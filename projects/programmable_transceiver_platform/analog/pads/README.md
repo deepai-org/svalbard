@@ -54,6 +54,24 @@ projection leaves almost no length allowance for a loop; choose and verify the
 actual bond locations before treating this as buildable or assigning GHz
 package performance. Pin-map agreement is not a bond-wire or RF signoff.
 
+The audit now proposes landing points inside the actual 1 × 0.25 mm rectangular
+copper pads, with a 100 µm edge inset as a planning assumption. Keeping the die
+and bond assignment unchanged gives projected spans of 1.797–2.665 mm and a
+maximum angle of 43.994°, with no proper projected crossings. The shorter span
+improves length margin but leaves only about 1° of angle margin. These points
+are a buildability proposal, not an approved bonder program.
+
+A two-segment loop sensitivity calculation gives a worst 2.945 mm length for an
+assumed 0.4 mm die and 0.25 mm apex above it across three apex positions. A
+0.6 mm die with that apex reaches 3.094 mm and misses the published length screen.
+Neither die thickness is established here, and a two-segment length is not an
+upper bound on the actual curved wire. The remaining decision requires the real
+thickness, landing footprint/tolerances, loop profile and selected-run rules;
+do not substitute the shorter projection into the electrical package model as
+if it were extracted wire length. Coordinates and all scenarios are in
+`packaging-audit.json:proposed_landing_plan`.
+
+
 ### Extracted ring power topology
 
 `generated/retained-ring-connectivity.json` extracts all five metals and vias

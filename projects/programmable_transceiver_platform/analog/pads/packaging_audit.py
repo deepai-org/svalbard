@@ -48,6 +48,54 @@ def inspect_layout(assembly, mask):
     return result
 
 
+def landing_plan(board, sites, edge_inset_mm=None):
+    """Propose points inside actual rectangular copper; no bond-loop signoff."""
+    bond=next(f for f in children(sexpr(board.read_text()),'footprint') if 'default_padring' in f[1])
+    if children(bond,'at')[0][-1]!='180':raise ValueError('Re-audit changed board orientation')
+    if edge_inset_mm is None:
+        edge_inset_mm=json.loads((PROJECT/'spec/contract.json').read_text())['assembly_policy']['packaging_gate']['landing_plan']['edge_inset_mm']
+    pads={int(p[1]):p for p in children(bond,'pad') if p[1].isdigit() and 1<=int(p[1])<=74}
+    if not 0<edge_inset_mm<.125:raise ValueError('Inset must leave landing space on250um pad')
+    rows=[]
+    for site in sites:
+        p=pads[site['bond_number_1based']]
+        if p[3]!='rect':raise ValueError('Re-audit nonrectangular landing')
+        at=children(p,'at')[0];angle=float(at[3])%180 if len(at)>3 else 0.
+        if angle not in (0.,90.):raise ValueError('Re-audit rotated landing')
+        size=list(map(float,children(p,'size')[0][1:3]))
+        if angle==90:size.reverse()
+        center=site['pcb_landing_centered_mm'];source=site['die_centered_mm']
+        if any(abs(a-b)>1e-9 for a,b in zip(center,[-float(at[1]),float(at[2])])):raise ValueError('Site landing differs from pinned copper')
+        half=[v/2-edge_inset_mm for v in size]
+        target=[min(max(source[i],center[i]-half[i]),center[i]+half[i]) for i in (0,1)]
+        delta=[target[i]-source[i] for i in (0,1)]
+        normal=abs(delta[1 if site['side'] in ('south','north') else 0]);tangent=abs(delta[0 if site['side'] in ('south','north') else 1])
+        rows.append(dict(bond_number_1based=site['bond_number_1based'],source_mm=source,landing_mm=target,
+            copper_center_mm=center,copper_size_xy_mm=size,projected_length_mm=math.hypot(*delta),
+            projected_angle_deg=math.degrees(math.atan2(tangent,normal))))
+    def cross(a,b,c):return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])
+    crossings=[]
+    for i,a in enumerate(rows):
+        for b in rows[i+1:]:
+            p,q=a['source_mm'],a['landing_mm'];r,t=b['source_mm'],b['landing_mm']
+            if cross(p,q,r)*cross(p,q,t)<0 and cross(r,t,p)*cross(r,t,q)<0:
+                crossings.append([a['bond_number_1based'],b['bond_number_1based']])
+    scenarios=[]
+    for thickness in (.2,.4,.6,.8):
+        for height in (.1,.25,.5):
+            lengths=[math.hypot(fraction*r['projected_length_mm'],height)+
+                math.hypot((1-fraction)*r['projected_length_mm'],height+thickness)
+                for r in rows for fraction in (.25,.5,.75)]
+            scenarios.append(dict(die_thickness_mm=thickness,apex_above_die_mm=height,
+                max_two_segment_length_mm=max(lengths),min_two_segment_length_mm=min(lengths),
+                satisfies_length_screen=max(lengths)<3 and min(lengths)>=max(1,2*thickness)))
+    return dict(status='proposed_landing_geometry_not_assembly_approval',edge_inset_mm=edge_inset_mm,sites=rows,
+        projected_length_range_mm=[min(r['projected_length_mm'] for r in rows),max(r['projected_length_mm'] for r in rows)],
+        maximum_projected_angle_deg=max(r['projected_angle_deg'] for r in rows),projected_crossings=crossings,
+        loop_scenarios=scenarios,
+        scope='Nearest point inside actual axis-aligned copper rectangle inset100um. Centered die and existing pin assignment retained. Inset is a planning assumption, not a supplied bond footprint/tolerance. Two straight segments via an assumed apex are a geometric sensitivity calculation, not an upper bound on real curved wire length. Bond-tool access, heel shape, placement tolerance, die thickness, mask clearance and selected-run assembly rules remain unverified.')
+
+
 def audit(board, output, layout_inventory=None, placement=None):
     contract=PROJECT/'spec/contract.json';placement=placement or PROJECT/'analog/pads/generated/assembly-report.json'
     policy=json.loads(contract.read_text())['assembly_policy'];geometry=json.loads(placement.read_text())
@@ -104,6 +152,7 @@ def audit(board, output, layout_inventory=None, placement=None):
                  'template':'https://github.com/wafer-space/gf180mcu-project-template/blob/33e4b5ecc9faac82787fa7cb205f08377e27b912/README.md',
                  'wire_rules':'https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/5cb466897372ac6c9df03142287858c1c8b1c9a7/run-1/wirebonding/README.md'},
         source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),board,contract,placement)})
+    report['proposed_landing_plan']=landing_plan(board,rows)
     if layout_inventory is not None:
         layout=json.loads(layout_inventory.read_text())
         gold=[b for b in layout['golden_openings_um'] if b[2]-b[0]<100 and b[3]-b[1]<100]

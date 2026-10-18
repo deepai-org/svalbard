@@ -320,3 +320,33 @@ class DesignBoundary(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class BondLandingGeometry(unittest.TestCase):
+    def test_crossed_assignment_is_not_hidden_by_shorter_landings(self):
+        from packaging_audit import landing_plan
+        board='''(kicad_pcb (footprint "default_padring" (at 0 0 180)
+          (pad "1" smd rect (at -3 -.2) (size 1 .25))
+          (pad "2" smd rect (at -3 .2) (size 1 .25))))'''
+        sites=[dict(bond_number_1based=i,side='east',die_centered_mm=[0,y],
+                    pcb_landing_centered_mm=[3,-y]) for i,y in [(1,.2),(2,-.2)]]
+        with TemporaryDirectory() as directory:
+            path=Path(directory)/'board.kicad_pcb';path.write_text(board)
+            result=landing_plan(path,sites,.1)
+            self.assertEqual(result['projected_crossings'],[[1,2]])
+            for row in result['sites']:
+                for landing,center,width in zip(row['landing_mm'],row['copper_center_mm'],row['copper_size_xy_mm']):
+                    self.assertLessEqual(abs(landing-center),width/2-.1+1e-12)
+            sites[0]['pcb_landing_centered_mm'][0]=4
+            with self.assertRaisesRegex(ValueError,'pinned copper'):landing_plan(path,sites,.1)
+
+    def test_plan_preserves_unknown_real_loop_qualification(self):
+        report=json.loads((PROJECT/'analog/pads/generated/packaging-audit.json').read_text())
+        plan=report['proposed_landing_plan']
+        self.assertEqual(len(plan['sites']),74)
+        self.assertEqual(plan['projected_crossings'],[])
+        self.assertLess(plan['projected_length_range_mm'][1],report['projected_center_length_range_mm'][1])
+        self.assertLess(plan['maximum_projected_angle_deg'],45)
+        self.assertIn('not_assembly_approval',plan['status'])
+        # A shorter projection must not silently pass thicker/high-loop cases.
+        self.assertTrue(any(not c['satisfies_length_screen'] for c in plan['loop_scenarios']))

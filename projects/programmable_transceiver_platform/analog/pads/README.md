@@ -535,6 +535,18 @@ voltage-source relations. Of 357 pad MOS devices, 88 have all terminal pairs
 observable, 149 only some, and 120 none. Missing internal nodes remain unknown;
 this is a lower-bound exposure audit, not a survival verdict or complete audit.
 
+A separate feed-forward candidate retains the discharge path and adds a nominal
+4 pF PDK MIM capacitor between isolated rail and shunt gate. The same pulse
+peaks at 7.19 V on the pad (6.09 V on the rail), and the recovery window returns
+near 3.00 V. This is an improvement over discharge alone, not protection closure.
+The capacitor plate alone occupies about 2000 square micrometres; new routing,
+normal-edge false triggering and loading remain unverified. Reproduce with
+`feedforward=True` in the pulse helper. Keep this unselected and establish a
+justified terminal-voltage/current/duration protection window before additional
+sizing sweeps; neither voltage-class labels nor ESD ratings of other cells
+establish that window for these attached devices.
+
+
 
 
 
@@ -1125,6 +1137,18 @@ stage, through primary clamping or a deliberately coordinated input structure.
 voltage-source relations. Of 357 pad MOS devices, 88 have all terminal pairs
 observable, 149 only some, and 120 none. Missing internal nodes remain unknown;
 this is a lower-bound exposure audit, not a survival verdict or complete audit.
+
+A separate feed-forward candidate retains the discharge path and adds a nominal
+4 pF PDK MIM capacitor between isolated rail and shunt gate. The same pulse
+peaks at 7.19 V on the pad (6.09 V on the rail), and the recovery window returns
+near 3.00 V. This is an improvement over discharge alone, not protection closure.
+The capacitor plate alone occupies about 2000 square micrometres; new routing,
+normal-edge false triggering and loading remain unverified. Reproduce with
+`feedforward=True` in the pulse helper. Keep this unselected and establish a
+justified terminal-voltage/current/duration protection window before additional
+sizing sweeps; neither voltage-class labels nor ESD ratings of other cells
+establish that window for these attached devices.
+
 
 
 

@@ -2360,5 +2360,120 @@
     "unobserved_mos_count": 120,
     "unobserved_internal_node_count": 66,
     "scope": "990..1499ns includes pulse and recovery. Only measured waveform nodes or exact fixture voltage-source relations are used. Unknown internal voltages are not inferred from off controls or nominal supply. Device voltage class is not a transient survival limit. Full internal-node traces and terminal current/duration limits remain required."
+  },
+  "protection_feedforward": {
+    "windows": {
+      "before": {
+        "PAD_P": {
+          "min_v": 2.9999315,
+          "max_v": 2.99993229
+        },
+        "PAD_N": {
+          "min_v": 2.99997801,
+          "max_v": 2.99997817
+        },
+        "RX_P": {
+          "min_v": 8.57022978e-06,
+          "max_v": 9.43541231e-06
+        },
+        "RX_N": {
+          "min_v": -1.28399018e-06,
+          "max_v": -1.13815805e-06
+        },
+        "xpad.ESD_RAIL": {
+          "min_v": 2.56186781,
+          "max_v": 2.56211378
+        },
+        "xpad.xphysical.a_42245_162628#": {
+          "min_v": -1.75280402e-05,
+          "max_v": -1.74486524e-05
+        }
+      },
+      "pulse": {
+        "PAD_P": {
+          "min_v": 3.00026519,
+          "max_v": 7.18810446
+        },
+        "PAD_N": {
+          "min_v": 2.99064269,
+          "max_v": 3.08011483
+        },
+        "RX_P": {
+          "min_v": 1.98481936e-05,
+          "max_v": 0.163504229
+        },
+        "RX_N": {
+          "min_v": 6.56039255e-07,
+          "max_v": 0.0241631839
+        },
+        "xpad.ESD_RAIL": {
+          "min_v": 2.56184451,
+          "max_v": 6.08558483
+        },
+        "xpad.xphysical.a_42245_162628#": {
+          "min_v": -1.45925843e-05,
+          "max_v": 1.45468529
+        }
+      },
+      "after": {
+        "PAD_P": {
+          "min_v": 2.50838061,
+          "max_v": 4.70160175
+        },
+        "PAD_N": {
+          "min_v": 2.50836196,
+          "max_v": 3.05049843
+        },
+        "RX_P": {
+          "min_v": -0.026898063,
+          "max_v": 0.069387025
+        },
+        "RX_N": {
+          "min_v": -0.0235201329,
+          "max_v": 0.00981171881
+        },
+        "xpad.ESD_RAIL": {
+          "min_v": 1.73675076,
+          "max_v": 3.66279056
+        },
+        "xpad.xphysical.a_42245_162628#": {
+          "min_v": 0.103301773,
+          "max_v": 1.28338243
+        }
+      },
+      "recovery": {
+        "PAD_P": {
+          "min_v": 2.99932585,
+          "max_v": 2.99940553
+        },
+        "PAD_N": {
+          "min_v": 2.99931596,
+          "max_v": 2.99939612
+        },
+        "RX_P": {
+          "min_v": 3.33793771e-05,
+          "max_v": 5.60545607e-05
+        },
+        "RX_N": {
+          "min_v": 4.2296918e-05,
+          "max_v": 7.13755613e-05
+        },
+        "xpad.ESD_RAIL": {
+          "min_v": 2.40989676,
+          "max_v": 2.4131308
+        },
+        "xpad.xphysical.a_42245_162628#": {
+          "min_v": 4.16376457e-05,
+          "max_v": 4.88479931e-05
+        }
+      }
+    },
+    "gate_discharge": true,
+    "direct_trigger": false,
+    "feedforward": true,
+    "deck_sha256": "37b32e230a4cf384e6205f8dea9e915f683a1d6920f1bbe5c65186f25f4ad75a",
+    "source_deck_sha256": "c2f1b725a5e34cd1ff4aa63ec4d08e0624686a8f03a7e35b1278bdaf611c8d22",
+    "scope": "100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option and optional three100um diode-connected6V NMOS trigger devices with grounded bodies; optional44.72um-square MIM feed-forward capacitor from isolated rail to main clamp gate; no added layout routing. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.",
+    "decision": "Unselected: nominal4pF MIM feed-forward reduces pulse peak8.10 to7.19V and recovers near3V, but does not establish safe pad-facing terminal stress. Extra nominal capacitor plate area1999.8784um2 excludes spacing/routing. Normal-edge false triggering, loading, manufacturing variation and layout remain untested. Do not promote or size-sweep without a justified protection window."
   }
 }

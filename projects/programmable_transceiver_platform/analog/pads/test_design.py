@@ -255,6 +255,32 @@ class DesignBoundary(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'core endpoint'):
                 augment(original,family,route,'bond')
 
+    def test_wired_route_preserves_devices_and_separates_protection(self):
+        import re
+        from wired_tx_route import augment
+        original=(PROJECT/'analog/pads/generated/wired-transmit-extracted-c.spice').read_text()
+        branches={leg:dict(common_bond_lead_ohm=8,core_branch_ohm=2,
+                           protection_branch_ohm=7) for leg in ('P','N')}
+        routed,counts=augment(original,branches)
+        self.assertEqual(len([x for x in routed.splitlines() if x.startswith('RROUTE_')]),6)
+        restored=[]
+        for line in routed.splitlines():
+            if line.startswith('RROUTE_'):continue
+            for leg in ('P','N'):
+                line=line.replace('ROUTE_PRIMARY_'+leg,'PAD_'+leg).replace('ROUTE_CORE_'+leg,'PAD_'+leg)
+            restored.append(line.split())
+        joined=re.sub(r'\n\s*\+\s*',' ',original)
+        self.assertEqual(restored,[line.split() for line in joined.splitlines()])
+        for leg in ('P','N'):
+            self.assertEqual(counts[leg]['protection_diodes'],8)
+        for line in routed.splitlines():
+            if line.startswith('D') and 'ROUTE_' in line:
+                self.assertIn('ROUTE_PRIMARY_',line)
+            if line.startswith('X') and 'ROUTE_' in line:
+                self.assertIn('ROUTE_CORE_',line)
+        with self.assertRaises(ValueError):
+            augment(original.replace('D0 VSS PAD_N','D0 VSS OTHER'),branches)
+
     def test_physical_export_rejects_unhandled_device(self):
         with TemporaryDirectory() as tmp:
             root=Path(tmp);source=root/'physical.ext'

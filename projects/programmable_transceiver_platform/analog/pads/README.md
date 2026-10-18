@@ -827,6 +827,27 @@ closure in the connected lifecycle. Its disabled odd-mode loading is about
 allocation, and the existing detection-loading miss remains. These are recorded
 failures, not waived budgets. Widening addresses a large resistance omission;
 it does not complete impedance, current-capacity or timing qualification.
+A branched signal-metal estimate is implemented in `wired_tx_route.py`.
+It separates the common bond lead, core connection and primary-protection arm,
+preserving every extracted device. At nominal sheet resistance, bond-to-core
+metal contributes approximately 8.34 Ω (P) and 11.67 Ω (N), before vias and
+internal core buses. This asymmetry requires a connected electrical check;
+the widened M5 trunks alone do not establish acceptable total resistance.
+The overlay places extracted linear capacitance at the core endpoint, keeps
+physical steering diodes on the primary arm, and omits return-path resistance.
+It is a diagnostic approximation, not distributed extraction or an accepted
+replacement for the canonical pad model.
+The connected 300 ns open-loop replay is recorded in
+`generated/wired-transmit-branched-route-screen.json`. MAIN and MAIN+POST
+show approximately ±0.437 V and ±0.517 V differential extrema respectively,
+but these extrema are not eye or compliance results. All requested modes are
+reached; the prescribed controller also claims readiness without the loaded
+analog detector for about 40.95 ns. Feedback closure must therefore be rerun
+before accepting readiness for this overlay. The unpowered pad reaches about
+−0.656 V; core-survival limits and physical local controls remain unresolved.
+This is evidence for completing routing and safe-state integration, not a
+passing family verdict or a reason to relax the readiness limit.
+
 The canonical all-mode lifecycle and loading reports are rebuilt for these
 widths. Supplemental split-pull-up and AC-coupled TX reports predate this geometry
 change and require refresh before being used as current electrical evidence;

@@ -2909,5 +2909,312 @@
     "unobserved_mos_count": 120,
     "unobserved_internal_node_count": 66,
     "scope": "990..1499ns includes pulse and recovery. Only measured waveform nodes or exact fixture voltage-source relations are used. Unknown internal voltages are not inferred from off controls or nominal supply. Device voltage class is not a transient survival limit. Full internal-node traces and terminal current/duration limits remain required."
+  },
+  "protection_static_shunt": {
+    "windows": {
+      "before": {
+        "PAD_P": {
+          "min_v": 2.99332746,
+          "max_v": 2.99332805
+        },
+        "PAD_N": {
+          "min_v": 2.99336394,
+          "max_v": 2.99336405
+        },
+        "RX_P": {
+          "min_v": 8.38955608e-06,
+          "max_v": 9.24315182e-06
+        },
+        "RX_N": {
+          "min_v": -1.24878066e-06,
+          "max_v": -1.10846563e-06
+        },
+        "xpad.ESD_RAIL": {
+          "min_v": 2.34250373,
+          "max_v": 2.34250378
+        },
+        "xpad.xphysical.a_42245_162628#": {
+          "min_v": 7.69881271e-09,
+          "max_v": 7.80092176e-09
+        }
+      },
+      "pulse": {
+        "PAD_P": {
+          "min_v": 2.16314719,
+          "max_v": 7.2198417
+        },
+        "PAD_N": {
+          "min_v": 2.20053368,
+          "max_v": 3.0794735
+        },
+        "RX_P": {
+          "min_v": -0.0361915355,
+          "max_v": 0.16496822
+        },
+        "RX_N": {
+          "min_v": -0.0360074773,
+          "max_v": 0.0245724597
+        },
+        "xpad.ESD_RAIL": {
+          "min_v": 1.17919187,
+          "max_v": 6.11501167
+        },
+        "xpad.xphysical.a_42245_162628#": {
+          "min_v": 1.25866262e-06,
+          "max_v": 1.77357234
+        }
+      },
+      "after": {
+        "PAD_P": {
+          "min_v": 0.949224435,
+          "max_v": 2.13359711
+        },
+        "PAD_N": {
+          "min_v": 0.953088055,
+          "max_v": 2.17595146
+        },
+        "RX_P": {
+          "min_v": -0.102821143,
+          "max_v": -0.0375756044
+        },
+        "RX_N": {
+          "min_v": -0.0971016727,
+          "max_v": -0.0371452363
+        },
+        "xpad.ESD_RAIL": {
+          "min_v": 0.132247781,
+          "max_v": 1.15271379
+        },
+        "xpad.xphysical.a_42245_162628#": {
+          "min_v": 0.606669064,
+          "max_v": 1.47024303
+        }
+      },
+      "recovery": {
+        "PAD_P": {
+          "min_v": 2.89235666,
+          "max_v": 2.97865742
+        },
+        "PAD_N": {
+          "min_v": 2.89180882,
+          "max_v": 2.9785101
+        },
+        "RX_P": {
+          "min_v": 0.0234571339,
+          "max_v": 0.0378505868
+        },
+        "RX_N": {
+          "min_v": 0.0227029924,
+          "max_v": 0.0365071071
+        },
+        "xpad.ESD_RAIL": {
+          "min_v": 2.19525709,
+          "max_v": 2.31025945
+        },
+        "xpad.xphysical.a_42245_162628#": {
+          "min_v": 0.000151535338,
+          "max_v": 0.000909614199
+        }
+      }
+    },
+    "gate_discharge": true,
+    "direct_trigger": false,
+    "feedforward": false,
+    "static_shunt": true,
+    "deck_sha256": "67d33b99c2886588d9b25ef0614e45b0f3e5d201a57fcef4a2cf1e0f5ab5bde9",
+    "source_deck_sha256": "c2f1b725a5e34cd1ff4aa63ec4d08e0624686a8f03a7e35b1278bdaf611c8d22",
+    "scope": "100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option and optional three100um diode-connected6V NMOS trigger devices with grounded bodies; optional44.72um-square MIM feed-forward capacitor from isolated rail to main clamp gate; optional static shunt adds three series banks of twenty50um6V diode-connected NMOS with grounded bodies; no added layout routing. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.",
+    "decision": "Not selected: adds3000um total NMOS width in60fingers, yet pad peak7.220V and isolated rail6.115V still exceed the shared gate screen on exposed devices. Pre-pulse pad2.99333V already shows greater normal loading. No full layout/load acceptance. Retain as diagnostic evidence, not a new normative cell."
+  },
+  "static_shunt_terminal_exposure": {
+    "status": "observed_gate_screen_exceedances",
+    "observed_mos_exceeding_gate_screen": 38,
+    "gate_screen_spec_sha256": "0b282122e3187b0451fcdb6c2437ba73f5ac4d82b76d8c63d53de5c6b845c560",
+    "deck_sha256": "67d33b99c2886588d9b25ef0614e45b0f3e5d201a57fcef4a2cf1e0f5ab5bde9",
+    "waveform_sha256": "2396e907e310faa9dca529b2927033238b965cf9dc766fdac30b816995de193c",
+    "mos_count": 417,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 189,
+    "worst_terminal_exposures": [
+      {
+        "device": "X47",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_11",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.2198417,
+          "GB": 0.0,
+          "SB": 7.2198417
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.258649999999705e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X54",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "PAD_P",
+          "G": "BYPASS_ENABLE",
+          "S": "RX_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 0.16496822,
+          "GD": 7.2198417,
+          "GB": 0.0,
+          "DS": 7.0548734799999995,
+          "DB": 7.2198417,
+          "SB": 0.16496822
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 0.0,
+          "GD": 8.258649999999705e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X160",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_10",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.2198417,
+          "GB": 0.0,
+          "SB": 7.2198417
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.258649999999705e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X164",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "PAD_P",
+          "G": "BYPASS_ENABLE",
+          "S": "RX_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 0.16496822,
+          "GD": 7.2198417,
+          "GB": 0.0,
+          "DS": 7.0548734799999995,
+          "DB": 7.2198417,
+          "SB": 0.16496822
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 0.0,
+          "GD": 8.258649999999705e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X165",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_5",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.2198417,
+          "GB": 0.0,
+          "SB": 7.2198417
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.258649999999705e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X169",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_6",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.2198417,
+          "GB": 0.0,
+          "SB": 7.2198417
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.258649999999705e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X178",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_3",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.2198417,
+          "GB": 0.0,
+          "SB": 7.2198417
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.258649999999705e-10,
+          "GB": 0.0
+        }
+      },
+      {
+        "device": "X189",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_12",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 7.2198417,
+          "GB": 0.0,
+          "SB": 7.2198417
+        },
+        "gate_screen_v": 6.0,
+        "gate_screen_exceeded": true,
+        "sampled_above_screen_duration_s": {
+          "GS": 8.258649999999705e-10,
+          "GB": 0.0
+        }
+      }
+    ],
+    "unobserved_mos_count": 140,
+    "unobserved_internal_node_count": 68,
+    "scope": "990..1499ns includes pulse and recovery. Only measured waveform nodes or exact fixture voltage-source relations are used. Unknown internal voltages are not inferred from off controls or nominal supply. Device voltage class is not a transient survival limit. Full internal-node traces and terminal current/duration limits remain required."
   }
 }

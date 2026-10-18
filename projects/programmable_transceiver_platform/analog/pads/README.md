@@ -557,6 +557,15 @@ remain separate requirements.
 Reanalysis of existing waveforms finds observed gate-screen exceedances in
 98 devices for discharge alone, 99 for the direct trigger and 18 for feed-forward.
 Counts include parallel extracted fingers and are not independent failure counts.
+The separate static-shunt candidate adds three series banks of twenty 50-micrometre
+NMOS fingers (3000 micrometres of total width). It still peaks at 7.22 V on the
+pad and 6.12 V on the isolated rail, with pre-pulse pad voltage reduced to 2.9933 V.
+It is not selected: the added devices do not close the protection window, even
+before layout and capacitance accounting. Reproduce via `static_shunt=True` in
+the pulse and terminal-exposure helpers. The common conclusion across these
+experiments is that release fixes and simple parallel additions alone have not
+produced a qualified foundation; no family should inherit them as a completed cell.
+
 For a representative exposed USB HS device, sampled time above 6.0 V is roughly
 0.915 ns, 0.819 ns and 1.177 ns respectively: feed-forward lowers the peak but
 lengthens that excursion. None qualifies. These results reuse exact saved decks;
@@ -1178,6 +1187,15 @@ remain separate requirements.
 Reanalysis of existing waveforms finds observed gate-screen exceedances in
 98 devices for discharge alone, 99 for the direct trigger and 18 for feed-forward.
 Counts include parallel extracted fingers and are not independent failure counts.
+The separate static-shunt candidate adds three series banks of twenty 50-micrometre
+NMOS fingers (3000 micrometres of total width). It still peaks at 7.22 V on the
+pad and 6.12 V on the isolated rail, with pre-pulse pad voltage reduced to 2.9933 V.
+It is not selected: the added devices do not close the protection window, even
+before layout and capacitance accounting. Reproduce via `static_shunt=True` in
+the pulse and terminal-exposure helpers. The common conclusion across these
+experiments is that release fixes and simple parallel additions alone have not
+produced a qualified foundation; no family should inherit them as a completed cell.
+
 For a representative exposed USB HS device, sampled time above 6.0 V is roughly
 0.915 ns, 0.819 ns and 1.177 ns respectively: feed-forward lowers the peak but
 lengthens that excursion. None qualifies. These results reuse exact saved decks;

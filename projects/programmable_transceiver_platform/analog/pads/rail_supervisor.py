@@ -356,7 +356,7 @@ def clamp_state_screen(work,*,reuse=False,long_hold=False,gate_discharge=False):
     return dict(windows=r,gate_discharge_nominal_ohm=100000 if gate_discharge else None,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),scope='Connected diagnostic with all extracted devices retained; optional100k gate discharge uses eight schematic PDK resistors without added layout routing. Window averages do not establish final equilibrium or ESD survival.')
 
 
-def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False,direct_trigger=False,feedforward=False):
+def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False,direct_trigger=False,feedforward=False,static_shunt=False):
     """Compare a diagnostic protection pulse after the retained brownout hold."""
     from pathlib import Path
     import os,hashlib
@@ -390,6 +390,21 @@ def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False,direct_tr
                 inside=False
             lines.append(line)
         base='\n'.join(lines)+'\n';name+='_feedforward'
+    if static_shunt:
+        if not gate_discharge or direct_trigger or feedforward:raise ValueError('Static shunt comparison uses discharge only')
+        lines=[];inside=False
+        for line in base.splitlines():
+            if line.startswith('.subckt combined_flat '):inside=True
+            if inside and line.startswith('.ends'):
+                node='ESD_RAIL'
+                for stage in range(3):
+                    end='VSS' if stage==2 else f'STATIC_SHUNT_{stage}'
+                    for finger in range(20):
+                        lines.append(Mos(f'STATIC_SHUNT_{stage}_{finger}',(node,node,end,'VSS'),'nfet_06v0',50.,.7).spice())
+                    node=end
+                inside=False
+            lines.append(line)
+        base='\n'.join(lines)+'\n';name+='_static_shunt'
     deck=base+'IINJECT VSS PAD_P PULSE(0 .1 1000n .1n .1n 2n 20u)\n'
     nodes=['PAD_P','PAD_N','RX_P','RX_N','xpad.ESD_RAIL','xpad.xphysical.a_42245_162628#']
     deck+=control(w,name,'tran .05n 1500n',' '.join('v('+n+')' for n in nodes))
@@ -407,12 +422,12 @@ def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False,direct_tr
         y=x[(x[:,0]>=a*1e-9)&(x[:,0]<=b*1e-9)]
         if len(y)<2:raise ValueError('Missing pulse state')
         windows[name]={n:dict(min_v=float(y[:,i+1].min()),max_v=float(y[:,i+1].max())) for i,n in enumerate(nodes)}
-    return dict(windows=windows,gate_discharge=gate_discharge,direct_trigger=direct_trigger,feedforward=feedforward,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),
+    return dict(windows=windows,gate_discharge=gate_discharge,direct_trigger=direct_trigger,feedforward=feedforward,static_shunt=static_shunt,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),
         source_deck_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
-        scope='100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option and optional three100um diode-connected6V NMOS trigger devices with grounded bodies; optional44.72um-square MIM feed-forward capacitor from isolated rail to main clamp gate; no added layout routing. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.')
+        scope='100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option and optional three100um diode-connected6V NMOS trigger devices with grounded bodies; optional44.72um-square MIM feed-forward capacitor from isolated rail to main clamp gate; optional static shunt adds three series banks of twenty50um6V diode-connected NMOS with grounded bodies; no added layout routing. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.')
 
 
-def pulse_terminal_exposure(work,*,direct_trigger=False,feedforward=False):
+def pulse_terminal_exposure(work,*,direct_trigger=False,feedforward=False,static_shunt=False):
     """Lower-bound device exposure from saved nodes; unknown terminals stay unknown."""
     from pathlib import Path
     import re,hashlib,json
@@ -420,8 +435,8 @@ def pulse_terminal_exposure(work,*,direct_trigger=False,feedforward=False):
     import numpy as np
     work=Path(work).resolve()
     # Validate the exact regenerated fixture before interpreting its waveform.
-    verified=clamp_release_pulse_screen(work,gate_discharge=True,direct_trigger=direct_trigger,feedforward=feedforward,reuse=True)
-    name='release_pulse_discharge'+('_direct_trigger' if direct_trigger else '')+('_feedforward' if feedforward else '')
+    verified=clamp_release_pulse_screen(work,gate_discharge=True,direct_trigger=direct_trigger,feedforward=feedforward,static_shunt=static_shunt,reuse=True)
+    name='release_pulse_discharge'+('_direct_trigger' if direct_trigger else '')+('_feedforward' if feedforward else '')+('_static_shunt' if static_shunt else '')
     spec=PROJECT/'spec/schematic-implementation.json'
     limits=json.loads(spec.read_text())['io_pad_first_pass']['primary_protection']['core_boundary_policy']['gate_voltage_screen']['max_abs_gate_terminal_v']
     deck=(work/(name+'.spice')).read_text()

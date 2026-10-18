@@ -644,7 +644,8 @@
         "normal_operation": "Use each shared architecture block and retained external network for common-mode, swing, loading and power. Protection must preserve those operating conditions.",
         "power_transitions": "Evaluate each connected core against its local rails during reset, brownout, unpowered and reconfiguration states; external coupling capacitors do not eliminate retained charge or external excitation.",
         "transient_survival": "Unqualified until actual attached devices and allowed terminal voltage/current versus duration are established. Neither nominal device voltage labels nor behavioral rail clipping supply a survival limit.",
-        "implementation_gate": "Include secondary protection or isolation wherever the primary network cannot meet the attached-device contract. Account for its capacitance, resistance, current path and area in the same generated family, rather than adding an ideal clamp only in the bench."
+        "implementation_gate": "Include secondary protection or isolation wherever the primary network cannot meet the attached-device contract. Account for its capacitance, resistance, current path and area in the same generated family, rather than adding an ideal clamp only in the bench.",
+        "pad_facing_stage": "Released-candidate pulse produces about8.10V Vgd on bypass NMOS and8.10V Vgs on USB HS isolation NMOS even disabled. A secondary clamp only behind these devices cannot establish protection of the first stage. Bound exposed gate/junction terminal stress through primary clamping or coordinated input structure; include every added load and current path. Saved-waveform audit covers88/357MOS completely,149partly,120not observed; no survival verdict."
       },
       "release_evidence": "analog/pads/generated/rail-supervisor-screen.json"
     },

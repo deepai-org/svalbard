@@ -523,6 +523,19 @@ Do not pursue an unconstrained sizing sweep: the next architecture decision must
 address sufficient trigger drive and actual primary-to-core coordination together,
 including the capacitance and current cost of any secondary protection.
 
+The saved-waveform terminal audit narrows that decision: the released-candidate
+pulse applies about 8.10 V gate-to-drain to the pad-facing bypass NMOS and about
+8.10 V gate-to-source to the USB HS isolation NMOS, despite their disabled
+controls. Small RX output excursions therefore do not establish safe isolation.
+A secondary clamp only behind these devices cannot protect their exposed
+terminals: the protection design must also bound stress on the first pad-facing
+stage, through primary clamping or a deliberately coordinated input structure.
+`pulse_terminal_exposure(work)` derives only observed nodes and exact fixture
+voltage-source relations. Of 357 pad MOS devices, 88 have all terminal pairs
+observable, 149 only some, and 120 none. Missing internal nodes remain unknown;
+this is a lower-bound exposure audit, not a survival verdict or complete audit.
+
+
 
 
 | Current evidence | What it establishes / remaining limitation |
@@ -1100,6 +1113,19 @@ comparison is reproducible with `direct_trigger=True` in the same pulse helper.
 Do not pursue an unconstrained sizing sweep: the next architecture decision must
 address sufficient trigger drive and actual primary-to-core coordination together,
 including the capacitance and current cost of any secondary protection.
+
+The saved-waveform terminal audit narrows that decision: the released-candidate
+pulse applies about 8.10 V gate-to-drain to the pad-facing bypass NMOS and about
+8.10 V gate-to-source to the USB HS isolation NMOS, despite their disabled
+controls. Small RX output excursions therefore do not establish safe isolation.
+A secondary clamp only behind these devices cannot protect their exposed
+terminals: the protection design must also bound stress on the first pad-facing
+stage, through primary clamping or a deliberately coordinated input structure.
+`pulse_terminal_exposure(work)` derives only observed nodes and exact fixture
+voltage-source relations. Of 357 pad MOS devices, 88 have all terminal pairs
+observable, 149 only some, and 120 none. Missing internal nodes remain unknown;
+this is a lower-bound exposure audit, not a survival verdict or complete audit.
+
 
 
 

@@ -2221,5 +2221,144 @@
     "source_deck_sha256": "c2f1b725a5e34cd1ff4aa63ec4d08e0624686a8f03a7e35b1278bdaf611c8d22",
     "scope": "100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option and optional three100um diode-connected6V NMOS trigger devices with grounded bodies; no added layout routing. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.",
     "decision": "Not selected. Three diode-connected100um6V NMOS devices preserve about2.999V pre-pulse signal but reduce peak only8.099 to7.842V; isolated rail still6.814V. This does not close released-state protection. Avoid blind sizing sweeps; address trigger drive and primary-to-core coordination together."
+  },
+  "pad_facing_terminal_exposure": {
+    "status": "partial_terminal_exposure_not_survival_qualification",
+    "deck_sha256": "fbbf8717de94bfa8c8dfaccdb8d7cc4368ede067e083fcffece9b5c49c7d7909",
+    "waveform_sha256": "2e4f558e49c39ea7d8b39c2edb194ed3b16b23cd5ad5ca7523b4344dc003ea36",
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "worst_terminal_exposures": [
+      {
+        "device": "X47",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_11",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 8.09922611,
+          "GB": 0.0,
+          "SB": 8.09922611
+        }
+      },
+      {
+        "device": "X54",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "PAD_P",
+          "G": "BYPASS_ENABLE",
+          "S": "RX_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 0.197586768,
+          "GD": 8.09922611,
+          "GB": 0.0,
+          "DS": 7.901724069,
+          "DB": 8.09922611,
+          "SB": 0.197586768
+        }
+      },
+      {
+        "device": "X160",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_10",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 8.09922611,
+          "GB": 0.0,
+          "SB": 8.09922611
+        }
+      },
+      {
+        "device": "X164",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "PAD_P",
+          "G": "BYPASS_ENABLE",
+          "S": "RX_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 0.197586768,
+          "GD": 8.09922611,
+          "GB": 0.0,
+          "DS": 7.901724069,
+          "DB": 8.09922611,
+          "SB": 0.197586768
+        }
+      },
+      {
+        "device": "X165",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_5",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 8.09922611,
+          "GB": 0.0,
+          "SB": 8.09922611
+        }
+      },
+      {
+        "device": "X169",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_6",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 8.09922611,
+          "GB": 0.0,
+          "SB": 8.09922611
+        }
+      },
+      {
+        "device": "X178",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_3",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 8.09922611,
+          "GB": 0.0,
+          "SB": 8.09922611
+        }
+      },
+      {
+        "device": "X189",
+        "model": "nfet_06v0",
+        "nodes": {
+          "D": "HS_P_12",
+          "G": "HS_P",
+          "S": "PAD_P",
+          "B": "VSS"
+        },
+        "max_abs_terminal_v": {
+          "GS": 8.09922611,
+          "GB": 0.0,
+          "SB": 8.09922611
+        }
+      }
+    ],
+    "unobserved_mos_count": 120,
+    "unobserved_internal_node_count": 66,
+    "scope": "990..1499ns includes pulse and recovery. Only measured waveform nodes or exact fixture voltage-source relations are used. Unknown internal voltages are not inferred from off controls or nominal supply. Device voltage class is not a transient survival limit. Full internal-node traces and terminal current/duration limits remain required."
   }
 }

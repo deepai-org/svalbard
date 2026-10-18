@@ -400,3 +400,64 @@ def clamp_release_pulse_screen(work,*,gate_discharge=False,reuse=False,direct_tr
     return dict(windows=windows,gate_discharge=gate_discharge,direct_trigger=direct_trigger,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),
         source_deck_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
         scope='100mA positive2ns diagnostic into PAD_P after1us startup/brownout, all pad attachments and board peers retained. Typical models27C, schematic gate-discharge option and optional three100um diode-connected6V NMOS trigger devices with grounded bodies; no added layout routing. Not a standardized ESD waveform, current-density/thermal qualification, core survival or settled-DC acceptance; transient operating-point initialization is permitted for this lifecycle comparison.')
+
+
+def pulse_terminal_exposure(work,*,direct_trigger=False):
+    """Lower-bound device exposure from saved nodes; unknown terminals stay unknown."""
+    from pathlib import Path
+    import re,hashlib
+    import numpy as np
+    work=Path(work).resolve()
+    # Validate the exact regenerated fixture before interpreting its waveform.
+    verified=clamp_release_pulse_screen(work,gate_discharge=True,direct_trigger=direct_trigger,reuse=True)
+    name='release_pulse_discharge'+('_direct_trigger' if direct_trigger else '')
+    deck=(work/(name+'.spice')).read_text()
+    x=np.loadtxt(work/(name+'.dat'),skiprows=1)
+    known={'0':np.zeros(len(x))}
+    for i,node in enumerate(['PAD_P','PAD_N','RX_P','RX_N','ESD_RAIL','a_42245_162628#'],1):known[node]=x[:,i]
+    def value(token):
+        m=re.fullmatch(r'([+-]?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?)([numk]?)',token)
+        if not m:raise ValueError('Unsupported fixture numeric token: '+token)
+        return float(m[1])*{'':1.,'n':1e-9,'u':1e-6,'m':1e-3,'k':1e3}[m[2]]
+    sources=[];inside=False;devices=[]
+    for line in deck.splitlines():
+        if line.startswith('.subckt combined_flat '):inside=True
+        elif line.startswith('.ends'):inside=False
+        f=line.split()
+        if inside and len(f)>5 and f[0].startswith('X') and f[5] in ('nfet_03v3','pfet_03v3','nfet_06v0','pfet_06v0'):
+            devices.append(f)
+        if line.startswith('V'):
+            if 'PWL(' in line:
+                points=line.split('PWL(',1)[1].split(')',1)[0].split()
+                t=np.array([value(v) for v in points[::2]])
+                v=np.array([value(v) for v in points[1::2]])
+                sources.append((f[1],f[2],np.interp(x[:,0],t,v)))
+            elif len(f)==4:sources.append((f[1],f[2],value(f[3])))
+    for _ in range(len(sources)):
+        changed=False
+        for a,b,v in sources:
+            if a not in known and b in known:known[a]=known[b]+v;changed=True
+            elif b not in known and a in known:known[b]=known[a]-v;changed=True
+        if not changed:break
+    # The zero-volt pad-feed probe maps the internal supply onto external VDD.
+    if 'PAD_VDD' not in known:raise ValueError('Missing actual pad supply mapping')
+    known['VDD']=known['PAD_VDD']
+    mask=(x[:,0]>=990e-9)&(x[:,0]<=1499e-9)
+    records=[];missing={};full=0
+    for f in devices:
+        nodes=dict(zip('DGSB',f[1:5]));pairs={}
+        for pair in ('GS','GD','GB','DS','DB','SB'):
+            a,b=(nodes[c] for c in pair)
+            if a in known and b in known:
+                z=(known[a]-known[b])[mask]
+                pairs[pair]=float(np.max(np.abs(z)))
+        if len(pairs)==6:full+=1
+        else:missing[f[0]]=[n for n in nodes.values() if n not in known]
+        if pairs:records.append(dict(device=f[0],model=f[5],nodes=nodes,max_abs_terminal_v=pairs))
+    records.sort(key=lambda row:max(row['max_abs_terminal_v'].values()),reverse=True)
+    return dict(status='partial_terminal_exposure_not_survival_qualification',
+        deck_sha256=verified['deck_sha256'],waveform_sha256=hashlib.sha256((work/(name+'.dat')).read_bytes()).hexdigest(),
+        mos_count=len(devices),fully_observed_mos_count=full,partly_observed_mos_count=len(records)-full,
+        worst_terminal_exposures=records[:8],unobserved_mos_count=len(devices)-len(records),
+        unobserved_internal_node_count=len({n for nodes in missing.values() for n in nodes}),
+        scope='990..1499ns includes pulse and recovery. Only measured waveform nodes or exact fixture voltage-source relations are used. Unknown internal voltages are not inferred from off controls or nominal supply. Device voltage class is not a transient survival limit. Full internal-node traces and terminal current/duration limits remain required.')

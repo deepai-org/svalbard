@@ -1794,5 +1794,92 @@
     "deck_sha256": "f7414cd42e16eeb7fbac3bb0a94244753656e669f1908409de34041a1b2bf961",
     "scope": "Unmodified connected diagnostic; internal node voltages only. Window averages do not establish final equilibrium or ESD survival.",
     "interpretation": "At late brownout the timing node is about 0.763V, close to the 0.753V isolated rail, yet the shunt gate remains about 0.757V. This is consistent with low-voltage inverter-chain release failure rather than an uncharged timing capacitor alone. It does not establish infinite-duration holding or a safe remedy. Active and recovered windows are also loaded."
-  }
+  },
+  "protection_long_hold": {
+    "windows": {
+      "early_brownout": {
+        "VDD": 1.5,
+        "PAD_P": 1.5531112542696628,
+        "ESD_RAIL": 0.7527123339438202,
+        "a_42245_162628#": 0.757007193483146,
+        "a_44789_189064#": 0.22454419267415734,
+        "a_41005_203545#": 0.7626609218089889,
+        "a_43813_189064#": 0.00012501475216853932
+      },
+      "middle_brownout": {
+        "VDD": 1.5,
+        "PAD_P": 1.5943272137154152,
+        "ESD_RAIL": 0.7960039330968379,
+        "a_42245_162628#": 0.734256709898747,
+        "a_44789_189064#": 0.013580962131511849,
+        "a_41005_203545#": 0.7827307271976285,
+        "a_43813_189064#": 0.01472157157343195
+      },
+      "late_brownout": {
+        "VDD": 1.5,
+        "PAD_P": 1.55293783,
+        "ESD_RAIL": 0.7525369079525425,
+        "a_42245_162628#": 0.7570148256084747,
+        "a_44789_189064#": 0.22796898754325592,
+        "a_41005_203545#": 0.765692132461017,
+        "a_43813_189064#": 0.00012061123112033899
+      },
+      "recovered": {
+        "VDD": 3.300000000000001,
+        "PAD_P": 2.162837833777778,
+        "ESD_RAIL": 1.2271607303777776,
+        "a_42245_162628#": 0.9753065691999997,
+        "a_44789_189064#": 0.2590869932986667,
+        "a_41005_203545#": 0.8480973192222221,
+        "a_43813_189064#": 0.825372285315111
+      }
+    },
+    "gate_discharge_nominal_ohm": null,
+    "deck_sha256": "8a60cea559bf5b79dcec9553cefb60be64940988da0e99c02da063620ad01d75",
+    "scope": "Connected diagnostic with all extracted devices retained; optional100k gate discharge uses eight schematic PDK resistors without added layout routing. Window averages do not establish final equilibrium or ESD survival."
+  },
+  "protection_gate_discharge_candidate": {
+    "windows": {
+      "early_brownout": {
+        "VDD": 1.5,
+        "PAD_P": 2.999935688764045,
+        "ESD_RAIL": 2.5513613135955056,
+        "a_42245_162628#": -5.43473763258427e-06,
+        "a_44789_189064#": 2.551366878426966,
+        "a_41005_203545#": 2.5331999735955057,
+        "a_43813_189064#": -1.2054818915730337e-06
+      },
+      "middle_brownout": {
+        "VDD": 1.5,
+        "PAD_P": 2.9999224549599997,
+        "ESD_RAIL": 2.47177797906,
+        "a_42245_162628#": -2.12648124216e-06,
+        "a_44789_189064#": 2.4717801545599998,
+        "a_41005_203545#": 2.4852962395,
+        "a_43813_189064#": -6.529025343659999e-07
+      },
+      "late_brownout": {
+        "VDD": 1.5,
+        "PAD_P": 2.9998365391694914,
+        "ESD_RAIL": 2.447874160237288,
+        "a_42245_162628#": -6.83490482240678e-08,
+        "a_44789_189064#": 2.4478742187288134,
+        "a_41005_203545#": 2.4487594321525425,
+        "a_43813_189064#": -1.9391765036322034e-08
+      },
+      "recovered": {
+        "VDD": 3.2999999999999994,
+        "PAD_P": 3.2900086496,
+        "ESD_RAIL": 2.6621946104,
+        "a_42245_162628#": 2.5317493392000004e-05,
+        "a_44789_189064#": 2.6621687748,
+        "a_41005_203545#": 2.5091385748,
+        "a_43813_189064#": 8.196712058e-06
+      }
+    },
+    "gate_discharge_nominal_ohm": 100000,
+    "deck_sha256": "c2f1b725a5e34cd1ff4aa63ec4d08e0624686a8f03a7e35b1278bdaf611c8d22",
+    "scope": "Connected diagnostic with all extracted devices retained; optional100k gate discharge uses eight schematic PDK resistors without added layout routing. Window averages do not establish final equilibrium or ESD survival."
+  },
+  "protection_release_decision": "Unchanged clamp remains loaded at about1.553V during9..10.179us brownout. Adding100k nominal gate discharge using eight PDK resistors restores about2.99984V and releases the shunt in the same retained-network fixture. Candidate only: verify normal signal loading, protection pulses, core terminal stress and manufacturing variation before layout integration or selection."
 }

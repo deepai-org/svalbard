@@ -490,9 +490,16 @@ the unchanged extracted clamp. During late brownout its timing node is about
 FET gate remains about 0.757 V. This is consistent with failure of the inverter
 chain to release at its low self-powered rail voltage, rather than an uncharged
 timing capacitor alone. Active and recovered windows also show loaded pads.
-A longer hold and a physically implemented release mechanism must distinguish
-persistent holding from delayed recovery. Do not fix this by weakening the ESD
-shunt or simply removing protection from the signal model.
+The longer hold confirms that loading persists in the 9–10.179 microsecond
+window: the pad remains about 1.553 V. A candidate adds 100 kilohms nominal
+from the shunt gate to return, using eight schematic PDK resistors while retaining
+all extracted devices and capacitance. In the same extended fixture it releases
+the shunt and restores the pad to about 2.99984 V. This is a concrete release
+candidate, **not selected protection**: pulse clamping, core stress, process
+variation and additional layout parasitics remain unverified. Do not remove or
+weaken the shunt to claim protection completion. Reproduce both comparisons with
+`clamp_state_screen(..., long_hold=True)`, adding `gate_discharge=True` for the
+candidate. Both support exact-deck saved-waveform reuse.
 
 | Current evidence | What it establishes / remaining limitation |
 | --- | --- |
@@ -1037,9 +1044,16 @@ the unchanged extracted clamp. During late brownout its timing node is about
 FET gate remains about 0.757 V. This is consistent with failure of the inverter
 chain to release at its low self-powered rail voltage, rather than an uncharged
 timing capacitor alone. Active and recovered windows also show loaded pads.
-A longer hold and a physically implemented release mechanism must distinguish
-persistent holding from delayed recovery. Do not fix this by weakening the ESD
-shunt or simply removing protection from the signal model.
+The longer hold confirms that loading persists in the 9–10.179 microsecond
+window: the pad remains about 1.553 V. A candidate adds 100 kilohms nominal
+from the shunt gate to return, using eight schematic PDK resistors while retaining
+all extracted devices and capacitance. In the same extended fixture it releases
+the shunt and restores the pad to about 2.99984 V. This is a concrete release
+candidate, **not selected protection**: pulse clamping, core stress, process
+variation and additional layout parasitics remain unverified. Do not remove or
+weaken the shunt to claim protection completion. Reproduce both comparisons with
+`clamp_state_screen(..., long_hold=True)`, adding `gate_discharge=True` for the
+candidate. Both support exact-deck saved-waveform reuse.
 
 ### Current first-pass decisions
 

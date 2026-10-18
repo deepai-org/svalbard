@@ -925,9 +925,11 @@
       "simultaneity": "Cell reuse does not remove the need for separate physical instances for simultaneous independent lanes. Current pin and packaging plan remains selected.",
       "local_safety_evidence": {
         "report": "analog/pads/generated/rail-supervisor-screen.json",
-        "status": "junction_detector_building_block_unqualified_not_connected_to_pads",
+        "status": "unqualified_detector_with_connected_pad_diagnostics_not_selected_enable_control",
         "finding": "Grounded-base/collector VPNP floor and PMOS-input comparator narrow1V-reference trip onset to2.625..2.7V across15FET/BJT corner combinations at27C with typical resistors. FS/typical BJT at0.475V supply/0.4V reference gives0.451V output, independently reproduced. Typical500fF-load lifecycle has9.06ns output>1.65V while supply<2.5V and retains0.119..0.298V after power loss. Settled reset/brownout suppression does not qualify transitions.",
-        "decision": "Retain junction detector for refinement, not pad-enable use. Implement reset-dominant fast local clamp/discharge and controlled restart, then qualify actual final gate loads. Main reference generation, mismatch/resistor/temperature coverage, hysteresis and physical layout remain open. Earlier MOS-threshold floor remains a rejected diagnostic control."
+        "decision": "Keep the shared-foundation architecture and provider-compatible bond geometry, but do not qualify the present isolated-rail protection circuit for reuse. Resolve its normal-signal holding/release behavior while preserving protective clamping, then finish reset-dominant disable/discharge, controlled restart and actual gate loading. Reference generation, manufacturing variation, physical layout and device-survival qualification remain open.",
+        "connected_pad_finding": "Actual extracted RX/USB pad with schematic supervisor retains all branches. Stronger 10k output discharge consumes about0.50mA versus0.40mA total monitor allocation and is not selected. Pad supply backfeed decays, but about1.0603mA enters ESD_RAIL from PAD_P through upper steering diodes during late brownout. The timing node is already near the isolated rail, while the shunt gate stays high; investigate clamp release under normal powered-peer signals before further supervisor tuning.",
+        "release_candidate": "Unchanged clamp still loads PAD_P to1.553V after9us brownout. Schematic100k gate-to-return discharge (eight PDK resistors) restores2.99984V with all extracted devices retained. Candidate not selected until protection pulse/core stress, process variation and layout verification."
       }
     }
   }

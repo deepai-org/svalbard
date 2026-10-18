@@ -306,15 +306,37 @@ def branch_trace_screen(work,*,reuse=False):
     return r
 
 
-def clamp_state_screen(work,*,reuse=False):
+def clamp_state_screen(work,*,reuse=False,long_hold=False,gate_discharge=False):
     """Observe the extracted primary clamp without forcing its internal state."""
     from pathlib import Path
-    import os,json,hashlib
+    import os,re,hashlib
     import numpy as np
     from screen import control,run_spice
     w=Path(work).resolve();base=(w/'extended_brownout.spice').read_text().split('.control')[0]
     nodes=['ESD_RAIL','a_42245_162628#','a_44789_189064#','a_41005_203545#','a_43813_189064#']
-    name='clamp_state';deck=base+control(w,name,'tran .2n 1500n','v(VDD) v(PAD_P) '+' '.join(('v(xpad.esd_rail)' if n=='ESD_RAIL' else 'v(xpad.xphysical.'+n+')') for n in nodes))
+    if long_hold:
+        lines=[]
+        for line in base.splitlines():
+            if line.startswith(('VDD VDD','VREF VREF','VRESET RESET_N')):
+                line=re.sub(r'(\d+)n',lambda m:str(int(m[1])+9000)+'n' if int(m[1])>=1180 else m[0],line)
+            lines.append(line)
+        base='\n'.join(lines)+'\n'
+    if gate_discharge:
+        lines=[];inside=False
+        for line in base.splitlines():
+            if line.startswith('.subckt combined_flat '):inside=True
+            if inside and line.startswith('.ends'):
+                node='a_42245_162628#'
+                for i in range(8):
+                    end='VSS' if i==7 else f'CLAMP_DISCHARGE_{i}'
+                    lines.append(f'XCLAMP_DISCHARGE_{i} {node} {end} VSS ppolyf_u_1k r_width=1u r_length=12.5u')
+                    node=end
+                inside=False
+            lines.append(line)
+        base='\n'.join(lines)+'\n'
+    name='clamp_long_hold' if long_hold else 'clamp_state'
+    if gate_discharge:name+='_discharge'
+    deck=base+control(w,name,'tran 2n 10500n' if long_hold else 'tran .2n 1500n','v(VDD) v(PAD_P) '+' '.join(('v(xpad.esd_rail)' if n=='ESD_RAIL' else 'v(xpad.xphysical.'+n+')') for n in nodes))
     previous=Path.cwd()
     try:
      os.chdir(w)
@@ -323,9 +345,12 @@ def clamp_state_screen(work,*,reuse=False):
       x=np.loadtxt(w/(name+'.dat'),skiprows=1)
      else:x=run_spice(w,name,deck,timeout_s=120)
     finally:os.chdir(previous)
-    if not np.isfinite(x).all() or x[-1,0]<1499.9e-9:raise ValueError('Incomplete clamp state trace')
+    if not np.isfinite(x).all() or x[-1,0]<(10499.9e-9 if long_hold else 1499.9e-9):raise ValueError('Incomplete clamp state trace')
     r={}
-    for label,a,b in [('active',80,99),('late_brownout',1000,1179),('recovered',1450,1499)]:
+    windows=[('active',80,99),('late_brownout',1000,1179),('recovered',1450,1499)]
+    if long_hold:windows=[('early_brownout',1000,1179),('middle_brownout',4000,5000),('late_brownout',9000,10179),('recovered',10450,10499)]
+    for label,a,b in windows:
      y=x[(x[:,0]>=a*1e-9)&(x[:,0]<=b*1e-9)]
+     if len(y)<2:raise ValueError('Missing clamp state window')
      r[label]={n:float(y[:,i+1].mean()) for i,n in enumerate(['VDD','PAD_P']+nodes)}
-    return dict(windows=r,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),scope='Unmodified connected diagnostic; internal node voltages only. Window averages do not establish final equilibrium or ESD survival.')
+    return dict(windows=r,gate_discharge_nominal_ohm=100000 if gate_discharge else None,deck_sha256=hashlib.sha256(deck.encode()).hexdigest(),scope='Connected diagnostic with all extracted devices retained; optional100k gate discharge uses eight schematic PDK resistors without added layout routing. Window averages do not establish final equilibrium or ESD survival.')

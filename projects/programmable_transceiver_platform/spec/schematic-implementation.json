@@ -330,7 +330,7 @@
     "implementation": "analog/pads/README.md",
     "shared_parameter_resolver": "analog/pads/design.py",
     "assembly_reference": "analog/pads/generated/assembly-report.json",
-    "assembly_status": "Selected analog/pads/generated/packaging-assembly.gds integrates the corrected native ring, existing custom pads and attached core, real provider ID macros and actual PDK seal ring. Pinned upstream size and mask checks pass; synthetic TEST0000 ID insertion verifies provider cell positions/uniqueness in a scratch-only output. Core geometry is unchanged by native-ring/ID integration. Full-ring connectivity, integrated DRC/LVS, density, antenna, final assigned ID, actual wire loops and package electrical performance remain open. See contract.json assembly_policy.packaging_gate and generated/packaging-audit.json.",
+    "assembly_status": "Selected analog/pads/generated/packaging-assembly.gds integrates the corrected native ring, existing custom pads and attached core, real provider ID macros and actual PDK seal ring. Pinned upstream size and mask checks pass; synthetic TEST0000 ID insertion verifies provider cell positions/uniqueness in a scratch-only output. Core geometry is unchanged by native-ring/ID integration. Retained-ring drawing extraction joins all VDD/DVDD probes and eight supply bonds to one net, and all VSS/DVSS probes and ten ground bonds to a separate net. Custom-core supply/control routing, device LVS, integrated DRC, density, antenna, final assigned ID, actual wire loops and package electrical performance remain open. See contract.json assembly_policy.packaging_gate and generated/packaging-audit.json.",
     "circuit_and_layout_generator": [
       "analog/pads/circuits.py",
       "analog/pads/layout.py"

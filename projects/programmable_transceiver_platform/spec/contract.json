@@ -56,7 +56,7 @@
     },
     "mapping_status": "candidate_signal_assignment_fixed_provider_sites_terminal_limit_and_electrical_map_open",
     "pad_ring": "default_or_demonstrably_packaging_compatible",
-    "power_domains": "logical_budgets_not_demonstrated_independent_external_rails",
+    "power_domains": "logical_load_budgets_on_one_extracted_external_supply_and_return",
     "preserve_bond_positions": true,
     "preserve_provider_power_ground_assignments": true,
     "provider_site_inventory": {
@@ -162,10 +162,11 @@
       "delivered_run_board_confirmed": false,
       "required": "Preserve current golden-mask bond positions and provider power/ground assignments. Use the real seal ring and all four required ID/marker cells at template locations; pass official COB geometry checks before declaring the foundation packaging-compatible. Complete upstream precheck, electrical ring checks and board/bond verification before tapeout.",
       "ground_topology": "Pinned COB design ties all ten die ground sites to the same board GND; separate on-chip analog return routing does not imply independent off-chip grounds.",
-      "power_topology": "PCB supply names are not proof of independent die rails. Preserve native power sites and verify on-chip joins before assigning external voltages.",
+      "power_topology": "Retained-ring five-metal/via extraction joins all eight supply bonds and all VDD/DVDD probes to one net; all ten ground bonds and VSS/DVSS probes reach a separate net. Supply-site names are allocation labels, not independently driven inputs. Use a common external source; local analog/digital isolation requires explicitly implemented branches. Do not apply different external voltages to these bonded supply sites.",
       "wire_geometry": "Pinned Run 1 published rules: no crossing, angle <=45deg, actual wire length <3mm and >=max(1mm,2*die thickness), bonding area without solder mask. Confirm selected-run applicability and actual landing/loop geometry. Current centered straight-line projection is not wire-length qualification.",
-      "current_status": "Selected packaging assembly passes pinned upstream size, mask and test-ID insertion checks. Horizontal pad placements now retain half-micron arithmetic; real PDK seal ring and provider ID cells are included. Full upstream precheck, final assigned ID, electrical continuity and physical signoff remain pending.",
-      "selected_assembly": "analog/pads/generated/packaging-assembly.gds"
+      "current_status": "Selected packaging assembly passes pinned upstream size, mask and test-ID insertion checks. Horizontal pad placements now retain half-micron arithmetic; real PDK seal ring and provider ID cells are included. Full upstream precheck, final assigned ID, custom-core supply/control hookup and physical signoff remain pending. Retained-ring drawing extraction establishes one supply net and one separate ground net; this is not device LVS or current-capacity qualification.",
+      "selected_assembly": "analog/pads/generated/packaging-assembly.gds",
+      "ring_connectivity_report": "analog/pads/generated/retained-ring-connectivity.json"
     }
   },
   "assumptions": [

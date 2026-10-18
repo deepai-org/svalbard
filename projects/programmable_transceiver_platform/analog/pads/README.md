@@ -40,8 +40,9 @@ a polygon comparison checks that the core region is unchanged. The installed
 PDK `sealring.py` adds the real seal structure. `packaging_audit.py` consumes the
 aligned placement report and final layout inspection. This is the selected
 assembly path; intermediate ring/core files remain build inputs, not alternate
-production designs. Full-ring electrical continuity, integrated DRC/LVS, density,
-antenna, final assigned ID and board/bond performance remain unverified.
+production designs. Complete custom-core rail hookup, integrated DRC/LVS, density,
+antenna, final assigned ID and board/bond performance remain unverified. The
+retained native ring connectivity result is recorded below.
 
 The [published wire rules](https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/5cb466897372ac6c9df03142287858c1c8b1c9a7/run-1/wirebonding/README.md)
 are run-specific evidence: no crossing; angle at most 45 degrees; actual length
@@ -52,6 +53,27 @@ with maximum projected angle 38.71 degrees. Actual landing locations within the
 projection leaves almost no length allowance for a loop; choose and verify the
 actual bond locations before treating this as buildable or assigning GHz
 package performance. Pin-map agreement is not a bond-wire or RF signoff.
+
+### Extracted ring power topology
+
+`generated/retained-ring-connectivity.json` extracts all five metals and vias
+of the selected assembly's complete retained native ring. All 97,376 VDD/DVDD
+label probes and all eight supply bonds reach one connected net. All 83,642
+VSS/DVSS probes and all ten ground bonds reach one separate net. No rail probe
+is missing. Labels locate probes; they never implicitly join conductors.
+
+**Use one common external supply source.** CORE/HOST/WIRE/RF/PLL power-site
+names are allocation labels, not independent external feeds. The retained ring
+cannot provide external analog/digital supply isolation. Local filtering,
+qualification and return routing must be implemented explicitly; the behavioral
+power branches do not establish that isolation. Independently forced supply
+fixtures must not be interpreted as the selected bonded topology.
+
+This checks retained-ring drawing connectivity only: custom pad/core hookup,
+transistor conduction, resistance/current capacity, package coupling and ESD
+remain separate gates. Reproduce inside the pinned KLayout container with
+`rail_connectivity.py --generated analog/pads/generated --ring-placement
+<aligned assembly-report.json> --output <report.json>` from the project root.
 
 ## Reusable foundation and attachment decisions
 
@@ -1081,9 +1103,10 @@ The provider reference has 74 physical sites, a 211 µm pair pitch, and 18 fixed
 power/ground sites. Preserve absolute bond openings and native supply sites.
 The assembly substitutes five custom pairs, restores native rail modules and
 checks transformed openings, actual metal overlap and local ground connectivity.
-`generated/custom-assembly-candidate.oas` and its renders are the canonical
-geometric assembly. Full-ring device LVS, integrated signoff, package returns,
-full-bank switching and core clearance remain open.
+`generated/packaging-assembly.gds` is the selected geometric assembly;
+`generated/custom-assembly-candidate.oas` is an intermediate build input.
+Full-ring device LVS, integrated signoff, package returns, full-bank switching
+and core clearance remain open.
 
 The canonical TX retained waveform includes approximately 8.24 ns below the
 shared supply-valid threshold and above 0.1 V, including a 1.5 V plateau.

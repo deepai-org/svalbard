@@ -2231,7 +2231,7 @@
         },
         "regulator_on_die": false,
         "shared_return_l_h": 2.5e-10,
-        "topology": "VDD analog family; DVDD digital/host family; common board return; internal star branches",
+        "topology": "One external supply: retained ring physically joins VDD/DVDD and all eight supply bonds. VSS/DVSS and ten return bonds form one separate return. Analog/digital ports denote local branches, not independent external feeds; local isolation and star routing remain to be implemented.",
         "total_on_die_decoupling_f": 1e-09
       },
       "ports": {
@@ -10597,7 +10597,7 @@
       "reserve": 1300000,
       "rf": 3000000,
       "timing": 1670000,
-      "wired": 2690000
+      "wired": 2740000
     },
     "current_ma": {
       "rf_rx": 251.9,
@@ -10836,7 +10836,7 @@
     "interrupted_configuration": "Incomplete SPI words do not apply. Multiword configuration remains shadowed until validation and atomic commit. Recovery COMMIT=0 discards uncommitted recovery-mailbox fields; it cannot cancel a pending operation. On reconnect read pending/completed request identity before retrying. Active analog configuration is not reconstructed from partially written shadows.",
     "management_clock": "SPI request acceptance, recovery mailbox and fault status use SCLK plus the independent management oscillator; never REF_IN, H2D, D2H or recovered line timing. A missing target clock permits asynchronous isolation/reset assertion; synchronous reset release and target-ready acknowledgement wait for that clock. Timeout reports unavailable target without wedging management.",
     "owner": "Existing monitor, independent management oscillator and digital control; no new external pins or protocol engine.",
-    "partial_power": "VDD and DVDD may arrive or disappear in either order. Analog power without digital control leaves every active output released/muted by local default hardware. Digital power without analog power allows SPI/status but not analog readiness. Board peers may drive pins while either rail is absent; all exposed pads, including host/SPI/clock pins, require power-off tolerance or board isolation. Do not assume arbitrary attached FPGA pins are fail-safe.",
+    "partial_power": "External VDD and DVDD sites are metal-connected in the selected ring and must share one source. Local analog and digital branches may qualify or collapse at different times; independent external-rail sequencing fixtures are adverse boundary tests, not the selected bonded topology. Analog power without digital control leaves every active output released/muted by local default hardware. Digital power without analog power allows SPI/status but not analog readiness. Board peers may drive pins while either rail is absent; all exposed pads, including host/SPI/clock pins, require power-off tolerance or board isolation. Do not assume arbitrary attached FPGA pins are fail-safe.",
     "rearm": "Read fault snapshot; remove cause; cancel/drain control operations; clear partial configuration and queues; establish new epochs; requalify affected domains; retrain host; prefill; explicitly arm. Clearing a sticky bit alone must not resume payload. Unaffected powered bias need not be cycled.",
     "recovery_scope": "Host transport fault isolates payload, cancels scheduled launches and flushes affected queues; retain valid analog bias and clocks where safe. Analog source/reference loss additionally invalidates dependent converter/CDR state and requires new qualification. Core brownout or RESET_N is a full digital reset. Never wait for an absent payload clock to mute outputs or report a fault.",
     "status_budget": "Use existing epoch_status and diagnostic allocations: live first-cause8, fault-bitmap16, configuration-id16, stream-epoch16, sample-epoch16, management-heartbeat16 and lifecycle8 =96bits; coherent SPI snapshot adds96bits. Management heartbeat is sampled by SCLK so a stalled management oscillator can be observed; it is not a calibrated frequency measurement. Cold reset clears retention and requires a fresh host session. Register mapping and CDC implementation remain open.",

@@ -654,8 +654,8 @@ dot(430,9560);label(665,9550,'PAIR_CONSUMED → advance both queues',15)
 label(100,9750,'Invalid epoch / missing partner inhibits commit; fault handling selects the declared safe output state.',16,anchor='start')
 
 panel(55,9810,2490,480,'LOCAL POWER AND BIAS — REPEAT PER DOMAIN; SUPPLY AND RETURN ARE DISTINCT WIRES','#fbf8ed')
-block(130,9940,250,80,'VDD_DOMAIN pad','one of 7 supply terminals')
-block(130,10140,250,80,'VSS_DOMAIN pad','paired return terminal')
+block(130,9940,250,80,'Local VDD branch','common supply: 8 bonds')
+block(130,10140,250,80,'Local return branch','to common ten-bond return')
 block(1920,10020,490,80,'Local circuit supply ports','VDD top / VSS bottom; repeated fanout')
 WIRE_COLOR='#94504d'
 wire([(380,9980),(2165,9980),(2165,10020)],False)
@@ -677,7 +677,7 @@ WIRE_COLOR=None
 label(1630,10050,'IBIAS_DOMAIN',16,color='#b47a20')
 wire([(1320,9980),(1320,10030)],False);dot(1320,9980)
 wire([(1320,10100),(1320,10180)],False);dot(1320,10180)
-label(100,10255,'Repeat for CORE, HOST_A, HOST_B, WIRE_A, WIRE_B, RF and PLL. No implicit connection between separately named VDD rails.',16,anchor='start')
+label(100,10255,'Repeat local branches per domain. Retained ring joins VDD/DVDD supply bonds; local isolation remains implementation work.',16,anchor='start')
 label(55,10340,'Circuit-block connectivity proposal; device topology, component values, resource conflicts and electrical verification remain schematic work.',18,anchor='start')
 
 

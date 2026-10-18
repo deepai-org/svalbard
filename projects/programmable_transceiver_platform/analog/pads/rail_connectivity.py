@@ -214,12 +214,78 @@ def steering_campaign(generated, map_path):
     return report
 
 
+def audit_ring(assembly, placement):
+    """Probe the complete retained ring, excluding custom cores and seal ring."""
+    layout=db.Layout();layout.read(str(assembly))
+    ring=layout.cell('retained_provider_ring')
+    if ring is None:raise ValueError('Missing retained provider ring')
+    metals=[34,36,42,46,81];vias=[35,38,40,41]
+    drawing=db.Layout();drawing.dbu=layout.dbu
+    cell=drawing.create_cell('ring_drawing_only')
+    probes=[]
+    for level,number in enumerate(metals):
+        index=layout.find_layer(number,10)
+        if index is None:continue
+        it=ring.begin_shapes_rec(index)
+        while not it.at_end():
+            shape=it.shape()
+            if shape.is_text() and shape.text.string in ('VDD','DVDD','VSS','DVSS'):
+                displacement=shape.text.trans.disp
+                probes.append((shape.text.string,level,it.trans()*db.Point(displacement.x,displacement.y)))
+            it.next()
+    for number in metals+vias+[75]:
+        index=layout.find_layer(number,0)
+        if index is not None:
+            cell.shapes(drawing.layer(number,0)).insert(db.Region(ring.begin_shapes_rec(index)))
+    cap=db.Region(cell.begin_shapes_rec(drawing.layer(75,0)))
+    via4=db.Region(cell.begin_shapes_rec(drawing.layer(41,0)))
+    cell.shapes(drawing.layer(900,0)).insert(via4-cap)
+    cell.shapes(drawing.layer(901,0)).insert(via4&cap)
+    netlist=db.LayoutToNetlist(cell.begin_shapes_rec(drawing.layer(34,0)))
+    m=[netlist.make_layer(drawing.layer(n,0),'M'+str(i+1)) for i,n in enumerate(metals)]
+    v=[netlist.make_layer(drawing.layer(900 if i==3 else n,0),'V'+str(i+1)) for i,n in enumerate(vias)]
+    plate=netlist.make_layer(drawing.layer(75,0),'CAPM')
+    contact=netlist.make_layer(drawing.layer(901,0),'CAPM_CONTACT')
+    netlist.connect(plate);netlist.connect(plate,contact);netlist.connect(contact,m[4])
+    for layer in m:netlist.connect(layer)
+    for i,layer in enumerate(v):netlist.connect(m[i],layer);netlist.connect(layer,m[i+1])
+    netlist.extract_netlist()
+    def cluster(level,point):
+        net=netlist.probe_net(m[level],point)
+        return None if net is None else net.cluster_id
+    rails={name:{} for name in ('VDD','DVDD','VSS','DVSS')}
+    for name,level,point in probes:
+        key=str(cluster(level,point))
+        rails[name][key]=rails[name].get(key,0)+1
+    sites={}
+    for name,site in json.loads(placement.read_text())['sites'].items():
+        if site['master'] not in ('gf180mcu_fd_io__dvdd','gf180mcu_fd_io__dvss'):continue
+        point=db.Point(*(round(x/layout.dbu) for x in site['bond_center_um']))
+        net=cluster(4,point)
+        sites[name]=dict(master=site['master'],cluster_id=net,
+            rail_names=[name for name,counts in rails.items() if str(net) in counts and net is not None])
+    return dict(status='retained_ring_drawing_connectivity_observed',rail_probe_cluster_counts=rails,
+        supply_ground_bond_sites=sites,
+        scope='All five metal layers and vias of the complete retained provider ring. Labels only locate probes; no virtual net joins. MIM contacts handled separately.',
+        limitations=['Custom pad/core connections and seal/ID structures excluded.',
+            'Not device LVS, resistance, current capacity, leakage or ESD qualification. Rail aliases and missing bond access require explicit design review.'],
+        source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),assembly,placement)})
+
+
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--generated',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--pdk',type=Path,default=Path('/pdk/gf180mcuD'))
     p.add_argument('--steering',action='store_true')
+    p.add_argument('--ring-placement',type=Path,help='Audit retained ring in generated/packaging-assembly.gds using this placement report')
     p.add_argument('--fault',choices=('none','open_ground','short_supply','short_protection'),default='none')
     a=p.parse_args()
+    if a.ring_placement:
+        if a.steering or a.fault!='none':raise ValueError('Ring observation cannot be combined with other campaigns')
+        r=audit_ring(a.generated/'packaging-assembly.gds',a.ring_placement)
+        a.output.parent.mkdir(parents=True,exist_ok=True)
+        a.output.write_text(json.dumps(r,indent=2)+'\n')
+        print(json.dumps(r['rail_probe_cluster_counts']))
+        raise SystemExit(0)
     if a.steering:
         if a.fault!='none':raise ValueError('Steering campaign owns its fault cases')
         r=steering_campaign(a.generated,a.pdk/'libs.tech/klayout/tech/gf180mcu.map')

@@ -1276,11 +1276,11 @@
 <rect x="55" y="9810" width="2490" height="480" fill="#fbf8ed" stroke="#b5c3ce" stroke-width="2" stroke-dasharray="8 6"/>
 <text x="73" y="9839" font-size="22" font-weight="600" text-anchor="start" fill="#172a3a">LOCAL POWER AND BIAS — REPEAT PER DOMAIN; SUPPLY AND RETURN ARE DISTINCT WIRES</text>
 <rect x="130" y="9940" width="250" height="80" fill="white" stroke="#233e50" stroke-width="2"/>
-<text x="255.0" y="9980.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">VDD_DOMAIN pad</text>
-<text x="255.0" y="10004.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">one of 7 supply terminals</text>
+<text x="255.0" y="9980.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">Local VDD branch</text>
+<text x="255.0" y="10004.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">common supply: 8 bonds</text>
 <rect x="130" y="10140" width="250" height="80" fill="white" stroke="#233e50" stroke-width="2"/>
-<text x="255.0" y="10180.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">VSS_DOMAIN pad</text>
-<text x="255.0" y="10204.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">paired return terminal</text>
+<text x="255.0" y="10180.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">Local return branch</text>
+<text x="255.0" y="10204.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">to common ten-bond return</text>
 <rect x="1920" y="10020" width="490" height="80" fill="white" stroke="#233e50" stroke-width="2"/>
 <text x="2165.0" y="10060.0" font-size="20" font-weight="600" text-anchor="middle" fill="#172a3a">Local circuit supply ports</text>
 <text x="2165.0" y="10084.0" font-size="15" font-weight="400" text-anchor="middle" fill="#172a3a">VDD top / VSS bottom; repeated fanout</text>
@@ -1304,7 +1304,7 @@
 <circle cx="1320" cy="9980" r="4" fill="#233e50"/>
 <path d="M 1320,10100 L 1320,10180" fill="none" stroke="#233e50" stroke-width="2.5"/>
 <circle cx="1320" cy="10180" r="4" fill="#233e50"/>
-<text x="100" y="10255" font-size="16" font-weight="400" text-anchor="start" fill="#172a3a">Repeat for CORE, HOST_A, HOST_B, WIRE_A, WIRE_B, RF and PLL. No implicit connection between separately named VDD rails.</text>
+<text x="100" y="10255" font-size="16" font-weight="400" text-anchor="start" fill="#172a3a">Repeat local branches per domain. Retained ring joins VDD/DVDD supply bonds; local isolation remains implementation work.</text>
 <text x="55" y="10340" font-size="18" font-weight="400" text-anchor="start" fill="#172a3a">Circuit-block connectivity proposal; device topology, component values, resource conflicts and electrical verification remain schematic work.</text>
 <text x="55" y="10425" font-size="29" font-weight="600" text-anchor="start" fill="#172a3a">OUTPUT ISOLATION / SHARED ADC — CONNECTED CANDIDATE WIRING</text>
 <text x="55" y="10465" font-size="18" font-weight="400" text-anchor="start" fill="#172a3a">Expands the RF driver-to-pad path above. Switches, dummy load and readout buffer remain circuit candidates.</text>

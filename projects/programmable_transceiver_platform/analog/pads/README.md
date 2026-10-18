@@ -24,16 +24,24 @@ physical coordinates instead of concatenating the four configuration lists.
 All die grounds join on the board. Distinct PCB supply labels do not prove
 independent on-chip rails.
 
-**The current routed assembly fails the upstream size and pad-mask checks.**
-Its bounding box is (26,26)–(3906,5096), rather than the required
-(0,0)–(3932,5122), and it lacks the actual seal ring and four required
-ID/marker cells. Also, 34 north/south 60 µm openings lie 0.5 µm left of the
-current golden-mask positions; east/west openings match. Earlier opening
-preservation checks compared against our older template reference, not this
-current provider mask. Do not add a dummy outline or relax the mask test:
-regenerate the real ring/row geometry, integrate the seal ring and ID structures
-at their required positions, then rerun the pinned upstream checks. Full
-precheck, density, antenna, integrated DRC/LVS and electrical acceptance remain.
+**The selected packaging assembly passes the pinned upstream size, pad-mask
+and test-ID insertion checks.** `generated/packaging-assembly.gds` contains the
+corrected native ring, the existing custom pads and attached core, real provider
+ID macros and the actual PDK seal ring. Its bounds are (0,0)–(3932,5122), all 74
+bond openings match the golden mask, and the four required ID cells occupy the
+provider locations. The ID test used `TEST0000` only in a scratch output; the
+selected artifact keeps the template placeholders for later provider assignment.
+
+`assembly.py --placement-only` preserves fractional horizontal spacing in the
+installed placer and regenerates filler rows, then performs placement/local
+rail checks without the separate legacy electrical-estimation stage.
+`packaging_assembly.py` replaces the retained ring and inserts real ID macros;
+a polygon comparison checks that the core region is unchanged. The installed
+PDK `sealring.py` adds the real seal structure. `packaging_audit.py` consumes the
+aligned placement report and final layout inspection. This is the selected
+assembly path; intermediate ring/core files remain build inputs, not alternate
+production designs. Full-ring electrical continuity, integrated DRC/LVS, density,
+antenna, final assigned ID and board/bond performance remain unverified.
 
 The [published wire rules](https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/5cb466897372ac6c9df03142287858c1c8b1c9a7/run-1/wirebonding/README.md)
 are run-specific evidence: no crossing; angle at most 45 degrees; actual length

@@ -48,8 +48,8 @@ def inspect_layout(assembly, mask):
     return result
 
 
-def audit(board, output, layout_inventory=None):
-    contract=PROJECT/'spec/contract.json';placement=PROJECT/'analog/pads/generated/assembly-report.json'
+def audit(board, output, layout_inventory=None, placement=None):
+    contract=PROJECT/'spec/contract.json';placement=placement or PROJECT/'analog/pads/generated/assembly-report.json'
     policy=json.loads(contract.read_text())['assembly_policy'];geometry=json.loads(placement.read_text())
     footprints=children(sexpr(board.read_text()),'footprint')
     bond=next(f for f in footprints if 'default_padring' in f[1])
@@ -107,26 +107,31 @@ def audit(board, output, layout_inventory=None):
     if layout_inventory is not None:
         layout=json.loads(layout_inventory.read_text())
         gold=[b for b in layout['golden_openings_um'] if b[2]-b[0]<100 and b[3]-b[1]<100]
-        current=layout['current_openings_um'];offsets=[]
+        current=[b for b in layout['current_openings_um'] if b[2]-b[0]<100 and b[3]-b[1]<100];offsets=[]
         if len(gold)!=74 or len(current)!=74:raise ValueError('Re-audit changed mask inventory')
         for b in current:
             match=min(gold,key=lambda g:sum((g[i]-b[i])**2 for i in range(4)))
             if b!=match:offsets.append(dict(current_bbox_um=b,required_bbox_um=match,
                                            lower_left_delta_um=[match[i]-b[i] for i in (0,1)]))
         report['inspected_layout_sources']=layout.get('source_sha256',{})
+        required_ids=['gf180mcu_ws_ip__'+n for n in ('qrcode_id','shuttle_id','project_id','marker')]
+        geometry_ok=(layout['dbu_um']==.001 and layout['bbox_um']==[0,0,3932,5122]
+            and len(layout['top_cells'])==1 and layout['guard_ring_marker_polygons']>0
+            and set(required_ids)<=set(layout['identifiers']) and not offsets
+            and layout['missing_required_opening_area_um2']==0)
         report['submission_geometry']={
-            'status':'not_submission_ready',
+            'status':'geometry_pass_full_physical_signoff_pending' if geometry_ok else 'not_submission_ready',
             'layout_dbu_um':layout['dbu_um'],'top_cells':layout['top_cells'],
             'bbox_um':layout['bbox_um'],'expected_bbox_um':[0,0,3932,5122],
             'guard_ring_marker_polygons':layout['guard_ring_marker_polygons'],
             'present_identifier_cells':layout['identifiers'],
-            'required_identifier_cells':['gf180mcu_ws_ip__'+n for n in ('qrcode_id','shuttle_id','project_id','marker')],
+            'required_identifier_cells':required_ids,
             'misaligned_bond_opening_count':len(offsets),'misaligned_openings':offsets,
             'missing_required_opening_area_um2':layout['missing_required_opening_area_um2'],
             'provider_precheck_revision':'8d58ff75fb9e2169a37876696eb470a42c6c9701',
             'official_check_observations':{'size':(layout_inventory.parent/'size-check.log').read_text().strip(),
                                            'pad_mask':(layout_inventory.parent/'mask-check.log').read_text().strip()},
-            'scope':'Actual partial routed assembly inspected; two upstream geometry scripts run. Not full precheck, DRC/LVS or package qualification.'}
+            'scope':'Actual assembly geometry inspected with upstream size/mask scripts. Not full precheck, DRC/LVS or package qualification.'}
         for path in (layout_inventory,layout_inventory.parent/'size-check.log',layout_inventory.parent/'mask-check.log'):
             report['source_sha256'][str(path.resolve())]=hashlib.sha256(path.read_bytes()).hexdigest()
     output.write_text(json.dumps(report,indent=2)+'\n');return report
@@ -134,4 +139,5 @@ def audit(board, output, layout_inventory=None):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--board',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--layout-inventory',type=Path)
-    a=p.parse_args();r=audit(a.board.resolve(),a.output.resolve(),a.layout_inventory);print(json.dumps({k:v for k,v in r.items() if k not in ('sites','source_sha256','sources')},indent=2))
+    p.add_argument('--placement',type=Path,help='Aligned native-ring placement report for current assembly')
+    a=p.parse_args();r=audit(a.board.resolve(),a.output.resolve(),a.layout_inventory,a.placement);print(json.dumps({k:v for k,v in r.items() if k not in ('sites','source_sha256','sources')},indent=2))

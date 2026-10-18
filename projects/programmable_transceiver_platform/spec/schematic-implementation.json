@@ -330,7 +330,7 @@
     "implementation": "analog/pads/README.md",
     "shared_parameter_resolver": "analog/pads/design.py",
     "assembly_reference": "analog/pads/generated/assembly-report.json",
-    "assembly_status": "Existing custom assembly preserves all 74 openings relative to its older placed template and has local clearance/rail checks. Current provider golden-mask audit fails: 34 north/south openings are 0.5um left of required positions; the real seal-ring and required ID/marker assembly are absent. Packaging is the first implementation gate; see contract.json assembly_policy.packaging_gate and analog/pads/generated/packaging-audit.json. Pinned Run 2 board net mapping matches all assigned signals and fixed power/ground sites, but future-run delivery, wire-loop geometry, whole-ring DRC/LVS and current capacity remain unqualified.",
+    "assembly_status": "Selected analog/pads/generated/packaging-assembly.gds integrates the corrected native ring, existing custom pads and attached core, real provider ID macros and actual PDK seal ring. Pinned upstream size and mask checks pass; synthetic TEST0000 ID insertion verifies provider cell positions/uniqueness in a scratch-only output. Core geometry is unchanged by native-ring/ID integration. Full-ring connectivity, integrated DRC/LVS, density, antenna, final assigned ID, actual wire loops and package electrical performance remain open. See contract.json assembly_policy.packaging_gate and generated/packaging-audit.json.",
     "circuit_and_layout_generator": [
       "analog/pads/circuits.py",
       "analog/pads/layout.py"

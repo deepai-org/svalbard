@@ -16,7 +16,7 @@ from retained import binding as retained_binding
 from layout import IMAGE,PDK
 
 
-def build(work,template,generated=None):
+def build(work,template,generated=None,placement_only=False):
     generated=generated or PROJECT/'analog/pads/generated'
     work.mkdir(parents=True,exist_ok=True)
     contract=json.loads((PROJECT/'spec/contract.json').read_text())
@@ -68,13 +68,23 @@ def build(work,template,generated=None):
         ' puts $f "[$inst getName]\t[[$inst getMaster] getName]\t[$inst getOrient]\t[$b xMin]\t[$b yMin]\t[$b xMax]\t[$b yMax]"',
         '}','close $f','exit']
     (work/'place.tcl').write_text('\n'.join(commands)+'\n')
-    # Reuse installed placement code unchanged except power-net hookup, which
+    # Reuse installed placement with explicit half-micron arithmetic correction.
+    # Omit power-net hookup, which
     # is outside this geometric reference fixture. Record original and derived
     # scripts so the exclusion cannot be mistaken for electrical integration.
     prepare=r"""import pathlib,librelane
 p=pathlib.Path(librelane.__file__).parent/'scripts/openroad/common/pad_cfg.tcl'
 s=p.read_text();pathlib.Path('/work/provider-pad-placement.tcl').write_text(s)
 s='\n'.join(l for l in s.splitlines() if not l.startswith('source ') and l.strip()!='set_global_connections')
+# This installed Tcl version divides integers before converting the placement
+# to float, losing the horizontal half-micron. Keep the original script above;
+# preserve fractional arithmetic and let the placer rebuild the filler rows.
+needle='($space_for_fill - $space_between_pads_min_filler * ([llength $::env($side)] - 1)) / 2 * 1000) / 1000'
+if s.count(needle)!=1:raise ValueError('Re-audit changed provider placement arithmetic')
+s=s.replace(needle,needle.replace('/ 2 *','/ 2.0 *').replace('/ 1000','/ 1000.0'))
+check='floor($space_side / $pad_site_width) * $pad_site_width * 1000) / 1000'
+if s.count(check)!=1:raise ValueError('Re-audit changed site-grid check')
+s=s.replace(check,check.replace('/ 1000','/ 1000.0'))
 pathlib.Path('/work/reference-pad-placement.tcl').write_text(s+'\n')
 """
     (work/'prepare.py').write_text(prepare)
@@ -139,6 +149,11 @@ pathlib.Path('/work/reference-pad-placement.tcl').write_text(s+'\n')
     subprocess.run(['docker','run','--rm','--network','none','--entrypoint','python3',
          '--mount',f'type=bind,src={work},dst=/work',IMAGE,'/work/rail_connectivity.py',
          '--generated','/work/rail-inputs','--output','/work/rail-connectivity.json'],check=True,timeout=60)
+    if placement_only:
+        preview(report,work/'provider-reference-ring.png')
+        physical_preview(work,report)
+        print('Placement and local rail checks complete; electrical estimates not requested')
+        return
     resistance_script=Path(__file__).with_name('wire_resistance.py')
     subprocess.run(['docker','run','--rm','--network','none','--entrypoint','python3',
          '--mount',f'type=bind,src={work},dst=/work',
@@ -208,7 +223,10 @@ if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--template',type=Path,required=True)
     p.add_argument('--publish-dir',type=Path)
     p.add_argument('--generated',type=Path)
-    a=p.parse_args();build(a.output_dir.resolve(),a.template.resolve(),a.generated.resolve() if a.generated else None)
+    p.add_argument('--placement-only',action='store_true',help='Build placement/local rails without unrelated electrical estimates; not electrical signoff')
+    a=p.parse_args()
+    if a.placement_only and a.publish_dir:p.error('Placement-only run cannot publish the full electrical bundle')
+    build(a.output_dir.resolve(),a.template.resolve(),a.generated.resolve() if a.generated else None,a.placement_only)
     if a.publish_dir:
         a.publish_dir.mkdir(parents=True,exist_ok=True)
         for name in ('assembly-report.json','rail-connectivity.json','wire-resistance.json','provider-sites.json','provider-reference-ring.png','placement-audit.json','custom-assembly-candidate.oas','custom-assembly-candidate.png','custom-assembly-wired-rx.png'):

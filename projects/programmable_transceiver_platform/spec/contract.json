@@ -161,10 +161,11 @@
       "candidate_connector_contacts": 70,
       "delivered_run_board_confirmed": false,
       "required": "Preserve current golden-mask bond positions and provider power/ground assignments. Use the real seal ring and all four required ID/marker cells at template locations; pass official COB geometry checks before declaring the foundation packaging-compatible. Complete upstream precheck, electrical ring checks and board/bond verification before tapeout.",
-      "current_failure": "Partial routed assembly fails upstream size and pad-mask checks: no seal-ring/ID assembly and 34 north/south openings are 0.5um left of current golden-mask positions. Existing local placement checks are not submission approval.",
       "ground_topology": "Pinned COB design ties all ten die ground sites to the same board GND; separate on-chip analog return routing does not imply independent off-chip grounds.",
       "power_topology": "PCB supply names are not proof of independent die rails. Preserve native power sites and verify on-chip joins before assigning external voltages.",
-      "wire_geometry": "Pinned Run 1 published rules: no crossing, angle <=45deg, actual wire length <3mm and >=max(1mm,2*die thickness), bonding area without solder mask. Confirm selected-run applicability and actual landing/loop geometry. Current centered straight-line projection is not wire-length qualification."
+      "wire_geometry": "Pinned Run 1 published rules: no crossing, angle <=45deg, actual wire length <3mm and >=max(1mm,2*die thickness), bonding area without solder mask. Confirm selected-run applicability and actual landing/loop geometry. Current centered straight-line projection is not wire-length qualification.",
+      "current_status": "Selected packaging assembly passes pinned upstream size, mask and test-ID insertion checks. Horizontal pad placements now retain half-micron arithmetic; real PDK seal ring and provider ID cells are included. Full upstream precheck, final assigned ID, electrical continuity and physical signoff remain pending.",
+      "selected_assembly": "analog/pads/generated/packaging-assembly.gds"
     }
   },
   "assumptions": [

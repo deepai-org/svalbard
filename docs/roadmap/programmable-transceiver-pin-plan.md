@@ -125,7 +125,7 @@ and preserves the tested RF/converter/wired behaviors. It is not a measured
 COB parameter or proof that these fixed ground sites achieve it. Validate the
 existing bond/board geometry or reduce the required host-current coupling and
 rerun the common model; do not satisfy the target by assuming unprovided ground
-connections. See the [USB return-path gate](../../projects/programmable_transceiver_platform/spec/power-partition.md#usb-static-output-voltage-and-return-path-gate). The [HS quiet-pin screen](../../projects/programmable_transceiver_platform/spec/power-partition.md#usb-high-speed-quiet-pin-and-common-return-gate) still shows common-mode disturbance at that target, so physical host-to-wired-return coupling must be resolved as well.
+connections. See the [USB return-path gate](../../projects/programmable_transceiver_platform/spec/power-partition.md#host-switching-and-wired-electrical-requirements). The [HS quiet-pin screen](../../projects/programmable_transceiver_platform/spec/power-partition.md#host-switching-and-wired-electrical-requirements) still shows common-mode disturbance at that target, so physical host-to-wired-return coupling must be resolved as well.
 
 ### Executable physical inventory and immediate consequences
 
@@ -241,7 +241,7 @@ Logical IDs are allocation labels, not package numbering. Final ordering follows
 There is no dedicated interrupt, crystal pair, general GPIO bank, external-memory interface, or wide analog monitor bus. Poll status over SPI or receive events in the fast link. The host FPGA directly drives board PA enable, RF switch, and other connector sidebands; deterministic scheduled TX and timestamped status support that coordination. An MCU can drive those board controls too. External PA, baluns/matching, RF filtering, reference oscillator, and antenna remain board components.
 
 `REF_IN`/`REF_IN_N` form one differential clock input. PCIe common-reference electrical compatibility still needs bias, swing and termination qualification; single-ended board sources require external conversion/buffering with its noise charged. Do not route an arbitrary fabric-generated FPGA clock into the RF PLL and assume adequate phase noise. External LO injection is an alternate local RF input mode that requires separate pad/loading qualification, not permission to put GHz signals through an ordinary digital buffer. Autonomous synthesis and externally supplied timing are both intended operating paths; neither is physically qualified. No claim of simultaneous reference and external LO use on this one differential port.
-The [direct-LO rate candidate](../../projects/programmable_transceiver_platform/spec/clock-feasibility-envelope.md#direct-lo-mitigation-in-the-fast-waveform-model)
+The [direct-LO rate candidate](../../projects/programmable_transceiver_platform/spec/clock-feasibility-envelope.md#converter-clock-ownership-under-direct-external-lo)
 uses uniform LO division for ADC/DAC and proposes LO/16 for D2H_CLK, retaining
 H2D_CLK from the FPGA. The selected differential frontend adds one signal site versus the historical single-ended model. Variable-rate conversion may require
 explicit FPGA resampling; the model now accounts for its latency and estimated

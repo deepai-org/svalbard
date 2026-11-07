@@ -58,7 +58,7 @@ circuitry. No area/current saving is credited for functions already external.
 Full calibration observability, FPGA timing and board implementation still need
 qualification; the ownership decision does not demonstrate those functions.
 
-The shared RF chain now has an explicit [Wi-Fi interoperability allocation](feasibility-gates.md#wi-fi-he20-acceptance-versus-data-diagnostics):
+The shared RF chain now has an explicit [Wi-Fi interoperability allocation](feasibility-gates.md#wi-fi-he20-capability-gate):
 MCS0–7 quality with margin, external-frontend costs, antenna-time response
 budgets and equipment/FPGA-owned calibration. No new pins or Wi-Fi-specific
 blocks are selected; complete exchange and wider-filter qualification remain open. A generic48bit
@@ -701,7 +701,7 @@ comparison; it is not measured package performance. Evidence ID
 `lower_return_probe` identifies this current target; `selected` retains the
 original 0.5 nH control for comparison. Provider-compatible geometry must still
 be shown capable of meeting the target, with no assumed extra ground sites. The
-[HS quiet-pin screen](power-partition.md#usb-high-speed-quiet-pin-and-common-return-gate)
+[HS quiet-pin screen](power-partition.md#host-switching-and-wired-electrical-requirements)
 still exposes host-induced common-mode disturbance at this target; meeting the
 equivalent inductance alone does not qualify the wired termination reference.
 
@@ -719,13 +719,13 @@ For the wired lane, select CTLE plus slicer/phase-sampling CDR, without a
 baseline DFE or general-purpose line-rate ADC. Start the mathematical CTLE at
 unity DC gain, 200 ps zero and 80 ps pole (2.5× high-frequency gain). This is a
 conditional circuit requirement within the existing wired allocation, not a
-validated GF180 equalizer. The [joined recovery test](power-partition.md#wired-equalization-host-delivery-and-recovery)
+validated GF180 equalizer. The [joined recovery test](power-partition.md#host-switching-and-wired-electrical-requirements)
 retains the unequalized failure and rejects the higher-inductance package probe.
 Select current-steering TX with
 programmable main/postcursor drive and the separately controlled USB/TMDS
 branches. In single-branch bidirectional operation, disable the unused serial
 branch and cap WIRE current at 50 mA (48 active plus 2 inactive). Simultaneous
-serial RX/TX retains its 96 mA allocation. The [USB voltage gate](power-partition.md#usb-static-output-voltage-and-return-path-gate)
+serial RX/TX retains its 96 mA allocation. The [USB voltage gate](power-partition.md#host-switching-and-wired-electrical-requirements)
 requires a lower common-return target; the current package fixture is not a
 closed USB operating envelope. Use the retained 8 mA differential-tail case as the initial serial
 requirement point, not as the total lane-current estimate. Protection and

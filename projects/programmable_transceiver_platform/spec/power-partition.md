@@ -1318,7 +1318,7 @@ owns the conditional numerical comparison; no physical PSRR is claimed.
 Current RF/wired comparisons must use the architecture inventory and selected
 common environment, with an explicit source/return map. The former robustness
 comparison's fixed-current ledger is retired. The
-[current joined assessment](risk-priorities.md#current-joined-host-power-and-receiver-assessment)
+[current joined assessment](risk-priorities.md#open-issue-register)
 owns the accounting requirements and limitations. Public assembly connectivity
 does not establish bond/board impedance or independent on-die rails; see the
 [assembly evidence](../../../docs/roadmap/programmable-transceiver-pin-plan.md#public-run-1-assembly-evidence).

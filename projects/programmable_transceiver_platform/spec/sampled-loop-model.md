@@ -22,3 +22,13 @@ loop parameters, not measured bandwidths. This detector is a sampled/held averag
 model; physical charge-pump pulses, compliance, dead zones, propagation delays and
 extra loop-filter poles are not included. Those effects must be represented or
 bounded before using this result as evidence for a transistor implementation.
+
+## Three-node charge-state model
+
+Keep pump, slow and VCO capacitor states distinct. Pump compliance senses the
+pump node; oscillator phase uses the VCO-node voltage integral. Preserve charge
+across allowed band transfers, reject malformed or live-state overwrites, and
+commit state only after a successful solve. A fast propagator must preserve
+these quantities and failure behavior, not merely reproduce an endpoint voltage.
+Finite driver/reference loads, acquisition history, calibration and retuning
+remain part of integration. Isolated filter or clock success is not chip closure.

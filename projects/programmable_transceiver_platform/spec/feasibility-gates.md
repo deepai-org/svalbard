@@ -51,7 +51,7 @@ Avoid further precision about isolated packet failures unless it changes a
 requirement, an architectural choice or coverage of a missing system behavior.
 Physical uncertainty is not resolved by repeatedly simulating one assigned value.
 
-The [first combined RF-chain assessment](risk-priorities.md#rf-chain-operating-region-first-version-result)
+The [first combined RF-chain assessment](risk-priorities.md#open-issue-register)
 now identifies sampled wideband and narrowband operating points on the selected
 power/package inventory, with clipping and comparator-deadline failures retained.
 This closes the first-version assessment, not G3: protocol waveforms, uncertainty
@@ -1362,7 +1362,7 @@ while using the actual inventory for each exclusive payload mode. Check rail
 headroom and model validity alongside decoding; an unbounded interval is not
 a measured excursion, and a short receiver pass cannot override it. The older
 paired robustness campaign is retired. See the
-[current joined assessment](risk-priorities.md#current-joined-host-power-and-receiver-assessment)
+[current joined assessment](risk-priorities.md#open-issue-register)
 for current ownership and evidence requirements.
 
 Mitigations to price: permitted existing supply/return paths, local isolation

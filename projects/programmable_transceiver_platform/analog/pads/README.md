@@ -195,6 +195,31 @@ retained-network off-state requirements. Do not erase disabled devices, waive
 budgets, or use a passing simplified input load to claim missing cores complete.
 No pin-count or package change follows from this code consolidation.
 
+### Upstream reuse boundary
+
+The 2026-11-07 comparison against [OCD I/O revision
+6e0e354](https://github.com/RTimothyEdwards/gf180mcu_ocd_io/tree/6e0e354a78793339a4a004a6d9c08990d0eee3e4)
+found that its `netlist/schematic/gf180mcu_ocd_io__dvdd.spice` has the same
+seven clamp MOS connections, W/L, finger counts and multiplicities as our
+`generated/protection-clamp/clamp-reference.spice`, after mapping `TIMING` to
+`n8`. This was checked by parsing both netlists. Our passive implementation and
+isolated-rail use differ; this is not full LVS or electrical equivalence.
+Consequently, importing this upstream clamp does not introduce a new transistor
+trigger topology that resolves the recorded release/stress failures.
+
+The upstream `docs/analog.rst` explicitly requires secondary protection beside
+attached input gates. Its suggested resistor/diode network is a starting point,
+not a qualified GHz solution. Evaluate the actual receiver input capacitance,
+noise, bandwidth and transient terminal stress together before selecting it.
+The split-voltage I/O library also does not create separate bonded rails in our
+already-connected retained ring.
+
+For missing startup/bias/control circuits, use the pinned candidates and
+acceptance boundaries in the [implementation reuse decisions](../../spec/risk-priorities.md#open-gf180-implementation-reuse-decisions).
+A POR delay alone cannot implement fast brownout disable; a single high-side
+PMOS switch cannot guarantee reverse-current blocking. Neither should be used
+to mark the existing safe-state gaps closed.
+
 ## Authoritative artifacts
 
 `design.py` resolves requirements and pad sites from

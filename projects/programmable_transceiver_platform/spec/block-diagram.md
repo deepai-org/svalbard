@@ -13,7 +13,7 @@ block areas and routes are not a physical fit result.
 
 See the [decision gates and operating ledger](feasibility-gates.md#decision-sequence-several-credible-ways-to-succeed) for the packaging-first closure sequence.
 
-The [whole-architecture assessment](risk-priorities.md#architecture-assessment-one-implementation-several-ways-to-succeed) records the cross-system conflicts, operating sequences and every interface family’s open gate.
+The [whole-architecture assessment](risk-priorities.md#current-architecture-decisions) records the cross-system conflicts, operating sequences and every interface family’s open gate.
 
 ## Silicon, FPGA and board allocation
 
@@ -566,7 +566,7 @@ configuration must satisfy both GPIO clock limits and sustained transport demand
 
 ## Differential external clock architecture
 
-The [keep-or-change decision](risk-priorities.md#keep-or-change-decision-change-the-delivered-clock-architecture)
+The [keep-or-change decision](risk-priorities.md#current-architecture-decisions)
 is implemented in the contract, diagram and selected payload clock model.
 `REF_IN` is the positive leg and `REF_IN_N` the negative leg of one differential
 reference/LO port. The 0.025 ps/mV aggregate supply-delay target remains an
@@ -824,7 +824,7 @@ multi-lane applications explicitly consume multiple dies and board resources.
 
 The [rough implementation allocation](power-partition.md#provisional-implementation-allocation)
 owns area/current assumptions, [capability review](feasibility-gates.md#capability-wide-evidence-gaps-and-next-decisions)
-owns target-specific architectural obligations, and [risk ranking](risk-priorities.md#whole-chip-risk-ranking)
+owns target-specific architectural obligations, and [risk ranking](risk-priorities.md#open-issue-register)
 owns the next experiments. Detailed circuit studies do not silently change this
 baseline. Document a change and its cross-system cost first.
 

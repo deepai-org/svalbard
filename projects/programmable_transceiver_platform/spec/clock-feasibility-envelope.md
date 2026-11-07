@@ -17,7 +17,7 @@ now consumes corrected event timing with retained source/input noise. Moderate
 wideband SAR feedback and the narrowband packet exchange also use that input
 path, including recharge-induced threshold movement and supply delay. The
 corrected narrowband campaign exposes packet failures described in the
-[current risk assessment](risk-priorities.md#whole-chip-risk-ranking).
+[current risk assessment](risk-priorities.md#open-issue-register).
 Weak-wideband causal feedback, TX load transitions and wired timing consumers
 still require migration; receiver numerical sensitivity remains open. Independent wired RX
 CDR must not inherit an external-TX timing path by assumption.
@@ -1228,7 +1228,7 @@ Do not label the original 1 mV / 0.3 ps stress points as measured limits, or
 claim the tighter allocation is proven because this lower-bound screen fits.
 
 
-The [combined RF requirements point](risk-priorities.md#combined-rf-requirements-point)
+The [combined RF requirements point](risk-priorities.md#open-issue-register)
 now joins the input/distribution spectrum with finite frontend IIP3, rather
 than borrowing a pass from the ideal-clock linearity fixture. The 75 µV / 15 fs
 high-impedance allocation accepts six tested requests; its terminated counterpart

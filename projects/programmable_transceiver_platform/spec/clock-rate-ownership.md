@@ -244,7 +244,7 @@ Retain both existing choices. LO/24 is an exploratory mathematical comparison,
 not an enabled configuration; it requires divider implementation, additive
 noise/current, source ownership and paced transport closure before adoption.
 Do not give it a free copy of the binary divider's physical performance.
-The [current joined risk assessment](risk-priorities.md#current-joined-host-power-and-receiver-assessment)
+The [current joined risk assessment](risk-priorities.md#open-issue-register)
 owns the sweep, current tradeoffs and inverse supply-sensitivity requirements.
 
 ### Conditional storage and response envelope
@@ -290,7 +290,7 @@ all precede readiness. A finite timestamped sample queue now holds prefill
 through running clocks and drives the loaded DAC/filter/driver reply. The peer
 decodes the waveform, but uncalibrated RX delay, assigned launch/gate behavior
 and the diagnostic envelope-threshold marker still prevent a standards air-
-timing verdict. The [current packet assessment](risk-priorities.md#current-joined-host-power-and-receiver-assessment)
+timing verdict. The [current packet assessment](risk-priorities.md#open-issue-register)
 owns numeric results and remaining limitations.
 
 **Architectural consequence:** keep the slower RF D2H option for continuously

@@ -987,7 +987,7 @@ capacity_records=8, synchronizer_cycles=2)` derives processing frequency from
 H2D DDR, including its ppm error. Response/frame construction shares this clock
 with synchronous block enables; independent phase/frequency and nonzero
 `command_sync_cycles` are rejected. Processing is rounded to complete clock
-cycles. See [clock ownership](../../spec/clock-rate-ownership.md#fpga-response-path-clock-selection)
+cycles. See [clock ownership](../../spec/clock-rate-ownership.md#selected-clocks)
 for implementation and recovery obligations. With the historical 40 ns final budget its faster-host margin is 4.167 ns.
 Adding `decision_cycles=3` explicitly selects the proposed validate/select/publish
 pipeline budget instead (29.167 ns finite margin); this is not implemented FPGA

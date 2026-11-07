@@ -70,7 +70,7 @@ bond/package bound. Geometry, loop and coupling qualification remain open.
 
 Clock noise must include source, differential input conditioning, distribution,
 quadrature, supply-induced delay and aperture error under one environment.
-The selected aggregate supply-delay requirement is 0.025 ps/mV; its sign,
+The selected aggregate supply-delay requirement is 0.0025 ps/mV; its sign,
 frequency response and physical implementation remain unqualified. Common-mode
 rejection does not remove individual pin excursions or mismatch-generated
 differential noise.

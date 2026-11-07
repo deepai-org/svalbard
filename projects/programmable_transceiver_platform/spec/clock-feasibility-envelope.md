@@ -105,7 +105,7 @@ not a measured wideband law.
 For threshold noise, `sigma_t = sigma_v / slew`; evaluate actual loaded slew
 and input common mode on both legs. Static common delay is not jitter, but
 varying delay and I/Q skew are. The selected aggregate supply-delay requirement
-is 0.025 ps/mV, with physical sign, bandwidth and stage distribution unqualified.
+is 0.0025 ps/mV, with physical sign, bandwidth and stage distribution unqualified.
 The common ring, board/package and host-current boundary is specified in
 [power allocation](power-partition.md#common-supply-and-return-network).
 

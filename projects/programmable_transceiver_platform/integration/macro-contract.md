@@ -10,8 +10,7 @@ Current clock interface: `REF_IN` (positive) and `REF_IN_N` (negative) form one
 differential reference/LO port, selected while stopped. Both legs require analog
 conditioning/protection; source frequency and protocol ownership are unchanged.
 See the [normative architecture](../spec/block-diagram.md) for the selected 44 mA timing allocation
-and 0.025 ps/mV aggregate supply-delay requirement. Saved single-ended studies
-below are historical controls, not qualification of this revision.
+and 0.0025 ps/mV aggregate supply-delay requirement. Physical conditioning and distribution remain unqualified.
 
 The normative design is `spec/analog-architecture.json` with `spec/contract.json`.
 The existing RTL and `pt_chip.sv` are incomplete implementation scaffolding,

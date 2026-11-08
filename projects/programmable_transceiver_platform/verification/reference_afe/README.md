@@ -403,8 +403,7 @@ waveform scenarios; it does not construct a chip. On an HE20 waveform at normali
 gain-corrected unquantized differences range from 0.28% to 2.31%; at 0.9 they range
 from 0.93% to 3.24%. **These are neither exhaustive uncertainty bounds nor measured
 transceiver EVM.** Higher orders, dynamics, noise and the unknown input normalization
-permit other behavior. The retired whole-chain projection has been removed;
-these retained cases exclude quantization and clock or supply coupling.
+permit other behavior. These cases exclude quantization and clock or supply coupling.
 
 The same experiment separately propagates the table's 41 dB SNR through a
 noise-only ADC scenario. At HE20 axis peak 0.6, assuming the characterization

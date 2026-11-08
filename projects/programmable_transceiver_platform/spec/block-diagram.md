@@ -1163,9 +1163,8 @@ not in this architecture drawing.
 
 ## Diagram ownership
 
-`docs/diagrams/generate_block_diagram.py` regenerates the overview and supporting
-sheets; `generate_normative_diagram.py` owns the normative SVG. The PNG is a
-render of that SVG. The normative generator reads `analog-architecture.json`,
+`docs/diagrams/generate_normative_diagram.py` owns the normative SVG. The PNG
+is a render of that SVG. The normative generator reads `analog-architecture.json`,
 checks block/port/net coverage, and regenerates the connection table below.
 Run it with `--check` to detect stale SVG or connection documentation. Differential conductors and words are bundled, and local
 bias/clock/control fanout is named rather than drawn as individual wires.

@@ -43,8 +43,7 @@ The mathematical chip accepts generic resource, timing and transport settings.
 Protocol names belong to external waveform fixtures and requirement tables;
 there is no on-chip named-protocol selector. `BehavioralChip` owns modeled
 resource admission and lifecycle behavior. Register/RTL implementation must
-encode the same independent controls rather than the retired named-profile
-factory interface.
+encode the same independent controls.
 
 The low-level ownership selector also rejects transfer while either end drives
 the shared bidirectional pad. Configuration changes advance a mathematical
@@ -151,7 +150,7 @@ host return switching charge, rail-sensitive clock timing, and an assumed
 regulated wired termination load with explicit efficiency and bias. RF source and mixer signals stop with the RF oscillator;
 retained filter/network state decays. RF and wired driver bias now follow engine selection. Shared reference bias
 remains active; oscillator, converter, receiver and digital currents are still
-incomplete, so this does not establish a whole-chip power-budget saving. Use the current selected wired/lifecycle evidence for acceptance; the retired coupled-wire snapshot does not qualify it.
+incomplete, so this does not establish a whole-chip power-budget saving. Use selected wired/lifecycle evidence for acceptance.
 
 ## Multi-chip wired assemblies
 

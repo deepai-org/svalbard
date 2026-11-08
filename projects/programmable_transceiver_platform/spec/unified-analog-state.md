@@ -4,8 +4,7 @@ The planned architecture is owned by [the inventory](analog-architecture.json).
 Current electrical composition is constructed in
 [`baseline_envelope.py`](../verification/baseline_envelope.py), with lifecycle
 integration in [`selected_lifecycle.py`](../verification/selected_lifecycle.py).
-The retired managed-chip variants and their acquisition histories are not
-current acceptance evidence. [Closure gates](mathematical-closure.json) own
+[Closure gates](mathematical-closure.json) own
 remaining integration requirements.
 
 ## Retained circuit model

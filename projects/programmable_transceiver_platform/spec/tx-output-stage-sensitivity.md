@@ -103,7 +103,7 @@ Retrospective maxima are diagnostics, not future uncertainty bounds.
 
 These bounds assume an affine/square-law observation plus declared error terms.
 Clipping, stochastic noise and uncertain input coordinates are not covered by the
-historical analytic probe bound. Physical settling envelopes and readout transfer
+analytic probe bound. Physical settling envelopes and readout transfer
 must be established before using it as a managed accuracy gate. Longer dwell
 cannot eliminate systematic curvature.
 
@@ -121,8 +121,5 @@ cannot eliminate systematic curvature.
 | Affine uncertainty | 512 sign corners per case check enclosures. At gain 0.56, quantization-only axis-spread bounds are 0.6376%/0.1629% at 10/12 bits. Nonlinear discrepancy 0.00419864 is 85.9× half-LSB, invalidating the quantization-only enclosure. |
 | Nonlinear probe bound | Six histories/54 probes satisfy declared bounds; 12 quadrature comparisons include coincident poles. At 2 µs, axis-spread bounds are 14.18% with curvature 0.2 and 2.17% without; at 4 µs, 13.07%/1.15%. Neither 1 µs case certifies robust positive definiteness. See [probe-bound report](../evidence/connected-tx-probe-error-bound.json). |
 
-The [complete immutable history](https://github.com/deepai-org/svalbard/blob/3d06e6263892b2e6755c9f6a6e6d5bf7da4dc678/projects/programmable_transceiver_platform/spec/tx-output-stage-sensitivity.md) preserves every original command/source
-reference, measurement, limitation and intermediate policy, including policies
-later replaced by TX-specific admission. It is historical evidence, not a current
-backlog. Full waveform quality, loaded resource integration, noise, mismatch,
+Full waveform quality, loaded resource integration, noise, mismatch,
 package effects and physical implementation remain separate qualification work.

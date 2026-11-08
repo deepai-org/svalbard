@@ -82,7 +82,6 @@ Preventing ADC clipping does not prove that upstream distortion is acceptable.
 An optional envelope limiter such as `y=x/sqrt(1+|x/Vsat|²)` is a mathematical
 sensitivity case. Its internal voltage coordinate is not antenna power or a
 GF180 IIP3/P1dB result; it omits AM/PM and memory. Keep its assumptions visible.
-Use the selected electrical and packet compositions for joined evidence rather
-than the retired ProtocolService projections. Current failures and missing
+Use the selected electrical and packet compositions for joined evidence. Current failures and missing
 protocol qualification belong in [risk priorities](risk-priorities.md) and the
 [closure inventory](mathematical-closure.json).

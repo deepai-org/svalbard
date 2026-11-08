@@ -119,7 +119,7 @@ No transceiver default is promoted to a measured value by these deductions.
 These are implementation candidates and external
 simulation evidence, not replacements for the selected shared design or silicon
 qualification. Prefer reuse of small circuits with explicit interfaces; do not
-import another project's whole harness, pad ring or historical test campaigns.
+import another project's whole harness, pad ring or unrelated test campaigns.
 
 | Unfinished function | Reusable source and decision | Remaining acceptance boundary |
 | --- | --- | --- |

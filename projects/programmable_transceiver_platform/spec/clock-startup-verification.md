@@ -40,7 +40,7 @@ Use explicit uncertainty scenarios for model and startup conditions; do not
 present chosen sweep endpoints as guaranteed bounds on undisclosed fab behavior.
 This file is a verification contract, not evidence that these circuits exist.
 
-## Measure phase at detector inputs (pass 309)
+## Measure phase at detector inputs
 
 Retained buffered source-offset tests requested±10ps at ideal sources, but measured
 reference-buffer rising delay is~127.75ps. Actual REF-minus-FB at PFD pins is
@@ -51,14 +51,13 @@ gain, lock offset, or diagnosis of pump mismatch. Preserve input-buffer latency
 when interpreting polarity or near-zero-phase behavior.
 [Measured phase and charge](../evidence/pfd-buffered-phase.json).
 
-## Late phase history before any lock claim (pass 342)
+## Late phase history before any lock claim
 
 The shared loop checker now reports the last21 ordinal REF/FB edge pairs when
 available: actual observation window, both frequencies, total unwrapped phase
 drift, fitted slope and detrended peak-to-peak residual. Do not replace this with
 nearest-edge or modulo pairing that hides a cycle slip. Startup-dependent ordinal
-alignment remains explicit. The historical failed loop drifts5.780ns over its last
-20 reference periods even though its frequency is near target. Detrended transient
+alignment remains explicit. Near-target mean frequency alone cannot exclude accumulated phase drift. Detrended transient
 residual is deterministic behavior, not intrinsic jitter or phase noise. These
 metrics have no allocated lock threshold and cannot assert lock; incomplete-run
 windows also end near a numerical failure rather than a qualified steady state.

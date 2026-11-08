@@ -14,8 +14,7 @@ and 0.0025 ps/mV aggregate supply-delay requirement. Physical conditioning and d
 
 The normative design is `spec/analog-architecture.json` with `spec/contract.json`.
 The existing RTL and `pt_chip.sv` are incomplete implementation scaffolding,
-not the selected complete chip. Their old top-level synthesis, placement and
-regression flows have been retired. Retained component checks establish only
+not the selected complete chip. Component checks establish only
 their stated local behavior; no resulting netlist is ready for fabrication.
 
 ## Current generic control-surface audit
@@ -281,13 +280,12 @@ ADC sample rate, sample format and transport profile are independent controls.
 | Reference/LO/clocks | Trim and calibration interfaces implemented digitally | PLL/VCO, divider/phase network, clock mux/reset sequencing, lock monitoring |
 | Host pads/DDR | Existing native-pad experiments | Real DDR gearbox, input/output phase adjustment, host timing, simultaneous switching and rail closure |
 
-The listed circuit files are reuse candidates, not validated components of this chip. No full RF chain, RF-to-host simulation or analog hierarchical netlist has been completed in this pass. Ideal models do not establish GHz operation, Wi-Fi performance, protocol compliance or achievable ENOB.
+The listed circuit files are reuse candidates, not validated components of this chip. These candidates do not establish a complete RF chain, RF-to-host simulation or analog hierarchical netlist. Ideal models do not establish GHz operation, Wi-Fi performance, protocol compliance or achievable ENOB.
 
 ## Digital contents and costs
 
 Use `check_contract.resource_ledger` and the selected bridge/storage inventory
-for current allocations. Do not price the intended chip using the retired
-concurrent RF/wired top level or its capture/playback and frame-bank totals.
+for current allocations.
 Independent FIFO and codec mappings are component evidence; parent/child
 instances must not be double counted. Complete digital area, switching power,
 CDC and physical timing remain implementation obligations.
@@ -336,7 +334,6 @@ the word-reference rate, including supported fractional video clocks. Each
 chip carries one opaque lane; the external FPGA owns TMDS encoding, multi-lane
 coordination and protocol state. Use `resource_configuration.py`,
 `video_alignment.py` and the selected wired benches for current behavior.
-The retired mathematical dispatcher and its bit-field command are not an ABI.
 
 Cross-chip reset/phase alignment, continuous queue service, electrical pad
 limits and reference-path qualification remain separate requirements. Frozen

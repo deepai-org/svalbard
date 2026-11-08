@@ -97,14 +97,10 @@ preserve delivery with capture enabled or disabled. Full-chain error needs an
 independent carrier reference; calibration success or retarget continuity alone
 does not certify settled traffic quality. The scoped evidence below distinguishes
 observer fixtures, retuning continuity and the completed mode0 loaded-pad run.
-Historical pending-run notices are not current process status or additional
-quality evidence.
 
 ## Scoped evidence
 
 Reports below remain separate because they test different assumptions or stages.
-The full original journal is linked below for all numerical details and the
-historical implementation/registration sequence.
 
 | Report in `evidence/` | Finding and scope |
 | --- | --- |
@@ -136,9 +132,4 @@ resource ownership and physical area. Confirm calibrated reopening, retuned
 traffic, noise and waveform quality in each intended composition. Passive model
 checks do not establish MOS feasibility, an emissions limit, extra available pins
 or extracted layout performance. Current closure decisions stay with the linked
-gates rather than the historical scenario counts or queued-session notices.
-
-The [complete immutable experiment history](https://github.com/deepai-org/svalbard/blob/8bd7e601beba1b28d6bb0f4e092b1a76a5e2868c/projects/programmable_transceiver_platform/spec/tx-output-isolation.md)
-preserves all original measurements, intermediate failures, implementation names
-and historical next steps. Those steps and process notices are not a current
-backlog or evidence of a running job.
+gates; scenario counts alone do not establish closure.

@@ -1,138 +1,69 @@
 # Host output loading and driver selection
 
 The 8 mA native driver is a candidate under nominal lumped-load assumptions;
-no driver or FPGA board is physically qualified. This document owns the load
-and drive-strength comparisons. [FPGA host screening](fpga-host-screen.md)
-owns device frequency and bandwidth constraints; [power partitioning](power-partition.md)
-owns the bank allocation. RF and wired payloads are exclusive, so preserve the
-full rate of each selected mode without requiring concurrent RF/wired payload.
+no driver or FPGA board is physically qualified. This document owns load and
+drive comparisons. [FPGA screening](fpga-host-screen.md) owns frequency constraints;
+[power partition](power-partition.md) owns the common-ring supply architecture.
+RF and wired payloads are exclusive; preserve each selected engine's full rate.
 
 ## Artix load baseline
 
-## Primary evidence
-
 [AMD DS181](https://docs.amd.com/v/u/en-US/ds181_Artix_7_Data_Sheet), v1.27.1, July 3 2024: Table 3 specifies up to 8 pF die input capacitance, excluding package. Table 8 gives LVCMOS33 low/high input boundaries of 0.8/2.0 V. Table 19 uses a 1.65 V input timing reference. Table 21's -1 input-logic setup/hold values are internal-pin values, not a board interface timing guarantee. Published LVDS throughput does not establish LVCMOS throughput. Source PDF SHA-256 is retained in the report.
 
-### Fresh native-pad evidence
+The die capacitance excludes package and PCB loading. Compose these at explicit
+reference planes; do not equate an 8 pF ideal capacitor with a complete host link.
+No specific FPGA package or placed DDR implementation is qualified.
 
-Run `verification/run_artix_load.sh` from this project or its absolute path. It uses the repository's bounded, pinned analog container and the unchanged native pad deck generator. Two fresh nominal 3.3 V, 25 C cases use 8 pF external lumped loading per data/clock output, alternating and PRBS7 patterns. Four existing measurement regressions passed first.
+## Native driver evidence
 
-The [raw result summary](../evidence/artix-load-screen.json) records deck, waveform and log hashes. The minimum host-threshold margin across 20 bits per case is 0.799 V in the assumed ±0.2 ns aperture. This analysis includes all saved interior samples plus interpolated aperture boundaries. Clock edges are paired in order; no phase search selects a passing result. The 1.65 V reference is a measurement convention, not proof of the actual receiver's switching point. No claim of Artix timing closure follows.
+The scoped transistor checks use 312.5 Mb/s per pin, typical process, 3.3 V,
+25 °C, alternating/PRBS7 patterns and ideal driver/core supplies. They check only
+20 bits per case. The ±0.2 ns observation aperture is assumed, not demonstrated
+FPGA setup/hold. Positive voltage margins do not establish clock skew, SSO or PVT.
 
-The alternating pair draws 16.409 mA average from DVDD. Applying the existing per-output extrapolation and allowances produces 53.28 mA for HOST_A and **63.54 mA for HOST_B**, exceeding HOST_B's 55 mA planning ceiling. See the [power screen](../evidence/artix-load-power-screen.json). The measured extrapolation before allowances is 49.23 mA for HOST_B; the result rejects the present planning margin, not a direct measurement of a six-pad bank exceeding its supply-cell rating.
+| Drive / load | Alternating data-and-clock pair average current | Minimum Artix-threshold margin | Evidence |
+| --- | --- | --- | --- |
+| 24 mA / 8 pF | 16.409 mA | 0.799 V | [Artix load](../evidence/artix-load-screen.json) |
+| 8 mA / 8 pF | 12.601 mA | 0.720 V | [Weak drive](../evidence/weak-drive-screen.json) |
+| 8 mA / 10 pF | 13.813 mA | 0.661 V | [Weak drive](../evidence/weak-drive-screen.json) |
 
-The original 5 pF result remains valid only for its load. Its passing power check does not close this 8 pF case. Package and board loading are still absent, and 8 pF is not a complete host load model. Narrow temperature/voltage operation does not remove that load or the associated power demand.
+[Drive-strength characterization](../evidence/drive-strength-screen.json) also
+compares 12/16 mA settings using generic 0.3/0.7 VDD thresholds. Those margins
+are not interchangeable with the Artix thresholds. Pair-current extrapolation
+cannot qualify current distribution through the common supply/return ring.
 
-### Execution provenance and next decision
+With 8 mA drive, 10 pF load and 1 Ω signal resistance, assumed data/clock
+inductances of 1/1 and 2/1 nH give 0.665/0.674 V margins in the
+[signal-path screen](../evidence/signal-path-screen.json). The clock-edge intervals
+span 3.002–3.331 ns. These are short ideal-rail sensitivity cases, not package
+bounds; better margin at one inductance does not imply monotonic improvement.
+Overshoot observations do not establish reliability acceptance.
 
-Both simulations completed and waveforms were archived. The initial harness invocation then reported failure because it expected a signoff-style `result` field absent from this characterization JSON. Requested outputs were preserved; the reproducible wrapper now treats simulation completion separately from design acceptance. No rerun is claimed. The raw archive is `scratch/transceiver-artix-load-waveforms.tar.gz`; its SHA-256 is retained in the power report.
+## Supply-path boundary
 
-Artix-7 remains an unqualified candidate, with no chosen package or completed DDR implementation. Next investigate host-bank power/driver options at realistic loading without changing the 50-terminal or full-rate targets. A third supply pair, lower-capacitance host, driver redesign or another electrical interface must earn its own area/power/timing evidence; merely reducing an allowance to turn the check green is not closure. Host timing, H2D behavior and protocol latency remain open in parallel with this physical issue.
-
-## 12 and 16 mA alternatives
-
-## Supply-path audit
-
-The [GF180 I/O cell list](https://gf180mcu-pdk.readthedocs.io/en/latest/IPs/IO/gf180mcu_fd_io/datasheet.html) assigns 60 mA DC capacity to each native supply/ground cell. This is not a package-terminal rating. The [supply-pad description](https://gf180mcu-pdk.readthedocs.io/en/latest/IPs/IO/gf180mcu_fd_io/power.html) describes ESD circuits; it does not qualify a higher-current custom feed. The installed supply SPICE exposes rail nodes without a separate external bond node, so that schematic alone cannot prove feed-metal or bond capacity.
+[GF180 I/O cell list](https://gf180mcu-pdk.readthedocs.io/en/latest/IPs/IO/gf180mcu_fd_io/datasheet.html) assigns 60 mA DC capacity to each native supply/ground cell. This is not a package-terminal rating. The [supply-pad description](https://gf180mcu-pdk.readthedocs.io/en/latest/IPs/IO/gf180mcu_fd_io/power.html) describes ESD circuits; it does not qualify a higher-current custom feed. The installed supply SPICE exposes rail nodes without a separate external bond node, so that schematic alone cannot prove feed-metal or bond capacity.
 
 Do not assume that paralleling clamps, using a stronger bond wire, or narrowing temperature automatically increases native-cell current capacity. A custom supply path remains possible but needs physical metal/via, ESD and package evidence. Keep the present terminal allocation while investigating current at its source.
 
-### Native driver comparison
+The [supply-path failure report](../evidence/supply-path-incomplete.json) records
+six incomplete transistor runs with shared output supply/return impedance.
+Assumptions were 0.1 Ω/1 nH or 0.25 Ω/2 nH per rail; core rails and remote load
+ground remained ideal. Four default-integration runs timed out before stimulus,
+and two Gear-2 runs also produced no final waveform. No electrical pass or fail
+can be inferred from those numerical failures.
 
-The [programmable driver controls](https://gf180mcu-pdk.readthedocs.io/en/latest/IPs/IO/gf180mcu_fd_io/digital.html) select 12 mA with PDRV1/PDRV0=1/0 and 16 mA with 1/1. The native `bi_t` netlist includes these pins, unlike `bi_24t`. The runner now accepts a drive selection; its default 24 mA instance text remains unchanged. Six measurement/pin-mapping tests passed inside the pinned analog image.
+The next useful simulation must resolve DC/startup and numerical convergence on
+a tractable supply/return circuit, then compose the complete selected ring, bank
+activity and remote receiver. Extending runtime alone does not close this gap.
 
-Four fresh transistor simulations compare 12/16 mA settings using alternating and PRBS7 patterns. Conditions remain 312.5 Mb/s/pin, 8 pF per output, 3.3 V, 25 C, typical process, ideal supplies. All four cases check 20 bits at the same assumed three-point ±0.2 ns aperture and 0.3/0.7 VDD thresholds. These are generic screens, not the host-specific threshold analysis from pass 8.
+## Reproduction and acceptance
 
-| Native drive setting | Alternating pair DVDD average | Worst sampled margin across two patterns | HOST_B current with unchanged allowances |
-|---|---:|---:|---:|
-| 24 mA, pass 8 baseline | 16.409 mA | 0.983 V | 63.54 mA |
-| 16 mA | 15.551 mA | 0.968 V | 60.32 mA |
-| 12 mA | 14.334 mA | 0.916 V | 55.75 mA |
+The bounded wrappers `verification/run_artix_load.sh`, `run_drive_strength.sh`,
+`run_weak_drive.sh`, `run_signal_path.sh` and `run_supply_path.sh` retain their
+scoped conditions. Reports record exact decks, libraries and waveform hashes.
+Successful characterization execution is distinct from design acceptance.
 
-The smaller drivers reduce modeled current while retaining positive sampled margin. **Neither tested replacement meets the 55 mA HOST_B planning ceiling with existing allowances.** The 12 mA result is close but still fails; no allowance or ceiling was relaxed. No driver is selected for implementation yet.
-
-The drive labels are library modes, not constant-current sources or guaranteed currents at this operating voltage. Absolute clock delay also changes; common delay cancellation in this matched pair does not establish skew or FPGA timing.
-
-### Reproduction and next step
-
-Run `verification/run_drive_strength.sh` from this project. The [report](../evidence/drive-strength-screen.json) records source/deck/waveform/log hashes and current calculations tied to the unchanged contract. Raw waveforms are retained in `scratch/transceiver-drive-strength-waveforms.tar.gz`. The wrapper's PASS means bounded characterization completed, not that the candidate meets the chip requirements.
-
-The 8 mA screen below extends this comparison to weaker drive and host thresholds. Package/rail impedance and concurrent-bank switching still need qualification before selection. Keep 50 terminals, both 10-bit buses and the full rate of each selected RF or wired mode. No reduction in data rate, payload or functionality was used to improve the current result. Actual host timing, process variation and the numerical narrow operating envelope remain unclosed.
-
-Waveform archive SHA-256: `6668274a18c3a37f987e8e79b91e3499c341f63062b74c4d28086284257453f5`.
-
-## 8 mA candidate
-
-Four fresh native-pad cases hold the top data rate at 312.5 Mb/s/pin and use the programmable `bi_t` 8 mA mode (PDRV1/PDRV0=0/1). Conditions are typical process, 3.3 V, 25 C, fast slew and ideal rails. Alternating and PRBS7 patterns are run at both 8 pF and 10 pF external load per output. The latter is an explicit stress assumption, not a package/PCB characterization.
-
-| Load per output | Alternating pair DVDD average | HOST_A estimate with allowances | HOST_B estimate with allowances | Worst host-threshold margin, two patterns |
-|---|---:|---:|---:|---:|
-| 8 pF | 12.601 mA | 41.38 mA | 49.25 mA | 0.720 V |
-| 10 pF | 13.813 mA | 45.17 mA | 53.80 mA | 0.661 V |
-
-Both bank estimates remain below the unchanged 55 mA planning ceiling. The 10 pF HOST_B estimate leaves only 1.20 mA after the existing provisional allowances. These are still extrapolations from two pads, not measurements of bank current or proven bounds. The native drive label is a library setting, not its measured current at 3.3 V.
-
-The host-threshold analysis uses the [previously sourced Artix boundaries](#artix-load-baseline), 0.8/2.0 V, and a 1.65 V clock measurement reference. It checks every saved sample within an assumed ±0.2 ns aperture plus interpolated endpoints. Twenty bits per case are checked; none fail. Two synthetic tests verify rejection of an interior voltage glitch and missing clock edges. Six existing measurement/pin-mapping tests passed in the simulation container; the two new host-analysis tests passed on the host after simulation and are included in subsequent container runs.
-
-This result promotes 8 mA drive to a **candidate for the next physical screen**. It does not freeze the implemented driver, establish FPGA setup/hold, or replace the documented older evidence. The 10 pF load includes no series inductance, transmission-line behavior, ground bounce, inter-output skew or crosstalk. Process spread, voltage/temperature windows, H2D, and real FPGA implementation remain unclosed. A narrow operating envelope still needs measured or simulated numerical bounds; a nominal run is not that envelope.
-
-Reproduce with `verification/run_weak_drive.sh` from this project. The [retained report](../evidence/weak-drive-screen.json) contains exact source, deck, waveform, log and contract hashes. Raw archive: `scratch/transceiver-weak-drive-waveforms.tar.gz`. Wrapper success means characterization completed, not tapeout acceptance.
-
-Next add explicit supply/return and signal-path impedance sensitivity, then a complete switching bank. Choose those model values as documented stress assumptions until actual package geometry is available. Preserve both buses, the full PCIe/RF payload target, 50 terminals and the current planning allowances. The older 5 pF `check_power.py` remains a scoped historical screen; it does not automatically select or qualify this candidate.
-
-Archive SHA-256: `25286e3d54ccaac072239455fe7b7c269ea32eda62c86a61c035fc7ada253400`.
-
-## Signal-path impedance screen
-
-Historical pad-pair characterization. The results and next actions below describe
-this experiment; current rail ownership and integration requirements are maintained
-in [power partition](power-partition.md) and [current priorities](risk-priorities.md).
-
-Two fresh nominal native-pad simulations retain the 8 mA candidate, 312.5 Mb/s/pin, 10 pF load, 3.3 V, 25 C and PRBS7 data. Each signal now has 1 ohm series resistance; clock inductance is 1 nH and data inductance is either 1 or 2 nH. These values are deliberately selected sensitivity points, not extracted package parameters. Receiver load remains a capacitor to ideal ground; the core and output supplies remain ideal.
-
-| Data / clock series inductance | Minimum host-threshold margin | Received clock edge intervals | Data extrema in measurement region |
-|---|---:|---:|---:|
-| 1 / 1 nH | 0.665 V | 3.002–3.331 ns | −0.041 to 3.342 V |
-| 2 / 1 nH | 0.674 V | 3.002–3.331 ns | −0.042 to 3.343 V |
-
-Each case checks 20 bits against the same host boundaries and assumed ±0.2 ns aperture used in pass 10. No threshold failures occur. Slightly increased margin with added inductance does not establish a monotonic benefit; this is a short matched-pattern experiment with an unqualified receiver model. Voltage extrema are observations, not overshoot/reliability acceptance.
-
-### Measurement correction
-
-The previous host analyzer checked for missing clock edges but did not explicitly reject extra ringing-induced edges before pairing input/output crossings. It now rejects received edge intervals outside 0.5–1.5 UI (1.6–4.8 ns). This deliberately broad diagnostic screen is not an FPGA minimum pulse-width specification and cannot rule out every clock impairment. The new negative test inserts a short extra clock pulse and verifies rejection. Missing-edge and interior data-glitch tests continue to pass.
-
-Six native-instance/extractor tests plus three host-analysis tests passed inside the pinned analog image. Reanalysis of all four saved pass-10 waveforms passes the additional interval check with exactly unchanged voltage margins; this is replay analysis, not four new simulations. The [recheck record](../evidence/weak-drive-clock-recheck.json) is tied to the raw archive hash in the pass-10 specification.
-
-### Evidence and boundaries
-
-Run `verification/run_signal_path.sh` from this project. The [retained report](../evidence/signal-path-screen.json) records source, deck, waveform and log hashes. Raw waveforms: `scratch/transceiver-signal-path-waveforms.tar.gz`. This characterization's successful execution does not assert signoff.
-
-No receiver-clamp model, transmission-line model, rail/ground impedance, coupling, full-bank simultaneous switching, process spread or FPGA implementation is included. The package is still unselected. The prior current comparison remains a two-pad extrapolation; this PRBS-only path experiment does not update worst-case bank current.
-
-Next introduce a shared supply/return network and then replace the pair with the actual switching bank. Keep explicit separation between chosen stress parameters and provider/assembly-qualified values. Preserve the full data interface and terminal count throughout this work.
-
-Raw archive SHA-256: `9358e6eff098b33bfb7d45e682d2660e2e630aefd9f44a3f72b9d31263b2188d`.
-
-## Shared supply and return screen
-
-Historical pad-pair characterization. The results and next actions below describe
-this experiment; current rail ownership and integration requirements are maintained
-in [power partition](power-partition.md) and [current priorities](risk-priorities.md).
-
-The native GPIO harness now supports a shared output-driver supply and return, each with series R/L. Both pads connect DVSS to the moving return node while their core VSS remains ideal ground. A pin-mapping regression checks that distinction. Signal paths retain the pass-11 unequal inductances and 10 pF receiver load. No extra ideal decoupling is inserted; native pad capacitances remain.
-
-Initial selected stress points were 0.1 ohm/1 nH and 0.25 ohm/2 nH **per rail**, with alternating and PRBS7 patterns, 8 mA drive, nominal process, 3.3 V board supply and 25 C. These R/L values are assumptions, not assembly data. The reference planes are explicit: source and receiver use ideal board ground; output drivers use the shared moving DVSS; internal pre-driver/core rails remain ideal. Supply-pad clamp ring, substrate, mutual coupling and other bank pads are not modeled.
-
-### Observed numerical failure
-
-All four default-integration cases failed to produce final waveforms within the bounded run. The terminal exception was a 90-second per-case subprocess timeout. Last reported simulation times were approximately 8.43–9.82 ns, before stimulus begins at 20 ns. This is incomplete simulation evidence, not a measured electrical failure or a supply-margin result.
-
-A fresh numerical experiment retained one physical PRBS circuit (0.25 ohm/2 nH per rail) and tried Gear-2 with explicit 20 ps and 10 ps maximum steps. Both runs also ended without waveforms; last reported times were 5.71 ns and 2.15 ns. No timestep agreement or electrical margin is established.
-
-The [ngspice manual](https://ngspice.sourceforge.io/docs/ngspice-42-manual.pdf), transient-analysis options, documents the integration choices and warns that added numerical damping can hide ringing. Gear was a diagnostic comparison, not a means of accepting a circuit by suppressing its behavior. The cause remains unknown; model behavior, topology, numerical stiffness and genuine instability must be distinguished with actual startup traces.
-
-### Retained evidence and next action
-
-The [failure ledger](../evidence/supply-path-incomplete.json) records terminal state, last progress time and exact deck/log hashes for all six cases. Scratch directories are retained there. `verification/run_supply_path.sh` reproduces the current Gear comparison, which is **not passing**. Seven native-instance/extractor and three host-analysis tests passed before the runs; those tests do not validate supply behavior.
-
-Next capture a short startup trace before the slowdown and isolate supply versus return impedance. Verify the DC operating point and local rail/reference topology, then compare numerical methods on a tractable circuit before returning to the complete data interval. Do not extend to the full bank or report improved power closure until this numerical issue is understood. Preserve the 50-terminal full companion and all throughput goals. The previous ideal-rail positive results remain scoped to ideal rails.
+Before selecting the physical driver, establish both H2D and D2H margins with
+actual host thresholds/IBIS or transistor models, package/PCB impedance, matching,
+simultaneous switching, current distribution, rail bounce and the agreed narrow
+voltage/temperature window. Use the current pad map and power owner for budgets.

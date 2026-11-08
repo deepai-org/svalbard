@@ -1,0 +1,65 @@
+# Set default PDK_ROOT
+if { ![info exists env(PDK_ROOT)] } {
+  puts stderr "Warning: PDK_ROOT env. var. not found or empty, trying to find an open_pdks install"
+  if {[file isdir /usr/share/pdk]} {set ::env(PDK_ROOT) /usr/share/pdk
+  } elseif {[file isdir /foss/pdk]} {set ::env(PDK_ROOT) /foss/pdk
+  } elseif {[file isdir /usr/local/share/pdk]} {set ::env(PDK_ROOT) /usr/local/share/pdk
+  } elseif {[file isdir $env(HOME)/share/pdk]} {set ::env(PDK_ROOT) $env(HOME)/share/pdk
+  } elseif {[file isdir $env(HOME)/.ciel]} {set ::env(PDK_ROOT) $env(HOME)/.ciel
+  } else {
+    puts stderr {No open_pdks installation found, set PDK_ROOT env. var. and restart xschem}
+  }
+}
+
+# Set default PDK
+if { ![info exists env(PDK)] } {
+  set ::env(PDK) gf180mcuD
+}
+
+# Source the PDK xschemrc file, but only once.
+#
+# This guard is load bearing.  The PDK xschemrc begins with
+#     set XSCHEM_LIBRARY_PATH {}
+# so sourcing it a second time silently discards every library path added
+# up to that point.  The previous test, "![info exists PDK]", never fired:
+# nothing anywhere sets a plain variable named PDK (the PDK name lives in
+# env(PDK)), so each dependency xschemrc re-sourced the PDK file and wiped
+# out the paths contributed by the ones sourced before it.  Only the last
+# dependency in the list survived.
+if {![info exists ::pdk_xschemrc_sourced]} {
+    set ::pdk_xschemrc_sourced 1
+    source $env(PDK_ROOT)/$env(PDK)/libs.tech/xschem/xschemrc
+}
+
+# Append a directory to XSCHEM_LIBRARY_PATH unless it is already there.
+# Paths are normalized first, so the same directory reached by a relative
+# and by an absolute path counts as one entry.  Every one of these
+# repositories adds the Avalon standard cell library, so without the
+# duplicate check it would be appended once per dependency.
+#
+# Defined only if some other xschemrc in the chain has not defined it
+# already, so that each repository still works when xschem is started
+# inside it on its own.
+if {![llength [info procs add_library_path]]} {
+    proc add_library_path {dir} {
+        global XSCHEM_LIBRARY_PATH
+        set dir [file normalize $dir]
+        if {[lsearch -exact [split $XSCHEM_LIBRARY_PATH :] $dir] < 0} {
+            append XSCHEM_LIBRARY_PATH :$dir
+        }
+    }
+}
+
+# Add current directory to xschem library path
+add_library_path [file dirname [info script]]
+
+# Add the 3.3V standard cells directory to the xschem library path
+puts stdout "Adding path to Avalon semiconductor library symbols"
+add_library_path $env(PDK_ROOT)/gf180mcuD/libs.ref/gf180mcu_as_sc_mcu7t3v3/xschem
+puts stdout "XSCHEM_LIBRARY_PATH is ${XSCHEM_LIBRARY_PATH}"
+
+# Source the dependencies xschemrc files
+# foreach rcfile [glob -nocomplain [file dirname [info script]]/../ip/*/xschem/xschemrc] {
+#   puts "sourcing $rcfile"
+#   source $rcfile
+# }

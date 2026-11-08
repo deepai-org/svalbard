@@ -1,0 +1,819 @@
+* NGSPICE file created from gf180mcu_ocd_ip__biasgen.ext - technology: gf180mcuD
+
+.subckt nfet_06v0_6R5Q3A a_n188_n63# a_100_n76# a_n100_n168# VSUBS
+X0 a_100_n76# a_n100_n168# a_n188_n63# VSUBS nfet_05v0 ad=0.4348p pd=2.88u as=0.4348p ps=2.88u w=1u l=1u
+.ends
+
+.subckt bias_nstack itail shld2 shld3 a_1188_2591# ncasc nbias avss ena
+Xnfet_06v0_6R5Q3A_0[0] m3_1254_n1472# itail ena avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[1] m3_1254_n1472# itail ena avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[2] m3_1254_n1472# itail ena avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[3] m3_1254_n1472# m3_1419_n103# ncasc avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[4] m3_1254_n1472# m3_1419_n103# ncasc avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[5] m3_1254_n1472# m3_1419_n103# ncasc avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[6] avss m3_1419_n103# nbias avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[7] avss m3_1419_n103# nbias avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[8] avss m3_1419_n103# nbias avss nfet_06v0_6R5Q3A
+.ends
+
+.subckt gf180mcu_as_sc_mcu7t3v3__fillcap_4 VDD VNW VPW VSS
+X0 a_126_408# a_28_500# VSS VPW nfet_03v3 ad=0.44p pd=2.88u as=0.49p ps=2.98u w=1u l=1.03u
+X1 VDD a_126_408# a_28_500# VNW pfet_03v3 ad=0.4752p pd=3.04u as=0.5292p ps=3.14u w=1.08u l=1.03u
+.ends
+
+.subckt gf180mcu_as_sc_mcu7t3v3__inv_2 VDD VNW VPW VSS Y A
+X0 VDD A Y VNW pfet_03v3 ad=0.6072p pd=3.64u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X1 Y A VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.28u
+X2 Y A VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.6072p ps=3.64u w=1.38u l=0.28u
+X3 VSS A Y VPW nfet_03v3 ad=0.44p pd=2.88u as=0.26p ps=1.52u w=1u l=0.28u
+.ends
+
+.subckt gf180mcu_as_sc_mcu7t3v3__diode_2 VDD VNW VPW VSS DIODE
+D0 DIODE VNW diode_pd2nw_03v3 pj=1.93u area=0.2295p
+D1 VPW DIODE diode_nd2ps_03v3 pj=1.83u area=0.209p
+.ends
+
+.subckt pfet_06v0_3RDKLZ w_n274_n254# a_n188_n63# a_100_n76# a_n100_n168#
+X0 a_100_n76# a_n100_n168# a_n188_n63# w_n274_n254# pfet_05v0 ad=0.4348p pd=2.88u as=0.4348p ps=2.88u w=1u l=1u
+.ends
+
+.subckt bias_pstack pbias pcasc itail shld2 shld3 avdd enb
+Xpfet_06v0_3RDKLZ_0[0] avdd m3_1254_n1472# itail enb pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[1] avdd m3_1254_n1472# itail enb pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[2] avdd m3_1254_n1472# itail enb pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[3] avdd m3_1254_n1472# m3_1419_n103# pcasc pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[4] avdd m3_1254_n1472# m3_1419_n103# pcasc pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[5] avdd m3_1254_n1472# m3_1419_n103# pcasc pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[6] avdd avdd m3_1419_n103# pbias pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[7] avdd avdd m3_1419_n103# pbias pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[8] avdd avdd m3_1419_n103# pbias pfet_06v0_3RDKLZ
+.ends
+
+.subckt pfet_05v0_CKH6W8 a_n342_56# a_254_56# a_n342_n456# w_n428_n634# a_50_56# a_n50_n548#
++ a_50_n456# a_n154_n456# a_n154_56# a_154_n548# a_254_n456# a_n254_n548#
+X0 a_50_56# a_n50_n548# a_n154_56# w_n428_n634# pfet_05v0 ad=0.52p pd=2.52u as=0.52p ps=2.52u w=2u l=0.5u
+X1 a_254_56# a_154_n548# a_50_56# w_n428_n634# pfet_05v0 ad=0.88p pd=4.88u as=0.52p ps=2.52u w=2u l=0.5u
+X2 a_n154_n456# a_n254_n548# a_n342_n456# w_n428_n634# pfet_05v0 ad=0.52p pd=2.52u as=0.88p ps=4.88u w=2u l=0.5u
+X3 a_n154_56# a_n254_n548# a_n342_56# w_n428_n634# pfet_05v0 ad=0.52p pd=2.52u as=0.88p ps=4.88u w=2u l=0.5u
+X4 a_50_n456# a_n50_n548# a_n154_n456# w_n428_n634# pfet_05v0 ad=0.52p pd=2.52u as=0.52p ps=2.52u w=2u l=0.5u
+X5 a_254_n456# a_154_n548# a_50_n456# w_n428_n634# pfet_05v0 ad=0.88p pd=4.88u as=0.52p ps=2.52u w=2u l=0.5u
+.ends
+
+.subckt pfet_05v0_NN58UV a_52_24# a_n52_n316# a_n240_116# a_n152_24# a_152_116# a_n52_116#
++ a_52_n408# w_n326_n494# a_152_n316# a_n152_n408# a_n240_n316#
+X0 a_152_116# a_52_24# a_n52_116# w_n326_n494# pfet_05v0 ad=0.44p pd=2.88u as=0.26p ps=1.52u w=1u l=0.5u
+X1 a_152_n316# a_52_n408# a_n52_n316# w_n326_n494# pfet_05v0 ad=0.44p pd=2.88u as=0.26p ps=1.52u w=1u l=0.5u
+X2 a_n52_116# a_n152_24# a_n240_116# w_n326_n494# pfet_05v0 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.5u
+X3 a_n52_n316# a_n152_n408# a_n240_n316# w_n326_n494# pfet_05v0 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.5u
+.ends
+
+.subckt nfet_05v0_KAV8ES a_172_56# a_n260_n256# a_52_n348# a_n52_56# a_n52_n256# a_172_n256#
++ a_n172_n348# a_n260_56# VSUBS
+X0 a_n52_56# a_n172_n348# a_n260_56# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.6u
+X1 a_n52_n256# a_n172_n348# a_n260_n256# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.6u
+X2 a_172_n256# a_52_n348# a_n52_n256# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.26p ps=1.52u w=1u l=0.6u
+X3 a_172_56# a_52_n348# a_n52_56# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.26p ps=1.52u w=1u l=0.6u
+.ends
+
+.subckt nfet_05v0_PM8J2B a_n172_n192# a_n52_n100# a_172_n100# a_52_n192# a_n260_n100#
++ VSUBS
+X0 a_n52_n100# a_n172_n192# a_n260_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.6u
+X1 a_172_n100# a_52_n192# a_n52_n100# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.26p ps=1.52u w=1u l=0.6u
+.ends
+
+.subckt nfet_05v0_QZU775 a_n172_n492# a_n52_n400# a_172_n400# a_n396_n492# a_52_n492#
++ a_n276_n400# a_396_n400# a_276_n492# a_n484_n400# VSUBS
+X0 a_n276_n400# a_n396_n492# a_n484_n400# VSUBS nfet_05v0 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=0.6u
+X1 a_n52_n400# a_n172_n492# a_n276_n400# VSUBS nfet_05v0 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=0.6u
+X2 a_172_n400# a_52_n492# a_n52_n400# VSUBS nfet_05v0 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=0.6u
+X3 a_396_n400# a_276_n492# a_172_n400# VSUBS nfet_05v0 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=0.6u
+.ends
+
+.subckt level_shift_5v in_n vdd vss out in_p
+Xpfet_05v0_CKH6W8_0 m1_815_n293# vdd m1_815_n293# vdd out m1_815_n293# out vdd vdd
++ m1_815_n293# vdd m1_361_n474# pfet_05v0_CKH6W8
+Xpfet_05v0_NN58UV_0 m1_238_n301# vdd m1_238_n301# m1_361_n474# m1_361_n474# vdd m1_238_n301#
++ vdd m1_361_n474# m1_361_n474# m1_238_n301# pfet_05v0_NN58UV
+Xnfet_05v0_KAV8ES_0 vss vss m1_815_n293# out out vss m1_815_n293# vss vss nfet_05v0_KAV8ES
+Xnfet_05v0_PM8J2B_0 m1_361_n474# m1_815_n293# vss m1_361_n474# vss vss nfet_05v0_PM8J2B
+Xnfet_05v0_QZU775_0 in_p vss m1_361_n474# in_p in_n m1_238_n301# vss in_n vss vss
++ nfet_05v0_QZU775
+.ends
+
+.subckt bias_generator_be0p pcasc source_ena[4] source_ena[3] source_ena[2] source_ena[1]
++ source_ena[0] source_ibias bias_pstack_3/shld3 bias_pstack_3/shld2 pbias dvdd avdd
++ avss dvss
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_0 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_2 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_1 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_3 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_4 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_0 dvdd dvdd dvss dvss level_shift_5v_0[3]/in_p source_ena[1]
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_1 dvdd dvdd dvss dvss level_shift_5v_0[2]/in_p source_ena[2]
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_0 dvdd dvdd dvss dvss source_ena[1] gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_2 dvdd dvdd dvss dvss level_shift_5v_0[1]/in_p source_ena[3]
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_1 dvdd dvdd dvss dvss source_ena[2] gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_4 dvdd dvdd dvss dvss level_shift_5v_0[0]/in_p source_ena[4]
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_2 dvdd dvdd dvss dvss source_ena[3] gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_3 dvdd dvdd dvss dvss level_shift_5v_0[4]/in_p source_ena[0]
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xbias_pstack_0[0] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_0[7]/enb bias_pstack
+Xbias_pstack_0[1] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_0[7]/enb bias_pstack
+Xbias_pstack_0[2] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_0[7]/enb bias_pstack
+Xbias_pstack_0[3] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_0[7]/enb bias_pstack
+Xbias_pstack_0[4] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_0[7]/enb bias_pstack
+Xbias_pstack_0[5] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_0[7]/enb bias_pstack
+Xbias_pstack_0[6] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_0[7]/enb bias_pstack
+Xbias_pstack_0[7] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_0[7]/enb bias_pstack
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_3 dvdd dvdd dvss dvss source_ena[0] gf180mcu_as_sc_mcu7t3v3__diode_2
+Xbias_pstack_1[0] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_1[3]/enb bias_pstack
+Xbias_pstack_1[1] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_1[3]/enb bias_pstack
+Xbias_pstack_1[2] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_1[3]/enb bias_pstack
+Xbias_pstack_1[3] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_1[3]/enb bias_pstack
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_4 dvdd dvdd dvss dvss source_ena[4] gf180mcu_as_sc_mcu7t3v3__diode_2
+Xbias_pstack_2[0] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_2[1]/enb bias_pstack
+Xbias_pstack_2[1] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_2[1]/enb bias_pstack
+Xlevel_shift_5v_0[0] source_ena[4] avdd avss bias_pstack_4[9]/enb level_shift_5v_0[0]/in_p
++ level_shift_5v
+Xlevel_shift_5v_0[1] source_ena[3] avdd avss bias_pstack_0[7]/enb level_shift_5v_0[1]/in_p
++ level_shift_5v
+Xlevel_shift_5v_0[2] source_ena[2] avdd avss bias_pstack_1[3]/enb level_shift_5v_0[2]/in_p
++ level_shift_5v
+Xlevel_shift_5v_0[3] source_ena[1] avdd avss bias_pstack_2[1]/enb level_shift_5v_0[3]/in_p
++ level_shift_5v
+Xlevel_shift_5v_0[4] source_ena[0] avdd avss bias_pstack_3/enb level_shift_5v_0[4]/in_p
++ level_shift_5v
+Xbias_pstack_4[0] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[1] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[2] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[3] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[4] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[5] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[6] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[7] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[8] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[9] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[10] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[11] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[12] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[13] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[14] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_4[15] pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3
++ avdd bias_pstack_4[9]/enb bias_pstack
+Xbias_pstack_3 pbias pcasc source_ibias bias_pstack_3/shld2 bias_pstack_3/shld3 avdd
++ bias_pstack_3/enb bias_pstack
+.ends
+
+.subckt bias_generator_ben1um sink_ena[2] sink_ena[1] sink_ena[0] ncasc bias_nstack_0[9]/itail
++ sink_ibias dvdd nbias bias_nstack_3/shld2 avss bias_nstack_0[9]/a_1188_2591# level_shift_5v_2/vdd
++ dvss bias_nstack_3/shld3
+Xbias_nstack_0[0] bias_nstack_0[9]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[1] bias_nstack_0[9]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[2] bias_nstack_0[9]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[3] bias_nstack_0[9]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[4] bias_nstack_0[9]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[5] bias_nstack_0[9]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[6] bias_nstack_0[9]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[7] bias_nstack_0[9]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[8] bias_nstack_0[9]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[9] bias_nstack_0[9]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 bias_nstack_0[9]/a_1188_2591#
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_1 sink_ibias bias_nstack_3/shld2 bias_nstack_3/shld3 avss ncasc nbias
++ avss bias_nstack_1/ena bias_nstack
+Xbias_nstack_2[0] sink_ibias bias_nstack_3/shld2 bias_nstack_3/shld3 avss ncasc nbias
++ avss level_shift_5v_2/out bias_nstack
+Xbias_nstack_2[1] sink_ibias bias_nstack_3/shld2 bias_nstack_3/shld3 avss ncasc nbias
++ avss level_shift_5v_2/out bias_nstack
+Xbias_nstack_2[2] sink_ibias bias_nstack_3/shld2 bias_nstack_3/shld3 bias_nstack_2[2]/a_1188_2591#
++ ncasc nbias avss level_shift_5v_2/out bias_nstack
+Xbias_nstack_3 sink_ibias bias_nstack_3/shld2 bias_nstack_3/shld3 bias_nstack_3/a_1188_2591#
++ ncasc nbias avss bias_nstack_3/ena bias_nstack
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_0 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_1 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_2 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_0 dvdd dvdd dvss dvss level_shift_5v_0/in_n sink_ena[1]
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_1 dvdd dvdd dvss dvss level_shift_5v_1/in_n sink_ena[2]
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_0 dvdd dvdd dvss dvss sink_ena[1] gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_1 dvdd dvdd dvss dvss sink_ena[2] gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_4 dvdd dvdd dvss dvss level_shift_5v_2/in_n sink_ena[0]
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_4 dvdd dvdd dvss dvss sink_ena[0] gf180mcu_as_sc_mcu7t3v3__diode_2
+Xlevel_shift_5v_0 level_shift_5v_0/in_n level_shift_5v_2/vdd avss bias_nstack_1/ena
++ sink_ena[1] level_shift_5v
+Xlevel_shift_5v_1 level_shift_5v_1/in_n level_shift_5v_2/vdd avss bias_nstack_3/ena
++ sink_ena[2] level_shift_5v
+Xlevel_shift_5v_2 level_shift_5v_2/in_n level_shift_5v_2/vdd avss level_shift_5v_2/out
++ sink_ena[0] level_shift_5v
+.ends
+
+.subckt pfet_05v0_XC6Y4S a_n1168_n100# a_n2052_n100# w_n2138_n278# a_36_n100# a_n920_n192#
++ a_n1616_n192# a_472_n192# a_1516_n192# a_n124_n100# a_n572_n192# a_n1268_n192# a_1964_n100#
++ a_920_n100# a_1168_n192# a_124_n192# a_n224_n192# a_572_n100# a_1616_n100# a_1080_n100#
++ a_n1704_n100# a_n660_n100# a_1268_n100# a_732_n100# a_224_n100# a_n1356_n100# a_1776_n100#
++ a_n1864_n100# a_384_n100# a_n312_n100# a_n820_n100# a_n1008_n100# a_1428_n100# a_n1516_n100#
++ a_n1964_n192# a_n472_n100# a_1864_n192# a_820_n192#
+X0 a_n1168_n100# a_n1268_n192# a_n1356_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X1 a_n1864_n100# a_n1964_n192# a_n2052_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X2 a_572_n100# a_472_n192# a_384_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X3 a_1616_n100# a_1516_n192# a_1428_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X4 a_n124_n100# a_n224_n192# a_n312_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X5 a_1268_n100# a_1168_n192# a_1080_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X6 a_n820_n100# a_n920_n192# a_n1008_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X7 a_n1516_n100# a_n1616_n192# a_n1704_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X8 a_224_n100# a_124_n192# a_36_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X9 a_1964_n100# a_1864_n192# a_1776_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X10 a_n472_n100# a_n572_n192# a_n660_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X11 a_920_n100# a_820_n192# a_732_n100# w_n2138_n278# pfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+.ends
+
+.subckt nfet_05v0_CJX5SS a_n948_n100# a_n1844_n100# a_n2068_n100# a_1620_n192# a_1068_n100#
++ a_948_n192# a_n172_n192# a_1516_n100# a_1396_n192# a_1964_n100# a_n620_n192# a_2188_n100#
++ a_n2276_n100# a_1844_n192# a_n52_n100# a_2068_n192# a_172_n100# a_n500_n100# a_n396_n192#
++ a_n1292_n192# a_620_n100# a_52_n192# a_500_n192# a_n844_n192# a_n1740_n192# a_n1172_n100#
++ a_n276_n100# a_396_n100# a_n1620_n100# a_n1068_n192# a_n724_n100# a_276_n192# a_844_n100#
++ a_n1516_n192# a_724_n192# a_n1964_n192# a_1292_n100# a_n2188_n192# a_n1396_n100#
++ a_1172_n192# a_1740_n100# VSUBS
+X0 a_n1396_n100# a_n1516_n192# a_n1620_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X1 a_n52_n100# a_n172_n192# a_n276_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X2 a_n724_n100# a_n844_n192# a_n948_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X3 a_n1172_n100# a_n1292_n192# a_n1396_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X4 a_n1844_n100# a_n1964_n192# a_n2068_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X5 a_1292_n100# a_1172_n192# a_1068_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X6 a_1964_n100# a_1844_n192# a_1740_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X7 a_172_n100# a_52_n192# a_n52_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X8 a_620_n100# a_500_n192# a_396_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X9 a_n500_n100# a_n620_n192# a_n724_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X10 a_n2068_n100# a_n2188_n192# a_n2276_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.6u
+X11 a_396_n100# a_276_n192# a_172_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X12 a_n948_n100# a_n1068_n192# a_n1172_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X13 a_1068_n100# a_948_n192# a_844_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X14 a_n1620_n100# a_n1740_n192# a_n1844_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X15 a_2188_n100# a_2068_n192# a_1964_n100# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.26p ps=1.52u w=1u l=0.6u
+X16 a_n276_n100# a_n396_n192# a_n500_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X17 a_1740_n100# a_1620_n192# a_1516_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X18 a_1516_n100# a_1396_n192# a_1292_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+X19 a_844_n100# a_724_n192# a_620_n100# VSUBS nfet_05v0 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.6u
+.ends
+
+.subckt nfet_05v0_PSSCLX a_n148_n316# a_1412_n408# a_676_n408# a_1532_116# a_n1620_116#
++ a_n1900_n408# a_1692_116# a_n1780_116# a_n1164_n408# a_308_24# a_2060_n316# a_n1988_116#
++ a_n1164_24# a_1900_n316# a_n308_n316# a_2148_n408# a_n148_116# a_n796_24# a_1164_n316#
++ a_n1252_n316# a_n2268_24# a_428_n316# a_n428_n408# a_60_116# a_60_n316# a_n60_n408#
++ a_1412_24# a_n1044_116# a_n1900_24# a_956_116# a_1780_n408# a_1164_116# a_n1252_116#
++ a_1324_n316# a_588_n316# a_n516_n316# a_n1412_n316# a_220_n316# a_1044_n408# a_n1532_n408#
++ a_308_n408# a_1900_116# a_n428_24# a_n60_24# a_n676_n316# a_2060_116# a_n2148_n316#
++ a_220_116# a_n2148_116# a_1044_24# a_1532_n316# a_n1620_n316# a_n1988_n316# a_n308_116#
++ a_796_n316# a_n796_n408# a_n2268_n408# a_2268_116# a_n2356_116# a_676_24# a_428_116#
++ a_n516_116# a_2148_24# a_n1532_24# a_n676_116# a_588_116# a_n884_116# a_1692_n316#
++ a_n1780_n316# a_796_116# a_2268_n316# a_n884_n316# a_n2356_n316# a_1324_116# a_n1412_116#
++ a_956_n316# a_n1044_n316# a_1780_24# VSUBS
+X0 a_1900_116# a_1780_24# a_1692_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X1 a_2268_116# a_2148_24# a_2060_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X2 a_1532_116# a_1412_24# a_1324_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X3 a_n1412_n316# a_n1532_n408# a_n1620_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X4 a_n676_n316# a_n796_n408# a_n884_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X5 a_428_n316# a_308_n408# a_220_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X6 a_60_116# a_n60_24# a_n148_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X7 a_1164_n316# a_1044_n408# a_956_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X8 a_n2148_n316# a_n2268_n408# a_n2356_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X9 a_1900_n316# a_1780_n408# a_1692_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X10 a_n308_n316# a_n428_n408# a_n516_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X11 a_796_116# a_676_24# a_588_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X12 a_n1780_n316# a_n1900_n408# a_n1988_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X13 a_428_116# a_308_24# a_220_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X14 a_n676_116# a_n796_24# a_n884_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X15 a_n308_116# a_n428_24# a_n516_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X16 a_n1044_n316# a_n1164_n408# a_n1252_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X17 a_1532_n316# a_1412_n408# a_1324_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X18 a_n1044_116# a_n1164_24# a_n1252_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X19 a_1164_116# a_1044_24# a_956_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X20 a_60_n316# a_n60_n408# a_n148_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X21 a_796_n316# a_676_n408# a_588_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X22 a_n2148_116# a_n2268_24# a_n2356_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X23 a_2268_n316# a_2148_n408# a_2060_n316# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X24 a_n1780_116# a_n1900_24# a_n1988_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+X25 a_n1412_116# a_n1532_24# a_n1620_116# VSUBS nfet_05v0 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.6u
+.ends
+
+.subckt bias_amp_large avdd out inn inp avss ena nbias
+Xpfet_05v0_XC6Y4S_0 out avdd avdd avdd m3_1060_n19# m3_1060_n19# m3_1060_n19# m3_1060_n19#
++ m3_1060_n19# m3_1060_n19# m3_1060_n19# avdd out m3_1060_n19# m3_1060_n19# m3_1060_n19#
++ m3_1060_n19# out avdd avdd avdd m3_1060_n19# avdd out avdd avdd avdd avdd avdd m3_1060_n19#
++ avdd avdd m3_1060_n19# avdd out avdd m3_1060_n19# pfet_05v0_XC6Y4S
+Xpfet_05v0_XC6Y4S_1 m3_1060_n19# avdd avdd avdd m3_1060_n19# m3_1060_n19# m3_1060_n19#
++ m3_1060_n19# out m3_1060_n19# m3_1060_n19# avdd m3_1060_n19# m3_1060_n19# m3_1060_n19#
++ m3_1060_n19# out m3_1060_n19# avdd avdd avdd out avdd m3_1060_n19# avdd avdd avdd
++ avdd avdd out avdd avdd out avdd m3_1060_n19# avdd m3_1060_n19# pfet_05v0_XC6Y4S
+Xnfet_05v0_CJX5SS_0 m3_891_n2914# m3_891_n2914# m2_842_n906# ena m2_842_n906# ena
++ ena m2_842_n906# ena m2_842_n906# ena m3_891_n2914# m3_891_n2914# ena m3_891_n2914#
++ ena m2_842_n906# m3_891_n2914# ena ena m2_842_n906# ena ena ena ena m2_842_n906#
++ m2_842_n906# m3_891_n2914# m2_842_n906# ena m2_842_n906# ena m3_891_n2914# ena ena
++ ena m3_891_n2914# ena m3_891_n2914# ena m3_891_n2914# avss nfet_05v0_CJX5SS
+Xnfet_05v0_CJX5SS_1 m2_842_n906# m2_842_n906# m3_1060_n19# inp out inn inp m3_1060_n19#
++ inp out inn m2_842_n906# m2_842_n906# inn m2_842_n906# inn out m2_842_n906# inp
++ inp m3_1060_n19# inn inp inn inn m3_1060_n19# m3_1060_n19# m2_842_n906# out inp
++ out inn m2_842_n906# inn inp inp m2_842_n906# inp m2_842_n906# inn m2_842_n906#
++ avss nfet_05v0_CJX5SS
+Xnfet_05v0_CJX5SS_2 m2_842_n906# m2_842_n906# out inn m3_1060_n19# inp inn out inn
++ m3_1060_n19# inp m2_842_n906# m2_842_n906# inp m2_842_n906# inp m3_1060_n19# m2_842_n906#
++ inn inn out inp inn inp inp out out m2_842_n906# m3_1060_n19# inn m3_1060_n19# inp
++ m2_842_n906# inp inn inn m2_842_n906# inn m2_842_n906# inp m2_842_n906# avss nfet_05v0_CJX5SS
+Xnfet_05v0_PSSCLX_0 avss nbias nbias m3_891_n2914# avss nbias avss avss nbias nbias
++ avss avss nbias m3_891_n2914# m3_891_n2914# nbias avss nbias m3_891_n2914# avss
++ nbias m3_891_n2914# nbias m3_891_n2914# m3_891_n2914# nbias nbias m3_891_n2914#
++ nbias avss nbias m3_891_n2914# avss avss avss avss m3_891_n2914# avss nbias nbias
++ nbias m3_891_n2914# nbias nbias m3_891_n2914# avss avss avss avss nbias m3_891_n2914#
++ avss avss m3_891_n2914# m3_891_n2914# nbias nbias avss avss nbias m3_891_n2914#
++ avss nbias nbias m3_891_n2914# avss avss avss avss m3_891_n2914# avss avss avss
++ avss m3_891_n2914# avss m3_891_n2914# nbias avss nfet_05v0_PSSCLX
+.ends
+
+.subckt bias_pset pcasc enb itail shld3 avdd pbias
+Xpfet_06v0_3RDKLZ_0[0] avdd pcasc itail enb pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[1] avdd pcasc itail enb pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[2] avdd pcasc itail enb pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[3] avdd pcasc pbias pcasc pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[4] avdd pcasc pbias pcasc pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[5] avdd pcasc pbias pcasc pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[6] avdd avdd pbias pbias pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[7] avdd avdd pbias pbias pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[8] avdd avdd pbias pbias pfet_06v0_3RDKLZ
+.ends
+
+.subckt gf180mcu_as_sc_mcu7t3v3__nand2_2 VDD VNW VPW VSS Y B A
+X0 VDD A Y VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X1 VSS A a_28_68# VPW nfet_03v3 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.28u
+X2 Y B VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X3 a_28_68# B Y VPW nfet_03v3 ad=0.515p pd=3.03u as=0.26p ps=1.52u w=1u l=0.28u
+X4 VDD B Y VNW pfet_03v3 ad=0.7176p pd=3.8u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X5 Y B a_28_68# VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X6 Y A VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.6072p ps=3.64u w=1.38u l=0.28u
+X7 a_28_68# A VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+.ends
+
+.subckt gf180mcu_as_sc_mcu7t3v3__nor2_2 VDD VNW VPW VSS Y B A
+X0 a_28_440# A VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X1 Y A VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.28u
+X2 Y B a_28_440# VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X3 VSS B Y VPW nfet_03v3 ad=0.515p pd=3.03u as=0.26p ps=1.52u w=1u l=0.28u
+X4 a_28_440# B Y VNW pfet_03v3 ad=0.7176p pd=3.8u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X5 Y B VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X6 VDD A a_28_440# VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.6072p ps=3.64u w=1.38u l=0.28u
+X7 VSS A Y VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+.ends
+
+.subckt ppolyf_u_1k_CSXJ42 a_40_n2049# a_n5840_n2049# a_n800_1927# a_600_n2049# a_2000_1927#
++ a_1440_1927# a_n1360_1927# a_n1360_n2049# a_5080_n2049# a_2280_1927# a_n2480_n2049#
++ a_n3040_n2049# a_1720_1927# a_n2200_1927# a_4800_n2049# a_n1640_1927# a_n4160_n2049#
++ a_3120_1927# a_5920_n2049# a_2560_1927# a_n3040_1927# a_n5280_n2049# a_n2480_1927#
++ a_n800_n2049# a_1440_n2049# a_2000_n2049# a_n1920_1927# a_2560_n2049# a_n6332_n2261#
++ a_3120_n2049# a_3400_1927# a_2840_1927# a_n3320_1927# a_3680_n2049# a_n2760_1927#
++ a_4240_n2049# a_4240_1927# a_3680_1927# a_n1640_n2049# a_n4160_1927# a_5360_n2049#
++ a_n2200_n2049# a_n240_n2049# a_40_1927# a_5080_1927# a_n3600_1927# a_n2760_n2049#
++ a_n3320_n2049# a_4520_1927# a_3960_1927# a_n3880_n2049# a_n5000_1927# a_320_1927#
++ a_n4440_1927# a_n3880_1927# a_n4440_n2049# a_n5000_n2049# a_5360_1927# a_n5560_n2049#
++ a_320_n2049# a_n5280_1927# a_1720_n2049# a_n6120_n2049# a_4800_1927# a_n1080_n2049#
++ a_880_n2049# a_600_1927# a_n4720_1927# a_2840_n2049# a_3400_n2049# a_5640_1927#
++ a_3960_n2049# a_n6120_1927# a_880_1927# a_n5560_1927# a_n240_1927# a_4520_n2049#
++ a_n1920_n2049# a_5640_n2049# a_5920_1927# a_n520_n2049# a_1160_n2049# a_n5840_1927#
++ a_n520_1927# a_1160_1927# a_n3600_n2049# a_n1080_1927# a_2280_n2049# a_n4720_n2049#
+X0 a_n4440_1927# a_n4440_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X1 a_320_1927# a_320_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X2 a_n5000_1927# a_n5000_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X3 a_n2480_1927# a_n2480_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X4 a_n1920_1927# a_n1920_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X5 a_3120_1927# a_3120_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X6 a_5640_1927# a_5640_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X7 a_880_1927# a_880_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X8 a_1160_1927# a_1160_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X9 a_3680_1927# a_3680_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X10 a_n5280_1927# a_n5280_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X11 a_n240_1927# a_n240_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X12 a_40_1927# a_40_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X13 a_n4720_1927# a_n4720_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X14 a_600_1927# a_600_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X15 a_n2760_1927# a_n2760_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X16 a_n800_1927# a_n800_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X17 a_3400_1927# a_3400_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X18 a_5920_1927# a_5920_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X19 a_1440_1927# a_1440_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X20 a_3960_1927# a_3960_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X21 a_n5560_1927# a_n5560_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X22 a_n3040_1927# a_n3040_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X23 a_n520_1927# a_n520_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X24 a_n3600_1927# a_n3600_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X25 a_n1080_1927# a_n1080_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X26 a_4240_1927# a_4240_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X27 a_2280_1927# a_2280_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X28 a_n3320_1927# a_n3320_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X29 a_1720_1927# a_1720_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X30 a_n5840_1927# a_n5840_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X31 a_5080_1927# a_5080_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X32 a_n3880_1927# a_n3880_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X33 a_n1360_1927# a_n1360_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X34 a_2000_1927# a_2000_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X35 a_4520_1927# a_4520_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X36 a_n6120_1927# a_n6120_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X37 a_n4160_1927# a_n4160_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X38 a_2560_1927# a_2560_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X39 a_n2200_1927# a_n2200_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X40 a_5360_1927# a_5360_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X41 a_n1640_1927# a_n1640_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X42 a_4800_1927# a_4800_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+X43 a_2840_1927# a_2840_n2049# a_n6332_n2261# ppolyf_u_1k r_width=1u r_length=19.27u
+.ends
+
+.subckt bias_pset2 pbias pcasc enb itail shld2 shld3 avdd
+Xpfet_06v0_3RDKLZ_0[0] avdd pcasc itail enb pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[1] avdd pcasc itail enb pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[2] avdd pcasc itail enb pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[3] avdd pcasc pbias pcasc pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[4] avdd pcasc pbias pcasc pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[5] avdd pcasc pbias pcasc pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[6] avdd avdd pbias pbias pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[7] avdd avdd pbias pbias pfet_06v0_3RDKLZ
+Xpfet_06v0_3RDKLZ_0[8] avdd avdd pbias pbias pfet_06v0_3RDKLZ
+.ends
+
+.subckt cap_mim_2p0fF_BXZFNP m4_n740_n2420# m4_n620_n2300#
+X0 m4_n620_n2300# m4_n740_n2420# cap_mim_2f0_m4m5_noshield c_width=5u c_length=23u
+.ends
+
+.subckt ppolyf_u_1k_PNFQJL a_n240_n2074# a_40_1952# a_5080_1952# a_n2760_n2074# a_n3600_1952#
++ a_6480_n2074# a_n3320_n2074# a_7040_n2074# a_4520_1952# a_3960_1952# a_n3880_n2074#
++ a_320_1952# a_n5000_1952# a_n8852_n2286# a_n4440_1952# a_n3880_1952# a_n4440_n2074#
++ a_8160_n2074# a_n5000_n2074# a_5360_1952# a_n5560_n2074# a_320_n2074# a_n5280_1952#
++ a_1720_n2074# a_n6120_n2074# a_880_n2074# a_4800_1952# a_n1080_n2074# a_600_1952#
++ a_n6680_n2074# a_n4720_1952# a_2840_n2074# a_n7240_n2074# a_3400_n2074# a_6200_1952#
++ a_5640_1952# a_n6120_1952# a_3960_n2074# a_n5560_1952# a_n8360_n2074# a_n240_1952#
++ a_880_1952# a_4520_n2074# a_7040_1952# a_6480_1952# a_5640_n2074# a_n1920_n2074#
++ a_6200_n2074# a_5920_1952# a_1160_n2074# a_n520_n2074# a_n6400_1952# a_6760_n2074#
++ a_n5840_1952# a_n520_1952# a_n3600_n2074# a_1160_1952# a_7320_n2074# a_7320_1952#
++ a_2280_n2074# a_n1080_1952# a_6760_1952# a_7880_n2074# a_n7240_1952# a_n4720_n2074#
++ a_8440_n2074# a_n6680_1952# a_40_n2074# a_8160_1952# a_n5840_n2074# a_2000_1952#
++ a_n800_1952# a_600_n2074# a_n8080_1952# a_1440_1952# a_n6400_n2074# a_7600_1952#
++ a_n1360_n2074# a_n1360_1952# a_5080_n2074# a_n6960_n2074# a_n7520_1952# a_n6960_1952#
++ a_n7520_n2074# a_2280_1952# a_n2480_n2074# a_8440_1952# a_7880_1952# a_n3040_n2074#
++ a_n8640_n2074# a_1720_1952# a_n8360_1952# a_4800_n2074# a_n2200_1952# a_n1640_1952#
++ a_n4160_n2074# a_n7800_1952# a_3120_1952# a_5920_n2074# a_2560_1952# a_n5280_n2074#
++ a_n3040_1952# a_n2480_1952# a_1440_n2074# a_n800_n2074# a_n8640_1952# a_2000_n2074#
++ a_7600_n2074# a_n1920_1952# a_2560_n2074# a_3120_n2074# a_3400_1952# a_2840_1952#
++ a_3680_n2074# a_n3320_1952# a_n8080_n2074# a_n2760_1952# a_4240_n2074# a_4240_1952#
++ a_3680_1952# a_n1640_n2074# a_n4160_1952# a_5360_n2074# a_n2200_n2074# a_n7800_n2074#
+X0 a_n5840_1952# a_n5840_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X1 a_n3320_1952# a_n3320_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X2 a_n3880_1952# a_n3880_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X3 a_n1360_1952# a_n1360_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X4 a_2000_1952# a_2000_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X5 a_4520_1952# a_4520_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X6 a_5080_1952# a_5080_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X7 a_n6120_1952# a_n6120_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X8 a_n8640_1952# a_n8640_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X9 a_2560_1952# a_2560_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X10 a_n6680_1952# a_n6680_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X11 a_n4160_1952# a_n4160_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X12 a_7320_1952# a_7320_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X13 a_n2200_1952# a_n2200_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X14 a_5360_1952# a_5360_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X15 a_n1640_1952# a_n1640_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X16 a_4800_1952# a_4800_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X17 a_7880_1952# a_7880_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X18 a_n4440_1952# a_n4440_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X19 a_2840_1952# a_2840_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X20 a_8160_1952# a_8160_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X21 a_n6960_1952# a_n6960_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X22 a_7600_1952# a_7600_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X23 a_320_1952# a_320_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X24 a_n5000_1952# a_n5000_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X25 a_n2480_1952# a_n2480_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X26 a_3120_1952# a_3120_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X27 a_5640_1952# a_5640_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X28 a_n7240_1952# a_n7240_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X29 a_n1920_1952# a_n1920_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X30 a_880_1952# a_880_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X31 a_1160_1952# a_1160_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X32 a_n5280_1952# a_n5280_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X33 a_n240_1952# a_n240_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X34 a_40_1952# a_40_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X35 a_3680_1952# a_3680_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X36 a_n7800_1952# a_n7800_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X37 a_n4720_1952# a_n4720_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X38 a_8440_1952# a_8440_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X39 a_600_1952# a_600_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X40 a_n800_1952# a_n800_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X41 a_6480_1952# a_6480_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X42 a_n8080_1952# a_n8080_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X43 a_n2760_1952# a_n2760_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X44 a_3400_1952# a_3400_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X45 a_5920_1952# a_5920_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X46 a_n7520_1952# a_n7520_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X47 a_1440_1952# a_1440_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X48 a_3960_1952# a_3960_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X49 a_n5560_1952# a_n5560_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X50 a_n3040_1952# a_n3040_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X51 a_n520_1952# a_n520_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X52 a_6200_1952# a_6200_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X53 a_n1080_1952# a_n1080_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X54 a_n3600_1952# a_n3600_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X55 a_4240_1952# a_4240_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X56 a_6760_1952# a_6760_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X57 a_n8360_1952# a_n8360_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X58 a_2280_1952# a_2280_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X59 a_n6400_1952# a_n6400_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X60 a_1720_1952# a_1720_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+X61 a_7040_1952# a_7040_n2074# a_n8852_n2286# ppolyf_u_1k r_width=1u r_length=19.52u
+.ends
+
+.subckt bias_nset itail shld2 shld3 a_1188_2591# ncasc nbias avss ena
+Xnfet_06v0_6R5Q3A_0[0] ncasc itail ena avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[1] ncasc itail ena avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[2] ncasc itail ena avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[3] ncasc nbias ncasc avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[4] ncasc nbias ncasc avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[5] ncasc nbias ncasc avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[6] avss nbias nbias avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[7] avss nbias nbias avss nfet_06v0_6R5Q3A
+Xnfet_06v0_6R5Q3A_0[8] avss nbias nbias avss nfet_06v0_6R5Q3A
+.ends
+
+.subckt bias_generator_fe ena vbg src_test0 ena_src_test0 ref_sel_vbg ref_in pcasc
++ pbias snk_test0 ena_snk_test0 ncasc ref_sel_fine ref_sel_coarse dvdd x13[9]/shld2
++ nbias avdd dvss
+Xbias_nstack_0 bias_pset_1/itail dvss dvss bias_nstack_0/a_1188_2591# ncasc nbias
++ dvss ena_5v0 bias_nstack
+Xbias_nstack_1[0] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss dvss bias_nstack
+Xbias_nstack_1[1] bias_nset_0[9]/itail dvss dvss bias_nstack_1[1]/a_1188_2591# ncasc
++ nbias dvss dvss bias_nstack
+Xx3 avdd pbias vbg x3/inp dvss ena_vbg_5v0 nbias bias_amp_large
+Xx4[0] snk_test0 dvss dvss dvss ncasc nbias dvss ena_test0_5v0 bias_nstack
+Xx4[1] snk_test0 dvss dvss x4[1]/a_1188_2591# ncasc nbias dvss ena_test0_5v0 bias_nstack
+Xbias_pset_1 pcasc ena_vbg_5v0 bias_pset_1/itail avdd avdd pbias bias_pset
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_0 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_1 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_2 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_3 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_0 dvdd dvdd dvss dvss level_shift_5v_4/in_n level_shift_5v_4/in_p
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_4 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_1 dvdd dvdd dvss dvss x12/in_n ena_snk_test0 gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_0 dvdd dvdd dvss dvss ref_sel_coarse gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_5 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_2 dvdd dvdd dvss dvss level_shift_5v_0/in_n ena gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_1 dvdd dvdd dvss dvss ena_snk_test0 gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_6 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3_nand2_2_0 dvdd dvdd dvss dvss level_shift_5v_4/in_p ref_sel_vbg
++ gf180mcu_as_sc_mcu7t3v3_nand2_2_3/Y gf180mcu_as_sc_mcu7t3v3__nand2_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_3 dvdd dvdd dvss dvss level_shift_5v_6/in_p ena_src_test0
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xbias_pstack_0[0] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_std_5v0 bias_pstack
+Xbias_pstack_0[1] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_std_5v0 bias_pstack
+Xbias_pstack_0[2] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_std_5v0 bias_pstack
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_2 dvdd dvdd dvss dvss ena gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3_nand2_2_1 dvdd dvdd dvss dvss level_shift_5v_3/in_p ref_sel_vbg
++ gf180mcu_as_sc_mcu7t3v3_nand2_2_4/Y gf180mcu_as_sc_mcu7t3v3__nand2_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_4 dvdd dvdd dvss dvss level_shift_5v_2/in_n ref_sel_vbg
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xbias_pstack_1 pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_coarse_5v0 bias_pstack
+Xgf180mcu_as_sc_mcu7t3v3_nor2_2_1 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3_nor2_2_1/Y
++ gf180mcu_as_sc_mcu7t3v3_nor2_2_1/B ref_sel_coarse gf180mcu_as_sc_mcu7t3v3__nor2_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_3 dvdd dvdd dvss dvss ena_src_test0 gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3_nand2_2_2 dvdd dvdd dvss dvss level_shift_5v_5/in_p ref_sel_vbg
++ gf180mcu_as_sc_mcu7t3v3_nor2_2_1/Y gf180mcu_as_sc_mcu7t3v3__nand2_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_5 dvdd dvdd dvss dvss level_shift_5v_3/in_n level_shift_5v_3/in_p
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xppolyf_u_1k_CSXJ42_0 m1_1171_3842# m1_n4989_3842# m1_331_7866# m1_1731_3842# m1_3131_7866#
++ m1_2571_7866# m1_n229_7866# m1_n509_3842# m1_6204_3842# m1_3131_7866# m1_n1629_3842#
++ m1_n2189_3842# m1_2571_7866# m1_n1349_7866# m1_5651_3842# m1_n789_7866# m1_n3309_3842#
++ m1_4251_7866# m1_6764_3842# m1_3691_7866# m1_n1909_7866# m1_n4429_3842# m1_n1349_7866#
++ m1_51_3842# m1_2291_3842# m1_2851_3842# m1_n789_7866# m1_3411_3842# dvss m1_3971_3842#
++ m1_4251_7866# m1_3691_7866# m1_n2469_7866# m1_4531_3842# m1_n1909_7866# m1_5091_3842#
++ m1_5371_7866# m1_4811_7866# m1_n509_3842# m1_n3029_7866# m1_6204_3842# m1_n1069_3842#
++ m1_611_3842# m1_891_7866# m1_5931_7866# m1_n2469_7866# m1_n1629_3842# m1_n2189_3842#
++ m1_5371_7866# m1_4811_7866# m1_n2749_3842# m1_n4149_7866# m1_1451_7866# m1_n3589_7866#
++ m1_n3029_7866# m1_n3309_3842# m1_n3869_3842# m1_6485_7866# m1_n4429_3842# m1_1171_3842#
++ m1_n4149_7866# m1_2851_3842# m1_n4989_3842# m1_5931_7866# m1_51_3842# m1_1731_3842#
++ m1_1451_7866# m1_n3589_7866# m1_3971_3842# m1_4531_3842# m1_6485_7866# m1_5091_3842#
++ bias_nset_0[9]/itail m1_2011_7866# m1_n4709_7866# m1_891_7866# m1_5651_3842# m1_n1069_3842#
++ m1_6764_3842# ref_in m1_611_3842# m1_2291_3842# m1_n4709_7866# m1_331_7866# m1_2011_7866#
++ m1_n2749_3842# m1_n229_7866# m1_3411_3842# m1_n3869_3842# ppolyf_u_1k_CSXJ42
+Xbias_pstack_2[0] pbias pcasc src_test0 x13[9]/shld2 avdd avdd level_shift_5v_6/out
++ bias_pstack
+Xbias_pstack_2[1] pbias pcasc src_test0 x13[9]/shld2 avdd avdd level_shift_5v_6/out
++ bias_pstack
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_4 dvdd dvdd dvss dvss ref_sel_vbg gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3_nand2_2_3 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3_nand2_2_3/Y
++ ref_sel_coarse gf180mcu_as_sc_mcu7t3v3_nor2_2_1/B gf180mcu_as_sc_mcu7t3v3__nand2_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_6 dvdd dvdd dvss dvss level_shift_5v_5/in_n level_shift_5v_5/in_p
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_5 dvdd dvdd dvss dvss ref_sel_fine gf180mcu_as_sc_mcu7t3v3__diode_2
+Xbias_pstack_3[0] bias_pset2_0/pbias pcasc x3/inp pbias avdd avdd avdd bias_pstack
+Xbias_pstack_3[1] bias_pset2_0/pbias pcasc x3/inp pbias avdd avdd avdd bias_pstack
+Xlevel_shift_5v_0 level_shift_5v_0/in_n avdd dvss ena_5v0 ena level_shift_5v
+Xgf180mcu_as_sc_mcu7t3v3_nand2_2_4 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3_nand2_2_4/Y
++ ref_sel_fine ref_sel_coarse gf180mcu_as_sc_mcu7t3v3__nand2_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_7 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3_nor2_2_1/B
++ ref_sel_fine gf180mcu_as_sc_mcu7t3v3__inv_2
+Xbias_pset2_0 bias_pset2_0/pbias pcasc enb_vbg_5v0 bias_pset_1/itail pbias avdd avdd
++ bias_pset2
+Xlevel_shift_5v_1 ref_sel_vbg avdd dvss enb_vbg_5v0 level_shift_5v_2/in_n level_shift_5v
+Xlevel_shift_5v_2 level_shift_5v_2/in_n avdd dvss ena_vbg_5v0 ref_sel_vbg level_shift_5v
+Xcap_mim_2p0fF_BXZFNP_0 x3/inp pbias cap_mim_2p0fF_BXZFNP
+Xlevel_shift_5v_3 level_shift_5v_3/in_n avdd dvss enb_coarse_5v0 level_shift_5v_3/in_p
++ level_shift_5v
+Xlevel_shift_5v_4 level_shift_5v_4/in_n avdd dvss enb_std_5v0 level_shift_5v_4/in_p
++ level_shift_5v
+Xlevel_shift_5v_5 level_shift_5v_5/in_n avdd dvss enb_fine_5v0 level_shift_5v_5/in_p
++ level_shift_5v
+Xlevel_shift_5v_6 ena_src_test0 avdd dvss level_shift_5v_6/out level_shift_5v_6/in_p
++ level_shift_5v
+Xppolyf_u_1k_PNFQJL_0 m1_783_8755# m1_1062_12830# m1_6102_12830# m1_n1457_8755# m1_n2298_12830#
++ m1_7503_8755# m1_n2017_8755# m1_8063_8755# m1_5542_12830# m1_4982_12830# m1_n2577_8755#
++ m1_1622_12830# m1_n3978_12830# dvss m1_n3418_12830# m1_n2858_12830# m1_n3137_8755#
++ m1_9183_8755# m1_n3697_8755# m1_6662_12830# m1_n4257_8755# m1_1343_8755# m1_n3978_12830#
++ m1_3023_8755# m1_n4817_8755# m1_1903_8755# m1_6102_12830# m1_223_8755# m1_1622_12830#
++ m1_n5377_8755# m1_n3418_12830# m1_4143_8755# m1_n5937_8755# m1_4703_8755# m1_7222_12830#
++ m1_6662_12830# m1_n5098_12830# m1_5263_8755# m1_n4538_12830# m1_n7057_8755# m1_1062_12830#
++ m1_2182_12830# m1_5823_8755# m1_8342_12830# m1_7782_12830# m1_6944_8755# m1_n897_8755#
++ m1_7503_8755# m1_7222_12830# m1_2463_8755# m1_783_8755# m1_n5098_12830# m1_8063_8755#
++ m1_n4538_12830# m1_502_12830# m1_n2577_8755# m1_2182_12830# m1_8623_8755# m1_8342_12830#
++ m1_3583_8755# m1_n58_12830# m1_7782_12830# m1_9183_8755# m1_n6218_12830# m1_n3697_8755#
++ x3/inp m1_n5658_12830# m1_1343_8755# m1_9462_12830# m1_n4817_8755# m1_3302_12830#
++ m1_502_12830# m1_1903_8755# m1_n6778_12830# m1_2742_12830# m1_n5377_8755# m1_8902_12830#
++ m1_n337_8755# m1_n58_12830# m1_6381_8755# m1_n5937_8755# m1_n6218_12830# m1_n5658_12830#
++ m1_n6497_8755# m1_3302_12830# m1_n1457_8755# m1_9462_12830# m1_8902_12830# m1_n2017_8755#
++ dvss m1_2742_12830# m1_n7338_12830# m1_5823_8755# m1_n1178_12830# m1_n618_12830#
++ m1_n3137_8755# m1_n6778_12830# m1_4422_12830# m1_6944_8755# m1_3862_12830# m1_n4257_8755#
++ m1_n1738_12830# m1_n1178_12830# m1_2463_8755# m1_223_8755# m1_n7338_12830# m1_3023_8755#
++ m1_8623_8755# m1_n618_12830# m1_3583_8755# m1_4143_8755# m1_4422_12830# m1_3862_12830#
++ m1_4703_8755# m1_n2298_12830# m1_n7057_8755# m1_n1738_12830# m1_5263_8755# m1_5542_12830#
++ m1_4982_12830# m1_n337_8755# m1_n2858_12830# m1_6381_8755# m1_n897_8755# m1_n6497_8755#
++ ppolyf_u_1k_PNFQJL
+Xx12 x12/in_n avdd dvss ena_test0_5v0 ena_snk_test0 level_shift_5v
+Xbias_nset_0[0] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[1] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[2] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[3] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[4] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[5] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[6] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[7] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[8] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[9] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[10] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[11] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[12] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[13] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[14] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xbias_nset_0[15] bias_nset_0[9]/itail dvss dvss dvss ncasc nbias dvss ena_5v0 bias_nset
+Xx13[0] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[1] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[2] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[3] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[4] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[5] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[6] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[7] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[8] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[9] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[10] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[11] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[12] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[13] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[14] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+Xx13[15] pbias pcasc x3/inp x13[9]/shld2 avdd avdd enb_fine_5v0 bias_pstack
+.ends
+
+.subckt bias_generator_ben250nm sink_ena[1] sink_ena[0] bias_nstack_1/a_1188_2591#
++ bias_nstack_3/shld3 bias_nstack_3/shld2 bias_nstack_0[7]/a_1188_2591# sink_ibias
++ ncasc avdd nbias dvdd dvss avss
+Xbias_nstack_0[0] bias_nstack_0[7]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[1] bias_nstack_0[7]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[2] bias_nstack_0[7]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[3] bias_nstack_0[7]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[4] bias_nstack_0[7]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[5] bias_nstack_0[7]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[6] bias_nstack_0[7]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 avss
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_0[7] bias_nstack_0[7]/itail bias_nstack_3/shld2 bias_nstack_3/shld3 bias_nstack_0[7]/a_1188_2591#
++ ncasc nbias avss avss bias_nstack
+Xbias_nstack_1 sink_ibias bias_nstack_3/shld2 bias_nstack_3/shld3 bias_nstack_1/a_1188_2591#
++ ncasc nbias avss bias_nstack_1/ena bias_nstack
+Xbias_nstack_3 sink_ibias bias_nstack_3/shld2 bias_nstack_3/shld3 bias_nstack_3/a_1188_2591#
++ ncasc nbias avss bias_nstack_3/ena bias_nstack
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_0 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_2 dvdd dvdd dvss dvss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_0 dvdd dvdd dvss dvss level_shift_5v_0/in_n sink_ena[1]
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_0 dvdd dvdd dvss dvss sink_ena[1] gf180mcu_as_sc_mcu7t3v3__diode_2
+Xgf180mcu_as_sc_mcu7t3v3__inv_2_4 dvdd dvdd dvss dvss level_shift_5v_1/in_n sink_ena[0]
++ gf180mcu_as_sc_mcu7t3v3__inv_2
+Xgf180mcu_as_sc_mcu7t3v3__diode_2_4 dvdd dvdd dvss dvss sink_ena[0] gf180mcu_as_sc_mcu7t3v3__diode_2
+Xlevel_shift_5v_0 level_shift_5v_0/in_n avdd avss bias_nstack_3/ena sink_ena[1] level_shift_5v
+Xlevel_shift_5v_1 level_shift_5v_1/in_n avdd avss bias_nstack_1/ena sink_ena[0] level_shift_5v
+.ends
+
+.subckt gf180mcu_ocd_ip__biasgen ena ref_in dvss vbg ref_sel_vbg idac1_source_ibias
++ idac2_source[4] idac2_source[3] idac2_source[2] idac2_source[1] idac2_source[0]
++ idac2_source_ibias idac1_source[0] idac1_source[1] idac1_source[2] idac1_source[3]
++ idac1_source[4] voltgen_source[4] voltgen_source[3] voltgen_source[2] voltgen_source[1]
++ voltgen_source[0] voltgen_source_ibias ref_sel_coarse ref_sel_fine bandgap_sink2_ibias
++ bandgap_sink2[0] bandgap_sink2[1] bandgap_sink1[0] bandgap_sink1[1] bandgap_sink1[2]
++ voltgen_sink1[0] voltgen_sink1[1] voltgen_sink1[2] voltgen_sink2[0] voltgen_sink2[1]
++ voltgen_sink2[2] voltgen_sink2_ibias voltgen_sink1_ibias bandgap_sink1_ibias avdd
+Xbias_nstack_0[0] bias_nstack_0[4]/itail dvss dvss dvss bias_nstack_0[4]/ncasc bias_nstack_0[4]/nbias
++ dvss dvss bias_nstack
+Xbias_nstack_0[1] bias_nstack_0[4]/itail dvss dvss dvss bias_nstack_0[4]/ncasc bias_nstack_0[4]/nbias
++ dvss dvss bias_nstack
+Xbias_nstack_0[2] bias_nstack_0[4]/itail dvss dvss dvss bias_nstack_0[4]/ncasc bias_nstack_0[4]/nbias
++ dvss dvss bias_nstack
+Xbias_nstack_0[3] bias_nstack_0[4]/itail dvss dvss dvss bias_nstack_0[4]/ncasc bias_nstack_0[4]/nbias
++ dvss dvss bias_nstack
+Xbias_nstack_0[4] bias_nstack_0[4]/itail dvss dvss bias_nstack_0[4]/a_1188_2591# bias_nstack_0[4]/ncasc
++ bias_nstack_0[4]/nbias dvss dvss bias_nstack
+Xbias_generator_be0p_0 bias_pstack_0[4]/pcasc voltgen_source[4] voltgen_source[3]
++ voltgen_source[2] voltgen_source[1] voltgen_source[0] voltgen_source_ibias avdd
++ avdd bias_pstack_0[4]/pbias bias_generator_fe_0/dvdd avdd dvss dvss bias_generator_be0p
+Xbias_generator_be0p_1 bias_pstack_0[4]/pcasc idac2_source[4] idac2_source[3] idac2_source[2]
++ idac2_source[1] idac2_source[0] idac2_source_ibias avdd avdd bias_pstack_0[4]/pbias
++ bias_generator_fe_0/dvdd avdd dvss dvss bias_generator_be0p
+Xbias_generator_be0p_2 bias_pstack_0[4]/pcasc idac1_source[4] idac1_source[3] idac1_source[2]
++ idac1_source[1] idac1_source[0] idac1_source_ibias avdd avdd bias_pstack_0[4]/pbias
++ bias_generator_fe_0/dvdd avdd dvss dvss bias_generator_be0p
+Xbias_pstack_0[0] bias_pstack_0[4]/pbias bias_pstack_0[4]/pcasc bias_pstack_0[4]/itail
++ avdd avdd avdd avdd bias_pstack
+Xbias_pstack_0[1] bias_pstack_0[4]/pbias bias_pstack_0[4]/pcasc bias_pstack_0[4]/itail
++ avdd avdd avdd avdd bias_pstack
+Xbias_pstack_0[2] bias_pstack_0[4]/pbias bias_pstack_0[4]/pcasc bias_pstack_0[4]/itail
++ avdd avdd avdd avdd bias_pstack
+Xbias_pstack_0[3] bias_pstack_0[4]/pbias bias_pstack_0[4]/pcasc bias_pstack_0[4]/itail
++ avdd avdd avdd avdd bias_pstack
+Xbias_pstack_0[4] bias_pstack_0[4]/pbias bias_pstack_0[4]/pcasc bias_pstack_0[4]/itail
++ avdd avdd avdd avdd bias_pstack
+Xbias_generator_ben1um_0 voltgen_sink2[2] voltgen_sink2[1] voltgen_sink2[0] bias_nstack_0[4]/ncasc
++ bias_generator_ben1um_0/bias_nstack_0[9]/itail voltgen_sink2_ibias bias_generator_fe_0/dvdd
++ bias_nstack_0[4]/nbias dvss dvss dvss avdd dvss dvss bias_generator_ben1um
+Xbias_generator_ben1um_1 voltgen_sink1[2] voltgen_sink1[1] voltgen_sink1[0] bias_nstack_0[4]/ncasc
++ bias_generator_ben1um_1/bias_nstack_0[9]/itail voltgen_sink1_ibias bias_generator_fe_0/dvdd
++ bias_nstack_0[4]/nbias dvss dvss dvss avdd dvss dvss bias_generator_ben1um
+Xbias_generator_ben1um_2 bandgap_sink1[2] bandgap_sink1[1] bandgap_sink1[0] bias_nstack_0[4]/ncasc
++ bias_generator_ben1um_2/bias_nstack_0[9]/itail bandgap_sink1_ibias bias_generator_fe_0/dvdd
++ bias_nstack_0[4]/nbias dvss dvss dvss avdd dvss dvss bias_generator_ben1um
+Xbias_generator_fe_0 ena vbg bias_generator_fe_0/src_test0 dvss ref_sel_vbg ref_in
++ bias_pstack_0[4]/pcasc bias_pstack_0[4]/pbias bias_generator_fe_0/snk_test0 dvss
++ bias_nstack_0[4]/ncasc ref_sel_fine ref_sel_coarse bias_generator_fe_0/dvdd avdd
++ bias_nstack_0[4]/nbias avdd dvss bias_generator_fe
+Xbias_generator_ben250nm_0 bandgap_sink2[1] bandgap_sink2[0] bias_nstack_0[4]/a_1188_2591#
++ dvss dvss dvss bandgap_sink2_ibias bias_nstack_0[4]/ncasc avdd bias_nstack_0[4]/nbias
++ bias_generator_fe_0/dvdd dvss dvss bias_generator_ben250nm
+.ends
+

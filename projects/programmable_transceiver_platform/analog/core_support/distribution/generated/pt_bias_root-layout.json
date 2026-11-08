@@ -1,0 +1,46 @@
+{
+ "cell": "pt_bias_root",
+ "layout_image": "svalbard/librelane-gf180-canary:2026.08",
+ "layout_image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+ "magic_drc_errors": 0,
+ "klayout_drc": {
+  "result": "SUCCESS",
+  "violations": 0,
+  "lyrdb_items": 0
+ },
+ "gds_export": {
+  "tool": "analog image Magic 8.3.678, cif ostyle gdsii",
+  "hres_check": {
+   "gds": "/work/pt_bias_root_export.gds",
+   "top": "pt_bias_root",
+   "resistor_bodies": 0,
+   "bodies_with_hres": 0,
+   "bodies_without_hres": 0,
+   "hres_shapes": 0,
+   "bodies_not_fully_covered": 0
+  }
+ },
+ "lvs_final": "Final result: Circuits match uniquely.",
+ "lvs_unique_match": true,
+ "width_um": 157.7,
+ "height_um": 25.06,
+ "area_um2": 3952.0,
+ "circuit": {
+  "devices": 11,
+  "mos_instances": 11,
+  "mos_fingers": 17,
+  "resistors": 0,
+  "nets": 17
+ },
+ "hashes": {
+  "pt_bias_root.spice": "19fc1311e89cd1b8cf256b6290041460936337cc4950746e1a7ab9b6b805c259",
+  "pt_bias_root.gds": "5325fb8823e034fc7b65e9c56938bf086929ccdee48e669e693ed8c3d7ca546b",
+  "pt_bias_root.ext.spice": "ba314f2516f82897d44ef7fb0f787cf5461ac0faf35e34a2d5f7409e260cbc93",
+  "rf_tx/layoutlib.py": "067f29bd000ba2e414787dfd146ba34e49c7f5c7c88bae3d1a4b606447c5c111",
+  "rf_tx/circuits.py": "59382037c2ad25a85d7086c05a59cb0bc7b263fddbe9ca558a6447f9f9f272fb",
+  "circuits_dist.py": "8282b817edc5fca73c1396bbbf1ddbba83c26b243dc4f3618cff171d47e950a3"
+ },
+ "limitations": [
+  "Extraction is capacitance-only (layoutlib ext2spice cthresh 0)."
+ ]
+}

@@ -1,0 +1,85 @@
+{
+ "results": {
+  "nominal_resistance/typical/27C": {
+   "pad_p_peak_v": 5.2164885,
+   "rail_peak_v": 4.08078034,
+   "exceeding": 0,
+   "brownout_pad_v": 2.95628666,
+   "deck_sha256": "f7b7362bcf7e65725b62c4f2d80a47620f4f471eee3bc8be8294232a854111b3"
+  },
+  "nominal_resistance/ss/0C": {
+   "pad_p_peak_v": 5.87278689,
+   "rail_peak_v": 4.69505275,
+   "exceeding": 0,
+   "brownout_pad_v": 2.99988382,
+   "deck_sha256": "08dc3c5b62ef8b649b76ac84327d3420bab610bce99b204d79b46f2a4f4a3f78"
+  },
+  "nominal_model": {
+   "r_segment_ohm": 0.025633866279069772,
+   "r_join_ohm": 0.42856822086515717,
+   "r_via_group_ohm": 0.03,
+   "straps": {
+    "rail_strap_ohm": 0.09024666666666667,
+    "vss_strap_ohm": 0.18165681276307657,
+    "plate_end_to_end_ohm": 0.6152127906976745,
+    "banks_bound_ohm": 3.6912767441860472,
+    "total_bound_ohm": 3.9631802236157903,
+    "drop_at_100mA_v": 0.39631802236157904
+   },
+   "rail_columns": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "vss_columns": [
+    7,
+    8,
+    9
+   ]
+  },
+  "high_resistance/typical/27C": {
+   "pad_p_peak_v": 5.24092856,
+   "rail_peak_v": 4.10541717,
+   "exceeding": 0,
+   "brownout_pad_v": 2.95629049,
+   "deck_sha256": "f804bfb3818076987d129f19f477dbde40a4a527f7d55959c86ec6706d55acd2"
+  },
+  "high_resistance/ss/0C": {
+   "pad_p_peak_v": 5.89504714,
+   "rail_peak_v": 4.71762638,
+   "exceeding": 0,
+   "brownout_pad_v": 2.99988381,
+   "deck_sha256": "d7073b73bbf98e774799b2e7867e980220325c1f41ca9dc87b9994b06b937fc7"
+  },
+  "high_model": {
+   "r_segment_ohm": 0.029621356589147295,
+   "r_join_ohm": 0.4952343885552927,
+   "r_via_group_ohm": 0.1,
+   "straps": {
+    "rail_strap_ohm": 0.14217716666666666,
+    "vss_strap_ohm": 0.2568958526547781,
+    "plate_end_to_end_ohm": 0.710912558139535,
+    "banks_bound_ohm": 4.26547534883721,
+    "total_bound_ohm": 4.664548368158655,
+    "drop_at_100mA_v": 0.46645483681586547
+   },
+   "rail_columns": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "vss_columns": [
+    7,
+    8,
+    9
+   ]
+  }
+ },
+ "scope": "Wiring-resistance check of the v2 rail shunt in the 100 mA retained-network pulse.\n\nMagic's device-level extraction (used for LVS and the earlier screens) has no\nwiring resistance. This builds a distributed model of the drawn v2 macro: each\nbank is 24 groups of 10 fingers on drain and source plate lines (metal2 ||\nmetal3, nominal or high sheet resistance), source(k) and drain(k+1) joined plate\nto plate, RAIL entering bank 0 and VSS leaving bank 2 at the drawn strap columns\nthrough the drawn strap and via resistances (rail_shunt_v2.strap_resistance).\nIt replaces the shunt in the same RX retained pulse fixture used for selection.\nLumped-line approximation, not resistance extraction.",
+ "device_only_reference": {
+  "typical/27C": 5.153,
+  "ss/0C": 5.822
+ }
+}

@@ -9,11 +9,16 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import os
 import subprocess
 from circuits import build, FAMILIES
 from design import PROJECT, resolve
 
-IMAGE = 'sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17'
+# Locked svalbard/librelane-gf180-canary:2026.08 identity (env/images.lock).
+LOCKED_IMAGE = 'sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17'
+# A rebuild from the same checked-in recipe may be selected explicitly. Its ID is
+# recorded in every report that stores image_id; see env/pad-environment.json.
+IMAGE = os.environ.get('SVALBARD_PAD_IMAGE', LOCKED_IMAGE)
 PDK = '/pdk/gf180mcuD'
 
 
@@ -39,7 +44,7 @@ def magic(work, script, *, allow_failure=False):
     command = ['docker', 'run', '--rm', '--network', 'none', '--entrypoint', '/bin/sh',
                '--mount', f'type=bind,src={work},dst=/work', '-w', '/work', IMAGE,
                '-c', f'magic -dnull -noconsole -rcfile {PDK}/libs.tech/magic/gf180mcuD.magicrc /work/{script}']
-    result = subprocess.run(command, capture_output=True, text=True, timeout=60)
+    result = subprocess.run(command, capture_output=True, text=True, timeout=int(os.environ.get('SVALBARD_MAGIC_TIMEOUT_S', '60')))
     (work / (script + '.log')).write_text(result.stdout + result.stderr)
     if not allow_failure:result.check_returncode()
     return result
@@ -96,7 +101,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     placement_source=Path(__file__).with_name('generated')/'provider-sites.json'
     reference=json.loads(placement_source.read_text())
     contract=resolve()['assembly_policy']
-    if reference['template_commit']!=contract['provider_template_commit'] or reference['image_id']!=IMAGE:
+    if reference['template_commit']!=contract['provider_template_commit'] or reference['image_id'] not in (IMAGE,LOCKED_IMAGE):
         raise ValueError('Regenerate provider-site reference for the pinned template and image')
     pair=[reference['sites'][p['site']] for p in circuit.requirements['pads']]
     bond_pitch=math.dist(pair[0]['bond_center_um'],pair[1]['bond_center_um'])

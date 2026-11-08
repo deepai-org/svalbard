@@ -1,0 +1,65 @@
+gf180mcu_ocd_ip__por
+
+Power-on-reset circuit for GF180MCU for a 3.3V power supply
+-----------------------------------------------------------
+Specifications:
+Operating voltage:  3.3V (down to 1.8V)
+Reset delay time:   40ms (20ms at 1.8V)
+
+Inputs:
+	"ena" is a circuit enable and normally should be
+		tied to the power supply, although it can be
+		driven by the 5V PoR output in a dual-voltage
+		system.
+
+Outputs:
+	"por_unbuf" is for testing and should not be used
+	"porb" is low during the initial power-up and
+		high after the delay period
+	"por" is high during the initial power-up and
+		low after the delay period.
+
+Normally "porb" is used to drive an internal chip digital
+reset because it has clean low and high states, whereas
+"por" follows the supply voltage ramp at initial power-up.
+
+History:  The Caravel harness chip design that Efabless made
+for the Open MPW shuttle run featured a PoR circuit with a
+simple timer based on a trickle current onto a capacitor to
+set an approximatly 15ms delay between the 5V power supply
+being turned on and the power-on-reset signal being forced
+low.
+
+Since Wafer.Space took over the GF180MCU shuttle runs in 2025,
+more emphasis has been placed on developing IP for 3.3V
+operation, including the Open Circuit Design dual-voltage
+padframe I/O library, the 3.3V SRAM library, and the Avalon
+Semiconductors 3.3V standard cell library.
+
+The original PoR was calibrated for 5V operation, and when
+given a 3.3V supply, the delay time is approximately 14 to
+16 seconds, which is inappropriate for typical use.  The
+fact that the PoR is so sensitive to all external conditions
+was the impetus for creating this version.  This version of
+the PoR is not only calibrated for use at 3.3V, and features
+all 3.3V devices, but it also features a regulated voltage
+which sets an internal bias to 1.2V independent of the
+power supply, so that the reset time of 40ms is relatively
+independent of the power supply.
+
+This specific version is self-calibrated which makes it more
+sensitive to the power supply level;  it can be improved by
+replacing the resistor/transistor stack at the "inn" input
+of the amplifier with a bandgap, since the circuit is designed
+for a value of 1.2V.
+
+Power supplies with an extremely long rise time (> 0.1s) will
+cause the reset to trip at a low voltage (about 1.5V), which
+should still be sufficient for a proper reset.
+
+In a dual-voltage environment, this circuit should always be
+connected to 3.3V.  If a reset is needed for the 5V domain,
+use the original 5V PoR; the 5V PoR output can then feed the
+"ena" enable input to the 3.3V PoR.  Otherwise, the "ena" is
+for testing purposes only and would normally be tied to the
+3.3V power rail.

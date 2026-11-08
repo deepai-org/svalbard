@@ -1,0 +1,5 @@
+.subckt rail_shunt RAIL VSS
+XS0 RAIL RAIL MID0 VSS nfet_06v0 w=50.0u l=0.7u m=240
+XS1 MID0 MID0 MID1 VSS nfet_06v0 w=50.0u l=0.7u m=240
+XS2 MID1 MID1 VSS VSS nfet_06v0 w=50.0u l=0.7u m=240
+.ends rail_shunt

@@ -56,10 +56,11 @@ class DesignBoundary(unittest.TestCase):
             (root/'wired-transmit-screen.json').write_text(json.dumps(data))
             result=tx_macro_power_budget(root)['modes']['TMDS']['blocks']
             override=self.architecture['resource_policy']['branch_current_overrides_ma']['wired_tmds']
-            self.assertEqual(result['tmds']['wired_mode_allocation_ma'],override['tmds'])
+            # TMDS is a wiredtx configuration (consolidation-pass.md item 4): its drive is charged to wiredtx.
+            self.assertNotIn('tmds',result)
             self.assertEqual(result['wiredtx']['wired_mode_allocation_ma'],override['wiredtx'])
-            self.assertTrue(result['tmds']['measured_macro_alone_exceeds_allocation'])
-            self.assertFalse(result['wiredtx']['measured_macro_alone_exceeds_allocation'])
+            self.assertAlmostEqual(result['wiredtx']['measured_macro_mean_ma'],30.)
+            self.assertTrue(result['wiredtx']['measured_macro_alone_exceeds_allocation'])
 
     def test_ac_coupled_peer_preserves_chip_and_retains_charge(self):
         from transmit_fixture import build

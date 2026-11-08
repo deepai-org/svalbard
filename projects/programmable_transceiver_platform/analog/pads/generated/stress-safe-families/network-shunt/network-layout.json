@@ -1,0 +1,231 @@
+{
+  "status": "stress_safe_network_with_v2_shunt_dropin_DRC_LVS_recorded_not_ESD_qualification",
+  "drc_count": 0,
+  "device_graph_lvs_match": true,
+  "physical_bleed_included": true,
+  "bleed_dc": {
+    "current_a": 3.21187546e-07,
+    "resistance_ohm": 10274370.97452091
+  },
+  "geometry": {
+    "bbox_um": "(-0.055,-2;274.5,288)",
+    "array_origin_um": [
+      150.0,
+      20.0
+    ],
+    "ports_um": {
+      "VSS": [
+        138.0,
+        4.0
+      ],
+      "RAIL": [
+        130.0,
+        4.0
+      ],
+      "PADP": [
+        186.0,
+        4.0
+      ],
+      "PADN": [
+        190.0,
+        4.0
+      ]
+    },
+    "routing_parameters": {
+      "rail_width_um": 8.0,
+      "return_width_um": 12.0,
+      "port_via_cuts_per_axis": 3,
+      "port_via_pitch_um": 0.6
+    },
+    "rail_route_length_um": 394.945,
+    "return_route_length_um": 388.095
+  },
+  "array_well_capacitance_removed_ff": 68.33433600000001,
+  "extracted_spice_sha256": "d15b488b710c94f4f43ab78cca61558fb6b75e44724c5361102a10aa99890a32",
+  "limitations": [
+    "Stress shunt is not inside this footprint; it must be attached through RAIL/VSS",
+    "Gate tap is a single 1 um metal3 jog; resistor current is small but the jog is not EM-reviewed",
+    "No ESD rating, core-survival or current-capacity claim"
+  ],
+  "source_sha256": {
+    "rail_shunt_v2.py": "cf11c23f226bd29d9bef53cf094ac8cbc21d2fe39434f60c263bbc72727cfc45"
+  },
+  "gds_roundtrip": {
+    "method": "DRC, extraction and LVS run on Magic reading the written GDS",
+    "drc_count": 0,
+    "lvs_match": true
+  },
+  "additions": {
+    "gate_discharge": {
+      "model": "ppolyf_u_1k_6p0",
+      "w_um": 1,
+      "segments": 5,
+      "segment_um": 20,
+      "squares": 100,
+      "placed_um": [
+        76.0,
+        0.1999999999999993,
+        86.24000000000001,
+        24.3
+      ]
+    },
+    "atb_tap": {
+      "model": "ppolyf_u_1k_6p0",
+      "w_um": 1,
+      "segments": 20,
+      "segment_um": 24,
+      "squares": 480,
+      "placed_um": [
+        89.85999999999999,
+        0.1999999999999993,
+        125.6,
+        27.47
+      ],
+      "port": "ATB_RAIL",
+      "port_um": [
+        91.58,
+        -1.8
+      ],
+      "layer": "metal3"
+    }
+  },
+  "ports": {
+    "RAIL": [
+      130,
+      4
+    ],
+    "VSS": [
+      138,
+      4
+    ],
+    "PADP": [
+      186,
+      4
+    ],
+    "PADN": [
+      190,
+      4
+    ],
+    "ATB_RAIL": [
+      91.58,
+      -1.8
+    ]
+  },
+  "high_r_marker_repair": {
+    "dis_res": {
+      "added_area_um2": {
+        "62": 181.868,
+        "55": 181.868
+      },
+      "selected_poly_components": {
+        "mvnhighres": 1
+      },
+      "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+      "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+      "before_gds_sha256": "ad7629f7a0b7876e379ecaf3ed7efcedef5300cae35ad1ea6602f4f54ea72a92",
+      "after_gds_sha256": "ecddb176e4acb79baf72677a1308a06202aa352d53fbf65c8399b4c85e12e815",
+      "physical_magic_sha256": "473cb817f469beffe1fcf8a37601f5e5c21bd05fcab7ce3cea27d2ae8d0e9799",
+      "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+    },
+    "atb_res": {
+      "added_area_um2": {
+        "62": 848.668,
+        "55": 848.668
+      },
+      "selected_poly_components": {
+        "mvnhighres": 1
+      },
+      "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+      "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+      "before_gds_sha256": "ad8e77f4794a158129cfec066bccc877f9da6150eaa656bca609702bd530ea2d",
+      "after_gds_sha256": "4866f5d6848ff9b03d237b9d66160cdb38c952c83af3be42b771356d248a3491",
+      "physical_magic_sha256": "97d813099bef4f106cf2f52965c1d317534d58540a062c927918d9f6ae3bc8aa",
+      "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+    }
+  },
+  "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "pdk": "/pdk/gf180mcuD",
+  "canonical_network_gds_sha256": "0b7c25860190af02dfaffab9c180d5734f5d9eb771111367adc97ae98fcf493d",
+  "gds_sha256": "bd7adab65585a251d2aa88d21ae9b01049c3013f08c15adf1b12de12966fd4ee",
+  "shunt": {
+    "version": 2,
+    "stages": 3,
+    "fingers_per_stage": 240,
+    "offset_um": [
+      155.0,
+      327.935
+    ],
+    "gds_sha256": "bb56883c679ef61d570ec5188d392b7ba0a5957771f305c53f1ded720c32e3ce"
+  },
+  "straps": {
+    "rail": {
+      "layer": "metal5",
+      "width_um": 30.0,
+      "length_um": 56.435,
+      "cuts": {
+        "rail_via4": 600,
+        "rail_via3": 600
+      }
+    },
+    "vss": {
+      "layers": [
+        "metal4",
+        "metal5 (above y=290)"
+      ],
+      "width_um": 30.0,
+      "metal4_length_um": 201.575,
+      "metal5_length_um": 176.575,
+      "metal4_only_um": 2.0,
+      "metal4_base_width_um": 63.0,
+      "cuts": {
+        "vss_via4_low": 300,
+        "vss_via4_high": 600,
+        "vss_via3": 600
+      }
+    }
+  },
+  "wiring_resistance": {
+    "nominal": {
+      "rail_strap_ohm": 0.09024666666666667,
+      "vss_strap_ohm": 0.18831171765569607,
+      "plate_end_to_end_ohm": 0.6152127906976745,
+      "banks_bound_ohm": 3.6912767441860472,
+      "total_bound_ohm": 3.96983512850841,
+      "drop_at_100mA_v": 0.396983512850841
+    },
+    "high": {
+      "rail_strap_ohm": 0.14217716666666666,
+      "vss_strap_ohm": 0.2640752898297741,
+      "plate_end_to_end_ohm": 0.710912558139535,
+      "banks_bound_ohm": 4.26547534883721,
+      "total_bound_ohm": 4.671727805333651,
+      "drop_at_100mA_v": 0.46717278053336514
+    }
+  },
+  "allocation_regions_um": [
+    [
+      -0.055,
+      -2.0,
+      274.5,
+      288.0
+    ],
+    [
+      5.764999999999986,
+      301.0,
+      303.235,
+      473.40999999999997
+    ],
+    [
+      20.0,
+      288.0,
+      50.0,
+      301.0
+    ],
+    [
+      100.0,
+      288.0,
+      130.0,
+      301.0
+    ]
+  ]
+}

@@ -8,7 +8,15 @@ from circuits import Circuit, Mos, Resistor, foundation_devices
 from design import PROJECT, resolve
 
 
-def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_width_um=20., fs_high_width_um=20., fs_series_geometry_um=None):
+def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_width_um=20., fs_high_width_um=20., fs_series_geometry_um=None,
+          termination_geometry_um=None, high_side_fast_off=False, hs_mirror_reference=False):
+    # Stress-safe USB revision (opt-in; defaults reproduce the canonical cell):
+    # termination_geometry_um=(w, l, n): n parallel unsalicided ppolyf_u segments
+    #   (ppolyf_s 24 ohm spans 14..60 ohm across res corners; ppolyf_u ~+/-19 %)
+    # high_side_fast_off: well-sourced PMOS pulls each FS high-side gate to its well
+    #   when the enable falls (the bleed chain alone turns it off in ~100 ns)
+    # hs_mirror_reference: diode-connected reference PMOS on HS_PBIAS; HS_PBIAS becomes
+    #   a current input (I_leg / hs_units) from the trimmed bias DAC
     if any(type(n) is not int or n < 1 for n in (hs_units,fs_high_units,differential_units)):
         raise ValueError('Positive integer unit counts required')
     if not .8<=differential_width_um<=20.:
@@ -45,6 +53,8 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
         # pass gates toward their floating source, avoiding a resistor-only
         # 100kohm discharge delay. Its body follows the same local well.
         mos(name+'_RESTORE',gate,'VDD',well,well,'pfet_03v3',4.,.28)
+        if high_side_fast_off and name.startswith('FS_'):
+            mos(name+'_FASTOFF',gate,enable,well,well,'pfet_03v3',4.,.28)
         previous=well
         for i in range(8):
             following=gate if i==7 else f'{name}_BLEED_{i}'
@@ -75,6 +85,8 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
         return out
     # Supply-powered, skewed inverter senses termination common mode. Its
     # analog trip range must be characterized; it is not a precision comparator.
+    if hs_mirror_reference:
+        mos('HS_REF','HS_PBIAS','HS_PBIAS','VDD','VDD','pfet_03v3',20.,1.)
     mos('VCM_LOW_SENSE_N','VCM_LOW_OK','TERM_VCM','VSS','VSS',w=8.)
     mos('VCM_LOW_SENSE_P','VCM_LOW_OK','TERM_VCM','VDD','VDD','pfet_03v3',2.,.28)
     for leg in ('P','N'):
@@ -83,7 +95,13 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
         # Shared switched shunt: TERM_VCM selects ground for USB or a serial
         # common mode. The differential bridge reuses these physical resistors.
         local_enable=shared_low_enable(leg)
-        resistor('TERM_'+leg,pad,'TERM_'+leg+'_R',24.,'ppolyf_s')
+        if termination_geometry_um is None:
+            resistor('TERM_'+leg,pad,'TERM_'+leg+'_R',24.,'ppolyf_s')
+        else:
+            # Parallel segments keep each primitive inside the 21 x 26 um placement grid.
+            w_um, l_um, segments = termination_geometry_um
+            for k in range(segments):
+                devices.append(Resistor('TERM_'+leg+('' if segments == 1 else f'_SEG{k}'),(pad,'TERM_'+leg+'_R','VSS'),'ppolyf_u',w_um,l_um))
         for i in range(8):
             mos(f'TERM_{leg}_{i}','TERM_'+leg+'_R',local_enable,'TERM_VCM','VSS',w=20.)
         # Divider switch is on the low-voltage side of the upper resistor.

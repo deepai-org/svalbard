@@ -1,0 +1,1221 @@
+{
+ "schema": "island_support_evidence/1",
+ "image": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+ "image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+ "pdk_ngspice_sha256": {
+  "design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+  "sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+  "sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24"
+ },
+ "source_sha256": {
+  "design.py": "55f1bfa1938107fdd597a728682011104f6c8f51926a827223bddc3a624479c3",
+  "extracted.py": "c5cd16776dfabbd1cb042cd9764f5879cc9b4a147e50ae32e143a95880b26950",
+  "integration.py": "be1c84395be5d6882efc536f850d7d929465f6325dc2e9151c25c7497659ca17",
+  "layout.py": "b6bb519465dec7e96e94027c1d7de39ee0687c566f5eaa840e15e841dd8e71dc",
+  "rc_check.py": "7efee713579a7172b6142d3f30eb1ea1e40c4ea583ed1592634167c396a696db",
+  "sim.py": "e4093b00162a049f899237acc2dd8d7d3238a3e34b35d30c21c33689e98bac15",
+  "summarize.py": "459cf90a23f968080f1e804800d62b51c0b7f1bb686a70d46df5ca884a4e355f"
+ },
+ "source_sha256_at_summary": {
+  "container_flow.sh": "6cbb9d8ca5a73c3bd819422be0270f7db03cbacd9351efc77b94778ab1536169",
+  "crosscheck.sh": "025a779cd3f45e37b2a6ac3f1029950cd880ed967ee1ca1fc9ab793759d0c721",
+  "design.py": "55f1bfa1938107fdd597a728682011104f6c8f51926a827223bddc3a624479c3",
+  "extracted.py": "c5cd16776dfabbd1cb042cd9764f5879cc9b4a147e50ae32e143a95880b26950",
+  "integration.py": "be1c84395be5d6882efc536f850d7d929465f6325dc2e9151c25c7497659ca17",
+  "layout.py": "b6bb519465dec7e96e94027c1d7de39ee0687c566f5eaa840e15e841dd8e71dc",
+  "physical.sh": "daa2a7b4573b489da0ef9724298d9afd5f35419554ed677fb942ebc9931caef5",
+  "rc_check.py": "7efee713579a7172b6142d3f30eb1ea1e40c4ea583ed1592634167c396a696db",
+  "run.sh": "d0b2aa17d1a552bbdf2b078162ca62e83d4921783c365f2f963565e2f48c0082",
+  "sim.py": "e4093b00162a049f899237acc2dd8d7d3238a3e34b35d30c21c33689e98bac15",
+  "summarize.py": "7f11c88b284fba70f3bca43fbf1b8fd2130add36356d43e58a7607b32b68ab60"
+ },
+ "envelope": {
+  "functional_points": [
+   [
+    "tt",
+    27,
+    3.3
+   ],
+   [
+    "tt",
+    22,
+    3.15
+   ],
+   [
+    "tt",
+    22,
+    3.35
+   ],
+   [
+    "tt",
+    32,
+    3.15
+   ],
+   [
+    "tt",
+    32,
+    3.35
+   ],
+   [
+    "ss",
+    22,
+    3.15
+   ],
+   [
+    "ss",
+    22,
+    3.35
+   ],
+   [
+    "ss",
+    32,
+    3.15
+   ],
+   [
+    "ss",
+    32,
+    3.35
+   ],
+   [
+    "ff",
+    22,
+    3.15
+   ],
+   [
+    "ff",
+    22,
+    3.35
+   ],
+   [
+    "ff",
+    32,
+    3.15
+   ],
+   [
+    "ff",
+    32,
+    3.35
+   ]
+  ],
+  "exploratory_points": [
+   [
+    "tt",
+    -40,
+    3.0
+   ],
+   [
+    "tt",
+    -40,
+    3.6
+   ],
+   [
+    "tt",
+    125,
+    3.0
+   ],
+   [
+    "tt",
+    125,
+    3.6
+   ],
+   [
+    "ff",
+    -40,
+    3.0
+   ],
+   [
+    "ff",
+    -40,
+    3.6
+   ],
+   [
+    "ff",
+    125,
+    3.0
+   ],
+   [
+    "ff",
+    125,
+    3.6
+   ],
+   [
+    "ss",
+    -40,
+    3.0
+   ],
+   [
+    "ss",
+    -40,
+    3.6
+   ],
+   [
+    "ss",
+    125,
+    3.0
+   ],
+   [
+    "ss",
+    125,
+    3.6
+   ],
+   [
+    "fs",
+    -40,
+    3.0
+   ],
+   [
+    "fs",
+    -40,
+    3.6
+   ],
+   [
+    "fs",
+    125,
+    3.0
+   ],
+   [
+    "fs",
+    125,
+    3.6
+   ],
+   [
+    "sf",
+    -40,
+    3.0
+   ],
+   [
+    "sf",
+    -40,
+    3.6
+   ],
+   [
+    "sf",
+    125,
+    3.0
+   ],
+   [
+    "sf",
+    125,
+    3.6
+   ]
+  ],
+  "safety_temps_c": [
+   0,
+   27,
+   85
+  ],
+  "safety_vmax_v": 3.63
+ },
+ "limits": {
+  "drop_v": 0.02,
+  "ring_undershoot_v": 0.01,
+  "discharge_s": 5e-05,
+  "off_rail_v": 0.5,
+  "reverse_into_ring_a": 1e-05,
+  "off_leak_functional_a": 1e-06,
+  "tap_s_off_c_f": 5e-15,
+  "tap_off_leak_a": 1e-10,
+  "tap_s_ron_ohm": 30000.0,
+  "pad_overvoltage_ring_i_a": 1e-06,
+  "pad_overvoltage_bus_v": 0.1,
+  "backdrive_into_ring_a": 1e-05,
+  "sense_error_v": 0.002
+ },
+ "architecture_source": "/src/spec/analog-architecture.json",
+ "island_switch": {
+  "wired": {
+   "blocks": [
+    "ctle",
+    "detect",
+    "rxlevel",
+    "rxselect",
+    "slicer",
+    "termination",
+    "tmds",
+    "txpad",
+    "usbdrive",
+    "usbhs",
+    "wiredtx",
+    "wirepad"
+   ],
+   "peak_allocation_ma": 62.86,
+   "design_current_ma": 80,
+   "island_decap_f": 1.5e-10,
+   "pass_device": {
+    "fingers": 3520,
+    "w_um": 35200.0,
+    "l_um": 0.28,
+    "array": "11x320"
+   },
+   "layout_area_um2": 64081.2,
+   "drop": {
+    "schematic_functional_max_v": 0.01180964,
+    "schematic_tt27_v": 0.01005822,
+    "extracted_functional_max_v": 0.01180964,
+    "extracted_tt27_v": 0.01005822,
+    "exploratory_max_v": 0.01465687,
+    "extracted_full_rc_functional_max_v": 0.01986856,
+    "extracted_full_rc_tt27_v": 0.01811269,
+    "note": "C-coupled extraction has no resistors, so its DC drop equals the device-only value. Full-RC drop is measured between single-point VDD/VISL labels at the M4 plate corners; it includes in-cell M3-stripe/M4-plate spreading that a per-row M4 bar + M5 grid fed along the array by the top-level ring would largely remove.",
+    "verdict": "pass"
+   },
+   "on_state_status": {
+    "pg_high_iso_low_functional": true,
+    "extracted": true
+   },
+   "soft_start": {
+    "ring_undershoot_max_v": 0.0,
+    "abrupt_reference_undershoot_v": 0.12107000000000001,
+    "switch_current_peak_a": 0.0622768,
+    "abrupt_switch_current_peak_a": 0.157682,
+    "rail_10_90_s_range": [
+     2.6157999999999996e-06,
+     4.566999999999999e-06
+    ],
+    "en_to_pg_s_max": 7.7673e-06,
+    "extracted_ring_undershoot_max_v": 0.0,
+    "verdict": "pass"
+   },
+   "discharge": {
+    "unloaded_rail_to_0v3_s": [
+     1.2060000000000152e-06,
+     1.3480000000000013e-06
+    ],
+    "verdict": "pass"
+   },
+   "iso_on_disable_s_max": 6.000000000013156e-09,
+   "off_leakage": {
+    "functional_max_a_3v35_22to32c": 1.350071e-08,
+    "tt_27c_3v63_a": 6.784765e-09,
+    "safety_max_a_3v63_0to85c": 4.336236e-07,
+    "exploratory_125c_max_a": 3.687384e-06,
+    "cell_ring_current_off_max_a_0to85c": 4.341482e-07,
+    "verdict": "pass"
+   },
+   "reverse_blocking": {
+    "max_i_into_ring_a": 4.33677e-07,
+    "max_i_from_peer_a": 0.001192795,
+    "max_i_from_peer_ring_unpowered_a": 4.336943e-07,
+    "note": "Peer current with the ring powered is the active-discharge NMOS sinking from the back-driven rail.",
+    "verdict": "pass"
+   },
+   "default_off": {
+    "en_floating_ramp_visl_max_v": 0.319269,
+    "iso_high_after_ramp": true,
+    "brownout_en_floating_visl_max_v": 0.182319,
+    "brownout_en_on_recovers": true,
+    "verdict": "pass"
+   },
+   "physical": {
+    "magic_drc_errors": 0,
+    "klayout_drc_violations": 0,
+    "lvs": "match",
+    "pex_sha256": "0a49552c25c95877faea1c6ee12a22aad65b455116a6b99a1c94447bc4fb008a",
+    "gds_sha256": "54605e36613ab924c63e0cd204c07bbffe4660ad40aa28591fe4579732a133c6",
+    "clean_physical": "pass"
+   }
+  },
+  "rf": {
+   "blocks": [
+    "lna",
+    "pga_i",
+    "pga_q",
+    "rfdriver",
+    "rfpad",
+    "rftxpad",
+    "rxfilter_i",
+    "rxfilter_q",
+    "rxmix_i",
+    "rxmix_q",
+    "txfilter_i",
+    "txfilter_q",
+    "txmix_i",
+    "txmix_q",
+    "txsum"
+   ],
+   "peak_allocation_ma": 42.49,
+   "design_current_ma": 55,
+   "island_decap_f": 2e-10,
+   "pass_device": {
+    "fingers": 2520,
+    "w_um": 25200.0,
+    "l_um": 0.28,
+    "array": "9x280"
+   },
+   "layout_area_um2": 49817.2,
+   "drop": {
+    "schematic_functional_max_v": 0.01133922,
+    "schematic_tt27_v": 0.009657947,
+    "extracted_functional_max_v": 0.01133922,
+    "extracted_tt27_v": 0.009657947,
+    "exploratory_max_v": 0.0140726,
+    "extracted_full_rc_functional_max_v": 0.01653721,
+    "extracted_full_rc_tt27_v": 0.01485335,
+    "note": "C-coupled extraction has no resistors, so its DC drop equals the device-only value. Full-RC drop is measured between single-point VDD/VISL labels at the M4 plate corners; it includes in-cell M3-stripe/M4-plate spreading that a per-row M4 bar + M5 grid fed along the array by the top-level ring would largely remove.",
+    "verdict": "pass"
+   },
+   "on_state_status": {
+    "pg_high_iso_low_functional": true,
+    "extracted": true
+   },
+   "soft_start": {
+    "ring_undershoot_max_v": 0.0,
+    "abrupt_reference_undershoot_v": 0.18610999999999978,
+    "switch_current_peak_a": 0.0421321,
+    "abrupt_switch_current_peak_a": 0.223022,
+    "rail_10_90_s_range": [
+     1.8899000000000003e-06,
+     3.321699999999999e-06
+    ],
+    "en_to_pg_s_max": 5.5734e-06,
+    "extracted_ring_undershoot_max_v": 0.0,
+    "verdict": "pass"
+   },
+   "discharge": {
+    "unloaded_rail_to_0v3_s": [
+     1.577000000000002e-06,
+     1.7590000000000216e-06
+    ],
+    "verdict": "pass"
+   },
+   "iso_on_disable_s_max": 6.000000000013156e-09,
+   "off_leakage": {
+    "functional_max_a_3v35_22to32c": 9.665761e-09,
+    "tt_27c_3v63_a": 4.857515e-09,
+    "safety_max_a_3v63_0to85c": 3.104503e-07,
+    "exploratory_125c_max_a": 2.639961e-06,
+    "cell_ring_current_off_max_a_0to85c": 3.10975e-07,
+    "verdict": "pass"
+   },
+   "reverse_blocking": {
+    "max_i_into_ring_a": 3.105042e-07,
+    "max_i_from_peer_a": 0.0008534442,
+    "max_i_from_peer_ring_unpowered_a": 3.105171e-07,
+    "note": "Peer current with the ring powered is the active-discharge NMOS sinking from the back-driven rail.",
+    "verdict": "pass"
+   },
+   "default_off": {
+    "en_floating_ramp_visl_max_v": 0.259585,
+    "iso_high_after_ramp": true,
+    "brownout_en_floating_visl_max_v": 0.13796,
+    "brownout_en_on_recovers": true,
+    "verdict": "pass"
+   },
+   "physical": {
+    "magic_drc_errors": 0,
+    "klayout_drc_violations": 0,
+    "lvs": "match",
+    "pex_sha256": "864c56e25650aa77dd930068d920fe85840fae1425519d64cb7fe4d6e91080b6",
+    "gds_sha256": "c15ec9c4276d7241d1b2fcc24eadf15a319647d0610e8e57fd50584a4ff4086d",
+    "clean_physical": "pass"
+   }
+  },
+  "pll": {
+   "blocks": [
+    "cdr",
+    "clockmux",
+    "clocktree",
+    "quadrature",
+    "refinput",
+    "refpad",
+    "rfpll",
+    "wirepll"
+   ],
+   "peak_allocation_ma": 47.78,
+   "design_current_ma": 60,
+   "island_decap_f": 2.5e-10,
+   "pass_device": {
+    "fingers": 2700,
+    "w_um": 27000.0,
+    "l_um": 0.28,
+    "array": "9x300"
+   },
+   "layout_area_um2": 53258.8,
+   "drop": {
+    "schematic_functional_max_v": 0.01154619,
+    "schematic_tt27_v": 0.009834054,
+    "extracted_functional_max_v": 0.01154619,
+    "extracted_tt27_v": 0.009834054,
+    "exploratory_max_v": 0.01432966,
+    "extracted_full_rc_functional_max_v": 0.01725931,
+    "extracted_full_rc_tt27_v": 0.01554426,
+    "note": "C-coupled extraction has no resistors, so its DC drop equals the device-only value. Full-RC drop is measured between single-point VDD/VISL labels at the M4 plate corners; it includes in-cell M3-stripe/M4-plate spreading that a per-row M4 bar + M5 grid fed along the array by the top-level ring would largely remove.",
+    "verdict": "pass"
+   },
+   "on_state_status": {
+    "pg_high_iso_low_functional": true,
+    "extracted": true
+   },
+   "soft_start": {
+    "ring_undershoot_max_v": 0.0,
+    "abrupt_reference_undershoot_v": 0.2138399999999998,
+    "switch_current_peak_a": 0.047364,
+    "abrupt_switch_current_peak_a": 0.259614,
+    "rail_10_90_s_range": [
+     2.0226e-06,
+     3.549800000000001e-06
+    ],
+    "en_to_pg_s_max": 5.984900000000001e-06,
+    "extracted_ring_undershoot_max_v": 0.0,
+    "verdict": "pass"
+   },
+   "discharge": {
+    "unloaded_rail_to_0v3_s": [
+     1.78300000000002e-06,
+     1.986000000000018e-06
+    ],
+    "verdict": "pass"
+   },
+   "iso_on_disable_s_max": 6.000000000013156e-09,
+   "off_leakage": {
+    "functional_max_a_3v35_22to32c": 1.035781e-08,
+    "tt_27c_3v63_a": 5.205304e-09,
+    "safety_max_a_3v63_0to85c": 3.326778e-07,
+    "exploratory_125c_max_a": 2.828972e-06,
+    "cell_ring_current_off_max_a_0to85c": 3.332024e-07,
+    "verdict": "pass"
+   },
+   "reverse_blocking": {
+    "max_i_into_ring_a": 3.327316e-07,
+    "max_i_from_peer_a": 0.000915168,
+    "max_i_from_peer_ring_unpowered_a": 3.327452e-07,
+    "note": "Peer current with the ring powered is the active-discharge NMOS sinking from the back-driven rail.",
+    "verdict": "pass"
+   },
+   "default_off": {
+    "en_floating_ramp_visl_max_v": 0.270662,
+    "iso_high_after_ramp": true,
+    "brownout_en_floating_visl_max_v": 0.145017,
+    "brownout_en_on_recovers": true,
+    "verdict": "pass"
+   },
+   "physical": {
+    "magic_drc_errors": 0,
+    "klayout_drc_violations": 0,
+    "lvs": "match",
+    "pex_sha256": "d2de17ecc324f84532d20486edbf7717b8c0e59550ba9541875c433744975fd7",
+    "gds_sha256": "db18f6c4ce65141b372f7fd534ecea6252f07930ebc3533fe61f1114c785fa71",
+    "clean_physical": "pass"
+   }
+  },
+  "conv": {
+   "blocks": [
+    "adc_i",
+    "adc_q",
+    "dac_i",
+    "dac_q",
+    "refbuf"
+   ],
+   "peak_allocation_ma": 23.0,
+   "design_current_ma": 30,
+   "island_decap_f": 2.5e-10,
+   "pass_device": {
+    "fingers": 1320,
+    "w_um": 13200.0,
+    "l_um": 0.28,
+    "array": "6x220"
+   },
+   "layout_area_um2": 31781.2,
+   "drop": {
+    "schematic_functional_max_v": 0.01180964,
+    "schematic_tt27_v": 0.01005822,
+    "extracted_functional_max_v": 0.01180964,
+    "extracted_tt27_v": 0.01005822,
+    "exploratory_max_v": 0.01465688,
+    "extracted_full_rc_functional_max_v": 0.01442222,
+    "extracted_full_rc_tt27_v": 0.0126695,
+    "note": "C-coupled extraction has no resistors, so its DC drop equals the device-only value. Full-RC drop is measured between single-point VDD/VISL labels at the M4 plate corners; it includes in-cell M3-stripe/M4-plate spreading that a per-row M4 bar + M5 grid fed along the array by the top-level ring would largely remove.",
+    "verdict": "pass"
+   },
+   "on_state_status": {
+    "pg_high_iso_low_functional": true,
+    "extracted": true
+   },
+   "soft_start": {
+    "ring_undershoot_max_v": 0.0,
+    "abrupt_reference_undershoot_v": 0.28632000000000035,
+    "switch_current_peak_a": 0.0228196,
+    "abrupt_switch_current_peak_a": 0.334136,
+    "rail_10_90_s_range": [
+     1.0133999999999995e-06,
+     1.816199999999998e-06
+    ],
+    "en_to_pg_s_max": 2.9808000000000003e-06,
+    "extracted_ring_undershoot_max_v": 0.0,
+    "verdict": "pass"
+   },
+   "discharge": {
+    "unloaded_rail_to_0v3_s": [
+     2.9790000000000133e-06,
+     3.341000000000021e-06
+    ],
+    "verdict": "pass"
+   },
+   "iso_on_disable_s_max": 6.000000000013156e-09,
+   "off_leakage": {
+    "functional_max_a_3v35_22to32c": 5.06229e-09,
+    "tt_27c_3v63_a": 2.544047e-09,
+    "safety_max_a_3v63_0to85c": 1.625936e-07,
+    "exploratory_125c_max_a": 1.38264e-06,
+    "cell_ring_current_off_max_a_0to85c": 1.631182e-07,
+    "verdict": "pass"
+   },
+   "reverse_blocking": {
+    "max_i_into_ring_a": 1.626478e-07,
+    "max_i_from_peer_a": 0.0004516027,
+    "max_i_from_peer_ring_unpowered_a": 1.626554e-07,
+    "note": "Peer current with the ring powered is the active-discharge NMOS sinking from the back-driven rail.",
+    "verdict": "pass"
+   },
+   "default_off": {
+    "en_floating_ramp_visl_max_v": 0.175164,
+    "iso_high_after_ramp": true,
+    "brownout_en_floating_visl_max_v": 0.0799295,
+    "brownout_en_on_recovers": true,
+    "verdict": "pass"
+   },
+   "physical": {
+    "magic_drc_errors": 0,
+    "klayout_drc_violations": 0,
+    "lvs": "match",
+    "pex_sha256": "b8124423caf0991d2d9402c801e684e4fd3f4199204818ad52456162b9b0f362",
+    "gds_sha256": "09e86bddf39a10150786894f8f131e2a185111beac27e0a3e1ccfe1d6103843b",
+    "clean_physical": "pass"
+   }
+  },
+  "debug": {
+   "blocks": [
+    "bb_tap x2",
+    "wmon",
+    "clk_obs x2",
+    "aux_clk/wclk_in/wtx_ext receivers x3",
+    "ring_osc",
+    "vco_replica"
+   ],
+   "peak_allocation_ma": 28.02,
+   "design_current_ma": 40,
+   "island_decap_f": 1e-10,
+   "pass_device": {
+    "fingers": 1760,
+    "w_um": 17600.0,
+    "l_um": 0.28,
+    "array": "8x220"
+   },
+   "layout_area_um2": 36922.0,
+   "drop": {
+    "schematic_functional_max_v": 0.01180964,
+    "schematic_tt27_v": 0.01005822,
+    "extracted_functional_max_v": 0.01180964,
+    "extracted_tt27_v": 0.01005822,
+    "exploratory_max_v": 0.01465688,
+    "extracted_full_rc_functional_max_v": 0.01550616,
+    "extracted_full_rc_tt27_v": 0.01375288,
+    "note": "C-coupled extraction has no resistors, so its DC drop equals the device-only value. Full-RC drop is measured between single-point VDD/VISL labels at the M4 plate corners; it includes in-cell M3-stripe/M4-plate spreading that a per-row M4 bar + M5 grid fed along the array by the top-level ring would largely remove.",
+    "verdict": "pass"
+   },
+   "on_state_status": {
+    "pg_high_iso_low_functional": true,
+    "extracted": true
+   },
+   "soft_start": {
+    "ring_undershoot_max_v": 0.0,
+    "abrupt_reference_undershoot_v": 0.12778,
+    "switch_current_peak_a": 0.0277978,
+    "abrupt_switch_current_peak_a": 0.14643,
+    "rail_10_90_s_range": [
+     1.3358999999999985e-06,
+     2.3715999999999995e-06
+    ],
+    "en_to_pg_s_max": 3.9064e-06,
+    "extracted_ring_undershoot_max_v": 0.0,
+    "verdict": "pass"
+   },
+   "discharge": {
+    "unloaded_rail_to_0v3_s": [
+     1.1570000000000026e-06,
+     1.2940000000000184e-06
+    ],
+    "verdict": "pass"
+   },
+   "iso_on_disable_s_max": 6.000000000013156e-09,
+   "off_leakage": {
+    "functional_max_a_3v35_22to32c": 6.752267e-09,
+    "tt_27c_3v63_a": 3.393343e-09,
+    "safety_max_a_3v63_0to85c": 2.168729e-07,
+    "exploratory_125c_max_a": 1.844208e-06,
+    "cell_ring_current_off_max_a_0to85c": 2.173976e-07,
+    "verdict": "pass"
+   },
+   "reverse_blocking": {
+    "max_i_into_ring_a": 2.16927e-07,
+    "max_i_from_peer_a": 0.000606351,
+    "max_i_from_peer_ring_unpowered_a": 2.169366e-07,
+    "note": "Peer current with the ring powered is the active-discharge NMOS sinking from the back-driven rail.",
+    "verdict": "pass"
+   },
+   "default_off": {
+    "en_floating_ramp_visl_max_v": 0.206923,
+    "iso_high_after_ramp": true,
+    "brownout_en_floating_visl_max_v": 0.0990732,
+    "brownout_en_on_recovers": true,
+    "verdict": "pass"
+   },
+   "physical": {
+    "magic_drc_errors": 0,
+    "klayout_drc_violations": 0,
+    "lvs": "match",
+    "pex_sha256": "95b29febe09a2eeadc6ece4f335c6857b3b51f64808047c92874e184b7c766c2",
+    "gds_sha256": "b18bdd7ad2d2a2dcd407bcf45e960cc8b64b79dfbbf285b047ce570b7a557428",
+    "clean_physical": "pass"
+   }
+  }
+ },
+ "rf_tx_backdrive": {
+  "model": "PAD -> diode(IS=1e-14) -> 28 ohm -> VISL; switch off; load 0 = rail held at 0 V (calibration), None = decap only, 77.7 ohm = RF island allocation as a resistor",
+  "calibration_i_into_0v_rail_a_range": [
+   0.0889877,
+   0.09318531
+  ],
+  "max_i_into_ring_a": 2.709442e-07,
+  "decap_only": {
+   "visl_range_v": [
+    2.577516,
+    3.471248
+   ],
+   "i_pad_max_a": 0.0008494679
+  },
+  "with_island_load": {
+   "visl_range_v": [
+    1.837036,
+    2.187748
+   ],
+   "i_pad_max_a": 0.0286482
+  },
+  "iso_high_when_ring_powered": true,
+  "pg_high_when_ring_powered_decap_only": true,
+  "verdict": "pass",
+  "extracted": null
+ },
+ "reverse_topology_comparison_wired": {
+  "bodyswitch/wired": {
+   "max_i_into_ring_a": 4.33677e-07,
+   "max_i_from_peer_a": 0.001192795,
+   "max_i_from_peer_ring_unpowered_a": 4.336943e-07
+  },
+  "bodyvdd/wired": {
+   "max_i_into_ring_a": 0.3021351,
+   "max_i_from_peer_a": 0.3021351,
+   "max_i_from_peer_ring_unpowered_a": 0.3021351
+  },
+  "b2b/wired": {
+   "max_i_into_ring_a": 2.703692e-07,
+   "max_i_from_peer_a": 0.0002999785,
+   "max_i_from_peer_ring_unpowered_a": 2.703748e-07
+  }
+ },
+ "atb": {
+  "atb_leaf_s": {
+   "schematic_ron_functional_max_ohm": 16351.99,
+   "schematic_ron_tt27_max_ohm": 11397.8,
+   "extracted_ron_functional_max_ohm": 16351.99,
+   "bbm_min_gap_s_schematic": 2e-08,
+   "bbm_min_gap_s_extracted": 2e-08,
+   "bbm_min_internal_gap_s_extracted": -2.1828e-10,
+   "layout_area_um2": 826.9,
+   "physical": {
+    "magic_drc_errors": 0,
+    "klayout_drc_violations": 0,
+    "lvs": "match",
+    "pex_sha256": "57a41f923c0fd1a571802c5ff0049fbfb62c04d89c6c82a6433cc5c760354ac8",
+    "gds_sha256": "968de6c891f9673b4043edf9dea1a7f91c6850935ce9fd119a14c4ec5268d6da",
+    "clean_physical": "pass"
+   },
+   "off_c_schematic_max_f": 1.719817e-15,
+   "off_c_extracted_max_f": 3.172064e-15,
+   "off_c_extracted_tt22_mid_f": 2.945155e-15,
+   "off_leak_schematic_max_22to32c_a": 1.677524e-11,
+   "off_leak_extracted_max_22to32c_a": 1.677524e-11,
+   "off_leak_schematic_85c_a": 3.150498e-10,
+   "isolation_schematic": {
+    "iso_atb_leaf_s_tt_27": {
+     "iso_1meg": -205.213,
+     "iso_10meg": -165.213,
+     "iso_100meg": -125.215
+    },
+    "iso_atb_leaf_s_ff_32": {
+     "iso_1meg": -207.877,
+     "iso_10meg": -167.877,
+     "iso_100meg": -127.879
+    }
+   },
+   "isolation_extracted_tt27": {
+    "iso_1meg": -174.22,
+    "iso_10meg": -134.22,
+    "iso_100meg": -94.2362
+   }
+  },
+  "atb_leaf_f": {
+   "schematic_ron_functional_max_ohm": 4415.81,
+   "schematic_ron_tt27_max_ohm": 2692.056,
+   "extracted_ron_functional_max_ohm": 4415.81,
+   "bbm_min_gap_s_schematic": 2e-08,
+   "bbm_min_gap_s_extracted": 2e-08,
+   "bbm_min_internal_gap_s_extracted": -3.7692e-10,
+   "layout_area_um2": 1086.0,
+   "physical": {
+    "magic_drc_errors": 0,
+    "klayout_drc_violations": 0,
+    "lvs": "match",
+    "pex_sha256": "7a4a0828a9cad1f0a3f6a196172b11e5712352f7b4bd4f92d76dc8fbc9bb6e4a",
+    "gds_sha256": "2a5d7a86e96d2140b2992f33870df8b7fe10fac15db01d894f2795d0d93ca323",
+    "clean_physical": "pass"
+   },
+   "off_c_schematic_max_f": 1.422389e-14,
+   "off_c_extracted_max_f": 1.708673e-14,
+   "off_c_extracted_tt22_mid_f": 1.487871e-14,
+   "off_leak_schematic_max_22to32c_a": 1.546882e-12,
+   "off_leak_extracted_max_22to32c_a": 1.546882e-12,
+   "off_leak_schematic_85c_a": 5.409823e-11,
+   "isolation_schematic": {
+    "iso_atb_leaf_f_tt_27": {
+     "iso_1meg": -173.596,
+     "iso_10meg": -133.596,
+     "iso_100meg": -93.6366
+    },
+    "iso_atb_leaf_f_ff_32": {
+     "iso_1meg": -176.384,
+     "iso_10meg": -136.385,
+     "iso_100meg": -96.42
+    }
+   },
+   "isolation_extracted_tt27": {
+    "iso_1meg": -156.883,
+    "iso_10meg": -116.884,
+    "iso_100meg": -76.972
+   }
+  },
+  "atb_grp": {
+   "schematic_ron_functional_max_ohm": 1170.863,
+   "schematic_ron_tt27_max_ohm": 816.0283,
+   "extracted_ron_functional_max_ohm": 1170.863,
+   "bbm_min_gap_s_schematic": 1.09012e-09,
+   "bbm_min_gap_s_extracted": 5.51127e-09,
+   "bbm_min_internal_gap_s_extracted": 5.87328e-09,
+   "layout_area_um2": 6145.2,
+   "physical": {
+    "magic_drc_errors": 0,
+    "klayout_drc_violations": 0,
+    "lvs": "match",
+    "pex_sha256": "04d00be17fd442cbe0e2fcb926858d23813b641ee74a6bd84826435273fa70d7",
+    "gds_sha256": "3b4307658f923806b03dcc57dacf52a1afd2c4fa00ce1f7129a777cd8562b29e",
+    "clean_physical": "pass"
+   },
+   "off_c_schematic_max_f": 2.819744e-14,
+   "off_c_extracted_max_f": 3.442841e-14,
+   "off_c_extracted_tt22_mid_f": 3.000359e-14,
+   "off_leak_schematic_max_22to32c_a": 2.265071e-10,
+   "off_leak_extracted_max_22to32c_a": 2.265071e-10,
+   "off_leak_schematic_85c_a": 4.452727e-09,
+   "isolation_schematic": {
+    "iso_atb_grp_tt_27": {
+     "iso_1meg": -165.685,
+     "iso_10meg": -125.686,
+     "iso_100meg": -85.7991
+    },
+    "iso_atb_grp_ff_32": {
+     "iso_1meg": -168.633,
+     "iso_10meg": -128.634,
+     "iso_100meg": -88.7375
+    }
+   },
+   "isolation_extracted_tt27": {
+    "iso_1meg": -155.994,
+    "iso_10meg": -115.996,
+    "iso_100meg": -76.1802
+   }
+  },
+  "atb_pad": {
+   "schematic_ron_functional_max_ohm": 585.4307,
+   "schematic_ron_tt27_max_ohm": 408.1788,
+   "extracted_ron_functional_max_ohm": 585.4307,
+   "bbm_min_gap_s_schematic": 1.07786e-09,
+   "bbm_min_gap_s_extracted": 5.72417e-09,
+   "bbm_min_internal_gap_s_extracted": 6.00789e-09,
+   "layout_area_um2": 6626.1,
+   "physical": {
+    "magic_drc_errors": 0,
+    "klayout_drc_violations": 0,
+    "lvs": "match",
+    "pex_sha256": "68dccbeba9ae0e70881587fa529935095c9bb747f11d25c0e245be615359ed70",
+    "gds_sha256": "090332373d74c00e32f106a751cb16a226e2b03e1900156ce496bef715975487",
+    "clean_physical": "pass"
+   }
+  },
+  "verdicts": {
+   "sense_tap_off_loading": "pass",
+   "tap_off_leakage": "pass",
+   "sense_tap_ron": "pass",
+   "break_before_make": "pass",
+   "pad_overvoltage": "pass",
+   "force_sense": "pass"
+  },
+  "select_glitch_schematic": {
+   "atb_leaf_s": {
+    "max_on_v": 0.01411,
+    "max_off_v": 0.000682,
+    "cases": 14,
+    "node": "1.2 V via 100 kohm with 1 pF or 10 pF; bus at 1.2 V via 10 kohm"
+   },
+   "atb_leaf_f": {
+    "max_on_v": 0.054385,
+    "max_off_v": 0.007315,
+    "cases": 14,
+    "node": "1.2 V via 100 kohm with 1 pF or 10 pF; bus at 1.2 V via 10 kohm"
+   }
+  },
+  "register_gap_spec_s": 2e-08,
+  "lvsmode_off_c_tt22_mid_f": {
+   "atb_leaf_s": 8.341345e-15,
+   "atb_leaf_f": 1.808547e-14,
+   "atb_grp": 3.84615e-14
+  },
+  "pad_overvoltage_schematic": {
+   "max_abs_i_pad_a": 1.36452e-06,
+   "max_abs_i_pad_positive_overdrive_a": 5.341261e-09,
+   "max_abs_vbus_v": 0.004103272,
+   "max_abs_i_ring_a": 1.08008e-09
+  },
+  "pad_overvoltage_extracted": {
+   "padov_tt_27_0.0_3.63_0.0": {
+    "i_pad": 1.376618e-11,
+    "i_ring": 3.935227e-13,
+    "vbus": 1.1978e-05
+   },
+   "padov_tt_27_3.3_3.63_0.0": {
+    "i_pad": 5.585807e-05,
+    "i_ring": -1.57087e-12,
+    "vbus": 0.04486412
+   },
+   "padov_tt_27_3.3_-0.3_0.0": {
+    "i_pad": -2.21204e-08,
+    "i_ring": -6.20934e-12,
+    "vbus": -1.74003e-05
+   },
+   "padov_tt_85_0.0_3.63_0.0": {
+    "i_pad": 4.089008e-10,
+    "i_ring": 2.357249e-12,
+    "vbus": 0.0003530992
+   },
+   "padov_tt_85_3.3_3.63_0.0": {
+    "i_pad": 4.114983e-10,
+    "i_ring": -5.58491e-11,
+    "vbus": 3.273714e-07
+   },
+   "padov_tt_85_3.3_-0.3_0.0": {
+    "i_pad": -1.90175e-07,
+    "i_ring": -8.85804e-11,
+    "vbus": -0.000174063
+   }
+  },
+  "force_sense_schematic": {
+   "fs_tt_27": {
+    "v_force_pad": 1.289594,
+    "v_node": 1.049454,
+    "v_sense_pad": 1.048612,
+    "force_ir_error": 0.2401404,
+    "sense_error": -0.000841403
+   },
+   "fs_ss_32": {
+    "v_force_pad": 1.496541,
+    "v_node": 1.174363,
+    "v_sense_pad": 1.173163,
+    "force_ir_error": 0.322178,
+    "sense_error": -0.0012002
+   },
+   "fs_ff_22": {
+    "v_force_pad": 1.117726,
+    "v_node": 0.9261377,
+    "v_sense_pad": 0.9255333,
+    "force_ir_error": 0.1915887,
+    "sense_error": -0.000604328
+   }
+  },
+  "force_sense_extracted": {
+   "fs_tt_27": {
+    "v_force_pad": 1.289594,
+    "v_node": 1.049454,
+    "v_sense_pad": 1.048612,
+    "force_ir_error": 0.2401404,
+    "sense_error": -0.000841403
+   }
+  },
+  "sense_settling_schematic": {
+   "settle_tt_27": {
+    "t_settle": 1.08409e-06,
+    "v_end": 1.2,
+    "settle_1pct": 9.84094e-07
+   },
+   "settle_ss_32": {
+    "t_settle": 1.08045e-06,
+    "v_end": 1.19999,
+    "settle_1pct": 9.80449e-07
+   }
+  },
+  "sense_settling_extracted": {
+   "settle_tt_27": {
+    "t_settle": 1.11494e-06,
+    "v_end": 1.19999,
+    "settle_1pct": 1.014941e-06
+   }
+  },
+  "hierarchy": {
+   "groups": 8,
+   "leaves_per_group": 12,
+   "nodes": 96,
+   "force_capable_per_group": 4,
+   "select_bits": {
+    "group": 3,
+    "leaf": 4,
+    "bus_enable": 2
+   },
+   "local_bus_off_load_estimate_f": 3.4892704e-14,
+   "global_bus_off_load_estimate_f": 2.4099887e-13,
+   "note": "Uses node-side extracted off capacitance per cell. atb_leaf_s has a larger T2 on its bus side (1/2 um vs 0.42/0.84 um T1), so the local-bus figure is a lower bound. Bus wiring excluded."
+  },
+  "notes": [
+   "Ron, DC leakage and force/sense DC values are identical between schematic and C-coupled extracted netlists by construction (no extracted resistance at DC); extracted capacitance changes only AC/transient results.",
+   "ATB cells are simulated on a default-mode ext2spice C-coupled extraction (pexd). sak-pex runs ext2spice in lvs mode, which moved the substrate capacitance of gate-only nets (SEL 6.27 fF + SWB 4.52 fF in atb_leaf_s) in equal halves onto NODE and MID (+5.40 fF each); the default mode keeps NODE at its .ext value (0.47 fF to substrate). atb.lvsmode_off_c_tt22_mid_f records the lvs-mode figure for comparison.",
+   "Bare leaves have no internal TG/shunt non-overlap; a switching leaf briefly overlaps (~0.1-0.2 ns). atb.select_glitch_schematic gives the resulting disturbance on a 1 pF / 10 pF, 100 kohm-fed bias node.",
+   "atb_pad auto-bulk dead zone: with the ring at 3.3 V and PAD at 3.63 V (|PAD-VDD| below |Vtp|) VMAX is not driven; one extracted DC case conducts ~56 uA PAD -> bus -> shunt to VSS (bus 45 mV, ring current < 1 nA). Not a ring back-drive, but a bench load on the ATB pad."
+  ]
+ },
+ "physical": {
+  "isw_wired": {
+   "magic_drc_errors": 0,
+   "klayout_drc_violations": 0,
+   "lvs": "match",
+   "pex_sha256": "0a49552c25c95877faea1c6ee12a22aad65b455116a6b99a1c94447bc4fb008a",
+   "gds_sha256": "54605e36613ab924c63e0cd204c07bbffe4660ad40aa28591fe4579732a133c6",
+   "clean_physical": "pass"
+  },
+  "isw_rf": {
+   "magic_drc_errors": 0,
+   "klayout_drc_violations": 0,
+   "lvs": "match",
+   "pex_sha256": "864c56e25650aa77dd930068d920fe85840fae1425519d64cb7fe4d6e91080b6",
+   "gds_sha256": "c15ec9c4276d7241d1b2fcc24eadf15a319647d0610e8e57fd50584a4ff4086d",
+   "clean_physical": "pass"
+  },
+  "isw_pll": {
+   "magic_drc_errors": 0,
+   "klayout_drc_violations": 0,
+   "lvs": "match",
+   "pex_sha256": "d2de17ecc324f84532d20486edbf7717b8c0e59550ba9541875c433744975fd7",
+   "gds_sha256": "db18f6c4ce65141b372f7fd534ecea6252f07930ebc3533fe61f1114c785fa71",
+   "clean_physical": "pass"
+  },
+  "isw_conv": {
+   "magic_drc_errors": 0,
+   "klayout_drc_violations": 0,
+   "lvs": "match",
+   "pex_sha256": "b8124423caf0991d2d9402c801e684e4fd3f4199204818ad52456162b9b0f362",
+   "gds_sha256": "09e86bddf39a10150786894f8f131e2a185111beac27e0a3e1ccfe1d6103843b",
+   "clean_physical": "pass"
+  },
+  "isw_debug": {
+   "magic_drc_errors": 0,
+   "klayout_drc_violations": 0,
+   "lvs": "match",
+   "pex_sha256": "95b29febe09a2eeadc6ece4f335c6857b3b51f64808047c92874e184b7c766c2",
+   "gds_sha256": "b18bdd7ad2d2a2dcd407bcf45e960cc8b64b79dfbbf285b047ce570b7a557428",
+   "clean_physical": "pass"
+  },
+  "atb_leaf_s": {
+   "magic_drc_errors": 0,
+   "klayout_drc_violations": 0,
+   "lvs": "match",
+   "pex_sha256": "57a41f923c0fd1a571802c5ff0049fbfb62c04d89c6c82a6433cc5c760354ac8",
+   "gds_sha256": "968de6c891f9673b4043edf9dea1a7f91c6850935ce9fd119a14c4ec5268d6da",
+   "clean_physical": "pass"
+  },
+  "atb_leaf_f": {
+   "magic_drc_errors": 0,
+   "klayout_drc_violations": 0,
+   "lvs": "match",
+   "pex_sha256": "7a4a0828a9cad1f0a3f6a196172b11e5712352f7b4bd4f92d76dc8fbc9bb6e4a",
+   "gds_sha256": "2a5d7a86e96d2140b2992f33870df8b7fe10fac15db01d894f2795d0d93ca323",
+   "clean_physical": "pass"
+  },
+  "atb_grp": {
+   "magic_drc_errors": 0,
+   "klayout_drc_violations": 0,
+   "lvs": "match",
+   "pex_sha256": "04d00be17fd442cbe0e2fcb926858d23813b641ee74a6bd84826435273fa70d7",
+   "gds_sha256": "3b4307658f923806b03dcc57dacf52a1afd2c4fa00ce1f7129a777cd8562b29e",
+   "clean_physical": "pass"
+  },
+  "atb_pad": {
+   "magic_drc_errors": 0,
+   "klayout_drc_violations": 0,
+   "lvs": "match",
+   "pex_sha256": "68dccbeba9ae0e70881587fa529935095c9bb747f11d25c0e245be615359ed70",
+   "gds_sha256": "090332373d74c00e32f106a751cb16a226e2b03e1900156ce496bef715975487",
+   "clean_physical": "pass"
+  },
+  "iso_clamp": {
+   "magic_drc_errors": 0,
+   "klayout_drc_violations": 0,
+   "lvs": "match",
+   "pex_sha256": "c01f1ce42c5c7e7f6220f086a21003d37288d29f6b6d12972cf91a09c8098073",
+   "gds_sha256": "92ff6457ddce1e2f738efa05c1864c8b9aba1a720cc79ddcc3af42749101feb1",
+   "clean_physical": "pass"
+  }
+ },
+ "physical_crosscheck_librelane_image": {
+  "isw_wired": {
+   "magic_drc_errors": 0,
+   "lvs": "match"
+  },
+  "isw_rf": {
+   "magic_drc_errors": 0,
+   "lvs": "match"
+  },
+  "isw_pll": {
+   "magic_drc_errors": 0,
+   "lvs": "match"
+  },
+  "isw_conv": {
+   "magic_drc_errors": 0,
+   "lvs": "match"
+  },
+  "isw_debug": {
+   "magic_drc_errors": 0,
+   "lvs": "match"
+  },
+  "atb_leaf_s": {
+   "magic_drc_errors": 0,
+   "lvs": "match"
+  },
+  "atb_leaf_f": {
+   "magic_drc_errors": 0,
+   "lvs": "match"
+  },
+  "atb_grp": {
+   "magic_drc_errors": 0,
+   "lvs": "match"
+  },
+  "atb_pad": {
+   "magic_drc_errors": 0,
+   "lvs": "match"
+  },
+  "iso_clamp": {
+   "magic_drc_errors": 0,
+   "lvs": "match"
+  },
+  "tools": "8.3.623; Netgen 1.5.316 compiled on Tue Feb 10 10:44:29 UTC 2026",
+  "image": "svalbard/librelane-gf180-canary:2026.08",
+  "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43"
+ },
+ "integration_rf_tx_backdrive_iso": {
+  "schematic": {
+   "op_cases": 72,
+   "core_in_max_v": 6.93709e-08,
+   "isl_in_max_v": 0.1456248,
+   "i_into_ring_max_a": 2.709365e-07,
+   "i_esd_island_input_max_a": -1.7293e-15,
+   "visl_range_v": [
+    1.837036,
+    3.471192
+   ],
+   "i_pad_max_a": 0.0286482,
+   "iso_high_ring_powered": true,
+   "hotplug_core_in_max_v": 0.00524317,
+   "hotplug_isl_in_max_v": 0.000302055,
+   "hotplug_i_ring_max_a": 0.000769601,
+   "island_on_core_in_end_v": [
+    3.30003,
+    3.3,
+    3.29991
+   ],
+   "hotplug_note": "hotplug_i_ring_max_a is the capacitive displacement current of the 0->3.63 V/100 ns pad step through the off pass device, not DC conduction; q_ring_hotplug in the tran cases is its integrated charge into the ring.",
+   "verdict": "pass"
+  },
+  "extracted": {
+   "op_cases": 72,
+   "core_in_max_v": 6.93709e-08,
+   "isl_in_max_v": 0.1456324,
+   "i_into_ring_max_a": 2.70871e-07,
+   "i_esd_island_input_max_a": -1.72931e-15,
+   "visl_range_v": [
+    1.837036,
+    3.471894
+   ],
+   "i_pad_max_a": 0.0286482,
+   "iso_high_ring_powered": true,
+   "hotplug_core_in_max_v": 0.00925611,
+   "hotplug_isl_in_max_v": 0.000448276,
+   "hotplug_i_ring_max_a": 0.000829686,
+   "island_on_core_in_end_v": [
+    3.29998,
+    3.30001,
+    3.3
+   ],
+   "hotplug_note": "hotplug_i_ring_max_a is the capacitive displacement current of the 0->3.63 V/100 ns pad step through the off pass device, not DC conduction; q_ring_hotplug in the tran cases is its integrated charge into the ring.",
+   "verdict": "pass"
+  }
+ },
+ "area": {
+  "cells_um2": {
+   "isw_wired": 64081.2,
+   "isw_rf": 49817.2,
+   "isw_pll": 53258.8,
+   "isw_conv": 31781.2,
+   "isw_debug": 36922.0,
+   "atb_leaf_s": 826.9,
+   "atb_leaf_f": 1086.0,
+   "atb_grp": 6145.2,
+   "atb_pad": 6626.1,
+   "iso_clamp": 905.9
+  },
+  "island_switches_total_mm2": 0.2359,
+  "atb_tree_96_node_mm2": 0.2257,
+  "atb_tree_target_mm2": 0.3,
+  "note": "Bounding-box areas, no routing. ATB tree: 96 bare sense leaves, 32 bare force-capable leaves (4 per group; the register map allows ATB0 on 20 codes), 16 group switches (8 per bus, with the default-open/break-before-make control), 2 pad switches.",
+  "reserve_granted_mm2": 0.35,
+  "atb_tree_register_map": {
+   "source": "spec/debug-controls.json atb_nodes (hardware != false)",
+   "sense_leaves": 54,
+   "force_leaves": 20,
+   "groups_sense_bus": 5,
+   "groups_force_bus": 2,
+   "pad_switches": 2,
+   "mm2": 0.1226,
+   "placement": "Sense leaves for per-block bias nodes sit at the core_support bias-bank outputs (same observability as the mirror gate, shorter routing); one leaf per register-map code."
+  }
+ },
+ "summary": {
+  "all_cells_drc_lvs_clean": true,
+  "extracted_function_all_islands": true,
+  "proposed_tapeout_readiness_power": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core",
+   "scope": "Island switches + ATB cells + iso_clamp, cell level plus the RF_TX back-drive integration fixture. \"observable\" stays open: PG/ISO/EN register fields and the ATB select decode are not in rtl/. \"clean\" covers the switch/ATB cells; ring decap and top-level assembly belong to later freeze stages.",
+   "evidence": {
+    "safe": [
+     "island_switch.*.{default_off,reverse_blocking,discharge,off_leakage}",
+     "rf_tx_backdrive",
+     "integration_rf_tx_backdrive_iso",
+     "atb.verdicts.pad_overvoltage"
+    ],
+    "clean": [
+     "physical",
+     "physical_crosscheck_librelane_image",
+     "island_switch.*.drop",
+     "atb.verdicts"
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,107 @@
+{
+ "schema_version": 1,
+ "observed_utc": "2026-11-08",
+ "status": "restored_functionally_reproducing_not_byte_identical_images",
+ "layout_image": {
+  "role": "Magic/Netgen/KLayout for pad layout, extraction, DRC, LVS, GDS round trip (layout.py IMAGE)",
+  "locked_image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+  "locked_image_identity": "svalbard/librelane-gf180-canary:2026.08 (env/images.lock); absent from the local daemon",
+  "recipe": "env/images/librelane-gf180-canary/{Dockerfile,build.sh,overlay_pdk.py} (repository root), unchanged",
+  "rebuilt_image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "rebuild_record": "env/images/librelane-gf180-canary/rebuild-2026-11-08.json (repository root)",
+  "identity": "mismatch: same recipe and pinned base digests, image build not byte-reproducible",
+  "selection": "layout.py now reads SVALBARD_PAD_IMAGE (default: locked ID); reports record the image actually used",
+  "observed_tools": {
+   "magic": "8.3.623",
+   "netgen": "1.5.316",
+   "klayout": "0.30.7"
+  },
+  "pdk_file_sha256": {
+   "/pdk/gf180mcuD/libs.tech/magic/gf180mcuD.tech": "f0c3a445aa0a2a9b7a1f10530a6c011800a41fcad36c12d8bb9b792a59c74f44",
+   "/pdk/gf180mcuD/libs.tech/netgen/gf180mcuD_setup.tcl": "eb6217e33acb2c81680351745bc184a2ee37b31a25d37f4dce423f61ba466fe4",
+   "/pdk/gf180mcuD/libs.ref/gf180mcu_fd_io/gds/gf180mcu_fd_io.gds": "c8ccb709da1935bb7c0276fa8abb55b957f45c14d0a2f97b0852ac30dcb98893"
+  },
+  "pdk_matches_recorded": {
+   "magic_tech": "equal to scratch/pad-current-gf180mcuD.tech recorded in generated/wire-resistance.json",
+   "fd_io_gds": "equal to source_gds_sha256 in generated/protection-clamp/clamp-layout.json"
+  }
+ },
+ "simulation_image": {
+  "role": "ngspice for pad simulation (previously a host build at scratch/pad-diode-fixed-tools/ngspice)",
+  "recipe": "analog/pads/env/Dockerfile.sim + env/build_sim_image.sh (offline build, --network none)",
+  "base": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3 (local image ID sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305, arm64)",
+  "tag": "svalbard/transceiver-pad-sim:ngspice47-corrected",
+  "image_id": "sha256:aff04aa3fba8fb224f8b538f159cc34bf261e5be34ecf8737d1574b443012dfa",
+  "ngspice_archive_sha256": "894e649651f1838a14095e5a5439e7d3aa63e87ede14d283173fda4fcdef675f",
+  "patches_sha256": {
+   "ngspice-cap-multiplier.patch": "eda4810b0286f6a30e4e5a61408bdd4c9ff9babaf51c566430c54cd447ed4a67",
+   "ngspice-diode-charge.patch": "789510fbd22020e3c653bfde994b261bed23dc9f4ca473bb17ef0d82e406688b"
+  },
+  "configure": [
+   "--with-x=no",
+   "--with-readline=no",
+   "--disable-debug",
+   "--enable-xspice",
+   "--disable-cider"
+  ],
+  "binary_sha256": "fc3cbfc741aa1feba73ab6cc4bc2764db730075c9a515dda5215a8e75863499f",
+  "recorded_host_binary_sha256": "fe4c022a189fb6bb56b04e7958614908b83bbc2b76fe609efc4fafc4ab29e810",
+  "binary_note": "Different compiler/base than the recorded host build, so binary hashes differ; behaviour is checked below."
+ },
+ "pdk_models": {
+  "directory": "scratch/transceiver-pad-pdk/ngspice (unchanged copy)",
+  "source": "pinned iic-osic-tools /foss/pdks/ciel/gf180mcu/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/gf180mcuD/libs.tech/ngspice",
+  "identical_to_pinned_image": true,
+  "sha256": {
+   ".spiceinit": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+   "design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+   "sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+   "sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+   "sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+   "sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+   "smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+   "smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363"
+  }
+ },
+ "reproduction": {
+  "simulation": {
+   "decks": [
+    "scratch/pad-supervised-receive/release_pulse_discharge.spice",
+    "scratch/pad-supervised-receive/release_pulse_control.spice"
+   ],
+   "method": "Recorded decks re-run in the simulation image with only the wrdata path changed",
+   "release_pulse_discharge": {
+    "waveform_sha256": "2e4f558e49c39ea7d8b39c2edb194ed3b16b23cd5ad5ca7523b4344dc003ea36",
+    "recorded_waveform_sha256": "2e4f558e49c39ea7d8b39c2edb194ed3b16b23cd5ad5ca7523b4344dc003ea36",
+    "byte_identical": true,
+    "pad_p_peak_v": 8.09922611
+   },
+   "release_pulse_control": {
+    "waveform_sha256": "73a567bb1221c6a034c9d78fba9b291c10a91b59925fb4d947841ea9f3de55f3",
+    "byte_identical_to_recorded_dat": true,
+    "pad_p_peak_v": 4.01337703
+   }
+  },
+  "layout": {
+   "cell": "protection clamp macro (clamp_layout.generate), canonical generated/protection-clamp",
+   "image": "rebuilt layout image b6027809...",
+   "drc_count": 0,
+   "gds_geometric_xor_polygons": 0,
+   "gds_layers_compared": 28,
+   "gds_bytes_identical": false,
+   "gds_note": "GDS byte hashes differ (library timestamps); KLayout XOR over all 28 layers is empty",
+   "extracted_device_lines_identical": true,
+   "extracted_capacitor_pairs": 75,
+   "extracted_capacitance_identical": true,
+   "extracted_spice_sha256_identical": false,
+   "extracted_note": "Same 142 device lines and identical capacitor values; capacitor line order differs",
+   "netgen_lvs_vs_recorded_reference": "Circuits match uniquely",
+   "known_abort": "clamp_layout.generate then stops in protection_candidate.build_candidate (\"Expected four existing protection units\") because generated/rf-receive-extracted-c.spice has since been replaced by the connected-protection version. This is a stale input of that script, not an environment difference; the recorded clamp-reference.spice was used for LVS instead."
+  }
+ },
+ "limitations": [
+  "Images are rebuilt, not the locked byte-identical images; equivalence shown for the cells/decks listed only",
+  "Other canonical families were not regenerated in this pass"
+ ]
+}

@@ -1,0 +1,110 @@
+Local modification (svalbard, 2026-11-08) of gf180mcu_ocd_ip__biasgen @ 96a93f811a10c0b63111a5bd862e3173300802d4
+(Apache-2.0, original (c) Open Circuit Design, LLC), applied after biasgen-dvdd-dvss-pin-alignment.patch.
+Adds 4 separate 100 um x 38 um MIM capacitors (~30 pF total) from the bandgap-loop feedback node vfb
+(bottom plates) to avss (top plates), placed above the cell.  The vbg-referenced loop
+(bias_amp_large -> pbias -> pstack -> vfb/R2) had -31 deg phase margin at 3.3 V (-49 deg at 5 V).
+vfb is reached on metal5 from the C2 bottom-plate via4 strip; avss by a metal5 hop from the avss
+metal4 strap at the left end.  Schematic: C3 (m=4) in bias_generator_fe.
+
+diff -ruN a/magic/gf180mcu_ocd_ip__biasgen.mag b/magic/gf180mcu_ocd_ip__biasgen.mag
+--- a/magic/gf180mcu_ocd_ip__biasgen.mag	2026-11-08 05:26:36.172413044 +0000
++++ b/magic/gf180mcu_ocd_ip__biasgen.mag	2026-11-08 05:32:17.704747418 +0000
+@@ -91,6 +91,25 @@
+ rect 8842 1312 10385 2657
+ rect 8842 1206 10383 1312
+ rect 100653 1256 102513 2713
++rect 34230 12300 34480 12400
++rect 55310 12300 55560 12400
++rect 76390 12300 76640 12400
++rect 97470 12300 97720 12400
++<< via4 >>
++rect 11050 9610 11450 9705
++<< metal5 >>
++rect 11000 9560 11500 21200
++rect 53500 4208 54000 12000
++rect 34330 11600 97780 12000
++rect 11000 20700 88480 21200
++rect 34330 12000 34540 12462
++rect 23240 19920 25240 20700
++rect 55410 12000 55620 12462
++rect 44320 19920 46320 20700
++rect 76490 12000 76700 12462
++rect 65400 19920 67400 20700
++rect 97570 12000 97780 12462
++rect 86480 19920 88480 20700
+ use bias_generator_be0p  bias_generator_be0p_0
+ timestamp 1793541270
+ transform 1 0 88590 0 1 5971
+@@ -141,6 +160,22 @@
+ timestamp 1792612779
+ transform 0 -1 33925 -1 0 10145
+ box -35 -82 41 102
++use cap_mim_2p0fF_VFBCMP  cap_mim_2p0fF_VFBCMP_0 paramcells
++timestamp 1794115728
++transform 1 0 24240 0 1 16320
++box -10240 -3920 10240 3920
++use cap_mim_2p0fF_VFBCMP  cap_mim_2p0fF_VFBCMP_1 paramcells
++timestamp 1794115728
++transform 1 0 45320 0 1 16320
++box -10240 -3920 10240 3920
++use cap_mim_2p0fF_VFBCMP  cap_mim_2p0fF_VFBCMP_2 paramcells
++timestamp 1794115728
++transform 1 0 66400 0 1 16320
++box -10240 -3920 10240 3920
++use cap_mim_2p0fF_VFBCMP  cap_mim_2p0fF_VFBCMP_3 paramcells
++timestamp 1794115728
++transform 1 0 87480 0 1 16320
++box -10240 -3920 10240 3920
+ << labels >>
+ flabel metal4 32181 10068 32651 10290 0 FreeSans 1846 0 0 0 dvss
+ port 7 nsew
+diff -ruN a/magic/paramcells/cap_mim_2p0fF_VFBCMP.mag b/magic/paramcells/cap_mim_2p0fF_VFBCMP.mag
+--- a/magic/paramcells/cap_mim_2p0fF_VFBCMP.mag	1970-01-01 00:00:00.000000000 +0000
++++ b/magic/paramcells/cap_mim_2p0fF_VFBCMP.mag	2026-11-08 05:32:17.687395503 +0000
+@@ -0,0 +1,30 @@
++magic
++tech gf180mcuD
++magscale 1 10
++timestamp 1794115728
++<< mimcap >>
++rect -10120 3720 9880 3800
++rect -10120 -3720 -10040 3720
++rect 9800 -3720 9880 3720
++rect -10120 -3800 9880 -3720
++<< mimcapcontact >>
++rect -10040 -3720 9800 3720
++<< metal4 >>
++rect -10240 3853 10240 3920
++rect -10240 3800 10090 3853
++rect -10240 -3800 -10120 3800
++rect 9880 -3800 10090 3800
++rect -10240 -3853 10090 -3800
++rect 10178 -3853 10240 3853
++rect -10240 -3920 10240 -3853
++<< via4 >>
++rect 10090 -3853 10178 3853
++<< metal5 >>
++rect 10090 3853 10178 3863
++rect 10090 -3863 10178 -3853
++<< properties >>
++string FIXED_BBOX -10240 -3920 10000 3920
++string gencell cap_mim_2p0fF
++string library gf180mcu
++string parameters w 100 l 38 val 100.52k carea 25.00 cperi 20.00 class capacitor nx 1 ny 1 dummy 0 square 0 lmin 5.00 wmin 5.00 lmax 100.0 wmax 100.0 dc 0 bconnect 1 tconnect 1
++<< end >>
+diff -ruN a/xschem/bias_generator_fe.sch b/xschem/bias_generator_fe.sch
+--- a/xschem/bias_generator_fe.sch	2026-11-08 05:26:14.931282957 +0000
++++ b/xschem/bias_generator_fe.sch	2026-11-08 05:32:17.704903185 +0000
+@@ -495,3 +495,12 @@
+ C {devices/lab_pin.sym} -1750 -810 0 1 {name=p32 sig_type=std_logic lab=enb_fine_5v0}
+ C {lab_pin.sym} -880 -440 0 1 {name=p58 sig_type=std_logic lab=dummypbias}
+ C {tap_2.sym} -2060 -260 0 0 {name=x32[6:0] VSS=dvss VDD=dvdd prefix=gf180mcu_as_sc_mcu7t3v3__ }
++C {gf180mcu_fd_pr/cap_mim_2f0fF.sym} 3000 -3000 0 0 {name=C3
++W=100e-6
++L=38e-6
++model=cap_mim_2f0_m4m5_noshield
++spiceprefix=X
++m=4}
++C {devices/lab_pin.sym} 3000 -3030 0 0 {name=p_avsscmp sig_type=std_logic lab=avss}
++C {devices/lab_pin.sym} 3000 -2970 0 0 {name=p_vfbcmp sig_type=std_logic lab=vfb}
++T {svalbard local fix: 4 x 7.6 pF MIM from vfb (bottom plate) to avss (top plate); the bandgap-mode loop had negative phase margin} 2900 -3150 0 0 0.3 0.3 {}

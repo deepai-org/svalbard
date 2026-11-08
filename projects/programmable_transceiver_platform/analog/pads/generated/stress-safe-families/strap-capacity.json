@@ -1,0 +1,346 @@
+{
+ "scope": "Current-capacity screen of the stress-safe shunt wiring (v2 macro).\n\nInputs: drawn strap widths/lengths/cut counts (generated/stress-safe-families/\nnetwork-shunt/network-layout.json) and Magic sheet resistances. Two loads:\n  pulse  100 mA for 2 ns (selection diagnostic)\n  dc     13.4 mA: both pads of a pair held at 3.63 V through 50 ohm with the chip\n         off at ff/85 C (worst powered-peer case, family-sims.json), and\n         57.2 mA: both pads forced to 3.63 V by an ideal source at ff/85 C\n         (2 x 28.6 mA, stress-safe-sweep.json pad_loading) - a fault, not lifetime use\nThickness is inferred from sheet resistance with rho = 3.0e-8 ohm m (aluminium\nfilm), which gives the thinnest (most pessimistic) film for a given sheet value.\nDC limits are the GF180 design manual section 14.2 values (T0.1 > 100 kh) at the\n85 C junction limit of the safety range, unidirectional:\nhttps://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_2.html\nTable 14.3: metal1..top-1 2.09 mA/um; top metal 11 kA (the selected 1.1 um top\nmetal of gf180mcuD, MIM_2P0/METAL5 nodeinfo) 4.5 mA/um. Table 14.4: via1-5\n(0.26 um) and COMP contact 0.58 mA per cut. At 110 C the values are 1.0 / 2.2\nmA/um and 0.28 mA. EM limits are lifetime limits; the 57.2 mA case is a fault.\nPulse heating is adiabatic Joule heating dT = J^2 rho t / c_v (c_v 2.42e6 J/m3K).",
+ "drm_source": "https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_2.html",
+ "v2": {
+  "pulse_100mA_2ns": [
+   {
+    "element": "RAIL strap",
+    "layer": "metal5",
+    "width_um": 30.0,
+    "thickness_um_inferred": 0.75,
+    "current_a": 0.1,
+    "ma_per_um": 3.3333333333333335,
+    "dc_limit_ma_per_um_drm_85c": 4.5,
+    "dc_limit_ma_per_um_drm_110c": 2.2,
+    "pulse_dT_K": 0.0004897459442913991,
+    "resistance_ohm": 0.07524666666666667
+   },
+   {
+    "element": "RAIL via4 array",
+    "cuts": 600,
+    "current_a": 0.1,
+    "ma_per_cut": 0.16666666666666666,
+    "limit_ma_per_cut_drm_85c": 0.58
+   },
+   {
+    "element": "RAIL via3 array",
+    "cuts": 600,
+    "current_a": 0.1,
+    "ma_per_cut": 0.16666666666666666,
+    "limit_ma_per_cut_drm_85c": 0.58
+   },
+   {
+    "element": "VSS strap metal4-only section (y 288..290)",
+    "layer": "metal4",
+    "width_um": 63.0,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.1,
+    "ma_per_um": 1.5873015873015872,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": 0.0005622083544161466,
+    "resistance_ohm": 0.002857142857142857
+   },
+   {
+    "element": "VSS strap metal4 above the base (parallel to metal5)",
+    "layer": "metal4",
+    "width_um": 30.0,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.05,
+    "ma_per_um": 1.6666666666666667,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null,
+    "resistance_ohm": 0.604725
+   },
+   {
+    "element": "VSS via3 array",
+    "cuts": 600,
+    "current_a": 0.1,
+    "ma_per_cut": 0.16666666666666666,
+    "limit_ma_per_cut_drm_85c": 0.58
+   },
+   {
+    "element": "VSS strap metal5 parallel",
+    "layer": "metal5",
+    "width_um": 30.0,
+    "thickness_um_inferred": 0.75,
+    "current_a": 0.05,
+    "ma_per_um": 1.6666666666666667,
+    "dc_limit_ma_per_um_drm_85c": 4.5,
+    "dc_limit_ma_per_um_drm_110c": 2.2,
+    "pulse_dT_K": null,
+    "resistance_ohm": 0.23543333333333333
+   },
+   {
+    "element": "plate spreading from the feed column (metal2, per side, half via metal3)",
+    "layer": "metal2",
+    "width_um": 21.5,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.025,
+    "ma_per_um": 1.1627906976744187,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null
+   },
+   {
+    "element": "finger strip (metal1, one finger share)",
+    "layer": "metal1",
+    "width_um": 0.23,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.0004166666666666667,
+    "ma_per_um": 1.8115942028985508,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null
+   },
+   {
+    "element": "via1 column (one strip, ~30 cuts)",
+    "cuts": 30,
+    "current_a": 0.0004166666666666667,
+    "ma_per_cut": 0.01388888888888889,
+    "limit_ma_per_cut_drm_85c": 0.58
+   }
+  ],
+  "dc_13p4mA": [
+   {
+    "element": "RAIL strap",
+    "layer": "metal5",
+    "width_um": 30.0,
+    "thickness_um_inferred": 0.75,
+    "current_a": 0.0134,
+    "ma_per_um": 0.44666666666666666,
+    "dc_limit_ma_per_um_drm_85c": 4.5,
+    "dc_limit_ma_per_um_drm_110c": 2.2,
+    "pulse_dT_K": null,
+    "resistance_ohm": 0.07524666666666667
+   },
+   {
+    "element": "RAIL via4 array",
+    "cuts": 600,
+    "current_a": 0.0134,
+    "ma_per_cut": 0.022333333333333334,
+    "limit_ma_per_cut_drm_85c": 0.58
+   },
+   {
+    "element": "RAIL via3 array",
+    "cuts": 600,
+    "current_a": 0.0134,
+    "ma_per_cut": 0.022333333333333334,
+    "limit_ma_per_cut_drm_85c": 0.58
+   },
+   {
+    "element": "VSS strap metal4-only section (y 288..290)",
+    "layer": "metal4",
+    "width_um": 63.0,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.0134,
+    "ma_per_um": 0.2126984126984127,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null,
+    "resistance_ohm": 0.002857142857142857
+   },
+   {
+    "element": "VSS strap metal4 above the base (parallel to metal5)",
+    "layer": "metal4",
+    "width_um": 30.0,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.0067,
+    "ma_per_um": 0.22333333333333333,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null,
+    "resistance_ohm": 0.604725
+   },
+   {
+    "element": "VSS via3 array",
+    "cuts": 600,
+    "current_a": 0.0134,
+    "ma_per_cut": 0.022333333333333334,
+    "limit_ma_per_cut_drm_85c": 0.58
+   },
+   {
+    "element": "VSS strap metal5 parallel",
+    "layer": "metal5",
+    "width_um": 30.0,
+    "thickness_um_inferred": 0.75,
+    "current_a": 0.0067,
+    "ma_per_um": 0.22333333333333333,
+    "dc_limit_ma_per_um_drm_85c": 4.5,
+    "dc_limit_ma_per_um_drm_110c": 2.2,
+    "pulse_dT_K": null,
+    "resistance_ohm": 0.23543333333333333
+   },
+   {
+    "element": "plate spreading from the feed column (metal2, per side, half via metal3)",
+    "layer": "metal2",
+    "width_um": 21.5,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.00335,
+    "ma_per_um": 0.1558139534883721,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null
+   },
+   {
+    "element": "finger strip (metal1, one finger share)",
+    "layer": "metal1",
+    "width_um": 0.23,
+    "thickness_um_inferred": 0.333,
+    "current_a": 5.583333333333333e-05,
+    "ma_per_um": 0.2427536231884058,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null
+   },
+   {
+    "element": "via1 column (one strip, ~30 cuts)",
+    "cuts": 30,
+    "current_a": 5.583333333333333e-05,
+    "ma_per_cut": 0.0018611111111111111,
+    "limit_ma_per_cut_drm_85c": 0.58
+   }
+  ],
+  "dc_fault_57p2mA": [
+   {
+    "element": "RAIL strap",
+    "layer": "metal5",
+    "width_um": 30.0,
+    "thickness_um_inferred": 0.75,
+    "current_a": 0.0572,
+    "ma_per_um": 1.9066666666666667,
+    "dc_limit_ma_per_um_drm_85c": 4.5,
+    "dc_limit_ma_per_um_drm_110c": 2.2,
+    "pulse_dT_K": null,
+    "resistance_ohm": 0.07524666666666667
+   },
+   {
+    "element": "RAIL via4 array",
+    "cuts": 600,
+    "current_a": 0.0572,
+    "ma_per_cut": 0.09533333333333334,
+    "limit_ma_per_cut_drm_85c": 0.58
+   },
+   {
+    "element": "RAIL via3 array",
+    "cuts": 600,
+    "current_a": 0.0572,
+    "ma_per_cut": 0.09533333333333334,
+    "limit_ma_per_cut_drm_85c": 0.58
+   },
+   {
+    "element": "VSS strap metal4-only section (y 288..290)",
+    "layer": "metal4",
+    "width_um": 63.0,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.0572,
+    "ma_per_um": 0.9079365079365079,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null,
+    "resistance_ohm": 0.002857142857142857
+   },
+   {
+    "element": "VSS strap metal4 above the base (parallel to metal5)",
+    "layer": "metal4",
+    "width_um": 30.0,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.0286,
+    "ma_per_um": 0.9533333333333334,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null,
+    "resistance_ohm": 0.604725
+   },
+   {
+    "element": "VSS via3 array",
+    "cuts": 600,
+    "current_a": 0.0572,
+    "ma_per_cut": 0.09533333333333334,
+    "limit_ma_per_cut_drm_85c": 0.58
+   },
+   {
+    "element": "VSS strap metal5 parallel",
+    "layer": "metal5",
+    "width_um": 30.0,
+    "thickness_um_inferred": 0.75,
+    "current_a": 0.0286,
+    "ma_per_um": 0.9533333333333334,
+    "dc_limit_ma_per_um_drm_85c": 4.5,
+    "dc_limit_ma_per_um_drm_110c": 2.2,
+    "pulse_dT_K": null,
+    "resistance_ohm": 0.23543333333333333
+   },
+   {
+    "element": "plate spreading from the feed column (metal2, per side, half via metal3)",
+    "layer": "metal2",
+    "width_um": 21.5,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.0143,
+    "ma_per_um": 0.6651162790697674,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null
+   },
+   {
+    "element": "finger strip (metal1, one finger share)",
+    "layer": "metal1",
+    "width_um": 0.23,
+    "thickness_um_inferred": 0.333,
+    "current_a": 0.00023833333333333334,
+    "ma_per_um": 1.036231884057971,
+    "dc_limit_ma_per_um_drm_85c": 2.09,
+    "dc_limit_ma_per_um_drm_110c": 1.0,
+    "pulse_dT_K": null
+   },
+   {
+    "element": "via1 column (one strip, ~30 cuts)",
+    "cuts": 30,
+    "current_a": 0.00023833333333333334,
+    "ma_per_cut": 0.007944444444444445,
+    "limit_ma_per_cut_drm_85c": 0.58
+   }
+  ]
+ },
+ "dc_worst_fraction_of_drm_85c_limit": {
+  "dc_13p4mA": {
+   "metal": [
+    0.11615005894182096,
+    "finger strip (metal1, one finger share)"
+   ],
+   "via": [
+    0.038505747126436785,
+    "VSS via3 array"
+   ]
+  },
+  "dc_fault_57p2mA": {
+   "metal": [
+    0.4958047292143402,
+    "finger strip (metal1, one finger share)"
+   ],
+   "via": [
+    0.16436781609195406,
+    "VSS via3 array"
+   ]
+  }
+ },
+ "wiring_resistance": {
+  "nominal": {
+   "rail_strap_ohm": 0.09024666666666667,
+   "vss_strap_ohm": 0.18831171765569607,
+   "plate_end_to_end_ohm": 0.6152127906976745,
+   "banks_bound_ohm": 3.6912767441860472,
+   "total_bound_ohm": 3.96983512850841,
+   "drop_at_100mA_v": 0.396983512850841
+  },
+  "high": {
+   "rail_strap_ohm": 0.14217716666666666,
+   "vss_strap_ohm": 0.2640752898297741,
+   "plate_end_to_end_ohm": 0.710912558139535,
+   "banks_bound_ohm": 4.26547534883721,
+   "total_bound_ohm": 4.671727805333651,
+   "drop_at_100mA_v": 0.46717278053336514
+  }
+ }
+}

@@ -272,7 +272,7 @@ def tx_macro_power_budget(publish):
             if instance=='Xpad':owner='detect' if mode=='DETECT' else 'txpad'
             elif instance=='XBUF':owner=allocations['buffer']['block']
             elif instance=='XCTL':owner=allocations['interlock']['block']
-            elif instance.startswith('XDRIVE_TMDS_'):owner='tmds'
+            elif instance.startswith('XDRIVE_TMDS_'):owner=architecture['blocks']['tmds'].get('merged_into',{}).get('block','tmds')
             elif instance.startswith('XDRIVE_'):owner=allocations['steering_driver']['block']
             else:raise ValueError('Unmapped macro current: '+instance)
             owners[owner]=owners.get(owner,0)+current*1000

@@ -1,0 +1,338 @@
+{
+ "scope": "P3-10: can neighbouring debug pads share one stress-safe macro?\n\nShared candidate: pair A keeps the drawn macro (network + discharge + ATB +\nv2.1 shunt, Magic-extracted). The neighbour B (another pair, or the single WMON\nleg) keeps only its local steering diodes (4 x pd2nw PAD->rail, 4 x nd2ps\nVSS->PAD per pad, the drawn junction geometry) and reaches A's isolated rail and\nVSS through a rail bus and a return bus of resistance R each. Every leg of both\nsites is attached. Stimulus: the selection pulse (+/-100 mA, 2 ns) into B's\npad, bare unpowered die, tt/27 C and ss/0 C. Reference: the same pulse into A's\nown pad. The added peak (B - A) must fit the 0.105 V margin left at ss/0 C in\nthe retained-fixture worst case (5.895 V vs 6.0 V) for the share to be adopted.\nR values: metal4 || metal5 bus, 211 um (WMON next to WTX_EXT_N) or 422 um\n(BB_Q pair next to BB_I pair) long, 20/40/80 um wide (sheet 0.09 || 0.04 ohm/sq).",
+ "pair_model": {
+  "path": "/home/ubuntu/svalbard/scratch/pad-ss4-rf-pair/pad/pad-extracted.spice",
+  "sha256": "3663c2ee42eaad46ab78656584fcafc5ed458054998cf06c1e511fcca12f5df7"
+ },
+ "results": [
+  {
+   "target": "PA_P",
+   "b_legs": [
+    "P",
+    "N"
+   ],
+   "bus_length_um": 0,
+   "bus_width_um": 1,
+   "bus_ohm_each": 0.001,
+   "process": "ss",
+   "temp_c": 0,
+   "sign": "pos",
+   "peak_v": 4.74103631,
+   "min_v": -3.31085656e-16,
+   "rail_a_max_v": 3.5549263,
+   "rail_b_max_v": 3.5549263,
+   "op_fallback": false,
+   "deck_sha256": "38437ac6d09b03d64eaba79712b226b32a6cc3b180f7fb842c419219dddbadae",
+   "added_v": 0.0,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P",
+    "N"
+   ],
+   "bus_length_um": 422,
+   "bus_width_um": 20,
+   "bus_ohm_each": 0.5843076923076922,
+   "process": "ss",
+   "temp_c": 0,
+   "sign": "pos",
+   "peak_v": 4.80567125,
+   "min_v": -1.58162916e-16,
+   "rail_a_max_v": 3.56093611,
+   "rail_b_max_v": 3.61929789,
+   "op_fallback": false,
+   "deck_sha256": "bf37c6813145c3cd1cedbdd5faee139fe154339a82c25c273bf78ba76bd6e333",
+   "added_v": 0.06463493999999947,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P",
+    "N"
+   ],
+   "bus_length_um": 422,
+   "bus_width_um": 40,
+   "bus_ohm_each": 0.2921538461538461,
+   "process": "ss",
+   "temp_c": 0,
+   "sign": "pos",
+   "peak_v": 4.77643975,
+   "min_v": -2.55784096e-16,
+   "rail_a_max_v": 3.56097748,
+   "rail_b_max_v": 3.59016012,
+   "op_fallback": false,
+   "deck_sha256": "972edcfdbdd42d7c89bfb75363e0edbefe65e2683aa5cfb7526c6dfcc83575cc",
+   "added_v": 0.03540343999999962,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P",
+    "N"
+   ],
+   "bus_length_um": 422,
+   "bus_width_um": 80,
+   "bus_ohm_each": 0.14607692307692305,
+   "process": "ss",
+   "temp_c": 0,
+   "sign": "pos",
+   "peak_v": 4.76182229,
+   "min_v": -5.95796495e-16,
+   "rail_a_max_v": 3.56099784,
+   "rail_b_max_v": 3.57558966,
+   "op_fallback": false,
+   "deck_sha256": "ee8f78814cb7c7fe3a6e0ab9a7be4f414dad6f8990c6fb6f2205fcebce8e0212",
+   "added_v": 0.020785979999999427,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P"
+   ],
+   "bus_length_um": 211,
+   "bus_width_um": 20,
+   "bus_ohm_each": 0.2921538461538461,
+   "process": "ss",
+   "temp_c": 0,
+   "sign": "pos",
+   "peak_v": 4.77782215,
+   "min_v": -3.26330519e-16,
+   "rail_a_max_v": 3.56247195,
+   "rail_b_max_v": 3.59166371,
+   "op_fallback": false,
+   "deck_sha256": "f26ebdd4cf53f7311ca80c91740ee408f757b143d940d17cdca8304384a99f71",
+   "added_v": 0.03678584000000029,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P"
+   ],
+   "bus_length_um": 211,
+   "bus_width_um": 40,
+   "bus_ohm_each": 0.14607692307692305,
+   "process": "ss",
+   "temp_c": 0,
+   "sign": "pos",
+   "peak_v": 4.76324913,
+   "min_v": -3.14539939e-16,
+   "rail_a_max_v": 3.56248778,
+   "rail_b_max_v": 3.57708404,
+   "op_fallback": false,
+   "deck_sha256": "cca704e6c7c390d985cb9bce035ccabf4ad7a8bce81742f64c6f58fc2732bfc8",
+   "added_v": 0.022212820000000022,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P"
+   ],
+   "bus_length_um": 211,
+   "bus_width_um": 80,
+   "bus_ohm_each": 0.07303846153846152,
+   "process": "ss",
+   "temp_c": 0,
+   "sign": "pos",
+   "peak_v": 4.75596225,
+   "min_v": -5.2558755e-16,
+   "rail_a_max_v": 3.56249562,
+   "rail_b_max_v": 3.56979385,
+   "op_fallback": false,
+   "deck_sha256": "24be52d02291a011e1dc4bdfb593593374663f9acbb42369ec2f708b7c2e2297",
+   "added_v": 0.014925939999999471,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P",
+    "N"
+   ],
+   "bus_length_um": 422,
+   "bus_width_um": 40,
+   "bus_ohm_each": 0.2921538461538461,
+   "process": "ss",
+   "temp_c": 0,
+   "sign": "neg",
+   "peak_v": 5.0618949e-16,
+   "min_v": -1.24252828,
+   "rail_a_max_v": 6.37383029e-17,
+   "rail_b_max_v": 6.37383029e-17,
+   "op_fallback": false,
+   "deck_sha256": "9df0df0892d8e40728499e0a36f2b3086d3ec89d42ae5acb15fc3164973b9236"
+  },
+  {
+   "target": "PA_P",
+   "b_legs": [
+    "P",
+    "N"
+   ],
+   "bus_length_um": 0,
+   "bus_width_um": 1,
+   "bus_ohm_each": 0.001,
+   "process": "typical",
+   "temp_c": 27,
+   "sign": "pos",
+   "peak_v": 4.23726206,
+   "min_v": -9.80531866e-17,
+   "rail_a_max_v": 3.09593971,
+   "rail_b_max_v": 3.09593971,
+   "op_fallback": false,
+   "deck_sha256": "75b71c31d8284e67a86c9e8f6d63f0e7fc7acc151b1e41b7f57b72e0c3daf2aa",
+   "added_v": 0.0,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P",
+    "N"
+   ],
+   "bus_length_um": 422,
+   "bus_width_um": 20,
+   "bus_ohm_each": 0.5843076923076922,
+   "process": "typical",
+   "temp_c": 27,
+   "sign": "pos",
+   "peak_v": 4.30073485,
+   "min_v": -4.23364341e-16,
+   "rail_a_max_v": 3.10113319,
+   "rail_b_max_v": 3.15952771,
+   "op_fallback": false,
+   "deck_sha256": "2bf150e3952016980a8f9c4371d13d413efd7c2e4bfc4f674d51e0179c994395",
+   "added_v": 0.0634727900000005,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P",
+    "N"
+   ],
+   "bus_length_um": 422,
+   "bus_width_um": 40,
+   "bus_ohm_each": 0.2921538461538461,
+   "process": "typical",
+   "temp_c": 27,
+   "sign": "pos",
+   "peak_v": 4.27158231,
+   "min_v": -8.63588201e-17,
+   "rail_a_max_v": 3.10116028,
+   "rail_b_max_v": 3.13035939,
+   "op_fallback": false,
+   "deck_sha256": "1cbd091798caf7d83f20643148dcefcb1aeed8c204ada98da9e708fafaff972c",
+   "added_v": 0.034320250000000385,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P",
+    "N"
+   ],
+   "bus_length_um": 422,
+   "bus_width_um": 80,
+   "bus_ohm_each": 0.14607692307692305,
+   "process": "typical",
+   "temp_c": 27,
+   "sign": "pos",
+   "peak_v": 4.25700434,
+   "min_v": -2.19561668e-16,
+   "rail_a_max_v": 3.10117351,
+   "rail_b_max_v": 3.1157735,
+   "op_fallback": false,
+   "deck_sha256": "686b87218ce003cc6d02a1a3cac0637b6210b13a298f9b8703aef3cf777fa288",
+   "added_v": 0.01974228,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P"
+   ],
+   "bus_length_um": 211,
+   "bus_width_um": 20,
+   "bus_ohm_each": 0.2921538461538461,
+   "process": "typical",
+   "temp_c": 27,
+   "sign": "pos",
+   "peak_v": 4.2727359,
+   "min_v": -2.88152928e-17,
+   "rail_a_max_v": 3.10225308,
+   "rail_b_max_v": 3.1314589,
+   "op_fallback": false,
+   "deck_sha256": "379aa177559d47991f37f81e9cb6b6b0e334b30cd1f06b33e06bd7dd9e795a39",
+   "added_v": 0.03547383999999987,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P"
+   ],
+   "bus_length_um": 211,
+   "bus_width_um": 40,
+   "bus_ohm_each": 0.14607692307692305,
+   "process": "typical",
+   "temp_c": 27,
+   "sign": "pos",
+   "peak_v": 4.2581504,
+   "min_v": -2.97536721e-16,
+   "rail_a_max_v": 3.10226273,
+   "rail_b_max_v": 3.11686604,
+   "op_fallback": false,
+   "deck_sha256": "94865f0a607f28905d6dc983a8e53c73a3668d947842c88164fa5b5223eb5578",
+   "added_v": 0.02088833999999995,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P"
+   ],
+   "bus_length_um": 211,
+   "bus_width_um": 80,
+   "bus_ohm_each": 0.07303846153846152,
+   "process": "typical",
+   "temp_c": 27,
+   "sign": "pos",
+   "peak_v": 4.25085729,
+   "min_v": -1.97035978e-16,
+   "rail_a_max_v": 3.10226748,
+   "rail_b_max_v": 3.10956925,
+   "op_fallback": false,
+   "deck_sha256": "34c0deb1ae925148dbbed3a41063324a829f9f4aa81da0c16440f2f4ded6e0a0",
+   "added_v": 0.013595229999999958,
+   "fits_0p105_margin": true
+  },
+  {
+   "target": "PB_P",
+   "b_legs": [
+    "P",
+    "N"
+   ],
+   "bus_length_um": 422,
+   "bus_width_um": 40,
+   "bus_ohm_each": 0.2921538461538461,
+   "process": "typical",
+   "temp_c": 27,
+   "sign": "neg",
+   "peak_v": 1.42442595e-16,
+   "min_v": -1.18387349,
+   "rail_a_max_v": 8.43192083e-16,
+   "rail_b_max_v": 8.42844738e-16,
+   "op_fallback": false,
+   "deck_sha256": "6084a1aa62170ade345d4d207dea017f97bdd4074f8ba82f7a9e131e6192e5f5"
+  }
+ ],
+ "source_sha256": {
+  "shared_protection_check.py": "c716efdcde3bda401c5dbbe45fec010bd04b2fc0fc694682a29ac0542a916755"
+ }
+}

@@ -1,0 +1,89 @@
+v {xschem version=3.4.6 file_version=3.3}
+G {}
+K {type=subcircuit
+format="@name @pinlist @symname"
+template="name=x1"
+}
+V {}
+S {}
+E {}
+L 4 -130 -350 130 -350 {}
+L 4 -130 0 130 0 {}
+L 4 -150 -320 -130 -320 {}
+L 4 -150 -300 -130 -300 {}
+L 4 -150 -280 -130 -280 {}
+L 4 -150 -260 -130 -260 {}
+L 4 -150 -160 -130 -160 {}
+L 4 -150 -100 -130 -100 {}
+L 4 -150 -140 -130 -140 {}
+L 4 -150 -50 -130 -50 {}
+L 4 -150 -30 -130 -30 {}
+L 4 -150 -240 -130 -240 {}
+L 4 -130 -200 130 -200 {}
+L 4 -150 -220 -130 -220 {}
+L 4 -150 -180 -130 -180 {}
+L 4 -150 -120 -130 -120 {}
+L 4 -130 -70 130 -70 {}
+L 4 -130 -350 -130 -0 {}
+L 4 130 -350 130 -0 {}
+L 7 130 -320 150 -320 {}
+L 7 130 -300 150 -300 {}
+L 7 130 -280 150 -280 {}
+L 7 130 -260 150 -260 {}
+L 7 130 -160 150 -160 {}
+L 7 130 -100 150 -100 {}
+L 7 130 -140 150 -140 {}
+L 7 130 -50 150 -50 {}
+L 7 130 -30 150 -30 {}
+L 7 130 -180 150 -180 {}
+L 7 130 -120 150 -120 {}
+B 5 -152.5 -322.5 -147.5 -317.5 {name=ena dir=in}
+B 5 147.5 -322.5 152.5 -317.5 {name=avdd dir=inout}
+B 5 147.5 -302.5 152.5 -297.5 {name=avss dir=inout}
+B 5 -152.5 -302.5 -147.5 -297.5 {name=ref_in dir=in}
+B 5 147.5 -282.5 152.5 -277.5 {name=dvdd dir=inout}
+B 5 -152.5 -282.5 -147.5 -277.5 {name=vbg dir=in}
+B 5 -152.5 -262.5 -147.5 -257.5 {name=ref_sel_vbg dir=in}
+B 5 147.5 -262.5 152.5 -257.5 {name=dvss dir=inout}
+B 5 -152.5 -162.5 -147.5 -157.5 {name=bandgap_sink2[1:0] dir=in}
+B 5 -152.5 -102.5 -147.5 -97.5 {name=voltgen_source[4:0] dir=in}
+B 5 147.5 -162.5 152.5 -157.5 {name=bandgap_sink2_ibias dir=inout}
+B 5 -152.5 -142.5 -147.5 -137.5 {name=voltgen_sink1[2:0] dir=in}
+B 5 147.5 -102.5 152.5 -97.5 {name=voltgen_source_ibias dir=inout}
+B 5 -152.5 -52.5 -147.5 -47.5 {name=idac1_source[4:0] dir=in}
+B 5 147.5 -142.5 152.5 -137.5 {name=voltgen_sink1_ibias dir=inout}
+B 5 147.5 -52.5 152.5 -47.5 {name=idac1_source_ibias dir=inout}
+B 5 147.5 -32.5 152.5 -27.5 {name=idac2_source_ibias dir=inout}
+B 5 -152.5 -32.5 -147.5 -27.5 {name=idac2_source[4:0] dir=in}
+B 5 -152.5 -242.5 -147.5 -237.5 {name=ref_sel_coarse dir=in}
+B 5 -152.5 -222.5 -147.5 -217.5 {name=ref_sel_fine dir=in}
+B 5 -152.5 -182.5 -147.5 -177.5 {name=bandgap_sink1[2:0] dir=in}
+B 5 147.5 -182.5 152.5 -177.5 {name=bandgap_sink1_ibias dir=inout}
+B 5 -152.5 -122.5 -147.5 -117.5 {name=voltgen_sink2[2:0] dir=in}
+B 5 147.5 -122.5 152.5 -117.5 {name=voltgen_sink2_ibias dir=inout}
+T {@symname} -107 -346 0 0 0.3 0.3 {}
+T {@name} 95 -372 0 0 0.2 0.2 {}
+T {ena} -125 -324 0 0 0.2 0.2 {}
+T {avdd} 125 -324 0 1 0.2 0.2 {}
+T {avss} 125 -304 0 1 0.2 0.2 {}
+T {ref_in} -125 -304 0 0 0.2 0.2 {}
+T {dvdd} 125 -284 0 1 0.2 0.2 {}
+T {vbg} -125 -284 0 0 0.2 0.2 {}
+T {ref_sel_vbg} -125 -264 0 0 0.2 0.2 {}
+T {dvss} 125 -264 0 1 0.2 0.2 {}
+T {bandgap_sink2[1:0]} -125 -164 0 0 0.2 0.2 {}
+T {voltgen_source[4:0]} -125 -104 0 0 0.2 0.2 {}
+T {bandgap_sink2_ibias} 125 -164 0 1 0.2 0.2 {}
+T {voltgen_sink1[2:0]} -125 -144 0 0 0.2 0.2 {}
+T {voltgen_source_ibias} 125 -104 0 1 0.2 0.2 {}
+T {idac1_source[4:0]} -125 -54 0 0 0.2 0.2 {}
+T {voltgen_sink1_ibias} 125 -144 0 1 0.2 0.2 {}
+T {idac1_source_ibias} 125 -54 0 1 0.2 0.2 {}
+T {idac2_source_ibias} 125 -34 0 1 0.2 0.2 {}
+T {idac2_source[4:0]} -125 -34 0 0 0.2 0.2 {}
+T {ref_sel_coarse} -125 -244 0 0 0.2 0.2 {}
+T {ref_sel_fine} -125 -224 0 0 0.2 0.2 {}
+T {bandgap_sink1[2:0]} -125 -184 0 0 0.2 0.2 {}
+T {bandgap_sink1_ibias} 125 -184 0 1 0.2 0.2 {}
+T {voltgen_sink2[2:0]} -125 -124 0 0 0.2 0.2 {}
+T {voltgen_sink2_ibias} 125 -124 0 1 0.2 0.2 {}

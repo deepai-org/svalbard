@@ -1,0 +1,578 @@
+* NGSPICE file created from gf180mcu_ocd_ip__por.ext - technology: gf180mcuD
+
+.subckt nfet_03v3_UDCARV a_268_n100# a_364_n192# a_428_n100# a_n52_n100# a_524_n192#
++ a_n814_n286# a_n116_n192# a_588_n100# a_n212_n100# a_n276_n192# a_n372_n100# a_44_n192#
++ a_n436_n192# a_108_n100# a_204_n192# a_n532_n100# a_n676_n87# a_n596_n192#
+X0 a_n52_n100# a_n116_n192# a_n212_n100# a_n814_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X1 a_588_n100# a_524_n192# a_428_n100# a_n814_n286# nfet_03v3 ad=0.43155p pd=2.88u as=0.26p ps=1.52u w=1u l=0.28u
+X2 a_n212_n100# a_n276_n192# a_n372_n100# a_n814_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X3 a_108_n100# a_44_n192# a_n52_n100# a_n814_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X4 a_268_n100# a_204_n192# a_108_n100# a_n814_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X5 a_n372_n100# a_n436_n192# a_n532_n100# a_n814_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X6 a_428_n100# a_364_n192# a_268_n100# a_n814_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X7 a_n532_n100# a_n596_n192# a_n676_n87# a_n814_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.43155p ps=2.88u w=1u l=0.28u
+.ends
+
+.subckt gf180mcu_as_sc_mcu7t3v3__buff_12 VDD VNW VPW VSS A Y
+X0 VSS a_172_68# Y VPW nfet_03v3 ad=0.985p pd=3.97u as=0.26p ps=1.52u w=1u l=0.28u
+X1 VSS a_172_68# Y VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X2 VDD A a_172_68# VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X3 Y a_172_68# VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X4 Y a_172_68# VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X5 VDD a_172_68# Y VNW pfet_03v3 ad=1.3593p pd=4.73u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X6 a_172_68# A VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.28u
+X7 VSS a_172_68# Y VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X8 VDD a_172_68# Y VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X9 Y a_172_68# VDD VNW pfet_03v3 ad=0.36915p pd=1.915u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X10 VDD a_172_68# Y VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X11 Y a_172_68# VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X12 Y a_172_68# VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X13 Y a_172_68# VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X14 Y a_172_68# VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X15 a_172_68# A VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X16 VSS a_172_68# Y VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X17 VDD a_172_68# Y VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X18 VSS A a_172_68# VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X19 VSS a_172_68# Y VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X20 VSS a_172_68# Y VPW nfet_03v3 ad=0.26p pd=1.52u as=0.2675p ps=1.535u w=1u l=0.28u
+X21 VDD A a_172_68# VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X22 Y a_172_68# VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X23 Y a_172_68# VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X24 a_172_68# A VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X25 Y a_172_68# VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X26 VDD a_172_68# Y VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X27 Y a_172_68# VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X28 a_172_68# A VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.6072p ps=3.64u w=1.38u l=0.28u
+X29 VDD a_172_68# Y VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.36915p ps=1.915u w=1.38u l=0.28u
+X30 VSS A a_172_68# VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X31 Y a_172_68# VSS VPW nfet_03v3 ad=0.2675p pd=1.535u as=0.26p ps=1.52u w=1u l=0.28u
+.ends
+
+.subckt gf180mcu_as_sc_mcu7t3v3__inv_4 VDD VNW VPW VSS Y A
+X0 VDD A Y VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X1 Y A VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.28u
+X2 Y A VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X3 VSS A Y VPW nfet_03v3 ad=0.52p pd=3.04u as=0.26p ps=1.52u w=1u l=0.28u
+X4 VDD A Y VNW pfet_03v3 ad=0.7176p pd=3.8u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X5 Y A VSS VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X6 Y A VDD VNW pfet_03v3 ad=0.3588p pd=1.9u as=0.6072p ps=3.64u w=1.38u l=0.28u
+X7 VSS A Y VPW nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+.ends
+
+.subckt gf180mcu_as_sc_mcu7t3v3__fillcap_4 VDD VNW VPW VSS
+X0 a_126_408# a_28_500# VSS VPW nfet_03v3 ad=0.44p pd=2.88u as=0.49p ps=2.98u w=1u l=1.03u
+X1 VDD a_126_408# a_28_500# VNW pfet_03v3 ad=0.4752p pd=3.04u as=0.5292p ps=3.14u w=1.08u l=1.03u
+.ends
+
+.subckt ppolyf_u_1k_FPWM3N a_7600_n2622# a_5360_2500# a_2560_n2622# a_n13120_2500#
++ a_n12560_2500# a_n12840_n2622# a_3120_n2622# a_n5280_2500# a_8720_n2622# a_13200_2500#
++ a_n13400_n2622# a_12640_2500# a_12080_n2622# a_4800_2500# a_3680_n2622# a_n8080_n2622#
++ a_n13960_n2622# a_600_2500# a_4240_n2622# a_n4720_2500# a_9840_n2622# a_6200_2500#
++ a_13480_2500# a_5640_2500# a_n1640_n2622# a_n10040_n2622# a_n13400_2500# a_5360_n2622#
++ a_n12840_2500# a_n6120_2500# a_11800_n2622# a_880_2500# a_n2200_n2622# a_n5560_2500#
++ a_n240_2500# a_n7800_n2622# a_12920_2500# a_n240_n2622# a_n2760_n2622# a_n11160_n2622#
++ a_6480_n2622# a_7040_2500# a_6480_2500# a_12920_n2622# a_n3320_n2622# a_7040_n2622#
++ a_n8920_n2622# a_n13680_2500# a_n3880_n2622# a_n12280_n2622# a_13760_2500# a_5920_2500#
++ a_n4440_n2622# a_8160_n2622# a_n6400_2500# a_n5840_2500# a_n520_2500# a_n5000_n2622#
++ a_1160_2500# a_7320_2500# a_n5560_n2622# a_6760_2500# a_9280_n2622# a_320_n2622#
++ a_n1080_2500# a_10120_n2622# a_n13960_2500# a_1720_n2622# a_n6120_n2622# a_n7240_2500#
++ a_880_n2622# a_n1080_n2622# a_n6680_2500# a_10680_n2622# a_n6680_n2622# a_8160_2500#
++ a_11240_n2622# a_2840_n2622# a_n7240_n2622# a_2000_2500# a_n800_2500# a_3400_n2622#
++ a_1440_2500# a_n8080_2500# a_7600_2500# a_12360_n2622# a_n1360_2500# a_n8360_n2622#
++ a_3960_n2622# a_4520_n2622# a_n7520_2500# a_n6960_2500# a_13480_n2622# a_2280_2500#
++ a_n9480_n2622# a_n10040_2500# a_9000_2500# a_8440_2500# a_5640_n2622# a_n1920_n2622#
++ a_n10320_n2622# a_7880_2500# a_10120_2500# a_6200_n2622# a_1720_2500# a_n8360_2500#
++ a_n10880_n2622# a_n520_n2622# a_n2200_2500# a_1160_n2622# a_n1640_2500# a_n11440_n2622#
++ a_6760_n2622# a_9280_2500# a_n3600_n2622# a_n7800_2500# a_n12000_n2622# a_7320_n2622#
++ a_3120_2500# a_n10320_2500# a_2560_2500# a_2280_n2622# a_n12560_n2622# a_7880_n2622#
++ a_n3040_2500# a_8720_2500# a_n2480_2500# a_n4720_n2622# a_n13120_n2622# a_8440_n2622#
++ a_10400_2500# a_n9200_2500# a_n8640_2500# a_40_n2622# a_9000_n2622# a_n13680_n2622#
++ a_n1920_2500# a_n11160_2500# a_n5840_n2622# a_9560_n2622# a_9560_2500# a_10400_n2622#
++ a_600_n2622# a_11240_2500# a_n6400_n2622# a_10680_2500# a_3400_2500# a_n14172_n2834#
++ a_n9480_2500# a_n10600_2500# a_10960_n2622# a_2840_2500# a_n1360_n2622# a_5080_n2622#
++ a_n3320_2500# a_n6960_n2622# a_11520_n2622# a_n2760_2500# a_n7520_n2622# a_n8920_2500#
++ a_12080_2500# a_n2480_n2622# a_n12000_2500# a_4240_2500# a_3680_2500# a_n11440_2500#
++ a_12640_n2622# a_n3040_n2622# a_n10880_2500# a_n4160_2500# a_n8640_n2622# a_9840_2500#
++ a_11520_2500# a_13200_n2622# a_10960_2500# a_4800_n2622# a_n9200_n2622# a_n9760_2500#
++ a_n4160_n2622# a_5080_2500# a_13760_n2622# a_40_2500# a_n3600_2500# a_n9760_n2622#
++ a_n12280_2500# a_n10600_n2622# a_5920_n2622# a_12360_2500# a_n5280_n2622# a_4520_2500#
++ a_3960_2500# a_n5000_2500# a_n11720_2500# a_1440_n2622# a_320_2500# a_n800_n2622#
++ a_n4440_2500# a_n11720_n2622# a_n3880_2500# a_11800_2500# a_2000_n2622#
+X0 a_9560_2500# a_9560_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X1 a_n3320_2500# a_n3320_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X2 a_n5840_2500# a_n5840_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X3 a_n10040_2500# a_n10040_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X4 a_n12560_2500# a_n12560_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X5 a_5080_2500# a_5080_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X6 a_2000_2500# a_2000_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X7 a_n1360_2500# a_n1360_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X8 a_4520_2500# a_4520_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X9 a_n3880_2500# a_n3880_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X10 a_12080_2500# a_12080_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X11 a_n9200_2500# a_n9200_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X12 a_n6120_2500# a_n6120_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X13 a_11520_2500# a_11520_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X14 a_n8640_2500# a_n8640_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X15 a_n10600_2500# a_n10600_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X16 a_2560_2500# a_2560_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X17 a_n4160_2500# a_n4160_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X18 a_7320_2500# a_7320_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X19 a_n6680_2500# a_n6680_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X20 a_9840_2500# a_9840_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X21 a_n13400_2500# a_n13400_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X22 a_n10320_2500# a_n10320_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X23 a_n2200_2500# a_n2200_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X24 a_n12840_2500# a_n12840_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X25 a_5360_2500# a_5360_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X26 a_n1640_2500# a_n1640_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X27 a_7880_2500# a_7880_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X28 a_4800_2500# a_4800_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X29 a_12360_2500# a_12360_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X30 a_n9480_2500# a_n9480_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X31 a_11800_2500# a_11800_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X32 a_n8920_2500# a_n8920_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X33 a_n10880_2500# a_n10880_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X34 a_n13120_2500# a_n13120_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X35 a_2840_2500# a_2840_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X36 a_8160_2500# a_8160_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X37 a_n4440_2500# a_n4440_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X38 a_7600_2500# a_7600_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X39 a_n6960_2500# a_n6960_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X40 a_320_2500# a_320_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X41 a_n11160_2500# a_n11160_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X42 a_n13680_2500# a_n13680_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X43 a_3120_2500# a_3120_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X44 a_n2480_2500# a_n2480_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X45 a_5640_2500# a_5640_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X46 a_n5000_2500# a_n5000_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X47 a_n1920_2500# a_n1920_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X48 a_10120_2500# a_10120_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X49 a_n7240_2500# a_n7240_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X50 a_880_2500# a_880_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X51 a_12640_2500# a_12640_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X52 a_n9760_2500# a_n9760_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X53 a_1160_2500# a_1160_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X54 a_3680_2500# a_3680_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X55 a_n240_2500# a_n240_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X56 a_40_2500# a_40_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X57 a_n5280_2500# a_n5280_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X58 a_10680_2500# a_10680_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X59 a_8440_2500# a_8440_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X60 a_n7800_2500# a_n7800_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X61 a_n4720_2500# a_n4720_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X62 a_600_2500# a_600_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X63 a_n11440_2500# a_n11440_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X64 a_n13960_2500# a_n13960_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X65 a_n800_2500# a_n800_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X66 a_6480_2500# a_6480_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X67 a_3400_2500# a_3400_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X68 a_n2760_2500# a_n2760_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X69 a_5920_2500# a_5920_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X70 a_n8080_2500# a_n8080_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X71 a_13480_2500# a_13480_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X72 a_10400_2500# a_10400_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X73 a_n7520_2500# a_n7520_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X74 a_12920_2500# a_12920_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X75 a_n12000_2500# a_n12000_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X76 a_1440_2500# a_1440_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X77 a_3960_2500# a_3960_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X78 a_n3040_2500# a_n3040_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X79 a_9280_2500# a_9280_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X80 a_n520_2500# a_n520_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X81 a_6200_2500# a_6200_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X82 a_n5560_2500# a_n5560_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X83 a_10960_2500# a_10960_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X84 a_8720_2500# a_8720_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X85 a_13200_2500# a_13200_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X86 a_n12280_2500# a_n12280_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X87 a_n1080_2500# a_n1080_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X88 a_n11720_2500# a_n11720_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X89 a_4240_2500# a_4240_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X90 a_n3600_2500# a_n3600_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X91 a_6760_2500# a_6760_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X92 a_11240_2500# a_11240_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X93 a_9000_2500# a_9000_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X94 a_n8360_2500# a_n8360_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X95 a_13760_2500# a_13760_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X96 a_2280_2500# a_2280_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X97 a_1720_2500# a_1720_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X98 a_7040_2500# a_7040_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+X99 a_n6400_2500# a_n6400_n2622# a_n14172_n2834# ppolyf_u_1k r_width=1u r_length=25u
+.ends
+
+.subckt diode_nd2ps_03v3_E3DKMC a_n181_n181# a_n45_n45#
+D0 a_n181_n181# a_n45_n45# diode_nd2ps_03v3 pj=1.8u area=0.2025p
+.ends
+
+.subckt cap_mim_2p0fF_U8GDWG m4_9613_n4540# m4_n4567_n4660# m4_n10071_n4540# m4_n7379_n4660#
++ m4_3869_n4660# m4_6681_n4660# m4_3989_n4540# m4_12305_n4660# m4_9493_n4660# m4_12425_n4540#
++ m4_1057_n4660# m4_n13003_n4660# m4_1177_n4540# m4_n1635_n4540# m4_n4447_n4540# m4_n7259_n4540#
++ m4_n10191_n4660# m4_n12883_n4540# m4_6801_n4540# m4_n1755_n4660#
+X0 m4_n1635_n4540# m4_n1755_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X1 m4_6801_n4540# m4_6681_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X2 m4_9613_n4540# m4_9493_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X3 m4_n7259_n4540# m4_n7379_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X4 m4_n12883_n4540# m4_n13003_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X5 m4_n12883_n4540# m4_n13003_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X6 m4_6801_n4540# m4_6681_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X7 m4_n1635_n4540# m4_n1755_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X8 m4_n4447_n4540# m4_n4567_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X9 m4_n1635_n4540# m4_n1755_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X10 m4_n1635_n4540# m4_n1755_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X11 m4_n12883_n4540# m4_n13003_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X12 m4_n4447_n4540# m4_n4567_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X13 m4_n4447_n4540# m4_n4567_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X14 m4_9613_n4540# m4_9493_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X15 m4_n10071_n4540# m4_n10191_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X16 m4_n10071_n4540# m4_n10191_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X17 m4_1177_n4540# m4_1057_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X18 m4_9613_n4540# m4_9493_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X19 m4_n7259_n4540# m4_n7379_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X20 m4_n7259_n4540# m4_n7379_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X21 m4_n7259_n4540# m4_n7379_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X22 m4_1177_n4540# m4_1057_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X23 m4_3989_n4540# m4_3869_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X24 m4_12425_n4540# m4_12305_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X25 m4_3989_n4540# m4_3869_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X26 m4_3989_n4540# m4_3869_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X27 m4_n4447_n4540# m4_n4567_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X28 m4_n10071_n4540# m4_n10191_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X29 m4_n12883_n4540# m4_n13003_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X30 m4_3989_n4540# m4_3869_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X31 m4_12425_n4540# m4_12305_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X32 m4_6801_n4540# m4_6681_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X33 m4_12425_n4540# m4_12305_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X34 m4_6801_n4540# m4_6681_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X35 m4_12425_n4540# m4_12305_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X36 m4_1177_n4540# m4_1057_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X37 m4_1177_n4540# m4_1057_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X38 m4_n10071_n4540# m4_n10191_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X39 m4_9613_n4540# m4_9493_n4660# cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+.ends
+
+.subckt nfet_03v3_3DMKYT a_n334_n237# a_n52_n51# a_44_n143# a_n196_n39# a_108_n51#
++ a_n116_n143#
+X0 a_n52_n51# a_n116_n143# a_n196_n39# a_n334_n237# nfet_03v3 ad=0.195p pd=1.27u as=0.3222p ps=2.38u w=0.75u l=0.28u
+X1 a_108_n51# a_44_n143# a_n52_n51# a_n334_n237# nfet_03v3 ad=0.3222p pd=2.38u as=0.195p ps=1.27u w=0.75u l=0.28u
+.ends
+
+.subckt pfet_03v3_9U7ATZ a_n36_n143# w_n278_n261# a_28_n51# a_n116_n39#
+X0 a_28_n51# a_n36_n143# a_n116_n39# w_n278_n261# pfet_03v3 ad=0.3222p pd=2.38u as=0.3222p ps=2.38u w=0.75u l=0.28u
+.ends
+
+.subckt pfet_03v3_VR43ZA a_n52_n51# a_44_n143# a_204_n143# a_n212_n51# w_n518_n261#
++ a_108_n51# a_268_n51# a_n116_n143# a_n356_n39# a_n276_n143#
+X0 a_n52_n51# a_n116_n143# a_n212_n51# w_n518_n261# pfet_03v3 ad=0.195p pd=1.27u as=0.195p ps=1.27u w=0.75u l=0.28u
+X1 a_n212_n51# a_n276_n143# a_n356_n39# w_n518_n261# pfet_03v3 ad=0.195p pd=1.27u as=0.3222p ps=2.38u w=0.75u l=0.28u
+X2 a_108_n51# a_44_n143# a_n52_n51# w_n518_n261# pfet_03v3 ad=0.195p pd=1.27u as=0.195p ps=1.27u w=0.75u l=0.28u
+X3 a_268_n51# a_204_n143# a_108_n51# w_n518_n261# pfet_03v3 ad=0.3222p pd=2.38u as=0.195p ps=1.27u w=0.75u l=0.28u
+.ends
+
+.subckt nfet_03v3_45Z7NE a_n144_n517# a_n56_n668# a_56_n576# a_n282_n762#
+X0 a_56_n576# a_n56_n668# a_n144_n517# a_n282_n762# nfet_03v3 ad=2.60165p pd=12.88u as=2.60165p ps=12.88u w=6u l=0.56u
+.ends
+
+.subckt pfet_03v3_W2ZTV7 a_56_n276# a_n56_n368# w_n306_n486# a_n144_n247#
+X0 a_56_n276# a_n56_n368# a_n144_n247# w_n306_n486# pfet_03v3 ad=1.30115p pd=6.88u as=1.30115p ps=6.88u w=3u l=0.56u
+.ends
+
+.subckt por_3v3_schmitt_inv vdd3v3 in out vss
+XXM1 vss m1_2323_n1115# in vss vss in nfet_03v3_3DMKYT
+XXM2 in vdd3v3 m1_2328_n243# out pfet_03v3_9U7ATZ
+XXM3 vdd3v3 in in m1_2328_n243# vdd3v3 m1_2328_n243# vdd3v3 in vdd3v3 in pfet_03v3_VR43ZA
+XXM5 m1_2323_n1115# out vdd3v3 vss nfet_03v3_45Z7NE
+XXM6 m1_2328_n243# out vdd3v3 vss pfet_03v3_W2ZTV7
+Xnfet_03v3_3DMKYT_0 vss out in m1_2323_n1115# m1_2323_n1115# in nfet_03v3_3DMKYT
+.ends
+
+.subckt pfet_03v3_KAPG2P a_444_n142# a_n36_n142# a_n836_n142# a_n452_n50# a_n932_n50#
++ a_604_n142# a_n196_n142# a_n1092_n50# a_n996_n142# a_348_n50# a_n1156_n142# a_828_n50#
++ a_988_n50# a_764_n142# a_n1236_n44# a_n356_n142# w_n1398_n266# a_124_n142# a_n132_n50#
++ a_924_n142# a_n292_n50# a_n612_n50# a_n772_n50# a_n516_n142# a_284_n142# a_508_n50#
++ a_188_n50# a_1084_n142# a_668_n50# a_n676_n142# a_1148_n50# a_28_n50#
+X0 a_n292_n50# a_n356_n142# a_n452_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X1 a_n772_n50# a_n836_n142# a_n932_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X2 a_348_n50# a_284_n142# a_188_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X3 a_828_n50# a_764_n142# a_668_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X4 a_n932_n50# a_n996_n142# a_n1092_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X5 a_28_n50# a_n36_n142# a_n132_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X6 a_n452_n50# a_n516_n142# a_n612_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X7 a_508_n50# a_444_n142# a_348_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X8 a_988_n50# a_924_n142# a_828_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X9 a_n1092_n50# a_n1156_n142# a_n1236_n44# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.2161p ps=1.88u w=0.5u l=0.28u
+X10 a_n612_n50# a_n676_n142# a_n772_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X11 a_n132_n50# a_n196_n142# a_n292_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X12 a_1148_n50# a_1084_n142# a_988_n50# w_n1398_n266# pfet_03v3 ad=0.2161p pd=1.88u as=0.13p ps=1.02u w=0.5u l=0.28u
+X13 a_188_n50# a_124_n142# a_28_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X14 a_668_n50# a_604_n142# a_508_n50# w_n1398_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+.ends
+
+.subckt pfet_03v3_HJ4KN5 a_444_n142# a_n36_n142# a_n836_n142# a_n452_n50# w_n1078_n266#
++ a_604_n142# a_n196_n142# a_348_n50# a_828_n50# a_764_n142# a_n356_n142# a_124_n142#
++ a_n132_n50# a_n292_n50# a_n612_n50# a_n772_n50# a_n516_n142# a_284_n142# a_508_n50#
++ a_188_n50# a_668_n50# a_n676_n142# a_28_n50# a_n916_n44#
+X0 a_n292_n50# a_n356_n142# a_n452_n50# w_n1078_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X1 a_n772_n50# a_n836_n142# a_n916_n44# w_n1078_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.2161p ps=1.88u w=0.5u l=0.28u
+X2 a_348_n50# a_284_n142# a_188_n50# w_n1078_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X3 a_828_n50# a_764_n142# a_668_n50# w_n1078_n266# pfet_03v3 ad=0.2161p pd=1.88u as=0.13p ps=1.02u w=0.5u l=0.28u
+X4 a_28_n50# a_n36_n142# a_n132_n50# w_n1078_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X5 a_n452_n50# a_n516_n142# a_n612_n50# w_n1078_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X6 a_508_n50# a_444_n142# a_348_n50# w_n1078_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X7 a_n612_n50# a_n676_n142# a_n772_n50# w_n1078_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X8 a_n132_n50# a_n196_n142# a_n292_n50# w_n1078_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X9 a_188_n50# a_124_n142# a_28_n50# w_n1078_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X10 a_668_n50# a_604_n142# a_508_n50# w_n1078_n266# pfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+.ends
+
+.subckt pfet_03v3_C7VN8M a_268_n100# a_364_n192# a_428_n100# a_n676_n91# a_n52_n100#
++ a_524_n192# a_n116_n192# a_588_n100# a_n212_n100# a_n276_n192# a_n372_n100# a_44_n192#
++ a_n436_n192# w_n838_n310# a_108_n100# a_204_n192# a_n532_n100# a_n596_n192#
+X0 a_n52_n100# a_n116_n192# a_n212_n100# w_n838_n310# pfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X1 a_588_n100# a_524_n192# a_428_n100# w_n838_n310# pfet_03v3 ad=0.43415p pd=2.88u as=0.26p ps=1.52u w=1u l=0.28u
+X2 a_n212_n100# a_n276_n192# a_n372_n100# w_n838_n310# pfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X3 a_108_n100# a_44_n192# a_n52_n100# w_n838_n310# pfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X4 a_268_n100# a_204_n192# a_108_n100# w_n838_n310# pfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X5 a_n372_n100# a_n436_n192# a_n532_n100# w_n838_n310# pfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X6 a_428_n100# a_364_n192# a_268_n100# w_n838_n310# pfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X7 a_n532_n100# a_n596_n192# a_n676_n91# w_n838_n310# pfet_03v3 ad=0.26p pd=1.52u as=0.43415p ps=2.88u w=1u l=0.28u
+.ends
+
+.subckt nfet_03v3_J6SUXM a_n1492_n100# a_268_n100# a_1804_n192# a_1068_n100# a_364_n192#
++ a_n1556_n192# a_2028_n100# a_n692_n100# a_1868_n100# a_1164_n192# a_1964_n192# a_n756_n192#
++ a_428_n100# a_n1652_n100# a_1228_n100# a_n1716_n192# a_n52_n100# a_524_n192# a_n852_n100#
++ a_n116_n192# a_n1012_n100# a_1324_n192# a_588_n100# a_n916_n192# a_n1076_n192# a_n1812_n100#
++ a_n2116_n91# a_n2036_n192# a_1388_n100# a_n1876_n192# a_n212_n100# a_684_n192# a_n276_n192#
++ a_n1172_n100# a_1484_n192# a_n1972_n100# a_n1236_n192# a_748_n100# a_n372_n100#
++ a_1548_n100# a_844_n192# a_44_n192# a_n436_n192# a_n2254_n286# a_n1332_n100# a_1644_n192#
++ a_108_n100# a_n1396_n192# a_908_n100# a_204_n192# a_n532_n100# a_1708_n100# a_1004_n192#
++ a_n596_n192#
+X0 a_1548_n100# a_1484_n192# a_1388_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X1 a_2028_n100# a_1964_n192# a_1868_n100# a_n2254_n286# nfet_03v3 ad=0.43707p pd=2.88u as=0.26p ps=1.52u w=1u l=0.28u
+X2 a_n52_n100# a_n116_n192# a_n212_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X3 a_588_n100# a_524_n192# a_428_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X4 a_n1172_n100# a_n1236_n192# a_n1332_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X5 a_n1652_n100# a_n1716_n192# a_n1812_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X6 a_n212_n100# a_n276_n192# a_n372_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X7 a_n692_n100# a_n756_n192# a_n852_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X8 a_1068_n100# a_1004_n192# a_908_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X9 a_748_n100# a_684_n192# a_588_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X10 a_n1332_n100# a_n1396_n192# a_n1492_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X11 a_n1812_n100# a_n1876_n192# a_n1972_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X12 a_1228_n100# a_1164_n192# a_1068_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X13 a_1708_n100# a_1644_n192# a_1548_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X14 a_108_n100# a_44_n192# a_n52_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X15 a_n1972_n100# a_n2036_n192# a_n2116_n91# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.43707p ps=2.88u w=1u l=0.28u
+X16 a_268_n100# a_204_n192# a_108_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X17 a_n372_n100# a_n436_n192# a_n532_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X18 a_n852_n100# a_n916_n192# a_n1012_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X19 a_428_n100# a_364_n192# a_268_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X20 a_n1012_n100# a_n1076_n192# a_n1172_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X21 a_908_n100# a_844_n192# a_748_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X22 a_n1492_n100# a_n1556_n192# a_n1652_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X23 a_n532_n100# a_n596_n192# a_n692_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X24 a_1388_n100# a_1324_n192# a_1228_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X25 a_1868_n100# a_1804_n192# a_1708_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+.ends
+
+.subckt nfet_03v3_J6SUXX a_n1492_n100# a_268_n100# a_1804_n192# a_1068_n100# a_364_n192#
++ a_n1556_n192# a_2028_n100# a_n692_n100# a_1868_n100# a_1164_n192# a_1964_n192# a_n756_n192#
++ a_428_n100# a_n1652_n100# a_1228_n100# a_n1716_n192# a_n52_n100# a_524_n192# a_n852_n100#
++ a_n116_n192# a_n1012_n100# a_1324_n192# a_588_n100# a_n916_n192# a_n1076_n192# a_n1812_n100#
++ a_n2116_n91# a_n2036_n192# a_1388_n100# a_n1876_n192# a_n212_n100# a_684_n192# a_n276_n192#
++ a_n1172_n100# a_1484_n192# a_n1972_n100# a_n1236_n192# a_748_n100# a_n372_n100#
++ a_1548_n100# a_844_n192# a_44_n192# a_n436_n192# a_n2254_n286# a_n1332_n100# a_1644_n192#
++ a_108_n100# a_n1396_n192# a_908_n100# a_204_n192# a_n532_n100# a_1708_n100# a_1004_n192#
++ a_n596_n192#
+X0 a_1548_n100# a_1484_n192# a_1388_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X1 a_2028_n100# a_1964_n192# a_1868_n100# a_n2254_n286# nfet_03v3 ad=0.43707p pd=2.88u as=0.26p ps=1.52u w=1u l=0.28u
+X2 a_n52_n100# a_n116_n192# a_n212_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X3 a_588_n100# a_524_n192# a_428_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X4 a_n1172_n100# a_n1236_n192# a_n1332_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X5 a_n1652_n100# a_n1716_n192# a_n1812_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X6 a_n212_n100# a_n276_n192# a_n372_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X7 a_n692_n100# a_n756_n192# a_n852_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X8 a_1068_n100# a_1004_n192# a_908_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X9 a_748_n100# a_684_n192# a_588_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X10 a_n1332_n100# a_n1396_n192# a_n1492_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X11 a_n1812_n100# a_n1876_n192# a_n1972_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X12 a_1228_n100# a_1164_n192# a_1068_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X13 a_1708_n100# a_1644_n192# a_1548_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X14 a_108_n100# a_44_n192# a_n52_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X15 a_n1972_n100# a_n2036_n192# a_n2116_n91# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.43707p ps=2.88u w=1u l=0.28u
+X16 a_268_n100# a_204_n192# a_108_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X17 a_n372_n100# a_n436_n192# a_n532_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X18 a_n852_n100# a_n916_n192# a_n1012_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X19 a_428_n100# a_364_n192# a_268_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X20 a_n1012_n100# a_n1076_n192# a_n1172_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X21 a_908_n100# a_844_n192# a_748_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X22 a_n1492_n100# a_n1556_n192# a_n1652_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X23 a_n532_n100# a_n596_n192# a_n692_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X24 a_1388_n100# a_1324_n192# a_1228_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X25 a_1868_n100# a_1804_n192# a_1708_n100# a_n2254_n286# nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+.ends
+
+.subckt por_amp vdd3v3 out inn inp nbias ena vss
+XXM2 out m1_1933_n1601# vdd3v3 vdd3v3 m1_1933_n1601# vdd3v3 m1_1933_n1601# vdd3v3
++ vdd3v3 m1_1933_n1601# out m1_1933_n1601# m1_1933_n1601# vdd3v3 vdd3v3 m1_1933_n1601#
++ vdd3v3 vdd3v3 pfet_03v3_C7VN8M
+XXM4 out m1_3702_n862# inn out inn inn vss m1_3702_n862# m1_3702_n862# inn vss inn
++ out m1_3702_n862# m1_3702_n862# inp m1_3702_n862# inn out inn m1_3702_n862# inp
++ m1_3702_n862# inn inp m1_1933_n1601# vss vss m1_1933_n1601# inp out inp inn m1_1933_n1601#
++ inp m1_3702_n862# inp m1_1933_n1601# m1_3702_n862# m1_3702_n862# inp inp inp vss
++ m1_3702_n862# inn m1_1933_n1601# inn m1_3702_n862# inp m1_1933_n1601# out inn inp
++ nfet_03v3_J6SUXM
+Xpfet_03v3_C7VN8M_0 m1_1933_n1601# m1_1933_n1601# vdd3v3 vdd3v3 out vdd3v3 m1_1933_n1601#
++ vdd3v3 vdd3v3 m1_1933_n1601# m1_1933_n1601# m1_1933_n1601# m1_1933_n1601# vdd3v3
++ vdd3v3 m1_1933_n1601# vdd3v3 vdd3v3 pfet_03v3_C7VN8M
+Xnfet_03v3_J6SUXX_0 m1_3862_n1508# m1_3702_n862# nbias m1_3862_n1508# ena ena vss
++ vss vss nbias vss nbias m1_3862_n1508# m1_3702_n862# vss ena vss nbias m1_3862_n1508#
++ nbias m1_3702_n862# nbias vss ena ena m1_3862_n1508# vss vss m1_3862_n1508# nbias
++ m1_3862_n1508# nbias ena m1_3862_n1508# ena vss nbias m1_3862_n1508# m1_3702_n862#
++ m1_3702_n862# ena nbias ena vss vss ena m1_3862_n1508# nbias m1_3702_n862# ena m1_3862_n1508#
++ m1_3862_n1508# ena nbias nfet_03v3_J6SUXX
+.ends
+
+.subckt nfet_03v3_EENGZV a_444_n142# a_n1374_n242# a_n36_n142# a_n836_n142# a_n452_n50#
++ a_n932_n50# a_604_n142# a_n196_n142# a_n1092_n50# a_n996_n142# a_348_n50# a_n1156_n142#
++ a_828_n50# a_988_n50# a_764_n142# a_n1236_n44# a_n356_n142# a_124_n142# a_n132_n50#
++ a_924_n142# a_n292_n50# a_n612_n50# a_n772_n50# a_n516_n142# a_284_n142# a_508_n50#
++ a_188_n50# a_1084_n142# a_668_n50# a_n676_n142# a_1148_n50# a_28_n50#
+X0 a_n292_n50# a_n356_n142# a_n452_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X1 a_n772_n50# a_n836_n142# a_n932_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X2 a_348_n50# a_284_n142# a_188_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X3 a_828_n50# a_764_n142# a_668_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X4 a_n932_n50# a_n996_n142# a_n1092_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X5 a_28_n50# a_n36_n142# a_n132_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X6 a_n452_n50# a_n516_n142# a_n612_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X7 a_508_n50# a_444_n142# a_348_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X8 a_988_n50# a_924_n142# a_828_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X9 a_n1092_n50# a_n1156_n142# a_n1236_n44# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.2161p ps=1.88u w=0.5u l=0.28u
+X10 a_n612_n50# a_n676_n142# a_n772_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X11 a_n132_n50# a_n196_n142# a_n292_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X12 a_1148_n50# a_1084_n142# a_988_n50# a_n1374_n242# nfet_03v3 ad=0.2161p pd=1.88u as=0.13p ps=1.02u w=0.5u l=0.28u
+X13 a_188_n50# a_124_n142# a_28_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+X14 a_668_n50# a_604_n142# a_508_n50# a_n1374_n242# nfet_03v3 ad=0.13p pd=1.02u as=0.13p ps=1.02u w=0.5u l=0.28u
+.ends
+
+.subckt gf180mcu_ocd_ip__por vdd3v3 ena por_unbuf vss porb por
+XXM14 por_amp_0/nbias por_amp_0/inn por_amp_0/inn por_amp_0/nbias por_amp_0/inn vss
++ por_amp_0/inn por_amp_0/nbias por_amp_0/inn por_amp_0/inn por_amp_0/nbias por_amp_0/inn
++ por_amp_0/inn por_amp_0/inn por_amp_0/inn por_amp_0/inn por_amp_0/nbias por_amp_0/inn
++ nfet_03v3_UDCARV
+XXM13 por_amp_0/nbias por_amp_0/nbias vss por_amp_0/nbias por_amp_0/nbias vss por_amp_0/nbias
++ por_amp_0/nbias vss por_amp_0/nbias por_amp_0/nbias por_amp_0/nbias por_amp_0/nbias
++ vss por_amp_0/nbias vss por_amp_0/nbias por_amp_0/nbias nfet_03v3_UDCARV
+Xx3 vdd3v3 vdd3v3 vss vss x6/Y porb gf180mcu_as_sc_mcu7t3v3__buff_12
+Xx5 vdd3v3 vdd3v3 vss vss por_unbuf por gf180mcu_as_sc_mcu7t3v3__buff_12
+Xx6 vdd3v3 vdd3v3 vss vss x6/Y por_unbuf gf180mcu_as_sc_mcu7t3v3__inv_4
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_0 vdd3v3 vdd3v3 vss vss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+XXR2 m1_29663_n691# m1_27703_4487# m1_24623_n691# m1_9223_4487# m1_9783_4487# m1_9503_n691#
++ m1_25183_n691# m1_17063_4487# m1_30783_n691# m1_35543_4487# m1_8943_n691# m1_34983_4487#
++ m1_34143_n691# m1_27143_4487# m1_25743_n691# m1_13983_n691# m1_8383_n691# m1_22663_4487#
++ m1_26303_n691# m1_17623_4487# m1_31903_n691# m1_28263_4487# m1_35543_4487# m1_27703_4487#
++ m1_20703_n691# m1_12303_n691# m1_8663_4487# m1_27423_n691# m1_9223_4487# m1_15943_4487#
++ m1_34143_n691# m1_23223_4487# m1_20143_n691# m1_16503_4487# m1_22103_4487# m1_14543_n691#
++ m1_34983_4487# m1_21823_n691# m1_19583_n691# m1_11183_n691# m1_28543_n691# m1_29383_4487#
++ m1_28823_4487# m1_35263_n691# m1_19023_n691# m1_29103_n691# m1_13423_n691# m1_8663_4487#
++ m1_18463_n691# m1_10063_n691# vss m1_28263_4487# m1_17903_n691# m1_30223_n691# m1_15943_4487#
++ m1_16503_4487# m1_21543_4487# m1_17343_n691# m1_23223_4487# m1_29383_4487# m1_16783_n691#
++ m1_28823_4487# m1_31343_n691# m1_22383_n691# m1_20983_4487# m1_32463_n691# por_amp_0/inp
++ m1_24063_n691# m1_16223_n691# m1_14823_4487# m1_22943_n691# m1_21263_n691# m1_15383_4487#
++ m1_33023_n691# m1_15663_n691# m1_30503_4487# m1_33583_n691# m1_25183_n691# m1_15103_n691#
++ m1_24343_4487# m1_21543_4487# m1_25743_n691# m1_23783_4487# m1_14263_4487# m1_29943_4487#
++ m1_34703_n691# m1_20983_4487# m1_13983_n691# m1_26303_n691# m1_26863_n691# m1_14823_4487#
++ m1_15383_4487# m1_35823_n691# m1_24343_4487# m1_12863_n691# m1_12023_4487# m1_31063_4487#
++ m1_30503_4487# m1_27983_n691# m1_20143_n691# m1_11743_n691# m1_29943_4487# m1_32183_4487#
++ m1_28543_n691# m1_23783_4487# m1_13703_4487# m1_11183_n691# m1_21823_n691# m1_19863_4487#
++ m1_23503_n691# m1_20423_4487# m1_10623_n691# m1_29103_n691# m1_31623_4487# m1_18463_n691#
++ m1_14263_4487# m1_10063_n691# m1_29663_n691# m1_25463_4487# m1_12023_4487# m1_24903_4487#
++ m1_24623_n691# m1_9503_n691# m1_30223_n691# m1_19303_4487# m1_31063_4487# m1_19863_4487#
++ m1_17343_n691# m1_8943_n691# m1_30783_n691# m1_32743_4487# m1_13143_4487# m1_13703_4487#
++ m1_22383_n691# m1_31343_n691# m1_8383_n691# m1_20423_4487# m1_10903_4487# m1_16223_n691#
++ m1_31903_n691# m1_31623_4487# m1_32463_n691# m1_22943_n691# m1_33303_4487# m1_15663_n691#
++ m1_32743_4487# m1_25463_4487# vss m1_12583_4487# m1_11463_4487# m1_33023_n691# m1_24903_4487#
++ m1_20703_n691# m1_27423_n691# m1_18743_4487# m1_15103_n691# m1_33583_n691# m1_19303_4487#
++ m1_14543_n691# m1_13143_4487# m1_34423_4487# m1_19583_n691# m1_10343_4487# m1_26583_4487#
++ m1_26023_4487# m1_10903_4487# m1_34703_n691# m1_19023_n691# m1_11463_4487# m1_18183_4487#
++ m1_13423_n691# m1_32183_4487# m1_33863_4487# m1_35263_n691# m1_33303_4487# m1_26863_n691#
++ m1_12863_n691# m1_12583_4487# m1_17903_n691# m1_27143_4487# m1_35823_n691# m1_22103_4487#
++ m1_18743_4487# m1_12303_n691# m1_9783_4487# m1_11743_n691# m1_27983_n691# m1_34423_4487#
++ m1_16783_n691# m1_26583_4487# m1_26023_4487# m1_17063_4487# m1_10343_4487# m1_23503_n691#
++ m1_22663_4487# m1_21263_n691# m1_17623_4487# m1_10623_n691# m1_18183_4487# m1_33863_4487#
++ m1_24063_n691# ppolyf_u_1k_FPWM3N
+Xgf180mcu_as_sc_mcu7t3v3__fillcap_4_1 vdd3v3 vdd3v3 vss vss gf180mcu_as_sc_mcu7t3v3__fillcap_4
+XD1 vss ena diode_nd2ps_03v3_E3DKMC
+Xcap_mim_2p0fF_U8GDWG_0 por_3v3_schmitt_inv_0/in vss por_3v3_schmitt_inv_0/in vss
++ vss vss por_3v3_schmitt_inv_0/in por_amp_0/out vss por_amp_0/inn vss vss por_3v3_schmitt_inv_0/in
++ por_3v3_schmitt_inv_0/in por_3v3_schmitt_inv_0/in por_3v3_schmitt_inv_0/in vss por_3v3_schmitt_inv_0/in
++ por_3v3_schmitt_inv_0/in vss cap_mim_2p0fF_U8GDWG
+Xpor_3v3_schmitt_inv_0 vdd3v3 por_3v3_schmitt_inv_0/in por_unbuf vss por_3v3_schmitt_inv
+XXM9 por_amp_0/out por_amp_0/out por_amp_0/out vdd3v3 m1_18670_5435# por_amp_0/out
++ por_amp_0/out vdd3v3 por_amp_0/out m1_18670_5435# vdd3v3 vdd3v3 m1_20590_5435# por_amp_0/out
++ vdd3v3 por_amp_0/out vdd3v3 por_amp_0/out vdd3v3 por_amp_0/out m1_18670_5435# m1_18670_5435#
++ vdd3v3 por_amp_0/out por_amp_0/out vdd3v3 vdd3v3 vdd3v3 m1_18670_5435# por_amp_0/out
++ vdd3v3 m1_18670_5435# pfet_03v3_KAPG2P
+Xpfet_03v3_HJ4KN5_0 m1_24647_5905# m1_24647_5905# vdd3v3 vdd3v3 vdd3v3 m1_24647_5905#
++ m1_24647_5905# m1_24647_5905# vdd3v3 vdd3v3 m1_24647_5905# m1_24647_5905# vdd3v3
++ m1_24647_5905# m1_24647_5905# vdd3v3 m1_24647_5905# m1_24647_5905# vdd3v3 vdd3v3
++ m1_26200_5442# m1_24647_5905# m1_24647_5905# vdd3v3 pfet_03v3_HJ4KN5
+Xpfet_03v3_HJ4KN5_1 m1_23831_6003# m1_23831_6003# m1_23831_6003# m1_24647_5905# vdd3v3
++ m1_23831_6003# m1_23831_6003# m1_23831_6003# vdd3v3 vdd3v3 m1_23831_6003# m1_23831_6003#
++ m1_24647_5905# m1_23831_6003# m1_23831_6003# m1_26200_5442# m1_23831_6003# m1_23831_6003#
++ m1_24647_5905# m1_24647_5905# m1_23831_6003# vdd3v3 m1_23831_6003# por_3v3_schmitt_inv_0/in
++ pfet_03v3_HJ4KN5
+Xpor_amp_0 vdd3v3 por_amp_0/out por_amp_0/inn por_amp_0/inp por_amp_0/nbias ena vss
++ por_amp
+Xnfet_03v3_EENGZV_0 m1_21492_5550# vss m1_21492_5550# m1_21492_5550# vss m1_21492_5550#
++ m1_21492_5550# m1_21492_5550# vss m1_21492_5550# m1_21492_5550# vss vss m1_23670_5431#
++ m1_21492_5550# vss m1_21492_5550# m1_21492_5550# vss m1_21492_5550# m1_21492_5550#
++ m1_21492_5550# vss m1_21492_5550# m1_21492_5550# vss vss vss m1_21492_5550# m1_21492_5550#
++ vss m1_21492_5550# nfet_03v3_EENGZV
+Xppolyf_u_1k_FPWM3N_0 m1_29935_6932# m1_27415_12102# m1_24895_6932# m1_8935_12102#
++ m1_9495_12102# m1_9215_6932# m1_25455_6932# m1_16775_12102# m1_31055_6932# m1_35255_12102#
++ m1_8655_6932# m1_34695_12102# m1_34415_6932# m1_26855_12102# m1_26015_6932# m1_14255_6932#
++ por_amp_0/inn m1_22935_12102# m1_26575_6932# m1_17335_12102# m1_32175_6932# m1_28535_12102#
++ m1_35815_12102# m1_27975_12102# m1_20415_6932# m1_12015_6932# m1_8935_12102# m1_27695_6932#
++ m1_9495_12102# m1_16215_12102# m1_33855_6932# m1_22935_12102# m1_19855_6932# m1_16775_12102#
++ m1_21815_12102# m1_14255_6932# m1_35255_12102# m1_22095_6932# m1_19295_6932# m1_10895_6932#
++ m1_28815_6932# m1_29095_12102# m1_28535_12102# m1_34975_6932# m1_18735_6932# m1_29375_6932#
++ m1_13135_6932# m1_8375_12102# m1_18175_6932# m1_9775_6932# m1_35815_12102# m1_27975_12102#
++ m1_17615_6932# m1_30495_6932# m1_15655_12102# m1_16215_12102# m1_21815_12102# m1_17055_6932#
++ m1_23495_12102# m1_29655_12102# m1_16495_6932# m1_29095_12102# m1_31615_6932# m1_22655_6932#
++ m1_21255_12102# m1_32175_6932# m1_8375_12102# m1_23775_6932# m1_15935_6932# m1_15095_12102#
++ m1_23215_6932# m1_20975_6932# m1_15655_12102# m1_32735_6932# m1_15375_6932# m1_30215_12102#
++ m1_33295_6932# m1_24895_6932# m1_14815_6932# m1_24055_12102# m1_21255_12102# m1_25455_6932#
++ m1_23495_12102# m1_13975_12102# m1_29655_12102# m1_34415_6932# m1_20695_12102# m1_13695_6932#
++ m1_26015_6932# m1_26575_6932# m1_14535_12102# m1_15095_12102# m1_35535_6932# m1_24615_12102#
++ m1_12575_6932# m1_12295_12102# m1_31335_12102# m1_30775_12102# m1_27695_6932# m1_20415_6932#
++ m1_12015_6932# m1_30215_12102# m1_32455_12102# m1_28255_6932# m1_24055_12102# m1_13975_12102#
++ m1_11455_6932# m1_21535_6932# m1_20135_12102# m1_23215_6932# m1_20695_12102# m1_10895_6932#
++ m1_28815_6932# m1_31335_12102# m1_18735_6932# m1_14535_12102# m1_10335_6932# m1_29375_6932#
++ m1_25175_12102# m1_11735_12102# m1_24615_12102# m1_24335_6932# m1_9775_6932# m1_29935_6932#
++ m1_19015_12102# m1_30775_12102# m1_19575_12102# m1_17615_6932# m1_9215_6932# m1_30495_6932#
++ m1_32455_12102# m1_12855_12102# m1_13415_12102# m1_22095_6932# m1_31055_6932# m1_8655_6932#
++ m1_20135_12102# m1_11175_12102# m1_16495_6932# m1_31615_6932# m1_31895_12102# m1_32735_6932#
++ m1_22655_6932# m1_33575_12102# m1_15935_6932# m1_33015_12102# m1_25735_12102# vss
++ m1_12855_12102# m1_11735_12102# m1_33295_6932# m1_25175_12102# m1_20975_6932# m1_27135_6932#
++ m1_19015_12102# m1_15375_6932# m1_33855_6932# m1_19575_12102# m1_14815_6932# m1_13415_12102#
++ m1_34135_12102# m1_19855_6932# m1_10055_12102# m1_26295_12102# m1_25735_12102# m1_10615_12102#
++ m1_34975_6932# m1_19295_6932# m1_11175_12102# m1_17895_12102# m1_13695_6932# m1_31895_12102#
++ m1_33575_12102# m1_35535_6932# m1_33015_12102# m1_27135_6932# m1_13135_6932# m1_12295_12102#
++ m1_18175_6932# m1_27415_12102# vdd3v3 m1_22375_12102# m1_18455_12102# m1_12575_6932#
++ m1_10055_12102# m1_11455_6932# m1_28255_6932# m1_34695_12102# m1_17055_6932# m1_26855_12102#
++ m1_26295_12102# m1_17335_12102# m1_10615_12102# m1_23775_6932# m1_22375_12102# m1_21535_6932#
++ m1_17895_12102# m1_10335_6932# m1_18455_12102# m1_34135_12102# m1_24335_6932# ppolyf_u_1k_FPWM3N
+Xnfet_03v3_EENGZV_1 m1_20750_5435# vss m1_20750_5435# m1_20750_5435# m1_20750_5435#
++ m1_21492_5550# m1_20750_5435# m1_20750_5435# m1_20750_5435# m1_20750_5435# m1_21492_5550#
++ vss m1_20750_5435# m1_23670_5431# m1_20750_5435# vss m1_20750_5435# m1_20750_5435#
++ m1_20750_5435# vss m1_21492_5550# m1_21492_5550# m1_20750_5435# m1_20750_5435# m1_20750_5435#
++ m1_20750_5435# m1_20750_5435# m1_20750_5435# m1_21492_5550# m1_20750_5435# m1_23831_6003#
++ m1_21492_5550# nfet_03v3_EENGZV
+Xpfet_03v3_KAPG2P_0 por_amp_0/inp por_amp_0/inp por_amp_0/inp por_amp_0/inp m1_18670_5435#
++ por_amp_0/inp por_amp_0/inp por_amp_0/inp por_amp_0/inp m1_18670_5435# vdd3v3 por_amp_0/inp
++ m1_20590_5435# por_amp_0/inp vdd3v3 por_amp_0/inp vdd3v3 por_amp_0/inp por_amp_0/inp
++ vdd3v3 m1_18670_5435# m1_18670_5435# por_amp_0/inp por_amp_0/inp por_amp_0/inp por_amp_0/inp
++ por_amp_0/inp por_amp_0/inp m1_18670_5435# por_amp_0/inp m1_20750_5435# m1_18670_5435#
++ pfet_03v3_KAPG2P
+.ends
+

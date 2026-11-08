@@ -1,0 +1,105 @@
+{
+ "question": "Is the wired TX swing at ss/3.15 V (0.50/0.81 V in the 100-160/180-230 ns driver windows) caused by the shunt?",
+ "original_layout_runs": [
+  {
+   "family": "txpad",
+   "process": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "baseline": true,
+   "complete": true,
+   "final_window_s": [
+    2.550025e-07,
+    3e-07
+   ],
+   "final_diff_pp_v": 7.320000000010651e-05,
+   "final_pad_p_mean_v": 1.5997400479150299,
+   "final_pad_n_mean_v": 1.5997464460305975,
+   "pad_max_v": 1.72747508,
+   "pad_min_v": -0.642429996,
+   "op_fallback": false,
+   "deck_sha256": "007848fd5082a9ac662efaebb9e5434225fca02ec967174f3d0075e7ec471be9",
+   "waveform_sha256": "16ed0527fddf7f92ad0a026cbb4237b9cae3245d83290582e65d5df053a772c7"
+  },
+  {
+   "family": "txpad",
+   "process": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "baseline": true,
+   "complete": true,
+   "final_window_s": [
+    2.550025e-07,
+    3e-07
+   ],
+   "final_diff_pp_v": 7.005000000015471e-05,
+   "final_pad_p_mean_v": 1.610263883511474,
+   "final_pad_n_mean_v": 1.6102703727010543,
+   "pad_max_v": 1.74213954,
+   "pad_min_v": -0.640660283,
+   "op_fallback": false,
+   "deck_sha256": "fce734a83288f0313ac9bb3102dd1b320d5f3992d4d0a6bf2c7474888fae5a8d",
+   "waveform_sha256": "65fe5b19561a78ae534f0ad21671a8c7c73b873f52b59141c45dec0b5f7f09e4"
+  },
+  {
+   "family": "txpad",
+   "process": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "baseline": true,
+   "complete": true,
+   "final_window_s": [
+    2.550025e-07,
+    3e-07
+   ],
+   "final_diff_pp_v": 8.656999999989701e-05,
+   "final_pad_p_mean_v": 1.596462906189787,
+   "final_pad_n_mean_v": 1.5964787656171182,
+   "pad_max_v": 2.01321188,
+   "pad_min_v": -0.676507837,
+   "op_fallback": false,
+   "deck_sha256": "9d367c883a73841859780cafaf3a3e22f340dce734574d38b1a0411443e663b8",
+   "waveform_sha256": "7ad0de9079f7f759cfa8ef2f512bf8e395869440bf5d20e4b1d916e4d163b73e"
+  },
+  {
+   "family": "txpad",
+   "process": "typical",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "baseline": true,
+   "complete": true,
+   "final_window_s": [
+    2.550025e-07,
+    3e-07
+   ],
+   "final_diff_pp_v": 0.00016079000000002175,
+   "final_pad_p_mean_v": 1.3606682621469919,
+   "final_pad_n_mean_v": 1.3606847440934464,
+   "pad_max_v": 1.84544747,
+   "pad_min_v": -0.624488447,
+   "op_fallback": false,
+   "deck_sha256": "944390b2096f8cb9dfeee7fb5a550177b865889c55d85aa8e97173ac07648689",
+   "waveform_sha256": "fdccf57ecb5907e859f367a9258b9e09d7198753e902aba8d9fa395a94053a19"
+  }
+ ],
+ "original_layout_window_diff_pp_v": {
+  "ss_22_3.15": [
+   0.5052,
+   0.8117
+  ],
+  "ss_22_3.35": [
+   0.8975,
+   1.1061
+  ],
+  "ss_32_3.15": [
+   0.5274,
+   0.7808
+  ],
+  "typical_22_3.15": [
+   0.9191,
+   1.1474
+  ]
+ },
+ "stress_safe_windows_note": "stress-safe (drop-in network + shunt) values are in family-sims.json / lifecycle-active-windows.json",
+ "scope": "Canonical wired-transmit lifecycle fixture with its embedded canonical model at the same corners; windows 100-160 and 180-230 ns."
+}

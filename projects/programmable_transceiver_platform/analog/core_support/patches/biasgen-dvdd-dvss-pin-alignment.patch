@@ -1,0 +1,31 @@
+Local modification (svalbard, 2026-11-08) of gf180mcu_ocd_ip__biasgen @ 96a93f811a10c0b63111a5bd862e3173300802d4,
+Apache-2.0, original (c) Open Circuit Design, LLC.  Moves the top-level dvdd/dvss metal4 pin
+rectangles and labels onto the bias_generator_fe dvdd/dvss straps (they overlapped the dvss strap,
+shorting dvdd to ground in extraction).  Applied only to scratch copies by flow/clean_flow.sh.
+
+--- a/magic/gf180mcu_ocd_ip__biasgen.mag	2026-11-08 02:58:38.767633878 +0000
++++ b/magic/gf180mcu_ocd_ip__biasgen.mag	2026-11-08 02:58:38.768005909 +0000
+@@ -73,9 +73,9 @@
+ rect 98625 5610 98920 5711
+ rect 99204 5596 100730 5711
+ << metal4 >>
+-rect 32170 10246 32631 10658
++rect 32170 10785 32631 11007
+ rect 8842 9350 12126 9735
+-rect 32181 9684 32651 10077
++rect 32181 10068 32651 10290
+ rect 8842 5347 10227 9350
+ rect 98976 6092 102513 6447
+ rect 101089 5401 102513 6092
+@@ -142,9 +142,9 @@
+ transform 0 -1 33925 -1 0 10145
+ box -35 -82 41 102
+ << labels >>
+-flabel metal4 32181 9684 32651 10077 0 FreeSans 1846 0 0 0 dvss
++flabel metal4 32181 10068 32651 10290 0 FreeSans 1846 0 0 0 dvss
+ port 7 nsew
+-flabel metal4 32170 10246 32631 10658 0 FreeSans 1846 0 0 0 dvdd
++flabel metal4 32170 10785 32631 11007 0 FreeSans 1846 0 0 0 dvdd
+ port 4 nsew
+ flabel metal2 35865 11228 35979 11456 0 FreeSans 1846 90 0 0 ena
+ port 0 nsew

@@ -1,0 +1,473 @@
+{
+  "status": "RF_pad_candidate_DRC_and_device_LVS_pass_area_not_closed",
+  "drc_count": 0,
+  "device_graph_lvs_match": true,
+  "configuration": {
+    "active_origin_um": 440.0,
+    "bond_pitch_um": 211.0,
+    "escape_width_um": 24.0,
+    "area_ceiling_um2": 130000,
+    "return_routing": {
+      "corridor_width_um": 8.0,
+      "transverse_width_um": 8.0,
+      "vertical_width_um": 4.0,
+      "transverse_offset_um": -40.0
+    },
+    "signal_routes": [
+      {
+        "leg": "P",
+        "bond_center_x_um": 37.5,
+        "escape_offset_um": -24.0,
+        "outer_trunk_x_um": 288.0,
+        "landing_x_um": 186.0,
+        "landing_offset_um": 40.0,
+        "transverse_width_um": 12.0,
+        "vertical_width_um": 12.0
+      },
+      {
+        "leg": "N",
+        "bond_center_x_um": 248.5,
+        "escape_offset_um": -8.0,
+        "outer_trunk_x_um": 304.0,
+        "landing_x_um": 190.0,
+        "landing_offset_um": 60.0,
+        "transverse_width_um": 12.0,
+        "vertical_width_um": 12.0
+      }
+    ],
+    "atb_port_um": [
+      91.58,
+      -1.8
+    ],
+    "network_regions_um": [
+      [
+        -0.055,
+        -2.0,
+        274.5,
+        288.0
+      ],
+      [
+        5.764999999999986,
+        301.0,
+        303.235,
+        473.40999999999997
+      ],
+      [
+        20.0,
+        288.0,
+        50.0,
+        301.0
+      ],
+      [
+        100.0,
+        288.0,
+        130.0,
+        301.0
+      ]
+    ],
+    "single_leg": false
+  },
+  "network_routing": {
+    "bbox_um": "(-0.055,-2;274.5,288)",
+    "array_origin_um": [
+      150.0,
+      20.0
+    ],
+    "ports_um": {
+      "VSS": [
+        138.0,
+        4.0
+      ],
+      "RAIL": [
+        130.0,
+        4.0
+      ],
+      "PADP": [
+        186.0,
+        4.0
+      ],
+      "PADN": [
+        190.0,
+        4.0
+      ]
+    },
+    "routing_parameters": {
+      "rail_width_um": 8.0,
+      "return_width_um": 12.0,
+      "port_via_cuts_per_axis": 3,
+      "port_via_pitch_um": 0.6
+    },
+    "rail_route_length_um": 394.945,
+    "return_route_length_um": 388.095
+  },
+  "geometry": {
+    "bbox_um": "(-0.055,0;310,912.91)",
+    "routes": [
+      {
+        "leg": "P",
+        "bond_center_x_um": 37.5,
+        "corridor_end_y_um": 416.0,
+        "outer_trunk_x_um": 288.0,
+        "protection_landing_um": [
+          186.0,
+          480.0
+        ],
+        "segments": [
+          {
+            "layer": 2,
+            "start_um": [
+              37.5,
+              62.0
+            ],
+            "end_um": [
+              37.5,
+              416.0
+            ],
+            "width_um": 24.0,
+            "role": "bond corridor"
+          },
+          {
+            "layer": 4,
+            "start_um": [
+              37.5,
+              416.0
+            ],
+            "end_um": [
+              288.0,
+              416.0
+            ],
+            "width_um": 12.0,
+            "role": "first transverse"
+          },
+          {
+            "layer": 5,
+            "start_um": [
+              288.0,
+              416.0
+            ],
+            "end_um": [
+              288.0,
+              480.0
+            ],
+            "width_um": 12.0,
+            "role": "outer vertical"
+          },
+          {
+            "layer": 4,
+            "start_um": [
+              288.0,
+              480.0
+            ],
+            "end_um": [
+              186.0,
+              480.0
+            ],
+            "width_um": 12.0,
+            "role": "protection transverse"
+          }
+        ]
+      },
+      {
+        "leg": "N",
+        "bond_center_x_um": 248.5,
+        "corridor_end_y_um": 432.0,
+        "outer_trunk_x_um": 304.0,
+        "protection_landing_um": [
+          190.0,
+          500.0
+        ],
+        "segments": [
+          {
+            "layer": 2,
+            "start_um": [
+              248.5,
+              62.0
+            ],
+            "end_um": [
+              248.5,
+              432.0
+            ],
+            "width_um": 24.0,
+            "role": "bond corridor"
+          },
+          {
+            "layer": 4,
+            "start_um": [
+              248.5,
+              432.0
+            ],
+            "end_um": [
+              304.0,
+              432.0
+            ],
+            "width_um": 12.0,
+            "role": "first transverse"
+          },
+          {
+            "layer": 5,
+            "start_um": [
+              304.0,
+              432.0
+            ],
+            "end_um": [
+              304.0,
+              500.0
+            ],
+            "width_um": 12.0,
+            "role": "outer vertical"
+          },
+          {
+            "layer": 4,
+            "start_um": [
+              304.0,
+              500.0
+            ],
+            "end_um": [
+              190.0,
+              500.0
+            ],
+            "width_um": 12.0,
+            "role": "protection transverse"
+          }
+        ]
+      }
+    ],
+    "ground_routes": [
+      {
+        "a": "GND_P",
+        "b": "TOP_P",
+        "layer": 2,
+        "start_um": [
+          10.0,
+          78.305
+        ],
+        "end_um": [
+          10.0,
+          400.0
+        ],
+        "width_um": 8.0
+      },
+      {
+        "a": "TOP_P",
+        "b": "JOIN",
+        "layer": 4,
+        "start_um": [
+          10.0,
+          400.0
+        ],
+        "end_um": [
+          138.0,
+          400.0
+        ],
+        "width_um": 8.0
+      },
+      {
+        "a": "GND_N",
+        "b": "TOP_N",
+        "layer": 2,
+        "start_um": [
+          221.0,
+          78.305
+        ],
+        "end_um": [
+          221.0,
+          400.0
+        ],
+        "width_um": 8.0
+      },
+      {
+        "a": "TOP_N",
+        "b": "JOIN",
+        "layer": 4,
+        "start_um": [
+          221.0,
+          400.0
+        ],
+        "end_um": [
+          138.0,
+          400.0
+        ],
+        "width_um": 8.0
+      },
+      {
+        "a": "JOIN",
+        "b": "PAD_RETURN",
+        "layer": 5,
+        "start_um": [
+          138.0,
+          400.0
+        ],
+        "end_um": [
+          138.0,
+          444.0
+        ],
+        "width_um": 4.0
+      }
+    ],
+    "allocation_regions_um": [
+      [
+        -0.055,
+        438.0,
+        274.5,
+        728.0
+      ],
+      [
+        5.764999999999986,
+        741.0,
+        303.235,
+        913.41
+      ],
+      [
+        20.0,
+        728.0,
+        50.0,
+        741.0
+      ],
+      [
+        100.0,
+        728.0,
+        130.0,
+        741.0
+      ],
+      [
+        0.0,
+        0.0,
+        75.0,
+        65.325
+      ],
+      [
+        211.0,
+        0.0,
+        286.0,
+        65.325
+      ],
+      [
+        0.0,
+        406.0,
+        286.0,
+        440.0
+      ],
+      [
+        9.0,
+        76.0,
+        11.0,
+        440.0
+      ],
+      [
+        25.5,
+        62.0,
+        49.5,
+        440.0
+      ],
+      [
+        220.0,
+        76.0,
+        222.0,
+        440.0
+      ],
+      [
+        236.5,
+        62.0,
+        260.5,
+        440.0
+      ],
+      [
+        25.5,
+        50.0,
+        49.5,
+        428.0
+      ],
+      [
+        31.5,
+        410.0,
+        294.0,
+        422.0
+      ],
+      [
+        282.0,
+        410.0,
+        294.0,
+        486.0
+      ],
+      [
+        180.0,
+        474.0,
+        294.0,
+        486.0
+      ],
+      [
+        236.5,
+        50.0,
+        260.5,
+        444.0
+      ],
+      [
+        242.5,
+        426.0,
+        310.0,
+        438.0
+      ],
+      [
+        298.0,
+        426.0,
+        310.0,
+        506.0
+      ],
+      [
+        184.0,
+        494.0,
+        310.0,
+        506.0
+      ],
+      [
+        6.0,
+        74.305,
+        14.0,
+        404.0
+      ],
+      [
+        6.0,
+        396.0,
+        142.0,
+        404.0
+      ],
+      [
+        217.0,
+        74.305,
+        225.0,
+        404.0
+      ],
+      [
+        134.0,
+        396.0,
+        225.0,
+        404.0
+      ],
+      [
+        136.0,
+        398.0,
+        140.0,
+        446.0
+      ]
+    ],
+    "allocation_union_um2": 175909.0227,
+    "native_bond_source_sha256": "c8ccb709da1935bb7c0276fa8abb55b957f45c14d0a2f97b0852ac30dcb98893"
+  },
+  "fits_assigned_area": false,
+  "extracted_spice_sha256": "3663c2ee42eaad46ab78656584fcafc5ed458054998cf06c1e511fcca12f5df7",
+  "limitations": [
+    "Area overrun is explicit; not adopted in the provider ring.",
+    "Native rail module is not included in this standalone view.",
+    "Signal and return resistance, current capacity and ESD stress remain unqualified; protection taps are behind the long bond corridors."
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_pad_ss.py": "0d5c67b9ce582a84e5d8de14fc2d3bee56ffb4c82787476337df7688e454b378",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_device_audit.py": "faca1155b3ec8d51ec1db7a43fd2d1102d0e0441cf036f494fc71c4b318512f5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "b3e9f311401ea251c5adb47f406d9e6170448865026108ad3ca7dd14c67d3b68",
+    "/home/ubuntu/svalbard/scratch/pad-network-shunt-v21/network.gds": "bd7adab65585a251d2aa88d21ae9b01049c3013f08c15adf1b12de12966fd4ee",
+    "/home/ubuntu/svalbard/scratch/pad-network-shunt-v21/network-layout.json": "99a368efa0d9c29ac3042bd00833acec3b7f0b69b2b8daeb5907d0386a14eda7",
+    "/home/ubuntu/svalbard/scratch/pad-network-shunt-v21/network-with-well.spice": "6d864b087415f406a9f5ff9b7aa9da6140e43c0f2af6d84be30e1aeb99564212",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-receive-layout.json": "af5a10880ad2a25481680eca0f0396febd1d83b6412ea3195b0333491366ec22",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-layout.json": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a"
+  }
+}

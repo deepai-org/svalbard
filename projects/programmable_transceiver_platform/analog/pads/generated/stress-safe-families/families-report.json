@@ -1,0 +1,1983 @@
+{
+ "status": "stress_safe_family_closure_attempt_not_ESD_qualified",
+ "network": {
+  "dir": "generated/stress-safe-families/network-shunt",
+  "drc_count": 0,
+  "lvs": true,
+  "additions": {
+   "gate_discharge": {
+    "model": "ppolyf_u_1k_6p0",
+    "w_um": 1,
+    "segments": 5,
+    "segment_um": 20,
+    "squares": 100,
+    "placed_um": [
+     76.0,
+     0.1999999999999993,
+     86.24000000000001,
+     24.3
+    ]
+   },
+   "atb_tap": {
+    "model": "ppolyf_u_1k_6p0",
+    "w_um": 1,
+    "segments": 20,
+    "segment_um": 24,
+    "squares": 480,
+    "placed_um": [
+     89.85999999999999,
+     0.1999999999999993,
+     125.6,
+     27.47
+    ],
+    "port": "ATB_RAIL",
+    "port_um": [
+     91.58,
+     -1.8
+    ],
+    "layer": "metal3"
+   }
+  },
+  "ports": {
+   "RAIL": [
+    130,
+    4
+   ],
+   "VSS": [
+    138,
+    4
+   ],
+   "PADP": [
+    186,
+    4
+   ],
+   "PADN": [
+    190,
+    4
+   ],
+   "ATB_RAIL": [
+    91.58,
+    -1.8
+   ]
+  },
+  "straps": {
+   "rail": {
+    "layer": "metal5",
+    "width_um": 30.0,
+    "length_um": 56.435,
+    "cuts": {
+     "rail_via4": 600,
+     "rail_via3": 600
+    }
+   },
+   "vss": {
+    "layers": [
+     "metal4",
+     "metal5 (above y=290)"
+    ],
+    "width_um": 30.0,
+    "metal4_length_um": 201.575,
+    "metal5_length_um": 176.575,
+    "metal4_only_um": 2.0,
+    "metal4_base_width_um": 63.0,
+    "cuts": {
+     "vss_via4_low": 300,
+     "vss_via4_high": 600,
+     "vss_via3": 600
+    }
+   }
+  },
+  "wiring_resistance": {
+   "nominal": {
+    "rail_strap_ohm": 0.09024666666666667,
+    "vss_strap_ohm": 0.18831171765569607,
+    "plate_end_to_end_ohm": 0.6152127906976745,
+    "banks_bound_ohm": 3.6912767441860472,
+    "total_bound_ohm": 3.96983512850841,
+    "drop_at_100mA_v": 0.396983512850841
+   },
+   "high": {
+    "rail_strap_ohm": 0.14217716666666666,
+    "vss_strap_ohm": 0.2640752898297741,
+    "plate_end_to_end_ohm": 0.710912558139535,
+    "banks_bound_ohm": 4.26547534883721,
+    "total_bound_ohm": 4.671727805333651,
+    "drop_at_100mA_v": 0.46717278053336514
+   }
+  },
+  "allocation_regions_um": [
+   [
+    -0.055,
+    -2.0,
+    274.5,
+    288.0
+   ],
+   [
+    5.764999999999986,
+    301.0,
+    303.235,
+    473.40999999999997
+   ],
+   [
+    20.0,
+    288.0,
+    50.0,
+    301.0
+   ],
+   [
+    100.0,
+    288.0,
+    130.0,
+    301.0
+   ]
+  ],
+  "canonical_geometry_unchanged": "network part: KLayout comparison, no canonical shape removed; additions in x 62.8..135.3, y -2..30 and above y=288"
+ },
+ "esd_test": {
+  "dir": "generated/stress-safe-families/single-leg",
+  "drc_count": 0,
+  "lvs": true,
+  "allocation_um2": 158302,
+  "contents": "native Bondpad_5LM on PAD_P (provider bond geometry, wide signal routes) + complete stress-safe macro; PADN terminated to VSS on metal3",
+  "note": "allocation includes the unused second-leg corridor boxes of the RF pair template (overstated)"
+ },
+ "layouts": {
+  "refpad": {
+   "dir": "generated/stress-safe-families/reference",
+   "drc_count": 0,
+   "device_lvs_match": true,
+   "independent_device_graph_match": true,
+   "device_count": 897,
+   "contains": [
+    "canonical family base",
+    "stress-safe macro: network + gate discharge + ATB tap + v2 shunt and straps"
+   ],
+   "gds_check": "Magic reads combined.gds (KLayout-written) for DRC, extraction, netgen LVS and the independent device audit",
+   "gds_sha256": "2001220c559ea3c847f9e414c99628ede434164ce9273834f231e6e0194b4241"
+  },
+  "txpad": {
+   "dir": "generated/stress-safe-families/wired-transmit",
+   "drc_count": 0,
+   "device_lvs_match": true,
+   "independent_device_graph_match": true,
+   "device_count": 1088,
+   "contains": [
+    "canonical family base",
+    "stress-safe macro: network + gate discharge + ATB tap + v2 shunt and straps"
+   ],
+   "gds_check": "Magic reads combined.gds (KLayout-written) for DRC, extraction, netgen LVS and the independent device audit",
+   "gds_sha256": "3f95103fb8ed5001be0c22cc29bb632a6559e9f49a2a835592d105f31dfb5c2b"
+  },
+  "wirepad": {
+   "dir": "generated/stress-safe-families/wired-receive-usb",
+   "drc_count": 0,
+   "device_lvs_match": true,
+   "independent_device_graph_match": true,
+   "device_count": 1170,
+   "contains": [
+    "canonical family base",
+    "stress-safe macro: network + gate discharge + ATB tap + v2 shunt and straps"
+   ],
+   "gds_check": "Magic reads combined.gds (KLayout-written) for DRC, extraction, netgen LVS and the independent device audit",
+   "gds_sha256": "d44bd380e88f85dbfa87eba819e1a1d3039162ece249fbc01260684276194654"
+  },
+  "rfpad": {
+   "dir": "generated/stress-safe-families/rf-pair",
+   "drc_count": 0,
+   "lvs": true,
+   "shared_with": "rfpad and rftxpad use the same physical pair",
+   "gds_sha256": "8f49c09fa9dce257a7c9cc0de7dbc4d417abd41d81ed7840b56d4d8b3e6bdba6",
+   "note": "pad-layout.json fits_assigned_area uses the stale 130,000 um2 ceiling copied from rf-receive-layout.json; checked here against spec/analog-architecture.json"
+  },
+  "rftxpad": {
+   "dir": "generated/stress-safe-families/rf-pair",
+   "drc_count": 0,
+   "lvs": true,
+   "shared_with": "rfpad and rftxpad use the same physical pair",
+   "gds_sha256": "8f49c09fa9dce257a7c9cc0de7dbc4d417abd41d81ed7840b56d4d8b3e6bdba6",
+   "note": "pad-layout.json fits_assigned_area uses the stale 130,000 um2 ceiling copied from rf-receive-layout.json; checked here against spec/analog-architecture.json"
+  }
+ },
+ "area_fit": {
+  "refpad": {
+   "allocation_um2": 179237,
+   "ceiling_um2": 185000,
+   "headroom_um2": 5763,
+   "fits": true
+  },
+  "txpad": {
+   "allocation_um2": 292666,
+   "ceiling_um2": 300000,
+   "headroom_um2": 7334,
+   "fits": true
+  },
+  "wirepad": {
+   "allocation_um2": 335069,
+   "ceiling_um2": 340000,
+   "headroom_um2": 4931,
+   "fits": true
+  },
+  "rfpad": {
+   "allocation_um2": 175909,
+   "ceiling_um2": 180000,
+   "headroom_um2": 4091,
+   "fits": true
+  },
+  "rftxpad": {
+   "allocation_um2": 175909,
+   "ceiling_um2": 180000,
+   "headroom_um2": 4091,
+   "fits": true
+  }
+ },
+ "runs": {
+  "refpad": {
+   "pulses": {
+    "runs": 8,
+    "complete": true,
+    "op_fallback": false,
+    "max_pad_v": 4.75932083,
+    "min_pad_v": -1.28140507,
+    "rail_max_v": 3.55991142,
+    "observed_mos": 240,
+    "exceeding": 0,
+    "all_within_6v0": true
+   },
+   "powered_peer": [
+    {
+     "corner": "typical/27C",
+     "pad_v": 3.58508252,
+     "peer_current_a": [
+      0.000898349836,
+      0.000898349836
+     ],
+     "vdd_backfeed_peak_a": 0.0,
+     "atb_v": 2.66068865,
+     "rail_v": 2.79065807,
+     "exceeding": 0,
+     "op_fallback": false
+    },
+    {
+     "corner": "ff/85C",
+     "pad_v": 3.29399382,
+     "peer_current_a": [
+      0.006720123620000001,
+      0.006720123620000001
+     ],
+     "vdd_backfeed_peak_a": 0.0,
+     "atb_v": 2.42601896,
+     "rail_v": 2.5165052,
+     "exceeding": 0,
+     "op_fallback": false
+    }
+   ],
+   "ramps": [
+    {
+     "case": "ramp_fast",
+     "supply_current_end_a": 0.085955464421598,
+     "max_pad_v": 0.000853013463,
+     "exceeding": 0,
+     "op_fallback": false
+    },
+    {
+     "case": "ramp_slow",
+     "supply_current_end_a": 4.7457054278372096e-09,
+     "max_pad_v": 0.00087013645,
+     "exceeding": 0,
+     "op_fallback": false
+    }
+   ],
+   "function": {
+    "baseline": {
+     "kind": "lifecycle",
+     "family": "refpad",
+     "process": "typical",
+     "temp_c": 27,
+     "vdd_v": 3.3,
+     "baseline": true,
+     "complete": true,
+     "final_window_s": [
+      6.8001e-08,
+      8e-08
+     ],
+     "final_diff_pp_v": 2.2011308300000003,
+     "final_pad_p_mean_v": 1.6440192922712882,
+     "final_pad_n_mean_v": 1.6441383449975004,
+     "pad_max_v": 2.18632035,
+     "pad_min_v": 1.07658031,
+     "op_fallback": false,
+     "deck_sha256": "852f83cd3ef08cfa47ae58ee0ecde83e90da7d11c5ca8a514d86538f8e70e4a9",
+     "waveform_sha256": "46d3c23fa7fc8b0617f0429361b3cf3e3a38aa7058ef73247903f162251ca705",
+     "layout_version": "v3 (v2 macro; v2.1 adds parallel metal only)"
+    },
+    "runs": [
+     {
+      "corner": "typical/27C/3.3V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.19689999,
+      "final_cm_v": 1.6367522729461756,
+      "rail_final_v": 1.4425383585385767,
+      "atb_final_v": 1.039421234280953
+     },
+     {
+      "corner": "typical/22C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.1976046,
+      "final_cm_v": 1.563420235510748,
+      "rail_final_v": 1.3642881841593066,
+      "atb_final_v": 0.9616843280478253
+     },
+     {
+      "corner": "typical/22C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.19742018,
+      "final_cm_v": 1.661895271730545,
+      "rail_final_v": 1.459582484339277,
+      "atb_final_v": 1.0524712513847692
+     },
+     {
+      "corner": "typical/32C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.19646451,
+      "final_cm_v": 1.5624971533752707,
+      "rail_final_v": 1.3779648248858527,
+      "atb_final_v": 0.9813119009291785
+     },
+     {
+      "corner": "typical/32C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.1962842799999995,
+      "final_cm_v": 1.660433404202633,
+      "rail_final_v": 1.472834360256624,
+      "atb_final_v": 1.070743457818697
+     },
+     {
+      "corner": "ss/22C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.19289049,
+      "final_cm_v": 1.5631847627370439,
+      "rail_final_v": 1.3671956956023996,
+      "atb_final_v": 0.9513210147917014
+     },
+     {
+      "corner": "ss/22C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.19317005,
+      "final_cm_v": 1.6620912253066158,
+      "rail_final_v": 1.4656650507382105,
+      "atb_final_v": 1.0424857405949008
+     },
+     {
+      "corner": "ss/32C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.1919940999999996,
+      "final_cm_v": 1.562949991371438,
+      "rail_final_v": 1.3835822308165304,
+      "atb_final_v": 0.9729240076192301
+     },
+     {
+      "corner": "ss/32C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.19223655,
+      "final_cm_v": 1.6618251877220462,
+      "rail_final_v": 1.4816640150674891,
+      "atb_final_v": 1.0640236900999833
+     },
+     {
+      "corner": "ff/22C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.199708974,
+      "final_cm_v": 1.5528057305242458,
+      "rail_final_v": 1.344200607670388,
+      "atb_final_v": 0.9435212974870854
+     },
+     {
+      "corner": "ff/22C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.19901078,
+      "final_cm_v": 1.6432527235102485,
+      "rail_final_v": 1.431280537202133,
+      "atb_final_v": 1.0215129074937508
+     },
+     {
+      "corner": "ff/32C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.19830754,
+      "final_cm_v": 1.5430172134650055,
+      "rail_final_v": 1.3483608704915848,
+      "atb_final_v": 0.9464854308180304
+     },
+     {
+      "corner": "ff/32C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 2.1974206300000008,
+      "final_cm_v": 1.6285093872137977,
+      "rail_final_v": 1.4300306269805034,
+      "atb_final_v": 1.0190951095667389
+     }
+    ]
+   }
+  },
+  "txpad": {
+   "pulses": {
+    "runs": 8,
+    "complete": true,
+    "op_fallback": false,
+    "max_pad_v": 4.73868881,
+    "min_pad_v": -0.945891599,
+    "rail_max_v": 3.54291507,
+    "observed_mos": 406,
+    "exceeding": 0,
+    "all_within_6v0": true
+   },
+   "powered_peer": [
+    {
+     "corner": "typical/27C",
+     "pad_v": 3.58650765,
+     "peer_current_a": [
+      0.0008698470140000004,
+      0.0008698470140000004
+     ],
+     "vdd_backfeed_peak_a": 3.61293578e-14,
+     "atb_v": 2.66185968,
+     "rail_v": 2.7918863,
+     "exceeding": 0,
+     "op_fallback": false
+    },
+    {
+     "corner": "ff/85C",
+     "pad_v": 3.29502011,
+     "peer_current_a": [
+      0.006699598,
+      0.006699598
+     ],
+     "vdd_backfeed_peak_a": 1.0897224e-11,
+     "atb_v": 2.42686919,
+     "rail_v": 2.51738713,
+     "exceeding": 0,
+     "op_fallback": false
+    }
+   ],
+   "ramps": [
+    {
+     "case": "ramp_fast",
+     "supply_current_end_a": 0.08596040441947564,
+     "max_pad_v": 0.0015048822,
+     "exceeding": 0,
+     "op_fallback": false
+    },
+    {
+     "case": "ramp_slow",
+     "supply_current_end_a": 4.769496415996678e-09,
+     "max_pad_v": 0.00017102432,
+     "exceeding": 0,
+     "op_fallback": false
+    }
+   ],
+   "function": {
+    "baseline": {
+     "kind": "lifecycle",
+     "family": "txpad",
+     "process": "typical",
+     "temp_c": 27,
+     "vdd_v": 3.3,
+     "baseline": true,
+     "complete": true,
+     "final_window_s": [
+      2.550025e-07,
+      3e-07
+     ],
+     "final_diff_pp_v": 0.000788889999999931,
+     "final_pad_p_mean_v": 1.2711060585848666,
+     "final_pad_n_mean_v": 1.2711432962766178,
+     "pad_max_v": 1.90837291,
+     "pad_min_v": -0.656174798,
+     "op_fallback": false,
+     "deck_sha256": "cc75161d16eb646441d38acae88bfe53d925695aaa5f53444f9bdf7928c15cba",
+     "waveform_sha256": "ddbb12d98032b6df04c9b7ccb5f579bc674d8afb306251502984e72a2585d47f",
+     "layout_version": "v3 (v2 macro; v2.1 adds parallel metal only)"
+    },
+    "runs": [
+     {
+      "corner": "typical/27C/3.3V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.00012747000000024045,
+      "final_cm_v": 1.6169241402072565,
+      "rail_final_v": 0.9403901475786645,
+      "atb_final_v": 0.024923725765722556
+     },
+     {
+      "corner": "typical/22C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.00010545000000017346,
+      "final_cm_v": 1.5925590331998138,
+      "rail_final_v": 0.9332750619286749,
+      "atb_final_v": 0.022866305303276824
+     },
+     {
+      "corner": "typical/22C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.00013032999999995631,
+      "final_cm_v": 1.6115973895250155,
+      "rail_final_v": 0.9168226907195575,
+      "atb_final_v": 0.025234525186189787
+     },
+     {
+      "corner": "typical/32C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.00011038999999990473,
+      "final_cm_v": 1.585014631474054,
+      "rail_final_v": 0.9423342520661567,
+      "atb_final_v": 0.02337706186299359
+     },
+     {
+      "corner": "typical/32C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.0001442199999999172,
+      "final_cm_v": 1.4949680651974364,
+      "rail_final_v": 0.814746662719971,
+      "atb_final_v": 0.025119113951912343
+     },
+     {
+      "corner": "ss/22C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.0001215500000000258,
+      "final_cm_v": 1.4237246611582592,
+      "rail_final_v": 0.7635957371660119,
+      "atb_final_v": 0.01019525782501964
+     },
+     {
+      "corner": "ss/22C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 9.310999999989633e-05,
+      "final_cm_v": 1.671811370497209,
+      "rail_final_v": 1.0138281801726277,
+      "atb_final_v": 0.019486884798304734
+     },
+     {
+      "corner": "ss/32C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.00011797000000002278,
+      "final_cm_v": 1.4408486723723382,
+      "rail_final_v": 0.7998559624656812,
+      "atb_final_v": 0.011780933338806077
+     },
+     {
+      "corner": "ss/32C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.00010119999999980145,
+      "final_cm_v": 1.6531472596516437,
+      "rail_final_v": 1.0130540174612364,
+      "atb_final_v": 0.020004385112156298
+     },
+     {
+      "corner": "ff/22C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.0024738800000001504,
+      "final_cm_v": 1.2599137351803806,
+      "rail_final_v": 0.575815745096134,
+      "atb_final_v": 0.026332327339321893
+     },
+     {
+      "corner": "ff/22C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.0035972600000000465,
+      "final_cm_v": 1.1831588706956793,
+      "rail_final_v": 0.4993019505355592,
+      "atb_final_v": 0.025647711825945833
+     },
+     {
+      "corner": "ff/32C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.0033678600000000003,
+      "final_cm_v": 1.203249108477879,
+      "rail_final_v": 0.5378384466691131,
+      "atb_final_v": 0.025685012129398388
+     },
+     {
+      "corner": "ff/32C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 0.0038276200000002536,
+      "final_cm_v": 1.1215847851467853,
+      "rail_final_v": 0.4563018989914203,
+      "atb_final_v": 0.025091276799793262
+     }
+    ]
+   }
+  },
+  "wirepad": {
+   "pulses": {
+    "runs": 8,
+    "complete": true,
+    "op_fallback": false,
+    "max_pad_v": 4.6667199,
+    "min_pad_v": -0.937942882,
+    "rail_max_v": 3.4887933,
+    "observed_mos": 333,
+    "exceeding": 0,
+    "all_within_6v0": true
+   },
+   "powered_peer": [
+    {
+     "corner": "typical/27C",
+     "pad_v": 3.58650764,
+     "peer_current_a": [
+      0.000869847191,
+      0.000869847191
+     ],
+     "vdd_backfeed_peak_a": 2.86083116e-10,
+     "atb_v": 2.66185968,
+     "rail_v": 2.7918863,
+     "exceeding": 0,
+     "op_fallback": false
+    },
+    {
+     "corner": "ff/85C",
+     "pad_v": 3.29501967,
+     "peer_current_a": [
+      0.0066996066499999994,
+      0.0066996066499999994
+     ],
+     "vdd_backfeed_peak_a": 9.71671852e-09,
+     "atb_v": 2.42686882,
+     "rail_v": 2.51738675,
+     "exceeding": 0,
+     "op_fallback": false
+    }
+   ],
+   "ramps": [
+    {
+     "case": "ramp_fast",
+     "supply_current_end_a": 0.08597191555468166,
+     "max_pad_v": 0.00141544498,
+     "exceeding": 0,
+     "op_fallback": false
+    },
+    {
+     "case": "ramp_slow",
+     "supply_current_end_a": 6.182194497308969e-08,
+     "max_pad_v": 0.000176013972,
+     "exceeding": 0,
+     "op_fallback": false
+    }
+   ],
+   "function": {
+    "baseline": {
+     "kind": "lifecycle",
+     "family": "wirepad",
+     "process": "typical",
+     "temp_c": 27,
+     "vdd_v": 3.3,
+     "baseline": true,
+     "complete": true,
+     "final_window_s": [
+      8.501e-08,
+      1e-07
+     ],
+     "final_diff_pp_v": 1.4840090953999998,
+     "final_pad_p_mean_v": 3.2778410574352335,
+     "final_pad_n_mean_v": 0.8365334881025905,
+     "pad_max_v": 3.28887427,
+     "pad_min_v": 0.0628089819,
+     "op_fallback": false,
+     "deck_sha256": "4d5ecc4fbdbbc85bbe652d7992d59ba8333917ef506cdabe37f8fbaca9a3b5c3",
+     "waveform_sha256": "b19d5f21970c712c427445e6a3ae133e6ab154477b18d377bf98d48814b9cf06"
+    },
+    "runs": [
+     {
+      "corner": "typical/27C/3.3V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.5788886295000002,
+      "final_cm_v": 1.9792355167807645,
+      "rail_final_v": 2.365993124222798,
+      "atb_final_v": 2.1483602132642488
+     },
+     {
+      "corner": "typical/22C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.5406568747,
+      "final_cm_v": 1.936322098533355,
+      "rail_final_v": 2.283515526955959,
+      "atb_final_v": 2.150175574015544
+     },
+     {
+      "corner": "typical/22C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.5933831888,
+      "final_cm_v": 2.0004410912577724,
+      "rail_final_v": 2.4005376173056994,
+      "atb_final_v": 2.150384691645078
+     },
+     {
+      "corner": "typical/32C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.5380771878,
+      "final_cm_v": 1.926648599962759,
+      "rail_final_v": 2.276693400025907,
+      "atb_final_v": 2.1456150144818653
+     },
+     {
+      "corner": "typical/32C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.5923501664,
+      "final_cm_v": 1.9896975278610753,
+      "rail_final_v": 2.391158952759067,
+      "atb_final_v": 2.1458233957383417
+     },
+     {
+      "corner": "ss/22C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.2718758209999999,
+      "final_cm_v": 1.8322490413471502,
+      "rail_final_v": 2.333287581334197,
+      "atb_final_v": 2.22503845126943
+     },
+     {
+      "corner": "ss/22C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.4587459140000003,
+      "final_cm_v": 1.9444490270110102,
+      "rail_final_v": 2.3599552289507773,
+      "atb_final_v": 2.2250698496632126
+     },
+     {
+      "corner": "ss/32C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.2393941080000004,
+      "final_cm_v": 1.8154159217227979,
+      "rail_final_v": 2.3350142950129538,
+      "atb_final_v": 2.231991243976684
+     },
+     {
+      "corner": "ss/32C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.4374041289999995,
+      "final_cm_v": 1.9327821639643785,
+      "rail_final_v": 2.3588699330958547,
+      "atb_final_v": 2.232020989041451
+     },
+     {
+      "corner": "ff/22C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.6994491200000006,
+      "final_cm_v": 1.8938832839528499,
+      "rail_final_v": 2.160867419650259,
+      "atb_final_v": 1.942717215349741
+     },
+     {
+      "corner": "ff/22C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.8145999256999998,
+      "final_cm_v": 1.9374998901763603,
+      "rail_final_v": 2.2381574803238347,
+      "atb_final_v": 1.9429874052202072
+     },
+     {
+      "corner": "ff/32C/3.15V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.7165638212999998,
+      "final_cm_v": 1.877620714623057,
+      "rail_final_v": 2.1413316717357516,
+      "atb_final_v": 1.919712631476684
+     },
+     {
+      "corner": "ff/32C/3.35V",
+      "complete": true,
+      "op_fallback": false,
+      "final_diff_pp_v": 1.8314791359999998,
+      "final_cm_v": 1.9188824909270727,
+      "rail_final_v": 2.2143700931217616,
+      "atb_final_v": 1.9199721857642489
+     }
+    ]
+   }
+  },
+  "rfpad": {
+   "pulses": {
+    "runs": 8,
+    "complete": true,
+    "op_fallback": false,
+    "max_pad_v": 4.75834109,
+    "min_pad_v": -1.28270356,
+    "rail_max_v": 3.55915719,
+    "observed_mos": 240,
+    "exceeding": 0,
+    "all_within_6v0": true
+   },
+   "powered_peer": [
+    {
+     "corner": "typical/27C",
+     "pad_v": 3.58650766,
+     "peer_current_a": [
+      0.0008698467849999996,
+      0.0008698467849999996
+     ],
+     "vdd_backfeed_peak_a": 0.0,
+     "atb_v": 2.66185969,
+     "rail_v": 2.79188631,
+     "exceeding": 0,
+     "op_fallback": false
+    },
+    {
+     "corner": "ff/85C",
+     "pad_v": 3.29502189,
+     "peer_current_a": [
+      0.00669956216,
+      0.00669956216
+     ],
+     "vdd_backfeed_peak_a": 0.0,
+     "atb_v": 2.42687067,
+     "rail_v": 2.51738866,
+     "exceeding": 0,
+     "op_fallback": false
+    }
+   ],
+   "ramps": [
+    {
+     "case": "ramp_fast",
+     "supply_current_end_a": 0.085955464421598,
+     "max_pad_v": 4.43591717e-16,
+     "exceeding": 0,
+     "op_fallback": false
+    },
+    {
+     "case": "ramp_slow",
+     "supply_current_end_a": 4.7457054278372096e-09,
+     "max_pad_v": 3.59705942e-17,
+     "exceeding": 0,
+     "op_fallback": false
+    }
+   ],
+   "function": [
+    {
+     "corner": "typical/27C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.068721389451354,
+      -6.301684128686562
+     ],
+     "excess_loss_db": [
+      -0.0481,
+      -0.2811
+     ]
+    },
+    {
+     "corner": "typical/27C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.069159742526295,
+      -6.303063800205225
+     ],
+     "excess_loss_db": [
+      -0.0486,
+      -0.2825
+     ]
+    },
+    {
+     "corner": "typical/22C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.068536738074682,
+      -6.300649347540953
+     ],
+     "excess_loss_db": [
+      -0.0479,
+      -0.28
+     ]
+    },
+    {
+     "corner": "typical/22C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.0690550760658235,
+      -6.302496203824408
+     ],
+     "excess_loss_db": [
+      -0.0485,
+      -0.2819
+     ]
+    },
+    {
+     "corner": "typical/22C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.068536738074682,
+      -6.300649347540953
+     ],
+     "excess_loss_db": [
+      -0.0479,
+      -0.28
+     ]
+    },
+    {
+     "corner": "typical/22C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.0690550760658235,
+      -6.302496203824408
+     ],
+     "excess_loss_db": [
+      -0.0485,
+      -0.2819
+     ]
+    },
+    {
+     "corner": "typical/32C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.0688942331675495,
+      -6.302648479732106
+     ],
+     "excess_loss_db": [
+      -0.0483,
+      -0.282
+     ]
+    },
+    {
+     "corner": "typical/32C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.0692618335451485,
+      -6.3036162008801
+     ],
+     "excess_loss_db": [
+      -0.0487,
+      -0.283
+     ]
+    },
+    {
+     "corner": "typical/32C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.0688942331675495,
+      -6.302648479732106
+     ],
+     "excess_loss_db": [
+      -0.0483,
+      -0.282
+     ]
+    },
+    {
+     "corner": "typical/32C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.0692618335451485,
+      -6.3036162008801
+     ],
+     "excess_loss_db": [
+      -0.0487,
+      -0.283
+     ]
+    },
+    {
+     "corner": "ss/22C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.072162645443385,
+      -6.321243228453355
+     ],
+     "excess_loss_db": [
+      -0.0516,
+      -0.3006
+     ]
+    },
+    {
+     "corner": "ss/22C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.072720209056859,
+      -6.323409290302751
+     ],
+     "excess_loss_db": [
+      -0.0521,
+      -0.3028
+     ]
+    },
+    {
+     "corner": "ss/22C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.072162645443385,
+      -6.321243228453355
+     ],
+     "excess_loss_db": [
+      -0.0516,
+      -0.3006
+     ]
+    },
+    {
+     "corner": "ss/22C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.072720209056859,
+      -6.323409290302751
+     ],
+     "excess_loss_db": [
+      -0.0521,
+      -0.3028
+     ]
+    },
+    {
+     "corner": "ss/32C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.072575002654559,
+      -6.323549442297311
+     ],
+     "excess_loss_db": [
+      -0.052,
+      -0.3029
+     ]
+    },
+    {
+     "corner": "ss/32C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.072955114886963,
+      -6.324692836074549
+     ],
+     "excess_loss_db": [
+      -0.0524,
+      -0.3041
+     ]
+    },
+    {
+     "corner": "ss/32C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.072575002654559,
+      -6.323549442297311
+     ],
+     "excess_loss_db": [
+      -0.052,
+      -0.3029
+     ]
+    },
+    {
+     "corner": "ss/32C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.072955114886963,
+      -6.324692836074549
+     ],
+     "excess_loss_db": [
+      -0.0524,
+      -0.3041
+     ]
+    },
+    {
+     "corner": "ff/22C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.065074208428492,
+      -6.28090592177633
+     ],
+     "excess_loss_db": [
+      -0.0445,
+      -0.2603
+     ]
+    },
+    {
+     "corner": "ff/22C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.065602193601051,
+      -6.282603760114411
+     ],
+     "excess_loss_db": [
+      -0.045,
+      -0.262
+     ]
+    },
+    {
+     "corner": "ff/22C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.065074208428492,
+      -6.28090592177633
+     ],
+     "excess_loss_db": [
+      -0.0445,
+      -0.2603
+     ]
+    },
+    {
+     "corner": "ff/22C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.065602193601051,
+      -6.282603760114411
+     ],
+     "excess_loss_db": [
+      -0.045,
+      -0.262
+     ]
+    },
+    {
+     "corner": "ff/32C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.065396686315461,
+      -6.2827038354052425
+     ],
+     "excess_loss_db": [
+      -0.0448,
+      -0.2621
+     ]
+    },
+    {
+     "corner": "ff/32C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.065819643120257,
+      -6.283697433524564
+     ],
+     "excess_loss_db": [
+      -0.0452,
+      -0.2631
+     ]
+    },
+    {
+     "corner": "ff/32C",
+     "bias_v": 0.9,
+     "transfer_db": [
+      -6.065396686315461,
+      -6.2827038354052425
+     ],
+     "excess_loss_db": [
+      -0.0448,
+      -0.2621
+     ]
+    },
+    {
+     "corner": "ff/32C",
+     "bias_v": 1.65,
+     "transfer_db": [
+      -6.065819643120257,
+      -6.283697433524564
+     ],
+     "excess_loss_db": [
+      -0.0452,
+      -0.2631
+     ]
+    }
+   ]
+  }
+ },
+ "run_errors": [],
+ "sims_report": {
+  "path": "generated/stress-safe-families/family-sims.json",
+  "sha256": "cca38d13b609c9461ac332080d2d59bffadf8c1b9cda8c26afb164e275198c5b",
+  "models": {
+   "refpad": {
+    "path": "/home/ubuntu/svalbard/scratch/pad-ss4-reference_clock/pad/physical.spice",
+    "sha256": "1aaea90eeac6e8e7700b2470dcb77af05310a66b3e8361890558a3c7fca458bf"
+   },
+   "txpad": {
+    "path": "/home/ubuntu/svalbard/scratch/pad-ss4-wired_transmit/pad/physical.spice",
+    "sha256": "5243d1ce11e35ba4d63dd4ccf972cadcb5f924b850a1741614ecfb95ffaa7449"
+   },
+   "rfpad": {
+    "path": "/home/ubuntu/svalbard/scratch/pad-ss4-rf-pair/pad/pad-extracted.spice",
+    "sha256": "3663c2ee42eaad46ab78656584fcafc5ed458054998cf06c1e511fcca12f5df7"
+   },
+   "wirepad": {
+    "path": "/home/ubuntu/svalbard/scratch/pad-ss5-wired_receive_usb/pad/physical.spice",
+    "sha256": "3b20386752f985aa6ef191fbf61d3e9d7455c3444fc4225b72db5dbf7567ed18"
+   }
+  },
+  "shunt_model": "drawn in the family layouts (extracted with the layout)"
+ },
+ "source_sha256": {
+  "stress_safe_families_report.py": "68909a96bd1cbb6e34478c03563bc37a6fcb84db75c97d629dfb3e228f600be5",
+  "stress_safe_family_sims.py": "9a213bb8b111528c74b8a2a726513e2e6a4b5a652697b0e5529b0fd88c1cdfa4",
+  "protection_network_ss.py": "e45d0676349c35170304facc133123c39189f57b6f57421f764bcb0bfef0d80c",
+  "rail_shunt_v2.py": "cf11c23f226bd29d9bef53cf094ac8cbc21d2fe39434f60c263bbc72727cfc45",
+  "shunt_wiring_check.py": "f22930808a7550fcb4422f5d35747ced04195bab1ce9fe6a7d5dd8f269b922b5",
+  "strap_capacity.py": "33fd389a67851e44df7a8269c84567bff889b1bb24401fefeda24464f04f3f5f",
+  "stress_safe_usb.py": "f9c311b2535133b79a3b90fb217c6453ddde85ee35647805f15e32bc6a6bb047",
+  "wired_protection_layout_ss.py": "1b70c6f68f04e359f7bddf2f4bfcaa280ee241b2c2b8742ac0729373e4ad505f",
+  "protection_pad_ss.py": "0d5c67b9ce582a84e5d8de14fc2d3bee56ffb4c82787476337df7688e454b378",
+  "stress_safe_wired_layout.py": "71a6da90475499791bd974e849d0cb37be35fb35a9197fa87b3a936acfaeee4c"
+ },
+ "v1_withdrawn": "The v1 shunt (rail_shunt_layout.py) and everything built on it were withdrawn: last-bank VSS return through 0.23 um guard-ring metal1 (~79 ohm), 4 um metal2 buses (~6.6 ohm), 1 um metal3 risers (~5.2 ohm); device-level extraction hid this.",
+ "wiring_resistance_check": {
+  "source": "generated/stress-safe-families/wiring-resistance-check.json",
+  "results": {
+   "nominal_resistance/typical/27C": {
+    "pad_p_peak_v": 5.2164885,
+    "rail_peak_v": 4.08078034,
+    "exceeding": 0,
+    "brownout_pad_v": 2.95628666,
+    "deck_sha256": "f7b7362bcf7e65725b62c4f2d80a47620f4f471eee3bc8be8294232a854111b3"
+   },
+   "nominal_resistance/ss/0C": {
+    "pad_p_peak_v": 5.87278689,
+    "rail_peak_v": 4.69505275,
+    "exceeding": 0,
+    "brownout_pad_v": 2.99988382,
+    "deck_sha256": "08dc3c5b62ef8b649b76ac84327d3420bab610bce99b204d79b46f2a4f4a3f78"
+   },
+   "high_resistance/typical/27C": {
+    "pad_p_peak_v": 5.24092856,
+    "rail_peak_v": 4.10541717,
+    "exceeding": 0,
+    "brownout_pad_v": 2.95629049,
+    "deck_sha256": "f804bfb3818076987d129f19f477dbde40a4a527f7d55959c86ec6706d55acd2"
+   },
+   "high_resistance/ss/0C": {
+    "pad_p_peak_v": 5.89504714,
+    "rail_peak_v": 4.71762638,
+    "exceeding": 0,
+    "brownout_pad_v": 2.99988381,
+    "deck_sha256": "d7073b73bbf98e774799b2e7867e980220325c1f41ca9dc87b9994b06b937fc7"
+   }
+  },
+  "conclusion": "Distributed model of the drawn v2 wiring: ss/0C retained-fixture peak 5.873 V (nominal sheet) / 5.895 V (high) vs 6.0 V; network-internal routing not included. v2.1 only adds parallel metal."
+ },
+ "tx_swing_investigation": {
+  "source": "generated/stress-safe-families/tx-swing-investigation.json",
+  "original_layout": {
+   "ss_22_3.15": [
+    0.5052,
+    0.8117
+   ],
+   "ss_22_3.35": [
+    0.8975,
+    1.1061
+   ],
+   "ss_32_3.15": [
+    0.5274,
+    0.7808
+   ],
+   "typical_22_3.15": [
+    0.9191,
+    1.1474
+   ]
+  },
+  "conclusion": "Not caused by the shunt: original layout 0.505/0.812 V at ss/22C/3.15V, identical to the stress-safe layout."
+ },
+ "usb_attachment": {
+  "source": "generated/stress-safe-families/usb-attachment.json",
+  "changes": {
+   "termination": "TERM_P/N: 24 ohm ppolyf_s (short, contact-dominated: 14-60 ohm across res corners) -> one ppolyf_u 16 x 1.3 um per leg (fits the 21 x 26 um placement grid)",
+   "fs_fast_off": "FS_P/N high side: well-sourced PMOS (4/0.28) pulls the pass gates to the floating well when FS_HIGH falls; previously only the 100 kohm bleed turned them off (~100 ns contention)",
+   "hs_bias": "HS_PBIAS is a VSS-referenced gate voltage from the wtx_idac (interface in hs_interface); the mirror-reference proposal is withdrawn",
+   "generator": "wired_receive.build(termination_geometry_um=(16,1.3,1), high_side_fast_off=True) via stress_safe_wired_layout.py usbfix; canonical defaults unchanged",
+   "layout": "DRC 0, LVS match, independent audit match, 1170 devices, area unchanged 335,069 / 340,000 um2"
+  },
+  "results": {
+   "termination_ohm": [
+    39.6158,
+    53.315
+   ],
+   "hs_spec_mV": [
+    360,
+    440
+   ],
+   "fs_voh_v": [
+    3.0808,
+    3.3348
+   ],
+   "fs_vol_v": [
+    0.0,
+    0.0
+   ],
+   "fs_rise_ns": [
+    5.82,
+    11.02
+   ],
+   "fs_fall_ns": [
+    5.92,
+    7.46
+   ],
+   "fs_p_low_at_119ns_v": [
+    0.0,
+    0.0
+   ],
+   "ls_edge_ns": [
+    33.5,
+    67.1
+   ],
+   "pullup_level_v": [
+    2.722,
+    2.93
+   ],
+   "disabled_loading_pf": [
+    2.336,
+    2.349
+   ]
+  },
+  "verdicts": {
+   "hs": "pass with a calibrated gate-voltage code (0-0.54 V) at all 13 points; at ss/3.15 V only 372-379 mV is reachable (inside 360-440, not centred)",
+   "fs": "pass (VOH 3.08-3.34 V, VOL 0 V, edges 5.8-11 ns; D+ low reaches 0 V)",
+   "ls": "fail: 33-67 ns edges vs 75-300 ns; no cheap slew control within the 4.9k um2 headroom; LS via external PHY fallback",
+   "handoff": "pull-up 2.72-2.93 V with 15 kohm host, no glitch",
+   "loading": "2.34-2.35 pF <= 2.7 pF"
+  },
+  "original_layout_nominal": [
+   {
+    "case": "fs",
+    "process": "typical",
+    "temp_c": 27,
+    "vdd_v": 3.3,
+    "canonical_layout": true,
+    "op_fallback": false,
+    "deck_sha256": "1fdc513f7c7109944e4e9a1c1a4d2a272660a8d667afdd5c205c15652570b306",
+    "voh_v": 3.2897889899999986,
+    "vol_v": 6.1891169246666666e-09,
+    "rise_s": 8.179999999999998e-09,
+    "fall_s": null,
+    "final_p_v": 1.4375586,
+    "final_n_v": 3.28975875
+   },
+   {
+    "case": "hs",
+    "process": "typical",
+    "temp_c": 27,
+    "vdd_v": 3.3,
+    "canonical_layout": true,
+    "op_fallback": false,
+    "deck_sha256": "043f3b80e7ce501157977d8a9aa557831110e61e4de751c2bbbf30e901d69e8d",
+    "pad_p_v": 0.787318314,
+    "far_current_a": 0.017495962533333333,
+    "delivered_current_a": 0.017495962533333333,
+    "target_current_a": 0.01778,
+    "pad_n_v": 5.535945399620758e-09
+   },
+   {
+    "case": "hs_term",
+    "process": "typical",
+    "temp_c": 27,
+    "vdd_v": 3.3,
+    "canonical_layout": true,
+    "op_fallback": false,
+    "deck_sha256": "dba83e0bd695a507a9021df21072b7b50e01a678a42895a3fa851b44c9f12922",
+    "pad_p_v": 0.39735739600000003,
+    "far_current_a": 0.008830164355555557,
+    "delivered_current_a": 0.017660328711111114,
+    "target_current_a": 0.01778,
+    "pad_n_v": 2.5205775046307382e-09
+   },
+   {
+    "case": "handoff",
+    "process": "typical",
+    "temp_c": 27,
+    "vdd_v": 3.3,
+    "canonical_layout": true,
+    "op_fallback": false,
+    "deck_sha256": "addace4872beca86db988c8769754dcd8dfa0fdf6705f93e621bf138c951a1e5",
+    "pullup_level_v": 2.9982565899999996,
+    "gap_min_v": 2.99819946,
+    "terminated_level_v": 0.004181757071528471,
+    "min_v": 0.000122169634,
+    "max_v": 2.99903905
+   },
+   {
+    "case": "cap",
+    "process": "typical",
+    "temp_c": 27,
+    "vdd_v": 3.3,
+    "canonical_layout": true,
+    "op_fallback": false,
+    "deck_sha256": "50c9a29e47f43b92ca96c32f860f5f286e44e2fa5cb450bed5a72fa8c3c0cedf",
+    "capacitance_f": 2.3381677257255047e-12,
+    "conductance_s": 0.00156494715,
+    "limit_f": 2.7e-12
+   }
+  ],
+  "hs_interface": {
+   "correction": "The earlier HS result (374-428 mV with a mirror reference fed I_leg/14 = 1.27 mA) is WITHDRAWN: a 20/1 replica needs |Vgs| of 3.1-3.6 V at that current, so the ideal current source drove the gate to -0.17..-0.47 V at ss, which no sink to VSS can do. The sources are large-overdrive switches, not saturated mirrors.",
+   "measured": "generated/stress-safe-families/usb-hs-gate-sweep.json: HS_PBIAS swept 0..1.2 V with near-end termination + 45 ohm far end, all 13 envelope points",
+   "gate_for_amplitude_v": {
+    "typical/27/3.3": {
+     "g440": 0.08,
+     "g400": 0.22,
+     "g360": 0.36,
+     "mv_at_0v": 461.0
+    },
+    "typical/22/3.15": {
+     "g440": 0.0,
+     "g400": 0.08,
+     "g360": 0.22,
+     "mv_at_0v": 420.6
+    },
+    "typical/22/3.35": {
+     "g440": 0.14,
+     "g400": 0.28,
+     "g360": 0.42,
+     "mv_at_0v": 481.0
+    },
+    "typical/32/3.15": {
+     "g440": 0.0,
+     "g400": 0.06,
+     "g360": 0.2,
+     "mv_at_0v": 412.3
+    },
+    "typical/32/3.35": {
+     "g440": 0.12,
+     "g400": 0.26,
+     "g360": 0.4,
+     "mv_at_0v": 471.5
+    },
+    "ss/22/3.15": {
+     "g440": 0.0,
+     "g400": 0.0,
+     "g360": 0.08,
+     "mv_at_0v": 379.1
+    },
+    "ss/22/3.35": {
+     "g440": 0.0,
+     "g400": 0.14,
+     "g360": 0.28,
+     "mv_at_0v": 437.8
+    },
+    "ss/32/3.15": {
+     "g440": 0.0,
+     "g400": 0.0,
+     "g360": 0.06,
+     "mv_at_0v": 371.7
+    },
+    "ss/32/3.35": {
+     "g440": 0.0,
+     "g400": 0.12,
+     "g360": 0.26,
+     "mv_at_0v": 429.1
+    },
+    "ff/22/3.15": {
+     "g440": 0.06,
+     "g400": 0.2,
+     "g360": 0.34,
+     "mv_at_0v": 454.9
+    },
+    "ff/22/3.35": {
+     "g440": 0.26,
+     "g400": 0.4,
+     "g360": 0.54,
+     "mv_at_0v": 515.4
+    },
+    "ff/32/3.15": {
+     "g440": 0.04,
+     "g400": 0.18,
+     "g360": 0.32,
+     "mv_at_0v": 445.9
+    },
+    "ff/32/3.35": {
+     "g440": 0.24,
+     "g400": 0.38,
+     "g360": 0.52,
+     "mv_at_0v": 505.2
+    }
+   },
+   "verdict": "360-440 mV is reachable at every point with HS_PBIAS between 0 and 0.54 V; at ss/3.15 V the maximum (gate at 0 V) is only 372-379 mV, so the window is met but 400 mV is not. Supply sensitivity at fixed code is about 0.3 mV per mV (3.15 vs 3.35 V), larger than the architecture provisional 0.2/V target: calibrate at the board rail.",
+   "interface_for_wtx_idac": {
+    "node": "wirepad port HS_PBIAS: common gate of 28 pfet_03v3 20/1 current units (14 per leg; sources/bodies on the wired island VDD); DC load = gate leakage only, capacitive load ~2.6 pF plus routing",
+    "quantity": "voltage referenced to VSS, 0.00-0.60 V; 8 bit (<=2.4 mV/LSB, about 0.7 mV of HS amplitude per LSB)",
+    "suggested_realisation": "PMOS-output IDAC 0-300 uA into an on-DAC 2.0 kohm poly resistor to VSS (output compliance 0.6 V); absolute resistor/current accuracy is calibrated out",
+    "default_and_disable": "reset/HS disabled/island off: drive HS_PBIAS to the island VDD (sources off); the HS_P/HS_N isolate switches already block pad current, so this saves leakage only",
+    "settling": "< 1 us to 1 LSB into 3 pF (2 kohm x 3 pF = 6 ns)",
+    "calibration": "per board at the actual rail and load: measure HS amplitude (or its ATB proxy) and store the code; no on-chip regulation is provided"
+   }
+  }
+ },
+ "debug_sites": {
+  "source": "generated/stress-safe-families/debug-sites.json",
+  "cells": {
+   "pair": "rf-pair (BB_I, BB_Q, AUX_CLK, WCLK_IN, WTX_EXT); the refpad protection for the clock pairs is the same macro; diff_clk_rx self-biases its input",
+   "single": "single-leg (WMON; same cell as ESD_TEST: PAD_P on a native bond, PADN tied to VSS)"
+  },
+  "area_um2": {
+   "pair": 175909,
+   "single": 158302,
+   "total": 1196149,
+   "budget": 1200000
+  },
+  "tapped_node_added_capacitance_fF": {
+   "pair/IN_P/typical": {
+    "1e+07": 0.0,
+    "1e+08": -0.002,
+    "1e+09": 0.021
+   },
+   "pair/INJ_P/typical": {
+    "1e+07": 0.072,
+    "1e+08": 0.073,
+    "1e+09": 0.109
+   },
+   "single/IN_P/typical": {
+    "1e+07": 0.0,
+    "1e+08": -0.002,
+    "1e+09": 0.021
+   },
+   "single/INJ_P/typical": {
+    "1e+07": 0.072,
+    "1e+08": 0.073,
+    "1e+09": 0.109
+   },
+   "pair/IN_P/ss": {
+    "1e+07": 0.0,
+    "1e+08": -0.001,
+    "1e+09": 0.015
+   },
+   "pair/INJ_P/ss": {
+    "1e+07": 0.074,
+    "1e+08": 0.075,
+    "1e+09": 0.119
+   },
+   "single/IN_P/ss": {
+    "1e+07": 0.0,
+    "1e+08": -0.001,
+    "1e+09": 0.016
+   },
+   "single/INJ_P/ss": {
+    "1e+07": 0.074,
+    "1e+08": 0.075,
+    "1e+09": 0.118
+   },
+   "pair/IN_P/ff": {
+    "1e+07": 0.0,
+    "1e+08": -0.001,
+    "1e+09": 0.009
+   },
+   "pair/INJ_P/ff": {
+    "1e+07": 0.07,
+    "1e+08": 0.071,
+    "1e+09": 0.098
+   },
+   "single/IN_P/ff": {
+    "1e+07": 0.0,
+    "1e+08": -0.001,
+    "1e+09": 0.01
+   },
+   "single/INJ_P/ff": {
+    "1e+07": 0.07,
+    "1e+08": 0.07,
+    "1e+09": 0.098
+   }
+  },
+  "tap_isolation_db": {
+   "pair/typical": {
+    "1e+07": {
+     "in_p": -101.08142986948202,
+     "inj_p": -72.92606342677334
+    },
+    "1e+08": {
+     "in_p": -71.07209645584844,
+     "inj_p": -52.87296586525243
+    },
+    "1e+09": {
+     "in_p": -40.21430151056986,
+     "inj_p": -31.996596496582633
+    }
+   },
+   "single/typical": {
+    "1e+07": {
+     "in_p": -101.07969563036053,
+     "inj_p": -72.92600965194411
+    },
+    "1e+08": {
+     "in_p": -71.07169722314151,
+     "inj_p": -52.87383397656649
+    },
+    "1e+09": {
+     "in_p": -40.16998030824947,
+     "inj_p": -31.97108523566044
+    }
+   },
+   "pair/ss": {
+    "1e+07": {
+     "in_p": -101.1040952827903,
+     "inj_p": -72.61747777922356
+    },
+    "1e+08": {
+     "in_p": -71.26878117515363,
+     "inj_p": -52.54447020250381
+    },
+    "1e+09": {
+     "in_p": -40.42864501225267,
+     "inj_p": -31.441882191154416
+    }
+   },
+   "single/ss": {
+    "1e+07": {
+     "in_p": -101.1023308978927,
+     "inj_p": -72.61743381078476
+    },
+    "1e+08": {
+     "in_p": -71.26895757730087,
+     "inj_p": -52.54592486102038
+    },
+    "1e+09": {
+     "in_p": -40.36758120431118,
+     "inj_p": -31.406820561268724
+    }
+   },
+   "pair/ff": {
+    "1e+07": {
+     "in_p": -101.01597168270187,
+     "inj_p": -73.62730574453388
+    },
+    "1e+08": {
+     "in_p": -70.55436608197219,
+     "inj_p": -53.584407240743715
+    },
+    "1e+09": {
+     "in_p": -39.72418075915194,
+     "inj_p": -32.80815500643285
+    }
+   },
+   "single/ff": {
+    "1e+07": {
+     "in_p": -101.01426187406986,
+     "inj_p": -73.62724212132238
+    },
+    "1e+08": {
+     "in_p": -70.55378230318347,
+     "inj_p": -53.584931109431395
+    },
+    "1e+09": {
+     "in_p": -39.69418172964235,
+     "inj_p": -32.78909470983504
+    }
+   }
+  },
+  "receiver_input": {
+   "True/742500000.0/typical/27": {
+    "cdiff_fF": 365.2,
+    "zin_diff_ohm": [
+     15.8,
+     -587.0
+    ]
+   },
+   "True/2450000000.0/typical/27": {
+    "cdiff_fF": 361.9,
+    "zin_diff_ohm": [
+     4.1,
+     -179.5
+    ]
+   },
+   "False/742500000.0/typical/27": {
+    "cdiff_fF": 356.4,
+    "zin_diff_ohm": [
+     3.7,
+     -601.5
+    ]
+   },
+   "False/2450000000.0/typical/27": {
+    "cdiff_fF": 354.7,
+    "zin_diff_ohm": [
+     1.9,
+     -183.2
+    ]
+   },
+   "True/742500000.0/ss/22": {
+    "cdiff_fF": 376.8,
+    "zin_diff_ohm": [
+     13.0,
+     -568.9
+    ]
+   },
+   "True/2450000000.0/ss/22": {
+    "cdiff_fF": 373.1,
+    "zin_diff_ohm": [
+     3.8,
+     -174.1
+    ]
+   },
+   "False/742500000.0/ss/22": {
+    "cdiff_fF": 367.9,
+    "zin_diff_ohm": [
+     3.5,
+     -582.6
+    ]
+   },
+   "False/2450000000.0/ss/22": {
+    "cdiff_fF": 366.2,
+    "zin_diff_ohm": [
+     1.9,
+     -177.4
+    ]
+   },
+   "True/742500000.0/ff/32": {
+    "cdiff_fF": 354.9,
+    "zin_diff_ohm": [
+     23.1,
+     -604.0
+    ]
+   },
+   "True/2450000000.0/ff/32": {
+    "cdiff_fF": 352.0,
+    "zin_diff_ohm": [
+     4.6,
+     -184.5
+    ]
+   },
+   "False/742500000.0/ff/32": {
+    "cdiff_fF": 346.3,
+    "zin_diff_ohm": [
+     7.1,
+     -618.9
+    ]
+   },
+   "False/2450000000.0/ff/32": {
+    "cdiff_fF": 344.7,
+    "zin_diff_ohm": [
+     2.2,
+     -188.5
+    ]
+   }
+  },
+  "receiver_disabled_isolation": {
+   "2450000000.0/typical/27": {
+    "out_diff_pp_v": 0.0001862402904695415,
+    "pad_diff_pp_v": 0.8762679300000003
+   },
+   "2450000000.0/ss/22": {
+    "out_diff_pp_v": 0.000196932044710163,
+    "pad_diff_pp_v": 0.8698231599999997
+   },
+   "2450000000.0/ff/32": {
+    "out_diff_pp_v": 0.00017509879709987075,
+    "pad_diff_pp_v": 0.8808764200000001
+   }
+  },
+  "single_leg_pulses": [
+   {
+    "job": [
+     "single_pulse",
+     "pos",
+     "typical",
+     "27"
+    ],
+    "pad_max_v": 4.23936724,
+    "pad_min_v": -2.58087276e-17,
+    "rail_max_v": 3.09789601,
+    "op_fallback": false,
+    "deck_sha256": "91d8842baee871591b759752238d9d3a555c0f321f6dedcc9056678270d1d589"
+   },
+   {
+    "job": [
+     "single_pulse",
+     "neg",
+     "typical",
+     "27"
+    ],
+    "pad_max_v": 2.94566962e-16,
+    "pad_min_v": -1.15468725,
+    "rail_max_v": 4.67920051e-16,
+    "op_fallback": false,
+    "deck_sha256": "d9488a722719b3a07bcc1bb685851bf3b296a3d65344ae563f3afc39da4fafc8"
+   },
+   {
+    "job": [
+     "single_pulse",
+     "pos",
+     "ss",
+     "0"
+    ],
+    "pad_max_v": 4.74398557,
+    "pad_min_v": -4.40478605e-16,
+    "rail_max_v": 3.55769601,
+    "op_fallback": false,
+    "deck_sha256": "41c3fb57be66f32cb15aad6ce6013ad365eac1e70b21dfb25ee6c6ec55ee2f4c"
+   },
+   {
+    "job": [
+     "single_pulse",
+     "neg",
+     "ss",
+     "0"
+    ],
+    "pad_max_v": 1.45366501e-17,
+    "pad_min_v": -1.21322653,
+    "rail_max_v": 7.53862178e-17,
+    "op_fallback": false,
+    "deck_sha256": "82d623fa13712e82fbb57ee6e905f60b9d446c152a41f2066ac3068c0718d15a"
+   }
+  ],
+  "verdict": "Off taps: pad + protection add <=0.12 fF to bb_tap in_p/inj_p; isolation -101/-71/-40 dB (in_p) and -73/-53/-32 dB (inj_p) at 10 MHz/100 MHz/1 GHz. Disabled diff_clk_rx: 0.2 mVpp out for 0.88 Vpp at 2.45 GHz. Receiver input 345-377 fF differential, Zin_diff about -j180 ohm at 2.45 GHz (board match needed for the external LO). The spec gives no numeric disabled-loading allocation for these sites."
+ },
+ "atb_provider_pads": {
+  "source": "generated/stress-safe-families/atb-provider-pad-force.json",
+  "cell": "gf180mcu_fd_io__asig_5p0: 4 x 150 um2 diodes to DVDD and from DVSS, no MOS on the pad; ESD via ring DVDD clamps",
+  "verdict": "adequate for force up to 3.63 V with the chip powered (<=3.7 uA at ff/85C); unpowered, the up-diode carries 54-56 mA from a 50 ohm source into the ring: force only when powered or limit compliance to <=1 mA"
+ },
+ "powered_host_backfeed": {
+  "question": "Is the ~81.6 mA powered-host backfeed a wirepad (USB) path, and does the island_support reverse-blocking switch remove it?",
+  "source": "generated/retained-screen.json:independent_peer_diagnostic (canonical evidence, unchanged)",
+  "finding": {
+   "path": "Host-interface outputs on provider gf180mcu_fd_io__bi_t cells (D2H_CLK, D2H_D[0..9], HOST_MISO: 12 sites) with the chip unpowered and the host powered: current flows from the host through each provider pad's upper ESD/drain junction into the common DVDD ring and out through the off board supply.",
+   "unpowered_state": {
+    "local_supply_v": 0.009178547283571455,
+    "output_v": 0.665145317,
+    "board_supply_backfeed_a": 0.0815870957,
+    "peer_source_current_a": 0.0815871933
+   },
+   "brownout_state": {
+    "local_supply_v": 1.502747658982596,
+    "output_v": 2.12256366,
+    "board_supply_backfeed_a": 0.0244249357,
+    "peer_source_current_a": 0.0244400355
+   },
+   "per_pin_estimate_ma": 6.8,
+   "not_wirepad": "The wirepad (USB/TMDS) pads do not carry this path: with a 3.63 V/50 ohm peer and the chip off they draw 0.87 mA/leg (tt) to 6.7 mA/leg (ff/85C) into the isolated protection rail and shunt, with <=10 nA into the supply (family-sims.json). The earlier report wrongly listed the 81.6 mA under wirepad.",
+   "island_switch": "No effect: the island_support body-switched PMOS blocks island-rail -> ring current (<=0.33 uA), but this current enters the ring itself through the provider pad junctions, upstream of every island switch."
+  },
+  "damage_risk": {
+   "per_pin": "~6.8 mA DC per provider pad junction; the provider diode area is far above the DRM 14.2 contact/via EM limits at this current, so no EM or thermal damage is expected for bench durations",
+   "ring": "The ring is held near 0 V only because the off board supply sinks 81.6 mA. If the board supply is disconnected (floating) the host phantom-powers the ring toward ~2.6 V through the junctions: undefined partial power-up, POR uncertainty and forward-biased I/O junctions (DRM 14.3 I/O latch-up rules apply to such junctions).",
+   "host": "The FPGA sources ~6.8 mA per pin into a low impedance; within typical FPGA drive limits but continuous."
+  },
+  "proposal": {
+   "on_chip": "Not available with the provider bi_t cell: the junction to DVDD is intrinsic to the provider cell. A custom isolated-rail pad for 12 x 312.5 MHz host lines would need a full redesign and area; not proposed for this die.",
+   "board_requirement": [
+    "Host I/Os toward the chip must be high-impedance (no keepers/pull-ups, outputs tristated) whenever the chip supply is below 3.15 V; FPGA configuration holds them high-Z until the chip POR/power-good is observed.",
+    "Preferred hardware enforcement: a FET bus switch with Ioff/powered-off isolation and >=500 MHz bandwidth (e.g. a TS3L/SN74CB3Q-class part) on the 12 host lines, enabled from the chip-side 3.3 V rail; external parts allowed.",
+    "Series resistors are not suitable on the 312.5 MHz D2H lines (1 kohm would limit the backfeed to ~2.7 mA/pin but destroys the edge rate); acceptable only on HOST_MISO/SPI-rate lines.",
+    "Never leave the chip supply floating while the host is powered: the board supply must present a defined (off = grounded) state or the bus switch must be open."
+   ]
+  },
+  "wirepad_safe": "pass for its own pads (pulses, ramps, powered peer); the host-interface backfeed belongs to the host/digital pad block and the supply ring"
+ },
+ "strap_capacity": {
+  "source": "generated/stress-safe-families/strap-capacity.json",
+  "drm": "https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_2.html",
+  "dc_fraction_of_drm_85c": {
+   "dc_13p4mA": {
+    "metal": [
+     0.11615005894182096,
+     "finger strip (metal1, one finger share)"
+    ],
+    "via": [
+     0.038505747126436785,
+     "VSS via3 array"
+    ]
+   },
+   "dc_fault_57p2mA": {
+    "metal": [
+     0.4958047292143402,
+     "finger strip (metal1, one finger share)"
+    ],
+    "via": [
+     0.16436781609195406,
+     "VSS via3 array"
+    ]
+   }
+  },
+  "conclusion": "Macro v2.1 (metal4 VSS base 63 um, metal5 overlay from y=290): worst 0.50 of the DRM 85C limit in the 57.2 mA ideal-source fault, 0.12 at 13.4 mA. With DRM values v2 would have been 0.91, not the 1.9x of the earlier assumed limit."
+ },
+ "proposed_readiness": {
+  "refpad": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core"
+  },
+  "rfpad": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core"
+  },
+  "rftxpad": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core"
+  },
+  "txpad": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core"
+  },
+  "wirepad": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core"
+  },
+  "conditions": [
+   "compact-model diagnostics, not HBM/CDM/TLP; 0.105 V margin at ss/0C with drawn wiring",
+   "observable waits for the island_support atb_tap cell/mux/register (ATB_ESD_RAIL ports exist and read the rail in simulation)",
+   "wirepad safe: its own pads pass; the 81.6 mA backfeed is the host-interface provider pads (board requirement in powered-host-backfeed.json)",
+   "USB LS edge rate fails (USB-route function item, external PHY fallback); refpad/txpad/rfpad function evidence from v3 layouts (identical devices), safe runs repeated on v4"
+  ]
+ },
+ "notes": {
+  "v4": "Layouts use macro v2.1; wirepad USB-fixed. rf-pair/single-leg wrapper port order is sorted (PAD_N PAD_P ...); connect by name.",
+  "ramp": "ramp_fast end current = fixture 100 nF decoupling charging",
+  "generators": "stress_safe_wired_layout.py (wired_protection_layout_ss.py), protection_pad_ss.py; canonical generators unchanged"
+ },
+ "shared_debug_protection": {
+  "source": "generated/stress-safe-families/shared-protection-check.json",
+  "model": "pair A with the drawn macro; neighbour B keeps only its steering diodes (drawn geometry) and reaches A rail/VSS through equal rail and return buses; all legs of both sites attached; pulse into B",
+  "added_peak_v": {
+   "422um x 20um/ss": 0.065,
+   "422um x 40um/ss": 0.035,
+   "422um x 80um/ss": 0.021,
+   "211um x 20um/ss": 0.037,
+   "211um x 40um/ss": 0.022,
+   "211um x 80um/ss": 0.015,
+   "422um x 20um/typical": 0.063,
+   "422um x 40um/typical": 0.034,
+   "422um x 80um/typical": 0.02,
+   "211um x 20um/typical": 0.035,
+   "211um x 40um/typical": 0.021,
+   "211um x 80um/typical": 0.014
+  },
+  "negative_pulse_min_v": [
+   -1.243,
+   -1.184
+  ],
+  "verdict": "Inside the 0.105 V margin for every bus considered: +0.014..+0.065 V (worst: BB_Q via 422 x 20 um). With 40 um buses: +0.035 V (BB_I/BB_Q) and +0.022 V (WMON next to WTX_EXT) at ss/0C, i.e. 5.93 V / 5.92 V in the retained worst case.",
+  "saving_estimate_um2": {
+   "bb_share": 97340,
+   "wmon_share": 114220,
+   "total": 211560,
+   "basis": "removed macro (network 79.6k + shunt/straps 51.5k) minus two 40 um metal4/metal5 buses; neighbour steering diodes ~2k um2 not netted"
+  },
+  "decision": "Criterion met: adopt sharing for BB_I+BB_Q and WTX_EXT+WMON with >=40 um rail and return buses. NOT yet drawn: the inter-site buses are ring-level geometry; the current per-site cells remain the drawn evidence until the shared cells are laid out and re-checked (DRC/LVS, pulses on the drawn bus).",
+  "caveats": [
+   "debug-cell attachments (bb_tap, diff_clk_rx) add only capacitance at the pads and are not in this pulse model",
+   "the shared rail also shares the ATB_ESD_RAIL tap: B site loses its own rail observation"
+  ]
+ }
+}

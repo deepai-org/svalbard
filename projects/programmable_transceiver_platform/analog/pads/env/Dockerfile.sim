@@ -1,0 +1,23 @@
+# Pad simulation image: pinned analog base plus the recorded corrected ngspice-47.
+# Build only through build_sim_image.sh (offline; verifies archive and patch hashes).
+FROM docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3
+
+LABEL org.svalbard.scope="transceiver-pad-simulation"
+LABEL org.svalbard.pdk.ciel-revision="f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7"
+LABEL org.svalbard.ngspice="ngspice-47 + ngspice-cap-multiplier.patch + ngspice-diode-charge.patch"
+
+USER root
+COPY ngspice-47.tar.gz ngspice-cap-multiplier.patch ngspice-diode-charge.patch /opt/pad-ngspice47/src/
+RUN set -eu; cd /opt/pad-ngspice47/src; \
+    echo "894e649651f1838a14095e5a5439e7d3aa63e87ede14d283173fda4fcdef675f  ngspice-47.tar.gz" | sha256sum -c -; \
+    echo "eda4810b0286f6a30e4e5a61408bdd4c9ff9babaf51c566430c54cd447ed4a67  ngspice-cap-multiplier.patch" | sha256sum -c -; \
+    echo "789510fbd22020e3c653bfde994b261bed23dc9f4ca473bb17ef0d82e406688b  ngspice-diode-charge.patch" | sha256sum -c -; \
+    tar xzf ngspice-47.tar.gz; cd ngspice-47; \
+    patch -p1 < ../ngspice-cap-multiplier.patch; patch -p1 < ../ngspice-diode-charge.patch; \
+    ./configure --with-x=no --with-readline=no --disable-debug --enable-xspice --disable-cider > ../configure.log 2>&1; \
+    make -j4 > ../make.log 2>&1; \
+    mkdir -p /opt/pad-ngspice47/bin; cp src/ngspice /opt/pad-ngspice47/bin/ngspice; \
+    mkdir -p /opt/pad-ngspice47/lib; cp -r src/xspice/icm/*/*.cm /opt/pad-ngspice47/lib/ 2>/dev/null || true; \
+    sha256sum /opt/pad-ngspice47/bin/ngspice > /opt/pad-ngspice47/binary.sha256; \
+    rm -rf /opt/pad-ngspice47/src/ngspice-47
+ENV PAD_NGSPICE=/opt/pad-ngspice47/bin/ngspice

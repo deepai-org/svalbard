@@ -1,0 +1,5646 @@
+{
+ "fixture": "/home/ubuntu/svalbard/scratch/pad-supervised-receive/clamp_long_hold_discharge.spice",
+ "fixture_sha256": "c2f1b725a5e34cd1ff4aa63ec4d08e0624686a8f03a7e35b1278bdaf611c8d22",
+ "sim_image": "svalbard/transceiver-pad-sim:ngspice47-corrected",
+ "sim_image_id": "sha256:aff04aa3fba8fb224f8b538f159cc34bf261e5be34ecf8737d1574b443012dfa",
+ "stimulus": "100 mA positive, 0.1 ns edges, 2 ns flat into PAD_P at 1000 ns, VDD=1.5 V brownout after 1 us; retained 3.3 V / 1.5 kohm / 15 kohm board peers, 1 ohm + 1 nH bond, 10 pF board",
+ "pulses": [
+  {
+   "variant": "released_baseline",
+   "process": "typical",
+   "temp_c": 27,
+   "shunt": null,
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.26380699,
+     "pad_p_max_v": 3.2894649,
+     "rail_max_v": 2.61255512,
+     "clamp_gate_max_v": 0.00319431242,
+     "rx_p_max_abs_v": 0.0108748327,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": -0.0002028663596666665
+    },
+    "before": {
+     "pad_p_min_v": 2.99992813,
+     "pad_p_max_v": 2.99992892,
+     "rail_max_v": 2.55569976,
+     "clamp_gate_max_v": -5.71864886e-06,
+     "rx_p_max_abs_v": 9.43858106e-06,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 5.2415000000275805e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 1.69910324,
+     "pad_p_max_v": 8.09922611,
+     "rail_max_v": 7.10901876,
+     "clamp_gate_max_v": 1.89622906,
+     "rx_p_max_abs_v": 0.197586768,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0
+    },
+    "recovery": {
+     "pad_p_min_v": 2.88483733,
+     "pad_p_max_v": 2.98362538,
+     "rail_max_v": 2.33062142,
+     "clamp_gate_max_v": 0.00108254119,
+     "rx_p_max_abs_v": 0.0390686864,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 4.8230339666666915e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 98,
+    "exceeding_by_model": {
+     "nfet_06v0": 98
+    },
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 8.0992,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 8.0992,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 8.0992,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 8.0992,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 8.0992,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 8.0992,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "857c9bdbf0e4217d82a155e943f3ab5751f012847e14f836ee23a158a017105e",
+   "waveform_sha256": "2e4f558e49c39ea7d8b39c2edb194ed3b16b23cd5ad5ca7523b4344dc003ea36"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "typical",
+   "temp_c": 0,
+   "shunt": null,
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.27017378,
+     "pad_p_max_v": 3.29025439,
+     "rail_max_v": 2.56478999,
+     "clamp_gate_max_v": 0.00283289802,
+     "rx_p_max_abs_v": 0.0110550006,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": -0.0002054903289999999
+    },
+    "before": {
+     "pad_p_min_v": 2.99993925,
+     "pad_p_max_v": 2.99993989,
+     "rail_max_v": 2.5066428,
+     "clamp_gate_max_v": -5.35846799e-06,
+     "rx_p_max_abs_v": 1.13133049e-05,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 4.431533333333348e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 1.67659161,
+     "pad_p_max_v": 8.0291083,
+     "rail_max_v": 6.99844269,
+     "clamp_gate_max_v": 1.89259496,
+     "rx_p_max_abs_v": 0.19698196,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0
+    },
+    "recovery": {
+     "pad_p_min_v": 1.65692502,
+     "pad_p_max_v": 1.69060763,
+     "rail_max_v": 0.85268463,
+     "clamp_gate_max_v": 0.777619471,
+     "rx_p_max_abs_v": 0.00158051956,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 0.0009725713616666666
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 98,
+    "exceeding_by_model": {
+     "nfet_06v0": 98
+    },
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 8.0291,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 8.0291,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 8.0291,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 8.0291,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 8.0291,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 8.0291,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "71614358581da2cde00404cce7888ea226536335fa089b20e14610907d6f6a22",
+   "waveform_sha256": "a4e5630b54edd5ef3e7b72bccdd0f654f26c8c290d26b619e3d5947192078bcd"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "typical",
+   "temp_c": 85,
+   "shunt": null,
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.24860685,
+     "pad_p_max_v": 3.28766646,
+     "rail_max_v": 2.71681431,
+     "clamp_gate_max_v": 0.00251425067,
+     "rx_p_max_abs_v": 0.0105319504,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": -0.0001966335470000001
+    },
+    "before": {
+     "pad_p_min_v": 2.99989551,
+     "pad_p_max_v": 2.99989644,
+     "rail_max_v": 2.66282989,
+     "clamp_gate_max_v": -6.37488068e-06,
+     "rx_p_max_abs_v": 3.74734915e-05,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 7.628499999980202e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 1.82127049,
+     "pad_p_max_v": 8.24177347,
+     "rail_max_v": 7.30750827,
+     "clamp_gate_max_v": 1.90204289,
+     "rx_p_max_abs_v": 0.199106499,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0
+    },
+    "recovery": {
+     "pad_p_min_v": 2.99786636,
+     "pad_p_max_v": 2.99844835,
+     "rail_max_v": 2.51372104,
+     "clamp_gate_max_v": 4.03498302e-05,
+     "rx_p_max_abs_v": 0.00630478981,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 1.3512729999999824e-06
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 98,
+    "exceeding_by_model": {
+     "nfet_06v0": 98
+    },
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 8.2418,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 8.2418,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 8.2418,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 8.2418,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 8.2418,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 8.2418,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "d5d3ab6b88c5b56f0dd1ef7c2889b4efc719c6d124e096e77f226e22a8ea8f1d",
+   "waveform_sha256": "1da7530d6596b16854541d15cea48773fcfed47d07757aa2ab1cadd36d46057d"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ss",
+   "temp_c": 0,
+   "shunt": null,
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.98778443,
+     "pad_p_max_v": 3.28542807,
+     "rail_max_v": 2.54136658,
+     "clamp_gate_max_v": 0.00379225451,
+     "rx_p_max_abs_v": 0.0107223206,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": -0.00010017791666666652
+    },
+    "before": {
+     "pad_p_min_v": 2.9999837,
+     "pad_p_max_v": 2.99998374,
+     "rail_max_v": 2.49419979,
+     "clamp_gate_max_v": -6.03621721e-06,
+     "rx_p_max_abs_v": 3.2687043e-05,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 1.1938666666733155e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 2.05387739,
+     "pad_p_max_v": 8.31026481,
+     "rail_max_v": 7.26757432,
+     "clamp_gate_max_v": 2.08617771,
+     "rx_p_max_abs_v": 0.207106756,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0
+    },
+    "recovery": {
+     "pad_p_min_v": 1.76035045,
+     "pad_p_max_v": 1.76203499,
+     "rail_max_v": 0.921151197,
+     "clamp_gate_max_v": 0.90523482,
+     "rx_p_max_abs_v": 0.000574769255,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 0.0009084586719999999
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 98,
+    "exceeding_by_model": {
+     "nfet_06v0": 98
+    },
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 8.3103,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 8.3103,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 8.3103,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 8.3103,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 8.3103,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 8.3103,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "8b4b04a57905cb771415643844afe9780eff95e3b4c25455d0408d7062573aab",
+   "waveform_sha256": "133dc256f7e7d491479b0cc5121552eba0c1d937c116c9fbbe896a7955b9daed"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ss",
+   "temp_c": 85,
+   "shunt": null,
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.13903344,
+     "pad_p_max_v": 3.2818374,
+     "rail_max_v": 2.70101916,
+     "clamp_gate_max_v": 0.00119419222,
+     "rx_p_max_abs_v": 0.00830159051,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": -0.00015431930800000003
+    },
+    "before": {
+     "pad_p_min_v": 2.99991737,
+     "pad_p_max_v": 2.99991796,
+     "rail_max_v": 2.65682088,
+     "clamp_gate_max_v": -6.95038303e-06,
+     "rx_p_max_abs_v": 3.15932165e-05,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 6.037900000007331e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 2.55254616,
+     "pad_p_max_v": 8.64703321,
+     "rail_max_v": 7.64932921,
+     "clamp_gate_max_v": 2.08268225,
+     "rx_p_max_abs_v": 0.213211505,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0
+    },
+    "recovery": {
+     "pad_p_min_v": 2.97988825,
+     "pad_p_max_v": 2.99480041,
+     "rail_max_v": 2.47646157,
+     "clamp_gate_max_v": 0.000363660115,
+     "rx_p_max_abs_v": 0.0283178899,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 9.280824666666671e-06
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 98,
+    "exceeding_by_model": {
+     "nfet_06v0": 98
+    },
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 8.647,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 8.647,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 8.647,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 8.647,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 8.647,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 8.647,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "bc7f2b45dbd814ca690b2ecd5c3d6fa42cab9d365733766aa992af2a050a9954",
+   "waveform_sha256": "fc94edf5d20adb34ddc5c67abb9e13698ea183143addea438095b8a1a5ae4d96"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ff",
+   "temp_c": 0,
+   "shunt": null,
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.29018529,
+     "pad_p_max_v": 3.2931545,
+     "rail_max_v": 2.57877049,
+     "clamp_gate_max_v": 0.000535127114,
+     "rx_p_max_abs_v": 0.0110377645,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": -0.00021389125633333337
+    },
+    "before": {
+     "pad_p_min_v": 2.99993015,
+     "pad_p_max_v": 2.999931,
+     "rail_max_v": 2.50902685,
+     "clamp_gate_max_v": -4.87838632e-06,
+     "rx_p_max_abs_v": 2.82627875e-06,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 5.0911666666634635e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 1.52328573,
+     "pad_p_max_v": 7.77625944,
+     "rail_max_v": 6.72778254,
+     "clamp_gate_max_v": 1.7065522,
+     "rx_p_max_abs_v": 0.188928149,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0
+    },
+    "recovery": {
+     "pad_p_min_v": 2.77069741,
+     "pad_p_max_v": 2.97168123,
+     "rail_max_v": 2.25930027,
+     "clamp_gate_max_v": 0.00161527177,
+     "rx_p_max_abs_v": 0.0413536774,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 9.446116533333329e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 98,
+    "exceeding_by_model": {
+     "nfet_06v0": 98
+    },
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 7.7763,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 7.7763,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 7.7763,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 7.7763,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 7.7763,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 7.7763,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "a60d65a4530d203aea02f0db375c26b50b7e52ec896e028a203d6468653d8dac",
+   "waveform_sha256": "a0a63dd10d40a08cab3cc87c3cc4ec83c6d4536cc8996cae77b98d6ac8f5ae55"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ff",
+   "temp_c": 85,
+   "shunt": null,
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.28513386,
+     "pad_p_max_v": 3.29172196,
+     "rail_max_v": 2.7358527,
+     "clamp_gate_max_v": 0.000963953263,
+     "rx_p_max_abs_v": 0.0109677248,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": -0.00021151380066666682
+    },
+    "before": {
+     "pad_p_min_v": 2.99980619,
+     "pad_p_max_v": 2.99980706,
+     "rail_max_v": 2.66265211,
+     "clamp_gate_max_v": -6.79974768e-06,
+     "rx_p_max_abs_v": 0.000367849443,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 1.41808333333208e-07
+    },
+    "pulse": {
+     "pad_p_min_v": 1.46920289,
+     "pad_p_max_v": 7.93178017,
+     "rail_max_v": 7.01019069,
+     "clamp_gate_max_v": 1.71752386,
+     "rx_p_max_abs_v": 0.18925196,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0
+    },
+    "recovery": {
+     "pad_p_min_v": 2.99848172,
+     "pad_p_max_v": 2.99869132,
+     "rail_max_v": 2.52476097,
+     "clamp_gate_max_v": 1.58204781e-05,
+     "rx_p_max_abs_v": 0.00141636684,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 1.036552000000057e-06
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 98,
+    "exceeding_by_model": {
+     "nfet_06v0": 98
+    },
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 7.9318,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 7.9318,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 7.9318,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 7.9318,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 7.9318,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 7.9318,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "baf9e99a5aaebf716d5cb0ce6fe43bd10938a6c2f67600710797f77f54520886",
+   "waveform_sha256": "e9705bcc8dfcdeaea5c1640c1eca88db8a9a0e371d25b9fcefd03cafb2c34b64"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "typical",
+   "temp_c": 27,
+   "shunt": {
+    "stages": 2,
+    "width_per_stage_um": 2000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.91907741,
+     "pad_p_max_v": 2.98408174,
+     "rail_max_v": 2.12035166,
+     "clamp_gate_max_v": 0.0052996298,
+     "rx_p_max_abs_v": 0.0205560972,
+     "shunt_mean_current_a": 0.007005203533710527,
+     "shunt_peak_current_a": 0.0072928342,
+     "peer_loading_current_a": 3.5508311666666494e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.49932875,
+     "pad_p_max_v": 2.49932875,
+     "rail_max_v": 1.72929677,
+     "clamp_gate_max_v": 9.53747413e-09,
+     "rx_p_max_abs_v": 4.52572099e-06,
+     "shunt_mean_current_a": 0.0007336022565444445,
+     "shunt_peak_current_a": 0.000733603347,
+     "peer_loading_current_a": 0.0003671589166666666
+    },
+    "pulse": {
+     "pad_p_min_v": 2.50466099,
+     "pad_p_max_v": 4.84361942,
+     "rail_max_v": 3.70668656,
+     "clamp_gate_max_v": 0.258864947,
+     "rx_p_max_abs_v": 0.0915765566,
+     "shunt_mean_current_a": 0.06923641443984932,
+     "shunt_peak_current_a": 0.0977059809
+    },
+    "recovery": {
+     "pad_p_min_v": 2.49933039,
+     "pad_p_max_v": 2.49933044,
+     "rail_max_v": 1.72929853,
+     "clamp_gate_max_v": 9.02851442e-09,
+     "rx_p_max_abs_v": 1.47938223e-05,
+     "shunt_mean_current_a": 0.000733612509644898,
+     "shunt_peak_current_a": 0.000736885131,
+     "peer_loading_current_a": 0.0003671576956666665
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 437,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 189,
+    "unobserved_mos_count": 160,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.8436,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.8436,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.8436,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.8436,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.8436,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.8436,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "1dbe1b3624817ca223cd93b8b633e7fef31842d01c94a6175da6111a774f19ca",
+   "waveform_sha256": "cd60fc14485a2eb37961d1f7b70bdc21c3b3bd0fb482bfdfd31b84a19f03dc55"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "typical",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 2,
+    "width_per_stage_um": 2000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.98267093,
+     "pad_p_max_v": 3.03019811,
+     "rail_max_v": 2.13441837,
+     "clamp_gate_max_v": 0.00327517743,
+     "rx_p_max_abs_v": 0.0194688159,
+     "shunt_mean_current_a": 0.00640282194818421,
+     "shunt_peak_current_a": 0.00660798365,
+     "peer_loading_current_a": -4.718647999999999e-06
+    },
+    "before": {
+     "pad_p_min_v": 2.57872235,
+     "pad_p_max_v": 2.57872236,
+     "rail_max_v": 1.76984814,
+     "clamp_gate_max_v": 8.70756263e-09,
+     "rx_p_max_abs_v": 6.06400109e-06,
+     "shunt_mean_current_a": 0.0006172445846499999,
+     "shunt_peak_current_a": 0.000617245553,
+     "peer_loading_current_a": 0.00030893693966666663
+    },
+    "pulse": {
+     "pad_p_min_v": 2.58261385,
+     "pad_p_max_v": 4.82162107,
+     "rail_max_v": 3.66440015,
+     "clamp_gate_max_v": 0.24147456,
+     "rx_p_max_abs_v": 0.0885990594,
+     "shunt_mean_current_a": 0.06921531120669444,
+     "shunt_peak_current_a": 0.0979474323
+    },
+    "recovery": {
+     "pad_p_min_v": 2.57872404,
+     "pad_p_max_v": 2.57872409,
+     "rail_max_v": 1.76984996,
+     "clamp_gate_max_v": 8.23207006e-09,
+     "rx_p_max_abs_v": 1.56869987e-05,
+     "shunt_mean_current_a": 0.0006172544226816327,
+     "shunt_peak_current_a": 0.000620824636,
+     "peer_loading_current_a": 0.00030893568566666644
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 437,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 189,
+    "unobserved_mos_count": 160,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.8216,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.8216,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.8216,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.8216,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.8216,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.8216,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "a6db403c4899f9629fa0ccf66b0661e41f4890d4b1e0d7287d7c7d4322264e22",
+   "waveform_sha256": "13f629086d70c35afb72eaff4d77f4f5129a81f74f8a2f7b40ed2e956e3c970b"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "typical",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 2,
+    "width_per_stage_um": 2000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.76912935,
+     "pad_p_max_v": 2.88243904,
+     "rail_max_v": 2.08965845,
+     "clamp_gate_max_v": 0.0122048161,
+     "rx_p_max_abs_v": 0.0225720084,
+     "shunt_mean_current_a": 0.008064557374157894,
+     "shunt_peak_current_a": 0.0085874425,
+     "peer_loading_current_a": 0.00012775825700000014
+    },
+    "before": {
+     "pad_p_min_v": 2.32802966,
+     "pad_p_max_v": 2.32802967,
+     "rail_max_v": 1.64314239,
+     "clamp_gate_max_v": 1.18186097e-08,
+     "rx_p_max_abs_v": 2.75153536e-05,
+     "shunt_mean_current_a": 0.0009846415653944444,
+     "shunt_peak_current_a": 0.000984642825,
+     "peer_loading_current_a": 0.0004927782456666667
+    },
+    "pulse": {
+     "pad_p_min_v": 2.33710729,
+     "pad_p_max_v": 4.87698564,
+     "rail_max_v": 3.78473019,
+     "clamp_gate_max_v": 0.292955228,
+     "rx_p_max_abs_v": 0.0973644779,
+     "shunt_mean_current_a": 0.06669831206990141,
+     "shunt_peak_current_a": 0.096277544
+    },
+    "recovery": {
+     "pad_p_min_v": 2.32803186,
+     "pad_p_max_v": 2.32803189,
+     "rail_max_v": 1.64314455,
+     "clamp_gate_max_v": 1.1116987e-08,
+     "rx_p_max_abs_v": 1.70184678e-05,
+     "shunt_mean_current_a": 0.0009846556981112245,
+     "shunt_peak_current_a": 0.000986566248,
+     "peer_loading_current_a": 0.0004927766250000001
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 437,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 189,
+    "unobserved_mos_count": 160,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.877,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.877,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.877,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.877,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.877,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.877,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "6f969328cfbea4af991a189316e0e97a4e1b4a37b05581181f7c191a30b42d2f",
+   "waveform_sha256": "74f62021b9d7e10ce595a5c2a6cfa7d1ac7241a3733f6247c1261fdb8f2b626e"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "ss",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 2,
+    "width_per_stage_um": 2000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.79524478,
+     "pad_p_max_v": 3.14487994,
+     "rail_max_v": 2.2750512,
+     "clamp_gate_max_v": 0.0128139388,
+     "rx_p_max_abs_v": 0.0144222205,
+     "shunt_mean_current_a": 0.0019189370232552633,
+     "shunt_peak_current_a": 0.00259722666,
+     "peer_loading_current_a": 2.1954269333333322e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.79153928,
+     "pad_p_max_v": 2.7915393,
+     "rail_max_v": 1.99670092,
+     "clamp_gate_max_v": 1.07505995e-08,
+     "rx_p_max_abs_v": 2.42445337e-05,
+     "shunt_mean_current_a": 0.0003053500486166667,
+     "shunt_peak_current_a": 0.000305350714,
+     "peer_loading_current_a": 0.00015287118733333315
+    },
+    "pulse": {
+     "pad_p_min_v": 2.7924559,
+     "pad_p_max_v": 5.35809366,
+     "rail_max_v": 4.17781792,
+     "clamp_gate_max_v": 0.268674728,
+     "rx_p_max_abs_v": 0.100631851,
+     "shunt_mean_current_a": 0.06232339772429166,
+     "shunt_peak_current_a": 0.0970635254
+    },
+    "recovery": {
+     "pad_p_min_v": 2.79154183,
+     "pad_p_max_v": 2.79154186,
+     "rail_max_v": 1.99670378,
+     "clamp_gate_max_v": 1.01020995e-08,
+     "rx_p_max_abs_v": 4.12642716e-05,
+     "shunt_mean_current_a": 0.00030535817431938774,
+     "shunt_peak_current_a": 0.000307704993,
+     "peer_loading_current_a": 0.00015286931366666648
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 437,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 189,
+    "unobserved_mos_count": 160,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.3581,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.3581,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.3581,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.3581,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.3581,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.3581,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "f657c7a88a0fd1e6d6ede707bf109d733c101982ad0f576f44accd7ed1b5ad9f",
+   "waveform_sha256": "7abbb73f9784e2d009a804ad6665c6c4043830be2be391a7091623537da17b93"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "ss",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 2,
+    "width_per_stage_um": 2000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.72115625,
+     "pad_p_max_v": 3.00287723,
+     "rail_max_v": 2.23599844,
+     "clamp_gate_max_v": 0.01304932,
+     "rx_p_max_abs_v": 0.0156392567,
+     "shunt_mean_current_a": 0.0035791288202631573,
+     "shunt_peak_current_a": 0.00429930029,
+     "peer_loading_current_a": 0.00010118772399999994
+    },
+    "before": {
+     "pad_p_min_v": 2.5641074,
+     "pad_p_max_v": 2.56410741,
+     "rail_max_v": 1.88859219,
+     "clamp_gate_max_v": 1.41636388e-08,
+     "rx_p_max_abs_v": 1.75178396e-05,
+     "shunt_mean_current_a": 0.0006386671835666666,
+     "shunt_peak_current_a": 0.000638668284,
+     "peer_loading_current_a": 0.00031965456966666654
+    },
+    "pulse": {
+     "pad_p_min_v": 2.56785238,
+     "pad_p_max_v": 5.44004869,
+     "rail_max_v": 4.32202162,
+     "clamp_gate_max_v": 0.316809459,
+     "rx_p_max_abs_v": 0.109016985,
+     "shunt_mean_current_a": 0.06039344009319117,
+     "shunt_peak_current_a": 0.0955691346
+    },
+    "recovery": {
+     "pad_p_min_v": 2.56410961,
+     "pad_p_max_v": 2.56410964,
+     "rail_max_v": 1.88859448,
+     "clamp_gate_max_v": 1.34736754e-08,
+     "rx_p_max_abs_v": 3.53214393e-05,
+     "shunt_mean_current_a": 0.0006386772319999999,
+     "shunt_peak_current_a": 0.00064077966,
+     "peer_loading_current_a": 0.0003196529416666667
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 437,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 189,
+    "unobserved_mos_count": 160,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.44,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.44,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.44,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.44,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.44,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.44,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "6e76a7baf424f03f3bc56449d0b18ac63836ddd6aa672dd51d357f99030de459",
+   "waveform_sha256": "21899de4a9a8517052f984a6d41b85798547618a321cb35e6e11c4b581c152fd"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "ff",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 2,
+    "width_per_stage_um": 2000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.90306488,
+     "pad_p_max_v": 2.91125983,
+     "rail_max_v": 1.98992767,
+     "clamp_gate_max_v": 0.000511087358,
+     "rx_p_max_abs_v": 0.0251542485,
+     "shunt_mean_current_a": 0.013510351786315789,
+     "shunt_peak_current_a": 0.0135529974,
+     "peer_loading_current_a": 6.808093966666659e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.32924368,
+     "pad_p_max_v": 2.32924368,
+     "rail_max_v": 1.51183004,
+     "clamp_gate_max_v": 7.12174146e-09,
+     "rx_p_max_abs_v": 1.36322384e-06,
+     "shunt_mean_current_a": 0.0009828720562,
+     "shunt_peak_current_a": 0.000982873457,
+     "peer_loading_current_a": 0.0004918879680000001
+    },
+    "pulse": {
+     "pad_p_min_v": 2.33951683,
+     "pad_p_max_v": 4.34468617,
+     "rail_max_v": 3.21053774,
+     "clamp_gate_max_v": 0.220315339,
+     "rx_p_max_abs_v": 0.0802101399,
+     "shunt_mean_current_a": 0.07304010124769565,
+     "shunt_peak_current_a": 0.0985001581
+    },
+    "recovery": {
+     "pad_p_min_v": 2.32924479,
+     "pad_p_max_v": 2.32924487,
+     "rail_max_v": 1.51183126,
+     "clamp_gate_max_v": 6.73281134e-09,
+     "rx_p_max_abs_v": 3.41653235e-06,
+     "shunt_mean_current_a": 0.0009828818882622447,
+     "shunt_peak_current_a": 0.000984904848,
+     "peer_loading_current_a": 0.0004918871246666663
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 437,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 189,
+    "unobserved_mos_count": 160,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.3447,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.3447,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.3447,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.3447,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.3447,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.3447,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "c9ef7bf451b208c7cb3edd48eead472279178f583d3bc1ddbfd0a8a573b6bcd0",
+   "waveform_sha256": "aa15a88f5c5aa8abd4247ab5905572f5e9ef48f15d265011c2315921fea6f6ae"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "ff",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 2,
+    "width_per_stage_um": 2000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.74084591,
+     "pad_p_max_v": 2.77199036,
+     "rail_max_v": 1.9515624,
+     "clamp_gate_max_v": 0.0018647778,
+     "rx_p_max_abs_v": 0.0289403406,
+     "shunt_mean_current_a": 0.015417042890789474,
+     "shunt_peak_current_a": 0.0156082391,
+     "peer_loading_current_a": 0.00017862670099999992
+    },
+    "before": {
+     "pad_p_min_v": 2.06754644,
+     "pad_p_max_v": 2.06754644,
+     "rail_max_v": 1.37608933,
+     "clamp_gate_max_v": 1.26655831e-08,
+     "rx_p_max_abs_v": 0.000281122939,
+     "shunt_mean_current_a": 0.0013663031695000001,
+     "shunt_peak_current_a": 0.001366305,
+     "peer_loading_current_a": 0.0006837992773333332
+    },
+    "pulse": {
+     "pad_p_min_v": 2.08173574,
+     "pad_p_max_v": 4.36177075,
+     "rail_max_v": 3.29839532,
+     "clamp_gate_max_v": 0.665525494,
+     "rx_p_max_abs_v": 0.0886403903,
+     "shunt_mean_current_a": 0.06939907539957142,
+     "shunt_peak_current_a": 0.0959238055
+    },
+    "recovery": {
+     "pad_p_min_v": 2.06750485,
+     "pad_p_max_v": 2.06750828,
+     "rail_max_v": 1.37604937,
+     "clamp_gate_max_v": 3.51357522e-08,
+     "rx_p_max_abs_v": 0.00104786739,
+     "shunt_mean_current_a": 0.0013659303475918368,
+     "shunt_peak_current_a": 0.00137042558,
+     "peer_loading_current_a": 0.0006838285189999997
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 437,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 189,
+    "unobserved_mos_count": 160,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.3618,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.3618,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.3618,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.3618,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.3618,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.3618,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "36403ebb53b19fcd82c3bb193ef4c3597e694568dc6633199d8177ea026c1706",
+   "waveform_sha256": "83e233907bf0f5cfbf3441577a0f2185e426052ff55cdae7f13662db5906d97c"
+  },
+  {
+   "variant": "stack3_w6000",
+   "process": "typical",
+   "temp_c": 27,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 6000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.22938029,
+     "pad_p_max_v": 3.28159951,
+     "rail_max_v": 2.52946823,
+     "clamp_gate_max_v": 0.0043891198,
+     "rx_p_max_abs_v": 0.0116240059,
+     "shunt_mean_current_a": 0.0001486852771576316,
+     "shunt_peak_current_a": 0.000184446795,
+     "peer_loading_current_a": -0.00018735925999999978
+    },
+    "before": {
+     "pad_p_min_v": 2.97321694,
+     "pad_p_max_v": 2.97321744,
+     "rail_max_v": 2.28445316,
+     "clamp_gate_max_v": 1.38507516e-08,
+     "rx_p_max_abs_v": 8.93617237e-06,
+     "shunt_mean_current_a": 3.896581578666667e-05,
+     "shunt_peak_current_a": 3.89658936e-05,
+     "peer_loading_current_a": 1.9640727333333527e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.97354693,
+     "pad_p_max_v": 5.68998993,
+     "rail_max_v": 4.55424617,
+     "clamp_gate_max_v": 0.230683267,
+     "rx_p_max_abs_v": 0.105579317,
+     "shunt_mean_current_a": 0.05059793421980676,
+     "shunt_peak_current_a": 0.0960475601
+    },
+    "recovery": {
+     "pad_p_min_v": 2.97327492,
+     "pad_p_max_v": 2.97327623,
+     "rail_max_v": 2.28451457,
+     "clamp_gate_max_v": 5.54263962e-10,
+     "rx_p_max_abs_v": 6.10822485e-05,
+     "shunt_mean_current_a": 3.8981443583673474e-05,
+     "shunt_peak_current_a": 4.0752067e-05,
+     "peer_loading_current_a": 1.9597911666666542e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 717,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 269,
+    "unobserved_mos_count": 360,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.69,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.69,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.69,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.69,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.69,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.69,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "4e85ce4ee1dceb71b8067fbc4342d8e6f8e506dadd5bdc94c096744bc2eef038",
+   "waveform_sha256": "7f189cedb11e5a1a19a3d312740fe54d8b09f95d5de6e4360b38db74d216ee44"
+  },
+  {
+   "variant": "stack3_w6000",
+   "process": "typical",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 6000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.25111727,
+     "pad_p_max_v": 3.28699328,
+     "rail_max_v": 2.50922225,
+     "clamp_gate_max_v": 0.00328208409,
+     "rx_p_max_abs_v": 0.0112083733,
+     "shunt_mean_current_a": 4.316329930210527e-05,
+     "shunt_peak_current_a": 5.98417721e-05,
+     "peer_loading_current_a": -0.0001973072016666666
+    },
+    "before": {
+     "pad_p_min_v": 2.99129437,
+     "pad_p_max_v": 2.99129475,
+     "rail_max_v": 2.28002631,
+     "clamp_gate_max_v": 5.31489177e-09,
+     "rx_p_max_abs_v": 1.10060955e-05,
+     "shunt_mean_current_a": 1.2497310741111112e-05,
+     "shunt_peak_current_a": 1.24973221e-05,
+     "peer_loading_current_a": 6.3839893333332985e-06
+    },
+    "pulse": {
+     "pad_p_min_v": 2.99162536,
+     "pad_p_max_v": 5.70994152,
+     "rail_max_v": 4.55377658,
+     "clamp_gate_max_v": 0.222984934,
+     "rx_p_max_abs_v": 0.106931593,
+     "shunt_mean_current_a": 0.05169113801435263,
+     "shunt_peak_current_a": 0.0963578304
+    },
+    "recovery": {
+     "pad_p_min_v": 2.99140517,
+     "pad_p_max_v": 2.99145554,
+     "rail_max_v": 2.28044102,
+     "clamp_gate_max_v": -3.0849863e-07,
+     "rx_p_max_abs_v": 9.98548903e-05,
+     "shunt_mean_current_a": 1.2545291478469388e-05,
+     "shunt_peak_current_a": 1.41970549e-05,
+     "peer_loading_current_a": 6.2844063333330994e-06
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 717,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 269,
+    "unobserved_mos_count": 360,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.7099,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.7099,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.7099,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.7099,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.7099,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.7099,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "97739ebc802300bdfa8a9b0fef8c955ea27983a8aebbf6b9fcdcce98c0b167cf",
+   "waveform_sha256": "1449884dba68e553c10a484d4be4ed56663037e5178910f50c1abb200d1b831a"
+  },
+  {
+   "variant": "stack3_w6000",
+   "process": "typical",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 6000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.14684501,
+     "pad_p_max_v": 3.24880509,
+     "rail_max_v": 2.54738012,
+     "clamp_gate_max_v": 0.00779364782,
+     "rx_p_max_abs_v": 0.0142814358,
+     "shunt_mean_current_a": 0.0007251464747394736,
+     "shunt_peak_current_a": 0.000813835478,
+     "peer_loading_current_a": -0.00014507170333333304
+    },
+    "before": {
+     "pad_p_min_v": 2.87527556,
+     "pad_p_max_v": 2.875276,
+     "rail_max_v": 2.24639737,
+     "clamp_gate_max_v": 1.84593263e-08,
+     "rx_p_max_abs_v": 3.5109536e-05,
+     "shunt_mean_current_a": 0.00018247029252777778,
+     "shunt_peak_current_a": 0.000182470762,
+     "peer_loading_current_a": 9.146442800000003e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.87563713,
+     "pad_p_max_v": 5.64051329,
+     "rail_max_v": 4.55099182,
+     "clamp_gate_max_v": 0.247813803,
+     "rx_p_max_abs_v": 0.104929753,
+     "shunt_mean_current_a": 0.050366260097625,
+     "shunt_peak_current_a": 0.0952287955
+    },
+    "recovery": {
+     "pad_p_min_v": 2.87531657,
+     "pad_p_max_v": 2.87531689,
+     "rail_max_v": 2.2464317,
+     "clamp_gate_max_v": 8.92130873e-09,
+     "rx_p_max_abs_v": 9.64007427e-06,
+     "shunt_mean_current_a": 0.0001825027061632653,
+     "shunt_peak_current_a": 0.000184403393,
+     "peer_loading_current_a": 9.143439800000016e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 717,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 269,
+    "unobserved_mos_count": 360,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.6405,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.6405,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.6405,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.6405,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.6405,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.6405,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "48e5bcf5c24247c6802e1cd411b310166223dedf3568eef7c481536a2828a4d2",
+   "waveform_sha256": "d38d391a965e947bdca2661a1d6d20035afa1d7e0a8eb223a02e219481c73242"
+  },
+  {
+   "variant": "stack3_w6000",
+   "process": "ss",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 6000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.98752304,
+     "pad_p_max_v": 3.28362812,
+     "rail_max_v": 2.51646672,
+     "clamp_gate_max_v": 0.00371677455,
+     "rx_p_max_abs_v": 0.0106128716,
+     "shunt_mean_current_a": 1.0868806193289474e-06,
+     "shunt_peak_current_a": 1.4959099e-06,
+     "peer_loading_current_a": -9.942209200000017e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.99993994,
+     "pad_p_max_v": 2.99994063,
+     "rail_max_v": 2.41362952,
+     "clamp_gate_max_v": -9.4233248e-06,
+     "rx_p_max_abs_v": 3.23586884e-05,
+     "shunt_mean_current_a": 9.211039845444445e-07,
+     "shunt_peak_current_a": 9.22225153e-07,
+     "peer_loading_current_a": 4.379099999993011e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 3.00027547,
+     "pad_p_max_v": 6.36945448,
+     "rail_max_v": 5.19136304,
+     "clamp_gate_max_v": 0.254505255,
+     "rx_p_max_abs_v": 0.132113472,
+     "shunt_mean_current_a": 0.040809650802184766,
+     "shunt_peak_current_a": 0.0934598723
+    },
+    "recovery": {
+     "pad_p_min_v": 2.99992752,
+     "pad_p_max_v": 2.99993469,
+     "rail_max_v": 2.67168776,
+     "clamp_gate_max_v": -4.52385876e-05,
+     "rx_p_max_abs_v": 0.000194646627,
+     "shunt_mean_current_a": 6.2069535495612245e-06,
+     "shunt_peak_current_a": 6.9509715e-06,
+     "peer_loading_current_a": 5.052300000005042e-08
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 18,
+    "exceeding_by_model": {
+     "nfet_06v0": 18
+    },
+    "mos_count": 717,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 269,
+    "unobserved_mos_count": 360,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 6.3695,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 6.3695,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 6.3695,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 6.3695,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 6.3695,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 6.3695,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "e2bef4926df616194040ecd8f6719461efa11717667300b55b6e24e009292aaf",
+   "waveform_sha256": "dd2c91a5c2c47dca494e1ff2cda784753268ffea6672841ebd4ac34299d6229d"
+  },
+  {
+   "variant": "stack3_w6000",
+   "process": "ss",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 6000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.12152337,
+     "pad_p_max_v": 3.2736529,
+     "rail_max_v": 2.62714749,
+     "clamp_gate_max_v": 0.00304656297,
+     "rx_p_max_abs_v": 0.00884607962,
+     "shunt_mean_current_a": 6.548453771763158e-05,
+     "shunt_peak_current_a": 8.31379757e-05,
+     "peer_loading_current_a": -0.00014489796566666678
+    },
+    "before": {
+     "pad_p_min_v": 2.98020614,
+     "pad_p_max_v": 2.98020657,
+     "rail_max_v": 2.40671508,
+     "clamp_gate_max_v": 1.86123664e-08,
+     "rx_p_max_abs_v": 3.07667228e-05,
+     "shunt_mean_current_a": 2.874021468944445e-05,
+     "shunt_peak_current_a": 2.87402424e-05,
+     "peer_loading_current_a": 1.4515339666666685e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.9805377,
+     "pad_p_max_v": 6.32164281,
+     "rail_max_v": 5.20769778,
+     "clamp_gate_max_v": 0.282842171,
+     "rx_p_max_abs_v": 0.126261375,
+     "shunt_mean_current_a": 0.040331221430918746,
+     "shunt_peak_current_a": 0.0918606392
+    },
+    "recovery": {
+     "pad_p_min_v": 2.98027621,
+     "pad_p_max_v": 2.98028238,
+     "rail_max_v": 2.40682038,
+     "clamp_gate_max_v": -2.96510014e-08,
+     "rx_p_max_abs_v": 0.000164035845,
+     "shunt_mean_current_a": 2.8756540782244896e-05,
+     "shunt_peak_current_a": 2.90797885e-05,
+     "peer_loading_current_a": 1.4461850333333417e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 18,
+    "exceeding_by_model": {
+     "nfet_06v0": 18
+    },
+    "mos_count": 717,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 269,
+    "unobserved_mos_count": 360,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 6.3216,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 6.3216,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 6.3216,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 6.3216,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 6.3216,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 6.3216,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "3cc892293523ac12c21e442ea01abe43bed7f5897a3741d355cb80bbce2fe831",
+   "waveform_sha256": "2a216041d923909a9079d1a6c332450a149b74321874439cf5bc81ab7ef3c127"
+  },
+  {
+   "variant": "stack3_w6000",
+   "process": "ff",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 6000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.25819949,
+     "pad_p_max_v": 3.26203317,
+     "rail_max_v": 2.42340154,
+     "clamp_gate_max_v": 0.000202905388,
+     "rx_p_max_abs_v": 0.014751279,
+     "shunt_mean_current_a": 0.0011099510955789474,
+     "shunt_peak_current_a": 0.00111489781,
+     "peer_loading_current_a": -0.00019075197533333316
+    },
+    "before": {
+     "pad_p_min_v": 2.89172139,
+     "pad_p_max_v": 2.89172176,
+     "rail_max_v": 2.12068947,
+     "clamp_gate_max_v": 1.08969835e-08,
+     "rx_p_max_abs_v": 2.36701293e-06,
+     "shunt_mean_current_a": 0.0001583739903055556,
+     "shunt_peak_current_a": 0.000158374397,
+     "peer_loading_current_a": 7.940417833333329e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.89207014,
+     "pad_p_max_v": 5.08379032,
+     "rail_max_v": 3.9502955,
+     "clamp_gate_max_v": 0.184970522,
+     "rx_p_max_abs_v": 0.0865946508,
+     "shunt_mean_current_a": 0.05975989908029729,
+     "shunt_peak_current_a": 0.0975058114
+    },
+    "recovery": {
+     "pad_p_min_v": 2.89175449,
+     "pad_p_max_v": 2.891755,
+     "rail_max_v": 2.12071781,
+     "clamp_gate_max_v": 5.00417734e-09,
+     "rx_p_max_abs_v": 8.9924411e-06,
+     "shunt_mean_current_a": 0.00015840485380612247,
+     "shunt_peak_current_a": 0.000161316279,
+     "peer_loading_current_a": 7.937985366666661e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 717,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 269,
+    "unobserved_mos_count": 360,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.0838,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.0838,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.0838,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.0838,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.0838,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.0838,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "8e4c8b2aab7371b5113844c13a3d0aca436295878aa39535e23c0c02f87acfe5",
+   "waveform_sha256": "2c6408c4de63c0d40fc56651ba788b7d6fe1ae9048b24d3948af57e013ae10d9"
+  },
+  {
+   "variant": "stack3_w6000",
+   "process": "ff",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 6000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.13264848,
+     "pad_p_max_v": 3.15330326,
+     "rail_max_v": 2.39699535,
+     "clamp_gate_max_v": 0.000938601133,
+     "rx_p_max_abs_v": 0.0220747412,
+     "shunt_mean_current_a": 0.004215016619026316,
+     "shunt_peak_current_a": 0.00427767679,
+     "peer_loading_current_a": -0.00010484897133333325
+    },
+    "before": {
+     "pad_p_min_v": 2.61021414,
+     "pad_p_max_v": 2.61021436,
+     "rail_max_v": 1.94796798,
+     "clamp_gate_max_v": 1.47823401e-08,
+     "rx_p_max_abs_v": 0.000331308779,
+     "shunt_mean_current_a": 0.0005708019759111112,
+     "shunt_peak_current_a": 0.000570803384,
+     "peer_loading_current_a": 0.0002858428833333331
+    },
+    "pulse": {
+     "pad_p_min_v": 2.61395926,
+     "pad_p_max_v": 4.98939641,
+     "rail_max_v": 3.92578993,
+     "clamp_gate_max_v": 0.22102138,
+     "rx_p_max_abs_v": 0.0910307508,
+     "shunt_mean_current_a": 0.05907440951607043,
+     "shunt_peak_current_a": 0.0967301456
+    },
+    "recovery": {
+     "pad_p_min_v": 2.610235,
+     "pad_p_max_v": 2.61023519,
+     "rail_max_v": 1.94798551,
+     "clamp_gate_max_v": 1.00857695e-08,
+     "rx_p_max_abs_v": 0.000328097157,
+     "shunt_mean_current_a": 0.0005708512676581634,
+     "shunt_peak_current_a": 0.000572622974,
+     "peer_loading_current_a": 0.00028582759699999984
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 717,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 269,
+    "unobserved_mos_count": 360,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.9894,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.9894,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.9894,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.9894,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.9894,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.9894,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "3b150c037dee588cf8af1ee86e140e4ef52492c774d17c1dd94ce12e8956db9d",
+   "waveform_sha256": "118ce6f4759022182e9d783a7b2d3fde060c8bad7329ed35ac7be2bcabfdd6af"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "typical",
+   "temp_c": 27,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 9000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.21702866,
+     "pad_p_max_v": 3.27823386,
+     "rail_max_v": 2.51673414,
+     "clamp_gate_max_v": 0.00439144546,
+     "rx_p_max_abs_v": 0.0118326182,
+     "shunt_mean_current_a": 0.00019970988933473686,
+     "shunt_peak_current_a": 0.000254645411,
+     "peer_loading_current_a": -0.00018159625733333326
+    },
+    "before": {
+     "pad_p_min_v": 2.96415603,
+     "pad_p_max_v": 2.96415647,
+     "rail_max_v": 2.26738253,
+     "clamp_gate_max_v": 1.37765502e-08,
+     "rx_p_max_abs_v": 8.82603445e-06,
+     "shunt_mean_current_a": 5.224929979000001e-05,
+     "shunt_peak_current_a": 5.22494057e-05,
+     "peer_loading_current_a": 2.6285416666666793e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.96448573,
+     "pad_p_max_v": 5.34688898,
+     "rail_max_v": 4.21052847,
+     "clamp_gate_max_v": 0.198362253,
+     "rx_p_max_abs_v": 0.0925067742,
+     "shunt_mean_current_a": 0.05127117297533243,
+     "shunt_peak_current_a": 0.0965230034
+    },
+    "recovery": {
+     "pad_p_min_v": 2.96420861,
+     "pad_p_max_v": 2.96420997,
+     "rail_max_v": 2.26743473,
+     "clamp_gate_max_v": 1.88056151e-09,
+     "rx_p_max_abs_v": 5.92210515e-05,
+     "shunt_mean_current_a": 5.226720860959184e-05,
+     "shunt_peak_current_a": 5.3981996e-05,
+     "peer_loading_current_a": 2.6246520666666424e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 897,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 329,
+    "unobserved_mos_count": 480,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.3469,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.3469,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.3469,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.3469,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.3469,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.3469,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "d982a452d3979f0077317b29cced6d7336acf9ad5cdba49e72b1fc8758c6f19f",
+   "waveform_sha256": "19f5ba8b2ba424884f0adee39af6a7c5cf02a91e02c75728407a806cafd8a65b"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "typical",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 9000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.24336369,
+     "pad_p_max_v": 3.28541558,
+     "rail_max_v": 2.49871379,
+     "clamp_gate_max_v": 0.0033197613,
+     "rx_p_max_abs_v": 0.011239986,
+     "shunt_mean_current_a": 5.8126325536578954e-05,
+     "shunt_peak_current_a": 8.15350506e-05,
+     "peer_loading_current_a": -0.00019388573233333309
+    },
+    "before": {
+     "pad_p_min_v": 2.98804681,
+     "pad_p_max_v": 2.98804717,
+     "rail_max_v": 2.26891894,
+     "clamp_gate_max_v": 7.25513858e-09,
+     "rx_p_max_abs_v": 1.09536047e-05,
+     "shunt_mean_current_a": 1.7258727043888892e-05,
+     "shunt_peak_current_a": 1.72587341e-05,
+     "peer_loading_current_a": 8.765540666666697e-06
+    },
+    "pulse": {
+     "pad_p_min_v": 2.98837759,
+     "pad_p_max_v": 5.38551155,
+     "rail_max_v": 4.22891559,
+     "clamp_gate_max_v": 0.192094393,
+     "rx_p_max_abs_v": 0.0942064039,
+     "shunt_mean_current_a": 0.051104990635405266,
+     "shunt_peak_current_a": 0.0967579435
+    },
+    "recovery": {
+     "pad_p_min_v": 2.98816737,
+     "pad_p_max_v": 2.98823184,
+     "rail_max_v": 2.26932661,
+     "clamp_gate_max_v": -3.34465422e-07,
+     "rx_p_max_abs_v": 0.000102628575,
+     "shunt_mean_current_a": 1.732792268877551e-05,
+     "shunt_peak_current_a": 1.85959091e-05,
+     "peer_loading_current_a": 8.65362299999989e-06
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 897,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 329,
+    "unobserved_mos_count": 480,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.3855,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.3855,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.3855,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.3855,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.3855,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.3855,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "c536552a8e970828b41578eaeec1355daaea20da5ed1a06415488ce84864f884",
+   "waveform_sha256": "804df293f367a9fe33348c022e4edd4123a3a5b4595d3fca81b8f7f09d5fc7db"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "typical",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 9000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.11734276,
+     "pad_p_max_v": 3.23541456,
+     "rail_max_v": 2.52398043,
+     "clamp_gate_max_v": 0.0078598434,
+     "rx_p_max_abs_v": 0.0149959552,
+     "shunt_mean_current_a": 0.0009472283544131578,
+     "shunt_peak_current_a": 0.00109154003,
+     "peer_loading_current_a": -0.00012934435066666675
+    },
+    "before": {
+     "pad_p_min_v": 2.84548687,
+     "pad_p_max_v": 2.84548723,
+     "rail_max_v": 2.20952762,
+     "clamp_gate_max_v": 1.73672878e-08,
+     "rx_p_max_abs_v": 3.46375435e-05,
+     "shunt_mean_current_a": 0.00022613676927777784,
+     "shunt_peak_current_a": 0.000226137375,
+     "peer_loading_current_a": 0.00011330949666666665
+    },
+    "pulse": {
+     "pad_p_min_v": 2.84603356,
+     "pad_p_max_v": 5.25823271,
+     "rail_max_v": 4.16768348,
+     "clamp_gate_max_v": 0.213962938,
+     "rx_p_max_abs_v": 0.0914887851,
+     "shunt_mean_current_a": 0.05090988987945071,
+     "shunt_peak_current_a": 0.0959529011
+    },
+    "recovery": {
+     "pad_p_min_v": 2.84552203,
+     "pad_p_max_v": 2.84552229,
+     "rail_max_v": 2.20955692,
+     "clamp_gate_max_v": 9.25948347e-09,
+     "rx_p_max_abs_v": 1.07405625e-05,
+     "shunt_mean_current_a": 0.0002261713491979592,
+     "shunt_peak_current_a": 0.000228238205,
+     "peer_loading_current_a": 0.00011328374933333347
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 897,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 329,
+    "unobserved_mos_count": 480,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.2582,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.2582,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.2582,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.2582,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.2582,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.2582,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "d8c45afef8e279e1e2cecb8958629dc0e17aca9807ab256872846f6510051a7c",
+   "waveform_sha256": "b466b0e9557335dd45d3b28431c88eb91c6e7eb9dc8535f58a7fb7a253389b40"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "ss",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 9000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.98739486,
+     "pad_p_max_v": 3.28269214,
+     "rail_max_v": 2.50867199,
+     "clamp_gate_max_v": 0.00356005416,
+     "rx_p_max_abs_v": 0.0105625365,
+     "shunt_mean_current_a": 1.5603901675578946e-06,
+     "shunt_peak_current_a": 2.12305255e-06,
+     "peer_loading_current_a": -9.903190000000006e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.9999118,
+     "pad_p_max_v": 2.99991301,
+     "rail_max_v": 2.40098028,
+     "clamp_gate_max_v": -9.33010073e-06,
+     "rx_p_max_abs_v": 3.21043212e-05,
+     "shunt_mean_current_a": 1.2644770689999999e-06,
+     "shunt_peak_current_a": 1.26594075e-06,
+     "peer_loading_current_a": 6.423633333341171e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 3.00024706,
+     "pad_p_max_v": 6.01827876,
+     "rail_max_v": 4.83983104,
+     "clamp_gate_max_v": 0.220226773,
+     "rx_p_max_abs_v": 0.118202593,
+     "shunt_mean_current_a": 0.03906699414475594,
+     "shunt_peak_current_a": 0.0945047461
+    },
+    "recovery": {
+     "pad_p_min_v": 2.99992761,
+     "pad_p_max_v": 2.99993472,
+     "rail_max_v": 2.65308053,
+     "clamp_gate_max_v": -4.52024339e-05,
+     "rx_p_max_abs_v": 0.000183407379,
+     "shunt_mean_current_a": 8.293376990091839e-06,
+     "shunt_peak_current_a": 9.22583012e-06,
+     "peer_loading_current_a": 5.047899999999216e-08
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 18,
+    "exceeding_by_model": {
+     "nfet_06v0": 18
+    },
+    "mos_count": 897,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 329,
+    "unobserved_mos_count": 480,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 6.0183,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 6.0183,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 6.0183,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 6.0183,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 6.0183,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 6.0183,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "9c0f339b219876db300a9e2d46296dbee9d24fd93f83bc751359a21fa65ebbdc",
+   "waveform_sha256": "b58592f39713881661ec80c8b075af43210acafc54bcdba8f0466948aa392927"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "ss",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 9000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.11450345,
+     "pad_p_max_v": 3.2697867,
+     "rail_max_v": 2.61193531,
+     "clamp_gate_max_v": 0.00312952284,
+     "rx_p_max_abs_v": 0.00901980034,
+     "shunt_mean_current_a": 8.852933321157894e-05,
+     "shunt_peak_current_a": 0.000113289695,
+     "peer_loading_current_a": -0.0001409063883333333
+    },
+    "before": {
+     "pad_p_min_v": 2.97301217,
+     "pad_p_max_v": 2.97301255,
+     "rail_max_v": 2.38939834,
+     "clamp_gate_max_v": 1.87846526e-08,
+     "rx_p_max_abs_v": 3.05408616e-05,
+     "shunt_mean_current_a": 3.928816921666667e-05,
+     "shunt_peak_current_a": 3.92882066e-05,
+     "peer_loading_current_a": 1.979093599999982e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.97334343,
+     "pad_p_max_v": 5.90891242,
+     "rail_max_v": 4.79359543,
+     "clamp_gate_max_v": 0.244085793,
+     "rx_p_max_abs_v": 0.110780092,
+     "shunt_mean_current_a": 0.03854790728171746,
+     "shunt_peak_current_a": 0.0930058422
+    },
+    "recovery": {
+     "pad_p_min_v": 2.97307831,
+     "pad_p_max_v": 2.97308845,
+     "rail_max_v": 2.38949573,
+     "clamp_gate_max_v": -4.48395335e-08,
+     "rx_p_max_abs_v": 0.000162901469,
+     "shunt_mean_current_a": 3.9309257965e-05,
+     "shunt_peak_current_a": 3.99151727e-05,
+     "peer_loading_current_a": 1.9738854666666462e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 897,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 329,
+    "unobserved_mos_count": 480,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.9089,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.9089,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.9089,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.9089,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.9089,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.9089,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "602a721d56f8d12979eca3407c5c1f150c017faf087a7628665f06adb1e75532",
+   "waveform_sha256": "635e26081165d71e2f7c8d295c7a1ea793730ba4ce2c9db3d785b59b3a1b7a5e"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "ff",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 9000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.24672585,
+     "pad_p_max_v": 3.25136491,
+     "rail_max_v": 2.40485643,
+     "clamp_gate_max_v": 0.000264816926,
+     "rx_p_max_abs_v": 0.0154257848,
+     "shunt_mean_current_a": 0.0014885440223157895,
+     "shunt_peak_current_a": 0.00149708384,
+     "peer_loading_current_a": -0.00018263327866666673
+    },
+    "before": {
+     "pad_p_min_v": 2.86749526,
+     "pad_p_max_v": 2.86749559,
+     "rail_max_v": 2.09135916,
+     "clamp_gate_max_v": 1.04359867e-08,
+     "rx_p_max_abs_v": 2.30235194e-06,
+     "shunt_mean_current_a": 0.00019388506343333332,
+     "shunt_peak_current_a": 0.000193885579,
+     "peer_loading_current_a": 9.717002166666666e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.86800541,
+     "pad_p_max_v": 4.78187565,
+     "rail_max_v": 3.64800637,
+     "clamp_gate_max_v": 0.1603312,
+     "rx_p_max_abs_v": 0.0757850497,
+     "shunt_mean_current_a": 0.05970535989704054,
+     "shunt_peak_current_a": 0.097842059
+    },
+    "recovery": {
+     "pad_p_min_v": 2.86752423,
+     "pad_p_max_v": 2.86752465,
+     "rail_max_v": 2.09138364,
+     "clamp_gate_max_v": 5.3031014e-09,
+     "rx_p_max_abs_v": 8.28325289e-06,
+     "shunt_mean_current_a": 0.00019391809030306123,
+     "shunt_peak_current_a": 0.00019690068,
+     "peer_loading_current_a": 9.714874400000002e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 897,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 329,
+    "unobserved_mos_count": 480,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.7819,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.7819,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.7819,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.7819,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.7819,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.7819,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "5068b1d7866fb38ed61c04d32d3d9e2bd4c05546aa3953744e256bded91d269f",
+   "waveform_sha256": "178866f0e4e308cbcaeaeafdf345ee82708aa4aac3222c0c3206b5aa29502999"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "ff",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 9000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.09496301,
+     "pad_p_max_v": 3.11780557,
+     "rail_max_v": 2.3521102,
+     "clamp_gate_max_v": 0.00114228108,
+     "rx_p_max_abs_v": 0.0228879555,
+     "shunt_mean_current_a": 0.005280215706921053,
+     "shunt_peak_current_a": 0.00536555676,
+     "peer_loading_current_a": -7.801514599999987e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.55802596,
+     "pad_p_max_v": 2.55802613,
+     "rail_max_v": 1.89159817,
+     "clamp_gate_max_v": 1.4133833e-08,
+     "rx_p_max_abs_v": 0.000326453555,
+     "shunt_mean_current_a": 0.0006473066757444445,
+     "shunt_peak_current_a": 0.000647308405,
+     "peer_loading_current_a": 0.0003241142336666666
+    },
+    "pulse": {
+     "pad_p_min_v": 2.56274917,
+     "pad_p_max_v": 4.63177292,
+     "rail_max_v": 3.56746863,
+     "clamp_gate_max_v": 0.191770789,
+     "rx_p_max_abs_v": 0.0794075157,
+     "shunt_mean_current_a": 0.05852915742640846,
+     "shunt_peak_current_a": 0.0972972567
+    },
+    "recovery": {
+     "pad_p_min_v": 2.55804329,
+     "pad_p_max_v": 2.55804345,
+     "rail_max_v": 1.89161274,
+     "clamp_gate_max_v": 1.02654432e-08,
+     "rx_p_max_abs_v": 0.000323498987,
+     "shunt_mean_current_a": 0.0006473538522887754,
+     "shunt_peak_current_a": 0.000649305663,
+     "peer_loading_current_a": 0.00032410152866666663
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 897,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 329,
+    "unobserved_mos_count": 480,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.6318,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.6318,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.6318,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.6318,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.6318,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.6318,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "b7630134020b31f485ca5402422469fb1161d0d0161c6f0edc1b178c01b3633b",
+   "waveform_sha256": "e8672e1ea9c654b06448b93447cc644670a08101778a298fcf9ac167c09dd72d"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "typical",
+   "temp_c": 27,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 12000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.2057422,
+     "pad_p_max_v": 3.27503946,
+     "rail_max_v": 2.50684488,
+     "clamp_gate_max_v": 0.00439269341,
+     "rx_p_max_abs_v": 0.0120012492,
+     "shunt_mean_current_a": 0.00024281915324210528,
+     "shunt_peak_current_a": 0.000317724269,
+     "peer_loading_current_a": -0.0001762866086666666
+    },
+    "before": {
+     "pad_p_min_v": 2.95627577,
+     "pad_p_max_v": 2.95627618,
+     "rail_max_v": 2.25402859,
+     "clamp_gate_max_v": 1.35640619e-08,
+     "rx_p_max_abs_v": 8.74301065e-06,
+     "shunt_mean_current_a": 6.380180396722222e-05,
+     "shunt_peak_current_a": 6.38019316e-05,
+     "peer_loading_current_a": 3.2064284999999956e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.95660526,
+     "pad_p_max_v": 5.14739701,
+     "rail_max_v": 4.01122234,
+     "clamp_gate_max_v": 0.176073345,
+     "rx_p_max_abs_v": 0.0850297953,
+     "shunt_mean_current_a": 0.04874013989653889,
+     "shunt_peak_current_a": 0.0966781273
+    },
+    "recovery": {
+     "pad_p_min_v": 2.95632495,
+     "pad_p_max_v": 2.9563267,
+     "rail_max_v": 2.25407668,
+     "clamp_gate_max_v": 1.61472275e-09,
+     "rx_p_max_abs_v": 5.99165011e-05,
+     "shunt_mean_current_a": 6.382199413744898e-05,
+     "shunt_peak_current_a": 6.53077446e-05,
+     "peer_loading_current_a": 3.202772833333336e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 1077,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 389,
+    "unobserved_mos_count": 600,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.1474,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.1474,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.1474,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.1474,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.1474,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.1474,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "90670980d4ce7f6f920d396f6d15a46adf94199d5597d050152c3c76cd9016ab",
+   "waveform_sha256": "14b6d94a71c278bbcad4d7b8aa1cf4ad8d2419a45bef985e303210d043f05ea6"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "typical",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 12000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.23618531,
+     "pad_p_max_v": 3.28384396,
+     "rail_max_v": 2.49057021,
+     "clamp_gate_max_v": 0.00334936447,
+     "rx_p_max_abs_v": 0.0112642661,
+     "shunt_mean_current_a": 7.099550392631579e-05,
+     "shunt_peak_current_a": 0.00010055823,
+     "peer_loading_current_a": -0.00019067739900000005
+    },
+    "before": {
+     "pad_p_min_v": 2.98508273,
+     "pad_p_max_v": 2.98508307,
+     "rail_max_v": 2.26045093,
+     "clamp_gate_max_v": 8.13330124e-09,
+     "rx_p_max_abs_v": 1.08993057e-05,
+     "shunt_mean_current_a": 2.1604808445555555e-05,
+     "shunt_peak_current_a": 2.16048187e-05,
+     "peer_loading_current_a": 1.0939206666666597e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.98541336,
+     "pad_p_max_v": 5.1974831,
+     "rail_max_v": 4.0411683,
+     "clamp_gate_max_v": 0.170065172,
+     "rx_p_max_abs_v": 0.0868921404,
+     "shunt_mean_current_a": 0.04845704161834794,
+     "shunt_peak_current_a": 0.0968675672
+    },
+    "recovery": {
+     "pad_p_min_v": 2.98522711,
+     "pad_p_max_v": 2.98531586,
+     "rail_max_v": 2.26092619,
+     "clamp_gate_max_v": -4.2184835e-07,
+     "rx_p_max_abs_v": 0.000109386967,
+     "shunt_mean_current_a": 2.1710081928469387e-05,
+     "shunt_peak_current_a": 2.30621494e-05,
+     "peer_loading_current_a": 1.0800910999999875e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 1077,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 389,
+    "unobserved_mos_count": 600,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.1975,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.1975,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.1975,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.1975,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.1975,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.1975,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "b4ee7b73ef3ec663163c4bb7a021f111f2366b2a22b1565e71ba1f9457c4b06c",
+   "waveform_sha256": "d6d1ebbcf909dfd3316e6c539cdf241ec853981692b4227c143e62b7aeaac6a0"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "typical",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 12000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.09218592,
+     "pad_p_max_v": 3.22384669,
+     "rail_max_v": 2.50552785,
+     "clamp_gate_max_v": 0.00785397962,
+     "rx_p_max_abs_v": 0.015503581,
+     "shunt_mean_current_a": 0.0011262069006710525,
+     "shunt_peak_current_a": 0.00133144006,
+     "peer_loading_current_a": -0.00011587862366666656
+    },
+    "before": {
+     "pad_p_min_v": 2.82206906,
+     "pad_p_max_v": 2.82206938,
+     "rail_max_v": 2.18143967,
+     "clamp_gate_max_v": 1.65061859e-08,
+     "rx_p_max_abs_v": 3.42809794e-05,
+     "shunt_mean_current_a": 0.0002604648577111111,
+     "shunt_peak_current_a": 0.000260465574,
+     "peer_loading_current_a": 0.00013048257200000003
+    },
+    "pulse": {
+     "pad_p_min_v": 2.82278701,
+     "pad_p_max_v": 5.03457037,
+     "rail_max_v": 3.94395455,
+     "clamp_gate_max_v": 0.19031843,
+     "rx_p_max_abs_v": 0.0838793158,
+     "shunt_mean_current_a": 0.05036789806981944,
+     "shunt_peak_current_a": 0.0960983338
+    },
+    "recovery": {
+     "pad_p_min_v": 2.82210029,
+     "pad_p_max_v": 2.82210053,
+     "rail_max_v": 2.18146579,
+     "clamp_gate_max_v": 9.37543412e-09,
+     "rx_p_max_abs_v": 1.09084177e-05,
+     "shunt_mean_current_a": 0.00026050055615408165,
+     "shunt_peak_current_a": 0.000262399946,
+     "peer_loading_current_a": 0.00013045969933333333
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 1077,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 389,
+    "unobserved_mos_count": 600,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.0346,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.0346,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.0346,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.0346,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.0346,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.0346,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "a7e9f9c84bc0076a3941a0576344889c9a30afd6e01e27b505eedeb2ad921b51",
+   "waveform_sha256": "8f872847359f3d7b717d4d9cd23b6021bdac6e343fb538890418fff9170205e6"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ss",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 12000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.98729208,
+     "pad_p_max_v": 3.28173488,
+     "rail_max_v": 2.50221409,
+     "clamp_gate_max_v": 0.00340855905,
+     "rx_p_max_abs_v": 0.0105144425,
+     "shunt_mean_current_a": 2.0055324239184214e-06,
+     "shunt_peak_current_a": 2.69196877e-06,
+     "peer_loading_current_a": -9.864321866666654e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.99988212,
+     "pad_p_max_v": 2.99988387,
+     "rail_max_v": 2.3923487,
+     "clamp_gate_max_v": -9.17371925e-06,
+     "rx_p_max_abs_v": 3.18419327e-05,
+     "shunt_mean_current_a": 1.5836681111666669e-06,
+     "shunt_peak_current_a": 1.58540804e-06,
+     "peer_loading_current_a": 8.58036666665877e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 3.00021718,
+     "pad_p_max_v": 5.80930706,
+     "rail_max_v": 4.6307621,
+     "clamp_gate_max_v": 0.196468784,
+     "rx_p_max_abs_v": 0.109929661,
+     "shunt_mean_current_a": 0.03636961937466842,
+     "shunt_peak_current_a": 0.0943822833
+    },
+    "recovery": {
+     "pad_p_min_v": 2.99992764,
+     "pad_p_max_v": 2.99993473,
+     "rail_max_v": 2.64264965,
+     "clamp_gate_max_v": -4.5187515e-05,
+     "rx_p_max_abs_v": 0.000176740749,
+     "shunt_mean_current_a": 1.037883853152041e-05,
+     "shunt_peak_current_a": 1.13126742e-05,
+     "peer_loading_current_a": 5.046433333308897e-08
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 1077,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 389,
+    "unobserved_mos_count": 600,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.8093,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.8093,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.8093,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.8093,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.8093,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.8093,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "e303c84ca8eadb517f779956e1dbbe6ccd298ab8eac2f74d4611cdf11b0ca018",
+   "waveform_sha256": "8a578680c5fcef6f351217045e3a500065ccd0e6aa9fb3dcb313a10091ef13d7"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ss",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 12000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.10790175,
+     "pad_p_max_v": 3.26595856,
+     "rail_max_v": 2.59973138,
+     "clamp_gate_max_v": 0.00315622859,
+     "rx_p_max_abs_v": 0.00916895941,
+     "shunt_mean_current_a": 0.00010829478163052633,
+     "shunt_peak_current_a": 0.000139496383,
+     "peer_loading_current_a": -0.00013708211366666648
+    },
+    "before": {
+     "pad_p_min_v": 2.9665691,
+     "pad_p_max_v": 2.96656945,
+     "rail_max_v": 2.37594906,
+     "clamp_gate_max_v": 1.86485108e-08,
+     "rx_p_max_abs_v": 3.03682998e-05,
+     "shunt_mean_current_a": 4.8735016023888894e-05,
+     "shunt_peak_current_a": 4.87350604e-05,
+     "peer_loading_current_a": 2.451586499999975e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.96690015,
+     "pad_p_max_v": 5.66210194,
+     "rail_max_v": 4.54642963,
+     "clamp_gate_max_v": 0.216667818,
+     "rx_p_max_abs_v": 0.101618854,
+     "shunt_mean_current_a": 0.036835544880393645,
+     "shunt_peak_current_a": 0.092876488
+    },
+    "recovery": {
+     "pad_p_min_v": 2.96663599,
+     "pad_p_max_v": 2.96665344,
+     "rail_max_v": 2.37605639,
+     "clamp_gate_max_v": -7.87187977e-08,
+     "rx_p_max_abs_v": 0.000168013138,
+     "shunt_mean_current_a": 4.876465339979592e-05,
+     "shunt_peak_current_a": 4.95366509e-05,
+     "peer_loading_current_a": 2.4460542333333217e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 1077,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 389,
+    "unobserved_mos_count": 600,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.6621,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.6621,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.6621,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.6621,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.6621,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.6621,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "b1a68c974a7ee405dfaddca4aa6ee93add9c9a7fa4e6d762671d7c02cc489c3a",
+   "waveform_sha256": "37231abf395632f7134169e4b8415a0c5ea2ac6c7bff58afd0f42b9f1424b220"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ff",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 12000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.23660842,
+     "pad_p_max_v": 3.24217598,
+     "rail_max_v": 2.39023383,
+     "clamp_gate_max_v": 0.000338649543,
+     "rx_p_max_abs_v": 0.0159057353,
+     "shunt_mean_current_a": 0.0018145699130263158,
+     "shunt_peak_current_a": 0.0018275759,
+     "peer_loading_current_a": -0.00017555428000000012
+    },
+    "before": {
+     "pad_p_min_v": 2.84869651,
+     "pad_p_max_v": 2.8486968,
+     "rail_max_v": 2.06920364,
+     "clamp_gate_max_v": 1.00831269e-08,
+     "rx_p_max_abs_v": 2.25502327e-06,
+     "shunt_mean_current_a": 0.00022144080557777776,
+     "shunt_peak_current_a": 0.000221441411,
+     "peer_loading_current_a": 0.00011095578633333339
+    },
+    "pulse": {
+     "pad_p_min_v": 2.84935116,
+     "pad_p_max_v": 4.60887728,
+     "rail_max_v": 3.47461782,
+     "clamp_gate_max_v": 0.14355774,
+     "rx_p_max_abs_v": 0.0696741918,
+     "shunt_mean_current_a": 0.058502511405040536,
+     "shunt_peak_current_a": 0.0981497333
+    },
+    "recovery": {
+     "pad_p_min_v": 2.84872285,
+     "pad_p_max_v": 2.84872324,
+     "rail_max_v": 2.06922583,
+     "clamp_gate_max_v": 5.4201231e-09,
+     "rx_p_max_abs_v": 8.09176488e-06,
+     "shunt_mean_current_a": 0.00022147526635714286,
+     "shunt_peak_current_a": 0.000224097371,
+     "peer_loading_current_a": 0.00011093643366666677
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 1077,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 389,
+    "unobserved_mos_count": 600,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.6089,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.6089,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.6089,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.6089,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.6089,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.6089,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "a528f61ce6b3e549c4c96c2e6093d597d0f6c7f844197d1313618f242549c76b",
+   "waveform_sha256": "f2ac0899df15cc07b3af176344c5f195a0182556078e45838f54f226c749db95"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ff",
+   "temp_c": 85,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 12000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.06540847,
+     "pad_p_max_v": 3.08992094,
+     "rail_max_v": 2.31783661,
+     "clamp_gate_max_v": 0.00134290073,
+     "rx_p_max_abs_v": 0.0233747982,
+     "shunt_mean_current_a": 0.006109727793263157,
+     "shunt_peak_current_a": 0.00621570257,
+     "peer_loading_current_a": -5.695411700000008e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.51997646,
+     "pad_p_max_v": 2.5199766,
+     "rail_max_v": 1.85079695,
+     "clamp_gate_max_v": 1.37597033e-08,
+     "rx_p_max_abs_v": 0.000322919698,
+     "shunt_mean_current_a": 0.0007030845021944444,
+     "shunt_peak_current_a": 0.000703086519,
+     "peer_loading_current_a": 0.00035201721133333325
+    },
+    "pulse": {
+     "pad_p_min_v": 2.52547566,
+     "pad_p_max_v": 4.4233869,
+     "rail_max_v": 3.35914465,
+     "clamp_gate_max_v": 0.171924707,
+     "rx_p_max_abs_v": 0.0729572824,
+     "shunt_mean_current_a": 0.057906983228728566,
+     "shunt_peak_current_a": 0.0974192228
+    },
+    "recovery": {
+     "pad_p_min_v": 2.51999173,
+     "pad_p_max_v": 2.51999189,
+     "rail_max_v": 1.85080984,
+     "clamp_gate_max_v": 1.03477819e-08,
+     "rx_p_max_abs_v": 0.000320064025,
+     "shunt_mean_current_a": 0.0007031302773204081,
+     "shunt_peak_current_a": 0.000705615254,
+     "peer_loading_current_a": 0.00035200600599999995
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 1077,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 389,
+    "unobserved_mos_count": 600,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.4234,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.4234,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.4234,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.4234,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.4234,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.4234,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "3a926ba4a9749f964c7f301c0a11b4c857790ed1b00c5ac0acc5fd480b0d0113",
+   "waveform_sha256": "d5d25f58d1e4054a857e2fc8aedef16844c2c869e637ba10bc55056c8fda9b2a"
+  },
+  {
+   "variant": "stack3_w12000_extracted",
+   "process": "typical",
+   "temp_c": 27,
+   "shunt": {
+    "extracted_netlist": "generated/stress-safe-foundation/shunt-extracted.spice",
+    "extracted_sha256": "97838f4075dae4b87f98819bc1d3b5adae92921059ded7f729e91ff34e132901"
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.2124742,
+     "pad_p_max_v": 3.27555709,
+     "rail_max_v": 2.50826159,
+     "clamp_gate_max_v": 0.00457375011,
+     "rx_p_max_abs_v": 0.0121025927,
+     "shunt_mean_current_a": 0.0004138582879921053,
+     "shunt_peak_current_a": 0.000698785321,
+     "peer_loading_current_a": -0.00017894480633333344
+    },
+    "before": {
+     "pad_p_min_v": 2.95627479,
+     "pad_p_max_v": 2.9562752,
+     "rail_max_v": 2.25402694,
+     "clamp_gate_max_v": 1.38551452e-08,
+     "rx_p_max_abs_v": 8.70490051e-06,
+     "shunt_mean_current_a": 6.380324430222222e-05,
+     "shunt_peak_current_a": 6.38033004e-05,
+     "peer_loading_current_a": 3.206500366666649e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.95660432,
+     "pad_p_max_v": 5.1531718,
+     "rail_max_v": 4.01593932,
+     "clamp_gate_max_v": 0.196079893,
+     "rx_p_max_abs_v": 0.0853800154,
+     "shunt_mean_current_a": 0.06754086800755404,
+     "shunt_peak_current_a": 0.0978772394
+    },
+    "recovery": {
+     "pad_p_min_v": 2.95632193,
+     "pad_p_max_v": 2.95632282,
+     "rail_max_v": 2.25407065,
+     "clamp_gate_max_v": 4.11541891e-09,
+     "rx_p_max_abs_v": 5.09975753e-05,
+     "shunt_mean_current_a": 6.382029965928572e-05,
+     "shunt_peak_current_a": 6.4197538e-05,
+     "peer_loading_current_a": 3.203025833333329e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.1532,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.1532,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.1532,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.1532,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.1532,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.1532,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "abd0eceeebc8892688cb3cc92041b431c9da00b1dea230fbe11cf9afc738caab",
+   "waveform_sha256": "bcf98a04ced4b437fce36912409e28297a265737a8fb45a64ad03745be335baf"
+  },
+  {
+   "variant": "stack3_w12000_extracted",
+   "process": "typical",
+   "temp_c": 0,
+   "shunt": {
+    "extracted_netlist": "generated/stress-safe-foundation/shunt-extracted.spice",
+    "extracted_sha256": "97838f4075dae4b87f98819bc1d3b5adae92921059ded7f729e91ff34e132901"
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.24111166,
+     "pad_p_max_v": 3.28470585,
+     "rail_max_v": 2.49474817,
+     "clamp_gate_max_v": 0.00341608848,
+     "rx_p_max_abs_v": 0.0113462748,
+     "shunt_mean_current_a": 0.00022105565703157897,
+     "shunt_peak_current_a": 0.000452948558,
+     "peer_loading_current_a": -0.0001927997536666665
+    },
+    "before": {
+     "pad_p_min_v": 2.98508077,
+     "pad_p_max_v": 2.98508113,
+     "rail_max_v": 2.26044598,
+     "clamp_gate_max_v": 8.87728056e-09,
+     "rx_p_max_abs_v": 1.09468317e-05,
+     "shunt_mean_current_a": 2.1605588427222225e-05,
+     "shunt_peak_current_a": 2.16056178e-05,
+     "peer_loading_current_a": 1.0940636666666373e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.98541146,
+     "pad_p_max_v": 5.2021538,
+     "rail_max_v": 4.04486224,
+     "clamp_gate_max_v": 0.190057298,
+     "rx_p_max_abs_v": 0.0872891377,
+     "shunt_mean_current_a": 0.06716019990853377,
+     "shunt_peak_current_a": 0.0980951608
+    },
+    "recovery": {
+     "pad_p_min_v": 2.9851531,
+     "pad_p_max_v": 2.9851726,
+     "rail_max_v": 2.26059604,
+     "clamp_gate_max_v": -7.78920106e-08,
+     "rx_p_max_abs_v": 8.36652047e-05,
+     "shunt_mean_current_a": 2.1604948178367346e-05,
+     "shunt_peak_current_a": 2.17093615e-05,
+     "peer_loading_current_a": 1.088057666666664e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.2022,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.2022,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.2022,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.2022,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.2022,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.2022,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "94f5b572bc60ea46f77b330e57fe36dd92b78b72c2934beb02e1ce4b5809130f",
+   "waveform_sha256": "142ac5e60455e34362037a4b75070e343db8c815161e8c0c00abd7f4e04a396c"
+  },
+  {
+   "variant": "stack3_w12000_extracted",
+   "process": "typical",
+   "temp_c": 85,
+   "shunt": {
+    "extracted_netlist": "generated/stress-safe-foundation/shunt-extracted.spice",
+    "extracted_sha256": "97838f4075dae4b87f98819bc1d3b5adae92921059ded7f729e91ff34e132901"
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.10399151,
+     "pad_p_max_v": 3.22400785,
+     "rail_max_v": 2.50576338,
+     "clamp_gate_max_v": 0.00835957449,
+     "rx_p_max_abs_v": 0.0155849015,
+     "shunt_mean_current_a": 0.001354223813894737,
+     "shunt_peak_current_a": 0.00149902748,
+     "peer_loading_current_a": -0.00012026643199999989
+    },
+    "before": {
+     "pad_p_min_v": 2.82206865,
+     "pad_p_max_v": 2.82206897,
+     "rail_max_v": 2.18143915,
+     "clamp_gate_max_v": 1.66143473e-08,
+     "rx_p_max_abs_v": 3.42529825e-05,
+     "shunt_mean_current_a": 0.00026046626314444444,
+     "shunt_peak_current_a": 0.000260466545,
+     "peer_loading_current_a": 0.0001304828726666665
+    },
+    "pulse": {
+     "pad_p_min_v": 2.82278636,
+     "pad_p_max_v": 5.04391647,
+     "rail_max_v": 3.95197918,
+     "clamp_gate_max_v": 0.211365191,
+     "rx_p_max_abs_v": 0.0842193334,
+     "shunt_mean_current_a": 0.06894433062791781,
+     "shunt_peak_current_a": 0.0977435229
+    },
+    "recovery": {
+     "pad_p_min_v": 2.82209926,
+     "pad_p_max_v": 2.82209943,
+     "rail_max_v": 2.1814645,
+     "clamp_gate_max_v": 9.6989386e-09,
+     "rx_p_max_abs_v": 1.28758232e-05,
+     "shunt_mean_current_a": 0.0002605001783755102,
+     "shunt_peak_current_a": 0.000261616944,
+     "peer_loading_current_a": 0.00013046048033333346
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.0439,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.0439,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.0439,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.0439,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.0439,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.0439,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "ef2d160d48ef22572826da4a532264ddac15465094bdbfed1a3489efb17f2cef",
+   "waveform_sha256": "51ec7dc3bd1c6f95ba9c573311304a10034b82dd03945ebdc1d5e328327e26b2"
+  },
+  {
+   "variant": "stack3_w12000_extracted",
+   "process": "ss",
+   "temp_c": 0,
+   "shunt": {
+    "extracted_netlist": "generated/stress-safe-foundation/shunt-extracted.spice",
+    "extracted_sha256": "97838f4075dae4b87f98819bc1d3b5adae92921059ded7f729e91ff34e132901"
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.98731604,
+     "pad_p_max_v": 3.28251266,
+     "rail_max_v": 2.50738529,
+     "clamp_gate_max_v": 0.00360517599,
+     "rx_p_max_abs_v": 0.0105597095,
+     "shunt_mean_current_a": 0.00010010597486905263,
+     "shunt_peak_current_a": 0.000250983329,
+     "peer_loading_current_a": -9.893718999999988e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.99987289,
+     "pad_p_max_v": 2.99987503,
+     "rail_max_v": 2.39055764,
+     "clamp_gate_max_v": -1.04443478e-05,
+     "rx_p_max_abs_v": 3.16779592e-05,
+     "shunt_mean_current_a": 4.2551709187777775e-07,
+     "shunt_peak_current_a": 4.25875379e-07,
+     "peer_loading_current_a": 9.242933333336959e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 3.00020792,
+     "pad_p_max_v": 5.82169136,
+     "rail_max_v": 4.64184466,
+     "clamp_gate_max_v": 0.220638818,
+     "rx_p_max_abs_v": 0.110470838,
+     "shunt_mean_current_a": 0.05812312844068125,
+     "shunt_peak_current_a": 0.0967093264
+    },
+    "recovery": {
+     "pad_p_min_v": 2.9999269,
+     "pad_p_max_v": 2.99993403,
+     "rail_max_v": 2.61329097,
+     "clamp_gate_max_v": -4.5607092e-05,
+     "rx_p_max_abs_v": 0.000173314179,
+     "shunt_mean_current_a": 1.9272882664693877e-06,
+     "shunt_peak_current_a": 2.27452933e-06,
+     "peer_loading_current_a": 5.0992333333136716e-08
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.8217,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.8217,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.8217,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.8217,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.8217,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.8217,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "2b1be8c736cbcd8757ef44a8ea0640428459c2120ce6ab4bf89d02222a35e99d",
+   "waveform_sha256": "6652c43d1347c4ece07f34695d6aa5790fb2f050008713bbd5d9544fbc576db5"
+  },
+  {
+   "variant": "stack3_w12000_extracted",
+   "process": "ss",
+   "temp_c": 85,
+   "shunt": {
+    "extracted_netlist": "generated/stress-safe-foundation/shunt-extracted.spice",
+    "extracted_sha256": "97838f4075dae4b87f98819bc1d3b5adae92921059ded7f729e91ff34e132901"
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.11003178,
+     "pad_p_max_v": 3.26777271,
+     "rail_max_v": 2.60515995,
+     "clamp_gate_max_v": 0.00331959737,
+     "rx_p_max_abs_v": 0.00920025379,
+     "shunt_mean_current_a": 0.00025419915644736844,
+     "shunt_peak_current_a": 0.000314337463,
+     "peer_loading_current_a": -0.00013852831299999995
+    },
+    "before": {
+     "pad_p_min_v": 2.96656807,
+     "pad_p_max_v": 2.96656842,
+     "rail_max_v": 2.37594698,
+     "clamp_gate_max_v": 1.89846551e-08,
+     "rx_p_max_abs_v": 3.02561238e-05,
+     "shunt_mean_current_a": 4.8736626556111114e-05,
+     "shunt_peak_current_a": 4.87366715e-05,
+     "peer_loading_current_a": 2.451662033333305e-05
+    },
+    "pulse": {
+     "pad_p_min_v": 2.96689916,
+     "pad_p_max_v": 5.68444497,
+     "rail_max_v": 4.56642162,
+     "clamp_gate_max_v": 0.242936406,
+     "rx_p_max_abs_v": 0.102515701,
+     "shunt_mean_current_a": 0.059404983079921536,
+     "shunt_peak_current_a": 0.0964729089
+    },
+    "recovery": {
+     "pad_p_min_v": 2.96662294,
+     "pad_p_max_v": 2.96662593,
+     "rail_max_v": 2.3760093,
+     "clamp_gate_max_v": -4.36263398e-09,
+     "rx_p_max_abs_v": 0.000140314643,
+     "shunt_mean_current_a": 4.874949129244898e-05,
+     "shunt_peak_current_a": 4.90489918e-05,
+     "peer_loading_current_a": 2.4475414333333368e-05
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.6844,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.6844,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.6844,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.6844,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.6844,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.6844,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "788e93347f92c6ebf58d2b1b0c71d1c5f6d9520adeca1a9cd398c5d2d34302d6",
+   "waveform_sha256": "12519fe246b17275b50c9fe9276481dd159547957cc0568eaefe2c3b2ba719a5"
+  },
+  {
+   "variant": "stack3_w12000_extracted",
+   "process": "ff",
+   "temp_c": 0,
+   "shunt": {
+    "extracted_netlist": "generated/stress-safe-foundation/shunt-extracted.spice",
+    "extracted_sha256": "97838f4075dae4b87f98819bc1d3b5adae92921059ded7f729e91ff34e132901"
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.23746391,
+     "pad_p_max_v": 3.2421789,
+     "rail_max_v": 2.39023824,
+     "clamp_gate_max_v": 0.000240611628,
+     "rx_p_max_abs_v": 0.0159099297,
+     "shunt_mean_current_a": 0.0018227921082368422,
+     "shunt_peak_current_a": 0.00182797314,
+     "peer_loading_current_a": -0.0001758690303333332
+    },
+    "before": {
+     "pad_p_min_v": 2.84869614,
+     "pad_p_max_v": 2.84869644,
+     "rail_max_v": 2.06920319,
+     "clamp_gate_max_v": 1.0169894e-08,
+     "rx_p_max_abs_v": 2.25246006e-06,
+     "shunt_mean_current_a": 0.0002214420133888889,
+     "shunt_peak_current_a": 0.000221442191,
+     "peer_loading_current_a": 0.00011095605400000005
+    },
+    "pulse": {
+     "pad_p_min_v": 2.84935066,
+     "pad_p_max_v": 4.61181672,
+     "rail_max_v": 3.47714177,
+     "clamp_gate_max_v": 0.156048103,
+     "rx_p_max_abs_v": 0.0698070251,
+     "shunt_mean_current_a": 0.07284082423422975,
+     "shunt_peak_current_a": 0.0990737489
+    },
+    "recovery": {
+     "pad_p_min_v": 2.84872204,
+     "pad_p_max_v": 2.84872236,
+     "rail_max_v": 2.0692248,
+     "clamp_gate_max_v": 5.63217165e-09,
+     "rx_p_max_abs_v": 7.14417533e-06,
+     "shunt_mean_current_a": 0.00022147485915306124,
+     "shunt_peak_current_a": 0.000222189712,
+     "peer_loading_current_a": 0.00011093705333333326
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.6118,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.6118,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.6118,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.6118,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.6118,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.6118,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "59944d5ebf7ec61c3f68abab5fc849e4578ea356a6ee83a288e9a046cda3b11b",
+   "waveform_sha256": "9f3f7f6c81462749387c2658d9f3e3d71b8a77a30767034f7a8fa352c4479e0b"
+  },
+  {
+   "variant": "stack3_w12000_extracted",
+   "process": "ff",
+   "temp_c": 85,
+   "shunt": {
+    "extracted_netlist": "generated/stress-safe-foundation/shunt-extracted.spice",
+    "extracted_sha256": "97838f4075dae4b87f98819bc1d3b5adae92921059ded7f729e91ff34e132901"
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 3.06699717,
+     "pad_p_max_v": 3.08992519,
+     "rail_max_v": 2.31784157,
+     "clamp_gate_max_v": 0.00115695195,
+     "rx_p_max_abs_v": 0.0233957197,
+     "shunt_mean_current_a": 0.006143016579052632,
+     "shunt_peak_current_a": 0.00621635033,
+     "peer_loading_current_a": -5.753819866666676e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.51997645,
+     "pad_p_max_v": 2.51997659,
+     "rail_max_v": 1.8507969,
+     "clamp_gate_max_v": 1.37737728e-08,
+     "rx_p_max_abs_v": 0.000322917979,
+     "shunt_mean_current_a": 0.0007030859019055557,
+     "shunt_peak_current_a": 0.00070308643,
+     "peer_loading_current_a": 0.0003520172186666665
+    },
+    "pulse": {
+     "pad_p_min_v": 2.52547406,
+     "pad_p_max_v": 4.42862195,
+     "rail_max_v": 3.36353628,
+     "clamp_gate_max_v": 0.188313034,
+     "rx_p_max_abs_v": 0.0733102065,
+     "shunt_mean_current_a": 0.07466604437642857,
+     "shunt_peak_current_a": 0.0985012945
+    },
+    "recovery": {
+     "pad_p_min_v": 2.51999139,
+     "pad_p_max_v": 2.51999152,
+     "rail_max_v": 1.85080944,
+     "clamp_gate_max_v": 1.04723565e-08,
+     "rx_p_max_abs_v": 0.000320263717,
+     "shunt_mean_current_a": 0.0007031300849397959,
+     "shunt_peak_current_a": 0.000704023517,
+     "peer_loading_current_a": 0.0003520062663333333
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.4286,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.4286,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.4286,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.4286,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.4286,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.4286,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "47cd6f1919cd70ff7a31dcf62edfb6bdd47c6656241791eb6803a54da7f257d7",
+   "waveform_sha256": "256f4ada843bab1129dae326322e825232adc0e9e1175c940e93caeaac238ba2"
+  }
+ ],
+ "shunt_dc": [
+  {
+   "variant": "stack3_w12000",
+   "process": "typical",
+   "temp_c": 27,
+   "rail_v_at_current_a": {
+    "1e-06": 1.64,
+    "1e-05": 1.98,
+    "0.0001": 2.33,
+    "0.001": 2.7,
+    "0.1": 4.04
+   },
+   "current_a_at_rail_v": {
+    "1.2": 5.62864302e-08,
+    "1.5": 4.04926375e-07,
+    "1.8": 3.02790068e-06,
+    "2.0": 1.16821529e-05,
+    "2.4": 0.000164885959,
+    "2.7": 0.00103392385,
+    "3.0": 0.00511899807
+   },
+   "deck_sha256": "3685fd49ecb4a55a81d23db23cf47a39e1a31808c2cf51633a98db3645476a10"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ff",
+   "temp_c": 32,
+   "rail_v_at_current_a": {
+    "1e-06": 1.08,
+    "1e-05": 1.43,
+    "0.0001": 1.78,
+    "0.001": 2.16,
+    "0.1": 3.45
+   },
+   "current_a_at_rail_v": {
+    "1.2": 2.23730032e-06,
+    "1.5": 1.61458126e-05,
+    "1.8": 0.000113980115,
+    "2.0": 0.000398722815,
+    "2.4": 0.00382064982,
+    "2.7": 0.0147478282,
+    "3.0": 0.0392063161
+   },
+   "deck_sha256": "dfc3f9276d650c59f857d3d5757bb76b650b5c3d5c484a2ea6a78f085f9ae121"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ss",
+   "temp_c": 22,
+   "rail_v_at_current_a": {
+    "1e-06": 2.18,
+    "1e-05": 2.52,
+    "0.0001": 2.86,
+    "0.001": 3.23,
+    "0.1": 4.66
+   },
+   "current_a_at_rail_v": {
+    "1.2": 1.51490424e-09,
+    "1.5": 1.10113704e-08,
+    "1.8": 8.03218641e-08,
+    "2.0": 3.08075622e-07,
+    "2.4": 4.70598538e-06,
+    "2.7": 3.60985367e-05,
+    "3.0": 0.000254574058
+   },
+   "deck_sha256": "4a1c2b7e16c9754ae29c13a066347698ead897e88b83acc8baaa9f9e3189f431"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ff",
+   "temp_c": 85,
+   "rail_v_at_current_a": {
+    "1e-06": 0.63,
+    "1e-05": 1.06,
+    "0.0001": 1.48,
+    "0.001": 1.93,
+    "0.1": 3.38
+   },
+   "current_a_at_rail_v": {
+    "1.2": 2.21795305e-05,
+    "1.5": 0.000112558361,
+    "1.8": 0.000543180083,
+    "2.0": 0.00147193485,
+    "2.4": 0.00865661337,
+    "2.7": 0.0241787014,
+    "3.0": 0.0513558763
+   },
+   "deck_sha256": "5e7e135c56c13a59160cd1ac58041c1a3b4230621432ef245b40db1614d3b9b5"
+  }
+ ],
+ "pad_loading": [
+  {
+   "variant": "released_baseline",
+   "process": "typical",
+   "temp_c": 27,
+   "stages": 0,
+   "width_per_stage_um": 0.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.41665738e-10,
+    "2.5": 2.24363663e-10,
+    "2.8": 2.53691165e-10,
+    "3.0": 2.73273598e-10,
+    "3.15": 2.87976527e-10,
+    "3.3": 3.0269321e-10,
+    "3.35": 3.07602283e-10,
+    "3.63": 3.35128256e-10
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.60714473,
+    "3.3": 2.90447527,
+    "3.63": 3.23181499
+   },
+   "pad_v_at_current_a": {
+    "1e-06": null,
+    "1e-05": null,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "fd57f121d7ea6cf8e2bb1b9596a8c4e5f5f3d2d16db5fdaaeb364dd9a22ce8a0"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "typical",
+   "temp_c": 22,
+   "stages": 0,
+   "width_per_stage_um": 0.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.2881967e-10,
+    "2.5": 2.07199366e-10,
+    "2.8": 2.34977696e-10,
+    "3.0": 2.53529629e-10,
+    "3.15": 2.67455923e-10,
+    "3.3": 2.81393899e-10,
+    "3.35": 2.86042527e-10,
+    "3.63": 3.12100352e-10
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.59485514,
+    "3.3": 2.8921777,
+    "3.63": 3.21951489
+   },
+   "pad_v_at_current_a": {
+    "1e-06": null,
+    "1e-05": null,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "aecb58bb5999d22b1760e805414881ffca30bfbecf2f7bcacec6280543350671"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "typical",
+   "temp_c": 32,
+   "stages": 0,
+   "width_per_stage_um": 0.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.60341802e-10,
+    "2.5": 2.49437929e-10,
+    "2.8": 2.81040288e-10,
+    "3.0": 3.02146075e-10,
+    "3.15": 3.17995654e-10,
+    "3.3": 3.33864246e-10,
+    "3.35": 3.39158029e-10,
+    "3.63": 3.68854369e-10
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.6186926,
+    "3.3": 2.91604345,
+    "3.63": 3.24339668
+   },
+   "pad_v_at_current_a": {
+    "1e-06": null,
+    "1e-05": null,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "d02bbdfeab4049c6546bde38d3d589e73bfb4feaa3a7714ddd364a143b9ec09f"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ss",
+   "temp_c": 22,
+   "stages": 0,
+   "width_per_stage_um": 0.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.08721097e-10,
+    "2.5": 1.79416155e-10,
+    "2.8": 2.04465882e-10,
+    "3.0": 2.21175739e-10,
+    "3.15": 2.33723941e-10,
+    "3.3": 2.46277566e-10,
+    "3.35": 2.50463535e-10,
+    "3.63": 2.73915023e-10
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.59435997,
+    "3.3": 2.89160555,
+    "3.63": 3.21887356
+   },
+   "pad_v_at_current_a": {
+    "1e-06": null,
+    "1e-05": null,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "13b1640425e2a52a22ad923584b55d16781f7a0d0d348bd4f799d673a8be2d0c"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ss",
+   "temp_c": 32,
+   "stages": 0,
+   "width_per_stage_um": 0.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.12739718e-10,
+    "2.5": 1.83956302e-10,
+    "2.8": 2.09189528e-10,
+    "3.0": 2.26021001e-10,
+    "3.15": 2.38661731e-10,
+    "3.3": 2.51308307e-10,
+    "3.35": 2.55525019e-10,
+    "3.63": 2.79151255e-10
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.62241013,
+    "3.3": 2.91960595,
+    "3.63": 3.24682037
+   },
+   "pad_v_at_current_a": {
+    "1e-06": null,
+    "1e-05": null,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "669c069c28e6a2aff0dd0a0c462f6213f3737730d3824905d41fcea2487441ea"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ff",
+   "temp_c": 22,
+   "stages": 0,
+   "width_per_stage_um": 0.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 6.31555018e-10,
+    "2.5": 9.20262318e-10,
+    "2.8": 1.02327289e-09,
+    "3.0": 1.09227471e-09,
+    "3.15": 1.14420597e-09,
+    "3.3": 1.19630614e-09,
+    "3.35": 1.21371436e-09,
+    "3.63": 1.31167287e-09
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.56001023,
+    "3.3": 2.85768053,
+    "3.63": 3.18532228
+   },
+   "pad_v_at_current_a": {
+    "1e-06": null,
+    "1e-05": null,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "ccf4870f9b5df4d7601a63a6058d4a9429951c9c863ae8640c90e100278679c0"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ff",
+   "temp_c": 32,
+   "stages": 0,
+   "width_per_stage_um": 0.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.24583661e-09,
+    "2.5": 1.77963732e-09,
+    "2.8": 1.9702632e-09,
+    "3.0": 2.09801034e-09,
+    "3.15": 2.1941894e-09,
+    "3.3": 2.29071937e-09,
+    "3.35": 2.32298323e-09,
+    "3.63": 2.50465946e-09
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.57005112,
+    "3.3": 2.86773473,
+    "3.63": 3.19537816
+   },
+   "pad_v_at_current_a": {
+    "1e-06": null,
+    "1e-05": null,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "ece279b2551df84dd76c91434c60ba28dcecf695691016ba526584df48aaa6f7"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ff",
+   "temp_c": 85,
+   "stages": 0,
+   "width_per_stage_um": 0.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 3.3306771e-08,
+    "2.5": 4.56770954e-08,
+    "2.8": 5.00899912e-08,
+    "3.0": 5.30474565e-08,
+    "3.15": 5.527459e-08,
+    "3.3": 5.75106726e-08,
+    "3.35": 5.82583184e-08,
+    "3.63": 6.24700724e-08
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.61357386,
+    "3.3": 2.91105393,
+    "3.63": 3.2383208
+   },
+   "pad_v_at_current_a": {
+    "1e-06": null,
+    "1e-05": null,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "dcba7e0b9d181de3b754a5bd5b50580d719a109e633fad15f54b3c5405857f8b"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "typical",
+   "temp_c": 85,
+   "stages": 0,
+   "width_per_stage_um": 0.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 2.41062552e-09,
+    "2.5": 3.23947822e-09,
+    "2.8": 3.53411056e-09,
+    "3.0": 3.73132956e-09,
+    "3.15": 3.87974962e-09,
+    "3.3": 4.02871149e-09,
+    "3.35": 4.07851121e-09,
+    "3.63": 4.35923163e-09
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.69194158,
+    "3.3": 2.98956003,
+    "3.63": 3.31711034
+   },
+   "pad_v_at_current_a": {
+    "1e-06": null,
+    "1e-05": null,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "969c4dcac3b31a660b0ef6a8f15acef12fec6a0d567985174be5452ad56f041a"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ss",
+   "temp_c": 0,
+   "stages": 0,
+   "width_per_stage_um": 0.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.02727335e-10,
+    "2.5": 1.73146855e-10,
+    "2.8": 1.98090115e-10,
+    "3.0": 2.14744866e-10,
+    "3.15": 2.27243533e-10,
+    "3.3": 2.39747532e-10,
+    "3.35": 2.43916649e-10,
+    "3.63": 2.67273666e-10
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.53235886,
+    "3.3": 2.82973813,
+    "3.63": 3.15714592
+   },
+   "pad_v_at_current_a": {
+    "1e-06": null,
+    "1e-05": null,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "e2ef744a8ab08045103de30a2edf4a4ad9c82b71217eb5809c65070390c30b2e"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "typical",
+   "temp_c": 27,
+   "stages": 2,
+   "width_per_stage_um": 2000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 7.32892631e-07,
+    "2.5": 0.000647399238,
+    "2.8": 0.00351013709,
+    "3.0": 0.00763572162,
+    "3.15": 0.0118447855,
+    "3.3": 0.0168490017,
+    "3.35": 0.0186722965,
+    "3.63": 0.0301272202
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.13219907,
+    "3.3": 2.39075783,
+    "3.63": 2.67586699
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.69,
+    "1e-05": 1.96,
+    "0.0001": 2.25,
+    "0.001": 2.57
+   },
+   "deck_sha256": "571f33d7a5b31aa8d161829184051adb4e6d50fc2e53273f575ff93a10c1674b"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "typical",
+   "temp_c": 22,
+   "stages": 2,
+   "width_per_stage_um": 2000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 5.49596632e-07,
+    "2.5": 0.000568641715,
+    "2.8": 0.00326515659,
+    "3.0": 0.00730165898,
+    "3.15": 0.0114813633,
+    "3.3": 0.0164837045,
+    "3.35": 0.0183112693,
+    "3.63": 0.029823991
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.12752765,
+    "3.3": 2.38607762,
+    "3.63": 2.67124508
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.72,
+    "1e-05": 1.99,
+    "0.0001": 2.27,
+    "0.001": 2.59
+   },
+   "deck_sha256": "f1fde33fffcf03a1434b0e80a24a7741ab7435d9124008829f96a21fca49d7f6"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "typical",
+   "temp_c": 32,
+   "stages": 2,
+   "width_per_stage_um": 2000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 9.67751196e-07,
+    "2.5": 0.000733188839,
+    "2.8": 0.00376107378,
+    "3.0": 0.0079703782,
+    "3.15": 0.0122060337,
+    "3.3": 0.0172107018,
+    "3.35": 0.0190294903,
+    "3.63": 0.0304266949
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.13688765,
+    "3.3": 2.3954532,
+    "3.63": 2.68050485
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.66,
+    "1e-05": 1.93,
+    "0.0001": 2.22,
+    "0.001": 2.55
+   },
+   "deck_sha256": "89943f6e9468febeaabd4ed14b3cbe1fb1050e819e667115306a531cd327df85"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "ss",
+   "temp_c": 22,
+   "stages": 2,
+   "width_per_stage_um": 2000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 4.29569899e-08,
+    "2.5": 5.91574913e-05,
+    "2.8": 0.000531370048,
+    "3.0": 0.00177485114,
+    "3.15": 0.0036308192,
+    "3.3": 0.00637482359,
+    "3.35": 0.00747471486,
+    "3.63": 0.0150814723
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.17226582,
+    "3.3": 2.42754732,
+    "3.63": 2.7139897
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.02,
+    "1e-05": 2.29,
+    "0.0001": 2.57,
+    "0.001": 2.9
+   },
+   "deck_sha256": "a4ed24764a02565ff451f0a609f1298f699f8561e78ce87d5287bfde5ede26d3"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "ss",
+   "temp_c": 32,
+   "stages": 2,
+   "width_per_stage_um": 2000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 8.20799454e-08,
+    "2.5": 8.45665503e-05,
+    "2.8": 0.000680653753,
+    "3.0": 0.00210664997,
+    "3.15": 0.00410292207,
+    "3.3": 0.0069443768,
+    "3.35": 0.00806496862,
+    "3.63": 0.0156952303
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.18130716,
+    "3.3": 2.43704585,
+    "3.63": 2.72350198
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.95,
+    "1e-05": 2.23,
+    "0.0001": 2.53,
+    "0.001": 2.87
+   },
+   "deck_sha256": "cbc0a67f656386bc4583f035746956e1990126564078eb527ce2bf831e194a8a"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "ff",
+   "temp_c": 22,
+   "stages": 2,
+   "width_per_stage_um": 2000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 7.877308e-06,
+    "2.5": 0.00370657713,
+    "2.8": 0.0114235662,
+    "3.0": 0.0188704015,
+    "3.15": 0.025400956,
+    "3.3": 0.0326261037,
+    "3.35": 0.0351757777,
+    "3.63": 0.0506317888
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.08504646,
+    "3.3": 2.34351962,
+    "3.63": 2.62635019
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.42,
+    "1e-05": 1.68,
+    "0.0001": 1.96,
+    "0.001": 2.27
+   },
+   "deck_sha256": "6990d90f3b320c66f09e43c5775cb76749865f85f3fc8056290edef77eb0e79f"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "ff",
+   "temp_c": 32,
+   "stages": 2,
+   "width_per_stage_um": 2000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.25612522e-05,
+    "2.5": 0.0042755349,
+    "2.8": 0.0122418379,
+    "3.0": 0.0197038968,
+    "3.15": 0.0261896545,
+    "3.3": 0.0333344658,
+    "3.35": 0.0358508012,
+    "3.63": 0.0510713396
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.09435323,
+    "3.3": 2.35272189,
+    "3.63": 2.63545298
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.36,
+    "1e-05": 1.63,
+    "0.0001": 1.91,
+    "0.001": 2.24
+   },
+   "deck_sha256": "1ad19efcc5d481dffb99b72235b1c38144986ad9a9767e7debdec0bf7b9ea1f6"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "ff",
+   "temp_c": 85,
+   "stages": 2,
+   "width_per_stage_um": 2000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 9.17717416e-05,
+    "2.5": 0.00762495554,
+    "2.8": 0.0164411074,
+    "3.0": 0.0238576517,
+    "3.15": 0.0300840041,
+    "3.3": 0.0368203371,
+    "3.35": 0.03917211,
+    "3.63": 0.0532517519
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.14461272,
+    "3.3": 2.40247624,
+    "3.63": 2.68475722
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.01,
+    "1e-05": 1.33,
+    "0.0001": 1.67,
+    "0.001": 2.04
+   },
+   "deck_sha256": "0fce28d51684fa7869e9bb6860a22d4ae6494a410c04a87b0661f42952fad2ec"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "typical",
+   "temp_c": 85,
+   "stages": 2,
+   "width_per_stage_um": 2000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.10896067e-05,
+    "2.5": 0.00208934906,
+    "2.8": 0.00667677777,
+    "3.0": 0.011500879,
+    "3.15": 0.0158879382,
+    "3.3": 0.0208331093,
+    "3.35": 0.0225938682,
+    "3.63": 0.0333896251
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.18759614,
+    "3.3": 2.44609019,
+    "3.63": 2.73058553
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.32,
+    "1e-05": 1.64,
+    "0.0001": 1.98,
+    "0.001": 2.36
+   },
+   "deck_sha256": "99554ec14dd5e2286846f97d70486934fc911695c145773d6d131dc48a0342b7"
+  },
+  {
+   "variant": "stack2_w2000",
+   "process": "ss",
+   "temp_c": 0,
+   "stages": 2,
+   "width_per_stage_um": 2000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 8.81930602e-09,
+    "2.5": 2.42315141e-05,
+    "2.8": 0.000284853037,
+    "3.0": 0.0011438306,
+    "3.15": 0.00265426798,
+    "3.3": 0.00513397934,
+    "3.35": 0.00617419701,
+    "3.63": 0.0136860735
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.15284746,
+    "3.3": 2.4069286,
+    "3.63": 2.69328419
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.16,
+    "1e-05": 2.41,
+    "0.0001": 2.67,
+    "0.001": 2.98
+   },
+   "deck_sha256": "3928eb9a0149f32b7042cbad92320048538ed9871eab9a3ed89b1b63aa01fc92"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "typical",
+   "temp_c": 27,
+   "stages": 3,
+   "width_per_stage_um": 9000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 2.83395059e-08,
+    "2.5": 3.37998549e-06,
+    "2.8": 1.86740088e-05,
+    "3.0": 5.73804375e-05,
+    "3.15": 0.000130812016,
+    "3.3": 0.000291585078,
+    "3.35": 0.000378531502,
+    "3.63": 0.00151370861
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.28163738,
+    "3.3": 2.536417,
+    "3.63": 2.81900251
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.29,
+    "1e-05": 2.7,
+    "0.0001": 3.11,
+    "0.001": 3.55
+   },
+   "deck_sha256": "36bd17bc31a4dd78a0ec676b5bc249573c7c1fcd8e3e0bbbe8fd31fbbb0ee923"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "typical",
+   "temp_c": 22,
+   "stages": 3,
+   "width_per_stage_um": 9000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 2.00026267e-08,
+    "2.5": 2.58329693e-06,
+    "2.8": 1.47774156e-05,
+    "3.0": 4.65455289e-05,
+    "3.15": 0.000108171149,
+    "3.3": 0.000245871354,
+    "3.35": 0.000321274173,
+    "3.63": 0.00133218087
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.27842028,
+    "3.3": 2.53294533,
+    "3.63": 2.81537852
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.34,
+    "1e-05": 2.74,
+    "0.0001": 3.14,
+    "0.001": 3.58
+   },
+   "deck_sha256": "1b34f51d6aa9d17809bf55efb52d0109c657b0eff59f04c191122c6bed013cda"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "typical",
+   "temp_c": 32,
+   "stages": 3,
+   "width_per_stage_um": 9000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 3.97727273e-08,
+    "2.5": 4.38161906e-06,
+    "2.8": 2.34003609e-05,
+    "3.0": 7.01923734e-05,
+    "3.15": 0.000157065874,
+    "3.3": 0.000343567263,
+    "3.35": 0.000443219958,
+    "3.63": 0.00171138172
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.28489524,
+    "3.3": 2.53992756,
+    "3.63": 2.82263285
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.24,
+    "1e-05": 2.65,
+    "0.0001": 3.07,
+    "0.001": 3.52
+   },
+   "deck_sha256": "f3b0f4ef3f212f7dbe21fc8f41d8692f101dc5d75dc5b70e108082a4500599e3"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "ss",
+   "temp_c": 22,
+   "stages": 3,
+   "width_per_stage_um": 9000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.70848942e-09,
+    "2.5": 1.42255637e-07,
+    "2.8": 7.98446406e-07,
+    "3.0": 2.5433108e-06,
+    "3.15": 6.06012216e-06,
+    "3.3": 1.43705564e-05,
+    "3.35": 1.91276619e-05,
+    "3.63": 9.21362125e-05
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.35202161,
+    "3.3": 2.60600814,
+    "3.63": 2.88564778
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.84,
+    "1e-05": 3.24,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "e0dd84d1c0c7f07cc750cf431aa71b8ad187adcf41cb998953dcc922302af602"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "ss",
+   "temp_c": 32,
+   "stages": 3,
+   "width_per_stage_um": 9000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 3.15863884e-09,
+    "2.5": 2.65010349e-07,
+    "2.8": 1.4019817e-06,
+    "3.0": 4.27805988e-06,
+    "3.15": 9.85377302e-06,
+    "3.3": 2.2555251e-05,
+    "3.35": 2.96613993e-05,
+    "3.63": 0.000133266488
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.35832843,
+    "3.3": 2.61241215,
+    "3.63": 2.89248085
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.74,
+    "1e-05": 3.16,
+    "0.0001": 3.58,
+    "0.001": null
+   },
+   "deck_sha256": "dd99a86bc283d7bc8f7f1520194df16edad6374440027fa0a45fa9ef68b6aa2a"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "ff",
+   "temp_c": 22,
+   "stages": 3,
+   "width_per_stage_um": 9000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 3.81392464e-07,
+    "2.5": 5.14914054e-05,
+    "2.8": 0.000272545889,
+    "3.0": 0.000779722193,
+    "3.15": 0.00163781492,
+    "3.3": 0.00326407161,
+    "3.35": 0.00405030345,
+    "3.63": 0.0116296737
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.20457318,
+    "3.3": 2.46179183,
+    "3.63": 2.74200226
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.82,
+    "1e-05": 2.22,
+    "0.0001": 2.62,
+    "0.001": 3.05
+   },
+   "deck_sha256": "91962c999447646776a6bc09219779e1da567a54ddbb630b87601f150327b83b"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "ff",
+   "temp_c": 32,
+   "stages": 3,
+   "width_per_stage_um": 9000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 6.97760155e-07,
+    "2.5": 7.79797951e-05,
+    "2.8": 0.000382628933,
+    "3.0": 0.00104015006,
+    "3.15": 0.00210251484,
+    "3.3": 0.00403088927,
+    "3.35": 0.00493775608,
+    "3.63": 0.0132553767
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.21169994,
+    "3.3": 2.46874285,
+    "3.63": 2.74801996
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.72,
+    "1e-05": 2.13,
+    "0.0001": 2.55,
+    "0.001": 3.0
+   },
+   "deck_sha256": "61510e237eae37f561d4f9e8f655e581391e196e932d7f57ee2b930495f80594"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "ff",
+   "temp_c": 85,
+   "stages": 3,
+   "width_per_stage_um": 9000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 9.63182038e-06,
+    "2.5": 0.000456083914,
+    "2.8": 0.00160981586,
+    "3.0": 0.00349605975,
+    "3.15": 0.00594814202,
+    "3.3": 0.00960297379,
+    "3.35": 0.0111258662,
+    "3.63": 0.0226506177
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.25003262,
+    "3.3": 2.50460893,
+    "3.63": 2.77889876
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.16,
+    "1e-05": 1.66,
+    "0.0001": 2.16,
+    "0.001": 2.69
+   },
+   "deck_sha256": "1cad45d1ec8614cd1a6afbe0313af80e9d8cfed67bec630c9f2711892a95e9d3"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "typical",
+   "temp_c": 85,
+   "stages": 3,
+   "width_per_stage_um": 9000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 8.32236209e-07,
+    "2.5": 4.26585092e-05,
+    "2.8": 0.000166747454,
+    "3.0": 0.000402715041,
+    "3.15": 0.000764255678,
+    "3.3": 0.00141666011,
+    "3.35": 0.00172902091,
+    "3.63": 0.00487106297
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.32186254,
+    "3.3": 2.57876271,
+    "3.63": 2.86094976
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.7,
+    "1e-05": 2.19,
+    "0.0001": 2.69,
+    "0.001": 3.22
+   },
+   "deck_sha256": "c6bd3c2052b41572a982ac614eb53c947180ba12df93f4bda77653ea94154526"
+  },
+  {
+   "variant": "stack3_w9000",
+   "process": "ss",
+   "temp_c": 0,
+   "stages": 3,
+   "width_per_stage_um": 9000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 6.9094853e-10,
+    "2.5": 3.12144621e-08,
+    "2.8": 1.99779356e-07,
+    "3.0": 7.04077619e-07,
+    "3.15": 1.81833688e-06,
+    "3.3": 4.69140695e-06,
+    "3.35": 6.42787881e-06,
+    "3.63": 3.66608889e-05
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.33836061,
+    "3.3": 2.59229888,
+    "3.63": 2.8712293
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 3.06,
+    "1e-05": 3.43,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "3709ae93667ff4084059f048ec36e4e29a9d8a12ed2550c1acb676d26f350881"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "typical",
+   "temp_c": 27,
+   "stages": 3,
+   "width_per_stage_um": 12000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 3.62374174e-08,
+    "2.5": 4.31186798e-06,
+    "2.8": 2.38115192e-05,
+    "3.0": 7.31957092e-05,
+    "3.15": 0.000166995624,
+    "3.3": 0.000372618502,
+    "3.35": 0.00048388944,
+    "3.63": 0.00193668405
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.27489799,
+    "3.3": 2.5295321,
+    "3.63": 2.81144376
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.25,
+    "1e-05": 2.65,
+    "0.0001": 3.06,
+    "0.001": 3.5
+   },
+   "deck_sha256": "f892351dac7afe9a122a29867db4e04f93694ffd12ddb10700b83b84bc95383d"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "typical",
+   "temp_c": 22,
+   "stages": 3,
+   "width_per_stage_um": 12000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 2.55760518e-08,
+    "2.5": 3.29558216e-06,
+    "2.8": 1.88412792e-05,
+    "3.0": 5.93627193e-05,
+    "3.15": 0.00013805759,
+    "3.3": 0.000314127007,
+    "3.35": 0.000410609989,
+    "3.63": 0.00170458748
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.27180662,
+    "3.3": 2.52619675,
+    "3.63": 2.80803746
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.3,
+    "1e-05": 2.7,
+    "0.0001": 3.1,
+    "0.001": 3.53
+   },
+   "deck_sha256": "3b7f17de6fb82ceefd31897c33cab156635949d62ba48449584ae19b291c7123"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "typical",
+   "temp_c": 32,
+   "stages": 3,
+   "width_per_stage_um": 12000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 5.08576776e-08,
+    "2.5": 5.58961223e-06,
+    "2.8": 2.98412874e-05,
+    "3.0": 8.95576988e-05,
+    "3.15": 0.000200561611,
+    "3.3": 0.00043914054,
+    "3.35": 0.000566686405,
+    "3.63": 0.00218931879
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.2780305,
+    "3.3": 2.53290289,
+    "3.63": 2.81484533
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.2,
+    "1e-05": 2.61,
+    "0.0001": 3.03,
+    "0.001": 3.47
+   },
+   "deck_sha256": "9997ad17eef47fc87502966dd376d9550145217ec5fc159412b49cc8f58f9ca4"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ss",
+   "temp_c": 22,
+   "stages": 3,
+   "width_per_stage_um": 12000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 2.18032576e-09,
+    "2.5": 1.81767853e-07,
+    "2.8": 1.01937893e-06,
+    "3.0": 3.24535083e-06,
+    "3.15": 7.73061051e-06,
+    "3.3": 1.83299695e-05,
+    "3.35": 2.43985649e-05,
+    "3.63": 0.000117646234
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.34560072,
+    "3.3": 2.59946523,
+    "3.63": 2.87896622
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.8,
+    "1e-05": 3.2,
+    "0.0001": 3.61,
+    "0.001": null
+   },
+   "deck_sha256": "af688e5235592ef4f06dab25b862798c34c476a277f5294d10b6b01eb368b26f"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ss",
+   "temp_c": 32,
+   "stages": 3,
+   "width_per_stage_um": 12000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 4.0374723e-09,
+    "2.5": 3.38611682e-07,
+    "2.8": 1.7898548e-06,
+    "3.0": 5.45898472e-06,
+    "3.15": 1.25710811e-05,
+    "3.3": 2.87759622e-05,
+    "3.35": 3.78452048e-05,
+    "3.63": 0.000170247938
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.35165269,
+    "3.3": 2.60561085,
+    "3.63": 2.88554374
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 2.7,
+    "1e-05": 3.11,
+    "0.0001": 3.53,
+    "0.001": null
+   },
+   "deck_sha256": "be6272ede88b20bafe219a36307f8e3945afc795f4ec2447d9cd841ec81b5cc5"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ff",
+   "temp_c": 22,
+   "stages": 3,
+   "width_per_stage_um": 12000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 4.87093611e-07,
+    "2.5": 6.5670547e-05,
+    "2.8": 0.000348179591,
+    "3.0": 0.000997279616,
+    "3.15": 0.00209515564,
+    "3.3": 0.00417161706,
+    "3.35": 0.00517330103,
+    "3.63": 0.0147657795
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.19759361,
+    "3.3": 2.45355911,
+    "3.63": 2.72956816
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.78,
+    "1e-05": 2.18,
+    "0.0001": 2.58,
+    "0.001": 3.01
+   },
+   "deck_sha256": "934e2b099c209e2dca7592afcebc6da7e98d01479d002a41c8e61eb70eb80ade"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ff",
+   "temp_c": 32,
+   "stages": 3,
+   "width_per_stage_um": 12000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 8.91034744e-07,
+    "2.5": 9.94931401e-05,
+    "2.8": 0.000489025702,
+    "3.0": 0.00133050203,
+    "3.15": 0.00268882075,
+    "3.3": 0.00514797146,
+    "3.35": 0.00630153608,
+    "3.63": 0.0168101185
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.20436508,
+    "3.3": 2.45987062,
+    "3.63": 2.73446045
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.68,
+    "1e-05": 2.09,
+    "0.0001": 2.51,
+    "0.001": 2.95
+   },
+   "deck_sha256": "796a710d00df66250cfa6dcf344e9d4270fcb7b0c300118d2884fd3b96a43704"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ff",
+   "temp_c": 85,
+   "stages": 3,
+   "width_per_stage_um": 12000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.22929165e-05,
+    "2.5": 0.000583109437,
+    "2.8": 0.00205859344,
+    "3.0": 0.00446505161,
+    "3.15": 0.00758194623,
+    "3.3": 0.0122066479,
+    "3.35": 0.0141272541,
+    "3.63": 0.0285711109
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.24013269,
+    "3.3": 2.49131894,
+    "3.63": 2.75858297
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.11,
+    "1e-05": 1.61,
+    "0.0001": 2.11,
+    "0.001": 2.63
+   },
+   "deck_sha256": "968dc0529e7e4e1f2bb54e4613855ac72ed2cda9399a3f1687b6bc559be6ad14"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "typical",
+   "temp_c": 85,
+   "stages": 3,
+   "width_per_stage_um": 12000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 1.06372808e-06,
+    "2.5": 5.44545596e-05,
+    "2.8": 0.000213033791,
+    "3.0": 0.000514909415,
+    "3.15": 0.000977553146,
+    "3.3": 0.0018119446,
+    "3.35": 0.00221111998,
+    "3.63": 0.00621363969
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.31360855,
+    "3.3": 2.56991322,
+    "3.63": 2.84995882
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 1.64,
+    "1e-05": 2.14,
+    "0.0001": 2.64,
+    "0.001": 3.16
+   },
+   "deck_sha256": "9ce63f66377f011efeff45cfddabde0852989b351eff365a4b8d8aee58e617ec"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ss",
+   "temp_c": 0,
+   "stages": 3,
+   "width_per_stage_um": 12000.0,
+   "primary_diode_multiplier": 1,
+   "pad_current_a_at_pad_v": {
+    "1.65": 8.77853183e-10,
+    "2.5": 3.98809189e-08,
+    "2.8": 2.55076191e-07,
+    "3.0": 8.98477162e-07,
+    "3.15": 2.31948947e-06,
+    "3.3": 5.98254468e-06,
+    "3.35": 8.19636276e-06,
+    "3.63": 4.67633735e-05
+   },
+   "rail_v_at_pad_v": {
+    "3.0": 2.3324841,
+    "3.3": 2.58632614,
+    "3.63": 2.86510688
+   },
+   "pad_v_at_current_a": {
+    "1e-06": 3.02,
+    "1e-05": 3.39,
+    "0.0001": null,
+    "0.001": null
+   },
+   "deck_sha256": "9d2d17c741873652f18e431c6e1c9f42f476fe3c5d406b816eac63f3d689a3ab"
+  }
+ ],
+ "primary_diode_capacitance": [
+  {
+   "primary_diode_multiplier": 1,
+   "pad_v": 0.5,
+   "rail_v": 3.3,
+   "frequency_hz": 1000000000.0,
+   "capacitance_f": 1.758505194391555e-13
+  },
+  {
+   "primary_diode_multiplier": 1,
+   "pad_v": 1.65,
+   "rail_v": 3.3,
+   "frequency_hz": 1000000000.0,
+   "capacitance_f": 1.6943960554266857e-13
+  },
+  {
+   "primary_diode_multiplier": 1,
+   "pad_v": 3.0,
+   "rail_v": 3.3,
+   "frequency_hz": 1000000000.0,
+   "capacitance_f": 1.8069117246991144e-13
+  },
+  {
+   "primary_diode_multiplier": 2,
+   "pad_v": 0.5,
+   "rail_v": 3.3,
+   "frequency_hz": 1000000000.0,
+   "capacitance_f": 3.51701038878311e-13
+  },
+  {
+   "primary_diode_multiplier": 2,
+   "pad_v": 1.65,
+   "rail_v": 3.3,
+   "frequency_hz": 1000000000.0,
+   "capacitance_f": 3.3887921108533714e-13
+  },
+  {
+   "primary_diode_multiplier": 2,
+   "pad_v": 3.0,
+   "rail_v": 3.3,
+   "frequency_hz": 1000000000.0,
+   "capacitance_f": 3.6138234334827336e-13
+  }
+ ],
+ "source_sha256": {
+  "analog/pads/stress_safe_clamp.py": "d43c4f1587727ec33eb0196cdf0f190b79151cd0145ed6c7e6ecaa2706126f19",
+  "analog/pads/circuits.py": "1c212fbefc7157c2fb50594b3c137aa9ce2f94bfd30075c9386c05a0fa55e2b3"
+ }
+}

@@ -1,0 +1,946 @@
+{
+ "schema_version": 1,
+ "status": "selected_for_stress_not_ESD_qualified",
+ "decision": "User decision (tapeout-plan.md tier 1 \"Pad ESD\"): for the release/stress conflict choose the variant that survives stress and accept reduced swing or bandwidth.",
+ "selection": {
+  "name": "stress-safe foundation: canonical isolated-rail network + 100 kohm clamp-gate discharge + 3 x 12000 um diode-connected nfet_06v0 rail shunt",
+  "configuration": {
+   "primary": "per pad: 4 x diode_pd2nw_06v0 (22.5 um2) PAD->ESD_RAIL, 4 x diode_nd2ps_06v0 (22.5 um2) VSS->PAD (unchanged)",
+   "rc_clamp": "native-derived GF_NI_DVDD clamp, 80 x 50 um nfet_06v0 L0.7, 2 MIM, physical ~10 Mohm bleed (unchanged)",
+   "release_fix": "100 kohm clamp gate to VSS, 8 x ppolyf_u_1k 1 x 12.5 um (required; see stress-safe-native-clamp-check.json)",
+   "stress_shunt": "3 series banks, each 240 x 50 um nfet_06v0 L0.7 diode-connected (gate=drain), bodies VSS; v2 wiring (full-width metal2+metal3 plates, 30 um straps) per rail_shunt_v2.py; one per isolated rail (pad pair)"
+  },
+  "result": {
+   "description": "gate discharge + 3-stage diode-connected nfet_06v0 series stack, 12000 um per stage (50 um x L0.7 fingers), ESD_RAIL->VSS",
+   "stress": {
+    "corners": [
+     "typical/27C",
+     "typical/0C",
+     "typical/85C",
+     "ss/0C",
+     "ss/85C",
+     "ff/0C",
+     "ff/85C"
+    ],
+    "pad_p_peak_v": {
+     "typical/27C": 5.147,
+     "typical/0C": 5.197,
+     "typical/85C": 5.035,
+     "ss/0C": 5.809,
+     "ss/85C": 5.662,
+     "ff/0C": 4.609,
+     "ff/85C": 4.423
+    },
+    "rail_peak_v": {
+     "typical/27C": 4.011,
+     "typical/0C": 4.041,
+     "typical/85C": 3.944,
+     "ss/0C": 4.631,
+     "ss/85C": 4.546,
+     "ff/0C": 3.475,
+     "ff/85C": 3.359
+    },
+    "worst_corner": "ss/0C",
+    "worst_pad_p_peak_v": 5.809,
+    "observed_mos_exceeding_gate_screen_max": 0,
+    "passes_screen_all_corners": true
+   },
+   "retained_fixture": {
+    "brownout_pad_p_v": {
+     "typical/27C": 2.956,
+     "typical/0C": 2.985,
+     "typical/85C": 2.822,
+     "ss/0C": 3.0,
+     "ss/85C": 2.967,
+     "ff/0C": 2.849,
+     "ff/85C": 2.52
+    },
+    "brownout_shunt_current_a": {
+     "typical/27C": 6.380180396722222e-05,
+     "typical/0C": 2.1604808445555555e-05,
+     "typical/85C": 0.0002604648577111111,
+     "ss/0C": 1.5836681111666669e-06,
+     "ss/85C": 4.8735016023888894e-05,
+     "ff/0C": 0.00022144080557777776,
+     "ff/85C": 0.0007030845021944444
+    },
+    "recovery_pad_p_v": {
+     "typical/27C": 2.956,
+     "typical/0C": 2.985,
+     "typical/85C": 2.822,
+     "ss/0C": 3.0,
+     "ss/85C": 2.967,
+     "ff/0C": 2.849,
+     "ff/85C": 2.52
+    }
+   },
+   "functional_window_dc_loading_per_driven_pad_a": {
+    "1.65": {
+     "min": 2.18032576e-09,
+     "max": 8.91034744e-07
+    },
+    "2.5": {
+     "min": 1.81767853e-07,
+     "max": 9.94931401e-05
+    },
+    "2.8": {
+     "min": 1.01937893e-06,
+     "max": 0.000489025702
+    },
+    "3.0": {
+     "min": 3.24535083e-06,
+     "max": 0.00133050203
+    },
+    "3.15": {
+     "min": 7.73061051e-06,
+     "max": 0.00268882075
+    },
+    "3.3": {
+     "min": 1.83299695e-05,
+     "max": 0.00514797146
+    },
+    "3.35": {
+     "min": 2.43985649e-05,
+     "max": 0.00630153608
+    }
+   },
+   "pad_v_at_10uA_functional_window": {
+    "min": 2.09,
+    "max": 3.2
+   },
+   "safety_dc_loading_at_3p63v_pad_a": {
+    "ff/85C": 0.0285711109,
+    "typical/85C": 0.00621363969,
+    "ss/0C": 4.67633735e-05
+   },
+   "decision": "SELECTED: below the 6.0 V screen at all seven stress corners; costs bounded DC loading near 3.3 V"
+  },
+  "pad_capacitance_1ghz_per_pad_f": {
+   "x1@0.5V": 1.758505194391555e-13,
+   "x1@1.65V": 1.6943960554266857e-13,
+   "x1@3.0V": 1.8069117246991144e-13,
+   "x2@0.5V": 3.51701038878311e-13,
+   "x2@1.65V": 3.3887921108533714e-13,
+   "x2@3.0V": 3.6138234334827336e-13
+  },
+  "capacitance_note": "Shunt hangs on the isolated rail behind the steering diodes; with the rail as AC ground (upper bound) it adds 0 F to the pad. Primary diode capacitance is unchanged at 0.169-0.181 pF per pad."
+ },
+ "criterion": {
+  "stress": "Observed PAD-facing MOS gate-terminal voltages below the PDK DC screens (6.0 V nfet/pfet_06v0, 3.63 V 03v3; spec/schematic-implementation.json gate_voltage_screen) for the 100 mA / 2 ns diagnostic at tt/ss/ff x 0/85C plus tt/27C (safety range)",
+  "function": "DC loading per driven pad at tt/ss/ff x 22/32C plus tt/27C, pad 1.65-3.35 V (functional window); reported, not gated (decision accepts reduced swing)",
+  "safety": "Brownout retained-fixture loading and DC loading at 3.63 V, 85C and ss/0C: must be bounded, into VSS only"
+ },
+ "stimulus": "100 mA positive, 0.1 ns edges, 2 ns flat into PAD_P at 1000 ns, VDD=1.5 V brownout after 1 us; retained 3.3 V / 1.5 kohm / 15 kohm board peers, 1 ohm + 1 nH bond, 10 pF board",
+ "fixture": {
+  "path": "/home/ubuntu/svalbard/scratch/pad-supervised-receive/clamp_long_hold_discharge.spice",
+  "sha256": "c2f1b725a5e34cd1ff4aa63ec4d08e0624686a8f03a7e35b1278bdaf611c8d22",
+  "description": "retained RX/USB extracted pad (all attachments), board peers, long brownout; only the named rail devices added"
+ },
+ "candidates": {
+  "recorded_unchanged_clamp": {
+   "source": "rail-supervisor-screen.json:protection_release_pulse.False; reproduced byte-identically",
+   "description": "Canonical native-derived RC clamp as laid out (no gate discharge)",
+   "stress": {
+    "pad_p_peak_v_typ27": 4.01337703,
+    "note": "Passes only because the clamp starts stuck partly on (gate ~0.76 V). From a released start (ss/0C) it reaches 8.29 V with 98 observed exceedances (stress-safe-native-clamp-check.json)."
+   },
+   "release": "Fails: brownout pad held at 1.554 V with 1.06 mA into the isolated rail; active-window pad dips to ~1.96 V at tt/27C (inside the functional window).",
+   "decision": "rejected: stress result depends on an undefined stuck state; loads pads inside the functional window"
+  },
+  "recorded_gate_discharge": {
+   "source": "rail-supervisor-screen.json:protection_release_pulse.True; rerun across corners as released_baseline; tt/27C reproduces the recorded 8.099 V peak",
+   "description": "Canonical clamp + 100 kohm gate discharge (8 x ppolyf_u_1k 1x12.5 um, schematic)",
+   "stress": {
+    "corners": [
+     "typical/27C",
+     "typical/0C",
+     "typical/85C",
+     "ss/0C",
+     "ss/85C",
+     "ff/0C",
+     "ff/85C"
+    ],
+    "pad_p_peak_v": {
+     "typical/27C": 8.099,
+     "typical/0C": 8.029,
+     "typical/85C": 8.242,
+     "ss/0C": 8.31,
+     "ss/85C": 8.647,
+     "ff/0C": 7.776,
+     "ff/85C": 7.932
+    },
+    "rail_peak_v": {
+     "typical/27C": 7.109,
+     "typical/0C": 6.998,
+     "typical/85C": 7.308,
+     "ss/0C": 7.268,
+     "ss/85C": 7.649,
+     "ff/0C": 6.728,
+     "ff/85C": 7.01
+    },
+    "worst_corner": "ss/85C",
+    "worst_pad_p_peak_v": 8.647,
+    "observed_mos_exceeding_gate_screen_max": 98,
+    "passes_screen_all_corners": false
+   },
+   "retained_fixture": {
+    "brownout_pad_p_v": {
+     "typical/27C": 3.0,
+     "typical/0C": 3.0,
+     "typical/85C": 3.0,
+     "ss/0C": 3.0,
+     "ss/85C": 3.0,
+     "ff/0C": 3.0,
+     "ff/85C": 3.0
+    },
+    "brownout_shunt_current_a": {
+     "typical/27C": 0.0,
+     "typical/0C": 0.0,
+     "typical/85C": 0.0,
+     "ss/0C": 0.0,
+     "ss/85C": 0.0,
+     "ff/0C": 0.0,
+     "ff/85C": 0.0
+    },
+    "recovery_pad_p_v": {
+     "typical/27C": 2.984,
+     "typical/0C": 1.691,
+     "typical/85C": 2.998,
+     "ss/0C": 1.762,
+     "ss/85C": 2.995,
+     "ff/0C": 2.972,
+     "ff/85C": 2.999
+    }
+   },
+   "functional_window_dc_loading_per_driven_pad_a": {
+    "1.65": {
+     "min": 1.08721097e-10,
+     "max": 1.24583661e-09
+    },
+    "2.5": {
+     "min": 1.79416155e-10,
+     "max": 1.77963732e-09
+    },
+    "2.8": {
+     "min": 2.04465882e-10,
+     "max": 1.9702632e-09
+    },
+    "3.0": {
+     "min": 2.21175739e-10,
+     "max": 2.09801034e-09
+    },
+    "3.15": {
+     "min": 2.33723941e-10,
+     "max": 2.1941894e-09
+    },
+    "3.3": {
+     "min": 2.46277566e-10,
+     "max": 2.29071937e-09
+    },
+    "3.35": {
+     "min": 2.50463535e-10,
+     "max": 2.32298323e-09
+    }
+   },
+   "pad_v_at_10uA_functional_window": {
+    "min": 9,
+    "max": 0
+   },
+   "safety_dc_loading_at_3p63v_pad_a": {
+    "ff/85C": 6.24700724e-08,
+    "typical/85C": 4.35923163e-09,
+    "ss/0C": 2.67273666e-10
+   },
+   "decision": "rejected: releases correctly, fails stress at every corner (7.78-8.65 V, 98 observed exceedances)"
+  },
+  "recorded_direct_trigger": {
+   "source": "rail-supervisor-screen.json:protection_direct_trigger (tt/27C only, not rerun)",
+   "description": "gate discharge + three diode-connected 100 um 6V NMOS rail-to-gate trigger",
+   "stress": {
+    "pad_p_peak_v_typ27": 7.84238827,
+    "observed_mos_exceeding_gate_screen": 99
+   },
+   "release": "pre-pulse brownout pad 2.9990 V (released)",
+   "decision": "rejected: exceeds the 6.0 V screen at tt/27C"
+  },
+  "recorded_feedforward": {
+   "source": "rail-supervisor-screen.json:protection_feedforward (tt/27C only, not rerun)",
+   "description": "gate discharge + 4 pF MIM rail-to-gate feed-forward",
+   "stress": {
+    "pad_p_peak_v_typ27": 7.18810446,
+    "observed_mos_exceeding_gate_screen": 18
+   },
+   "release": "pre-pulse brownout pad 2.9999 V (released)",
+   "decision": "rejected: exceeds the 6.0 V screen at tt/27C"
+  },
+  "recorded_static_shunt_3x1000": {
+   "source": "rail-supervisor-screen.json:protection_static_shunt (tt/27C only, not rerun)",
+   "description": "gate discharge + 3 series banks of 20 x 50 um diode-connected 6V NMOS",
+   "stress": {
+    "pad_p_peak_v_typ27": 7.2198417,
+    "observed_mos_exceeding_gate_screen": 38
+   },
+   "release": "pre-pulse brownout pad 2.9933 V (released)",
+   "decision": "rejected: exceeds the 6.0 V screen at tt/27C"
+  },
+  "stack2_w2000": {
+   "description": "gate discharge + 2-stage diode-connected nfet_06v0 series stack, 2000 um per stage (50 um x L0.7 fingers), ESD_RAIL->VSS",
+   "stress": {
+    "corners": [
+     "typical/27C",
+     "typical/0C",
+     "typical/85C",
+     "ss/0C",
+     "ss/85C",
+     "ff/0C",
+     "ff/85C"
+    ],
+    "pad_p_peak_v": {
+     "typical/27C": 4.844,
+     "typical/0C": 4.822,
+     "typical/85C": 4.877,
+     "ss/0C": 5.358,
+     "ss/85C": 5.44,
+     "ff/0C": 4.345,
+     "ff/85C": 4.362
+    },
+    "rail_peak_v": {
+     "typical/27C": 3.707,
+     "typical/0C": 3.664,
+     "typical/85C": 3.785,
+     "ss/0C": 4.178,
+     "ss/85C": 4.322,
+     "ff/0C": 3.211,
+     "ff/85C": 3.298
+    },
+    "worst_corner": "ss/85C",
+    "worst_pad_p_peak_v": 5.44,
+    "observed_mos_exceeding_gate_screen_max": 0,
+    "passes_screen_all_corners": true
+   },
+   "retained_fixture": {
+    "brownout_pad_p_v": {
+     "typical/27C": 2.499,
+     "typical/0C": 2.579,
+     "typical/85C": 2.328,
+     "ss/0C": 2.792,
+     "ss/85C": 2.564,
+     "ff/0C": 2.329,
+     "ff/85C": 2.068
+    },
+    "brownout_shunt_current_a": {
+     "typical/27C": 0.0007336022565444445,
+     "typical/0C": 0.0006172445846499999,
+     "typical/85C": 0.0009846415653944444,
+     "ss/0C": 0.0003053500486166667,
+     "ss/85C": 0.0006386671835666666,
+     "ff/0C": 0.0009828720562,
+     "ff/85C": 0.0013663031695000001
+    },
+    "recovery_pad_p_v": {
+     "typical/27C": 2.499,
+     "typical/0C": 2.579,
+     "typical/85C": 2.328,
+     "ss/0C": 2.792,
+     "ss/85C": 2.564,
+     "ff/0C": 2.329,
+     "ff/85C": 2.068
+    }
+   },
+   "functional_window_dc_loading_per_driven_pad_a": {
+    "1.65": {
+     "min": 4.29569899e-08,
+     "max": 1.25612522e-05
+    },
+    "2.5": {
+     "min": 5.91574913e-05,
+     "max": 0.0042755349
+    },
+    "2.8": {
+     "min": 0.000531370048,
+     "max": 0.0122418379
+    },
+    "3.0": {
+     "min": 0.00177485114,
+     "max": 0.0197038968
+    },
+    "3.15": {
+     "min": 0.0036308192,
+     "max": 0.0261896545
+    },
+    "3.3": {
+     "min": 0.00637482359,
+     "max": 0.0333344658
+    },
+    "3.35": {
+     "min": 0.00747471486,
+     "max": 0.0358508012
+    }
+   },
+   "pad_v_at_10uA_functional_window": {
+    "min": 1.63,
+    "max": 2.29
+   },
+   "safety_dc_loading_at_3p63v_pad_a": {
+    "ff/85C": 0.0532517519,
+    "typical/85C": 0.0333896251,
+    "ss/0C": 0.0136860735
+   },
+   "decision": "rejected: most stress margin (<=5.44 V) but 7-17 mA per pad at 3.0-3.3 V even at tt; loads 1.65 V +/- 1 V reference peaks"
+  },
+  "stack3_w6000": {
+   "description": "gate discharge + 3-stage diode-connected nfet_06v0 series stack, 6000 um per stage (50 um x L0.7 fingers), ESD_RAIL->VSS",
+   "stress": {
+    "corners": [
+     "typical/27C",
+     "typical/0C",
+     "typical/85C",
+     "ss/0C",
+     "ss/85C",
+     "ff/0C",
+     "ff/85C"
+    ],
+    "pad_p_peak_v": {
+     "typical/27C": 5.69,
+     "typical/0C": 5.71,
+     "typical/85C": 5.641,
+     "ss/0C": 6.369,
+     "ss/85C": 6.322,
+     "ff/0C": 5.084,
+     "ff/85C": 4.989
+    },
+    "rail_peak_v": {
+     "typical/27C": 4.554,
+     "typical/0C": 4.554,
+     "typical/85C": 4.551,
+     "ss/0C": 5.191,
+     "ss/85C": 5.208,
+     "ff/0C": 3.95,
+     "ff/85C": 3.926
+    },
+    "worst_corner": "ss/0C",
+    "worst_pad_p_peak_v": 6.369,
+    "observed_mos_exceeding_gate_screen_max": 18,
+    "passes_screen_all_corners": false
+   },
+   "retained_fixture": {
+    "brownout_pad_p_v": {
+     "typical/27C": 2.973,
+     "typical/0C": 2.991,
+     "typical/85C": 2.875,
+     "ss/0C": 3.0,
+     "ss/85C": 2.98,
+     "ff/0C": 2.892,
+     "ff/85C": 2.61
+    },
+    "brownout_shunt_current_a": {
+     "typical/27C": 3.896581578666667e-05,
+     "typical/0C": 1.2497310741111112e-05,
+     "typical/85C": 0.00018247029252777778,
+     "ss/0C": 9.211039845444445e-07,
+     "ss/85C": 2.874021468944445e-05,
+     "ff/0C": 0.0001583739903055556,
+     "ff/85C": 0.0005708019759111112
+    },
+    "recovery_pad_p_v": {
+     "typical/27C": 2.973,
+     "typical/0C": 2.991,
+     "typical/85C": 2.875,
+     "ss/0C": 3.0,
+     "ss/85C": 2.98,
+     "ff/0C": 2.892,
+     "ff/85C": 2.61
+    }
+   },
+   "decision": "rejected: 6.37 V at ss/0C and 6.32 V at ss/85C (18 observed exceedances)"
+  },
+  "stack3_w9000": {
+   "description": "gate discharge + 3-stage diode-connected nfet_06v0 series stack, 9000 um per stage (50 um x L0.7 fingers), ESD_RAIL->VSS",
+   "stress": {
+    "corners": [
+     "typical/27C",
+     "typical/0C",
+     "typical/85C",
+     "ss/0C",
+     "ss/85C",
+     "ff/0C",
+     "ff/85C"
+    ],
+    "pad_p_peak_v": {
+     "typical/27C": 5.347,
+     "typical/0C": 5.386,
+     "typical/85C": 5.258,
+     "ss/0C": 6.018,
+     "ss/85C": 5.909,
+     "ff/0C": 4.782,
+     "ff/85C": 4.632
+    },
+    "rail_peak_v": {
+     "typical/27C": 4.211,
+     "typical/0C": 4.229,
+     "typical/85C": 4.168,
+     "ss/0C": 4.84,
+     "ss/85C": 4.794,
+     "ff/0C": 3.648,
+     "ff/85C": 3.567
+    },
+    "worst_corner": "ss/0C",
+    "worst_pad_p_peak_v": 6.018,
+    "observed_mos_exceeding_gate_screen_max": 18,
+    "passes_screen_all_corners": false
+   },
+   "retained_fixture": {
+    "brownout_pad_p_v": {
+     "typical/27C": 2.964,
+     "typical/0C": 2.988,
+     "typical/85C": 2.845,
+     "ss/0C": 3.0,
+     "ss/85C": 2.973,
+     "ff/0C": 2.867,
+     "ff/85C": 2.558
+    },
+    "brownout_shunt_current_a": {
+     "typical/27C": 5.224929979000001e-05,
+     "typical/0C": 1.7258727043888892e-05,
+     "typical/85C": 0.00022613676927777784,
+     "ss/0C": 1.2644770689999999e-06,
+     "ss/85C": 3.928816921666667e-05,
+     "ff/0C": 0.00019388506343333332,
+     "ff/85C": 0.0006473066757444445
+    },
+    "recovery_pad_p_v": {
+     "typical/27C": 2.964,
+     "typical/0C": 2.988,
+     "typical/85C": 2.846,
+     "ss/0C": 3.0,
+     "ss/85C": 2.973,
+     "ff/0C": 2.868,
+     "ff/85C": 2.558
+    }
+   },
+   "functional_window_dc_loading_per_driven_pad_a": {
+    "1.65": {
+     "min": 1.70848942e-09,
+     "max": 6.97760155e-07
+    },
+    "2.5": {
+     "min": 1.42255637e-07,
+     "max": 7.79797951e-05
+    },
+    "2.8": {
+     "min": 7.98446406e-07,
+     "max": 0.000382628933
+    },
+    "3.0": {
+     "min": 2.5433108e-06,
+     "max": 0.00104015006
+    },
+    "3.15": {
+     "min": 6.06012216e-06,
+     "max": 0.00210251484
+    },
+    "3.3": {
+     "min": 1.43705564e-05,
+     "max": 0.00403088927
+    },
+    "3.35": {
+     "min": 1.91276619e-05,
+     "max": 0.00493775608
+    }
+   },
+   "pad_v_at_10uA_functional_window": {
+    "min": 2.13,
+    "max": 3.24
+   },
+   "safety_dc_loading_at_3p63v_pad_a": {
+    "ff/85C": 0.0226506177,
+    "typical/85C": 0.00487106297,
+    "ss/0C": 3.66608889e-05
+   },
+   "decision": "rejected: 6.02 V at ss/0C (18 observed exceedances)"
+  },
+  "stack3_w12000": {
+   "description": "gate discharge + 3-stage diode-connected nfet_06v0 series stack, 12000 um per stage (50 um x L0.7 fingers), ESD_RAIL->VSS",
+   "stress": {
+    "corners": [
+     "typical/27C",
+     "typical/0C",
+     "typical/85C",
+     "ss/0C",
+     "ss/85C",
+     "ff/0C",
+     "ff/85C"
+    ],
+    "pad_p_peak_v": {
+     "typical/27C": 5.147,
+     "typical/0C": 5.197,
+     "typical/85C": 5.035,
+     "ss/0C": 5.809,
+     "ss/85C": 5.662,
+     "ff/0C": 4.609,
+     "ff/85C": 4.423
+    },
+    "rail_peak_v": {
+     "typical/27C": 4.011,
+     "typical/0C": 4.041,
+     "typical/85C": 3.944,
+     "ss/0C": 4.631,
+     "ss/85C": 4.546,
+     "ff/0C": 3.475,
+     "ff/85C": 3.359
+    },
+    "worst_corner": "ss/0C",
+    "worst_pad_p_peak_v": 5.809,
+    "observed_mos_exceeding_gate_screen_max": 0,
+    "passes_screen_all_corners": true
+   },
+   "retained_fixture": {
+    "brownout_pad_p_v": {
+     "typical/27C": 2.956,
+     "typical/0C": 2.985,
+     "typical/85C": 2.822,
+     "ss/0C": 3.0,
+     "ss/85C": 2.967,
+     "ff/0C": 2.849,
+     "ff/85C": 2.52
+    },
+    "brownout_shunt_current_a": {
+     "typical/27C": 6.380180396722222e-05,
+     "typical/0C": 2.1604808445555555e-05,
+     "typical/85C": 0.0002604648577111111,
+     "ss/0C": 1.5836681111666669e-06,
+     "ss/85C": 4.8735016023888894e-05,
+     "ff/0C": 0.00022144080557777776,
+     "ff/85C": 0.0007030845021944444
+    },
+    "recovery_pad_p_v": {
+     "typical/27C": 2.956,
+     "typical/0C": 2.985,
+     "typical/85C": 2.822,
+     "ss/0C": 3.0,
+     "ss/85C": 2.967,
+     "ff/0C": 2.849,
+     "ff/85C": 2.52
+    }
+   },
+   "functional_window_dc_loading_per_driven_pad_a": {
+    "1.65": {
+     "min": 2.18032576e-09,
+     "max": 8.91034744e-07
+    },
+    "2.5": {
+     "min": 1.81767853e-07,
+     "max": 9.94931401e-05
+    },
+    "2.8": {
+     "min": 1.01937893e-06,
+     "max": 0.000489025702
+    },
+    "3.0": {
+     "min": 3.24535083e-06,
+     "max": 0.00133050203
+    },
+    "3.15": {
+     "min": 7.73061051e-06,
+     "max": 0.00268882075
+    },
+    "3.3": {
+     "min": 1.83299695e-05,
+     "max": 0.00514797146
+    },
+    "3.35": {
+     "min": 2.43985649e-05,
+     "max": 0.00630153608
+    }
+   },
+   "pad_v_at_10uA_functional_window": {
+    "min": 2.09,
+    "max": 3.2
+   },
+   "safety_dc_loading_at_3p63v_pad_a": {
+    "ff/85C": 0.0285711109,
+    "typical/85C": 0.00621363969,
+    "ss/0C": 4.67633735e-05
+   },
+   "decision": "SELECTED: below the 6.0 V screen at all seven stress corners; costs bounded DC loading near 3.3 V"
+  },
+  "stack3_w12000_extracted": {
+   "description": "gate discharge + gate discharge + extracted stress-safe shunt macro",
+   "stress": {
+    "corners": [
+     "typical/27C",
+     "typical/0C",
+     "typical/85C",
+     "ss/0C",
+     "ss/85C",
+     "ff/0C",
+     "ff/85C"
+    ],
+    "pad_p_peak_v": {
+     "typical/27C": 5.153,
+     "typical/0C": 5.202,
+     "typical/85C": 5.044,
+     "ss/0C": 5.822,
+     "ss/85C": 5.684,
+     "ff/0C": 4.612,
+     "ff/85C": 4.429
+    },
+    "rail_peak_v": {
+     "typical/27C": 4.016,
+     "typical/0C": 4.045,
+     "typical/85C": 3.952,
+     "ss/0C": 4.642,
+     "ss/85C": 4.566,
+     "ff/0C": 3.477,
+     "ff/85C": 3.364
+    },
+    "worst_corner": "ss/0C",
+    "worst_pad_p_peak_v": 5.822,
+    "observed_mos_exceeding_gate_screen_max": 0,
+    "passes_screen_all_corners": true
+   },
+   "retained_fixture": {
+    "brownout_pad_p_v": {
+     "typical/27C": 2.956,
+     "typical/0C": 2.985,
+     "typical/85C": 2.822,
+     "ss/0C": 3.0,
+     "ss/85C": 2.967,
+     "ff/0C": 2.849,
+     "ff/85C": 2.52
+    },
+    "brownout_shunt_current_a": {
+     "typical/27C": 6.380324430222222e-05,
+     "typical/0C": 2.1605588427222225e-05,
+     "typical/85C": 0.00026046626314444444,
+     "ss/0C": 4.2551709187777775e-07,
+     "ss/85C": 4.8736626556111114e-05,
+     "ff/0C": 0.0002214420133888889,
+     "ff/85C": 0.0007030859019055557
+    },
+    "recovery_pad_p_v": {
+     "typical/27C": 2.956,
+     "typical/0C": 2.985,
+     "typical/85C": 2.822,
+     "ss/0C": 3.0,
+     "ss/85C": 2.967,
+     "ff/0C": 2.849,
+     "ff/85C": 2.52
+    }
+   },
+   "decision": "confirms the selected macro: Magic device extraction of the generated 3 x 12000 um layout in the same fixture"
+  },
+  "diode_area_x2": {
+   "source": "scratch sweep (pad-stress-safe-sweep2), not in final report",
+   "description": "doubled primary steering diodes without shunt",
+   "stress": {
+    "pad_p_peak_v": {
+     "typical/27C": 8.079,
+     "ss/125C": 8.651
+    }
+   },
+   "cost": "+0.17 pF per pad at 1 GHz (0.169 -> 0.339 pF at 1.65 V)",
+   "decision": "rejected: diode drop is not the limiting term; with stack3_w6000 it lowered the peak only 0.12-0.15 V"
+  }
+ },
+ "families": {
+  "txpad (wired TX)": {
+   "variant": "stress-safe foundation (shared)",
+   "signal": "TMDS/CML into 50 ohm board pull-ups to 3.3 V; high level up to the die rail",
+   "cost": "Added pad C at 1 GHz: 0 (rail-side shunt). DC load per leg at 3.3 V: 0.31-0.44 mA tt, 18-29 uA ss, 4.2-5.2 mA ff (6.3 mA at 3.35 V ff/32C) -> high-level droop on a 50 ohm pull-up <=22 mV tt, <=0.32 V ff; differential swing preserved to first order, common mode lowered.",
+   "fallback": "Plan tier 2 \"Equalizer / termination\": on-chip termination off with board resistors (board pull-up/termination chosen for reduced common mode, or AC-coupled lane). WTX_EXT shares the same pad and does not cover this loss."
+  },
+  "wirepad (wired RX/USB)": {
+   "variant": "stress-safe foundation (shared)",
+   "signal": "USB FS 0-3.3 V, USB HS 0.4 V, TMDS sink 2.8-3.3 V, generic input range 0-3.6 V",
+   "cost": "Same DC load as txpad at 3.0-3.35 V; FS high level loaded up to ~5-6 mA at ff (VOH droop through the ~40 ohm FS driver ~0.2-0.25 V); HS and <=2.5 V signals unaffected (<=0.1 mA ff, <=6 uA tt at 2.5 V). Inputs above 3.35 V (to 3.63 V) draw up to 17 mA at ff/32C.",
+   "fallback": "Plan tier 2 USB HS/FS: external board PHY; equalizer/termination: board resistors."
+  },
+  "refpad (differential reference)": {
+   "variant": "stress-safe foundation (shared)",
+   "signal": "1.65 V common mode, source up to 1.0 V differential peak (single-ended peaks to ~2.65 V)",
+   "cost": "No added pad C. Peak loading at 2.65 V: <=~10 uA tt, ~0.1-0.4 mA ff (top of the swing compressed at ff). Below ~2.2 V (<=0.55 V peak) <10 uA at all window corners.",
+   "fallback": "Reduce source amplitude to <=0.55 V peak; plan tier 2 RF synthesizer second fallback: independent AUX_CLK debug pair (same foundation, same limit)."
+  },
+  "rfpad (RF RX)": {
+   "variant": "stress-safe foundation (shared)",
+   "signal": "small-signal LNA input around its bias (bias level not yet fixed by a transistor-level LNA)",
+   "cost": "No added pad capacitance or series resistance, so no bandwidth/NF change from the shunt. Loading <1 uA up to 1.65 V and <0.1 mA up to 2.5 V across the window; an LNA bias above ~2.1 V would be loaded at ff.",
+   "fallback": "Plan tier 2 RF RX front end: LNA bypass switch into the mixers with an external board LNA."
+  },
+  "rftxpad (RF TX)": {
+   "variant": "stress-safe foundation (shared)",
+   "signal": "0 dBm target = 0.32 V peak into 50 ohm around the driver bias",
+   "cost": "No added pad C. Output peaks above ~2.1 V (ff) / ~2.6 V (tt) are loaded and clipped (10 uA onset), limiting maximum output if the driver idles near VDD.",
+   "fallback": "Plan tier 2 RF TX output: low-power mixer output through the same pad to an external board PA."
+  },
+  "generic digital/host": {
+   "variant": "provider gf180mcu_fd_io bidirectional cells with native supply-rail clamps, unchanged",
+   "signal": "3.3 V CMOS",
+   "cost": "None introduced here. Not simulated in this work; relies on the provider cell and retained ring clamps (no isolated rail, so no release/stress conflict).",
+   "fallback": "Plan tier 2 host link: SDR/reduced rate, SPI capture/playback."
+  },
+  "debug analog sites (BB_I/Q, AUX_CLK, WCLK_IN, WTX_EXT, WMON)": {
+   "variant": "stress-safe pair cell (rf-pair) for BB_I/BB_Q/AUX_CLK/WCLK_IN/WTX_EXT; single-leg cell for WMON",
+   "cost": "5 x 175,909 + 2 x 158,302 = 1,196,149 um2 incl. ESD_TEST (budget 1.2 mm2)",
+   "open": [
+    "debug cells (bb_tap, diff_clk_rx) owned elsewhere; loading/isolation in debug-sites.json"
+   ]
+  },
+  "ESD_TEST (bidir[25])": {
+   "variant": "generated/stress-safe-families/single-leg: complete v2.1 macro, PAD_P on a native Bondpad_5LM, PADN tied to VSS",
+   "cost": "158,302 um2 allocation from the debug budget",
+   "open": []
+  },
+  "debug digital/ATB sites": {
+   "variant": "provider bi_t (observe outputs) and asig_5p0 (ATB0/1) unchanged",
+   "cost": "none",
+   "note": "ATB force check in atb-provider-pad-force.json"
+  }
+ },
+ "layout": {
+  "macro": "generated/stress-safe-families/network-shunt (v2.1: network + discharge + ATB tap + v2 shunt, widened VSS strap)",
+  "families": {
+   "refpad": {
+    "drc": 0,
+    "lvs": true,
+    "dir": "generated/stress-safe-families/reference"
+   },
+   "txpad": {
+    "drc": 0,
+    "lvs": true,
+    "dir": "generated/stress-safe-families/wired-transmit"
+   },
+   "wirepad": {
+    "drc": 0,
+    "lvs": true,
+    "dir": "generated/stress-safe-families/wired-receive-usb"
+   },
+   "rfpad": {
+    "drc": 0,
+    "lvs": true,
+    "dir": "generated/stress-safe-families/rf-pair"
+   },
+   "rftxpad": {
+    "drc": 0,
+    "lvs": true,
+    "dir": "generated/stress-safe-families/rf-pair"
+   }
+  },
+  "esd_test": {
+   "dir": "generated/stress-safe-families/single-leg",
+   "drc_count": 0,
+   "lvs": true,
+   "allocation_um2": 158302,
+   "contents": "native Bondpad_5LM on PAD_P (provider bond geometry, wide signal routes) + complete stress-safe macro; PADN terminated to VSS on metal3",
+   "note": "allocation includes the unused second-leg corridor boxes of the RF pair template (overstated)"
+  },
+  "area_fit": {
+   "refpad": {
+    "allocation_um2": 179237,
+    "ceiling_um2": 185000,
+    "headroom_um2": 5763,
+    "fits": true
+   },
+   "txpad": {
+    "allocation_um2": 292666,
+    "ceiling_um2": 300000,
+    "headroom_um2": 7334,
+    "fits": true
+   },
+   "wirepad": {
+    "allocation_um2": 335069,
+    "ceiling_um2": 340000,
+    "headroom_um2": 4931,
+    "fits": true
+   },
+   "rfpad": {
+    "allocation_um2": 175909,
+    "ceiling_um2": 180000,
+    "headroom_um2": 4091,
+    "fits": true
+   },
+   "rftxpad": {
+    "allocation_um2": 175909,
+    "ceiling_um2": 180000,
+    "headroom_um2": 4091,
+    "fits": true
+   }
+  },
+  "v1_withdrawn": "The earlier v1 shunt (rail_shunt_layout.py) and everything built on it (stress-safe-foundation/, the first RF composite and ESD_TEST) were withdrawn: its last-bank VSS return ran through 0.23 um guard-ring metal1 (~79 ohm), 4 um metal2 buses (~6.6 ohm end to end) and 1 um metal3 risers (~5.2 ohm). Device-level extraction hid this.",
+  "wiring_resistance_check": "Distributed wiring model of the drawn v2 macro raises the retained-fixture peak from 5.822 V (device-only) to 5.873 V (nominal sheet/via resistance) and 5.895 V (high corner) at ss/0C: margin 0.105 V to the 6.0 V screen. Network-internal and pad-route resistances are still not included.",
+  "strap_capacity": "Macro v2.1 (metal4 VSS base 63 um, metal5 overlay from y=290): worst 0.50 of the DRM 85C limit in the 57.2 mA ideal-source fault, 0.12 at 13.4 mA. With DRM values v2 would have been 0.91, not the 1.9x of the earlier assumed limit."
+ },
+ "environment": "env/pad-environment.json",
+ "source_sha256": {
+  "stress_safe_clamp.py": "5d7247238bb44085b3ace9d7ca14f00d53f742e0170e26bee7e04c6e2093c8a2",
+  "stress_safe_native_clamp.py": "45b6cde51660a8bb9b6335457474ff556e1df1d10361eb361f426fe9498dbec1",
+  "rail_shunt_layout.py": "d8997f3e8f7cefe32dd7324eb629bbecc40706a67bf550363294e93e6f925dc9",
+  "circuits.py": "1c212fbefc7157c2fb50594b3c137aa9ce2f94bfd30075c9386c05a0fa55e2b3",
+  "layout.py": "8677a84189144fc4c1ef9524ec0d379e5c2e5218bcfc6ba039ea56b4913bf8f5",
+  "gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
+  "run_first_pass.py": "5fa247e2ddb246d7551dee4d8dd95d832e57830beb83778597a9d1e70d95b830",
+  "env/Dockerfile.sim": "5f3d14e9cc6422f4e77554a87dc971174c4c5945a449fc928e158d550578b075",
+  "env/build_sim_image.sh": "f8c8f05fcc48042c5cf9a6f52cfe6e1ca80204cf8307d203b4d215abef2428d0",
+  "ngspice-cap-multiplier.patch": "eda4810b0286f6a30e4e5a61408bdd4c9ff9babaf51c566430c54cd447ed4a67",
+  "ngspice-diode-charge.patch": "789510fbd22020e3c653bfde994b261bed23dc9f4ca473bb17ef0d82e406688b"
+ },
+ "evidence_sha256": {
+  "generated/stress-safe-sweep.json": "0c038d64f7c271e21855973094403231f3ea193ce4c8c9c1879ed66f439d975b",
+  "generated/stress-safe-native-clamp-check.json": "136562ecac36cef6b8cf778e8db3717c1d808d88b7814c8a1ad6f40703b43c50",
+  "generated/rail-supervisor-screen.json": "31c00390a65bd17e09695218de2e3db929a289801faf43ff9350589ff61ce422",
+  "env/pad-environment.json": "07023c1a3a1532c121314e1b9a3d77055267f92bf03e1c4bcedfd9a1c2123b72",
+  "generated/stress-safe-families/families-report.json": "c482e93402b363bf84946ee81005889d21c1faed2015ae001e9763c27ae0568d",
+  "generated/stress-safe-families/family-sims.json": "86235731b1584d2a61b8935ea475a8309c2c4424b1d51b88066cad5e1a44643c",
+  "generated/stress-safe-families/wiring-resistance-check.json": "638e337ae2d0f51950851e84e47e08e1af067a9f10a2b3772d938a6823584a5f",
+  "generated/stress-safe-families/strap-capacity.json": "493bd3b15b4a70a78f696b953e8a31c8506417a46919bbcd72f18842f67e1adc",
+  "generated/stress-safe-families/usb-attachment.json": "63708ff57409d65d74ca18f6c6756dafcb578e8a208d369eb992a5b775dd3cbb",
+  "generated/stress-safe-families/tx-swing-investigation.json": "2969a247d0e0e0aaa766fd6fec1a31ee34a86b4bdf537a7cb92c36eeed91d67e",
+  "generated/stress-safe-families/network-shunt/network-layout.json": "80948a96e8a59c8a639953b165a21530c60a2bd3618f505975c64bd3f466a7d6"
+ },
+ "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+ "exclusions": [
+  "Not ESD qualification: 100 mA/2 ns compact-model diagnostic, not HBM/CDM/TLP; no snapback, thermal, current-density or electromigration model; 2 kV HBM / 500 V CDM targets are unverified",
+  "Only the positive PAD_P pulse in the retained RX/USB fixture; negative pulses, PAD_N, pad-to-pad and other families were not re-simulated with the shunt",
+  "Terminal audit observes 88 of 1077 MOS fully; 989 are partly or not observed (internal nodes unknown)",
+  "Shunt buses/vias are not discharge-current or EM qualified",
+  "Powered-host backfeed (~81.6 mA), autonomous disable and supervisor gaps are unaffected by this selection",
+  "Functional loading uses one pad driven through its primary diodes with the released 4000 um clamp; the RC trigger and second pad are not modelled in that DC check",
+  "Selected margin with drawn v2 wiring: 5.873/5.895 V vs 6.0 V at ss/0C (network-internal routing resistance excluded)",
+  "Strap EM limits are assumptions (no EM table in the installed PDK)"
+ ],
+ "proposed_readiness": {
+  "refpad": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core"
+  },
+  "rfpad": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core"
+  },
+  "rftxpad": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core"
+  },
+  "txpad": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core"
+  },
+  "wirepad": {
+   "safe": "pass",
+   "clean": "pass",
+   "observable": "open",
+   "fallback": "waived_core"
+  }
+ },
+ "proposed_readiness_reason": "See generated/stress-safe-families/families-report.json:proposed_readiness (conditions listed there).",
+ "source_note": "stress_safe_clamp.py changed after stress-safe-sweep.json was produced (recorded d43c4f15...): docker runs now pass -e OMP_NUM_THREADS=1 (host throttle) and floating-conductor anchoring is applied only in stress_safe_family_sims.py. Simulation decks and waveform hashes in the sweep are unaffected."
+}

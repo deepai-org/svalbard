@@ -1,0 +1,37 @@
+{
+ "question": "Is the ~81.6 mA powered-host backfeed a wirepad (USB) path, and does the island_support reverse-blocking switch remove it?",
+ "source": "generated/retained-screen.json:independent_peer_diagnostic (canonical evidence, unchanged)",
+ "finding": {
+  "path": "Host-interface outputs on provider gf180mcu_fd_io__bi_t cells (D2H_CLK, D2H_D[0..9], HOST_MISO: 12 sites) with the chip unpowered and the host powered: current flows from the host through each provider pad's upper ESD/drain junction into the common DVDD ring and out through the off board supply.",
+  "unpowered_state": {
+   "local_supply_v": 0.009178547283571455,
+   "output_v": 0.665145317,
+   "board_supply_backfeed_a": 0.0815870957,
+   "peer_source_current_a": 0.0815871933
+  },
+  "brownout_state": {
+   "local_supply_v": 1.502747658982596,
+   "output_v": 2.12256366,
+   "board_supply_backfeed_a": 0.0244249357,
+   "peer_source_current_a": 0.0244400355
+  },
+  "per_pin_estimate_ma": 6.8,
+  "not_wirepad": "The wirepad (USB/TMDS) pads do not carry this path: with a 3.63 V/50 ohm peer and the chip off they draw 0.87 mA/leg (tt) to 6.7 mA/leg (ff/85C) into the isolated protection rail and shunt, with <=10 nA into the supply (family-sims.json). The earlier report wrongly listed the 81.6 mA under wirepad.",
+  "island_switch": "No effect: the island_support body-switched PMOS blocks island-rail -> ring current (<=0.33 uA), but this current enters the ring itself through the provider pad junctions, upstream of every island switch."
+ },
+ "damage_risk": {
+  "per_pin": "~6.8 mA DC per provider pad junction; the provider diode area is far above the DRM 14.2 contact/via EM limits at this current, so no EM or thermal damage is expected for bench durations",
+  "ring": "The ring is held near 0 V only because the off board supply sinks 81.6 mA. If the board supply is disconnected (floating) the host phantom-powers the ring toward ~2.6 V through the junctions: undefined partial power-up, POR uncertainty and forward-biased I/O junctions (DRM 14.3 I/O latch-up rules apply to such junctions).",
+  "host": "The FPGA sources ~6.8 mA per pin into a low impedance; within typical FPGA drive limits but continuous."
+ },
+ "proposal": {
+  "on_chip": "Not available with the provider bi_t cell: the junction to DVDD is intrinsic to the provider cell. A custom isolated-rail pad for 12 x 312.5 MHz host lines would need a full redesign and area; not proposed for this die.",
+  "board_requirement": [
+   "Host I/Os toward the chip must be high-impedance (no keepers/pull-ups, outputs tristated) whenever the chip supply is below 3.15 V; FPGA configuration holds them high-Z until the chip POR/power-good is observed.",
+   "Preferred hardware enforcement: a FET bus switch with Ioff/powered-off isolation and >=500 MHz bandwidth (e.g. a TS3L/SN74CB3Q-class part) on the 12 host lines, enabled from the chip-side 3.3 V rail; external parts allowed.",
+   "Series resistors are not suitable on the 312.5 MHz D2H lines (1 kohm would limit the backfeed to ~2.7 mA/pin but destroys the edge rate); acceptable only on HOST_MISO/SPI-rate lines.",
+   "Never leave the chip supply floating while the host is powered: the board supply must present a defined (off = grounded) state or the bus switch must be open."
+  ]
+ },
+ "wirepad_safe": "pass for its own pads (pulses, ramps, powered peer); the host-interface backfeed belongs to the host/digital pad block and the supply ring"
+}

@@ -1,0 +1,227 @@
+* NGSPICE file created from network_flat.ext - technology: gf180mcuD
+
+.subckt network_flat VSS RAIL PADP PADN
+X0 a_3813_29064# a_1005_43545# VSS VSS nfet_06v0 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=0.7u
+X1 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X2 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X3 a_4789_29064# a_3813_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X4 a_1005_45505# a_13878_45225# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X5 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X6 VSS a_3813_29064# a_4789_29064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X7 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D0 PADP RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X8 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X9 RAIL a_13878_46345# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X10 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X11 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X12 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X13 RAIL a_1005_43545# a_3813_29064# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D1 PADN RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X14 a_3813_29064# a_1005_43545# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X15 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X16 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X17 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X18 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X19 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D2 PADN RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X20 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X21 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X22 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X23 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X24 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X25 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X26 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X27 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X28 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X29 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X30 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X31 a_1005_44385# a_13878_44105# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X32 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X33 a_2245_2628# a_4789_29064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X34 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X35 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D3 VSS RAIL diode_nd2ps_06v0 pj=82u area=40p
+X36 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X37 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X38 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X39 VSS a_4789_29064# a_2245_2628# VSS nfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+D4 PADP RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X40 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X41 a_4789_29064# a_3813_29064# RAIL RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X42 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X43 a_1005_43825# a_13878_44105# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X44 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X45 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X46 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X47 a_4789_29064# a_3813_29064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X48 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X49 a_1005_44945# a_13878_45225# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X50 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X51 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X52 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X53 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X54 a_1005_43545# VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
+X55 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X56 RAIL a_1005_43545# a_3813_29064# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D5 VSS PADN diode_nd2ps_06v0 pj=51.8u area=22.5p
+X57 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D6 VSS PADP diode_nd2ps_06v0 pj=51.8u area=22.5p
+X58 a_1005_46065# a_13878_46345# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X59 a_3813_29064# a_1005_43545# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X60 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X61 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X62 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X63 RAIL a_3813_29064# a_4789_29064# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X64 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X65 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X66 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X67 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X68 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X69 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X70 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X71 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X72 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X73 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D7 PADP RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X74 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X75 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X76 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X77 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D8 VSS RAIL diode_nd2ps_06v0 pj=82u area=40p
+X78 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D9 VSS RAIL diode_nd2ps_06v0 pj=82u area=40p
+D10 VSS RAIL diode_nd2ps_06v0 pj=82u area=40p
+X79 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X80 a_1005_43825# a_13878_43545# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X81 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X82 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X83 VSS a_3813_29064# a_4789_29064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X84 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X85 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X86 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X87 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X88 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X89 a_4789_29064# a_3813_29064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X90 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D11 VSS PADP diode_nd2ps_06v0 pj=51.8u area=22.5p
+D12 PADN RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+D13 PADP RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X91 a_1005_44945# a_13878_44665# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X92 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D14 VSS PADN diode_nd2ps_06v0 pj=51.8u area=22.5p
+X93 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X94 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X95 VSS a_3813_29064# a_4789_29064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X96 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X97 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X98 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X99 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X100 a_1005_46065# a_13878_45785# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X101 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X102 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X103 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X104 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X105 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X106 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X107 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X108 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X109 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X110 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X111 RAIL VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
+X112 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X113 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D15 VSS PADP diode_nd2ps_06v0 pj=51.8u area=22.5p
+X114 VSS RAIL VSS ppolyf_u_1k_6p0 r_width=1u r_length=9.98874m
+D16 PADN RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X115 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X116 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X117 a_1005_43545# a_13878_43545# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+D17 VSS PADN diode_nd2ps_06v0 pj=51.8u area=22.5p
+X118 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X119 a_2245_2628# a_4789_29064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X120 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X121 VSS a_4789_29064# a_2245_2628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X122 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D18 VSS PADP diode_nd2ps_06v0 pj=51.8u area=22.5p
+X123 a_1005_44385# a_13878_44665# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X124 a_2245_2628# a_4789_29064# RAIL RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X125 a_4789_29064# a_3813_29064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X126 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X127 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X128 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D19 VSS PADN diode_nd2ps_06v0 pj=51.8u area=22.5p
+X129 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X130 RAIL a_4789_29064# a_2245_2628# RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X131 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X132 VSS a_2245_2628# RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X133 a_1005_45505# a_13878_45785# RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X134 VSS a_4789_29064# a_2245_2628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X135 a_2245_2628# a_4789_29064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X136 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X137 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X138 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+C0 RAIL a_1005_44945# 0.53823f
+C1 a_1005_44945# a_1005_44385# 0.0346f
+C2 a_1005_43545# m2_2279_36800# 0.05457f
+C3 RAIL a_13878_44665# 0.53916f
+C4 RAIL a_13878_45785# 0.53942f
+C5 a_13878_44665# a_13878_45225# 0.0346f
+C6 a_1005_45505# a_1005_46065# 0.0346f
+C7 a_13878_45785# a_13878_45225# 0.0346f
+C8 RAIL a_1005_45505# 0.53842f
+C9 RAIL a_3813_29064# 4.89902f
+C10 a_1005_43545# a_1005_44945# 0
+C11 a_3813_29064# a_2245_2628# 0.00994f
+C12 RAIL a_13878_44105# 0.53942f
+C13 a_4789_29064# RAIL 13.9519f
+C14 a_13878_44105# a_13878_43545# 0.0346f
+C15 a_1005_44945# m2_2279_36800# 0
+C16 a_4789_29064# a_2245_2628# 10.1844f
+C17 RAIL PADP 24.1165f
+C18 PADN PADP 4.8219f
+C19 a_1005_43545# a_3813_29064# 2.2693f
+C20 a_1005_45505# m2_2279_36800# 0
+C21 a_4789_29064# a_1005_43545# 0.02879f
+C22 a_1005_43825# RAIL 0.53823f
+C23 a_13878_45785# a_13878_46345# 0.0346f
+C24 a_1005_43825# a_1005_44385# 0.0346f
+C25 RAIL a_1005_46065# 0.57348f
+C26 RAIL a_13878_43545# 0.56772f
+C27 RAIL PADN 22.0614f
+C28 RAIL a_1005_44385# 0.53823f
+C29 RAIL a_2245_2628# 0.24219p
+C30 RAIL a_13878_45225# 0.53916f
+C31 a_1005_44945# a_1005_45505# 0.0346f
+C32 a_1005_43825# a_1005_43545# 0.03725f
+C33 a_1005_43825# m2_2279_36800# 0
+C34 RAIL a_1005_43545# 96.5489f
+C35 a_13878_44105# a_13878_44665# 0.0346f
+C36 a_1005_43545# a_1005_44385# 0
+C37 a_1005_43545# a_2245_2628# 0.0135f
+C38 m2_2279_36800# a_1005_46065# 0
+C39 RAIL m2_2279_36800# 5.47988f
+C40 m2_2279_36800# a_1005_44385# 0
+C41 RAIL a_13878_46345# 0.5677f
+C42 a_4789_29064# a_3813_29064# 2.94235f
+C43 PADP VSS 32.9765f
+C44 PADN VSS 34.4478f
+C45 RAIL VSS 1674.15566f
+C46 m2_2279_36800# VSS 7.46506f $ **FLOATING
+C47 a_2245_2628# VSS 0.24797p
+C48 a_4789_29064# VSS 12.0947f
+C49 a_3813_29064# VSS 5.60447f
+C50 a_1005_43545# VSS 0.10822p
+C51 a_13878_43545# VSS 0.07835f
+C52 a_1005_43825# VSS 0.07377f
+C53 a_13878_44105# VSS 0.07394f
+C54 a_1005_44385# VSS 0.07377f
+C55 a_13878_44665# VSS 0.07394f
+C56 a_1005_44945# VSS 0.07377f
+C57 a_13878_45225# VSS 0.07394f
+C58 a_1005_45505# VSS 0.07377f
+C59 a_13878_45785# VSS 0.07394f
+C60 a_1005_46065# VSS 0.07377f
+C61 a_13878_46345# VSS 0.07838f
+DWELL_ARRAY VSS RAIL diode_nw2ps_06v0 area=569.4528p pj=470.72u
+.ends
+

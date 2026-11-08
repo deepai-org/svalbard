@@ -1,0 +1,413 @@
+{
+ "fixture": "/home/ubuntu/svalbard/scratch/pad-supervised-receive/clamp_long_hold.spice",
+ "fixture_sha256": "8a60cea559bf5b79dcec9553cefb60be64940988da0e99c02da063620ad01d75",
+ "gate_discharge": false,
+ "pulses": [
+  {
+   "variant": "released_baseline",
+   "process": "typical",
+   "temp_c": 27,
+   "shunt": null,
+   "windows": {
+    "active": {
+     "pad_p_min_v": 1.95794919,
+     "pad_p_max_v": 3.14622103,
+     "rail_max_v": 2.31463739,
+     "clamp_gate_max_v": 1.02247076,
+     "rx_p_max_abs_v": 0.0697510718,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 0.0003284709193333332
+    },
+    "before": {
+     "pad_p_min_v": 1.55411415,
+     "pad_p_max_v": 1.55419932,
+     "rail_max_v": 0.753822563,
+     "clamp_gate_max_v": 0.756940827,
+     "rx_p_max_abs_v": 3.47738355e-05,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 0.001060285061
+    },
+    "pulse": {
+     "pad_p_min_v": 1.56927547,
+     "pad_p_max_v": 4.01337703,
+     "rail_max_v": 2.87280631,
+     "clamp_gate_max_v": 1.43744253,
+     "rx_p_max_abs_v": 0.0960739184,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0
+    },
+    "recovery": {
+     "pad_p_min_v": 1.51433932,
+     "pad_p_max_v": 1.51600489,
+     "rail_max_v": 0.714874736,
+     "clamp_gate_max_v": 0.759514568,
+     "rx_p_max_abs_v": 0.000316255212,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 0.0010888737896666667
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 4.0134,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 4.0134,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 4.0134,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 4.0134,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 4.0134,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 4.0134,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "4ac3996e3dc63f8f81c0b1c89bea8ea56f01f7baf2d33330f2aa4a35c7f3f636",
+   "waveform_sha256": "73a567bb1221c6a034c9d78fba9b291c10a91b59925fb4d947841ea9f3de55f3"
+  },
+  {
+   "variant": "released_baseline",
+   "process": "ss",
+   "temp_c": 0,
+   "shunt": null,
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.98815181,
+     "pad_p_max_v": 3.28542779,
+     "rail_max_v": 2.54127648,
+     "clamp_gate_max_v": 0.00396469638,
+     "rx_p_max_abs_v": 0.0107235413,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": -0.00010031251999999989
+    },
+    "before": {
+     "pad_p_min_v": 2.99998283,
+     "pad_p_max_v": 2.99998286,
+     "rail_max_v": 2.49015252,
+     "clamp_gate_max_v": -6.47629929e-06,
+     "rx_p_max_abs_v": 3.26892872e-05,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 1.2580333333408096e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 2.04620033,
+     "pad_p_max_v": 8.29209627,
+     "rail_max_v": 7.25069603,
+     "clamp_gate_max_v": 2.08314174,
+     "rx_p_max_abs_v": 0.206112131,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0
+    },
+    "recovery": {
+     "pad_p_min_v": 1.74747272,
+     "pad_p_max_v": 1.74747834,
+     "rail_max_v": 0.906267633,
+     "clamp_gate_max_v": 0.906311116,
+     "rx_p_max_abs_v": 0.000686474522,
+     "shunt_mean_current_a": 0.0,
+     "shunt_peak_current_a": 0.0,
+     "peer_loading_current_a": 0.0009185179446666666
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 98,
+    "exceeding_by_model": {
+     "nfet_06v0": 98
+    },
+    "mos_count": 357,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 149,
+    "unobserved_mos_count": 120,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 8.2921,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 8.2921,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 8.2921,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 8.2921,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 8.2921,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 8.2921,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "0c1068b5e2bcbf01be54066f8df6d847a4ceb624fc32f881efbecb74e234d621",
+   "waveform_sha256": "28b21f62cad31c3344fca009c689579a16379ce86a042249f48b9ba959e13f75"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "typical",
+   "temp_c": 27,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 12000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 1.93529116,
+     "pad_p_max_v": 3.09232631,
+     "rail_max_v": 2.24897825,
+     "clamp_gate_max_v": 1.07293771,
+     "rx_p_max_abs_v": 0.0671366226,
+     "shunt_mean_current_a": 8.50886227254342e-06,
+     "shunt_peak_current_a": 6.15461829e-05,
+     "peer_loading_current_a": 0.00035654026099999996
+    },
+    "before": {
+     "pad_p_min_v": 1.55409012,
+     "pad_p_max_v": 1.55417538,
+     "rail_max_v": 0.753798128,
+     "clamp_gate_max_v": 0.756943487,
+     "rx_p_max_abs_v": 3.48708131e-05,
+     "shunt_mean_current_a": 1.437799417388889e-06,
+     "shunt_peak_current_a": 1.44073796e-06,
+     "peer_loading_current_a": 0.00106030265
+    },
+    "pulse": {
+     "pad_p_min_v": 1.56912992,
+     "pad_p_max_v": 3.79287186,
+     "rail_max_v": 2.67130558,
+     "clamp_gate_max_v": 1.47058171,
+     "rx_p_max_abs_v": 0.0880812017,
+     "shunt_mean_current_a": 0.00024261218391812502,
+     "shunt_peak_current_a": 0.000937273408
+    },
+    "recovery": {
+     "pad_p_min_v": 1.49591902,
+     "pad_p_max_v": 1.49851144,
+     "rail_max_v": 0.697042349,
+     "clamp_gate_max_v": 0.760664784,
+     "rx_p_max_abs_v": 0.000387300844,
+     "shunt_mean_current_a": 5.136609930428571e-06,
+     "shunt_peak_current_a": 6.15589748e-06,
+     "peer_loading_current_a": 0.0011020421646666665
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 1077,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 389,
+    "unobserved_mos_count": 600,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 3.7929,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 3.7929,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 3.7929,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 3.7929,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 3.7929,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 3.7929,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "db1eea66ae755f5719dc83af732b34e2098f0893c53b05a1bff57577cf4105d1",
+   "waveform_sha256": "6fcd0a0b2c18309f4b197be2bcb920bb85eade2d2ede3dc79bdcabbca4d965f6"
+  },
+  {
+   "variant": "stack3_w12000",
+   "process": "ss",
+   "temp_c": 0,
+   "shunt": {
+    "stages": 3,
+    "width_per_stage_um": 12000.0,
+    "finger_um": 50.0,
+    "length_um": 0.7,
+    "model": "nfet_06v0",
+    "connection": "diode-connected series stack ESD_RAIL->VSS",
+    "primary_diode_multiplier": 1
+   },
+   "windows": {
+    "active": {
+     "pad_p_min_v": 2.98774497,
+     "pad_p_max_v": 3.28166334,
+     "rail_max_v": 2.50172859,
+     "clamp_gate_max_v": 0.00345346715,
+     "rx_p_max_abs_v": 0.0105151174,
+     "shunt_mean_current_a": 1.9873795224815787e-06,
+     "shunt_peak_current_a": 2.66404342e-06,
+     "peer_loading_current_a": -9.878304700000006e-05
+    },
+    "before": {
+     "pad_p_min_v": 2.99987293,
+     "pad_p_max_v": 2.99987483,
+     "rail_max_v": 2.39019956,
+     "clamp_gate_max_v": -9.12328699e-06,
+     "rx_p_max_abs_v": 3.17624999e-05,
+     "shunt_mean_current_a": 1.5549539912777775e-06,
+     "shunt_peak_current_a": 1.55660447e-06,
+     "peer_loading_current_a": 9.248800000000537e-08
+    },
+    "pulse": {
+     "pad_p_min_v": 3.00020794,
+     "pad_p_max_v": 5.80920054,
+     "rail_max_v": 4.630665,
+     "clamp_gate_max_v": 0.196773204,
+     "rx_p_max_abs_v": 0.109926039,
+     "shunt_mean_current_a": 0.03638317826358984,
+     "shunt_peak_current_a": 0.094368131
+    },
+    "recovery": {
+     "pad_p_min_v": 2.99992759,
+     "pad_p_max_v": 2.99993468,
+     "rail_max_v": 2.64250555,
+     "clamp_gate_max_v": -4.5272745e-05,
+     "rx_p_max_abs_v": 0.000176721996,
+     "shunt_mean_current_a": 1.037070460842857e-05,
+     "shunt_peak_current_a": 1.13040301e-05,
+     "peer_loading_current_a": 5.050100000018413e-08
+    }
+   },
+   "exposure": {
+    "observed_mos_exceeding_gate_screen": 0,
+    "exceeding_by_model": {},
+    "mos_count": 1077,
+    "fully_observed_mos_count": 88,
+    "partly_observed_mos_count": 389,
+    "unobserved_mos_count": 600,
+    "worst_ratio_to_screen": [
+     {
+      "device": "X47",
+      "model": "nfet_06v0",
+      "gate_v": 5.8092,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X54",
+      "model": "nfet_06v0",
+      "gate_v": 5.8092,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X160",
+      "model": "nfet_06v0",
+      "gate_v": 5.8092,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X164",
+      "model": "nfet_06v0",
+      "gate_v": 5.8092,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X165",
+      "model": "nfet_06v0",
+      "gate_v": 5.8092,
+      "screen_v": 6.0
+     },
+     {
+      "device": "X169",
+      "model": "nfet_06v0",
+      "gate_v": 5.8092,
+      "screen_v": 6.0
+     }
+    ]
+   },
+   "gate_screen_spec_sha256": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332",
+   "deck_sha256": "a12d7d8b6143b9799437de6a605ef54a8422c8fd536676883f84e9905dbd5c0c",
+   "waveform_sha256": "ffc3866fe634b0a400a61ff0111701cf64bffd3f2cb08edcb4e2446b907eb00f"
+  }
+ ],
+ "source_sha256": {
+  "stress_safe_native_clamp.py": "45b6cde51660a8bb9b6335457474ff556e1df1d10361eb361f426fe9498dbec1",
+  "stress_safe_clamp.py": "d43c4f1587727ec33eb0196cdf0f190b79151cd0145ed6c7e6ecaa2706126f19"
+ }
+}

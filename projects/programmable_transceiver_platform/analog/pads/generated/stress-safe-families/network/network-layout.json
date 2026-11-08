@@ -1,0 +1,150 @@
+{
+  "status": "stress_safe_network_dropin_DRC_LVS_roundtrip_recorded_not_ESD_qualification",
+  "drc_count": 0,
+  "device_graph_lvs_match": true,
+  "physical_bleed_included": true,
+  "bleed_dc": {
+    "current_a": 3.21187546e-07,
+    "resistance_ohm": 10274370.97452091
+  },
+  "geometry": {
+    "bbox_um": "(-0.055,-2;274.5,288)",
+    "array_origin_um": [
+      150.0,
+      20.0
+    ],
+    "ports_um": {
+      "VSS": [
+        138.0,
+        4.0
+      ],
+      "RAIL": [
+        130.0,
+        4.0
+      ],
+      "PADP": [
+        186.0,
+        4.0
+      ],
+      "PADN": [
+        190.0,
+        4.0
+      ]
+    },
+    "routing_parameters": {
+      "rail_width_um": 8.0,
+      "return_width_um": 12.0,
+      "port_via_cuts_per_axis": 3,
+      "port_via_pitch_um": 0.6
+    },
+    "rail_route_length_um": 394.945,
+    "return_route_length_um": 388.095
+  },
+  "array_well_capacitance_removed_ff": 68.33433600000001,
+  "extracted_spice_sha256": "a157ffff27db167535dceb94d3bfa2adc4d5e6b1b9c55c9c66cc9ee1b2f04079",
+  "limitations": [
+    "Stress shunt is not inside this footprint; it must be attached through RAIL/VSS",
+    "Gate tap is a single 1 um metal3 jog; resistor current is small but the jog is not EM-reviewed",
+    "No ESD rating, core-survival or current-capacity claim"
+  ],
+  "source_sha256": {
+    "protection_network_ss.py": "e45d0676349c35170304facc133123c39189f57b6f57421f764bcb0bfef0d80c"
+  },
+  "gds_roundtrip": {
+    "method": "DRC, extraction and LVS are run on Magic reading the written GDS itself",
+    "drc_count": 0,
+    "lvs_match": true
+  },
+  "additions": {
+    "gate_discharge": {
+      "model": "ppolyf_u_1k_6p0",
+      "w_um": 1,
+      "segments": 5,
+      "segment_um": 20,
+      "squares": 100,
+      "placed_um": [
+        76.0,
+        0.1999999999999993,
+        86.24000000000001,
+        24.3
+      ]
+    },
+    "atb_tap": {
+      "model": "ppolyf_u_1k_6p0",
+      "w_um": 1,
+      "segments": 20,
+      "segment_um": 24,
+      "squares": 480,
+      "placed_um": [
+        89.85999999999999,
+        0.1999999999999993,
+        125.6,
+        27.47
+      ],
+      "port": "ATB_RAIL",
+      "port_um": [
+        91.58,
+        -1.8
+      ],
+      "layer": "metal3"
+    }
+  },
+  "ports": {
+    "RAIL": [
+      130,
+      4
+    ],
+    "VSS": [
+      138,
+      4
+    ],
+    "PADP": [
+      186,
+      4
+    ],
+    "PADN": [
+      190,
+      4
+    ],
+    "ATB_RAIL": [
+      91.58,
+      -1.8
+    ]
+  },
+  "high_r_marker_repair": {
+    "dis_res": {
+      "added_area_um2": {
+        "62": 181.868,
+        "55": 181.868
+      },
+      "selected_poly_components": {
+        "mvnhighres": 1
+      },
+      "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+      "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+      "before_gds_sha256": "ad7629f7a0b7876e379ecaf3ed7efcedef5300cae35ad1ea6602f4f54ea72a92",
+      "after_gds_sha256": "ecddb176e4acb79baf72677a1308a06202aa352d53fbf65c8399b4c85e12e815",
+      "physical_magic_sha256": "473cb817f469beffe1fcf8a37601f5e5c21bd05fcab7ce3cea27d2ae8d0e9799",
+      "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+    },
+    "atb_res": {
+      "added_area_um2": {
+        "62": 848.668,
+        "55": 848.668
+      },
+      "selected_poly_components": {
+        "mvnhighres": 1
+      },
+      "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+      "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+      "before_gds_sha256": "ad8e77f4794a158129cfec066bccc877f9da6150eaa656bca609702bd530ea2d",
+      "after_gds_sha256": "4866f5d6848ff9b03d237b9d66160cdb38c952c83af3be42b771356d248a3491",
+      "physical_magic_sha256": "97d813099bef4f106cf2f52965c1d317534d58540a062c927918d9f6ae3bc8aa",
+      "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+    }
+  },
+  "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "pdk": "/pdk/gf180mcuD",
+  "canonical_network_gds_sha256": "0b7c25860190af02dfaffab9c180d5734f5d9eb771111367adc97ae98fcf493d",
+  "gds_sha256": "b19d742f22608e3b03f883fbc23f89246c70c127e9b726bb8010051c1dd8d969"
+}

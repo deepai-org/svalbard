@@ -1,249 +1,257 @@
-# Shared IO-pad foundation and implementation status
+# Shared IO-pad foundation
 
-The design uses one reusable protection/bond foundation with functional
-attachments. Circuits and partial connected layouts exist for wired TX,
-wired RX/USB, differential reference, RF RX and RF TX. **No family is qualified
-for production.** Normal-signal protection release, stress coordination,
-local safe controls and real RF/reference cores remain unfinished.
+One reusable protection/bond foundation with functional attachments serves
+every custom pad: wired TX, wired RX/USB, differential reference, RF RX, RF TX,
+the analog debug pairs and `ESD_TEST`. Generic digital/host pads, digital
+observe outputs and ATB use the unchanged provider cells and are not simulated
+here. **No family is production-qualified**; the readiness states below are
+the tapeout-plan tests, not ESD/HBM/CDM ratings.
 
-## Authoritative artifacts
+## Authoritative sources
 
-`spec/analog-architecture.json` and `spec/contract.json` own requirements and
-sites. `spec/schematic-implementation.json:io_pad_first_pass` owns sizing and
-implementation acceptance. `design.build_integration_candidate()` resolves
-selected devices; budgets must not be copied into independent bench defaults.
-
-`generated/coverage.json` indexes canonical netlists, GDS, extraction, state
-windows, source freshness and electrical findings. A named window is coverage,
-not acceptance. `generated/selected-recipe-audit.json` compares selected
-buffer/interlock device graphs with their physical extractions. A circuit
-change requires affected evidence to be regenerated, not its hashes relabeled.
-
-| Family | Implemented boundary | Principal reports in `generated/` |
-| --- | --- | --- |
-| Wired TX | 366-device protected pad, steering/TMDS, detection, terminations, extracted buffer and interlock | `wired-transmit-screen.json`, `wired-transmit-integration.json` |
-| Wired RX/USB | 446-device protected network, discharge, divider/bypass, terminations, HS/FS drive and pulls | `wired-receive-usb-screen.json`, `wired-receive-usb-loading.json` |
-| Differential reference | 175-device protection/bias network; receiver remains behavioral | `reference-clock-screen.json` |
-| RF RX | 159-device protection network, steering diodes, isolated clamp rail, MIMs and bleed; LNA remains behavioral | `rf-receive-screen.json` |
-| RF TX | Connected protection network; supply/current/headroom-limited behavioral driver | `rf-transmit-screen.json` |
-
-Each family has extracted-capacitance SPICE, GDS, layout/extraction reports and
-GDS round-trip checks. Do not add a budget-sized ideal capacitor on top of
-extracted capacitance. RF/reference attached-core loading is an assumption,
-not a transistor-level receiver or driver.
-
-## Packaging and supply topology
-
-Retain all provider bond positions and eighteen fixed power/ground sites.
-The selected assembly is `generated/packaging-assembly.gds`: 3932 × 5122 µm,
-74 golden-mask openings, native seal ring and provider ID placeholders.
-The pinned board exposes 37 assigned signals through its connector mapping.
-`packaging_audit.py` owns the pinned board/template identities and geometric
-checks; passing these checks is not package electrical qualification.
-
-The proposed landing points lie within the board copper with a 100 µm assumed
-edge inset. Projected spans are 1.797–2.665 mm, maximum angle 43.994°, with no
-proper projected crossings. Actual die thickness, loop profile, landing
-tolerances and selected-run assembly rules remain unverified. Wire length and
-inductance must not be inferred from projection alone.
-
-`generated/retained-ring-connectivity.json` identifies one common supply net
-and one common ground net across the retained ring. **Use one common external
-supply source.** CORE/HOST/WIRE/RF/PLL site labels do not permit independent
-external feeds. All on-chip loads, including host switching, sit behind package
-impedance. Any local filtering/isolation requires an implemented branch.
-
-`system_model/architecture_fast/power_distribution.py` owns the corresponding
-retained-state RLC model. DC/AC/transient agreement with SPICE verifies its
-mathematics, not physical impedances or noise. The package/damping resistance,
-allocated 1 nF, ESR/ESL and current laws remain assumptions.
-
-## Reusable foundation and attachment decisions
-
-`circuits.py:foundation_devices` centralizes the local protection recipe used
-by every family; `attachment` separates that replaceable foundation from all
-functional devices. The existing isolated-rail primary macro and
-provider bond geometry are the common physical foundation. Safe-state policy is
-shared, but its physical supervisors and final disable circuits remain unfinished.
-The five names describe use sites, not a requirement for five distinct cell designs.
-
-`pad_composition.py` composes exactly one extracted primary macro with complete
-functional attachments. It compares separate wired cells, a simple wired union,
-a wired candidate sharing the RX termination bank, lean RF/reference inputs,
-and a universal candidate. Every disabled functional branch remains attached.
-The shared-bank candidate retains the TX VCM discharge path and independently
-namespaced controls; only the explicitly replaced termination bank is removed.
-A shared cell design would still need separate physical instances wherever
-simultaneous independent lanes are required.
-
-The current comparison is in `generated/pad-composition-comparison.json`:
-
-| Composition | Disabled / RX-bypass loading at 1 GHz, worst leg | Decision |
-| --- | --- | --- |
-| Separate wired TX / RX-USB | 1.802 / 1.155 pF disabled; RX bypass 1.416 pF | Keep specialized selected attachments |
-| Wired union | 2.655 / 2.917 pF | Do not select; bypass exceeds 2.7 pF allocation |
-| Wired shared termination | 2.478 / 2.740 pF | Co-design experiment; still exceeds allocation before new routing |
-| Lean RF receive + reference | 0.504 pF disabled | Promising shared input structure; retain lean attachments |
-| Universal populated attachments | 2.958 / 3.220 pF | Do not select; exceeds RF 1 pF and wired 2.7 pF allocations |
-
-These numbers are **comparison-model values**, not replacements for the
-canonical extracted layouts. The primary macro includes extracted capacitance;
-functional attachments include device junction geometry but not their new
-routing, package or shared returns. RF and clock cores remain the shared assumed
-capacitive loads, and the wired receiver uses its shared output-load allocation.
-The universal candidate contains all currently implemented attachments, not
-invented complete RF transistor cores. Its present failure does not prove that
-all possible co-designed universal pads are impossible.
-
-The screen also measures linear source-to-pad transfer from the same 50 ohm
-differential source and DC peer/supply/bias currents with supplies on and off.
-Sharing the RX termination bank changes the incremental common-mode resistance
-near 1.65 V from about 46.65 to 56.49 ohms per leg in this schematic fixture;
-loading reduction alone does not preserve wired capability. The populated
-reference bias returns about 63 microamps to its ideal VCM source at a 3.3 V
-peer input with the chip off. That source's physical ability to absorb charge
-remains unproven. Neither a low VDD backfeed number nor a small AC loss proves
-safe shutdown, low receiver noise, low distortion or a compliant data eye.
-
-**Selection rule:** share the foundation now; merge functional attachments only
-when the same populated candidate meets loading, impedance/signal quality and
-retained-network off-state requirements. Do not erase disabled devices, waive
-budgets, or use a passing simplified input load to claim missing cores complete.
-No pin-count or package change follows from this code consolidation.
-
-### Upstream reuse boundary
-
-The comparison against [OCD I/O revision
-6e0e354](https://github.com/RTimothyEdwards/gf180mcu_ocd_io/tree/6e0e354a78793339a4a004a6d9c08990d0eee3e4)
-found that its `netlist/schematic/gf180mcu_ocd_io__dvdd.spice` has the same
-seven clamp MOS connections, W/L, finger counts and multiplicities as our
-`generated/protection-clamp/clamp-reference.spice`, after mapping `TIMING` to
-`n8`. This was checked by parsing both netlists. Our passive implementation and
-isolated-rail use differ; this is not full LVS or electrical equivalence.
-Consequently, importing this upstream clamp does not introduce a new transistor
-trigger topology that resolves the recorded release/stress failures.
-
-The upstream `docs/analog.rst` explicitly requires secondary protection beside
-attached input gates. Its suggested resistor/diode network is a starting point,
-not a qualified GHz solution. Evaluate the actual receiver input capacitance,
-noise, bandwidth and transient terminal stress together before selecting it.
-The split-voltage I/O library also does not create separate bonded rails in our
-already-connected retained ring.
-
-For missing startup/bias/control circuits, use the pinned candidates and
-acceptance boundaries in the [implementation reuse decisions](../../spec/risk-priorities.md#open-gf180-implementation-reuse-decisions).
-A POR delay alone cannot implement fast brownout disable; a single high-side
-PMOS switch cannot guarantee reverse-current blocking. Neither should be used
-to mark the existing safe-state gaps closed.
-
-## Current protection and shutdown decision
-
-Keep the isolated primary protection rail and coordinate secondary protection
-with the first exposed core devices. Do not send primary discharge into a
-functional supply or assume AC coupling can replace DC-coupled pad protection.
-No tested protection/control candidate meets all current acceptance gates.
-
-| Gap | Evidence and required decision |
+| Owns | File |
 | --- | --- |
-| Normal-signal release | The retained RX/USB pad sits near 1.55 V during brownout with an unloaded 3 V peer network; about 1.06 mA enters the isolated protection rail. Fix this functional loading failure without sacrificing protection. |
-| Transient protection | Released-state 100 mA/2 ns diagnostic candidates still exceed the conservative gate screens. A clamp behind exposed USB isolation/bypass devices is insufficient. Observe all relevant Vgs/Vgd/Vds and discharge paths. |
-| Autonomous disable | The junction-floor supervisor candidate trips around 2.625–2.7 V across fifteen corners but retains low-rail/overlap problems. Output discharge alone can exceed its 0.40 mA monitor allocation. It is not selected safety control. |
-| Powered host | An independently powered host produces about 81.6 mA in the retained off-state fixture. External isolation or enforced board sequencing is required until qualified local isolation exists. |
-| Actual control implementation | Use local-rail qualification, reset-dominant disable, passive default-off paths and break-before-make sequencing. Prescribed controls and ideal readiness are not physical supervisors. |
+| Requirements, sites, area ceilings | `spec/analog-architecture.json`, `spec/contract.json` |
+| Sizing and implementation acceptance | `spec/schematic-implementation.json:io_pad_first_pass` |
+| Resolved device selection | `design.build_integration_candidate()` (never copy budgets into bench defaults) |
+| Shared protection recipe | `circuits.py:foundation_devices`; attachments in `circuits.py` / `wired_receive.py` |
+| Canonical family layouts and coverage index | `generated/coverage.json`, `generated/selected-recipe-audit.json` |
+| Selected protection and its cost | `generated/stress-safe-selection.json`, `generated/stress-safe-sweep.json` |
+| Stress-safe layouts and per-family runs | `generated/stress-safe-families/families-report.json` |
 
-`generated/rail-supervisor-screen.json`, `rail_supervisor.py` and the terminal
-exposure reports retain exact diagnostic conditions. The 3.63 V/6.0 V gate
-screens are conservative [PDK DC reliability limits](https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_14_1.html),
-not nanosecond damage thresholds. Unobserved terminals remain unknown.
-The **2 kV HBM / 500 V CDM** project targets are not inherited ratings; pulse
-simulation and board protection do not establish bare-chip ESD qualification.
+## Blocks
 
-## Electrical and physical integration gaps
+| Block | Implemented boundary | Stress-safe layout (`generated/stress-safe-families/`) | Devices | Area used / ceiling (µm²) |
+| --- | --- | --- | --- | --- |
+| `txpad` (wired TX) | Protected pad, steering/TMDS drive, detection, terminations, extracted buffer and interlock | `wired-transmit/` | 1,088 | 292,666 / 300,000 |
+| `wirepad` (wired RX/USB) | Protected network, discharge, divider/bypass, terminations, HS/FS drive and pulls, USB fixes | `wired-receive-usb/` | 1,170 | 335,069 / 340,000 |
+| `refpad` (differential reference) | Protection/bias network; receiver is behavioral | `reference/` | 897 | 179,237 / 185,000 |
+| `rfpad` = `rftxpad` (one physical pair) | Protection network, steering diodes, isolated clamp rail, MIMs, bleed; LNA and RF driver are behavioral | `rf-pair/` | — | 175,909 / 180,000 |
+| Single-leg cell (WMON, `ESD_TEST`) | Native bond on `PAD_P`, `PADN` tied to VSS | `single-leg/` | — | 158,302 |
 
-| Area | Current state and acceptance boundary |
+All five layouts are DRC 0, netgen LVS match and pass the independent device
+audit (`extract_audit.py`).
+
+### Protection foundation (drop-in macro v2.1, `network-shunt/`)
+
+- Canonical isolated-rail `protection_network`: 4 + 4 steering diodes of
+  22.5 µm² per pad, native-derived RC clamp 80 × 50 µm, MIMs, ~10 MΩ bleed.
+- 100 kΩ clamp-gate discharge (8 × `ppolyf_u_1k` 1 × 12.5 µm); required for
+  release (`stress-safe-native-clamp-check.json`: without it the clamp sticks at
+  tt/27 °C, 1.06 mA, pad at 1.55 V).
+- ATB tap `ATB_ESD_RAIL`: ~480 kΩ from the rail.
+- Static rail shunt (`rail_shunt_v2.py`): three series banks of 240 × 50 µm
+  diode-connected `nfet_06v0` (L 0.7 µm) from `ESD_RAIL` to VSS, 14 µm above the
+  network. RAIL strap 30 µm metal5; VSS strap 30 µm metal4 + metal5 with a
+  63 µm metal4 base. DRC 0, LVS match.
+- Adds 0 pF at the pad at 1 GHz (shunt is behind the steering diodes); primary
+  diode capacitance 0.169–0.181 pF per pad. About 51,500 µm² per pad pair.
+
+### Ports and controls
+
+Pad ports are `PAD_P`/`PAD_N`, `VDD`, `VSS`, the isolated `ESD_RAIL` and
+`ATB_ESD_RAIL`, plus each attachment's active-high control ports
+(`circuits.py`). USB HS bias `HS_PBIAS` is a VSS-referenced gate voltage from
+the wired-TX `wtx_idac` (0–0.6 V, board-calibrated code;
+`families-report.json:usb_attachment.hs_interface`). The island_support ATB
+leaf for `ATB_ESD_RAIL` and its register entry do not exist yet.
+
+## Results
+
+### Stress (`stress-safe-sweep.json`, `wiring-resistance-check.json`)
+
+Retained RX/USB fixture, +100 mA / 2 ns into `PAD_P` during brownout. Gate
+screens: 6.0 V (06v0), 3.63 V (03v3) on observed terminals.
+
+| Variant | Worst pad peak | Screen exceedances | Verdict |
+| --- | --- | --- | --- |
+| Canonical clamp + gate discharge, no shunt | 8.65 V (ss/85 °C) | 98 | fails |
+| 2-stage 2000 µm shunt | 5.44 V | 0 | 7.6–16.8 mA per pad at 3.0–3.3 V: rejected |
+| 3-stage 6000 / 9000 µm shunt | 6.37 / 6.02 V (ss/0 °C) | 18 / 18 | fails ss/0 °C |
+| **3-stage 12000 µm shunt (selected)** | **5.81 V ss/0 °C, 5.15 V tt/27 °C; 5.87–5.90 V with drawn wiring R** | **0 at 7 corners** | selected |
+
+Margin at ss/0 °C with wiring resistance: **0.105 V**. Only 88 of 1077 MOS are
+fully observed in the selection fixture.
+
+Per-family runs on the drawn layouts (`family-sims.json`):
+
+- ±100 mA / 2 ns on both legs, tt/27 °C and ss/0 °C: pads +4.76 to −1.28 V,
+  0 gate-screen exceedances (240–406 MOS observed). Single leg: +4.74 / −1.21 V.
+- 0 → 3.63 V ramps: no exceedance.
+- 3.63 V / 50 Ω peer, chip off: 0.87–6.7 mA per leg, supply backfeed ≤ 10 nA.
+- Strap current (`strap-capacity.json`, DRM 14.2 at 85 °C): ≤ 0.12 of the limit
+  at 13.4 mA (50 Ω peers), ≤ 0.50 at the 57.2 mA 3.63 V fault; 100 mA / 2 ns
+  heating negligible.
+
+### Swing and loading cost
+
+DC load of one driven pad, function window (tt/ss/ff × 22/32 °C):
+
+| Pad level | ≤ 1.65 V | 2.5 V | 3.0 V | 3.3 V | 3.35 V |
+| --- | --- | --- | --- | --- | --- |
+| Load | < 1 µA | ≤ 0.1 mA | ≤ 1.3 mA | 18 µA ss / 0.44 mA tt / 5.1 mA ff | ≤ 6.3 mA |
+
+The 10 µA onset is 2.1 V (ff) to 3.2 V (ss). Brownout (VDD 1.5 V) load ≤ 0.70 mA,
+pad 2.52–3.00 V. A 3.63 V peer draws ≤ 28.6 mA at ff/85 °C, into VSS only.
+
+| Family | Effect | Fallback |
+| --- | --- | --- |
+| Wired TX | 3.3 V-referenced high levels droop up to ~0.3 V at ff | Board resistors or AC coupling instead of on-chip termination |
+| USB FS | High level loaded by up to ~5–6 mA at ff | External board PHY |
+| Reference | Single-ended peaks near 2.65 V compressed at ff | Source ≤ 0.55 V peak, or `AUX_CLK` |
+| RF RX / TX | Unaffected below ~2.1 V; higher driver peaks clipped | LNA bypass with external LNA; mixer output to external PA |
+
+The TX ss/3.15 V swing (0.50 / 0.81 V) is the same on the canonical layout
+(`tx-swing-investigation.json`); the shunt does not cause it.
+
+### USB on wirepad (`usb-attachment.json`, `usb-hs-gate-sweep.json`)
+
+Attachment options in `wired_receive.build` (defaults reproduce the canonical
+cell): termination `ppolyf_u` 16 × 1.3 µm per leg (39.6–53.3 Ω over resistor
+corners), and a well-sourced fast-off PMOS on each FS high-side gate.
+
+| Check | Result | Requirement |
+| --- | --- | --- |
+| HS amplitude, 13 points | 360–440 mV reachable with gate 0–0.54 V; ss/3.15 V tops out at 372–379 mV | 360–440 mV |
+| FS high / low | 3.08–3.34 V / 0 V | — |
+| FS edges | 5.8–11 ns | — |
+| D+ after J→K | reaches 0 V | — |
+| LS edges | 33–67 ns — **fails** | 75–300 ns (external PHY fallback) |
+| Pull-up level | 2.72–2.93 V | — |
+| Disabled loading | 2.34–2.35 pF | ≤ 2.7 pF |
+
+### Debug sites (`debug-sites.json`, `shared-protection-check.json`)
+
+Five protected pairs (BB_I, BB_Q, AUX_CLK, WCLK_IN, WTX_EXT) and two single-leg
+cells (WMON, ESD_TEST): 1,196,149 µm² against a 1.2 mm² budget.
+
+- `bb_tap`, tap off: protected pad adds ≤ 0.12 fF; isolation −101/−71/−40 dB
+  (observed node) and −73/−53/−32 dB (inject node) at 10 MHz/100 MHz/1 GHz.
+- `diff_clk_rx`: 345–377 fF differential input; Zin ≈ −j180 Ω at 2.45 GHz (the
+  external LO needs a board match); 0.2 mVpp leakage for 0.88 Vpp when disabled.
+- Shared macro (adopted, not drawn): neighbour pad B keeps only its steering
+  diodes and uses pair A's macro through 40 µm rail/return buses: +0.035 V for
+  BB_I+BB_Q, +0.022 V for WTX_EXT+WMON, inside the 0.105 V margin; saves about
+  0.21 mm². The per-site cells remain the checked evidence until the shared
+  cells are laid out.
+- ATB0/1 on provider `asig_5p0`: forcing 3.63 V while powered draws ≤ 3.7 µA;
+  unpowered it drives 54–56 mA through 50 Ω into the ring
+  (`atb-provider-pad-force.json`). Force only when powered or at ≤ 1 mA
+  compliance.
+
+### Composition comparison (`generated/pad-composition-comparison.json`)
+
+Comparison-model values at 1 GHz, worst leg (primary macro extracted;
+attachments without new routing):
+
+| Composition | Disabled / RX-bypass loading | Decision |
+| --- | --- | --- |
+| Separate wired TX / RX-USB | 1.802 / 1.155 pF; RX bypass 1.416 pF | Selected |
+| Wired union | 2.655 / 2.917 pF | Exceeds 2.7 pF |
+| Wired shared termination | 2.478 / 2.740 pF | Exceeds 2.7 pF |
+| Lean RF receive + reference | 0.504 pF | Shared input structure retained |
+| Universal | 2.958 / 3.220 pF | Exceeds RF 1 pF and wired 2.7 pF |
+
+Share the foundation; merge attachments only when one populated candidate meets
+loading, impedance and off-state requirements.
+
+### Packaging and supply
+
+`generated/packaging-assembly.gds`: 3932 × 5122 µm, 74 golden-mask openings,
+native seal ring, 18 fixed power/ground sites, 211 µm pair pitch; 37 assigned
+signals on the pinned board. Projected bond spans 1.797–2.665 mm, maximum angle
+43.994°, no projected crossings (`packaging_audit.py`; geometric only). The
+retained ring has one common supply net and one common ground net: **use one
+common external supply**. The 81.6 mA powered-host backfeed
+(`powered-host-backfeed.json`) enters through the 12 provider `bi_t` host pads,
+not wirepad; board requirement: host lines high-Z while unpowered, an Ioff bus
+switch on those lines, never a floating chip supply.
+
+## Readiness (four tests)
+
+| Block | safe | clean | observable | fallback |
+| --- | --- | --- | --- | --- |
+| `refpad`, `txpad`, `wirepad`, `rfpad`, `rftxpad` | pass | pass | open | waived_core |
+
+`safe` rests on compact-model pulse/ramp/peer runs with a 0.105 V margin, not
+HBM/CDM/TLP. `clean` covers DRC/LVS/device audit, envelope function runs and
+area fit. `observable` needs the `ATB_ESD_RAIL` leaf and register entry.
+
+## Known limitations and open items
+
+| Item | State |
 | --- | --- |
-| Wired TX loading/impedance | Selected current trunks are 8 µm. Recorded disabled loading is about 2.706/2.713 pF against 2.7 pF; active and detection cases also have misses. Geometry-derived bond-to-core resistance is asymmetric (about 8.34/11.67 Ω before vias/internal buses). Full distributed impedance and current capacity remain open. |
-| Wired TX controls/current | Extracted buffer/interlock, sequencing RTL and retained pad are connected in fixtures. Bias/serializer translation and readiness remain partly idealized; branched-route feedback does not establish readiness closure. Canonical static currents miss intended settings. |
-| Wired RX/USB | Back-to-back high-side devices, restoration and physical discharge exist. Brownout controls, off-state gate stress, loading and bidirectional termination/pull handoff still need connected acceptance. |
-| RF/reference | Real LNA, RF output stage and differential clock receiver are missing at the pad boundary. Tone power margin is narrow; millisecond-scale reference bias startup is not a ready deadline. Include modulated quality, noise, clock slew/jitter and peer exposure. |
-| Attached core area/routing | Buffer/interlock reservations and six steering connections are checked. Supply/return, bias, buffer/interlock and upstream-data hookups, full-core clearance and routed timing remain incomplete. |
-| Assembly signoff | Local DRC/device graphs and bond-mask checks do not establish integrated DRC/LVS, density, antenna, assigned IDs, electromigration, package coupling or full-bank switching. |
+| Stress margin | 0.105 V at ss/0 °C with drawn shunt wiring, excluding network-internal routing; partial terminal observation; 2 kV HBM / 500 V CDM targets not established |
+| USB | LS edge rate fails (no slew control; no room in the 4.9k µm² headroom). HS amplitude needs a board-calibrated `wtx_idac` gate code, ~0.3 mV/mV supply sensitivity, no headroom to centre at ss/3.15 V |
+| Wired TX | Recorded disabled loading 2.706/2.713 pF vs 2.7 pF; asymmetric bond-to-core resistance (~8.34/11.67 Ω); static currents miss intended settings; bias/serializer readiness partly idealized |
+| Wired RX/USB | Brownout controls, off-state gate stress and termination/pull handoff need connected acceptance |
+| RF / reference | Real LNA, RF output stage and differential clock receiver are behavioral at the pad boundary |
+| Autonomous disable | Rail supervisor candidate (`rail_supervisor.py`) trips at 2.625–2.7 V but has low-rail/overlap problems; not selected |
+| Integration | Shared debug macros not drawn; full-ring LVS, integrated DRC, density, antenna, EM, package coupling and full-bank switching open |
+| Distributed resistance | Not in capacitance extraction; `wire_resistance.py`, `rf_route.py`, `protected_rf_route.py` are scoped sensitivity models |
+| Reproducibility | The stress fixtures (`stress_safe_clamp.py`, `shunt_wiring_check.py`, `stress_safe_native_clamp.py`) read the retained RX/USB deck from `scratch/pad-supervised-receive`; `usb-attachment.json` was run with the replica-mirror HS bias still enabled in `stress_safe_usb.py --usbfix` (HS figures above come from the gate sweep); `atb-provider-pad-force.json`, `lifecycle-active-windows.json`, `tx-swing-investigation.json` and `powered-host-backfeed.json` have no generator script in this directory; `protection_pad_ss.generate(network=..., single_leg=...)` has no CLI flags |
 
-Warm RF bias remains in current accounting even when payload direction changes.
-External decoupling cannot supply average current or eliminate package impedance.
-Keep every disabled branch and the actual peer network attached in every
-startup, active, reset, brownout, off and reconfiguration case. TMDS needs its
-independently powered pull-ups; a differential resistor fixture is insufficient.
-
-## Extraction and assembly rules
-
-`circuits.py` / `wired_receive.py` drive SPICE and layout. `extract_audit.py`
-independently reads actual device/body connections from Magic extraction.
-The installed stock converter has exhibited body-connectivity errors, so its
-output alone is not the simulation authority. Preserve the independent
-extracted graph and device dimensions.
-
-`gds_markers.py` restores missing HRES export enclosures from physical poly
-geometry, including DUALGATE for MV high-R poly. `gds_roundtrip.py` reimports
-actual GDS and checks DRC plus device types, dimensions and connectivity.
-`run_first_pass.py` refuses publication on a failed round-trip check.
-
-Physical well area/perimeter supplies nonlinear well-junction models. Remove
-only the corresponding linear well-area capacitance to avoid double counting;
-retain fringe/routing capacitance. The array audit bounds numerical uncertainty
-from the printed precision of exported capacitor values.
-
-`rail_connectivity.py` distinguishes MIM top-plate contacts from ordinary VIA4:
-inside CAPM (75/0), the contact reaches the top plate rather than shorting the
-Metal4 bottom plate through the dielectric. Labels are probed on their actual
-metal layers. No connection is inferred merely from matching net names.
-
-Distributed resistance is not included in the capacitance extraction.
-`wire_resistance.py`, `rf_route.py` and `protected_rf_route.py` provide explicitly
-scoped geometry-derived resistance sensitivity models. Lumped capacitance
-placement, omitted access/via resistance and uncertain package parameters remain
-limitations; these are not distributed PEX or RF signoff.
-
-The provider reference has 74 physical sites, a 211 µm pair pitch, and 18 fixed
-power/ground sites. Preserve absolute bond openings and native supply sites.
-The assembly substitutes five custom pairs, restores native rail modules and
-checks transformed openings, actual metal overlap and local ground connectivity.
-`generated/packaging-assembly.gds` is the selected geometric assembly;
-`generated/custom-assembly-candidate.oas` is an intermediate build input.
-Full-ring device LVS, integrated signoff, package returns, full-bank switching
-and core clearance remain open.
+**Evidence currency.** `usb-attachment.json` and `families-report.json` predate
+the current `stress_safe_usb.py`; `shunt-v2/shunt-layout.json` and
+`families-report.json` predate the current `rail_shunt_v2.py` and
+`strap_capacity.py` (wiring and device output unchanged; `reference()` moved in);
+`stress-safe-native-clamp-check.json` predates `stress_safe_clamp.py`;
+`stress-safe-selection.json` predates `layout.py` and `run_first_pass.py`;
+`rail-supervisor-screen.json` and `pad-composition-comparison.json` predate the
+opt-in `wired_receive.py` options (defaults unchanged);
+`rf-receive-extraction.json` / `rf-transmit-extraction.json` record older
+`circuits.py` and `physical.spice` hashes. `strap-capacity.json` is current.
 
 ## Reproduction
 
-The exact image ID in `layout.py` is not available locally. Restore its build
-recipe and PDK identity before fresh layout claims; see
-[process inputs](../../../../processes/README.md). Do not substitute an unrelated
-image silently.
+Environment (`env/pad-environment.json`):
 
-Use the image pinned in `layout.py`, the contract-pinned provider template and
-unchanged PDK models copied from that image. Use new output directories to avoid
-merging old geometry or accepting stale waveforms. Large waveforms stay in
-scratch; publish compact netlists, layouts, images and scoped reports.
+- Layout image: `layout.py` uses the locked `sha256:9253a51f…` unless
+  `SVALBARD_PAD_IMAGE` selects the rebuild from the same recipe
+  (`sha256:b6027809…`, not byte-identical; clamp macro regenerates with an empty
+  28-layer XOR, identical devices/capacitances, DRC 0, LVS match).
+- Simulation image: `env/build_sim_image.sh <ngspice-47.tar.gz>` builds
+  `svalbard/transceiver-pad-sim:ngspice47-corrected` offline with
+  `ngspice-cap-multiplier.patch` and `ngspice-diode-charge.patch`
+  (`diode_model_check.py` documents the regression). Recorded pulse decks
+  reproduce byte-identical waveforms.
+- PDK models: `scratch/transceiver-pad-pdk/ngspice` (identical to the pinned
+  image's ciel f6eeac7 copy).
 
-The recorded corrected ngspice47 build is described by
-`generated/simulator-build.json`. Its capacitor-multiplier parser and forward
-sidewall-diode charge fixes are retained as patch files in this directory;
-`diode_model_check.py` documents the solver regression. Do not silently replace
-this simulator with another binary when reproducing its results.
+Stress-safe flow, from this directory, with new empty output directories:
 
-From the repository root, with those prerequisites available:
+```sh
+export SVALBARD_PAD_IMAGE=sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43
+python3 stress_safe_clamp.py --output-dir <dir> --report <json> --variants released_baseline stack2_w2000 stack3_w6000 stack3_w9000 stack3_w12000 stack3_w12000_extracted --corners typical:27 typical:0 typical:85 ss:0 ss:85 ff:0 ff:85 --dc stack3_w12000@typical:27,ff:32,ss:22,ff:85 --loading <variant>@typical:27,typical:22,typical:32,ss:22,ss:32,ff:22,ff:32,ff:85,typical:85,ss:0 --capacitance --jobs 4
+python3 stress_safe_native_clamp.py --output-dir <dir> --report <json>
+python3 protection_network_ss.py --output-dir <net>               # network + discharge + ATB tap
+python3 rail_shunt_v2.py --output-dir <shunt>                      # v2 shunt
+python3 rail_shunt_v2.py --macro --network-dir <net> --shunt-dir <shunt> --output-dir <macro>
+python3 stress_safe_wired_layout.py {reference_clock|wired_transmit|wired_receive_usb} <work> <macro> [usbfix]
+python3 shunt_wiring_check.py --macro-dir <macro> --shunt-dir <shunt> --output-dir <dir> --report <json>
+python3 strap_capacity.py --macro-json <macro>/network-layout.json --report generated/stress-safe-families/strap-capacity.json
+python3 stress_safe_family_sims.py --drawn-v4 --output-dir <dir> --report generated/stress-safe-families/family-sims.json
+python3 stress_safe_usb.py --usbfix --output-dir <dir> --report <json> [--only hs_vsweep]
+python3 stress_safe_debug.py --output-dir <dir> --report generated/stress-safe-families/debug-sites.json
+python3 shared_protection_check.py --output-dir <dir> --report generated/stress-safe-families/shared-protection-check.json
+python3 stress_safe_families_report.py --sims generated/stress-safe-families/family-sims.json
+```
+
+RF pair and single-leg cells come from
+`protection_pad_ss.generate(work, generated, network=<macro>, single_leg=…)`.
+
+Canonical family flow (repository root):
 
 ```sh
 python3 projects/programmable_transceiver_platform/analog/pads/design.py --output scratch/transceiver-pad-inputs.json
 python3 -m unittest discover -s projects/programmable_transceiver_platform/analog/pads -p test_design.py
-PATH="$PWD/scratch/pad-diode-fixed-tools:$PATH" OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python3 projects/programmable_transceiver_platform/analog/pads/run_first_pass.py --output-dir scratch/pad-pass --pdk-model-dir scratch/transceiver-pad-pdk/ngspice --publish-dir projects/programmable_transceiver_platform/analog/pads/generated
+python3 projects/programmable_transceiver_platform/analog/pads/run_first_pass.py --output-dir scratch/pad-pass --pdk-model-dir scratch/transceiver-pad-pdk/ngspice --publish-dir projects/programmable_transceiver_platform/analog/pads/generated
 python3 projects/programmable_transceiver_platform/analog/pads/assembly.py --template scratch/pad-provider-template --output-dir scratch/pad-assembly --generated projects/programmable_transceiver_platform/analog/pads/generated --publish-dir projects/programmable_transceiver_platform/analog/pads/generated
 ```
 
-## Completion gates
-
-Finish the coordinated protection/core contract, implement safe controls and
-real pad-to-core circuits, integrate the common ring and package, then pass
-representative electrical lifecycles. Production additionally requires extracted
-signoff and silicon/reliability qualification. Keep numerical failures and
-missing evidence explicit; test counts do not measure pad completeness.
+`run_first_pass.py` refuses to publish on a failed GDS round trip
+(`gds_roundtrip.py`). `gds_markers.py` restores HRES/DUALGATE enclosures;
+`rail_connectivity.py` treats VIA4 inside CAPM as a MIM top-plate contact;
+`extract_audit.py` reads device/body connectivity independently of the stock
+converter. Do not add budget-sized ideal capacitors on top of extracted
+capacitance.

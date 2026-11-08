@@ -1,5 +1,9 @@
 // Candidate CDC FIFO. Gray pointers; dual-clock storage needs physical implementation.
-module pt_async_fifo #(parameter W=10, A=6)(
+// REG_OUT=1 registers the read port (dout = flop) with identical observable behaviour: the
+// register reloads mem[next read pointer] on every read-clock edge (rb+1 kept in its own register), and a slot only changes
+// while the FIFO is empty at that slot (writer side), so dout equals mem[rb] whenever !empty
+// (sim/tb_async_fifo_regout.sv). Used where dout leaves the macro or feeds a deep path.
+module pt_async_fifo #(parameter W=10, A=6, REG_OUT=0)(
  input wire wr_clk, rd_clk, rst_n, input wire [W-1:0] din,
  input wire push, pop, output wire [W-1:0] dout,
  output wire full, empty, output wire [A:0] wr_count, rd_count,
@@ -20,7 +24,15 @@ module pt_async_fifo #(parameter W=10, A=6)(
  assign full=(wg=={~rg2[A:A-1],rg2[A-2:0]});
  assign empty=(rg==wg2); assign wr_count=wb-binary(rg2);
  assign rd_count=binary(wg2)-rb;
- assign dout=mem[rb[A-1:0]];
+ generate if(REG_OUT)begin:reg_out
+  // Two read muxes addressed by registers (rb and rb+1); the late pop only drives the final 2:1.
+  reg [W-1:0] dq; reg [A-1:0] rbp1;
+  always @(posedge rd_clk or negedge rd_ready) if(!rd_ready) rbp1<=1; else if(pop&&!empty) rbp1<=rbp1+1'b1;
+  always @(posedge rd_clk) dq<=(pop&&!empty)?mem[rbp1]:mem[rb[A-1:0]];
+  assign dout=dq;
+ end else begin:comb_out
+  assign dout=mem[rb[A-1:0]];
+ end endgenerate
  always @(posedge wr_clk or negedge wr_ready) begin
   if(!wr_ready) begin wb<=0;wg<=0;rg1<=0;rg2<=0;overflow<=0;end
   else begin rg1<=rg;rg2<=rg1;

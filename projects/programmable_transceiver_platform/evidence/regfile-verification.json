@@ -1,0 +1,79 @@
+{
+ "status": "pass",
+ "scope": "Generated SPI register file (control path of the must-work core): register map, reset defaults, write/readback, rule-based commit rejection, island isolation, fault release, break-before-make, commit while running, legacy pt_control equivalence, formal safety invariants and rough GF180 size. Not hardened: no DRC/LVS, no STA, no gate-level simulation.",
+ "simulation": {
+  "seed": 20261108,
+  "random_operations": 3000,
+  "commands": 8750,
+  "reads_checked": 3435,
+  "snapshots_checked": 506,
+  "commits_accepted": 427,
+  "commits_rejected": 151,
+  "registers": 166,
+  "fields": 294,
+  "rules": 38,
+  "registers_swept": 166,
+  "rejected_value_writes": 138,
+  "directed_rule_violations_rejected": 38,
+  "all_rule_codes_exercised": true,
+  "legacy_equivalence": [
+   "legacy equivalence: 4000 transactions (2022 writes, 1978 reads, 157 memory writes), 0 mismatches",
+   "PASS"
+  ],
+  "chip_integration": {
+   "debug_sites": 19,
+   "missing_debug_ports": [],
+   "elaborates": true,
+   "elaboration_errors": ""
+  },
+  "iverilog": "pass",
+  "verilator": "pass"
+ },
+ "formal": {
+  "prove": "PASS",
+  "cover": "PASS",
+  "method": "k-induction (smtbmc yices), depth 3",
+  "covers_reached": 4,
+  "image": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "yosys": "Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/bin/c++ 13.3.0)"
+ },
+ "formal_properties": [
+  "P1 asynchronous reset: every shadow/active field at its declared default; island switches, ATB switches, observation output enables, receiver enables and island-gated outputs off",
+  "P2 every rule (pad, ownership, legality, ATB force/override) holds on the active configuration; every active and non-split shadow field holds an accepted encoding",
+  "P3 every pad/ownership rule holds on the pad-facing outputs for all island, power-good and fault inputs; at most one ATB switch per bus; ATB0 never closes on a sense-only node and closes on an overridable node exactly when its bias override is active",
+  "P4 island-gated outputs are 0 while their island is off; fault forces released values",
+  "P5 non-live fields never change while ENABLE=1; break-before-make fields never move directly between two non-zero codes",
+  "P6 reset-cause flags: POR sets both RESET_STATUS flags; any reset sets the reset flag"
+ ],
+ "synthesis": {
+  "top": "pt_mgmt (pt_spi + pt_regfile)",
+  "image": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43 arm64",
+  "image_tag": "svalbard/librelane-gf180-canary:2026.08",
+  "yosys": "Yosys 0.62 (git sha1 7326bb7d6641500ecb285c291a54a662cb1e76cf, clang++ 21.1.2 -fPIC -O3)",
+  "liberty": "gf180mcu_fd_sc_mcu7t5v0__tt_025C_3v30",
+  "standard_cells": 9239,
+  "flip_flops": 1876,
+  "cell_area_um2": 302880.5,
+  "scope": "Generic yosys synth + abc mapping; no placement, timing or utilization."
+ },
+ "sources_sha256": {
+  "spec/analog-architecture.json": "6757746a388f8e40a83a0756fd1b7bbc7f80bc1ab9f3970d79b9faf237be8e99",
+  "spec/debug-controls.json": "9ecffe67d62768d8a8397deb1087604199b4bb44c7ab0ba677a5870a15c18346",
+  "spec/register-map.json": "8c3af61a998ba6ded3a659ada131fda35f82f070b248dec438c724bb00d1ba8b",
+  "rtl/gen/gen_regfile.py": "8edd1f28ff7a811855fe0b9ebbb5779da6566524024381dde52e590fa61a71d3",
+  "rtl/gen/regmap_runtime.py": "9b268251b624584746ccbac36e51e63c3da5225e370023f6602cd2eb27d4ae68",
+  "rtl/pt_regfile.sv": "2d421b3f055f404519dfad33b5b011ccc93cc0079b1ff2b4de438690f9be6a15",
+  "rtl/pt_regmap_defs.svh": "e2c60a207f7ae7e8d74211581f8ea528023c9f7d2711a36f2cf5ae5822d6bb2a",
+  "rtl/pt_spi.sv": "48648490810a8e2b37740508d78c86307cbc5caa56cafc2ec39ece99f3868102",
+  "rtl/pt_digital.sv": "65377dc77c64defc7f61e28e6f27f4dd8ece51c6453f270fbe13a4336247eb9a",
+  "integration/pt_chip.sv": "2137198efead55377fa958b03c6e608da3b591ca9ecd351388c17d2b3654e32f",
+  "sim/tb_regfile.sv": "b010703825d9e16504e93a8662337ad69c829ea30d2175e2f0edfc77d6bb4a01",
+  "sim/tb_regfile_legacy.sv": "f67b1e1f2893d88d806bef663b64b507dcfc91ee97c70edab1cd26fe53b3edf8",
+  "verification/check_regfile.py": "1cf32f512e9016dc34c0ef9d8cb6afa660ea8d943f63f6eb7fab6679e2fa7782",
+  "verification/formal/pt_regfile.sby": "a2b76467e04c33e80cc297765d20db6daa4c7f8b3f05a5261fe1a2505a41b2e1",
+  "verification/formal/pt_regfile_fv.sv": "2e5fcd8a7856f4a21693ead2a2bf9d3fdbf818c39bf503c970c16c54aadb9cee",
+  "verification/run_regfile_formal.sh": "ad380b59186d73d795c93f6c660875433a6c3f4f2eb88f040c03ac3363dd4694",
+  "verification/run_regfile_synth.sh": "493c4f3158e1cf1378782c03d9bf942b1f4fda6897e4f46ed8f40f821034522e",
+  "integration/macro-contract.md": "e9dc0bb7f9ba45a999a1c0e25163cc5a14266705f43e6638dd318439dd6ea0c5"
+ }
+}

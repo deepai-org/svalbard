@@ -1,0 +1,24 @@
+# SymbiYosys proof of the generated register file's safety properties
+# (reset defaults, rule invariants on active state and pad outputs, island
+# isolation, fault release, commit discipline). Run via verification/run_regfile_formal.sh.
+[tasks]
+prove
+cover
+
+[options]
+prove: mode prove
+prove: depth 3
+cover: mode cover
+cover: depth 10
+
+[engines]
+smtbmc yices
+
+[script]
+read -formal pt_regfile.sv
+read -formal pt_regfile_fv.sv
+prep -top pt_regfile_fv
+
+[files]
+../../rtl/pt_regfile.sv
+pt_regfile_fv.sv

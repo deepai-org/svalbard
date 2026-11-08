@@ -1,0 +1,2688 @@
+{
+ "block": "digital",
+ "also_covers": "hostio (clocked logic; pad cells are provider gf180mcu_fd_io)",
+ "macro": "pt_digital_macro",
+ "run_tag": "FREEZE1",
+ "source_hashes": {
+  "rtl/pt_digital_macro.sv": "sha256:584d20bb9e4ce77ab3d25b81bc9fbb7b06e2d88f6982803e2ec848aac3c61029",
+  "rtl/pt_host_link.sv": "sha256:5ba62afac89625e777ad9831209d0465cd638d7f4a1d46d900ed666d7c855df7",
+  "rtl/pt_digital.sv": "sha256:b9d4ab6bb918d019e62b3c97621c2c8fd1c14b782617a2c7b07eae38709db71d",
+  "rtl/pt_regfile.sv": "sha256:2d421b3f055f404519dfad33b5b011ccc93cc0079b1ff2b4de438690f9be6a15",
+  "rtl/pt_spi.sv": "sha256:48648490810a8e2b37740508d78c86307cbc5caa56cafc2ec39ece99f3868102",
+  "rtl/pt_core.sv": "sha256:ff5f7a1f0d90ab8fdfc5fdbf152dc62b9ed2fc838b68803f0fa70a3b13d06123",
+  "rtl/pt_fifo.sv": "sha256:b0c5c1c20c24983326abe3fedf0dc2fa0acd18d17c3bc222085cd31e82f06342",
+  "rtl/pt_pack.sv": "sha256:bd5f065baa985c9cea5208a332c1168f86a5340ea121aaa52ca915dce2612c2e",
+  "rtl/pt_stream_link.sv": "sha256:26c55522cf98035c4ba6991d11c0a8671fe402449f900cae28cd0a61d2d2645b",
+  "rtl/pt_stream_tx.sv": "sha256:c42af8fd07f87562415f581c7b322b8856e31b344a2741a4c287804405501cd9",
+  "rtl/pt_stream_rx.sv": "sha256:5b216283b09aa625073ebf1011bf06f6b7251d8f1268fcc54ba1c465aed4d7f0",
+  "rtl/pt_frame.sv": "sha256:2654b9031e617e9ec79bc921c1c044cee6bb689773c9d871e9a2fecfd381f25a",
+  "rtl/pt_memory.sv": "sha256:3f0cef4f7dacaad4312fca58a2a6e4743445e4c63c4baa92e1f6affda3d74fc3",
+  "rtl/pt_pattern.sv": "sha256:95f467ee1a83b67e280142e9099639fc51fa31f6ca22adb007b3d5660c94c434",
+  "rtl/pt_helpers.sv": "sha256:2cf77deecb992c0a535bb69d45474b4592e11e142a29f4bf02573bed39e79831",
+  "rtl/pt_clocktree_slow.sv": "sha256:d6a9424d2fb05dc1bea76b1f3edad6b8b63dd82853624877da70b591cb4d0a66",
+  "rtl/pt_freq_count.sv": "sha256:1bbc5ed2068e12e6dff42eb4af6747f545a24fc60157330ece74ee35f98ef1ec",
+  "rtl/pt_regmap_defs.svh": "sha256:e2c60a207f7ae7e8d74211581f8ea528023c9f7d2711a36f2cf5ae5822d6bb2a",
+  "spec/debug-controls.json": "sha256:9ecffe67d62768d8a8397deb1087604199b4bb44c7ab0ba677a5870a15c18346",
+  "sim/tb_pt_freq_count.sv": "sha256:f14f0b0185fc2febcbe8e37930aeca34e9054b0520c94dda1db893ae7adfadce",
+  "sim/tb_digital_wire20.sv": "sha256:7b11ad4ca9f88dbd3e15a1da1c8a91ece5d0aca8a31d2d349acc31c61b2f5d91",
+  "integration/pt_digital_macro.sdc": "sha256:b4a6c236d9433d004f447f00ee4823fd70c5879542f0d3680c183867015c0114",
+  "verification/digital_hardening/config.json": "sha256:b3b0dff42f481bc96d634b66528778b9155e0fe89ddf1b87890fd8d8ff3d6c73",
+  "sim/tb_digital_gl.sv": "sha256:4e85f2fcc37a28f090a21b86d61ee11475cd2fcbea9656d6f982dc5421c9b4db",
+  "sim/tb_async_fifo_regout.sv": "sha256:e33cb8d9ae0d0f50f3d308b45335262ce55d625085cb97fe7e54a14751055029",
+  "verification/run_digital_hardening.sh": "sha256:0054f496f0f2a5409137cc70ad7fae854a6d250f7f60c224062ebffe9cde9ba1"
+ },
+ "images": {
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43 arm64",
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305 arm64"
+ },
+ "tools": {
+  "librelane": "LibreLane v3.0.5\n\nCopyright \u00a92025-2026 LibreLane Contributors\n\nAdapted from OpenLane 2.0\nCopyright \u00a92020-2025 Efabless Corporation\n\nAvailable under the Apache License, version 2. Included with the source code,\nbut you can also get a copy at https://www.apache.org/licenses/LICENSE-2.0\n\nIncluded tools and utilities may be distributed under stricter licenses.",
+  "magic_export": "8.3.678",
+  "klayout_export": "KLayout 0.30.9",
+  "sta": "OpenSTA 2.7.0"
+ },
+ "pdk": "gf180mcuD (open_pdks 1.0.605, commit f6eeac7d) in both images; gf180mcu_fd_sc_mcu7t5v0",
+ "physical": {
+  "die_bbox_um": "0.0 0.0 1800.0 1800.0",
+  "core_bbox_um": "6.72 15.68 1793.12 1783.6",
+  "die_area_um2": 3240000,
+  "core_area_um2": 3158210,
+  "instance_area_um2": 3158210,
+  "stdcell_area_um2": 1919420,
+  "utilization": 0.607756,
+  "instance_count": 154714,
+  "stdcell_count": 71501,
+  "io_count": 1150,
+  "allocation_um2": {
+   "digital": 1650000,
+   "memory": 850000,
+   "total": 2500000
+  },
+  "routing_layers": "Signal routing Metal2-Metal5 (RT_MAX_LAYER=Metal5), cell rails Metal1, PDN Metal4 vertical straps only (PDN_MULTILAYER=false); Metal5 carries signal routing in this macro. The Metal1-Metal4 variant that keeps Metal5 free for MIM decap is recorded under variants.",
+  "memory": "No SRAM macro: the RTL storage is register arrays (async/sync FIFOs 4.4 kbit, capture/playback 2 x 32 x 24 bit) with dual-clock or combinational reads that single-port gf180mcu_fd_ip_sram macros cannot serve without clock muxing. Implemented in flops inside the digital+memory allocation.",
+  "wire_length_um": 5265217,
+  "route_drc_errors": 0
+ },
+ "metrics_snapshot": {
+  "design__max_slew_violation__count__corner:nom_tt_025C_3v30": 214,
+  "design__max_fanout_violation__count__corner:nom_tt_025C_3v30": 0,
+  "design__max_cap_violation__count__corner:nom_tt_025C_3v30": 58,
+  "power__total": 0.6837361454963684,
+  "clock__skew__worst_hold__corner:nom_tt_025C_3v30": -1.8684729847758443,
+  "clock__skew__worst_setup__corner:nom_tt_025C_3v30": 0.5580607245382277,
+  "timing__hold__ws__corner:nom_tt_025C_3v30": 0.411534373782571,
+  "timing__setup__ws__corner:nom_tt_025C_3v30": -10.696108301815025,
+  "design__max_slew_violation__count__corner:nom_ss_125C_3v00": 664,
+  "design__max_fanout_violation__count__corner:nom_ss_125C_3v00": 0,
+  "design__max_cap_violation__count__corner:nom_ss_125C_3v00": 107,
+  "clock__skew__worst_hold__corner:nom_ss_125C_3v00": -3.474190811150059,
+  "clock__skew__worst_setup__corner:nom_ss_125C_3v00": 0.8317511359524753,
+  "timing__hold__ws__corner:nom_ss_125C_3v00": 1.1333476700137302,
+  "timing__setup__ws__corner:nom_ss_125C_3v00": -29.023774427544012,
+  "design__max_slew_violation__count__corner:nom_ss_n40C_3v00": 179,
+  "design__max_fanout_violation__count__corner:nom_ss_n40C_3v00": 0,
+  "design__max_cap_violation__count__corner:nom_ss_n40C_3v00": 42,
+  "clock__skew__worst_hold__corner:nom_ss_n40C_3v00": -2.5890215149015803,
+  "clock__skew__worst_setup__corner:nom_ss_n40C_3v00": 0.669965657470208,
+  "timing__hold__ws__corner:nom_ss_n40C_3v00": 0.7199387956233675,
+  "timing__setup__ws__corner:nom_ss_n40C_3v00": -18.014401147348917,
+  "design__max_slew_violation__count__corner:nom_ff_n40C_3v60": 70,
+  "design__max_fanout_violation__count__corner:nom_ff_n40C_3v60": 0,
+  "design__max_cap_violation__count__corner:nom_ff_n40C_3v60": 30,
+  "clock__skew__worst_hold__corner:nom_ff_n40C_3v60": -1.2045473848196315,
+  "clock__skew__worst_setup__corner:nom_ff_n40C_3v60": 0.43736168702390166,
+  "timing__hold__ws__corner:nom_ff_n40C_3v60": 0.11332179959607865,
+  "timing__setup__ws__corner:nom_ff_n40C_3v60": -4.025965452745076,
+  "design__max_slew_violation__count__corner:nom_ff_125C_3v60": 306,
+  "design__max_fanout_violation__count__corner:nom_ff_125C_3v60": 0,
+  "design__max_cap_violation__count__corner:nom_ff_125C_3v60": 79,
+  "clock__skew__worst_hold__corner:nom_ff_125C_3v60": -1.782525510982937,
+  "clock__skew__worst_setup__corner:nom_ff_125C_3v60": 0.49995231591974376,
+  "timing__hold__ws__corner:nom_ff_125C_3v60": 0.27193825738722993,
+  "timing__setup__ws__corner:nom_ff_125C_3v60": -7.513215151569317,
+  "design__max_slew_violation__count": 1492,
+  "design__max_fanout_violation__count": 0,
+  "design__max_cap_violation__count": 188,
+  "clock__skew__worst_hold": -1.1541763427231928,
+  "clock__skew__worst_setup": 0.4164617379942422,
+  "timing__hold__ws": 0.10040946136529236,
+  "timing__setup__ws": -32.12551737782189,
+  "antenna__violating__nets": 0,
+  "antenna__violating__pins": 0,
+  "route__antenna_violation__count": 0,
+  "design__instance__count__class:antenna_cell": 246,
+  "design__instance__area__class:antenna_cell": 1080.04,
+  "antenna_diodes_count": 73,
+  "route__drc_errors__iter:0": 576,
+  "route__drc_errors__iter:1": 70,
+  "route__drc_errors__iter:2": 32,
+  "route__drc_errors__iter:3": 0,
+  "route__drc_errors__iter:4": 284,
+  "route__drc_errors__iter:5": 247,
+  "route__drc_errors__iter:6": 213,
+  "route__drc_errors__iter:7": 193,
+  "route__drc_errors__iter:8": 176,
+  "route__drc_errors__iter:9": 171,
+  "route__drc_errors__iter:10": 19,
+  "route__drc_errors__iter:11": 0,
+  "route__drc_errors__iter:12": 7,
+  "route__drc_errors__iter:13": 0,
+  "route__drc_errors": 0,
+  "design__disconnected_pin__count": 0,
+  "design__critical_disconnected_pin__count": 0,
+  "design__max_slew_violation__count__corner:min_tt_025C_3v30": 19,
+  "design__max_fanout_violation__count__corner:min_tt_025C_3v30": 0,
+  "design__max_cap_violation__count__corner:min_tt_025C_3v30": 7,
+  "clock__skew__worst_hold__corner:min_tt_025C_3v30": -1.7886657106165857,
+  "clock__skew__worst_setup__corner:min_tt_025C_3v30": 0.5242075810693202,
+  "timing__hold__ws__corner:min_tt_025C_3v30": 0.42932858483530784,
+  "timing__setup__ws__corner:min_tt_025C_3v30": -9.457536355086637,
+  "design__max_slew_violation__count__corner:max_tt_025C_3v30": 1014,
+  "design__max_fanout_violation__count__corner:max_tt_025C_3v30": 0,
+  "design__max_cap_violation__count__corner:max_tt_025C_3v30": 147,
+  "clock__skew__worst_hold__corner:max_tt_025C_3v30": -1.9633086823106718,
+  "clock__skew__worst_setup__corner:max_tt_025C_3v30": 0.601748889971233,
+  "timing__hold__ws__corner:max_tt_025C_3v30": 0.38973159136375246,
+  "timing__setup__ws__corner:max_tt_025C_3v30": -12.248828964476083,
+  "design__max_slew_violation__count__corner:min_ss_125C_3v00": 118,
+  "design__max_fanout_violation__count__corner:min_ss_125C_3v00": 0,
+  "design__max_cap_violation__count__corner:min_ss_125C_3v00": 35,
+  "clock__skew__worst_hold__corner:min_ss_125C_3v00": -3.331166992091548,
+  "clock__skew__worst_setup__corner:min_ss_125C_3v00": 0.7689684662235174,
+  "timing__hold__ws__corner:min_ss_125C_3v00": 1.1678223163494001,
+  "timing__setup__ws__corner:min_ss_125C_3v00": -26.418068480556496,
+  "design__max_slew_violation__count__corner:max_ss_125C_3v00": 1492,
+  "design__max_fanout_violation__count__corner:max_ss_125C_3v00": 0,
+  "design__max_cap_violation__count__corner:max_ss_125C_3v00": 188,
+  "clock__skew__worst_hold__corner:max_ss_125C_3v00": -3.6293333809989097,
+  "clock__skew__worst_setup__corner:max_ss_125C_3v00": 0.912234757997464,
+  "timing__hold__ws__corner:max_ss_125C_3v00": 1.0905663347728856,
+  "timing__setup__ws__corner:max_ss_125C_3v00": -32.12551737782189,
+  "design__max_slew_violation__count__corner:max_ss_n40C_3v00": 1022,
+  "design__max_fanout_violation__count__corner:max_ss_n40C_3v00": 0,
+  "design__max_cap_violation__count__corner:max_ss_n40C_3v00": 133,
+  "clock__skew__worst_hold__corner:max_ss_n40C_3v00": -2.710688195075961,
+  "clock__skew__worst_setup__corner:max_ss_n40C_3v00": 0.729919700897027,
+  "timing__hold__ws__corner:max_ss_n40C_3v00": 0.688015885959664,
+  "timing__setup__ws__corner:max_ss_n40C_3v00": -20.209427592306998,
+  "design__max_slew_violation__count__corner:min_ff_n40C_3v60": 19,
+  "design__max_fanout_violation__count__corner:min_ff_n40C_3v60": 0,
+  "design__max_cap_violation__count__corner:min_ff_n40C_3v60": 3,
+  "clock__skew__worst_hold__corner:min_ff_n40C_3v60": -1.1541763427231928,
+  "clock__skew__worst_setup__corner:min_ff_n40C_3v60": 0.4164617379942422,
+  "timing__hold__ws__corner:min_ff_n40C_3v60": 0.1235446224736458,
+  "timing__setup__ws__corner:min_ff_n40C_3v60": -3.8720245883320663,
+  "design__max_slew_violation__count__corner:max_ff_n40C_3v60": 718,
+  "design__max_fanout_violation__count__corner:max_ff_n40C_3v60": 0,
+  "design__max_cap_violation__count__corner:max_ff_n40C_3v60": 124,
+  "clock__skew__worst_hold__corner:max_ff_n40C_3v60": -1.2697372401786615,
+  "clock__skew__worst_setup__corner:max_ff_n40C_3v60": 0.4644124938285476,
+  "timing__hold__ws__corner:max_ff_n40C_3v60": 0.10040946136529236,
+  "timing__setup__ws__corner:max_ff_n40C_3v60": -4.209131828884873,
+  "design__max_slew_violation__count__corner:min_ff_125C_3v60": 22,
+  "design__max_fanout_violation__count__corner:min_ff_125C_3v60": 0,
+  "design__max_cap_violation__count__corner:min_ff_125C_3v60": 15,
+  "clock__skew__worst_hold__corner:min_ff_125C_3v60": -1.6868216190182985,
+  "clock__skew__worst_setup__corner:min_ff_125C_3v60": 0.4723443991855848,
+  "timing__hold__ws__corner:min_ff_125C_3v60": 0.28639491588894617,
+  "timing__setup__ws__corner:min_ff_125C_3v60": -6.4927860481377175,
+  "design__xor_difference__count": 0,
+  "magic__drc_error__count": 0,
+  "klayout__drc_error__count": 0,
+  "design__lvs_device_difference__count": 0,
+  "design__lvs_net_difference__count": 0,
+  "design__lvs_property_fail__count": 0,
+  "design__lvs_error__count": 0,
+  "design__lvs_unmatched_device__count": 0,
+  "design__lvs_unmatched_net__count": 0,
+  "design__lvs_unmatched_pin__count": 0
+ },
+ "signoff": {
+  "magic_drc_errors": 0,
+  "klayout_drc_errors_librelane_gds": 0,
+  "klayout_on_exported_gds": {
+   "main": {
+    "violations": 0,
+    "by_rule": {}
+   },
+   "antenna": {
+    "violations": 0,
+    "by_rule": {}
+   }
+  },
+  "gds_export": {
+   "tool": "8.3.678",
+   "sha256": "471a7a39ebd8c9977e802e9584fa95cb21ff916a83eaa0f8d7071969a43e35b8  pt_digital_macro.gds",
+   "xor_vs_librelane_gds": 0
+  },
+  "lvs_errors": 0,
+  "lvs_unique_match": true,
+  "antenna_openroad": {
+   "antenna__violating__nets": 0,
+   "antenna__violating__pins": 0,
+   "route__antenna_violation__count": 0,
+   "design__instance__count__class:antenna_cell": 246,
+   "design__instance__area__class:antenna_cell": 1080.04,
+   "antenna_diodes_count": 73
+  },
+  "illegal_overlap": 0
+ },
+ "sta": {
+  "tool": "OpenSTA 2.7.0",
+  "corners": {
+   "tt_025C_3v30_nom": {
+    "liberty": "gf180mcu_fd_sc_mcu7t5v0__tt_025C_3v30.lib",
+    "spef": "spef/nom/pt_digital_macro.nom.spef",
+    "netlist": "pt_digital_macro.nl.v",
+    "slack": {
+     "sclk": {
+      "setup": -3.643141,
+      "hold": 0.411534
+     },
+     "ref": {
+      "setup": -6.076054,
+      "hold": 0.443826
+     },
+     "hword": {
+      "setup": -8.920098,
+      "hold": 0.534849
+     },
+     "h2d": {
+      "setup": -1.028702,
+      "hold": 0.583197
+     },
+     "wtx": {
+      "setup": -10.696108,
+      "hold": 0.560704
+     },
+     "wrx": {
+      "setup": -7.67661,
+      "hold": 0.571278
+     },
+     "rftx": {
+      "setup": -4.465695,
+      "hold": 0.589196
+     },
+     "rfrx": {
+      "setup": 1.503088,
+      "hold": 0.573736
+     },
+     "ctw": {
+      "setup": -5.50875,
+      "hold": 0.579601
+     },
+     "ctref": {
+      "setup": 24.871677,
+      "hold": 0.649878
+     },
+     "ctdet": {
+      "setup": -5.336669,
+      "hold": 0.603752
+     },
+     "fc0": {
+      "setup": -5.839136,
+      "hold": 0.606579
+     },
+     "fc1": {
+      "setup": -5.839138,
+      "hold": 0.606579
+     },
+     "fc2": {
+      "setup": -5.839138,
+      "hold": 0.606579
+     },
+     "fc3": {
+      "setup": -5.839138,
+      "hold": 0.606579
+     },
+     "fc4": {
+      "setup": -5.839138,
+      "hold": 0.606579
+     },
+     "fc5": {
+      "setup": -5.839138,
+      "hold": 0.606579
+     }
+    },
+    "worst_setup": {
+     "sclk": "{{-3.643141 spi_mosi {digital.control.regs.a_clocktree_config__launch_reference_count[4]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/D}} {-3.631115 spi_mosi debug_cfg_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q_6/D} {-3.613124 spi_mosi debug_cfg_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q_2/D} {6.710014 spi_cs_n {digital.control.rd_addr[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {6.710128 spi_cs_n {digital.control.rd_addr[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {6.710419 spi_cs_n {digital.control.rd_addr[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}}}",
+     "ref": "{{-6.076054 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-6.042174 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-6.033574 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "hword": "{{-8.920098 {digital.core.stream_v2.frame_tx.payload.pos[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} d2h_pin_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q_1/D} {-8.693101 {digital.core.wire_in.reg_out.rbp1[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_in.dout[17]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-8.580220 {digital.core.stream_v2.frame_tx.payload.pos[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} d2h_pin_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q_4/D} {-7.458648 digital.core.e0.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.stream_v2.frame_tx.payload.banks[2][2]_gf180mcu_fd_sc_mcu7t5v0__dff",
+     "h2d": "{{-1.028702 {h2d_pin[7]} {host.r[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.955652 {h2d_pin[6]} {host.r[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.930978 {h2d_pin[5]} {host.r[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.809509 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.rg1[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.820236 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.820619 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.rg1[1]_gf180mcu_f",
+     "wtx": "{{-10.696108 {digital.core.wire_out.rb[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-10.593695 {digital.core.wire_out.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-10.482163 {digital.core.wire_out.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {1.892764 digital.core.wire_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.wg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {",
+     "wrx": "{{-7.676610 {wire_rx_data[0]} {digital.prbs_check.run[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-7.674625 {wire_rx_data[0]} {digital.prbs_check.run[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-7.201468 {wire_rx_data[0]} {digital.prbs_check.run[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.664427 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.rg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {0.664472 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {0.667690 dig",
+     "rftx": "{{-4.465695 {digital.memory.pp[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[14]}} {-3.834472 {digital.memory.pp[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[15]}} {-3.732570 {digital.memory.pp[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[17]}} {2.897517 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.899782 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_out.wg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.899809 digital.core.rf_out",
+     "rfrx": "{{1.503088 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.503215 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.rg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.503613 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.rg1[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {3.559455 {rf_rx_sample[10]} {digital.core.rf_in.mem[15][6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {3.570286 {rf_rx_sample[10]} {digital.core.rf_in.mem[6][10]_gf180m",
+     "ctw": "{{-5.508750 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-4.731941 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-4.619748 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.204443 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.since[1]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/SETN}} {2.204552 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.sin",
+     "ctref": "{{24.871677 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.pend_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {30.175177 clocktree.launch.req_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.pend_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D} {44.414230 ct_marker_seen_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_marker_seen} {44.440701 ct_armed_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_armed} {56.563301 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.launch.rc[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {56.563313 clocktree.launch.rst_n_gf180mcu",
+     "ctdet": "{{-5.336669 clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/Q ct_det_clk} {-0.396568 {clocktree.detect.n_q[0]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/Q} clocktree.detect.a_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {-0.110831 {clocktree.detect.n_q[0]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/Q} {clocktree.detect.c[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.387640 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {0.388302 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.en_n_gf180mcu_fd_sc_mcu7t5v0",
+     "fc0": "{{-5.839136 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.725016 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.232479 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc1": "{{-5.839138 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.725016 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.232479 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc2": "{{-5.839138 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.725017 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.232479 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc3": "{{-5.839138 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.725017 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.232478 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc4": "{{-5.839138 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.725015 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.232478 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc5": "{{-5.839138 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.725015 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.232478 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}"
+    },
+    "worst_hold": {
+     "sclk": "{{0.411534 {digital.control.regs.st1_fca_count[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.st2_fca_count[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.518760 {digital.control.regs.pg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.pg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.526785 {digital.control.regs.s1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.s2[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {39.755878 spi_cs_n {digital.control.regs.wr_addr[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {39.756405 spi_cs_n {digital.control.regs.wr_a",
+     "ref": "{{0.443826 {digital.fcb.scr.meta[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.cfg_r[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.531934 {digital.fca.scr.meta[25]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.cfg_r[25]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.565737 {digital.fcb.scr.meta[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.cfg_r[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "hword": "{{0.534849 {host.smw.meta[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.mode_w[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.567979 digital.core.e0.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.core.e0.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.570064 {digital.core.rf_out.rg1[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.rg2[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.466277 digital.core.rf_in.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.rg2[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.503623 digital.core.rf_in.rd_active_gf180mcu_fd_sc_mcu",
+     "h2d": "{{0.583197 {host.h2d_fifo.wr_reset[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.598236 {host.h2d_fifo.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.h2d_fifo.rg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.599752 {host.smh.meta[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.mode_h[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {3.106746 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.mode_h[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {3.106794 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {ho",
+     "wtx": "{{0.560704 {digital.core.wire_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.wg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.581830 {digital.ptxc.meta[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_tx_cfg[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.583624 {digital.ptxc.meta[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_tx_cfg[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.287551 digital.core.wire_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.rg[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.289753 digital.core.wire_out.",
+     "wrx": "{{0.571278 {digital.prxc.meta[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_rx_cfg[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.583636 digital.prxl.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.pat_clr_s_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.592431 {digital.prxc.meta[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_rx_cfg[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.967519 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.wb[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.967809 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7",
+     "rftx": "{{0.589196 {digital.core.rf_out.wg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.590180 {digital.core.rf_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.592852 {digital.core.rf_out.wg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.022681 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.core.rf_out.underflow_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {2.143798 digita",
+     "rfrx": "{{0.573736 {digital.core.rf_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.582268 {digital.core.rf_in.rg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.582848 {digital.core.rf_in.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.571949 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.wb[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.572830 digital.core.rf_",
+     "ctw": "{{0.579601 {clocktree.wr[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.187199 {clocktree.stable[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.stable[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.286930 {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.082334 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_word_clk_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {2.082372 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_ser_run_gf180mcu_fd_sc_m",
+     "ctref": "{{0.649878 {clocktree.qual_s[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.qualified_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.748165 {clocktree.arm_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.arm_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.782042 clocktree.launch.marker_q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.marker_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {3.641740 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_armed_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {3.646153 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct",
+     "ctdet": "{{0.603752 {clocktree.dr[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.270233 {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.386708 {clocktree.detect.n_q[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.detect.n_q[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.525953 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.526476 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0",
+     "fc0": "{{0.606579 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.776563 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.180303 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc1": "{{0.606579 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.776563 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.180303 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc2": "{{0.606579 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.776563 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.180303 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc3": "{{0.606579 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.776563 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.180303 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc4": "{{0.606579 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.776563 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.180303 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc5": "{{0.606579 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.776563 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.180303 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}"
+    },
+    "crossings": [
+     {
+      "launch": "ref",
+      "capture": "sclk",
+      "slack": 46.369766,
+      "start": "digital.fca.hold[19]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.control.fca_count[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "ref",
+      "capture": "rftx",
+      "slack": -6.477511,
+      "start": "digital.cal_busy_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "rf_mute"
+     },
+     {
+      "launch": "hword",
+      "capture": "h2d",
+      "slack": 4.151103,
+      "start": "host.h2d_fifo.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "host.h2d_fifo.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "wtx",
+      "slack": -0.323064,
+      "start": "digital.core.wire_out.mem[9][0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.wire_out.dout[0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "wrx",
+      "slack": 4.076248,
+      "start": "digital.core.wire_in.rb[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.wire_in.rg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "rftx",
+      "slack": 4.068891,
+      "start": "digital.core.rf_out.wb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_out.wg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "rfrx",
+      "slack": 4.179124,
+      "start": "digital.core.rf_in.rb[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_in.rg1[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "h2d",
+      "capture": "hword",
+      "slack": 1.832392,
+      "start": "host.h2d_fifo.mem[1][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "host.h2d_fifo.dout[10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "wtx",
+      "capture": "hword",
+      "slack": 4.123518,
+      "start": "digital.core.wire_out.rb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.wire_out.rg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "wrx",
+      "capture": "hword",
+      "slack": 0.76867,
+      "start": "digital.core.wire_in.mem[31][17]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.wire_in.dout[17]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "rftx",
+      "capture": "hword",
+      "slack": 3.999704,
+      "start": "digital.core.rf_out.rb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_out.rg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "rfrx",
+      "capture": "sclk",
+      "slack": 35.874409,
+      "start": "digital.capture_done_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.control.spi.read_value[2]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D"
+     },
+     {
+      "launch": "rfrx",
+      "capture": "hword",
+      "slack": 0.819468,
+      "start": "digital.core.rf_in.mem[1][4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.packer.sample[4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "fc0",
+      "capture": "ref",
+      "slack": 7.88614,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc1",
+      "capture": "ref",
+      "slack": 7.886141,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc2",
+      "capture": "ref",
+      "slack": 7.886141,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc3",
+      "capture": "ref",
+      "slack": 7.886141,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc4",
+      "capture": "ref",
+      "slack": 7.886142,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc5",
+      "capture": "ref",
+      "slack": 7.886141,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     }
+    ],
+    "fmax_mhz": {
+     "hword": 65.3,
+     "wtx": 53.1,
+     "wrx": 56.6,
+     "ctw": 83.3,
+     "ctdet": 41.2,
+     "rftx": 38.7,
+     "rfrx": 63.6,
+     "sclk": 17.4,
+     "ref": 62.1,
+     "fc0": 80.7
+    },
+    "rc": 0,
+    "targets_ns": {
+     "sclk": 50.0,
+     "ref": 10.0,
+     "hword": 6.4,
+     "h2d": 12.8,
+     "wtx": 8.0,
+     "wrx": 8.0,
+     "rftx": 20.0,
+     "rfrx": 20.0,
+     "ctw": 6.4,
+     "ctref": 64.0,
+     "ctdet": 6.4
+    },
+    "tns": {
+     "setup": -45225.53118144719,
+     "hold": 0.0
+    },
+    "d2h_data_max": [
+     9.788674,
+     9.462892,
+     9.941934,
+     9.893511,
+     9.676049,
+     9.885905,
+     9.929941,
+     9.69886,
+     9.882193,
+     9.684368
+    ],
+    "d2h_data_min": [
+     9.448741,
+     9.148361,
+     9.590284,
+     9.543826,
+     9.344266,
+     9.539143,
+     9.575008,
+     9.363599,
+     9.533556,
+     9.352254
+    ],
+    "d2h_clk_max": [],
+    "d2h_clk_min": [],
+    "h2d_capture": {
+     "setup": "-1.028702",
+     "hold": "0.583197"
+    },
+    "worst_slack_all_paths": {
+     "setup": -1.0696107999308424e-08,
+     "hold": 4.115343621435841e-10
+    },
+    "max_slew_cap_violators": 272
+   },
+   "ss_125C_3v00_max": {
+    "liberty": "gf180mcu_fd_sc_mcu7t5v0__ss_125C_3v00.lib",
+    "spef": "spef/max/pt_digital_macro.max.spef",
+    "netlist": "pt_digital_macro.nl.v",
+    "slack": {
+     "sclk": {
+      "setup": -28.710653,
+      "hold": 1.090566
+     },
+     "ref": {
+      "setup": -22.674709,
+      "hold": 1.162126
+     },
+     "hword": {
+      "setup": -26.33604,
+      "hold": 1.371176
+     },
+     "h2d": {
+      "setup": -11.674131,
+      "hold": 1.470656
+     },
+     "wtx": {
+      "setup": -32.125519,
+      "hold": 1.420021
+     },
+     "wrx": {
+      "setup": -22.751722,
+      "hold": 1.448529
+     },
+     "rftx": {
+      "setup": -26.766071,
+      "hold": 1.481747
+     },
+     "rfrx": {
+      "setup": -9.791719,
+      "hold": 1.4579
+     },
+     "ctw": {
+      "setup": -18.385191,
+      "hold": 1.46674
+     },
+     "ctref": {
+      "setup": 17.98678,
+      "hold": 1.616888
+     },
+     "ctdet": {
+      "setup": -12.800884,
+      "hold": 1.514053
+     },
+     "fc0": {
+      "setup": -18.235998,
+      "hold": 1.518111
+     },
+     "fc1": {
+      "setup": -18.236002,
+      "hold": 1.518111
+     },
+     "fc2": {
+      "setup": -18.236002,
+      "hold": 1.518111
+     },
+     "fc3": {
+      "setup": -18.236002,
+      "hold": 1.518111
+     },
+     "fc4": {
+      "setup": -18.236,
+      "hold": 1.518111
+     },
+     "fc5": {
+      "setup": -18.236,
+      "hold": 1.518111
+     }
+    },
+    "worst_setup": {
+     "sclk": "{{-28.710653 analog_cfg_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q_26/Q {digital.control.regs.a_clocktree_config__launch_reference_count[4]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/D}} {-28.685474 analog_cfg_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q_26/Q debug_cfg_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q_6/D} {-28.661533 analog_cfg_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q_26/Q {digital.control.regs.a_cdr_config__nominal_rate_khz[20]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/D}} {-2.384997 spi_cs_n {digital.control.rd_addr[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-2.384848 spi_cs_n {digital.control.rd_addr[5]_gf180mcu_fd_sc",
+     "ref": "{{-22.674709 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-22.599669 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-22.581106 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "hword": "{{-26.336040 {digital.core.stream_v2.frame_tx.payload.pos[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} d2h_pin_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q_1/D} {-25.281481 {digital.core.stream_v2.frame_tx.payload.pos[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} d2h_pin_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q_4/D} {-25.084066 {digital.core.stream_v2.frame_tx.payload.pos[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} d2h_pin_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q_9/D} {-21.335186 digital.core.e0.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.stream_v2.frame_tx.payload.banks[117][2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_",
+     "h2d": "{{-11.674131 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.mem[6][18]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-11.614110 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.mem[6][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-11.602744 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.mem[6][5]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-2.645052 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.rg1[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-2.626372 host.h2d_fifo.wr_active_gf180mcu_fd_sc_",
+     "wtx": "{{-32.125519 {digital.core.wire_out.rb[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-31.553137 {digital.core.wire_out.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-31.243023 {digital.core.wire_out.reg_out.rbp1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[16]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-3.511991 digital.core.e3.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.prbs.h[6]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/SETN}} {-3.510302 d",
+     "wrx": "{{-22.751722 {wire_rx_data[0]} {digital.prbs_check.run[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-22.749706 {wire_rx_data[0]} {digital.prbs_check.run[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-22.181419 {digital.pat_rx_cfg[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.prbs_check.bad[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-4.922696 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.rg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-4.922644 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.rg1[3]_gf180",
+     "rftx": "{{-26.766071 {digital.memory.pp[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[14]}} {-25.484509 {digital.memory.pp[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[15]}} {-25.137575 {digital.memory.pp[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[17]}} {-0.681836 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_out.wg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-0.681805 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_out.wg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-0.679759 digital.core.",
+     "rfrx": "{{-9.791719 digital.capture_done_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.memory.capture[0][11]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-9.618525 digital.capture_done_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.memory.capture[3][18]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-9.614217 digital.capture_done_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.memory.capture[3][20]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-3.316127 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-3.315982 digital.core.rf_in.wr_act",
+     "ctw": "{{-18.385191 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-16.711655 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-16.512280 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-1.720386 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.since[1]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/SETN}} {-1.720269 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktre",
+     "ctref": "{{17.986780 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.pend_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {28.515676 clocktree.launch.req_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.pend_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D} {34.050110 {clocktree.launch.rc[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.req_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {34.309391 {clocktree.launch.rc[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.counting_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {49.459839 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dff",
+     "ctdet": "{{-12.800884 clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/Q ct_det_clk} {-7.423556 {clocktree.detect.n_q[0]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/Q} clocktree.detect.a_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {-6.849077 {clocktree.detect.n_q[0]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/Q} {clocktree.detect.c[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-2.102601 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {-2.101803 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.en_n_gf180mcu_fd_sc_mcu7t",
+     "fc0": "{{-18.235998 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.995998 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.015076 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc1": "{{-18.236002 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.995996 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.015079 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc2": "{{-18.236002 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.995996 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.015079 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc3": "{{-18.236002 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.995996 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.015079 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc4": "{{-18.236000 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.995995 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.015079 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc5": "{{-18.236000 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.995998 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-17.015079 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}"
+    },
+    "worst_hold": {
+     "sclk": "{{1.090566 {digital.control.regs.st1_fca_count[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.st2_fca_count[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.324076 {digital.control.regs.pg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.pg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.336203 {digital.control.regs.s1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.s2[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {45.241264 spi_cs_n {digital.control.regs.wr_addr[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {45.241924 spi_cs_n {digital.control.regs.wr_a",
+     "ref": "{{1.162126 {digital.fcb.scr.meta[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.cfg_r[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.376119 {digital.fca.scr.meta[25]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.cfg_r[25]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.434167 {digital.fcb.scr.meta[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.cfg_r[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "hword": "{{1.371176 {host.smw.meta[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.mode_w[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.439928 digital.core.e0.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.core.e0.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.440783 {digital.core.rf_out.rg1[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.rg2[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {3.183437 digital.core.rf_in.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.rg2[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {3.266932 digital.core.rf_in.rd_active_gf180mcu_fd_sc_mcu",
+     "h2d": "{{1.470656 {host.h2d_fifo.wr_reset[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.500837 {host.h2d_fifo.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.h2d_fifo.rg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.503727 {host.smh.meta[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.mode_h[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {6.173304 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.din[19]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {6.176245 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_",
+     "wtx": "{{1.420021 {digital.core.wire_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.wg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.468907 {digital.ptxc.meta[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_tx_cfg[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.471066 {digital.ptxc.meta[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_tx_cfg[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {4.680632 digital.core.wire_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.rg[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {4.683129 digital.core.wire_out.",
+     "wrx": "{{1.448529 {digital.prxc.meta[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_rx_cfg[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.470984 digital.prxl.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.pat_clr_s_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.482001 {digital.prxc.meta[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_rx_cfg[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {5.922445 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.wb[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {5.922766 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7",
+     "rftx": "{{1.481747 {digital.core.rf_out.wg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.483564 {digital.core.rf_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.491940 {digital.core.rf_out.wg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {4.296309 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.core.rf_out.underflow_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {4.532278 digita",
+     "rfrx": "{{1.457900 {digital.core.rf_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.469055 {digital.core.rf_in.rg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.469739 {digital.core.rf_in.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {5.212511 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.wb[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {5.213573 digital.core.rf_",
+     "ctw": "{{1.466740 {clocktree.wr[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {2.660821 {clocktree.stable[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.stable[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.890423 {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {4.317052 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_word_clk_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {4.317097 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_ser_run_gf180mcu_fd_sc_m",
+     "ctref": "{{1.616888 {clocktree.qual_s[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.qualified_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.797318 {clocktree.arm_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.arm_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.873193 clocktree.launch.marker_q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.marker_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {7.247361 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_armed_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {7.252522 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct",
+     "ctdet": "{{1.514053 {clocktree.dr[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {2.834066 {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {3.054787 {clocktree.detect.n_q[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.detect.n_q[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {3.252949 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {3.253567 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0",
+     "fc0": "{{1.518111 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.858540 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {2.666699 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc1": "{{1.518111 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.858540 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {2.666699 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc2": "{{1.518111 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.858541 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {2.666699 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc3": "{{1.518111 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.858541 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {2.666699 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc4": "{{1.518111 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.858541 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {2.666699 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc5": "{{1.518111 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.858541 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {2.666699 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}"
+    },
+    "crossings": [
+     {
+      "launch": "ref",
+      "capture": "sclk",
+      "slack": 42.501823,
+      "start": "digital.fca.hold[19]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.control.fca_count[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "ref",
+      "capture": "rftx",
+      "slack": -19.347315,
+      "start": "digital.cal_busy_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "rf_mute"
+     },
+     {
+      "launch": "hword",
+      "capture": "h2d",
+      "slack": 1.741152,
+      "start": "host.h2d_fifo.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "host.h2d_fifo.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "wtx",
+      "slack": -9.930467,
+      "start": "digital.core.wire_out.mem[9][0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.wire_out.dout[0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "wrx",
+      "slack": 1.596662,
+      "start": "digital.core.wire_in.rb[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.wire_in.rg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "rftx",
+      "slack": 1.58012,
+      "start": "digital.core.rf_out.wb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_out.wg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "rfrx",
+      "slack": 1.804914,
+      "start": "digital.core.rf_in.rb[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_in.rg1[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "h2d",
+      "capture": "hword",
+      "slack": -3.123755,
+      "start": "host.h2d_fifo.mem[1][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "host.h2d_fifo.dout[10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "wtx",
+      "capture": "hword",
+      "slack": 1.702662,
+      "start": "digital.core.wire_out.rb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.wire_out.rg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "wrx",
+      "capture": "hword",
+      "slack": -5.507105,
+      "start": "digital.core.wire_in.mem[28][6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.wire_in.dout[6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "rftx",
+      "capture": "hword",
+      "slack": 1.43082,
+      "start": "digital.core.rf_out.rb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_out.rg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "rfrx",
+      "capture": "sclk",
+      "slack": 20.108892,
+      "start": "digital.capture_done_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.control.spi.read_value[4]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D"
+     },
+     {
+      "launch": "rfrx",
+      "capture": "hword",
+      "slack": -5.279155,
+      "start": "digital.core.rf_in.mem[1][4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.packer.sample[4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "fc0",
+      "capture": "ref",
+      "slack": 5.606973,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc1",
+      "capture": "ref",
+      "slack": 5.606973,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc2",
+      "capture": "ref",
+      "slack": 5.606973,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc3",
+      "capture": "ref",
+      "slack": 5.606971,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc4",
+      "capture": "ref",
+      "slack": 5.606973,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc5",
+      "capture": "ref",
+      "slack": 5.606971,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     }
+    ],
+    "fmax_mhz": {
+     "hword": 30.4,
+     "wtx": 2.5,
+     "wrx": 2.5,
+     "ctw": 39.9,
+     "ctdet": 20.1,
+     "rftx": 2.5,
+     "rfrx": 2.5,
+     "sclk": 9.8,
+     "ref": 30.4,
+     "fc0": 40.5
+    },
+    "rc": 0,
+    "targets_ns": {
+     "sclk": 50.0,
+     "ref": 10.0,
+     "hword": 6.4,
+     "h2d": 12.8,
+     "wtx": 8.0,
+     "wrx": 8.0,
+     "rftx": 20.0,
+     "rfrx": 20.0,
+     "ctw": 6.4,
+     "ctref": 64.0,
+     "ctdet": 6.4
+    },
+    "tns": {
+     "setup": -181662.2585911558,
+     "hold": 0.0
+    },
+    "d2h_data_max": [
+     20.068575,
+     19.287611,
+     20.402534,
+     20.296816,
+     19.79125,
+     20.304895,
+     20.390245,
+     19.846642,
+     20.254171,
+     19.832386
+    ],
+    "d2h_data_min": [
+     19.177244,
+     18.505325,
+     19.483406,
+     19.380686,
+     18.930229,
+     19.394461,
+     19.456867,
+     18.978096,
+     19.341553,
+     18.969189
+    ],
+    "d2h_clk_max": [],
+    "d2h_clk_min": [],
+    "h2d_capture": {
+     "setup": "-11.674131",
+     "hold": "1.470656"
+    },
+    "worst_slack_all_paths": {
+     "setup": -3.2125516469250215e-08,
+     "hold": 1.0905663039295632e-09
+    },
+    "max_slew_cap_violators": 1680
+   },
+   "ss_n40C_3v00_max": {
+    "liberty": "gf180mcu_fd_sc_mcu7t5v0__ss_n40C_3v00.lib",
+    "spef": "spef/max/pt_digital_macro.max.spef",
+    "netlist": "pt_digital_macro.nl.v",
+    "slack": {
+     "sclk": {
+      "setup": -11.983727,
+      "hold": 0.688016
+     },
+     "ref": {
+      "setup": -12.768867,
+      "hold": 0.738677
+     },
+     "hword": {
+      "setup": -16.279842,
+      "hold": 0.895386
+     },
+     "h2d": {
+      "setup": -4.195484,
+      "hold": 0.967495
+     },
+     "wtx": {
+      "setup": -20.209427,
+      "hold": 0.931581
+     },
+     "wrx": {
+      "setup": -14.009514,
+      "hold": 0.949971
+     },
+     "rftx": {
+      "setup": -13.916543,
+      "hold": 0.975324
+     },
+     "rfrx": {
+      "setup": -2.111783,
+      "hold": 0.956058
+     },
+     "ctw": {
+      "setup": -10.689567,
+      "hold": 0.962149
+     },
+     "ctref": {
+      "setup": 22.136272,
+      "hold": 1.072204
+     },
+     "ctdet": {
+      "setup": -8.374307,
+      "hold": 0.998366
+     },
+     "fc0": {
+      "setup": -10.885879,
+      "hold": 1.001773
+     },
+     "fc1": {
+      "setup": -10.885878,
+      "hold": 1.001773
+     },
+     "fc2": {
+      "setup": -10.885878,
+      "hold": 1.001773
+     },
+     "fc3": {
+      "setup": -10.885876,
+      "hold": 1.001773
+     },
+     "fc4": {
+      "setup": -10.885877,
+      "hold": 1.001773
+     },
+     "fc5": {
+      "setup": -10.88588,
+      "hold": 1.001773
+     }
+    },
+    "worst_setup": {
+     "sclk": "{{-11.983727 spi_mosi {digital.control.regs.a_clocktree_config__launch_reference_count[4]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/D}} {-11.965746 spi_mosi debug_cfg_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q_6/D} {-11.941861 spi_mosi debug_cfg_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q_2/D} {3.445820 spi_cs_n {digital.control.rd_addr[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {3.445965 spi_cs_n {digital.control.rd_addr[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {3.446285 spi_cs_n {digital.control.rd_addr[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}}}",
+     "ref": "{{-12.768867 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-12.719118 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-12.706536 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "hword": "{{-16.279842 {digital.core.stream_v2.frame_tx.payload.pos[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} d2h_pin_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q_1/D} {-15.667953 {digital.core.wire_in.reg_out.rbp1[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_in.dout[17]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-15.552445 {digital.core.stream_v2.frame_tx.payload.pos[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} d2h_pin_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q_4/D} {-13.453753 digital.core.e0.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.stream_v2.frame_tx.payload.banks[117][2]_gf180mcu_fd_sc_mcu7t5v",
+     "h2d": "{{-4.195484 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.mem[6][18]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-4.152928 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.mem[6][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-4.145178 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.mem[6][5]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-0.078964 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.rg1[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-0.063957 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu",
+     "wtx": "{{-20.209427 {digital.core.wire_out.rb[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-19.909231 {digital.core.wire_out.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-19.442804 {digital.core.wire_out.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-0.238972 digital.core.e3.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.prbs.h[6]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/SETN}} {-0.238739 digital.core",
+     "wrx": "{{-14.009514 {wire_rx_data[0]} {digital.prbs_check.run[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-13.999497 {wire_rx_data[0]} {digital.prbs_check.run[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-13.338008 {wire_rx_data[0]} {digital.prbs_check.run[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-1.491588 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.rg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-1.491537 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-1.4885",
+     "rftx": "{{-13.916543 {digital.memory.pp[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[14]}} {-13.000259 {digital.memory.pp[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[15]}} {-12.713800 {digital.memory.pp[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[17]}} {1.344175 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_out.wg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.344206 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_out.wg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.344697 digital.core.rf_",
+     "rfrx": "{{-2.111783 {rf_rx_sample[10]} {digital.core.rf_in.mem[6][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-2.109486 {rf_rx_sample[10]} {digital.core.rf_in.mem[9][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-2.087768 {rf_rx_sample[10]} {digital.core.rf_in.mem[15][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-0.360903 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-0.360760 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.rg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {-0.36032",
+     "ctw": "{{-10.689567 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-9.577326 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-9.404188 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.670575 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.since[1]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/SETN}} {0.670689 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.si",
+     "ctref": "{{22.136272 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.pend_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {29.495033 clocktree.launch.req_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.pend_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D} {41.449135 ct_marker_seen_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_marker_seen} {41.518471 ct_armed_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_armed} {53.765995 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.launch.rc[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {53.766014 clocktree.launch.rst_n_gf180mcu",
+     "ctdet": "{{-8.374307 clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/Q ct_det_clk} {-3.186231 {clocktree.detect.n_q[0]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/Q} clocktree.detect.a_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {-2.788374 {clocktree.detect.n_q[0]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/Q} {clocktree.detect.c[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.530714 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {-0.529927 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.en_n_gf180mcu_fd_sc_mcu7t5",
+     "fc0": "{{-10.885879 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-10.699561 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-9.994712 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc1": "{{-10.885878 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-10.699561 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-9.994711 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc2": "{{-10.885878 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-10.699561 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-9.994711 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc3": "{{-10.885876 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-10.699559 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-9.994709 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc4": "{{-10.885877 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-10.699560 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-9.994710 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc5": "{{-10.885880 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-10.699562 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-9.994713 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}"
+    },
+    "worst_hold": {
+     "sclk": "{{0.688016 {digital.control.regs.st1_fca_count[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.st2_fca_count[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.859722 {digital.control.regs.pg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.pg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.869756 {digital.control.regs.s1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.s2[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {41.683884 spi_cs_n {digital.control.regs.wr_addr[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {41.684540 spi_cs_n {digital.control.regs.wr_a",
+     "ref": "{{0.738677 {digital.fcb.scr.meta[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.cfg_r[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.895636 {digital.fca.scr.meta[25]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.cfg_r[25]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.943678 {digital.fcb.scr.meta[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.cfg_r[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "hword": "{{0.895386 {host.smw.meta[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.mode_w[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.944827 digital.core.e0.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.core.e0.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.945848 {digital.core.rf_out.rg1[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.rg2[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.108630 digital.core.rf_in.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.rg2[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.169266 digital.core.rf_in.rd_active_gf180mcu_fd_sc_mcu",
+     "h2d": "{{0.967495 {host.h2d_fifo.wr_reset[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.990160 {host.h2d_fifo.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.h2d_fifo.rg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.992581 {host.smh.meta[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.mode_h[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {4.194870 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.h2d_fifo.din[19]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {4.195916 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_",
+     "wtx": "{{0.931581 {digital.core.wire_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.wg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.964756 {digital.ptxc.meta[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_tx_cfg[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.966868 {digital.ptxc.meta[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_tx_cfg[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {3.164816 digital.core.wire_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.rg[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {3.167279 digital.core.wire_out.",
+     "wrx": "{{0.949971 {digital.prxc.meta[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_rx_cfg[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.967662 digital.prxl.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.pat_clr_s_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.977970 {digital.prxc.meta[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_rx_cfg[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {4.034973 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.wb[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {4.035288 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7",
+     "rftx": "{{0.975324 {digital.core.rf_out.wg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.976520 {digital.core.rf_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.982778 {digital.core.rf_out.wg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.903544 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.core.rf_out.underflow_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {3.083942 digita",
+     "rfrx": "{{0.956058 {digital.core.rf_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.966033 {digital.core.rf_in.rg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.966594 {digital.core.rf_in.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {3.541682 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.wb[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {3.542727 digital.core.rf_",
+     "ctw": "{{0.962149 {clocktree.wr[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.819902 {clocktree.stable[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.stable[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.949188 {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.906381 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_word_clk_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {2.906426 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_ser_run_gf180mcu_fd_sc_m",
+     "ctref": "{{1.072204 {clocktree.qual_s[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.qualified_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.208376 {clocktree.arm_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.arm_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.263560 clocktree.launch.marker_q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.marker_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {4.962355 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_armed_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {4.967455 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct",
+     "ctdet": "{{0.998366 {clocktree.dr[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.925628 {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.100841 {clocktree.detect.n_q[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.detect.n_q[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.171987 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.172597 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0",
+     "fc0": "{{1.001773 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.255357 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.784863 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc1": "{{1.001773 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.255357 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.784863 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc2": "{{1.001773 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.255357 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.784863 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc3": "{{1.001773 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.255357 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.784863 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc4": "{{1.001773 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.255357 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.784863 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc5": "{{1.001773 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.255357 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {1.784863 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}"
+    },
+    "crossings": [
+     {
+      "launch": "ref",
+      "capture": "sclk",
+      "slack": 44.651791,
+      "start": "digital.fca.hold[19]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.control.fca_count[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "ref",
+      "capture": "rftx",
+      "slack": -12.2657,
+      "start": "digital.cal_busy_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "rf_mute"
+     },
+     {
+      "launch": "hword",
+      "capture": "h2d",
+      "slack": 3.170647,
+      "start": "host.h2d_fifo.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "host.h2d_fifo.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "wtx",
+      "slack": -4.175922,
+      "start": "digital.core.wire_out.mem[9][0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.wire_out.dout[0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "wrx",
+      "slack": 3.055978,
+      "start": "digital.core.wire_in.rb[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.wire_in.rg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "rftx",
+      "slack": 3.046489,
+      "start": "digital.core.rf_out.wb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_out.wg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "rfrx",
+      "slack": 3.212059,
+      "start": "digital.core.rf_in.rb[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_in.rg1[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "h2d",
+      "capture": "hword",
+      "slack": -0.049393,
+      "start": "host.h2d_fifo.mem[1][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "host.h2d_fifo.dout[10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "wtx",
+      "capture": "hword",
+      "slack": 3.135814,
+      "start": "digital.core.wire_out.rb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.wire_out.rg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "wrx",
+      "capture": "hword",
+      "slack": -1.665593,
+      "start": "digital.core.wire_in.mem[28][6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.wire_in.dout[6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "rftx",
+      "capture": "hword",
+      "slack": 2.933706,
+      "start": "digital.core.rf_out.rb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_out.rg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "rfrx",
+      "capture": "sclk",
+      "slack": 28.629267,
+      "start": "digital.capture_done_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.control.spi.read_value[2]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D"
+     },
+     {
+      "launch": "rfrx",
+      "capture": "hword",
+      "slack": -1.470483,
+      "start": "digital.core.rf_in.mem[5][4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.packer.sample[4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "fc0",
+      "capture": "ref",
+      "slack": 6.957362,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc1",
+      "capture": "ref",
+      "slack": 6.957362,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc2",
+      "capture": "ref",
+      "slack": 6.957362,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc3",
+      "capture": "ref",
+      "slack": 6.957361,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc4",
+      "capture": "ref",
+      "slack": 6.957362,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc5",
+      "capture": "ref",
+      "slack": 6.957362,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     }
+    ],
+    "fmax_mhz": {
+     "hword": 44.0,
+     "wtx": 35.0,
+     "wrx": 2.5,
+     "ctw": 57.9
+    },
+    "rc": 1,
+    "targets_ns": {
+     "sclk": 50.0,
+     "ref": 10.0,
+     "hword": 6.4,
+     "h2d": 12.8,
+     "wtx": 8.0,
+     "wrx": 8.0,
+     "rftx": 20.0,
+     "rfrx": 20.0,
+     "ctw": 6.4,
+     "ctref": 64.0,
+     "ctdet": 6.4
+    },
+    "tns": {
+     "setup": -95861.78473996189,
+     "hold": 0.0
+    },
+    "d2h_data_max": [
+     14.347145,
+     13.753728,
+     14.595319,
+     14.517561,
+     14.141047,
+     14.521673,
+     14.593225,
+     14.180105,
+     14.485907,
+     14.170609
+    ],
+    "d2h_data_min": [
+     13.741486,
+     13.235246,
+     13.968857,
+     13.893229,
+     13.556466,
+     13.903358,
+     13.953176,
+     13.590387,
+     13.864079,
+     13.58536
+    ],
+    "d2h_clk_max": [],
+    "d2h_clk_min": [],
+    "h2d_capture": {
+     "setup": "-4.195484",
+     "hold": "0.967495"
+    },
+    "worst_slack_all_paths": {
+     "setup": -2.0209427020745352e-08,
+     "hold": 6.880158665012459e-10
+    },
+    "max_slew_cap_violators": 1155
+   },
+   "ff_n40C_3v60_min": {
+    "liberty": "gf180mcu_fd_sc_mcu7t5v0__ff_n40C_3v60.lib",
+    "spef": "spef/min/pt_digital_macro.min.spef",
+    "netlist": "pt_digital_macro.nl.v",
+    "slack": {
+     "sclk": {
+      "setup": 4.349801,
+      "hold": 0.123545
+     },
+     "ref": {
+      "setup": 0.79329,
+      "hold": 0.140974
+     },
+     "hword": {
+      "setup": -2.117701,
+      "hold": 0.187233
+     },
+     "h2d": {
+      "setup": 0.678502,
+      "hold": 0.216258
+     },
+     "wtx": {
+      "setup": -2.192274,
+      "hold": 0.204603
+     },
+     "wrx": {
+      "setup": -1.438055,
+      "hold": 0.21109
+     },
+     "rftx": {
+      "setup": 4.690001,
+      "hold": 0.218085
+     },
+     "rfrx": {
+      "setup": 8.922804,
+      "hold": 0.20781
+     },
+     "ctw": {
+      "setup": -0.222518,
+      "hold": 0.213378
+     },
+     "ctref": {
+      "setup": 27.68907,
+      "hold": 0.252249
+     },
+     "ctdet": {
+      "setup": -2.20738,
+      "hold": 0.229129
+     },
+     "fc0": {
+      "setup": -0.681215,
+      "hold": 0.230709
+     },
+     "fc1": {
+      "setup": -0.681215,
+      "hold": 0.23071
+     },
+     "fc2": {
+      "setup": -0.681215,
+      "hold": 0.23071
+     },
+     "fc3": {
+      "setup": -0.681215,
+      "hold": 0.23071
+     },
+     "fc4": {
+      "setup": -0.681215,
+      "hold": 0.23071
+     },
+     "fc5": {
+      "setup": -0.681215,
+      "hold": 0.23071
+     }
+    },
+    "worst_setup": {
+     "sclk": "{{4.349801 spi_mosi {digital.control.regs.a_clocktree_config__launch_reference_count[4]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/D}} {4.357133 spi_mosi debug_cfg_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q_6/D} {4.369035 spi_mosi debug_cfg_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q_2/D} {10.434199 spi_cs_n {digital.control.rd_addr[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {10.434292 spi_cs_n {digital.control.rd_addr[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {10.434559 spi_cs_n {digital.control.rd_addr[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}}}",
+     "ref": "{{0.793290 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.811326 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.815648 {digital.fcb.delta_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "hword": "{{-2.117701 {digital.core.unpacker.count[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.mem[27][23]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-2.113700 {digital.core.unpacker.count[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.mem[27][3]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-2.102026 {digital.core.wire_in.reg_out.rbp1[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_in.dout[17]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-1.711658 digital.core.e0.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.stream_v2.frame_tx.payload.banks[2][2]_gf180mcu_fd_sc_mc",
+     "h2d": "{{0.678502 {h2d_pin[7]} {host.r[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.712240 {h2d_pin[6]} {host.r[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.725743 {h2d_pin[5]} {host.r[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {3.571706 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.f[5]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN}} {3.571785 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.f[2]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN}} {3.572719 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.f[3]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN}}}",
+     "wtx": "{{-2.192274 {digital.core.wire_out.rb[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-2.113427 {digital.core.wire_out.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-2.110880 {digital.core.wire_out.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {4.458568 digital.core.e3.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.prbs.h[18]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/SETN}} {4.459157 digital.core.e3.",
+     "wrx": "{{-1.438055 {wire_rx_data[0]} {digital.prbs_check.run[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-1.436402 {wire_rx_data[0]} {digital.prbs_check.run[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-1.168589 {wire_rx_data[0]} {digital.prbs_check.run[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {4.316677 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.wb[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {4.316745 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.wb[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {4.316909 digit",
+     "rftx": "{{4.690001 {digital.memory.pp[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[14]}} {5.032375 {digital.memory.pp[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[17]}} {5.037365 {digital.memory.pp[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[15]}} {17.514641 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_out.rg[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {17.514662 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_out.rg[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {17.514782 digital.core.rf_out.r",
+     "rfrx": "{{8.922804 {rf_rx_sample[10]} {digital.core.rf_in.mem[15][6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {8.927202 {rf_rx_sample[10]} {digital.core.rf_in.mem[6][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {8.928356 {rf_rx_sample[10]} {digital.core.rf_in.mem[9][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {16.821497 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.rg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {16.821705 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {16.821806 di",
+     "ctw": "{{-0.222518 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.193521 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.256840 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {3.827779 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.since[1]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/SETN}} {3.827883 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.since",
+     "ctref": "{{27.689070 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.pend_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {30.856133 clocktree.launch.req_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.pend_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D} {47.351898 ct_marker_seen_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_marker_seen} {47.359680 ct_armed_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_armed} {59.546051 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.launch.rc[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {59.546074 clocktree.launch.rst_n_gf180mcu",
+     "ctdet": "{{-2.207380 clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/Q ct_det_clk} {1.425890 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {1.426442 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.en_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {1.482527 {clocktree.den_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.detect.en_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D} {1.940022 clocktree.detect.a_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q",
+     "fc0": "{{-0.681215 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.615747 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.336462 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc1": "{{-0.681215 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.615747 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.336464 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc2": "{{-0.681215 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.615746 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.336462 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc3": "{{-0.681215 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.615747 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.336463 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc4": "{{-0.681215 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.615747 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.336463 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc5": "{{-0.681215 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.615747 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.336462 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}"
+    },
+    "worst_hold": {
+     "sclk": "{{0.123545 {digital.control.regs.st1_fca_count[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.st2_fca_count[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.181003 {digital.control.regs.pg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.pg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.187135 {digital.control.regs.s1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.s2[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {37.487217 spi_cs_n {digital.control.regs.wr_addr[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {37.487633 spi_cs_n {digital.control.regs.wr_a",
+     "ref": "{{0.140974 {digital.fcb.scr.meta[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.cfg_r[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.182568 {digital.fca.scr.meta[25]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.cfg_r[25]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.203871 {digital.fcb.scr.meta[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.cfg_r[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "hword": "{{0.187233 {host.smw.meta[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.mode_w[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.207374 digital.core.e0.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.core.e0.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.209484 {digital.core.rf_out.rg1[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.rg2[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.760499 digital.core.rf_in.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {0.761047 digital.core.rf_in.rd_active_gf180mcu_fd_sc_mcu",
+     "h2d": "{{0.216258 {host.h2d_fifo.wr_reset[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.223872 {host.h2d_fifo.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.h2d_fifo.rg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.225237 {host.smh.meta[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.mode_h[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.842188 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.mode_h[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.842228 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {ho",
+     "wtx": "{{0.204603 {digital.core.wire_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.wg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.217140 {digital.ptxc.meta[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_tx_cfg[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.218016 {digital.ptxc.meta[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_tx_cfg[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.311188 digital.core.wire_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.rg[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.313173 digital.core.wire_out.",
+     "wrx": "{{0.211090 {digital.prxc.meta[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_rx_cfg[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.216646 digital.prxl.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.pat_clr_s_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.222598 {digital.prxc.meta[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_rx_cfg[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.753158 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.753309 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu",
+     "rftx": "{{0.218085 {digital.core.rf_out.wg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.218683 {digital.core.rf_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.220413 {digital.core.rf_out.wg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.094831 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.core.rf_out.underflow_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {1.168589 digita",
+     "rfrx": "{{0.207810 {digital.core.rf_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.214942 {digital.core.rf_in.rg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.215244 {digital.core.rf_in.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.490184 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.wb[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.490920 digital.core.rf_",
+     "ctw": "{{0.213378 {clocktree.wr[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.570986 {clocktree.stable[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.stable[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.617163 {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.175121 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_word_clk_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {1.175153 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_ser_run_gf180mcu_fd_sc_m",
+     "ctref": "{{0.252249 {clocktree.qual_s[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.qualified_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.311693 {clocktree.arm_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.arm_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.330121 clocktree.launch.marker_q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.marker_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {2.163148 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_armed_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {2.166989 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct",
+     "ctdet": "{{0.229129 {clocktree.dr[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.619238 {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.688706 {clocktree.detect.n_q[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.detect.n_q[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.816492 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {0.816936 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0",
+     "fc0": "{{0.230709 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.327121 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.555946 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc1": "{{0.230710 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.327121 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.555946 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc2": "{{0.230710 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.327121 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.555945 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc3": "{{0.230710 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.327121 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.555945 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc4": "{{0.230710 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.327121 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.555945 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc5": "{{0.230710 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.327121 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.555945 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}"
+    },
+    "crossings": [
+     {
+      "launch": "ref",
+      "capture": "sclk",
+      "slack": 47.966999,
+      "start": "digital.fca.hold[19]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.control.fca_count[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "ref",
+      "capture": "rftx",
+      "slack": -1.086432,
+      "start": "digital.cal_busy_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "rf_mute"
+     },
+     {
+      "launch": "hword",
+      "capture": "h2d",
+      "slack": 5.134537,
+      "start": "host.h2d_fifo.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "host.h2d_fifo.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "wtx",
+      "slack": 3.563298,
+      "start": "digital.core.wire_out.mem[9][0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.wire_out.dout[0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "wrx",
+      "slack": 5.094469,
+      "start": "digital.core.wire_in.rb[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.wire_in.rg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "rftx",
+      "slack": 5.089759,
+      "start": "digital.core.rf_out.wb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_out.wg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "rfrx",
+      "slack": 5.149897,
+      "start": "digital.core.rf_in.rb[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_in.rg1[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "h2d",
+      "capture": "hword",
+      "slack": 3.874566,
+      "start": "host.h2d_fifo.mem[1][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "host.h2d_fifo.dout[10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "wtx",
+      "capture": "hword",
+      "slack": 5.119131,
+      "start": "digital.core.wire_out.rb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.wire_out.rg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "wrx",
+      "capture": "hword",
+      "slack": 3.304718,
+      "start": "digital.core.wire_in.mem[19][6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.wire_in.dout[6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "rftx",
+      "capture": "hword",
+      "slack": 5.055301,
+      "start": "digital.core.rf_out.rb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_out.rg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "rfrx",
+      "capture": "sclk",
+      "slack": 42.230873,
+      "start": "digital.capture_done_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.control.spi.read_value[2]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D"
+     },
+     {
+      "launch": "rfrx",
+      "capture": "hword",
+      "slack": 3.324947,
+      "start": "digital.core.rf_in.mem[1][4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.packer.sample[4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "fc0",
+      "capture": "ref",
+      "slack": 8.81462,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc1",
+      "capture": "ref",
+      "slack": 8.81462,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc2",
+      "capture": "ref",
+      "slack": 8.814621,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc3",
+      "capture": "ref",
+      "slack": 8.814621,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc4",
+      "capture": "ref",
+      "slack": 8.814621,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc5",
+      "capture": "ref",
+      "slack": 8.81462,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     }
+    ],
+    "fmax_mhz": {
+     "hword": 113.8,
+     "wtx": 90.6,
+     "wrx": 101.4,
+     "ctw": 150.5,
+     "ctdet": 72.6,
+     "rftx": 70.6,
+     "rfrx": 112.5,
+     "sclk": 23.9,
+     "ref": 107.8,
+     "fc0": 140.2
+    },
+    "rc": 0,
+    "targets_ns": {
+     "sclk": 50.0,
+     "ref": 10.0,
+     "hword": 6.4,
+     "h2d": 12.8,
+     "wtx": 8.0,
+     "wrx": 8.0,
+     "rftx": 20.0,
+     "rfrx": 20.0,
+     "ctw": 6.4,
+     "ctref": 64.0,
+     "ctdet": 6.4
+    },
+    "tns": {
+     "setup": -4695.273351904404,
+     "hold": 0.0
+    },
+    "d2h_data_max": [
+     5.477121,
+     5.320631,
+     5.555616,
+     5.532913,
+     5.428346,
+     5.524505,
+     5.547304,
+     5.434098,
+     5.530964,
+     5.424316
+    ],
+    "d2h_data_min": [
+     5.339023,
+     5.187802,
+     5.413474,
+     5.39121,
+     5.292593,
+     5.384722,
+     5.40563,
+     5.296827,
+     5.389603,
+     5.287455
+    ],
+    "d2h_clk_max": [],
+    "d2h_clk_min": [],
+    "h2d_capture": {
+     "setup": "0.678502",
+     "hold": "0.216258"
+    },
+    "worst_slack_all_paths": {
+     "setup": -2.2073796124288947e-09,
+     "hold": 1.2354461897956526e-10
+    },
+    "max_slew_cap_violators": 22
+   },
+   "ff_125C_3v60_min": {
+    "liberty": "gf180mcu_fd_sc_mcu7t5v0__ff_125C_3v60.lib",
+    "spef": "spef/min/pt_digital_macro.min.spef",
+    "netlist": "pt_digital_macro.nl.v",
+    "slack": {
+     "sclk": {
+      "setup": 0.082739,
+      "hold": 0.286395
+     },
+     "ref": {
+      "setup": -3.361182,
+      "hold": 0.311636
+     },
+     "hword": {
+      "setup": -5.812427,
+      "hold": 0.375502
+     },
+     "h2d": {
+      "setup": -0.23823,
+      "hold": 0.411314
+     },
+     "wtx": {
+      "setup": -6.492786,
+      "hold": 0.392717
+     },
+     "wrx": {
+      "setup": -5.036634,
+      "hold": 0.402891
+     },
+     "rftx": {
+      "setup": -0.209516,
+      "hold": 0.415013
+     },
+     "rfrx": {
+      "setup": 6.004845,
+      "hold": 0.403857
+     },
+     "ctw": {
+      "setup": -3.251829,
+      "hold": 0.407636
+     },
+     "ctref": {
+      "setup": 25.798729,
+      "hold": 0.457513
+     },
+     "ctdet": {
+      "setup": -3.97161,
+      "hold": 0.424798
+     },
+     "fc0": {
+      "setup": -3.652668,
+      "hold": 0.427919
+     },
+     "fc1": {
+      "setup": -3.652669,
+      "hold": 0.427919
+     },
+     "fc2": {
+      "setup": -3.65267,
+      "hold": 0.427919
+     },
+     "fc3": {
+      "setup": -3.65267,
+      "hold": 0.427919
+     },
+     "fc4": {
+      "setup": -3.65267,
+      "hold": 0.427919
+     },
+     "fc5": {
+      "setup": -3.65267,
+      "hold": 0.427919
+     }
+    },
+    "worst_setup": {
+     "sclk": "{{0.082739 spi_mosi {digital.control.regs.a_clocktree_config__launch_reference_count[4]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/D}} {0.097863 spi_mosi debug_cfg_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q_6/D} {0.104240 spi_mosi debug_cfg_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q_2/D} {7.935502 spi_cs_n {digital.control.rd_addr[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {7.935590 spi_cs_n {digital.control.rd_addr[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {7.935857 spi_cs_n {digital.control.rd_addr[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}}}",
+     "ref": "{{-3.361182 {digital.fcb.delta_q[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.335409 {digital.fcb.delta_q[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.329333 {digital.fcb.delta_q[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.good[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "hword": "{{-5.812427 {digital.core.unpacker.count[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.mem[27][23]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-5.798140 {digital.core.unpacker.count[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.mem[27][3]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-5.787330 {digital.core.unpacker.count[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.mem[27][5]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-4.794449 digital.core.e0.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.stream_v2.frame_tx.payload.banks[2][2]_gf180mcu_fd_sc_mcu7t5v",
+     "h2d": "{{-0.238230 {h2d_pin[7]} {host.r[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.193200 {h2d_pin[6]} {host.r[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-0.174191 {h2d_pin[5]} {host.r[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.614716 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.f[2]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN}} {2.615503 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.f[5]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN}} {2.615633 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.f[3]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN}}",
+     "wtx": "{{-6.492786 {digital.core.wire_out.rb[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-6.462402 {digital.core.wire_out.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[6]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {-6.382156 {digital.core.wire_out.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.dout[0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {3.143883 digital.core.e3.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.prbs.h[18]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/SETN}} {3.144310 digital.core.e3.",
+     "wrx": "{{-5.036634 {wire_rx_data[0]} {digital.prbs_check.run[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-5.023710 {wire_rx_data[0]} {digital.prbs_check.run[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-4.616502 {wire_rx_data[0]} {digital.prbs_check.run[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.747356 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.wb[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.747423 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.wb[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.747589 digit",
+     "rftx": "{{-0.209516 {digital.memory.pp[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[14]}} {0.224510 {digital.memory.pp[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[15]}} {0.305080 {digital.memory.pp[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {rf_tx_sample[17]}} {16.498861 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_out.rg[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {16.498884 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_out.rg[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {16.499002 digital.core.rf_out.",
+     "rfrx": "{{6.004845 {rf_rx_sample[10]} {digital.core.rf_in.mem[6][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {6.006827 {rf_rx_sample[10]} {digital.core.rf_in.mem[9][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {6.013220 {rf_rx_sample[10]} {digital.core.rf_in.mem[15][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D}} {15.492951 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.rg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {15.493159 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {15.493260 d",
+     "ctw": "{{-3.251829 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-2.620260 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-2.523105 {clocktree.ref_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.717097 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.since[1]_gf180mcu_fd_sc_mcu7t5v0__dffsnq_1_Q/SETN}} {2.717202 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.sin",
+     "ctref": "{{25.798729 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.pend_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {30.407858 clocktree.launch.req_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.pend_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D} {45.748608 ct_marker_seen_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_marker_seen} {45.757744 ct_armed_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_armed} {57.622730 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.launch.rc[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {57.622746 clocktree.launch.rst_n_gf180mcu",
+     "ctdet": "{{-3.971610 clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/Q ct_det_clk} {0.677699 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.b_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {0.678254 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.detect.en_n_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/RN} {0.731610 {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.detect.a_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.838837 {clocktree.den_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.detect.en_n_gf180mcu_fd_sc_mcu7t5v0__dffnr",
+     "fc0": "{{-3.652668 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.571367 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.213368 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc1": "{{-3.652669 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.571367 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.213368 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc2": "{{-3.652670 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.571368 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.213368 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc3": "{{-3.652670 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.571369 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.213368 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc4": "{{-3.652670 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.571369 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.213368 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc5": "{{-3.652670 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[15]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.571368 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_gray[16]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {-3.213368 {digital.fca.fb_bin[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}"
+    },
+    "worst_hold": {
+     "sclk": "{{0.286395 {digital.control.regs.st1_fca_count[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.st2_fca_count[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.365972 {digital.control.regs.pg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.pg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.375437 {digital.control.regs.s1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.control.regs.s2[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {39.084938 spi_cs_n {digital.control.regs.wr_addr[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {39.085354 spi_cs_n {digital.control.regs.wr_a",
+     "ref": "{{0.311636 {digital.fcb.scr.meta[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.cfg_r[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.370356 {digital.fca.scr.meta[25]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fca.cfg_r[25]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.396734 {digital.fcb.scr.meta[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.cfg_r[10]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "hword": "{{0.375502 {host.smw.meta[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.mode_w[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.400386 digital.core.e0.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.core.e0.q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.402876 {digital.core.rf_out.rg1[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.rg2[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.238595 digital.core.rf_in.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.239147 digital.core.rf_in.rd_active_gf180mcu_fd_sc_mcu",
+     "h2d": "{{0.411314 {host.h2d_fifo.wr_reset[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.422940 {host.h2d_fifo.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.h2d_fifo.rg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.423393 {host.smh.meta[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {host.mode_h[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.814727 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {host.mode_h[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.814767 host.h2d_fifo.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {ho",
+     "wtx": "{{0.392717 {digital.core.wire_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.wire_out.wg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.408615 {digital.ptxc.meta[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_tx_cfg[7]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.410741 {digital.ptxc.meta[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_tx_cfg[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.042368 digital.core.wire_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_out.rg[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.044370 digital.core.wire_out.",
+     "wrx": "{{0.402891 {digital.prxc.meta[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_rx_cfg[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.411810 digital.prxl.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.pat_clr_s_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.419577 {digital.prxc.meta[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.pat_rx_cfg[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.683971 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.wire_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.684124 digital.core.wire_in.wr_active_gf180mcu_fd_sc_mcu",
+     "rftx": "{{0.415013 {digital.core.rf_out.wg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.415913 {digital.core.rf_out.wg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.418329 {digital.core.rf_out.wg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_out.wg2[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.717195 digital.core.rf_out.rd_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.core.rf_out.underflow_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {1.809572 digita",
+     "rfrx": "{{0.403857 {digital.core.rf_in.rg1[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.411336 {digital.core.rf_in.rg1[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.411763 {digital.core.rf_in.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.core.rf_in.rg2[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {2.301741 digital.core.rf_in.wr_active_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {digital.core.rf_in.wb[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {2.302481 digital.core.rf_",
+     "ctw": "{{0.407636 {clocktree.wr[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.906065 {clocktree.stable[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.stable[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {0.990131 {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.dly[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.841311 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_word_clk_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {1.841343 clocktree.word.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_ser_run_gf180mcu_fd_sc_m",
+     "ctref": "{{0.457513 {clocktree.qual_s[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.qualified_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.539380 {clocktree.arm_s[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.launch.arm_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.564593 clocktree.launch.marker_q_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q clocktree.launch.marker_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {3.282628 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct_armed_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN} {3.286491 clocktree.launch.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q ct",
+     "ctdet": "{{0.424798 {clocktree.dr[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.972435 {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.073893 {clocktree.detect.n_q[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {clocktree.detect.n_q[2]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}} {1.318312 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q {clocktree.detect.n_q[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/RN}} {1.318757 clocktree.detect.rst_n_gf180mcu_fd_sc_mcu7t5v0",
+     "fc0": "{{0.427919 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.559492 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.903538 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc1": "{{0.427919 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.559492 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.903538 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc2": "{{0.427919 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.559492 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.903538 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc3": "{{0.427919 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.559492 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.903538 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc4": "{{0.427919 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.559492 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.903538 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}",
+     "fc5": "{{0.427919 digital.fca.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fca.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.559492 digital.fcb.sf.meta_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q digital.fcb.en_f_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D} {0.903538 {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q} {digital.fcb.fb_gray[8]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D}}}"
+    },
+    "crossings": [
+     {
+      "launch": "ref",
+      "capture": "sclk",
+      "slack": 47.039413,
+      "start": "digital.fca.hold[19]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.control.fca_count[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "ref",
+      "capture": "rftx",
+      "slack": -3.814273,
+      "start": "digital.cal_busy_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "rf_mute"
+     },
+     {
+      "launch": "hword",
+      "capture": "h2d",
+      "slack": 4.548189,
+      "start": "host.h2d_fifo.rb[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "host.h2d_fifo.rg1[3]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "wtx",
+      "slack": 1.314687,
+      "start": "digital.core.wire_out.mem[9][0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.wire_out.dout[0]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "wrx",
+      "slack": 4.494797,
+      "start": "digital.core.wire_in.rb[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.wire_in.rg1[5]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "rftx",
+      "slack": 4.48647,
+      "start": "digital.core.rf_out.wb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_out.wg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "hword",
+      "capture": "rfrx",
+      "slack": 4.569085,
+      "start": "digital.core.rf_in.rb[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_in.rg1[4]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "h2d",
+      "capture": "hword",
+      "slack": 2.589039,
+      "start": "host.h2d_fifo.mem[1][10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "host.h2d_fifo.dout[10]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "wtx",
+      "capture": "hword",
+      "slack": 4.527046,
+      "start": "digital.core.wire_out.rb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.wire_out.rg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "wrx",
+      "capture": "hword",
+      "slack": 1.737671,
+      "start": "digital.core.wire_in.mem[31][17]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.wire_in.dout[17]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "rftx",
+      "capture": "hword",
+      "slack": 4.441585,
+      "start": "digital.core.rf_out.rb[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.core.rf_out.rg1[6]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "rfrx",
+      "capture": "sclk",
+      "slack": 38.997803,
+      "start": "digital.capture_done_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.control.spi.read_value[2]_gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1_Q/D"
+     },
+     {
+      "launch": "rfrx",
+      "capture": "hword",
+      "slack": 1.725145,
+      "start": "digital.core.rf_in.mem[1][4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/Q",
+      "end": "digital.core.packer.sample[4]_gf180mcu_fd_sc_mcu7t5v0__dffq_1_Q/D"
+     },
+     {
+      "launch": "fc0",
+      "capture": "ref",
+      "slack": 8.25746,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc1",
+      "capture": "ref",
+      "slack": 8.257459,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc2",
+      "capture": "ref",
+      "slack": 8.257461,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc3",
+      "capture": "ref",
+      "slack": 8.257459,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc4",
+      "capture": "ref",
+      "slack": 8.257459,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     },
+     {
+      "launch": "fc5",
+      "capture": "ref",
+      "slack": 8.257461,
+      "start": "digital.fcb.fb_bin[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/Q",
+      "end": "digital.fcb.g1[17]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q/D"
+     }
+    ],
+    "fmax_mhz": {
+     "hword": 80.7,
+     "wtx": 67.0,
+     "wrx": 69.7,
+     "ctw": 103.4,
+     "ctdet": 50.0,
+     "rftx": 49.0,
+     "rfrx": 79.4,
+     "sclk": 19.8,
+     "ref": 74.8,
+     "fc0": 99.4
+    },
+    "rc": 0,
+    "targets_ns": {
+     "sclk": 50.0,
+     "ref": 10.0,
+     "hword": 6.4,
+     "h2d": 12.8,
+     "wtx": 8.0,
+     "wrx": 8.0,
+     "rftx": 20.0,
+     "rfrx": 20.0,
+     "ctw": 6.4,
+     "ctref": 64.0,
+     "ctdet": 6.4
+    },
+    "tns": {
+     "setup": -25758.133052461704,
+     "hold": 0.0
+    },
+    "d2h_data_max": [
+     7.698161,
+     7.498167,
+     7.798951,
+     7.769163,
+     7.634558,
+     7.760233,
+     7.787134,
+     7.643207,
+     7.766527,
+     7.629909
+    ],
+    "d2h_data_min": [
+     7.529509,
+     7.319596,
+     7.633098,
+     7.601945,
+     7.463165,
+     7.593093,
+     7.621135,
+     7.470787,
+     7.599493,
+     7.456661
+    ],
+    "d2h_clk_max": [],
+    "d2h_clk_min": [],
+    "h2d_capture": {
+     "setup": "-0.238230",
+     "hold": "0.411314"
+    },
+    "worst_slack_all_paths": {
+     "setup": -6.492785864509187e-09,
+     "hold": 2.863949077891448e-10
+    },
+    "max_slew_cap_violators": 37
+   }
+  }
+ },
+ "gate_level": {
+  "status": "pass",
+  "lockstep": {
+   "records_rtl": 3969,
+   "records_gl": 3969,
+   "mismatches": 0,
+   "first": []
+  },
+  "model": {
+   "reads_checked": 3397,
+   "reads_skipped_bench_constant": 59,
+   "snapshots_checked": 512,
+   "mismatches": 0,
+   "first": []
+  },
+  "reset_safety": {
+   "reset_snapshots": 101,
+   "violations": 0,
+   "first": [],
+   "x_on_data_with_valid_low": [
+    "rf_tx_sample",
+    "wire_tx_data"
+   ],
+   "safe_values": {
+    "rf_trim": "0000",
+    "wire_trim": "0000",
+    "clock_trim": "0000",
+    "calibration_trial": "000",
+    "wire_tx_valid": "0",
+    "wire_idle": "1",
+    "rf_tx_valid": "0",
+    "rf_mute": "1",
+    "d2h_oe": "0",
+    "d2h_clk_pin": "0",
+    "ct_bits": "0000000000",
+    "island_on": "00",
+    "atb_grp_en": "000"
+   },
+   "regfile_fields": "analog_cfg/debug_cfg at reset defaults; island_en, ATB, receiver and observation enables, ENABLE, MODE8 0; MISO 0 and MISO_OE 0 with CS_N high"
+  },
+  "observability": {
+   "reads": {
+    "ID": "5356",
+    "ABI": "0002",
+    "MAP_HASH": "5a1f",
+    "RESET_STATUS after POR": "0003",
+    "RESET_STATUS after W1C": "0000",
+    "RESET_STATUS after RESET_N": "0002",
+    "ISLAND_STATUS pgood=0x2A": "2a00",
+    "FAULT_STATUS fault=1": "0001",
+    "ISLAND_STATUS pgood=0": "0000",
+    "FAULT_STATUS fault=0": "0000",
+    "STATUS (ENABLE=1, clocks running)": "0001",
+    "STATUS (ENABLE=0, after run)": "0000",
+    "FREQ_COUNT_A lock (source=REF, target 256)": "0001",
+    "FREQ_COUNT_A count": "0100",
+    "FREQ_COUNT_A lock (source=off)": "0000"
+   },
+   "expected": {
+    "ID": "5356",
+    "ABI": "0002",
+    "MAP_HASH": "5a1f",
+    "RESET_STATUS after POR": "0003",
+    "RESET_STATUS after W1C": "0000",
+    "RESET_STATUS after RESET_N": "0002",
+    "ISLAND_STATUS pgood=0x2A": "2a00",
+    "FAULT_STATUS fault=1": "0001",
+    "ISLAND_STATUS pgood=0": "0000",
+    "FAULT_STATUS fault=0": "0000",
+    "FREQ_COUNT_A lock (source=REF, target 256)": "0001",
+    "FREQ_COUNT_A count": "0100",
+    "FREQ_COUNT_A lock (source=off)": "0000"
+   },
+   "mismatches": []
+  },
+  "host_link_loopback": {
+   "status": "pass",
+   "lockstep_equal": true,
+   "per_mode": {
+    "mode0": {
+     "status": "0201",
+     "locked": true,
+     "rx_fault": false
+    },
+    "mode1": {
+     "status": "0201",
+     "locked": true,
+     "rx_fault": false
+    },
+    "mode2": {
+     "status": "0201",
+     "locked": true,
+     "rx_fault": false
+    }
+   },
+   "final_status_after_stop": "0000",
+   "modes": {
+    "0": "DDR",
+    "1": "SDR",
+    "2": "SDR reduced"
+   }
+  }
+ },
+ "hostio_pad_screen": {
+  "summary": {
+   "tt_025C_3v30": {
+    "best_output": {
+     "cell": "bi_24t",
+     "when": "!IE&OE&!SL",
+     "f_ddr_max_mhz": 222.8
+    },
+    "bi_24t_fast_slew_6pF_f_ddr_max_mhz": 222.8,
+    "bi_24t_input_f_ddr_max_mhz": 193.2
+   },
+   "ss_125C_2v97": {
+    "best_output": {
+     "cell": "bi_24t",
+     "when": "!IE&OE&!SL",
+     "f_ddr_max_mhz": 177.9
+    },
+    "bi_24t_fast_slew_6pF_f_ddr_max_mhz": 177.9,
+    "bi_24t_input_f_ddr_max_mhz": 148.2
+   },
+   "ff_n40C_3v63": {
+    "best_output": {
+     "cell": "bi_24t",
+     "when": "!IE&OE&!SL",
+     "f_ddr_max_mhz": 251.9
+    },
+    "bi_24t_fast_slew_6pF_f_ddr_max_mhz": 251.9,
+    "bi_24t_input_f_ddr_max_mhz": 213.8
+   }
+  },
+  "assumptions": {
+   "fpga_rx_window_ns": 1.0,
+   "skew_budget_ns": 0.4,
+   "macro_capture_window_ns": 0.3,
+   "pad_input_edge_ns": 1.0,
+   "driver_input_slew_ns": 0.5,
+   "y_load_pf": 0.1,
+   "ui_target_ns": 3.2
+  }
+ },
+ "hardened_copy_differences": [
+  "pt_digital.sv"
+ ],
+ "sdc": {
+  "pnr": "sha256:9e0aa45d88ae73fa63caab9344ee35c36be5a94bb8e19a96993dabb0b45dbd63",
+  "signoff": "sha256:b4a6c236d9433d004f447f00ee4823fd70c5879542f0d3680c183867015c0114"
+ },
+ "config_override": null,
+ "variants": {
+  "metal4_only": {
+   "design__max_slew_violation__count__corner:nom_tt_025C_3v30": 801,
+   "timing__setup__ws__corner:nom_tt_025C_3v30": -15.456980133335568,
+   "design__max_slew_violation__count__corner:nom_ss_125C_3v00": 1311,
+   "design__max_slew_violation__count__corner:nom_ss_n40C_3v00": 781,
+   "design__max_slew_violation__count__corner:nom_ff_n40C_3v60": 696,
+   "design__max_slew_violation__count__corner:nom_ff_125C_3v60": 904,
+   "design__max_slew_violation__count": 2220,
+   "design__instance__utilization": 0.607071,
+   "design__instance__utilization__stdcell": 0.607071,
+   "antenna__violating__nets": 2,
+   "antenna__violating__pins": 2,
+   "route__drc_errors__iter:0": 1373,
+   "route__drc_errors__iter:1": 402,
+   "route__drc_errors__iter:2": 301,
+   "route__drc_errors__iter:3": 266,
+   "route__drc_errors__iter:4": 240,
+   "route__drc_errors__iter:5": 232,
+   "route__drc_errors__iter:6": 227,
+   "route__drc_errors__iter:7": 227,
+   "route__drc_errors__iter:8": 226,
+   "route__drc_errors__iter:9": 225,
+   "route__drc_errors__iter:10": 212,
+   "route__drc_errors__iter:11": 212,
+   "route__drc_errors__iter:12": 201,
+   "route__drc_errors__iter:13": 182,
+   "route__drc_errors__iter:14": 182,
+   "route__drc_errors__iter:15": 165,
+   "route__drc_errors__iter:16": 103,
+   "route__drc_errors__iter:17": 215,
+   "route__drc_errors__iter:18": 54,
+   "route__drc_errors__iter:19": 6,
+   "route__drc_errors__iter:20": 5,
+   "route__drc_errors__iter:21": 5,
+   "route__drc_errors__iter:22": 0,
+   "route__drc_errors__iter:23": 2,
+   "route__drc_errors__iter:24": 2,
+   "route__drc_errors__iter:25": 2,
+   "route__drc_errors__iter:26": 2,
+   "route__drc_errors__iter:27": 0,
+   "route__drc_errors__iter:28": 41,
+   "route__drc_errors__iter:29": 41,
+   "route__drc_errors__iter:30": 41,
+   "route__drc_errors__iter:31": 41,
+   "route__drc_errors__iter:32": 7,
+   "route__drc_errors__iter:33": 7,
+   "route__drc_errors__iter:34": 7,
+   "route__drc_errors__iter:35": 3,
+   "route__drc_errors__iter:37": 3,
+   "route__drc_errors__iter:38": 3,
+   "route__drc_errors__iter:39": 1,
+   "route__drc_errors__iter:40": 1,
+   "route__drc_errors__iter:41": 1,
+   "route__drc_errors__iter:42": 1,
+   "route__drc_errors__iter:43": 0,
+   "route__drc_errors": 0,
+   "route__drc_errors__iter:36": 3,
+   "design__max_slew_violation__count__corner:min_tt_025C_3v30": 343,
+   "design__max_slew_violation__count__corner:max_tt_025C_3v30": 1821,
+   "design__max_slew_violation__count__corner:min_ss_125C_3v00": 601,
+   "design__max_slew_violation__count__corner:max_ss_125C_3v00": 2220,
+   "design__max_slew_violation__count__corner:max_ss_n40C_3v00": 1828,
+   "design__max_slew_violation__count__corner:min_ff_n40C_3v60": 347,
+   "design__max_slew_violation__count__corner:max_ff_n40C_3v60": 1570,
+   "design__max_slew_violation__count__corner:min_ff_125C_3v60": 353,
+   "design__xor_difference__count": 0,
+   "magic__drc_error__count": 0,
+   "klayout__drc_error__count": 0,
+   "design__lvs_error__count": 0
+  }
+ },
+ "timing": {
+  "method": "OpenSTA on the routed netlist with OpenRCX SPEF (nom RC at tt, max RC at ss, min RC at ff), propagated CTS clocks, integration/pt_digital_macro.sdc at its targets. fmax_est = 1/(T - WNS) over paths launched and captured by the same clock.",
+  "envelope_note": "No Liberty exists inside the narrow envelope (22-32 C, 3.15-3.35 V). The nearest characterized corners are tt_025C_3v30 (inside), ss_125C_3v00 / ss_n40C_3v00 and ff_n40C_3v60 / ff_125C_3v60 (outside, pessimistic in both directions).",
+  "per_corner": {
+   "tt_025C_3v30_nom": {
+    "sclk": {
+     "target_mhz": 20.0,
+     "setup_slack_ns": -3.643,
+     "hold_slack_ns": 0.412,
+     "meets_target": false,
+     "fmax_est_mhz": 18.6,
+     "fmax_bisection_mhz": 17.4
+    },
+    "ref": {
+     "target_mhz": 100.0,
+     "setup_slack_ns": -6.076,
+     "hold_slack_ns": 0.444,
+     "meets_target": false,
+     "fmax_est_mhz": 62.2,
+     "fmax_bisection_mhz": 62.1
+    },
+    "hword": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -8.92,
+     "hold_slack_ns": 0.535,
+     "meets_target": false,
+     "fmax_est_mhz": 65.3,
+     "fmax_bisection_mhz": 65.3
+    },
+    "h2d": {
+     "target_mhz": 78.12,
+     "setup_slack_ns": -1.029,
+     "hold_slack_ns": 0.583,
+     "meets_target": false,
+     "fmax_est_mhz": 72.3,
+     "fmax_bisection_mhz": null
+    },
+    "wtx": {
+     "target_mhz": 125.0,
+     "setup_slack_ns": -10.696,
+     "hold_slack_ns": 0.561,
+     "meets_target": false,
+     "fmax_est_mhz": 53.5,
+     "fmax_bisection_mhz": 53.1
+    },
+    "wrx": {
+     "target_mhz": 125.0,
+     "setup_slack_ns": -7.677,
+     "hold_slack_ns": 0.571,
+     "meets_target": false,
+     "fmax_est_mhz": 63.8,
+     "fmax_bisection_mhz": 56.6
+    },
+    "rftx": {
+     "target_mhz": 50.0,
+     "setup_slack_ns": -4.466,
+     "hold_slack_ns": 0.589,
+     "meets_target": false,
+     "fmax_est_mhz": 40.9,
+     "fmax_bisection_mhz": 38.7
+    },
+    "rfrx": {
+     "target_mhz": 50.0,
+     "setup_slack_ns": 1.503,
+     "hold_slack_ns": 0.574,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": 63.6
+    },
+    "ctw": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -5.509,
+     "hold_slack_ns": 0.58,
+     "meets_target": false,
+     "fmax_est_mhz": 84.0,
+     "fmax_bisection_mhz": 83.3
+    },
+    "ctref": {
+     "target_mhz": 15.62,
+     "setup_slack_ns": 24.872,
+     "hold_slack_ns": 0.65,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": null
+    },
+    "ctdet": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -5.337,
+     "hold_slack_ns": 0.604,
+     "meets_target": false,
+     "fmax_est_mhz": 85.2,
+     "fmax_bisection_mhz": 41.2
+    },
+    "fc0": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -5.839,
+     "hold_slack_ns": 0.607,
+     "meets_target": false,
+     "fmax_est_mhz": 81.7,
+     "fmax_bisection_mhz": 80.7
+    }
+   },
+   "ss_125C_3v00_max": {
+    "sclk": {
+     "target_mhz": 20.0,
+     "setup_slack_ns": -28.711,
+     "hold_slack_ns": 1.091,
+     "meets_target": false,
+     "fmax_est_mhz": 12.7,
+     "fmax_bisection_mhz": 9.8
+    },
+    "ref": {
+     "target_mhz": 100.0,
+     "setup_slack_ns": -22.675,
+     "hold_slack_ns": 1.162,
+     "meets_target": false,
+     "fmax_est_mhz": 30.6,
+     "fmax_bisection_mhz": 30.4
+    },
+    "hword": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -26.336,
+     "hold_slack_ns": 1.371,
+     "meets_target": false,
+     "fmax_est_mhz": 30.5,
+     "fmax_bisection_mhz": 30.4
+    },
+    "h2d": {
+     "target_mhz": 78.12,
+     "setup_slack_ns": -11.674,
+     "hold_slack_ns": 1.471,
+     "meets_target": false,
+     "fmax_est_mhz": 40.9,
+     "fmax_bisection_mhz": null
+    },
+    "wtx": {
+     "target_mhz": 125.0,
+     "setup_slack_ns": -32.126,
+     "hold_slack_ns": 1.42,
+     "meets_target": false,
+     "fmax_est_mhz": 24.9,
+     "fmax_bisection_mhz": null
+    },
+    "wrx": {
+     "target_mhz": 125.0,
+     "setup_slack_ns": -22.752,
+     "hold_slack_ns": 1.449,
+     "meets_target": false,
+     "fmax_est_mhz": 32.5,
+     "fmax_bisection_mhz": null
+    },
+    "rftx": {
+     "target_mhz": 50.0,
+     "setup_slack_ns": -26.766,
+     "hold_slack_ns": 1.482,
+     "meets_target": false,
+     "fmax_est_mhz": 21.4,
+     "fmax_bisection_mhz": null
+    },
+    "rfrx": {
+     "target_mhz": 50.0,
+     "setup_slack_ns": -9.792,
+     "hold_slack_ns": 1.458,
+     "meets_target": false,
+     "fmax_est_mhz": 33.6,
+     "fmax_bisection_mhz": null
+    },
+    "ctw": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -18.385,
+     "hold_slack_ns": 1.467,
+     "meets_target": false,
+     "fmax_est_mhz": 40.3,
+     "fmax_bisection_mhz": 39.9
+    },
+    "ctref": {
+     "target_mhz": 15.62,
+     "setup_slack_ns": 17.987,
+     "hold_slack_ns": 1.617,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": null
+    },
+    "ctdet": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -12.801,
+     "hold_slack_ns": 1.514,
+     "meets_target": false,
+     "fmax_est_mhz": 52.1,
+     "fmax_bisection_mhz": 20.1
+    },
+    "fc0": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -18.236,
+     "hold_slack_ns": 1.518,
+     "meets_target": false,
+     "fmax_est_mhz": 40.6,
+     "fmax_bisection_mhz": 40.5
+    }
+   },
+   "ss_n40C_3v00_max": {
+    "sclk": {
+     "target_mhz": 20.0,
+     "setup_slack_ns": -11.984,
+     "hold_slack_ns": 0.688,
+     "meets_target": false,
+     "fmax_est_mhz": 16.1,
+     "fmax_bisection_mhz": null
+    },
+    "ref": {
+     "target_mhz": 100.0,
+     "setup_slack_ns": -12.769,
+     "hold_slack_ns": 0.739,
+     "meets_target": false,
+     "fmax_est_mhz": 43.9,
+     "fmax_bisection_mhz": null
+    },
+    "hword": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -16.28,
+     "hold_slack_ns": 0.895,
+     "meets_target": false,
+     "fmax_est_mhz": 44.1,
+     "fmax_bisection_mhz": 44.0
+    },
+    "h2d": {
+     "target_mhz": 78.12,
+     "setup_slack_ns": -4.195,
+     "hold_slack_ns": 0.967,
+     "meets_target": false,
+     "fmax_est_mhz": 58.8,
+     "fmax_bisection_mhz": null
+    },
+    "wtx": {
+     "target_mhz": 125.0,
+     "setup_slack_ns": -20.209,
+     "hold_slack_ns": 0.932,
+     "meets_target": false,
+     "fmax_est_mhz": 35.4,
+     "fmax_bisection_mhz": 35.0
+    },
+    "wrx": {
+     "target_mhz": 125.0,
+     "setup_slack_ns": -14.01,
+     "hold_slack_ns": 0.95,
+     "meets_target": false,
+     "fmax_est_mhz": 45.4,
+     "fmax_bisection_mhz": null
+    },
+    "rftx": {
+     "target_mhz": 50.0,
+     "setup_slack_ns": -13.917,
+     "hold_slack_ns": 0.975,
+     "meets_target": false,
+     "fmax_est_mhz": 29.5,
+     "fmax_bisection_mhz": null
+    },
+    "rfrx": {
+     "target_mhz": 50.0,
+     "setup_slack_ns": -2.112,
+     "hold_slack_ns": 0.956,
+     "meets_target": false,
+     "fmax_est_mhz": 45.2,
+     "fmax_bisection_mhz": null
+    },
+    "ctw": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -10.69,
+     "hold_slack_ns": 0.962,
+     "meets_target": false,
+     "fmax_est_mhz": 58.5,
+     "fmax_bisection_mhz": 57.9
+    },
+    "ctref": {
+     "target_mhz": 15.62,
+     "setup_slack_ns": 22.136,
+     "hold_slack_ns": 1.072,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": null
+    },
+    "ctdet": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -8.374,
+     "hold_slack_ns": 0.998,
+     "meets_target": false,
+     "fmax_est_mhz": 67.7,
+     "fmax_bisection_mhz": null
+    },
+    "fc0": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -10.886,
+     "hold_slack_ns": 1.002,
+     "meets_target": false,
+     "fmax_est_mhz": 57.9,
+     "fmax_bisection_mhz": null
+    }
+   },
+   "ff_n40C_3v60_min": {
+    "sclk": {
+     "target_mhz": 20.0,
+     "setup_slack_ns": 4.35,
+     "hold_slack_ns": 0.124,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": 23.9
+    },
+    "ref": {
+     "target_mhz": 100.0,
+     "setup_slack_ns": 0.793,
+     "hold_slack_ns": 0.141,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": 107.8
+    },
+    "hword": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -2.118,
+     "hold_slack_ns": 0.187,
+     "meets_target": false,
+     "fmax_est_mhz": 117.4,
+     "fmax_bisection_mhz": 113.8
+    },
+    "h2d": {
+     "target_mhz": 78.12,
+     "setup_slack_ns": 0.679,
+     "hold_slack_ns": 0.216,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": null
+    },
+    "wtx": {
+     "target_mhz": 125.0,
+     "setup_slack_ns": -2.192,
+     "hold_slack_ns": 0.205,
+     "meets_target": false,
+     "fmax_est_mhz": 98.1,
+     "fmax_bisection_mhz": 90.6
+    },
+    "wrx": {
+     "target_mhz": 125.0,
+     "setup_slack_ns": -1.438,
+     "hold_slack_ns": 0.211,
+     "meets_target": false,
+     "fmax_est_mhz": 106.0,
+     "fmax_bisection_mhz": 101.4
+    },
+    "rftx": {
+     "target_mhz": 50.0,
+     "setup_slack_ns": 4.69,
+     "hold_slack_ns": 0.218,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": 70.6
+    },
+    "rfrx": {
+     "target_mhz": 50.0,
+     "setup_slack_ns": 8.923,
+     "hold_slack_ns": 0.208,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": 112.5
+    },
+    "ctw": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -0.223,
+     "hold_slack_ns": 0.213,
+     "meets_target": false,
+     "fmax_est_mhz": 151.0,
+     "fmax_bisection_mhz": 150.5
+    },
+    "ctref": {
+     "target_mhz": 15.62,
+     "setup_slack_ns": 27.689,
+     "hold_slack_ns": 0.252,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": null
+    },
+    "ctdet": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -2.207,
+     "hold_slack_ns": 0.229,
+     "meets_target": false,
+     "fmax_est_mhz": 116.2,
+     "fmax_bisection_mhz": 72.6
+    },
+    "fc0": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -0.681,
+     "hold_slack_ns": 0.231,
+     "meets_target": false,
+     "fmax_est_mhz": 141.2,
+     "fmax_bisection_mhz": 140.2
+    }
+   },
+   "ff_125C_3v60_min": {
+    "sclk": {
+     "target_mhz": 20.0,
+     "setup_slack_ns": 0.083,
+     "hold_slack_ns": 0.286,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": 19.8
+    },
+    "ref": {
+     "target_mhz": 100.0,
+     "setup_slack_ns": -3.361,
+     "hold_slack_ns": 0.312,
+     "meets_target": false,
+     "fmax_est_mhz": 74.8,
+     "fmax_bisection_mhz": 74.8
+    },
+    "hword": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -5.812,
+     "hold_slack_ns": 0.376,
+     "meets_target": false,
+     "fmax_est_mhz": 81.9,
+     "fmax_bisection_mhz": 80.7
+    },
+    "h2d": {
+     "target_mhz": 78.12,
+     "setup_slack_ns": -0.238,
+     "hold_slack_ns": 0.411,
+     "meets_target": false,
+     "fmax_est_mhz": 76.7,
+     "fmax_bisection_mhz": null
+    },
+    "wtx": {
+     "target_mhz": 125.0,
+     "setup_slack_ns": -6.493,
+     "hold_slack_ns": 0.393,
+     "meets_target": false,
+     "fmax_est_mhz": 69.0,
+     "fmax_bisection_mhz": 67.0
+    },
+    "wrx": {
+     "target_mhz": 125.0,
+     "setup_slack_ns": -5.037,
+     "hold_slack_ns": 0.403,
+     "meets_target": false,
+     "fmax_est_mhz": 76.7,
+     "fmax_bisection_mhz": 69.7
+    },
+    "rftx": {
+     "target_mhz": 50.0,
+     "setup_slack_ns": -0.21,
+     "hold_slack_ns": 0.415,
+     "meets_target": false,
+     "fmax_est_mhz": 49.5,
+     "fmax_bisection_mhz": 49.0
+    },
+    "rfrx": {
+     "target_mhz": 50.0,
+     "setup_slack_ns": 6.005,
+     "hold_slack_ns": 0.404,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": 79.4
+    },
+    "ctw": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -3.252,
+     "hold_slack_ns": 0.408,
+     "meets_target": false,
+     "fmax_est_mhz": 103.6,
+     "fmax_bisection_mhz": 103.4
+    },
+    "ctref": {
+     "target_mhz": 15.62,
+     "setup_slack_ns": 25.799,
+     "hold_slack_ns": 0.458,
+     "meets_target": true,
+     "fmax_est_mhz": null,
+     "fmax_bisection_mhz": null
+    },
+    "ctdet": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -3.972,
+     "hold_slack_ns": 0.425,
+     "meets_target": false,
+     "fmax_est_mhz": 96.4,
+     "fmax_bisection_mhz": 50.0
+    },
+    "fc0": {
+     "target_mhz": 156.25,
+     "setup_slack_ns": -3.653,
+     "hold_slack_ns": 0.428,
+     "meets_target": false,
+     "fmax_est_mhz": 99.5,
+     "fmax_bisection_mhz": 99.4
+    }
+   }
+  },
+  "hold": "met at every clock and corner (worst hold slack in sta-report.json)",
+  "crossings_after_exceptions": "Remaining timed clock-to-clock paths are the bounded categories of the SDC (Gray pointers, FIFO storage reads, held handshake registers) plus one undocumented crossing: ref-domain cal_busy ORed combinationally into the rf_mute output (rftx-constrained). See open_risks."
+ },
+ "tests": {
+  "digital": {
+   "safe": {
+    "proposal": "pass",
+    "evidence": [
+     "evidence/digital-hardening-evidence.json#gate_level.reset_safety",
+     "evidence/regfile-verification.json"
+    ],
+    "note": "Post-route netlist: 101 snapshots taken while reset is asserted (RESET_N+POR, RESET_N alone, POR alone, RESET_N mid-write): 0 violations; analog_cfg/debug_cfg at declared defaults, island_en/island_on/ATB/receiver/observation enables 0, D2H OE 0, no X/Z on any control output (wire_tx_data/rf_tx_sample are X with valid=0: FIFO storage has no reset)."
+   },
+   "clean": {
+    "proposal": "pass",
+    "evidence": [
+     "evidence/digital-hardening-evidence.json#signoff"
+    ],
+    "note": "Magic DRC 0, KLayout DRC 0 (LibreLane GDS and the analog-image Magic 8.3.678 export, which XORs to 0 against it), Netgen LVS 0 errors, OpenROAD and KLayout antenna 0. Gate-level simulation of the post-route netlist matches the RTL and the register model. Timing does NOT meet the clock targets at ss (and several at tt); performance_vs_target records it (block-deliverables: performance does not gate freeze)."
+   },
+   "observable": {
+    "proposal": "pass",
+    "evidence": [
+     "evidence/digital-hardening-evidence.json#gate_level.observability"
+    ],
+    "note": "ID/ABI/map hash, POR vs RESET_N cause flags, island power-good and fault status, core status and frequency-counter lock/count read over SPI on the post-route netlist."
+   },
+   "fallback": {
+    "proposal": "waived_core"
+   }
+  },
+  "hostio": {
+   "safe": {
+    "proposal": "open",
+    "note": "Digital half passes (D2H OE=0 and data 0 at reset on the netlist; H2D inputs only capture). Pad half (provider bi_24t/in_c with powered peer and unpowered die, RESET_N weak pull-down PD=1 on in_c) is an assembly/pads-stage check not run here."
+   },
+   "clean": {
+    "proposal": "open",
+    "note": "pt_host_link is inside the clean macro; the provider pad cells and their hookup at the ring are not assembled or checked yet (freeze stage 2/4)."
+   },
+   "observable": {
+    "proposal": "pass",
+    "evidence": [
+     "evidence/digital-hardening-evidence.json#gate_level.host_link_loopback"
+    ],
+    "note": "Core status over SPI shows frame-receiver lock / rx fault; D2H looped to H2D locks in DDR, SDR and reduced-rate SDR on the post-route netlist; DBG_OBS host_rx_clk_div."
+   },
+   "fallback": {
+    "proposal": "pass",
+    "note": "debug.host_link.mode 1/2 (SDR, reduced-rate SDR) implemented and exercised in the netlist loopback; SPI capture/playback memory is the last route."
+   }
+  }
+ },
+ "hostio": {
+  "partition": "Provider gf180mcu_fd_io cells own pads/ESD/drive/receivers: bi_24t at the bidir sites (SPI, H2D, D2H), in_c at rst_n_pad (RESET_N, PD=1 weak pull-down), clk_pad (in_s in the template) needs the provider-permitted substitution to bi_24t for D2H[0]. Ours (in the hardened macro, rtl/pt_host_link.sv): DDR/SDR capture on H2D_CLK, pair FIFO into the core host word clock, D2H launch, centre-aligned forwarded D2H_CLK (word/2 toggle on the falling edge in DDR, gated inverted word clock in SDR), d2h_enable gating, drive/slew controls to the pads.",
+  "pad_toggle_screen": {
+   "summary": {
+    "tt_025C_3v30": {
+     "best_output": {
+      "cell": "bi_24t",
+      "when": "!IE&OE&!SL",
+      "f_ddr_max_mhz": 222.8
+     },
+     "bi_24t_fast_slew_6pF_f_ddr_max_mhz": 222.8,
+     "bi_24t_input_f_ddr_max_mhz": 193.2
+    },
+    "ss_125C_2v97": {
+     "best_output": {
+      "cell": "bi_24t",
+      "when": "!IE&OE&!SL",
+      "f_ddr_max_mhz": 177.9
+     },
+     "bi_24t_fast_slew_6pF_f_ddr_max_mhz": 177.9,
+     "bi_24t_input_f_ddr_max_mhz": 148.2
+    },
+    "ff_n40C_3v63": {
+     "best_output": {
+      "cell": "bi_24t",
+      "when": "!IE&OE&!SL",
+      "f_ddr_max_mhz": 251.9
+     },
+     "bi_24t_fast_slew_6pF_f_ddr_max_mhz": 251.9,
+     "bi_24t_input_f_ddr_max_mhz": 213.8
+    }
+   },
+   "ss_cmos_input_f_ddr_max_mhz": 191.6,
+   "note": "Liberty-only eye budget (see hostio_pad_screen.py); the pads alone allow roughly 178 MHz DDR out / 191 MHz DDR in (CMOS receiver, CS=0) at ss 2.97 V; Schmitt inputs (CS=1, in_s) drop to ~148 MHz. Not a qualification."
+  },
+  "core_limited_rate": {
+   "host_word_fmax_mhz": {
+    "tt": 65.3,
+    "worst_corner": 30.5
+   },
+   "ddr_pin_clock_max_mhz": {
+    "tt": 32.6,
+    "worst_corner": 15.2
+   },
+   "target": "156.25 MHz DDR pins = 312.5 Mword/s"
+  },
+  "verdict": "156.25 MHz DDR is NOT reachable: the pads would allow about 150-180 MHz DDR, but the standard-cell transport (framer, FIFO read muxes) closes only at the host word clock above; the DDR pin clock is half of it.",
+  "reduced_rate_proposal": "Tapeout-plan host-link fallback: SDR (mode 1) or reduced-rate SDR (mode 2) with the host word clock at or below the worst-corner fmax (H2D_CLK = D2H_CLK = word clock), or DDR with the pin clock at half of it. Full rate needs a 2-word-wide transport and pipelined FIFO reads (open RTL item)."
+ },
+ "performance_vs_target": [
+  {
+   "item": "host word clock",
+   "target_mhz": 312.5,
+   "tt_mhz": 65.3,
+   "worst_corner_mhz": 30.5
+  },
+  {
+   "item": "wired double-word clock (wtx/wrx)",
+   "target_mhz": 125.0,
+   "tt_mhz": [
+    53.5,
+    63.8
+   ],
+   "worst_corner_mhz": [
+    24.9,
+    32.5
+   ]
+  },
+  {
+   "item": "SPI SCLK",
+   "target_mhz": 20.0,
+   "tt_mhz": 18.6,
+   "worst_corner_mhz": 12.7,
+   "spec": "starts at <= 1 MHz; bench 10 MHz"
+  },
+  {
+   "item": "RF sample clocks (rftx/rfrx)",
+   "target_mhz": 50.0,
+   "tt_mhz": [
+    40.9,
+    null
+   ],
+   "worst_corner_mhz": [
+    21.4,
+    33.6
+   ]
+  },
+  {
+   "item": "pt_clocktree_slow word clock (ctw)",
+   "target_mhz": 156.25,
+   "tt_mhz": 84.0,
+   "worst_corner_mhz": 40.3
+  },
+  {
+   "item": "frequency-counter sources (fc*)",
+   "target_mhz": 156.25,
+   "tt_mhz": 81.7,
+   "worst_corner_mhz": 40.6
+  },
+  {
+   "item": "area",
+   "allocation_um2": 2500000,
+   "die_um2": 3240000,
+   "note": "1800 x 1800 um; 1650 x 1650 um failed detailed placement after antenna repair and the 1580 x 1580 um floorplan failed detailed placement (utilization ~0.67-0.71)."
+  }
+ ],
+ "decisions": [
+  "Memory: no gf180mcu_fd_ip_sram macro. The RTL storage is register arrays with dual-clock (async FIFO) or combinational reads; single-port synchronous SRAMs cannot serve them without clock muxing. Flop storage (~11.3k sequential cells total) is inside the macro. Item 9 MIM-over-SRAM therefore does not apply.",
+  "Metal5: the primary macro routes on Metal1-Metal5 with Metal4-only PDN straps (PDN_MULTILAYER false). A Metal1-Metal4 variant (Metal5 free for MIM) of the same netlist and floorplan also routed with DRC 0 and LVS 0 but left 2 antenna violations and ~45 % worse tt setup slack (variants.metal4_only); at 1650 x 1650 um the Metal4-only route did not converge (11371 GRT overflows).",
+  "Timing targets kept at the specification rates; closure is not claimed. fmax per clock/corner recorded.",
+  "Port buffering: LibreLane input/output port buffers enabled (disabling output buffers crashed TritonCTS).",
+  "Signoff SDC adds three exceptions to the PnR SDC (CS_N->MISO and CS_N->register data false paths, forwarded D2H_CLK unconstrained, bounded crossings restricted to the reader clock); see sdc.pnr vs sdc.signoff."
+ ],
+ "open_risks": [
+  "Timing: at ss_125C/3.0 V (outside the envelope) every fast clock misses its target by 2-5x; at tt the host word, wired and RF sample clocks also miss. Silicon must run reduced clocks or the RTL needs pipelining (FIFO read muxes over a 1.8 mm die, stream framer, regfile commit path).",
+  "Max slew/cap violations remain (hundreds at tt, ~1.7k at ss) on the large flop-FIFO nets.",
+  "Undocumented CDC: rf_mute = cal_busy (ref domain) OR stream mute (rftx). Level to analog, but should be resynchronized or documented.",
+  "Area 3.24 mm2 against the 2.5 mm2 digital+memory allocation.",
+  "pt_clocktree_slow cfg_det_en/cfg_det_div have no register field (strapped in pt_chip).",
+  "D2H[0] at clk_pad needs the in_s -> bi_24t cell substitution; RESET_N PD=1 tie and pad-level safe tests belong to the pad/assembly stage.",
+  "GLS is zero-delay functional (no SDF); timing is covered by STA only.",
+  "Regfile formal proof was not re-run here on the final map (0x5A1F); the register-file agent owns it."
+ ]
+}

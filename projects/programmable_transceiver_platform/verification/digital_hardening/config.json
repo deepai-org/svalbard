@@ -1,0 +1,118 @@
+{
+  "DESIGN_NAME": "pt_digital_macro",
+  "VERILOG_FILES": [
+    "dir::rtl/pt_digital_macro.sv",
+    "dir::rtl/pt_host_link.sv",
+    "dir::rtl/pt_digital.sv",
+    "dir::rtl/pt_regfile.sv",
+    "dir::rtl/pt_spi.sv",
+    "dir::rtl/pt_core.sv",
+    "dir::rtl/pt_fifo.sv",
+    "dir::rtl/pt_pack.sv",
+    "dir::rtl/pt_stream_link.sv",
+    "dir::rtl/pt_stream_tx.sv",
+    "dir::rtl/pt_stream_rx.sv",
+    "dir::rtl/pt_frame.sv",
+    "dir::rtl/pt_memory.sv",
+    "dir::rtl/pt_pattern.sv",
+    "dir::rtl/pt_helpers.sv",
+    "dir::rtl/pt_clocktree_slow.sv",
+    "dir::rtl/pt_freq_count.sv"
+  ],
+  "VERILOG_INCLUDE_DIRS": [
+    "dir::rtl"
+  ],
+  "SYNTH_DEFINES": [
+    "SYNTHESIS"
+  ],
+  "RUN_LINTER": false,
+  "CLOCK_PORT": [
+    "spi_sclk",
+    "ref_clk",
+    "host_word_clk",
+    "h2d_clk",
+    "wire_tx_clk",
+    "wire_rx_clk",
+    "rf_tx_clk",
+    "rf_rx_clk",
+    "ct_wclk",
+    "ct_ref_clk",
+    "ct_det_clk_in",
+    "fc_src[0]",
+    "fc_src[1]",
+    "fc_src[2]",
+    "fc_src[3]",
+    "fc_src[4]",
+    "fc_src[5]"
+  ],
+  "CLOCK_PERIOD": 6.4,
+  "PNR_SDC_FILE": "dir::pt_digital_macro.sdc",
+  "SIGNOFF_SDC_FILE": "dir::pt_digital_macro.sdc",
+  "SYNTH_AUTONAME": true,
+  "SYNTH_STRATEGY": "AREA 0",
+  "LIB": {
+    "*_tt_025C_3v30": [
+      "pdk_dir::libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__tt_025C_3v30.lib"
+    ],
+    "*_ss_125C_3v00": [
+      "pdk_dir::libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__ss_125C_3v00.lib"
+    ],
+    "*_ss_n40C_3v00": [
+      "pdk_dir::libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__ss_n40C_3v00.lib"
+    ],
+    "*_ff_n40C_3v60": [
+      "pdk_dir::libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__ff_n40C_3v60.lib"
+    ],
+    "*_ff_125C_3v60": [
+      "pdk_dir::libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__ff_125C_3v60.lib"
+    ]
+  },
+  "STA_CORNERS": [
+    "nom_tt_025C_3v30",
+    "min_tt_025C_3v30",
+    "max_tt_025C_3v30",
+    "nom_ss_125C_3v00",
+    "min_ss_125C_3v00",
+    "max_ss_125C_3v00",
+    "nom_ss_n40C_3v00",
+    "max_ss_n40C_3v00",
+    "nom_ff_n40C_3v60",
+    "min_ff_n40C_3v60",
+    "max_ff_n40C_3v60",
+    "nom_ff_125C_3v60",
+    "min_ff_125C_3v60"
+  ],
+  "DEFAULT_CORNER": "nom_tt_025C_3v30",
+  "TIMING_VIOLATION_CORNERS": [
+    "*tt*"
+  ],
+  "VDD_PIN_VOLTAGE": "3.30",
+  "FP_SIZING": "absolute",
+  "FP_ASPECT_RATIO": 1,
+  "PL_TARGET_DENSITY_PCT": 58,
+  "RT_MAX_LAYER": "Metal5",
+  "PDN_MULTILAYER": false,
+  "PDN_VERTICAL_LAYER": "Metal4",
+  "PDN_VPITCH": 76.8,
+  "DIODE_ON_PORTS": "in",
+  "RUN_HEURISTIC_DIODE_INSERTION": false,
+  "PL_RESIZER_HOLD_SLACK_MARGIN": 0.1,
+  "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.05,
+  "PL_RESIZER_SETUP_SLACK_MARGIN": 0.1,
+  "GRT_RESIZER_SETUP_SLACK_MARGIN": 0.05,
+  "MAX_FANOUT_CONSTRAINT": 12,
+  "RUN_EQY": false,
+  "RUN_IRDROP_REPORT": false,
+  "PRIMARY_GDSII_STREAMOUT_TOOL": "magic",
+  "DIE_AREA": [
+    0,
+    0,
+    1800,
+    1800
+  ],
+  "DESIGN_REPAIR_BUFFER_INPUT_PORTS": true,
+  "DESIGN_REPAIR_BUFFER_OUTPUT_PORTS": true,
+  "PL_MAX_DISPLACEMENT_X": 1000,
+  "PL_MAX_DISPLACEMENT_Y": 300,
+  "GRT_ALLOW_CONGESTION": false
+}

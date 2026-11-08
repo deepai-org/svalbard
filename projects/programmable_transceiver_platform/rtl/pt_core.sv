@@ -2,8 +2,8 @@
 module pt_core #(parameter STREAM_V2=1)(input wire rst_n,enable,mode8,
  input wire host_tx_clk,host_rx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
  input wire[9:0]h2d_word,output wire[9:0]d2h_word,
- input wire[9:0]wire_rx_data,input wire wire_rx_valid,
- output wire[9:0]wire_tx_data,output wire wire_tx_valid,input wire wire_tx_request,
+ input wire[19:0]wire_rx_data,input wire wire_rx_valid,     // 20-bit double words (P3-6), word 0 in [9:0]
+ output wire[19:0]wire_tx_data,output wire wire_tx_valid,input wire wire_tx_request,
  input wire[23:0]rf_rx_sample,input wire rf_rx_valid,
  output wire[23:0]rf_tx_sample,output wire rf_tx_valid,input wire rf_tx_request,
  output wire[15:0]status,output wire wire_idle,rf_mute);
@@ -16,11 +16,17 @@ module pt_core #(parameter STREAM_V2=1)(input wire rst_n,enable,mode8,
  wire wrrst=rst_n&&ewr,wtrst=rst_n&&ewt,rfrst=rst_n&&err,rftrst=rst_n&&ert;
  wire[9:0]wr_head,iq_head;wire[6:0]wr_avail;wire[5:0]iq_avail;
  wire wr_pop,iq_pop,wr_empty,wr_full;wire wr_ov,wr_un;
- pt_async_fifo #(.W(10),.A(6)) wire_in(.wr_clk(wire_rx_clk),.rd_clk(host_tx_clk),.rst_n(rst_n&&enable),
- .din(wire_rx_data),.push(wire_rx_valid&&ewr),.pop(wr_pop),.dout(wr_head),.full(wr_full),.empty(wr_empty),.wr_count(),.rd_count(wr_avail),.overflow(wr_ov),.underflow(wr_un));
+ // Wired RX: double words cross into the host word clock in a 32-pair FIFO (64 words, as before) and are
+ // split back into 10-bit words for the framer; wr_avail counts words (2 x pairs - half already taken).
+ wire[19:0]wr_pair;wire[5:0]wr_pairs;reg wr_half;wire wr_pair_empty;
+ pt_async_fifo #(.W(20),.A(5),.REG_OUT(1)) wire_in(.wr_clk(wire_rx_clk),.rd_clk(host_tx_clk),.rst_n(rst_n&&enable),
+ .din(wire_rx_data),.push(wire_rx_valid&&ewr),.pop(wr_pop&&wr_half),.dout(wr_pair),.full(wr_full),.empty(wr_pair_empty),.wr_count(),.rd_count(wr_pairs),.overflow(wr_ov),.underflow(wr_un));
+ always @(posedge host_tx_clk or negedge trst)if(!trst)wr_half<=0;else if(wr_pop&&!wr_pair_empty)wr_half<=!wr_half;
+ assign wr_head=wr_half?wr_pair[19:10]:wr_pair[9:0];assign wr_empty=wr_pair_empty;
+ assign wr_avail={wr_pairs,1'b0}-wr_half;
  wire[23:0]rf_head;wire rf_empty,rf_full,rf_pop,rf_ov,rf_un;
  wire[23:0]compressed=mode8?{8'b0,rf_rx_sample[23:16],rf_rx_sample[11:4]}:rf_rx_sample;
- pt_async_fifo #(.W(24),.A(4)) rf_in(.wr_clk(rf_rx_clk),.rd_clk(host_tx_clk),.rst_n(rst_n&&enable),
+ pt_async_fifo #(.W(24),.A(4),.REG_OUT(1)) rf_in(.wr_clk(rf_rx_clk),.rd_clk(host_tx_clk),.rst_n(rst_n&&enable),
  .din(compressed),.push(rf_rx_valid&&err),.pop(rf_pop),.dout(rf_head),.full(rf_full),.empty(rf_empty),.wr_count(),.rd_count(),.overflow(rf_ov),.underflow(rf_un));
  wire[9:0]packed_word;wire packed_valid,pack_ready,iq_full,iq_empty,iq_ov,iq_un;
  assign rf_pop=!rf_empty&&pack_ready;
@@ -38,16 +44,21 @@ module pt_core #(parameter STREAM_V2=1)(input wire rst_n,enable,mode8,
   pt_frame_rx frame_rx(host_rx_clk,rrst,mode8,h2d_word,wire_out_word,iq_out_word,wire_out_valid,iq_out_valid,
    wire_out_ready,iq_out_ready,rx_fault,locked,command_valid,opcode,argument);
  end endgenerate
- wire wire_out_full,wire_out_empty,wire_out_ov,wire_out_un;wire[7:0]wire_out_count;
+ wire wire_out_full,wire_out_empty,wire_out_ov,wire_out_un;wire[6:0]wire_out_count;
  reg wire_running,rf_running,wire_starved,rf_starved;reg idle_command,mute_command,command_fault;
  wire rx_fault_wire,rx_fault_rf;
  pt_sync_bit f0(wire_tx_clk,rst_n,rx_fault||command_fault,rx_fault_wire);
  pt_sync_bit f1(rf_tx_clk,rst_n,rx_fault||command_fault,rx_fault_rf);
  wire idle_sync,mute_sync;
  pt_sync_bit f2(wire_tx_clk,rst_n,idle_command,idle_sync);pt_sync_bit f3(rf_tx_clk,rst_n,mute_command,mute_sync);
+ // Wired TX: 10-bit words from the framer are paired (first word in [9:0]) in the host RX domain and
+ // cross to the 20-bit double-word clock in a 64-pair FIFO (128 words, as before).
+ reg[9:0]wo_first;reg wo_have;wire wo_push=wire_out_valid&&wo_have;
+ always @(posedge host_rx_clk or negedge rrst)if(!rrst)begin wo_first<=0;wo_have<=0;end
+  else if(wire_out_valid)begin if(!wo_have)wo_first<=wire_out_word;wo_have<=!wo_have;end
  assign wire_out_ready=!wire_out_full;
- pt_async_fifo #(.W(10),.A(7)) wire_out(.wr_clk(host_rx_clk),.rd_clk(wire_tx_clk),.rst_n(rst_n&&enable),
- .din(wire_out_word),.push(wire_out_valid),.pop(wire_tx_request&&wire_running&&!wire_out_empty),.dout(wire_tx_data),
+ pt_async_fifo #(.W(20),.A(6),.REG_OUT(1)) wire_out(.wr_clk(host_rx_clk),.rd_clk(wire_tx_clk),.rst_n(rst_n&&enable),
+ .din({wire_out_word,wo_first}),.push(wo_push),.pop(wire_tx_request&&wire_running&&!wire_out_empty),.dout(wire_tx_data),
  .full(wire_out_full),.empty(wire_out_empty),.wr_count(),.rd_count(wire_out_count),.overflow(wire_out_ov),.underflow(wire_out_un));
  assign wire_tx_valid=wire_running&&!wire_out_empty&&!rx_fault_wire&&!wire_starved;
  assign wire_idle=!wire_tx_valid||idle_sync;
@@ -59,7 +70,7 @@ module pt_core #(parameter STREAM_V2=1)(input wire rst_n,enable,mode8,
  unpack_word,iq_qfull,iq_qempty,iq_qcount,iq_qov,iq_qun);
  assign iq_out_ready=!iq_qfull;
  pt_unpack unpacker(host_rx_clk,rrst,mode8,unpack_word,!iq_qempty,unpack_ready,unpacked_sample,unpacked_valid,!rf_out_full);
- pt_async_fifo #(.W(24),.A(6)) rf_out(.wr_clk(host_rx_clk),.rd_clk(rf_tx_clk),.rst_n(rst_n&&enable),
+ pt_async_fifo #(.W(24),.A(6),.REG_OUT(1)) rf_out(.wr_clk(host_rx_clk),.rd_clk(rf_tx_clk),.rst_n(rst_n&&enable),
  .din(unpacked_sample),.push(unpacked_valid&&!rf_out_full),.pop(rf_tx_request&&rf_running&&!rf_out_empty),.dout(rf_out_head),
  .full(rf_out_full),.empty(rf_out_empty),.wr_count(),.rd_count(rf_out_count),.overflow(rf_out_ov),.underflow(rf_out_un));
  assign rf_tx_sample=mode8?{rf_out_head[15:8],4'b0,rf_out_head[7:0],4'b0}:rf_out_head;
@@ -68,7 +79,7 @@ module pt_core #(parameter STREAM_V2=1)(input wire rst_n,enable,mode8,
  always @(posedge wire_tx_clk or negedge rst_n)begin
   if(!rst_n)begin wire_running<=0;wire_starved<=0;end
   else if(!ewt)begin wire_running<=0;wire_starved<=0;end
-  else if(!wire_running&&wire_out_count>=32)wire_running<=1;
+  else if(!wire_running&&wire_out_count>=16)wire_running<=1;   // 16 pairs = 32 words
   else if(wire_running&&wire_tx_request&&wire_out_empty)wire_starved<=1;
  end
  always @(posedge rf_tx_clk or negedge rst_n)begin

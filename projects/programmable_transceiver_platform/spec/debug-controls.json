@@ -1,0 +1,3615 @@
+{
+  "schema_version": 1,
+  "purpose": "Debug, fallback, island-power and consolidation controls for the risk-accepted first die. Together with analog-architecture.json:control_fields this is the complete input of rtl/gen/gen_regfile.py, which emits the register map, rtl/pt_regfile.sv and the bench headers. Field records use the control_fields format (bits/default/minimum/maximum or bits/default/values); enums use the zero-based list index, as control_semantics.encoding requires.",
+  "sources": [
+    "spec/tapeout-plan.md",
+    "spec/tapeout-readiness.json:fallback_routes,debug_sites,characterization_structures",
+    "spec/analog-architecture.json:control_fields,control_semantics,blocks",
+    "spec/consolidation-pass.md",
+    "integration/macro-contract.md"
+  ],
+  "spi_abi": {
+    "mode": "SPI mode 0, MSB first, CS_N delimits one 32-clock transaction",
+    "frame": "command8 / address8 / data16",
+    "write_command": "0x80",
+    "read_command": "0x00",
+    "id_register": {
+      "address": "0x00",
+      "value": "0x5356"
+    },
+    "paging": "none: every register fits the flat 8-bit address space (the generator fails if it stops fitting, at which point a page register at 0x0F must be added)"
+  },
+  "address_policy": {
+    "system": [
+      "0x00",
+      "0x0F"
+    ],
+    "legacy_trim": [
+      "0x10",
+      "0x12"
+    ],
+    "legacy_memory": [
+      "0x20",
+      "0x26"
+    ],
+    "reserved_recovery_mailbox": [
+      "0x30",
+      "0x3F"
+    ],
+    "debug_base": "0x40",
+    "debug_limit": "0x5F",
+    "analog_base": "0x60",
+    "analog_limit": "0xEF",
+    "reserved_top": [
+      "0xF0",
+      "0xFF"
+    ],
+    "status_base": "0xF0",
+    "status_limit": "0xFF"
+  },
+  "islands": {
+    "wired": {
+      "bit": 0,
+      "supply": "WIRE_VDD local switch",
+      "description": "Wired switch, all 12 wire-domain blocks: ctle, detect, rxlevel, rxselect, slicer, termination, tmds, txpad, wiredtx, plus usbhs and usbdrive (USB merged into wired, P2-8)"
+    },
+    "rf": {
+      "bit": 1,
+      "supply": "RF_VDD local switch",
+      "description": "RF front end and analog baseband: lna, mixers, pga, filters, txsum, rfdriver"
+    },
+    "pll": {
+      "bit": 2,
+      "supply": "PLL_VDD local switch (bias generator excluded, see core_blocks)",
+      "description": "Timing: shared pll (rfpll/wirepll contexts), clockmux, clocktree, refinput, cdr. The AUX_CLK/WCLK_IN/WTX_EXT debug-pad receivers moved to the debug island (island_support README I2)."
+    },
+    "usb": {
+      "bit": 3,
+      "supply": "local switch on the USB branch roots (HS driver on WIRE_VDD, FS/LS drivers and pulls on HOST_VDD)",
+      "description": "RESERVED (P2-8, analog/island_support README I1): no USB island switch exists. island_en[3] is constant 0, island_pgood[3] must be tied 0, island_on[3] = 0. usbhs/usbdrive are on the wired switch; usbfs is on the host domain.",
+      "reserved": true
+    },
+    "conv": {
+      "bit": 4,
+      "supply": "CONV_VDD local switch",
+      "description": "adc_i/q, dac_i/q, refbuf"
+    },
+    "debug": {
+      "bit": 5,
+      "supply": "local switch on debug analog buffers",
+      "description": "Debug switch: BB tap and WMON observation buffers, CLK_OBS/WCLK_OBS dividers, ring oscillator, VCO replica, and the debug-pad receivers aux_clk_rx, wclk_in_rx, wtx_ext_rx (decision I2; rx_en_aux/rx_en_wclk/rx_en_wtx_ext are gated by this island)."
+    }
+  },
+  "core_blocks": {
+    "blocks": [
+      "aosc",
+      "bias",
+      "monitor",
+      "digital",
+      "hostio"
+    ],
+    "rule": "Core and host domains are never switchable. Their control groups are not island-gated. bias is listed on PLL_VDD in analog-architecture.json blocks, but control_semantics.reset keeps bias, monitor, management oscillator and SPI enabled after power-on, so the master bias generator must sit on the unswitched side of the PLL island switch."
+  },
+  "block_islands": {
+    "lna": [
+      "rf"
+    ],
+    "rxmix_i": [
+      "rf"
+    ],
+    "rxmix_q": [
+      "rf"
+    ],
+    "pga_i": [
+      "rf"
+    ],
+    "pga_q": [
+      "rf"
+    ],
+    "rxfilter_i": [
+      "rf"
+    ],
+    "rxfilter_q": [
+      "rf"
+    ],
+    "txfilter_i": [
+      "rf"
+    ],
+    "txfilter_q": [
+      "rf"
+    ],
+    "txmix_i": [
+      "rf"
+    ],
+    "txmix_q": [
+      "rf"
+    ],
+    "txsum": [
+      "rf"
+    ],
+    "rfdriver": [
+      "rf"
+    ],
+    "rfpll": [
+      "pll"
+    ],
+    "wirepll": [
+      "pll"
+    ],
+    "quadrature": [
+      "pll"
+    ],
+    "clockmux": [
+      "pll"
+    ],
+    "clocktree": [
+      "pll"
+    ],
+    "refinput": [
+      "pll"
+    ],
+    "cdr": [
+      "pll"
+    ],
+    "adc_i": [
+      "conv"
+    ],
+    "adc_q": [
+      "conv"
+    ],
+    "dac_i": [
+      "conv"
+    ],
+    "dac_q": [
+      "conv"
+    ],
+    "refbuf": [
+      "conv"
+    ],
+    "ctle": [
+      "wired"
+    ],
+    "detect": [
+      "wired"
+    ],
+    "rxlevel": [
+      "wired"
+    ],
+    "rxselect": [
+      "wired"
+    ],
+    "slicer": [
+      "wired"
+    ],
+    "termination": [
+      "wired"
+    ],
+    "tmds": [
+      "wired"
+    ],
+    "txpad": [
+      "wired"
+    ],
+    "wiredtx": [
+      "wired"
+    ],
+    "usbhs": [
+      "wired"
+    ],
+    "usbfs": [],
+    "usbdrive": [
+      "wired"
+    ],
+    "bias": [],
+    "monitor": [],
+    "digital": [],
+    "hostio": []
+  },
+  "gating_rule": "A control output whose island list is non-empty is driven to all-zero (isolation value) unless every listed island has its switch enabled and reports power-good (or has pgood_override set). Zero is the off/disconnected/disabled encoding of every state, enable, branch and select field. Register contents keep their programmed values; only the outputs are clamped, so re-enabling an island restores the committed configuration. Island status (0x0A): power-good is a ratiometric rail-up flag, so power-good = 1 with debug.island_power = 0 is the back-drive signature (the island rail is being powered through a control, pad or bias path; analog/island_support README I4).",
+  "clock_sources": [
+    "stopped",
+    "internal_pll",
+    "ref_in",
+    "aux_clk",
+    "wclk_in"
+  ],
+  "atb_nodes": [
+    {
+      "code": 1,
+      "name": "master_ibias",
+      "island": null,
+      "kind": "bias",
+      "force": "allowed",
+      "note": "core_support ROOT_REF; current into node. Force precondition (commit rule): idac2_source=0 or biasgen ena=0."
+    },
+    {
+      "code": 2,
+      "name": "master_vref0",
+      "island": null,
+      "kind": "reference",
+      "force": "sense_only"
+    },
+    {
+      "code": 3,
+      "name": "master_vcm",
+      "island": null,
+      "kind": "reference",
+      "force": "sense_only"
+    },
+    {
+      "code": 4,
+      "name": "monitor_por_threshold",
+      "island": null,
+      "kind": "monitor",
+      "force": "sense_only"
+    },
+    {
+      "code": 5,
+      "name": "core_vdd_sense",
+      "island": null,
+      "kind": "supply_monitor",
+      "force": "sense_only"
+    },
+    {
+      "code": 6,
+      "name": "host_vdd_sense",
+      "island": null,
+      "kind": "supply_monitor",
+      "force": "sense_only"
+    },
+    {
+      "code": 7,
+      "name": "wire_vdd_sw_sense",
+      "island": null,
+      "kind": "supply_monitor",
+      "force": "sense_only"
+    },
+    {
+      "code": 8,
+      "name": "rf_vdd_sw_sense",
+      "island": null,
+      "kind": "supply_monitor",
+      "force": "sense_only"
+    },
+    {
+      "code": 9,
+      "name": "pll_vdd_sw_sense",
+      "island": null,
+      "kind": "supply_monitor",
+      "force": "sense_only"
+    },
+    {
+      "code": 10,
+      "name": "usb_vdd_sw_sense",
+      "island": null,
+      "kind": "supply_monitor",
+      "force": "sense_only",
+      "hardware": false,
+      "note": "no USB rail: the USB island was merged into wired (P2-8); no tap (analog/island_support README A3)"
+    },
+    {
+      "code": 11,
+      "name": "conv_vdd_sw_sense",
+      "island": null,
+      "kind": "supply_monitor",
+      "force": "sense_only"
+    },
+    {
+      "code": 12,
+      "name": "debug_vdd_sw_sense",
+      "island": null,
+      "kind": "supply_monitor",
+      "force": "sense_only"
+    },
+    {
+      "code": 13,
+      "name": "vss_local_sense",
+      "island": null,
+      "kind": "supply_monitor",
+      "force": "sense_only"
+    },
+    {
+      "code": 14,
+      "name": "rf_ibias",
+      "island": null,
+      "kind": "bias",
+      "force": "allowed",
+      "note": "core_support TRK_RF; current out of node. Force precondition (commit rule): dist_en_rf=0, or the island switched off (allows the README idac2 trim)."
+    },
+    {
+      "code": 15,
+      "name": "rf_vcm",
+      "island": "rf",
+      "kind": "reference",
+      "force": "sense_only"
+    },
+    {
+      "code": 16,
+      "name": "lna_bias",
+      "island": "rf",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 17,
+      "name": "rxmix_bias",
+      "island": "rf",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 18,
+      "name": "pga_bias",
+      "island": "rf",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 19,
+      "name": "bbfilter_bias",
+      "island": "rf",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 20,
+      "name": "txmix_bias",
+      "island": "rf",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 21,
+      "name": "rfdriver_bias",
+      "island": "rf",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 22,
+      "name": "wire_ibias",
+      "island": null,
+      "kind": "bias",
+      "force": "allowed",
+      "note": "core_support TRK_WIRE; current out of node. Force precondition (commit rule): dist_en_wire=0, or the island switched off (allows the README idac2 trim)."
+    },
+    {
+      "code": 23,
+      "name": "wire_vcm",
+      "island": "wired",
+      "kind": "reference",
+      "force": "sense_only"
+    },
+    {
+      "code": 24,
+      "name": "ctle_bias",
+      "island": "wired",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 25,
+      "name": "slicer_bias",
+      "island": "wired",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 26,
+      "name": "wiredtx_bias",
+      "island": "wired",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 27,
+      "name": "termination_vcm",
+      "island": "wired",
+      "kind": "reference",
+      "force": "sense_only"
+    },
+    {
+      "code": 28,
+      "name": "detect_ibias",
+      "island": "wired",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 29,
+      "name": "pll_ibias",
+      "island": null,
+      "kind": "bias",
+      "force": "allowed",
+      "note": "core_support TRK_PLL; current out of node. Force precondition (commit rule): dist_en_pll=0, or the island switched off (allows the README idac2 trim)."
+    },
+    {
+      "code": 30,
+      "name": "pll_vctrl",
+      "island": "pll",
+      "kind": "pll_control",
+      "force": "sense_only"
+    },
+    {
+      "code": 31,
+      "name": "pll_cp_bias",
+      "island": "pll",
+      "kind": "bias",
+      "force": "sense_only",
+      "hardware": false,
+      "note": "node does not exist in the timing designs (analog/timing/README.md)"
+    },
+    {
+      "code": 32,
+      "name": "refinput_vcm",
+      "island": "pll",
+      "kind": "reference",
+      "force": "sense_only",
+      "hardware": false,
+      "note": "node does not exist in the timing designs (analog/timing/README.md)"
+    },
+    {
+      "code": 33,
+      "name": "quadrature_bias",
+      "island": "pll",
+      "kind": "bias",
+      "force": "sense_only",
+      "hardware": false,
+      "note": "node does not exist in the timing designs (analog/timing/README.md)"
+    },
+    {
+      "code": 34,
+      "name": "cdr_bias",
+      "island": "pll",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 35,
+      "name": "conv_ibias",
+      "island": null,
+      "kind": "bias",
+      "force": "allowed",
+      "note": "core_support TRK_CONV; current out of node. Force precondition (commit rule): dist_en_conv=0, or the island switched off (allows the README idac2 trim)."
+    },
+    {
+      "code": 36,
+      "name": "conv_vref",
+      "island": "conv",
+      "kind": "reference",
+      "force": "override",
+      "override": "refbuf"
+    },
+    {
+      "code": 37,
+      "name": "conv_vcm",
+      "island": "conv",
+      "kind": "reference",
+      "force": "sense_only"
+    },
+    {
+      "code": 38,
+      "name": "adc_comparator_bias",
+      "island": "conv",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 39,
+      "name": "dac_bias",
+      "island": "conv",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 40,
+      "name": "usbhs_ibias",
+      "island": "wired",
+      "kind": "bias",
+      "force": "sense_only",
+      "note": "usbhs bias, on the wired switch (island_support README A3)"
+    },
+    {
+      "code": 41,
+      "name": "usbfs_vref",
+      "island": null,
+      "kind": "reference",
+      "force": "sense_only",
+      "note": "usbfs on the host domain, never switched (island_support README A3)"
+    },
+    {
+      "code": 42,
+      "name": "debug_buffer_bias",
+      "island": "debug",
+      "kind": "bias",
+      "force": "sense_only"
+    },
+    {
+      "code": 43,
+      "name": "replica_nmos_lna",
+      "island": null,
+      "kind": "device_replica",
+      "force": "allowed"
+    },
+    {
+      "code": 44,
+      "name": "replica_pmos_lna",
+      "island": null,
+      "kind": "device_replica",
+      "force": "allowed"
+    },
+    {
+      "code": 45,
+      "name": "replica_nmos_mixer",
+      "island": null,
+      "kind": "device_replica",
+      "force": "allowed"
+    },
+    {
+      "code": 46,
+      "name": "replica_pmos_mixer",
+      "island": null,
+      "kind": "device_replica",
+      "force": "allowed"
+    },
+    {
+      "code": 47,
+      "name": "replica_nmos_sampler",
+      "island": null,
+      "kind": "device_replica",
+      "force": "allowed"
+    },
+    {
+      "code": 48,
+      "name": "replica_pmos_sampler",
+      "island": null,
+      "kind": "device_replica",
+      "force": "allowed"
+    },
+    {
+      "code": 49,
+      "name": "replica_nmos_driver",
+      "island": null,
+      "kind": "device_replica",
+      "force": "allowed"
+    },
+    {
+      "code": 50,
+      "name": "replica_pmos_driver",
+      "island": null,
+      "kind": "device_replica",
+      "force": "allowed"
+    },
+    {
+      "code": 51,
+      "name": "matching_resistor_a",
+      "island": null,
+      "kind": "passive_matching",
+      "force": "allowed"
+    },
+    {
+      "code": 52,
+      "name": "matching_resistor_b",
+      "island": null,
+      "kind": "passive_matching",
+      "force": "allowed"
+    },
+    {
+      "code": 53,
+      "name": "matching_mim_a",
+      "island": null,
+      "kind": "passive_matching",
+      "force": "allowed"
+    },
+    {
+      "code": 54,
+      "name": "matching_mim_b",
+      "island": null,
+      "kind": "passive_matching",
+      "force": "allowed"
+    },
+    {
+      "code": 55,
+      "name": "vbg",
+      "island": null,
+      "kind": "reference",
+      "force": "allowed",
+      "note": "core_support VBG (bandgap output = biasgen vbg). Force precondition (commit rule): bgap_ena=0."
+    },
+    {
+      "code": 56,
+      "name": "debug_ibias",
+      "island": null,
+      "kind": "bias",
+      "force": "allowed",
+      "note": "core_support TRK_DEBUG; current out of node. Force precondition (commit rule): dist_en_debug=0, or the island switched off (allows the README idac2 trim)."
+    },
+    {
+      "code": 57,
+      "name": "idac1_source_ibias",
+      "island": null,
+      "kind": "bias",
+      "force": "sense_only",
+      "note": "core_support spare idac1 output, current sensed into an SMU on ATB1"
+    }
+  ],
+  "atb_policy": "ATB0 is the force bus and ATB1 the sense bus. Each bus closes at most one switch (code 0 = all open). ATB1 may select any node. ATB0 may select only device replicas, matching structures and the six overridable bias/reference nodes; selecting an overridable node on ATB0 requires its bias_override bit, and setting a bias_override bit requires ATB0 to select that node, so the internal source and the bench never drive one node together and an overridden mirror is never left floating. Island nodes are disconnected while their island is off; supply monitor taps are not gated so a switched-off island can be confirmed dead. Nodes marked hardware=false have no tap: their codes are rejected on both buses. Core reference-chain nodes (VBG, ROOT_REF, TRK_<island>) carry the force preconditions of analog/core_support/README.md as commit rules instead of override bits. ATB all-off gap: >= 20 ns from deselect to the next select on one bus (atb_switch_dead_time_s; group/pad non-overlap up to 5.7 ns). The break-before-make rule puts a zero commit between two non-zero codes, i.e. at least one 32-clock SPI transaction, which exceeds 20 ns for any SCLK below 1.6 GHz. control_semantics.switch_dead_time_s (4 ns) remains the analog-switch figure for other selects.",
+  "obs_status": [
+    "island_pgood_wired",
+    "island_pgood_rf",
+    "island_pgood_pll",
+    "island_pgood_usb",
+    "island_pgood_conv",
+    "island_pgood_debug",
+    "pll_lock",
+    "ref_present",
+    "bias_ready",
+    "refbuf_ready",
+    "monitor_fault",
+    "por_n",
+    "cdr_qualified",
+    "cdr_loss",
+    "adc_i_done",
+    "adc_q_done",
+    "adc_i_overload",
+    "adc_q_overload",
+    "rf_rx_valid",
+    "rf_tx_request",
+    "rf_mute",
+    "wire_rx_valid",
+    "wire_tx_request",
+    "wire_idle",
+    "calibration_busy",
+    "calibration_done",
+    "capture_done",
+    "playback_enable",
+    "capture_enable",
+    "payload_enable",
+    "host_rx_clk_div",
+    "aosc_div"
+  ],
+  "wire_status": [
+    "cdr_qualified",
+    "cdr_loss",
+    "cdr_rx_state0",
+    "cdr_rx_state1",
+    "slicer_data",
+    "slicer_early",
+    "slicer_late",
+    "electrical_quiet",
+    "usb_squelch",
+    "detect_event",
+    "detect_timeout",
+    "pll_lock",
+    "wire_rx_valid",
+    "wire_tx_request",
+    "wire_idle",
+    "wtx_ext_data"
+  ],
+  "controls": {
+    "debug.island_power": {
+      "description": "Local island power-switch enables. Core and host are never switchable and have no bit.",
+      "update": "stopped",
+      "islands": [],
+      "live": false,
+      "fields": {
+        "wired": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "rf": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "pll": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "usb": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "conv": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "debug": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.pgood_override": {
+      "description": "Fallback for a failed island power-good detector: treat the island as powered when its switch is enabled.",
+      "update": "stopped",
+      "islands": [],
+      "live": false,
+      "fields": {
+        "wired": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "rf": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "pll": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "usb": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "conv": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "debug": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.clk_select": {
+      "description": "Source of each clock domain. internal_pll selects the functional path (clockmux/pll/clocktree as configured); the others connect the named input receiver directly. Changing between two running sources is rejected: go through stopped (break-before-make). host_follow (P3-3) is the pll_ring locked to the FPGA-forwarded H2D_CLK followed by the prescaler; it is the converter/sample and host clock source in passive-LO mode, where REF_IN and AUX_CLK carry the LO. Allowed for conv_sample and host_clk only.",
+      "update": "stopped",
+      "islands": [
+        "pll"
+      ],
+      "live": false,
+      "fallback_routes": [
+        "rf_lo_aux_clk",
+        "clk_stop_and_external",
+        "wire_clk_external_ref",
+        "wire_clk_wclk_in",
+        "wire_cdr_external_clock"
+      ],
+      "fields": {
+        "rf_lo": {
+          "bits": 3,
+          "default": "stopped",
+          "values": [
+            "stopped",
+            "internal_pll",
+            "ref_in",
+            "aux_clk",
+            "wclk_in",
+            "host_follow"
+          ],
+          "forbidden": [
+            "host_follow",
+            "wclk_in"
+          ]
+        },
+        "wire_line": {
+          "bits": 3,
+          "default": "stopped",
+          "values": [
+            "stopped",
+            "internal_pll",
+            "ref_in",
+            "aux_clk",
+            "wclk_in",
+            "host_follow"
+          ],
+          "islands": [
+            "pll",
+            "wired"
+          ],
+          "forbidden": [
+            "host_follow"
+          ]
+        },
+        "wire_sample": {
+          "bits": 3,
+          "default": "stopped",
+          "values": [
+            "stopped",
+            "internal_pll",
+            "ref_in",
+            "aux_clk",
+            "wclk_in",
+            "host_follow"
+          ],
+          "forbidden": [
+            "aux_clk",
+            "host_follow"
+          ],
+          "islands": [
+            "pll",
+            "wired"
+          ]
+        },
+        "conv_sample": {
+          "bits": 3,
+          "default": "stopped",
+          "values": [
+            "stopped",
+            "internal_pll",
+            "ref_in",
+            "aux_clk",
+            "wclk_in",
+            "host_follow"
+          ],
+          "forbidden": [
+            "wclk_in"
+          ],
+          "islands": [
+            "pll",
+            "conv"
+          ]
+        },
+        "host_clk": {
+          "bits": 3,
+          "default": "stopped",
+          "values": [
+            "stopped",
+            "internal_pll",
+            "ref_in",
+            "aux_clk",
+            "wclk_in",
+            "host_follow"
+          ],
+          "forbidden": [
+            "ref_in",
+            "aux_clk",
+            "wclk_in"
+          ],
+          "meaning": "host-transport clock domain: internal_pll = carrier/wire divided (clocktree), host_follow = pll_ring locked to the FPGA-forwarded H2D_CLK then prescale (P3-3)"
+        }
+      }
+    },
+    "debug.bb_tap": {
+      "description": "BB_I/BB_Q pad mode. observe_* drives the pads from the tristate observation buffer; inject_* connects the pads (externally driven) to the named internal node. One mode at a time by encoding.",
+      "update": "stopped",
+      "islands": [
+        "rf",
+        "debug"
+      ],
+      "live": false,
+      "fallback_routes": [
+        "rf_bb_external_adc",
+        "rf_rx_external_downconverter",
+        "rf_tx_external_baseband",
+        "rf_tx_external_upconverter"
+      ],
+      "fields": {
+        "mode": {
+          "bits": 3,
+          "default": "off",
+          "values": [
+            "off",
+            "observe_rx_mixer",
+            "observe_rx_filter",
+            "observe_rx_pga",
+            "inject_rx",
+            "observe_tx",
+            "inject_tx_filter",
+            "inject_tx_mixer"
+          ],
+          "meaning": "observe_rx_mixer=mixer output (before filter); observe_rx_filter=filter output; observe_rx_pga=PGA output/ADC input; inject_rx=PGA input; observe_tx=TX filter output; inject_tx_filter=TX filter input (DAC disconnected); inject_tx_mixer=TX mixer input (filter and DAC disconnected)"
+        }
+      }
+    },
+    "debug.rf_rx_bypass": {
+      "description": "LNA bypass switch from RF_RX into the mixers (external board LNA).",
+      "update": "stopped",
+      "islands": [
+        "rf"
+      ],
+      "live": false,
+      "fallback_routes": [
+        "rf_lna_bypass"
+      ],
+      "fields": {
+        "lna": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.rf_tx_bypass": {
+      "description": "Low-power mixer/txsum output to RF_TX with rfdriver off (external board PA).",
+      "update": "stopped",
+      "islands": [
+        "rf"
+      ],
+      "live": false,
+      "fallback_routes": [
+        "rf_tx_low_power_external_pa"
+      ],
+      "fields": {
+        "rfdriver": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.rf_bb_bypass": {
+      "description": "Per-stage RX baseband bypass (I and Q together).",
+      "update": "stopped",
+      "islands": [
+        "rf"
+      ],
+      "live": false,
+      "fallback_routes": [
+        "rf_bb_stage_bypass"
+      ],
+      "fields": {
+        "pga": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "rxfilter": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.wire_bypass": {
+      "description": "CTLE bypass (terminated input straight to the slicer path).",
+      "update": "stopped",
+      "islands": [
+        "wired"
+      ],
+      "live": false,
+      "fallback_routes": [
+        "wire_ctle_bypass"
+      ],
+      "fields": {
+        "ctle": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.wtx_ext": {
+      "description": "External serial data on WTX_EXT_P/N drives the wired TX output stage input in place of the serializer.",
+      "update": "stopped",
+      "islands": [
+        "wired"
+      ],
+      "live": false,
+      "fallback_routes": [
+        "wire_tx_external_data"
+      ],
+      "fields": {
+        "enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.wmon_select": {
+      "description": "WMON buffered wired monitor (analog/wired_rx/README.md wmon_sel): off = buffer disabled and output tristated.",
+      "update": "stopped",
+      "islands": [
+        "wired",
+        "debug"
+      ],
+      "live": false,
+      "fallback_routes": [
+        "wire_wmon_scope",
+        "wire_detect_via_wmon"
+      ],
+      "fields": {
+        "select": {
+          "bits": 3,
+          "default": "off",
+          "values": [
+            "off",
+            "rx_p",
+            "rx_n",
+            "ctle_p",
+            "ctle_n"
+          ]
+        }
+      }
+    },
+    "debug.atb": {
+      "description": "Analog test bus switch selects; code = atb_nodes[].code, 0 = all switches open.",
+      "update": "stopped",
+      "islands": [],
+      "live": false,
+      "fields": {
+        "atb0": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 57,
+          "unit": "code",
+          "atb_bus": 0
+        },
+        "atb1": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 57,
+          "unit": "code",
+          "atb_bus": 1,
+          "live": true
+        }
+      }
+    },
+    "debug.bias_override": {
+      "description": "Disconnect the internal source of an overridable bias/reference node so ATB0 can force it (see atb_policy).",
+      "update": "stopped",
+      "islands": [],
+      "live": false,
+      "fields": {
+        "master": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "rf": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "islands": [
+            "rf"
+          ]
+        },
+        "wired": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "islands": [
+            "wired"
+          ]
+        },
+        "pll": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "islands": [
+            "pll"
+          ]
+        },
+        "conv": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "islands": [
+            "conv"
+          ]
+        },
+        "refbuf": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "islands": [
+            "conv"
+          ]
+        },
+        "debug": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "islands": [
+            "debug"
+          ]
+        }
+      }
+    },
+    "debug.clk_obs": {
+      "description": "CLK_OBS source and power-of-two divider (analog-side prescaler). off = pad tristated. pt_clk_obs has 8 inputs and N<=7: sources without a cell input are rejected (analog/timing/README.md register-map gap).",
+      "update": "stopped",
+      "islands": [
+        "debug"
+      ],
+      "live": true,
+      "fields": {
+        "source": {
+          "bits": 4,
+          "default": "off",
+          "values": [
+            "off",
+            "rf_lo",
+            "wire_line",
+            "wire_sample",
+            "conv_sample",
+            "ref_in",
+            "aux_clk",
+            "wclk_in",
+            "pll_vco",
+            "pll_feedback",
+            "ring_osc",
+            "vco_replica",
+            "aosc",
+            "host_tx_clk",
+            "cdr_recovered"
+          ],
+          "forbidden": [
+            "wire_line",
+            "wire_sample",
+            "ref_in",
+            "aux_clk",
+            "wclk_in",
+            "host_tx_clk",
+            "cdr_recovered"
+          ]
+        },
+        "divider_log2": {
+          "bits": 4,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "log2"
+        }
+      }
+    },
+    "debug.wclk_obs": {
+      "description": "WCLK_OBS recovered/divided wired clock source and divider. off = pad tristated.",
+      "update": "stopped",
+      "islands": [
+        "wired",
+        "debug"
+      ],
+      "live": true,
+      "fields": {
+        "source": {
+          "bits": 3,
+          "default": "off",
+          "values": [
+            "off",
+            "cdr_recovered",
+            "wire_line",
+            "wire_sample",
+            "wclk_in"
+          ]
+        },
+        "divider_log2": {
+          "bits": 3,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "log2"
+        }
+      }
+    },
+    "debug.dbg_obs": {
+      "description": "DBG_OBS0/1 digital status mux: 0 = tristate, 1 = constant 0, 2 = constant 1, 3 = commit toggle, 4+n = obs_status[n], 36 = live combined reset level rst_n (RESET_N AND POR; 1 = released). Any reset also returns the select to 0, so during reset the pad is tristated and reads the board level.",
+      "update": "stopped",
+      "islands": [],
+      "live": true,
+      "fields": {
+        "sel0": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 36,
+          "unit": "code"
+        },
+        "sel1": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 36,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.wdbg_obs": {
+      "description": "WDBG_OBS wired status mux: 0 = tristate, 1 = constant 0, 2 = constant 1, 3+n = wire_status[n].",
+      "update": "stopped",
+      "islands": [],
+      "live": true,
+      "fields": {
+        "select": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 18,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.replica": {
+      "description": "Characterization oscillators routed to CLK_OBS: ring-oscillator speed monitor and standalone VCO replica with its own divider.",
+      "update": "stopped",
+      "islands": [
+        "debug"
+      ],
+      "live": false,
+      "fields": {
+        "ringosc_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "vco_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "vco_coarse": {
+          "bits": 6,
+          "default": 32,
+          "minimum": 0,
+          "maximum": 63,
+          "unit": "code"
+        },
+        "vco_divider_log2": {
+          "bits": 3,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "log2"
+        }
+      }
+    },
+    "debug.host_link": {
+      "description": "Host GPIO link mode fallback (consumed by pt_host_physical). D2H drive itself is hostio.controls.d2h_enable.",
+      "update": "stopped",
+      "islands": [],
+      "live": false,
+      "fallback_routes": [],
+      "fields": {
+        "mode": {
+          "bits": 2,
+          "default": "ddr_full",
+          "values": [
+            "ddr_full",
+            "sdr_full",
+            "sdr_reduced"
+          ]
+        }
+      }
+    },
+    "consolidation.bbfilter": {
+      "description": "Shared I/Q baseband filter bank (consolidation items 1-2, pass-2 P2-2): replaces the rxfilter_*, txfilter_* and pga_* field sets, which now read zero. direction drives bbfilter en/dir_tx; bw, gain and finite_zeros are the block's only programmable settings (analog/rf_rx/README.md section 4); rx_direct is filter-less RX for TX-through-filter loopback; tx_dac_direct drives txmix sel_dac (analog/rf_tx/README.md).",
+      "update": "stopped",
+      "islands": [
+        "rf"
+      ],
+      "live": false,
+      "fields": {
+        "direction": {
+          "bits": 2,
+          "default": "isolated",
+          "values": [
+            "isolated",
+            "rx",
+            "tx"
+          ]
+        },
+        "tx_dac_direct": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "rx_direct": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "meaning": "filter-less RX (rx_in -> out_rx) for TX-through-filter loopback; default 0. Hardware decode: core->out_rx = en & !dir_tx & !rx_direct, rx_in->out_rx = en & rx_direct (analog/rf_rx/README.md). Commit rule rx_direct_needs_tx_direction keeps the ADC input single-sourced."
+        },
+        "bw": {
+          "bits": 4,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "meaning": "bw[3:0] (bw3 added): 0 = widest; each bit adds 1/2/4/8 units of integrator C (analog/rf_rx/README.md); one setting for I and Q"
+        },
+        "gain": {
+          "bits": 4,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "meaning": "first-stage gain, linear (code+1), 0..24 dB; was pga_x.gain"
+        },
+        "finite_zeros": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "meaning": "reserved: the finite-zero hardware was removed (analog/rf_rx/README.md); reset 0, reads 0"
+        }
+      }
+    },
+    "consolidation.pll": {
+      "description": "Shared PLL/VCO bank (consolidation item 3, P2-2): replaces rfpll.config and wirepll.config (read zero). owner drives pll EN (off = 0); output_divider drives W1..W10; feedback_n drives the one-hot NS16..NS128 (integer-N, power of two, no fractional accumulator, no reference divider, fixed charge pump: analog/timing/README.md); phase_tap drives PH1..PH8. rfpll.state is the state of the shared PLL; wirepll.state reads zero. lock_window/lock_tolerance/lock_count configure the standard-cell counter lock check rtl/pt_pll_lock.sv (FBCK = VCO/16 counted against REF over the window; expected FBCK/REF = N/16 from feedback_n); it runs while owner != off and its result is status.pll_lock.",
+      "update": "stopped",
+      "islands": [
+        "pll"
+      ],
+      "live": false,
+      "fields": {
+        "owner": {
+          "bits": 2,
+          "default": "off",
+          "values": [
+            "off",
+            "rf",
+            "wired"
+          ]
+        },
+        "output_divider": {
+          "bits": 3,
+          "default": 1,
+          "values": [
+            1,
+            2,
+            4,
+            5,
+            8,
+            10
+          ]
+        },
+        "feedback_n": {
+          "bits": 2,
+          "default": 16,
+          "values": [
+            16,
+            32,
+            64,
+            128
+          ]
+        },
+        "phase_tap": {
+          "bits": 2,
+          "default": 1,
+          "values": [
+            1,
+            2,
+            4,
+            8
+          ]
+        },
+        "lock_window": {
+          "bits": 2,
+          "default": 1024,
+          "values": [
+            256,
+            1024,
+            2048,
+            4096
+          ],
+          "meaning": "pt_pll_lock window in reference cycles DEPRECATED: superseded by debug.freq_count_a (P3-7); becomes reserved once pt_digital moves to the frequency counters."
+        },
+        "lock_tolerance": {
+          "bits": 3,
+          "default": 2,
+          "values": [
+            0,
+            1,
+            2,
+            4,
+            8,
+            16,
+            32,
+            64
+          ],
+          "meaning": "pt_pll_lock: max |feedback count - window*N/16| per window DEPRECATED: superseded by debug.freq_count_a (P3-7); becomes reserved once pt_digital moves to the frequency counters."
+        },
+        "lock_count": {
+          "bits": 2,
+          "default": 4,
+          "values": [
+            1,
+            2,
+            4,
+            8
+          ],
+          "meaning": "pt_pll_lock: consecutive in-tolerance windows to declare lock DEPRECATED: superseded by debug.freq_count_a (P3-7); becomes reserved once pt_digital moves to the frequency counters."
+        }
+      }
+    },
+    "consolidation.wiredtx_stage": {
+      "description": "consolidation-pass.md item 4: TMDS is a configuration of the wired TX output stage. stage selects serial (CML with source termination) or tmds (current sink, termination off). tmds.* fields remain the TMDS-configuration controls. bits_per_cycle selects 1, 2 or 4 bits per ring cycle for both the serializer and the deserializer. rate_mode (shared by serializer and deserializer) selects 4/half/full bits per ring cycle.",
+      "update": "stopped",
+      "islands": [
+        "wired"
+      ],
+      "live": false,
+      "fields": {
+        "stage": {
+          "bits": 1,
+          "default": "serial",
+          "values": [
+            "serial",
+            "tmds"
+          ]
+        },
+        "bits_per_cycle": {
+          "bits": 2,
+          "default": 1,
+          "values": [
+            1,
+            2,
+            4
+          ],
+          "meaning": "serializer and deserializer bits per ring cycle (consolidation-pass.md 'Selectable bits per ring cycle'); sets the gearbox ratio ring cycles per 20-bit double word = 20/b and the pt_clocktree_slow word-divider modulus"
+        },
+        "rate_mode": {
+          "bits": 2,
+          "default": "quarter",
+          "values": [
+            "quarter",
+            "half",
+            "full"
+          ],
+          "meaning": "bits per ring cycle for the wired serializer and deserializer (spec/consolidation-pass.md 'Selectable bits per ring cycle'): quarter = 4 (MODE_H=MODE_F=0), half = MODE_H, full = MODE_F; code 3 is a reserved encoding and is rejected. Also sets the pt_digital gearbox ratio (debug_cfg PT_D_CONSOLIDATION_WIREDTX_STAGE__RATE_MODE)."
+        }
+      }
+    },
+    "consolidation.txmix": {
+      "description": "Saturated (constant-envelope) mixer mode from the RF TX power-recovery pass: shorts mixer degeneration for BLE/802.15.4/GFSK/LoRa. 0 = linear (OFDM).",
+      "update": "stopped",
+      "islands": [
+        "rf"
+      ],
+      "live": false,
+      "fields": {
+        "sat_mode": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "consolidation.quadrature": {
+      "description": "Retired in pass 3 (P3-1): mode is reserved and reads 0; the group keeps its address 0x56.",
+      "update": "stopped",
+      "islands": [
+        "pll"
+      ],
+      "live": false,
+      "fields": {
+        "mode": {
+          "bits": 3,
+          "default": "off",
+          "values": [
+            "off",
+            "pll_1x",
+            "div2",
+            "div4",
+            "external_iq"
+          ]
+        }
+      }
+    },
+    "consolidation.detect": {
+      "description": "detect det_src_tx: sense the WIRE_TX pad instead of WIRE_RX (analog/wired_rx/README.md: no field existed).",
+      "update": "stopped",
+      "islands": [
+        "wired"
+      ],
+      "live": false,
+      "fields": {
+        "src_tx": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.pattern": {
+      "description": "PRBS/pattern generator and RX checker in pt_digital (pass-2 P2-6). tx_mode payload (0) keeps the legacy behaviour (wire_trim[15] selects PRBS31). inject and check_clear are live levels: one error is injected / the checker is cleared on each 0->1 transition, synchronized into the word-clock domain. Status is read-only at status.pattern.",
+      "update": "stopped",
+      "islands": [],
+      "live": false,
+      "fields": {
+        "tx_mode": {
+          "bits": 3,
+          "default": "payload",
+          "values": [
+            "payload",
+            "prbs7",
+            "prbs15",
+            "prbs31",
+            "clock",
+            "slow",
+            "user",
+            "idle"
+          ]
+        },
+        "tx_invert": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "user_word": {
+          "bits": 10,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1023,
+          "unit": "code"
+        },
+        "inject": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "live": true
+        },
+        "check_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "check_mode": {
+          "bits": 3,
+          "default": "payload",
+          "values": [
+            "payload",
+            "prbs7",
+            "prbs15",
+            "prbs31",
+            "clock",
+            "slow",
+            "user",
+            "idle"
+          ],
+          "meaning": "payload (0) = same as the effective TX mode"
+        },
+        "check_invert": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "check_clear": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "live": true
+        }
+      }
+    },
+    "rxmix.offset": {
+      "description": "Mixer TIA offset-correction DAC pt_rxmix_ofsdac (analog/rf_rx/README.md): 6-bit sign-magnitude, bit 5 = sign (1 = negative), bits 4:0 = magnitude (ofs[4:0], about 8 mV per LSB); 0 and 32 are both zero offset. Fields correspond to the requested rxmix_i.offset / rxmix_q.offset.",
+      "update": "stopped",
+      "islands": [
+        "rf"
+      ],
+      "live": false,
+      "fields": {
+        "i_code": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 63,
+          "unit": "code"
+        },
+        "q_code": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 63,
+          "unit": "code"
+        }
+      }
+    },
+    "core.biasgen": {
+      "description": "Master bias generator gf180mcu_ocd_ip__biasgen (README field names bias.*). All resets are the safe state. ref_sel_fine is gated in hardware (fine_eff = ref_sel_fine & ref_sel_coarse) and also rejected at commit. Bring-up order (analog/core_support/README.md 'Register requirements'): (1) islands off, all fields at reset; (2) ena=1 and core.refchain.bgap_ena=1 (sinks 7/3, trim 8), wait >= 100 us; (3) ref_sel_vbg=1, ref_sel_coarse=1; (4) power an island, set core.refchain.dist_en_<island>=1, then the block enables. Per-die trims (bandgap trim, idac2_source) are applied by host software after every reset.",
+      "update": "stopped",
+      "islands": [],
+      "live": false,
+      "fields": {
+        "ena": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "ref_sel_vbg": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "ref_sel_coarse": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "ref_sel_fine": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "gate_and": "core.biasgen.ref_sel_coarse",
+          "meaning": "fine_eff = fine & coarse in hardware"
+        },
+        "idac2_source": {
+          "bits": 5,
+          "default": 10,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "meaning": "distribution reference into ROOT_REF, code x 1 uA; trimmed 8-13"
+        },
+        "idac1_source": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "meaning": "spare 1 uA-unit source, ATB sense output for bench checks"
+        },
+        "bandgap_sink1": {
+          "bits": 3,
+          "default": 7,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "code",
+          "meaning": "bandgap 1 uA bias, non-binary: bit0 = 3 units, bit1 = bit2 = 1 unit"
+        },
+        "bandgap_sink2": {
+          "bits": 2,
+          "default": 3,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "meaning": "bandgap 250 nA bias"
+        },
+        "voltgen_source": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "meaning": "voltgen not imported; keep 0"
+        },
+        "voltgen_sink1": {
+          "bits": 3,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "code",
+          "meaning": "voltgen not imported; keep 0"
+        },
+        "voltgen_sink2": {
+          "bits": 3,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "code",
+          "meaning": "voltgen not imported; keep 0"
+        }
+      }
+    },
+    "core.refchain": {
+      "description": "Bandgap (README bgap.*) and bias-distribution root trunk-leg enables (README dist.en_<island> = EN_<ISLAND>). Trunk enables are not island-gated: the documented idac2 trim runs dist_en_debug=1 with the debug island unpowered.",
+      "update": "stopped",
+      "islands": [],
+      "live": false,
+      "fields": {
+        "bgap_ena": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "meaning": "must be 0 while ATB0 forces VBG"
+        },
+        "bgap_trim": {
+          "bits": 5,
+          "default": 8,
+          "minimum": 0,
+          "maximum": 16,
+          "unit": "code",
+          "decode": "thermometer",
+          "meaning": "stored as a count 0..16, exported as the 16-bit thermometer trim[15:0] (bits 0..count-1 set)"
+        },
+        "dist_en_rf": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "dist_en_conv": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "dist_en_pll": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "dist_en_wire": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "dist_en_debug": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "debug.freq_count_a": {
+      "description": "Generalized frequency counter instance a (PLL/TX ring; spec/consolidation-pass.md P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xE8 (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full.",
+      "update": "stopped",
+      "islands": [],
+      "live": false,
+      "base": "0xE8",
+      "fields": {
+        "source": {
+          "bits": 3,
+          "default": "off",
+          "values": [
+            "off",
+            "tx_ring_fbck",
+            "cdr_ring_fbck",
+            "ring_osc",
+            "vco_replica",
+            "aosc",
+            "lc_prescale"
+          ]
+        },
+        "window": {
+          "bits": 2,
+          "default": 1024,
+          "values": [
+            256,
+            1024,
+            2048,
+            4096
+          ],
+          "meaning": "reference cycles per window"
+        },
+        "tolerance": {
+          "bits": 3,
+          "default": 2,
+          "values": [
+            0,
+            1,
+            2,
+            4,
+            8,
+            16,
+            32,
+            64
+          ]
+        },
+        "count": {
+          "bits": 2,
+          "default": 4,
+          "values": [
+            1,
+            2,
+            4,
+            8
+          ],
+          "meaning": "consecutive in-tolerance windows to declare lock"
+        },
+        "target": {
+          "bits": 16,
+          "default": 1024,
+          "minimum": 0,
+          "maximum": 65535,
+          "unit": "counts per window"
+        }
+      }
+    },
+    "debug.freq_count_b": {
+      "description": "Generalized frequency counter instance b (CDR ring; spec/consolidation-pass.md P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xEA (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full.",
+      "update": "stopped",
+      "islands": [],
+      "live": false,
+      "base": "0xEA",
+      "fields": {
+        "source": {
+          "bits": 3,
+          "default": "off",
+          "values": [
+            "off",
+            "tx_ring_fbck",
+            "cdr_ring_fbck",
+            "ring_osc",
+            "vco_replica",
+            "aosc",
+            "lc_prescale"
+          ]
+        },
+        "window": {
+          "bits": 2,
+          "default": 1024,
+          "values": [
+            256,
+            1024,
+            2048,
+            4096
+          ],
+          "meaning": "reference cycles per window"
+        },
+        "tolerance": {
+          "bits": 3,
+          "default": 2,
+          "values": [
+            0,
+            1,
+            2,
+            4,
+            8,
+            16,
+            32,
+            64
+          ]
+        },
+        "count": {
+          "bits": 2,
+          "default": 4,
+          "values": [
+            1,
+            2,
+            4,
+            8
+          ],
+          "meaning": "consecutive in-tolerance windows to declare lock"
+        },
+        "target": {
+          "bits": 16,
+          "default": 1024,
+          "minimum": 0,
+          "maximum": 65535,
+          "unit": "counts per window"
+        }
+      }
+    }
+  },
+  "rules": [
+    {
+      "id": "bb_inject_rx_vs_mixer",
+      "class": "pad",
+      "node": "bbfilter RX input (BB tap inject point)",
+      "if_any": [
+        [
+          "debug.bb_tap.mode",
+          "eq",
+          "inject_rx"
+        ]
+      ],
+      "then_all": [
+        [
+          "rxmix_i.state.state",
+          "eq",
+          "off"
+        ],
+        [
+          "rxmix_q.state.state",
+          "eq",
+          "off"
+        ]
+      ]
+    },
+    {
+      "id": "bb_inject_tx_filter_vs_dac",
+      "class": "pad",
+      "node": "bbfilter TX input",
+      "if_any": [
+        [
+          "debug.bb_tap.mode",
+          "eq",
+          "inject_tx_filter"
+        ]
+      ],
+      "then_all": [
+        [
+          "dac_i.config.enable",
+          "eq",
+          0
+        ],
+        [
+          "dac_q.config.enable",
+          "eq",
+          0
+        ],
+        [
+          "dac_i.state.state",
+          "eq",
+          "off"
+        ],
+        [
+          "dac_q.state.state",
+          "eq",
+          "off"
+        ]
+      ]
+    },
+    {
+      "id": "bb_inject_tx_mixer_vs_dac",
+      "class": "pad",
+      "node": "TX mixer input",
+      "if_any": [
+        [
+          "debug.bb_tap.mode",
+          "eq",
+          "inject_tx_mixer"
+        ]
+      ],
+      "then_all": [
+        [
+          "dac_i.config.enable",
+          "eq",
+          0
+        ],
+        [
+          "dac_q.config.enable",
+          "eq",
+          0
+        ],
+        [
+          "dac_i.state.state",
+          "eq",
+          "off"
+        ],
+        [
+          "dac_q.state.state",
+          "eq",
+          "off"
+        ],
+        [
+          "consolidation.bbfilter.tx_dac_direct",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "tx_dac_direct_vs_filter",
+      "class": "pad",
+      "node": "TX mixer input",
+      "if_any": [
+        [
+          "consolidation.bbfilter.tx_dac_direct",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "consolidation.bbfilter.direction",
+          "ne",
+          "tx"
+        ]
+      ]
+    },
+    {
+      "id": "lna_bypass_vs_lna",
+      "class": "pad",
+      "node": "mixer RF input",
+      "if_any": [
+        [
+          "debug.rf_rx_bypass.lna",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "lna.state.state",
+          "eq",
+          "off"
+        ]
+      ]
+    },
+    {
+      "id": "rf_tx_bypass_vs_driver",
+      "class": "pad",
+      "node": "RF_TX_P/N",
+      "if_any": [
+        [
+          "debug.rf_tx_bypass.rfdriver",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "rfdriver.state.state",
+          "eq",
+          "off"
+        ]
+      ]
+    },
+    {
+      "id": "ctle_bypass_vs_ctle",
+      "class": "pad",
+      "node": "slicer input",
+      "if_any": [
+        [
+          "debug.wire_bypass.ctle",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "ctle.state.state",
+          "eq",
+          "off"
+        ]
+      ]
+    },
+    {
+      "id": "wtx_ext_vs_serializer",
+      "class": "pad",
+      "node": "wired TX output-stage input",
+      "if_any": [
+        [
+          "debug.wtx_ext.enable",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "clocktree.config.tx_enable",
+          "eq",
+          0
+        ],
+        [
+          "detect.config.test_current_enable",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "detect_current_vs_drive",
+      "class": "pad",
+      "node": "WIRE_TX_P/N",
+      "if_any": [
+        [
+          "detect.config.test_current_enable",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "wiredtx.state.state",
+          "eq",
+          "off"
+        ],
+        [
+          "usbhs.config.tx_enable",
+          "eq",
+          0
+        ],
+        [
+          "usbfs.config.drive_enable",
+          "eq",
+          0
+        ],
+        [
+          "usbdrive.select.branch",
+          "eq",
+          "off"
+        ]
+      ]
+    },
+    {
+      "id": "usb_drive_vs_wired_path",
+      "class": "pad",
+      "node": "WIRE_RX_P/N (USB D+/D-) and WIRE_TX_P/N",
+      "if_any": [
+        [
+          "usbdrive.select.branch",
+          "ne",
+          "off"
+        ],
+        [
+          "usbhs.config.tx_enable",
+          "eq",
+          1
+        ],
+        [
+          "usbfs.config.drive_enable",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "txpad.config.branch",
+          "eq",
+          "off"
+        ],
+        [
+          "wiredtx.state.state",
+          "eq",
+          "off"
+        ],
+        [
+          "debug.wtx_ext.enable",
+          "eq",
+          0
+        ],
+        [
+          "termination.config.differential_100_enable",
+          "eq",
+          0
+        ],
+        [
+          "termination.config.p_load",
+          "ne",
+          "50_to_vcm"
+        ],
+        [
+          "rxlevel.config.path",
+          "eq",
+          "off"
+        ]
+      ]
+    },
+    {
+      "id": "usb_hs_vs_fs_drive",
+      "class": "pad",
+      "node": "WIRE_RX_P/N (USB D+/D-)",
+      "if_any": [
+        [
+          "usbhs.config.tx_enable",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "usbfs.config.drive_enable",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "usb_pull_p_fight",
+      "class": "pad",
+      "node": "WIRE_RX_P (D+)",
+      "if_any": [
+        [
+          "usbfs.config.pullup_p",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "usbfs.config.pulldown_p",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "usb_pull_n_fight",
+      "class": "pad",
+      "node": "WIRE_RX_N (D-)",
+      "if_any": [
+        [
+          "usbfs.config.pullup_n",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "usbfs.config.pulldown_n",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "tmds_rx_divider_vs_shunts",
+      "class": "pad",
+      "node": "WIRE_RX_P/N",
+      "if_any": [
+        [
+          "rxlevel.config.path",
+          "eq",
+          "half"
+        ]
+      ],
+      "then_all": [
+        [
+          "termination.config.p_load",
+          "eq",
+          "off"
+        ],
+        [
+          "termination.config.differential_100_enable",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "termination_single_mode",
+      "class": "pad",
+      "node": "WIRE_RX_P/N termination bank (one term_mode)",
+      "if_any": [
+        [
+          "termination.config.differential_100_enable",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "termination.config.p_load",
+          "eq",
+          "off"
+        ]
+      ]
+    },
+    {
+      "id": "rf_wired_payload_exclusive",
+      "class": "ownership",
+      "node": "die resource ownership (macro-contract: RF and wired payload mutually exclusive)",
+      "if_any": [
+        [
+          "adc_i.state.state",
+          "eq",
+          "active"
+        ],
+        [
+          "adc_q.state.state",
+          "eq",
+          "active"
+        ],
+        [
+          "dac_i.state.state",
+          "eq",
+          "active"
+        ],
+        [
+          "dac_q.state.state",
+          "eq",
+          "active"
+        ],
+        [
+          "lna.state.state",
+          "eq",
+          "active"
+        ],
+        [
+          "rfdriver.state.state",
+          "eq",
+          "active"
+        ]
+      ],
+      "then_all": [
+        [
+          "wiredtx.state.state",
+          "ne",
+          "active"
+        ],
+        [
+          "cdr.state.state",
+          "ne",
+          "active"
+        ],
+        [
+          "usbhs.state.state",
+          "ne",
+          "active"
+        ],
+        [
+          "usbfs.state.state",
+          "ne",
+          "active"
+        ]
+      ]
+    },
+    {
+      "id": "wiredtx_serial_needs_serial_branch",
+      "class": "legality",
+      "node": "WIRE_TX_P/N",
+      "if_any": [
+        [
+          "wiredtx.state.state",
+          "eq",
+          "active"
+        ]
+      ],
+      "then_all": [
+        [
+          "txpad.config.branch",
+          "eq",
+          "serial"
+        ]
+      ],
+      "if_all": [
+        [
+          "consolidation.wiredtx_stage.stage",
+          "eq",
+          "serial"
+        ]
+      ]
+    },
+    {
+      "id": "wiredtx_tmds_needs_tmds_branch",
+      "class": "legality",
+      "node": "WIRE_TX_P/N",
+      "if_any": [
+        [
+          "wiredtx.state.state",
+          "eq",
+          "active"
+        ]
+      ],
+      "then_all": [
+        [
+          "txpad.config.branch",
+          "eq",
+          "tmds"
+        ]
+      ],
+      "if_all": [
+        [
+          "consolidation.wiredtx_stage.stage",
+          "eq",
+          "tmds"
+        ]
+      ]
+    },
+    {
+      "id": "detect_current_needs_detect_branch",
+      "class": "legality",
+      "node": "WIRE_TX_P/N",
+      "if_any": [
+        [
+          "detect.config.test_current_enable",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "txpad.config.branch",
+          "eq",
+          "detect"
+        ],
+        [
+          "wiredtx.idle.idle",
+          "eq",
+          1
+        ]
+      ]
+    },
+    {
+      "id": "usbhs_drive_needs_hs_branch",
+      "class": "legality",
+      "node": "WIRE_RX_P/N",
+      "if_any": [
+        [
+          "usbhs.config.tx_enable",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "usbdrive.select.branch",
+          "eq",
+          "hs"
+        ]
+      ]
+    },
+    {
+      "id": "usbfs_drive_needs_fsls_branch",
+      "class": "legality",
+      "node": "WIRE_RX_P/N",
+      "if_any": [
+        [
+          "usbfs.config.drive_enable",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "usbdrive.select.branch",
+          "eq",
+          "fsls"
+        ]
+      ]
+    },
+    {
+      "id": "wtx_ext_needs_output_branch",
+      "class": "legality",
+      "node": "WIRE_TX_P/N",
+      "if_any": [
+        [
+          "debug.wtx_ext.enable",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "txpad.config.branch",
+          "in",
+          [
+            "serial",
+            "tmds"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "inject_rx_needs_rx_direction",
+      "class": "legality",
+      "node": "bbfilter",
+      "if_any": [
+        [
+          "debug.bb_tap.mode",
+          "eq",
+          "inject_rx"
+        ]
+      ],
+      "then_all": [
+        [
+          "consolidation.bbfilter.direction",
+          "eq",
+          "rx"
+        ]
+      ]
+    },
+    {
+      "id": "tx_tap_needs_tx_direction",
+      "class": "legality",
+      "node": "bbfilter",
+      "if_any": [
+        [
+          "debug.bb_tap.mode",
+          "in",
+          [
+            "observe_tx",
+            "inject_tx_filter",
+            "inject_tx_mixer"
+          ]
+        ]
+      ],
+      "then_all": [
+        [
+          "consolidation.bbfilter.direction",
+          "eq",
+          "tx"
+        ]
+      ]
+    },
+    {
+      "id": "inject_tx_mixer_needs_stage_bypasses",
+      "class": "legality",
+      "node": "bbfilter (pad -> bypasses -> out_tx -> txmix)",
+      "if_any": [
+        [
+          "debug.bb_tap.mode",
+          "eq",
+          "inject_tx_mixer"
+        ]
+      ],
+      "then_all": [
+        [
+          "debug.rf_bb_bypass.pga",
+          "eq",
+          1
+        ],
+        [
+          "debug.rf_bb_bypass.rxfilter",
+          "eq",
+          1
+        ]
+      ]
+    },
+    {
+      "id": "pll_state_needs_owner",
+      "class": "legality",
+      "node": "shared pll",
+      "if_any": [
+        [
+          "rfpll.state.state",
+          "ne",
+          "off"
+        ]
+      ],
+      "then_all": [
+        [
+          "consolidation.pll.owner",
+          "ne",
+          "off"
+        ]
+      ]
+    },
+    {
+      "id": "rx_direct_needs_tx_direction",
+      "class": "legality",
+      "node": "bbfilter out_rx (ADC input)",
+      "if_any": [
+        [
+          "consolidation.bbfilter.rx_direct",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "consolidation.bbfilter.direction",
+          "eq",
+          "tx"
+        ]
+      ]
+    },
+    {
+      "id": "pattern_inject_needs_mode",
+      "class": "legality",
+      "node": "wired TX pattern generator",
+      "if_any": [
+        [
+          "debug.pattern.inject",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "debug.pattern.tx_mode",
+          "ne",
+          "payload"
+        ]
+      ]
+    },
+    {
+      "id": "biasgen_fine_needs_coarse",
+      "class": "legality",
+      "node": "biasgen reference range (fine-only: 25 deg phase margin; also gated in hardware)",
+      "if_any": [
+        [
+          "core.biasgen.ref_sel_fine",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "core.biasgen.ref_sel_coarse",
+          "eq",
+          1
+        ]
+      ]
+    },
+    {
+      "id": "vbg_force_needs_bandgap_off",
+      "class": "pad",
+      "node": "VBG (bandgap output vs ATB0 force)",
+      "if_any": [
+        [
+          "debug.atb.atb0",
+          "eq",
+          55
+        ]
+      ],
+      "then_all": [
+        [
+          "core.refchain.bgap_ena",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "root_ref_force_needs_idac2_off",
+      "class": "legality",
+      "node": "ROOT_REF (idac2 source vs ATB0 force)",
+      "if_any": [
+        [
+          "debug.atb.atb0",
+          "eq",
+          1
+        ]
+      ],
+      "if_all": [
+        [
+          "core.biasgen.ena",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "core.biasgen.idac2_source",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "trk_rf_force_needs_trunk_off",
+      "class": "legality",
+      "node": "TRK_RF (root leg vs ATB0 force)",
+      "if_any": [
+        [
+          "debug.atb.atb0",
+          "eq",
+          14
+        ]
+      ],
+      "if_all": [
+        [
+          "core.refchain.dist_en_rf",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "debug.island_power.rf",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "trk_wire_force_needs_trunk_off",
+      "class": "legality",
+      "node": "TRK_WIRE (root leg vs ATB0 force)",
+      "if_any": [
+        [
+          "debug.atb.atb0",
+          "eq",
+          22
+        ]
+      ],
+      "if_all": [
+        [
+          "core.refchain.dist_en_wire",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "debug.island_power.wired",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "trk_pll_force_needs_trunk_off",
+      "class": "legality",
+      "node": "TRK_PLL (root leg vs ATB0 force)",
+      "if_any": [
+        [
+          "debug.atb.atb0",
+          "eq",
+          29
+        ]
+      ],
+      "if_all": [
+        [
+          "core.refchain.dist_en_pll",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "debug.island_power.pll",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "trk_conv_force_needs_trunk_off",
+      "class": "legality",
+      "node": "TRK_CONV (root leg vs ATB0 force)",
+      "if_any": [
+        [
+          "debug.atb.atb0",
+          "eq",
+          35
+        ]
+      ],
+      "if_all": [
+        [
+          "core.refchain.dist_en_conv",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "debug.island_power.conv",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "trk_debug_force_needs_trunk_off",
+      "class": "legality",
+      "node": "TRK_DEBUG (root leg vs ATB0 force)",
+      "if_any": [
+        [
+          "debug.atb.atb0",
+          "eq",
+          56
+        ]
+      ],
+      "if_all": [
+        [
+          "core.refchain.dist_en_debug",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "debug.island_power.debug",
+          "eq",
+          0
+        ]
+      ]
+    }
+  ],
+  "break_before_make": [
+    "debug.clk_select.rf_lo",
+    "debug.clk_select.wire_line",
+    "debug.clk_select.wire_sample",
+    "debug.clk_select.conv_sample",
+    "debug.bb_tap.mode",
+    "debug.wmon_select.select",
+    "debug.atb.atb0",
+    "debug.atb.atb1",
+    "debug.clk_obs.source",
+    "debug.wclk_obs.source",
+    "txpad.config.branch",
+    "usbdrive.select.branch",
+    "clockmux.config.rf_source",
+    "clockmux.config.wire_source",
+    "refinput.select.branch",
+    "termination.config.p_load",
+    "consolidation.bbfilter.direction",
+    "consolidation.pll.owner",
+    "debug.clk_select.host_clk"
+  ],
+  "break_before_make_rule": "A commit may not change one of these fields directly from one non-zero code to a different non-zero code; it must commit the zero (stopped/off/open) code first. Two SPI transactions separate the commits, far exceeding the 4 ns switch dead time in control_semantics.switch_dead_time_s.",
+  "fault_forced": {
+    "description": "While the monitor fault input is high, these outputs are forced to their released value regardless of the committed configuration (control_semantics.reset: physical output enables are forced off by reset/fault). Island gating still applies first.",
+    "fields": {
+      "rfdriver.state.state": "off",
+      "rfdriver.mute.mute": 1,
+      "wiredtx.state.state": "off",
+      "wiredtx.idle.idle": 1,
+      "usbhs.config.tx_enable": 0,
+      "usbfs.config.drive_enable": 0,
+      "usbdrive.select.branch": "off",
+      "detect.config.test_current_enable": 0,
+      "txpad.config.branch": "off",
+      "dac_i.config.hold_zero": 1,
+      "dac_q.config.hold_zero": 1,
+      "txmix_i.enable.enable": 0,
+      "txmix_q.enable.enable": 0,
+      "txsum.enable.enable": 0,
+      "debug.bb_tap.mode": "off",
+      "debug.wtx_ext.enable": 0,
+      "debug.rf_tx_bypass.rfdriver": 0
+    }
+  },
+  "commit_semantics": "SPI writes go to shadow registers (write-time range/encoding check per register; fields wider than 16 bits are range-checked at commit). Writing COMMIT (0x06 bit 0) validates the complete shadow (split-field ranges, every rule above, break-before-make against the active set, and - while the legacy payload ENABLE is 1 - that only live fields differ) and copies shadow to active in one SCLK edge, or rejects the commit, keeps the prior active configuration and latches CONFIG_ERROR (control_semantics.illegal). Bit 1 reverts shadow to active.",
+  "cdc_semantics": "The register file is clocked only by SPI SCLK and asynchronously reset by RESET_N AND POR. Active fields are quasi-static: they change only on a successful commit, which also toggles commit_toggle. A consuming clock domain that must see a coherent multi-bit value synchronizes commit_toggle through two flops and reloads its local copy on a toggle edge; the next commit cannot occur for at least one more 32-clock SPI transaction. Purely analog consumers see each field change once per commit; stopped-only fields are changed only while their outputs are isolated.",
+  "hardware_trim": {
+    "description": "Pass-2 P2-2 register-map trim. keep=null: the field keeps its address bits but has no storage; it reads zero, writes to it are ignored and it is absent from the output buses. keep=[hi,lo]: only those bits are stored and exported; the other bits read zero. Addresses and the SPI ABI are unchanged.",
+    "forbidden": {
+      "lna.gain.gain_db": {
+        "values": [
+          10,
+          20
+        ],
+        "source": "analog/rf_rx/README.md",
+        "reason": "only two gain levels (gain_lo) exist"
+      }
+    },
+    "fields": {
+      "adc_i.config.comparator_trim": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "not implemented in the SAR block"
+      },
+      "adc_i.config.acquisition_ns": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "not implemented in the SAR block"
+      },
+      "adc_i.config.decision_ns": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "not implemented in the SAR block"
+      },
+      "adc_i.config.reset_ns": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "not implemented in the SAR block"
+      },
+      "dac_i.config.gain_trim": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "no analog effect in this version"
+      },
+      "dac_i.config.offset_trim": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "no analog effect in this version"
+      },
+      "rxfilter_i.coefficients.cutoff_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_i.coefficients.finite_zeros": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_i.coefficients.q1_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_i.coefficients.q2_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_i.coefficients.zero1_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_i.coefficients.zero2_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_i.state.state": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "txfilter_i.state.state": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "pga_i.gain.gain_db": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "pga_i.offset.code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "pga_i.state.state": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "txfilter_i.coefficients.cutoff_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "txfilter_i.coefficients.gain_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "txfilter_i.coefficients.q_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "adc_q.config.comparator_trim": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "not implemented in the SAR block"
+      },
+      "adc_q.config.acquisition_ns": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "not implemented in the SAR block"
+      },
+      "adc_q.config.decision_ns": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "not implemented in the SAR block"
+      },
+      "adc_q.config.reset_ns": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "not implemented in the SAR block"
+      },
+      "dac_q.config.gain_trim": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "no analog effect in this version"
+      },
+      "dac_q.config.offset_trim": {
+        "keep": null,
+        "source": "analog/converters/README.md",
+        "reason": "no analog effect in this version"
+      },
+      "rxfilter_q.coefficients.cutoff_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_q.coefficients.finite_zeros": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_q.coefficients.q1_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_q.coefficients.q2_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_q.coefficients.zero1_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_q.coefficients.zero2_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "rxfilter_q.state.state": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "txfilter_q.state.state": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "pga_q.gain.gain_db": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "pga_q.offset.code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "pga_q.state.state": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "txfilter_q.coefficients.cutoff_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "txfilter_q.coefficients.gain_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "txfilter_q.coefficients.q_code": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
+      },
+      "termination.config.n_load": {
+        "keep": null,
+        "source": "analog/wired_rx/README.md",
+        "reason": "pad bank has one common load mode and no trim legs; p_load is the common mode (term_mode)"
+      },
+      "termination.config.trim_p": {
+        "keep": null,
+        "source": "analog/wired_rx/README.md",
+        "reason": "pad bank has one common load mode and no trim legs; p_load is the common mode (term_mode)"
+      },
+      "termination.config.trim_n": {
+        "keep": null,
+        "source": "analog/wired_rx/README.md",
+        "reason": "pad bank has one common load mode and no trim legs; p_load is the common mode (term_mode)"
+      },
+      "ctle.config.pole_trim": {
+        "keep": null,
+        "source": "analog/wired_rx/README.md",
+        "reason": "8-bit pole/zero trims collapse to one 2-bit degeneration code"
+      },
+      "ctle.config.zero_trim": {
+        "keep": [
+          1,
+          0
+        ],
+        "source": "analog/wired_rx/README.md",
+        "reason": "ctle_peak[1:0]"
+      },
+      "slicer.offset.data": {
+        "keep": [
+          3,
+          0
+        ],
+        "source": "analog/wired_rx/README.md",
+        "reason": "4-bit sampler trims, low nibble"
+      },
+      "slicer.offset.early": {
+        "keep": [
+          3,
+          0
+        ],
+        "source": "analog/wired_rx/README.md",
+        "reason": "4-bit sampler trims, low nibble"
+      },
+      "slicer.offset.late": {
+        "keep": [
+          3,
+          0
+        ],
+        "source": "analog/wired_rx/README.md",
+        "reason": "4-bit sampler trims, low nibble"
+      },
+      "detect.config.high_threshold_code": {
+        "keep": [
+          1,
+          0
+        ],
+        "source": "analog/wired_rx/README.md",
+        "reason": "det_thr 2-bit code"
+      },
+      "detect.config.low_threshold_code": {
+        "keep": [
+          1,
+          0
+        ],
+        "source": "analog/wired_rx/README.md",
+        "reason": "det_se 2-bit code"
+      },
+      "detect.config.current_code": {
+        "keep": null,
+        "source": "analog/wired_rx/README.md",
+        "reason": "6-bit test-current trim not implemented"
+      },
+      "cdr.config.burst_enable": {
+        "keep": null,
+        "source": "analog/wired_rx/README.md",
+        "reason": "burst samplers not implemented"
+      },
+      "cdr.config.burst_acquire_rows": {
+        "keep": null,
+        "source": "analog/wired_rx/README.md",
+        "reason": "burst samplers not implemented"
+      },
+      "cdr.config.burst_min_edges": {
+        "keep": null,
+        "source": "analog/wired_rx/README.md",
+        "reason": "burst samplers not implemented"
+      },
+      "rfpll.config.charge_pump_code": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "rfpll.config.enable": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "rfpll.config.feedback_fraction": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "rfpll.config.feedback_integer": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "rfpll.config.reference_divider": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "rfpll.config.vco_coarse": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "wirepll.config.charge_pump_code": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "wirepll.config.enable": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "wirepll.config.feedback_fraction": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "wirepll.config.feedback_integer": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "wirepll.config.reference_divider": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "wirepll.config.vco_coarse": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "wirepll.state.state": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
+      },
+      "quadrature.config.generation": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "bias-free CMOS divider/interpolator; replaced by consolidation.quadrature.mode"
+      },
+      "quadrature.config.invert_q": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "bias-free CMOS divider/interpolator; replaced by consolidation.quadrature.mode"
+      },
+      "quadrature.config.rc_trim_i": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "bias-free CMOS divider/interpolator; replaced by consolidation.quadrature.mode"
+      },
+      "quadrature.config.rc_trim_q": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "bias-free CMOS divider/interpolator; replaced by consolidation.quadrature.mode"
+      },
+      "refinput.select.reference_divider": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "the 1..256 reference divider is not in pt_diff_clk_rx"
+      },
+      "debug.replica.vco_coarse": {
+        "keep": null,
+        "source": "analog/timing/README.md",
+        "reason": "vco_replica has no coarse DAC; VCTRL is forced from the ATB"
+      },
+      "tmds.state.state": {
+        "keep": null,
+        "source": "analog/wired_tx/wiredtx.spice",
+        "reason": "TMDS is a configuration of the wiredtx stage (EN_TMDS from wiredtx.state with consolidation.wiredtx_stage=tmds); tmds.config.current_code drives TMDS_CODE"
+      },
+      "tmds.idle.idle": {
+        "keep": null,
+        "source": "analog/wired_tx/wiredtx.spice",
+        "reason": "TMDS is a configuration of the wiredtx stage (EN_TMDS from wiredtx.state with consolidation.wiredtx_stage=tmds); tmds.config.current_code drives TMDS_CODE"
+      },
+      "wiredtx.config.source_termination_enable": {
+        "keep": null,
+        "source": "analog/wired_tx/wiredtx.spice",
+        "reason": "pt_wiredtx has no source-termination control port"
+      },
+      "usbhs.config.squelch_code": {
+        "keep": null,
+        "source": "spec/consolidation-pass.md (items 5, P2-2)",
+        "reason": "USB HS receive uses slicer; squelch/disconnect use detect thresholds"
+      },
+      "usbhs.config.disconnect_code": {
+        "keep": null,
+        "source": "spec/consolidation-pass.md (items 5, P2-2)",
+        "reason": "USB HS receive uses slicer; squelch/disconnect use detect thresholds"
+      },
+      "usbhs.config.rx_enable": {
+        "keep": null,
+        "source": "spec/consolidation-pass.md (items 5, P2-2)",
+        "reason": "USB HS receive uses slicer; squelch/disconnect use detect thresholds"
+      },
+      "rfdriver.gain.code": {
+        "keep": [
+          7,
+          4
+        ],
+        "source": "analog/rf_tx/README.md",
+        "reason": "g3..g0 = code[7:4]"
+      },
+      "consolidation.bbfilter.finite_zeros": {
+        "keep": null,
+        "source": "analog/rf_rx/README.md",
+        "reason": "finite-zero option removed from the filter; reserved, reads 0"
+      },
+      "bias.trim.code": {
+        "keep": null,
+        "source": "analog/core_support/README.md",
+        "reason": "retired: core.biasgen.idac2 is the bias trim; reserved, reads 0"
+      },
+      "debug.bias_override.master": {
+        "keep": null,
+        "source": "analog/core_support/README.md 'Register requirements'",
+        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
+      },
+      "debug.bias_override.rf": {
+        "keep": null,
+        "source": "analog/core_support/README.md 'Register requirements'",
+        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
+      },
+      "debug.bias_override.wired": {
+        "keep": null,
+        "source": "analog/core_support/README.md 'Register requirements'",
+        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
+      },
+      "debug.bias_override.pll": {
+        "keep": null,
+        "source": "analog/core_support/README.md 'Register requirements'",
+        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
+      },
+      "debug.bias_override.conv": {
+        "keep": null,
+        "source": "analog/core_support/README.md 'Register requirements'",
+        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
+      },
+      "debug.bias_override.debug": {
+        "keep": null,
+        "source": "analog/core_support/README.md 'Register requirements'",
+        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
+      },
+      "consolidation.quadrature.mode": {
+        "keep": null,
+        "source": "spec/consolidation-pass.md P3-1",
+        "reason": "quadrature retired (RF baseline is the passive external I/Q LO lo_ext; lower band moves to ring PH0/PH2 into lo_ext internal mode); reserved, reads 0"
+      },
+      "quadrature.state.state": {
+        "keep": null,
+        "source": "spec/consolidation-pass.md P3-1",
+        "reason": "quadrature retired (RF baseline is the passive external I/Q LO lo_ext; lower band moves to ring PH0/PH2 into lo_ext internal mode); reserved, reads 0"
+      },
+      "debug.island_power.usb": {
+        "keep": null,
+        "source": "analog/island_support/README.md I1",
+        "reason": "no USB island switch; reserved, island_en[3] = 0"
+      },
+      "debug.pgood_override.usb": {
+        "keep": null,
+        "source": "analog/island_support/README.md I1",
+        "reason": "no USB island switch; reserved"
+      },
+      "consolidation.pll.lock_window": {
+        "keep": null,
+        "source": "spec/consolidation-pass.md P3-7",
+        "reason": "superseded by debug.freq_count_a; reserved, reads 0"
+      },
+      "consolidation.pll.lock_tolerance": {
+        "keep": null,
+        "source": "spec/consolidation-pass.md P3-7",
+        "reason": "superseded by debug.freq_count_a; reserved, reads 0"
+      },
+      "consolidation.pll.lock_count": {
+        "keep": null,
+        "source": "spec/consolidation-pass.md P3-7",
+        "reason": "superseded by debug.freq_count_a; reserved, reads 0"
+      }
+    }
+  },
+  "status_registers": {
+    "description": "Read-only status registers (fixed block address_policy.status_base..status_limit = 0xF0-0xFF, so status addresses do not move as control groups grow). Each field is a pt_regfile input port, synchronized bitwise into SCLK by two flops (reset by rst_n). Multi-bit counters must be Gray-coded at the source (one bit changes per step, saturating without wrap) and are converted to binary after synchronization, so a read never tears by more than one count. Writes to these addresses are rejected as address errors.",
+    "groups": {
+      "status.pattern": {
+        "description": "PRBS/pattern checker in pt_digital (pass-2 P2-6).",
+        "fields": {
+          "locked": {
+            "bits": 1,
+            "port": "pattern_locked",
+            "meaning": "checker locked to the received pattern (live level)"
+          },
+          "lost_lock": {
+            "bits": 1,
+            "port": "pattern_lost_lock",
+            "meaning": "sticky: lock was lost since the checker was cleared"
+          },
+          "errors": {
+            "bits": 16,
+            "port": "pattern_errors_gray",
+            "encoding": "gray",
+            "meaning": "saturating bit-error count (read as binary)"
+          }
+        }
+      },
+      "status.pll_lock": {
+        "description": "RESERVED slot (0xF2, reads 0): the counter-based PLL lock check was superseded by status.freq_count_a (P3-7). Kept as an empty slot so later status addresses do not move.",
+        "reserved_registers": 1,
+        "fields": {}
+      },
+      "status.freq_count_a": {
+        "description": "Frequency counter a results, held by a req/ack handshake in RTL (no tearing; plain binary).",
+        "fields": {
+          "locked": {
+            "bits": 1,
+            "port": "fca_locked",
+            "meaning": "live level"
+          },
+          "lost_lock": {
+            "bits": 1,
+            "port": "fca_lost",
+            "meaning": "sticky until source=off"
+          },
+          "diff": {
+            "bits": 14,
+            "port": "fca_diff",
+            "meaning": "count - target, two's complement, saturated"
+          },
+          "count": {
+            "bits": 16,
+            "port": "fca_count",
+            "meaning": "last window count, saturating"
+          }
+        }
+      },
+      "status.freq_count_b": {
+        "description": "Frequency counter b results, held by a req/ack handshake in RTL (no tearing; plain binary).",
+        "fields": {
+          "locked": {
+            "bits": 1,
+            "port": "fcb_locked",
+            "meaning": "live level"
+          },
+          "lost_lock": {
+            "bits": 1,
+            "port": "fcb_lost",
+            "meaning": "sticky until source=off"
+          },
+          "diff": {
+            "bits": 14,
+            "port": "fcb_diff",
+            "meaning": "count - target, two's complement, saturated"
+          },
+          "count": {
+            "bits": 16,
+            "port": "fcb_count",
+            "meaning": "last window count, saturating"
+          }
+        }
+      }
+    }
+  },
+  "atb_groups": {
+    "description": "Proposed placement table (analog/island_support README A1): code -> group per bus. atbX_grp[g] = OR of that group's island-gated atbX_sw lines; atbX_en = OR of all lines on the bus. The integration step owns the final mapping; the generator checks that every legal code is in exactly one group.",
+    "atb0": [
+      {
+        "name": "core_ref_trunks",
+        "codes": [
+          1,
+          14,
+          22,
+          29,
+          35,
+          36,
+          55,
+          56
+        ]
+      },
+      {
+        "name": "characterization",
+        "codes": [
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54
+        ]
+      }
+    ],
+    "atb1": [
+      {
+        "name": "core_ref_supply",
+        "codes": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          11,
+          12,
+          13,
+          14,
+          22,
+          29,
+          35,
+          41,
+          55,
+          57
+        ]
+      },
+      {
+        "name": "rf",
+        "codes": [
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ]
+      },
+      {
+        "name": "wired",
+        "codes": [
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          40
+        ]
+      },
+      {
+        "name": "pll_conv",
+        "codes": [
+          30,
+          34,
+          36,
+          37,
+          38,
+          39
+        ]
+      },
+      {
+        "name": "characterization_debug",
+        "codes": [
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          56
+        ]
+      }
+    ]
+  },
+  "atb_switch_dead_time_s": 2e-08
+}

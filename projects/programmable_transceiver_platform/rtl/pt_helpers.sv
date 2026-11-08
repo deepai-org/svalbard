@@ -1,12 +1,4 @@
-module pt_prbs #(parameter [30:0] SEED=31'h7fffffff)(input wire clk,rst_n,step,
- output wire[9:0]word);
- reg[30:0]state;reg[30:0]next_state;reg[9:0]value;integer k;
- always @*begin next_state=state;value=0;
-  for(k=0;k<10;k=k+1)begin value[k]=next_state[30];next_state={next_state[29:0],next_state[30]^next_state[27]};end
- end
- assign word=value;
- always @(posedge clk or negedge rst_n)if(!rst_n)state<=SEED==0?31'b1:SEED;else if(step)state<=next_state;
-endmodule
+// PRBS generation moved to rtl/pt_pattern.sv (pt_pattern_gen/pt_pattern_check, consolidation P2-6).
 
 // Generic successive-approximation calibration helper. Caller guarantees a quiet window.
 module pt_calibrator(input wire clk,rst_n,start,input wire above_target,

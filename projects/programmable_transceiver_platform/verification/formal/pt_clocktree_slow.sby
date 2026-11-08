@@ -1,0 +1,24 @@
+# SymbiYosys proof of the clock-tree slow functions (P2-10): word divider,
+# launch re-phase latency, qualification and the detector divider rule.
+# Run via verification/run_clocktree_slow_formal.sh.
+[tasks]
+prove
+cover
+
+[options]
+prove: mode prove
+prove: depth 8
+cover: mode cover
+cover: depth 80
+
+[engines]
+smtbmc yices
+
+[script]
+read -formal pt_clocktree_slow.sv
+read -formal pt_clocktree_slow_fv.sv
+prep -top pt_clocktree_slow_fv
+
+[files]
+../../rtl/pt_clocktree_slow.sv
+pt_clocktree_slow_fv.sv

@@ -1,0 +1,23 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_prescale: custom TSPC prescaler in front of the standard-cell
+* rtl/pt_clocktree_slow.sv (which only reaches ~150 MHz).  CK_IN (wired line
+* clock, 240 MHz - 2.5 GHz, from clockmux WIRE_P) -> restore buffer -> four
+* ct_tspc2 stages; one-hot D2/D4/D8/D16 selects the output CK_OUT (all-zero =
+* stopped low).  Software picks the smallest ratio that keeps CK_OUT <= 150 MHz
+* (2.5 GHz -> /16 = 156 MHz is the one case slightly above; use /16 only up to
+* 2.4 GHz or accept the RTL's measured margin).  EN=0: stages reset, CK_OUT=0.
+.include timing_cells.spice
+.include generated/fast/ct_tspc2.spice
+
+.subckt pt_prescale CK_IN EN D2 D4 D8 D16 CK_OUT VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+XG CK_IN EN GB VDD VSS pt_t_nand2x
+XGI GB G VDD VSS pt_t_inv4
+XS1 G Q1 ENB VDD VSS ct_tspc2
+XS2 Q1 Q2 ENB VDD VSS ct_tspc2
+XS3 Q2 Q3 ENB VDD VSS ct_tspc2
+XS4 Q3 Q4 ENB VDD VSS ct_tspc2
+XM Q1 Q2 Q3 Q4 D2 D4 D8 D16 M VDD VSS pt_t_sel4s
+XB1 M MB VDD VSS pt_t_inv2
+XB2 MB CK_OUT VDD VSS pt_t_inv4
+.ends

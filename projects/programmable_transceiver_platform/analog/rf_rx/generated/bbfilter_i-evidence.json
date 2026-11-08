@@ -1,0 +1,639 @@
+{
+ "block": "bbfilter_i",
+ "top_cell": "pt_bbfilter_i",
+ "source_hashes": {
+  "bbfilter_i.spice": "sha256:f06d604279957f39550d9009585e1a614ef79d8f5c7f481e6449846600e3117e",
+  "netlists.py": "sha256:5b510fefe992f2a5c41026c506f7217975cef917e05dc9fe3b366c5791fb7329",
+  "rfrx_flow.py": "sha256:a3f7188401453a8c894ec1f7b81fbbd61397d1edd1123122250f5b982d7ca833"
+ },
+ "artifact_hashes": {
+  "bbfilter_i.gds": "sha256:9765c71a24462bd109f2c48705989b9e28141d77a5cadbee5213e8c6be05afe6",
+  "bbfilter_i.mag": "sha256:e96c33e5c8db854eda7a0647d1e1bb0299a191684ed4a88311e634ef6d1cee22",
+  "bbfilter_i.ext.spice": "sha256:9f76dd03357b2f2d3756860de1b7b9b1ca295b66c573acf0b63527522d151d37",
+  "bbfilter_i-lvs.txt": "sha256:d58702e2b848eba3fe94f0176775e825d1451b3267b5108b9f3a21126688a141"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_tag": "svalbard/librelane-gf180-canary:2026.08"
+ },
+ "pdk": "gf180mcuD; layout/LVS: canary image /pdk/gf180mcuD; simulation: analog image ciel gf180mcu f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+ "area": {
+  "bbox_um": [
+   1.5,
+   -0.2,
+   405.2,
+   1006.09
+  ],
+  "area_um2": 406239.0
+ },
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "reset/off: all controls 0, island on",
+     "rail_current_a": 1.499762e-09,
+     "signal_pin_current_a": 7.259309e-11,
+     "tx_in_current_a": 1.980001e-11,
+     "out_rx_current_a": 4.290231e-11
+    },
+    {
+     "case": "island off (VDD=0, island_off=1); DAC (tx_in) and ADC (out_rx) nodes driven to 1.65 V, 27 C",
+     "rail_current_a": 7.445777e-12,
+     "signal_pin_current_a": 6.644196e-05,
+     "tx_in_current_a": 2.67908e-11,
+     "out_rx_current_a": 6.644192e-05
+    },
+    {
+     "case": "same 85 C",
+     "rail_current_a": 6.022017e-11,
+     "signal_pin_current_a": 5.329332e-05,
+     "tx_in_current_a": 2.115618e-10,
+     "out_rx_current_a": 5.329244e-05
+    },
+    {
+     "case": "same 0 C",
+     "rail_current_a": 1.304516e-12,
+     "signal_pin_current_a": 7.475824e-05,
+     "tx_in_current_a": 2.084708e-11,
+     "out_rx_current_a": 7.475822e-05
+    },
+    {
+     "case": "same with peer nodes at 3.63 V",
+     "rail_current_a": 1.772987e-11,
+     "signal_pin_current_a": 7.729214e-05,
+     "tx_in_current_a": 6.061656e-11,
+     "out_rx_current_a": 7.729201e-05
+    },
+    {
+     "case": "filter off: rx_in -> out_rx isolation (dB)",
+     "value": -51.3198
+    }
+   ],
+   "notes": "Cross-island pins (tx_in from DAC, out_rx to ADC) use NMOS-only switches: no PMOS junction to VDD_RF_SW. out_rx current with the island off is the weak island_off clamp (W/L=1/10)."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "tool": "Magic 8.3.623 drc(full), euclidean",
+    "errors": 0,
+    "error_tiles": "0",
+    "report": "generated/bbfilter_i-layout.json",
+    "klayout_crosscheck": {
+     "ran": true,
+     "violations": 0,
+     "by_rule": {},
+     "deck": "gf180mcuD klayout (sak-drc.sh -k)"
+    }
+   },
+   "lvs": {
+    "tool": "Netgen 1.5.316 gf180mcuD_setup.tcl",
+    "result": "Circuits match uniquely.",
+    "unique_match": true,
+    "report": "generated/bbfilter_i-lvs.txt"
+   },
+   "extracted_nominal": {
+    "condition": "tt 27 C 3.3 V, extracted with parasitic C, RX direction, bw=0, gain=0",
+    "idd_a": 0.005823107,
+    "dc_gain_db": -0.0580583,
+    "peak_gain_db": 1.64507,
+    "f3db_hz": 15156300.0,
+    "gain_20mhz_db": -15.4797,
+    "out_cm_v": 1.650173,
+    "vcm_v": 1.65
+   }
+  },
+  "observable": {
+   "state": "pass",
+   "atb_taps": [
+    {
+     "port": "atb_vcm",
+     "nominal_v": 1.65
+    },
+    {
+     "port": "atb_vbp"
+    }
+   ],
+   "observe_mux": {
+    "obs_sel=1 rx_in (after mixer)": {
+     "idd_a": 0.005823107,
+     "dc_gain_db": -6.17977e-08,
+     "peak_gain_db": -6.17977e-08,
+     "f3db_hz": 179411000.0,
+     "gain_20mhz_db": -0.0530282,
+     "out_cm_v": 1.65,
+     "vcm_v": 1.65
+    },
+    "obs_sel=2 after PGA stage": {
+     "idd_a": 0.005823107,
+     "dc_gain_db": -0.0608147,
+     "peak_gain_db": -0.0608147,
+     "f3db_hz": 21905700.0,
+     "gain_20mhz_db": -2.59925,
+     "out_cm_v": 1.650174,
+     "vcm_v": 1.65
+    },
+    "obs_sel=3 filter output": {
+     "idd_a": 0.005823107,
+     "dc_gain_db": -0.058058,
+     "peak_gain_db": 1.70461,
+     "f3db_hz": 15232300.0,
+     "gain_20mhz_db": -15.3026,
+     "out_cm_v": 1.650173,
+     "vcm_v": 1.65
+    }
+   },
+   "status_bits": [],
+   "clock_obs": []
+  },
+  "fallback": {
+   "state": "pass",
+   "routes": [
+    {
+     "route": "rf_bb_stage_bypass",
+     "control": "byp_s1 (debug.rf_bb_bypass.pga), byp_s23 (debug.rf_bb_bypass.rxfilter)",
+     "byp_s1": {
+      "idd_a": 0.004992697,
+      "dc_gain_db": -0.244994,
+      "peak_gain_db": 2.33789,
+      "f3db_hz": 15998600.0,
+      "gain_20mhz_db": -12.9249,
+      "out_cm_v": 1.650001,
+      "vcm_v": 1.65
+     },
+     "byp_s23": {
+      "idd_a": 0.0008406395,
+      "dc_gain_db": -0.0596799,
+      "peak_gain_db": -0.0596799,
+      "f3db_hz": 22993100.0,
+      "gain_20mhz_db": -2.39767,
+      "out_cm_v": 1.650174,
+      "vcm_v": 1.65
+     },
+     "both": {
+      "idd_a": 1.022899e-05,
+      "dc_gain_db": -0.153219,
+      "peak_gain_db": -0.153219,
+      "f3db_hz": 56875100.0,
+      "gain_20mhz_db": -0.84531,
+      "out_cm_v": 1.65,
+      "vcm_v": 1.65
+     }
+    },
+    {
+     "route": "rf_bb_external_adc",
+     "control": "obs_sel 1/2/3 -> bb_tap",
+     "see": "observable.observe_mux"
+    },
+    {
+     "route": "rf_rx_external_downconverter",
+     "control": "inj=1 (+ bb_tap inj_en)",
+     "inject_to_out_rx": {
+      "idd_a": 0.005823107,
+      "dc_gain_db": -0.000471918,
+      "peak_gain_db": 1.70741,
+      "f3db_hz": 15162600.0,
+      "gain_20mhz_db": -15.3704,
+      "out_cm_v": 1.650173,
+      "vcm_v": 1.65
+     }
+    },
+    {
+     "route": "loopback: TX through filter while RX goes filter-less",
+     "control": "dir_tx=1, rx_direct=1",
+     "rx_in_to_out_rx": {
+      "idd_a": 0.005823107,
+      "dc_gain_db": -3.54362e-08,
+      "peak_gain_db": -3.54362e-08,
+      "f3db_hz": null,
+      "gain_20mhz_db": -0.00200612,
+      "out_cm_v": 1.65,
+      "vcm_v": 1.65
+     }
+    },
+    {
+     "route": "rx_direct (filter-less RX)",
+     "rx_in_to_out_rx": {
+      "idd_a": 0.005823107,
+      "dc_gain_db": -3.48804e-08,
+      "peak_gain_db": 8.4774e-07,
+      "f3db_hz": null,
+      "gain_20mhz_db": -0.002013,
+      "out_cm_v": 1.65,
+      "vcm_v": 1.65
+     }
+    },
+    {
+     "route": "rf_tx_external_upconverter (for txmix/txsum)",
+     "control": "direction=tx, obs_sel=11 (bb_tap observe_tx), bb_tap obs_en=1",
+     "dac_in_to_bb_pad_10pF": [
+      {
+       "idd_a": 0.006836648,
+       "pad_cm_v": 0.8185589,
+       "lf_gain_db": -1.39962,
+       "f3db_hz": 15090700.0,
+       "gain_10mhz_db": 0.140332,
+       "tone_gain_db": -1.3175786527098565,
+       "hd3_dbc": -65.64041470294686,
+       "amp_diff_peak_v": 0.2,
+       "f_hz": 2000000.0,
+       "load": "10 pF || 100 kohm per pad"
+      },
+      {
+       "idd_a": 0.006836648,
+       "pad_cm_v": 0.8185589,
+       "lf_gain_db": -1.39962,
+       "f3db_hz": 15090700.0,
+       "gain_10mhz_db": 0.140332,
+       "tone_gain_db": -1.320137974085866,
+       "hd3_dbc": -67.32505530808456,
+       "amp_diff_peak_v": 0.4,
+       "f_hz": 2000000.0,
+       "load": "10 pF || 100 kohm per pad"
+      },
+      {
+       "idd_a": 0.006836648,
+       "pad_cm_v": 0.8185589,
+       "lf_gain_db": -1.39962,
+       "f3db_hz": 15090700.0,
+       "gain_10mhz_db": 0.140332,
+       "tone_gain_db": -1.3323236459207708,
+       "hd3_dbc": -71.72120534529583,
+       "amp_diff_peak_v": 0.8,
+       "f_hz": 2000000.0,
+       "load": "10 pF || 100 kohm per pad"
+      }
+     ]
+    }
+   ],
+   "bypass_loading_fF": {
+    "tgm_off_10MHz": 25.99228,
+    "nsw_off_10MHz": 26.892699999999998
+   },
+   "bypass_loading_note": "schematic-device off capacitance of one bypass TG (n 10 / p 20) and one NMOS-only switch (30/0.28)"
+  }
+ },
+ "performance_vs_target": [
+  {
+   "metric": "RX -3 dB cutoff, widest (bw=0) (Hz)",
+   "target": ">= 10e6 at tt and in the envelope (lead, Wi-Fi 20 MHz)",
+   "extracted_nominal": 15156300.0,
+   "schematic_nominal": 17841800.0
+  },
+  {
+   "metric": "RX -3 dB cutoff, narrowest (bw=15) (Hz)",
+   "target": "1e5 min",
+   "extracted_nominal": 775872.0
+  },
+  {
+   "metric": "passband peaking at bw=0 (dB above DC)",
+   "target": "<= 1 dB ripple",
+   "extracted_nominal": 1.7031283
+  },
+  {
+   "metric": "PGA gain range (dB, gain=0 .. 15)",
+   "target": "-6 .. 42 in 3 dB steps",
+   "extracted_nominal": [
+    -0.0580583,
+    23.0355
+   ]
+  },
+  {
+   "metric": "TX direction (tx_in -> out_tx) cutoff and gain",
+   "extracted_nominal": {
+    "idd_a": 0.005823107,
+    "dc_gain_db": -0.0279793,
+    "peak_gain_db": 1.66347,
+    "f3db_hz": 15161800.0,
+    "gain_20mhz_db": -15.4204,
+    "out_cm_v": 1.650173,
+    "vcm_v": 1.65
+   }
+  },
+  {
+   "metric": "stretch: gain at 20 MHz with widest setting (dB) (40 MHz channels need ~20 MHz corner)",
+   "extracted_nominal": -15.4797,
+   "note": "widest corner is far below 20 MHz"
+  },
+  {
+   "metric": "supply current, RX active (mA)",
+   "target": 4.5,
+   "extracted_nominal": 5.823107
+  },
+  {
+   "metric": "output CM minus input CM with input CM at 1.75 V (V), gain 1 / gain 16 (OTAs reference the input CM)",
+   "target": "no PGA-gain multiplication",
+   "extracted_nominal": [
+    0.0001943053,
+    0.00160381
+   ]
+  },
+  {
+   "metric": "passband peaking at max PGA gain (dB above DC)",
+   "target": "<= 1 dB ripple",
+   "extracted_nominal": 0.0
+  },
+  {
+   "metric": "TX observe through bb_tap into 10 pF: -3 dB (Hz) / gain (dB) / HD3 at 0.4 and 0.8 Vpk diff (dBc)",
+   "extracted_nominal": [
+    15090700.0,
+    -1.39962,
+    -67.32505530808456,
+    -71.72120534529583
+   ]
+  },
+  {
+   "metric": "TX->RX direction switch settling to 1 % (s)",
+   "target": 1e-06,
+   "extracted_nominal": 2.998399999999999e-07,
+   "detail": {
+    "final_diff_v": 0.099333,
+    "settle_1pct_after_switch_s": 2.998399999999999e-07
+   }
+  },
+  {
+   "metric": "corner sweep (ext, RX widest, gain 0)",
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 15103700.0,
+     "dc_gain_db": -0.0629963,
+     "peak_gain_db": 1.72374,
+     "idd_a": 0.005741491,
+     "out_cm_v": 1.650235
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 15036100.0,
+     "dc_gain_db": -0.0553722,
+     "peak_gain_db": 1.48233,
+     "idd_a": 0.005842968,
+     "out_cm_v": 1.650167
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 15315500.0,
+     "dc_gain_db": -0.0652597,
+     "peak_gain_db": 1.99306,
+     "idd_a": 0.005739881,
+     "out_cm_v": 1.650236
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 15254800.0,
+     "dc_gain_db": -0.0574796,
+     "peak_gain_db": 1.74058,
+     "idd_a": 0.005841415,
+     "out_cm_v": 1.650165
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 11421900.0,
+     "dc_gain_db": -0.0717015,
+     "peak_gain_db": 1.19079,
+     "idd_a": 0.005554199,
+     "out_cm_v": 1.650467
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 11257400.0,
+     "dc_gain_db": -0.0602482,
+     "peak_gain_db": 0.719463,
+     "idd_a": 0.005734407,
+     "out_cm_v": 1.650262
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 11594700.0,
+     "dc_gain_db": -0.0740576,
+     "peak_gain_db": 1.41389,
+     "idd_a": 0.005553306,
+     "out_cm_v": 1.650474
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 11438700.0,
+     "dc_gain_db": -0.0624666,
+     "peak_gain_db": 0.898616,
+     "idd_a": 0.005732221,
+     "out_cm_v": 1.650263
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 21012900.0,
+     "dc_gain_db": -0.0603149,
+     "peak_gain_db": 3.26151,
+     "idd_a": 0.005866712,
+     "out_cm_v": 1.650127
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 21001800.0,
+     "dc_gain_db": -0.0546713,
+     "peak_gain_db": 3.12121,
+     "idd_a": 0.005935025,
+     "out_cm_v": 1.650111
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 21248800.0,
+     "dc_gain_db": -0.0625696,
+     "peak_gain_db": 3.68526,
+     "idd_a": 0.005865636,
+     "out_cm_v": 1.650124
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 21245100.0,
+     "dc_gain_db": -0.0567743,
+     "peak_gain_db": 3.52418,
+     "idd_a": 0.005933695,
+     "out_cm_v": 1.650107
+    }
+   ]
+  },
+  {
+   "metric": "corner sweep (ext, RX gain 15)",
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 22.959,
+     "f3db_hz": 11612200.0,
+     "out_cm_v": 1.651934
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 23.0719,
+     "f3db_hz": 11403100.0,
+     "out_cm_v": 1.651384
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 22.9326,
+     "f3db_hz": 11919900.0,
+     "out_cm_v": 1.651944
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 23.0475,
+     "f3db_hz": 11677700.0,
+     "out_cm_v": 1.651368
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 22.852,
+     "f3db_hz": 8754410.0,
+     "out_cm_v": 1.653841
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 23.0201,
+     "f3db_hz": 8445810.0,
+     "out_cm_v": 1.652165
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 22.8234,
+     "f3db_hz": 8974600.0,
+     "out_cm_v": 1.653901
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 22.993,
+     "f3db_hz": 8628900.0,
+     "out_cm_v": 1.652179
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 22.9676,
+     "f3db_hz": 17859800.0,
+     "out_cm_v": 1.651043
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 23.0511,
+     "f3db_hz": 17013500.0,
+     "out_cm_v": 1.650917
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 22.943,
+     "f3db_hz": 18737600.0,
+     "out_cm_v": 1.65102
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 23.0285,
+     "f3db_hz": 18378200.0,
+     "out_cm_v": 1.650888
+    }
+   ]
+  }
+ ],
+ "excluded_coverage": [
+  "Q tuning codes (q1/q2) and zero-position codes not implemented: fixed pre-distorted Butterworth Qs",
+  "cutoff programmable over 4 bits (x1..x16 capacitance) only; arch cutoff_code is 8 bits",
+  "PGA: 0..24 dB (1..16 linear) only; offset correction lives in the mixer TIA (rxmix ofs DAC), not in the filter",
+  "finite-zero (elliptic) option removed: the extracted single-zero version gave no useful notch; all-pole only",
+  "noise not simulated; linearity only via the TX-observe HD3 points",
+  "no Monte Carlo"
+ ]
+}

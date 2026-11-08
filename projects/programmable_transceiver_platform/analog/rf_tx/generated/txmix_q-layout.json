@@ -1,0 +1,91 @@
+{
+ "block": "txmix_q",
+ "cell": "pt_txmix_q",
+ "image": "svalbard/librelane-gf180-canary:2026.08",
+ "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+ "pdk": "/pdk/gf180mcuD (open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7)",
+ "drc_errors": 0,
+ "lvs_unique_match": true,
+ "lvs_final": "Final result: Circuits match uniquely.",
+ "bbox_um": {
+  "x0": 0.0,
+  "y0": -90.60000000000012,
+  "x1": 237.85999999999987,
+  "y1": 1.0
+ },
+ "width_um": 237.86,
+ "height_um": 91.6,
+ "area_um2": 21788.0,
+ "area_ceiling_um2": 27300,
+ "rows": [
+  [
+   "QA",
+   "QB",
+   "QC",
+   "QD",
+   "GM_p",
+   "GM_n",
+   "RDEG",
+   "SATSW",
+   "SWB_p",
+   "SWD_p",
+   "SWB_n",
+   "SWD_n"
+  ],
+  [
+   "TAIL_p",
+   "TAIL_n",
+   "DIODE",
+   "BSW",
+   "BPD",
+   "CLG_p",
+   "CLG_n",
+   "RATB_B",
+   "RATB_T"
+  ],
+  [
+   "IEN_N",
+   "IEN_P",
+   "ISEL_N",
+   "ISEL_P",
+   "GD_NA",
+   "GD_NB",
+   "GD_PA",
+   "GD_PB",
+   "ID_N",
+   "ID_P",
+   "GB_NA",
+   "GB_NB",
+   "GB_PA",
+   "GB_PB",
+   "IB_N",
+   "IB_P",
+   "GSAT_NA",
+   "GSAT_NB",
+   "GSAT_PA",
+   "GSAT_PB",
+   "ISAT_N",
+   "ISAT_P"
+  ]
+ ],
+ "trunked_nets": 24,
+ "circuit": {
+  "devices": 43,
+  "mos_instances": 40,
+  "mos_fingers": 59,
+  "resistors": 3,
+  "nets": 34
+ },
+ "hashes": {
+  "txmix_q.spice": "598f3a32be60da7224f9a57ee22a421578390ebee3fccdde95e3da716aeec5e1",
+  "circuits.py": "59382037c2ad25a85d7086c05a59cb0bc7b263fddbe9ca558a6447f9f9f272fb",
+  "layoutlib.py": "067f29bd000ba2e414787dfd146ba34e49c7f5c7c88bae3d1a4b606447c5c111",
+  "generate.py": "67829d6dd34ad18bb9a2f4d86496826eaf7735e9124b84cd45f31ff9706cf8cb",
+  "txmix_q.gds": "ec19ee806d9b581b018abefcbdc5b6de11790ee2e64da6fd4d04992bc031bcc9",
+  "txmix_q.ext.spice": "cdf9575ef2774f595dcae49ddab7c5f366ae7ed7d7a95957586c95087a8f8102"
+ },
+ "limitations": [
+  "Extraction is capacitance-only (ext2spice cthresh 0); wire and via resistance are not extracted.",
+  "Single-block DRC with the Magic gf180mcuD deck; no KLayout signoff deck, antenna or density run."
+ ]
+}

@@ -1,0 +1,484 @@
+{
+ "block": "cdr",
+ "subckt": "pt_cdr",
+ "source_hashes": {
+  "cdr.spice": "sha256:137762f1503865cc205c9e78157c93c3171653c2c7dbc44ca5bef60bf9a912bc",
+  "generated/cdr.ext.spice": "sha256:fbd62ff1b12d85efbecc875fea4481dc25e767d4fec9963ec7f39925a9a8eda5",
+  "generated/cdr.gds": "sha256:1007681835ddfd7eb6d770294b50f2128a3f32051362b4428bda542fc32dac4c",
+  "netlists.py": "sha256:90690f0b94360e16d0ad3ccc317b81cb7a823334e5d632e088556e0008663f47",
+  "wrx_flow.py": "sha256:adb1f3b9b6dcd3b6c6fa6379e8abea316ea1dbb450a6d4b3f3dfbf854269dfe9",
+  "sims.py": "sha256:100523c87412b50e60072e14611efe6fb2dd60a6c8d98ba1f3f408ca0a2a6dc0",
+  "run_family.py": "sha256:a14453c9264fe0659461ae9ca2dadb10d8d107df1c554835b0b503f101739052",
+  "evidence.py": "sha256:a59eef6d605b5710bf944128040122a323c0f452f95efcedc39c678764579d46",
+  "run_wired_rx.sh": "sha256:a1dca456de988cdc00d6d947449c8a7dc3b0131b5f99f1995e61244bbfa60f83",
+  "rtl/pt_wrx_cdr_loop.sv": "sha256:6239e376fceea48ecb57822b120d02ce7ff24713c0b138642323492880cc4a60",
+  "rtl/tb_pt_wrx_cdr_loop.sv": "sha256:1a37580da16571be2ed2e827f614217e16bb86c842e4c0ea419f33e061328dea"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
+  "digital_note": "rebuilt canary (not byte-identical to locked 9253a51f...)"
+ },
+ "pdk": "ciel gf180mcu f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (analog image); canary /pdk/gf180mcuD tech fingerprint 9e0a3f80",
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "off_0C",
+     "i_rail": 1.07416e-07,
+     "vmax_ib_pll": 0.00126794,
+     "vmax_ref_pll": 0.0468505,
+     "i_rail_A": -1.07416e-07,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "off_27C",
+     "i_rail": 1.12312e-07,
+     "vmax_ib_pll": 0.00136241,
+     "vmax_ref_pll": 0.05044,
+     "i_rail_A": -1.12312e-07,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "off_85C",
+     "i_rail": -1.42297e-07,
+     "vmax_ib_pll": 0.00155875,
+     "vmax_ref_pll": 0.0581642,
+     "i_rail_A": 1.42297e-07,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "stuck_on",
+     "i_rail": -0.000176968,
+     "i_peak": -0.00285795,
+     "i_rail_A": 0.000176968,
+     "pass": true
+    },
+    {
+     "case": "unpowered",
+     "v_rail": 1.30994e-15,
+     "i_ain": -3.98443e-12,
+     "i_ctl": -1.0945e-20,
+     "pass": true
+    },
+    {
+     "case": "unpowered_internal_driven",
+     "v_rail": 2.85849,
+     "i_ain": -2.3796e-05,
+     "i_ctl": -4.58785e-17,
+     "pass": false,
+     "gating": false
+    }
+   ],
+   "notes": "Extracted netlist. off_*: rail 3.63 V, all controls low, clocks running, analog inputs 3.3 V, 0/27/85 C. stuck_on: all controls high at 3.63 V (no latch/short, current bounded). unpowered: rail via 1 Mohm, controls 0 (register isolation clamp), clocks running, pad-reachable inputs (detect TX_P/N) 3.63 V, internal analog nodes 0 V. unpowered_internal_driven is non-gating: internal RX/CTLE nodes forced to 3.63 V (only possible if the pad bypass were on with this island off) back-drive the rail through PMOS TG wells. Pad-level stress and brownout ramps are analog/pads scope."
+  },
+  "clean": {
+   "state": "fail",
+   "drc": {
+    "tool": "magic 8.3.623 drc(full)",
+    "errors": 0,
+    "klayout_gf180_on_exported_gds": {
+     "violations": 0,
+     "by_rule": {},
+     "rc": "0",
+     "lyrdb_files": 1
+    },
+    "gds_export": {
+     "magic": "8.3.678",
+     "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+     "marker_shapes": {
+      "HRES 62/0": 0,
+      "RES_MK 110/5": 0
+     },
+     "hres_ok": true
+    }
+   },
+   "lvs": {
+    "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
+    "unique_match": true,
+    "final": "Circuits match uniquely.",
+    "devices": 113
+   },
+   "extracted_nominal": {
+    "acq": {
+     "i_ibpll_uA": 9.37145,
+     "i_bb_nA": 0.621791,
+     "i_vdd_uA": 47.21164,
+     "pass": true
+    },
+    "hold_idle": {
+     "i_ibpll_uA": 1.65992e-05,
+     "i_bb_nA": 0.331455,
+     "i_vdd_uA": 41.091289999999994,
+     "pass": true
+    },
+    "hold_up": {
+     "i_ibpll_uA": 1.65682e-05,
+     "i_bb_nA": 49.9184,
+     "i_vdd_uA": 41.14097,
+     "pass": true
+    },
+    "hold_dn": {
+     "i_ibpll_uA": 1.66029e-05,
+     "i_bb_nA": -51.6279,
+     "i_vdd_uA": 41.09096,
+     "pass": true
+    },
+    "hold_up_g": {
+     "i_ibpll_uA": 1.6565400000000002e-05,
+     "i_bb_nA": 99.50330000000001,
+     "i_vdd_uA": 41.19058,
+     "pass": true
+    },
+    "hold_dn_g": {
+     "i_ibpll_uA": 1.65748e-05,
+     "i_bb_nA": -103.622,
+     "i_vdd_uA": 41.09096,
+     "pass": true
+    },
+    "acq_up": {
+     "i_ibpll_uA": 9.37145,
+     "i_bb_nA": 0.622159,
+     "i_vdd_uA": 47.21167,
+     "pass": true
+    },
+    "off": {
+     "i_ibpll_uA": 1.01419e-15,
+     "i_bb_nA": 0.00220092,
+     "i_vdd_uA": 0.0001380015,
+     "pass": true
+    }
+   },
+   "corner_failures": [],
+   "non_gating_failures": [],
+   "area": {
+    "size_um": [
+     245.22,
+     163.5
+    ],
+    "area_um2": 40093.5,
+    "ceiling_um2": 300000
+   }
+  },
+  "observable": {
+   "state": "open",
+   "atb_taps": [
+    "atb_cdr_pbias (PMOS reference gate)",
+    "VCTRL is the pt_pll_ring ATB_VCTRL node (timing tap)"
+   ],
+   "status_bits": [
+    "freq_hold, phase_sel, early/late counters (pt_wrx_cdr_loop)"
+   ],
+   "clock_obs": [
+    "QCK / RX ring FBCK -> WCLK_OBS via clk_obs (timing)"
+   ],
+   "notes": "Taps/status are exposed at block ports; atb_tap cells, register-map entries and clk_obs hookup are added at integration (not yet available)."
+  },
+  "fallback": {
+   "state": "open",
+   "routes": [
+    {
+     "route": "wire_cdr_external_clock",
+     "state": "open",
+     "notes": "WCLK_IN path: diff_clk_rx -> ring PLL reference or slicer clocks is an integration item (the PI-based external-clock mux was removed with the PI)"
+    },
+    {
+     "route": "wire_cdr_fpga_oversample",
+     "state": "open",
+     "notes": "cfg_raw=1 streams all eight samples per ring cycle (RTL simulated); D2H transport pending"
+    }
+   ],
+   "bypass_loading_fF": null
+  }
+ },
+ "performance_vs_target": [
+  {
+   "case": "acq",
+   "metric": "i_ibpll_uA",
+   "target": "PLL charge-pump bias delivered in acquisition (10 uA)",
+   "extracted_nominal": 9.37145,
+   "schematic_nominal": 9.37179,
+   "corner_min": 8.30401,
+   "corner_max": 10.0748,
+   "corners_reported": 12
+  },
+  {
+   "case": "hold_idle",
+   "metric": "i_ibpll_uA",
+   "target": "PLL charge pump disabled in hold (0)",
+   "extracted_nominal": 1.65992e-05,
+   "schematic_nominal": -2.02669e-06,
+   "corner_min": 1.07312e-05,
+   "corner_max": 3.6177400000000004e-05,
+   "corners_reported": 12
+  },
+  {
+   "case": "hold_up",
+   "metric": "i_bb_nA",
+   "target": "bang-bang pump up current (~50 nA)",
+   "extracted_nominal": 49.9184,
+   "schematic_nominal": 49.566,
+   "corner_min": 43.923,
+   "corner_max": 53.822700000000005,
+   "corners_reported": 12
+  },
+  {
+   "case": "hold_dn",
+   "metric": "i_bb_nA",
+   "target": "bang-bang pump down current (~-50 nA)",
+   "extracted_nominal": -51.6279,
+   "schematic_nominal": -52.0023,
+   "corner_min": -56.0683,
+   "corner_max": -45.6431,
+   "corners_reported": 12
+  },
+  {
+   "case": "hold_up_g",
+   "metric": "i_bb_nA",
+   "target": "bb_gain=1 (~100 nA)",
+   "extracted_nominal": 99.50330000000001,
+   "schematic_nominal": 99.128,
+   "corner_min": 87.63550000000001,
+   "corner_max": 107.329,
+   "corners_reported": 12
+  },
+  {
+   "case": "hold_idle",
+   "metric": "i_vdd_uA",
+   "target": "cell supply current incl. hand-over flops clocked by FBCK (39 MHz)",
+   "extracted_nominal": 41.091289999999994,
+   "schematic_nominal": 24.59592,
+   "corner_min": 37.74822,
+   "corner_max": 42.91221,
+   "corners_reported": 12
+  },
+  {
+   "case": "acq_625m",
+   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt)",
+   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
+   "extracted_nominal": {
+    "f_acq_end": 624590036.1770278,
+    "f_hold": 625483161.5715153,
+    "f_after_up": 625429180.2292216,
+    "f_after_dn": 624128183.4334699,
+    "vctrl_hold": 1.15986027,
+    "vctrl_after_up": 1.1628294,
+    "vctrl_after_dn": 1.16049272,
+    "f_target": 625000000.0,
+    "fb_minus_ref_ps": 636.8758943614203,
+    "acq_error_ppm": -655.9421167554591,
+    "hold_drift_ppm": 1429.9385881242354,
+    "bb_up_step_ppm": -86.30343006854613,
+    "bb_dn_step_ppm": -2080.166447102516,
+    "pass": false,
+    "gating": true
+   }
+  },
+  {
+   "case": "dual_quarter_2g5_no_fll",
+   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt) [non-gating]",
+   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
+   "extracted_nominal": {
+    "ivdd": -0.0159794,
+    "line_rate_bps": 2500000000.0,
+    "bits_per_cycle": 4,
+    "ring_hz_acq": 620000000.0,
+    "ring_hz_end": 602500000.0000007,
+    "ring_target_hz": 625000000.0,
+    "vctrl_at_hold": 1.18404882,
+    "vctrl_end": 1.13794526,
+    "bits_checked": 3888,
+    "bit_errors": 579,
+    "first_err_ns": 2800.695126459694,
+    "up_fraction": 0.11063736079644093,
+    "dn_fraction": 0.3187722661522063,
+    "pass": false,
+    "gating": false
+   }
+  },
+  {
+   "case": "dual_half_1g25_no_fll",
+   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt) [non-gating]",
+   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
+   "extracted_nominal": {
+    "ivdd": -0.0159561,
+    "line_rate_bps": 1250000000.0,
+    "bits_per_cycle": 2,
+    "ring_hz_acq": 620000000.0,
+    "ring_hz_end": 602500000.0000007,
+    "ring_target_hz": 625000000.0,
+    "vctrl_at_hold": 1.1830179,
+    "vctrl_end": 1.13139875,
+    "bits_checked": 1942,
+    "bit_errors": 189,
+    "first_err_ns": 2804.4088788548816,
+    "up_fraction": 0.04381636611427137,
+    "dn_fraction": 0.13211596557800476,
+    "pass": false,
+    "gating": false
+   }
+  },
+  {
+   "case": "track_quarter",
+   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt)",
+   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
+   "extracted_nominal": {
+    "ivdd": -0.0158948,
+    "ring_hz_end_fit": 611459462.7735926,
+    "ring_hz_check_start_fit": 615037834.6776036,
+    "line_rate_bps": 2486609704.5161977,
+    "bits_per_cycle": 4,
+    "ring_hz_acq": 620000000.0,
+    "ring_hz_end": 610000000.0,
+    "ring_target_hz": 621652426.1290494,
+    "vctrl_at_hold": 1.15816044,
+    "vctrl_end": 1.14729266,
+    "bits_checked": 3424,
+    "bit_errors": 354,
+    "first_err_ns": 2011.4276128416616,
+    "up_fraction": 0.1690877442463111,
+    "dn_fraction": 0.4133222834881724,
+    "pass": false,
+    "free_running_ring_hz": 621341755.2514237,
+    "fll_residual_ppm": 500,
+    "gating": true
+   }
+  },
+  {
+   "case": "track_half",
+   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt)",
+   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
+   "extracted_nominal": {
+    "ivdd": -0.0160669,
+    "ring_hz_end_fit": 624024927.4621147,
+    "ring_hz_check_start_fit": 623403073.7036736,
+    "line_rate_bps": 1243302283.4018464,
+    "bits_per_cycle": 2,
+    "ring_hz_acq": 620000000.0,
+    "ring_hz_end": 620000000.0,
+    "ring_target_hz": 621651141.7009232,
+    "vctrl_at_hold": 1.15809838,
+    "vctrl_end": 1.15820605,
+    "bits_checked": 1744,
+    "bit_errors": 33,
+    "first_err_ns": 2032.098338875501,
+    "up_fraction": 0.1375432999822772,
+    "dn_fraction": 0.09689851289735286,
+    "pass": false,
+    "free_running_ring_hz": 621340471.4651906,
+    "fll_residual_ppm": 500,
+    "gating": true
+   }
+  }
+ ],
+ "corner_set": "tt/ss/ff x 22/32 C x 3.15/3.35 V (spec/tapeout-plan.md operating envelope), extracted netlist",
+ "excluded_coverage": [
+  "Phase interpolator removed (lead decision): dual-loop CDR on a second pt_pll_ring instance (timing family, instantiated unchanged at integration) for half/quarter rate; full rate uses 8x oversampling with digital blind phase picking (no analog tracking)",
+  "The bang-bang pump is a separate weak pump on the PLL loop-filter node (ATB_VCTRL), not the PLL's own pump: pt_pll_ring has no hold input, so freq_hold gates its REF (at an FBCK falling edge) and clamps its pump bias IB_PLL (next FBCK rising edge) instead",
+  "Extracted closed loop uses an analog-behavioural phase detector (sample/holds + smooth logic, ~4 ns decision filter) as a stand-in for the RTL, which decides every 20-bit word; long windows, ppm, SSC and the frequency-counter hand-over (FLL) are behavioural (RTL + analog loop model)",
+  "The FLL hand-over step (cfg_fll_en) needs >100 us of ring time and is not simulated extracted",
+  "Cold acquisition is not simulated: VCTRL is pre-charged near the 625 MHz lock value before the frequency loop runs",
+  "pt_pll_ring changed several times during this pass (port list BAND -> N4/N8, pump 20 uA); each extracted result records the pll_ring.ext.spice sha256 it used",
+  "Ring port phase error of pt_pll_ring (37.7/83 deg at 742.5 MHz, timing README) is included in the extracted runs as-is",
+  "Timing closure of the QCK-domain RTL (480-810 MHz) is not established; the timing family will own the shared word-divider/capture front end (P3-6)"
+ ],
+ "rtl_check": {
+  "bpc4_ui400ps_0ppm_ssc0": [
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1496 max_freq_err_ppm=1074.8 phase_sel=4",
+   "PASS"
+  ],
+  "bpc4_ui400ps_300ppm_ssc0": [
+   "RESULT bpc=4 ui_ps=400.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30180 errors=0 first_err_ui=-1 hold=1 vctrl=1.1499 max_freq_err_ppm=1074.9 phase_sel=4",
+   "PASS"
+  ],
+  "bpc4_ui400ps_-300ppm_ssc0": [
+   "RESULT bpc=4 ui_ps=400.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30140 errors=0 first_err_ui=-1 hold=1 vctrl=1.1491 max_freq_err_ppm=1069.9 phase_sel=4",
+   "PASS"
+  ],
+  "bpc4_ui400ps_0ppm_ssc-5000": [
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=139840 errors=0 first_err_ui=-1 hold=1 vctrl=1.1478 max_freq_err_ppm=1131.9 phase_sel=4",
+   "PASS"
+  ],
+  "bpc2_ui800ps_0ppm_ssc0": [
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1491 max_freq_err_ppm=1250.3 phase_sel=4",
+   "PASS"
+  ],
+  "bpc2_ui800ps_300ppm_ssc0": [
+   "RESULT bpc=2 ui_ps=800.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30180 errors=0 first_err_ui=-1 hold=1 vctrl=1.1505 max_freq_err_ppm=1247.4 phase_sel=4",
+   "PASS"
+  ],
+  "bpc2_ui800ps_-300ppm_ssc0": [
+   "RESULT bpc=2 ui_ps=800.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30140 errors=0 first_err_ui=-1 hold=1 vctrl=1.1505 max_freq_err_ppm=1274.1 phase_sel=4",
+   "PASS"
+  ],
+  "bpc2_ui800ps_0ppm_ssc-5000": [
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=60040 errors=0 first_err_ui=-1 hold=1 vctrl=1.1464 max_freq_err_ppm=1320.8 phase_sel=4",
+   "PASS"
+  ],
+  "bpc1_ui2083.3ps_0ppm_ssc0": [
+   "RESULT bpc=1 ui_ps=2083.3 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=20160 errors=0 first_err_ui=-1 hold=0 vctrl=1.1500 max_freq_err_ppm=0.0 phase_sel=3",
+   "PASS"
+  ],
+  "bpc1_ui2083.3ps_500ppm_ssc0": [
+   "RESULT bpc=1 ui_ps=2083.3 ppm=500.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=20180 errors=0 first_err_ui=-1 hold=0 vctrl=1.1500 max_freq_err_ppm=499.8 phase_sel=2",
+   "PASS"
+  ],
+  "bpc1_ui2083.3ps_-500ppm_ssc0": [
+   "RESULT bpc=1 ui_ps=2083.3 ppm=-500.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=20140 errors=0 first_err_ui=-1 hold=0 vctrl=1.1500 max_freq_err_ppm=500.3 phase_sel=1",
+   "PASS"
+  ],
+  "bpc4_ui400ps_0ppm_ssc0_holdstep2000ppm": [
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1509 max_freq_err_ppm=1084.1 phase_sel=4",
+   "PASS"
+  ],
+  "bpc4_ui400ps_0ppm_ssc0_holdstep-2000ppm": [
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1507 max_freq_err_ppm=1083.5 phase_sel=4",
+   "PASS"
+  ],
+  "bpc4_ui400ps_0ppm_ssc0_holdstep4000ppm": [
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=4000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30380 errors=770 first_err_ui=30143 hold=1 vctrl=1.1572 max_freq_err_ppm=8031.5 phase_sel=4",
+   "FAIL"
+  ],
+  "bpc2_ui800ps_0ppm_ssc0_holdstep2000ppm": [
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1502 max_freq_err_ppm=1265.1 phase_sel=4",
+   "PASS"
+  ],
+  "bpc2_ui800ps_0ppm_ssc0_holdstep-2000ppm": [
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1503 max_freq_err_ppm=1259.2 phase_sel=4",
+   "PASS"
+  ],
+  "bpc2_ui800ps_0ppm_ssc0_holdstep4000ppm": [
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=4000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30500 errors=1176 first_err_ui=30093 hold=1 vctrl=1.1615 max_freq_err_ppm=12253.3 phase_sel=4",
+   "FAIL"
+  ],
+  "bpc4_ui400ps_0ppm_ssc0_holdstep35000ppm_leak1nA_fll_k6": [
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=102740 fll_err_words=0 bits_checked=187440 errors=0 first_err_ui=-1 hold=1 vctrl=1.1495 max_freq_err_ppm=1094.9 phase_sel=4",
+   "PASS"
+  ],
+  "bpc4_ui400ps_300ppm_ssc0_holdstep-20000ppm_leak-1nA_fll_k6": [
+   "RESULT bpc=4 ui_ps=400.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-20000 ileak_nA=-1.0 fll_en=1 fll_done_ui=102742 fll_err_words=-1 bits_checked=187480 errors=0 first_err_ui=-1 hold=1 vctrl=1.1513 max_freq_err_ppm=1096.7 phase_sel=4",
+   "PASS"
+  ],
+  "bpc2_ui800ps_0ppm_ssc0_holdstep35000ppm_leak1nA_fll_k7": [
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=123161 fll_err_words=1 bits_checked=87000 errors=0 first_err_ui=-1 hold=1 vctrl=1.1490 max_freq_err_ppm=1277.3 phase_sel=4",
+   "PASS"
+  ],
+  "bpc2_ui800ps_-300ppm_ssc0_holdstep-20000ppm_leak-1nA_fll_k7": [
+   "RESULT bpc=2 ui_ps=800.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-20000 ileak_nA=-1.0 fll_en=1 fll_done_ui=61722 fll_err_words=1 bits_checked=149860 errors=5101 first_err_ui=71778 hold=1 vctrl=1.1602 max_freq_err_ppm=11321.4 phase_sel=4",
+   "FAIL"
+  ],
+  "bpc4_ui400ps_0ppm_ssc-5000_holdstep35000ppm_leak1nA_fll_k6": [
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=102740 fll_err_words=0 bits_checked=289640 errors=10151 first_err_ui=112866 hold=1 vctrl=1.1598 max_freq_err_ppm=15603.2 phase_sel=4",
+   "FAIL"
+  ],
+  "yosys_generic_synth": {
+   "returncode": 0
+  }
+ }
+}

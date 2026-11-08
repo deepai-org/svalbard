@@ -1,0 +1,92 @@
+{
+ "drc_count": 0,
+ "drc_raw": "0",
+ "bbox_um": [
+  1.5,
+  -0.2,
+  178.14,
+  110.98
+ ],
+ "area_um2": 19639.0,
+ "lvs": {
+  "unique_match": true,
+  "final_result": "Circuits match uniquely.",
+  "top_level_match": true
+ },
+ "cells": {
+  "pt_rfrx_inv": {
+   "size_um": [
+    24.72,
+    15.46
+   ],
+   "rows": 1,
+   "nets": 4,
+   "bank_um": 12.1,
+   "row_report": [
+    [
+     2,
+     4.0,
+     5.2,
+     11.6
+    ]
+   ]
+  },
+  "pt_lna": {
+   "size_um": [
+    180.22,
+    112.78
+   ],
+   "rows": 4,
+   "nets": 21,
+   "bank_um": 23.9,
+   "row_report": [
+    [
+     6,
+     8.5,
+     35.3,
+     155.3
+    ],
+    [
+     2,
+     5.5,
+     15.5,
+     53.4
+    ],
+    [
+     3,
+     7.0,
+     8.2,
+     154.8
+    ],
+    [
+     13,
+     13.0,
+     8.2,
+     145.2
+    ]
+   ]
+  }
+ },
+ "klayout_drc": {
+  "ran": true,
+  "violations": 0,
+  "by_rule": {},
+  "deck": "gf180mcuD klayout (sak-drc.sh -k)"
+ },
+ "block": "lna",
+ "top_cell": "pt_lna",
+ "digital_image": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+ "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
+ "drc_details": "",
+ "sources": {
+  "lna.spice": "sha256:ac5dfd439b8fda5b5df5ddd48ae9db0cccc2cc2fea47b01211749c0745b2f663",
+  "netlists.py": "sha256:833043cc904d05b58d27ed0171234b368d2abb6e5cb769ba9b412d7cba863614",
+  "rfrx_flow.py": "sha256:a3f7188401453a8c894ec1f7b81fbbd61397d1edd1123122250f5b982d7ca833"
+ },
+ "artifacts": {
+  "lna.gds": "sha256:fef12160c2d3ed6c6bcb19efdedf3e4cae57e092a9149f8e9748137671a3ff90",
+  "lna.mag": "sha256:06d05c69effd981ed02a372703c78835194a0fb0d262c6e8512e3ad43a2f3e29",
+  "lna.ext.spice": "sha256:f577bb2f59e6de81fba6f0f363ec5c5f6679f4478f658564a426d549dcac37a8",
+  "lna-lvs.txt": "sha256:b3f2d5fc0d8e17787f7953383e607f4686dd0b62831639dc7203df5a60284951"
+ }
+}

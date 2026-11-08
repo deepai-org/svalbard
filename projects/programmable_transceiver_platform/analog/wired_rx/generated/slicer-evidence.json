@@ -1,0 +1,600 @@
+{
+ "block": "slicer",
+ "subckt": "pt_slicer",
+ "source_hashes": {
+  "slicer.spice": "sha256:cc4203e228934da2a3e71c834a952f3b9f13725a04b4ee29b177ea2447f1abfe",
+  "generated/slicer.ext.spice": "sha256:898f1d1dfef07b71035a5fbf41fc40bdc8551e2852745dec143543893654e198",
+  "generated/slicer.gds": "sha256:cf145ab329e7945a4541587186dc780cd00a00597e532a8defd4b5feacba9826",
+  "netlists.py": "sha256:beb0897de811d10fc5f1932662b1cfe7659001eae4357a9b8ae17546307dadd3",
+  "wrx_flow.py": "sha256:adb1f3b9b6dcd3b6c6fa6379e8abea316ea1dbb450a6d4b3f3dfbf854269dfe9",
+  "sims.py": "sha256:72dea34aa45188daa654905de9ce3b3d9872748f733977ab5d08c9944e2738b5",
+  "run_family.py": "sha256:6fad1320ccbfbf071d13ccb6387f468c4f3812b93441a95fa4e1af4a5930b4b1",
+  "evidence.py": "sha256:8f8e277ee3f3a556569d9035321f0b006e83e617afefc29f360bedb77844e8d9",
+  "run_wired_rx.sh": "sha256:a1dca456de988cdc00d6d947449c8a7dc3b0131b5f99f1995e61244bbfa60f83"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
+  "digital_note": "rebuilt canary (not byte-identical to locked 9253a51f...)"
+ },
+ "pdk": "ciel gf180mcu f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (analog image); canary /pdk/gf180mcuD tech fingerprint 9e0a3f80",
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "off_0C",
+     "i_rail": 4.29512e-06,
+     "vmax_d0": 0.057159,
+     "vmax_e0": 0.0568252,
+     "vmax_d1": 0.0546526,
+     "vmax_e1": 0.0539919,
+     "vmax_d2": 0.0540843,
+     "vmax_e2": 0.0540997,
+     "vmax_d3": 0.0539256,
+     "vmax_e3": 0.0534614,
+     "vmax_qck": 0.0649629,
+     "i_rail_A": -4.29512e-06,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "off_27C",
+     "i_rail": 5.20885e-06,
+     "vmax_d0": 0.0591558,
+     "vmax_e0": 0.0589201,
+     "vmax_d1": 0.0566935,
+     "vmax_e1": 0.0561176,
+     "vmax_d2": 0.0563971,
+     "vmax_e2": 0.0566307,
+     "vmax_d3": 0.056704,
+     "vmax_e3": 0.0565133,
+     "vmax_qck": 0.0672686,
+     "i_rail_A": -5.20885e-06,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "off_85C",
+     "i_rail": 4.70644e-06,
+     "vmax_d0": 0.0629699,
+     "vmax_e0": 0.0629385,
+     "vmax_d1": 0.0606131,
+     "vmax_e1": 0.0602194,
+     "vmax_d2": 0.0608958,
+     "vmax_e2": 0.0616023,
+     "vmax_d3": 0.0622283,
+     "vmax_e3": 0.0626743,
+     "vmax_qck": 0.0716788,
+     "i_rail_A": -4.70644e-06,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "stuck_on",
+     "i_rail": -0.000324644,
+     "i_peak": -0.0177031,
+     "i_rail_A": 0.000324644,
+     "pass": true
+    },
+    {
+     "case": "unpowered",
+     "v_rail": 0.344186,
+     "i_ain": 0.0,
+     "i_ctl": 2.07905e-05,
+     "pass": true
+    },
+    {
+     "case": "unpowered_internal_driven",
+     "v_rail": 0.316455,
+     "i_ain": 2.49804e-07,
+     "i_ctl": 5.73354e-08,
+     "pass": true,
+     "gating": false
+    }
+   ],
+   "notes": "Extracted netlist. off_*: rail 3.63 V, all controls low, clocks running, analog inputs 3.3 V, 0/27/85 C. stuck_on: all controls high at 3.63 V (no latch/short, current bounded). unpowered: rail via 1 Mohm, controls 0 (register isolation clamp), clocks running, pad-reachable inputs (detect TX_P/N) 3.63 V, internal analog nodes 0 V. unpowered_internal_driven is non-gating: internal RX/CTLE nodes forced to 3.63 V (only possible if the pad bypass were on with this island off) back-drive the rail through PMOS TG wells. Pad-level stress and brownout ramps are analog/pads scope."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "tool": "magic 8.3.623 drc(full)",
+    "errors": 0,
+    "klayout_gf180_on_exported_gds": {
+     "violations": 0,
+     "by_rule": {},
+     "rc": "0",
+     "lyrdb_files": 1
+    },
+    "gds_export": {
+     "magic": "8.3.678",
+     "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+     "marker_shapes": {
+      "HRES 62/0": 0,
+      "RES_MK 110/5": 0
+     },
+     "hres_ok": true
+    }
+   },
+   "lvs": {
+    "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
+    "unique_match": true,
+    "final": "Circuits match uniquely.",
+    "devices": 264
+   },
+   "extracted_nominal": {
+    "data_1G_cm1_200mVpp": {
+     "iavg": -0.00305498,
+     "bits_checked": 34,
+     "bit_errors": 0,
+     "line_rate_bps": 1000000000.0,
+     "sampling_delay_ps": 100.0,
+     "power_w": 0.010081434,
+     "pass": true
+    },
+    "data_0.48G_cm0.2_400mVpp": {
+     "iavg": -0.00172361,
+     "bits_checked": 34,
+     "bit_errors": 0,
+     "line_rate_bps": 480000000.0,
+     "sampling_delay_ps": 100.0,
+     "power_w": 0.005687912999999999,
+     "pass": true
+    },
+    "data_1G_cm1_60mVpp_trimmed": {
+     "iavg": -0.00324403,
+     "bits_checked": 34,
+     "bit_errors": 0,
+     "line_rate_bps": 1000000000.0,
+     "sampling_delay_ps": 100.0,
+     "power_w": 0.010705299,
+     "pass": true,
+     "gating": false
+    },
+    "offset_trim0": {
+     "offset_mV_d0": -7.119369156603383,
+     "offset_mV_e0": -6.531642790671394,
+     "offset_mV_d1": -5.926735257137217,
+     "offset_mV_e1": -5.3290598451117,
+     "offset_mV_d2": -9.554332621343892,
+     "offset_mV_e2": -8.991145849315958,
+     "offset_mV_d3": -8.435594572307304,
+     "offset_mV_e3": -7.862414507965932,
+     "input_referred_offset_mV": -7.119369156603383,
+     "offset_mV_worst": -9.554332621343892,
+     "pass": true
+    },
+    "offset_trim_p0": {
+     "offset_mV_d0": -26.952643806435333,
+     "offset_mV_e0": -26.4217950224698,
+     "offset_mV_d1": -25.83560097703047,
+     "offset_mV_e1": -25.259962902787535,
+     "offset_mV_d2": -24.67773375143206,
+     "offset_mV_e2": -24.09319111772107,
+     "offset_mV_d3": -23.5044896694834,
+     "offset_mV_e3": -22.915505009146187,
+     "input_referred_offset_mV": -26.952643806435333,
+     "offset_mV_worst": -26.952643806435333,
+     "pass": true
+    },
+    "offset_trim_n1": {
+     "offset_mV_d0": 17.852210518867263,
+     "offset_mV_e0": 13.709457798403268,
+     "offset_mV_d1": 14.219132243520004,
+     "offset_mV_e1": 14.783831931223512,
+     "offset_mV_d2": 15.35330413397562,
+     "offset_mV_e2": 15.93126606165568,
+     "offset_mV_d3": 16.515224391049355,
+     "offset_mV_e3": 17.10244340408368,
+     "input_referred_offset_mV": 17.852210518867263,
+     "offset_mV_worst": 17.852210518867263,
+     "pass": true
+    },
+    "offset_trim_p3": {
+     "offset_mV_d0": -47.12300792801233,
+     "offset_mV_e0": -46.533858738866314,
+     "offset_mV_d1": -45.928164012518785,
+     "offset_mV_e1": -50.12146189096514,
+     "offset_mV_d2": -49.560545620022296,
+     "offset_mV_e2": -49.014385176463534,
+     "offset_mV_d3": -48.443182096878616,
+     "offset_mV_e3": -47.868820628888365,
+     "input_referred_offset_mV": -47.12300792801233,
+     "offset_mV_worst": -50.12146189096514,
+     "pass": true
+    },
+    "offset_trim_n3": {
+     "offset_mV_d0": 32.8880253029154,
+     "offset_mV_e0": 33.47536966921072,
+     "offset_mV_d1": 34.081127215304484,
+     "offset_mV_e1": 34.677653925589745,
+     "offset_mV_d2": 30.456306818941627,
+     "offset_mV_e2": 30.991233501984517,
+     "offset_mV_d3": 31.567551974210907,
+     "offset_mV_e3": 32.14610072193369,
+     "input_referred_offset_mV": 32.8880253029154,
+     "offset_mV_worst": 34.677653925589745,
+     "pass": true
+    }
+   },
+   "corner_failures": [],
+   "non_gating_failures": [],
+   "area": {
+    "size_um": [
+     237.22,
+     591.48
+    ],
+    "area_um2": 140310.9,
+    "ceiling_um2": 360000
+   }
+  },
+  "observable": {
+   "state": "open",
+   "atb_taps": [],
+   "status_bits": [
+    "D0/E0/D1/E1 -> pt_wrx_cdr_loop raw_word / data_byte / early,late counters (SPI-readable)"
+   ],
+   "clock_obs": [],
+   "notes": "Taps/status are exposed at block ports; atb_tap cells, register-map entries and clk_obs hookup are added at integration (not yet available)."
+  },
+  "fallback": {
+   "state": "open",
+   "routes": [
+    {
+     "route": "wire_wmon_scope",
+     "state": "open",
+     "notes": "front-end/CTLE waveform on WMON for scope slicing; bb_tap pending"
+    }
+   ],
+   "bypass_loading_fF": null
+  }
+ },
+ "performance_vs_target": [
+  {
+   "case": "data_1G_cm1_200mVpp",
+   "metric": "bit_errors",
+   "target": "0 errors at 1 Gb/s (gating rate), CM 1.0 V, 200 mVppd, quarter-rate",
+   "extracted_nominal": 0,
+   "schematic_nominal": 0,
+   "corner_min": 0,
+   "corner_max": 0,
+   "corners_reported": 12
+  },
+  {
+   "case": "data_1G_cm1_200mVpp",
+   "metric": "sampling_delay_ps",
+   "target": "CK0 edge to D0 decision instant (divider + aperture)",
+   "extracted_nominal": 100.0,
+   "schematic_nominal": 100.0,
+   "corner_min": 100.0,
+   "corner_max": 100.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "data_1G_cm1_60mVpp_trimmed",
+   "metric": "bit_errors",
+   "target": "0 errors at 1 Gb/s, 60 mVppd, trim n1",
+   "extracted_nominal": 0,
+   "schematic_nominal": 0,
+   "corner_min": 0,
+   "corner_max": 0,
+   "corners_reported": 12
+  },
+  {
+   "case": "data_0.48G_cm0.2_400mVpp",
+   "metric": "bit_errors",
+   "target": "0 errors USB HS 480 Mb/s, CM 0.2 V",
+   "extracted_nominal": 0,
+   "schematic_nominal": 0,
+   "corner_min": 0,
+   "corner_max": 0,
+   "corners_reported": 12
+  },
+  {
+   "case": "data_1G_cm1_200mVpp",
+   "metric": "power_w",
+   "target": "wired budget 16.1 mA (53 mW)",
+   "extracted_nominal": 0.010081434,
+   "schematic_nominal": 0.0048559169999999995,
+   "corner_min": 0.0087923115,
+   "corner_max": 0.0114881215,
+   "corners_reported": 12
+  },
+  {
+   "case": "offset_trim_p0",
+   "metric": "offset_mV_worst",
+   "target": "trimmed residual < 20 mV (code p0)",
+   "extracted_nominal": -26.952643806435333,
+   "schematic_nominal": -13.525602968154443,
+   "corner_min": -30.990609868788514,
+   "corner_max": -20.763789934316573,
+   "corners_reported": 12
+  },
+  {
+   "case": "offset_trim0",
+   "metric": "offset_mV_worst",
+   "target": "untrimmed offset (worst of 4 samplers); trimmed residual < 20 mV",
+   "extracted_nominal": -9.554332621343892,
+   "schematic_nominal": 4.501769231460062,
+   "corner_min": -11.475590390358143,
+   "corner_max": -7.203429888610197,
+   "corners_reported": 12
+  },
+  {
+   "case": "offset_trim_p3",
+   "metric": "input_referred_offset_mV",
+   "target": "trim range +/-50 mV",
+   "extracted_nominal": -47.12300792801233,
+   "schematic_nominal": -37.97181964399024,
+   "corner_min": -57.205724084977874,
+   "corner_max": -36.60813353640702,
+   "corners_reported": 12
+  },
+  {
+   "case": "offset_trim_n3",
+   "metric": "input_referred_offset_mV",
+   "target": "trim range +/-50 mV",
+   "extracted_nominal": 32.8880253029154,
+   "schematic_nominal": 42.0430986782096,
+   "corner_min": 28.033373188285083,
+   "corner_max": 37.60623304779948,
+   "corners_reported": 12
+  },
+  {
+   "case": "maxrate",
+   "metric": "rate sweep per corner (extracted, non-gating)",
+   "target": "2.5 Gb/s line (1.25 GHz half-rate clocks)",
+   "per_corner": {
+    "typical_22C_3.15V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": [
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed"
+     ]
+    },
+    "typical_22C_3.35V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": [
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed"
+     ]
+    },
+    "typical_32C_3.15V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": [
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed"
+     ]
+    },
+    "typical_32C_3.35V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": [
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed"
+     ]
+    },
+    "ss_22C_3.15V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": [
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp"
+     ]
+    },
+    "ss_22C_3.35V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": [
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed"
+     ]
+    },
+    "ss_32C_3.15V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": [
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed"
+     ]
+    },
+    "ss_32C_3.35V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": [
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed"
+     ]
+    },
+    "ff_22C_3.15V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": []
+    },
+    "ff_22C_3.35V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": []
+    },
+    "ff_32C_3.15V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2.97G_cm1_200mVpp",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": [
+      "data_2.97G_cm1_60mVpp_trimmed"
+     ]
+    },
+    "ff_32C_3.35V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2.97G_cm1_200mVpp",
+      "data_2.97G_cm1_60mVpp_trimmed",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": []
+    },
+    "typical_27C_3.3V": {
+     "passing": [
+      "data_1.5G_cm1_200mVpp",
+      "data_1.5G_cm1_60mVpp_trimmed",
+      "data_2.5G_cm1_200mVpp",
+      "data_2.5G_cm1_60mVpp_trimmed",
+      "data_2.97G_cm1_200mVpp",
+      "data_2G_cm1_200mVpp",
+      "data_2G_cm1_60mVpp_trimmed"
+     ],
+     "failing": [
+      "data_2.97G_cm1_60mVpp_trimmed"
+     ]
+    }
+   }
+  },
+  {
+   "case": "data_4G_cm1_200mVpp",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "iavg": -0.00760803,
+    "bits_checked": 33,
+    "bit_errors": 14,
+    "line_rate_bps": 4000000000.0,
+    "sampling_delay_ps": 100.0,
+    "power_w": 0.025106498999999997,
+    "pass": false,
+    "gating": false
+   }
+  },
+  {
+   "case": "data_5G_cm1_200mVpp",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "iavg": -0.00773342,
+    "bits_checked": 33,
+    "bit_errors": 14,
+    "line_rate_bps": 5000000000.0,
+    "sampling_delay_ps": 100.0,
+    "power_w": 0.025520286,
+    "pass": false,
+    "gating": false
+   }
+  },
+  {
+   "case": "data_4G_cm1_60mVpp_trimmed",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "iavg": -0.00754888,
+    "bits_checked": 33,
+    "bit_errors": 14,
+    "line_rate_bps": 4000000000.0,
+    "sampling_delay_ps": 100.0,
+    "power_w": 0.024911304,
+    "pass": false,
+    "gating": false
+   }
+  },
+  {
+   "case": "data_5G_cm1_60mVpp_trimmed",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "iavg": -0.00768177,
+    "bits_checked": 33,
+    "bit_errors": 14,
+    "line_rate_bps": 5000000000.0,
+    "sampling_delay_ps": 100.0,
+    "power_w": 0.025349840999999998,
+    "pass": false,
+    "gating": false
+   }
+  }
+ ],
+ "corner_set": "tt/ss/ff x 22/32 C x 3.15/3.35 V (spec/tapeout-plan.md operating envelope), extracted netlist",
+ "excluded_coverage": [
+  "Gating line rate 1 Gb/s (serial) and 480 Mb/s (USB HS); higher rates are reported per corner in the maxrate entry (non-gating). The quarter-rate divider flops limit the rate (setup of the divider links), most at the ss corner",
+  "Divider/sampler phase spacing depends on matched clock-to-Q of the four divider flops (not trimmed)",
+  "97 boundary phase slots + 8 burst samplers of the architecture model: replaced by 8 quarter-rate samplers (half-rate bang-bang); burst acquisition not implemented",
+  "Offset trim is 2+2 bits of switched capacitance per sampler, not a calibrated DAC",
+  "Noise and metastability not simulated"
+ ]
+}

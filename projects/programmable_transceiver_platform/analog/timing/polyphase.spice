@@ -1,0 +1,67 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_polyphase: 2.4-2.5 GHz RC polyphase quadrature generator + limiters.
+* Revision 2: R 300 ohm, C ~200/175 fF (lower network impedance so the
+* limiter and wiring loads matter less), compact ct_lim limiters.
+* Input: one differential LO pair INP/INN (AC-coupled by the source: the
+* REF_IN pads through the board capacitor, or the LC VCO buffer).  Two-stage
+* passive RC polyphase (poles ~2.3 and ~2.6 GHz, R 600 ohm ppolyf_u) feeding
+* four self-biased inverter limiters (40 k feedback sets every network node at
+* the inverter trip point), then two inverter stages.  Outputs LOI_* go to
+* pt_lo_ext (internal LO inputs), which drives the mixer gates.
+* Floating capacitors: each network capacitor is two NMOS gate capacitors in
+* anti-series; their shared channel node sits at VSS through 50 k, so both
+* stay inverted (Vgs ~ 1.5 V) with no DC across the pair (C ~ half of one).
+* EN=0: limiter headers/footers off, stage-1 outputs clamped, LOI_P outputs low
+* and LOI_N outputs low too (pt_lo_ext gates its own drivers with INT).
+.include timing_cells.spice
+.include generated/fast/ct_lim.spice
+
+.subckt pt_pp_cap A B VSS
+XCA M A M VSS nfet_03v3 w=10u l=8u
+XCB M B M VSS nfet_03v3 w=10u l=8u
+XRM M VSS VSS ppolyf_u_1k r_width=1u r_length=50u
+.ends
+.subckt pt_pp_cap2 A B VSS
+XCA M A M VSS nfet_03v3 w=10u l=7u
+XCB M B M VSS nfet_03v3 w=10u l=7u
+XRM M VSS VSS ppolyf_u_1k r_width=1u r_length=50u
+.ends
+* one polyphase section: out_k = R from in_k, C from in_(k-1)
+.subckt pt_pp_stage I0 I1 I2 I3 O0 O1 O2 O3 VSS
+XR0 I0 O0 VSS ppolyf_u_1k r_width=4u r_length=1.2u
+XR1 I1 O1 VSS ppolyf_u_1k r_width=4u r_length=1.2u
+XR2 I2 O2 VSS ppolyf_u_1k r_width=4u r_length=1.2u
+XR3 I3 O3 VSS ppolyf_u_1k r_width=4u r_length=1.2u
+XC0 I3 O0 VSS pt_pp_cap
+XC1 I0 O1 VSS pt_pp_cap
+XC2 I1 O2 VSS pt_pp_cap
+XC3 I2 O3 VSS pt_pp_cap
+.ends
+.subckt pt_pp_stage2 I0 I1 I2 I3 O0 O1 O2 O3 VSS
+XR0 I0 O0 VSS ppolyf_u_1k r_width=4u r_length=1.2u
+XR1 I1 O1 VSS ppolyf_u_1k r_width=4u r_length=1.2u
+XR2 I2 O2 VSS ppolyf_u_1k r_width=4u r_length=1.2u
+XR3 I3 O3 VSS ppolyf_u_1k r_width=4u r_length=1.2u
+XC0 I3 O0 VSS pt_pp_cap2
+XC1 I0 O1 VSS pt_pp_cap2
+XC2 I1 O2 VSS pt_pp_cap2
+XC3 I2 O3 VSS pt_pp_cap2
+.ends
+* limiter: compact self-biased stage (fastcells.py ct_rxin) + 40 k feedback
+* through an EN switch
+.subckt pt_pp_lim IN OUT EN ENB VDD VSS
+XC IN A1 OUT EN ENB VDD VSS ct_lim
+XRF A1 RS VSS ppolyf_u_1k r_width=1u r_length=40u
+XSW RS EN IN VSS nfet_03v3 w=2u l=0.28u
+.ends
+
+.subckt pt_polyphase INP INN EN LOI_IP LOI_QP LOI_IN LOI_QN ATB_N0 VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+XS1 INP INP INN INN N0 N1 N2 N3 VSS pt_pp_stage
+XS2 N0 N1 N2 N3 ATB_N0 M1 M2 M3 VSS pt_pp_stage2
+* limiters invert once more than they buffer (3 inversions): out = !node
+XL0 ATB_N0 LOI_IN EN ENB VDD VSS pt_pp_lim
+XL1 M1 LOI_QP EN ENB VDD VSS pt_pp_lim
+XL2 M2 LOI_IP EN ENB VDD VSS pt_pp_lim
+XL3 M3 LOI_QN EN ENB VDD VSS pt_pp_lim
+.ends

@@ -1,0 +1,321 @@
+{
+ "block": "ring_osc",
+ "source_hashes": {
+  "ring_osc.spice": "sha256:8aa029471c8423c729f40fbfdb6a4c75d50ee22d4509497aa3f05ad2a4337a46",
+  "timing_cells.spice": "sha256:f9f1f38f3d190cf34a8c02560d70c0061ccefe7951a3022b1803d74656139452",
+  "layout_engine.py": "sha256:acb531c9c30a6b3f4a76c124bc9ea8e9274a532a7a9e1769d40ff535ab61f0ae",
+  "netlist.py": "sha256:9eb8d5c8d7d044a76b560ebebd23c768aefd2b0c1183d38313964e89a1d30ab3",
+  "run_timing.py": "sha256:0ffa242409850c1211baf29172da2a7a542b21e6d88ffb5e03b87cde437056b3",
+  "timing_flow.py": "sha256:ae25349b5de22a22b47a77687abf481166efaac60013c748078420666f8e0b28"
+ },
+ "generated_hashes": {
+  "ring_osc.mag": "sha256:922ecf66dac879c8d4bc1bc02fa5a12602951bce5f0d8041df7bf46c757b0e31",
+  "ring_osc.ext.spice": "sha256:9975f54338ef019c2bad789e1ac26a5933b9ba569bd115cc4d297e5a229d094d",
+  "ring_osc.gds": "sha256:2f1373190a862169888cfdd6ff8ef10a04532b605838cab5e1b46da8e4e627e2",
+  "ring_osc.lvs.spice": "sha256:fff373f4fed51b4499530534072c01876fa57a7ca941f0f56321df57fd2d956c"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_ref": "svalbard/librelane-gf180-canary:2026.08"
+ },
+ "pdk": "gf180mcuD (digital image /pdk/gf180mcuD for Magic/Netgen; analog image /foss/pdks/gf180mcuD models for ngspice)",
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "tt",
+     "temp_c": 27,
+     "vdd_v": 3.3,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 9.85533e-05,
+     "i_vdd_peak_ua": 9.85533e-05,
+     "output_max_v": {
+      "out": 2.81824e-09
+     },
+     "deck": "scratch/timing/ring_osc/sim/safe_tt_27_3.3.spice",
+     "errors": []
+    },
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "ff",
+     "temp_c": 85,
+     "vdd_v": 3.63,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 0.00645586,
+     "i_vdd_peak_ua": 0.00645586,
+     "output_max_v": {
+      "out": 4.67021e-08
+     },
+     "deck": "scratch/timing/ring_osc/sim/safe_ff_85_3.63.spice",
+     "errors": []
+    },
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "ss",
+     "temp_c": 0,
+     "vdd_v": 3.63,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 9.979039999999999e-05,
+     "i_vdd_peak_ua": 9.979039999999999e-05,
+     "output_max_v": {
+      "out": 3.08302e-09
+     },
+     "deck": "scratch/timing/ring_osc/sim/safe_ss_0_3.63.spice",
+     "errors": []
+    }
+   ],
+   "notes": "Reset-default = every control input 0; clock/pad inputs toggling. Includes 3.63 V at 85 C (ff) and 0 C (ss)."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "errors": 0,
+    "tool": "Magic 8.3.623 drc(full)",
+    "report": "generated/ring_osc-drc.txt",
+    "klayout": {
+     "ran": true,
+     "violations": 0,
+     "by_rule": {},
+     "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+    },
+    "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii"
+   },
+   "lvs": {
+    "unique_match": true,
+    "summary": "Final result: Circuits match uniquely.\n.",
+    "tool": "Netgen 1.5.316",
+    "report": "generated/ring_osc-lvs.txt"
+   },
+   "extracted_nominal": {
+    "gating_cases": [
+     "nom"
+    ],
+    "all_pass": true,
+    "results": [
+     {
+      "f_out_hz": 211255703.9040054,
+      "i_off_ua": 9.85517e-05,
+      "i_on_ma": 0.423012,
+      "stage_delay_ps": 112.70476190476191,
+      "pass": true,
+      "netlist": "extracted",
+      "corner": "tt",
+      "temp_c": 27,
+      "vdd_v": 3.3,
+      "deck": "scratch/timing/ring_osc/sim/nom.spice"
+     }
+    ]
+   },
+   "layout": {
+    "size_um": [
+     197.68,
+     48.16
+    ],
+    "area_um2": 9520.3,
+    "devices": 54,
+    "gds": "generated/ring_osc.gds",
+    "mag": "generated/ring_osc.mag",
+    "extracted": "generated/ring_osc.ext.spice"
+   }
+  },
+  "observable": {
+   "state": "open",
+   "atb_taps": [],
+   "status_bits": [],
+   "clock_obs": [
+    "OUT -> CLK_OBS input"
+   ],
+   "notes": "Points exist as ports; register-file / test-bus / CLK_OBS mux codes are assigned at integration (register map not yet published)."
+  },
+  "fallback": {
+   "state": "open",
+   "bypass_loading_fF": null,
+   "bypass_loading_note": null,
+   "routes": [],
+   "notes": "Characterization structure."
+  }
+ },
+ "performance_vs_target": [
+  {
+   "kind": "nominal_extracted",
+   "f_out_hz": 211255703.9040054,
+   "i_off_ua": 9.85517e-05,
+   "i_on_ma": 0.423012,
+   "stage_delay_ps": 112.70476190476191,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/ring_osc/sim/nom.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 205163977.30886412,
+   "i_off_ua": 9.02292e-05,
+   "i_on_ma": 0.39204399999999995,
+   "stage_delay_ps": 116.05119047619047,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/ring_osc/sim/c_tt_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 215686908.88306534,
+   "i_off_ua": 9.76488e-05,
+   "i_on_ma": 0.43706399999999995,
+   "stage_delay_ps": 110.38928571428572,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/ring_osc/sim/c_tt_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 201571247.87720278,
+   "i_off_ua": 9.63144e-05,
+   "i_on_ma": 0.38601599999999997,
+   "stage_delay_ps": 118.11964285714286,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/ring_osc/sim/c_tt_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 211908180.18552563,
+   "i_off_ua": 0.000104833,
+   "i_on_ma": 0.43194899999999997,
+   "stage_delay_ps": 112.35773809523809,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/ring_osc/sim/c_tt_32_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 168457936.05336747,
+   "i_off_ua": 8.4691e-05,
+   "i_on_ma": 0.316355,
+   "stage_delay_ps": 141.33809523809526,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/ring_osc/sim/c_ss_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 178468649.75081313,
+   "i_off_ua": 9.07528e-05,
+   "i_on_ma": 0.358196,
+   "stage_delay_ps": 133.41011904761905,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/ring_osc/sim/c_ss_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 165504685.85141817,
+   "i_off_ua": 8.51179e-05,
+   "i_on_ma": 0.312505,
+   "stage_delay_ps": 143.86011904761904,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/ring_osc/sim/c_ss_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 175327863.1040045,
+   "i_off_ua": 9.123860000000001e-05,
+   "i_on_ma": 0.35406899999999997,
+   "stage_delay_ps": 135.79999999999998,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/ring_osc/sim/c_ss_32_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 244941948.75814432,
+   "i_off_ua": 0.00019241600000000002,
+   "i_on_ma": 0.472888,
+   "stage_delay_ps": 97.20476190476191,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/ring_osc/sim/c_ff_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 255497997.53444436,
+   "i_off_ua": 0.000222106,
+   "i_on_ma": 0.531895,
+   "stage_delay_ps": 93.18869047619046,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/ring_osc/sim/c_ff_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 240708646.2545735,
+   "i_off_ua": 0.000297208,
+   "i_on_ma": 0.46901400000000004,
+   "stage_delay_ps": 98.91428571428571,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/ring_osc/sim/c_ff_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 251095403.6986353,
+   "i_off_ua": 0.00034759,
+   "i_on_ma": 0.524764,
+   "stage_delay_ps": 94.82261904761904,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/ring_osc/sim/c_ff_32_3.35.spice"
+  },
+  {
+   "kind": "area",
+   "area_um2": 9520.3,
+   "ceiling_um2": null,
+   "ceiling_source": "characterization structure; 0.41 mm2 shared reserve",
+   "fits": null
+  }
+ ],
+ "excluded_coverage": []
+}

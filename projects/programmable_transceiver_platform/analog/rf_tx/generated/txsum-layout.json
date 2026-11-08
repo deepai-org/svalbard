@@ -1,0 +1,59 @@
+{
+ "block": "txsum",
+ "cell": "pt_txsum",
+ "image": "svalbard/librelane-gf180-canary:2026.08",
+ "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+ "pdk": "/pdk/gf180mcuD (open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7)",
+ "drc_errors": 0,
+ "lvs_unique_match": true,
+ "lvs_final": "Final result: Circuits match uniquely.",
+ "bbox_um": {
+  "x0": 0.0,
+  "y0": -48.62000000000002,
+  "x1": 83.94000000000003,
+  "y1": 1.0
+ },
+ "width_um": 83.94,
+ "height_um": 49.62,
+ "area_um2": 4165.1,
+ "area_ceiling_um2": 5600,
+ "rows": [
+  [
+   "RI_p",
+   "RQ_p",
+   "RL_p",
+   "RL_n",
+   "RQ_n",
+   "RI_n"
+  ],
+  [
+   "HDR",
+   "CL_p",
+   "CL_n",
+   "RATB_p",
+   "RATB_n",
+   "IEN_N",
+   "IEN_P"
+  ]
+ ],
+ "trunked_nets": 11,
+ "circuit": {
+  "devices": 13,
+  "mos_instances": 5,
+  "mos_fingers": 8,
+  "resistors": 8,
+  "nets": 12
+ },
+ "hashes": {
+  "txsum.spice": "e1d9b8f5c87db3c5cea1bdbfc57d4438bc9a7357bffea9bd2b7b4069a0024a26",
+  "circuits.py": "59382037c2ad25a85d7086c05a59cb0bc7b263fddbe9ca558a6447f9f9f272fb",
+  "layoutlib.py": "067f29bd000ba2e414787dfd146ba34e49c7f5c7c88bae3d1a4b606447c5c111",
+  "generate.py": "67829d6dd34ad18bb9a2f4d86496826eaf7735e9124b84cd45f31ff9706cf8cb",
+  "txsum.gds": "cb584ec73e90a71dbace453221406c2960642235f8c5a2d8a67c10a9db2cb5c4",
+  "txsum.ext.spice": "be3b73625ecb6df4cbc3af0f0f1c74e7409ae0b452b60f0ddf4c7658a899c8e5"
+ },
+ "limitations": [
+  "Extraction is capacitance-only (ext2spice cthresh 0); wire and via resistance are not extracted.",
+  "Single-block DRC with the Magic gf180mcuD deck; no KLayout signoff deck, antenna or density run."
+ ]
+}

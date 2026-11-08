@@ -1,0 +1,22 @@
+* pt_wtx_ext_rx: receiver for the WTX_EXT_P/N east debug pair (fallback route
+* wire_tx_external_data).  Per spec/consolidation-pass.md item 6 this is one
+* instance of the timing family's shared differential receiver
+* pt_diff_clk_rx (analog/timing/diff_clk_rx.spice); no separate design.
+*
+*   WTX_EXT_P/N  pad side (after the pads family's protection)
+*   EN           debug.wtx_ext.enable (the same control drives pt_wiredtx WTX_EXT)
+*   DX           to pt_wiredtx DX (selected break-before-make in pt_wtx_predrv)
+*   DXB          complement (unused by pt_wiredtx; available for observation)
+*   PRESENT      receiver activity detector -> status (wtx_ext presence)
+*   ATB_DET      detector node -> atb_tap
+* SE is tied low: differential (qualified) mode.  Per timing's data-mode
+* check, DX is taken from OUTN (OUTP has 2-3x the edge spread) with the
+* pad legs swapped so the polarity is preserved.  Board/FPGA requirement
+* B12: AC-coupled source sends >= 128 balanced bits (e.g. 1010) before
+* payload.  EN=0 is the safe state; the pre-driver ignores DX unless
+* WTX_EXT selects it.
+.include ../timing/diff_clk_rx.spice
+
+.subckt pt_wtx_ext_rx WTX_EXT_P WTX_EXT_N EN DX DXB PRESENT ATB_DET VDD VSS
+XRX WTX_EXT_N WTX_EXT_P EN VSS DXB DX PRESENT ATB_DET VDD VSS pt_diff_clk_rx
+.ends pt_wtx_ext_rx

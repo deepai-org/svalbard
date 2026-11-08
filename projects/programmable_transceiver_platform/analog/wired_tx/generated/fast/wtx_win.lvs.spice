@@ -1,0 +1,33 @@
+* NGSPICE file created from wtx_win.ext - technology: gf180mcuD
+
+.subckt wtx_win MQ QA QB MH HA HB MF FA FB S SX VDD VSS
+X0 VDD HA NH VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X1 VDD NH SB VDD pfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X2 a_496_230# QA a_236_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X3 VDD FA NF VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X4 NQ QB a_496_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X5 a_2148_230# MF VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X6 VDD QA NQ VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X7 a_1452_230# HA a_1192_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X8 NH MH VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X9 a_2408_230# FA a_2148_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X10 a_3104_230# NQ VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X11 SB NF a_3364_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X12 NH HB a_1452_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X13 S SX VSS VSS nfet_03v3 ad=2.91p pd=12.97u as=4.17p ps=13.39u w=6u l=0.28u
+X14 a_1192_230# MH VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X15 NF FB a_2408_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X16 a_3364_230# NH a_3104_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X17 NH HB VDD VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X18 SB NQ VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X19 NF FB VDD VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X20 NF MF VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X21 NQ QB VDD VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X22 SB NF VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X23 SX SB VSS VSS nfet_03v3 ad=1.455p pd=6.97u as=2.085p ps=7.39u w=3u l=0.28u
+X24 NQ MQ VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X25 S SX VDD VDD pfet_03v3 ad=5.82p pd=24.97u as=8.34p ps=25.39u w=12u l=0.28u
+X26 SX SB VDD VDD pfet_03v3 ad=2.91p pd=12.97u as=4.17p ps=13.39u w=6u l=0.28u
+X27 a_236_230# MQ VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+.ends
+

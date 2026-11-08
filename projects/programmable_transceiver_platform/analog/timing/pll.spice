@@ -1,0 +1,49 @@
+* SPDX-License-Identifier: Apache-2.0
+* Loop-piece library for pt_pll_ring (included by pll_ring.spice):
+*   pt_pfd -- static NAND-DFF phase-frequency detector with RESET_N input.
+* Not a block on its own (no layout or evidence of its own).
+.include timing_cells.spice
+
+* ---- PFD ----
+.subckt pt_pfd_inv A Y VDD VSS
+XP Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XN Y A VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_pfd_nand2 A B Y VDD VSS
+XP0 Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XP1 Y B VDD VDD pfet_03v3 w=2u l=0.28u
+XN0 Y A N VSS nfet_03v3 w=2u l=0.28u
+XN1 N B VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+.subckt pt_pfd_nand3 A B C Y VDD VSS
+XP0 Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XP1 Y B VDD VDD pfet_03v3 w=2u l=0.28u
+XP2 Y C VDD VDD pfet_03v3 w=2u l=0.28u
+XN0 Y A N1 VSS nfet_03v3 w=3u l=0.28u
+XN1 N1 B N2 VSS nfet_03v3 w=3u l=0.28u
+XN2 N2 C VSS VSS nfet_03v3 w=3u l=0.28u
+.ends
+.subckt pt_pfd_and2 A B Y VDD VSS
+XN A B N VDD VSS pt_pfd_nand2
+XI N Y VDD VSS pt_pfd_inv
+.ends
+.subckt pt_pfd_dff D CLK RN Q QB VDD VSS
+XDB D DB VDD VSS pt_pfd_inv
+XCB CLK CB VDD VSS pt_pfd_inv
+XMS D CB RN MS VDD VSS pt_pfd_nand3
+XMR0 DB CB MR0 VDD VSS pt_pfd_nand2
+XMR MR0 RN MR VDD VSS pt_pfd_and2
+XMQ MS MQB MQ VDD VSS pt_pfd_nand2
+XMQB MR MQ MQB VDD VSS pt_pfd_nand2
+XSS MQ CLK RN SS VDD VSS pt_pfd_nand3
+XSR0 MQB CLK SR0 VDD VSS pt_pfd_nand2
+XSR SR0 RN SR VDD VSS pt_pfd_and2
+XQ SS QB Q VDD VSS pt_pfd_nand2
+XQB SR Q QB VDD VSS pt_pfd_nand2
+.ends
+.subckt pt_pfd REF FB RESET_N UP DN VDD VSS
+XU VDD REF RN UP UPB VDD VSS pt_pfd_dff
+XD VDD FB RN DN DNB VDD VSS pt_pfd_dff
+XRESET UP DN BOTH_N VDD VSS pt_pfd_nand2
+XRN RESET_N BOTH_N RN VDD VSS pt_pfd_and2
+.ends

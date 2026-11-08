@@ -1,0 +1,66 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_lcvco (P3-4 evaluation, schematic level; NOT laid out): 2.45 GHz
+* complementary cross-coupled LC VCO for the autonomous-RF route.
+* Tank: pt_spiral (analytical model, lcvco/spiral.py: 2.86 nH, Q_eff ~7.4,
+*   400 x 400 um octagon, Metal5 + Metal4 strap) || MIM (cap_mim_2f0_m4m5_noshield, 2 fF/um2) fixed
+*   capacitor (~0.75 pF differential) || two PDK MOS varactors
+*   (cap_nmos_03v3, 20 x 20 um each, tank node to VTUNE).
+* Core: NMOS pair 2 x 20/0.28 um, PMOS pair 4 x 20/0.28 um, NMOS tail
+*   mirrored x300 from IBIAS (10 uA -> 3 mA).
+* Buffers: tank node -> AC-coupled self-biased inv 10/20 -> inv 30/60 -> inv 90/180 (OUTP/OUTN,
+*   rail-to-rail, drives the passive RC polyphase); a separate inv 10/20 tap
+*   (PRE) feeds the prescaler (first feedback divider).
+* VDDB: buffer supply (separate so the core current is measured alone).
+* EN=0: tail mirror off (gate clamped), buffers see the PMOS-pulled-up tank.
+.include spiral.spice
+
+.subckt pt_lcvco EN VTUNE IBIAS TP TN OUTP OUTN PRE VDD VDDB VSS
+XEI EN ENB VDD VSS pt_t_inv1
+* tail bias
+XNB IBIAS IBIAS NBS VSS nfet_03v3 w=2u l=1u
+XNBS NBS EN VSS VSS nfet_03v3 w=4u l=0.28u
+XNBC IBIAS ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XT TS IBIAS VSS VSS nfet_03v3 w=10u l=1u m=60
+* cross-coupled pairs
+XN1 TP TN TS VSS nfet_03v3 w=20u l=0.28u m=2
+XN2 TN TP TS VSS nfet_03v3 w=20u l=0.28u m=2
+XP1 TP TN VDD VDD pfet_03v3 w=20u l=0.28u m=4
+XP2 TN TP VDD VDD pfet_03v3 w=20u l=0.28u m=4
+* tank
+XL TP TN VSS pt_spiral
+XCF TP TN cap_mim_2f0_m4m5_noshield c_width=19.4u c_length=19.4u
+XVP TP VTUNE cap_nmos_03v3 c_width=20u c_length=20u
+XVN TN VTUNE cap_nmos_03v3 c_width=20u c_length=20u
+* buffers
+* buffer inputs AC-coupled (MIM 0.2 pF) and self-biased (50 k feedback):
+* the tank common mode sits ~2.1 V (PMOS Vsg), not at the inverter trip point
+XB1P TP B1P VDDB VSS pt_lc_acinv
+XB1N TN B1N VDDB VSS pt_lc_acinv
+XB2P B1P B2P VDDB VSS pt_lc_inv3
+XB2N B1N B2N VDDB VSS pt_lc_inv3
+XB3P B2P OUTN VDDB VSS pt_lc_inv9
+XB3N B2N OUTP VDDB VSS pt_lc_inv9
+XBR TP PREB VDDB VSS pt_lc_acinv
+XBR2 PREB PRE VDDB VSS pt_lc_inv3
+* matching dummy load on TN for the prescaler tap
+XBD TN PRED VDDB VSS pt_lc_acinv
+.ends
+
+.subckt pt_lc_acinv A Y VDD VSS
+XC A AI cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+XRF Y AI VSS ppolyf_u_1k r_width=1u r_length=50u
+XN Y AI VSS VSS nfet_03v3 w=10u l=0.28u
+XP Y AI VDD VDD pfet_03v3 w=20u l=0.28u
+.ends
+.subckt pt_lc_inv1 A Y VDD VSS
+XN Y A VSS VSS nfet_03v3 w=10u l=0.28u
+XP Y A VDD VDD pfet_03v3 w=20u l=0.28u
+.ends
+.subckt pt_lc_inv3 A Y VDD VSS
+XN Y A VSS VSS nfet_03v3 w=10u l=0.28u m=3
+XP Y A VDD VDD pfet_03v3 w=20u l=0.28u m=3
+.ends
+.subckt pt_lc_inv9 A Y VDD VSS
+XN Y A VSS VSS nfet_03v3 w=10u l=0.28u m=9
+XP Y A VDD VDD pfet_03v3 w=20u l=0.28u m=9
+.ends

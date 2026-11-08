@@ -1,0 +1,347 @@
+{
+ "block": "detect",
+ "subckt": "pt_detect",
+ "source_hashes": {
+  "detect.spice": "sha256:0dee8fd3150ec77ad8a069b8533049af5783daa8a22b359fa30a6d574a4c8a24",
+  "generated/detect.ext.spice": "sha256:1ebfef8783eeccaebf70542d6ff97eeaa31b1db3377e0da56f25c402d04fab59",
+  "generated/detect.gds": "sha256:5ee9d7f49e4f9d02344ede10b7b273641192dea52d3243b01c99dfcee4a62a71",
+  "netlists.py": "sha256:46d3148a4ffc8f51981f4fa4563fc4d6be85dd1cec1e515cee225cb5e28e1e3d",
+  "wrx_flow.py": "sha256:adb1f3b9b6dcd3b6c6fa6379e8abea316ea1dbb450a6d4b3f3dfbf854269dfe9",
+  "sims.py": "sha256:40d76522f9148374fef7a4a6c22548b3700af77ea01f1ddcaafec9eaa75e3ce8",
+  "run_family.py": "sha256:6fb0665eae5cd295f37006aed8560c4d0146f4d91069128ba304c470ce82c515",
+  "evidence.py": "sha256:3c12981c66dfcecceaa045968230951753809b64f9e38d5f5fe60997b52d25b8",
+  "run_wired_rx.sh": "sha256:a1dca456de988cdc00d6d947449c8a7dc3b0131b5f99f1995e61244bbfa60f83"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
+  "digital_note": "rebuilt canary (not byte-identical to locked 9253a51f...)"
+ },
+ "pdk": "ciel gf180mcu f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (analog image); canary /pdk/gf180mcuD tech fingerprint 9e0a3f80",
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "off_0C",
+     "i_rail": -8.74854e-07,
+     "vmax_diff_pos": 0.00172344,
+     "vmax_diff_neg": 0.00135582,
+     "vmax_se_p": 0.000960988,
+     "vmax_se_n": 0.000540028,
+     "i_rail_A": 8.74854e-07,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "off_27C",
+     "i_rail": -8.9078e-07,
+     "vmax_diff_pos": 0.0025335,
+     "vmax_diff_neg": 0.00205264,
+     "vmax_se_p": 0.00101639,
+     "vmax_se_n": 0.000575625,
+     "i_rail_A": 8.9078e-07,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "off_85C",
+     "i_rail": -1.02304e-06,
+     "vmax_diff_pos": 0.00266763,
+     "vmax_diff_neg": 0.00217262,
+     "vmax_se_p": 0.00160185,
+     "vmax_se_n": 0.000953068,
+     "i_rail_A": 1.02304e-06,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "stuck_on",
+     "i_rail": -0.00120527,
+     "i_peak": -0.00683397,
+     "i_rail_A": 0.00120527,
+     "pass": true
+    },
+    {
+     "case": "unpowered",
+     "v_rail": 0.0866051,
+     "i_ain": -3.91843e-07,
+     "i_ctl": -7.24094e-08,
+     "pass": true
+    },
+    {
+     "case": "unpowered_internal_driven",
+     "v_rail": 2.85716,
+     "i_ain": -0.000892427,
+     "i_ctl": -2.00213e-07,
+     "pass": false,
+     "gating": false
+    }
+   ],
+   "notes": "Extracted netlist. off_*: rail 3.63 V, all controls low, clocks running, analog inputs 3.3 V, 0/27/85 C. stuck_on: all controls high at 3.63 V (no latch/short, current bounded). unpowered: rail via 1 Mohm, controls 0 (register isolation clamp), clocks running, pad-reachable inputs (detect TX_P/N) 3.63 V, internal analog nodes 0 V. unpowered_internal_driven is non-gating: internal RX/CTLE nodes forced to 3.63 V (only possible if the pad bypass were on with this island off) back-drive the rail through PMOS TG wells. Pad-level stress and brownout ramps are analog/pads scope."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "tool": "magic 8.3.623 drc(full)",
+    "errors": 0,
+    "klayout_gf180_on_exported_gds": {
+     "violations": 0,
+     "by_rule": {},
+     "rc": "0",
+     "lyrdb_files": 1
+    },
+    "gds_export": {
+     "magic": "8.3.678",
+     "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+     "marker_shapes": {
+      "HRES 62/0": 14,
+      "RES_MK 110/5": 28
+     },
+     "hres_ok": true
+    }
+   },
+   "lvs": {
+    "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
+    "unique_match": true,
+    "final": "Circuits match uniquely.",
+    "devices": 259
+   },
+   "extracted_nominal": {
+    "usb_hs_squelch": {
+     "iavg": -0.00135442,
+     "vref_v": 0.447952,
+     "hits_above_threshold_window": 1,
+     "fraction_hit_above": 1.0,
+     "fraction_hit_below": 0.0,
+     "pass": true
+    },
+    "usb_hs_disconnect": {
+     "iavg": -0.00133712,
+     "vref_v": 0.451428,
+     "hits_above_threshold_window": 1,
+     "fraction_hit_above": 1.0,
+     "fraction_hit_below": 0.0,
+     "pass": true
+    },
+    "usb_fs_line_state": {
+     "sep_j": 3.29969,
+     "sen_j": -0.000255977,
+     "sep_k": -0.000316276,
+     "sen_k": 3.29971,
+     "sep_se0": 6.5101e-06,
+     "sen_se0": 7.79606e-05,
+     "pass": true
+    },
+    "rx_detect": {
+     "v_txp": 1.02893,
+     "v_txn_100n": 0.143248,
+     "t_sep": 4.21098e-08,
+     "iavg": -0.00146416,
+     "inject_current_uA_est": 102.89299999999999,
+     "present_leg_slower": true,
+     "pass": true
+    },
+    "off": {
+     "iavg": -1.78622e-08,
+     "itxp": 1.7767e-07,
+     "dpos_max": 0.00321256,
+     "sep_max": 0.00115047,
+     "pass": true
+    }
+   },
+   "corner_failures": [],
+   "non_gating_failures": [],
+   "area": {
+    "size_um": [
+     235.26,
+     411.54
+    ],
+    "area_um2": 96818.9,
+    "ceiling_um2": 180000
+   }
+  },
+  "observable": {
+   "state": "open",
+   "atb_taps": [
+    "atb_det_vref (ladder base 0.5 V)"
+   ],
+   "status_bits": [
+    "DIFF_POS/DIFF_NEG/SE_P/SE_N sampled outputs -> RTL line-state, squelch, disconnect, SE0, receiver-detect timing"
+   ],
+   "clock_obs": [],
+   "notes": "Taps/status are exposed at block ports; atb_tap cells, register-map entries and clk_obs hookup are added at integration (not yet available)."
+  },
+  "fallback": {
+   "state": "open",
+   "routes": [
+    {
+     "route": "wire_detect_via_wmon",
+     "state": "open",
+     "notes": "line waveform on WMON via pt_wmon_sel; bb_tap pending"
+    }
+   ],
+   "bypass_loading_fF": {
+    "rx_p_detect_off": 93.21117000000001,
+    "tx_p_detect_off": 110.5972
+   }
+  }
+ },
+ "performance_vs_target": [
+  {
+   "case": "usb_hs_squelch",
+   "metric": "fraction_hit_above",
+   "target": "fires on 200 mV diff (> 125 mV threshold)",
+   "extracted_nominal": 1.0,
+   "schematic_nominal": 1.0,
+   "corner_min": 1.0,
+   "corner_max": 1.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_squelch",
+   "metric": "fraction_hit_below",
+   "target": "silent on 60 mV diff (squelch)",
+   "extracted_nominal": 0.0,
+   "schematic_nominal": 0.0,
+   "corner_min": 0.0,
+   "corner_max": 0.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_disconnect",
+   "metric": "fraction_hit_above",
+   "target": "fires on 800 mV diff (625 mV threshold)",
+   "extracted_nominal": 1.0,
+   "schematic_nominal": 1.0,
+   "corner_min": 1.0,
+   "corner_max": 1.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_disconnect",
+   "metric": "fraction_hit_below",
+   "target": "silent on 400 mV diff",
+   "extracted_nominal": 0.0,
+   "schematic_nominal": 0.0,
+   "corner_min": 0.0,
+   "corner_max": 0.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "rx_detect",
+   "metric": "inject_current_uA_est",
+   "target": "100 uA per leg",
+   "extracted_nominal": 102.89299999999999,
+   "schematic_nominal": 101.107,
+   "corner_min": 91.14,
+   "corner_max": 110.40700000000001,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_squelch",
+   "metric": "iavg",
+   "target": "wired budget 4 mA",
+   "extracted_nominal": -0.00135442,
+   "schematic_nominal": -0.000731304,
+   "corner_min": -0.00142289,
+   "corner_max": -0.00125287,
+   "corners_reported": 12
+  },
+  {
+   "case": "thr_code0_pos",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "wrong_side_fired": true,
+    "pass": false,
+    "gating": false
+   }
+  },
+  {
+   "case": "thr_code0_neg",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "wrong_side_fired": true,
+    "pass": false,
+    "gating": false
+   }
+  },
+  {
+   "case": "thr_code1_pos",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "threshold_mV": 65.78119514155325,
+    "wrong_side_fired": false,
+    "pass": true,
+    "gating": false
+   }
+  },
+  {
+   "case": "thr_code1_neg",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "threshold_mV": 65.53153483715542,
+    "wrong_side_fired": false,
+    "pass": true,
+    "gating": false
+   }
+  },
+  {
+   "case": "thr_code2_pos",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "threshold_mV": 125.61956504073316,
+    "wrong_side_fired": false,
+    "pass": true,
+    "gating": false
+   }
+  },
+  {
+   "case": "thr_code2_neg",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "threshold_mV": 125.46496126656814,
+    "wrong_side_fired": false,
+    "pass": true,
+    "gating": false
+   }
+  },
+  {
+   "case": "thr_code3_pos",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "threshold_mV": 545.5909535090042,
+    "wrong_side_fired": false,
+    "pass": true,
+    "gating": false
+   }
+  },
+  {
+   "case": "thr_code3_neg",
+   "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
+   "target": "above nominal rate",
+   "extracted_nominal": {
+    "threshold_mV": 535.6601466474214,
+    "wrong_side_fired": false,
+    "pass": true,
+    "gating": false
+   }
+  }
+ ],
+ "corner_set": "tt/ss/ff x 22/32 C x 3.15/3.35 V (spec/tapeout-plan.md operating envelope), extracted netlist",
+ "excluded_coverage": [
+  "8-bit thresholds: 2-bit ladder taps (0/62.5/125/625 mV diff, 0.8/1.125/1.4/2.0 V SE)",
+  "6-bit test-current trim; 1 ms timeout/abort are RTL responsibilities",
+  "Envelope detector replaced by clocked comparators + digital window",
+  "Sampled on det_clk: FS/LS line state requires a running detect clock (>=48 MHz)"
+ ]
+}

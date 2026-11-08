@@ -1,0 +1,233 @@
+* SPDX-License-Identifier: Apache-2.0
+* Shared transistor-level cells for the timing family (GF180MCU gf180mcuD,
+* 3.3 V nfet_03v3/pfet_03v3 and ppolyf_u_1k only).  Every block .spice
+* includes this file; layout, LVS and simulation read the same text.
+* Convention: all cells take VDD VSS as their last two ports.
+
+* ---------------------------------------------------------------- inverters
+.subckt pt_t_inv1 A Y VDD VSS
+XP Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XN Y A VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_t_inv2 A Y VDD VSS
+XP Y A VDD VDD pfet_03v3 w=4u l=0.28u
+XN Y A VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+.subckt pt_t_inv4 A Y VDD VSS
+XP Y A VDD VDD pfet_03v3 w=8u l=0.28u
+XN Y A VSS VSS nfet_03v3 w=4u l=0.28u
+.ends
+.subckt pt_t_inv8 A Y VDD VSS
+XP Y A VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XN Y A VSS VSS nfet_03v3 w=8u l=0.28u
+.ends
+
+* ---------------------------------------------------------------- gates
+.subckt pt_t_nand2 A B Y VDD VSS
+XPA Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XPB Y B VDD VDD pfet_03v3 w=2u l=0.28u
+XNA Y A X VSS nfet_03v3 w=2u l=0.28u
+XNB X B VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+* Faster 2x NAND for GHz select gating.
+.subckt pt_t_nand2x A B Y VDD VSS
+XPA Y A VDD VDD pfet_03v3 w=4u l=0.28u
+XPB Y B VDD VDD pfet_03v3 w=4u l=0.28u
+XNA Y A X VSS nfet_03v3 w=4u l=0.28u
+XNB X B VSS VSS nfet_03v3 w=4u l=0.28u
+.ends
+.subckt pt_t_nand3 A B C Y VDD VSS
+XPA Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XPB Y B VDD VDD pfet_03v3 w=2u l=0.28u
+XPC Y C VDD VDD pfet_03v3 w=2u l=0.28u
+XNA Y A X1 VSS nfet_03v3 w=3u l=0.28u
+XNB X1 B X2 VSS nfet_03v3 w=3u l=0.28u
+XNC X2 C VSS VSS nfet_03v3 w=3u l=0.28u
+.ends
+.subckt pt_t_nand3x A B C Y VDD VSS
+XPA Y A VDD VDD pfet_03v3 w=4u l=0.28u
+XPB Y B VDD VDD pfet_03v3 w=4u l=0.28u
+XPC Y C VDD VDD pfet_03v3 w=4u l=0.28u
+XNA Y A X1 VSS nfet_03v3 w=6u l=0.28u
+XNB X1 B X2 VSS nfet_03v3 w=6u l=0.28u
+XNC X2 C VSS VSS nfet_03v3 w=6u l=0.28u
+.ends
+.subckt pt_t_nor2 A B Y VDD VSS
+XPA X A VDD VDD pfet_03v3 w=4u l=0.28u
+XPB Y B X VDD pfet_03v3 w=4u l=0.28u
+XNA Y A VSS VSS nfet_03v3 w=1u l=0.28u
+XNB Y B VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_t_nor2x A B Y VDD VSS
+XPA X A VDD VDD pfet_03v3 w=8u l=0.28u
+XPB Y B X VDD pfet_03v3 w=8u l=0.28u
+XNA Y A VSS VSS nfet_03v3 w=2u l=0.28u
+XNB Y B VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+* AND2 / OR2 composites
+.subckt pt_t_and2 A B Y VDD VSS
+X0 A B N VDD VSS pt_t_nand2
+X1 N Y VDD VSS pt_t_inv1
+.ends
+
+* ---------------------------------------------------------------- latch / dividers
+* Clocked (C2MOS) inverter: drives Y = !A while CKN=1 and CKP=0.
+.subckt pt_t_cinv A Y CKN CKP VDD VSS
+XP1 X A VDD VDD pfet_03v3 w=4u l=0.28u
+XP2 Y CKP X VDD pfet_03v3 w=4u l=0.28u
+XN2 Y CKN Z VSS nfet_03v3 w=2u l=0.28u
+XN1 Z A VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+* Pseudo-differential C2MOS latch with cross-coupled keeper (strong enough to
+* reject the common-mode state P=N that weak keepers allowed), so the
+* state is static at any clock rate.  Transparent while EN=1, ENB=0.
+* Non-inverting: OP follows DP.
+.subckt pt_t_latd DP DN OP ON EN ENB VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinv
+X1 DN OP EN ENB VDD VSS pt_t_cinv
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+* Same latch with reset: RST=1 forces OP=0 / ON=1.  Used only as the slave
+* (opaque while the clock pair is stopped at CKP=0), so reset never fights
+* a transparent latch in the stopped state.
+.subckt pt_t_latdr DP DN OP ON EN ENB RST VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinv
+X1 DN OP EN ENB VDD VSS pt_t_cinv
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+XR OP RST VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+* Master-side reset variant: RST=1 forces ON=0 / OP=1, which is exactly the
+* value a transparent master copies from a reset slave, so it never fights.
+.subckt pt_t_latdm DP DN OP ON EN ENB RST VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinv
+X1 DN OP EN ENB VDD VSS pt_t_cinv
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+XR ON RST VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+* Divide-by-two with quadrature outputs.  Clock pair CKP/CKN (complementary).
+* RST is effective while the clock pair is stopped (CKP=0, CKN=1).
+* Slave (I) changes on CKP rising, master (Q) on CKP falling: Q leads I by a
+* quarter output period.  Output pairs are complementary by construction.
+.subckt pt_t_div2 CKP CKN RST IP IN QP QN VDD VSS
+XM IN IP QP QN CKN CKP RST VDD VSS pt_t_latdm
+XS QP QN IP IN CKP CKN RST VDD VSS pt_t_latdr
+.ends
+* Edge-triggered pseudo-differential D flip-flop (rising CKP).
+.subckt pt_t_dffd DP DN CKP CKN RST QP QN VDD VSS
+XM DP DN MP MN CKN CKP VDD VSS pt_t_latd
+XS MP MN QP QN CKP CKN RST VDD VSS pt_t_latdr
+.ends
+* Divide-by-five: 3-bit shift register with D0 = NOR(Q1,Q2); 40 % duty.
+* Self-starting from every state.
+.subckt pt_t_div5 CKP CKN RST OP ON VDD VSS
+X0 D0P D0N CKP CKN RST OP ON VDD VSS pt_t_dffd
+X1 OP ON CKP CKN RST Q1P Q1N VDD VSS pt_t_dffd
+X2 Q1P Q1N CKP CKN RST Q2P Q2N VDD VSS pt_t_dffd
+XNOR Q1P Q2P D0P VDD VSS pt_t_nor2
+XNAND Q1N Q2N D0N VDD VSS pt_t_nand2
+.ends
+
+* ---------------------------------------------------------------- clock selection
+* Y = (S0 & A) | (S1 & B) for pseudo-differential pairs; with S0=S1=0 the
+* output is stopped at P=0, N=1.  S0/S1 must be one-hot or both 0; changing
+* the selection is specified only through the stopped state (both 0).
+.subckt pt_t_sel2 AP AN BP BN S0 S1 YP YN VDD VSS
+XSN S0 S1 SN VDD VSS pt_t_nor2
+XSB SN SNB VDD VSS pt_t_inv1
+XA0 AP S0 NA0 VDD VSS pt_t_nand2x
+XB0 BP S1 NB0 VDD VSS pt_t_nand2x
+XO0 NA0 NB0 VDD YP VDD VSS pt_t_nand3x
+XA1 AN S0 NA1 VDD VSS pt_t_nand2x
+XB1 BN S1 NB1 VDD VSS pt_t_nand2x
+XO1 NA1 NB1 SNB YN VDD VSS pt_t_nand3x
+.ends
+* OR-combine two stopped-or-running pairs (at most one running):
+* YP = AP | BP, YN = AN & BN.  Same gate depth on both legs.
+.subckt pt_t_comb2 AP AN BP BN YP YN VDD VSS
+XIA AP APB VDD VSS pt_t_inv2
+XIB BP BPB VDD VSS pt_t_inv2
+XOP APB BPB YP VDD VSS pt_t_nand2x
+XON AN BN YNB VDD VSS pt_t_nand2x
+XIN YNB YN VDD VSS pt_t_inv2
+.ends
+* 2:1 multiplexer (single-ended): Y = S ? B : A.  AOI22 + inverter.
+.subckt pt_t_mux2 A B S SB Y VDD VSS
+XPA X1 A VDD VDD pfet_03v3 w=4u l=0.28u
+XPSB X1 SB VDD VDD pfet_03v3 w=4u l=0.28u
+XPB YB B X1 VDD pfet_03v3 w=4u l=0.28u
+XPS YB S X1 VDD pfet_03v3 w=4u l=0.28u
+XNA YB A X2 VSS nfet_03v3 w=2u l=0.28u
+XNSB X2 SB VSS VSS nfet_03v3 w=2u l=0.28u
+XNB YB B X3 VSS nfet_03v3 w=2u l=0.28u
+XNS X3 S VSS VSS nfet_03v3 w=2u l=0.28u
+XI YB Y VDD VSS pt_t_inv2
+.ends
+* Faster first-stage divider: 2x C2MOS strength (for VCO-rate inputs).
+.subckt pt_t_cinvf A Y CKN CKP VDD VSS
+XP1 X A VDD VDD pfet_03v3 w=8u l=0.28u
+XP2 Y CKP X VDD pfet_03v3 w=8u l=0.28u
+XN2 Y CKN Z VSS nfet_03v3 w=4u l=0.28u
+XN1 Z A VSS VSS nfet_03v3 w=4u l=0.28u
+.ends
+.subckt pt_t_latdf DP DN OP ON EN ENB VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinvf
+X1 DN OP EN ENB VDD VSS pt_t_cinvf
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_t_latdfm DP DN OP ON EN ENB RST VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinvf
+X1 DN OP EN ENB VDD VSS pt_t_cinvf
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+XR ON RST VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+.subckt pt_t_latdfr DP DN OP ON EN ENB RST VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinvf
+X1 DN OP EN ENB VDD VSS pt_t_cinvf
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+XR OP RST VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+.subckt pt_t_div2f CKP CKN RST IP IN QP QN VDD VSS
+XM IN IP QP QN CKN CKP RST VDD VSS pt_t_latdfm
+XS QP QN IP IN CKP CKN RST VDD VSS pt_t_latdfr
+.ends
+* Single-ended clock to complementary pair (CKN one inverter, CKP two).
+.subckt pt_t_s2d A CKP CKN VDD VSS
+X0 A AB VDD VSS pt_t_inv2
+X1 AB CKP VDD VSS pt_t_inv4
+X2 A CKN VDD VSS pt_t_inv4
+.ends
+* Single-ended one-hot select: Y = (A & S0) | (B & S1); 0 when stopped.
+.subckt pt_t_sel2s A B S0 S1 Y VDD VSS
+XA A S0 NA VDD VSS pt_t_nand2
+XB B S1 NB VDD VSS pt_t_nand2
+XO NA NB Y VDD VSS pt_t_nand2
+.ends
+* Y = A | B
+.subckt pt_t_or2 A B Y VDD VSS
+X0 A B N VDD VSS pt_t_nor2
+X1 N Y VDD VSS pt_t_inv1
+.ends
+* 4-way single-ended one-hot select
+.subckt pt_t_sel4s A B C D S0 S1 S2 S3 Y VDD VSS
+X0 A B S0 S1 Y0 VDD VSS pt_t_sel2s
+X1 C D S2 S3 Y1 VDD VSS pt_t_sel2s
+X2 Y0 Y1 Y VDD VSS pt_t_or2
+.ends

@@ -1,0 +1,166 @@
+{
+ "ext_u": {
+  "gain_i_db": 15.306376163288668,
+  "gain_q_db": 14.555090874571086,
+  "bb_pp_i_v": 0.0428942,
+  "bb_pp_q_v": 0.0340914,
+  "idd_a": 0.00655294,
+  "f_lo_hz": 2400000000.0,
+  "f_if_hz": 5000000.0,
+  "rf_emf_amp_diff_v": 0.003,
+  "board_match": null,
+  "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
+ },
+ "ext_m": {
+  "gain_i_db": 26.266864938109364,
+  "gain_q_db": 26.84577022966287,
+  "bb_pp_i_v": 0.133344,
+  "bb_pp_q_v": 0.143819,
+  "idd_a": 0.00655297,
+  "f_lo_hz": 2400000000.0,
+  "f_if_hz": 5000000.0,
+  "rf_emf_amp_diff_v": 0.003,
+  "board_match": {
+   "order": "series_at_pad",
+   "series_leg": [
+    "L",
+    5.9999075266525975e-09
+   ],
+   "shunt_diff": [
+    "C",
+    3.1333196345924206e-12
+   ],
+   "q": 4.724934693784418
+  },
+  "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
+ },
+ "ext_byp": {
+  "gain_i_db": 10.914592781297356,
+  "gain_q_db": 12.641982611367242,
+  "bb_pp_i_v": 0.0310495,
+  "bb_pp_q_v": 0.0290076,
+  "idd_a": 0.00381818,
+  "f_lo_hz": 2400000000.0,
+  "f_if_hz": 5000000.0,
+  "rf_emf_amp_diff_v": 0.003,
+  "board_match": null,
+  "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
+ },
+ "ext_m_1200MHz": {
+  "gain_i_db": 36.26608344464886,
+  "gain_q_db": 36.234124392919725,
+  "bb_pp_i_v": 0.392325,
+  "bb_pp_q_v": 0.389443,
+  "idd_a": 0.00657186,
+  "f_lo_hz": 1200000000.0,
+  "f_if_hz": 2000000.0,
+  "rf_emf_amp_diff_v": 0.003,
+  "board_match": {
+   "order": "series_at_pad",
+   "series_leg": [
+    "L",
+    2.3864819791961142e-08
+   ],
+   "shunt_diff": [
+    "C",
+    3.0541379662405687e-12
+   ],
+   "q": 2.30276577546985
+  },
+  "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
+ },
+ "ext_m_600MHz": {
+  "gain_i_db": 36.4235345237513,
+  "gain_q_db": 36.41567970940973,
+  "bb_pp_i_v": 0.401303,
+  "bb_pp_q_v": 0.398096,
+  "idd_a": 0.00658394,
+  "f_lo_hz": 600000000.0,
+  "f_if_hz": 2000000.0,
+  "rf_emf_amp_diff_v": 0.003,
+  "board_match": {
+   "order": "series_at_pad",
+   "series_leg": [
+    "L",
+    9.388153567661017e-08
+   ],
+   "shunt_diff": [
+    "C",
+    1.6720921402798487e-12
+   ],
+   "q": 0.6303638860834088
+  },
+  "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
+ },
+ "tnoise_lna_matched": {
+  "gain_i_db": 28.87950080093014,
+  "out_psd_i_v2_hz": 3.280458355829245e-14,
+  "bins": 10,
+  "nf_i_db": 14.085028271339919,
+  "psd_by_band": {
+   "2-3MHz": 8.134816336120968e-14,
+   "5-7MHz": 1.88872864073736e-14,
+   "7-9MHz": 2.245009080775267e-14
+  },
+  "mode": "lna",
+  "board_match": {
+   "order": "series_at_pad",
+   "series_leg": [
+    "L",
+    5.9999075266525975e-09
+   ],
+   "shunt_diff": [
+    "C",
+    3.1333196345924206e-12
+   ],
+   "q": 4.724934693784418
+  },
+  "lna_nf_input_db": 3.284737,
+  "ota_en_v_rthz": 7.080991e-09,
+  "band_hz": [
+   2000000.0,
+   9000000.0
+  ],
+  "analysed_window_s": [
+   1e-06,
+   3e-06
+  ],
+  "trnoise_k": 1.6903560324032997e-11,
+  "channel": "I (Q mixer present, noiseless)",
+  "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
+  "board_lna_15db_1p5db_nf_db": 3.4063206671463995,
+  "nf_i_5to9mhz_db": 12.078812204788358,
+  "board_lna_15db_1p5db_nf_5to9mhz_db": 2.7675586764146605,
+  "note_5to9": "5-9 MHz value computed from the same run data with the same code now in tb.chain_tnoise"
+ },
+ "tnoise_bypass": {
+  "gain_i_db": 14.098247498919722,
+  "out_psd_i_v2_hz": 1.9048547003268586e-14,
+  "bins": 10,
+  "nf_i_db": 26.505554823045667,
+  "psd_by_band": {
+   "2-3MHz": 6.683715793297632e-14,
+   "5-7MHz": 6.442600564064583e-15,
+   "7-9MHz": 7.760187977618717e-15
+  },
+  "mode": "bypass",
+  "board_match": null,
+  "lna_nf_input_db": null,
+  "ota_en_v_rthz": 7.080991e-09,
+  "band_hz": [
+   2000000.0,
+   9000000.0
+  ],
+  "analysed_window_s": [
+   1e-06,
+   3e-06
+  ],
+  "trnoise_k": 1.6903560324032997e-11,
+  "channel": "I (Q mixer present, noiseless)",
+  "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
+  "board_lna_15db_1p5db_nf_db": 11.91013950485399,
+  "nf_i_5to9mhz_db": 22.220372538452583,
+  "board_lna_15db_1p5db_nf_5to9mhz_db": 8.23060974234126,
+  "note_5to9": "5-9 MHz value computed from the same run data with the same code now in tb.chain_tnoise"
+ }
+}

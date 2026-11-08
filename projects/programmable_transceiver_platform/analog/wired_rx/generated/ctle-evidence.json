@@ -1,0 +1,312 @@
+{
+ "block": "ctle",
+ "subckt": "pt_ctle",
+ "source_hashes": {
+  "ctle.spice": "sha256:1b469daea349bd8782779c34a34792276bed58125a94f629fb7a498343188275",
+  "generated/ctle.ext.spice": "sha256:d0235dc47fa110f5c9144f617850e5f857b6827074d6b4ae46c8e415f17ce666",
+  "generated/ctle.gds": "sha256:5994d6ac27bc16b28ae9261ab33a24bce9d49c1437050bb14dbb208790c03acc",
+  "netlists.py": "sha256:beb0897de811d10fc5f1932662b1cfe7659001eae4357a9b8ae17546307dadd3",
+  "wrx_flow.py": "sha256:adb1f3b9b6dcd3b6c6fa6379e8abea316ea1dbb450a6d4b3f3dfbf854269dfe9",
+  "sims.py": "sha256:72dea34aa45188daa654905de9ce3b3d9872748f733977ab5d08c9944e2738b5",
+  "run_family.py": "sha256:6fad1320ccbfbf071d13ccb6387f468c4f3812b93441a95fa4e1af4a5930b4b1",
+  "evidence.py": "sha256:8f8e277ee3f3a556569d9035321f0b006e83e617afefc29f360bedb77844e8d9",
+  "run_wired_rx.sh": "sha256:a1dca456de988cdc00d6d947449c8a7dc3b0131b5f99f1995e61244bbfa60f83"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
+  "digital_note": "rebuilt canary (not byte-identical to locked 9253a51f...)"
+ },
+ "pdk": "ciel gf180mcu f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (analog image); canary /pdk/gf180mcuD tech fingerprint 9e0a3f80",
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "off_0C",
+     "i_rail": -9.32447e-11,
+     "vmax_ctle_p": 1.40099e-08,
+     "vmax_ctle_n": 1.40099e-08,
+     "i_rail_A": 9.32447e-11,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "off_27C",
+     "i_rail": -1.07393e-10,
+     "vmax_ctle_p": 2.67857e-08,
+     "vmax_ctle_n": 2.67857e-08,
+     "i_rail_A": 1.07393e-10,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "off_85C",
+     "i_rail": -7.22781e-10,
+     "vmax_ctle_p": 6.18102e-07,
+     "vmax_ctle_n": 6.18102e-07,
+     "i_rail_A": 7.22781e-10,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "stuck_on",
+     "i_rail": -6.21348e-11,
+     "i_peak": -6.22695e-11,
+     "i_rail_A": 6.21348e-11,
+     "pass": true
+    },
+    {
+     "case": "unpowered",
+     "v_rail": 1.56729e-15,
+     "i_ain": -3.95618e-12,
+     "i_ctl": -2.32653e-21,
+     "pass": true
+    },
+    {
+     "case": "unpowered_internal_driven",
+     "v_rail": 2.97729,
+     "i_ain": -2.97741e-06,
+     "i_ctl": -6.23097e-18,
+     "pass": false,
+     "gating": false
+    }
+   ],
+   "notes": "Extracted netlist. off_*: rail 3.63 V, all controls low, clocks running, analog inputs 3.3 V, 0/27/85 C. stuck_on: all controls high at 3.63 V (no latch/short, current bounded). unpowered: rail via 1 Mohm, controls 0 (register isolation clamp), clocks running, pad-reachable inputs (detect TX_P/N) 3.63 V, internal analog nodes 0 V. unpowered_internal_driven is non-gating: internal RX/CTLE nodes forced to 3.63 V (only possible if the pad bypass were on with this island off) back-drive the rail through PMOS TG wells. Pad-level stress and brownout ramps are analog/pads scope."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "tool": "magic 8.3.623 drc(full)",
+    "errors": 0,
+    "klayout_gf180_on_exported_gds": {
+     "violations": 0,
+     "by_rule": {},
+     "rc": "0",
+     "lyrdb_files": 1
+    },
+    "gds_export": {
+     "magic": "8.3.678",
+     "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+     "marker_shapes": {
+      "HRES 62/0": 5,
+      "RES_MK 110/5": 10
+     },
+     "hres_ok": true
+    }
+   },
+   "lvs": {
+    "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
+    "unique_match": true,
+    "final": "Circuits match uniquely.",
+    "devices": 77
+   },
+   "extracted_nominal": {
+    "ac_code0": {
+     "idd": 0.004795158,
+     "gdc": 0.700109,
+     "gpk": 0.70013,
+     "g625": 0.312245,
+     "g1g25": -1.03888,
+     "g2g5": -4.39649,
+     "bw3db": 1711350000.0,
+     "idd_a": 0.004795158,
+     "peaking_db": 2.1000000000048757e-05,
+     "pass": true
+    },
+    "ac_code1": {
+     "idd": 0.004795158,
+     "gdc": -0.856489,
+     "gpk": -0.213301,
+     "g625": -0.216136,
+     "g1g25": -1.03409,
+     "g2g5": -4.335,
+     "bw3db": 2314450000.0,
+     "idd_a": 0.004795158,
+     "peaking_db": 0.643188,
+     "pass": true
+    },
+    "ac_code2": {
+     "idd": 0.004795158,
+     "gdc": -2.46931,
+     "gpk": -0.335974,
+     "g625": -0.47296,
+     "g1g25": -0.931842,
+     "g2g5": -4.25404,
+     "bw3db": 2995090000.0,
+     "idd_a": 0.004795158,
+     "peaking_db": 2.133336,
+     "pass": true
+    },
+    "ac_code3": {
+     "idd": 0.004795158,
+     "gdc": -7.44891,
+     "gpk": -0.0995734,
+     "g625": -0.495663,
+     "g1g25": -0.642798,
+     "g2g5": -4.14428,
+     "bw3db": 5813270000.0,
+     "idd_a": 0.004795158,
+     "peaking_db": 7.3493366,
+     "pass": true
+    },
+    "ac_bypass": {
+     "idd": 1.093205e-10,
+     "gdc": 1.44896e-07,
+     "gpk": 1.44896e-07,
+     "g625": -0.177232,
+     "g1g25": -0.662186,
+     "g2g5": -2.17406,
+     "bw3db": 3106410000.0,
+     "idd_a": 1.093205e-10,
+     "pass": true
+    },
+    "ac_off": {
+     "idd": 1.254181e-10,
+     "gdc": -86.2415,
+     "gpk": -29.3502,
+     "g625": -32.2275,
+     "g1g25": -30.4545,
+     "g2g5": -29.8255,
+     "idd_a": 1.254181e-10,
+     "pass": true
+    }
+   },
+   "corner_failures": [],
+   "non_gating_failures": [],
+   "area": {
+    "size_um": [
+     104.64,
+     204.86
+    ],
+    "area_um2": 21436.6,
+    "ceiling_um2": 200000
+   }
+  },
+  "observable": {
+   "state": "open",
+   "atb_taps": [
+    "atb_ctle_pbias (PMOS tail gate)",
+    "atb_ctle_src (source node / output CM monitor)"
+   ],
+   "status_bits": [],
+   "clock_obs": [],
+   "notes": "Taps/status are exposed at block ports; atb_tap cells, register-map entries and clk_obs hookup are added at integration (not yet available)."
+  },
+  "fallback": {
+   "state": "pass",
+   "routes": [
+    {
+     "route": "wire_ctle_bypass",
+     "state": "pass",
+     "notes": "wire_ctle_bypass=1: amplifier and loads off, 2x(20+20 um) TGs connect RX->CTLE outputs; simulated (ac_bypass). External board equalizer optional."
+    }
+   ],
+   "bypass_loading_fF": {
+    "rx_p_ctle_on": 180.1362,
+    "rx_p_all_off": 155.5302,
+    "ctle_p_ctle_on_bypass_off": 151.3112
+   }
+  }
+ },
+ "performance_vs_target": [
+  {
+   "case": "ac_code1",
+   "metric": "gdc",
+   "target": "dc_gain 1.0 (0 dB)",
+   "extracted_nominal": -0.856489,
+   "schematic_nominal": -0.856493,
+   "corner_min": -1.5139,
+   "corner_max": 1.38835,
+   "corners_reported": 12
+  },
+  {
+   "case": "ac_code0",
+   "metric": "gdc",
+   "target": "DC gain, least peaking",
+   "extracted_nominal": 0.700109,
+   "schematic_nominal": 0.700107,
+   "corner_min": 0.0847355,
+   "corner_max": 2.32569,
+   "corners_reported": 12
+  },
+  {
+   "case": "ac_code3",
+   "metric": "peaking_db",
+   "target": "peaking ~6 dB (zero 0.8 GHz / pole 1.66 GHz)",
+   "extracted_nominal": 7.3493366,
+   "schematic_nominal": 7.090592,
+   "corner_min": 1.6348310000000001,
+   "corner_max": 8.066301999999999,
+   "corners_reported": 12
+  },
+  {
+   "case": "ac_code2",
+   "metric": "peaking_db",
+   "target": "mid peaking",
+   "extracted_nominal": 2.133336,
+   "schematic_nominal": 1.9649020000000001,
+   "corner_min": 0.11637000000000003,
+   "corner_max": 2.320329,
+   "corners_reported": 12
+  },
+  {
+   "case": "ac_code1",
+   "metric": "g1g25",
+   "target": "gain at 1.25 GHz (2.5 Gb/s Nyquist)",
+   "extracted_nominal": -1.03409,
+   "schematic_nominal": -0.412838,
+   "corner_min": -1.30291,
+   "corner_max": -0.943093,
+   "corners_reported": 12
+  },
+  {
+   "case": "ac_code0",
+   "metric": "idd_a",
+   "target": "wired budget 12 mA",
+   "extracted_nominal": 0.004795158,
+   "schematic_nominal": 0.004795158,
+   "corner_min": 0.003962402,
+   "corner_max": 0.005250968,
+   "corners_reported": 12
+  },
+  {
+   "case": "ac_code3",
+   "metric": "g2g5",
+   "target": "5 Gb/s stretch: gain at 2.5 GHz (non-gating)",
+   "extracted_nominal": -4.14428,
+   "schematic_nominal": -1.63234,
+   "corner_min": -5.03912,
+   "corner_max": -3.51825,
+   "corners_reported": 12
+  },
+  {
+   "case": "ac_bypass",
+   "metric": "g1g25",
+   "target": "bypass loss at 1.25 GHz",
+   "extracted_nominal": -0.662186,
+   "schematic_nominal": -0.25603,
+   "corner_min": -0.899096,
+   "corner_max": -0.54016,
+   "corners_reported": 12
+  },
+  {
+   "case": "ac_bypass",
+   "metric": "bw3db",
+   "target": "bypass path BW",
+   "extracted_nominal": 3106410000.0,
+   "schematic_nominal": 5077700000.0,
+   "corner_min": 2627570000.0,
+   "corner_max": 3458440000.0,
+   "corners_reported": 12
+  }
+ ],
+ "corner_set": "tt/ss/ff x 22/32 C x 3.15/3.35 V (spec/tapeout-plan.md operating envelope), extracted netlist",
+ "excluded_coverage": [
+  "Speed pass: input pair 48 um (was 80) and single bypass TG to cut RX_P loading (302 -> ~180 fF)",
+  "Input CM below ~0.5 V (USB HS) is out of range: use rxselect_direct=1 or the bypass",
+  "Equalization quality vs channel (eye) not simulated; AC response only"
+ ]
+}

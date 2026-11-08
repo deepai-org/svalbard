@@ -1,0 +1,61 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_lo_ext: passive external quadrature LO route (RF qualification baseline)
+* plus the switch into the internal LO path.
+*
+* External mode (EXT=1): the board drives I on REF_IN_P/N and Q on AUX_CLK_P/N
+* (2.4-2.5 GHz sine or square, AC-coupled on the board, up to ~2 Vpp per leg
+* from 50 ohm).  Per leg: NMOS series switch (pad side biased to VPAD ~1.1 V
+* through 10 k) -> NMOS-inversion series capacitor (~3 pF, gate on the
+* mixer side) -> mixer LO node biased to VB ~2.45 V through 20 k.  No active
+* device in the signal path.  VB is exposed as ATB_VB (sense, or force from the
+* analog test bus to trim the switching point).
+* Internal mode (INT=1): a tristate CMOS driver per leg drives the same mixer
+* node from the internal LO set LOI_* (rail to rail); the external series
+* switches and the capacitor transmission gates are open.
+* Off (EXT=INT=0, reset): bias dividers off, tristate drivers off, mixer LO
+* nodes clamped to VSS (mixers off); each pad sees one NMOS drain junction.
+* EXT and INT must not both be 1 (register-file rule).
+.include timing_cells.spice
+.include generated/fast/ct_lodrv.spice
+
+.subckt pt_lo_ext_leg PAD LOI LO VPAD VB EXT EXTB INT INTB OFF VDD VSS
+XSW PS EXT PAD VSS nfet_03v3 w=10u l=0.28u m=6
+XRP PS VPAD VSS ppolyf_u_1k r_width=1u r_length=10u
+XCC PS CG PS VSS nfet_03v3 w=20u l=15u m=2
+* transmission gate between the series capacitor and the mixer node: open in
+* internal mode, so the capacitor's channel-to-substrate (bottom-plate)
+* capacitance does not load the internal driver
+XTN CG EXT LO VSS nfet_03v3 w=10u l=0.28u m=4
+XTP CG EXTB LO VDD pfet_03v3 w=10u l=0.28u m=4
+XRB LO VB VSS ppolyf_u_1k r_width=1u r_length=20u
+XCL LO OFF VSS VSS nfet_03v3 w=1u l=0.28u
+* internal driver: compact hand-placed cell (fastcells.py ct_lodrv): split
+* NAND/NOR pre-drivers and a 16-finger output stage whose P and N gates are
+* both off when INT=0 (tristate without series stacks)
+XDRV LOI INT INTB LO VDD VSS ct_lodrv
+.ends
+
+.subckt pt_lo_ext EXT_IP EXT_IN EXT_QP EXT_QN LOI_IP LOI_IN LOI_QP LOI_QN EXT INT
++ LO_IP LO_IN LO_QP LO_QN ATB_VB VDD VSS
+XEI INT INTB VDD VSS pt_t_inv1
+XON EXT INT OFF VDD VSS pt_t_nor2
+XONB OFF ON VDD VSS pt_t_inv1
+XEB EXT EXTB VDD VSS pt_t_inv1
+* VB = 3.3 * 34k/44k ~ 2.55 V while EXT=1 (gated both ends); raised from 2.45 V
+* so the RX switch on-drive holds at ss, 3.15 V
+XVBP VBT EXTB VDD VDD pfet_03v3 w=4u l=0.28u
+XRV1 VBT ATB_VB VSS ppolyf_u_1k r_width=1u r_length=10u
+XRV2 ATB_VB VBB VSS ppolyf_u_1k r_width=1u r_length=34u
+XVBN VBB EXT VSS VSS nfet_03v3 w=4u l=0.28u
+XCVB VSS ATB_VB VSS VSS nfet_03v3 w=10u l=10u
+* VPAD = 3.3 * 10k/30k ~ 1.1 V while EXT or INT
+XVPP VPT OFF VDD VDD pfet_03v3 w=4u l=0.28u
+XRP1 VPT VPAD VSS ppolyf_u_1k r_width=1u r_length=20u
+XRP2 VPAD VPB VSS ppolyf_u_1k r_width=1u r_length=10u
+XVPN VPB ON VSS VSS nfet_03v3 w=4u l=0.28u
+XCVP VSS VPAD VSS VSS nfet_03v3 w=10u l=10u
+XIP EXT_IP LOI_IP LO_IP VPAD ATB_VB EXT EXTB INT INTB OFF VDD VSS pt_lo_ext_leg
+XIN EXT_IN LOI_IN LO_IN VPAD ATB_VB EXT EXTB INT INTB OFF VDD VSS pt_lo_ext_leg
+XQP EXT_QP LOI_QP LO_QP VPAD ATB_VB EXT EXTB INT INTB OFF VDD VSS pt_lo_ext_leg
+XQN EXT_QN LOI_QN LO_QN VPAD ATB_VB EXT EXTB INT INTB OFF VDD VSS pt_lo_ext_leg
+.ends

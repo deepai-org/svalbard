@@ -1,0 +1,3030 @@
+{
+ "view": "sch",
+ "analog_image": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+ "analog_image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+ "models": "/foss/pdks/gf180mcuD/libs.tech/ngspice",
+ "nominal": "tt / 27 C / 3.3 V",
+ "lo_assumption": "differential rail-to-rail CMOS square LO, 50% duty, 30 ps edges, 50 ohm source, 2.44 GHz",
+ "pad_assumption": "2 ohm + 1 pF per leg (rftxpad allocation), 50 ohm differential DC-blocked load",
+ "board_match": {
+  "f": 2440000000.0,
+  "q_l": 30.0,
+  "r_load": 50.0,
+  "shunt_pad": [
+   "L",
+   1.824382133798705e-08
+  ],
+  "series_l": 3.796339950701634e-09,
+  "shunt_load": null,
+  "r_opt_ohm": 117.74848307249162,
+  "pad_susceptance_S": 0.0134610629,
+  "method": "driver differential output admittance at the pad (tt, code 15) conjugate-matched to 50 ohm differential by an L-section; inductor Q=30 (series loss in simulation), ideal capacitors, ideal 1:1 balun not included (budget ~0.5 dB).",
+  "pad_admittance_S": [
+   0.00849267841,
+   0.0134610629
+  ]
+ },
+ "runtime_s": 176.6,
+ "results": {
+  "mix_sat": {
+   "meta": {
+    "kind": "mixer",
+    "vin": 0.3
+   },
+   "result": {
+    "out_fund_mVpk_diff": 250.897,
+    "out_current_fund_uApk": 836.32,
+    "conversion_transconductance_mS": 2.7877,
+    "tail_current_mA": 1.0005,
+    "logic_supply_uA": 0.073,
+    "bb_source_uA": 0.7993,
+    "dac_source_uA": -0.0026,
+    "atb_bias_V": 0.9397,
+    "atb_tail_V": 0.7561
+   }
+  },
+  "mix_sat_1p0": {
+   "meta": {
+    "kind": "mixer",
+    "vin": 1.0
+   },
+   "result": {
+    "out_fund_mVpk_diff": 317.525,
+    "out_current_fund_uApk": 1058.42,
+    "conversion_transconductance_mS": 1.0584,
+    "tail_current_mA": 1.0075,
+    "logic_supply_uA": 0.072,
+    "bb_source_uA": 0.3533,
+    "dac_source_uA": -0.0026,
+    "atb_bias_V": 0.9397,
+    "atb_tail_V": 1.0336
+   }
+  },
+  "mix_bb_1p0": {
+   "meta": {
+    "kind": "mixer",
+    "vin": 1.0
+   },
+   "result": {
+    "out_fund_mVpk_diff": 316.58,
+    "out_current_fund_uApk": 1055.27,
+    "conversion_transconductance_mS": 1.0553,
+    "tail_current_mA": 1.0038,
+    "logic_supply_uA": 0.001,
+    "bb_source_uA": 0.3964,
+    "dac_source_uA": -0.0026,
+    "atb_bias_V": 0.9397,
+    "atb_tail_V": 1.0344
+   }
+  },
+  "mix_bb_p": {
+   "meta": {
+    "kind": "mixer",
+    "vin": 0.3
+   },
+   "result": {
+    "out_fund_mVpk_diff": 139.796,
+    "out_current_fund_uApk": 465.99,
+    "conversion_transconductance_mS": 1.5533,
+    "tail_current_mA": 0.9994,
+    "logic_supply_uA": -0.004,
+    "bb_source_uA": 0.7382,
+    "dac_source_uA": -0.0025,
+    "atb_bias_V": 0.9397,
+    "atb_tail_V": 0.791
+   }
+  },
+  "mix_bb_n": {
+   "meta": {
+    "kind": "mixer",
+    "vin": -0.3
+   },
+   "result": {
+    "out_fund_mVpk_diff": 139.797,
+    "out_current_fund_uApk": 465.99,
+    "conversion_transconductance_mS": -1.5533,
+    "tail_current_mA": 0.9994,
+    "logic_supply_uA": -0.004,
+    "bb_source_uA": 0.3822,
+    "dac_source_uA": -0.0025,
+    "atb_bias_V": 0.9397,
+    "atb_tail_V": 0.6473
+   }
+  },
+  "mix_zero": {
+   "meta": {
+    "kind": "mixer",
+    "vin": 0.0
+   },
+   "result": {
+    "out_fund_mVpk_diff": 0.011,
+    "out_current_fund_uApk": 0.04,
+    "conversion_transconductance_mS": null,
+    "tail_current_mA": 0.9991,
+    "logic_supply_uA": -0.004,
+    "bb_source_uA": 0.6135,
+    "dac_source_uA": -0.0024,
+    "atb_bias_V": 0.9397,
+    "atb_tail_V": 0.7131
+   }
+  },
+  "mix_dac": {
+   "meta": {
+    "kind": "mixer",
+    "vin": 0.3
+   },
+   "result": {
+    "out_fund_mVpk_diff": 139.796,
+    "out_current_fund_uApk": 465.99,
+    "conversion_transconductance_mS": 1.5533,
+    "tail_current_mA": 0.9994,
+    "logic_supply_uA": -0.003,
+    "bb_source_uA": -0.0025,
+    "dac_source_uA": 0.7379,
+    "atb_bias_V": 0.9397,
+    "atb_tail_V": 0.791
+   }
+  },
+  "mix_off": {
+   "meta": {
+    "kind": "mixer",
+    "vin": 0.3
+   },
+   "result": {
+    "out_fund_mVpk_diff": 0.0,
+    "out_current_fund_uApk": 0.0,
+    "conversion_transconductance_mS": 0.0,
+    "tail_current_mA": -0.0,
+    "logic_supply_uA": -0.007,
+    "bb_source_uA": -0.0001,
+    "dac_source_uA": -0.0001,
+    "atb_bias_V": -0.0,
+    "atb_tail_V": 0.0799
+   }
+  },
+  "mix_unselected": {
+   "meta": {
+    "kind": "mixer",
+    "vin": 0.3
+   },
+   "result": {
+    "out_fund_mVpk_diff": 0.011,
+    "out_current_fund_uApk": 0.04,
+    "conversion_transconductance_mS": 0.0001,
+    "tail_current_mA": 0.9991,
+    "logic_supply_uA": -0.003,
+    "bb_source_uA": -0.0024,
+    "dac_source_uA": 0.6134,
+    "atb_bias_V": 0.9397,
+    "atb_tail_V": 0.7131
+   }
+  },
+  "sum_on": {
+   "meta": {
+    "kind": "sum"
+   },
+   "result": {
+    "out_fund_mVpk_diff": 75.572,
+    "transimpedance_ohm": 267.19,
+    "supply_mA": 2.0,
+    "out_p_dc_V": 2.8365,
+    "atb_cm_V": 2.8365,
+    "in_p_dc_V": 2.8293
+   }
+  },
+  "sum_off": {
+   "meta": {
+    "kind": "sum"
+   },
+   "result": {
+    "out_fund_mVpk_diff": 0.0,
+    "transimpedance_ohm": 0.0,
+    "supply_mA": 0.0,
+    "out_p_dc_V": 0.0,
+    "atb_cm_V": 0.0,
+    "in_p_dc_V": 0.0
+   }
+  },
+  "sum_ac": {
+   "meta": {
+    "kind": "sum_ac"
+   },
+   "result": {
+    "input_impedance_ohm_at_2p44GHz": 297.24,
+    "transfer_ohm_at_2p44GHz": 286.78
+   }
+  },
+  "drv_a50": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.05
+   },
+   "result": {
+    "input_mVpk_diff": 49.996,
+    "pad_fund_mVpk_diff": 103.161,
+    "pad_dBm_50ohm": -9.73,
+    "voltage_gain": 2.0634,
+    "supply_mA": 27.9242,
+    "atb_bias_V": 0.9473,
+    "atb_pre_V": 2.6422,
+    "atb_cm_V": 2.3397
+   }
+  },
+  "drv_a150": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.15
+   },
+   "result": {
+    "input_mVpk_diff": 149.988,
+    "pad_fund_mVpk_diff": 265.626,
+    "pad_dBm_50ohm": -1.51,
+    "voltage_gain": 1.771,
+    "supply_mA": 28.2605,
+    "atb_bias_V": 0.9489,
+    "atb_pre_V": 2.6362,
+    "atb_cm_V": 2.3267
+   }
+  },
+  "drv_a300": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.976,
+    "pad_fund_mVpk_diff": 346.972,
+    "pad_dBm_50ohm": 0.81,
+    "voltage_gain": 1.1567,
+    "supply_mA": 29.213,
+    "atb_bias_V": 0.9533,
+    "atb_pre_V": 2.6182,
+    "atb_cm_V": 2.2905
+   }
+  },
+  "drv_a600": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.6
+   },
+   "result": {
+    "input_mVpk_diff": 599.952,
+    "pad_fund_mVpk_diff": 363.737,
+    "pad_dBm_50ohm": 1.22,
+    "voltage_gain": 0.6063,
+    "supply_mA": 30.0518,
+    "atb_bias_V": 0.9571,
+    "atb_pre_V": 2.5994,
+    "atb_cm_V": 2.2604
+   }
+  },
+  "drv_code1": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.976,
+    "pad_fund_mVpk_diff": 42.888,
+    "pad_dBm_50ohm": -17.35,
+    "voltage_gain": 0.143,
+    "supply_mA": 11.8428,
+    "atb_bias_V": 0.9509,
+    "atb_pre_V": 2.6255,
+    "atb_cm_V": 3.2325
+   }
+  },
+  "drv_code2": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.976,
+    "pad_fund_mVpk_diff": 74.089,
+    "pad_dBm_50ohm": -12.6,
+    "voltage_gain": 0.247,
+    "supply_mA": 13.1483,
+    "atb_bias_V": 0.9518,
+    "atb_pre_V": 2.6221,
+    "atb_cm_V": 3.1643
+   }
+  },
+  "drv_code4": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.976,
+    "pad_fund_mVpk_diff": 134.306,
+    "pad_dBm_50ohm": -7.44,
+    "voltage_gain": 0.4477,
+    "supply_mA": 15.7146,
+    "atb_bias_V": 0.953,
+    "atb_pre_V": 2.619,
+    "atb_cm_V": 3.0271
+   }
+  },
+  "drv_code8": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.976,
+    "pad_fund_mVpk_diff": 231.681,
+    "pad_dBm_50ohm": -2.7,
+    "voltage_gain": 0.7723,
+    "supply_mA": 20.7261,
+    "atb_bias_V": 0.9535,
+    "atb_pre_V": 2.6183,
+    "atb_cm_V": 2.7542
+   }
+  },
+  "drv_code12": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.976,
+    "pad_fund_mVpk_diff": 305.003,
+    "pad_dBm_50ohm": -0.31,
+    "voltage_gain": 1.0168,
+    "supply_mA": 25.6035,
+    "atb_bias_V": 0.9535,
+    "atb_pre_V": 2.6179,
+    "atb_cm_V": 2.4881
+   }
+  },
+  "drv_mute": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.976,
+    "pad_fund_mVpk_diff": 21.841,
+    "pad_dBm_50ohm": -23.21,
+    "voltage_gain": 0.0728,
+    "supply_mA": 10.5005,
+    "atb_bias_V": 0.9494,
+    "atb_pre_V": 2.632,
+    "atb_cm_V": 3.2999
+   }
+  },
+  "drv_bypass": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.974,
+    "pad_fund_mVpk_diff": 34.712,
+    "pad_dBm_50ohm": -19.19,
+    "voltage_gain": 0.1157,
+    "supply_mA": -0.0,
+    "atb_bias_V": 0.9471,
+    "atb_pre_V": 3.3,
+    "atb_cm_V": 2.8225
+   }
+  },
+  "drv_bypass_en0": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.974,
+    "pad_fund_mVpk_diff": 34.712,
+    "pad_dBm_50ohm": -19.19,
+    "voltage_gain": 0.1157,
+    "supply_mA": -0.0,
+    "atb_bias_V": 0.0,
+    "atb_pre_V": 3.3,
+    "atb_cm_V": 2.8225
+   }
+  },
+  "drv_off": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.976,
+    "pad_fund_mVpk_diff": 0.001,
+    "pad_dBm_50ohm": -107.75,
+    "voltage_gain": 0.0,
+    "supply_mA": 0.0,
+    "atb_bias_V": 0.0,
+    "atb_pre_V": 3.3,
+    "atb_cm_V": 0.0
+   }
+  },
+  "cap_mix_bb_off": {
+   "meta": {
+    "kind": "cap"
+   },
+   "result": {
+    "capacitance_fF": 4.01
+   }
+  },
+  "cap_mix_bb_on": {
+   "meta": {
+    "kind": "cap"
+   },
+   "result": {
+    "capacitance_fF": 49.46
+   }
+  },
+  "cap_mix_bb_unselected": {
+   "meta": {
+    "kind": "cap"
+   },
+   "result": {
+    "capacitance_fF": 4.01
+   }
+  },
+  "cap_mix_dac_off": {
+   "meta": {
+    "kind": "cap"
+   },
+   "result": {
+    "capacitance_fF": 4.01
+   }
+  },
+  "cap_mix_dac_on": {
+   "meta": {
+    "kind": "cap"
+   },
+   "result": {
+    "capacitance_fF": 49.46
+   }
+  },
+  "cap_drv_in_on": {
+   "meta": {
+    "kind": "cap"
+   },
+   "result": {
+    "capacitance_fF": 127.12
+   }
+  },
+  "cap_drv_in_off": {
+   "meta": {
+    "kind": "cap"
+   },
+   "result": {
+    "capacitance_fF": 87.61
+   }
+  },
+  "cap_drv_in_bypass": {
+   "meta": {
+    "kind": "cap"
+   },
+   "result": {
+    "capacitance_fF": 1140.25
+   }
+  },
+  "chain_dc": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 212.628,
+    "pad_dBm_50ohm": -3.45,
+    "sum_fund_mVpk_diff": 125.729,
+    "mixi_drain_fund_mVpk_diff": 131.861,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0099,
+     "rfdriver": 25.955
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9362,
+     "rfdriver.atb_pre": 2.6869,
+     "rfdriver.atb_cm": 2.4081,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7905
+    },
+    "pad_cm_V": 2.4081,
+    "sum_cm_V": 2.8339
+   }
+  },
+  "chain_dcneg": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 212.654,
+    "pad_dBm_50ohm": -3.45,
+    "sum_fund_mVpk_diff": 125.749,
+    "mixi_drain_fund_mVpk_diff": 131.882,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0099,
+     "rfdriver": 25.955
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9362,
+     "rfdriver.atb_pre": 2.6869,
+     "rfdriver.atb_cm": 2.4081,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.6467
+    },
+    "pad_cm_V": 2.408,
+    "sum_cm_V": 2.834
+   }
+  },
+  "chain_zero": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 0.029,
+    "pad_dBm_50ohm": -80.61,
+    "sum_fund_mVpk_diff": 0.014,
+    "mixi_drain_fund_mVpk_diff": 0.014,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0098,
+     "rfdriver": 27.8689
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9471,
+     "rfdriver.atb_pre": 2.6429,
+     "rfdriver.atb_cm": 2.3412,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7125
+    },
+    "pad_cm_V": 2.3412,
+    "sum_cm_V": 2.834
+   }
+  },
+  "chain_large": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 298.009,
+    "pad_dBm_50ohm": -0.52,
+    "sum_fund_mVpk_diff": 264.748,
+    "mixi_drain_fund_mVpk_diff": 277.629,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0108,
+     "rfdriver": 26.1035
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9365,
+     "rfdriver.atb_pre": 2.6852,
+     "rfdriver.atb_cm": 2.402,
+     "txsum.atb_cm": 2.8325,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.9127
+    },
+    "pad_cm_V": 2.402,
+    "sum_cm_V": 2.8337
+   }
+  },
+  "chain_dac": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 212.628,
+    "pad_dBm_50ohm": -3.45,
+    "sum_fund_mVpk_diff": 125.729,
+    "mixi_drain_fund_mVpk_diff": 131.861,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0099,
+     "rfdriver": 25.955
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9362,
+     "rfdriver.atb_pre": 2.6869,
+     "rfdriver.atb_cm": 2.4081,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7905
+    },
+    "pad_cm_V": 2.4081,
+    "sum_cm_V": 2.8339
+   }
+  },
+  "chain_bypass": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 7.117,
+    "pad_dBm_50ohm": -32.95,
+    "sum_fund_mVpk_diff": 60.614,
+    "mixi_drain_fund_mVpk_diff": 69.022,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0082,
+     "rfdriver": -0.0063
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9471,
+     "rfdriver.atb_pre": 3.3,
+     "rfdriver.atb_cm": 2.8332,
+     "txsum.atb_cm": 2.8331,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7905
+    },
+    "pad_cm_V": 2.8332,
+    "sum_cm_V": 2.8344
+   }
+  },
+  "chain_bypass_large": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 14.949,
+    "pad_dBm_50ohm": -26.51,
+    "sum_fund_mVpk_diff": 127.585,
+    "mixi_drain_fund_mVpk_diff": 145.256,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0094,
+     "rfdriver": -0.0046
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9471,
+     "rfdriver.atb_pre": 3.3,
+     "rfdriver.atb_cm": 2.8334,
+     "txsum.atb_cm": 2.833,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.9128
+    },
+    "pad_cm_V": 2.8334,
+    "sum_cm_V": 2.8341
+   }
+  },
+  "chain_mute": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 12.272,
+    "pad_dBm_50ohm": -28.22,
+    "sum_fund_mVpk_diff": 125.495,
+    "mixi_drain_fund_mVpk_diff": 131.628,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0099,
+     "rfdriver": 10.3385
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9476,
+     "rfdriver.atb_pre": 2.6408,
+     "rfdriver.atb_cm": 3.3,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7905
+    },
+    "pad_cm_V": 3.3,
+    "sum_cm_V": 2.8339
+   }
+  },
+  "chain_code4": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 101.272,
+    "pad_dBm_50ohm": -9.89,
+    "sum_fund_mVpk_diff": 125.608,
+    "mixi_drain_fund_mVpk_diff": 131.739,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0099,
+     "rfdriver": 14.4861
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9413,
+     "rfdriver.atb_pre": 2.6676,
+     "rfdriver.atb_cm": 3.0509,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7905
+    },
+    "pad_cm_V": 3.0509,
+    "sum_cm_V": 2.8339
+   }
+  },
+  "chain_lo_low": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 210.486,
+    "pad_dBm_50ohm": -3.54,
+    "sum_fund_mVpk_diff": 123.819,
+    "mixi_drain_fund_mVpk_diff": 129.839,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0085,
+     "rfdriver": 25.9802
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9363,
+     "rfdriver.atb_pre": 2.6864,
+     "rfdriver.atb_cm": 2.4074,
+     "txsum.atb_cm": 2.8331,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7635
+    },
+    "pad_cm_V": 2.4074,
+    "sum_cm_V": 2.8343
+   }
+  },
+  "stretch_lo_div2": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 1.0557377049180329e-08,
+    "f_lo": 1220000000.0
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 409.771,
+    "pad_dBm_50ohm": 2.25,
+    "sum_fund_mVpk_diff": 158.501,
+    "mixi_drain_fund_mVpk_diff": 165.662,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0098,
+     "rfdriver": 26.8356
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9404,
+     "rfdriver.atb_pre": 2.6694,
+     "rfdriver.atb_cm": 2.3752,
+     "txsum.atb_cm": 2.8331,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7911
+    },
+    "pad_cm_V": 2.3753,
+    "sum_cm_V": 2.8341
+   }
+  },
+  "stretch_lo_div2_large": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 1.0557377049180329e-08,
+    "f_lo": 1220000000.0
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 433.555,
+    "pad_dBm_50ohm": 2.74,
+    "sum_fund_mVpk_diff": 334.087,
+    "mixi_drain_fund_mVpk_diff": 349.127,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.011,
+     "rfdriver": 27.6015
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9436,
+     "rfdriver.atb_pre": 2.6544,
+     "rfdriver.atb_cm": 2.3467,
+     "txsum.atb_cm": 2.8329,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.9134
+    },
+    "pad_cm_V": 2.347,
+    "sum_cm_V": 2.8339
+   }
+  },
+  "stretch_lo_div4": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 1.7114754098360655e-08,
+    "f_lo": 610000000.0
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 449.154,
+    "pad_dBm_50ohm": 3.05,
+    "sum_fund_mVpk_diff": 181.366,
+    "mixi_drain_fund_mVpk_diff": 189.155,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0116,
+     "rfdriver": 27.5505
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9438,
+     "rfdriver.atb_pre": 2.6562,
+     "rfdriver.atb_cm": 2.3475,
+     "txsum.atb_cm": 2.8333,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7914
+    },
+    "pad_cm_V": 2.3472,
+    "sum_cm_V": 2.8337
+   }
+  },
+  "stretch_lo_div4_large": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 1.7114754098360655e-08,
+    "f_lo": 610000000.0
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 453.831,
+    "pad_dBm_50ohm": 3.14,
+    "sum_fund_mVpk_diff": 381.546,
+    "mixi_drain_fund_mVpk_diff": 397.879,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0127,
+     "rfdriver": 27.9958
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9455,
+     "rfdriver.atb_pre": 2.6456,
+     "rfdriver.atb_cm": 2.3303,
+     "txsum.atb_cm": 2.833,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.9137
+    },
+    "pad_cm_V": 2.33,
+    "sum_cm_V": 2.8334
+   }
+  },
+  "chain_ssb": {
+   "meta": {
+    "kind": "chain_ssb",
+    "tstop": 2.1393442622950818e-08,
+    "fbb": 61000000.0
+   },
+   "result": {
+    "lsb_dBm": -2.98,
+    "lo_dBm": -58.7,
+    "usb_dBm": -64.73,
+    "lsb3_dBm": -66.62,
+    "usb3_dBm": -51.43,
+    "wanted": "lsb",
+    "image_rejection_dB": 61.75,
+    "lo_suppression_dBc": 55.72,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0101,
+     "rfdriver": 26.0912
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.937,
+     "rfdriver.atb_pre": 2.6857,
+     "rfdriver.atb_cm": 2.4017,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7155
+    },
+    "pad_cm_V": 2.4016,
+    "sum_cm_V": 2.8339
+   }
+  },
+  "chain_ssb_dac": {
+   "meta": {
+    "kind": "chain_ssb",
+    "tstop": 2.1393442622950818e-08,
+    "fbb": 61000000.0
+   },
+   "result": {
+    "lsb_dBm": -2.98,
+    "lo_dBm": -58.7,
+    "usb_dBm": -64.73,
+    "lsb3_dBm": -66.62,
+    "usb3_dBm": -51.43,
+    "wanted": "lsb",
+    "image_rejection_dB": 61.75,
+    "lo_suppression_dBc": 55.72,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0101,
+     "rfdriver": 26.0912
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.937,
+     "rfdriver.atb_pre": 2.6857,
+     "rfdriver.atb_cm": 2.4017,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7155
+    },
+    "pad_cm_V": 2.4016,
+    "sum_cm_V": 2.8339
+   }
+  },
+  "match_lin_0p1": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 101.553,
+    "pad_dBm_50ohm": -9.87,
+    "sum_fund_mVpk_diff": 42.273,
+    "mixi_drain_fund_mVpk_diff": 44.34,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0098,
+     "rfdriver": 27.5296
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9452,
+     "rfdriver.atb_pre": 2.6507,
+     "rfdriver.atb_cm": 2.3531,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7374
+    },
+    "pad_cm_V": 2.3531,
+    "sum_cm_V": 2.834
+   }
+  },
+  "match_lin_0p3": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 250.289,
+    "pad_dBm_50ohm": -2.03,
+    "sum_fund_mVpk_diff": 125.712,
+    "mixi_drain_fund_mVpk_diff": 131.844,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0099,
+     "rfdriver": 25.9164
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.936,
+     "rfdriver.atb_pre": 2.6877,
+     "rfdriver.atb_cm": 2.4095,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7905
+    },
+    "pad_cm_V": 2.4095,
+    "sum_cm_V": 2.8339
+   }
+  },
+  "match_lin_0p7": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 350.061,
+    "pad_dBm_50ohm": 0.88,
+    "sum_fund_mVpk_diff": 264.713,
+    "mixi_drain_fund_mVpk_diff": 277.594,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0108,
+     "rfdriver": 26.0741
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9363,
+     "rfdriver.atb_pre": 2.6858,
+     "rfdriver.atb_cm": 2.4031,
+     "txsum.atb_cm": 2.8325,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.9127
+    },
+    "pad_cm_V": 2.4031,
+    "sum_cm_V": 2.8337
+   }
+  },
+  "match_sat_0p3": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 335.751,
+    "pad_dBm_50ohm": 0.52,
+    "sum_fund_mVpk_diff": 226.032,
+    "mixi_drain_fund_mVpk_diff": 237.036,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0105,
+     "rfdriver": 25.8932
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9355,
+     "rfdriver.atb_pre": 2.6894,
+     "rfdriver.atb_cm": 2.4096,
+     "txsum.atb_cm": 2.8325,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7555
+    },
+    "pad_cm_V": 2.4096,
+    "sum_cm_V": 2.8338
+   }
+  },
+  "match_sat_1p0": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 355.358,
+    "pad_dBm_50ohm": 1.01,
+    "sum_fund_mVpk_diff": 286.374,
+    "mixi_drain_fund_mVpk_diff": 300.299,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0172,
+     "rfdriver": 26.1699
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9368,
+     "rfdriver.atb_pre": 2.6839,
+     "rfdriver.atb_cm": 2.3997,
+     "txsum.atb_cm": 2.831,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 1.0329
+    },
+    "pad_cm_V": 2.3997,
+    "sum_cm_V": 2.8322
+   }
+  },
+  "match_zero": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 0.035,
+    "pad_dBm_50ohm": -79.19,
+    "sum_fund_mVpk_diff": 0.014,
+    "mixi_drain_fund_mVpk_diff": 0.014,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0098,
+     "rfdriver": 27.8689
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9471,
+     "rfdriver.atb_pre": 2.6429,
+     "rfdriver.atb_cm": 2.3412,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7125
+    },
+    "pad_cm_V": 2.3412,
+    "sum_cm_V": 2.834
+   }
+  },
+  "match_sat_zero": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 0.01,
+    "pad_dBm_50ohm": -90.37,
+    "sum_fund_mVpk_diff": 0.004,
+    "mixi_drain_fund_mVpk_diff": 0.004,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0098,
+     "rfdriver": 27.8689
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9471,
+     "rfdriver.atb_pre": 2.6429,
+     "rfdriver.atb_cm": 2.3412,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7125
+    },
+    "pad_cm_V": 2.3412,
+    "sum_cm_V": 2.834
+   }
+  },
+  "match_bypass_0p3": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 8.887,
+    "pad_dBm_50ohm": -31.02,
+    "sum_fund_mVpk_diff": 66.062,
+    "mixi_drain_fund_mVpk_diff": 74.496,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0082,
+     "rfdriver": -0.0063
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9471,
+     "rfdriver.atb_pre": 3.3,
+     "rfdriver.atb_cm": 2.8332,
+     "txsum.atb_cm": 2.8331,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7905
+    },
+    "pad_cm_V": 2.8333,
+    "sum_cm_V": 2.8344
+   }
+  },
+  "match_bypass_sat_1p0": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 20.176,
+    "pad_dBm_50ohm": -23.9,
+    "sum_fund_mVpk_diff": 150.364,
+    "mixi_drain_fund_mVpk_diff": 169.524,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.016,
+     "rfdriver": -0.0037
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9471,
+     "rfdriver.atb_pre": 3.3,
+     "rfdriver.atb_cm": 2.832,
+     "txsum.atb_cm": 2.8314,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 1.0329
+    },
+    "pad_cm_V": 2.832,
+    "sum_cm_V": 2.8326
+   }
+  },
+  "match_mute_sat": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 26.543,
+    "pad_dBm_50ohm": -21.52,
+    "sum_fund_mVpk_diff": 285.814,
+    "mixi_drain_fund_mVpk_diff": 299.737,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0173,
+     "rfdriver": 10.3352
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9473,
+     "rfdriver.atb_pre": 2.6415,
+     "rfdriver.atb_cm": 3.3,
+     "txsum.atb_cm": 2.831,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 1.0329
+    },
+    "pad_cm_V": 3.3,
+    "sum_cm_V": 2.8322
+   }
+  },
+  "match_code4_sat": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 156.021,
+    "pad_dBm_50ohm": -6.14,
+    "sum_fund_mVpk_diff": 286.021,
+    "mixi_drain_fund_mVpk_diff": 299.943,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0173,
+     "rfdriver": 14.6397
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9424,
+     "rfdriver.atb_pre": 2.6626,
+     "rfdriver.atb_cm": 3.0475,
+     "txsum.atb_cm": 2.831,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 1.0329
+    },
+    "pad_cm_V": 3.0474,
+    "sum_cm_V": 2.8322
+   }
+  },
+  "match_code8_sat": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 253.603,
+    "pad_dBm_50ohm": -1.92,
+    "sum_fund_mVpk_diff": 286.222,
+    "mixi_drain_fund_mVpk_diff": 300.145,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0172,
+     "rfdriver": 18.784
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.939,
+     "rfdriver.atb_pre": 2.6747,
+     "rfdriver.atb_cm": 2.8111,
+     "txsum.atb_cm": 2.831,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 1.0329
+    },
+    "pad_cm_V": 2.8111,
+    "sum_cm_V": 2.8322
+   }
+  },
+  "match_code1_sat": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 52.891,
+    "pad_dBm_50ohm": -15.53,
+    "sum_fund_mVpk_diff": 285.787,
+    "mixi_drain_fund_mVpk_diff": 299.708,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0173,
+     "rfdriver": 11.4591
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9462,
+     "rfdriver.atb_pre": 2.6465,
+     "rfdriver.atb_cm": 3.2346,
+     "txsum.atb_cm": 2.831,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 1.0329
+    },
+    "pad_cm_V": 3.2346,
+    "sum_cm_V": 2.8322
+   }
+  },
+  "match_ssb_lin": {
+   "meta": {
+    "kind": "chain_ssb",
+    "tstop": 2.1393442622950818e-08,
+    "fbb": 61000000.0
+   },
+   "result": {
+    "lsb_dBm": -1.59,
+    "lo_dBm": -57.15,
+    "usb_dBm": -63.37,
+    "lsb3_dBm": -65.89,
+    "usb3_dBm": -49.49,
+    "wanted": "lsb",
+    "image_rejection_dB": 61.78,
+    "lo_suppression_dBc": 55.56,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0101,
+     "rfdriver": 26.0567
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9368,
+     "rfdriver.atb_pre": 2.6865,
+     "rfdriver.atb_cm": 2.4029,
+     "txsum.atb_cm": 2.8326,
+     "txmix_i.atb_bias": 0.9397,
+     "txmix_i.atb_tail": 0.7155
+    },
+    "pad_cm_V": 2.4028,
+    "sum_cm_V": 2.8339
+   }
+  },
+  "match_ssb_sat": {
+   "meta": {
+    "kind": "chain_ssb",
+    "tstop": 2.1393442622950818e-08,
+    "fbb": 61000000.0
+   },
+   "result": {
+    "lsb_dBm": 1.29,
+    "lo_dBm": -45.56,
+    "usb_dBm": -37.27,
+    "lsb3_dBm": -41.05,
+    "usb3_dBm": -14.81,
+    "wanted": "lsb",
+    "image_rejection_dB": 38.56,
+    "lo_suppression_dBc": 46.85,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0213,
+     "rfdriver": 26.7097
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9395,
+     "rfdriver.atb_pre": 2.6739,
+     "rfdriver.atb_cm": 2.3787,
+     "txsum.atb_cm": 2.8301,
+     "txmix_i.atb_bias": 0.9373,
+     "txmix_i.atb_tail": 0.8734
+    },
+    "pad_cm_V": 2.3787,
+    "sum_cm_V": 2.8314
+   }
+  },
+  "drv_match_a100": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.1
+   },
+   "result": {
+    "input_mVpk_diff": 99.992,
+    "pad_fund_mVpk_diff": 230.105,
+    "pad_dBm_50ohm": -2.76,
+    "voltage_gain": 2.3012,
+    "supply_mA": 28.0477,
+    "atb_bias_V": 0.9479,
+    "atb_pre_V": 2.64,
+    "atb_cm_V": 2.335
+   }
+  },
+  "drv_match_a300": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.3
+   },
+   "result": {
+    "input_mVpk_diff": 299.976,
+    "pad_fund_mVpk_diff": 408.343,
+    "pad_dBm_50ohm": 2.22,
+    "voltage_gain": 1.3613,
+    "supply_mA": 29.225,
+    "atb_bias_V": 0.9534,
+    "atb_pre_V": 2.6177,
+    "atb_cm_V": 2.2904
+   }
+  },
+  "drv_match_a600": {
+   "meta": {
+    "kind": "driver",
+    "amp": 0.6
+   },
+   "result": {
+    "input_mVpk_diff": 599.952,
+    "pad_fund_mVpk_diff": 427.339,
+    "pad_dBm_50ohm": 2.62,
+    "voltage_gain": 0.7123,
+    "supply_mA": 30.0643,
+    "atb_bias_V": 0.9572,
+    "atb_pre_V": 2.5988,
+    "atb_cm_V": 2.2604
+   }
+  },
+  "corner_tt_22C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 22,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 215.762,
+    "pad_dBm_50ohm": -3.32,
+    "sum_fund_mVpk_diff": 125.37,
+    "mixi_drain_fund_mVpk_diff": 131.42,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0172,
+     "rfdriver": 25.7633
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9388,
+     "rfdriver.atb_pre": 2.5382,
+     "rfdriver.atb_cm": 2.2646,
+     "txsum.atb_cm": 2.6779,
+     "txmix_i.atb_bias": 0.9422,
+     "txmix_i.atb_tail": 0.788
+    },
+    "pad_cm_V": 2.2645,
+    "sum_cm_V": 2.6792
+   }
+  },
+  "mcorner_tt_22C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 22,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 254.33,
+    "pad_dBm_50ohm": -1.89,
+    "sum_fund_mVpk_diff": 125.352,
+    "mixi_drain_fund_mVpk_diff": 131.402,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0172,
+     "rfdriver": 25.7257
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9386,
+     "rfdriver.atb_pre": 2.5391,
+     "rfdriver.atb_cm": 2.2659,
+     "txsum.atb_cm": 2.6779,
+     "txmix_i.atb_bias": 0.9422,
+     "txmix_i.atb_tail": 0.788
+    },
+    "pad_cm_V": 2.2659,
+    "sum_cm_V": 2.6792
+   }
+  },
+  "scorner_tt_22C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 22,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 356.758,
+    "pad_dBm_50ohm": 1.05,
+    "sum_fund_mVpk_diff": 285.794,
+    "mixi_drain_fund_mVpk_diff": 299.547,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0249,
+     "rfdriver": 26.0677
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9398,
+     "rfdriver.atb_pre": 2.5337,
+     "rfdriver.atb_cm": 2.2526,
+     "txsum.atb_cm": 2.6761,
+     "txmix_i.atb_bias": 0.9422,
+     "txmix_i.atb_tail": 1.0315
+    },
+    "pad_cm_V": 2.2526,
+    "sum_cm_V": 2.6774
+   }
+  },
+  "corner_tt_22C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 22,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 221.405,
+    "pad_dBm_50ohm": -3.1,
+    "sum_fund_mVpk_diff": 126.109,
+    "mixi_drain_fund_mVpk_diff": 132.179,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0173,
+     "rfdriver": 26.043
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9387,
+     "rfdriver.atb_pre": 2.7344,
+     "rfdriver.atb_cm": 2.4558,
+     "txsum.atb_cm": 2.883,
+     "txmix_i.atb_bias": 0.9422,
+     "txmix_i.atb_tail": 0.7884
+    },
+    "pad_cm_V": 2.4558,
+    "sum_cm_V": 2.8843
+   }
+  },
+  "mcorner_tt_22C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 22,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 260.507,
+    "pad_dBm_50ohm": -1.68,
+    "sum_fund_mVpk_diff": 126.091,
+    "mixi_drain_fund_mVpk_diff": 132.161,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0173,
+     "rfdriver": 26.0039
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9385,
+     "rfdriver.atb_pre": 2.7353,
+     "rfdriver.atb_cm": 2.4572,
+     "txsum.atb_cm": 2.883,
+     "txmix_i.atb_bias": 0.9422,
+     "txmix_i.atb_tail": 0.7884
+    },
+    "pad_cm_V": 2.4572,
+    "sum_cm_V": 2.8843
+   }
+  },
+  "scorner_tt_22C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 22,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 363.17,
+    "pad_dBm_50ohm": 1.2,
+    "sum_fund_mVpk_diff": 287.758,
+    "mixi_drain_fund_mVpk_diff": 301.568,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0248,
+     "rfdriver": 26.3359
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9397,
+     "rfdriver.atb_pre": 2.7297,
+     "rfdriver.atb_cm": 2.4447,
+     "txsum.atb_cm": 2.8813,
+     "txmix_i.atb_bias": 0.9422,
+     "txmix_i.atb_tail": 1.0313
+    },
+    "pad_cm_V": 2.4447,
+    "sum_cm_V": 2.8826
+   }
+  },
+  "corner_tt_32C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 32,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 201.272,
+    "pad_dBm_50ohm": -3.92,
+    "sum_fund_mVpk_diff": 124.869,
+    "mixi_drain_fund_mVpk_diff": 131.052,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0026,
+     "rfdriver": 25.7235
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9338,
+     "rfdriver.atb_pre": 2.5411,
+     "rfdriver.atb_cm": 2.265,
+     "txsum.atb_cm": 2.6794,
+     "txmix_i.atb_bias": 0.9373,
+     "txmix_i.atb_tail": 0.7923
+    },
+    "pad_cm_V": 2.2649,
+    "sum_cm_V": 2.6807
+   }
+  },
+  "mcorner_tt_32C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 32,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 237.267,
+    "pad_dBm_50ohm": -2.5,
+    "sum_fund_mVpk_diff": 124.853,
+    "mixi_drain_fund_mVpk_diff": 131.035,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0025,
+     "rfdriver": 25.6865
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9336,
+     "rfdriver.atb_pre": 2.5419,
+     "rfdriver.atb_cm": 2.2663,
+     "txsum.atb_cm": 2.6794,
+     "txmix_i.atb_bias": 0.9373,
+     "txmix_i.atb_tail": 0.7923
+    },
+    "pad_cm_V": 2.2662,
+    "sum_cm_V": 2.6807
+   }
+  },
+  "scorner_tt_32C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 32,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 344.315,
+    "pad_dBm_50ohm": 0.74,
+    "sum_fund_mVpk_diff": 283.826,
+    "mixi_drain_fund_mVpk_diff": 297.836,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.01,
+     "rfdriver": 25.8738
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9339,
+     "rfdriver.atb_pre": 2.5398,
+     "rfdriver.atb_cm": 2.2585,
+     "txsum.atb_cm": 2.6777,
+     "txmix_i.atb_bias": 0.9373,
+     "txmix_i.atb_tail": 1.0346
+    },
+    "pad_cm_V": 2.2585,
+    "sum_cm_V": 2.6789
+   }
+  },
+  "corner_tt_32C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 32,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 206.65,
+    "pad_dBm_50ohm": -3.7,
+    "sum_fund_mVpk_diff": 125.628,
+    "mixi_drain_fund_mVpk_diff": 131.831,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0026,
+     "rfdriver": 26.0026
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9337,
+     "rfdriver.atb_pre": 2.7372,
+     "rfdriver.atb_cm": 2.4563,
+     "txsum.atb_cm": 2.8846,
+     "txmix_i.atb_bias": 0.9373,
+     "txmix_i.atb_tail": 0.7927
+    },
+    "pad_cm_V": 2.4563,
+    "sum_cm_V": 2.8859
+   }
+  },
+  "mcorner_tt_32C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 32,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 243.16,
+    "pad_dBm_50ohm": -2.28,
+    "sum_fund_mVpk_diff": 125.613,
+    "mixi_drain_fund_mVpk_diff": 131.814,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0026,
+     "rfdriver": 25.9641
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9335,
+     "rfdriver.atb_pre": 2.7381,
+     "rfdriver.atb_cm": 2.4577,
+     "txsum.atb_cm": 2.8846,
+     "txmix_i.atb_bias": 0.9373,
+     "txmix_i.atb_tail": 0.7927
+    },
+    "pad_cm_V": 2.4577,
+    "sum_cm_V": 2.8859
+   }
+  },
+  "scorner_tt_32C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "tt",
+    "temp": 32,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 350.684,
+    "pad_dBm_50ohm": 0.9,
+    "sum_fund_mVpk_diff": 285.807,
+    "mixi_drain_fund_mVpk_diff": 299.874,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0099,
+     "rfdriver": 26.1398
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.9339,
+     "rfdriver.atb_pre": 2.7359,
+     "rfdriver.atb_cm": 2.4507,
+     "txsum.atb_cm": 2.883,
+     "txmix_i.atb_bias": 0.9373,
+     "txmix_i.atb_tail": 1.0345
+    },
+    "pad_cm_V": 2.4508,
+    "sum_cm_V": 2.8842
+   }
+  },
+  "corner_ss_22C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 22,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 159.871,
+    "pad_dBm_50ohm": -5.92,
+    "sum_fund_mVpk_diff": 114.53,
+    "mixi_drain_fund_mVpk_diff": 122.831,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0104,
+     "rfdriver": 23.944
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.0575,
+     "rfdriver.atb_pre": 2.4506,
+     "rfdriver.atb_cm": 2.2011,
+     "txsum.atb_cm": 2.5997,
+     "txmix_i.atb_bias": 1.0621,
+     "txmix_i.atb_tail": 0.6793
+    },
+    "pad_cm_V": 2.201,
+    "sum_cm_V": 2.601
+   }
+  },
+  "mcorner_ss_22C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 22,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 193.594,
+    "pad_dBm_50ohm": -4.26,
+    "sum_fund_mVpk_diff": 114.496,
+    "mixi_drain_fund_mVpk_diff": 122.797,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0104,
+     "rfdriver": 23.9204
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.0573,
+     "rfdriver.atb_pre": 2.4515,
+     "rfdriver.atb_cm": 2.2019,
+     "txsum.atb_cm": 2.5997,
+     "txmix_i.atb_bias": 1.0621,
+     "txmix_i.atb_tail": 0.6793
+    },
+    "pad_cm_V": 2.2018,
+    "sum_cm_V": 2.601
+   }
+  },
+  "scorner_ss_22C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 22,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 322.041,
+    "pad_dBm_50ohm": 0.16,
+    "sum_fund_mVpk_diff": 296.353,
+    "mixi_drain_fund_mVpk_diff": 317.79,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0194,
+     "rfdriver": 24.6522
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.0584,
+     "rfdriver.atb_pre": 2.4462,
+     "rfdriver.atb_cm": 2.1599,
+     "txsum.atb_cm": 2.5973,
+     "txmix_i.atb_bias": 1.0622,
+     "txmix_i.atb_tail": 0.911
+    },
+    "pad_cm_V": 2.1599,
+    "sum_cm_V": 2.5985
+   }
+  },
+  "corner_ss_22C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 22,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 167.166,
+    "pad_dBm_50ohm": -5.54,
+    "sum_fund_mVpk_diff": 115.24,
+    "mixi_drain_fund_mVpk_diff": 123.572,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0105,
+     "rfdriver": 24.8646
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.0575,
+     "rfdriver.atb_pre": 2.6475,
+     "rfdriver.atb_cm": 2.3477,
+     "txsum.atb_cm": 2.8064,
+     "txmix_i.atb_bias": 1.0621,
+     "txmix_i.atb_tail": 0.6795
+    },
+    "pad_cm_V": 2.3477,
+    "sum_cm_V": 2.8076
+   }
+  },
+  "mcorner_ss_22C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 22,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 201.488,
+    "pad_dBm_50ohm": -3.92,
+    "sum_fund_mVpk_diff": 115.204,
+    "mixi_drain_fund_mVpk_diff": 123.536,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0105,
+     "rfdriver": 24.8297
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.0573,
+     "rfdriver.atb_pre": 2.6484,
+     "rfdriver.atb_cm": 2.3492,
+     "txsum.atb_cm": 2.8064,
+     "txmix_i.atb_bias": 1.0621,
+     "txmix_i.atb_tail": 0.6795
+    },
+    "pad_cm_V": 2.3491,
+    "sum_cm_V": 2.8076
+   }
+  },
+  "scorner_ss_22C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 22,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 330.315,
+    "pad_dBm_50ohm": 0.38,
+    "sum_fund_mVpk_diff": 298.03,
+    "mixi_drain_fund_mVpk_diff": 319.533,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0186,
+     "rfdriver": 25.1926
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.0583,
+     "rfdriver.atb_pre": 2.6431,
+     "rfdriver.atb_cm": 2.3315,
+     "txsum.atb_cm": 2.8042,
+     "txmix_i.atb_bias": 1.0621,
+     "txmix_i.atb_tail": 0.9101
+    },
+    "pad_cm_V": 2.3315,
+    "sum_cm_V": 2.8054
+   }
+  },
+  "corner_ss_32C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 32,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 148.414,
+    "pad_dBm_50ohm": -6.57,
+    "sum_fund_mVpk_diff": 114.194,
+    "mixi_drain_fund_mVpk_diff": 122.708,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 1.9967,
+     "rfdriver": 23.9442
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.053,
+     "rfdriver.atb_pre": 2.4525,
+     "rfdriver.atb_cm": 2.2001,
+     "txsum.atb_cm": 2.6012,
+     "txmix_i.atb_bias": 1.0575,
+     "txmix_i.atb_tail": 0.6832
+    },
+    "pad_cm_V": 2.2,
+    "sum_cm_V": 2.6024
+   }
+  },
+  "mcorner_ss_32C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 32,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 179.799,
+    "pad_dBm_50ohm": -4.9,
+    "sum_fund_mVpk_diff": 114.162,
+    "mixi_drain_fund_mVpk_diff": 122.676,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 1.9967,
+     "rfdriver": 23.9212
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.0528,
+     "rfdriver.atb_pre": 2.4533,
+     "rfdriver.atb_cm": 2.2009,
+     "txsum.atb_cm": 2.6012,
+     "txmix_i.atb_bias": 1.0575,
+     "txmix_i.atb_tail": 0.6832
+    },
+    "pad_cm_V": 2.2008,
+    "sum_cm_V": 2.6024
+   }
+  },
+  "scorner_ss_32C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 32,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 309.591,
+    "pad_dBm_50ohm": -0.18,
+    "sum_fund_mVpk_diff": 294.467,
+    "mixi_drain_fund_mVpk_diff": 316.371,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0052,
+     "rfdriver": 24.4887
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.053,
+     "rfdriver.atb_pre": 2.4519,
+     "rfdriver.atb_cm": 2.166,
+     "txsum.atb_cm": 2.5989,
+     "txmix_i.atb_bias": 1.0576,
+     "txmix_i.atb_tail": 0.9136
+    },
+    "pad_cm_V": 2.1659,
+    "sum_cm_V": 2.6
+   }
+  },
+  "corner_ss_32C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 32,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 155.203,
+    "pad_dBm_50ohm": -6.18,
+    "sum_fund_mVpk_diff": 114.913,
+    "mixi_drain_fund_mVpk_diff": 123.459,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 1.9967,
+     "rfdriver": 24.8691
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.053,
+     "rfdriver.atb_pre": 2.6494,
+     "rfdriver.atb_cm": 2.3466,
+     "txsum.atb_cm": 2.808,
+     "txmix_i.atb_bias": 1.0575,
+     "txmix_i.atb_tail": 0.6835
+    },
+    "pad_cm_V": 2.3465,
+    "sum_cm_V": 2.8092
+   }
+  },
+  "mcorner_ss_32C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 32,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 187.17,
+    "pad_dBm_50ohm": -4.56,
+    "sum_fund_mVpk_diff": 114.88,
+    "mixi_drain_fund_mVpk_diff": 123.425,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 1.9967,
+     "rfdriver": 24.8349
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.0527,
+     "rfdriver.atb_pre": 2.6503,
+     "rfdriver.atb_cm": 2.348,
+     "txsum.atb_cm": 2.808,
+     "txmix_i.atb_bias": 1.0575,
+     "txmix_i.atb_tail": 0.6835
+    },
+    "pad_cm_V": 2.3479,
+    "sum_cm_V": 2.8092
+   }
+  },
+  "scorner_ss_32C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ss",
+    "temp": 32,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 317.683,
+    "pad_dBm_50ohm": 0.04,
+    "sum_fund_mVpk_diff": 296.217,
+    "mixi_drain_fund_mVpk_diff": 318.192,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0046,
+     "rfdriver": 25.0312
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 1.0529,
+     "rfdriver.atb_pre": 2.649,
+     "rfdriver.atb_cm": 2.3373,
+     "txsum.atb_cm": 2.8059,
+     "txmix_i.atb_bias": 1.0575,
+     "txmix_i.atb_tail": 0.9128
+    },
+    "pad_cm_V": 2.3373,
+    "sum_cm_V": 2.807
+   }
+  },
+  "corner_ff_22C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 22,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 254.57,
+    "pad_dBm_50ohm": -1.88,
+    "sum_fund_mVpk_diff": 134.401,
+    "mixi_drain_fund_mVpk_diff": 137.753,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0229,
+     "rfdriver": 27.0165
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8214,
+     "rfdriver.atb_pre": 2.6249,
+     "rfdriver.atb_cm": 2.3899,
+     "txsum.atb_cm": 2.7546,
+     "txmix_i.atb_bias": 0.8229,
+     "txmix_i.atb_tail": 0.8978
+    },
+    "pad_cm_V": 2.3898,
+    "sum_cm_V": 2.7559
+   }
+  },
+  "mcorner_ff_22C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 22,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 291.381,
+    "pad_dBm_50ohm": -0.71,
+    "sum_fund_mVpk_diff": 134.406,
+    "mixi_drain_fund_mVpk_diff": 137.758,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0229,
+     "rfdriver": 26.979
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8212,
+     "rfdriver.atb_pre": 2.6256,
+     "rfdriver.atb_cm": 2.391,
+     "txsum.atb_cm": 2.7546,
+     "txmix_i.atb_bias": 0.8229,
+     "txmix_i.atb_tail": 0.8978
+    },
+    "pad_cm_V": 2.3909,
+    "sum_cm_V": 2.7559
+   }
+  },
+  "scorner_ff_22C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 22,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 370.178,
+    "pad_dBm_50ohm": 1.37,
+    "sum_fund_mVpk_diff": 268.172,
+    "mixi_drain_fund_mVpk_diff": 274.837,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": 0.0,
+     "txsum": 2.0303,
+     "rfdriver": 27.1183
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8215,
+     "rfdriver.atb_pre": 2.6242,
+     "rfdriver.atb_cm": 2.3862,
+     "txsum.atb_cm": 2.7533,
+     "txmix_i.atb_bias": 0.8229,
+     "txmix_i.atb_tail": 1.1525
+    },
+    "pad_cm_V": 2.3861,
+    "sum_cm_V": 2.7545
+   }
+  },
+  "corner_ff_22C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 22,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 261.159,
+    "pad_dBm_50ohm": -1.66,
+    "sum_fund_mVpk_diff": 135.115,
+    "mixi_drain_fund_mVpk_diff": 138.475,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.023,
+     "rfdriver": 27.3432
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8218,
+     "rfdriver.atb_pre": 2.8194,
+     "rfdriver.atb_cm": 2.5827,
+     "txsum.atb_cm": 2.9586,
+     "txmix_i.atb_bias": 0.8229,
+     "txmix_i.atb_tail": 0.8983
+    },
+    "pad_cm_V": 2.5827,
+    "sum_cm_V": 2.9599
+   }
+  },
+  "mcorner_ff_22C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 22,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 298.625,
+    "pad_dBm_50ohm": -0.5,
+    "sum_fund_mVpk_diff": 135.12,
+    "mixi_drain_fund_mVpk_diff": 138.479,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.023,
+     "rfdriver": 27.3065
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8216,
+     "rfdriver.atb_pre": 2.8201,
+     "rfdriver.atb_cm": 2.5838,
+     "txsum.atb_cm": 2.9586,
+     "txmix_i.atb_bias": 0.8229,
+     "txmix_i.atb_tail": 0.8983
+    },
+    "pad_cm_V": 2.5837,
+    "sum_cm_V": 2.9599
+   }
+  },
+  "scorner_ff_22C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 22,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 377.452,
+    "pad_dBm_50ohm": 1.54,
+    "sum_fund_mVpk_diff": 269.974,
+    "mixi_drain_fund_mVpk_diff": 276.664,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": 0.0,
+     "txsum": 2.0303,
+     "rfdriver": 27.4412
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8218,
+     "rfdriver.atb_pre": 2.8187,
+     "rfdriver.atb_cm": 2.5792,
+     "txsum.atb_cm": 2.9573,
+     "txmix_i.atb_bias": 0.8229,
+     "txmix_i.atb_tail": 1.1529
+    },
+    "pad_cm_V": 2.5792,
+    "sum_cm_V": 2.9585
+   }
+  },
+  "corner_ff_32C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 32,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 238.293,
+    "pad_dBm_50ohm": -2.46,
+    "sum_fund_mVpk_diff": 133.659,
+    "mixi_drain_fund_mVpk_diff": 137.051,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0074,
+     "rfdriver": 26.9195
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8159,
+     "rfdriver.atb_pre": 2.6286,
+     "rfdriver.atb_cm": 2.3917,
+     "txsum.atb_cm": 2.756,
+     "txmix_i.atb_bias": 0.8177,
+     "txmix_i.atb_tail": 0.9024
+    },
+    "pad_cm_V": 2.3917,
+    "sum_cm_V": 2.7573
+   }
+  },
+  "mcorner_ff_32C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 32,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 272.547,
+    "pad_dBm_50ohm": -1.29,
+    "sum_fund_mVpk_diff": 133.664,
+    "mixi_drain_fund_mVpk_diff": 137.054,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0074,
+     "rfdriver": 26.8828
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8157,
+     "rfdriver.atb_pre": 2.6293,
+     "rfdriver.atb_cm": 2.3928,
+     "txsum.atb_cm": 2.756,
+     "txmix_i.atb_bias": 0.8177,
+     "txmix_i.atb_tail": 0.9024
+    },
+    "pad_cm_V": 2.3928,
+    "sum_cm_V": 2.7573
+   }
+  },
+  "scorner_ff_32C_3p15V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 32,
+    "vdd": 3.15
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 357.845,
+    "pad_dBm_50ohm": 1.07,
+    "sum_fund_mVpk_diff": 266.034,
+    "mixi_drain_fund_mVpk_diff": 272.76,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": 0.0,
+     "txsum": 2.0145,
+     "rfdriver": 26.9006
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8154,
+     "rfdriver.atb_pre": 2.6301,
+     "rfdriver.atb_cm": 2.3917,
+     "txsum.atb_cm": 2.7547,
+     "txmix_i.atb_bias": 0.8177,
+     "txmix_i.atb_tail": 1.1562
+    },
+    "pad_cm_V": 2.3916,
+    "sum_cm_V": 2.7559
+   }
+  },
+  "corner_ff_32C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 32,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 244.571,
+    "pad_dBm_50ohm": -2.23,
+    "sum_fund_mVpk_diff": 134.407,
+    "mixi_drain_fund_mVpk_diff": 137.807,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0074,
+     "rfdriver": 27.2359
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8162,
+     "rfdriver.atb_pre": 2.8233,
+     "rfdriver.atb_cm": 2.5849,
+     "txsum.atb_cm": 2.9601,
+     "txmix_i.atb_bias": 0.8177,
+     "txmix_i.atb_tail": 0.9029
+    },
+    "pad_cm_V": 2.5849,
+    "sum_cm_V": 2.9614
+   }
+  },
+  "mcorner_ff_32C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 32,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 279.422,
+    "pad_dBm_50ohm": -1.07,
+    "sum_fund_mVpk_diff": 134.412,
+    "mixi_drain_fund_mVpk_diff": 137.811,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": -0.0,
+     "txsum": 2.0074,
+     "rfdriver": 27.2001
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.816,
+     "rfdriver.atb_pre": 2.824,
+     "rfdriver.atb_cm": 2.586,
+     "txsum.atb_cm": 2.9601,
+     "txmix_i.atb_bias": 0.8177,
+     "txmix_i.atb_tail": 0.9029
+    },
+    "pad_cm_V": 2.5859,
+    "sum_cm_V": 2.9614
+   }
+  },
+  "scorner_ff_32C_3p35V": {
+   "meta": {
+    "kind": "chain",
+    "tstop": 8e-09,
+    "corner": "ff",
+    "temp": 32,
+    "vdd": 3.35
+   },
+   "result": {
+    "pad_fund_mVpk_diff": 365.09,
+    "pad_dBm_50ohm": 1.25,
+    "sum_fund_mVpk_diff": 267.867,
+    "mixi_drain_fund_mVpk_diff": 274.619,
+    "supply_mA": {
+     "txmix_i": -0.0,
+     "txmix_q": 0.0,
+     "txsum": 2.0145,
+     "rfdriver": 27.2167
+    },
+    "atb_V": {
+     "rfdriver.atb_bias": 0.8157,
+     "rfdriver.atb_pre": 2.8247,
+     "rfdriver.atb_cm": 2.5849,
+     "txsum.atb_cm": 2.9588,
+     "txmix_i.atb_bias": 0.8177,
+     "txmix_i.atb_tail": 1.1566
+    },
+    "pad_cm_V": 2.5848,
+    "sum_cm_V": 2.96
+   }
+  },
+  "safe_reset_3p3": {
+   "meta": {
+    "kind": "safety"
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0394,
+    "txmix_q_rail_uA": -0.0396,
+    "txsum_rail_uA": -1.7094,
+    "rfdriver_rail_uA": -8.5563,
+    "bb_dac_source_uA": -0.0145,
+    "rail_peak_abs_uA": 208.031,
+    "pad_p_V": 0.0,
+    "sum_p_V": -0.001,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 0.0,
+     "rfdriver_rail": 0.0007,
+     "bb_dac_source": 0.0
+    },
+    "pad_n_V": 0.0
+   }
+  },
+  "safe_reset_3p63_85C": {
+   "meta": {
+    "kind": "safety",
+    "vdd": 3.63,
+    "temp": 85
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0336,
+    "txmix_q_rail_uA": -0.0338,
+    "txsum_rail_uA": -1.4029,
+    "rfdriver_rail_uA": -7.2834,
+    "bb_dac_source_uA": -0.0059,
+    "rail_peak_abs_uA": 178.435,
+    "pad_p_V": 0.0,
+    "sum_p_V": -0.0011,
+    "ibias_pin_V": 0.9146,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0001,
+     "txmix_q_rail": 0.0001,
+     "txsum_rail": 0.0001,
+     "rfdriver_rail": 0.0024,
+     "bb_dac_source": 0.0003
+    },
+    "pad_n_V": 0.0
+   }
+  },
+  "safe_reset_3p63_0C": {
+   "meta": {
+    "kind": "safety",
+    "vdd": 3.63,
+    "temp": 0
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0425,
+    "txmix_q_rail_uA": -0.0428,
+    "txsum_rail_uA": -1.9246,
+    "rfdriver_rail_uA": -8.9658,
+    "bb_dac_source_uA": -0.0167,
+    "rail_peak_abs_uA": 218.893,
+    "pad_p_V": 0.0,
+    "sum_p_V": -0.0009,
+    "ibias_pin_V": 0.9621,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 0.0,
+     "rfdriver_rail": 0.0008,
+     "bb_dac_source": 0.0
+    },
+    "pad_n_V": 0.0
+   }
+  },
+  "safe_reset_ff_3p63_85C": {
+   "meta": {
+    "kind": "safety",
+    "vdd": 3.63,
+    "temp": 85,
+    "corner": "ff"
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0229,
+    "txmix_q_rail_uA": -0.0229,
+    "txsum_rail_uA": -1.7729,
+    "rfdriver_rail_uA": -5.6006,
+    "bb_dac_source_uA": 0.009,
+    "rail_peak_abs_uA": 161.534,
+    "pad_p_V": 0.0,
+    "sum_p_V": -0.0008,
+    "ibias_pin_V": 0.7899,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0015,
+     "txmix_q_rail": 0.0015,
+     "txsum_rail": 0.0014,
+     "rfdriver_rail": 0.0218,
+     "bb_dac_source": 0.0035
+    },
+    "pad_n_V": 0.0
+   }
+  },
+  "safe_rail_off": {
+   "meta": {
+    "kind": "safety",
+    "vdd": 0.0
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0355,
+    "txmix_q_rail_uA": -0.0357,
+    "txsum_rail_uA": -0.4888,
+    "rfdriver_rail_uA": -11.5371,
+    "bb_dac_source_uA": -0.0196,
+    "rail_peak_abs_uA": 258.851,
+    "pad_p_V": -0.0,
+    "sum_p_V": -0.0044,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": -0.0,
+     "rfdriver_rail": -0.0,
+     "bb_dac_source": 0.0
+    },
+    "pad_n_V": -0.0
+   }
+  },
+  "safe_rail_off_ctrl_high": {
+   "meta": {
+    "kind": "safety",
+    "vdd": 0.0,
+    "ctrl": 3.3,
+    "en": 1,
+    "mute": 0,
+    "gain": 15,
+    "sel": 1,
+    "sat": 1
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0325,
+    "txmix_q_rail_uA": -0.0327,
+    "txsum_rail_uA": -0.5402,
+    "rfdriver_rail_uA": -11.5415,
+    "bb_dac_source_uA": -0.0195,
+    "rail_peak_abs_uA": 258.719,
+    "pad_p_V": -0.0,
+    "sum_p_V": -0.0044,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": -0.0,
+     "txmix_q_rail": -0.0,
+     "txsum_rail": 0.0,
+     "rfdriver_rail": 0.0,
+     "bb_dac_source": 0.0
+    },
+    "pad_n_V": -0.0
+   }
+  },
+  "safe_rail_off_bypass": {
+   "meta": {
+    "kind": "safety",
+    "vdd": 0.0,
+    "ctrl": 3.3,
+    "bypass": 1
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0355,
+    "txmix_q_rail_uA": -0.0357,
+    "txsum_rail_uA": -0.4897,
+    "rfdriver_rail_uA": -11.5557,
+    "bb_dac_source_uA": -0.0196,
+    "rail_peak_abs_uA": 258.308,
+    "pad_p_V": -0.0,
+    "sum_p_V": -0.0044,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": -0.0,
+     "rfdriver_rail": 0.0,
+     "bb_dac_source": 0.0
+    },
+    "pad_n_V": -0.0
+   }
+  },
+  "safe_bypass_and_en": {
+   "meta": {
+    "kind": "safety",
+    "ctrl": 3.3,
+    "en": 1,
+    "mute": 0,
+    "bypass": 1,
+    "gain": 15
+   },
+   "result": {
+    "txmix_i_rail_uA": 0.0121,
+    "txmix_q_rail_uA": 0.011,
+    "txsum_rail_uA": 2000.299,
+    "rfdriver_rail_uA": -8.3547,
+    "bb_dac_source_uA": 2.059,
+    "rail_peak_abs_uA": 2147.95,
+    "pad_p_V": 2.8338,
+    "sum_p_V": 2.8362,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 2014.97,
+     "rfdriver_rail": 0.0005,
+     "bb_dac_source": 0.0
+    },
+    "pad_n_V": 2.8338
+   }
+  },
+  "safe_en_no_bias": {
+   "meta": {
+    "kind": "safety",
+    "ctrl": 3.3,
+    "en": 1,
+    "mute": 0,
+    "gain": 15,
+    "ibias": 0.0
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0104,
+    "txmix_q_rail_uA": -0.0106,
+    "txsum_rail_uA": -0.1702,
+    "rfdriver_rail_uA": -1.3592,
+    "bb_dac_source_uA": -0.1251,
+    "rail_peak_abs_uA": 66.357,
+    "pad_p_V": 3.3,
+    "sum_p_V": 3.3,
+    "ibias_pin_V": -0.0,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 0.0002,
+     "rfdriver_rail": 0.001,
+     "bb_dac_source": 0.0
+    },
+    "pad_n_V": 3.3
+   }
+  },
+  "safe_en_lo_stopped": {
+   "meta": {
+    "kind": "safety",
+    "ctrl": 3.3,
+    "en": 1,
+    "mute": 0,
+    "gain": 15,
+    "lo_on": false
+   },
+   "result": {
+    "txmix_i_rail_uA": 0.0,
+    "txmix_q_rail_uA": 0.0,
+    "txsum_rail_uA": 2014.9668,
+    "rfdriver_rail_uA": 27885.6556,
+    "bb_dac_source_uA": 0.0,
+    "rail_peak_abs_uA": 29900.622,
+    "pad_p_V": 2.3413,
+    "sum_p_V": 2.833,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 2014.97,
+     "rfdriver_rail": 27885.7,
+     "bb_dac_source": 0.0
+    },
+    "pad_n_V": 2.3413
+   }
+  },
+  "safe_en_3p63_85C": {
+   "meta": {
+    "kind": "safety",
+    "vdd": 3.63,
+    "temp": 85,
+    "ctrl": 3.63,
+    "en": 1,
+    "mute": 0,
+    "gain": 15
+   },
+   "result": {
+    "txmix_i_rail_uA": 0.0005,
+    "txmix_q_rail_uA": -0.0005,
+    "txsum_rail_uA": 1930.9832,
+    "rfdriver_rail_uA": 27314.0195,
+    "bb_dac_source_uA": 1.9149,
+    "rail_peak_abs_uA": 29466.485,
+    "pad_p_V": 2.6861,
+    "sum_p_V": 3.1797,
+    "ibias_pin_V": 0.9146,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0002,
+     "txmix_q_rail": 0.0002,
+     "txsum_rail": 1939.86,
+     "rfdriver_rail": 27336.4,
+     "bb_dac_source": 0.0001
+    },
+    "pad_n_V": 2.6861
+   }
+  },
+  "safe_pad_driven_rail_off": {
+   "meta": {
+    "kind": "safety",
+    "vdd": 0.0,
+    "pad_drive": 3.3
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0786,
+    "txmix_q_rail_uA": -0.0786,
+    "txsum_rail_uA": -540.5296,
+    "rfdriver_rail_uA": -91100.6777,
+    "bb_dac_source_uA": -0.0435,
+    "rail_peak_abs_uA": 92146.551,
+    "pad_p_V": 0.9182,
+    "sum_p_V": 0.7803,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": -540.0161,
+     "rfdriver_rail": -91068.51,
+     "bb_dac_source": 0.0
+    },
+    "pad_source_current_mA": 91.6086
+   }
+  },
+  "safe_pad_driven_reset": {
+   "meta": {
+    "kind": "safety",
+    "pad_drive": 3.3
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0394,
+    "txmix_q_rail_uA": -0.0396,
+    "txsum_rail_uA": -1.7091,
+    "rfdriver_rail_uA": -8.5596,
+    "bb_dac_source_uA": -0.0145,
+    "rail_peak_abs_uA": 208.05,
+    "pad_p_V": 3.2926,
+    "sum_p_V": -0.001,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 0.0,
+     "rfdriver_rail": 0.0004,
+     "bb_dac_source": 0.0
+    },
+    "pad_source_current_mA": 0.2842
+   }
+  },
+  "safe_peer_grounded_reset": {
+   "meta": {
+    "kind": "safety",
+    "pad_drive": 0.0
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0394,
+    "txmix_q_rail_uA": -0.0396,
+    "txsum_rail_uA": -1.7094,
+    "rfdriver_rail_uA": -8.5602,
+    "bb_dac_source_uA": -0.0145,
+    "rail_peak_abs_uA": 208.109,
+    "pad_p_V": 0.0,
+    "sum_p_V": -0.001,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 0.0,
+     "rfdriver_rail": 0.0007,
+     "bb_dac_source": 0.0
+    },
+    "pad_source_current_mA": -0.0
+   }
+  },
+  "safe_peer_grounded_rail_off": {
+   "meta": {
+    "kind": "safety",
+    "vdd": 0.0,
+    "pad_drive": 0.0
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0355,
+    "txmix_q_rail_uA": -0.0357,
+    "txsum_rail_uA": -0.4888,
+    "rfdriver_rail_uA": -11.5509,
+    "bb_dac_source_uA": -0.0196,
+    "rail_peak_abs_uA": 259.104,
+    "pad_p_V": -0.0,
+    "sum_p_V": -0.0044,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 0.0,
+     "rfdriver_rail": 0.0,
+     "bb_dac_source": 0.0
+    },
+    "pad_source_current_mA": 0.0
+   }
+  },
+  "safe_peer_grounded_enabled": {
+   "meta": {
+    "kind": "safety",
+    "pad_drive": 0.0,
+    "ctrl": 3.3,
+    "en": 1,
+    "mute": 0,
+    "gain": 15
+   },
+   "result": {
+    "txmix_i_rail_uA": 0.0116,
+    "txmix_q_rail_uA": 0.0105,
+    "txsum_rail_uA": 2005.0464,
+    "rfdriver_rail_uA": 56753.1855,
+    "bb_dac_source_uA": 2.0793,
+    "rail_peak_abs_uA": 59042.208,
+    "pad_p_V": 0.7543,
+    "sum_p_V": 2.8349,
+    "ibias_pin_V": 0.9472,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 2014.97,
+     "rfdriver_rail": 56781.7,
+     "bb_dac_source": 0.0
+    },
+    "pad_source_current_mA": -29.0101
+   }
+  },
+  "safe_peer_grounded_bypass": {
+   "meta": {
+    "kind": "safety",
+    "pad_drive": 0.0,
+    "ctrl": 3.3,
+    "en": 1,
+    "bypass": 1
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0821,
+    "txmix_q_rail_uA": -0.0837,
+    "txsum_rail_uA": 5821.9096,
+    "rfdriver_rail_uA": -2.7242,
+    "bb_dac_source_uA": 1.9868,
+    "rail_peak_abs_uA": 6167.439,
+    "pad_p_V": 0.0993,
+    "sum_p_V": 1.925,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 5832.1,
+     "rfdriver_rail": 0.0006,
+     "bb_dac_source": 0.0
+    },
+    "pad_source_current_mA": -3.8179
+   }
+  },
+  "safe_ramp_reset": {
+   "meta": {
+    "kind": "ramp",
+    "en_level": 0.0
+   },
+   "result": {
+    "rail_current_peak_uA": 71.7,
+    "rail_current_at_3p63V_uA": 1.538,
+    "bb_source_peak_uA": 0.344
+   }
+  },
+  "safe_ramp_en_high": {
+   "meta": {
+    "kind": "ramp",
+    "en_level": 3.3
+   },
+   "result": {
+    "rail_current_peak_uA": 13247.787,
+    "rail_current_at_3p63V_uA": 12530.063,
+    "bb_source_peak_uA": 5.814
+   }
+  }
+ }
+}

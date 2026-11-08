@@ -1,0 +1,210 @@
+{
+ "ct_ring8": [
+  {
+   "f_hz": 1779327769.968506,
+   "phase_o0_o1_deg": 43.31613316489032,
+   "phase_o0_o2_deg": 88.30540381843741,
+   "i_ma": 2.64465,
+   "metric": [
+    "period_ps",
+    562.01
+   ],
+   "netlist": "schematic",
+   "case": {},
+   "deck": "scratch/timing/fast/ct_ring8/sim/sch.spice"
+  },
+  {
+   "f_hz": 1120822414.6549773,
+   "phase_o0_o1_deg": 43.5428748198278,
+   "phase_o0_o2_deg": 87.51829742591924,
+   "i_ma": 2.87094,
+   "metric": [
+    "period_ps",
+    892.202
+   ],
+   "netlist": "extracted",
+   "case": {},
+   "deck": "scratch/timing/fast/ct_ring8/sim/ext.spice"
+  }
+ ],
+ "ct_tspc2": [
+  {
+   "f_in_hz": 3500000000.0,
+   "f_out_hz": 1749995625.0109375,
+   "divides": true,
+   "i_ma": 0.413554,
+   "metric": [
+    "ck_to_q_ps",
+    142.476
+   ],
+   "netlist": "schematic",
+   "case": {
+    "f": 3500000000.0
+   },
+   "deck": "scratch/timing/fast/ct_tspc2/sim/sch_f3.5e+09.spice"
+  },
+  {
+   "f_in_hz": 3500000000.0,
+   "f_out_hz": 1749995625.0109375,
+   "divides": true,
+   "i_ma": 0.557258,
+   "metric": [
+    "ck_to_q_ps",
+    111.65299999999999
+   ],
+   "netlist": "extracted",
+   "case": {
+    "f": 3500000000.0
+   },
+   "deck": "scratch/timing/fast/ct_tspc2/sim/ext_f3.5e+09.spice"
+  },
+  {
+   "f_in_hz": 4000000000.0,
+   "f_out_hz": 2000000000.0,
+   "divides": true,
+   "i_ma": 0.464873,
+   "metric": [
+    "ck_to_q_ps",
+    385.61400000000003
+   ],
+   "netlist": "schematic",
+   "case": {
+    "f": 4000000000.0
+   },
+   "deck": "scratch/timing/fast/ct_tspc2/sim/sch_f4e+09.spice"
+  },
+  {
+   "f_in_hz": 4000000000.0,
+   "f_out_hz": null,
+   "divides": false,
+   "i_ma": 0.5347540000000001,
+   "metric": [
+    "ck_to_q_ps",
+    null
+   ],
+   "netlist": "extracted",
+   "case": {
+    "f": 4000000000.0
+   },
+   "deck": "scratch/timing/fast/ct_tspc2/sim/ext_f4e+09.spice"
+  }
+ ],
+ "ct_lodrv": [
+  {
+   "f_hz": 2450004593.7586136,
+   "lo_swing_v": [
+    -0.0859096,
+    3.4339
+   ],
+   "duty": null,
+   "i_ma": 10.0898,
+   "metric": [
+    "loi_to_lo_ps",
+    242.10500000000002
+   ],
+   "netlist": "schematic",
+   "case": {
+    "f": 2450000000.0
+   },
+   "deck": "scratch/timing/fast/ct_lodrv/sim/sch_f2.45e+09.spice"
+  },
+  {
+   "f_hz": 2450004593.7586136,
+   "lo_swing_v": [
+    -0.103535,
+    3.44638
+   ],
+   "duty": null,
+   "i_ma": 11.527000000000001,
+   "metric": [
+    "loi_to_lo_ps",
+    285.215
+   ],
+   "netlist": "extracted",
+   "case": {
+    "f": 2450000000.0
+   },
+   "deck": "scratch/timing/fast/ct_lodrv/sim/ext_f2.45e+09.spice"
+  }
+ ],
+ "ct_rxin": [
+  {
+   "f_hz": 2449884549.1906195,
+   "out_swing_v": [
+    -0.0573126,
+    3.37061
+   ],
+   "stage1_pp_v": 2.29546,
+   "i_ma": 1.0193299999999998,
+   "metric": [
+    "in_to_out_ps",
+    -232.404
+   ],
+   "netlist": "schematic",
+   "case": {
+    "f": 2450000000.0,
+    "amp": 0.3
+   },
+   "deck": "scratch/timing/fast/ct_rxin/sim/sch_f2.45e+09_amp0.3.spice"
+  },
+  {
+   "f_hz": 2449959575.6670017,
+   "out_swing_v": [
+    -0.030561,
+    3.02135
+   ],
+   "stage1_pp_v": 1.68326,
+   "i_ma": 1.1837099999999998,
+   "metric": [
+    "in_to_out_ps",
+    -194.031
+   ],
+   "netlist": "extracted",
+   "case": {
+    "f": 2450000000.0,
+    "amp": 0.3
+   },
+   "deck": "scratch/timing/fast/ct_rxin/sim/ext_f2.45e+09_amp0.3.spice"
+  }
+ ],
+ "ct_lim": [
+  {
+   "f_hz": 2449959575.6670017,
+   "out_swing_v": [
+    -0.0371375,
+    3.3288
+   ],
+   "stage1_pp_v": 1.57789,
+   "i_ma": 0.716353,
+   "metric": [
+    "in_to_out_ps",
+    -205.674
+   ],
+   "netlist": "schematic",
+   "case": {
+    "f": 2450000000.0,
+    "amp": 0.3
+   },
+   "deck": "scratch/timing/fast/ct_lim/sim/sch_f2.45e+09_amp0.3.spice"
+  },
+  {
+   "f_hz": 2449839535.510424,
+   "out_swing_v": [
+    -0.0072002,
+    2.64034
+   ],
+   "stage1_pp_v": 1.04188,
+   "i_ma": 0.827669,
+   "metric": [
+    "in_to_out_ps",
+    -196.99300000000002
+   ],
+   "netlist": "extracted",
+   "case": {
+    "f": 2450000000.0,
+    "amp": 0.3
+   },
+   "deck": "scratch/timing/fast/ct_lim/sim/ext_f2.45e+09_amp0.3.spice"
+  }
+ ]
+}

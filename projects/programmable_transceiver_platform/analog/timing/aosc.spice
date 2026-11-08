@@ -1,0 +1,24 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_aosc: always-on management oscillator, nominal 50 MHz (40-60 MHz).
+* Schmitt-trigger RC relaxation oscillator: timing capacitor ATB_X charged
+* and discharged through R = 2 x 25 k ppolyf_u_1k from the gated output Z.
+* Self-contained (no bias input) so it survives bias/reference faults.
+* EN=0: Z=0, capacitor discharged, CLK=0, no static current.
+.include timing_cells.spice
+
+.subckt pt_aosc EN CLK ATB_X VDD VSS
+* Schmitt inverter: X -> Y
+XP1 SA ATB_X VDD VDD pfet_03v3 w=2u l=0.28u
+XP2 Y ATB_X SA VDD pfet_03v3 w=2u l=0.28u
+XP3 SA Y VSS VDD pfet_03v3 w=1u l=0.28u
+XN1 Y ATB_X SB VSS nfet_03v3 w=1u l=0.28u
+XN2 SB ATB_X VSS VSS nfet_03v3 w=1u l=0.28u
+XN3 SB Y VDD VSS nfet_03v3 w=0.5u l=0.28u
+* enable gate (non-inverting): Z = Y & EN
+XG Y EN ZB VDD VSS pt_t_nand2
+XGI ZB Z VDD VSS pt_t_inv2
+XR1 Z RM VSS ppolyf_u_1k r_width=1u r_length=25u
+XR2 RM ATB_X VSS ppolyf_u_1k r_width=1u r_length=25u
+XC VSS ATB_X VSS VSS nfet_03v3 w=8.5u l=10u
+XO1 ZB CLK VDD VSS pt_t_inv2
+.ends

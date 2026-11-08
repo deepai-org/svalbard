@@ -1,0 +1,183 @@
+{
+ "block": "rxlevel",
+ "subckt": "pt_rxlevel",
+ "source_hashes": {
+  "rxlevel.spice": "sha256:09913ac26c421146421ffe8b4cf271d801cc37e0b9ca55bae23aaa98dc95d1fa",
+  "generated/rxlevel.ext.spice": "sha256:5722f6a68bcf38a2320348c0be80c0c14a9ac54f28fda8202d153523c4432fd3",
+  "generated/rxlevel.gds": "sha256:4f784f8c05a690d60121cb0993b4d829c152031a6d8ef013748208f0e1940fa3",
+  "netlists.py": "sha256:beb0897de811d10fc5f1932662b1cfe7659001eae4357a9b8ae17546307dadd3",
+  "wrx_flow.py": "sha256:adb1f3b9b6dcd3b6c6fa6379e8abea316ea1dbb450a6d4b3f3dfbf854269dfe9",
+  "sims.py": "sha256:72dea34aa45188daa654905de9ce3b3d9872748f733977ab5d08c9944e2738b5",
+  "run_family.py": "sha256:6fad1320ccbfbf071d13ccb6387f468c4f3812b93441a95fa4e1af4a5930b4b1",
+  "evidence.py": "sha256:8f8e277ee3f3a556569d9035321f0b006e83e617afefc29f360bedb77844e8d9",
+  "run_wired_rx.sh": "sha256:a1dca456de988cdc00d6d947449c8a7dc3b0131b5f99f1995e61244bbfa60f83"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
+  "digital_note": "rebuilt canary (not byte-identical to locked 9253a51f...)"
+ },
+ "pdk": "ciel gf180mcu f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (analog image); canary /pdk/gf180mcuD tech fingerprint 9e0a3f80",
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "off_0C",
+     "i_rail": -7.73594e-11,
+     "vmax_div_enable": 1.78399e-09,
+     "vmax_bypass_enable": 1.78399e-09,
+     "i_rail_A": 7.73594e-11,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "off_27C",
+     "i_rail": -8.05964e-11,
+     "vmax_div_enable": 1.94262e-09,
+     "vmax_bypass_enable": 1.94262e-09,
+     "i_rail_A": 8.05964e-11,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "off_85C",
+     "i_rail": -2.14953e-10,
+     "vmax_div_enable": 4.92157e-09,
+     "vmax_bypass_enable": 4.92158e-09,
+     "i_rail_A": 2.14953e-10,
+     "outputs_low": true,
+     "pass": true
+    },
+    {
+     "case": "stuck_on",
+     "i_rail": -3.41959e-05,
+     "i_peak": -3.41959e-05,
+     "i_rail_A": 3.41959e-05,
+     "pass": true
+    },
+    {
+     "case": "unpowered",
+     "v_rail": -3.45325e-16,
+     "i_ain": 0.0,
+     "i_ctl": -9.29626e-22,
+     "pass": true
+    }
+   ],
+   "notes": "Extracted netlist. off_*: rail 3.63 V, all controls low, clocks running, analog inputs 3.3 V, 0/27/85 C. stuck_on: all controls high at 3.63 V (no latch/short, current bounded). unpowered: rail via 1 Mohm, controls 0 (register isolation clamp), clocks running, pad-reachable inputs (detect TX_P/N) 3.63 V, internal analog nodes 0 V. unpowered_internal_driven is non-gating: internal RX/CTLE nodes forced to 3.63 V (only possible if the pad bypass were on with this island off) back-drive the rail through PMOS TG wells. Pad-level stress and brownout ramps are analog/pads scope."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "tool": "magic 8.3.623 drc(full)",
+    "errors": 0,
+    "klayout_gf180_on_exported_gds": {
+     "violations": 0,
+     "by_rule": {},
+     "rc": "0",
+     "lyrdb_files": 1
+    },
+    "gds_export": {
+     "magic": "8.3.678",
+     "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+     "marker_shapes": {
+      "HRES 62/0": 32,
+      "RES_MK 110/5": 64
+     },
+     "hres_ok": true
+    }
+   },
+   "lvs": {
+    "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
+    "unique_match": true,
+    "final": "Circuits match uniquely.",
+    "devices": 70
+   },
+   "extracted_nominal": {
+    "bbm": {
+     "byp_on": 3.28275,
+     "div_on": 3.28275,
+     "t_byp_fall": 1.02547e-07,
+     "t_div_rise": 1.09063e-07,
+     "t_div_fall": 2.01247e-07,
+     "t_byp_rise2": 2.08282e-07,
+     "byp_off": 1.84204e-09,
+     "div_off": 2.70718e-09,
+     "idd_static": -3.10778e-05,
+     "idd_off": -1.08703e-08,
+     "both_on_max": 3.28698,
+     "bbm_gap_byp_to_div_ns": 6.516000000000004,
+     "bbm_gap_div_to_byp_ns": 7.03500000000001,
+     "pass": true
+    }
+   },
+   "corner_failures": [],
+   "non_gating_failures": [],
+   "area": {
+    "size_um": [
+     77.72,
+     169.5
+    ],
+    "area_um2": 13173.5,
+    "ceiling_um2": 50000
+   }
+  },
+  "observable": {
+   "state": "open",
+   "atb_taps": [],
+   "status_bits": [],
+   "clock_obs": [],
+   "notes": "Taps/status are exposed at block ports; atb_tap cells, register-map entries and clk_obs hookup are added at integration (not yet available)."
+  },
+  "fallback": {
+   "state": "open",
+   "routes": [
+    {
+     "route": "wire_wmon_scope",
+     "state": "open",
+     "notes": "RX_P/RX_N (rxlevel output) selectable on WMON via pt_wmon_sel codes 00/01; needs the shared bb_tap buffer (rf_rx agent) and the WMON pad."
+    }
+   ],
+   "bypass_loading_fF": null
+  }
+ },
+ "performance_vs_target": [
+  {
+   "case": "bbm",
+   "metric": "bbm_gap_byp_to_div_ns",
+   "target": "break-before-make gap > 0",
+   "extracted_nominal": 6.516000000000004,
+   "schematic_nominal": 3.556999999999997,
+   "corner_min": 5.475000000000001,
+   "corner_max": 8.251,
+   "corners_reported": 12
+  },
+  {
+   "case": "bbm",
+   "metric": "bbm_gap_div_to_byp_ns",
+   "target": "break-before-make gap > 0",
+   "extracted_nominal": 7.03500000000001,
+   "schematic_nominal": 3.9599999999999906,
+   "corner_min": 5.947999999999995,
+   "corner_max": 8.838000000000015,
+   "corners_reported": 12
+  },
+  {
+   "case": "bbm",
+   "metric": "idd_static",
+   "target": "wired budget 0.05 mA (bleed of the active output)",
+   "extracted_nominal": -3.10778e-05,
+   "schematic_nominal": -3.10778e-05,
+   "corner_min": -3.93785e-05,
+   "corner_max": -2.46996e-05,
+   "corners_reported": 12
+  }
+ ],
+ "corner_set": "tt/ss/ff x 22/32 C x 3.15/3.35 V (spec/tapeout-plan.md operating envelope), extracted netlist",
+ "excluded_coverage": [
+  "Divider/bypass resistors and switches are pad-resident (analog/pads wired_receive); only their control is here",
+  "Gate loads modelled as 1.0 pF (bypass) / 0.4 pF (divider) ideal capacitors, not the extracted pad"
+ ]
+}

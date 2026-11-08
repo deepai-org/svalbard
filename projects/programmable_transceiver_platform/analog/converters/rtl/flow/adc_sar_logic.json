@@ -1,0 +1,39 @@
+{
+  "DESIGN_NAME": "adc_sar_logic",
+  "VERILOG_FILES": [
+    "dir::../adc_sar_logic.v",
+    "dir::../adc_sar_delay.v"
+  ],
+  "VERILOG_DEFINES": [
+    "SYNTH_CELLS"
+  ],
+  "CLOCK_PORT": null,
+  "CLOCK_PERIOD": 20,
+  "FP_SIZING": "absolute",
+  "DIE_AREA": [
+    0,
+    0,
+    215,
+    90
+  ],
+  "PL_TARGET_DENSITY_PCT": 50,
+  "IO_PIN_ORDER_CFG": "dir::adc_sar_logic.pins",
+  "PDN_VPITCH": 50,
+  "PDN_HPITCH": 40,
+  "PDN_VOFFSET": 10,
+  "PDN_HOFFSET": 10,
+  "PDN_MULTILAYER": false,
+  "RT_MAX_LAYER": "Metal3",
+  "RSZ_DONT_TOUCH_RX": "u_d1|u_d2|u_dp|u_ck|u_cko",
+  "SYNTH_ABC_BUFFERING": false,
+  "RUN_KLAYOUT_XOR": false,
+  "RUN_KLAYOUT_DRC": false,
+  "MAGIC_DRC_USE_GDS": true,
+  "QUIT_ON_SYNTH_CHECKS": false,
+  "RUN_POST_GPL_DESIGN_REPAIR": false,
+  "RUN_POST_CTS_RESIZER_TIMING": false,
+  "RUN_POST_GRT_RESIZER_TIMING": false,
+  "RUN_POST_GRT_DESIGN_REPAIR": false,
+  "DESIGN_REPAIR_BUFFER_INPUT_PORTS": false,
+  "DESIGN_REPAIR_BUFFER_OUTPUT_PORTS": false
+}

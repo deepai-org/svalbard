@@ -1,0 +1,251 @@
+{
+  "block": "refbuf",
+  "top_cell": "pt_refbuf",
+  "generated_utc": "2026-11-08T14:55:36Z",
+  "source_hashes": {
+    "refbuf.spice": "sha256:62d3f8fb6a5c4fe46ca42092d19f8ed0f7dde9df00c74679baaef764c3a2480f",
+    "circuits.py": "sha256:43d0e76421eac24af743156099dc3fa3e165a0b2d083a40b8415f3fb61231907",
+    "lib/convkit.py": "sha256:e75a0a2d28befc9ec4ffcae448b55dac611d6ff0a4960b203e853b6ccb7cdf95",
+    "flow.py": "sha256:e00c51c4bb85581839ebf76124765d2aded27ce6cff149f4fc0fce71ed946bdf",
+    "benches.py": "sha256:281b316df161fae431a4b8e291e2d3918255c15813c8a7a2c8ead495a13a84eb"
+  },
+  "artifact_hashes": {
+    "generated/refbuf.gds": "sha256:175523e3d42e641779a421330dbb25eb08ef0bd4c61ebf07028edd07ecb6e587",
+    "generated/refbuf.mag": "sha256:07831474d82ccc926ae51dd8e4fd51184f5b8253447eb23f1a5ba2ab62426d93",
+    "generated/refbuf.ext.spice": "sha256:a593c8145aef65593278a64f8ed56c5e23258eb96495177276c50983a9bf960a"
+  },
+  "images": {
+    "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+    "digital_tag": "svalbard/librelane-gf180-canary:2026.08"
+  },
+  "pdk": "gf180mcuD ciel f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (both images)",
+  "area": {
+    "bbox_um": [
+      -19.0,
+      0.0,
+      374.5,
+      300.56
+    ],
+    "area_um2": 118270.4,
+    "ceiling_um2": 150000,
+    "fits": true
+  },
+  "tests": {
+    "safe": {
+      "state": "pass",
+      "cases": [
+        {
+          "case": "EN=0, tt 27C 3.3V: VDD current (A)",
+          "value": -5.27732e-11
+        },
+        {
+          "case": "EN=0, ff 85C 3.63V: VDD current (A)",
+          "value": -2.29175e-09
+        },
+        {
+          "case": "OVR=1 (ATB force 1.05 V via 500 ohm): VDD current (A)",
+          "value": -7.86174e-10
+        },
+        {
+          "case": "OVR=1: forced VREF (V) -> buffer does not fight ATB",
+          "value": 1.05
+        },
+        {
+          "case": "island unpowered, VREF held 1.0 V, VREF0 1.0 V: op point",
+          "value": {
+            "i(vf)": -1.5365e-11,
+            "i(vdd)": 2.725471e-13,
+            "v(ibias)": 3.836006,
+            "v(ready)": 3.640512e-21
+          }
+        }
+      ],
+      "notes": "Reset state EN=0: IBIAS switch open, NB/X pulled to VSS, PMOS mirrors on an opened header; VREF sees only NMOS junctions and gates."
+    },
+    "clean": {
+      "extracted_nominal": {
+        "vref_settled": 0.99894,
+        "vref_load_avg": 0.998511,
+        "iq": -0.000552565,
+        "t_ready": 2.05635e-06,
+        "t_settle": 2.10971e-06
+      },
+      "extracted_ok": true,
+      "netlist": "generated/refbuf.ext.spice",
+      "bench": "benches.refbuf_deck",
+      "drc": {
+        "tool": "magic 8.3.623 (digital image), full gf180mcuD deck",
+        "errors": 0,
+        "report": "generated/refbuf-drc.txt"
+      },
+      "lvs": {
+        "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
+        "result": "Circuits match uniquely.",
+        "unique": true,
+        "report": "generated/refbuf-lvs.txt"
+      },
+      "gds_export": {
+        "magic": "8.3.678",
+        "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+        "marker_shapes": {
+          "HRES 62/0": 0,
+          "RES_MK 110/5": 0
+        },
+        "ppolyf_u_1k_devices": 0,
+        "klayout_drc": {
+          "violations": 0,
+          "by_rule": {},
+          "rc": "0"
+        },
+        "hres_ok": true,
+        "published_gds_lvs": "Circuits match uniquely.",
+        "published_gds_lvs_unique": true,
+        "pass": true
+      },
+      "klayout_drc": {
+        "violations": 0,
+        "by_rule": {},
+        "rc": "0",
+        "report": "generated/refbuf-klayout-drc.lyrdb"
+      },
+      "state": "pass"
+    },
+    "observable": {
+      "state": "pass",
+      "atb_taps": [
+        "conv_vref (= VREF output net; ATB0 force with OVR, ATB1 sense)"
+      ],
+      "status_bits": [
+        "refbuf_ready (READY): rises when VREF > VREF0 - ~30 mV"
+      ],
+      "clock_obs": []
+    },
+    "fallback": {
+      "state": "waived_core",
+      "routes": [
+        "ATB0 force / ATB1 sense on conv_vref with debug.bias_override.refbuf=1 (OVR) -> buffer high-Z"
+      ],
+      "bypass_loading_fF": null,
+      "evidence": {
+        "vref_forced_V": 1.05,
+        "supply_A_while_forced": -7.86174e-10
+      }
+    }
+  },
+  "performance_vs_target": [
+    {
+      "metric": "VREF settled (V)",
+      "target": "1.0 (0.98..1.02)",
+      "nominal": 0.99894
+    },
+    {
+      "metric": "VREF under 0.42 mA ADC-like load, avg (V)",
+      "target": "0.98..1.02",
+      "nominal": 0.998511
+    },
+    {
+      "metric": "VREF ripple p-p under 1 mA x 3 ns pulses (mV)",
+      "target": "not specified",
+      "nominal": 26.98
+    },
+    {
+      "metric": "quiescent current (mA)",
+      "target": "2 (allocation 3)",
+      "nominal": 0.552565
+    },
+    {
+      "metric": "enable to VREF within 1% (us)",
+      "target": "not specified",
+      "nominal": 1.61
+    },
+    {
+      "metric": "enable to READY (us)",
+      "target": "after VREF valid",
+      "nominal": 1.556
+    },
+    {
+      "metric": "corner sweep (extracted)",
+      "target": "narrow window, not gating",
+      "corners": {
+        "typical_22C_3.15V": {
+          "vref_settled": 0.998412,
+          "vref_load_avg": 0.99795,
+          "iq": -0.000553026,
+          "t_ready": 2.06264e-06
+        },
+        "typical_22C_3.35V": {
+          "vref_settled": 0.999104,
+          "vref_load_avg": 0.998688,
+          "iq": -0.000553189,
+          "t_ready": 2.05718e-06
+        },
+        "typical_32C_3.15V": {
+          "vref_settled": 0.998418,
+          "vref_load_avg": 0.997944,
+          "iq": -0.000551901,
+          "t_ready": 2.05848e-06
+        },
+        "typical_32C_3.35V": {
+          "vref_settled": 0.999112,
+          "vref_load_avg": 0.998686,
+          "iq": -0.000552058,
+          "t_ready": 2.05311e-06
+        },
+        "ss_22C_3.15V": {
+          "vref_settled": 0.997716,
+          "vref_load_avg": 0.997112,
+          "iq": -0.000546306,
+          "t_ready": 3.14695e-06
+        },
+        "ss_22C_3.35V": {
+          "vref_settled": 0.998443,
+          "vref_load_avg": 0.997919,
+          "iq": -0.000546488,
+          "t_ready": 3.13498e-06
+        },
+        "ss_32C_3.15V": {
+          "vref_settled": 0.997711,
+          "vref_load_avg": 0.99709,
+          "iq": -0.000545472,
+          "t_ready": 3.10058e-06
+        },
+        "ss_32C_3.35V": {
+          "vref_settled": 0.998442,
+          "vref_load_avg": 0.997909,
+          "iq": -0.000545647,
+          "t_ready": 3.08885e-06
+        },
+        "ff_22C_3.15V": {
+          "vref_settled": 0.999286,
+          "vref_load_avg": 0.99893,
+          "iq": -0.00055542,
+          "t_ready": 1.62855e-06
+        },
+        "ff_22C_3.35V": {
+          "vref_settled": 0.999937,
+          "vref_load_avg": 0.999607,
+          "iq": -0.000555571,
+          "t_ready": 1.62585e-06
+        },
+        "ff_32C_3.15V": {
+          "vref_settled": 0.999297,
+          "vref_load_avg": 0.99893,
+          "iq": -0.000554181,
+          "t_ready": 1.62916e-06
+        },
+        "ff_32C_3.35V": {
+          "vref_settled": 0.999949,
+          "vref_load_avg": 0.999609,
+          "iq": -0.000554327,
+          "t_ready": 1.62674e-06
+        }
+      }
+    }
+  ],
+  "excluded_coverage": [
+    "READY upper window bound (1.02) not implemented: lower bound only",
+    "No noise, PSRR or Monte Carlo analysis",
+    "Load model is a current pulse train, not the ADC"
+  ]
+}

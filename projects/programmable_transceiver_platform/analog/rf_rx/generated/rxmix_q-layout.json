@@ -1,0 +1,212 @@
+{
+ "drc_count": 0,
+ "drc_raw": "0",
+ "bbox_um": [
+  1.5,
+  -0.2,
+  265.2,
+  288.91
+ ],
+ "area_um2": 76238.0,
+ "lvs": {
+  "unique_match": true,
+  "final_result": "Circuits match uniquely.",
+  "top_level_match": true
+ },
+ "cells": {
+  "pt_rfrx_inv": {
+   "size_um": [
+    24.72,
+    15.46
+   ],
+   "rows": 1,
+   "nets": 4,
+   "bank_um": 12.1,
+   "row_report": [
+    [
+     2,
+     4.0,
+     5.2,
+     11.6
+    ]
+   ]
+  },
+  "pt_rfrx_bias": {
+   "size_um": [
+    32.72,
+    25.67
+   ],
+   "rows": 2,
+   "nets": 6,
+   "bank_um": 12.9,
+   "row_report": [
+    [
+     3,
+     4.0,
+     5.2,
+     18.8
+    ],
+    [
+     2,
+     3.2,
+     5.2,
+     12.3
+    ]
+   ]
+  },
+  "pt_rfrx_vcm": {
+   "size_um": [
+    52.82,
+    69.75
+   ],
+   "rows": 2,
+   "nets": 9,
+   "bank_um": 12.1,
+   "row_report": [
+    [
+     7,
+     4.0,
+     20.2,
+     39.7
+    ],
+    [
+     1,
+     2.5,
+     34.9,
+     35.6
+    ]
+   ]
+  },
+  "pt_rxmix_quad": {
+   "size_um": [
+    51.32,
+    21.66
+   ],
+   "rows": 1,
+   "nets": 7,
+   "bank_um": 0.0,
+   "row_report": []
+  },
+  "pt_rxmix_ofsdac": {
+   "size_um": [
+    80.92,
+    60.68
+   ],
+   "rows": 3,
+   "nets": 19,
+   "bank_um": 24.9,
+   "row_report": [
+    [
+     7,
+     7.8,
+     7.2,
+     49.7
+    ],
+    [
+     6,
+     8.5,
+     7.2,
+     55.0
+    ],
+    [
+     2,
+     4.8,
+     15.5,
+     50.0
+    ]
+   ]
+  },
+  "pt_rfrx_otan": {
+   "size_um": [
+    93.22,
+    152.69
+   ],
+   "rows": 5,
+   "nets": 13,
+   "bank_um": 27.5,
+   "row_report": [
+    [
+     1,
+     2.5,
+     51.3,
+     52.0
+    ],
+    [
+     2,
+     5.5,
+     23.2,
+     64.7
+    ],
+    [
+     1,
+     4.0,
+     23.2,
+     50.6
+    ],
+    [
+     4,
+     6.2,
+     8.2,
+     63.8
+    ],
+    [
+     4,
+     7.0,
+     8.2,
+     59.5
+    ]
+   ]
+  },
+  "pt_rxmix_q": {
+   "size_um": [
+    267.92,
+    292.51
+   ],
+   "rows": 3,
+   "nets": 27,
+   "bank_um": 44.9,
+   "row_report": [
+    [
+     14,
+     16.0,
+     25.7,
+     221.4
+    ],
+    [
+     4,
+     10.8,
+     69.8,
+     222.0
+    ],
+    [
+     2,
+     7.8,
+     152.7,
+     190.4
+    ]
+   ]
+  }
+ },
+ "klayout_drc": {
+  "ran": true,
+  "violations": 0,
+  "by_rule": {},
+  "deck": "gf180mcuD klayout (sak-drc.sh -k)"
+ },
+ "block": "rxmix_q",
+ "top_cell": "pt_rxmix_q",
+ "digital_image": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+ "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
+ "drc_details": "",
+ "sources": {
+  "rxmix_q.spice": "sha256:e927ca6f5a618f35a3e0bdc47e55c32c241ea49e77df155beb7c074f70a389a8",
+  "netlists.py": "sha256:5b510fefe992f2a5c41026c506f7217975cef917e05dc9fe3b366c5791fb7329",
+  "rfrx_flow.py": "sha256:a3f7188401453a8c894ec1f7b81fbbd61397d1edd1123122250f5b982d7ca833"
+ },
+ "artifacts": {
+  "rxmix_q.gds": "sha256:859658fa47f929b1927856736ac375b75990364822d0fb1c06f11239dffc98b3",
+  "rxmix_q.mag": "sha256:5d9c0c0acf07422ba8efcf7231731b4d9e68bad49bae5c8184b8715652120ebb",
+  "rxmix_q.ext.spice": "sha256:4fe15c0d6cd1006cd8c1cac12ad77d3c0a2a1357c1da3ec7f9bf119bad44a3bd",
+  "rxmix_q-lvs.txt": "sha256:01eb470f68c4df480512c9c4458cde6ec0a267a6dc7509b46243c199f702326f"
+ }
+}

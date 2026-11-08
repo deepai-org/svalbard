@@ -1,0 +1,210 @@
+{
+ "block": "prescale",
+ "source_hashes": {
+  "prescale.spice": "sha256:0f43b7e1d3ee03dfe01c98537629efb7cc66442fe8150a25a2ac1a6b2681468c",
+  "timing_cells.spice": "sha256:f9f1f38f3d190cf34a8c02560d70c0061ccefe7951a3022b1803d74656139452",
+  "layout_engine.py": "sha256:acb531c9c30a6b3f4a76c124bc9ea8e9274a532a7a9e1769d40ff535ab61f0ae",
+  "netlist.py": "sha256:9eb8d5c8d7d044a76b560ebebd23c768aefd2b0c1183d38313964e89a1d30ab3",
+  "run_timing.py": "sha256:0ffa242409850c1211baf29172da2a7a542b21e6d88ffb5e03b87cde437056b3",
+  "timing_flow.py": "sha256:ae25349b5de22a22b47a77687abf481166efaac60013c748078420666f8e0b28",
+  "fast/ct_tspc2.spice": "sha256:dc8b1819d67cd96023d16f3d629b346ca6d8eed0ef6ec0d383cb54c6022c60f3"
+ },
+ "generated_hashes": {
+  "prescale.mag": "sha256:9555383d36f7f44daee6aaf22a927c5936c9e70acd47c22b128c1be88b8a60e8",
+  "prescale.gds": "sha256:da12c6b6ebff9842a8192074041736055d9d926a3fcb03672d1eb31413f3ba16",
+  "prescale.lvs.spice": "sha256:21116d05d82e02480969278b9c10066660bc6eeb90251aa1d7ded17f7cf6dc76",
+  "prescale.ext.spice": "sha256:1f88ea92a89ff39137892e884d8cf975d51509fb96024aec7b58259c83bc7316"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_ref": "svalbard/librelane-gf180-canary:2026.08"
+ },
+ "pdk": "gf180mcuD (digital image /pdk/gf180mcuD for Magic/Netgen; analog image /foss/pdks/gf180mcuD models for ngspice)",
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "tt",
+     "temp_c": 27,
+     "vdd_v": 3.3,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": -0.003910380000000001,
+     "i_vdd_peak_ua": 360.957,
+     "output_max_v": {
+      "ck_out": 4.62123e-06
+     },
+     "deck": "scratch/timing/prescale/sim/safe_tt_27_3.3.spice",
+     "errors": []
+    },
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "ff",
+     "temp_c": 85,
+     "vdd_v": 3.63,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 0.0405437,
+     "i_vdd_peak_ua": 353.22700000000003,
+     "output_max_v": {
+      "ck_out": 4.63981e-06
+     },
+     "deck": "scratch/timing/prescale/sim/safe_ff_85_3.63.spice",
+     "errors": []
+    },
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "ss",
+     "temp_c": 0,
+     "vdd_v": 3.63,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 0.00581832,
+     "i_vdd_peak_ua": 367.114,
+     "output_max_v": {
+      "ck_out": 4.50752e-06
+     },
+     "deck": "scratch/timing/prescale/sim/safe_ss_0_3.63.spice",
+     "errors": []
+    }
+   ],
+   "notes": "Reset-default = every control input 0; clock/pad inputs toggling. Includes 3.63 V at 85 C (ff) and 0 C (ss)."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "errors": 0,
+    "tool": "Magic 8.3.623 drc(full)",
+    "report": "generated/prescale-drc.txt",
+    "klayout": {
+     "ran": true,
+     "violations": 0,
+     "by_rule": {},
+     "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+    },
+    "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii"
+   },
+   "lvs": {
+    "unique_match": true,
+    "summary": "Final result: Circuits match uniquely.\n.",
+    "tool": "Netgen 1.5.316",
+    "report": "generated/prescale-lvs.txt"
+   },
+   "extracted_nominal": {
+    "gating_cases": [
+     "nom_2g5_d16",
+     "nom_240m_d2"
+    ],
+    "all_pass": true,
+    "results": [
+     {
+      "f_in_hz": 2500000000.0,
+      "ratio": 16,
+      "f_out_hz": 156250000.0,
+      "expected_hz": 156250000.0,
+      "i_on_ma": 1.9911,
+      "pass": true,
+      "netlist": "extracted",
+      "corner": "tt",
+      "temp_c": 27,
+      "vdd_v": 3.3,
+      "deck": "scratch/timing/prescale/sim/nom_2g5_d16.spice"
+     },
+     {
+      "f_in_hz": 240000000.0,
+      "ratio": 2,
+      "f_out_hz": 119999040.00767995,
+      "expected_hz": 120000000.0,
+      "i_on_ma": 0.322001,
+      "pass": true,
+      "netlist": "extracted",
+      "corner": "tt",
+      "temp_c": 27,
+      "vdd_v": 3.3,
+      "deck": "scratch/timing/prescale/sim/nom_240m_d2.spice"
+     }
+    ]
+   },
+   "layout": {
+    "size_um": [
+     200.08,
+     63.11
+    ],
+    "area_um2": 12627.0,
+    "devices": 46,
+    "gds": "generated/prescale.gds",
+    "mag": "generated/prescale.mag",
+    "extracted": "generated/prescale.ext.spice"
+   }
+  },
+  "observable": {
+   "state": "open",
+   "atb_taps": [],
+   "status_bits": [],
+   "clock_obs": [
+    "CK_OUT -> WCLK_OBS input"
+   ],
+   "notes": "Points exist as ports; register-file / test-bus / CLK_OBS mux codes are assigned at integration (register map not yet published)."
+  },
+  "fallback": {
+   "state": "open",
+   "bypass_loading_fF": null,
+   "bypass_loading_note": null,
+   "routes": [],
+   "notes": "Front end for rtl/pt_clocktree_slow.sv."
+  }
+ },
+ "performance_vs_target": [
+  {
+   "kind": "nominal_extracted",
+   "f_in_hz": 2500000000.0,
+   "ratio": 16,
+   "f_out_hz": 156250000.0,
+   "expected_hz": 156250000.0,
+   "i_on_ma": 1.9911,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/prescale/sim/nom_2g5_d16.spice"
+  },
+  {
+   "kind": "nominal_extracted",
+   "f_in_hz": 240000000.0,
+   "ratio": 2,
+   "f_out_hz": 119999040.00767995,
+   "expected_hz": 120000000.0,
+   "i_on_ma": 0.322001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/prescale/sim/nom_240m_d2.spice"
+  },
+  {
+   "kind": "nominal_extracted",
+   "f_in_hz": 1500000000.0,
+   "ratio": 16,
+   "f_out_hz": 93750146.48460388,
+   "expected_hz": 93750000.0,
+   "i_on_ma": 1.28781,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/prescale/sim/nom_1g5_d16.spice"
+  },
+  {
+   "kind": "area",
+   "area_um2": 12627.0,
+   "ceiling_um2": null,
+   "ceiling_source": "analog-architecture.json blocks.prescale",
+   "fits": null
+  }
+ ],
+ "excluded_coverage": []
+}

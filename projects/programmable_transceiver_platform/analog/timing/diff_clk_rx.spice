@@ -1,0 +1,55 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_diff_clk_rx: generic differential clock receiver (one design, four
+* instances: REF_IN (refinput), AUX_CLK (aux_clk_rx), WCLK_IN, WTX_EXT).
+*
+* Per leg: self-biased CMOS inverter amplifier (40 k feedback resistor sets
+* the input DC at the inverter trip point when the pad is AC-coupled), then
+* two inverter stages.  The legs are independent (no cross-coupling, so no
+* hysteresis); differential drive gives complementary outputs, and SE=1
+* derives OUTN from the INP leg for single-ended sources.
+* Enable gating: header/footer devices on stage 1, NMOS series switch in the
+* feedback resistor, clamp on the stage-1 output.  With EN=0, or with the
+* island rail off, each pad sees only MOS gates and one NMOS drain junction
+* (high-Z, no forward path to the rail).
+* OUTP = INP & EN, OUTN = INN | !EN  (stop state OUTP=0, OUTN=1).
+* SE=1 (single-ended mode, for a CMOS/sine source on INP with INN AC-
+* grounded): OUTN is derived from the INP leg (one inverter less delay).
+* Differential drive (SE=0, default) is the qualified mode.
+* PRESENT: two weak-pull-up detector capacitors, one discharged while OUTP
+* is high and one while OUTN is high; PRESENT=1 only while both toggle.
+* ATB_DET exposes detector node A for the analog test bus.
+.include timing_cells.spice
+.include generated/fast/ct_rxin.spice
+.include generated/fast/ct_rxout.spice
+
+* Leg (revision 3): compact self-biased input stage + two inverters
+* (fastcells.py ct_rxin) with the 40 k feedback resistor and its EN switch.
+.subckt pt_rx_leg IN EN ENB A3 VDD VSS
+XC IN A1 A3 EN ENB VDD VSS ct_rxin
+XRF1 A1 RM VSS ppolyf_u_1k r_width=1u r_length=20u
+XRF2 RM RS VSS ppolyf_u_1k r_width=1u r_length=20u
+XSW RS EN IN VSS nfet_03v3 w=2u l=0.28u
+.ends
+
+.subckt pt_diff_clk_rx INP INN EN SE OUTP OUTN PRESENT ATB_DET VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+XSEI SE SEB VDD VSS pt_t_inv1
+XLP INP EN ENB A3P VDD VSS pt_rx_leg
+XLN INN EN ENB A3N VDD VSS pt_rx_leg
+* compact gating/SE-select/output drivers (fastcells.py ct_rxout)
+XO A3P A3N SE SEB ENB OUTP OUTN VDD VSS ct_rxout
+* clock-present detector
+XUA ATB_DET ENB VDD VDD pfet_03v3 w=0.5u l=10u
+XDA ATB_DET OUTP DSA VSS nfet_03v3 w=0.5u l=1u
+XDA2 DSA EN VSS VSS nfet_03v3 w=1u l=0.28u
+XCA VSS ATB_DET VSS VSS nfet_03v3 w=4u l=10u
+XUB DETB ENB VDD VDD pfet_03v3 w=0.5u l=10u
+XDB DETB OUTN DSB VSS nfet_03v3 w=0.5u l=1u
+XDB2 DSB EN VSS VSS nfet_03v3 w=1u l=0.28u
+XCB VSS DETB VSS VSS nfet_03v3 w=4u l=10u
+XKA ATB_DET ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XKB DETB ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XPR ATB_DET DETB PRB VDD VSS pt_t_nor2
+XPB1 PRB EN PRBB VDD VSS pt_t_nand2
+XPB2 PRBB PRESENT VDD VSS pt_t_inv1
+.ends

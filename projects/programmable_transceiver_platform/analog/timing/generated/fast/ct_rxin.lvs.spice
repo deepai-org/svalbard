@@ -1,0 +1,16 @@
+* NGSPICE file created from ct_rxin.ext - technology: gf180mcuD
+
+.subckt ct_rxin IN A1 OUT EN ENB VDD VSS
+X0 VSS A2 OUT VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X1 A1 IN a_236_230# VSS nfet_03v3 ad=1.5125p pd=6.6u as=5.145p ps=13.02u w=6u l=0.28u
+X2 OUT A2 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X3 OUT A2 VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X4 A1 IN a_236_3760# VDD pfet_03v3 ad=5.82p pd=24.97u as=7.51p ps=17.02u w=12u l=0.28u
+X5 VSS ENB A1 VSS nfet_03v3 ad=0.695p pd=3.39u as=1.5125p ps=6.6u w=1u l=0.28u
+X6 A2 A1 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X7 A2 A1 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X8 VDD A2 OUT VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X9 a_236_3760# ENB VDD VDD pfet_03v3 ad=7.51p pd=17.02u as=7.76p ps=32.97u w=16u l=0.28u
+X10 a_236_230# EN VSS VSS nfet_03v3 ad=5.145p pd=13.02u as=5.82p ps=24.97u w=12u l=0.28u
+.ends
+

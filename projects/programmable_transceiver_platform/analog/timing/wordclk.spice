@@ -1,0 +1,70 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_wordclk (P3-6): shared word-clock divider for wired TX and RX.
+* CK is the ring clock (PH0 of a pll_ring, 480-810 MHz; or the external
+* WCLK_IN path).  Bits per ring cycle select the divide:
+*   D10=D20=0 : /5  (4 bits per ring cycle, quarter rate)
+*   D10=1     : /10 (2 bits per ring cycle, half rate)
+*   D20=1     : /20 (1 bit per ring cycle, full rate)
+* so one 20-bit double word per WORD_CLK period in every mode (<= 125 MHz at
+* 2.5 Gb/s).
+* Core: self-starting /5 on TSPC flops (a <- NOR(b,c), b <- a, c <- b;
+* states abc 000 -> 100 -> 110 -> 011 -> 001), ripple TSPC /2 stages T and U
+* clocked from a (T toggles entering 100, U on T rising), so T/U are settled
+* well before the state-011 decode.
+* LDE : registered, high for exactly one CK period (state 001, and T=1 for
+*       /10, T=U=1 for /20) once per word, one period before the boundary.
+* LD  : LDE delayed one CK period (registered, state 000); the CK rising edge
+*       that ends LD is the word boundary (TX shift-register load, RX word
+*       capture).  Both are flop outputs (no decode glitches; CK->LD is one
+*       clk-to-q plus a buffer).  Consumers far from this cell should
+*       re-register LDE locally (pt_wordcap does) rather than route LD.
+* WORD_CLK: c (/5, 40 % duty), T (/10, 50 %) or U (/20, 50 %).
+* EN=0: CK blocked, all flops reset (Q=0), WORD_CLK=0, LD=LDE=0, LDB=1; no
+* current.
+.include timing_cells.spice
+.include generated/fast/ct_tspcd.spice
+.include generated/fast/ct_tspc2.spice
+.include generated/fast/ct_mux4.spice
+.include generated/fast/ct_div5.spice
+.include generated/fast/ct_tspcn3.spice
+
+.subckt pt_wordclk CK EN D10 D20 WORD_CLK LDE LD LDB VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+* CK gated by EN: the TSPC flops see a static low clock while reset
+* (no contention between the reset pull-down and a clocked stage)
+XCKA CK EN CKB VDD VSS pt_t_nand2
+XCKB CKB CKB2 VDD VSS pt_t_inv2
+XCKC CKB2 CKB3 VDD VSS pt_t_inv4
+XCKD CKB3 CKI VDD VSS pt_t_inv8
+* /5 core (ct_div5: the NOR feedback is merged into flop A's first stage)
+XD5 CKI ENB A B C VDD VSS ct_div5
+* /10 and /20 phases: ripple TSPC /2 stages clocked from a (rising on entry
+* to state 100), so T and U have settled three CK periods before the LDE
+* decode in state 011 (clocking from b left two periods, which raced at
+* 2 of 12 corners in /20)
+* T/U clocks re-buffered (sharp edges for the TSPC /2 stages)
+XTB1 A BB1 VDD VSS pt_t_inv2
+XTB2 BB1 BCK VDD VSS pt_t_inv4
+XT BCK T ENB VDD VSS ct_tspc2
+XUB1 T TB1 VDD VSS pt_t_inv2
+XUB2 TB1 TCK VDD VSS pt_t_inv4
+XU TCK U ENB VDD VSS ct_tspc2
+* mode decode (one-hot to the muxes)
+XS5 D10 D20 S5 VDD VSS pt_t_nor2
+XTU T U TUB VDD VSS pt_t_nand2
+XTUI TUB TU VDD VSS pt_t_inv1
+* LDE.D = b & c (state 011) & (S5 | D10&T | D20&T&U)
+XQ5 VDD T TU VSS S5 D10 D20 VSS QOK VDD VSS ct_mux4
+* LDE flop with the 3-input AND merged into its first stage
+XFE CKI B C QOK LDEQ ENB VDD VSS ct_tspcn3
+XFL CKI LDEQ LDQ ENB VDD VSS ct_tspcd
+XLE1 LDEQ LDEB VDD VSS pt_t_inv2
+XLE2 LDEB LDE VDD VSS pt_t_inv4
+XLC LDQ LDB0 VDD VSS pt_t_inv2
+XLD LDB0 LD VDD VSS pt_t_inv4
+XLF LDQ LDB VDD VSS pt_t_inv4
+* word clock select and driver
+XWM C T U VSS S5 D10 D20 VSS WK VDD VSS ct_mux4
+XWB1 WK WKB VDD VSS pt_t_inv2
+XWB2 WKB WORD_CLK VDD VSS pt_t_inv8
+.ends

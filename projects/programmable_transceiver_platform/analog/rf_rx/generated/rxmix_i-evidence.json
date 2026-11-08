@@ -1,0 +1,466 @@
+{
+ "block": "rxmix_i",
+ "top_cell": "pt_rxmix_i",
+ "source_hashes": {
+  "rxmix_i.spice": "sha256:bae2d49fc929ff8fef8f96759c7081d8456b7f6cc111dafdb01685f154bd35b8",
+  "netlists.py": "sha256:5b510fefe992f2a5c41026c506f7217975cef917e05dc9fe3b366c5791fb7329",
+  "rfrx_flow.py": "sha256:a3f7188401453a8c894ec1f7b81fbbd61397d1edd1123122250f5b982d7ca833"
+ },
+ "artifact_hashes": {
+  "rxmix_i.gds": "sha256:6db894fc3c8118e188a1d94a58b366ce984dd43546527d66c2f95ff0c71b032a",
+  "rxmix_i.mag": "sha256:f3411a4a663f5bb686bddb3ab9ec2728f2414ac4b1d2e6e4b42ae6fdcd1fac84",
+  "rxmix_i.ext.spice": "sha256:044f987b89b75c6d378d7c2d19ba446eb1f5a0ae73fa0d8c342545fc5ab8800d",
+  "rxmix_i-lvs.txt": "sha256:9f8e72e917d678df80349e16b5c8570f148ffacfbe3f2652ae6e711ddc207cb4"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_tag": "svalbard/librelane-gf180-canary:2026.08"
+ },
+ "pdk": "gf180mcuD; layout/LVS: canary image /pdk/gf180mcuD; simulation: analog image ciel gf180mcu f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+ "area": {
+  "bbox_um": [
+   1.5,
+   -0.2,
+   265.2,
+   288.91
+  ],
+  "area_um2": 76238.0
+ },
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "reset/off, island on",
+     "rail_current_a": 7.254216e-08,
+     "rf_pin_current_a": 7.632468e-12,
+     "control_current_a": 5.348081e-10,
+     "forced_bb_current_a": null,
+     "bb_p_v": 0.4536926,
+     "bb_n_v": 0.4554716
+    },
+    {
+     "case": "island unpowered, en/island_off/LO (pll island) at 3.63 V, 27 C; rf nodes have no DC source (behind LNA MIM caps)",
+     "rail_current_a": 2.700997e-08,
+     "rf_pin_current_a": 1.891391e-13,
+     "control_current_a": 7.768508e-09,
+     "forced_bb_current_a": null,
+     "bb_p_v": -3.22974e-08,
+     "bb_n_v": -1.14932e-06
+    },
+    {
+     "case": "same 85 C",
+     "rail_current_a": 2.283302e-08,
+     "rf_pin_current_a": 2.612597e-13,
+     "control_current_a": 4.607228e-09,
+     "forced_bb_current_a": null,
+     "bb_p_v": -3.83236e-08,
+     "bb_n_v": -1.76161e-06
+    },
+    {
+     "case": "same 0 C",
+     "rail_current_a": 8.503376e-10,
+     "rf_pin_current_a": 1.616747e-13,
+     "control_current_a": 2.575591e-10,
+     "forced_bb_current_a": null,
+     "bb_p_v": -2.88661e-08,
+     "bb_n_v": -9.21706e-07
+    }
+   ],
+   "notes": "LO drives only NMOS gates (no junction to the pll island). OTA outputs high-Z when off."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "tool": "Magic 8.3.623 drc(full), euclidean",
+    "errors": 0,
+    "error_tiles": "0",
+    "report": "generated/rxmix_i-layout.json",
+    "klayout_crosscheck": {
+     "ran": true,
+     "violations": 0,
+     "by_rule": {},
+     "deck": "gf180mcuD klayout (sak-drc.sh -k)"
+    }
+   },
+   "lvs": {
+    "tool": "Netgen 1.5.316 gf180mcuD_setup.tcl",
+    "result": "Circuits match uniquely.",
+    "unique_match": true,
+    "report": "generated/rxmix_i-lvs.txt"
+   },
+   "extracted_nominal": {
+    "condition": "tt 27 C 3.3 V, extracted with parasitic C",
+    "conversion_gain_db": 19.2754063068775,
+    "bb_tone_amp_v": 0.09199629037038234,
+    "bb_pp_v": 0.184988,
+    "bb_offset_v": -0.0597444,
+    "idd_a": 0.00190095,
+    "vcm_v": 1.61423,
+    "rf_amp_diff_v": 0.01,
+    "if_hz": 5000000.0,
+    "source": "300 ohm/leg, 4 pF coupling"
+   }
+  },
+  "observable": {
+   "state": "pass",
+   "offset_dac": {
+    "pins": "ofs0..ofs4 (magnitude), ofs_sign",
+    "calibration_nominal": {
+     "raw_offset_v": -0.0542242,
+     "lsb_v": -0.00860085,
+     "code": -6,
+     "residual_v": -0.00337291
+    }
+   },
+   "atb_taps": [
+    {
+     "port": "atb_vcm",
+     "node": "TIA reference / output CM"
+    },
+    {
+     "port": "atb_vbp",
+     "node": "OTA PMOS bias"
+    }
+   ],
+   "status_bits": [],
+   "clock_obs": [],
+   "notes": "Baseband output also observable through bb_tap (bbfilter obs_sel=1)."
+  },
+  "fallback": {
+   "state": "pass",
+   "routes": [
+    {
+     "route": "rf_rx_external_downconverter",
+     "control": "rxmix en=0 and LO stopped (outputs tri-stated); bb_tap inj_en=1 + bbfilter inj=1",
+     "pads": [
+      "BB_I_P",
+      "BB_I_N",
+      "BB_Q_P",
+      "BB_Q_N"
+     ],
+     "mixer_output_current_when_forced_a": 6.665463e-10
+    }
+   ],
+   "bypass_loading_fF": null,
+   "notes": "The inject switch lives in bb_tap; the mixer only has to release rx_bb (verified)."
+  }
+ },
+ "performance_vs_target": [
+  {
+   "metric": "conversion gain, 300 ohm/leg source, 2.4 GHz LO, 5 MHz IF (dB)",
+   "target": "0 (arch, voltage)",
+   "extracted_nominal": 19.2754063068775,
+   "schematic_nominal": 20.11071276766892
+  },
+  {
+   "metric": "supply current (mA)",
+   "target": 1.0,
+   "extracted_nominal": 1.90095
+  },
+  {
+   "metric": "baseband output CM (V)",
+   "target": 1.65,
+   "extracted_nominal": 1.61423
+  },
+  {
+   "metric": "TIA output offset raw / after FPGA calibration with the offset DAC (V); DAC LSB (V)",
+   "target": "|residual| < 10 mV referred to the filter input",
+   "extracted_nominal": [
+    -0.0542242,
+    -0.00337291,
+    -0.00860085
+   ],
+   "detail": {
+    "raw_offset_v": -0.0542242,
+    "lsb_v": -0.00860085,
+    "code": -6,
+    "residual_v": -0.00337291
+   }
+  },
+  {
+   "metric": "offset calibration across the envelope (ext; calibrated at each point)",
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "raw_offset_v": -0.051654,
+     "lsb_v": -0.008591749999999999,
+     "code": -6,
+     "residual_v": -0.000888616
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "raw_offset_v": -0.0556893,
+     "lsb_v": -0.0086590875,
+     "code": -6,
+     "residual_v": -0.00453645
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "raw_offset_v": -0.0507598,
+     "lsb_v": -0.008511149999999999,
+     "code": -6,
+     "residual_v": -0.000388574
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "raw_offset_v": -0.0547439,
+     "lsb_v": -0.0085768875,
+     "code": -6,
+     "residual_v": -0.00399404
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "raw_offset_v": -0.0537837,
+     "lsb_v": -0.010169787500000003,
+     "code": -5,
+     "residual_v": -0.0039654
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "raw_offset_v": -0.0585926,
+     "lsb_v": -0.010248550000000002,
+     "code": -6,
+     "residual_v": 0.00194048
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "raw_offset_v": -0.0527033,
+     "lsb_v": -0.010076587499999998,
+     "code": -5,
+     "residual_v": -0.00323957
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "raw_offset_v": -0.0574438,
+     "lsb_v": -0.010153524999999998,
+     "code": -6,
+     "residual_v": 0.00262216
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "raw_offset_v": -0.0456355,
+     "lsb_v": -0.0069813125000000005,
+     "code": -7,
+     "residual_v": 0.00199518
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "raw_offset_v": -0.0487166,
+     "lsb_v": -0.007036175,
+     "code": -7,
+     "residual_v": -0.000756859
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "raw_offset_v": -0.0448757,
+     "lsb_v": -0.0069140375,
+     "code": -6,
+     "residual_v": -0.00395184
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "raw_offset_v": -0.0478955,
+     "lsb_v": -0.006967687500000001,
+     "code": -7,
+     "residual_v": -0.000220736
+    }
+   ]
+  },
+  {
+   "metric": "chain with LNA (see lna evidence)",
+   "extracted_nominal": {
+    "gain_i_db": 15.306376163288668,
+    "gain_q_db": 14.555090874571086,
+    "bb_pp_i_v": 0.0428942,
+    "bb_pp_q_v": 0.0340914,
+    "idd_a": 0.00655294,
+    "f_lo_hz": 2400000000.0,
+    "f_if_hz": 5000000.0,
+    "rf_emf_amp_diff_v": 0.003,
+    "board_match": null,
+    "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
+   }
+  },
+  {
+   "metric": "corner sweep (ext transient)",
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "conversion_gain_db": 19.284324109252196,
+     "idd_a": 0.00187772,
+     "bb_offset_v": -0.056795
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "conversion_gain_db": 19.38522547791134,
+     "idd_a": 0.00190715,
+     "bb_offset_v": -0.0613836
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "conversion_gain_db": 19.106422571272937,
+     "idd_a": 0.00187796,
+     "bb_offset_v": -0.0558338
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "conversion_gain_db": 19.20907848075013,
+     "idd_a": 0.00190745,
+     "bb_offset_v": -0.0603682
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "conversion_gain_db": 17.833756447781624,
+     "idd_a": 0.00178705,
+     "bb_offset_v": -0.0631145
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "conversion_gain_db": 18.081794329288442,
+     "idd_a": 0.00184885,
+     "bb_offset_v": -0.0688702
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "conversion_gain_db": 17.65247117415758,
+     "idd_a": 0.00178703,
+     "bb_offset_v": -0.061862
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "conversion_gain_db": 17.902002988725382,
+     "idd_a": 0.00184863,
+     "bb_offset_v": -0.0675389
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "conversion_gain_db": 20.44790748943985,
+     "idd_a": 0.00192892,
+     "bb_offset_v": -0.047495
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "conversion_gain_db": 20.527607990062897,
+     "idd_a": 0.00195089,
+     "bb_offset_v": -0.0507494
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "conversion_gain_db": 20.277702303098295,
+     "idd_a": 0.00192964,
+     "bb_offset_v": -0.0467186
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "conversion_gain_db": 20.35949277336874,
+     "idd_a": 0.00195144,
+     "bb_offset_v": -0.0499109
+    }
+   ]
+  }
+ ],
+ "excluded_coverage": [
+  "LO assumed ideal 0/VDD 50% square (quadrature block output not co-simulated)",
+  "I/Q mismatch, IIP2/IIP3, noise figure, LO leakage not simulated",
+  "no Monte Carlo"
+ ]
+}

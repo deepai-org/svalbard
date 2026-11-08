@@ -1,0 +1,445 @@
+{
+ "block": "clk_obs",
+ "source_hashes": {
+  "clk_obs.spice": "sha256:abd8563db4bf9785da5fc34eb3d10f8ef9968fbc81deed1bb7360b8ae4ad5fd8",
+  "timing_cells.spice": "sha256:f9f1f38f3d190cf34a8c02560d70c0061ccefe7951a3022b1803d74656139452",
+  "layout_engine.py": "sha256:acb531c9c30a6b3f4a76c124bc9ea8e9274a532a7a9e1769d40ff535ab61f0ae",
+  "netlist.py": "sha256:9eb8d5c8d7d044a76b560ebebd23c768aefd2b0c1183d38313964e89a1d30ab3",
+  "run_timing.py": "sha256:0ffa242409850c1211baf29172da2a7a542b21e6d88ffb5e03b87cde437056b3",
+  "timing_flow.py": "sha256:ae25349b5de22a22b47a77687abf481166efaac60013c748078420666f8e0b28"
+ },
+ "generated_hashes": {
+  "clk_obs.lvs.spice": "sha256:17c19ade8b55385baffe1fdaac655776dbab2e4dd41a975877165a77bafe76ef",
+  "clk_obs.mag": "sha256:78028b073980739c3782457eb863165989ac5de8b5c67e7d8376f589066d311d",
+  "clk_obs.ext.spice": "sha256:bf342b2c2635ac5660baa6f520130400d9c3982de2d6ccb7484af13a567ccc67",
+  "clk_obs.gds": "sha256:451b631c9f95dc7eb9bb48f204640da6f98588b72ef2c4cf997884045f8eee9f"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_ref": "svalbard/librelane-gf180-canary:2026.08"
+ },
+ "pdk": "gf180mcuD (digital image /pdk/gf180mcuD for Magic/Netgen; analog image /foss/pdks/gf180mcuD models for ngspice)",
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "tt",
+     "temp_c": 27,
+     "vdd_v": 3.3,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 0.0198077,
+     "i_vdd_peak_ua": 1550.94,
+     "output_max_v": {
+      "out": 0.0372066
+     },
+     "deck": "scratch/timing/clk_obs/sim/safe_tt_27_3.3.spice",
+     "errors": []
+    },
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "ff",
+     "temp_c": 85,
+     "vdd_v": 3.63,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 0.0852926,
+     "i_vdd_peak_ua": 1551.3799999999999,
+     "output_max_v": {
+      "out": 0.0615478
+     },
+     "deck": "scratch/timing/clk_obs/sim/safe_ff_85_3.63.spice",
+     "errors": []
+    },
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "ss",
+     "temp_c": 0,
+     "vdd_v": 3.63,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 0.0263971,
+     "i_vdd_peak_ua": 1554.97,
+     "output_max_v": {
+      "out": 0.0445429
+     },
+     "deck": "scratch/timing/clk_obs/sim/safe_ss_0_3.63.spice",
+     "errors": []
+    }
+   ],
+   "notes": "Reset-default = every control input 0; clock/pad inputs toggling. Includes 3.63 V at 85 C (ff) and 0 C (ss)."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "errors": 0,
+    "tool": "Magic 8.3.623 drc(full)",
+    "report": "generated/clk_obs-drc.txt",
+    "klayout": {
+     "ran": true,
+     "violations": 0,
+     "by_rule": {},
+     "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+    },
+    "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii"
+   },
+   "lvs": {
+    "unique_match": true,
+    "summary": "Final result: Circuits match uniquely.\n.",
+    "tool": "Netgen 1.5.316",
+    "report": "generated/clk_obs-lvs.txt"
+   },
+   "extracted_nominal": {
+    "gating_cases": [
+     "nom"
+    ],
+    "all_pass": true,
+    "results": [
+     {
+      "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+      "expected_hz": 62500000.0,
+      "f_out_hz": 62499999.99999999,
+      "duty": 0.5066006249999999,
+      "out_swing_v": [
+       -0.00431551,
+       3.30258
+      ],
+      "i_off_ua": -53.6464,
+      "out_while_disabled_v": 5.39419e-05,
+      "i_on_ma": 4.954359999999999,
+      "pass": true,
+      "netlist": "extracted",
+      "corner": "tt",
+      "temp_c": 27,
+      "vdd_v": 3.3,
+      "deck": "scratch/timing/clk_obs/sim/nom.spice"
+     }
+    ]
+   },
+   "layout": {
+    "size_um": [
+     197.68,
+     369.88
+    ],
+    "area_um2": 73117.9,
+    "devices": 383,
+    "gds": "generated/clk_obs.gds",
+    "mag": "generated/clk_obs.mag",
+    "extracted": "generated/clk_obs.ext.spice"
+   }
+  },
+  "observable": {
+   "state": "open",
+   "atb_taps": [],
+   "status_bits": [],
+   "clock_obs": [
+    "is the observation path itself (OUT -> CLK_OBS pad)"
+   ],
+   "notes": "Points exist as ports; register-file / test-bus / CLK_OBS mux codes are assigned at integration (register map not yet published)."
+  },
+  "fallback": {
+   "state": "open",
+   "bypass_loading_fF": null,
+   "bypass_loading_note": null,
+   "routes": [],
+   "notes": "Debug cell."
+  }
+ },
+ "performance_vs_target": [
+  {
+   "kind": "nominal_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499999.99999999,
+   "duty": 0.5066006249999999,
+   "out_swing_v": [
+    -0.00431551,
+    3.30258
+   ],
+   "i_off_ua": -53.6464,
+   "out_while_disabled_v": 5.39419e-05,
+   "i_on_ma": 4.954359999999999,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/clk_obs/sim/nom.spice"
+  },
+  {
+   "kind": "nominal_extracted",
+   "input": "IN0 1 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 125000000.0,
+   "f_out_hz": null,
+   "duty": null,
+   "out_swing_v": [
+    -2.96021e-05,
+    2.9761e-05
+   ],
+   "i_off_ua": 0.10658000000000001,
+   "out_while_disabled_v": 3.79303e-05,
+   "i_on_ma": 0.959091,
+   "pass": false,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/clk_obs/sim/nom_in1g.spice",
+   "sim_messages": [
+    "Error: measure  per  trig(TRIG) : out of interval",
+    "Error: measure  thi  trig(TRIG) : out of interval",
+    ".measure tran per trig v(out) val=    1.650000000000000e+00     td=3e-08 rise=1 targ v(out) val=    1.650000000000000e+00     td=3e-08 rise=3 failed!",
+    ".measure tran thi trig v(out) val=    1.650000000000000e+00     td=30n rise=1 targ v(out) val=    1.650000000000000e+00     td=30n fall=1 failed!"
+   ]
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499999.99999999,
+   "duty": 0.505844375,
+   "out_swing_v": [
+    -0.00428634,
+    3.1526
+   ],
+   "i_off_ua": -51.161500000000004,
+   "out_while_disabled_v": 4.93851e-05,
+   "i_on_ma": 4.69728,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/clk_obs/sim/c_tt_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499999.99999999,
+   "duty": 0.5063068749999999,
+   "out_swing_v": [
+    -0.00434769,
+    3.3526
+   ],
+   "i_off_ua": -54.4772,
+   "out_while_disabled_v": 5.54371e-05,
+   "i_on_ma": 5.03493,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/clk_obs/sim/c_tt_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499999.99999999,
+   "duty": 0.5047887499999999,
+   "out_swing_v": [
+    -0.00425318,
+    3.15256
+   ],
+   "i_off_ua": -51.1577,
+   "out_while_disabled_v": 4.98795e-05,
+   "i_on_ma": 4.70515,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/clk_obs/sim/c_tt_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499999.99999999,
+   "duty": 0.5066356249999999,
+   "out_swing_v": [
+    -0.00430995,
+    3.35256
+   ],
+   "i_off_ua": -54.4733,
+   "out_while_disabled_v": 5.59745e-05,
+   "i_on_ma": 5.04317,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/clk_obs/sim/c_tt_32_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499999.99999999,
+   "duty": 0.49896937499999994,
+   "out_swing_v": [
+    -0.00481914,
+    3.15304
+   ],
+   "i_off_ua": -51.1651,
+   "out_while_disabled_v": 4.79231e-05,
+   "i_on_ma": 4.62922,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/clk_obs/sim/c_ss_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499999.99999999,
+   "duty": 0.5030612499999999,
+   "out_swing_v": [
+    -0.00486088,
+    3.35308
+   ],
+   "i_off_ua": -54.4919,
+   "out_while_disabled_v": 5.26817e-05,
+   "i_on_ma": 4.96357,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/clk_obs/sim/c_ss_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499999.99999999,
+   "duty": 0.49993875,
+   "out_swing_v": [
+    -0.00479287,
+    3.15299
+   ],
+   "i_off_ua": -51.159200000000006,
+   "out_while_disabled_v": 4.79571e-05,
+   "i_on_ma": 4.635249999999999,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/clk_obs/sim/c_ss_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499999.99999999,
+   "duty": 0.501308125,
+   "out_swing_v": [
+    -0.00483487,
+    3.35304
+   ],
+   "i_off_ua": -54.4865,
+   "out_while_disabled_v": 5.27193e-05,
+   "i_on_ma": 4.96932,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/clk_obs/sim/c_ss_32_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499804.68811035,
+   "duty": null,
+   "out_swing_v": [
+    -0.00369634,
+    3.15209
+   ],
+   "i_off_ua": -51.1616,
+   "out_while_disabled_v": 5.92268e-05,
+   "i_on_ma": 4.779870000000001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/clk_obs/sim/c_ff_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499804.68811035,
+   "duty": null,
+   "out_swing_v": [
+    -0.00373352,
+    3.35207
+   ],
+   "i_off_ua": -54.466,
+   "out_while_disabled_v": 6.81957e-05,
+   "i_on_ma": 5.12378,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/clk_obs/sim/c_ff_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499804.68811035,
+   "duty": null,
+   "out_swing_v": [
+    -0.00366108,
+    3.15207
+   ],
+   "i_off_ua": -51.1584,
+   "out_while_disabled_v": 7.00297e-05,
+   "i_on_ma": 4.78924,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/clk_obs/sim/c_ff_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
+   "expected_hz": 62500000.0,
+   "f_out_hz": 62499804.68811035,
+   "duty": null,
+   "out_swing_v": [
+    -0.00369827,
+    3.35204
+   ],
+   "i_off_ua": -54.4622,
+   "out_while_disabled_v": 7.99943e-05,
+   "i_on_ma": 5.133450000000001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/clk_obs/sim/c_ff_32_3.35.spice"
+  },
+  {
+   "kind": "area",
+   "area_um2": 73117.9,
+   "ceiling_um2": null,
+   "ceiling_source": "debug structure; 0.41 mm2 shared reserve",
+   "fits": null
+  }
+ ],
+ "excluded_coverage": []
+}

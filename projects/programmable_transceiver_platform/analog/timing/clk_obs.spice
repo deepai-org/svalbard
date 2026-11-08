@@ -1,0 +1,55 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_clk_obs: digital observation output cell (one design; instances for
+* CLK_OBS, WCLK_OBS, DBG_OBS0/1, WDBG_OBS).  Supply: always-on core rail.
+*   8:1 input mux (binary S2..S0) -> enable gate -> 7-stage /2 chain
+*   (first stage 2x C2MOS for VCO-rate inputs) -> 8:1 tap mux (binary N2..N0
+*   selects /2^N, N=0..7) -> tristate CMOS pad driver.
+* EN=0 (reset): chain held in reset, mux output gated low, OUT high-Z.
+* Status/static signals pass with N=0.
+.include timing_cells.spice
+
+.subckt pt_clk_obs IN0 IN1 IN2 IN3 IN4 IN5 IN6 IN7 S0 S1 S2 N0 N1 N2 EN OUT VDD VSS
+* S0 is gated by EN so a disabled cell's first mux level cannot toggle
+XIE0 S0 EN S0E VDD VSS pt_t_and2
+XIS0 S0 ENB S0BE VDD VSS pt_t_nor2
+XIS1 S1 S1B VDD VSS pt_t_inv1
+XIS2 S2 S2B VDD VSS pt_t_inv1
+XIN0 N0 N0B VDD VSS pt_t_inv1
+XIN1 N1 N1B VDD VSS pt_t_inv1
+XIN2 N2 N2B VDD VSS pt_t_inv1
+XIE EN ENB VDD VSS pt_t_inv1
+* input mux tree
+XM10 IN0 IN1 S0E S0BE M10 VDD VSS pt_t_mux2
+XM11 IN2 IN3 S0E S0BE M11 VDD VSS pt_t_mux2
+XM12 IN4 IN5 S0E S0BE M12 VDD VSS pt_t_mux2
+XM13 IN6 IN7 S0E S0BE M13 VDD VSS pt_t_mux2
+XM20 M10 M11 S1 S1B M20 VDD VSS pt_t_mux2
+XM21 M12 M13 S1 S1B M21 VDD VSS pt_t_mux2
+XM30 M20 M21 S2 S2B M30 VDD VSS pt_t_mux2
+XG M30 EN GB VDD VSS pt_t_nand2x
+XGI GB G VDD VSS pt_t_inv2
+* divider chain
+XCK G CKP CKN VDD VSS pt_t_s2d
+XD1 CKP CKN ENB D1P D1N Q1P Q1N VDD VSS pt_t_div2f
+XD2 D1P D1N ENB D2P D2N Q2P Q2N VDD VSS pt_t_div2
+XD3 D2P D2N ENB D3P D3N Q3P Q3N VDD VSS pt_t_div2
+XD4 D3P D3N ENB D4P D4N Q4P Q4N VDD VSS pt_t_div2
+XD5 D4P D4N ENB D5P D5N Q5P Q5N VDD VSS pt_t_div2
+XD6 D5P D5N ENB D6P D6N Q6P Q6N VDD VSS pt_t_div2
+XD7 D6P D6N ENB D7P D7N Q7P Q7N VDD VSS pt_t_div2
+* tap mux tree
+XT10 G D1P N0 N0B T10 VDD VSS pt_t_mux2
+XT11 D2P D3P N0 N0B T11 VDD VSS pt_t_mux2
+XT12 D4P D5P N0 N0B T12 VDD VSS pt_t_mux2
+XT13 D6P D7P N0 N0B T13 VDD VSS pt_t_mux2
+XT20 T10 T11 N1 N1B T20 VDD VSS pt_t_mux2
+XT21 T12 T13 N1 N1B T21 VDD VSS pt_t_mux2
+XT30 T20 T21 N2 N2B T30 VDD VSS pt_t_mux2
+* tristate pad driver: PG low only for D=1 & EN, NG high only for D=0 & EN
+XB1 T30 B1 VDD VSS pt_t_inv2
+XB2 B1 B2 VDD VSS pt_t_inv4
+XPGN B2 EN PG VDD VSS pt_t_nand2x
+XNGN B2 ENB NG VDD VSS pt_t_nor2x
+XPO OUT PG VDD VDD pfet_03v3 w=8u l=0.28u m=10
+XNO OUT NG VSS VSS nfet_03v3 w=8u l=0.28u m=5
+.ends

@@ -1,0 +1,1095 @@
+{
+ "block": "rfdriver",
+ "source_hashes": {
+  "rfdriver.spice": "sha256:220d37fe843f659d1c6c79fb42551524a4a31e5f016d4de16f7045dc10a5c196",
+  "circuits.py": "sha256:59382037c2ad25a85d7086c05a59cb0bc7b263fddbe9ca558a6447f9f9f272fb",
+  "layoutlib.py": "sha256:067f29bd000ba2e414787dfd146ba34e49c7f5c7c88bae3d1a4b606447c5c111",
+  "generate.py": "sha256:67829d6dd34ad18bb9a2f4d86496826eaf7735e9124b84cd45f31ff9706cf8cb",
+  "simulate.py": "sha256:fb3ca89424205a8b133fa2bfc7796de5b81d632b4bf5c599470b4c296ff5fae2",
+  "run_benches.py": "sha256:a5605c861fe95133435d330ae6c98d40da217130420ddaab78dcbb39c95e85c2",
+  "evidence.py": "sha256:9e98f018da82a248cb8d4837dcf82d0098a8bc3d632b3590d54692b6bce78ca9",
+  "run_rf_tx.sh": "sha256:d95f600df754504173e6ca304efb1732f7a679c7e903ff7592efb8519c682cd8"
+ },
+ "output_hashes": {
+  "generated/rfdriver.gds": "sha256:c1797cca61f85a87125ac4e8a94ff1c69a6677c1429ba185e39634aedadb3336",
+  "generated/rfdriver.ext.spice": "sha256:e9d618ec724ff65f4eacb056e5f98fa83b1742ff8f187728e7fccb8bc82210f1"
+ },
+ "output_notes": "generated/<block>.gds is the Magic 8.3.678 re-export (analog image); DRC, LVS and extraction ran on the canary image from the same .mag.",
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_ref": "svalbard/librelane-gf180-canary:2026.08"
+ },
+ "pdk": "gf180mcuD, open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (both images)",
+ "area": {
+  "width_um": 370.9,
+  "height_um": 211.56,
+  "area_um2": 78467.6,
+  "ceiling_um2": 98100,
+  "fits": true
+ },
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "safe_reset_3p3",
+     "condition": {},
+     "rail_static_uA": 0.0007,
+     "rail_transient_mean_uA": -5.8439,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": null,
+     "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
+     "pass": true
+    },
+    {
+     "case": "safe_reset_3p63_85C",
+     "condition": {
+      "vdd": 3.63,
+      "temp": 85
+     },
+     "rail_static_uA": 0.0024,
+     "rail_transient_mean_uA": -4.6364,
+     "bb_dac_source_static_uA": 0.0003,
+     "pad_source_current_mA": null,
+     "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
+     "pass": true
+    },
+    {
+     "case": "safe_reset_3p63_0C",
+     "condition": {
+      "vdd": 3.63,
+      "temp": 0
+     },
+     "rail_static_uA": 0.0008,
+     "rail_transient_mean_uA": -6.4429,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": null,
+     "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
+     "pass": true
+    },
+    {
+     "case": "safe_reset_ff_3p63_85C",
+     "condition": {
+      "vdd": 3.63,
+      "temp": 85,
+      "corner": "ff"
+     },
+     "rail_static_uA": 0.0218,
+     "rail_transient_mean_uA": -3.1093,
+     "bb_dac_source_static_uA": 0.0035,
+     "pad_source_current_mA": null,
+     "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
+     "pass": true
+    },
+    {
+     "case": "safe_rail_off",
+     "condition": {
+      "vdd": 0.0
+     },
+     "rail_static_uA": -0.0,
+     "rail_transient_mean_uA": -7.3693,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": null,
+     "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
+     "pass": true
+    },
+    {
+     "case": "safe_rail_off_ctrl_high",
+     "condition": {
+      "vdd": 0.0,
+      "ctrl": 3.3,
+      "en": 1,
+      "mute": 0,
+      "gain": 15,
+      "sel": 1,
+      "sat": 1
+     },
+     "rail_static_uA": 0.0,
+     "rail_transient_mean_uA": -7.3567,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": null,
+     "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
+     "pass": true
+    },
+    {
+     "case": "safe_rail_off_bypass",
+     "condition": {
+      "vdd": 0.0,
+      "ctrl": 3.3,
+      "bypass": 1
+     },
+     "rail_static_uA": 0.0,
+     "rail_transient_mean_uA": -7.3934,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": null,
+     "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
+     "pass": true
+    },
+    {
+     "case": "safe_bypass_and_en",
+     "condition": {
+      "ctrl": 3.3,
+      "en": 1,
+      "mute": 0,
+      "bypass": 1,
+      "gain": 15
+     },
+     "rail_static_uA": 0.0005,
+     "rail_transient_mean_uA": -17.9141,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": null,
+     "criterion": "informational (block enabled)",
+     "pass": null
+    },
+    {
+     "case": "safe_en_no_bias",
+     "condition": {
+      "ctrl": 3.3,
+      "en": 1,
+      "mute": 0,
+      "gain": 15,
+      "ibias": 0.0
+     },
+     "rail_static_uA": 0.001,
+     "rail_transient_mean_uA": -1.8722,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": null,
+     "criterion": "informational (block enabled)",
+     "pass": null
+    },
+    {
+     "case": "safe_en_lo_stopped",
+     "condition": {
+      "ctrl": 3.3,
+      "en": 1,
+      "mute": 0,
+      "gain": 15,
+      "lo_on": false
+     },
+     "rail_static_uA": 27885.7,
+     "rail_transient_mean_uA": 27885.6556,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": null,
+     "criterion": "informational (block enabled)",
+     "pass": null
+    },
+    {
+     "case": "safe_en_3p63_85C",
+     "condition": {
+      "vdd": 3.63,
+      "temp": 85,
+      "ctrl": 3.63,
+      "en": 1,
+      "mute": 0,
+      "gain": 15
+     },
+     "rail_static_uA": 27336.4,
+     "rail_transient_mean_uA": 27332.8389,
+     "bb_dac_source_static_uA": 0.0001,
+     "pad_source_current_mA": null,
+     "criterion": "informational (block enabled)",
+     "pass": null
+    },
+    {
+     "case": "safe_pad_driven_rail_off",
+     "condition": {
+      "vdd": 0.0,
+      "pad_drive": 3.3
+     },
+     "rail_static_uA": -89277.72,
+     "rail_transient_mean_uA": -89307.4819,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": 89.8476,
+     "criterion": "out of contract: DC-driven RF_TX (board must DC-block RF_TX)",
+     "pass": null
+    },
+    {
+     "case": "safe_pad_driven_reset",
+     "condition": {
+      "pad_drive": 3.3
+     },
+     "rail_static_uA": 0.0004,
+     "rail_transient_mean_uA": -5.9518,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": 0.2844,
+     "criterion": "out of contract: DC-driven RF_TX (board must DC-block RF_TX)",
+     "pass": null
+    },
+    {
+     "case": "safe_peer_grounded_reset",
+     "condition": {
+      "pad_drive": 0.0
+     },
+     "rail_static_uA": 0.0007,
+     "rail_transient_mean_uA": -5.861,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": 0.0,
+     "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
+     "pass": true
+    },
+    {
+     "case": "safe_peer_grounded_rail_off",
+     "condition": {
+      "vdd": 0.0,
+      "pad_drive": 0.0
+     },
+     "rail_static_uA": -0.0,
+     "rail_transient_mean_uA": -7.4215,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": 0.0002,
+     "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
+     "pass": true
+    },
+    {
+     "case": "safe_peer_grounded_enabled",
+     "condition": {
+      "pad_drive": 0.0,
+      "ctrl": 3.3,
+      "en": 1,
+      "mute": 0,
+      "gain": 15
+     },
+     "rail_static_uA": 56781.7,
+     "rail_transient_mean_uA": 56743.0936,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": -29.0363,
+     "criterion": "informational (block enabled)",
+     "pass": null
+    },
+    {
+     "case": "safe_peer_grounded_bypass",
+     "condition": {
+      "pad_drive": 0.0,
+      "ctrl": 3.3,
+      "en": 1,
+      "bypass": 1
+     },
+     "rail_static_uA": 0.0006,
+     "rail_transient_mean_uA": -15.464,
+     "bb_dac_source_static_uA": 0.0,
+     "pad_source_current_mA": -3.8179,
+     "criterion": "informational (block enabled)",
+     "pass": null
+    },
+    {
+     "case": "safe_ramp_reset",
+     "condition": {
+      "kind": "ramp",
+      "en_level": 0.0
+     },
+     "family_rail_current_uA_at_3p63V": 1.48,
+     "peak_uA": 108.648,
+     "criterion": "<= 10.0 uA",
+     "pass": true
+    },
+    {
+     "case": "safe_ramp_en_high",
+     "condition": {
+      "kind": "ramp",
+      "en_level": 3.3
+     },
+     "family_rail_current_uA_at_3p63V": 12723.702,
+     "peak_uA": 14353.944,
+     "criterion": "informational (enabled)",
+     "pass": null
+    }
+   ],
+   "notes": "Family-level extracted benches (all four blocks connected, LO running, upstream baseband and ibias live). Static currents from the DC operating point; transient means over six LO periods. Default-off: en=0 opens bias switches and clamps; island rail off gives no static backfeed. Board contract: RF_TX must be DC-blocked; a DC-coupled source above ~0.5 V on RF_TX with the island rail at 0 V forward-biases the rfdriver PMOS drain junctions (recorded as out-of-contract case)."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "tool": "magic 8.3.623 gf180mcuD deck",
+    "errors": 0,
+    "report": "generated/rfdriver-drc.txt"
+   },
+   "lvs": {
+    "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
+    "result": "Final result: Circuits match uniquely.",
+    "report": "generated/rfdriver-lvs.txt"
+   },
+   "gds_export": {
+    "rule": "spec/block-deliverables.md GDS export rule",
+    "tool": "magic 8.3.678 (analog image), cif ostyle gdsii",
+    "image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "marker_shapes": {
+     "HRES 62/0": 5,
+     "RES_MK 110/5": 22
+    },
+    "ppolyf_u_1k_in_netlist": 5,
+    "hres_present_where_required": true,
+    "report": "generated/rfdriver-gds-export.json"
+   },
+   "klayout_drc": {
+    "tool": "KLayout GF180 deck via sak-drc.sh -k (analog image)",
+    "violations": 0,
+    "by_rule": {},
+    "report": "generated/rfdriver-klayout-drc.lyrdb"
+   },
+   "extracted_nominal": {
+    "bench": "extracted pt_rfdriver, ideal 2.44 GHz differential input at 2.82 V CM, pad 2 ohm + 1 pF per leg, 50 ohm differential load",
+    "small_signal_voltage_gain": 1.6831,
+    "pad_dBm_at_0p3V_in": -0.16,
+    "pad_dBm_at_0p6V_in": 0.41,
+    "supply_mA": 28.9349,
+    "chain_pad_dBm_0p3V_DC_I": -7.58,
+    "chain_ssb_wanted_dBm": -7.04,
+    "source": "generated/rf_tx-sim-ext.json",
+    "board_matched_linear_dBm_0p3V": -6.15,
+    "board_matched_saturated_dBm_1p0V": -1.08,
+    "board_matched_ssb_linear_dBm": -5.63,
+    "board_matched_ssb_saturated_dBm": -0.13,
+    "board_match": {
+     "r_opt_diff_ohm": 113.8,
+     "shunt_pad": [
+      "L",
+      1.4180817809304006e-08
+     ],
+     "series_l_total_H": 3.682630458318593e-09,
+     "inductor_q": 30.0,
+     "method": "driver differential output admittance at the pad (tt, code 15) conjugate-matched to 50 ohm differential by an L-section; inductor Q=30 (series loss in simulation), ideal capacitors, ideal 1:1 balun not included (budget ~0.5 dB)."
+    }
+   }
+  },
+  "observable": {
+   "state": "open",
+   "atb_taps": [
+    {
+     "port": "atb_bias",
+     "node": "bias line vb",
+     "on_V": 0.95,
+     "off_V": -0.0
+    },
+    {
+     "port": "atb_pre",
+     "node": "pre-amplifier 2 output common mode",
+     "on_V": 2.6236,
+     "off_V": 3.3
+    },
+    {
+     "port": "atb_cm",
+     "node": "RF_TX pad common mode",
+     "on_V": 2.3004,
+     "off_V": 0.0
+    }
+   ],
+   "status_bits": [],
+   "clock_obs": [],
+   "notes": "ATB taps are exposed as atb_* ports behind ~20 kohm on-block isolation resistors; atb_tap cells, test-bus mux codes and register fields are assigned at integration (analog/island_support, register map), so the test stays open."
+  },
+  "fallback": {
+   "state": "pass",
+   "routes": [
+    {
+     "route": "rf_tx_low_power_external_pa",
+     "control": "bypass=1 (debug.rf_tx_bypass): header, pre-amplifiers and all output tails off; PMOS switches connect summed_rf to RF_TX",
+     "evidence": {
+      "chain_bypass": {
+       "pad_fund_mVpk_diff": 6.361,
+       "pad_dBm_50ohm": -33.93,
+       "sum_fund_mVpk_diff": 55.056,
+       "mixi_drain_fund_mVpk_diff": 62.81,
+       "supply_mA": {
+        "txmix_i": -0.0001,
+        "txmix_q": 0.0002,
+        "txsum": 2.0094,
+        "rfdriver": -0.0104
+       },
+       "atb_V": {
+        "rfdriver.atb_bias": 0.9472,
+        "rfdriver.atb_pre": 3.3,
+        "rfdriver.atb_cm": 2.8334,
+        "txsum.atb_cm": 2.8332,
+        "txmix_i.atb_bias": 0.9397,
+        "txmix_i.atb_tail": 0.7903
+       },
+       "pad_cm_V": 2.833,
+       "sum_cm_V": 2.8323
+      },
+      "chain_bypass_large": {
+       "pad_fund_mVpk_diff": 13.388,
+       "pad_dBm_50ohm": -27.47,
+       "sum_fund_mVpk_diff": 116.063,
+       "mixi_drain_fund_mVpk_diff": 132.37,
+       "supply_mA": {
+        "txmix_i": -0.0003,
+        "txmix_q": 0.0002,
+        "txsum": 2.0106,
+        "rfdriver": -0.0096
+       },
+       "atb_V": {
+        "rfdriver.atb_bias": 0.9473,
+        "rfdriver.atb_pre": 3.3,
+        "rfdriver.atb_cm": 2.8335,
+        "txsum.atb_cm": 2.833,
+        "txmix_i.atb_bias": 0.9397,
+        "txmix_i.atb_tail": 0.9126
+       },
+       "pad_cm_V": 2.8333,
+       "sum_cm_V": 2.8333
+      },
+      "standalone_bypass": {
+       "input_mVpk_diff": 299.974,
+       "pad_fund_mVpk_diff": 34.157,
+       "pad_dBm_50ohm": -19.33,
+       "voltage_gain": 0.1139,
+       "supply_mA": -0.0,
+       "atb_bias_V": 0.9473,
+       "atb_pre_V": 3.3,
+       "atb_cm_V": 2.8225
+      },
+      "board_matched_bypass": {
+       "pad_fund_mVpk_diff": 7.975,
+       "pad_dBm_50ohm": -31.96,
+       "sum_fund_mVpk_diff": 59.549,
+       "mixi_drain_fund_mVpk_diff": 67.273,
+       "supply_mA": {
+        "txmix_i": -0.0001,
+        "txmix_q": 0.0002,
+        "txsum": 2.0094,
+        "rfdriver": -0.0104
+       },
+       "atb_V": {
+        "rfdriver.atb_bias": 0.9472,
+        "rfdriver.atb_pre": 3.3,
+        "rfdriver.atb_cm": 2.8334,
+        "txsum.atb_cm": 2.8332,
+        "txmix_i.atb_bias": 0.9397,
+        "txmix_i.atb_tail": 0.7903
+       },
+       "pad_cm_V": 2.8332,
+       "sum_cm_V": 2.8324
+      },
+      "board_matched_bypass_saturated": {
+       "pad_fund_mVpk_diff": 18.189,
+       "pad_dBm_50ohm": -24.8,
+       "sum_fund_mVpk_diff": 136.09,
+       "mixi_drain_fund_mVpk_diff": 153.693,
+       "supply_mA": {
+        "txmix_i": -0.0003,
+        "txmix_q": 0.0003,
+        "txsum": 2.0168,
+        "rfdriver": -0.0093
+       },
+       "atb_V": {
+        "rfdriver.atb_bias": 0.9472,
+        "rfdriver.atb_pre": 3.3,
+        "rfdriver.atb_cm": 2.8321,
+        "txsum.atb_cm": 2.8315,
+        "txmix_i.atb_bias": 0.9396,
+        "txmix_i.atb_tail": 1.0325
+       },
+       "pad_cm_V": 2.8321,
+       "sum_cm_V": 2.8334
+      },
+      "rfdriver_supply_in_bypass_mA": -0.0104
+     },
+     "note": "Function shown at low power (-33.9 dBm at 0.3 V baseband); an external PA needs ~34 dB gain to reach 0 dBm."
+    }
+   ],
+   "bypass_loading_fF": 125.92,
+   "notes": "bypass_loading_fF = total rfdriver input capacitance on summed_rf with the driver off and bypass open (includes the off bypass PMOS); 155.4 fF with the driver on."
+  }
+ },
+ "performance_vs_target": [
+  {
+   "metric": "board-matched output power, linear mode (power delivered to 50 ohm after external L-match)",
+   "target": 0.0,
+   "achieved": -6.15,
+   "unit": "dBm",
+   "condition": "extracted chain, 0.3 V DC I, inductor Q=30, balun loss not included",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "board-matched output power, linear mode, 0.7 V DC I",
+   "target": 0.0,
+   "achieved": -1.38,
+   "unit": "dBm",
+   "condition": "extracted chain",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "board-matched output power, saturated mode (txmix sat=1, full-scale baseband)",
+   "target": 0.0,
+   "achieved": -1.08,
+   "unit": "dBm",
+   "condition": "extracted chain, 1.0 V DC I",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "board-matched SSB, linear (0.3 V I/Q) / saturated (1.0 V I/Q, sat=1)",
+   "target": 0.0,
+   "achieved": [
+    -5.63,
+    -0.13
+   ],
+   "unit": "dBm",
+   "condition": "extracted chain, 61 MHz offset",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": "saturated SSB image rejection 33.1 dB, LO 38.0 dBc (limiting distortion; acceptable for constant-envelope modulation only)"
+  },
+  {
+   "metric": "saturated-mode power control by gain code 1/4/8/15",
+   "target": null,
+   "achieved": [
+    -16.56,
+    -7.49,
+    -3.64,
+    -1.08
+   ],
+   "unit": "dBm",
+   "condition": "extracted chain, matched",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "rfdriver current per mode",
+   "target": 28.92,
+   "achieved": {
+    "linear (chain, 0.3 V, matched)": 25.7481,
+    "saturated (chain, 1.0 V, sat=1, matched)": 25.5313,
+    "zero input (chain, matched)": 27.8996,
+    "mute": 10.2425,
+    "bypass": -0.0104
+   },
+   "unit": "mA",
+   "condition": "tt/27C/3.3V",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "board-matched linear output vs corner",
+   "target": null,
+   "achieved": [
+    {
+     "corner": "tt",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": -5.97
+    },
+    {
+     "corner": "tt",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": -5.78
+    },
+    {
+     "corner": "tt",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": -6.62
+    },
+    {
+     "corner": "tt",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": -6.43
+    },
+    {
+     "corner": "ss",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": -8.93
+    },
+    {
+     "corner": "ss",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": -8.63
+    },
+    {
+     "corner": "ss",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": -9.56
+    },
+    {
+     "corner": "ss",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": -9.26
+    },
+    {
+     "corner": "ff",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": -4.11
+    },
+    {
+     "corner": "ff",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": -3.91
+    },
+    {
+     "corner": "ff",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": -4.77
+    },
+    {
+     "corner": "ff",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": -4.57
+    }
+   ],
+   "unit": "dBm",
+   "condition": "tt/ss/ff x 22/32 C x 3.15/3.35 V, same board network",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "board-matched saturated output vs corner",
+   "target": null,
+   "achieved": [
+    {
+     "corner": "tt",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": -0.96
+    },
+    {
+     "corner": "tt",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": -0.81
+    },
+    {
+     "corner": "tt",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": -1.44
+    },
+    {
+     "corner": "tt",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": -1.28
+    },
+    {
+     "corner": "ss",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": -2.29
+    },
+    {
+     "corner": "ss",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": -2.05
+    },
+    {
+     "corner": "ss",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": -2.81
+    },
+    {
+     "corner": "ss",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": -2.58
+    },
+    {
+     "corner": "ff",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": -0.38
+    },
+    {
+     "corner": "ff",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": -0.2
+    },
+    {
+     "corner": "ff",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": -0.84
+    },
+    {
+     "corner": "ff",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": -0.66
+    }
+   ],
+   "unit": "dBm",
+   "condition": "same corners, sat=1, 1.0 V",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "rfdriver current vs corner, saturated",
+   "target": 28.92,
+   "achieved": [
+    {
+     "corner": "tt",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": 25.4088
+    },
+    {
+     "corner": "tt",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": 25.6659
+    },
+    {
+     "corner": "tt",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": 25.271
+    },
+    {
+     "corner": "tt",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": 25.526
+    },
+    {
+     "corner": "ss",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": 23.9103
+    },
+    {
+     "corner": "ss",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": 24.5553
+    },
+    {
+     "corner": "ss",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": 23.8158
+    },
+    {
+     "corner": "ss",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": 24.455
+    },
+    {
+     "corner": "ff",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": 26.525
+    },
+    {
+     "corner": "ff",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": 26.8368
+    },
+    {
+     "corner": "ff",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": 26.3576
+    },
+    {
+     "corner": "ff",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": 26.6624
+    }
+   ],
+   "unit": "mA",
+   "condition": "same corners",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "mute isolation, saturated, matched",
+   "target": null,
+   "achieved": 22.22,
+   "unit": "dB",
+   "condition": "extracted chain",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "mean output power into 50 ohm differential, no board matching",
+   "target": 0.0,
+   "achieved": -7.58,
+   "unit": "dBm",
+   "condition": "full extracted chain, 0.3 V DC I baseband (CW at LO), code 15",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "SSB output power",
+   "target": 0.0,
+   "achieved": -7.04,
+   "unit": "dBm",
+   "condition": "full extracted chain, 0.3 V I/Q at 61 MHz",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "maximum output power (driver standalone, 0.6 V input)",
+   "target": 0.0,
+   "achieved": 0.41,
+   "unit": "dBm",
+   "condition": "tt/27C/3.3V extracted",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "driver voltage gain summed_rf -> pad",
+   "target": 5.36,
+   "achieved": 1.6831,
+   "unit": "V/V",
+   "condition": "50 mV input, 2.44 GHz, extracted",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "supply current",
+   "target": 28.92,
+   "achieved": 28.9349,
+   "unit": "mA",
+   "condition": "code 15, 0.3 V input",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "gain-code steps (pad dBm for code 1/2/4/8/12/15)",
+   "target": null,
+   "achieved": [
+    -17.74,
+    -13.08,
+    -8.07,
+    -3.48,
+    -1.2,
+    -0.16
+   ],
+   "unit": "dBm",
+   "condition": "standalone, 0.3 V input; code = rfdriver.gain[7:4]",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "mute isolation (chain, unmatched)",
+   "target": null,
+   "achieved": 23.96,
+   "unit": "dB",
+   "condition": "mute=1 vs mute=0, extracted chain",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "LO suppression at pad (chain SSB)",
+   "target": null,
+   "achieved": 44.63,
+   "unit": "dBc",
+   "condition": "ideal LO",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "chain output power vs corner",
+   "target": null,
+   "achieved": [
+    {
+     "corner": "tt",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": -7.41
+    },
+    {
+     "corner": "tt",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": -7.21
+    },
+    {
+     "corner": "tt",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": -8.06
+    },
+    {
+     "corner": "tt",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": -7.86
+    },
+    {
+     "corner": "ss",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": -10.63
+    },
+    {
+     "corner": "ss",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": -10.28
+    },
+    {
+     "corner": "ss",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": -11.26
+    },
+    {
+     "corner": "ss",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": -10.92
+    },
+    {
+     "corner": "ff",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": -5.27
+    },
+    {
+     "corner": "ff",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": -5.06
+    },
+    {
+     "corner": "ff",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": -5.94
+    },
+    {
+     "corner": "ff",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": -5.73
+    }
+   ],
+   "unit": "dBm",
+   "condition": "tt/ss/ff x 22/32 C x 3.15/3.35 V, extracted chain, 0.3 V DC I",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "rfdriver current vs corner",
+   "target": 28.92,
+   "achieved": [
+    {
+     "corner": "tt",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": 25.6633
+    },
+    {
+     "corner": "tt",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": 25.9441
+    },
+    {
+     "corner": "tt",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": 25.6407
+    },
+    {
+     "corner": "tt",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": 25.921
+    },
+    {
+     "corner": "ss",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": 23.8613
+    },
+    {
+     "corner": "ss",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": 24.8399
+    },
+    {
+     "corner": "ss",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": 23.8707
+    },
+    {
+     "corner": "ss",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": 24.8492
+    },
+    {
+     "corner": "ff",
+     "temp_C": 22,
+     "vdd_V": 3.15,
+     "value": 26.8713
+    },
+    {
+     "corner": "ff",
+     "temp_C": 22,
+     "vdd_V": 3.35,
+     "value": 27.1904
+    },
+    {
+     "corner": "ff",
+     "temp_C": 32,
+     "vdd_V": 3.15,
+     "value": 26.8016
+    },
+    {
+     "corner": "ff",
+     "temp_C": 32,
+     "vdd_V": 3.35,
+     "value": 27.1114
+    }
+   ],
+   "unit": "mA",
+   "condition": "same corners",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": ""
+  },
+  {
+   "metric": "stretch: output at LO/2 (1.22 GHz) and LO/4 (610 MHz)",
+   "target": null,
+   "achieved": {
+    "stretch_lo_div2": 1.37,
+    "stretch_lo_div2_large": 2.34,
+    "stretch_lo_div4": 2.87,
+    "stretch_lo_div4_large": 3.1
+   },
+   "unit": "dBm",
+   "condition": "extracted chain, 0.3 V / 0.7 V DC I, no board matching applied (50 ohm differential load)",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": "non-gating stretch goal; no design change made for it"
+  },
+  {
+   "metric": "schematic (no wiring parasitics) chain output for reference",
+   "target": null,
+   "achieved": -3.45,
+   "unit": "dBm",
+   "condition": "same bench, source netlists",
+   "source": "generated/rf_tx-sim-sch.json",
+   "note": ""
+  }
+ ],
+ "excluded_coverage": [
+  "Wire/via resistance not extracted (capacitance-only extraction).",
+  "No package, bond-wire or supply-network impedance; ideal 3.3 V rails.",
+  "LO is an ideal rail-to-rail square wave behind 50 ohm (quadrature block not simulated).",
+  "Baseband sources ideal (bbfilter / DAC output impedance not modelled).",
+  "No noise, mismatch/Monte Carlo, EVM or spectral-mask simulation.",
+  "Pad modelled as the rftxpad allocation (2 ohm + 1 pF per leg), not the pads agent extraction."
+ ]
+}

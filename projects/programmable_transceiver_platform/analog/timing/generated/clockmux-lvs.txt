@@ -1,0 +1,111 @@
+
+Circuit 1 cell pfet_03v3 and Circuit 2 cell pfet_03v3 are black boxes.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: pfet_03v3                       |Circuit 2: pfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pfet_03v3 and pfet_03v3 are equivalent.
+
+Circuit 1 cell nfet_03v3 and Circuit 2 cell nfet_03v3 are black boxes.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_03v3                       |Circuit 2: nfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_03v3 and nfet_03v3 are equivalent.
+
+Class ct_mux4 (0):  Merged 2 parallel devices.
+Class ct_mux4 (1):  Merged 2 parallel devices.
+Subcircuit summary:
+Circuit 1: ct_mux4                         |Circuit 2: ct_mux4                         
+-------------------------------------------|-------------------------------------------
+pfet_03v3 (15->14)                         |pfet_03v3 (15->14)                         
+nfet_03v3 (15->14)                         |nfet_03v3 (15->14)                         
+Number of devices: 28                      |Number of devices: 28                      
+Number of nets: 24                         |Number of nets: 24                         
+---------------------------------------------------------------------------------------
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: ct_mux4                         |Circuit 2: ct_mux4                         
+-------------------------------------------|-------------------------------------------
+VSS                                        |VSS                                        
+VDD                                        |VDD                                        
+S3                                         |S3                                         
+S1                                         |S1                                         
+S2                                         |S2                                         
+S0                                         |S0                                         
+A1                                         |A1                                         
+A2                                         |A2                                         
+A3                                         |A3                                         
+A0                                         |A0                                         
+Y                                          |Y                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ct_mux4 and ct_mux4 are equivalent.
+
+Subcircuit summary:
+Circuit 1: pt_clockmux                     |Circuit 2: pt_clockmux                     
+-------------------------------------------|-------------------------------------------
+ct_mux4 (5)                                |ct_mux4 (5)                                
+Number of devices: 5                       |Number of devices: 5                       
+Number of nets: 32                         |Number of nets: 32                         
+---------------------------------------------------------------------------------------
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: pt_clockmux                     |Circuit 2: pt_clockmux                     
+-------------------------------------------|-------------------------------------------
+WCK                                        |WCK                                        
+HF                                         |HF                                         
+VDD                                        |VDD                                        
+VSS                                        |VSS                                        
+H2D                                        |H2D                                        
+PS_REF                                     |PS_REF                                     
+PS_AUX                                     |PS_AUX                                     
+PS_H2D                                     |PS_H2D                                     
+PREF                                       |PREF                                       
+WSI                                        |WSI                                        
+SS_INT                                     |SS_INT                                     
+SS_REF                                     |SS_REF                                     
+SS_WCK                                     |SS_WCK                                     
+WSMP                                       |WSMP                                       
+CONV_INT                                   |CONV_INT                                   
+PLLW                                       |PLLW                                       
+CS_INT                                     |CS_INT                                     
+WS_PLL                                     |WS_PLL                                     
+CS_REF                                     |CS_REF                                     
+WS_REF                                     |WS_REF                                     
+CS_AUX                                     |CS_AUX                                     
+WS_AUX                                     |WS_AUX                                     
+CS_HF                                      |CS_HF                                      
+WS_WCK                                     |WS_WCK                                     
+CONV_CLK                                   |CONV_CLK                                   
+WIRE                                       |WIRE                                       
+HOST_INT                                   |HOST_INT                                   
+HS_INT                                     |HS_INT                                     
+HS_HF                                      |HS_HF                                      
+HOST_CLK                                   |HOST_CLK                                   
+AUX                                        |AUX                                        
+REF                                        |REF                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pt_clockmux and pt_clockmux are equivalent.
+
+Final result: Circuits match uniquely.
+.

@@ -1,0 +1,328 @@
+{
+  "block": "usb_hs_bias (pt_wtx_hsbias, P3-12)",
+  "source_hashes": {
+    "cells.py": "sha256:bb15d388383be67ffc069d3a8e322e06507aff272d0d0f0ad73360bcf0ffbadd",
+    "layoutgen.py": "sha256:fca8e602c1bc5c232fe03cf132a9086f4bd8dfe3140985d9732a32b3236adadf",
+    "tools.py": "sha256:5e9bb2c460276fecfaa115b019694000a8d468a360707a27f95b5ef2ec1e0589",
+    "sim_wiredtx.py": "sha256:0e6e7e38ab1bc12e81e4e9ad339d2d17269b0b39562ce15e5b717a49a8877629",
+    "sim_integration.py": "sha256:b426b982c0233bf4d2666a820d41e7438bb38c8989e88b8ecc790491933d7907",
+    "sim_static.py": "sha256:5b9f14d9de52f7e653bd366f8714feb225e3fe76a27248db8c7c2ea82c0fcc08",
+    "run_all.py": "sha256:135c2d8f3169c54900f04034c6c8b50ef24ff46cbb0d837af6235556dbd635ab",
+    "evidence.py": "sha256:dd6b30a502e6da07cc781b0c506ccbaea3adea57a9cfdc5a1ff9e55029f2aadd",
+    "wiredtx.spice": "sha256:953e2df488e0798bc76413cae076db3be726abc64fb572aaf904f7b1e09e8d2f",
+    "wtx_ext_rx.spice": "sha256:37ea31efb8c99dfbf26beaeca0bac5641c433cf02d0d0b29cc170bb021f8144d"
+  },
+  "images": {
+    "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+    "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
+    "pad_integration_simulator": {
+      "path": "scratch/pad-ngspice47/ngspice-47/src/ngspice",
+      "sha256": "sha256:fe4c022a189fb6bb56b04e7958614908b83bbc2b76fe609efc4fafc4ab29e810",
+      "note": "pads-recorded patched ngspice-47 (analog/pads/generated/simulator-build.json)"
+    }
+  },
+  "pdk": "gf180mcuD (open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7; identical model/tech/netgen files in both images)",
+  "tests": {
+    "safe": {
+      "state": "pass",
+      "cases": [
+        {
+          "corner": "tt",
+          "disabled": {
+            "v_hs_pbias": 3.3,
+            "i_vdd_a": 1.64327e-10,
+            "i_hs_mirror_a": 1.26228e-10
+          }
+        },
+        {
+          "corner": "ss_32_3.15",
+          "disabled": {
+            "v_hs_pbias": 3.15,
+            "i_vdd_a": 1.33851e-10,
+            "i_hs_mirror_a": 9.88048e-11
+          }
+        },
+        {
+          "corner": "ff_22_3.35",
+          "disabled": {
+            "v_hs_pbias": 3.35,
+            "i_vdd_a": 2.1641e-10,
+            "i_hs_mirror_a": 1.65568e-10
+          }
+        },
+        {
+          "corner": "typical_22_3.15",
+          "disabled": {
+            "v_hs_pbias": 3.15,
+            "i_vdd_a": 1.42957e-10,
+            "i_hs_mirror_a": 1.07262e-10
+          }
+        },
+        {
+          "corner": "typical_22_3.35",
+          "disabled": {
+            "v_hs_pbias": 3.35,
+            "i_vdd_a": 1.72876e-10,
+            "i_hs_mirror_a": 1.34277e-10
+          }
+        },
+        {
+          "corner": "typical_32_3.15",
+          "disabled": {
+            "v_hs_pbias": 3.15,
+            "i_vdd_a": 1.43597e-10,
+            "i_hs_mirror_a": 1.0732e-10
+          }
+        },
+        {
+          "corner": "typical_32_3.35",
+          "disabled": {
+            "v_hs_pbias": 3.35,
+            "i_vdd_a": 1.73608e-10,
+            "i_hs_mirror_a": 1.34336e-10
+          }
+        },
+        {
+          "corner": "ss_22_3.15",
+          "disabled": {
+            "v_hs_pbias": 3.15,
+            "i_vdd_a": 1.3381e-10,
+            "i_hs_mirror_a": 9.88015e-11
+          }
+        },
+        {
+          "corner": "ss_22_3.35",
+          "disabled": {
+            "v_hs_pbias": 3.35,
+            "i_vdd_a": 1.54527e-10,
+            "i_hs_mirror_a": 1.16947e-10
+          }
+        },
+        {
+          "corner": "ss_32_3.35",
+          "disabled": {
+            "v_hs_pbias": 3.35,
+            "i_vdd_a": 1.54572e-10,
+            "i_hs_mirror_a": 1.1695e-10
+          }
+        },
+        {
+          "corner": "ff_22_3.15",
+          "disabled": {
+            "v_hs_pbias": 3.15,
+            "i_vdd_a": 1.69078e-10,
+            "i_hs_mirror_a": 1.23381e-10
+          }
+        },
+        {
+          "corner": "ff_32_3.15",
+          "disabled": {
+            "v_hs_pbias": 3.15,
+            "i_vdd_a": 1.80786e-10,
+            "i_hs_mirror_a": 1.24514e-10
+          }
+        },
+        {
+          "corner": "ff_32_3.35",
+          "disabled": {
+            "v_hs_pbias": 3.35,
+            "i_vdd_a": 2.29923e-10,
+            "i_hs_mirror_a": 1.66708e-10
+          }
+        }
+      ],
+      "notes": "EN=0 (reset/HS disabled): sources off, load released, HS_PBIAS pulled to island VDD (wirepad HS mirror off), no static current. Island off: all devices unpowered, inputs are MOS gates except IBIAS (NMOS drain)."
+    },
+    "clean": {
+      "state": "pass",
+      "drc": {
+        "magic": 0,
+        "klayout": {
+          "ran": true,
+          "violations": 0,
+          "by_rule": {},
+          "report": "/home/ubuntu/svalbard/scratch/wired_tx/hs_layout/klayout/out/pt_wtx_hsbias.klayout.drc/pt_wtx_hsbias.lyrdb",
+          "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+        },
+        "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii"
+      },
+      "lvs": {
+        "unique_match": true,
+        "summary": "Final result: Circuits match uniquely.",
+        "tool": "Netgen (digital image)",
+        "report": "lvs.out"
+      },
+      "area_um2": 9552.0,
+      "devices": 53,
+      "extracted_nominal": {
+        "point": "tt 27 C 3.3 V, load 28 x pfet 20/1 + 0.3 pF",
+        "corner": "typical",
+        "temp_c": 27,
+        "vdd": 3.3,
+        "rows": [
+          {
+            "code": 0,
+            "v_hs_pbias": 5.02919e-08,
+            "i_vdd_a": 0.040873,
+            "i_hs_mirror_a": 0.0408629
+          },
+          {
+            "code": 1,
+            "v_hs_pbias": 0.00179946,
+            "i_vdd_a": 0.0408252,
+            "i_hs_mirror_a": 0.040814
+          },
+          {
+            "code": 2,
+            "v_hs_pbias": 0.00368415,
+            "i_vdd_a": 0.0407752,
+            "i_hs_mirror_a": 0.0407628
+          },
+          {
+            "code": 16,
+            "v_hs_pbias": 0.0306083,
+            "i_vdd_a": 0.0400629,
+            "i_hs_mirror_a": 0.0400341
+          },
+          {
+            "code": 64,
+            "v_hs_pbias": 0.125954,
+            "i_vdd_a": 0.0375726,
+            "i_hs_mirror_a": 0.0374876
+          },
+          {
+            "code": 128,
+            "v_hs_pbias": 0.262547,
+            "i_vdd_a": 0.0340962,
+            "i_hs_mirror_a": 0.0339365
+          },
+          {
+            "code": 192,
+            "v_hs_pbias": 0.413502,
+            "i_vdd_a": 0.0303875,
+            "i_hs_mirror_a": 0.0301528
+          },
+          {
+            "code": 255,
+            "v_hs_pbias": 0.579631,
+            "i_vdd_a": 0.0264804,
+            "i_hs_mirror_a": 0.026172
+          }
+        ],
+        "disabled": {
+          "v_hs_pbias": 3.3,
+          "i_vdd_a": 1.64327e-10,
+          "i_hs_mirror_a": 1.26228e-10
+        },
+        "full_scale_v": 0.579631,
+        "max_lsb_mv": 2.637,
+        "monotonic": true
+      }
+    },
+    "observable": {
+      "state": "open",
+      "atb_taps": [
+        "HS_PBIAS can be sensed through an atb_tap at integration"
+      ],
+      "status_bits": [],
+      "clock_obs": []
+    },
+    "fallback": {
+      "state": "n/a",
+      "routes": [
+        "USB HS through an external board PHY (tapeout-plan)"
+      ]
+    }
+  },
+  "performance_vs_target": [
+    {
+      "metric": "full scale (target ~0.6 V), LSB (target <= 2.4 mV), monotonic, across tt/ss/ff x 22/32 C x 3.15/3.35 V",
+      "all_in_window": true,
+      "corners": {
+        "tt": {
+          "full_scale_v": 0.579631,
+          "max_lsb_mv": 2.637,
+          "monotonic": true
+        },
+        "ss_32_3.15": {
+          "full_scale_v": 0.709475,
+          "max_lsb_mv": 3.454,
+          "monotonic": true
+        },
+        "ff_22_3.35": {
+          "full_scale_v": 0.505802,
+          "max_lsb_mv": 2.23,
+          "monotonic": true
+        },
+        "typical_22_3.15": {
+          "full_scale_v": 0.592661,
+          "max_lsb_mv": 2.736,
+          "monotonic": true
+        },
+        "typical_22_3.35": {
+          "full_scale_v": 0.560443,
+          "max_lsb_mv": 2.531,
+          "monotonic": true
+        },
+        "typical_32_3.15": {
+          "full_scale_v": 0.618653,
+          "max_lsb_mv": 2.872,
+          "monotonic": true
+        },
+        "typical_32_3.35": {
+          "full_scale_v": 0.583927,
+          "max_lsb_mv": 2.649,
+          "monotonic": true
+        },
+        "ss_22_3.15": {
+          "full_scale_v": 0.677529,
+          "max_lsb_mv": 3.272,
+          "monotonic": true
+        },
+        "ss_22_3.35": {
+          "full_scale_v": 0.631098,
+          "max_lsb_mv": 2.953,
+          "monotonic": true
+        },
+        "ss_32_3.35": {
+          "full_scale_v": 0.659216,
+          "max_lsb_mv": 3.104,
+          "monotonic": true
+        },
+        "ff_22_3.15": {
+          "full_scale_v": 0.52891,
+          "max_lsb_mv": 2.369,
+          "monotonic": true
+        },
+        "ff_32_3.15": {
+          "full_scale_v": 0.550819,
+          "max_lsb_mv": 2.478,
+          "monotonic": true
+        },
+        "ff_32_3.35": {
+          "full_scale_v": 0.525926,
+          "max_lsb_mv": 2.327,
+          "monotonic": true
+        }
+      }
+    },
+    {
+      "metric": "settling 64->192 to 1 LSB (target 1 us)",
+      "step": "code 64 -> 192 at 1.0 us",
+      "v_before": 0.12595421,
+      "v_after": 0.413501955,
+      "lsb_v": 0.0022464667578124997,
+      "settle_to_1lsb_s": 4.6991541999999997e-07,
+      "spec_s": 1e-06
+    }
+  ],
+  "register_fields": {
+    "code": "8 bits, HS_PBIAS ~ code x 2.3 mV (tt); suggested default 0 with EN=0",
+    "enable": "1 bit (usb HS drive enable); 0 = HS_PBIAS at VDD"
+  },
+  "excluded_coverage": [
+    "Load modelled as 28 ideal pfet gates + 0.3 pF, not the pads extracted wirepad.",
+    "Triode NMOS load: full scale varies with PVT (per-board calibration intended)."
+  ]
+}

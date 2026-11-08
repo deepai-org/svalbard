@@ -1,0 +1,393 @@
+{
+ "block": "aosc",
+ "source_hashes": {
+  "aosc.spice": "sha256:d46af55ac51c7fc986161f8b2f4f45957db1c55c7507b44eec1bfeece792dc00",
+  "timing_cells.spice": "sha256:f9f1f38f3d190cf34a8c02560d70c0061ccefe7951a3022b1803d74656139452",
+  "layout_engine.py": "sha256:acb531c9c30a6b3f4a76c124bc9ea8e9274a532a7a9e1769d40ff535ab61f0ae",
+  "netlist.py": "sha256:9eb8d5c8d7d044a76b560ebebd23c768aefd2b0c1183d38313964e89a1d30ab3",
+  "run_timing.py": "sha256:0ffa242409850c1211baf29172da2a7a542b21e6d88ffb5e03b87cde437056b3",
+  "timing_flow.py": "sha256:ae25349b5de22a22b47a77687abf481166efaac60013c748078420666f8e0b28"
+ },
+ "generated_hashes": {
+  "aosc.lvs.spice": "sha256:3a7f1398ede6b71480830081e926f8e85a5945a7531ddc2cbd5a161ccb663071",
+  "aosc.mag": "sha256:a2b06b03835f085aca1ae2e31049da572f9dfadf23db60053d9f50dee4417060",
+  "aosc.gds": "sha256:a5f9cd25254901ae771970e5c3978b280e5a237d82c2b6cc489e60b6e13abaed",
+  "aosc.ext.spice": "sha256:20f14e30c7d36e4a5a87cc5b5fc9448a66f6e7a3fdc6f550796787ac3e628cf7"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "analog_ref": "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "digital_ref": "svalbard/librelane-gf180-canary:2026.08"
+ },
+ "pdk": "gf180mcuD (digital image /pdk/gf180mcuD for Magic/Netgen; analog image /foss/pdks/gf180mcuD models for ngspice)",
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "tt",
+     "temp_c": 27,
+     "vdd_v": 3.3,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 3.55767e-05,
+     "i_vdd_peak_ua": 3.55767e-05,
+     "output_max_v": {
+      "clk": 2.81824e-09
+     },
+     "deck": "scratch/timing/aosc/sim/safe_tt_27_3.3.spice",
+     "errors": []
+    },
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "ff",
+     "temp_c": 85,
+     "vdd_v": 3.63,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 0.00111168,
+     "i_vdd_peak_ua": 0.00111168,
+     "output_max_v": {
+      "clk": 4.67026e-08
+     },
+     "deck": "scratch/timing/aosc/sim/safe_ff_85_3.63.spice",
+     "errors": []
+    },
+    {
+     "case": "reset-default controls (all 0), sources toggling",
+     "corner": "ss",
+     "temp_c": 0,
+     "vdd_v": 3.63,
+     "netlist": "extracted",
+     "i_vdd_avg_ua": 3.73944e-05,
+     "i_vdd_peak_ua": 3.73945e-05,
+     "output_max_v": {
+      "clk": 3.08302e-09
+     },
+     "deck": "scratch/timing/aosc/sim/safe_ss_0_3.63.spice",
+     "errors": []
+    }
+   ],
+   "notes": "Reset-default = every control input 0; clock/pad inputs toggling. Includes 3.63 V at 85 C (ff) and 0 C (ss)."
+  },
+  "clean": {
+   "state": "pass",
+   "drc": {
+    "errors": 0,
+    "tool": "Magic 8.3.623 drc(full)",
+    "report": "generated/aosc-drc.txt",
+    "klayout": {
+     "ran": true,
+     "violations": 0,
+     "by_rule": {},
+     "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+    },
+    "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii"
+   },
+   "lvs": {
+    "unique_match": true,
+    "summary": "Final result: Circuits match uniquely.\n.",
+    "tool": "Netgen 1.5.316",
+    "report": "generated/aosc-lvs.txt"
+   },
+   "extracted_nominal": {
+    "gating_cases": [
+     "nom"
+    ],
+    "all_pass": true,
+    "results": [
+     {
+      "f_out_hz": 44852435.48724696,
+      "target_hz": [
+       40000000.0,
+       60000000.0
+      ],
+      "duty": 0.4717713721855097,
+      "i_off_ua": 3.55767e-05,
+      "i_on_ma": 0.158324,
+      "pass": true,
+      "in_target_window": true,
+      "netlist": "extracted",
+      "corner": "tt",
+      "temp_c": 27,
+      "vdd_v": 3.3,
+      "deck": "scratch/timing/aosc/sim/nom.spice"
+     }
+    ]
+   },
+   "layout": {
+    "size_um": [
+     119.04,
+     42.82
+    ],
+    "area_um2": 5097.3,
+    "devices": 17,
+    "gds": "generated/aosc.gds",
+    "mag": "generated/aosc.mag",
+    "extracted": "generated/aosc.ext.spice"
+   }
+  },
+  "observable": {
+   "state": "open",
+   "atb_taps": [
+    "ATB_X (timing capacitor)"
+   ],
+   "status_bits": [],
+   "clock_obs": [
+    "CLK -> CLK_OBS input"
+   ],
+   "notes": "Points exist as ports; register-file / test-bus / CLK_OBS mux codes are assigned at integration (register map not yet published)."
+  },
+  "fallback": {
+   "state": "waived_core",
+   "bypass_loading_fF": null,
+   "bypass_loading_note": null,
+   "routes": [],
+   "notes": "Core block: fallback waived; self-contained RC oscillator (no bias input)."
+  }
+ },
+ "performance_vs_target": [
+  {
+   "kind": "nominal_extracted",
+   "f_out_hz": 44852435.48724696,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": 0.4717713721855097,
+   "i_off_ua": 3.55767e-05,
+   "i_on_ma": 0.158324,
+   "pass": true,
+   "in_target_window": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/aosc/sim/nom.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 43515469.749495946,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": 0.47226469009732963,
+   "i_off_ua": 3.31506e-05,
+   "i_on_ma": 0.143649,
+   "pass": true,
+   "in_target_window": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/aosc/sim/c_tt_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 45161678.8101403,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": 0.4713343770699102,
+   "i_off_ua": 3.5753399999999996e-05,
+   "i_on_ma": 0.165556,
+   "pass": true,
+   "in_target_window": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/aosc/sim/c_tt_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 43691335.28002505,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": 0.47267034159342297,
+   "i_off_ua": 3.42428e-05,
+   "i_on_ma": 0.142425,
+   "pass": true,
+   "in_target_window": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/aosc/sim/c_tt_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 45326806.273229994,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": 0.4717840630949144,
+   "i_off_ua": 3.69966e-05,
+   "i_on_ma": 0.164665,
+   "pass": true,
+   "in_target_window": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/aosc/sim/c_tt_32_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 35363805.14543365,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": null,
+   "i_off_ua": 3.17187e-05,
+   "i_on_ma": 0.10607000000000001,
+   "pass": true,
+   "in_target_window": false,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/aosc/sim/c_ss_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 36981108.81691269,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": null,
+   "i_off_ua": 3.40463e-05,
+   "i_on_ma": 0.12488500000000001,
+   "pass": true,
+   "in_target_window": false,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/aosc/sim/c_ss_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 35526713.127712615,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": null,
+   "i_off_ua": 3.18717e-05,
+   "i_on_ma": 0.105626,
+   "pass": true,
+   "in_target_window": false,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/aosc/sim/c_ss_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 37130321.23916259,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": null,
+   "i_off_ua": 3.42069e-05,
+   "i_on_ma": 0.12380799999999999,
+   "pass": true,
+   "in_target_window": false,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/aosc/sim/c_ss_32_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 54521167.84341521,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": 0.4720933402393479,
+   "i_off_ua": 5.04213e-05,
+   "i_on_ma": 0.18877100000000002,
+   "pass": true,
+   "in_target_window": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/aosc/sim/c_ff_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 56212407.95218198,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": 0.47137308175157866,
+   "i_off_ua": 5.63505e-05,
+   "i_on_ma": 0.216598,
+   "pass": true,
+   "in_target_window": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/aosc/sim/c_ff_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 54718065.16921562,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": 0.4725824190856612,
+   "i_off_ua": 6.82861e-05,
+   "i_on_ma": 0.187479,
+   "pass": true,
+   "in_target_window": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/aosc/sim/c_ff_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "f_out_hz": 56402639.643535316,
+   "target_hz": [
+    40000000.0,
+    60000000.0
+   ],
+   "duty": 0.4718909924984489,
+   "i_off_ua": 7.72515e-05,
+   "i_on_ma": 0.214338,
+   "pass": true,
+   "in_target_window": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/aosc/sim/c_ff_32_3.35.spice"
+  },
+  {
+   "kind": "area",
+   "area_um2": 5097.3,
+   "ceiling_um2": 20000,
+   "ceiling_source": "analog-architecture.json blocks.aosc",
+   "fits": true
+  }
+ ],
+ "excluded_coverage": []
+}

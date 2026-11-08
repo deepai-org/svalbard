@@ -1,0 +1,14 @@
+* pt_spiral: analytical single-pi model of the LC-VCO tank inductor (lcvco/spiral.py)
+* octagon, n=2, w=20.0 um, s=2.0 um, dout=400.0 um, Metal5 with Metal4 strapped in parallel (M4 also forms the crossover)
+* L=2.858 nH, Rac=5.71 ohm @2.45 GHz, Q_series=7.7, Q_eff=7.4; NOT EM-verified, see spiral.json for uncertainty
+.subckt pt_spiral A B VSS
+LS A M 2.8584n
+RS M B 5.7065
+CS A B 46.041f
+COXA A SA 175.059f
+COXB B SB 175.059f
+RSIA SA VSS 1053.69
+RSIB SB VSS 1053.69
+CSIA SA VSS 142.3569f
+CSIB SB VSS 142.3569f
+.ends pt_spiral

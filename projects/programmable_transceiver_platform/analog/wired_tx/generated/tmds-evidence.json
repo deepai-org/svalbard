@@ -1,0 +1,131 @@
+{
+  "block": "tmds",
+  "source_hashes": {
+    "cells.py": "sha256:bb15d388383be67ffc069d3a8e322e06507aff272d0d0f0ad73360bcf0ffbadd",
+    "layoutgen.py": "sha256:fca8e602c1bc5c232fe03cf132a9086f4bd8dfe3140985d9732a32b3236adadf",
+    "tools.py": "sha256:5e9bb2c460276fecfaa115b019694000a8d468a360707a27f95b5ef2ec1e0589",
+    "sim_wiredtx.py": "sha256:0e6e7e38ab1bc12e81e4e9ad339d2d17269b0b39562ce15e5b717a49a8877629",
+    "sim_integration.py": "sha256:b426b982c0233bf4d2666a820d41e7438bb38c8989e88b8ecc790491933d7907",
+    "sim_static.py": "sha256:5b9f14d9de52f7e653bd366f8714feb225e3fe76a27248db8c7c2ea82c0fcc08",
+    "run_all.py": "sha256:135c2d8f3169c54900f04034c6c8b50ef24ff46cbb0d837af6235556dbd635ab",
+    "evidence.py": "sha256:dd6b30a502e6da07cc781b0c506ccbaea3adea57a9cfdc5a1ff9e55029f2aadd",
+    "wiredtx.spice": "sha256:953e2df488e0798bc76413cae076db3be726abc64fb572aaf904f7b1e09e8d2f",
+    "wtx_ext_rx.spice": "sha256:37ea31efb8c99dfbf26beaeca0bac5641c433cf02d0d0b29cc170bb021f8144d"
+  },
+  "images": {
+    "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+    "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
+    "pad_integration_simulator": {
+      "path": "scratch/pad-ngspice47/ngspice-47/src/ngspice",
+      "sha256": "sha256:fe4c022a189fb6bb56b04e7958614908b83bbc2b76fe609efc4fafc4ab29e810",
+      "note": "pads-recorded patched ngspice-47 (analog/pads/generated/simulator-build.json)"
+    }
+  },
+  "pdk": "gf180mcuD (open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7; identical model/tech/netgen files in both images)",
+  "configuration_of": "wiredtx (spec/consolidation-pass.md item 4)",
+  "tests": {
+    "safe": {
+      "state": "pass",
+      "cases": [
+        "see wiredtx-evidence.json safe"
+      ],
+      "notes": "Same hardware as wiredtx; EN_TMDS gates the TMDS steering commands and the TMDS tail DAC."
+    },
+    "clean": {
+      "state": "pass",
+      "drc": {
+        "magic": {
+          "errors": 0,
+          "style": "drc(full), flattened",
+          "tool": "Magic (digital image)",
+          "report": "analog/wired_tx/generated/wiredtx-drc.txt"
+        },
+        "klayout": {
+          "ran": true,
+          "violations": 0,
+          "by_rule": {},
+          "report": "/home/ubuntu/svalbard/scratch/wired_tx/layout/klayout/out/pt_wiredtx.klayout.drc/pt_wiredtx.lyrdb",
+          "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+        },
+        "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii"
+      },
+      "lvs": {
+        "unique_match": true,
+        "summary": "Final result: Circuits match uniquely.",
+        "report": "analog/wired_tx/generated/wiredtx-lvs.txt"
+      },
+      "extracted_nominal": {
+        "point": "tt, 27 C, 3.3 V, 1.25 Gb/s half-rate mode; pt_wiredtx extracted -> pads steering buffers -> extracted pad TMDS branch; on-chip termination off; 50 ohm per leg to an independent 3.3 V",
+        "mode": "tmds",
+        "bit_rate_bps": 1250000000.0,
+        "bits_per_ring_cycle": 2,
+        "network": {
+          "topology": "split_pullup_50ohm_to_independent_3v3"
+        },
+        "lossy_channel": false,
+        "receiver": null,
+        "eye_height_mv": 955.0,
+        "eye_width_ps": 663.3,
+        "amplitude_pp_mv": 1159.3,
+        "bits": 60,
+        "errors": 0,
+        "pad_levels_v": {
+          "p_min": 2.74930977,
+          "p_max": 3.31485542,
+          "n_min": 2.62711337,
+          "n_max": 3.3147377
+        },
+        "vdd_current_ma": 27.96,
+        "pass_": true,
+        "reason": null
+      }
+    },
+    "observable": {
+      "state": "pass",
+      "atb_taps": [
+        "TMDS_BIAS"
+      ],
+      "status_bits": [],
+      "clock_obs": [
+        "WORD_CLK"
+      ]
+    },
+    "fallback": {
+      "state": "pass",
+      "routes": [
+        "wire_tx_external_data (TMDS branch)"
+      ],
+      "bypass_loading_fF": null
+    }
+  },
+  "performance_vs_target": [
+    {
+      "mode": "tmds",
+      "bit_rate_bps": 2970000000.0,
+      "bits_per_ring_cycle": 4,
+      "network": {
+        "topology": "split_pullup_50ohm_to_independent_3v3"
+      },
+      "lossy_channel": false,
+      "receiver": null,
+      "eye_height_mv": 1.5,
+      "eye_width_ps": 77.0,
+      "amplitude_pp_mv": 1532.2,
+      "bits": 59,
+      "errors": 20,
+      "pad_levels_v": {
+        "p_min": 2.54452916,
+        "p_max": 3.32285245,
+        "n_min": 2.44775032,
+        "n_max": 3.32116889
+      },
+      "vdd_current_ma": 38.4,
+      "pass_": false,
+      "reason": null
+    }
+  ],
+  "excluded_coverage": [
+    "TMDS code 125 (~10 mA tail) used; no HDMI compliance (rise time, skew, eye mask) evaluation; no 10-bit TMDS encoding (digital)."
+  ]
+}

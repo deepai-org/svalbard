@@ -1,0 +1,37 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_vco_replica (revision 5, P3-8): characterization copy of the pll_ring
+* VCO, built from the same cells: NMOS tail (gate VCTRL, forced from the
+* analog test bus) and PMOS header around ct_ring8,
+* the same eight ct_phbuf8 phase buffers as load, and the same OD restore +
+* four ct_tspc2 /2 stages.  OUT = VCO/16 for a CLK_OBS input.
+* ATB_VTAIL observes the ring's bottom rail (VT).
+* EN=0: VCTRL clamped to VSS, header off, ring clamped, dividers reset,
+* OUT=0, no current.
+.include timing_cells.spice
+.include generated/fast/ct_ring8.spice
+.include generated/fast/ct_tspc2.spice
+.include generated/fast/ct_phbuf8.spice
+
+.subckt pt_vco_replica EN VCTRL OUT ATB_VTAIL VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+XCL VCTRL ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XTL ATB_VTAIL VCTRL VSS VSS nfet_03v3 w=10u l=1u m=6
+* symmetric starving: the header is a PMOS current source mirrored from a
+* 1/12 replica of the tail (VCTRL -> XRPN -> diode XRPD -> VPB), so both ring
+* rails move with the tuning current.  The ring common mode is not
+* controlled: VT stays near 0.25 V and VH tracks the current (1.9-3.0 V);
+* ct_ring8 restores each node with a low-threshold (~1.25 V) inverter.  EN=0: replica path open, VPB pulled to VDD (header off).
+XRPN VPB VCTRL RPS VSS nfet_03v3 w=5u l=1u
+XRPE RPS EN VSS VSS nfet_03v3 w=4u l=0.28u
+XRPD VPB VPB VDD VDD pfet_03v3 w=6.5u l=0.28u
+XRPU VPB EN VDD VDD pfet_03v3 w=1u l=0.28u
+XHD VH VPB VDD VDD pfet_03v3 w=10u l=0.28u m=8
+XRING O0 O1 O2 O3 O4 O5 O6 O7 ENB ATB_VTAIL VH VDD VSS ct_ring8
+XPHB O4 O5 O6 O7 O0 O1 O2 O3 PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 ODC VDD VSS ct_phbuf8
+XD1 ODC Q1 ENB VDD VSS ct_tspc2
+XD2 Q1 Q2 ENB VDD VSS ct_tspc2
+XD3 Q2 Q3 ENB VDD VSS ct_tspc2
+XD4 Q3 Q4 ENB VDD VSS ct_tspc2
+XO1 Q4 O1B VDD VSS pt_t_inv1
+XO2 O1B OUT VDD VSS pt_t_inv2
+.ends

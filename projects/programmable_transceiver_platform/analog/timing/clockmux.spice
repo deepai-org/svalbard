@@ -1,0 +1,32 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_clockmux (revision 5, consolidation pass 3: P3-3 and P3-5).
+* Per-domain one-hot clock source selection, single-ended CMOS, clocks
+* <= 1 GHz only.  The RF LO domain is removed: the RF LO is the passive
+* external I/Q route (lo_ext) or the internal LO driver, never this mux.
+*   PREF     (ring-PLL reference) : PS_REF (REF_IN rx), PS_AUX (AUX_CLK rx),
+*                                    PS_H2D (FPGA-forwarded H2D_CLK)
+*   WIRE     (wired line clock)   : WS_PLL (wired pll_ring), WS_REF, WS_AUX, WS_WCK
+*   WSMP     (wire sample clock)  : SS_INT (CDR/pll_ring phase), SS_REF, SS_WCK
+*   CONV_CLK (converter sample)   : CS_INT (prescale from the line ring),
+*                                    CS_REF, CS_AUX, CS_HF (host_follow)
+*   HOST_CLK (host word clock)    : HS_INT (prescale from the line ring),
+*                                    HS_HF (host_follow)
+* host_follow (P3-3): in passive-LO RF mode REF_IN and AUX_CLK carry the LO,
+* so PREF selects H2D, a pll_ring locks to it, the prescaler divides it, and
+* the result (HF) feeds CONV_CLK and HOST_CLK.
+* Each domain is one ct_mux4 (NAND2 per input -> NAND4 -> buffer).  All
+* selects 0 (reset default) = stopped, output 0.  Switching only through
+* stopped (software writes all-zero, waits >= 1 us, then the new code); the
+* AND-OR has no state, so an out-of-protocol change gives at worst a runt.
+.include generated/fast/ct_mux4.spice
+
+.subckt pt_clockmux PLLW REF AUX WCK H2D WSI CONV_INT HOST_INT HF
++ PS_REF PS_AUX PS_H2D WS_PLL WS_REF WS_AUX WS_WCK SS_INT SS_REF SS_WCK
++ CS_INT CS_REF CS_AUX CS_HF HS_INT HS_HF
++ PREF WIRE WSMP CONV_CLK HOST_CLK VDD VSS
+XMP REF AUX H2D VSS PS_REF PS_AUX PS_H2D VSS PREF VDD VSS ct_mux4
+XMW PLLW REF AUX WCK WS_PLL WS_REF WS_AUX WS_WCK WIRE VDD VSS ct_mux4
+XMS WSI REF WCK VSS SS_INT SS_REF SS_WCK VSS WSMP VDD VSS ct_mux4
+XMC CONV_INT REF AUX HF CS_INT CS_REF CS_AUX CS_HF CONV_CLK VDD VSS ct_mux4
+XMH HOST_INT HF VSS VSS HS_INT HS_HF VSS VSS HOST_CLK VDD VSS ct_mux4
+.ends

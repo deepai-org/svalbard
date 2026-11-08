@@ -1,0 +1,215 @@
+{
+  "block": "dac_q",
+  "top_cell": "pt_dac_q",
+  "generated_utc": "2026-11-08T12:10:42Z",
+  "source_hashes": {
+    "dac_q.spice": "sha256:7e9efa1032d9baf1b46dbbff5c15f6dc567c26f1d36854124317f812fd855aaf",
+    "circuits.py": "sha256:6bc9d4a406f770f07fb0868608439edf06c5cf9e5e6ee3772c748eaf71b24ea8",
+    "lib/convkit.py": "sha256:e75a0a2d28befc9ec4ffcae448b55dac611d6ff0a4960b203e853b6ccb7cdf95",
+    "flow.py": "sha256:e00c51c4bb85581839ebf76124765d2aded27ce6cff149f4fc0fce71ed946bdf",
+    "benches.py": "sha256:281b316df161fae431a4b8e291e2d3918255c15813c8a7a2c8ead495a13a84eb",
+    "generated/macros/dac_logic.gds": "sha256:ebe8c850e83d9de65f18914e03c0d365bd4119daf08be85cc43cfbe11dfd7293",
+    "generated/macros/dac_logic.lef": "sha256:a36a17b11a2e3f1cb63d4935de87e941ffc73425d288ca3ccd22d2c80895df86",
+    "generated/macros/dac_logic.pnl.v": "sha256:a4e8477ed08e9959d423a14dd39303b71536baf8ed5bb79b7b1c8bfd0007a0e0",
+    "rtl/adc_sar_delay.v": "sha256:32042162b2f1f933f1d759d194b6f49c00e1b6ebc260126baa7f782d263fede1",
+    "rtl/adc_sar_logic.v": "sha256:5e7c512539bcfe20a730c55856ca754ec3666df0cfcb90e6b5c00b48427d8e63",
+    "rtl/dac_logic.v": "sha256:94cd12d47c9c808c1bb04b1a3182dd998ed994ef8ce7593297551b0b3356ecb3",
+    "rtl/tb_adc_sar_logic.v": "sha256:a73dc0a64c15fb64779b80e11d9ce2e6ab4f359738fe4aefc2b4cf1508832339",
+    "rtl/tb_dac_logic.v": "sha256:0a651fb00017aa23e8f1e8917488404350f8b83be1ed1407f044dab6f1271679"
+  },
+  "artifact_hashes": {
+    "generated/dac_q.gds": "sha256:fd87b45bcb9891bf8970ce349b064cad31de86637a43806b71cb01d1e7662964",
+    "generated/dac_q.mag": "sha256:7605ceab91fc1fe74fac16a3ef0c79a5b0db591a6ae1afed5331eebe0961a088",
+    "generated/dac_q.ext.spice": "sha256:21b3f29dfcf407cf9821eb056bfa99eebe475fc0c0a4353e05d985ec803521a0"
+  },
+  "images": {
+    "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+    "digital_tag": "svalbard/librelane-gf180-canary:2026.08"
+  },
+  "pdk": "gf180mcuD ciel f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (both images)",
+  "area": {
+    "bbox_um": [
+      -34.0,
+      0.0,
+      641.0,
+      186.84
+    ],
+    "area_um2": 126117.0,
+    "ceiling_um2": 225000,
+    "fits": true
+  },
+  "tests": {
+    "safe": {
+      "state": "pass",
+      "cases": [
+        {
+          "case": "EN=0 supply current (A), tt 27C 3.3V",
+          "value": 3.22821e-09
+        },
+        {
+          "case": "OUTP held at 1.65 V while disabled / island unpowered",
+          "value": {
+            "powered_disabled": {
+              "leak_A_at_1p65V": 5.037112e-12,
+              "cap_fF_at_10MHz": 63.10939,
+              "conductance_S": 3.577249e-10
+            },
+            "island_unpowered": {
+              "leak_A_at_1p65V": 5.58588e-12,
+              "cap_fF_at_10MHz": 62.80764,
+              "conductance_S": 1.950294e-11
+            }
+          }
+        }
+      ],
+      "notes": "Reset: registers cleared, load header open, IBIAS switch open, clock receiver tail off; outputs isolated by NMOS series switches (no PMOS junction on OUTP/OUTN)."
+    },
+    "clean": {
+      "extracted_nominal": {
+        "fullscale_diff_V": [
+          -0.9957,
+          0.9957
+        ],
+        "lsb_mV": 1.9466,
+        "code_error_lsb": {
+          "-512": 0.0,
+          "-256": -9.946,
+          "0": 0.345,
+          "255": 5.96,
+          "511": 0.0,
+          "100": 5.454
+        },
+        "cm_V": 1.4296
+      },
+      "extracted_ok": true,
+      "netlist": "generated/dac_q.ext.spice",
+      "bench": "benches.dac_deck",
+      "drc": {
+        "tool": "magic 8.3.623 (digital image), full gf180mcuD deck",
+        "errors": 0,
+        "report": "generated/dac_q-drc.txt"
+      },
+      "lvs": {
+        "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
+        "result": "Circuits match uniquely.",
+        "unique": true,
+        "report": "generated/dac_q-lvs.txt"
+      },
+      "gds_export": {
+        "magic": "8.3.678",
+        "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+        "marker_shapes": {
+          "HRES 62/0": 3,
+          "RES_MK 110/5": 6
+        },
+        "ppolyf_u_1k_devices": 3,
+        "klayout_drc": {
+          "violations": 0,
+          "by_rule": {},
+          "rc": "0"
+        },
+        "hres_ok": true,
+        "published_gds_lvs": "Circuits match uniquely.",
+        "published_gds_lvs_unique": true,
+        "pass": true
+      },
+      "klayout_drc": {
+        "violations": 0,
+        "by_rule": {},
+        "rc": "0",
+        "report": "generated/dac_q-klayout-drc.lyrdb"
+      },
+      "state": "pass",
+      "criterion": "basic function: +/-1 V class full scale, monotonic at sampled codes, |error| < 32 LSB (benches.dac_bench); re-evaluated from the stored run"
+    },
+    "observable": {
+      "state": "pass",
+      "atb_taps": [
+        "dac_bias (ATB_BIAS = local NMOS bias gate)"
+      ],
+      "status_bits": [],
+      "clock_obs": [],
+      "notes": "Function observable on the BB_I/BB_Q pads via debug.bb_tap observe_tx (TX filter output), owned by rf_rx/bbfilter."
+    },
+    "fallback": {
+      "state": "pass",
+      "routes": [
+        "rf_tx_external_baseband: debug.bb_tap inject_tx_filter / inject_tx_mixer with dac_*.config.enable=0 -> OUTP/OUTN series switches open"
+      ],
+      "bypass_loading_fF": {
+        "powered_disabled": 63.10939,
+        "island_unpowered": 62.80764
+      },
+      "evidence": {
+        "powered_disabled": {
+          "leak_A_at_1p65V": 5.037112e-12,
+          "cap_fF_at_10MHz": 63.10939,
+          "conductance_S": 3.577249e-10
+        },
+        "island_unpowered": {
+          "leak_A_at_1p65V": 5.58588e-12,
+          "cap_fF_at_10MHz": 62.80764,
+          "conductance_S": 1.950294e-11
+        }
+      }
+    }
+  },
+  "performance_vs_target": [
+    {
+      "metric": "differential full scale (V)",
+      "target": "+/-1.0",
+      "nominal": [
+        -0.9957,
+        0.9957
+      ]
+    },
+    {
+      "metric": "static code error at sampled codes (LSB, endpoint fit)",
+      "target": "8-bit-class",
+      "nominal": {
+        "-512": 0.0,
+        "-256": -9.946,
+        "0": 0.345,
+        "255": 5.96,
+        "511": 0.0,
+        "100": 5.454
+      }
+    },
+    {
+      "metric": "output common mode (V)",
+      "target": "1.65",
+      "nominal": 1.4296
+    },
+    {
+      "metric": "supply current, active (mA)",
+      "target": "2.0 allocation",
+      "nominal": 1.92235
+    },
+    {
+      "metric": "stretch: 80 MS/s (12.5 ns) update, same codes",
+      "target": "non-gating 40 MHz-channel stretch",
+      "nominal": "not run (identical copy of dac_i)"
+    },
+    {
+      "metric": "corner sweep (extracted)",
+      "target": "narrow window, not gating",
+      "corners": {}
+    },
+    {
+      "metric": "hold_zero with codes 511/-512 applied (V diff)",
+      "target": "0",
+      "nominal": [
+        null,
+        null
+      ]
+    }
+  ],
+  "excluded_coverage": [
+    "gain_trim and offset_trim register fields have no analog effect in this version",
+    "hold_zero verified only at one code pair",
+    "No glitch energy, SFDR or full 1024-code INL/DNL run; static error sampled at 6 codes",
+    "Output CM tracks VDD (VDD - 1.65 V), no CM regulation",
+    "Rounding/saturation of the 12-bit transport word: truncation (code[11:2]) only"
+  ]
+}

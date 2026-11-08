@@ -266,6 +266,55 @@ transceiver-contract:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_power.py
 	$(PYTHON) projects/programmable_transceiver_platform/verification/test_power.py
 
+.PHONY: transceiver-tapeout-readiness
+transceiver-tapeout-readiness:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_tapeout_readiness.py
+
+# Generated SPI register file: map/RTL freshness, iverilog+verilator model comparison,
+# legacy pt_control equivalence and chip elaboration; SymbiYosys proof; GF180 size.
+.PHONY: transceiver-regfile transceiver-regfile-formal transceiver-regfile-synth transceiver-regfile-report
+transceiver-regfile-report: transceiver-regfile transceiver-regfile-formal transceiver-regfile-synth
+	$(PYTHON) projects/programmable_transceiver_platform/verification/report_regfile.py
+transceiver-regfile:
+	$(PYTHON) projects/programmable_transceiver_platform/rtl/gen/gen_regfile.py --check
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_regfile.py
+transceiver-regfile-formal:
+	bash projects/programmable_transceiver_platform/verification/run_regfile_formal.sh
+transceiver-regfile-synth:
+	bash projects/programmable_transceiver_platform/verification/run_regfile_synth.sh
+
+# Consolidation P2-6 (shared wired PRBS/pattern generator + checker, rtl/pt_pattern.sv) and
+# P2-10 (clock-tree word divider, launch qualification, detector divider, rtl/pt_clocktree_slow.sv).
+.PHONY: transceiver-pattern transceiver-clocktree-slow transceiver-clocktree-slow-formal transceiver-p2-synth
+transceiver-pattern:
+	bash projects/programmable_transceiver_platform/verification/run_p2_sim.sh pattern
+transceiver-clocktree-slow:
+	bash projects/programmable_transceiver_platform/verification/run_p2_sim.sh clocktree
+transceiver-clocktree-slow-formal:
+	bash projects/programmable_transceiver_platform/verification/run_clocktree_slow_formal.sh
+transceiver-p2-synth:
+	bash projects/programmable_transceiver_platform/verification/run_p2_synth.sh
+
+# Freeze stage 1 (control and digital): LibreLane hardening of rtl/pt_digital_macro.sv, analog-image
+# GDS export + KLayout DRC/antenna, per-clock/per-corner STA, post-route gate-level simulation,
+# host-link pad screen -> evidence/digital-hardening-evidence.json. Stages can be run alone:
+# make transceiver-digital-hardening DIGITAL_HARDENING_STAGES="sta gls report".
+DIGITAL_HARDENING_STAGES ?=
+.PHONY: transceiver-digital-hardening transceiver-digital-rtl-checks
+transceiver-digital-hardening: transceiver-digital-rtl-checks
+	SVALBARD_DIGITAL_IMAGE=$${SVALBARD_DIGITAL_IMAGE:-svalbard/librelane-gf180-canary:2026.08} \
+	bash projects/programmable_transceiver_platform/verification/run_digital_hardening.sh $(DIGITAL_HARDENING_STAGES)
+# RTL checks of the blocks added for the hardened macro: registered-read FIFO equivalence,
+# frequency counter (P3-7) and the 20-bit wired boundary end to end (P3-6).
+transceiver-digital-rtl-checks:
+	cd projects/programmable_transceiver_platform && \
+	iverilog -g2012 -s tb_async_fifo_regout -o /tmp/pt_fifo_regout.vvp rtl/pt_fifo.sv sim/tb_async_fifo_regout.sv && \
+	vvp -n /tmp/pt_fifo_regout.vvp | grep -q FIFO_REGOUT_PASS && \
+	iverilog -g2012 -s tb_pt_freq_count -o /tmp/pt_freq_count.vvp rtl/pt_freq_count.sv rtl/pt_fifo.sv rtl/pt_pattern.sv sim/tb_pt_freq_count.sv && \
+	vvp -n /tmp/pt_freq_count.vvp | grep -q FREQ_COUNT_PASS && \
+	iverilog -g2012 -I rtl -s tb_digital_wire20 -o /tmp/pt_wire20.vvp sim/tb_digital_wire20.sv rtl/*.sv && \
+	vvp -n /tmp/pt_wire20.vvp | grep -q WIRE20_PASS
+
 .PHONY: transceiver-gpio-screen
 transceiver-gpio-screen:
 	bash projects/programmable_transceiver_platform/verification/run_gpio_screen.sh

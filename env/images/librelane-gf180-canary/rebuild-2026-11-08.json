@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-11-08",
+  "recipe": "env/images/librelane-gf180-canary/build.sh (unchanged Dockerfile, pinned base digests)",
+  "locked_image_id": "sha256:9253a51f5fdcc7202a164aa26274b4b95533ecdedeb7eb47d6605f5881bfef17",
+  "rebuilt_image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "identity": "mismatch",
+  "tool_versions_observed": {
+    "magic": "8.3.623",
+    "netgen": "1.5.316"
+  },
+  "tool_versions_locked": {
+    "magic": "8.3.623",
+    "netgen": "1.5.316"
+  },
+  "pdk_tech_fingerprint": {
+    "method": "sha256 of sorted sha256sum over /pdk/gf180mcuD/libs.tech/{magic,netgen,ngspice}",
+    "value": "9e0a3f802ad26e7baa539a3e938f39aba02d3c0e460900bead7fce7a7bfa6b70"
+  },
+  "status": "functionally_equivalent_tools_unproven_byte_identity",
+  "note": "The build is not byte-reproducible. Tool versions match the lock. Evidence produced with the rebuilt image must record its ID; reproduction of earlier pad results is checked separately in analog/pads.",
+  "override": "Digital flow scripts accept SVALBARD_DIGITAL_IMAGE (default: the locked ID). On this host set SVALBARD_DIGITAL_IMAGE=svalbard/librelane-gf180-canary:2026.08.",
+  "regression_with_rebuilt_image": {
+    "transceiver-stream-rx": "pass",
+    "transceiver-stream-tx": "pass",
+    "transceiver-stream-link": "pass",
+    "transceiver-rtl-primitives": "pass"
+  }
+}

@@ -127,7 +127,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 350000,
+        "area_ceiling_um2": 179000,
         "area_group": "converters",
         "current_budget_ma": {
           "rf_rx": 8,
@@ -240,7 +240,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 350000,
+        "area_ceiling_um2": 179000,
         "area_group": "converters",
         "current_budget_ma": {
           "rf_rx": 8,
@@ -292,14 +292,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 20000,
+        "area_ceiling_um2": 6400,
         "area_group": "digital",
         "current_budget_ma": {
-          "rf_rx": 0.1,
-          "rf_tx": 0.1,
-          "stopped": 0.1,
-          "usb": 0.1,
-          "wired": 0.1
+          "rf_rx": 0.22,
+          "rf_tx": 0.22,
+          "stopped": 0.22,
+          "usb": 0.22,
+          "wired": 0.22
         }
       },
       "supply": "core"
@@ -515,6 +515,13 @@
         "phase_code"
       ],
       "kind": "clock_recovery",
+      "merged_into": {
+        "block": "cdr",
+        "design": "pll_ring (second instance; dual-loop CDR with digital phase pick)",
+        "retired_design": "pt_cdr quarter-rate phase interpolator (removed; evidence analog/wired_rx/generated/cdr-evidence.json)",
+        "charged": true,
+        "reference": "lead decision 2026-11-08 (consolidation pass 3, P3-2)"
+      },
       "outputs": [
         "phase",
         "recovered",
@@ -666,14 +673,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 250000,
+        "area_ceiling_um2": 73200,
         "area_group": "timing",
         "current_budget_ma": {
           "rf_rx": 0.2,
           "rf_tx": 0.2,
           "stopped": 0,
-          "usb": 12,
-          "wired": 12
+          "usb": 3.97,
+          "wired": 3.97
         }
       },
       "supply": "pll"
@@ -753,14 +760,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 80000,
+        "area_ceiling_um2": 91500,
         "area_group": "timing",
         "current_budget_ma": {
-          "rf_rx": 2,
-          "rf_tx": 2,
+          "rf_rx": 9.67,
+          "rf_tx": 9.67,
           "stopped": 0,
-          "usb": 2,
-          "wired": 2
+          "usb": 9.67,
+          "wired": 9.67
         }
       },
       "supply": "pll"
@@ -936,14 +943,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 180000,
+        "area_ceiling_um2": 218500,
         "area_group": "timing",
         "current_budget_ma": {
           "rf_rx": 12,
           "rf_tx": 12,
           "stopped": 0,
-          "usb": 5,
-          "wired": 5
+          "usb": 10.48,
+          "wired": 10.48
         }
       },
       "supply": "pll"
@@ -1013,14 +1020,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 200000,
+        "area_ceiling_um2": 57100,
         "area_group": "wired",
         "current_budget_ma": {
           "rf_rx": 0.2,
           "rf_tx": 0.2,
           "stopped": 0,
           "usb": 0.1,
-          "wired": 12
+          "wired": 5.33
         }
       },
       "supply": "wire"
@@ -1305,14 +1312,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 180000,
+        "area_ceiling_um2": 209900,
         "area_group": "wired",
         "current_budget_ma": {
           "rf_rx": 0.4,
           "rf_tx": 0.4,
           "stopped": 0,
-          "usb": 4,
-          "wired": 4
+          "usb": 1.66,
+          "wired": 1.66
         }
       },
       "supply": "wire"
@@ -1779,11 +1786,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 220000,
+        "area_ceiling_um2": 24600,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 3,
-          "rf_tx": 3,
+          "rf_rx": 2.85,
+          "rf_tx": 2.85,
           "stopped": 0,
           "usb": 0.2,
           "wired": 0.2
@@ -1971,6 +1978,12 @@
         "state"
       ],
       "kind": "baseband_gain",
+      "merged_into": {
+        "block": "rxfilter_i",
+        "design": "bbfilter_i (programmable-gain first biquad)",
+        "charged": false,
+        "reference": "spec/consolidation-pass.md item 2 / P2-1"
+      },
       "outputs": [
         "adc_in"
       ],
@@ -2051,14 +2064,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 100000,
+        "area_ceiling_um2": 0,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 0.5,
-          "rf_tx": 0.5,
+          "rf_rx": 0,
+          "rf_tx": 0,
           "stopped": 0,
-          "usb": 0.1,
-          "wired": 0.1
+          "usb": 0,
+          "wired": 0
         }
       },
       "supply": "rf"
@@ -2076,6 +2089,12 @@
         "state"
       ],
       "kind": "baseband_gain",
+      "merged_into": {
+        "block": "rxfilter_q",
+        "design": "bbfilter_q (programmable-gain first biquad)",
+        "charged": false,
+        "reference": "spec/consolidation-pass.md item 2 / P2-1"
+      },
       "outputs": [
         "adc_in"
       ],
@@ -2156,14 +2175,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 100000,
+        "area_ceiling_um2": 0,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 0.5,
-          "rf_tx": 0.5,
+          "rf_rx": 0,
+          "rf_tx": 0,
           "stopped": 0,
-          "usb": 0.1,
-          "wired": 0.1
+          "usb": 0,
+          "wired": 0
         }
       },
       "supply": "rf"
@@ -2315,6 +2334,13 @@
         "state"
       ],
       "kind": "phase_generator",
+      "merged_into": {
+        "block": "quadrature",
+        "design": "lo_ext (external passive I/Q LO; internal mode) + polyphase (autonomous LO only)",
+        "retired_design": "pt_quadrature (divider quadrature generator)",
+        "charged": true,
+        "reference": "spec/consolidation-pass.md P3-1; lo_ext/polyphase evidence books their area against the quadrature ceiling"
+      },
       "outputs": [
         "lo_i",
         "lo_q",
@@ -2391,11 +2417,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 150000,
+        "area_ceiling_um2": 107100,
         "area_group": "timing",
         "current_budget_ma": {
-          "rf_rx": 5,
-          "rf_tx": 5,
+          "rf_rx": 18.83,
+          "rf_tx": 18.83,
           "stopped": 0,
           "usb": 0,
           "wired": 0
@@ -2475,11 +2501,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 150000,
+        "area_ceiling_um2": 147900,
         "area_group": "converters",
         "current_budget_ma": {
-          "rf_rx": 3,
-          "rf_tx": 3,
+          "rf_rx": 1.56,
+          "rf_tx": 1.56,
           "stopped": 0,
           "usb": 0.1,
           "wired": 0.1
@@ -2576,14 +2602,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 180000,
+        "area_ceiling_um2": 73400,
         "area_group": "timing",
         "current_budget_ma": {
-          "rf_rx": 12,
-          "rf_tx": 12,
+          "rf_rx": 3.55,
+          "rf_tx": 3.55,
           "stopped": 0,
-          "usb": 12,
-          "wired": 12
+          "usb": 3.55,
+          "wired": 3.55
         }
       },
       "shared_parameter_sources": {
@@ -2633,7 +2659,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 130000,
+        "area_ceiling_um2": 185000,
         "area_group": "timing",
         "current_budget_ma": {
           "rf_rx": 0,
@@ -2736,11 +2762,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 200000,
+        "area_ceiling_um2": 98100,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 28,
-          "rf_tx": 28,
+          "rf_rx": 28.92,
+          "rf_tx": 28.92,
           "stopped": 0,
           "usb": 0.7,
           "wired": 0.7
@@ -2788,7 +2814,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 130000,
+        "area_ceiling_um2": 180000,
         "area_group": "rf",
         "current_budget_ma": {
           "rf_rx": 0,
@@ -2874,14 +2900,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 300000,
+        "area_ceiling_um2": 89000,
         "area_group": "timing",
         "current_budget_ma": {
           "rf_rx": 12,
           "rf_tx": 12,
           "stopped": 0,
-          "usb": 0,
-          "wired": 0
+          "usb": 3.97,
+          "wired": 3.97
         }
       },
       "supply": "pll"
@@ -2926,7 +2952,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 130000,
+        "area_ceiling_um2": 180000,
         "area_group": "rf",
         "current_budget_ma": {
           "rf_rx": 0,
@@ -3023,11 +3049,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 430000,
+        "area_ceiling_um2": 493400,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 4,
-          "rf_tx": 4,
+          "rf_rx": 3.77,
+          "rf_tx": 3.77,
           "stopped": 0,
           "usb": 0.1,
           "wired": 0.1
@@ -3120,11 +3146,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 430000,
+        "area_ceiling_um2": 493400,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 4,
-          "rf_tx": 4,
+          "rf_rx": 3.77,
+          "rf_tx": 3.77,
           "stopped": 0,
           "usb": 0.1,
           "wired": 0.1
@@ -3188,14 +3214,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 50000,
+        "area_ceiling_um2": 26100,
         "area_group": "wired",
         "current_budget_ma": {
           "rf_rx": 0,
           "rf_tx": 0,
           "stopped": 0,
           "usb": 0,
-          "wired": 0.05
+          "wired": 0.04
         }
       },
       "supply": "wire"
@@ -3263,11 +3289,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 100000,
+        "area_ceiling_um2": 44700,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 1,
-          "rf_tx": 1,
+          "rf_rx": 0.58,
+          "rf_tx": 0.58,
           "stopped": 0,
           "usb": 0.1,
           "wired": 0.1
@@ -3338,11 +3364,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 100000,
+        "area_ceiling_um2": 44700,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 1,
-          "rf_tx": 1,
+          "rf_rx": 0.58,
+          "rf_tx": 0.58,
           "stopped": 0,
           "usb": 0.1,
           "wired": 0.1
@@ -3410,7 +3436,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 80000,
+        "area_ceiling_um2": 16000,
         "area_group": "wired",
         "current_budget_ma": {
           "rf_rx": 0.1,
@@ -3529,7 +3555,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 360000,
+        "area_ceiling_um2": 234500,
         "area_group": "wired",
         "current_budget_ma": {
           "rf_rx": 0.1,
@@ -3598,14 +3624,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 200000,
+        "area_ceiling_um2": 49400,
         "area_group": "wired",
         "current_budget_ma": {
           "rf_rx": 0.1,
           "rf_tx": 0.1,
           "stopped": 0,
-          "usb": 8,
-          "wired": 8
+          "usb": 1.23,
+          "wired": 1.23
         }
       },
       "supply": "wire"
@@ -3622,6 +3648,12 @@
         "state"
       ],
       "kind": "tmds_driver",
+      "merged_into": {
+        "block": "wiredtx",
+        "design": "wiredtx TMDS configuration (termination off, 6..16 mA)",
+        "charged": false,
+        "reference": "spec/consolidation-pass.md item 4 / P2-1"
+      },
       "outputs": [
         "tmds_out"
       ],
@@ -3678,14 +3710,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 220000,
+        "area_ceiling_um2": 0,
         "area_group": "wired",
         "current_budget_ma": {
-          "rf_rx": 0.1,
-          "rf_tx": 0.1,
+          "rf_rx": 0,
+          "rf_tx": 0,
           "stopped": 0,
-          "usb": 0.2,
-          "wired": 0.2
+          "usb": 0,
+          "wired": 0
         }
       },
       "supply": "wire"
@@ -3702,6 +3734,12 @@
         "state"
       ],
       "kind": "reconstruction_filter",
+      "merged_into": {
+        "block": "rxfilter_i",
+        "design": "bbfilter_i",
+        "charged": false,
+        "reference": "spec/consolidation-pass.md item 1 / P2-1"
+      },
       "outputs": [
         "bb"
       ],
@@ -3763,14 +3801,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 430000.0,
+        "area_ceiling_um2": 0,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 4.0,
-          "rf_tx": 4.0,
+          "rf_rx": 0,
+          "rf_tx": 0,
           "stopped": 0,
-          "usb": 0.1,
-          "wired": 0.1
+          "usb": 0,
+          "wired": 0
         }
       },
       "supply": "rf"
@@ -3787,6 +3825,12 @@
         "state"
       ],
       "kind": "reconstruction_filter",
+      "merged_into": {
+        "block": "rxfilter_q",
+        "design": "bbfilter_q",
+        "charged": false,
+        "reference": "spec/consolidation-pass.md item 1 / P2-1"
+      },
       "outputs": [
         "bb"
       ],
@@ -3848,14 +3892,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 430000.0,
+        "area_ceiling_um2": 0,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 4.0,
-          "rf_tx": 4.0,
+          "rf_rx": 0,
+          "rf_tx": 0,
           "stopped": 0,
-          "usb": 0.1,
-          "wired": 0.1
+          "usb": 0,
+          "wired": 0
         }
       },
       "supply": "rf"
@@ -3930,11 +3974,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 70000,
+        "area_ceiling_um2": 27300,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 1,
-          "rf_tx": 1,
+          "rf_rx": 1.01,
+          "rf_tx": 1.01,
           "stopped": 0,
           "usb": 0.1,
           "wired": 0.1
@@ -4012,11 +4056,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 70000,
+        "area_ceiling_um2": 27300,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 1,
-          "rf_tx": 1,
+          "rf_rx": 1.01,
+          "rf_tx": 1.01,
           "stopped": 0,
           "usb": 0.1,
           "wired": 0.1
@@ -4088,7 +4132,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 250000,
+        "area_ceiling_um2": 300000,
         "area_group": "wired",
         "current_budget_ma": {
           "rf_rx": 0.1,
@@ -4164,11 +4208,11 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 60000,
+        "area_ceiling_um2": 5600,
         "area_group": "rf",
         "current_budget_ma": {
-          "rf_rx": 1,
-          "rf_tx": 1,
+          "rf_rx": 0.0,
+          "rf_tx": 0.0,
           "stopped": 0,
           "usb": 0.1,
           "wired": 0.1
@@ -4187,6 +4231,13 @@
         "state"
       ],
       "kind": "pad_switch",
+      "merged_into": {
+        "block": "wirepad",
+        "also": "wiredtx",
+        "charged": true,
+        "status": "measurement pending",
+        "reference": "spec/consolidation-pass.md P2-4: reservations released only after the drive is measured"
+      },
       "outputs": [
         "drive_usb"
       ],
@@ -4256,6 +4307,13 @@
         "state"
       ],
       "kind": "usb_fsls_phy",
+      "merged_into": {
+        "block": "wirepad",
+        "also": "wiredtx",
+        "charged": true,
+        "status": "measurement pending",
+        "reference": "spec/consolidation-pass.md P2-4: reservations released only after the drive is measured"
+      },
       "outputs": [
         "drive",
         "states"
@@ -4337,6 +4395,13 @@
         "state"
       ],
       "kind": "usb_hs_phy",
+      "merged_into": {
+        "block": "wirepad",
+        "also": "wiredtx",
+        "charged": true,
+        "status": "measurement pending",
+        "reference": "spec/consolidation-pass.md P2-4: reservations released only after the drive is measured"
+      },
       "outputs": [
         "drive",
         "squelch",
@@ -4561,7 +4626,7 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 290000,
+        "area_ceiling_um2": 340000,
         "area_group": "wired",
         "current_budget_ma": {
           "rf_rx": 0.2,
@@ -4584,6 +4649,12 @@
         "state"
       ],
       "kind": "pll",
+      "merged_into": {
+        "block": "rfpll",
+        "design": "pll (shared loop; ring VCO core for wired)",
+        "charged": false,
+        "reference": "spec/consolidation-pass.md item 3 (revised) / P2-1"
+      },
       "outputs": [
         "clock",
         "lock"
@@ -4655,14 +4726,14 @@
         }
       },
       "resource_allocation": {
-        "area_ceiling_um2": 300000,
+        "area_ceiling_um2": 0,
         "area_group": "timing",
         "current_budget_ma": {
           "rf_rx": 0,
           "rf_tx": 0,
           "stopped": 0,
-          "usb": 12,
-          "wired": 12
+          "usb": 0,
+          "wired": 0
         }
       },
       "supply": "pll"
@@ -7233,7 +7304,7 @@
     "monitor_guard": "SPI may set a stronger monitoring mask, never weaker than active mode requirements: always PLL/CORE/HOST, plusRF/CONV forRF, WIRE forwired/USB. Require reference inRF; require input presence when external timing or PLL reference is used; require selectedPLL lock. CDR loss is armed only after qualified acquisition. Hardware mode validation rejects insufficient mask/requirements. CDR loss input now means qualified unexpected loss after receive_qualification policy, not raw transition absence; ordinary quiet never reaches global fault latch. During explicitly armed RETUNE_WINDOW only, source presence/selectedRFPLL-lock may be absent while converters isolated; supply and host requirements remain mandatory. Restore all source requirements on window exit.",
     "receiver_detection": "While wired payload stopped, select txpad detect with wiredtx.idle=tmds.idle=1, their output states off, and source termination off. Reset counter, capture initial TX-pad voltage, then scheduled-enable paired test currents. Threshold crossings are timestamped on DETECT_CLOCK. Both sources disconnect at crossing/timeout/fault. Clear test enable before changing pad branch. Timeout uses selected detector clock:250000ticks gives0.5..1ms. No current injected into WIRE_RX or USB. Reject test enable in any other ownership state.",
     "reference_clock_guard": "In high-frequency mode select divider so low_ref is10..250MHz for CDR/PLL acquisition; high_ref remains undivided. No simultaneous independent clock inputs. Both PLL feedback loops must remain within VCO/PFD ranges.",
-    "reset": "All fields take declared defaults. Physical output enables are additionally forced off by reset/fault regardless of shadow settings. Bias, monitor, management oscillator and SPI remain enabled after power-on startup.",
+    "reset": "All fields take declared defaults. Physical output enables are additionally forced off by reset/fault regardless of shadow settings. Monitor (POR), management oscillator and SPI remain enabled after power-on startup. The master bias generator (core.biasgen.ena) and every island bias trunk reset OFF (decision 2026-11-08, spec/tapeout-plan.md): nothing outside the switched islands needs bias, so bring-up enables bias first, then islands.",
     "rf_frequency_guard": "Polyphase requires carrier=input2.4..2.5GHz. Divide-by-two requires input480..2500MHz and carrier=input/2. Sample and RF host clocks divide actual carrier, not raw REF_IN. No native1250..2400MHz claim. Below240MHz or other bands use external frequency conversion.",
     "rx_level_guard": "Require half for DC high-common-mode TMDS sink plus external pullups and internal shunts off; bypass for serial CTLE. USB selects its dedicated preamplifier and leaves this path off.",
     "scheduled": "Only explicitly live fields may change at a timestamp. Fault overrides every scheduled action. Analog settling guard expires before data becomes valid; clocks remain running during same-channel RF direction change.",
@@ -7241,6 +7312,8 @@
     "scheduler_clock_divider": 4,
     "state_ownership": "Per-block state requests are checked against operating_modes.block_states; warm/active may be reduced to off. source_dependent and branch_dependent require their stated selector. Safety output constraints always dominate requested enable.",
     "switch_dead_time_s": 4e-09,
+    "atb_switch_dead_time_s": 2e-08,
+    "atb_switch_dead_time_reason": "ATB group/pad non-overlap up to 5.7 ns (analog/island_support README A2); the commit-level zero-code rule gives at least one 32-clock SPI transaction between two non-zero ATB codes, which meets 20 ns below 1.6 GHz SCLK. switch_dead_time_s remains the figure for the other analog selects.",
     "trim_mapping": "Unless overridden, centered trim uses code/(2**bits-1), maps declared min/max linearly and saturates at endpoints. Code 128/32 denotes near midpoint, not exact physical calibration."
   },
   "direct_stream_service": {
@@ -10514,20 +10587,22 @@
     },
     "branch_current_overrides_ma": {
       "external_rf_clock": {
-        "rfpll": 0.1
+        "quadrature": 0.19,
+        "refinput": 0,
+        "rfpll": 5.26
       },
       "external_wired_clock": {
-        "wirepll": 0.1
+        "refinput": 10.65,
+        "rfpll": 0.1
       },
       "wired_tmds": {
-        "rxlevel": 0.05,
-        "tmds": 16,
-        "wiredtx": 0.2
+        "rxlevel": 0.04,
+        "wiredtx": 16
       }
     },
     "branch_current_semantics": "Overrides replace listed block budgets only when corresponding branch/source selected; all other mode loads retained. USB envelope includes both receiver and potential FS/HS driver biases; output driver enables remain exclusive.",
     "converter_reference_reservoir_pf": 100,
-    "current": "Base per-block totals include autonomous RF synthesis. Apply only the explicitly selected branch override before checking the unchanged mode ceiling. Primary RF qualification uses external_rf_clock, which replaces RFPLL12mA with0.1mA; external input/distribution and all warm analog loads remain charged. Autonomous RF remains available for separate qualification but does not presently fit the240mA planning envelope.",
+    "current": "Base per-block totals include autonomous RF synthesis. Apply only the explicitly selected branch override before checking the unchanged mode ceiling. Primary RF qualification uses external_rf_clock: the passive external I/Q LO through lo_ext external mode (booked on the quadrature slot), no clock-receiver LO charge, and the host_follow pll_ring plus prescaler booked on rfpll; all warm analog loads remain charged. Measured extracted currents replace allocations where evidence exists (P2-1, P3); see current_reallocation_log. Autonomous RF is 253.02 mA against the 240 mA envelope.",
     "current_ceiling_ma": {
       "rf_rx": 240,
       "rf_tx": 240,
@@ -10536,8 +10611,9 @@
       "wired": 292
     },
     "current_open_gates": [
-      "Selected primary external-clock RF subtotal240mA includes8mA paired RX filtering and the selected five-pole TX filters. No additional current reserve is demonstrated; circuit overhead, area and headroom remain unqualified.",
-      "Selected autonomous RF subtotal251.9mA exceeds240mA. Preserve the capability target; physical allocation and implementation closure are deferred until behavioral closure."
+      "Primary external-clock RF subtotal 224.09 mA against 240 mA after the P3 booking. pll_ring and prescale are nominal-only measurements; clockmux and clocktree remain lower bounds measured below target frequency.",
+      "Autonomous RF subtotal 253.02 mA against 240 mA exceeds the ceiling. It charges lo_ext internal mode plus polyphase and keeps the unmeasured 12 mA LO synthesis allocation (P3-4 LC loop is Evaluate).",
+      "Autonomous RF exceeding the 240 mA envelope is accepted as a known limit of the separately qualified autonomous mode (lead decision 2026-11-08); external-clock RF is the qualified primary case."
     ],
     "dac_support_allocation": {
       "equivalent_activity_weighted_capacitance_f": 5.681818181818182e-12,
@@ -10596,20 +10672,20 @@
   },
   "resource_totals": {
     "area_used_um2": {
-      "converters": 1300000,
-      "digital": 1650000,
+      "converters": 955900,
+      "digital": 1636400,
       "external": 0,
       "reserve": 1300000,
-      "rf": 3000000,
-      "timing": 1670000,
-      "wired": 2740000
+      "rf": 1619100,
+      "timing": 937700,
+      "wired": 2143000
     },
     "current_ma": {
-      "rf_rx": 251.9,
-      "rf_tx": 251.9,
-      "stopped": 4.5,
-      "usb": 252.20000000000002,
-      "wired": 272.45000000000005
+      "rf_rx": 253.02,
+      "rf_tx": 253.02,
+      "stopped": 4.62,
+      "usb": 231.25,
+      "wired": 244.82
     }
   },
   "rf_gain_feedback": {
@@ -10904,5 +10980,1516 @@
       "source_qualification": 4
     },
     "timer": "H2D/4 one-shot deadline atH0; maximum1953ticks=49.9968us. Independent management watchdog backs up recovery; host-clock loss cannot be masked by RETUNE_WINDOW. Repeat arm rejected until finish/reset."
-  }
+  },
+  "area_reallocation_log": [
+    {
+      "date": "2026-11-08",
+      "reason": "Stress-safe pad shunt (analog/pads/generated/stress-safe-families) does not fit pad reservations; area moved from blocks removed by spec/consolidation-pass.md (txfilter -> shared bbfilter, wirepll -> shared pll, tmds -> wiredtx configuration). Group totals unchanged.",
+      "moves_um2": [
+        {
+          "from": "txfilter_i",
+          "to": "rfpad",
+          "amount": 50000
+        },
+        {
+          "from": "txfilter_i",
+          "to": "rftxpad",
+          "amount": 50000
+        },
+        {
+          "from": "wirepll",
+          "to": "refpad",
+          "amount": 55000
+        },
+        {
+          "from": "tmds",
+          "to": "txpad",
+          "amount": 50000
+        },
+        {
+          "from": "tmds",
+          "to": "wirepad",
+          "amount": 50000
+        }
+      ]
+    },
+    {
+      "date": "2026-11-08",
+      "reason": "CDR interpolator speed rework (static mux tree / CML) for 2.5 Gb/s; area from wirepll, merged into the shared pll by spec/consolidation-pass.md. Group totals unchanged.",
+      "moves_um2": [
+        {
+          "from": "wirepll",
+          "to": "cdr",
+          "amount": 50000
+        }
+      ]
+    },
+    {
+      "date": "2026-11-08",
+      "reason": "P2-1 rebaseline (spec/consolidation-pass.md): merged blocks released; ceilings set to 1.25x measured layout area where evidence tests.clean.state is pass and 1.5x otherwise. Group budgets unchanged; slack allocated in freed_area_allocation_um2.",
+      "changes": [
+        {
+          "block": "txfilter_i",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 330000.0,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_i; area carried by the surviving block"
+        },
+        {
+          "block": "txfilter_q",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 430000.0,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_q; area carried by the surviving block"
+        },
+        {
+          "block": "pga_i",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 100000,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_i; area carried by the surviving block"
+        },
+        {
+          "block": "pga_q",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 100000,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_q; area carried by the surviving block"
+        },
+        {
+          "block": "wirepll",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 195000,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rfpll; area carried by the surviving block"
+        },
+        {
+          "block": "tmds",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 120000,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into wiredtx; area carried by the surviving block"
+        },
+        {
+          "block": "lna",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 220000,
+          "new": 24600,
+          "source": "analog/rf_rx/generated/lna-evidence.json",
+          "reason": "1.25x measured layout area 19639.0 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "rxmix_i",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 100000,
+          "new": 44700,
+          "source": "analog/rf_rx/generated/rxmix_i-evidence.json",
+          "reason": "1.25x measured layout area 35704.0 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "rxfilter_i",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 430000,
+          "new": 493400,
+          "source": "analog/rf_rx/generated/bbfilter_i-evidence.json",
+          "reason": "1.25x measured layout area 394665.0 um2 (evidence tests.clean.state=pass); carries merged txfilter_i and pga_i"
+        },
+        {
+          "block": "rxmix_q",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 100000,
+          "new": 44700,
+          "source": "analog/rf_rx/generated/rxmix_q-evidence.json",
+          "reason": "1.25x measured layout area 35704.0 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "rxfilter_q",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 430000,
+          "new": 493400,
+          "source": "analog/rf_rx/generated/bbfilter_q-evidence.json",
+          "reason": "1.25x measured layout area 394665.0 um2 (evidence tests.clean.state=pass); carries merged txfilter_q and pga_q"
+        },
+        {
+          "block": "txmix_i",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 70000,
+          "new": 27300,
+          "source": "analog/rf_tx/generated/txmix_i-evidence.json",
+          "reason": "1.25x measured layout area 21788.0 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "txmix_q",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 70000,
+          "new": 27300,
+          "source": "analog/rf_tx/generated/txmix_q-evidence.json",
+          "reason": "1.25x measured layout area 21788.0 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "txsum",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 60000,
+          "new": 5600,
+          "source": "analog/rf_tx/generated/txsum-evidence.json",
+          "reason": "1.25x measured layout area 4462.3 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "rfdriver",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 200000,
+          "new": 98100,
+          "source": "analog/rf_tx/generated/rfdriver-evidence.json",
+          "reason": "1.25x measured layout area 78467.6 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "adc_i",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 350000,
+          "new": 179000,
+          "source": "analog/converters/generated/adc_i-evidence.json",
+          "reason": "1.5x measured layout area 119288.0 um2 (evidence tests.clean.state=fail)"
+        },
+        {
+          "block": "refbuf",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 150000,
+          "new": 147900,
+          "source": "analog/converters/generated/refbuf-evidence.json",
+          "reason": "1.25x measured layout area 118270.4 um2 (evidence tests.clean.state=pass); includes the 100 pF reference reservoir"
+        },
+        {
+          "block": "aosc",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 20000,
+          "new": 6400,
+          "source": "analog/timing/generated/aosc-evidence.json",
+          "reason": "1.25x measured layout area 5097.3 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "clockmux",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 80000,
+          "new": 91500,
+          "source": "analog/timing/generated/clockmux-evidence.json",
+          "reason": "1.25x measured layout area 73173.2 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "clocktree",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 180000,
+          "new": 218500,
+          "source": "analog/timing/generated/clocktree-evidence.json",
+          "reason": "1.25x measured layout area 174792.5 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "quadrature",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 150000,
+          "new": 84000,
+          "source": "analog/timing/generated/quadrature-evidence.json",
+          "reason": "1.25x measured layout area 67124.2 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "refinput",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 180000,
+          "new": 24500,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "1.25x measured layout area 19544.8 um2 (evidence tests.clean.state=pass); one instance (REF_IN). aux_clk_rx/wclk_in_rx/wtx_ext_rx instances are debug cells (tapeout-readiness debug_cells)"
+        },
+        {
+          "block": "rfpll",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 300000,
+          "new": 332300,
+          "source": "analog/timing/generated/pll-evidence.json",
+          "reason": "1.5x measured layout area 221498.2 um2 (evidence tests.clean.state=open); shared pll carries merged wirepll"
+        },
+        {
+          "block": "ctle",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 200000,
+          "new": 57100,
+          "source": "analog/wired_rx/generated/ctle-evidence.json",
+          "reason": "1.25x measured layout area 45657.6 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "termination",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 200000,
+          "new": 49400,
+          "source": "analog/wired_rx/generated/termination-evidence.json",
+          "reason": "1.25x measured layout area 39485.6 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "detect",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 180000,
+          "new": 209900,
+          "source": "analog/wired_rx/generated/detect-evidence.json",
+          "reason": "1.25x measured layout area 167883.6 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "rxlevel",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 50000,
+          "new": 26100,
+          "source": "analog/wired_rx/generated/rxlevel-evidence.json",
+          "reason": "1.25x measured layout area 20860.4 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "rxselect",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 80000,
+          "new": 16000,
+          "source": "analog/wired_rx/generated/rxselect-evidence.json",
+          "reason": "1.25x measured layout area 12754.8 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "slicer",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 360000,
+          "new": 234500,
+          "source": "analog/wired_rx/generated/slicer-evidence.json",
+          "reason": "1.25x measured layout area 187592.0 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "cdr",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 300000,
+          "new": 309100,
+          "source": "analog/wired_rx/generated/cdr-evidence.json",
+          "reason": "1.25x measured layout area 247233.3 um2 (evidence tests.clean.state=pass)"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.area_used_um2.converters",
+          "old": 1300000,
+          "new": 1126900,
+          "source": "sum of blocks.*.resource_allocation.area_ceiling_um2",
+          "reason": "recomputed after rebaseline"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.area_used_um2.digital",
+          "old": 1650000,
+          "new": 1636400,
+          "source": "sum of blocks.*.resource_allocation.area_ceiling_um2",
+          "reason": "recomputed after rebaseline"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.area_used_um2.rf",
+          "old": 3000000,
+          "new": 1619100,
+          "source": "sum of blocks.*.resource_allocation.area_ceiling_um2",
+          "reason": "recomputed after rebaseline"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.area_used_um2.timing",
+          "old": 1670000,
+          "new": 1344900,
+          "source": "sum of blocks.*.resource_allocation.area_ceiling_um2",
+          "reason": "recomputed after rebaseline"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.area_used_um2.wired",
+          "old": 2740000,
+          "new": 2143000,
+          "source": "sum of blocks.*.resource_allocation.area_ceiling_um2",
+          "reason": "recomputed after rebaseline"
+        },
+        {
+          "block": "debug",
+          "field": "freed_area_allocation_um2.allocations.debug",
+          "old": null,
+          "new": 670000,
+          "source": "spec/consolidation-pass.md",
+          "reason": "new debug allocation from freed area"
+        },
+        {
+          "block": "reserve",
+          "field": "freed_area_allocation_um2.allocations.reserve",
+          "old": 410000,
+          "new": 2229700,
+          "source": "spec/consolidation-pass.md",
+          "reason": "remaining slack after debug (previous unused reserve was the 0.41 mm2 reserve-group slack)"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-08",
+      "reason": "P3 booking (spec/consolidation-pass.md third pass: P3-1, P3-2, P3-13). Group budgets unchanged.",
+      "changes": [
+        {
+          "block": "adc_q",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 350000,
+          "new": 179000,
+          "source": "analog/converters/generated/adc_i-evidence.json",
+          "reason": "P3-13: adc_q is the same design as adc_i; ceiling set equal to the booked adc_i ceiling"
+        },
+        {
+          "block": "refinput",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 24500,
+          "new": 73400,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "P3-13: four pt_diff_clk_rx instances (REF_IN, AUX_CLK, WCLK_IN, WTX_EXT) x 14670.9 um2 x 1.25; aux_clk_rx/wclk_in_rx/wtx_ext_rx moved out of the debug subset"
+        },
+        {
+          "block": "quadrature",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 84000,
+          "new": 107100,
+          "source": "analog/timing/generated/lo_ext-evidence.json; analog/timing/generated/polyphase-evidence.json",
+          "reason": "P3-1/P3-13: lo_ext 38405.3 um2 x 1.25 + polyphase 39329.3 um2 x 1.5; pt_quadrature retired; lo_ext/polyphase moved out of the debug subset"
+        },
+        {
+          "block": "rfpll",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 332300,
+          "new": 89000,
+          "source": "analog/timing/generated/pll_ring-evidence.json; analog/timing/generated/prescale-evidence.json",
+          "reason": "P3-2: pt_pll retired; one pll_ring (48791.1 um2 x 1.5) + one prescale (12627.0 um2 x 1.25). LC VCO/inductor area for P3-4 is not booked"
+        },
+        {
+          "block": "cdr",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 309100,
+          "new": 112300,
+          "source": "analog/timing/generated/pll_ring-evidence.json; analog/wired_rx/generated/cdr-evidence.json",
+          "reason": "P3-2: pll_ring (73200) + pt_cdr quarter-rate PI 26031.0 um2 x 1.5"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.area_used_um2.converters",
+          "old": 1126900,
+          "new": 955900,
+          "source": "sum of blocks.*.resource_allocation.area_ceiling_um2",
+          "reason": "recomputed after P3 booking"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.area_used_um2.timing",
+          "old": 1344900,
+          "new": 976800,
+          "source": "sum of blocks.*.resource_allocation.area_ceiling_um2",
+          "reason": "recomputed after P3 booking"
+        },
+        {
+          "block": "debug",
+          "field": "freed_area_allocation_um2.debug_measured_subset.cells.lo_ext",
+          "old": 51603.2,
+          "new": null,
+          "source": "analog/timing/generated/lo_ext-evidence.json",
+          "reason": "P3-13: functional cell moved to its functional block (quadrature / refinput)"
+        },
+        {
+          "block": "debug",
+          "field": "freed_area_allocation_um2.debug_measured_subset.cells.polyphase",
+          "old": 53005.9,
+          "new": null,
+          "source": "analog/timing/generated/polyphase-evidence.json",
+          "reason": "P3-13: functional cell moved to its functional block (quadrature / refinput)"
+        },
+        {
+          "block": "debug",
+          "field": "freed_area_allocation_um2.debug_measured_subset.cells.aux_clk_rx, wclk_in_rx, wtx_ext_rx (pt_diff_clk_rx)",
+          "old": 58634.4,
+          "new": null,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "P3-13: functional cell moved to its functional block (quadrature / refinput)"
+        },
+        {
+          "block": "reserve",
+          "field": "freed_area_allocation_um2.allocations.reserve",
+          "old": 2229700,
+          "new": 2768800,
+          "source": "this booking",
+          "reason": "recomputed slack after P3 booking; debug allocation unchanged"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-08",
+      "reason": "P3b cdr area rebooked as ring PLL only (PI removed). Group budgets unchanged.",
+      "changes": [
+        {
+          "block": "cdr",
+          "field": "resource_allocation.area_ceiling_um2",
+          "old": 112300,
+          "new": 73200,
+          "source": "analog/timing/generated/pll_ring-evidence.json",
+          "reason": "P3b: pll_ring only (48791.1 um2 x 1.5, clean state fail); PI area released"
+        },
+        {
+          "block": "cdr",
+          "field": "merged_into",
+          "old": null,
+          "new": {
+            "block": "cdr",
+            "design": "pll_ring (second instance; dual-loop CDR with digital phase pick)",
+            "retired_design": "pt_cdr quarter-rate phase interpolator (removed; evidence analog/wired_rx/generated/cdr-evidence.json)",
+            "charged": true,
+            "reference": "lead decision 2026-11-08 (consolidation pass 3, P3-2)"
+          },
+          "source": "analog/wired_rx/generated/cdr-evidence.json",
+          "reason": "record PI removal"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.area_used_um2.timing",
+          "old": 976800,
+          "new": 937700,
+          "source": "sum of blocks",
+          "reason": "recomputed after P3b"
+        },
+        {
+          "block": "reserve",
+          "field": "freed_area_allocation_um2.allocations.reserve",
+          "old": 2768800,
+          "new": 2807900,
+          "source": "this booking",
+          "reason": "slack 3438800 -> 3477900 after PI area release"
+        }
+      ]
+    }
+  ],
+  "freed_area_allocation_um2": {
+    "date": "2026-11-08",
+    "basis": "Group budgets (area_budget_um2) are unchanged. Slack = group budget minus the sum of rebaselined block ceilings. Per spec/consolidation-pass.md the slack goes first to debug cells (measured about 0.67 mm2), then reserve (pad shunts incl. debug-site protection, decoupling, then margin). This is an accounting allocation, not a placement.",
+    "slack_by_group_before": {
+      "converters": 0,
+      "digital": 0,
+      "reserve": 410000,
+      "rf": 0,
+      "timing": 0,
+      "wired": 0
+    },
+    "slack_by_group_after": {
+      "converters": 344100,
+      "digital": 13600,
+      "reserve": 410000,
+      "rf": 1380900,
+      "timing": 732300,
+      "wired": 597000
+    },
+    "total_slack": 3477900,
+    "allocations": {
+      "debug": 670000,
+      "reserve": 2807900
+    },
+    "debug_reference": "spec/consolidation-pass.md (debug cells about 0.67 mm2 against the 0.41 mm2 reserve); spec/tapeout-readiness.json reserve_area_mm2 (owner must book the debug allocation there)",
+    "debug_measured_subset": {
+      "cells": {
+        "clk_obs (CLK_OBS, WCLK_OBS)": {
+          "source": "analog/timing/generated/clk_obs-evidence.json",
+          "instances": 2,
+          "area_um2_each": 73117.9,
+          "area_um2": 146235.8
+        },
+        "ring_osc": {
+          "source": "analog/timing/generated/ring_osc-evidence.json",
+          "instances": 1,
+          "area_um2_each": 9520.3,
+          "area_um2": 9520.3
+        },
+        "vco_replica": {
+          "source": "analog/timing/generated/vco_replica-evidence.json",
+          "instances": 1,
+          "area_um2_each": 38516.0,
+          "area_um2": 38516.0
+        },
+        "bb_tap (I, Q) and wmon buffer (pt_bb_tap)": {
+          "source": "analog/rf_rx/generated/bb_tap-evidence.json",
+          "instances": 3,
+          "area_um2_each": 9978.0,
+          "area_um2": 29934.0
+        },
+        "wmon_sel": {
+          "source": "analog/wired_rx/generated/wmon_sel-evidence.json",
+          "instances": 1,
+          "area_um2_each": 15102.3,
+          "area_um2": 15102.3
+        }
+      },
+      "total_um2": 239308.4,
+      "unmeasured": [
+        "atb_tap",
+        "esd_test_pad",
+        "device_replicas",
+        "passive_matching",
+        "dbg_obs pads"
+      ]
+    }
+  },
+  "current_reallocation_log": [
+    {
+      "date": "2026-11-08",
+      "reason": "P2-1 rebaseline: merged blocks stop being charged; worst operating-envelope (22-32 C, 3.15-3.35 V, all process corners) extracted current replaces the allocation where the evidence measures the block at its operating condition; where the measurement is below target rate/frequency it is a lower bound and only raises the allocation.",
+      "changes": [
+        {
+          "block": "rfpll",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 0,
+          "new": 12,
+          "source": "spec/consolidation-pass.md item 3",
+          "reason": "shared pll (rfpll+wirepll) now carries the wired/USB PLL load formerly charged to wirepll (12 mA)"
+        },
+        {
+          "block": "rfpll",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 0,
+          "new": 12,
+          "source": "spec/consolidation-pass.md item 3",
+          "reason": "shared pll (rfpll+wirepll) now carries the wired/USB PLL load formerly charged to wirepll (12 mA)"
+        },
+        {
+          "block": "txfilter_i",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 4.0,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_i (bbfilter_i); no separate charge"
+        },
+        {
+          "block": "txfilter_i",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 4.0,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_i (bbfilter_i); no separate charge"
+        },
+        {
+          "block": "txfilter_i",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 0.1,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_i (bbfilter_i); no separate charge"
+        },
+        {
+          "block": "txfilter_i",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 0.1,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_i (bbfilter_i); no separate charge"
+        },
+        {
+          "block": "txfilter_q",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 4.0,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_q (bbfilter_q); no separate charge"
+        },
+        {
+          "block": "txfilter_q",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 4.0,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_q (bbfilter_q); no separate charge"
+        },
+        {
+          "block": "txfilter_q",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 0.1,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_q (bbfilter_q); no separate charge"
+        },
+        {
+          "block": "txfilter_q",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 0.1,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_q (bbfilter_q); no separate charge"
+        },
+        {
+          "block": "pga_i",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 0.5,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_i (bbfilter_i (programmable-gain first biquad)); no separate charge"
+        },
+        {
+          "block": "pga_i",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 0.5,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_i (bbfilter_i (programmable-gain first biquad)); no separate charge"
+        },
+        {
+          "block": "pga_i",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 0.1,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_i (bbfilter_i (programmable-gain first biquad)); no separate charge"
+        },
+        {
+          "block": "pga_i",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 0.1,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_i (bbfilter_i (programmable-gain first biquad)); no separate charge"
+        },
+        {
+          "block": "pga_q",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 0.5,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_q (bbfilter_q (programmable-gain first biquad)); no separate charge"
+        },
+        {
+          "block": "pga_q",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 0.5,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_q (bbfilter_q (programmable-gain first biquad)); no separate charge"
+        },
+        {
+          "block": "pga_q",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 0.1,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_q (bbfilter_q (programmable-gain first biquad)); no separate charge"
+        },
+        {
+          "block": "pga_q",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 0.1,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rxfilter_q (bbfilter_q (programmable-gain first biquad)); no separate charge"
+        },
+        {
+          "block": "wirepll",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 12,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rfpll (pll (shared loop; ring VCO core for wired)); no separate charge"
+        },
+        {
+          "block": "wirepll",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 12,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into rfpll (pll (shared loop; ring VCO core for wired)); no separate charge"
+        },
+        {
+          "block": "tmds",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 0.1,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into wiredtx (wiredtx TMDS configuration (termination off, 6..16 mA)); no separate charge"
+        },
+        {
+          "block": "tmds",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 0.1,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into wiredtx (wiredtx TMDS configuration (termination off, 6..16 mA)); no separate charge"
+        },
+        {
+          "block": "tmds",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 0.2,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into wiredtx (wiredtx TMDS configuration (termination off, 6..16 mA)); no separate charge"
+        },
+        {
+          "block": "tmds",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 0.2,
+          "new": 0,
+          "source": "spec/consolidation-pass.md P2-1",
+          "reason": "merged into wiredtx (wiredtx TMDS configuration (termination off, 6..16 mA)); no separate charge"
+        },
+        {
+          "block": "lna",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 3,
+          "new": 2.85,
+          "source": "analog/rf_rx/generated/lna-evidence.json",
+          "reason": "worst envelope corner idd_a, extracted LNA alone (chain LNA+mixer entries excluded)"
+        },
+        {
+          "block": "lna",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 3,
+          "new": 2.85,
+          "source": "analog/rf_rx/generated/lna-evidence.json",
+          "reason": "worst envelope corner idd_a, extracted LNA alone (chain LNA+mixer entries excluded)"
+        },
+        {
+          "block": "rxmix_i",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 1,
+          "new": 0.58,
+          "source": "analog/rf_rx/generated/rxmix_i-evidence.json",
+          "reason": "worst envelope corner idd_a of the mixer alone"
+        },
+        {
+          "block": "rxmix_i",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 1,
+          "new": 0.58,
+          "source": "analog/rf_rx/generated/rxmix_i-evidence.json",
+          "reason": "worst envelope corner idd_a of the mixer alone"
+        },
+        {
+          "block": "rxfilter_i",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 4,
+          "new": 3.77,
+          "source": "analog/rf_rx/generated/bbfilter_i-evidence.json",
+          "reason": "bbfilter covers rxfilter+txfilter+pga; worst envelope corner idd_a (RX); TX-direction nominal equal (3.683 mA)"
+        },
+        {
+          "block": "rxfilter_i",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 4,
+          "new": 3.77,
+          "source": "analog/rf_rx/generated/bbfilter_i-evidence.json",
+          "reason": "bbfilter covers rxfilter+txfilter+pga; worst envelope corner idd_a (RX); TX-direction nominal equal (3.683 mA)"
+        },
+        {
+          "block": "rxmix_q",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 1,
+          "new": 0.58,
+          "source": "analog/rf_rx/generated/rxmix_q-evidence.json",
+          "reason": "worst envelope corner idd_a of the mixer alone"
+        },
+        {
+          "block": "rxmix_q",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 1,
+          "new": 0.58,
+          "source": "analog/rf_rx/generated/rxmix_q-evidence.json",
+          "reason": "worst envelope corner idd_a of the mixer alone"
+        },
+        {
+          "block": "rxfilter_q",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 4,
+          "new": 3.77,
+          "source": "analog/rf_rx/generated/bbfilter_q-evidence.json",
+          "reason": "bbfilter covers rxfilter+txfilter+pga; worst envelope corner idd_a (RX); TX-direction nominal equal (3.683 mA)"
+        },
+        {
+          "block": "rxfilter_q",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 4,
+          "new": 3.77,
+          "source": "analog/rf_rx/generated/bbfilter_q-evidence.json",
+          "reason": "bbfilter covers rxfilter+txfilter+pga; worst envelope corner idd_a (RX); TX-direction nominal equal (3.683 mA)"
+        },
+        {
+          "block": "txmix_i",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 1,
+          "new": 1.01,
+          "source": "analog/rf_tx/generated/txmix_i-evidence.json",
+          "reason": "tail current tt/27C/3.3V (only value present; txmix_q evidence states it is the same circuit)"
+        },
+        {
+          "block": "txmix_i",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 1,
+          "new": 1.01,
+          "source": "analog/rf_tx/generated/txmix_i-evidence.json",
+          "reason": "tail current tt/27C/3.3V (only value present; txmix_q evidence states it is the same circuit)"
+        },
+        {
+          "block": "txmix_q",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 1,
+          "new": 1.01,
+          "source": "analog/rf_tx/generated/txmix_q-evidence.json",
+          "reason": "tail current tt/27C/3.3V (only value present; txmix_q evidence states it is the same circuit)"
+        },
+        {
+          "block": "txmix_q",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 1,
+          "new": 1.01,
+          "source": "analog/rf_tx/generated/txmix_q-evidence.json",
+          "reason": "tail current tt/27C/3.3V (only value present; txmix_q evidence states it is the same circuit)"
+        },
+        {
+          "block": "txsum",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 1,
+          "new": 0.0,
+          "source": "analog/rf_tx/generated/txsum-evidence.json",
+          "reason": "passive load: own supply current 0 mA; mixer tails are charged to txmix"
+        },
+        {
+          "block": "txsum",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 1,
+          "new": 0.0,
+          "source": "analog/rf_tx/generated/txsum-evidence.json",
+          "reason": "passive load: own supply current 0 mA; mixer tails are charged to txmix"
+        },
+        {
+          "block": "rfdriver",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 28,
+          "new": 28.92,
+          "source": "analog/rf_tx/generated/rfdriver-evidence.json",
+          "reason": "worst envelope value of rfdriver supply current (corner sweeps and tt nominal code 15)"
+        },
+        {
+          "block": "rfdriver",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 28,
+          "new": 28.92,
+          "source": "analog/rf_tx/generated/rfdriver-evidence.json",
+          "reason": "worst envelope value of rfdriver supply current (corner sweeps and tt nominal code 15)"
+        },
+        {
+          "block": "aosc",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 0.1,
+          "new": 0.22,
+          "source": "analog/timing/generated/aosc-evidence.json",
+          "reason": "worst envelope corner i_on_ma (always-on oscillator, retained in every mode)"
+        },
+        {
+          "block": "aosc",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 0.1,
+          "new": 0.22,
+          "source": "analog/timing/generated/aosc-evidence.json",
+          "reason": "worst envelope corner i_on_ma (always-on oscillator, retained in every mode)"
+        },
+        {
+          "block": "aosc",
+          "field": "resource_allocation.current_budget_ma.stopped",
+          "old": 0.1,
+          "new": 0.22,
+          "source": "analog/timing/generated/aosc-evidence.json",
+          "reason": "worst envelope corner i_on_ma (always-on oscillator, retained in every mode)"
+        },
+        {
+          "block": "aosc",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 0.1,
+          "new": 0.22,
+          "source": "analog/timing/generated/aosc-evidence.json",
+          "reason": "worst envelope corner i_on_ma (always-on oscillator, retained in every mode)"
+        },
+        {
+          "block": "aosc",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 0.1,
+          "new": 0.22,
+          "source": "analog/timing/generated/aosc-evidence.json",
+          "reason": "worst envelope corner i_on_ma (always-on oscillator, retained in every mode)"
+        },
+        {
+          "block": "clockmux",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 2,
+          "new": 9.67,
+          "source": "analog/timing/generated/clockmux-evidence.json",
+          "reason": "measured worst in-envelope i_on_ma_rf_pll exceeds the allocation; 2.0/2.5 GHz PLL input not passed, so this is a lower bound"
+        },
+        {
+          "block": "clockmux",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 2,
+          "new": 9.67,
+          "source": "analog/timing/generated/clockmux-evidence.json",
+          "reason": "measured worst in-envelope i_on_ma_rf_pll exceeds the allocation; 2.0/2.5 GHz PLL input not passed, so this is a lower bound"
+        },
+        {
+          "block": "clockmux",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 2,
+          "new": 9.67,
+          "source": "analog/timing/generated/clockmux-evidence.json",
+          "reason": "measured worst in-envelope i_on_ma_rf_pll exceeds the allocation; 2.0/2.5 GHz PLL input not passed, so this is a lower bound"
+        },
+        {
+          "block": "clockmux",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 2,
+          "new": 9.67,
+          "source": "analog/timing/generated/clockmux-evidence.json",
+          "reason": "measured worst in-envelope i_on_ma_rf_pll exceeds the allocation; 2.0/2.5 GHz PLL input not passed, so this is a lower bound"
+        },
+        {
+          "block": "clocktree",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 5,
+          "new": 10.48,
+          "source": "analog/timing/generated/clocktree-evidence.json",
+          "reason": "wire 1 GHz extracted nominal (only value present; miscounts, target 2.5 GHz) exceeds the 5 mA wired allocation; lower bound"
+        },
+        {
+          "block": "clocktree",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 5,
+          "new": 10.48,
+          "source": "analog/timing/generated/clocktree-evidence.json",
+          "reason": "wire 1 GHz extracted nominal (only value present; miscounts, target 2.5 GHz) exceeds the 5 mA wired allocation; lower bound"
+        },
+        {
+          "block": "quadrature",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 5,
+          "new": 8.84,
+          "source": "analog/timing/generated/quadrature-evidence.json",
+          "reason": "worst envelope corner i_on_ma (M2 corner sweep) exceeds the 5 mA allocation; most modes fail function at target, lower bound"
+        },
+        {
+          "block": "quadrature",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 5,
+          "new": 8.84,
+          "source": "analog/timing/generated/quadrature-evidence.json",
+          "reason": "worst envelope corner i_on_ma (M2 corner sweep) exceeds the 5 mA allocation; most modes fail function at target, lower bound"
+        },
+        {
+          "block": "refinput",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 12,
+          "new": 3.63,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "one pt_diff_clk_rx instance (REF_IN), worst in-envelope i_on_ma 3.62322 mA incl. 2.5 GHz 1 V nominal; the 1..256 divider is not implemented (timing README)"
+        },
+        {
+          "block": "refinput",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 12,
+          "new": 3.63,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "one pt_diff_clk_rx instance (REF_IN), worst in-envelope i_on_ma 3.62322 mA incl. 2.5 GHz 1 V nominal; the 1..256 divider is not implemented (timing README)"
+        },
+        {
+          "block": "refinput",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 12,
+          "new": 3.63,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "one pt_diff_clk_rx instance (REF_IN), worst in-envelope i_on_ma 3.62322 mA incl. 2.5 GHz 1 V nominal; the 1..256 divider is not implemented (timing README)"
+        },
+        {
+          "block": "refinput",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 12,
+          "new": 3.63,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "one pt_diff_clk_rx instance (REF_IN), worst in-envelope i_on_ma 3.62322 mA incl. 2.5 GHz 1 V nominal; the 1..256 divider is not implemented (timing README)"
+        },
+        {
+          "block": "ctle",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 12,
+          "new": 5.33,
+          "source": "analog/wired_rx/generated/ctle-evidence.json",
+          "reason": "worst envelope corner idd_a (bias current independent of line rate)"
+        },
+        {
+          "block": "termination",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 8,
+          "new": 1.23,
+          "source": "analog/wired_rx/generated/termination-evidence.json",
+          "reason": "worst envelope corner idd_div (TERM_VCM divider mode, highest-current mode); line current is supplied by the external driver"
+        },
+        {
+          "block": "termination",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 8,
+          "new": 1.23,
+          "source": "analog/wired_rx/generated/termination-evidence.json",
+          "reason": "worst envelope corner idd_div (TERM_VCM divider mode, highest-current mode); line current is supplied by the external driver"
+        },
+        {
+          "block": "detect",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 4,
+          "new": 1.66,
+          "source": "analog/wired_rx/generated/detect-evidence.json",
+          "reason": "worst envelope corner comparator iavg plus 2 legs x worst-corner receiver-detect injection"
+        },
+        {
+          "block": "detect",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 4,
+          "new": 1.66,
+          "source": "analog/wired_rx/generated/detect-evidence.json",
+          "reason": "worst envelope corner comparator iavg plus 2 legs x worst-corner receiver-detect injection"
+        },
+        {
+          "block": "rxlevel",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 0.05,
+          "new": 0.04,
+          "source": "analog/wired_rx/generated/rxlevel-evidence.json",
+          "reason": "worst envelope corner idd_static"
+        },
+        {
+          "block": "refinput,rfpll",
+          "field": "resource_policy.branch_current_overrides_ma.external_rf_clock",
+          "old": {
+            "rfpll": 0.1
+          },
+          "new": {
+            "refinput": 7.25,
+            "rfpll": 0.1
+          },
+          "source": "spec/consolidation-pass.md P2-1; analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "external quadrature LO uses two diff_clk_rx instances (REF_IN I, AUX_CLK Q); AUX_CLK instance current charged to refinput"
+        },
+        {
+          "block": "refinput,rfpll,wirepll",
+          "field": "resource_policy.branch_current_overrides_ma.external_wired_clock",
+          "old": {
+            "wirepll": 0.1
+          },
+          "new": {
+            "refinput": 10.87,
+            "rfpll": 0.1
+          },
+          "source": "spec/consolidation-pass.md P2-1; analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "wirepll merged into the shared pll carried by rfpll; WCLK_IN and WTX_EXT receiver instances charged to refinput (conservative: all three enabled)"
+        },
+        {
+          "block": "rxlevel,tmds,wiredtx",
+          "field": "resource_policy.branch_current_overrides_ma.wired_tmds",
+          "old": {
+            "rxlevel": 0.05,
+            "tmds": 16,
+            "wiredtx": 0.2
+          },
+          "new": {
+            "rxlevel": 0.04,
+            "wiredtx": 16
+          },
+          "source": "spec/consolidation-pass.md P2-1; analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "tmds is a configuration of wiredtx: the 16 mA TMDS sink current is charged to wiredtx; rxlevel follows its measured base value"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.rf_rx",
+          "old": 251.9,
+          "new": 244.55,
+          "source": "sum of blocks.*.resource_allocation.current_budget_ma",
+          "reason": "recomputed after rebaseline"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.rf_tx",
+          "old": 251.9,
+          "new": 244.55,
+          "source": "sum of blocks.*.resource_allocation.current_budget_ma",
+          "reason": "recomputed after rebaseline"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.stopped",
+          "old": 4.5,
+          "new": 4.62,
+          "source": "sum of blocks.*.resource_allocation.current_budget_ma",
+          "reason": "recomputed after rebaseline"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.usb",
+          "old": 252.20000000000002,
+          "new": 247.39,
+          "source": "sum of blocks.*.resource_allocation.current_budget_ma",
+          "reason": "recomputed after rebaseline"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.wired",
+          "old": 272.45000000000005,
+          "new": 260.96,
+          "source": "sum of blocks.*.resource_allocation.current_budget_ma",
+          "reason": "recomputed after rebaseline"
+        },
+        {
+          "block": "*",
+          "field": "resource_policy.current / current_open_gates",
+          "old": "text",
+          "new": "text",
+          "source": "this rebaseline",
+          "reason": "restated with rebaselined totals"
+        }
+      ],
+      "not_replaced": [
+        {
+          "block": "adc_i",
+          "field": "current_budget_ma",
+          "decision": "kept",
+          "reason": "extracted simulation failed (tests.clean.extracted_ok=false, supply current null); no measured current",
+          "source": "analog/converters/generated/adc_i-evidence.json"
+        },
+        {
+          "block": "refbuf",
+          "field": "current_budget_ma",
+          "decision": "kept",
+          "reason": "measured quiescent 0.55 mA excludes the reference current delivered to the ADCs; the checked reference_with_bias_peak already exceeds the 3 mA allocation (check_contract reference_current=false)",
+          "source": "analog/converters/generated/refbuf-evidence.json"
+        },
+        {
+          "block": "clocktree",
+          "field": "current_budget_ma.rf_rx/rf_tx",
+          "decision": "kept 12",
+          "reason": "RF measurement at 1.25 GHz carrier (7.95 mA) is below the 2.4-2.5 GHz operating carrier; nominal only, not representative",
+          "source": "analog/timing/generated/clocktree-evidence.json"
+        },
+        {
+          "block": "rfpll",
+          "field": "current_budget_ma",
+          "decision": "kept 12",
+          "reason": "only an open-loop tt/27C/3.3V point (11.79 mA at 0.59 GHz ring VCO); no corners, clean state open, RF LC VCO core not in the layout",
+          "source": "analog/timing/generated/pll-evidence.json"
+        },
+        {
+          "block": "rxselect",
+          "field": "current_budget_ma",
+          "decision": "kept",
+          "reason": "no supply current reported in evidence",
+          "source": "analog/wired_rx/generated/rxselect-evidence.json"
+        },
+        {
+          "block": "slicer",
+          "field": "current_budget_ma",
+          "decision": "kept 16.1/12",
+          "reason": "measured only at reduced 1 Gb/s (worst 9.49 mW); 1.5-5 Gb/s exploratory points fail; lower bound below allocation",
+          "source": "analog/wired_rx/generated/slicer-evidence.json"
+        },
+        {
+          "block": "cdr",
+          "field": "current_budget_ma",
+          "decision": "kept 12",
+          "reason": "measured only at 500 Mb/s (worst 12.21 mW); 1.25/2.5 GHz exploratory points fail; lower bound below allocation",
+          "source": "analog/wired_rx/generated/cdr-evidence.json"
+        }
+      ],
+      "evidence_sha256": {
+        "analog/converters/generated/adc_i-evidence.json": "sha256:4a2d1ac8cb658d3fa841dbe159074c3aaa1350d0de381dd636997cbdb488af1e",
+        "analog/converters/generated/refbuf-evidence.json": "sha256:192431321f6c4654aa061652b072bce769663bdc37dca0b66634e22c4fd6743b",
+        "analog/rf_rx/generated/bb_tap-evidence.json": "sha256:900cc4a81e0a6c82f4caac53fce54710643553416b9fc3232b65487b9d8ac8f0",
+        "analog/rf_rx/generated/bbfilter_i-evidence.json": "sha256:77e5f20fe7b903a6bee5b95c2cc4253cd5909daa3985178603b519f135e560e7",
+        "analog/rf_rx/generated/bbfilter_q-evidence.json": "sha256:33d425dfad1b5ad14961fbb313039d1bee0dd47772731f2e11ab320665f474b2",
+        "analog/rf_rx/generated/lna-evidence.json": "sha256:ddab531df9c89a11f7341e99001068195702e18b807bf476287de2164bdc20b5",
+        "analog/rf_rx/generated/rxmix_i-evidence.json": "sha256:4a6400ef61ef5f425be1fac5e54ae7f54a8ddac6ee703b653d83da8944a4a27b",
+        "analog/rf_rx/generated/rxmix_q-evidence.json": "sha256:5026e8e49e8b61ce9e921fcdd4092f02107451100ed39a7dc0f9f98d121d168c",
+        "analog/rf_tx/generated/rfdriver-evidence.json": "sha256:b11694ab7b83ceb453a6ab14e385d4c127812251ab1ba40d16157fb33e706e71",
+        "analog/rf_tx/generated/txmix_i-evidence.json": "sha256:beabcd03ceac3a4a4a30bf869d96500913e5ca975cf25a6b7961b8f813674641",
+        "analog/rf_tx/generated/txmix_q-evidence.json": "sha256:b34b1d72b913cca973efee99b9d85db33c1b7673b521121b7abdd0db379d30bf",
+        "analog/rf_tx/generated/txsum-evidence.json": "sha256:555b5bfcb10b03b6ee91cc1e6a5eeb92e7969afdd2531ea35e52fbc893c6f9db",
+        "analog/timing/generated/aosc-evidence.json": "sha256:2db0fe1d3f818082c709bffb6741d1c9277974c57ac865d58fd525be0d25f5b0",
+        "analog/timing/generated/clk_obs-evidence.json": "sha256:5186afc22094429f564674aef80b9683827c7d29d44b24cda2e4b8f70abbc7b9",
+        "analog/timing/generated/clockmux-evidence.json": "sha256:0ce336e65036afa8c799104b31307f9c68940b29026b6194ab831fdbcdacd559",
+        "analog/timing/generated/clocktree-evidence.json": "sha256:57b68b4fdc41f9debfa4b4dfabe481ec71b594e68cc008c29698a8ee9ffe17e8",
+        "analog/timing/generated/diff_clk_rx-evidence.json": "sha256:f2df7289a46fc45a2edbf83f336f34101cc4e8f00ce1b8c9f6e394ca27ce47da",
+        "analog/timing/generated/lo_ext-evidence.json": "sha256:b6c5d226709d65ce5d4cfbc7e2bf30e645cfd20b0a89deb4f165fb9b9949594f",
+        "analog/timing/generated/pll-evidence.json": "sha256:7cc286a7933455c1f41c096acf574dd31f07e5befc8f4b28c14a6f044f245493",
+        "analog/timing/generated/polyphase-evidence.json": "sha256:999638c1603758f3971ae3b001d486daa129520772711ff48e6540dc0ba2b17e",
+        "analog/timing/generated/quadrature-evidence.json": "sha256:a02a5bf8d14278036c71e1b8d118739c33e082304ec023eced2fcbab3f8709cb",
+        "analog/timing/generated/ring_osc-evidence.json": "sha256:7b854c295e417c853c8640fdc8cade972f692767d595626021fab8d389cf9727",
+        "analog/timing/generated/vco_replica-evidence.json": "sha256:1fe04586f17e46f0da6b696938bb385ef8d469caef1f923202de67dfc9006b3a",
+        "analog/wired_rx/generated/cdr-evidence.json": "sha256:e84b4655e4d5536fd32b96e87678471f4113375fcd126b1e5914f2c10e475176",
+        "analog/wired_rx/generated/cdr-layout.json": "sha256:c4f6f2b12e0726b85ed1058378efa7e0eef8ad77f9f520c7d0b8b490ee92525d",
+        "analog/wired_rx/generated/ctle-evidence.json": "sha256:74220eacd343d31e75afd7af9963762a98a082b053ca5ba9e20de7dbc2066dd6",
+        "analog/wired_rx/generated/ctle-layout.json": "sha256:ccaf951e3e01f3b2e16bfc2170be70b9bd2aac8d3673df5b52dab696ef0ec4ee",
+        "analog/wired_rx/generated/detect-evidence.json": "sha256:2fcd7df2aa462e8d6c5acd4e7b85a87b2debe89211abf7d5844a5745ef9174b0",
+        "analog/wired_rx/generated/detect-layout.json": "sha256:327936d66b46106d9d51d3bc97d31dc0ee54f747dbb66b74ec2066a1484bf3de",
+        "analog/wired_rx/generated/rxlevel-evidence.json": "sha256:2365cf4068c21cb240bd884594392d3ab0a96bdd0f655e944f6addd5dc70db67",
+        "analog/wired_rx/generated/rxlevel-layout.json": "sha256:62e8157f3258dd881cdf04700b048e71755b93de1d8dc5ab5a66b620d8e2a15a",
+        "analog/wired_rx/generated/rxselect-evidence.json": "sha256:7ba4742ccba3296cc50534e94c76f81d8ff00f47d83aec99f31efc7121b49979",
+        "analog/wired_rx/generated/rxselect-layout.json": "sha256:241f85ee575053945504aea9830eb31bf15f535d6a15f991c4654c9f473ca15c",
+        "analog/wired_rx/generated/slicer-evidence.json": "sha256:dcd5b23b86009d3b56bbd8b3da74c234eae6373157bcb5dd339a03c7237824e4",
+        "analog/wired_rx/generated/slicer-layout.json": "sha256:9162d415f51f022d2e22805355f915a2728e83e262f5829affd372a4eb4db386",
+        "analog/wired_rx/generated/termination-evidence.json": "sha256:25783285640c38e87ba31b05d9289b15cfbefeae3b0592bd2019508efe0ad85b",
+        "analog/wired_rx/generated/termination-layout.json": "sha256:87ab3049c7bee6ab0c4a7063111d33489a860298d169d060f9bc504cbb65dd8f",
+        "analog/wired_rx/generated/wmon_sel-evidence.json": "sha256:d9addb0770d06ee987f4c11724be956cfa9a40e5277494f2f5ef7ba4eda85f82",
+        "analog/wired_rx/generated/wmon_sel-layout.json": "sha256:c121fb5ed5518e1798a9b23e61eeb991bc778fd5477abc2eb5f7e533fee54757"
+      }
+    },
+    {
+      "date": "2026-11-08",
+      "reason": "P3 booking (spec/consolidation-pass.md third pass: P3-1, P3-2, P3-3, P3-13).",
+      "changes": [
+        {
+          "block": "refbuf",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 3,
+          "new": 1.56,
+          "source": "analog/converters/generated/refbuf-evidence.json",
+          "reason": "P3-13: measured worst-corner quiescent 0.5556 mA plus a 1.00 mA delivered-reference allowance (refbuf source limit; ADC VREF average measured 4.90 uA per ADC at 8 MS/s in analog/converters/generated/adc_i-evidence.json). The delivered ADC reference current is booked here, not on adc_i/adc_q."
+        },
+        {
+          "block": "refbuf",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 3,
+          "new": 1.56,
+          "source": "analog/converters/generated/refbuf-evidence.json",
+          "reason": "P3-13: measured worst-corner quiescent 0.5556 mA plus a 1.00 mA delivered-reference allowance (refbuf source limit; ADC VREF average measured 4.90 uA per ADC at 8 MS/s in analog/converters/generated/adc_i-evidence.json). The delivered ADC reference current is booked here, not on adc_i/adc_q."
+        },
+        {
+          "block": "refinput",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 3.63,
+          "new": 3.55,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "refreshed to current evidence: one REF_IN receiver, worst in-envelope i_on_ma (nominal only)"
+        },
+        {
+          "block": "refinput",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 3.63,
+          "new": 3.55,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "refreshed to current evidence: one REF_IN receiver, worst in-envelope i_on_ma (nominal only)"
+        },
+        {
+          "block": "refinput",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 3.63,
+          "new": 3.55,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "refreshed to current evidence: one REF_IN receiver, worst in-envelope i_on_ma (nominal only)"
+        },
+        {
+          "block": "refinput",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 3.63,
+          "new": 3.55,
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "refreshed to current evidence: one REF_IN receiver, worst in-envelope i_on_ma (nominal only)"
+        },
+        {
+          "block": "quadrature",
+          "field": "resource_allocation.current_budget_ma.rf_rx",
+          "old": 8.84,
+          "new": 18.83,
+          "source": "analog/timing/generated/lo_ext-evidence.json; analog/timing/generated/polyphase-evidence.json",
+          "reason": "P3-1: pt_quadrature (8.84 mA) retired; autonomous LO path = lo_ext internal mode 16.0274 mA + polyphase 2.79753 mA (the pass-3 correction notes both were omitted from the 244.55 mA figure)"
+        },
+        {
+          "block": "quadrature",
+          "field": "resource_allocation.current_budget_ma.rf_tx",
+          "old": 8.84,
+          "new": 18.83,
+          "source": "analog/timing/generated/lo_ext-evidence.json; analog/timing/generated/polyphase-evidence.json",
+          "reason": "P3-1: pt_quadrature (8.84 mA) retired; autonomous LO path = lo_ext internal mode 16.0274 mA + polyphase 2.79753 mA (the pass-3 correction notes both were omitted from the 244.55 mA figure)"
+        },
+        {
+          "block": "rfpll",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 12,
+          "new": 3.97,
+          "source": "analog/timing/generated/pll_ring-evidence.json",
+          "reason": "P3-2: shared/TX pll_ring instance in wired/USB; worst in-envelope value present 3.97 mA (nominal only, 912 MHz; passing lock point [2.7011000000000003] mA at 743 MHz)"
+        },
+        {
+          "block": "rfpll",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 12,
+          "new": 3.97,
+          "source": "analog/timing/generated/pll_ring-evidence.json",
+          "reason": "P3-2: shared/TX pll_ring instance in wired/USB; worst in-envelope value present 3.97 mA (nominal only, 912 MHz; passing lock point [2.7011000000000003] mA at 743 MHz)"
+        },
+        {
+          "block": "cdr",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 12,
+          "new": 30.36,
+          "source": "analog/timing/generated/pll_ring-evidence.json; analog/wired_rx/generated/cdr-evidence.json",
+          "reason": "P3-2: RX CDR pll_ring instance 3.97 mA + measured quarter-rate PI (pt_cdr) 26.39 mA (worst of nominal/corner power at 625 MHz over 3.15 V; fails at target, lower bound)"
+        },
+        {
+          "block": "cdr",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 12,
+          "new": 30.36,
+          "source": "analog/timing/generated/pll_ring-evidence.json; analog/wired_rx/generated/cdr-evidence.json",
+          "reason": "P3-2: RX CDR pll_ring instance 3.97 mA + measured quarter-rate PI (pt_cdr) 26.39 mA (worst of nominal/corner power at 625 MHz over 3.15 V; fails at target, lower bound)"
+        },
+        {
+          "block": "quadrature,refinput,rfpll",
+          "field": "resource_policy.branch_current_overrides_ma.external_rf_clock",
+          "old": {
+            "refinput": 7.25,
+            "rfpll": 0.1
+          },
+          "new": {
+            "quadrature": 0.19,
+            "refinput": 0,
+            "rfpll": 5.26
+          },
+          "source": "analog/timing/generated/lo_ext-evidence.json; analog/timing/generated/pll_ring-evidence.json; analog/timing/generated/prescale-evidence.json",
+          "reason": "P3-3: passive external I/Q LO through lo_ext external mode (0.19 mA); REF_IN/AUX_CLK carry the LO, so no clock-receiver charge; rfpll carries the host_follow pll_ring (3.97 mA) + prescale (1.29 mA, 1.5 GHz point)"
+        },
+        {
+          "block": "refinput,rfpll",
+          "field": "resource_policy.branch_current_overrides_ma.external_wired_clock",
+          "old": {
+            "refinput": 10.87,
+            "rfpll": 0.1
+          },
+          "new": {
+            "refinput": 10.65,
+            "rfpll": 0.1
+          },
+          "source": "analog/timing/generated/diff_clk_rx-evidence.json",
+          "reason": "three receiver instances (REF_IN, WCLK_IN, WTX_EXT) at the refreshed per-instance current"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.rf_rx",
+          "old": 244.55,
+          "new": 253.02,
+          "source": "sum of blocks.*.resource_allocation.current_budget_ma",
+          "reason": "recomputed after P3 booking"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.rf_tx",
+          "old": 244.55,
+          "new": 253.02,
+          "source": "sum of blocks.*.resource_allocation.current_budget_ma",
+          "reason": "recomputed after P3 booking"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.usb",
+          "old": 247.39,
+          "new": 257.64,
+          "source": "sum of blocks.*.resource_allocation.current_budget_ma",
+          "reason": "recomputed after P3 booking"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.wired",
+          "old": 260.96,
+          "new": 271.21,
+          "source": "sum of blocks.*.resource_allocation.current_budget_ma",
+          "reason": "recomputed after P3 booking"
+        },
+        {
+          "block": "*",
+          "field": "resource_policy.current / current_open_gates",
+          "old": "text",
+          "new": "text",
+          "source": "this booking",
+          "reason": "restated with P3 totals"
+        }
+      ],
+      "not_replaced": [
+        {
+          "block": "rfpll",
+          "field": "current_budget_ma.rf_rx/rf_tx",
+          "decision": "kept 12",
+          "reason": "autonomous RF LO synthesis (LC VCO + prescale + pll_ring, P3-4) is Evaluate, not built or measured",
+          "source": "analog/timing/generated/pll_ring-evidence.json"
+        },
+        {
+          "block": "wirepll",
+          "field": "current_budget_ma / area",
+          "decision": "kept 0 (merged into rfpll)",
+          "reason": "P2-1 merge stands; the shared/TX ring is booked on rfpll and the host_follow ring on the rfpll external_rf_clock override",
+          "source": "analog/timing/generated/pll_ring-evidence.json"
+        }
+      ],
+      "evidence_sha256": {
+        "analog/converters/generated/adc_i-evidence.json": "sha256:1cc3db04f26bba16970c6fe74fdb08afebfda7fd04da898cc9e961067bd01aff",
+        "analog/converters/generated/refbuf-evidence.json": "sha256:4e8b64b5de57791fd93756c6341aed3a2747748d4af639c8a8989c04fcfc08ae",
+        "analog/timing/generated/diff_clk_rx-evidence.json": "sha256:1d4b447a643066df90f77681c07103b72d3c62a562175263df6a007af48d1aac",
+        "analog/timing/generated/lo_ext-evidence.json": "sha256:0f404bd03d9d6cbc4eb93815d6dc636e80893f55511cbef12e17f812f8c8ebb9",
+        "analog/timing/generated/pll-evidence.json": "sha256:5c5def07e4d7ef304a47040b000edac44fc84d5ead819f684bbfeae857b0ee4c",
+        "analog/timing/generated/pll_ring-evidence.json": "sha256:5d66eda18cd6712a1b6bd379aee060b1ca01cf5c1f5ae263c96f7ff882eef248",
+        "analog/timing/generated/polyphase-evidence.json": "sha256:a9c6400efb621b14b834d1a9a095c423328cfef711db6e76cb4d16f39f471933",
+        "analog/timing/generated/prescale-evidence.json": "sha256:f82e4f84175fb48072251acb59c4c57dd6bc2a5fb969ddfd331a33d8a48af4bb",
+        "analog/timing/generated/quadrature-evidence.json": "sha256:1856f703584952b45d25bc4957d7e37e94eebb7d838509cd4ead2c83adb09571",
+        "analog/wired_rx/generated/cdr-evidence.json": "sha256:19ed0b26b6677d16ca45f3547bb5de3f29112d4a1247f89f552a2ef4ba9602a4",
+        "analog/wired_rx/generated/cdr-layout.json": "sha256:5c4421adc734305840aba718a4db22f03a7db00470d1f1c241ea841ac53b389f"
+      }
+    },
+    {
+      "date": "2026-11-08",
+      "reason": "P3b cdr rebooked as ring PLL only (PI removed).",
+      "changes": [
+        {
+          "block": "cdr",
+          "field": "resource_allocation.current_budget_ma.usb",
+          "old": 30.36,
+          "new": 3.97,
+          "source": "analog/timing/generated/pll_ring-evidence.json",
+          "reason": "P3b: quarter-rate PI (pt_cdr) removed; cdr is the second pll_ring instance of a dual-loop CDR with digital phase pick. Booked at the worst in-envelope pll_ring value present, 3.97 mA (closed loop, 912 MHz, tt/27C/3.3V, nominal only), not the 2.70 mA locked point at 743 MHz: there are no corners, and ring current rises with frequency up to the 1.12 GHz ring maximum, so the highest measured point is the conservative bound."
+        },
+        {
+          "block": "cdr",
+          "field": "resource_allocation.current_budget_ma.wired",
+          "old": 30.36,
+          "new": 3.97,
+          "source": "analog/timing/generated/pll_ring-evidence.json",
+          "reason": "P3b: quarter-rate PI (pt_cdr) removed; cdr is the second pll_ring instance of a dual-loop CDR with digital phase pick. Booked at the worst in-envelope pll_ring value present, 3.97 mA (closed loop, 912 MHz, tt/27C/3.3V, nominal only), not the 2.70 mA locked point at 743 MHz: there are no corners, and ring current rises with frequency up to the 1.12 GHz ring maximum, so the highest measured point is the conservative bound."
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.usb",
+          "old": 257.64,
+          "new": 231.25,
+          "source": "sum of blocks",
+          "reason": "recomputed after P3b"
+        },
+        {
+          "block": "*",
+          "field": "resource_totals.current_ma.wired",
+          "old": 271.21,
+          "new": 244.82,
+          "source": "sum of blocks",
+          "reason": "recomputed after P3b"
+        },
+        {
+          "block": "*",
+          "field": "resource_policy.current_open_gates[+]",
+          "old": null,
+          "new": "Autonomous RF exceeding the 240 mA envelope is accepted as a known limit of the separately qualified autonomous mode (lead decision 2026-11-08); external-clock RF is the qualified primary case.",
+          "source": "lead decision",
+          "reason": "record accepted autonomous-RF limit"
+        }
+      ],
+      "evidence_sha256": {
+        "analog/timing/generated/pll_ring-evidence.json": "sha256:5d66eda18cd6712a1b6bd379aee060b1ca01cf5c1f5ae263c96f7ff882eef248",
+        "analog/wired_rx/generated/cdr-evidence.json": "sha256:19ed0b26b6677d16ca45f3547bb5de3f29112d4a1247f89f552a2ef4ba9602a4"
+      }
+    }
+  ]
 }

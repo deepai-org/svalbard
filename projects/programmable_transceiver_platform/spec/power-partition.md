@@ -3,10 +3,12 @@
 `analog-architecture.json:resource_policy`, per-block `resource_allocation` and
 `resource_totals` own the allocation. `contract.json` owns assembly terminals
 and physical services. The [pad implementation](../analog/pads/README.md) owns
-physical connectivity and circuit evidence. Allocations are implementation
-requirements, not measured current, area or performance.
+physical connectivity and circuit evidence. Where a block has extracted
+evidence, its allocation is the measured current and about 1.25–1.5× its
+measured area; otherwise it is a planning requirement. `area_reallocation_log`
+records every move between blocks.
 
-## Provisional implementation allocation
+## Implementation allocation
 
 | Area group | Ceiling (mm²) |
 | --- | ---: |
@@ -19,27 +21,38 @@ requirements, not measured current, area or performance.
 | wired | 2.74 |
 
 The core ceiling is 12.92 mm². All wired and RF blocks retain fabricated area
-while inactive. Of the 1.71 mm² reserve group, 1.30 mm² is assigned to power
-and 1 nF supply decoupling, leaving 0.41 mm² unassigned. The separate 100 pF
-reference reservoir belongs to the 0.150 mm² reference-buffer allocation.
+while inactive. Area freed by consolidation and measured layouts is booked to
+debug cells, debug-pad protection and reserve
+(`tapeout-readiness.json:reserve_area_mm2`). The 1 nF supply decoupling needs
+its own area, because the digital macro uses flip-flop arrays rather than SRAM
+macros that MIM could sit over. The separate 100 pF
+reference reservoir belongs to the 0.148 mm² reference-buffer allocation.
 At the conservative 0.9 fF/µm² planning density, 1 nF alone needs 1.111 mm² of
 plates before routing. Density, overhead and impedance need physical checking.
 
 | Configuration | Allocated current | Mode ceiling | Margin |
 | --- | ---: | ---: | ---: |
-| RF RX or TX, external clock | 240 mA | 240 mA | 0 mA |
-| RF RX or TX, autonomous synthesis | 251.9 mA | 240 mA | −11.9 mA |
-| Wired, base allocation | 272.45 mA | 292 mA | 19.55 mA |
-| USB, base allocation | 252.2 mA | 292 mA | 39.8 mA |
+| RF RX or TX, external clock | 224.09 mA | 240 mA | 15.91 mA |
+| RF RX or TX, autonomous synthesis | 253.02 mA | 240 mA | −13.02 mA |
+| Wired, base allocation | 244.82 mA | 292 mA | 47.18 mA |
+| USB, base allocation | 231.25 mA | 292 mA | 60.75 mA |
+
+External-clock RF is the qualified primary RF case. Autonomous RF exceeding the
+240 mA envelope is accepted as a known limit of the separately qualified
+autonomous mode.
 
 Apply clock/TMDS branch overrides exactly once and only to their selected
-blocks. External RF timing replaces the RF PLL's 12 mA with 0.1 mA; input,
+blocks. External RF timing uses the passive external I/Q LO through `lo_ext` (0.19 mA,
+booked on the `quadrature` slot), charges no clock receiver for the LO, and
+replaces the shared PLL's (`rfpll`) 12 mA with the `host_follow` ring PLL plus
+prescaler (5.26 mA); input,
 quadrature/distribution and warm analog loads remain charged. Autonomous RF
 needs a circuit saving or separately qualified envelope. No unused margin is
 claimed for the external-clock RF case.
 
-Each RX filter has 4 mA and 0.43 mm², so the pair has 8 mA and 0.86 mm².
-Each selected five-pole TX filter also reserves 4 mA and 0.43 mm². A conditional
+Each shared baseband filter (`bbfilter`, booked on `rxfilter_i/q`; it carries the
+merged TX filter and PGA) has 3.77 mA and 0.4934 mm², so the pair has 7.54 mA and
+0.9868 mm². `txfilter_i/q` and `pga_i/q` are charged nothing. A conditional
 paired RX sizing estimate of 7.251 mA does not establish area/noise/headroom
 fit. DACs each reserve 2 mA including 1 mA provisional support. Count global
 clock-tree and local switching capacitance once, not in both budgets.

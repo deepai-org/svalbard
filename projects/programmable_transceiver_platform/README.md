@@ -73,55 +73,116 @@ External oscillators, clock modules and RF LO sources are also allowed operating
 options. Autonomous on-chip synthesis need not serve every configuration; input
 bandwidth, clock conditioning and terminal allocation must support the chosen
 source. See the [clock allowance](../../docs/roadmap/programmable-transceiver-pin-plan.md#external-oscillator-and-clock-allowance).
-Narrow temperature and supply ranges are acceptable design targets.
+**Operating envelope: the chip is designed to work only at 27 °C ±5 °C junction
+and a 3.3 V ±1% board supply** (3.15–3.35 V at the die). Outside that window it
+must stay safe but need not function. See the
+[tapeout plan](spec/tapeout-plan.md#operating-envelope-user-decision-narrow-range-accepted).
 
-The [normative architecture](spec/block-diagram.md) selects both autonomous and
-external timing paths, configurable narrow/wide RF filtering, and FPGA-owned
-resampling, TX interpolation and bulk storage. External LO operation reuses
-`REF_IN` and still needs a qualified RF input branch. Dedicated wired RX clock
-recovery remains necessary. The main diagram shows these selected boundaries;
-detailed circuit candidates are linked separately.
+The [normative architecture](spec/block-diagram.md) defines the blocks and
+their connectivity. The first die is a **risk-accepted, full-scope tapeout**:
+every block must be safe when off or broken, DRC/LVS clean with an extracted
+simulation of its basic function, observable from the bench, and backed by a
+second route. The [tapeout plan](spec/tapeout-plan.md) defines these four
+tests, the must-work core, the fallback routes, the 19 debug pads and the
+freeze order. Key implementation choices:
 
-The [provisional first-chip baseline](spec/block-diagram.md#provisional-first-chip-baseline)
-now makes the implementation choices: external timing first for qualification,
-autonomous paths retained, high-impedance clock input, slower RF return clock,
-paired SAR/DAC conversion and a tunable finite-zero channel filter. The
-[implementation allocations](spec/power-partition.md#provisional-implementation-allocation)
-assign rough area and complete-mode current budgets; actual area remains a
-layout result. The [capability review](spec/feasibility-gates.md#capability-wide-evidence-gaps-and-next-decisions)
-records each target's required circuitry and distinct open proof. These are
-current design requirements, not claims that existing
-simulations already implement or pass them all.
+- **RF LO baseline:** passive external I/Q LO on `REF_IN`/`AUX_CLK`, AC-coupled
+  straight onto the mixer gates.
+- **Clocks:** one compact ring-PLL design for every PLL. Wired lanes run the
+  ring at 480–810 MHz with 1, 2 or 4 bits per ring cycle.
+- **Shared resources:** one I/Q baseband filter bank for RX and TX, USB on the
+  wired receive path, and TMDS as a wired TX setting
+  ([decisions](spec/consolidation-pass.md)).
+- **Power:** five default-off island power switches behind one external supply,
+  with per-island bias trunks and an analog test bus.
 
 ## Where the design stands
 
-The shared behavioral model connects clock delivery, RF conversion/filtering,
-wired recovery, finite FPGA queues and selected startup/fault/recovery paths.
-Intended-chip tests use one configured design; simplified numerical examples
-and deliberately adverse fixtures identify their exceptions. Passing tests do
-not establish full capability or silicon performance.
+Per-block state against the four tests is in
+[`spec/tapeout-readiness.json`](spec/tapeout-readiness.json). Run
+`make transceiver-tapeout-readiness` for counts. Open issues and priorities are
+in the [current issue register](spec/risk-priorities.md#open-issue-register).
+Board obligations are in [`spec/board-requirements.md`](spec/board-requirements.md),
+and the recommended next steps are in [`spec/path-to-tapeout.md`](spec/path-to-tapeout.md).
 
-The [current issue register](spec/risk-priorities.md#open-issue-register) owns
-unresolved failures. The main implementation risks are protection compatible
-with the attached cores, local safe-state controls, real RF/reference receivers,
-and the coupled package/supply/timing budget. The [pad implementation](analog/pads/README.md)
-contains generated circuits and partial layouts but is not production-ready.
+| Freeze stage | State |
+| --- | --- |
+| Control and digital | Hardened and DRC/LVS clean; timing not closed at target clocks (below) |
+| Pads | All five custom families pass safe and clean |
+| Blocks | All except the wired CDR have clean extracted layouts; performance shortfalls are recorded per block |
+| Top-level assembly, submission | Not started |
 
-All 17 intended interfaces remain in the [closure inventory](spec/mathematical-closure.json).
-Each still needs its complete electrical, signal-quality, timing, host-service
-and lifecycle evidence. Wi-Fi diagnostic success does not establish router
-interoperability; finite wired trajectories do not establish BER or compliance.
+| Directory | Blocks |
+| --- | --- |
+| [`analog/core_support`](analog/core_support/README.md) | POR, bandgap, biasgen, per-island bias distribution |
+| [`analog/island_support`](analog/island_support/README.md) | Island power switches, isolation clamps, analog test bus |
+| [`analog/pads`](analog/pads/README.md) | Stress-safe pad protection, pad families, debug-site protection, USB attachment |
+| [`analog/timing`](analog/timing/README.md) | `pll_ring`, passive/internal LO path, clock mux, receivers, dividers, clock observation, oscillators |
+| [`analog/rf_rx`](analog/rf_rx/README.md) | LNA, mixers, shared baseband filter, BB tap buffer |
+| [`analog/rf_tx`](analog/rf_tx/README.md) | Upmixers, summer, RF driver |
+| [`analog/converters`](analog/converters/README.md) | SAR ADCs, DACs, reference buffer |
+| [`analog/wired_rx`](analog/wired_rx/README.md) | Termination, level, select, CTLE, slicer, detect, CDR |
+| [`analog/wired_tx`](analog/wired_tx/README.md) | Serializer, TMDS configuration, USB HS bias DAC |
 
-The [next priorities](spec/risk-priorities.md#big-picture-closure-priorities)
-are coherent analog interfaces, one useful coupled operating envelope and full
-representative lifecycles. External clocks, passives and a narrow accepted
-operating range are allowed. Physical fit and fabrication qualification remain
-explicit obligations.
+All 17 intended interfaces remain in the [closure inventory](spec/mathematical-closure.json)
+with unresolved capability verdicts. These are pre-silicon results: no protocol
+compliance, interoperability or silicon performance is claimed. Use the
+[model guide](system_model/architecture_fast/README.md) for behavioral checks.
 
-Use the [model guide](system_model/architecture_fast/README.md) for scoped
-checks and the [analog workflow](spec/analog-design-workflow.md) for the
-mathematical-model → complete schematic → layout/extraction sequence. Exact
-source/configuration provenance is required for every result.
+## Hardened core digital macro (freeze stage 1)
+
+`rtl/pt_digital_macro.sv` is the control-and-digital block hardened with LibreLane
+3.0.5 on gf180mcu_fd_sc_mcu7t5v0 (3.3 V libraries): register file and SPI, transport
+and FIFOs, capture/playback memory, pattern generator/checker, calibrator,
+`pt_clocktree_slow`, two frequency counters (`pt_freq_count`) and the clocked
+half of the host link (`pt_host_link`: DDR/SDR capture, launch, forwarded clock).
+Pad cells stay provider `gf180mcu_fd_io` cells (`integration/pt_chip.sv`,
+`pt_host_physical`). The wired boundary is 20-bit double words.
+
+Results, with the exact numbers, live in
+[`evidence/digital-hardening-evidence.json`](evidence/digital-hardening-evidence.json);
+constraints are in [`integration/pt_digital_macro.sdc`](integration/pt_digital_macro.sdc).
+Summary of what that run shows:
+
+- **Physical:** 1800 × 1800 µm macro (3.24 mm², above the 2.5 mm² digital + memory
+  allocation), 71.5k standard cells, 61 % utilization. The capture/playback memory and
+  every FIFO are flip-flop arrays; no SRAM macro is used, because their dual-clock reads
+  do not fit single-port SRAMs. Routing uses Metal2–Metal5 with a Metal4-only power grid.
+  A Metal1–Metal4 variant, which leaves Metal5 free for MIM decap, also routes but has 2
+  antenna violations and worse timing.
+- **Signoff:** Magic DRC, KLayout DRC and Netgen LVS all report 0 errors. Antenna
+  checks (OpenROAD and KLayout) report 0. The GDS re-exported with the analog image's
+  Magic 8.3.678 passes KLayout DRC with 0 violations and XORs to 0 against the LibreLane
+  GDS. Hold timing is met at every corner.
+- **Timing is not closed at the specification clocks.** The table gives fmax at the
+  nominal corner (tt 25 °C 3.3 V) and at the worst characterized corner, which is
+  ss 125 °C 3.0 V and lies outside the operating envelope; no Liberty exists inside the
+  envelope.
+
+  | Clock | Target | Nominal (tt) | Worst corner |
+  | --- | --- | --- | --- |
+  | Host word | 312.5 MHz | ≈65 MHz | ≈30 MHz |
+  | Wired double-word | 125 MHz | ≈54 MHz | ≈25 MHz |
+  | SPI SCLK | 20 MHz | ≈18.6 MHz | ≈12.7 MHz |
+  | RF sample | 50 MHz | ≈41 MHz | ≈21 MHz |
+
+  SPI still runs at its ≤ 1 MHz start rate and the 10 MHz bench rate at every corner.
+- **Host link:** the provider pads alone would allow about 150–180 MHz DDR, but the
+  transport logic limits the DDR pin clock to about 33 MHz (nominal) and 15 MHz (worst
+  corner), so 156.25 MHz DDR is not reachable. Use the SDR or reduced-rate host-link
+  fallback.
+- **Gate-level simulation (post-route netlist):** 3969 SPI reads and output snapshots
+  match the RTL record by record and match the register model. Every output is at its
+  safe value while RESET_N or POR is asserted; island_on is 0, so every iso_clamp
+  isolates. Status, reset cause and the frequency counter read back over SPI. With D2H
+  looped back to H2D, the link locks in DDR, SDR and reduced-rate SDR modes.
+
+Reproduce from the repository root (about 4 h on a loaded host; stages can run alone):
+
+```sh
+make transceiver-digital-hardening
+make transceiver-digital-hardening DIGITAL_HARDENING_STAGES="sta gls report"
+```
 
 ## Explore and run
 
@@ -139,6 +200,12 @@ source/configuration provenance is required for every result.
 | [Analog workflow](spec/analog-design-workflow.md) | Six-family primitive library, schematic and extraction workflow |
 | [Macro contract](integration/macro-contract.md) | Digital/analog boundary and RTL obligations |
 | [Consolidation audit](docs/consolidation.md) | Design and documentation ownership |
+| [Tapeout plan](spec/tapeout-plan.md) | Four tapeout tests, must-work core, fallbacks, debug pads, freeze order |
+| [Tapeout readiness](spec/tapeout-readiness.json) | Per-block test states and evidence |
+| [Path to tapeout](spec/path-to-tapeout.md) | Recommended next steps to submission |
+| [Shared-resource decisions](spec/consolidation-pass.md) | Merged blocks and clocking architecture |
+| [Register map](spec/register-map.md) | Generated SPI register map |
+| [Board requirements](spec/board-requirements.md) | Board and FPGA obligations |
 
 From the repository root, run the active behavioral regression:
 
@@ -147,5 +214,5 @@ make transceiver-behavioral
 ```
 
 See the model guide for optional checks. Model code lives in `system_model`,
-checks in `verification`, incomplete circuits in `analog`, digital implementation
+checks in `verification`, block circuits and layouts in `analog`, digital implementation
 in `rtl`, `sim` and `integration`, and reports in `evidence`.

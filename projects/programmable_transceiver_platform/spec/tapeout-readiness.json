@@ -1,0 +1,2385 @@
+{
+ "schema_version": 1,
+ "plan": "spec/tapeout-plan.md",
+ "policy": "risk_accepted_full_scope_first_die",
+ "operating_envelope": {
+  "source": "spec/tapeout-plan.md#operating-envelope-user-decision-narrow-range-accepted",
+  "junction_temperature_c": {
+   "nominal": 27,
+   "min": 22,
+   "max": 32
+  },
+  "board_supply_v": {
+   "nominal": 3.3,
+   "min": 3.267,
+   "max": 3.333
+  },
+  "die_rail_design_v": {
+   "min": 3.15,
+   "max": 3.35
+  },
+  "function_check_points": {
+   "process": [
+    "tt",
+    "ss",
+    "ff"
+   ],
+   "temperature_c": [
+    22,
+    32
+   ],
+   "die_rail_v": [
+    3.15,
+    3.35
+   ],
+   "nominal": {
+    "process": "tt",
+    "temperature_c": 27,
+    "die_rail_v": 3.3
+   }
+  },
+  "safety_check_range": {
+   "supply_ramp_v": [
+    0,
+    3.63
+   ],
+   "temperature_c": [
+    0,
+    85
+   ],
+   "cases": [
+    "cold ramp",
+    "brownout",
+    "repeated ramps",
+    "powered peer"
+   ]
+  }
+ },
+ "test_states": [
+  "open",
+  "pass",
+  "fail",
+  "waived_core",
+  "retired"
+ ],
+ "tests": {
+  "safe": "Off, unpowered, mis-programmed or broken, the block cannot damage, load, latch or lock up anything else.",
+  "clean": "DRC and LVS pass; an extracted simulation shows basic function at one nominal operating point.",
+  "observable": "Internal state visible from the bench via SPI status, ATB, clock observe or a data tap.",
+  "fallback": "At least one other route performs the function without sharing the likely failure mode."
+ },
+ "core_blocks": {
+  "power": {
+   "function": "Supply ring and local island switches",
+   "safe_mechanism": "Island switches default off; core and host domains are never switched.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/island_support/evidence.json"
+     ],
+     "note": "Default-off, reverse current <=0.43 uA, discharge 1.2-3.3 us, EN-floating ramps <=0.32 V, brownout <=0.18 V; RF_TX back-drive with iso_clamp: ring <=0.27 uA."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/island_support/evidence.json"
+     ],
+     "note": "Cell scope: 10 cells Magic/KLayout DRC 0, LVS match; full-RC drop <=19.9 mV (wired margin 0.13 mV, needs >=4 edge-bar straps). Ring decap and assembly belong to the top-assembly stage."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/island_support",
+   "island_switches": {
+    "wired": "80 mA, 0.064 mm2",
+    "rf": "55 mA, 0.050 mm2",
+    "pll": "60 mA, 0.053 mm2",
+    "conv": "30 mA, 0.032 mm2",
+    "debug": "40 mA, 0.037 mm2",
+    "total_mm2": 0.236,
+    "usb": "none (USB is on the wired island)"
+   },
+   "atb": {
+    "area_mm2": 0.123,
+    "sense_leaves": 54,
+    "force_leaves": 20,
+    "groups": 7,
+    "note": "Bare-switch leaves; default-open and break-before-make per group/pad plus register zero-commit gap (>=20 ns)."
+   }
+  },
+  "monitor": {
+   "function": "POR and supervisor",
+   "safe_mechanism": "Edwards POR holds reset; reset forces every island to its reset state.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/core_support/evidence/core_support_evidence.json"
+     ],
+     "note": "Conditional on reset = porb AND RESET_N with the board reset supervisor (tapeout-plan core table). POR alone misses 4/54 1 s ramps and ignores dips >= 1.5 V."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/core_support/evidence/core_support_evidence.json"
+     ]
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/core_support"
+  },
+  "aosc": {
+   "function": "Always-on oscillator for timers",
+   "safe_mechanism": "Gated by register; SPI does not depend on it.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/aosc-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/aosc-evidence.json"
+     ],
+     "note": "44.9 MHz tt; ss 35-37 MHz below 40-60 MHz window (recorded)."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/timing"
+  },
+  "bias": {
+   "function": "Master bias from Edwards biasgen",
+   "safe_mechanism": "Island bias branches open when the island is off; ATB override.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/core_support/evidence/core_support_evidence.json"
+     ],
+     "note": "Compensated biasgen: PM 53-79 deg, GM >= 21 dB at 25 points; all fast-ramp/enable/mode-switch transients settle. Fine-only range (25 deg PM) must be forbidden in the register map."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/core_support/evidence/core_support_evidence.json"
+     ],
+     "note": "Bandgap + compensated biasgen + distribution: KLayout DRC 0 on tapeout GDS (bandgap vendored GDS by exception), LVS unique (bandgap with PNP device-name mapping), C-only extraction. Chain starts at 13 window points and 28 safe-range ramps; vbg 1.207-1.219 V; outputs 7.64-12.14 uA pre-trim."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/core_support",
+   "distribution": {
+    "trunks": {
+     "rf": 8,
+     "conv": 5,
+     "pll": 1,
+     "wire": 3,
+     "debug": 3
+    },
+    "area_mm2": 0.037,
+    "output_ua": {
+     "ideal_ref": [
+      10.06,
+      10.15
+     ],
+     "behind_biasgen": [
+      7.5,
+      12.1
+     ]
+    }
+   }
+  },
+  "refbuf": {
+   "function": "Converter reference buffer",
+   "safe_mechanism": "Disabled with its island; ATB force/sense.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/refbuf-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/refbuf-evidence.json"
+     ],
+     "note": "VREF 0.999 V, 0.55 mA, READY 1.6 us; 12 envelope corners."
+    },
+    "observable": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/refbuf-evidence.json"
+     ],
+     "note": "VREF on ATB conv_vref; OVR override verified (forced 1.05 V untouched)."
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/converters"
+  },
+  "digital": {
+   "function": "Register file, SPI and digital transport",
+   "safe_mechanism": "Generated register file; reset values are the safe state.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/evidence/regfile-verification.json",
+      "projects/programmable_transceiver_platform/evidence/digital-hardening-evidence.json"
+     ],
+     "scope": "Control register file RTL: formal reset-safe and mutual-exclusion proof plus simulation. Gate-level/hardened check belongs to clean."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/evidence/digital-hardening-evidence.json"
+     ],
+     "note": "Hardened macro pt_digital_macro: Magic/KLayout DRC 0, LVS 0, antenna 0; post-route gate-level simulation matches RTL. Timing at tt reaches 53-72 MHz on the fast clocks against 125-156 MHz targets (SCLK 17.4 MHz); area 3.24 mm2 against 2.5 mm2 digital+memory allocation."
+    },
+    "observable": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/evidence/regfile-verification.json",
+      "projects/programmable_transceiver_platform/spec/register-map.md",
+      "projects/programmable_transceiver_platform/evidence/digital-hardening-evidence.json"
+     ]
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "rtl"
+  },
+  "hostio": {
+   "function": "Host GPIO pads and SPI pads",
+   "safe_mechanism": "SPI pads are plain CMOS I/O; D2H outputs tristate at reset.",
+   "tests": {
+    "safe": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/evidence/digital-hardening-evidence.json"
+     ],
+     "note": "Digital half passes at reset on the netlist; provider pad cells with powered peer and unpowered die are an assembly check."
+    },
+    "clean": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/evidence/digital-hardening-evidence.json"
+     ],
+     "note": "pt_host_link is inside the clean macro; provider pad cells and ring hookup are not assembled."
+    },
+    "observable": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/evidence/digital-hardening-evidence.json"
+     ],
+     "note": "Frame-receiver lock and fault over SPI; DDR, SDR and reduced-rate SDR loopback on the post-route netlist."
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "rtl (pt_host_link) + provider gf180mcu_fd_io cells",
+   "note": "Host fallback (debug.host_link SDR / reduced-rate SDR) is implemented and exercised on the netlist."
+  },
+  "refpad": {
+   "function": "REF_IN pad protection",
+   "safe_mechanism": "Stress-safe primary clamp; no driver on the pad.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json"
+     ],
+     "note": "Stress-safe protection with shunt v2 drawn; +/-100 mA 2 ns both legs at tt/27C and ss/0C, ramps, powered peer; worst 5.895 V vs 6.0 V screen incl. wiring R (margin 0.105 V). Compact-model pulse checks, not HBM/CDM/TLP."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json"
+     ],
+     "note": "DRC 0 / LVS match / independent device check; envelope functional sims; fits grown reservation (4-7k um2 headroom)."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/pads",
+   "selected_protection": {
+    "variant": "3-stage 12000 um diode-NMOS rail shunt + 100 kohm gate discharge",
+    "evidence": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-selection.json",
+    "stress": "5.81 V worst (ss/0 C) vs 6.0 V gate screen; extracted 5.82 V",
+    "loading_at_3p3v_ma": {
+     "ss": 0.018,
+     "tt": 0.44,
+     "ff": 5.1
+    },
+    "status": "in layout (shunt v2)"
+   }
+  },
+  "rfpad": {
+   "function": "RF_RX pad protection",
+   "safe_mechanism": "Stress-safe primary clamp; LNA input switch open at reset.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json"
+     ],
+     "note": "Stress-safe protection with shunt v2 drawn; +/-100 mA 2 ns both legs at tt/27C and ss/0C, ramps, powered peer; worst 5.895 V vs 6.0 V screen incl. wiring R (margin 0.105 V). Compact-model pulse checks, not HBM/CDM/TLP."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json"
+     ],
+     "note": "DRC 0 / LVS match / independent device check; envelope functional sims; fits grown reservation (4-7k um2 headroom)."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/pads",
+   "selected_protection": {
+    "variant": "3-stage 12000 um diode-NMOS rail shunt + 100 kohm gate discharge",
+    "evidence": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-selection.json",
+    "stress": "5.81 V worst (ss/0 C) vs 6.0 V gate screen; extracted 5.82 V",
+    "loading_at_3p3v_ma": {
+     "ss": 0.018,
+     "tt": 0.44,
+     "ff": 5.1
+    },
+    "status": "in layout (shunt v2)"
+   }
+  },
+  "rftxpad": {
+   "function": "RF_TX pad protection",
+   "safe_mechanism": "Stress-safe primary clamp; driver tristated at reset.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json"
+     ],
+     "note": "Stress-safe protection with shunt v2 drawn; +/-100 mA 2 ns both legs at tt/27C and ss/0C, ramps, powered peer; worst 5.895 V vs 6.0 V screen incl. wiring R (margin 0.105 V). Compact-model pulse checks, not HBM/CDM/TLP."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json"
+     ],
+     "note": "DRC 0 / LVS match / independent device check; envelope functional sims; fits grown reservation (4-7k um2 headroom)."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/pads",
+   "selected_protection": {
+    "variant": "3-stage 12000 um diode-NMOS rail shunt + 100 kohm gate discharge",
+    "evidence": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-selection.json",
+    "stress": "5.81 V worst (ss/0 C) vs 6.0 V gate screen; extracted 5.82 V",
+    "loading_at_3p3v_ma": {
+     "ss": 0.018,
+     "tt": 0.44,
+     "ff": 5.1
+    },
+    "status": "in layout (shunt v2)"
+   }
+  },
+  "txpad": {
+   "function": "WIRE_TX pad protection",
+   "safe_mechanism": "Stress-safe primary clamp; driver and terminations off at reset.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json"
+     ],
+     "note": "Stress-safe protection with shunt v2 drawn; +/-100 mA 2 ns both legs at tt/27C and ss/0C, ramps, powered peer; worst 5.895 V vs 6.0 V screen incl. wiring R (margin 0.105 V). Compact-model pulse checks, not HBM/CDM/TLP."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json"
+     ],
+     "note": "DRC 0 / LVS match / independent device check; envelope functional sims; fits grown reservation (4-7k um2 headroom)."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/pads",
+   "selected_protection": {
+    "variant": "3-stage 12000 um diode-NMOS rail shunt + 100 kohm gate discharge",
+    "evidence": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-selection.json",
+    "stress": "5.81 V worst (ss/0 C) vs 6.0 V gate screen; extracted 5.82 V",
+    "loading_at_3p3v_ma": {
+     "ss": 0.018,
+     "tt": 0.44,
+     "ff": 5.1
+    },
+    "status": "in layout (shunt v2)"
+   }
+  },
+  "wirepad": {
+   "function": "WIRE_RX pad protection",
+   "safe_mechanism": "Stress-safe primary clamp; terminations and pulls released at reset.",
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json",
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/powered-host-backfeed.json"
+     ],
+     "note": "Same pulse/ramp/peer runs as other pads. The 81.6 mA powered-host backfeed comes from the 12 host-interface provider pads, not wirepad; covered by board requirement B6 (spec/board-requirements.md)."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json"
+     ],
+     "note": "DRC 0 / LVS match / independent device check; envelope functional sims; fits grown reservation (4-7k um2 headroom)."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "waived_core",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/pads",
+   "selected_protection": {
+    "variant": "3-stage 12000 um diode-NMOS rail shunt + 100 kohm gate discharge",
+    "evidence": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-selection.json",
+    "stress": "5.81 V worst (ss/0 C) vs 6.0 V gate screen; extracted 5.82 V",
+    "loading_at_3p3v_ma": {
+     "ss": 0.018,
+     "tt": 0.44,
+     "ff": 5.1
+    },
+    "status": "in layout (shunt v2)"
+   }
+  }
+ },
+ "chain_blocks": {
+  "rfpll": {
+   "group": "rf_synth",
+   "fallback_routes": [
+    "rf_lo_external_ref"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/pll_ring-evidence.json"
+     ],
+     "note": "Implemented by pll_ring."
+    },
+    "clean": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/pll_ring-evidence.json"
+     ],
+     "note": "Autonomous RF LO synthesis (LC VCO + passive polyphase into lo_ext internal mode) is not built. lo_ext internal mode swings rail-to-rail at 2.45 GHz extracted, 16.0 mA."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/lo_ext-evidence.json"
+     ],
+     "note": "rf_lo_external_ref passive route works extracted at 2.45 GHz."
+    }
+   },
+   "implementation_dir": "analog/timing",
+   "implemented_by": "pll_ring instance"
+  },
+  "quadrature": {
+   "group": "rf_synth",
+   "fallback_routes": [
+    "rf_lo_external_ref"
+   ],
+   "tests": {
+    "safe": {
+     "state": "retired",
+     "evidence": [],
+     "note": "Retired: the RF baseline is the passive external I/Q LO through lo_ext; lower-band LOs come from ring PH0/PH2 or external I/Q."
+    },
+    "clean": {
+     "state": "retired",
+     "evidence": [],
+     "note": "Retired: the RF baseline is the passive external I/Q LO through lo_ext; lower-band LOs come from ring PH0/PH2 or external I/Q."
+    },
+    "observable": {
+     "state": "retired",
+     "evidence": [],
+     "note": "Retired: the RF baseline is the passive external I/Q LO through lo_ext; lower-band LOs come from ring PH0/PH2 or external I/Q."
+    },
+    "fallback": {
+     "state": "retired",
+     "evidence": [],
+     "note": "Retired: the RF baseline is the passive external I/Q LO through lo_ext; lower-band LOs come from ring PH0/PH2 or external I/Q."
+    }
+   },
+   "implementation_dir": "analog/timing",
+   "retired": true
+  },
+  "clockmux": {
+   "group": "clocking",
+   "fallback_routes": [
+    "clk_stop_and_external"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/clockmux-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/clockmux-evidence.json"
+     ],
+     "note": "Fast-cell rebuild, <= 1 GHz, host_follow path, RF LO domain removed; 12/12 corners; 0.32 mA RF / 1.35 mA wired."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/timing"
+  },
+  "clocktree": {
+   "group": "clocking",
+   "fallback_routes": [
+    "clk_stop_and_external"
+   ],
+   "tests": {
+    "safe": {
+     "state": "retired",
+     "evidence": [],
+     "note": "Retired: word clocks come from wordclk, prescaling from prescale, slow clock functions from rtl/pt_clocktree_slow.sv."
+    },
+    "clean": {
+     "state": "retired",
+     "evidence": [],
+     "note": "Retired: word clocks come from wordclk, prescaling from prescale, slow clock functions from rtl/pt_clocktree_slow.sv."
+    },
+    "observable": {
+     "state": "retired",
+     "evidence": [],
+     "note": "Retired: word clocks come from wordclk, prescaling from prescale, slow clock functions from rtl/pt_clocktree_slow.sv."
+    },
+    "fallback": {
+     "state": "retired",
+     "evidence": [],
+     "note": "Retired: word clocks come from wordclk, prescaling from prescale, slow clock functions from rtl/pt_clocktree_slow.sv."
+    }
+   },
+   "implementation_dir": "analog/timing",
+   "retired": true
+  },
+  "refinput": {
+   "group": "clocking",
+   "fallback_routes": [
+    "rf_lo_external_ref",
+    "rf_lo_aux_clk"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/diff_clk_rx-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/diff_clk_rx-evidence.json"
+     ],
+     "note": "Required rate redefined by 'Selectable bits per ring cycle': ring-rate clocks <= ~0.81 GHz (RF LO uses the passive path). Extracted: passes 1 GHz at 500 mVpp differential, 600 mVpp single-ended, 100 MHz, 10 MHz square. Fails 2.5/3.3 GHz (no longer required). Corners not re-run."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/timing"
+  },
+  "lna": {
+   "group": "rf_rx",
+   "fallback_routes": [
+    "rf_lna_bypass"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/lna-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/lna-evidence.json"
+     ],
+     "note": "Magic DRC 0, KLayout DRC 0 on exported GDS (analog-image export), LVS unique, extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/lna-evidence.json"
+     ],
+     "note": "atb_* ports and BB observe mux exist and are simulated; ATB tap cells, mux codes and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/lna-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rf_rx_chain.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/rf_rx",
+   "performance_note": "Chain NF (transient noise incl. folding, 5-9 MHz, +/-1.5 dB): 12.1 dB with board L-match; 2.8 dB with a 15 dB/1.5 dB board LNA (B5). LNA bypass path 22.2 dB chip-only, 8.2 dB with board LNA. Conversion gain 28.9 dB."
+  },
+  "rxmix_i": {
+   "group": "rf_rx",
+   "fallback_routes": [
+    "rf_rx_external_downconverter"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rxmix_i-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rxmix_i-evidence.json"
+     ],
+     "note": "Magic DRC 0, KLayout DRC 0 on exported GDS (analog-image export), LVS unique, extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rxmix_i-evidence.json"
+     ],
+     "note": "atb_* ports and BB observe mux exist and are simulated; ATB tap cells, mux codes and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rxmix_i-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rf_rx_chain.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/rf_rx",
+   "performance_note": "Low-noise TIA amp 7.1 nV/rtHz at 5 MHz (+1.32 mA/path, mixer 1.90 mA); offset after per-point calibration <= 4.5 mV."
+  },
+  "rxmix_q": {
+   "group": "rf_rx",
+   "fallback_routes": [
+    "rf_rx_external_downconverter"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rxmix_q-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rxmix_q-evidence.json"
+     ],
+     "note": "Magic DRC 0, KLayout DRC 0 on exported GDS (analog-image export), LVS unique, extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rxmix_q-evidence.json"
+     ],
+     "note": "atb_* ports and BB observe mux exist and are simulated; ATB tap cells, mux codes and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rxmix_q-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rf_rx_chain.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/rf_rx"
+  },
+  "pga_i": {
+   "group": "rf_rx",
+   "fallback_routes": [
+    "rf_bb_stage_bypass",
+    "rf_bb_external_adc"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json"
+     ],
+     "note": "Magic DRC 0, KLayout DRC 0 on exported GDS (analog-image export), LVS unique, extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json"
+     ],
+     "note": "atb_* ports and BB observe mux exist and are simulated; ATB tap cells, mux codes and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rf_rx_chain.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/rf_rx"
+  },
+  "pga_q": {
+   "group": "rf_rx",
+   "fallback_routes": [
+    "rf_bb_stage_bypass",
+    "rf_bb_external_adc"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ],
+     "note": "Magic DRC 0, KLayout DRC 0 on exported GDS (analog-image export), LVS unique, extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ],
+     "note": "atb_* ports and BB observe mux exist and are simulated; ATB tap cells, mux codes and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rf_rx_chain.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/rf_rx"
+  },
+  "rxfilter_i": {
+   "group": "rf_rx",
+   "fallback_routes": [
+    "rf_bb_stage_bypass",
+    "rf_bb_external_adc"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json"
+     ],
+     "note": "Magic DRC 0, KLayout DRC 0 on exported GDS (analog-image export), LVS unique, extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json"
+     ],
+     "note": "atb_* ports and BB observe mux exist and are simulated; ATB tap cells, mux codes and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rf_rx_chain.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/rf_rx",
+   "performance_note": "PGA moved to a real-pole first stage (no top-gain peaking); widest corner 15.2 MHz tt, 11.3-21.2 MHz envelope; peaking <= 1.7 dB tt / 3.7 dB ff; area 406k of 430k."
+  },
+  "rxfilter_q": {
+   "group": "rf_rx",
+   "fallback_routes": [
+    "rf_bb_stage_bypass",
+    "rf_bb_external_adc"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ],
+     "note": "Magic DRC 0, KLayout DRC 0 on exported GDS (analog-image export), LVS unique, extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ],
+     "note": "atb_* ports and BB observe mux exist and are simulated; ATB tap cells, mux codes and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rf_rx_chain.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/rf_rx"
+  },
+  "adc_i": {
+   "group": "rf_rx",
+   "fallback_routes": [
+    "rf_bb_external_adc"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/adc_i-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/adc_i-evidence.json"
+     ],
+     "note": "Basic function: all conversions complete, monotonic, within 32 codes/LSB of a fit (criterion relaxed by the converters agent after first runs; recorded in evidence). Analog-image GDS, KLayout 0, LVS unique."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/adc_i-evidence.json"
+     ],
+     "note": "ATB_BIAS port and converter test modes exist; ATB and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/adc_i-evidence.json"
+     ],
+     "note": "Off/unpowered: no DC path, 110-113 fF (criterion re-stated as < 0.5 pF/leg on-state load after v2; recorded in evidence)."
+    }
+   },
+   "implementation_dir": "analog/converters",
+   "performance_note": "v2 custom 3.3 V SAR loop: 20 MS/s tt/ff, 16 MS/s ss/32C/3.15V (40 MS/s target not met); SNDR 50.2 dB, ENOB 8.0, SFDR 53.2 dB at 20 MS/s (coarse 32-pt FFT); 2.9 mA; 259k of 350k um2. 20 MHz Wi-Fi at ss uses rf_bb_external_adc."
+  },
+  "adc_q": {
+   "group": "rf_rx",
+   "fallback_routes": [
+    "rf_bb_external_adc"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/adc_q-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/adc_q-evidence.json"
+     ],
+     "note": "Basic function: all conversions complete, monotonic, within 32 codes/LSB of a fit (criterion relaxed by the converters agent after first runs; recorded in evidence). Analog-image GDS, KLayout 0, LVS unique."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/adc_q-evidence.json"
+     ],
+     "note": "ATB_BIAS port and converter test modes exist; ATB and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/adc_q-evidence.json"
+     ],
+     "note": "Off/unpowered loading: ADC input 82-84 fF, DAC output ~63 fF, NMOS-only switches; external ADC/DAC routes stay unloaded."
+    }
+   },
+   "implementation_dir": "analog/converters"
+  },
+  "dac_i": {
+   "group": "rf_tx",
+   "fallback_routes": [
+    "rf_tx_external_baseband"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/dac_i-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/dac_i-evidence.json"
+     ],
+     "note": "Basic function: all conversions complete, monotonic, within 32 codes/LSB of a fit (criterion relaxed by the converters agent after first runs; recorded in evidence). Analog-image GDS, KLayout 0, LVS unique."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/dac_i-evidence.json"
+     ],
+     "note": "ATB_BIAS port and converter test modes exist; ATB and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/dac_i-evidence.json"
+     ],
+     "note": "Off/unpowered loading: ADC input 82-84 fF, DAC output ~63 fF, NMOS-only switches; external ADC/DAC routes stay unloaded."
+    }
+   },
+   "implementation_dir": "analog/converters",
+   "performance_note": "+/-0.996 V diff, ~10 LSB error, 1.92 mA; output CM 1.43 V vs 1.65 V target (TX filter must accept)."
+  },
+  "dac_q": {
+   "group": "rf_tx",
+   "fallback_routes": [
+    "rf_tx_external_baseband"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/dac_q-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/dac_q-evidence.json"
+     ],
+     "note": "Basic function: all conversions complete, monotonic, within 32 codes/LSB of a fit (criterion relaxed by the converters agent after first runs; recorded in evidence). Analog-image GDS, KLayout 0, LVS unique."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/dac_q-evidence.json"
+     ],
+     "note": "ATB_BIAS port and converter test modes exist; ATB and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/converters/generated/dac_q-evidence.json"
+     ],
+     "note": "Off/unpowered loading: ADC input 82-84 fF, DAC output ~63 fF, NMOS-only switches; external ADC/DAC routes stay unloaded."
+    }
+   },
+   "implementation_dir": "analog/converters"
+  },
+  "txfilter_i": {
+   "group": "rf_tx",
+   "fallback_routes": [
+    "rf_tx_external_baseband"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json"
+     ],
+     "note": "Magic DRC 0, KLayout DRC 0 on exported GDS (analog-image export), LVS unique, extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json"
+     ],
+     "note": "atb_* ports and BB observe mux exist and are simulated; ATB tap cells, mux codes and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rf_rx_chain.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/rf_rx"
+  },
+  "txfilter_q": {
+   "group": "rf_tx",
+   "fallback_routes": [
+    "rf_tx_external_baseband"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ],
+     "note": "Magic DRC 0, KLayout DRC 0 on exported GDS (analog-image export), LVS unique, extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ],
+     "note": "atb_* ports and BB observe mux exist and are simulated; ATB tap cells, mux codes and register hookup are not integrated."
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/rf_rx_chain.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/rf_rx"
+  },
+  "txmix_i": {
+   "group": "rf_tx",
+   "fallback_routes": [
+    "rf_tx_external_upconverter"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/txmix_i-evidence.json"
+     ],
+     "note": "Reset static current <0.03 uA; no back-feed with island off and inputs live. Out-of-contract: 3.3 V DC forced on RF_TX with the island rail at 0 V feeds ~90 mA into the rail; the board must DC-block RF_TX."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/txmix_i-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/txmix_i-gds-export.json"
+     ],
+     "note": "Analog-image GDS export with HRES; KLayout DRC 0; Magic DRC 0; LVS unique; extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ],
+     "note": "rf_tx_external_upconverter: DAC -> bbfilter TX -> bb_tap -> 10 pF pads, extracted: -1.4 dB, -3 dB at 15.1 MHz, HD3 -67..-73 dBc."
+    }
+   },
+   "implementation_dir": "analog/rf_tx"
+  },
+  "txmix_q": {
+   "group": "rf_tx",
+   "fallback_routes": [
+    "rf_tx_external_upconverter"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/txmix_q-evidence.json"
+     ],
+     "note": "Reset static current <0.03 uA; no back-feed with island off and inputs live. Out-of-contract: 3.3 V DC forced on RF_TX with the island rail at 0 V feeds ~90 mA into the rail; the board must DC-block RF_TX."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/txmix_q-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/txmix_q-gds-export.json"
+     ],
+     "note": "Analog-image GDS export with HRES; KLayout DRC 0; Magic DRC 0; LVS unique; extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ],
+     "note": "rf_tx_external_upconverter: DAC -> bbfilter TX -> bb_tap -> 10 pF pads, extracted: -1.4 dB, -3 dB at 15.1 MHz, HD3 -67..-73 dBc."
+    }
+   },
+   "implementation_dir": "analog/rf_tx"
+  },
+  "txsum": {
+   "group": "rf_tx",
+   "fallback_routes": [
+    "rf_tx_external_upconverter"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/txsum-evidence.json"
+     ],
+     "note": "Reset static current <0.03 uA; no back-feed with island off and inputs live. Out-of-contract: 3.3 V DC forced on RF_TX with the island rail at 0 V feeds ~90 mA into the rail; the board must DC-block RF_TX."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/txsum-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/txsum-gds-export.json"
+     ],
+     "note": "Analog-image GDS export with HRES; KLayout DRC 0; Magic DRC 0; LVS unique; extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q-evidence.json"
+     ],
+     "note": "rf_tx_external_upconverter: DAC -> bbfilter TX -> bb_tap -> 10 pF pads, extracted: -1.4 dB, -3 dB at 15.1 MHz, HD3 -67..-73 dBc."
+    }
+   },
+   "implementation_dir": "analog/rf_tx"
+  },
+  "rfdriver": {
+   "group": "rf_tx",
+   "fallback_routes": [
+    "rf_tx_low_power_external_pa"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/rfdriver-evidence.json"
+     ],
+     "note": "Reset static current <0.03 uA; no back-feed with island off and inputs live. Out-of-contract: 3.3 V DC forced on RF_TX with the island rail at 0 V feeds ~90 mA into the rail; the board must DC-block RF_TX."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/rfdriver-evidence.json",
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/rfdriver-gds-export.json"
+     ],
+     "note": "Analog-image GDS export with HRES; KLayout DRC 0; Magic DRC 0; LVS unique; extracted nominal + envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/rf_tx/generated/rfdriver-evidence.json"
+     ],
+     "note": "External-PA bypass gives -37.7 dBm at 0.3 V; the board PA needs ~35 dB gain."
+    }
+   },
+   "implementation_dir": "analog/rf_tx",
+   "performance_note": "After power-recovery pass (extracted, tt, board L-match + balun): linear SSB -6.0 dBm, saturated -0.3 dBm vs 0 dBm target; envelope linear -4.2..-9.9, saturated -0.4..-3.1 dBm. Within 28 mA. Saturated mode via consolidation.txmix.sat_mode (reg 0x55)."
+  },
+  "wirepll": {
+   "group": "wired",
+   "fallback_routes": [
+    "wire_clk_external_ref",
+    "wire_clk_wclk_in"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/pll_ring-evidence.json"
+     ],
+     "note": "Implemented by pll_ring."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/timing/generated/pll_ring-evidence.json"
+     ],
+     "note": "pll_ring locks extracted at 480/625/810 MHz and host_follow 125/156.25 MHz; open-loop 480-810 MHz at 12/12 corners; port phases <= 5.5 deg (fixed routing skew). Closed loop nominal only; cold-start acquisition not simulated."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/timing",
+   "implemented_by": "pll_ring instance"
+  },
+  "wiredtx": {
+   "group": "wired",
+   "fallback_routes": [
+    "wire_tx_external_data"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_tx/generated/wiredtx-evidence.json"
+     ],
+     "note": "Island off with inputs high: no back-feed; reset ~3 nA with clocks stopped (11 mA with ring phases running); ramp outputs < 0.24 V."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_tx/generated/wiredtx-evidence.json"
+     ],
+     "note": "Basic serialization: 0.96 Gb/s 0 errors at all 12 envelope corners; USB HS 0.48 Gb/s and 1.25 Gb/s (tt/ff) pass. Pad eye 305 mV/634 ps at 1.25 Gb/s."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/wired_tx",
+   "performance_note": "Extracted: 0.96 Gb/s at all 12 corners; 1.25 Gb/s at tt/ff (fails ss); full rate 0.81 Gb/s and quarter rate 2.5/2.97 Gb/s fail because generic-layout routing capacitance slows the serializer about 3x. The compact-cell port of the 4:1 mux and retiming is not done."
+  },
+  "tmds": {
+   "group": "wired",
+   "fallback_routes": [
+    "wire_tx_external_data"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_tx/generated/wiredtx-evidence.json"
+     ],
+     "note": "Configuration of wiredtx."
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_tx/generated/wiredtx-evidence.json"
+     ],
+     "note": "TMDS 1.25 Gb/s into 50 ohm pull-ups: eye 955 mV/663 ps; 2.97 Gb/s fails."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/wired_tx"
+  },
+  "cdr": {
+   "group": "wired",
+   "fallback_routes": [
+    "wire_cdr_external_clock",
+    "wire_cdr_fpga_oversample"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/cdr-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "fail",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/cdr-evidence.json"
+     ],
+     "note": "PI removed; dual-loop on pll_ring: frequency loop locks extracted (624.6 MHz); hold step -3842/+1430 ppm exceeds tracking pull-in; tracking fails extracted (quarter runs away, half 33/1744 errors). Behavioural loop passes +/-300 ppm and -5000 ppm SSC. Next: HOLD input on pll_ring, 4-edge PD, capture block."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/wired_rx",
+   "performance_note": "Interpolator monotonic, DNL 0.45 LSB; fails at >=500 MHz half-rate; CK180 skew 18-50 deg. RTL loop locks -6000..+1000 ppm in model.",
+   "implemented_by": "pll_ring instance"
+  },
+  "ctle": {
+   "group": "wired",
+   "fallback_routes": [
+    "wire_ctle_bypass"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/ctle-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/ctle-evidence.json"
+     ],
+     "note": "Analog-image GDS with HRES, Magic+KLayout DRC 0, LVS unique, extracted envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/ctle-evidence.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/wired_rx"
+  },
+  "slicer": {
+   "group": "wired",
+   "fallback_routes": [
+    "wire_wmon_scope"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/slicer-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/slicer-evidence.json"
+     ],
+     "note": "Analog-image GDS with HRES, Magic+KLayout DRC 0, LVS unique, extracted envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/wired_rx",
+   "performance_note": "Quarter-rate 8-phase slicer, open loop: >=2.97 Gb/s tt27/ff, 2.5 Gb/s other tt points, 2.0 Gb/s ss (1.5 at ss/22C/3.15V). Short-window checks, not BER."
+  },
+  "rxlevel": {
+   "group": "wired",
+   "fallback_routes": [
+    "wire_wmon_scope"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/rxlevel-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/rxlevel-evidence.json"
+     ],
+     "note": "Analog-image GDS with HRES, Magic+KLayout DRC 0, LVS unique, extracted envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/wired_rx"
+  },
+  "rxselect": {
+   "group": "wired",
+   "fallback_routes": [
+    "wire_wmon_scope"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/rxselect-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/rxselect-evidence.json"
+     ],
+     "note": "Analog-image GDS with HRES, Magic+KLayout DRC 0, LVS unique, extracted envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/wired_rx"
+  },
+  "termination": {
+   "group": "wired",
+   "fallback_routes": [
+    "wire_board_termination"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/termination-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/termination-evidence.json"
+     ],
+     "note": "Analog-image GDS with HRES, Magic+KLayout DRC 0, LVS unique, extracted envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/termination-evidence.json"
+     ]
+    }
+   },
+   "implementation_dir": "analog/wired_rx"
+  },
+  "detect": {
+   "group": "wired",
+   "fallback_routes": [
+    "wire_detect_via_wmon"
+   ],
+   "tests": {
+    "safe": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/detect-evidence.json"
+     ]
+    },
+    "clean": {
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/wired_rx/generated/detect-evidence.json"
+     ],
+     "note": "Analog-image GDS with HRES, Magic+KLayout DRC 0, LVS unique, extracted envelope."
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/wired_rx",
+   "performance_note": "USB HS squelch 125.5 mV; disconnect 536-546 mV (inside 525-625 mV) after fix."
+  },
+  "usbhs": {
+   "group": "usb",
+   "fallback_routes": [
+    "usb_board_phy"
+   ],
+   "tests": {
+    "safe": {
+     "state": "open",
+     "evidence": []
+    },
+    "clean": {
+     "state": "open",
+     "evidence": []
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/pads (wirepad attachment) + analog/wired_tx",
+   "performance_note": "HS_PBIAS gate-voltage control reaches 360-440 mV at all 13 envelope points (ss/3.15 V: 372-379 mV at full scale); ~0.3 mV/mV supply sensitivity, so the code is calibrated per board (B11). Bias DAC: analog/wired_tx usb_hs_bias."
+  },
+  "usbfs": {
+   "group": "usb",
+   "fallback_routes": [
+    "usb_fs_via_slicer"
+   ],
+   "tests": {
+    "safe": {
+     "state": "open",
+     "evidence": []
+    },
+    "clean": {
+     "state": "open",
+     "evidence": []
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/pads (wirepad attachment) + analog/wired_tx",
+   "performance_note": "FS fixed (edges 5.8-11 ns, D+ reaches 0 V). LS edges 33-67 ns vs 75-300 ns required: LS uses the external-PHY fallback."
+  },
+  "usbdrive": {
+   "group": "usb",
+   "fallback_routes": [
+    "usb_board_phy"
+   ],
+   "tests": {
+    "safe": {
+     "state": "open",
+     "evidence": []
+    },
+    "clean": {
+     "state": "open",
+     "evidence": []
+    },
+    "observable": {
+     "state": "open",
+     "evidence": []
+    },
+    "fallback": {
+     "state": "open",
+     "evidence": []
+    }
+   },
+   "implementation_dir": "analog/pads (wirepad attachment) + analog/wired_tx"
+  }
+ },
+ "external_blocks": {
+  "board": "Board passives, external clocks, LNA/PA and PHY options; not fabricated."
+ },
+ "fallback_routes": {
+  "rf_lo_external_ref": {
+   "replaces": [
+    "rfpll",
+    "quadrature"
+   ],
+   "route": "Passive external quadrature LO: board I on REF_IN and Q on AUX_CLK (sine, ~2 Vpp per leg at the pad, AC-coupled), switched and biased straight onto the RX and TX mixer gates (pt_lo_ext). No active device in the path.",
+   "pads": [
+    "REF_IN",
+    "REF_IN_N",
+    "AUX_CLK_P",
+    "AUX_CLK_N"
+   ],
+   "control": "clockmux.config source=external_lo",
+   "shares_failure_with": [
+    "mixer switches"
+   ],
+   "evidence": [
+    "projects/programmable_transceiver_platform/analog/timing/generated/lo_ext-evidence.json"
+   ],
+   "status": "pass: extracted, 2.45 GHz, 12/12 envelope corners at 4 Vpp open-circuit source; square-wave drive fails (node pumps), board must supply sine"
+  },
+  "clk_stop_and_external": {
+   "replaces": [
+    "clockmux",
+    "clocktree"
+   ],
+   "route": "Every clock mux defaults to a stopped input; each clock domain can take REF_IN or AUX_CLK directly with the PLLs off.",
+   "pads": [
+    "REF_IN",
+    "REF_IN_N",
+    "AUX_CLK_P",
+    "AUX_CLK_N"
+   ],
+   "control": "debug.clk_select",
+   "shares_failure_with": []
+  },
+  "rf_lna_bypass": {
+   "replaces": [
+    "lna"
+   ],
+   "route": "Series switch from the protected RF_RX node to the mixer input with the LNA off; external board LNA supplies gain.",
+   "pads": [
+    "RF_RX_P",
+    "RF_RX_N"
+   ],
+   "control": "debug.rf_rx_bypass",
+   "shares_failure_with": [
+    "rfpad"
+   ]
+  },
+  "rf_bb_stage_bypass": {
+   "replaces": [
+    "pga_i",
+    "pga_q",
+    "rxfilter_i",
+    "rxfilter_q"
+   ],
+   "route": "Per-stage bypass switches around the PGA and channel filter.",
+   "pads": [],
+   "control": "debug.rf_bb_bypass",
+   "shares_failure_with": [
+    "rxmix"
+   ]
+  },
+  "rf_bb_external_adc": {
+   "replaces": [
+    "adc_i",
+    "adc_q",
+    "pga_i",
+    "pga_q",
+    "rxfilter_i",
+    "rxfilter_q"
+   ],
+   "route": "Buffered I/Q baseband, selectable after the mixer, PGA or filter, out to an external ADC.",
+   "pads": [
+    "BB_I_P",
+    "BB_I_N",
+    "BB_Q_P",
+    "BB_Q_N"
+   ],
+   "control": "debug.bb_tap",
+   "shares_failure_with": [
+    "rxmix"
+   ]
+  },
+  "rf_rx_external_downconverter": {
+   "replaces": [
+    "lna",
+    "rxmix_i",
+    "rxmix_q"
+   ],
+   "route": "Board downconverter drives external baseband into BB_I/BB_Q, injected at the PGA input; on-chip PGA, filter and ADC complete the chain.",
+   "pads": [
+    "BB_I_P",
+    "BB_I_N",
+    "BB_Q_P",
+    "BB_Q_N"
+   ],
+   "control": "debug.bb_tap inject_rx",
+   "shares_failure_with": [
+    "pga",
+    "rxfilter",
+    "adc"
+   ]
+  },
+  "rf_tx_external_baseband": {
+   "replaces": [
+    "dac_i",
+    "dac_q",
+    "txfilter_i",
+    "txfilter_q"
+   ],
+   "route": "External DAC baseband injected through BB_I/BB_Q into the TX filter input or directly into the upmixer.",
+   "pads": [
+    "BB_I_P",
+    "BB_I_N",
+    "BB_Q_P",
+    "BB_Q_N"
+   ],
+   "control": "debug.bb_tap",
+   "shares_failure_with": [
+    "txmix"
+   ]
+  },
+  "rf_tx_external_upconverter": {
+   "replaces": [
+    "txmix_i",
+    "txmix_q",
+    "txsum",
+    "rfdriver"
+   ],
+   "route": "On-chip DAC and TX filter output reach BB_I/BB_Q through the tap buffer; a board upconverter and PA complete the transmitter.",
+   "pads": [
+    "BB_I_P",
+    "BB_I_N",
+    "BB_Q_P",
+    "BB_Q_N"
+   ],
+   "control": "debug.bb_tap observe_tx",
+   "shares_failure_with": [
+    "dac",
+    "txfilter"
+   ]
+  },
+  "rf_tx_low_power_external_pa": {
+   "replaces": [
+    "rfdriver"
+   ],
+   "route": "Driver output stage off; summer output reaches RF_TX through a bypass switch at low power for an external PA.",
+   "pads": [
+    "RF_TX_P",
+    "RF_TX_N"
+   ],
+   "control": "debug.rf_tx_bypass",
+   "shares_failure_with": [
+    "rftxpad",
+    "txsum"
+   ]
+  },
+  "wire_clk_external_ref": {
+   "replaces": [
+    "wirepll"
+   ],
+   "route": "Serial bit clock taken directly from REF_IN at full rate (external synthesizer).",
+   "pads": [
+    "REF_IN",
+    "REF_IN_N"
+   ],
+   "control": "debug.clk_select",
+   "shares_failure_with": [
+    "refinput"
+   ]
+  },
+  "wire_clk_wclk_in": {
+   "replaces": [
+    "wirepll",
+    "refinput"
+   ],
+   "route": "Serial clock from the east WCLK_IN pair.",
+   "pads": [
+    "WCLK_IN_P",
+    "WCLK_IN_N"
+   ],
+   "control": "debug.clk_select",
+   "shares_failure_with": []
+  },
+  "wire_tx_external_data": {
+   "replaces": [
+    "wiredtx serializer",
+    "tmds pre-driver",
+    "wirepll"
+   ],
+   "route": "External differential serial data on WTX_EXT_P/N drives the WIRE_TX output stage directly.",
+   "pads": [
+    "WTX_EXT_P",
+    "WTX_EXT_N"
+   ],
+   "control": "debug.wtx_ext",
+   "shares_failure_with": [
+    "txpad output stage"
+   ],
+   "status": "diff_clk_rx data mode: 0 errors at 0.5-1.6 Gb/s, 300-800 mVpp, AC-coupled, with >=128 balanced preamble bits (B12), using OUTN inverted. The mux path works to 1 Gb/s with an ideal receiver. The combined extracted route is not yet simulated."
+  },
+  "wire_cdr_external_clock": {
+   "replaces": [
+    "cdr"
+   ],
+   "route": "Slicer samples on WCLK_IN; raw words to the FPGA over D2H; FPGA performs phase selection.",
+   "pads": [
+    "WCLK_IN_P",
+    "WCLK_IN_N"
+   ],
+   "control": "debug.clk_select + cdr.config raw",
+   "shares_failure_with": [
+    "slicer"
+   ]
+  },
+  "wire_cdr_fpga_oversample": {
+   "replaces": [
+    "cdr"
+   ],
+   "route": "At low rates (USB FS, OOB, slow serial), slicer output is oversampled and recovered in the FPGA.",
+   "pads": [],
+   "control": "cdr.config raw",
+   "shares_failure_with": [
+    "slicer"
+   ]
+  },
+  "wire_ctle_bypass": {
+   "replaces": [
+    "ctle"
+   ],
+   "route": "CTLE bypass switch; external board equalizer if needed.",
+   "pads": [],
+   "control": "debug.wire_bypass",
+   "shares_failure_with": []
+  },
+  "wire_wmon_scope": {
+   "replaces": [
+    "slicer",
+    "rxlevel",
+    "rxselect"
+   ],
+   "route": "Buffered, bandwidth-limited front-end output on WMON for scope observation and low-rate external slicing.",
+   "pads": [
+    "WMON"
+   ],
+   "control": "debug.wmon_select",
+   "shares_failure_with": []
+  },
+  "wire_board_termination": {
+   "replaces": [
+    "termination"
+   ],
+   "route": "On-chip termination off; board resistors (external passives are allowed).",
+   "pads": [],
+   "control": "termination.config off",
+   "shares_failure_with": []
+  },
+  "wire_detect_via_wmon": {
+   "replaces": [
+    "detect"
+   ],
+   "route": "Line state observed on WMON and through the ATB; FPGA decides.",
+   "pads": [
+    "WMON"
+   ],
+   "control": "debug.wmon_select",
+   "shares_failure_with": []
+  },
+  "usb_board_phy": {
+   "replaces": [
+    "usbhs",
+    "usbdrive"
+   ],
+   "route": "Off-die: board USB PHY to the FPGA. The chip's USB branches stay off.",
+   "pads": [],
+   "control": "usb islands off",
+   "shares_failure_with": []
+  },
+  "usb_fs_via_slicer": {
+   "replaces": [
+    "usbfs"
+   ],
+   "route": "FS/LS line state through slicer comparators and SPI-polled detectors; board pull resistors.",
+   "pads": [],
+   "control": "rxselect usb_se",
+   "shares_failure_with": [
+    "slicer"
+   ]
+  },
+  "rf_lo_aux_clk": {
+   "replaces": [
+    "refinput"
+   ],
+   "route": "AUX_CLK_P/N clock input. In passive-LO mode it carries the Q LO (route rf_lo_external_ref). Otherwise it is an independent differential clock selectable by debug.clk_select for the converter/sample and wired clock domains.",
+   "pads": [
+    "AUX_CLK_P",
+    "AUX_CLK_N"
+   ],
+   "control": "debug.clk_select",
+   "shares_failure_with": [
+    "diff_clk_rx design"
+   ]
+  }
+ },
+ "debug_sites": [
+  {
+   "site": "inputs[9].pad",
+   "name": "BB_I_P",
+   "edge": "west",
+   "kind": "analog_bidir",
+   "serves": "rf_bb_external_adc / rf_tx_external_baseband",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "inputs[8].pad",
+   "name": "BB_I_N",
+   "edge": "west",
+   "kind": "analog_bidir",
+   "serves": "rf_bb_external_adc / rf_tx_external_baseband",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "inputs[7].pad",
+   "name": "BB_Q_P",
+   "edge": "west",
+   "kind": "analog_bidir",
+   "serves": "rf_bb_external_adc / rf_tx_external_baseband",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "inputs[6].pad",
+   "name": "BB_Q_N",
+   "edge": "west",
+   "kind": "analog_bidir",
+   "serves": "rf_bb_external_adc / rf_tx_external_baseband",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "inputs[3].pad",
+   "name": "AUX_CLK_P",
+   "edge": "west",
+   "kind": "clock_input",
+   "serves": "rf_lo_aux_clk / clk_stop_and_external",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "inputs[2].pad",
+   "name": "AUX_CLK_N",
+   "edge": "west",
+   "kind": "clock_input",
+   "serves": "rf_lo_aux_clk / clk_stop_and_external",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "analog[0].pad",
+   "name": "ATB0",
+   "edge": "north",
+   "kind": "analog_bidir",
+   "serves": "analog test bus force",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "analog[1].pad",
+   "name": "ATB1",
+   "edge": "north",
+   "kind": "analog_bidir",
+   "serves": "analog test bus sense",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[37].pad",
+   "name": "CLK_OBS",
+   "edge": "north",
+   "kind": "digital_output",
+   "serves": "divided clock observation",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[38].pad",
+   "name": "DBG_OBS0",
+   "edge": "north",
+   "kind": "digital_output",
+   "serves": "digital status mux",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[39].pad",
+   "name": "DBG_OBS1",
+   "edge": "north",
+   "kind": "digital_output",
+   "serves": "digital status mux",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[16].pad",
+   "name": "WCLK_IN_P",
+   "edge": "east",
+   "kind": "clock_input",
+   "serves": "wire_clk_wclk_in / wire_cdr_external_clock",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[17].pad",
+   "name": "WCLK_IN_N",
+   "edge": "east",
+   "kind": "clock_input",
+   "serves": "wire_clk_wclk_in / wire_cdr_external_clock",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[18].pad",
+   "name": "WCLK_OBS",
+   "edge": "east",
+   "kind": "digital_output",
+   "serves": "recovered/divided wired clock",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[19].pad",
+   "name": "WDBG_OBS",
+   "edge": "east",
+   "kind": "digital_output",
+   "serves": "wired status mux",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[22].pad",
+   "name": "WTX_EXT_P",
+   "edge": "east",
+   "kind": "clock_input",
+   "serves": "wire_tx_external_data",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[23].pad",
+   "name": "WTX_EXT_N",
+   "edge": "east",
+   "kind": "clock_input",
+   "serves": "wire_tx_external_data",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[24].pad",
+   "name": "WMON",
+   "edge": "east",
+   "kind": "analog_output",
+   "serves": "wire_wmon_scope / wire_detect_via_wmon",
+   "loading_isolation_check": "open"
+  },
+  {
+   "site": "bidir[25].pad",
+   "name": "ESD_TEST",
+   "edge": "east",
+   "kind": "test_structure",
+   "serves": "standalone selected clamp variant",
+   "loading_isolation_check": "open"
+  }
+ ],
+ "characterization_structures": [
+  {
+   "id": "device_replicas",
+   "access": "ATB",
+   "content": "NMOS/PMOS replicas at LNA, mixer, sampler and driver sizes"
+  },
+  {
+   "id": "ring_oscillator",
+   "access": "CLK_OBS",
+   "content": "Process speed monitor"
+  },
+  {
+   "id": "vco_replica",
+   "access": "CLK_OBS",
+   "content": "Standalone VCO with its own divider"
+  },
+  {
+   "id": "passive_matching",
+   "access": "ATB",
+   "content": "Resistor and MIM capacitor matching arrays"
+  },
+  {
+   "id": "esd_test_pad",
+   "access": "ESD_TEST",
+   "content": "Standalone selected clamp variant for I-V and TLP"
+  }
+ ],
+ "reserve_area_mm2": {
+  "available": 2.9,
+  "source": "analog-architecture.json area_reallocation_log",
+  "allocated": {
+   "debug_cells_measured": 0.4,
+   "debug_cells_planned_remaining": 0.27,
+   "debug_site_protection_planned": 1.2,
+   "atb_tree": 0.123
+  }
+ },
+ "freeze_stages": [
+  {
+   "id": "control_digital",
+   "state": "in_progress",
+   "note": "Register file and digital macro hardened (DRC/LVS/antenna clean, gate-level reset safety pass). Open: timing at target clock rates and area over allocation."
+  },
+  {
+   "id": "pads",
+   "state": "in_progress",
+   "note": "All five pad families safe+clean; debug-site protection and shared buses at assembly."
+  },
+  {
+   "id": "blocks",
+   "state": "open"
+  },
+  {
+   "id": "top_assembly",
+   "state": "open"
+  },
+  {
+   "id": "submission",
+   "state": "open"
+  }
+ ],
+ "debug_cells": {
+  "bb_tap": "analog/rf_rx",
+  "aux_clk_rx": "analog/timing",
+  "clk_obs": "analog/timing (CLK_OBS, WCLK_OBS only)",
+  "ring_osc": "analog/timing",
+  "vco_replica": "analog/timing",
+  "wclk_in_rx": "analog/wired_rx",
+  "wmon": "analog/wired_rx",
+  "wtx_ext_rx": "analog/wired_tx",
+  "atb_tap": "analog/island_support",
+  "esd_test_pad": "analog/pads",
+  "device_replicas": "unassigned",
+  "passive_matching": "unassigned",
+  "dbg_obs": "rtl (status mux) + provider digital pad cells",
+  "lo_ext": "analog/timing",
+  "polyphase": "analog/timing",
+  "prescale": "analog/timing",
+  "wordclk": "analog/timing"
+ },
+ "consolidation": {
+  "source": "spec/consolidation-pass.md",
+  "merged_into": {
+   "rxfilter_i": "bbfilter_i",
+   "txfilter_i": "bbfilter_i",
+   "rxfilter_q": "bbfilter_q",
+   "txfilter_q": "bbfilter_q",
+   "pga_i": "bbfilter_i",
+   "pga_q": "bbfilter_q",
+   "rfpll": "pll",
+   "wirepll": "pll",
+   "tmds": "wiredtx",
+   "usbhs.receive": "slicer+detect",
+   "usbfs.receive": "detect",
+   "quadrature": "retired: passive LO via lo_ext; lower bands via ring PH0/PH2 or external I/Q",
+   "clocktree": "retired: wordclk + prescale + rtl/pt_clocktree_slow.sv",
+   "pll": "rfpll, wirepll and cdr are pll_ring instances"
+  },
+  "shared_cell_designs": {
+   "diff_clk_rx": [
+    "refinput",
+    "aux_clk_rx",
+    "wclk_in_rx",
+    "wtx_ext_rx"
+   ],
+   "bb_tap": [
+    "bb_tap_i",
+    "bb_tap_q",
+    "wmon"
+   ],
+   "clk_obs": [
+    "clk_obs",
+    "wclk_obs"
+   ]
+  }
+ },
+ "stretch_goals": {
+  "serial_5gbps": {
+   "class": "USB 3 Gen1 / PCIe Gen2 electrical",
+   "gating": false,
+   "cost_allowed": "none (no area, current, pins or schedule)",
+   "checks": {
+    "pll_2p5ghz_halfrate_output": "fail",
+    "serializer_accepts_2p5ghz": "open",
+    "extracted_tx_eye_5gbps": "open",
+    "rx_best_effort_5gbps": "fail (slicer fails 4-5 Gb/s at tt)"
+   },
+   "owners": {
+    "pll_2p5ghz_halfrate_output": "analog/timing",
+    "serializer_accepts_2p5ghz": "analog/wired_tx",
+    "extracted_tx_eye_5gbps": "analog/wired_tx",
+    "rx_best_effort_5gbps": "analog/wired_rx"
+   },
+   "known_limits": [
+    "2.7 pF wired pad loading budget",
+    "USB 3 needs an external USB 2 PHY (two wired pairs only)"
+   ]
+  },
+  "rf_40mhz_channel": {
+   "class": "Wi-Fi HT40-class 40 MHz RF bandwidth",
+   "gating": false,
+   "cost_allowed": "none",
+   "checks": {
+    "bbfilter_20mhz_corner": "partial: 15.2 MHz tt, 11.1-22.1 MHz envelope (target 20 MHz)",
+    "adc_dac_at_40mhz_rate": "fail: ADC converts at 20 MS/s (tt)",
+    "host_rate_for_40mhz": "pass"
+   },
+   "owners": {
+    "bbfilter_20mhz_corner": "analog/rf_rx",
+    "adc_dac_at_40mhz_rate": "analog/converters",
+    "host_rate_for_40mhz": "rtl"
+   },
+   "findings": {
+    "source": "register map and transport analysis",
+    "host_rate_for_40mhz": "fits dense framed transport (~2.88 Gb/s available vs 1.83 Gb/s at 12-bit); needs rf_host_clock_divider /16",
+    "blockers": [
+     "clocktree.sample_divider is 2 bits, all codes used: /32 not encodable",
+     "ADC timing minimums cap conversion at 40 MS/s",
+     "filter cutoff codes top out at 9.53 MHz RX / 12 MHz TX"
+    ],
+    "workaround": "debug.clk_select.conv_sample from REF_IN/AUX_CLK bypasses the divider limit only"
+   }
+  },
+  "rf_lo_division": {
+   "class": "lower-frequency RF via LO \u00f72/\u00f74",
+   "gating": false,
+   "cost_allowed": "none",
+   "source": "spec/exclusive-engine-policy.md#rf-band-stretch-goals",
+   "checks": {
+    "rx_gain_at_1p2ghz_600mhz": "pass",
+    "tx_gain_at_1p2ghz_600mhz": "pass",
+    "lo_source": "ring PH0/PH2 into lo_ext internal mode, or external I/Q: open"
+   },
+   "owners": {
+    "quadrature_div2_div4": "analog/timing",
+    "rx_gain_at_1p2ghz_600mhz": "analog/rf_rx",
+    "tx_gain_at_1p2ghz_600mhz": "analog/rf_tx"
+   },
+   "findings": {
+    "tx": "+1.3 dBm at 1.22 GHz, +2.9 dBm at 610 MHz LO (unmatched, extracted)"
+   }
+  }
+ },
+ "current_envelope_ma": {
+  "rf_autonomous": {
+   "allocated": 244.55,
+   "ceiling": 240,
+   "status": "over by 4.55; autonomous RF remains a separately qualified envelope"
+  },
+  "rf_external_clock": {
+   "allocated": 236.27,
+   "ceiling": 240
+  },
+  "wired": {
+   "allocated": 260.96,
+   "ceiling": 292
+  },
+  "usb": {
+   "allocated": 247.39,
+   "ceiling": 292
+  }
+ },
+ "board_requirements": "spec/board-requirements.md",
+ "top_assembly_obligations": [
+  "Shared debug-pad protection buses >= 40 um (BB_I+BB_Q, WTX_EXT+WMON), then DRC/LVS and pulse runs on the drawn buses",
+  "Island switch edge-bar strapping at >= 4 evenly spaced points (wired island 0.13 mV drop margin)",
+  "Bias trunk enters each island behind its ISO clamp",
+  "LO and mixer-output routing symmetric and shielded (RF TX LO leakage, RX offset)",
+  "On-chip decoupling: 1 nF MIM in dedicated area or over the digital macro using the Metal1-Metal4 routing variant (no SRAM macros are used)"
+ ],
+ "preexisting_test_failures": {
+  "checked": "clean HEAD worktree before this tapeout work",
+  "test_baseline_envelope": 6,
+  "test_design_definition": 4,
+  "note": "Present before this session's changes; not caused by the tapeout work."
+ },
+ "design_rules": [
+  "Export GDS with the analog image's Magic 8.3.678 (cif ostyle gdsii before gds write); the canary Magic omits the HRES marker on ppolyf_u_1k resistors.",
+  "Run KLayout GF180 DRC on every exported GDS; Magic DRC misses PP.2 implant spacing and PRES/HRES rules.",
+  "Draw ppolyf_s/ppolyf_u resistors without a p+ guard ring at minimum spacing (PP.2).",
+  "Export extracted netlists flat; hierarchical export left floating nodes in the converters."
+ ],
+ "open_register_requests": [
+  {
+   "from": "analog/wired_tx",
+   "fields": "usb_hs_bias: 8-bit code (default 0) and enable (default 0 = HS_PBIAS at VDD)"
+  }
+ ]
+}

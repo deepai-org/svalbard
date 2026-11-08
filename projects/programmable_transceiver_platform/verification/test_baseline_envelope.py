@@ -11,6 +11,10 @@ from design_definition import load_design
 
 # Explicit intent; declarations alone do not certify downstream parameter ownership.
 TEST_DESIGN_ROLES = {
+    'RetainedRingPowerTests': ('shared_design', 'Shared passive values and current allocations, die-side host-port correction; analytic parallel impedance and energy conservation, not physical qualification.'),
+    'CommonRingCircuitTests': ('shared_design', 'Shared common-ring passive network and mode loads; current/capacitance conservation and independent ngspice agreement verify circuit mathematics, not physical impedances.'),
+    'CommonRingEnvironmentTests': ('shared_design', 'Shared common-ring environment; DC ledger and host harmonic spectrum checked against the same circuit and native-ground connectivity, not package qualification.'),
+    'CommonRingTransientTests': ('shared_design', 'Shared common-ring load ports; state-space response checked against independent impedance equations, not measured transients.'),
     'CommonEnvelopeMigrationTests.test_periodic_source_mismatch_revokes_receiver_readiness': ('independent_fixture', 'Assigned validated constant-clock fit and subsequent local-voltage phase jump test transactional activation and revocation at DATA validity.'),
     'CommonEnvelopeMigrationTests.test_periodic_learner_observations_commit_with_receiver': ('independent_fixture', 'Voltage-only local observations cannot leak from prediction or grant readiness before periodic acquisition.'),
     'CommonEnvelopeMigrationTests.test_staggered_phase_banks_are_bounded_with_sparse_observations': ('independent_fixture', 'Sparse observed transitions must expire incomplete fits and bound estimator storage.'),
@@ -745,7 +749,7 @@ class CommonEnvelopeMigrationTests(unittest.TestCase):
         ledger=result['ledger']
         self.assertEqual(result['inventory'],allocated)
         self.assertAlmostEqual(sum(ledger['owner_current_a'].values()),allocated['total_ma']/1000)
-        self.assertAlmostEqual(ledger['total_chip_supply_current_a'],.2522)
+        self.assertAlmostEqual(ledger['total_chip_supply_current_a'],.23125)  # P2-1 + P3 + P3b booked USB inventory total (current_reallocation_log)
         self.assertLess(abs(ledger['power_balance_residual_w']),1e-12)
         self.assertNotEqual(allocated['total_ma'],current_allocation(architecture,'wired')['total_ma'])
         for mode in ('rf_rx','rf_tx'):
@@ -3826,7 +3830,6 @@ class RetainedRingPowerTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'one external voltage'):
             retained_ring_power_screen(changed)
 
-TEST_DESIGN_ROLES['RetainedRingPowerTests']=('shared_design','Shared passive values and current allocations, die-side host-port correction; analytic parallel impedance and energy conservation, not physical qualification.')
 
 
 class CommonRingCircuitTests(unittest.TestCase):

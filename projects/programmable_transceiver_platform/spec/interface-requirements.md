@@ -222,6 +222,57 @@ Feasibility against current evidence:
 - Fallbacks: `wire_rx_board_retimer` / B13, `wire_tx_board_serializer` / B14, `wire_board_phy_bypass` (FPGA GTs
   carry the lane, chip unused) for rates the primary route misses.
 
+### 1.14 Twisted-pair Ethernet: 100BASE-TX added, 10BASE-T not added (2026-11-10)
+
+Admission rule (user): add a standard only if it makes the chip more general-purpose by **generalizing existing
+hardware**, with no dedicated new blocks. The analysis is
+summarised here. The behavioural link model (MLT-3, TX filter, 2 × magnetics HPF, Cat5 skin/dielectric loss, CTLE, eye and
+baseline-wander statistics) is `scratch/ethernet/fe100.py`. Demands IX-9…IX-13 are in
+`scratch/reviews/interface-changes.md`. Board items are B38, B39 and B38a. Standard values transcribed from memory are *(verify)*
+(IEEE 802.3 cl.24/25 → ANSI X3.263 TP-PMD; cl.14 10BASE-T; cl.28 auto-negotiation).
+
+**Verdicts**
+
+| Standard | Verdict | Binding quantity |
+|---|---|---|
+| 100BASE-TX (MLT-3, 125 MBd, 4B5B + scrambler) | **(b) add, via four small generalizations** (IX-9…IX-13) | TX: 2 × 20 mA = 40 mA gives ±1.0 V into the 49.9 Ω‖100 Ω network (V = I·25 Ω). That is available as MAIN + POST summed at the same sign. RX: no eye beyond ≈ 50 m without a low-frequency EQ zero, and the ±thresholds (≈ ±90…±135 mV at the slicer) exceed the ±52 mV trim range |
+| 100BASE-FX / FDDI-style 125 MBd NRZI over an optical module | (a) free: NRZ at 125 MBd on the existing TX (4× repetition) and the IX-4 oversampling path. Nothing added | — |
+| 10BASE-T (Manchester, 10 Mb/s, 2.2–2.8 V peak) | **(c) not added** | A current-steering driver at 3.3 V into a matched (back-terminated) load, with any transformer ratio n, gives V_line = 25·I/n and a leg drop of 37.5·I/n² ≤ 2.5 V. So V_line,max = 1.39 V (46.4 mA, MAIN 25.4 + POST 21.05) or 1.45 V (50.8 mA with IX-9). 2.2 V needs I ≥ 116 mA (n ≥ 1.32), or a dedicated low-impedance voltage-mode H-bridge. The RX side would be free (raw oversampling and IX-10 squelch threshold), but a PHY is useless without its TX. Near miss: 10BASE-Te (802.3az, 1.54 V min peak) needs ≥ 57–62 mA, i.e. MAIN+POST+TMDS tails summed and a pad interlock/EM change. Not proposed. 10BASE-T, if needed, goes through the board PHY B38a |
+
+**100BASE-TX function map (existing block → role)**
+
+| PHY function | Implementation | New? |
+|---|---|---|
+| 4B5B, scrambler/descrambler (11-bit LFSR), NRZI↔MLT-3, idle/JK/TR, link monitor, auto-negotiation state machine, MII/RMII to the MAC | FPGA | none on chip |
+| TX levels +1/0/−1 | MAIN and POST tails (pads `tx_protected_pad`), external centre-tap network B39, on-die TX termination off (TMDS-like external pull-up configuration). With POST at the same sign (IX-9): held ±1 = MAIN+POST on one leg (±2·I·25 Ω). 0 = main toggling every line UI so that MAIN(k) and POST = MAIN(k−1) cancel exactly | IX-9 (polarity bit, POST DAC ×1.2) |
+| TX clock / rate | Quarter-rate core (WT12) at ring 500 MHz = 2 Gb/s, 16 line UI per symbol. The FPGA builds the 16× pattern. The 0→±1 parity alignment costs ≤ 1 line UI = 0.5 ns DJ | none |
+| TX wave-shaping (3–5 ns edges, ≤ 5 % overshoot) | Board doubly-terminated 2nd-order Bessel/Butterworth LC low-pass, fc ≈ 110–120 MHz (B39). It also removes the 1 GHz cancellation residue of the 0 level | board only |
+| Link pulses (FLP for auto-negotiation) | Same TX, 100 ns pulses, MAIN+POST summed: 1.16 V peak (tt, today) / 1.27 V (IX-9). This is **below** the cl.14 2.2 V template | best effort (WR-100TX-ANEG) |
+| RX termination / CM | `termination` mode 10 (100 Ω differential, trim PKG-W1a). Magnetics RX centre tap biased to 1.0 V on the board (B38), inside the CTLE window 0.8–1.2 V ss. On-die AC coupling (PKG-W1c, HPF 0.8 MHz) **off** | none |
+| RX amplitude | `rxlevel` bypass (half only for ≤ 10 m if the CTLE linear range needs it). CTLE code 7 DC gain −11.4 dB | none |
+| Cable EQ (0–100 m Cat5) | CTLE with a switchable low-frequency source-degeneration cap bank: zero 4.4–35 MHz at code 7 (IX-13) | IX-13 |
+| ± decision thresholds, DC restore (baseline wander), squelch level | Threshold DACs on the edge samplers e0–e3 (IX-10), updated by the FPGA through a fast in-band command (IX-11) | IX-10, IX-11 |
+| Clock recovery | FPGA blind oversampling (the IX-4 / `wire_cdr_fpga_oversample` route promoted for this mode). RX ring locked to the board reference at 750 MHz (6× per symbol), full-rate raw mode, psel forced odd so the data (psel) and edge (psel+4) lanes are both e-samplers at +V_th / −V_th (IX-12) | IX-12 |
+| Signal detect | Coarse energy from `pt_detect` (squelch 125 mV / disconnect ≈ 540 mV codes) plus FPGA descrambler lock | none |
+| Magnetics, RJ45, Bob-Smith termination | Board (B38) | board only |
+
+**Requirements**
+
+| ID | Value (standard) | First-die adaptation | Verification |
+|---|---|---|---|
+| WR-100TX-TXLVL | Differential output 950–1050 mV peak into 100 Ω; amplitude symmetry 0.98–1.02; overshoot ≤ 5 % *(verify, TP-PMD §9.1)* | Same, through the COB (at 62.5 MHz the COB chain is < 0.05 dB: ~3–4 nH, 2.7 pF) and B39. **Sum current 40 mA (2 × 20 mA)**: today MAIN 25.4 mA + POST 21.05 mA full scale (tt) = +16 % headroom. With IX-9 (POST ×1.2): +27 %. The pad leg sinks ≤ 51 mA and stays ≥ 1.7 V above VSS with the CT at 3.3 V. Per-board code calibration as B11 | Extracted pad + B39 network sim at tt/ss/ff; bench scope at the RJ45 |
+| WR-100TX-TXSHAPE | Rise/fall 3.0–5.0 ns, rise/fall symmetry ≤ 0.5 ns, DCD ≤ ±0.25 ns *(verify)* | Edges set by the B39 LC filter (2nd-order, fc ≈ 110–120 MHz). The 0-level cancellation residue (MAIN/POST mismatch at 1 GHz) ≤ 1 % of peak after the filter | Sim with B39 + bench |
+| WR-100TX-TXJIT | Transmit jitter ≤ 1.4 ns pp *(verify)*; 125 MBd ± 50 ppm | ≤ 0.7 ns pp: 0.5 ns parity DJ (16× quarter-rate pattern) + PLL/serializer. Half-rate (1 Gb/s, 8×) is allowed if host H2D is short, giving ≤ 1.2 ns | Scope TIE |
+| WR-100TX-RL | TX and RX RL ≥ 16 dB 2–30 MHz, ≥ 16 − 20·log10(f/30 MHz) dB 30–60 MHz, ≥ 10 dB 60–80 MHz *(verify)* | TX: B39 49.9 Ω 1 % back-termination with the doubly-terminated filter: ≈ 24 dB at 30 MHz, ≈ 12 dB at 60 MHz (spec 10). RX: on-die 100 Ω trim (PKG-W1a, 40–60 Ω per leg). Pad C is negligible below 80 MHz | VNA at the RJ45 |
+| WR-100TX-RXEQ | Operate over 0–100 m Cat5/Class D (IL 1.967√f + 0.023f + 0.05/√f dB per 100 m: 11.7 dB at 31.25 MHz, 17.0 dB at 62.5 MHz) with NEXT | Behavioural model (two 350 µH magnetics, Bessel TX filter, single-zero CTLE, ideal DC restore). Inner-eye opening / outer level: no EQ 1.00 / 0.59 / −0.01 at 0 / 25 / 50 m (**closed at 50 m**). With the IX-13 zero (best of 10–40 MHz): 0.84 / 0.66 / 0.61 / 0.54 at 25 / 50 / 75 / 100 m. FPGA picks the zero code by eye scan (IX-10) | Model + extracted CTLE with IX-13 bank; bench with 0/50/100 m cable |
+| WR-100TX-RXTH | Ternary decisions (two thresholds) | Outer level at the slicer A ≈ 0.18–0.27 V (100 m … 0 m, code 7 DC gain). Thresholds ±A/2 = ±90…±135 mV plus ±50 mV DC-restore headroom ⇒ **threshold range ≥ ±250 mV, LSB ≤ 4 mV** (IX-10). Today's trim is −52…+65 mV, which is insufficient | Extracted slicer + DAC |
+| WR-100TX-BLW | Tolerate baseline wander, including the "killer packet" *(verify TP-PMD Annex)* | Two magnetics HPFs (OCL ≥ 350 µH, τ = 7 µs). Uncorrected held-level wander: 26 % of A after 1 µs, 110 % after 10 µs. FPGA decision-directed DC restore via IX-10/IX-11, **loop delay ≤ 0.5 µs** ⇒ residual: random scrambled data ≤ 5.6 % A peak (1.3 % rms); worst held level 13.5 % A, against the 27 % half-eye at 100 m (marginal at 100 m, OK ≤ 50 m). A 1 µs loop gives 6.9 % / 26 % | Model + bench killer packet |
+| WR-100TX-CDR | 125 MBd ± 50 ppm, TP-PMD jitter tolerance *(verify)* | FPGA oversampling 6× (RX ring 750 MHz), 1.33 ns phase quantization against an 8 ns UI. Two lanes (IX-12) | FPGA model + bench |
+| WR-100TX-SD | Signal detect assert > 1000 mVppd, de-assert < 200 mVppd *(verify)* | `pt_detect` energy codes plus descrambler lock in the FPGA; the threshold-DAC amplitude scan gives a level estimate | Bench |
+| WR-100TX-BER | BER ≤ 2.5e-10 *(verify)* | ≤ 1e-10 at 95 % CL (3.0e10 bits, 4.0 min at 125 Mb/s payload) at 0, 50 and 100 m | FPGA PRBS / frame CRC |
+| WR-100TX-HOST | Host transport of the PHY streams | D2H 2 lanes × 750 Mb/s = 1.5 Gb/s (52 % of 2.88 Gb/s). H2D 2.0 Gb/s at 16× (69 %), or 1.0 Gb/s at 8×. Plus the threshold updates (≤ 2 MHz × 32 b ≈ 64 Mb/s). Full duplex: TX and RX rings separate | Transport model |
+| WR-100TX-ANEG | Auto-negotiation FLP bursts (cl.28), link-pulse amplitude 2.2–2.8 V peak (cl.14 template) *(verify)* | **Not compliant: FLP at 1.16 V (today) / 1.27 V (IX-9)**. Best effort, partner link-pulse detection to ≈ 50 m. Primary mode: forced 100BASE-TX full duplex (the partner forced, or its parallel detection giving half duplex) | Bench with a commodity switch |
+
 ## 2. Radio interfaces (2.4–2.5 GHz)
 
 Output powers are mean power at the RF_TX pad into the board match, before

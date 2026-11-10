@@ -4,7 +4,7 @@ Rendered from `spec/performance-requirements.json` by `spec/check_performance_re
 Status uses the performance-review legend (meets / marginal / fails / unverified), envelope only (Tj 22–32 °C, 3.15–3.35 V, all process corners).
 Per MANDATE.md the **primary fix** is the plan; fallbacks are backups.
 
-Summary: meets 4, marginal 12, fails 36, unverified 64 (total 116).
+Summary: meets 4, marginal 12, fails 36, unverified 76 (total 128).
 
 | ID | Requirement | Owner | Evidence | Status | Basis | Primary fix | Fallback (backup) |
 |---|---|---|---|---|---|---|---|
@@ -124,3 +124,15 @@ Summary: meets 4, marginal 12, fails 36, unverified 64 (total 116).
 | RF-RX-ESD | RF_RX: 2 kV HBM and +10 dBm CW survivable; board TVS for IEC +-8 kV | pads + rf_rx + board (B36) | — | **unverified** | +10 dBm estimate ~3.7 V gate peak vs ~3.6 V; HBM margin 0.105 V (ESD-02) (RXR-07) | +10 dBm transient on the RF pad model; B36 TVS | `B36` |
 | RF-RX-PSRR | RX with board ripple (B37): spurs <= RF-RX-SPUR, desense <= 0.5 dB | rf_rx + board (B37) | — | **unverified** | No RX PSRR evidence (RXR-10) | AC PSRR sim of TIA+filter; B37 | `B37` |
 | RF-COEX-PTA | 3-wire PTA in FPGA; grant-to-mute <= 2 us | FPGA + digital | — | **unverified** | No coex interface defined; no chip pin needed | FPGA PTA block using the scheduled RF unmute | — |
+| WR-100TX-TXLVL | 100BASE-TX MLT-3 950-1050 mV peak, symmetry 0.98-1.02, overshoot <=5 % via MAIN+POST summed into the B39 network | wired_tx + pads + board (B39) | — | **unverified** | Needs 40 mA: MAIN 25.4 + POST 21.05 mA FS tt (+16 %); POST is wired inverted (de-emphasis), so the same-sign sum is impossible today | IX-9 POST polarity select + POST DAC x1.2; B39 | `B38a`, `B39` |
+| WR-100TX-TXSHAPE | Rise/fall 3-5 ns, symmetry <=0.5 ns, 0-level cancellation residue <=1 % after the filter | board (B39) + wired_tx | — | **unverified** | No sim with B39; MAIN/POST delay match at 2 Gb/s not characterized | B39 LC filter sim with extracted pad; IX-9 matched CMD gating | `B38a`, `B39` |
+| WR-100TX-TXJIT | TX jitter <=1.4 ns pp (first die <=0.7 ns) at 125 MBd +/-50 ppm | wired_tx + FPGA | — | **unverified** | 0.5 ns parity DJ from the 16x pattern (analytic) | Quarter-rate 2 Gb/s 16x pattern (WT12), FPGA parity alignment | `B38a` |
+| WR-100TX-RL | TX/RX RL >=16 dB 2-30 MHz, 30-60 MHz slope, >=10 dB 60-80 MHz | board (B38/B39) + pads | — | **unverified** | Analytic: ~24 dB at 30 MHz, ~12 dB at 60 MHz with B39; pad C negligible <80 MHz | B39 49.9 ohm 1 %; RX PKG-W1a trim | `B38a`, `B39` |
+| WR-100TX-RXEQ | Operate 0-100 m Cat5 with NEXT: inner eye >=0.5 of outer level after EQ | wired_rx (CTLE) | — | **unverified** | Model scratch/ethernet/fe100.py: eye closed at 50 m without EQ; 0.54 at 100 m with a 10 MHz zero; CTLE r2 has no MHz zero | IX-13 CTLE low-frequency zero cap bank | `B38a` |
+| WR-100TX-RXTH | Two decision thresholds +/-90..+/-135 mV plus +/-50 mV DC-restore headroom (range >= +/-250 mV, LSB <=4 mV) | wired_rx (slicer) + digital | — | **unverified** | Slicer r4c trim -52..+65 mV only | IX-10 e-sampler threshold DACs | `B38a` |
+| WR-100TX-BLW | Baseline wander incl. killer packet: residual after DC restore <= half-eye margin | FPGA + digital + wired_rx | — | **unverified** | Model: held-level wander 26 % A/1 us; residual 13.5 % (0.5 us loop) vs 27 % half-eye at 100 m: marginal | IX-10 + IX-11 fast threshold update, loop delay <=0.5 us | `B38a` |
+| WR-100TX-CDR | 125 MBd +/-50 ppm recovered by 6x FPGA oversampling on two lanes | digital (capture raw mode) + FPGA | — | **unverified** | Raw dual-lane export with forced odd psel not implemented | IX-12 raw dual-lane full-rate mode; IX-4 | `B38a`, `wire_cdr_fpga_oversample` |
+| WR-100TX-SD | Signal detect assert >1000 mVppd / deassert <200 mVppd | wired_rx (detect) + FPGA | — | **unverified** | pt_detect codes 125/540 mV exist; no Ethernet bench | Detect codes + descrambler lock; IX-10 amplitude scan | `B38a` |
+| WR-100TX-BER | BER <=1e-10 at 95 % CL at 0/50/100 m | FPGA + all above | — | **unverified** | No link sim beyond the behavioural model | Close RXEQ/RXTH/BLW/CDR | `B38a` |
+| WR-100TX-HOST | D2H 1.5 Gb/s (2 x 750 Mb/s) and H2D 2.0 Gb/s simultaneously, plus threshold updates | digital (transport) + hostio | — | **unverified** | Fits 2.88 Gb/s/direction (52 % / 69 %) only if HL-RATE closes | HL-RATE/AC-1; H2D 8x mode (1.0 Gb/s) if needed | `B38a`, `debug.host_link.rate` |
+| WR-100TX-ANEG | Auto-negotiation FLP (non-compliant amplitude: 1.16-1.27 V vs 2.2 V); forced 100 FD primary | FPGA + wired_tx | — | **unverified** | Amplitude bound of the current-mode TX (sec. 1.14) | Best-effort FLP via IX-9 summed tails; forced mode | `B38a` |

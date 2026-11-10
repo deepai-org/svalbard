@@ -1773,6 +1773,167 @@
    "basis": "No coex interface defined; no chip pin needed",
    "primary_fix": "FPGA PTA block using the scheduled RF unmute",
    "fallback": []
+  },
+  {
+   "id": "WR-100TX-TXLVL",
+   "requirement": "100BASE-TX MLT-3 950-1050 mV peak, symmetry 0.98-1.02, overshoot <=5 % via MAIN+POST summed into the B39 network",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx + pads + board (B39)",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Needs 40 mA: MAIN 25.4 + POST 21.05 mA FS tt (+16 %); POST is wired inverted (de-emphasis), so the same-sign sum is impossible today",
+   "primary_fix": "IX-9 POST polarity select + POST DAC x1.2; B39",
+   "fallback": [
+    "B38a",
+    "B39"
+   ]
+  },
+  {
+   "id": "WR-100TX-TXSHAPE",
+   "requirement": "Rise/fall 3-5 ns, symmetry <=0.5 ns, 0-level cancellation residue <=1 % after the filter",
+   "source": "spec/interface-requirements.md",
+   "owner": "board (B39) + wired_tx",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "No sim with B39; MAIN/POST delay match at 2 Gb/s not characterized",
+   "primary_fix": "B39 LC filter sim with extracted pad; IX-9 matched CMD gating",
+   "fallback": [
+    "B38a",
+    "B39"
+   ]
+  },
+  {
+   "id": "WR-100TX-TXJIT",
+   "requirement": "TX jitter <=1.4 ns pp (first die <=0.7 ns) at 125 MBd +/-50 ppm",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx + FPGA",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "0.5 ns parity DJ from the 16x pattern (analytic)",
+   "primary_fix": "Quarter-rate 2 Gb/s 16x pattern (WT12), FPGA parity alignment",
+   "fallback": [
+    "B38a"
+   ]
+  },
+  {
+   "id": "WR-100TX-RL",
+   "requirement": "TX/RX RL >=16 dB 2-30 MHz, 30-60 MHz slope, >=10 dB 60-80 MHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "board (B38/B39) + pads",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Analytic: ~24 dB at 30 MHz, ~12 dB at 60 MHz with B39; pad C negligible <80 MHz",
+   "primary_fix": "B39 49.9 ohm 1 %; RX PKG-W1a trim",
+   "fallback": [
+    "B38a",
+    "B39"
+   ]
+  },
+  {
+   "id": "WR-100TX-RXEQ",
+   "requirement": "Operate 0-100 m Cat5 with NEXT: inner eye >=0.5 of outer level after EQ",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (CTLE)",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Model scratch/ethernet/fe100.py: eye closed at 50 m without EQ; 0.54 at 100 m with a 10 MHz zero; CTLE r2 has no MHz zero",
+   "primary_fix": "IX-13 CTLE low-frequency zero cap bank",
+   "fallback": [
+    "B38a"
+   ]
+  },
+  {
+   "id": "WR-100TX-RXTH",
+   "requirement": "Two decision thresholds +/-90..+/-135 mV plus +/-50 mV DC-restore headroom (range >= +/-250 mV, LSB <=4 mV)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (slicer) + digital",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Slicer r4c trim -52..+65 mV only",
+   "primary_fix": "IX-10 e-sampler threshold DACs",
+   "fallback": [
+    "B38a"
+   ]
+  },
+  {
+   "id": "WR-100TX-BLW",
+   "requirement": "Baseline wander incl. killer packet: residual after DC restore <= half-eye margin",
+   "source": "spec/interface-requirements.md",
+   "owner": "FPGA + digital + wired_rx",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Model: held-level wander 26 % A/1 us; residual 13.5 % (0.5 us loop) vs 27 % half-eye at 100 m: marginal",
+   "primary_fix": "IX-10 + IX-11 fast threshold update, loop delay <=0.5 us",
+   "fallback": [
+    "B38a"
+   ]
+  },
+  {
+   "id": "WR-100TX-CDR",
+   "requirement": "125 MBd +/-50 ppm recovered by 6x FPGA oversampling on two lanes",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (capture raw mode) + FPGA",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Raw dual-lane export with forced odd psel not implemented",
+   "primary_fix": "IX-12 raw dual-lane full-rate mode; IX-4",
+   "fallback": [
+    "B38a",
+    "wire_cdr_fpga_oversample"
+   ]
+  },
+  {
+   "id": "WR-100TX-SD",
+   "requirement": "Signal detect assert >1000 mVppd / deassert <200 mVppd",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (detect) + FPGA",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "pt_detect codes 125/540 mV exist; no Ethernet bench",
+   "primary_fix": "Detect codes + descrambler lock; IX-10 amplitude scan",
+   "fallback": [
+    "B38a"
+   ]
+  },
+  {
+   "id": "WR-100TX-BER",
+   "requirement": "BER <=1e-10 at 95 % CL at 0/50/100 m",
+   "source": "spec/interface-requirements.md",
+   "owner": "FPGA + all above",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "No link sim beyond the behavioural model",
+   "primary_fix": "Close RXEQ/RXTH/BLW/CDR",
+   "fallback": [
+    "B38a"
+   ]
+  },
+  {
+   "id": "WR-100TX-HOST",
+   "requirement": "D2H 1.5 Gb/s (2 x 750 Mb/s) and H2D 2.0 Gb/s simultaneously, plus threshold updates",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (transport) + hostio",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Fits 2.88 Gb/s/direction (52 % / 69 %) only if HL-RATE closes",
+   "primary_fix": "HL-RATE/AC-1; H2D 8x mode (1.0 Gb/s) if needed",
+   "fallback": [
+    "B38a",
+    "debug.host_link.rate"
+   ]
+  },
+  {
+   "id": "WR-100TX-ANEG",
+   "requirement": "Auto-negotiation FLP (non-compliant amplitude: 1.16-1.27 V vs 2.2 V); forced 100 FD primary",
+   "source": "spec/interface-requirements.md",
+   "owner": "FPGA + wired_tx",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Amplitude bound of the current-mode TX (sec. 1.14)",
+   "primary_fix": "Best-effort FLP via IX-9 summed tails; forced mode",
+   "fallback": [
+    "B38a"
+   ]
   }
  ]
 }

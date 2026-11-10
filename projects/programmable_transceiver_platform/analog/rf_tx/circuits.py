@@ -146,14 +146,21 @@ DRV = dict(
     unit_w=20.0, unit_l=0.5,                  # tail unit finger (~20x diode)
     pre1_w=10.0, pre1_nf=6, pre1_tail_nf=14, pre1_rl_w=2.0, pre1_rl_l=2.4,
     pre2_w=10.0, pre2_nf=6, pre2_tail_nf=14, pre2_rl_w=2.0, pre2_rl_l=2.2,
-    sf_w=10.0, sf_nf=8, sf_tail_nf=11,        # source followers p2 -> p3 (per side), drive the output gates
-    out_w=20.0, out_nf=24, out_l=0.28,
-    out_tail_nf=(6, 12, 24, 48),              # binary slices (fingers of unit_w/unit_l)
-    ro_w=10.0, ro_l=11.0, ro_par=4,           # 4 x ~400 ohm ppolyf_u in parallel per leg (~100 ohm source);
-                                              # the board L-match/balun presents the optimum load (~130 ohm diff)
+    pre3_w=10.0, pre3_nf=6, pre3_tail_nf=14, pre3_rl_w=2.0, pre3_rl_l=2.2,
+    n_pre=3,                                  # three pre-amplifiers: the summed_rf level (~0.2 V pk diff at
+                                              # full scale) must reach ~0.6 V to drive the output stage to Psat
+    sf_w=10.0, sf_nf=12, sf_tail_nf=36,       # source followers p2 -> p3 (per side), drive the output gates
+    out_w=20.0, out_nf=32, out_l=0.28,
+    out_tail_nf=(12, 24, 48, 96),             # binary slices (fingers of unit_w/unit_l), ~36 mA at code 15
+    ro_w=10.0, ro_l=44.0, ro_par=1,           # ~1.6 kohm ppolyf_u keeper per leg (header on). The output is
+                                              # DC-fed by the board (balun centre tap / chokes to the island
+                                              # rail); the old 4 x 400 ohm resistive feed dropped ~1.3 V and
+                                              # took half the signal current (Psat ~+1 dBm).
     hdr_w=20.0, hdr_nf=48,                    # output-load PMOS header
     byp_w=20.0, byp_nf=2,                     # external-PA bypass PMOS per leg
     clamp_w=1.0, clamp_l=2.0,
+    pad_clamp=False,                          # off-state pad pull-downs removed: with the board DC feed they
+                                              # sank ~0.28 mA from the rail in reset; pads now rest at the feed
 )
 ATB_R = dict(w=1.0, l=20.0)                   # ~20 kohm isolation in every ATB tap
 
@@ -234,8 +241,10 @@ def rfdriver(name='pt_rfdriver'):
     c.n('BCAP', 'VSS', 'vb', 'VSS', 10.0, 4.0, 2)
     c.n('PSW', 'vbp', 'pre_on', 'vb', 2.0, 0.28)
     c.n('PPD', 'vbp', 'pre_off', 'VSS', 1.0, 0.28)
-    # Pre-amplifier 1: in -> p1, pre-amplifier 2: p1 -> p2 (non-inverting naming)
-    for stage, src, dst in ((1, 'in', 'p1'), (2, 'p1', 'p2')):
+    # Pre-amplifiers: in -> p1 [-> p1b] -> p2 (non-inverting naming; the last stage always drives p2)
+    chain = [(1, 'in', 'p1'), (2, 'p1', 'p2')] if d.get('n_pre', 2) == 2 else \
+        [(1, 'in', 'p1'), (2, 'p1', 'p1b'), (3, 'p1b', 'p2')]
+    for stage, src, dst in chain:
         w, nf = d[f'pre{stage}_w'], d[f'pre{stage}_nf']
         c.n(f'A{stage}_P', f'{dst}_n', f'{src}_p', f't{stage}', w, 0.28, nf)
         c.n(f'A{stage}_N', f'{dst}_p', f'{src}_n', f't{stage}', w, 0.28, nf)
@@ -264,7 +273,8 @@ def rfdriver(name='pt_rfdriver'):
         for i in range(d['ro_par']):
             c.r(f'RO_{leg}{i}', 'hdrv', f'pad_{leg}', d['ro_w'], d['ro_l'], model='ppolyf_u')
         c.p(f'BYP_{leg}', f'pad_{leg}', 'byp_b', f'in_{leg}', d['byp_w'], 0.28, d['byp_nf'])
-        c.n(f'CLP_{leg}', f'pad_{leg}', 'off_all', 'VSS', d['clamp_w'], d['clamp_l'])
+        if d.get('pad_clamp', True):
+            c.n(f'CLP_{leg}', f'pad_{leg}', 'off_all', 'VSS', d['clamp_w'], d['clamp_l'])
         c.r(f'RATBC_{leg}', f'pad_{leg}', 'atb_cm', **ATB_R)
         c.r(f'RATBP_{leg}', f'p2_{leg}', 'atb_pre', **ATB_R)
     c.r('RATB_B', 'vb', 'atb_bias', **ATB_R)

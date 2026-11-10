@@ -377,6 +377,9 @@ def validate(model, dbg, readiness):
                 raise SpecError(f"{g['name']}: unknown fallback route {route_id}")
     groups_spec = model['atb_groups']
     for bus in ('atb0', 'atb1'):
+        for group in groups_spec.get(bus, []):
+            if len(group['codes']) > groups_spec.get('max_leaves_per_group', 12):
+                raise SpecError(f'atb_groups.{bus}.{group["name"]}: exceeds the physical leaf-load limit')
         f = by_name[f'debug.atb.{bus}']
         legal = set(f['allowed'] if f['allowed'] is not None else range(f['minimum'], f['maximum'] + 1)) - {0}
         codes = [c for g in groups_spec.get(bus, []) for c in g['codes']]

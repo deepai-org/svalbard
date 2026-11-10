@@ -1,0 +1,18 @@
+[options]
+mode prove
+depth 1
+
+[engines]
+smtbmc yices
+
+[script]
+read -formal -sv pt_freq_count.sv
+cw16: chparam -set CW 16 pt_count_metrics
+prep -top pt_count_metrics
+
+[files]
+../../rtl/pt_freq_count.sv
+[tasks]
+cw16
+cw18
+

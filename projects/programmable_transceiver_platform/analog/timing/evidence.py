@@ -116,7 +116,13 @@ def assemble(block):
     klp = tf.SCRATCH / block / 'layout' / 'klayout.json'
     if kl is None and klp.exists():
         kl = json.loads(klp.read_text())
-    drc_ok = lay.get('drc_errors') == 0 and bool(kl and kl.get('ran') and kl.get('violations') == 0)
+    # Required: the tapeout precheck's KLayout decks (DRC + antenna) on the published GDS
+    # (verification/kl_block_drc.py --publish -> generated/<block>-kldrc.json, current GDS hash).
+    pre_p = tf.GENERATED / f'{block}-kldrc.json'
+    pre = json.loads(pre_p.read_text()) if pre_p.exists() else None
+    gds_p = tf.GENERATED / f'{block}.gds'
+    pre_ok = bool(pre and pre.get('clean') and gds_p.exists() and 'sha256:' + pre.get('gds_sha256', '') == tf.sha(gds_p))
+    drc_ok = lay.get('drc_errors') == 0 and bool(kl and kl.get('ran') and kl.get('violations') == 0) and pre_ok
     lvs_ok = bool(lay.get('lvs', {}).get('unique_match'))
     clean_state = 'pass' if (drc_ok and lvs_ok and nominal_ok) else ('fail' if lay else 'open')
     safe = res.get('safe', [])
@@ -165,7 +171,9 @@ def assemble(block):
                       notes='Reset-default = every control input 0; clock/pad inputs toggling. Includes 3.63 V at 85 C (ff) and 0 C (ss).'),
             clean=dict(state=clean_state,
                        drc=dict(errors=lay.get('drc_errors'), tool='Magic 8.3.623 drc(full)', report=f'generated/{block}-drc.txt',
-                                klayout=kl, gds_export='analog image Magic 8.3.678, cif ostyle gdsii'),
+                                klayout=kl, gds_export='analog image Magic 8.3.678, cif ostyle gdsii',
+                                klayout_precheck=dict(required=True, ok=pre_ok, record=f'generated/{block}-kldrc.json',
+                                                      decks={k: v.get('total') for k, v in (pre or {}).get('decks', {}).items()})),
                        lvs=dict(unique_match=lvs_ok, summary=lay.get('lvs', {}).get('summary'), tool='Netgen 1.5.316',
                                 report=f'generated/{block}-lvs.txt'),
                        extracted_nominal=dict(gating_cases=[Path(r.get('deck', '')).stem for r in gate],

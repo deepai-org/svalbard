@@ -199,16 +199,18 @@ def pwl(points):
 
 
 def adc_deck(net, corner, temp, vdd, *, top, inputs, period, acq, test=0, vref='VREF 0 1.0',
-             t0=40e-9, extra='', sine=None):
-    """inputs: differential volts per conversion (held across each sample)."""
+             t0=40e-9, extra='', sine=None, ilen=1):
+    """inputs: differential volts per conversion (held across each sample).
+    v3 block: ILEN=ilen; with ILEN=1 conversion i goes to core A (even i) or B (odd i)."""
     n = len(inputs)
     pts_p, pts_n = [(0, 1.65), ], [(0, 1.65)]
     for i, vd in enumerate(inputs):
         ts = t0 + i * period - 0.25 * period          # change mid-conversion of the previous one
         pts_p += [(ts, pts_p[-1][1]), (ts + 0.2e-9, 1.65 + vd / 2)]
         pts_n += [(ts, pts_n[-1][1]), (ts + 0.2e-9, 1.65 - vd / 2)]
-    tstop = t0 + n * period + 2e-9
-    t = header(net, corner, temp, vdd)
+    # interleaved: the last core needs two clock periods to deliver its code
+    tstop = t0 + (n + (1 if ilen else 0)) * period + (acq if ilen else 0) + 2e-9
+    t = header(net, corner, temp, vdd) + '.option klu\n'
     t += f'VDD VDD 0 {{vdd}}\nVR {vref}\nVCMS VCM 0 1.65\nIB VDD IBIAS 10u\nD1 IBIAS VDD dclamp\n'
     t += clock_sources('CLKP', 'CLKN', period, acq, delay=t0)
     t += f'VEN EN 0 PWL(0 0 10n 0 10.2n {{vdd}})\n'
@@ -227,43 +229,68 @@ def adc_deck(net, corner, temp, vdd, *, top, inputs, period, acq, test=0, vref='
     else:
         t += f'VIP INP 0 {pwl(pts_p)}\nVIN INN 0 {pwl(pts_n)}\n'
     t += extra
-    t += f'X1 VDD 0 INP INN VCM VREF IBIAS CLKP CLKN EN TEST0 TEST1 ' + ' '.join(f'CODE{i}' for i in range(10)) + \
-         f' DONE OVERLOAD ATB_BIAS {top}\n'
+    t += f'VIL ILEN 0 {3.3 if ilen else 0}\n'
+    t += f'X1 VDD 0 INP INN VCM VREF IBIAS CLKP CLKN EN ILEN TEST0 TEST1 ' + ' '.join(f'CODE{i}' for i in range(10)) + \
+         ' DONE OVERLOAD ' + ' '.join(f'CODEB{i}' for i in range(10)) + f' DONEB OVERLOADB ATB_BIAS {top}\n'
     t += '.control\nset wr_singlescale\nset wr_vecnames\noption interp\n'
     t += f'tran 20p {tstop:.4e}\n'
+    # (KLU direct solver only, same tolerances: identical codes and DONE times to
+    # the default solver on the v2 extracted deck, 1.7x faster; see README.)
     t += 'meas tran idd avg i(VDD) from=%.4e to=%.4e\n' % (t0, tstop - 2e-9)
     t += 'meas tran ioff avg i(VDD) from=1n to=9n\n'
     t += 'meas tran iref avg i(VR) from=%.4e to=%.4e\n' % (t0, tstop - 2e-9)
-    t += 'wrdata adc.dat v(DONE) v(OVERLOAD) ' + ' '.join(f'v(CODE{i})' for i in range(10)) + '\n'
+    t += 'wrdata adc.dat v(DONE) v(OVERLOAD) ' + ' '.join(f'v(CODE{i})' for i in range(10)) + \
+        ' v(DONEB) v(OVERLOADB) ' + ' '.join(f'v(CODEB{i})' for i in range(10)) + '\n'
     t += '.endc\n.end\n'
     return t, tstop
 
 
-def decode(datfile, t0, period, n, acq):
+def decode(datfile, t0, period, n, acq, ilen=0):
+    """ilen=0: single core (CODE*, DONE). ilen=1: conversion i on core A (even) /
+    B (odd); each core's register is read just before that core's next conversion
+    could complete (2 periods later)."""
     h, rows = ck.read_wrdata(datfile)
     idx = {k: i for i, k in enumerate(h)}
     out = []
+    import bisect
+    times = [r[0] for r in rows]
+    first_b = False
+    if ilen:
+        # The core that receives the first SAMPLE pulse is not fixed: the clock
+        # receiver can emit a short pulse when EN rises, which toggles the A/B
+        # flip-flop once. The core order is taken from whichever DONE rises first
+        # (the digital side orders the two code streams the same way).
+        def first_rise(col):
+            j = idx[col]
+            for r0, r1 in zip(rows, rows[1:]):
+                if r1[0] > t0 and r0[j] <= 1.65 < r1[j]:
+                    return r1[0]
+            return 1.0
+        first_b = first_rise('v(DONEB)') < first_rise('v(DONE)')
     for i in range(n):
-        # code register of conversion i is read just before conversion i+1 completes
-        ts = t0 + (i + 1) * period + acq * 0.5
-        row = min(rows, key=lambda r: abs(r[0] - ts))
-        bits = [row[idx[f'v(CODE{b})']] > 1.65 for b in range(10)]
+        b_ = 'B' if (ilen and (i % 2) != first_b) else ''
+        done = 'v(DONEB)' if b_ else 'v(DONE)'
+        step = 2 if ilen else 1
+        ts = t0 + (i + step) * period + acq * 0.5
+        k = min(max(bisect.bisect_left(times, ts), 0), len(rows) - 1)
+        row = rows[k]
+        bits = [row[idx[f'v(CODE{b_}{b})']] > 1.65 for b in range(10)]
         v = sum(int(b) << k for k, b in enumerate(bits))
         if v >= 512:
             v -= 1024
         # done timing within conversion i
         tdone = None
-        a, b = t0 + i * period + acq, t0 + (i + 1) * period
+        a, b = t0 + i * period + acq, t0 + (i + step) * period
         prev = None
-        for r in rows:
+        for r in rows[bisect.bisect_left(times, a):bisect.bisect_right(times, b)]:
             if a <= r[0] <= b:
-                hi = r[idx['v(DONE)']] > 1.65
+                hi = r[idx[done]] > 1.65
                 if prev is False and hi:
                     tdone = r[0] - a
                     break
                 prev = hi
         out.append(dict(code=v, t_done_after_sample_fall_ns=None if tdone is None else round(tdone * 1e9, 3),
-                        overload=row[idx['v(OVERLOAD)']] > 1.65))
+                        overload=row[idx[f'v(OVERLOAD{b_})']] > 1.65, core='B' if b_ else 'A'))
     return out
 
 
@@ -315,10 +342,10 @@ def offload_deck(net, corner, temp, vdd, *, top, kind, node, powered):
         t += f'X1 VDD 0 OUTP OUTN IBIAS CLKP CLKN EN HOLD_ZERO ' + ' '.join(f'CODE{i}' for i in range(10)) + \
              f' ATB_BIAS {top}\n'
     else:
-        t += 'VR VREF 0 0\nVCMS VCM 0 1.65\nVT0 TEST0 0 0\nVT1 TEST1 0 0\n'
+        t += 'VR VREF 0 0\nVCMS VCM 0 1.65\nVT0 TEST0 0 0\nVT1 TEST1 0 0\nVIL ILEN 0 0\n'
         t += f'VX INP 0 DC 1.65 AC 1\nVO INN 0 1.65\n'
-        t += f'X1 VDD 0 INP INN VCM VREF IBIAS CLKP CLKN EN TEST0 TEST1 ' + ' '.join(f'CODE{i}' for i in range(10)) + \
-             f' DONE OVERLOAD ATB_BIAS {top}\n'
+        t += f'X1 VDD 0 INP INN VCM VREF IBIAS CLKP CLKN EN ILEN TEST0 TEST1 ' + ' '.join(f'CODE{i}' for i in range(10)) + \
+             ' DONE OVERLOAD ' + ' '.join(f'CODEB{i}' for i in range(10)) + f' DONEB OVERLOADB ATB_BIAS {top}\n'
     t += '.control\nop\nlet ileak = -i(VX)\nprint ileak\nac lin 1 10e6 10e6\n' \
          'let cpf = imag(-i(VX))/(2*3.14159265*10e6)*1e15\nprint cpf\nlet gin = real(-i(VX))\nprint gin\n.endc\n.end\n'
     return t
@@ -340,8 +367,13 @@ def offload(work, net, top, kind, node):
     return res
 
 
-DAC_CODES = [-512, -256, 0, 255, 511, 100]
-DAC_CORNER_CODES = [-512, 0, 511]
+CLEAN_LSB = 4          # 1 LSB at 8 bit, in 10-bit codes (ADC and DAC 'clean')
+ADC_OFF_CAP_FF = 100   # ADC input loading when disabled/unpowered (fallback)
+
+DAC_CODES = [-512, -384, -256, -128, -1, 0, 1, 127, 255, 383, 511, 100, -100]
+DAC_CORNER_CODES = [-512, -256, 0, 255, 511]
+DAC_SINE_BIN = 7
+DAC_SINE = [round(480 * math.sin(2 * math.pi * DAC_SINE_BIN * k / 64)) for k in range(64)]
 
 
 def dac_eval(m, codes, n):
@@ -366,6 +398,9 @@ def dac_bench(c, work, corners):
     if corners:
         for cr in corner_list(corners):
             decks['c_' + tag(cr)] = dac_deck(net, *cr, top=c.name, codes=DAC_CORNER_CODES, period=period)[0]
+    if corners != 'minimal':
+        import math as _m
+        decks['sine'] = dac_deck(net, *NOMINAL, top=c.name, codes=DAC_SINE, period=period)[0]
     res = run_decks(work, decks)
     n = res['nominal'][0]
     ev = dac_eval(n, DAC_CODES, len(DAC_CODES))
@@ -373,12 +408,15 @@ def dac_bench(c, work, corners):
     hz = res['hold_zero'][0] if 'hold_zero' in res else {}
     off = offload(work, net, c.name, 'dac', 'OUTP')
     # 'clean' = basic function: +/-1 V class full scale, monotonic at the sampled
-    # codes, static error < 32 LSB. Linearity is recorded as performance.
+    # codes, static error <= 4 LSB (10-bit) = 1 LSB at the 8-bit class the spec
+    # asks for. (The 32-LSB limit used earlier was set after the first runs; the
+    # 2026-11 performance review flagged it as relaxed. The pre-relaxation value
+    # is not recorded in git, so the limit is tied to the 8-bit spec.)
     def dmono(e):
         vals = [e['code_error_lsb'][str(cd)] + cd for cd in sorted(DAC_CODES)]
         return all(a < b for a, b in zip(vals, vals[1:]))
     ok = ev is not None and 1.6 < ev['fullscale_diff_V'][1] - ev['fullscale_diff_V'][0] < 2.4 and \
-        max(abs(v) for v in ev['code_error_lsb'].values()) < 32 and dmono(ev)
+        max(abs(v) for v in ev['code_error_lsb'].values()) <= CLEAN_LSB and dmono(ev)
     perf = [dict(metric='differential full scale (V)', target='+/-1.0', nominal=ev and ev['fullscale_diff_V']),
             dict(metric='static code error at sampled codes (LSB, endpoint fit)', target='8-bit-class',
                  nominal=ev and ev['code_error_lsb']),
@@ -410,9 +448,19 @@ def dac_bench(c, work, corners):
                       evidence=off),
         )
     excluded = ['gain_trim and offset_trim register fields have no analog effect in this version',
-                'hold_zero verified only at one code pair', 'No glitch energy, SFDR or full 1024-code INL/DNL run; '
-                'static error sampled at 6 codes', 'Output CM tracks VDD (VDD - 1.65 V), no CM regulation',
+                'hold_zero verified only at one code pair', 'No glitch energy or full 1024-code INL/DNL run; '
+                f'static error sampled at {len(DAC_CODES)} codes; SFDR from settled samples only', 'Output CM regulated to VDD/2 by the on-block CM loop (v3)',
                 'Rounding/saturation of the 12-bit transport word: truncation (code[11:2]) only']
+    if 'sine' in res:
+        sm = res['sine'][0]
+        vd = [sm.get(f'vcm{i}', float('nan')) - sm.get(f'vn{i}', float('nan')) for i in range(len(DAC_SINE))]
+        try:
+            perf.append(dict(metric=f'coherent sine, {len(DAC_SINE)} codes (bin {DAC_SINE_BIN}), output settled 1.9 T '
+                                    'after each update (static SFDR; glitches not included)', target='8-bit class (SFDR >= 50 dB)',
+                             nominal={k: v for k, v in fft_metrics([x * 1e3 for x in vd], DAC_SINE_BIN).items()
+                                      if k != 'codes'}))
+        except Exception as e:      # noqa: BLE001
+            perf.append(dict(metric='coherent sine', nominal=f'failed: {e}'))
     perf.append(dict(metric='hold_zero with codes 511/-512 applied (V diff)', target='0',
                      nominal=[None if hz.get('vcm0') is None else hz['vcm0'] - hz.get('vn0', 0),
                               None if hz.get('vcm1') is None else hz['vcm1'] - hz.get('vn1', 0)]))
@@ -422,156 +470,241 @@ def dac_bench(c, work, corners):
 # ===================================================================== ADC bench
 ADC_INPUTS = [0.0, 0.5, -0.5, 0.123, -0.7, 0.75, -0.25, 0.9]
 ADC_NOM = [0.5, -0.5, 0.123, -0.7]       # extracted runs are slow: 4 conversions
+ADC_IL = [0.5, -0.5, -0.5, 0.5, 0.123, -0.7, -0.7, 0.123]   # interleaved: each core sees all four levels
 
 
 def adc_bench(c, work, corners):
+    """v3 (2-way interleaved). Gating rate: 40 MS/s per channel (ILEN=1, 25 ns
+    clock, 6 ns acquisition) at every envelope corner. ILEN=0 single-core 20 MS/s
+    is the in-block fallback. Each core sees every DC level (ADC_IL ordering)."""
     net = 'ext.spice'
-    runs = {}
-    cfg = {'nominal_20MSps': dict(period=50e-9, acq=10e-9),
-           'slow_ss_32C_3.15V_16MSps': dict(period=62.5e-9, acq=10e-9),
-           'rate_25MSps': dict(period=40e-9, acq=6e-9),
-           'target_40MSps': dict(period=25.2e-9, acq=3e-9),
-           'stretch_80MSps': dict(period=12.5e-9, acq=3e-9)}
-    decks = {}
-    minimal = corners in ('minimal',)
-    for k, v in cfg.items():
-        if k.startswith('slow_'):
-            continue
-        if minimal and k != 'nominal_20MSps':
-            continue
-        decks[k] = adc_deck(net, *NOMINAL, top=c.name, inputs=ADC_NOM if k == 'nominal_20MSps' else ADC_NOM[:2],
-                            **v)[0]
-    if not minimal:
-        decks['tests'] = adc_deck(net, *NOMINAL, top=c.name, inputs=[0.3, 0.3, 0.3, 0.3], period=50e-9, acq=10e-9,
-                              test=[0, 1, 2, 3])[0]
+    P40 = dict(period=25e-9, acq=6e-9, ilen=1)
+    P20 = dict(period=50e-9, acq=10e-9, ilen=0)
+    decks, cfg = {}, {}
+
+    def add(name, crn, inputs, p, **kw):
+        decks[name] = adc_deck(net, *crn, top=c.name, inputs=inputs, **p, **kw)[0]
+        cfg[name] = dict(p, n=len(inputs), inputs=inputs)
+    add('nominal_40MSps', NOMINAL, ADC_IL, P40)
+    if corners != 'minimal':
+        add('single_core_20MSps', NOMINAL, ADC_NOM, P20)
+        add('tests', NOMINAL, [0.3] * 8, P40, test=[0, 0, 1, 1, 2, 2, 3, 3])
+        add('margin_ss_32C_3.15V_45MSps', ('ss', 32, 3.15), ADC_IL[:4], dict(P40, period=22.2e-9))
     if corners:
         for cr in corner_list(corners):
-            decks['c_' + tag(cr)] = adc_deck(net, *cr, top=c.name, inputs=ADC_NOM[:2], period=50e-9, acq=10e-9)[0]
-        if corners in ('extremes', 'all', True):
-            # slow corner at 4 MS/s: where does basic conversion still complete?
-            decks['slow_ss_32C_3.15V_16MSps'] = adc_deck(net, 'ss', 32, 3.15, top=c.name, inputs=ADC_NOM[:3],
-                                                         period=62.5e-9, acq=10e-9)[0]
-    res = {}
+            add('c_' + tag(cr), cr, ADC_IL[:4], P40)
+            if corners in ('all', True) and cr[0] == 'ss':
+                add('s_' + tag(cr), cr, ADC_NOM[:2], P20)     # single-core fallback at slow corners
 
     def one(item):
         name, text = item
         d = work / name
         d.mkdir(exist_ok=True)
         import os
-        os.link(work / net, d / net)          # hard link: only the run directory is mounted
+        if not (d / net).exists():
+            os.link(work / net, d / net)          # hard link: only the run directory is mounted
         r = ck.ngspice(d, 'tb.spice', text)
-        k = name if name in cfg else ('test' if name.startswith('test') else 'nominal_20MSps')
-        p = cfg.get(name, cfg['nominal_20MSps'])
-        ninp = 4 if name in ('tests', 'nominal_20MSps') else 3 if name.startswith('slow_') else 2
-        codes = decode(d / 'adc.dat', 40e-9, p['period'], ninp, p['acq']) if (d / 'adc.dat').exists() else None
+        p = cfg[name]
+        codes = decode(d / 'adc.dat', 40e-9, p['period'], p['n'], p['acq'], ilen=p['ilen']) \
+            if (d / 'adc.dat').exists() else None
         return name, dict(meas=meas(r.stdout), codes=codes, rc=r.returncode)
     with cf.ThreadPoolExecutor(WORKERS) as ex:
         res = dict(ex.map(one, decks.items()))
     off = offload(work, net, c.name, 'adc', 'INP')
 
-    def gain_eval(codes):
-        if not codes:
+    def core_eval(cd, vin):
+        """gain/offset from the +0.5/-0.5 V conversions, deviation of every point."""
+        try:
+            hi, lo = cd[vin.index(0.5)], cd[vin.index(-0.5)]
+        except ValueError:
             return None
-        cd = [x['code'] for x in codes]
-        g = (cd[0] - cd[1]) / 1.0       # codes per volt from +0.5 / -0.5 V
-        off = (cd[0] + cd[1]) / 2
-        ideal = [round(v * g + off) for v in ADC_NOM]
-        return dict(inputs_V=ADC_NOM[:len(cd)], codes=cd, codes_per_V=g,
-                    implied_fullscale_V=round(512 / g, 4) if g else None, offset_codes=off,
-                    dev_from_gain_offset_fit=[a - b for a, b in zip(cd, ideal)],
-                    t_done_ns=[x['t_done_after_sample_fall_ns'] for x in codes])
-    nom = gain_eval(res['nominal_20MSps']['codes'])
-    get = lambda k: gain_eval(res[k]['codes']) if k in res else 'not run (identical copy of the _i block)'
+        g = hi - lo
+        o = (hi + lo) / 2
+        ideal = [round(v * g + o) for v in vin]
+        mono = [c_ for _, c_ in sorted(zip(vin, cd))]
+        return dict(inputs_V=vin, codes=cd, codes_per_V=g, implied_fullscale_V=round(512 / g, 4) if g else None,
+                    offset_codes=o, dev_from_gain_offset_fit=[a - b for a, b in zip(cd, ideal)],
+                    monotonic=all(a < b for a, b in zip(mono, mono[1:])))
+
+    def gain_eval(name):
+        r = res.get(name)
+        if not r or not r['codes']:
+            return None
+        p, codes = cfg[name], r['codes']
+        out = dict(t_done_ns_max=max((x['t_done_after_sample_fall_ns'] or 1e9) for x in codes),
+                   all_done=all(x['t_done_after_sample_fall_ns'] is not None for x in codes),
+                   conversion_window_ns=round(((2 if p['ilen'] else 1) * p['period'] - p['acq']) * 1e9, 2))
+        for core in ('A', 'B') if p['ilen'] else ('A',):
+            sel = [k for k, x in enumerate(codes) if x['core'] == core]
+            out['core_' + core] = core_eval([codes[k]['code'] for k in sel], [p['inputs'][k] for k in sel])
+        out['pass'] = out['all_done'] and all(
+            v and v['codes_per_V'] > 350 and v['monotonic'] and max(abs(x) for x in v['dev_from_gain_offset_fit']) <= CLEAN_LSB
+            for k, v in out.items() if k.startswith('core_'))
+        return out
+    nom = gain_eval('nominal_40MSps')
     tc = (res['tests']['codes'] if 'tests' in res else None) or []
-    tst = {f'input_test={i}': (tc[i]['code'] if i < len(tc) else None) for i in range(4)}
+    tst = {}
+    for core in ('A', 'B'):
+        for m_ in range(4):
+            v = [x['code'] for k, x in enumerate(tc) if x['core'] == core and [0, 0, 1, 1, 2, 2, 3, 3][k] == m_]
+            tst[f'core_{core}_input_test={m_}'] = v[0] if v else None
     tst['note'] = 'input 0.3 V differential applied throughout; modes 1-3 must ignore it'
-    # 'clean' = basic function: every conversion completes, codes follow the input
-    # monotonically with the right sign and stay within 32 codes of a gain/offset
-    # fit. Linearity, speed and corners are performance, recorded separately.
-    def mono(v):
-        cd = [c_ for _, c_ in sorted(zip(ADC_NOM, v['codes']))]
-        return all(a < b for a, b in zip(cd, cd[1:]))
-    ok = nom is not None and nom['codes_per_V'] > 350 and max(abs(x) for x in nom['dev_from_gain_offset_fit']) <= 32 \
-        and all(t is not None for t in nom['t_done_ns']) and mono(nom)
-    perf = [dict(metric='conversion at 20 MS/s (50 ns, 10 ns acquisition)', target='>= 20 MS/s per I/Q (20 MHz Wi-Fi)',
-                 nominal=nom),
-            dict(metric='25 MS/s (40 ns, 6 ns acquisition)', target='margin probe',
-                 nominal=get('rate_25MSps')),
-            dict(metric='selected 40 MS/s timing (3 ns acq, 25.2 ns period)', target='3/20/2/0.2 ns allocation',
-                 nominal=get('target_40MSps')),
-            dict(metric='stretch 80 MS/s (12.5 ns)', target='non-gating 40 MHz-channel stretch',
-                 nominal=get('stretch_80MSps')),
-            dict(metric='input_test modes 1/2/3 (expect 0, +128*g, -128*g codes)', target='0/+VREF/4/-VREF/4',
+    ok = bool(nom and nom['pass'])
+    perf = [dict(metric='40 MS/s per channel, 2-way interleaved (25 ns clock, 6 ns acquisition), tt/27C/3.3V',
+                 target='40 MS/s per I/Q (AA)', nominal=nom),
+            dict(metric='single-core fallback ILEN=0 at 20 MS/s (50 ns, 10 ns acquisition)', target='>= 20 MS/s',
+                 nominal=gain_eval('single_core_20MSps')),
+            dict(metric='margin probe: ss/32C/3.15V at 45 MS/s (22.2 ns clock)', target='margin, not gating',
+                 nominal=gain_eval('margin_ss_32C_3.15V_45MSps')),
+            dict(metric='input_test modes 1/2/3 per core (expect 0, +128*g, -128*g codes)', target='0/+VREF/4/-VREF/4',
                  nominal=tst),
-            dict(metric='supply current at 20 MS/s (mA)', target='8 allocation',
-                 nominal=-1e3 * res['nominal_20MSps']['meas'].get('idd', 0)),
-            dict(metric='VREF average current at 20 MS/s (uA)', target='refbuf source limit 1 mA',
-                 nominal=-1e6 * res['nominal_20MSps']['meas'].get('iref', 0))]
-    if 'slow_ss_32C_3.15V_16MSps' in res:
-        perf.append(dict(metric='ss/32C/3.15V at 16 MS/s (62.5 ns, 10 ns acquisition)', target='reduced-rate floor',
-                         nominal=gain_eval(res['slow_ss_32C_3.15V_16MSps']['codes'])))
+            dict(metric='supply current at 40 MS/s (mA)', target='8 allocation',
+                 nominal=-1e3 * res['nominal_40MSps']['meas'].get('idd', 0)),
+            dict(metric='VREF average current at 40 MS/s (uA)', target='refbuf source limit 1 mA',
+                 nominal=-1e6 * res['nominal_40MSps']['meas'].get('iref', 0))]
     if corners:
-        perf.append(dict(metric='corner sweep (extracted, 20 MS/s)', target='narrow window, not gating',
-                         corners={k[2:]: gain_eval(v['codes']) for k, v in res.items() if k.startswith('c_')}))
-    nm = res['nominal_20MSps']['meas']
+        cr_res = {k[2:]: gain_eval(k) for k in res if k.startswith('c_')}
+        perf.append(dict(metric='corner sweep at 40 MS/s interleaved (extracted)', target='40 MS/s at every envelope corner',
+                         all_pass=all(v and v['pass'] for v in cr_res.values()), corners=cr_res))
+        sl = {k[2:]: gain_eval(k) for k in res if k.startswith('s_')}
+        if sl:
+            perf.append(dict(metric='single-core fallback 20 MS/s at ss corners', target='>= 20 MS/s', corners=sl))
+    nm = res['nominal_40MSps']['meas']
+    tvals = [tst.get(f'core_{x}_input_test={m_}') for x in 'AB' for m_ in (1, 2, 3)]
+    obs_ok = None not in tvals and all(
+        tst[f'core_{x}_input_test=2'] > tst[f'core_{x}_input_test=1'] + 80 and
+        tst[f'core_{x}_input_test=3'] < tst[f'core_{x}_input_test=1'] - 80 for x in 'AB')
     tests = dict(
         safe=dict(state='pass' if abs(nm.get('ioff', 1)) < 1e-6 and
                   all(abs(v['leak_A_at_1p65V'] or 1) < 1e-8 for v in off.values()) else 'fail',
                   cases=[dict(case='EN=0 supply current (A)', value=nm.get('ioff')),
                          dict(case='INP held at 1.65 V while disabled / island unpowered', value=off)],
                   notes='Reset: registers cleared, comparator clock low (no static path), bootstrap gate '
-                        'pulled to VSS, clock receiver and bias off. Every device touching INP/INN, VCM and '
-                        'VREF is an NMOS in p-substrate.'),
+                        'pulled to VSS, clock receiver and bias off; ILEN=0 also holds core B in reset. Every '
+                        'device touching INP/INN, VCM and VREF is an NMOS in p-substrate.'),
         clean=dict(extracted_nominal=nom, extracted_ok=ok, netlist=f'generated/{c.name[3:]}.ext.spice',
-                   bench='benches.adc_deck'),
-        observable=dict(state='pass' if None not in (tst['input_test=1'], tst['input_test=2'], tst['input_test=3'])
-                        and tst['input_test=2'] > tst['input_test=1'] + 80
-                        and tst['input_test=3'] < tst['input_test=1'] - 80 else 'open',
+                   bench='benches.adc_deck', criterion=f'all conversions complete at 40 MS/s, both cores monotonic, '
+                   f'<= {CLEAN_LSB} codes from a per-core gain/offset fit'),
+        observable=dict(state='pass' if obs_ok else 'open',
                         atb_taps=['adc_comparator_bias (ATB_BIAS = local bias gate, also clock receiver)'],
-                        status_bits=['adc_*_done', 'adc_*_overload'], clock_obs=[],
-                        notes='input_test 1/2/3 give known codes without any external source.'),
-        # Criterion: no DC path (< 10 nA at 1.65 V) and below the ADC's specified
-        # on-state sampling load (0.5 pF per leg), which the PGA/tap node is already
-        # specified to drive. (v1 used an arbitrary 100 fF; v2's longer input route
-        # measures ~110 fF, so the criterion is now tied to the spec, stated openly.)
-        fallback=dict(state='pass' if all((v['cap_fF_at_10MHz'] or 1e9) < 500 and abs(v['leak_A_at_1p65V'] or 1) < 1e-8
-                                          for v in off.values()) else 'open',
+                        status_bits=['adc_*_done', 'adc_*_overload', 'adc_*_doneb', 'adc_*_overloadb'], clock_obs=[],
+                        notes='input_test 1/2/3 give known codes on each core without any external source; '
+                              'ILEN=0 isolates core A.'),
+        # Criterion: no DC path (< 10 nA at 1.65 V) and < ADC_OFF_CAP_FF per leg (the original
+        # 100 fF; it had been moved to 0.5 pF after measuring ~110 fF, which the 2026-11
+        # review rejected as a post-hoc relaxation).
+        fallback=dict(state='pass' if all((v['cap_fF_at_10MHz'] or 1e9) < ADC_OFF_CAP_FF and
+                                          abs(v['leak_A_at_1p65V'] or 1) < 1e-8 for v in off.values()) else 'open',
+                      criterion=f'no DC path (<10 nA at 1.65 V) and < {ADC_OFF_CAP_FF} fF per leg disabled/unpowered',
                       routes=['rf_bb_external_adc: debug.bb_tap observe_rx_pga etc.; ADC input stays high-Z '
-                              'when disabled or unpowered'],
+                              'when disabled or unpowered',
+                              'in-block: ILEN=0 runs core A alone at 20 MS/s (v2 behaviour)'],
                       bypass_loading_fF={k: v['cap_fF_at_10MHz'] for k, v in off.items()}, evidence=off))
-    excluded = ['comparator_trim field not implemented (no analog trim)',
-                'acquisition_ns/decision_ns/reset_ns are realised by the ADC_CLOCK duty cycle from the '
-                'clock tree, not inside this block', 'No FFT/ENOB, noise or Monte Carlo run; linearity sampled '
-                'at 8 DC points', 'VREF is an ideal source in these benches (refbuf verified separately)']
+    excluded = ['comparator_trim field not implemented (no analog trim); per-core offset removed digitally',
+                'acquisition_ns is realised by the ADC_CLOCK duty cycle (6 ns high at 40 MHz), not inside this block',
+                'VREF is an ideal source in these DC benches; the FFT bench (adc_fft.py --refbuf) puts the '
+                'extracted refbuf in the loop',
+                'No Monte Carlo: interleave timing skew from mismatch is estimated, not simulated']
     return dict(tests=tests, performance=perf, excluded=excluded,
                 raw={k: dict(meas=v['meas'], codes=v['codes']) for k, v in res.items()})
 
 
 # ===================================================================== ADC FFT
-def fft_metrics(codes, nbin):
-    """Single-tone coherent DFT on N codes: SNDR, ENOB, SFDR (dB)."""
-    import cmath
-    n = len(codes)
-    mean = sum(codes) / n
-    x = [c - mean for c in codes]
-    p = []
-    for k in range(n // 2 + 1):
-        s = sum(x[i] * cmath.exp(-2j * math.pi * k * i / n) for i in range(n))
-        p.append(abs(s) ** 2)
+def fft_metrics(codes, nbin, nharm=7):
+    """Coherent single-tone FFT (rectangular window; nbin coprime with N).
+    SNDR = signal / everything except DC; SFDR = signal / largest other bin;
+    THD from harmonics 2..nharm (folded)."""
+    import numpy as np
+    x = np.asarray(codes, float)
+    n = len(x)
+    p = np.abs(np.fft.rfft(x - x.mean())) ** 2
     sig = p[nbin]
-    rest = [p[k] for k in range(1, n // 2 + 1) if k != nbin]
-    sndr = 10 * math.log10(sig / max(sum(rest), 1e-30))
-    sfdr = 10 * math.log10(sig / max(max(rest), 1e-30))
-    return dict(points=n, signal_bin=nbin, sndr_db=round(sndr, 2), enob=round((sndr - 1.76) / 6.02, 2),
-                sfdr_db=round(sfdr, 2), codes=codes)
+    rest = np.delete(p[1:], nbin - 1)
+    sndr = 10 * np.log10(sig / max(rest.sum(), 1e-30))
+    k = int(np.argmax(np.where(np.arange(len(p)) == nbin, 0, p[:] * (np.arange(len(p)) > 0))))
+    sfdr = 10 * np.log10(sig / max(p[k], 1e-30))
+    hb = []
+    for h in range(2, nharm + 1):
+        b = (h * nbin) % n
+        hb.append(min(b, n - b))
+    thd = 10 * np.log10(sum(p[b] for b in set(hb) if 0 < b <= n // 2) / sig)
+    amp = 2 * np.sqrt(sig) / n
+    return dict(points=n, signal_bin=nbin, sndr_db=round(float(sndr), 2), enob=round(float((sndr - 1.76) / 6.02), 2),
+                sfdr_db=round(float(sfdr), 2), sfdr_bin=k, thd_db=round(float(thd), 2),
+                amplitude_codes=round(float(amp), 1))
 
 
-def adc_fft(work, net, top, n=32, cycles=3, period=50e-9, acq=10e-9, amp=0.8):
-    fin = cycles / (n * period)
-    d, ts = adc_deck(net, *NOMINAL, top=top, inputs=[0.0] * (n + 1), period=period, acq=acq, sine=(amp, fin))
-    r = ck.ngspice(work, 'tb_fft.spice', d)
-    codes = [x['code'] for x in decode(Path(work) / 'adc.dat', 40e-9, period, n + 1, acq)][1:]
-    m = fft_metrics(codes, cycles)
-    m.update(fin_hz=fin, fs_hz=1 / period, amplitude_diff_peak_V=amp,
-             note='continuous SIN input; only %d points: coarse SNDR/SFDR resolution' % n)
-    return m
+def il_correct(codes):
+    """Per-core offset and gain correction (what the FPGA does for a 2-way
+    interleaved ADC): remove each core's mean, scale core B's rms to core A's."""
+    import numpy as np
+    x = np.asarray(codes, float)
+    a, b = x[0::2] - x[0::2].mean(), x[1::2] - x[1::2].mean()
+    y = np.empty_like(x)
+    y[0::2], y[1::2] = a, b * (a.std() / b.std() if b.std() else 1.0)
+    return dict(offset_A=round(float(x[0::2].mean()), 2), offset_B=round(float(x[1::2].mean()), 2),
+                gain_B_over_A=round(float(b.std() / a.std()), 5) if a.std() else None), y.tolist()
+
+
+REFBUF_LOOP = """.include refbuf.ext.spice
+VR0 VREF0 0 1.0
+IBR VDD IBR 10u
+D2 IBR VDD dclamp
+XRB VDD 0 VREF0 VREFRB IBR VDD 0 RBREADY pt_refbuf
+"""
+
+
+def adc_fft(work, net, top, corner=NOMINAL, n=1024, cycles=487, period=25e-9, acq=6e-9, amp=1.6,
+            ilen=1, chunk=64, warm=2, refbuf=False, workers=None):
+    """Coherent N-point FFT of the extracted ADC, split into parallel chunks.
+    Chunk j converts global samples j*chunk-warm .. (j+1)*chunk-1 of one
+    continuous sine (SIN phase set so every chunk sits on the same global time
+    grid; the first `warm` conversions of each chunk are discarded, an even
+    count so the core A/B assignment is preserved). amp = differential peak V.
+    refbuf=True: VREF comes from the extracted refbuf (100 pF reservoir) instead
+    of an ideal source; the ADC starts after refbuf READY settles."""
+    import shutil as _sh
+    fs = 1 / period
+    fin = cycles * fs / n
+    t0 = 8e-6 if refbuf else 40e-9
+    decks = {}
+    for j in range(n // chunk):
+        g0 = j * chunk - warm                      # global index of local sample 0
+        ph = (360.0 * fin * (g0 * period - t0)) % 360.0
+        extra = REFBUF_LOOP if refbuf else ''
+        d, _ = adc_deck(net, *corner, top=top, inputs=[0.0] * (chunk + warm), period=period, acq=acq,
+                        t0=t0, ilen=ilen, extra=extra, sine=(amp, fin),
+                        vref='VREFRB VREF 0' if refbuf else 'VREF 0 1.0')
+        a = amp / 2
+        d = d.replace(f'VIP INP 0 SIN(1.65 {a:.5g} {fin:.6g})', f'VIP INP 0 SIN(1.65 {a:.5g} {fin:.6g} 0 0 {ph:.6f})')
+        d = d.replace(f'VIN INN 0 SIN(1.65 {-a:.5g} {fin:.6g})', f'VIN INN 0 SIN(1.65 {-a:.5g} {fin:.6g} 0 0 {ph:.6f})')
+        assert f'{ph:.6f}' in d
+        decks[f'c{j:03d}'] = d
+    work = Path(work)
+
+    def one(item):
+        name, text = item
+        w = work / name
+        w.mkdir(parents=True, exist_ok=True)
+        _sh.copy(work / net, w / net)
+        if refbuf:
+            _sh.copy(work / 'refbuf.ext.spice', w / 'refbuf.ext.spice')
+        if not (w / 'adc.dat').exists():
+            ck.ngspice(w, 'tb.spice', text)
+        dec = decode(w / 'adc.dat', t0, period, chunk + warm, acq, ilen=ilen)
+        return name, dec[warm:]
+    with cf.ThreadPoolExecutor(workers or WORKERS) as ex:
+        parts = dict(ex.map(one, decks.items()))
+    conv = [x for k in sorted(parts) for x in parts[k]]
+    codes = [x['code'] for x in conv]
+    late = sum(1 for x in conv if x['t_done_after_sample_fall_ns'] is None)
+    raw = fft_metrics(codes, cycles)
+    out = dict(corner=list(corner), fs_hz=fs, fin_hz=fin, amplitude_diff_peak_V=amp, acquisition_ns=acq * 1e9,
+               interleaved=bool(ilen), refbuf_in_loop=refbuf, chunks=n // chunk, warmup_per_chunk=warm,
+               missing_done=late, overload=sum(1 for x in conv if x['overload']), raw=raw)
+    if ilen:
+        cal, y = il_correct(codes)
+        out['per_core_offset_gain_corrected'] = dict(fft_metrics(y, cycles), **cal)
+    out['codes'] = codes
+    out['t_done_ns_max'] = max((x['t_done_after_sample_fall_ns'] or 1e9) for x in conv)
+    return out

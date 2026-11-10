@@ -19,7 +19,10 @@ HERE = Path(__file__).resolve().parent
 # ---------------------------------------------------------------- design constants
 R_UNIT_L = 40.0       # ppolyf_u_1k, w=1u: ~40 kohm unit resistor of the filter
 CU = 9.6             # MIM side (um) of the unit filter capacitor, ~0.25 pF (some sizes trip MIMTM.2 in the PCell; checked by DRC)
+CU0 = 9.0            # always-on integrator cap (smaller than the bank unit: widest corner up ~1.3x, narrowest unchanged)
 CU2, CU4, CU8 = 2 * CU, 4 * CU, 8 * CU  # wider plates of the same height
+CC_LEAD_GC = 6.0       # MIM side (um) of each of the two series extra lead caps switched in with a biquad's +12 dB gain
+CC_LEAD = 6.0          # MIM side (um) of the Tow-Thomas excess-phase lead cap (0 = none)
 Q1, Q2 = 1.0, 0.5       # biquad Qs: 1.618/0.618 Butterworth, pre-distorted for OTA excess phase and parasitics
 
 
@@ -158,6 +161,8 @@ def ota_lownoise():
 
 OTAN = dict(tail=120., win=600., lin=1., wl=20., ll=2., w6=13.3, w7=80., cc=48., rz=1., fw=20.)
 OTAF = dict(tail=16., win=30., wl=8., w6=36., w7=72., cc=12.2, rz=3., l2=.5)
+# PGA stage-1 OTA: OTAF with every device doubled and the same Miller cap (~2x GBW, +~0.45 mA per OTA)
+OTAG = dict(tail=32., win=60., wl=16., w6=72., w7=144., cc=12.2, rz=1.5, l2=.5)
 
 
 def bias():
@@ -267,7 +272,8 @@ def bbfilter(name):
     ports = ['rx_in_p', 'rx_in_n', 'tx_in_p', 'tx_in_n', 'inj_p', 'inj_n',
              'out_rx_p', 'out_rx_n', 'out_tx_p', 'out_tx_n', 'obs_p', 'obs_n',
              'ibias', 'en', 'dir_tx', 'inj', 'rx_direct', 'byp_s1', 'byp_s23', 'obs_sel0', 'obs_sel1',
-             'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3', 'island_off',
+             'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3', 'gain4', 'gain5',
+             'gainc0', 'gainc1', 'island_off',
              'atb_vcm', 'atb_vbp', 'VDD', 'VSS']
     s = Sub(name, ports)
     I = lambda a, y: s.x('pt_rfrx_inv', a, y, 'VDD', 'VSS')
@@ -275,7 +281,8 @@ def bbfilter(name):
     N3 = lambda a, b, c, y: s.x('pt_rfrx_nor3', a, b, c, y, 'VDD', 'VSS')
     # ---- control decode (island-powered; all off when en=0 or island unpowered)
     for c in ('en', 'dir_tx', 'rx_direct', 'byp_s1', 'byp_s23', 'obs_sel0', 'obs_sel1',
-              'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3'):
+              'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3', 'gain4', 'gain5',
+              'gainc0', 'gainc1'):
         I(c, c + '_b')
     N3('en_b', 'dir_tx', 'inj', 'k_inrx')          # rx_in -> core
     N3('en_b', 'dir_tx_b', 'inj', 'k_intx')        # tx_in -> core
@@ -300,7 +307,7 @@ def bbfilter(name):
         s.res(f'inj_{h}', 'atb_vcm', 200.)
     s.cap('atb_vcm', 'VSS', 31.6)                  # ~2 pF: keeps residual differential ripple off the reference
     BW = ['bw0', 'bw0_b', 'bw1', 'bw1_b', 'bw2', 'bw2_b', 'bw3', 'bw3_b']
-    GN = ['gain0', 'gain0_b', 'gain1', 'gain1_b', 'gain2', 'gain2_b', 'gain3', 'gain3_b']
+    GN = [x for k in range(6) for x in (f'gain{k}', f'gain{k}_b')]
     COM = ['atb_vcm', 'atb_vbp']
 
     def T(size, a, b, k):
@@ -316,8 +323,9 @@ def bbfilter(name):
         s.x('pt_bbf_gpole', ci, f's1_{o}', *COM, 'pd1', *GN, *BW, 'VDD', 'VSS')
         T('m', ci, s1, 'k_s1byp')
         # stages 2 and 3: Tow-Thomas biquads (Q1, Q2), non-inverting low-pass outputs
-        s.x('pt_bbf_tt1', s1, f'bp1_{h}', f'lp1_{h}', *COM, 'pd23', *BW, 'VDD', 'VSS')
-        s.x('pt_bbf_tt2', f'lp1_{h}', f'bp2_{h}', f'co_{h}', *COM, 'pd23', *BW, 'VDD', 'VSS')
+        s.x('pt_bbf_tt1', s1, f'bp1_{h}', f'lp1_{h}', *COM, 'pd23', 'gainc0', 'gainc0_b', *BW, 'VDD', 'VSS')
+        s.x('pt_bbf_tt2', f'lp1_{h}', f'bp2_{h}', f'co_{h}', *COM, 'pd23', 'gainc1', 'gainc1_b', *BW,
+            'VDD', 'VSS')
         T('m', s1, f'co_{h}', 'k_s23byp')          # bypass keeps the differential sign
         # outputs and direction
         s.x('pt_rfrx_nsw', f'co_{h}', f'out_rx_{h}', 'k_orx', 'VSS')   # to ADC (conv island)
@@ -329,9 +337,9 @@ def bbfilter(name):
         T('s', f'co_{h}', f'obs_{h}', 'k_obs3')
         for node in (f'out_rx_{h}', f'out_tx_{h}', f'obs_{h}'):
             s.nmos(node, 'island_off', 'VSS', 1., 10.)   # weak clamp (~tens of uA)
-    stages = [bbf_int(), bbf_tt('pt_bbf_tt1', Q1), bbf_tt('pt_bbf_tt2', Q2), bbf_gpole()]
+    stages = [bbf_int(), bbf_int('pt_bbf_intg', 'pt_rfrx_otag'), bbf_tt('pt_bbf_tt1', Q1), bbf_tt('pt_bbf_tt2', Q2), bbf_gpole()]
     inline(s, stages)   # flatten the filter stages into the block (layout packs better flat)
-    return [inv(), nor2(), nor3(), tg('s'), tg('m'), tg('l'), nsw(), bias(), ota_fast(), s]
+    return [inv(), nor2(), nor3(), tg('s'), tg('m'), tg('l'), nsw(), bias(), ota_fast(), ota('pt_rfrx_otag', **OTAG), s]
 
 
 def inline(sub, cells):
@@ -361,11 +369,11 @@ def inline(sub, cells):
 BWP = ['bw0', 'bw0_b', 'bw1', 'bw1_b', 'bw2', 'bw2_b', 'bw3', 'bw3_b']
 
 
-def bbf_int():
+def bbf_int(name='pt_bbf_int', ota_cell='pt_rfrx_otaf'):
     """Integrator: OTA + switched capacitor bank (unit + 1/2/4/8 x unit on bw0..3)."""
-    s = Sub('pt_bbf_int', ['a', 'out', 'vcm', 'vbp', 'pd', *BWP, 'VDD', 'VSS'])
-    s.x('pt_rfrx_otaf', 'vcm', 'a', 'out', 'vbp', 'pd', 'VDD', 'VSS')
-    s.cap('a', 'out', CU)                          # always-on unit (widest bandwidth)
+    s = Sub(name, ['a', 'out', 'vcm', 'vbp', 'pd', *BWP, 'VDD', 'VSS'])
+    s.x(ota_cell, 'vcm', 'a', 'out', 'vbp', 'pd', 'VDD', 'VSS')
+    s.cap('a', 'out', CU0)                         # always-on unit (widest bandwidth)
     for bit, side in (('bw0', CU), ('bw1', CU2), ('bw2', CU4), ('bw3', CU8)):
         s.x('pt_rfrx_tgs', 'a', f'c_{bit}', bit, bit + '_b', 'VDD', 'VSS')  # switch on the virtual-ground side
         s.cap(f'c_{bit}', 'out', side, CU)
@@ -378,6 +386,11 @@ def _tt(s, vin, v1, v2, q):
     s.res(v1, 'a', q * R_UNIT_L)
     s.x('pt_bbf_int', 'a', v1, 'vcm', 'vbp', 'pd', *BWP, 'VDD', 'VSS')
     s.res(v1, 'b', R_UNIT_L)
+    if CC_LEAD:
+        # phase lead in the two-integrator loop cancels the OTAs' excess phase. It sits at an
+        # integrator input (capacitive feedback: no extra feedback pole), not at the A3 inverter
+        # (resistive feedback: a cap there made A3 peak in the extracted netlist).
+        s.cap(v1, 'b', CC_LEAD)
     s.x('pt_bbf_int', 'b', v2, 'vcm', 'vbp', 'pd', *BWP, 'VDD', 'VSS')
     s.res(v2, 'c', R_UNIT_L)
     s.res('v3', 'c', R_UNIT_L)
@@ -385,26 +398,50 @@ def _tt(s, vin, v1, v2, q):
 
 
 def bbf_tt(name, q):
-    """Unity-gain Tow-Thomas biquad (v1 band-pass, v2 low-pass)."""
-    s = Sub(name, ['vin', 'v1', 'v2', 'vcm', 'vbp', 'pd', *BWP, 'VDD', 'VSS'])
+    """Tow-Thomas biquad (v1 band-pass, v2 low-pass); passband gain 1, or 4 (+12 dB) with gc:
+    an extra R/3 input branch.  Input resistors set only the gain, not w0 or Q."""
+    s = Sub(name, ['vin', 'v1', 'v2', 'vcm', 'vbp', 'pd', 'gc', 'gc_b', *BWP, 'VDD', 'VSS'])
     s.res('vin', 'a', R_UNIT_L)
+    s.res('vin', 'gx', R_UNIT_L / 3)
+    s.x('pt_rfrx_tgm', 'gx', 'a', 'gc', 'gc_b', 'VDD', 'VSS')
+    if CC_LEAD_GC:   # extra lead with the +12 dB input: A1's noise gain (and excess phase) rises
+        s.x('pt_rfrx_tgs', 'v1', 'lx', 'gc', 'gc_b', 'VDD', 'VSS')
+        s.cap('lx', 'ly', CC_LEAD_GC)            # two in series: a single ~30 fF MIM is below the DRC-clean PCell sizes
+        s.cap('ly', 'b', CC_LEAD_GC)
     _tt(s, 'vin', 'v1', 'v2', q)
     return s
 
 
 def bbf_gpole():
-    """PGA stage: inverting real pole, gain = Rf/R1 = 1 + gain0 + 2 gain1 + 4 gain2 + 8 gain3
-    (0..24 dB).  The pole 1/(Rf C) does not move with gain and, unlike a biquad, it has no Q to
-    enhance when the OTA loop gain drops at high gain (round-2 fix for the top-code peaking)."""
-    gn = ['gain0', 'gain0_b', 'gain1', 'gain1_b', 'gain2', 'gain2_b', 'gain3', 'gain3_b']
+    """PGA stage: inverting real pole, gain = Rf/Rin = k/4, k = sum(2^j gain_j), j = 0..5 (binary
+    conductance bank of 4R/2^j; k = 0 mutes).  The pole 1/(Rf C) does not move with gain and has no
+    Q to enhance.  With the +12 dB steps of the two biquads (gainc0/1) the chain covers -6..42 dB
+    in 3 dB steps (+-0.5 dB worst, see GAIN_TABLE)."""
+    gn = [x for k in range(6) for x in (f'gain{k}', f'gain{k}_b')]
     s = Sub('pt_bbf_gpole', ['vin', 'out', 'vcm', 'vbp', 'pd', *gn, *BWP, 'VDD', 'VSS'])
-    s.res('vin', 'a', R_UNIT_L)
-    for bit, div, size in (('gain0', 1, 's'), ('gain1', 2, 's'), ('gain2', 4, 'm'), ('gain3', 8, 'l')):
-        s.res('vin', f'g{div}', R_UNIT_L / div)
-        s.x(f'pt_rfrx_tg{size}', f'g{div}', 'a', bit, bit + '_b', 'VDD', 'VSS')
+    for j, size in enumerate(('s', 's', 's', 'm', 'm', 'l')):
+        s.res('vin', f'g{j}', 4 * R_UNIT_L / (1 << j))
+        s.x(f'pt_rfrx_tg{size}', f'g{j}', 'a', f'gain{j}', f'gain{j}_b', 'VDD', 'VSS')
     s.res('a', 'out', R_UNIT_L)
-    s.x('pt_bbf_int', 'a', 'out', 'vcm', 'vbp', 'pd', *BWP, 'VDD', 'VSS')
+    # 2x OTA: at the top stage-1 gain (k = 32, noise gain 9) the loop must still be >> the pole
+    s.x('pt_bbf_intg', 'a', 'out', 'vcm', 'vbp', 'pd', *BWP, 'VDD', 'VSS')
     return s
+
+
+def _gain_table():
+    """dB code (-6..42, 3 dB steps) -> (k, gainc0, gainc1): coarse steps used from +21 dB so
+    stage 1 keeps >= +9 dB in front of the biquads (noise)."""
+    t = {}
+    for db in range(-6, 43, 3):
+        nc = 0 if db <= 18 else 1 if db <= 30 else 2
+        ki = 4 * 10 ** ((db - 12 * nc) / 20)
+        # schematic-measured gain loss (TG Ron, finite OTA gain): ~0.023 dB per k unit, ~0.15 dB per coarse step
+        k = max(1, min(63, round(ki * 10 ** ((0.023 * ki + 0.15 * nc) / 20))))
+        t[db] = (k, int(nc >= 1), int(nc >= 2))
+    return t
+
+
+GAIN_TABLE = _gain_table()
 
 
 # ---------------------------------------------------------------- generic observation buffer

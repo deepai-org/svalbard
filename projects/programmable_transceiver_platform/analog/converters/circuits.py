@@ -161,7 +161,7 @@ def dac(name='pt_dac_i'):
     d += inv('IE', 'EN', 'ENB')
     d += bias('B', 'EN', 'ENB', nb='ATB_BIAS')
     d += clkrx('K', 'CLKP', 'CLKN', 'CK', 'EN', nb='ATB_BIAS')
-    sw, cs = [], []
+    sw, cs, cc = [], [], []
     cells = [(f'TH{k}', f'THB{k}', f'th[{k}]', 16) for k in range(63)]
     cells += [(f'BN{j}', f'BNB{j}', f'bn[{j}]', 1 << j) for j in (0, 1, 2, 3)]
     for i, (a, b, pa, wgt) in enumerate(cells):
@@ -170,20 +170,44 @@ def dac(name='pt_dac_i'):
         node = f'CS{i}'
         sw += [Mos(f'SA{i}', N, 1, 0.28, 'ONI', a, node, 'VSS', flip=True, x=xa),
                Mos(f'SB{i}', N, 1, 0.28, 'OPI', b, node, 'VSS', flip=True, x=xb)]
-        cs += [Mos(f'CS{i}', N, round(DAC_LSB_W * wgt, 3), 2, node, 'ATB_BIAS', 'VSS', 'VSS', x=xa - 0.8)]
-    d += sw + cs
-    loads = [Mos('MHDR', P, 10, 0.28, 'RT', 'LOAD_ENB', 'VDD', 'VDD', m=2),
-             Res('RS', 4, 4.4, 'RT', 'T', 'VSS'),
+        cs += [Mos(f'CS{i}', N, round(DAC_LSB_W * wgt, 3), 2, f'CD{i}', 'ATB_BIAS', 'VSS', 'VSS', x=xa - 0.8)]
+        # v3: low-voltage cascode per cell (CS Vds ~0.5 V). v2 cells saw the full
+        # ~1 V leg swing on an L=2 source: odd-order static error up to ~10 LSB.
+        cc += [Mos(f'CC{i}', N, round(2 * DAC_LSB_W * wgt, 3), 0.5, node, 'VCASC', f'CD{i}', 'VSS', x=xa - 0.8)]
+    d += sw + cs + cc
+    # Cascode bias: 10 uA (PMOS mirror of the NB reference) into a W1/L3 diode.
+    cb = [Mos('KBN', N, 4, 2, 'KPG', 'ATB_BIAS', 'VSS', 'VSS'),
+          Mos('KBP1', P, 4, 1, 'KPG', 'KPG', 'VDD', 'VDD'),
+          Mos('KBP2', P, 4, 1, 'VCASC', 'KPG', 'VDD', 'VDD'),
+          Mos('KBD', N, 1, 3, 'VCASC', 'VCASC', 'VSS', 'VSS'),
+          Mos('KPD', N, 1, 0.5, 'VCASC', 'ENB', 'VSS', 'VSS')]
+    # v3 common-mode loop (v2: passive RS, CM 1.43 V tt, 0.99-1.83 V corners):
+    # sense R 2 x 20k -> CMS; reference VDD/2 (2 x 50k); 5T NMOS OTA
+    # (40 uA tail) drives the PMOS header gate HG; Miller cap HG-T (~1 pF) splits
+    # the HG and T poles (T is high-impedance: header ro || sense R). CMS high -> HG
+    # up -> header weaker -> T and the CM fall. Disabled: HG pulled to VDD.
+    cm = [Res('RCP', 1, 20, 'OPI', 'CMS', 'VSS'), Res('RCN', 1, 20, 'ONI', 'CMS', 'VSS'),
+          Res('RDA', 1, 50, 'VDD', 'CMR', 'VSS'), Res('RDB', 1, 50, 'CMR', 'VSS', 'VSS'),
+          Mos('OTT', N, 16, 2, 'OTS', 'ATB_BIAS', 'VSS', 'VSS'),
+          Mos('OT1', N, 4, 1, 'OTD', 'CMS', 'OTS', 'VSS'),
+          Mos('OT2', N, 4, 1, 'HG', 'CMR', 'OTS', 'VSS'),
+          Mos('OT3', P, 4, 1, 'OTD', 'OTD', 'VDD', 'VDD'),
+          Mos('OT4', P, 4, 1, 'HG', 'OTD', 'VDD', 'VDD'),
+          Mos('OTU', P, 2, 0.28, 'HG', 'LOAD_EN', 'VDD', 'VDD'),
+          Cap('OTC', 22, 22, 'HG', 'T')]
+    cm += inv('ILE', 'LOAD_ENB', 'LOAD_EN')
+    loads = [Mos('MHDR', P, 10, 0.5, 'T', 'HG', 'VDD', 'VDD', m=4),
              Res('RLP', 4, 4, 'T', 'OPI', 'VSS'),
              Res('RLN', 4, 4, 'T', 'ONI', 'VSS'),
              Mos('MOP', N, 10, 0.28, 'OPI', 'OUT_EN', 'OUTP', 'VSS', m=2),
              Mos('MON', N, 10, 0.28, 'ONI', 'OUT_EN', 'OUTN', 'VSS', m=2)]
-    d += loads
-    misc = [x for x in d if x is not m and x not in sw and x not in cs]
-    rows = [names(misc), names(cs), names(sw), [m.name]]
+    d += cb + cm + loads
+    misc = [x for x in d if x is not m and x not in sw and x not in cs and x not in cc and not isinstance(x, Cap)]
+    caps = [x for x in d if isinstance(x, Cap)]
+    rows = [names(misc), names(caps), names(cs), names(cc), names(sw), [m.name]]
     ports = ['VDD', 'VSS', 'OUTP', 'OUTN', 'IBIAS', 'CLKP', 'CLKN', 'EN', 'HOLD_ZERO'] + \
             [f'CODE{i}' for i in range(10)] + ['ATB_BIAS']
-    return Circuit(name, ports, d, rows=rows, wide_nets={'VDD': 2.0, 'VSS': 2.0, 'OPI': 1.0, 'ONI': 1.0, 'RT': 1.0, 'T': 1.0})
+    return Circuit(name, ports, d, rows=rows, wide_nets={'VDD': 2.0, 'VSS': 2.0, 'OPI': 1.0, 'ONI': 1.0, 'T': 1.0})
 
 
 # ------------------------------------------------------------ ADC
@@ -216,25 +240,33 @@ def bootstrap(p, vin, out, on, onb):
             Mos(p + 'M8', N, 2, 0.28, gx, onb, 'VSS', 'VSS')]
 
 
+# v3 (2026-11): latch, reset and clock-buffer widths doubled / tail 1.5x. The
+# extracted v2 loop spent ~1.3-2.8 ns regenerating (latch 4 um loaded by the
+# 6/12 um output inverters) and ~1.0-1.7 ns resetting (2 um reset PMOS).
+CMP_SIZE = dict(b1=3, b2=12, tail=12, latch=8, rst=4)
+
+
 def comparator(p, inp, inn, clk, dp, dn):
     """StrongARM latch (clk high evaluates); dp = inp > inn, both low in reset."""
     cn1, cn2, ct, qp, qn = p + 'cn1', p + 'cn2', p + 'ct', p + 'qp', p + 'qn'
     # Local two-stage clock buffer: the std-cell output alone gave ~3 ns edges on
     # the routed comparator clock and could not reset the latch (extracted run).
     ck = p + 'ck'
-    d = inv(p + 'B1', clk, p + 'ckb', wn=2, wp=4) + inv(p + 'B2', p + 'ckb', ck, wn=8, wp=16)
+    z = CMP_SIZE
+    d = inv(p + 'B1', clk, p + 'ckb', wn=z['b1'], wp=2 * z['b1']) + \
+        inv(p + 'B2', p + 'ckb', ck, wn=z['b2'], wp=2 * z['b2'])
     clk = ck
-    d += [Mos(p + 'MT', N, 8, 0.28, ct, clk, 'VSS', 'VSS'),
+    d += [Mos(p + 'MT', N, z['tail'], 0.28, ct, clk, 'VSS', 'VSS'),
          Mos(p + 'MIP', N, 8, 0.28, cn1, inp, ct, 'VSS', flip=True),
          Mos(p + 'MIN', N, 8, 0.28, cn2, inn, ct, 'VSS', flip=True),
-         Mos(p + 'MNP', N, 4, 0.28, qn, qp, cn1, 'VSS'),
-         Mos(p + 'MNN', N, 4, 0.28, qp, qn, cn2, 'VSS'),
-         Mos(p + 'MPP', P, 4, 0.28, qn, qp, 'VDD', 'VDD'),
-         Mos(p + 'MPN', P, 4, 0.28, qp, qn, 'VDD', 'VDD'),
-         Mos(p + 'MR1', P, 2, 0.28, cn1, clk, 'VDD', 'VDD'),
-         Mos(p + 'MR2', P, 2, 0.28, cn2, clk, 'VDD', 'VDD'),
-         Mos(p + 'MRP', P, 2, 0.28, qp, clk, 'VDD', 'VDD'),
-         Mos(p + 'MRN', P, 2, 0.28, qn, clk, 'VDD', 'VDD')]
+         Mos(p + 'MNP', N, z['latch'], 0.28, qn, qp, cn1, 'VSS'),
+         Mos(p + 'MNN', N, z['latch'], 0.28, qp, qn, cn2, 'VSS'),
+         Mos(p + 'MPP', P, z['latch'], 0.28, qn, qp, 'VDD', 'VDD'),
+         Mos(p + 'MPN', P, z['latch'], 0.28, qp, qn, 'VDD', 'VDD'),
+         Mos(p + 'MR1', P, z['rst'], 0.28, cn1, clk, 'VDD', 'VDD'),
+         Mos(p + 'MR2', P, z['rst'], 0.28, cn2, clk, 'VDD', 'VDD'),
+         Mos(p + 'MRP', P, z['rst'], 0.28, qp, clk, 'VDD', 'VDD'),
+         Mos(p + 'MRN', P, z['rst'], 0.28, qn, clk, 'VDD', 'VDD')]
     d += inv(p + 'IP', qn, dp, wn=6, wp=12)     # drive the routed DP/DN to the SAR logic
     d += inv(p + 'IN', qp, dn, wn=6, wp=12)
     return d
@@ -338,6 +370,7 @@ def delay(p, a, z, stages, l=1.0):
 
 
 SAR_LOGIC_SCALE = 2.5
+SAR_DIRECT_CMPCLK = True
 SAR_DLY = dict(trk=(2, 0.28))   # (stages, L um): sample-end delays (force release, first compare)
 
 
@@ -372,7 +405,16 @@ def sar_core():
     # reset path (NOR, INV, NOR, comparator clock buffer, latch reset) is longer
     # than the capture path (NOR3 -> NOR latch), and the CDAC settles while the
     # comparator resets (extracted: delay cells only cost ~0.8 ns per half cycle).
-    d += nor2('OK', 'VALID', 'RUNB', 'CMPCLK', wn=2, wp=8)
+    if SAR_DIRECT_CMPCLK:
+        # v3: CMPCLK = NOR3(DP, DN, RUNB) = RUN & ~VALID in one stage. v2 went
+        # DP -> NOR (VALIDB) -> INV (VALID) -> NOR: two extra stages in both the
+        # decide and the reset half-cycle (~1 ns of a ~3 ns tt cycle, extracted).
+        # Capture (DP -> IDP -> NOR3 -> NOR latch, 3 stages) still precedes the
+        # reset (NOR3 -> 2 clock buffers -> latch reset -> output inverter, 5);
+        # a slice armed late only re-compares the unchanged CDAC (extra cycle).
+        d += nor3('OK', 'DP', 'DN', 'RUNB', 'CMPCLK', wn=2, wp=12)
+    else:
+        d += nor2('OK', 'VALID', 'RUNB', 'CMPCLK', wn=2, wp=8)
     # +/-VREF/4 diagnostic force on the weight-128 plate (cap 7) while TD1
     d += inv('IT0', 'TEST0', 'TEST0B')
     d += inv('IT1', 'TEST1', 'TEST1B')
@@ -441,4 +483,87 @@ def adc2(name='pt_adc_i'):
     c = Circuit(name, base.ports, keep + core + [m], rows=rows, wide_nets=base.wide_nets)
     c.notes = ['v2: custom 3.3 V asynchronous SAR loop (circuits.sar_core); adc_code_reg macro = output register']
     c.device_gap = 1.2
+    return c
+
+
+# ------------------------------------------------------------ ADC v3: 2-way time-interleaved
+ADC_SHARED = ('VDD', 'VSS', 'INP', 'INN', 'VCM', 'VREF', 'IBIAS', 'ATB_BIAS', 'TEST0', 'TEST1')
+
+
+def _rename(dev, sfx, netmap):
+    """Copy of a device with its name suffixed and private nets renamed."""
+    import copy
+    d = copy.deepcopy(dev)
+    d.name = dev.name + sfx
+    f = lambda n: netmap.get(n, n if n in ADC_SHARED else n + sfx)
+    if isinstance(d, Mos):
+        d.d, d.g, d.s, d.b = f(d.d), f(d.g), f(d.s), f(d.b)
+    elif isinstance(d, Cap):
+        d.top, d.bot = f(d.top), f(d.bot)
+    elif isinstance(d, Macro):
+        d.pins = {k: f(v) for k, v in d.pins.items()}
+    d.x = None
+    return d
+
+
+def dff_clr(p, d_, ck, clr, q, qb):
+    """Static positive-edge D flip-flop (7474 structure, no preset); clr low -> q=0."""
+    o1, o2, o3, o4 = (p + x for x in ('o1', 'o2', 'o3', 'o4'))
+    return (nand2(p + 'G1', o4, o2, o1) + nand3(p + 'G2', o1, clr, ck, o2) +
+            nand3(p + 'G3', o2, ck, o4, o3) + nand3(p + 'G4', o3, clr, d_, o4) +
+            nand2(p + 'G5', o2, qb, q, wn=3, wp=3) + nand3(p + 'G6', q, o3, clr, qb))
+
+
+def adc_il(name='pt_adc_i'):
+    """v3: two v2 SAR cores (comparator v3) behind one clock receiver. A toggle
+    flip-flop clocked at the end of each acquisition steers alternate SAMPLE
+    pulses to core A and core B, so each core has 2 x T_clk per conversion:
+    40 MS/s per channel from 20 MS/s cores. ILEN=0 (reset value) holds the
+    toggle at core A and disables core B: the block then behaves exactly like
+    the single-core v2 ADC on CODE*/DONE/OVERLOAD (fallback / debug mode).
+    Core A keeps the v2 port names; core B adds CODEB*, DONEB, OVERLOADB."""
+    base = adc2(name)
+    shared_names = set(names(inv('IE', 'EN', 'ENB') + bias('B', 'EN', 'ENB', nb='ATB_BIAS') +
+                             clkrx('K', 'CLKP', 'CLKN', 'SAMPLE', 'EN', nb='ATB_BIAS')))
+    shared = [x for x in base.devices if x.name in shared_names]
+    core = [x for x in base.devices if x.name not in shared_names]
+    assert len(shared) == len(shared_names)
+    # The clock receiver emits a ~1.5-2.5 ns SAMPLE pulse when EN rises (its
+    # internal node starts high); in v2 that was one spurious conversion, here it
+    # would also flip the A/B order. Gate the receiver output with EN delayed by
+    # ~5-10 ns (long-channel chain): first SAMPLE after enable -> core A.
+    for x in shared:
+        if x.name in ('KGNB', 'KGPB'):
+            assert x.g == 'EN'
+            x.g = 'EN_D'
+    ctl = delay('EDL', 'EN', 'EN_D', 4, l=4.0)
+    ctl += nand2('ILG', 'EN', 'ILEN', 'ENB_B')            # core B enable = EN & ILEN
+    ctl += inv('ILI', 'ENB_B', 'EN_B', wn=2, wp=4)
+    ctl += inv('TCK', 'SAMPLE', 'SCK', wn=2, wp=4)        # toggle on the acquisition end
+    ctl += dff_clr('TF', 'PHB', 'SCK', 'EN_B', 'PH', 'PHB')
+    ctl += nand2('SGA', 'SAMPLE', 'PHB', 'SAB_A', wn=4, wp=4)   # matched A/B sample gating
+    ctl += inv('SIA', 'SAB_A', 'SAMPLE_A', wn=4, wp=8)
+    ctl += nand2('SGB', 'SAMPLE', 'PH', 'SAB_B', wn=4, wp=4)
+    ctl += inv('SIB', 'SAB_B', 'SAMPLE_B', wn=4, wp=8)
+    maps = {
+        '_A': dict(EN='EN', ENB='ENB', SAMPLE='SAMPLE_A', DONE='DONE', OVERLOAD='OVERLOAD',
+                   **{f'CODE{i}': f'CODE{i}' for i in range(10)}),
+        '_B': dict(EN='EN_B', ENB='ENB_B', SAMPLE='SAMPLE_B', DONE='DONEB', OVERLOAD='OVERLOADB',
+                   **{f'CODE{i}': f'CODEB{i}' for i in range(10)}),
+    }
+    devs = shared + ctl
+    rows = [names(shared + ctl)]
+    for sfx, nm in maps.items():
+        cd = [_rename(x, sfx, nm) for x in core]
+        devs += cd
+        for r in base.rows:
+            rr = [x + sfx for x in r if x not in shared_names]
+            if rr:
+                rows.append(rr)
+    ports = ['VDD', 'VSS', 'INP', 'INN', 'VCM', 'VREF', 'IBIAS', 'CLKP', 'CLKN', 'EN', 'ILEN', 'TEST0', 'TEST1'] + \
+            [f'CODE{i}' for i in range(10)] + ['DONE', 'OVERLOAD'] + \
+            [f'CODEB{i}' for i in range(10)] + ['DONEB', 'OVERLOADB', 'ATB_BIAS']
+    c = Circuit(name, ports, devs, rows=rows, wide_nets=base.wide_nets)
+    c.notes = ['v3: 2-way time-interleaved v2 cores; ILEN=0 = single core A (v2 behaviour)']
+    c.device_gap = getattr(base, 'device_gap', 1.2)
     return c

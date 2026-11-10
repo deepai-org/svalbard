@@ -132,7 +132,11 @@ def build():
                         'No package, bond-wire or supply-network impedance; ideal 3.3 V rails.',
                         'LO is an ideal rail-to-rail square wave behind 50 ohm (quadrature block not simulated).',
                         'Baseband sources ideal (bbfilter / DAC output impedance not modelled).',
-                        'No noise, mismatch/Monte Carlo, EVM or spectral-mask simulation.',
+                        'No noise or mismatch/Monte Carlo. EVM/ACLR/mask come from a memoryless model fed by the extracted '
+                        'AM-AM/AM-PM (tx_modulation.py), not from a transistor-level modulated transient.',
+                        'Board: ideal chokes (Q=30), ideal 200:50 balun + 1.0 dB loss pad; balun harmonic rejection not modelled.',
+                        'rftxpad stress-safe clamp not in the bench: its 2.1 V (ff) onset conflicts with the ~3.3 V pad bias '
+                        'and ~4.1 V peaks of the DC-fed driver (interface-changes.md).',
                         'Pad modelled as the rftxpad allocation (2 ohm + 1 pF per leg), not the pads agent extraction.']
         if block.startswith('txmix'):
             mp, mz, md, mo, mu = (r(ext, n) for n in ('mix_bb_p', 'mix_zero', 'mix_dac', 'mix_off', 'mix_unselected'))
@@ -220,15 +224,16 @@ def build():
             t['clean']['extracted_nominal'].update(
                 board_matched_linear_dBm_0p3V=ml['pad_dBm_50ohm'], board_matched_saturated_dBm_1p0V=ms['pad_dBm_50ohm'],
                 board_matched_ssb_linear_dBm=r(ext, 'match_ssb_lin')['lsb_dBm'], board_matched_ssb_saturated_dBm=ss['lsb_dBm'],
-                board_match=dict(r_opt_diff_ohm=round(bm.get('r_opt_ohm', float('nan')), 1), shunt_pad=bm.get('shunt_pad'),
-                                 series_l_total_H=bm.get('series_l'), inductor_q=bm.get('q_l'), method=bm.get('method')))
+                board_match=dict(r_out_diff_ohm=round(bm.get('r_out_ohm', float('nan')), 1), choke_l_per_leg_H=bm.get('choke_l'),
+                                 balun_ratio_ohm=bm.get('balun_ratio_ohm'), balun_loss_db=bm.get('balun_loss_db'),
+                                 inductor_q=bm.get('q_l'), method=bm.get('method')))
             mode_current = {'linear (chain, 0.3 V, matched)': ml['supply_mA']['rfdriver'],
                             'saturated (chain, 1.0 V, sat=1, matched)': ms['supply_mA']['rfdriver'],
                             'zero input (chain, matched)': r(ext, 'match_zero')['supply_mA']['rfdriver'],
                             'mute': r(ext, 'match_mute_sat')['supply_mA']['rfdriver'],
                             'bypass': r(ext, 'match_bypass_0p3')['supply_mA']['rfdriver']}
-            pv += [perf('board-matched output power, linear mode (power delivered to 50 ohm after external L-match)', 0.0,
-                        ml['pad_dBm_50ohm'], 'dBm', 'extracted chain, 0.3 V DC I, inductor Q=30, balun loss not included', src),
+            pv += [perf('board-matched output power, linear mode (50 ohm after chokes + 200:50 balun, 1.0 dB balun loss included)', 0.0,
+                        ml['pad_dBm_50ohm'], 'dBm', 'extracted chain, 0.3 V DC I, choke Q=30', src),
                    perf('board-matched output power, linear mode, 0.7 V DC I', 0.0, r(ext, 'match_lin_0p7')['pad_dBm_50ohm'], 'dBm',
                         'extracted chain', src),
                    perf('board-matched output power, saturated mode (txmix sat=1, full-scale baseband)', 0.0, ms['pad_dBm_50ohm'],
@@ -249,6 +254,27 @@ def build():
                         corners(ext, 'supply_mA', 'rfdriver', prefix='scorner_'), 'mA', 'same corners', src),
                    perf('mute isolation, saturated, matched', None,
                         round(ms['pad_dBm_50ohm'] - r(ext, 'match_mute_sat')['pad_dBm_50ohm'], 2), 'dB', 'extracted chain', src)]
+            mod = GEN / 'rf_tx-modulation.json'
+            if mod.exists():
+                for mode, md in json.loads(mod.read_text())['modes'].items():
+                    srcm = 'generated/rf_tx-modulation.json'
+                    pv += [perf(f'[{mode}] HE20 OFDM near 0 dBm mean (after 1 dB balun loss): EVM / ACLR / mask margin',
+                                '0 dBm with EVM <= -27 dB (MCS7) and mask margin >= 0', md['at_0dBm'], 'dBm/dB',
+                                'extracted AM-AM/AM-PM + tx_modulation.py (64QAM HE20, 10b 40 MS/s DAC, FPGA shaping FIR, '
+                                '5th-order 15.2 MHz filter)', srcm),
+                           perf(f'[{mode}] max mean output meeting EVM limit and mask, per MCS', 0.0, md['max_mean_power_meeting'],
+                                'dBm', 'same model', srcm),
+                           perf(f'[{mode}] AM-AM: P1dB / Psat after balun loss', None,
+                                dict(p1dB=md['amam']['p1dB_out_dBm'], psat=md['amam']['psat_dBm']), 'dBm', 'extracted chain, CW', srcm),
+                           perf(f'[{mode}] power sweep (EVM, ACLR, mask vs mean output)', None, md['power_sweep'], 'dBm/dB', 'same model', srcm),
+                           perf(f'[{mode}] LO jitter sweep at the 0 dBm point', None, md['lo_jitter_sweep'], 'dB', 'white phase jitter', srcm),
+                           perf(f'[{mode}] baseband I/Q skew sweep', None, md['bb_iq_skew_sweep'], 'dB', 'Q path delayed', srcm),
+                           perf(f'[{mode}] LO quadrature skew (transistor-level image rejection -> EVM)', None,
+                                md['lo_iq_skew_sweep'], 'dB', 'Q LO delayed, extracted chain', srcm)]
+                pv += [perf('harmonics at 2LO / 3LO vs drive (load side after the ideal balun; pad side in pad_h*)', None,
+                            {k: {x: r(ext, k).get(x) for x in ('vin', 'pad_dBm_50ohm', 'h2_dBc', 'h3_dBc', 'pad_h2_dBc', 'pad_h3_dBc')}
+                             for k in sorted(ext.get('results', {})) if k.startswith('amam')}, 'dBc', 'extracted chain, CW', src,
+                            'board balun/filter harmonic rejection not modelled beyond the ideal transformer')]
             pv += [perf('mean output power into 50 ohm differential, no board matching', ARCH['blocks']['rfdriver']['parameters']['target_mean_power_dbm'],
                         chain['pad_dBm_50ohm'], 'dBm', 'full extracted chain, 0.3 V DC I baseband (CW at LO), code 15', src),
                    perf('SSB output power', 0.0, r(ext, 'chain_ssb')['lsb_dBm'], 'dBm', 'full extracted chain, 0.3 V I/Q at 61 MHz', src),

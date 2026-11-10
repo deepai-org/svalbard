@@ -1,50 +1,299 @@
 {
  "geometry": {
-  "shape": "octagon",
-  "turns": 2,
-  "width_um": 20.0,
-  "space_um": 2.0,
-  "dout_um": 400.0,
-  "strap": "Metal5 with Metal4 strapped in parallel (M4 also forms the crossover)",
-  "f_hz": 2450000000.0
+  "turns": 3,
+  "width_um": 25.0,
+  "space_um": 2.5,
+  "dout_um": 300.0,
+  "under_w_um": 12.0,
+  "f_hz": 2450000000.0,
+  "strap": [
+   "metal5",
+   "metal4",
+   "metal3"
+  ],
+  "underpass": [
+   "metal2",
+   "metal1"
+  ]
  },
- "process": {
-  "m5_sheet": 0.04,
-  "m5_t_um": 1.0,
-  "m4_sheet": 0.09,
-  "m4_t_um": 0.55,
-  "h_m4_um": 4.68,
-  "t_m45_um": 0.6,
-  "gsub_s_per_um2": 4e-08,
-  "csub_f_per_um2": 6e-18,
-  "crowding_factor": 1.3,
-  "via_and_underpass_ohm": 0.3
+ "stack": {
+  "metal1": [
+   1.23,
+   0.55,
+   0.09
+  ],
+  "metal2": [
+   2.38,
+   0.55,
+   0.09
+  ],
+  "metal3": [
+   3.53,
+   0.55,
+   0.09
+  ],
+  "metal4": [
+   4.68,
+   0.55,
+   0.09
+  ],
+  "metal5": [
+   5.83,
+   1.0025,
+   0.04
+  ]
  },
- "din_um": 316.0,
- "davg_um": 358.0,
- "fill_ratio": 0.11731843575418995,
- "L_nH": 2.858411932709241,
- "length_um": 2372.6152852730884,
- "metal_area_um2": 47452.30570546177,
- "footprint_um2": 160000.0,
- "rsheet_strapped_ohm": 0.02769230769230769,
- "Rdc_ohm": 3.5851596257627376,
- "skin_depth_um": 2.03360726690622,
- "skin_factor": 1.2659382145677136,
- "Rac_ohm": 5.706451844570424,
- "Cox_total_fF": 350.11892893013203,
- "Cs_fF": 46.04079999999999,
- "Csi_total_fF": 284.7138342327706,
- "Rsi_total_ohm": 526.8447892748549,
- "shunt_per_terminal_ohm": 3594.862281661021,
- "shunt_per_terminal_fF": 82.02159343463661,
- "Q_series": 7.710891855270341,
- "Rp_diff_ohm": 324.0032019933804,
- "Q_eff": 7.363402375064456,
+ "substrate_params": {
+  "nominal": {
+   "gsub": 4e-08,
+   "csub": 0.006
+  },
+  "worst": {
+   "gsub": 1.2e-07,
+   "csub": 0.002
+  },
+  "best": {
+   "gsub": 1.3e-08,
+   "csub": 0.018
+  }
+ },
+ "crowding": 1.3,
+ "via_ohm": 0.3,
+ "variants": {
+  "pt_spiral": {
+   "L_nH": 2.9111254165224456,
+   "Rs_ohm": 4.333266104482999,
+   "Rdc_ohm": 3.1207941176470584,
+   "R_turns_ohm": 3.3957661044829996,
+   "R_underpass_ohm": 0.6375,
+   "length_um": 2577.5,
+   "din_um": 140.0,
+   "metal_area_um2": 64437.5,
+   "footprint_um2": 102000.0,
+   "Cox_total_fF": 724.8797076841358,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 386.62500000000006,
+   "Rsi_total_ohm": 387.97284190106694,
+   "shunt_per_terminal_ohm": 1865.8087777402186,
+   "shunt_per_terminal_fF": 131.3156114376994,
+   "Q_series": 10.341689849728564,
+   "Rp_diff_ohm": 412.2465639550383,
+   "Q_eff": 9.199202431697751,
+   "substrate": "nominal",
+   "rs_scale": 1.0,
+   "l_scale": 1.0,
+   "f_hz": 2450000000.0
+  },
+  "pt_spiral_lowq": {
+   "L_nH": 2.9111254165224456,
+   "Rs_ohm": 6.499899156724499,
+   "Rdc_ohm": 3.1207941176470584,
+   "R_turns_ohm": 3.3957661044829996,
+   "R_underpass_ohm": 0.6375,
+   "length_um": 2577.5,
+   "din_um": 140.0,
+   "metal_area_um2": 64437.5,
+   "footprint_um2": 102000.0,
+   "Cox_total_fF": 724.8797076841358,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 128.87500000000003,
+   "Rsi_total_ohm": 129.324280633689,
+   "shunt_per_terminal_ohm": 482.99466467338686,
+   "shunt_per_terminal_fF": 133.84268396745006,
+   "Q_series": 6.894459899819043,
+   "Rp_diff_ohm": 234.0913383889183,
+   "Q_eff": 5.223702991449517,
+   "substrate": "worst",
+   "rs_scale": 1.5,
+   "l_scale": 1.0,
+   "f_hz": 2450000000.0
+  },
+  "pt_spiral_lhi": {
+   "L_nH": 3.2022379581746905,
+   "Rs_ohm": 4.333266104482999,
+   "Rdc_ohm": 3.1207941176470584,
+   "R_turns_ohm": 3.3957661044829996,
+   "R_underpass_ohm": 0.6375,
+   "length_um": 2577.5,
+   "din_um": 140.0,
+   "metal_area_um2": 64437.5,
+   "footprint_um2": 102000.0,
+   "Cox_total_fF": 724.8797076841358,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 386.62500000000006,
+   "Rsi_total_ohm": 387.97284190106694,
+   "shunt_per_terminal_ohm": 1865.8087777402186,
+   "shunt_per_terminal_fF": 131.3156114376994,
+   "Q_series": 11.37585883470142,
+   "Rp_diff_ohm": 487.5083765254511,
+   "Q_eff": 9.88968658107829,
+   "substrate": "nominal",
+   "rs_scale": 1.0,
+   "l_scale": 1.1,
+   "f_hz": 2450000000.0
+  },
+  "pt_spiral_llo": {
+   "L_nH": 2.620012874870201,
+   "Rs_ohm": 4.333266104482999,
+   "Rdc_ohm": 3.1207941176470584,
+   "R_turns_ohm": 3.3957661044829996,
+   "R_underpass_ohm": 0.6375,
+   "length_um": 2577.5,
+   "din_um": 140.0,
+   "metal_area_um2": 64437.5,
+   "footprint_um2": 102000.0,
+   "Cox_total_fF": 724.8797076841358,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 386.62500000000006,
+   "Rsi_total_ohm": 387.97284190106694,
+   "shunt_per_terminal_ohm": 1865.8087777402186,
+   "shunt_per_terminal_fF": 131.3156114376994,
+   "Q_series": 9.307520864755707,
+   "Rp_diff_ohm": 341.07898243752106,
+   "Q_eff": 8.456790665755411,
+   "substrate": "nominal",
+   "rs_scale": 1.0,
+   "l_scale": 0.9,
+   "f_hz": 2450000000.0
+  },
+  "pt_spiral_lhi_lowq": {
+   "L_nH": 3.2022379581746905,
+   "Rs_ohm": 6.499899156724499,
+   "Rdc_ohm": 3.1207941176470584,
+   "R_turns_ohm": 3.3957661044829996,
+   "R_underpass_ohm": 0.6375,
+   "length_um": 2577.5,
+   "din_um": 140.0,
+   "metal_area_um2": 64437.5,
+   "footprint_um2": 102000.0,
+   "Cox_total_fF": 724.8797076841358,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 128.87500000000003,
+   "Rsi_total_ohm": 129.324280633689,
+   "shunt_per_terminal_ohm": 482.99466467338686,
+   "shunt_per_terminal_fF": 133.84268396745006,
+   "Q_series": 7.583905889800946,
+   "Rp_diff_ohm": 269.533941601423,
+   "Q_eff": 5.467816213536529,
+   "substrate": "worst",
+   "rs_scale": 1.5,
+   "l_scale": 1.1,
+   "f_hz": 2450000000.0
+  },
+  "pt_spiral_llo_lowq": {
+   "L_nH": 2.620012874870201,
+   "Rs_ohm": 6.499899156724499,
+   "Rdc_ohm": 3.1207941176470584,
+   "R_turns_ohm": 3.3957661044829996,
+   "R_underpass_ohm": 0.6375,
+   "length_um": 2577.5,
+   "din_um": 140.0,
+   "metal_area_um2": 64437.5,
+   "footprint_um2": 102000.0,
+   "Cox_total_fF": 724.8797076841358,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 128.87500000000003,
+   "Rsi_total_ohm": 129.324280633689,
+   "shunt_per_terminal_ohm": 482.99466467338686,
+   "shunt_per_terminal_fF": 133.84268396745006,
+   "Q_series": 6.205013909837138,
+   "Rp_diff_ohm": 198.7658221372666,
+   "Q_eff": 4.928245467688846,
+   "substrate": "worst",
+   "rs_scale": 1.5,
+   "l_scale": 0.9,
+   "f_hz": 2450000000.0
+  }
+ },
+ "at_4p9ghz": {
+  "L_nH": 2.9111254165224456,
+  "Rs_ohm": 4.578312520671772,
+  "Rdc_ohm": 3.1207941176470584,
+  "R_turns_ohm": 3.640812520671772,
+  "R_underpass_ohm": 0.6375,
+  "length_um": 2577.5,
+  "din_um": 140.0,
+  "metal_area_um2": 64437.5,
+  "footprint_um2": 102000.0,
+  "Cox_total_fF": 724.8797076841358,
+  "Cs_fF": 51.79589999999999,
+  "Csi_total_fF": 386.62500000000006,
+  "Rsi_total_ohm": 387.97284190106694,
+  "shunt_per_terminal_ohm": 1834.7584532552569,
+  "shunt_per_terminal_fF": 127.40420680006768,
+  "Q_series": 19.57633686497629,
+  "Rp_diff_ohm": 1187.0016585481421,
+  "Q_eff": 13.243856345320886,
+  "substrate": "nominal",
+  "rs_scale": 1.0,
+  "l_scale": 1.0,
+  "f_hz": 4900000000.0
+ },
+ "fasthenry": {
+  "points": [
+   {
+    "f_hz": 1000000000.0,
+    "R_ohm": 2.79841,
+    "L_nH": 2.68895459452619,
+    "Q": 6.037428396839633
+   },
+   {
+    "f_hz": 1258930000.0,
+    "R_ohm": 2.8931,
+    "L_nH": 2.679134967783804,
+    "Q": 7.3250838201237425
+   },
+   {
+    "f_hz": 1584890000.0,
+    "R_ohm": 2.99905,
+    "L_nH": 2.668927443241586,
+    "Q": 8.862006301995631
+   },
+   {
+    "f_hz": 1995260000.0,
+    "R_ohm": 3.11214,
+    "L_nH": 2.6590487906065214,
+    "Q": 10.711407584491699
+   },
+   {
+    "f_hz": 2511890000.0,
+    "R_ohm": 3.22988,
+    "L_nH": 2.650109208115402,
+    "Q": 12.949645188056522
+   },
+   {
+    "f_hz": 3162280000.0,
+    "R_ohm": 3.35276,
+    "L_nH": 2.642382338758962,
+    "Q": 15.659337381739224
+   },
+   {
+    "f_hz": 3981070000.0,
+    "R_ohm": 3.48445,
+    "L_nH": 2.63584095982037,
+    "Q": 18.921895851569115
+   }
+  ],
+  "log_tail": "onditioner..\nconductor 0 from node nmetal3_0\nCalling gmres...\n1 2 3 4 5 6 7 8 9 10 11 12 13 \n\nAll impedance matrices dumped to file Zc.mat\n\nTimes:  Read geometry   0.000276\n        Multipole setup 0.246845\n        Scanning graph  5.2e-05\n        Form A M and Z  0.000132\n        form M'ZM       6e-06\n        Form precond    0.164429\n        GMRES time      0.337151\n   Total:               0.748891\n"
+ },
+ "fasthenry_vs_model": {
+  "L_ratio": 0.9106710910471789,
+  "R_ratio": 0.7424246484554066,
+  "fasthenry_at_f": {
+   "R_ohm": 3.21712356428452,
+   "L_nH": 2.651077759239669
+  }
+ },
+ "layout": {
+  "drc_count": 0,
+  "drc_report": "0\n\n",
+  "work": "/home/ubuntu/svalbard/scratch/timing/lcvco/layout",
+  "gds": true
+ },
  "uncertainty": {
-  "L": "+-10 % (Mohan [1] quotes 2-3 % vs field solvers; +-10 % covers the M4 strap, the crossover, the lead-in and return-path effects not modelled)",
-  "Rac": "-20 %/+50 % (current crowding factor 1.3 assumed, [3]; via/underpass 0.3 ohm assumed)",
-  "substrate": "Rsi/Csi factor 3 either way (substrate resistivity and doping profile not known from the PDK); Cox +-20 %",
-  "Q": "therefore Q_eff ~ -35 %/+20 % around the nominal value"
+  "L": "+-10 %: Mohan quotes 2-3 % vs field solvers; FastHenry (partial inductance of the drawn polyline, no substrate eddy currents) cross-checks it; the lead-in, the underpass return and the neighbouring QVCO inductor are not in the closed form. Bounded by variants pt_spiral_lhi/llo.",
+  "Rs": "-20 %/+50 % (crowding factor and vias); bounded by the low-Q variants (x1.5).",
+  "substrate": "Gsub x3 / Csub /3 (worst) vs nominal: substrate resistivity is not published for gf180mcuD.",
+  "Q": "Q_eff spans the nominal and the low-Q variants; the design must start and cover the band with low-Q."
  }
 }

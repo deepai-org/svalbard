@@ -33,6 +33,12 @@ d = json.load(open(p)); d['image'] = 'svalbard/librelane-gf180-canary:2026.08'; 
 json.dump(d, open(p, 'w'), indent=1)
 PY
 fi
+# Required: block-unique subcell names + the tapeout precheck's KLayout decks (DRC + antenna) per cell,
+# published as $OUT/layout/<cell>-kldrc.json (verification/kl_block_drc.py).
+for c in $cells; do
+  python3 -c "import sys; sys.path.insert(0, '$PROJ/analog'); import gds_uniquify as g, json; \
+print(json.dumps(g.publish_checked('$OUT/layout/$c.gds', '$c', '$c')))" > "$OUT/layout/$c-kldrc.log" 2>&1 || true
+done
 python3 "$HERE/summarize.py" --work "$OUT" --out "$OUT/evidence.json"
 cp "$OUT/evidence.json" "$HERE/evidence.json"
 echo "outputs: $OUT"

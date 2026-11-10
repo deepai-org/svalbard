@@ -42,7 +42,7 @@ def assemble(work):
             for i in range(cuts):
                 for j in range(cuts):
                     cx=x+(i-(cuts-1)/2)*pitch;cy=y+(j-(cuts-1)/2)*pitch
-                    rect(via,cx-.14,cy-.14,cx+.14,cy+.14)
+                    rect(via,cx-.13,cy-.13,cx+.13,cy+.13)
     # Separate layers carry rail and return; no signal switching devices added.
     ra=cfg['gate_landings_um']['rail'];gr=cfg['ground_landing_um']
     wire(81,ra,(130.,ra[1]),ROUTING['rail_width_um']);wire(81,(130.,ra[1]),(130.,4.),ROUTING['rail_width_um']);stack(130.,4.,5,ROUTING['port_via_cuts_per_axis'])
@@ -54,12 +54,12 @@ def assemble(work):
         metals={1:34,2:36,3:42,4:46};vias={1:35,2:38,3:40}
         for level in range(1,hi+1):rect(metals[level],x-.25,y-.25,x+.25,y+.25)
         for level in range(1,hi):
-            h=.13 if level==1 else .14
+            h=.13  # GDS cut: exactly 0.26 um (KLayout V*.1)
             rect(vias[level],x-h,y-h,x+h,y+h)
     low_stack(bp['RAIL'],2)
     # M2 rail route lands on existing M3 rail; M4 carries the return below it.
     rail_landing=(130.,bp['RAIL'][1]);x,y=rail_landing
-    rect(36,x-.25,y-.25,x+.25,y+.25);rect(38,x-.14,y-.14,x+.14,y+.14)
+    rect(36,x-.25,y-.25,x+.25,y+.25);rect(38,x-.13,y-.13,x+.13,y+.13)
     wire(36,rail_landing,bp['RAIL'],.5)
     low_stack(bp['VSS'],4)
     wire(46,(138.,4.),(bp['VSS'][0],4.),1.)

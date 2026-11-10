@@ -73,7 +73,7 @@ power-up defaults have to work, or nothing else can be measured.
 | SPI control and register file | Clocked by `HOST_SCLK` only; works with every PLL and oscillator stopped. All analog settings come from one generated register file whose reset values are the safe state. No register write can enable two drivers on one pad. |
 | POR / reset | Internal reset = `porb AND RESET_N`, asynchronous and reset-dominant. Edwards `gf180mcu_ocd_ip__por` covers **cold start and full power cycles only**. On 100 ms–1 s ramps it releases near 1.0–1.5 V or not at all, and it ignores dips that stay above 1.5 V. **A board reset-supervisor IC on `RESET_N` covers slow ramps and brownout** (board requirement B1). `RESET_N` has a weak on-chip pull-down. Sticky "POR occurred" and "reset occurred" bits and the live reset level are observable. |
 | Bias and references | Edwards `gf180mcu_ocd_ip__bandgap` and `gf180mcu_ocd_ip__biasgen`. The biasgen carries two local patches: its top-level `dvdd` pin moved off the ground strap, and a 30 pF compensation capacitor on the bandgap-referenced loop. Five per-island trunks deliver 10 µA to each of 23 consumers, trimmed per die. The bandgap node, root reference and every trunk can be forced from the analog test bus, which is the qualified fallback for the core itself. Bias and trunks reset off. |
-| Supply ring | Provider ring and fixed power/ground sites unchanged. One external supply. Every non-core island sits behind a local power switch that defaults off. DC drop budget: about 25 mV across bond wires (8 supply, 10 ground bonds at roughly 0.1 Ω each) at 250 mA, leaving about 100 mV for the on-die grid and island switches inside the 3.15–3.35 V window. The 2 Ω `package_r` in the reduced PDN model is an unmeasured AC damping value, not a DC resistance. |
+| Supply ring | Provider ring and fixed power/ground sites unchanged. One external supply. Every non-core island sits behind a local power switch that defaults off. DC drop budget: about 25 mV across bond wires (8 supply, 10 ground bonds at roughly 0.1 Ω each) at 250 mA, leaving about 100 mV for the on-die grid and island switches inside the 3.15–3.35 V window. The 2 Ω `package_r` in the reduced PDN model is an unmeasured AC damping value, not a DC resistance. **Superseded 2026-11-09:** the drop budget is now computed at the worst mode current by `spec/budgets/power_budget.py`; see [power-partition.md](power-partition.md#supply-drop-and-thermal-budget-envelope-2026-11-09). |
 | Pad ESD | Provider/OCD primary clamp geometry on every custom signal pad, plus the **stress-safe** additions: a 3 × 12000 µm diode-NMOS shunt from the isolated protection rail to ground and a 100 kΩ clamp-gate discharge resistor. Worst ±100 mA / 2 ns pulse peak is 5.895 V against the 6.0 V gate screen. The cost is pad leakage near 3.3 V at the fast corner; the fallbacks below cover it. Digital and test-bus pads use provider cells. |
 | Safe power-up defaults | Master bias and all bias trunks off (SPI, POR and the management oscillator need no bias). Every island off, every driver tristated, every termination and pull released, every test-bus switch open, every clock mux on its stopped input. Checked formally from the generated register file. |
 
@@ -121,8 +121,8 @@ Characterization structures in the reserve area, all reached through the
 analog test bus or `ESD_TEST`: NMOS/PMOS device replicas at the sizes used in
 the LNA, mixer, sampler and driver; a ring-oscillator speed monitor; one VCO
 replica with its own divider to `CLK_OBS`; and resistor and MIM-capacitor
-matching arrays. The device-replica and passive-matching arrays are not yet
-designed.
+matching arrays. The device replicas and matching pairs are `pt_char_atb` in
+`analog/characterization` (ATB codes 43–54).
 
 ## Stretch goals (exploratory, never gating)
 

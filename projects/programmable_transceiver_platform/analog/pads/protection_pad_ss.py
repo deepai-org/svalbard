@@ -41,7 +41,7 @@ def assemble(work):
         metals={1:34,2:36,3:42,4:46,5:81};vias={1:35,2:38,3:40,4:41}
         for level in range(low,high+1):rect(metals[level],x-.25,y-.25,x+.25,y+.25)
         for level in range(low,high):
-            h=.13 if level==1 else .14
+            h=.13  # GDS cut: every via is exactly 0.26 um (KLayout V*.1)
             rect(vias[level],x-h,y-h,x+h,y+h)
     routes=[]
     for route in [r for r in cfg['signal_routes'] if not single or r['leg']=='P']:
@@ -60,6 +60,16 @@ def assemble(work):
         for layer in (36,42,46):rect(layer,cx-1.,escape_y-1.,cx+1.,escape_y+1.)
         stack(trunk_x,escape_y,4,5);stack(trunk_x,landing_y,4,5)
         stack(landing_x,landing_y,3,4)
+        if cfg.get('boundary_port_width_um'):
+            # I8: continue the outer M5 vertical from the protection landing to the
+            # cell's inner edge (network top) as the core-facing boundary pin. The
+            # column x 274.5..310 is free of M3..M5 up to the shunt; above it only the
+            # shunt's metal3 lies underneath (P leg).
+            top=origin+cfg['network_top_um'];bw=cfg['boundary_port_width_um']
+            seg=dict(layer=5,start_um=[trunk_x,landing_y],end_um=[trunk_x,top-bw/2],width_um=bw,role='boundary pin')
+            wire(81,seg['start_um'],seg['end_um'],bw);rect(81,trunk_x-bw/2,top-bw,trunk_x+bw/2,top)
+            segments.append(seg)
+            root.shapes(layout.layer(81,10)).insert(k.DText('PAD_'+leg,k.DTrans(trunk_x,top-bw/2)))
         routes.append(dict(leg=leg,bond_center_x_um=cx,corridor_end_y_um=escape_y,outer_trunk_x_um=trunk_x,protection_landing_um=[landing_x,landing_y],segments=segments))
     ground_routes=[];ground_y=origin+cfg['return_routing']['transverse_offset_um']
     for leg,dx in ([('P',0.)] if single else [('P',0.),('N',pitch)]):
@@ -82,8 +92,12 @@ def assemble(work):
         root.shapes(layout.layer(42,10)).insert(k.DText(name,k.DTrans(x,origin+4.)))
     if cfg.get('atb_port_um'):
         ax,ay=cfg['atb_port_um'];root.shapes(layout.layer(42,10)).insert(k.DText('ATB_ESD_RAIL',k.DTrans(ax,origin+ay)))
+    import marker_merge   # PCell implant/marker gaps below the KLayout spacing rules (PP.2, DV.2, SB.2)
+    (work/'marker-merge.json').write_text(json.dumps(marker_merge.merge(layout,root),indent=1)+'\n')
+    # Block-unique subcell prefix: the RF pair and single-leg variants differ, and the chip GDS merges by name.
+    prefix='svrfpad1__' if single else 'svrfpad__'
     for cell in layout.each_cell():
-        if cell.cell_index()!=root.cell_index():cell.name='svrfpad__'+cell.name
+        if cell.cell_index()!=root.cell_index():cell.name=prefix+cell.name
     opts=k.SaveLayoutOptions();opts.add_cell(root.cell_index());layout.write(str(work/'pad.gds'),opts)
     # Reserve the complete native bond stack, not just its glass opening.
     bond_top=bond.dbbox().top
@@ -101,7 +115,7 @@ def assemble(work):
     (work/'geometry.json').write_text(json.dumps(report,indent=2)+'\n')
 
 
-def generate(work,generated,wide_signals=False,escape_width_um=None,network=None,single_leg=False):
+def generate(work,generated,wide_signals=False,escape_width_um=None,network=None,single_leg=False,boundary_port_width_um=None):
     from layout import magic,IMAGE
     from run_first_pass import lvs
     work.mkdir(parents=True,exist_ok=False)
@@ -127,11 +141,13 @@ def generate(work,generated,wide_signals=False,escape_width_um=None,network=None
     cfg['atb_port_um']=manifest.get('ports',{}).get('ATB_RAIL')
     cfg['network_regions_um']=manifest.get('allocation_regions_um')
     cfg['single_leg']=single_leg
+    cfg['boundary_port_width_um']=boundary_port_width_um
+    cfg['network_top_um']=manifest.get('bbox_top_um',472.91)
     (work/'config.json').write_text(json.dumps(cfg))
     if manifest['drc_count'] or not manifest['device_graph_lvs_match'] or not manifest['physical_bleed_included']:raise ValueError('Protection network not checked')
     for source,digest in ({} if cfg['atb_port_um'] else manifest['source_sha256']).items():
         if hashlib.sha256(Path(source).read_bytes()).hexdigest()!=digest:raise ValueError('Stale network input: '+source)
-    shutil.copy2(network/'network.gds',work/'network.gds');shutil.copy2(Path(__file__),work/'protection_pad.py')
+    shutil.copy2(network/'network.gds',work/'network.gds');shutil.copy2(Path(__file__),work/'protection_pad.py');shutil.copy2(Path(__file__).with_name('marker_merge.py'),work/'marker_merge.py')
     subprocess.run(['docker','run','--rm','--network','none','--entrypoint','python3','--mount',f'type=bind,src={work},dst=/work',IMAGE,'/work/protection_pad.py','--inside','--output-dir','/work'],check=True,timeout=60)
     (work/'extract.tcl').write_text('''crashbackups stop
 gds read pad.gds

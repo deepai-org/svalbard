@@ -151,7 +151,11 @@ def main():
     p.add_argument('--output-dir', type=Path, required=True)
     p.add_argument('--report', type=Path, required=True)
     p.add_argument('--jobs', type=int, default=3)
+    p.add_argument('--pad-models', nargs='*', default=[], metavar='KIND=PATH', help='override pair/single pad models')
     a = p.parse_args()
+    for item in a.pad_models:
+        kind, path = item.split('=', 1)
+        PADS[kind] = Path(path).resolve()
     work = a.output_dir.resolve()
     jobs = []
     for pr, t in CORNERS:

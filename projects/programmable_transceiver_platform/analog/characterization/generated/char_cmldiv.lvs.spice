@@ -1,0 +1,138 @@
+* NGSPICE file created from pt_char_cmldiv.ext - technology: gf180mcuD
+
+.subckt prim_8 a_28_n400# a_n36_n556# w_n278_n716# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# w_n278_n716# pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt prim_9 a_n36_n956# a_n116_n800# a_28_n800# w_n278_n1116#
+X0 a_28_n800# a_n36_n956# a_n116_n800# w_n278_n1116# pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+.ends
+
+.subckt prim_2 a_28_n1000# a_n36_n1156# a_n254_n1292# a_n116_n1000#
+X0 a_28_n1000# a_n36_n1156# a_n116_n1000# a_n254_n1292# nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+.ends
+
+.subckt prim_10 a_n312_n514# a_n100_180# a_n100_n302#
+X0 a_n100_180# a_n100_n302# a_n312_n514# ppolyf_u_1k r_width=1u r_length=1.8u
+.ends
+
+.subckt prim_7 a_28_n300# w_n278_n616# a_n36_n456# a_n116_n300#
+X0 a_28_n300# a_n36_n456# a_n116_n300# w_n278_n616# pfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+.ends
+
+.subckt prim_11 a_n312_n3934# a_n100_3600# a_n100_n3722#
+X0 a_n100_3600# a_n100_n3722# a_n312_n3934# ppolyf_u_1k r_width=1u r_length=36u
+.ends
+
+.subckt prim_4 a_n36_n356# a_n116_n200# a_n254_n492# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# a_n254_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt prim_3 a_n50_n1160# a_50_n1000# a_n276_n1292# a_n138_n1000#
+X0 a_50_n1000# a_n50_n1160# a_n138_n1000# a_n276_n1292# nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+.ends
+
+.subckt prim_5 a_n254_n692# a_28_n400# a_n36_n556# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# a_n254_n692# nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt prim_1 a_n138_n100# a_n50_n260# a_50_n100# a_n276_n392#
+X0 a_50_n100# a_n50_n260# a_n138_n100# a_n276_n392# nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+.ends
+
+.subckt prim_6 w_n278_n516# a_n36_n356# a_n116_n200# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# w_n278_n516# pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt prim_0 a_n254_n392# a_28_n100# a_n36_n256# a_n116_n100#
+X0 a_28_n100# a_n36_n256# a_n116_n100# a_n254_n392# nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+.ends
+
+.subckt pt_char_cmldiv EN OUT BIAS VDD VSS
+XXP71_0 C2 ENB VDD cg_m prim_8
+XXP64_0 CX VDD CX VDD prim_9
+XXN12_0 s0_mb s0_m VSS s0M_h prim_2
+XXN35_0 s1S_a S0B VSS s1S_t prim_2
+XXR24_0 VSS VDD S0B prim_10
+XXN28_0 s1_mb S1B VSS s1M_a prim_2
+XXP3_0 BT ENB VDD VDD prim_8
+XXN58_0 S2 S2B VSS s2S_h prim_2
+XXN40_0 S1 S1B VSS s1S_h prim_2
+XXN10_0 s0_mb S0B VSS s0M_a prim_2
+XXP85_0 OB VDD OUT VDD prim_9
+XXR15_0 VSS VDD s0_mb prim_10
+XXN9_0 s0M_h VDD VSS s0M_t prim_2
+XXP78_0 D1 VDD d1_b VDD prim_7
+XXN63_0 CY S2B VSS CT prim_2
+XXN26_0 s1M_a S0 VSS s1M_t prim_2
+XXN56_0 S2 s2_mb VSS s2S_a prim_2
+XXR4_0 VSS BT BIAS prim_11
+XXN19_0 S0B s0_m VSS s0S_a prim_2
+XXP83_0 OB D1 VDD VDD prim_8
+XXN79_0 C2 d1_x3 VSS D1 prim_4
+XXR50_0 VSS VDD s2_m prim_10
+XXN49_0 s2_m s2_mb VSS s2M_h prim_2
+XXN31_0 s1_m s1_mb VSS s1M_h prim_2
+XXN7_0 BIAS s0M_t VSS VSS prim_3
+XXN61_0 BIAS CT VSS VSS prim_3
+XXN54_0 s2S_h S1 VSS s2S_t prim_2
+XXN84_0 VSS OUT OB VSS prim_5
+XXN47_0 s2_m S2 VSS s2M_a prim_2
+XXN17_0 s0S_a VDD VSS s0S_t prim_2
+XXN5_0 VSS BIAS BIAS VSS prim_1
+XXN77_0 C2 VSS VSS d1_x2 prim_4
+XXR59_0 VSS VDD S2 prim_10
+XXP67_0 C1 CY VDD VDD prim_8
+XXN52_0 BIAS s2S_t VSS VSS prim_3
+XXR41_0 VSS VDD S1 prim_10
+XXN22_0 S0 S0B VSS s0S_h prim_2
+XXN82_0 D1 VSS VSS OB prim_4
+XXN45_0 s2M_h S1B VSS s2M_t prim_2
+XXP72_0 VDD D1 VDD d1_x1 prim_6
+XXN38_0 S1 s1_mb VSS s1S_a prim_2
+XXP65_0 CX VDD CY VDD prim_9
+XXN68_0 C1 VSS VSS C2 prim_4
+XXR32_0 VSS VDD s1_m prim_10
+XXN20_0 S0 s0_mb VSS s0S_a prim_2
+XXN13_0 s0_m s0_mb VSS s0M_h prim_2
+XXN80_0 d1_b VSS VSS d1_x3 prim_4
+XXN43_0 BIAS s2M_t VSS VSS prim_3
+XXN1_0 VSS ENB EN VSS prim_0
+XXP70_0 cg_m C1 VDD VDD prim_8
+XXN36_0 s1S_h S0 VSS s1S_t prim_2
+XXN66_0 CY VSS VSS C1 prim_4
+XXN29_0 s1_m S1 VSS s1M_a prim_2
+XXN11_0 s0_m S0 VSS s0M_a prim_2
+XXR60_0 VSS VDD S2B prim_10
+XXR23_0 VSS VDD S0 prim_10
+XXN34_0 BIAS s1S_t VSS VSS prim_3
+XXP2_0 VDD EN VDD ENB prim_6
+XXN57_0 S2B S2 VSS s2S_h prim_2
+XXN27_0 s1M_h S0B VSS s1M_t prim_2
+XXR51_0 VSS VDD s2_mb prim_10
+XXN8_0 s0M_a VDD VSS s0M_t prim_2
+XXN62_0 CX S2 VSS CT prim_2
+XXN25_0 BIAS s1M_t VSS VSS prim_3
+XXR14_0 VSS VDD s0_m prim_10
+XXN55_0 S2B s2_m VSS s2S_a prim_2
+XXN18_0 s0S_h VDD VSS s0S_t prim_2
+XXN48_0 s2_mb s2_m VSS s2M_h prim_2
+XXN30_0 s1_mb s1_m VSS s1M_h prim_2
+XXN6_0 VSS BIAS ENB VSS prim_0
+XXP75_0 VDD C2 VDD d1_b prim_6
+XXR42_0 VSS VDD S1B prim_10
+XXN53_0 s2S_a S1B VSS s2S_t prim_2
+XXN16_0 BIAS s0S_t VSS VSS prim_3
+XXN76_0 d1_a d1_x2 VSS d1_b prim_4
+XXN46_0 s2_mb S2B VSS s2M_a prim_2
+XXP73_0 VDD C2 d1_x1 d1_a prim_6
+XXN69_0 ENB VSS VSS C2 prim_4
+XXN39_0 S1B S1 VSS s1S_h prim_2
+XXN21_0 S0B S0 VSS s0S_h prim_2
+XXN81_0 VSS D1 ENB VSS prim_0
+XXR33_0 VSS VDD s1_mb prim_10
+XXN74_0 VSS d1_a D1 VSS prim_0
+XXN44_0 s2M_a S1 VSS s2M_t prim_2
+XXN37_0 S1B s1_m VSS s1S_a prim_2
+.ends
+

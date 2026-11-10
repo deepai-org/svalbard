@@ -26,8 +26,45 @@ LAY = W / 'layout'
 GEN = tools.GENERATED
 PEX = LAY / 'pt_wiredtx_pex.spice'
 NOMINAL = dict(rate=1.25e9, bpc=2)          # half-rate mode, ring 625 MHz
-CORNERS = [(c, t, v) for c in ('typical', 'ss', 'ff') for t in (22, 32) for v in (3.15, 3.35)]
-SWEEP = [(1.92e9, 4), (2.5e9, 4), (2.97e9, 4), (0.96e9, 2), (1.62e9, 2), (0.48e9, 1), (0.81e9, 1)]
+# Performance envelope (spec/tapeout-plan.md, MANDATE.md): every process corner at 22/32 C and
+# 3.15/3.35 V (20 points; sf/fs were missing before).  Safety benches stay wide (sim_static).
+CORNERS = [(c, t, v) for c in ('typical', 'ss', 'ff', 'sf', 'fs') for t in (22, 32) for v in (3.15, 3.35)]
+SWEEP = [(1.92e9, 4), (2.5e9, 4), (2.97e9, 4), (3.24e9, 4), (0.96e9, 2), (1.25e9, 2), (1.62e9, 2), (0.48e9, 1),
+         (0.81e9, 1)]
+NW = 14            # 280 bits: nominal / integration runs, more than two PRBS7 periods (127 bits)
+NWC = 10           # 200 bits per envelope-corner run (> 1.5 PRBS7 periods)
+QRATES = (2.5e9, 3.24e9)   # quarter rate: PCIe Gen1 and the top of the 480-810 MHz ring plan
+
+
+def with_antenna_diodes(src, dst, top, summary, cell=None):
+    """LVS reference = schematic + the generator's antenna diodes (layoutgen summary).
+
+    Diodes sit on flat (layout) net names such as CG/A0, which only exist inside subcircuits of the
+    hierarchical schematic, so when diodes were placed the top subckt is replaced by its flattened
+    device list (the same list layoutgen places); macros stay black-box subcircuits."""
+    import re
+    import antenna_diodes as ad
+    text = Path(src).read_text()
+    lines = ad.spice_lines(summary.get('antenna_diodes', []))
+    if lines:
+        cell = cell or C.TOP
+        k = text.index(f'.subckt {top} ')
+        e = text.index('\n', text.index('.ends', k))
+        flat = [f'.subckt {top} {" ".join(cell.ports)}']
+        for d in C.layout_devices(cell):
+            if isinstance(d, C.MacroDev):
+                flat.append(f'X{d.name.replace("/", "__")} {" ".join(d.nodes)} {d.model}')
+            else:
+                flat.append(d.spice().replace(f'X{d.name}', 'X' + d.name.replace('/', '__'), 1))
+        flat += lines + [f'.ends {top}']
+        text = text[:k] + '\n'.join(flat) + text[e:]
+    Path(dst).write_text(text)
+
+
+def publish_gds(gds, block, top, work):
+    """Block-unique subcell names, then the required KLayout precheck (DRC + antenna) record."""
+    from gds_uniquify import publish_checked
+    return publish_checked(gds, block, top)
 
 
 def stage_layout():
@@ -35,17 +72,18 @@ def stage_layout():
     if LAY.exists():
         shutil.rmtree(LAY)
     summary = layoutgen.generate(LAY)
-    shutil.copy(tools.HERE / 'wiredtx.spice', LAY / 'wiredtx.spice')
+    with_antenna_diodes(tools.HERE / 'wiredtx.spice', LAY / 'wiredtx.spice', 'pt_wiredtx', summary)
     lvs = tools.netgen_lvs(LAY, 'pt_wiredtx_lvs.spice', 'pt_wiredtx', 'wiredtx.spice')
     gds = tools.gds_export_analog(LAY, 'pt_wiredtx')
     kl = tools.klayout_drc(LAY, gds, 'pt_wiredtx')
     GEN.mkdir(exist_ok=True)
     shutil.copy(gds, GEN / 'wiredtx.gds')
+    precheck = publish_gds(GEN / 'wiredtx.gds', 'wiredtx', 'pt_wiredtx', LAY)
     magdir = GEN / 'mag'
     if magdir.exists():
         shutil.rmtree(magdir)
     magdir.mkdir()
-    for m in LAY.glob('wtx_p*.mag'):
+    for m in LAY.glob('pt_wiredtx__p*.mag'):
         shutil.copy(m, magdir / m.name)
     shutil.copy(LAY / 'pt_wiredtx.mag', magdir / 'pt_wiredtx.mag')
     shutil.copy(PEX, GEN / 'wiredtx.ext.spice')
@@ -53,7 +91,8 @@ def stage_layout():
     shutil.copy(LAY / 'lvs.out', GEN / 'wiredtx-lvs.txt')
     (GEN / 'wiredtx-drc.txt').write_text(f"magic drc(full) flat error count: {summary['drc_count']}\n"
                                          + (LAY / 'drc-why.txt').read_text())
-    res = dict(layout=summary, lvs=lvs, klayout=kl, gds_export='analog image Magic 8.3.678, cif ostyle gdsii',
+    res = dict(layout=summary, lvs=lvs, klayout=kl, klayout_precheck=precheck,
+               gds_export='analog image Magic 8.3.678, cif ostyle gdsii',
                magic_drc_lvs_extract_image=tools.DIGITAL_IMAGE)
     tools.write_json(W / 'layout-result.json', res)
     return res
@@ -66,7 +105,7 @@ def stage_hsbias():
     if L.exists():
         shutil.rmtree(L)
     s = layoutgen.generate(L, cell=C.HSBIAS, row_width=120)
-    shutil.copy(tools.HERE / 'hsbias.spice', L / 'hsbias.spice')
+    with_antenna_diodes(tools.HERE / 'hsbias.spice', L / 'hsbias.spice', 'pt_wtx_hsbias', s, C.HSBIAS)
     lvs = tools.netgen_lvs(L, 'pt_wtx_hsbias_lvs.spice', 'pt_wtx_hsbias', 'hsbias.spice')
     g = tools.gds_export_analog(L, 'pt_wtx_hsbias')
     kl = tools.klayout_drc(L, g, 'pt_wtx_hsbias')
@@ -77,6 +116,7 @@ def stage_hsbias():
                **{f'{c}_{t}_{v}': H.sweep(W / 'hs_sim', P, c, t, v) for c, t, v in CORNERS})
     tools.write_json(W / 'hs-sim-results.json', res)
     shutil.copy(g, GEN / 'hsbias.gds')
+    publish_gds(GEN / 'hsbias.gds', 'hsbias', 'pt_wtx_hsbias', L)
     (GEN / 'mag_hsbias').mkdir(exist_ok=True)
     for m in L.glob('*.mag'):
         shutil.copy(m, GEN / 'mag_hsbias' / m.name)
@@ -86,27 +126,46 @@ def stage_hsbias():
 
 def jobs():
     j = []
-    j.append(('nominal', lambda: S.run_case(W / 'sim', PEX, 'pt_wiredtx', nwords=6, tag='nominal', **NOMINAL)))
-    j.append(('schematic_q2g5', lambda: S.run_case(W / 'sim', tools.HERE / 'wiredtx.spice', 'pt_wiredtx', rate=2.5e9,
-                                                   bpc=4, nwords=6, tag='sch_q2g5')))
+    j.append(('nominal', lambda: S.run_case(W / 'sim', PEX, 'pt_wiredtx', nwords=NW, tag='nominal', **NOMINAL)))
+    j.append(('schematic_q3g24', lambda: S.run_case(W / 'sim', tools.HERE / 'wiredtx.spice', 'pt_wiredtx',
+                                                    rate=3.24e9, bpc=4, nwords=NW, tag='sch_q3g24')))
     for rate, bpc in SWEEP:
         j.append((f'sweep_{bpc}_{rate/1e9:g}', lambda r=rate, b=bpc: S.run_case(
-            W / 'sim', PEX, 'pt_wiredtx', rate=r, bpc=b, nwords=6, tag=f'sweep_{b}_{r/1e9:g}')))
+            W / 'sim', PEX, 'pt_wiredtx', rate=r, bpc=b, nwords=NW, tag=f'sweep_{b}_{r/1e9:g}')))
+    # quarter rate (compact core) across the envelope
+    for rate in QRATES:
+        for c, t, v in CORNERS:
+            k = f'cornerq{rate/1e9:g}_{c}_{t}_{v}'
+            j.append((k, lambda c=c, t=t, v=v, r=rate, k=k: S.run_case(
+                W / 'sim', PEX, 'pt_wiredtx', rate=r, bpc=4, nwords=NWC, corner=c, temp=t, vdd=v, tag=k)))
+    # half rate (compact core): top of the half-rate range (ring 810 MHz) across the envelope
     for c, t, v in CORNERS:
-        j.append((f'corner_{c}_{t}_{v}', lambda c=c, t=t, v=v: S.run_case(
-            W / 'sim', PEX, 'pt_wiredtx', nwords=6, corner=c, temp=t, vdd=v, tag=f'corner_{c}_{t}_{v}', **NOMINAL)))
-    # reduced nominal (lowest ring frequency, half rate): 0.96 Gb/s
-    j.append(('nominal_0g96', lambda: S.run_case(W / 'sim', PEX, 'pt_wiredtx', rate=0.96e9, bpc=2, nwords=6,
+        k = f'cornerh1.62_{c}_{t}_{v}'
+        j.append((k, lambda c=c, t=t, v=v, k=k: S.run_case(
+            W / 'sim', PEX, 'pt_wiredtx', rate=1.62e9, bpc=2, nwords=NWC, corner=c, temp=t, vdd=v, tag=k)))
+    # full rate (compact core, UI >= 1.23 ns): slow/skewed corners
+    for c, t, v in [(c, t, v) for c in ('ss', 'sf', 'fs') for t, v in ((22, 3.15), (32, 3.15))]:
+        k = f'cornerf0.81_{c}_{t}_{v}'
+        j.append((k, lambda c=c, t=t, v=v, k=k: S.run_case(
+            W / 'sim', PEX, 'pt_wiredtx', rate=0.81e9, bpc=1, nwords=NWC, corner=c, temp=t, vdd=v, tag=k)))
+    j.append(('nominal_0g96', lambda: S.run_case(W / 'sim', PEX, 'pt_wiredtx', rate=0.96e9, bpc=2, nwords=NW,
                                                 tag='nominal_0g96')))
-    for c, t, v in CORNERS:
-        j.append((f'corner096_{c}_{t}_{v}', lambda c=c, t=t, v=v: S.run_case(
-            W / 'sim', PEX, 'pt_wiredtx', rate=0.96e9, bpc=2, nwords=6, corner=c, temp=t, vdd=v,
-            tag=f'corner096_{c}_{t}_{v}')))
+    # generic serializer, kept as the fallback (rate code 11 = half rate)
+    for rate, (c, t, v) in ((0.96e9, ('typical', 27, 3.3)), (0.96e9, ('ss', 22, 3.15)), (1.25e9, ('typical', 27, 3.3))):
+        k = f'fallback_h{rate/1e9:g}_{c}_{t}_{v}'
+        j.append((k, lambda r=rate, c=c, t=t, v=v, k=k: S.run_case(
+            W / 'sim', PEX, 'pt_wiredtx', rate=r, bpc=2, nwords=NW, corner=c, temp=t, vdd=v, tag=k, fallback=True)))
     iw = W / 'integration'
-    j += [('int_serial_h1g25', lambda: I.run(iw, PEX, mode='serial', rate=1.25e9, bpc=2, nwords=6, tag='serial_h1g25')),
-          ('int_tmds_h1g25', lambda: I.run(iw, PEX, mode='tmds', rate=1.25e9, bpc=2, nwords=6, tag='tmds_h1g25')),
-          ('int_tmds_q2g97', lambda: I.run(iw, PEX, mode='tmds', rate=2.97e9, bpc=4, nwords=6, tag='tmds_q2g97')),
-          ('int_serial_q2g5', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=6, tag='serial_q2g5')),
+    j += [('int_serial_h1g25', lambda: I.run(iw, PEX, mode='serial', rate=1.25e9, bpc=2, nwords=NW, tag='serial_h1g25')),
+          ('int_tmds_h1g25', lambda: I.run(iw, PEX, mode='tmds', rate=1.25e9, bpc=2, nwords=NW, tag='tmds_h1g25')),
+          ('int_tmds_h1g485', lambda: I.run(iw, PEX, mode='tmds', rate=1.485e9, bpc=2, nwords=NW, tag='tmds_h1g485')),
+          ('int_tmds_q2g97', lambda: I.run(iw, PEX, mode='tmds', rate=2.97e9, bpc=4, nwords=NW, tag='tmds_q2g97')),
+          ('int_serial_q2g5', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW, tag='serial_q2g5')),
+          ('int_serial_q2g5_main200', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
+                                                    codes=(200, 32, 125), tag='serial_q2g5_main200')),
+          ('int_serial_q2g5_main240', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
+                                                    codes=(240, 32, 125), tag='serial_q2g5_main240')),
+          ('int_serial_q3g24', lambda: I.run(iw, PEX, mode='serial', rate=3.24e9, bpc=4, nwords=NW, tag='serial_q3g24')),
           ('int_stretch_5g_lossy', lambda: I.run(iw, PEX, mode='serial', rate=5e9, bpc=4, nwords=6, lossy=True,
                                                  tag='stretch_q5g_lossy')),
           ('ext_ideal_1g', lambda: I.run_ext(iw, PEX, rate=1e9, tag='ext_ideal_1g')),
@@ -136,12 +195,19 @@ def stage_sims(only=None):
 
     def wrap(item):
         k, f = item
+        # hash of the netlist the bench reads, taken before the run; benches that
+        # know their DUT (sim_wiredtx) record it themselves and win
+        dut = tools.HERE / 'wiredtx.spice' if k.startswith('schematic') else PEX
+        pre = tools.sha(dut) if dut.exists() else None
         try:
             r = f()
         except Exception as e:  # recorded, not hidden
             r = dict(ok=False, error=repr(e))
+        if isinstance(r, dict):
+            r.setdefault('dut_sha256', pre)
+            r['dut_kind'] = 'schematic' if k.startswith('schematic') else 'extracted'
         return k, r
-    with ThreadPoolExecutor(3) as ex:
+    with ThreadPoolExecutor(int(__import__('os').environ.get('WTX_JOBS', '3'))) as ex:
         for k, r in ex.map(wrap, todo):
             results[k] = r
             tools.write_json(out_path, results)

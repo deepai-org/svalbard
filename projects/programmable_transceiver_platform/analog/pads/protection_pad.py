@@ -40,7 +40,7 @@ def assemble(work):
         metals={1:34,2:36,3:42,4:46,5:81};vias={1:35,2:38,3:40,4:41}
         for level in range(low,high+1):rect(metals[level],x-.25,y-.25,x+.25,y+.25)
         for level in range(low,high):
-            h=.13 if level==1 else .14
+            h=.13  # GDS cut: every via is exactly 0.26 um (KLayout V*.1)
             rect(vias[level],x-h,y-h,x+h,y+h)
     routes=[]
     for route in cfg['signal_routes']:

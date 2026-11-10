@@ -1,0 +1,123 @@
+{
+  "status": "pass",
+  "test": "core_blocks.power.tests.observable",
+  "scope": "Nominal assembled physical island power-good to real SPI pad, all five islands",
+  "criterion": "tapeout-plan.md: internal state visible through SPI status plus simulation",
+  "observations": [
+    {
+      "island": "wired",
+      "physical_cell": "isw_wired_pex",
+      "physical_pin": "PG",
+      "digital_input": "island_pgood[0]",
+      "spi_address": "0x0A",
+      "pgood_bit": 8,
+      "on_bit": 0,
+      "observed_pgood": 1,
+      "observed_on": 1
+    },
+    {
+      "island": "rf",
+      "physical_cell": "isw_rf_pex",
+      "physical_pin": "PG",
+      "digital_input": "island_pgood[1]",
+      "spi_address": "0x0A",
+      "pgood_bit": 9,
+      "on_bit": 1,
+      "observed_pgood": 1,
+      "observed_on": 1
+    },
+    {
+      "island": "pll",
+      "physical_cell": "isw_pll_pex",
+      "physical_pin": "PG",
+      "digital_input": "island_pgood[2]",
+      "spi_address": "0x0A",
+      "pgood_bit": 10,
+      "on_bit": 2,
+      "observed_pgood": 1,
+      "observed_on": 1
+    },
+    {
+      "island": "conv",
+      "physical_cell": "isw_conv_pex",
+      "physical_pin": "PG",
+      "digital_input": "island_pgood[4]",
+      "spi_address": "0x0A",
+      "pgood_bit": 12,
+      "on_bit": 4,
+      "observed_pgood": 1,
+      "observed_on": 1
+    },
+    {
+      "island": "debug",
+      "physical_cell": "isw_debug_pex",
+      "physical_pin": "PG",
+      "digital_input": "island_pgood[5]",
+      "spi_address": "0x0A",
+      "pgood_bit": 13,
+      "on_bit": 5,
+      "observed_pgood": 1,
+      "observed_on": 1
+    }
+  ],
+  "campaign_status": "partial_diagnostic",
+  "fixture_boundaries": [
+    "external reset/POR at 2 us, not the real cold-start POR",
+    "diode loads enabled on all consumer ports; reserved LC output disabled",
+    "unused ATB nodes terminate through 1 Gohm fixture loads"
+  ],
+  "audit": {
+    "path": "scratch/core-bias-observation-checkpointed/live-prefix-1/audit.json",
+    "sha256": "87f54143fa97777af7ad4efcb73a16507cc56cf2e1d20e7fff526ae4508e3638"
+  },
+  "waveform": {
+    "path": "scratch/core-bias-observation-checkpointed/live-prefix-1/wave.txt",
+    "sha256": "d92233a1ab7ca72c76cff9aff0f846cf19caadfab5c52c92f3c3de0c026789c8"
+  },
+  "frozen_manifest": {
+    "path": "scratch/core-bias-observation-checkpointed/frozen-sources/manifest.json",
+    "sha256": "1edf841741ec61537dbe4fd103cc78cdb2199268e4436c8021643c5da70c9a56"
+  },
+  "unchanged_control_sources": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_regfile.sv": "a4d3fc43b882229ced8acac25c4f133f6f162cacfd74e55941eb8e24127808bc",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv": "584d20bb9e4ce77ab3d25b81bc9fbb7b06e2d88f6982803e2ec848aac3c61029",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_regmap_defs.svh": "b16c52ccc053b1977973c3510dff89707177d6a9aedc8892de5e132ca63f2e63",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/register-map.json": "d68b079cf48d0fce64d6ebeba14952257fb43c30236a148e5d953165603f3ef7",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/integration/pt_chip.sv": "afbef502d7bae4c4f03575e5eb12b1e9033e1ae8ce8c760f3d1fb1a8618e378f"
+  },
+  "reproduce": "python3 projects/programmable_transceiver_platform/verification/audit_core_bias_observation.py --wave live-prefix-1/wave.txt --report live-prefix-1/audit.json",
+  "excluded": [
+    "full-chip supply/routing and physical digital signoff",
+    "cold-start POR in this warm-reset fixture",
+    "remaining ATB sense codes and external-force campaign",
+    "physical consumer loads and accepted PVT qualification"
+  ],
+  "equivalent_source_refactors": [
+    {
+      "path": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_digital.sv",
+      "frozen_path": "/home/ubuntu/svalbard/scratch/core-bias-observation-checkpointed/frozen-sources/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_digital.sv",
+      "frozen_sha256": "ae7f113e48956e7c7f5f4598282686ed6649d2821c7858f0e439d50fdeeb5101",
+      "current_sha256": "e42e30758fb1797f55c94581c90758f3f780a56b4315c4cfa59c82a4a4fe55ac",
+      "verified_text_replacements": [
+        {
+          "before": " #(parameter STREAM_V2=1)",
+          "after": ""
+        },
+        {
+          "before": "pt_core #(.STREAM_V2(STREAM_V2)) core",
+          "after": "pt_core core"
+        }
+      ],
+      "scope": "Remove an implementation selector whose selected value was 1; the control logic is unchanged."
+    }
+  ],
+  "unchanged_control_modules": [
+    {
+      "module": "pt_spi",
+      "frozen_source": "/home/ubuntu/svalbard/scratch/core-bias-observation-checkpointed/frozen-sources/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_spi.sv",
+      "current_source": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_spi.sv",
+      "module_sha256": "53df27783e59c3254e0d571af9eccdd482a3ee321067e6b86609ad60faae02d6",
+      "current_file_sha256": "10f10eb0a721a327fc8e074c40ecc5a794d88dc68883b493c41105c2296febf2"
+    }
+  ]
+}

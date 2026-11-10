@@ -1,0 +1,205 @@
+{
+ "status": "in_progress",
+ "updated_at": "2026-11-10T05:11:27.592886+00:00",
+ "objective": "achieve digital rate area closure, physical chip assembly, observation wiring",
+ "stopping_policy": "Digital closure agent active. CLOSE_R2 (current sources) runs via run_digital_hardening.sh pnr then export/sta/gls/pads/report; driver log scratch/closure-r2-driver.log.",
+ "maintained_state": {
+  "rtl": "Paired core retained. Added: reduced-rate fallback debug.host_link.rate (pt_host_rate_clock, tb_host_rate_clock), header delay-line reclaim, registered PRBS saturation, en_eff/island_off decode outputs, cdr.config.cap_rcsel (W1), slow-slew host pad reset, static DAC bus when invalid. Adopted next architecture: AC-1/S2/S3 (40-bit core at word/4, 40-bit wired boundary).",
+  "storage": {
+   "routed_netlist_ff": 8149,
+   "cap_bits": 8192,
+   "source": "scratch/digital-hardening-closure-r1/design/runs/CLOSE_R1/final/nl (flattened, one module)",
+   "reclaim": "pt_dense_header ALIGN=0 removes the 90-bit data delay line in the production encoder"
+  },
+  "physical": "Maintained flow make transceiver-core-bias-routing (verification/run_core_bias_routing.py + core_bias_routing/): supply-first routing of the 7 supply nets (4 um (VDD/VSS) / 2 um (rails) NDR on Metal2-4, min-width Metal5 at the 0.6 um bank pin pitch, every supply via filled to the layer overlap with a cut array), then 143 signal nets around the FIXED special supply wiring with POWER/GROUND roles and master pin types restored. Run scratch/core-bias-routing-20261109-101927: router 0/0 violations, independent audit 150 nets/278 terminals/120 pins pass (incl. route-vs-master-internal-metal shorts), 5 negative controls rejected, DEF vs GDS XOR 0 with shift control, all 8 masters XOR 0, GF180 KLayout DRC 0, black-box routing LVS unique (36 instances/150 nets; bridge control rejected), Magic C extraction 1616 caps. Supply IR/EM pass against GF180MCU DRM 14.2 limits with spec currents (see tapeout-readiness core bias physical_routing note); overall flow status pass.",
+  "observation": "Voltage/force campaign passes (fixture). IDAC1 SMU campaign completed: the simulation finished at 08:21 but the producer crashed because audit() returned None; fixed and re-assessed with --assess-only (no rerun). Independent audit of checkpoint-2.txt passes: off -0.76 nA, code 4 3.753 uA, code 8 7.506 uA, code 0 -0.76 nA (0.938 uA/LSB), SMU pad 1.000 V, all 6 SPI reads. Fixture boundaries remain: external warm reset, diode loads, 1 Gohm unused-ATB terminations; full-chip observation remains open.",
+  "toolchain": {
+   "image": "svalbard/librelane-gf180-guarded:2026.11",
+   "image_id": "sha256:92f2fae1ef0c1ab8ec96d3c5b5f1fb908a484ed62f4d5d870679cdd9d2d2c957",
+   "openroad": "c74892e7b",
+   "recipe": "verification/digital_hardening/Dockerfile",
+   "scope": "Guarded image pins OpenROAD c74892e7b under a LibreLane built for an older engine. Compatibility patches (prepare_toolchain.py): scene-name list helpers, corner dict name->scene object, set_cmd_scene via find_scene; config works around odb area units (explicit IO_PIN_*_LENGTH) and stray PAD_LIBS. Canary image (matched engine) is unusable: repair_design runaway (23 GiB) below 3 ns transition."
+  },
+  "hardening": "CLOSE_R1 (scratch/digital-hardening-closure-r1): full flow completes. Magic/KLayout DRC 0, LVS 0, antenna 0, routing DRC 0, util 64.1 %, stdcell 1.555 mm2 in 1580x1580. In-window timing (tt Liberty; ss_window 1.54 / ff_window 0.71 derates in pt_digital_macro.sdc): setup WNS -15.08 ss_window, -7.01 tt, -3.31 ff_window at full rate; hold >= +0.04 everywhere. /2,/4 fallback modes close hcore/hpair at /4 but rate-independent domains still fail. GLS for R1 invalid (netlist predates later RTL edits); CLOSE_R2 repeats on current sources. Recipe: transition 2.0 ns, cap 0.15 pF, no wire-length repair, density 68, pin_order.cfg, RSZ/STA corners tt, PAD_LIBS {}, IO pin length 2 um.",
+  "evidence_reporting": "Historical hard-coded verdicts removed. Missing stages stay open; GLS needs a fresh source manifest; absent RTL copies cannot be called current; generated/shared-egress clocks are covered by STA. New final routed GLS/STA signoff remains unrun."
+ },
+ "validation": {
+  "passed": [
+   "Target-rate functional source hashes validate through report_transport_budget.py.",
+   "Register checks pass in both simulators; 4,000 ABI-equivalence transactions and all 19 debug ports pass.",
+   "The guarded image builds and reports the expected engine, compatibility-patch hashes and PDK alias.",
+   "Shell syntax, Python compilation and git diff --check pass.",
+   "The missing-stage reporter control leaves every test open.",
+   "Bias signal GDS passes KLayout DRC, independent connectivity and the deleted-segment negative control.",
+   "The complete 514.4 µs native voltage/force campaign passes the independent frozen-source/runtime/waveform audit with no pending checks.",
+   "STA Tcl generation includes generated clocks; missing-stage reporting also rejects absent hardened RTL/SDC copies.",
+   "IDAC1 SMU off/4/8/off steps and all SPI reads pass the independent audit (checkpoint-2-audit.json) and the producer report (report.json).",
+   "Core-bias routing of all 150 nets: router 0, audit pass, DRC 0, black-box LVS unique, DEF/GDS XOR 0, negative controls rejected.",
+   "2026-11-10: make transceiver-digital-rtl-checks, pair-word/gearbox/freq-count formal, transport-budget, regfile (+formal safe-reset), pattern, dense-rf-service/burst all pass on current RTL."
+  ],
+  "limitations": [
+   "No new RTL was adopted from the FIFO read trials.",
+   "New source-manifest GLS gate and extended STA clock table have not been exercised against a new final routed netlist.",
+   "Whole-chip floorplan/bindings/PDN/DRC/LVS/antenna/density/accepted-envelope/fallback/submission remain open.",
+   "Core-bias LVS treats masters as pin-only black boxes; device-level LVS of the assembled block (schematic parasitic C lines, PNP name mapping) is not run.",
+   "biasgen avss is absent from the reference subckt; its LVS stub binding comes from the audited terminal map (VSS)."
+  ]
+ },
+ "next_steps": [
+  {
+   "priority": 2,
+   "action": "Resolve digital placement legalization after electrical repair, then close setup/hold, the 8,192-bit state cap and the 2.5 mm² footprint at existing periods. Complete routed checks and fresh GLS, accepted-envelope timing, real pads/board timing, clock tolerance and bounded interruptions."
+  },
+  {
+   "priority": 4,
+   "action": "Device-level LVS of the routed core-bias assembly (strip parasitic C from pt_core_bias.spice, PNP device mapping) to complement the black-box routing LVS."
+  },
+  {
+   "priority": 5,
+   "action": "Complete the provider floorplan and actual payload, USB, bias, enable, clamp, status and clock-observation bindings. Finish PDN/1 nF decoupling, all family fallbacks and full-chip signoff under path-to-tapeout.md."
+  }
+ ],
+ "evidence": [
+  {
+   "path": "scratch/core-bias-routing-20261109-101927/def-crosscheck.json",
+   "sha256": "5f19f7942aa036c25f56fad4009918eeb70aef92f2b585831a5e7fede979277f",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-routing-20261109-101927/negative-controls.json",
+   "sha256": "74c209fa71b9bda820ac78aafc3a78cbc6e6c827c3a984b486ce5afb6feb3a9e",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-routing-20261109-101927/supply-ir.json",
+   "sha256": "ba58e78beacffee1c71575bb900bf41dda69ee2acd893a12527b5eac49bdac95",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-routing-20261109-101927/lvs.json",
+   "sha256": "2e68d3923e5b29b93c3c33578847ef930a0b19f56d8784be3401ba832cf9b871",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-routing-20261109-101927/audit.json",
+   "sha256": "786e53fcc93be8e004b7d407c1ff9445d819368f5d9e30b890780d75c5145da0",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-routing-20261109-101927/report.json",
+   "sha256": "72d08ef133957c9c484d06b6da0545450418b3dfd6ce998b0ab3a80491996456",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-idac1-observation-current/report.json",
+   "sha256": "ea87185be916af8f3b78c5bc961c4e2f55ebd626608f392f65267ac10621f202",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-idac1-observation-current/checkpoint-2-audit.json",
+   "sha256": "9d348f9b223a3c18c82f4a7a500cc287e3f67388f8dcc0108e7181da0922964f",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-observation-checkpointed/checkpoint-2-audit.json",
+   "sha256": "14e2550231a78b821e3882f76a3c66020e58588efe976cd4b0626df9d9788bfc",
+   "status": "partial_diagnostic"
+  },
+  {
+   "path": "scratch/cleanup-final-reference-regfile-current/report.json",
+   "sha256": "113e1452f7be71eb5015b8516db66873537f41ff1b45a7dd72c80e88cfea153f",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/digital-hardening-queue-seven-tt-repair/checkpoint-report.json",
+   "sha256": "1b4c5c2ffed7f96982389c0ac30e5870a1f305ce01786340d5ee04a53043ab8b",
+   "status": "intermediate_timing_not_closed"
+  },
+  {
+   "path": "scratch/digital-hardening-decoded-read-tt/checkpoint-report.json",
+   "sha256": "0259ed4ac326e6708c89b69b1e85be9eb77eedc99559a9b05317f53f9b9dfe42",
+   "status": "intermediate_timing_not_closed"
+  },
+  {
+   "path": "scratch/core-bias-observation-checkpointed/core-bias-audit.json",
+   "sha256": "02bb6b0896467a87de0f425a04c7eb11112961546cdead892a322d9debe6d66a",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-observation-checkpointed/report.json",
+   "sha256": "42e8618557f9dfde33005075525058af89cffa411147a5370b75c4e690c28e72",
+   "status": "pass"
+  }
+ ],
+ "background_jobs": [
+  {
+   "name": "core bias voltage/force observation",
+   "pid": 1220393,
+   "live_at_handoff": false,
+   "output": "scratch/core-bias-observation-checkpointed",
+   "last_phase": "Completed; producer and independent full-wave audit both pass at 514.4 µs.",
+   "collect": [
+    "Review core-bias-audit.json and report.json. No rerun is needed to collect this campaign.",
+    "Keep frozen-circuit fixture scope; IDAC1 and full-chip observation gates remain open."
+   ],
+   "process_state": "terminal",
+   "terminal_status": "pass"
+  },
+  {
+   "name": "spare IDAC1 current observation",
+   "pid": 1953280,
+   "live_at_handoff": false,
+   "output": "scratch/core-bias-idac1-observation-current",
+   "last_phase": "Simulation completed; producer crashed in assess() (audit() returned None). Fixed; --assess-only re-assessment and independent checkpoint-2 audit pass.",
+   "collect": [
+    "report.json and checkpoint-2-audit.json pass; fixture scope only."
+   ],
+   "process_state": "terminal",
+   "process_start_ticks": "1202148506",
+   "executable": "/home/ubuntu/svalbard/scratch/pad-ngspice47/ngspice-47/src/ngspice",
+   "terminal_status": "pass"
+  },
+  {
+   "name": "guarded digital electrical repair",
+   "pid": 2071025,
+   "live_at_handoff": false,
+   "output": "scratch/digital-hardening-guarded-compatible",
+   "last_phase": "Terminal failure: DPL-0033 in OpenROAD.RepairDesignPostGPL; exit 2.",
+   "collect": [
+    "Inspect the completed librelane.log and placement diagnostics.",
+    "Plan a fresh placement/repair ordering or displacement change from the preserved placement; retain the target periods and footprint.",
+    "Do not wait for this process or reuse its run directory as though it reached CTS."
+   ],
+   "process_state": "terminal",
+   "terminal_status": "failed_legalization"
+  },
+  {
+   "name": "core bias supply routing trial",
+   "pid": 2063162,
+   "live_at_handoff": false,
+   "output": "scratch/core-bias-power-route-trial",
+   "last_phase": "Superseded by the maintained flow run scratch/core-bias-routing-20261109-101927 (completed).",
+   "collect": [
+    "See scratch/core-bias-routing-20261109-101927/report.json."
+   ],
+   "process_state": "terminal",
+   "process_start_ticks": "1202406437",
+   "executable": "/nix/store/6dwi4i18awlrcs1hsxskgf545w5x9457-openroad-2026-02-17/bin/.openroad-wrapped",
+   "terminal_status": "superseded"
+  }
+ ],
+ "scratch_checkpoint": "scratch/digital-closure/checkpoint.json",
+ "cleanup": "22 obsolete files removed; needed references are in sim/reference; scratch experiment/provenance data retained. Unrelated root ZIP and GF180_UNIVERSAL_EMBEDDED_DEBUGGER.md left untouched. Changes remain uncommitted.",
+ "source_checkpoints": {
+  "projects/programmable_transceiver_platform/verification/run_digital_hardening.sh": "f7790ddf97559a8cb018fa6948db1e181b0c37046ad3031b8038e6678734fe1b",
+  "projects/programmable_transceiver_platform/verification/digital_hardening/Dockerfile": "8b2659d1b8bc82c3d0340495cc1c0a4196aeeff314b3b0b1a421c5f06f6d7faf",
+  "projects/programmable_transceiver_platform/verification/digital_hardening/prepare_toolchain.py": "eba440d71f94cb635fc771def76d7ddb7fa85384f286a37eaf0a9f7273a049f5",
+  "projects/programmable_transceiver_platform/verification/digital_hardening/config.json": "3c76cf07d4d62cee44628513a9b06eb586cf6cbcee277278c2ff1051fe74e7c8",
+  "projects/programmable_transceiver_platform/verification/digital_hardening/report.py": "628a135e90a623123adf19aca954a0117b5c68544e44a7b76c3dd3677486b97e",
+  "projects/programmable_transceiver_platform/verification/digital_hardening/gls.sh": "d49af208665fafdb7446c4527a020d0aac48a1c3f20382e0bd2cfc67f16dbc69",
+  "projects/programmable_transceiver_platform/verification/digital_hardening/gls_check.py": "83f10fa1c17c7213af768ec8360db5096ed13b7d2720ae5937db428bf7ac4b5a",
+  "projects/programmable_transceiver_platform/verification/digital_hardening/sta_signoff.py": "cbebd224f8c166f689bc0c4936dc7bad70c22580bff92b1580b8e92ef57bd54e",
+  "projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc": "05334b6cb4c3d1c57ac499758a647c66365d779ac0e6ce3a8822a5141f29703a",
+  "projects/programmable_transceiver_platform/verification/run_core_bias_routing.py": "4f2130383c15b2f4a85f5838f32203153051018972dda171b73e82333db122ee"
+ }
+}

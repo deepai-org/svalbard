@@ -30,6 +30,11 @@ import re
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import antenna_diodes as ad  # noqa: E402
+from gds_uniquify import publish_checked  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 PROJECT = HERE.parents[1]
@@ -66,7 +71,7 @@ STATIC_PINS = {'pt_rfrx_inv': '*', 'pt_rfrx_nor2': '*', 'pt_rfrx_nor3': '*', 'pt
                'pt_rfrx_vcm': '*', 'pt_rfrx_tgs': {'on', 'onb'}, 'pt_rfrx_tgm': {'on', 'onb'},
                'pt_rfrx_tgl': {'on', 'onb'}, 'pt_rfrx_nsw': {'on'}, 'pt_rfrx_ota': {'inp', 'vbp', 'pd'}}
 STATIC_PORTS = {'ibias', 'en', 'dir_tx', 'inj', 'rx_direct', 'byp_s1', 'byp_s23', 'obs_sel0', 'obs_sel1',
-                'bw0', 'bw1', 'bw2', 'gain0', 'gain1', 'gain2', 'gain3', 'fz', 'island_off', 'atb_vcm', 'atb_vbp',
+                'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3', 'gain4', 'gain5', 'gainc0', 'gainc1', 'fz', 'island_off', 'atb_vcm', 'atb_vbp',
                 'gain_lo', 'byp', 'atb_nbias', 'obs_en', 'inj_en'}
 _PIN_NAMES = {}
 
@@ -318,10 +323,13 @@ def primitive_geometry(path, d):
 class Painter:
     def __init__(self):
         self.cmds = []
+        self.net = None       # net of the shapes being drawn (antenna-diode planning)
+        self.shapes = []      # (layer, x1, y1, x2, y2, net)
 
     def rect(self, layer, x1, y1, x2, y2):
         self.cmds += [f'box values {min(x1, x2):.3f} {min(y1, y2):.3f} {max(x1, x2):.3f} {max(y1, y2):.3f}',
                       f'paint {layer}']
+        self.shapes.append((layer, min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2), self.net))
 
     def via(self, x, y, low, high):
         for m in range(low, high + 1):
@@ -517,6 +525,7 @@ def layout_subckt(sub, work, geoms, macros, *, row_width=None, top=False):
     trunk, span = L['trunk'], L['span']
     p = Painter()
     placed = []
+    keepouts, taps, terminals = [], [], []
     for pr in L['plan']:
         cx = L['bank_right']
         reach = {}
@@ -527,6 +536,9 @@ def layout_subckt(sub, work, geoms, macros, *, row_width=None, top=False):
             for cell, dx, dy, nm in g['cells']:
                 p.cmds += [f'getcell {cell} child 0 0 parent {ox + dx:.3f} {oy + dy:.3f}', f'identify {nm}']
                 placed.append(dict(name=nm, cell=cell, x=ox + dx, y=oy + dy))
+            keepouts.append((ox + fp[0], oy + fp[1], ox + fp[2], oy + fp[3]))
+            if g['kind'] != 'cap' and not d.model.startswith('pfet'):   # NMOS/resistor guard ring, macro taps
+                taps.append(keepouts[-1])
             for ex_ in g['extra']:
                 if ex_[0] == 'top_tab':
                     xt, ym, xin = ex_[1]
@@ -537,6 +549,14 @@ def layout_subckt(sub, work, geoms, macros, *, row_width=None, top=False):
             for t, ((px, py), ex, net, lev) in enumerate(zip(g['pins'], g['esc'], d.nodes, g['level'])):
                 X, Y, E = ox + px, oy + py, ox + ex
                 ty = pr['track'][net]
+                p.net = net
+                if g['kind'] == 'mos':
+                    terminals.append((X, Y, net, 'g' if t == 1 else 'sd' if t in (0, 2) else 'x',
+                                      d.w * d.l if t == 1 else 0.))
+                elif g['kind'] == 'macro':
+                    # child port: diffusion (or a child antenna diode) protects; else its gate area counts
+                    pr_, ga_ = (g.get('port_info') or [(True, 0.)] * len(d.nodes))[t]
+                    terminals.append((X, Y, net, 'sd' if pr_ else 'g', ga_))
                 if g['kind'] == 'macro':
                     pass
                 elif g['kind'] == 'cap':
@@ -556,6 +576,7 @@ def layout_subckt(sub, work, geoms, macros, *, row_width=None, top=False):
             cx += fp[2] - fp[0] + GAP
         for net, (xa, xe) in reach.items():
             ty = pr['track'][net]
+            p.net = net
             if net in trunk:
                 tx = trunk[net][0]
                 p.wire('metal4', tx, ty, xe, ty)
@@ -566,7 +587,14 @@ def layout_subckt(sub, work, geoms, macros, *, row_width=None, top=False):
     pins = []
     for n in trunk:
         lo, hi = span[n]
+        p.net = n
         p.wire('metal5', trunk[n][0], lo, trunk[n][0], max(hi, lo + 1.), width=trunk[n][1])
+    p.net = None
+    # antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M5 get an N+/Psub diode
+    # under their own M3-M5 wire; reported as 'antenna_diodes' for the LVS reference.
+    req = ad.requests_from_shapes(p.shapes, terminals)
+    dcmds, diodes = ad.plan(req, [s[:5] for s in p.shapes], keepouts, taps=taps)
+    p.cmds += dcmds
     for i, n in enumerate(sub.ports, 1):
         xx = trunk[n][0]
         p.via(xx, port_y, 3, 5)
@@ -587,8 +615,11 @@ def layout_subckt(sub, work, geoms, macros, *, row_width=None, top=False):
     if (work / f'{sub.name}.mag').exists():
         (work / f'{sub.name}.mag').unlink()
     magic(work, f'{sub.name}.tcl')
+    dnets = {q['net'] for q in diodes if q.get('placed')}
+    port_info = [(n in dnets or any(k_ == 'sd' and n_ == n for _, _, n_, k_, _ in terminals),
+                  sum(a_ for _, _, n_, k_, a_ in terminals if n_ == n and k_ == 'g')) for n in sub.ports]
     return dict(pins=pins, esc=[pp[0] for pp in pins], level=[3] * len(pins), bbox=(0., 0., width, height),
-                fp=(-.5, 0., width + .5, height), extra=[], kind='macro',
+                fp=(-.5, 0., width + .5, height), extra=[], kind='macro', port_info=port_info, antenna_diodes=diodes,
                 size_um=[round(width, 2), round(height, 2)], placed=placed, nets=len(nets), rows=L['rows'],
                 bank_um=round(L['bank_right'], 1), ncols=L['ncols'], long_nets=L['long_nets'],
                 row_report=[(len(pr['row']), pr['band_h'], pr['row_h'], pr['used_w']) for pr in L['plan']])
@@ -716,7 +747,16 @@ def build_block(spice, top, work, *, row_widths=None):
     tot = re.findall(r'Total DRC errors found: (\d+)', (work / 'check.tcl.log').read_text())
     drc = int(tot[-1]) if tot else None
     bb = [float(v) * .005 for v in (work / 'bbox.txt').read_text().split()]
-    lv = lvs(work, f'{top}.lvs.spice', top, Path(spice).name, top)
+    # LVS reference = schematic + every subcircuit's antenna diodes (each cell is its own layout cell)
+    ref = Path(spice).read_text()
+    for name, m in macros.items():
+        lines = ad.spice_lines(m.get('antenna_diodes') or [], prefix=f'DANT_{name}_')
+        if lines:
+            k = re.search(rf'(?mi)^\.subckt\s+{re.escape(name)}\s', ref).start()
+            e = ref.lower().index('.ends', k)
+            ref = ref[:e] + '\n'.join(lines) + '\n' + ref[e:]
+    (work / 'lvs_reference.spice').write_text(ref)
+    lv = lvs(work, f'{top}.lvs.spice', top, 'lvs_reference.spice', top)
     return dict(drc_count=drc, drc_raw=drc_raw, bbox_um=[round(v, 2) for v in bb],
                 area_um2=round((bb[2] - bb[0]) * (bb[3] - bb[1]), 0),
                 lvs=lv, cells={k: dict(size_um=v['size_um'], rows=v['rows'], nets=v['nets'], bank_um=v['bank_um'],
@@ -744,6 +784,7 @@ def sim_header(corner='typical', temp=27):
             f'.lib {ANALOG_PDK}/libs.tech/ngspice/sm141064.ngspice {corner}\n'
             f'.lib {ANALOG_PDK}/libs.tech/ngspice/sm141064.ngspice res_{rc}\n'
             f'.lib {ANALOG_PDK}/libs.tech/ngspice/sm141064.ngspice mimcap_{rc}\n'
+            f'.lib {ANALOG_PDK}/libs.tech/ngspice/sm141064.ngspice diode_{rc}\n'   # antenna diodes (extracted)
             f'.option temp={temp} gmin=1e-12 reltol=1e-3\n')
 
 
@@ -818,6 +859,7 @@ def generate(block):
     gds = export_gds(work, top)
     res['klayout_drc'] = klayout_drc(work, gds, top)
     shutil.copy(gds, GENERATED / f'{block}.gds')
+    res['klayout_precheck'] = publish_checked(GENERATED / f'{block}.gds', block, top)   # unique names + KLayout precheck
     shutil.copy(work / f'{block}.mag', GENERATED / f'{block}.mag')
     shutil.copy(work / f'{top}.ext.spice', GENERATED / f'{block}.ext.spice')
     shutil.copy(work / f'{top}.lvs.spice', GENERATED / f'{block}.lvs.spice')

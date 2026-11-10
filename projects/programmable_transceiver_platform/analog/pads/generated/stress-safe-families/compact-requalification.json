@@ -1,0 +1,19 @@
+{
+ "date": "2026-11-10",
+ "scope": "Compact pad families (I8) rebuilt on the DRC-fixed protection macro scratch/pads-kldrc/macro (K5) and requalified",
+ "build": "scratch/pad-compact-v2/build.sh (stress_safe_compact_layout.py; protection_pad_ss.generate wide_signals=True escape 24 boundary_port_width 4)",
+ "published": {
+  "txpad": "wired-transmit/ top pad_txpad, 2.78..484 x 0..1226.72, notch x 144.2..484 y 914.9..1226.72",
+  "wirepad": "wired-receive-usb/ top pad_wirepad, 2.78..524 x 0..1512.72, notch x 192.5..524 y 914.9..1512.72, RX_P/N Metal3 side pins at x=2.78 (y 437.4..438.4 / 438.8..440.02)",
+  "single_leg": "single-leg/ top pad_single_leg, PAD_P 4 um M5 pin on the inner edge at x 288"
+ },
+ "backup": "generated/stress-safe-families-precompact-20261110/",
+ "held": {
+  "refpad": "scratch/pad-compact-v2/reference_clock/pad (pad_refpad.gds): clean and passes, but +82/+113 fF on PAD_N/P; lifecycle diff 2.197 -> 2.132 V. Held for LO rerun (P1).",
+  "rf_pair": "scratch/pad-compact-v2/rf-pair (pad_rf_pair.gds): clean and passes; +42/+53 fF per leg, -0.04 dB at 2.4 GHz, debug-site 2.45 GHz vdiff 0.871 -> 0.853. Held for RF/LO reruns (P1/P2)."
+ },
+ "klayout": "precheck main 0 / antenna 0 for all five (scratch/pad-compact-v2/kl, published *-kldrc.json for the three)",
+ "magic_lvs": "Magic DRC 0, netgen unique, independent device graph match for all five",
+ "family_sims": "scratch/pad-compact-v2/sims/family-sims.json: 116 runs, 0 errors, exposure 0, pad peak <= 4.76 V; txpad and wirepad within 5 mV of canonical (wirepad lifecycle swing +3.6 mV)",
+ "debug_sites": "scratch/pad-compact-v2/sims/debug-sites.json: single-leg identical to canonical"
+}

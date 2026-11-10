@@ -11,7 +11,9 @@ import math
 from pathlib import Path
 import os
 import subprocess
+import sys
 from circuits import build, FAMILIES
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))   # analog/antenna_diodes.py
 from design import PROJECT, resolve
 
 # Locked svalbard/librelane-gf180-canary:2026.08 identity (env/images.lock).
@@ -82,7 +84,12 @@ def terminals(path):
     return [center(drain), center(gate), center(source), (bx, bodyrect[3]-.2)]
 
 
-def generate(work,family='wired_transmit', *, external_primary=False, serial_tail_units=None, folded_tails=False, fs_high_width_um=20., fs_series_geometry_um=None, trunk_width_overrides_um=None):
+def generate(work,family='wired_transmit', *, external_primary=False, serial_tail_units=None, folded_tails=False, fs_high_width_um=20., fs_series_geometry_um=None, trunk_width_overrides_um=None,
+             columns=7, port_top_um=None, bond_y_offsets_um=(12.,4.)):
+    # Compact-family options (defaults reproduce the canonical layout exactly):
+    #   columns: devices per placement row (the M4 route rows need columns*3.2+2.4 <= 26 um, so <= 7);
+    #   port_top_um: draw every cell port's M5 trunk up to this y and label it there (boundary pins);
+    #   bond_y_offsets_um: depth of the P/N bond M4 transverses below active_origin.
     if serial_tail_units is not None:
         if family!='wired_transmit':raise ValueError('Serial tail sizing applies only to wired TX')
         from circuits import wired_transmit
@@ -117,7 +124,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     if list(work.glob('*.mag')):
         raise FileExistsError('Use an empty output directory: Magic must not merge a previous layout')
     kinds = sorted({(d.model, d.w_um, d.l_um) for d in circuit.devices})
-    keys = {k: f'primitive_{i}' for i,k in enumerate(kinds)}
+    keys = {k: f'{circuit.name}__primitive_{i}' for i,k in enumerate(kinds)}  # block-unique (chip GDS merge)
     commands = ['crashbackups stop', 'load primitive_workspace']
     for (model, width, length), name in keys.items():
         if model.startswith('ppoly'):
@@ -159,7 +166,8 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     magic(work, 'primitives.tcl')
     pinloc = {k: terminals(work/(name+'.mag')) for k,name in keys.items()}
     nets = sorted({n for d in circuit.devices for n in d.nodes})
-    pitch, columns, row_height = 21., 7, 26.
+    pitch, row_height = 21., 26.
+    if not 1<=columns<=7:raise ValueError('M4 route rows support at most 7 columns per 26 um row')
     folded_names=set();folded_meta=None
     core_reservation_width = 143. if family=="wired_receive_usb" else 150.
     core_devices = [d for d in circuit.devices if not d.name.startswith("ESD_")]
@@ -212,6 +220,9 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     tracks,trunk_widths=trunk_geometry(nets,width_overrides_um=trunk_width_overrides_um)
     port_heights={port:(active_origin-2 if bounded_routes and port in signal_ports else height)
                   for port in circuit.ports}
+    if port_top_um is not None:
+        if port_top_um<height:raise ValueError('Boundary port height below the device array')
+        port_heights={port:port_top_um for port in circuit.ports}
     net_spans={net:(active_origin-4,height) for net in nets}
     if bounded_routes:
         endpoints={net:[] for net in nets}
@@ -225,8 +236,10 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     commands = ['crashbackups stop', f'set ::env(PDKPATH) {PDK}',
                 f'path search +{PDK}/libs.ref/gf180mcu_fd_io/mag',
                 'load '+circuit.name, 'units microns']
+    shapes,cur=[],[None]   # net-tagged rectangles for antenna-diode planning
     def rect(layer, x1,y1,x2,y2):
         commands.extend([f'box values {min(x1,x2):.4f} {min(y1,y2):.4f} {max(x1,x2):.4f} {max(y1,y2):.4f}', f'paint {layer}'])
+        shapes.append((layer,min(x1,x2),min(y1,y2),max(x1,x2),max(y1,y2),cur[0]))
     def via(x,y, low, high):
         for metal in range(low, high+1):
             half = .19 if metal == 1 else .22 if metal == 5 else .2
@@ -239,7 +252,12 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
             raise ValueError('Manhattan route required')
         half = width/2 if width is not None else (.22 if layer == 'metal5' else .2)
         rect(layer,min(x1,x2)-half,min(y1,y2)-half,max(x1,x2)+half,max(y1,y2)+half)
+    keepouts,taps,ant_terms=[],[],[]
+    def prim_bbox(cell):
+        r=rectangles(work/(cell+'.mag'));allr=[a for k,v in r.items() if k not in ('checkpaint','properties') for a in v]
+        return (min(a[0] for a in allr),min(a[1] for a in allr),max(a[2] for a in allr),max(a[3] for a in allr))
     for net, x in tracks.items():
+        cur[0]=net
         # Widen across the trunk, not past its reserved endpoints.
         rect('metal5',x-trunk_widths[net]/2,net_spans[net][0]-.22,
              x+trunk_widths[net]/2,net_spans[net][1]+.22)
@@ -249,8 +267,14 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
         cell='folded_tail' if device.name in folded_names else keys[key]
         pins=[folded_meta['pins'][n][:2] for n in ('D','G','S','B')] if device.name in folded_names else pinloc[key]
         commands += [f'getcell {cell} child 0 0 parent {cx} {cy}', f'identify X{device.name}']
+        bb=prim_bbox(cell);keepouts.append((cx+bb[0],cy+bb[1],cx+bb[2],cy+bb[3]))
+        if 'nfet' in device.model:taps.append(keepouts[-1])   # NMOS guard ring = P-substrate tap
         for terminal, ((dx,dy), net) in enumerate(zip(pins,device.nodes)):
             x,y = cx+dx,cy+dy
+            cur[0]=net
+            mos='fet' in device.model and len(device.nodes)==4
+            ant_terms.append((x,y,net,('g' if terminal==1 else 'sd' if terminal in (0,2) else 'x') if mos else 'x',
+                              device.w_um*device.l_um if mos and terminal==1 else 0.))
             # Distinct local vertical escapes, with a unique M4 row per pin.
             offsets=(-2.5,0.,4.) if len(device.nodes)==3 else (2.5,0.,-2.5,4.)
             escape = cx + offsets[terminal]
@@ -262,6 +286,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
             via(escape,route_y,3,4)
             wire('metal4',escape,route_y,tracks[net],route_y)
             via(tracks[net],route_y,4,5)
+    cur[0]=None
     # Keep protection directly behind each bond. M1 local ground wiring and
     # M2 signal wiring fit below the restored M3..M5 rail module. The explicit
     # ground landing is an intended ring join, requiring assembled net checks.
@@ -296,7 +321,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
         via(tracks['VSS'],active_origin-20,4,5)
         rect('metal5',tracks['VSS']-trunk_widths['VSS']/2,active_origin-20-.22,
              tracks['VSS']+trunk_widths['VSS']/2,active_origin-4+.22)
-    for leg, cx, bond_y in [('P',37.5,active_origin-12),('N',37.5+bond_pitch,active_origin-4)]:
+    for leg, cx, bond_y in [('P',37.5,active_origin-bond_y_offsets_um[0]),('N',37.5+bond_pitch,active_origin-bond_y_offsets_um[1])]:
         # Preserve the actual library bond opening and via/metal construction.
         # The reference 75um cell places Bondpad_5LM at x=5.5um, putting
         # its 60um glass opening at [7.5,67.5] x [2,62]. Do not redraw it
@@ -321,13 +346,23 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
         x=tracks[net];y=net_spans[net][1]-.25 if bounded_routes else height
         commands += [f'box values {x-.2} {y-.5} {x+.2} {y}',
                      f'label {net} FreeSans 0.3 0 0 0 c metal5']
+    # Antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M5 get an N+/Psub diode
+    # under their own M3-M5 trunk; added to the schematic below so LVS still matches.
+    import antenna_diodes as ad
+    ant_req=ad.requests_from_shapes(shapes,ant_terms)
+    ant_cmds,ant_diodes=ad.plan(ant_req,[s[:5] for s in shapes],keepouts,taps=taps)
+    commands += ant_cmds
     commands += ['select top cell', f'flatten {flat}', f'load {flat}', 'save',
                  'select top cell', 'drc on', 'drc check', 'drc catchup', 'set f [open drc-count.txt w]',
                  'puts $f [drc list count total]', 'close $f',
                  'set f [open drc-details.txt w]', 'puts $f [drc listall why]', 'close $f',
                  'extract all', f'gds write {flat}.gds', 'quit -noprompt']
     (work/'layout.tcl').write_text('\n'.join(commands)+'\n')
-    (work/(circuit.name+'.spice')).write_text(circuit.spice())
+    sch=circuit.spice();ant_lines=ad.spice_lines(ant_diodes)
+    if ant_lines:
+        k=sch.index(f'.subckt {circuit.name} ');e=sch.index('.ends',k)
+        sch=sch[:e]+'\n'.join(ant_lines)+'\n'+sch[e:]
+    (work/(circuit.name+'.spice')).write_text(sch)
     magic(work,'layout.tcl')
     from gds_markers import repair as repair_gds_markers
     marker_export=repair_gds_markers(work,flat)
@@ -335,7 +370,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     # crashes. The independent physical-record export never reads schematics.
     (work/'stock-export.tcl').write_text(f'load {flat}\next2spice lvs\next2spice\nquit -noprompt\n')
     stock=magic(work,'stock-export.tcl',allow_failure=True)
-    report = dict(status='generated_candidate_requires_connectivity_and_rule_review',
+    report = dict(status='generated_candidate_requires_connectivity_and_rule_review',antenna_diodes=ant_diodes,
                   family=family,flat_cell=flat,marker_export=marker_export,serial_tail_units=serial_tail_units,folded_tail_layout=folded_meta,fs_high_width_um=fs_high_width_um,fs_series_geometry_um=fs_series_geometry_um,
                   bond_template=dict(cell='Bondpad_5LM',source='gf180mcu_fd_io',
                                      reference_parent='5LM_METAL_RAIL_PAD_60',
@@ -348,7 +383,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
                   pad_trunk_widths_um={leg:trunk_widths["PAD_"+leg] for leg in ("P","N")},
                   net_track_x_um=tracks,net_trunk_widths_um=trunk_widths,
                   bounded_internal_routes=bounded_routes,net_trunk_spans_um=net_spans,port_heights_um=port_heights,
-                  candidate_size_um=[candidate_width,height], reference_pair_size_um=[candidate_width,350],
+                  candidate_size_um=[candidate_width,height],columns=columns,port_top_um=port_top_um,bond_y_offsets_um=list(bond_y_offsets_um), reference_pair_size_um=[candidate_width,350],
                   bond_pitch_um=bond_pitch,escape_layer='metal2',escape_width_um=escape_width,active_origin_um=active_origin,core_clearance_depth_um=clearance,reference_sites=[p['site'] for p in circuit.requirements['pads']],
                   fits_reference_height=height<=350,
                   area_um2=candidate_width*height,

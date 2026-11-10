@@ -1,0 +1,25 @@
+* NGSPICE file created from wtx_q4ck.ext - technology: gf180mcuD
+
+.subckt wtx_q4ck QKN0 QKN1 QDN QK0 QK1 QD VDD VSS
+X0 VSS QKN1 QK1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X1 QK1 QKN1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X2 VSS QDN QD VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X3 QK1 QKN1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X4 QD QDN VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X5 VDD QKN1 QK1 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X6 QK0 QKN0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X7 VSS QKN1 QK1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X8 QD QDN VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X9 VDD QKN0 QK0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X10 QK0 QKN0 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X11 VSS QKN0 QK0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X12 QK0 QKN0 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X13 VDD QKN1 QK1 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X14 QK0 QKN0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X15 QK1 QKN1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X16 QK1 QKN1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X17 VSS QKN0 QK0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X18 VDD QDN QD VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
+X19 VDD QKN0 QK0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+.ends
+

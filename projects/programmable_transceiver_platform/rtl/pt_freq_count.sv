@@ -49,7 +49,16 @@ module pt_freq_count #(parameter integer CW = 18)(
     always @(posedge ref_clk or negedge rst_n)
         if (!rst_n) begin g1 <= 0; g2 <= 0; end else begin g1 <= fb_gray; g2 <= g1; end
     function automatic [CW-1:0] g2b(input [CW-1:0] g);
-        integer k; begin g2b[CW-1] = g[CW-1]; for (k = CW-2; k >= 0; k = k - 1) g2b[k] = g2b[k+1] ^ g[k]; end
+        integer distance; reg [CW-1:0] prefix;
+        begin
+            // Parallel prefix conversion bounds depth to ceil(log2(CW)).
+            // The serial suffix recurrence became a long physical XOR path
+            // from synchronized Gray state to fbq[0] at the 100 MHz reference.
+            prefix = g;
+            for (distance = 1; distance < CW; distance = distance * 2)
+                prefix = prefix ^ (prefix >> distance);
+            g2b = prefix;
+        end
     endfunction
     wire [1:0] w = cfg_r[22:21];
     wire [12:0] wlen = w == 2'd0 ? 13'd256 : w == 2'd1 ? 13'd1024 : w == 2'd2 ? 13'd2048 : 13'd4096;
@@ -61,10 +70,8 @@ module pt_freq_count #(parameter integer CW = 18)(
     reg [12:0] wc; reg [CW-1:0] fb_prev, fbq, delta_q; reg primed, eval; reg [3:0] good; reg r_locked, r_lost;
     reg [13:0] r_diff; reg [15:0] r_count;
     always @(posedge ref_clk or negedge rst_n) if (!rst_n) fbq <= 0; else fbq <= g2b(g2);
-    wire signed [CW+1:0] d_next = $signed({2'b0, delta_q}) - $signed({{(CW-14){1'b0}}, target});
-    wire signed [CW+1:0] tol_s = $signed({{(CW-5){1'b0}}, tol});
-    wire in_tol = (d_next >= -tol_s) && (d_next <= tol_s);
-    wire [13:0] d_sat = d_next > 8191 ? 14'h1fff : d_next < -8192 ? 14'h2000 : d_next[13:0];
+    wire in_tol;wire[13:0]d_sat;
+    pt_count_metrics #(.CW(CW)) metrics(delta_q,target,tol,in_tol,d_sat);
     wire [15:0] c_sat = |delta_q[CW-1:16] ? 16'hffff : delta_q[15:0];
     assign locked_ref = r_locked;
     always @(posedge ref_clk or negedge rst_n)
@@ -110,5 +117,45 @@ module pt_freq_count #(parameter integer CW = 18)(
         if (!rst_n) begin ack <= 1'b0; locked <= 1'b0; lost_lock <= 1'b0; diff <= 14'd0; count <= 16'd0; end
         else if (req_s != ack) begin ack <= req_s; {count, lost_lock, locked, diff} <= hold; end
     pt_sync_bit sa(.clk(ref_clk), .rst_n(rst_n), .d(ack), .q(ack_r));
+endmodule
+
+// Compare the observed count against target-relative bounds in parallel.
+// This removes the wide subtraction from ahead of both limit decisions;
+// only the low fourteen difference bits are needed when no limit is hit.
+module pt_count_metrics #(parameter CW=18)(input wire[CW-1:0]value,
+ input wire[15:0]target,input wire[6:0]tolerance,
+ output wire in_range,output wire[13:0]difference);
+ // A seven-bit tolerance crosses at most one boundary between the upper
+ // counts. Decode those cases alongside the short low-bit subtraction.
+ wire[7:0]low_delta={1'b0,value[6:0]}-{1'b0,target[6:0]};
+ wire[6:0]negative_low=-low_delta[6:0];
+ wire[CW-8:0]value_high=value[CW-1:7];
+ wire[CW-8:0]target_high={{(CW-16){1'b0}},target[15:7]};
+ wire same_high=value_high==target_high;
+ wire[CW-7:0]raised_target_high={1'b0,target_high}+1'b1;
+ wire above_high={1'b0,value_high}==raised_target_high;
+ // Widen before incrementing so the largest source count cannot wrap to
+ // zero and appear adjacent to a zero target.
+ wire[CW-7:0]raised_high={1'b0,value_high}+1'b1;
+ wire below_high=raised_high=={1'b0,target_high};
+ wire same_range=(low_delta[7]?negative_low:low_delta[6:0])<=tolerance;
+ assign in_range=(same_high&&same_range)||
+                 (above_high&&low_delta[7]&&low_delta[6:0]<=tolerance)||
+                 (below_high&&!low_delta[7]&&(|low_delta[6:0])&&negative_low<=tolerance);
+ wire[16:0]sat_low={1'b0,target}-17'd8192;
+ wire[16:0]sat_high={1'b0,target}+17'd8191;
+ wire[13:0]low_difference=value[13:0]-target[13:0];
+ assign difference=value>sat_high?14'h1fff:
+                   !sat_low[16]&&value<sat_low[15:0]?14'h2000:low_difference;
+`ifdef FORMAL
+ wire signed[CW+1:0]reference=$signed({2'b0,value})-$signed({{(CW-14){1'b0}},target});
+ wire signed[CW+1:0]signed_tol=$signed({{(CW-5){1'b0}},tolerance});
+ wire reference_within=(reference>=-signed_tol)&&(reference<=signed_tol);
+ wire[13:0]reference_difference=reference>8191?14'h1fff:reference< -8192?14'h2000:reference[13:0];
+ always @*begin
+  assert(in_range==reference_within);
+  assert(difference==reference_difference);
+ end
+`endif
 endmodule
 `default_nettype wire

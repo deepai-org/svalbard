@@ -1,5 +1,6 @@
 {
   "status": "generated_candidate_requires_connectivity_and_rule_review",
+  "antenna_diodes": [],
   "family": "wired_transmit",
   "flat_cell": "tx_with_primary",
   "marker_export": {
@@ -12,9 +13,9 @@
     },
     "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
     "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
-    "before_gds_sha256": "73857e9f9ff5474961e23623b926844a85e96cda2892f669f2f553f432c0e58d",
-    "after_gds_sha256": "04c18ea7153a14e9504bbfcf212eb6204b25f664cf4c9ca4f0cc15b8ca8ceee0",
-    "physical_magic_sha256": "2c809d87730c78d9efa01fea5d9869f295872c916c0f302172de72ae2977396f",
+    "before_gds_sha256": "7b4722cc3a4587115a86da8bd04f84baf886780d35ca3c06a3b887391f4271d8",
+    "after_gds_sha256": "963d011535919e83cf384f91b5cb6a4ea5978262ed3a923a46cc388147b6a8a5",
+    "physical_magic_sha256": "7ca9e7f775441a2efbafe698816954469c7c825e34e685ecffa43f7b101725bd",
     "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
   },
   "serial_tail_units": 4,
@@ -550,6 +551,12 @@
     "TERM_ENABLE": 1226.0,
     "TERM_VCM": 1226.0
   },
+  "columns": 7,
+  "port_top_um": null,
+  "bond_y_offsets_um": [
+    14.0,
+    6.0
+  ],
   "reference_pair_size_um": [
     286.0,
     350
@@ -629,101 +636,101 @@
     ],
     [
       159.945,
-      698.0,
+      438.0,
       434.5,
-      988.0
+      728.0
     ],
     [
       165.765,
-      1001.0,
+      741.0,
       463.235,
-      1173.4099999999999
+      913.41
     ],
     [
       180.0,
-      988.0,
+      728.0,
       210.0,
-      1001.0
+      741.0
     ],
     [
       260.0,
-      988.0,
+      728.0,
       290.0,
-      1001.0
+      741.0
     ],
     [
       33.5,
-      396.0,
+      392.0,
       452.0,
-      404.0
+      400.0
     ],
     [
       444.0,
-      396.0,
+      392.0,
       452.0,
-      744.0
+      484.0
     ],
     [
       342.0,
-      736.0,
+      476.0,
       452.0,
-      744.0
+      484.0
     ],
     [
       244.5,
-      408.0,
+      402.0,
       468.0,
-      416.0
+      410.0
     ],
     [
       460.0,
-      408.0,
+      402.0,
       468.0,
-      764.0
+      504.0
     ],
     [
       346.0,
-      756.0,
+      496.0,
       468.0,
-      764.0
+      504.0
     ],
     [
       296.0,
-      702.0,
+      442.0,
       482.0,
-      706.0
+      446.0
     ],
     [
       476.0,
-      700.0,
+      411.0,
       484.0,
-      1230.0
+      448.0
     ],
     [
       133.1,
-      1224.0,
+      413.0,
       482.0,
-      1228.0
+      417.0
     ]
   ],
   "area_ceiling_um2": 300000,
   "fits_assigned_area": true,
   "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
   "sources_sha256": {
-    "analog/pads/layout.py": "04f98a9bff0374c6fba37f130b3ec7b6f97cc216bc2906dd803a3f4f8e5f3729",
+    "analog/pads/layout.py": "747c7be03aef948ba6a117258abe2715d45f607945b93932ca37dd6e4f8ebe8d",
     "analog/pads/gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
     "analog/pads/generated/provider-sites.json": "c58790b22d45497c45bfd20e8cc60e698d8286010856fcc6fa18ab7021d26df4",
     "analog/pads/circuits.py": "1c212fbefc7157c2fb50594b3c137aa9ce2f94bfd30075c9386c05a0fa55e2b3",
     "analog/pads/design.py": "7330ebd9a33ffcfe6a0c9949cd8d51d08a8e6564521b14ae4ec57fd66a1a40f9",
-    "analog/pads/wired_receive.py": "117711d681b59df45eb9e8df153021d000a46835db261ec865a27c2a92ca3b6d",
+    "analog/pads/wired_receive.py": "955c3b046b5b62c338143ed9fc3c6a141a12e3f067713d05d3868306ff244a37",
     "analog/pads/folded_tail.py": "7d8ddd4f655ac25e8ebbfdcb4c1599b53374f7b6b795e521ecdade18da2ed386",
-    "spec/analog-architecture.json": "5314a56b1a5f2167c120b70839e21a8db3472e6b01091bbaeab55ce7c76d4fa1",
+    "spec/analog-architecture.json": "8c21c072f5c4eddef381d0aca7212672fb90e742c68e3101978b7f89de6118f8",
     "spec/contract.json": "712a142ab5e6fa1f2fe50b30c23be83207125c47caee8b18c79fd134eb7b693c",
     "spec/schematic-implementation.json": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332"
   },
   "drc_count": "0",
   "pcell_terminal_coordinates": {
-    "primitive_0": [
+    "pad_wired_transmit__primitive_0": [
       [
         0.4,
         0.0
@@ -741,7 +748,7 @@
         10.680000000000001
       ]
     ],
-    "primitive_1": [
+    "pad_wired_transmit__primitive_1": [
       [
         0.76,
         0.0
@@ -759,7 +766,7 @@
         10.680000000000001
       ]
     ],
-    "primitive_2": [
+    "pad_wired_transmit__primitive_2": [
       [
         0.61,
         0.0
@@ -777,7 +784,7 @@
         1.6800000000000002
       ]
     ],
-    "primitive_3": [
+    "pad_wired_transmit__primitive_3": [
       [
         0.61,
         0.0
@@ -795,7 +802,7 @@
         2.6799999999999997
       ]
     ],
-    "primitive_4": [
+    "pad_wired_transmit__primitive_4": [
       [
         0.61,
         0.0
@@ -813,7 +820,7 @@
         8.680000000000001
       ]
     ],
-    "primitive_5": [
+    "pad_wired_transmit__primitive_5": [
       [
         1.26,
         0.0
@@ -831,7 +838,7 @@
         2.6799999999999997
       ]
     ],
-    "primitive_6": [
+    "pad_wired_transmit__primitive_6": [
       [
         0.535,
         0.0
@@ -849,7 +856,7 @@
         2.6799999999999997
       ]
     ],
-    "primitive_7": [
+    "pad_wired_transmit__primitive_7": [
       [
         0.0,
         1.08
@@ -863,7 +870,7 @@
         1.12
       ]
     ],
-    "primitive_8": [
+    "pad_wired_transmit__primitive_8": [
       [
         0.0,
         6.68
@@ -877,7 +884,7 @@
         7.14
       ]
     ],
-    "primitive_9": [
+    "pad_wired_transmit__primitive_9": [
       [
         0.0,
         1.43
@@ -911,15 +918,15 @@
     2.7800000000000002,
     0.0,
     484.0,
-    1230.0
+    1226.72
   ],
   "candidate_size_um": [
     484.0,
-    1230.0
+    1226.72
   ],
-  "area_um2": 292666.2527,
+  "area_um2": 284347.2427,
   "area_basis": "Allocated nonrectangular union, not material area or bounding rectangle.",
-  "allocation_union_um2": 292666.2527,
+  "allocation_union_um2": 284347.2427,
   "connected_primary_candidate": true,
   "device_count": 1088
 }

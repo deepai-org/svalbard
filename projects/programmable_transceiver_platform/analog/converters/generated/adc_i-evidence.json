@@ -1,13 +1,13 @@
 {
   "block": "adc_i",
   "top_cell": "pt_adc_i",
-  "generated_utc": "2026-11-08T16:27:46Z",
+  "generated_utc": "2026-11-10T02:44:32Z",
   "source_hashes": {
-    "adc_i.spice": "sha256:8fa5dac7999973fc10ed46278ccb4be70a68ac9d5f7d56b5566d0d72fe8490b5",
-    "circuits.py": "sha256:adef90cbf0361a13c7f816226d4c16024301fdaa3a59ecd81f469bd80ebd97fd",
+    "adc_i.spice": "sha256:0e0b21ba7b95358b326b0947783dd9a0857fab63b02809108ae515bfe2ebc5c9",
+    "circuits.py": "sha256:dab7a955791d8288e0570057e50a2b724869b8d4a436a8b2ec52810fdaac45ba",
     "lib/convkit.py": "sha256:335aaf313b48811efd7abdca25e07c0e4535a19b8c5e4e14de11ec17fed43a6e",
-    "flow.py": "sha256:d53ad8a2cbf8a969d4b234d27bb056af2d621d3ef820e371439f123910a78905",
-    "benches.py": "sha256:d1e760363f80ba641ec15cfd6df27c60bc6118672683f0544c3abe60c15868e2",
+    "flow.py": "sha256:2cfac4be4d486d95f11a11ab4c09217a37d163a9daa2d96bf1b4eb4976097817",
+    "benches.py": "sha256:4315c470b4fba951ebdeed473b74acc279820a9ffc018f4261b5f6565deacebc",
     "generated/macros/adc_code_reg.gds": "sha256:62e70715d13b8d49e5fa376bb42e3f78ea6e80f555d10ea73a19ff46df67d693",
     "generated/macros/adc_code_reg.lef": "sha256:e310191ddc55dc59286e2c355059bca8464f998af224f9da6ba6372e7ad96b34",
     "generated/macros/adc_code_reg.pnl.v": "sha256:3f588477a65b65775a039876de3e88dd375854523933230fb7aca5fe17745e46",
@@ -20,9 +20,9 @@
     "rtl/tb_dac_logic.v": "sha256:0a651fb00017aa23e8f1e8917488404350f8b83be1ed1407f044dab6f1271679"
   },
   "artifact_hashes": {
-    "generated/adc_i.gds": "sha256:31201d8e20ec3462ed26022b9802f4aeb0cf855b1f9b9aed1d072236510eca5c",
-    "generated/adc_i.mag": "sha256:8903ed210b09d2305a5b7e4735c4cad4fbc000c71b9ed39f45e9faa75e701c84",
-    "generated/adc_i.ext.spice": "sha256:cc677da585856e33368ac49f0d89f98a9709c91b28a4f9239cc26b8b1180d94c"
+    "generated/adc_i.gds": "sha256:6c240c0aa0b824336246c5549a664fdba67e6bb5ad25b35c57d7573027063f4e",
+    "generated/adc_i.mag": "sha256:92e872db37ca3ad0ce9fb5094ccd797d3cc0c130198bfddac0fbe8f6602f4bae",
+    "generated/adc_i.ext.spice": "sha256:55d423d7b785a9960ee157af1031e32b17e2ded8fef70f75bf6baf62d35520ba"
   },
   "images": {
     "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -32,14 +32,14 @@
   "pdk": "gf180mcuD ciel f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (both images)",
   "area": {
     "bbox_um": [
-      -39.0,
+      -60.0,
       0.0,
       407.96,
-      579.55
+      1242.16
     ],
-    "area_um2": 259035.7,
+    "area_um2": 581281.2,
     "ceiling_um2": 350000,
-    "fits": true
+    "fits": false
   },
   "tests": {
     "safe": {
@@ -47,59 +47,85 @@
       "cases": [
         {
           "case": "EN=0 supply current (A)",
-          "value": -1.68592e-09
+          "value": -7.83346e-07
         },
         {
           "case": "INP held at 1.65 V while disabled / island unpowered",
           "value": {
             "powered_disabled": {
-              "leak_A_at_1p65V": 4.256442e-12,
-              "cap_fF_at_10MHz": 113.2898,
-              "conductance_S": 1.499667e-09
+              "leak_A_at_1p65V": 8.522885e-12,
+              "cap_fF_at_10MHz": 232.0167,
+              "conductance_S": 1.918584e-08
             },
             "island_unpowered": {
-              "leak_A_at_1p65V": 3.636732e-12,
-              "cap_fF_at_10MHz": 110.2066,
-              "conductance_S": 3.140974e-12
+              "leak_A_at_1p65V": 7.283465e-12,
+              "cap_fF_at_10MHz": 209.0877,
+              "conductance_S": 1.540359e-11
             }
           }
         }
       ],
-      "notes": "Reset: registers cleared, comparator clock low (no static path), bootstrap gate pulled to VSS, clock receiver and bias off. Every device touching INP/INN, VCM and VREF is an NMOS in p-substrate."
+      "notes": "Reset: registers cleared, comparator clock low (no static path), bootstrap gate pulled to VSS, clock receiver and bias off; ILEN=0 also holds core B in reset. Every device touching INP/INN, VCM and VREF is an NMOS in p-substrate."
     },
     "clean": {
       "extracted_nominal": {
-        "inputs_V": [
-          0.5,
-          -0.5,
-          0.123,
-          -0.7
-        ],
-        "codes": [
-          300,
-          -286,
-          78,
-          -404
-        ],
-        "codes_per_V": 586.0,
-        "implied_fullscale_V": 0.8737,
-        "offset_codes": 7.0,
-        "dev_from_gain_offset_fit": [
-          0,
-          0,
-          -1,
-          -1
-        ],
-        "t_done_ns": [
-          34.68,
-          34.84,
-          34.96,
-          34.94
-        ]
+        "t_done_ns_max": 29.96,
+        "all_done": true,
+        "conversion_window_ns": 44.0,
+        "core_A": {
+          "inputs_V": [
+            0.5,
+            -0.5,
+            0.123,
+            -0.7
+          ],
+          "codes": [
+            280,
+            -288,
+            64,
+            -402
+          ],
+          "codes_per_V": 568,
+          "implied_fullscale_V": 0.9014,
+          "offset_codes": -4.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0,
+            -2,
+            0
+          ],
+          "monotonic": true
+        },
+        "core_B": {
+          "inputs_V": [
+            -0.5,
+            0.5,
+            -0.7,
+            0.123
+          ],
+          "codes": [
+            -296,
+            272,
+            -414,
+            60
+          ],
+          "codes_per_V": 568,
+          "implied_fullscale_V": 0.9014,
+          "offset_codes": -12.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0,
+            -4,
+            2
+          ],
+          "monotonic": true
+        },
+        "pass": true
       },
       "extracted_ok": true,
       "netlist": "generated/adc_i.ext.spice",
       "bench": "benches.adc_deck",
+      "criterion": "all conversions complete at 40 MS/s, both cores monotonic, <= 4 codes from a per-core gain/offset fit",
       "drc": {
         "tool": "magic 8.3.623 (digital image), full gf180mcuD deck",
         "errors": 0,
@@ -144,286 +170,820 @@
       ],
       "status_bits": [
         "adc_*_done",
-        "adc_*_overload"
+        "adc_*_overload",
+        "adc_*_doneb",
+        "adc_*_overloadb"
       ],
       "clock_obs": [],
-      "notes": "input_test 1/2/3 give known codes without any external source."
+      "notes": "input_test 1/2/3 give known codes on each core without any external source; ILEN=0 isolates core A."
     },
     "fallback": {
-      "state": "pass",
+      "state": "open",
+      "criterion": "no DC path (<10 nA at 1.65 V) and < 100 fF per leg disabled/unpowered",
       "routes": [
-        "rf_bb_external_adc: debug.bb_tap observe_rx_pga etc.; ADC input stays high-Z when disabled or unpowered"
+        "rf_bb_external_adc: debug.bb_tap observe_rx_pga etc.; ADC input stays high-Z when disabled or unpowered",
+        "in-block: ILEN=0 runs core A alone at 20 MS/s (v2 behaviour)"
       ],
       "bypass_loading_fF": {
-        "powered_disabled": 113.2898,
-        "island_unpowered": 110.2066
+        "powered_disabled": 232.0167,
+        "island_unpowered": 209.0877
       },
       "evidence": {
         "powered_disabled": {
-          "leak_A_at_1p65V": 4.256442e-12,
-          "cap_fF_at_10MHz": 113.2898,
-          "conductance_S": 1.499667e-09
+          "leak_A_at_1p65V": 8.522885e-12,
+          "cap_fF_at_10MHz": 232.0167,
+          "conductance_S": 1.918584e-08
         },
         "island_unpowered": {
-          "leak_A_at_1p65V": 3.636732e-12,
-          "cap_fF_at_10MHz": 110.2066,
-          "conductance_S": 3.140974e-12
+          "leak_A_at_1p65V": 7.283465e-12,
+          "cap_fF_at_10MHz": 209.0877,
+          "conductance_S": 1.540359e-11
         }
-      },
-      "criterion": "no DC path (<10 nA at 1.65 V) and < 0.5 pF/leg (ADC on-state sampling load per spec); re-evaluated from the stored run (earlier ad-hoc limit 100 fF, measured ~110 fF)"
+      }
     }
   },
   "performance_vs_target": [
     {
-      "metric": "conversion at 20 MS/s (50 ns, 10 ns acquisition)",
-      "target": ">= 20 MS/s per I/Q (20 MHz Wi-Fi)",
+      "metric": "40 MS/s per channel, 2-way interleaved (25 ns clock, 6 ns acquisition), tt/27C/3.3V",
+      "target": "40 MS/s per I/Q (AA)",
       "nominal": {
-        "inputs_V": [
-          0.5,
-          -0.5,
-          0.123,
-          -0.7
-        ],
-        "codes": [
-          300,
-          -286,
-          78,
-          -404
-        ],
-        "codes_per_V": 586.0,
-        "implied_fullscale_V": 0.8737,
-        "offset_codes": 7.0,
-        "dev_from_gain_offset_fit": [
-          0,
-          0,
-          -1,
-          -1
-        ],
-        "t_done_ns": [
-          34.68,
-          34.84,
-          34.96,
-          34.94
-        ]
+        "t_done_ns_max": 29.96,
+        "all_done": true,
+        "conversion_window_ns": 44.0,
+        "core_A": {
+          "inputs_V": [
+            0.5,
+            -0.5,
+            0.123,
+            -0.7
+          ],
+          "codes": [
+            280,
+            -288,
+            64,
+            -402
+          ],
+          "codes_per_V": 568,
+          "implied_fullscale_V": 0.9014,
+          "offset_codes": -4.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0,
+            -2,
+            0
+          ],
+          "monotonic": true
+        },
+        "core_B": {
+          "inputs_V": [
+            -0.5,
+            0.5,
+            -0.7,
+            0.123
+          ],
+          "codes": [
+            -296,
+            272,
+            -414,
+            60
+          ],
+          "codes_per_V": 568,
+          "implied_fullscale_V": 0.9014,
+          "offset_codes": -12.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0,
+            -4,
+            2
+          ],
+          "monotonic": true
+        },
+        "pass": true
       }
     },
     {
-      "metric": "25 MS/s (40 ns, 6 ns acquisition)",
-      "target": "margin probe",
+      "metric": "single-core fallback ILEN=0 at 20 MS/s (50 ns, 10 ns acquisition)",
+      "target": ">= 20 MS/s",
       "nominal": {
-        "inputs_V": [
-          0.5,
-          -0.5
-        ],
-        "codes": [
-          300,
-          -288
-        ],
-        "codes_per_V": 588.0,
-        "implied_fullscale_V": 0.8707,
-        "offset_codes": 6.0,
-        "dev_from_gain_offset_fit": [
-          0,
-          0
-        ],
-        "t_done_ns": [
-          null,
-          null
-        ]
+        "t_done_ns_max": 29.9,
+        "all_done": true,
+        "conversion_window_ns": 40.0,
+        "core_A": {
+          "inputs_V": [
+            0.5,
+            -0.5,
+            0.123,
+            -0.7
+          ],
+          "codes": [
+            286,
+            -288,
+            67,
+            -404
+          ],
+          "codes_per_V": 574,
+          "implied_fullscale_V": 0.892,
+          "offset_codes": -1.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0,
+            -3,
+            -1
+          ],
+          "monotonic": true
+        },
+        "pass": true
       }
     },
     {
-      "metric": "selected 40 MS/s timing (3 ns acq, 25.2 ns period)",
-      "target": "3/20/2/0.2 ns allocation",
+      "metric": "margin probe: ss/32C/3.15V at 45 MS/s (22.2 ns clock)",
+      "target": "margin, not gating",
       "nominal": {
-        "inputs_V": [
-          0.5,
-          -0.5
-        ],
-        "codes": [
-          0,
-          0
-        ],
-        "codes_per_V": 0.0,
-        "implied_fullscale_V": null,
-        "offset_codes": 0.0,
-        "dev_from_gain_offset_fit": [
-          0,
-          0
-        ],
-        "t_done_ns": [
-          null,
-          null
-        ]
+        "t_done_ns_max": 1000000000.0,
+        "all_done": false,
+        "conversion_window_ns": 38.4,
+        "core_A": {
+          "inputs_V": [
+            0.5,
+            -0.5
+          ],
+          "codes": [
+            280,
+            224
+          ],
+          "codes_per_V": 56,
+          "implied_fullscale_V": 9.1429,
+          "offset_codes": 252.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0
+          ],
+          "monotonic": true
+        },
+        "core_B": {
+          "inputs_V": [
+            -0.5,
+            0.5
+          ],
+          "codes": [
+            -296,
+            272
+          ],
+          "codes_per_V": 568,
+          "implied_fullscale_V": 0.9014,
+          "offset_codes": -12.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0
+          ],
+          "monotonic": true
+        },
+        "pass": false
       }
     },
     {
-      "metric": "stretch 80 MS/s (12.5 ns)",
-      "target": "non-gating 40 MHz-channel stretch",
-      "nominal": {
-        "inputs_V": [
-          0.5,
-          -0.5
-        ],
-        "codes": [
-          0,
-          0
-        ],
-        "codes_per_V": 0.0,
-        "implied_fullscale_V": null,
-        "offset_codes": 0.0,
-        "dev_from_gain_offset_fit": [
-          0,
-          0
-        ],
-        "t_done_ns": [
-          null,
-          null
-        ]
-      }
-    },
-    {
-      "metric": "input_test modes 1/2/3 (expect 0, +128*g, -128*g codes)",
+      "metric": "input_test modes 1/2/3 per core (expect 0, +128*g, -128*g codes)",
       "target": "0/+VREF/4/-VREF/4",
       "nominal": {
-        "input_test=0": 184,
-        "input_test=1": 14,
-        "input_test=2": 140,
-        "input_test=3": -116,
+        "core_A_input_test=0": 168,
+        "core_A_input_test=1": 0,
+        "core_A_input_test=2": 126,
+        "core_A_input_test=3": -128,
+        "core_B_input_test=0": 158,
+        "core_B_input_test=1": -14,
+        "core_B_input_test=2": 112,
+        "core_B_input_test=3": -142,
         "note": "input 0.3 V differential applied throughout; modes 1-3 must ignore it"
       }
     },
     {
-      "metric": "supply current at 20 MS/s (mA)",
+      "metric": "supply current at 40 MS/s (mA)",
       "target": "8 allocation",
-      "nominal": 2.86893
+      "nominal": 5.73147
     },
     {
-      "metric": "VREF average current at 20 MS/s (uA)",
+      "metric": "VREF average current at 40 MS/s (uA)",
       "target": "refbuf source limit 1 mA",
-      "nominal": 62.921200000000006
+      "nominal": 83.17930000000001
     },
     {
-      "metric": "ss/32C/3.15V at 12.5 MS/s (80 ns, 10 ns acquisition)",
-      "target": "reduced-rate floor",
-      "nominal": {
-        "inputs_V": [
-          0.5,
-          -0.5
-        ],
-        "codes": [
-          296,
-          -286
-        ],
-        "codes_per_V": 582.0,
-        "implied_fullscale_V": 0.8797,
-        "offset_codes": 5.0,
-        "dev_from_gain_offset_fit": [
-          0,
-          0
-        ],
-        "t_done_ns": [
-          44.92,
-          44.92
-        ]
-      }
-    },
-    {
-      "metric": "corner sweep (extracted, 20 MS/s)",
-      "target": "narrow window, not gating",
+      "metric": "corner sweep at 40 MS/s interleaved (extracted)",
+      "target": "40 MS/s at every envelope corner",
+      "all_pass": true,
       "corners": {
+        "typical_22C_3.15V": {
+          "t_done_ns_max": 30.16,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              280,
+              -288
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -4.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -297,
+              275
+            ],
+            "codes_per_V": 572,
+            "implied_fullscale_V": 0.8951,
+            "offset_codes": -11.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "typical_22C_3.35V": {
+          "t_done_ns_max": 29.26,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              284,
+              -288
+            ],
+            "codes_per_V": 572,
+            "implied_fullscale_V": 0.8951,
+            "offset_codes": -2.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -296,
+              275
+            ],
+            "codes_per_V": 571,
+            "implied_fullscale_V": 0.8967,
+            "offset_codes": -10.5,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "typical_32C_3.15V": {
+          "t_done_ns_max": 30.74,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              280,
+              -288
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -4.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -298,
+              274
+            ],
+            "codes_per_V": 572,
+            "implied_fullscale_V": 0.8951,
+            "offset_codes": -12.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "typical_32C_3.35V": {
+          "t_done_ns_max": 30.04,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              280,
+              -288
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -4.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -296,
+              272
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -12.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "ss_22C_3.15V": {
+          "t_done_ns_max": 38.0,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              280,
+              -288
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -4.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -296,
+              272
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -12.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "ss_22C_3.35V": {
+          "t_done_ns_max": 37.34,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              278,
+              -288
+            ],
+            "codes_per_V": 566,
+            "implied_fullscale_V": 0.9046,
+            "offset_codes": -5.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -296,
+              272
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -12.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
         "ss_32C_3.15V": {
-          "inputs_V": [
-            0.5,
-            -0.5
-          ],
-          "codes": [
-            0,
-            294
-          ],
-          "codes_per_V": -294.0,
-          "implied_fullscale_V": -1.7415,
-          "offset_codes": 147.0,
-          "dev_from_gain_offset_fit": [
-            0,
-            0
-          ],
-          "t_done_ns": [
-            null,
-            null
-          ]
+          "t_done_ns_max": 39.1,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              280,
+              -288
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -4.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -296,
+              272
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -12.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "ss_32C_3.35V": {
+          "t_done_ns_max": 37.54,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              280,
+              -288
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -4.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -296,
+              272
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -12.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "ff_22C_3.15V": {
+          "t_done_ns_max": 24.48,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              287,
+              -289
+            ],
+            "codes_per_V": 576,
+            "implied_fullscale_V": 0.8889,
+            "offset_codes": -1.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -304,
+              275
+            ],
+            "codes_per_V": 579,
+            "implied_fullscale_V": 0.8843,
+            "offset_codes": -14.5,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
         },
         "ff_22C_3.35V": {
-          "inputs_V": [
-            0.5,
-            -0.5
-          ],
-          "codes": [
-            304,
-            -288
-          ],
-          "codes_per_V": 592.0,
-          "implied_fullscale_V": 0.8649,
-          "offset_codes": 8.0,
-          "dev_from_gain_offset_fit": [
-            0,
-            0
-          ],
-          "t_done_ns": [
-            28.54,
-            28.24
-          ]
+          "t_done_ns_max": 23.98,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              286,
+              -290
+            ],
+            "codes_per_V": 576,
+            "implied_fullscale_V": 0.8889,
+            "offset_codes": -2.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -304,
+              275
+            ],
+            "codes_per_V": 579,
+            "implied_fullscale_V": 0.8843,
+            "offset_codes": -14.5,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "ff_32C_3.15V": {
+          "t_done_ns_max": 24.8,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              287,
+              -289
+            ],
+            "codes_per_V": 576,
+            "implied_fullscale_V": 0.8889,
+            "offset_codes": -1.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -304,
+              275
+            ],
+            "codes_per_V": 579,
+            "implied_fullscale_V": 0.8843,
+            "offset_codes": -14.5,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "ff_32C_3.35V": {
+          "t_done_ns_max": 24.42,
+          "all_done": true,
+          "conversion_window_ns": 44.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              287,
+              -289
+            ],
+            "codes_per_V": 576,
+            "implied_fullscale_V": 0.8889,
+            "offset_codes": -1.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "core_B": {
+            "inputs_V": [
+              -0.5,
+              0.5
+            ],
+            "codes": [
+              -304,
+              275
+            ],
+            "codes_per_V": 579,
+            "implied_fullscale_V": 0.8843,
+            "offset_codes": -14.5,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
         }
       }
     },
     {
-      "metric": "ss/32C/3.15V at 16 MS/s (62.5 ns, 10 ns acquisition)",
-      "target": "reduced-rate floor",
-      "nominal": {
-        "inputs_V": [
-          0.5,
-          -0.5,
-          0.123
-        ],
-        "codes": [
-          296,
-          -286,
-          78
-        ],
-        "t_done_ns": [
-          44.66,
-          44.8,
-          45.56
-        ]
-      },
-      "provenance": "benches.adc_deck(ext, ss,32,3.15, period=62.5n, acq=10n) run separately after the block run (scratch/converters/v2ext/ss16); now part of adc_bench"
-    },
-    {
-      "metric": "25 MS/s note",
-      "target": "",
-      "nominal": "codes correct (300/-288) but DONE rises ~0.8 ns after the next SAMPLE edge (34.8 ns conversion vs 34 ns window): marginal, not claimed"
-    },
-    {
-      "metric": "single-tone FFT, extracted, tt/27C/3.3V, 20 MS/s",
-      "target": "ENOB 8",
-      "nominal": {
-        "points": 32,
-        "fin_hz": 1875000.0,
-        "fs_hz": 20000000.0,
-        "amplitude_diff_peak_V": 0.8,
-        "sndr_db": 50.17,
-        "enob": 8.04,
-        "sfdr_db": 53.24,
-        "note": "continuous SIN input; only 32 points: coarse SNDR/SFDR resolution"
-      },
-      "report": "generated/adc_i-fft.json (adc_fft.py)"
+      "metric": "single-core fallback 20 MS/s at ss corners",
+      "target": ">= 20 MS/s",
+      "corners": {
+        "ss_22C_3.15V": {
+          "t_done_ns_max": 37.74,
+          "all_done": true,
+          "conversion_window_ns": 40.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              280,
+              -288
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -4.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "ss_22C_3.35V": {
+          "t_done_ns_max": 36.64,
+          "all_done": true,
+          "conversion_window_ns": 40.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              280,
+              -288
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -4.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "ss_32C_3.15V": {
+          "t_done_ns_max": 38.36,
+          "all_done": true,
+          "conversion_window_ns": 40.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              280,
+              -288
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -4.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        },
+        "ss_32C_3.35V": {
+          "t_done_ns_max": 37.24,
+          "all_done": true,
+          "conversion_window_ns": 40.0,
+          "core_A": {
+            "inputs_V": [
+              0.5,
+              -0.5
+            ],
+            "codes": [
+              280,
+              -288
+            ],
+            "codes_per_V": 568,
+            "implied_fullscale_V": 0.9014,
+            "offset_codes": -4.0,
+            "dev_from_gain_offset_fit": [
+              0,
+              0
+            ],
+            "monotonic": true
+          },
+          "pass": true
+        }
+      }
     }
   ],
   "excluded_coverage": [
-    "comparator_trim field not implemented (no analog trim)",
-    "acquisition_ns/decision_ns/reset_ns are realised by the ADC_CLOCK duty cycle from the clock tree, not inside this block",
-    "VREF is an ideal source in these benches (refbuf verified separately)",
-    "FFT only 32 points at one rate/corner (coarse resolution); no INL/DNL sweep, noise or Monte Carlo",
-    "comparator_trim not implemented (offset ~+7..+14 codes at tt, digitally removable)"
+    "comparator_trim field not implemented (no analog trim); per-core offset removed digitally",
+    "acquisition_ns is realised by the ADC_CLOCK duty cycle (6 ns high at 40 MHz), not inside this block",
+    "VREF is an ideal source in these DC benches; the FFT bench (adc_fft.py --refbuf) puts the extracted refbuf in the loop",
+    "No Monte Carlo: interleave timing skew from mismatch is estimated, not simulated"
   ]
 }

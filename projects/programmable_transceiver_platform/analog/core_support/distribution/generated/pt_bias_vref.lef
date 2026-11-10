@@ -1,0 +1,71 @@
+VERSION 5.7 ;
+  NOWIREEXTENSIONATPIN ON ;
+  DIVIDERCHAR "/" ;
+  BUSBITCHARS "[]" ;
+MACRO pt_bias_vref
+  CLASS BLOCK ;
+  FOREIGN pt_bias_vref ;
+  ORIGIN -0.300 54.780 ;
+  SIZE 85.850 BY 56.000 ;
+  PIN VDD
+    DIRECTION INOUT ;
+    USE POWER ;
+    PORT
+      LAYER Metal5 ;
+        RECT 0.300 -47.240 0.740 1.220 ;
+    END
+  END VDD
+  PIN VSS
+    DIRECTION INOUT ;
+    USE GROUND ;
+    PORT
+      LAYER Metal5 ;
+        RECT 1.340 -49.040 1.780 1.220 ;
+    END
+  END VSS
+  PIN VBG
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER Metal5 ;
+        RECT 2.380 -45.440 2.820 1.220 ;
+    END
+  END VBG
+  PIN VREF0
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER Metal5 ;
+        RECT 3.420 -48.140 3.860 1.220 ;
+    END
+  END VREF0
+  PIN VCM
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER Metal5 ;
+        RECT 4.460 -46.340 4.900 1.220 ;
+    END
+  END VCM
+  OBS
+      LAYER Nwell ;
+        RECT 8.050 -44.180 84.400 -0.600 ;
+      LAYER Metal1 ;
+        RECT 8.235 -44.080 84.300 -0.785 ;
+      LAYER Metal2 ;
+        RECT 7.150 -44.080 86.150 -1.760 ;
+      LAYER Metal3 ;
+        RECT 7.150 -54.780 86.150 -1.760 ;
+      LAYER Metal4 ;
+        RECT 0.320 -54.780 86.150 -45.380 ;
+      LAYER Metal5 ;
+        RECT 0.300 -47.520 0.380 -47.240 ;
+        RECT 0.300 -47.600 0.740 -47.520 ;
+        RECT 0.300 -49.400 0.740 -47.840 ;
+        RECT 2.380 -48.740 2.820 -46.040 ;
+        RECT 4.460 -48.740 4.900 -46.940 ;
+        RECT 2.380 -49.400 4.900 -48.740 ;
+  END
+END pt_bias_vref
+END LIBRARY
+

@@ -136,7 +136,9 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
     reg  [QW-1:0] pend;
     reg           ovf;               // pend overflowed: run the count to saturation
     wire [CW-1:0] errors_n = errors + 1'b1;
-    wire          at_max   = &errors;
+    // Saturation flag kept as a register (always equal to &errors: errors only changes by
+    // clear, reset or the +1 step below), so the 16-bit AND is off the pend/step path.
+    reg           at_max;
     localparam integer RW = 8;
     localparam integer PW = $clog2(W + 1);
     reg  [30:0]   h;
@@ -190,7 +192,7 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             h <= 31'h7fffffff; run <= 0; bad <= 0; locked <= 1'b0; lost_lock <= 1'b0; errors <= 0;
-            mism_q <= 0; pop_q <= 0; pop_h <= 0; mism_v <= 1'b0; err_v <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0;
+            mism_q <= 0; pop_q <= 0; pop_h <= 0; mism_v <= 1'b0; err_v <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
         end else if (ce) begin
             if (!on) begin
                 locked <= 1'b0; run <= 0; bad <= 0;
@@ -215,9 +217,9 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
             pop_h  <= popcount({mism_q[W-1:WL], {WL{1'b0}}}) & {PW{1'b1}};
             err_v  <= mism_v && !clear;
             if (clear) begin
-                errors <= 0; lost_lock <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0;
+                errors <= 0; lost_lock <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
             end else begin
-                if (step_cnt) begin errors <= errors_n; errors_gray <= errors_n ^ (errors_n >> 1); end
+                if (step_cnt) begin errors <= errors_n; errors_gray <= errors_n ^ (errors_n >> 1); at_max <= &errors_n; end
                 if (at_max) pend <= 0;
                 else if (pend_sum[QW]) begin ovf <= 1'b1; pend <= 0; end
                 else pend <= pend_sum[QW-1:0];

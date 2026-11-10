@@ -1,18 +1,18 @@
 {
  "block": "aosc",
  "source_hashes": {
-  "aosc.spice": "sha256:d46af55ac51c7fc986161f8b2f4f45957db1c55c7507b44eec1bfeece792dc00",
+  "aosc.spice": "sha256:610f93baa84f880516c0b443f7e478d95c536c1202b77286258a402ad4a993a1",
   "timing_cells.spice": "sha256:f9f1f38f3d190cf34a8c02560d70c0061ccefe7951a3022b1803d74656139452",
   "layout_engine.py": "sha256:acb531c9c30a6b3f4a76c124bc9ea8e9274a532a7a9e1769d40ff535ab61f0ae",
   "netlist.py": "sha256:9eb8d5c8d7d044a76b560ebebd23c768aefd2b0c1183d38313964e89a1d30ab3",
-  "run_timing.py": "sha256:0ffa242409850c1211baf29172da2a7a542b21e6d88ffb5e03b87cde437056b3",
+  "run_timing.py": "sha256:23245a4794f903c23047d5500fc6b33335e193086dc9fa470e644d359baa2233",
   "timing_flow.py": "sha256:ae25349b5de22a22b47a77687abf481166efaac60013c748078420666f8e0b28"
  },
  "generated_hashes": {
-  "aosc.lvs.spice": "sha256:3a7f1398ede6b71480830081e926f8e85a5945a7531ddc2cbd5a161ccb663071",
-  "aosc.mag": "sha256:a2b06b03835f085aca1ae2e31049da572f9dfadf23db60053d9f50dee4417060",
-  "aosc.gds": "sha256:a5f9cd25254901ae771970e5c3978b280e5a237d82c2b6cc489e60b6e13abaed",
-  "aosc.ext.spice": "sha256:20f14e30c7d36e4a5a87cc5b5fc9448a66f6e7a3fdc6f550796787ac3e628cf7"
+  "aosc.lvs.spice": "sha256:f2e4ce3547d437a30b888830569845b81231a392c4def75ffb4472b086d4ccba",
+  "aosc.mag": "sha256:fc1c248f1bca0599f4ab61a3386cab6f438c4d7268d32e3b97f165e58dbd765b",
+  "aosc.gds": "sha256:dfa4b4142a45bf439b7b497572380be40b7dbf8840cfbfab1756b741221efccb",
+  "aosc.ext.spice": "sha256:611ce7f59c416fa027107f32015313319a81d164314ca93e079dac26db639c96"
  },
  "images": {
   "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -31,8 +31,8 @@
      "temp_c": 27,
      "vdd_v": 3.3,
      "netlist": "extracted",
-     "i_vdd_avg_ua": 3.55767e-05,
-     "i_vdd_peak_ua": 3.55767e-05,
+     "i_vdd_avg_ua": 4.7886299999999996e-05,
+     "i_vdd_peak_ua": 4.7886399999999996e-05,
      "output_max_v": {
       "clk": 2.81824e-09
      },
@@ -45,8 +45,8 @@
      "temp_c": 85,
      "vdd_v": 3.63,
      "netlist": "extracted",
-     "i_vdd_avg_ua": 0.00111168,
-     "i_vdd_peak_ua": 0.00111168,
+     "i_vdd_avg_ua": 0.0019376200000000001,
+     "i_vdd_peak_ua": 0.0019376200000000001,
      "output_max_v": {
       "clk": 4.67026e-08
      },
@@ -59,8 +59,8 @@
      "temp_c": 0,
      "vdd_v": 3.63,
      "netlist": "extracted",
-     "i_vdd_avg_ua": 3.73944e-05,
-     "i_vdd_peak_ua": 3.73945e-05,
+     "i_vdd_avg_ua": 4.99007e-05,
+     "i_vdd_peak_ua": 4.99007e-05,
      "output_max_v": {
       "clk": 3.08302e-09
      },
@@ -97,16 +97,16 @@
     "all_pass": true,
     "results": [
      {
-      "f_out_hz": 44852435.48724696,
+      "f_out_hz": 47701958.16538268,
       "target_hz": [
        40000000.0,
        60000000.0
       ],
-      "duty": 0.4717713721855097,
-      "i_off_ua": 3.55767e-05,
-      "i_on_ma": 0.158324,
-      "pass": true,
+      "duty": null,
+      "i_off_ua": 4.7886299999999996e-05,
+      "i_on_ma": 0.375496,
       "in_target_window": true,
+      "pass": true,
       "netlist": "extracted",
       "corner": "tt",
       "temp_c": 27,
@@ -117,11 +117,11 @@
    },
    "layout": {
     "size_um": [
-     119.04,
-     42.82
+     201.56,
+     63.96
     ],
-    "area_um2": 5097.3,
-    "devices": 17,
+    "area_um2": 12891.8,
+    "devices": 34,
     "gds": "generated/aosc.gds",
     "mag": "generated/aosc.mag",
     "extracted": "generated/aosc.ext.spice"
@@ -149,16 +149,16 @@
  "performance_vs_target": [
   {
    "kind": "nominal_extracted",
-   "f_out_hz": 44852435.48724696,
+   "f_out_hz": 47701958.16538268,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
-   "duty": 0.4717713721855097,
-   "i_off_ua": 3.55767e-05,
-   "i_on_ma": 0.158324,
-   "pass": true,
+   "duty": null,
+   "i_off_ua": 4.7886299999999996e-05,
+   "i_on_ma": 0.375496,
    "in_target_window": true,
+   "pass": true,
    "netlist": "extracted",
    "corner": "tt",
    "temp_c": 27,
@@ -167,16 +167,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 43515469.749495946,
+   "f_out_hz": 48056129.5593253,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
-   "duty": 0.47226469009732963,
-   "i_off_ua": 3.31506e-05,
-   "i_on_ma": 0.143649,
-   "pass": true,
+   "duty": 0.5230861646403,
+   "i_off_ua": 4.43267e-05,
+   "i_on_ma": 0.346447,
    "in_target_window": true,
+   "pass": true,
    "netlist": "extracted",
    "corner": "tt",
    "temp_c": 22,
@@ -185,16 +185,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 45161678.8101403,
+   "f_out_hz": 47624339.21229343,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
-   "duty": 0.4713343770699102,
-   "i_off_ua": 3.5753399999999996e-05,
-   "i_on_ma": 0.165556,
-   "pass": true,
+   "duty": null,
+   "i_off_ua": 4.79542e-05,
+   "i_on_ma": 0.384192,
    "in_target_window": true,
+   "pass": true,
    "netlist": "extracted",
    "corner": "tt",
    "temp_c": 22,
@@ -203,16 +203,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 43691335.28002505,
+   "f_out_hz": 47958563.80087604,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
-   "duty": 0.47267034159342297,
-   "i_off_ua": 3.42428e-05,
-   "i_on_ma": 0.142425,
-   "pass": true,
+   "duty": 0.523472519742942,
+   "i_off_ua": 4.62349e-05,
+   "i_on_ma": 0.34809,
    "in_target_window": true,
+   "pass": true,
    "netlist": "extracted",
    "corner": "tt",
    "temp_c": 32,
@@ -221,16 +221,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 45326806.273229994,
+   "f_out_hz": 47563556.802777715,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
-   "duty": 0.4717840630949144,
-   "i_off_ua": 3.69966e-05,
-   "i_on_ma": 0.164665,
-   "pass": true,
+   "duty": null,
+   "i_off_ua": 5.01419e-05,
+   "i_on_ma": 0.385497,
    "in_target_window": true,
+   "pass": true,
    "netlist": "extracted",
    "corner": "tt",
    "temp_c": 32,
@@ -239,16 +239,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 35363805.14543365,
+   "f_out_hz": 43392733.16361953,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
    "duty": null,
-   "i_off_ua": 3.17187e-05,
-   "i_on_ma": 0.10607000000000001,
+   "i_off_ua": 4.21484e-05,
+   "i_on_ma": 0.278032,
+   "in_target_window": true,
    "pass": true,
-   "in_target_window": false,
    "netlist": "extracted",
    "corner": "ss",
    "temp_c": 22,
@@ -257,16 +257,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 36981108.81691269,
+   "f_out_hz": 42997807.1118373,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
    "duty": null,
-   "i_off_ua": 3.40463e-05,
-   "i_on_ma": 0.12488500000000001,
+   "i_off_ua": 4.52792e-05,
+   "i_on_ma": 0.307876,
+   "in_target_window": true,
    "pass": true,
-   "in_target_window": false,
    "netlist": "extracted",
    "corner": "ss",
    "temp_c": 22,
@@ -275,16 +275,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 35526713.127712615,
+   "f_out_hz": 43278177.70019764,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
    "duty": null,
-   "i_off_ua": 3.18717e-05,
-   "i_on_ma": 0.105626,
+   "i_off_ua": 4.23665e-05,
+   "i_on_ma": 0.279317,
+   "in_target_window": true,
    "pass": true,
-   "in_target_window": false,
    "netlist": "extracted",
    "corner": "ss",
    "temp_c": 32,
@@ -293,16 +293,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 37130321.23916259,
+   "f_out_hz": 42915999.08445869,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
    "duty": null,
-   "i_off_ua": 3.42069e-05,
-   "i_on_ma": 0.12380799999999999,
+   "i_off_ua": 4.55086e-05,
+   "i_on_ma": 0.309277,
+   "in_target_window": true,
    "pass": true,
-   "in_target_window": false,
    "netlist": "extracted",
    "corner": "ss",
    "temp_c": 32,
@@ -311,16 +311,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 54521167.84341521,
+   "f_out_hz": 54301099.597266845,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
-   "duty": 0.4720933402393479,
-   "i_off_ua": 5.04213e-05,
-   "i_on_ma": 0.18877100000000002,
-   "pass": true,
+   "duty": null,
+   "i_off_ua": 7.42189e-05,
+   "i_on_ma": 0.441189,
    "in_target_window": true,
+   "pass": true,
    "netlist": "extracted",
    "corner": "ff",
    "temp_c": 22,
@@ -329,16 +329,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 56212407.95218198,
+   "f_out_hz": 53882213.48132981,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
-   "duty": 0.47137308175157866,
-   "i_off_ua": 5.63505e-05,
-   "i_on_ma": 0.216598,
-   "pass": true,
+   "duty": null,
+   "i_off_ua": 8.37544e-05,
+   "i_on_ma": 0.482607,
    "in_target_window": true,
+   "pass": true,
    "netlist": "extracted",
    "corner": "ff",
    "temp_c": 22,
@@ -347,16 +347,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 54718065.16921562,
+   "f_out_hz": 54220623.71790817,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
-   "duty": 0.4725824190856612,
-   "i_off_ua": 6.82861e-05,
-   "i_on_ma": 0.187479,
-   "pass": true,
+   "duty": null,
+   "i_off_ua": 0.000105176,
+   "i_on_ma": 0.440844,
    "in_target_window": true,
+   "pass": true,
    "netlist": "extracted",
    "corner": "ff",
    "temp_c": 32,
@@ -365,16 +365,16 @@
   },
   {
    "kind": "corner_extracted",
-   "f_out_hz": 56402639.643535316,
+   "f_out_hz": 53842081.175911054,
    "target_hz": [
     40000000.0,
     60000000.0
    ],
-   "duty": 0.4718909924984489,
-   "i_off_ua": 7.72515e-05,
-   "i_on_ma": 0.214338,
-   "pass": true,
+   "duty": null,
+   "i_off_ua": 0.000120039,
+   "i_on_ma": 0.484181,
    "in_target_window": true,
+   "pass": true,
    "netlist": "extracted",
    "corner": "ff",
    "temp_c": 32,
@@ -383,7 +383,7 @@
   },
   {
    "kind": "area",
-   "area_um2": 5097.3,
+   "area_um2": 12891.8,
    "ceiling_um2": 20000,
    "ceiling_source": "analog-architecture.json blocks.aosc",
    "fits": true

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Per-clock, per-corner signoff STA of the routed pt_digital_macro (OpenSTA, canary image).
+"""Per-clock, per-corner signoff STA of the routed pt_digital_macro (OpenSTA).
 
 For every available 3.3 V-class Liberty corner of gf180mcu_fd_sc_mcu7t5v0 and the matching
 extracted SPEF (nom/min/max RC from LibreLane's OpenRCX step), with propagated (CTS) clocks:
@@ -11,9 +11,12 @@ extracted SPEF (nom/min/max RC from LibreLane's OpenRCX step), with propagated (
   * host-link source-synchronous windows: D2H data and forwarded-clock arrival at the macro
     pins relative to the hword source, H2D capture setup/hold slack;
   * max slew / max capacitance violations.
-The narrow operating envelope (22-32 C, 3.15-3.35 V) has no Liberty; the nearest characterized
-corners are tt_025C_3v30 (nominal), ss_125C_3v00 / ss_n40C_3v00 (slow) and ff_n40C_3v60 /
-ff_125C_3v60 (fast). All of them are outside the envelope in the pessimistic direction.
+Signoff is inside the operating envelope (22-32 C, 3.15-3.35 V; scratch/reviews/MANDATE.md).
+The PDK's only in-window Liberty is tt_025C_3v30. In-window ss and ff are emulated on it with
+the global derates defined in integration/pt_digital_macro.sdc (PT_TIMING_CORNER ss_window
+1.54, ff_window 0.71). The out-of-window -40/125 C, 3.0/3.6 V libraries are not timing
+criteria. Each reduced-rate fallback setting (debug.host_link.rate; HOST_RATE_DIV 1/2/4) is a
+separate mode.
 """
 import argparse
 import json
@@ -22,14 +25,17 @@ import subprocess
 from pathlib import Path
 
 LIB = '/pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__{}.lib'
-CORNERS = [  # (name, liberty pvt, rc)
-    ('tt_025C_3v30_nom', 'tt_025C_3v30', 'nom'),
-    ('ss_125C_3v00_max', 'ss_125C_3v00', 'max'),
-    ('ss_n40C_3v00_max', 'ss_n40C_3v00', 'max'),
-    ('ff_n40C_3v60_min', 'ff_n40C_3v60', 'min'),
-    ('ff_125C_3v60_min', 'ff_125C_3v60', 'min'),
+CORNERS = [  # (name, liberty pvt, rc, envelope timing corner, host rate divider)
+    ('ss_window_max_rate1', 'tt_025C_3v30', 'max', 'ss_window', 1),
+    ('tt_nom_rate1', 'tt_025C_3v30', 'nom', 'tt', 1),
+    ('ff_window_min_rate1', 'tt_025C_3v30', 'min', 'ff_window', 1),
+    ('ss_window_max_rate2', 'tt_025C_3v30', 'max', 'ss_window', 2),
+    ('ff_window_min_rate2', 'tt_025C_3v30', 'min', 'ff_window', 2),
+    ('ss_window_max_rate4', 'tt_025C_3v30', 'max', 'ss_window', 4),
+    ('ff_window_min_rate4', 'tt_025C_3v30', 'min', 'ff_window', 4),
 ]
-CLOCKS = ['sclk', 'ref', 'hword', 'h2d', 'wtx', 'wrx', 'rftx', 'rfrx', 'ctw', 'ctref', 'ctdet', 'fc0', 'fc1', 'fc2', 'fc3', 'fc4', 'fc5']
+CLOCKS = ['sclk', 'ref', 'hword', 'hcore', 'h2d', 'hpair_tx', 'hpair_rx', 'egress_wtx', 'egress_rftx',
+          'wtx', 'wrx', 'rftx', 'rfrx', 'ctw', 'ctref', 'ctdet', 'fc0', 'fc1', 'fc2', 'fc3', 'fc4', 'fc5']
 PERIOD_VAR = dict(sclk='SCLK_PERIOD', ref='REF_PERIOD', hword='HWORD_PERIOD', wtx='WTX_PERIOD', wrx='WRX_PERIOD',
                   rftx='RFTX_PERIOD', rfrx='RFRX_PERIOD', ctw='CTW_PERIOD', ctdet='CTDET_PERIOD',
                   fc0='FC_PERIOD')
@@ -41,7 +47,7 @@ read_verilog {netlist}
 link_design pt_digital_macro
 read_spef {spef}
 proc pt_load_sdc {{}} {{
-  global SCLK_PERIOD REF_PERIOD HWORD_PERIOD WTX_PERIOD WRX_PERIOD RFTX_PERIOD RFRX_PERIOD CTW_PERIOD CTDET_PERIOD FC_PERIOD H2D_PERIOD CTREF_PERIOD
+  global PT_TIMING_CORNER HOST_RATE_DIV HCORE_PERIOD SCLK_PERIOD REF_PERIOD HWORD_PERIOD WTX_PERIOD WRX_PERIOD RFTX_PERIOD RFRX_PERIOD CTW_PERIOD CTDET_PERIOD FC_PERIOD H2D_PERIOD CTREF_PERIOD
   source {sdc}
   set_propagated_clock [all_clocks]
 }}
@@ -60,13 +66,15 @@ proc pt_paths {{clk dly n}} {{
   }}
   return $out
 }}
+set PT_TIMING_CORNER {tcorner}
+set HOST_RATE_DIV {rate}
 proc pt_default_periods {{}} {{
-  global SCLK_PERIOD REF_PERIOD HWORD_PERIOD WTX_PERIOD WRX_PERIOD RFTX_PERIOD RFRX_PERIOD CTW_PERIOD CTDET_PERIOD FC_PERIOD H2D_PERIOD CTREF_PERIOD
+  global PT_TIMING_CORNER HOST_RATE_DIV SCLK_PERIOD REF_PERIOD HWORD_PERIOD WTX_PERIOD WRX_PERIOD RFTX_PERIOD RFRX_PERIOD CTW_PERIOD CTDET_PERIOD FC_PERIOD H2D_PERIOD CTREF_PERIOD
   foreach v {{SCLK_PERIOD REF_PERIOD HWORD_PERIOD WTX_PERIOD WRX_PERIOD RFTX_PERIOD RFRX_PERIOD CTW_PERIOD CTDET_PERIOD FC_PERIOD H2D_PERIOD CTREF_PERIOD}} {{ catch {{unset $v}} }}
 }}
 pt_default_periods
 pt_load_sdc
-puts "PT_TARGETS [list sclk $SCLK_PERIOD ref $REF_PERIOD hword $HWORD_PERIOD h2d $H2D_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD ctw $CTW_PERIOD ctref $CTREF_PERIOD ctdet $CTDET_PERIOD]"
+puts "PT_TARGETS [list sclk $SCLK_PERIOD ref $REF_PERIOD hword $HWORD_PERIOD h2d $H2D_PERIOD hcore $HCORE_PERIOD hpair_tx [expr {{2*$HCORE_PERIOD}}] hpair_rx [expr {{2*$HCORE_PERIOD}}] egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD ctw $CTW_PERIOD ctref $CTREF_PERIOD ctdet $CTDET_PERIOD]"
 foreach c {{{clocks}}} {{
   puts "PT_SLACK $c [pt_slack $c max] [pt_slack $c min]"
   puts "PT_WORST_SETUP $c [list [pt_paths $c max 3]]"
@@ -122,17 +130,17 @@ foreach {{c var}} {{{fmax}}} {{
 '''
 
 
-def run_corner(name, pvt, rc, run, sdc, out):
+def run_corner(name, pvt, rc, tcorner, rate, run, sdc, out):
     netlist = next((run / 'final/nl').glob('*.nl.v'))
     spefs = sorted((run / 'final/spef').rglob('*.spef'))
     spef = next((s for s in spefs if f'{rc}_' in s.parent.name or s.parent.name == rc or f'.{rc}' in s.name), spefs[0])
     fmax = ' '.join(f'{c} {PERIOD_VAR[c]}' for c in FMAX_CLOCKS)
     tcl = TCL.format(lib=LIB.format(pvt), netlist=netlist, spef=spef, sdc=sdc, clocks=' '.join(CLOCKS), fmax=fmax,
-                     out=out, corner=name)
+                     out=out, corner=name, tcorner=tcorner, rate=rate)
     (out / f'{name}.tcl').write_text(tcl)
     r = subprocess.run(['sta', '-no_init', '-exit', str(out / f'{name}.tcl')], capture_output=True, text=True)
     (out / f'{name}.log').write_text(r.stdout + r.stderr)
-    res = dict(liberty=LIB.format(pvt).rsplit('/', 1)[1], spef=str(spef).split('/final/')[-1], netlist=netlist.name,
+    res = dict(timing_corner=tcorner, host_rate_div=rate, liberty=LIB.format(pvt).rsplit('/', 1)[1], spef=str(spef).split('/final/')[-1], netlist=netlist.name,
                slack={}, worst_setup={}, worst_hold={}, crossings=[], fmax_mhz={}, rc=r.returncode)
     for ln in r.stdout.splitlines():
         t = ln.split()
@@ -173,8 +181,8 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     v = subprocess.run(['sta', '-version'], capture_output=True, text=True).stdout.strip()
     report = dict(tool=f'OpenSTA {v}', corners={})
-    for name, pvt, rc in CORNERS:
-        report['corners'][name] = run_corner(name, pvt, rc, run, a.sdc, out)
+    for name, pvt, rc, tcorner, rate in CORNERS:
+        report['corners'][name] = run_corner(name, pvt, rc, tcorner, rate, run, a.sdc, out)
         c = report['corners'][name]
         print(name, json.dumps(c['slack']), json.dumps(c['fmax_mhz']), flush=True)
     (out / 'sta-report.json').write_text(json.dumps(report, indent=1) + '\n')

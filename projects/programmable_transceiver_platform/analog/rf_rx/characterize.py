@@ -212,7 +212,15 @@ def do_rxmix(block, quick, chain):
 
 # ---------------------------------------------------------------- baseband filter
 BW7 = ('en', 'bw0', 'bw1', 'bw2', 'bw3')   # narrowest (all 4 bandwidth bits)
-G15 = ('en', 'gain0', 'gain1', 'gain2', 'gain3')
+def pga_on(db):
+    """Control set for PGA code `db` (-6..42 dB, netlists.GAIN_TABLE)."""
+    import netlists
+    k, c0, c1 = netlists.GAIN_TABLE[db]
+    return ('en', *[f'gain{j}' for j in range(6) if k >> j & 1], *(('gainc0',) if c0 else ()), *(('gainc1',) if c1 else ()))
+
+
+G15 = pga_on(42)     # top PGA code (name kept from the 4-bit version)
+PGA_CODES = list(range(-6, 43, 3))
 
 
 def do_bbf(block, quick):
@@ -232,6 +240,7 @@ def do_bbf(block, quick):
                 A('inject', on=('en', 'inj'), inj_drive=True),
                 A('off_iso', on=())])
     R = dict(zip(names, runs))
+    pga = dict(zip(PGA_CODES, par([(lambda c=c: tb.bbf_ac(w, 'ext', NOM, block, on=pga_on(c), tag=f'pga{c}')) for c in PGA_CODES])))
     sch = tb.bbf_ac(w, 'sch', NOM, block, tag='rx')
     settle, off, unp27, unp85, unp0, unp_hi = par([
         lambda: tb.bbf_direction_settle(w, 'ext', NOM, block),
@@ -254,8 +263,11 @@ def do_bbf(block, quick):
         {'metric': 'RX -3 dB cutoff, narrowest (bw=15) (Hz)', 'target': '1e5 min', 'extracted_nominal': R['rx_bw7'].get('f3db_hz')},
         {'metric': 'passband peaking at bw=0 (dB above DC)', 'target': '<= 1 dB ripple',
          'extracted_nominal': (rx['peak_gain_db'] - rx['dc_gain_db']) if rx.get('peak_gain_db') is not None else None},
-        {'metric': 'PGA gain range (dB, gain=0 .. 15)', 'target': '-6 .. 42 in 3 dB steps',
-         'extracted_nominal': [rx.get('dc_gain_db'), R['rx_g15'].get('dc_gain_db')]},
+        {'metric': 'PGA gain range (dB, code -6 .. 42)', 'target': '-6 .. 42 in 3 dB steps',
+         'extracted_nominal': [pga[-6].get('dc_gain_db'), pga[42].get('dc_gain_db')]},
+        {'metric': 'PGA code sweep, bw=0 (code dB: dc gain dB, peaking dB, f3db Hz)', 'target': '3 dB steps, <= 1 dB ripple, >= 10 MHz',
+         'extracted_nominal': {c: [pga[c].get('dc_gain_db'), (pga[c]['peak_gain_db'] - pga[c]['dc_gain_db']) if pga[c].get('peak_gain_db') is not None else None,
+                                   pga[c].get('f3db_hz')] for c in PGA_CODES}},
         {'metric': 'TX direction (tx_in -> out_tx) cutoff and gain', 'extracted_nominal': R['tx']},
         {'metric': 'stretch: gain at 20 MHz with widest setting (dB) (40 MHz channels need ~20 MHz corner)',
          'extracted_nominal': rx.get('gain_20mhz_db'), 'note': 'widest corner is far below 20 MHz'},
@@ -272,8 +284,10 @@ def do_bbf(block, quick):
     if not quick:
         perf.append({'metric': 'corner sweep (ext, RX widest, gain 0)', 'rows': corner_table(
             lambda c: tb.bbf_ac(w, 'ext', c, block, tag='rx'), ['f3db_hz', 'dc_gain_db', 'peak_gain_db', 'idd_a', 'out_cm_v'])})
-        perf.append({'metric': 'corner sweep (ext, RX gain 15)', 'rows': corner_table(
-            lambda c: tb.bbf_ac(w, 'ext', c, block, on=G15, tag='rx_g15'), ['dc_gain_db', 'f3db_hz', 'out_cm_v'])})
+        perf.append({'metric': 'corner sweep (ext, RX top PGA code 42 dB)', 'rows': corner_table(
+            lambda c: tb.bbf_ac(w, 'ext', c, block, on=G15, tag='rx_g15'), ['dc_gain_db', 'peak_gain_db', 'f3db_hz', 'out_cm_v'])})
+        perf.append({'metric': 'corner sweep (ext, RX PGA code 21 dB: first coarse step)', 'rows': corner_table(
+            lambda c: tb.bbf_ac(w, 'ext', c, block, on=pga_on(21), tag='rx_g21'), ['dc_gain_db', 'peak_gain_db', 'f3db_hz'])})
     ok_byp = all(R[k].get('dc_gain_db') is not None and abs(R[k]['dc_gain_db']) < 3
                  for k in ('byp_s1', 'byp_s23', 'byp_both', 'rx_direct', 'inject', 'rxd_txfilt'))
     ok_obs = all(R[k].get('dc_gain_db') is not None and abs(R[k]['dc_gain_db']) < 3 for k in ('obs1', 'obs2', 'obs3'))
@@ -314,7 +328,8 @@ def do_bbf(block, quick):
     rec['performance_vs_target'] = perf
     rec['excluded_coverage'] = ['Q tuning codes (q1/q2) and zero-position codes not implemented: fixed pre-distorted Butterworth Qs',
                                 'cutoff programmable over 4 bits (x1..x16 capacitance) only; arch cutoff_code is 8 bits',
-                                'PGA: 0..24 dB (1..16 linear) only; offset correction lives in the mixer TIA (rxmix ofs DAC), not in the filter',
+                                'PGA -6..42 dB: stage-1 conductance k/4 (6 bits) x two +12 dB biquad steps (gainc0/1); code table netlists.GAIN_TABLE (register -> bits LUT in the digital); offset correction lives in the mixer TIA (rxmix ofs DAC), not in the filter',
+                                'narrowest corner limited by the 1..16x capacitor bank (LoRa 203/406 kHz needs ~4x more range): open',
                                 'finite-zero (elliptic) option removed: the extracted single-zero version gave no useful notch; all-pole only',
                                 'noise not simulated; linearity only via the TX-observe HD3 points',
                                 'no Monte Carlo']

@@ -1,0 +1,58 @@
+VERSION 5.7 ;
+  NOWIREEXTENSIONATPIN ON ;
+  DIVIDERCHAR "/" ;
+  BUSBITCHARS "[]" ;
+MACRO pt_char_ro33
+  CLASS BLOCK ;
+  FOREIGN pt_char_ro33 ;
+  ORIGIN 9.500 -0.800 ;
+  SIZE 69.640 BY 139.260 ;
+  PIN EN
+    ANTENNAGATEAREA 4.200000 ;
+    PORT
+      LAYER Metal4 ;
+        RECT -8.400 79.120 -8.000 140.060 ;
+    END
+  END EN
+  PIN OUT
+    ANTENNADIFFAREA 5.280000 ;
+    PORT
+      LAYER Metal4 ;
+        RECT -9.400 134.200 -9.000 140.060 ;
+    END
+  END OUT
+  PIN VDD
+    USE POWER ;
+    PORT
+      LAYER Metal4 ;
+        RECT -4.000 136.000 -2.000 140.060 ;
+    END
+  END VDD
+  PIN VSS
+    USE GROUND ;
+    PORT
+      LAYER Metal4 ;
+        RECT -7.000 113.240 -5.000 140.060 ;
+    END
+  END VSS
+  OBS
+      LAYER Nwell ;
+        RECT 0.000 7.400 60.140 132.360 ;
+      LAYER Metal1 ;
+        RECT 0.185 7.510 59.955 132.175 ;
+      LAYER Metal2 ;
+        RECT 0.335 0.900 59.350 137.860 ;
+      LAYER Metal3 ;
+        RECT -9.500 0.900 59.450 137.860 ;
+      LAYER Metal4 ;
+        RECT -9.400 78.820 -8.700 133.900 ;
+        RECT -7.700 112.940 -7.300 137.860 ;
+        RECT -4.700 135.700 -4.300 137.860 ;
+        RECT -1.700 135.700 51.980 137.860 ;
+        RECT -4.700 112.940 51.980 135.700 ;
+        RECT -7.700 78.820 51.980 112.940 ;
+        RECT -9.400 0.800 51.980 78.820 ;
+  END
+END pt_char_ro33
+END LIBRARY
+

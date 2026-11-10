@@ -102,4 +102,55 @@ module pt_host_link(
     assign d2h_clk_pin = tq | (~word_clk & en_sdr);
     assign d2h_oe = d2h_enable;
 endmodule
+
+// Reduced-rate fallback for the whole host transport (debug.host_link.rate):
+// 0 = full (core word clock = host word clock), 1 = /2, 2 or 3 = /4. The
+// selected clock drives pt_host_link (word side), both paired-core host
+// boundaries and every engine behind them, so the chip stays fully
+// functional at 1/2 or 1/4 throughput (the FPGA follows the forwarded D2H
+// clock; the wired/RF line rates must be lowered to match through the
+// clocktree dividers). The field is stopped-only: a change first holds
+// the host link and transport core in reset (hold_n=0), switches the
+// clock-select register while every destination is in reset, then
+// releases. Runt pulses at the switch therefore only reach reset flops.
+// STA constrains each setting as a separate mode (HOST_RATE_DIV in
+// integration/pt_digital_macro.sdc); the select register is case-analysed.
+module pt_host_rate_clock(input wire clk,rst_n,input wire[1:0]rate,
+ output wire out_clk,output reg hold_n);
+ reg[1:0]div;   // div[0] = clk/2, div[1] = clk/4 (both 50 % duty, rising together)
+ reg[1:0]cur;   // applied select: 0 full, 1 /2, 2 /4
+ reg[1:0]gap;
+ wire[1:0]rate_s;
+ pt_sync_vec #(2) rate_sync(clk,rst_n,rate,rate_s);
+ reg[1:0]want;   // normalized request, registered (off the 3.2 ns compare path)
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)div<=0;else div<=div+1'b1;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin cur<=0;hold_n<=0;gap<=0;want<=0;end
+  else begin want<=rate_s[1]?2'd2:rate_s;
+  if(hold_n)begin
+   if(want!=cur)begin hold_n<=0;gap<=0;end
+  end else begin
+   gap<=gap+1'b1;
+   if(gap==1)cur<=want;
+   if(gap==3&&want==cur)hold_n<=1;
+  end
+  end
+ end
+ wire slow_clk;
+`ifdef SYNTHESIS
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__mux2_2 rate_slow_mux(
+  .I0(div[0]),.I1(div[1]),.S(cur[1]),.Z(slow_clk));
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__mux2_2 rate_clock_mux(
+  .I0(clk),.I1(slow_clk),.S(cur != 2'd0),.Z(out_clk));
+`else
+ assign slow_clk=cur[1] ? div[1] : div[0];
+ assign out_clk=(cur != 2'd0) ? slow_clk : clk;
+`endif
+endmodule
+
+`ifdef SYNTHESIS
+(* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__mux2_2(input wire I0,I1,S,output wire Z);
+endmodule
+`endif
 `default_nettype wire

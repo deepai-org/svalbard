@@ -1,14 +1,16 @@
 #!/bin/sh
-# Gate-level simulation of the post-route netlist (canary image). Runs sim/tb_digital_gl.sv on
+# Gate-level simulation of the post-route netlist. Runs sim/tb_digital_gl.sv on
 # the RTL macro and on the powered post-route netlist ($1) with the same commands.txt, twice:
 # the register-file stream (fast clocks stopped) and the host-link loopback (PT_LOOPBACK).
 set -u
 NL="$1"
 SC=/pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog
 RTL="/src/rtl/pt_digital_macro.sv /src/rtl/pt_host_link.sv /src/rtl/pt_digital.sv /src/rtl/pt_regfile.sv /src/rtl/pt_spi.sv
- /src/rtl/pt_core.sv /src/rtl/pt_fifo.sv /src/rtl/pt_pack.sv /src/rtl/pt_stream_link.sv /src/rtl/pt_stream_tx.sv
- /src/rtl/pt_stream_rx.sv /src/rtl/pt_frame.sv /src/rtl/pt_memory.sv /src/rtl/pt_pattern.sv /src/rtl/pt_helpers.sv
+ /src/rtl/pt_dense_header.sv /src/rtl/pt_core.sv /src/rtl/pt_core_pair.sv /src/rtl/pt_dense_pair.sv /src/rtl/pt_dense_pair_link.sv
+ /src/rtl/pt_pair_gearbox.sv /src/rtl/pt_fifo.sv /src/rtl/pt_memory.sv /src/rtl/pt_pattern.sv /src/rtl/pt_helpers.sv
  /src/rtl/pt_clocktree_slow.sv /src/rtl/pt_freq_count.sv"
+sha256sum $RTL /src/rtl/*.svh /src/rtl/*.vh /src/sim/tb_digital_gl.sv \
+  /src/verification/digital_hardening/gls.sh /src/verification/digital_hardening/gls_check.py > sources.sha256
 iverilog -V 2>&1 | head -1 > iverilog-version.txt
 sha256sum "$NL" > netlist.sha256
 for t in regfile loopback; do

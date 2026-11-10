@@ -1,0 +1,1665 @@
+* NGSPICE file created from gf180mcu_ocd_ip__bandgap.ext - technology: gf180mcuD
+
+.subckt gf180mcu_ocd_ip__bandgap dvdd vbg dvss ibias1_250n trim[15] trim[14] trim[13]
++ trim[12] trim[11] trim[10] trim[9] trim[8] trim[7] trim[6] trim[5] trim[4] trim[3]
++ trim[2] trim[1] trim[0] ena ibias2_1u
+D0 trim[13] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D1 dvss trim[13] diode_nd2ps_03v3 pj=1.83p area=0.209p
+X0 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X1 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X2 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X3 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X4 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X5 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X6 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X7 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X8 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X9 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X10 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X11 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X12 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X13 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X14 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X15 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X16 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X17 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X18 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X19 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X20 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X21 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X22 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X23 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X24 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X25 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X26 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X27 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X28 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X29 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X30 x1/xamp/out ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X31 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X32 ibias1_250n ibias1_250n x1/xamp/vbp1 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X33 ibias1_250n ibias1_250n x1/xamp/vbp1 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X34 ibias1_250n ibias1_250n x1/xamp/vbp1 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X35 ibias1_250n ibias1_250n x1/xamp/vbp1 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X36 ibias1_250n ibias1_250n x1/xamp/vbp1 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X37 ibias1_250n ibias1_250n x1/xamp/vbp1 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X38 ibias1_250n ibias1_250n x1/xamp/vbp1 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X39 ibias1_250n ibias1_250n x1/xamp/vbp1 dvdd pfet_03v3 ad=0.86765p pd=4.88u as=0.86765p ps=4.88u w=2u l=0.5u
+X40 x1/xamp/vbn1 x1/xamp/vbn2 x1/xamp/vbn2 dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X41 x1/xamp/out x1/xamp/vbn2 x1/xamp/out1p dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X42 x1/xamp/out x1/xamp/vbn2 x1/xamp/out1p dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X43 x1/xamp/out x1/xamp/vbn2 x1/xamp/out1p dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X44 x1/xamp/out x1/xamp/vbn2 x1/xamp/out1p dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X45 x1/xamp/vbn1 x1/xamp/vbn2 x1/xamp/vbn2 dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X46 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/vbn2 x1/xamp/out1n dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X47 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/vbn2 x1/xamp/out1n dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X48 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/vbn2 x1/xamp/out1n dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X49 x1/xamp/out x1/xamp/vbn2 x1/xamp/out1p dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X50 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/vbn2 x1/xamp/out1n dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X51 x1/xamp/vbn1 x1/xamp/vbn2 x1/xamp/vbn2 dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X52 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/vbn2 x1/xamp/out1n dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X53 x1/xamp/vbn1 x1/xamp/vbn2 x1/xamp/vbn2 dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X54 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/vbn2 x1/xamp/out1n dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X55 x1/xamp/out x1/xamp/vbn2 x1/xamp/out1p dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X56 x1/xamp/out x1/xamp/vbn2 x1/xamp/out1p dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X57 x1/xamp/out x1/xamp/vbn2 x1/xamp/out1p dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X58 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/vbn2 x1/xamp/out1n dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X59 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/vbn2 x1/xamp/out1n dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=4u
+X60 x1/xamp/out1n x1/xamp/inp x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X61 dvdd dvdd dvdd dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X62 x1/xamp/out1p x1/xamp/inn x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X63 x1/xamp/out1p x1/xamp/inn x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X64 x1/xamp/out1n x1/xamp/inp x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X65 x1/xamp/out1n x1/xamp/inp x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X66 dvdd dvdd dvdd dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X67 x1/xamp/out1n x1/xamp/inp x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X68 x1/xamp/out1p x1/xamp/inn x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X69 dvdd dvdd dvdd dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X70 dvdd dvdd dvdd dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X71 x1/xamp/out1p x1/xamp/inn x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X72 x1/xamp/out1p x1/xamp/inn x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X73 x1/xamp/out1p x1/xamp/inn x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X74 x1/xamp/out1n x1/xamp/inp x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X75 x1/xamp/out1n x1/xamp/inp x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X76 x1/xamp/out1p x1/xamp/inn x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X77 x1/xamp/out1n x1/xamp/inp x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X78 dvdd dvdd dvdd dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X79 dvdd dvdd dvdd dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X80 dvdd dvdd dvdd dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X81 x1/xamp/out1p x1/xamp/inn x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X82 dvdd dvdd dvdd dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X83 x1/xamp/out1n x1/xamp/inp x1/xamp/pfet_03v3_4WQT4W_0/S8 dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X84 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X85 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X86 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X87 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X88 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X89 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X90 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X91 x1/xamp/vbn1 x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X92 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X93 x1/xamp/vbn1 x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X94 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X95 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X96 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X97 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X98 x1/xamp/vbn1 x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X99 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X100 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X101 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X102 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X103 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X104 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X105 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X106 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X107 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X108 x1/xamp/vbn1 x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X109 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X110 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X111 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X112 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X113 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X114 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X115 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X116 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X117 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X118 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X119 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X120 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X121 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X122 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X123 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X124 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X125 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X126 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X127 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X128 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X129 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X130 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X131 x1/xamp/out1n x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X132 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X133 x1/xamp/out1p x1/xamp/vbn1 dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=1u
+X134 dvdd x1/ena_buf ibias1_250n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+X135 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X136 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X137 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X138 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X139 dvdd dvdd dvdd dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X140 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X141 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X142 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X143 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X144 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X145 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X146 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X147 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X148 dvdd dvdd dvdd dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X149 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/D8 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X150 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X151 dvdd dvdd dvdd dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X152 dvdd dvdd dvdd dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X153 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X154 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/pfet_03v3_7FHHXC_0/S9 dvdd pfet_03v3 ad=0.87415p pd=4.88u as=0.87415p ps=4.88u w=2u l=4u
+X155 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=2u
+X156 dvss dvss dvss dvss nfet_03v3 ad=0.43415p pd=2.88u as=0.43415p ps=2.88u w=1u l=2u
+X157 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X158 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X159 x1/xamp/vbn2 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X160 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X161 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X162 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X163 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X164 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X165 x1/xamp/vbp1 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X166 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X167 x1/xamp/vbn2 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X168 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X169 x1/xamp/vbp1 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X170 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X171 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X172 x1/xamp/vbn2 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X173 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X174 x1/xamp/vbp1 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X175 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X176 x1/xamp/vbp1 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X177 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X178 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X179 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X180 x1/xamp/vbn2 x1/xamp/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+D2 trim[14] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D3 dvss trim[14] diode_nd2ps_03v3 pj=1.83p area=0.209p
+X181 x1/xtr/ctrl[11] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# dvdd dvdd pfet_03v3 ad=0.3588p pd=1.9u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X182 dvss trim[11] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# dvss nfet_03v3 ad=0.26p pd=1.52u as=0.44p ps=2.88u w=1u l=0.28u
+X183 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# x1/xtr/ctrl[11] dvdd pfet_03v3 ad=1.0488p pd=4.28u as=0.3588p ps=1.9u w=1.38u l=0.28u
+X184 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# x1/xtr/ctrl[11] dvss nfet_03v3 ad=0.76p pd=3.52u as=0.26p ps=1.52u w=1u l=0.28u
+X185 dvdd trim[11] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# dvdd pfet_03v3 ad=0.3588p pd=1.9u as=0.6072p ps=3.64u w=1.38u l=0.28u
+X186 x1/xtr/ctrl[11] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# dvss dvss nfet_03v3 ad=0.26p pd=1.52u as=0.26p ps=1.52u w=1u l=0.28u
+X187 x1/xtr/ctrl[10] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0.14078n ps=0.78152m w=1.38u l=0.28u
+X188 dvss trim[10] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# dvss nfet_03v3 ad=0.20871n pd=1.14048m as=0.44p ps=2.88u w=1u l=0.28u
+X189 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# x1/xtr/ctrl[10] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X190 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# x1/xtr/ctrl[10] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X191 dvdd trim[10] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X192 x1/xtr/ctrl[10] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+D4 trim[3] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D5 dvss trim[3] diode_nd2ps_03v3 pj=1.83p area=0.209p
+D6 trim[15] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D7 dvss trim[15] diode_nd2ps_03v3 pj=1.83p area=0.209p
+X193 x1/xtr/ctrl[12] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X194 dvss trim[12] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X195 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# x1/xtr/ctrl[12] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X196 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# x1/xtr/ctrl[12] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X197 dvdd trim[12] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X198 x1/xtr/ctrl[12] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+D8 trim[4] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D9 dvss trim[4] diode_nd2ps_03v3 pj=1.83p area=0.209p
+D10 ena dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D11 dvss ena diode_nd2ps_03v3 pj=1.83p area=0.209p
+X199 x1/xtr/ctrl[13] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X200 dvss trim[13] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X201 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# x1/xtr/ctrl[13] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X202 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# x1/xtr/ctrl[13] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X203 dvdd trim[13] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X204 x1/xtr/ctrl[13] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+D12 trim[6] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D13 dvss trim[6] diode_nd2ps_03v3 pj=1.83p area=0.209p
+D14 trim[5] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D15 dvss trim[5] diode_nd2ps_03v3 pj=1.83p area=0.209p
+X205 x1/xtr/ctrl[14] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X206 dvss trim[14] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X207 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# x1/xtr/ctrl[14] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X208 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# x1/xtr/ctrl[14] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X209 dvdd trim[14] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X210 x1/xtr/ctrl[14] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+D16 trim[7] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D17 dvss trim[7] diode_nd2ps_03v3 pj=1.83p area=0.209p
+X211 x1/pfet_03v3_BWTVHK_0/D dvss cap_mim_2f0_m4m5_noshield c_width=22u c_length=22u
+X212 x1/xamp/out dvss cap_mim_2f0_m4m5_noshield c_width=22u c_length=22u
+X213 x1/xamp/out dvss cap_mim_2f0_m4m5_noshield c_width=22u c_length=22u
+X214 x1/xtr/ctrl[15] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X215 dvss trim[15] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X216 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# x1/xtr/ctrl[15] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X217 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# x1/xtr/ctrl[15] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X218 dvdd trim[15] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X219 x1/xtr/ctrl[15] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+D18 trim[8] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D19 dvss trim[8] diode_nd2ps_03v3 pj=1.83p area=0.209p
+X220 x1/ena_buf x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X221 dvss ena x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X222 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# x1/ena_buf dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X223 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# x1/ena_buf dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X224 dvdd ena x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X225 x1/ena_buf x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+D20 trim[9] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D21 dvss trim[9] diode_nd2ps_03v3 pj=1.83p area=0.209p
+D22 trim[10] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D23 dvss trim[10] diode_nd2ps_03v3 pj=1.83p area=0.209p
+X226 dvss dvss x1/xtr/bot pnp_10p00x00p42
+X227 dvss dvss x1/xtr/bot pnp_10p00x00p42
+X228 dvss dvss x1/xtr/bot pnp_10p00x00p42
+X229 dvss dvss x1/xtr/bot pnp_10p00x00p42
+X230 dvss dvss x1/xamp/inn pnp_10p00x00p42
+X231 dvss dvss x1/xtr/bot pnp_10p00x00p42
+X232 dvss dvss x1/xtr/bot pnp_10p00x00p42
+X233 dvss dvss x1/xtr/bot pnp_10p00x00p42
+X234 dvss dvss x1/xtr/bot pnp_10p00x00p42
+D24 trim[11] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D25 dvss trim[11] diode_nd2ps_03v3 pj=1.83p area=0.209p
+X235 x1/xamp/out x1/pfet_03v3_773T9V_0/S1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X236 x1/pfet_03v3_773T9V_0/S1 x1/vbg dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+D26 trim[0] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D27 dvss trim[0] diode_nd2ps_03v3 pj=1.83p area=0.209p
+D28 trim[12] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D29 dvss trim[12] diode_nd2ps_03v3 pj=1.83p area=0.209p
+D30 trim[1] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D31 dvss trim[1] diode_nd2ps_03v3 pj=1.83p area=0.209p
+X237 x1/m1_n555_n7082# x1/m1_n3687_n6521# dvss ppolyf_u r_width=1u r_length=15u
+X238 dvss dvss dvss ppolyf_u r_width=1u r_length=15u
+X239 x1/m1_n654_n7922# x1/m1_n3786_n8481# dvss ppolyf_u r_width=1u r_length=15u
+X240 x1/m1_n555_n5962# x1/m1_n3687_n6521# dvss ppolyf_u r_width=1u r_length=15u
+X241 x1/m1_n654_n10162# x1/m1_n3786_n10721# dvss ppolyf_u r_width=1u r_length=15u
+X242 x1/m1_n654_n5682# x1/m1_n3786_n6241# dvss ppolyf_u r_width=1u r_length=15u
+X243 x1/vbg x1/m1_n3786_n10721# dvss ppolyf_u r_width=1u r_length=15u
+X244 x1/m1_n555_n8202# x1/m1_n3687_n8761# dvss ppolyf_u r_width=1u r_length=15u
+X245 x1/pfet_03v3_73PQE5_0/S2 x1/m1_n3687_n11001# dvss ppolyf_u r_width=1u r_length=15u
+X246 x1/m1_n555_n10442# x1/m1_n3687_n11001# dvss ppolyf_u r_width=1u r_length=15u
+X247 x1/m1_n555_n5962# x1/m1_n3687_n5401# dvss ppolyf_u r_width=1u r_length=15u
+X248 x1/m1_n654_n7922# x1/m1_n3786_n7361# dvss ppolyf_u r_width=1u r_length=15u
+X249 x1/m1_n555_n8202# x1/m1_n3687_n7641# dvss ppolyf_u r_width=1u r_length=15u
+X250 x1/m1_n654_n9042# x1/m1_n3786_n8481# dvss ppolyf_u r_width=1u r_length=15u
+X251 x1/xamp/inn x1/m1_n3687_n5401# dvss ppolyf_u r_width=1u r_length=15u
+X252 x1/m1_n555_n9322# x1/m1_n3687_n8761# dvss ppolyf_u r_width=1u r_length=15u
+X253 dvss dvss dvss ppolyf_u r_width=1u r_length=15u
+X254 x1/m1_n555_n9322# x1/m1_n3687_n9881# dvss ppolyf_u r_width=1u r_length=15u
+X255 x1/xamp/inp x1/m1_n3786_n5121# dvss ppolyf_u r_width=1u r_length=15u
+X256 x1/m1_n654_n5682# x1/m1_n3786_n5121# dvss ppolyf_u r_width=1u r_length=15u
+X257 x1/m1_n555_n7082# x1/m1_n3687_n7641# dvss ppolyf_u r_width=1u r_length=15u
+X258 x1/m1_n654_n9042# x1/m1_n3786_n9601# dvss ppolyf_u r_width=1u r_length=15u
+X259 x1/m1_n654_n10162# x1/m1_n3786_n9601# dvss ppolyf_u r_width=1u r_length=15u
+X260 x1/xamp/inp x1/xtr/top dvss ppolyf_u r_width=1u r_length=15u
+X261 x1/m1_n654_n6802# x1/m1_n3786_n7361# dvss ppolyf_u r_width=1u r_length=15u
+X262 x1/m1_n654_n6802# x1/m1_n3786_n6241# dvss ppolyf_u r_width=1u r_length=15u
+X263 x1/m1_n555_n10442# x1/m1_n3687_n9881# dvss ppolyf_u r_width=1u r_length=15u
+D32 trim[2] dvdd diode_pd2nw_03v3 pj=1.93p area=0.2295p
+D33 dvss trim[2] diode_nd2ps_03v3 pj=1.83p area=0.209p
+X264 x1/xtr/ctrl[0] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X265 dvss trim[0] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X266 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# x1/xtr/ctrl[0] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X267 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# x1/xtr/ctrl[0] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X268 dvdd trim[0] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X269 x1/xtr/ctrl[0] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+X270 x1/xtr/ctrl[1] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X271 dvss trim[1] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X272 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# x1/xtr/ctrl[1] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X273 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# x1/xtr/ctrl[1] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X274 dvdd trim[1] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X275 x1/xtr/ctrl[1] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+X276 x1/xtr/ctrl[2] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X277 dvss trim[2] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X278 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# x1/xtr/ctrl[2] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X279 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# x1/xtr/ctrl[2] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X280 dvdd trim[2] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X281 x1/xtr/ctrl[2] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+X282 x1/xtr/nfet_03v3_GP977X_0/S1 x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X283 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/nfet_03v3_GP977X_0/S1 dvss ppolyf_u r_width=1u r_length=2.63u
+X284 x1/xtr/nfet_03v3_GP977X_0/S5 x1/xtr/nfet_03v3_GP977X_0/S4 dvss ppolyf_u r_width=1u r_length=2.63u
+X285 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/nfet_03v3_GP977X_0/S1 dvss ppolyf_u r_width=1u r_length=2.63u
+X286 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/nfet_03v3_GP977X_0/S13 dvss ppolyf_u r_width=1u r_length=2.63u
+X287 x1/xtr/nfet_03v3_GP977X_0/S5 x1/xtr/nfet_03v3_GP977X_0/S4 dvss ppolyf_u r_width=1u r_length=2.63u
+X288 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/nfet_03v3_GP977X_0/S10 dvss ppolyf_u r_width=1u r_length=2.63u
+X289 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/nfet_03v3_GP977X_0/S10 dvss ppolyf_u r_width=1u r_length=2.63u
+X290 x1/xtr/nfet_03v3_GP977X_0/S12 x1/xtr/nfet_03v3_GP977X_0/S11 dvss ppolyf_u r_width=1u r_length=2.63u
+X291 x1/xtr/nfet_03v3_GP977X_0/S15 x1/xtr/nfet_03v3_GP977X_0/S14 dvss ppolyf_u r_width=1u r_length=2.63u
+X292 x1/xtr/nfet_03v3_GP977X_0/S12 x1/xtr/nfet_03v3_GP977X_0/S11 dvss ppolyf_u r_width=1u r_length=2.63u
+X293 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/nfet_03v3_GP977X_0/S1 dvss ppolyf_u r_width=1u r_length=2.63u
+X294 dvss dvss dvss ppolyf_u r_width=1u r_length=2.63u
+X295 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xtr/nfet_03v3_GP977X_0/S7 dvss ppolyf_u r_width=1u r_length=2.63u
+X296 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/nfet_03v3_GP977X_0/S1 dvss ppolyf_u r_width=1u r_length=2.63u
+X297 x1/xtr/top x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X298 x1/xtr/top x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X299 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/nfet_03v3_GP977X_0/S13 dvss ppolyf_u r_width=1u r_length=2.63u
+X300 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/nfet_03v3_GP977X_0/S13 dvss ppolyf_u r_width=1u r_length=2.63u
+X301 x1/xtr/nfet_03v3_GP977X_0/S5 x1/xtr/nfet_03v3_GP977X_0/S4 dvss ppolyf_u r_width=1u r_length=2.63u
+X302 x1/xtr/nfet_03v3_GP977X_0/S15 x1/xtr/nfet_03v3_GP977X_0/S14 dvss ppolyf_u r_width=1u r_length=2.63u
+X303 x1/xtr/top x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X304 x1/xtr/nfet_03v3_GP977X_0/S15 x1/xtr/nfet_03v3_GP977X_0/S14 dvss ppolyf_u r_width=1u r_length=2.63u
+X305 x1/xtr/top x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X306 x1/xtr/nfet_03v3_GP977X_0/S10 x1/xtr/nfet_03v3_GP977X_0/S9 dvss ppolyf_u r_width=1u r_length=2.63u
+X307 dvss dvss dvss ppolyf_u r_width=1u r_length=2.63u
+X308 dvss dvss dvss ppolyf_u r_width=1u r_length=2.63u
+X309 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/nfet_03v3_GP977X_0/S1 dvss ppolyf_u r_width=1u r_length=2.63u
+X310 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/nfet_03v3_GP977X_0/S8 dvss ppolyf_u r_width=1u r_length=2.63u
+X311 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/nfet_03v3_GP977X_0/S12 dvss ppolyf_u r_width=1u r_length=2.63u
+X312 x1/xtr/nfet_03v3_GP977X_0/S10 x1/xtr/nfet_03v3_GP977X_0/S9 dvss ppolyf_u r_width=1u r_length=2.63u
+X313 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/nfet_03v3_GP977X_0/S10 dvss ppolyf_u r_width=1u r_length=2.63u
+X314 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/nfet_03v3_GP977X_0/S8 dvss ppolyf_u r_width=1u r_length=2.63u
+X315 x1/xtr/nfet_03v3_GP977X_0/S10 x1/xtr/nfet_03v3_GP977X_0/S9 dvss ppolyf_u r_width=1u r_length=2.63u
+X316 x1/xtr/nfet_03v3_GP977X_0/S12 x1/xtr/nfet_03v3_GP977X_0/S11 dvss ppolyf_u r_width=1u r_length=2.63u
+X317 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S15 dvss ppolyf_u r_width=1u r_length=2.63u
+X318 x1/xtr/top x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X319 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/nfet_03v3_GP977X_0/S8 dvss ppolyf_u r_width=1u r_length=2.63u
+X320 x1/xtr/nfet_03v3_GP977X_0/S10 x1/xtr/nfet_03v3_GP977X_0/S9 dvss ppolyf_u r_width=1u r_length=2.63u
+X321 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/nfet_03v3_GP977X_0/S10 dvss ppolyf_u r_width=1u r_length=2.63u
+X322 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/nfet_03v3_GP977X_0/S8 dvss ppolyf_u r_width=1u r_length=2.63u
+X323 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/nfet_03v3_GP977X_0/S12 dvss ppolyf_u r_width=1u r_length=2.63u
+X324 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/nfet_03v3_GP977X_0/S12 dvss ppolyf_u r_width=1u r_length=2.63u
+X325 x1/xtr/nfet_03v3_GP977X_0/S12 x1/xtr/nfet_03v3_GP977X_0/S11 dvss ppolyf_u r_width=1u r_length=2.63u
+X326 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/nfet_03v3_GP977X_0/S13 dvss ppolyf_u r_width=1u r_length=2.63u
+X327 x1/xtr/nfet_03v3_GP977X_0/S15 x1/xtr/nfet_03v3_GP977X_0/S14 dvss ppolyf_u r_width=1u r_length=2.63u
+X328 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S15 dvss ppolyf_u r_width=1u r_length=2.63u
+X329 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S15 dvss ppolyf_u r_width=1u r_length=2.63u
+X330 dvss dvss dvss ppolyf_u r_width=1u r_length=2.63u
+X331 x1/xtr/nfet_03v3_GP977X_0/S7 x1/xtr/nfet_03v3_GP977X_0/S6 dvss ppolyf_u r_width=1u r_length=2.63u
+X332 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/nfet_03v3_GP977X_0/S13 dvss ppolyf_u r_width=1u r_length=2.63u
+X333 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xtr/nfet_03v3_GP977X_0/S5 dvss ppolyf_u r_width=1u r_length=2.63u
+X334 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/nfet_03v3_GP977X_0/S10 dvss ppolyf_u r_width=1u r_length=2.63u
+X335 x1/xtr/nfet_03v3_GP977X_0/S15 x1/xtr/nfet_03v3_GP977X_0/S14 dvss ppolyf_u r_width=1u r_length=2.63u
+X336 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xtr/nfet_03v3_GP977X_0/S7 dvss ppolyf_u r_width=1u r_length=2.63u
+X337 x1/xtr/nfet_03v3_GP977X_0/S12 x1/xtr/nfet_03v3_GP977X_0/S11 dvss ppolyf_u r_width=1u r_length=2.63u
+X338 dvss dvss dvss ppolyf_u r_width=1u r_length=2.63u
+X339 x1/xtr/nfet_03v3_GP977X_0/S3 x1/xtr/nfet_03v3_GP977X_0/S2 dvss ppolyf_u r_width=1u r_length=2.63u
+X340 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xtr/nfet_03v3_GP977X_0/S3 dvss ppolyf_u r_width=1u r_length=2.63u
+X341 x1/xtr/nfet_03v3_GP977X_0/S10 x1/xtr/nfet_03v3_GP977X_0/S9 dvss ppolyf_u r_width=1u r_length=2.63u
+X342 x1/xtr/nfet_03v3_GP977X_0/S7 x1/xtr/nfet_03v3_GP977X_0/S6 dvss ppolyf_u r_width=1u r_length=2.63u
+X343 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/nfet_03v3_GP977X_0/S13 dvss ppolyf_u r_width=1u r_length=2.63u
+X344 x1/xtr/nfet_03v3_GP977X_0/S7 x1/xtr/nfet_03v3_GP977X_0/S6 dvss ppolyf_u r_width=1u r_length=2.63u
+X345 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/nfet_03v3_GP977X_0/S8 dvss ppolyf_u r_width=1u r_length=2.63u
+X346 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/nfet_03v3_GP977X_0/S12 dvss ppolyf_u r_width=1u r_length=2.63u
+X347 x1/xtr/nfet_03v3_GP977X_0/S15 x1/xtr/nfet_03v3_GP977X_0/S14 dvss ppolyf_u r_width=1u r_length=2.63u
+X348 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xtr/nfet_03v3_GP977X_0/S5 dvss ppolyf_u r_width=1u r_length=2.63u
+X349 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xtr/nfet_03v3_GP977X_0/S7 dvss ppolyf_u r_width=1u r_length=2.63u
+X350 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xtr/nfet_03v3_GP977X_0/S5 dvss ppolyf_u r_width=1u r_length=2.63u
+X351 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xtr/nfet_03v3_GP977X_0/S7 dvss ppolyf_u r_width=1u r_length=2.63u
+X352 x1/xtr/nfet_03v3_GP977X_0/S1 x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X353 dvss dvss dvss ppolyf_u r_width=1u r_length=2.63u
+X354 x1/xtr/nfet_03v3_GP977X_0/S7 x1/xtr/nfet_03v3_GP977X_0/S6 dvss ppolyf_u r_width=1u r_length=2.63u
+X355 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S15 dvss ppolyf_u r_width=1u r_length=2.63u
+X356 x1/xtr/nfet_03v3_GP977X_0/S3 x1/xtr/nfet_03v3_GP977X_0/S2 dvss ppolyf_u r_width=1u r_length=2.63u
+X357 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xtr/nfet_03v3_GP977X_0/S5 dvss ppolyf_u r_width=1u r_length=2.63u
+X358 x1/xtr/nfet_03v3_GP977X_0/S7 x1/xtr/nfet_03v3_GP977X_0/S6 dvss ppolyf_u r_width=1u r_length=2.63u
+X359 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/nfet_03v3_GP977X_0/S12 dvss ppolyf_u r_width=1u r_length=2.63u
+X360 x1/xtr/nfet_03v3_GP977X_0/S3 x1/xtr/nfet_03v3_GP977X_0/S2 dvss ppolyf_u r_width=1u r_length=2.63u
+X361 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xtr/nfet_03v3_GP977X_0/S5 dvss ppolyf_u r_width=1u r_length=2.63u
+X362 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xtr/nfet_03v3_GP977X_0/S3 dvss ppolyf_u r_width=1u r_length=2.63u
+X363 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xtr/nfet_03v3_GP977X_0/S3 dvss ppolyf_u r_width=1u r_length=2.63u
+X364 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S15 dvss ppolyf_u r_width=1u r_length=2.63u
+X365 x1/xtr/nfet_03v3_GP977X_0/S3 x1/xtr/nfet_03v3_GP977X_0/S2 dvss ppolyf_u r_width=1u r_length=2.63u
+X366 x1/xtr/nfet_03v3_GP977X_0/S3 x1/xtr/nfet_03v3_GP977X_0/S2 dvss ppolyf_u r_width=1u r_length=2.63u
+X367 x1/xtr/nfet_03v3_GP977X_0/S1 x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X368 x1/xtr/nfet_03v3_GP977X_0/S1 x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X369 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xtr/nfet_03v3_GP977X_0/S3 dvss ppolyf_u r_width=1u r_length=2.63u
+X370 x1/xtr/nfet_03v3_GP977X_0/S5 x1/xtr/nfet_03v3_GP977X_0/S4 dvss ppolyf_u r_width=1u r_length=2.63u
+X371 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xtr/nfet_03v3_GP977X_0/S3 dvss ppolyf_u r_width=1u r_length=2.63u
+X372 x1/xtr/nfet_03v3_GP977X_0/S7 x1/xtr/nfet_03v3_GP977X_0/S6 dvss ppolyf_u r_width=1u r_length=2.63u
+X373 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/nfet_03v3_GP977X_0/S12 dvss ppolyf_u r_width=1u r_length=2.63u
+X374 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xtr/nfet_03v3_GP977X_0/S5 dvss ppolyf_u r_width=1u r_length=2.63u
+X375 x1/xtr/nfet_03v3_GP977X_0/S1 x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X376 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/nfet_03v3_GP977X_0/S1 dvss ppolyf_u r_width=1u r_length=2.63u
+X377 x1/xtr/nfet_03v3_GP977X_0/S1 x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X378 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S15 dvss ppolyf_u r_width=1u r_length=2.63u
+X379 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xtr/nfet_03v3_GP977X_0/S7 dvss ppolyf_u r_width=1u r_length=2.63u
+X380 x1/xtr/nfet_03v3_GP977X_0/S3 x1/xtr/nfet_03v3_GP977X_0/S2 dvss ppolyf_u r_width=1u r_length=2.63u
+X381 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/nfet_03v3_GP977X_0/S10 dvss ppolyf_u r_width=1u r_length=2.63u
+X382 x1/xtr/nfet_03v3_GP977X_0/S10 x1/xtr/nfet_03v3_GP977X_0/S9 dvss ppolyf_u r_width=1u r_length=2.63u
+X383 x1/xtr/nfet_03v3_GP977X_0/S12 x1/xtr/nfet_03v3_GP977X_0/S11 dvss ppolyf_u r_width=1u r_length=2.63u
+X384 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xtr/nfet_03v3_GP977X_0/S3 dvss ppolyf_u r_width=1u r_length=2.63u
+X385 x1/xtr/nfet_03v3_GP977X_0/S5 x1/xtr/nfet_03v3_GP977X_0/S4 dvss ppolyf_u r_width=1u r_length=2.63u
+X386 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/nfet_03v3_GP977X_0/S8 dvss ppolyf_u r_width=1u r_length=2.63u
+X387 x1/xtr/nfet_03v3_GP977X_0/S5 x1/xtr/nfet_03v3_GP977X_0/S4 dvss ppolyf_u r_width=1u r_length=2.63u
+X388 x1/xtr/top x1/xtr/top dvss ppolyf_u r_width=1u r_length=2.63u
+X389 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xtr/nfet_03v3_GP977X_0/S7 dvss ppolyf_u r_width=1u r_length=2.63u
+X390 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/ctrl[1] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X391 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/ctrl[4] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X392 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xtr/ctrl[7] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X393 x1/xtr/nfet_03v3_GP977X_0/S1 x1/xtr/ctrl[14] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X394 x1/xtr/bot x1/xtr/bot x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X395 x1/xtr/nfet_03v3_GP977X_0/S7 x1/xtr/ctrl[8] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X396 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/ctrl[6] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X397 x1/xtr/nfet_03v3_GP977X_0/S5 x1/xtr/ctrl[10] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X398 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/ctrl[13] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X399 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/ctrl[2] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X400 x1/xtr/nfet_03v3_GP977X_0/S10 x1/xtr/ctrl[5] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X401 x1/xtr/nfet_03v3_GP977X_0/S3 x1/xtr/ctrl[12] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X402 x1/xtr/top x1/xtr/ctrl[15] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X403 x1/xtr/nfet_03v3_GP977X_0/S15 x1/xtr/ctrl[0] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X404 x1/xtr/nfet_03v3_GP977X_0/S12 x1/xtr/ctrl[3] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X405 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xtr/ctrl[9] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X406 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xtr/ctrl[11] x1/xtr/bot dvss nfet_03v3 ad=1.2964p pd=7.08u as=1.2964p ps=7.08u w=3.1u l=0.28u
+X407 x1/xtr/ctrl[3] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X408 dvss trim[3] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X409 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# x1/xtr/ctrl[3] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X410 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# x1/xtr/ctrl[3] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X411 dvdd trim[3] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X412 x1/xtr/ctrl[3] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+X413 x1/xtr/ctrl[4] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X414 dvss trim[4] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X415 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# x1/xtr/ctrl[4] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X416 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# x1/xtr/ctrl[4] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X417 dvdd trim[4] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X418 x1/xtr/ctrl[4] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+X419 x1/xtr/ctrl[5] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X420 dvss trim[5] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X421 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# x1/xtr/ctrl[5] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X422 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# x1/xtr/ctrl[5] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X423 dvdd trim[5] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X424 x1/xtr/ctrl[5] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+X425 x1/xtr/ctrl[6] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X426 dvss trim[6] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X427 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# x1/xtr/ctrl[6] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X428 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# x1/xtr/ctrl[6] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X429 dvdd trim[6] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X430 x1/xtr/ctrl[6] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+X431 x1/xtr/ctrl[7] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X432 dvss trim[7] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X433 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# x1/xtr/ctrl[7] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X434 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# x1/xtr/ctrl[7] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X435 dvdd trim[7] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X436 x1/xtr/ctrl[7] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+X437 x1/xtr/ctrl[9] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X438 dvss trim[9] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X439 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# x1/xtr/ctrl[9] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X440 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# x1/xtr/ctrl[9] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X441 dvdd trim[9] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X442 x1/xtr/ctrl[9] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+X443 x1/xtr/ctrl[8] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# dvdd dvdd pfet_03v3 ad=0.7176p pd=3.8u as=0 ps=0 w=1.38u l=0.28u
+X444 dvss trim[8] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# dvss nfet_03v3 ad=0 pd=0 as=0.44p ps=2.88u w=1u l=0.28u
+X445 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# x1/xtr/ctrl[8] dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1.38u l=0.28u
+X446 dvss x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# x1/xtr/ctrl[8] dvss nfet_03v3 ad=0 pd=0 as=0.52p ps=3.04u w=1u l=0.28u
+X447 dvdd trim[8] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# dvdd pfet_03v3 ad=0 pd=0 as=0.6072p ps=3.64u w=1.38u l=0.28u
+X448 x1/xtr/ctrl[8] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# dvss dvss nfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.28u
+X449 x1/pfet_03v3_773T9V_0/S1 x1/pfet_03v3_BWTVHK_0/D dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X450 x1/pfet_03v3_BWTVHK_0/D x1/pfet_03v3_BWTVHK_0/D dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X451 dvss dvdd x1/pfet_03v3_BWTVHK_0/D x1/pfet_03v3_BWTVHK_0/D pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X452 x1/pfet_03v3_73PQE5_0/S2 x1/xamp/out dvdd dvdd pfet_03v3 ad=1.74765p pd=8.88u as=1.74765p ps=8.88u w=4u l=0.5u
+X453 x1/pfet_03v3_73PQE5_0/S2 x1/xamp/out dvdd dvdd pfet_03v3 ad=1.74765p pd=8.88u as=1.74765p ps=8.88u w=4u l=0.5u
+X454 x1/vbg x1/xamp/out dvdd dvdd pfet_03v3 ad=1.74765p pd=8.88u as=1.74765p ps=8.88u w=4u l=0.5u
+X455 x1/vbg x1/xamp/out dvdd dvdd pfet_03v3 ad=1.74765p pd=8.88u as=1.74765p ps=8.88u w=4u l=0.5u
+X456 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X457 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X458 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X459 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X460 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X461 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X462 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X463 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X464 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X465 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X466 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X467 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X468 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X469 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X470 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X471 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X472 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X473 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X474 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X475 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X476 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X477 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X478 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X479 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X480 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X481 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X482 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X483 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X484 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X485 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X486 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X487 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X488 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X489 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X490 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X491 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X492 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X493 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X494 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X495 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X496 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X497 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X498 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X499 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X500 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X501 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X502 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X503 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X504 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X505 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X506 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X507 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X508 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X509 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X510 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X511 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X512 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X513 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X514 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X515 dvdd dvdd dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X516 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X517 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X518 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X519 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X520 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X521 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X522 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X523 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X524 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X525 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X526 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X527 dvdd dvdd dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X528 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X529 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X530 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X531 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X532 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X533 dvdd dvdd dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X534 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X535 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X536 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X537 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X538 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X539 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X540 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X541 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X542 dvdd dvdd dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X543 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X544 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X545 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X546 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X547 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X548 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X549 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X550 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X551 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X552 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X553 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X554 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X555 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X556 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X557 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X558 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X559 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X560 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X561 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X562 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X563 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X564 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D cap_mim_2f0_m4m5_noshield c_width=12u c_length=19u
+X565 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D cap_mim_2f0_m4m5_noshield c_width=12u c_length=19u
+X566 vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D cap_mim_2f0_m4m5_noshield c_width=12u c_length=19u
+X567 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X568 dvss gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 dvss dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X569 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X570 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X571 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X572 dvss dvss dvss dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X573 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X574 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X575 dvss dvss dvss dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X576 dvss gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 dvss dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X577 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X578 dvss gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 dvss dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X579 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X580 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X581 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X582 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X583 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X584 dvss gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 dvss dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X585 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X586 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X587 dvss dvss dvss dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X588 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X589 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X590 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X591 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X592 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X593 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X594 dvss dvss dvss dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X595 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X596 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X597 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X598 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X599 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X600 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X601 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X602 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X603 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X604 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X605 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X606 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X607 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X608 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X609 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X610 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X611 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X612 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X613 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X614 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X615 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X616 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X617 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X618 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X619 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X620 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X621 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X622 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X623 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X624 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X625 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X626 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X627 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D vbg dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=4u
+X628 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D vbg dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=4u
+X629 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D vbg dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=4u
+X630 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D vbg dvdd pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=4u
+X631 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X632 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X633 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X634 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X635 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X636 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X637 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X638 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X639 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X640 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X641 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X642 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X643 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X644 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X645 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X646 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X647 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X648 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X649 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X650 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X651 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X652 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X653 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X654 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X655 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X656 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X657 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X658 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X659 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X660 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X661 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X662 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X663 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X664 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X665 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X666 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X667 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X668 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X669 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X670 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X671 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X672 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X673 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X674 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X675 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X676 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X677 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X678 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X679 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X680 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X681 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X682 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X683 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X684 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X685 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X686 dvss dvss dvss dvss nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X687 dvss x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 dvss nfet_03v3 ad=1.73465p pd=8.88u as=1.73465p ps=8.88u w=4u l=0.28u
+X688 dvss x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 dvss nfet_03v3 ad=1.73465p pd=8.88u as=1.73465p ps=8.88u w=4u l=0.28u
+X689 dvss x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 dvss nfet_03v3 ad=1.73465p pd=8.88u as=1.73465p ps=8.88u w=4u l=0.28u
+X690 dvss x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 dvss nfet_03v3 ad=1.73465p pd=8.88u as=1.73465p ps=8.88u w=4u l=0.28u
+X691 dvss x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 dvss nfet_03v3 ad=1.73465p pd=8.88u as=1.73465p ps=8.88u w=4u l=0.28u
+X692 dvss x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 dvss nfet_03v3 ad=1.73465p pd=8.88u as=1.73465p ps=8.88u w=4u l=0.28u
+X693 dvss x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 dvss nfet_03v3 ad=1.73465p pd=8.88u as=1.73465p ps=8.88u w=4u l=0.28u
+X694 dvss x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 dvss nfet_03v3 ad=1.73465p pd=8.88u as=1.73465p ps=8.88u w=4u l=0.28u
+X695 dvdd x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvdd pfet_03v3 ad=0.4231p pd=2.88u as=0.4231p ps=2.88u w=1u l=0.28u
+X696 ibias2_1u x1/ena_buf dvdd dvdd pfet_03v3 ad=5.5315p pd=37.44u as=0 ps=0 w=1u l=0.28u
+X697 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D vbg dvss nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=4u
+X698 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D vbg dvss nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=4u
+X699 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D vbg dvss nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=4u
+X700 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D vbg dvss nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=4u
+X701 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X702 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X703 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X704 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X705 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X706 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X707 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X708 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X709 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X710 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X711 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X712 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u ibias2_1u dvdd pfet_03v3 ad=0.4257p pd=2.88u as=0.4257p ps=2.88u w=1u l=0.5u
+X713 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X714 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X715 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X716 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X717 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X718 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X719 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X720 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X721 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X722 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X723 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X724 dvdd dvdd dvdd dvdd pfet_03v3 ad=0 pd=0 as=0 ps=0 w=1u l=0.5u
+X725 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X726 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X727 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X728 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X729 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X730 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X731 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X732 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 dvdd dvdd pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+C0 x1/xtr/bot trim[0] 0
+C1 trim[14] dvdd 0.33849f
+C2 x1/xtr/ctrl[11] x1/xtr/nfet_03v3_GP977X_0/S4 0.04527f
+C3 x1/xtr/ctrl[8] trim[8] 0.05473f
+C4 x1/xtr/nfet_03v3_GP977X_0/S4 trim[11] 0
+C5 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# dvdd 0.43499f
+C6 x1/xtr/nfet_03v3_GP977X_0/S10 x1/xtr/ctrl[6] 0
+C7 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 vbg 8.19147f
+C8 x1/xtr/ctrl[5] x1/xtr/bot 0.47004f
+C9 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# trim[7] 0.42011f
+C10 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# 0.00149f
+C11 trim[9] x1/xtr/ctrl[10] 0.04033f
+C12 x1/xtr/ctrl[8] dvdd 0.27637f
+C13 trim[5] x1/xtr/nfet_03v3_GP977X_0/S11 0
+C14 x1/pfet_03v3_773T9V_0/S1 x1/xamp/out 0.83903f
+C15 x1/xtr/nfet_03v3_GP977X_0/S10 x1/vbg 0.04095f
+C16 x1/xamp/pfet_03v3_7FHHXC_0/S9 x1/xamp/pfet_03v3_7FHHXC_0/D8 21.89805f
+C17 x1/xtr/nfet_03v3_GP977X_0/S4 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# 0
+C18 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 0.22717f
+C19 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 vbg 2.06695f
+C20 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 0.20048f
+C21 x1/xtr/ctrl[6] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# 0.0036f
+C22 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 0.0417f
+C23 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 x1/vbg 1.80371f
+C24 x1/xtr/ctrl[7] trim[6] 0.04031f
+C25 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# dvdd 0.43504f
+C26 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 0.43382f
+C27 x1/xtr/ctrl[9] x1/xtr/nfet_03v3_GP977X_0/S6 0.04484f
+C28 x1/xamp/out1n x1/xamp/out 3.36672f
+C29 trim[15] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# 0.01563f
+C30 x1/xamp/vbn1 x1/ena_buf 0
+C31 x1/xtr/nfet_03v3_GP977X_0/S13 x1/vbg 0.0173f
+C32 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# dvdd 0.43499f
+C33 x1/xtr/ctrl[4] x1/xtr/ctrl[3] 0.63369f
+C34 x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n 1.86355f
+C35 x1/xtr/nfet_03v3_GP977X_0/S7 trim[8] 0
+C36 x1/xtr/nfet_03v3_GP977X_0/S15 x1/pfet_03v3_BWTVHK_0/D 0.01898f
+C37 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/ctrl[1] 0
+C38 x1/xamp/pfet_03v3_7FHHXC_0/D9 ibias2_1u 0.00143f
+C39 x1/m1_n555_n7082# x1/xamp/inp 0
+C40 x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 0.10426f
+C41 x1/xtr/bot x1/xamp/inp 0.28253f
+C42 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# dvdd 0.44102f
+C43 x1/pfet_03v3_73PQE5_0/S2 dvdd 2.33059f
+C44 x1/xamp/vbp1 dvdd 21.7554f
+C45 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/ctrl[5] 0
+C46 trim[9] x1/xtr/nfet_03v3_GP977X_0/S6 0
+C47 x1/pfet_03v3_73PQE5_0/S2 x1/vbg 1.30293f
+C48 x1/xamp/vbp1 x1/vbg 0.0024f
+C49 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 0.02109f
+C50 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 0
+C51 x1/xtr/bot x1/xtr/ctrl[14] 0.46267f
+C52 x1/xamp/inn x1/xamp/vbn2 0
+C53 x1/m1_n555_n7082# x1/xamp/inn 0
+C54 x1/xtr/bot x1/xamp/inn 4.18534f
+C55 x1/m1_n555_n9322# x1/m1_n654_n9042# 0.57453f
+C56 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D vbg 30.37019f
+C57 x1/xtr/nfet_03v3_GP977X_0/S12 x1/vbg 0.0173f
+C58 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p x1/ena_buf 0.00665f
+C59 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/ctrl[14] 0
+C60 x1/m1_n654_n7922# x1/xamp/out 0.08311f
+C61 x1/m1_n555_n5962# x1/xamp/inp 0.00161f
+C62 ibias1_250n dvdd 18.37794f
+C63 x1/m1_n3786_n10721# x1/m1_n3687_n11001# 0.57323f
+C64 x1/xtr/bot trim[14] 0
+C65 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/ctrl[4] 0.04484f
+C66 x1/xtr/ctrl[0] trim[1] 0
+C67 x1/xtr/top x1/xamp/out 0.17969f
+C68 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# trim[6] 0.42017f
+C69 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/ctrl[3] 0
+C70 x1/xamp/vbn1 x1/xamp/out1p 9.24867f
+C71 x1/xamp/out x1/ena_buf 1.89446f
+C72 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# x1/xtr/ctrl[12] 0.3296f
+C73 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# 0.00177f
+C74 x1/xtr/nfet_03v3_GP977X_0/S1 x1/xamp/out 0.02113f
+C75 x1/m1_n555_n5962# x1/xamp/inn 0.00586f
+C76 x1/m1_n654_n10162# x1/xamp/inp 0
+C77 x1/m1_n654_n9042# dvdd 0.00321f
+C78 trim[1] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# 0.42061f
+C79 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S10 0.30735f
+C80 x1/m1_n654_n9042# x1/vbg 0
+C81 x1/m1_n3786_n5121# dvdd 0.00204f
+C82 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 59.74432f
+C83 x1/xtr/bot x1/xtr/ctrl[8] 0.4667f
+C84 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/out 0.00249f
+C85 x1/m1_n654_n10162# x1/xamp/inn 0
+C86 x1/xtr/nfet_03v3_GP977X_0/S8 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# 0
+C87 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# 0.00142f
+C88 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/bot 0.30739f
+C89 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xtr/ctrl[10] 0
+C90 x1/m1_n654_n6802# x1/xamp/out 0.08422f
+C91 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# 0.00186f
+C92 x1/xtr/ctrl[6] trim[6] 0.0603f
+C93 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 0.46127f
+C94 x1/xtr/ctrl[11] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# 0.00644f
+C95 trim[12] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# 0.4224f
+C96 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 0
+C97 x1/xtr/top x1/m1_n3786_n6241# 0
+C98 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# trim[11] 0.01516f
+C99 trim[2] trim[1] 0.04287f
+C100 x1/xamp/out1p x1/xamp/out 10.56668f
+C101 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 ibias2_1u 5.98083f
+C102 x1/xtr/nfet_03v3_GP977X_0/S15 trim[1] 0
+C103 x1/m1_n3786_n6241# x1/xtr/nfet_03v3_GP977X_0/S1 0.00151f
+C104 x1/m1_n555_n8202# x1/m1_n555_n9322# 0.01137f
+C105 x1/xtr/top x1/m1_n3687_n6521# 0
+C106 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# 0.00586f
+C107 trim[6] dvdd 0.34f
+C108 x1/xamp/vbp1 x1/xamp/vbn2 6.01866f
+C109 x1/pfet_03v3_BWTVHK_0/D x1/xamp/inp 0.05091f
+C110 x1/xtr/bot x1/pfet_03v3_73PQE5_0/S2 0.0119f
+C111 x1/xtr/ctrl[12] x1/xtr/nfet_03v3_GP977X_0/S3 0.04543f
+C112 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n x1/ena_buf 0.0146f
+C113 dvdd vbg 18.98831f
+C114 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S7 0.30732f
+C115 x1/xtr/ctrl[13] dvdd 0.27217f
+C116 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/nfet_03v3_GP977X_0/S10 0.26923f
+C117 x1/ena_buf ibias2_1u 4.58771f
+C118 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb vbg 2.25905f
+C119 trim[3] dvdd 0.33996f
+C120 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 vbg 11.51407f
+C121 x1/xtr/ctrl[2] trim[1] 0.03988f
+C122 x1/vbg vbg 8.86254f
+C123 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# x1/xtr/nfet_03v3_GP977X_0/S5 0
+C124 x1/xamp/out1n x1/xamp/pfet_03v3_7FHHXC_0/D9 8.16537f
+C125 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xamp/out 0.00791f
+C126 x1/pfet_03v3_BWTVHK_0/D x1/xamp/inn 3.7863f
+C127 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S12 0.30872f
+C128 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# trim[13] 0.42261f
+C129 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# dvdd 0.43499f
+C130 trim[1] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# 0.01562f
+C131 x1/m1_n654_n5682# x1/ena_buf 0
+C132 ibias1_250n x1/xamp/vbn2 1.42949f
+C133 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D8 11.83824f
+C134 x1/m1_n555_n8202# dvdd 0.00321f
+C135 x1/xtr/ctrl[7] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# 0.00361f
+C136 x1/xamp/vbn1 x1/xamp/inp 0.00407f
+C137 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n 0.20588f
+C138 trim[5] trim[4] 0.04331f
+C139 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S3 0.30735f
+C140 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 5.15818f
+C141 x1/m1_n3786_n7361# x1/xamp/out 0.05533f
+C142 trim[12] x1/xtr/nfet_03v3_GP977X_0/S3 0
+C143 trim[0] trim[1] 0.04252f
+C144 x1/xtr/ctrl[11] x1/xtr/nfet_03v3_GP977X_0/S3 0
+C145 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 33.91892f
+C146 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# x1/xtr/ctrl[8] 0.00233f
+C147 x1/xamp/vbn1 x1/xamp/inn 0.00425f
+C148 dvdd x1/xamp/pfet_03v3_7FHHXC_0/S9 17.99785f
+C149 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 0.00392f
+C150 x1/m1_n654_n10162# x1/pfet_03v3_73PQE5_0/S2 0
+C151 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/nfet_03v3_GP977X_0/S3 0.26925f
+C152 x1/xtr/nfet_03v3_GP977X_0/S4 x1/m1_n3687_n8761# 0.00118f
+C153 x1/xtr/nfet_03v3_GP977X_0/S10 x1/pfet_03v3_BWTVHK_0/D 0
+C154 x1/xtr/ctrl[5] trim[5] 0.0584f
+C155 trim[2] x1/xtr/ctrl[3] 0.04041f
+C156 x1/m1_n654_n5682# x1/m1_n654_n6802# 0.01138f
+C157 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p 13.44555f
+C158 x1/xtr/ctrl[9] trim[9] 0.05164f
+C159 x1/xtr/ctrl[13] x1/xtr/ctrl[12] 0.40637f
+C160 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 0.01629f
+C161 x1/xtr/ctrl[8] x1/xtr/nfet_03v3_GP977X_0/S8 0
+C162 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/ena_buf 0.09273f
+C163 x1/xtr/ctrl[7] x1/xtr/ctrl[6] 0.57513f
+C164 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 0.01645f
+C165 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 x1/vbg 0.1461f
+C166 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# dvdd 0.43504f
+C167 x1/xtr/nfet_03v3_GP977X_0/S13 x1/pfet_03v3_BWTVHK_0/D 0.01898f
+C168 x1/xtr/ctrl[8] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# 0.007f
+C169 x1/xamp/inp x1/xamp/out 0.48472f
+C170 x1/xtr/ctrl[2] x1/xtr/ctrl[3] 0.65916f
+C171 x1/xtr/ctrl[7] dvdd 0.27812f
+C172 x1/m1_n3786_n7361# x1/m1_n3786_n6241# 0.01137f
+C173 x1/m1_n3687_n5401# x1/xamp/out 0.07288f
+C174 x1/xtr/bot trim[6] 0
+C175 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/pfet_03v3_7FHHXC_0/D9 0.01291f
+C176 x1/xtr/ctrl[3] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# 0.00336f
+C177 x1/m1_n3786_n7361# x1/m1_n3687_n6521# 0.04652f
+C178 x1/m1_n3786_n8481# x1/xtr/nfet_03v3_GP977X_0/S4 0.00191f
+C179 x1/m1_n654_n10162# x1/m1_n654_n9042# 0.01138f
+C180 x1/xamp/inn x1/xamp/out 1.60012f
+C181 x1/xamp/vbn2 vbg 0
+C182 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n 4.40867f
+C183 x1/pfet_03v3_BWTVHK_0/D x1/pfet_03v3_73PQE5_0/S2 0.00626f
+C184 x1/xtr/ctrl[15] trim[15] 0.05165f
+C185 x1/xtr/bot x1/xtr/ctrl[13] 0.46287f
+C186 x1/xtr/ctrl[4] trim[4] 0.05845f
+C187 x1/xtr/ctrl[3] trim[4] 0
+C188 x1/xtr/bot trim[3] 0
+C189 x1/xtr/ctrl[13] trim[12] 0.04128f
+C190 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 4.55434f
+C191 ena trim[15] 0.04216f
+C192 x1/xtr/ctrl[15] dvdd 0.27211f
+C193 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xtr/nfet_03v3_GP977X_0/S7 0.26923f
+C194 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# 0.00163f
+C195 x1/xamp/pfet_03v3_7FHHXC_0/D8 x1/xamp/vbn2 0.03026f
+C196 x1/xtr/nfet_03v3_GP977X_0/S12 x1/pfet_03v3_BWTVHK_0/D 0.01904f
+C197 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 16.51812f
+C198 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/ctrl[13] 0.04559f
+C199 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/out1p 3.35379f
+C200 x1/m1_n3786_n7361# x1/m1_n3786_n8481# 0.01137f
+C201 x1/m1_n555_n7082# x1/m1_n555_n8202# 0.01137f
+C202 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 0.01548f
+C203 x1/vbg gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 0.03824f
+C204 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 5.48222f
+C205 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# x1/xtr/nfet_03v3_GP977X_0/S7 0
+C206 x1/xamp/out1n x1/ena_buf 0
+C207 ena dvdd 0.4926f
+C208 x1/xamp/vbn1 x1/pfet_03v3_73PQE5_0/S2 0
+C209 x1/xtr/ctrl[5] x1/xtr/ctrl[4] 0.61699f
+C210 x1/xtr/nfet_03v3_GP977X_0/S14 x1/vbg 0.0173f
+C211 x1/xtr/ctrl[6] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# 0.32066f
+C212 x1/xamp/vbp1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n 0
+C213 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/ctrl[1] 0.04535f
+C214 x1/xtr/nfet_03v3_GP977X_0/S10 x1/xamp/out 0.01967f
+C215 x1/xamp/pfet_03v3_7FHHXC_0/S9 x1/xamp/vbn2 0.02114f
+C216 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p 0.02302f
+C217 x1/xamp/vbp1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 0
+C218 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n 6.19398f
+C219 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# dvdd 0.43499f
+C220 x1/m1_n3687_n5401# x1/m1_n3786_n6241# 0.04652f
+C221 x1/xtr/ctrl[0] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# 0.008f
+C222 x1/m1_n3687_n5401# x1/m1_n3687_n6521# 0.01138f
+C223 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 ibias2_1u 0.9004f
+C224 x1/xamp/out1n x1/xamp/pfet_03v3_4WQT4W_0/S8 7.73562f
+C225 ibias1_250n x1/xamp/vbn1 0.00467f
+C226 x1/xtr/ctrl[8] x1/xtr/nfet_03v3_GP977X_0/S6 0
+C227 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# trim[13] 0.0154f
+C228 x1/xtr/top x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# 0
+C229 x1/m1_n555_n10442# x1/xamp/inp 0
+C230 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# x1/ena_buf 0.00257f
+C231 x1/m1_n654_n5682# x1/xamp/inp 0.00346f
+C232 x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 2.78509f
+C233 x1/xamp/vbp1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p 0
+C234 x1/m1_n555_n9322# dvdd 0.00321f
+C235 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# 0.00142f
+C236 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# dvdd 0.43483f
+C237 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# trim[6] 0.01566f
+C238 x1/m1_n555_n9322# x1/vbg 0
+C239 x1/xamp/out1n x1/xamp/out1p 36.81671f
+C240 x1/xtr/top x1/ena_buf 0.30242f
+C241 x1/xtr/ctrl[5] x1/xtr/nfet_03v3_GP977X_0/S11 0
+C242 x1/xtr/ctrl[11] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# 0.00321f
+C243 x1/m1_n555_n10442# x1/xamp/inn 0
+C244 x1/xtr/top x1/xtr/nfet_03v3_GP977X_0/S1 0.26968f
+C245 x1/m1_n654_n5682# x1/xamp/inn 0.08545f
+C246 x1/pfet_03v3_73PQE5_0/S2 x1/xamp/out 2.93522f
+C247 trim[8] dvdd 0.34275f
+C248 x1/xtr/bot x1/xtr/ctrl[7] 0.46855f
+C249 x1/xamp/vbp1 x1/xamp/out 0
+C250 x1/xtr/nfet_03v3_GP977X_0/S1 x1/ena_buf 0
+C251 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# x1/xtr/ctrl[1] 0.00343f
+C252 x1/xtr/nfet_03v3_GP977X_0/S15 x1/xtr/ctrl[0] 0.04551f
+C253 x1/xamp/pfet_03v3_4WQT4W_0/S8 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 0
+C254 x1/xtr/nfet_03v3_GP977X_0/S7 x1/xamp/out 0.02148f
+C255 trim[5] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# 0.42056f
+C256 x1/xtr/ctrl[6] dvdd 0.27236f
+C257 trim[15] dvdd 0.33856f
+C258 x1/m1_n3687_n9881# x1/m1_n3687_n11001# 0.01138f
+C259 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xtr/nfet_03v3_GP977X_0/S7 0.26923f
+C260 x1/xtr/nfet_03v3_GP977X_0/S15 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# 0
+C261 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# x1/xtr/nfet_03v3_GP977X_0/S1 0
+C262 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/ena_buf 0
+C263 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb dvdd 10.07948f
+C264 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 0.27162f
+C265 ibias1_250n x1/xamp/out 2.81893f
+C266 dvdd x1/vbg 11.28723f
+C267 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/inp 0
+C268 x1/xtr/bot x1/xtr/ctrl[15] 0.50765f
+C269 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb x1/vbg 2.40206f
+C270 x1/m1_n654_n7922# x1/m1_n654_n6802# 0.01138f
+C271 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n 0.68717f
+C272 x1/xtr/ctrl[0] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# 0
+C273 x1/xtr/ctrl[9] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# 0.00354f
+C274 x1/xtr/ctrl[1] dvdd 0.27495f
+C275 x1/xtr/ctrl[14] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# 0.0034f
+C276 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# x1/xtr/ctrl[4] 0.3195f
+C277 x1/xtr/nfet_03v3_GP977X_0/S3 x1/xamp/out 0.02115f
+C278 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# x1/xtr/ctrl[3] 0.00554f
+C279 x1/xtr/ctrl[2] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# 0.00336f
+C280 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/bot 0.30884f
+C281 x1/m1_n654_n9042# x1/xamp/out 0.05511f
+C282 x1/xtr/nfet_03v3_GP977X_0/S10 x1/xtr/ctrl[4] 0
+C283 x1/xamp/out1p x1/ena_buf 0.00917f
+C284 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n vbg 1.87803f
+C285 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/ctrl[7] 0
+C286 x1/m1_n3786_n5121# x1/xamp/out 0.0547f
+C287 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S5 0.30735f
+C288 x1/xtr/ctrl[0] trim[0] 0.053f
+C289 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# 0.00182f
+C290 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p vbg 4.67586f
+C291 x1/xtr/ctrl[11] x1/xtr/nfet_03v3_GP977X_0/S5 0
+C292 x1/xamp/vbp1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n 0
+C293 x1/m1_n3687_n9881# x1/m1_n3786_n10721# 0.04652f
+C294 x1/xamp/vbn1 x1/xamp/pfet_03v3_7FHHXC_0/D8 0.00209f
+C295 trim[0] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# 0.01554f
+C296 x1/xamp/vbp1 ibias2_1u 0.00503f
+C297 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/ctrl[3] 0
+C298 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/out1p 13.87383f
+C299 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# x1/xtr/ctrl[4] 0.00553f
+C300 trim[2] x1/xtr/ctrl[2] 0.06139f
+C301 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# trim[10] 0.42264f
+C302 x1/m1_n555_n10442# x1/pfet_03v3_73PQE5_0/S2 0
+C303 x1/xtr/ctrl[12] dvdd 0.2715f
+C304 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# x1/xtr/ctrl[7] 0.31976f
+C305 x1/xamp/out1n x1/xamp/inp 5.43553f
+C306 trim[2] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# 0.42029f
+C307 x1/xamp/vbn1 x1/xamp/pfet_03v3_7FHHXC_0/S9 0.00134f
+C308 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n 7.13012f
+C309 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# x1/xtr/bot 0.00353f
+C310 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p vbg 10.04052f
+C311 ibias1_250n ibias2_1u 0
+C312 x1/xtr/bot trim[8] 0
+C313 x1/m1_n3687_n7641# x1/xamp/out 0.0715f
+C314 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/nfet_03v3_GP977X_0/S10 0.26923f
+C315 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 30.29804f
+C316 x1/xamp/out1n x1/xamp/inn 2.61179f
+C317 x1/xtr/bot trim[15] 0
+C318 x1/xtr/bot x1/xtr/ctrl[6] 0.46614f
+C319 x1/m1_n3786_n5121# x1/m1_n3786_n6241# 0.01137f
+C320 x1/xtr/ctrl[2] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# 0.32916f
+C321 x1/xtr/ctrl[14] trim[13] 0.04198f
+C322 x1/xtr/nfet_03v3_GP977X_0/S12 x1/xtr/ctrl[4] 0
+C323 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xtr/ctrl[7] 0.04484f
+C324 x1/xtr/nfet_03v3_GP977X_0/S12 x1/xtr/ctrl[3] 0.04493f
+C325 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n 0.01642f
+C326 dvdd x1/xamp/vbn2 3.88196f
+C327 trim[5] trim[6] 0.04277f
+C328 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# trim[7] 0.00943f
+C329 x1/m1_n555_n7082# dvdd 0.00321f
+C330 x1/xtr/bot dvdd 0.14181f
+C331 x1/xamp/vbn2 x1/vbg 0
+C332 x1/xamp/pfet_03v3_7FHHXC_0/D8 x1/xamp/out 4.47402f
+C333 x1/xtr/nfet_03v3_GP977X_0/S10 x1/pfet_03v3_773T9V_0/S1 0
+C334 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 2.19571f
+C335 x1/m1_n555_n8202# x1/xamp/out 0.05366f
+C336 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 0.04425f
+C337 x1/xtr/bot x1/vbg 1.15444f
+C338 trim[12] dvdd 0.33924f
+C339 x1/xtr/ctrl[11] dvdd 0.27045f
+C340 x1/xtr/nfet_03v3_GP977X_0/S11 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# 0
+C341 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p 23.57832f
+C342 x1/xtr/bot x1/xtr/ctrl[1] 0.46758f
+C343 trim[11] dvdd 0.33717f
+C344 x1/m1_n654_n7922# x1/xamp/inp 0
+C345 x1/xtr/ctrl[9] x1/xtr/ctrl[8] 0.47289f
+C346 x1/xamp/vbp1 x1/xamp/pfet_03v3_7FHHXC_0/D9 0.0845f
+C347 trim[14] trim[13] 0.04228f
+C348 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# x1/xtr/ctrl[14] 0.00103f
+C349 x1/m1_n3687_n8761# x1/m1_n3687_n7641# 0.01138f
+C350 x1/m1_n654_n10162# x1/m1_n555_n9322# 0.04652f
+C351 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# x1/xtr/ctrl[10] 0.32676f
+C352 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 x1/ena_buf 0.03146f
+C353 x1/xtr/nfet_03v3_GP977X_0/S14 x1/pfet_03v3_BWTVHK_0/D 0.01904f
+C354 x1/xamp/inp x1/ena_buf 0.02639f
+C355 x1/m1_n3687_n11001# x1/xamp/out 0.07094f
+C356 x1/xamp/pfet_03v3_7FHHXC_0/S9 x1/xamp/out 11.31988f
+C357 x1/xtr/nfet_03v3_GP977X_0/S5 trim[10] 0
+C358 x1/m1_n654_n7922# x1/xamp/inn 0
+C359 x1/m1_n555_n5962# dvdd 0.00321f
+C360 x1/xtr/top x1/m1_n3687_n5401# 0.00515f
+C361 x1/xtr/top x1/xtr/ctrl[14] 0
+C362 dvdd x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# 0.43504f
+C363 x1/m1_n3687_n5401# x1/ena_buf 0
+C364 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p 5.09856f
+C365 x1/m1_n3687_n6521# x1/m1_n3687_n7641# 0.01138f
+C366 x1/m1_n3687_n5401# x1/xtr/nfet_03v3_GP977X_0/S1 0.00114f
+C367 x1/xtr/ctrl[14] x1/ena_buf 0
+C368 x1/m1_n3786_n9601# x1/m1_n3786_n10721# 0.01137f
+C369 x1/xtr/nfet_03v3_GP977X_0/S1 x1/xtr/ctrl[14] 0.04576f
+C370 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D9 6.39379f
+C371 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/ctrl[6] 0.04484f
+C372 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# trim[14] 0.01539f
+C373 x1/xamp/inn x1/ena_buf 0
+C374 x1/xtr/nfet_03v3_GP977X_0/S11 x1/xtr/nfet_03v3_GP977X_0/S12 0.26923f
+C375 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 25.99268f
+C376 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/inp 6.82671f
+C377 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n vbg 13.91675f
+C378 x1/xtr/ctrl[5] trim[4] 0.04057f
+C379 x1/m1_n654_n10162# dvdd 0.00321f
+C380 x1/xtr/nfet_03v3_GP977X_0/S9 dvdd 0
+C381 ibias2_1u vbg 0.01446f
+C382 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 4.67201f
+C383 x1/m1_n654_n10162# x1/vbg 0.00462f
+C384 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# x1/xtr/ctrl[14] 0.31576f
+C385 x1/xtr/ctrl[9] x1/xtr/nfet_03v3_GP977X_0/S7 0
+C386 x1/xtr/bot x1/xtr/ctrl[12] 0.46347f
+C387 x1/m1_n3786_n8481# x1/m1_n3687_n7641# 0.04652f
+C388 x1/xtr/nfet_03v3_GP977X_0/S1 trim[14] 0
+C389 x1/xamp/inn x1/xamp/pfet_03v3_4WQT4W_0/S8 6.96827f
+C390 x1/m1_n654_n6802# x1/xamp/inp 0
+C391 x1/m1_n3786_n10721# x1/xamp/out 0.05534f
+C392 x1/xtr/ctrl[11] x1/xtr/ctrl[12] 0.40878f
+C393 trim[12] x1/xtr/ctrl[12] 0.05116f
+C394 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# x1/xtr/ctrl[6] 0.00556f
+C395 x1/xamp/out1n x1/xamp/vbp1 0.015f
+C396 x1/xtr/ctrl[12] trim[11] 0.03669f
+C397 x1/xamp/inp x1/xamp/out1p 0.62226f
+C398 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/ctrl[12] 0
+C399 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# trim[14] 0.42245f
+C400 trim[3] x1/xtr/ctrl[4] 0.04035f
+C401 x1/m1_n654_n6802# x1/xamp/inn 0
+C402 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# dvdd 0.43431f
+C403 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 7.76012f
+C404 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n 4.43989f
+C405 trim[3] x1/xtr/ctrl[3] 0.05872f
+C406 x1/xtr/nfet_03v3_GP977X_0/S5 x1/xtr/ctrl[10] 0.04506f
+C407 x1/xtr/nfet_03v3_GP977X_0/S5 x1/m1_n3786_n9601# 0
+C408 trim[10] dvdd 0.33913f
+C409 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# x1/xtr/ctrl[4] 0.00363f
+C410 x1/xamp/inn x1/xamp/out1p 3.66473f
+C411 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 ibias2_1u 0.05073f
+C412 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# x1/xtr/ctrl[3] 0.3199f
+C413 x1/xtr/ctrl[12] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# 0.00292f
+C414 ibias1_250n x1/xamp/out1n 0.04799f
+C415 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xtr/ctrl[6] 0
+C416 x1/xtr/ctrl[8] trim[7] 0.02366f
+C417 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# trim[8] 0.01544f
+C418 x1/pfet_03v3_BWTVHK_0/D dvdd 3.42136f
+C419 x1/xtr/bot trim[12] 0
+C420 x1/xtr/bot x1/xtr/ctrl[11] 0.464f
+C421 x1/pfet_03v3_BWTVHK_0/D x1/vbg 0.63401f
+C422 x1/xtr/bot trim[11] 0
+C423 x1/xtr/ctrl[13] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# 0.32406f
+C424 x1/xamp/vbp1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 0.00175f
+C425 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n 10.17422f
+C426 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/bot 0.30731f
+C427 trim[12] trim[11] 0.0432f
+C428 x1/xtr/ctrl[11] trim[11] 0.05074f
+C429 x1/xtr/top x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# 0
+C430 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 ibias2_1u 0
+C431 x1/xtr/nfet_03v3_GP977X_0/S5 x1/xamp/out 0.00138f
+C432 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# dvdd 0.43504f
+C433 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# x1/ena_buf 0.34869f
+C434 x1/xamp/vbp1 x1/ena_buf 0.64748f
+C435 x1/m1_n555_n7082# x1/m1_n555_n5962# 0.01137f
+C436 x1/xamp/vbn1 dvdd 0.04962f
+C437 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# 0.00142f
+C438 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n 25.58768f
+C439 x1/xamp/pfet_03v3_7FHHXC_0/D8 x1/xamp/pfet_03v3_7FHHXC_0/D9 11.57419f
+C440 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xtr/nfet_03v3_GP977X_0/S5 0.26923f
+C441 x1/xamp/vbn1 x1/vbg 0
+C442 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n 0
+C443 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n x1/vbg 3.52595f
+C444 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# trim[4] 0.41987f
+C445 x1/xtr/ctrl[11] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# 0.32247f
+C446 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 10.7035f
+C447 trim[11] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# 0.42241f
+C448 trim[5] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# 0.01563f
+C449 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 0
+C450 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p x1/vbg 0.85551f
+C451 x1/xtr/ctrl[10] dvdd 0.27199f
+C452 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/bot 0.30731f
+C453 x1/xamp/vbp1 x1/xamp/pfet_03v3_4WQT4W_0/S8 3.18506f
+C454 x1/m1_n555_n9322# x1/xamp/out 0.06766f
+C455 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/ctrl[2] 0.04516f
+C456 ibias1_250n x1/ena_buf 1.10782f
+C457 x1/xamp/pfet_03v3_7FHHXC_0/S9 x1/xamp/pfet_03v3_7FHHXC_0/D9 10.44269f
+C458 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 22.35624f
+C459 x1/xtr/nfet_03v3_GP977X_0/S5 x1/m1_n3687_n8761# 0.00138f
+C460 x1/m1_n654_n7922# x1/m1_n654_n9042# 0.01138f
+C461 x1/xtr/ctrl[5] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# 0.00359f
+C462 ibias2_1u gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 0.06801f
+C463 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p 2.44585f
+C464 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p 8.34904f
+C465 ibias1_250n x1/xamp/pfet_03v3_4WQT4W_0/S8 0.0713f
+C466 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 0.01312f
+C467 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p x1/vbg 3.21764f
+C468 x1/xtr/ctrl[5] x1/xtr/nfet_03v3_GP977X_0/S10 0.04484f
+C469 x1/xtr/top x1/m1_n3786_n5121# 0.09129f
+C470 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# trim[4] 0.01574f
+C471 x1/m1_n3786_n5121# x1/ena_buf 0
+C472 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# x1/xtr/bot 0.00179f
+C473 x1/xamp/inn x1/xamp/inp 12.42931f
+C474 x1/xtr/ctrl[13] trim[13] 0.0554f
+C475 dvdd x1/xamp/out 14.57714f
+C476 x1/xtr/bot trim[10] 0
+C477 x1/xtr/ctrl[8] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# 0.31705f
+C478 x1/xamp/out x1/vbg 2.76363f
+C479 x1/pfet_03v3_773T9V_0/S1 x1/m1_n3687_n11001# 0
+C480 x1/xamp/out1n x1/xamp/pfet_03v3_7FHHXC_0/D8 0.21769f
+C481 x1/xtr/nfet_03v3_GP977X_0/S12 x1/xtr/ctrl[2] 0
+C482 trim[5] x1/xtr/ctrl[6] 0.04022f
+C483 x1/xtr/ctrl[11] trim[10] 0.04028f
+C484 trim[10] trim[11] 0.04294f
+C485 x1/xtr/bot x1/pfet_03v3_BWTVHK_0/D 20.23756f
+C486 ibias1_250n x1/xamp/out1p 0.12783f
+C487 x1/xtr/ctrl[5] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# 0.31955f
+C488 trim[1] dvdd 0.33945f
+C489 trim[5] dvdd 0.33952f
+C490 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S8 0.30726f
+C491 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 vbg 0.01324f
+C492 x1/xtr/nfet_03v3_GP977X_0/S12 trim[4] 0
+C493 x1/xamp/out1n x1/xamp/pfet_03v3_7FHHXC_0/S9 0.02637f
+C494 x1/xtr/ctrl[14] trim[14] 0.05193f
+C495 trim[1] x1/xtr/ctrl[1] 0.06033f
+C496 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# 0.00145f
+C497 trim[10] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# 0.01558f
+C498 x1/xamp/vbn1 x1/xamp/vbn2 7.8682f
+C499 x1/ena_buf vbg 1.07938f
+C500 x1/xtr/ctrl[9] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# 0.00652f
+C501 x1/xtr/ctrl[13] x1/xtr/nfet_03v3_GP977X_0/S1 0
+C502 trim[7] trim[6] 0.04292f
+C503 x1/m1_n555_n10442# x1/m1_n555_n9322# 0.01137f
+C504 x1/xtr/nfet_03v3_GP977X_0/S9 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# 0
+C505 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 0
+C506 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xtr/nfet_03v3_GP977X_0/S3 0.26924f
+C507 x1/m1_n654_n7922# x1/m1_n555_n8202# 0.57453f
+C508 x1/xamp/pfet_03v3_7FHHXC_0/D8 x1/ena_buf 0.0077f
+C509 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n 2.43721f
+C510 x1/xtr/bot x1/xtr/ctrl[10] 0.46401f
+C511 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 0.00471f
+C512 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 0.08469f
+C513 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n 9.09487f
+C514 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# x1/xtr/ctrl[13] 0.00107f
+C515 x1/xamp/pfet_03v3_4WQT4W_0/S8 vbg 0
+C516 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n x1/vbg 0.3948f
+C517 x1/xtr/ctrl[11] x1/xtr/ctrl[10] 0.41875f
+C518 dvdd ibias2_1u 6.20385f
+C519 trim[9] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# 0.01553f
+C520 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb ibias2_1u 0.7372f
+C521 ibias2_1u x1/vbg 1.03996f
+C522 trim[2] trim[3] 0.04276f
+C523 x1/m1_n3786_n7361# x1/xtr/nfet_03v3_GP977X_0/S3 0.00157f
+C524 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xtr/nfet_03v3_GP977X_0/S8 0.26923f
+C525 x1/m1_n555_n10442# dvdd 0.00321f
+C526 x1/pfet_03v3_73PQE5_0/S2 x1/xamp/inp 0
+C527 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 x1/ena_buf 0.00209f
+C528 x1/m1_n654_n5682# dvdd 0.00321f
+C529 x1/xamp/pfet_03v3_7FHHXC_0/D8 x1/xamp/pfet_03v3_4WQT4W_0/S8 0.00139f
+C530 x1/xamp/pfet_03v3_7FHHXC_0/S9 x1/ena_buf 0.02331f
+C531 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# trim[2] 0.01559f
+C532 x1/m1_n555_n10442# x1/vbg 0.07546f
+C533 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 0.00214f
+C534 x1/xamp/vbn2 x1/xamp/out 10.81919f
+C535 x1/xtr/ctrl[4] dvdd 0.27288f
+C536 x1/xtr/ctrl[10] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# 0.00626f
+C537 x1/xtr/ctrl[3] dvdd 0.27356f
+C538 x1/m1_n555_n7082# x1/xamp/out 0.07203f
+C539 x1/xtr/bot x1/xamp/out 0.27386f
+C540 trim[3] x1/xtr/ctrl[2] 0
+C541 x1/pfet_03v3_73PQE5_0/S2 x1/xamp/inn 0.03577f
+C542 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# x1/xtr/ctrl[2] 0.00561f
+C543 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 x1/ena_buf 0.00142f
+C544 x1/xamp/pfet_03v3_7FHHXC_0/S9 x1/xamp/pfet_03v3_4WQT4W_0/S8 0.00743f
+C545 x1/xtr/ctrl[9] x1/xtr/nfet_03v3_GP977X_0/S5 0
+C546 ibias1_250n x1/xamp/inp 0
+C547 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S6 0.30735f
+C548 x1/xamp/pfet_03v3_7FHHXC_0/D8 x1/xamp/out1p 2.45211f
+C549 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xamp/out 0.02113f
+C550 x1/xtr/bot trim[5] 0
+C551 x1/xtr/bot trim[1] 0
+C552 trim[3] trim[4] 0.04293f
+C553 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# dvdd 0.43504f
+C554 x1/m1_n3786_n9601# x1/m1_n3687_n9881# 0.57323f
+C555 ibias1_250n x1/xamp/inn 0
+C556 x1/m1_n555_n5962# x1/xamp/out 0.07313f
+C557 x1/xtr/ctrl[5] trim[6] 0
+C558 x1/m1_n654_n9042# x1/xamp/inp 0
+C559 dvdd x1/xamp/pfet_03v3_7FHHXC_0/D9 29.30533f
+C560 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# x1/xtr/ctrl[15] 0.31903f
+C561 x1/xamp/pfet_03v3_7FHHXC_0/S9 x1/xamp/out1p 0.00874f
+C562 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/ctrl[0] 0
+C563 x1/m1_n3786_n7361# x1/m1_n3687_n7641# 0.57323f
+C564 x1/xtr/ctrl[7] trim[7] 0.05884f
+C565 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 0.05689f
+C566 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# x1/xtr/nfet_03v3_GP977X_0/S12 0
+C567 x1/m1_n654_n9042# x1/xamp/inn 0
+C568 x1/m1_n654_n10162# x1/xamp/out 0.0859f
+C569 x1/xtr/nfet_03v3_GP977X_0/S11 x1/vbg 0.01781f
+C570 x1/m1_n3786_n5121# x1/m1_n3687_n5401# 0.57323f
+C571 x1/xtr/nfet_03v3_GP977X_0/S9 x1/xamp/out 0.02504f
+C572 x1/xtr/ctrl[8] x1/xtr/nfet_03v3_GP977X_0/S7 0.04484f
+C573 x1/xtr/top x1/xtr/ctrl[15] 0.06272f
+C574 x1/xtr/ctrl[10] trim[10] 0.05094f
+C575 x1/xtr/ctrl[9] trim[8] 0.04076f
+C576 x1/xtr/ctrl[15] x1/ena_buf 0.05753f
+C577 x1/xtr/ctrl[15] x1/xtr/nfet_03v3_GP977X_0/S1 0
+C578 x1/m1_n3687_n9881# x1/xamp/out 0.07135f
+C579 x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 0.95883f
+C580 x1/xtr/nfet_03v3_GP977X_0/S2 x1/m1_n3786_n6241# 0.00134f
+C581 ena x1/ena_buf 0.05563f
+C582 x1/pfet_03v3_773T9V_0/S1 dvdd 0.31021f
+C583 x1/xtr/nfet_03v3_GP977X_0/S6 x1/m1_n3687_n9881# 0
+C584 x1/xtr/nfet_03v3_GP977X_0/S2 x1/m1_n3687_n6521# 0.00143f
+C585 x1/pfet_03v3_773T9V_0/S1 x1/vbg 0.44098f
+C586 x1/xtr/ctrl[9] dvdd 0.27032f
+C587 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# x1/xtr/ctrl[15] 0.00356f
+C588 trim[9] trim[8] 0.04247f
+C589 x1/xtr/nfet_03v3_GP977X_0/S13 x1/xtr/nfet_03v3_GP977X_0/S12 0.26923f
+C590 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# x1/xtr/ctrl[10] 0.00356f
+C591 x1/xtr/ctrl[12] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# 0.00447f
+C592 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 vbg 5.76914f
+C593 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 46.8675f
+C594 x1/xamp/out1n dvdd 5.72163f
+C595 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# x1/xtr/ctrl[0] 0.33424f
+C596 x1/xtr/bot x1/xtr/ctrl[4] 0.47f
+C597 x1/xtr/nfet_03v3_GP977X_0/S14 trim[2] 0
+C598 x1/xtr/bot x1/xtr/ctrl[3] 0.47064f
+C599 x1/xamp/out1n x1/vbg 0.00616f
+C600 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/nfet_03v3_GP977X_0/S15 0.26924f
+C601 x1/pfet_03v3_BWTVHK_0/D x1/xamp/out 1.19898f
+C602 x1/m1_n3687_n8761# x1/m1_n3687_n9881# 0.01138f
+C603 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# x1/xtr/nfet_03v3_GP977X_0/S3 0
+C604 trim[9] dvdd 0.33936f
+C605 dvdd trim[13] 0.33837f
+C606 x1/xtr/ctrl[13] x1/xtr/ctrl[14] 0.40498f
+C607 x1/xamp/pfet_03v3_7FHHXC_0/D8 x1/xamp/inp 0.00263f
+C608 x1/m1_n555_n8202# x1/xamp/inp 0
+C609 x1/xtr/nfet_03v3_GP977X_0/S8 x1/xamp/out 0.02172f
+C610 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# trim[15] 0.42209f
+C611 x1/m1_n654_n5682# x1/m1_n555_n5962# 0.57453f
+C612 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/ctrl[2] 0
+C613 ibias1_250n x1/xamp/vbp1 4.96964f
+C614 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n 0.9968f
+C615 x1/xtr/ctrl[0] dvdd 0.28645f
+C616 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# 0.00142f
+C617 x1/xtr/nfet_03v3_GP977X_0/S14 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# 0
+C618 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# dvdd 0.43504f
+C619 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/vbn2 2.44157f
+C620 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 15.22077f
+C621 x1/m1_n555_n8202# x1/xamp/inn 0
+C622 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 0.33022f
+C623 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 17.78733f
+C624 x1/xamp/vbn1 x1/xamp/out 0.33626f
+C625 x1/xamp/pfet_03v3_7FHHXC_0/S9 x1/xamp/inp 0.00295f
+C626 trim[12] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# 0.01536f
+C627 x1/xtr/top trim[15] 0
+C628 x1/xtr/ctrl[0] x1/xtr/ctrl[1] 0.63432f
+C629 x1/xtr/ctrl[7] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# 0.00674f
+C630 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 3.83696f
+C631 trim[15] x1/ena_buf 0.03937f
+C632 x1/m1_n555_n10442# x1/m1_n654_n10162# 0.57453f
+C633 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 x1/vbg 0.02579f
+C634 x1/m1_n654_n7922# dvdd 0.00321f
+C635 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# dvdd 0.43499f
+C636 x1/xtr/nfet_03v3_GP977X_0/S10 trim[6] 0
+C637 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# trim[3] 0.01565f
+C638 trim[8] trim[7] 0.03477f
+C639 x1/xtr/nfet_03v3_GP977X_0/S2 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# 0
+C640 x1/xtr/top dvdd 0.07693f
+C641 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S11 0.30936f
+C642 x1/xtr/ctrl[6] trim[7] 0
+C643 x1/xamp/pfet_03v3_7FHHXC_0/S9 x1/xamp/inn 0
+C644 dvdd x1/ena_buf 25.45021f
+C645 x1/xtr/ctrl[1] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# 0.32032f
+C646 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb x1/ena_buf 0.4809f
+C647 x1/ena_buf x1/vbg 0.00372f
+C648 x1/ena_buf gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 1.37926f
+C649 x1/m1_n3786_n9601# x1/xamp/out 0.05396f
+C650 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 1.00752f
+C651 x1/xtr/nfet_03v3_GP977X_0/S5 x1/xtr/nfet_03v3_GP977X_0/S4 0.26924f
+C652 trim[7] dvdd 0.35607f
+C653 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 vbg 2.89512f
+C654 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xtr/ctrl[10] 0
+C655 x1/xtr/nfet_03v3_GP977X_0/S6 x1/m1_n3786_n9601# 0.00164f
+C656 x1/xtr/bot x1/pfet_03v3_773T9V_0/S1 0.00944f
+C657 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# dvdd 0.43504f
+C658 x1/xtr/ctrl[13] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# 0.00237f
+C659 dvdd x1/xamp/pfet_03v3_4WQT4W_0/S8 24.68015f
+C660 x1/xtr/nfet_03v3_GP977X_0/S13 trim[3] 0
+C661 x1/xtr/bot x1/xtr/ctrl[9] 0.46793f
+C662 trim[2] dvdd 0.3397f
+C663 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/vbg 0.00659f
+C664 x1/xtr/nfet_03v3_GP977X_0/S13 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# 0
+C665 x1/xtr/ctrl[5] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# 0.00554f
+C666 x1/xtr/nfet_03v3_GP977X_0/S15 x1/vbg 0.0173f
+C667 x1/xamp/out1n x1/xamp/vbn2 4.97747f
+C668 trim[2] x1/xtr/ctrl[1] 0
+C669 x1/m1_n654_n6802# dvdd 0.00321f
+C670 x1/xtr/nfet_03v3_GP977X_0/S15 x1/xtr/ctrl[1] 0
+C671 x1/m1_n3687_n8761# x1/m1_n3786_n9601# 0.04652f
+C672 x1/xamp/vbp1 vbg 0.00105f
+C673 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n 0.17966f
+C674 x1/xtr/ctrl[2] dvdd 0.27583f
+C675 x1/xtr/nfet_03v3_GP977X_0/S6 x1/xamp/out 0.02152f
+C676 dvdd x1/xamp/out1p 6.77915f
+C677 x1/xtr/bot trim[13] 0
+C678 x1/xtr/bot trim[9] 0
+C679 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# trim[0] 0.42034f
+C680 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n ibias2_1u 0.2054f
+C681 x1/xamp/out1p x1/vbg 0.00676f
+C682 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 11.79749f
+C683 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p 0.2287f
+C684 trim[12] trim[13] 0.04264f
+C685 x1/xtr/ctrl[2] x1/xtr/ctrl[1] 0.66721f
+C686 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# dvdd 0.43499f
+C687 x1/xamp/vbp1 x1/xamp/pfet_03v3_7FHHXC_0/D8 0.00773f
+C688 x1/xtr/ctrl[15] x1/xtr/ctrl[14] 0.40473f
+C689 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p ibias2_1u 0.02594f
+C690 x1/xtr/nfet_03v3_GP977X_0/S2 trim[13] 0
+C691 x1/xtr/ctrl[1] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# 0.00696f
+C692 x1/xtr/bot x1/xtr/ctrl[0] 1.17137f
+C693 trim[4] dvdd 0.33921f
+C694 x1/xtr/nfet_03v3_GP977X_0/S3 x1/m1_n3687_n7641# 0.00135f
+C695 x1/xamp/vbn2 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbp1 0
+C696 x1/m1_n3687_n8761# x1/xamp/out 0.01894f
+C697 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 2.24406f
+C698 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# 0.00147f
+C699 trim[8] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# 0.42383f
+C700 x1/xtr/ctrl[13] x1/xtr/nfet_03v3_GP977X_0/S3 0
+C701 trim[0] dvdd 0.34244f
+C702 x1/xtr/ctrl[5] x1/xtr/ctrl[6] 0.56616f
+C703 x1/xtr/ctrl[8] x1/xtr/ctrl[7] 0.47355f
+C704 x1/m1_n555_n7082# x1/m1_n654_n7922# 0.04652f
+C705 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n 42.12988f
+C706 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# 0.00149f
+C707 x1/xamp/vbp1 x1/xamp/pfet_03v3_7FHHXC_0/S9 0.00503f
+C708 x1/m1_n3786_n8481# x1/m1_n3786_n9601# 0.01137f
+C709 x1/m1_n3786_n6241# x1/xamp/out 0.05533f
+C710 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/D8 2.47927f
+C711 x1/xtr/ctrl[15] trim[14] 0.04157f
+C712 x1/xtr/nfet_03v3_GP977X_0/S7 x1/m1_n3687_n11001# 0.00159f
+C713 trim[0] x1/xtr/ctrl[1] 0.04103f
+C714 x1/xamp/vbn2 x1/ena_buf 0.35403f
+C715 x1/xtr/top x1/xtr/bot 0.33521f
+C716 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p ibias2_1u 0.08508f
+C717 x1/m1_n3687_n6521# x1/xamp/out 0.07161f
+C718 x1/xtr/ctrl[5] dvdd 0.27241f
+C719 x1/xtr/bot x1/ena_buf 0.09848f
+C720 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S1 0.30727f
+C721 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# dvdd 0.43652f
+C722 x1/m1_n555_n9322# x1/xamp/inp 0
+C723 x1/xtr/bot trim[7] 0
+C724 x1/xtr/top x1/xtr/nfet_03v3_GP977X_0/S2 0
+C725 ibias1_250n x1/xamp/pfet_03v3_7FHHXC_0/S9 2.22088f
+C726 x1/m1_n555_n8202# x1/m1_n654_n9042# 0.04652f
+C727 x1/xamp/vbn1 x1/xamp/pfet_03v3_7FHHXC_0/D9 0.0581f
+C728 x1/xtr/nfet_03v3_GP977X_0/S2 x1/xtr/nfet_03v3_GP977X_0/S1 0.26925f
+C729 x1/xamp/pfet_03v3_4WQT4W_0/S8 x1/xamp/vbn2 3.67182f
+C730 x1/m1_n555_n10442# x1/xamp/out 0.07206f
+C731 x1/m1_n3786_n8481# x1/xamp/out 0.04137f
+C732 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# x1/xtr/bot 0.00144f
+C733 x1/m1_n654_n5682# x1/xamp/out 0.08541f
+C734 x1/pfet_03v3_773T9V_0/S1 x1/pfet_03v3_BWTVHK_0/D 0.40308f
+C735 x1/xtr/bot trim[2] 0
+C736 x1/m1_n555_n9322# x1/xamp/inn 0
+C737 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S15 0.58122f
+C738 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D 0.02181f
+C739 x1/xtr/nfet_03v3_GP977X_0/S7 x1/xtr/ctrl[7] 0
+C740 x1/xtr/nfet_03v3_GP977X_0/S7 x1/m1_n3786_n10721# 0.00112f
+C741 x1/xtr/nfet_03v3_GP977X_0/S4 x1/xtr/ctrl[12] 0
+C742 x1/xtr/nfet_03v3_GP977X_0/S10 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# 0
+C743 x1/m1_n555_n7082# x1/m1_n654_n6802# 0.57453f
+C744 dvdd gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 3.53694f
+C745 trim[9] trim[10] 0.04306f
+C746 x1/xtr/nfet_03v3_GP977X_0/S14 x1/xtr/nfet_03v3_GP977X_0/S13 0.26924f
+C747 dvdd x1/xamp/inp 6.1674f
+C748 x1/xamp/vbn2 x1/xamp/out1p 9.3341f
+C749 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/diffb gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 0
+C750 x1/m1_n3786_n6241# x1/m1_n3687_n6521# 0.57323f
+C751 x1/xtr/bot x1/xtr/ctrl[2] 0.47029f
+C752 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 x1/vbg 0.00192f
+C753 x1/xamp/inp x1/vbg 0.80395f
+C754 x1/xtr/ctrl[9] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# 0.31614f
+C755 x1/xtr/ctrl[15] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# 0.00169f
+C756 x1/m1_n3687_n5401# dvdd 0
+C757 trim[5] x1/xtr/ctrl[4] 0
+C758 x1/xtr/ctrl[14] dvdd 0.26915f
+C759 x1/xtr/bot x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# 0.00153f
+C760 x1/m1_n3786_n8481# x1/m1_n3687_n8761# 0.57323f
+C761 dvdd x1/xamp/inn 8.21526f
+C762 ena x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# 0.42089f
+C763 x1/xtr/nfet_03v3_GP977X_0/S9 trim[7] 0
+C764 x1/xamp/inn x1/vbg 1.18583f
+C765 trim[14] trim[15] 0.04194f
+C766 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# trim[3] 0.42033f
+C767 x1/xtr/bot trim[4] 0
+C768 x1/xamp/pfet_03v3_7FHHXC_0/D9 x1/xamp/out 21.11772f
+C769 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n ibias2_1u 0.00687f
+C770 x1/m1_n654_n6802# x1/m1_n555_n5962# 0.04652f
+C771 x1/xamp/vbn1 x1/xamp/out1n 4.59917f
+C772 x1/xtr/bot x1/xtr/nfet_03v3_GP977X_0/S4 0.30736f
+C773 trim[9] x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# 0.42254f
+C774 x1/xtr/ctrl[9] x1/xtr/ctrl[10] 0.42259f
+C775 vbg dvss 15.91077f
+C776 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_XWLNX2_0/D dvss 19.13966f
+C777 x1/vbg dvss 15.54302f
+C778 ibias2_1u dvss 0.26149f
+C779 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_CRBY7Y_0/S7 dvss 15.89172f
+C780 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1p dvss 2.61614f
+C781 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outa1n dvss 1.75243f
+C782 x1/ena_buf dvss 12.0342f
+C783 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1n dvss 13.93442f
+C784 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/outb1p dvss 14.3125f
+C785 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/nfet_03v3_XHQ8ZW_0/S6_1 dvss 4.91027f
+C786 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn1 dvss 41.25516f
+C787 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/vbn2 dvss 38.89977f
+C788 gf180mcu_ocd_ip__classab_buffer_0/se_folded_cascode_np_ab_0/pfet_03v3_9TM96F_0/S6_3 dvss 2.40512f
+C789 trim[1] dvss 0.34565f
+C790 trim[2] dvss 0.34527f
+C791 trim[3] dvss 0.34659f
+C792 trim[4] dvss 0.34654f
+C793 trim[5] dvss 0.34564f
+C794 trim[6] dvss 0.34459f
+C795 ena dvss 0.44849f
+C796 x1/pfet_03v3_73PQE5_0/S2 dvss 0.61487f
+C797 x1/pfet_03v3_BWTVHK_0/D dvss 14.73113f
+C798 trim[7] dvss 0.35678f
+C799 trim[0] dvss 0.41203f
+C800 trim[8] dvss 0.35232f
+C801 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_8/a_28_68# dvss 0.47298f ; **FLOATING
+C802 trim[9] dvss 0.34926f
+C803 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_9/a_28_68# dvss 0.47266f ; **FLOATING
+C804 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_7/a_28_68# dvss 0.47289f ; **FLOATING
+C805 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_6/a_28_68# dvss 0.47281f ; **FLOATING
+C806 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_5/a_28_68# dvss 0.47281f ; **FLOATING
+C807 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_4/a_28_68# dvss 0.47281f ; **FLOATING
+C808 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_3/a_28_68# dvss 0.47281f ; **FLOATING
+C809 x1/xtr/ctrl[1] dvss 1.07527f
+C810 x1/xtr/ctrl[3] dvss 1.04514f
+C811 x1/xtr/ctrl[4] dvss 1.04215f
+C812 x1/xtr/ctrl[6] dvss 1.03439f
+C813 x1/xtr/ctrl[8] dvss 1.0104f
+C814 x1/xtr/ctrl[9] dvss 1.00637f
+C815 x1/xtr/ctrl[11] dvss 0.9915f
+C816 x1/xtr/ctrl[0] dvss 1.24434f
+C817 x1/xtr/ctrl[2] dvss 1.04597f
+C818 x1/xtr/ctrl[5] dvss 1.04187f
+C819 x1/xtr/ctrl[7] dvss 1.07016f
+C820 x1/xtr/ctrl[10] dvss 1.0044f
+C821 x1/xtr/ctrl[12] dvss 0.97109f
+C822 x1/xtr/ctrl[13] dvss 0.95899f
+C823 x1/xtr/ctrl[14] dvss 0.94828f
+C824 x1/xtr/ctrl[15] dvss 1.17141f
+C825 x1/xtr/top dvss 7.75983f
+C826 x1/xtr/bot dvss 72.06342f
+C827 x1/xtr/nfet_03v3_GP977X_0/S1 dvss 2.85001f
+C828 x1/xtr/nfet_03v3_GP977X_0/S2 dvss 2.84779f
+C829 x1/xtr/nfet_03v3_GP977X_0/S3 dvss 2.8457f
+C830 x1/xtr/nfet_03v3_GP977X_0/S4 dvss 2.84392f
+C831 x1/xtr/nfet_03v3_GP977X_0/S5 dvss 2.84044f
+C832 x1/xtr/nfet_03v3_GP977X_0/S6 dvss 2.84154f
+C833 x1/xtr/nfet_03v3_GP977X_0/S7 dvss 2.84157f
+C834 x1/xtr/nfet_03v3_GP977X_0/S8 dvss 2.84421f
+C835 x1/xtr/nfet_03v3_GP977X_0/S9 dvss 2.84201f
+C836 x1/xtr/nfet_03v3_GP977X_0/S10 dvss 2.84182f
+C837 x1/xtr/nfet_03v3_GP977X_0/S11 dvss 2.83486f
+C838 x1/xtr/nfet_03v3_GP977X_0/S12 dvss 2.87654f
+C839 x1/xtr/nfet_03v3_GP977X_0/S13 dvss 2.87882f
+C840 x1/xtr/nfet_03v3_GP977X_0/S14 dvss 2.879f
+C841 x1/xtr/nfet_03v3_GP977X_0/S15 dvss 2.88446f
+C842 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_2/a_28_68# dvss 0.47273f ; **FLOATING
+C843 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_1/a_28_68# dvss 0.47634f ; **FLOATING
+C844 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_0/a_28_68# dvss 0.48499f ; **FLOATING
+C845 x1/m1_n3687_n11001# dvss 0.61246f ; **FLOATING
+C846 x1/m1_n3786_n10721# dvss 1.2541f ; **FLOATING
+C847 x1/m1_n555_n10442# dvss 1.25088f ; **FLOATING
+C848 x1/m1_n3786_n9601# dvss 1.24344f ; **FLOATING
+C849 x1/m1_n654_n10162# dvss 0.55571f ; **FLOATING
+C850 x1/m1_n3687_n9881# dvss 0.54874f ; **FLOATING
+C851 x1/m1_n555_n9322# dvss 1.25355f ; **FLOATING
+C852 x1/m1_n654_n9042# dvss 0.56711f ; **FLOATING
+C853 x1/m1_n3687_n8761# dvss 0.57601f ; **FLOATING
+C854 x1/m1_n555_n8202# dvss 1.2586f ; **FLOATING
+C855 x1/m1_n3786_n8481# dvss 1.25671f ; **FLOATING
+C856 x1/m1_n654_n7922# dvss 0.54978f ; **FLOATING
+C857 x1/m1_n3687_n7641# dvss 0.54993f ; **FLOATING
+C858 x1/m1_n3786_n7361# dvss 1.24236f ; **FLOATING
+C859 x1/m1_n654_n6802# dvss 0.54901f ; **FLOATING
+C860 x1/m1_n3687_n6521# dvss 0.54814f ; **FLOATING
+C861 x1/m1_n555_n7082# dvss 1.24334f ; **FLOATING
+C862 x1/m1_n3786_n6241# dvss 1.24231f ; **FLOATING
+C863 x1/m1_n3687_n5401# dvss 0.55624f ; **FLOATING
+C864 x1/m1_n555_n5962# dvss 1.25089f ; **FLOATING
+C865 x1/m1_n3786_n5121# dvss 1.25329f ; **FLOATING
+C866 x1/m1_n654_n5682# dvss 0.55455f ; **FLOATING
+C867 x1/pfet_03v3_773T9V_0/S1 dvss 1.49895f
+C868 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_16/a_28_68# dvss 0.47519f ; **FLOATING
+C869 trim[15] dvss 0.34838f
+C870 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_15/a_28_68# dvss 0.47267f ; **FLOATING
+C871 trim[14] dvss 0.35026f
+C872 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_14/a_28_68# dvss 0.4727f ; **FLOATING
+C873 trim[13] dvss 0.35006f
+C874 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_13/a_28_68# dvss 0.47269f ; **FLOATING
+C875 trim[12] dvss 0.34985f
+C876 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_12/a_28_68# dvss 0.47255f ; **FLOATING
+C877 trim[10] dvss 0.34959f
+C878 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_10/a_28_68# dvss 0.47267f ; **FLOATING
+C879 trim[11] dvss 0.35968f
+C880 x1/gf180mcu_as_sc_mcu7t3v3__buff_2_11/a_28_68# dvss 0.47264f ; **FLOATING
+C881 x1/xamp/out dvss 25.43305f
+C882 x1/xamp/out1p dvss 9.73349f
+C883 x1/xamp/inp dvss 11.77719f
+C884 x1/xamp/vbn2 dvss 25.029f
+C885 x1/xamp/pfet_03v3_7FHHXC_0/D9 dvss 1.26819f
+C886 x1/xamp/pfet_03v3_4WQT4W_0/S8 dvss 0.19871f
+C887 x1/xamp/inn dvss 12.09463f
+C888 dvdd dvss 0.52087p
+C889 x1/xamp/out1n dvss 11.55011f
+C890 x1/xamp/vbn1 dvss 31.37812f
+C891 ibias1_250n dvss 0.24375f
+.ends

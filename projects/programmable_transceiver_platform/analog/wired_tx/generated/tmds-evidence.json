@@ -1,16 +1,16 @@
 {
   "block": "tmds",
   "source_hashes": {
-    "cells.py": "sha256:bb15d388383be67ffc069d3a8e322e06507aff272d0d0f0ad73360bcf0ffbadd",
-    "layoutgen.py": "sha256:fca8e602c1bc5c232fe03cf132a9086f4bd8dfe3140985d9732a32b3236adadf",
-    "tools.py": "sha256:5e9bb2c460276fecfaa115b019694000a8d468a360707a27f95b5ef2ec1e0589",
-    "sim_wiredtx.py": "sha256:0e6e7e38ab1bc12e81e4e9ad339d2d17269b0b39562ce15e5b717a49a8877629",
-    "sim_integration.py": "sha256:b426b982c0233bf4d2666a820d41e7438bb38c8989e88b8ecc790491933d7907",
+    "cells.py": "sha256:485ef3893422211a517d937fdd81340717e45d33bb2cb782d0a0780cd3dc23e6",
+    "layoutgen.py": "sha256:f1192f07cf0a89660dbf1ae36adeb790bc68a4428366a01f01ee680aa6ee811e",
+    "tools.py": "sha256:6c03d6ed8403408952c360e12bfe0ae28c6f13cac5266406d4aa9cfc8b3e8c5e",
+    "sim_wiredtx.py": "sha256:d96a2d865717f61ab2fde52aec59fceb2742dd7f03e8e2eae1038311e7c30425",
+    "sim_integration.py": "sha256:af9710dadf47c5535e3500e9c79cdd04fe2cfcb5c432959482abed35f9c50f33",
     "sim_static.py": "sha256:5b9f14d9de52f7e653bd366f8714feb225e3fe76a27248db8c7c2ea82c0fcc08",
-    "run_all.py": "sha256:135c2d8f3169c54900f04034c6c8b50ef24ff46cbb0d837af6235556dbd635ab",
-    "evidence.py": "sha256:dd6b30a502e6da07cc781b0c506ccbaea3adea57a9cfdc5a1ff9e55029f2aadd",
-    "wiredtx.spice": "sha256:953e2df488e0798bc76413cae076db3be726abc64fb572aaf904f7b1e09e8d2f",
-    "wtx_ext_rx.spice": "sha256:37ea31efb8c99dfbf26beaeca0bac5641c433cf02d0d0b29cc170bb021f8144d"
+    "run_all.py": "sha256:6d84084bd1fe05295330a28a2c7681ea6db953f49d614e9dcbac96b76ff933c1",
+    "evidence.py": "sha256:ed526fc76aab89910f91756a92764ca90304c41526050d6f236fcaeb1a703907",
+    "wiredtx.spice": "sha256:ba6fe0e6d71984aeb798ed551e8de707158794e89c149c27bd5f641106643681",
+    "wtx_ext_rx.spice": "sha256:6e67dc4953fe95012799345a5cf242ce498c25969b9bb47af563ba778d5a1a9e"
   },
   "images": {
     "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -18,22 +18,50 @@
     "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
     "pad_integration_simulator": {
       "path": "scratch/pad-ngspice47/ngspice-47/src/ngspice",
-      "sha256": "sha256:fe4c022a189fb6bb56b04e7958614908b83bbc2b76fe609efc4fafc4ab29e810",
+      "sha256": "sha256:55a1889490f1ce9003aa2cd29d144a7d69ce3badb9a6fd6fadf081fb2e1d50ea",
       "note": "pads-recorded patched ngspice-47 (analog/pads/generated/simulator-build.json)"
     }
   },
   "pdk": "gf180mcuD (open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7; identical model/tech/netgen files in both images)",
+  "netlist_hashes": {
+    "extracted": "sha256:a8b5f07f6e0e9cf68b34a73e6ac79e06d698759875bc03c65099015ad934de64",
+    "schematic": "sha256:ba6fe0e6d71984aeb798ed551e8de707158794e89c149c27bd5f641106643681",
+    "lvs_layout": "sha256:8b2a3910c77273d0b26ca4b2108762e9a67f71f9d6ec4ba1377f1479566bf57e",
+    "gds": "sha256:13abd98ecdf785bf917486014156e8cfaf26b4af2182cb0fda6fd16a4c40dcf5"
+  },
+  "stale_results_excluded": [
+    {
+      "run": "sweep_4_2.5",
+      "dut_sha256": "sha256:8ce13a06e95fc441e0afa4bf6c6049cc4aeacf3ce8ce00b56eee73ab4dbbc8db",
+      "kind": "extracted"
+    },
+    {
+      "run": "sweep_2_1.62",
+      "dut_sha256": "sha256:8ce13a06e95fc441e0afa4bf6c6049cc4aeacf3ce8ce00b56eee73ab4dbbc8db",
+      "kind": "extracted"
+    },
+    {
+      "run": "sweep_1_0.81",
+      "dut_sha256": "sha256:8ce13a06e95fc441e0afa4bf6c6049cc4aeacf3ce8ce00b56eee73ab4dbbc8db",
+      "kind": "extracted"
+    },
+    {
+      "run": "nominal_0g96",
+      "dut_sha256": "sha256:8ce13a06e95fc441e0afa4bf6c6049cc4aeacf3ce8ce00b56eee73ab4dbbc8db",
+      "kind": "extracted"
+    }
+  ],
   "configuration_of": "wiredtx (spec/consolidation-pass.md item 4)",
   "tests": {
     "safe": {
-      "state": "pass",
+      "state": "open",
       "cases": [
         "see wiredtx-evidence.json safe"
       ],
       "notes": "Same hardware as wiredtx; EN_TMDS gates the TMDS steering commands and the TMDS tail DAC."
     },
     "clean": {
-      "state": "pass",
+      "state": "fail",
       "drc": {
         "magic": {
           "errors": 0,
@@ -56,33 +84,11 @@
         "report": "analog/wired_tx/generated/wiredtx-lvs.txt"
       },
       "extracted_nominal": {
-        "point": "tt, 27 C, 3.3 V, 1.25 Gb/s half-rate mode; pt_wiredtx extracted -> pads steering buffers -> extracted pad TMDS branch; on-chip termination off; 50 ohm per leg to an independent 3.3 V",
-        "mode": "tmds",
-        "bit_rate_bps": 1250000000.0,
-        "bits_per_ring_cycle": 2,
-        "network": {
-          "topology": "split_pullup_50ohm_to_independent_3v3"
-        },
-        "lossy_channel": false,
-        "receiver": null,
-        "eye_height_mv": 955.0,
-        "eye_width_ps": 663.3,
-        "amplitude_pp_mv": 1159.3,
-        "bits": 60,
-        "errors": 0,
-        "pad_levels_v": {
-          "p_min": 2.74930977,
-          "p_max": 3.31485542,
-          "n_min": 2.62711337,
-          "n_max": 3.3147377
-        },
-        "vdd_current_ma": 27.96,
-        "pass_": true,
-        "reason": null
+        "point": "tt, 27 C, 3.3 V, 1.25 Gb/s half-rate mode; pt_wiredtx extracted -> pads steering buffers -> extracted pad TMDS branch; on-chip termination off; 50 ohm per leg to an independent 3.3 V"
       }
     },
     "observable": {
-      "state": "pass",
+      "state": "open",
       "atb_taps": [
         "TMDS_BIAS"
       ],
@@ -92,39 +98,14 @@
       ]
     },
     "fallback": {
-      "state": "pass",
+      "state": "open",
       "routes": [
         "wire_tx_external_data (TMDS branch)"
       ],
       "bypass_loading_fF": null
     }
   },
-  "performance_vs_target": [
-    {
-      "mode": "tmds",
-      "bit_rate_bps": 2970000000.0,
-      "bits_per_ring_cycle": 4,
-      "network": {
-        "topology": "split_pullup_50ohm_to_independent_3v3"
-      },
-      "lossy_channel": false,
-      "receiver": null,
-      "eye_height_mv": 1.5,
-      "eye_width_ps": 77.0,
-      "amplitude_pp_mv": 1532.2,
-      "bits": 59,
-      "errors": 20,
-      "pad_levels_v": {
-        "p_min": 2.54452916,
-        "p_max": 3.32285245,
-        "n_min": 2.44775032,
-        "n_max": 3.32116889
-      },
-      "vdd_current_ma": 38.4,
-      "pass_": false,
-      "reason": null
-    }
-  ],
+  "performance_vs_target": [],
   "excluded_coverage": [
     "TMDS code 125 (~10 mA tail) used; no HDMI compliance (rise time, skew, eye mask) evaluation; no 10-bit TMDS encoding (digital)."
   ]

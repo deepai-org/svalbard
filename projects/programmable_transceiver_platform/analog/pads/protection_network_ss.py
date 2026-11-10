@@ -78,6 +78,8 @@ def compose_gds(work):
         top.shapes(ly.layer(layer, 0)).insert(k.DBox(x0, y0, x1, y1))
     name, x, y = cfg['label']
     top.shapes(ly.layer(42, 10)).insert(k.DText(name, k.DTrans(float(x), float(y))))
+    import marker_merge   # PCell implant/marker gaps below the KLayout spacing rules (DV.2, SB.2)
+    (work / 'marker-merge.json').write_text(json.dumps(marker_merge.merge(ly, top), indent=1) + '\n')
     opts = k.SaveLayoutOptions(); opts.add_cell(top.cell_index())
     ly.write(str(work / 'network_ss.gds'), opts)
 
@@ -87,6 +89,7 @@ def generate(work, network_dir=HERE / 'generated/protection-network'):
     for name in ('network.gds', 'network_flat.spice', 'network-layout.json', 'network-with-well.spice'):
         shutil.copy2(network_dir / name, work / name)
     shutil.copy2(Path(__file__), work / 'protection_network_ss.py')
+    shutil.copy2(HERE / 'marker_merge.py', work / 'marker_merge.py')
     subprocess.run(['docker', 'run', '--rm', '--network', 'none', '--entrypoint', 'python3',
                     '--mount', f'type=bind,src={work},dst=/work', IMAGE, '/work/protection_network_ss.py',
                     '--inside', '--output-dir', '/work'], check=True, timeout=120)
@@ -138,7 +141,7 @@ quit -noprompt
 
     def stack(x, y, lo, hi, half=.8):
         names = {1: 'metal1', 2: 'metal2', 3: 'metal3', 4: 'metal4', 5: 'metal5'}
-        cuts = {1: ('via1', .26), 2: ('via2', .28), 3: ('via3', .28), 4: ('via4', .28)}
+        cuts = {1: ('via1', .26), 2: ('via2', .26), 3: ('via3', .26), 4: ('via4', .26)}  # GDS cuts are exactly 0.26 um (KLayout V*.1)
         for level in range(lo, hi + 1):
             paint(names[level], x - half, y - half, x + half, y + half)
         offsets = (-.4, .4) if half >= .8 else (0.,)
@@ -155,7 +158,7 @@ quit -noprompt
     # resistor guard ring -> via1 onto the upper snake contact. Internal
     # contacts leave their (VSS) guard rings on metal2/metal3 only.
     for dy in (-.3, .3):
-        via('via2', GATE_STRAP_X, GATE_TAP_Y + dy, .28)
+        via('via2', GATE_STRAP_X, GATE_TAP_Y + dy, .26)
     paint('metal2', GATE_STRAP_X - .5, GATE_TAP_Y - .5, GATE_STRAP_X + .5, GATE_TAP_Y + .5)
     jx = 77.
     paint('metal3', GATE_STRAP_X - .5, GATE_TAP_Y - .5, jx + .5, GATE_TAP_Y + .5)
@@ -213,7 +216,9 @@ quit -noprompt
     body = re.sub(r'\n\+\s*', ' ', base)
     body = body.replace('.subckt network_flat VSS RAIL PADP PADN', '.subckt network_ss VSS RAIL PADP PADN ATB_RAIL')
     add = (f'XDISCHARGE {gate} VSS VSS ppolyf_u_1k_6p0 r_width=1u r_length=100u\n'
-           'XATBTAP RAIL ATB_RAIL VSS ppolyf_u_1k_6p0 r_width=1u r_length=480u\n')
+           # drawn snake: 20 x 24 um less the bend corrections Magic extracts (474.74 squares, 1.1 % below
+           # the 480 nominal; netgen flagged this as a property error once the pads LVS gate counted them)
+           'XATBTAP RAIL ATB_RAIL VSS ppolyf_u_1k_6p0 r_width=1u r_length=474.74u\n')
     body = re.sub(r'\n\.ends', '\n' + add + '.ends', body, count=1)
     (work / 'reference.spice').write_text(strip(body))
     from run_first_pass import lvs

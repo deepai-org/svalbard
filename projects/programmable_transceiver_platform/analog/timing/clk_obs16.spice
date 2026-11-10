@@ -1,0 +1,86 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_clk_obs16: 16-input variant of pt_clk_obs for CLK_OBS (replaces the two
+* 8-input instances A/B that shared the pad; one divider and one pad driver).
+* Divider chain, tap mux and pad driver are identical to pt_clk_obs.
+* Source code = S3..S0 directly (debug.clk_obs.source, 4 bits); IN0 is code 0 (off).
+* r2 (2026-11-10): every input is <= 500 MHz at the cell (the mux + C2MOS
+* divider passes 500 MHz at all 12 envelope corners, not 810 MHz at tt/ss):
+* fast sources are divided before the mux, next to the source:
+*   1 rf_lo        pt_lo_ext LO_OBS (CML /2 + TSPC /4 = LO/8, 300-313 MHz)
+*   2 wire_line, 3 wire_sample, 5 ref_in, 6 aux_clk, 7 wclk_in, 8 pll_vco,
+*  14 cdr_recovered: pt_obs_pre4 (/4) at the source (<= 250 MHz for 1 GHz)
+*   4 conv_sample, 9 pll_feedback, 10 ring_osc, 11 vco_replica, 12 aosc,
+*  13 host_tx_clk: direct (all <= 500 MHz)
+*  15 char_speed: OR of IN15A/B/C = pt_char_ro33 / pt_char_ro50 /
+*     pt_char_cmldiv OUT (CH1).  Each structure's OUT is low while its EN=0,
+*     so the structure being measured is chosen by its own enable bit
+*     (debug.replica.ro33/ro50/cmldiv_enable, enable one at a time).
+* Observed frequency = f_source / prescale(code) / 2^N.
+* pt_clk_obs: digital observation output cell (one design; instances for
+* CLK_OBS, WCLK_OBS, DBG_OBS0/1, WDBG_OBS).  Supply: always-on core rail.
+*   8:1 input mux (binary S2..S0) -> enable gate -> 7-stage /2 chain
+*   (first stage 2x C2MOS for VCO-rate inputs) -> 8:1 tap mux (binary N2..N0
+*   selects /2^N, N=0..7) -> tristate CMOS pad driver.
+* EN=0 (reset): chain held in reset, mux output gated low, OUT high-Z.
+* Status/static signals pass with N=0.
+.include timing_cells.spice
+
+.subckt pt_clk_obs16 IN0 IN1 IN2 IN3 IN4 IN5 IN6 IN7 IN8 IN9 IN10 IN11 IN12 IN13 IN14 IN15A IN15B IN15C S0 S1 S2 S3 N0 N1 N2 EN OUT VDD VSS
+* S0 is gated by EN so a disabled cell's first mux level cannot toggle
+XIE0 S0 EN S0E VDD VSS pt_t_and2
+XIS0 S0 ENB S0BE VDD VSS pt_t_nor2
+XIS1 S1 S1B VDD VSS pt_t_inv1
+XIS2 S2 S2B VDD VSS pt_t_inv1
+XIS3 S3 S3B VDD VSS pt_t_inv1
+XIN0 N0 N0B VDD VSS pt_t_inv1
+XIN1 N1 N1B VDD VSS pt_t_inv1
+XIN2 N2 N2B VDD VSS pt_t_inv1
+XIE EN ENB VDD VSS pt_t_inv1
+* code 15 = OR(IN15A, IN15B, IN15C) (characterization speed structures)
+XC5A IN15A I5A VDD VSS pt_t_inv1
+XC5B IN15B I5B VDD VSS pt_t_inv1
+XC5C IN15C I5C VDD VSS pt_t_inv1
+XC5N I5A I5B I5C IN15 VDD VSS pt_t_nand3
+* input mux tree
+XM10 IN0 IN1 S0E S0BE M10 VDD VSS pt_t_mux2
+XM11 IN2 IN3 S0E S0BE M11 VDD VSS pt_t_mux2
+XM12 IN4 IN5 S0E S0BE M12 VDD VSS pt_t_mux2
+XM13 IN6 IN7 S0E S0BE M13 VDD VSS pt_t_mux2
+XM20 M10 M11 S1 S1B M20 VDD VSS pt_t_mux2
+XM21 M12 M13 S1 S1B M21 VDD VSS pt_t_mux2
+XM30 M20 M21 S2 S2B M30 VDD VSS pt_t_mux2
+XM14 IN8 IN9 S0E S0BE M14 VDD VSS pt_t_mux2
+XM15 IN10 IN11 S0E S0BE M15 VDD VSS pt_t_mux2
+XM16 IN12 IN13 S0E S0BE M16 VDD VSS pt_t_mux2
+XM17 IN14 IN15 S0E S0BE M17 VDD VSS pt_t_mux2
+XM22 M14 M15 S1 S1B M22 VDD VSS pt_t_mux2
+XM23 M16 M17 S1 S1B M23 VDD VSS pt_t_mux2
+XM31 M22 M23 S2 S2B M31 VDD VSS pt_t_mux2
+XM40 M30 M31 S3 S3B M40 VDD VSS pt_t_mux2
+XG M40 EN GB VDD VSS pt_t_nand2x
+XGI GB G VDD VSS pt_t_inv2
+* divider chain
+XCK G CKP CKN VDD VSS pt_t_s2d
+XD1 CKP CKN ENB D1P D1N Q1P Q1N VDD VSS pt_t_div2f
+XD2 D1P D1N ENB D2P D2N Q2P Q2N VDD VSS pt_t_div2
+XD3 D2P D2N ENB D3P D3N Q3P Q3N VDD VSS pt_t_div2
+XD4 D3P D3N ENB D4P D4N Q4P Q4N VDD VSS pt_t_div2
+XD5 D4P D4N ENB D5P D5N Q5P Q5N VDD VSS pt_t_div2
+XD6 D5P D5N ENB D6P D6N Q6P Q6N VDD VSS pt_t_div2
+XD7 D6P D6N ENB D7P D7N Q7P Q7N VDD VSS pt_t_div2
+* tap mux tree
+XT10 G D1P N0 N0B T10 VDD VSS pt_t_mux2
+XT11 D2P D3P N0 N0B T11 VDD VSS pt_t_mux2
+XT12 D4P D5P N0 N0B T12 VDD VSS pt_t_mux2
+XT13 D6P D7P N0 N0B T13 VDD VSS pt_t_mux2
+XT20 T10 T11 N1 N1B T20 VDD VSS pt_t_mux2
+XT21 T12 T13 N1 N1B T21 VDD VSS pt_t_mux2
+XT30 T20 T21 N2 N2B T30 VDD VSS pt_t_mux2
+* tristate pad driver: PG low only for D=1 & EN, NG high only for D=0 & EN
+XB1 T30 B1 VDD VSS pt_t_inv2
+XB2 B1 B2 VDD VSS pt_t_inv4
+XPGN B2 EN PG VDD VSS pt_t_nand2x
+XNGN B2 ENB NG VDD VSS pt_t_nor2x
+XPO OUT PG VDD VDD pfet_03v3 w=8u l=0.28u m=10
+XNO OUT NG VSS VSS nfet_03v3 w=8u l=0.28u m=5
+.ends

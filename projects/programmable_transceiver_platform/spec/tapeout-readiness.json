@@ -88,8 +88,11 @@
      "note": "Cell scope: 10 cells Magic/KLayout DRC 0, LVS match; full-RC drop <=19.9 mV (wired margin 0.13 mV, needs >=4 edge-bar straps). Ring decap and assembly belong to the top-assembly stage."
     },
     "observable": {
-     "state": "open",
-     "evidence": []
+     "state": "pass",
+     "evidence": [
+      "projects/programmable_transceiver_platform/evidence/assembled-power-observation.json"
+     ],
+     "note": "All five extracted island PG outputs reach SPI status 0x0A through the control RTL and provider pads; observed 0x3737. Evidence records the unchanged control sources and verified removal of a default implementation selector. Scope is nominal warm reset with diode loads; cold startup, actual payload loads, routed supplies and current digital hardening remain separate obligations."
     },
     "fallback": {
      "state": "waived_core",
@@ -107,11 +110,11 @@
     "usb": "none (USB is on the wired island)"
    },
    "atb": {
-    "area_mm2": 0.123,
-    "sense_leaves": 54,
+    "area_mm2": 0.125,
+    "sense_leaves": 57,
     "force_leaves": 20,
     "groups": 7,
-    "note": "Bare-switch leaves; default-open and break-before-make per group/pad plus register zero-commit gap (>=20 ns)."
+    "note": "Bare-switch leaves; default-open and break-before-make per group/pad plus register zero-commit gap (>=20 ns). Counts are the physical tree of integration/atb_tree.py (make transceiver-atb-tree, scratch/atb-tree-current/report.json sense_channels/force_channels): 57 sense = every ATB code 1-57 (codes 10, 31, 32, 33 got leaves 2026-11-09; the earlier 54 was stale, the tree then had 53), 20 force, 5+2 groups. Area = island_support cell areas x counts, no routing."
    }
   },
   "monitor": {
@@ -150,14 +153,15 @@
      "state": "pass",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/timing/generated/aosc-evidence.json"
-     ]
+     ],
+     "note": "EN=0: <= 2 nA at tt/27/3.3, ff/85/3.63, ss/0/3.63 (extracted)."
     },
     "clean": {
      "state": "pass",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/timing/generated/aosc-evidence.json"
      ],
-     "note": "44.9 MHz tt; ss 35-37 MHz below 40-60 MHz window (recorded)."
+     "note": "r3 (2026-11-10): extracted 47.7 MHz tt/27/3.3 V; 13/13 envelope points in 40-60 MHz (ss 42.9-43.4, tt 47.6-48.1, ff 53.8-54.3 MHz); the bench verdict now requires the window. r1 (Schmitt) ran 35-37 MHz at ss; r2 38.2-38.7 MHz extracted at ss."
     },
     "observable": {
      "state": "open",
@@ -190,7 +194,8 @@
     },
     "observable": {
      "state": "open",
-     "evidence": []
+     "evidence": [],
+     "note": "Fixture-only evidence (state stays open): scratch/core-bias-observation-checkpointed passes 15 sense codes and VBG force; scratch/core-bias-idac1-observation-current passes IDAC1 via ATB code 57 into a 1 V SMU (off -0.76 nA, code 4 3.753 uA, code 8 7.506 uA, 0.938 uA/LSB) with independent audit checkpoint-2-audit.json. Warm reset, diode loads and unbound payload nodes; full-chip observation not done."
     },
     "fallback": {
      "state": "waived_core",
@@ -217,6 +222,14 @@
       12.1
      ]
     }
+   },
+   "physical_routing": {
+    "state": "partial",
+    "evidence": [
+     "scratch/core-bias-routing-20261109-101927/report.json",
+     "scratch/core-bias-routing-20261109-101927/supply-ir.json"
+    ],
+    "note": "2026-11-09 23:06 rerun with pt_bias_vref (VREF0/VCM) added: scratch/core-bias-routing-20261109-230633 PASS (11/11; 37 cells, 152 nets, 283 terminals, 122 pins, DRC 0 after supply via-array spacing fix and a biasgen MIM Metal4 keepout); device-level LVS scratch/core-bias-device-lvs PASS (1550 devices, 3 negatives rejected, 89 missing-terminal devices all drain=source). Previous: make transceiver-core-bias-routing run scratch/core-bias-routing-20261109-101927: PASS (all 11 checks). 150 nets (7 supply special POWER/GROUND; VDD/VSS 4 um and rails 2 um NDR on Metal2-4), 278 terminals, 120 pins; router 0/0, GF180 KLayout DRC 0, black-box routing LVS unique (bridge control rejected), DEF/GDS XOR 0, masters XOR 0, independent audit incl. master-metal shorts, 5 negative controls rejected, C extraction. Supply EM/IR against real limits: GF180MCU DRM 14.2 (Table 14.4 Via1-5 unidirectional 0.58 mA/cut at 85 C, 0.18 at 125 C; Table 14.3 Metal1-4 2.09 / 0.67 mA/um), gate at 85 C (stress envelope 0-85 C), max-corner tech-LEF resistance (15 ohm/cut, 0.104 ohm/sq). Currents: VDD 1.0 mA = bias current_budget_ma (analog-architecture.json), rails (outputs+TRK leg) x 12.14 uA x 2, VSS = VDD + rails = 1.68 mA. Results: IR VDD 5.5 / VSS 8.8 / rails <= 2.2 mV (limit 10); via-cut util <= 0.19 at 85 C and <= 0.61 at 125 C; metal EM util <= 0.19 at 85 C, <= 0.59 at 125 C. Fix: every router supply via filled to the overlap with a cut array (up to 5x5 at 0.62 um pitch; VDD 225 / VSS 253 added cuts) and VDD/VSS widened to 4 um (6 um gave 78 DRC errors). Open: device-level LVS of the assembly; VDD current is the budget ceiling, not a simulated total."
    }
   },
   "refbuf": {
@@ -263,11 +276,11 @@
      "scope": "Control register file RTL: formal reset-safe and mutual-exclusion proof plus simulation. Gate-level/hardened check belongs to clean."
     },
     "clean": {
-     "state": "pass",
+     "state": "open",
      "evidence": [
       "projects/programmable_transceiver_platform/evidence/digital-hardening-evidence.json"
      ],
-     "note": "Hardened macro pt_digital_macro: Magic/KLayout DRC 0, LVS 0, antenna 0; post-route gate-level simulation matches RTL. Timing at tt reaches 53-72 MHz on the fast clocks against 125-156 MHz targets (SCLK 17.4 MHz); area 3.24 mm2 against 2.5 mm2 digital+memory allocation."
+     "note": "The current paired implementation completes placement and CTS within 1580x1580 um with 8177 sequential cells, against an 8192-bit cap. Mapping contains 8178 flip-flops and the conservative pre-map census is 8246 bits. Nominal post-CTS repair leaves setup slack of -6.70 ns; routed timing, final state count, DRC/LVS/antenna, gate-level checks and accepted-envelope/board service remain open. The attached hardening evidence qualifies its recorded source snapshot."
     },
     "observable": {
      "state": "pass",
@@ -293,7 +306,7 @@
      "evidence": [
       "projects/programmable_transceiver_platform/evidence/digital-hardening-evidence.json"
      ],
-     "note": "Digital half passes at reset on the netlist; provider pad cells with powered peer and unpowered die are an assembly check."
+     "note": "Digital half passes at reset on the netlist; provider pad cells with powered peer and unpowered die are an assembly check. 2026-11-09 review (analog/characterization agent): analog/pads/generated/retained-screen.json quantifies the pad half. With the host peer on the common board source (B2/B6) the unpowered die sees no backfeed; with an independent powered peer (50 ohm) the provider bi_t cells sink 82 mA per pin DC into the unpowered ring (1.2 A peak), so safe depends on board requirement B6. Not closed: that screen is stale against spec/contract.json, spec/analog-architecture.json and its ngspice binary, and is a candidate screen, not signoff."
     },
     "clean": {
      "state": "open",
@@ -536,9 +549,10 @@
     "clean": {
      "state": "open",
      "evidence": [
-      "projects/programmable_transceiver_platform/analog/timing/generated/pll_ring-evidence.json"
+      "projects/programmable_transceiver_platform/analog/timing/generated/pll_ring-evidence.json",
+      "projects/programmable_transceiver_platform/analog/timing/generated/lcvco-evidence.json"
      ],
-     "note": "Autonomous RF LO synthesis (LC VCO + passive polyphase into lo_ext internal mode) is not built. lo_ext internal mode swings rail-to-rail at 2.45 GHz extracted, 16.0 mA."
+     "note": "2026-11-10, lcvco r2 (schematic QVCO, explicit gate R 16 ohm per 2 um finger, documented spiral model: lcvco/spiral.py, FastHenry-anchored 2.65 nH, +-10 % L and low-Q variants, layout DRC 0): starts at 12/12 envelope points with the low-Q +10 % L inductor in the worst code (r1 did not start at ss/32/3.15), covers 2.4-2.5 GHz at 5/5 L/Q/process extremes (tightest: ff band 15 reaches 2.377 GHz), bands overlap at tt, EN=0 quiet. Still open: (1) the QVCO -> pt_lo_ext internal-mode chain fails at tt/ss (ct_lodrv too slow at 2.45 GHz extracted; QVCO buffer duty 44 %); (2) the frequency loop (PRE -> prescaler -> PFD vs the REF_IN crystal) is not built; (3) no QVCO layout/extraction, the spiral is not EM-verified. First die RF LO baseline stays rf_lo_external_ref (board B3)."
     },
     "observable": {
      "state": "open",
@@ -547,9 +561,10 @@
     "fallback": {
      "state": "pass",
      "evidence": [
-      "projects/programmable_transceiver_platform/analog/timing/generated/lo_ext-evidence.json"
+      "projects/programmable_transceiver_platform/analog/timing/generated/lo_ext-evidence.json",
+      "projects/programmable_transceiver_platform/analog/timing/generated/lo_ext-pad-evidence.json"
      ],
-     "note": "rf_lo_external_ref passive route works extracted at 2.45 GHz."
+     "note": "2026-11-10: lo_ext VB lowered to 0.716 VDD (centre Vgs 0.68-0.72 V); pass criteria are now steady-state levels (the 12 ns benches sit inside the 20-200 ns bias time constants; avg(LO)=VB is exact in steady state, checked against a 200 ns run) with the mixer switch source at VCM=VDD/2. Block bench 12/12 corners at 4 Vpp; real-pad bench (refpad on REF_IN, rf_protected_pad on AUX_CLK, B21 package model): see lo_ext-pad-evidence.json and board B3. The 2026-11-09/10 '12/12' and '13/13' results were 12 ns snapshots with REF_IN modelled as rf_protected_pad and a fixed 1.65 V switch source."
     }
    },
    "implementation_dir": "analog/timing",
@@ -948,11 +963,11 @@
      ]
     },
     "clean": {
-     "state": "pass",
+     "state": "open",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/converters/generated/adc_i-evidence.json"
      ],
-     "note": "Basic function: all conversions complete, monotonic, within 32 codes/LSB of a fit (criterion relaxed by the converters agent after first runs; recorded in evidence). Analog-image GDS, KLayout 0, LVS unique."
+     "note": "Criterion restored 2026-11-10: <= 4 codes (10-bit) = 1 LSB8 from a gain/offset fit, monotonic, all conversions complete (the 32-LSB relaxation is withdrawn). v3 2-way interleaved ADC, 40 MS/s per channel: evidence re-run from current sources queued (scratch/converters/rfconv/queue); state open until it lands."
     },
     "observable": {
      "state": "open",
@@ -962,11 +977,11 @@
      "note": "ATB_BIAS port and converter test modes exist; ATB and register hookup are not integrated."
     },
     "fallback": {
-     "state": "pass",
+     "state": "open",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/converters/generated/adc_i-evidence.json"
      ],
-     "note": "Off/unpowered: no DC path, 110-113 fF (criterion re-stated as < 0.5 pF/leg on-state load after v2; recorded in evidence)."
+     "note": "Limit restored to 100 fF/leg disabled/unpowered (was moved to 0.5 pF). v3 measures 209-232 fF (two cores on INP/INN): fails; no relaxation."
     }
    },
    "implementation_dir": "analog/converters",
@@ -985,11 +1000,11 @@
      ]
     },
     "clean": {
-     "state": "pass",
+     "state": "open",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/converters/generated/adc_q-evidence.json"
      ],
-     "note": "Basic function: all conversions complete, monotonic, within 32 codes/LSB of a fit (criterion relaxed by the converters agent after first runs; recorded in evidence). Analog-image GDS, KLayout 0, LVS unique."
+     "note": "Criterion restored 2026-11-10: <= 4 codes (10-bit) = 1 LSB8 from a gain/offset fit, monotonic, all conversions complete (the 32-LSB relaxation is withdrawn). v3 2-way interleaved ADC, 40 MS/s per channel: evidence re-run from current sources queued (scratch/converters/rfconv/queue); state open until it lands."
     },
     "observable": {
      "state": "open",
@@ -999,11 +1014,11 @@
      "note": "ATB_BIAS port and converter test modes exist; ATB and register hookup are not integrated."
     },
     "fallback": {
-     "state": "pass",
+     "state": "open",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/converters/generated/adc_q-evidence.json"
      ],
-     "note": "Off/unpowered loading: ADC input 82-84 fF, DAC output ~63 fF, NMOS-only switches; external ADC/DAC routes stay unloaded."
+     "note": "Limit restored to 100 fF/leg disabled/unpowered (was moved to 0.5 pF). v3 measures 209-232 fF (two cores on INP/INN): fails; no relaxation."
     }
    },
    "implementation_dir": "analog/converters"
@@ -1021,11 +1036,11 @@
      ]
     },
     "clean": {
-     "state": "pass",
+     "state": "open",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/converters/generated/dac_i-evidence.json"
      ],
-     "note": "Basic function: all conversions complete, monotonic, within 32 codes/LSB of a fit (criterion relaxed by the converters agent after first runs; recorded in evidence). Analog-image GDS, KLayout 0, LVS unique."
+     "note": "Criterion restored 2026-11-10: <= 4 codes (10-bit) = 1 LSB8 from a gain/offset fit, monotonic, all conversions complete (the 32-LSB relaxation is withdrawn). v3 cascoded DAC with CM loop: evidence re-run from current sources queued (scratch/converters/rfconv/queue); state open until it lands."
     },
     "observable": {
      "state": "open",
@@ -1058,11 +1073,11 @@
      ]
     },
     "clean": {
-     "state": "pass",
+     "state": "open",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/converters/generated/dac_q-evidence.json"
      ],
-     "note": "Basic function: all conversions complete, monotonic, within 32 codes/LSB of a fit (criterion relaxed by the converters agent after first runs; recorded in evidence). Analog-image GDS, KLayout 0, LVS unique."
+     "note": "Criterion restored 2026-11-10: <= 4 codes (10-bit) = 1 LSB8 from a gain/offset fit, monotonic, all conversions complete (the 32-LSB relaxation is withdrawn). v3 cascoded DAC with CM loop: evidence re-run from current sources queued (scratch/converters/rfconv/queue); state open until it lands."
     },
     "observable": {
      "state": "open",
@@ -1309,14 +1324,14 @@
      "evidence": [
       "projects/programmable_transceiver_platform/analog/timing/generated/pll_ring-evidence.json"
      ],
-     "note": "Implemented by pll_ring."
+     "note": "pll_ring r6a (2026-11-09 run_timing.sh pll_ring): disabled-state supply 10.0-10.1 uA (= IBIAS) at tt 27 C, ff 85 C/3.63 V, ss 0 C/3.63 V. r6 as laid out drew 509 uA disabled (HOLD flop reset fight), fixed in r6a."
     },
     "clean": {
      "state": "pass",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/timing/generated/pll_ring-evidence.json"
      ],
-     "note": "pll_ring locks extracted at 480/625/810 MHz and host_follow 125/156.25 MHz; open-loop 480-810 MHz at 12/12 corners; port phases <= 5.5 deg (fixed routing skew). Closed loop nominal only; cold-start acquisition not simulated."
+     "note": "pll_ring r6a extracted: DRC 0 / KLayout 0 / LVS unique; locks 480/625/810 MHz and host_follow 125/156.25 MHz; cold start locks at 480 and 810 MHz; open-loop 480-810 MHz covered at corners. Port phase error 9.0-10.8 deg (r5 was <= 5.5 deg); analog LOCK flag wrong at 625/810 MHz (informative). HOLD (non-gating) fails: +1545 ppm step, 110 ppm/10 us drift at 625 MHz. 2026-11-09 r7 (charge-pump steering into a VDUM held at VCTRL by an OTA): schematic VCTRL ripple 38 -> 3.6 mV, PFD activity 6.5 -> 3.2 % (analog LOCK break-even ~6.7 %), HOLD step +850 -> +273 ppm; layout DRC 0/KLayout 0/LVS unique; extracted rerun in progress (pll_ring-evidence.json is still r6a)."
     },
     "observable": {
      "state": "open",
@@ -1344,11 +1359,11 @@
      "note": "Island off with inputs high: no back-feed; reset ~3 nA with clocks stopped (11 mA with ring phases running); ramp outputs < 0.24 V."
     },
     "clean": {
-     "state": "pass",
+     "state": "fail",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/wired_tx/generated/wiredtx-evidence.json"
      ],
-     "note": "Basic serialization: 0.96 Gb/s 0 errors at all 12 envelope corners; USB HS 0.48 Gb/s and 1.25 Gb/s (tt/ff) pass. Pad eye 305 mV/634 ps at 1.25 Gb/s."
+     "note": "2026-11-10: serializer rebuilt as compact TSPC core wtx_serq4 (quarter/half/full; generic serializer kept as rate-code-11 fallback). Schematic 0 errors at 3.24 Gb/s quarter on tt/ss/ff/sf/fs, 1.62 half and 0.81 full at ss. Layout 2081 devices, DRC 0, KLayout 0, LVS unique, 0.337 mm2 (over 0.30). Extracted FAILS (generic placement skews core phases: 2.5 Gb/s 57/221, 1.62 Gb/s 31/221 errors); hand-placed core macro is the open item. The ss/22/3.15 abort was a bench artifact (stimulus breakpoints), fixed with smooth stimuli; evidence now hashes the extracted netlist and drops stale runs."
     },
     "observable": {
      "state": "open",
@@ -1360,7 +1375,7 @@
     }
    },
    "implementation_dir": "analog/wired_tx",
-   "performance_note": "Extracted: 0.96 Gb/s at all 12 corners; 1.25 Gb/s at tt/ff (fails ss); full rate 0.81 Gb/s and quarter rate 2.5/2.97 Gb/s fail because generic-layout routing capacitance slows the serializer about 3x. The compact-cell port of the 4:1 mux and retiming is not done."
+   "performance_note": "Extracted on-chip rates above the generic fallback are not qualified (compact core layout pending). Envelope is now 20 points (tt/ss/ff/sf/fs)."
   },
   "tmds": {
    "group": "wired",
@@ -1376,11 +1391,11 @@
      "note": "Configuration of wiredtx."
     },
     "clean": {
-     "state": "pass",
+     "state": "fail",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/wired_tx/generated/wiredtx-evidence.json"
      ],
-     "note": "TMDS 1.25 Gb/s into 50 ohm pull-ups: eye 955 mV/663 ps; 2.97 Gb/s fails."
+     "note": "Configuration of wiredtx; follows wiredtx clean (fail). TMDS 1.485 Gb/s job (int_tmds_h1g485) defined, not yet run on the new netlist."
     },
     "observable": {
      "state": "open",
@@ -1411,7 +1426,7 @@
      "evidence": [
       "projects/programmable_transceiver_platform/analog/wired_rx/generated/cdr-evidence.json"
      ],
-     "note": "PI removed; dual-loop on pll_ring: frequency loop locks extracted (624.6 MHz); hold step -3842/+1430 ppm exceeds tracking pull-in; tracking fails extracted (quarter runs away, half 33/1744 errors). Behavioural loop passes +/-300 ppm and -5000 ppm SSC. Next: HOLD input on pll_ring, 4-edge PD, capture block."
+     "note": "2026-11-09 second pass: pt_wrx_cap r2. The r1 extracted failure above 480 MHz was the slot decode (counter -> decode -> enable ~1.7 ns > 1.6 ns period); r2 uses a one-hot enable chain, buffered front/lane outputs, a local latch-gated word load and keepers on the word flops. Ideal-sampler extracted benches r2b-r2d: 0 errors at quarter 480/625/810 MHz, half 625, full 480. Revisions differed at ss and 810 (wired_rx README table). r2f run in progress, so wrx_cap-evidence.json is still r1. Open: slicer->capture re-capture race (extracted slicer delay 0.95-1.28 ns tt, 1.24-1.63 ns ss vs fixed T/2 re-capture; WCLK_IN fallback bench 43/180 errors at 480 MHz); CDR cell and tracking not reworked (superseded by AC-3 and consolidation R2); extracted CDR runs used pll_ring r6a. Prior: acq_625m hand-over drift 5883 ppm; tracking quarter 560/3588, half 104/1768."
     },
     "observable": {
      "state": "open",
@@ -1468,14 +1483,15 @@
      "state": "pass",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/wired_rx/generated/slicer-evidence.json"
-     ]
+     ],
+     "note": "r2: off (0/27/85 C), stuck_on, unpowered pass; disabled-output glitch worst 0.087 V (limit 0.1 V)."
     },
     "clean": {
      "state": "pass",
      "evidence": [
       "projects/programmable_transceiver_platform/analog/wired_rx/generated/slicer-evidence.json"
      ],
-     "note": "Analog-image GDS with HRES, Magic+KLayout DRC 0, LVS unique, extracted envelope."
+     "note": "r2 compact samplers (slicer_compact.py) 2026-11-10: Magic DRC 0 (cells + top), KLayout GF180 DRC 0 on the analog-image GDS, LVS unique (472 devices), 30,069 um2. Ring plan 480/625/810 MHz x quarter/half/full + USB HS 480 Mb/s (CM 0.2 V): 0 errors extracted at nominal and all 12 envelope corners; corners now gate clean for this block. Open loop, ideal clocks; clock kick-back into SL_P/N (34 fF CKP5-SL_P coupling) not covered."
     },
     "observable": {
      "state": "open",
@@ -1487,7 +1503,7 @@
     }
    },
    "implementation_dir": "analog/wired_rx",
-   "performance_note": "Quarter-rate 8-phase slicer, open loop: >=2.97 Gb/s tt27/ff, 2.5 Gb/s other tt points, 2.0 Gb/s ss (1.5 at ss/22C/3.15V). Short-window checks, not BER."
+   "performance_note": "r2 open loop, extracted: whole 480-810 MHz ring plan (quarter 1.92-3.24, half 0.96-1.62, full 0.48-0.81 Gb/s, USB HS 480 Mb/s) 0 errors at every envelope corner incl. ss; 3.6 Gb/s quarter passes everywhere, 4 Gb/s fails at ss/3.15 V. Short-window checks (51-65 decisions/run), not BER. Slicer output delay changed (QCK->D 0.47-0.95 ns): capture/fallback/CDR benches using slicer.ext.spice need a rerun."
   },
   "rxlevel": {
    "group": "wired",
@@ -1620,7 +1636,10 @@
    "tests": {
     "safe": {
      "state": "open",
-     "evidence": []
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/wired-receive-usb-screen.json"
+     ],
+     "note": "2026-11-09 review: pads USB attachment evidence (analog/pads/generated/wired-receive-usb-screen.json: power-off pad current 0.13 uA, guard-bypass backfeed 34 mA peak) is a candidate screen and is stale against wired_receive.py, circuits.py, screen.py and analog-architecture.json; the wired_tx half is owned elsewhere. Not closed."
     },
     "clean": {
      "state": "open",
@@ -1646,7 +1665,10 @@
    "tests": {
     "safe": {
      "state": "open",
-     "evidence": []
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/wired-receive-usb-screen.json"
+     ],
+     "note": "2026-11-09 review: pads USB attachment evidence (analog/pads/generated/wired-receive-usb-screen.json: power-off pad current 0.13 uA, guard-bypass backfeed 34 mA peak) is a candidate screen and is stale against wired_receive.py, circuits.py, screen.py and analog-architecture.json; the wired_tx half is owned elsewhere. Not closed."
     },
     "clean": {
      "state": "open",
@@ -1672,7 +1694,10 @@
    "tests": {
     "safe": {
      "state": "open",
-     "evidence": []
+     "evidence": [
+      "projects/programmable_transceiver_platform/analog/pads/generated/wired-receive-usb-screen.json"
+     ],
+     "note": "2026-11-09 review: pads USB attachment evidence (analog/pads/generated/wired-receive-usb-screen.json: power-off pad current 0.13 uA, guard-bypass backfeed 34 mA peak) is a candidate screen and is stale against wired_receive.py, circuits.py, screen.py and analog-architecture.json; the wired_tx half is owned elsewhere. Not closed."
     },
     "clean": {
      "state": "open",
@@ -1711,9 +1736,12 @@
     "mixer switches"
    ],
    "evidence": [
-    "projects/programmable_transceiver_platform/analog/timing/generated/lo_ext-evidence.json"
+    "projects/programmable_transceiver_platform/analog/timing/generated/lo_ext-evidence.json",
+    "projects/programmable_transceiver_platform/analog/timing/generated/lo_ext-pad-evidence.json"
    ],
-   "status": "pass: extracted, 2.45 GHz, 12/12 envelope corners at 4 Vpp open-circuit source; square-wave drive fails (node pumps), board must supply sine"
+   "status": "pass (rerun 2026-11-09): extracted, 2.45 GHz, 12/12 envelope corners at 4 Vpp open-circuit sine; 2 Vpp/1 Vpp and square-wave drive fail; board must supply sine I/Q with its own quadrature accuracy. This is the first-die RF LO: autonomous LO (LC VCO + polyphase) is not qualified.",
+   "first_die_dependence": true,
+   "pad_check": "2026-11-10: through the drawn rf_protected_pad pairs (REF_IN = I, AUX_CLK = Q) with the disabled diff_clk_rx attached, extracted pt_lo_ext, pad-family ngspice 47: 13/13 envelope points pass at 3.0, 3.5 and 4.0 Vpp open-circuit per leg (+7.5..+10 dBm available; 1.5-2.25 Vpp at the pad, peaks <= 2.18 V, no clamp compression). Fails at 2 Vpp (off level) and at >= 5 Vpp at ss (on-drive < 0.9 V). ss margin thin: Vgs on 0.911-0.918 V vs 0.9 V. Board B3 updated to this window."
   },
   "clk_stop_and_external": {
    "replaces": [
@@ -1908,8 +1936,10 @@
    ],
    "control": "debug.clk_select + cdr.config raw",
    "shares_failure_with": [
-    "slicer"
-   ]
+    "slicer",
+    "wrx_cap"
+   ],
+   "note": "Both CDR fallbacks go through pt_wrx_cap (the raw words are its DW). WMON (wire_wmon_scope) is the only RX route that avoids capture. Simulated 2026-11-09 (run_fallback.py, extracted slicer + r2c capture): fail; 480 MHz 43/180 (slicer->capture re-capture race), 625 MHz EW mismatches, 810 MHz bit-0 race (fixed in r2d). Evidence analog/wired_rx/generated/wrx_fallback-evidence.json."
   },
   "wire_cdr_fpga_oversample": {
    "replaces": [
@@ -1919,7 +1949,8 @@
    "pads": [],
    "control": "cdr.config raw",
    "shares_failure_with": [
-    "slicer"
+    "slicer",
+    "wrx_cap"
    ]
   },
   "wire_ctle_bypass": {
@@ -1998,6 +2029,73 @@
    "shares_failure_with": [
     "diff_clk_rx design"
    ]
+  },
+  "wire_rx_board_retimer": {
+   "replaces": [
+    "cdr",
+    "slicer",
+    "ctle",
+    "wrx_cap"
+   ],
+   "backup_only": true,
+   "route": "BACKUP. Board CDR/retimer (B13) on the line ahead of WIRE_RX recovers clock and data; its recovered clock (rate/1, /2 or /4) drives WCLK_IN and its retimed data drives WIRE_RX, so the slicer samples a clean, phase-aligned eye; raw words to the FPGA (wire_cdr_external_clock path). Covers PCIe Gen1, SATA Gen1, DP RBR, HD-SDI, 1000BASE-X. Board phase-adjust of WCLK_IN required (B13).",
+   "pads": [
+    "WIRE_RX_P",
+    "WIRE_RX_N",
+    "WCLK_IN_P",
+    "WCLK_IN_N"
+   ],
+   "control": "debug.clk_select + cdr.config raw",
+   "shares_failure_with": [
+    "slicer",
+    "wrx_cap above 480 MHz",
+    "host link capacity (divider 8 rule)"
+   ],
+   "status": "unverified; primary route is on-chip CDR closure (spec/interface-architecture-changes.md AC-3)"
+  },
+  "wire_tx_board_serializer": {
+   "replaces": [
+    "wiredtx serializer",
+    "txpad"
+   ],
+   "backup_only": true,
+   "route": "BACKUP. Board serializer/SerDes PHY (B14) driven by FPGA, output to the line directly (chip TX bypassed) or into WTX_EXT for rates <=1.6 Gb/s. Above 1.6 Gb/s (PCIe 2.5 GT/s, DP 1.62) the chip WTX_EXT path is out of range, so the board part drives the connector through a 2:1 board mux (B15).",
+   "pads": [
+    "WTX_EXT_P",
+    "WTX_EXT_N"
+   ],
+   "control": "debug.wtx_ext",
+   "shares_failure_with": [
+    "diff_clk_rx (<=1.6 Gb/s)"
+   ],
+   "status": "unverified backup"
+  },
+  "wire_board_phy_bypass": {
+   "replaces": [
+    "entire wired lane"
+   ],
+   "backup_only": true,
+   "route": "BACKUP for PCIe Gen1: board PCIe PHY (PIPE) or FPGA transceiver with a 2:1 high-speed mux at the connector (B15); the chip is bypassed for the protocol and kept on the lane for observation (WMON). Keeps the bench usable if AC-1/AC-3 do not close.",
+   "pads": [],
+   "control": "board",
+   "shares_failure_with": [],
+   "status": "unverified backup"
+  },
+  "wire_rx_tmds_forwarded_clock": {
+   "replaces": [
+    "cdr frequency acquisition"
+   ],
+   "route": "PRIMARY on-chip for HDMI/DVI RX (AC-3/S6): forwarded TMDS clock into WCLK_IN as CDR reference; ring x10; on-chip phase loop tracks.",
+   "pads": [
+    "WCLK_IN_P",
+    "WCLK_IN_N"
+   ],
+   "control": "clockmux REF select (new) + cdr.config",
+   "shares_failure_with": [
+    "cdr phase loop",
+    "wrx_cap"
+   ],
+   "status": "proposed; needs WCLK_IN->ring REF select (timing owner)"
   }
  },
  "debug_sites": [
@@ -2158,7 +2256,15 @@
   {
    "id": "device_replicas",
    "access": "ATB",
-   "content": "NMOS/PMOS replicas at LNA, mixer, sampler and driver sizes"
+   "content": "NMOS/PMOS replicas at LNA, mixer, sampler and driver sizes",
+   "implementation_dir": "analog/characterization",
+   "cell": "pt_char_atb",
+   "atb_codes": "43-50",
+   "state": "built",
+   "evidence": [
+    "projects/programmable_transceiver_platform/analog/characterization/generated/char_atb-evidence.json"
+   ],
+   "note": "Diode-connected replicas (NMOS d=g=NODE; PMOS s=well=NODE, d=g=VSS), no VDD pin. Extracted, through the extracted ATB leaf_f/leaf_s/grp/pad at 5 corners: sense error <= 0.04 mV, vs directly forced device <= 0.35 mV (0.1-100 uA), force pad <= 2.83 V; DRC/KLayout 0, LVS unique, GDS round-trip LVS, LEF. Needs a >= 1 Gohm sense meter (10 Mohm gives up to 42 mV error)."
   },
   {
    "id": "ring_oscillator",
@@ -2168,17 +2274,86 @@
   {
    "id": "vco_replica",
    "access": "CLK_OBS",
-   "content": "Standalone VCO with its own divider"
+   "content": "Standalone VCO with its own divider",
+   "state": "built_not_sweepable",
+   "evidence": [
+    "projects/programmable_transceiver_platform/analog/characterization/generated/referenced-structures.json",
+    "projects/programmable_transceiver_platform/analog/timing/generated/vco_replica-evidence.json"
+   ],
+   "note": "DRC/LVS clean in analog/timing; OUT observable on CLK_OBS (11) and freq_count (4), EN = debug.replica.vco_enable. VCTRL has no ATB code, so it floats when enabled: see open_register_requests vco_replica_vctrl."
   },
   {
    "id": "passive_matching",
    "access": "ATB",
-   "content": "Resistor and MIM capacitor matching arrays"
+   "content": "Resistor and MIM capacitor matching arrays",
+   "implementation_dir": "analog/characterization",
+   "cell": "pt_char_atb",
+   "atb_codes": "51-54",
+   "state": "built",
+   "evidence": [
+    "projects/programmable_transceiver_platform/analog/characterization/generated/char_atb-evidence.json"
+   ],
+   "note": "Resistor pair: 2 x 4 ppolyf_u_1k (2x10 um) in series, ABBAABBA, 20.6 kohm/side. MIM pair: 2 x 2 cap_mim_2f0 40x40 um, ABBA, ~6.5 pF/side. MIM read as ATB0 pad admittance at 100 kHz minus open-bus reading (2.4 pF): within 1.1-1.5 % of direct C; A-B difference recovered exactly in sim."
   },
   {
    "id": "esd_test_pad",
    "access": "ESD_TEST",
-   "content": "Standalone selected clamp variant for I-V and TLP"
+   "content": "Standalone selected clamp variant for I-V and TLP",
+   "state": "built",
+   "evidence": [
+    "projects/programmable_transceiver_platform/analog/characterization/generated/referenced-structures.json",
+    "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json"
+   ],
+   "note": "Single-leg stress-safe cell (analog/pads), DRC 0, LVS match; LEF in analog/characterization/generated/esd_test.lef. GDS top cell is named rf_protected_pad_pair, the same name as the RF pair GDS: the assembly must rename on import."
+  },
+  {
+   "id": "speed_ring_3v3",
+   "access": "CLK_OBS (requested)",
+   "content": "11-stage ring, nfet/pfet_03v3 4/8 um, on-cell /4: 3.3 V gate-delay calibration",
+   "implementation_dir": "analog/characterization",
+   "cell": "pt_char_ro33",
+   "state": "built",
+   "evidence": [
+    "projects/programmable_transceiver_platform/analog/characterization/generated/char_speed-evidence.json"
+   ],
+   "note": "Extracted + explicit gate R: 605 MHz tt (475 ss/32/3.15 .. 730 ff/22/3.35), OUT 119-183 MHz; EN=0 < 1 nA; DRC/KLayout 0, LVS unique, renamed-GDS round-trip LVS, LEF. Needs a CLK_OBS source and an enable bit (interface-changes.md CH1)."
+  },
+  {
+   "id": "speed_ring_5v",
+   "access": "CLK_OBS (requested)",
+   "content": "same ring with nfet_05v0/pfet_05v0 (standard-cell device class) on the 3.3 V rail, /4",
+   "implementation_dir": "analog/characterization",
+   "cell": "pt_char_ro50",
+   "state": "built",
+   "evidence": [
+    "projects/programmable_transceiver_platform/analog/characterization/generated/char_speed-evidence.json"
+   ],
+   "note": "Extracted + gate R: 327 MHz tt (223 .. 435), OUT 56-109 MHz; EN=0 < 1 nA; clean as above. Needs CLK_OBS source + enable (CH1)."
+  },
+  {
+   "id": "speed_cml_selfosc_divider",
+   "access": "CLK_OBS (requested); BIAS on ATB (requested)",
+   "content": "self-oscillating CML /2 (CK=CKB=VDD), nfet_03v3 10 um pairs, 1.8 kohm loads, 0.6 mA tails; two clocked CML /2, CML->CMOS, TSPC /2",
+   "implementation_dir": "analog/characterization",
+   "cell": "pt_char_cmldiv",
+   "state": "built",
+   "evidence": [
+    "projects/programmable_transceiver_platform/analog/characterization/generated/char_speed-evidence.json"
+   ],
+   "note": "Extracted + gate R: S0 856 MHz tt (692 .. 1089; equivalent self-oscillation clock 2x), OUT 86-136 MHz; 4.0 mA; EN=0 < 20 nA; clean as above. 0.8 kohm loads did not self-oscillate. Needs CLK_OBS source, enable, ATB sense (CH1)."
+  },
+  {
+   "id": "rf_transistor_gsg",
+   "access": "on-wafer GSG probes (own Metal5 pads, GLASS openings)",
+   "content": "nfet_03v3 W=10 um (5 x 2 um), L=0.28, gate contacted both ends, 2-port GSG frame 100 um pitch + OPEN + SHORT frames",
+   "implementation_dir": "analog/characterization",
+   "cell": "pt_char_rffet, pt_char_rffet_open, pt_char_rffet_short",
+   "state": "built",
+   "evidence": [
+    "projects/programmable_transceiver_platform/analog/characterization/generated/char_rffet-physical.json",
+    "projects/programmable_transceiver_platform/analog/characterization/generated/char_speed-evidence.json"
+   ],
+   "note": "430 x 260 um each; Magic DRC 0, KLayout 0 (Metal5 straps <= 28 um for MSLOT5.1), DUT LVS unique + renamed-GDS round trip; OPEN keeps G/D/GND separate, SHORT merges them. Placement/fill keep-out request: interface-changes.md CH2."
   }
  ],
  "reserve_area_mm2": {
@@ -2195,7 +2370,7 @@
   {
    "id": "control_digital",
    "state": "in_progress",
-   "note": "Register file and digital macro hardened (DRC/LVS/antenna clean, gate-level reset safety pass). Open: timing at target clock rates and area over allocation."
+   "note": "Historical macro is DRC/LVS/antenna clean; current paired implementation passes nominal wired/RF service and SPI I/O RTL checks, and its capture window has a formal proof. Fresh whole-macro physical/GLS signoff, target timing, storage-cap reconciliation/reduction and fit within 2.5 mm2 remain open."
   },
   {
    "id": "pads",
@@ -2226,8 +2401,8 @@
   "wtx_ext_rx": "analog/wired_tx",
   "atb_tap": "analog/island_support",
   "esd_test_pad": "analog/pads",
-  "device_replicas": "unassigned",
-  "passive_matching": "unassigned",
+  "device_replicas": "analog/characterization",
+  "passive_matching": "analog/characterization",
   "dbg_obs": "rtl (status mux) + provider digital pad cells",
   "lo_ext": "analog/timing",
   "polyphase": "analog/timing",
@@ -2338,23 +2513,45 @@
   }
  },
  "current_envelope_ma": {
+  "source": "spec/budgets/power_budget.py -> spec/budgets/power-budget.json (2026-11-09). Previous values 236.27/244.55/260.96/247.39 were not reproducible and are superseded.",
   "rf_autonomous": {
-   "allocated": 244.55,
+   "allocated": 253.02,
+   "evidence_bound": 447.53,
+   "with_digital_requirement": 221.93,
    "ceiling": 240,
-   "status": "over by 4.55; autonomous RF remains a separately qualified envelope"
+   "status": "allocation over by 13.02; meets with PWR-DIG-RF + PWR-HOST-RF"
   },
   "rf_external_clock": {
-   "allocated": 236.27,
+   "allocated": 224.09,
+   "evidence_bound": 418.6,
+   "with_digital_requirement": 193.0,
    "ceiling": 240
   },
   "wired": {
-   "allocated": 260.96,
+   "allocated": 244.82,
+   "evidence_bound": 422.33,
+   "with_digital_requirement": 275.14,
+   "ceiling": 292
+  },
+  "wired_external_clock": {
+   "allocated": 248.05,
+   "evidence_bound": 425.56,
+   "with_digital_requirement": 278.37,
+   "ceiling": 292
+  },
+  "wired_tmds": {
+   "allocated": 224.82,
+   "evidence_bound": 402.33,
+   "with_digital_requirement": 255.14,
    "ceiling": 292
   },
   "usb": {
-   "allocated": 247.39,
+   "allocated": 231.25,
+   "evidence_bound": 408.76,
+   "with_digital_requirement": 261.57,
    "ceiling": 292
-  }
+  },
+  "note": "evidence_bound uses the only post-route digital power (0.684 W vectorless, 207 mA) and the 8 pF host IO screen (116.8 mA); every mode exceeds its ceiling on that basis. PWR-DIG-WIRED <=60 mA, PWR-DIG-RF <=40 mA and PWR-HOST-RF (div2) are the closure requirements (spec/power-partition.md)."
  },
  "board_requirements": "spec/board-requirements.md",
  "top_assembly_obligations": [
@@ -2362,7 +2559,8 @@
   "Island switch edge-bar strapping at >= 4 evenly spaced points (wired island 0.13 mV drop margin)",
   "Bias trunk enters each island behind its ISO clamp",
   "LO and mixer-output routing symmetric and shielded (RF TX LO leakage, RX offset)",
-  "On-chip decoupling: 1 nF MIM in dedicated area or over the digital macro using the Metal1-Metal4 routing variant (no SRAM macros are used)"
+  "On-chip decoupling: 1 nF MIM in dedicated area or over the digital macro using the Metal1-Metal4 routing variant (no SRAM macros are used)",
+  "Bind usbhs.bias.code[7:0] and usbhs.bias.enable to pt_wtx_hsbias C0..C7 and EN. Disabled EN must clamp HS_PBIAS to VDD; the new register map requires digital re-hardening."
  ],
  "preexisting_test_failures": {
   "checked": "clean HEAD worktree before this tapeout work",
@@ -2378,8 +2576,28 @@
  ],
  "open_register_requests": [
   {
-   "from": "analog/wired_tx",
-   "fields": "usb_hs_bias: 8-bit code (default 0) and enable (default 0 = HS_PBIAS at VDD)"
+   "id": "vco_replica_vctrl_atb",
+   "requested_by": "analog/characterization",
+   "request": "Add ATB nodes for pt_vco_replica: vco_replica_vctrl (force allowed, debug island) and vco_replica_vtail (sense only, debug island). spec/register-map.md says VCTRL is forced from the ATB but codes 1-57 have no such node; with debug.replica.vco_enable = 1 VCTRL floats and the replica frequency is undefined.",
+   "affects": [
+    "spec/register-map.md ATB nodes",
+    "spec/debug-controls.json atb_nodes",
+    "rtl/gen (PT_ATB_W)",
+    "island_support ATB tree leaf count"
+   ],
+   "state": "open"
+  },
+  {
+   "id": "speed_structures_obs",
+   "requested_by": "analog/characterization",
+   "request": "Three CLK_OBS sources (pt_char_ro33/ro50/cmldiv OUT), three enables (proposed debug.replica.ro33_enable, ro50_enable, cmldiv_enable, reset 0) and one ATB sense code for pt_char_cmldiv.BIAS.",
+   "affects": [
+    "spec/register-map.md",
+    "spec/debug-controls.json",
+    "analog/timing clk_obs (instance count)",
+    "island_support ATB tree"
+   ],
+   "state": "open"
   }
  ]
 }

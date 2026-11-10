@@ -1,4 +1,4 @@
-// Lockstep equivalence of the legacy pt_control boundary: pt_control (rtl/pt_spi.sv)
+// Lockstep equivalence of the legacy pt_control boundary: sim/reference/pt_control.sv
 // and the generated pt_mgmt share every SPI pin and legacy input. Random transactions
 // target the legacy addresses and addresses that are unassigned in both maps. MISO
 // (sampled at every rising SCLK edge) and every legacy output must match.

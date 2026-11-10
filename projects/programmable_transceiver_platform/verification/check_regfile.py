@@ -165,7 +165,7 @@ class Model:
         bits6 = f"{dsrc[s0]}{int(s0 != 0)}{dsrc[s1]}{int(s1 != 0)}{wsrc_bits[ws]}{int(ws != 0)}"
         bits2 = f"{self.toggle}{int(self.cfg_err != 0)}"
         return (o['analog_cfg'], o['debug_cfg'], o['island_en'], o['island_on'], o['atb0_sw'], o['atb1_sw'],
-                bits5, bits6, bits2, self.enable, self.mode8, (self.pb << 1) | self.ce, int(mid), 0,
+                bits5, bits6, bits2, self.enable, self.mode8, (self.pb << 1) | self.ce, int(mid and not in_reset), 0,
                 o['atb0_grp'], o['atb1_grp'], f"{int(o['atb0_sw'] != 0)}{int(o['atb1_sw'] != 0)}")
 
 
@@ -383,7 +383,8 @@ def build(seed, n_random):
             'debug.bb_tap.mode': 1, 'consolidation.pll.owner': 1, 'consolidation.pll.feedback_n': 2, 'rfpll.state.state': 1,
             'consolidation.bbfilter.direction': 1, 'consolidation.bbfilter.bw': 5, 'consolidation.bbfilter.gain': 9,
             'slicer.offset.data': 0xAB, 'rfdriver.gain.code': 0xD7, 'adc_i.config.decision_ns': 77,
-            'monitor.config.qualification_ticks': 0x12345678}
+            'monitor.config.qualification_ticks': 0x12345678,
+            'usbhs.bias.code': 0x7F, 'usbhs.bias.enable': 1}
     s.reset()
     s.set_fields(rich)
     assert s.commit() == 0
@@ -620,7 +621,7 @@ def main():
     ap.add_argument('--rtl', default=str(P / 'rtl/pt_regfile.sv'), help='register file under test (mutation checks)')
     args = ap.parse_args()
     stim, info = build(args.seed, args.random)
-    out = Path(args.out)
+    out = Path(args.out).resolve()
     files = [str(P / 'sim/tb_regfile.sv'), str(P / 'rtl/pt_spi.sv'), args.rtl]
     sims = ['iverilog', 'verilator'] if args.sim == 'both' else [args.sim]
     report = dict(seed=args.seed, random_operations=args.random, commands=len(stim.cmds),
@@ -652,7 +653,7 @@ def main():
     leg = out / 'legacy'
     leg.mkdir(parents=True, exist_ok=True)
     subprocess.run(['iverilog', '-g2012', '-I', str(P / 'rtl'), '-o', str(leg / 'tb.vvp'), str(P / 'sim/tb_regfile_legacy.sv'),
-                    str(P / 'rtl/pt_spi.sv'), args.rtl], check=True)
+                    str(P / 'rtl/pt_spi.sv'), str(P / 'sim/reference/pt_control.sv'), args.rtl], check=True)
     lines = subprocess.run(['vvp', '-n', str(leg / 'tb.vvp')], capture_output=True, text=True, check=True).stdout.splitlines()
     report['legacy_equivalence'] = [ln for ln in lines if ln.startswith('legacy') or ln in ('PASS', 'FAIL')]
     ok = ok and 'PASS' in lines

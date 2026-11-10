@@ -159,6 +159,12 @@ EOS
   fi
 
   # 4. Netgen LVS: Magic extraction vs regenerated schematic + std-cell netlists.
+  #    Both sides get the canonical MIM orientation (canon_mim.py: c_width >=
+  #    c_length, exact swap only) because Magic reports a rotated cap_mim
+  #    paramcell transposed between hierarchical and flat extraction.
+  python3 /src/flow/canon_mim.py "$schnet" $out/sch_lvs.spice > canon_mim.log
+  schnet=$out/sch_lvs.spice
+  python3 /src/flow/canon_mim.py $out/layout_lvs.spice $out/layout_lvs.spice >> canon_mim.log
   cat > netgen.tcl <<EOS
 set circuit1 [readnet spice $out/layout_lvs.spice]
 set circuit2 [readnet spice $PDK_ROOT/$PDK/libs.ref/$SCLIB/spice/$SCLIB.spice]
@@ -199,6 +205,7 @@ quit -noprompt
 EOS
   ( cd ext_gds && magic -dnull -noconsole -rcfile $MAGICRC ../magic_gds_ext.tcl > ../magic_gds.log 2>&1 < /dev/null )
   sed -i "s/^\.subckt ${cell}_flat /.subckt $cell /" layout_gds_flat.spice 2>/dev/null
+  python3 /src/flow/canon_mim.py $out/layout_gds_flat.spice $out/layout_gds_flat.spice >> canon_mim.log
   sed -e "s#$out/layout_lvs.spice#$out/layout_gds_flat.spice#" -e "s#$out/lvs_comp.out#$out/lvs_gds_comp.out#" \
       netgen.tcl > netgen_gds.tcl
   NETGEN_COLUMNS=75 netgen -batch source netgen_gds.tcl > netgen_gds.log 2>&1 < /dev/null

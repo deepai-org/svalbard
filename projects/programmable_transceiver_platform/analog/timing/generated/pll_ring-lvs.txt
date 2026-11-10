@@ -190,17 +190,18 @@ VH                                         |VH
 Cell pin lists are equivalent.
 Device classes ct_ring8 and ct_ring8 are equivalent.
 Flattening unmatched subcell p_nfet_03v3_w2_l0p28 in circuit pt_pll_ring (0)(45 instances)
-Flattening unmatched subcell p_pfet_03v3_w2_l0p28 in circuit pt_pll_ring (0)(77 instances)
-Flattening unmatched subcell p_nfet_03v3_w1_l0p28 in circuit pt_pll_ring (0)(33 instances)
+Flattening unmatched subcell p_pfet_03v3_w2_l0p28 in circuit pt_pll_ring (0)(78 instances)
+Flattening unmatched subcell p_nfet_03v3_w1_l0p28 in circuit pt_pll_ring (0)(37 instances)
 Flattening unmatched subcell p_nfet_03v3_w3_l0p28 in circuit pt_pll_ring (0)(12 instances)
 Flattening unmatched subcell p_pfet_03v3_w10_l0p28 in circuit pt_pll_ring (0)(8 instances)
-Flattening unmatched subcell p_pfet_03v3_w4_l0p28 in circuit pt_pll_ring (0)(8 instances)
+Flattening unmatched subcell p_pfet_03v3_w4_l0p28 in circuit pt_pll_ring (0)(10 instances)
 Flattening unmatched subcell p_nfet_03v3_w5_l1 in circuit pt_pll_ring (0)(1 instance)
 Flattening unmatched subcell p_pfet_03v3_w0p5_l5 in circuit pt_pll_ring (0)(1 instance)
-Flattening unmatched subcell p_pfet_03v3_w8_l2 in circuit pt_pll_ring (0)(3 instances)
+Flattening unmatched subcell p_pfet_03v3_w8_l2 in circuit pt_pll_ring (0)(4 instances)
 Flattening unmatched subcell p_pfet_03v3_w1_l0p28 in circuit pt_pll_ring (0)(1 instance)
-Flattening unmatched subcell p_nfet_03v3_w4_l2 in circuit pt_pll_ring (0)(4 instances)
-Flattening unmatched subcell p_nfet_03v3_w10_l10 in circuit pt_pll_ring (0)(2 instances)
+Flattening unmatched subcell p_nfet_03v3_w10_l10 in circuit pt_pll_ring (0)(4 instances)
+Flattening unmatched subcell p_nfet_03v3_w4_l2 in circuit pt_pll_ring (0)(6 instances)
+Flattening unmatched subcell p_pfet_03v3_w8_l1 in circuit pt_pll_ring (0)(2 instances)
 Flattening unmatched subcell p_nfet_03v3_w20_l20 in circuit pt_pll_ring (0)(5 instances)
 Flattening unmatched subcell p_ppolyf_u_1k_w1_l20 in circuit pt_pll_ring (0)(1 instance)
 Flattening unmatched subcell p_nfet_03v3_w4_l10 in circuit pt_pll_ring (0)(1 instance)
@@ -209,28 +210,28 @@ Flattening unmatched subcell p_nfet_03v3_w0p5_l2 in circuit pt_pll_ring (0)(1 in
 Flattening unmatched subcell p_nfet_03v3_w4_l0p28 in circuit pt_pll_ring (0)(2 instances)
 Flattening unmatched subcell p_pfet_03v3_w6p5_l0p28 in circuit pt_pll_ring (0)(1 instance)
 
-Class pt_pll_ring (0):  Merged 17 parallel devices.
-Class pt_pll_ring (1):  Merged 17 parallel devices.
+Class pt_pll_ring (0):  Merged 19 parallel devices.
+Class pt_pll_ring (1):  Merged 19 parallel devices.
 Subcircuit summary:
 Circuit 1: pt_pll_ring                     |Circuit 2: pt_pll_ring                     
 -------------------------------------------|-------------------------------------------
-nfet_03v3 (112->102)                       |nfet_03v3 (112->102)                       
-pfet_03v3 (99->92)                         |pfet_03v3 (99->92)                         
+nfet_03v3 (120->109)                       |nfet_03v3 (120->109)                       
+pfet_03v3 (105->98)                        |pfet_03v3 (105->98)                        
 ct_tspcd (1)                               |ct_tspcd (1)                               
 ct_mux4 (2)                                |ct_mux4 (2)                                
 ct_phbuf8 (1)                              |ct_phbuf8 (1)                              
 ct_tspc2 (5)                               |ct_tspc2 (5)                               
 ppolyf_u_1k (1)                            |ppolyf_u_1k (1)                            
 ct_ring8 (1)                               |ct_ring8 (1)                               
-Number of devices: 205                     |Number of devices: 205                     
-Number of nets: 130                        |Number of nets: 130                        
+diode_nd2ps_03v3 (9->8)                    |diode_nd2ps_03v3 (9->8)                    
+Number of devices: 226                     |Number of devices: 226                     
+Number of nets: 135                        |Number of nets: 135                        
 ---------------------------------------------------------------------------------------
 Netlists match uniquely.
 
 Subcircuit pins:
 Circuit 1: pt_pll_ring                     |Circuit 2: pt_pll_ring                     
 -------------------------------------------|-------------------------------------------
-HOLD                                       |HOLD                                       
 PH0                                        |PH0                                        
 PH1                                        |PH1                                        
 PH2                                        |PH2                                        
@@ -239,13 +240,14 @@ PH4                                        |PH4
 PH5                                        |PH5                                        
 PH6                                        |PH6                                        
 PH7                                        |PH7                                        
+ATB_VCTRL                                  |ATB_VCTRL                                  
 EN                                         |EN                                         
 IBIAS                                      |IBIAS                                      
+REF                                        |REF                                        
 LOCK                                       |LOCK                                       
 N4                                         |N4                                         
-ATB_VCTRL                                  |ATB_VCTRL                                  
 VDD                                        |VDD                                        
-REF                                        |REF                                        
+HOLD                                       |HOLD                                       
 N8                                         |N8                                         
 REFO                                       |REFO                                       
 FBCK                                       |FBCK                                       

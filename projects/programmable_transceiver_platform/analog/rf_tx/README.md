@@ -80,7 +80,13 @@ Python 3 + NumPy. Raw work: `scratch/rf_tx/`.
 ## Results (extracted, tt / 27 °C / 3.3 V unless stated)
 
 Source: `generated/rf_tx-sim-ext.json` and `generated/<block>-evidence.json`.
-"Matched" = the board network above, power into the 50 Ω load.
+"Matched" = board network: per-leg chokes (Q=30) from each pad to the rf_tx
+island rail that resonate the pad susceptance and DC-feed the output stage,
+DC blocks, an ideal 200:50 Ω balun and a 1.0 dB resistive pad for the balun's
+insertion loss (assumed: a 2.45 GHz 200:50 Ω chip balun with centre-tap DC feed,
+datasheet-class loss 0.6–1.0 dB), power into 50 Ω. Unmatched benches use 20 nH
+bias-tee chokes and a DC-blocked 50 Ω differential load. Modulation results:
+`tx_modulation.py` → `generated/rf_tx-modulation.json`.
 
 | Item | Target | Achieved | Verdict |
 | --- | --- | --- | --- |
@@ -88,17 +94,19 @@ Source: `generated/rf_tx-sim-ext.json` and `generated/<block>-evidence.json`.
 | Mixer conversion gm, linear / sat=1 | 1 mS | 1.51 / 2.72 mS, 1.00 mA | pass |
 | Mixer DAC input (filter bypass) | works | 1.51 mS | pass |
 | txsum transimpedance / input impedance, 2.44 GHz | 1000 Ω / ≤ 100 Ω | 220 Ω / 262 Ω | miss |
-| rfdriver gain (summed_rf → pad) | 5.36 V/V | 1.68 V/V | miss |
-| Matched SSB, linear (0.3 V I/Q, 61 MHz) | 0 dBm | −5.6 dBm | miss |
-| Matched SSB, saturated (1.0 V I/Q, sat=1) | 0 dBm | −0.1 dBm (image ~−33 dBc) | ≈ target |
-| Matched CW linear 0.3 / 0.7 V; saturated 1.0 V | 0 dBm | −6.2 / −1.4; −1.1 dBm | — |
-| Unmatched 50 Ω CW / SSB, 0.3 V | 0 dBm | −7.6 / −7.0 dBm (schematic −3.5) | — |
-| Chain image rejection / LO suppression (ideal LO) | — | 61.6 dB / 44.6 dBc | — |
-| Saturated power control, code 1/4/8/15 (matched) | monotonic | −16.6 / −7.5 / −3.6 / −1.1 dBm | pass |
-| Mute isolation, saturated matched / unmatched | — | 22.2 / 24.0 dB | — |
-| External-PA bypass route | function | −33.9 / −27.5 dBm unmatched (0.3 / 0.7 V); −24.8 dBm matched, sat=1, full scale | pass (low power) |
-| Corners (tt/ss/ff × 22/32 °C × 3.15/3.35 V), matched linear / saturated | — | −3.9..−9.6 / −0.2..−2.8 dBm (worst ss/32 °C/3.15 V) | recorded |
-| rfdriver current over corners | 28.9 mA | 23.8–27.2 mA | pass |
+| rfdriver gain (summed_rf → pad, 50 mV, bias tee into 50 Ω) | 5.36 V/V | 5.24 V/V (was 1.68) | ≈ target |
+| Matched SSB, linear (0.3 V I/Q, 61 MHz), after 1 dB balun loss | 0 dBm | +3.7 dBm (was −5.6, balun loss excluded) | pass |
+| Matched SSB, saturated (1.0 V I/Q, sat=1), after balun loss | 0 dBm | +8.05 dBm (image −30 dBc) | pass |
+| Chain AM-AM (CW, linear mode), after balun loss: P1dB / Psat | — | +3.8 / +5.9 dBm | — |
+| Driver alone into the board: Psat | — | +9.0 dBm | — |
+| HE20 64QAM OFDM at 0 dBm mean (after balun): EVM / ACLR / mask margin | ≤ −27 dB (MCS7) / — / ≥ 0 | −22.8 dB / 29.9 dB / +0.1 dB (sat=1 mode: −22.6 / 29.9 / +1.7) | MCS0–5 pass, **MCS7 miss by ~1 dB** (−1.0 dBm max) |
+| Harmonics after ideal balun, 0.3–1.0 V drive | — | H2 −41…−52 dBc, H3 −52…−66 dBc | recorded (needs board LPF for FCC 15.247) |
+| LO quadrature skew 2 / 5 / 10 / 20 ps (transistor level) | — | IRR 36 / 29 / 23 / 17 dB; EVM at 0 dBm −22.5 / −21.9 / −20.3 / −16.8 dB | ≤5 ps needed |
+| LO white jitter 0.3 / 1 / 2 ps rms | — | EVM unchanged (compression-limited); mask margin +0.2 / −0.5 / −2.1 dB | ≤0.5 ps needed |
+| Chain image rejection / LO suppression, matched linear (ideal LO) | — | 48.9 dB / 33.9 dBc | — |
+| Saturated power control, code 1/4/8/15 (matched) | monotonic | see `rf_tx-sim-ext.json` match_code*_sat | pass |
+| Matched linear / saturated vs corners (12 env) | 0 dBm | −2.8..+5.0 / +4.5..+6.1 dBm (worst ss/32 °C/3.15 V) | ss linear marginal |
+| rfdriver current incl. board feed, code 15 | 28.9 mA (old allocation) | 53–59 mA tt; 41–56 mA over corners | **budget raised** (interface-changes.md) |
 | Stretch: LO/2 1.22 GHz / LO/4 610 MHz, unmatched (0.3 / 0.7 V) | — | +1.4 / +2.3; +2.9 / +3.1 dBm | non-gating |
 
 ## Four tapeout tests
@@ -116,7 +124,7 @@ Source: `generated/rf_tx-sim-ext.json` and `generated/<block>-evidence.json`.
   source current; reset rail ramp to 3.63 V: 1.49 µA mean 50–200 ns after the
   ramp (criterion ≤ 10 µA), 109 µA displacement peak; missing ibias → 0 mA;
   bypass with en=1 → output stage 0 mA; grounded 50 Ω peer in reset or rail off
-  → 0 mA. Board contract: RF_TX must be DC-blocked (enabled into a DC-coupled
+  → 0 mA. Board contract: the RF_TX load must be DC-blocked (the DC feed comes from the island rail through the balun centre tap / chokes) (enabled into a DC-coupled
   grounded peer: 29 mA into the peer; 3.3 V behind 50 Ω with rail off: 90 mA
   through rfdriver PMOS junctions, out of contract). Off states: mixer current
   outputs unclamped (tail off, gm gates clamped), txsum clamps to VSS, rfdriver
@@ -140,7 +148,13 @@ current sources.
 
 ## Limitations and open items
 
-1. **Output power**: linear mode −5.6 dBm SSB tt (−9.6 dBm ss/3.15 V);
+1. **Output power** (2026-11-09 rework): the driver is now DC-fed from the
+   board (balun centre tap or chokes to the rf_tx island rail) instead of the
+   on-chip 4 x 400 Ω resistive feed, has a third pre-amplifier, stronger source
+   followers and a doubled output stage. HE20 at 0 dBm mean meets MCS0–5 EVM and
+   the mask; MCS7 reaches −1.0 dBm. Remaining loss is in the extracted
+   chain ahead of the driver (driver alone +9 dBm Psat, chain +5.9 dBm).
+   Historical note (old design): linear mode −5.6 dBm SSB tt (−9.6 dBm ss/3.15 V);
    saturated −0.1 dBm tt (−2.8 dBm ss). Limited by gm/C at 2.44 GHz without
    inductors and by wiring capacitance (~4 dB vs schematic). Top-level wiring
    will cost more; board L-match values depend on unmodelled bond-wire/package
@@ -149,10 +163,18 @@ current sources.
    and mixer-output routing can collapse LO suppression); top-level routing of
    `lo_*` and `out_*` must keep separation and shielding.
 3. **Bypass route** works but is weak (−25 dBm at best).
-4. **Headroom**: ~100 Ω source puts pad CM at ~2.4 V; at ss/3.15 V output tails
-   lose ~2 mA.
+4. **Pad bias / stress**: pads now sit at the island rail (~3.3 V) with peaks
+   to ~4.1 V; output-device Vds stays ≤ ~3.5 V. The rftxpad stress-safe clamp
+   (2.1 V onset at ff) is incompatible and must be replaced (interface-changes.md).
+   The bypass route with the board feed passes ~1.6 mA DC from the feed into txsum.
 5. **Saturated-mode spectrum**: image ~33 dB and LO ~38 dB down: fine for
    GFSK / O-QPSK / LoRa, not OFDM.
+7. **Gate resistance not in the benches** (PDK rgatemod=0). Estimate
+   (2026-11-10, not simulated): 20 µm fingers at 120–300 Ω each
+   (60–150 Ω per 10 µm), Cgg ≈ 40 fF (L 0.28) / 64 fF (L 0.5), give gate poles
+   at 13 / 8 GHz, i.e. 0.15–0.36 dB per stage and ≤ ~1 dB over 4 stages at
+   2.45 GHz. Linear output (+3.7 dBm) keeps margin over 0 dBm. The MCS7 EVM gap
+   (~1 dB) may grow. An Rg-annotated extracted rerun is open.
 6. **txsum** misses its transimpedance and input-impedance targets (a
    low-impedance current summer does not fit 3.3 V headroom with a
    rail-to-rail LO).

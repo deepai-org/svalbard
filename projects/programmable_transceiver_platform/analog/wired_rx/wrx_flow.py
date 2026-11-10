@@ -18,8 +18,11 @@ import re
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
+import sys
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent))
+import antenna_diodes as ad  # noqa: E402
 PROJECT = HERE.parents[1]
 REPO = PROJECT.parents[1]
 SCRATCH = REPO / 'scratch' / 'wired_rx'
@@ -156,7 +159,7 @@ def generate_layout(sub, work, *, columns=None, quiet=None):
         if old.is_file():
             old.unlink()
     kinds = sorted({(d.model, d.w, d.l) for d in sub.devices})
-    keys = {k: f'prim_{i}' for i, k in enumerate(kinds)}
+    keys = {k: f'{sub.name}__prim_{i}' for i, k in enumerate(kinds)}   # block-unique (chip GDS merge)
     cmds = ['crashbackups stop', 'load prim_workspace']
     for (model, w, l), name in keys.items():
         if model.startswith('ppoly'):
@@ -230,9 +233,12 @@ def generate_layout(sub, work, *, columns=None, quiet=None):
     rows = len(rows_list)
     cmds = ['crashbackups stop', 'load ' + sub.name + '_h', 'units microns', 'snap internal']
 
+    shapes, cur = [], [None]   # net-tagged rectangles for antenna-diode planning
+
     def rect(layer, x1, y1, x2, y2):
         cmds.extend([f'box values {min(x1, x2):.3f} {min(y1, y2):.3f} {max(x1, x2):.3f} {max(y1, y2):.3f}',
                      f'paint {layer}'])
+        shapes.append((layer, min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2), cur[0]))
 
     def via(x, y, low, high):
         for m in range(low, high + 1):
@@ -248,6 +254,7 @@ def generate_layout(sub, work, *, columns=None, quiet=None):
 
     span = {net: [math.inf, -math.inf] for net in nets}
     placements = []
+    keepouts, taps, terminals = [], [], []
     ybase = 2.
     track_pitch = .9
     for r in range(rows):
@@ -282,9 +289,16 @@ def generate_layout(sub, work, *, columns=None, quiet=None):
             cy = band_top - b[1]
             cmds += [f'getcell {keys[k]} child 0 0 parent {cx:.3f} {cy:.3f}', f'identify X{d.name}']
             placements.append(dict(device=d.name, x=round(cx, 3), y=round(cy, 3)))
+            keepouts.append((cx + b[0], cy + b[1], cx + b[2], cy + b[3]))
+            if not d.model.startswith('pfet'):     # NMOS / resistor guard ring = P-substrate tap
+                taps.append(keepouts[-1])
             offs = OFFS3 if len(d.nodes) == 3 else OFFS4
             for t, ((dx, dy), net) in enumerate(zip(pins[k], d.nodes)):
                 x, y = cx + dx, cy + dy
+                cur[0] = net
+                mos = d.model.startswith(('nfet', 'pfet'))
+                terminals.append((x, y, net, ('g' if t == 1 else 'sd' if t in (0, 2) else 'x') if mos else 'x',
+                                  d.w * d.l if mos and t == 1 else 0.))
                 esc = cx + offs[t]
                 ry = track_y[net]
                 via(x, y, 1, 2)
@@ -293,6 +307,7 @@ def generate_layout(sub, work, *, columns=None, quiet=None):
                 wire('metal3', esc, y, esc, ry)
                 via(esc, ry, 3, 4)
         for net, ry in track_y.items():
+            cur[0] = net
             escs = [cxs[c] + o for c, d in enumerate(row)
                     for o, nt in zip(OFFS3 if len(d.nodes) == 3 else OFFS4, d.nodes) if nt == net]
             if net in local:
@@ -321,7 +336,14 @@ def generate_layout(sub, work, *, columns=None, quiet=None):
         if lo == math.inf:
             lo = top - 2.
         hi = max(hi, lo + 1.5)
+        cur[0] = net
         wire('metal5', trunk_x[net], lo, trunk_x[net], hi, width=.44)
+    cur[0] = None
+    # antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M5 get an N+/Psub diode
+    # under their own M3-M5 wire; returned as 'antenna_diodes' for the LVS reference (lvs_reference).
+    req = ad.requests_from_shapes(shapes, terminals)
+    dcmds, diodes = ad.plan(req, [s[:5] for s in shapes], keepouts, taps=taps)
+    cmds.extend(dcmds)
     for idx, port in enumerate(sub.ports, 1):
         x = trunk_x[port]
         cmds += [f'box values {x - .22:.3f} {top - 1.0:.3f} {x + .22:.3f} {top:.3f}',
@@ -356,10 +378,22 @@ def generate_layout(sub, work, *, columns=None, quiet=None):
         drc = None
     bb = [float(v) for v in (work / 'bbox.txt').read_text().split()]
     size = [round(bb[2] - bb[0], 2), round(bb[3] - bb[1], 2)]
-    return dict(drc_count=drc, drc_raw=drc_text, columns=columns, rows=rows, pitch_um=pitch,
+    return dict(drc_count=drc, drc_raw=drc_text, columns=columns, rows=rows, pitch_um=pitch, antenna_diodes=diodes,
                 bbox_um=bb, size_um=size, area_um2=round(size[0] * size[1], 1),
                 planned_size_um=[round(width, 2), round(height, 2)], placements=len(placements),
                 magic_log_tail=res.stdout[-1500:] + res.stderr[-1500:])
+
+
+def lvs_reference(spice, top, diodes, out):
+    """Schematic + the generator's antenna diodes (flat top subckt), written to `out`."""
+    text = Path(spice).read_text()
+    lines = ad.spice_lines(diodes or [])
+    if lines:
+        k = text.index(f'.subckt {top} ')
+        e = text.index('.ends', k)
+        text = text[:e] + '\n'.join(lines) + '\n' + text[e:]
+    Path(out).write_text(text)
+    return Path(out)
 
 
 def magic(work, script):
@@ -401,6 +435,7 @@ def ngspice(work, deck, *, timeout=3600):
 SIM_HEADER = f""".include {ANALOG_PDK}/libs.tech/ngspice/design.ngspice
 .lib {ANALOG_PDK}/libs.tech/ngspice/sm141064.ngspice {{corner}}
 .lib {ANALOG_PDK}/libs.tech/ngspice/sm141064.ngspice res_{{rescorner}}
+.lib {ANALOG_PDK}/libs.tech/ngspice/sm141064.ngspice diode_{{rescorner}}
 .option temp={{temp}} gmin=1e-12 reltol=1e-3
 """
 

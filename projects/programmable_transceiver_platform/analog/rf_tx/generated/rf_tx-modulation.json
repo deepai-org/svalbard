@@ -1,0 +1,1945 @@
+{
+ "model": "TX modulation-quality model: EVM, ACLR, spectral mask, LO jitter and I/Q skew.",
+ "modes": {
+  "linear (txmix sat=0)": {
+   "amam": {
+    "vin": [
+     0.02,
+     0.05,
+     0.1,
+     0.15,
+     0.2,
+     0.3,
+     0.4,
+     0.5,
+     0.6,
+     0.8,
+     1.0,
+     1.3
+    ],
+    "pout_dBm": [
+     -19.17,
+     -11.26,
+     -5.64,
+     -2.33,
+     0.08,
+     3.44,
+     5.41,
+     5.23,
+     5.49,
+     5.88,
+     5.93,
+     5.94
+    ],
+    "compression_dB": [
+     0.0,
+     -0.06,
+     -0.46,
+     -0.67,
+     -0.76,
+     -0.91,
+     -1.44,
+     -3.56,
+     -4.88,
+     -7.0,
+     -8.88,
+     -11.15
+    ],
+    "p1dB_out_dBm": 3.768563590458278,
+    "psat_dBm": 5.94
+   },
+   "stimulus": {
+    "standard": "802.11ax HE20, 242 tones, 64QAM, 60 symbols",
+    "papr_dB": 9.99,
+    "dac": "10 bit, 40 MS/s, ZOH",
+    "filter": "Butterworth 5th order, 15.2 MHz"
+   },
+   "evm_limits_dB": {
+    "MCS0 BPSK 1/2": -5,
+    "MCS2 QPSK 3/4": -13,
+    "MCS4 16QAM 3/4": -19,
+    "MCS5 64QAM 2/3": -22,
+    "MCS7 64QAM 5/6": -27,
+    "MCS9 256QAM 5/6": -32
+   },
+   "mask_dBr": [
+    [
+     9.75,
+     0.0
+    ],
+    [
+     10.5,
+     -20.0
+    ],
+    [
+     20.0,
+     -28.0
+    ],
+    [
+     30.0,
+     -40.0
+    ],
+    [
+     60.0,
+     -40.0
+    ]
+   ],
+   "power_sweep": [
+    {
+     "pout_dBm": -15.71,
+     "evm_dB": -33.37,
+     "aclr_dB_lower_upper": [
+      47.09,
+      47.06
+     ],
+     "mask_margin_dB": 3.76,
+     "bb_vrms": 0.03,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -14.96,
+     "evm_dB": -33.11,
+     "aclr_dB_lower_upper": [
+      45.94,
+      45.92
+     ],
+     "mask_margin_dB": 3.72,
+     "bb_vrms": 0.0328,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -14.2,
+     "evm_dB": -32.83,
+     "aclr_dB_lower_upper": [
+      44.89,
+      44.88
+     ],
+     "mask_margin_dB": 3.63,
+     "bb_vrms": 0.0359,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -13.46,
+     "evm_dB": -32.55,
+     "aclr_dB_lower_upper": [
+      44.0,
+      43.99
+     ],
+     "mask_margin_dB": 3.62,
+     "bb_vrms": 0.0392,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -12.71,
+     "evm_dB": -32.27,
+     "aclr_dB_lower_upper": [
+      43.23,
+      43.23
+     ],
+     "mask_margin_dB": 3.52,
+     "bb_vrms": 0.0429,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -11.97,
+     "evm_dB": -32.02,
+     "aclr_dB_lower_upper": [
+      42.6,
+      42.59
+     ],
+     "mask_margin_dB": 3.51,
+     "bb_vrms": 0.0469,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -11.23,
+     "evm_dB": -31.8,
+     "aclr_dB_lower_upper": [
+      42.06,
+      42.06
+     ],
+     "mask_margin_dB": 3.49,
+     "bb_vrms": 0.0513,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -10.49,
+     "evm_dB": -31.63,
+     "aclr_dB_lower_upper": [
+      41.62,
+      41.61
+     ],
+     "mask_margin_dB": 3.53,
+     "bb_vrms": 0.0561,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -9.77,
+     "evm_dB": -31.49,
+     "aclr_dB_lower_upper": [
+      41.27,
+      41.26
+     ],
+     "mask_margin_dB": 3.61,
+     "bb_vrms": 0.0613,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -9.04,
+     "evm_dB": -31.39,
+     "aclr_dB_lower_upper": [
+      41.0,
+      40.99
+     ],
+     "mask_margin_dB": 3.59,
+     "bb_vrms": 0.067,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -8.3,
+     "evm_dB": -31.32,
+     "aclr_dB_lower_upper": [
+      40.8,
+      40.79
+     ],
+     "mask_margin_dB": 3.55,
+     "bb_vrms": 0.0733,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -7.57,
+     "evm_dB": -31.29,
+     "aclr_dB_lower_upper": [
+      40.67,
+      40.67
+     ],
+     "mask_margin_dB": 3.5,
+     "bb_vrms": 0.0801,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -6.83,
+     "evm_dB": -31.29,
+     "aclr_dB_lower_upper": [
+      40.61,
+      40.6
+     ],
+     "mask_margin_dB": 3.47,
+     "bb_vrms": 0.0876,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -6.1,
+     "evm_dB": -31.31,
+     "aclr_dB_lower_upper": [
+      40.59,
+      40.58
+     ],
+     "mask_margin_dB": 3.44,
+     "bb_vrms": 0.0958,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -5.36,
+     "evm_dB": -31.33,
+     "aclr_dB_lower_upper": [
+      40.59,
+      40.58
+     ],
+     "mask_margin_dB": 3.39,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -4.63,
+     "evm_dB": -31.34,
+     "aclr_dB_lower_upper": [
+      40.57,
+      40.56
+     ],
+     "mask_margin_dB": 3.3,
+     "bb_vrms": 0.1145,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -3.89,
+     "evm_dB": -31.28,
+     "aclr_dB_lower_upper": [
+      40.43,
+      40.41
+     ],
+     "mask_margin_dB": 3.26,
+     "bb_vrms": 0.1252,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -3.15,
+     "evm_dB": -31.03,
+     "aclr_dB_lower_upper": [
+      39.99,
+      39.93
+     ],
+     "mask_margin_dB": 3.03,
+     "bb_vrms": 0.137,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -2.43,
+     "evm_dB": -30.38,
+     "aclr_dB_lower_upper": [
+      38.9,
+      38.78
+     ],
+     "mask_margin_dB": 2.87,
+     "bb_vrms": 0.1497,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -1.71,
+     "evm_dB": -29.1,
+     "aclr_dB_lower_upper": [
+      37.0,
+      36.87
+     ],
+     "mask_margin_dB": 2.5,
+     "bb_vrms": 0.1637,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -1.01,
+     "evm_dB": -27.21,
+     "aclr_dB_lower_upper": [
+      34.62,
+      34.52
+     ],
+     "mask_margin_dB": 2.08,
+     "bb_vrms": 0.179,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -0.32,
+     "evm_dB": -25.02,
+     "aclr_dB_lower_upper": [
+      32.21,
+      32.16
+     ],
+     "mask_margin_dB": 1.2,
+     "bb_vrms": 0.1958,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 0.32,
+     "evm_dB": -22.84,
+     "aclr_dB_lower_upper": [
+      29.89,
+      29.89
+     ],
+     "mask_margin_dB": 0.1,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 0.93,
+     "evm_dB": -20.82,
+     "aclr_dB_lower_upper": [
+      27.79,
+      27.81
+     ],
+     "mask_margin_dB": -1.71,
+     "bb_vrms": 0.2341,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 1.49,
+     "evm_dB": -19.03,
+     "aclr_dB_lower_upper": [
+      25.97,
+      25.99
+     ],
+     "mask_margin_dB": -2.75,
+     "bb_vrms": 0.2559,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.0,
+     "evm_dB": -17.5,
+     "aclr_dB_lower_upper": [
+      24.42,
+      24.44
+     ],
+     "mask_margin_dB": -3.66,
+     "bb_vrms": 0.2798,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.47,
+     "evm_dB": -16.19,
+     "aclr_dB_lower_upper": [
+      23.11,
+      23.13
+     ],
+     "mask_margin_dB": -4.5,
+     "bb_vrms": 0.306,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.89,
+     "evm_dB": -15.1,
+     "aclr_dB_lower_upper": [
+      22.0,
+      22.02
+     ],
+     "mask_margin_dB": -5.68,
+     "bb_vrms": 0.3346,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 3.27,
+     "evm_dB": -14.19,
+     "aclr_dB_lower_upper": [
+      21.05,
+      21.06
+     ],
+     "mask_margin_dB": -6.77,
+     "bb_vrms": 0.3658,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 3.6,
+     "evm_dB": -13.42,
+     "aclr_dB_lower_upper": [
+      20.22,
+      20.22
+     ],
+     "mask_margin_dB": -7.98,
+     "bb_vrms": 0.4,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -15.71,
+     "evm_dB": -31.52,
+     "aclr_dB_lower_upper": [
+      47.16,
+      47.18
+     ],
+     "mask_margin_dB": 3.78,
+     "bb_vrms": 0.03,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -14.96,
+     "evm_dB": -31.31,
+     "aclr_dB_lower_upper": [
+      45.99,
+      46.01
+     ],
+     "mask_margin_dB": 3.73,
+     "bb_vrms": 0.0328,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -14.2,
+     "evm_dB": -31.1,
+     "aclr_dB_lower_upper": [
+      44.92,
+      44.94
+     ],
+     "mask_margin_dB": 3.64,
+     "bb_vrms": 0.0359,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -13.46,
+     "evm_dB": -30.89,
+     "aclr_dB_lower_upper": [
+      44.03,
+      44.05
+     ],
+     "mask_margin_dB": 3.62,
+     "bb_vrms": 0.0392,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -12.71,
+     "evm_dB": -30.68,
+     "aclr_dB_lower_upper": [
+      43.26,
+      43.27
+     ],
+     "mask_margin_dB": 3.52,
+     "bb_vrms": 0.0429,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -11.97,
+     "evm_dB": -30.49,
+     "aclr_dB_lower_upper": [
+      42.62,
+      42.63
+     ],
+     "mask_margin_dB": 3.51,
+     "bb_vrms": 0.0469,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -11.23,
+     "evm_dB": -30.33,
+     "aclr_dB_lower_upper": [
+      42.08,
+      42.09
+     ],
+     "mask_margin_dB": 3.49,
+     "bb_vrms": 0.0513,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -10.49,
+     "evm_dB": -30.2,
+     "aclr_dB_lower_upper": [
+      41.63,
+      41.64
+     ],
+     "mask_margin_dB": 3.54,
+     "bb_vrms": 0.0561,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -9.77,
+     "evm_dB": -30.1,
+     "aclr_dB_lower_upper": [
+      41.28,
+      41.29
+     ],
+     "mask_margin_dB": 3.61,
+     "bb_vrms": 0.0613,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -9.04,
+     "evm_dB": -30.03,
+     "aclr_dB_lower_upper": [
+      41.01,
+      41.01
+     ],
+     "mask_margin_dB": 3.59,
+     "bb_vrms": 0.067,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -8.3,
+     "evm_dB": -30.0,
+     "aclr_dB_lower_upper": [
+      40.81,
+      40.81
+     ],
+     "mask_margin_dB": 3.54,
+     "bb_vrms": 0.0733,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -7.57,
+     "evm_dB": -29.99,
+     "aclr_dB_lower_upper": [
+      40.69,
+      40.69
+     ],
+     "mask_margin_dB": 3.5,
+     "bb_vrms": 0.0801,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -6.83,
+     "evm_dB": -30.0,
+     "aclr_dB_lower_upper": [
+      40.63,
+      40.63
+     ],
+     "mask_margin_dB": 3.46,
+     "bb_vrms": 0.0876,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -6.1,
+     "evm_dB": -30.02,
+     "aclr_dB_lower_upper": [
+      40.61,
+      40.61
+     ],
+     "mask_margin_dB": 3.43,
+     "bb_vrms": 0.0958,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -5.36,
+     "evm_dB": -30.04,
+     "aclr_dB_lower_upper": [
+      40.62,
+      40.62
+     ],
+     "mask_margin_dB": 3.38,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -4.63,
+     "evm_dB": -30.05,
+     "aclr_dB_lower_upper": [
+      40.63,
+      40.62
+     ],
+     "mask_margin_dB": 3.3,
+     "bb_vrms": 0.1145,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -3.89,
+     "evm_dB": -30.01,
+     "aclr_dB_lower_upper": [
+      40.57,
+      40.56
+     ],
+     "mask_margin_dB": 3.27,
+     "bb_vrms": 0.1252,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -3.15,
+     "evm_dB": -29.82,
+     "aclr_dB_lower_upper": [
+      40.29,
+      40.26
+     ],
+     "mask_margin_dB": 3.04,
+     "bb_vrms": 0.137,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -2.42,
+     "evm_dB": -29.42,
+     "aclr_dB_lower_upper": [
+      39.54,
+      39.44
+     ],
+     "mask_margin_dB": 2.86,
+     "bb_vrms": 0.1497,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -1.7,
+     "evm_dB": -28.52,
+     "aclr_dB_lower_upper": [
+      37.86,
+      37.73
+     ],
+     "mask_margin_dB": 2.72,
+     "bb_vrms": 0.1637,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -1.0,
+     "evm_dB": -26.85,
+     "aclr_dB_lower_upper": [
+      35.22,
+      35.12
+     ],
+     "mask_margin_dB": 2.07,
+     "bb_vrms": 0.179,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -0.32,
+     "evm_dB": -24.76,
+     "aclr_dB_lower_upper": [
+      32.5,
+      32.45
+     ],
+     "mask_margin_dB": 1.28,
+     "bb_vrms": 0.1958,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 0.93,
+     "evm_dB": -20.68,
+     "aclr_dB_lower_upper": [
+      27.86,
+      27.88
+     ],
+     "mask_margin_dB": -1.57,
+     "bb_vrms": 0.2341,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 1.49,
+     "evm_dB": -18.93,
+     "aclr_dB_lower_upper": [
+      26.01,
+      26.02
+     ],
+     "mask_margin_dB": -2.65,
+     "bb_vrms": 0.2559,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.01,
+     "evm_dB": -17.42,
+     "aclr_dB_lower_upper": [
+      24.45,
+      24.46
+     ],
+     "mask_margin_dB": -3.63,
+     "bb_vrms": 0.2798,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.47,
+     "evm_dB": -16.14,
+     "aclr_dB_lower_upper": [
+      23.13,
+      23.15
+     ],
+     "mask_margin_dB": -4.49,
+     "bb_vrms": 0.306,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.89,
+     "evm_dB": -15.06,
+     "aclr_dB_lower_upper": [
+      22.02,
+      22.03
+     ],
+     "mask_margin_dB": -5.7,
+     "bb_vrms": 0.3346,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 3.27,
+     "evm_dB": -14.16,
+     "aclr_dB_lower_upper": [
+      21.06,
+      21.07
+     ],
+     "mask_margin_dB": -6.81,
+     "bb_vrms": 0.3658,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 3.6,
+     "evm_dB": -13.4,
+     "aclr_dB_lower_upper": [
+      20.23,
+      20.23
+     ],
+     "mask_margin_dB": -7.96,
+     "bb_vrms": 0.4,
+     "cfr_papr_dB": 8.0
+    }
+   ],
+   "max_mean_power_meeting": {
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=None": 0.32,
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=8.0": 0.33,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=None": 0.32,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=8.0": 0.33,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=None": 0.32,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=8.0": 0.33,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=None": 0.32,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=8.0": 0.33,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=None": -1.01,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=8.0": -1.7,
+    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=None": -11.97,
+    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=8.0": null
+   },
+   "at_0dBm": {
+    "cfr_None": {
+     "pout_dBm": 0.32,
+     "evm_dB": -22.84,
+     "aclr_dB_lower_upper": [
+      29.89,
+      29.89
+     ],
+     "mask_margin_dB": 0.1,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": null
+    },
+    "cfr_8.0": {
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": 8.0
+    }
+   },
+   "lo_jitter_sweep": [
+    {
+     "jitter_ps_rms": 0.0,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "jitter_ps_rms": 0.3,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.02,
+      30.02
+     ],
+     "mask_margin_dB": 0.17
+    },
+    {
+     "jitter_ps_rms": 0.5,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.01,
+      30.01
+     ],
+     "mask_margin_dB": 0.05
+    },
+    {
+     "jitter_ps_rms": 1.0,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.64,
+     "aclr_dB_lower_upper": [
+      29.96,
+      29.97
+     ],
+     "mask_margin_dB": -0.51
+    },
+    {
+     "jitter_ps_rms": 2.0,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.61,
+     "aclr_dB_lower_upper": [
+      29.77,
+      29.8
+     ],
+     "mask_margin_dB": -2.14
+    },
+    {
+     "jitter_ps_rms": 3.0,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.55,
+     "aclr_dB_lower_upper": [
+      29.48,
+      29.52
+     ],
+     "mask_margin_dB": -3.93
+    }
+   ],
+   "bb_iq_skew_sweep": [
+    {
+     "skew_ps": 0,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "skew_ps": 50,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "skew_ps": 100,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "skew_ps": 250,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.64,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "skew_ps": 500,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.6,
+     "aclr_dB_lower_upper": [
+      30.04,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "skew_ps": 1000,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.44,
+     "aclr_dB_lower_upper": [
+      30.04,
+      30.03
+     ],
+     "mask_margin_dB": 0.2
+    }
+   ],
+   "lo_iq_skew_sweep": [
+    {
+     "lo_q_skew_ps": 0,
+     "image_rejection_dB_transistor": 48.91,
+     "equiv_phase_err_deg": 0.411,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.23
+    },
+    {
+     "lo_q_skew_ps": 10,
+     "image_rejection_dB_transistor": 23.22,
+     "equiv_phase_err_deg": 7.897,
+     "pout_dBm": 0.32,
+     "evm_dB": -20.31,
+     "aclr_dB_lower_upper": [
+      29.85,
+      29.83
+     ],
+     "mask_margin_dB": 0.04
+    },
+    {
+     "lo_q_skew_ps": 20,
+     "image_rejection_dB_transistor": 17.33,
+     "equiv_phase_err_deg": 15.488,
+     "pout_dBm": 0.3,
+     "evm_dB": -16.81,
+     "aclr_dB_lower_upper": [
+      29.36,
+      29.33
+     ],
+     "mask_margin_dB": -0.47
+    },
+    {
+     "lo_q_skew_ps": 2,
+     "image_rejection_dB_transistor": 35.75,
+     "equiv_phase_err_deg": 1.869,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.5,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.02
+     ],
+     "mask_margin_dB": 0.22
+    },
+    {
+     "lo_q_skew_ps": 5,
+     "image_rejection_dB_transistor": 28.86,
+     "equiv_phase_err_deg": 4.13,
+     "pout_dBm": 0.33,
+     "evm_dB": -21.9,
+     "aclr_dB_lower_upper": [
+      29.98,
+      29.97
+     ],
+     "mask_margin_dB": 0.18
+    }
+   ]
+  },
+  "high-gain (txmix sat=1)": {
+   "amam": {
+    "vin": [
+     0.02,
+     0.05,
+     0.1,
+     0.15,
+     0.2,
+     0.3,
+     0.4,
+     0.5,
+     0.6,
+     0.8,
+     1.0,
+     1.3
+    ],
+    "pout_dBm": [
+     -12.72,
+     -5.2,
+     0.42,
+     3.59,
+     5.48,
+     5.47,
+     5.76,
+     6.0,
+     6.04,
+     6.05,
+     6.06,
+     6.06
+    ],
+    "compression_dB": [
+     0.0,
+     -0.45,
+     -0.84,
+     -1.19,
+     -1.8,
+     -5.33,
+     -7.54,
+     -9.24,
+     -10.78,
+     -13.27,
+     -15.21,
+     -17.48
+    ],
+    "p1dB_out_dBm": 1.836405729479085,
+    "psat_dBm": 6.06
+   },
+   "stimulus": {
+    "standard": "802.11ax HE20, 242 tones, 64QAM, 60 symbols",
+    "papr_dB": 9.99,
+    "dac": "10 bit, 40 MS/s, ZOH",
+    "filter": "Butterworth 5th order, 15.2 MHz"
+   },
+   "evm_limits_dB": {
+    "MCS0 BPSK 1/2": -5,
+    "MCS2 QPSK 3/4": -13,
+    "MCS4 16QAM 3/4": -19,
+    "MCS5 64QAM 2/3": -22,
+    "MCS7 64QAM 5/6": -27,
+    "MCS9 256QAM 5/6": -32
+   },
+   "mask_dBr": [
+    [
+     9.75,
+     0.0
+    ],
+    [
+     10.5,
+     -20.0
+    ],
+    [
+     20.0,
+     -28.0
+    ],
+    [
+     30.0,
+     -40.0
+    ],
+    [
+     60.0,
+     -40.0
+    ]
+   ],
+   "power_sweep": [
+    {
+     "pout_dBm": -9.53,
+     "evm_dB": -31.71,
+     "aclr_dB_lower_upper": [
+      41.76,
+      41.76
+     ],
+     "mask_margin_dB": 3.69,
+     "bb_vrms": 0.03,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -8.8,
+     "evm_dB": -31.56,
+     "aclr_dB_lower_upper": [
+      41.43,
+      41.42
+     ],
+     "mask_margin_dB": 3.69,
+     "bb_vrms": 0.0328,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -8.06,
+     "evm_dB": -31.42,
+     "aclr_dB_lower_upper": [
+      41.11,
+      41.1
+     ],
+     "mask_margin_dB": 3.68,
+     "bb_vrms": 0.0359,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -7.34,
+     "evm_dB": -31.28,
+     "aclr_dB_lower_upper": [
+      40.82,
+      40.82
+     ],
+     "mask_margin_dB": 3.67,
+     "bb_vrms": 0.0392,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -6.6,
+     "evm_dB": -31.15,
+     "aclr_dB_lower_upper": [
+      40.56,
+      40.55
+     ],
+     "mask_margin_dB": 3.59,
+     "bb_vrms": 0.0429,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -5.88,
+     "evm_dB": -31.02,
+     "aclr_dB_lower_upper": [
+      40.3,
+      40.29
+     ],
+     "mask_margin_dB": 3.54,
+     "bb_vrms": 0.0469,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -5.15,
+     "evm_dB": -30.87,
+     "aclr_dB_lower_upper": [
+      40.03,
+      40.02
+     ],
+     "mask_margin_dB": 3.5,
+     "bb_vrms": 0.0513,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -4.42,
+     "evm_dB": -30.67,
+     "aclr_dB_lower_upper": [
+      39.69,
+      39.68
+     ],
+     "mask_margin_dB": 3.5,
+     "bb_vrms": 0.0561,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -3.71,
+     "evm_dB": -30.39,
+     "aclr_dB_lower_upper": [
+      39.23,
+      39.21
+     ],
+     "mask_margin_dB": 3.47,
+     "bb_vrms": 0.0613,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -2.99,
+     "evm_dB": -29.93,
+     "aclr_dB_lower_upper": [
+      38.56,
+      38.53
+     ],
+     "mask_margin_dB": 3.34,
+     "bb_vrms": 0.067,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -2.28,
+     "evm_dB": -29.19,
+     "aclr_dB_lower_upper": [
+      37.52,
+      37.46
+     ],
+     "mask_margin_dB": 3.2,
+     "bb_vrms": 0.0733,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -1.59,
+     "evm_dB": -28.03,
+     "aclr_dB_lower_upper": [
+      36.01,
+      35.93
+     ],
+     "mask_margin_dB": 3.13,
+     "bb_vrms": 0.0801,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -0.9,
+     "evm_dB": -26.44,
+     "aclr_dB_lower_upper": [
+      34.09,
+      34.02
+     ],
+     "mask_margin_dB": 2.77,
+     "bb_vrms": 0.0876,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -0.24,
+     "evm_dB": -24.57,
+     "aclr_dB_lower_upper": [
+      32.02,
+      31.97
+     ],
+     "mask_margin_dB": 2.34,
+     "bb_vrms": 0.0958,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 0.4,
+     "evm_dB": -22.62,
+     "aclr_dB_lower_upper": [
+      29.91,
+      29.9
+     ],
+     "mask_margin_dB": 1.69,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 1.0,
+     "evm_dB": -20.74,
+     "aclr_dB_lower_upper": [
+      27.93,
+      27.94
+     ],
+     "mask_margin_dB": 0.2,
+     "bb_vrms": 0.1145,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 1.55,
+     "evm_dB": -19.0,
+     "aclr_dB_lower_upper": [
+      26.13,
+      26.14
+     ],
+     "mask_margin_dB": -1.16,
+     "bb_vrms": 0.1252,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.07,
+     "evm_dB": -17.44,
+     "aclr_dB_lower_upper": [
+      24.52,
+      24.54
+     ],
+     "mask_margin_dB": -2.87,
+     "bb_vrms": 0.137,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.53,
+     "evm_dB": -16.1,
+     "aclr_dB_lower_upper": [
+      23.14,
+      23.16
+     ],
+     "mask_margin_dB": -4.37,
+     "bb_vrms": 0.1497,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.95,
+     "evm_dB": -14.95,
+     "aclr_dB_lower_upper": [
+      21.95,
+      21.97
+     ],
+     "mask_margin_dB": -5.69,
+     "bb_vrms": 0.1637,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 3.32,
+     "evm_dB": -13.99,
+     "aclr_dB_lower_upper": [
+      20.93,
+      20.94
+     ],
+     "mask_margin_dB": -6.81,
+     "bb_vrms": 0.179,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 3.65,
+     "evm_dB": -13.18,
+     "aclr_dB_lower_upper": [
+      20.04,
+      20.05
+     ],
+     "mask_margin_dB": -7.74,
+     "bb_vrms": 0.1958,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 3.94,
+     "evm_dB": -12.52,
+     "aclr_dB_lower_upper": [
+      19.29,
+      19.29
+     ],
+     "mask_margin_dB": -8.69,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 4.2,
+     "evm_dB": -11.97,
+     "aclr_dB_lower_upper": [
+      18.63,
+      18.64
+     ],
+     "mask_margin_dB": -10.26,
+     "bb_vrms": 0.2341,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 4.43,
+     "evm_dB": -11.52,
+     "aclr_dB_lower_upper": [
+      18.07,
+      18.07
+     ],
+     "mask_margin_dB": -11.38,
+     "bb_vrms": 0.2559,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 4.63,
+     "evm_dB": -11.13,
+     "aclr_dB_lower_upper": [
+      17.59,
+      17.59
+     ],
+     "mask_margin_dB": -12.26,
+     "bb_vrms": 0.2798,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 4.81,
+     "evm_dB": -10.8,
+     "aclr_dB_lower_upper": [
+      17.18,
+      17.17
+     ],
+     "mask_margin_dB": -13.08,
+     "bb_vrms": 0.306,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 4.97,
+     "evm_dB": -10.51,
+     "aclr_dB_lower_upper": [
+      16.82,
+      16.81
+     ],
+     "mask_margin_dB": -13.9,
+     "bb_vrms": 0.3346,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 5.11,
+     "evm_dB": -10.26,
+     "aclr_dB_lower_upper": [
+      16.5,
+      16.49
+     ],
+     "mask_margin_dB": -14.64,
+     "bb_vrms": 0.3658,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 5.24,
+     "evm_dB": -10.03,
+     "aclr_dB_lower_upper": [
+      16.22,
+      16.21
+     ],
+     "mask_margin_dB": -15.35,
+     "bb_vrms": 0.4,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -9.53,
+     "evm_dB": -30.25,
+     "aclr_dB_lower_upper": [
+      41.79,
+      41.79
+     ],
+     "mask_margin_dB": 3.69,
+     "bb_vrms": 0.03,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -8.8,
+     "evm_dB": -30.13,
+     "aclr_dB_lower_upper": [
+      41.45,
+      41.45
+     ],
+     "mask_margin_dB": 3.7,
+     "bb_vrms": 0.0328,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -8.06,
+     "evm_dB": -30.03,
+     "aclr_dB_lower_upper": [
+      41.13,
+      41.13
+     ],
+     "mask_margin_dB": 3.68,
+     "bb_vrms": 0.0359,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -7.34,
+     "evm_dB": -29.93,
+     "aclr_dB_lower_upper": [
+      40.86,
+      40.86
+     ],
+     "mask_margin_dB": 3.65,
+     "bb_vrms": 0.0392,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -6.6,
+     "evm_dB": -29.83,
+     "aclr_dB_lower_upper": [
+      40.59,
+      40.59
+     ],
+     "mask_margin_dB": 3.57,
+     "bb_vrms": 0.0429,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -5.88,
+     "evm_dB": -29.71,
+     "aclr_dB_lower_upper": [
+      40.34,
+      40.34
+     ],
+     "mask_margin_dB": 3.53,
+     "bb_vrms": 0.0469,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -5.15,
+     "evm_dB": -29.59,
+     "aclr_dB_lower_upper": [
+      40.08,
+      40.07
+     ],
+     "mask_margin_dB": 3.49,
+     "bb_vrms": 0.0513,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -4.42,
+     "evm_dB": -29.44,
+     "aclr_dB_lower_upper": [
+      39.77,
+      39.76
+     ],
+     "mask_margin_dB": 3.48,
+     "bb_vrms": 0.0561,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -3.71,
+     "evm_dB": -29.23,
+     "aclr_dB_lower_upper": [
+      39.37,
+      39.36
+     ],
+     "mask_margin_dB": 3.47,
+     "bb_vrms": 0.0613,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -2.99,
+     "evm_dB": -28.87,
+     "aclr_dB_lower_upper": [
+      38.77,
+      38.75
+     ],
+     "mask_margin_dB": 3.34,
+     "bb_vrms": 0.067,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -2.28,
+     "evm_dB": -28.34,
+     "aclr_dB_lower_upper": [
+      37.88,
+      37.83
+     ],
+     "mask_margin_dB": 3.17,
+     "bb_vrms": 0.0733,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -1.58,
+     "evm_dB": -27.5,
+     "aclr_dB_lower_upper": [
+      36.54,
+      36.46
+     ],
+     "mask_margin_dB": 3.15,
+     "bb_vrms": 0.0801,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -0.89,
+     "evm_dB": -26.1,
+     "aclr_dB_lower_upper": [
+      34.56,
+      34.49
+     ],
+     "mask_margin_dB": 2.77,
+     "bb_vrms": 0.0876,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -0.23,
+     "evm_dB": -24.37,
+     "aclr_dB_lower_upper": [
+      32.34,
+      32.29
+     ],
+     "mask_margin_dB": 2.42,
+     "bb_vrms": 0.0958,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 1.0,
+     "evm_dB": -20.63,
+     "aclr_dB_lower_upper": [
+      28.03,
+      28.04
+     ],
+     "mask_margin_dB": 0.41,
+     "bb_vrms": 0.1145,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 1.56,
+     "evm_dB": -18.91,
+     "aclr_dB_lower_upper": [
+      26.18,
+      26.19
+     ],
+     "mask_margin_dB": -1.17,
+     "bb_vrms": 0.1252,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.07,
+     "evm_dB": -17.37,
+     "aclr_dB_lower_upper": [
+      24.55,
+      24.56
+     ],
+     "mask_margin_dB": -2.88,
+     "bb_vrms": 0.137,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.53,
+     "evm_dB": -16.04,
+     "aclr_dB_lower_upper": [
+      23.16,
+      23.18
+     ],
+     "mask_margin_dB": -4.38,
+     "bb_vrms": 0.1497,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.95,
+     "evm_dB": -14.91,
+     "aclr_dB_lower_upper": [
+      21.97,
+      21.98
+     ],
+     "mask_margin_dB": -5.7,
+     "bb_vrms": 0.1637,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 3.32,
+     "evm_dB": -13.95,
+     "aclr_dB_lower_upper": [
+      20.94,
+      20.95
+     ],
+     "mask_margin_dB": -6.82,
+     "bb_vrms": 0.179,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 3.65,
+     "evm_dB": -13.15,
+     "aclr_dB_lower_upper": [
+      20.05,
+      20.06
+     ],
+     "mask_margin_dB": -7.75,
+     "bb_vrms": 0.1958,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 3.95,
+     "evm_dB": -12.49,
+     "aclr_dB_lower_upper": [
+      19.29,
+      19.3
+     ],
+     "mask_margin_dB": -8.72,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 4.2,
+     "evm_dB": -11.95,
+     "aclr_dB_lower_upper": [
+      18.64,
+      18.64
+     ],
+     "mask_margin_dB": -10.27,
+     "bb_vrms": 0.2341,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 4.43,
+     "evm_dB": -11.5,
+     "aclr_dB_lower_upper": [
+      18.08,
+      18.08
+     ],
+     "mask_margin_dB": -11.38,
+     "bb_vrms": 0.2559,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 4.63,
+     "evm_dB": -11.12,
+     "aclr_dB_lower_upper": [
+      17.6,
+      17.59
+     ],
+     "mask_margin_dB": -12.26,
+     "bb_vrms": 0.2798,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 4.81,
+     "evm_dB": -10.79,
+     "aclr_dB_lower_upper": [
+      17.18,
+      17.18
+     ],
+     "mask_margin_dB": -13.08,
+     "bb_vrms": 0.306,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 4.97,
+     "evm_dB": -10.5,
+     "aclr_dB_lower_upper": [
+      16.82,
+      16.82
+     ],
+     "mask_margin_dB": -13.92,
+     "bb_vrms": 0.3346,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 5.11,
+     "evm_dB": -10.25,
+     "aclr_dB_lower_upper": [
+      16.51,
+      16.5
+     ],
+     "mask_margin_dB": -14.65,
+     "bb_vrms": 0.3658,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 5.24,
+     "evm_dB": -10.02,
+     "aclr_dB_lower_upper": [
+      16.23,
+      16.21
+     ],
+     "mask_margin_dB": -15.37,
+     "bb_vrms": 0.4,
+     "cfr_papr_dB": 8.0
+    }
+   ],
+   "max_mean_power_meeting": {
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=None": 1.0,
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=8.0": 1.0,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=None": 1.0,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=8.0": 1.0,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=None": 1.0,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=8.0": 1.0,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=None": 0.4,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=8.0": 0.41,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=None": -1.59,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=8.0": -1.58,
+    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=None": null,
+    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=8.0": null
+   },
+   "at_0dBm": {
+    "cfr_None": {
+     "pout_dBm": 0.4,
+     "evm_dB": -22.62,
+     "aclr_dB_lower_upper": [
+      29.91,
+      29.9
+     ],
+     "mask_margin_dB": 1.69,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": null
+    },
+    "cfr_8.0": {
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": 8.0
+    }
+   },
+   "lo_jitter_sweep": [
+    {
+     "jitter_ps_rms": 0.0,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "jitter_ps_rms": 0.3,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.09,
+      30.08
+     ],
+     "mask_margin_dB": 1.71
+    },
+    {
+     "jitter_ps_rms": 0.5,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.08,
+      30.08
+     ],
+     "mask_margin_dB": 1.56
+    },
+    {
+     "jitter_ps_rms": 1.0,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.47,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.86
+    },
+    {
+     "jitter_ps_rms": 2.0,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.44,
+     "aclr_dB_lower_upper": [
+      29.84,
+      29.86
+     ],
+     "mask_margin_dB": -1.21
+    },
+    {
+     "jitter_ps_rms": 3.0,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.39,
+     "aclr_dB_lower_upper": [
+      29.54,
+      29.58
+     ],
+     "mask_margin_dB": -3.32
+    }
+   ],
+   "bb_iq_skew_sweep": [
+    {
+     "skew_ps": 0,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "skew_ps": 50,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "skew_ps": 100,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "skew_ps": 250,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.47,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "skew_ps": 500,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.43,
+     "aclr_dB_lower_upper": [
+      30.11,
+      30.09
+     ],
+     "mask_margin_dB": 1.82
+    },
+    {
+     "skew_ps": 1000,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.28,
+     "aclr_dB_lower_upper": [
+      30.11,
+      30.09
+     ],
+     "mask_margin_dB": 1.82
+    }
+   ],
+   "lo_iq_skew_sweep": [
+    {
+     "lo_q_skew_ps": 0,
+     "image_rejection_dB_transistor": 48.91,
+     "equiv_phase_err_deg": 0.411,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "lo_q_skew_ps": 10,
+     "image_rejection_dB_transistor": 23.22,
+     "equiv_phase_err_deg": 7.897,
+     "pout_dBm": 0.4,
+     "evm_dB": -20.22,
+     "aclr_dB_lower_upper": [
+      29.9,
+      29.89
+     ],
+     "mask_margin_dB": 1.63
+    },
+    {
+     "lo_q_skew_ps": 20,
+     "image_rejection_dB_transistor": 17.33,
+     "equiv_phase_err_deg": 15.488,
+     "pout_dBm": 0.38,
+     "evm_dB": -16.8,
+     "aclr_dB_lower_upper": [
+      29.41,
+      29.38
+     ],
+     "mask_margin_dB": 1.2
+    },
+    {
+     "lo_q_skew_ps": 2,
+     "image_rejection_dB_transistor": 35.75,
+     "equiv_phase_err_deg": 1.869,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.33,
+     "aclr_dB_lower_upper": [
+      30.09,
+      30.08
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "lo_q_skew_ps": 5,
+     "image_rejection_dB_transistor": 28.86,
+     "equiv_phase_err_deg": 4.13,
+     "pout_dBm": 0.41,
+     "evm_dB": -21.76,
+     "aclr_dB_lower_upper": [
+      30.05,
+      30.03
+     ],
+     "mask_margin_dB": 1.77
+    }
+   ]
+  }
+ }
+}

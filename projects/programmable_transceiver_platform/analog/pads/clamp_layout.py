@@ -90,7 +90,7 @@ def assemble(work):
     def stack(x,y,lo,hi):
         for n in range(lo,hi+1):rect(layers[n],x-.24,y-.24,x+.24,y+.24)
         for n in range(lo,hi):
-            h=.13 if n==1 else .14
+            h=.13  # GDS cut: every via is exactly 0.26 um (KLayout V*.1); Magic re-grows cuts on read
             rect(vias[n],x-h,y-h,x+h,y+h)
     anchors={};placements={}
     for kind,y in [('timing',175.),('rail',245.)]:

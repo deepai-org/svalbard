@@ -19,8 +19,11 @@ free trunk positions).  DRC, LVS and extraction are run by run_wired_tx.sh.
 import json
 import statistics
 from pathlib import Path
+import sys
 import cells as C
 import tools
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import antenna_diodes as ad  # noqa: E402
 
 PRIM_GAP = 1.0
 ESC_PITCH = 0.9
@@ -98,11 +101,14 @@ def pin_names(p):
 class Script:
     def __init__(self):
         self.cmd = []
+        self.net = None       # net of the shapes being drawn (antenna-diode planning)
+        self.shapes = []      # (layer, x1, y1, x2, y2, net)
 
     def rect(self, layer, x1, y1, x2, y2):
         x1, x2 = sorted((snap(x1), snap(x2)))
         y1, y2 = sorted((snap(y1), snap(y2)))
         self.cmd += [f'box values {x1}um {y1}um {x2}um {y2}um', f'paint {layer}']
+        self.shapes.append((layer, x1, y1, x2, y2, self.net))
 
     def via(self, x, y, lo, hi):
         for m in range(lo, hi + 1):
@@ -198,7 +204,8 @@ def generate(work, cell=None, row_width=330.0):
     import shutil
     macros = sorted({d.model for d in devs if isinstance(d, C.MacroDev)})
     keys = sorted({(d.model, d.w, d.l) for d in devs if not isinstance(d, C.MacroDev)})
-    prims = {k: Prim(k, f'wtx_p{i}') for i, k in enumerate(keys)}
+    # block-unique primitive names (the chip GDS merges cells by name; wiredtx and hsbias both had wtx_p0..)
+    prims = {k: Prim(k, f'{cell.name}__p{i}') for i, k in enumerate(keys)}
     s = ['crashbackups stop', 'load workspace']
     for k, p in prims.items():
         model, w, l = k
@@ -226,6 +233,8 @@ def generate(work, cell=None, row_width=330.0):
     for t in trunks:
         trunk_by_net.setdefault(t[0], []).append(t)
     row_y = []
+    keepouts, terminals, taps = [], [], []
+    pin_info = {m: ad.macro_pin_info(tools.GENERATED / 'fast' / f'{m}.spice', m) for m in macros}
     for r, row in enumerate(rows):
         items = [(d, ex) for rr, d, ex in placed if rr == r]
         h = max(prims[(d.model, d.w, d.l)].height for d, _ in items)
@@ -234,9 +243,18 @@ def generate(work, cell=None, row_width=330.0):
             cx, cy = ex - p.x0, y - p.bbox[1]
             sc.cmd += [f'getcell {p.name} child 0 0 parent {snap(cx)}um {snap(cy)}um',
                        f'identify {d.name.replace("/", "_")}']
+            keepouts.append((cx + p.bbox[0], cy + p.bbox[1], cx + p.bbox[2], cy + p.bbox[3]))
+            if not isinstance(d, C.MacroDev) and d.model.startswith('nfet'):   # guard ring = P-substrate tap
+                taps.append(keepouts[-1])
             for pn, net in zip(pin_names(p), d.nodes):
                 px, py = p.pins[pn]
                 pin_geo.append((r, net, cx + p.esc[pn], cy + py, cx + px, getattr(p, 'kind', {}).get(pn, 'm1')))
+                if isinstance(d, C.MacroDev):
+                    pr, ga = pin_info[d.model].get(pn, (True, 0.))
+                    kind = 'sd' if pr else 'g'
+                else:
+                    kind, ga = ('g', d.w * d.l) if pn == 'g' else ('sd', 0.) if pn in ('d', 's') else ('x', 0.)
+                terminals.append((cx + px, cy + py, net, kind, ga))
         row_y.append(y)
         # segments in this channel
         segs = {}
@@ -272,6 +290,7 @@ def generate(work, cell=None, row_width=330.0):
     # routing
     for (r, net, ex, ey, px, kind) in pin_geo:
         sy = seg_track[(r, net)][0]
+        sc.net = net
         if kind == 'm1':
             sc.via(px, ey, 1, 2)
             if abs(px - ex) > 1e-6:
@@ -281,6 +300,7 @@ def generate(work, cell=None, row_width=330.0):
         sc.via(ex, sy, 3, 4)
     trunk_span = {}
     for (r, n), (sy, xs) in seg_track.items():
+        sc.net = n
         w = M4_PWR if n in POWER else M4_SIG
         sc.hwire('metal4', min(xs), max(xs), sy, w)
         for t in trunk_by_net.get(n, []):
@@ -302,7 +322,9 @@ def generate(work, cell=None, row_width=330.0):
             raise RuntimeError(f'trunk without tracks: {n}')
         lo = min(ys) - 0.3
         hi = H if rhi == len(rows) else max(ys) + 0.3
+        sc.net = n
         sc.vwire('metal5', x, lo, hi, w)
+        sc.net = None
         if n in cell.ports and rhi == len(rows) and n not in port_done:
             port_done.add(n)
             sc.cmd += [f'box values {snap(x-0.2)}um {snap(H-0.6)}um {snap(x+0.2)}um {snap(H)}um',
@@ -311,6 +333,11 @@ def generate(work, cell=None, row_width=330.0):
     missing = set(cell.ports) - port_done
     if missing:
         raise RuntimeError(f'ports without top trunk: {missing}')
+    # antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M5 get an N+/Psub diode
+    # under their own M3-M5 wire; listed in the summary so the LVS reference gets them too.
+    req = ad.requests_from_shapes(sc.shapes, terminals)
+    dcmds, diodes = ad.plan(req, [s_[:5] for s_ in sc.shapes], keepouts, taps=taps)
+    sc.cmd += dcmds   # plain numbers are microns ('units microns' above)
     sc.cmd += ['select top cell', f'save {name}',
                f'gds write {name}.gds',
                f'flatten {name}_flat', f'load {name}_flat', 'select top cell',
@@ -326,7 +353,7 @@ def generate(work, cell=None, row_width=330.0):
     tools.magic(work, 'cells.tcl')
     summary = dict(cell=name, devices=len(devs), rows=len(rows), W_um=round(W, 2), H_um=round(H, 2),
                    area_um2=round(W * H, 1), trunks=len(trunks), row_width_um=row_width,
-                   drc_count=int((work / 'drc-count.txt').read_text().split()[0]))
+                   drc_count=int((work / 'drc-count.txt').read_text().split()[0]), antenna_diodes=diodes)
     tools.write_json(work / 'layout-summary.json', summary)
     return summary
 

@@ -27,7 +27,7 @@ def generate(work, source_width=None, complementary_isolation=None, circuit=None
                         complementary_isolation=bool(complementary_isolation))
     if not cell_name.replace("_","").isalnum():raise ValueError("Invalid cell name")
     kinds=sorted({(d.model,d.w_um,d.l_um) for d in circuit.devices})
-    cells={k:f'primitive_{i}' for i,k in enumerate(kinds)}
+    cells={k:f'{cell_name}__primitive_{i}' for i,k in enumerate(kinds)}  # block-unique (chip GDS merge)
     commands=['crashbackups stop','load workspace']
     for (model,w,l),name in cells.items():
         if model.startswith('ppoly'):

@@ -1,24 +1,40 @@
 * SPDX-License-Identifier: Apache-2.0
-* pt_aosc: always-on management oscillator, nominal 50 MHz (40-60 MHz).
-* Schmitt-trigger RC relaxation oscillator: timing capacitor ATB_X charged
-* and discharged through R = 2 x 25 k ppolyf_u_1k from the gated output Z.
+* pt_aosc r3: always-on management oscillator, nominal 50 MHz (40-60 MHz).
+* Two-capacitor RC relaxation oscillator with an SR latch.
+* r1 (Schmitt trigger, single RC) spread 35.4-56.4 MHz extracted because the
+* Schmitt hysteresis grows with Vt at ss. Here each half period is
+* R*C*ln2 + latch delay: capacitor X (ATB_X) or XB charges from 0 through R
+* from the latch output until it crosses a plain inverter's switching point
+* (~VDD/2, symmetric in tt/ss/ff), the latch flips, that capacitor is
+* discharged and the other one charges. ln2 is independent of VDD.
+* Process spread: ppolyf_u_1k +-20 %; the timing capacitors are nfet gate
+* capacitors, which move -4/+5 % (opposite to R), so R*C spreads less than R.
+* r3: R 11 -> 9.4 um.  r2 extracted (layout parasitics on X/XB) ran 15 % below
+* schematic: tt 42.3-42.8, ss 38.2-38.7 (fail), ff 47.9-48.4 MHz.  9.4 um centres
+* the extracted spread in 40-60 MHz.
 * Self-contained (no bias input) so it survives bias/reference faults.
-* EN=0: Z=0, capacitor discharged, CLK=0, no static current.
+* EN=0: both capacitors discharged, latch forced Q=1, CLK=0, no static current.
 .include timing_cells.spice
 
 .subckt pt_aosc EN CLK ATB_X VDD VSS
-* Schmitt inverter: X -> Y
-XP1 SA ATB_X VDD VDD pfet_03v3 w=2u l=0.28u
-XP2 Y ATB_X SA VDD pfet_03v3 w=2u l=0.28u
-XP3 SA Y VSS VDD pfet_03v3 w=1u l=0.28u
-XN1 Y ATB_X SB VSS nfet_03v3 w=1u l=0.28u
-XN2 SB ATB_X VSS VSS nfet_03v3 w=1u l=0.28u
-XN3 SB Y VDD VSS nfet_03v3 w=0.5u l=0.28u
-* enable gate (non-inverting): Z = Y & EN
-XG Y EN ZB VDD VSS pt_t_nand2
-XGI ZB Z VDD VSS pt_t_inv2
-XR1 Z RM VSS ppolyf_u_1k r_width=1u r_length=25u
-XR2 RM ATB_X VSS ppolyf_u_1k r_width=1u r_length=25u
-XC VSS ATB_X VSS VSS nfet_03v3 w=8.5u l=10u
-XO1 ZB CLK VDD VSS pt_t_inv2
+* side A (ATB_X), charged while Q=1
+XNA Q EN NA VDD VSS pt_t_nand2
+XIA NA QA VDD VSS pt_t_inv2
+XRA QA ATB_X VSS ppolyf_u_1k r_width=1u r_length=9.4u
+XCA VSS ATB_X VSS VSS nfet_03v3 w=25u l=15u
+XDA ATB_X NA VSS VSS nfet_03v3 w=2u l=0.28u
+XPA DA ATB_X VDD VDD pfet_03v3 w=2u l=0.28u
+XMA DA ATB_X VSS VSS nfet_03v3 w=1u l=0.28u
+* side B (XB), charged while QB=1
+XNB QB EN NB VDD VSS pt_t_nand2
+XIB NB QBB VDD VSS pt_t_inv2
+XRB QBB XB VSS ppolyf_u_1k r_width=1u r_length=9.4u
+XCB VSS XB VSS VSS nfet_03v3 w=25u l=15u
+XDB XB NB VSS VSS nfet_03v3 w=2u l=0.28u
+XPB DB XB VDD VDD pfet_03v3 w=2u l=0.28u
+XMB DB XB VSS VSS nfet_03v3 w=1u l=0.28u
+* NAND SR latch: DA low (A crossed) resets Q; DB low sets Q; EN=0 forces Q=1
+XL1 DB QB EN Q VDD VSS pt_t_nand3
+XL2 DA Q QB VDD VSS pt_t_nand2
+XO NA CLK VDD VSS pt_t_inv2
 .ends

@@ -2,17 +2,17 @@
  "block": "cdr",
  "subckt": "pt_cdr",
  "source_hashes": {
-  "cdr.spice": "sha256:137762f1503865cc205c9e78157c93c3171653c2c7dbc44ca5bef60bf9a912bc",
-  "generated/cdr.ext.spice": "sha256:fbd62ff1b12d85efbecc875fea4481dc25e767d4fec9963ec7f39925a9a8eda5",
-  "generated/cdr.gds": "sha256:1007681835ddfd7eb6d770294b50f2128a3f32051362b4428bda542fc32dac4c",
-  "netlists.py": "sha256:90690f0b94360e16d0ad3ccc317b81cb7a823334e5d632e088556e0008663f47",
+  "cdr.spice": "sha256:137071123df2ca6db0fb1dad0bc4e35c6ca8c2db40e5c209ed116eb03def957b",
+  "generated/cdr.ext.spice": "sha256:f7a505a89b12f30e8b9aed5d0e9b6054ca71f2e17a27b60c6287a9873a0cbb12",
+  "generated/cdr.gds": "sha256:3ec2e3666eccb272eb2d2f3a6fc28c96ce303d43caa7588ba52ccad54a259787",
+  "netlists.py": "sha256:da365a0ce95f2b96eb372fed52aedd7a22452463578f042898333835a62f9119",
   "wrx_flow.py": "sha256:adb1f3b9b6dcd3b6c6fa6379e8abea316ea1dbb450a6d4b3f3dfbf854269dfe9",
-  "sims.py": "sha256:100523c87412b50e60072e14611efe6fb2dd60a6c8d98ba1f3f408ca0a2a6dc0",
+  "sims.py": "sha256:f0c8db7e9982348b7e47a9e78fbad1b4eb5c0a53c7a62b33a9b44ff73d65e60f",
   "run_family.py": "sha256:a14453c9264fe0659461ae9ca2dadb10d8d107df1c554835b0b503f101739052",
-  "evidence.py": "sha256:a59eef6d605b5710bf944128040122a323c0f452f95efcedc39c678764579d46",
-  "run_wired_rx.sh": "sha256:a1dca456de988cdc00d6d947449c8a7dc3b0131b5f99f1995e61244bbfa60f83",
-  "rtl/pt_wrx_cdr_loop.sv": "sha256:6239e376fceea48ecb57822b120d02ce7ff24713c0b138642323492880cc4a60",
-  "rtl/tb_pt_wrx_cdr_loop.sv": "sha256:1a37580da16571be2ed2e827f614217e16bb86c842e4c0ea419f33e061328dea"
+  "evidence.py": "sha256:ab823a99abf7f8a3271dcd014ca074ba68d9c30a474e9defec5592d68ce8c694",
+  "run_wired_rx.sh": "sha256:e198a45b7682b442875f690a7a51c4c593b33662c9eb22d03d259a84db872948",
+  "rtl/pt_wrx_cdr_loop.sv": "sha256:3e6a6bbb5a2dbd87402902d9c1bff7aed58b30c849f8176c99c6cee7605aeae3",
+  "rtl/tb_pt_wrx_cdr_loop.sv": "sha256:cff1f51dd6dc6350ea314febb855555568f943d604e0ec3f8e5f14b85e47b29f"
  },
  "images": {
   "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -28,50 +28,50 @@
    "cases": [
     {
      "case": "off_0C",
-     "i_rail": 1.07416e-07,
-     "vmax_ib_pll": 0.00126794,
-     "vmax_ref_pll": 0.0468505,
-     "i_rail_A": -1.07416e-07,
+     "i_rail": 3.84713e-07,
+     "vmax_ib_pll": 0.00126182,
+     "vmax_ref_pll": 0.050411,
+     "i_rail_A": -3.84713e-07,
      "outputs_low": true,
      "pass": true
     },
     {
      "case": "off_27C",
-     "i_rail": 1.12312e-07,
-     "vmax_ib_pll": 0.00136241,
-     "vmax_ref_pll": 0.05044,
-     "i_rail_A": -1.12312e-07,
+     "i_rail": 3.8936e-07,
+     "vmax_ib_pll": 0.0013554,
+     "vmax_ref_pll": 0.054252,
+     "i_rail_A": -3.8936e-07,
      "outputs_low": true,
      "pass": true
     },
     {
      "case": "off_85C",
-     "i_rail": -1.42297e-07,
-     "vmax_ib_pll": 0.00155875,
-     "vmax_ref_pll": 0.0581642,
-     "i_rail_A": 1.42297e-07,
+     "i_rail": 1.92567e-07,
+     "vmax_ib_pll": 0.00154903,
+     "vmax_ref_pll": 0.0624671,
+     "i_rail_A": -1.92567e-07,
      "outputs_low": true,
      "pass": true
     },
     {
      "case": "stuck_on",
-     "i_rail": -0.000176968,
-     "i_peak": -0.00285795,
-     "i_rail_A": 0.000176968,
+     "i_rail": -0.000178862,
+     "i_peak": -0.00295753,
+     "i_rail_A": 0.000178862,
      "pass": true
     },
     {
      "case": "unpowered",
-     "v_rail": 1.30994e-15,
-     "i_ain": -3.98443e-12,
-     "i_ctl": -1.0945e-20,
+     "v_rail": 1.03177e-14,
+     "i_ain": -3.98444e-12,
+     "i_ctl": 1.31354e-19,
      "pass": true
     },
     {
      "case": "unpowered_internal_driven",
-     "v_rail": 2.85849,
-     "i_ain": -2.3796e-05,
-     "i_ctl": -4.58785e-17,
+     "v_rail": 8.64434e-08,
+     "i_ain": -1.03564e-05,
+     "i_ctl": -1.30252e-17,
      "pass": false,
      "gating": false
     }
@@ -103,55 +103,55 @@
     "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
     "unique_match": true,
     "final": "Circuits match uniquely.",
-    "devices": 113
+    "devices": 125
    },
    "extracted_nominal": {
     "acq": {
-     "i_ibpll_uA": 9.37145,
-     "i_bb_nA": 0.621791,
-     "i_vdd_uA": 47.21164,
+     "i_ibpll_uA": 9.371550000000001,
+     "i_bb_nA": 0.865059,
+     "i_vdd_uA": 47.928869999999996,
      "pass": true
     },
     "hold_idle": {
-     "i_ibpll_uA": 1.65992e-05,
-     "i_bb_nA": 0.331455,
-     "i_vdd_uA": 41.091289999999994,
+     "i_ibpll_uA": 1.76723e-05,
+     "i_bb_nA": 0.468945,
+     "i_vdd_uA": 41.85381,
      "pass": true
     },
     "hold_up": {
-     "i_ibpll_uA": 1.65682e-05,
-     "i_bb_nA": 49.9184,
-     "i_vdd_uA": 41.14097,
+     "i_ibpll_uA": 1.76844e-05,
+     "i_bb_nA": 50.1343,
+     "i_vdd_uA": 41.90343,
      "pass": true
     },
     "hold_dn": {
-     "i_ibpll_uA": 1.66029e-05,
-     "i_bb_nA": -51.6279,
-     "i_vdd_uA": 41.09096,
+     "i_ibpll_uA": 1.76972e-05,
+     "i_bb_nA": -51.5677,
+     "i_vdd_uA": 41.80186,
      "pass": true
     },
     "hold_up_g": {
-     "i_ibpll_uA": 1.6565400000000002e-05,
-     "i_bb_nA": 99.50330000000001,
-     "i_vdd_uA": 41.19058,
+     "i_ibpll_uA": 1.77227e-05,
+     "i_bb_nA": 99.7992,
+     "i_vdd_uA": 41.95312,
      "pass": true
     },
     "hold_dn_g": {
-     "i_ibpll_uA": 1.65748e-05,
-     "i_bb_nA": -103.622,
-     "i_vdd_uA": 41.09096,
+     "i_ibpll_uA": 1.77299e-05,
+     "i_bb_nA": -103.598,
+     "i_vdd_uA": 41.74996,
      "pass": true
     },
     "acq_up": {
-     "i_ibpll_uA": 9.37145,
-     "i_bb_nA": 0.622159,
-     "i_vdd_uA": 47.21167,
+     "i_ibpll_uA": 9.371550000000001,
+     "i_bb_nA": 0.8668830000000001,
+     "i_vdd_uA": 47.92893,
      "pass": true
     },
     "off": {
-     "i_ibpll_uA": 1.01419e-15,
-     "i_bb_nA": 0.00220092,
-     "i_vdd_uA": 0.0001380015,
+     "i_ibpll_uA": 4.4678499999999994e-15,
+     "i_bb_nA": -0.004399999999999999,
+     "i_vdd_uA": 0.0001540473,
      "pass": true
     }
    },
@@ -159,10 +159,10 @@
    "non_gating_failures": [],
    "area": {
     "size_um": [
-     245.22,
-     163.5
+     278.92,
+     185.26
     ],
-    "area_um2": 40093.5,
+    "area_um2": 51672.7,
     "ceiling_um2": 300000
    }
   },
@@ -186,7 +186,7 @@
     {
      "route": "wire_cdr_external_clock",
      "state": "open",
-     "notes": "WCLK_IN path: diff_clk_rx -> ring PLL reference or slicer clocks is an integration item (the PI-based external-clock mux was removed with the PI)"
+     "notes": "WCLK_IN path: diff_clk_rx -> ring PLL reference or slicer clocks is an integration item"
     },
     {
      "route": "wire_cdr_fpga_oversample",
@@ -202,60 +202,60 @@
    "case": "acq",
    "metric": "i_ibpll_uA",
    "target": "PLL charge-pump bias delivered in acquisition (10 uA)",
-   "extracted_nominal": 9.37145,
-   "schematic_nominal": 9.37179,
-   "corner_min": 8.30401,
-   "corner_max": 10.0748,
+   "extracted_nominal": 9.371550000000001,
+   "schematic_nominal": 9.371879999999999,
+   "corner_min": 8.30411,
+   "corner_max": 10.074900000000001,
    "corners_reported": 12
   },
   {
    "case": "hold_idle",
    "metric": "i_ibpll_uA",
    "target": "PLL charge pump disabled in hold (0)",
-   "extracted_nominal": 1.65992e-05,
-   "schematic_nominal": -2.02669e-06,
-   "corner_min": 1.07312e-05,
-   "corner_max": 3.6177400000000004e-05,
+   "extracted_nominal": 1.76723e-05,
+   "schematic_nominal": -2.02674e-06,
+   "corner_min": 1.08257e-05,
+   "corner_max": 3.03703e-05,
    "corners_reported": 12
   },
   {
    "case": "hold_up",
    "metric": "i_bb_nA",
    "target": "bang-bang pump up current (~50 nA)",
-   "extracted_nominal": 49.9184,
-   "schematic_nominal": 49.566,
-   "corner_min": 43.923,
-   "corner_max": 53.822700000000005,
+   "extracted_nominal": 50.1343,
+   "schematic_nominal": 49.6015,
+   "corner_min": 44.063,
+   "corner_max": 54.0651,
    "corners_reported": 12
   },
   {
    "case": "hold_dn",
    "metric": "i_bb_nA",
    "target": "bang-bang pump down current (~-50 nA)",
-   "extracted_nominal": -51.6279,
-   "schematic_nominal": -52.0023,
-   "corner_min": -56.0683,
-   "corner_max": -45.6431,
+   "extracted_nominal": -51.5677,
+   "schematic_nominal": -52.05459999999999,
+   "corner_min": -55.9863,
+   "corner_max": -45.647099999999995,
    "corners_reported": 12
   },
   {
    "case": "hold_up_g",
    "metric": "i_bb_nA",
    "target": "bb_gain=1 (~100 nA)",
-   "extracted_nominal": 99.50330000000001,
-   "schematic_nominal": 99.128,
-   "corner_min": 87.63550000000001,
-   "corner_max": 107.329,
+   "extracted_nominal": 99.7992,
+   "schematic_nominal": 99.2072,
+   "corner_min": 87.8484,
+   "corner_max": 107.653,
    "corners_reported": 12
   },
   {
    "case": "hold_idle",
    "metric": "i_vdd_uA",
    "target": "cell supply current incl. hand-over flops clocked by FBCK (39 MHz)",
-   "extracted_nominal": 41.091289999999994,
-   "schematic_nominal": 24.59592,
-   "corner_min": 37.74822,
-   "corner_max": 42.91221,
+   "extracted_nominal": 41.85381,
+   "schematic_nominal": 25.2225,
+   "corner_min": 38.439319999999995,
+   "corner_max": 43.826299999999996,
    "corners_reported": 12
   },
   {
@@ -263,65 +263,21 @@
    "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt)",
    "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
    "extracted_nominal": {
-    "f_acq_end": 624590036.1770278,
-    "f_hold": 625483161.5715153,
-    "f_after_up": 625429180.2292216,
-    "f_after_dn": 624128183.4334699,
-    "vctrl_hold": 1.15986027,
-    "vctrl_after_up": 1.1628294,
-    "vctrl_after_dn": 1.16049272,
+    "f_acq_end": 624604660.7845012,
+    "f_hold": 628279415.9095681,
+    "f_after_up": 629006997.7626566,
+    "f_after_dn": 628548258.1224052,
+    "vctrl_hold": 1.17680646,
+    "vctrl_after_up": 1.14640765,
+    "vctrl_after_dn": 1.14588271,
     "f_target": 625000000.0,
-    "fb_minus_ref_ps": 636.8758943614203,
-    "acq_error_ppm": -655.9421167554591,
-    "hold_drift_ppm": 1429.9385881242354,
-    "bb_up_step_ppm": -86.30343006854613,
-    "bb_dn_step_ppm": -2080.166447102516,
-    "pass": false,
+    "fb_minus_ref_ps": 25211.872690528853,
+    "acq_error_ppm": -632.5427447980703,
+    "hold_drift_ppm": 5883.329657597081,
+    "bb_up_step_ppm": 1158.0545767764238,
+    "bb_dn_step_ppm": -729.3076895537043,
+    "pass": true,
     "gating": true
-   }
-  },
-  {
-   "case": "dual_quarter_2g5_no_fll",
-   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt) [non-gating]",
-   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
-   "extracted_nominal": {
-    "ivdd": -0.0159794,
-    "line_rate_bps": 2500000000.0,
-    "bits_per_cycle": 4,
-    "ring_hz_acq": 620000000.0,
-    "ring_hz_end": 602500000.0000007,
-    "ring_target_hz": 625000000.0,
-    "vctrl_at_hold": 1.18404882,
-    "vctrl_end": 1.13794526,
-    "bits_checked": 3888,
-    "bit_errors": 579,
-    "first_err_ns": 2800.695126459694,
-    "up_fraction": 0.11063736079644093,
-    "dn_fraction": 0.3187722661522063,
-    "pass": false,
-    "gating": false
-   }
-  },
-  {
-   "case": "dual_half_1g25_no_fll",
-   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt) [non-gating]",
-   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
-   "extracted_nominal": {
-    "ivdd": -0.0159561,
-    "line_rate_bps": 1250000000.0,
-    "bits_per_cycle": 2,
-    "ring_hz_acq": 620000000.0,
-    "ring_hz_end": 602500000.0000007,
-    "ring_target_hz": 625000000.0,
-    "vctrl_at_hold": 1.1830179,
-    "vctrl_end": 1.13139875,
-    "bits_checked": 1942,
-    "bit_errors": 189,
-    "first_err_ns": 2804.4088788548816,
-    "up_fraction": 0.04381636611427137,
-    "dn_fraction": 0.13211596557800476,
-    "pass": false,
-    "gating": false
    }
   },
   {
@@ -329,23 +285,23 @@
    "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt)",
    "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
    "extracted_nominal": {
-    "ivdd": -0.0158948,
-    "ring_hz_end_fit": 611459462.7735926,
-    "ring_hz_check_start_fit": 615037834.6776036,
-    "line_rate_bps": 2486609704.5161977,
+    "ivdd": -0.0164028,
+    "ring_hz_end_fit": 650058006.0873625,
+    "ring_hz_check_start_fit": 630452168.6122994,
+    "line_rate_bps": 2493518457.7327433,
     "bits_per_cycle": 4,
-    "ring_hz_acq": 620000000.0,
-    "ring_hz_end": 610000000.0,
-    "ring_target_hz": 621652426.1290494,
-    "vctrl_at_hold": 1.15816044,
-    "vctrl_end": 1.14729266,
-    "bits_checked": 3424,
-    "bit_errors": 354,
-    "first_err_ns": 2011.4276128416616,
-    "up_fraction": 0.1690877442463111,
-    "dn_fraction": 0.4133222834881724,
+    "ring_hz_acq": 615000000.0,
+    "ring_hz_end": 647500000.0,
+    "ring_target_hz": 623379614.4331858,
+    "vctrl_at_hold": 1.1536813,
+    "vctrl_end": 1.16317202,
+    "bits_checked": 3588,
+    "bit_errors": 560,
+    "first_err_ns": 2020.7360257890605,
+    "up_fraction": 0.16786162871918237,
+    "dn_fraction": 0.41139583470370267,
     "pass": false,
-    "free_running_ring_hz": 621341755.2514237,
+    "free_running_ring_hz": 623068080.3929894,
     "fll_residual_ppm": 500,
     "gating": true
    }
@@ -355,126 +311,174 @@
    "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt)",
    "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
    "extracted_nominal": {
-    "ivdd": -0.0160669,
-    "ring_hz_end_fit": 624024927.4621147,
-    "ring_hz_check_start_fit": 623403073.7036736,
-    "line_rate_bps": 1243302283.4018464,
+    "ivdd": -0.0162632,
+    "ring_hz_end_fit": 634905813.9991999,
+    "ring_hz_check_start_fit": 628619519.9442446,
+    "line_rate_bps": 1246761557.4100559,
     "bits_per_cycle": 2,
-    "ring_hz_acq": 620000000.0,
-    "ring_hz_end": 620000000.0,
-    "ring_target_hz": 621651141.7009232,
-    "vctrl_at_hold": 1.15809838,
-    "vctrl_end": 1.15820605,
-    "bits_checked": 1744,
-    "bit_errors": 33,
-    "first_err_ns": 2032.098338875501,
-    "up_fraction": 0.1375432999822772,
-    "dn_fraction": 0.09689851289735286,
+    "ring_hz_acq": 615000000.0,
+    "ring_hz_end": 632500000.0,
+    "ring_target_hz": 623380778.7050279,
+    "vctrl_at_hold": 1.15368108,
+    "vctrl_end": 1.14811064,
+    "bits_checked": 1768,
+    "bit_errors": 104,
+    "first_err_ns": 2057.7280783563333,
+    "up_fraction": 0.008502844232864001,
+    "dn_fraction": 0.07889296808811071,
     "pass": false,
-    "free_running_ring_hz": 621340471.4651906,
+    "free_running_ring_hz": 623069244.0829865,
     "fll_residual_ppm": 500,
     "gating": true
+   }
+  },
+  {
+   "case": "dual_quarter_2g5_no_fll",
+   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt) [non-gating]",
+   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
+   "extracted_nominal": {
+    "ivdd": -0.0167463,
+    "ring_hz_end_fit": 669349988.4461918,
+    "ring_hz_check_start_fit": 645485358.8336197,
+    "line_rate_bps": 2500000000.0,
+    "bits_per_cycle": 4,
+    "ring_hz_acq": 620000000.0,
+    "ring_hz_end": 667500000.0000007,
+    "ring_target_hz": 625000000.0,
+    "vctrl_at_hold": 1.17706464,
+    "vctrl_end": 1.21534283,
+    "bits_checked": 4216,
+    "bit_errors": 929,
+    "first_err_ns": 2802.771827546821,
+    "up_fraction": 0.09318589465460449,
+    "dn_fraction": 0.34547931762978945,
+    "pass": false,
+    "gating": false
+   }
+  },
+  {
+   "case": "dual_half_1g25_no_fll",
+   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt) [non-gating]",
+   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
+   "extracted_nominal": {
+    "ivdd": -0.0164248,
+    "ring_hz_end_fit": 642995580.9191852,
+    "ring_hz_check_start_fit": 635664494.1695093,
+    "line_rate_bps": 1250000000.0,
+    "bits_per_cycle": 2,
+    "ring_hz_acq": 620000000.0,
+    "ring_hz_end": 640000000.0000007,
+    "ring_target_hz": 625000000.0,
+    "vctrl_at_hold": 1.1789331,
+    "vctrl_end": 1.1555532,
+    "bits_checked": 2046,
+    "bit_errors": 193,
+    "first_err_ns": 2802.034726586906,
+    "up_fraction": 0.007958560027508332,
+    "dn_fraction": 0.07125129638564907,
+    "pass": false,
+    "gating": false
    }
   }
  ],
  "corner_set": "tt/ss/ff x 22/32 C x 3.15/3.35 V (spec/tapeout-plan.md operating envelope), extracted netlist",
  "excluded_coverage": [
   "Phase interpolator removed (lead decision): dual-loop CDR on a second pt_pll_ring instance (timing family, instantiated unchanged at integration) for half/quarter rate; full rate uses 8x oversampling with digital blind phase picking (no analog tracking)",
-  "The bang-bang pump is a separate weak pump on the PLL loop-filter node (ATB_VCTRL), not the PLL's own pump: pt_pll_ring has no hold input, so freq_hold gates its REF (at an FBCK falling edge) and clamps its pump bias IB_PLL (next FBCK rising edge) instead",
+  "The bang-bang pump is a separate weak pump on the PLL loop-filter node (ATB_VCTRL), not the PLL's own pump: freq_hold gates its REF (at an FBCK falling edge) and clamps its pump bias IB_PLL; the pt_pll_ring HOLD input (timing r6) is tied low and not used yet",
   "Extracted closed loop uses an analog-behavioural phase detector (sample/holds + smooth logic, ~4 ns decision filter) as a stand-in for the RTL, which decides every 20-bit word; long windows, ppm, SSC and the frequency-counter hand-over (FLL) are behavioural (RTL + analog loop model)",
   "The FLL hand-over step (cfg_fll_en) needs >100 us of ring time and is not simulated extracted",
   "Cold acquisition is not simulated: VCTRL is pre-charged near the 625 MHz lock value before the frequency loop runs",
-  "pt_pll_ring changed several times during this pass (port list BAND -> N4/N8, pump 20 uA); each extracted result records the pll_ring.ext.spice sha256 it used",
-  "Ring port phase error of pt_pll_ring (37.7/83 deg at 742.5 MHz, timing README) is included in the extracted runs as-is",
-  "Timing closure of the QCK-domain RTL (480-810 MHz) is not established; the timing family will own the shared word-divider/capture front end (P3-6)"
+  "Each extracted result records the sha256 of the pll_ring.ext.spice it used",
+  "Ring port phase error of pt_pll_ring (timing evidence) is included in the extracted runs as-is",
+  "Ring-rate capture is the fast-cell block pt_wrx_cap (capture.py), which is not part of this evidence flow"
  ],
  "rtl_check": {
   "bpc4_ui400ps_0ppm_ssc0": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1496 max_freq_err_ppm=1074.8 phase_sel=4",
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1493 max_freq_err_ppm=1023.2 psel=0",
    "PASS"
   ],
   "bpc4_ui400ps_300ppm_ssc0": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30180 errors=0 first_err_ui=-1 hold=1 vctrl=1.1499 max_freq_err_ppm=1074.9 phase_sel=4",
+   "RESULT bpc=4 ui_ps=400.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1493 max_freq_err_ppm=1024.6 psel=0",
    "PASS"
   ],
   "bpc4_ui400ps_-300ppm_ssc0": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30140 errors=0 first_err_ui=-1 hold=1 vctrl=1.1491 max_freq_err_ppm=1069.9 phase_sel=4",
+   "RESULT bpc=4 ui_ps=400.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1499 max_freq_err_ppm=1000.3 psel=0",
    "PASS"
   ],
   "bpc4_ui400ps_0ppm_ssc-5000": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=139840 errors=0 first_err_ui=-1 hold=1 vctrl=1.1478 max_freq_err_ppm=1131.9 phase_sel=4",
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=139560 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1477 max_freq_err_ppm=1065.9 psel=0",
    "PASS"
   ],
   "bpc2_ui800ps_0ppm_ssc0": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1491 max_freq_err_ppm=1250.3 phase_sel=4",
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1491 max_freq_err_ppm=1191.3 psel=0",
    "PASS"
   ],
   "bpc2_ui800ps_300ppm_ssc0": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30180 errors=0 first_err_ui=-1 hold=1 vctrl=1.1505 max_freq_err_ppm=1247.4 phase_sel=4",
+   "RESULT bpc=2 ui_ps=800.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1498 max_freq_err_ppm=1195.7 psel=0",
    "PASS"
   ],
   "bpc2_ui800ps_-300ppm_ssc0": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30140 errors=0 first_err_ui=-1 hold=1 vctrl=1.1505 max_freq_err_ppm=1274.1 phase_sel=4",
+   "RESULT bpc=2 ui_ps=800.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1504 max_freq_err_ppm=1205.3 psel=0",
    "PASS"
   ],
   "bpc2_ui800ps_0ppm_ssc-5000": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=60040 errors=0 first_err_ui=-1 hold=1 vctrl=1.1464 max_freq_err_ppm=1320.8 phase_sel=4",
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=59800 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1464 max_freq_err_ppm=1224.2 psel=0",
    "PASS"
   ],
   "bpc1_ui2083.3ps_0ppm_ssc0": [
-   "RESULT bpc=1 ui_ps=2083.3 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=20160 errors=0 first_err_ui=-1 hold=0 vctrl=1.1500 max_freq_err_ppm=0.0 phase_sel=3",
+   "RESULT bpc=1 ui_ps=2083.3 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=19920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=0 vctrl=1.1500 max_freq_err_ppm=0.0 psel=2",
    "PASS"
   ],
   "bpc1_ui2083.3ps_500ppm_ssc0": [
-   "RESULT bpc=1 ui_ps=2083.3 ppm=500.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=20180 errors=0 first_err_ui=-1 hold=0 vctrl=1.1500 max_freq_err_ppm=499.8 phase_sel=2",
+   "RESULT bpc=1 ui_ps=2083.3 ppm=500.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=19906 errors=0 first_err_ui=-1 slips_p=27 slips_m=47 hold=0 vctrl=1.1500 max_freq_err_ppm=0.0 psel=1",
    "PASS"
   ],
   "bpc1_ui2083.3ps_-500ppm_ssc0": [
-   "RESULT bpc=1 ui_ps=2083.3 ppm=-500.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=20140 errors=0 first_err_ui=-1 hold=0 vctrl=1.1500 max_freq_err_ppm=500.3 phase_sel=1",
+   "RESULT bpc=1 ui_ps=2083.3 ppm=-500.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=19892 errors=0 first_err_ui=-1 slips_p=56 slips_m=36 hold=0 vctrl=1.1500 max_freq_err_ppm=0.0 psel=0",
    "PASS"
   ],
   "bpc4_ui400ps_0ppm_ssc0_holdstep2000ppm": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1509 max_freq_err_ppm=1084.1 phase_sel=4",
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1510 max_freq_err_ppm=1017.6 psel=0",
    "PASS"
   ],
   "bpc4_ui400ps_0ppm_ssc0_holdstep-2000ppm": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1507 max_freq_err_ppm=1083.5 phase_sel=4",
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1496 max_freq_err_ppm=1001.6 psel=0",
    "PASS"
   ],
   "bpc4_ui400ps_0ppm_ssc0_holdstep4000ppm": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=4000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30380 errors=770 first_err_ui=30143 hold=1 vctrl=1.1572 max_freq_err_ppm=8031.5 phase_sel=4",
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=4000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30100 errors=656 first_err_ui=30047 slips_p=0 slips_m=0 hold=1 vctrl=1.1567 max_freq_err_ppm=7939.6 psel=0",
    "FAIL"
   ],
   "bpc2_ui800ps_0ppm_ssc0_holdstep2000ppm": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1502 max_freq_err_ppm=1265.1 phase_sel=4",
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1510 max_freq_err_ppm=1189.0 psel=0",
    "PASS"
   ],
   "bpc2_ui800ps_0ppm_ssc0_holdstep-2000ppm": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30160 errors=0 first_err_ui=-1 hold=1 vctrl=1.1503 max_freq_err_ppm=1259.2 phase_sel=4",
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1508 max_freq_err_ppm=1195.4 psel=0",
    "PASS"
   ],
   "bpc2_ui800ps_0ppm_ssc0_holdstep4000ppm": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=4000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30500 errors=1176 first_err_ui=30093 hold=1 vctrl=1.1615 max_freq_err_ppm=12253.3 phase_sel=4",
-   "FAIL"
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=4000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1503 max_freq_err_ppm=1203.0 psel=0",
+   "PASS"
   ],
   "bpc4_ui400ps_0ppm_ssc0_holdstep35000ppm_leak1nA_fll_k6": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=102740 fll_err_words=0 bits_checked=187440 errors=0 first_err_ui=-1 hold=1 vctrl=1.1495 max_freq_err_ppm=1094.9 phase_sel=4",
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=102732 fll_err_words=0 bits_checked=187200 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1502 max_freq_err_ppm=1025.2 psel=0",
    "PASS"
   ],
   "bpc4_ui400ps_300ppm_ssc0_holdstep-20000ppm_leak-1nA_fll_k6": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-20000 ileak_nA=-1.0 fll_en=1 fll_done_ui=102742 fll_err_words=-1 bits_checked=187480 errors=0 first_err_ui=-1 hold=1 vctrl=1.1513 max_freq_err_ppm=1096.7 phase_sel=4",
+   "RESULT bpc=4 ui_ps=400.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-20000 ileak_nA=-1.0 fll_en=1 fll_done_ui=102742 fll_err_words=-1 bits_checked=187240 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1510 max_freq_err_ppm=1027.6 psel=0",
    "PASS"
   ],
   "bpc2_ui800ps_0ppm_ssc0_holdstep35000ppm_leak1nA_fll_k7": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=123161 fll_err_words=1 bits_checked=87000 errors=0 first_err_ui=-1 hold=1 vctrl=1.1490 max_freq_err_ppm=1277.3 phase_sel=4",
+   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=143647 fll_err_words=0 bits_checked=66280 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1504 max_freq_err_ppm=1206.6 psel=0",
    "PASS"
   ],
   "bpc2_ui800ps_-300ppm_ssc0_holdstep-20000ppm_leak-1nA_fll_k7": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-20000 ileak_nA=-1.0 fll_en=1 fll_done_ui=61722 fll_err_words=1 bits_checked=149860 errors=5101 first_err_ui=71778 hold=1 vctrl=1.1602 max_freq_err_ppm=11321.4 phase_sel=4",
+   "RESULT bpc=2 ui_ps=800.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-20000 ileak_nA=-1.0 fll_en=1 fll_done_ui=61736 fll_err_words=1 bits_checked=149460 errors=4625 first_err_ui=71822 slips_p=0 slips_m=0 hold=1 vctrl=1.1603 max_freq_err_ppm=11538.0 psel=0",
    "FAIL"
   ],
   "bpc4_ui400ps_0ppm_ssc-5000_holdstep35000ppm_leak1nA_fll_k6": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=102740 fll_err_words=0 bits_checked=289640 errors=10151 first_err_ui=112866 hold=1 vctrl=1.1598 max_freq_err_ppm=15603.2 phase_sel=4",
+   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=102732 fll_err_words=0 bits_checked=289460 errors=10593 first_err_ui=112762 slips_p=0 slips_m=0 hold=1 vctrl=1.1615 max_freq_err_ppm=16599.6 psel=0",
    "FAIL"
   ],
   "yosys_generic_synth": {

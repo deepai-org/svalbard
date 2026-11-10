@@ -1,0 +1,13 @@
+* NGSPICE file created from ws_ctl.ext - technology: gf180mcuD
+
+.subckt ws_ctl EN CKP0 ENB QCK VDD VSS
+X0 qb CKP0 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X1 QCK qb VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X2 ENB EN VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X3 ENB EN VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X4 a_714_230# CKP0 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X5 VDD EN qb VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X6 qb EN a_714_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X7 QCK qb VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+.ends
+

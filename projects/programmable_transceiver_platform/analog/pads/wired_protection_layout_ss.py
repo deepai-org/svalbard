@@ -32,19 +32,43 @@ def assemble(work):
         for level in range(lo,hi):
             for dx in (-.6,0.,.6):
                 for dy in (-.6,0.,.6):box(vias[level],x+dx-.13,y+dy-.13,x+dx+.13,y+dy+.13)
-    for leg,cx,y,outer,px,py in [('P',37.5,400.,ox+288.,ox+186.,oy+40.),('N',248.5,412.,ox+304.,ox+190.,oy+60.)]:
+    ry=cfg.get('route_y_um') or [400.,412.]
+    for leg,cx,y,outer,px,py in [('P',37.5,ry[0],ox+288.,ox+186.,oy+40.),('N',248.5,ry[1],ox+304.,ox+190.,oy+60.)]:
         stack(cx,y,2,4);wire(4,(cx,y),(outer,y),8.)
         stack(outer,y,4,5);wire(5,(outer,y),(outer,py),8.)
         stack(outer,py,4,5);wire(4,(outer,py),(px,py),8.);stack(px,py,3,4)
     ground=ox+320.
     wire(4,(ox+138.,oy+4.),(ground,oy+4.),4.);stack(ground,oy+4.,4,5)
-    wire(5,(ground,oy+4.),(ground,gy),8.);stack(ground,gy,4,5)
-    wire(4,(ground,gy),(gx,gy),4.);stack(gx,gy,4,5)
+    if cfg.get('ground_low_um') is not None:
+        # Compact families: join the base VSS trunk below the network, at its bond-end
+        # landing, instead of running up past the network to the top-of-array VSS port.
+        lo=cfg['ground_low_um'];vw=cfg.get('vss_trunk_width_um',8.)
+        wire(5,(ground,oy+4.),(ground,lo),8.);stack(ground,lo,4,5)
+        wire(4,(ground,lo),(gx,lo),4.);stack(gx,lo,4,5)
+        box(metals[5],gx-vw/2,lo-2.,gx+vw/2,gy+.5)
+    else:
+        wire(5,(ground,oy+4.),(ground,gy),8.);stack(ground,gy,4,5)
+        wire(4,(ground,gy),(gx,gy),4.);stack(gx,gy,4,5)
     root.shapes(l.layer(42,10)).insert(k.DText('ESD_RAIL',k.DTrans(float(ox+130.),float(oy+4.))))
     if cfg.get('atb_port_um'):
         # Stress-safe network: expose the high-value protection-rail ATB tap.
         ax,ay=cfg['atb_port_um']
         root.shapes(l.layer(42,10)).insert(k.DText('ATB_ESD_RAIL',k.DTrans(float(ox+ax),float(oy+ay))))
+    for pin in cfg.get('side_pins') or []:
+        # Opt-in boundary (side) pins: extra metal from an existing port trunk to the cell
+        # edge, plus a same-name label there. Same net, no device change.
+        for layer,x1,y1,x2,y2 in pin['rects']:box(metals[layer],x1,y1,x2,y2)
+        for x,y,lo,hi in pin.get('stacks',[]):
+            for level in range(lo,hi+1):
+                h=.19 if level==1 else .22 if level==5 else .2
+                box(metals[level],x-h,y-h,x+h,y+h)
+            for level in range(lo,hi):
+                box(vias[level],x-.13,y-.13,x+.13,y+.13)   # GDS cut size is exactly 0.26 um (V*.1)
+        lx,ly,ll=pin['label']
+        root.shapes(l.layer(metals[ll],10)).insert(k.DText(pin['net'],k.DTrans(float(lx),float(ly))))
+        routes.append(dict(side_pin=pin['net'],rects=pin['rects']))
+    import marker_merge   # PCell implant/marker gaps below the KLayout spacing rules (PP.2, DV.2, SB.2)
+    (work/'marker-merge.json').write_text(json.dumps(marker_merge.merge(l,root),indent=1)+'\n')
     opts=k.SaveLayoutOptions();opts.select_cell(root.cell_index());l.write(str(work/'combined.gds'),opts)
     (work/'routes.json').write_text(json.dumps(routes,indent=2)+'\n')
     metadata=json.loads((work/'base-layout.json').read_text())
@@ -55,6 +79,8 @@ def assemble(work):
     else:
         b=network.dbbox();regions.append([b.left+ox,b.bottom+oy,b.right+ox,b.top+oy])
     for route in routes:
+        if 'side_pin' in route:
+            regions += [[x1,y1,x2,y2] for _,x1,y1,x2,y2 in route['rects']];continue
         a,b=route['start_um'],route['end_um'];h=route['width_um']/2
         regions.append([min(a[0],b[0])-h,min(a[1],b[1])-h,max(a[0],b[0])+h,max(a[1],b[1])+h])
     union=k.Region()
@@ -102,7 +128,7 @@ def export_model(work, network, pdk):
     return model
 
 
-def generate(work,base,network,origin,pdk=None):
+def generate(work,base,network,origin,pdk=None,route_y_um=None,ground_low_um=None,side_pins=None):
     from layout import IMAGE,magic
     work.mkdir(parents=True,exist_ok=False)
     meta=json.loads((base/'layout-report.json').read_text())
@@ -112,10 +138,13 @@ def generate(work,base,network,origin,pdk=None):
     base_gds=base/(meta['flat_cell']+'.gds')
     base_schematic=base/('pad_'+family+'.spice')
     ground_anchor=[meta['net_track_x_um']['VSS'],meta['port_heights_um']['VSS']]
-    for source,name in ((base_gds,'base.gds'),(base/'layout-report.json','base-layout.json'),(network/'network.gds','network.gds'),(Path(__file__),'wired_protection_layout.py')):shutil.copyfile(source,work/name)
+    if ground_low_um is not None:
+        # Bridge from the low ground row to the bottom of the base VSS trunk.
+        ground_anchor=[meta['net_track_x_um']['VSS'],meta['net_trunk_spans_um']['VSS'][0]]
+    for source,name in ((base_gds,'base.gds'),(base/'layout-report.json','base-layout.json'),(network/'network.gds','network.gds'),(Path(__file__),'wired_protection_layout.py'),(Path(__file__).with_name('marker_merge.py'),'marker_merge.py')):shutil.copyfile(source,work/name)
     network_meta=json.loads((network/'network-layout.json').read_text())
     atb=network_meta.get('ports',{}).get('ATB_RAIL')
-    (work/'config.json').write_text(json.dumps(dict(origin_um=origin,ground_anchor_um=ground_anchor,atb_port_um=atb,network_regions_um=network_meta.get('allocation_regions_um')))+'\n')
+    (work/'config.json').write_text(json.dumps(dict(origin_um=origin,ground_anchor_um=ground_anchor,atb_port_um=atb,network_regions_um=network_meta.get('allocation_regions_um'),route_y_um=route_y_um,ground_low_um=ground_low_um,side_pins=side_pins,vss_trunk_width_um=meta['net_trunk_widths_um']['VSS']))+'\n')
     subprocess.run(['docker','run','--rm','--network','none','--entrypoint','python3','--mount',f'type=bind,src={work},dst=/work',IMAGE,'/work/wired_protection_layout.py','--inside','--output-dir','/work'],check=True)
     (work/'extract.tcl').write_text('crashbackups stop\ngds read combined.gds\nload tx_with_primary\nselect top cell\nflatten combined_flat\nload combined_flat\nselect top cell\nexpand\ndrc check\ndrc catchup\nputs "COMBINED_DRC [drc list count total]"\nputs [drc listall why]\nextract all\next2spice lvs\next2spice cthresh 0\next2spice\nsave\nquit -noprompt\n')
     result=magic(work,'extract.tcl')

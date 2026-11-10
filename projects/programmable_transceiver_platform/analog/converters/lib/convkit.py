@@ -26,7 +26,11 @@ import math
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))   # analog/antenna_diodes.py
+import antenna_diodes as ad  # noqa: E402
 
 DIGITAL_IMAGE = 'svalbard/librelane-gf180-canary:2026.08'
 ANALOG_IMAGE = 'sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305'
@@ -382,6 +386,20 @@ def instance_view(dev, g):
     return box, pins
 
 
+def _lef_gate_area(lef):
+    """{pin: ANTENNAGATEAREA um^2} from a macro LEF."""
+    out, pin = {}, None
+    for line in Path(lef).read_text().splitlines():
+        tok = line.split()
+        if tok[:1] == ['PIN']:
+            pin = tok[1]
+        elif tok[:1] == ['ANTENNAGATEAREA'] and pin:
+            out[pin] = out.get(pin, 0.) + float(tok[1])
+        elif tok[:1] == ['END'] and len(tok) > 1 and tok[1] == pin:
+            pin = None
+    return out
+
+
 class Layout:
     W = 0.4              # default wire width (M2..M4)
     SP = 0.6             # track spacing
@@ -393,11 +411,15 @@ class Layout:
         self.row_gap = row_gap
         self.cmds = []
         self.report = {}
+        self.net = None           # net of the shapes being drawn (antenna-diode planning)
+        self.shapes = []          # (layer, x1, y1, x2, y2, net)
+        self.antenna_diodes = []
 
     # -- painting helpers
     def rect(self, layer, x1, y1, x2, y2):
         self.cmds.append(f'box values {q(min(x1, x2))} {q(min(y1, y2))} {q(max(x1, x2))} {q(max(y1, y2))}')
         self.cmds.append(f'paint {layer}')
+        self.shapes.append((layer, q(min(x1, x2)), q(min(y1, y2)), q(max(x1, x2)), q(max(y1, y2)), self.net))
 
     def via(self, x, y, lo, hi):
         half = {1: .19, 2: .2, 3: .2, 4: .2, 5: .22}
@@ -425,7 +447,9 @@ class Layout:
 
     def primitives(self):
         keys = sorted({d.key() for d in self.c.devices if not isinstance(d, Macro)}, key=str)
-        self.prim = {k: f'prim_{i}' for i, k in enumerate(keys)}
+        # Block-unique primitive cell names: a generic `prim_N` collides with other blocks' cells of
+        # the same name (and different contents) when the chip GDS merges every block's layout.
+        self.prim = {k: f'{self.c.name}__prim_{i}' for i, k in enumerate(keys)}
         cmds = ['crashbackups stop', 'load primitive_workspace']
         for k, name in self.prim.items():
             cmds += ['units internal', f'set cell [{gencell_cmd(k)}]', 'load $cell', f'save {name}',
@@ -690,6 +714,7 @@ class Layout:
             ty = track_y[(a['ch'], a['key'])]
             x, y0, p = a['x'], a['y'], a['p']
             pad = p['pad']
+            self.net = a['net']
             sgn = 1 if p['dir'] == 'up' else -1
             if pad == 'm1':
                 self.via(x, y0, 1, 2)
@@ -725,12 +750,14 @@ class Layout:
         for (c, k), xs in grp.items():
             xs = sorted(set(xs))
             ty = track_y[(c, k)]
+            self.net = k[0]
             for x1, x2 in zip(xs, xs[1:]):
                 if x2 - x1 < 1.2:
                     self.rect('metal2', x1, ty - .2, x2, ty + .2)
         for c, (tracks, spans, anchor, local, split) in chan_tracks.items():
             for k, (lo, hi) in spans.items():
                 n = k[0]
+                self.net = n
                 ty = track_y[(c, k)]
                 w = wide.get(n, self.W)
                 left = lo - 0.3
@@ -746,6 +773,7 @@ class Layout:
                     if n in jx and jumpers[n][0] <= c <= jumpers[n][1]:
                         self.via(jx[n], ty, 3, 4)
             for n, xl in local.items():
+                self.net = n
                 w = max(wide.get(n, self.W), self.W)
                 y1, y2 = track_y[(c, (n, 'lo'))], track_y[(c, (n, 'hi'))]
                 self.rect('metal4', xl - w / 2, y1 - .2, xl + w / 2, y2 + .2)
@@ -755,6 +783,7 @@ class Layout:
                         for d_ in (-w / 2 + 0.3, w / 2 - 0.3):
                             self.via(q(xl + d_), yv, 3, 4)
         for n, (lo, hi) in jumpers.items():
+            self.net = n
             self.rect('metal4', jx[n] - .2, track_y[(lo, chan_tracks[lo][2][n])] - .2,
                       jx[n] + .2, track_y[(hi, chan_tracks[hi][2][n])] + .2)
         for n, x in tx.items():
@@ -763,7 +792,10 @@ class Layout:
             if n in self.c.ports:
                 hi = top + 1.0
             w = wide.get(n, self.W)
+            self.net = n
             self.rect('metal4', x - w / 2, lo - 0.3, x + w / 2, hi + 0.3)
+        self.net = None
+        self._antenna(acc)
         labelled = set()
         for (c, k), ty in sorted(track_y.items()):
             n = k[0]
@@ -785,6 +817,41 @@ class Layout:
                            bbox_um=self.bbox,
                            area_um2=round((self.bbox[2] - self.bbox[0]) * (self.bbox[3] - self.bbox[1]), 1))
         return self
+
+    def _antenna(self, acc):
+        """Antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M4 get an N+/Psub
+        diode under their own M3/M4 wire (analog/antenna_diodes.py); see lvs_reference()."""
+        terms, keep, taps = [], [], []
+        for row in self.rows:
+            for u in row['units']:
+                box = (u['ox'] + u['box'][0], u['oy'] + u['box'][1], u['ox'] + u['box'][2], u['oy'] + u['box'][3])
+                keep.append(box)
+                if isinstance(u['dev'], Mos) and u['dev'].model.startswith('nfet'):
+                    taps.append(box)
+        for a in acc:
+            d, pin = a['unit']['dev'], next((k for k, v in a['unit']['pins'].items() if v == a['net'] and
+                                             a['p'] in a['unit']['view'].get(k, [])), None)
+            if isinstance(d, Mos):
+                kind = 'g' if pin == 'G' else 'sd' if pin in ('D', 'S') else 'x'
+                terms.append((a['x'], a['y'], a['net'], kind, d.w * d.l if kind == 'g' else 0.))
+            elif isinstance(d, Macro):
+                # Hardened macro input pins (LEF ANTENNAGATEAREA) are gates seen from this level's
+                # routing; the macro's internal diodes are not reliably on the partial net here.
+                ga = _lef_gate_area(d.lef).get(pin, 0.)
+                terms.append((a['x'], a['y'], a['net'], 'g' if ga > 0 else 'sd', ga))
+        req = ad.requests_from_shapes(self.shapes, terms)
+        cmds, self.antenna_diodes = ad.plan(req, [s[:5] for s in self.shapes], keep, taps=taps)
+        self.cmds += cmds
+        self.report['antenna_diodes'] = self.antenna_diodes
+
+    def lvs_reference(self, text):
+        """Schematic text + this layout's antenna diodes in the top subckt."""
+        lines = ad.spice_lines(self.antenna_diodes)
+        if not lines:
+            return text
+        k = text.index(f'.subckt {self.c.name} ')
+        e = text.index('.ends', k)
+        return text[:e] + '\n'.join(lines) + '\n' + text[e:]
 
     def write(self):
         name = self.c.name

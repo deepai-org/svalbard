@@ -139,15 +139,15 @@ Circuit 1: combined_flat                   |Circuit 2: expected
 -------------------------------------------|-------------------------------------------
 nfet_06v0 (851->29)                        |nfet_06v0 (851->29)                        
 nfet_03v3 (144->74)                        |nfet_03v3 (144->74)                        
-pfet_06v0 (35->7)                          |pfet_06v0 (35->7)                          
-diode_nd2ps_06v0 (12->3)                   |diode_nd2ps_06v0 (12->3)                   
 cap_mim_2f0_m4m5_noshield (2)              |cap_mim_2f0_m4m5_noshield (2)              
-diode_pd2nw_06v0 (8->2)                    |diode_pd2nw_06v0 (8->2)                    
+diode_nd2ps_06v0 (12->3)                   |diode_nd2ps_06v0 (12->3)                   
+pfet_06v0 (35->7)                          |pfet_06v0 (35->7)                          
 ppolyf_u_1k_6p0 (3)                        |ppolyf_u_1k_6p0 (3)                        
+diode_pd2nw_06v0 (8->2)                    |diode_pd2nw_06v0 (8->2)                    
 ppolyf_u_1k (17->3)                        |ppolyf_u_1k (17->3)                        
-ppolyf_u (12->1)                           |ppolyf_u (12->1)                           
 ppolyf_s (2)                               |ppolyf_s (2)                               
 pfet_03v3 (2)                              |pfet_03v3 (2)                              
+ppolyf_u (12->1)                           |ppolyf_u (12->1)                           
 Number of devices: 128                     |Number of devices: 128                     
 Number of nets: 74                         |Number of nets: 74                         
 ---------------------------------------------------------------------------------------
@@ -161,13 +161,12 @@ Circuit 1: combined_flat                   |Circuit 2: expected
 -------------------------------------------|-------------------------------------------
 ATB_ESD_RAIL                               |ATB_ESD_RAIL                               
 CASCODE                                    |CASCODE                                    
+PAD_N                                      |PAD_N                                      
+PAD_P                                      |PAD_P                                      
+VDD                                        |VDD                                        
 DETECT_PBIAS                               |DETECT_PBIAS                               
 DETECT_ENABLE                              |DETECT_ENABLE                              
 TERM_ENABLE                                |TERM_ENABLE                                
-PAD_P                                      |PAD_P                                      
-PAD_N                                      |PAD_N                                      
-VDD                                        |VDD                                        
-ESD_RAIL                                   |ESD_RAIL                                   
 TMDS_N                                     |TMDS_N                                     
 TMDS_P                                     |TMDS_P                                     
 MAIN_P                                     |MAIN_P                                     
@@ -177,8 +176,9 @@ POST_N                                     |POST_N
 MAIN_BIAS                                  |MAIN_BIAS                                  
 POST_BIAS                                  |POST_BIAS                                  
 TMDS_BIAS                                  |TMDS_BIAS                                  
-VSS                                        |VSS                                        
 TERM_VCM                                   |TERM_VCM                                   
+VSS                                        |VSS                                        
+ESD_RAIL                                   |ESD_RAIL                                   
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes combined_flat and expected are equivalent.

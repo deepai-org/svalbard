@@ -1,129 +1,2369 @@
 {
- "tune": {
-  "tune_vt0.0": {
-   "vtune_v": 0.0,
-   "f_hz": 2171604533.4416237,
-   "tank_p_v": [
-    1.52655,
-    2.67408
+ "r1_superseded": "see scratch/timing/lcvco/results.r1.json (qvco r1: 4 mA/core, NMOS 40 um, PMOS 80 um)",
+ "extremes": {
+  "x_tt27_3.3_pt_spiral_b0_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 0,
+   "spiral": "pt_spiral",
+   "f_hz": 2536255776.3225307,
+   "q_minus_i_tank_deg": -89.48522123759138,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 2.12837,
+   "tank_q_diff_peak_v": 2.12382,
+   "tank_ip_v": [
+    0.927297,
+    3.05832
    ],
-   "tank_n_v": [
-    1.52735,
-    2.67368
+   "tank_qp_v": [
+    0.93237,
+    3.05621
    ],
-   "tank_diff_vpp": 2.29506,
-   "buf_out_v": [
-    -0.000586282,
-    0.000250075
-   ],
-   "i_core_ma": 3.41345,
-   "i_buf_ma": 2.1385,
+   "tank_cm_v": 1.94074,
+   "i_core_ma": 13.7129,
+   "i_buf_ma": 1.85553,
    "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_tt27_3.3_pt_spiral_b0_vt0.3",
    "corner": "tt",
    "temp_c": 27,
    "vdd_v": 3.3,
-   "deck": "scratch/timing/lcvco/sim/tune_vt0.0.spice",
-   "netlist": "schematic VCO + analytical spiral"
+   "deck": "scratch/timing/lcvco/sim/x_tt27_3.3_pt_spiral_b0_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
   },
-  "tune_vt0.8": {
-   "vtune_v": 0.8,
-   "f_hz": 2176818623.118685,
-   "tank_p_v": [
-    1.5138,
-    2.67364
+  "x_tt27_3.3_pt_spiral_b0_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 0,
+   "spiral": "pt_spiral",
+   "f_hz": 2722132845.5271273,
+   "q_minus_i_tank_deg": -89.48870178762462,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 2.24344,
+   "tank_q_diff_peak_v": 2.23795,
+   "tank_ip_v": [
+    0.836218,
+    3.08289
    ],
-   "tank_n_v": [
-    1.51484,
-    2.67314
+   "tank_qp_v": [
+    0.842593,
+    3.08056
    ],
-   "tank_diff_vpp": 2.3196799999999995,
-   "buf_out_v": [
-    -0.000610413,
-    0.00025475
-   ],
-   "i_core_ma": 3.41338,
-   "i_buf_ma": 2.13962,
+   "tank_cm_v": 1.95067,
+   "i_core_ma": 13.5391,
+   "i_buf_ma": 1.85951,
    "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_tt27_3.3_pt_spiral_b0_vt3.0",
    "corner": "tt",
    "temp_c": 27,
    "vdd_v": 3.3,
-   "deck": "scratch/timing/lcvco/sim/tune_vt0.8.spice",
-   "netlist": "schematic VCO + analytical spiral"
+   "deck": "scratch/timing/lcvco/sim/x_tt27_3.3_pt_spiral_b0_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
   },
-  "tune_vt1.65": {
+  "x_tt27_3.3_pt_spiral_b15_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral",
+   "f_hz": 2116491703.3525229,
+   "q_minus_i_tank_deg": -89.447595665425,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.74633,
+   "tank_q_diff_peak_v": 1.74158,
+   "tank_ip_v": [
+    1.11894,
+    2.86766
+   ],
+   "tank_qp_v": [
+    1.12342,
+    2.86528
+   ],
+   "tank_cm_v": 1.98089,
+   "i_core_ma": 14.0322,
+   "i_buf_ma": 1.9447699999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_tt27_3.3_pt_spiral_b15_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/x_tt27_3.3_pt_spiral_b15_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_tt27_3.3_pt_spiral_b15_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 15,
+   "spiral": "pt_spiral",
+   "f_hz": 2225005951.890921,
+   "q_minus_i_tank_deg": -89.48555637386335,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.8319,
+   "tank_q_diff_peak_v": 1.82749,
+   "tank_ip_v": [
+    1.05686,
+    2.89196
+   ],
+   "tank_qp_v": [
+    1.0615,
+    2.88983
+   ],
+   "tank_cm_v": 1.9869,
+   "i_core_ma": 13.9733,
+   "i_buf_ma": 1.9145500000000002,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_tt27_3.3_pt_spiral_b15_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/x_tt27_3.3_pt_spiral_b15_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ss32_3.15_pt_spiral_lhi_lowq_b0_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 0,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2337579156.274179,
+   "q_minus_i_tank_deg": -89.1565780646247,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.70948,
+   "tank_q_diff_peak_v": 1.69712,
+   "tank_ip_v": [
+    0.842345,
+    2.5558
+   ],
+   "tank_qp_v": [
+    0.851175,
+    2.54952
+   ],
+   "tank_cm_v": 1.68466,
+   "i_core_ma": 14.0918,
+   "i_buf_ma": 1.43548,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_ss32_3.15_pt_spiral_lhi_lowq_b0_vt0.3",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/x_ss32_3.15_pt_spiral_lhi_lowq_b0_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ss32_3.15_pt_spiral_lhi_lowq_b0_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 0,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2550148673.667675,
+   "q_minus_i_tank_deg": -89.28529533271785,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.87754,
+   "tank_q_diff_peak_v": 1.86693,
+   "tank_ip_v": [
+    0.753349,
+    2.63679
+   ],
+   "tank_qp_v": [
+    0.762337,
+    2.63137
+   ],
+   "tank_cm_v": 1.70174,
+   "i_core_ma": 14.0521,
+   "i_buf_ma": 1.45014,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_ss32_3.15_pt_spiral_lhi_lowq_b0_vt3.0",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/x_ss32_3.15_pt_spiral_lhi_lowq_b0_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ss32_3.15_pt_spiral_lhi_lowq_b15_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 1926837962.5615385,
+   "q_minus_i_tank_deg": -88.73805601317957,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.12824,
+   "tank_q_diff_peak_v": 1.11519,
+   "tank_ip_v": [
+    1.08919,
+    2.22024
+   ],
+   "tank_qp_v": [
+    1.09639,
+    2.21199
+   ],
+   "tank_cm_v": 1.65807,
+   "i_core_ma": 13.729,
+   "i_buf_ma": 1.57611,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_ss32_3.15_pt_spiral_lhi_lowq_b15_vt0.3",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/x_ss32_3.15_pt_spiral_lhi_lowq_b15_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ss32_3.15_pt_spiral_lhi_lowq_b15_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2049549918.8378234,
+   "q_minus_i_tank_deg": -89.29905392775747,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.29934,
+   "tank_q_diff_peak_v": 1.29082,
+   "tank_ip_v": [
+    1.00629,
+    2.31005
+   ],
+   "tank_qp_v": [
+    1.0124,
+    2.30447
+   ],
+   "tank_cm_v": 1.68145,
+   "i_core_ma": 13.899099999999999,
+   "i_buf_ma": 1.5295400000000001,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_ss32_3.15_pt_spiral_lhi_lowq_b15_vt3.0",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/x_ss32_3.15_pt_spiral_lhi_lowq_b15_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ff22_3.35_pt_spiral_llo_b0_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 0,
+   "spiral": "pt_spiral_llo",
+   "f_hz": 2772279423.587662,
+   "q_minus_i_tank_deg": -89.52045110530781,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.9032,
+   "tank_q_diff_peak_v": 1.89875,
+   "tank_ip_v": [
+    1.22578,
+    3.13168
+   ],
+   "tank_qp_v": [
+    1.23059,
+    3.12968
+   ],
+   "tank_cm_v": 2.13917,
+   "i_core_ma": 13.6479,
+   "i_buf_ma": 2.7039500000000003,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": false,
+   "loi_rail_to_rail": false,
+   "case": "x_ff22_3.35_pt_spiral_llo_b0_vt0.3",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/x_ff22_3.35_pt_spiral_llo_b0_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ff22_3.35_pt_spiral_llo_b0_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 0,
+   "spiral": "pt_spiral_llo",
+   "f_hz": 2951881381.598562,
+   "q_minus_i_tank_deg": -89.48167914820505,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.99853,
+   "tank_q_diff_peak_v": 1.99492,
+   "tank_ip_v": [
+    1.14464,
+    3.14598
+   ],
+   "tank_qp_v": [
+    1.14958,
+    3.14433
+   ],
+   "tank_cm_v": 2.13855,
+   "i_core_ma": 13.540099999999999,
+   "i_buf_ma": 2.67441,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": false,
+   "loi_rail_to_rail": false,
+   "case": "x_ff22_3.35_pt_spiral_llo_b0_vt3.0",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/x_ff22_3.35_pt_spiral_llo_b0_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ff22_3.35_pt_spiral_llo_b15_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_llo",
+   "f_hz": 2328353760.7569942,
+   "q_minus_i_tank_deg": -89.52808925976976,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.64196,
+   "tank_q_diff_peak_v": 1.63809,
+   "tank_ip_v": [
+    1.36025,
+    3.00388
+   ],
+   "tank_qp_v": [
+    1.36387,
+    3.00204
+   ],
+   "tank_cm_v": 2.17527,
+   "i_core_ma": 13.839,
+   "i_buf_ma": 2.80747,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": false,
+   "loi_rail_to_rail": false,
+   "case": "x_ff22_3.35_pt_spiral_llo_b15_vt0.3",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/x_ff22_3.35_pt_spiral_llo_b15_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ff22_3.35_pt_spiral_llo_b15_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 15,
+   "spiral": "pt_spiral_llo",
+   "f_hz": 2433948716.700539,
+   "q_minus_i_tank_deg": -89.52092587409183,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.71411,
+   "tank_q_diff_peak_v": 1.71016,
+   "tank_ip_v": [
+    1.30088,
+    3.01729
+   ],
+   "tank_qp_v": [
+    1.30503,
+    3.01545
+   ],
+   "tank_cm_v": 2.14969,
+   "i_core_ma": 13.7917,
+   "i_buf_ma": 2.75035,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": false,
+   "loi_rail_to_rail": false,
+   "case": "x_ff22_3.35_pt_spiral_llo_b15_vt3.0",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/x_ff22_3.35_pt_spiral_llo_b15_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ff22_3.35_pt_spiral_llo_lowq_b0_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 0,
+   "spiral": "pt_spiral_llo_lowq",
+   "f_hz": 2783073347.8980837,
+   "q_minus_i_tank_deg": -89.53536590456844,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.44828,
+   "tank_q_diff_peak_v": 1.4387,
+   "tank_ip_v": [
+    1.46662,
+    2.91762
+   ],
+   "tank_qp_v": [
+    1.47388,
+    2.91254
+   ],
+   "tank_cm_v": 2.18462,
+   "i_core_ma": 13.8764,
+   "i_buf_ma": 3.1512599999999997,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": false,
+   "loi_rail_to_rail": false,
+   "case": "x_ff22_3.35_pt_spiral_llo_lowq_b0_vt0.3",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/x_ff22_3.35_pt_spiral_llo_lowq_b0_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ff22_3.35_pt_spiral_llo_lowq_b0_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 0,
+   "spiral": "pt_spiral_llo_lowq",
+   "f_hz": 2975110227.833941,
+   "q_minus_i_tank_deg": -89.41521233361695,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.55035,
+   "tank_q_diff_peak_v": 1.5428,
+   "tank_ip_v": [
+    1.39457,
+    2.94899
+   ],
+   "tank_qp_v": [
+    1.40197,
+    2.94511
+   ],
+   "tank_cm_v": 2.16935,
+   "i_core_ma": 13.8467,
+   "i_buf_ma": 3.08459,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": false,
+   "loi_rail_to_rail": false,
+   "case": "x_ff22_3.35_pt_spiral_llo_lowq_b0_vt3.0",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/x_ff22_3.35_pt_spiral_llo_lowq_b0_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ff22_3.35_pt_spiral_llo_lowq_b15_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_llo_lowq",
+   "f_hz": 2322233059.3098326,
+   "q_minus_i_tank_deg": -89.29441270725931,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.13499,
+   "tank_q_diff_peak_v": 1.12906,
+   "tank_ip_v": [
+    1.60646,
+    2.74371
+   ],
+   "tank_qp_v": [
+    1.61095,
+    2.74019
+   ],
+   "tank_cm_v": 2.18622,
+   "i_core_ma": 13.8392,
+   "i_buf_ma": 3.33359,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": false,
+   "loi_rail_to_rail": false,
+   "case": "x_ff22_3.35_pt_spiral_llo_lowq_b15_vt0.3",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/x_ff22_3.35_pt_spiral_llo_lowq_b15_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ff22_3.35_pt_spiral_llo_lowq_b15_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 15,
+   "spiral": "pt_spiral_llo_lowq",
+   "f_hz": 2436421578.8986397,
+   "q_minus_i_tank_deg": -89.29787202939298,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.22739,
+   "tank_q_diff_peak_v": 1.22191,
+   "tank_ip_v": [
+    1.54851,
+    2.77964
+   ],
+   "tank_qp_v": [
+    1.55347,
+    2.77648
+   ],
+   "tank_cm_v": 2.1711,
+   "i_core_ma": 13.8669,
+   "i_buf_ma": 3.2519,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": false,
+   "loi_rail_to_rail": false,
+   "case": "x_ff22_3.35_pt_spiral_llo_lowq_b15_vt3.0",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/x_ff22_3.35_pt_spiral_llo_lowq_b15_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ss32_3.15_pt_spiral_lhi_b0_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 0,
+   "spiral": "pt_spiral_lhi",
+   "f_hz": 2338278792.980487,
+   "q_minus_i_tank_deg": -89.50987338220337,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 2.29064,
+   "tank_q_diff_peak_v": 2.28561,
+   "tank_ip_v": [
+    0.561089,
+    2.85501
+   ],
+   "tank_qp_v": [
+    0.566043,
+    2.85207
+   ],
+   "tank_cm_v": 1.65776,
+   "i_core_ma": 13.7311,
+   "i_buf_ma": 1.29094,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_ss32_3.15_pt_spiral_lhi_b0_vt0.3",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/x_ss32_3.15_pt_spiral_lhi_b0_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ss32_3.15_pt_spiral_lhi_b0_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 0,
+   "spiral": "pt_spiral_lhi",
+   "f_hz": 2533229639.8000774,
+   "q_minus_i_tank_deg": -89.54944484272443,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 2.43062,
+   "tank_q_diff_peak_v": 2.42444,
+   "tank_ip_v": [
+    0.468859,
+    2.9034
+   ],
+   "tank_qp_v": [
+    0.475582,
+    2.90038
+   ],
+   "tank_cm_v": 1.64316,
+   "i_core_ma": 13.5022,
+   "i_buf_ma": 1.3421399999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_ss32_3.15_pt_spiral_lhi_b0_vt3.0",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/x_ss32_3.15_pt_spiral_lhi_b0_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ss32_3.15_pt_spiral_lhi_b15_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi",
+   "f_hz": 1940131424.5026958,
+   "q_minus_i_tank_deg": -89.16797463860202,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.81621,
+   "tank_q_diff_peak_v": 1.80705,
+   "tank_ip_v": [
+    0.787941,
+    2.60767
+   ],
+   "tank_qp_v": [
+    0.794841,
+    2.60326
+   ],
+   "tank_cm_v": 1.68159,
+   "i_core_ma": 14.104999999999999,
+   "i_buf_ma": 1.2546899999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_ss32_3.15_pt_spiral_lhi_b15_vt0.3",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/x_ss32_3.15_pt_spiral_lhi_b15_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "x_ss32_3.15_pt_spiral_lhi_b15_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 15,
+   "spiral": "pt_spiral_lhi",
+   "f_hz": 2053215232.393166,
+   "q_minus_i_tank_deg": -89.43509889311166,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.91883,
+   "tank_q_diff_peak_v": 1.91276,
+   "tank_ip_v": [
+    0.72856,
+    2.65194
+   ],
+   "tank_qp_v": [
+    0.734196,
+    2.64888
+   ],
+   "tank_cm_v": 1.69981,
+   "i_core_ma": 14.056600000000001,
+   "i_buf_ma": 1.26797,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "cml_drive_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "x_ss32_3.15_pt_spiral_lhi_b15_vt3.0",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/x_ss32_3.15_pt_spiral_lhi_b15_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  }
+ },
+ "startup": {
+  "su_tt22_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2052166061.2776785,
+   "q_minus_i_tank_deg": -89.32734100843439,
+   "q_minus_i_loi_deg": -89.24385889306163,
+   "tank_diff_peak_v": 1.33184,
+   "tank_q_diff_peak_v": 1.32607,
+   "tank_ip_v": [
+    1.16241,
+    2.4972
+   ],
+   "loi_ip_v": [
+    0.0374909,
+    3.14848
+   ],
+   "loi_qp_v": [
+    0.0388349,
+    3.14754
+   ],
+   "loi_duty": 0.5416322928851403,
+   "i_core_ma": 14.043999999999999,
+   "i_buf_ma": 8.760499999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_tt22_3.15_lowq",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_tt22_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_tt22_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2052422987.958434,
+   "q_minus_i_tank_deg": -89.2978866200493,
+   "q_minus_i_loi_deg": -89.21291630834781,
+   "tank_diff_peak_v": 1.34284,
+   "tank_q_diff_peak_v": 1.3369,
+   "tank_ip_v": [
+    1.3555,
+    2.70121
+   ],
+   "loi_ip_v": [
+    0.0528696,
+    3.3364
+   ],
+   "loi_qp_v": [
+    0.0544756,
+    3.33517
+   ],
+   "loi_duty": 0.5417514146325444,
+   "i_core_ma": 14.0878,
+   "i_buf_ma": 10.4045,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_tt22_3.35_lowq",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_tt22_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_tt32_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2051568218.74641,
+   "q_minus_i_tank_deg": -89.30796500845247,
+   "q_minus_i_loi_deg": -89.22450721331386,
+   "tank_diff_peak_v": 1.30345,
+   "tank_q_diff_peak_v": 1.29719,
+   "tank_ip_v": [
+    1.17677,
+    2.48309
+   ],
+   "loi_ip_v": [
+    0.0495799,
+    3.13845
+   ],
+   "loi_qp_v": [
+    0.0511597,
+    3.13726
+   ],
+   "loi_duty": 0.5434378538955178,
+   "i_core_ma": 13.8919,
+   "i_buf_ma": 8.908009999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_tt32_3.15_lowq",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_tt32_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_tt32_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2051808155.93742,
+   "q_minus_i_tank_deg": -89.2763067453193,
+   "q_minus_i_loi_deg": -89.19136188766349,
+   "tank_diff_peak_v": 1.31437,
+   "tank_q_diff_peak_v": 1.30794,
+   "tank_ip_v": [
+    1.36995,
+    2.68715
+   ],
+   "loi_ip_v": [
+    0.0667774,
+    3.32415
+   ],
+   "loi_qp_v": [
+    0.068652,
+    3.32265
+   ],
+   "loi_duty": 0.5437147986663248,
+   "i_core_ma": 13.934000000000001,
+   "i_buf_ma": 10.565700000000001,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_tt32_3.35_lowq",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_tt32_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ss22_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 1965088242.28752,
+   "q_minus_i_tank_deg": -89.21775732339262,
+   "q_minus_i_loi_deg": -88.17075830790185,
+   "tank_diff_peak_v": 1.20879,
+   "tank_q_diff_peak_v": 1.20039,
+   "tank_ip_v": [
+    1.05074,
+    2.26284
+   ],
+   "loi_ip_v": [
+    0.0660891,
+    3.12454
+   ],
+   "loi_qp_v": [
+    0.0661117,
+    3.12006
+   ],
+   "loi_duty": 0.5506963290186546,
+   "i_core_ma": 13.9372,
+   "i_buf_ma": 7.21687,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ss22_3.15_lowq",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_ss22_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ss22_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 1964976263.0867417,
+   "q_minus_i_tank_deg": -89.19569591599334,
+   "q_minus_i_loi_deg": -88.3079196403308,
+   "tank_diff_peak_v": 1.22291,
+   "tank_q_diff_peak_v": 1.21455,
+   "tank_ip_v": [
+    1.24209,
+    2.46837
+   ],
+   "loi_ip_v": [
+    0.0822141,
+    3.30887
+   ],
+   "loi_qp_v": [
+    0.0826016,
+    3.30397
+   ],
+   "loi_duty": 0.5494211179928946,
+   "i_core_ma": 14.0173,
+   "i_buf_ma": 8.64611,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ss22_3.35_lowq",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_ss22_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ss32_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 1964420417.4000502,
+   "q_minus_i_tank_deg": -89.01983278853406,
+   "q_minus_i_loi_deg": -87.41733718883586,
+   "tank_diff_peak_v": 1.16966,
+   "tank_q_diff_peak_v": 1.1587,
+   "tank_ip_v": [
+    1.07034,
+    2.24312
+   ],
+   "loi_ip_v": [
+    0.0837991,
+    3.11031
+   ],
+   "loi_qp_v": [
+    0.0831423,
+    3.10406
+   ],
+   "loi_duty": 0.554383014835303,
+   "i_core_ma": 13.7725,
+   "i_buf_ma": 7.35458,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ss32_3.15_lowq",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_ss32_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ss32_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 1964289221.945039,
+   "q_minus_i_tank_deg": -89.01105894831956,
+   "q_minus_i_loi_deg": -87.66324225578978,
+   "tank_diff_peak_v": 1.18377,
+   "tank_q_diff_peak_v": 1.17302,
+   "tank_ip_v": [
+    1.26172,
+    2.44865
+   ],
+   "loi_ip_v": [
+    0.101876,
+    3.29253
+   ],
+   "loi_qp_v": [
+    0.101836,
+    3.28582
+   ],
+   "loi_duty": 0.5532931308805908,
+   "i_core_ma": 13.8509,
+   "i_buf_ma": 8.79954,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ss32_3.35_lowq",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_ss32_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ff22_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2149557621.0415897,
+   "q_minus_i_tank_deg": -89.48075286106119,
+   "q_minus_i_loi_deg": -89.37164131621711,
+   "tank_diff_peak_v": 1.36541,
+   "tank_q_diff_peak_v": 1.36171,
+   "tank_ip_v": [
+    1.30185,
+    2.66926
+   ],
+   "loi_ip_v": [
+    0.033837,
+    3.14945
+   ],
+   "loi_qp_v": [
+    0.0346849,
+    3.14886
+   ],
+   "loi_duty": 0.5394228867699028,
+   "i_core_ma": 13.8668,
+   "i_buf_ma": 10.947999999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ff22_3.15_lowq",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_ff22_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ff22_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2150075252.6338425,
+   "q_minus_i_tank_deg": -89.46127714470008,
+   "q_minus_i_loi_deg": -89.35059127069445,
+   "tank_diff_peak_v": 1.37459,
+   "tank_q_diff_peak_v": 1.37078,
+   "tank_ip_v": [
+    1.49562,
+    2.8722
+   ],
+   "loi_ip_v": [
+    0.0507715,
+    3.3373
+   ],
+   "loi_qp_v": [
+    0.051811,
+    3.33651
+   ],
+   "loi_duty": 0.5403268114384004,
+   "i_core_ma": 13.8909,
+   "i_buf_ma": 12.9004,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ff22_3.35_lowq",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_ff22_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ff32_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2148970965.2532887,
+   "q_minus_i_tank_deg": -89.45246368776313,
+   "q_minus_i_loi_deg": -89.34415555111434,
+   "tank_diff_peak_v": 1.34218,
+   "tank_q_diff_peak_v": 1.33814,
+   "tank_ip_v": [
+    1.3143,
+    2.65851
+   ],
+   "loi_ip_v": [
+    0.0446283,
+    3.1412
+   ],
+   "loi_qp_v": [
+    0.04565,
+    3.14044
+   ],
+   "loi_duty": 0.5411581664120136,
+   "i_core_ma": 13.7261,
+   "i_buf_ma": 11.1096,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ff32_3.15_lowq",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_ff32_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ff32_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2149465213.0549917,
+   "q_minus_i_tank_deg": -89.43202531210234,
+   "q_minus_i_loi_deg": -89.32291845788768,
+   "tank_diff_peak_v": 1.35145,
+   "tank_q_diff_peak_v": 1.34731,
+   "tank_ip_v": [
+    1.50803,
+    2.86151
+   ],
+   "loi_ip_v": [
+    0.0632468,
+    3.32694
+   ],
+   "loi_qp_v": [
+    0.0644635,
+    3.32596
+   ],
+   "loi_duty": 0.5421166213845995,
+   "i_core_ma": 13.7506,
+   "i_buf_ma": 13.069,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ff32_3.35_lowq",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_ff32_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  }
+ },
+ "neg": {
+  "neg_en0": {
    "vtune_v": 1.65,
+   "band": 8,
+   "spiral": "pt_spiral",
    "f_hz": null,
-   "tank_p_v": [
-    null,
-    null
+   "q_minus_i_tank_deg": null,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": -1.35611e-10,
+   "tank_q_diff_peak_v": 2.74891e-13,
+   "tank_ip_v": [
+    3.04635,
+    3.04635
    ],
-   "tank_n_v": [
-    null,
-    null
+   "loi_ip_v": [
+    3.3,
+    3.3
    ],
-   "tank_diff_vpp": null,
-   "buf_out_v": [
-    null,
-    null
+   "loi_qp_v": [
+    3.3,
+    3.3
    ],
-   "i_core_ma": NaN,
-   "i_buf_ma": NaN,
+   "loi_duty": null,
+   "i_core_ma": 0.010000799999999999,
+   "i_buf_ma": 1.78846e-07,
    "oscillates": false,
+   "quadrature_ok": false,
+   "loi_rail_to_rail": false,
+   "case": "neg_en0",
    "corner": "tt",
    "temp_c": 27,
    "vdd_v": 3.3,
-   "deck": "scratch/timing/lcvco/sim/tune_vt1.65.spice",
-   "netlist": "schematic VCO + analytical spiral"
+   "deck": "scratch/timing/lcvco/sim/neg_en0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs",
+   "sim_messages": [
+    "Error: measure  per  trig(TRIG) : out of interval",
+    "Error: measure  tiq  trig(TRIG) : out of interval",
+    "Error: measure  tlo  trig(TRIG) : out of interval",
+    "Error: measure  thi  trig(TRIG) : out of interval",
+    ".measure tran per trig v(di) val=0 td=2.2e-08 rise=1 targ v(di) val=0 td=2.2e-08 rise=11 failed!"
+   ]
   },
-  "tune_vt2.5": {
-   "vtune_v": 2.5,
-   "f_hz": null,
-   "tank_p_v": [
-    null,
-    null
+  "neg_nocouple": {
+   "vtune_v": 1.65,
+   "band": 8,
+   "spiral": "pt_spiral",
+   "f_hz": 2338399085.218278,
+   "q_minus_i_tank_deg": -148.39162572519604,
+   "q_minus_i_loi_deg": -147.07501350425468,
+   "tank_diff_peak_v": 2.23093,
+   "tank_q_diff_peak_v": 2.21688,
+   "tank_ip_v": [
+    0.822942,
+    3.05702
    ],
-   "tank_n_v": [
-    null,
-    null
+   "loi_ip_v": [
+    -0.00576359,
+    3.33922
    ],
-   "tank_diff_vpp": null,
-   "buf_out_v": [
-    null,
-    null
+   "loi_qp_v": [
+    -0.005649,
+    3.33812
    ],
-   "i_core_ma": NaN,
-   "i_buf_ma": NaN,
-   "oscillates": false,
+   "loi_duty": 0.5449592300119492,
+   "i_core_ma": 13.3199,
+   "i_buf_ma": 8.76793,
+   "oscillates": true,
+   "quadrature_ok": false,
+   "loi_rail_to_rail": true,
+   "case": "neg_nocouple",
    "corner": "tt",
    "temp_c": 27,
    "vdd_v": 3.3,
-   "deck": "scratch/timing/lcvco/sim/tune_vt2.5.spice",
-   "netlist": "schematic VCO + analytical spiral"
+   "deck": "scratch/timing/lcvco/sim/neg_nocouple.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  }
+ },
+ "codes": {
+  "code0_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 0,
+   "spiral": "pt_spiral",
+   "f_hz": 2611429705.5351863,
+   "q_minus_i_tank_deg": -89.48867161793737,
+   "q_minus_i_loi_deg": -89.42088934850051,
+   "tank_diff_peak_v": 2.15692,
+   "tank_q_diff_peak_v": 2.15197,
+   "tank_ip_v": [
+    0.914532,
+    3.07434
+   ],
+   "loi_ip_v": [
+    0.0133986,
+    3.32547
+   ],
+   "loi_qp_v": [
+    0.0141075,
+    3.32497
+   ],
+   "loi_duty": 0.5493743014425537,
+   "i_core_ma": 13.684,
+   "i_buf_ma": 9.464759999999998,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code0_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code0_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
   },
-  "tune_vt3.3": {
-   "vtune_v": 3.3,
-   "f_hz": null,
-   "tank_p_v": [
-    null,
-    null
+  "code0_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 0,
+   "spiral": "pt_spiral",
+   "f_hz": 2814713068.1498327,
+   "q_minus_i_tank_deg": -89.48321868068774,
+   "q_minus_i_loi_deg": -89.40630946081356,
+   "tank_diff_peak_v": 2.27393,
+   "tank_q_diff_peak_v": 2.268,
+   "tank_ip_v": [
+    0.819692,
+    3.09716
    ],
-   "tank_n_v": [
-    null,
-    null
+   "loi_ip_v": [
+    0.0213773,
+    3.32598
    ],
-   "tank_diff_vpp": null,
-   "buf_out_v": [
-    null,
-    null
+   "loi_qp_v": [
+    0.0222264,
+    3.3254
    ],
-   "i_core_ma": NaN,
-   "i_buf_ma": NaN,
-   "oscillates": false,
+   "loi_duty": -0.4460419504835677,
+   "i_core_ma": 13.4948,
+   "i_buf_ma": 9.81011,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code0_vt3.0",
    "corner": "tt",
    "temp_c": 27,
    "vdd_v": 3.3,
-   "deck": "scratch/timing/lcvco/sim/tune_vt3.3.spice",
-   "netlist": "schematic VCO + analytical spiral"
+   "deck": "scratch/timing/lcvco/sim/code0_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code1_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 1,
+   "spiral": "pt_spiral",
+   "f_hz": 2570628004.42148,
+   "q_minus_i_tank_deg": -89.48786920644713,
+   "q_minus_i_loi_deg": -89.40948561733632,
+   "tank_diff_peak_v": 2.1234,
+   "tank_q_diff_peak_v": 2.11832,
+   "tank_ip_v": [
+    0.932377,
+    3.0586
+   ],
+   "loi_ip_v": [
+    0.0128176,
+    3.32543
+   ],
+   "loi_qp_v": [
+    0.0135231,
+    3.32493
+   ],
+   "loi_duty": -0.45144340762448265,
+   "i_core_ma": 13.7193,
+   "i_buf_ma": 9.40794,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code1_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code1_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code1_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 1,
+   "spiral": "pt_spiral",
+   "f_hz": 2764439357.876026,
+   "q_minus_i_tank_deg": -89.48513422735303,
+   "q_minus_i_loi_deg": -89.39636255069291,
+   "tank_diff_peak_v": 2.2361,
+   "tank_q_diff_peak_v": 2.23023,
+   "tank_ip_v": [
+    0.841281,
+    3.08094
+   ],
+   "loi_ip_v": [
+    0.0202617,
+    3.3261
+   ],
+   "loi_qp_v": [
+    0.0210838,
+    3.3255
+   ],
+   "loi_duty": -0.4471867682874575,
+   "i_core_ma": 13.5458,
+   "i_buf_ma": 9.736609999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code1_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code1_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code2_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 2,
+   "spiral": "pt_spiral",
+   "f_hz": 2533691766.261867,
+   "q_minus_i_tank_deg": -89.48815879153037,
+   "q_minus_i_loi_deg": -89.40378685571385,
+   "tank_diff_peak_v": 2.09369,
+   "tank_q_diff_peak_v": 2.08856,
+   "tank_ip_v": [
+    0.948126,
+    3.04452
+   ],
+   "loi_ip_v": [
+    0.0122824,
+    3.32542
+   ],
+   "loi_qp_v": [
+    0.0129697,
+    3.32492
+   ],
+   "loi_duty": -0.45222597490124933,
+   "i_core_ma": 13.752699999999999,
+   "i_buf_ma": 9.371559999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code2_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code2_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code2_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 2,
+   "spiral": "pt_spiral",
+   "f_hz": 2719179460.406028,
+   "q_minus_i_tank_deg": -89.48734765797073,
+   "q_minus_i_loi_deg": -89.39024032108071,
+   "tank_diff_peak_v": 2.20296,
+   "tank_q_diff_peak_v": 2.197,
+   "tank_ip_v": [
+    0.860136,
+    3.06649
+   ],
+   "loi_ip_v": [
+    0.0192475,
+    3.32623
+   ],
+   "loi_qp_v": [
+    0.0200499,
+    3.32564
+   ],
+   "loi_duty": -0.4482404189711713,
+   "i_core_ma": 13.5945,
+   "i_buf_ma": 9.67233,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code2_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code2_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code3_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 3,
+   "spiral": "pt_spiral",
+   "f_hz": 2496317931.0516987,
+   "q_minus_i_tank_deg": -89.48550887441024,
+   "q_minus_i_loi_deg": -89.39869692203997,
+   "tank_diff_peak_v": 2.06239,
+   "tank_q_diff_peak_v": 2.0572,
+   "tank_ip_v": [
+    0.964538,
+    3.02949
+   ],
+   "loi_ip_v": [
+    0.0118311,
+    3.32531
+   ],
+   "loi_qp_v": [
+    0.0125184,
+    3.3248
+   ],
+   "loi_duty": -0.4529868444045034,
+   "i_core_ma": 13.7888,
+   "i_buf_ma": 9.32563,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code3_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code3_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code3_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 3,
+   "spiral": "pt_spiral",
+   "f_hz": 2673668112.2298927,
+   "q_minus_i_tank_deg": -89.48909410777023,
+   "q_minus_i_loi_deg": -89.38408311899427,
+   "tank_diff_peak_v": 2.16827,
+   "tank_q_diff_peak_v": 2.16248,
+   "tank_ip_v": [
+    0.87959,
+    3.05125
+   ],
+   "loi_ip_v": [
+    0.0183233,
+    3.32625
+   ],
+   "loi_qp_v": [
+    0.0191153,
+    3.32565
+   ],
+   "loi_duty": -0.4492965579196724,
+   "i_core_ma": 13.643699999999999,
+   "i_buf_ma": 9.604,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code3_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code3_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code4_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 4,
+   "spiral": "pt_spiral",
+   "f_hz": 2465155033.600063,
+   "q_minus_i_tank_deg": -89.49104409176293,
+   "q_minus_i_loi_deg": -89.39519886405662,
+   "tank_diff_peak_v": 2.03789,
+   "tank_q_diff_peak_v": 2.03271,
+   "tank_ip_v": [
+    0.977184,
+    3.01766
+   ],
+   "loi_ip_v": [
+    0.0113785,
+    3.32531
+   ],
+   "loi_qp_v": [
+    0.0120643,
+    3.32481
+   ],
+   "loi_duty": 0.5463473797867148,
+   "i_core_ma": 13.8108,
+   "i_buf_ma": 9.29178,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code4_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code4_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code4_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 4,
+   "spiral": "pt_spiral",
+   "f_hz": 2635886540.8997335,
+   "q_minus_i_tank_deg": -89.49066764370195,
+   "q_minus_i_loi_deg": -89.38163683282417,
+   "tank_diff_peak_v": 2.14134,
+   "tank_q_diff_peak_v": 2.13555,
+   "tank_ip_v": [
+    0.894391,
+    3.0391
+   ],
+   "loi_ip_v": [
+    0.0174689,
+    3.32636
+   ],
+   "loi_qp_v": [
+    0.0182491,
+    3.32575
+   ],
+   "loi_duty": 0.5498169376797345,
+   "i_core_ma": 13.6705,
+   "i_buf_ma": 9.54864,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code4_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code4_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code5_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 5,
+   "spiral": "pt_spiral",
+   "f_hz": 2430641640.7803335,
+   "q_minus_i_tank_deg": -89.49291954090042,
+   "q_minus_i_loi_deg": -89.39054091499075,
+   "tank_diff_peak_v": 2.00827,
+   "tank_q_diff_peak_v": 2.00309,
+   "tank_ip_v": [
+    0.992363,
+    3.00321
+   ],
+   "loi_ip_v": [
+    0.0110498,
+    3.32512
+   ],
+   "loi_qp_v": [
+    0.0117304,
+    3.32462
+   ],
+   "loi_duty": -0.45434525806122306,
+   "i_core_ma": 13.842600000000001,
+   "i_buf_ma": 9.23875,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code5_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code5_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code5_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 5,
+   "spiral": "pt_spiral",
+   "f_hz": 2594289450.0625224,
+   "q_minus_i_tank_deg": -89.493895636924,
+   "q_minus_i_loi_deg": -89.37883371123483,
+   "tank_diff_peak_v": 2.10916,
+   "tank_q_diff_peak_v": 2.10333,
+   "tank_ip_v": [
+    0.912218,
+    3.02462
+   ],
+   "loi_ip_v": [
+    0.0167191,
+    3.32629
+   ],
+   "loi_qp_v": [
+    0.0174845,
+    3.3257
+   ],
+   "loi_duty": 0.5488426874763271,
+   "i_core_ma": 13.7153,
+   "i_buf_ma": 9.502780000000001,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code5_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code5_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code6_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 6,
+   "spiral": "pt_spiral",
+   "f_hz": 2399261027.603498,
+   "q_minus_i_tank_deg": -89.49493156107918,
+   "q_minus_i_loi_deg": -89.38782854880695,
+   "tank_diff_peak_v": 1.98182,
+   "tank_q_diff_peak_v": 1.97661,
+   "tank_ip_v": [
+    1.00571,
+    2.9902
+   ],
+   "loi_ip_v": [
+    0.0107401,
+    3.32497
+   ],
+   "loi_qp_v": [
+    0.0114171,
+    3.32447
+   ],
+   "loi_duty": -0.45500065979678256,
+   "i_core_ma": 13.8605,
+   "i_buf_ma": 9.21576,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code6_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code6_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code6_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 6,
+   "spiral": "pt_spiral",
+   "f_hz": 2556642412.6523123,
+   "q_minus_i_tank_deg": -89.4961778195931,
+   "q_minus_i_loi_deg": -89.37919608935971,
+   "tank_diff_peak_v": 2.08045,
+   "tank_q_diff_peak_v": 2.07467,
+   "tank_ip_v": [
+    0.92783,
+    3.01154
+   ],
+   "loi_ip_v": [
+    0.0160305,
+    3.32624
+   ],
+   "loi_qp_v": [
+    0.0167856,
+    3.32565
+   ],
+   "loi_duty": 0.5479523850917069,
+   "i_core_ma": 13.7465,
+   "i_buf_ma": 9.45618,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code6_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code6_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code7_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 7,
+   "spiral": "pt_spiral",
+   "f_hz": 2367368196.775645,
+   "q_minus_i_tank_deg": -89.49504036362771,
+   "q_minus_i_loi_deg": -89.38424753201866,
+   "tank_diff_peak_v": 1.95385,
+   "tank_q_diff_peak_v": 1.94858,
+   "tank_ip_v": [
+    1.01962,
+    2.9763
+   ],
+   "loi_ip_v": [
+    0.0105068,
+    3.32473
+   ],
+   "loi_qp_v": [
+    0.0111748,
+    3.32423
+   ],
+   "loi_duty": 0.5443857863213466,
+   "i_core_ma": 13.8894,
+   "i_buf_ma": 9.18566,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code7_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code7_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code7_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 7,
+   "spiral": "pt_spiral",
+   "f_hz": 2518574486.8404484,
+   "q_minus_i_tank_deg": -89.49842085379674,
+   "q_minus_i_loi_deg": -89.37647147714394,
+   "tank_diff_peak_v": 2.0503,
+   "tank_q_diff_peak_v": 2.04458,
+   "tank_ip_v": [
+    0.94409,
+    2.99775
+   ],
+   "loi_ip_v": [
+    0.0154214,
+    3.3261
+   ],
+   "loi_qp_v": [
+    0.016163,
+    3.32552
+   ],
+   "loi_duty": -0.45293791713889936,
+   "i_core_ma": 13.786200000000001,
+   "i_buf_ma": 9.39626,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code7_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code7_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code8_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 8,
+   "spiral": "pt_spiral",
+   "f_hz": 2341487172.1625276,
+   "q_minus_i_tank_deg": -89.49950711695028,
+   "q_minus_i_loi_deg": -89.38233909885527,
+   "tank_diff_peak_v": 1.93312,
+   "tank_q_diff_peak_v": 1.92777,
+   "tank_ip_v": [
+    1.02959,
+    2.96582
+   ],
+   "loi_ip_v": [
+    0.0102139,
+    3.32467
+   ],
+   "loi_qp_v": [
+    0.0108723,
+    3.32416
+   ],
+   "loi_duty": -0.4561989702139417,
+   "i_core_ma": 13.9073,
+   "i_buf_ma": 9.13933,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code8_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code8_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code8_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 8,
+   "spiral": "pt_spiral",
+   "f_hz": 2487784975.7689743,
+   "q_minus_i_tank_deg": -89.49962683225363,
+   "q_minus_i_loi_deg": -89.37612323491656,
+   "tank_diff_peak_v": 2.02775,
+   "tank_q_diff_peak_v": 2.02211,
+   "tank_ip_v": [
+    0.955477,
+    2.98698
+   ],
+   "loi_ip_v": [
+    0.0148165,
+    3.3261
+   ],
+   "loi_qp_v": [
+    0.015541,
+    3.32552
+   ],
+   "loi_duty": -0.45367246818123014,
+   "i_core_ma": 13.7983,
+   "i_buf_ma": 9.36701,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code8_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code8_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code9_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 9,
+   "spiral": "pt_spiral",
+   "f_hz": 2311780602.7736745,
+   "q_minus_i_tank_deg": -89.50169569107214,
+   "q_minus_i_loi_deg": -89.37852402055636,
+   "tank_diff_peak_v": 1.90666,
+   "tank_q_diff_peak_v": 1.90116,
+   "tank_ip_v": [
+    1.04259,
+    2.95232
+   ],
+   "loi_ip_v": [
+    0.0100732,
+    3.32439
+   ],
+   "loi_qp_v": [
+    0.0107306,
+    3.32387
+   ],
+   "loi_duty": -0.45677085861843375,
+   "i_core_ma": 13.9309,
+   "i_buf_ma": 9.1251,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code9_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code9_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code9_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 9,
+   "spiral": "pt_spiral",
+   "f_hz": 2452621484.4736795,
+   "q_minus_i_tank_deg": -89.50047458225725,
+   "q_minus_i_loi_deg": -89.37509657197094,
+   "tank_diff_peak_v": 1.99947,
+   "tank_q_diff_peak_v": 1.99382,
+   "tank_ip_v": [
+    0.970428,
+    2.97367
+   ],
+   "loi_ip_v": [
+    0.0143281,
+    3.32592
+   ],
+   "loi_qp_v": [
+    0.0150396,
+    3.32534
+   ],
+   "loi_duty": 0.5455169758196048,
+   "i_core_ma": 13.8305,
+   "i_buf_ma": 9.32371,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code9_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code9_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code10_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 10,
+   "spiral": "pt_spiral",
+   "f_hz": 2284669865.204478,
+   "q_minus_i_tank_deg": -89.5007539410555,
+   "q_minus_i_loi_deg": -89.37244688142562,
+   "tank_diff_peak_v": 1.88299,
+   "tank_q_diff_peak_v": 1.87737,
+   "tank_ip_v": [
+    1.05419,
+    2.94008
+   ],
+   "loi_ip_v": [
+    0.00994459,
+    3.32418
+   ],
+   "loi_qp_v": [
+    0.0105939,
+    3.32363
+   ],
+   "loi_duty": 0.5427050491204021,
+   "i_core_ma": 13.9495,
+   "i_buf_ma": 9.107830000000002,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code10_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code10_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code10_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 10,
+   "spiral": "pt_spiral",
+   "f_hz": 2420651058.308643,
+   "q_minus_i_tank_deg": -89.50066809969209,
+   "q_minus_i_loi_deg": -89.37343868006735,
+   "tank_diff_peak_v": 1.9742,
+   "tank_q_diff_peak_v": 1.96856,
+   "tank_ip_v": [
+    0.98354,
+    2.9615
+   ],
+   "loi_ip_v": [
+    0.0138831,
+    3.32577
+   ],
+   "loi_qp_v": [
+    0.0145829,
+    3.32519
+   ],
+   "loi_duty": 0.5447723619744768,
+   "i_core_ma": 13.852500000000001,
+   "i_buf_ma": 9.2926,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code10_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code10_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code11_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 11,
+   "spiral": "pt_spiral",
+   "f_hz": 2257015368.017641,
+   "q_minus_i_tank_deg": -89.49968740337154,
+   "q_minus_i_loi_deg": -89.3713083692387,
+   "tank_diff_peak_v": 1.85771,
+   "tank_q_diff_peak_v": 1.85213,
+   "tank_ip_v": [
+    1.06647,
+    2.92695
+   ],
+   "loi_ip_v": [
+    0.0099041,
+    3.32387
+   ],
+   "loi_qp_v": [
+    0.0105382,
+    3.32331
+   ],
+   "loi_duty": -0.4578175112794344,
+   "i_core_ma": 13.969000000000001,
+   "i_buf_ma": 9.07626,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code11_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code11_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code11_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 11,
+   "spiral": "pt_spiral",
+   "f_hz": 2388179466.910579,
+   "q_minus_i_tank_deg": -89.50199293576513,
+   "q_minus_i_loi_deg": -89.37475073376814,
+   "tank_diff_peak_v": 1.94754,
+   "tank_q_diff_peak_v": 1.94198,
+   "tank_ip_v": [
+    0.99749,
+    2.94864
+   ],
+   "loi_ip_v": [
+    0.0135264,
+    3.32555
+   ],
+   "loi_qp_v": [
+    0.0142137,
+    3.32496
+   ],
+   "loi_duty": -0.4559751056172369,
+   "i_core_ma": 13.8823,
+   "i_buf_ma": 9.2529,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code11_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code11_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code12_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 12,
+   "spiral": "pt_spiral",
+   "f_hz": 2233798261.2114334,
+   "q_minus_i_tank_deg": -89.49417872173129,
+   "q_minus_i_loi_deg": -89.35586193339707,
+   "tank_diff_peak_v": 1.83778,
+   "tank_q_diff_peak_v": 1.83227,
+   "tank_ip_v": [
+    1.07608,
+    2.91638
+   ],
+   "loi_ip_v": [
+    0.00980177,
+    3.32369
+   ],
+   "loi_qp_v": [
+    0.0104308,
+    3.32313
+   ],
+   "loi_duty": 0.5417273515194295,
+   "i_core_ma": 13.987,
+   "i_buf_ma": 9.058689999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code12_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code12_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code12_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 12,
+   "spiral": "pt_spiral",
+   "f_hz": 2360996340.4556723,
+   "q_minus_i_tank_deg": -89.49809939794596,
+   "q_minus_i_loi_deg": -89.37060559556132,
+   "tank_diff_peak_v": 1.92637,
+   "tank_q_diff_peak_v": 1.92098,
+   "tank_ip_v": [
+    1.00816,
+    2.93805
+   ],
+   "loi_ip_v": [
+    0.0131528,
+    3.32543
+   ],
+   "loi_qp_v": [
+    0.0138306,
+    3.32485
+   ],
+   "loi_duty": 0.5434045567229371,
+   "i_core_ma": 13.8981,
+   "i_buf_ma": 9.22012,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code12_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code12_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code13_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 13,
+   "spiral": "pt_spiral",
+   "f_hz": 2207900308.8852534,
+   "q_minus_i_tank_deg": -89.48672941519345,
+   "q_minus_i_loi_deg": -89.35558013684567,
+   "tank_diff_peak_v": 1.81329,
+   "tank_q_diff_peak_v": 1.80807,
+   "tank_ip_v": [
+    1.08778,
+    2.90359
+   ],
+   "loi_ip_v": [
+    0.00984684,
+    3.32334
+   ],
+   "loi_qp_v": [
+    0.010453,
+    3.32277
+   ],
+   "loi_duty": -0.4587531103795602,
+   "i_core_ma": 13.9963,
+   "i_buf_ma": 9.0323,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code13_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code13_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code13_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 13,
+   "spiral": "pt_spiral",
+   "f_hz": 2330801306.1810517,
+   "q_minus_i_tank_deg": -89.4954980572771,
+   "q_minus_i_loi_deg": -89.36795660980295,
+   "tank_diff_peak_v": 1.9008,
+   "tank_q_diff_peak_v": 1.89555,
+   "tank_ip_v": [
+    1.02135,
+    2.92558
+   ],
+   "loi_ip_v": [
+    0.0129099,
+    3.32515
+   ],
+   "loi_qp_v": [
+    0.0135657,
+    3.32459
+   ],
+   "loi_duty": 0.5427270841442579,
+   "i_core_ma": 13.9254,
+   "i_buf_ma": 9.1941,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code13_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code13_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code14_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 14,
+   "spiral": "pt_spiral",
+   "f_hz": 2184192995.293064,
+   "q_minus_i_tank_deg": -89.47179660794825,
+   "q_minus_i_loi_deg": -89.33733768715804,
+   "tank_diff_peak_v": 1.79128,
+   "tank_q_diff_peak_v": 1.78624,
+   "tank_ip_v": [
+    1.09838,
+    2.89202
+   ],
+   "loi_ip_v": [
+    0.00988481,
+    3.32302
+   ],
+   "loi_qp_v": [
+    0.0104887,
+    3.32247
+   ],
+   "loi_duty": 0.540823659178525,
+   "i_core_ma": 14.0085,
+   "i_buf_ma": 9.030410000000002,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code14_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code14_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code14_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 14,
+   "spiral": "pt_spiral",
+   "f_hz": 2303250577.5400825,
+   "q_minus_i_tank_deg": -89.48902385937274,
+   "q_minus_i_loi_deg": -89.36298998776975,
+   "tank_diff_peak_v": 1.87755,
+   "tank_q_diff_peak_v": 1.87266,
+   "tank_ip_v": [
+    1.03301,
+    2.91415
+   ],
+   "loi_ip_v": [
+    0.0126913,
+    3.32491
+   ],
+   "loi_qp_v": [
+    0.0133235,
+    3.32436
+   ],
+   "loi_duty": -0.45789082131612346,
+   "i_core_ma": 13.9371,
+   "i_buf_ma": 9.1599,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code14_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code14_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code15_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral",
+   "f_hz": 2159939176.1128006,
+   "q_minus_i_tank_deg": -89.45647290572298,
+   "q_minus_i_loi_deg": -89.32739494055848,
+   "tank_diff_peak_v": 1.76753,
+   "tank_q_diff_peak_v": 1.76285,
+   "tank_ip_v": [
+    1.10954,
+    2.87962
+   ],
+   "loi_ip_v": [
+    0.0100224,
+    3.32262
+   ],
+   "loi_qp_v": [
+    0.0105916,
+    3.32207
+   ],
+   "loi_duty": -0.45960481752833837,
+   "i_core_ma": 14.0184,
+   "i_buf_ma": 9.00222,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code15_vt0.3",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code15_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "code15_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 15,
+   "spiral": "pt_spiral",
+   "f_hz": 2275162731.014336,
+   "q_minus_i_tank_deg": -89.48215021079383,
+   "q_minus_i_loi_deg": -89.35601518898639,
+   "tank_diff_peak_v": 1.85297,
+   "tank_q_diff_peak_v": 1.84825,
+   "tank_ip_v": [
+    1.04565,
+    2.90211
+   ],
+   "loi_ip_v": [
+    0.0125477,
+    3.32458
+   ],
+   "loi_qp_v": [
+    0.0131664,
+    3.32406
+   ],
+   "loi_duty": 0.541495555469605,
+   "i_core_ma": 13.965,
+   "i_buf_ma": 9.14418,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "code15_vt3.0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/code15_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  }
+ },
+ "chain": {
+  "chain_tt27_b6_vt1.65": {
+   "vtune_v": 1.65,
+   "band": 6,
+   "spiral": "pt_spiral",
+   "f_lo_hz": 2431285785.487655,
+   "lo_i_v": [
+    1.12115,
+    3.20852
+   ],
+   "lo_q_v": [
+    0.707176,
+    3.18955
+   ],
+   "q_minus_i_deg": -74.80635538104326,
+   "rx_switch_vgs_on_v": 1.5585200000000001,
+   "rx_switch_vgs_off_v": -0.5288499999999998,
+   "i_vdd_ma": 28.6643,
+   "i_buf_ma": 9.42932,
+   "pass": false,
+   "case": "chain_tt27_b6_vt1.65",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/chain_tt27_b6_vt1.65.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "chain_ss32_lhi_lowq_b0_vt1.65": {
+   "vtune_v": 1.65,
+   "band": 0,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_lo_hz": null,
+   "lo_i_v": [
+    3.14612,
+    3.15838
+   ],
+   "lo_q_v": [
+    2.98198,
+    3.17414
+   ],
+   "q_minus_i_deg": null,
+   "rx_switch_vgs_on_v": 1.5083800000000003,
+   "rx_switch_vgs_off_v": 1.49612,
+   "i_vdd_ma": 17.8561,
+   "i_buf_ma": 7.47756,
+   "pass": false,
+   "case": "chain_ss32_lhi_lowq_b0_vt1.65",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/chain_ss32_lhi_lowq_b0_vt1.65.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs",
+   "sim_messages": [
+    "Error: measure  per  trig(TRIG) : out of interval",
+    "Error: measure  tiq  trig(TRIG) : out of interval",
+    ".measure tran per trig v(loip) val=1.575 td=2.3999999999999997e-08 rise=1 targ v(loip) val=1.575 td=2.3999999999999997e-08 rise=5 failed!",
+    ".measure tran tiq trig v(loip) val=1.575 td=2.3999999999999997e-08 rise=1 targ v(loqp) val=1.575 td=2.3999999999999997e-08 rise=1 failed!"
+   ]
+  },
+  "chain_ff22_llo_b15_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 15,
+   "spiral": "pt_spiral_llo",
+   "f_lo_hz": 2493501312.2050653,
+   "lo_i_v": [
+    0.348314,
+    3.20849
+   ],
+   "lo_q_v": [
+    0.221571,
+    3.23707
+   ],
+   "q_minus_i_deg": -90.8804927158593,
+   "rx_switch_vgs_on_v": 1.55849,
+   "rx_switch_vgs_off_v": -1.301686,
+   "i_vdd_ma": 31.8573,
+   "i_buf_ma": 12.5984,
+   "pass": true,
+   "case": "chain_ff22_llo_b15_vt3.0",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/chain_ff22_llo_b15_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "r3_chain_tt27_b6_vt1.65": {
+   "vtune_v": 1.65,
+   "band": 6,
+   "spiral": "pt_spiral",
+   "f_lo_hz": 2384088592.7321057,
+   "lo_i_v": [
+    1.82571,
+    2.85684
+   ],
+   "lo_q_v": [
+    1.82643,
+    2.86626
+   ],
+   "q_minus_i_deg": -93.26926492588463,
+   "rx_switch_vgs_on_v": 1.2068400000000001,
+   "rx_switch_vgs_off_v": 0.1764300000000001,
+   "duty_at_vb": 0.49637558931689907,
+   "i_vdd_ma": 24.7773,
+   "i_buf_ma": 1.88805,
+   "pass": true,
+   "case": "r3_chain_tt27_b6_vt1.65",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/r3_chain_tt27_b6_vt1.65.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "r3_chain_ss32_lhi_lowq_b0_vt1.65": {
+   "vtune_v": 1.65,
+   "band": 0,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_lo_hz": 2410262899.4257545,
+   "lo_i_v": [
+    1.80076,
+    2.69663
+   ],
+   "lo_q_v": [
+    1.79711,
+    2.70566
+   ],
+   "q_minus_i_deg": -93.70060919394783,
+   "rx_switch_vgs_on_v": 1.12163,
+   "rx_switch_vgs_off_v": 0.22575999999999996,
+   "duty_at_vb": 0.48168139939863935,
+   "i_vdd_ma": 22.865099999999998,
+   "i_buf_ma": 1.44982,
+   "pass": true,
+   "case": "r3_chain_ss32_lhi_lowq_b0_vt1.65",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/r3_chain_ss32_lhi_lowq_b0_vt1.65.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "r3_chain_ff22_llo_b15_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 15,
+   "spiral": "pt_spiral_llo",
+   "f_lo_hz": 2447875550.0070376,
+   "lo_i_v": [
+    1.87076,
+    2.90332
+   ],
+   "lo_q_v": [
+    1.86904,
+    2.91231
+   ],
+   "q_minus_i_deg": -92.56626705098313,
+   "rx_switch_vgs_on_v": 1.2283199999999999,
+   "rx_switch_vgs_off_v": 0.19575999999999993,
+   "duty_at_vb": 0.4786845116794262,
+   "i_vdd_ma": 27.2618,
+   "i_buf_ma": 2.78512,
+   "pass": true,
+   "case": "r3_chain_ff22_llo_b15_vt3.0",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/r3_chain_ff22_llo_b15_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
   }
  }
 }

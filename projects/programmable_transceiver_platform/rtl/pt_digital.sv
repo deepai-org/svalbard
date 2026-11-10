@@ -1,5 +1,7 @@
 `include "pt_regmap_defs.svh"
-module pt_digital #(parameter STREAM_V2=1)(input wire rst_n,ref_clk,
+module pt_digital(input wire rst_n,ref_clk,
+ // Host-transport reset: rst_n AND the reduced-rate switch hold (pt_host_rate_clock).
+ input wire core_rst_n,
  input wire host_sclk,host_cs_n,host_mosi,output wire host_miso,host_miso_oe,
  input wire host_tx_clk,host_rx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
  input wire[9:0]h2d_word,output wire[9:0]d2h_word,
@@ -39,7 +41,7 @@ module pt_digital #(parameter STREAM_V2=1)(input wire rst_n,ref_clk,
  // Pattern checker status (wire_rx_clk domain; pt_mgmt synchronizes each bit to SCLK).
  wire pattern_locked,pattern_lost_lock;wire[15:0]pattern_errors_gray;
  wire fca_locked,fca_lost,fcb_locked,fcb_lost;wire[13:0]fca_diff,fcb_diff;wire[15:0]fca_count,fcb_count;
- pt_toggle_div hd(host_rx_clk,rst_n,host_rx_div);
+ pt_toggle_div hd(host_rx_clk,core_rst_n,host_rx_div);
  pt_mgmt control(.rst_n(rst_n),.por_n(por_n),.sclk(host_sclk),.cs_n(host_cs_n),.mosi(host_mosi),.miso(host_miso),.miso_oe(host_miso_oe),
   .status(status),.enable(enable),.mode8(mode8),.rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),
   .memory_write(memory_write),.memory_index(index),.memory_wdata(memory_wdata),.capture_data(capture_data),
@@ -75,9 +77,10 @@ module pt_digital #(parameter STREAM_V2=1)(input wire rst_n,ref_clk,
  wire[2:0]pat_tx_eff=pat_tx_mode!=3'd0 ? pat_tx_mode : 3'd3;
  wire[2:0]pat_check_eff=pat_check_mode!=3'd0 ? pat_check_mode : pat_tx_eff;
  wire prbs_select=wire_trim[15]||pat_tx_mode!=3'd0,play_select=playback_enable;
- pt_core #(.STREAM_V2(STREAM_V2)) core(rst_n,enable,mode8,host_tx_clk,host_rx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
+ pt_core core(core_rst_n,enable,mode8,host_tx_clk,host_rx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
  h2d_word,d2h_word,wire_rx_data,wire_rx_valid,stream_wire,stream_wire_valid,wire_tx_request&&!prbs_select,
- rf_rx_sample,rf_rx_valid,stream_rf,stream_rf_valid,rf_tx_request&&!play_select,core_status,stream_wire_idle,stream_rf_mute);
+ rf_rx_sample,rf_rx_valid,stream_rf,stream_rf_valid,rf_tx_request&&!play_select,core_status,stream_wire_idle,stream_rf_mute,
+ analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__PAYLOAD_IQ_LSB]);
  pt_memory memory(rst_n,host_sclk,memory_write,index,memory_wdata,capture_data,rf_rx_clk,rf_tx_clk,
  capture_enable&&enable,playback_enable&&enable,rf_rx_sample,rf_rx_valid,capture_done,play_rf,play_valid,rf_tx_request);
  wire tx_enabled;pt_sync_bit e(wire_tx_clk,rst_n,enable,tx_enabled);
@@ -109,8 +112,10 @@ module pt_digital #(parameter STREAM_V2=1)(input wire rst_n,ref_clk,
  assign wire_tx_data=prbs_select?prbs_word:stream_wire;
  assign wire_tx_valid=prbs_select?tx_enabled&&prbs_ready:stream_wire_valid;
  assign wire_idle=prbs_select?!tx_enabled:stream_wire_idle;
- assign rf_tx_sample=play_select?play_rf:stream_rf;
+ // The DAC data bus is held static (all zero) whenever no sample is valid, e.g. throughout
+ // receive-only operation, so idle DAC inputs do not toggle next to the receive path.
  assign rf_tx_valid=play_select?play_valid:stream_rf_valid;
+ assign rf_tx_sample=rf_tx_valid?(play_select?play_rf:stream_rf):24'd0;
  wire cal_start;
  pt_sync_bit cs(ref_clk,rst_n,clock_trim[15]&&!enable,cal_start);
  pt_calibrator calibration(ref_clk,rst_n,cal_start,calibration_above_target,calibration_trial,cal_busy,cal_done);

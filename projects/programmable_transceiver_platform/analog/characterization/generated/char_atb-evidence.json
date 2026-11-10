@@ -1,0 +1,467 @@
+{
+ "block": "char_atb",
+ "cell": "pt_char_atb",
+ "generated_utc": "2026-11-09T22:38:00Z",
+ "source_hashes": {
+  "structures.py": "sha256:08ef51ddf2abfcf07bba532c2c83719c30a10d99768180b27119eabd8947b17b",
+  "run_char.py": "sha256:6da3245ee9fc162dc824811c053e8eadb4ffe3283583db7afc91861703839401",
+  "pt_char_atb.spice": "sha256:a451f6820dc9123937e23c3aef917075771c131100f9c7f3538202eebbdd5354",
+  "convkit.py": "sha256:335aaf313b48811efd7abdca25e07c0e4535a19b8c5e4e14de11ec17fed43a6e",
+  "flow.py": "sha256:d53ad8a2cbf8a969d4b234d27bb056af2d621d3ef820e371439f123910a78905",
+  "atb_reference/atb_grp.pex.spice": "sha256:81ca49632d63b269e2b250b15da9d33d9075d2a2bd02a16a2b7981b1ef14503d",
+  "atb_reference/atb_leaf_f.pex.spice": "sha256:529fe37812d161dbd59daf8477df635e2ad6f0794e1d34c9f08d42a1bccb21d4",
+  "atb_reference/atb_leaf_s.pex.spice": "sha256:fb86b163f4a3729f061b5d6be808907f78e6b0a98091414b0c0140f5efc67024",
+  "atb_reference/atb_pad.pex.spice": "sha256:a42bc58c422a8a2e7b3861662747b2011fc569f3e146e0a195583436a88129e0"
+ },
+ "generated_hashes": {
+  "char_atb.ext.spice": "sha256:f4d33206fa4b1d7af0b968497b86e2e8f189b23844551444cc37b6d500974626",
+  "char_atb.gds": "sha256:9a0f068c41fa003960c70b6ac08927a49046379672a6187ba871b221bd3956e9",
+  "char_atb.lef": "sha256:f36e4712ed323c6dc9742eb66335d1edc75f8a262b433a9c5c4d334a4e3f967c",
+  "char_atb.lvs.spice": "sha256:517e08cb5a8491bf3ef338340b33bbe497b617f8e67e98f72cd73040b7182776",
+  "char_atb.mag": "sha256:ef169624838f078272094528975c1e99c513bd6b1d4f64fab03965f45fcd9d58"
+ },
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43"
+ },
+ "atb_codes": {
+  "RN_LNA": 43,
+  "RP_LNA": 44,
+  "RN_MIX": 45,
+  "RP_MIX": 46,
+  "RN_SMP": 47,
+  "RP_SMP": 48,
+  "RN_DRV": 49,
+  "RP_DRV": 50,
+  "RES_A": 51,
+  "RES_B": 52,
+  "MIM_A": 53,
+  "MIM_B": 54
+ },
+ "replicas": [
+  {
+   "code": 43,
+   "port": "RN_LNA",
+   "model": "nfet_03v3",
+   "w_um": 5.0,
+   "l_um": 0.5,
+   "fingers": 2,
+   "size_source": "lna.spice gm fingers nfet 5/0.5 (x112)"
+  },
+  {
+   "code": 44,
+   "port": "RP_LNA",
+   "model": "pfet_03v3",
+   "w_um": 5.0,
+   "l_um": 0.28,
+   "fingers": 2,
+   "size_source": "lna.spice pfet 5/0.28 (x32)"
+  },
+  {
+   "code": 45,
+   "port": "RN_MIX",
+   "model": "nfet_03v3",
+   "w_um": 5.0,
+   "l_um": 0.28,
+   "fingers": 2,
+   "size_source": "rxmix_i.spice switch nfet 5/0.28 (x24)"
+  },
+  {
+   "code": 46,
+   "port": "RP_MIX",
+   "model": "pfet_03v3",
+   "w_um": 20.0,
+   "l_um": 1.0,
+   "fingers": 1,
+   "size_source": "rxmix_i.spice load pfet 20/1 (x66)"
+  },
+  {
+   "code": 47,
+   "port": "RN_SMP",
+   "model": "nfet_03v3",
+   "w_um": 8.0,
+   "l_um": 0.28,
+   "fingers": 1,
+   "size_source": "converters/circuits.py bootstrap(): ADC sampling switch MS nfet 8/0.28"
+  },
+  {
+   "code": 48,
+   "port": "RP_SMP",
+   "model": "pfet_03v3",
+   "w_um": 10.0,
+   "l_um": 0.28,
+   "fingers": 1,
+   "size_source": "adc_i.spice comparator/logic pfet 10/0.28 (x101); the 5/0.28 pfet is already RP_LNA"
+  },
+  {
+   "code": 49,
+   "port": "RN_DRV",
+   "model": "nfet_03v3",
+   "w_um": 20.0,
+   "l_um": 0.5,
+   "fingers": 1,
+   "size_source": "rfdriver.spice nfet 20/0.5 (x140)"
+  },
+  {
+   "code": 50,
+   "port": "RP_DRV",
+   "model": "pfet_03v3",
+   "w_um": 20.0,
+   "l_um": 0.28,
+   "fingers": 1,
+   "size_source": "rfdriver.spice pfet 20/0.28 (x52)"
+  }
+ ],
+ "size_um": null,
+ "criteria": {
+  "sense_err_mv": 1.0,
+  "path_err_mv": 2.0,
+  "force_pad_max_v": 3.3,
+  "mim_deembed_err": 0.03,
+  "safe_dut_settled_na": 100.0,
+  "safe_dut_peak_ua": 10.0,
+  "sense_meter_ohm": 1000000000.0
+ },
+ "tests": {
+  "safe": {
+   "state": "pass",
+   "cases": [
+    {
+     "corner": "typical",
+     "temp_c": 27,
+     "vdd": 3.63,
+     "i_dut_peak_na": 622.8580000000001,
+     "i_dut_settled_na": 2.29138,
+     "v_node_max": {
+      "rn_lna": 0.48291,
+      "rp_lna": 0.123838,
+      "rn_mix": 0.398807,
+      "rp_mix": 0.396052,
+      "rn_smp": 0.406112,
+      "rp_smp": 0.544096,
+      "rn_drv": 0.447562,
+      "rp_drv": 0.4735,
+      "res_a": 0.001325,
+      "res_b": 0.00140082,
+      "mim_a": 0.00586476,
+      "mim_b": 0.00586328
+     },
+     "overdrive_3v63": {
+      "RN_LNA": {
+       "i_pad_ma": 0.736901,
+       "i_vdd_ma": 5.8594800000000005e-08
+      },
+      "RP_LNA": {
+       "i_pad_ma": 0.636208,
+       "i_vdd_ma": 5.76397e-08
+      },
+      "RN_MIX": {
+       "i_pad_ma": 0.825828,
+       "i_vdd_ma": 5.9425000000000004e-08
+      },
+      "RP_MIX": {
+       "i_pad_ma": 0.501314,
+       "i_vdd_ma": 5.63028e-08
+      },
+      "RN_SMP": {
+       "i_pad_ma": 0.7912359999999999,
+       "i_vdd_ma": 5.9101200000000005e-08
+      },
+      "RP_SMP": {
+       "i_pad_ma": 0.636487,
+       "i_vdd_ma": 5.7642399999999996e-08
+      },
+      "RN_DRV": {
+       "i_pad_ma": 0.836235,
+       "i_vdd_ma": 5.95227e-08
+      },
+      "RP_DRV": {
+       "i_pad_ma": 0.750082,
+       "i_vdd_ma": 5.87176e-08
+      },
+      "RES_A": {
+       "i_pad_ma": 0.158393,
+       "i_vdd_ma": 5.3008300000000004e-08
+      },
+      "RES_B": {
+       "i_pad_ma": 0.158393,
+       "i_vdd_ma": 5.3008300000000004e-08
+      },
+      "MIM_A": {
+       "i_pad_ma": 5.83689e-08,
+       "i_vdd_ma": 5.1661e-08
+      },
+      "MIM_B": {
+       "i_pad_ma": 5.83689e-08,
+       "i_vdd_ma": 5.1661e-08
+      }
+     }
+    },
+    {
+     "corner": "ff",
+     "temp_c": 85,
+     "vdd": 3.63,
+     "i_dut_peak_na": 530.309,
+     "i_dut_settled_na": 2.82274,
+     "v_node_max": {
+      "rn_lna": 0.283796,
+      "rp_lna": 0.114273,
+      "rn_mix": 0.209907,
+      "rp_mix": 0.358423,
+      "rn_smp": 0.218152,
+      "rp_smp": 0.318427,
+      "rn_drv": 0.252,
+      "rp_drv": 0.282143,
+      "res_a": 0.000863724,
+      "res_b": 0.000912488,
+      "mim_a": 0.00658243,
+      "mim_b": 0.00658059
+     },
+     "overdrive_3v63": {
+      "RN_LNA": {
+       "i_pad_ma": 0.8266159999999999,
+       "i_vdd_ma": 1.07133e-06
+      },
+      "RP_LNA": {
+       "i_pad_ma": 0.7260730000000001,
+       "i_vdd_ma": 1.07043e-06
+      },
+      "RN_MIX": {
+       "i_pad_ma": 0.929625,
+       "i_vdd_ma": 1.07226e-06
+      },
+      "RP_MIX": {
+       "i_pad_ma": 0.5468740000000001,
+       "i_vdd_ma": 1.06882e-06
+      },
+      "RN_SMP": {
+       "i_pad_ma": 0.8896820000000001,
+       "i_vdd_ma": 1.0719e-06
+      },
+      "RP_SMP": {
+       "i_pad_ma": 0.7262930000000001,
+       "i_vdd_ma": 1.07043e-06
+      },
+      "RN_DRV": {
+       "i_pad_ma": 0.9430820000000001,
+       "i_vdd_ma": 1.07238e-06
+      },
+      "RP_DRV": {
+       "i_pad_ma": 0.863642,
+       "i_vdd_ma": 1.07166e-06
+      },
+      "RES_A": {
+       "i_pad_ma": 0.200387,
+       "i_vdd_ma": 1.06554e-06
+      },
+      "RES_B": {
+       "i_pad_ma": 0.200387,
+       "i_vdd_ma": 1.06554e-06
+      },
+      "MIM_A": {
+       "i_pad_ma": 2.46446e-06,
+       "i_vdd_ma": 1.06377e-06
+      },
+      "MIM_B": {
+       "i_pad_ma": 2.46446e-06,
+       "i_vdd_ma": 1.06377e-06
+      }
+     }
+    },
+    {
+     "corner": "ss",
+     "temp_c": 0,
+     "vdd": 3.63,
+     "i_dut_peak_na": 704.7090000000001,
+     "i_dut_settled_na": 1.71349,
+     "v_node_max": {
+      "rn_lna": 0.627738,
+      "rp_lna": 0.126867,
+      "rn_mix": 0.540032,
+      "rp_mix": 0.404724,
+      "rn_smp": 0.546876,
+      "rp_smp": 0.6775,
+      "rn_drv": 0.523382,
+      "rp_drv": 0.498242,
+      "res_a": 0.00185888,
+      "res_b": 0.00196391,
+      "mim_a": 0.00533338,
+      "mim_b": 0.00533215
+     },
+     "overdrive_3v63": {
+      "RN_LNA": {
+       "i_pad_ma": 0.6167940000000001,
+       "i_vdd_ma": 5.5161899999999996e-08
+      },
+      "RP_LNA": {
+       "i_pad_ma": 0.535636,
+       "i_vdd_ma": 5.42405e-08
+      },
+      "RN_MIX": {
+       "i_pad_ma": 0.682552,
+       "i_vdd_ma": 5.59037e-08
+      },
+      "RP_MIX": {
+       "i_pad_ma": 0.44229799999999997,
+       "i_vdd_ma": 5.3187e-08
+      },
+      "RN_SMP": {
+       "i_pad_ma": 0.6568430000000001,
+       "i_vdd_ma": 5.56197e-08
+      },
+      "RP_SMP": {
+       "i_pad_ma": 0.535918,
+       "i_vdd_ma": 5.42437e-08
+      },
+      "RN_DRV": {
+       "i_pad_ma": 0.688068,
+       "i_vdd_ma": 5.59635e-08
+      },
+      "RP_DRV": {
+       "i_pad_ma": 0.6167469999999999,
+       "i_vdd_ma": 5.51614e-08
+      },
+      "RES_A": {
+       "i_pad_ma": 0.130712,
+       "i_vdd_ma": 5.00274e-08
+      },
+      "RES_B": {
+       "i_pad_ma": 0.130712,
+       "i_vdd_ma": 5.00274e-08
+      },
+      "MIM_A": {
+       "i_pad_ma": 5.36943e-08,
+       "i_vdd_ma": 4.8899800000000004e-08
+      },
+      "MIM_B": {
+       "i_pad_ma": 5.36943e-08,
+       "i_vdd_ma": 4.8899800000000004e-08
+      }
+     }
+    }
+   ],
+   "failures": [],
+   "note": "No VDD connection in the cell. Ramp 0->3.63 V in 1 us with all ATB leaves open; overdrive: ATB0 held at 3.63 V into each node with its force chain closed (bench error)."
+  },
+  "clean": {
+   "state": "pass",
+   "magic_drc": 0,
+   "lvs": "Circuits match uniquely.",
+   "lvs_unique": true,
+   "gds_export": {
+    "magic": "8.3.678",
+    "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "marker_shapes": {
+     "HRES 62/0": 8,
+     "RES_MK 110/5": 16
+    },
+    "ppolyf_u_1k_devices": 8,
+    "klayout_drc": {
+     "violations": 0,
+     "by_rule": {},
+     "rc": "0"
+    },
+    "hres_ok": true,
+    "published_gds_lvs": "Circuits match uniquely.",
+    "published_gds_lvs_unique": true,
+    "pass": true
+   },
+   "lef_pins": [
+    "MIM_A",
+    "MIM_B",
+    "RES_A",
+    "RES_B",
+    "RN_DRV",
+    "RN_LNA",
+    "RN_MIX",
+    "RN_SMP",
+    "RP_DRV",
+    "RP_LNA",
+    "RP_MIX",
+    "RP_SMP",
+    "VSS"
+   ]
+  },
+  "observable": {
+   "state": "pass",
+   "worst": {
+    "sense_mv": 0.03999999999981796,
+    "path_mv": 0.3449999999999287,
+    "force_pad_v": 2.82787
+   },
+   "mim": [
+    {
+     "corner": "typical",
+     "temp_c": 27,
+     "c_bus_open_pf": 2.39175,
+     "c_a_deembedded_pf": 6.569610000000001,
+     "c_b_deembedded_pf": 6.57126,
+     "c_a_direct_pf": 6.4890799999999995,
+     "c_b_direct_pf": 6.49072,
+     "err_a": 0.012410079703132126,
+     "err_b": 0.01240848472896694,
+     "mismatch_meas": -0.00025112492551852215,
+     "mismatch_direct": -0.0002527003497742617
+    },
+    {
+     "corner": "ss",
+     "temp_c": 32,
+     "c_bus_open_pf": 2.38355,
+     "c_a_deembedded_pf": 7.21237,
+     "c_b_deembedded_pf": 7.21401,
+     "c_a_direct_pf": 7.1340200000000005,
+     "c_b_direct_pf": 7.135669999999999,
+     "err_a": 0.010982587657449638,
+     "err_b": 0.010978646714324025,
+     "mismatch_meas": -0.0002273612645722601,
+     "mismatch_direct": -0.00023125940367300078
+    },
+    {
+     "corner": "ff",
+     "temp_c": 22,
+     "c_bus_open_pf": 2.41291,
+     "c_a_deembedded_pf": 5.92993,
+     "c_b_deembedded_pf": 5.931579999999999,
+     "c_a_direct_pf": 5.8442099999999995,
+     "c_b_direct_pf": 5.8458499999999995,
+     "err_a": 0.014667508525532114,
+     "err_b": 0.014665104304763199,
+     "mismatch_meas": -0.0002782107842929427,
+     "mismatch_direct": -0.00028058025365138944
+    },
+    {
+     "corner": "ss",
+     "temp_c": 22,
+     "c_bus_open_pf": 2.3816900000000003,
+     "c_a_deembedded_pf": 7.21108,
+     "c_b_deembedded_pf": 7.21273,
+     "c_a_direct_pf": 7.133,
+     "c_b_direct_pf": 7.13465,
+     "err_a": 0.010946305902144848,
+     "err_b": 0.010943774396781958,
+     "mismatch_meas": -0.00022878837144960884,
+     "mismatch_direct": -0.00023129246932736521
+    },
+    {
+     "corner": "ff",
+     "temp_c": 32,
+     "c_bus_open_pf": 2.41477,
+     "c_a_deembedded_pf": 5.9314100000000005,
+     "c_b_deembedded_pf": 5.933059999999999,
+     "c_a_direct_pf": 5.84504,
+     "c_b_direct_pf": 5.84669,
+     "err_a": 0.014776631126562023,
+     "err_b": 0.014772460999300518,
+     "mismatch_meas": -0.00027814137504655347,
+     "mismatch_direct": -0.00028225078752247936
+    }
+   ],
+   "failures": [],
+   "note": "Extracted DUT + extracted ATB leaf_f/leaf_s/grp/pad (island_support default-mode PEX). Forced current on ATB0, Kelvin sense on ATB1 into 10 Mohm; MIM by 100 kHz pad admittance with the open-bus reading subtracted."
+  },
+  "fallback": {
+   "state": "waived",
+   "note": "Characterization structure; no function to fall back from."
+  }
+ }
+}

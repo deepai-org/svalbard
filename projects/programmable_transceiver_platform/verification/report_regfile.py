@@ -17,7 +17,7 @@ S = ROOT / 'scratch/pt_regfile'
 SOURCES = ['spec/analog-architecture.json', 'spec/debug-controls.json', 'spec/register-map.json',
            'rtl/gen/gen_regfile.py', 'rtl/gen/regmap_runtime.py', 'rtl/pt_regfile.sv', 'rtl/pt_regmap_defs.svh',
            'rtl/pt_spi.sv', 'rtl/pt_digital.sv', 'integration/pt_chip.sv', 'sim/tb_regfile.sv',
-           'sim/tb_regfile_legacy.sv', 'verification/check_regfile.py', 'verification/formal/pt_regfile.sby',
+           'sim/tb_regfile_legacy.sv', 'sim/reference/pt_control.sv', 'verification/check_regfile.py', 'verification/formal/pt_regfile.sby',
            'verification/formal/pt_regfile_fv.sv', 'verification/run_regfile_formal.sh',
            'verification/run_regfile_synth.sh', 'integration/macro-contract.md']
 FORMAL_IMAGE = 'docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3'

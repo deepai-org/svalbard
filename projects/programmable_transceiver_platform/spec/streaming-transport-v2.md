@@ -32,8 +32,9 @@ it does not prove physical GPIO or CDC performance.
 Frames have header words 0–4 and payload slots 5–63. `owner="wire"|"iq"` selects
 exclusive ownership in the reference codec. Source counts describe complete
 words; unadvertised slots are padding, and packing residuals span frames.
-The existing RTL still has mixed-quota scheduling; integration of the selected
-exclusive-owner service remains a requirement, not established by codec support.
+The RTL uses exclusive dense framing. Stopped-only
+`digital.transport_config.payload_iq` selects wired (0) or I/Q (1); MODE8 still
+selects I/Q sample width.
 
 Metadata is 30 bits: wired count [5:0], IQ count [11:6], sequence [17:12],
 opcode [21:18], argument [29:22]. Shortened extended Hamming is detection-only:
@@ -58,16 +59,62 @@ samples require a separately qualified error budget.
 
 ## Implementation and command boundary
 
-`pt_core`/`pt_digital` default to `STREAM_V2=1`. `pt_stream_rx.sv` stores metadata
-and state, and emits readiness-gated transfer strobes. `pt_stream_tx.sv` retains
-two staging banks and a full-frame snapshot latency. It starts with an empty
-frame and keeps command fields attached to their payload snapshot.
+`pt_core` instantiates `pt_core_pair` and `pt_dense_pair_link_tx/rx`. Two chronological ten-bit words
+are processed at 156.25 MHz; the external ten-bit word port stays at 312.5 MHz.
+The receive side
+validates metadata before releasing payload, rejecting nonzero inactive-source
+counts. TX starts with an empty frame, then reserves available words near the
+end of each preceding frame. It subtracts every still-advertised current-frame
+word before reserving the next frame; no other consumer can drain that source.
+Credit arithmetic and parity are pipelined before header publication. Payload
+words come directly from the source FIFO on their advertised beats, with no
+full-frame staging bank. Commands and counts share the same snapshot.
+
+The wired ingress CDC FIFO is 64 pairs (1280 storage bits). The paired framer
+counts complete FIFO pairs plus its held odd word before the 59-word clamp.
+Its next-frame snapshot is pair beat24 of32 and subtracts all current-frame
+reservations. A one-word guard payload can leave a held odd word across frame
+boundaries; chronological order remains unchanged. The prior 32-pair FIFO
+overflowed in the full-rate test. `make transceiver-dense-transport` checks 840
+frames against the independent codec, including both owners and 112 negative
+cases. `make transceiver-dense-service` runs both wired directions at 312.5 MHz
+host / 2.5 Gb/s line for 200 µs at five clock phases, checking word order and
+FIFO faults; a 250 MHz host case must reject overload. These are functional RTL
+checks, not physical timing, clock-tolerance or interruption qualification.
+
+`make transceiver-dense-pair` independently codec-checks the selected paired
+engine: 720 frames, 235 odd-word carry cases and 114 corruption/refusal cases.
+`transceiver-dense-pair-link` checks training, both word alignments and five
+capture phases for both owners. The I/Q TX and RX queues hold twelve and seven
+pairs. RX admission uses its registered full flag; downstream unpacker
+readiness affects dequeue only.
+RF ingress holds eight samples; a 32-entry, 24-bit egress FIFO is shared with
+the wired owner. Its read clock selects the stopped owner's output clock;
+disable asserts queue reset even while clocks are stopped, with synchronous
+release after restart. Changing owners requires disable and a queue flush.
+`transceiver-shared-egress-lifecycle` checks both transitions with stopped
+host and output clocks. `transceiver-sync-fifo-depth` independently models
+wrap, overflow, underflow and reset for the seven/twelve-entry conservative
+queues, plus full replacement in the generic six-entry lookahead case. The nibble-based sample/pair converters accept and emit simultaneously; `transceiver-pair-gearbox` checks every occupancy with
+backpressure/reset, and `transceiver-dense-rf-service` checks both directions
+at 40 MS/s for both sample widths over five clock phases.
+`transceiver-dense-rf-burst` also checks actual full 59-word H2D frames with
+finite FPGA buffering and a bounded initial burst followed by 40 MS/s service.
+These smaller queues do not establish an interruption or clock-drift allowance.
+
+Fast launch uses local per-bit phase drivers and synchronized reset release.
+`transceiver-pair-word-formal` proves coherent phases and the low-word capture
+window. Only the twenty launch-pair registers have a two-word setup path;
+fast word-register paths remain 3.2 ns. A kept GF180 clock buffer isolates
+divider feedback from the engine clock tree. Full physical timing, storage
+and area closure remain open.
 
 Base commands are no-op(arg0), wired-idle(arg0/1) and RF-mute(arg0/1). Extensions
 below are normative behavioral encodings, not all implemented in RTL. Reserved
-or context-illegal commands fault. Same-frame exclusive scheduling, direct-stream
-mode and additional metadata require model/RTL integration; the selected
-service bound cannot be claimed from the existing two-bank implementation.
+or context-illegal commands fault. Direct-stream mode and additional metadata
+still require model/RTL integration. The analytical service bound needs
+reconciliation with the actual reservation lookahead and CDC latency before
+it qualifies interruptions or clock tolerance.
 
 ## Coordinated word-aligned startup
 
@@ -264,8 +311,10 @@ does not displace IQ payload; FPGA accounts the retrospective timestamp.
 
 ## Verification
 
-`make transceiver-stream-codec`, `transceiver-stream-rx`, `transceiver-stream-tx`
-and `transceiver-stream-link` exercise the codec and existing RTL. The model
+`make transceiver-stream-codec`, `transceiver-dense-pair`,
+`transceiver-dense-pair-link` and the wired/RF service checks exercise the
+codec and selected RTL. The word-at-a-time FPGA peer lives in
+`sim/reference/pt_dense_transport.sv`. The model
 suite covers generic gain, epoch, sample-time and direct-stream behaviors with
 explicit scope. These checks do not establish target-frequency timing, complete
 RTL parity with the selected model, BER, pad behavior or physical recovery.

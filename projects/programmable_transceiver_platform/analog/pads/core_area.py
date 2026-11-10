@@ -212,9 +212,9 @@ def route_steering(project, output, assembly):
             regions[metal]+=rectangle(a,b,width)
             length+=(abs(a.x-b.x)+abs(a.y-b.y))*unit
         for q in points[1:-1]:
-            vias+=rectangle(q,q,.28)
+            vias+=rectangle(q,q,.26)
             regions[4]+=rectangle(q,q,.4);regions[5]+=rectangle(q,q,.44)
-        vias+=rectangle(end,end,.28)
+        vias+=rectangle(end,end,.26)
         regions[4]+=rectangle(end,end,.4);regions[5]+=rectangle(end,end,.44)
         allowed=metal_at(start)+metal_at(end)
         for metal in (4,5):

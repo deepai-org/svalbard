@@ -7,6 +7,7 @@ artifacts go to analog/timing/generated/.
 import argparse
 import json
 import math
+import os
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -236,8 +237,9 @@ CL clk 0 20f
         fo = freq(m, 6)
         r = dict(f_out_hz=fo, target_hz=[40e6, 60e6], duty=(m['thi'] * fo if fo and 'thi' in m else None),
                  i_off_ua=-m.get('ioff', math.nan) * 1e6, i_on_ma=-m.get('ion', math.nan) * 1e3)
-        r['pass'] = bool(fo and fo > 10e6 and r['i_off_ua'] < 1)
         r['in_target_window'] = bool(fo and 40e6 <= fo <= 60e6)
+        # pass requires the 40-60 MHz window (r1 passed ss at 35-37 MHz on fo > 10 MHz alone)
+        r['pass'] = bool(r['in_target_window'] and r['i_off_ua'] < 1)
         return r
     return body, analyse
 
@@ -334,11 +336,45 @@ CL out 0 20f
     return body, analyse
 
 
-def tb_lo_ext(inc, v=VDD, mode='ext', f=2.45e9, vpp=2.0, kind='sin'):
+# Explicit gate resistance for the CML LO driver pair (the PDK models have
+# rgatemod=0 and Magic extraction is C-only): mandate 60-150 ohm per 10 um
+# device, upper end, 120 um per side -> 12.5 ohm in series with GA / GB.
+LOCML_RG = 12.5
+
+
+def rg_wrap_locml(text, rg=LOCML_RG):
+    """Rename `ct_locml` (schematic or extracted) to ct_locml_core and add a
+    wrapper with series gate resistors on GA/GB."""
+    import re as _re
+    m = _re.search(r'^\.subckt ct_locml (.*)$', text, _re.M)
+    if not m or 'ct_locml_core' in text:
+        return text
+    ports = m.group(1).split()
+    text = text.replace(m.group(0), '.subckt ct_locml_core ' + m.group(1))
+    text = _re.sub(r'^\.ends ct_locml\b', '.ends ct_locml_core', text, flags=_re.M)
+    inner = ' '.join({'GA': 'GAI', 'GB': 'GBI'}.get(p, p) for p in ports)
+    return text + (f'\n.subckt ct_locml {" ".join(ports)}\nRGA GA GAI {rg}\nRGB GB GBI {rg}\n'
+                   f'XC {inner} ct_locml_core\n.ends ct_locml\n')
+
+
+def stage_rg(work):
+    """Apply rg_wrap_locml to the staged schematic macro and extracted block."""
+    work = Path(work)
+    for f in (work / 'generated' / 'fast' / 'ct_locml.spice', work / 'lo_ext.ext.spice'):
+        if f.exists():
+            f.write_text(rg_wrap_locml(f.read_text()))
+
+
+def tb_lo_ext(inc, v=VDD, mode='ext', f=2.45e9, vpp=2.0, kind='sin', amp=0.58, cm=1.7, T=None):
     """Mixer LO nodes loaded with the RX (12x5u) and TX (2x20u) switch gates
     per line plus 22 fF wiring.  External sources: 50 ohm, board AC coupling
-    100 pF, ~1 pF pad capacitance; I on EXT_I*, Q on EXT_Q* (90 deg later)."""
-    T = 12e-9
+    100 pF, ~1 pF pad capacitance; I on EXT_I*, Q on EXT_Q* (90 deg later).
+    Internal mode (r-cml): LOI_* are the QVCO tank nodes, a DC-coupled sine
+    (cm, amp per side; kind='sin') or a rail-to-rail square (kind='sq');
+    100 ns so the CM loop and VB are settled (steady state)."""
+    stage_rg(tf.SCRATCH / 'lo_ext' / 'sim')
+    if T is None:
+        T = 12e-9 if mode.startswith('ext') else 100e-9
     a = vpp / 2
     q = 0.25 / f
     src = ''
@@ -353,8 +389,11 @@ def tb_lo_ext(inc, v=VDD, mode='ext', f=2.45e9, vpp=2.0, kind='sin'):
             src += f'RS{n} s{n} b{n} 50\nCB{n} b{n} pad{n} 100p\nCP{n} pad{n} 0 1p\n'
             src += f'VLI{n} loi{n} 0 0\n'
         else:
-            lo, hi = (0, v) if sgn > 0 else (v, 0)
-            src += f'VLI{n} loi{n} 0 pulse({lo} {hi} {ph} 30p 30p {0.5 / f - 30e-12} {1 / f})\n'
+            if kind == 'sin':
+                src += f'VLI{n} loi{n} 0 sin({cm} {sgn * amp} {f} 0 0 {-ph * f * 360})\n'
+            else:
+                lo, hi = (0, v) if sgn > 0 else (v, 0)
+                src += f'VLI{n} loi{n} 0 pulse({lo} {hi} {ph} 30p 30p {0.5 / f - 30e-12} {1 / f})\n'
             src += f'RP{n} pad{n} 0 50\nCP{n} pad{n} 0 1p\n'
     loads = ''
     for n in ('ip', 'in', 'qp', 'qn'):
@@ -364,8 +403,8 @@ def tb_lo_ext(inc, v=VDD, mode='ext', f=2.45e9, vpp=2.0, kind='sin'):
     inn = v if mode == 'int' else 0
     body = f""".param vth={v / 2}
 .include {inc}
-{sup(v)}VRXD rxd 0 1.65
-VRXS rxs 0 1.65
+{sup(v)}VRXD rxd 0 {v / 2}
+VRXS rxs 0 {v / 2}
 VTXD txd 0 2.5
 VTXS txs 0 1.0
 VEXT ext 0 {ext}
@@ -378,13 +417,19 @@ VINT int 0 {inn}
 .measure tran qmax max v(loqp) from={T - 4e-9} to={T}
 .measure tran qmin min v(loqp) from={T - 4e-9} to={T}
 .measure tran vbavg avg v(vb) from={T - 4e-9} to={T}
+.measure tran vb0 find v(vb) at=0
+.measure tran qavg avg v(loqp) from={T - 4e-9} to={T}
 .measure tran tiq trig v(loip) val={{vth2}} td={T - 4e-9} rise=1 targ v(loqp) val={{vth2}} td={T - 4e-9} rise=1
 .measure tran tqi trig v(loqp) val={{vth2}} td={T - 4e-9} rise=1 targ v(loip) val={{vth2}} td={T - 4e-9} rise=1
 .measure tran tdiff trig v(loip) val={{vth2}} td={T - 4e-9} rise=1 targ v(loin) val={{vth2}} td={T - 4e-9} fall=1
 {period_meas('loip', T - 4e-9, 4).replace('{vth}', '{vth2}')}.measure tran ion avg i(VDD) from={T - 4e-9} to={T}
+.measure tran thi trig v(loip) val={{vth2}} td={T - 4e-9} rise=1 targ v(loip) val={{vth2}} td={T - 4e-9} fall=1
+.measure tran vbearly avg v(vb) from={T - 24e-9} to={T - 20e-9}
 .param vth2={{(2.33 if mode.startswith('ext') else v / 2)}}
 """
-    body = body.replace("{(2.33 if mode.startswith('ext') else v / 2)}", str(2.45 if mode.startswith('ext') else v / 2))
+    # crossing threshold = the LO centre VB = 0.739 VDD in both modes (r-cml: the
+    # CML swings about VB too; the old rail-to-rail driver used VDD/2)
+    body = body.replace("{(2.33 if mode.startswith('ext') else v / 2)}", str(0.739 * v))
 
     def analyse(m):
         fo = freq(m)
@@ -394,16 +439,36 @@ VINT int 0 {inn}
                 d = sg * m[k]
         ph = ((d * f * 360 + 180) % 360 - 180) if d is not None else None
         r = dict(mode=mode, input=(f'{kind} {f / 1e9:g} GHz {vpp:g} Vpp per leg open-circuit behind 50 ohm (+1 pF pad)' if mode.startswith('ext')
-                                    else f'internal LOI rail-to-rail {f / 1e9:g} GHz'),
+                                    else (f'internal LOI tank-node sine {f / 1e9:g} GHz, {cm:g} V +- {amp:g} V per side' if kind == 'sin'
+                                          else f'internal LOI rail-to-rail square {f / 1e9:g} GHz')),
+                 duty_at_vb=((m['thi'] * f) % 1 if 'thi' in m else None),
+                 vb_drift_last20ns_mv=((m['vbavg'] - m['vbearly']) * 1e3 if 'vbavg' in m and 'vbearly' in m and not mode.startswith('ext') else None),
                  f_lo_hz=fo, lo_i_max_v=m.get('lomax'), lo_i_min_v=m.get('lomin'), lo_i_avg_v=m.get('loavg'),
                  lo_q_max_v=m.get('qmax'), lo_q_min_v=m.get('qmin'), vb_v=m.get('vbavg'), q_minus_i_deg=ph,
                  ip_in_skew_ps=m.get('tdiff', 0) * 1e12 if 'tdiff' in m else None,
                  i_on_ma=-m.get('ion', math.nan) * 1e3,
-                 rx_switch_vgs_on_v=(m['lomax'] - 1.65) if 'lomax' in m else None,
-                 rx_switch_vgs_off_v=(m['lomin'] - 1.65) if 'lomin' in m else None)
-        r['pass'] = bool(fo and abs(fo / f - 1) < 0.01 and r['rx_switch_vgs_on_v'] is not None
-                         and r['rx_switch_vgs_on_v'] >= 0.9 and r['rx_switch_vgs_off_v'] <= 0.5
-                         and ph is not None and 80 < abs(ph) < 100)
+                 rx_switch_source_v=v / 2,
+                 rx_switch_vgs_on_v=(m['lomax'] - v / 2) if 'lomax' in m else None,
+                 rx_switch_vgs_off_v=(m['lomin'] - v / 2) if 'lomin' in m else None)
+        # External (AC-coupled) mode: the 12 ns window is inside the 20-200 ns
+        # bias time constants, so the LO DC is still moving.  The LO node's only
+        # DC path is 20 k to VB, so in steady state avg(LO) = VB(t=0); the
+        # steady-state levels keep the measured waveform about that average.
+        # Both I and Q must meet the limits.  (Internal mode is driven, not
+        # AC-coupled: judged on the measured levels.)
+        if mode.startswith('ext') and all(k in m for k in ('lomax', 'lomin', 'loavg', 'qmax', 'qmin', 'qavg', 'vb0')):
+            r['steady_state_projection'] = dict(
+                vb_dc_v=m['vb0'],
+                on_i_v=m['lomax'] - m['loavg'] + m['vb0'] - v / 2, off_i_v=m['vb0'] - (m['loavg'] - m['lomin']) - v / 2,
+                on_q_v=m['qmax'] - m['qavg'] + m['vb0'] - v / 2, off_q_v=m['vb0'] - (m['qavg'] - m['qmin']) - v / 2)
+            ss_ = r['steady_state_projection']
+            levels_ok = min(ss_['on_i_v'], ss_['on_q_v']) >= 0.9 and max(ss_['off_i_v'], ss_['off_q_v']) <= 0.5
+        else:
+            # r-cml: I and Q both, plus duty at VB (the CML centre) 40-60 %
+            levels_ok = (all(k in m for k in ('lomax', 'lomin', 'qmax', 'qmin'))
+                         and min(m['lomax'], m['qmax']) - v / 2 >= 0.9 and max(m['lomin'], m['qmin']) - v / 2 <= 0.5
+                         and r['duty_at_vb'] is not None and 0.4 <= r['duty_at_vb'] <= 0.6)
+        r['pass'] = bool(fo and abs(fo / f - 1) < 0.01 and levels_ok and ph is not None and 80 < abs(ph) < 100)
         return r
     return body, analyse
 
@@ -561,7 +626,8 @@ CRO refo 0 20f
                                      and abs(r.get('hold_drift_ppm_per_10us') or 1e9) < 100)
             r['frequency_locked'] = locked
             r['lock_flag_correct'] = bool(((m.get('lock_end') or 0) > v / 2) == locked)
-            r['pass'] = locked
+            if hold_at is None:   # HOLD benches keep their own criterion (was overwritten by `locked`)
+                r['pass'] = locked
         else:
             r['pass'] = bool(fv and ffb and abs(fv / ffb / n - 1) < 0.02)
         return r
@@ -644,8 +710,104 @@ CL3 ldb 0 60f
     return body, analyse
 
 
-TB = dict(wordclk=tb_wordclk, prescale=tb_prescale, pll_ring=tb_pll_ring, polyphase=tb_polyphase, lo_ext=tb_lo_ext, diff_clk_rx=tb_diff_clk_rx, clk_obs=tb_clk_obs, ring_osc=tb_ring_osc, aosc=tb_aosc,
-          clockmux=tb_clockmux, vco_replica=tb_vco_replica)
+
+def tb_clk_obs16(inc, v=VDD, f=0.5e9, sel=14):
+    """pt_clk_obs16: source `sel` (S3..S0 = sel) toggling, every other input held at 0."""
+    T = 30e-9 + 48 / f
+    ins = ' '.join('insel' if i == sel else '0' for i in range(15))
+    ins += ' insel 0 0' if sel == 15 else ' 0 0 0'   # r2: code 15 = OR(IN15A, IN15B, IN15C); IN15A driven
+    sb = ' '.join('vdd' if (sel >> k) & 1 else '0' for k in range(4))
+    body = f""".param vth={v / 2}
+.include {inc}
+{sup(v)}VEN en 0 pwl(0 0 5n 0 5.1n {v})
+VIN insel 0 pulse(0 {v} 0 50p 50p {0.5 / f - 50e-12} {1 / f})
+VN0 n0 0 {v}
+VN1 n1 0 {v}
+X1 {ins} {sb} n0 n1 0 en out vdd 0 pt_clk_obs16
+CL out 0 10p
+RL out 0 1meg
+.tran 5p {T}
+.measure tran ioff avg i(VDD) from=2n to=4.9n
+.measure tran vout_off find v(out) at=4.9n
+{period_meas('out', 30e-9, 2)}.measure tran thi trig v(out) val={{vth}} td=30n rise=1 targ v(out) val={{vth}} td=30n fall=1
+.measure tran vmax max v(out) from=30n to={T}
+.measure tran vmin min v(out) from=30n to={T}
+.measure tran ion avg i(VDD) from=30n to={T}
+"""
+
+    def analyse(m):
+        fo = freq(m, 2)
+        r = dict(input=f'IN{sel} {f / 1e9:g} GHz, N=3 (/8), 10 pF pad load', expected_hz=f / 8, f_out_hz=fo,
+                 duty=(m['thi'] * fo if fo and 'thi' in m else None),
+                 out_swing_v=[m.get('vmin'), m.get('vmax')], i_off_ua=-m.get('ioff', math.nan) * 1e6,
+                 out_while_disabled_v=m.get('vout_off'), i_on_ma=-m.get('ion', math.nan) * 1e3)
+        r['pass'] = bool(fo and abs(fo / (f / 8) - 1) < 0.01 and m.get('vmax', 0) > 0.9 * v and m.get('vmin', 9) < 0.1 * v)
+        return r
+    return body, analyse
+
+
+def tb_obs_pre4(inc, v=VDD, f=1.0e9):
+    """pt_obs_pre4: CK toggling (CMOS, 40 ps edges); OUT = CK/4 into a 2 pF
+    route load (a ~2 mm route to pt_clk_obs16).  EN rises at 5 ns."""
+    T = 20e-9 + 40 / f
+    body = f""".param vth={v / 2}
+.include {inc}
+{sup(v)}VEN en 0 pwl(0 0 5n 0 5.1n {v})
+VCK ck 0 pulse(0 {v} 0 40p 40p {0.5 / f - 40e-12} {1 / f})
+X1 ck en out vdd 0 pt_obs_pre4
+CL out 0 2p
+.tran 2p {T}
+.measure tran ioff avg i(VDD) from=1n to=4.9n
+.measure tran vout_off max v(out) from=1n to=4.9n
+{period_meas('out', 20e-9, 2)}.measure tran thi trig v(out) val={{vth}} td=20n rise=1 targ v(out) val={{vth}} td=20n fall=1
+.measure tran vmax max v(out) from=20n to={T}
+.measure tran vmin min v(out) from=20n to={T}
+.measure tran ion avg i(VDD) from=20n to={T}
+"""
+
+    def analyse(m):
+        fo = freq(m, 2)
+        r = dict(input=f'CK {f / 1e9:g} GHz CMOS', expected_hz=f / 4, f_out_hz=fo,
+                 duty=(m['thi'] * fo if fo and 'thi' in m else None), out_swing_v=[m.get('vmin'), m.get('vmax')],
+                 out_while_disabled_max_v=m.get('vout_off'), i_off_ua=-m.get('ioff', math.nan) * 1e6, i_on_ma=-m.get('ion', math.nan) * 1e3)
+        r['pass'] = bool(fo and abs(fo / (f / 4) - 1) < 0.01 and m.get('vmax', 0) > 0.9 * v and m.get('vmin', 9) < 0.1 * v
+                         and r['duty'] is not None and 0.4 < r['duty'] < 0.6)
+        return r
+    return body, analyse
+
+
+def tb_lo_obs(inc, v=VDD, f=2.45e9, amp=0.45, cm=1.7):
+    """pt_lo_obs: LP/LN = QVCO I tank pair (DC-coupled sine, cm +- amp per
+    side; ss tank: ~1.66 V +- 0.6 V); OBS = LO/8 into a 2 pF route load.
+    EN rises at 2 ns.  The extracted latch starts from its layout asymmetry
+    (no .ic)."""
+    T = 40e-9
+    body = f""".param vth={v / 2}
+.include {inc}
+{sup(v)}VEN en 0 pwl(0 0 2n 0 2.1n {v})
+VP lp 0 sin({cm} {amp} {f})
+VN ln 0 sin({cm} {-amp} {f})
+X1 lp ln en obs vdd 0 pt_lo_obs
+CL obs 0 2p
+.tran 1p {T}
+.measure tran ioff avg i(VDD) from=0.5n to=1.9n
+{period_meas('obs', 20e-9, 4)}.measure tran thi trig v(obs) val={{vth}} td=20n rise=1 targ v(obs) val={{vth}} td=20n fall=1
+.measure tran vmax max v(obs) from=20n to={T}
+.measure tran vmin min v(obs) from=20n to={T}
+.measure tran ion avg i(VDD) from=20n to={T}
+"""
+
+    def analyse(m):
+        fo = freq(m, 4)
+        r = dict(input=f'tank sine {f / 1e9:g} GHz, {cm:g} V +- {amp:g} V per side', expected_hz=f / 8, f_out_hz=fo,
+                 duty=((m['thi'] * fo) % 1 if fo and 'thi' in m else None), out_swing_v=[m.get('vmin'), m.get('vmax')],
+                 i_off_ua=-m.get('ioff', math.nan) * 1e6, i_on_ma=-m.get('ion', math.nan) * 1e3)
+        r['pass'] = bool(fo and abs(fo / (f / 8) - 1) < 0.01 and m.get('vmax', 0) > 0.9 * v and m.get('vmin', 9) < 0.1 * v)
+        return r
+    return body, analyse
+
+TB = dict(wordclk=tb_wordclk, prescale=tb_prescale, pll_ring=tb_pll_ring, polyphase=tb_polyphase, lo_ext=tb_lo_ext, diff_clk_rx=tb_diff_clk_rx, clk_obs=tb_clk_obs, clk_obs16=tb_clk_obs16, ring_osc=tb_ring_osc, aosc=tb_aosc,
+          clockmux=tb_clockmux, vco_replica=tb_vco_replica, obs_pre4=tb_obs_pre4, lo_obs=tb_lo_obs)
 WIDTH = dict()
 
 
@@ -678,7 +840,7 @@ def quick(blocks, extracted=False, tag='sch'):
         except Exception as e:  # keep going; record
             return b, name, dict(error=repr(e), **{'pass': False})
     out = {}
-    with ThreadPoolExecutor(3) as ex:
+    with ThreadPoolExecutor(int(os.environ.get("TIMING_JOBS", "3"))) as ex:
         for b, name, r in ex.map(one, jobs):
             out.setdefault(b, {})[name] = r
             print(b, name, json.dumps(r, default=str)[:900], flush=True)
@@ -687,7 +849,7 @@ def quick(blocks, extracted=False, tag='sch'):
 
 OUTPUTS = dict(
     diff_clk_rx=['OUTP', 'OUTN', 'PRESENT', 'ATB_DET'],
-    clk_obs=['OUT'], ring_osc=['OUT'], aosc=['CLK', 'ATB_X'],
+    clk_obs=['OUT'], clk_obs16=['OUT'], obs_pre4=['OUT'], lo_obs=['OBS'], ring_osc=['OUT'], aosc=['CLK', 'ATB_X'],
     clockmux=['PREF', 'WIRE', 'WSMP', 'CONV_CLK', 'HOST_CLK'],
     vco_replica=['OUT', 'ATB_VTAIL'],
     prescale=['CK_OUT'],
@@ -697,7 +859,7 @@ OUTPUTS = dict(
     lo_ext=['LO_IP', 'LO_IN', 'LO_QP', 'LO_QN', 'ATB_VB'])
 # inputs that are clocks/pads in the safe test are driven (toggling) to show
 # that a running source cannot wake a disabled block.
-SAFE_TOGGLE = dict(wordclk=['CK'], prescale=['CK_IN'], pll_ring=['REF'], polyphase=['INP'], lo_ext=['EXT_IP', 'EXT_QP', 'LOI_IP'], diff_clk_rx=['INP'], clk_obs=['IN0'], clockmux=['PLLW', 'REF', 'AUX', 'H2D', 'HF'])
+SAFE_TOGGLE = dict(lo_obs=['LP'], obs_pre4=['CK'], wordclk=['CK'], prescale=['CK_IN'], pll_ring=['REF'], polyphase=['INP'], lo_ext=['EXT_IP', 'EXT_QP', 'LOI_IP'], diff_clk_rx=['INP'], clk_obs=['IN0'], clk_obs16=['IN0', 'IN8', 'IN15A'], clockmux=['PLLW', 'REF', 'AUX', 'H2D', 'HF'])
 
 
 def tb_safe(block, inc, v=3.63, island_off=False):
@@ -788,7 +950,11 @@ NOMINAL = dict(
                  ('data_1g6_800mv', dict(kind='data', rate=1.6e9, vpp=0.8)), ('data_2g_500mv', dict(kind='data', rate=2e9, vpp=0.5)),
                  ('data_start_0g5_500mv', dict(kind='data', rate=0.5e9, vpp=0.5, nper=1, first=True)),
                  ('data_pre128_0g5_300mv', dict(kind='data', rate=0.5e9, vpp=0.3, nper=1, first=True, pre=128))],
-    clk_obs=[('nom', dict(f=0.5e9)), ('nom_in1g', dict(f=1e9))], ring_osc=[('nom', {})], aosc=[('nom', {})],
+    clk_obs=[('nom', dict(f=0.5e9)), ('nom_in1g', dict(f=1e9))], ring_osc=[('nom', {})],
+    lo_obs=[('nom_2g45', dict(f=2.45e9)), ('nom_2g5_a0p3', dict(f=2.5e9, amp=0.3)), ('nom_2g4_a1p1', dict(f=2.4e9, amp=1.1, cm=1.95))],
+    obs_pre4=[('nom_1g', dict(f=1e9)), ('nom_810m', dict(f=0.81e9)), ('nom_1g25', dict(f=1.25e9)), ('nom_50m', dict(f=50e6))],
+    clk_obs16=[('nom', dict(f=0.5e9, sel=14)), ('nom_sel1', dict(f=0.5e9, sel=1)), ('nom_sel8', dict(f=0.5e9, sel=8)),
+               ('nom_sel15', dict(f=0.5e9, sel=15)), ('nom_313m_sel1', dict(f=0.3125e9, sel=1))], aosc=[('nom', {})],
     clockmux=[('nom', dict(mode='switch')), ('nom_mode_rf', dict(mode='rf')), ('nom_mode_wired', dict(mode='wired'))],
     vco_replica=[(f'nom_vc{vc}', dict(vctrl=vc)) for vc in (0.9, 1.0, 1.1, 1.2, 1.5, 1.8, 2.1, 2.5, 3.3)],
     prescale=[('nom_2g5_d16', dict(f=2.5e9, sel='D16')), ('nom_240m_d2', dict(f=0.24e9, sel='D2')),
@@ -806,18 +972,25 @@ NOMINAL = dict(
               ('cold_810m', dict(mode='closed', fref=810e6 / 16, vc0=0.0, T=3.0e-6, tpre=5e-9)),
               # HOLD (r6): lock, assert HOLD at 2.0 us, observe the step and drift to 3.2 us
               ('hold_625m', dict(mode='closed', fref=625e6 / 16, vc0=1.16, T=3.2e-6, tpre=0.8e-6, hold_at=2.0e-6)),
+              # same with HOLD at 4.0 us: 3.2 us of loop settling before HOLD (the 2.0 us case still
+              # contains the loop's own settling tail; in use HOLD follows the lock counter)
+              ('hold_625m_late', dict(mode='closed', fref=625e6 / 16, vc0=1.16, T=5.2e-6, tpre=0.8e-6, hold_at=4.0e-6)),
               # drift bench: HOLD from t=0, VCTRL pre-charged for 0.8 us then floating
               ('holddrift_625m', dict(mode='closed', fref=625e6 / 16, vc0=1.16, T=2.6e-6, tpre=0.8e-6, hold_at=0))] +
              [(f'open_vc{vc}', dict(mode='open', vctrl=vc)) for vc in (0.8, 3.3)],
     polyphase=[('nom_2g45_1vpp', dict(f=2.45e9, amp=0.5)), ('nom_2g4_1vpp', dict(f=2.4e9, amp=0.5)),
                ('nom_2g5_1vpp', dict(f=2.5e9, amp=0.5)), ('nom_2g45_0v4pp', dict(f=2.45e9, amp=0.2))],
     lo_ext=[('nom_ext_sin_2vpp_pad', dict(mode='ext', vpp=4.0)), ('nom_ext_sin_2vpp', dict(mode='ext', vpp=2.0)), ('nom_ext_sin_1vpp', dict(mode='ext', vpp=1.0)),
-            ('nom_ext_sq_2vpp', dict(mode='ext', vpp=2.0, kind='sq')), ('nom_int', dict(mode='int'))])
+            ('nom_ext_sq_2vpp', dict(mode='ext', vpp=2.0, kind='sq')), ('nom_int', dict(mode='int')),
+            ('nom_int_sq', dict(mode='int', kind='sq')), ('nom_int_2g4', dict(mode='int', f=2.4e9)), ('nom_int_2g5', dict(mode='int', f=2.5e9))])
 CORNER_CASES = dict(
+    lo_obs=[('c_2g5', dict(f=2.5e9, amp=0.45)), ('c_2g4_a0p3', dict(f=2.4e9, amp=0.3))],
+    obs_pre4=[('c_1g', dict(f=1e9)), ('c_1g25', dict(f=1.25e9))],
     wordclk=[('c_810m_d5', dict(f=810e6, div=5)), ('c_810m_d20', dict(f=810e6, div=20)), ('c_625m_d5', dict(f=625e6, div=5)), ('c_625m_d20', dict(f=625e6, div=20))],
     diff_clk_rx=[('c', dict(f=1e8, amp=0.125))], clk_obs=[('c', dict(f=0.5e9))], ring_osc=[('c', {})], aosc=[('c', {})],
+    clk_obs16=[('c', dict(f=0.5e9, sel=14)), ('c_sel15', dict(f=0.5e9, sel=15))],
     clockmux=[('c', dict(mode='switch'))],
-    vco_replica=[('c_vc3.3', dict(vctrl=3.3)), ('c_vc0.9', dict(vctrl=0.9)), ('c_vc0.8', dict(vctrl=0.8)), ('c_vc1.2', dict(vctrl=1.2))], lo_ext=[('c', dict(mode='ext', vpp=4.0))], pll_ring=[('c_vc3.3', dict(mode='open', vctrl=3.3)), ('c_vc0.8', dict(mode='open', vctrl=0.8))], prescale=[('c', dict(f=2.5e9, sel='D16'))], polyphase=[('c', dict(f=2.45e9, amp=0.5))])
+    vco_replica=[('c_vc3.3', dict(vctrl=3.3)), ('c_vc0.9', dict(vctrl=0.9)), ('c_vc0.8', dict(vctrl=0.8)), ('c_vc1.2', dict(vctrl=1.2))], lo_ext=[('c', dict(mode='ext', vpp=4.0)), ('c_int', dict(mode='int', f=2.5e9))], pll_ring=[('c_vc3.3', dict(mode='open', vctrl=3.3)), ('c_vc0.8', dict(mode='open', vctrl=0.8))], prescale=[('c', dict(f=2.5e9, sel='D16'))], polyphase=[('c', dict(f=2.45e9, amp=0.5))])
 
 
 def run_sims(block, cases, extracted=True, corners=False):
@@ -836,7 +1009,7 @@ def run_sims(block, cases, extracted=True, corners=False):
             return simulate(block, name, tb, kw, extracted=extracted, corner=c, temp=t, v=v)
         except Exception as e:
             return dict(case=name, error=repr(e), **{'pass': False})
-    with ThreadPoolExecutor(3) as ex:
+    with ThreadPoolExecutor(int(os.environ.get("TIMING_JOBS", "3"))) as ex:
         return list(ex.map(one, jobs))
 
 

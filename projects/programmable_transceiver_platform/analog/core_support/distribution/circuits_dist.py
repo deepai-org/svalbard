@@ -77,6 +77,35 @@ def bank(n, name=None):
     return c
 
 
+# Master voltage references (analog-architecture.json bias.vref0 / bias.vcm).
+# Passive, always-on, on core VDD; no register control, so reset-safe by
+# construction (both outputs stay inside 0..VDD and only drive gates or
+# n-diffusion sampling switches).  One unit resistor everywhere for ratio
+# matching: ppolyf_u_1k (unsalicided, high-R) W=1 um L=40 um, ~40 kohm.
+#   VREF0 = VBG * 5/6  (1.212 V -> 1.010 V): 1 unit VBG->VREF0, 5 units
+#           VREF0->VSS; 240 kohm loads the bandgap's class-AB buffered vbg with
+#           ~5 uA.  Bandgap off -> VREF0 discharges to 0.  An ATB0 force of VBG
+#           (fallback) moves VREF0 with it.
+#   VCM   = VDD / 2    (1.65 V at 3.3 V): 2 units VDD->VCM, 2 units VCM->VSS;
+#           ~20 uA static, 40 kohm Thevenin.  Ratiometric to the supply, which
+#           is what the 'about VDD/2' consumers (ADC top-plate VCM) need; any
+#           charge-sharing decoupling belongs at the consumer.
+VREF_UNIT = dict(w=1.0, l=40.0)
+
+
+def vref(name='pt_bias_vref'):
+    c = Circuit(name, ['VDD', 'VSS', 'VBG', 'VREF0', 'VCM'])
+    c.notes += ['Passive master references: VREF0 = 5/6 VBG, VCM = VDD/2 (always on, core VDD).']
+    c.r('RV_T', 'VBG', 'VREF0', **VREF_UNIT)
+    chain = ['VREF0', 'v1', 'v2', 'v3', 'v4', 'VSS']
+    for k in range(5):
+        c.r(f'RV_B{k}', chain[k], chain[k+1], **VREF_UNIT)
+    cm = ['VDD', 'c1', 'VCM', 'c2', 'VSS']
+    for k in range(4):
+        c.r(f'RC_{k}', cm[k], cm[k+1], **VREF_UNIT)
+    return c
+
+
 BANKS = sorted({len(v) for v in ISLANDS.values()})
-CELLS = {'pt_bias_root': root}
+CELLS = {'pt_bias_root': root, 'pt_bias_vref': vref}
 CELLS.update({f'pt_bias_bank{n}': (lambda n=n: bank(n)) for n in BANKS})

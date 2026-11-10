@@ -118,6 +118,11 @@ def summarize(b):
         shutil.copy(gds, GEN / f'{b}.gds')
         for f in lyrdbs:
             shutil.copy(f, GEN / f'{b}-klayout-drc.lyrdb')
+        # block-unique subcell names + the required tapeout-precheck KLayout record (DRC + antenna)
+        sys.path.insert(0, str(HERE.parent))
+        from gds_uniquify import publish_checked
+        out['klayout_precheck'] = publish_checked(GEN / f'{b}.gds', b, cell)
+        out['pass'] = out['pass'] and out['klayout_precheck']['clean']
     (GEN / f'{b}-gds-export.json').write_text(json.dumps(out, indent=1) + '\n')
     return out
 

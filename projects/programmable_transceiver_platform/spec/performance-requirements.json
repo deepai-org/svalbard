@@ -1,0 +1,1009 @@
+{
+ "schema": "performance-requirements/1",
+ "generated": "2026-11-09",
+ "status_enum": [
+  "meets",
+  "marginal",
+  "fails",
+  "unverified"
+ ],
+ "checker": "spec/check_performance_requirements.py",
+ "rows": [
+  {
+   "id": "HL-RATE",
+   "requirement": "312.5 Mb/s per pin, 10+1 pins/direction; framed wired rates at host word clock = line/8",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital/hostio",
+   "evidence": [
+    "evidence/digital-hardening-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "hword fmax 65.3 MHz tt (stale, 18/26 sources)",
+   "primary_fix": "AC-1 pad-edge gearbox + 40-bit/78.125 MHz core; divider 8 (interface-changes S1-S3)",
+   "fallback": [
+    "debug.host_link.rate div2/div4"
+   ]
+  },
+  {
+   "id": "HL-CORE",
+   "requirement": "Core closes 78.125 MHz x 40 b and wired boundary line/40 across envelope",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital",
+   "evidence": [
+    "evidence/digital-hardening-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "wtx/wrx 53.5/63.8 MHz tt at 20-bit boundary; no in-envelope Liberty",
+   "primary_fix": "AC-1; in-envelope STA",
+   "fallback": [
+    "debug.host_link.rate div2/div4"
+   ]
+  },
+  {
+   "id": "HL-D2H-MARGIN",
+   "requirement": "D2H eye margin >= 0.15 UI at every in-envelope corner",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital/hostio + board",
+   "evidence": [
+    "evidence/digital-hardening-evidence.json",
+    "spec/fpga-host-screen.md"
+   ],
+   "status": "unverified",
+   "basis": "Budget margin 1140 ps on assumptions; FPGA not chosen; SSO unverified",
+   "primary_fix": "Select FPGA (board-requirements.md host-link section); board SI + SSO sim",
+   "fallback": [
+    "HL-B6"
+   ]
+  },
+  {
+   "id": "HL-H2D-MARGIN",
+   "requirement": "H2D capture margin >= 0.15 UI in envelope",
+   "source": "spec/interface-requirements.md",
+   "owner": "hostio",
+   "evidence": [
+    "evidence/digital-hardening-evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "612 ps tt pad-limited; in-envelope ss input f_max missing (ss_125C non-gating)",
+   "primary_fix": "Characterize bi_24t input at 22/32 C x 3.15/3.35 V",
+   "fallback": [
+    "HL-B6"
+   ]
+  },
+  {
+   "id": "HL-SSO",
+   "requirement": "Ground bounce <= 300 mV with 11 D2H outputs switching",
+   "source": "spec/interface-requirements.md",
+   "owner": "hostio + board",
+   "evidence": [
+    "spec/host-driver-selection.md"
+   ],
+   "status": "unverified",
+   "basis": "supply-path simulations incomplete (evidence/supply-path-incomplete.json)",
+   "primary_fix": "Tractable bank SSO sim; board HL-B4",
+   "fallback": [
+    "HL-B6"
+   ]
+  },
+  {
+   "id": "HL-LATENCY",
+   "requirement": "Command/response <= 400 ns (USB HS turnaround)",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital",
+   "evidence": [
+    "spec/streaming-transport-v2.md"
+   ],
+   "status": "unverified",
+   "basis": "342 ns model at full clock only; ~2.4x slower at achieved clocks",
+   "primary_fix": "Re-run after AC-1 (+25.6 ns gearbox)",
+   "fallback": []
+  },
+  {
+   "id": "PWR-DIG-WIRED",
+   "requirement": "Digital macro <= 60 mA in wired/USB modes (SAIF-based)",
+   "source": "spec/power-partition.md",
+   "owner": "digital",
+   "evidence": [
+    "evidence/digital-hardening-evidence.json",
+    "spec/budgets/power-budget.json"
+   ],
+   "status": "fails",
+   "basis": "Only post-route number: 0.684 W vectorless = 207 mA",
+   "primary_fix": "Clock gating + AC-1 half-rate core; SAIF power",
+   "fallback": []
+  },
+  {
+   "id": "PWR-DIG-RF",
+   "requirement": "Digital macro <= 40 mA in RF modes",
+   "source": "spec/power-partition.md",
+   "owner": "digital",
+   "evidence": [
+    "evidence/digital-hardening-evidence.json",
+    "spec/budgets/power-budget.json"
+   ],
+   "status": "fails",
+   "basis": "as above",
+   "primary_fix": "as above",
+   "fallback": []
+  },
+  {
+   "id": "PWR-HOST-RF",
+   "requirement": "RF modes run host link at div2",
+   "source": "spec/power-partition.md",
+   "owner": "digital (recipe)",
+   "evidence": [
+    "spec/budgets/power-budget.json"
+   ],
+   "status": "unverified",
+   "basis": "recipe change only",
+   "primary_fix": "Set default RF recipe",
+   "fallback": []
+  },
+  {
+   "id": "PWR-MODE-CEIL",
+   "requirement": "Every primary mode within its current ceiling (240 RF / 292 wired-USB)",
+   "source": "spec/power-partition.md",
+   "owner": "spec (power)",
+   "evidence": [
+    "spec/budgets/power-budget.json"
+   ],
+   "status": "marginal",
+   "basis": "Allocation: all fit except autonomous RF; evidence bound: all over by 110-208 mA; with PWR-DIG: +13.6 mA min margin",
+   "primary_fix": "PWR-DIG-*, PWR-HOST-RF",
+   "fallback": []
+  },
+  {
+   "id": "PWR-DROP",
+   "requirement": "Rail >= 3.15 V at die: total drop <= 117 mV",
+   "source": "spec/power-partition.md",
+   "owner": "spec (power) + integration",
+   "evidence": [
+    "spec/budgets/power-budget.json",
+    "analog/island_support/evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "81.1 mV with PWR-DIG (+35.9 mV); evidence bound -1.3 mV; grid R is an allocation",
+   "primary_fix": "Extract ring/grid; PWR-DIG; island edge-bar straps",
+   "fallback": [
+    "B2a"
+   ]
+  },
+  {
+   "id": "PWR-THERM",
+   "requirement": "Tj 22-32 C over stopped-to-max mode step",
+   "source": "spec/power-partition.md",
+   "owner": "board + spec",
+   "evidence": [
+    "spec/budgets/power-budget.json"
+   ],
+   "status": "unverified",
+   "basis": "theta(j->plate) <= 8.25 C/W required; COB theta not characterized",
+   "primary_fix": "B2a controlled plate",
+   "fallback": [
+    "B2a"
+   ]
+  },
+  {
+   "id": "WR-PCIE-BER",
+   "requirement": "2.5 GT/s BER 1e-12 at 95 % CL (3.0e12 bits)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + wired_tx + digital",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "CDR tracking fails extracted; wrx_cap fails >480 MHz; digital caps ~1.07 Gb/s",
+   "primary_fix": "AC-3 CDR closure + AC-1",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_board_phy_bypass",
+    "B13",
+    "B15"
+   ]
+  },
+  {
+   "id": "WR-PCIE-JTOL",
+   "requirement": "2.5 GT/s jitter tolerance mask per standard",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + timing",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_board_phy_bypass",
+    "B13",
+    "B15"
+   ]
+  },
+  {
+   "id": "WR-PCIE-PPM",
+   "requirement": "2.5 GT/s ppm offset + SSC",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (cdr)",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-rtl-check.json"
+   ],
+   "status": "unverified",
+   "basis": "FLL locks -6000..+1000 ppm in behavioural model only; hand-over drift 5883 ppm extracted",
+   "primary_fix": "AC-3 continuous integral path",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_board_phy_bypass",
+    "B13",
+    "B15"
+   ]
+  },
+  {
+   "id": "WR-SATA-BER",
+   "requirement": "1.5 Gb/s BER 1e-12 at 95 % CL (3.0e12 bits)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + wired_tx + digital",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "CDR tracking fails extracted; wrx_cap fails >480 MHz; digital caps ~1.07 Gb/s",
+   "primary_fix": "AC-3 CDR closure + AC-1",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-SATA-JTOL",
+   "requirement": "1.5 Gb/s jitter tolerance mask per standard",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + timing",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-SATA-PPM",
+   "requirement": "1.5 Gb/s ppm offset + SSC",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (cdr)",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-rtl-check.json"
+   ],
+   "status": "unverified",
+   "basis": "FLL locks -6000..+1000 ppm in behavioural model only; hand-over drift 5883 ppm extracted",
+   "primary_fix": "AC-3 continuous integral path",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-DP-BER",
+   "requirement": "1.62 Gb/s BER 1e-12 at 95 % CL (3.0e12 bits)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + wired_tx + digital",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "CDR tracking fails extracted; wrx_cap fails >480 MHz; digital caps ~1.07 Gb/s",
+   "primary_fix": "AC-3 CDR closure + AC-1",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-DP-JTOL",
+   "requirement": "1.62 Gb/s jitter tolerance mask per standard",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + timing",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-DP-PPM",
+   "requirement": "1.62 Gb/s ppm offset + SSC",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (cdr)",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-rtl-check.json"
+   ],
+   "status": "unverified",
+   "basis": "FLL locks -6000..+1000 ppm in behavioural model only; hand-over drift 5883 ppm extracted",
+   "primary_fix": "AC-3 continuous integral path",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-SDI-BER",
+   "requirement": "1.485 Gb/s BER 1e-12 at 95 % CL (3.0e12 bits)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + wired_tx + digital",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "CDR tracking fails extracted; wrx_cap fails >480 MHz; digital caps ~1.07 Gb/s",
+   "primary_fix": "AC-3 CDR closure + AC-1",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-SDI-JTOL",
+   "requirement": "1.485 Gb/s jitter tolerance mask per standard",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + timing",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-SDI-PPM",
+   "requirement": "1.485 Gb/s ppm offset",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (cdr)",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-rtl-check.json"
+   ],
+   "status": "unverified",
+   "basis": "FLL locks -6000..+1000 ppm in behavioural model only; hand-over drift 5883 ppm extracted",
+   "primary_fix": "AC-3 continuous integral path",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-GBE-BER",
+   "requirement": "1.25 GBd BER 1e-12 at 95 % CL (3.0e12 bits)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + wired_tx + digital",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "CDR tracking fails extracted; wrx_cap fails >480 MHz; digital caps ~1.07 Gb/s",
+   "primary_fix": "AC-3 CDR closure + AC-1",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_tx_external_data",
+    "B13",
+    "B12"
+   ]
+  },
+  {
+   "id": "WR-GBE-JTOL",
+   "requirement": "1.25 GBd jitter tolerance mask per standard",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + timing",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_tx_external_data",
+    "B13",
+    "B12"
+   ]
+  },
+  {
+   "id": "WR-GBE-PPM",
+   "requirement": "1.25 GBd ppm offset",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (cdr)",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-rtl-check.json"
+   ],
+   "status": "unverified",
+   "basis": "FLL locks -6000..+1000 ppm in behavioural model only; hand-over drift 5883 ppm extracted",
+   "primary_fix": "AC-3 continuous integral path",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_tx_external_data",
+    "B13",
+    "B12"
+   ]
+  },
+  {
+   "id": "WR-PCIE-SSC",
+   "requirement": "0..-5000 ppm down-spread, 30-33 kHz tracked",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (cdr)",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-rtl-check.json"
+   ],
+   "status": "unverified",
+   "basis": "no SSC test",
+   "primary_fix": "AC-3 integral slew >= 400 ppm/us",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-SATA-SSC",
+   "requirement": "0..-5000 ppm down-spread, 30-33 kHz tracked",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (cdr)",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-rtl-check.json"
+   ],
+   "status": "unverified",
+   "basis": "no SSC test",
+   "primary_fix": "AC-3 integral slew >= 400 ppm/us",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-DP-SSC",
+   "requirement": "0..-5000 ppm down-spread, 30-33 kHz tracked",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (cdr)",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-rtl-check.json"
+   ],
+   "status": "unverified",
+   "basis": "no SSC test",
+   "primary_fix": "AC-3 integral slew >= 400 ppm/us",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-PCIE-TXSWING",
+   "requirement": "800-1200 mVppd",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "578.5 mVppd tt",
+   "primary_fix": "S8 CML tail >= 16 mA",
+   "fallback": [
+    "wire_tx_board_serializer",
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-PCIE-TXJIT",
+   "requirement": "TJ <= 0.25 UI",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx + timing",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "4:1 mux fails 1.92-2.97 Gb/s; serializer DJ 0.38 UI at 1.25 G",
+   "primary_fix": "Compact-cell 4:1 mux and retiming (wired_tx)",
+   "fallback": [
+    "wire_tx_board_serializer",
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-PCIE-RL",
+   "requirement": "Diff RL >= 10 dB, CM >= 6 dB, 50 MHz-1.25 GHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "pads + wired_rx/tx",
+   "evidence": [
+    "analog/pads/README.md"
+   ],
+   "status": "fails",
+   "basis": "2.35/2.71 pF -> 7.6/6.6 dB at 1.25 GHz",
+   "primary_fix": "S7 pad C <= 1.6 pF or T-coil",
+   "fallback": [
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-PAD-C",
+   "requirement": "Wired pad C <= 1.6 pF effective at 1.25 GHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "pads",
+   "evidence": [
+    "analog/pads/README.md"
+   ],
+   "status": "fails",
+   "basis": "RX 2.34-2.35 pF, TX 2.706/2.713 pF",
+   "primary_fix": "S7",
+   "fallback": []
+  },
+  {
+   "id": "WR-SATA-TXSWING",
+   "requirement": "400-600 mVppd",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "578.5 mVppd tt; ss/3.15 V 0.50 V",
+   "primary_fix": "corner swing trim",
+   "fallback": [
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-SATA-OOB",
+   "requirement": "OOB squelch 50-200 mV, COMRESET/COMWAKE timing",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (detect)",
+   "evidence": [
+    "analog/wired_rx/generated/detect-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "detect block clean; no OOB burst timing",
+   "primary_fix": "OOB burst bench",
+   "fallback": [
+    "wire_cdr_fpga_oversample"
+   ]
+  },
+  {
+   "id": "WR-PCIE-DETECT",
+   "requirement": "Receiver detect + electrical idle",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx/wired_rx (detect)",
+   "evidence": [
+    "analog/wired_rx/generated/detect-evidence.json",
+    "spec/receiver-detect-model.md"
+   ],
+   "status": "unverified",
+   "basis": "no numeric evidence",
+   "primary_fix": "Detect pulse bench",
+   "fallback": [
+    "wire_detect_via_wmon"
+   ]
+  },
+  {
+   "id": "WR-GBE-TXSWING",
+   "requirement": ">= 500 mVppd",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "578.5 mVppd tt; 1.25 Gb/s tt/ff only",
+   "primary_fix": "4:1/2:1 mux port + swing trim",
+   "fallback": [
+    "wire_tx_external_data",
+    "B12"
+   ]
+  },
+  {
+   "id": "WR-TMDS-TXSWING",
+   "requirement": "TMDS 400-600 mV SE into 50 ohm to 3.3 V incl. ff clamp leakage",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx (tmds) + pads",
+   "evidence": [
+    "analog/wired_tx/generated/tmds-evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "1.25 Gb/s eye OK; 1.485 not simulated; ff clamp 5.1 mA at 3.3 V not in bench",
+   "primary_fix": "1.485 Gb/s bench with clamp",
+   "fallback": [
+    "wire_tx_external_data",
+    "B12"
+   ]
+  },
+  {
+   "id": "WR-TMDS-BER",
+   "requirement": "TMDS RX/TX BER 1e-12 at 742.5 Mb/s and 1.485 Gb/s",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + wired_tx",
+   "evidence": [
+    "analog/wired_tx/generated/tmds-evidence.json",
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "TX 720p inferred OK; RX needs CDR",
+   "primary_fix": "S6 forwarded TMDS clock into WCLK_IN",
+   "fallback": [
+    "wire_rx_tmds_forwarded_clock",
+    "B16"
+   ]
+  },
+  {
+   "id": "WR-SDI-TXSWING",
+   "requirement": "die >= 400 mVppd into board cable driver",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "1.485 not simulated",
+   "primary_fix": "1.485 Gb/s bench",
+   "fallback": [
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-USB-HSSWING",
+   "requirement": "HS 360-440 mV",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx (usbhs)",
+   "evidence": [
+    "analog/wired_tx/generated/usb_hs_bias-evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "reachable; ss/3.15 V 372-379 at full scale; per-board cal",
+   "primary_fix": "B11 calibration",
+   "fallback": [
+    "B8",
+    "B11"
+   ]
+  },
+  {
+   "id": "WR-USB-TURN",
+   "requirement": "HS turnaround <= 192 bit times (400 ns)",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital + usbhs",
+   "evidence": [
+    "spec/streaming-transport-v2.md"
+   ],
+   "status": "unverified",
+   "basis": "model at full clock only",
+   "primary_fix": "HL-LATENCY re-run after AC-1",
+   "fallback": [
+    "B8"
+   ]
+  },
+  {
+   "id": "WR-USB-FSLS",
+   "requirement": "FS edges 4-20 ns, LS 75-300 ns",
+   "source": "spec/interface-requirements.md",
+   "owner": "pads/usbdrive",
+   "evidence": [
+    "analog/pads/generated/wired-receive-usb-screen.json"
+   ],
+   "status": "fails",
+   "basis": "FS 5.8-11 ns meets; LS 33-67 ns fails",
+   "primary_fix": "LS slew control (no area) ",
+   "fallback": [
+    "B8"
+   ]
+  },
+  {
+   "id": "WR-PLL-JIT",
+   "requirement": "Ring PLL RJ <= 2 ps rms, DJ <= 0.05 UI at 2.5 G",
+   "source": "spec/interface-requirements.md",
+   "owner": "timing (pll_ring)",
+   "evidence": [
+    "analog/timing/generated/pll_ring-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no jitter evidence; pll_ring.spice stale",
+   "primary_fix": "Phase-noise sim (transient noise or PSS/PNOISE)",
+   "fallback": [
+    "wire_clk_wclk_in"
+   ]
+  },
+  {
+   "id": "WR-SER-DJ",
+   "requirement": "Serializer + pad DJ <= 0.15 UI",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "305 ps pp at 1.25 G (0.38 UI)",
+   "primary_fix": "Compact retiming",
+   "fallback": [
+    "wire_tx_external_data"
+   ]
+  },
+  {
+   "id": "WR-SLICER-OFFSET",
+   "requirement": "Sampler offset <= 10 mV after trim",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (slicer)",
+   "evidence": [
+    "analog/wired_rx/generated/slicer-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "-27 mV nominal, -31..-21 mV corners (stale)",
+   "primary_fix": "Finer trim (<= 2 mV step)",
+   "fallback": [
+    "wire_wmon_scope"
+   ]
+  },
+  {
+   "id": "RF-WIFI-SENS",
+   "requirement": "MCS0 -82 dBm, MCS7 -64 dBm",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json",
+    "analog/rf_rx/generated/bbfilter_i-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "On-chip NF 12.1 dB + 2.4 dB ADC penalty: MCS0 ~-79.7, MCS7 ~-57.7 dBm",
+   "primary_fix": "Restore PGA to 42 dB; LNA gain",
+   "fallback": [
+    "rf_lna_bypass",
+    "B5"
+   ]
+  },
+  {
+   "id": "RF-WIFI-ACR",
+   "requirement": "Adjacent +16 dB (MCS0)",
+   "source": "spec/interface-requirements.md",
+   "owner": "converters (adc) + rf_rx filter",
+   "evidence": [
+    "analog/converters/generated/adc_i-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "20 MS/s + 15.2 MHz filter: adjacent aliases with 3-20 dB rejection",
+   "primary_fix": "ADC 40 MS/s",
+   "fallback": [
+    "rf_bb_external_adc"
+   ]
+  },
+  {
+   "id": "RF-WIFI-EVM",
+   "requirement": "TX EVM MCS0 -5 dB .. MCS7 -27 dB at >= -10 dBm mean",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no EVM sim; driver gain 3.2x short",
+   "primary_fix": "Linear driver gain; EVM sim",
+   "fallback": [
+    "rf_tx_external_upconverter"
+   ]
+  },
+  {
+   "id": "RF-WIFI-MASK",
+   "requirement": "HE20 mask 0/-20/-28/-40 dBr",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "not simulated",
+   "primary_fix": "Mask sim with real balun",
+   "fallback": [
+    "rf_tx_external_upconverter"
+   ]
+  },
+  {
+   "id": "RF-TX-ACLR",
+   "requirement": "ACLR <= -28 dBc",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "not simulated",
+   "primary_fix": "as above",
+   "fallback": [
+    "rf_tx_external_upconverter"
+   ]
+  },
+  {
+   "id": "RF-TX-HARM",
+   "requirement": "H2/H3 <= -40 dBc at pad",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "not simulated",
+   "primary_fix": "Harmonic sim + board LPF",
+   "fallback": [
+    "B4"
+   ]
+  },
+  {
+   "id": "RF-TX-POUT",
+   "requirement": "0 dBm constant envelope; >= -10 dBm OFDM mean",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "saturated -0.13 tt (-0.4..-3.1 env); linear -5.6 tt",
+   "primary_fix": "Driver gain fix",
+   "fallback": [
+    "rf_tx_external_upconverter"
+   ]
+  },
+  {
+   "id": "RF-BLE-SENS",
+   "requirement": "-70 dBm",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "meets",
+   "basis": "10-18 dB margin by cascade (analytic on extracted NF)",
+   "primary_fix": "—",
+   "fallback": []
+  },
+  {
+   "id": "RF-BLE-IBE",
+   "requirement": "In-band emissions -20 dBm @2 MHz, -30 dBm >=3 MHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "not simulated",
+   "primary_fix": "Saturated-mode spectrum sim",
+   "fallback": []
+  },
+  {
+   "id": "RF-154-SENS",
+   "requirement": "-85 dBm",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "meets",
+   "basis": "margin by cascade",
+   "primary_fix": "—",
+   "fallback": []
+  },
+  {
+   "id": "RF-154-EVM",
+   "requirement": "EVM <= 35 %",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "not simulated",
+   "primary_fix": "EVM sim",
+   "fallback": [
+    "rf_tx_external_upconverter"
+   ]
+  },
+  {
+   "id": "RF-BT-EDR",
+   "requirement": "DEVM <= 20 % / 13 %",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "linear -5.6 dBm; no DEVM",
+   "primary_fix": "Linear driver",
+   "fallback": [
+    "rf_tx_external_upconverter"
+   ]
+  },
+  {
+   "id": "RF-RX-IIP3",
+   "requirement": "IIP3 >= -10 dBm at max gain",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "not simulated",
+   "primary_fix": "Two-tone sim",
+   "fallback": [
+    "rf_lna_bypass"
+   ]
+  },
+  {
+   "id": "RF-TX-IRR",
+   "requirement": "TX IRR >= 35 dB (>= 40 after cal)",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/txmix_i-evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "61.6 dB ideal LO linear; 33.1 dB saturated",
+   "primary_fix": "Real-LO sim",
+   "fallback": [
+    "rf_tx_external_upconverter"
+   ]
+  },
+  {
+   "id": "RF-RX-IRR",
+   "requirement": "RX IRR >= 25 dB (>= 35 after cal)",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx",
+   "evidence": [
+    "analog/rf_rx/generated/rxmix_i-evidence.json"
+   ],
+   "status": "meets",
+   "basis": "~29 dB uncorrected from 0.6 dB I/Q gain (tt only)",
+   "primary_fix": "FPGA correction",
+   "fallback": []
+  },
+  {
+   "id": "RF-TX-MUTE",
+   "requirement": "Mute isolation >= 40 dB",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "22-24 dB",
+   "primary_fix": "Series mute switch / driver off",
+   "fallback": []
+  },
+  {
+   "id": "RF-WIFI-LOLEAK",
+   "requirement": "LO leakage <= -30 dBc",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx",
+   "evidence": [
+    "analog/rf_tx/generated/txmix_i-evidence.json"
+   ],
+   "status": "meets",
+   "basis": "44.6 dBc linear, 38 dBc saturated (ideal LO)",
+   "primary_fix": "Real-LO confirm",
+   "fallback": []
+  },
+  {
+   "id": "RF-LO-JIT",
+   "requirement": "LO total <= 1.05 ps; I/Q skew <= 1.16 ps",
+   "source": "spec/interface-requirements.md",
+   "owner": "timing (lo_ext) + board",
+   "evidence": [
+    "analog/timing/generated/lo_ext-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no additive jitter or skew evidence; refpad clamp conflict at ff",
+   "primary_fix": "lo_ext + refpad co-sim",
+   "fallback": [
+    "rf_lo_external_ref",
+    "B3"
+   ]
+  }
+ ]
+}

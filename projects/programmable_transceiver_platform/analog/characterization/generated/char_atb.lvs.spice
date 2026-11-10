@@ -1,0 +1,69 @@
+* NGSPICE file created from pt_char_atb.ext - technology: gf180mcuD
+
+.subckt prim_3 a_50_n500# a_n276_n792# a_n138_n500# a_n50_n660#
+X0 a_50_n500# a_n50_n660# a_n138_n500# a_n276_n792# nfet_03v3 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=0.5u
+.ends
+
+.subckt prim_9 a_n200_1000# a_n200_n1122# a_n412_n1334#
+X0 a_n200_1000# a_n200_n1122# a_n412_n1334# ppolyf_u_1k r_width=2u r_length=10u
+.ends
+
+.subckt prim_0 m4_n4240_n4120# m4_n4120_n4000#
+X0 m4_n4120_n4000# m4_n4240_n4120# cap_mim_2f0_m4m5_noshield c_width=40u c_length=40u
+.ends
+
+.subckt prim_5 w_n278_n1316# a_28_n1000# a_n36_n1156# a_n116_n1000#
+X0 a_28_n1000# a_n36_n1156# a_n116_n1000# w_n278_n1316# pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+.ends
+
+.subckt prim_6 w_n278_n2316# a_28_n2000# a_n36_n2156# a_n116_n2000#
+X0 a_28_n2000# a_n36_n2156# a_n116_n2000# w_n278_n2316# pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+.ends
+
+.subckt prim_4 a_n36_n956# a_n116_n800# a_n254_n1092# a_28_n800#
+X0 a_28_n800# a_n36_n956# a_n116_n800# a_n254_n1092# nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+.ends
+
+.subckt prim_1 a_n276_n2292# a_n138_n2000# a_n50_n2160# a_50_n2000#
+X0 a_50_n2000# a_n50_n2160# a_n138_n2000# a_n276_n2292# nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.5u
+.ends
+
+.subckt prim_7 a_100_n2000# a_n188_n2000# a_n100_n2160# w_n350_n2316#
+X0 a_100_n2000# a_n100_n2160# a_n188_n2000# w_n350_n2316# pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+.ends
+
+.subckt prim_2 a_n36_n656# a_n116_n500# a_n254_n792# a_28_n500#
+X0 a_28_n500# a_n36_n656# a_n116_n500# a_n254_n792# nfet_03v3 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=0.28u
+.ends
+
+.subckt prim_8 a_n36_n656# w_n278_n816# a_n116_n500# a_28_n500#
+X0 a_28_n500# a_n36_n656# a_n116_n500# w_n278_n816# pfet_03v3 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=0.28u
+.ends
+
+.subckt pt_char_atb RN_LNA RP_LNA RN_MIX RP_MIX RN_SMP RP_SMP RN_DRV RP_DRV RES_A
++ RES_B MIM_A MIM_B VSS
+XXMRN_LNA_1 RN_LNA VSS VSS RN_LNA prim_3
+XXMRN_LNA_0 RN_LNA VSS VSS RN_LNA prim_3
+XXRB3_0 rb3 VSS VSS prim_9
+XXRB1_0 rb1 rb2 VSS prim_9
+XXCB2_0 VSS MIM_B prim_0
+XXRA2_0 ra2 ra3 VSS prim_9
+XXMRP_SMP_0 RP_SMP VSS VSS RP_SMP prim_5
+XXCA3_0 VSS MIM_A prim_0
+XXMRP_DRV_0 RP_DRV VSS VSS RP_DRV prim_6
+XXRA0_0 RES_A ra1 VSS prim_9
+XXMRN_SMP_0 RN_SMP VSS VSS RN_SMP prim_4
+XXMRN_DRV_0 VSS VSS RN_DRV RN_DRV prim_1
+XXMRP_MIX_0 VSS RP_MIX VSS RP_MIX prim_7
+XXMRN_MIX_0 RN_MIX VSS VSS RN_MIX prim_2
+XXMRN_MIX_1 RN_MIX VSS VSS RN_MIX prim_2
+XXRB2_0 rb2 rb3 VSS prim_9
+XXRB0_0 RES_B rb1 VSS prim_9
+XXRA3_0 ra3 VSS VSS prim_9
+XXCB1_0 VSS MIM_B prim_0
+XXRA1_0 ra1 ra2 VSS prim_9
+XXMRP_LNA_0 VSS RP_LNA RP_LNA VSS prim_8
+XXCA0_0 VSS MIM_A prim_0
+XXMRP_LNA_1 VSS RP_LNA RP_LNA VSS prim_8
+.ends
+

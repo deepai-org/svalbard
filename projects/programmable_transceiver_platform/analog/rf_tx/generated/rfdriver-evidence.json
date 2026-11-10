@@ -1,18 +1,18 @@
 {
  "block": "rfdriver",
  "source_hashes": {
-  "rfdriver.spice": "sha256:220d37fe843f659d1c6c79fb42551524a4a31e5f016d4de16f7045dc10a5c196",
-  "circuits.py": "sha256:59382037c2ad25a85d7086c05a59cb0bc7b263fddbe9ca558a6447f9f9f272fb",
+  "rfdriver.spice": "sha256:b3131d42fbb4f82ba88b4439777ed00a13ced474d2b400e3a119232ff21bbe4b",
+  "circuits.py": "sha256:c8af6244384cfb858ad85036993c2ab02cf6d720367b4292acfe4df601e1c8af",
   "layoutlib.py": "sha256:067f29bd000ba2e414787dfd146ba34e49c7f5c7c88bae3d1a4b606447c5c111",
-  "generate.py": "sha256:67829d6dd34ad18bb9a2f4d86496826eaf7735e9124b84cd45f31ff9706cf8cb",
-  "simulate.py": "sha256:fb3ca89424205a8b133fa2bfc7796de5b81d632b4bf5c599470b4c296ff5fae2",
-  "run_benches.py": "sha256:a5605c861fe95133435d330ae6c98d40da217130420ddaab78dcbb39c95e85c2",
-  "evidence.py": "sha256:9e98f018da82a248cb8d4837dcf82d0098a8bc3d632b3590d54692b6bce78ca9",
+  "generate.py": "sha256:1d7aac03cecd7bce13996c43a809ebd42d8507039f337402fb45c8e185a12b24",
+  "simulate.py": "sha256:323f5b9eb2f1aebef6e1738227bccabcd40def9bb6404143de875ea422a6c1f5",
+  "run_benches.py": "sha256:ba6e071ba84946c39212a5e6760dd904630b6228628bce6daf12454ee7fd632a",
+  "evidence.py": "sha256:628a1f1b0201014c55c825380c6b74ac092293937b17e1660a32d3a4c1327847",
   "run_rf_tx.sh": "sha256:d95f600df754504173e6ca304efb1732f7a679c7e903ff7592efb8519c682cd8"
  },
  "output_hashes": {
-  "generated/rfdriver.gds": "sha256:c1797cca61f85a87125ac4e8a94ff1c69a6677c1429ba185e39634aedadb3336",
-  "generated/rfdriver.ext.spice": "sha256:e9d618ec724ff65f4eacb056e5f98fa83b1742ff8f187728e7fccb8bc82210f1"
+  "generated/rfdriver.gds": "sha256:300a5a70b68ac399ac5f86ae6738605c6a8419225f730573c2dfb30197d02cdc",
+  "generated/rfdriver.ext.spice": "sha256:e5048dc5d4162da9d35c64771e66e8d3832910e60e5971ae2a0d6fdbf93c7696"
  },
  "output_notes": "generated/<block>.gds is the Magic 8.3.678 re-export (analog image); DRC, LVS and extraction ran on the canary image from the same .mag.",
  "images": {
@@ -23,11 +23,11 @@
  },
  "pdk": "gf180mcuD, open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (both images)",
  "area": {
-  "width_um": 370.9,
-  "height_um": 211.56,
-  "area_um2": 78467.6,
+  "width_um": 472.38,
+  "height_um": 235.82,
+  "area_um2": 111396.7,
   "ceiling_um2": 98100,
-  "fits": true
+  "fits": false
  },
  "tests": {
   "safe": {
@@ -36,8 +36,8 @@
     {
      "case": "safe_reset_3p3",
      "condition": {},
-     "rail_static_uA": 0.0007,
-     "rail_transient_mean_uA": -5.8439,
+     "rail_static_uA": 0.0008,
+     "rail_transient_mean_uA": -5.6953,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -50,7 +50,7 @@
       "temp": 85
      },
      "rail_static_uA": 0.0024,
-     "rail_transient_mean_uA": -4.6364,
+     "rail_transient_mean_uA": -4.5103,
      "bb_dac_source_static_uA": 0.0003,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -62,8 +62,8 @@
       "vdd": 3.63,
       "temp": 0
      },
-     "rail_static_uA": 0.0008,
-     "rail_transient_mean_uA": -6.4429,
+     "rail_static_uA": 0.0007,
+     "rail_transient_mean_uA": -6.2777,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -76,8 +76,8 @@
       "temp": 85,
       "corner": "ff"
      },
-     "rail_static_uA": 0.0218,
-     "rail_transient_mean_uA": -3.1093,
+     "rail_static_uA": 0.02,
+     "rail_transient_mean_uA": -3.03,
      "bb_dac_source_static_uA": 0.0035,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -89,7 +89,7 @@
       "vdd": 0.0
      },
      "rail_static_uA": -0.0,
-     "rail_transient_mean_uA": -7.3693,
+     "rail_transient_mean_uA": -7.2623,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -106,8 +106,8 @@
       "sel": 1,
       "sat": 1
      },
-     "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -7.3567,
+     "rail_static_uA": -0.0,
+     "rail_transient_mean_uA": -7.2491,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -121,7 +121,7 @@
       "bypass": 1
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -7.3934,
+     "rail_transient_mean_uA": -7.2837,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -136,8 +136,8 @@
       "bypass": 1,
       "gain": 15
      },
-     "rail_static_uA": 0.0005,
-     "rail_transient_mean_uA": -17.9141,
+     "rail_static_uA": 0.01,
+     "rail_transient_mean_uA": -21.7705,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -152,8 +152,8 @@
       "gain": 15,
       "ibias": 0.0
      },
-     "rail_static_uA": 0.001,
-     "rail_transient_mean_uA": -1.8722,
+     "rail_static_uA": 0.0008,
+     "rail_transient_mean_uA": -1.8415,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -168,8 +168,8 @@
       "gain": 15,
       "lo_on": false
      },
-     "rail_static_uA": 27885.7,
-     "rail_transient_mean_uA": 27885.6556,
+     "rail_static_uA": 23426.3,
+     "rail_transient_mean_uA": 23426.27,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -185,8 +185,8 @@
       "mute": 0,
       "gain": 15
      },
-     "rail_static_uA": 27336.4,
-     "rail_transient_mean_uA": 27332.8389,
+     "rail_static_uA": 22807.4,
+     "rail_transient_mean_uA": 22792.0824,
      "bb_dac_source_static_uA": 0.0001,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -198,10 +198,10 @@
       "vdd": 0.0,
       "pad_drive": 3.3
      },
-     "rail_static_uA": -89277.72,
-     "rail_transient_mean_uA": -89307.4819,
+     "rail_static_uA": -89217.02,
+     "rail_transient_mean_uA": -89246.0016,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": 89.8476,
+     "pad_source_current_mA": 89.7879,
      "criterion": "out of contract: DC-driven RF_TX (board must DC-block RF_TX)",
      "pass": null
     },
@@ -210,10 +210,10 @@
      "condition": {
       "pad_drive": 3.3
      },
-     "rail_static_uA": 0.0004,
-     "rail_transient_mean_uA": -5.9518,
+     "rail_static_uA": 0.0007,
+     "rail_transient_mean_uA": -5.7642,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": 0.2844,
+     "pad_source_current_mA": 0.0002,
      "criterion": "out of contract: DC-driven RF_TX (board must DC-block RF_TX)",
      "pass": null
     },
@@ -222,8 +222,8 @@
      "condition": {
       "pad_drive": 0.0
      },
-     "rail_static_uA": 0.0007,
-     "rail_transient_mean_uA": -5.861,
+     "rail_static_uA": 0.001,
+     "rail_transient_mean_uA": -5.6849,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": 0.0,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -236,7 +236,7 @@
       "pad_drive": 0.0
      },
      "rail_static_uA": -0.0,
-     "rail_transient_mean_uA": -7.4215,
+     "rail_transient_mean_uA": -7.301,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": 0.0002,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -251,10 +251,10 @@
       "mute": 0,
       "gain": 15
      },
-     "rail_static_uA": 56781.7,
-     "rail_transient_mean_uA": 56743.0936,
+     "rail_static_uA": 27560.8,
+     "rail_transient_mean_uA": 27518.0237,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": -29.0363,
+     "pad_source_current_mA": -0.868,
      "criterion": "informational (block enabled)",
      "pass": null
     },
@@ -266,10 +266,10 @@
       "en": 1,
       "bypass": 1
      },
-     "rail_static_uA": 0.0006,
-     "rail_transient_mean_uA": -15.464,
+     "rail_static_uA": 0.0009,
+     "rail_transient_mean_uA": -15.381,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": -3.8179,
+     "pad_source_current_mA": -3.8184,
      "criterion": "informational (block enabled)",
      "pass": null
     },
@@ -279,8 +279,8 @@
       "kind": "ramp",
       "en_level": 0.0
      },
-     "family_rail_current_uA_at_3p63V": 1.48,
-     "peak_uA": 108.648,
+     "family_rail_current_uA_at_3p63V": 9.647,
+     "peak_uA": 361.338,
      "criterion": "<= 10.0 uA",
      "pass": true
     },
@@ -290,8 +290,8 @@
       "kind": "ramp",
       "en_level": 3.3
      },
-     "family_rail_current_uA_at_3p63V": 12723.702,
-     "peak_uA": 14353.944,
+     "family_rail_current_uA_at_3p63V": 21225.132,
+     "peak_uA": 23413.985,
      "criterion": "informational (enabled)",
      "pass": null
     }
@@ -316,7 +316,7 @@
     "image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
     "marker_shapes": {
      "HRES 62/0": 5,
-     "RES_MK 110/5": 22
+     "RES_MK 110/5": 18
     },
     "ppolyf_u_1k_in_netlist": 5,
     "hres_present_where_required": true,
@@ -330,26 +330,24 @@
    },
    "extracted_nominal": {
     "bench": "extracted pt_rfdriver, ideal 2.44 GHz differential input at 2.82 V CM, pad 2 ohm + 1 pF per leg, 50 ohm differential load",
-    "small_signal_voltage_gain": 1.6831,
-    "pad_dBm_at_0p3V_in": -0.16,
-    "pad_dBm_at_0p6V_in": 0.41,
-    "supply_mA": 28.9349,
-    "chain_pad_dBm_0p3V_DC_I": -7.58,
-    "chain_ssb_wanted_dBm": -7.04,
+    "small_signal_voltage_gain": 5.2404,
+    "pad_dBm_at_0p3V_in": 7.82,
+    "pad_dBm_at_0p6V_in": 8.05,
+    "supply_mA": 59.1304,
+    "chain_pad_dBm_0p3V_DC_I": 1.36,
+    "chain_ssb_wanted_dBm": 1.67,
     "source": "generated/rf_tx-sim-ext.json",
-    "board_matched_linear_dBm_0p3V": -6.15,
-    "board_matched_saturated_dBm_1p0V": -1.08,
-    "board_matched_ssb_linear_dBm": -5.63,
-    "board_matched_ssb_saturated_dBm": -0.13,
+    "board_matched_linear_dBm_0p3V": 3.44,
+    "board_matched_saturated_dBm_1p0V": 6.06,
+    "board_matched_ssb_linear_dBm": 3.7,
+    "board_matched_ssb_saturated_dBm": 8.05,
     "board_match": {
-     "r_opt_diff_ohm": 113.8,
-     "shunt_pad": [
-      "L",
-      1.4180817809304006e-08
-     ],
-     "series_l_total_H": 3.682630458318593e-09,
+     "r_out_diff_ohm": 181.7,
+     "choke_l_per_leg_H": 2.0665384794295465e-09,
+     "balun_ratio_ohm": 200.0,
+     "balun_loss_db": 1.0,
      "inductor_q": 30.0,
-     "method": "driver differential output admittance at the pad (tt, code 15) conjugate-matched to 50 ohm differential by an L-section; inductor Q=30 (series loss in simulation), ideal capacitors, ideal 1:1 balun not included (budget ~0.5 dB)."
+     "method": "board DC feed to the rf_tx island rail through per-leg chokes (Q=30) that resonate the measured differential pad susceptance (tt, code 15, driver biased by the feed); DC blocks; ideal 200:50 ohm balun followed by a 1.0 dB resistive pad for balun insertion loss; 50 ohm load. All board-matched powers are after the balun loss."
     }
    }
   },
@@ -359,20 +357,20 @@
     {
      "port": "atb_bias",
      "node": "bias line vb",
-     "on_V": 0.95,
+     "on_V": 0.9498,
      "off_V": -0.0
     },
     {
      "port": "atb_pre",
      "node": "pre-amplifier 2 output common mode",
-     "on_V": 2.6236,
+     "on_V": 2.628,
      "off_V": 3.3
     },
     {
      "port": "atb_cm",
      "node": "RF_TX pad common mode",
-     "on_V": 2.3004,
-     "off_V": 0.0
+     "on_V": 3.2676,
+     "off_V": 3.3
     }
    ],
    "status_bits": [],
@@ -387,126 +385,126 @@
      "control": "bypass=1 (debug.rf_tx_bypass): header, pre-amplifiers and all output tails off; PMOS switches connect summed_rf to RF_TX",
      "evidence": {
       "chain_bypass": {
-       "pad_fund_mVpk_diff": 6.361,
-       "pad_dBm_50ohm": -33.93,
-       "sum_fund_mVpk_diff": 55.056,
-       "mixi_drain_fund_mVpk_diff": 62.81,
+       "pad_fund_mVpk_diff": 7.871,
+       "pad_dBm_50ohm": -32.08,
+       "sum_fund_mVpk_diff": 51.759,
+       "mixi_drain_fund_mVpk_diff": 59.525,
        "supply_mA": {
         "txmix_i": -0.0001,
         "txmix_q": 0.0002,
-        "txsum": 2.0094,
-        "rfdriver": -0.0104
+        "txsum": 0.3999,
+        "rfdriver": 1.5981
        },
        "atb_V": {
         "rfdriver.atb_bias": 0.9472,
-        "rfdriver.atb_pre": 3.3,
-        "rfdriver.atb_cm": 2.8334,
-        "txsum.atb_cm": 2.8332,
+        "rfdriver.atb_pre": 3.3001,
+        "rfdriver.atb_cm": 3.2984,
+        "txsum.atb_cm": 3.2069,
         "txmix_i.atb_bias": 0.9397,
-        "txmix_i.atb_tail": 0.7903
+        "txmix_i.atb_tail": 0.791
        },
-       "pad_cm_V": 2.833,
-       "sum_cm_V": 2.8323
+       "pad_cm_V": 3.2983,
+       "sum_cm_V": 3.2063
       },
       "chain_bypass_large": {
-       "pad_fund_mVpk_diff": 13.388,
-       "pad_dBm_50ohm": -27.47,
-       "sum_fund_mVpk_diff": 116.063,
-       "mixi_drain_fund_mVpk_diff": 132.37,
+       "pad_fund_mVpk_diff": 16.579,
+       "pad_dBm_50ohm": -25.61,
+       "sum_fund_mVpk_diff": 108.956,
+       "mixi_drain_fund_mVpk_diff": 125.285,
        "supply_mA": {
         "txmix_i": -0.0003,
         "txmix_q": 0.0002,
-        "txsum": 2.0106,
-        "rfdriver": -0.0096
+        "txsum": 0.4014,
+        "rfdriver": 1.5999
        },
        "atb_V": {
-        "rfdriver.atb_bias": 0.9473,
-        "rfdriver.atb_pre": 3.3,
-        "rfdriver.atb_cm": 2.8335,
-        "txsum.atb_cm": 2.833,
+        "rfdriver.atb_bias": 0.9472,
+        "rfdriver.atb_pre": 3.3001,
+        "rfdriver.atb_cm": 3.2984,
+        "txsum.atb_cm": 3.2066,
         "txmix_i.atb_bias": 0.9397,
-        "txmix_i.atb_tail": 0.9126
+        "txmix_i.atb_tail": 0.9134
        },
-       "pad_cm_V": 2.8333,
-       "sum_cm_V": 2.8333
+       "pad_cm_V": 3.2983,
+       "sum_cm_V": 3.207
       },
       "standalone_bypass": {
        "input_mVpk_diff": 299.974,
-       "pad_fund_mVpk_diff": 34.157,
-       "pad_dBm_50ohm": -19.33,
-       "voltage_gain": 0.1139,
-       "supply_mA": -0.0,
-       "atb_bias_V": 0.9473,
+       "pad_fund_mVpk_diff": 35.981,
+       "pad_dBm_50ohm": -18.88,
+       "voltage_gain": 0.1199,
+       "supply_mA": 7.3523,
+       "atb_bias_V": 0.9471,
        "atb_pre_V": 3.3,
-       "atb_cm_V": 2.8225
+       "atb_cm_V": 3.2926
       },
       "board_matched_bypass": {
-       "pad_fund_mVpk_diff": 7.975,
-       "pad_dBm_50ohm": -31.96,
-       "sum_fund_mVpk_diff": 59.549,
-       "mixi_drain_fund_mVpk_diff": 67.273,
+       "pad_fund_mVpk_diff": 11.57,
+       "pad_dBm_50ohm": -28.73,
+       "sum_fund_mVpk_diff": 65.369,
+       "mixi_drain_fund_mVpk_diff": 72.977,
        "supply_mA": {
         "txmix_i": -0.0001,
         "txmix_q": 0.0002,
-        "txsum": 2.0094,
-        "rfdriver": -0.0104
+        "txsum": 0.4031,
+        "rfdriver": 1.5956
        },
        "atb_V": {
         "rfdriver.atb_bias": 0.9472,
-        "rfdriver.atb_pre": 3.3,
-        "rfdriver.atb_cm": 2.8334,
-        "txsum.atb_cm": 2.8332,
+        "rfdriver.atb_pre": 3.3001,
+        "rfdriver.atb_cm": 3.2976,
+        "txsum.atb_cm": 3.2062,
         "txmix_i.atb_bias": 0.9397,
-        "txmix_i.atb_tail": 0.7903
+        "txmix_i.atb_tail": 0.791
        },
-       "pad_cm_V": 2.8332,
-       "sum_cm_V": 2.8324
+       "pad_cm_V": 3.2974,
+       "sum_cm_V": 3.2055
       },
       "board_matched_bypass_saturated": {
-       "pad_fund_mVpk_diff": 18.189,
-       "pad_dBm_50ohm": -24.8,
-       "sum_fund_mVpk_diff": 136.09,
-       "mixi_drain_fund_mVpk_diff": 153.693,
+       "pad_fund_mVpk_diff": 26.417,
+       "pad_dBm_50ohm": -21.56,
+       "sum_fund_mVpk_diff": 149.228,
+       "mixi_drain_fund_mVpk_diff": 166.565,
        "supply_mA": {
         "txmix_i": -0.0003,
         "txmix_q": 0.0003,
-        "txsum": 2.0168,
-        "rfdriver": -0.0093
+        "txsum": 0.4063,
+        "rfdriver": 1.6026
        },
        "atb_V": {
         "rfdriver.atb_bias": 0.9472,
-        "rfdriver.atb_pre": 3.3,
-        "rfdriver.atb_cm": 2.8321,
-        "txsum.atb_cm": 2.8315,
+        "rfdriver.atb_pre": 3.3001,
+        "rfdriver.atb_cm": 3.2976,
+        "txsum.atb_cm": 3.2055,
         "txmix_i.atb_bias": 0.9396,
-        "txmix_i.atb_tail": 1.0325
+        "txmix_i.atb_tail": 1.0334
        },
-       "pad_cm_V": 2.8321,
-       "sum_cm_V": 2.8334
+       "pad_cm_V": 3.2975,
+       "sum_cm_V": 3.2073
       },
-      "rfdriver_supply_in_bypass_mA": -0.0104
+      "rfdriver_supply_in_bypass_mA": 1.5981
      },
-     "note": "Function shown at low power (-33.9 dBm at 0.3 V baseband); an external PA needs ~34 dB gain to reach 0 dBm."
+     "note": "Function shown at low power (-32.1 dBm at 0.3 V baseband); an external PA needs ~32 dB gain to reach 0 dBm."
     }
    ],
    "bypass_loading_fF": 125.92,
-   "notes": "bypass_loading_fF = total rfdriver input capacitance on summed_rf with the driver off and bypass open (includes the off bypass PMOS); 155.4 fF with the driver on."
+   "notes": "bypass_loading_fF = total rfdriver input capacitance on summed_rf with the driver off and bypass open (includes the off bypass PMOS); 140.4 fF with the driver on."
   }
  },
  "performance_vs_target": [
   {
-   "metric": "board-matched output power, linear mode (power delivered to 50 ohm after external L-match)",
+   "metric": "board-matched output power, linear mode (50 ohm after chokes + 200:50 balun, 1.0 dB balun loss included)",
    "target": 0.0,
-   "achieved": -6.15,
+   "achieved": 3.44,
    "unit": "dBm",
-   "condition": "extracted chain, 0.3 V DC I, inductor Q=30, balun loss not included",
+   "condition": "extracted chain, 0.3 V DC I, choke Q=30",
    "source": "generated/rf_tx-sim-ext.json",
    "note": ""
   },
   {
    "metric": "board-matched output power, linear mode, 0.7 V DC I",
    "target": 0.0,
-   "achieved": -1.38,
+   "achieved": 5.75,
    "unit": "dBm",
    "condition": "extracted chain",
    "source": "generated/rf_tx-sim-ext.json",
@@ -515,7 +513,7 @@
   {
    "metric": "board-matched output power, saturated mode (txmix sat=1, full-scale baseband)",
    "target": 0.0,
-   "achieved": -1.08,
+   "achieved": 6.06,
    "unit": "dBm",
    "condition": "extracted chain, 1.0 V DC I",
    "source": "generated/rf_tx-sim-ext.json",
@@ -525,22 +523,22 @@
    "metric": "board-matched SSB, linear (0.3 V I/Q) / saturated (1.0 V I/Q, sat=1)",
    "target": 0.0,
    "achieved": [
-    -5.63,
-    -0.13
+    3.7,
+    8.05
    ],
    "unit": "dBm",
    "condition": "extracted chain, 61 MHz offset",
    "source": "generated/rf_tx-sim-ext.json",
-   "note": "saturated SSB image rejection 33.1 dB, LO 38.0 dBc (limiting distortion; acceptable for constant-envelope modulation only)"
+   "note": "saturated SSB image rejection 30.3 dB, LO 37.8 dBc (limiting distortion; acceptable for constant-envelope modulation only)"
   },
   {
    "metric": "saturated-mode power control by gain code 1/4/8/15",
    "target": null,
    "achieved": [
-    -16.56,
-    -7.49,
-    -3.64,
-    -1.08
+    -6.28,
+    2.66,
+    5.15,
+    6.06
    ],
    "unit": "dBm",
    "condition": "extracted chain, matched",
@@ -551,11 +549,11 @@
    "metric": "rfdriver current per mode",
    "target": 28.92,
    "achieved": {
-    "linear (chain, 0.3 V, matched)": 25.7481,
-    "saturated (chain, 1.0 V, sat=1, matched)": 25.5313,
-    "zero input (chain, matched)": 27.8996,
-    "mute": 10.2425,
-    "bypass": -0.0104
+    "linear (chain, 0.3 V, matched)": 53.1234,
+    "saturated (chain, 1.0 V, sat=1, matched)": 53.7056,
+    "zero input (chain, matched)": 58.1049,
+    "mute": 23.3463,
+    "bypass": 1.5956
    },
    "unit": "mA",
    "condition": "tt/27C/3.3V",
@@ -570,73 +568,73 @@
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -5.97
+     "value": 3.72
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -5.78
+     "value": 3.89
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -6.62
+     "value": 2.9
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -6.43
+     "value": 3.08
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -8.93
+     "value": -2.41
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -8.63
+     "value": -0.83
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -9.56
+     "value": -2.82
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -9.26
+     "value": -1.35
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -4.11
+     "value": 4.87
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -3.91
+     "value": 4.93
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -4.77
+     "value": 4.99
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -4.57
+     "value": 5.04
     }
    ],
    "unit": "dBm",
@@ -652,73 +650,73 @@
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -0.96
+     "value": 6.0
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -0.81
+     "value": 6.05
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -1.44
+     "value": 6.06
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -1.28
+     "value": 6.1
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -2.29
+     "value": 5.05
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -2.05
+     "value": 6.13
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -2.81
+     "value": 4.46
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -2.58
+     "value": 5.57
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -0.38
+     "value": 5.61
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -0.2
+     "value": 6.0
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -0.84
+     "value": 5.55
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -0.66
+     "value": 5.68
     }
    ],
    "unit": "dBm",
@@ -734,73 +732,73 @@
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 25.4088
+     "value": 53.1758
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 25.6659
+     "value": 54.0726
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 25.271
+     "value": 52.8477
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 25.526
+     "value": 53.7107
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 23.9103
+     "value": 41.0555
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 24.5553
+     "value": 49.0801
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 23.8158
+     "value": 40.9961
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 24.455
+     "value": 48.8755
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 26.525
+     "value": 55.8594
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 26.8368
+     "value": 56.4631
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 26.3576
+     "value": 55.5429
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 26.6624
+     "value": 56.0786
     }
    ],
    "unit": "mA",
@@ -811,16 +809,2110 @@
   {
    "metric": "mute isolation, saturated, matched",
    "target": null,
-   "achieved": 22.22,
+   "achieved": 20.28,
    "unit": "dB",
    "condition": "extracted chain",
    "source": "generated/rf_tx-sim-ext.json",
    "note": ""
   },
   {
+   "metric": "[linear (txmix sat=0)] HE20 OFDM near 0 dBm mean (after 1 dB balun loss): EVM / ACLR / mask margin",
+   "target": "0 dBm with EVM <= -27 dB (MCS7) and mask margin >= 0",
+   "achieved": {
+    "cfr_None": {
+     "pout_dBm": 0.32,
+     "evm_dB": -22.84,
+     "aclr_dB_lower_upper": [
+      29.89,
+      29.89
+     ],
+     "mask_margin_dB": 0.1,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": null
+    },
+    "cfr_8.0": {
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": 8.0
+    }
+   },
+   "unit": "dBm/dB",
+   "condition": "extracted AM-AM/AM-PM + tx_modulation.py (64QAM HE20, 10b 40 MS/s DAC, FPGA shaping FIR, 5th-order 15.2 MHz filter)",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[linear (txmix sat=0)] max mean output meeting EVM limit and mask, per MCS",
+   "target": 0.0,
+   "achieved": {
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=None": 0.32,
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=8.0": 0.33,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=None": 0.32,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=8.0": 0.33,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=None": 0.32,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=8.0": 0.33,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=None": 0.32,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=8.0": 0.33,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=None": -1.01,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=8.0": -1.7,
+    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=None": -11.97,
+    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=8.0": null
+   },
+   "unit": "dBm",
+   "condition": "same model",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[linear (txmix sat=0)] AM-AM: P1dB / Psat after balun loss",
+   "target": null,
+   "achieved": {
+    "p1dB": 3.768563590458278,
+    "psat": 5.94
+   },
+   "unit": "dBm",
+   "condition": "extracted chain, CW",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[linear (txmix sat=0)] power sweep (EVM, ACLR, mask vs mean output)",
+   "target": null,
+   "achieved": [
+    {
+     "pout_dBm": -15.71,
+     "evm_dB": -33.37,
+     "aclr_dB_lower_upper": [
+      47.09,
+      47.06
+     ],
+     "mask_margin_dB": 3.76,
+     "bb_vrms": 0.03,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -14.96,
+     "evm_dB": -33.11,
+     "aclr_dB_lower_upper": [
+      45.94,
+      45.92
+     ],
+     "mask_margin_dB": 3.72,
+     "bb_vrms": 0.0328,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -14.2,
+     "evm_dB": -32.83,
+     "aclr_dB_lower_upper": [
+      44.89,
+      44.88
+     ],
+     "mask_margin_dB": 3.63,
+     "bb_vrms": 0.0359,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -13.46,
+     "evm_dB": -32.55,
+     "aclr_dB_lower_upper": [
+      44.0,
+      43.99
+     ],
+     "mask_margin_dB": 3.62,
+     "bb_vrms": 0.0392,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -12.71,
+     "evm_dB": -32.27,
+     "aclr_dB_lower_upper": [
+      43.23,
+      43.23
+     ],
+     "mask_margin_dB": 3.52,
+     "bb_vrms": 0.0429,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -11.97,
+     "evm_dB": -32.02,
+     "aclr_dB_lower_upper": [
+      42.6,
+      42.59
+     ],
+     "mask_margin_dB": 3.51,
+     "bb_vrms": 0.0469,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -11.23,
+     "evm_dB": -31.8,
+     "aclr_dB_lower_upper": [
+      42.06,
+      42.06
+     ],
+     "mask_margin_dB": 3.49,
+     "bb_vrms": 0.0513,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -10.49,
+     "evm_dB": -31.63,
+     "aclr_dB_lower_upper": [
+      41.62,
+      41.61
+     ],
+     "mask_margin_dB": 3.53,
+     "bb_vrms": 0.0561,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -9.77,
+     "evm_dB": -31.49,
+     "aclr_dB_lower_upper": [
+      41.27,
+      41.26
+     ],
+     "mask_margin_dB": 3.61,
+     "bb_vrms": 0.0613,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -9.04,
+     "evm_dB": -31.39,
+     "aclr_dB_lower_upper": [
+      41.0,
+      40.99
+     ],
+     "mask_margin_dB": 3.59,
+     "bb_vrms": 0.067,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -8.3,
+     "evm_dB": -31.32,
+     "aclr_dB_lower_upper": [
+      40.8,
+      40.79
+     ],
+     "mask_margin_dB": 3.55,
+     "bb_vrms": 0.0733,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -7.57,
+     "evm_dB": -31.29,
+     "aclr_dB_lower_upper": [
+      40.67,
+      40.67
+     ],
+     "mask_margin_dB": 3.5,
+     "bb_vrms": 0.0801,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -6.83,
+     "evm_dB": -31.29,
+     "aclr_dB_lower_upper": [
+      40.61,
+      40.6
+     ],
+     "mask_margin_dB": 3.47,
+     "bb_vrms": 0.0876,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -6.1,
+     "evm_dB": -31.31,
+     "aclr_dB_lower_upper": [
+      40.59,
+      40.58
+     ],
+     "mask_margin_dB": 3.44,
+     "bb_vrms": 0.0958,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -5.36,
+     "evm_dB": -31.33,
+     "aclr_dB_lower_upper": [
+      40.59,
+      40.58
+     ],
+     "mask_margin_dB": 3.39,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -4.63,
+     "evm_dB": -31.34,
+     "aclr_dB_lower_upper": [
+      40.57,
+      40.56
+     ],
+     "mask_margin_dB": 3.3,
+     "bb_vrms": 0.1145,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -3.89,
+     "evm_dB": -31.28,
+     "aclr_dB_lower_upper": [
+      40.43,
+      40.41
+     ],
+     "mask_margin_dB": 3.26,
+     "bb_vrms": 0.1252,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -3.15,
+     "evm_dB": -31.03,
+     "aclr_dB_lower_upper": [
+      39.99,
+      39.93
+     ],
+     "mask_margin_dB": 3.03,
+     "bb_vrms": 0.137,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -2.43,
+     "evm_dB": -30.38,
+     "aclr_dB_lower_upper": [
+      38.9,
+      38.78
+     ],
+     "mask_margin_dB": 2.87,
+     "bb_vrms": 0.1497,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -1.71,
+     "evm_dB": -29.1,
+     "aclr_dB_lower_upper": [
+      37.0,
+      36.87
+     ],
+     "mask_margin_dB": 2.5,
+     "bb_vrms": 0.1637,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -1.01,
+     "evm_dB": -27.21,
+     "aclr_dB_lower_upper": [
+      34.62,
+      34.52
+     ],
+     "mask_margin_dB": 2.08,
+     "bb_vrms": 0.179,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -0.32,
+     "evm_dB": -25.02,
+     "aclr_dB_lower_upper": [
+      32.21,
+      32.16
+     ],
+     "mask_margin_dB": 1.2,
+     "bb_vrms": 0.1958,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 0.32,
+     "evm_dB": -22.84,
+     "aclr_dB_lower_upper": [
+      29.89,
+      29.89
+     ],
+     "mask_margin_dB": 0.1,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 0.93,
+     "evm_dB": -20.82,
+     "aclr_dB_lower_upper": [
+      27.79,
+      27.81
+     ],
+     "mask_margin_dB": -1.71,
+     "bb_vrms": 0.2341,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 1.49,
+     "evm_dB": -19.03,
+     "aclr_dB_lower_upper": [
+      25.97,
+      25.99
+     ],
+     "mask_margin_dB": -2.75,
+     "bb_vrms": 0.2559,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.0,
+     "evm_dB": -17.5,
+     "aclr_dB_lower_upper": [
+      24.42,
+      24.44
+     ],
+     "mask_margin_dB": -3.66,
+     "bb_vrms": 0.2798,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.47,
+     "evm_dB": -16.19,
+     "aclr_dB_lower_upper": [
+      23.11,
+      23.13
+     ],
+     "mask_margin_dB": -4.5,
+     "bb_vrms": 0.306,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.89,
+     "evm_dB": -15.1,
+     "aclr_dB_lower_upper": [
+      22.0,
+      22.02
+     ],
+     "mask_margin_dB": -5.68,
+     "bb_vrms": 0.3346,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 3.27,
+     "evm_dB": -14.19,
+     "aclr_dB_lower_upper": [
+      21.05,
+      21.06
+     ],
+     "mask_margin_dB": -6.77,
+     "bb_vrms": 0.3658,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 3.6,
+     "evm_dB": -13.42,
+     "aclr_dB_lower_upper": [
+      20.22,
+      20.22
+     ],
+     "mask_margin_dB": -7.98,
+     "bb_vrms": 0.4,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -15.71,
+     "evm_dB": -31.52,
+     "aclr_dB_lower_upper": [
+      47.16,
+      47.18
+     ],
+     "mask_margin_dB": 3.78,
+     "bb_vrms": 0.03,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -14.96,
+     "evm_dB": -31.31,
+     "aclr_dB_lower_upper": [
+      45.99,
+      46.01
+     ],
+     "mask_margin_dB": 3.73,
+     "bb_vrms": 0.0328,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -14.2,
+     "evm_dB": -31.1,
+     "aclr_dB_lower_upper": [
+      44.92,
+      44.94
+     ],
+     "mask_margin_dB": 3.64,
+     "bb_vrms": 0.0359,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -13.46,
+     "evm_dB": -30.89,
+     "aclr_dB_lower_upper": [
+      44.03,
+      44.05
+     ],
+     "mask_margin_dB": 3.62,
+     "bb_vrms": 0.0392,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -12.71,
+     "evm_dB": -30.68,
+     "aclr_dB_lower_upper": [
+      43.26,
+      43.27
+     ],
+     "mask_margin_dB": 3.52,
+     "bb_vrms": 0.0429,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -11.97,
+     "evm_dB": -30.49,
+     "aclr_dB_lower_upper": [
+      42.62,
+      42.63
+     ],
+     "mask_margin_dB": 3.51,
+     "bb_vrms": 0.0469,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -11.23,
+     "evm_dB": -30.33,
+     "aclr_dB_lower_upper": [
+      42.08,
+      42.09
+     ],
+     "mask_margin_dB": 3.49,
+     "bb_vrms": 0.0513,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -10.49,
+     "evm_dB": -30.2,
+     "aclr_dB_lower_upper": [
+      41.63,
+      41.64
+     ],
+     "mask_margin_dB": 3.54,
+     "bb_vrms": 0.0561,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -9.77,
+     "evm_dB": -30.1,
+     "aclr_dB_lower_upper": [
+      41.28,
+      41.29
+     ],
+     "mask_margin_dB": 3.61,
+     "bb_vrms": 0.0613,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -9.04,
+     "evm_dB": -30.03,
+     "aclr_dB_lower_upper": [
+      41.01,
+      41.01
+     ],
+     "mask_margin_dB": 3.59,
+     "bb_vrms": 0.067,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -8.3,
+     "evm_dB": -30.0,
+     "aclr_dB_lower_upper": [
+      40.81,
+      40.81
+     ],
+     "mask_margin_dB": 3.54,
+     "bb_vrms": 0.0733,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -7.57,
+     "evm_dB": -29.99,
+     "aclr_dB_lower_upper": [
+      40.69,
+      40.69
+     ],
+     "mask_margin_dB": 3.5,
+     "bb_vrms": 0.0801,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -6.83,
+     "evm_dB": -30.0,
+     "aclr_dB_lower_upper": [
+      40.63,
+      40.63
+     ],
+     "mask_margin_dB": 3.46,
+     "bb_vrms": 0.0876,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -6.1,
+     "evm_dB": -30.02,
+     "aclr_dB_lower_upper": [
+      40.61,
+      40.61
+     ],
+     "mask_margin_dB": 3.43,
+     "bb_vrms": 0.0958,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -5.36,
+     "evm_dB": -30.04,
+     "aclr_dB_lower_upper": [
+      40.62,
+      40.62
+     ],
+     "mask_margin_dB": 3.38,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -4.63,
+     "evm_dB": -30.05,
+     "aclr_dB_lower_upper": [
+      40.63,
+      40.62
+     ],
+     "mask_margin_dB": 3.3,
+     "bb_vrms": 0.1145,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -3.89,
+     "evm_dB": -30.01,
+     "aclr_dB_lower_upper": [
+      40.57,
+      40.56
+     ],
+     "mask_margin_dB": 3.27,
+     "bb_vrms": 0.1252,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -3.15,
+     "evm_dB": -29.82,
+     "aclr_dB_lower_upper": [
+      40.29,
+      40.26
+     ],
+     "mask_margin_dB": 3.04,
+     "bb_vrms": 0.137,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -2.42,
+     "evm_dB": -29.42,
+     "aclr_dB_lower_upper": [
+      39.54,
+      39.44
+     ],
+     "mask_margin_dB": 2.86,
+     "bb_vrms": 0.1497,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -1.7,
+     "evm_dB": -28.52,
+     "aclr_dB_lower_upper": [
+      37.86,
+      37.73
+     ],
+     "mask_margin_dB": 2.72,
+     "bb_vrms": 0.1637,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -1.0,
+     "evm_dB": -26.85,
+     "aclr_dB_lower_upper": [
+      35.22,
+      35.12
+     ],
+     "mask_margin_dB": 2.07,
+     "bb_vrms": 0.179,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -0.32,
+     "evm_dB": -24.76,
+     "aclr_dB_lower_upper": [
+      32.5,
+      32.45
+     ],
+     "mask_margin_dB": 1.28,
+     "bb_vrms": 0.1958,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 0.93,
+     "evm_dB": -20.68,
+     "aclr_dB_lower_upper": [
+      27.86,
+      27.88
+     ],
+     "mask_margin_dB": -1.57,
+     "bb_vrms": 0.2341,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 1.49,
+     "evm_dB": -18.93,
+     "aclr_dB_lower_upper": [
+      26.01,
+      26.02
+     ],
+     "mask_margin_dB": -2.65,
+     "bb_vrms": 0.2559,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.01,
+     "evm_dB": -17.42,
+     "aclr_dB_lower_upper": [
+      24.45,
+      24.46
+     ],
+     "mask_margin_dB": -3.63,
+     "bb_vrms": 0.2798,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.47,
+     "evm_dB": -16.14,
+     "aclr_dB_lower_upper": [
+      23.13,
+      23.15
+     ],
+     "mask_margin_dB": -4.49,
+     "bb_vrms": 0.306,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.89,
+     "evm_dB": -15.06,
+     "aclr_dB_lower_upper": [
+      22.02,
+      22.03
+     ],
+     "mask_margin_dB": -5.7,
+     "bb_vrms": 0.3346,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 3.27,
+     "evm_dB": -14.16,
+     "aclr_dB_lower_upper": [
+      21.06,
+      21.07
+     ],
+     "mask_margin_dB": -6.81,
+     "bb_vrms": 0.3658,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 3.6,
+     "evm_dB": -13.4,
+     "aclr_dB_lower_upper": [
+      20.23,
+      20.23
+     ],
+     "mask_margin_dB": -7.96,
+     "bb_vrms": 0.4,
+     "cfr_papr_dB": 8.0
+    }
+   ],
+   "unit": "dBm/dB",
+   "condition": "same model",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[linear (txmix sat=0)] LO jitter sweep at the 0 dBm point",
+   "target": null,
+   "achieved": [
+    {
+     "jitter_ps_rms": 0.0,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "jitter_ps_rms": 0.3,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.02,
+      30.02
+     ],
+     "mask_margin_dB": 0.17
+    },
+    {
+     "jitter_ps_rms": 0.5,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.01,
+      30.01
+     ],
+     "mask_margin_dB": 0.05
+    },
+    {
+     "jitter_ps_rms": 1.0,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.64,
+     "aclr_dB_lower_upper": [
+      29.96,
+      29.97
+     ],
+     "mask_margin_dB": -0.51
+    },
+    {
+     "jitter_ps_rms": 2.0,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.61,
+     "aclr_dB_lower_upper": [
+      29.77,
+      29.8
+     ],
+     "mask_margin_dB": -2.14
+    },
+    {
+     "jitter_ps_rms": 3.0,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.55,
+     "aclr_dB_lower_upper": [
+      29.48,
+      29.52
+     ],
+     "mask_margin_dB": -3.93
+    }
+   ],
+   "unit": "dB",
+   "condition": "white phase jitter",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[linear (txmix sat=0)] baseband I/Q skew sweep",
+   "target": null,
+   "achieved": [
+    {
+     "skew_ps": 0,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "skew_ps": 50,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "skew_ps": 100,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "skew_ps": 250,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.64,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "skew_ps": 500,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.6,
+     "aclr_dB_lower_upper": [
+      30.04,
+      30.03
+     ],
+     "mask_margin_dB": 0.24
+    },
+    {
+     "skew_ps": 1000,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.44,
+     "aclr_dB_lower_upper": [
+      30.04,
+      30.03
+     ],
+     "mask_margin_dB": 0.2
+    }
+   ],
+   "unit": "dB",
+   "condition": "Q path delayed",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[linear (txmix sat=0)] LO quadrature skew (transistor-level image rejection -> EVM)",
+   "target": null,
+   "achieved": [
+    {
+     "lo_q_skew_ps": 0,
+     "image_rejection_dB_transistor": 48.91,
+     "equiv_phase_err_deg": 0.411,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.65,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.23
+    },
+    {
+     "lo_q_skew_ps": 10,
+     "image_rejection_dB_transistor": 23.22,
+     "equiv_phase_err_deg": 7.897,
+     "pout_dBm": 0.32,
+     "evm_dB": -20.31,
+     "aclr_dB_lower_upper": [
+      29.85,
+      29.83
+     ],
+     "mask_margin_dB": 0.04
+    },
+    {
+     "lo_q_skew_ps": 20,
+     "image_rejection_dB_transistor": 17.33,
+     "equiv_phase_err_deg": 15.488,
+     "pout_dBm": 0.3,
+     "evm_dB": -16.81,
+     "aclr_dB_lower_upper": [
+      29.36,
+      29.33
+     ],
+     "mask_margin_dB": -0.47
+    },
+    {
+     "lo_q_skew_ps": 2,
+     "image_rejection_dB_transistor": 35.75,
+     "equiv_phase_err_deg": 1.869,
+     "pout_dBm": 0.33,
+     "evm_dB": -22.5,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.02
+     ],
+     "mask_margin_dB": 0.22
+    },
+    {
+     "lo_q_skew_ps": 5,
+     "image_rejection_dB_transistor": 28.86,
+     "equiv_phase_err_deg": 4.13,
+     "pout_dBm": 0.33,
+     "evm_dB": -21.9,
+     "aclr_dB_lower_upper": [
+      29.98,
+      29.97
+     ],
+     "mask_margin_dB": 0.18
+    }
+   ],
+   "unit": "dB",
+   "condition": "Q LO delayed, extracted chain",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[high-gain (txmix sat=1)] HE20 OFDM near 0 dBm mean (after 1 dB balun loss): EVM / ACLR / mask margin",
+   "target": "0 dBm with EVM <= -27 dB (MCS7) and mask margin >= 0",
+   "achieved": {
+    "cfr_None": {
+     "pout_dBm": 0.4,
+     "evm_dB": -22.62,
+     "aclr_dB_lower_upper": [
+      29.91,
+      29.9
+     ],
+     "mask_margin_dB": 1.69,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": null
+    },
+    "cfr_8.0": {
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": 8.0
+    }
+   },
+   "unit": "dBm/dB",
+   "condition": "extracted AM-AM/AM-PM + tx_modulation.py (64QAM HE20, 10b 40 MS/s DAC, FPGA shaping FIR, 5th-order 15.2 MHz filter)",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[high-gain (txmix sat=1)] max mean output meeting EVM limit and mask, per MCS",
+   "target": 0.0,
+   "achieved": {
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=None": 1.0,
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=8.0": 1.0,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=None": 1.0,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=8.0": 1.0,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=None": 1.0,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=8.0": 1.0,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=None": 0.4,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=8.0": 0.41,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=None": -1.59,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=8.0": -1.58,
+    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=None": null,
+    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=8.0": null
+   },
+   "unit": "dBm",
+   "condition": "same model",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[high-gain (txmix sat=1)] AM-AM: P1dB / Psat after balun loss",
+   "target": null,
+   "achieved": {
+    "p1dB": 1.836405729479085,
+    "psat": 6.06
+   },
+   "unit": "dBm",
+   "condition": "extracted chain, CW",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[high-gain (txmix sat=1)] power sweep (EVM, ACLR, mask vs mean output)",
+   "target": null,
+   "achieved": [
+    {
+     "pout_dBm": -9.53,
+     "evm_dB": -31.71,
+     "aclr_dB_lower_upper": [
+      41.76,
+      41.76
+     ],
+     "mask_margin_dB": 3.69,
+     "bb_vrms": 0.03,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -8.8,
+     "evm_dB": -31.56,
+     "aclr_dB_lower_upper": [
+      41.43,
+      41.42
+     ],
+     "mask_margin_dB": 3.69,
+     "bb_vrms": 0.0328,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -8.06,
+     "evm_dB": -31.42,
+     "aclr_dB_lower_upper": [
+      41.11,
+      41.1
+     ],
+     "mask_margin_dB": 3.68,
+     "bb_vrms": 0.0359,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -7.34,
+     "evm_dB": -31.28,
+     "aclr_dB_lower_upper": [
+      40.82,
+      40.82
+     ],
+     "mask_margin_dB": 3.67,
+     "bb_vrms": 0.0392,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -6.6,
+     "evm_dB": -31.15,
+     "aclr_dB_lower_upper": [
+      40.56,
+      40.55
+     ],
+     "mask_margin_dB": 3.59,
+     "bb_vrms": 0.0429,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -5.88,
+     "evm_dB": -31.02,
+     "aclr_dB_lower_upper": [
+      40.3,
+      40.29
+     ],
+     "mask_margin_dB": 3.54,
+     "bb_vrms": 0.0469,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -5.15,
+     "evm_dB": -30.87,
+     "aclr_dB_lower_upper": [
+      40.03,
+      40.02
+     ],
+     "mask_margin_dB": 3.5,
+     "bb_vrms": 0.0513,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -4.42,
+     "evm_dB": -30.67,
+     "aclr_dB_lower_upper": [
+      39.69,
+      39.68
+     ],
+     "mask_margin_dB": 3.5,
+     "bb_vrms": 0.0561,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -3.71,
+     "evm_dB": -30.39,
+     "aclr_dB_lower_upper": [
+      39.23,
+      39.21
+     ],
+     "mask_margin_dB": 3.47,
+     "bb_vrms": 0.0613,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -2.99,
+     "evm_dB": -29.93,
+     "aclr_dB_lower_upper": [
+      38.56,
+      38.53
+     ],
+     "mask_margin_dB": 3.34,
+     "bb_vrms": 0.067,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -2.28,
+     "evm_dB": -29.19,
+     "aclr_dB_lower_upper": [
+      37.52,
+      37.46
+     ],
+     "mask_margin_dB": 3.2,
+     "bb_vrms": 0.0733,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -1.59,
+     "evm_dB": -28.03,
+     "aclr_dB_lower_upper": [
+      36.01,
+      35.93
+     ],
+     "mask_margin_dB": 3.13,
+     "bb_vrms": 0.0801,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -0.9,
+     "evm_dB": -26.44,
+     "aclr_dB_lower_upper": [
+      34.09,
+      34.02
+     ],
+     "mask_margin_dB": 2.77,
+     "bb_vrms": 0.0876,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -0.24,
+     "evm_dB": -24.57,
+     "aclr_dB_lower_upper": [
+      32.02,
+      31.97
+     ],
+     "mask_margin_dB": 2.34,
+     "bb_vrms": 0.0958,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 0.4,
+     "evm_dB": -22.62,
+     "aclr_dB_lower_upper": [
+      29.91,
+      29.9
+     ],
+     "mask_margin_dB": 1.69,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 1.0,
+     "evm_dB": -20.74,
+     "aclr_dB_lower_upper": [
+      27.93,
+      27.94
+     ],
+     "mask_margin_dB": 0.2,
+     "bb_vrms": 0.1145,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 1.55,
+     "evm_dB": -19.0,
+     "aclr_dB_lower_upper": [
+      26.13,
+      26.14
+     ],
+     "mask_margin_dB": -1.16,
+     "bb_vrms": 0.1252,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.07,
+     "evm_dB": -17.44,
+     "aclr_dB_lower_upper": [
+      24.52,
+      24.54
+     ],
+     "mask_margin_dB": -2.87,
+     "bb_vrms": 0.137,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.53,
+     "evm_dB": -16.1,
+     "aclr_dB_lower_upper": [
+      23.14,
+      23.16
+     ],
+     "mask_margin_dB": -4.37,
+     "bb_vrms": 0.1497,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 2.95,
+     "evm_dB": -14.95,
+     "aclr_dB_lower_upper": [
+      21.95,
+      21.97
+     ],
+     "mask_margin_dB": -5.69,
+     "bb_vrms": 0.1637,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 3.32,
+     "evm_dB": -13.99,
+     "aclr_dB_lower_upper": [
+      20.93,
+      20.94
+     ],
+     "mask_margin_dB": -6.81,
+     "bb_vrms": 0.179,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 3.65,
+     "evm_dB": -13.18,
+     "aclr_dB_lower_upper": [
+      20.04,
+      20.05
+     ],
+     "mask_margin_dB": -7.74,
+     "bb_vrms": 0.1958,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 3.94,
+     "evm_dB": -12.52,
+     "aclr_dB_lower_upper": [
+      19.29,
+      19.29
+     ],
+     "mask_margin_dB": -8.69,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 4.2,
+     "evm_dB": -11.97,
+     "aclr_dB_lower_upper": [
+      18.63,
+      18.64
+     ],
+     "mask_margin_dB": -10.26,
+     "bb_vrms": 0.2341,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 4.43,
+     "evm_dB": -11.52,
+     "aclr_dB_lower_upper": [
+      18.07,
+      18.07
+     ],
+     "mask_margin_dB": -11.38,
+     "bb_vrms": 0.2559,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 4.63,
+     "evm_dB": -11.13,
+     "aclr_dB_lower_upper": [
+      17.59,
+      17.59
+     ],
+     "mask_margin_dB": -12.26,
+     "bb_vrms": 0.2798,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 4.81,
+     "evm_dB": -10.8,
+     "aclr_dB_lower_upper": [
+      17.18,
+      17.17
+     ],
+     "mask_margin_dB": -13.08,
+     "bb_vrms": 0.306,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 4.97,
+     "evm_dB": -10.51,
+     "aclr_dB_lower_upper": [
+      16.82,
+      16.81
+     ],
+     "mask_margin_dB": -13.9,
+     "bb_vrms": 0.3346,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 5.11,
+     "evm_dB": -10.26,
+     "aclr_dB_lower_upper": [
+      16.5,
+      16.49
+     ],
+     "mask_margin_dB": -14.64,
+     "bb_vrms": 0.3658,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": 5.24,
+     "evm_dB": -10.03,
+     "aclr_dB_lower_upper": [
+      16.22,
+      16.21
+     ],
+     "mask_margin_dB": -15.35,
+     "bb_vrms": 0.4,
+     "cfr_papr_dB": null
+    },
+    {
+     "pout_dBm": -9.53,
+     "evm_dB": -30.25,
+     "aclr_dB_lower_upper": [
+      41.79,
+      41.79
+     ],
+     "mask_margin_dB": 3.69,
+     "bb_vrms": 0.03,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -8.8,
+     "evm_dB": -30.13,
+     "aclr_dB_lower_upper": [
+      41.45,
+      41.45
+     ],
+     "mask_margin_dB": 3.7,
+     "bb_vrms": 0.0328,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -8.06,
+     "evm_dB": -30.03,
+     "aclr_dB_lower_upper": [
+      41.13,
+      41.13
+     ],
+     "mask_margin_dB": 3.68,
+     "bb_vrms": 0.0359,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -7.34,
+     "evm_dB": -29.93,
+     "aclr_dB_lower_upper": [
+      40.86,
+      40.86
+     ],
+     "mask_margin_dB": 3.65,
+     "bb_vrms": 0.0392,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -6.6,
+     "evm_dB": -29.83,
+     "aclr_dB_lower_upper": [
+      40.59,
+      40.59
+     ],
+     "mask_margin_dB": 3.57,
+     "bb_vrms": 0.0429,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -5.88,
+     "evm_dB": -29.71,
+     "aclr_dB_lower_upper": [
+      40.34,
+      40.34
+     ],
+     "mask_margin_dB": 3.53,
+     "bb_vrms": 0.0469,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -5.15,
+     "evm_dB": -29.59,
+     "aclr_dB_lower_upper": [
+      40.08,
+      40.07
+     ],
+     "mask_margin_dB": 3.49,
+     "bb_vrms": 0.0513,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -4.42,
+     "evm_dB": -29.44,
+     "aclr_dB_lower_upper": [
+      39.77,
+      39.76
+     ],
+     "mask_margin_dB": 3.48,
+     "bb_vrms": 0.0561,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -3.71,
+     "evm_dB": -29.23,
+     "aclr_dB_lower_upper": [
+      39.37,
+      39.36
+     ],
+     "mask_margin_dB": 3.47,
+     "bb_vrms": 0.0613,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -2.99,
+     "evm_dB": -28.87,
+     "aclr_dB_lower_upper": [
+      38.77,
+      38.75
+     ],
+     "mask_margin_dB": 3.34,
+     "bb_vrms": 0.067,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -2.28,
+     "evm_dB": -28.34,
+     "aclr_dB_lower_upper": [
+      37.88,
+      37.83
+     ],
+     "mask_margin_dB": 3.17,
+     "bb_vrms": 0.0733,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -1.58,
+     "evm_dB": -27.5,
+     "aclr_dB_lower_upper": [
+      36.54,
+      36.46
+     ],
+     "mask_margin_dB": 3.15,
+     "bb_vrms": 0.0801,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -0.89,
+     "evm_dB": -26.1,
+     "aclr_dB_lower_upper": [
+      34.56,
+      34.49
+     ],
+     "mask_margin_dB": 2.77,
+     "bb_vrms": 0.0876,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": -0.23,
+     "evm_dB": -24.37,
+     "aclr_dB_lower_upper": [
+      32.34,
+      32.29
+     ],
+     "mask_margin_dB": 2.42,
+     "bb_vrms": 0.0958,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81,
+     "bb_vrms": 0.1048,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 1.0,
+     "evm_dB": -20.63,
+     "aclr_dB_lower_upper": [
+      28.03,
+      28.04
+     ],
+     "mask_margin_dB": 0.41,
+     "bb_vrms": 0.1145,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 1.56,
+     "evm_dB": -18.91,
+     "aclr_dB_lower_upper": [
+      26.18,
+      26.19
+     ],
+     "mask_margin_dB": -1.17,
+     "bb_vrms": 0.1252,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.07,
+     "evm_dB": -17.37,
+     "aclr_dB_lower_upper": [
+      24.55,
+      24.56
+     ],
+     "mask_margin_dB": -2.88,
+     "bb_vrms": 0.137,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.53,
+     "evm_dB": -16.04,
+     "aclr_dB_lower_upper": [
+      23.16,
+      23.18
+     ],
+     "mask_margin_dB": -4.38,
+     "bb_vrms": 0.1497,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 2.95,
+     "evm_dB": -14.91,
+     "aclr_dB_lower_upper": [
+      21.97,
+      21.98
+     ],
+     "mask_margin_dB": -5.7,
+     "bb_vrms": 0.1637,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 3.32,
+     "evm_dB": -13.95,
+     "aclr_dB_lower_upper": [
+      20.94,
+      20.95
+     ],
+     "mask_margin_dB": -6.82,
+     "bb_vrms": 0.179,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 3.65,
+     "evm_dB": -13.15,
+     "aclr_dB_lower_upper": [
+      20.05,
+      20.06
+     ],
+     "mask_margin_dB": -7.75,
+     "bb_vrms": 0.1958,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 3.95,
+     "evm_dB": -12.49,
+     "aclr_dB_lower_upper": [
+      19.29,
+      19.3
+     ],
+     "mask_margin_dB": -8.72,
+     "bb_vrms": 0.2141,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 4.2,
+     "evm_dB": -11.95,
+     "aclr_dB_lower_upper": [
+      18.64,
+      18.64
+     ],
+     "mask_margin_dB": -10.27,
+     "bb_vrms": 0.2341,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 4.43,
+     "evm_dB": -11.5,
+     "aclr_dB_lower_upper": [
+      18.08,
+      18.08
+     ],
+     "mask_margin_dB": -11.38,
+     "bb_vrms": 0.2559,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 4.63,
+     "evm_dB": -11.12,
+     "aclr_dB_lower_upper": [
+      17.6,
+      17.59
+     ],
+     "mask_margin_dB": -12.26,
+     "bb_vrms": 0.2798,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 4.81,
+     "evm_dB": -10.79,
+     "aclr_dB_lower_upper": [
+      17.18,
+      17.18
+     ],
+     "mask_margin_dB": -13.08,
+     "bb_vrms": 0.306,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 4.97,
+     "evm_dB": -10.5,
+     "aclr_dB_lower_upper": [
+      16.82,
+      16.82
+     ],
+     "mask_margin_dB": -13.92,
+     "bb_vrms": 0.3346,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 5.11,
+     "evm_dB": -10.25,
+     "aclr_dB_lower_upper": [
+      16.51,
+      16.5
+     ],
+     "mask_margin_dB": -14.65,
+     "bb_vrms": 0.3658,
+     "cfr_papr_dB": 8.0
+    },
+    {
+     "pout_dBm": 5.24,
+     "evm_dB": -10.02,
+     "aclr_dB_lower_upper": [
+      16.23,
+      16.21
+     ],
+     "mask_margin_dB": -15.37,
+     "bb_vrms": 0.4,
+     "cfr_papr_dB": 8.0
+    }
+   ],
+   "unit": "dBm/dB",
+   "condition": "same model",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[high-gain (txmix sat=1)] LO jitter sweep at the 0 dBm point",
+   "target": null,
+   "achieved": [
+    {
+     "jitter_ps_rms": 0.0,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "jitter_ps_rms": 0.3,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.09,
+      30.08
+     ],
+     "mask_margin_dB": 1.71
+    },
+    {
+     "jitter_ps_rms": 0.5,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.08,
+      30.08
+     ],
+     "mask_margin_dB": 1.56
+    },
+    {
+     "jitter_ps_rms": 1.0,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.47,
+     "aclr_dB_lower_upper": [
+      30.03,
+      30.03
+     ],
+     "mask_margin_dB": 0.86
+    },
+    {
+     "jitter_ps_rms": 2.0,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.44,
+     "aclr_dB_lower_upper": [
+      29.84,
+      29.86
+     ],
+     "mask_margin_dB": -1.21
+    },
+    {
+     "jitter_ps_rms": 3.0,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.39,
+     "aclr_dB_lower_upper": [
+      29.54,
+      29.58
+     ],
+     "mask_margin_dB": -3.32
+    }
+   ],
+   "unit": "dB",
+   "condition": "white phase jitter",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[high-gain (txmix sat=1)] baseband I/Q skew sweep",
+   "target": null,
+   "achieved": [
+    {
+     "skew_ps": 0,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "skew_ps": 50,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "skew_ps": 100,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "skew_ps": 250,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.47,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "skew_ps": 500,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.43,
+     "aclr_dB_lower_upper": [
+      30.11,
+      30.09
+     ],
+     "mask_margin_dB": 1.82
+    },
+    {
+     "skew_ps": 1000,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.28,
+     "aclr_dB_lower_upper": [
+      30.11,
+      30.09
+     ],
+     "mask_margin_dB": 1.82
+    }
+   ],
+   "unit": "dB",
+   "condition": "Q path delayed",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "[high-gain (txmix sat=1)] LO quadrature skew (transistor-level image rejection -> EVM)",
+   "target": null,
+   "achieved": [
+    {
+     "lo_q_skew_ps": 0,
+     "image_rejection_dB_transistor": 48.91,
+     "equiv_phase_err_deg": 0.411,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.48,
+     "aclr_dB_lower_upper": [
+      30.1,
+      30.09
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "lo_q_skew_ps": 10,
+     "image_rejection_dB_transistor": 23.22,
+     "equiv_phase_err_deg": 7.897,
+     "pout_dBm": 0.4,
+     "evm_dB": -20.22,
+     "aclr_dB_lower_upper": [
+      29.9,
+      29.89
+     ],
+     "mask_margin_dB": 1.63
+    },
+    {
+     "lo_q_skew_ps": 20,
+     "image_rejection_dB_transistor": 17.33,
+     "equiv_phase_err_deg": 15.488,
+     "pout_dBm": 0.38,
+     "evm_dB": -16.8,
+     "aclr_dB_lower_upper": [
+      29.41,
+      29.38
+     ],
+     "mask_margin_dB": 1.2
+    },
+    {
+     "lo_q_skew_ps": 2,
+     "image_rejection_dB_transistor": 35.75,
+     "equiv_phase_err_deg": 1.869,
+     "pout_dBm": 0.41,
+     "evm_dB": -22.33,
+     "aclr_dB_lower_upper": [
+      30.09,
+      30.08
+     ],
+     "mask_margin_dB": 1.81
+    },
+    {
+     "lo_q_skew_ps": 5,
+     "image_rejection_dB_transistor": 28.86,
+     "equiv_phase_err_deg": 4.13,
+     "pout_dBm": 0.41,
+     "evm_dB": -21.76,
+     "aclr_dB_lower_upper": [
+      30.05,
+      30.03
+     ],
+     "mask_margin_dB": 1.77
+    }
+   ],
+   "unit": "dB",
+   "condition": "Q LO delayed, extracted chain",
+   "source": "generated/rf_tx-modulation.json",
+   "note": ""
+  },
+  {
+   "metric": "harmonics at 2LO / 3LO vs drive (load side after the ideal balun; pad side in pad_h*)",
+   "target": null,
+   "achieved": {
+    "amam_0020": {
+     "vin": 0.02,
+     "pad_dBm_50ohm": -19.166,
+     "h2_dBc": -57.13,
+     "h3_dBc": -51.8,
+     "pad_h2_dBc": -62.86,
+     "pad_h3_dBc": -55.95
+    },
+    "amam_0050": {
+     "vin": 0.05,
+     "pad_dBm_50ohm": -11.265,
+     "h2_dBc": -58.82,
+     "h3_dBc": -53.77,
+     "pad_h2_dBc": -55.43,
+     "pad_h3_dBc": -56.36
+    },
+    "amam_0100": {
+     "vin": 0.1,
+     "pad_dBm_50ohm": -5.644,
+     "h2_dBc": -50.68,
+     "h3_dBc": -56.12,
+     "pad_h2_dBc": -49.56,
+     "pad_h3_dBc": -57.8
+    },
+    "amam_0150": {
+     "vin": 0.15,
+     "pad_dBm_50ohm": -2.334,
+     "h2_dBc": -47.22,
+     "h3_dBc": -57.91,
+     "pad_h2_dBc": -46.67,
+     "pad_h3_dBc": -59.29
+    },
+    "amam_0200": {
+     "vin": 0.2,
+     "pad_dBm_50ohm": 0.079,
+     "h2_dBc": -45.23,
+     "h3_dBc": -59.96,
+     "pad_h2_dBc": -44.89,
+     "pad_h3_dBc": -61.28
+    },
+    "amam_0300": {
+     "vin": 0.3,
+     "pad_dBm_50ohm": 3.444,
+     "h2_dBc": -43.69,
+     "h3_dBc": -65.93,
+     "pad_h2_dBc": -43.47,
+     "pad_h3_dBc": -67.21
+    },
+    "amam_0400": {
+     "vin": 0.4,
+     "pad_dBm_50ohm": 5.41,
+     "h2_dBc": -50.24,
+     "h3_dBc": -60.09,
+     "pad_h2_dBc": -49.08,
+     "pad_h3_dBc": -63.11
+    },
+    "amam_0500": {
+     "vin": 0.5,
+     "pad_dBm_50ohm": 5.229,
+     "h2_dBc": -41.44,
+     "h3_dBc": -57.35,
+     "pad_h2_dBc": -42.69,
+     "pad_h3_dBc": -64.11
+    },
+    "amam_0600": {
+     "vin": 0.6,
+     "pad_dBm_50ohm": 5.494,
+     "h2_dBc": -44.77,
+     "h3_dBc": -50.9,
+     "pad_h2_dBc": -46.52,
+     "pad_h3_dBc": -52.4
+    },
+    "amam_0800": {
+     "vin": 0.8,
+     "pad_dBm_50ohm": 5.877,
+     "h2_dBc": -52.13,
+     "h3_dBc": -51.71,
+     "pad_h2_dBc": -51.08,
+     "pad_h3_dBc": -52.06
+    },
+    "amam_1000": {
+     "vin": 1.0,
+     "pad_dBm_50ohm": 5.93,
+     "h2_dBc": -51.47,
+     "h3_dBc": -52.1,
+     "pad_h2_dBc": -50.44,
+     "pad_h3_dBc": -52.54
+    },
+    "amam_1300": {
+     "vin": 1.3,
+     "pad_dBm_50ohm": 5.939,
+     "h2_dBc": -51.39,
+     "h3_dBc": -52.16,
+     "pad_h2_dBc": -50.38,
+     "pad_h3_dBc": -52.62
+    },
+    "amamsat_0020": {
+     "vin": 0.02,
+     "pad_dBm_50ohm": -12.718,
+     "h2_dBc": -59.77,
+     "h3_dBc": -53.84,
+     "pad_h2_dBc": -63.19,
+     "pad_h3_dBc": -55.61
+    },
+    "amamsat_0050": {
+     "vin": 0.05,
+     "pad_dBm_50ohm": -5.205,
+     "h2_dBc": -61.47,
+     "h3_dBc": -55.89,
+     "pad_h2_dBc": -60.89,
+     "pad_h3_dBc": -56.84
+    },
+    "amamsat_0100": {
+     "vin": 0.1,
+     "pad_dBm_50ohm": 0.418,
+     "h2_dBc": -59.82,
+     "h3_dBc": -57.69,
+     "pad_h2_dBc": -59.4,
+     "pad_h3_dBc": -58.22
+    },
+    "amamsat_0150": {
+     "vin": 0.15,
+     "pad_dBm_50ohm": 3.591,
+     "h2_dBc": -60.04,
+     "h3_dBc": -59.21,
+     "pad_h2_dBc": -60.01,
+     "pad_h3_dBc": -59.54
+    },
+    "amamsat_0200": {
+     "vin": 0.2,
+     "pad_dBm_50ohm": 5.482,
+     "h2_dBc": -55.84,
+     "h3_dBc": -57.65,
+     "pad_h2_dBc": -57.56,
+     "pad_h3_dBc": -59.07
+    },
+    "amamsat_0300": {
+     "vin": 0.3,
+     "pad_dBm_50ohm": 5.473,
+     "h2_dBc": -39.89,
+     "h3_dBc": -50.4,
+     "pad_h2_dBc": -40.45,
+     "pad_h3_dBc": -52.09
+    },
+    "amamsat_0400": {
+     "vin": 0.4,
+     "pad_dBm_50ohm": 5.761,
+     "h2_dBc": -49.97,
+     "h3_dBc": -48.1,
+     "pad_h2_dBc": -52.26,
+     "pad_h3_dBc": -48.95
+    },
+    "amamsat_0500": {
+     "vin": 0.5,
+     "pad_dBm_50ohm": 6.001,
+     "h2_dBc": -54.56,
+     "h3_dBc": -49.83,
+     "pad_h2_dBc": -54.18,
+     "pad_h3_dBc": -50.6
+    },
+    "amamsat_0600": {
+     "vin": 0.6,
+     "pad_dBm_50ohm": 6.044,
+     "h2_dBc": -54.19,
+     "h3_dBc": -50.09,
+     "pad_h2_dBc": -53.57,
+     "pad_h3_dBc": -50.8
+    },
+    "amamsat_0800": {
+     "vin": 0.8,
+     "pad_dBm_50ohm": 6.051,
+     "h2_dBc": -54.12,
+     "h3_dBc": -50.2,
+     "pad_h2_dBc": -53.47,
+     "pad_h3_dBc": -50.91
+    },
+    "amamsat_1000": {
+     "vin": 1.0,
+     "pad_dBm_50ohm": 6.055,
+     "h2_dBc": -54.05,
+     "h3_dBc": -50.3,
+     "pad_h2_dBc": -53.39,
+     "pad_h3_dBc": -51.0
+    },
+    "amamsat_1300": {
+     "vin": 1.3,
+     "pad_dBm_50ohm": 6.062,
+     "h2_dBc": -53.96,
+     "h3_dBc": -50.45,
+     "pad_h2_dBc": -53.3,
+     "pad_h3_dBc": -51.13
+    }
+   },
+   "unit": "dBc",
+   "condition": "extracted chain, CW",
+   "source": "generated/rf_tx-sim-ext.json",
+   "note": "board balun/filter harmonic rejection not modelled beyond the ideal transformer"
+  },
+  {
    "metric": "mean output power into 50 ohm differential, no board matching",
    "target": 0.0,
-   "achieved": -7.58,
+   "achieved": 1.36,
    "unit": "dBm",
    "condition": "full extracted chain, 0.3 V DC I baseband (CW at LO), code 15",
    "source": "generated/rf_tx-sim-ext.json",
@@ -829,7 +2921,7 @@
   {
    "metric": "SSB output power",
    "target": 0.0,
-   "achieved": -7.04,
+   "achieved": 1.67,
    "unit": "dBm",
    "condition": "full extracted chain, 0.3 V I/Q at 61 MHz",
    "source": "generated/rf_tx-sim-ext.json",
@@ -838,7 +2930,7 @@
   {
    "metric": "maximum output power (driver standalone, 0.6 V input)",
    "target": 0.0,
-   "achieved": 0.41,
+   "achieved": 8.05,
    "unit": "dBm",
    "condition": "tt/27C/3.3V extracted",
    "source": "generated/rf_tx-sim-ext.json",
@@ -847,7 +2939,7 @@
   {
    "metric": "driver voltage gain summed_rf -> pad",
    "target": 5.36,
-   "achieved": 1.6831,
+   "achieved": 5.2404,
    "unit": "V/V",
    "condition": "50 mV input, 2.44 GHz, extracted",
    "source": "generated/rf_tx-sim-ext.json",
@@ -856,7 +2948,7 @@
   {
    "metric": "supply current",
    "target": 28.92,
-   "achieved": 28.9349,
+   "achieved": 59.1304,
    "unit": "mA",
    "condition": "code 15, 0.3 V input",
    "source": "generated/rf_tx-sim-ext.json",
@@ -866,12 +2958,12 @@
    "metric": "gain-code steps (pad dBm for code 1/2/4/8/12/15)",
    "target": null,
    "achieved": [
-    -17.74,
-    -13.08,
-    -8.07,
-    -3.48,
-    -1.2,
-    -0.16
+    -9.81,
+    -5.0,
+    0.06,
+    4.61,
+    6.83,
+    7.82
    ],
    "unit": "dBm",
    "condition": "standalone, 0.3 V input; code = rfdriver.gain[7:4]",
@@ -881,7 +2973,7 @@
   {
    "metric": "mute isolation (chain, unmatched)",
    "target": null,
-   "achieved": 23.96,
+   "achieved": 24.72,
    "unit": "dB",
    "condition": "mute=1 vs mute=0, extracted chain",
    "source": "generated/rf_tx-sim-ext.json",
@@ -890,7 +2982,7 @@
   {
    "metric": "LO suppression at pad (chain SSB)",
    "target": null,
-   "achieved": 44.63,
+   "achieved": 30.67,
    "unit": "dBc",
    "condition": "ideal LO",
    "source": "generated/rf_tx-sim-ext.json",
@@ -904,73 +2996,73 @@
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -7.41
+     "value": 1.46
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -7.21
+     "value": 1.71
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -8.06
+     "value": 0.84
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -7.86
+     "value": 1.1
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -10.63
+     "value": -5.38
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -10.28
+     "value": -3.43
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -11.26
+     "value": -5.57
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -10.92
+     "value": -3.75
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -5.27
+     "value": 4.39
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -5.06
+     "value": 4.61
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -5.94
+     "value": 3.67
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -5.73
+     "value": 3.9
     }
    ],
    "unit": "dBm",
@@ -986,73 +3078,73 @@
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 25.6633
+     "value": 52.6217
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 25.9441
+     "value": 53.5286
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 25.6407
+     "value": 52.3639
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 25.921
+     "value": 53.2668
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 23.8613
+     "value": 41.4867
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 24.8399
+     "value": 49.3798
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 23.8707
+     "value": 41.1138
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 24.8492
+     "value": 48.9659
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 26.8713
+     "value": 54.9873
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 27.1904
+     "value": 55.6144
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 26.8016
+     "value": 54.6935
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 27.1114
+     "value": 55.3138
     }
    ],
    "unit": "mA",
@@ -1064,10 +3156,10 @@
    "metric": "stretch: output at LO/2 (1.22 GHz) and LO/4 (610 MHz)",
    "target": null,
    "achieved": {
-    "stretch_lo_div2": 1.37,
-    "stretch_lo_div2_large": 2.34,
-    "stretch_lo_div4": 2.87,
-    "stretch_lo_div4_large": 3.1
+    "stretch_lo_div2": 10.3,
+    "stretch_lo_div2_large": 10.61,
+    "stretch_lo_div4": 10.79,
+    "stretch_lo_div4_large": 10.83
    },
    "unit": "dBm",
    "condition": "extracted chain, 0.3 V / 0.7 V DC I, no board matching applied (50 ohm differential load)",
@@ -1077,7 +3169,7 @@
   {
    "metric": "schematic (no wiring parasitics) chain output for reference",
    "target": null,
-   "achieved": -3.45,
+   "achieved": 5.68,
    "unit": "dBm",
    "condition": "same bench, source netlists",
    "source": "generated/rf_tx-sim-sch.json",
@@ -1089,7 +3181,9 @@
   "No package, bond-wire or supply-network impedance; ideal 3.3 V rails.",
   "LO is an ideal rail-to-rail square wave behind 50 ohm (quadrature block not simulated).",
   "Baseband sources ideal (bbfilter / DAC output impedance not modelled).",
-  "No noise, mismatch/Monte Carlo, EVM or spectral-mask simulation.",
+  "No noise or mismatch/Monte Carlo. EVM/ACLR/mask come from a memoryless model fed by the extracted AM-AM/AM-PM (tx_modulation.py), not from a transistor-level modulated transient.",
+  "Board: ideal chokes (Q=30), ideal 200:50 balun + 1.0 dB loss pad; balun harmonic rejection not modelled.",
+  "rftxpad stress-safe clamp not in the bench: its 2.1 V (ff) onset conflicts with the ~3.3 V pad bias and ~4.1 V peaks of the DC-fed driver (interface-changes.md).",
   "Pad modelled as the rftxpad allocation (2 ohm + 1 pF per leg), not the pads agent extraction."
  ]
 }

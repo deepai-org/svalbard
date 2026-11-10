@@ -270,6 +270,121 @@ transceiver-contract:
 transceiver-tapeout-readiness:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_tapeout_readiness.py
 
+# Per-block KLayout DRC + antenna with the tapeout precheck's decks (gf180mcu.drc, variant D, deep,
+# KLayout 0.30.9): main = all,-antenna,-density,-cup; antenna = antenna.  Required block evidence:
+#   make transceiver-block-kldrc BLOCK=<registry name>|all [PUBLISH=1] [THREADS=4]
+#   make transceiver-block-kldrc GDS=<file> TOP=<cell> NAME=<name>      (any GDS, e.g. a scratch candidate)
+#   make transceiver-block-kldrc-check     every registered block: published, current (GDS hash) and clean
+#   make transceiver-gds-collisions        same cell name with different geometry across block GDS inputs
+KLDRC := projects/programmable_transceiver_platform/verification
+.PHONY: transceiver-block-kldrc transceiver-block-kldrc-check transceiver-gds-collisions
+transceiver-block-kldrc:
+	$(PYTHON) $(KLDRC)/kl_block_drc.py $(if $(GDS),--gds $(GDS) --top $(TOP) --name $(NAME),--block $(or $(BLOCK),all)) $(if $(PUBLISH),--publish) --threads $(or $(THREADS),4)
+transceiver-block-kldrc-check:
+	$(PYTHON) $(KLDRC)/check_block_kldrc.py --json scratch/kl-block-drc/check.json
+transceiver-gds-collisions:
+	$(PYTHON) $(KLDRC)/gds_cell_collisions.py --json scratch/kl-block-drc/collisions.json
+
+.PHONY: transceiver-chip-io
+transceiver-chip-io:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_chip_io.py
+
+.PHONY: transceiver-chip-power
+transceiver-chip-power:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_chip_power.py
+
+.PHONY: transceiver-chip-fallback transceiver-chip-fallback-route
+transceiver-chip-fallback:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_chip_fallback.py
+transceiver-chip-fallback-route:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_chip_fallback.py --route-only --output-dir scratch/chip-fallback-route
+
+.PHONY: transceiver-bringup-control
+transceiver-bringup-control:
+	$(PYTHON) projects/programmable_transceiver_platform/analog/bringup_control/build.py
+	$(PYTHON) projects/programmable_transceiver_platform/analog/bringup_control/characterize.py
+	$(PYTHON) projects/programmable_transceiver_platform/analog/bringup_control/export_lef.py --preview
+
+.PHONY: transceiver-chip-fallback-layout-route
+transceiver-chip-fallback-layout-route:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_chip_fallback_layout.py --route-only --output-dir scratch/chip-fallback-layout-route
+
+.PHONY: transceiver-observation-coverage transceiver-observation-paths
+transceiver-observation-coverage:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/observation_coverage.py
+# Assembled-RTL check of every mapped observation selection (block_observation);
+# coverage grades entries with it when its report matches debug-controls.json.
+transceiver-observation-paths:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_observation_paths.py --output-dir scratch/observation-paths
+
+.PHONY: transceiver-transport-budget
+transceiver-transport-budget: transceiver-dense-transport transceiver-dense-service transceiver-dense-pair transceiver-dense-pair-link transceiver-pair-gearbox transceiver-dense-rf-service transceiver-dense-rf-burst transceiver-sync-fifo-depth transceiver-shared-egress-lifecycle
+	$(PYTHON) projects/programmable_transceiver_platform/verification/report_transport_budget.py
+
+.PHONY: transceiver-area-budget
+transceiver-area-budget:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/report_area_budget.py
+
+.PHONY: transceiver-dense-transport transceiver-dense-service transceiver-atb-tree
+transceiver-dense-transport:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_dense_transport.py --output-dir scratch/dense-transport
+transceiver-dense-service:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_dense_service.py --output-dir scratch/dense-service
+transceiver-atb-tree:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_atb_tree.py --output-dir scratch/atb-tree-current
+
+# The default paired core also needs codec, gear conversion and RF service
+# evidence. Functional passes do not establish routed rate closure.
+.PHONY: transceiver-dense-pair transceiver-dense-pair-link transceiver-core-bias-observation transceiver-pair-gearbox transceiver-dense-rf-service transceiver-pair-word-formal transceiver-freq-count-formal transceiver-sync-fifo-depth transceiver-shared-egress-lifecycle transceiver-dense-rf-burst
+transceiver-dense-pair:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_dense_pair.py
+transceiver-dense-pair-link:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_dense_pair_link.py
+transceiver-pair-gearbox:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_pair_gearbox.py
+
+.PHONY: transceiver-pair-gearbox-formal
+transceiver-pair-gearbox-formal:
+	bash projects/programmable_transceiver_platform/verification/run_pair_gearbox_formal.sh
+transceiver-dense-rf-service:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_dense_rf_service.py --output-dir scratch/dense-rf-service
+transceiver-pair-word-formal:
+	bash projects/programmable_transceiver_platform/verification/run_pair_word_formal.sh
+transceiver-freq-count-formal:
+	bash projects/programmable_transceiver_platform/verification/run_freq_count_formal.sh
+
+.PHONY: transceiver-bias-abstracts
+transceiver-bias-abstracts:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/export_bias_abstracts.py --output-dir scratch/bias-distribution-abstracts-$$(date -u +%Y%m%d-%H%M%S) --publish-dir projects/programmable_transceiver_platform/analog/core_support/distribution/generated
+
+.PHONY: transceiver-core-bias-placement
+transceiver-core-bias-placement:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/place_core_bias.py --output-dir scratch/core-bias-physical-placement-$$(date -u +%Y%m%d-%H%M%S)
+transceiver-sync-fifo-depth:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_sync_fifo_depth.py
+transceiver-shared-egress-lifecycle:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_shared_egress_lifecycle.py
+transceiver-dense-rf-burst:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_dense_rf_service.py --burst --output-dir scratch/dense-rf-burst
+transceiver-core-bias-observation:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_core_bias_observation.py --output-dir scratch/core-bias-observation-current
+
+.PHONY: transceiver-chip-assembly
+transceiver-chip-assembly:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/run_chip_assembly.py --output-dir scratch/chip-assembly-$$(date -u +%Y%m%d-%H%M%S)
+
+.PHONY: transceiver-core-bias-routing
+transceiver-core-bias-routing:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/run_core_bias_routing.py --output-dir scratch/core-bias-routing-$$(date -u +%Y%m%d-%H%M%S)
+
+.PHONY: transceiver-core-bias-device-lvs
+transceiver-core-bias-device-lvs:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_core_bias_device_lvs.py --output-dir scratch/core-bias-device-lvs
+
+.PHONY: transceiver-core-bias-idac1-observation
+transceiver-core-bias-idac1-observation:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_core_bias_observation.py --idac1-smu --output-dir scratch/core-bias-idac1-observation-current
+
 # Generated SPI register file: map/RTL freshness, iverilog+verilator model comparison,
 # legacy pt_control equivalence and chip elaboration; SymbiYosys proof; GF180 size.
 .PHONY: transceiver-regfile transceiver-regfile-formal transceiver-regfile-synth transceiver-regfile-report
@@ -301,19 +416,22 @@ transceiver-p2-synth:
 # make transceiver-digital-hardening DIGITAL_HARDENING_STAGES="sta gls report".
 DIGITAL_HARDENING_STAGES ?=
 .PHONY: transceiver-digital-hardening transceiver-digital-rtl-checks
-transceiver-digital-hardening: transceiver-digital-rtl-checks
-	SVALBARD_DIGITAL_IMAGE=$${SVALBARD_DIGITAL_IMAGE:-svalbard/librelane-gf180-canary:2026.08} \
+transceiver-digital-hardening: transceiver-digital-rtl-checks transceiver-pair-word-formal transceiver-pair-gearbox-formal transceiver-freq-count-formal
 	bash projects/programmable_transceiver_platform/verification/run_digital_hardening.sh $(DIGITAL_HARDENING_STAGES)
 # RTL checks of the blocks added for the hardened macro: registered-read FIFO equivalence,
 # frequency counter (P3-7) and the 20-bit wired boundary end to end (P3-6).
-transceiver-digital-rtl-checks:
+transceiver-digital-rtl-checks: transceiver-dense-transport transceiver-dense-service transceiver-dense-pair transceiver-dense-pair-link transceiver-pair-gearbox transceiver-dense-rf-service transceiver-sync-fifo-depth transceiver-shared-egress-lifecycle transceiver-dense-rf-burst
 	cd projects/programmable_transceiver_platform && \
 	iverilog -g2012 -s tb_async_fifo_regout -o /tmp/pt_fifo_regout.vvp rtl/pt_fifo.sv sim/tb_async_fifo_regout.sv && \
 	vvp -n /tmp/pt_fifo_regout.vvp | grep -q FIFO_REGOUT_PASS && \
 	iverilog -g2012 -s tb_pt_freq_count -o /tmp/pt_freq_count.vvp rtl/pt_freq_count.sv rtl/pt_fifo.sv rtl/pt_pattern.sv sim/tb_pt_freq_count.sv && \
 	vvp -n /tmp/pt_freq_count.vvp | grep -q FREQ_COUNT_PASS && \
-	iverilog -g2012 -I rtl -s tb_digital_wire20 -o /tmp/pt_wire20.vvp sim/tb_digital_wire20.sv rtl/*.sv && \
-	vvp -n /tmp/pt_wire20.vvp | grep -q WIRE20_PASS
+	iverilog -g2012 -s tb_freq_gray_prefix -o /tmp/pt_freq_gray_prefix.vvp rtl/pt_freq_count.sv rtl/pt_fifo.sv rtl/pt_pattern.sv sim/tb_freq_gray_prefix.sv && \
+	vvp -n /tmp/pt_freq_gray_prefix.vvp | grep -q FREQ_GRAY_PREFIX_PASS && \
+	iverilog -g2012 -I rtl -s tb_digital_wire20 -o /tmp/pt_wire20.vvp sim/tb_digital_wire20.sv sim/reference/pt_dense_transport.sv rtl/*.sv && \
+	vvp -n /tmp/pt_wire20.vvp | grep -q WIRE20_PASS && \
+	iverilog -g2012 -s tb_host_rate_clock -o /tmp/pt_host_rate_clock.vvp rtl/pt_host_link.sv rtl/pt_pattern.sv sim/tb_host_rate_clock.sv && \
+	vvp -n /tmp/pt_host_rate_clock.vvp | grep -q HOST_RATE_CLOCK_PASS
 
 .PHONY: transceiver-gpio-screen
 transceiver-gpio-screen:
@@ -326,22 +444,6 @@ transceiver-gpio-transient:
 .PHONY: transceiver-stream-codec
 transceiver-stream-codec:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/test_stream_codec.py
-
-.PHONY: transceiver-stream-rx
-transceiver-stream-rx:
-	bash projects/programmable_transceiver_platform/verification/run_stream_rx.sh
-
-.PHONY: transceiver-stream-tx
-transceiver-stream-tx:
-	bash projects/programmable_transceiver_platform/verification/run_stream_tx.sh
-
-.PHONY: transceiver-stream-link
-transceiver-stream-link:
-	bash projects/programmable_transceiver_platform/verification/run_stream_link.sh
-
-.PHONY: transceiver-pack-stream
-transceiver-pack-stream:
-	bash projects/programmable_transceiver_platform/verification/run_pack_stream.sh
 
 .PHONY: transceiver-rtl-primitives
 transceiver-rtl-primitives:

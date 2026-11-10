@@ -340,6 +340,43 @@ def iso_clamp_netlist(name='iso_clamp'):
     return '\n'.join(L) + '\n'
 
 
+def iso_clamp_x4_netlist(name='iso_clamp_x4'):
+    """iso_clamp with a 4x output stage (clock nets routed ~1 mm to the macro: fc_src, ct_wclk,
+    ct_word_clk). Same function Y = A AND NOT ISO, receiver (core VDD) domain; A reaches gates only."""
+    p, n = 'pfet_03v3', 'nfet_03v3'
+    L = [f'.subckt {name} A ISO Y VDD VSS']
+    L.append(_m('MIP', 'AN', 'A', 'VDD', 'VDD', p, 1, 0.28))
+    L.append(_m('MIN', 'AN', 'A', 'VSS', 'VSS', n, 0.5, 0.28))
+    L.append(_m('MP1', 'NY', 'ISO', 'VDD', 'VDD', p, 4, 0.28, 2))
+    L.append(_m('MP2', 'Y', 'AN', 'NY', 'VDD', p, 4, 0.28, 2))
+    L.append(_m('MN1', 'Y', 'AN', 'VSS', 'VSS', n, 2, 0.28))
+    L.append(_m('MN2', 'Y', 'ISO', 'VSS', 'VSS', n, 2, 0.28))
+    L.append(f'.ends {name}')
+    return '\n'.join(L) + '\n'
+
+
+def iso_pd_netlist(name='iso_pd'):
+    """Analog/RF isolation clamp, one net: NMOS pull-down Y -> VSS while ISO (core-domain ISO_<island>
+    of the DRIVING island) is high. No series element in the signal path: adds only the drain
+    junction + overlap of a 0.5/0.28 nfet (~1 fF) to Y. Use on gate-only analog/RF nets driven from a
+    switchable island (LO_*, WMON_IN): when that island is off the receiving gates sit at VSS instead
+    of floating."""
+    n = 'nfet_03v3'
+    return '\n'.join([f'.subckt {name} Y ISO VSS', _m('MPD', 'Y', 'ISO', 'VSS', 'VSS', n, 0.5, 0.28), f'.ends {name}']) + '\n'
+
+
+def iso_pd2_netlist(name='iso_pd2'):
+    """Differential iso_pd (one LO pair, e.g. LO_IP/LO_IN): matched pull-downs side by side so the
+    P and N legs see identical loading (IQ/LO symmetry rule)."""
+    n = 'nfet_03v3'
+    return '\n'.join([f'.subckt {name} P N ISO VSS', _m('MPDP', 'P', 'ISO', 'VSS', 'VSS', n, 0.5, 0.28),
+                       _m('MPDN', 'N', 'ISO', 'VSS', 'VSS', n, 0.5, 0.28), f'.ends {name}']) + '\n'
+
+
+ISO_CELLS = {'iso_clamp': iso_clamp_netlist, 'iso_clamp_x4': iso_clamp_x4_netlist,
+             'iso_pd': iso_pd_netlist, 'iso_pd2': iso_pd2_netlist}
+
+
 # ATB hierarchy plan (chip-wide): 8 groups x 12 leaves = 96 node slots.
 ATB_PLAN = {
     'groups': ['core_bias_ref', 'pll_timing', 'rf_rx', 'rf_tx', 'conv', 'wired_rx',

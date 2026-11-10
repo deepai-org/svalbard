@@ -1,0 +1,33 @@
+* NGSPICE file created from pt_decap_tile.ext - technology: gf180mcuD
+
+.subckt pt_decap_tile VSS VDD
+X0 VDD a_200_1680# VDD VDD pfet_03v3 ad=8.25p pd=28.1u as=99.6p ps=0.3404m w=27.5u l=6u
+X1 a_200_1680# a_320_300# VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X2 VSS a_320_300# a_200_1680# VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X3 VDD a_200_1680# VDD VDD pfet_03v3 ad=16.5p pd=56.2u as=0 ps=0 w=27.5u l=6u
+X4 VDD a_200_1680# VDD VDD pfet_03v3 ad=8.25p pd=28.1u as=0 ps=0 w=27.5u l=6u
+X5 VSS a_320_300# a_200_1680# VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X6 a_320_300# a_200_1680# VDD VDD pfet_03v3 ad=0.6p pd=3.2u as=0.6p ps=3.2u w=1u l=0.5u
+X7 VDD a_200_1680# VDD VDD pfet_03v3 ad=8.25p pd=28.1u as=0 ps=0 w=27.5u l=6u
+X8 VSS a_320_300# a_200_1680# VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X9 a_200_1680# a_320_300# VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X10 VSS a_320_300# a_200_1680# VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X11 VSS a_320_300# a_200_1680# VSS nfet_03v3 ad=2.4p pd=9.2u as=1.2p ps=4.6u w=4u l=0.5u
+X12 a_200_1680# a_320_300# VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X13 VSS a_320_300# a_200_1680# VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X14 a_200_1680# a_320_300# VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X15 VSS a_320_300# a_200_1680# VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X16 a_200_1680# a_320_300# VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X17 a_200_1680# a_320_300# VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.4p ps=9.2u w=4u l=0.5u
+X18 a_200_1680# a_320_300# VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X19 VSS a_320_300# a_200_1680# VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+X20 VDD a_200_1680# VDD VDD pfet_03v3 ad=8.25p pd=28.1u as=0 ps=0 w=27.5u l=6u
+X21 a_200_1680# a_320_300# VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.2p ps=4.6u w=4u l=0.5u
+C0 a_320_300# a_200_1680# 1.33667f
+C1 VDD a_320_300# 0.40155f
+C2 VDD a_200_1680# 22.4846f
+C3 VDD VSS 0.14671p
+C4 a_320_300# VSS 8.73523f
+C5 a_200_1680# VSS 7.03245f
+.ends
+

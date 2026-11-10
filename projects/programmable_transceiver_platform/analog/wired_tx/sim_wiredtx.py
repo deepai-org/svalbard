@@ -37,17 +37,39 @@ def ports_of(spice_text, subckt):
     raise ValueError(subckt + ' not found')
 
 
+# Stimuli are breakpoint-free behavioural sources.  PWL/PULSE corners make ngspice cut the step
+# to ~delmin at every corner; with gear integration the current unknowns attached to pF of gate
+# and wiring capacitance (C/h ~ 1e5 S) then cannot converge to abstol (1 pA) in floating point and
+# the run aborts ("Timestep too small", reported on a source branch).  Real drivers produce
+# smooth edges; tanh edges with the same 10-90 % time are used instead (no simulator options
+# changed).
+SMOOTH = True
+
+
+def _step(t0, edge):
+    # 0 -> 1 around t0 + edge/2 with 10-90 % time = edge (tanh: 10-90 % = 2.197 / k)
+    k = 2.197 / edge
+    return f'(0.5+0.5*tanh({k:.6e}*(time-{t0 + edge / 2:.6e})))'
+
+
 def pwl_bits(name, node, times_vals, vdd, edge=100e-12):
-    pts = ['0', f'{times_vals[0][1]*vdd:g}']
     level = times_vals[0][1]
+    if not SMOOTH:
+        pts = ['0', f'{level*vdd:g}']
+        for t, v in times_vals[1:]:
+            if v != level:
+                pts += [f'{t:.6e}', f'{level*vdd:g}', f'{t+edge:.6e}', f'{v*vdd:g}']
+                level = v
+        return f'V{name} {node} 0 PWL({" ".join(pts)})'
+    terms = [f'{level*vdd:g}']
     for t, v in times_vals[1:]:
         if v != level:
-            pts += [f'{t:.6e}', f'{level*vdd:g}', f'{t+edge:.6e}', f'{v*vdd:g}']
+            terms.append(f'{(v - level) * vdd:+g}*{_step(t, edge)}')
             level = v
-    return f'V{name} {node} 0 PWL({" ".join(pts)})'
+    return f'B{name} {node} 0 V={" ".join(terms)}'
 
 
-def phase_sources(rate, vdd, stopped=False, bpc=4):
+def phase_sources(rate, vdd, stopped=False, bpc=4, fallback=False):
     """Four ring phases (PH0 first, 90 deg apart), 50 % duty, ring = rate/bpc,
     plus the bits-per-cycle mode pins (bpc 4: quarter, 2: MODE_H, 1: MODE_F)."""
     tq = bpc / rate
@@ -56,23 +78,57 @@ def phase_sources(rate, vdd, stopped=False, bpc=4):
     for k, ph in enumerate(('0', '90', '180', '270')):
         if stopped:
             out.append(f'VPH{ph} WTX_PH{ph} 0 {vdd if ph in ("180", "270") else 0}')
+        elif SMOOTH:
+            # periodic 50 % square with tanh edges (10-90 % = tr): rises at k*tq/4 + tr/2
+            kk = 2.197 / tr
+            ph_ = f'(time-{k*tq/4 + tr/2:.6e})'
+            out.append(f'BPH{ph} WTX_PH{ph} 0 V={vdd}*(0.5+0.5*tanh({kk*tq/(2*3.141592653589793):.6e}'
+                       f'*sin(2*3.141592653589793*{ph_}/{tq:.6e})))')
         else:
             out.append(f'VPH{ph} WTX_PH{ph} 0 PULSE(0 {vdd} {k*tq/4:.6e} {tr} {tr} {tq/2-tr:.6e} {tq:.6e})')
-    out += [f'VMODEH MODE_H 0 {vdd if bpc == 2 else 0}', f'VMODEF MODE_F 0 {vdd if bpc == 1 else 0}']
+    # rate field: 00 quarter, 10 half, 01 full (compact core); 11 = generic half-rate fallback
+    if fallback:
+        assert bpc == 2, 'the generic fallback serializer runs half rate'
+        out += [f'VMODEH MODE_H 0 {vdd}', f'VMODEF MODE_F 0 {vdd}']
+    else:
+        out += [f'VMODEH MODE_H 0 {vdd if bpc == 2 else 0}', f'VMODEF MODE_F 0 {vdd if bpc == 1 else 0}']
+    return out
+
+
+# Output resistance of the real drivers of the DUT inputs (nothing on chip is a 0-ohm source):
+# ring phases come from the clockmux ct_mux4 output stage (2 x INV 3/6 um, ~150 ohm), word bits
+# and controls from standard-cell flops / register bits (~1 kohm).  Ideal 0-ohm sources made each
+# source's branch current a pure C/h image of the gate nodes' Newton updates; at source
+# breakpoints ngspice could not converge it and aborted ("Timestep too small ... vd19#branch").
+R_PHASE, R_LOGIC = 150.0, 1000.0
+_NO_R = ('VDD', 'VSS', 'VT', 'VX')   # VX*: AC-coupled receiver sources (sim_integration)
+
+
+def driver_impedance(lines):
+    out = []
+    for l in lines:
+        p = l.split()
+        if p and l[:1] in 'VB' and not p[0].upper()[1:].startswith(tuple(n[1:] for n in _NO_R)) and len(p) > 3 \
+                and p[2] == '0':
+            node = p[1]
+            r = R_PHASE if node.startswith('WTX_PH') else R_LOGIC
+            out += [' '.join([p[0], node + '_drv'] + p[2:]), f'R{p[0][1:]}_drv {node}_drv {node} {r:g}']
+        else:
+            out.append(l)
     return out
 
 
 def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical', temp=27, bpc=4,
           mode='serial', codes=(109, 32, 125), en=(1, 1, 0), wtx_ext=0, dx_pattern=None,
-          load_f=20e-15, extra='', probes=None, ser_on=2e-9):
+          load_f=20e-15, extra='', probes=None, ser_on=2e-9, fallback=False):
     text = Path(dut).read_text()
     ports = ports_of(text, subckt)
     tw = 20 / rate
     nets = {p: p for p in ports}
     lines = ['* pt_wiredtx transient testbench', tools.model_header(corner, temp), f'.include {Path(dut).name}',
              f'VDD VDD 0 {vdd}', 'VSS VSS 0 0']
-    lines += phase_sources(rate, vdd, bpc=bpc)
-    lines.append(f'VSER SER_EN 0 PWL(0 0 {ser_on} 0 {ser_on+100e-12} {vdd})')
+    lines += phase_sources(rate, vdd, bpc=bpc, fallback=fallback)
+    lines.append(pwl_bits('SER', 'SER_EN', [(0.0, 0), (ser_on, 1)], vdd))
     lines.append(f'VEXT WTX_EXT 0 {wtx_ext*vdd}')
     if dx_pattern is None:
         lines.append('VDX DX 0 0')
@@ -95,23 +151,30 @@ def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical'
         if load_f:
             lines.append(f'C{o} {o} 0 {load_f}')
     lines.append(f'CWCK WORD_CLK 0 50f')
-    # tail replicas of the pad output stage (MAIN/POST: 8x4 fingers, TMDS: 8x2 fingers of W20/L1)
+    # Tail-gate load of the pad output stage (MAIN/POST: 8x4 fingers, TMDS: 8x2 fingers of W20/L1,
+    # ~1-3 pF on <b>_BIAS), with the drain tied to the source.  The tail current is NOT measured
+    # here: an ideal source on the drain of these pF devices (the earlier bench) makes the source's
+    # branch current carry C/h times the gate node's Newton update, which cannot converge once a
+    # source breakpoint cuts the step; ngspice 43 and 47 then abort ("Timestep too small ...
+    # vttmds#branch" at ss/22/3.15, "vtpost#branch" elsewhere) at the end of a phase-source ramp.
+    # Tail currents are measured by the DC benches (sim_static.dac_sweep / quiescent).
     for b, m in (('MAIN', 32), ('POST', 32), ('TMDS', 16)):
-        lines.append(f'VT{b} T{b} 0 1.0')
-        lines.append(f'XT{b} T{b} {b}_BIAS 0 0 nfet_03v3 w=20u l=1u m={m}')
+        lines.append(f'XT{b} 0 {b}_BIAS 0 0 nfet_03v3 w=20u l=1u m={m}')
     lines.append(extra)
+    lines = driver_impedance(lines)
     lines.append('X0 ' + ' '.join(nets[p] for p in ports) + f' {subckt}')
     probes = probes or ['WTX_PH0', 'WORD_CLK', 'CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N',
                         'CMD_TMDS_P', 'CMD_TMDS_N', 'MAIN_BIAS', 'TMDS_BIAS', 'WTX_EXT_DATA']
-    vecs = ' '.join(f'v({p})' for p in probes) + ' i(VTMAIN) i(VTPOST) i(VTTMDS) i(VDD)'
-    # ngspice sizes its output buffer for every node at the print step, which
-    # overflows for long runs of the extracted netlist: print on a 20 ps grid
-    # (interpolated) while limiting the internal step to 4 ps.
+    vecs = ' '.join(f'v({p})' for p in probes) + ' i(VDD)'
+    # ngspice sizes its output buffer for every node at the print step, which overflows for the
+    # extracted netlist without `interp` ("memory required ... more than available"): print on a
+    # >= 20 ps grid, interpolated, internal step limited to 4 ps.  (Corrupt interpolated samples
+    # were seen only with a print grid finer than the internal step, 1 ps; not used here.)
     tstep = 20e-12 * max(1.0, 2.5e9 / rate)
     lines += ['.options reltol=1e-3 method=gear interp', f'.tran {tstep:.3e} {tstop:.6e} 0 4e-12', '.control',
               f'save {vecs}', 'set wr_singlescale', 'run', 'wrdata wave.txt ' + vecs,
               '.endc', '.end']
-    return '\n'.join(lines) + '\n', probes + ['I_TMAIN', 'I_TPOST', 'I_TTMDS', 'I_VDD']
+    return '\n'.join(lines) + '\n', probes + ['I_VDD']
 
 
 def crossings(t, v, th=VTH, rising=None):
@@ -149,6 +212,14 @@ def decode(w, node, rate, t_start, t_end, vdd=3.3):
                 eye_width_est=ui - jitter_pp, vertical_margin=margin, n_cross=len(xs))
 
 
+def sim_abort(log):
+    """Return the ngspice abort line (e.g. 'Timestep too small ...') or None."""
+    for line in log.replace('\r', '\n').splitlines():
+        if 'too small' in line or 'simulation(s) aborted' in line or 'run simulation(s) aborted' in line:
+            return line.strip()[:200]
+    return None
+
+
 def align(bits, expected):
     best = None
     n = len(bits)
@@ -160,7 +231,7 @@ def align(bits, expected):
 
 
 def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, vdd=3.3, mode='serial', bpc=4,
-             words=None, codes=(109, 32, 125), en=(1, 1, 0), extra='', tag='case', mounts=()):
+             words=None, codes=(109, 32, 125), en=(1, 1, 0), extra='', tag='case', mounts=(), fallback=False):
     work = Path(work); work.mkdir(parents=True, exist_ok=True)
     tw = 20 / rate
     ser_on = 2e-9
@@ -169,14 +240,18 @@ def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, v
     (pdir / Path(dut).name).write_text(Path(dut).read_text())
     zero = [[0] * 20]
     deck, names = build(dut, subckt, rate=rate, words=zero, word_t0=1, tstop=ser_on + 3 * tw, vdd=vdd,
-                        corner=corner, temp=temp, codes=codes, en=en, extra=extra, ser_on=ser_on, bpc=bpc)
+                        corner=corner, temp=temp, codes=codes, en=en, extra=extra, ser_on=ser_on, bpc=bpc,
+                        fallback=fallback)
     (pdir / 'tb.sp').write_text(deck)
     _, log = tools.ngspice(pdir, 'tb.sp', mounts=mounts)
+    abort = sim_abort(log)
+    if abort:
+        return dict(ok=False, reason='simulator abort (phase pass): ' + abort, dut_sha256=tools.sha(dut))
     w = tools.read_wrdata(pdir / 'wave.txt', names)
     rises = crossings(w['time'], w['WORD_CLK'], rising=True)
     rises = rises[rises > ser_on]
     if len(rises) < 2:
-        return dict(ok=False, reason='WORD_CLK not running', log_tail=log[-2000:])
+        return dict(ok=False, reason='WORD_CLK not running', dut_sha256=tools.sha(dut), log_tail=log[-2000:])
     word_t0 = float(rises[0])
     measured_tw = float(np.mean(np.diff(rises)))
     # pass 2: data
@@ -188,14 +263,21 @@ def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, v
     ddir = work / f'{tag}_data'; ddir.mkdir(exist_ok=True)
     (ddir / Path(dut).name).write_text(Path(dut).read_text())
     deck, names = build(dut, subckt, rate=rate, words=words, word_t0=word_t0, tstop=tstop, vdd=vdd,
-                        corner=corner, temp=temp, codes=codes, en=en, extra=extra, ser_on=ser_on, bpc=bpc)
+                        corner=corner, temp=temp, codes=codes, en=en, extra=extra, ser_on=ser_on, bpc=bpc,
+                        fallback=fallback)
     (ddir / 'tb.sp').write_text(deck)
     _, log = tools.ngspice(ddir, 'tb.sp', mounts=mounts)
+    abort = sim_abort(log)
+    if abort:
+        return dict(ok=False, reason='simulator abort: ' + abort, dut_sha256=tools.sha(dut), bit_rate_bps=rate,
+                    bits_per_ring_cycle=bpc, ring_hz=rate / bpc, corner=corner, temp_c=temp, vdd=vdd,
+                    log_tail=log[-1500:])
     w = tools.read_wrdata(ddir / 'wave.txt', names)
     expected = [b for wd in words for b in wd]
     t0 = word_t0 + 2 * tw
     t1 = word_t0 + (nwords - 1) * tw
-    res = dict(bit_rate_bps=rate, bits_per_ring_cycle=bpc, ring_hz=rate / bpc, corner=corner, temp_c=temp, vdd=vdd,
+    res = dict(dut_sha256=tools.sha(dut), serializer='generic (fallback, rate code 11)' if fallback else 'compact core',
+               bit_rate_bps=rate, bits_per_ring_cycle=bpc, ring_hz=rate / bpc, corner=corner, temp_c=temp, vdd=vdd,
                word_clk_period_s=measured_tw, word_t0_s=word_t0)
     for node in ('CMD_MAIN_N', 'CMD_MAIN_P'):
         d = decode(w, node, rate, t0, t1)
@@ -218,7 +300,7 @@ def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, v
                              for k in (0, 1, 2)}
         res['CMD_POST_P']['bits_compared'] = int(len(post) - 1)
     sel = w['time'] > t0
-    res['tail_current_a'] = {b: float(-np.mean(w[f'I_T{b}'][sel])) for b in ('MAIN', 'POST', 'TMDS')}
+    res['tail_current_a'] = None   # measured by sim_static (DC), see build()
     res['bias_v'] = {b: float(np.mean(w[f'{b}_BIAS'][sel])) for b in ('MAIN', 'TMDS')}
     res['supply_current_avg_a'] = float(-np.mean(w['I_VDD'][sel]))
     m = res.get('CMD_MAIN_N', {})

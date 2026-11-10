@@ -149,6 +149,40 @@ the clamp is transparent with the island on.
 The hot-plug ring current peak (0.77–0.83 mA) is capacitive displacement through
 the off pass device during the 100 ns pad edge, not DC conduction.
 
+### 2a. Isolation-clamp family for LU-02 (pads owner, 2026-11-10)
+
+Risk register LU-02 / RA-2: v3 had no clamp instances. The family adds a
+clock-strength logic clamp and an analog/RF clamp with no series element
+(`design.py:ISO_CELLS`, built by `iso_family.sh <outdir>`; the NMOS-only cells
+use the bank-A-only path of `layout.logic_block`).
+
+| Cell | Function / ports | Area (µm²) | Use |
+| --- | --- | --- | --- |
+| `iso_clamp` | Y = A·!ISO; `A ISO Y VDD VSS` | 906 | slow status nets (analog_status[0], WTX_EXT_DATA) |
+| `iso_clamp_x4` | same function, 4× output stage | 1,025 | clocks routed to the macro (fc_src[0..3], ct_wclk, ct_word_clk) |
+| `iso_pd` | nfet_03v3 0.5/0.28 pull-down Y→VSS while ISO=1; `Y ISO VSS` | 95 | LO_IP/IN/QP/QN, WMON_IN (gate-only analog/RF nets) |
+| `iso_pd2` | two `iso_pd` in one cell | 176 | **not recommended**: extracted leg C is asymmetric (P 1.09 fF, N 3.02 fF); use two `iso_pd` for matched LO legs |
+
+Physical (`scratch/iso-family/`): Magic DRC 0, KLayout DRC 0 (sak), netgen
+unique match, PEX, and the tapeout KLayout precheck (main 0 / antenna 0) for
+all four after `gds_uniquify`.
+
+Extracted checks (`scratch/iso-family/sims/iso_sims.py`, `iso-sims.json`):
+
+| Check | Result |
+| --- | --- |
+| `iso_pd` on a 2.45 GHz LO leg (100 Ω source, 30 fF mixer gate), ISO=0, tt/ss/ff × 22/32 °C | amplitude −0.0016 dB worst, phase ≤ 0.22°; load 1.75 fF + junction |
+| `iso_pd` release with the driver unpowered (node left at 1.0 V, 1 GΩ) | < 50 mV in ≤ 369 ps after ISO rises |
+| `iso_clamp` / `iso_clamp_x4` A→Y into 200 fF (~1 mm), 12 functional points | worst 2.08 ns / 0.93 ns; high level ≥ 3.11 / 3.15 V |
+| ISO=1, A at 0 / 1.65 / 3.63 V (floating or back-powered island), tt/27, ss/0/3.63, ff/85/3.63, ss/85/3.15 | Y ≤ 0.0001 mV |
+
+ISO source: `ISLAND_OFF_<driving island>` = NOT `island_on[k]` (honours
+`pgood_override`, mismatch I3); the switch's own ISO stays the backstop.
+Placement list for assembly: `scratch/iso-family/publish/iso-placement.json`
+(13 cells, 8.4k µm²). Two v3 binding defects block two of the nets:
+`ct_word_clk` and `island_on[0]` each have two drivers (see interface-changes
+"Pads owner: LU-01 / ESD-04 / LU-02 / PDN-04").
+
 ## 3. Analog test bus
 
 ### Architecture
@@ -171,7 +205,7 @@ between two non-zero codes. So:
 | `atb_pad` (with control) | 2: `analog[0]` = ATB0 force, `analog[1]` = ATB1 sense | TG 8/16 µm; PMOS well auto-bulk max(VDD, PAD); off gate to VMAX; bus shunted while open | 6 626 µm² |
 
 **Tree area** (bounding boxes, no routing):
-- Register-map tree (54 sense leaves, 20 force leaves, 7 groups, 2 pads): **0.123 mm²**.
+- Register-map tree (57 sense leaves, 20 force leaves, 7 groups, 2 pads): **0.125 mm²**.
 - A full 96-slot tree (96 sense, 32 force, 16 groups, 2 pads): 0.226 mm².
 - Target: ≤ 0.3 mm².
 

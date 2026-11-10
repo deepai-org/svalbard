@@ -63,7 +63,12 @@ def ngspice(work, deck, timeout=7200, mounts=()):
 def model_header(corner='typical', temp=27, pdk=ANALOG_PDK):
     return (f'.include {pdk}/libs.tech/ngspice/design.ngspice\n'
             f'.lib {pdk}/libs.tech/ngspice/sm141064.ngspice {corner}\n'
+            f'.lib {pdk}/libs.tech/ngspice/sm141064.ngspice {_diode(corner)}\n'   # antenna diodes (extracted)
             f'.temp {temp}\n.option savecurrents=0\n')
+
+
+def _diode(corner):
+    return {'ss': 'diode_ss', 'ff': 'diode_ff'}.get(corner, 'diode_typical')
 
 
 def read_wrdata(path, names):

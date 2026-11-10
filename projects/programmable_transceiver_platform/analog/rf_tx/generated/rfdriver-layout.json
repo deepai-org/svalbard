@@ -9,13 +9,13 @@
  "lvs_final": "Final result: Circuits match uniquely.",
  "bbox_um": {
   "x0": 0.0,
-  "y0": -210.55999999999918,
-  "x1": 370.89999999999986,
+  "y0": -234.81999999999917,
+  "x1": 472.38,
   "y1": 1.0
  },
- "width_um": 370.9,
- "height_um": 211.56,
- "area_um2": 78467.6,
+ "width_um": 472.38,
+ "height_um": 235.82,
+ "area_um2": 111396.7,
  "area_ceiling_um2": 98100,
  "rows": [
   [
@@ -29,6 +29,10 @@
    "A2_N",
    "R2_p",
    "R2_n",
+   "A3_P",
+   "A3_N",
+   "R3_p",
+   "R3_n",
    "RATBP_p",
    "RATBP_n",
    "SF_p",
@@ -39,6 +43,7 @@
   [
    "T1",
    "T2",
+   "T3",
    "TS_p",
    "TS_n",
    "TO0",
@@ -50,15 +55,7 @@
   [
    "HDR",
    "RO_p0",
-   "RO_p1",
-   "RO_p2",
-   "RO_p3",
    "RO_n0",
-   "RO_n1",
-   "RO_n2",
-   "RO_n3",
-   "CLP_p",
-   "CLP_n",
    "RATBC_p",
    "RATBC_n"
   ],
@@ -127,19 +124,19 @@
  ],
  "trunked_nets": 33,
  "circuit": {
-  "devices": 96,
-  "mos_instances": 79,
-  "mos_fingers": 341,
-  "resistors": 17,
-  "nets": 55
+  "devices": 93,
+  "mos_instances": 80,
+  "mos_fingers": 529,
+  "resistors": 13,
+  "nets": 58
  },
  "hashes": {
-  "rfdriver.spice": "220d37fe843f659d1c6c79fb42551524a4a31e5f016d4de16f7045dc10a5c196",
-  "circuits.py": "59382037c2ad25a85d7086c05a59cb0bc7b263fddbe9ca558a6447f9f9f272fb",
+  "rfdriver.spice": "b3131d42fbb4f82ba88b4439777ed00a13ced474d2b400e3a119232ff21bbe4b",
+  "circuits.py": "c8af6244384cfb858ad85036993c2ab02cf6d720367b4292acfe4df601e1c8af",
   "layoutlib.py": "067f29bd000ba2e414787dfd146ba34e49c7f5c7c88bae3d1a4b606447c5c111",
-  "generate.py": "67829d6dd34ad18bb9a2f4d86496826eaf7735e9124b84cd45f31ff9706cf8cb",
-  "rfdriver.gds": "6ef9f3565914d6f637f64b8cae4146abd1bd35a4827caa4b831abe84d8128024",
-  "rfdriver.ext.spice": "e9d618ec724ff65f4eacb056e5f98fa83b1742ff8f187728e7fccb8bc82210f1"
+  "generate.py": "1d7aac03cecd7bce13996c43a809ebd42d8507039f337402fb45c8e185a12b24",
+  "rfdriver.gds": "527be78671e098304d9a7d98a8730bd8933da7d4d516b0320907d6e4b1166fca",
+  "rfdriver.ext.spice": "e5048dc5d4162da9d35c64771e66e8d3832910e60e5971ae2a0d6fdbf93c7696"
  },
  "limitations": [
   "Extraction is capacitance-only (ext2spice cthresh 0); wire and via resistance are not extracted.",

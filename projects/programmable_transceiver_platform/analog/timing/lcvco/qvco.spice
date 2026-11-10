@@ -1,0 +1,158 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_lc_qvco: autonomous RF LO, 2.4-2.5 GHz quadrature LC VCO (schematic).
+*
+* Two identical complementary cross-coupled LC cores (I and Q) coupled in
+* parallel (P-QVCO): each NMOS switching device has an NMOS coupling device
+* beside it on the same drain and tail, gated by the other core.  I+ is
+* coupled from Q+, Q+ from I- (the sign inversion forces I to lead/lag Q by
+* 90 deg).  Quadrature comes from the oscillators themselves: no polyphase,
+* no 4.9 GHz divider.
+*
+* Tank per core: pt_spiral (lcvco/spiral.py: 3-turn square, 300 um, M5||M4||M3,
+*   L 2.65 nH FastHenry / 2.91 nH Mohan, model variants for L +-10 % and low Q)
+*   || fixed MIM 0.7 pF across the tank
+*   || 4-bit binary differential switched-MIM bank (BAND[3:0], bit k: two
+*   cap_mim_2f0 of 0.1*2^k pF in series through an NMOS switch, both MIM
+*   bottom nodes pulled to VSS by the switch-side NMOS while on)
+*   || accumulation varactors cap_nmos_03v3_b (gate on tank, n-well on VTUNE)
+*   with a 2 ohm series resistance per varactor (the PDK moscap model is
+*   lossless; 2 ohm corresponds to Q ~ 30 at 2.45 GHz for the ~1 pF max).
+* Core current: NMOS tail mirrored x(10*ntail/2) from IBIAS (r2: ntail=120,
+*   10 uA -> 6 mA per core; r1 was 4 mA).
+* r2 (2026-11-10): r1 did not start at ss/32 C/3.15 V with the low-Q +10 % L
+*   inductor (and at ff/llo low-Q in band 15).  Small-signal tank impedance at
+*   the static point (scratch/timing/lcvco/zac.py): r1 left a net +2.7 mS
+*   loss; more tail current alone (8 mA/core) still left +1.9 mS because the
+*   pair was gm/W-limited.  r2: NMOS pair 40 -> 80 um, PMOS 80 -> 120 um per
+*   side, tail 6 mA/core; the fixed MIM 0.70 -> 0.55 pF (wcf 18.7 -> 16.5 um)
+*   returns the added device capacitance so the band top is unchanged.
+*   Gate R qualified at rgf = 16 ohm per 2 um finger (2x the 8.3 ohm estimate
+*   below; the mandate's 60-150 ohm per single-finger 10 um device scales to
+*   7.5-12 ohm per double-contacted 2 um finger).
+* Outputs (r3, 2026-11-10): the tank nodes IP/IN/QP/QN go DC-coupled to the
+*   pt_lo_ext CML driver inputs (LOI_IP/IN/QP/QN, INT=1); the r2 rail-to-rail
+*   LOI buffers (pt_lc_buf x4, 6-15 mA, 44 % duty) are removed.  PRE
+*   (prescaler tap, from I+) for the frequency loop stays, with its three
+*   matching dummies.
+* EN=0: tail mirrors off; the PRE inverters are unpowered (PMOS header).
+.param rgf=16 ntail=120 nn=4 np=6 wcf=16.5
+.subckt pt_lc_qvco EN VTUNE IBIAS BAND0 BAND1 BAND2 BAND3 PRE IP IN QP QN VDD VDDB VSS
+XEI EN ENB VDD VSS pt_t_inv1
+XNB IBIAS IBIAS NBS VSS nfet_03v3 w=2u l=1u
+XNBS NBS EN VSS VSS nfet_03v3 w=4u l=0.28u
+XNBC IBIAS ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XCI IP IN QP QN TSI VTUNE IBIAS BAND0 BAND1 BAND2 BAND3 VDD VSS pt_lc_core
+XCQ QP QN IN IP TSQ VTUNE IBIAS BAND0 BAND1 BAND2 BAND3 VDD VSS pt_lc_core
+XBP IP PREB ENB VDDB VSS pt_lc_acinv
+XBP2 PREB PRE VDDB VSS pt_lc_inv1
+* matching dummy on the other three nodes for the prescaler tap
+XBD1 IN DD1 ENB VDDB VSS pt_lc_acinv
+XBD2 QP DD2 ENB VDDB VSS pt_lc_acinv
+XBD3 QN DD3 ENB VDDB VSS pt_lc_acinv
+.ends
+
+* one core: tank nodes P/N; coupling inputs CP (drives the device beside P's
+* switch) and CN; tail TS
+.subckt pt_lc_core P N CP CN TS VTUNE IBIAS B0 B1 B2 B3 VDD VSS
+* explicit poly gate resistance (the PDK models have rgatemod=0): per finger
+* Rg_f = Rsh*Wf/(12*L) + Rcont/2 with poly Rsh 7.3 ohm/sq and pc contact 8 ohm
+* per cut (gf180mcuD.tech extract), Wf = 2 um, L = 0.28 um, contacted on both
+* sides: 4.3 + 4 = 8.3 ohm per finger (param rgf); device Rg = rgf / fingers.
+* Conservative check: rgf=51 (Wf 5 um, one-side contact), see README.
+XT TS IBIAS VSS VSS nfet_03v3 w=10u l=1u m={ntail}
+RG1 N GN1 {rgf/(10*nn)}
+RG2 P GN2 {rgf/(10*nn)}
+RG3 CN GC1 {rgf/12}
+RG4 CP GC2 {rgf/12}
+RG5 N GP1 {rgf/(10*np)}
+RG6 P GP2 {rgf/(10*np)}
+XN1 P GN1 TS VSS nfet_03v3 w=20u l=0.28u m={nn}
+XN2 N GN2 TS VSS nfet_03v3 w=20u l=0.28u m={nn}
+XC1 P GC1 TS VSS nfet_03v3 w=24u l=0.28u
+XC2 N GC2 TS VSS nfet_03v3 w=24u l=0.28u
+XP1 P GP1 VDD VDD pfet_03v3 w=20u l=0.28u m={np}
+XP2 N GP2 VDD VDD pfet_03v3 w=20u l=0.28u m={np}
+XL P N VSS pt_spiral
+XCF P N cap_mim_2f0_m4m5_noshield c_width={wcf*1u} c_length={wcf*1u}
+XV1 P V1 VTUNE VSS pt_lc_var
+XV2 N V2 VTUNE VSS pt_lc_var
+XS0 P N B0 VSS pt_lc_sw0
+XS1 P N B1 VSS pt_lc_sw1
+XS2 P N B2 VSS pt_lc_sw2
+XS3 P N B3 VSS pt_lc_sw3
+.ends
+
+.subckt pt_lc_var A M VT VSS
+RS A M 2
+XV M VT pt_var_nwell AREA=1.69e-10
+.ends
+
+* PDK cap_nmos_03v3_b C(V) = corner*A*(c1 + c2*tanh(c3*V + c4)) (sm141064.spice),
+* implemented through its integral charge Q(V): EQ sets node QN to Q(V) (in
+* volts = coulombs x 1e12), a 1 pF capacitor turns dQ/dt into a current in VQS,
+* and FQ mirrors it into G-W. The PDK element itself (a voltage-dependent C on
+* an E-source branch) and the B-source forms ddt(Q(V)) / C(V)*ddt(V) all stop
+* this ngspice's transient ("timestep too small") within the first 20 ps.
+* ln(cosh(x)) = |x| + ln(1 + exp(-2|x|)) - ln 2 (no overflow).
+.subckt pt_var_nwell G W AREA=1e-10
+.param c1=0.002458 c2=0.001533 c3=1.515152 c4=0.560606
+EQ QN 0 value={1e12*cap_nmos_03v3_b_corner*AREA}*(c1*v(G,W) + (c2/c3)*(abs(c3*v(G,W) + c4) + ln(1 + exp(-2*abs(c3*v(G,W) + c4))) - 0.693147))
+CQ QN QS 1p
+VQS QS 0 0
+FQ G W VQS 1
+.ends
+
+* switched-cap unit: P -MIM- X -NMOS(B)- Y -MIM- N; X/Y pulled to VSS by
+* small NMOS when B=1 (defines the DC level), floating when B=0
+.subckt pt_lc_sw0 P N B VSS
+XCA P X cap_mim_2f0_m4m5_noshield c_width=7.1u c_length=7.1u
+XCB N Y cap_mim_2f0_m4m5_noshield c_width=7.1u c_length=7.1u
+XS X B Y VSS nfet_03v3 w=6u l=0.28u m=4
+XGX X B VSS VSS nfet_03v3 w=1u l=0.28u
+XGY Y B VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_lc_sw1 P N B VSS
+XCA P X cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+XCB N Y cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+XS X B Y VSS nfet_03v3 w=6u l=0.28u m=8
+XGX X B VSS VSS nfet_03v3 w=1u l=0.28u
+XGY Y B VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_lc_sw2 P N B VSS
+XCA P X cap_mim_2f0_m4m5_noshield c_width=14.1u c_length=14.1u
+XCB N Y cap_mim_2f0_m4m5_noshield c_width=14.1u c_length=14.1u
+XS X B Y VSS nfet_03v3 w=6u l=0.28u m=16
+XGX X B VSS VSS nfet_03v3 w=1u l=0.28u
+XGY Y B VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_lc_sw3 P N B VSS
+XCA P X cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+XCB N Y cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+XS X B Y VSS nfet_03v3 w=6u l=0.28u m=32
+XGX X B VSS VSS nfet_03v3 w=1u l=0.28u
+XGY Y B VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+
+.subckt pt_lc_buf A Y ENB VDD VSS
+XA A M ENB VDD VSS pt_lc_acinv
+XB M Y VDD VSS pt_lc_inv3
+.ends
+* r2: the self-biased input inverter sits at its trip point and drew 16 mA
+* (eight of them) with EN = 0.  ENB now opens a PMOS header and pulls Y low
+* (Y = 0 -> feedback R -> AI = 0: no current); the next inverter holds Y high.
+.subckt pt_lc_acinv A Y ENB VDD VSS
+XC A AI cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+XRF Y AI VSS ppolyf_u_1k r_width=1u r_length=50u
+XN Y AI VSS VSS nfet_03v3 w=6u l=0.28u
+XP Y AI VH VDD pfet_03v3 w=12u l=0.28u
+XH VH ENB VDD VDD pfet_03v3 w=24u l=0.28u
+XZ Y ENB VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_lc_inv1 A Y VDD VSS
+XN Y A VSS VSS nfet_03v3 w=6u l=0.28u
+XP Y A VDD VDD pfet_03v3 w=12u l=0.28u
+.ends
+.subckt pt_lc_inv3 A Y VDD VSS
+XN Y A VSS VSS nfet_03v3 w=6u l=0.28u m=3
+XP Y A VDD VDD pfet_03v3 w=12u l=0.28u m=3
+.ends

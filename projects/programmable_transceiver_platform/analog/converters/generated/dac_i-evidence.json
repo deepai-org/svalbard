@@ -1,26 +1,28 @@
 {
   "block": "dac_i",
   "top_cell": "pt_dac_i",
-  "generated_utc": "2026-11-08T10:55:36Z",
+  "generated_utc": "2026-11-10T01:18:09Z",
   "source_hashes": {
-    "dac_i.spice": "sha256:3bca52c1963aa203a51a95ebf588bee8b3fe9951a4606ed33f39dec41554da6e",
-    "circuits.py": "sha256:6bc9d4a406f770f07fb0868608439edf06c5cf9e5e6ee3772c748eaf71b24ea8",
-    "lib/convkit.py": "sha256:e75a0a2d28befc9ec4ffcae448b55dac611d6ff0a4960b203e853b6ccb7cdf95",
-    "flow.py": "sha256:e00c51c4bb85581839ebf76124765d2aded27ce6cff149f4fc0fce71ed946bdf",
-    "benches.py": "sha256:0eb8fa7a44e546979ebf01628fee582fc093e5fa52d8cb17430bdfeccc74089f",
+    "dac_i.spice": "sha256:08f0db2de05d3bcff37c05d43ffc1deeee688f1ce93180ba141cd65de1ec46d2",
+    "circuits.py": "sha256:c2e34cfbbbf503ebb78b43ec0302c01632bf872b04d6fc7ea5f42116cd5b1210",
+    "lib/convkit.py": "sha256:335aaf313b48811efd7abdca25e07c0e4535a19b8c5e4e14de11ec17fed43a6e",
+    "flow.py": "sha256:2cfac4be4d486d95f11a11ab4c09217a37d163a9daa2d96bf1b4eb4976097817",
+    "benches.py": "sha256:4315c470b4fba951ebdeed473b74acc279820a9ffc018f4261b5f6565deacebc",
     "generated/macros/dac_logic.gds": "sha256:ebe8c850e83d9de65f18914e03c0d365bd4119daf08be85cc43cfbe11dfd7293",
     "generated/macros/dac_logic.lef": "sha256:a36a17b11a2e3f1cb63d4935de87e941ffc73425d288ca3ccd22d2c80895df86",
     "generated/macros/dac_logic.pnl.v": "sha256:a4e8477ed08e9959d423a14dd39303b71536baf8ed5bb79b7b1c8bfd0007a0e0",
-    "rtl/adc_sar_delay.v": "sha256:eb1ecf092e6615fb0dd8f91196a770d7ccae839a6f6d9109b83b2d04ed47861e",
-    "rtl/adc_sar_logic.v": "sha256:c11859e2c1143288b883397ff32b3514f64807b01e3aa02cd9ef9c32eaea56c4",
+    "rtl/adc_code_reg.v": "sha256:84c184cbaf56991421de1a00b68b65da5a7e27e43cbca04eb632b1b97aef2a0b",
+    "rtl/adc_sar_delay.v": "sha256:32042162b2f1f933f1d759d194b6f49c00e1b6ebc260126baa7f782d263fede1",
+    "rtl/adc_sar_logic.v": "sha256:5e7c512539bcfe20a730c55856ca754ec3666df0cfcb90e6b5c00b48427d8e63",
     "rtl/dac_logic.v": "sha256:94cd12d47c9c808c1bb04b1a3182dd998ed994ef8ce7593297551b0b3356ecb3",
+    "rtl/tb_adc_code_reg.v": "sha256:afc5738d87b84adf3beb894b1ab7497dc88637636ee45586819cd5dc9da09fbc",
     "rtl/tb_adc_sar_logic.v": "sha256:a73dc0a64c15fb64779b80e11d9ce2e6ab4f359738fe4aefc2b4cf1508832339",
     "rtl/tb_dac_logic.v": "sha256:0a651fb00017aa23e8f1e8917488404350f8b83be1ed1407f044dab6f1271679"
   },
   "artifact_hashes": {
-    "generated/dac_i.gds": "sha256:86dde7cc66f80a8bfb0eeb4d2e3e4347fc410dc320d8a61d1b42b8723f52578d",
-    "generated/dac_i.mag": "sha256:c7be91300fa189f24e7b906bfcd77300e78dc402f777557e2a7689d0a6530a02",
-    "generated/dac_i.ext.spice": "sha256:9055e755c33c7a7fbcebbd6d3a77ccfd8289a1ebc0a99b1874c24392335e7856"
+    "generated/dac_i.gds": "sha256:0895f6c2c23ee2239c05857381247f6b6a2ac8a232afc351a9cc5cabbf3ca5ba",
+    "generated/dac_i.mag": "sha256:1aee579dc527c241c54c1fce97e67a3089a1a42e9322d09abc7601143ddc5434",
+    "generated/dac_i.ext.spice": "sha256:6d6dccd0e991662c37d72ffdf8aad6485f7320b9a6701583243725d8775aa484"
   },
   "images": {
     "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -51,14 +53,14 @@
           "case": "OUTP held at 1.65 V while disabled / island unpowered",
           "value": {
             "powered_disabled": {
-              "leak_A_at_1p65V": 5.037112e-12,
-              "cap_fF_at_10MHz": 63.10939,
-              "conductance_S": 3.577249e-10
+              "leak_A_at_1p65V": 4.346025e-12,
+              "cap_fF_at_10MHz": 99.50056,
+              "conductance_S": 2.9894e-09
             },
             "island_unpowered": {
-              "leak_A_at_1p65V": 5.58588e-12,
-              "cap_fF_at_10MHz": 62.80764,
-              "conductance_S": 1.950294e-11
+              "leak_A_at_1p65V": 5.597189e-12,
+              "cap_fF_at_10MHz": 98.31582,
+              "conductance_S": 7.587542e-11
             }
           }
         }
@@ -120,8 +122,7 @@
         "rc": "0",
         "report": "generated/dac_i-klayout-drc.lyrdb"
       },
-      "state": "pass",
-      "criterion": "basic function: +/-1 V class full scale, monotonic at sampled codes, |error| < 32 LSB (benches.dac_bench)"
+      "state": "pass"
     },
     "observable": {
       "state": "pass",
@@ -138,19 +139,19 @@
         "rf_tx_external_baseband: debug.bb_tap inject_tx_filter / inject_tx_mixer with dac_*.config.enable=0 -> OUTP/OUTN series switches open"
       ],
       "bypass_loading_fF": {
-        "powered_disabled": 63.10939,
-        "island_unpowered": 62.80764
+        "powered_disabled": 99.50056,
+        "island_unpowered": 98.31582
       },
       "evidence": {
         "powered_disabled": {
-          "leak_A_at_1p65V": 5.037112e-12,
-          "cap_fF_at_10MHz": 63.10939,
-          "conductance_S": 3.577249e-10
+          "leak_A_at_1p65V": 4.346025e-12,
+          "cap_fF_at_10MHz": 99.50056,
+          "conductance_S": 2.9894e-09
         },
         "island_unpowered": {
-          "leak_A_at_1p65V": 5.58588e-12,
-          "cap_fF_at_10MHz": 62.80764,
-          "conductance_S": 1.950294e-11
+          "leak_A_at_1p65V": 5.597189e-12,
+          "cap_fF_at_10MHz": 98.31582,
+          "conductance_S": 7.587542e-11
         }
       }
     }

@@ -1,5 +1,5 @@
 * SPDX-License-Identifier: Apache-2.0
-* VERSION: pt_pll_ring r6 (2026-11-08) -- ports REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL VDD VSS
+* VERSION: pt_pll_ring r7 (2026-11-09; r6a 2026-11-09, r6 2026-11-08) -- ports REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL VDD VSS
 * pt_pll_ring: wired-side PLL with the compact 8-phase ring (P3/P4 first cut).
 * Shared loop pieces from pll.spice (PFD, charge pump, filter, lock detector);
 * VCO = ct_ring8 (4-stage pseudo-differential ring, O0..O7 at 45 deg) with an
@@ -44,7 +44,11 @@ XRO2 REFOB REFO VDD VSS pt_t_inv2
 * held VCTRL; an external pump (pt_cdr bang-bang) may still drive ATB_VCTRL.
 * HOLD=0 releases at the next reference falling edge; the PFD restarts from
 * reset (normal re-acquisition).
-XHI REFP REFPN VDD VSS pt_t_inv1
+* r6a (2026-11-09): the HOLD flop clock is NOR(REFP, ENB), not !REFP.  With
+* EN=0 REFP is held low, so an inverter held CK high and ct_tspcd's reset
+* NMOS (XNR) fought its Y-gated pull-up (XP4): 509 uA static in the disabled
+* state (safe bench, schematic and extracted).  CK low in reset removes the fight.
+XHI REFP ENB REFPN VDD VSS pt_t_nor2
 XHF REFPN HOLD HOLDS ENB VDD VSS ct_tspcd
 XHN HOLDS HOLDSB VDD VSS pt_t_inv1
 XPEN EN HOLDSB PENB VDD VSS pt_t_nand2
@@ -61,6 +65,24 @@ XPS2 PS2 PB VDD VDD pfet_03v3 w=8u l=2u
 XPE2 PS N16B PS2 VDD pfet_03v3 w=2u l=0.28u
 XPU ATB_VCTRL UPB PS VDD pfet_03v3 w=2u l=0.28u
 XND ATB_VCTRL DN NS VSS nfet_03v3 w=1u l=0.28u
+* r7 (2026-11-09) current steering: while UP (DN) is off its current source is steered into
+* VDUM, which a unity-gain PMOS-input OTA holds at VCTRL.  r6a let PS float to VDD and NS to VSS
+* between pulses; at switch-on PS dumped its charge into VCTRL (schematic: +35 mV in a 0.64 ns
+* UP/DN overlap, i.e. ~48 uA effective vs a 20 uA pump), which the loop cancelled with ~1 ns of
+* DN-only per reference cycle: 38 mV VCTRL ripple, PFD activity 6.5 % (analog LOCK dropped at
+* 625/810 MHz) and part of the HOLD step.  r7 schematic: ripple 3.6 mV, activity 3.2 %, HOLD step
+* +273 ppm (r6a +850 ppm).  In HOLD both sources run into VDUM, so the off switches see ~0 V.
+* EN=0: OTA tail is the PB mirror (no current), VDUM clamped to VSS.
+XDI DN DNB VDD VSS pt_t_inv1
+XPUD VDUM UP PS VDD pfet_03v3 w=2u l=0.28u
+XNDD VDUM DNB NS VSS nfet_03v3 w=1u l=0.28u
+XAT TL PB VDD VDD pfet_03v3 w=8u l=2u
+XA1 AM ATB_VCTRL TL VDD pfet_03v3 w=8u l=1u
+XA2 VDUM VDUM TL VDD pfet_03v3 w=8u l=1u
+XA3 AM AM VSS VSS nfet_03v3 w=4u l=2u
+XA4 VDUM AM VSS VSS nfet_03v3 w=4u l=2u
+XCD VSS VDUM VSS VSS nfet_03v3 w=10u l=10u m=2
+XCLD VDUM ENB VSS VSS nfet_03v3 w=1u l=0.28u
 XNS0 NS IBIAS VSS VSS nfet_03v3 w=4u l=2u
 XNS2 NS2 IBIAS VSS VSS nfet_03v3 w=4u l=2u
 XNE2 NS N16 NS2 VSS nfet_03v3 w=2u l=0.28u

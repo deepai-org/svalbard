@@ -30,12 +30,47 @@ reference reservoir belongs to the 0.148 mm² reference-buffer allocation.
 At the conservative 0.9 fF/µm² planning density, 1 nF alone needs 1.111 mm² of
 plates before routing. Density, overhead and impedance need physical checking.
 
-| Configuration | Allocated current | Mode ceiling | Margin |
-| --- | ---: | ---: | ---: |
-| RF RX or TX, external clock | 224.09 mA | 240 mA | 15.91 mA |
-| RF RX or TX, autonomous synthesis | 253.02 mA | 240 mA | −13.02 mA |
-| Wired, base allocation | 244.82 mA | 292 mA | 47.18 mA |
-| USB, base allocation | 231.25 mA | 292 mA | 60.75 mA |
+## Reconciled mode currents (2026-11-09)
+
+`spec/budgets/power_budget.py` produces `spec/budgets/power-budget.json` and is the only
+source of mode totals. Run with `--check` to make it fail on a ceiling violation. It sums
+the per-block `current_budget_ma` in `analog-architecture.json` and applies each branch
+override once. These totals match `resource_totals.current_ma`.
+
+The previous `tapeout-readiness.json:current_envelope_ma` values (236.27 / 244.55 /
+260.96 / 247.39 mA) cannot be reproduced from any recorded derivation, so this script
+supersedes them. Wired and USB were +16.14 mA against the per-block sum.
+
+Two blocks are still allocations, not measurements. The script substitutes the only
+evidence that exists for each:
+
+| Block | Allocation | Evidence | Basis |
+|---|---:|---:|---|
+| digital | 19.5 (RF) / 36.5 (wired) mA | **207.2 mA** upper bound; 24.5 mA lower bound (clock pins only) | `digital-hardening-evidence.json` `power__total` 0.684 W: OpenROAD, vectorless, nom tt, every SDC clock at target, no mode gating, stale RTL. `clock-power-screen.json` gives the lower bound. |
+| hostio | 110 mA | 95.2 mA typical; **116.8 mA** at the 8 pF Artix load | `host-power-allocation-screen.json` and `artix-load-power-screen.json`: alternating data, two-pad extrapolation with allowances, nominal. |
+
+Mode totals in mA. The "with requirement" column holds digital to PWR-DIG
+(≤ 60 mA wired/USB, ≤ 40 mA RF) and RF host IO to PWR-HOST-RF (div2):
+
+| Case | Ceiling | Allocation | Evidence bound | With requirement | Margin (with requirement) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| RF, external clock (primary first-die RF) | 240 | 224.09 | 418.60 | 193.00 | +47.0 |
+| RF, autonomous synthesis | 240 | 253.02 | 447.53 | 221.93 | +18.1 |
+| Wired, on-chip PLL | 292 | 244.82 | 422.33 | 275.14 | +16.9 |
+| Wired, external clock (`WCLK_IN`/`REF_IN`) | 292 | 248.05 | 425.56 | 278.37 | +13.6 |
+| Wired, TMDS | 292 | 224.82 | 402.33 | 255.14 | +36.9 |
+| USB | 292 | 231.25 | 408.76 | 261.57 | +30.4 |
+| Stopped | 292 | 4.62 | 4.62 | 4.62 | — |
+
+**Reading the table.**
+- On allocations alone, every case except autonomous RF fits.
+- On evidence, every mode is over its ceiling by 110–208 mA, because the digital macro's only post-route power number is 5.7× its allocation.
+- The evidence-bound digital number is pessimistic: it is vectorless, every clock runs at the SDC target, and nothing is gated. It is still the only number on record.
+- The AC-1 gearbox halves the core clock ([interface-architecture-changes.md](interface-architecture-changes.md)), which makes these requirements plausible:
+  - **PWR-DIG-WIRED** ≤ 60 mA and **PWR-DIG-RF** ≤ 40 mA, with unused domains clock-gated.
+  - Signoff by SAIF-annotated power from the dense-service simulations.
+  - **PWR-HOST-RF**: RF modes run `debug.host_link.rate=div2`.
+- The 8 pF host load leaves hostio 6.8 mA over its 110 mA allocation. The budget carries the evidence value.
 
 External-clock RF is the qualified primary RF case. Autonomous RF exceeding the
 240 mA envelope is accepted as a known limit of the separately qualified
@@ -56,6 +91,37 @@ merged TX filter and PGA) has 3.77 mA and 0.4934 mm², so the pair has 7.54 mA a
 paired RX sizing estimate of 7.251 mA does not establish area/noise/headroom
 fit. DACs each reserve 2 mA including 1 mA provisional support. Count global
 clock-tree and local switching capacitance once, not in both budgets.
+
+## Supply-drop and thermal budget (envelope, 2026-11-09)
+
+Computed by `spec/budgets/power_budget.py`. This replaces the tapeout-plan figure computed at 250 mA.
+
+The available drop is the minimum source voltage (3.3 V − 1 % = 3.267 V) minus the minimum die rail (3.15 V), which is **117 mV**. Contributions:
+- **Board**, from regulator sense to the COB pads: 20 mΩ. This is requirement B2a.
+- **Bonds**: 0.1 Ω each, 8 supply ∥ 10 return. A 4.44× unequal-share derating reproduces the plan's 25 mV at 250 mA, giving 0.100 Ω effective.
+- **On-die ring and grid**: 0.1 Ω planning allocation, not yet extracted.
+- **Worst island switch**: full-RC extracted at design current. The wired island is 19.87 mV at 80 mA.
+
+| Case (worst mode) | I max | Board | Bonds | Grid | Island switch | Total | Margin to 117 mV |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Allocation (autonomous RF) | 253.0 mA | 5.1 | 25.3 | 25.3 | 19.9 | 75.5 mV | +41.5 mV |
+| Evidence bound | 447.5 mA | 9.0 | 44.7 | 44.8 | 19.9 | 118.3 mV | **−1.3 mV** |
+| With PWR-DIG (wired, external clock) | 278.4 mA | 5.6 | 27.8 | 27.8 | 19.9 | 81.1 mV | +35.9 mV |
+
+Island switches at their actual peak allocation, rather than the 1.25× design current, have 4.4 mV (wired) to 9.1 mV (debug) of margin against their 20 mV target. The "0.13 mV" figure is the margin at 80 mA design current, not at the 62.86 mA load. Native supply-cell utilization under even sharing is 0.58 with PWR-DIG and 0.93 on the evidence bound (8 × 60 mA).
+
+**Thermal.**
+- P_max is 0.98 W with PWR-DIG and 1.55 W on the evidence bound. Both use 3.35 V × I_max and add 45 mW for TMDS driver plus clamp leakage and 6.5 mW for the RX level divider.
+- Stopped power is 15 mW.
+- A glob-top COB in still air (θJA of about 40–100 °C/W, class value, not measured) would rise 39–98 °C. **Free air cannot hold 27 ± 5 °C.**
+- Mode switches are faster than any plate controller, so the 10 °C window minus ±2 °C control must absorb the whole stopped-to-max step. That requires θ(junction→temperature-controlled plate) ≤ **8.25 °C/W** with PWR-DIG, or 5.21 °C/W on the evidence bound.
+- These limits are board requirement B2a. scratch/reviews/physical-limits.md L7 shows they are achievable.
+
+Requirement IDs owned here (traced in `spec/performance-requirements.json`):
+- **PWR-MODE-CEIL**: every primary mode stays within its ceiling (240 mA RF, 292 mA wired/USB).
+- **PWR-DROP**: total drop from source to die is ≤ 117 mV, so the rail stays ≥ 3.15 V at a 3.267 V source.
+- **PWR-THERM**: Tj stays within 22–32 °C across the stopped-to-max mode step.
+- **PWR-DIG-WIRED**, **PWR-DIG-RF** and **PWR-HOST-RF**: as defined above.
 
 ## Common supply and return network
 

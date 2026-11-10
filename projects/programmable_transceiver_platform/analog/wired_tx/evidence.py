@@ -45,8 +45,24 @@ def _summary(r):
                     'mismatches_vs_main_delayed_1ui'),
                 word_clk_period_ns=round(r['word_clk_period_s'] * 1e9, 3) if r.get('word_clk_period_s') else None,
                 supply_current_avg_ma=round(r['supply_current_avg_a'] * 1e3, 2) if r.get('supply_current_avg_a') else None,
-                tail_current_ma={k: round(v * 1e3, 3) for k, v in (r.get('tail_current_a') or {}).items()},
+                tail_current_ma={k: (round(v * 1e3, 3) if v is not None else None) for k, v in (r.get('tail_current_a') or {}).items()},
+                tj_1e12_ui=_tj_ui(r),
                 pass_=_serial_ok(r), reason=r.get('reason') or r.get('error'))
+
+
+RJ_RMS_S = 2e-12   # ring random jitter budget (spec/interface-architecture-changes.md S5: <= 2 ps rms)
+Q_1E12 = 7.034
+
+
+def _tj_ui(r):
+    """Total jitter at BER 1e-12 at the pre-driver output, in UI: the simulated deterministic
+    jitter (peak-peak crossing spread over >= 2 PRBS7 periods, ideal ring phases) plus the
+    ring RJ budget, TJ = DJ_pp + 2 Q(1e-12) RJ_rms.  The serializer itself adds no RJ in
+    simulation; pad, package and channel are not included."""
+    m = (r or {}).get('CMD_MAIN_N', {})
+    if 'jitter_pp_s' not in m or not r.get('bit_rate_bps'):
+        return None
+    return round((m['jitter_pp_s'] + 2 * Q_1E12 * RJ_RMS_S) * r['bit_rate_bps'], 3)
 
 
 def _eye(r):
@@ -80,12 +96,21 @@ def common_header():
 
 def build():
     lay = _load('layout-result.json')
-    sims = _load('sim-results.json')
-    # runs not repeated after the reset-flop fix keep the rev1 netlist tag
-    cur = set(json.loads((W / 'rerun-keys.json').read_text())) if (W / 'rerun-keys.json').exists() else set(sims)
-    for k, v in sims.items():
-        if isinstance(v, dict):
-            v['netlist_revision'] = 'rev3' if k in cur else 'earlier revision (before the reset-flop fix and phase gating)'
+    raw = _load('sim-results.json')
+    # Only results simulated on the current netlists count.  Every result carries
+    # the sha256 of the netlist it read (dut_sha256); anything else (older layout,
+    # no hash recorded) is dropped from the tests, the performance list and the
+    # README table and only listed by name under stale_results_excluded.
+    cur_sha = dict(extracted=tools.sha(GEN / 'wiredtx.ext.spice'), schematic=tools.sha(tools.HERE / 'wiredtx.spice'))
+    sims, stale = {}, []
+    for k, v in raw.items():
+        if not isinstance(v, dict):
+            continue
+        kind = v.get('dut_kind') or ('schematic' if k.startswith('schematic') else 'extracted')
+        if v.get('dut_sha256') and v.get('dut_sha256') == cur_sha[kind]:
+            sims[k] = v
+        else:
+            stale.append(dict(run=k, dut_sha256=v.get('dut_sha256'), kind=kind))
     lr = lay.get('layout', {})
     drc0 = lr.get('drc_count') == 0
     kl0 = (lay.get('klayout') or {}).get('violations') == 0
@@ -93,9 +118,24 @@ def build():
     # clean gate: 0.96 Gb/s half rate (lowest ring frequency, 480 MHz) - the highest
     # simulated point that passes all twelve required corners; 1.25 Gb/s is recorded
     nominal = sims.get('nominal_0g96')
-    corners = {k: _summary(v) for k, v in sims.items() if k.startswith('corner096_')}
-    corners_pass = bool(corners) and all(c and c['pass_'] for c in corners.values())
-    clean_pass = drc0 and kl0 and lvs and _serial_ok(nominal) and corners_pass
+    corners = {}
+    env = [(c, tt, v) for c in ('typical', 'ss', 'ff', 'sf', 'fs') for tt in (22, 32) for v in (3.15, 3.35)]
+    need = {f'corner096_{c}_{tt}_{v}' for c, tt, v in env}
+    missing_corners = sorted(need - set(corners))
+    corners_pass = not missing_corners and all(c and c['pass_'] for c in corners.values())
+    # quarter rate (compact core): 2.5 Gb/s gates clean; 3.24 Gb/s (ring 810 MHz) is recorded
+    qsets = {}
+    slow = [(c, tt, v) for c in ('ss', 'sf', 'fs') for tt, v in ((22, 3.15), (32, 3.15))]
+    for q, pre, pts in (('quarter 2.5', 'cornerq2.5_', env), ('quarter 3.24', 'cornerq3.24_', env),
+                        ('half 1.62', 'cornerh1.62_', env), ('full 0.81', 'cornerf0.81_', slow)):
+        got = {k: _summary(v) for k, v in sims.items() if k.startswith(pre)}
+        miss = sorted({f'{pre}{c}_{tt}_{v}' for c, tt, v in pts} - set(got))
+        qsets[q] = dict(runs=got, missing=miss, all_pass=not miss and all(s and s['pass_'] for s in got.values()),
+                        points=len(pts))
+    # clean gate: PCIe-rate quarter rate and the top half rate (covers TMDS 1.485, SATA 1.5, DP 1.62)
+    # on all 20 envelope points; 3.24 Gb/s quarter and full rate are recorded
+    gating = ('quarter 2.5', 'half 1.62')
+    clean_pass = drc0 and kl0 and lvs and _serial_ok(nominal) and all(qsets[g]['all_pass'] for g in gating)
     off = [sims.get(k) for k in ('unpowered_tt', 'unpowered_ff_85_3v63')]
     qs = [sims.get(k) for k in ('quiescent_stopped_tt', 'quiescent_stopped_ff_85_3v63')]
     qr = [sims.get(k) for k in ('quiescent_tt', 'quiescent_ff_85_3v63')]
@@ -117,6 +157,9 @@ def build():
     ho = sims.get('ext_handover')
     fallback_pass = bool(ext1 and ext1.get('ok') and ho and ho.get('ok'))
     head = common_header()
+    head['netlist_hashes'] = dict(extracted=cur_sha['extracted'], schematic=cur_sha['schematic'],
+                                  lvs_layout=tools.sha(GEN / 'wiredtx.lvs.spice'), gds=tools.sha(GEN / 'wiredtx.gds'))
+    head['stale_results_excluded'] = stale
     perf = []
     for k, v in sims.items():
         if k.startswith('sweep_') or k in ('schematic_q2g5', 'nominal'):
@@ -127,8 +170,12 @@ def build():
         if sims.get(k):
             perf.append(dict(metric='pad eye (pt_wiredtx extracted + pads steering buffers + extracted pad)',
                              run=k, **_eye(sims[k])))
-    for k, v in corners.items():
-        perf.append(dict(metric='nominal-rate (0.96 Gb/s) function across the required corner set', run=k, **v))
+    for q, s in qsets.items():
+        for k, v in s['runs'].items():
+            perf.append(dict(metric=f'{q} Gb/s (compact core) across the envelope', run=k, **v))
+    for k, v in sims.items():
+        if k.startswith('fallback_'):
+            perf.append(dict(metric='generic serializer (fallback, rate code 11, half rate)', run=k, **_summary(v)))
     for k, v in sims.items():
         if k.startswith('corner_'):
             perf.append(dict(metric='1.25 Gb/s half-rate across the corner set (stretch over nominal)', run=k,
@@ -157,7 +204,11 @@ def build():
                    extracted_nominal=dict(point='tt, 27 C, 3.3 V, 0.96 Gb/s, 2 bits per ring cycle (ring 480 MHz), '
                                                 'PRBS7 20-bit double words, extracted C (Magic)',
                                           **(_summary(nominal) or {})),
-                   corners=dict(set='tt/ss/ff x 22/32 C x 3.15/3.35 V at the nominal point', all_pass=corners_pass),
+                   corner_sets={f'{q} Gb/s': dict(points=s['points'], all_pass=s['all_pass'], missing=s['missing'],
+                                                  gating=q in gating,
+                                                  failing=sorted(k for k, v in s['runs'].items() if not v['pass_']))
+                                for q, s in qsets.items()},
+                   envelope='tt/ss/ff/sf/fs x 22/32 C x 3.15/3.35 V (20 points); slow subset for full rate',
                    area_um2=lr.get('area_um2'), area_allocation_um2=300000, devices=lr.get('devices')),
         observable=dict(state='pass' if dac.get('rows') and ext1 else 'open',
                         atb_taps=['ATB_NBIAS (bias reference diode)', 'ATB_PBIAS (MAIN DAC PMOS mirror gate)',
@@ -170,7 +221,10 @@ def build():
                               'rtl/pt_pattern.sv and the RX checker (loopback).'),
         fallback=dict(state='pass' if fallback_pass else 'open',
                       routes=['wire_tx_external_data (debug.wtx_ext): WTX_EXT_P/N -> pt_diff_clk_rx (timing) -> DX '
-                              '-> break-before-make select in pt_wtx_predrv -> MAIN/TMDS steering commands'],
+                              '-> break-before-make select in pt_wtx_predrv -> MAIN/TMDS steering commands',
+                              'generic serializer (rate field MODE_H=MODE_F=1): the earlier static-CMOS 20:1 '
+                              'serializer in half rate, independent of the compact core except the pre-driver'],
+                      generic_serializer={k: _summary(v) for k, v in sims.items() if k.startswith('fallback_')},
                       bypass_loading_fF=dict(DX_routing=_pex_cap_ff('DX'),
                                              DX_gates='INV1 (1/2 um) + NAND (4/4 um) gates, ~15 fF estimate'),
                       evidence=dict(ideal_dx_1g=_eye(ext1), shared_receiver={k: _eye(v) for k, v in exr.items()},
@@ -183,9 +237,18 @@ def build():
             'Extraction is capacitance only (no distributed resistance).',
             'The 20-bit word source is ideal PWL launched T_word/4 after WORD_CLK; the standard-cell pattern '
             'RTL (rtl/pt_pattern.sv) is not co-simulated.',
-            'Ring phases are ideal 50 % duty sources with 50 ps edges; ring jitter, phase error and the '
-            'clockmux are not included.',
-            'Corners at the nominal point only; rate sweep at tt only.',
+            'Ring phases are ideal 50 % duty, exactly 90 deg apart, tanh edges (10-90 % 50 ps) through 150 ohm; '
+            'ring jitter (except the 2 ps rms RJ budget added to TJ), phase-spacing error and the clockmux are '
+            'not included.  The core needs <= ~10 ps phase-to-phase skew (interface WT2).',
+            'Stimuli are breakpoint-free behavioural sources (tanh edges) behind 150 ohm (phases) / 1 kohm '
+            '(word bits, controls) driver resistances.  Ideal PWL/PULSE sources made ngspice abort at '
+            'source corners (C/h-dominated branch currents could not converge to abstol); no simulator '
+            'tolerance was changed.',
+            'The serializer bench loads each tail-bias node with its pad tail device (drain tied to source); '
+            'tail currents are measured by the DC benches (dac_tt, quiescent), not in the transient runs.',
+            'Envelope runs use 200 bits (>1.5 PRBS7 periods), nominal/integration 280 bits: error-free '
+            'windows, not a measured BER; TJ(1e-12) = simulated DJ_pp + 14.07 x 2 ps rms ring RJ budget.',
+            'Rate sweep at tt only; envelope sets as listed under clean.corner_sets.',
             'No Monte Carlo, aging, EM/IR or antenna analysis; density fill is left to top-level assembly.'])
     tools.write_json(GEN / 'wiredtx-evidence.json', ev)
     # TMDS configuration record
@@ -264,7 +327,7 @@ def readme_table(sims):
     rows = ['<!-- RESULTS:BEGIN (generated by evidence.py) -->',
             '| Run | Rate | Bits/ring cycle | Corner | Result | Detail |', '| --- | --- | --- | --- | --- | --- |']
     for k, v in sims.items():
-        tagk = k + (' (earlier rev)' if 'earlier' in v.get('netlist_revision', '') else '')
+        tagk = k
         if 'CMD_MAIN_N' in v or k.startswith(('nominal', 'sweep', 'corner', 'schematic')) and 'eye' not in v:
             s = _summary(v)
             det = (f"{s['errors']} errors / {s['bits_compared']} bits, CMD jitter {s['cmd_jitter_pp_ps']} ps pp, "

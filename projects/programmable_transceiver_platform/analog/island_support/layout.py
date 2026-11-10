@@ -260,6 +260,8 @@ def logic_block(lay, devs, x_start, y_base, extra_nets=(), edge_net=None):
     tap_strip(lay, 'p', x_start + .5, x_end_n - .5, y_ptap, 'VSS', x_start - 1.0, 'A')
     lay.r('pwell', x_start - 2.5, y_base - .5, x_end_n + 1.0, y_ptap + 1.2)
     route_devices(lay, placed_n, 'A')
+    if not pm_all:                     # NMOS-only cell (iso_pd*): bank A only
+        return {'x_max': x_end_n + 1.0, 'nets_a': nets_a, 'nets_b': [], 'y_top': bank_a1 + .5}
     x = x_start
     y_row_base = bank_a1 + 1.5
     rows = []
@@ -533,7 +535,7 @@ def generate(outdir, cells):
             lay, meta = isw_layout(name, nf)
             text = design.isw_netlist(name, nf)
         elif kind == 'logic':
-            text = design.iso_clamp_netlist(name)
+            text = design.ISO_CELLS.get(name, design.iso_clamp_netlist)(name)
             lay = Layout(name)
             logic_block(lay, parse_devices(text), 0.0, 0.0)
             finish_tracks(lay, ports_of(text)[1])

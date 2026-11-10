@@ -2,15 +2,15 @@
  "block": "bbfilter_q",
  "top_cell": "pt_bbfilter_q",
  "source_hashes": {
-  "bbfilter_q.spice": "sha256:707938d5706ec847f30e2a36a6f779215dc11d192724dec2e952e010efb6437a",
-  "netlists.py": "sha256:5b510fefe992f2a5c41026c506f7217975cef917e05dc9fe3b366c5791fb7329",
-  "rfrx_flow.py": "sha256:a3f7188401453a8c894ec1f7b81fbbd61397d1edd1123122250f5b982d7ca833"
+  "bbfilter_q.spice": "sha256:dddc410ddd82ea77eeafa33331c7e256a9f4a6a3e0abae83d45cf05d9b38c43a",
+  "netlists.py": "sha256:fb4f51b6eede1d916e5a24128fdbfc250408585f135fdfdde4622b62084fbd93",
+  "rfrx_flow.py": "sha256:6fa4ba2ff246182b7c47dd4d2a9c95652d70c09a833ab3674ecb170dd0ee15a1"
  },
  "artifact_hashes": {
-  "bbfilter_q.gds": "sha256:d3122796858a57668c2cad85b65e9591010f153aae4173a0ddd57488d7bcf02d",
-  "bbfilter_q.mag": "sha256:4c7265c2ab67063cf0f64af5ca169f99bf94ccd34bde2db9e0efb25924b2bdc9",
-  "bbfilter_q.ext.spice": "sha256:b8576941b67e300fbc393ec6a38335def6fb83c7f2a64650ee35827059c57968",
-  "bbfilter_q-lvs.txt": "sha256:4430317d2ca58d6be59e0dc660fa1f9e75f41bd5ae44edb56443efe6d057d073"
+  "bbfilter_q.gds": "sha256:f85b56a6ae4694d735d12c490b394490cc9f351b11bbb86de138bfa4caaa4a16",
+  "bbfilter_q.mag": "sha256:27ac1eb8677a87084afa83ab19639372bdf23f9e5b88947ffbbd968ec5be7ede",
+  "bbfilter_q.ext.spice": "sha256:7e7a831893d45c95a092185bd49ca3538f8f63c2e9c7200958062b5842d73ee2",
+  "bbfilter_q-lvs.txt": "sha256:779bc78807396f67f7022c103a7a66a9c99f935035f0641ad4fa036a063f3c70"
  },
  "images": {
   "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -23,10 +23,10 @@
   "bbox_um": [
    1.5,
    -0.2,
-   405.2,
-   1006.09
+   500.56,
+   931.99
   ],
-  "area_um2": 406239.0
+  "area_um2": 465219.0
  },
  "tests": {
   "safe": {
@@ -34,42 +34,42 @@
    "cases": [
     {
      "case": "reset/off: all controls 0, island on",
-     "rail_current_a": 1.499762e-09,
+     "rail_current_a": 1.745699e-09,
      "signal_pin_current_a": 7.259309e-11,
      "tx_in_current_a": 1.980001e-11,
      "out_rx_current_a": 4.290231e-11
     },
     {
      "case": "island off (VDD=0, island_off=1); DAC (tx_in) and ADC (out_rx) nodes driven to 1.65 V, 27 C",
-     "rail_current_a": 7.445777e-12,
+     "rail_current_a": 7.127159e-12,
      "signal_pin_current_a": 6.644196e-05,
-     "tx_in_current_a": 2.67908e-11,
-     "out_rx_current_a": 6.644192e-05
+     "tx_in_current_a": 2.477038e-11,
+     "out_rx_current_a": 6.644193e-05
     },
     {
      "case": "same 85 C",
-     "rail_current_a": 6.022017e-11,
-     "signal_pin_current_a": 5.329332e-05,
-     "tx_in_current_a": 2.115618e-10,
-     "out_rx_current_a": 5.329244e-05
+     "rail_current_a": 5.752873e-11,
+     "signal_pin_current_a": 5.329333e-05,
+     "tx_in_current_a": 1.811243e-10,
+     "out_rx_current_a": 5.329247e-05
     },
     {
      "case": "same 0 C",
-     "rail_current_a": 1.304516e-12,
+     "rail_current_a": 1.214379e-12,
      "signal_pin_current_a": 7.475824e-05,
-     "tx_in_current_a": 2.084708e-11,
+     "tx_in_current_a": 2.067255e-11,
      "out_rx_current_a": 7.475822e-05
     },
     {
      "case": "same with peer nodes at 3.63 V",
-     "rail_current_a": 1.772987e-11,
+     "rail_current_a": 1.761805e-11,
      "signal_pin_current_a": 7.729214e-05,
-     "tx_in_current_a": 6.061656e-11,
-     "out_rx_current_a": 7.729201e-05
+     "tx_in_current_a": 5.366831e-11,
+     "out_rx_current_a": 7.729202e-05
     },
     {
      "case": "filter off: rx_in -> out_rx isolation (dB)",
-     "value": -51.3198
+     "value": -47.2256
     }
    ],
    "notes": "Cross-island pins (tx_in from DAC, out_rx to ADC) use NMOS-only switches: no PMOS junction to VDD_RF_SW. out_rx current with the island off is the weak island_off clamp (W/L=1/10)."
@@ -96,12 +96,12 @@
    },
    "extracted_nominal": {
     "condition": "tt 27 C 3.3 V, extracted with parasitic C, RX direction, bw=0, gain=0",
-    "idd_a": 0.005823107,
-    "dc_gain_db": -0.0580583,
-    "peak_gain_db": 1.64507,
-    "f3db_hz": 15156300.0,
-    "gain_20mhz_db": -15.4797,
-    "out_cm_v": 1.650173,
+    "idd_a": 0.006656039,
+    "dc_gain_db": -0.176253,
+    "peak_gain_db": -0.0199171,
+    "f3db_hz": 20300300.0,
+    "gain_20mhz_db": -2.70004,
+    "out_cm_v": 1.650171,
     "vcm_v": 1.65
    }
   },
@@ -118,30 +118,30 @@
    ],
    "observe_mux": {
     "obs_sel=1 rx_in (after mixer)": {
-     "idd_a": 0.005823107,
-     "dc_gain_db": -6.17977e-08,
-     "peak_gain_db": -6.17977e-08,
-     "f3db_hz": 179411000.0,
-     "gain_20mhz_db": -0.0530282,
+     "idd_a": 0.006656039,
+     "dc_gain_db": -4.64685e-08,
+     "peak_gain_db": 3.40496e-06,
+     "f3db_hz": 181964000.0,
+     "gain_20mhz_db": -0.0610239,
      "out_cm_v": 1.65,
      "vcm_v": 1.65
     },
     "obs_sel=2 after PGA stage": {
-     "idd_a": 0.005823107,
-     "dc_gain_db": -0.0608147,
-     "peak_gain_db": -0.0608147,
-     "f3db_hz": 21905700.0,
-     "gain_20mhz_db": -2.59925,
-     "out_cm_v": 1.650174,
+     "idd_a": 0.006656039,
+     "dc_gain_db": -0.179002,
+     "peak_gain_db": -0.178995,
+     "f3db_hz": 32008100.0,
+     "gain_20mhz_db": -1.24379,
+     "out_cm_v": 1.650171,
      "vcm_v": 1.65
     },
     "obs_sel=3 filter output": {
-     "idd_a": 0.005823107,
-     "dc_gain_db": -0.058058,
-     "peak_gain_db": 1.70461,
-     "f3db_hz": 15232300.0,
-     "gain_20mhz_db": -15.3026,
-     "out_cm_v": 1.650173,
+     "idd_a": 0.006656039,
+     "dc_gain_db": -0.176252,
+     "peak_gain_db": 0.24441,
+     "f3db_hz": 20463800.0,
+     "gain_20mhz_db": -2.41718,
+     "out_cm_v": 1.650171,
      "vcm_v": 1.65
     }
    },
@@ -156,28 +156,28 @@
      "control": "byp_s1 (debug.rf_bb_bypass.pga), byp_s23 (debug.rf_bb_bypass.rxfilter)",
      "byp_s1": {
       "idd_a": 0.004992697,
-      "dc_gain_db": -0.244994,
-      "peak_gain_db": 2.33789,
-      "f3db_hz": 15998600.0,
-      "gain_20mhz_db": -12.9249,
+      "dc_gain_db": -0.244026,
+      "peak_gain_db": 1.04484,
+      "f3db_hz": 21287900.0,
+      "gain_20mhz_db": -1.29599,
       "out_cm_v": 1.650001,
-      "vcm_v": 1.65
+      "vcm_v": 1.650001
      },
      "byp_s23": {
-      "idd_a": 0.0008406395,
-      "dc_gain_db": -0.0596799,
-      "peak_gain_db": -0.0596799,
-      "f3db_hz": 22993100.0,
-      "gain_20mhz_db": -2.39767,
-      "out_cm_v": 1.650174,
+      "idd_a": 0.001673571,
+      "dc_gain_db": -0.178442,
+      "peak_gain_db": -0.178442,
+      "f3db_hz": 32108900.0,
+      "gain_20mhz_db": -1.55346,
+      "out_cm_v": 1.650171,
       "vcm_v": 1.65
      },
      "both": {
-      "idd_a": 1.022899e-05,
-      "dc_gain_db": -0.153219,
-      "peak_gain_db": -0.153219,
-      "f3db_hz": 56875100.0,
-      "gain_20mhz_db": -0.84531,
+      "idd_a": 1.022933e-05,
+      "dc_gain_db": -0.152238,
+      "peak_gain_db": -0.152238,
+      "f3db_hz": 53657100.0,
+      "gain_20mhz_db": -0.90128,
       "out_cm_v": 1.65,
       "vcm_v": 1.65
      }
@@ -191,12 +191,12 @@
      "route": "rf_rx_external_downconverter",
      "control": "inj=1 (+ bb_tap inj_en)",
      "inject_to_out_rx": {
-      "idd_a": 0.005823107,
-      "dc_gain_db": -0.000471918,
-      "peak_gain_db": 1.70741,
-      "f3db_hz": 15162600.0,
-      "gain_20mhz_db": -15.3704,
-      "out_cm_v": 1.650173,
+      "idd_a": 0.006656039,
+      "dc_gain_db": -0.11932,
+      "peak_gain_db": 0.117996,
+      "f3db_hz": 20379100.0,
+      "gain_20mhz_db": -2.52169,
+      "out_cm_v": 1.650171,
       "vcm_v": 1.65
      }
     },
@@ -204,11 +204,11 @@
      "route": "loopback: TX through filter while RX goes filter-less",
      "control": "dir_tx=1, rx_direct=1",
      "rx_in_to_out_rx": {
-      "idd_a": 0.005823107,
-      "dc_gain_db": -3.54362e-08,
-      "peak_gain_db": -3.54362e-08,
+      "idd_a": 0.006656039,
+      "dc_gain_db": -3.54202e-08,
+      "peak_gain_db": -3.54202e-08,
       "f3db_hz": null,
-      "gain_20mhz_db": -0.00200612,
+      "gain_20mhz_db": -0.00191026,
       "out_cm_v": 1.65,
       "vcm_v": 1.65
      }
@@ -216,11 +216,11 @@
     {
      "route": "rx_direct (filter-less RX)",
      "rx_in_to_out_rx": {
-      "idd_a": 0.005823107,
-      "dc_gain_db": -3.48804e-08,
-      "peak_gain_db": 8.4774e-07,
+      "idd_a": 0.006656039,
+      "dc_gain_db": -3.50829e-08,
+      "peak_gain_db": -3.50829e-08,
       "f3db_hz": null,
-      "gain_20mhz_db": -0.002013,
+      "gain_20mhz_db": -0.00219019,
       "out_cm_v": 1.65,
       "vcm_v": 1.65
      }
@@ -230,37 +230,37 @@
      "control": "direction=tx, obs_sel=11 (bb_tap observe_tx), bb_tap obs_en=1",
      "dac_in_to_bb_pad_10pF": [
       {
-       "idd_a": 0.006836648,
-       "pad_cm_v": 0.8185589,
-       "lf_gain_db": -1.39962,
-       "f3db_hz": 15090700.0,
-       "gain_10mhz_db": 0.140332,
-       "tone_gain_db": -1.3175786527098565,
-       "hd3_dbc": -65.64041470294686,
+       "idd_a": 0.00766958,
+       "pad_cm_v": 0.818557,
+       "lf_gain_db": -1.51816,
+       "f3db_hz": 20003900.0,
+       "gain_10mhz_db": -2.47827,
+       "tone_gain_db": -1.6172829775494173,
+       "hd3_dbc": -67.12683564058547,
        "amp_diff_peak_v": 0.2,
        "f_hz": 2000000.0,
        "load": "10 pF || 100 kohm per pad"
       },
       {
-       "idd_a": 0.006836648,
-       "pad_cm_v": 0.8185589,
-       "lf_gain_db": -1.39962,
-       "f3db_hz": 15090700.0,
-       "gain_10mhz_db": 0.140332,
-       "tone_gain_db": -1.320137974085866,
-       "hd3_dbc": -67.32505530808456,
+       "idd_a": 0.00766958,
+       "pad_cm_v": 0.818557,
+       "lf_gain_db": -1.51816,
+       "f3db_hz": 20003900.0,
+       "gain_10mhz_db": -2.47827,
+       "tone_gain_db": -1.6198287919748977,
+       "hd3_dbc": -68.45323710366245,
        "amp_diff_peak_v": 0.4,
        "f_hz": 2000000.0,
        "load": "10 pF || 100 kohm per pad"
       },
       {
-       "idd_a": 0.006836648,
-       "pad_cm_v": 0.8185589,
-       "lf_gain_db": -1.39962,
-       "f3db_hz": 15090700.0,
-       "gain_10mhz_db": 0.140332,
-       "tone_gain_db": -1.3323236459207708,
-       "hd3_dbc": -71.72120534529583,
+       "idd_a": 0.00766958,
+       "pad_cm_v": 0.818557,
+       "lf_gain_db": -1.51816,
+       "f3db_hz": 20003900.0,
+       "gain_10mhz_db": -2.47827,
+       "tone_gain_db": -1.6318750202990056,
+       "hd3_dbc": -67.30333722741973,
        "amp_diff_peak_v": 0.8,
        "f_hz": 2000000.0,
        "load": "10 pF || 100 kohm per pad"
@@ -279,78 +279,169 @@
   {
    "metric": "RX -3 dB cutoff, widest (bw=0) (Hz)",
    "target": ">= 10e6 at tt and in the envelope (lead, Wi-Fi 20 MHz)",
-   "extracted_nominal": 15156300.0,
-   "schematic_nominal": 17841800.0
+   "extracted_nominal": 20300300.0,
+   "schematic_nominal": 17530100.0
   },
   {
    "metric": "RX -3 dB cutoff, narrowest (bw=15) (Hz)",
    "target": "1e5 min",
-   "extracted_nominal": 775872.0
+   "extracted_nominal": 749796.0
   },
   {
    "metric": "passband peaking at bw=0 (dB above DC)",
    "target": "<= 1 dB ripple",
-   "extracted_nominal": 1.7031283
+   "extracted_nominal": 0.1563359
   },
   {
-   "metric": "PGA gain range (dB, gain=0 .. 15)",
+   "metric": "PGA gain range (dB, code -6 .. 42)",
    "target": "-6 .. 42 in 3 dB steps",
    "extracted_nominal": [
-    -0.0580583,
-    23.0355
+    -6.11309,
+    42.1024
    ]
+  },
+  {
+   "metric": "PGA code sweep, bw=0 (code dB: dc gain dB, peaking dB, f3db Hz)",
+   "target": "3 dB steps, <= 1 dB ripple, >= 10 MHz",
+   "extracted_nominal": {
+    "-6": [
+     -6.11309,
+     1.3933399999999994,
+     21389800.0
+    ],
+    "-3": [
+     -2.59344,
+     0.0,
+     20157800.0
+    ],
+    "0": [
+     -0.176253,
+     0.1563359,
+     20300300.0
+    ],
+    "3": [
+     3.34132,
+     0.0,
+     19627800.0
+    ],
+    "6": [
+     5.82023,
+     0.0,
+     19203500.0
+    ],
+    "9": [
+     9.28619,
+     0.0,
+     19008900.0
+    ],
+    "12": [
+     12.1118,
+     0.0,
+     18203100.0
+    ],
+    "15": [
+     15.0661,
+     0.0,
+     17799200.0
+    ],
+    "18": [
+     18.0594,
+     0.0,
+     15442200.0
+    ],
+    "21": [
+     21.1919,
+     0.0,
+     17154000.0
+    ],
+    "24": [
+     24.0165,
+     0.0,
+     15132000.0
+    ],
+    "27": [
+     26.9695,
+     0.0,
+     14282300.0
+    ],
+    "30": [
+     29.9608,
+     0.0,
+     11813200.0
+    ],
+    "33": [
+     33.0991,
+     4.7667,
+     20864700.0
+    ],
+    "36": [
+     35.9237,
+     0.0,
+     15628000.0
+    ],
+    "39": [
+     39.2263,
+     2.3932,
+     14320000.0
+    ],
+    "42": [
+     42.1024,
+     0.06639999999999446,
+     15397000.0
+    ]
+   }
   },
   {
    "metric": "TX direction (tx_in -> out_tx) cutoff and gain",
    "extracted_nominal": {
-    "idd_a": 0.005823107,
-    "dc_gain_db": -0.0279793,
-    "peak_gain_db": 1.66347,
-    "f3db_hz": 15161800.0,
-    "gain_20mhz_db": -15.4204,
-    "out_cm_v": 1.650173,
+    "idd_a": 0.006656039,
+    "dc_gain_db": -0.146515,
+    "peak_gain_db": -0.0759055,
+    "f3db_hz": 20230200.0,
+    "gain_20mhz_db": -2.78061,
+    "out_cm_v": 1.650171,
     "vcm_v": 1.65
    }
   },
   {
    "metric": "stretch: gain at 20 MHz with widest setting (dB) (40 MHz channels need ~20 MHz corner)",
-   "extracted_nominal": -15.4797,
+   "extracted_nominal": -2.70004,
    "note": "widest corner is far below 20 MHz"
   },
   {
    "metric": "supply current, RX active (mA)",
    "target": 4.5,
-   "extracted_nominal": 5.823107
+   "extracted_nominal": 6.656039
   },
   {
    "metric": "output CM minus input CM with input CM at 1.75 V (V), gain 1 / gain 16 (OTAs reference the input CM)",
    "target": "no PGA-gain multiplication",
    "extracted_nominal": [
-    0.0001943053,
-    0.00160381
+    0.0001921293,
+    -0.14845
    ]
   },
   {
    "metric": "passband peaking at max PGA gain (dB above DC)",
    "target": "<= 1 dB ripple",
-   "extracted_nominal": 0.0
+   "extracted_nominal": 0.06639999999999446
   },
   {
    "metric": "TX observe through bb_tap into 10 pF: -3 dB (Hz) / gain (dB) / HD3 at 0.4 and 0.8 Vpk diff (dBc)",
    "extracted_nominal": [
-    15090700.0,
-    -1.39962,
-    -67.32505530808456,
-    -71.72120534529583
+    20003900.0,
+    -1.51816,
+    -68.45323710366245,
+    -67.30333722741973
    ]
   },
   {
    "metric": "TX->RX direction switch settling to 1 % (s)",
    "target": 1e-06,
-   "extracted_nominal": 2.998399999999999e-07,
+   "extracted_nominal": 2.635500000000002e-07,
    "detail": {
-    "final_diff_v": 0.099333,
-    "settle_1pct_after_switch_s": 2.998399999999999e-07
+    "final_diff_v": 0.0979902,
+    "settle_1pct_after_switch_s": 2.635500000000002e-07
    }
   },
   {
@@ -362,11 +453,11 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "f3db_hz": 15103700.0,
-     "dc_gain_db": -0.0629963,
-     "peak_gain_db": 1.72374,
-     "idd_a": 0.005741491,
-     "out_cm_v": 1.650235
+     "f3db_hz": 20213800.0,
+     "dc_gain_db": -0.191391,
+     "peak_gain_db": 0.131645,
+     "idd_a": 0.006562705,
+     "out_cm_v": 1.650232
     },
     {
      "corner": {
@@ -374,47 +465,47 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "f3db_hz": 15036100.0,
-     "dc_gain_db": -0.0553722,
-     "peak_gain_db": 1.48233,
-     "idd_a": 0.005842968,
-     "out_cm_v": 1.650167
-    },
-    {
-     "corner": {
-      "mos": "typical",
-      "temp_c": 32,
-      "vdd_v": 3.15
-     },
-     "f3db_hz": 15315500.0,
-     "dc_gain_db": -0.0652597,
-     "peak_gain_db": 1.99306,
-     "idd_a": 0.005739881,
-     "out_cm_v": 1.650236
-    },
-    {
-     "corner": {
-      "mos": "typical",
-      "temp_c": 32,
-      "vdd_v": 3.35
-     },
-     "f3db_hz": 15254800.0,
-     "dc_gain_db": -0.0574796,
-     "peak_gain_db": 1.74058,
-     "idd_a": 0.005841415,
+     "f3db_hz": 20126500.0,
+     "dc_gain_db": -0.168084,
+     "peak_gain_db": -0.168084,
+     "idd_a": 0.006678737,
      "out_cm_v": 1.650165
     },
     {
      "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 20485800.0,
+     "dc_gain_db": -0.19821,
+     "peak_gain_db": 0.712027,
+     "idd_a": 0.006560879,
+     "out_cm_v": 1.650234
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 20437500.0,
+     "dc_gain_db": -0.174439,
+     "peak_gain_db": 0.193112,
+     "idd_a": 0.006676977,
+     "out_cm_v": 1.650163
+    },
+    {
+     "corner": {
       "mos": "ss",
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "f3db_hz": 11421900.0,
-     "dc_gain_db": -0.0717015,
-     "peak_gain_db": 1.19079,
-     "idd_a": 0.005554199,
-     "out_cm_v": 1.650467
+     "f3db_hz": 14750200.0,
+     "dc_gain_db": -0.218146,
+     "peak_gain_db": -0.218146,
+     "idd_a": 0.006348683,
+     "out_cm_v": 1.650462
     },
     {
      "corner": {
@@ -422,11 +513,11 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "f3db_hz": 11257400.0,
-     "dc_gain_db": -0.0602482,
-     "peak_gain_db": 0.719463,
-     "idd_a": 0.005734407,
-     "out_cm_v": 1.650262
+     "f3db_hz": 14035900.0,
+     "dc_gain_db": -0.183157,
+     "peak_gain_db": -0.183157,
+     "idd_a": 0.006554766,
+     "out_cm_v": 1.650258
     },
     {
      "corner": {
@@ -434,11 +525,11 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "f3db_hz": 11594700.0,
-     "dc_gain_db": -0.0740576,
-     "peak_gain_db": 1.41389,
-     "idd_a": 0.005553306,
-     "out_cm_v": 1.650474
+     "f3db_hz": 15097900.0,
+     "dc_gain_db": -0.225241,
+     "peak_gain_db": -0.225241,
+     "idd_a": 0.006347672,
+     "out_cm_v": 1.650469
     },
     {
      "corner": {
@@ -446,11 +537,11 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "f3db_hz": 11438700.0,
-     "dc_gain_db": -0.0624666,
-     "peak_gain_db": 0.898616,
-     "idd_a": 0.005732221,
-     "out_cm_v": 1.650263
+     "f3db_hz": 14547100.0,
+     "dc_gain_db": -0.189851,
+     "peak_gain_db": -0.189851,
+     "idd_a": 0.006552279,
+     "out_cm_v": 1.65026
     },
     {
      "corner": {
@@ -458,11 +549,11 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "f3db_hz": 21012900.0,
-     "dc_gain_db": -0.0603149,
-     "peak_gain_db": 3.26151,
-     "idd_a": 0.005866712,
-     "out_cm_v": 1.650127
+     "f3db_hz": 28175400.0,
+     "dc_gain_db": -0.182923,
+     "peak_gain_db": 4.28877,
+     "idd_a": 0.006705723,
+     "out_cm_v": 1.650125
     },
     {
      "corner": {
@@ -470,11 +561,11 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "f3db_hz": 21001800.0,
-     "dc_gain_db": -0.0546713,
-     "peak_gain_db": 3.12121,
-     "idd_a": 0.005935025,
-     "out_cm_v": 1.650111
+     "f3db_hz": 28224100.0,
+     "dc_gain_db": -0.165669,
+     "peak_gain_db": 3.96851,
+     "idd_a": 0.006783812,
+     "out_cm_v": 1.65011
     },
     {
      "corner": {
@@ -482,11 +573,11 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "f3db_hz": 21248800.0,
-     "dc_gain_db": -0.0625696,
-     "peak_gain_db": 3.68526,
-     "idd_a": 0.005865636,
-     "out_cm_v": 1.650124
+     "f3db_hz": 28341800.0,
+     "dc_gain_db": -0.189706,
+     "peak_gain_db": 5.19288,
+     "idd_a": 0.006704512,
+     "out_cm_v": 1.650123
     },
     {
      "corner": {
@@ -494,16 +585,16 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "f3db_hz": 21245100.0,
-     "dc_gain_db": -0.0567743,
-     "peak_gain_db": 3.52418,
-     "idd_a": 0.005933695,
-     "out_cm_v": 1.650107
+     "f3db_hz": 28404300.0,
+     "dc_gain_db": -0.171999,
+     "peak_gain_db": 4.84032,
+     "idd_a": 0.006782312,
+     "out_cm_v": 1.650106
     }
    ]
   },
   {
-   "metric": "corner sweep (ext, RX gain 15)",
+   "metric": "corner sweep (ext, RX top PGA code 42 dB)",
    "rows": [
     {
      "corner": {
@@ -511,9 +602,10 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 22.959,
-     "f3db_hz": 11612200.0,
-     "out_cm_v": 1.651934
+     "dc_gain_db": 42.0274,
+     "peak_gain_db": 42.0915,
+     "f3db_hz": 15340500.0,
+     "out_cm_v": 1.665667
     },
     {
      "corner": {
@@ -521,9 +613,10 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 23.0719,
-     "f3db_hz": 11403100.0,
-     "out_cm_v": 1.651384
+     "dc_gain_db": 42.1313,
+     "peak_gain_db": 42.1982,
+     "f3db_hz": 15324800.0,
+     "out_cm_v": 1.661219
     },
     {
      "corner": {
@@ -531,9 +624,10 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 22.9326,
-     "f3db_hz": 11919900.0,
-     "out_cm_v": 1.651944
+     "dc_gain_db": 42.0118,
+     "peak_gain_db": 42.3512,
+     "f3db_hz": 15441800.0,
+     "out_cm_v": 1.665763
     },
     {
      "corner": {
@@ -541,9 +635,10 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 23.0475,
-     "f3db_hz": 11677700.0,
-     "out_cm_v": 1.651368
+     "dc_gain_db": 42.1177,
+     "peak_gain_db": 42.1847,
+     "f3db_hz": 15452500.0,
+     "out_cm_v": 1.6611
     },
     {
      "corner": {
@@ -551,9 +646,10 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 22.852,
-     "f3db_hz": 8754410.0,
-     "out_cm_v": 1.653841
+     "dc_gain_db": 41.9497,
+     "peak_gain_db": 41.999,
+     "f3db_hz": 11389800.0,
+     "out_cm_v": 1.681109
     },
     {
      "corner": {
@@ -561,9 +657,10 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 23.0201,
-     "f3db_hz": 8445810.0,
-     "out_cm_v": 1.652165
+     "dc_gain_db": 42.1053,
+     "peak_gain_db": 47.1604,
+     "f3db_hz": 10940500.0,
+     "out_cm_v": 1.66756
     },
     {
      "corner": {
@@ -571,9 +668,10 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 22.8234,
-     "f3db_hz": 8974600.0,
-     "out_cm_v": 1.653901
+     "dc_gain_db": 41.9304,
+     "peak_gain_db": 41.9798,
+     "f3db_hz": 11576200.0,
+     "out_cm_v": 1.681603
     },
     {
      "corner": {
@@ -581,9 +679,10 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 22.993,
-     "f3db_hz": 8628900.0,
-     "out_cm_v": 1.652179
+     "dc_gain_db": 42.0877,
+     "peak_gain_db": 42.1399,
+     "f3db_hz": 11308200.0,
+     "out_cm_v": 1.667686
     },
     {
      "corner": {
@@ -591,9 +690,10 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 22.9676,
-     "f3db_hz": 17859800.0,
-     "out_cm_v": 1.651043
+     "dc_gain_db": 42.0034,
+     "peak_gain_db": 45.6599,
+     "f3db_hz": 20587700.0,
+     "out_cm_v": 1.658428
     },
     {
      "corner": {
@@ -601,9 +701,10 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 23.0511,
-     "f3db_hz": 17013500.0,
-     "out_cm_v": 1.650917
+     "dc_gain_db": 42.08,
+     "peak_gain_db": 45.5056,
+     "f3db_hz": 20627000.0,
+     "out_cm_v": 1.657426
     },
     {
      "corner": {
@@ -611,9 +712,10 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 22.943,
-     "f3db_hz": 18737600.0,
-     "out_cm_v": 1.65102
+     "dc_gain_db": 41.9916,
+     "peak_gain_db": 46.3131,
+     "f3db_hz": 20582600.0,
+     "out_cm_v": 1.658259
     },
     {
      "corner": {
@@ -621,9 +723,135 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 23.0285,
-     "f3db_hz": 18378200.0,
-     "out_cm_v": 1.650888
+     "dc_gain_db": 42.0703,
+     "peak_gain_db": 46.1478,
+     "f3db_hz": 20626200.0,
+     "out_cm_v": 1.657204
+    }
+   ]
+  },
+  {
+   "metric": "corner sweep (ext, RX PGA code 21 dB: first coarse step)",
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 21.1603,
+     "peak_gain_db": 21.1603,
+     "f3db_hz": 17160900.0
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 21.2077,
+     "peak_gain_db": 21.2077,
+     "f3db_hz": 16850100.0
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 21.148,
+     "peak_gain_db": 21.148,
+     "f3db_hz": 17627300.0
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 21.1963,
+     "peak_gain_db": 21.1963,
+     "f3db_hz": 17360300.0
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 21.1113,
+     "peak_gain_db": 21.1113,
+     "f3db_hz": 11935600.0
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 21.1823,
+     "peak_gain_db": 21.1823,
+     "f3db_hz": 10075100.0
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 21.0981,
+     "peak_gain_db": 21.0981,
+     "f3db_hz": 12507700.0
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 21.1699,
+     "peak_gain_db": 21.1699,
+     "f3db_hz": 11088700.0
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 21.1696,
+     "peak_gain_db": 22.7179,
+     "f3db_hz": 25546600.0
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 21.2046,
+     "peak_gain_db": 22.5142,
+     "f3db_hz": 25404500.0
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "dc_gain_db": 21.1578,
+     "peak_gain_db": 23.3853,
+     "f3db_hz": 26134900.0
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "dc_gain_db": 21.1937,
+     "peak_gain_db": 23.1684,
+     "f3db_hz": 26058200.0
     }
    ]
   }
@@ -631,7 +859,8 @@
  "excluded_coverage": [
   "Q tuning codes (q1/q2) and zero-position codes not implemented: fixed pre-distorted Butterworth Qs",
   "cutoff programmable over 4 bits (x1..x16 capacitance) only; arch cutoff_code is 8 bits",
-  "PGA: 0..24 dB (1..16 linear) only; offset correction lives in the mixer TIA (rxmix ofs DAC), not in the filter",
+  "PGA -6..42 dB: stage-1 conductance k/4 (6 bits) x two +12 dB biquad steps (gainc0/1); code table netlists.GAIN_TABLE (register -> bits LUT in the digital); offset correction lives in the mixer TIA (rxmix ofs DAC), not in the filter",
+  "narrowest corner limited by the 1..16x capacitor bank (LoRa 203/406 kHz needs ~4x more range): open",
   "finite-zero (elliptic) option removed: the extracted single-zero version gave no useful notch; all-pole only",
   "noise not simulated; linearity only via the TX-observe HD3 points",
   "no Monte Carlo"

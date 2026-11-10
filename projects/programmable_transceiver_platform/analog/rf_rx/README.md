@@ -140,8 +140,8 @@ ATB: lna `atb_nbias` (tail mirror gate, code 16), `atb_vdcm` (drain CM via
 | lna | 19639 | 220000 | 0 | 0 | unique match | pass | pass | pass | pass |
 | rxmix_i | 76238 | 100000 | 0 | 0 | unique match | pass | pass | pass | pass |
 | rxmix_q | 76238 | 100000 | 0 | 0 | unique match | pass | pass | pass | pass |
-| bbfilter_i | 406239 | 430000 | 0 | 0 | unique match | pass | pass | pass | pass |
-| bbfilter_q | 406239 | 430000 | 0 | 0 | unique match | pass | pass | pass | pass |
+| bbfilter_i | 465219 | 430000 | 0 | 0 | unique match | pass | pass | pass | pass |
+| bbfilter_q | 465219 | 430000 | 0 | 0 | unique match | pass | pass | pass | pass |
 | bb_tap | 9978 | none | 0 | 0 | unique match | pass | pass | pass | pass |
 
 ### Extracted performance vs target (tt, 27 C, 3.3 V unless a corner table is given)
@@ -159,7 +159,7 @@ ATB: lna `atb_nbias` (tail mirror gate, code 16), `atb_vdcm` (drain CM via
 | IIP3 (dBm) | 0.0 | n/a | n/a |
 | chain NF incl. noise folding (transient noise, I output), board match: 5-9 MHz / 2-9 MHz band (dB) | 6.0 | 12.1, 14.1 | n/a |
 | same with a board LNA (15 dB gain, 1.5 dB NF) ahead of the on-chip LNA (dB, Friis), 5-9 / 2-9 MHz |  | 2.77, 3.41 | n/a |
-| chain NF via the LNA bypass (unmatched), 5-9 / 2-9 MHz, and with the board LNA 5-9 / 2-9 MHz (dB) |  | 22.2, 26.5, 8.23, 11.9 | n/a |
+| chain NF via the LNA bypass (unmatched), 5-9 / 2-9 MHz, and with the board LNA 5-9 / 2-9 MHz (dB) |  | 21.5, 28.8, 7.71, 14.1 | n/a |
 | RF pad -> I/Q baseband conversion gain with LNA, no board match (dB) |  | gain_i_db=15.3, gain_q_db=14.6 | n/a |
 | same with ideal lossless board L-match (dB) |  | gain_i_db=26.3, gain_q_db=26.8 | n/a |
 
@@ -231,69 +231,89 @@ corner sweep (ext transient): min / max over 12 corners (tt/ss/ff x 22/32 C x 3.
 
 | Metric | Target | Extracted | Schematic |
 | --- | --- | --- | --- |
-| RX -3 dB cutoff, widest (bw=0) (Hz) | >= 10e6 at tt and in the envelope (lead, Wi-Fi 20 MHz) | 1.52e+07 | 1.78e+07 |
-| RX -3 dB cutoff, narrowest (bw=15) (Hz) | 1e5 min | 7.76e+05 | n/a |
-| passband peaking at bw=0 (dB above DC) | <= 1 dB ripple | 1.7 | n/a |
-| PGA gain range (dB, gain=0 .. 15) | -6 .. 42 in 3 dB steps | -0.0581, 23 | n/a |
-| TX direction (tx_in -> out_tx) cutoff and gain |  | dc_gain_db=-0.028, f3db_hz=1.52e+07, peak_gain_db=1.66 | n/a |
-| stretch: gain at 20 MHz with widest setting (dB) (40 MHz channels need ~20 MHz corner) |  | -15.5 | n/a |
-| supply current, RX active (mA) | 4.5 | 5.82 | n/a |
-| output CM minus input CM with input CM at 1.75 V (V), gain 1 / gain 16 (OTAs reference the input CM) | no PGA-gain multiplication | 0.000194, 0.0016 | n/a |
-| passband peaking at max PGA gain (dB above DC) | <= 1 dB ripple | 0 | n/a |
-| TX observe through bb_tap into 10 pF: -3 dB (Hz) / gain (dB) / HD3 at 0.4 and 0.8 Vpk diff (dBc) |  | 1.51e+07, -1.4, -67.3, -71.7 | n/a |
-| TX->RX direction switch settling to 1 % (s) | 1e-06 | 3e-07 | n/a |
+| RX -3 dB cutoff, widest (bw=0) (Hz) | >= 10e6 at tt and in the envelope (lead, Wi-Fi 20 MHz) | 2.03e+07 | 1.75e+07 |
+| RX -3 dB cutoff, narrowest (bw=15) (Hz) | 1e5 min | 7.5e+05 | n/a |
+| passband peaking at bw=0 (dB above DC) | <= 1 dB ripple | 0.156 | n/a |
+| PGA gain range (dB, code -6 .. 42) | -6 .. 42 in 3 dB steps | -6.11, 42.1 | n/a |
+| PGA code sweep, bw=0 (code dB: dc gain dB, peaking dB, f3db Hz) | 3 dB steps, <= 1 dB ripple, >= 10 MHz |  | n/a |
+| TX direction (tx_in -> out_tx) cutoff and gain |  | dc_gain_db=-0.147, f3db_hz=2.02e+07, peak_gain_db=-0.0759 | n/a |
+| stretch: gain at 20 MHz with widest setting (dB) (40 MHz channels need ~20 MHz corner) |  | -2.7 | n/a |
+| supply current, RX active (mA) | 4.5 | 6.66 | n/a |
+| output CM minus input CM with input CM at 1.75 V (V), gain 1 / gain 16 (OTAs reference the input CM) | no PGA-gain multiplication | 0.000192, -0.266 | n/a |
+| passband peaking at max PGA gain (dB above DC) | <= 1 dB ripple | 0.0664 | n/a |
+| TX observe through bb_tap into 10 pF: -3 dB (Hz) / gain (dB) / HD3 at 0.4 and 0.8 Vpk diff (dBc) |  | 2e+07, -1.52, -68.5, -67.3 | n/a |
+| TX->RX direction switch settling to 1 % (s) | 1e-06 | 2.64e-07 | n/a |
 
 corner sweep (ext, RX widest, gain 0): min / max over 12 corners (tt/ss/ff x 22/32 C x 3.15/3.35 V)
 
 | Quantity | min | max |
 | --- | --- | --- |
-| f3db_hz | 1.13e+07 | 2.12e+07 |
-| dc_gain_db | -0.0741 | -0.0547 |
-| peak_gain_db | 0.719 | 3.69 |
-| idd_a | 0.00555 | 0.00594 |
+| f3db_hz | 1.4e+07 | 2.84e+07 |
+| dc_gain_db | -0.225 | -0.166 |
+| peak_gain_db | -0.225 | 5.19 |
+| idd_a | 0.00635 | 0.00678 |
 | out_cm_v | 1.65 | 1.65 |
 
-corner sweep (ext, RX gain 15): min / max over 12 corners (tt/ss/ff x 22/32 C x 3.15/3.35 V)
+corner sweep (ext, RX top PGA code 42 dB): min / max over 12 corners (tt/ss/ff x 22/32 C x 3.15/3.35 V)
 
 | Quantity | min | max |
 | --- | --- | --- |
-| dc_gain_db | 22.8 | 23.1 |
-| f3db_hz | 8.45e+06 | 1.87e+07 |
-| out_cm_v | 1.65 | 1.65 |
+| dc_gain_db | 41.9 | 42.1 |
+| peak_gain_db | 42 | 47.2 |
+| f3db_hz | 1.09e+07 | 2.06e+07 |
+| out_cm_v | 1.66 | 1.68 |
+
+corner sweep (ext, RX PGA code 21 dB: first coarse step): min / max over 12 corners (tt/ss/ff x 22/32 C x 3.15/3.35 V)
+
+| Quantity | min | max |
+| --- | --- | --- |
+| dc_gain_db | 21.1 | 21.2 |
+| peak_gain_db | 21.1 | 23.4 |
+| f3db_hz | 1.01e+07 | 2.61e+07 |
 
 **bbfilter_q**
 
 | Metric | Target | Extracted | Schematic |
 | --- | --- | --- | --- |
-| RX -3 dB cutoff, widest (bw=0) (Hz) | >= 10e6 at tt and in the envelope (lead, Wi-Fi 20 MHz) | 1.52e+07 | 1.78e+07 |
-| RX -3 dB cutoff, narrowest (bw=15) (Hz) | 1e5 min | 7.76e+05 | n/a |
-| passband peaking at bw=0 (dB above DC) | <= 1 dB ripple | 1.7 | n/a |
-| PGA gain range (dB, gain=0 .. 15) | -6 .. 42 in 3 dB steps | -0.0581, 23 | n/a |
-| TX direction (tx_in -> out_tx) cutoff and gain |  | dc_gain_db=-0.028, f3db_hz=1.52e+07, peak_gain_db=1.66 | n/a |
-| stretch: gain at 20 MHz with widest setting (dB) (40 MHz channels need ~20 MHz corner) |  | -15.5 | n/a |
-| supply current, RX active (mA) | 4.5 | 5.82 | n/a |
-| output CM minus input CM with input CM at 1.75 V (V), gain 1 / gain 16 (OTAs reference the input CM) | no PGA-gain multiplication | 0.000194, 0.0016 | n/a |
-| passband peaking at max PGA gain (dB above DC) | <= 1 dB ripple | 0 | n/a |
-| TX observe through bb_tap into 10 pF: -3 dB (Hz) / gain (dB) / HD3 at 0.4 and 0.8 Vpk diff (dBc) |  | 1.51e+07, -1.4, -67.3, -71.7 | n/a |
-| TX->RX direction switch settling to 1 % (s) | 1e-06 | 3e-07 | n/a |
+| RX -3 dB cutoff, widest (bw=0) (Hz) | >= 10e6 at tt and in the envelope (lead, Wi-Fi 20 MHz) | 2.03e+07 | 1.75e+07 |
+| RX -3 dB cutoff, narrowest (bw=15) (Hz) | 1e5 min | 7.5e+05 | n/a |
+| passband peaking at bw=0 (dB above DC) | <= 1 dB ripple | 0.156 | n/a |
+| PGA gain range (dB, code -6 .. 42) | -6 .. 42 in 3 dB steps | -6.11, 42.1 | n/a |
+| PGA code sweep, bw=0 (code dB: dc gain dB, peaking dB, f3db Hz) | 3 dB steps, <= 1 dB ripple, >= 10 MHz |  | n/a |
+| TX direction (tx_in -> out_tx) cutoff and gain |  | dc_gain_db=-0.147, f3db_hz=2.02e+07, peak_gain_db=-0.0759 | n/a |
+| stretch: gain at 20 MHz with widest setting (dB) (40 MHz channels need ~20 MHz corner) |  | -2.7 | n/a |
+| supply current, RX active (mA) | 4.5 | 6.66 | n/a |
+| output CM minus input CM with input CM at 1.75 V (V), gain 1 / gain 16 (OTAs reference the input CM) | no PGA-gain multiplication | 0.000192, -0.148 | n/a |
+| passband peaking at max PGA gain (dB above DC) | <= 1 dB ripple | 0.0664 | n/a |
+| TX observe through bb_tap into 10 pF: -3 dB (Hz) / gain (dB) / HD3 at 0.4 and 0.8 Vpk diff (dBc) |  | 2e+07, -1.52, -68.5, -67.3 | n/a |
+| TX->RX direction switch settling to 1 % (s) | 1e-06 | 2.64e-07 | n/a |
 
 corner sweep (ext, RX widest, gain 0): min / max over 12 corners (tt/ss/ff x 22/32 C x 3.15/3.35 V)
 
 | Quantity | min | max |
 | --- | --- | --- |
-| f3db_hz | 1.13e+07 | 2.12e+07 |
-| dc_gain_db | -0.0741 | -0.0547 |
-| peak_gain_db | 0.719 | 3.69 |
-| idd_a | 0.00555 | 0.00594 |
+| f3db_hz | 1.4e+07 | 2.84e+07 |
+| dc_gain_db | -0.225 | -0.166 |
+| peak_gain_db | -0.225 | 5.19 |
+| idd_a | 0.00635 | 0.00678 |
 | out_cm_v | 1.65 | 1.65 |
 
-corner sweep (ext, RX gain 15): min / max over 12 corners (tt/ss/ff x 22/32 C x 3.15/3.35 V)
+corner sweep (ext, RX top PGA code 42 dB): min / max over 12 corners (tt/ss/ff x 22/32 C x 3.15/3.35 V)
 
 | Quantity | min | max |
 | --- | --- | --- |
-| dc_gain_db | 22.8 | 23.1 |
-| f3db_hz | 8.45e+06 | 1.87e+07 |
-| out_cm_v | 1.65 | 1.65 |
+| dc_gain_db | 41.9 | 42.1 |
+| peak_gain_db | 42 | 47.2 |
+| f3db_hz | 1.09e+07 | 2.06e+07 |
+| out_cm_v | 1.66 | 1.68 |
+
+corner sweep (ext, RX PGA code 21 dB: first coarse step): min / max over 12 corners (tt/ss/ff x 22/32 C x 3.15/3.35 V)
+
+| Quantity | min | max |
+| --- | --- | --- |
+| dc_gain_db | 21.1 | 21.2 |
+| peak_gain_db | 21.1 | 23.4 |
+| f3db_hz | 1.01e+07 | 2.61e+07 |
 
 **bb_tap**
 
@@ -326,7 +346,7 @@ corner sweep (ext observe): min / max over 12 corners (tt/ss/ff x 22/32 C x 3.15
 | ext_m_1200MHz | 1.2e+09 | 36.3 | 36.2 | 6.57 |
 | ext_m_600MHz | 6e+08 | 36.4 | 36.4 | 6.58 |
 | tnoise_lna_matched | n/a | 28.9 | n/a | n/a |
-| tnoise_bypass | n/a | 14.1 | n/a | n/a |
+| tnoise_bypass | n/a | 14.7 | n/a | n/a |
 
 <!-- RESULTS:END -->
 ## 6. Four-test basis

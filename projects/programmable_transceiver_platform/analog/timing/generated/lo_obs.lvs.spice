@@ -1,0 +1,127 @@
+* NGSPICE file created from pt_lo_obs.ext - technology: gf180mcuD
+
+.subckt p_ppolyf_u_1k_w2_l2p4 a_n200_n362# a_n200_240# a_n412_n574#
+X0 a_n200_240# a_n200_n362# a_n412_n574# ppolyf_u_1k r_width=2u r_length=2.4u
+.ends
+
+.subckt p_nfet_03v3_w8_l0p28 a_n36_n956# a_n116_n800# a_n254_n1092# a_28_n800#
+X0 a_28_n800# a_n36_n956# a_n116_n800# a_n254_n1092# nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+.ends
+
+.subckt p_nfet_03v3_w10_l0p5 a_n50_n1160# a_50_n1000# a_n276_n1292# a_n138_n1000#
+X0 a_50_n1000# a_n50_n1160# a_n138_n1000# a_n276_n1292# nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+.ends
+
+.subckt p_pfet_03v3_w4_l0p28 a_28_n400# a_n36_n556# w_n278_n716# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# w_n278_n716# pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt p_nfet_03v3_w1_l0p28 a_n254_n392# a_28_n100# a_n36_n256# a_n116_n100#
+X0 a_28_n100# a_n36_n256# a_n116_n100# a_n254_n392# nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+.ends
+
+.subckt p_nfet_03v3_w6_l0p28 a_n254_n892# a_28_n600# a_n36_n756# a_n116_n600#
+X0 a_28_n600# a_n36_n756# a_n116_n600# a_n254_n892# nfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+.ends
+
+.subckt p_nfet_03v3_w1_l0p5 a_n138_n100# a_n50_n260# a_50_n100# a_n276_n392#
+X0 a_50_n100# a_n50_n260# a_n138_n100# a_n276_n392# nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.5u
+.ends
+
+.subckt p_nfet_03v3_w10_l0p28 a_28_n1000# a_n36_n1156# a_n254_n1292# a_n116_n1000#
+X0 a_28_n1000# a_n36_n1156# a_n116_n1000# a_n254_n1292# nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+.ends
+
+.subckt p_pfet_03v3_w8_l0p28 a_n36_n956# a_n116_n800# a_28_n800# w_n278_n1116#
+X0 a_28_n800# a_n36_n956# a_n116_n800# w_n278_n1116# pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+.ends
+
+.subckt p_pfet_03v3_w2_l0p28 w_n278_n516# a_n36_n356# a_n116_n200# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# w_n278_n516# pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt p_pfet_03v3_w10_l0p28 w_n278_n1316# a_28_n1000# a_n36_n1156# a_n116_n1000#
+X0 a_28_n1000# a_n36_n1156# a_n116_n1000# w_n278_n1316# pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+.ends
+
+.subckt ct_tspc2 CK Q ENB VDD VSS
+X0 a_278_1760# QB VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.78p ps=9.39u w=4u l=0.28u
+X1 Q ENB a_2538_1760# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X2 a_2538_1760# QB VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X3 Q QB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X4 VSS Y a_1582_230# VSS nfet_03v3 ad=0.5425p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X5 a_1582_230# CK QB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X6 QB Y VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X7 VSS ENB Q VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X8 X QB VSS VSS nfet_03v3 ad=1.39p pd=5.39u as=1.39p ps=5.39u w=2u l=0.28u
+X9 QB ENB VSS VSS nfet_03v3 ad=0.695p pd=3.39u as=0.5425p ps=2.6u w=1u l=0.28u
+X10 a_844_230# X Y VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X11 X CK a_278_1760# VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X12 VSS CK a_844_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X13 Y CK VDD VDD pfet_03v3 ad=2.78p pd=9.39u as=2.78p ps=9.39u w=4u l=0.28u
+.ends
+
+.subckt p_nfet_03v3_w2_l0p28 a_n36_n356# a_n116_n200# a_n254_n492# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# a_n254_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt p_ppolyf_u_1k_w1_l36 a_n312_n3934# a_n100_3600# a_n100_n3722#
+X0 a_n100_3600# a_n100_n3722# a_n312_n3934# ppolyf_u_1k r_width=1u r_length=36u
+.ends
+
+.subckt p_nfet_03v3_w4_l0p28 a_n254_n692# a_28_n400# a_n36_n556# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# a_n254_n692# nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt pt_lo_obs LP LN EN OBS VDD VSS
+XXMR2 m1_13718_1278# VDD VSS p_ppolyf_u_1k_w2_l2p4
+XXMR1 m1_14974_1278# VDD VSS p_ppolyf_u_1k_w2_l2p4
+XXO2_N m1_20150_13138# VSS VSS OBS p_nfet_03v3_w8_l0p28
+XXMT_0 m1_4816_634# m1_8650_1678# VSS VSS p_nfet_03v3_w10_l0p5
+XXC2_PA m1_6094_12738# m1_3582_12738# VDD VDD p_pfet_03v3_w4_l0p28
+XXBC VSS m1_4816_634# XD2/ENB VSS p_nfet_03v3_w1_l0p28
+XXS1 VSS m1_13638_558# m1_14974_1278# m1_24166_1678# p_nfet_03v3_w6_l0p28
+XXST_0 m1_4816_634# m1_21610_1678# VSS VSS p_nfet_03v3_w10_l0p5
+XXMT_1 m1_4816_634# m1_8650_1678# VSS VSS p_nfet_03v3_w10_l0p5
+XXC2_PB XD1/CK XD2/ENB VDD m1_6094_12738# p_pfet_03v3_w4_l0p28
+XXBD VSS m1_4816_634# m1_4816_634# VSS p_nfet_03v3_w1_l0p5
+XXS2 VSS m1_14894_558# m1_13718_1278# m1_24166_1678# p_nfet_03v3_w6_l0p28
+XXST_1 m1_4816_634# m1_21610_1678# VSS VSS p_nfet_03v3_w10_l0p5
+XXC2_NA VSS XD1/CK m1_3582_12738# VSS p_nfet_03v3_w1_l0p28
+XXS3 m1_13638_558# m1_14894_558# VSS m1_25422_1678# p_nfet_03v3_w10_l0p28
+XXC2_NB VSS XD1/CK XD2/ENB VSS p_nfet_03v3_w1_l0p28
+XXEI_N VSS XD2/ENB EN VSS p_nfet_03v3_w1_l0p28
+XXS4 m1_14894_558# m1_13638_558# VSS m1_25422_1678# p_nfet_03v3_w10_l0p28
+XXO3_P_0 m1_20150_13138# VDD OBS VDD p_pfet_03v3_w8_l0p28
+XXO3_P_1 m1_20150_13138# VDD OBS VDD p_pfet_03v3_w8_l0p28
+XXEI_P VDD EN VDD XD2/ENB p_pfet_03v3_w2_l0p28
+XXM1 VSS m1_13718_1278# m1_13638_558# m1_11206_1678# p_nfet_03v3_w6_l0p28
+XXM2 VSS m1_14974_1278# m1_14894_558# m1_11206_1678# p_nfet_03v3_w6_l0p28
+XXM3 m1_13718_1278# m1_14974_1278# VSS m1_12462_1678# p_nfet_03v3_w10_l0p28
+XXM4 m1_14974_1278# m1_13718_1278# VSS m1_12462_1678# p_nfet_03v3_w10_l0p28
+XXCP1 VDD m1_990_12218# m1_990_12218# VDD p_pfet_03v3_w10_l0p28
+XXO2_P_0 m1_20150_13138# VDD OBS VDD p_pfet_03v3_w8_l0p28
+XXD1 XD1/CK XD1/Q XD2/ENB VDD VSS ct_tspc2
+XXCP2 VDD m1_2326_13338# m1_990_12218# VDD p_pfet_03v3_w10_l0p28
+XXBS m1_3582_1078# XD2/ENB VDD VDD p_pfet_03v3_w4_l0p28
+XXO3_N m1_20150_13138# VSS VSS OBS p_nfet_03v3_w8_l0p28
+XXSA m1_24166_1678# LN VSS m1_21610_1678# p_nfet_03v3_w10_l0p28
+XXO2_P_1 m1_20150_13138# VDD OBS VDD p_pfet_03v3_w8_l0p28
+XXD2 XD1/Q XD2/Q XD2/ENB VDD VSS ct_tspc2
+XXC1_N m1_2326_13338# VSS VSS m1_3582_12738# p_nfet_03v3_w2_l0p28
+XXRB VSS m1_3582_1078# m1_4816_634# p_ppolyf_u_1k_w1_l36
+XXC1_P m1_3582_12738# m1_2326_13338# VDD VDD p_pfet_03v3_w4_l0p28
+XXCX m1_990_12218# m1_14894_558# VSS m1_34570_1678# p_nfet_03v3_w10_l0p28
+XXO1_N VSS m1_20150_13138# XD2/Q VSS p_nfet_03v3_w4_l0p28
+XXCY m1_2326_13338# m1_13638_558# VSS m1_34570_1678# p_nfet_03v3_w10_l0p28
+XXCT_0 m1_4816_634# m1_34570_1678# VSS VSS p_nfet_03v3_w10_l0p5
+XXO1_P XD2/Q VDD m1_20150_13138# VDD p_pfet_03v3_w8_l0p28
+XXCT_1 m1_4816_634# m1_34570_1678# VSS VSS p_nfet_03v3_w10_l0p5
+XXMA m1_11206_1678# LP VSS m1_8650_1678# p_nfet_03v3_w10_l0p28
+XXCT_2 m1_4816_634# m1_34570_1678# VSS VSS p_nfet_03v3_w10_l0p5
+XXSR1 m1_14894_558# VDD VSS p_ppolyf_u_1k_w2_l2p4
+XXSH m1_25422_1678# LP VSS m1_21610_1678# p_nfet_03v3_w10_l0p28
+XXSR2 m1_13638_558# VDD VSS p_ppolyf_u_1k_w2_l2p4
+XXMH m1_12462_1678# LN VSS m1_8650_1678# p_nfet_03v3_w10_l0p28
+.ends
+

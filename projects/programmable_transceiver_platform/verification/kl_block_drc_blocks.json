@@ -1,0 +1,325 @@
+{
+ "note": "Per-block KLayout DRC/antenna registry (verification/kl_block_drc.py). gds is repo-relative.",
+ "blocks": {
+  "lna": {
+   "gds": "projects/programmable_transceiver_platform/analog/rf_rx/generated/lna.gds",
+   "top": "pt_lna",
+   "owner": "rf"
+  },
+  "rxmix_i": {
+   "gds": "projects/programmable_transceiver_platform/analog/rf_rx/generated/rxmix_i.gds",
+   "top": "pt_rxmix_i",
+   "owner": "rf"
+  },
+  "rxmix_q": {
+   "gds": "projects/programmable_transceiver_platform/analog/rf_rx/generated/rxmix_q.gds",
+   "top": "pt_rxmix_q",
+   "owner": "rf"
+  },
+  "bbfilter_i": {
+   "gds": "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_i.gds",
+   "top": "pt_bbfilter_i",
+   "owner": "rf"
+  },
+  "bbfilter_q": {
+   "gds": "projects/programmable_transceiver_platform/analog/rf_rx/generated/bbfilter_q.gds",
+   "top": "pt_bbfilter_q",
+   "owner": "rf"
+  },
+  "txmix_i": {
+   "gds": "projects/programmable_transceiver_platform/analog/rf_tx/generated/txmix_i.gds",
+   "top": "pt_txmix_i",
+   "owner": "rf"
+  },
+  "txmix_q": {
+   "gds": "projects/programmable_transceiver_platform/analog/rf_tx/generated/txmix_q.gds",
+   "top": "pt_txmix_q",
+   "owner": "rf"
+  },
+  "txsum": {
+   "gds": "projects/programmable_transceiver_platform/analog/rf_tx/generated/txsum.gds",
+   "top": "pt_txsum",
+   "owner": "rf"
+  },
+  "rfdriver": {
+   "gds": "projects/programmable_transceiver_platform/analog/rf_tx/generated/rfdriver.gds",
+   "top": "pt_rfdriver",
+   "owner": "rf"
+  },
+  "adc_i": {
+   "gds": "projects/programmable_transceiver_platform/analog/converters/generated/adc_i.gds",
+   "top": "pt_adc_i",
+   "owner": "converters"
+  },
+  "adc_q": {
+   "gds": "projects/programmable_transceiver_platform/analog/converters/generated/adc_q.gds",
+   "top": "pt_adc_q",
+   "owner": "converters"
+  },
+  "dac_i": {
+   "gds": "projects/programmable_transceiver_platform/analog/converters/generated/dac_i.gds",
+   "top": "pt_dac_i",
+   "owner": "converters"
+  },
+  "dac_q": {
+   "gds": "projects/programmable_transceiver_platform/analog/converters/generated/dac_q.gds",
+   "top": "pt_dac_q",
+   "owner": "converters"
+  },
+  "refbuf": {
+   "gds": "projects/programmable_transceiver_platform/analog/converters/generated/refbuf.gds",
+   "top": "pt_refbuf",
+   "owner": "converters"
+  },
+  "pll_ring": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/pll_ring.gds",
+   "top": "pt_pll_ring",
+   "owner": "wired_rx"
+  },
+  "clockmux": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/clockmux.gds",
+   "top": "pt_clockmux",
+   "owner": "unowned:timing"
+  },
+  "prescale": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/prescale.gds",
+   "top": "pt_prescale",
+   "owner": "unowned:timing"
+  },
+  "wordclk": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/wordclk.gds",
+   "top": "pt_wordclk",
+   "owner": "unowned:timing"
+  },
+  "polyphase": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/polyphase.gds",
+   "top": "pt_polyphase",
+   "owner": "unowned:timing"
+  },
+  "lo_ext": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/lo_ext.gds",
+   "top": "pt_lo_ext",
+   "owner": "unowned:timing"
+  },
+  "cdr": {
+   "gds": "projects/programmable_transceiver_platform/analog/wired_rx/generated/cdr.gds",
+   "top": "pt_cdr",
+   "owner": "wired_rx"
+  },
+  "ctle": {
+   "gds": "projects/programmable_transceiver_platform/analog/wired_rx/generated/ctle.gds",
+   "top": "pt_ctle",
+   "owner": "wired_rx"
+  },
+  "detect": {
+   "gds": "projects/programmable_transceiver_platform/analog/wired_rx/generated/detect.gds",
+   "top": "pt_detect",
+   "owner": "wired_rx"
+  },
+  "rxlevel": {
+   "gds": "projects/programmable_transceiver_platform/analog/wired_rx/generated/rxlevel.gds",
+   "top": "pt_rxlevel",
+   "owner": "wired_rx"
+  },
+  "rxselect": {
+   "gds": "projects/programmable_transceiver_platform/analog/wired_rx/generated/rxselect.gds",
+   "top": "pt_rxselect",
+   "owner": "wired_rx"
+  },
+  "slicer": {
+   "gds": "projects/programmable_transceiver_platform/analog/wired_rx/generated/slicer.gds",
+   "top": "pt_slicer",
+   "owner": "wired_rx"
+  },
+  "termination": {
+   "gds": "projects/programmable_transceiver_platform/analog/wired_rx/generated/termination.gds",
+   "top": "pt_termination",
+   "owner": "wired_rx"
+  },
+  "wmon_sel": {
+   "gds": "projects/programmable_transceiver_platform/analog/wired_rx/generated/wmon_sel.gds",
+   "top": "pt_wmon_sel",
+   "owner": "wired_rx"
+  },
+  "wiredtx": {
+   "gds": "projects/programmable_transceiver_platform/analog/wired_tx/generated/wiredtx.gds",
+   "top": "pt_wiredtx",
+   "owner": "wired_tx"
+  },
+  "hsbias": {
+   "gds": "projects/programmable_transceiver_platform/analog/wired_tx/generated/hsbias.gds",
+   "top": "pt_wtx_hsbias",
+   "owner": "wired_tx"
+  },
+  "wtx_fallback_control": {
+   "gds": "projects/programmable_transceiver_platform/analog/bringup_control/generated/pt_wtx_fallback_control.gds",
+   "top": "pt_wtx_fallback_control",
+   "owner": "digital"
+  },
+  "bb_tap": {
+   "gds": "projects/programmable_transceiver_platform/analog/rf_rx/generated/bb_tap.gds",
+   "top": "pt_bb_tap",
+   "owner": "rf"
+  },
+  "clk_obs": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/clk_obs.gds",
+   "top": "pt_clk_obs",
+   "owner": "unowned:timing"
+  },
+  "diff_clk_rx": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/diff_clk_rx.gds",
+   "top": "pt_diff_clk_rx",
+   "owner": "unowned:timing"
+  },
+  "ring_osc": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/ring_osc.gds",
+   "top": "pt_ring_osc",
+   "owner": "unowned:timing"
+  },
+  "vco_replica": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/vco_replica.gds",
+   "top": "pt_vco_replica",
+   "owner": "unowned:timing"
+  },
+  "aosc": {
+   "gds": "projects/programmable_transceiver_platform/analog/timing/generated/aosc.gds",
+   "top": "pt_aosc",
+   "owner": "unowned:timing"
+  },
+  "por": {
+   "gds": "projects/programmable_transceiver_platform/analog/core_support/por/gds/gf180mcu_ocd_ip__por.gds.gz",
+   "top": "gf180mcu_ocd_ip__por",
+   "owner": "unowned:core_support"
+  },
+  "core_bias": {
+   "gds": "scratch/core-bias-routing-20261109-101927/pt_core_bias_routed.gds",
+   "top": "pt_core_bias",
+   "owner": "unowned:core_support"
+  },
+  "isw_wired": {
+   "gds": "scratch/island-support-20261108-075605/layout/isw_wired.gds",
+   "top": "isw_wired",
+   "owner": "unowned:island_support"
+  },
+  "isw_rf": {
+   "gds": "scratch/island-support-20261108-075605/layout/isw_rf.gds",
+   "top": "isw_rf",
+   "owner": "unowned:island_support"
+  },
+  "isw_pll": {
+   "gds": "scratch/island-support-20261108-075605/layout/isw_pll.gds",
+   "top": "isw_pll",
+   "owner": "unowned:island_support"
+  },
+  "isw_conv": {
+   "gds": "scratch/island-support-20261108-075605/layout/isw_conv.gds",
+   "top": "isw_conv",
+   "owner": "unowned:island_support"
+  },
+  "isw_debug": {
+   "gds": "scratch/island-support-20261108-075605/layout/isw_debug.gds",
+   "top": "isw_debug",
+   "owner": "unowned:island_support"
+  },
+  "iso_clamp": {
+   "gds": "scratch/island-support-20261108-075605/layout/iso_clamp.gds",
+   "top": "iso_clamp",
+   "owner": "unowned:island_support"
+  },
+  "atb_leaf_s": {
+   "gds": "scratch/island-support-20261108-075605/layout/atb_leaf_s.gds",
+   "top": "atb_leaf_s",
+   "owner": "unowned:island_support"
+  },
+  "atb_leaf_f": {
+   "gds": "scratch/island-support-20261108-075605/layout/atb_leaf_f.gds",
+   "top": "atb_leaf_f",
+   "owner": "unowned:island_support"
+  },
+  "atb_grp": {
+   "gds": "scratch/island-support-20261108-075605/layout/atb_grp.gds",
+   "top": "atb_grp",
+   "owner": "unowned:island_support"
+  },
+  "atb_pad": {
+   "gds": "scratch/island-support-20261108-075605/layout/atb_pad.gds",
+   "top": "atb_pad",
+   "owner": "unowned:island_support"
+  },
+  "pad_rf_pair": {
+   "gds": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-pair/pad.gds",
+   "top": "rf_protected_pad_pair",
+   "owner": "unowned:pads"
+  },
+  "pad_single_leg": {
+   "gds": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/single-leg/pad.gds",
+   "top": "pad_single_leg",
+   "owner": "unowned:pads"
+  },
+  "pad_refpad": {
+   "gds": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/reference/combined.gds",
+   "top": "tx_with_primary",
+   "owner": "unowned:pads"
+  },
+  "pad_wirepad": {
+   "gds": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-usb/combined.gds",
+   "top": "pad_wirepad",
+   "owner": "unowned:pads"
+  },
+  "pad_txpad": {
+   "gds": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-transmit/combined.gds",
+   "top": "pad_txpad",
+   "owner": "unowned:pads"
+  },
+  "attached_tx_steering_driver": {
+   "gds": "projects/programmable_transceiver_platform/analog/pads/generated/packaging-assembly.gds",
+   "top": "attached_tx_steering_driver",
+   "owner": "unowned:pads"
+  },
+  "attached_tx_interlock": {
+   "gds": "projects/programmable_transceiver_platform/analog/pads/generated/packaging-assembly.gds",
+   "top": "attached_tx_interlock",
+   "owner": "unowned:pads"
+  },
+  "attached_tx_buffer": {
+   "gds": "projects/programmable_transceiver_platform/analog/pads/generated/packaging-assembly.gds",
+   "top": "attached_tx_buffer",
+   "owner": "unowned:pads"
+  },
+  "char_atb": {
+   "gds": "projects/programmable_transceiver_platform/analog/characterization/generated/char_atb.gds",
+   "top": "pt_char_atb",
+   "owner": "characterization"
+  },
+  "char_cmldiv": {
+   "gds": "projects/programmable_transceiver_platform/analog/characterization/generated/char_cmldiv.gds",
+   "top": "pt_char_cmldiv",
+   "owner": "characterization"
+  },
+  "char_rffet": {
+   "gds": "projects/programmable_transceiver_platform/analog/characterization/generated/char_rffet.gds",
+   "top": "pt_char_rffet",
+   "owner": "characterization"
+  },
+  "char_rffet_open": {
+   "gds": "projects/programmable_transceiver_platform/analog/characterization/generated/char_rffet_open.gds",
+   "top": "pt_char_rffet_open",
+   "owner": "characterization"
+  },
+  "char_rffet_short": {
+   "gds": "projects/programmable_transceiver_platform/analog/characterization/generated/char_rffet_short.gds",
+   "top": "pt_char_rffet_short",
+   "owner": "characterization"
+  },
+  "char_ro33": {
+   "gds": "projects/programmable_transceiver_platform/analog/characterization/generated/char_ro33.gds",
+   "top": "pt_char_ro33",
+   "owner": "characterization"
+  },
+  "char_ro50": {
+   "gds": "projects/programmable_transceiver_platform/analog/characterization/generated/char_ro50.gds",
+   "top": "pt_char_ro50",
+   "owner": "characterization"
+  }
+ }
+}

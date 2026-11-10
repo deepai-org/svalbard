@@ -1,0 +1,26 @@
+
+.subckt bringup_inv A Y VDD VSS
+XN Y A VSS VSS nfet_03v3 w=2u l=0.28u
+XP Y A VDD VDD pfet_03v3 w=4u l=0.28u
+.ends bringup_inv
+.subckt bringup_and A B Y VDD VSS
+XP0 YB A VDD VDD pfet_03v3 w=4u l=0.28u
+XP1 YB B VDD VDD pfet_03v3 w=4u l=0.28u
+XN0 YB A MID VSS nfet_03v3 w=4u l=0.28u
+XN1 MID B VSS VSS nfet_03v3 w=4u l=0.28u
+XI YB Y VDD VSS bringup_inv
+.ends bringup_and
+
+.subckt pt_wtx_fallback_control L_BRANCH0 L_BRANCH1 L_STATE0 L_STATE1 L_IDLE L_STAGE_TMDS L_EXT_ENABLE ISO_wired FORCE_LEAF TMDS_REQUEST WIRED_ON FORCE_SELECTED RAIL_wired VDD VSS
+Xbranch_inv L_BRANCH0 BRANCH0_B RAIL_wired VSS bringup_inv
+Xbranch_decode L_BRANCH1 BRANCH0_B TMDS_SELECTED RAIL_wired VSS bringup_and
+Xstate_inv L_STATE0 STATE0_B RAIL_wired VSS bringup_inv
+Xstate_active L_STATE1 STATE0_B STATE_ACTIVE RAIL_wired VSS bringup_and
+Xidle_inv L_IDLE NOT_IDLE RAIL_wired VSS bringup_inv
+Xrun STATE_ACTIVE NOT_IDLE RUN RAIL_wired VSS bringup_and
+Xstage RUN L_STAGE_TMDS RUN_TMDS RAIL_wired VSS bringup_and
+Xexternal_request TMDS_SELECTED L_EXT_ENABLE EXT_REQUEST RAIL_wired VSS bringup_and
+Xdrive_request EXT_REQUEST RUN_TMDS TMDS_REQUEST RAIL_wired VSS bringup_and
+Xwire_on ISO_wired WIRED_ON VDD VSS bringup_inv
+Xforce_isolation FORCE_LEAF WIRED_ON FORCE_SELECTED VDD VSS bringup_and
+.ends pt_wtx_fallback_control

@@ -27,7 +27,7 @@ from fastcells import C, G, BRK, fet  # noqa: E402
 
 FAST = tools.GENERATED / 'fast'
 TIMING_FAST = TIMING / 'generated/fast'
-REUSED = ('ct_mux4', 'ct_tspcd')
+REUSED = ('ct_mux4', 'ct_tspcd', 'ct_div5')
 
 
 def _nand3(a, b, c, y, pre, wn=3, wp=3):

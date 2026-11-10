@@ -126,7 +126,7 @@ VG3 g3 0 {g[3]}
 IB 0 ib 10u
 {src}
 X1 vdd VSS inp inn pad_p pad_n ib en mute byp g0 g1 g2 g3 ab ap ac pt_rfdriver
-{S.pad_load(match=match)}
+{S.pad_load(match=match, feed='vdd')}
 .control
 tran 1p 5n 0 2p
 wrdata {out} v(lp)-v(ln) i(VDD) v(ab) v(ap) v(ac) v(inp)-v(inn)
@@ -185,9 +185,9 @@ XD vdd_d VSS sp sn pad_p pad_n ib_d en mute byp g0 g1 g2 g3 a6 a7 a8 pt_rfdriver
 {pad}
 .control
 op
-print i(VDMI) i(VDMQ) i(VDS) i(VDD) i(VBB)
+print i(VDMI) i(VDMQ) i(VDS) i(VDD) i(VBB){'' if pad_drive is not None else ' i(VFEED)'}
 tran 2p {tstop} 0 4p
-wrdata {out} i(VDMI) i(VDMQ) i(VDS) i(VDD) i(VBB) v(pad_p) v(sp) v(ib_d) {'i(VPDP)' if pad_drive is not None else 'v(pad_n)'}
+wrdata {out} i(VDMI) i(VDMQ) i(VDS) i(VDD) i(VBB) v(pad_p) v(sp) v(ib_d) {'i(VPDP)' if pad_drive is not None else 'v(pad_n) i(VFEED)'}
 .endc
 .end
 """
@@ -203,6 +203,11 @@ def safety_metrics(work, name, tstop=3e-9):
     r['sum_p_V'] = round(float(np.mean(y[m, 6])), 4)
     r['ibias_pin_V'] = round(float(np.mean(y[m, 7])), 4)
     r['col8'] = float(np.mean(y[m, 8]))
+    if y.shape[1] > 9:   # board feed present: report it and keep rfdriver_rail_uA chip-only
+        feed = -1e6 * float(np.mean(y[m, 9]))
+        r['board_feed_uA'] = round(feed, 4)
+        r['rfdriver_rail_uA'] = round(r['rfdriver_rail_uA'] - feed, 4)
+        r['rail_peak_abs_uA'] = round(1e6 * float(np.max(np.abs(y[:, 0:4].sum(axis=1) - y[:, 9]))), 3)
     # static (DC operating point, LO at its t=0 level) currents from the log
     import re
     log = (Path(work) / f'{name}.log').read_text()
@@ -210,6 +215,9 @@ def safety_metrics(work, name, tstop=3e-9):
     r['dc_op_uA'] = {lab: round(-1e6 * op.get(src, float('nan')), 4) for src, lab in
                      (('vdmi', 'txmix_i_rail'), ('vdmq', 'txmix_q_rail'), ('vds', 'txsum_rail'), ('vdd', 'rfdriver_rail'),
                       ('vbb', 'bb_dac_source'))}
+    if 'vfeed' in op:
+        r['dc_op_uA']['board_feed'] = round(-1e6 * op['vfeed'], 4)
+        r['dc_op_uA']['rfdriver_rail'] = round(r['dc_op_uA']['rfdriver_rail'] + 1e6 * op['vfeed'], 4)
     return r
 
 
@@ -255,7 +263,7 @@ def cap_deck(view, block, node, dc, ctrl, out='w.txt'):
         dut = 'X1 vdd VSS bbp bbn dacp dacn lop lon op on ib en sel VSS ab at pt_txmix_i'
     else:
         fix = (f"VIP inp 0 2.8\nVIN inn 0 2.8\nIB 0 ib 10u\nVEN en 0 {ctrl['en']}\nVMUTE mute 0 {ctrl.get('mute', 0)}\n"
-               f"VBYP byp 0 {ctrl.get('bypass', 0)}\nVG g 0 3.3\n" + S.pad_load())
+               f"VBYP byp 0 {ctrl.get('bypass', 0)}\nVG g 0 3.3\n" + S.pad_load(feed='vdd'))
         dut = 'X1 vdd VSS inp inn pad_p pad_n ib en mute byp g g g g ab ap ac pt_rfdriver'
     # replace the probed node's fixture source by a DC+AC source with a current sense
     lines = [l for l in fix.splitlines() if not l.split()[1:2] == [node] or l.startswith(('R', 'C'))]
@@ -275,6 +283,10 @@ wrdata {out} c
 
 
 # ----------------------------------------------------------------------------
+AMAM_LEVELS = (0.02, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.3)
+LO_SKEW_PS = (0, 2, 5, 10, 20)
+
+
 def build(view, match=None):
     decks, meta = {}, {}
 
@@ -347,6 +359,19 @@ def build(view, match=None):
         'chain_ssb', tstop=5e-9 + 1 / fbb, fbb=fbb)
     add('match_ssb_sat', S.chain_deck(view, vin_i=1.0, vin_q=1.0, fbb=fbb, sat=1, match=m, tstop=5e-9 + 1 / fbb, out='w.txt'),
         'chain_ssb', tstop=5e-9 + 1 / fbb, fbb=fbb)
+    # AM-AM / AM-PM of the whole chain into the board (baseband DC on I, CW at the LO), input to the
+    # modulation model (tx_modulation.py): EVM, ACLR, mask with a 20 MHz HE20 OFDM stimulus
+    for v in AMAM_LEVELS:
+        add(f'amam_{int(round(v * 1000)):04d}', S.chain_deck(view, vin_i=v, match=m, tstop=8e-9, out='w.txt'), 'amam',
+            tstop=8e-9, vin=v)
+        add(f'amamsat_{int(round(v * 1000)):04d}', S.chain_deck(view, vin_i=v, match=m, sat=1, tstop=8e-9, out='w.txt'), 'amam',
+            tstop=8e-9, vin=v, sat=1)
+    # LO quadrature skew (Q LO delayed by extra ps): image rejection with an SSB tone, linear level
+    for sk in LO_SKEW_PS:
+        d = S.chain_deck(view, vin_i=0.3, vin_q=0.3, fbb=fbb, match=m, tstop=5e-9 + 1 / fbb, out='w.txt')
+        d = d.replace(f"PULSE(0 3.3 {1 / S.F_LO / 4}", f"PULSE(0 3.3 {1 / S.F_LO / 4 + sk * 1e-12}").replace(
+            f"PULSE(3.3 0 {1 / S.F_LO / 4}", f"PULSE(3.3 0 {1 / S.F_LO / 4 + sk * 1e-12}")
+        add(f'skew_{sk}ps', d, 'chain_ssb', tstop=5e-9 + 1 / fbb, fbb=fbb, lo_q_skew_ps=sk)
     for a in (0.1, 0.3, 0.6):
         add(f'drv_match_a{int(a * 1000)}', driver_deck(view, amp=a, match=m), 'driver', amp=a)
     # corners (performance only)
@@ -405,6 +430,17 @@ def evaluate(work, meta):
                 r = driver_metrics(work, name, m['amp'])
             elif k == 'chain':
                 r = S.chain_metrics(work, name, m['tstop'], f_lo=m.get('f_lo', S.F_LO))
+            elif k == 'amam':
+                t, y = S.load(work, name); t1 = m['tstop']; t0 = t1 - 8 / S.F_LO
+                z = S.ctone(t, y[:, 0], S.F_LO, t0, t1)
+                r = dict(vin=m['vin'], out_re=float(z.real), out_im=float(z.imag), pad_dBm_50ohm=round(S.dbm(abs(z)), 3),
+                         h2_dBc=round(20 * np.log10(abs(S.ctone(t, y[:, 0], 2 * S.F_LO, t0, t1)) / abs(z) + 1e-15), 2),
+                         h3_dBc=round(20 * np.log10(abs(S.ctone(t, y[:, 0], 3 * S.F_LO, t0, t1)) / abs(z) + 1e-15), 2),
+                         pad_h2_dBc=round(20 * np.log10(abs(S.ctone(t, y[:, 13] - y[:, 15], 2 * S.F_LO, t0, t1)) /
+                                                        abs(S.ctone(t, y[:, 13] - y[:, 15], S.F_LO, t0, t1)) + 1e-15), 2),
+                         pad_h3_dBc=round(20 * np.log10(abs(S.ctone(t, y[:, 13] - y[:, 15], 3 * S.F_LO, t0, t1)) /
+                                                        abs(S.ctone(t, y[:, 13] - y[:, 15], S.F_LO, t0, t1)) + 1e-15), 2),
+                         supply_mA=round(-1e3 * float(np.mean(y[t >= t0, 6])), 3))
             elif k == 'chain_ssb':
                 r = S.chain_metrics(work, name, m['tstop'], fbb=m['fbb'])
             elif k == 'safety':
@@ -445,10 +481,11 @@ if __name__ == '__main__':
     res = evaluate(work, meta)
     doc = dict(view=a.view, analog_image=S.ANALOG_IMAGE_REF, analog_image_id=S.ANALOG_IMAGE, models=S.MODELS,
                nominal='tt / 27 C / 3.3 V', lo_assumption='differential rail-to-rail CMOS square LO, 50% duty, 30 ps edges, 50 ohm source, 2.44 GHz',
-               pad_assumption='2 ohm + 1 pF per leg (rftxpad allocation), 50 ohm differential DC-blocked load',
-               board_match=dict(match, method='driver differential output admittance at the pad (tt, code 15) '
-                                'conjugate-matched to 50 ohm differential by an L-section; inductor Q=30 (series loss '
-                                'in simulation), ideal capacitors, ideal 1:1 balun not included (budget ~0.5 dB).',
+               pad_assumption='2 ohm + 1 pF per leg (rftxpad allocation); unmatched benches: 100 nH bias-tee chokes to the island rail, DC-blocked 50 ohm differential load',
+               board_match=dict(match, method='board DC feed to the rf_tx island rail through per-leg chokes (Q=30) that resonate the measured '
+                                'differential pad susceptance (tt, code 15, driver biased by the feed); DC blocks; ideal '
+                                '200:50 ohm balun followed by a 1.0 dB resistive pad for balun insertion loss; 50 ohm load. '
+                                'All board-matched powers are after the balun loss.',
                                 pad_admittance_S=[float(zd[1]), float(zd[3])]),
                runtime_s=round(time.time() - t0, 1), results=res)
     if not a.only:

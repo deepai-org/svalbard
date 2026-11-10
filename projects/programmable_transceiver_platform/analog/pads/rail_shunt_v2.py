@@ -25,8 +25,17 @@ try:
 except ImportError:
     IMAGE = PDK = magic = rectangles = None
 
-FINGER_UM, LENGTH_UM, GAP_UM = 50., .7, 6.
-D_REGION, S_REGION = (-22.5, -1.), (1., 22.5)
+# LU-01 (risk register, DRM LU.3 for 6 V devices): every NCOMP point must be <= 15 um from a
+# Psub tap. v2 drew one 240-finger x 50 um device per bank with only a perimeter guard ring
+# (7,193 um2 of n-diffusion > 15 um from a tap). v2.2 builds every bank from SUB_NF-finger
+# guarded sub-banks whose shared guard columns become p+ tap stripes through the array
+# (farthest n-diffusion point 10.3 um from a tap). The finger height grows 50 -> 53.6 um so
+# that the bank keeps its width with SUB_BANKS x SUB_NF = 224 fingers; W/stage 12006.4 um
+# (>= the selected 12000 um, so the stress protection is not weakened).
+FINGER_UM, LENGTH_UM, GAP_UM = 53.6, .7, 6.
+SUB_NF, SUB_BANKS = 16, 14
+_HALF = FINGER_UM / 2 - 2.3
+D_REGION, S_REGION = (-_HALF, -1.), (1., _HALF)
 SHEET = {1: .090, 2: .090, 3: .090, 4: .090, 5: .040}      # nominal ohm/sq (Magic tech)
 SHEET_HI = {1: .104, 2: .104, 3: .104, 4: .104, 5: .049}
 CUT_OHM, CUT_OHM_HI = 4.5, 15.
@@ -42,19 +51,41 @@ def reference(stages, fingers_per_stage, name='rail_shunt', ports=('RAIL', 'VSS'
     return lines + [f'.ends {name}', '']
 
 
-def bank_commands(stages, fingers, r):
+def sub_bank_layout(r, banks=SUB_BANKS, nf=SUB_NF):
+    """Composite geometry of `banks` guarded nf-finger sub-banks whose guard columns overlap."""
     strips = sorted(r['mvndiffc']); gates = sorted(r['polycontact']); guard = sorted(r['mvpsubdiffcont'])
-    if len(strips) != fingers + 1 or len(gates) != fingers or len(guard) != 2:
+    if len(strips) != nf + 1 or len(gates) != nf or len(guard) != 2:
         raise ValueError('Unexpected nfet_06v0 PCell contact topology')
-    gl, gr = guard[0][0], guard[1][2]
-    shapes = [v for k, vs in r.items() if k != 'checkpaint' for v in vs]
-    pitch = max(v[3] for v in shapes) - min(v[1] for v in shapes) + GAP_UM
-    gate_y = sum((g[1] + g[3]) / 2 for g in gates) / len(gates)
+    shift = round(guard[1][0] - guard[0][0], 3)            # left guard column of sub k+1 == right column of sub k
+    offs = [round((i - (banks - 1) / 2) * shift, 3) for i in range(banks)]
+    mv = lambda v, o: [v[0] + o, v[1], v[2] + o, v[3]]
+    comp = dict(strips=[], gates=[], sources=[], drains=[], offsets=offs, shift=shift)
+    for o in offs:
+        for i, v in enumerate(strips):
+            (comp['sources'] if i % 2 == 0 else comp['drains']).append((v[0] + v[2]) / 2 + o)
+        comp['gates'] += [mv(v, o) for v in gates]
     rows = sorted([v for v in r['metal1'] if v[2] - v[0] > 5], key=lambda v: v[1])
-    gb, gt = rows[0], rows[-1]
+    comp['gl'], comp['gr'] = guard[0][0] + offs[0], guard[1][2] + offs[-1]
+    comp['gb'] = [rows[0][0] + offs[0], rows[0][1], rows[0][2] + offs[-1], rows[0][3]]
+    comp['gt'] = [rows[-1][0] + offs[0], rows[-1][1], rows[-1][2] + offs[-1], rows[-1][3]]
+    shapes = [v for k, vs in r.items() if k != 'checkpaint' for v in vs]
+    comp['ymin'], comp['ymax'] = min(v[1] for v in shapes), max(v[3] for v in shapes)
+    # LU.3 audit of the composite: farthest n-diffusion x from the nearest tap column inner edge
+    # (the centre of a sub-bank is the farthest point; vertical distance to the top/bottom rows is larger,
+    #  so the column spacing alone bounds it)
+    comp['max_ndiff_to_tap_um'] = round((guard[1][0] - guard[0][2]) / 2, 3)
+    return comp
+
+
+def bank_commands(stages, fingers, comp, gate_coupled=False):
+    gl, gr, gb, gt = comp['gl'], comp['gr'], comp['gb'], comp['gt']
+    gates = comp['gates']
+    if len(gates) != fingers:
+        raise ValueError('finger count mismatch')
+    pitch = comp['ymax'] - comp['ymin'] + GAP_UM
+    gate_y = sum((g[1] + g[3]) / 2 for g in gates) / len(gates)
     strap_x = gl - 1.5
-    drains = [(v[0] + v[2]) / 2 for i, v in enumerate(strips) if i % 2 == 1]
-    sources = [(v[0] + v[2]) / 2 for i, v in enumerate(strips) if i % 2 == 0]
+    drains, sources = sorted(comp['drains']), sorted(comp['sources'])
     gate_xs = [(v[0] + v[2]) / 2 for v in gates]
     c = []
 
@@ -79,7 +110,8 @@ def bank_commands(stages, fingers, r):
     plates = {}
     for k in range(stages):
         oy = k * pitch
-        c.append(f'getcell shunt_bank child 0 0 parent 0 {oy:.3f}')
+        for o in comp['offsets']:
+            c.append(f'getcell shunt_sub child 0 0 parent {o:.3f} {oy:.3f}')
         for x in drains:
             cut_column(x, oy + D_REGION[0], oy + D_REGION[1])
         for x in sources:
@@ -92,7 +124,8 @@ def bank_commands(stages, fingers, r):
         paint('metal2', dx0, oy + D_REGION[0], dx1, oy + D_REGION[1])
         paint('metal2', sx0, oy + S_REGION[0], sx1, oy + S_REGION[1])
         paint('metal2', strap_x - .5, oy + gate_y - .3, max(gate_xs) + .3, oy + gate_y + .3)      # gate bus
-        paint('metal2', strap_x - .5, oy + gate_y - .3, strap_x + .5, oy + D_REGION[0] + 1.)      # gate -> drain
+        if not gate_coupled:   # diode-connected stack; the ESD-04 gate-coupled shunt exposes the gate bus instead
+            paint('metal2', strap_x - .5, oy + gate_y - .3, strap_x + .5, oy + D_REGION[0] + 1.)      # gate -> drain
         # metal3 plates; source(k) joins drain(k+1) across the gap
         x0m, x1m = min(dx0, sx0) + 1., max(dx1, sx1) - 1.
         paint('metal3', x0m, oy + D_REGION[0], x1m, oy + D_REGION[1])
@@ -121,17 +154,22 @@ def bank_commands(stages, fingers, r):
 
 
 def generate(work, stages=3, width_per_stage_um=12000.):
-    fingers = int(round(width_per_stage_um / FINGER_UM))
+    fingers = SUB_NF * SUB_BANKS
+    if fingers * FINGER_UM < width_per_stage_um:
+        raise ValueError('sub-banked shunt narrower than the selected width')
     work.mkdir(parents=True, exist_ok=False)
     (work / 'bank.tcl').write_text(f'''crashbackups stop
 load workspace
-set cell [magic::gencell_makecell gf180mcu::nfet_06v0 w {FINGER_UM} l {LENGTH_UM} nf {fingers} guard 1 topc 0 botc 1 full_metal 1]
+set cell [magic::gencell_makecell gf180mcu::nfet_06v0 w {FINGER_UM} l {LENGTH_UM} nf {SUB_NF} guard 1 topc 0 botc 1 full_metal 1]
 load $cell
-save shunt_bank
+save shunt_sub
 quit -noprompt
 ''')
     magic(work, 'bank.tcl')
-    body, g = bank_commands(stages, fingers, rectangles(work / 'shunt_bank.mag'))
+    comp = sub_bank_layout(rectangles(work / 'shunt_sub.mag'))
+    body, g = bank_commands(stages, fingers, comp)
+    g['lu'] = dict(sub_nf=SUB_NF, sub_banks=SUB_BANKS, tap_column_pitch_um=comp['shift'],
+                   max_ndiff_to_ptap_x_um=comp['max_ndiff_to_tap_um'], rule='GF180 DRM LU.3 (MV NCOMP <= 15 um from Psub tap)')
     p0 = g['plates'][0]['drain']; pl = g['plates'][stages - 1]['source']
     c = ['crashbackups stop', 'load rail_shunt', 'units microns', *body, 'save rail_shunt', 'flatten rail_shunt_flat',
          'load rail_shunt_flat', 'units microns',
@@ -149,7 +187,7 @@ quit -noprompt
     rt = check(work / 'roundtrip', work / 'rail_shunt.gds', work / 'rail_shunt_flat.spice', 'rail_shunt_flat')
     g['plates'] = {str(k): v for k, v in g['plates'].items()}
     (work / 'geometry.json').write_text(json.dumps(g, indent=1) + '\n')
-    rep = dict(status='v2_shunt_macro_DRC_LVS_roundtrip_recorded_not_ESD_qualification', version=2, stages=stages,
+    rep = dict(lu=g['lu'], width_per_stage_um=fingers * FINGER_UM, finger_um=FINGER_UM, status='v2_shunt_macro_DRC_LVS_roundtrip_recorded_not_ESD_qualification', version='2.2-lu', stages=stages,
                fingers_per_stage=fingers, drc_count=int(m[1]) if m else None, netgen_lvs_match=ok, gds_roundtrip=rt,
                gds_sha256=hashlib.sha256((work / 'rail_shunt.gds').read_bytes()).hexdigest(),
                image_id=subprocess.run(['docker', 'image', 'inspect', IMAGE, '--format', '{{.Id}}'], capture_output=True, text=True).stdout.strip(),
@@ -168,7 +206,7 @@ VSS_M5_START = 290.   # v2.1: was 300 (metal4-only stretch 288..300 ran 1.9x an 
 def macro_geometry(g, stages):
     shapes = []
     M = {1: 34, 2: 36, 3: 42, 4: 46, 5: 81}
-    V = {1: (35, .26), 2: (38, .28), 3: (40, .28), 4: (41, .28)}
+    V = {1: (35, .26), 2: (38, .26), 3: (40, .26), 4: (41, .26)}  # GDS cuts are exactly 0.26 um (KLayout V*.1)
 
     def box(layer, x0, y0, x1, y1):
         shapes.append([layer, min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)])
@@ -246,7 +284,7 @@ def compose_macro(work):
     ly.write(str(work / 'network_shunt.gds'), opts)
 
 
-def generate_macro(work, network_dir, shunt_dir):
+def generate_macro(work, network_dir, shunt_dir, shunt_lines=None):
     work.mkdir(parents=True, exist_ok=False)
     net_meta = json.loads((network_dir / 'network-layout.json').read_text())
     sh = json.loads((shunt_dir / 'shunt-layout.json').read_text())
@@ -276,7 +314,9 @@ def generate_macro(work, network_dir, shunt_dir):
     node, lines = 'RAIL', []
     for s in range(stages):
         end = 'VSS' if s == stages - 1 else f'SHUNT_MID{s}'
-        lines.append(f'XSHUNT{s} {node} {node} {end} VSS nfet_06v0 w=50u l=0.7u m={fingers}'); node = end
+        lines.append(f'XSHUNT{s} {node} {node} {end} VSS nfet_06v0 w={FINGER_UM}u l={LENGTH_UM}u m={fingers}'); node = end
+    if shunt_lines is not None:      # e.g. rftx_shunt (gate-coupled) supplies its own devices
+        lines = list(shunt_lines)
     (work / 'reference.spice').write_text(strip(re.sub(r'\n\.ends', '\n' + '\n'.join(lines) + '\n.ends', base, count=1)))
     from run_first_pass import lvs
     ok = lvs(work, 'actual.spice', 'network_shunt_flat', 'reference.spice', 'network_flat', 'lvs.txt')
@@ -290,7 +330,7 @@ def generate_macro(work, network_dir, shunt_dir):
     meta.update(status='stress_safe_network_with_v2_shunt_dropin_DRC_LVS_recorded_not_ESD_qualification',
                 drc_count=int(m[1]) if m else None, device_graph_lvs_match=ok,
                 gds_roundtrip=dict(method='DRC, extraction and LVS run on Magic reading the written GDS', drc_count=int(m[1]) if m else None, lvs_match=ok),
-                shunt=dict(version=2, stages=stages, fingers_per_stage=fingers, offset_um=[cfg['dx'], cfg['dy']], gds_sha256=sh['gds_sha256']),
+                shunt=dict(version='2.2-lu', stages=stages, fingers_per_stage=fingers, offset_um=[cfg['dx'], cfg['dy']], gds_sha256=sh['gds_sha256']),
                 straps=straps, wiring_resistance=strap_resistance(straps, g, stages), allocation_regions_um=regions,
                 image_id=sh['image_id'], gds_sha256=hashlib.sha256((work / 'network.gds').read_bytes()).hexdigest(),
                 extracted_spice_sha256=hashlib.sha256(raw.encode()).hexdigest(),

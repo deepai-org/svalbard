@@ -46,13 +46,45 @@ module pt_digital_macro(
  input  wire ct_cfg_det_en, input wire[2:0] ct_cfg_det_div, // no register-map field yet
  output wire ct_word_clk, ct_word_load, ct_ser_run, ct_bit_phase, ct_qualified,
  output wire ct_armed, ct_marker_seen, ct_launched, ct_arm_fault,
- output wire[2:0] ct_det_div, output wire ct_det_clk
+ output wire[2:0] ct_det_div, output wire ct_det_clk,
+ // Effective block enables and island-off levels for full-chip assembly
+ // (scratch/chip-assembly-dev/binding.json glue nets). Decoded from quasi-static register bits.
+//   en_eff[0] EN_EFF_adc_i: adc_i.state.state == active && island_on[4]
+//   en_eff[1] EN_EFF_adc_q: adc_q.state.state == active && island_on[4]
+//   en_eff[2] EN_EFF_wiredtx: wiredtx.state.state == active && island_on[0]
+//   en_eff[3] EN_EFF_dac_i: dac_i.state.state == active && island_on[4]
+//   en_eff[4] EN_EFF_dac_q: dac_q.state.state == active && island_on[4]
+//   en_eff[5] EN_EFF_refbuf: refbuf.state.state == active && island_on[4]
+//   en_eff[6] EN_EFF_detect: detect.state.state == active && island_on[0]
+//   en_eff[7] EN_EFF_rfdriver: rfdriver.state.state == active && island_on[1]
+//   en_eff[8] EN_EFF_rxmix_i: rxmix_i.state.state == active && island_on[1]
+//   en_eff[9] EN_EFF_rxmix_q: rxmix_q.state.state == active && island_on[1]
+//   en_eff[10] EN_EFF_pll_cdr: cdr.state.state == active && island_on[2]
+//   en_eff[11] EN_EFF_pll_host: rfpll.state.state == active && island_on[2]
+//   en_eff[12] EN_EFF_cdr: cdr.state.state == active && island_on[2]
+//   en_eff[13] EN_EFF_slicer: slicer.state.state == active && island_on[0]
+//   en_eff[14] EN_EFF_ctle: ctle.state.state == active && island_on[0]
+//   en_eff[15] EN_EFF_txmix_i: txmix_i.state.state == active && island_on[1]
+//   en_eff[16] EN_EFF_txmix_q: txmix_q.state.state == active && island_on[1]
+//   en_eff[17] EN_EFF_lna: lna.state.state == active && island_on[1]
+//   en_eff[18] EN_EFF_rxselect: rxselect.state.state == active && island_on[0]
+//   en_eff[19] EN_EFF_txsum: txsum.state.state == active && island_on[1]
+ //   island_off[i] = !island_on[i] (ISLAND_OFF_wired = [0], _rf = [1], _debug = [5]).
+ output wire[19:0] en_eff, output wire[`PT_ISLAND_W-1:0] island_off
 );
  wire rst_n = reset_n_pad & por_n;
  wire[9:0] h2d_word, d2h_word;
+ // Reduced-rate fallback (debug.host_link.rate, stopped-only): the host link word side and the
+ // whole transport core run on core_word_clk = host_word_clk / {1,2,4}. A rate change holds both
+ // in reset (host_rst_n) while the clock select switches (pt_host_rate_clock).
+ wire core_word_clk, rate_hold_n;
+ pt_host_rate_clock host_rate(.clk(host_word_clk), .rst_n(rst_n),
+  .rate(debug_cfg[`PT_D_DEBUG_HOST_LINK__RATE_LSB+:`PT_D_DEBUG_HOST_LINK__RATE_W]),
+  .out_clk(core_word_clk), .hold_n(rate_hold_n));
+ wire host_rst_n = rst_n & rate_hold_n;
  wire[15:0] status;
  pt_digital digital(.rst_n(rst_n), .ref_clk(ref_clk), .host_sclk(spi_sclk), .host_cs_n(spi_cs_n), .host_mosi(spi_mosi),
-  .host_miso(spi_miso), .host_miso_oe(spi_miso_oe), .host_tx_clk(host_word_clk), .host_rx_clk(host_word_clk),
+  .host_miso(spi_miso), .host_miso_oe(spi_miso_oe), .host_tx_clk(core_word_clk), .host_rx_clk(core_word_clk), .core_rst_n(host_rst_n),
   .wire_rx_clk(wire_rx_clk), .wire_tx_clk(wire_tx_clk), .rf_rx_clk(rf_rx_clk), .rf_tx_clk(rf_tx_clk),
   .h2d_word(h2d_word), .d2h_word(d2h_word), .wire_rx_data(wire_rx_data), .wire_rx_valid(wire_rx_valid),
   .wire_tx_data(wire_tx_data), .wire_tx_valid(wire_tx_valid), .wire_idle(wire_idle), .wire_tx_request(wire_tx_request),
@@ -65,11 +97,32 @@ module pt_digital_macro(
   .rx_en_wtx_ext(rx_en_wtx_ext), .clk_obs_oe(clk_obs_oe), .wclk_obs_oe(wclk_obs_oe), .dbg_obs0(dbg_obs0),
   .dbg_obs0_oe(dbg_obs0_oe), .dbg_obs1(dbg_obs1), .dbg_obs1_oe(dbg_obs1_oe), .wdbg_obs(wdbg_obs),
   .wdbg_obs_oe(wdbg_obs_oe), .commit_toggle(commit_toggle));
- pt_host_link host(.rst_n(rst_n),
+ pt_host_link host(.rst_n(host_rst_n),
   .mode(debug_cfg[`PT_D_DEBUG_HOST_LINK__MODE_LSB+:`PT_D_DEBUG_HOST_LINK__MODE_W]),
   .d2h_enable(analog_cfg[`PT_A_HOSTIO_CONTROLS__D2H_ENABLE_LSB]),
-  .h2d_clk(h2d_clk), .h2d_pin(h2d_pin), .word_clk(host_word_clk), .h2d_word(h2d_word), .d2h_word(d2h_word),
+  .h2d_clk(h2d_clk), .h2d_pin(h2d_pin), .word_clk(core_word_clk), .h2d_word(h2d_word), .d2h_word(d2h_word),
   .d2h_pin(d2h_pin), .d2h_clk_pin(d2h_clk_pin), .d2h_oe(d2h_oe), .h2d_overflow(), .h2d_underflow());
+ assign en_eff[0] = (analog_cfg[`PT_A_ADC_I_STATE__STATE_LSB+:2] == 2'd2) && island_on[4]; // adc_i
+ assign en_eff[1] = (analog_cfg[`PT_A_ADC_Q_STATE__STATE_LSB+:2] == 2'd2) && island_on[4]; // adc_q
+ assign en_eff[2] = (analog_cfg[`PT_A_WIREDTX_STATE__STATE_LSB+:2] == 2'd2) && island_on[0]; // wiredtx
+ assign en_eff[3] = (analog_cfg[`PT_A_DAC_I_STATE__STATE_LSB+:2] == 2'd2) && island_on[4]; // dac_i
+ assign en_eff[4] = (analog_cfg[`PT_A_DAC_Q_STATE__STATE_LSB+:2] == 2'd2) && island_on[4]; // dac_q
+ assign en_eff[5] = (analog_cfg[`PT_A_REFBUF_STATE__STATE_LSB+:2] == 2'd2) && island_on[4]; // refbuf
+ assign en_eff[6] = (analog_cfg[`PT_A_DETECT_STATE__STATE_LSB+:2] == 2'd2) && island_on[0]; // detect
+ assign en_eff[7] = (analog_cfg[`PT_A_RFDRIVER_STATE__STATE_LSB+:2] == 2'd2) && island_on[1]; // rfdriver
+ assign en_eff[8] = (analog_cfg[`PT_A_RXMIX_I_STATE__STATE_LSB+:2] == 2'd2) && island_on[1]; // rxmix_i
+ assign en_eff[9] = (analog_cfg[`PT_A_RXMIX_Q_STATE__STATE_LSB+:2] == 2'd2) && island_on[1]; // rxmix_q
+ assign en_eff[10] = (analog_cfg[`PT_A_CDR_STATE__STATE_LSB+:2] == 2'd2) && island_on[2]; // pll_cdr
+ assign en_eff[11] = (analog_cfg[`PT_A_RFPLL_STATE__STATE_LSB+:2] == 2'd2) && island_on[2]; // pll_host
+ assign en_eff[12] = (analog_cfg[`PT_A_CDR_STATE__STATE_LSB+:2] == 2'd2) && island_on[2]; // cdr
+ assign en_eff[13] = (analog_cfg[`PT_A_SLICER_STATE__STATE_LSB+:2] == 2'd2) && island_on[0]; // slicer
+ assign en_eff[14] = (analog_cfg[`PT_A_CTLE_STATE__STATE_LSB+:2] == 2'd2) && island_on[0]; // ctle
+ assign en_eff[15] = (analog_cfg[`PT_A_TXMIX_I_STATE__STATE_LSB+:2] == 2'd2) && island_on[1]; // txmix_i
+ assign en_eff[16] = (analog_cfg[`PT_A_TXMIX_Q_STATE__STATE_LSB+:2] == 2'd2) && island_on[1]; // txmix_q
+ assign en_eff[17] = (analog_cfg[`PT_A_LNA_STATE__STATE_LSB+:2] == 2'd2) && island_on[1]; // lna
+ assign en_eff[18] = (analog_cfg[`PT_A_RXSELECT_STATE__STATE_LSB+:2] == 2'd2) && island_on[0]; // rxselect
+ assign en_eff[19] = (analog_cfg[`PT_A_TXSUM_STATE__STATE_LSB+:2] == 2'd2) && island_on[1]; // txsum
+ assign island_off = ~island_on;
  assign d2h_pdrv = analog_cfg[`PT_A_HOSTIO_CONTROLS__DRIVE_LSB+:`PT_A_HOSTIO_CONTROLS__DRIVE_W];
  assign d2h_sl = analog_cfg[`PT_A_HOSTIO_CONTROLS__SLEW_LSB];
  // Word-divider modulus from consolidation.wiredtx_stage.bits_per_cycle: 1 bit/cycle -> 10 ring cycles per

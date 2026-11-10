@@ -1,0 +1,32 @@
+* NGSPICE file created from pt_wtx_fallback_control.ext - technology: gf180mcuD
+
+.subckt bringup_and A B Y VDD VSS
+X0 a_278_230# A YB VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X1 VSS B a_278_230# VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X2 YB A VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X3 Y YB VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X4 VDD B YB VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X5 Y YB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+.ends
+
+.subckt bringup_inv A Y VDD VSS
+X0 Y A VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X1 Y A VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+.ends
+
+.subckt pt_wtx_fallback_control L_BRANCH0 L_BRANCH1 L_STATE0 L_STATE1 L_IDLE L_STAGE_TMDS
++ L_EXT_ENABLE ISO_wired FORCE_LEAF TMDS_REQUEST WIRED_ON FORCE_SELECTED RAIL_wired
++ VDD VSS
+XXexternal_request Xbranch_decode/Y L_EXT_ENABLE Xdrive_request/A RAIL_wired VSS bringup_and
+XXstate_inv L_STATE0 Xstate_inv/Y RAIL_wired VSS bringup_inv
+XXstage Xrun/Y L_STAGE_TMDS Xstage/Y RAIL_wired VSS bringup_and
+XXbranch_decode L_BRANCH1 Xbranch_inv/Y Xbranch_decode/Y RAIL_wired VSS bringup_and
+XXbranch_inv L_BRANCH0 Xbranch_inv/Y RAIL_wired VSS bringup_inv
+XXdrive_request Xdrive_request/A Xstage/Y TMDS_REQUEST RAIL_wired VSS bringup_and
+XXrun Xrun/A Xrun/B Xrun/Y RAIL_wired VSS bringup_and
+XXwire_on ISO_wired WIRED_ON VDD VSS bringup_inv
+XXidle_inv L_IDLE Xrun/B RAIL_wired VSS bringup_inv
+XXstate_active L_STATE1 Xstate_inv/Y Xrun/A RAIL_wired VSS bringup_and
+XXforce_isolation FORCE_LEAF WIRED_ON FORCE_SELECTED VDD VSS bringup_and
+.ends
+

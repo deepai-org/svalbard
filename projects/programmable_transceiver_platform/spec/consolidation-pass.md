@@ -80,7 +80,7 @@ of up to about 0.81 GHz.
 
 | Candidate | Potential | Open question |
 |---|---|---|
-| P3-4 LC VCO + passive polyphase | Autonomous RF LO | Spiral inductor model, swing at the mixer gates, current |
+| P3-4 LC VCO + passive polyphase | Autonomous RF LO | **Not qualified on the first die** (2026-11-09: LC VCO deck gives no frequency; `polyphase` fails extracted). The passive external LO is the RF route. The blocks remain learning structures, and no bias output or area is booked for them as a functional route. |
 | MIM decoupling over the digital macro | Up to the macro area | The hardened macro uses flip-flop arrays, not SRAM macros, so MIM-over-SRAM (decision 9) does not apply. A Metal1–Metal4 routing variant frees Metal5 but has 2 antenna violations and worse timing. |
 | P2-11 per-mode host I/O current | 40–60 mA | Provider pad crowbar data |
 
@@ -100,3 +100,31 @@ of up to about 0.81 GHz.
 | Shared VCM cell | I/Q coupling risk for about 33 µA saved. |
 | SAR logic moved into `pt_digital` | It must sit next to the comparator. |
 | Custom RX word-capture block `wordcap` | Bit errors after extraction, 0.27 mm², 26–39 mA. RX capture is built in compact cells next to the slicer. |
+
+## Pass 4 review (2026-11-09)
+
+Full analysis: `scratch/reviews/consolidation-pass-2.md`. Area is not the
+binding constraint (about 3.5 mm² of analog headroom). The binding constraints
+are the digital macro (8177/8192 FF, negative slack), `pt_wrx_cap` above
+480 MHz, the CDR and `pll_ring` HOLD.
+
+| ID | Proposal | Effect | State |
+|---|---|---|---|
+| P4-1 | **Two `pll_ring` instances instead of three.** Ring L (line) also feeds `pt_wrx_cap` through a gated per-phase 2:1 select for full-rate RX/USB, where TX and RX share one reference and frequency. Ring C (CDR) gains a REF select (`PREF`/`H2D_CLK`) and PH0 → `prescale`, and takes the host_follow role whenever it is not tracking. Fallbacks: Ring L → `WTX_EXT` and Ring C for full-rate RX. Ring C → `WCLK_IN` and `carrier_divided`. | −80,541 µm², −1 instance, −5 to 8 mA; adds about 3 to 6 k µm² of selects and a matched dummy load per phase | Proposed. Precondition: no selected wired rate needs `wire_host_source=host_follow` with on-chip half/quarter CDR. |
+| P4-2 | **One hold mechanism.** `pll_ring.HOLD` only. `pt_cdr`'s REF-gating hold path is removed. | Part of the 51.7 k µm² cdr cell; one handover to verify instead of two | Proposed. |
+| P4-3 | Reclaim at least 64 FF by encoding the wide CDR timeout fields as mantissa/exponent, before any new field is added. | Pays for P4-1's ring fields | Proposed. Digital owner. |
+| P4-4 | One `clk_obs` generator parameterized for input count and divider depth: CLK_OBS 16 inputs/÷2^15, WCLK_OBS 8 inputs/÷2^7. | Estimated −20 to 35 k µm² | Proposed. Needs the mux/driver area split. |
+| P4-5 | One shared MIM decap pool on the always-on rail, split into 4 to 8 strap-isolatable banks. Only small local decap behind island switches. | Places the 1 nF | Proposed. |
+
+Re-check of earlier decisions:
+
+- P3-2, P2-5, P3-7, P3-10, items 6 and 7 and all rejections still hold.
+- `wired-rate` is at risk: capture passes extracted only at 480 MHz, and 8 of
+  the 9 rates need a ring at 625 MHz or above.
+- The `wired-cdr` fallbacks also share `pt_wrx_cap`. `shares_failure_with` in
+  `tapeout-readiness.json` must list it.
+- P2-6/P3-6 "closes timing at ss" no longer describes the macro. The sharing
+  itself stands.
+- `register-map` `consolidation.pll` still describes the retired generic PLL
+  (`NS16..NS128`, `W1..W10`, `PH1..PH8`, `pt_pll_lock.sv`). It has no `HOLD`
+  field and no per-instance ring control.

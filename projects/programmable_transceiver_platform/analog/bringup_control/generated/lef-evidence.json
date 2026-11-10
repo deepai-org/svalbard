@@ -1,0 +1,132 @@
+{
+  "status": "pass",
+  "gds_geometry_xor": {
+    "status": "pass",
+    "different_layers": [],
+    "gds_dbu_um": 0.001,
+    "reference_bbox_dbu": "(1500,0;99450,59840)",
+    "export_bbox_dbu": "(1500,0;99450,59840)"
+  },
+  "openroad": {
+    "status": "parsed",
+    "pins": {
+      "L_BRANCH0": {
+        "direction": "INPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "L_BRANCH1": {
+        "direction": "INPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "L_STATE0": {
+        "direction": "INPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "L_STATE1": {
+        "direction": "INPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "L_IDLE": {
+        "direction": "INPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "L_STAGE_TMDS": {
+        "direction": "INPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "L_EXT_ENABLE": {
+        "direction": "INPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "ISO_wired": {
+        "direction": "INPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "FORCE_LEAF": {
+        "direction": "INPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "TMDS_REQUEST": {
+        "direction": "OUTPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "WIRED_ON": {
+        "direction": "OUTPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "FORCE_SELECTED": {
+        "direction": "OUTPUT",
+        "use": "SIGNAL",
+        "shapes": 1
+      },
+      "RAIL_wired": {
+        "direction": "INOUT",
+        "use": "POWER",
+        "shapes": 1
+      },
+      "VDD": {
+        "direction": "INOUT",
+        "use": "POWER",
+        "shapes": 1
+      },
+      "VSS": {
+        "direction": "INOUT",
+        "use": "GROUND",
+        "shapes": 1
+      }
+    },
+    "obstructions": 32,
+    "size_um": [
+      97.95,
+      59.84
+    ]
+  },
+  "gds_bbox_um": [
+    1.5,
+    0.0,
+    99.45,
+    59.84
+  ],
+  "lef_origin_um": [
+    -1.5,
+    0.0
+  ],
+  "generator_allocation_estimate_um": [
+    99.95,
+    59.34
+  ],
+  "qualified_gds_sha256": "4b496c2d64f24bd91ac270092e31a938a30618e0b09ec931afcbe7165a35b7ce",
+  "lef_sha256": "25bdffd7d2179c38ce4b54049b65eedd47eaf1ff1aefbb883867e7a858b2cc8e",
+  "source_hashes": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/export_lef.py": "02e58c3a54c8ea2ae5cbecb27255013c10f2b5bedac904ec42599cbc1157efc1",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/evidence.json": "313aa087e9978b8e2f301c26dbb56b23a89bfb8babc54dbd7774e772df78200f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/pt_wtx_fallback_control.mag": "a637bd50f7351ce0a62ccd8c1ac075bc8a0833be26721b97ead0ebf9157a6e6d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/pt_wtx_fallback_control.gds": "4b496c2d64f24bd91ac270092e31a938a30618e0b09ec931afcbe7165a35b7ce"
+  },
+  "tool_images": {
+    "svalbard/librelane-gf180-canary:2026.08": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+    "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305"
+  },
+  "excluded": [
+    "full-chip placement, routing and pin-access closure"
+  ],
+  "preview": {
+    "sha256": "324a914cba9ea0ac349671a3164629c859f153a092989b6c4fc5e7f7388143fc",
+    "size_px": [
+      1920,
+      1200
+    ],
+    "note": "Mask geometry overview; pin names and roles are in the LEF/OpenROAD report."
+  }
+}

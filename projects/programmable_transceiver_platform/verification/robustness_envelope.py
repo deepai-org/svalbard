@@ -2002,7 +2002,7 @@ def control_surface_coverage(contract):
             requirements_mapped=True,control_service_qualified=not unresolved,end_to_end_verified=False))
     return dict(interfaces=rows,complete=False,
         status='requirements_mapped_implementation_and_latency_gaps_explicit',
-        sources=['rtl/pt_spi.sv','rtl/pt_stream_rx.sv','integration/pt_chip.sv',
+        sources=['rtl/pt_spi.sv','rtl/pt_dense_pair.sv','integration/pt_chip.sv',
                  'system_model/architecture_fast/resource_configuration.py','verification/recovery_mailbox.py'],
         limitation='Reviewed interface inventory, not proof by source-name matching; numerical application delay and per-target acceptance remain open.')
 
@@ -2175,7 +2175,7 @@ def run():
             'first-silicon observability implementation and fault discrimination'],
         sources_sha256={name:hashlib.sha256((P/name).read_bytes()).hexdigest() for name in (
             'verification/robustness_envelope.py', 'spec/contract.json',
-            'rtl/pt_spi.sv','rtl/pt_stream_rx.sv','integration/pt_chip.sv',
+            'rtl/pt_spi.sv','rtl/pt_dense_pair.sv','integration/pt_chip.sv',
             'verification/recovery_mailbox.py',
             'verification/wired_envelope.py','verification/ble_packet.py','verification/check_contract.py',
             'system_model/connected/wired_blocks.py',

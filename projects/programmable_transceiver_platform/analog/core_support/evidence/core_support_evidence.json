@@ -28,20 +28,21 @@
   "biasgen_tapeout/gf180mcu_ocd_ip__biasgen.gds.gz": "e3d13bff846361c7b1518bdfbdd2a66d592268ac261bf3726d6e60bf1e4e3f99",
   "biasgen_tapeout/gf180mcu_ocd_ip__biasgen.lef": "3da9aa606a7ab61fbcaaca754f53c68a3dc97ce6c6ab1ef32f011cf544574a9d",
   "biasgen_tapeout/patched_sources.tar.gz": "bf3c97906d20115a6c2d0af3a0ea94cee14abb28454f254d03615a989c405a2d",
-  "distribution/circuits_dist.py": "8282b817edc5fca73c1396bbbf1ddbba83c26b243dc4f3618cff171d47e950a3",
+  "distribution/circuits_dist.py": "5d300de75f38c0c503978f9a6b4e4567491b252e680829de42e7584ebfce1165",
   "distribution/generate_dist.py": "2ac128d1eefa4f1add8f65e24422c867772f378f23b4d56f5bf12d6223959699",
   "distribution/sim_dist.py": "203f123d534b834edbf0e02933f54df10ce6744dbcb03a95c5e97de952c5a73b",
-  "flow/clean_flow.sh": "cc2bc7fd54f860a572b1b715dfcba2346f1ba19a4fea420fdf34b1adc444d287",
+  "flow/canon_mim.py": "c977171977f4917e4e7e348a3c6063ec9466e088c3417ace96012f3b6a520534",
+  "flow/clean_flow.sh": "50f06163c6edf704cee9d76ab91315586cb70b3b9997bbf8060a6f70a76479e7",
   "flow/crosscheck_canary.sh": "aaaea2b4eae29d581797ebd043c550b2b7b1b1ea9d8e16229ae731d88abb1b4e",
   "flow/gds_xor.py": "0dbedf4b012d57930ef1732b744a16cacb6d22d6d8efd4017a187ae5d4248683",
   "flow/hres_check.py": "d300312d447ea5ee7cd0de34c7b60dd1d50d3f07afdb650c12810540da7a36b3",
   "flow/sim_bandgap.py": "d1aeb19129d79bb916675f58fff96d4682c75a34401f3d2429e2e3beed2e40cc",
   "flow/sim_core_support.py": "7f445a3cffbfe389b4e5ad0a7ad531234d06cbba43f055c8563643b39d3baac4",
-  "flow/summarize.py": "e53135115aab209b13adf79d64919717d2c7f072a4a49e4c4a87658f844c1abc",
+  "flow/summarize.py": "ae3abc801eba4193d5100d92f78bae7ed4c04abd7378f7c7e2178c896de8efea",
   "flow/tie_nets.py": "7caaf74a5dee964219f750a4bb9825971278e9313545c27e8bd867527c316d27",
   "patches/biasgen-dvdd-dvss-pin-alignment.patch": "02da4057849432985750f3cbb70277f339e08fabd5a1b0cae0d0c3cc733e5b4f",
   "patches/biasgen-vfb-compensation.patch": "652f49cb8e7e715d484bc0842bb51f9d371eb653b6213a9174d6629405af0b5a",
-  "run_core_support.sh": "50d40d05e94c1979750fee4a300485ca5791e8ad0813c04949079d0ff0c64c6f",
+  "run_core_support.sh": "78e958257b4bfc833bae3c469d866a741ef721522540fe32b9f360f56f0db400",
   "manifest/bandgap.sha256": "f600842a4cfd4521e89ef84e63e239124d044894c609c5fbac257d3aa5c503bc",
   "por/gds/gf180mcu_ocd_ip__por.gds.gz": "45d49ecfacd8cb0103501b8c6e96263d08121ebca3a6050f2924a7a45e169a1c",
   "por/magic/gf180mcu_ocd_ip__por.mag": "5233733c98949808cb33b574764551d1bb9342a63078ac12318f2defd6ce155d",
@@ -77,6 +78,11 @@
     "file": "scratch/core_support/work/clean/por/lvs_comp.out",
     "final": "Circuits match uniquely.",
     "match": true,
+    "failure_strings": [],
+    "failure_count": 0,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 20 |Number of nets: 20 ",
     "top_devices": "Number of devices: 36 |Number of devices: 36 "
    },
@@ -84,6 +90,11 @@
     "file": "scratch/core_support/work/clean/por/lvs_gds_comp.out",
     "final": "Circuits match uniquely.",
     "match": true,
+    "failure_strings": [],
+    "failure_count": 0,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 31 |Number of nets: 31 ",
     "top_devices": "Number of devices: 57 |Number of devices: 57 "
    },
@@ -116,6 +127,11 @@
      "file": "scratch/core_support/work/canary/por/lvs_comp.out",
      "final": "Circuits match uniquely.",
      "match": true,
+     "failure_strings": [],
+     "failure_count": 0,
+     "top_pin_mismatches": 0,
+     "flattened_subcells": [],
+     "accepted_dangling_extraction_ports": [],
      "top_nets": "Number of nets: 20 |Number of nets: 20 ",
      "top_devices": "Number of devices: 36 |Number of devices: 36 "
     },
@@ -150,6 +166,31 @@
     "file": "scratch/core_support/work/clean/biasgen/lvs_comp.out",
     "final": "Top level cell failed pin matching.",
     "match": false,
+    "failure_strings": [
+     {
+      "line": 715,
+      "text": "Netlists do not match."
+     },
+     {
+      "line": 768,
+      "text": "Final result: Top level cell failed pin matching."
+     },
+     {
+      "line": 768,
+      "text": "Final result: Top level cell failed pin matching."
+     }
+    ],
+    "failure_count": 3,
+    "top_pin_mismatches": 21,
+    "flattened_subcells": [
+     "Flattening non-matched subcircuits bias_generator_fe bias_generator_fe"
+    ],
+    "accepted_dangling_extraction_ports": [
+     "a_1188_2591#",
+     "bias_nstack_0[7]/a_1188_2591#",
+     "bias_nstack_0[9]/a_1188_2591#",
+     "bias_nstack_1/a_1188_2591#"
+    ],
     "top_nets": "Number of nets: 79 **Mismatch** |Number of nets: 80 **Mismatch** ",
     "top_devices": "Number of devices: 97 |Number of devices: 97 "
    },
@@ -157,6 +198,24 @@
     "file": "scratch/core_support/work/clean/biasgen/lvs_gds_comp.out",
     "final": "Top level cell failed pin matching.",
     "match": false,
+    "failure_strings": [
+     {
+      "line": 166,
+      "text": "Netlists do not match."
+     },
+     {
+      "line": 219,
+      "text": "Final result: Top level cell failed pin matching."
+     },
+     {
+      "line": 219,
+      "text": "Final result: Top level cell failed pin matching."
+     }
+    ],
+    "failure_count": 3,
+    "top_pin_mismatches": 21,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 683 **Mismatch** |Number of nets: 684 **Mismatch** ",
     "top_devices": "Number of devices: 1073 |Number of devices: 1073 "
    },
@@ -183,6 +242,27 @@
     "file": "scratch/core_support/work/clean/biasgen/lvs_comp_tiedgnd.out",
     "final": "Top level cell failed pin matching.",
     "match": false,
+    "failure_strings": [
+     {
+      "line": 708,
+      "text": "Final result: Top level cell failed pin matching."
+     },
+     {
+      "line": 708,
+      "text": "Final result: Top level cell failed pin matching."
+     }
+    ],
+    "failure_count": 2,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [
+     "Flattening non-matched subcircuits bias_generator_fe bias_generator_fe"
+    ],
+    "accepted_dangling_extraction_ports": [
+     "a_1188_2591#",
+     "bias_nstack_0[7]/a_1188_2591#",
+     "bias_nstack_0[9]/a_1188_2591#",
+     "bias_nstack_1/a_1188_2591#"
+    ],
     "top_nets": "Number of nets: 79 |Number of nets: 79 ",
     "top_devices": "Number of devices: 97 |Number of devices: 97 "
    },
@@ -190,6 +270,24 @@
     "file": "scratch/core_support/work/clean/biasgen/lvs_gds_comp_tiedgnd.out",
     "final": "Top level cell failed pin matching.",
     "match": false,
+    "failure_strings": [
+     {
+      "line": 198,
+      "text": "Final result: Top level cell failed pin matching."
+     },
+     {
+      "line": 198,
+      "text": "Final result: Top level cell failed pin matching."
+     },
+     {
+      "line": 200,
+      "text": "The following cells had property errors:"
+     }
+    ],
+    "failure_count": 3,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 683 |Number of nets: 683 ",
     "top_devices": "Number of devices: 1073 |Number of devices: 1073 "
    },
@@ -203,6 +301,29 @@
      "file": "scratch/core_support/work/canary/biasgen/lvs_comp.out",
      "final": "Top level cell failed pin matching.",
      "match": false,
+     "failure_strings": [
+      {
+       "line": 668,
+       "text": "Netlists do not match."
+      },
+      {
+       "line": 721,
+       "text": "Final result: Top level cell failed pin matching."
+      },
+      {
+       "line": 721,
+       "text": "Final result: Top level cell failed pin matching."
+      }
+     ],
+     "failure_count": 3,
+     "top_pin_mismatches": 20,
+     "flattened_subcells": [],
+     "accepted_dangling_extraction_ports": [
+      "a_1188_2591#",
+      "bias_nstack_0[7]/a_1188_2591#",
+      "bias_nstack_0[9]/a_1188_2591#",
+      "bias_nstack_1/a_1188_2591#"
+     ],
      "top_nets": "Number of nets: 53 **Mismatch** |Number of nets: 54 **Mismatch** ",
      "top_devices": "Number of devices: 18 |Number of devices: 18 "
     },
@@ -219,6 +340,25 @@
      "file": "scratch/core_support/work/canary/biasgen/lvs_comp_tiedgnd.out",
      "final": "Top level cell failed pin matching.",
      "match": false,
+     "failure_strings": [
+      {
+       "line": 684,
+       "text": "Final result: Top level cell failed pin matching."
+      },
+      {
+       "line": 684,
+       "text": "Final result: Top level cell failed pin matching."
+      }
+     ],
+     "failure_count": 2,
+     "top_pin_mismatches": 0,
+     "flattened_subcells": [],
+     "accepted_dangling_extraction_ports": [
+      "a_1188_2591#",
+      "bias_nstack_0[7]/a_1188_2591#",
+      "bias_nstack_0[9]/a_1188_2591#",
+      "bias_nstack_1/a_1188_2591#"
+     ],
      "top_nets": "Number of nets: 53 |Number of nets: 53 ",
      "top_devices": "Number of devices: 18 |Number of devices: 18 "
     }
@@ -238,12 +378,37 @@
    },
    "gds_checked": {
     "path_in_container": "/work/clean/biasgen_patched/tapeout/gf180mcu_ocd_ip__biasgen.gds.gz",
-    "sha256": "e3d13bff846361c7b1518bdfbdd2a66d592268ac261bf3726d6e60bf1e4e3f99"
+    "sha256": "325916b43dcc3a403f0351735d7bb8f464ac540eec798a3bd5aed6e303297383"
    },
    "lvs_magic_hierarchical": {
     "file": "scratch/core_support/work/clean/biasgen_patched/lvs_comp.out",
     "final": "Top level cell failed pin matching.",
     "match": false,
+    "failure_strings": [
+     {
+      "line": 734,
+      "text": "Netlists do not match."
+     },
+     {
+      "line": 787,
+      "text": "Final result: Top level cell failed pin matching."
+     },
+     {
+      "line": 787,
+      "text": "Final result: Top level cell failed pin matching."
+     }
+    ],
+    "failure_count": 3,
+    "top_pin_mismatches": 21,
+    "flattened_subcells": [
+     "Flattening non-matched subcircuits bias_generator_fe bias_generator_fe"
+    ],
+    "accepted_dangling_extraction_ports": [
+     "a_1188_2591#",
+     "bias_nstack_0[7]/a_1188_2591#",
+     "bias_nstack_0[9]/a_1188_2591#",
+     "bias_nstack_1/a_1188_2591#"
+    ],
     "top_nets": "Number of nets: 79 **Mismatch** |Number of nets: 80 **Mismatch** ",
     "top_devices": "Number of devices: 98 |Number of devices: 98 "
    },
@@ -251,6 +416,11 @@
     "file": "scratch/core_support/work/clean/biasgen_patched/lvs_gds_comp.out",
     "final": "Circuits match uniquely.",
     "match": true,
+    "failure_strings": [],
+    "failure_count": 0,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 684 |Number of nets: 684 ",
     "top_devices": "Number of devices: 1074 |Number of devices: 1074 "
    },
@@ -349,6 +519,18 @@
     "file": "scratch/core_support/work/clean/biasgen_patched/lvs_comp_tiedgnd.out",
     "final": "Circuits match uniquely.",
     "match": true,
+    "failure_strings": [],
+    "failure_count": 0,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [
+     "Flattening non-matched subcircuits bias_generator_fe bias_generator_fe"
+    ],
+    "accepted_dangling_extraction_ports": [
+     "a_1188_2591#",
+     "bias_nstack_0[7]/a_1188_2591#",
+     "bias_nstack_0[9]/a_1188_2591#",
+     "bias_nstack_1/a_1188_2591#"
+    ],
     "top_nets": "Number of nets: 79 |Number of nets: 79 ",
     "top_devices": "Number of devices: 98 |Number of devices: 98 "
    },
@@ -356,6 +538,11 @@
     "file": "scratch/core_support/work/clean/biasgen_patched/lvs_gds_comp_tiedgnd.out",
     "final": "Circuits match uniquely.",
     "match": true,
+    "failure_strings": [],
+    "failure_count": 0,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 683 |Number of nets: 683 ",
     "top_devices": "Number of devices: 1074 |Number of devices: 1074 "
    },
@@ -369,6 +556,18 @@
      "file": "scratch/core_support/work/canary/biasgen_patched/lvs_comp.out",
      "final": "Circuits match uniquely.",
      "match": true,
+     "failure_strings": [],
+     "failure_count": 0,
+     "top_pin_mismatches": 0,
+     "flattened_subcells": [
+      "Flattening non-matched subcircuits bias_generator_fe bias_generator_fe"
+     ],
+     "accepted_dangling_extraction_ports": [
+      "a_1188_2591#",
+      "bias_nstack_0[7]/a_1188_2591#",
+      "bias_nstack_0[9]/a_1188_2591#",
+      "bias_nstack_1/a_1188_2591#"
+     ],
      "top_nets": "Number of nets: 80 |Number of nets: 80 ",
      "top_devices": "Number of devices: 98 |Number of devices: 98 "
     },
@@ -385,6 +584,18 @@
      "file": "scratch/core_support/work/canary/biasgen_patched/lvs_comp_tiedgnd.out",
      "final": "Circuits match uniquely.",
      "match": true,
+     "failure_strings": [],
+     "failure_count": 0,
+     "top_pin_mismatches": 0,
+     "flattened_subcells": [
+      "Flattening non-matched subcircuits bias_generator_fe bias_generator_fe"
+     ],
+     "accepted_dangling_extraction_ports": [
+      "a_1188_2591#",
+      "bias_nstack_0[7]/a_1188_2591#",
+      "bias_nstack_0[9]/a_1188_2591#",
+      "bias_nstack_1/a_1188_2591#"
+     ],
      "top_nets": "Number of nets: 79 |Number of nets: 79 ",
      "top_devices": "Number of devices: 98 |Number of devices: 98 "
     }
@@ -410,6 +621,22 @@
     "file": "scratch/core_support/work/clean/bandgap/lvs_comp.out",
     "final": "Netlists do not match.",
     "match": false,
+    "failure_strings": [
+     {
+      "line": 394,
+      "text": "Netlists do not match."
+     },
+     {
+      "line": 426,
+      "text": "Final result: Netlists do not match."
+     }
+    ],
+    "failure_count": 2,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [
+     "Flattening non-matched subcircuits bandgap_unbuffered bandgap_unbuffered"
+    ],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 48 |Number of nets: 48 ",
     "top_devices": "Number of devices: 52 |Number of devices: 52 "
    },
@@ -417,6 +644,20 @@
     "file": "scratch/core_support/work/clean/bandgap/lvs_gds_comp.out",
     "final": "Netlists do not match.",
     "match": false,
+    "failure_strings": [
+     {
+      "line": 133,
+      "text": "Netlists do not match."
+     },
+     {
+      "line": 165,
+      "text": "Final result: Netlists do not match."
+     }
+    ],
+    "failure_count": 2,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 101 |Number of nets: 101 ",
     "top_devices": "Number of devices: 196 |Number of devices: 196 "
    },
@@ -446,6 +687,11 @@
     "file": "scratch/core_support/work/clean/bandgap/lvs_comp_pnpalias.out",
     "final": "Circuits match uniquely.",
     "match": true,
+    "failure_strings": [],
+    "failure_count": 0,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 24 |Number of nets: 24 ",
     "top_devices": "Number of devices: 2 |Number of devices: 2 "
    },
@@ -453,6 +699,11 @@
     "file": "scratch/core_support/work/clean/bandgap/gds_comp_pnpalias.out",
     "final": "Circuits match uniquely.",
     "match": true,
+    "failure_strings": [],
+    "failure_count": 0,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 101 |Number of nets: 101 ",
     "top_devices": "Number of devices: 196 |Number of devices: 196 "
    },
@@ -466,6 +717,22 @@
      "file": "scratch/core_support/work/canary/bandgap/lvs_comp.out",
      "final": "Netlists do not match.",
      "match": false,
+     "failure_strings": [
+      {
+       "line": 394,
+       "text": "Netlists do not match."
+      },
+      {
+       "line": 426,
+       "text": "Final result: Netlists do not match."
+      }
+     ],
+     "failure_count": 2,
+     "top_pin_mismatches": 0,
+     "flattened_subcells": [
+      "Flattening non-matched subcircuits bandgap_unbuffered bandgap_unbuffered"
+     ],
+     "accepted_dangling_extraction_ports": [],
      "top_nets": "Number of nets: 48 |Number of nets: 48 ",
      "top_devices": "Number of devices: 52 |Number of devices: 52 "
     },
@@ -498,6 +765,22 @@
     "file": "scratch/core_support/work/clean/bandgap_patched/lvs_comp.out",
     "final": "Netlists do not match.",
     "match": false,
+    "failure_strings": [
+     {
+      "line": 394,
+      "text": "Netlists do not match."
+     },
+     {
+      "line": 426,
+      "text": "Final result: Netlists do not match."
+     }
+    ],
+    "failure_count": 2,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [
+     "Flattening non-matched subcircuits bandgap_unbuffered bandgap_unbuffered"
+    ],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 48 |Number of nets: 48 ",
     "top_devices": "Number of devices: 52 |Number of devices: 52 "
    },
@@ -505,6 +788,20 @@
     "file": "scratch/core_support/work/clean/bandgap_patched/lvs_gds_comp.out",
     "final": "Netlists do not match.",
     "match": false,
+    "failure_strings": [
+     {
+      "line": 133,
+      "text": "Netlists do not match."
+     },
+     {
+      "line": 165,
+      "text": "Final result: Netlists do not match."
+     }
+    ],
+    "failure_count": 2,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 101 |Number of nets: 101 ",
     "top_devices": "Number of devices: 196 |Number of devices: 196 "
    },
@@ -546,13 +843,32 @@
     "file": "scratch/core_support/work/clean/bandgap_patched/lvs_comp_pnpalias.out",
     "final": "Circuits match uniquely.",
     "match": true,
+    "failure_strings": [],
+    "failure_count": 0,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 24 |Number of nets: 24 ",
     "top_devices": "Number of devices: 2 |Number of devices: 2 "
    },
    "lvs_gds_flat_pnp_alias": {
     "file": "scratch/core_support/work/clean/bandgap_patched/gds_comp_pnpalias.out",
     "final": "Circuits match uniquely.",
-    "match": true,
+    "match": false,
+    "failure_strings": [
+     {
+      "line": 136,
+      "text": "Property errors were found."
+     },
+     {
+      "line": 138,
+      "text": "The following cells had property errors:"
+     }
+    ],
+    "failure_count": 2,
+    "top_pin_mismatches": 0,
+    "flattened_subcells": [],
+    "accepted_dangling_extraction_ports": [],
     "top_nets": "Number of nets: 101 |Number of nets: 101 ",
     "top_devices": "Number of devices: 196 |Number of devices: 196 "
    },
@@ -566,6 +882,22 @@
      "file": "scratch/core_support/work/canary/bandgap_patched/lvs_comp.out",
      "final": "Netlists do not match.",
      "match": false,
+     "failure_strings": [
+      {
+       "line": 394,
+       "text": "Netlists do not match."
+      },
+      {
+       "line": 426,
+       "text": "Final result: Netlists do not match."
+      }
+     ],
+     "failure_count": 2,
+     "top_pin_mismatches": 0,
+     "flattened_subcells": [
+      "Flattening non-matched subcircuits bandgap_unbuffered bandgap_unbuffered"
+     ],
+     "accepted_dangling_extraction_ports": [],
      "top_nets": "Number of nets: 48 |Number of nets: 48 ",
      "top_devices": "Number of devices: 52 |Number of devices: 52 "
     },
@@ -6907,6 +7239,39 @@
      "circuits_dist.py": "8282b817edc5fca73c1396bbbf1ddbba83c26b243dc4f3618cff171d47e950a3"
     },
     "layout_image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43"
+   },
+   "pt_bias_vref": {
+    "magic_drc_errors": 0,
+    "klayout_drc": {
+     "result": "SUCCESS",
+     "violations": 0,
+     "lyrdb_items": 0
+    },
+    "lvs_final": "Final result: Circuits match uniquely.",
+    "area_um2": 5033.2,
+    "width_um": 88.8,
+    "height_um": 56.68,
+    "gds_export": {
+     "tool": "analog image Magic 8.3.678, cif ostyle gdsii",
+     "hres_check": {
+      "gds": "/work/pt_bias_vref_export.gds",
+      "top": "pt_bias_vref",
+      "resistor_bodies": 10,
+      "bodies_with_hres": 10,
+      "bodies_without_hres": 0,
+      "hres_shapes": 10,
+      "bodies_not_fully_covered": 0
+     }
+    },
+    "hashes": {
+     "pt_bias_vref.spice": "f1461883fd016aa7053e98daf8ca80017887c307c64a7636a8063ad6f9af20ed",
+     "pt_bias_vref.gds": "e97a4cefdfaf7c5b4211f9072df2f403872198669da80abd30959d93bb07df47",
+     "pt_bias_vref.ext.spice": "c1a768be615874b9b48195939c24f621a6cf710db47eaf7c3b8bfe2710bf6d5c",
+     "rf_tx/layoutlib.py": "067f29bd000ba2e414787dfd146ba34e49c7f5c7c88bae3d1a4b606447c5c111",
+     "rf_tx/circuits.py": "59382037c2ad25a85d7086c05a59cb0bc7b263fddbe9ca558a6447f9f9f272fb",
+     "circuits_dist.py": "5d300de75f38c0c503978f9a6b4e4567491b252e680829de42e7584ebfce1165"
+    },
+    "layout_image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43"
    }
   },
   "function_window_ideal_10uA_reference": {
@@ -7286,6 +7651,56 @@
    ],
    "records_without_hash": 0,
    "consistent": true
+  }
+ },
+ "lvs_qualification": {
+  "status": "pass",
+  "rule": "strict netgen reading (summarize.lvs_result): unique final match, no property errors, no pin mismatches, no unresolved non-match; only auto-named disconnected extraction ports and netgen-flattened subcell non-matches are tolerated and are listed per comparison",
+  "required": [
+   {
+    "block": "biasgen_patched",
+    "comparison": "lvs_magic_hierarchical_common_ground",
+    "what": "Magic hierarchical extraction, avss=dvss in both netlists",
+    "match": true,
+    "final": "Circuits match uniquely.",
+    "failure_count": 0
+   },
+   {
+    "block": "biasgen_patched",
+    "comparison": "lvs_gds_flat",
+    "what": "flat extraction of the tapeout GDS, separate avss/dvss",
+    "match": true,
+    "final": "Circuits match uniquely.",
+    "failure_count": 0
+   },
+   {
+    "block": "biasgen_patched",
+    "comparison": "lvs_gds_flat_common_ground",
+    "what": "flat extraction of the tapeout GDS, avss=dvss",
+    "match": true,
+    "final": "Circuits match uniquely.",
+    "failure_count": 0
+   },
+   {
+    "block": "bandgap",
+    "comparison": "lvs_magic_hierarchical_pnp_alias",
+    "what": "Magic hierarchical extraction, PNP recognition alias",
+    "match": true,
+    "final": "Circuits match uniquely.",
+    "failure_count": 0
+   },
+   {
+    "block": "bandgap",
+    "comparison": "lvs_gds_flat_pnp_alias",
+    "what": "flat extraction of the vendored tapeout GDS, PNP recognition alias",
+    "match": true,
+    "final": "Circuits match uniquely.",
+    "failure_count": 0
+   }
+  ],
+  "diagnostic_not_required": {
+   "biasgen_patched.lvs_magic_hierarchical": "expected to fail: Magic hierarchical extraction joins avss and dvss through the shared p-substrate (both tap it), so the layout has one ground net where the schematic has two; the idac1/idac2 and sink pin swaps netgen then reports are symmetry fallout of that non-match.  The die binds both to VSS (integration/core_bias.py), which is what the common-ground comparisons check.",
+   "bandgap.lvs_magic_hierarchical / lvs_gds_flat": "expected to fail: this PDK Magic tech names the 5x5 PNP pnp_10p00x00p42; the _pnp_alias comparisons map that name back"
   }
  }
 }

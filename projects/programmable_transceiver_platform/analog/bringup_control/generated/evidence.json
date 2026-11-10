@@ -1,0 +1,172 @@
+{
+  "status": "pass",
+  "physical_binding_in_live_simulation": false,
+  "leaves": {
+    "bringup_inv": {
+      "drc_errors": 0,
+      "lvs": {
+        "unique_match": true,
+        "summary": "Final result: Circuits match uniquely.\n.",
+        "log": "lvs.txt"
+      },
+      "klayout": {
+        "ran": true,
+        "violations": 0,
+        "by_rule": {},
+        "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+      },
+      "size_um": [
+        4.99,
+        10.950000000000003
+      ]
+    },
+    "bringup_and": {
+      "drc_errors": 0,
+      "lvs": {
+        "unique_match": true,
+        "summary": "Final result: Circuits match uniquely.\n.",
+        "log": "lvs.txt"
+      },
+      "klayout": {
+        "ran": true,
+        "violations": 0,
+        "by_rule": {},
+        "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+      },
+      "size_um": [
+        9.370000000000001,
+        14.450000000000003
+      ]
+    }
+  },
+  "macro": {
+    "drc_errors": 0,
+    "lvs": {
+      "unique_match": true,
+      "summary": "Final result: Circuits match uniquely.\n.",
+      "log": "lvs.txt"
+    },
+    "klayout": {
+      "ran": true,
+      "violations": 0,
+      "by_rule": {},
+      "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+    }
+  },
+  "layout": {
+    "cell": "pt_wtx_fallback_control",
+    "image": "svalbard/librelane-gf180-canary:2026.08",
+    "size_um": [
+      99.95,
+      59.34
+    ],
+    "area_um2": 5931.0,
+    "rows": [
+      {
+        "row": 0,
+        "y_bottom": 2.0,
+        "row_top": 17.050000000000004,
+        "channel_top": 30.44999999999999,
+        "right": 98.94999999999999,
+        "devices": 7,
+        "tracks": 15
+      },
+      {
+        "row": 1,
+        "y_bottom": 31.44999999999999,
+        "row_top": 46.5,
+        "channel_top": 58.34000000000005,
+        "right": 61.1,
+        "devices": 4,
+        "tracks": 12
+      }
+    ],
+    "trunk_nets": [
+      "VDD",
+      "VSS",
+      "RAIL_wired",
+      "FORCE_LEAF",
+      "FORCE_SELECTED",
+      "ISO_wired",
+      "L_BRANCH0",
+      "L_BRANCH1",
+      "L_EXT_ENABLE",
+      "L_IDLE",
+      "L_STAGE_TMDS",
+      "L_STATE0",
+      "L_STATE1",
+      "RUN_TMDS",
+      "TMDS_REQUEST",
+      "TMDS_SELECTED",
+      "WIRED_ON"
+    ],
+    "devices": 11,
+    "drc_count_raw": "0",
+    "magic_returncode": [
+      0,
+      0,
+      0
+    ]
+  },
+  "transistor_count": 50,
+  "gate_count": 11,
+  "ports": [
+    "L_BRANCH0",
+    "L_BRANCH1",
+    "L_STATE0",
+    "L_STATE1",
+    "L_IDLE",
+    "L_STAGE_TMDS",
+    "L_EXT_ENABLE",
+    "ISO_wired",
+    "FORCE_LEAF",
+    "TMDS_REQUEST",
+    "WIRED_ON",
+    "FORCE_SELECTED",
+    "RAIL_wired",
+    "VDD",
+    "VSS"
+  ],
+  "tool_images": {
+    "svalbard/librelane-gf180-canary:2026.08": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+    "docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305"
+  },
+  "source_hashes": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/build.py": "9bcf8e88d7fcfe6949d00d0d3975d94f62e256b79fad7f395412f44079c72f40",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/integration/wtx_fallback.py": "6a2b1d10e83a3a9b7e25022cefa4154e54aa4bec27d73c99672e0d21605b7c69",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/timing/compact.py": "9692ab4d5eb2b8498301bbf2188f52c3056875677601e24af6330cc4d1acd437",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/timing/layout_engine.py": "acb531c9c30a6b3f4a76c124bc9ea8e9274a532a7a9e1769d40ff535ab61f0ae",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/timing/netlist.py": "9eb8d5c8d7d044a76b560ebebd23c768aefd2b0c1183d38313964e89a1d30ab3",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/timing/timing_flow.py": "ae25349b5de22a22b47a77687abf481166efaac60013c748078420666f8e0b28"
+  },
+  "excluded": [
+    "extracted functional/PVT characterization",
+    "binding this extraction into the live assembled simulation",
+    "full-chip placement, routing, DRC/LVS and physical signoff"
+  ],
+  "artifact_hashes": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/pt_wtx_fallback_control.mag": "a637bd50f7351ce0a62ccd8c1ac075bc8a0833be26721b97ead0ebf9157a6e6d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/pt_wtx_fallback_control.lvs.spice": "1298a2cd8aa305c5a4bff26380b0d73ffca1b66e83e79cb4405afddb3dbccfb5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/pt_wtx_fallback_control.gds": "4b496c2d64f24bd91ac270092e31a938a30618e0b09ec931afcbe7165a35b7ce",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/bringup_inv.mag": "2e586de1fee2994586ec2752cd7989a7f6f0a6c2d90058ca8c4fa1793642e2a3",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/schematic.spice": "a35c706f3f0e7006ec98d468c6d9ea49fb3eda46d4c1506afc48c9216e4800a0",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/lvs.txt": "692e58270cd89a23549c0ee71a7aa35e20897bd66905d76ba56b8ce021a408fb",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/drc-details.txt": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/bringup_and.mag": "a44fa06962534b5afede182c669b5039de5f4b96141303934611b206d82ef8e8",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/pt_wtx_fallback_control.ext.spice": "584a7112f82ce9785b9363feec1789d01947ae95ff5426cfb6743d5b776ff348",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_and-drc.txt": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_inv.pins.json": "143982db25acb033035a864b7c873eb26e4324e9b0564147f6ac8ac104529c80",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_and-lvs.txt": "5fcb66077fd2f309a232b7a3b8d078960b3ac52930d394a73d0be91ee9c10e7f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_inv.mag": "2e586de1fee2994586ec2752cd7989a7f6f0a6c2d90058ca8c4fa1793642e2a3",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_and.ext.spice": "8a4050465d15f68f984e5809998094c97ec987de31df89102ca3a4ad0bb3e47e",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_and.gds": "b1ee137694b3eedf0f1f5699f2740943ad825e473cc9afb190e44ccfda6f629d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_and.mag": "a44fa06962534b5afede182c669b5039de5f4b96141303934611b206d82ef8e8",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_inv.lvs.spice": "de4b83b77a03ba70872ab6afe96343fe2a48cd8dcb43866f00333322161b7278",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_inv-drc.txt": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_and.lvs.spice": "5c6e49f3b13c698e4e0e6aa2e238a68e71f0795ba2266aa6a16cdd75ec0d3ea2",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_inv.gds": "ffc603d6e079a7145ab4c485e4ef5345a265e98c3e813b72c94e66e9b6fe3f46",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_inv-lvs.txt": "7a5dfcb376bc6b6f3dfbfe0e7f121711b103e7e7937e9636887962092a249dcd",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_and.pins.json": "858e8eba0cc55791db1390615e66ca4d109163df8d1ebecf81a718638b4001fc",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/leaves/bringup_inv.ext.spice": "edae71b747dbda80974e7245add28de0fc7f7bae90f69f0e507ce47a2cb0a955"
+  }
+}

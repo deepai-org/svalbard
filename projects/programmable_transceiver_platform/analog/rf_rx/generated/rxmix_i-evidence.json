@@ -3,13 +3,13 @@
  "top_cell": "pt_rxmix_i",
  "source_hashes": {
   "rxmix_i.spice": "sha256:bae2d49fc929ff8fef8f96759c7081d8456b7f6cc111dafdb01685f154bd35b8",
-  "netlists.py": "sha256:5b510fefe992f2a5c41026c506f7217975cef917e05dc9fe3b366c5791fb7329",
-  "rfrx_flow.py": "sha256:a3f7188401453a8c894ec1f7b81fbbd61397d1edd1123122250f5b982d7ca833"
+  "netlists.py": "sha256:fb4f51b6eede1d916e5a24128fdbfc250408585f135fdfdde4622b62084fbd93",
+  "rfrx_flow.py": "sha256:6fa4ba2ff246182b7c47dd4d2a9c95652d70c09a833ab3674ecb170dd0ee15a1"
  },
  "artifact_hashes": {
-  "rxmix_i.gds": "sha256:6db894fc3c8118e188a1d94a58b366ce984dd43546527d66c2f95ff0c71b032a",
-  "rxmix_i.mag": "sha256:f3411a4a663f5bb686bddb3ab9ec2728f2414ac4b1d2e6e4b42ae6fdcd1fac84",
-  "rxmix_i.ext.spice": "sha256:044f987b89b75c6d378d7c2d19ba446eb1f5a0ae73fa0d8c342545fc5ab8800d",
+  "rxmix_i.gds": "sha256:14d74cd925c50be8ee1e2d880d8e228ebc4372dad759db068a7baf23be251a99",
+  "rxmix_i.mag": "sha256:86f5cc2ac579f890fcd8c850b9bd7c0563a4a6ea22bf6292d6e608645d6f4b7d",
+  "rxmix_i.ext.spice": "sha256:82460f2940d74ca527f555c9de6d325bd1d0260dcc0c86eb1a76e1a7f83eb3ce",
   "rxmix_i-lvs.txt": "sha256:9f8e72e917d678df80349e16b5c8570f148ffacfbe3f2652ae6e711ddc207cb4"
  },
  "images": {
@@ -34,36 +34,36 @@
    "cases": [
     {
      "case": "reset/off, island on",
-     "rail_current_a": 7.254216e-08,
+     "rail_current_a": 7.254227e-08,
      "rf_pin_current_a": 7.632468e-12,
-     "control_current_a": 5.348081e-10,
+     "control_current_a": 5.348079e-10,
      "forced_bb_current_a": null,
      "bb_p_v": 0.4536926,
      "bb_n_v": 0.4554716
     },
     {
      "case": "island unpowered, en/island_off/LO (pll island) at 3.63 V, 27 C; rf nodes have no DC source (behind LNA MIM caps)",
-     "rail_current_a": 2.700997e-08,
+     "rail_current_a": 2.700983e-08,
      "rf_pin_current_a": 1.891391e-13,
-     "control_current_a": 7.768508e-09,
+     "control_current_a": 7.768501e-09,
      "forced_bb_current_a": null,
      "bb_p_v": -3.22974e-08,
      "bb_n_v": -1.14932e-06
     },
     {
      "case": "same 85 C",
-     "rail_current_a": 2.283302e-08,
+     "rail_current_a": 2.283303e-08,
      "rf_pin_current_a": 2.612597e-13,
-     "control_current_a": 4.607228e-09,
+     "control_current_a": 4.607226e-09,
      "forced_bb_current_a": null,
      "bb_p_v": -3.83236e-08,
      "bb_n_v": -1.76161e-06
     },
     {
      "case": "same 0 C",
-     "rail_current_a": 8.503376e-10,
+     "rail_current_a": 8.503171e-10,
      "rf_pin_current_a": 1.616747e-13,
-     "control_current_a": 2.575591e-10,
+     "control_current_a": 2.575577e-10,
      "forced_bb_current_a": null,
      "bb_p_v": -2.88661e-08,
      "bb_n_v": -9.21706e-07
@@ -93,8 +93,8 @@
    },
    "extracted_nominal": {
     "condition": "tt 27 C 3.3 V, extracted with parasitic C",
-    "conversion_gain_db": 19.2754063068775,
-    "bb_tone_amp_v": 0.09199629037038234,
+    "conversion_gain_db": 19.27540630744965,
+    "bb_tone_amp_v": 0.09199629037644226,
     "bb_pp_v": 0.184988,
     "bb_offset_v": -0.0597444,
     "idd_a": 0.00190095,
@@ -141,7 +141,7 @@
       "BB_Q_P",
       "BB_Q_N"
      ],
-     "mixer_output_current_when_forced_a": 6.665463e-10
+     "mixer_output_current_when_forced_a": 6.667187e-10
     }
    ],
    "bypass_loading_fF": null,
@@ -152,7 +152,7 @@
   {
    "metric": "conversion gain, 300 ohm/leg source, 2.4 GHz LO, 5 MHz IF (dB)",
    "target": "0 (arch, voltage)",
-   "extracted_nominal": 19.2754063068775,
+   "extracted_nominal": 19.27540630744965,
    "schematic_nominal": 20.11071276766892
   },
   {
@@ -258,7 +258,7 @@
      "raw_offset_v": -0.0527033,
      "lsb_v": -0.010076587499999998,
      "code": -5,
-     "residual_v": -0.00323957
+     "residual_v": -0.00323955
     },
     {
      "corner": {
@@ -320,8 +320,8 @@
   {
    "metric": "chain with LNA (see lna evidence)",
    "extracted_nominal": {
-    "gain_i_db": 15.306376163288668,
-    "gain_q_db": 14.555090874571086,
+    "gain_i_db": 15.306376163340252,
+    "gain_q_db": 14.555090874385225,
     "bb_pp_i_v": 0.0428942,
     "bb_pp_q_v": 0.0340914,
     "idd_a": 0.00655294,
@@ -341,7 +341,7 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 19.284324109252196,
+     "conversion_gain_db": 19.284324109266443,
      "idd_a": 0.00187772,
      "bb_offset_v": -0.056795
     },
@@ -351,7 +351,7 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 19.38522547791134,
+     "conversion_gain_db": 19.385225477895567,
      "idd_a": 0.00190715,
      "bb_offset_v": -0.0613836
     },
@@ -361,7 +361,7 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 19.106422571272937,
+     "conversion_gain_db": 19.106422571277427,
      "idd_a": 0.00187796,
      "bb_offset_v": -0.0558338
     },
@@ -371,7 +371,7 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 19.20907848075013,
+     "conversion_gain_db": 19.209078480746445,
      "idd_a": 0.00190745,
      "bb_offset_v": -0.0603682
     },
@@ -381,7 +381,7 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 17.833756447781624,
+     "conversion_gain_db": 17.83375644774616,
      "idd_a": 0.00178705,
      "bb_offset_v": -0.0631145
     },
@@ -391,7 +391,7 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 18.081794329288442,
+     "conversion_gain_db": 18.081794329251867,
      "idd_a": 0.00184885,
      "bb_offset_v": -0.0688702
     },
@@ -401,7 +401,7 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 17.65247117415758,
+     "conversion_gain_db": 17.652471174292966,
      "idd_a": 0.00178703,
      "bb_offset_v": -0.061862
     },
@@ -411,7 +411,7 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 17.902002988725382,
+     "conversion_gain_db": 17.902002988708364,
      "idd_a": 0.00184863,
      "bb_offset_v": -0.0675389
     },
@@ -421,7 +421,7 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 20.44790748943985,
+     "conversion_gain_db": 20.44790748944365,
      "idd_a": 0.00192892,
      "bb_offset_v": -0.047495
     },
@@ -431,7 +431,7 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 20.527607990062897,
+     "conversion_gain_db": 20.527607990064034,
      "idd_a": 0.00195089,
      "bb_offset_v": -0.0507494
     },
@@ -441,7 +441,7 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 20.277702303098295,
+     "conversion_gain_db": 20.277702371954977,
      "idd_a": 0.00192964,
      "bb_offset_v": -0.0467186
     },
@@ -451,7 +451,7 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 20.35949277336874,
+     "conversion_gain_db": 20.359492932415893,
      "idd_a": 0.00195144,
      "bb_offset_v": -0.0499109
     }

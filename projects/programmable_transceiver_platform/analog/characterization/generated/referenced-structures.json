@@ -1,0 +1,42 @@
+{
+ "vco_replica": {
+  "owner": "analog/timing",
+  "access": "CLK_OBS code 11 / freq_count source 4; EN = debug.replica.vco_enable",
+  "gds": "projects/programmable_transceiver_platform/analog/timing/generated/vco_replica.gds",
+  "gds_sha256": "sha256:53a1b9015a720568ea52c15ff166f9f59ff798ad82734102f4470ba7cdd95f5d",
+  "top_cells": [
+   "pt_vco_replica"
+  ],
+  "lef": "generated/vco_replica.lef",
+  "evidence": "projects/programmable_transceiver_platform/analog/timing/generated/vco_replica-evidence.json",
+  "evidence_hashes": {
+   "vco_replica.spice": "current",
+   "timing_cells.spice": "current",
+   "layout_engine.py": "current",
+   "netlist.py": "current",
+   "run_timing.py": "current",
+   "timing_flow.py": "current",
+   "fast/ct_phbuf8.spice": "current",
+   "fast/ct_ring8.spice": "current",
+   "fast/ct_tspc2.spice": "current",
+   "vco_replica.lvs.spice": "current",
+   "vco_replica.mag": "current",
+   "vco_replica.gds": "current",
+   "vco_replica.ext.spice": "current"
+  },
+  "evidence_stale": []
+ },
+ "esd_test": {
+  "owner": "analog/pads",
+  "access": "own pad bidir[25] ESD_TEST (single-leg stress-safe cell)",
+  "gds": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/single-leg/pad.gds",
+  "gds_sha256": "sha256:c762ab272336d30743bd980d8f6427cb9389bd2c84b5687040d0fe18243c562d",
+  "top_cells": [
+   "rf_protected_pad_pair"
+  ],
+  "lef": "generated/esd_test.lef",
+  "evidence": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/families-report.json",
+  "evidence_hashes": {},
+  "evidence_stale": []
+ }
+}

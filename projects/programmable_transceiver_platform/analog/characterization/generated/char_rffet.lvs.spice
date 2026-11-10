@@ -1,0 +1,15 @@
+* NGSPICE file created from pt_char_rffet.ext - technology: gf180mcuD
+
+.subckt rf_dev a_n508_n396# a_n626_n200# a_200_n396# a_500_n200# a_n444_n200# a_n36_n396#
++ a_436_n396# a_264_n200# a_n208_n200# a_n272_n396# a_n764_n490# a_28_n200#
+X0 a_28_n200# a_n36_n396# a_n208_n200# a_n764_n490# nfet_03v3 ad=0.9p pd=2.9u as=0.9p ps=2.9u w=2u l=0.28u
+X1 a_264_n200# a_200_n396# a_28_n200# a_n764_n490# nfet_03v3 ad=0.9p pd=2.9u as=0.9p ps=2.9u w=2u l=0.28u
+X2 a_500_n200# a_436_n396# a_264_n200# a_n764_n490# nfet_03v3 ad=1.26p pd=5.26u as=0.9p ps=2.9u w=2u l=0.28u
+X3 a_n208_n200# a_n272_n396# a_n444_n200# a_n764_n490# nfet_03v3 ad=0.9p pd=2.9u as=0.9p ps=2.9u w=2u l=0.28u
+X4 a_n444_n200# a_n508_n396# a_n626_n200# a_n764_n490# nfet_03v3 ad=0.9p pd=2.9u as=1.26p ps=5.26u w=2u l=0.28u
+.ends
+
+.subckt pt_char_rffet G D GND
+Xrf_dev_0 G GND G D D G G GND GND G GND D rf_dev
+.ends
+

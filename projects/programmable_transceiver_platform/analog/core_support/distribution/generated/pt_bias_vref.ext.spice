@@ -1,0 +1,52 @@
+* NGSPICE file created from pt_bias_vref.ext - technology: gf180mcuD
+
+.subckt pt_bias_vref VDD VSS VBG VREF0 VCM
+X0 c2 VSS VSS ppolyf_u_1k r_width=1u r_length=40u
+X1 v2 v3 VSS ppolyf_u_1k r_width=1u r_length=40u
+X2 VDD c1 VSS ppolyf_u_1k r_width=1u r_length=40u
+X3 VBG VREF0 VSS ppolyf_u_1k r_width=1u r_length=40u
+X4 v3 v4 VSS ppolyf_u_1k r_width=1u r_length=40u
+X5 VREF0 v1 VSS ppolyf_u_1k r_width=1u r_length=40u
+X6 v1 v2 VSS ppolyf_u_1k r_width=1u r_length=40u
+X7 c1 VCM VSS ppolyf_u_1k r_width=1u r_length=40u
+X8 v4 VSS VSS ppolyf_u_1k r_width=1u r_length=40u
+X9 VCM c2 VSS ppolyf_u_1k r_width=1u r_length=40u
+C0 VDD v2 0.10374f
+C1 VBG VCM 0.64049f
+C2 VCM c2 0.4998f
+C3 v3 v2 0.9527f
+C4 VREF0 v1 0.50292f
+C5 v3 VDD 0.10374f
+C6 VCM v2 0.11748f
+C7 c1 v4 0.04133f
+C8 VDD VCM 4.05378f
+C9 VREF0 VBG 9.52182f
+C10 v3 VCM 0.11748f
+C11 VREF0 v2 0.0229f
+C12 VREF0 VDD 1.34109f
+C13 c1 c2 0.04133f
+C14 VREF0 VCM 9.29737f
+C15 c1 VDD 0.49174f
+C16 v4 v2 0.09664f
+C17 v4 VDD 0.46139f
+C18 v1 VBG 0.0229f
+C19 v4 v3 1.0052f
+C20 c1 VCM 0.55357f
+C21 v4 VCM 0.11748f
+C22 v1 v2 0.95396f
+C23 v1 VDD 0.09773f
+C24 v1 v3 0.07821f
+C25 VBG VDD 0.08468f
+C26 v1 VCM 0.11748f
+C27 VCM VSS 8.37898f
+C28 VDD VSS 16.5373f
+C29 VREF0 VSS 5.86571f
+C30 VBG VSS 12.8391f
+C31 c2 VSS 5.98838f
+C32 c1 VSS 5.69513f
+C33 v4 VSS 5.39814f
+C34 v3 VSS 5.0278f
+C35 v2 VSS 4.9467f
+C36 v1 VSS 5.1209f
+.ends
+

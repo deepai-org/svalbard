@@ -1,0 +1,816 @@
+{
+ "block": "device-speed calibration structures",
+ "generated_utc": "2026-11-10T03:54:31Z",
+ "source_hashes": {
+  "speed.py": "sha256:142a77079c7f0a90555ec50b35120993308b63591aae9e669475fbe4ca015081",
+  "rffet.py": "sha256:c1137bd05e2f5c0759d790e6e2fd6d75e3a73a723494d057d1289b34999b287a",
+  "convkit.py": "sha256:335aaf313b48811efd7abdca25e07c0e4535a19b8c5e4e14de11ec17fed43a6e"
+ },
+ "criteria": {
+  "functional": "extracted netlist + explicit gate R, 5 corners (tt/27/3.3, ss/32/3.15, ff/22/3.35, ss/22/3.35, ff/32/3.15): OUT toggles rail to rail (>90 %/<10 % VDD), f_out <= 500 MHz (clk_obs limit), EN=0 supply current < 1 uA",
+  "divider": "schematic tt: f(OUT) = f(oscillator node)/N within 1 %",
+  "clean": "Magic DRC 0, KLayout DRC 0, LVS unique, published-GDS (renamed) round-trip LVS unique, LEF pins = ports"
+ },
+ "cells": {
+  "pt_char_ro33": {
+   "clean": true,
+   "functional_extracted_rg": true,
+   "divider_consistent_schematic": true,
+   "prediction_f_osc_hz": {
+    "typical_27_3.3": 605118546.5052513,
+    "ss_32_3.15": 475201886.55148965,
+    "ff_22_3.35": 730360158.8533345,
+    "ss_22_3.35": 511566191.8692948,
+    "ff_32_3.15": 689114573.911845
+   },
+   "prediction_f_out_hz": {
+    "typical_27_3.3": 151279636.62631282,
+    "ss_32_3.15": 118800471.63787241,
+    "ff_22_3.35": 182590039.71333364,
+    "ss_22_3.35": 127891547.9673237,
+    "ff_32_3.15": 172278643.47796124
+   },
+   "i_on_ma": {
+    "typical_27_3.3": 1.65799,
+    "ss_32_3.15": 1.2286599999999999,
+    "ff_22_3.35": 2.0584499999999997,
+    "ss_22_3.35": 1.4148699999999999,
+    "ff_32_3.15": 1.81471
+   },
+   "i_off_ua": {
+    "typical_27_3.3": 0.000113727,
+    "ss_32_3.15": 8.45996e-05,
+    "ff_22_3.35": 0.00045040600000000004,
+    "ss_22_3.35": 9.01911e-05,
+    "ff_32_3.15": 0.000665585
+   },
+   "no_gate_r_tt_f_osc_hz": {
+    "typical_27_3.3": 608348827.2175266
+   },
+   "schematic_tt": {
+    "typical_27_3.3": {
+     "f_out_hz": 290461252.46892065,
+     "divide": 4,
+     "f_osc_hz": 1161845009.8756826,
+     "i_on_ma": 1.58859,
+     "i_off_ua": 0.000113826,
+     "out_v": [
+      -0.0509361,
+      3.36298
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 1161845009.8756826,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true
+    }
+   },
+   "extracted_rg": {
+    "typical_27_3.3": {
+     "f_out_hz": 151279636.62631282,
+     "divide": 4,
+     "f_osc_hz": 605118546.5052513,
+     "i_on_ma": 1.65799,
+     "i_off_ua": 0.000113727,
+     "out_v": [
+      -0.0254544,
+      3.33335
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 605118088.7950284,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ss_32_3.15": {
+     "f_out_hz": 118800471.63787241,
+     "divide": 4,
+     "f_osc_hz": 475201886.55148965,
+     "i_on_ma": 1.2286599999999999,
+     "i_off_ua": 8.45996e-05,
+     "out_v": [
+      -0.0293204,
+      3.18946
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 475202733.3661223,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ff_22_3.35": {
+     "f_out_hz": 182590039.71333364,
+     "divide": 4,
+     "f_osc_hz": 730360158.8533345,
+     "i_on_ma": 2.0584499999999997,
+     "i_off_ua": 0.00045040600000000004,
+     "out_v": [
+      -0.020683,
+      3.37622
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 730358825.2908654,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ss_22_3.35": {
+     "f_out_hz": 127891547.9673237,
+     "divide": 4,
+     "f_osc_hz": 511566191.8692948,
+     "i_on_ma": 1.4148699999999999,
+     "i_off_ua": 9.01911e-05,
+     "out_v": [
+      -0.0294929,
+      3.38991
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 511566518.9944649,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ff_32_3.15": {
+     "f_out_hz": 172278643.47796124,
+     "divide": 4,
+     "f_osc_hz": 689114573.911845,
+     "i_on_ma": 1.81471,
+     "i_off_ua": 0.000665585,
+     "out_v": [
+      -0.0206864,
+      3.1763
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 689115761.1111302,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    }
+   },
+   "physical": {
+    "trunk_nets": 4,
+    "jumpers": 21,
+    "split_channels": {
+     "1": [
+      "R0",
+      "R1",
+      "R10",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9"
+     ]
+    },
+    "channels": {
+     "0": 4,
+     "1": 13,
+     "2": 10,
+     "3": 10,
+     "4": 9,
+     "5": 6,
+     "6": 3
+    },
+    "bbox_um": [
+     -11.0,
+     0.0,
+     61.14,
+     140.26
+    ],
+    "area_um2": 10118.4,
+    "drc_count": 0,
+    "lvs": "Circuits match uniquely.",
+    "lvs_unique": true,
+    "gds_export": {
+     "magic": "8.3.678",
+     "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+     "marker_shapes": {
+      "HRES 62/0": 0,
+      "RES_MK 110/5": 0
+     },
+     "ppolyf_u_1k_devices": 0,
+     "klayout_drc": {
+      "violations": 0,
+      "by_rule": {},
+      "rc": "0"
+     },
+     "hres_ok": true,
+     "published_gds_lvs": "Circuits match uniquely.",
+     "published_gds_lvs_unique": true,
+     "pass": true
+    },
+    "lef_pins": [
+     "EN",
+     "OUT",
+     "VDD",
+     "VSS"
+    ],
+    "lef_pins_match_ports": true,
+    "devices": 54,
+    "gds_subcells_uniquified": {
+     "top": "pt_char_ro33",
+     "renamed": {
+      "prim_2": "pt_char_ro33__prim_2",
+      "prim_6": "pt_char_ro33__prim_6",
+      "prim_0": "pt_char_ro33__prim_0",
+      "prim_1": "pt_char_ro33__prim_1",
+      "prim_3": "pt_char_ro33__prim_3",
+      "prim_5": "pt_char_ro33__prim_5",
+      "prim_4": "pt_char_ro33__prim_4"
+     }
+    },
+    "published_gds_after_rename": {
+     "gds_sha256": "sha256:7baf9898b90e2f2fede9a918cc849d5d5c72b87865fd6f68447258430b1da31d",
+     "lvs": "Circuits match uniquely.",
+     "lvs_unique": true
+    }
+   },
+   "verdict": "pass"
+  },
+  "pt_char_ro50": {
+   "clean": true,
+   "functional_extracted_rg": true,
+   "divider_consistent_schematic": true,
+   "prediction_f_osc_hz": {
+    "typical_27_3.3": 327380465.20764107,
+    "ss_32_3.15": 222933752.44878796,
+    "ff_22_3.35": 435132606.6618802,
+    "ss_22_3.35": 245935909.10208797,
+    "ff_32_3.15": 402842050.6674589
+   },
+   "prediction_f_out_hz": {
+    "typical_27_3.3": 81845116.30191027,
+    "ss_32_3.15": 55733438.11219699,
+    "ff_22_3.35": 108783151.66547005,
+    "ss_22_3.35": 61483977.27552199,
+    "ff_32_3.15": 100710512.66686472
+   },
+   "i_on_ma": {
+    "typical_27_3.3": 0.8058730000000001,
+    "ss_32_3.15": 0.5245070000000001,
+    "ff_22_3.35": 1.10079,
+    "ss_22_3.35": 0.6158669999999999,
+    "ff_32_3.15": 0.95512
+   },
+   "i_off_ua": {
+    "typical_27_3.3": 9.666730000000001e-05,
+    "ss_32_3.15": 8.4784e-05,
+    "ff_22_3.35": 0.000198475,
+    "ss_22_3.35": 9.03279e-05,
+    "ff_32_3.15": 0.00026839400000000003
+   },
+   "no_gate_r_tt_f_osc_hz": {
+    "typical_27_3.3": 327888337.62662125
+   },
+   "schematic_tt": {
+    "typical_27_3.3": {
+     "f_out_hz": 146189212.697995,
+     "divide": 4,
+     "f_osc_hz": 584756850.79198,
+     "i_on_ma": 0.7677470000000001,
+     "i_off_ua": 9.68202e-05,
+     "out_v": [
+      -0.0509431,
+      3.36297
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 584755995.9417933,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true
+    }
+   },
+   "extracted_rg": {
+    "typical_27_3.3": {
+     "f_out_hz": 81845116.30191027,
+     "divide": 4,
+     "f_osc_hz": 327380465.20764107,
+     "i_on_ma": 0.8058730000000001,
+     "i_off_ua": 9.666730000000001e-05,
+     "out_v": [
+      -0.0253716,
+      3.33344
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 327380465.20764107,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ss_32_3.15": {
+     "f_out_hz": 55733438.11219699,
+     "divide": 4,
+     "f_osc_hz": 222933752.44878796,
+     "i_on_ma": 0.5245070000000001,
+     "i_off_ua": 8.4784e-05,
+     "out_v": [
+      -0.029252,
+      3.18955
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 222933876.69750214,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ff_22_3.35": {
+     "f_out_hz": 108783151.66547005,
+     "divide": 4,
+     "f_osc_hz": 435132606.6618802,
+     "i_on_ma": 1.10079,
+     "i_off_ua": 0.000198475,
+     "out_v": [
+      -0.0206399,
+      3.37631
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 435132606.6618802,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ss_22_3.35": {
+     "f_out_hz": 61483977.27552199,
+     "divide": 4,
+     "f_osc_hz": 245935909.10208797,
+     "i_on_ma": 0.6158669999999999,
+     "i_off_ua": 9.03279e-05,
+     "out_v": [
+      -0.0294222,
+      3.38999
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 245936211.5248168,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ff_32_3.15": {
+     "f_out_hz": 100710512.66686472,
+     "divide": 4,
+     "f_osc_hz": 402842050.6674589,
+     "i_on_ma": 0.95512,
+     "i_off_ua": 0.00026839400000000003,
+     "out_v": [
+      -0.0206237,
+      3.17639
+     ],
+     "sim_messages": [],
+     "f_ring_direct_hz": 402841644.96357304,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    }
+   },
+   "physical": {
+    "trunk_nets": 4,
+    "jumpers": 21,
+    "split_channels": {},
+    "channels": {
+     "0": 4,
+     "1": 6,
+     "2": 10,
+     "3": 10,
+     "4": 9,
+     "5": 6,
+     "6": 3
+    },
+    "bbox_um": [
+     -11.0,
+     0.0,
+     61.88,
+     133.42
+    ],
+    "area_um2": 9723.6,
+    "drc_count": 0,
+    "lvs": "Circuits match uniquely.",
+    "lvs_unique": true,
+    "gds_export": {
+     "magic": "8.3.678",
+     "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+     "marker_shapes": {
+      "HRES 62/0": 0,
+      "RES_MK 110/5": 0
+     },
+     "ppolyf_u_1k_devices": 0,
+     "klayout_drc": {
+      "violations": 0,
+      "by_rule": {},
+      "rc": "0"
+     },
+     "hres_ok": true,
+     "published_gds_lvs": "Circuits match uniquely.",
+     "published_gds_lvs_unique": true,
+     "pass": true
+    },
+    "lef_pins": [
+     "EN",
+     "OUT",
+     "VDD",
+     "VSS"
+    ],
+    "lef_pins_match_ports": true,
+    "devices": 54,
+    "gds_subcells_uniquified": {
+     "top": "pt_char_ro50",
+     "renamed": {
+      "prim_3": "pt_char_ro50__prim_3",
+      "prim_8": "pt_char_ro50__prim_8",
+      "prim_1": "pt_char_ro50__prim_1",
+      "prim_0": "pt_char_ro50__prim_0",
+      "prim_4": "pt_char_ro50__prim_4",
+      "prim_6": "pt_char_ro50__prim_6",
+      "prim_5": "pt_char_ro50__prim_5",
+      "prim_2": "pt_char_ro50__prim_2",
+      "prim_7": "pt_char_ro50__prim_7"
+     }
+    },
+    "published_gds_after_rename": {
+     "gds_sha256": "sha256:f91df069bf4cfc610f9d7c58b38d1acbbc87a570ab951cf338dbc71eb6d7a8ea",
+     "lvs": "Circuits match uniquely.",
+     "lvs_unique": true
+    }
+   },
+   "verdict": "pass"
+  },
+  "pt_char_cmldiv": {
+   "clean": true,
+   "functional_extracted_rg": true,
+   "divider_consistent_schematic": true,
+   "prediction_f_osc_hz": {
+    "typical_27_3.3": 856311012.1596164,
+    "ss_32_3.15": 692393708.9107609,
+    "ff_22_3.35": 1089099206.0466788,
+    "ss_22_3.35": 691830861.191056,
+    "ff_32_3.15": 1088180725.0548172
+   },
+   "prediction_f_out_hz": {
+    "typical_27_3.3": 107040022.26432464,
+    "ss_32_3.15": 86549925.24250206,
+    "ff_22_3.35": 136137308.0889385,
+    "ss_22_3.35": 86478072.40376613,
+    "ff_32_3.15": 136016947.71168488
+   },
+   "i_on_ma": {
+    "typical_27_3.3": 4.02224,
+    "ss_32_3.15": 3.0055899999999998,
+    "ff_22_3.35": 5.2469600000000005,
+    "ss_22_3.35": 3.30023,
+    "ff_32_3.15": 4.81273
+   },
+   "i_off_ua": {
+    "typical_27_3.3": 0.0081277,
+    "ss_32_3.15": 0.0189925,
+    "ff_22_3.35": 0.00324177,
+    "ss_22_3.35": 0.0191828,
+    "ff_32_3.15": 0.00337208
+   },
+   "no_gate_r_tt_f_osc_hz": {
+    "typical_27_3.3": 865392520.4124461
+   },
+   "schematic_tt": {
+    "typical_27_3.3": {
+     "f_out_hz": 193716795.73048183,
+     "divide": 8,
+     "f_osc_hz": 1549726860.6408122,
+     "i_on_ma": 3.9800900000000006,
+     "i_off_ua": 0.000304227,
+     "out_v": [
+      -0.0511761,
+      3.36228
+     ],
+     "sim_messages": [],
+     "f_s0_direct_hz": 1549726860.6408122,
+     "s0_swing_v": [
+      2.46603,
+      3.07521
+     ],
+     "v_bias": 1.36288,
+     "f_so_equivalent_clock_hz": 3099453721.2816243,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true
+    }
+   },
+   "extracted_rg": {
+    "typical_27_3.3": {
+     "f_out_hz": 107040022.26432464,
+     "divide": 8,
+     "f_osc_hz": 856311012.1596164,
+     "i_on_ma": 4.02224,
+     "i_off_ua": 0.0081277,
+     "out_v": [
+      -0.0271894,
+      3.33257
+     ],
+     "sim_messages": [],
+     "f_s0_direct_hz": 856311012.1596164,
+     "s0_swing_v": [
+      2.4573,
+      3.0716
+     ],
+     "v_bias": 1.36298,
+     "f_so_equivalent_clock_hz": 1712622024.3192327,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ss_32_3.15": {
+     "f_out_hz": 86549925.24250206,
+     "divide": 8,
+     "f_osc_hz": 692393708.9107609,
+     "i_on_ma": 3.0055899999999998,
+     "i_off_ua": 0.0189925,
+     "out_v": [
+      -0.0306596,
+      3.18842
+     ],
+     "sim_messages": [],
+     "f_s0_direct_hz": 692393708.9107609,
+     "s0_swing_v": [
+      2.40739,
+      2.94688
+     ],
+     "v_bias": 1.40478,
+     "f_so_equivalent_clock_hz": 1384787417.8215218,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ff_22_3.35": {
+     "f_out_hz": 136137308.0889385,
+     "divide": 8,
+     "f_osc_hz": 1089099206.0466788,
+     "i_on_ma": 5.2469600000000005,
+     "i_off_ua": 0.00324177,
+     "out_v": [
+      -0.0227023,
+      3.37568
+     ],
+     "sim_messages": [],
+     "f_s0_direct_hz": 1089099206.0466788,
+     "s0_swing_v": [
+      2.45561,
+      3.09704
+     ],
+     "v_bias": 1.32102,
+     "f_so_equivalent_clock_hz": 2178198412.0933576,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ss_22_3.35": {
+     "f_out_hz": 86478072.40376613,
+     "divide": 8,
+     "f_osc_hz": 691830861.191056,
+     "i_on_ma": 3.30023,
+     "i_off_ua": 0.0191828,
+     "out_v": [
+      -0.0309629,
+      3.3889
+     ],
+     "sim_messages": [],
+     "f_s0_direct_hz": 691830861.191056,
+     "s0_swing_v": [
+      2.51374,
+      3.13579
+     ],
+     "v_bias": 1.43454,
+     "f_so_equivalent_clock_hz": 1383661722.382112,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    },
+    "ff_32_3.15": {
+     "f_out_hz": 136016947.71168488,
+     "divide": 8,
+     "f_osc_hz": 1088180725.0548172,
+     "i_on_ma": 4.81273,
+     "i_off_ua": 0.00337208,
+     "out_v": [
+      -0.0225343,
+      3.17572
+     ],
+     "sim_messages": [],
+     "f_s0_direct_hz": 1088180725.0548172,
+     "s0_swing_v": [
+      2.35002,
+      2.91201
+     ],
+     "v_bias": 1.29051,
+     "f_so_equivalent_clock_hz": 2176361450.1096344,
+     "divider_consistent": true,
+     "out_full_swing": true,
+     "f_out_clk_obs_ok": true,
+     "pass": true,
+     "netlist": "extracted (Magic C) + explicit gate R"
+    }
+   },
+   "physical": {
+    "trunk_nets": 5,
+    "jumpers": 24,
+    "split_channels": {},
+    "channels": {
+     "0": 7,
+     "1": 8,
+     "2": 4,
+     "3": 12,
+     "4": 10,
+     "5": 12,
+     "6": 10,
+     "7": 5,
+     "8": 9,
+     "9": 6,
+     "10": 5
+    },
+    "bbox_um": [
+     -12.0,
+     0.0,
+     95.26,
+     266.76
+    ],
+    "area_um2": 28612.7,
+    "drc_count": 0,
+    "lvs": "Circuits match uniquely.",
+    "lvs_unique": true,
+    "gds_export": {
+     "magic": "8.3.678",
+     "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+     "marker_shapes": {
+      "HRES 62/0": 13,
+      "RES_MK 110/5": 26
+     },
+     "ppolyf_u_1k_devices": 13,
+     "klayout_drc": {
+      "violations": 0,
+      "by_rule": {},
+      "rc": "0"
+     },
+     "hres_ok": true,
+     "published_gds_lvs": "Circuits match uniquely.",
+     "published_gds_lvs_unique": true,
+     "pass": true
+    },
+    "lef_pins": [
+     "BIAS",
+     "EN",
+     "OUT",
+     "VDD",
+     "VSS"
+    ],
+    "lef_pins_match_ports": true,
+    "devices": 85,
+    "gds_subcells_uniquified": {
+     "top": "pt_char_cmldiv",
+     "renamed": {
+      "prim_0": "pt_char_cmldiv__prim_0",
+      "prim_1": "pt_char_cmldiv__prim_1",
+      "prim_11": "pt_char_cmldiv__prim_11",
+      "prim_3": "pt_char_cmldiv__prim_3",
+      "prim_2": "pt_char_cmldiv__prim_2",
+      "prim_6": "pt_char_cmldiv__prim_6",
+      "prim_8": "pt_char_cmldiv__prim_8",
+      "prim_10": "pt_char_cmldiv__prim_10",
+      "prim_4": "pt_char_cmldiv__prim_4",
+      "prim_9": "pt_char_cmldiv__prim_9",
+      "prim_7": "pt_char_cmldiv__prim_7",
+      "prim_5": "pt_char_cmldiv__prim_5"
+     }
+    },
+    "published_gds_after_rename": {
+     "gds_sha256": "sha256:6da76add84e4cb99d50615f58c88c381b058bd5bd349cb9df5f7cb3cec0275a7",
+     "lvs": "Circuits match uniquely.",
+     "lvs_unique": true
+    }
+   },
+   "verdict": "pass"
+  },
+  "pt_char_rffet": {
+   "physical": {
+    "pt_char_rffet": {
+     "kind": "dut",
+     "magic_drc": 0,
+     "lvs": "Circuits match uniquely.",
+     "lvs_unique": true,
+     "gds_export": {
+      "magic": "8.3.678",
+      "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+      "marker_shapes": {
+       "HRES 62/0": 0,
+       "RES_MK 110/5": 0
+      },
+      "ppolyf_u_1k_devices": 0,
+      "klayout_drc": {
+       "violations": 0,
+       "by_rule": {},
+       "rc": "0"
+      },
+      "hres_ok": true,
+      "published_gds_lvs": "Circuits match uniquely.",
+      "published_gds_lvs_unique": true,
+      "pass": true
+     },
+     "gds_subcells_uniquified": "subcells prefixed with the top-cell name (speed.uniquify)",
+     "published_gds_after_rename": {
+      "gds_sha256": "sha256:9a735ea32a3b95cf28fa037b8fd49a58eb2546e23a7670ae142d715488a4b7d9",
+      "lvs": "Circuits match uniquely.",
+      "lvs_unique": true
+     }
+    },
+    "pt_char_rffet_open": {
+     "kind": "open",
+     "magic_drc": 0,
+     "extracted_ports": [
+      "G",
+      "D",
+      "GND"
+     ],
+     "devices": 0,
+     "gds_export": {
+      "magic": "8.3.678",
+      "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+      "marker_shapes": {
+       "HRES 62/0": 0,
+       "RES_MK 110/5": 0
+      },
+      "ppolyf_u_1k_devices": 0,
+      "klayout_drc": {
+       "violations": 0,
+       "by_rule": {},
+       "rc": "0"
+      },
+      "hres_ok": true,
+      "published_gds_lvs": "Verify:  cell pt_char_rffet_open.lvs_sch.spice has no elements and/or nodes.  Not checked.",
+      "published_gds_lvs_unique": false,
+      "pass": false
+     },
+     "gds_subcells_uniquified": "subcells prefixed with the top-cell name (speed.uniquify)"
+    },
+    "pt_char_rffet_short": {
+     "kind": "short",
+     "magic_drc": 0,
+     "extracted_ports": [
+      "GND"
+     ],
+     "devices": 0,
+     "gds_export": {
+      "magic": "8.3.678",
+      "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+      "marker_shapes": {
+       "HRES 62/0": 0,
+       "RES_MK 110/5": 0
+      },
+      "ppolyf_u_1k_devices": 0,
+      "klayout_drc": {
+       "violations": 0,
+       "by_rule": {},
+       "rc": "0"
+      },
+      "hres_ok": true,
+      "published_gds_lvs": "Verify:  cell pt_char_rffet_short.lvs_sch.spice has no elements and/or nodes.  Not checked.",
+      "published_gds_lvs_unique": false,
+      "pass": false
+     },
+     "gds_subcells_uniquified": "subcells prefixed with the top-cell name (speed.uniquify)"
+    }
+   },
+   "verdict": "pass",
+   "prediction": "fT/fmax from the model: gf180-device-speed-evidence.md E4/E5 (ss/32: fT 17.1-17.5 GHz, fmax 37.5 GHz at Rg 150 ohm); this structure measures them"
+  }
+ },
+ "observable": "open: CLK_OBS source codes, EN bits and the BIAS ATB code are requested in scratch/reviews/interface-changes.md"
+}

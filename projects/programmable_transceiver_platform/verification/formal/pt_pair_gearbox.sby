@@ -1,0 +1,18 @@
+[tasks]
+pack
+unpack
+
+[options]
+mode prove
+depth 1
+
+[engines]
+smtbmc yices
+
+[script]
+read -formal -sv pt_pair_gearbox.sv
+unpack: chparam -set PACK 0 pt_pair_gearbox
+prep -top pt_pair_gearbox
+
+[files]
+../../rtl/pt_pair_gearbox.sv

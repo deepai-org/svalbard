@@ -6,6 +6,35 @@ transistor-level schematic (`<block>.spice`), a reproducible Magic layout
 an extracted netlist with parasitic C, and extracted ngspice runs.
 `generated/<block>-evidence.json` is the authoritative four-test record.
 
+## Status 2026-11-10 (v3 rework in progress; tables below still describe v2 until marked)
+
+* **ADC v3** (`circuits.adc_il`): two v2 SAR cores, time-interleaved behind one
+  clock receiver (toggle flip-flop steers alternate SAMPLE pulses); comparator
+  latch/reset/clock buffers widened, direct `CMPCLK = NOR3(DP, DN, RUNB)`.
+  `ILEN=0` = single core A, v2 behaviour (in-block fallback). New ports
+  `ILEN`, `CODEB0..9`, `DONEB`, `OVERLOADB` (interface-changes.md). First v3
+  evidence run (00:29 netlist): 40 MS/s per channel passes at tt and every
+  envelope corner, single-core 20 MS/s passes at all ss corners (was: fails).
+  **Confirmed 02:44 on the regenerated layout** (generated/adc_i-evidence.json):
+  clean pass, 40 MS/s at 12/12 envelope corners, single-core 20 MS/s at all
+  ss corners, 5.73 mA; 45 MS/s ss margin probe fails. (Magic layout is not
+  bit-reproducible run to run, so evidence is always re-run after relayout.)
+* **Next (v4, risk register SUB-01):** DNW pockets under adc_i NMOS near the
+  digital macro + north p+ ring; ss/ff FFTs deferred to the v4 layout.
+* **DAC v3** (`circuits.dac`): per-cell NMOS cascode (W = 2 x CS, L = 0.5 µm,
+  bias 10 µA into a W1/L3 diode, CS Vds ~0.5 V; standalone check: cell
+  current changes 0.014 % over a 1.2–2.2 V leg) and an on-block CM loop
+  regulating the output CM to VDD/2. dac_i and dac_q netlists regenerated
+  from the same generator; both parse in ngspice (schematic and extracted).
+* **Criteria restored**: `clean` is ≤ 4 codes (10-bit) = 1 LSB8 from a
+  gain/offset fit for ADC and DAC (was relaxed to 32); ADC fallback loading
+  limit is 100 fF/leg (was moved to 0.5 pF). With 100 fF the v3 ADC
+  (2 cores on INP/INN, 209–232 fF) **fails** the fallback criterion; it is
+  reported open, not relaxed.
+* FFT bench (`adc_fft.py`): 1024 points, tone bin 487 (19.02 MHz at 40 MS/s,
+  near Nyquist), extracted refbuf in the loop, run at tt, ss/32 °C/3.15 V and
+  ff/22 °C/3.35 V.
+
 ## Files
 
 | Path | Role |

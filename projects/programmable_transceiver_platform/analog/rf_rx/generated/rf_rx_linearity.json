@@ -1,0 +1,46 @@
+{
+ "bench": "analog/rf_rx/linearity.py (run from a work dir; extracted lna + rxmix_i + rxmix_q, tt 27C 3.3V)",
+ "source": "100 ohm differential, ideal balun, ideal lossless board L-match from tb.board_match (same as prior chain evidence)",
+ "lo": "ideal 50% tanh-square 2.4 GHz LO, I/Q",
+ "output": "I TIA output (filter not included)",
+ "window": "1 us analysis after 0.2 us",
+ "results": [
+  {
+   "mode": "iip3",
+   "p_dbm": -30.0,
+   "im3_out_v": 0.011113058748055672,
+   "gain_3mhz_db": 30.32645553895665,
+   "im3_in_dbm": -68.44068320472678,
+   "iip3_dbm": -10.77965839763661,
+   "tones_out_v": [
+    0.13572333980305934,
+    0.06030480835322218
+   ]
+  },
+  {
+   "mode": "block",
+   "blocker_dbm": -30.0,
+   "offset_hz": 20000000.0,
+   "desense_db": 0.9466725694476175
+  },
+  {
+   "mode": "block",
+   "blocker_dbm": -20.0,
+   "offset_hz": 40000000.0,
+   "desense_db": 2.2799045383937697
+  },
+  {
+   "mode": "inband",
+   "p_dbm": -45.0,
+   "fund_v": 0.15893862676892462,
+   "im3_v": 0.006316943560186614,
+   "iip3_dbm": -30.99277540244225
+  }
+ ],
+ "notes": [
+  "IIP3 out-of-band: tones at LO+20 and LO+37 MHz, IM3 at LO+3 MHz; one input level (-30 dBm/tone), slope not swept",
+  "IIP3 in-band: LO+3/+4 MHz at -45 dBm/tone; TIA output already 0.16 V per tone (near compression at max LNA gain)",
+  "blocking = small-signal gain compression of a -60 dBm wanted tone (LO+3 MHz); reciprocal mixing / LO phase noise not included",
+  "not run: corners, filter in the loop, LNA gain_lo state, realistic lossy match"
+ ]
+}

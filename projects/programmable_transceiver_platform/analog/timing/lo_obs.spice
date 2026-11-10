@@ -1,0 +1,58 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_lo_obs: CLK_OBS rf_lo prescaler (divide before the CLK_OBS mux), placed at
+* the QVCO tank nodes: LP/LN = I tank pair (= pt_lo_ext LOI_IP/IN, ~1.7 V +-
+* 0.3..1.1 V, 2.4-2.5 GHz) clock a CML
+* master/slave /2 (1.2 mA tails, 1.2 k loads, hold pairs 10 um; sized at ss/2.5 GHz,
+* scratch/timing/loobs: 750 ohm / 6 um hold did not regenerate); a
+* CML-to-CMOS stage (NMOS pair, PMOS mirror) makes a CMOS 1.2 GHz clock; two
+* ct_tspc2 /2 and a buffer give OBS = LO/8 (300-310 MHz) for the CLK_OBS
+* input wire.  EN=0 (reset): bias off, tails off, TSPC reset, OBS low.
+* One more instance with EN tied low sits on the Q tank pair (matched tank
+* loading for the quadrature).
+.include timing_cells.spice
+.include generated/fast/ct_tspc2.spice
+
+.subckt pt_lo_obs LP LN EN OBS VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+XBS BT ENB VDD VDD pfet_03v3 w=4u l=0.28u
+XRB BT NB VSS ppolyf_u_1k r_width=1u r_length=36u
+XBD NB NB VSS VSS nfet_03v3 w=1u l=0.5u
+XBC NB ENB VSS VSS nfet_03v3 w=1u l=0.28u
+* master: transparent while LP > LN; D = SB/S (inverting feedback)
+XMT MT NB VSS VSS nfet_03v3 w=10u l=0.5u m=2
+XMA MA LP MT VSS nfet_03v3 w=10u l=0.28u
+XMH MH LN MT VSS nfet_03v3 w=10u l=0.28u
+XM1 MB SB MA VSS nfet_03v3 w=6u l=0.28u
+XM2 M S MA VSS nfet_03v3 w=6u l=0.28u
+XM3 MB M MH VSS nfet_03v3 w=10u l=0.28u
+XM4 M MB MH VSS nfet_03v3 w=10u l=0.28u
+XMR1 VDD M VSS ppolyf_u_1k r_width=2u r_length=2.4u
+XMR2 VDD MB VSS ppolyf_u_1k r_width=2u r_length=2.4u
+* slave: transparent while LN > LP
+XST ST NB VSS VSS nfet_03v3 w=10u l=0.5u m=2
+XSA SA LN ST VSS nfet_03v3 w=10u l=0.28u
+XSH SH LP ST VSS nfet_03v3 w=10u l=0.28u
+XS1 SB M SA VSS nfet_03v3 w=6u l=0.28u
+XS2 S MB SA VSS nfet_03v3 w=6u l=0.28u
+XS3 SB S SH VSS nfet_03v3 w=10u l=0.28u
+XS4 S SB SH VSS nfet_03v3 w=10u l=0.28u
+XSR1 VDD S VSS ppolyf_u_1k r_width=2u r_length=2.4u
+XSR2 VDD SB VSS ppolyf_u_1k r_width=2u r_length=2.4u
+* CML -> CMOS
+* r2 (extracted tt: CY only 1.18-2.76 V with a 0.6 mA tail and 6 um mirror):
+* 1.8 mA tail, 10 um pair and mirror
+XCT CT NB VSS VSS nfet_03v3 w=10u l=0.5u m=3
+XCX CX S CT VSS nfet_03v3 w=10u l=0.28u
+XCY CY SB CT VSS nfet_03v3 w=10u l=0.28u
+XCP1 CX CX VDD VDD pfet_03v3 w=10u l=0.28u
+XCP2 CY CX VDD VDD pfet_03v3 w=10u l=0.28u
+XC1 CY C1 VDD VSS pt_t_inv2
+XC2 C1 ENB C2 VDD VSS pt_t_nor2
+XD1 C2 Q1 ENB VDD VSS ct_tspc2
+XD2 Q1 Q2 ENB VDD VSS ct_tspc2
+* route driver (2 pF, ~2 mm to pt_clk_obs16): inv4 -> 2 x inv8
+XO1 Q2 OB VDD VSS pt_t_inv4
+XO2 OB OBS VDD VSS pt_t_inv8
+XO3 OB OBS VDD VSS pt_t_inv8
+.ends
+

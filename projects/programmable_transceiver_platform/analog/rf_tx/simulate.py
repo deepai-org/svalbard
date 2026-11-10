@@ -34,7 +34,9 @@ def header(view, corner='tt', temp=27):
         inc.append(f'.include {f}')
     return '\n'.join([f'* rf_tx bench view={view} corner={corner} temp={temp}',
                       f'.include {MODELS}/design.ngspice', f'.lib {MODELS}/sm141064.ngspice {mos}',
-                      f'.lib {MODELS}/sm141064.ngspice {res}', f'.temp {temp}',
+                      f'.lib {MODELS}/sm141064.ngspice {res}',
+                      f'.lib {MODELS}/sm141064.ngspice diode_{res.split("_")[-1] if res.split("_")[-1] in ("ss", "ff") else "typical"}',
+                      f'.temp {temp}',
                       '.options method=gear reltol=1e-3 abstol=1e-12 vntol=1e-6', *inc, ''])
 
 
@@ -46,52 +48,59 @@ def lo_sources(prefix, delay, high=3.3, rs=50, f=F_LO):
             f'R{prefix}p {prefix}p_s {prefix}p {rs}\nR{prefix}n {prefix}n_s {prefix}n {rs}\n')
 
 
-def pad_load(p='pad_p', n='pad_n', match=None):
-    """rftxpad allocation: 2 ohm + 1 pF per leg, then the board load.
+BOARD = dict(
+    feed='balun centre tap (or two RF chokes) to the rf_tx island rail: DC feed of the driver output',
+    choke_l_bias_tee=20e-9,                   # match=None: plain bias tee (no tuning) into 50 ohm differential;
+                                              # 20 nH / 10 nF keeps the bias-tee loop overdamped (settles < 1 ns)
+    balun_ratio_ohm=200.0,                    # 200:50 ohm chip balun (standard 2.45 GHz part class)
+    balun_loss_db=1.0,                        # insertion loss assumed for the balun incl. its own mismatch
+    q_l=30.0,                                 # tuning-inductor Q (0402 wire-wound class at 2.4 GHz)
+)
 
-    match=None: 50 ohm differential (balun / DC-blocked) load straight on the pads.
-    match=dict: lossy external matching network (see design_match) between the pads and the
-    50 ohm differential load; the load voltage is always v(lp)-v(ln).
+
+def pad_load(p='pad_p', n='pad_n', match=None, feed='vdd_d'):
+    """rftxpad allocation (2 ohm + 1 pF per leg) and the board.
+
+    The driver output is DC-fed from the board: each pad returns to `feed` (the rf_tx island rail,
+    the same node that supplies the block, so the feed current is counted in the rfdriver rail
+    current and vanishes with the rail).
+    match=None: bias tee (100 nH chokes), DC blocks, 50 ohm differential load (no tuning, no balun).
+    match=dict (from design_match): per-leg tuning chokes (Q=q_l) resonating the pad susceptance,
+    DC blocks, ideal 200:50 ohm balun followed by a balun_loss_db resistive pad (insertion loss),
+    50 ohm load. The load voltage is always v(lp)-v(ln) across 50 ohm, so power numbers include the
+    balun loss.
     """
     t = f'RPADP {p} padx_p 2\nRPADN {n} padx_n 2\nCPADP padx_p 0 1p\nCPADN padx_n 0 1p\n'
+    t += f'VFEED fdx {feed} 0\n'          # ammeter: board feed current (drawn from the same rail)
+    feed = 'fdx'
     if not match:
-        return t + 'VLPP padx_p lp 0\nVLPN padx_n ln 0\nRLOAD lp ln 50\n'
+        lb = BOARD['choke_l_bias_tee']
+        return t + (f'LFP padx_p {feed} {lb}\nLFN padx_n {feed} {lb}\n'
+                    'CBKP padx_p lp 10n\nCBKN padx_n ln 10n\nRLOAD lp ln 50\nRLDC lp 0 1e6\nRLDCN ln 0 1e6\n')
     w = 2 * np.pi * match['f']
-    q = match.get('q_l', 30.0)
-    def shunt(a, b, kind, val, tag):
-        if kind == 'L':
-            return f'LSH{tag} {a} sh{tag} {val}\nRSH{tag} sh{tag} {b} {w * val / q}\n'
-        return f'CSH{tag} {a} {b} {val}\n'
-    if match['shunt_pad']:
-        t += shunt('padx_p', 'padx_n', *match['shunt_pad'], 'A')
-    ls = match['series_l'] / 2
-    t += (f'LMSP padx_p msp1 {ls}\nRMSP msp1 lp {w * ls / q}\nLMSN padx_n msn1 {ls}\nRMSN msn1 ln {w * ls / q}\n')
-    if match['shunt_load']:
-        t += shunt('lp', 'ln', *match['shunt_load'], 'B')
-    return t + f'RLOAD lp ln {match.get("r_load", 50)}\n'
+    q, lr = match['q_l'], match['choke_l']
+    t += (f'LFP padx_p fp {lr}\nRFP fp {feed} {w * lr / q}\nLFN padx_n fn {lr}\nRFN fn {feed} {w * lr / q}\n'
+          'CBKP padx_p bp 100p\nCBKN padx_n bn 100p\nRBDC bp 0 1e6\nRBDCN bn 0 1e6\n')
+    nr = float(np.sqrt(match['balun_ratio_ohm'] / 50.0))
+    a = 10 ** (match['balun_loss_db'] / 20)
+    r_ser = 50.0 * (a * a - 1) / (2 * a)          # 50 ohm pi attenuator (series arm), split over both legs
+    r_sh = 50.0 * (a + 1) / (a - 1)               # shunt arms (differential)
+    t += (f'ETB s1 s2 bp bn {1 / nr:.6g}\nVTBS s1 s3 0\nFTB bp bn VTBS {1 / nr:.6g}\nRS2 s2 0 1e6\n'
+          f'RAS1 s3 s3x {r_sh:.6g}\nVAS s3x s2 0\nRAP s3 lp {r_ser / 2:.6g}\nRAN s2 ln {r_ser / 2:.6g}\n'
+          f'RAS2 lp ln {r_sh:.6g}\nRLOAD lp ln 50\n')
+    return t
 
 
-def design_match(y_pad, f=F_LO, r_load=50.0, q_l=30.0):
-    """Conjugate-match lossless L-section from r_load (differential, after an ideal balun) to the
-    measured differential pad admittance y_pad = G + jB. Inductor Q = q_l is applied in simulation."""
+def design_match(y_pad, f=F_LO):
+    """Board network from the measured differential pad admittance y_pad = G + jB (driver biased by
+    the board feed): per-leg chokes to the feed cancel B (two legs in series across the pads:
+    B = 1 / (w * 2 * L_leg)), then a 200:50 ohm balun with balun_loss_db insertion loss. The balun
+    ratio is a standard part value, not fitted to G."""
     w = 2 * np.pi * f
-    g, b = y_pad.real, y_pad.imag
-    ro = 1 / g
-    if ro >= r_load:
-        qm = np.sqrt(ro / r_load - 1)
-        b_net = qm / ro - b          # extra capacitive susceptance wanted at the pad side
-        series_l = qm * r_load / w
-        shunt_load = None
-    else:
-        qm = np.sqrt(r_load / ro - 1)
-        b_net = -b                   # cancel pad susceptance, then series L, shunt C at the load
-        series_l = qm * ro / w
-        shunt_load = ('C', qm / r_load / w)
-    shunt_pad = None if abs(b_net) < 1e-6 else (('C', float(b_net / w)) if b_net > 0 else ('L', float(1 / (w * -b_net))))
-    if shunt_load:
-        shunt_load = (shunt_load[0], float(shunt_load[1]))
-    return dict(f=float(f), q_l=q_l, r_load=r_load, shunt_pad=shunt_pad, series_l=float(series_l), shunt_load=shunt_load,
-                r_opt_ohm=float(ro), pad_susceptance_S=float(b))
+    b = y_pad.imag
+    choke = float(1 / (2 * w * b)) if b > 0 else BOARD['choke_l_bias_tee']
+    return dict(f=float(f), q_l=BOARD['q_l'], choke_l=choke, balun_ratio_ohm=BOARD['balun_ratio_ohm'],
+                balun_loss_db=BOARD['balun_loss_db'], r_out_ohm=float(1 / y_pad.real), pad_susceptance_S=float(b))
 
 
 def zout_deck(view, gain=15, f=F_LO, out='w.txt', corner='tt', temp=27, vdd=3.3, bypass=0, rs_in=0.001):
@@ -118,6 +127,8 @@ RPP pad_p padx_p 2
 RPN pad_n padx_n 2
 CPP padx_p 0 1p
 CPN padx_n 0 1p
+LZP padx_p vdd 1u
+LZN padx_n vdd 1u
 IT padx_n padx_p DC 0 AC 1
 .control
 ac lin 1 {f} {f}
@@ -176,7 +187,7 @@ XD vdd_d VSS sp sn pad_p pad_n ib_d en_d mute byp g0 g1 g2 g3 atbd_b atbd_p atbd
 {pad_load(match=match)}
 .control
 tran 1p {tstop} 0 2p
-wrdata {out} v(lp)-v(ln) v(sp)-v(sn) v(ip)-v(in) i(VDMI) i(VDMQ) i(VDS) i(VDD) v(atbd_b) v(atbd_p) v(atbd_c) v(atbs_cm) v(atbmi_b) v(atbmi_t) v(pad_p) v(sp)
+wrdata {out} v(lp)-v(ln) v(sp)-v(sn) v(ip)-v(in) i(VDMI) i(VDMQ) i(VDS) i(VDD) v(atbd_b) v(atbd_p) v(atbd_c) v(atbs_cm) v(atbmi_b) v(atbmi_t) v(pad_p) v(sp) v(pad_n)
 .endc
 .end
 """
@@ -187,6 +198,13 @@ def tone(t, y, f, t0, t1):
     tt = np.linspace(t0, t1, int(round((t1 - t0) / 0.5e-12)) + 1)
     yy = np.interp(tt, t, y)
     return 2 * abs(np.trapezoid(yy * np.exp(-2j * np.pi * f * tt), tt) / (t1 - t0))
+
+
+def ctone(t, y, f, t0, t1):
+    """Complex fundamental phasor (peak) of y at f over [t0, t1]."""
+    tt = np.linspace(t0, t1, int(round((t1 - t0) / 0.5e-12)) + 1)
+    yy = np.interp(tt, t, y)
+    return 2 * np.trapezoid(yy * np.exp(-2j * np.pi * f * tt), tt) / (t1 - t0)
 
 
 def dbm(vpk_diff, rl=50.0):
@@ -206,7 +224,7 @@ def run_decks(decks, label):
         names.append(name)
     (work / '.spiceinit').write_text('set ngbehavior=hs\nset num_threads=1\n')
     script = ('cd /work && printf "%s\\n" ' + ' '.join(names) +
-              ' | xargs -P 3 -I{} sh -c "/foss/tools/bin/ngspice -b {}.sp > {}.log 2>&1"')
+              ' | xargs -P 2 -I{} sh -c "/foss/tools/bin/ngspice -b {}.sp > {}.log 2>&1"')
     cmd = ['docker', 'run', '--rm', '--network', 'none', '--cpus', '3', '--memory', '6g', '--entrypoint', '/bin/bash',
            '-e', 'OMP_NUM_THREADS=1', '-v', f'{work}:/work', '-v', f'{HERE}:/rf_tx:ro', ANALOG_IMAGE, '-c', script]
     subprocess.run(cmd, capture_output=True, text=True, timeout=7200)

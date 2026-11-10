@@ -40,13 +40,18 @@ def extracted_graph(path):
     result=Counter()
     for fields in lines:
         if not fields or fields[0]!='device':continue
-        if fields[1] not in ('msubckt','rsubckt'):
+        if fields[1] not in ('msubckt','rsubckt','ndiode'):
             raise ValueError('Unsupported extracted device '+fields[1])
         model=fields[2]
         index=7; dimensions={}
         while '=' in fields[index]:
             name,value=fields[index].split('=');dimensions[name]=float(value)
             index+=1
+        if fields[1]=='ndiode':
+            # Antenna diode (analog/antenna_diodes.py): substrate, cathode ..., anode records.
+            result[diode_key(model,resolve(fields[index+4]),resolve(fields[index+1]),
+                             dimensions['a']*.005*.005,dimensions['p']*.005)]+=1
+            continue
         body,gate=fields[index:index+2]
         source,drain=fields[index+4],fields[index+7]
         nodes=(drain,source,body) if fields[1]=='rsubckt' else (drain,gate,source,body)
@@ -55,9 +60,17 @@ def extracted_graph(path):
     return result
 
 
+def diode_key(model,anode,cathode,area_um2,perimeter_um):
+    return (model,anode,cathode,round(area_um2,4),round(perimeter_um,4))
+
+
 def converted_graph(path):
     result=Counter()
     for line in path.read_text().splitlines():
+        if line.startswith('D'):
+            f=line.split();d=dict(item.split('=') for item in f[4:] if '=' in item)
+            result[diode_key(f[3],f[1],f[2],float(d['area'].removesuffix('p')),float(d['pj'].removesuffix('u')))]+=1
+            continue
         if not line.startswith('X'):continue
         fields=line.split()
         resistor=fields[4].startswith('ppoly')
@@ -99,10 +112,16 @@ def export_extracted(path,output,*,capacitance=True):
         if not r:continue
         if r[0]=='use':raise ValueError('Flatten hierarchy before export')
         if r[0]=='device':
-            if r[1] not in ('msubckt','rsubckt'):raise ValueError('Unsupported device')
+            if r[1] not in ('msubckt','rsubckt','ndiode'):raise ValueError('Unsupported device')
             index=7;dim={}
             while '=' in r[index]:
                 k,v=r[index].split('=');dim[k]=float(v);index+=1
+            if r[1]=='ndiode':
+                # Antenna diode (N+/Psub, analog/antenna_diodes.py): substrate, cathode, anode records.
+                cathode,anode=r[index+1],r[index+4]
+                lines.append(f"D{count} {net(anode)} {net(cathode)} {r[2]} area={dim['a']*length_um**2:.8g}p "
+                             f"pj={dim['p']*length_um:.8g}u");count+=1
+                continue
             body,gate=r[index:index+2]
             source,drain=r[index+4],r[index+7]
             w,l=dim['w']*length_um,dim['l']*length_um

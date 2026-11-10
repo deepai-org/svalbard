@@ -31,7 +31,7 @@ def assemble(work):
         layers={1:(34,35,36),2:(36,38,42)}
         a,v,b=layers[lower]
         for layer in (a,b):rect(layer,x-.24,y-.24,x+.24,y+.24)
-        h=.13 if lower==1 else .14
+        h=.13  # GDS cut: every via is exactly 0.26 um (KLayout V*.1)
         rect(v,x-h,y-h,x+h,y+h)
     buses={'VSS':-12.,'RAIL':-20.,'PADP':36.,'PADN':40.}
     placements=[]

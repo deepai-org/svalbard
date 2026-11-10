@@ -347,7 +347,32 @@ def tspcn3():
     return row, ports + ['VDD', 'VSS'], net
 
 
-CELLS = dict(ct_div5=div5core, ct_tspcn3=tspcn3, ct_mux4=mux4, ct_tspcd=tspcd, ct_phbuf8=phbuf8, ct_rxout=rxout, ct_lim=lim, ct_ring8=ring8, ct_tspc2=tspc2, ct_lodrv=lodrv, ct_rxin=rxin)
+
+# --------------------------------------------------------------- ct_locml
+def locml(units=10, wn=6, wp=4):
+    """Switching core of the lo_ext CML LO driver (pt_lo_cml in lo_ext.spice):
+    interdigitated NMOS pair (GA -> DN, GB -> DP, sources on the tail node TS,
+    `units` x 2 fingers of wn um per side) under the PMOS load-header switches
+    (INTB, sources on VS, drains VHN / VHP, `units` x 2 fingers of wp um per
+    side).  Loads, tail, bias and the CM loop stay in the block (lo_ext.spice).
+    Gate resistance is not extracted (C-only): the benches add it explicitly
+    at the GA/GB ports."""
+    cols, net = [], []
+    k = 0
+    for u in range(units):
+        for g, d, hp in (('GA', 'DN', 'VHN'), ('GB', 'DP', 'VHP')):
+            cols += [C('TS', 'VS', same=False), G(None, wn, wp, netn=g, netp='INTB'), C(d, hp, same=False),
+                     G(None, wn, wp, netn=g, netp='INTB')]
+            for h in range(2):
+                net += [fet(f'M{k}', d, g, 'TS', 'VSS', wn), fet(f'H{k}', hp, 'INTB', 'VS', 'VDD', wp, 'p')]
+                k += 1
+    cols.append(C('TS', 'VS', same=False))
+    ports = ['GA', 'GB', 'DN', 'DP', 'VHN', 'VHP', 'INTB']
+    row = compact.Row('ct_locml', cols, rail_n='TS', tap_n='VSS', rail_p='VS', tap_p='VDD', ports=ports, wn=wn, wp=wp)
+    row.track_order = ['DN', 'GA', 'GB', 'DP', 'INTB', 'VHN', 'VHP']
+    return row, ports + ['TS', 'VS', 'VDD', 'VSS'], net
+
+CELLS = dict(ct_locml=locml, ct_div5=div5core, ct_tspcn3=tspcn3, ct_mux4=mux4, ct_tspcd=tspcd, ct_phbuf8=phbuf8, ct_rxout=rxout, ct_lim=lim, ct_ring8=ring8, ct_tspc2=tspc2, ct_lodrv=lodrv, ct_rxin=rxin)
 
 
 def subckt(name, ports, net):

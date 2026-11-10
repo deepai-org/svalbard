@@ -1,0 +1,3802 @@
+{
+ "status": "analytic lumped/transmission-line model, not EM; connector L/C estimated (no HF data published)",
+ "date": "2026-11-10",
+ "sources": {
+  "board": "https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/4f05ed1ea1994d8101a265d5d4f995bcea86d5a1/run-1/1x1-cob/1x1-mezzanine.kicad_pcb",
+  "board_sha256": "b0de95dacd95a0e7ce6c4f997747d313230c8f4f259d64994fb9e6ab4f69dd8b",
+  "run1_readme": "https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/main/run-1/README.md",
+  "wirebond_rules": "https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/main/run-1/wirebonding/README.md",
+  "carrier_example": "https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/tree/main/run-1/motherboards",
+  "connector": "HCTL HC-PBB40C-70DP-0.4V-02, https://www.lcsc.com/product-detail/C19089236.html (mate C19089262); 0.4 mm pitch, 2 x 35, 0.3 A/contact, stack 1.5-4 mm; no SI data",
+  "local_copy": "scratch/cob/repo (clone), scratch/cob/*.py, *.json"
+ },
+ "board": {
+  "size_mm": [
+   14,
+   16
+  ],
+  "layers": 4,
+  "stackup": "F.Cu 17.5um / 0.196 prepreg FR4 er4.5 tand0.02 / In1 GND / 0.23 core / In2 GND / 0.196 prepreg / B.Cu; total 0.747 mm",
+  "microstrip": {
+   "w_mm": 0.1,
+   "h_mm": 0.196,
+   "er": 4.5,
+   "z0_ohm": 86.6,
+   "eeff": 3.14
+  },
+  "gnd": "one net; solid In1/In2; F.Cu pour excluded inside the finger ring (keepout 9.4x10.2 mm); B.Cu pour",
+  "die_paddle": "pad 75: 4.0 x 5.2 mm GND, 6 x 0.3 mm drill vias to GND",
+  "fingers": "1.0 x 0.25 mm, 0.4 mm pitch; N/S rows at +-4.7 mm, E/W at +-4.3 mm from centre",
+  "connector_side": "B.Cu, centred under the die; GND contacts 10,18,25,45,53,61 + 4 MP shell tabs",
+  "supply_contacts": {
+   "VDD_IO_3": 9,
+   "VDD_CORE_1": 11,
+   "PWR_AUX_1": 19,
+   "VDD_IO_2": 24,
+   "VDD_IO_1": 44,
+   "VDD_CORE_0": 46,
+   "PWR_AUX_0": 54,
+   "VDD_IO_0": 62
+  },
+  "passives": "8 x 0201 footprints (C101-C108, labelled 1 uF) on B.Cu edge strips (x = +-6.25 mm), each supply-net to GND; NO footprint on any signal net",
+  "pads_74_vs_contacts_70": "56 signal + 8 supply sites each own one contact; the 10 die GND bonds share the GND plane (6 contacts + 4 tabs). No functional signal loses a path."
+ },
+ "pins": {
+  "D2H_D[0]": {
+   "site": "clk_pad",
+   "cls": "host",
+   "bond_pad": 1,
+   "board_net": "/pad_0",
+   "connector_contact": 8,
+   "bond_mm": 2.79,
+   "bond_nH_0p83": 2.32,
+   "bond_nH_1p0": 2.79,
+   "trace_F_mm": 1.99,
+   "trace_B_mm": 4.13,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.41,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 36.2,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.3,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.0,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.04
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.85,
+     "RL_interconnect_dB": 9.8,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.33
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.83,
+     "RL_interconnect_dB": 5.9,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.3
+    }
+   },
+   "xtalk_dB": {
+    "RESET_N": {
+     "156.25MHz": -38.6,
+     "1250MHz": -20.6,
+     "2450MHz": -14.7
+    }
+   }
+  },
+  "RESET_N": {
+   "site": "rst_n_pad",
+   "cls": "spi",
+   "bond_pad": 2,
+   "board_net": "/pad_1",
+   "connector_contact": 7,
+   "bond_mm": 2.67,
+   "bond_nH_0p83": 2.22,
+   "bond_nH_1p0": 2.67,
+   "trace_F_mm": 2.82,
+   "trace_B_mm": 4.01,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.396,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 40.4,
+   "min_spacing_F_mm": 0.265,
+   "min_spacing_B_mm": 0.3,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 26.6,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.03
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.89,
+     "RL_interconnect_dB": 9.5,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.42
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.86,
+     "RL_interconnect_dB": 5.9,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.56
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[0]": {
+     "156.25MHz": -37.7,
+     "1250MHz": -19.7,
+     "2450MHz": -13.8
+    },
+    "D2H_D[1]": {
+     "156.25MHz": -39.4,
+     "1250MHz": -21.3,
+     "2450MHz": -15.5
+    }
+   }
+  },
+  "D2H_D[1]": {
+   "site": "bidir[0].pad",
+   "cls": "host",
+   "bond_pad": 3,
+   "board_net": "/pad_2",
+   "connector_contact": 6,
+   "bond_mm": 2.55,
+   "bond_nH_0p83": 2.12,
+   "bond_nH_1p0": 2.55,
+   "trace_F_mm": 3.11,
+   "trace_B_mm": 3.62,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.367,
+   "connector_nH": 1.15,
+   "connector_dist_to_gnd_mm": 1.6,
+   "cob_delay_ps": 39.8,
+   "min_spacing_F_mm": 0.265,
+   "min_spacing_B_mm": 0.283,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 26.7,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.03
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.87,
+     "RL_interconnect_dB": 9.7,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.38
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.81,
+     "RL_interconnect_dB": 6.0,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.41
+    }
+   },
+   "xtalk_dB": {
+    "RESET_N": {
+     "156.25MHz": -36.1,
+     "1250MHz": -18.0,
+     "2450MHz": -13.1
+    },
+    "D2H_D[2]": {
+     "156.25MHz": -37.8,
+     "1250MHz": -19.7,
+     "2450MHz": -13.8
+    }
+   }
+  },
+  "D2H_D[2]": {
+   "site": "bidir[1].pad",
+   "cls": "host",
+   "bond_pad": 4,
+   "board_net": "/pad_3",
+   "connector_contact": 5,
+   "bond_mm": 2.45,
+   "bond_nH_0p83": 2.03,
+   "bond_nH_1p0": 2.45,
+   "trace_F_mm": 3.17,
+   "trace_B_mm": 3.01,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.32,
+   "connector_nH": 1.21,
+   "connector_dist_to_gnd_mm": 2.0,
+   "cob_delay_ps": 36.5,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.283,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.2,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.04
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.82,
+     "RL_interconnect_dB": 10.1,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.27
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.73,
+     "RL_interconnect_dB": 6.2,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.05
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[1]": {
+     "156.25MHz": -37.7,
+     "1250MHz": -19.6,
+     "2450MHz": -13.8
+    },
+    "D2H_D[3]": {
+     "156.25MHz": -36.3,
+     "1250MHz": -18.2,
+     "2450MHz": -13.0
+    }
+   }
+  },
+  "D2H_D[3]": {
+   "site": "bidir[2].pad",
+   "cls": "host",
+   "bond_pad": 5,
+   "board_net": "/pad_4",
+   "connector_contact": 4,
+   "bond_mm": 2.36,
+   "bond_nH_0p83": 1.96,
+   "bond_nH_1p0": 2.36,
+   "trace_F_mm": 3.18,
+   "trace_B_mm": 2.56,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.304,
+   "connector_nH": 1.17,
+   "connector_dist_to_gnd_mm": 1.68,
+   "cob_delay_ps": 33.9,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.3,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 27.8,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.76,
+     "RL_interconnect_dB": 10.5,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -7.17
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.64,
+     "RL_interconnect_dB": 6.5,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -15.69
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[2]": {
+     "156.25MHz": -35.1,
+     "1250MHz": -17.0,
+     "2450MHz": -11.6
+    },
+    "D2H_D[4]": {
+     "156.25MHz": -41.9,
+     "1250MHz": -23.8,
+     "2450MHz": -18.0
+    }
+   }
+  },
+  "D2H_D[4]": {
+   "site": "bidir[3].pad",
+   "cls": "host",
+   "bond_pad": 6,
+   "board_net": "/pad_5",
+   "connector_contact": 3,
+   "bond_mm": 2.29,
+   "bond_nH_0p83": 1.9,
+   "bond_nH_1p0": 2.29,
+   "trace_F_mm": 3.13,
+   "trace_B_mm": 1.88,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.37,
+   "connector_nH": 1.1,
+   "connector_dist_to_gnd_mm": 1.28,
+   "cob_delay_ps": 29.6,
+   "min_spacing_F_mm": 0.283,
+   "min_spacing_B_mm": 0.312,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.5,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.07
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.7,
+     "RL_interconnect_dB": 11.1,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -7.08
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.55,
+     "RL_interconnect_dB": 6.7,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -15.26
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[3]": {
+     "156.25MHz": -36.8,
+     "1250MHz": -18.8,
+     "2450MHz": -12.9
+    },
+    "D2H_D[5]": {
+     "156.25MHz": -42.6,
+     "1250MHz": -24.5,
+     "2450MHz": -18.7
+    }
+   }
+  },
+  "D2H_D[5]": {
+   "site": "bidir[4].pad",
+   "cls": "host",
+   "bond_pad": 7,
+   "board_net": "/pad_6",
+   "connector_contact": 2,
+   "bond_mm": 2.24,
+   "bond_nH_0p83": 1.86,
+   "bond_nH_1p0": 2.24,
+   "trace_F_mm": 3.09,
+   "trace_B_mm": 1.13,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.427,
+   "connector_nH": 1.01,
+   "connector_dist_to_gnd_mm": 0.88,
+   "cob_delay_ps": 24.9,
+   "min_spacing_F_mm": 0.3,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 29.3,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.09
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.64,
+     "RL_interconnect_dB": 11.7,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -7.02
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.44,
+     "RL_interconnect_dB": 7.1,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -14.75
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[4]": {
+     "156.25MHz": -43.2,
+     "1250MHz": -25.1,
+     "2450MHz": -19.3
+    },
+    "D2H_CLK": {
+     "156.25MHz": -39.2,
+     "1250MHz": -21.2,
+     "2450MHz": -15.3
+    }
+   }
+  },
+  "D2H_CLK": {
+   "site": "bidir[5].pad",
+   "cls": "host",
+   "bond_pad": 8,
+   "board_net": "/pad_7",
+   "connector_contact": 1,
+   "bond_mm": 2.21,
+   "bond_nH_0p83": 1.83,
+   "bond_nH_1p0": 2.21,
+   "trace_F_mm": 2.18,
+   "trace_B_mm": 0.76,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.29,
+   "connector_nH": 0.88,
+   "connector_dist_to_gnd_mm": 0.48,
+   "cob_delay_ps": 17.4,
+   "min_spacing_F_mm": 0.3,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 31.3,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.12
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.51,
+     "RL_interconnect_dB": 13.5,
+     "RL_with_die_dB": 0.7,
+     "gain_to_die_dB": -6.98
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.16,
+     "RL_interconnect_dB": 8.3,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -13.51
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[5]": {
+     "156.25MHz": -42.5,
+     "1250MHz": -24.4,
+     "2450MHz": -18.5
+    }
+   }
+  },
+  "D2H_D[6]": {
+   "site": "bidir[6].pad",
+   "cls": "host",
+   "bond_pad": 10,
+   "board_net": "/pad_9",
+   "connector_contact": 70,
+   "bond_mm": 2.21,
+   "bond_nH_0p83": 1.83,
+   "bond_nH_1p0": 2.21,
+   "trace_F_mm": 2.18,
+   "trace_B_mm": 0.75,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.29,
+   "connector_nH": 0.88,
+   "connector_dist_to_gnd_mm": 0.48,
+   "cob_delay_ps": 17.3,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 31.3,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.12
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.51,
+     "RL_interconnect_dB": 13.5,
+     "RL_with_die_dB": 0.7,
+     "gain_to_die_dB": -6.99
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.16,
+     "RL_interconnect_dB": 8.3,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -13.51
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[7]": {
+     "156.25MHz": -41.9,
+     "1250MHz": -23.8,
+     "2450MHz": -18.0
+    }
+   }
+  },
+  "D2H_D[7]": {
+   "site": "bidir[7].pad",
+   "cls": "host",
+   "bond_pad": 11,
+   "board_net": "/pad_10",
+   "connector_contact": 69,
+   "bond_mm": 2.24,
+   "bond_nH_0p83": 1.86,
+   "bond_nH_1p0": 2.24,
+   "trace_F_mm": 3.16,
+   "trace_B_mm": 1.23,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.427,
+   "connector_nH": 1.01,
+   "connector_dist_to_gnd_mm": 0.88,
+   "cob_delay_ps": 25.9,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.325,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 29.1,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.08
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.65,
+     "RL_interconnect_dB": 11.6,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -7.03
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.47,
+     "RL_interconnect_dB": 7.0,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -14.84
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[6]": {
+     "156.25MHz": -38.0,
+     "1250MHz": -19.9,
+     "2450MHz": -14.1
+    },
+    "D2H_D[8]": {
+     "156.25MHz": -42.4,
+     "1250MHz": -24.3,
+     "2450MHz": -18.4
+    }
+   }
+  },
+  "D2H_D[8]": {
+   "site": "bidir[8].pad",
+   "cls": "host",
+   "bond_pad": 12,
+   "board_net": "/pad_11",
+   "connector_contact": 68,
+   "bond_mm": 2.29,
+   "bond_nH_0p83": 1.9,
+   "bond_nH_1p0": 2.29,
+   "trace_F_mm": 3.45,
+   "trace_B_mm": 1.82,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.372,
+   "connector_nH": 1.1,
+   "connector_dist_to_gnd_mm": 1.28,
+   "cob_delay_ps": 31.1,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.325,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.3,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.07
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.72,
+     "RL_interconnect_dB": 10.9,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -7.11
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.59,
+     "RL_interconnect_dB": 6.6,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -15.41
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[7]": {
+     "156.25MHz": -35.4,
+     "1250MHz": -17.4,
+     "2450MHz": -12.5
+    },
+    "D2H_D[9]": {
+     "156.25MHz": -42.5,
+     "1250MHz": -24.4,
+     "2450MHz": -18.5
+    }
+   }
+  },
+  "D2H_D[9]": {
+   "site": "bidir[9].pad",
+   "cls": "host",
+   "bond_pad": 13,
+   "board_net": "/pad_12",
+   "connector_contact": 67,
+   "bond_mm": 2.36,
+   "bond_nH_0p83": 1.96,
+   "bond_nH_1p0": 2.36,
+   "trace_F_mm": 3.41,
+   "trace_B_mm": 2.53,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.3,
+   "connector_nH": 1.17,
+   "connector_dist_to_gnd_mm": 1.68,
+   "cob_delay_ps": 35.1,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.7,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.05
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.78,
+     "RL_interconnect_dB": 10.4,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.19
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.66,
+     "RL_interconnect_dB": 6.4,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -15.78
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[8]": {
+     "156.25MHz": -36.9,
+     "1250MHz": -18.8,
+     "2450MHz": -13.3
+    },
+    "HOST_CS_N": {
+     "156.25MHz": -40.0,
+     "1250MHz": -21.9,
+     "2450MHz": -16.0
+    }
+   }
+  },
+  "HOST_CS_N": {
+   "site": "bidir[10].pad",
+   "cls": "spi",
+   "bond_pad": 14,
+   "board_net": "/pad_13",
+   "connector_contact": 66,
+   "bond_mm": 2.45,
+   "bond_nH_0p83": 2.03,
+   "bond_nH_1p0": 2.45,
+   "trace_F_mm": 3.38,
+   "trace_B_mm": 3.21,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.281,
+   "connector_nH": 1.21,
+   "connector_dist_to_gnd_mm": 2.0,
+   "cob_delay_ps": 38.9,
+   "min_spacing_F_mm": 0.269,
+   "min_spacing_B_mm": 0.368,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.0,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.04
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.84,
+     "RL_interconnect_dB": 9.9,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.31
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.75,
+     "RL_interconnect_dB": 6.2,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.18
+    }
+   },
+   "xtalk_dB": {
+    "D2H_D[9]": {
+     "156.25MHz": -36.6,
+     "1250MHz": -18.5,
+     "2450MHz": -13.1
+    },
+    "HOST_SCLK": {
+     "156.25MHz": -38.5,
+     "1250MHz": -20.5,
+     "2450MHz": -14.6
+    }
+   }
+  },
+  "HOST_SCLK": {
+   "site": "bidir[11].pad",
+   "cls": "spi",
+   "bond_pad": 15,
+   "board_net": "/pad_14",
+   "connector_contact": 65,
+   "bond_mm": 2.55,
+   "bond_nH_0p83": 2.12,
+   "bond_nH_1p0": 2.55,
+   "trace_F_mm": 3.19,
+   "trace_B_mm": 3.78,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.354,
+   "connector_nH": 1.15,
+   "connector_dist_to_gnd_mm": 1.6,
+   "cob_delay_ps": 41.2,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.368,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 26.6,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.03
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.89,
+     "RL_interconnect_dB": 9.6,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.41
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.82,
+     "RL_interconnect_dB": 6.0,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.49
+    }
+   },
+   "xtalk_dB": {
+    "HOST_CS_N": {
+     "156.25MHz": -41.6,
+     "1250MHz": -23.6,
+     "2450MHz": -17.7
+    },
+    "HOST_MOSI": {
+     "156.25MHz": -35.3,
+     "1250MHz": -17.2,
+     "2450MHz": -11.4
+    }
+   }
+  },
+  "HOST_MOSI": {
+   "site": "bidir[12].pad",
+   "cls": "spi",
+   "bond_pad": 16,
+   "board_net": "/pad_15",
+   "connector_contact": 64,
+   "bond_mm": 2.67,
+   "bond_nH_0p83": 2.22,
+   "bond_nH_1p0": 2.67,
+   "trace_F_mm": 2.59,
+   "trace_B_mm": 3.78,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.32,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 37.6,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.3,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.0,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.04
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.85,
+     "RL_interconnect_dB": 9.9,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.32
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.79,
+     "RL_interconnect_dB": 6.1,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.24
+    }
+   },
+   "xtalk_dB": {
+    "HOST_SCLK": {
+     "156.25MHz": -39.7,
+     "1250MHz": -21.6,
+     "2450MHz": -15.8
+    },
+    "HOST_MISO": {
+     "156.25MHz": -38.6,
+     "1250MHz": -20.6,
+     "2450MHz": -14.7
+    }
+   }
+  },
+  "HOST_MISO": {
+   "site": "bidir[13].pad",
+   "cls": "spi",
+   "bond_pad": 17,
+   "board_net": "/pad_16",
+   "connector_contact": 63,
+   "bond_mm": 2.79,
+   "bond_nH_0p83": 2.32,
+   "bond_nH_1p0": 2.79,
+   "trace_F_mm": 2.07,
+   "trace_B_mm": 3.94,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.334,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 35.5,
+   "min_spacing_F_mm": 0.299,
+   "min_spacing_B_mm": 0.3,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.2,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.04
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.83,
+     "RL_interconnect_dB": 10.0,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.29
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.79,
+     "RL_interconnect_dB": 6.0,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.14
+    }
+   },
+   "xtalk_dB": {
+    "HOST_MOSI": {
+     "156.25MHz": -40.7,
+     "1250MHz": -22.7,
+     "2450MHz": -16.8
+    }
+   }
+  },
+  "WIRE_RX_N": {
+   "site": "bidir[14].pad",
+   "cls": "wired_rx",
+   "bond_pad": 20,
+   "board_net": "/pad_19",
+   "connector_contact": 60,
+   "bond_mm": 2.9,
+   "bond_nH_0p83": 2.41,
+   "bond_nH_1p0": 2.9,
+   "trace_F_mm": 1.1,
+   "trace_B_mm": 4.24,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.27,
+   "connector_nH": 0.85,
+   "connector_dist_to_gnd_mm": 0.4,
+   "cob_delay_ps": 31.6,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.261,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 27.9,
+     "RL_with_die_dB": 35.6,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.76,
+     "RL_interconnect_dB": 10.5,
+     "RL_with_die_dB": 10.2,
+     "gain_to_die_dB": -2.16
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.69,
+     "RL_interconnect_dB": 6.3,
+     "RL_with_die_dB": 3.2,
+     "gain_to_die_dB": -7.73
+    }
+   },
+   "xtalk_dB": {
+    "WIRE_RX_P": {
+     "156.25MHz": -38.9,
+     "1250MHz": -20.8,
+     "2450MHz": -15.0
+    }
+   }
+  },
+  "WIRE_RX_P": {
+   "site": "bidir[15].pad",
+   "cls": "wired_rx",
+   "bond_pad": 21,
+   "board_net": "/pad_20",
+   "connector_contact": 59,
+   "bond_mm": 2.79,
+   "bond_nH_0p83": 2.32,
+   "bond_nH_1p0": 2.79,
+   "trace_F_mm": 1.17,
+   "trace_B_mm": 4.03,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.362,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 30.7,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.261,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 27.7,
+     "RL_with_die_dB": 36.1,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.77,
+     "RL_interconnect_dB": 10.4,
+     "RL_with_die_dB": 10.0,
+     "gain_to_die_dB": -2.18
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.71,
+     "RL_interconnect_dB": 6.2,
+     "RL_with_die_dB": 3.1,
+     "gain_to_die_dB": -7.79
+    }
+   },
+   "xtalk_dB": {
+    "WIRE_RX_N": {
+     "156.25MHz": -37.2,
+     "1250MHz": -19.1,
+     "2450MHz": -13.3
+    },
+    "WCLK_IN_P": {
+     "156.25MHz": -41.6,
+     "1250MHz": -23.5,
+     "2450MHz": -17.7
+    }
+   }
+  },
+  "WCLK_IN_P": {
+   "site": "bidir[16].pad",
+   "cls": "wired_aux",
+   "bond_pad": 22,
+   "board_net": "/pad_21",
+   "connector_contact": 58,
+   "bond_mm": 2.69,
+   "bond_nH_0p83": 2.23,
+   "bond_nH_1p0": 2.69,
+   "trace_F_mm": 1.19,
+   "trace_B_mm": 1.93,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.49,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 18.4,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.383,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 28.9,
+     "RL_with_die_dB": 39.1,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.65,
+     "RL_interconnect_dB": 11.4,
+     "RL_with_die_dB": 17.0,
+     "gain_to_die_dB": -0.29
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.51,
+     "RL_interconnect_dB": 6.7,
+     "RL_with_die_dB": 7.9,
+     "gain_to_die_dB": -5.08
+    }
+   },
+   "xtalk_dB": {
+    "WIRE_RX_P": {
+     "156.25MHz": -39.7,
+     "1250MHz": -21.7,
+     "2450MHz": -15.8
+    },
+    "WCLK_IN_N": {
+     "156.25MHz": -41.8,
+     "1250MHz": -23.8,
+     "2450MHz": -17.9
+    }
+   }
+  },
+  "WCLK_IN_N": {
+   "site": "bidir[17].pad",
+   "cls": "wired_aux",
+   "bond_pad": 23,
+   "board_net": "/pad_22",
+   "connector_contact": 57,
+   "bond_mm": 2.6,
+   "bond_nH_0p83": 2.16,
+   "bond_nH_1p0": 2.6,
+   "trace_F_mm": 1.06,
+   "trace_B_mm": 4.15,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.419,
+   "connector_nH": 1.15,
+   "connector_dist_to_gnd_mm": 1.6,
+   "cob_delay_ps": 30.8,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.34,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 27.6,
+     "RL_with_die_dB": 35.3,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.78,
+     "RL_interconnect_dB": 10.3,
+     "RL_with_die_dB": 14.5,
+     "gain_to_die_dB": -0.69
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.7,
+     "RL_interconnect_dB": 6.2,
+     "RL_with_die_dB": 6.7,
+     "gain_to_die_dB": -5.88
+    }
+   },
+   "xtalk_dB": {
+    "WCLK_IN_P": {
+     "156.25MHz": -41.3,
+     "1250MHz": -23.3,
+     "2450MHz": -17.4
+    },
+    "WCLK_OBS": {
+     "156.25MHz": -41.3,
+     "1250MHz": -23.2,
+     "2450MHz": -17.4
+    }
+   }
+  },
+  "WCLK_OBS": {
+   "site": "bidir[18].pad",
+   "cls": "debug",
+   "bond_pad": 24,
+   "board_net": "/pad_23",
+   "connector_contact": 56,
+   "bond_mm": 2.53,
+   "bond_nH_0p83": 2.1,
+   "bond_nH_1p0": 2.53,
+   "trace_F_mm": 1.22,
+   "trace_B_mm": 1.96,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.47,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 18.8,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.387,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 29.3,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.01
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.62,
+     "RL_interconnect_dB": 11.7,
+     "RL_with_die_dB": 0.6,
+     "gain_to_die_dB": -10.64
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.44,
+     "RL_interconnect_dB": 7.0,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -7.63
+    }
+   },
+   "xtalk_dB": {
+    "WCLK_IN_N": {
+     "156.25MHz": -41.9,
+     "1250MHz": -23.8,
+     "2450MHz": -17.9
+    },
+    "WDBG_OBS": {
+     "156.25MHz": -40.0,
+     "1250MHz": -22.0,
+     "2450MHz": -16.1
+    }
+   }
+  },
+  "WDBG_OBS": {
+   "site": "bidir[19].pad",
+   "cls": "debug",
+   "bond_pad": 25,
+   "board_net": "/pad_24",
+   "connector_contact": 55,
+   "bond_mm": 2.47,
+   "bond_nH_0p83": 2.05,
+   "bond_nH_1p0": 2.47,
+   "trace_F_mm": 1.12,
+   "trace_B_mm": 4.29,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.369,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 32.0,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.266,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.1,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.0
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.74,
+     "RL_interconnect_dB": 10.8,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -17.0
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.62,
+     "RL_interconnect_dB": 6.5,
+     "RL_with_die_dB": 1.1,
+     "gain_to_die_dB": -8.57
+    }
+   },
+   "xtalk_dB": {
+    "WCLK_OBS": {
+     "156.25MHz": -42.3,
+     "1250MHz": -24.2,
+     "2450MHz": -18.4
+    }
+   }
+  },
+  "WIRE_TX_N": {
+   "site": "bidir[20].pad",
+   "cls": "wired_tx",
+   "bond_pad": 28,
+   "board_net": "/pad_27",
+   "connector_contact": 52,
+   "bond_mm": 2.42,
+   "bond_nH_0p83": 2.01,
+   "bond_nH_1p0": 2.42,
+   "trace_F_mm": 1.06,
+   "trace_B_mm": 2.08,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.452,
+   "connector_nH": 0.85,
+   "connector_dist_to_gnd_mm": 0.4,
+   "cob_delay_ps": 18.6,
+   "min_spacing_F_mm": 0.367,
+   "min_spacing_B_mm": 0.261,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 30.2,
+     "RL_with_die_dB": 37.9,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.57,
+     "RL_interconnect_dB": 12.5,
+     "RL_with_die_dB": 14.2,
+     "gain_to_die_dB": -1.01
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.31,
+     "RL_interconnect_dB": 7.5,
+     "RL_with_die_dB": 5.4,
+     "gain_to_die_dB": -5.47
+    }
+   },
+   "xtalk_dB": {
+    "WIRE_TX_P": {
+     "156.25MHz": -40.8,
+     "1250MHz": -22.7,
+     "2450MHz": -16.9
+    }
+   }
+  },
+  "WIRE_TX_P": {
+   "site": "bidir[21].pad",
+   "cls": "wired_tx",
+   "bond_pad": 29,
+   "board_net": "/pad_28",
+   "connector_contact": 51,
+   "bond_mm": 2.44,
+   "bond_nH_0p83": 2.03,
+   "bond_nH_1p0": 2.44,
+   "trace_F_mm": 1.11,
+   "trace_B_mm": 4.05,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.278,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 30.5,
+   "min_spacing_F_mm": 0.367,
+   "min_spacing_B_mm": 0.261,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.5,
+     "RL_with_die_dB": 44.1,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.7,
+     "RL_interconnect_dB": 11.1,
+     "RL_with_die_dB": 13.0,
+     "gain_to_die_dB": -1.42
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.53,
+     "RL_interconnect_dB": 6.8,
+     "RL_with_die_dB": 4.5,
+     "gain_to_die_dB": -6.37
+    }
+   },
+   "xtalk_dB": {
+    "WIRE_TX_N": {
+     "156.25MHz": -38.0,
+     "1250MHz": -20.0,
+     "2450MHz": -14.1
+    },
+    "WTX_EXT_P": {
+     "156.25MHz": -42.8,
+     "1250MHz": -24.7,
+     "2450MHz": -18.9
+    }
+   }
+  },
+  "WTX_EXT_P": {
+   "site": "bidir[22].pad",
+   "cls": "wired_aux",
+   "bond_pad": 30,
+   "board_net": "/pad_29",
+   "connector_contact": 50,
+   "bond_mm": 2.47,
+   "bond_nH_0p83": 2.05,
+   "bond_nH_1p0": 2.47,
+   "trace_F_mm": 1.12,
+   "trace_B_mm": 1.92,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.467,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 18.0,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.382,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 29.5,
+     "RL_with_die_dB": 41.0,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.6,
+     "RL_interconnect_dB": 11.9,
+     "RL_with_die_dB": 18.0,
+     "gain_to_die_dB": -0.21
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.4,
+     "RL_interconnect_dB": 7.1,
+     "RL_with_die_dB": 8.4,
+     "gain_to_die_dB": -4.77
+    }
+   },
+   "xtalk_dB": {
+    "WIRE_TX_P": {
+     "156.25MHz": -40.6,
+     "1250MHz": -22.5,
+     "2450MHz": -16.6
+    },
+    "WTX_EXT_N": {
+     "156.25MHz": -42.1,
+     "1250MHz": -24.1,
+     "2450MHz": -18.2
+    }
+   }
+  },
+  "WTX_EXT_N": {
+   "site": "bidir[23].pad",
+   "cls": "wired_aux",
+   "bond_pad": 31,
+   "board_net": "/pad_30",
+   "connector_contact": 49,
+   "bond_mm": 2.53,
+   "bond_nH_0p83": 2.1,
+   "bond_nH_1p0": 2.53,
+   "trace_F_mm": 1.04,
+   "trace_B_mm": 4.08,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.291,
+   "connector_nH": 1.15,
+   "connector_dist_to_gnd_mm": 1.6,
+   "cob_delay_ps": 30.3,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.0,
+     "RL_with_die_dB": 36.4,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.74,
+     "RL_interconnect_dB": 10.7,
+     "RL_with_die_dB": 15.2,
+     "gain_to_die_dB": -0.61
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.61,
+     "RL_interconnect_dB": 6.5,
+     "RL_with_die_dB": 7.0,
+     "gain_to_die_dB": -5.6
+    }
+   },
+   "xtalk_dB": {
+    "WTX_EXT_P": {
+     "156.25MHz": -41.6,
+     "1250MHz": -23.5,
+     "2450MHz": -17.7
+    },
+    "WMON": {
+     "156.25MHz": -39.4,
+     "1250MHz": -21.4,
+     "2450MHz": -15.5
+    }
+   }
+  },
+  "WMON": {
+   "site": "bidir[24].pad",
+   "cls": "debug",
+   "bond_pad": 32,
+   "board_net": "/pad_31",
+   "connector_contact": 48,
+   "bond_mm": 2.6,
+   "bond_nH_0p83": 2.16,
+   "bond_nH_1p0": 2.6,
+   "trace_F_mm": 1.13,
+   "trace_B_mm": 2.06,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.478,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 18.9,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 29.1,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.01
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.64,
+     "RL_interconnect_dB": 11.5,
+     "RL_with_die_dB": 0.7,
+     "gain_to_die_dB": -11.51
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.48,
+     "RL_interconnect_dB": 6.8,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -7.73
+    }
+   },
+   "xtalk_dB": {
+    "WTX_EXT_N": {
+     "156.25MHz": -40.5,
+     "1250MHz": -22.4,
+     "2450MHz": -16.6
+    },
+    "ESD_TEST": {
+     "156.25MHz": -41.8,
+     "1250MHz": -23.8,
+     "2450MHz": -17.9
+    }
+   }
+  },
+  "ESD_TEST": {
+   "site": "bidir[25].pad",
+   "cls": "debug",
+   "bond_pad": 33,
+   "board_net": "/pad_32",
+   "connector_contact": 47,
+   "bond_mm": 2.69,
+   "bond_nH_0p83": 2.23,
+   "bond_nH_1p0": 2.69,
+   "trace_F_mm": 1.13,
+   "trace_B_mm": 4.22,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.279,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 31.6,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.25,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 27.9,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": 0.0
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.75,
+     "RL_interconnect_dB": 10.6,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -17.05
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.65,
+     "RL_interconnect_dB": 6.4,
+     "RL_with_die_dB": 1.1,
+     "gain_to_die_dB": -8.66
+    }
+   },
+   "xtalk_dB": {
+    "WMON": {
+     "156.25MHz": -42.4,
+     "1250MHz": -24.3,
+     "2450MHz": -18.5
+    }
+   }
+  },
+  "ATB1": {
+   "site": "analog[1].pad",
+   "cls": "debug",
+   "bond_pad": 38,
+   "board_net": "/pad_37",
+   "connector_contact": 43,
+   "bond_mm": 2.79,
+   "bond_nH_0p83": 2.32,
+   "bond_nH_1p0": 2.79,
+   "trace_F_mm": 1.93,
+   "trace_B_mm": 4.07,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.389,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 35.5,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.389,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.1,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": 0.01
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.84,
+     "RL_interconnect_dB": 9.9,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -13.56
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.81,
+     "RL_interconnect_dB": 6.0,
+     "RL_with_die_dB": 1.1,
+     "gain_to_die_dB": -9.34
+    }
+   },
+   "xtalk_dB": {
+    "ATB0": {
+     "156.25MHz": -40.0,
+     "1250MHz": -21.9,
+     "2450MHz": -16.1
+    }
+   }
+  },
+  "ATB0": {
+   "site": "analog[0].pad",
+   "cls": "debug",
+   "bond_pad": 39,
+   "board_net": "/pad_38",
+   "connector_contact": 42,
+   "bond_mm": 2.67,
+   "bond_nH_0p83": 2.22,
+   "bond_nH_1p0": 2.67,
+   "trace_F_mm": 2.53,
+   "trace_B_mm": 3.73,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.432,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 37.0,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.389,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 26.9,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": 0.02
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.86,
+     "RL_interconnect_dB": 9.7,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -12.36
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.83,
+     "RL_interconnect_dB": 5.9,
+     "RL_with_die_dB": 1.1,
+     "gain_to_die_dB": -9.52
+    }
+   },
+   "xtalk_dB": {
+    "ATB1": {
+     "156.25MHz": -39.5,
+     "1250MHz": -21.5,
+     "2450MHz": -15.6
+    },
+    "DBG_OBS1": {
+     "156.25MHz": -40.1,
+     "1250MHz": -22.0,
+     "2450MHz": -16.2
+    }
+   }
+  },
+  "DBG_OBS1": {
+   "site": "bidir[39].pad",
+   "cls": "debug",
+   "bond_pad": 40,
+   "board_net": "/pad_39",
+   "connector_contact": 41,
+   "bond_mm": 2.55,
+   "bond_nH_0p83": 2.12,
+   "bond_nH_1p0": 2.55,
+   "trace_F_mm": 3.19,
+   "trace_B_mm": 3.72,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.395,
+   "connector_nH": 1.15,
+   "connector_dist_to_gnd_mm": 1.6,
+   "cob_delay_ps": 40.8,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 26.6,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": 0.02
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.89,
+     "RL_interconnect_dB": 9.6,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -10.76
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.84,
+     "RL_interconnect_dB": 6.0,
+     "RL_with_die_dB": 1.1,
+     "gain_to_die_dB": -9.76
+    }
+   },
+   "xtalk_dB": {
+    "ATB0": {
+     "156.25MHz": -36.4,
+     "1250MHz": -18.3,
+     "2450MHz": -12.5
+    },
+    "DBG_OBS0": {
+     "156.25MHz": -41.6,
+     "1250MHz": -23.6,
+     "2450MHz": -17.7
+    }
+   }
+  },
+  "DBG_OBS0": {
+   "site": "bidir[38].pad",
+   "cls": "debug",
+   "bond_pad": 41,
+   "board_net": "/pad_40",
+   "connector_contact": 40,
+   "bond_mm": 2.45,
+   "bond_nH_0p83": 2.03,
+   "bond_nH_1p0": 2.45,
+   "trace_F_mm": 3.13,
+   "trace_B_mm": 2.98,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.348,
+   "connector_nH": 1.21,
+   "connector_dist_to_gnd_mm": 2.0,
+   "cob_delay_ps": 36.1,
+   "min_spacing_F_mm": 0.3,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.2,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": 0.01
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.82,
+     "RL_interconnect_dB": 10.1,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -12.87
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.73,
+     "RL_interconnect_dB": 6.2,
+     "RL_with_die_dB": 1.1,
+     "gain_to_die_dB": -9.2
+    }
+   },
+   "xtalk_dB": {
+    "DBG_OBS1": {
+     "156.25MHz": -37.7,
+     "1250MHz": -19.6,
+     "2450MHz": -13.8
+    },
+    "CLK_OBS": {
+     "156.25MHz": -40.3,
+     "1250MHz": -22.3,
+     "2450MHz": -16.4
+    }
+   }
+  },
+  "CLK_OBS": {
+   "site": "bidir[37].pad",
+   "cls": "debug",
+   "bond_pad": 42,
+   "board_net": "/pad_41",
+   "connector_contact": 39,
+   "bond_mm": 2.36,
+   "bond_nH_0p83": 1.96,
+   "bond_nH_1p0": 2.36,
+   "trace_F_mm": 3.15,
+   "trace_B_mm": 2.4,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.303,
+   "connector_nH": 1.17,
+   "connector_dist_to_gnd_mm": 1.68,
+   "cob_delay_ps": 32.8,
+   "min_spacing_F_mm": 0.264,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 27.9,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": 0.0
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.75,
+     "RL_interconnect_dB": 10.6,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -15.91
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.62,
+     "RL_interconnect_dB": 6.5,
+     "RL_with_die_dB": 1.1,
+     "gain_to_die_dB": -8.66
+    }
+   },
+   "xtalk_dB": {
+    "DBG_OBS0": {
+     "156.25MHz": -40.9,
+     "1250MHz": -22.9,
+     "2450MHz": -17.0
+    },
+    "H2D_D[9]": {
+     "156.25MHz": -37.6,
+     "1250MHz": -19.6,
+     "2450MHz": -13.7
+    }
+   }
+  },
+  "H2D_D[9]": {
+   "site": "bidir[36].pad",
+   "cls": "host",
+   "bond_pad": 43,
+   "board_net": "/pad_42",
+   "connector_contact": 38,
+   "bond_mm": 2.29,
+   "bond_nH_0p83": 1.9,
+   "bond_nH_1p0": 2.29,
+   "trace_F_mm": 3.13,
+   "trace_B_mm": 1.81,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.325,
+   "connector_nH": 1.1,
+   "connector_dist_to_gnd_mm": 1.28,
+   "cob_delay_ps": 29.2,
+   "min_spacing_F_mm": 0.264,
+   "min_spacing_B_mm": 0.283,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.6,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.07
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.69,
+     "RL_interconnect_dB": 11.2,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -7.06
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.53,
+     "RL_interconnect_dB": 6.8,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -15.15
+    }
+   },
+   "xtalk_dB": {
+    "CLK_OBS": {
+     "156.25MHz": -38.1,
+     "1250MHz": -20.1,
+     "2450MHz": -14.2
+    },
+    "H2D_D[8]": {
+     "156.25MHz": -40.7,
+     "1250MHz": -22.6,
+     "2450MHz": -16.7
+    }
+   }
+  },
+  "H2D_D[8]": {
+   "site": "bidir[35].pad",
+   "cls": "host",
+   "bond_pad": 44,
+   "board_net": "/pad_43",
+   "connector_contact": 37,
+   "bond_mm": 2.24,
+   "bond_nH_0p83": 1.86,
+   "bond_nH_1p0": 2.24,
+   "trace_F_mm": 3.09,
+   "trace_B_mm": 1.25,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.381,
+   "connector_nH": 1.01,
+   "connector_dist_to_gnd_mm": 0.88,
+   "cob_delay_ps": 25.6,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.283,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 29.3,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.09
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.64,
+     "RL_interconnect_dB": 11.7,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -7.02
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.44,
+     "RL_interconnect_dB": 7.1,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -14.74
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[9]": {
+     "156.25MHz": -41.6,
+     "1250MHz": -23.6,
+     "2450MHz": -17.7
+    },
+    "H2D_CLK": {
+     "156.25MHz": -37.7,
+     "1250MHz": -19.7,
+     "2450MHz": -14.1
+    }
+   }
+  },
+  "H2D_CLK": {
+   "site": "bidir[34].pad",
+   "cls": "host",
+   "bond_pad": 45,
+   "board_net": "/pad_44",
+   "connector_contact": 36,
+   "bond_mm": 2.21,
+   "bond_nH_0p83": 1.83,
+   "bond_nH_1p0": 2.21,
+   "trace_F_mm": 2.22,
+   "trace_B_mm": 0.66,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.301,
+   "connector_nH": 0.88,
+   "connector_dist_to_gnd_mm": 0.48,
+   "cob_delay_ps": 17.0,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 31.3,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.12
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.51,
+     "RL_interconnect_dB": 13.5,
+     "RL_with_die_dB": 0.7,
+     "gain_to_die_dB": -6.99
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.16,
+     "RL_interconnect_dB": 8.3,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -13.49
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[8]": {
+     "156.25MHz": -41.8,
+     "1250MHz": -23.8,
+     "2450MHz": -17.9
+    }
+   }
+  },
+  "H2D_D[7]": {
+   "site": "bidir[33].pad",
+   "cls": "host",
+   "bond_pad": 47,
+   "board_net": "/pad_46",
+   "connector_contact": 35,
+   "bond_mm": 2.21,
+   "bond_nH_0p83": 1.83,
+   "bond_nH_1p0": 2.21,
+   "trace_F_mm": 2.2,
+   "trace_B_mm": 0.71,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.293,
+   "connector_nH": 0.88,
+   "connector_dist_to_gnd_mm": 0.48,
+   "cob_delay_ps": 17.2,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 31.3,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.12
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.51,
+     "RL_interconnect_dB": 13.5,
+     "RL_with_die_dB": 0.7,
+     "gain_to_die_dB": -6.99
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.16,
+     "RL_interconnect_dB": 8.3,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -13.5
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[6]": {
+     "156.25MHz": -41.9,
+     "1250MHz": -23.8,
+     "2450MHz": -18.0
+    }
+   }
+  },
+  "H2D_D[6]": {
+   "site": "bidir[32].pad",
+   "cls": "host",
+   "bond_pad": 48,
+   "board_net": "/pad_47",
+   "connector_contact": 34,
+   "bond_mm": 2.24,
+   "bond_nH_0p83": 1.86,
+   "bond_nH_1p0": 2.24,
+   "trace_F_mm": 3.16,
+   "trace_B_mm": 1.17,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.415,
+   "connector_nH": 1.01,
+   "connector_dist_to_gnd_mm": 0.88,
+   "cob_delay_ps": 25.6,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 29.2,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.08
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.64,
+     "RL_interconnect_dB": 11.7,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -7.02
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.45,
+     "RL_interconnect_dB": 7.0,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -14.79
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[7]": {
+     "156.25MHz": -37.7,
+     "1250MHz": -19.7,
+     "2450MHz": -13.9
+    },
+    "H2D_D[5]": {
+     "156.25MHz": -43.2,
+     "1250MHz": -25.1,
+     "2450MHz": -19.3
+    }
+   }
+  },
+  "H2D_D[5]": {
+   "site": "bidir[31].pad",
+   "cls": "host",
+   "bond_pad": 49,
+   "board_net": "/pad_48",
+   "connector_contact": 33,
+   "bond_mm": 2.29,
+   "bond_nH_0p83": 1.9,
+   "bond_nH_1p0": 2.29,
+   "trace_F_mm": 3.26,
+   "trace_B_mm": 1.86,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.361,
+   "connector_nH": 1.1,
+   "connector_dist_to_gnd_mm": 1.28,
+   "cob_delay_ps": 30.3,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.4,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.07
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.71,
+     "RL_interconnect_dB": 11.0,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -7.09
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.56,
+     "RL_interconnect_dB": 6.7,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -15.31
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[6]": {
+     "156.25MHz": -41.9,
+     "1250MHz": -23.9,
+     "2450MHz": -18.0
+    },
+    "H2D_D[4]": {
+     "156.25MHz": -38.1,
+     "1250MHz": -20.0,
+     "2450MHz": -14.2
+    }
+   }
+  },
+  "H2D_D[4]": {
+   "site": "bidir[30].pad",
+   "cls": "host",
+   "bond_pad": 50,
+   "board_net": "/pad_49",
+   "connector_contact": 32,
+   "bond_mm": 2.36,
+   "bond_nH_0p83": 1.96,
+   "bond_nH_1p0": 2.36,
+   "trace_F_mm": 3.34,
+   "trace_B_mm": 2.49,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.321,
+   "connector_nH": 1.17,
+   "connector_dist_to_gnd_mm": 1.68,
+   "cob_delay_ps": 34.5,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.7,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.05
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.77,
+     "RL_interconnect_dB": 10.5,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -7.18
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.66,
+     "RL_interconnect_dB": 6.4,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -15.76
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[5]": {
+     "156.25MHz": -41.9,
+     "1250MHz": -23.8,
+     "2450MHz": -18.0
+    },
+    "H2D_D[3]": {
+     "156.25MHz": -36.7,
+     "1250MHz": -18.7,
+     "2450MHz": -12.8
+    }
+   }
+  },
+  "H2D_D[3]": {
+   "site": "bidir[29].pad",
+   "cls": "host",
+   "bond_pad": 51,
+   "board_net": "/pad_50",
+   "connector_contact": 31,
+   "bond_mm": 2.45,
+   "bond_nH_0p83": 2.03,
+   "bond_nH_1p0": 2.45,
+   "trace_F_mm": 3.41,
+   "trace_B_mm": 3.18,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.327,
+   "connector_nH": 1.22,
+   "connector_dist_to_gnd_mm": 2.08,
+   "cob_delay_ps": 38.9,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 26.9,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.04
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.85,
+     "RL_interconnect_dB": 9.9,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.33
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.77,
+     "RL_interconnect_dB": 6.1,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.26
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[4]": {
+     "156.25MHz": -40.3,
+     "1250MHz": -22.3,
+     "2450MHz": -16.4
+    },
+    "H2D_D[2]": {
+     "156.25MHz": -36.9,
+     "1250MHz": -18.9,
+     "2450MHz": -13.0
+    }
+   }
+  },
+  "H2D_D[2]": {
+   "site": "bidir[28].pad",
+   "cls": "host",
+   "bond_pad": 52,
+   "board_net": "/pad_51",
+   "connector_contact": 30,
+   "bond_mm": 2.55,
+   "bond_nH_0p83": 2.12,
+   "bond_nH_1p0": 2.55,
+   "trace_F_mm": 3.5,
+   "trace_B_mm": 3.94,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.367,
+   "connector_nH": 1.21,
+   "connector_dist_to_gnd_mm": 2.0,
+   "cob_delay_ps": 44.0,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.4,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.14,
+     "RL_interconnect_dB": 26.2,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.02
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.94,
+     "RL_interconnect_dB": 9.3,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.52
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.87,
+     "RL_interconnect_dB": 5.9,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.75
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[3]": {
+     "156.25MHz": -37.2,
+     "1250MHz": -19.2,
+     "2450MHz": -13.3
+    },
+    "H2D_D[1]": {
+     "156.25MHz": -39.8,
+     "1250MHz": -21.8,
+     "2450MHz": -15.9
+    }
+   }
+  },
+  "H2D_D[1]": {
+   "site": "bidir[27].pad",
+   "cls": "host",
+   "bond_pad": 53,
+   "board_net": "/pad_52",
+   "connector_contact": 29,
+   "bond_mm": 2.67,
+   "bond_nH_0p83": 2.22,
+   "bond_nH_1p0": 2.67,
+   "trace_F_mm": 3.11,
+   "trace_B_mm": 4.29,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.286,
+   "connector_nH": 1.15,
+   "connector_dist_to_gnd_mm": 1.6,
+   "cob_delay_ps": 43.7,
+   "min_spacing_F_mm": 0.261,
+   "min_spacing_B_mm": 0.3,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.14,
+     "RL_interconnect_dB": 26.3,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.02
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.93,
+     "RL_interconnect_dB": 9.4,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.5
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.86,
+     "RL_interconnect_dB": 5.9,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.69
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[2]": {
+     "156.25MHz": -39.4,
+     "1250MHz": -21.3,
+     "2450MHz": -15.5
+    },
+    "H2D_D[0]": {
+     "156.25MHz": -38.9,
+     "1250MHz": -20.9,
+     "2450MHz": -15.0
+    }
+   }
+  },
+  "H2D_D[0]": {
+   "site": "bidir[26].pad",
+   "cls": "host",
+   "bond_pad": 54,
+   "board_net": "/pad_53",
+   "connector_contact": 28,
+   "bond_mm": 2.79,
+   "bond_nH_0p83": 2.32,
+   "bond_nH_1p0": 2.79,
+   "trace_F_mm": 2.32,
+   "trace_B_mm": 4.14,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.297,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 38.2,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.261,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 26.8,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.03
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.87,
+     "RL_interconnect_dB": 9.7,
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -7.37
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.82,
+     "RL_interconnect_dB": 6.0,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -16.37
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[1]": {
+     "156.25MHz": -41.4,
+     "1250MHz": -23.3,
+     "2450MHz": -17.5
+    },
+    "BB_Q_N": {
+     "156.25MHz": -37.3,
+     "1250MHz": -19.2,
+     "2450MHz": -13.4
+    }
+   }
+  },
+  "BB_Q_N": {
+   "site": "inputs[0].pad",
+   "cls": "debug",
+   "bond_pad": 55,
+   "board_net": "/pad_54",
+   "connector_contact": 27,
+   "bond_mm": 3.16,
+   "bond_nH_0p83": 2.62,
+   "bond_nH_1p0": 3.16,
+   "trace_F_mm": 1.18,
+   "trace_B_mm": 4.21,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.346,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 31.9,
+   "min_spacing_F_mm": 0.255,
+   "min_spacing_B_mm": 0.261,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.0,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": 0.02
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.84,
+     "RL_interconnect_dB": 9.8,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -14.98
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.87,
+     "RL_interconnect_dB": 5.8,
+     "RL_with_die_dB": 1.1,
+     "gain_to_die_dB": -9.38
+    }
+   },
+   "xtalk_dB": {
+    "H2D_D[0]": {
+     "156.25MHz": -36.9,
+     "1250MHz": -18.9,
+     "2450MHz": -13.3
+    },
+    "BB_Q_P": {
+     "156.25MHz": -40.1,
+     "1250MHz": -22.0,
+     "2450MHz": -16.2
+    }
+   }
+  },
+  "BB_Q_P": {
+   "site": "inputs[1].pad",
+   "cls": "debug",
+   "bond_pad": 56,
+   "board_net": "/pad_55",
+   "connector_contact": 26,
+   "bond_mm": 3.02,
+   "bond_nH_0p83": 2.51,
+   "bond_nH_1p0": 3.02,
+   "trace_F_mm": 1.33,
+   "trace_B_mm": 4.35,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.263,
+   "connector_nH": 0.85,
+   "connector_dist_to_gnd_mm": 0.4,
+   "cob_delay_ps": 33.6,
+   "min_spacing_F_mm": 0.255,
+   "min_spacing_B_mm": 0.261,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.4,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": 0.01
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.8,
+     "RL_interconnect_dB": 10.2,
+     "RL_with_die_dB": 0.8,
+     "gain_to_die_dB": -15.69
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.78,
+     "RL_interconnect_dB": 6.1,
+     "RL_with_die_dB": 1.1,
+     "gain_to_die_dB": -9.07
+    }
+   },
+   "xtalk_dB": {
+    "BB_Q_N": {
+     "156.25MHz": -36.7,
+     "1250MHz": -18.7,
+     "2450MHz": -12.8
+    }
+   }
+  },
+  "RF_TX_N": {
+   "site": "inputs[2].pad",
+   "cls": "rf_tx",
+   "bond_pad": 59,
+   "board_net": "/pad_58",
+   "connector_contact": 23,
+   "bond_mm": 2.69,
+   "bond_nH_0p83": 2.23,
+   "bond_nH_1p0": 2.69,
+   "trace_F_mm": 1.15,
+   "trace_B_mm": 1.91,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.405,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 18.1,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.382,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 29.4,
+     "RL_with_die_dB": 40.7,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.61,
+     "RL_interconnect_dB": 11.8,
+     "RL_with_die_dB": 17.9,
+     "gain_to_die_dB": -0.22
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.43,
+     "RL_interconnect_dB": 7.0,
+     "RL_with_die_dB": 8.4,
+     "gain_to_die_dB": -4.88
+    }
+   },
+   "xtalk_dB": {
+    "RF_TX_P": {
+     "156.25MHz": -40.5,
+     "1250MHz": -22.4,
+     "2450MHz": -16.6
+    }
+   }
+  },
+  "RF_TX_P": {
+   "site": "inputs[3].pad",
+   "cls": "rf_tx",
+   "bond_pad": 60,
+   "board_net": "/pad_59",
+   "connector_contact": 22,
+   "bond_mm": 2.6,
+   "bond_nH_0p83": 2.16,
+   "bond_nH_1p0": 2.6,
+   "trace_F_mm": 1.22,
+   "trace_B_mm": 1.9,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.334,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 18.4,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.382,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 29.5,
+     "RL_with_die_dB": 41.0,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.61,
+     "RL_interconnect_dB": 11.9,
+     "RL_with_die_dB": 18.0,
+     "gain_to_die_dB": -0.22
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.4,
+     "RL_interconnect_dB": 7.1,
+     "RL_with_die_dB": 8.5,
+     "gain_to_die_dB": -4.79
+    }
+   },
+   "xtalk_dB": {
+    "RF_TX_N": {
+     "156.25MHz": -40.5,
+     "1250MHz": -22.4,
+     "2450MHz": -16.6
+    },
+    "AUX_CLK_N": {
+     "156.25MHz": -41.4,
+     "1250MHz": -23.4,
+     "2450MHz": -17.5
+    }
+   }
+  },
+  "AUX_CLK_N": {
+   "site": "inputs[4].pad",
+   "cls": "lo_ref",
+   "bond_pad": 61,
+   "board_net": "/pad_60",
+   "connector_contact": 21,
+   "bond_mm": 2.53,
+   "bond_nH_0p83": 2.1,
+   "bond_nH_1p0": 2.53,
+   "trace_F_mm": 1.22,
+   "trace_B_mm": 4.24,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.372,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 32.3,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.2,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 27.7,
+     "RL_with_die_dB": 35.7,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.77,
+     "RL_interconnect_dB": 10.5,
+     "RL_with_die_dB": 14.8,
+     "gain_to_die_dB": -0.68
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.67,
+     "RL_interconnect_dB": 6.4,
+     "RL_with_die_dB": 6.8,
+     "gain_to_die_dB": -5.81
+    }
+   },
+   "xtalk_dB": {
+    "RF_TX_P": {
+     "156.25MHz": -41.5,
+     "1250MHz": -23.5,
+     "2450MHz": -17.6
+    },
+    "AUX_CLK_P": {
+     "156.25MHz": -35.8,
+     "1250MHz": -17.7,
+     "2450MHz": -12.2
+    }
+   }
+  },
+  "AUX_CLK_P": {
+   "site": "inputs[5].pad",
+   "cls": "lo_ref",
+   "bond_pad": 62,
+   "board_net": "/pad_61",
+   "connector_contact": 20,
+   "bond_mm": 2.47,
+   "bond_nH_0p83": 2.05,
+   "bond_nH_1p0": 2.47,
+   "trace_F_mm": 1.05,
+   "trace_B_mm": 4.17,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.33,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 30.9,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.2,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.3,
+     "RL_with_die_dB": 37.1,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.72,
+     "RL_interconnect_dB": 10.9,
+     "RL_with_die_dB": 15.7,
+     "gain_to_die_dB": -0.57
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.58,
+     "RL_interconnect_dB": 6.7,
+     "RL_with_die_dB": 7.3,
+     "gain_to_die_dB": -5.53
+    }
+   },
+   "xtalk_dB": {
+    "AUX_CLK_N": {
+     "156.25MHz": -36.6,
+     "1250MHz": -18.6,
+     "2450MHz": -12.7
+    }
+   }
+  },
+  "REF_IN_N": {
+   "site": "inputs[6].pad",
+   "cls": "lo_ref",
+   "bond_pad": 65,
+   "board_net": "/pad_64",
+   "connector_contact": 17,
+   "bond_mm": 2.42,
+   "bond_nH_0p83": 2.01,
+   "bond_nH_1p0": 2.42,
+   "trace_F_mm": 1.41,
+   "trace_B_mm": 4.25,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.365,
+   "connector_nH": 0.85,
+   "connector_dist_to_gnd_mm": 0.4,
+   "cob_delay_ps": 33.5,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.27,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.3,
+     "RL_with_die_dB": 37.1,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.73,
+     "RL_interconnect_dB": 10.9,
+     "RL_with_die_dB": 15.7,
+     "gain_to_die_dB": -0.61
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.59,
+     "RL_interconnect_dB": 6.7,
+     "RL_with_die_dB": 7.3,
+     "gain_to_die_dB": -5.64
+    }
+   },
+   "xtalk_dB": {
+    "REF_IN": {
+     "156.25MHz": -41.3,
+     "1250MHz": -23.2,
+     "2450MHz": -17.4
+    }
+   }
+  },
+  "REF_IN": {
+   "site": "inputs[7].pad",
+   "cls": "lo_ref",
+   "bond_pad": 66,
+   "board_net": "/pad_65",
+   "connector_contact": 16,
+   "bond_mm": 2.44,
+   "bond_nH_0p83": 2.03,
+   "bond_nH_1p0": 2.44,
+   "trace_F_mm": 1.2,
+   "trace_B_mm": 1.98,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.407,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 18.8,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.27,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 29.8,
+     "RL_with_die_dB": 42.3,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.59,
+     "RL_interconnect_dB": 12.2,
+     "RL_with_die_dB": 18.5,
+     "gain_to_die_dB": -0.19
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.35,
+     "RL_interconnect_dB": 7.4,
+     "RL_with_die_dB": 8.8,
+     "gain_to_die_dB": -4.66
+    }
+   },
+   "xtalk_dB": {
+    "REF_IN_N": {
+     "156.25MHz": -39.5,
+     "1250MHz": -21.5,
+     "2450MHz": -15.6
+    },
+    "BB_I_N": {
+     "156.25MHz": -42.8,
+     "1250MHz": -24.7,
+     "2450MHz": -18.9
+    }
+   }
+  },
+  "BB_I_N": {
+   "site": "inputs[8].pad",
+   "cls": "debug",
+   "bond_pad": 67,
+   "board_net": "/pad_66",
+   "connector_contact": 15,
+   "bond_mm": 2.47,
+   "bond_nH_0p83": 2.05,
+   "bond_nH_1p0": 2.47,
+   "trace_F_mm": 1.06,
+   "trace_B_mm": 4.03,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.346,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 30.1,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.3,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.2,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.0
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.73,
+     "RL_interconnect_dB": 10.8,
+     "RL_with_die_dB": 0.7,
+     "gain_to_die_dB": -17.96
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.59,
+     "RL_interconnect_dB": 6.6,
+     "RL_with_die_dB": 1.1,
+     "gain_to_die_dB": -8.46
+    }
+   },
+   "xtalk_dB": {
+    "REF_IN": {
+     "156.25MHz": -42.2,
+     "1250MHz": -24.2,
+     "2450MHz": -18.3
+    },
+    "BB_I_P": {
+     "156.25MHz": -37.6,
+     "1250MHz": -19.5,
+     "2450MHz": -14.0
+    }
+   }
+  },
+  "BB_I_P": {
+   "site": "inputs[9].pad",
+   "cls": "debug",
+   "bond_pad": 68,
+   "board_net": "/pad_67",
+   "connector_contact": 14,
+   "bond_mm": 2.53,
+   "bond_nH_0p83": 2.1,
+   "bond_nH_1p0": 2.53,
+   "trace_F_mm": 1.24,
+   "trace_B_mm": 2.13,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.472,
+   "connector_nH": 1.15,
+   "connector_dist_to_gnd_mm": 1.6,
+   "cob_delay_ps": 19.9,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.3,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.11,
+     "RL_interconnect_dB": 28.9,
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.01
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.65,
+     "RL_interconnect_dB": 11.4,
+     "RL_with_die_dB": 0.7,
+     "gain_to_die_dB": -13.3
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.49,
+     "RL_interconnect_dB": 6.8,
+     "RL_with_die_dB": 1.0,
+     "gain_to_die_dB": -7.83
+    }
+   },
+   "xtalk_dB": {
+    "BB_I_N": {
+     "156.25MHz": -41.4,
+     "1250MHz": -23.3,
+     "2450MHz": -17.5
+    },
+    "RF_RX_N": {
+     "156.25MHz": -38.9,
+     "1250MHz": -20.8,
+     "2450MHz": -15.0
+    }
+   }
+  },
+  "RF_RX_N": {
+   "site": "inputs[10].pad",
+   "cls": "rf_rx",
+   "bond_pad": 69,
+   "board_net": "/pad_68",
+   "connector_contact": 13,
+   "bond_mm": 2.6,
+   "bond_nH_0p83": 2.16,
+   "bond_nH_1p0": 2.6,
+   "trace_F_mm": 1.33,
+   "trace_B_mm": 4.68,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.271,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 35.5,
+   "min_spacing_F_mm": 0.35,
+   "min_spacing_B_mm": 0.2,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.13,
+     "RL_interconnect_dB": 27.4,
+     "RL_with_die_dB": 30.5,
+     "gain_to_die_dB": -0.07
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.8,
+     "RL_interconnect_dB": 10.3,
+     "RL_with_die_dB": 13.0,
+     "gain_to_die_dB": -0.33
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.7,
+     "RL_interconnect_dB": 6.3,
+     "RL_with_die_dB": 7.9,
+     "gain_to_die_dB": -5.63
+    }
+   },
+   "xtalk_dB": {
+    "BB_I_P": {
+     "156.25MHz": -42.0,
+     "1250MHz": -23.9,
+     "2450MHz": -18.1
+    },
+    "RF_RX_P": {
+     "156.25MHz": -34.4,
+     "1250MHz": -16.3,
+     "2450MHz": -11.7
+    }
+   }
+  },
+  "RF_RX_P": {
+   "site": "inputs[11].pad",
+   "cls": "rf_rx",
+   "bond_pad": 70,
+   "board_net": "/pad_69",
+   "connector_contact": 12,
+   "bond_mm": 2.69,
+   "bond_nH_0p83": 2.23,
+   "bond_nH_1p0": 2.69,
+   "trace_F_mm": 0.9,
+   "trace_B_mm": 4.07,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.36,
+   "connector_nH": 0.99,
+   "connector_dist_to_gnd_mm": 0.8,
+   "cob_delay_ps": 29.4,
+   "min_spacing_F_mm": 0.35,
+   "min_spacing_B_mm": 0.2,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 28.0,
+     "RL_with_die_dB": 31.4,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.74,
+     "RL_interconnect_dB": 10.7,
+     "RL_with_die_dB": 13.7,
+     "gain_to_die_dB": -0.15
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.64,
+     "RL_interconnect_dB": 6.4,
+     "RL_with_die_dB": 8.3,
+     "gain_to_die_dB": -5.3
+    }
+   },
+   "xtalk_dB": {
+    "RF_RX_N": {
+     "156.25MHz": -35.9,
+     "1250MHz": -17.8,
+     "2450MHz": -12.0
+    }
+   }
+  }
+ },
+ "supplies_grounds": {
+  "dvss_pads[0].pad": {
+   "bond_pad": 9,
+   "net": "GND",
+   "f_mm": null,
+   "connector": "GND plane"
+  },
+  "dvdd_pads[0].pad": {
+   "bond_pad": 18,
+   "net": "VDD_IO_0",
+   "f_mm": 2.19,
+   "connector": [
+    62
+   ]
+  },
+  "dvss_pads[1].pad": {
+   "bond_pad": 19,
+   "net": "GND",
+   "f_mm": null,
+   "connector": "GND plane"
+  },
+  "dvdd_pads[1].pad": {
+   "bond_pad": 26,
+   "net": "PWR_AUX_0",
+   "f_mm": 2.08,
+   "connector": [
+    54
+   ]
+  },
+  "dvss_pads[2].pad": {
+   "bond_pad": 27,
+   "net": "GND",
+   "f_mm": null,
+   "connector": "GND plane"
+  },
+  "vss_pads[0].pad": {
+   "bond_pad": 34,
+   "net": "GND",
+   "f_mm": null,
+   "connector": "GND plane"
+  },
+  "vdd_pads[0].pad": {
+   "bond_pad": 35,
+   "net": "VDD_CORE_0",
+   "f_mm": 2.25,
+   "connector": [
+    46
+   ]
+  },
+  "dvss_pads[3].pad": {
+   "bond_pad": 36,
+   "net": "GND",
+   "f_mm": null,
+   "connector": "GND plane"
+  },
+  "dvdd_pads[2].pad": {
+   "bond_pad": 37,
+   "net": "VDD_IO_1",
+   "f_mm": 2.31,
+   "connector": [
+    44
+   ]
+  },
+  "dvss_pads[4].pad": {
+   "bond_pad": 46,
+   "net": "GND",
+   "f_mm": null,
+   "connector": "GND plane"
+  },
+  "dvss_pads[5].pad": {
+   "bond_pad": 57,
+   "net": "GND",
+   "f_mm": null,
+   "connector": "GND plane"
+  },
+  "dvdd_pads[3].pad": {
+   "bond_pad": 58,
+   "net": "VDD_IO_2",
+   "f_mm": 2.04,
+   "connector": [
+    24
+   ]
+  },
+  "dvss_pads[6].pad": {
+   "bond_pad": 63,
+   "net": "GND",
+   "f_mm": null,
+   "connector": "GND plane"
+  },
+  "dvdd_pads[4].pad": {
+   "bond_pad": 64,
+   "net": "PWR_AUX_1",
+   "f_mm": 2.85,
+   "connector": [
+    19
+   ]
+  },
+  "vss_pads[1].pad": {
+   "bond_pad": 71,
+   "net": "GND",
+   "f_mm": null,
+   "connector": "GND plane"
+  },
+  "vdd_pads[1].pad": {
+   "bond_pad": 72,
+   "net": "VDD_CORE_1",
+   "f_mm": 2.26,
+   "connector": [
+    11
+   ]
+  },
+  "dvss_pads[7].pad": {
+   "bond_pad": 73,
+   "net": "GND",
+   "f_mm": null,
+   "connector": "GND plane"
+  },
+  "dvdd_pads[5].pad": {
+   "bond_pad": 74,
+   "net": "VDD_IO_3",
+   "f_mm": 2.32,
+   "connector": [
+    9
+   ]
+  }
+ },
+ "pulse_2p5G_and_312M": {
+  "WIRE_RX_P": {
+   "main": 1.037,
+   "pre": 0.009,
+   "post": [
+    -0.03,
+    -0.037,
+    0.012
+   ],
+   "isi_sum_abs": 0.088,
+   "eye_open_frac": 0.95,
+   "rise_10_90_ps": 205.0,
+   "overshoot": 0.076
+  },
+  "WIRE_TX_P": {
+   "main": 1.058,
+   "pre": 0.008,
+   "post": [
+    -0.058,
+    -0.032,
+    0.018
+   ],
+   "isi_sum_abs": 0.115,
+   "eye_open_frac": 0.943,
+   "rise_10_90_ps": 190.0,
+   "overshoot": 0.074
+  },
+  "WCLK_IN_P": {
+   "main": 1.112,
+   "pre": 0.0,
+   "post": [
+    -0.121,
+    -0.013,
+    0.006
+   ],
+   "isi_sum_abs": 0.14,
+   "eye_open_frac": 0.972,
+   "rise_10_90_ps": 160.0,
+   "overshoot": 0.126
+  },
+  "WTX_EXT_P": {
+   "main": 1.113,
+   "pre": 0.0,
+   "post": [
+    -0.122,
+    -0.008,
+    -0.001
+   ],
+   "isi_sum_abs": 0.131,
+   "eye_open_frac": 0.982,
+   "rise_10_90_ps": 160.0,
+   "overshoot": 0.127
+  },
+  "D2H_CLK": {
+   "main": 1.094,
+   "pre": 0.0,
+   "post": [
+    -0.145,
+    0.041,
+    0.026
+   ],
+   "isi_sum_abs": 0.213,
+   "eye_open_frac": 0.881,
+   "rise_10_90_ps": 395.0,
+   "overshoot": 0.101
+  },
+  "H2D_CLK": {
+   "main": 1.097,
+   "pre": 0.0,
+   "post": [
+    -0.145,
+    0.037,
+    0.031
+   ],
+   "isi_sum_abs": 0.213,
+   "eye_open_frac": 0.884,
+   "rise_10_90_ps": 395.0,
+   "overshoot": 0.102
+  },
+  "WIRE_RX_P@1.6pF": {
+   "main": 1.066,
+   "pre": 0.007,
+   "post": [
+    -0.072,
+    -0.022,
+    0.012
+   ],
+   "isi_sum_abs": 0.114,
+   "eye_open_frac": 0.952,
+   "rise_10_90_ps": 185.0,
+   "overshoot": 0.082
+  },
+  "WIRE_RX_P@old_assumption_1.5nH_only": {
+   "main": 1.007,
+   "pre": 0.0,
+   "post": [
+    -0.025,
+    -0.003,
+    0.004
+   ],
+   "isi_sum_abs": 0.032,
+   "eye_open_frac": 0.975,
+   "rise_10_90_ps": 115.0,
+   "overshoot": 0.018
+  }
+ },
+ "intra_pair_and_group_skew": {
+  "RF_RX": {
+   "P_mm": 4.97,
+   "N_mm": 6.01,
+   "skew_ps": -6.1,
+   "bond_P": 2.69,
+   "bond_N": 2.6
+  },
+  "RF_TX": {
+   "P_mm": 3.12,
+   "N_mm": 3.06,
+   "skew_ps": 0.4,
+   "bond_P": 2.6,
+   "bond_N": 2.69
+  },
+  "REF_IN": {
+   "P_mm": 3.18,
+   "N_mm": 5.66,
+   "skew_ps": -14.7,
+   "bond_P": 2.44,
+   "bond_N": 2.42
+  },
+  "AUX_CLK": {
+   "P_mm": 5.22,
+   "N_mm": 5.46,
+   "skew_ps": -1.4,
+   "bond_P": 2.47,
+   "bond_N": 2.53
+  },
+  "WIRE_RX": {
+   "P_mm": 5.2,
+   "N_mm": 5.34,
+   "skew_ps": -0.8,
+   "bond_P": 2.79,
+   "bond_N": 2.9
+  },
+  "WIRE_TX": {
+   "P_mm": 5.16,
+   "N_mm": 3.14,
+   "skew_ps": 11.9,
+   "bond_P": 2.44,
+   "bond_N": 2.42
+  },
+  "WCLK_IN": {
+   "P_mm": 3.12,
+   "N_mm": 5.21,
+   "skew_ps": -12.4,
+   "bond_P": 2.69,
+   "bond_N": 2.6
+  },
+  "WTX_EXT": {
+   "P_mm": 3.04,
+   "N_mm": 5.12,
+   "skew_ps": -12.3,
+   "bond_P": 2.47,
+   "bond_N": 2.53
+  },
+  "BB_I": {
+   "P_mm": 3.37,
+   "N_mm": 5.09,
+   "skew_ps": -10.2,
+   "bond_P": 2.53,
+   "bond_N": 2.47
+  },
+  "BB_Q": {
+   "P_mm": 5.68,
+   "N_mm": 5.39,
+   "skew_ps": 1.7,
+   "bond_P": 3.02,
+   "bond_N": 3.16
+  },
+  "D2H_group": {
+   "min_mm": 2.93,
+   "max_mm": 6.73,
+   "clk_mm": 2.94,
+   "spread_ps": 22.5
+  },
+  "H2D_group": {
+   "min_mm": 2.88,
+   "max_mm": 7.44,
+   "clk_mm": 2.88,
+   "spread_ps": 27.0
+  }
+ },
+ "placement_sweep": {
+  "definition": "strip = COB passive strip (shunt-only rework, back-side edge); conn+2mm = carrier just past the connector; car10/30/50mm = 50-ohm carrier line",
+  "rf_rx_match": {
+   "strip": {
+    "topology": "series_load_shunt_src",
+    "RL_worst_band_dB": 29.8,
+    "RL_bond_pm0p3mm_dB": 29.0,
+    "loss_matched_dB": 0.23,
+    "loss_unmatched_dB": 0.58,
+    "Zseen_at_plane": "34.4-21.1j"
+   },
+   "conn+2mm": {
+    "topology": "series_load_shunt_src",
+    "RL_worst_band_dB": 28.4,
+    "RL_bond_pm0p3mm_dB": 28.7,
+    "loss_matched_dB": 0.37,
+    "loss_unmatched_dB": 0.49,
+    "Zseen_at_plane": "32.2+2.2j"
+   },
+   "car10mm": {
+    "topology": "series_load_shunt_src",
+    "RL_worst_band_dB": 29.4,
+    "RL_bond_pm0p3mm_dB": 31.0,
+    "loss_matched_dB": 0.61,
+    "loss_unmatched_dB": 0.78,
+    "Zseen_at_plane": "47.3+20.0j"
+   },
+   "car30mm": {
+    "topology": "series_load_shunt_src",
+    "RL_worst_band_dB": 26.9,
+    "RL_bond_pm0p3mm_dB": 31.4,
+    "loss_matched_dB": 1.44,
+    "loss_unmatched_dB": 1.51,
+    "Zseen_at_plane": "39.3-11.2j"
+   },
+   "car50mm": {
+    "topology": "shunt_load_series_src",
+    "RL_worst_band_dB": 26.9,
+    "RL_bond_pm0p3mm_dB": 32.3,
+    "loss_matched_dB": 2.2,
+    "loss_unmatched_dB": 2.23,
+    "Zseen_at_plane": "65.4+6.8j"
+   }
+  },
+  "rf_tx_match": {
+   "strip": {
+    "topology": "series_load_shunt_src",
+    "RL_worst_band_dB": 31.0,
+    "RL_bond_pm0p3mm_dB": 24.2,
+    "loss_matched_dB": 0.22,
+    "loss_unmatched_dB": 0.55,
+    "Zseen_at_plane": "29.8+12.4j"
+   },
+   "conn+2mm": {
+    "topology": "series_load_shunt_src",
+    "RL_worst_band_dB": 29.7,
+    "RL_bond_pm0p3mm_dB": 24.3,
+    "loss_matched_dB": 0.26,
+    "loss_unmatched_dB": 0.71,
+    "Zseen_at_plane": "47.2+32.3j"
+   },
+   "car10mm": {
+    "topology": "shunt_load_series_src",
+    "RL_worst_band_dB": 26.4,
+    "RL_bond_pm0p3mm_dB": 23.7,
+    "loss_matched_dB": 0.72,
+    "loss_unmatched_dB": 1.0,
+    "Zseen_at_plane": "90.8-8.8j"
+   },
+   "car30mm": {
+    "topology": "series_load_shunt_src",
+    "RL_worst_band_dB": 26.4,
+    "RL_bond_pm0p3mm_dB": 26.7,
+    "loss_matched_dB": 1.5,
+    "loss_unmatched_dB": 1.73,
+    "Zseen_at_plane": "32.6+11.5j"
+   },
+   "car50mm": {
+    "topology": "shunt_load_series_src",
+    "RL_worst_band_dB": 25.3,
+    "RL_bond_pm0p3mm_dB": 27.2,
+    "loss_matched_dB": 2.3,
+    "loss_unmatched_dB": 2.45,
+    "Zseen_at_plane": "51.3-21.9j"
+   }
+  },
+  "carrier_line_IL_dB_1p25G": {
+   "conn+2mm": 0.049,
+   "car10mm": 0.245,
+   "car30mm": 0.736,
+   "car50mm": 1.227
+  },
+  "wired_rx_RL_vs_termination": {
+   "Cpad2.35pF": {
+    "R40": {
+     "RL_1p25G": 9.0,
+     "RL_625M": 15.2
+    },
+    "R45": {
+     "RL_1p25G": 9.6,
+     "RL_625M": 17.8
+    },
+    "R50": {
+     "RL_1p25G": 10.0,
+     "RL_625M": 20.1
+    },
+    "R55": {
+     "RL_1p25G": 10.3,
+     "RL_625M": 21.2
+    },
+    "R60": {
+     "RL_1p25G": 10.3,
+     "RL_625M": 20.3
+    }
+   },
+   "Cpad1.6pF": {
+    "R40": {
+     "RL_1p25G": 10.7,
+     "RL_625M": 16.0
+    },
+    "R45": {
+     "RL_1p25G": 12.1,
+     "RL_625M": 19.7
+    },
+    "R50": {
+     "RL_1p25G": 13.5,
+     "RL_625M": 25.3
+    },
+    "R55": {
+     "RL_1p25G": 14.8,
+     "RL_625M": 37.6
+    },
+    "R60": {
+     "RL_1p25G": 16.0,
+     "RL_625M": 29.3
+    }
+   },
+   "Cpad1.0pF": {
+    "R40": {
+     "RL_1p25G": 11.1,
+     "RL_625M": 15.7
+    },
+    "R45": {
+     "RL_1p25G": 12.9,
+     "RL_625M": 19.0
+    },
+    "R50": {
+     "RL_1p25G": 14.8,
+     "RL_625M": 22.8
+    },
+    "R55": {
+     "RL_1p25G": 17.1,
+     "RL_625M": 25.6
+    },
+    "R60": {
+     "RL_1p25G": 20.0,
+     "RL_625M": 24.0
+    }
+   }
+  }
+ },
+ "lo": {
+  "diff_gain_vs_padC_unterminated": {
+   "C0.7pF_conn+2mm": {
+    "2.40": {
+     "I_diff_gain": 2.65,
+     "Q_diff_gain": 2.72,
+     "IQ_phase_deg": -10.1,
+     "IQ_amp_dB": 0.2
+    },
+    "2.45": {
+     "I_diff_gain": 2.65,
+     "Q_diff_gain": 2.69,
+     "IQ_phase_deg": -10.4,
+     "IQ_amp_dB": 0.15
+    },
+    "2.50": {
+     "I_diff_gain": 2.63,
+     "Q_diff_gain": 2.67,
+     "IQ_phase_deg": -10.7,
+     "IQ_amp_dB": 0.1
+    },
+    "bond_pm0p3_dB": 0.43
+   },
+   "C0.7pF_car30mm": {
+    "2.40": {
+     "I_diff_gain": 2.36,
+     "Q_diff_gain": 2.42,
+     "IQ_phase_deg": -10.1,
+     "IQ_amp_dB": 0.2
+    },
+    "2.45": {
+     "I_diff_gain": 2.35,
+     "Q_diff_gain": 2.4,
+     "IQ_phase_deg": -10.4,
+     "IQ_amp_dB": 0.15
+    },
+    "2.50": {
+     "I_diff_gain": 2.34,
+     "Q_diff_gain": 2.37,
+     "IQ_phase_deg": -10.7,
+     "IQ_amp_dB": 0.1
+    },
+    "bond_pm0p3_dB": 0.43
+   },
+   "C1.0pF_conn+2mm": {
+    "2.40": {
+     "I_diff_gain": 2.19,
+     "Q_diff_gain": 2.14,
+     "IQ_phase_deg": -10.0,
+     "IQ_amp_dB": -0.21
+    },
+    "2.45": {
+     "I_diff_gain": 2.15,
+     "Q_diff_gain": 2.08,
+     "IQ_phase_deg": -10.0,
+     "IQ_amp_dB": -0.26
+    },
+    "2.50": {
+     "I_diff_gain": 2.11,
+     "Q_diff_gain": 2.03,
+     "IQ_phase_deg": -10.1,
+     "IQ_amp_dB": -0.31
+    },
+    "bond_pm0p3_dB": 0.17
+   },
+   "C1.0pF_car30mm": {
+    "2.40": {
+     "I_diff_gain": 1.95,
+     "Q_diff_gain": 1.9,
+     "IQ_phase_deg": -10.0,
+     "IQ_amp_dB": -0.21
+    },
+    "2.45": {
+     "I_diff_gain": 1.91,
+     "Q_diff_gain": 1.85,
+     "IQ_phase_deg": -10.0,
+     "IQ_amp_dB": -0.26
+    },
+    "2.50": {
+     "I_diff_gain": 1.87,
+     "Q_diff_gain": 1.8,
+     "IQ_phase_deg": -10.1,
+     "IQ_amp_dB": -0.31
+    },
+    "bond_pm0p3_dB": 0.17
+   },
+   "C1.5pF_conn+2mm": {
+    "2.40": {
+     "I_diff_gain": 1.49,
+     "Q_diff_gain": 1.41,
+     "IQ_phase_deg": -8.3,
+     "IQ_amp_dB": -0.49
+    },
+    "2.45": {
+     "I_diff_gain": 1.45,
+     "Q_diff_gain": 1.37,
+     "IQ_phase_deg": -8.2,
+     "IQ_amp_dB": -0.52
+    },
+    "2.50": {
+     "I_diff_gain": 1.41,
+     "Q_diff_gain": 1.32,
+     "IQ_phase_deg": -8.1,
+     "IQ_amp_dB": -0.55
+    },
+    "bond_pm0p3_dB": 0.16
+   },
+   "C1.5pF_car30mm": {
+    "2.40": {
+     "I_diff_gain": 1.33,
+     "Q_diff_gain": 1.26,
+     "IQ_phase_deg": -8.3,
+     "IQ_amp_dB": -0.49
+    },
+    "2.45": {
+     "I_diff_gain": 1.29,
+     "Q_diff_gain": 1.21,
+     "IQ_phase_deg": -8.2,
+     "IQ_amp_dB": -0.52
+    },
+    "2.50": {
+     "I_diff_gain": 1.25,
+     "Q_diff_gain": 1.17,
+     "IQ_phase_deg": -8.1,
+     "IQ_amp_dB": -0.55
+    },
+    "bond_pm0p3_dB": 0.16
+   },
+   "C2.0pF_conn+2mm": {
+    "2.40": {
+     "I_diff_gain": 1.08,
+     "Q_diff_gain": 1.02,
+     "IQ_phase_deg": -7.1,
+     "IQ_amp_dB": -0.55
+    },
+    "2.45": {
+     "I_diff_gain": 1.05,
+     "Q_diff_gain": 0.98,
+     "IQ_phase_deg": -7.0,
+     "IQ_amp_dB": -0.57
+    },
+    "2.50": {
+     "I_diff_gain": 1.02,
+     "Q_diff_gain": 0.95,
+     "IQ_phase_deg": -6.9,
+     "IQ_amp_dB": -0.58
+    },
+    "bond_pm0p3_dB": 0.31
+   },
+   "C2.0pF_car30mm": {
+    "2.40": {
+     "I_diff_gain": 0.97,
+     "Q_diff_gain": 0.91,
+     "IQ_phase_deg": -7.1,
+     "IQ_amp_dB": -0.55
+    },
+    "2.45": {
+     "I_diff_gain": 0.93,
+     "Q_diff_gain": 0.87,
+     "IQ_phase_deg": -7.0,
+     "IQ_amp_dB": -0.57
+    },
+    "2.50": {
+     "I_diff_gain": 0.9,
+     "Q_diff_gain": 0.84,
+     "IQ_phase_deg": -6.9,
+     "IQ_amp_dB": -0.58
+    },
+    "bond_pm0p3_dB": 0.31
+   }
+  },
+  "termination_effect": {
+   "R5000": {
+    "gain_C0p7_1_1p5_2pF": [
+     2.35,
+     1.91,
+     1.29,
+     0.93
+    ],
+    "spread_dB": 8.0,
+    "IQ_phase_deg": [
+     -10.4,
+     -8.2
+    ]
+   },
+   "R200": {
+    "gain_C0p7_1_1p5_2pF": [
+     1.61,
+     1.44,
+     1.11,
+     0.86
+    ],
+    "spread_dB": 5.4,
+    "IQ_phase_deg": [
+     -8.1,
+     -7.7
+    ]
+   },
+   "R100": {
+    "gain_C0p7_1_1p5_2pF": [
+     1.2,
+     1.13,
+     0.95,
+     0.78
+    ],
+    "spread_dB": 3.8,
+    "IQ_phase_deg": [
+     -7.0,
+     -7.1
+    ]
+   },
+   "R50": {
+    "gain_C0p7_1_1p5_2pF": [
+     0.79,
+     0.77,
+     0.71,
+     0.63
+    ],
+    "spread_dB": 2.1,
+    "IQ_phase_deg": [
+     -6.0,
+     -6.3
+    ]
+   }
+  },
+  "larger_padC": {
+   "C2.5pF R5000": {
+    "cob_car30": 0.72,
+    "cob_conn2": 0.81,
+    "old_1p5nH_only": 1.0
+   },
+   "C2.5pF R100": {
+    "cob_car30": 0.64,
+    "cob_conn2": 0.72,
+    "old_1p5nH_only": 0.88
+   },
+   "C2.5pF R50": {
+    "cob_car30": 0.55,
+    "cob_conn2": 0.62,
+    "old_1p5nH_only": 0.76
+   },
+   "C3.0pF R5000": {
+    "cob_car30": 0.59,
+    "cob_conn2": 0.66,
+    "old_1p5nH_only": 0.86
+   },
+   "C3.0pF R100": {
+    "cob_car30": 0.54,
+    "cob_conn2": 0.61,
+    "old_1p5nH_only": 0.78
+   },
+   "C3.0pF R50": {
+    "cob_car30": 0.48,
+    "cob_conn2": 0.54,
+    "old_1p5nH_only": 0.69
+   },
+   "C4.0pF R5000": {
+    "cob_car30": 0.43,
+    "cob_conn2": 0.48,
+    "old_1p5nH_only": 0.67
+   },
+   "C4.0pF R100": {
+    "cob_car30": 0.41,
+    "cob_conn2": 0.46,
+    "old_1p5nH_only": 0.63
+   },
+   "C4.0pF R50": {
+    "cob_car30": 0.38,
+    "cob_conn2": 0.43,
+    "old_1p5nH_only": 0.58
+   }
+  }
+ },
+ "pdn": {
+  "Cdie1nF_strip_0201x8_populated": {
+   "L_nH": 1.0,
+   "f_res_MHz": 159.0,
+   "Z0_ohm": 1.0,
+   "Zpeak_undamped_ohm": 12.5,
+   "damping_R_for_Q1_ohm": 1.0
+  },
+  "Cdie1nF_conn+2mm": {
+   "L_nH": 1.6,
+   "f_res_MHz": 126.0,
+   "Z0_ohm": 1.26,
+   "Zpeak_undamped_ohm": 20.0,
+   "damping_R_for_Q1_ohm": 1.26
+  },
+  "Cdie1nF_car10mm": {
+   "L_nH": 1.8,
+   "f_res_MHz": 119.0,
+   "Z0_ohm": 1.34,
+   "Zpeak_undamped_ohm": 22.5,
+   "damping_R_for_Q1_ohm": 1.34
+  },
+  "Cdie1nF_car30mm": {
+   "L_nH": 2.2,
+   "f_res_MHz": 107.0,
+   "Z0_ohm": 1.48,
+   "Zpeak_undamped_ohm": 27.5,
+   "damping_R_for_Q1_ohm": 1.48
+  },
+  "Cdie2nF_strip_0201x8_populated": {
+   "L_nH": 1.0,
+   "f_res_MHz": 113.0,
+   "Z0_ohm": 0.71,
+   "Zpeak_undamped_ohm": 6.3,
+   "damping_R_for_Q1_ohm": 0.71
+  },
+  "Cdie2nF_conn+2mm": {
+   "L_nH": 1.6,
+   "f_res_MHz": 89.0,
+   "Z0_ohm": 0.89,
+   "Zpeak_undamped_ohm": 10.0,
+   "damping_R_for_Q1_ohm": 0.89
+  },
+  "Cdie2nF_car10mm": {
+   "L_nH": 1.8,
+   "f_res_MHz": 84.0,
+   "Z0_ohm": 0.95,
+   "Zpeak_undamped_ohm": 11.2,
+   "damping_R_for_Q1_ohm": 0.95
+  },
+  "Cdie2nF_car30mm": {
+   "L_nH": 2.2,
+   "f_res_MHz": 76.0,
+   "Z0_ohm": 1.05,
+   "Zpeak_undamped_ohm": 13.7,
+   "damping_R_for_Q1_ohm": 1.05
+  },
+  "Cdie4nF_strip_0201x8_populated": {
+   "L_nH": 1.0,
+   "f_res_MHz": 80.0,
+   "Z0_ohm": 0.5,
+   "Zpeak_undamped_ohm": 3.1,
+   "damping_R_for_Q1_ohm": 0.5
+  },
+  "Cdie4nF_conn+2mm": {
+   "L_nH": 1.6,
+   "f_res_MHz": 63.0,
+   "Z0_ohm": 0.63,
+   "Zpeak_undamped_ohm": 5.0,
+   "damping_R_for_Q1_ohm": 0.63
+  },
+  "Cdie4nF_car10mm": {
+   "L_nH": 1.8,
+   "f_res_MHz": 59.0,
+   "Z0_ohm": 0.67,
+   "Zpeak_undamped_ohm": 5.6,
+   "damping_R_for_Q1_ohm": 0.67
+  },
+  "Cdie4nF_car30mm": {
+   "L_nH": 2.2,
+   "f_res_MHz": 54.0,
+   "Z0_ohm": 0.74,
+   "Zpeak_undamped_ohm": 6.9,
+   "damping_R_for_Q1_ohm": 0.74
+  }
+ },
+ "host_ssn": {
+  "tr0.76ns_I42mA": {
+   "dIdt_A_per_ns": 0.61,
+   "bounce_mV": 486
+  },
+  "tr1.00ns_I35mA": {
+   "dIdt_A_per_ns": 0.39,
+   "bounce_mV": 308
+  },
+  "tr1.40ns_I30mA": {
+   "dIdt_A_per_ns": 0.24,
+   "bounce_mV": 189
+  },
+  "stagger_2groups": "halves bounce for the same edge rate"
+ },
+ "thermal": {
+  "paddle_mm": "4.0 x 5.2",
+  "paddle_vias": "6 x 0.3 mm drill (0.5 mm pad), GND",
+  "via_each": 101.6,
+  "vias_6_parallel": 16.9,
+  "fr4_under_paddle": 120.0,
+  "board_through": 14.8,
+  "back_side": "mezzanine connector U101 occupies the area under the die (B.Cu, centred on the die) -> no plate/coin contact",
+  "spreading_planes_est": 10,
+  "connector_to_carrier_est": 20,
+  "theta_j_carrier_bottom_path_est": "35-45",
+  "top_side_cold_finger_gel_3WmK_0p3mm": 5.0,
+  "top_side_via_glob_top_1p5WmK_0p4mm": 13.3,
+  "requirement_B2a": 8.25,
+  "rise_at_0p98W_bottom_path_C": "34-44",
+  "rise_at_0p98W_top_cold_finger_C": "5-8 (+die attach/spreading 1-2)"
+ }
+}

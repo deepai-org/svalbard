@@ -1,0 +1,53 @@
+VERSION 5.7 ;
+  NOWIREEXTENSIONATPIN ON ;
+  DIVIDERCHAR "/" ;
+  BUSBITCHARS "[]" ;
+MACRO pt_char_rffet
+  CLASS BLOCK ;
+  FOREIGN pt_char_rffet ;
+  ORIGIN 215.000 130.000 ;
+  SIZE 430.000 BY 260.000 ;
+  PIN G
+    ANTENNAGATEAREA 2.800000 ;
+    PORT
+      LAYER Metal5 ;
+        RECT -150.260 -30.000 -149.740 30.000 ;
+    END
+  END G
+  PIN D
+    ANTENNADIFFAREA 4.860000 ;
+    PORT
+      LAYER Metal5 ;
+        RECT 149.740 -30.000 150.260 30.000 ;
+    END
+  END D
+  PIN GND
+    ANTENNADIFFAREA 13.370399 ;
+    PORT
+      LAYER Metal5 ;
+        RECT -215.000 86.000 215.000 114.000 ;
+    END
+  END GND
+  OBS
+      LAYER Nwell ;
+        RECT -3.940 -2.570 3.940 2.570 ;
+      LAYER Metal1 ;
+        RECT -3.755 -2.685 3.755 2.385 ;
+      LAYER Metal2 ;
+        RECT -10.000 -6.300 3.150 2.000 ;
+      LAYER Metal3 ;
+        RECT -10.000 -100.000 10.000 7.000 ;
+      LAYER Metal4 ;
+        RECT -170.000 -100.000 170.000 2.000 ;
+      LAYER Metal5 ;
+        RECT -215.000 114.600 215.000 130.000 ;
+        RECT -215.000 85.400 -195.000 86.000 ;
+        RECT -215.000 30.600 215.000 85.400 ;
+        RECT -215.000 -30.600 -150.860 30.600 ;
+        RECT -149.140 -30.600 149.140 30.600 ;
+        RECT 150.860 -30.600 215.000 30.600 ;
+        RECT -215.000 -130.000 215.000 -30.600 ;
+  END
+END pt_char_rffet
+END LIBRARY
+

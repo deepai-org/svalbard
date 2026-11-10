@@ -8,8 +8,9 @@
 // derived receiver/observation enables. Reset is RESET_N AND the on-die POR.
 `include "pt_regmap_defs.svh"
 module pt_chip(
- input wire RESET_N,REF_IN,REF_IN_N,SPI_SCLK,SPI_CS_N,SPI_MOSI,output wire SPI_MISO,
- input wire[9:0]H2D,input wire H2D_CLK,output wire[9:0]D2H,output wire D2H_CLK,
+ inout wire RESET_N,SPI_SCLK,SPI_CS_N,SPI_MOSI,output wire SPI_MISO,
+ input wire REF_IN,REF_IN_N,
+ inout wire[9:0]H2D,inout wire H2D_CLK,output wire[9:0]D2H,output wire D2H_CLK,
  inout wire WIRE_RX_P,WIRE_RX_N,output wire WIRE_TX_P,WIRE_TX_N,
  input wire RF_RX_P,RF_RX_N,output wire RF_TX_P,RF_TX_N,
  // Debug sites (tapeout-plan.md tier 3).
@@ -82,21 +83,24 @@ endmodule
 // Sites (spec/contract.json assembly_policy) and cells:
 //   RESET_N  rst_n_pad  in_c   PU=0 PD=1 (weak on-chip pull-down, tapeout-plan POR/reset row)
 //   SPI_SCLK/CS_N/MOSI  bidir[11]/[10]/[12]  bi_24t  OE=0 IE=1 CS=0 (CMOS input)
-//   SPI_MISO bidir[13]  bi_24t  A=miso OE=miso_oe IE=0
+//   SPI_MISO bidir[13]  bi_t  A=miso OE=miso_oe IE=0 PDRV0=0 PDRV1=1 SL=0
 //   H2D[9:0], H2D_CLK  bidir[26..33,35,36], bidir[34]  bi_24t  OE=0 IE=1 CS=0 PU=PD=0
-//   D2H[9:0], D2H_CLK  clk_pad, bidir[0..4,6..9], bidir[5]  bi_24t  A=d2h_pin/d2h_clk_pin OE=d2h_oe
+//   D2H[9:0], D2H_CLK  clk_pad, bidir[0..4,6..9], bidir[5]  bi_t  A=d2h_pin/d2h_clk_pin OE=d2h_oe
 //                      SL=d2h_sl IE=0. clk_pad is an in_s site in the provider template: the
-//                      provider-permitted signal-cell substitution to bi_24t is required for D2H[0].
-//   d2h_pdrv drives PDRV0/PDRV1 only if the bi_t substitution (programmable drive) is chosen;
-//   bi_24t has a fixed 24 mA driver. D2H stays tristated while d2h_enable=0 (reset).
+//                      provider-permitted signal-cell substitution to bi_t is required for D2H[0].
+//   d2h_pdrv drives PDRV0/PDRV1. D2H stays tristated while d2h_enable=0 (reset).
+// Define PT_EXTERNAL_IO and compile pt_provider_io.sv to bind the retained
+// provider cells. The declarations remain available for interface-only checks.
+`ifndef PT_EXTERNAL_IO
 (* blackbox *) module pt_host_physical(
- input wire RESET_N,SPI_SCLK,SPI_CS_N,SPI_MOSI,output wire SPI_MISO,
- input wire[9:0]H2D,input wire H2D_CLK,output wire[9:0]D2H,output wire D2H_CLK,
+ inout wire RESET_N,SPI_SCLK,SPI_CS_N,SPI_MOSI,output wire SPI_MISO,
+ inout wire[9:0]H2D,inout wire H2D_CLK,output wire[9:0]D2H,output wire D2H_CLK,
  inout wire VDD_CORE,VSS_CORE,VDD_HOST_A,VSS_HOST_A,VDD_HOST_B,VSS_HOST_B,
  output wire rst_n,sclk,cs_n,mosi,input wire miso,miso_oe,
  output wire h2d_clk,output wire[9:0]h2d_pin,input wire[9:0]d2h_pin,input wire d2h_clk_pin,d2h_oe,
  input wire[1:0]d2h_pdrv,input wire d2h_sl);
 endmodule
+`endif
 
 // Internal architecture and circuit implementation tracked in macro-contract.md.
 // Differential reference protection/conditioning belongs here, not in host GPIO.
@@ -104,6 +108,7 @@ endmodule
 // CLK_OBS/WCLK_OBS source muxes and prescalers live here; the observation pad drivers are in
 // pt_debug_physical. Island switches follow island_en; island_pgood reports each local rail; every
 // iso_clamp at a core/island boundary follows island_on (switch on AND (pgood OR override)).
+`ifndef PT_EXTERNAL_ANALOG
 (* blackbox *) module pt_analog_physical(
  input wire REF_IN,REF_IN_N,
  inout wire WIRE_RX_P,WIRE_RX_N,output wire WIRE_TX_P,WIRE_TX_N,
@@ -134,9 +139,12 @@ endmodule
  // [3] vco_replica [4] aosc [5] lc_prescale; cdr_freq_locked = CDR frequency-to-phase handover.
  output wire[5:0]fc_src,input wire cdr_freq_locked);
 endmodule
+`endif
 
 // Digital observation pad cells (consolidation-pass.md item 8): tristate while oe=0 (reset).
+`ifndef PT_EXTERNAL_IO
 (* blackbox *) module pt_debug_physical(
  inout wire VDD_CORE,VSS_CORE,output wire CLK_OBS,DBG_OBS0,DBG_OBS1,WCLK_OBS,WDBG_OBS,
  input wire clk_obs,clk_obs_oe,dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wclk_obs,wclk_obs_oe,wdbg_obs,wdbg_obs_oe);
 endmodule
+`endif

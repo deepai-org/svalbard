@@ -19,9 +19,10 @@ REPO = HERE.parents[3]
 
 def _rows_rfdriver(c):
     names = [d.name for d in c.devices]
-    rf = ['BYP_p', 'A1_P', 'A1_N', 'BYP_n', 'R1_p', 'R1_n', 'A2_P', 'A2_N', 'R2_p', 'R2_n', 'RATBP_p', 'RATBP_n',
+    rf = ['BYP_p', 'A1_P', 'A1_N', 'BYP_n', 'R1_p', 'R1_n', 'A2_P', 'A2_N', 'R2_p', 'R2_n', 'A3_P', 'A3_N', 'R3_p', 'R3_n',
+          'RATBP_p', 'RATBP_n',
           'SF_p', 'SF_n', 'O_P', 'O_N']
-    tails = ['T1', 'T2', 'TS_p', 'TS_n', 'TO0', 'TO1', 'TO2', 'TO3', 'BCAP']
+    tails = ['T1', 'T2', 'T3', 'TS_p', 'TS_n', 'TO0', 'TO1', 'TO2', 'TO3', 'BCAP']
     load = ['HDR'] + [f'RO_{l}{i}' for l in 'pn' for i in range(circuits.DRV['ro_par'])] + ['CLP_p', 'CLP_n',
                                                                                           'RATBC_p', 'RATBC_n']
     used = set(rf + tails + load)
@@ -73,7 +74,12 @@ def generate(block, scratch, publish):
     rows = opts.pop('rows')
     rep = layoutlib.build(c, work, rows=rows(c) if rows else None, **opts)
     src = work / 'src.spice'
-    src.write_text(c.spice())
+    sch = c.spice()
+    ant = layoutlib.ad.spice_lines(rep.get('antenna_diodes', []))   # LVS reference + antenna diodes
+    if ant:
+        k = sch.rstrip().rfind('.ends')
+        sch = sch[:k] + '\n'.join(ant) + '\n' + sch[k:]
+    src.write_text(sch)
     layoutlib.docker_netgen(work, f'{c.name}.lvs.spice', c.name, 'src.spice', c.name, 'lvs.txt')
     lvs_txt = (work / 'lvs.txt').read_text() if (work / 'lvs.txt').exists() else ''
     final = [l for l in lvs_txt.splitlines() if l.startswith('Final result')]

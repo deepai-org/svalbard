@@ -1,0 +1,24 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_obs_pre4: CLK_OBS divide-before-mux prescaler for the fast CMOS clock
+* sources (2026-11-10).  pt_clk_obs16's CMOS mux + C2MOS divider passes
+* 500 MHz at every corner but not 810 MHz at tt/ss, so every listed source
+* that can exceed 500 MHz (pll_vco 810 MHz; wire_line, wire_sample, ref_in,
+* aux_clk, wclk_in, cdr_recovered up to 1 GHz) is divided by 4 next to its
+* source; the long route to CLK_OBS then carries <= 250 MHz (less aggressor
+* energy on the route as well).  The LO (2.45 GHz, CML levels) has its own CML
+* prescaler inside pt_lo_ext (LO_OBS, /8).
+* CK -> NAND(CK, EN) -> inv4 -> ct_tspc2 /2 -> ct_tspc2 /2 -> inv2 -> inv8 -> OUT
+* EN = (debug.clk_obs.source == this source's code), decoded in the register
+* glue.  EN=0 (reset): input gated, TSPC stages reset, OUT low and static.
+.include timing_cells.spice
+.include generated/fast/ct_tspc2.spice
+
+.subckt pt_obs_pre4 CK EN OUT VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+XG CK EN GB VDD VSS pt_t_nand2x
+XGI GB G VDD VSS pt_t_inv4
+XS1 G Q1 ENB VDD VSS ct_tspc2
+XS2 Q1 Q2 ENB VDD VSS ct_tspc2
+XB1 Q2 B VDD VSS pt_t_inv2
+XB2 B OUT VDD VSS pt_t_inv8
+.ends

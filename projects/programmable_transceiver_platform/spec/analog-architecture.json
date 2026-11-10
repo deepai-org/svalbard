@@ -1377,7 +1377,7 @@
         "calibration_ownership": "FPGA search, tables and estimation; chip exposes observations, trim registers and atomic timed application only.",
         "direct_stream_local_clock_hz": 240000000.0,
         "host_word_rate_max_hz": 312500000.0,
-        "ingress_bits": 1024,
+        "ingress_bits": 1280,
         "management_spi_hz": 25000000.0,
         "rf_sample_timing": "48bit sample counter and single pending generic launch; protected in-band descriptors; FPGA calibrates antenna delay.",
         "role": "generic packing, serializer/deserializer, SPI, event scheduler, independent reset, finite CDC; FPGA owns protocols CRC FEC and bulk memory"
@@ -5522,6 +5522,14 @@
           "minimum": 1,
           "unit": "code"
         },
+        "cap_rcsel": {
+          "bits": 2,
+          "default": 1,
+          "maximum": 2,
+          "minimum": 0,
+          "unit": "code",
+          "description": "pt_wrx_cap static re-capture select (interface-changes W1): slicer output S_j re-captured on CKP(j+k), k = 2, 4, 6 for codes 0, 1, 2. Reset 1 (k = 4, the fixed r1 behaviour). Calibrated from raw words."
+        },
         "burst_acquire_rows": {
           "bits": 5,
           "default": 8,
@@ -6038,6 +6046,13 @@
     },
     "digital.transport_config": {
       "fields": {
+        "payload_iq": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "meaning": "Exclusive dense payload owner: 0 wired, 1 I/Q. Change only with ENABLE=0; enabling resets and retrains both framing directions. Inactive-source counts must be zero."
+        },
         "direct_stream_enable": {
           "bits": 1,
           "default": 0,
@@ -6066,7 +6081,7 @@
         },
         "slew": {
           "bits": 1,
-          "default": 0,
+          "default": 1,
           "maximum": 1,
           "minimum": 0,
           "unit": "code"
@@ -7081,6 +7096,28 @@
         }
       },
       "update": "stopped_or_scheduled_direction"
+    },
+    "usbhs.bias": {
+      "description": "Dedicated pt_wtx_hsbias DAC for the USB HS output gate bias. EN=0 clamps HS_PBIAS to VDD.",
+      "fields": {
+        "code": {
+          "bits": 8,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 255,
+          "unit": "code",
+          "meaning": "C0..C7 of pt_wtx_hsbias; per-board amplitude calibration."
+        },
+        "enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "meaning": "EN of pt_wtx_hsbias. Zero clamps HS_PBIAS to VDD and disables static DAC current."
+        }
+      },
+      "update": "scheduled_enables_stopped_trim"
     },
     "usbhs.config": {
       "fields": {
@@ -10638,13 +10675,13 @@
     "memory_bits": {
       "alignment_state": 128,
       "burst_phase_history": 512,
-      "control_shadow_and_active": 2018,
+      "control_shadow_and_active": 2038,
       "counters": 256,
       "diagnostic": 256,
       "direct_stream_control": 128,
       "egress": 1024,
       "epoch_status": 128,
-      "ingress": 1024,
+      "ingress": 1280,
       "live_action_guard_state": 96,
       "payload_staging": 512,
       "receive_state_and_timers": 136,
@@ -10654,6 +10691,7 @@
       "periodic_clock_coefficients_and_state": 704
     },
     "memory_total_cap_bits": 8192,
+    "ingress_implementation_note": "The dense wired RTL uses a 64-pair by20-bit CDC FIFO (1280bits); the former32-pair FIFO overflowed at312.5MHz host/2.5Gb/s line during reservation/CDC latency. Book256bits beyond the prior1024-bit ingress allocation and20control bits for USB bias/payload owner from unassigned memory; total8094of8192bits. This is a planning booking, not a substitute for a complete synthesized storage census. The contract's1024-bit analytical admission bound remains conservative and does not qualify physical clock tolerance or host interruptions.",
     "power_distribution": "1nF supply decoupling plus power distribution consumes1.30mm2 of reserve. At the previously documented0.9fF/um2 planning density, capacitor plates alone require1.111mm2. The separate100pF reference capacitor requires0.111mm2 within the0.150mm2 reference-buffer ceiling. These are fit allocations, not completed layouts.",
     "primary_current_case_by_mode": {
       "rf_rx": "external_rf_clock",

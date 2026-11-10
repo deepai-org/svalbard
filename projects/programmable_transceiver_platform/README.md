@@ -107,15 +107,17 @@ and the recommended next steps are in [`spec/path-to-tapeout.md`](spec/path-to-t
 
 | Freeze stage | State |
 | --- | --- |
-| Control and digital | Hardened and DRC/LVS clean; timing not closed at target clocks (below) |
+| Control and digital | Current RTL passes functional checks and reaches CTS; target timing and current-source physical signoff remain open |
 | Pads | All five custom families pass safe and clean |
 | Blocks | All except the wired CDR have clean extracted layouts; performance shortfalls are recorded per block |
-| Top-level assembly, submission | Not started |
+| Top-level assembly | Core-bias placement and pad-level bring-up fixtures exist; full-chip floorplan, binding and routing remain open |
+| Submission | Open |
 
 | Directory | Blocks |
 | --- | --- |
 | [`analog/core_support`](analog/core_support/README.md) | POR, bandgap, biasgen, per-island bias distribution |
 | [`analog/island_support`](analog/island_support/README.md) | Island power switches, isolation clamps, analog test bus |
+| [`analog/characterization`](analog/characterization/README.md) | Device replicas and resistor/MIM matching pairs on the ATB; LEF/evidence check of the VCO replica and ESD_TEST |
 | [`analog/pads`](analog/pads/README.md) | Stress-safe pad protection, pad families, debug-site protection, USB attachment |
 | [`analog/timing`](analog/timing/README.md) | `pll_ring`, passive/internal LO path, clock mux, receivers, dividers, clock observation, oscillators |
 | [`analog/rf_rx`](analog/rf_rx/README.md) | LNA, mixers, shared baseband filter, BB tap buffer |
@@ -129,59 +131,28 @@ with unresolved capability verdicts. These are pre-silicon results: no protocol
 compliance, interoperability or silicon performance is claimed. Use the
 [model guide](system_model/architecture_fast/README.md) for behavioral checks.
 
-## Hardened core digital macro (freeze stage 1)
+## Core digital implementation
 
-`rtl/pt_digital_macro.sv` is the control-and-digital block hardened with LibreLane
-3.0.5 on gf180mcu_fd_sc_mcu7t5v0 (3.3 V libraries): register file and SPI, transport
-and FIFOs, capture/playback memory, pattern generator/checker, calibrator,
-`pt_clocktree_slow`, two frequency counters (`pt_freq_count`) and the clocked
-half of the host link (`pt_host_link`: DDR/SDR capture, launch, forwarded clock).
-Pad cells stay provider `gf180mcu_fd_io` cells (`integration/pt_chip.sv`,
-`pt_host_physical`). The wired boundary is 20-bit double words.
+`rtl/pt_digital_macro.sv` contains SPI/register control, paired dense transport,
+FIFOs, capture/playback memory, pattern generation/checking, calibration,
+clock supervision, frequency counters and DDR/SDR host-link logic. Provider
+pad cells are bound separately by `integration/pt_provider_io.sv`.
 
-Results, with the exact numbers, live in
-[`evidence/digital-hardening-evidence.json`](evidence/digital-hardening-evidence.json);
-constraints are in [`integration/pt_digital_macro.sdc`](integration/pt_digital_macro.sdc).
-Summary of what that run shows:
+The selected clocks are 312.5 MHz at the ten-bit host boundary, 156.25 MHz in
+the paired engines and 125 MHz at the twenty-bit wired boundary. Functional
+checks pass 2.5 Gb/s wired and 40 MS/s I/Q service. The physical implementation
+fits an intermediate 1580 × 1580 µm placement and passes CTS; setup timing and
+current-source physical signoff remain open. The published
+[digital hardening evidence](evidence/digital-hardening-evidence.json) records
+its own source snapshot and must not be transferred to changed RTL.
 
-- **Physical:** 1800 × 1800 µm macro (3.24 mm², above the 2.5 mm² digital + memory
-  allocation), 71.5k standard cells, 61 % utilization. The capture/playback memory and
-  every FIFO are flip-flop arrays; no SRAM macro is used, because their dual-clock reads
-  do not fit single-port SRAMs. Routing uses Metal2–Metal5 with a Metal4-only power grid.
-  A Metal1–Metal4 variant, which leaves Metal5 free for MIM decap, also routes but has 2
-  antenna violations and worse timing.
-- **Signoff:** Magic DRC, KLayout DRC and Netgen LVS all report 0 errors. Antenna
-  checks (OpenROAD and KLayout) report 0. The GDS re-exported with the analog image's
-  Magic 8.3.678 passes KLayout DRC with 0 violations and XORs to 0 against the LibreLane
-  GDS. Hold timing is met at every corner.
-- **Timing is not closed at the specification clocks.** The table gives fmax at the
-  nominal corner (tt 25 °C 3.3 V) and at the worst characterized corner, which is
-  ss 125 °C 3.0 V and lies outside the operating envelope; no Liberty exists inside the
-  envelope.
-
-  | Clock | Target | Nominal (tt) | Worst corner |
-  | --- | --- | --- | --- |
-  | Host word | 312.5 MHz | ≈65 MHz | ≈30 MHz |
-  | Wired double-word | 125 MHz | ≈54 MHz | ≈25 MHz |
-  | SPI SCLK | 20 MHz | ≈18.6 MHz | ≈12.7 MHz |
-  | RF sample | 50 MHz | ≈41 MHz | ≈21 MHz |
-
-  SPI still runs at its ≤ 1 MHz start rate and the 10 MHz bench rate at every corner.
-- **Host link:** the provider pads alone would allow about 150–180 MHz DDR, but the
-  transport logic limits the DDR pin clock to about 33 MHz (nominal) and 15 MHz (worst
-  corner), so 156.25 MHz DDR is not reachable. Use the SDR or reduced-rate host-link
-  fallback.
-- **Gate-level simulation (post-route netlist):** 3969 SPI reads and output snapshots
-  match the RTL record by record and match the register model. Every output is at its
-  safe value while RESET_N or POR is asserted; island_on is 0, so every iso_clamp
-  isolates. Status, reset cause and the frequency counter read back over SPI. With D2H
-  looped back to H2D, the link locks in DDR, SDR and reduced-rate SDR modes.
-
-Reproduce from the repository root (about 4 h on a loaded host; stages can run alone):
+The [tapeout roadmap](spec/path-to-tapeout.md) lists the remaining work and
+verification commands. Constraints are in
+[integration/pt_digital_macro.sdc](integration/pt_digital_macro.sdc).
 
 ```sh
+make transceiver-digital-rtl-checks
 make transceiver-digital-hardening
-make transceiver-digital-hardening DIGITAL_HARDENING_STAGES="sta gls report"
 ```
 
 ## Explore and run

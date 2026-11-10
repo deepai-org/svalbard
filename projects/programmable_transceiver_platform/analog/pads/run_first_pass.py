@@ -27,7 +27,8 @@ def lvs(work,left,left_cell,right,right_cell,output):
     (work/(output+'.log')).write_text(result.stdout+result.stderr)
     result.check_returncode()
     text=(work/output).read_text()
-    return 'Final result: Circuits match uniquely.' in text
+    # A unique topological match with property (W/L/m) errors is not a match.
+    return 'Final result: Circuits match uniquely.' in text and 'Property errors were found' not in text
 
 
 def run(work,pdk,publish,families):

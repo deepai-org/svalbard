@@ -3,7 +3,7 @@
 # produce the signoff evidence evidence/digital-hardening-evidence.json.
 #
 #   run_digital_hardening.sh [stage ...]      default: pnr export sta gls pads report
-#     pnr     LibreLane 3.0.5 Classic flow (synthesis .. Magic/KLayout DRC, Netgen LVS, antenna)
+#     pnr     LibreLane Classic flow (synthesis .. Magic/KLayout DRC, Netgen LVS, antenna)
 #     export  GDS re-export with the analog image's Magic 8.3.678 (block-deliverables GDS rule),
 #             KLayout GF180 DRC (sak-drc.sh -k) and antenna deck on that exported GDS
 #     sta     per-clock / per-corner signoff STA on the routed design with extracted SPEF
@@ -18,13 +18,18 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../../.." && pwd)
 PROJ="$ROOT/projects/programmable_transceiver_platform"
 OUT="${OUT:-$ROOT/scratch/digital_hardening}"
-DIGITAL_IMAGE="${SVALBARD_DIGITAL_IMAGE:-svalbard/librelane-gf180-canary:2026.08}"
+DIGITAL_IMAGE="${SVALBARD_DIGITAL_IMAGE:-svalbard/librelane-gf180-guarded:2026.11}"
 ANALOG_IMAGE="${SVALBARD_ANALOG_IMAGE:-sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305}"
 CPUS="${CPUS:-6}"
 MEM="${MEM:-16g}"
 TAG="${TAG:-FREEZE1}"
 stages=("$@"); [ ${#stages[@]} -eq 0 ] && stages=(pnr export sta gls pads report)
 mkdir -p "$OUT"
+if [ -z "${SVALBARD_DIGITAL_IMAGE:-}" ]; then
+  docker build --network none -t "$DIGITAL_IMAGE" \
+    -f "$PROJ/verification/digital_hardening/Dockerfile" \
+    "$PROJ/verification/digital_hardening" > "$OUT/toolchain-build.log" 2>&1
+fi
 docker image inspect "$DIGITAL_IMAGE" --format '{{.Id}} {{.Architecture}}' > "$OUT/digital-image.txt"
 docker image inspect "$ANALOG_IMAGE" --format '{{.Id}} {{.Architecture}}' > "$OUT/analog-image.txt"
 RUN="$OUT/design/runs/$TAG"
@@ -32,7 +37,7 @@ RUN="$OUT/design/runs/$TAG"
 dk() { # dk <image> <cpus> <mem> <command>
   docker run --rm --network none --cpus "$2" --memory "$3" --memory-swap "$3" --pids-limit 4096 \
     --user "$(id -u):$(id -g)" -e HOME=/out/home -e TMPDIR=/out/tmp -e OMP_NUM_THREADS=1 \
-    -v "$PROJ:/src:ro" -v "$OUT:/out" --entrypoint /bin/sh "$1" -c "$4"
+    -v "$PROJ:/src:ro" -v "$OUT:/out" --entrypoint /bin/bash "$1" -lc "$4"
 }
 
 for stage in "${stages[@]}"; do
@@ -40,17 +45,21 @@ case "$stage" in
 pnr)
   rm -rf "$OUT/design"; mkdir -p "$OUT/design/rtl" "$OUT/home" "$OUT/tmp"
   cp "$PROJ"/rtl/*.sv "$PROJ"/rtl/*.svh "$PROJ"/rtl/*.vh "$OUT/design/rtl/"
-  cp "$PROJ/integration/pt_digital_macro.sdc" "$PROJ/verification/digital_hardening/config.json" "$OUT/design/"
+  cp "$PROJ/integration/pt_digital_macro.sdc" "$PROJ/verification/digital_hardening/config.json" "$PROJ/verification/digital_hardening/pin_order.cfg" "$OUT/design/"
   # Optional overrides (recorded in the evidence), e.g. LL_OVERRIDE='{"RT_MAX_LAYER": "Metal5"}'
   if [ -n "${LL_OVERRIDE:-}" ]; then
     python3 -c 'import json,sys;p=sys.argv[1];c=json.load(open(p));c.update(json.loads(sys.argv[2]));json.dump(c,open(p,"w"),indent=2)' \
       "$OUT/design/config.json" "$LL_OVERRIDE"
     echo "$LL_OVERRIDE" > "$OUT/config-override.json"
   fi
+  pnr_rc=0
   dk "$DIGITAL_IMAGE" "$CPUS" "$MEM" "set -e; cd /out/design; librelane --version > /out/librelane-version.txt 2>&1 || true
+    if [ -f /opt/svalbard/toolchain.json ]; then cp /opt/svalbard/toolchain.json /out/toolchain.json; fi
     librelane --manual-pdk --pdk-root /pdk -p gf180mcuD -s gf180mcu_fd_sc_mcu7t5v0 -j $CPUS --run-tag $TAG \
-      --hide-progress-bar config.json > /out/librelane.log 2>&1; echo librelane_rc=\$? >> /out/librelane.log" || true
+      --hide-progress-bar config.json > /out/librelane.log 2>&1" || pnr_rc=$?
+  echo "librelane_rc=$pnr_rc" >> "$OUT/librelane.log"
   tail -n 30 "$OUT/librelane.log"
+  if [ "$pnr_rc" -ne 0 ]; then exit "$pnr_rc"; fi
   ;;
 export)
   rm -rf "$OUT/export"; mkdir -p "$OUT/export"

@@ -263,11 +263,16 @@ def main():
     p.add_argument('--jobs', type=int, default=4)
     p.add_argument('--drawn', action='store_true', help='v3 drawn layouts already containing the shunt')
     p.add_argument('--drawn-v4', action='store_true', help='v4: macro v2.1 layouts, USB-fixed wirepad')
+    p.add_argument('--models', nargs='*', default=[], metavar='FAMILY=PATH',
+                   help='override the model of a family (e.g. candidate layouts before publication)')
     a = p.parse_args()
     global DRAWN_SHUNT
     if a.drawn or a.drawn_v4:
         DRAWN_SHUNT = True
         FAMILIES.update(FAMILIES_V4 if a.drawn_v4 else FAMILIES_V3)
+    for item in a.models:
+        fam, path = item.split('=', 1)
+        FAMILIES[fam] = dict(FAMILIES[fam], model=Path(path).resolve())
     work = a.output_dir.resolve()
     jobs = []
     for f in a.families:

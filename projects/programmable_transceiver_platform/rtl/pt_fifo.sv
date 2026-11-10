@@ -47,25 +47,50 @@ module pt_async_fifo #(parameter W=10, A=6, REG_OUT=0)(
  end
 endmodule
 
-module pt_sync_fifo #(parameter W=10,A=5)(input wire clk,rst_n,
+module pt_sync_fifo #(parameter W=10,A=5,DEPTH=(1<<A),LOOKAHEAD=0)(input wire clk,rst_n,
  input wire push,pop,input wire[W-1:0]din,output wire[W-1:0]dout,
  output reg full,empty,output reg[A:0]count,output reg overflow,underflow);
- reg[W-1:0]mem[0:(1<<A)-1];reg[A-1:0]wp,rp;
+ reg[W-1:0]mem[0:DEPTH-1];reg[A-1:0]wp,rp;
  assign dout=mem[rp];
- wire put=push&&!full,take=pop&&!empty;
+ wire take=pop&&!empty;
+ wire put=push&&(!full||(LOOKAHEAD&&take));
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n)begin full<=0;empty<=1;wp<=0;rp<=0;count<=0;overflow<=0;underflow<=0;end
   else begin
-   if(put)begin mem[wp]<=din;wp<=wp+1'b1;end
-   if(take)rp<=rp+1'b1;
+   if(put)begin mem[wp]<=din;wp<=wp==DEPTH-1?0:wp+1'b1;end
+   if(take)rp<=rp==DEPTH-1?0:rp+1'b1;
    case({put,take})
-    2'b10:begin count<=count+1'b1;full<=count==((1<<A)-1);empty<=0;end
+    2'b10:begin count<=count+1'b1;full<=count==DEPTH-1;empty<=0;end
     2'b01:begin count<=count-1'b1;full<=0;empty<=count==1;end
     default:begin end
    endcase
-   if(push&&full)overflow<=1;if(pop&&empty)underflow<=1;
+   if(push&&full&&!(LOOKAHEAD&&take))overflow<=1;if(pop&&empty)underflow<=1;
   end
  end
+endmodule
+
+// Disable must flush a streaming domain even when its clock is stopped.
+// Release remains synchronized to that clock. Both reset events are explicit
+// so a cold reset is modeled even when ENABLE started low before the clock.
+module pt_enable_release(input wire clk,rst_n,enable,output wire active);
+ (* async_reg="true" *) reg[1:0]release_state;
+ wire reset_n=rst_n&&enable;
+`ifdef SYNTHESIS
+ always @(posedge clk or negedge reset_n)
+  if(!reset_n)release_state<=0;
+  else release_state<={release_state[0],1'b1};
+`elsif FORMAL
+ always @(posedge clk or negedge reset_n)
+  if(!reset_n)release_state<=0;
+  else release_state<={release_state[0],1'b1};
+`else
+ // The explicit cold-reset event also initializes a simulator whose
+ // ENABLE input was already zero before its first clock edge.
+ always @(posedge clk or negedge rst_n or negedge enable)
+  if(!rst_n||!enable)release_state<=0;
+  else release_state<={release_state[0],1'b1};
+`endif
+ assign active=release_state[1];
 endmodule
 
 module pt_sync_bit(input wire clk,rst_n,d,output reg q);

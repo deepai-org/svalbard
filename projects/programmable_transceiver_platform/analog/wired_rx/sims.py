@@ -222,14 +222,16 @@ def tb_ctle(sub, netfile, corner='typical', temp=27, vdd=3.3, cm=1.0):
 
 
 # ------------------------------------------------------------------ slicer
-def _slicer_body(sub, per, vd, cm, trims, vdd, n_bits=24, seed=1, ramp=None, tstop=None, delay=0.):
-    # per = 2 UI; the eight quarter-rate clocks CKPk (period 2*per) are k*per/4 apart
+def _slicer_body(sub, per, vd, cm, trims, vdd, n_bits=24, seed=1, ramp=None, tstop=None, delay=0., rep=1):
+    # per = 2 quarter-rate UI; the eight ring clocks CKPk (period 2*per) are k*per/4 apart.
+    # rep: line bit length in quarter-rate UI (1 quarter, 2 half, 4 full rate at the same ring frequency)
     m = dict(VDD_WIRE_SW='vdd', VSS='0', slicer_en='en', SL_P='inp', SL_N='inn', QCK='qck',
              D0='d0', E0='e0', D1='d1', E1='e1', D2='d2', E2='e2', D3='d3', E3='e3')
     m.update({f'CKP{k}': ('ck0' if k == 0 else f'ckp{k}') for k in range(8)})
-    for s in ('d0', 'e0', 'd1', 'e1'):
-        for b in ('p0', 'p1', 'n0', 'n1'):
-            m[f'trim_{s}_{b}'] = 'tvdd' if trims.get(s, {}).get(b) else '0'
+    for port in sub.ports:          # trim_<sampler>_<bit> (r3: per sampler, p0..p2 / n0..n2)
+        if port.startswith('trim_'):
+            _, s, b = port.split('_')
+            m[port] = 'tvdd' if trims.get(s, {}).get(b) else '0'
     P = 2 * per
     tr = P / 40
     lines = [f'VDD vdd 0 {vdd}', f'VT tvdd 0 {vdd}', f'VEN en 0 PWL(0 0 0.5n {vdd})']
@@ -239,7 +241,7 @@ def _slicer_body(sub, per, vd, cm, trims, vdd, n_bits=24, seed=1, ramp=None, tst
     ui = per / 2
     if ramp is None:
         rng = np.random.default_rng(seed)
-        bits = rng.integers(0, 2, n_bits)
+        bits = np.repeat(rng.integers(0, 2, -(-n_bits // rep)), rep)[:n_bits]
         # data bit k is centred on its data clock edge: bit k sampled at 1n + k*ui
         pts_p, pts_n = [], []
         for k, b in enumerate(bits):
@@ -259,7 +261,8 @@ def _slicer_body(sub, per, vd, cm, trims, vdd, n_bits=24, seed=1, ramp=None, tst
 
 # trim code used for the 'trimmed' data points: p0 on every sampler (extracted layout has a
 # systematic positive offset of ~+17 mV; per-die codes come from the offset calibration in bring-up)
-TRIM_NOMINAL = {k: {'p0': 1} for k in ('d0', 'e0', 'd1', 'e1')}
+SAMPLERS = ('d0', 'e0', 'd1', 'e1', 'd2', 'e2', 'd3', 'e3')
+TRIM_NOMINAL = {k: {'p0': 1} for k in SAMPLERS}
 
 
 def tb_slicer(sub, netfile, corner='typical', temp=27, vdd=3.3, rates=(1e9,), vd=.2, offsets=True, usb=True,
@@ -316,8 +319,11 @@ def tb_slicer(sub, netfile, corner='typical', temp=27, vdd=3.3, rates=(1e9,), vd
             cases.append((label, deck(sub, netfile, body, ctl, corner, temp, 'slicer data'), analyse))
     # offset / trim: slow ramp -250mV..+250mV over 200 CK0 cycles (2.5 mV per decision)
     per = 2e-9
-    for label, trims in () if not offsets else (('trim0', {}), ('trim_p0', TRIM_NOMINAL), ('trim_n1', {k: {'n1': 1} for k in ('d0', 'e0', 'd1', 'e1')}), ('trim_p3', {k: {'p0': 1, 'p1': 1} for k in ('d0', 'e0', 'd1', 'e1')}),
-                         ('trim_n3', {k: {'n0': 1, 'n1': 1} for k in ('d0', 'e0', 'd1', 'e1')})):
+    full = lambda bits: {k: {b: 1 for b in bits} for k in SAMPLERS}
+    for label, trims in () if not offsets else (('trim0', {}), ('trim_p0', TRIM_NOMINAL), ('trim_n1', full(('n1',))),
+                                                 ('trim_p3', full(('p0', 'p1'))), ('trim_n3', full(('n0', 'n1'))),
+                                                 # r3 third bit: full range each way (MT-01 target >= +/-50 mV)
+                                                 ('trim_p7', full(('p0', 'p1', 'p2'))), ('trim_n7', full(('n0', 'n1', 'n2')))):
         t_end = 400e-9
         body, _ = _slicer_body(sub, per, 0, 1.0, trims, vdd, ramp=(-.25, .25, t_end))
         ctl = '\n'.join([f'tran 20p {t_end:.4g}', 'set wr_singlescale',
@@ -336,6 +342,76 @@ def tb_slicer(sub, netfile, corner='typical', temp=27, vdd=3.3, rates=(1e9,), vd
             r['pass'] = len(offs) == 8
             return r
         cases.append((f'offset_{label}', deck(sub, netfile, body, ctl, corner, temp, f'slicer offset {label}'), analyse))
+    return cases
+
+
+RING_PLAN = (480e6, 625e6, 810e6)          # pt_pll_ring range used by the wired RX
+MODES = ((1, 'quarter'), (2, 'half'), (4, 'full'))
+
+
+def tb_slicer_plan(sub, netfile, corner='typical', temp=27, vdd=3.3, rings=RING_PLAN, delays=None, skews=(0.,),
+                   trimmed=True, usb=True):
+    """Ring-plan qualification (r2): every ring frequency x bits per ring cycle (quarter/half/full, the
+    samplers always run at the ring rate; half/full only lengthen the line bit), 200 mVppd at CM 1.0 V;
+    60 mVppd trimmed at quarter rate; USB HS = full rate at ring 480 MHz (480 Mb/s), CM 0.2 V, 400 mVppd.
+    skews: data shifted by skew x quarter-UI against the assumed sampling instant (clock edge + APERTURE)
+    while the check still uses that instant, i.e. a horizontal window test of the real aperture."""
+    delays = delays or {}
+    cases = []
+    points = []
+    for f_ring in rings:
+        for rep, mode in MODES:
+            points.append((f_ring, rep, mode, 1.0, .2, {}))
+        if trimmed:
+            points.append((f_ring, 1, 'quarter', 1.0, .06, TRIM_NOMINAL))
+    if usb:
+        points.append((480e6, 4, 'usbhs', .2, .4, {}))
+    for f_ring, rep, mode, cm, vd, trims in points:
+        for skew in skews:
+            rate = 4 * f_ring                 # quarter-rate equivalent (sampling grid)
+            per = 2 / rate
+            nb = 40
+            dq, ds = delays.get(rate, (0., APERTURE))
+            ui = per / 2
+            dly = (ds % ui) + skew * ui
+            body, bits = _slicer_body(sub, per, vd, cm, trims, vdd, nb, delay=dly, rep=rep)
+            tstop = 1e-9 + (nb / 2 + 1) * per
+            ctl = '\n'.join([f'tran {per / 200:.3g} {tstop:.4g}', 'set wr_singlescale',
+                             'wrdata tran.txt v(d0) v(d1) v(d2) v(d3) v(qck) i(VDD) v(inp) v(inn) v(e0) v(e1) v(e2) v(e3)',
+                             f'meas tran iavg avg i(VDD) from=1n to={tstop:.4g}'])
+
+            def analyse(log, data, per=per, rate=rate, trims=trims, dq=dq, ds=ds, rep=rep, skew=skew, f_ring=f_ring):
+                r = parse_meas(log)
+                d = load(data)
+                errs, checked = 0, 0
+                t = d[:, 0]
+                ui = per / 2
+                q_up = [x for x in crossings(t, d[:, 5], vdd / 2) if x > 1e-9 + 2 * per]
+                vd_ = lambda tt: at(d, 7, tt) - at(d, 8, tt)
+                # all eight samplers: D_j at j UI, E_j at j UI + UI/2 after the D0 instant (columns d0..d3, e0..e3)
+                outs = [(1 + j, j * ui) for j in range(4)] + [(9 + j, j * ui + ui / 2) for j in range(4)]
+                for tq in q_up:
+                    for col, off in outs:
+                        ts = tq - dq + ds + off
+                        t_read = tq + off + 2 * per - .03 * per
+                        if t_read > t[-1]:
+                            continue
+                        v0 = vd_(ts)
+                        if any(abs(vd_(ts + x) - v0) > 1e-3 for x in (-.1 * ui, .1 * ui)):
+                            continue           # within 0.1 quarter-UI of an input transition
+                        got = at(d, col, t_read) > vdd / 2
+                        checked += 1
+                        errs += int(got != (v0 > 0))
+                r.update(bits_checked=checked, bit_errors=errs, ring_hz=f_ring, line_rate_bps=rate / rep,
+                         bits_per_ring_cycle=4 // rep, skew_ui=skew, sampling_delay_ps=ds * 1e12,
+                         power_w=abs(r.get('iavg', 0)) * vdd)
+                r['pass'] = errs == 0 and checked > 20
+                if trims or skew:   # fixed trim code (per-die calibration) / window probes: not corner gates
+                    r['gating'] = False
+                return r
+            label = f'ring{f_ring / 1e6:g}M_{mode}_{rate / rep / 1e9:g}G_cm{cm:g}_{vd * 1e3:g}mVpp' + \
+                    ('_trimmed' if trims else '') + (f'_skew{skew:+g}' if skew else '')
+            cases.append((label, deck(sub, netfile, body, ctl, corner, temp, 'slicer ring plan'), analyse))
     return cases
 
 
@@ -436,42 +512,153 @@ def tb_detect(sub, netfile, corner='typical', temp=27, vdd=3.3):
 
 # ------------------------------------------------------------------ cdr
 def tb_cdr(sub, netfile, corner='typical', temp=27, vdd=3.3):
-    """Static currents of the dual-loop CDR cell: IB_PLL into a 0.8 V diode-like load (PLL IBIAS pin)
-    and the bang-bang pump current into VCTRL held at 1.1 V, for every control state."""
-    states = [  # name, en, hold, gain, up, dn
-        ('acq', 1, 0, 0, 0, 0), ('hold_idle', 1, 1, 0, 0, 0), ('hold_up', 1, 1, 0, 1, 0), ('hold_dn', 1, 1, 0, 0, 1),
-        ('hold_up_g', 1, 1, 1, 1, 0), ('hold_dn_g', 1, 1, 1, 0, 1), ('acq_up', 1, 0, 0, 1, 0), ('off', 0, 0, 0, 1, 1)]
+    """AC-3 pt_cdr (r-ac3): pump current into VCTRL held at 1.1 V (static votes and ring-rate vote
+    patterns), IB_PLL into the PLL's 4/2 NMOS diode, HOLD_PLL / REF_PLL logic.  Each case can fail.
+    Dynamic cases toggle the votes at 625 MHz (1.6 ns, one ring cycle per vote) and compare the average
+    current with the static expectation, so switch charge injection shows up as an error current;
+    alt625 alternates UP and DN of all four legs every ring cycle (ideal: 0) and must stay below 25 %
+    of one leg's current (the bang-bang loop absorbs a smaller offset with a vote imbalance)."""
+    unit = 8.0   # nA, design unit
+    T = 1.6e-9
+    def code_units(code):
+        return 1 + (code & 1) + 2 * ((code >> 1) & 1) + 4 * ((code >> 2) & 1)
+    # name, en, pfd, rsel, code, up legs, dn legs, fup, fdn, pattern
+    states = [('off', 0, 0, 0, 7, 4, 4, 1, 1, 'static'), ('idle', 1, 0, 0, 7, 0, 0, 0, 0, 'static'),
+              ('up1_c0', 1, 0, 0, 0, 1, 0, 0, 0, 'static'), ('up4_c7', 1, 0, 0, 7, 4, 0, 0, 0, 'static'),
+              ('dn4_c3', 1, 0, 0, 3, 0, 4, 0, 0, 'static'), ('dn1_c7', 1, 0, 0, 7, 0, 1, 0, 0, 'static'),
+              ('up4_c2', 1, 1, 1, 2, 4, 0, 0, 0, 'static'),
+              ('fup_c0', 1, 0, 0, 0, 0, 0, 1, 0, 'static'), ('fdn_c7', 1, 0, 0, 7, 0, 0, 0, 1, 'static'),
+              ('updn_c7', 1, 0, 0, 7, 4, 4, 0, 0, 'static'),
+              ('tog625_c3', 1, 0, 0, 3, 4, 0, 0, 0, 'toggle'), ('alt625_c3', 1, 0, 0, 3, 4, 4, 0, 0, 'alt'),
+              ('alt625_c0', 1, 0, 0, 0, 4, 4, 0, 0, 'alt'), ('alt625_c7', 1, 0, 0, 7, 4, 4, 0, 0, 'alt')]
     cases = []
-    for name, en, hold, gain, up, dn in states:
-        m = dict(VDD_PLL_SW='vdd', VSS='0', IBIAS='ib', cdr_en='en', freq_hold='hold', bb_gain='gain',
-                 BB_UP='up', BB_DN='dn', IB_PLL='ibp', VCTRL='vc', atb_cdr_pbias='pb', REF_IN='0', REF_PLL='refp', FBCK_IN='fbk')
-        body = '\n'.join([f'VDD vdd 0 {vdd}', 'RIB vdd ib 260k', f'VEN en 0 {en * vdd}', f'VHO hold 0 {hold * vdd}',
-                          f'VGA gain 0 {gain * vdd}', f'VUP up 0 {up * vdd}', f'VDN dn 0 {dn * vdd}',
-                          # PLL IBIAS pin load = its NMOS diode (4/2), sensed by a 0 V source
-                          'VIBP ibp ibpd 0', 'XNBD ibpd ibpd 0 0 nfet_03v3 w=4u l=2u', 'VVC vc 0 1.1',
-                          # pt_pll_ring FBCK (39 MHz) clocks the hand-over flops; static when the PLL is off
-                          (f'VFB fbk 0 PULSE(0 {vdd} 10n 200p 200p 12.6n 25.6n)' if en else 'VFB fbk 0 0'),
-                          inst(sub, m)])
-        ctl = '\n'.join(['tran 0.2n 400n', 'meas tran i_ibpll avg i(VIBP) from=300n to=400n',
-                         'meas tran i_bb avg i(VVC) from=300n to=400n', 'meas tran i_vdd_n avg i(VDD) from=300n to=400n',
+    for name, en, pfd, rsel, code, nup, ndn, fup, fdn, pat in states:
+        m = dict(VDD_PLL_SW='vdd', VSS='0', IBIAS='ib', cdr_en='en', pfd_mode='pfd', ref_sel='rsel',
+                 g0='g0', g1='g1', g2='g2', FUP='fup', FDN='fdn', IB_PLL='ibp', HOLD_PLL='holdp', VCTRL='vc',
+                 REF_IN='ref', WCK_IN='wck', REF_PLL='refp', atb_cdr_pbias='pb')
+        L = [f'VDD vdd 0 {vdd}', 'RIB vdd ib 260k', f'VEN en 0 {en * vdd}', f'VPF pfd 0 {pfd * vdd}',
+             f'VRS rsel 0 {rsel * vdd}', f'VFU fup 0 {fup * vdd}', f'VFD fdn 0 {fdn * vdd}',
+             'VIBP ibp ibpd 0', 'XNBD ibpd ibpd 0 0 nfet_03v3 w=4u l=2u', 'VVC vc 0 1.1',
+             # REF 39 MHz, WCK 74.25 MHz: REF_PLL frequency tells which one is selected
+             f'VRF ref 0 PULSE(0 {vdd} 10n 200p 200p 12.6n 25.6n)', f'VWK wck 0 PULSE(0 {vdd} 10n 200p 200p 6.53n 13.47n)']
+        L += [f'VG{b} g{b} 0 {vdd * ((code >> b) & 1)}' for b in range(3)]
+        for k in range(4):
+            for d, nlegs in (('UP', nup), ('DN', ndn)):
+                m[f'{d}{k}'] = f'{d.lower()}{k}'
+                on = k < nlegs
+                if pat == 'static' or not on:
+                    L.append(f'V{d}{k} {d.lower()}{k} 0 {vdd * on}')
+                else:
+                    # toggle: on every other ring cycle; alt: UP on even cycles, DN on odd cycles
+                    dl = 0 if (pat == 'toggle' or d == 'UP') else T
+                    L.append(f'V{d}{k} {d.lower()}{k} 0 PULSE(0 {vdd} {50e-9 + dl:.4g} 80p 80p {T - 80e-12:.4g} {2 * T:.4g})')
+        L.append(inst(sub, m))
+        body = '\n'.join(L)
+        ctl = '\n'.join(['tran 0.05n 400n', 'meas tran i_ibpll avg i(VIBP) from=200n to=400n',
+                         'meas tran i_bb avg i(VVC) from=200n to=400n', 'meas tran i_vdd_n avg i(VDD) from=200n to=400n',
+                         'meas tran v_hold avg v(holdp) from=200n to=400n',
+                         f'meas tran nref trig v(refp) val={vdd / 2} rise=2 targ v(refp) val={vdd / 2} rise=6',
                          'let i_vdd = -i_vdd_n', 'print i_vdd'])
 
-        def analyse(log, data, name=name, en=en, hold=hold, gain=gain, up=up, dn=dn):
+        def analyse(log, data, name=name, en=en, pfd=pfd, rsel=rsel, code=code, nup=nup, ndn=ndn, fup=fup, fdn=fdn, pat=pat):
             import re
-            g = lambda k: float(re.search(rf'^{k}\s*=\s*([-+0-9.eE]+)', log, re.M).group(1))
-            r = dict(i_ibpll_uA=g('i_ibpll') * 1e6, i_bb_nA=g('i_bb') * 1e9, i_vdd_uA=g('i_vdd') * 1e6)
-            want_ib = 10 if (en and not hold) else 0
-            want_bb = 0 if not (en and hold) or up == dn else (1 if up else -1) * (2 if gain else 1) * 60
-            r['pass'] = bool(abs(r['i_ibpll_uA'] - want_ib) < 3 and
-                             (abs(r['i_bb_nA']) < 5 if want_bb == 0 else 0.4 < r['i_bb_nA'] / want_bb < 2.5)
-                             and (en or abs(r['i_vdd_uA']) < 1))
+            def g(k):
+                mm = re.search(rf'^{k}\s*=\s*([-+0-9.eE]+)', log, re.M)
+                return float(mm.group(1)) if mm else None
+            # i(VVC): ngspice reports current from + through the source, so sourcing into VCTRL reads positive
+            ibb = g('i_bb')
+            r = dict(i_ibpll_uA=g('i_ibpll') * 1e6, i_pump_nA=ibb * 1e9 if ibb is not None else None,
+                     i_vdd_uA=g('i_vdd') * 1e6, v_hold=g('v_hold'), ref_4periods_s=g('nref'))
+            u = unit * code_units(code)
+            legs = (4 if fup else nup) - (4 if fdn else ndn)
+            if pat == 'toggle':
+                want = 0.5 * legs * u
+            elif pat == 'alt':
+                want = 0.0
+            else:
+                want = legs * u if en else 0.0
+            r['i_pump_expected_nA'] = want
+            ok_ib = abs(r['i_ibpll_uA'] - (10 if en else 0)) < 3
+            if pat == 'alt':
+                ok_p = abs(r['i_pump_nA']) < 0.25 * u
+            elif want == 0:
+                ok_p = abs(r['i_pump_nA']) < (0.25 * u if en else 1.0)
+            else:
+                ok_p = 0.5 < r['i_pump_nA'] / want < 2.0
+            ok_hold = (r['v_hold'] < 0.3) if (en and pfd) else (r['v_hold'] > vdd - 0.3)
+            per = r['ref_4periods_s']
+            ok_ref = (per is None) if not en else (per is not None and abs(per / 4 - (13.47e-9 if rsel else 25.6e-9)) < 1e-9)
+            r.update(ok_ib=ok_ib, ok_pump=ok_p, ok_hold=ok_hold, ok_ref=ok_ref)
+            r['pass'] = bool(ok_ib and ok_p and ok_hold and ok_ref and (en or abs(r['i_vdd_uA']) < 1))
             return r
         cases.append((name, deck(sub, netfile, body, ctl, corner, temp, f'cdr {name}'), analyse))
     return cases
 
 
+def tb_ptrim(sub, netfile, corner='typical', temp=27, vdd=3.3, f=810e6, codes=tuple(range(32))):
+    """Per-phase delay trim: ideal 45-degree phases at f into PH0..7, all eight channels at one code per
+    case; each case measures the PHk -> CKPk rise delay of every channel (CKPk loaded with 150 fF: slicer
+    + capture clock pins and route).  Code sweep 0..31 -> per-channel delay curve; the judgement (step
+    <= 1 deg at f, monotonic, range) is made over the whole sweep in ptrim_summary()."""
+    T = 1 / f
+    cases = []
+    for code in codes:
+        m = dict(VDD_WIRE_SW='vdd', VSS='0', ptrim_en='vdd')
+        L = [f'VDD vdd 0 {vdd}']
+        for k in range(8):
+            m[f'PH{k}'] = f'ph{k}'
+            m[f'CKP{k}'] = f'ckp{k}'
+            L.append(f'VPH{k} ph{k} 0 PULSE(0 {vdd} {1e-9 + k * T / 8:.6e} 60p 60p {T / 2 - 60e-12:.6e} {T:.6e})')
+            L.append(f'CL{k} ckp{k} 0 150f')
+            for b in range(5):
+                m[f'T{k}_{b}'] = 'vdd' if (code >> b) & 1 else '0'
+        L.append(inst(sub, m))
+        t1 = 1e-9 + 3 * T
+        meas = [f'meas tran d{k} trig v(ph{k}) val={vdd / 2} rise=3 targ v(ckp{k}) val={vdd / 2} rise=3' for k in range(8)]
+        ctl = '\n'.join([f'tran 2p {1e-9 + 5 * T:.4g}'] + meas)
+
+        def analyse(log, data, code=code):
+            import re
+            r = dict(code=code)
+            for k in range(8):
+                mm = re.search(rf'^d{k}\s*=\s*([-+0-9.eE]+)', log, re.M)
+                r[f'delay_ps_{k}'] = float(mm.group(1)) * 1e12 if mm else None
+            r['pass'] = all(r[f'delay_ps_{k}'] is not None for k in range(8))
+            r['gating'] = False         # judged over the sweep (ptrim_summary)
+            return r
+        cases.append((f'code{code:02d}', deck(sub, netfile, body='\n'.join(L), control=ctl, corner=corner, temp=temp,
+                                               title=f'ptrim code {code}'), analyse))
+    return cases
+
+
+def ptrim_summary(res, f=810e6, spec_err_deg=5.7):
+    """Over a code sweep {case: metrics}: per channel step (deg at f), monotonicity and range; pass if every
+    step <= 1 deg, monotonic, and range >= 2 x the ring's measured spacing error (r7 5.7 deg), so any
+    error inside +/-5.7 deg trims to within half a step (<= 0.5 deg, << 3 deg)."""
+    deg = 360.0 * f * 1e-12
+    out = dict(f_hz=f, channels={})
+    ok = True
+    for k in range(8):
+        d = [res.get(f'code{c:02d}', {}).get(f'delay_ps_{k}') for c in range(32)]
+        if any(x is None for x in d):
+            out['channels'][k] = dict(error='missing codes'); ok = False
+            continue
+        steps = [(d[i + 1] - d[i]) * deg for i in range(31)]
+        rng = (d[31] - d[0]) * deg
+        ch = dict(delay0_ps=d[0], range_deg=rng, max_step_deg=max(steps), min_step_deg=min(steps),
+                  monotonic=min(steps) > 0)
+        ch['pass'] = bool(ch['monotonic'] and ch['max_step_deg'] <= 1.0 and rng >= 2 * spec_err_deg)
+        ok &= ch['pass']
+        out['channels'][k] = ch
+    d0 = [res.get('code00', {}).get(f'delay_ps_{k}') for k in range(8)]
+    if all(x is not None for x in d0):
+        out['channel_spread_code0_deg'] = (max(d0) - min(d0)) * deg
+    out['pass'] = bool(ok)
+    return out
+
+
 BENCHES = dict(termination=[tb_termination], rxlevel=[tb_rxlevel], rxselect=[tb_rxselect], wmon_sel=[tb_wmon_sel],
-               ctle=[tb_ctle], slicer=[tb_slicer], detect=[tb_detect], cdr=[tb_cdr])
+               ctle=[tb_ctle], slicer=[tb_slicer], detect=[tb_detect], cdr=[tb_cdr], ptrim=[tb_ptrim])
 
 
 # ------------------------------------------------------------------ generic safety benches
@@ -485,16 +672,20 @@ PORTS = dict(
                   out=['WMON_IN']),
     ctle=dict(ctrl=['ctle_en', 'wire_ctle_bypass', 'ctle_peak0', 'ctle_peak1'], clk=[], ain=['RX_P', 'RX_N'],
               bias=['IBIAS'], out=['CTLE_P', 'CTLE_N'], atb=['atb_ctle_pbias', 'atb_ctle_src']),
-    slicer=dict(ctrl=['slicer_en'] + [f'trim_{s}_{b}' for s in ('d0', 'e0', 'd1', 'e1') for b in ('p0', 'p1', 'n0', 'n1')],
+    slicer=dict(ctrl=['slicer_en'] + [f'trim_{s}_{b}' for s in ('d0', 'e0', 'd1', 'e1', 'd2', 'e2', 'd3', 'e3')
+                                      for b in ('p0', 'p1', 'p2', 'n0', 'n1', 'n2')],
                 clk=[f'CKP{k}' for k in range(8)], ain=['SL_P', 'SL_N'], bias=[], out=['D0', 'E0', 'D1', 'E1', 'D2', 'E2', 'D3', 'E3', 'QCK']),
     detect=dict(ctrl=['det_en', 'det_thr0', 'det_thr1', 'det_se0', 'det_se1', 'det_src_tx', 'det_inject'],
                 clk=['det_clk'], ain=['RX_P', 'RX_N', 'TX_P', 'TX_N'], bias=['IBIAS'],
                 out=['DIFF_POS', 'DIFF_NEG', 'SE_P', 'SE_N'], atb=['atb_det_vref']),
-    cdr=dict(ctrl=['cdr_en', 'freq_hold', 'bb_gain', 'BB_UP', 'BB_DN'], clk=['REF_IN', 'FBCK_IN'], ain=['VCTRL'], bias=['IBIAS'],
-             out=['IB_PLL', 'REF_PLL'], atb=['atb_cdr_pbias']),
+    cdr=dict(ctrl=['cdr_en', 'pfd_mode', 'ref_sel', 'g0', 'g1', 'g2', 'UP0', 'UP1', 'UP2', 'UP3', 'DN0', 'DN1', 'DN2', 'DN3',
+                   'FUP', 'FDN'], clk=['REF_IN', 'WCK_IN'], ain=['VCTRL'], bias=['IBIAS'],
+             out=['IB_PLL', 'REF_PLL', 'HOLD_PLL'], atb=['atb_cdr_pbias']),
+    ptrim=dict(ctrl=['ptrim_en'] + [f'T{k}_{b}' for k in range(8) for b in range(5)], clk=[f'PH{k}' for k in range(8)],
+               ain=[], bias=[], out=[f'CKP{k}' for k in range(8)]),
 )
 ENABLE = dict(termination='term_en', rxlevel='rxlevel_en', rxselect='rxselect_en', wmon_sel='wmon_en', ctle='ctle_en',
-              slicer='slicer_en', detect='det_en', cdr='cdr_en')
+              slicer='slicer_en', detect='det_en', cdr='cdr_en', ptrim='ptrim_en')
 
 
 def tb_safe(sub, netfile, block, corner='typical', vdd=3.63):
@@ -882,5 +1073,145 @@ def tb_cdr_acq(pll_sub, cdr_sub, fring=625e6, T=1.6e-6, thold=1.0e-6, tpre=0.2e-
         r['bb_dn_step_ppm'] = (r['f_after_dn'] / r['f_after_up'] - 1) * 1e6 if r['f_after_dn'] and r['f_after_up'] else None
         r['pass'] = bool(r['acq_error_ppm'] is not None and abs(r['acq_error_ppm']) < 3000 and
                          (r['bb_up_step_ppm'] or 0) > 0 and (r['bb_dn_step_ppm'] or 0) < 0)
+        return r
+    return body, ctl, analyse
+
+
+# ------------------------------------------------------------------ AC-3 closed loop (pt_cdr r-ac3)
+def ac3_line(bits_n, rate, ppm=0.0, ppm_per_us=0.0, sj_ui=0.0, sj_hz=1e6, t0=0.0, t_ramp=0.0):
+    """Bit start times of a line at rate*(1 + ppm + ramp) with sinusoidal jitter (UI peak).  The ramp
+    (ppm/us) starts at t_ramp and is the SSC slope check.  Returns (edge times, nominal UI)."""
+    ui0 = 1.0 / rate
+    t, out = t0, []
+    for _ in range(bits_n):
+        r = ppm + (ppm_per_us * max(0.0, t - t_ramp) * 1e6 if ppm_per_us else 0.0)
+        out.append(t)
+        t += ui0 / (1 + r * 1e-6)
+    if sj_ui:
+        out = [x + sj_ui * ui0 * math.sin(2 * math.pi * sj_hz * x) for x in out]
+    return out, ui0
+
+
+def tb_cdr_ac3(pll_sub, slicer_sub, cdr_sub, rate, bpc, T=4.0e-6, tpre=0.8e-6, vc0=1.16, code=3, vd=.2,
+               vdd=3.3, bb=True, settle=1.5e-6, ppm=0.0, ppm_per_us=0.0, sj_ui=0.0, sj_hz=1e6, lat_extra=3,
+               vz_node=None, data_phase=0.37, fref=None, t_ramp=None):
+    """AC-3 extracted closed loop: timing's pt_pll_ring (ext) with HOLD driven by pt_cdr r-ac3 (HOLD_PLL=1:
+    PFD held from t=0, REF still toggling), pt_cdr r-ac3 (ext) pump legs on VCTRL, pt_slicer r2 (ext).
+    VCTRL and the loop-filter integrator start at vc0 (released at tpre; stands in for the FLL result).
+    Per-bit Alexander PD stand-in (behavioural): slicer outputs held at QCK edges (A: phases 0-3 on the
+    rise, B: 4-7 on the fall), a cycle-consistent copy C (transparent while QCK is low), the previous
+    cycle's last edge/data P, votes UPk = Dk^Ek, DNk = Ek^Dk+1 registered per ring cycle (V), then
+    lat_extra more ring cycles of delay (the capture PD sits on the octet O, ~5 ring cycles after
+    sampling) before driving pt_cdr UP0..3/DN0..3 (half rate: legs 0,1).  Pump code `code`.
+    bb=False: no votes (free-running ring at vc0; measures f1)."""
+    edges, ui0 = ac3_line(int(T * rate * 1.02) + 8, rate, ppm, ppm_per_us, sj_ui, sj_hz,
+                          t0=data_phase / rate, t_ramp=(tpre if t_ramp is None else t_ramp))
+    lf = []
+    s = [1, 0, 1, 1, 0, 1, 0]
+    for _ in edges:
+        b = s[6] ^ s[5]
+        s = [b] + s[:6]
+        lf.append(b)
+    pts_p, pts_n = [(0, 1.0 + (vd / 2 if lf[0] else -vd / 2))], [(0, 1.0 - (vd / 2 if lf[0] else -vd / 2))]
+    for k in range(1, len(edges)):
+        if lf[k] == lf[k - 1]:
+            continue
+        v = vd / 2 if lf[k] else -vd / 2
+        pts_p += [(edges[k], 1.0 - v), (edges[k] + 30e-12, 1.0 + v)]
+        pts_n += [(edges[k], 1.0 + v), (edges[k] + 30e-12, 1.0 - v)]
+    fref = fref or rate / bpc / 16
+    sm = dict(VDD_WIRE_SW='vdd', VSS='0', slicer_en='vdd', SL_P='inp', SL_N='inn', QCK='qck',
+              D0='d0', E0='e0', D1='d1', E1='e1', D2='d2', E2='e2', D3='d3', E3='e3')
+    sm.update({f'CKP{k}': f'ph{k}' for k in range(8)})
+    sm.update({p: '0' for p in slicer_sub.ports if p.startswith('trim_')})
+    cm = dict(VDD_PLL_SW='vdd', VSS='0', IBIAS='ib', cdr_en='en', pfd_mode='0', ref_sel='0',
+              g0=('vdd' if code & 1 else '0'), g1=('vdd' if code & 2 else '0'), g2=('vdd' if code & 4 else '0'),
+              FUP='0', FDN='0', IB_PLL='ibp', HOLD_PLL='holdp', VCTRL='vctrl', REF_IN='ref', WCK_IN='0',
+              REF_PLL='refp', atb_cdr_pbias='pb')
+    for k in range(4):
+        cm[f'UP{k}'] = f'up{k}' if (bb and k < (4 if bpc == 4 else 2)) else '0'
+        cm[f'DN{k}'] = f'dn{k}' if (bb and k < (4 if bpc == 4 else 2)) else '0'
+    pm = dict(PLL_MAP, HOLD='holdp')
+    names = ('d0', 'e0', 'd1', 'e1', 'd2', 'e2', 'd3', 'e3')
+    dig = ['.model swa sw vt=1.65 vh=0.2 ron=500 roff=1e12', f'BQB qckb 0 V={vdd}-v(qck)']
+    for i, n in enumerate(names):
+        ck = 'qckb' if i < 4 else 'qck'            # A: track while QCK low, hold from the rise; B: the opposite
+        dig += [f'SH{n} {n} h{n} {ck} 0 swa', f'CH{n} h{n} 0 20f',
+                f'BX{n} x{n} 0 V=1/(1+exp(-8*(v(h{n})-1.65)))',
+                f'SC{n} x{n} c{n} qckb 0 swa', f'CC{n} c{n} 0 20f']          # C: consistent copy
+    dig += ['SPe3 ce3 pe3 qck 0 swa', 'CPe3 pe3 0 20f', 'SPd3 cd3 pd3 qck 0 swa', 'CPd3 pd3 0 20f']
+    X = lambda a, b: f'(v({a})+v({b})-2*v({a})*v({b}))'
+    if bpc == 4:
+        votes = {'up0': X('cd0', 'ce0'), 'dn0': X('ce0', 'cd1'), 'up1': X('cd1', 'ce1'), 'dn1': X('ce1', 'cd2'),
+                 'up2': X('cd2', 'ce2'), 'dn2': X('ce2', 'cd3'), 'up3': X('cd3', 'ce3'), 'dn3': X('pe3', 'cd0')}
+    else:   # half: data phases 0,4 (D0, D2), edges 2,6 (D1, D3)
+        votes = {'up0': X('cd0', 'cd1'), 'dn0': X('cd1', 'cd2'), 'up1': X('cd2', 'cd3'), 'dn1': X('pd3', 'cd0')}
+    for v, expr in votes.items():
+        dig += [f'BR{v} r{v} 0 V={expr}', f'SV{v} r{v} v{v}_0 qckb 0 swa', f'CV{v} v{v}_0 0 20f']
+        prev = f'v{v}_0'
+        for k in range(lat_extra):       # one ring cycle each: master (QCK high) + slave (QCK low)
+            dig += [f'SM{v}_{k} {prev} m{v}_{k} qck 0 swa', f'CM{v}_{k} m{v}_{k} 0 20f',
+                    f'SS{v}_{k} m{v}_{k} v{v}_{k + 1} qckb 0 swa', f'CS{v}_{k} v{v}_{k + 1} 0 20f']
+            prev = f'v{v}_{k + 1}'
+        dig += [f'BD{v} {v}r 0 V={vdd}/(1+exp(-20*(v({prev})-0.5)))', f'RD{v} {v}r {v} 1k', f'CD{v} {v} 0 50f']
+    body = '\n'.join([
+        f'VDD vdd 0 {vdd}', 'RIB vdd ib 260k',
+        f'VREF refs 0 PULSE(0 {vdd} 5n 200p 200p {0.5 / fref - 200e-12} {1 / fref})', 'RREF refs ref 100', 'CREF ref 0 10f',
+        f'VEN ens 0 PWL(0 0 2n 0 2.1n {vdd})', 'REN ens en 100', 'CEN en 0 10f',
+        (f'.ic v(vctrl)={vc0} v(xpll.{vz_node})={vc0}' if vz_node else f'.ic v(vctrl)={vc0}'),
+        '.option rshunt=1e10',
+        f'VPRE pre 0 {vc0}', f'VPC pc 0 PWL(0 {vdd} {tpre} {vdd} {tpre + 1e-9} 0)',
+        'SPRE vctrl pre pc 0 swpre', f'.model swpre sw vt={vdd / 2} vh=0.1 ron=50 roff=1e12',
+        f'VIP inps 0 {pwl(pts_p)}', f'VIN inns 0 {pwl(pts_n)}', 'RSP inps inp 25', 'RSN inns inn 25',
+        'CSP inp 0 50f', 'CSN inn 0 50f', OPT_CLOSED,
+        inst(pll_sub, pm, 'XPLL'), inst(cdr_sub, cm, 'XCDR'), inst(slicer_sub, sm, 'XSL'), *(dig if bb else [])])
+    vn = ['up0', 'dn0'] if bb else ['vctrl', 'vctrl']
+    body += '\n.save v(qck) v(d0) v(d1) v(d2) v(d3) v(vctrl) v(ph0) v(holdp) i(VDD) ' + ' '.join(f'v({n})' for n in votes) if bb else \
+        '\n.save v(qck) v(d0) v(d1) v(d2) v(d3) v(vctrl) v(ph0) v(holdp) i(VDD)'
+    upn = [n for n in votes if n.startswith('up')] if bb else []
+    dnn = [n for n in votes if n.startswith('dn')] if bb else []
+    sig_up = '+'.join(f'v({n})' for n in upn) if bb else '0*v(vctrl)'
+    sig_dn = '+'.join(f'v({n})' for n in dnn) if bb else '0*v(vctrl)'
+    ctl = '\n'.join([f'tran 5p {T:.4g} 0 {TMAX_CLOSED}', 'set wr_singlescale',
+                     f'let sup = {sig_up}', f'let sdn = {sig_dn}',
+                     'wrdata tran.txt v(qck) v(d0) v(d1) v(d2) v(d3) v(vctrl) sup sdn v(ph0) v(holdp)',
+                     f'meas tran ivdd avg i(VDD) from={tpre:.4g} to={T:.4g}'])
+
+    def analyse(log, data, bpc=bpc, settle=settle, edges=edges, lf=lf):
+        r = parse_meas(log)
+        d = load(data)
+        t = d[:, 0]
+        q = crossings(t, d[:, 1], vdd / 2)
+        P = np.median(np.diff(q)) if len(q) > 3 else None
+        bitsr, tb = [], []
+        for i in range(len(q) - 2):
+            tn = q[i + 1]
+            a = [at(d, 2, tn - .05 * P), at(d, 3, tn - .05 * P)]
+            b = [at(d, 4, tn + .45 * P), at(d, 5, tn + .45 * P)]
+            seq = [a[0], a[1], b[0], b[1]] if bpc == 4 else [a[0], b[0]]
+            for v in seq:
+                bitsr.append(int(v > vdd / 2)); tb.append(q[i])
+        bitsr = np.array(bitsr); tb = np.array(tb)
+        ok = tb > tpre + settle
+        # PRBS7 self-check: every recovered bit must equal the XOR of the bits 6 and 7 before it (a
+        # slipped or wrong bit breaks it for the following 7 checks; no alignment to the source needed)
+        errs = [i for i in range(7, len(bitsr)) if ok[i] and bitsr[i] != (bitsr[i - 7] ^ bitsr[i - 6])]
+        ph = crossings(t, d[:, 9], vdd / 2)
+        def fit(a, b):
+            n = [x for x in ph if a <= x < b]
+            return (len(n) - 1) / (n[-1] - n[0]) if len(n) > 2 else None
+        nchk = int(np.sum(ok[7:]))
+        sel = t > tpre + settle
+        r.update(line_rate_bps_nominal=rate, ppm=ppm, ppm_per_us=ppm_per_us, sj_ui=sj_ui, sj_hz=sj_hz, code=code,
+                 bits_per_cycle=bpc, ring_hz_free_fit=fit(max(0, tpre - 0.3e-6), tpre),
+                 ring_hz_end_fit=fit(T - 0.4e-6, T), ring_hz_target_end=None,
+                 vctrl_at_release=at(d, 6, tpre), vctrl_end=at(d, 6, T),
+                 vctrl_span_check=(float(np.max(d[sel, 6]) - np.min(d[sel, 6])) if np.any(sel) else None),
+                 bits_checked=nchk, bit_errors=len(errs), first_err_ns=(tb[errs[0]] * 1e9 if errs else None),
+                 hold_pll_min_v=float(np.min(d[t > 5e-9, 10])) if np.any(t > 5e-9) else None,
+                 up_activity=float(np.mean(d[sel, 7])) / vdd if bb and np.any(sel) else None,
+                 dn_activity=float(np.mean(d[sel, 8])) / vdd if bb and np.any(sel) else None)
+        r['ber_95_upper'] = (3.0 / nchk) if (nchk and not errs) else None
+        r['pass'] = bool(bb and nchk > 2000 and not errs and r['hold_pll_min_v'] is not None and r['hold_pll_min_v'] > vdd - 0.4)
         return r
     return body, ctl, analyse

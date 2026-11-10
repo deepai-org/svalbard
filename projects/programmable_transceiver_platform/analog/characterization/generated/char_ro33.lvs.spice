@@ -1,0 +1,87 @@
+* NGSPICE file created from pt_char_ro33.ext - technology: gf180mcuD
+
+.subckt prim_3 w_n278_n516# a_n36_n356# a_n116_n200# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# w_n278_n516# pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt prim_1 a_n36_n356# a_n116_n200# a_n254_n492# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# a_n254_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt prim_6 a_n36_n956# a_n116_n800# a_28_n800# w_n278_n1116#
+X0 a_28_n800# a_n36_n956# a_n116_n800# w_n278_n1116# pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+.ends
+
+.subckt prim_0 a_n254_n392# a_28_n100# a_n36_n256# a_n116_n100#
+X0 a_28_n100# a_n36_n256# a_n116_n100# a_n254_n392# nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+.ends
+
+.subckt prim_2 a_n254_n692# a_28_n400# a_n36_n556# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# a_n254_n692# nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt prim_5 a_28_n400# a_n36_n556# w_n278_n716# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# w_n278_n716# pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt prim_4 a_28_n300# w_n278_n616# a_n36_n456# a_n116_n300#
+X0 a_28_n300# a_n36_n456# a_n116_n300# w_n278_n616# pfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+.ends
+
+.subckt pt_char_ro33 EN OUT VDD VSS
+XXP34_0 VDD T0 VDD d1_b prim_3
+XXN35_0 d1_a d1_x2 VSS d1_b prim_1
+XXP32_0 VDD T0 d1_x1 d1_a prim_3
+XXN28_0 ENB VSS VSS T0 prim_1
+XXP3_0 R10 VDD R0 VDD prim_6
+XXN40_0 VSS D1 ENB VSS prim_0
+XXN33_0 VSS d1_a D1 VSS prim_0
+XXP18_0 R6 VDD R7 VDD prim_6
+XXN9_0 VSS R3 R2 VSS prim_2
+XXP30_0 T0 ENB VDD tap_m prim_5
+XXN19_0 VSS R8 R7 VSS prim_2
+XXN49_0 d2_b VSS VSS d2_x3 prim_1
+XXP16_0 R5 VDD R6 VDD prim_6
+XXN7_0 VSS R2 R1 VSS prim_2
+XXP14_0 R4 VDD R5 VDD prim_6
+XXN17_0 VSS R7 R6 VSS prim_2
+XXN5_0 VSS R1 R0 VSS prim_2
+XXP44_0 VDD D1 VDD d2_b prim_3
+XXP37_0 D1 VDD d1_b VDD prim_4
+XXP8_0 R1 VDD R2 VDD prim_6
+XXN45_0 d2_a d2_x2 VSS d2_b prim_1
+XXP12_0 R3 VDD R4 VDD prim_6
+XXN15_0 VSS R6 R5 VSS prim_2
+XXP42_0 VDD D1 d2_x1 d2_a prim_3
+XXN38_0 T0 d1_x3 VSS D1 prim_1
+XXN50_0 VSS D2 ENB VSS prim_0
+XXP6_0 R0 VDD R1 VDD prim_6
+XXN13_0 VSS R5 R4 VSS prim_2
+XXN43_0 VSS d2_a D2 VSS prim_0
+XXP10_0 R2 VDD R3 VDD prim_6
+XXN1_0 VSS R0 R10 en_m prim_2
+XXN36_0 T0 VSS VSS d1_x2 prim_1
+XXP26_0 VDD EN VDD ENB prim_3
+XXP4_0 EN VDD R0 VDD prim_6
+XXN11_0 VSS R4 R3 VSS prim_2
+XXP31_0 VDD D1 VDD d1_x1 prim_3
+XXN27_0 R5 VSS VSS T0 prim_1
+XXP24_0 R9 VDD R10 VDD prim_6
+XXP54_0 OB VDD OUT VDD prim_6
+XXP47_0 D2 VDD d2_b VDD prim_4
+XXN25_0 VSS ENB EN VSS prim_0
+XXP22_0 R8 VDD R9 VDD prim_6
+XXP52_0 OB D2 VDD VDD prim_5
+XXN48_0 D1 d2_x3 VSS D2 prim_1
+XXN23_0 VSS R10 R9 VSS prim_2
+XXN53_0 VSS OUT OB VSS prim_2
+XXP20_0 R7 VDD R8 VDD prim_6
+XXN46_0 D1 VSS VSS d2_x2 prim_1
+XXN39_0 d1_b VSS VSS d1_x3 prim_1
+XXN21_0 VSS R9 R8 VSS prim_2
+XXN51_0 D2 VSS VSS OB prim_1
+XXP29_0 tap_m R5 VDD VDD prim_5
+XXP41_0 VDD D2 VDD d2_x1 prim_3
+XXN2_0 VSS en_m EN VSS prim_2
+.ends
+

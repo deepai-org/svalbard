@@ -58,24 +58,29 @@ META = dict(
                   'Input CM below ~0.5 V (USB HS) is out of range: use rxselect_direct=1 or the bypass',
                   'Equalization quality vs channel (eye) not simulated; AC response only']),
     slicer=dict(
-        key=[('data_1G_cm1_200mVpp', 'bit_errors', '0 errors at 1 Gb/s (gating rate), CM 1.0 V, 200 mVppd, quarter-rate'),
-             ('data_1G_cm1_200mVpp', 'sampling_delay_ps', 'CK0 edge to D0 decision instant (divider + aperture)'),
-             ('data_1G_cm1_60mVpp_trimmed', 'bit_errors', '0 errors at 1 Gb/s, 60 mVppd, trim n1'),
-             ('data_0.48G_cm0.2_400mVpp', 'bit_errors', '0 errors USB HS 480 Mb/s, CM 0.2 V'),
-             ('data_1G_cm1_200mVpp', 'power_w', 'wired budget 16.1 mA (53 mW)'),
+        key=[('ring810M_quarter_3.24G_cm1_200mVpp', 'bit_errors', '0 errors, ring 810 MHz quarter rate 3.24 Gb/s, CM 1.0 V, 200 mVppd (all 8 samplers)'),
+             ('ring625M_quarter_2.5G_cm1_200mVpp', 'bit_errors', '0 errors, ring 625 MHz quarter rate 2.5 Gb/s'),
+             ('ring480M_quarter_1.92G_cm1_200mVpp', 'bit_errors', '0 errors, ring 480 MHz quarter rate 1.92 Gb/s'),
+             ('ring810M_half_1.62G_cm1_200mVpp', 'bit_errors', '0 errors, ring 810 MHz half rate 1.62 Gb/s'),
+             ('ring810M_full_0.81G_cm1_200mVpp', 'bit_errors', '0 errors, ring 810 MHz full rate 0.81 Gb/s'),
+             ('ring480M_usbhs_0.48G_cm0.2_400mVpp', 'bit_errors', '0 errors USB HS 480 Mb/s (ring 480 MHz full rate), CM 0.2 V'),
+             ('ring810M_quarter_3.24G_cm1_60mVpp_trimmed', 'bit_errors', '0 errors at 60 mVppd, trim p0 (non-gating)'),
+             ('ring810M_quarter_3.24G_cm1_200mVpp', 'power_w', 'wired budget 16.1 mA (53 mW)'),
              ('offset_trim_p0', 'offset_mV_worst', 'trimmed residual < 20 mV (code p0)'),
-             ('offset_trim0', 'offset_mV_worst', 'untrimmed offset (worst of 4 samplers); trimmed residual < 20 mV'),
+             ('offset_trim0', 'offset_mV_worst', 'untrimmed offset (worst of 8 samplers); trimmed residual < 20 mV'),
              ('offset_trim_p3', 'input_referred_offset_mV', 'trim range +/-50 mV'),
              ('offset_trim_n3', 'input_referred_offset_mV', 'trim range +/-50 mV')],
         atb=[], status=['D0/E0/D1/E1 -> pt_wrx_cdr_loop raw_word / data_byte / early,late counters (SPI-readable)'],
         clocks=[],
         routes=[('wire_wmon_scope', 'open', 'front-end/CTLE waveform on WMON for scope slicing; bb_tap pending')],
-        excluded=['Gating line rate 1 Gb/s (serial) and 480 Mb/s (USB HS); higher rates are reported per corner in the '
-                  'maxrate entry (non-gating). The quarter-rate divider flops limit the rate (setup of the divider '
-                  'links), most at the ss corner',
-                  'Divider/sampler phase spacing depends on matched clock-to-Q of the four divider flops (not trimmed)',
-                  '97 boundary phase slots + 8 burst samplers of the architecture model: replaced by 8 quarter-rate samplers '
-                  '(half-rate bang-bang); burst acquisition not implemented',
+        excluded=['r2 (2026-11-09): compact samplers (slicer_compact.py). Gating: ring 480/625/810 MHz x quarter/half/full '
+                  'at 200 mVppd CM 1.0 V and USB HS 480 Mb/s (ring 480 MHz full rate) CM 0.2 V 400 mVppd, at every '
+                  'envelope corner; for this block a corner failure fails clean. 3.6/4 Gb/s quarter is the non-gating '
+                  'maxrate margin entry',
+                  'Open loop: data centred on clock edge + 100 ps (assumed aperture, not measured); the window probe '
+                  '(skew runs, non-gating) shifts the data against that instant. 40 quarter-UI per run, not a BER',
+                  'Ideal ring clocks (P/40 edges, exact 45 deg); ring phase error, jitter and the clock-tree load of '
+                  'the eight CKPk inputs are not included',
                   'Offset trim is 2+2 bits of switched capacitance per sampler, not a calibrated DAC',
                   'Noise and metastability not simulated']),
     detect=dict(
@@ -92,6 +97,13 @@ META = dict(
                   '6-bit test-current trim; 1 ms timeout/abort are RTL responsibilities',
                   'Envelope detector replaced by clocked comparators + digital window',
                   'Sampled on det_clk: FS/LS line state requires a running detect clock (>=48 MHz)']),
+    ptrim=dict(
+        key=[('code00', 'delay_ps_0', 'PH0 -> CKP0 delay at code 0 (810 MHz, 150 fF)'),
+             ('code31', 'delay_ps_0', 'PH0 -> CKP0 delay at code 31')],
+        atb=[], status=[], clocks=['PH0..7 in, CKP0..7 out (ring rate)'],
+        routes=[('wire_cdr_phase_trim', 'open', 'per-phase 5-bit delay trim; calibration from edge histograms is digital')],
+        excluded=['Code sweep judged by sims.ptrim_summary (step <= 1 deg at 810 MHz, monotonic, range >= 11.4 deg); '
+                  'clock jitter added by the trim stages is not simulated']),
     cdr=dict(
         key=[('acq', 'i_ibpll_uA', 'PLL charge-pump bias delivered in acquisition (10 uA)'),
              ('hold_idle', 'i_ibpll_uA', 'PLL charge pump disabled in hold (0)'),
@@ -106,19 +118,16 @@ META = dict(
                  'integration item'),
                 ('wire_cdr_fpga_oversample', 'open', 'cfg_raw=1 streams all eight samples per ring cycle (RTL simulated); '
                  'D2H transport pending')],
-        excluded=['Phase interpolator removed (lead decision): dual-loop CDR on a second pt_pll_ring instance (timing '
-                  'family, instantiated unchanged at integration) for half/quarter rate; full rate uses 8x oversampling '
-                  'with digital blind phase picking (no analog tracking)',
-                  'The bang-bang pump is a separate weak pump on the PLL loop-filter node (ATB_VCTRL), not the PLL\'s own '
-                  'pump: freq_hold gates its REF (at an FBCK falling edge) and clamps its pump bias IB_PLL; the pt_pll_ring '
-                  'HOLD input (timing r6) is tied low and not used yet',
-                  'Extracted closed loop uses an analog-behavioural phase detector (sample/holds + smooth logic, ~4 ns '
-                  'decision filter) as a stand-in for the RTL, which decides every 20-bit word; long windows, ppm, SSC '
-                  'and the frequency-counter hand-over (FLL) are behavioural (RTL + analog loop model)',
-                  'The FLL hand-over step (cfg_fll_en) needs >100 us of ring time and is not simulated extracted',
-                  'Cold acquisition is not simulated: VCTRL is pre-charged near the 625 MHz lock value before the '
-                  'frequency loop runs',
-                  'Each extracted result records the sha256 of the pll_ring.ext.spice it used',
+        excluded=['AC-3 (r-ac3): no phase interpolator; the RX pt_pll_ring runs with HOLD=1 (PFD in reset) from enable '
+                  'in wired CDR mode and the per-bit pump legs (8..64 nA unit, 4 legs) on its loop-filter node are the only '
+                  'loop actuator (FLL and PD on the same legs, no hand-over); pfd_mode=1 (HDMI/DVI) uses the PLL PFD',
+                  'Extracted closed loop (pll_ring.ext + cdr.ext + slicer.ext) uses an analog-behavioural per-bit Alexander '
+                  'PD stand-in (sample/holds + smooth XOR) with lat_extra ring cycles of delay; the capture-side PD circuit '
+                  'is not in these runs',
+                  'The FLL is not simulated: VCTRL and the filter integrator are pre-set to vc0 and the line rate is offset '
+                  'from the measured free-running ring (free_*) by the case ppm',
+                  'SSC is checked as a -400 ppm/us ramp over the run, not a full 33 kHz triangle',
+                  'Each extracted result records the sha256 of the pll_ring/cdr/slicer netlists it used',
                   'Ring port phase error of pt_pll_ring (timing evidence) is included in the extracted runs as-is',
                   'Ring-rate capture is the fast-cell block pt_wrx_cap (capture.py), which is not part of this evidence flow']),
 )
@@ -137,11 +146,16 @@ def write(block, res):
     sch = sims.get('sch_typical_27C_3.3V', {})
     corners = {k: v for k, v in sims.items() if k.startswith('ext_') and k != nom_key}
     gx = lay.get('gds_export', {})
-    closed = {k: v for k, v in res.get('closed', {}).items() if isinstance(v, dict)}
+    closed = {k: v for k, v in (res.get('ac3') or res.get('closed') or {}).items() if isinstance(v, dict)}
+    for k, v in closed.items():     # AC-3 free-running reference runs measure f1 only
+        if k.startswith('free_'):
+            v.setdefault('gating', False)
     clean_pass = (lay['drc_errors'] == 0 and lay['lvs_unique_match'] and gx.get('pass') and nom
                   and all(m.get('pass') for m in nom.values() if m.get('gating', True))
                   and all(m.get('pass') for m in closed.values() if m.get('gating', True)))
     corner_fail = sorted(f'{k}:{c}' for k, v in corners.items() for c, m in v.items() if not m.get('pass') and m.get('gating', True))
+    if block == 'slicer':      # r2: the ring plan is qualified across the envelope, so corners gate clean
+        clean_pass = bool(clean_pass) and not corner_fail
     nongating_fail = sorted(f'{k}:{c}' for k, v in sims.items() for c, m in v.items() if not m.get('pass') and not m.get('gating', True))
     explore = res.get('explore', {})
     perf = []
@@ -164,7 +178,7 @@ def write(block, res):
     for case, m in closed.items():
         perf.append(dict(case=case, metric='extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt)' +
                          ('' if m.get('gating', True) else ' [non-gating]'),
-                         target='acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle',
+                         target='AC-3: 0 errors over > 2000 bits after settle with HOLD_PLL high throughout (free_*: f1 only)',
                          extracted_nominal={k: v for k, v in m.items() if _num(v) or isinstance(v, bool)}))
     for case, m in explore.items():
         perf.append(dict(case=case, metric='exploratory (non-gating, extracted tt/27C/3.3V)', target='above nominal rate',
@@ -172,7 +186,8 @@ def write(block, res):
     safe = res.get('safe', {})
     safe_pass = bool(safe) and all(m.get('pass') for m in safe.values() if m.get('gating', True))
     hashes = {}
-    for rel in [f'{block}.spice', f'generated/{block}.ext.spice', f'generated/{block}.gds'] + COMMON + (RTL if block == 'cdr' else []):
+    extra = ['slicer_compact.py', 'wrx_compact.py', 'generated/fast/ws_sa.spice', 'generated/fast/ws_ctl.spice'] if block == 'slicer' else []
+    for rel in [f'{block}.spice', f'generated/{block}.ext.spice', f'generated/{block}.gds'] + COMMON + extra + (RTL if block == 'cdr' else []):
         p = f.HERE / rel
         if p.exists():
             hashes[rel] = f.sha256(p)

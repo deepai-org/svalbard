@@ -1,0 +1,7 @@
+* NGSPICE file created from bringup_inv.ext - technology: gf180mcuD
+
+.subckt bringup_inv A Y VDD VSS
+X0 Y A VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X1 Y A VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+.ends
+

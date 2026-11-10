@@ -5,9 +5,12 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 
 import netlist
 import layout_engine as le
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import gds_uniquify as gu  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 PROJECT = HERE.parents[1]
@@ -34,6 +37,7 @@ def header(corner='typical', temp=27):
     corner = 'typical' if corner == 'tt' else corner
     return (f'.lib {MODELS}/sm141064.ngspice {corner}\n'
             f'.lib {MODELS}/sm141064.ngspice {res}\n'
+            f'.lib {MODELS}/sm141064.ngspice diode_{corner if corner in ("ss", "ff") else "typical"}\n'   # antenna diodes
             f'.include {MODELS}/design.ngspice\n'
             f'.temp {temp}\n'
             '.option method=gear reltol=1e-3\n')
@@ -85,7 +89,7 @@ def build_layout(block, rows=None, max_row_width=160.0, extra_trunk_nets=()):
                       extra_trunk_nets=extra_trunk_nets)
     macros = sorted({d.model for d in devices if d.model in netlist.MACROS})
     defs = ''.join((GENERATED / 'fast' / f'{m}.spice').read_text() for m in macros)
-    (work / 'schematic.spice').write_text(defs + netlist.flat_spice(ports, devices, top))
+    (work / 'schematic.spice').write_text(defs + with_antenna_diodes(netlist.flat_spice(ports, devices, top), rep))
     lvs = le.netgen_lvs(work, f'{top}.lvs.spice', top, 'schematic.spice', top)
     for m in macros:  # macro .mag files are needed to reopen the hierarchical layout
         shutil.copy(work / f'{m}.mag', GENERATED / 'fast' / f'{m}.mag') if (work / f'{m}.mag').exists() else None
@@ -101,6 +105,11 @@ def build_layout(block, rows=None, max_row_width=160.0, extra_trunk_nets=()):
             shutil.copy(f, GENERATED / f'{block}{suffix}')
     if (work / f'{top}.a.gds').exists():
         shutil.copy(work / f'{top}.a.gds', GENERATED / f'{block}.gds')
+        # block-unique subcell names (p_*/ct_* differ between blocks; the chip GDS merge is by name), then the
+        # required tapeout-precheck KLayout decks (DRC + antenna) -> generated/<block>-kldrc.json
+        pre = gu.publish_checked(GENERATED / f'{block}.gds', block, top)
+        kl = dict(kl, precheck=pre, precheck_clean=pre['clean'])
+        (work / 'klayout.json').write_text(json.dumps(kl, indent=1))
     # primitives are needed to reopen the hierarchical .mag
     prim_dir = GENERATED / 'primitives'
     prim_dir.mkdir(exist_ok=True)
@@ -110,6 +119,15 @@ def build_layout(block, rows=None, max_row_width=160.0, extra_trunk_nets=()):
     details = (work / 'drc-details.txt').read_text() if (work / 'drc-details.txt').exists() else ''
     (GENERATED / f'{block}-drc.txt').write_text(f'drc(full) error count: {drc_raw}\n{details}')
     return dict(ports=ports, devices=len(devices), layout=rep, drc_errors=drc, lvs=lvs, klayout=kl, work=str(work))
+
+
+def with_antenna_diodes(top_spice, rep, sub='VSS'):
+    """LVS reference = schematic + the generator's antenna diodes (layout_engine report)."""
+    lines = le.ad.spice_lines(rep.get('antenna_diodes', []), sub=sub)
+    if not lines:
+        return top_spice
+    k = top_spice.rstrip().rfind('.ends')
+    return top_spice[:k] + '\n'.join(lines) + '\n' + top_spice[k:]
 
 
 def extracted_subckt(block):
@@ -157,3 +175,51 @@ def klayout_drc(work, cell, timeout=7200):
     t = dbs[0].read_text()
     cats = Counter(re.findall(r'<item>.*?<category>(.*?)</category>', t, re.S))
     return dict(ran=True, violations=sum(cats.values()), by_rule=dict(cats), deck='gf180mcuD KLayout (sak-drc.sh -k)')
+
+
+# ------------------------------------------------- netlist-level subckt name checks
+# Extracted block netlists define their PCell subckts under generic names
+# (p_nfet_03v3_w1_l0p28, ...).  A chain bench that includes several of them gets
+# one definition per name: ngspice keeps one and ignores the rest.  This is
+# harmless only if the definitions are equivalent.  `subckt_defs` canonicalises
+# each definition (ports in order; R/C node pairs unordered; X lines as written).
+def subckt_defs(text):
+    import re as _re
+    t = text.replace('\n+', ' ')
+    out = {}
+    for m in _re.finditer(r'^\.subckt (\S+) (.*?)\n(.*?)^\.ends', t, _re.M | _re.S):
+        els = []
+        for line in m.group(3).splitlines():
+            f = line.split()
+            if not f or f[0].startswith('*'):
+                continue
+            els.append((f[0][0], tuple(sorted(f[1:3])), f[3]) if f[0][0] in 'CR' else ('X', tuple(f[1:])))
+        out[m.group(1)] = (m.group(2).split(), sorted(els))
+    return out
+
+
+def check_duplicate_subckts(paths):
+    """Return {name: [files]} for subckt names defined in more than one file,
+    with 'equivalent' True/False.  Use before running any multi-netlist bench."""
+    seen, res = {}, {}
+    for p in paths:
+        for n, d in subckt_defs(Path(p).read_text()).items():
+            if n in seen:
+                q, d0 = seen[n]
+                r = res.setdefault(n, dict(files=[str(q)], equivalent=True))
+                r['files'].append(str(p))
+                r['equivalent'] = r['equivalent'] and d == d0
+            else:
+                seen[n] = (p, d)
+    return res
+
+
+def uniquify_subckts(text, prefix, keep=()):
+    """Prefix every subckt defined in `text` (except the names in `keep`, e.g.
+    the top cell and macros another file must see) with `prefix__`, as
+    gds_uniquify does for GDS cell names."""
+    import re as _re
+    names = [n for n in _re.findall(r'^\.subckt (\S+)', text, _re.M) if n not in keep]
+    for n in sorted(names, key=len, reverse=True):
+        text = _re.sub(rf'(?<![\w#]){_re.escape(n)}(?![\w#])', f'{prefix}__{n}', text)
+    return text

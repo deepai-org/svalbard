@@ -1,0 +1,31 @@
+* NGSPICE file created from atb_leaf_s_flat.ext - technology: gf180mcuD
+
+.subckt atb_leaf_s_flat NODE BUS SEL VDD VSS
+X0 MID SEL NODE VSS nfet_03v3 ad=0.1848p pd=1.72u as=0.1848p ps=1.72u w=0.42u l=0.28u
+X1 MID SWB NODE VDD pfet_03v3 ad=0.3696p pd=2.56u as=0.3696p ps=2.56u w=0.84u l=0.28u
+X2 VSS SEL SWB VSS nfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=0.28u
+X3 VSS SWB MID VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X4 BUS SWB MID VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X5 BUS SEL MID VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X6 VDD SEL SWB VDD pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+C0 NODE VDD 0.25758f
+C1 VDD BUS 0.79659f
+C2 SEL VDD 1.44486f
+C3 SWB VDD 2.25727f
+C4 NODE SEL 0.06084f
+C5 SEL BUS 0.41696f
+C6 MID VDD 0.7671f
+C7 SWB NODE 0.35587f
+C8 SWB BUS 1.70185f
+C9 MID NODE 0.37139f
+C10 SWB SEL 1.40198f
+C11 MID BUS 1.17607f
+C12 MID SEL 5.49466f
+C13 SWB MID 5.23014f
+C14 BUS VSS 3.10976f
+C15 NODE VSS 0.46969f
+C16 SEL VSS 6.27131f
+C17 VDD VSS 16.8242f
+C18 MID VSS 3.31157f ; **FLOATING
+C19 SWB VSS 4.52109f ; **FLOATING
+.ends

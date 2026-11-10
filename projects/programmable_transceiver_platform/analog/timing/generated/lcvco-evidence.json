@@ -1,0 +1,1071 @@
+{
+ "block": "lcvco (pt_lc_qvco)",
+ "generated_utc": "2026-11-10T02:51:09Z",
+ "netlist": "schematic QVCO; tank inductor = lcvco/spiral.py model variants; pt_lo_ext extracted in chain runs",
+ "source_hashes": {
+  "qvco.spice": "sha256:97f463325c8c76b0164a7544cd5412d5d5c09621f1bcea552094fc3e3d9f20a8",
+  "spiral.spice": "sha256:f3ed97dd982466a7f790bb26a04ef385b5a7d6fbc640438f9c70a8c6bfbf3f80",
+  "spiral.py": "sha256:f5cde926a6565c2599b959e2e34588cbac037a9d3e4a4f046f4022a397aa8ba4",
+  "run_lcvco.py": "sha256:cc331288633667726392ecb9f6c3f00afbafbce1c67666618ca43ca96e354754",
+  "lo_ext.ext.spice": "sha256:a3bce1ff75c5f1f1186810c121bebbdfa6a6f79722593e943fd7fbb2b6d2d558"
+ },
+ "criteria": {
+  "coverage": "per extreme: f(band 0, VTUNE 3.0) >= 2.5 GHz and f(band 15, VTUNE 0.3) <= 2.4 GHz, oscillating, 80<|Q-I|<100 deg, LOI rail to rail (>90 %/<10 % VDD)",
+  "band_overlap": "tt: every band tuning range overlaps the next band",
+  "startup": "all 12 envelope points, low-Q +10 % L inductor, band 15 / VTUNE 0.3 (smallest swing)",
+  "chain": "QVCO -> extracted pt_lo_ext internal mode: tb_lo_ext criteria",
+  "negative": "EN=0 must not oscillate and must draw < 1 uA in the buffers (core: only the 10 uA IBIAS); coupling removed must fail quadrature",
+  "gate_resistance": "explicit Rg in qvco.spice: rgf = 16 ohm per 2 um finger, contacted both ends"
+ },
+ "coverage": [
+  {
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "spiral": "pt_spiral",
+   "f_max_hz": 2814713068.1498327,
+   "f_min_hz": 2159939176.1128006,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "covers_2p4_2p5": true
+  },
+  {
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_max_hz": 2635518353.7498155,
+   "f_min_hz": 1964420417.4000502,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "covers_2p4_2p5": true
+  },
+  {
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "spiral": "pt_spiral_llo",
+   "f_max_hz": 3059142400.0195785,
+   "f_min_hz": 2380759652.790012,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "covers_2p4_2p5": true
+  },
+  {
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "spiral": "pt_spiral_llo_lowq",
+   "f_max_hz": 3087610961.018912,
+   "f_min_hz": 2376521865.1894207,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "covers_2p4_2p5": true
+  },
+  {
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "spiral": "pt_spiral_lhi",
+   "f_max_hz": 2614748225.8933287,
+   "f_min_hz": 1976761195.38703,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "covers_2p4_2p5": true
+  }
+ ],
+ "band_codes_tt": [
+  {
+   "band": 0,
+   "f_vt_lo": 2611429705.5351863,
+   "f_vt_hi": 2814713068.1498327
+  },
+  {
+   "band": 1,
+   "f_vt_lo": 2570628004.42148,
+   "f_vt_hi": 2764439357.876026
+  },
+  {
+   "band": 2,
+   "f_vt_lo": 2533691766.261867,
+   "f_vt_hi": 2719179460.406028
+  },
+  {
+   "band": 3,
+   "f_vt_lo": 2496317931.0516987,
+   "f_vt_hi": 2673668112.2298927
+  },
+  {
+   "band": 4,
+   "f_vt_lo": 2465155033.600063,
+   "f_vt_hi": 2635886540.8997335
+  },
+  {
+   "band": 5,
+   "f_vt_lo": 2430641640.7803335,
+   "f_vt_hi": 2594289450.0625224
+  },
+  {
+   "band": 6,
+   "f_vt_lo": 2399261027.603498,
+   "f_vt_hi": 2556642412.6523123
+  },
+  {
+   "band": 7,
+   "f_vt_lo": 2367368196.775645,
+   "f_vt_hi": 2518574486.8404484
+  },
+  {
+   "band": 8,
+   "f_vt_lo": 2341487172.1625276,
+   "f_vt_hi": 2487784975.7689743
+  },
+  {
+   "band": 9,
+   "f_vt_lo": 2311780602.7736745,
+   "f_vt_hi": 2452621484.4736795
+  },
+  {
+   "band": 10,
+   "f_vt_lo": 2284669865.204478,
+   "f_vt_hi": 2420651058.308643
+  },
+  {
+   "band": 11,
+   "f_vt_lo": 2257015368.017641,
+   "f_vt_hi": 2388179466.910579
+  },
+  {
+   "band": 12,
+   "f_vt_lo": 2233798261.2114334,
+   "f_vt_hi": 2360996340.4556723
+  },
+  {
+   "band": 13,
+   "f_vt_lo": 2207900308.8852534,
+   "f_vt_hi": 2330801306.1810517
+  },
+  {
+   "band": 14,
+   "f_vt_lo": 2184192995.293064,
+   "f_vt_hi": 2303250577.5400825
+  },
+  {
+   "band": 15,
+   "f_vt_lo": 2159939176.1128006,
+   "f_vt_hi": 2275162731.014336
+  }
+ ],
+ "band_overlap_tt": true,
+ "startup": {
+  "su_tt22_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2052166061.2776785,
+   "q_minus_i_tank_deg": -89.32734100843439,
+   "q_minus_i_loi_deg": -89.24385889306163,
+   "tank_diff_peak_v": 1.33184,
+   "tank_q_diff_peak_v": 1.32607,
+   "tank_ip_v": [
+    1.16241,
+    2.4972
+   ],
+   "loi_ip_v": [
+    0.0374909,
+    3.14848
+   ],
+   "loi_qp_v": [
+    0.0388349,
+    3.14754
+   ],
+   "loi_duty": 0.5416322928851403,
+   "i_core_ma": 14.043999999999999,
+   "i_buf_ma": 8.760499999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_tt22_3.15_lowq",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_tt22_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_tt22_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2052422987.958434,
+   "q_minus_i_tank_deg": -89.2978866200493,
+   "q_minus_i_loi_deg": -89.21291630834781,
+   "tank_diff_peak_v": 1.34284,
+   "tank_q_diff_peak_v": 1.3369,
+   "tank_ip_v": [
+    1.3555,
+    2.70121
+   ],
+   "loi_ip_v": [
+    0.0528696,
+    3.3364
+   ],
+   "loi_qp_v": [
+    0.0544756,
+    3.33517
+   ],
+   "loi_duty": 0.5417514146325444,
+   "i_core_ma": 14.0878,
+   "i_buf_ma": 10.4045,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_tt22_3.35_lowq",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_tt22_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_tt32_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2051568218.74641,
+   "q_minus_i_tank_deg": -89.30796500845247,
+   "q_minus_i_loi_deg": -89.22450721331386,
+   "tank_diff_peak_v": 1.30345,
+   "tank_q_diff_peak_v": 1.29719,
+   "tank_ip_v": [
+    1.17677,
+    2.48309
+   ],
+   "loi_ip_v": [
+    0.0495799,
+    3.13845
+   ],
+   "loi_qp_v": [
+    0.0511597,
+    3.13726
+   ],
+   "loi_duty": 0.5434378538955178,
+   "i_core_ma": 13.8919,
+   "i_buf_ma": 8.908009999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_tt32_3.15_lowq",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_tt32_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_tt32_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2051808155.93742,
+   "q_minus_i_tank_deg": -89.2763067453193,
+   "q_minus_i_loi_deg": -89.19136188766349,
+   "tank_diff_peak_v": 1.31437,
+   "tank_q_diff_peak_v": 1.30794,
+   "tank_ip_v": [
+    1.36995,
+    2.68715
+   ],
+   "loi_ip_v": [
+    0.0667774,
+    3.32415
+   ],
+   "loi_qp_v": [
+    0.068652,
+    3.32265
+   ],
+   "loi_duty": 0.5437147986663248,
+   "i_core_ma": 13.934000000000001,
+   "i_buf_ma": 10.565700000000001,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_tt32_3.35_lowq",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_tt32_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ss22_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 1965088242.28752,
+   "q_minus_i_tank_deg": -89.21775732339262,
+   "q_minus_i_loi_deg": -88.17075830790185,
+   "tank_diff_peak_v": 1.20879,
+   "tank_q_diff_peak_v": 1.20039,
+   "tank_ip_v": [
+    1.05074,
+    2.26284
+   ],
+   "loi_ip_v": [
+    0.0660891,
+    3.12454
+   ],
+   "loi_qp_v": [
+    0.0661117,
+    3.12006
+   ],
+   "loi_duty": 0.5506963290186546,
+   "i_core_ma": 13.9372,
+   "i_buf_ma": 7.21687,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ss22_3.15_lowq",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_ss22_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ss22_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 1964976263.0867417,
+   "q_minus_i_tank_deg": -89.19569591599334,
+   "q_minus_i_loi_deg": -88.3079196403308,
+   "tank_diff_peak_v": 1.22291,
+   "tank_q_diff_peak_v": 1.21455,
+   "tank_ip_v": [
+    1.24209,
+    2.46837
+   ],
+   "loi_ip_v": [
+    0.0822141,
+    3.30887
+   ],
+   "loi_qp_v": [
+    0.0826016,
+    3.30397
+   ],
+   "loi_duty": 0.5494211179928946,
+   "i_core_ma": 14.0173,
+   "i_buf_ma": 8.64611,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ss22_3.35_lowq",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_ss22_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ss32_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 1964420417.4000502,
+   "q_minus_i_tank_deg": -89.01983278853406,
+   "q_minus_i_loi_deg": -87.41733718883586,
+   "tank_diff_peak_v": 1.16966,
+   "tank_q_diff_peak_v": 1.1587,
+   "tank_ip_v": [
+    1.07034,
+    2.24312
+   ],
+   "loi_ip_v": [
+    0.0837991,
+    3.11031
+   ],
+   "loi_qp_v": [
+    0.0831423,
+    3.10406
+   ],
+   "loi_duty": 0.554383014835303,
+   "i_core_ma": 13.7725,
+   "i_buf_ma": 7.35458,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ss32_3.15_lowq",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_ss32_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ss32_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 1964289221.945039,
+   "q_minus_i_tank_deg": -89.01105894831956,
+   "q_minus_i_loi_deg": -87.66324225578978,
+   "tank_diff_peak_v": 1.18377,
+   "tank_q_diff_peak_v": 1.17302,
+   "tank_ip_v": [
+    1.26172,
+    2.44865
+   ],
+   "loi_ip_v": [
+    0.101876,
+    3.29253
+   ],
+   "loi_qp_v": [
+    0.101836,
+    3.28582
+   ],
+   "loi_duty": 0.5532931308805908,
+   "i_core_ma": 13.8509,
+   "i_buf_ma": 8.79954,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ss32_3.35_lowq",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_ss32_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ff22_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2149557621.0415897,
+   "q_minus_i_tank_deg": -89.48075286106119,
+   "q_minus_i_loi_deg": -89.37164131621711,
+   "tank_diff_peak_v": 1.36541,
+   "tank_q_diff_peak_v": 1.36171,
+   "tank_ip_v": [
+    1.30185,
+    2.66926
+   ],
+   "loi_ip_v": [
+    0.033837,
+    3.14945
+   ],
+   "loi_qp_v": [
+    0.0346849,
+    3.14886
+   ],
+   "loi_duty": 0.5394228867699028,
+   "i_core_ma": 13.8668,
+   "i_buf_ma": 10.947999999999999,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ff22_3.15_lowq",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_ff22_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ff22_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2150075252.6338425,
+   "q_minus_i_tank_deg": -89.46127714470008,
+   "q_minus_i_loi_deg": -89.35059127069445,
+   "tank_diff_peak_v": 1.37459,
+   "tank_q_diff_peak_v": 1.37078,
+   "tank_ip_v": [
+    1.49562,
+    2.8722
+   ],
+   "loi_ip_v": [
+    0.0507715,
+    3.3373
+   ],
+   "loi_qp_v": [
+    0.051811,
+    3.33651
+   ],
+   "loi_duty": 0.5403268114384004,
+   "i_core_ma": 13.8909,
+   "i_buf_ma": 12.9004,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ff22_3.35_lowq",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_ff22_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ff32_3.15_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2148970965.2532887,
+   "q_minus_i_tank_deg": -89.45246368776313,
+   "q_minus_i_loi_deg": -89.34415555111434,
+   "tank_diff_peak_v": 1.34218,
+   "tank_q_diff_peak_v": 1.33814,
+   "tank_ip_v": [
+    1.3143,
+    2.65851
+   ],
+   "loi_ip_v": [
+    0.0446283,
+    3.1412
+   ],
+   "loi_qp_v": [
+    0.04565,
+    3.14044
+   ],
+   "loi_duty": 0.5411581664120136,
+   "i_core_ma": 13.7261,
+   "i_buf_ma": 11.1096,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ff32_3.15_lowq",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/su_ff32_3.15_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "su_ff32_3.35_lowq": {
+   "vtune_v": 0.3,
+   "band": 15,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_hz": 2149465213.0549917,
+   "q_minus_i_tank_deg": -89.43202531210234,
+   "q_minus_i_loi_deg": -89.32291845788768,
+   "tank_diff_peak_v": 1.35145,
+   "tank_q_diff_peak_v": 1.34731,
+   "tank_ip_v": [
+    1.50803,
+    2.86151
+   ],
+   "loi_ip_v": [
+    0.0632468,
+    3.32694
+   ],
+   "loi_qp_v": [
+    0.0644635,
+    3.32596
+   ],
+   "loi_duty": 0.5421166213845995,
+   "i_core_ma": 13.7506,
+   "i_buf_ma": 13.069,
+   "oscillates": true,
+   "quadrature_ok": true,
+   "loi_rail_to_rail": true,
+   "case": "su_ff32_3.35_lowq",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/su_ff32_3.35_lowq.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  }
+ },
+ "startup_pass": true,
+ "chain": {
+  "chain_tt27_b6_vt1.65": {
+   "vtune_v": 1.65,
+   "band": 6,
+   "spiral": "pt_spiral",
+   "f_lo_hz": 2431285785.487655,
+   "lo_i_v": [
+    1.12115,
+    3.20852
+   ],
+   "lo_q_v": [
+    0.707176,
+    3.18955
+   ],
+   "q_minus_i_deg": -74.80635538104326,
+   "rx_switch_vgs_on_v": 1.5585200000000001,
+   "rx_switch_vgs_off_v": -0.5288499999999998,
+   "i_vdd_ma": 28.6643,
+   "i_buf_ma": 9.42932,
+   "pass": false,
+   "case": "chain_tt27_b6_vt1.65",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/chain_tt27_b6_vt1.65.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  },
+  "chain_ss32_lhi_lowq_b0_vt1.65": {
+   "vtune_v": 1.65,
+   "band": 0,
+   "spiral": "pt_spiral_lhi_lowq",
+   "f_lo_hz": null,
+   "lo_i_v": [
+    3.14612,
+    3.15838
+   ],
+   "lo_q_v": [
+    2.98198,
+    3.17414
+   ],
+   "q_minus_i_deg": null,
+   "rx_switch_vgs_on_v": 1.5083800000000003,
+   "rx_switch_vgs_off_v": 1.49612,
+   "i_vdd_ma": 17.8561,
+   "i_buf_ma": 7.47756,
+   "pass": false,
+   "case": "chain_ss32_lhi_lowq_b0_vt1.65",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/lcvco/sim/chain_ss32_lhi_lowq_b0_vt1.65.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs",
+   "sim_messages": [
+    "Error: measure  per  trig(TRIG) : out of interval",
+    "Error: measure  tiq  trig(TRIG) : out of interval",
+    ".measure tran per trig v(loip) val=1.575 td=2.3999999999999997e-08 rise=1 targ v(loip) val=1.575 td=2.3999999999999997e-08 rise=5 failed!",
+    ".measure tran tiq trig v(loip) val=1.575 td=2.3999999999999997e-08 rise=1 targ v(loqp) val=1.575 td=2.3999999999999997e-08 rise=1 failed!"
+   ]
+  },
+  "chain_ff22_llo_b15_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 15,
+   "spiral": "pt_spiral_llo",
+   "f_lo_hz": 2493501312.2050653,
+   "lo_i_v": [
+    0.348314,
+    3.20849
+   ],
+   "lo_q_v": [
+    0.221571,
+    3.23707
+   ],
+   "q_minus_i_deg": -90.8804927158593,
+   "rx_switch_vgs_on_v": 1.55849,
+   "rx_switch_vgs_off_v": -1.301686,
+   "i_vdd_ma": 31.8573,
+   "i_buf_ma": 12.5984,
+   "pass": true,
+   "case": "chain_ff22_llo_b15_vt3.0",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/chain_ff22_llo_b15_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  }
+ },
+ "chain_pass": false,
+ "negative": {
+  "neg_en0": {
+   "vtune_v": 1.65,
+   "band": 8,
+   "spiral": "pt_spiral",
+   "f_hz": null,
+   "q_minus_i_tank_deg": null,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": -1.35611e-10,
+   "tank_q_diff_peak_v": 2.74891e-13,
+   "tank_ip_v": [
+    3.04635,
+    3.04635
+   ],
+   "loi_ip_v": [
+    3.3,
+    3.3
+   ],
+   "loi_qp_v": [
+    3.3,
+    3.3
+   ],
+   "loi_duty": null,
+   "i_core_ma": 0.010000799999999999,
+   "i_buf_ma": 1.78846e-07,
+   "oscillates": false,
+   "quadrature_ok": false,
+   "loi_rail_to_rail": false,
+   "case": "neg_en0",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/neg_en0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs",
+   "sim_messages": [
+    "Error: measure  per  trig(TRIG) : out of interval",
+    "Error: measure  tiq  trig(TRIG) : out of interval",
+    "Error: measure  tlo  trig(TRIG) : out of interval",
+    "Error: measure  thi  trig(TRIG) : out of interval",
+    ".measure tran per trig v(di) val=0 td=2.2e-08 rise=1 targ v(di) val=0 td=2.2e-08 rise=11 failed!"
+   ]
+  },
+  "neg_nocouple": {
+   "vtune_v": 1.65,
+   "band": 8,
+   "spiral": "pt_spiral",
+   "f_hz": 2338399085.218278,
+   "q_minus_i_tank_deg": -148.39162572519604,
+   "q_minus_i_loi_deg": -147.07501350425468,
+   "tank_diff_peak_v": 2.23093,
+   "tank_q_diff_peak_v": 2.21688,
+   "tank_ip_v": [
+    0.822942,
+    3.05702
+   ],
+   "loi_ip_v": [
+    -0.00576359,
+    3.33922
+   ],
+   "loi_qp_v": [
+    -0.005649,
+    3.33812
+   ],
+   "loi_duty": 0.5449592300119492,
+   "i_core_ma": 13.3199,
+   "i_buf_ma": 8.76793,
+   "oscillates": true,
+   "quadrature_ok": false,
+   "loi_rail_to_rail": true,
+   "case": "neg_nocouple",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/lcvco/sim/neg_nocouple.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+  }
+ },
+ "negative_checks_fail_as_expected": true,
+ "phase_noise_estimate": {
+  "nominal": {
+   "L_1e+05_dbc_hz": -104.5202567227424,
+   "L_1e+06_dbc_hz": -124.5202567227424,
+   "L_3e+06_dbc_hz": -134.06268181713565,
+   "jitter_rms_ps_outside_bw": 0.05459541970151976,
+   "q": 9.2,
+   "vpk_diff": 1.93312,
+   "rp_ohm": 375.3009415831438,
+   "psig_w": 0.0024893042624915176,
+   "noise_factor": 3.0,
+   "qvco_penalty_db": 3.0,
+   "loop_bw_hz": 1000000.0,
+   "budget_ps": "0.524 ps per contribution at -30 dB EVM (spec/clock-feasibility-envelope.md)"
+  },
+  "low_q": {
+   "L_1e+05_dbc_hz": -97.67842836806817,
+   "L_1e+06_dbc_hz": -117.67842836806817,
+   "L_3e+06_dbc_hz": -127.2208534624614,
+   "jitter_rms_ps_outside_bw": 0.12001834305552024,
+   "q": 5.2,
+   "vpk_diff": 1.16966,
+   "rp_ohm": 212.12661915569,
+   "psig_w": 0.0016123677936382438,
+   "noise_factor": 3.0,
+   "qvco_penalty_db": 3.0,
+   "loop_bw_hz": 1000000.0,
+   "budget_ps": "0.524 ps per contribution at -30 dB EVM (spec/clock-feasibility-envelope.md)"
+  }
+ },
+ "spiral": {
+  "geometry": {
+   "turns": 3,
+   "width_um": 25.0,
+   "space_um": 2.5,
+   "dout_um": 300.0,
+   "under_w_um": 12.0,
+   "f_hz": 2450000000.0,
+   "strap": [
+    "metal5",
+    "metal4",
+    "metal3"
+   ],
+   "underpass": [
+    "metal2",
+    "metal1"
+   ]
+  },
+  "stack": {
+   "metal1": [
+    1.23,
+    0.55,
+    0.09
+   ],
+   "metal2": [
+    2.38,
+    0.55,
+    0.09
+   ],
+   "metal3": [
+    3.53,
+    0.55,
+    0.09
+   ],
+   "metal4": [
+    4.68,
+    0.55,
+    0.09
+   ],
+   "metal5": [
+    5.83,
+    1.0025,
+    0.04
+   ]
+  },
+  "substrate_params": {
+   "nominal": {
+    "gsub": 4e-08,
+    "csub": 0.006
+   },
+   "worst": {
+    "gsub": 1.2e-07,
+    "csub": 0.002
+   },
+   "best": {
+    "gsub": 1.3e-08,
+    "csub": 0.018
+   }
+  },
+  "crowding": 1.3,
+  "via_ohm": 0.3,
+  "variants": {
+   "pt_spiral": {
+    "L_nH": 2.9111254165224456,
+    "Rs_ohm": 4.333266104482999,
+    "Rdc_ohm": 3.1207941176470584,
+    "R_turns_ohm": 3.3957661044829996,
+    "R_underpass_ohm": 0.6375,
+    "length_um": 2577.5,
+    "din_um": 140.0,
+    "metal_area_um2": 64437.5,
+    "footprint_um2": 102000.0,
+    "Cox_total_fF": 724.8797076841358,
+    "Cs_fF": 51.79589999999999,
+    "Csi_total_fF": 386.62500000000006,
+    "Rsi_total_ohm": 387.97284190106694,
+    "shunt_per_terminal_ohm": 1865.8087777402186,
+    "shunt_per_terminal_fF": 131.3156114376994,
+    "Q_series": 10.341689849728564,
+    "Rp_diff_ohm": 412.2465639550383,
+    "Q_eff": 9.199202431697751,
+    "substrate": "nominal",
+    "rs_scale": 1.0,
+    "l_scale": 1.0,
+    "f_hz": 2450000000.0
+   },
+   "pt_spiral_lowq": {
+    "L_nH": 2.9111254165224456,
+    "Rs_ohm": 6.499899156724499,
+    "Rdc_ohm": 3.1207941176470584,
+    "R_turns_ohm": 3.3957661044829996,
+    "R_underpass_ohm": 0.6375,
+    "length_um": 2577.5,
+    "din_um": 140.0,
+    "metal_area_um2": 64437.5,
+    "footprint_um2": 102000.0,
+    "Cox_total_fF": 724.8797076841358,
+    "Cs_fF": 51.79589999999999,
+    "Csi_total_fF": 128.87500000000003,
+    "Rsi_total_ohm": 129.324280633689,
+    "shunt_per_terminal_ohm": 482.99466467338686,
+    "shunt_per_terminal_fF": 133.84268396745006,
+    "Q_series": 6.894459899819043,
+    "Rp_diff_ohm": 234.0913383889183,
+    "Q_eff": 5.223702991449517,
+    "substrate": "worst",
+    "rs_scale": 1.5,
+    "l_scale": 1.0,
+    "f_hz": 2450000000.0
+   },
+   "pt_spiral_lhi": {
+    "L_nH": 3.2022379581746905,
+    "Rs_ohm": 4.333266104482999,
+    "Rdc_ohm": 3.1207941176470584,
+    "R_turns_ohm": 3.3957661044829996,
+    "R_underpass_ohm": 0.6375,
+    "length_um": 2577.5,
+    "din_um": 140.0,
+    "metal_area_um2": 64437.5,
+    "footprint_um2": 102000.0,
+    "Cox_total_fF": 724.8797076841358,
+    "Cs_fF": 51.79589999999999,
+    "Csi_total_fF": 386.62500000000006,
+    "Rsi_total_ohm": 387.97284190106694,
+    "shunt_per_terminal_ohm": 1865.8087777402186,
+    "shunt_per_terminal_fF": 131.3156114376994,
+    "Q_series": 11.37585883470142,
+    "Rp_diff_ohm": 487.5083765254511,
+    "Q_eff": 9.88968658107829,
+    "substrate": "nominal",
+    "rs_scale": 1.0,
+    "l_scale": 1.1,
+    "f_hz": 2450000000.0
+   },
+   "pt_spiral_llo": {
+    "L_nH": 2.620012874870201,
+    "Rs_ohm": 4.333266104482999,
+    "Rdc_ohm": 3.1207941176470584,
+    "R_turns_ohm": 3.3957661044829996,
+    "R_underpass_ohm": 0.6375,
+    "length_um": 2577.5,
+    "din_um": 140.0,
+    "metal_area_um2": 64437.5,
+    "footprint_um2": 102000.0,
+    "Cox_total_fF": 724.8797076841358,
+    "Cs_fF": 51.79589999999999,
+    "Csi_total_fF": 386.62500000000006,
+    "Rsi_total_ohm": 387.97284190106694,
+    "shunt_per_terminal_ohm": 1865.8087777402186,
+    "shunt_per_terminal_fF": 131.3156114376994,
+    "Q_series": 9.307520864755707,
+    "Rp_diff_ohm": 341.07898243752106,
+    "Q_eff": 8.456790665755411,
+    "substrate": "nominal",
+    "rs_scale": 1.0,
+    "l_scale": 0.9,
+    "f_hz": 2450000000.0
+   },
+   "pt_spiral_lhi_lowq": {
+    "L_nH": 3.2022379581746905,
+    "Rs_ohm": 6.499899156724499,
+    "Rdc_ohm": 3.1207941176470584,
+    "R_turns_ohm": 3.3957661044829996,
+    "R_underpass_ohm": 0.6375,
+    "length_um": 2577.5,
+    "din_um": 140.0,
+    "metal_area_um2": 64437.5,
+    "footprint_um2": 102000.0,
+    "Cox_total_fF": 724.8797076841358,
+    "Cs_fF": 51.79589999999999,
+    "Csi_total_fF": 128.87500000000003,
+    "Rsi_total_ohm": 129.324280633689,
+    "shunt_per_terminal_ohm": 482.99466467338686,
+    "shunt_per_terminal_fF": 133.84268396745006,
+    "Q_series": 7.583905889800946,
+    "Rp_diff_ohm": 269.533941601423,
+    "Q_eff": 5.467816213536529,
+    "substrate": "worst",
+    "rs_scale": 1.5,
+    "l_scale": 1.1,
+    "f_hz": 2450000000.0
+   },
+   "pt_spiral_llo_lowq": {
+    "L_nH": 2.620012874870201,
+    "Rs_ohm": 6.499899156724499,
+    "Rdc_ohm": 3.1207941176470584,
+    "R_turns_ohm": 3.3957661044829996,
+    "R_underpass_ohm": 0.6375,
+    "length_um": 2577.5,
+    "din_um": 140.0,
+    "metal_area_um2": 64437.5,
+    "footprint_um2": 102000.0,
+    "Cox_total_fF": 724.8797076841358,
+    "Cs_fF": 51.79589999999999,
+    "Csi_total_fF": 128.87500000000003,
+    "Rsi_total_ohm": 129.324280633689,
+    "shunt_per_terminal_ohm": 482.99466467338686,
+    "shunt_per_terminal_fF": 133.84268396745006,
+    "Q_series": 6.205013909837138,
+    "Rp_diff_ohm": 198.7658221372666,
+    "Q_eff": 4.928245467688846,
+    "substrate": "worst",
+    "rs_scale": 1.5,
+    "l_scale": 0.9,
+    "f_hz": 2450000000.0
+   }
+  },
+  "at_4p9ghz": {
+   "L_nH": 2.9111254165224456,
+   "Rs_ohm": 4.578312520671772,
+   "Rdc_ohm": 3.1207941176470584,
+   "R_turns_ohm": 3.640812520671772,
+   "R_underpass_ohm": 0.6375,
+   "length_um": 2577.5,
+   "din_um": 140.0,
+   "metal_area_um2": 64437.5,
+   "footprint_um2": 102000.0,
+   "Cox_total_fF": 724.8797076841358,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 386.62500000000006,
+   "Rsi_total_ohm": 387.97284190106694,
+   "shunt_per_terminal_ohm": 1834.7584532552569,
+   "shunt_per_terminal_fF": 127.40420680006768,
+   "Q_series": 19.57633686497629,
+   "Rp_diff_ohm": 1187.0016585481421,
+   "Q_eff": 13.243856345320886,
+   "substrate": "nominal",
+   "rs_scale": 1.0,
+   "l_scale": 1.0,
+   "f_hz": 4900000000.0
+  },
+  "fasthenry": {
+   "points": [
+    {
+     "f_hz": 1000000000.0,
+     "R_ohm": 2.79841,
+     "L_nH": 2.68895459452619,
+     "Q": 6.037428396839633
+    },
+    {
+     "f_hz": 1258930000.0,
+     "R_ohm": 2.8931,
+     "L_nH": 2.679134967783804,
+     "Q": 7.3250838201237425
+    },
+    {
+     "f_hz": 1584890000.0,
+     "R_ohm": 2.99905,
+     "L_nH": 2.668927443241586,
+     "Q": 8.862006301995631
+    },
+    {
+     "f_hz": 1995260000.0,
+     "R_ohm": 3.11214,
+     "L_nH": 2.6590487906065214,
+     "Q": 10.711407584491699
+    },
+    {
+     "f_hz": 2511890000.0,
+     "R_ohm": 3.22988,
+     "L_nH": 2.650109208115402,
+     "Q": 12.949645188056522
+    },
+    {
+     "f_hz": 3162280000.0,
+     "R_ohm": 3.35276,
+     "L_nH": 2.642382338758962,
+     "Q": 15.659337381739224
+    },
+    {
+     "f_hz": 3981070000.0,
+     "R_ohm": 3.48445,
+     "L_nH": 2.63584095982037,
+     "Q": 18.921895851569115
+    }
+   ],
+   "log_tail": "onditioner..\nconductor 0 from node nmetal3_0\nCalling gmres...\n1 2 3 4 5 6 7 8 9 10 11 12 13 \n\nAll impedance matrices dumped to file Zc.mat\n\nTimes:  Read geometry   0.000276\n        Multipole setup 0.246845\n        Scanning graph  5.2e-05\n        Form A M and Z  0.000132\n        form M'ZM       6e-06\n        Form precond    0.164429\n        GMRES time      0.337151\n   Total:               0.748891\n"
+  },
+  "fasthenry_vs_model": {
+   "L_ratio": 0.9106710910471789,
+   "R_ratio": 0.7424246484554066,
+   "fasthenry_at_f": {
+    "R_ohm": 3.21712356428452,
+    "L_nH": 2.651077759239669
+   }
+  },
+  "layout": {
+   "drc_count": 0,
+   "drc_report": "0\n\n",
+   "work": "/home/ubuntu/svalbard/scratch/timing/lcvco/layout",
+   "gds": true
+  },
+  "uncertainty": {
+   "L": "+-10 %: Mohan quotes 2-3 % vs field solvers; FastHenry (partial inductance of the drawn polyline, no substrate eddy currents) cross-checks it; the lead-in, the underpass return and the neighbouring QVCO inductor are not in the closed form. Bounded by variants pt_spiral_lhi/llo.",
+   "Rs": "-20 %/+50 % (crowding factor and vias); bounded by the low-Q variants (x1.5).",
+   "substrate": "Gsub x3 / Csub /3 (worst) vs nominal: substrate resistivity is not published for gf180mcuD.",
+   "Q": "Q_eff spans the nominal and the low-Q variants; the design must start and cover the band with low-Q."
+  }
+ },
+ "verdict": "fail"
+}

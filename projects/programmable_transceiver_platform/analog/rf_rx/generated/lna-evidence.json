@@ -3,13 +3,13 @@
  "top_cell": "pt_lna",
  "source_hashes": {
   "lna.spice": "sha256:ac5dfd439b8fda5b5df5ddd48ae9db0cccc2cc2fea47b01211749c0745b2f663",
-  "netlists.py": "sha256:833043cc904d05b58d27ed0171234b368d2abb6e5cb769ba9b412d7cba863614",
-  "rfrx_flow.py": "sha256:a3f7188401453a8c894ec1f7b81fbbd61397d1edd1123122250f5b982d7ca833"
+  "netlists.py": "sha256:fb4f51b6eede1d916e5a24128fdbfc250408585f135fdfdde4622b62084fbd93",
+  "rfrx_flow.py": "sha256:6fa4ba2ff246182b7c47dd4d2a9c95652d70c09a833ab3674ecb170dd0ee15a1"
  },
  "artifact_hashes": {
-  "lna.gds": "sha256:fef12160c2d3ed6c6bcb19efdedf3e4cae57e092a9149f8e9748137671a3ff90",
-  "lna.mag": "sha256:06d05c69effd981ed02a372703c78835194a0fb0d262c6e8512e3ad43a2f3e29",
-  "lna.ext.spice": "sha256:f577bb2f59e6de81fba6f0f363ec5c5f6679f4478f658564a426d549dcac37a8",
+  "lna.gds": "sha256:461087f9dcae15f046ded92ae6019cfc6f988d34ec69ddfe2b48670edb87ea62",
+  "lna.mag": "sha256:1a35a2c015bc8b394362823eef8fe07eb84d04a2fe54dae087462fc67f75e1e8",
+  "lna.ext.spice": "sha256:a34c6f51d6eee29688d623c0d361c51d2d6d13182c3c946e276551e3d96d29bf",
   "lna-lvs.txt": "sha256:b3f2d5fc0d8e17787f7953383e607f4686dd0b62831639dc7203df5a60284951"
  },
  "images": {
@@ -125,8 +125,8 @@
      ],
      "bypass_gain_into_mixer_model_db": -12.0252,
      "chain_conversion_gain_db": {
-      "gain_i_db": 10.914592781297356,
-      "gain_q_db": 12.641982611367242,
+      "gain_i_db": 10.914592780746768,
+      "gain_q_db": 12.641982609526835,
       "bb_pp_i_v": 0.0310495,
       "bb_pp_q_v": 0.0290076,
       "idd_a": 0.00381818,
@@ -202,19 +202,20 @@
    "metric": "chain NF incl. noise folding (transient noise, I output), board match: 5-9 MHz / 2-9 MHz band (dB)",
    "target": 6.0,
    "extracted_nominal": [
-    12.078812204788358,
-    14.085028271339919
+    12.078812204425695,
+    14.08502827165847
    ],
    "detail": {
-    "gain_i_db": 28.87950080093014,
-    "out_psd_i_v2_hz": 3.280458355829245e-14,
+    "gain_i_db": 28.879500800886497,
+    "out_psd_i_v2_hz": 3.280458356036894e-14,
     "bins": 10,
-    "nf_i_db": 14.085028271339919,
+    "nf_i_db": 14.08502827165847,
     "psd_by_band": {
-     "2-3MHz": 8.134816336120968e-14,
-     "5-7MHz": 1.88872864073736e-14,
-     "7-9MHz": 2.245009080775267e-14
+     "2-3MHz": 8.134816337932692e-14,
+     "5-7MHz": 1.8887286400437217e-14,
+     "7-9MHz": 2.2450090810821674e-14
     },
+    "nf_i_5to9mhz_db": 12.078812204425695,
     "mode": "lna",
     "board_match": {
      "order": "series_at_pad",
@@ -241,37 +242,36 @@
     "trnoise_k": 1.6903560324032997e-11,
     "channel": "I (Q mixer present, noiseless)",
     "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
-    "board_lna_15db_1p5db_nf_db": 3.4063206671463995,
-    "nf_i_5to9mhz_db": 12.078812204788358,
-    "board_lna_15db_1p5db_nf_5to9mhz_db": 2.7675586764146605,
-    "note_5to9": "5-9 MHz value computed from the same run data with the same code now in tb.chain_tnoise"
+    "board_lna_15db_1p5db_nf_db": 3.4063206672641733,
+    "board_lna_15db_1p5db_nf_5to9mhz_db": 2.7675586763167948
    }
   },
   {
    "metric": "same with a board LNA (15 dB gain, 1.5 dB NF) ahead of the on-chip LNA (dB, Friis), 5-9 / 2-9 MHz",
    "extracted_nominal": [
-    2.7675586764146605,
-    3.4063206671463995
+    2.7675586763167948,
+    3.4063206672641733
    ]
   },
   {
    "metric": "chain NF via the LNA bypass (unmatched), 5-9 / 2-9 MHz, and with the board LNA 5-9 / 2-9 MHz (dB)",
    "extracted_nominal": [
-    22.220372538452583,
-    26.505554823045667,
-    8.23060974234126,
-    11.91013950485399
+    21.548912969891166,
+    28.808165873784578,
+    7.707300510482082,
+    14.05079702650983
    ],
    "detail": {
-    "gain_i_db": 14.098247498919722,
-    "out_psd_i_v2_hz": 1.9048547003268586e-14,
+    "gain_i_db": 14.660120580936413,
+    "out_psd_i_v2_hz": 3.683920650450937e-14,
     "bins": 10,
-    "nf_i_db": 26.505554823045667,
+    "nf_i_db": 28.808165873784578,
     "psd_by_band": {
-     "2-3MHz": 6.683715793297632e-14,
-     "5-7MHz": 6.442600564064583e-15,
-     "7-9MHz": 7.760187977618717e-15
+     "2-3MHz": 1.5649825209449456e-13,
+     "5-7MHz": 3.536478985855367e-15,
+     "7-9MHz": 1.0312411228170763e-14
     },
+    "nf_i_5to9mhz_db": 21.548912969891166,
     "mode": "bypass",
     "board_match": null,
     "lna_nf_input_db": null,
@@ -287,17 +287,15 @@
     "trnoise_k": 1.6903560324032997e-11,
     "channel": "I (Q mixer present, noiseless)",
     "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
-    "board_lna_15db_1p5db_nf_db": 11.91013950485399,
-    "nf_i_5to9mhz_db": 22.220372538452583,
-    "board_lna_15db_1p5db_nf_5to9mhz_db": 8.23060974234126,
-    "note_5to9": "5-9 MHz value computed from the same run data with the same code now in tb.chain_tnoise"
+    "board_lna_15db_1p5db_nf_db": 14.05079702650983,
+    "board_lna_15db_1p5db_nf_5to9mhz_db": 7.707300510482082
    }
   },
   {
    "metric": "RF pad -> I/Q baseband conversion gain with LNA, no board match (dB)",
    "extracted_nominal": {
-    "gain_i_db": 15.306376163288668,
-    "gain_q_db": 14.555090874571086,
+    "gain_i_db": 15.306376163340252,
+    "gain_q_db": 14.555090874385225,
     "bb_pp_i_v": 0.0428942,
     "bb_pp_q_v": 0.0340914,
     "idd_a": 0.00655294,
@@ -311,8 +309,8 @@
   {
    "metric": "same with ideal lossless board L-match (dB)",
    "extracted_nominal": {
-    "gain_i_db": 26.266864938109364,
-    "gain_q_db": 26.84577022966287,
+    "gain_i_db": 26.26686493810461,
+    "gain_q_db": 26.84577022967936,
     "bb_pp_i_v": 0.133344,
     "bb_pp_q_v": 0.143819,
     "idd_a": 0.00655297,

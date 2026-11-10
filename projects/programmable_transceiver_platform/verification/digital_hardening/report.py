@@ -12,12 +12,15 @@ from pathlib import Path
 P = Path(__file__).resolve().parents[2]
 ROOT = P.parents[1]
 SOURCES = ['rtl/pt_digital_macro.sv', 'rtl/pt_host_link.sv', 'rtl/pt_digital.sv', 'rtl/pt_regfile.sv', 'rtl/pt_spi.sv',
-           'rtl/pt_core.sv', 'rtl/pt_fifo.sv', 'rtl/pt_pack.sv', 'rtl/pt_stream_link.sv', 'rtl/pt_stream_tx.sv',
-           'rtl/pt_stream_rx.sv', 'rtl/pt_frame.sv', 'rtl/pt_memory.sv', 'rtl/pt_pattern.sv', 'rtl/pt_helpers.sv',
+           'rtl/pt_dense_header.sv', 'rtl/pt_core.sv', 'rtl/pt_core_pair.sv', 'rtl/pt_dense_pair.sv', 'rtl/pt_dense_pair_link.sv',
+           'rtl/pt_pair_gearbox.sv', 'rtl/pt_fifo.sv', 'rtl/pt_memory.sv', 'rtl/pt_pattern.sv', 'rtl/pt_helpers.sv',
            'rtl/pt_clocktree_slow.sv', 'rtl/pt_freq_count.sv', 'rtl/pt_regmap_defs.svh', 'spec/debug-controls.json',
-           'sim/tb_pt_freq_count.sv', 'sim/tb_digital_wire20.sv', 'integration/pt_digital_macro.sdc',
+           'sim/tb_pt_freq_count.sv', 'sim/tb_digital_wire20.sv', 'sim/reference/pt_dense_transport.sv', 'integration/pt_digital_macro.sdc',
            'verification/digital_hardening/config.json', 'sim/tb_digital_gl.sv', 'sim/tb_async_fifo_regout.sv',
-           'verification/run_digital_hardening.sh']
+           'verification/run_digital_hardening.sh', 'verification/digital_hardening/report.py',
+           'verification/digital_hardening/Dockerfile', 'verification/digital_hardening/prepare_toolchain.py',
+           'verification/digital_hardening/gls.sh', 'verification/digital_hardening/gls_check.py',
+           'verification/digital_hardening/sta_signoff.py']
 
 
 def sha(p):
@@ -56,133 +59,75 @@ def fmax_table(sta):
 
 
 def curate(ev, sta, gls, pads, m, exp):
+    """Derive current verdicts only from the supplied run's measurements."""
     ft = fmax_table(sta)
-    tt = ft.get('tt_025C_3v30_nom', {})
-    ss = ft.get('ss_125C_3v00_max', {})
-    ssn = ft.get('ss_n40C_3v00_max', {})
-    worst = lambda clk: min([(ft[c][clk]['fmax_est_mhz'] or ft[c][clk]['target_mhz']) for c in ft if clk in ft[c]] or [None])
-    hw_tt = (tt.get('hword') or {}).get('fmax_est_mhz')
-    hw_ss = worst('hword') if ft else None
+    rows = [row for clocks in ft.values() for row in clocks.values()]
+    hold = [row['hold_slack_ns'] for row in rows]
+    setup_met = bool(rows) and all(row['meets_target'] for row in rows)
+    hold_met = bool(hold) and all(value is not None and value >= 0 for value in hold)
     sig = ev['signoff']
-    phys_clean = all(x == 0 for x in (sig.get('magic_drc_errors'), sig.get('klayout_drc_errors_librelane_gds'),
-                                     sig.get('lvs_errors'), m.get('antenna__violating__nets'),
-                                     m.get('route__drc_errors'))) and bool(exp) and \
-        exp['main']['violations'] == 0 and exp['antenna']['violations'] == 0
+    physical_checks = {
+        'magic': sig.get('magic_drc_errors'),
+        'klayout': sig.get('klayout_drc_errors_librelane_gds'),
+        'lvs': sig.get('lvs_errors'),
+        'antenna': m.get('antenna__violating__nets'),
+        'route': m.get('route__drc_errors'),
+        'export_drc': (exp or {}).get('main', {}).get('violations'),
+        'export_antenna': (exp or {}).get('antenna', {}).get('violations'),
+        'export_xor': sig.get('gds_export', {}).get('xor_vs_librelane_gds'),
+    }
+    rtl_current = not ev['hardened_copy_missing'] and not ev['hardened_copy_differences']
+    sdc_current = ev['sdc']['pnr'] is not None and ev['sdc']['pnr'] == ev['sdc']['signoff']
+    clean = rtl_current and sdc_current and all(value == 0 for value in physical_checks.values())
     g = gls or {}
-    pad_ss = (pads or {}).get('summary', {}).get('ss_125C_2v97', {})
-    padc = (pads or {}).get('corners', {}).get('ss_125C_2v97', {})
-    cmos_in_ss = min((i['f_ddr_max_mhz'] for i in padc.get('inputs', []) if i['cell'] == 'bi_24t' and i['when'].startswith('!CS')), default=None)
+    hashes = g.get('source_hashes', {})
+    current_gls = bool(hashes) and all((P/name).exists() and sha(P/name) == digest
+                                     for name, digest in hashes.items())
+    gls_pass = g.get('status') == 'pass' and current_gls and rtl_current
+    reset = g.get('reset_safety', {})
+    safe = gls_pass and reset.get('reset_snapshots', 0) >= 4 and reset.get('violations') == 0
+    observable = gls_pass and g.get('observability', {}).get('mismatches') == []
+    loopback = gls_pass and g.get('host_link_loopback', {}).get('status') == 'pass'
+    def verdict(passed, evidence):
+        return dict(proposal='pass' if passed else 'open', evidence=[evidence])
+    area = m.get('design__die__area')
+    state = m.get('design__instance__count__class:sequential_cell')
     return dict(
         timing=dict(
-            method='OpenSTA on the routed netlist with OpenRCX SPEF (nom RC at tt, max RC at ss, min RC at ff), '
-                   'propagated CTS clocks, integration/pt_digital_macro.sdc at its targets. fmax_est = 1/(T - WNS) '
-                   'over paths launched and captured by the same clock.',
-            envelope_note='No Liberty exists inside the narrow envelope (22-32 C, 3.15-3.35 V). The nearest '
-                          'characterized corners are tt_025C_3v30 (inside), ss_125C_3v00 / ss_n40C_3v00 and '
-                          'ff_n40C_3v60 / ff_125C_3v60 (outside, pessimistic in both directions).',
-            per_corner=ft,
-            hold='met at every clock and corner (worst hold slack in sta-report.json)',
-            crossings_after_exceptions='Remaining timed clock-to-clock paths are the bounded categories of the SDC '
-                                       '(Gray pointers, FIFO storage reads, held handshake registers) plus one '
-                                       'undocumented crossing: ref-domain cal_busy ORed combinationally into the '
-                                       'rf_mute output (rftx-constrained). See open_risks.'),
+            method='OpenSTA on the recorded routed netlist and SPEF, using the specification clock periods.',
+            per_corner=ft, measured_setup_targets_met=setup_met,
+            measured_hold_targets_met=hold_met,
+            envelope_note='Nominal tt is inside the accepted envelope. The listed broad ss/ff corners '
+                          'do not replace qualification at 22–32 C and 3.15–3.35 V.'),
         tests=dict(
             digital=dict(
-                safe=dict(proposal='pass', evidence=['evidence/digital-hardening-evidence.json#gate_level.reset_safety',
-                                                     'evidence/regfile-verification.json'],
-                          note=f"Post-route netlist: {g.get('reset_safety', {}).get('reset_snapshots')} snapshots taken "
-                               "while reset is asserted (RESET_N+POR, RESET_N alone, POR alone, RESET_N mid-write): "
-                               f"{g.get('reset_safety', {}).get('violations')} violations; analog_cfg/debug_cfg at "
-                               "declared defaults, island_en/island_on/ATB/receiver/observation enables 0, D2H OE 0, "
-                               "no X/Z on any control output (wire_tx_data/rf_tx_sample are X with valid=0: FIFO "
-                               "storage has no reset)."),
-                clean=dict(proposal='pass' if phys_clean else 'open',
-                           evidence=['evidence/digital-hardening-evidence.json#signoff'],
-                           note='Magic DRC 0, KLayout DRC 0 (LibreLane GDS and the analog-image Magic 8.3.678 export, '
-                                'which XORs to 0 against it), Netgen LVS 0 errors, OpenROAD and KLayout antenna 0. '
-                                'Gate-level simulation of the post-route netlist matches the RTL and the register model. '
-                                'Timing does NOT meet the clock targets at ss (and several at tt); performance_vs_target '
-                                'records it (block-deliverables: performance does not gate freeze).'),
-                observable=dict(proposal='pass', evidence=['evidence/digital-hardening-evidence.json#gate_level.observability'],
-                                note='ID/ABI/map hash, POR vs RESET_N cause flags, island power-good and fault status, core '
-                                     'status and frequency-counter lock/count read over SPI on the post-route netlist.'),
+                safe=verdict(safe, 'evidence/digital-hardening-evidence.json#gate_level.reset_safety'),
+                clean=verdict(clean, 'evidence/digital-hardening-evidence.json#signoff'),
+                observable=verdict(observable, 'evidence/digital-hardening-evidence.json#gate_level.observability'),
                 fallback=dict(proposal='waived_core')),
             hostio=dict(
-                safe=dict(proposal='open', note='Digital half passes (D2H OE=0 and data 0 at reset on the netlist; H2D '
-                          'inputs only capture). Pad half (provider bi_24t/in_c with powered peer and unpowered die, '
-                          'RESET_N weak pull-down PD=1 on in_c) is an assembly/pads-stage check not run here.'),
-                clean=dict(proposal='open', note='pt_host_link is inside the clean macro; the provider pad cells and their '
-                           'hookup at the ring are not assembled or checked yet (freeze stage 2/4).'),
-                observable=dict(proposal='pass', evidence=['evidence/digital-hardening-evidence.json#gate_level.host_link_loopback'],
-                                note='Core status over SPI shows frame-receiver lock / rx fault; D2H looped to H2D locks in '
-                                     'DDR, SDR and reduced-rate SDR on the post-route netlist; DBG_OBS host_rx_clk_div.'),
-                fallback=dict(proposal='pass', note='debug.host_link.mode 1/2 (SDR, reduced-rate SDR) implemented and '
-                              'exercised in the netlist loopback; SPI capture/playback memory is the last route.'))),
+                safe=dict(proposal='open', note='Assembled provider-pad safety remains a separate gate.'),
+                clean=dict(proposal='open', note='Requires the assembled pad ring and full-chip checks.'),
+                observable=verdict(loopback, 'evidence/digital-hardening-evidence.json#gate_level.host_link_loopback'),
+                fallback=verdict(loopback, 'evidence/digital-hardening-evidence.json#gate_level.host_link_loopback'))),
+        physical_check_counts=physical_checks,
+        performance_vs_target=dict(
+            per_corner=ft, area_um2=area, area_cap_um2=2500000,
+            area_fits=None if area is None else area <= 2500000,
+            sequential_cells=state, state_cap_bits=8192,
+            state_fits=None if state is None else state <= 8192),
         hostio=dict(
-            partition='Provider gf180mcu_fd_io cells own pads/ESD/drive/receivers: bi_24t at the bidir sites (SPI, H2D, '
-                      'D2H), in_c at rst_n_pad (RESET_N, PD=1 weak pull-down), clk_pad (in_s in the template) needs '
-                      'the provider-permitted substitution to bi_24t for D2H[0]. Ours (in the hardened macro, '
-                      'rtl/pt_host_link.sv): DDR/SDR capture on H2D_CLK, pair FIFO into the core host word clock, '
-                      'D2H launch, centre-aligned forwarded D2H_CLK (word/2 toggle on the falling edge in DDR, '
-                      'gated inverted word clock in SDR), d2h_enable gating, drive/slew controls to the pads.',
-            pad_toggle_screen=dict(summary=(pads or {}).get('summary'), ss_cmos_input_f_ddr_max_mhz=cmos_in_ss,
-                                   note='Liberty-only eye budget (see hostio_pad_screen.py); the pads alone allow '
-                                        'roughly 178 MHz DDR out / 191 MHz DDR in (CMOS receiver, CS=0) at ss 2.97 V; '
-                                        'Schmitt inputs (CS=1, in_s) drop to ~148 MHz. Not a qualification.'),
-            core_limited_rate=dict(host_word_fmax_mhz=dict(tt=hw_tt, worst_corner=hw_ss),
-                                   ddr_pin_clock_max_mhz=dict(tt=round(hw_tt / 2, 1) if hw_tt else None,
-                                                              worst_corner=round(hw_ss / 2, 1) if hw_ss else None),
-                                   target='156.25 MHz DDR pins = 312.5 Mword/s'),
-            verdict='156.25 MHz DDR is NOT reachable: the pads would allow about 150-180 MHz DDR, but the standard-cell '
-                    'transport (framer, FIFO read muxes) closes only at the host word clock above; the DDR pin clock is '
-                    'half of it.',
-            reduced_rate_proposal='Tapeout-plan host-link fallback: SDR (mode 1) or reduced-rate SDR (mode 2) with the '
-                                  'host word clock at or below the worst-corner fmax (H2D_CLK = D2H_CLK = word clock), or '
-                                  'DDR with the pin clock at half of it. Full rate needs a 2-word-wide transport and '
-                                  'pipelined FIFO reads (open RTL item).'),
-        performance_vs_target=[
-            dict(item='host word clock', target_mhz=312.5, tt_mhz=hw_tt, worst_corner_mhz=hw_ss),
-            dict(item='wired double-word clock (wtx/wrx)', target_mhz=125.0,
-                 tt_mhz=[(tt.get(k) or {}).get('fmax_est_mhz') for k in ('wtx', 'wrx')],
-                 worst_corner_mhz=[worst(k) for k in ('wtx', 'wrx')] if ft else None),
-            dict(item='SPI SCLK', target_mhz=20.0, tt_mhz=(tt.get('sclk') or {}).get('fmax_est_mhz'),
-                 worst_corner_mhz=worst('sclk') if ft else None, spec='starts at <= 1 MHz; bench 10 MHz'),
-            dict(item='RF sample clocks (rftx/rfrx)', target_mhz=50.0,
-                 tt_mhz=[(tt.get(k) or {}).get('fmax_est_mhz') for k in ('rftx', 'rfrx')],
-                 worst_corner_mhz=[worst(k) for k in ('rftx', 'rfrx')] if ft else None),
-            dict(item='pt_clocktree_slow word clock (ctw)', target_mhz=156.25, tt_mhz=(tt.get('ctw') or {}).get('fmax_est_mhz'),
-                 worst_corner_mhz=worst('ctw') if ft else None),
-            dict(item='frequency-counter sources (fc*)', target_mhz=156.25, tt_mhz=(tt.get('fc0') or {}).get('fmax_est_mhz'),
-                 worst_corner_mhz=worst('fc0') if ft else None),
-            dict(item='area', allocation_um2=2500000, die_um2=m.get('design__die__area'),
-                 note='1800 x 1800 um; 1650 x 1650 um failed detailed placement after antenna repair and the '
-                      '1580 x 1580 um floorplan failed detailed placement (utilization ~0.67-0.71).')],
-        decisions=[
-            'Memory: no gf180mcu_fd_ip_sram macro. The RTL storage is register arrays with dual-clock (async FIFO) or '
-            'combinational reads; single-port synchronous SRAMs cannot serve them without clock muxing. Flop storage '
-            '(~11.3k sequential cells total) is inside the macro. Item 9 MIM-over-SRAM therefore does not apply.',
-            'Metal5: the primary macro routes on Metal1-Metal5 with Metal4-only PDN straps (PDN_MULTILAYER false). '
-            'A Metal1-Metal4 variant (Metal5 free for MIM) of the same netlist and floorplan also routed with DRC 0 and '
-            'LVS 0 but left 2 antenna violations and ~45 % worse tt setup slack (variants.metal4_only); at '
-            '1650 x 1650 um the Metal4-only route did not converge (11371 GRT overflows).',
-            'Timing targets kept at the specification rates; closure is not claimed. fmax per clock/corner recorded.',
-            'Port buffering: LibreLane input/output port buffers enabled (disabling output buffers crashed TritonCTS).',
-            'Signoff SDC adds three exceptions to the PnR SDC (CS_N->MISO and CS_N->register data false paths, '
-            'forwarded D2H_CLK unconstrained, bounded crossings restricted to the reader clock); see sdc.pnr vs sdc.signoff.'],
+            pad_toggle_screen=pads,
+            target='156.25 MHz DDR pins, 312.5 Mword/s ten-bit host boundary',
+            qualification='Routed timing, real pad/board timing, clock tolerance and bounded interruptions required.'),
+        evidence_scope=dict(current_gls_sources=current_gls,
+                            hardened_rtl_matches_current=rtl_current,
+                            hardened_sdc_matches_current=sdc_current),
         open_risks=[
-            'Timing: at ss_125C/3.0 V (outside the envelope) every fast clock misses its target by 2-5x; at tt the '
-            'host word, wired and RF sample clocks also miss. Silicon must run reduced clocks or the RTL needs '
-            'pipelining (FIFO read muxes over a 1.8 mm die, stream framer, regfile commit path).',
-            'Max slew/cap violations remain (hundreds at tt, ~1.7k at ss) on the large flop-FIFO nets.',
-            'Undocumented CDC: rf_mute = cal_busy (ref domain) OR stream mute (rftx). Level to analog, but should be '
-            'resynchronized or documented.',
-            'Area 3.24 mm2 against the 2.5 mm2 digital+memory allocation.',
-            'pt_clocktree_slow cfg_det_en/cfg_det_div have no register field (strapped in pt_chip).',
-            'D2H[0] at clk_pad needs the in_s -> bi_24t cell substitution; RESET_N PD=1 tie and pad-level safe tests '
-            'belong to the pad/assembly stage.',
-            'GLS is zero-delay functional (no SDF); timing is covered by STA only.',
-            'Regfile formal proof was not re-run here on the final map (0x5A1F); the register-file agent owns it.'],
-    )
+            'Target timing, state cap and footprint must pass on the final routed source snapshot.',
+            'Accepted-envelope timing, real pads/board skew and full-chip assembly remain required.',
+            'GLS is functional and has no SDF; physical timing requires STA.',
+            'Observation wiring and fallbacks must be checked on the assembled physical chip.'])
 
 
 def main():
@@ -207,8 +152,8 @@ def main():
         source_hashes={s: sha(P / s) for s in SOURCES if (P / s).exists()},
         images=dict(digital=rd('digital-image.txt'), analog=rd('analog-image.txt')),
         tools=dict(librelane=rd('librelane-version.txt'), magic_export=rd('export/magic-version.txt'),
-                   klayout_export=rd('export/klayout-version.txt'), sta=(sta or {}).get('tool')),
-        pdk='gf180mcuD (open_pdks 1.0.605, commit f6eeac7d) in both images; gf180mcu_fd_sc_mcu7t5v0',
+                   klayout_export=rd('export/klayout-version.txt'), sta=(sta or {}).get('tool'), toolchain=load(out / 'toolchain.json')),
+        pdk='gf180mcuD / gf180mcu_fd_sc_mcu7t5v0 in the recorded tool images',
         physical=dict(
             die_bbox_um=die, core_bbox_um=m.get('design__core__bbox'),
             die_area_um2=m.get('design__die__area'), core_area_um2=m.get('design__core__area'),
@@ -222,9 +167,7 @@ def main():
             routing_layers=('Signal routing Metal2-Metal5 (RT_MAX_LAYER=Metal5), cell rails Metal1, PDN Metal4 vertical '
                             'straps only (PDN_MULTILAYER=false); Metal5 carries signal routing in this macro. The '
                             'Metal1-Metal4 variant that keeps Metal5 free for MIM decap is recorded under variants.'),
-            memory='No SRAM macro: the RTL storage is register arrays (async/sync FIFOs 4.4 kbit, capture/playback '
-                   '2 x 32 x 24 bit) with dual-clock or combinational reads that single-port gf180mcu_fd_ip_sram macros '
-                   'cannot serve without clock muxing. Implemented in flops inside the digital+memory allocation.',
+            memory='Register-array FIFOs and capture/playback storage; counted inside the digital+memory allocation.',
             wire_length_um=m.get('route__wirelength'),
             route_drc_errors=m.get('route__drc_errors')),
         metrics_snapshot={k: v for k, v in m.items() if any(s in k for s in (
@@ -249,6 +192,9 @@ def main():
     ev['hardened_copy_differences'] = sorted(
         f.name for f in (out / 'design/rtl').glob('*') if (P / 'rtl' / f.name).exists()
         and (P / 'rtl' / f.name).read_bytes() != f.read_bytes())
+    ev['hardened_copy_missing'] = sorted(
+        f.name for f in (P / 'rtl').iterdir() if f.suffix in ('.sv', '.svh', '.vh')
+        and not (out / 'design/rtl' / f.name).exists())
     pnr_sdc = out / 'design/pt_digital_macro.sdc'
     ev['sdc'] = dict(pnr=sha(pnr_sdc) if pnr_sdc.exists() else None, signoff=sha(P / 'integration/pt_digital_macro.sdc'))
     over = out / 'config-override.json'
@@ -259,11 +205,6 @@ def main():
             'max_slew_violation__count', 'xor_difference'))})
     ev.update(curate(ev, sta, gls, pads, m, exp))
     Path(a.evidence).parent.mkdir(parents=True, exist_ok=True)
-    prev = {}  # curated sections are recomputed from the run outputs every time
-    for k in ('tests', 'decisions', 'performance_vs_target', 'excluded_coverage', 'open_risks', 'readiness_proposal',
-              'hostio', 'other_checks', 'history'):
-        if k in prev:
-            ev[k] = prev[k]          # curated sections (written from the numbers above) are kept
     Path(a.evidence).write_text(json.dumps(ev, indent=1) + '\n')
     print(json.dumps(dict(physical=ev['physical'], signoff=ev['signoff']), indent=1)[:4000])
 

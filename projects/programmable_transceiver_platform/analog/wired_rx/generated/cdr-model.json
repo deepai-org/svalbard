@@ -1,0 +1,67 @@
+{
+ "bw_MHz": {
+  "2nA": 0.13,
+  "4nA": 0.26,
+  "8nA": 0.52,
+  "16nA": 1.04,
+  "32nA": 2.08
+ },
+ "cases": {
+  "static_+600": {
+   "bits": 720000,
+   "errors": 0,
+   "worst_phase_ui": 0.0459,
+   "ber95": 4.166666666666667e-06
+  },
+  "static_-5600": {
+   "bits": 720000,
+   "errors": 0,
+   "worst_phase_ui": 0.0459,
+   "ber95": 4.166666666666667e-06
+  },
+  "static_-5600_fll-1000": {
+   "bits": 720000,
+   "errors": 0,
+   "worst_phase_ui": 0.0472,
+   "ber95": 4.166666666666667e-06
+  },
+  "ssc_5000_offset+600": {
+   "bits": 1520000,
+   "errors": 0,
+   "worst_phase_ui": 0.0477,
+   "ber95": 1.9736842105263157e-06
+  },
+  "ssc_5000": {
+   "bits": 1520000,
+   "errors": 0,
+   "worst_phase_ui": 0.0477,
+   "ber95": 1.9736842105263157e-06
+  },
+  "cid40": {
+   "bits": 720000,
+   "errors": 0,
+   "worst_phase_ui": 0.0498,
+   "ber95": 4.166666666666667e-06
+  },
+  "sj_0.1MHz_2.0UI": {
+   "bits": 720000,
+   "errors": 0,
+   "worst_phase_ui": 0.0493,
+   "ber95": 4.166666666666667e-06
+  },
+  "sj_1.5MHz_0.3UI": {
+   "bits": 720000,
+   "errors": 0,
+   "worst_phase_ui": 0.0662,
+   "ber95": 4.166666666666667e-06
+  },
+  "sj_5MHz_0.15UI": {
+   "bits": 720000,
+   "errors": 0,
+   "worst_phase_ui": 0.2087,
+   "ber95": 4.166666666666667e-06
+  }
+ },
+ "pass": true,
+ "note": "behavioural model only; i_leg=32 nA/leg (about 2 MHz at 0.05 UI rms), lat=6 ring cycles, rj 0.02 UI rms; sizing, not qualification"
+}

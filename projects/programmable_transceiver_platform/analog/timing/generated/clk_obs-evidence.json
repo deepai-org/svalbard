@@ -3,16 +3,16 @@
  "source_hashes": {
   "clk_obs.spice": "sha256:abd8563db4bf9785da5fc34eb3d10f8ef9968fbc81deed1bb7360b8ae4ad5fd8",
   "timing_cells.spice": "sha256:f9f1f38f3d190cf34a8c02560d70c0061ccefe7951a3022b1803d74656139452",
-  "layout_engine.py": "sha256:acb531c9c30a6b3f4a76c124bc9ea8e9274a532a7a9e1769d40ff535ab61f0ae",
+  "layout_engine.py": "sha256:3b5f4d4c4093635fc12cdfaee23e7d054148d53f864ae3abb10d90c2eb70d7eb",
   "netlist.py": "sha256:9eb8d5c8d7d044a76b560ebebd23c768aefd2b0c1183d38313964e89a1d30ab3",
-  "run_timing.py": "sha256:0ffa242409850c1211baf29172da2a7a542b21e6d88ffb5e03b87cde437056b3",
-  "timing_flow.py": "sha256:ae25349b5de22a22b47a77687abf481166efaac60013c748078420666f8e0b28"
+  "run_timing.py": "sha256:cfc564b969b661315a8445b3a1466dd3a1630bb801098d870707388f081ca73d",
+  "timing_flow.py": "sha256:bd8ce9923286fb57b2465a135b1cde27a0f272bbac405c95b57ea41c0738bfdb"
  },
  "generated_hashes": {
-  "clk_obs.lvs.spice": "sha256:17c19ade8b55385baffe1fdaac655776dbab2e4dd41a975877165a77bafe76ef",
-  "clk_obs.mag": "sha256:78028b073980739c3782457eb863165989ac5de8b5c67e7d8376f589066d311d",
-  "clk_obs.ext.spice": "sha256:bf342b2c2635ac5660baa6f520130400d9c3982de2d6ccb7484af13a567ccc67",
-  "clk_obs.gds": "sha256:451b631c9f95dc7eb9bb48f204640da6f98588b72ef2c4cf997884045f8eee9f"
+  "clk_obs.lvs.spice": "sha256:d97921a8f0522fed7d8b0064e8ddd933d2833aa8c0b0fbb162d8dee74c2feb07",
+  "clk_obs.mag": "sha256:738be82a80a1ba68f0199732f39c59089ba54ad0b30cbb9c6bad4fc1a40e2dfc",
+  "clk_obs.ext.spice": "sha256:8306c8ececca0b16495f8987f7f490b58da453181dbb39fff93e8fe5a1c3b00c",
+  "clk_obs.gds": "sha256:27f205083e3264c374f971bd84af151321e370fecbeac54966ea4f8a9d92e328"
  },
  "images": {
   "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -31,10 +31,10 @@
      "temp_c": 27,
      "vdd_v": 3.3,
      "netlist": "extracted",
-     "i_vdd_avg_ua": 0.0198077,
-     "i_vdd_peak_ua": 1550.94,
+     "i_vdd_avg_ua": 0.020147799999999997,
+     "i_vdd_peak_ua": 1552.14,
      "output_max_v": {
-      "out": 0.0372066
+      "out": 0.0372068
      },
      "deck": "scratch/timing/clk_obs/sim/safe_tt_27_3.3.spice",
      "errors": []
@@ -45,10 +45,10 @@
      "temp_c": 85,
      "vdd_v": 3.63,
      "netlist": "extracted",
-     "i_vdd_avg_ua": 0.0852926,
-     "i_vdd_peak_ua": 1551.3799999999999,
+     "i_vdd_avg_ua": 0.0855486,
+     "i_vdd_peak_ua": 1552.33,
      "output_max_v": {
-      "out": 0.0615478
+      "out": 0.061548
      },
      "deck": "scratch/timing/clk_obs/sim/safe_ff_85_3.63.spice",
      "errors": []
@@ -59,10 +59,10 @@
      "temp_c": 0,
      "vdd_v": 3.63,
      "netlist": "extracted",
-     "i_vdd_avg_ua": 0.0263971,
-     "i_vdd_peak_ua": 1554.97,
+     "i_vdd_avg_ua": 0.026540800000000003,
+     "i_vdd_peak_ua": 1556.15,
      "output_max_v": {
-      "out": 0.0445429
+      "out": 0.0445431
      },
      "deck": "scratch/timing/clk_obs/sim/safe_ss_0_3.63.spice",
      "errors": []
@@ -80,9 +80,24 @@
      "ran": true,
      "violations": 0,
      "by_rule": {},
-     "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+     "deck": "gf180mcuD KLayout (sak-drc.sh -k)",
+     "precheck": {
+      "clean": true,
+      "main": 0,
+      "antenna": 0
+     },
+     "precheck_clean": true
     },
-    "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii"
+    "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii",
+    "klayout_precheck": {
+     "required": true,
+     "ok": true,
+     "record": "generated/clk_obs-kldrc.json",
+     "decks": {
+      "main": 0,
+      "antenna": 0
+     }
+    }
    },
    "lvs": {
     "unique_match": true,
@@ -100,14 +115,14 @@
       "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
       "expected_hz": 62500000.0,
       "f_out_hz": 62499999.99999999,
-      "duty": 0.5066006249999999,
+      "duty": 0.5065999999999999,
       "out_swing_v": [
-       -0.00431551,
+       -0.00431015,
        3.30258
       ],
-      "i_off_ua": -53.6464,
-      "out_while_disabled_v": 5.39419e-05,
-      "i_on_ma": 4.954359999999999,
+      "i_off_ua": -53.715199999999996,
+      "out_while_disabled_v": 5.39417e-05,
+      "i_on_ma": 4.95645,
       "pass": true,
       "netlist": "extracted",
       "corner": "tt",
@@ -152,14 +167,14 @@
    "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
    "expected_hz": 62500000.0,
    "f_out_hz": 62499999.99999999,
-   "duty": 0.5066006249999999,
+   "duty": 0.5065999999999999,
    "out_swing_v": [
-    -0.00431551,
+    -0.00431015,
     3.30258
    ],
-   "i_off_ua": -53.6464,
-   "out_while_disabled_v": 5.39419e-05,
-   "i_on_ma": 4.954359999999999,
+   "i_off_ua": -53.715199999999996,
+   "out_while_disabled_v": 5.39417e-05,
+   "i_on_ma": 4.95645,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -174,12 +189,12 @@
    "f_out_hz": null,
    "duty": null,
    "out_swing_v": [
-    -2.96021e-05,
-    2.9761e-05
+    -2.96131e-05,
+    2.97778e-05
    ],
-   "i_off_ua": 0.10658000000000001,
-   "out_while_disabled_v": 3.79303e-05,
-   "i_on_ma": 0.959091,
+   "i_off_ua": 0.105442,
+   "out_while_disabled_v": 3.79308e-05,
+   "i_on_ma": 0.957903,
    "pass": false,
    "netlist": "extracted",
    "corner": "tt",
@@ -198,14 +213,14 @@
    "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
    "expected_hz": 62500000.0,
    "f_out_hz": 62499999.99999999,
-   "duty": 0.505844375,
+   "duty": 0.5058199999999999,
    "out_swing_v": [
-    -0.00428634,
+    -0.00428612,
     3.1526
    ],
-   "i_off_ua": -51.161500000000004,
-   "out_while_disabled_v": 4.93851e-05,
-   "i_on_ma": 4.69728,
+   "i_off_ua": -51.227000000000004,
+   "out_while_disabled_v": 4.93849e-05,
+   "i_on_ma": 4.69923,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -218,14 +233,14 @@
    "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
    "expected_hz": 62500000.0,
    "f_out_hz": 62499999.99999999,
-   "duty": 0.5063068749999999,
+   "duty": 0.5063243749999999,
    "out_swing_v": [
-    -0.00434769,
+    -0.00434352,
     3.3526
    ],
-   "i_off_ua": -54.4772,
-   "out_while_disabled_v": 5.54371e-05,
-   "i_on_ma": 5.03493,
+   "i_off_ua": -54.5471,
+   "out_while_disabled_v": 5.54369e-05,
+   "i_on_ma": 5.03706,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -238,14 +253,14 @@
    "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
    "expected_hz": 62500000.0,
    "f_out_hz": 62499999.99999999,
-   "duty": 0.5047887499999999,
+   "duty": 0.5047524999999999,
    "out_swing_v": [
-    -0.00425318,
-    3.15256
+    -0.00425082,
+    3.15257
    ],
-   "i_off_ua": -51.1577,
-   "out_while_disabled_v": 4.98795e-05,
-   "i_on_ma": 4.70515,
+   "i_off_ua": -51.2232,
+   "out_while_disabled_v": 4.98793e-05,
+   "i_on_ma": 4.707109999999999,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -258,14 +273,14 @@
    "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
    "expected_hz": 62500000.0,
    "f_out_hz": 62499999.99999999,
-   "duty": 0.5066356249999999,
+   "duty": 0.506639375,
    "out_swing_v": [
-    -0.00430995,
-    3.35256
+    -0.00431175,
+    3.35257
    ],
-   "i_off_ua": -54.4733,
-   "out_while_disabled_v": 5.59745e-05,
-   "i_on_ma": 5.04317,
+   "i_off_ua": -54.5429,
+   "out_while_disabled_v": 5.59742e-05,
+   "i_on_ma": 5.0453,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -278,14 +293,14 @@
    "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
    "expected_hz": 62500000.0,
    "f_out_hz": 62499999.99999999,
-   "duty": 0.49896937499999994,
+   "duty": 0.49900187499999993,
    "out_swing_v": [
-    -0.00481914,
+    -0.00481728,
     3.15304
    ],
-   "i_off_ua": -51.1651,
-   "out_while_disabled_v": 4.79231e-05,
-   "i_on_ma": 4.62922,
+   "i_off_ua": -51.2302,
+   "out_while_disabled_v": 4.79228e-05,
+   "i_on_ma": 4.63107,
    "pass": true,
    "netlist": "extracted",
    "corner": "ss",
@@ -298,14 +313,14 @@
    "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
    "expected_hz": 62500000.0,
    "f_out_hz": 62499999.99999999,
-   "duty": 0.5030612499999999,
+   "duty": 0.5030343749999999,
    "out_swing_v": [
-    -0.00486088,
+    -0.00486182,
     3.35308
    ],
-   "i_off_ua": -54.4919,
-   "out_while_disabled_v": 5.26817e-05,
-   "i_on_ma": 4.96357,
+   "i_off_ua": -54.5614,
+   "out_while_disabled_v": 5.26815e-05,
+   "i_on_ma": 4.96561,
    "pass": true,
    "netlist": "extracted",
    "corner": "ss",
@@ -318,14 +333,14 @@
    "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
    "expected_hz": 62500000.0,
    "f_out_hz": 62499999.99999999,
-   "duty": 0.49993875,
+   "duty": 0.49999125,
    "out_swing_v": [
-    -0.00479287,
+    -0.00479401,
     3.15299
    ],
-   "i_off_ua": -51.159200000000006,
-   "out_while_disabled_v": 4.79571e-05,
-   "i_on_ma": 4.635249999999999,
+   "i_off_ua": -51.2242,
+   "out_while_disabled_v": 4.79568e-05,
+   "i_on_ma": 4.63705,
    "pass": true,
    "netlist": "extracted",
    "corner": "ss",
@@ -338,14 +353,14 @@
    "input": "IN0 0.5 GHz, N=3 (/8), 10 pF pad load",
    "expected_hz": 62500000.0,
    "f_out_hz": 62499999.99999999,
-   "duty": 0.501308125,
+   "duty": 0.5012675,
    "out_swing_v": [
-    -0.00483487,
+    -0.00483547,
     3.35304
    ],
-   "i_off_ua": -54.4865,
-   "out_while_disabled_v": 5.27193e-05,
-   "i_on_ma": 4.96932,
+   "i_off_ua": -54.5558,
+   "out_while_disabled_v": 5.2719e-05,
+   "i_on_ma": 4.9713400000000005,
    "pass": true,
    "netlist": "extracted",
    "corner": "ss",
@@ -360,12 +375,12 @@
    "f_out_hz": 62499804.68811035,
    "duty": null,
    "out_swing_v": [
-    -0.00369634,
-    3.15209
+    -0.00369186,
+    3.1521
    ],
-   "i_off_ua": -51.1616,
-   "out_while_disabled_v": 5.92268e-05,
-   "i_on_ma": 4.779870000000001,
+   "i_off_ua": -51.227399999999996,
+   "out_while_disabled_v": 5.92266e-05,
+   "i_on_ma": 4.78187,
    "pass": true,
    "netlist": "extracted",
    "corner": "ff",
@@ -380,12 +395,12 @@
    "f_out_hz": 62499804.68811035,
    "duty": null,
    "out_swing_v": [
-    -0.00373352,
+    -0.00372763,
     3.35207
    ],
-   "i_off_ua": -54.466,
-   "out_while_disabled_v": 6.81957e-05,
-   "i_on_ma": 5.12378,
+   "i_off_ua": -54.5362,
+   "out_while_disabled_v": 6.81955e-05,
+   "i_on_ma": 5.12595,
    "pass": true,
    "netlist": "extracted",
    "corner": "ff",
@@ -400,12 +415,12 @@
    "f_out_hz": 62499804.68811035,
    "duty": null,
    "out_swing_v": [
-    -0.00366108,
+    -0.00365652,
     3.15207
    ],
-   "i_off_ua": -51.1584,
-   "out_while_disabled_v": 7.00297e-05,
-   "i_on_ma": 4.78924,
+   "i_off_ua": -51.2242,
+   "out_while_disabled_v": 7.00295e-05,
+   "i_on_ma": 4.791250000000001,
    "pass": true,
    "netlist": "extracted",
    "corner": "ff",
@@ -420,12 +435,12 @@
    "f_out_hz": 62499804.68811035,
    "duty": null,
    "out_swing_v": [
-    -0.00369827,
+    -0.00369316,
     3.35204
    ],
-   "i_off_ua": -54.4622,
-   "out_while_disabled_v": 7.99943e-05,
-   "i_on_ma": 5.133450000000001,
+   "i_off_ua": -53.5683,
+   "out_while_disabled_v": 7.99942e-05,
+   "i_on_ma": 5.1355699999999995,
    "pass": true,
    "netlist": "extracted",
    "corner": "ff",

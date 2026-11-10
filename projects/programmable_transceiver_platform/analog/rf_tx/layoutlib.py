@@ -21,7 +21,11 @@ import json
 import math
 import re
 import subprocess
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))   # analog/antenna_diodes.py
+import antenna_diodes as ad  # noqa: E402
 
 DIGITAL_IMAGE = 'svalbard/librelane-gf180-canary:2026.08'
 PDK = '/pdk/gf180mcuD'
@@ -122,11 +126,14 @@ def prim_geometry(key, path):
 class Painter:
     def __init__(self):
         self.cmds = []
+        self.net = None       # net of the shapes being drawn (antenna-diode planning)
+        self.shapes = []      # (layer, x1, y1, x2, y2, net)
 
     def rect(self, layer, x1, y1, x2, y2):
         x1, x2 = sorted((x1, x2)); y1, y2 = sorted((y1, y2))
         self.cmds.append(f'box values {snap(x1)} {snap(y1)} {snap(x2)} {snap(y2)}')
         self.cmds.append(f'paint {layer}')
+        self.shapes.append((layer, snap(x1), snap(y1), snap(x2), snap(y2), self.net))
 
     def via(self, x, y, low, high, w=0.4, h=None):
         """Via stack from metal<low> to metal<high> centred at (x, y); w x h landing.
@@ -306,16 +313,23 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
     height_bottom = cursor_y
     # --- paint ----------------------------------------------------------
     cmds = ['crashbackups stop', f'load {circuit.name}_hier', 'units microns']
+    keepouts, terminals = [], []
     for ri, R in enumerate(rowinfo):
         for name in R['names']:
             d = byname[name]; L = local[name]; ox, oy = R['xpos'][name], R['oy']
             cmds.append(f'getcell {cells[L["key"]]} child 0 0 parent {snap(ox)} {snap(oy)}')
             cmds.append(f'identify X{name}')
             pins, esc = L['pins'], L['esc']
+            bb = L['bbox']
+            keepouts.append((ox + bb[0], oy + bb[1], ox + bb[2], oy + bb[3]))
             for term, net, side in pin_list(d):
                 w = rw(net)
                 pin = pins[term]
                 ex = ox + esc[term]
+                P.net = net
+                if hasattr(d, 'nf'):
+                    terminals.append((ex, oy + pin['y'], net, 'g' if term == 'G' else 'sd' if term in ('S', 'D') else 'x',
+                                      d.w * d.nf * d.l if term == 'G' else 0.))
                 if term in ('S', 'D'):
                     w = pin['w']
                     y = oy + pin['y']
@@ -355,6 +369,7 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
                 P.via(ex, ly, 3, 4, w=w, h=lw[net])
         # lanes for this row
         for (rj, net), ly in lanes.items():
+            P.net = net
             if rj != ri:
                 continue
             xs = [R['xpos'][n] + local[n]['esc'][t] for n in R['names']
@@ -372,7 +387,14 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
         y_lo = min(ys)
         if y_hi - y_lo < 1.5:
             y_hi = y_lo + 1.5
+        P.net = net
         P.vwire('metal5', tx[net], y_lo, y_hi, tw[net])
+    P.net = None
+    # antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M5 get an N+/Psub diode
+    # (with its own substrate tap) under their own M3-M5 wire; returned as 'antenna_diodes'.
+    req = ad.requests_from_shapes(P.shapes, terminals)
+    dcmds, diodes = ad.plan(req, [s[:5] for s in P.shapes], keepouts)
+    P.cmds += dcmds
     cmds += P.cmds
     for i, port in enumerate(ports, 1):
         x = tx[port]
@@ -410,4 +432,5 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
                   for R in rowinfo for n in R['names']}
     (work / 'placements.json').write_text(json.dumps(placements, indent=1))
     return dict(cell=flat, rows=rows, bbox_um=bbox, area_um2=round(area, 1), drc_count=drc,
-                trunk_x_um=tx, trunked_nets=len(tx), primitives={cells[k]: list(k) for k in keys})
+                trunk_x_um=tx, trunked_nets=len(tx), primitives={cells[k]: list(k) for k in keys},
+                antenna_diodes=diodes)

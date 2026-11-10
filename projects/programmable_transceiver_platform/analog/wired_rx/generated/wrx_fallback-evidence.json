@@ -1,0 +1,62 @@
+{
+ "block": "wrx_fallback",
+ "subckt": "pt_slicer + pt_wrx_cap",
+ "source_hashes": {
+  "run_fallback.py": "sha256:4a8475ad39b67f835f67872ce2ff0e5905b3a2db14fe9b15ed43a5d6605c9715",
+  "capture.py": "sha256:6f5807473381af7ff18ae82b31b423949524691e835c185f4aec8a9d14fdc579",
+  "generated/wrx_cap.ext.spice": "sha256:cd41ee41a87f181053307e3afa533ba45f2fb4915df053556947a4037f9a14cc",
+  "generated/slicer.ext.spice": "sha256:898f1d1dfef07b71035a5fbf41fc40bdc8551e2852745dec143543893654e198"
+ },
+ "scope": "WCLK_IN raw-word fallback, extracted slicer + extracted capture, tt/27C/3.3V, ideal CK/!CK on CKP0..3/CKP4..7 (the diff_clk_rx/clockmux path and its skew are not included), eye centred on the CK edges, half mode (2 bits per CK cycle).",
+ "tests": {
+  "fallback": {
+   "state": "fail",
+   "cases": {
+    "fb480": {
+     "f": 480000000.0,
+     "vd": null,
+     "words": 9,
+     "bits": 180,
+     "bit_errors": 43,
+     "ew_vs_dw_mismatch": 0,
+     "i_mA": 20.3513,
+     "pass": false,
+     "error": null
+    },
+    "fb625": {
+     "f": 625000000.0,
+     "vd": null,
+     "words": 9,
+     "bits": 180,
+     "bit_errors": 0,
+     "ew_vs_dw_mismatch": 23,
+     "i_mA": 28.633,
+     "pass": false,
+     "error": null
+    },
+    "fb625_vd100": {
+     "f": 625000000.0,
+     "vd": 0.1,
+     "words": 9,
+     "bits": 180,
+     "bit_errors": 0,
+     "ew_vs_dw_mismatch": 0,
+     "i_mA": 29.6719,
+     "pass": true,
+     "error": null
+    },
+    "fb810": {
+     "f": 810000000.0,
+     "vd": null,
+     "words": 9,
+     "bits": 180,
+     "bit_errors": 8,
+     "ew_vs_dw_mismatch": 0,
+     "i_mA": 36.9643,
+     "pass": false,
+     "error": null
+    }
+   }
+  }
+ }
+}

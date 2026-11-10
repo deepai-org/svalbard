@@ -138,8 +138,33 @@ external part is not simulated here.
 | --- | --- | --- |
 | Magic DRC `drc(full)` | 0 | 0 |
 | KLayout DRC (GF180 deck, density excluded) | 0 on vendored GDS | 0 on `biasgen_tapeout/gf180mcu_ocd_ip__biasgen.gds.gz` |
-| Netgen LVS on the tapeout GDS, flattened | **fail** (`dvdd` pin on ground) | **match uniquely** (with and without tying `dvss` to `avss`) |
-| Netgen LVS, hierarchical (analog image) | fail | match uniquely once `dvss` is tied to `avss`. Untied it fails pin matching only because Magic's hierarchical extraction joins `avss`/`dvss` through the substrate; the die has one ground. |
+| Netgen LVS on the tapeout GDS, flattened | **fail** (`dvdd` pin on ground) | **match uniquely** (with and without tying `dvss` to `avss`), no property errors |
+| Netgen LVS, hierarchical (analog image) | fail | match uniquely once `dvss` is tied to `avss`. Untied it fails pin matching (`Top level cell failed pin matching`) because Magic's hierarchical extraction joins `avss`/`dvss` through the shared p-substrate (79 vs 80 nets); the idac1/idac2 and sink pin swaps netgen then lists are symmetry fallout of that non-match, not a pin-label error. The die binds both to VSS. |
+
+LVS is read strictly (`flow/summarize.py` `lvs_result`, gate in
+`evidence/core_support_evidence.json#lvs_qualification`, the summarize step
+exits non-zero on failure): a comparison passes only with a unique final match
+and none of the netgen failure strings (property errors, failed pin matching,
+unresolved "do not match", unmatched pins). Tolerated and listed per
+comparison: subcell non-matches netgen resolved by flattening, and Magic
+auto-named ports (`a_<x>_<y>#`) that netgen itself reports as disconnected.
+Required: biasgen hierarchical common-ground, flat GDS, flat GDS
+common-ground; bandgap hierarchical and flat with the PNP name mapping. Until
+2026-11-09 the summary read only the `Final result` line and recorded the flat
+biasgen LVS as a match although netgen also reported a property error: C2
+(`pbias`-`vfb` MIM) is drawn 23 × 5 µm, Magic reports it 5 × 23 µm
+hierarchically and 23 × 5 µm flat, and the GF180 netgen setup compares
+`c_width`/`c_length` independently. Both comparison netlists now get a
+canonical MIM orientation (`flow/canon_mim.py`, exact swap to
+`c_width >= c_length`, same area and perimeter); all other values are still
+compared. The fresh tapeout export the flow checks is XOR-identical to
+`biasgen_tapeout/gf180mcu_ocd_ip__biasgen.gds.gz` (Magic GDS bytes differ by
+timestamp only).
+
+The schematic netlists the assembly device LVS uses as reference are
+published, tracked, in `lvs_reference/` (`SHA256SUMS` checked by
+`verification/core_bias_routing/device_lvs_reference.py`) by the `tapeout`
+step.
 | Digital-image cross-check (Magic 8.3.623 / Netgen 1.5.316) | fail | match uniquely |
 | HRES on every `ppolyf_u_1k` body | 106/106 | 106/106 |
 | HRES negative control: same layout exported by the canary Magic | — | 0/106 (confirms the check detects the defect) |
@@ -328,6 +353,19 @@ output's `EN` must follow its ring's `EN`.
 
 The bank8 enable inverters are 4/8 µm because minimum gates failed antenna
 rule ANT.5 on the long EN routes.
+
+**Master voltage references (`pt_bias_vref`, 2026-11-09).** The architecture's
+`bias.vref0` (1.0 V, sink `refbuf.VREF0`) and `bias.vcm` (VDD/2, sinks
+`adc_i`/`adc_q` `VCM`), ATB codes 2/3, had no source in the core-bias assembly:
+the Edwards biasgen/bandgap give currents and `vbg` only (voltgen not
+imported). `pt_bias_vref` is passive and always on (core VDD, no control,
+reset-safe): `VREF0 = 5/6·VBG` (1 + 5 units of `ppolyf_u_1k` 1 × 40 µm,
+~240 kΩ, ~5 µA from the class-AB-buffered `vbg`; 1.010 V at VBG 1.212 V) and
+`VCM = VDD/2` (2 + 2 units, ~20 µA, ~40 kΩ Thevenin). Bandgap off → VREF0 = 0;
+an ATB0 force of VBG moves VREF0 with it; `conv_vref` (code 36) override
+remains the refbuf fallback. 85.9 × 56.0 µm, Magic DRC 0, KLayout DRC 0,
+LVS match uniquely, HRES 10/10. Not covered: the VCM sampling-charge
+decoupling at the ADC (consumer side), VREF0/VCM noise, and mismatch.
 
 **Simulations** (schematic and C-only extracted; root plus all five banks; 23
 outputs):

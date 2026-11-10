@@ -3,22 +3,26 @@
 * plus the switch into the internal LO path.
 *
 * External mode (EXT=1): the board drives I on REF_IN_P/N and Q on AUX_CLK_P/N
-* (2.4-2.5 GHz sine or square, AC-coupled on the board, up to ~2 Vpp per leg
-* from 50 ohm).  Per leg: NMOS series switch (pad side biased to VPAD ~1.1 V
+* (2.4-2.5 GHz sine, AC-coupled on the board; drive window in
+* spec/board-requirements.md B3).  Per leg: NMOS series switch (pad side biased to VPAD ~1.1 V
 * through 10 k) -> NMOS-inversion series capacitor (~3 pF, gate on the
-* mixer side) -> mixer LO node biased to VB ~2.45 V through 20 k.  No active
+* mixer side) -> mixer LO node biased to VB ~0.716 VDD through 20 k.  No active
 * device in the signal path.  VB is exposed as ATB_VB (sense, or force from the
 * analog test bus to trim the switching point).
-* Internal mode (INT=1): a tristate CMOS driver per leg drives the same mixer
-* node from the internal LO set LOI_* (rail to rail); the external series
-* switches and the capacitor transmission gates are open.
+* Internal mode (INT=1, r-cml 2026-11-10): one CML driver per pair (I, Q;
+* pt_lo_cml) takes the QVCO tank nodes directly on LOI_* (DC-coupled sine,
+* ~1.2 Vpp per side about ~1.7 V; no rail-to-rail buffers) and drives the
+* mixer LO nodes about VB through its resistive loads; a CM loop sets
+* avg(LO) = VB.  The external series switches and the capacitor transmission
+* gates are open.  VB is on in internal mode too.  ct_lodrv (tristate CMOS,
+* too slow at ss at 2.45 GHz extracted) is removed.
 * Off (EXT=INT=0, reset): bias dividers off, tristate drivers off, mixer LO
 * nodes clamped to VSS (mixers off); each pad sees one NMOS drain junction.
 * EXT and INT must not both be 1 (register-file rule).
 .include timing_cells.spice
-.include generated/fast/ct_lodrv.spice
+.include generated/fast/ct_locml.spice
 
-.subckt pt_lo_ext_leg PAD LOI LO VPAD VB EXT EXTB INT INTB OFF VDD VSS
+.subckt pt_lo_ext_leg PAD LO VPAD VB EXT EXTB OFF VDD VSS
 XSW PS EXT PAD VSS nfet_03v3 w=10u l=0.28u m=6
 XRP PS VPAD VSS ppolyf_u_1k r_width=1u r_length=10u
 XCC PS CG PS VSS nfet_03v3 w=20u l=15u m=2
@@ -29,10 +33,36 @@ XTN CG EXT LO VSS nfet_03v3 w=10u l=0.28u m=4
 XTP CG EXTB LO VDD pfet_03v3 w=10u l=0.28u m=4
 XRB LO VB VSS ppolyf_u_1k r_width=1u r_length=20u
 XCL LO OFF VSS VSS nfet_03v3 w=1u l=0.28u
-* internal driver: compact hand-placed cell (fastcells.py ct_lodrv): split
-* NAND/NOR pre-drivers and a 16-finger output stage whose P and N gates are
-* both off when INT=0 (tristate without series stacks)
-XDRV LOI INT INTB LO VDD VSS ct_lodrv
+* (internal driver: pt_lo_cml per pair, in pt_lo_ext)
+.ends
+
+* CML LO driver (one per I/Q pair), DC-coupled onto the mixer LO nodes YP/YN.
+* Sizing = scratch/timing/lodrv2/cml.spice with tm=12 (schematic tt/ss/ff
+* pass).  Switching core ct_locml (fastcells.py): pair 2 x 20 x 6 um /0.28,
+* PMOS header switches 2 x 20 x 4 um.  Loads 8u/1u poly (~125 ohm) per side
+* from VS; VS from VDD through 18u/1u poly (~55 ohm; 10u/0.55u of the schematic study violates HRES.3 min length 1 um).  Tail 12 x 10u/1u on
+* NB.  CM loop: 5T OTA compares the sensed centre VSN (2 x 10 k) with VB and
+* drives the tail gate NB.  INT=0: header and OTA bias off, NB clamped low
+* (no current; YP/YN float on the LO nodes, only junction C).
+.subckt pt_lo_cml AP AN YP YN VB INT INTB VDD VSS
+XBS BT INTB VDD VDD pfet_03v3 w=2u l=0.28u
+XRB BT NO VSS ppolyf_u_1k r_width=1u r_length=100u
+XBD NO NO VSS VSS nfet_03v3 w=2u l=1u
+XOT OS NO VSS VSS nfet_03v3 w=4u l=1u
+XO1 OD VSN OS VSS nfet_03v3 w=8u l=1u m=2
+XO2 NB VB OS VSS nfet_03v3 w=8u l=1u m=2
+XO3 OD OD VDD VDD pfet_03v3 w=4u l=1u m=2
+XO4 NB OD VDD VDD pfet_03v3 w=4u l=1u m=2
+XNC NB INTB VSS VSS nfet_03v3 w=1u l=0.28u
+XNCAP VSS NB VSS VSS nfet_03v3 w=20u l=10u
+XS1 YP VSN VSS ppolyf_u_1k r_width=1u r_length=10u
+XS2 YN VSN VSS ppolyf_u_1k r_width=1u r_length=10u
+XSC VSS VSN VSS VSS nfet_03v3 w=2u l=2u
+XT TS NB VSS VSS nfet_03v3 w=10u l=1u m=12
+XRC VDD VS VSS ppolyf_u_1k r_width=18u r_length=1u
+XRP VHP YP VSS ppolyf_u_1k r_width=8u r_length=1u
+XRN VHN YN VSS ppolyf_u_1k r_width=8u r_length=1u
+XCORE AP AN YN YP VHN VHP INTB TS VS VDD VSS ct_locml
 .ends
 
 .subckt pt_lo_ext EXT_IP EXT_IN EXT_QP EXT_QN LOI_IP LOI_IN LOI_QP LOI_QN EXT INT
@@ -41,12 +71,24 @@ XEI INT INTB VDD VSS pt_t_inv1
 XON EXT INT OFF VDD VSS pt_t_nor2
 XONB OFF ON VDD VSS pt_t_inv1
 XEB EXT EXTB VDD VSS pt_t_inv1
-* VB = 3.3 * 34k/44k ~ 2.55 V while EXT=1 (gated both ends); raised from 2.45 V
-* so the RX switch on-drive holds at ss, 3.15 V
-XVBP VBT EXTB VDD VDD pfet_03v3 w=4u l=0.28u
-XRV1 VBT ATB_VB VSS ppolyf_u_1k r_width=1u r_length=10u
-XRV2 ATB_VB VBB VSS ppolyf_u_1k r_width=1u r_length=34u
-XVBN VBB EXT VSS VSS nfet_03v3 w=4u l=0.28u
+* VB = VDD * 32.5k/44k ~ 0.739 VDD (2.44 V at 3.3 V; r-cml2, was 31.5k/44k = 0.716) while EXT|INT (gated both
+* ends).  2026-11-10: lowered from 0.773 VDD.  In steady state the LO node's
+* only DC path is its 20 k to VB, so avg(LO) = VB exactly; with the mixer
+* switch source at VCM = VDD/2 the centre Vgs is VB - VDD/2 = 0.216 VDD
+* (0.68-0.72 V), mid-way between the 0.5 V off and 0.9 V on limits.  At
+* 0.773 VDD the centre was 0.86-0.92 V and the off level failed in steady
+* state at ss/3 Vpp; the old 12 ns benches never reached steady state (VB and
+* the LO DC were still recovering, which read as a low on level).
+* r-cml: VB is on in internal mode too (CML common-mode target): gated by
+* ON = EXT|INT instead of EXT.
+XVBP VBT OFF VDD VDD pfet_03v3 w=4u l=0.28u
+* r-cml2: VB 0.716 -> 0.739 VDD (11.5k / 32.5k).  The CML drains, header and
+* loads add LO-node C, so the external-mode swing at ss/32/3.15/3 Vpp fell
+* (projected on 0.861-0.878 V, off 0.365-0.378 V with VB 0.716 VDD); the
+* window (on >= 0.9, off <= 0.5) is re-centred by raising VB.
+XRV1 VBT ATB_VB VSS ppolyf_u_1k r_width=1u r_length=11.5u
+XRV2 ATB_VB VBB VSS ppolyf_u_1k r_width=1u r_length=32.5u
+XVBN VBB ON VSS VSS nfet_03v3 w=4u l=0.28u
 XCVB VSS ATB_VB VSS VSS nfet_03v3 w=10u l=10u
 * VPAD = 3.3 * 10k/30k ~ 1.1 V while EXT or INT
 XVPP VPT OFF VDD VDD pfet_03v3 w=4u l=0.28u
@@ -54,8 +96,10 @@ XRP1 VPT VPAD VSS ppolyf_u_1k r_width=1u r_length=20u
 XRP2 VPAD VPB VSS ppolyf_u_1k r_width=1u r_length=10u
 XVPN VPB ON VSS VSS nfet_03v3 w=4u l=0.28u
 XCVP VSS VPAD VSS VSS nfet_03v3 w=10u l=10u
-XIP EXT_IP LOI_IP LO_IP VPAD ATB_VB EXT EXTB INT INTB OFF VDD VSS pt_lo_ext_leg
-XIN EXT_IN LOI_IN LO_IN VPAD ATB_VB EXT EXTB INT INTB OFF VDD VSS pt_lo_ext_leg
-XQP EXT_QP LOI_QP LO_QP VPAD ATB_VB EXT EXTB INT INTB OFF VDD VSS pt_lo_ext_leg
-XQN EXT_QN LOI_QN LO_QN VPAD ATB_VB EXT EXTB INT INTB OFF VDD VSS pt_lo_ext_leg
+XIP EXT_IP LO_IP VPAD ATB_VB EXT EXTB OFF VDD VSS pt_lo_ext_leg
+XIN EXT_IN LO_IN VPAD ATB_VB EXT EXTB OFF VDD VSS pt_lo_ext_leg
+XQP EXT_QP LO_QP VPAD ATB_VB EXT EXTB OFF VDD VSS pt_lo_ext_leg
+XQN EXT_QN LO_QN VPAD ATB_VB EXT EXTB OFF VDD VSS pt_lo_ext_leg
+XDI LOI_IP LOI_IN LO_IP LO_IN ATB_VB INT INTB VDD VSS pt_lo_cml
+XDQ LOI_QP LOI_QN LO_QP LO_QN ATB_VB INT INTB VDD VSS pt_lo_cml
 .ends

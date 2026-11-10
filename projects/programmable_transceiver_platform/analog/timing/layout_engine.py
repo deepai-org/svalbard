@@ -22,6 +22,10 @@ from pathlib import Path
 import json
 import math
 import subprocess
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import antenna_diodes as ad  # noqa: E402
 
 DIGITAL_IMAGE = 'svalbard/librelane-gf180-canary:2026.08'
 PDK = '/pdk/gf180mcuD'
@@ -156,11 +160,14 @@ def pin_order(model):
 class Layout:
     def __init__(self):
         self.cmds = []
+        self.net = None       # net of the shapes being drawn (antenna-diode planning)
+        self.shapes = []      # (layer, x1, y1, x2, y2, net)
 
     def rect(self, layer, x1, y1, x2, y2):
         x1, x2 = sorted((snap(x1), snap(x2)))
         y1, y2 = sorted((snap(y1), snap(y2)))
         self.cmds += [f'box values {x1} {y1} {x2} {y2}', f'paint {layer}']
+        self.shapes.append((layer, x1, y1, x2, y2, self.net))
 
     def via(self, x, y, low, high):
         for m in range(low, high + 1):
@@ -238,6 +245,9 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
     origin_x = 2.0
 
     L = Layout()
+    terminals = []    # (x, y, net, 'g'|'sd'|'x', gate area) at each pin landing, for antenna planning
+    pin_info = {d.model: ad.macro_pin_info(FAST / f'{d.model}.spice', d.model)
+                for d in devices if (FAST / f'{d.model}.pins.json').exists()}
     placements = {}
     y_row = 2.0
     tracks = {}       # (row, net) -> y
@@ -286,6 +296,15 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
                     else:
                         col = cx + p.bbox[2] + COL_INNER + PITCH_COL * k
                     col = snap(col)
+                    L.net = terms[t]
+                    if d.model in pin_info:
+                        pr, ga = pin_info[d.model].get(t, (True, 0.))
+                        kind = 'sd' if pr else 'g'
+                    elif d.model.startswith(('nfet', 'pfet')):
+                        kind, ga = ('g', d.w * d.l) if t == 'g' else ('sd', 0.) if t in ('d', 's') else ('x', 0.)
+                    else:
+                        kind, ga = 'x', 0.
+                    terminals.append((px, py, terms[t], kind, ga))
                     L.via(px, py, 1, 2)
                     L.hwire('metal2', px, col, py, 0.4)
                     L.via(col, py, 2, 3)
@@ -338,12 +357,14 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
     span = {}
     for ri, net, col, py in pin_routes:
         ty = tracks[(ri, net)]
+        L.net = net
         L.vwire('metal3', col, py, ty, 0.4)
         L.via(col, ty, 3, 4)
         lo, hi = span.get((ri, net), (col, col))
         span[(ri, net)] = (min(lo, col), max(hi, col))
     for (ri, net), (lo, hi) in span.items():
         ty = tracks[(ri, net)]
+        L.net = net
         if net in power_nets:
             L.hwire('metal4', origin_x, width - 1.0, ty, TRACK_PWR_W)
             for n, sx in straps:
@@ -355,10 +376,25 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
             L.via(trunk_x[net], ty, 4, 5)
         L.hwire('metal4', lo, hi, ty, TRACK_SIG_W)
     for n, sx in straps:
+        L.net = n
         L.vwire('metal5', sx, 1.0, top - 0.5, STRAP_W)
     for n, xx in trunk_x.items():
         lo, hi = want[n]
+        L.net = n
         L.vwire('metal5', xx, lo, hi, TRUNK_SIG_W)
+    L.net = None
+    # --- antenna diodes (KLayout ANT.16): gate-only nets with long M3-M5 get an N+/Psub diode
+    #     under their own M4/M5 wire.  Placed diodes are added to the LVS reference by the caller
+    #     via report['antenna_diodes'] (antenna_diodes.spice_lines).
+    keepouts, taps = [], []
+    for n, (cx, cy) in placements.items():
+        b = prims[by_name[n].key].bbox
+        keepouts.append((cx + b[0], cy + b[1], cx + b[2], cy + b[3]))
+        if by_name[n].model.startswith('nfet'):   # NMOS PCell guard ring = P-substrate tap (macros: rails only)
+            taps.append(keepouts[-1])
+    req = ad.requests_from_shapes(L.shapes, terminals)
+    dcmds, diodes = ad.plan(req, [s[:5] for s in L.shapes], keepouts, taps=taps)
+    L.cmds += dcmds
     for i, prt in enumerate(ports, 1):
         if prt in power_nets:
             xx = next(sx for n, sx in straps if n == prt)
@@ -392,7 +428,7 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
     drc_text = (work / 'drc-count.txt').read_text().strip() if (work / 'drc-count.txt').exists() else 'missing'
     report = dict(cell=flat, image=image, size_um=[round(width, 2), round(top, 2)],
                   area_um2=round(width * top, 1), rows=row_extents, trunk_nets=trunk_nets,
-                  devices=len(devices), drc_count_raw=drc_text, magic_returncode=[r0.returncode, rd.returncode, r.returncode])
+                  devices=len(devices), drc_count_raw=drc_text, antenna_diodes=diodes, magic_returncode=[r0.returncode, rd.returncode, r.returncode])
     (work / 'layout-report.json').write_text(json.dumps(report, indent=1) + '\n')
     return report
 

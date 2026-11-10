@@ -12,10 +12,11 @@ import simlib as S
 
 HERE = flow.HERE
 CTRL_BBF = ['en', 'dir_tx', 'inj', 'rx_direct', 'byp_s1', 'byp_s23', 'obs_sel0', 'obs_sel1',
-            'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3', 'island_off']
+            'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3', 'gain4', 'gain5', 'gainc0', 'gainc1',
+            'island_off']
 BBF_PINS = ('rx_in_p rx_in_n tx_in_p tx_in_n inj_p inj_n out_rx_p out_rx_n out_tx_p out_tx_n obs_p obs_n '
             'ibias en dir_tx inj rx_direct byp_s1 byp_s23 obs_sel0 obs_sel1 bw0 bw1 bw2 bw3 gain0 gain1 gain2 '
-            'gain3 island_off atb_vcm atb_vbp VDD 0')
+            'gain3 gain4 gain5 gainc0 gainc1 island_off atb_vcm atb_vbp VDD 0')
 
 
 def netlist(work, block, view):
@@ -23,7 +24,16 @@ def netlist(work, block, view):
     return S.prepare(work, src, f'{block}_{view}.spice')
 
 
+PGA_GAIN_BITS = ('gain0', 'gain1', 'gain2', 'gain3', 'gain4', 'gain5', 'gainc0', 'gainc1')
+PGA_UNITY = ('gain2',)    # PGA code for 0 dB (k = 4, coarse off): the register reset value
+
+
 def _ctl(names, on, vdd):
+    """Benches that enable the filter without naming a PGA code run it at 0 dB (k = 4): a PGA
+    code of all zeros mutes stage 1 (no input conductance)."""
+    on = set(on)
+    if 'gain2' in names and 'en' in on and not on & set(PGA_GAIN_BITS):
+        on |= set(PGA_UNITY)
     return '\n'.join(f'V{c} {c} 0 {vdd if c in on else 0}' for c in names)
 
 

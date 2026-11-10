@@ -37,16 +37,70 @@ def rel(p):
     return os.path.relpath(p, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(HERE)))))
 
 
+# Netgen strings that make an LVS run a failure wherever they appear in the
+# report.  "Netlists do not match" is also a failure unless netgen flattened
+# exactly that (sub)circuit pair afterwards and compared again; a top-level
+# occurrence is never resolved.
+NETGEN_FAILURES = ('failed pin matching', 'Property errors were found', 'had property errors',
+                   'Netlists do not match', 'no matching pin', 'Top level cell failed',
+                   'Cells have no pins in common', 'has no elements', 'Fatal error')
+
+
 def lvs_result(path):
+    """Strict reading of one netgen comparison report.
+
+    match is True only if the final verdict is a unique match AND none of the
+    NETGEN_FAILURES strings appears, except a subcircuit "Netlists do not match"
+    that netgen itself resolved by flattening that subcircuit pair and
+    re-comparing (recorded in flattened_subcells).  Property errors, pin
+    mismatches and top-level non-matches are always failures.
+    """
     txt = read(path)
     if txt is None:
-        return {'file': rel(path), 'result': 'missing'}
-    fin = [l for l in txt.splitlines() if l.startswith('Final result')]
-    nets = [l for l in txt.splitlines() if l.startswith('Number of nets')]
-    devs = [l for l in txt.splitlines() if l.startswith('Number of devices')]
+        return {'file': rel(path), 'result': 'missing', 'match': False}
+    lines = txt.splitlines()
+    fin = [l for l in lines if l.startswith('Final result')]
+    nets = [l for l in lines if l.startswith('Number of nets')]
+    devs = [l for l in lines if l.startswith('Number of devices')]
     final = fin[-1].split(':', 1)[1].strip() if fin else 'no final result'
+    failures, flattened, dangling = [], [], []
+    for i, l in enumerate(lines):
+        for f in NETGEN_FAILURES:
+            if f not in l:
+                continue
+            if f == 'Netlists do not match' and l.strip() == 'Netlists do not match.':
+                # resolved only if the next "Flattening non-matched subcircuits" follows
+                # before the next comparison verdict and the run continues to a top match
+                tail = lines[i+1:i+4]
+                m = [t for t in tail if 'Flattening non-matched subcircuits' in t]
+                if m:
+                    flattened.append(m[0].strip())
+                    continue
+            if f == 'no matching pin':
+                # A Magic auto-named node (a_<x>_<y>#) that netgen itself lists as a
+                # "disconnected node" of the layout cell is an unconnected extraction
+                # artifact, not a missing schematic pin.  Anything else fails.
+                port = l.split('|')[0].strip()
+                leaf = port.split('/')[-1]
+                if re.fullmatch(r'a_\d+_\d+#', leaf) and any(
+                        'disconnected node: ' + leaf in t or 'disconnected node: ' + port in t for t in lines):
+                    dangling.append(port)
+                    continue
+            failures.append({'line': i+1, 'text': l.strip()})
+    pin_mismatch = 0
+    blocks = [i for i, l in enumerate(lines) if l.startswith('Subcircuit pins:')]
+    if blocks:
+        for l in lines[blocks[-1]+1:]:
+            if l.startswith(('Cell pin lists', 'Final result', 'Device classes')):
+                break
+            pin_mismatch += l.count('**Mismatch**')
+    unique = final.startswith('Circuits match uniquely')
     return {'file': rel(path), 'final': final,
-            'match': final.startswith('Circuits match uniquely'),
+            'match': unique and not failures and not pin_mismatch,
+            'failure_strings': failures[:20], 'failure_count': len(failures),
+            'top_pin_mismatches': pin_mismatch,
+            'flattened_subcells': flattened,
+            'accepted_dangling_extraction_ports': sorted(set(dangling)),
             'top_nets': re.sub(r'\s+', ' ', nets[-1]) if nets else None,
             'top_devices': re.sub(r'\s+', ' ', devs[-1]) if devs else None}
 
@@ -573,10 +627,50 @@ def main():
                        'records_without_hash': nohash,
                        'consistent': bool(hashed) and hashed == {want}}
     ev['pex_simulation_consistency'] = pex_ok
+    # LVS qualification of the two tapeout sources.  Every listed comparison
+    # must be a strict match (lvs_result); otherwise the evidence is written
+    # with status fail and this script exits non-zero.
+    required = {
+        'biasgen_patched': {
+            'lvs_magic_hierarchical_common_ground': 'Magic hierarchical extraction, avss=dvss in both netlists',
+            'lvs_gds_flat': 'flat extraction of the tapeout GDS, separate avss/dvss',
+            'lvs_gds_flat_common_ground': 'flat extraction of the tapeout GDS, avss=dvss',
+        },
+        'bandgap': {
+            'lvs_magic_hierarchical_pnp_alias': 'Magic hierarchical extraction, PNP recognition alias',
+            'lvs_gds_flat_pnp_alias': 'flat extraction of the vendored tapeout GDS, PNP recognition alias',
+        },
+    }
+    rows, ok = [], True
+    for blk, checks in required.items():
+        for key, what in checks.items():
+            r = ev['clean'][blk].get(key) or {'match': False, 'final': 'missing'}
+            rows.append({'block': blk, 'comparison': key, 'what': what, 'match': bool(r.get('match')),
+                         'final': r.get('final'), 'failure_count': r.get('failure_count')})
+            ok &= bool(r.get('match'))
+    ev['lvs_qualification'] = {
+        'status': 'pass' if ok else 'fail',
+        'rule': 'strict netgen reading (summarize.lvs_result): unique final match, no property errors, no pin '
+                'mismatches, no unresolved non-match; only auto-named disconnected extraction ports and '
+                'netgen-flattened subcell non-matches are tolerated and are listed per comparison',
+        'required': rows,
+        'diagnostic_not_required': {
+            'biasgen_patched.lvs_magic_hierarchical': 'expected to fail: Magic hierarchical extraction joins avss and '
+                'dvss through the shared p-substrate (both tap it), so the layout has one ground net where the '
+                'schematic has two; the idac1/idac2 and sink pin swaps netgen then reports are symmetry fallout of '
+                'that non-match.  The die binds both to VSS (integration/core_bias.py), which is what the '
+                'common-ground comparisons check.',
+            'bandgap.lvs_magic_hierarchical / lvs_gds_flat': 'expected to fail: this PDK Magic tech names the 5x5 PNP '
+                'pnp_10p00x00p42; the _pnp_alias comparisons map that name back',
+        },
+    }
     with open(os.path.join(a.out, 'core_support_evidence.json'), 'w') as f:
         json.dump(ev, f, indent=1, sort_keys=False)
         f.write('\n')
     print('wrote', os.path.join(a.out, 'core_support_evidence.json'))
+    print('lvs_qualification', ev['lvs_qualification']['status'])
+    if ev['lvs_qualification']['status'] != 'pass':
+        raise SystemExit('LVS qualification failed: %s' % [r for r in rows if not r['match']])
 
 
 if __name__ == '__main__':

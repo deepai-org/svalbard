@@ -1,5 +1,87 @@
 {
   "status": "generated_candidate_requires_connectivity_and_rule_review",
+  "antenna_diodes": [
+    {
+      "net": "FS_HIGH_P",
+      "placed": true,
+      "x": 11.0,
+      "y": 1221.8,
+      "top": "metal5",
+      "side": 1.44,
+      "area": 2.0736,
+      "pj": 5.76
+    },
+    {
+      "net": "FS_LOW_N",
+      "placed": true,
+      "x": 71.747,
+      "y": 1059.0,
+      "top": "metal4",
+      "side": 0.6,
+      "area": 0.36,
+      "pj": 2.4
+    },
+    {
+      "net": "FS_LOW_N",
+      "placed": true,
+      "x": 12.0,
+      "y": 1295.401,
+      "top": "metal5",
+      "side": 1.23,
+      "area": 1.5129,
+      "pj": 4.92
+    },
+    {
+      "net": "FS_LOW_P",
+      "placed": true,
+      "x": 13.0,
+      "y": 1071.1,
+      "top": "metal5",
+      "side": 2.19,
+      "area": 4.7961,
+      "pj": 8.76
+    },
+    {
+      "net": "PULLDOWN_P",
+      "placed": true,
+      "x": 71.0,
+      "y": 1281.8,
+      "top": "metal5",
+      "side": 1.23,
+      "area": 1.5129,
+      "pj": 4.92
+    },
+    {
+      "net": "PULLUP_P",
+      "placed": true,
+      "x": 85.0,
+      "y": 1263.0,
+      "top": "metal5",
+      "side": 1.55,
+      "area": 2.4025,
+      "pj": 6.2
+    },
+    {
+      "net": "TERM_ENABLE",
+      "placed": true,
+      "x": 99.0,
+      "y": 1064.2,
+      "top": "metal5",
+      "side": 1.89,
+      "area": 3.5721,
+      "pj": 7.56
+    },
+    {
+      "net": "TERM_VCM",
+      "placed": true,
+      "x": 64.0,
+      "y": 623.8,
+      "top": "metal4",
+      "side": 0.6,
+      "area": 0.36,
+      "pj": 2.4
+    }
+  ],
   "family": "wired_receive_usb",
   "flat_cell": "tx_with_primary",
   "marker_export": {
@@ -12,9 +94,9 @@
     },
     "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
     "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
-    "before_gds_sha256": "fe35a9dcc311f499dbbb7c299cbf5f1064d826f2577c63f2d07b6c427274f508",
-    "after_gds_sha256": "b34cca1bd146f891cc3605dbf55b8efce013ecd973bd70196100ed12b3e0d8fc",
-    "physical_magic_sha256": "4af68338b1c16e536f97f2713143d7b7b142463f68171684dc706f25dfaa938e",
+    "before_gds_sha256": "9bcaf82e831786e51065d7f68384f90f1324dd34f83784385984f3977705fd4a",
+    "after_gds_sha256": "c8412c9bb372e9bc1908a2b29c870f0fa76c33d19adb4810c2793884dc2cf118",
+    "physical_magic_sha256": "a5fe63248997619092799e97cd5ae0570c7f8ec828530a7e43f2bc06b3239262",
     "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
   },
   "serial_tail_units": null,
@@ -779,6 +861,12 @@
     "PULLDOWN_P": 1512.0,
     "PULLDOWN_N": 1512.0
   },
+  "columns": 7,
+  "port_top_um": null,
+  "bond_y_offsets_um": [
+    14.0,
+    6.0
+  ],
   "reference_pair_size_um": [
     286.0,
     350
@@ -1278,101 +1366,113 @@
     ],
     [
       199.945,
-      798.0,
+      438.0,
       474.5,
-      1088.0
+      728.0
     ],
     [
       205.765,
-      1101.0,
+      741.0,
       503.235,
-      1273.4099999999999
+      913.41
     ],
     [
       220.0,
-      1088.0,
+      728.0,
       250.0,
-      1101.0
+      741.0
     ],
     [
       300.0,
-      1088.0,
+      728.0,
       330.0,
-      1101.0
+      741.0
     ],
     [
       33.5,
-      396.0,
+      392.0,
       492.0,
-      404.0
+      400.0
     ],
     [
       484.0,
-      396.0,
+      392.0,
       492.0,
-      844.0
+      484.0
     ],
     [
       382.0,
-      836.0,
+      476.0,
       492.0,
-      844.0
+      484.0
     ],
     [
       244.5,
-      408.0,
+      402.0,
       508.0,
-      416.0
+      410.0
     ],
     [
       500.0,
-      408.0,
+      402.0,
       508.0,
-      864.0
+      504.0
     ],
     [
       386.0,
-      856.0,
+      496.0,
       508.0,
-      864.0
+      504.0
     ],
     [
       336.0,
-      802.0,
+      442.0,
       522.0,
-      806.0
+      446.0
     ],
     [
       516.0,
-      800.0,
+      411.0,
       524.0,
-      1516.0
+      448.0
     ],
     [
       129.22,
-      1510.0,
+      413.0,
       522.0,
-      1514.0
+      417.0
+    ],
+    [
+      2.78,
+      437.4,
+      98.22,
+      438.4
+    ],
+    [
+      2.78,
+      438.8,
+      97.22,
+      440.02
     ]
   ],
   "area_ceiling_um2": 340000,
   "fits_assigned_area": true,
   "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
   "sources_sha256": {
-    "analog/pads/layout.py": "04f98a9bff0374c6fba37f130b3ec7b6f97cc216bc2906dd803a3f4f8e5f3729",
+    "analog/pads/layout.py": "747c7be03aef948ba6a117258abe2715d45f607945b93932ca37dd6e4f8ebe8d",
     "analog/pads/gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
     "analog/pads/generated/provider-sites.json": "c58790b22d45497c45bfd20e8cc60e698d8286010856fcc6fa18ab7021d26df4",
     "analog/pads/circuits.py": "1c212fbefc7157c2fb50594b3c137aa9ce2f94bfd30075c9386c05a0fa55e2b3",
     "analog/pads/design.py": "7330ebd9a33ffcfe6a0c9949cd8d51d08a8e6564521b14ae4ec57fd66a1a40f9",
     "analog/pads/wired_receive.py": "955c3b046b5b62c338143ed9fc3c6a141a12e3f067713d05d3868306ff244a37",
     "analog/pads/folded_tail.py": "7d8ddd4f655ac25e8ebbfdcb4c1599b53374f7b6b795e521ecdade18da2ed386",
-    "spec/analog-architecture.json": "5314a56b1a5f2167c120b70839e21a8db3472e6b01091bbaeab55ce7c76d4fa1",
+    "spec/analog-architecture.json": "8c21c072f5c4eddef381d0aca7212672fb90e742c68e3101978b7f89de6118f8",
     "spec/contract.json": "712a142ab5e6fa1f2fe50b30c23be83207125c47caee8b18c79fd134eb7b693c",
     "spec/schematic-implementation.json": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332"
   },
   "drc_count": "0",
   "pcell_terminal_coordinates": {
-    "primitive_0": [
+    "pad_wired_receive_usb__primitive_0": [
       [
         0.4,
         0.0
@@ -1390,7 +1490,7 @@
         1.6800000000000002
       ]
     ],
-    "primitive_1": [
+    "pad_wired_receive_usb__primitive_1": [
       [
         0.4,
         0.0
@@ -1408,7 +1508,7 @@
         2.6799999999999997
       ]
     ],
-    "primitive_2": [
+    "pad_wired_receive_usb__primitive_2": [
       [
         0.4,
         0.0
@@ -1426,7 +1526,7 @@
         4.68
       ]
     ],
-    "primitive_3": [
+    "pad_wired_receive_usb__primitive_3": [
       [
         0.4,
         0.0
@@ -1444,7 +1544,7 @@
         10.680000000000001
       ]
     ],
-    "primitive_4": [
+    "pad_wired_receive_usb__primitive_4": [
       [
         0.61,
         0.0
@@ -1462,7 +1562,7 @@
         1.6800000000000002
       ]
     ],
-    "primitive_5": [
+    "pad_wired_receive_usb__primitive_5": [
       [
         0.61,
         0.0
@@ -1480,7 +1580,7 @@
         10.680000000000001
       ]
     ],
-    "primitive_6": [
+    "pad_wired_receive_usb__primitive_6": [
       [
         0.4,
         0.0
@@ -1498,7 +1598,7 @@
         1.6800000000000002
       ]
     ],
-    "primitive_7": [
+    "pad_wired_receive_usb__primitive_7": [
       [
         0.4,
         0.0
@@ -1516,7 +1616,7 @@
         2.6799999999999997
       ]
     ],
-    "primitive_8": [
+    "pad_wired_receive_usb__primitive_8": [
       [
         0.4,
         0.0
@@ -1534,7 +1634,7 @@
         4.68
       ]
     ],
-    "primitive_9": [
+    "pad_wired_receive_usb__primitive_9": [
       [
         0.4,
         0.0
@@ -1552,7 +1652,7 @@
         7.68
       ]
     ],
-    "primitive_10": [
+    "pad_wired_receive_usb__primitive_10": [
       [
         0.4,
         0.0
@@ -1570,7 +1670,7 @@
         10.680000000000001
       ]
     ],
-    "primitive_11": [
+    "pad_wired_receive_usb__primitive_11": [
       [
         0.76,
         0.0
@@ -1588,7 +1688,7 @@
         10.680000000000001
       ]
     ],
-    "primitive_12": [
+    "pad_wired_receive_usb__primitive_12": [
       [
         0.0,
         1.93
@@ -1602,7 +1702,7 @@
         1.97
       ]
     ],
-    "primitive_13": [
+    "pad_wired_receive_usb__primitive_13": [
       [
         0.0,
         0.98
@@ -1616,7 +1716,7 @@
         1.34
       ]
     ],
-    "primitive_14": [
+    "pad_wired_receive_usb__primitive_14": [
       [
         0.0,
         1.02
@@ -1630,7 +1730,7 @@
         1.48
       ]
     ],
-    "primitive_15": [
+    "pad_wired_receive_usb__primitive_15": [
       [
         0.0,
         1.43
@@ -1644,7 +1744,7 @@
         1.89
       ]
     ],
-    "primitive_16": [
+    "pad_wired_receive_usb__primitive_16": [
       [
         0.0,
         6.68
@@ -1658,7 +1758,7 @@
         7.14
       ]
     ],
-    "primitive_17": [
+    "pad_wired_receive_usb__primitive_17": [
       [
         0.0,
         7.53
@@ -1698,10 +1798,10 @@
     "combined_reserved_um2": 183128.4427,
     "scope": "Incremental geometric union only. Other receiver circuitry, routing clearance and whole-core fit remain unproven.",
     "source_sha256": {
-      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "5314a56b1a5f2167c120b70839e21a8db3472e6b01091bbaeab55ce7c76d4fa1"
+      "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/analog-architecture.json": "8c21c072f5c4eddef381d0aca7212672fb90e742c68e3101978b7f89de6118f8"
     }
   },
-  "base_device_count": 289,
+  "base_device_count": 297,
   "base_net_count": 117,
   "base_candidate_size_um": [
     286.0,
@@ -1712,15 +1812,15 @@
     2.7800000000000002,
     0.0,
     524.0,
-    1516.0
+    1512.72
   ],
   "candidate_size_um": [
     524.0,
-    1516.0
+    1512.72
   ],
-  "area_um2": 335069.37539999996,
+  "area_um2": 323782.00539999997,
   "area_basis": "Allocated nonrectangular union, not material area or bounding rectangle.",
-  "allocation_union_um2": 335069.37539999996,
+  "allocation_union_um2": 323782.00539999997,
   "connected_primary_candidate": true,
-  "device_count": 1170
+  "device_count": 1178
 }

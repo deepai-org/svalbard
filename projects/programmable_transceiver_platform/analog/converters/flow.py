@@ -34,8 +34,8 @@ STDLIB = 'gf180mcu_fd_sc_mcu7t5v0'
 
 BLOCKS = {
     'refbuf': lambda: circuits.refbuf('pt_refbuf'),
-    'adc_i': lambda: circuits.adc2('pt_adc_i'),
-    'adc_q': lambda: circuits.adc2('pt_adc_q'),
+    'adc_i': lambda: circuits.adc_il('pt_adc_i'),
+    'adc_q': lambda: circuits.adc_il('pt_adc_q'),
     'dac_i': lambda: circuits.dac('pt_dac_i'),
     'dac_q': lambda: circuits.dac('pt_dac_q'),
 }
@@ -214,7 +214,7 @@ def layout_block(block):
     L.write()
     log(block, 'drc', L.report['drc_count'])
     lvs_sch = work / f'{c.name}.lvs_sch.spice'
-    lvs_sch.write_text(stdcell_spice().read_text() + '\n' + sch)
+    lvs_sch.write_text(stdcell_spice().read_text() + '\n' + L.lvs_reference(sch))   # + antenna diodes
     res = ck.lvs(work, f'{c.name}.lvs.spice', c.name, lvs_sch.name, c.name)
     log(block, 'lvs', res['final'])
     GEN.mkdir(exist_ok=True)
@@ -226,7 +226,9 @@ def layout_block(block):
                                           (work / 'drc-details.txt').read_text())
     (GEN / f'{block}.mag').write_text((work / f'{c.name}_flat.mag').read_text())
     shutil.copy(work / 'klayout-drc.lyrdb', GEN / f'{block}-klayout-drc.lyrdb') if (work / 'klayout-drc.lyrdb').exists() else None
-    info = dict(L.report, lvs=res['final'], lvs_unique=res['match_unique'], gds_export=gx)
+    from gds_uniquify import publish_checked   # analog/ (on sys.path via convkit)
+    pre = publish_checked(GEN / f'{block}.gds', block, c.name)   # unique subcell names + KLayout precheck
+    info = dict(L.report, lvs=res['final'], lvs_unique=res['match_unique'], gds_export=gx, klayout_precheck=pre)
     (work / 'layout-info.json').write_text(json.dumps(info, indent=2, default=str) + '\n')
     return c, info
 

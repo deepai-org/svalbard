@@ -1,0 +1,110 @@
+
+Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k                     
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
+
+Circuit 1 cell nfet_03v3 and Circuit 2 cell nfet_03v3 are black boxes.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_03v3                       |Circuit 2: nfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_03v3 and nfet_03v3 are equivalent.
+
+Circuit 1 cell pfet_03v3 and Circuit 2 cell pfet_03v3 are black boxes.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: pfet_03v3                       |Circuit 2: pfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pfet_03v3 and pfet_03v3 are equivalent.
+
+Subcircuit summary:
+Circuit 1: ct_tspc2                        |Circuit 2: ct_tspc2                        
+-------------------------------------------|-------------------------------------------
+pfet_03v3 (6)                              |pfet_03v3 (6)                              
+nfet_03v3 (8)                              |nfet_03v3 (8)                              
+Number of devices: 14                      |Number of devices: 14                      
+Number of nets: 12                         |Number of nets: 12                         
+---------------------------------------------------------------------------------------
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: ct_tspc2                        |Circuit 2: ct_tspc2                        
+-------------------------------------------|-------------------------------------------
+CK                                         |CK                                         
+VSS                                        |VSS                                        
+ENB                                        |ENB                                        
+Q                                          |Q                                          
+VDD                                        |VDD                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ct_tspc2 and ct_tspc2 are equivalent.
+Flattening unmatched subcell p_ppolyf_u_1k_w2_l2p4 in circuit pt_lo_obs (0)(4 instances)
+Flattening unmatched subcell p_nfet_03v3_w8_l0p28 in circuit pt_lo_obs (0)(2 instances)
+Flattening unmatched subcell p_nfet_03v3_w10_l0p5 in circuit pt_lo_obs (0)(7 instances)
+Flattening unmatched subcell p_pfet_03v3_w4_l0p28 in circuit pt_lo_obs (0)(4 instances)
+Flattening unmatched subcell p_nfet_03v3_w1_l0p28 in circuit pt_lo_obs (0)(4 instances)
+Flattening unmatched subcell p_nfet_03v3_w6_l0p28 in circuit pt_lo_obs (0)(4 instances)
+Flattening unmatched subcell p_nfet_03v3_w1_l0p5 in circuit pt_lo_obs (0)(1 instance)
+Flattening unmatched subcell p_nfet_03v3_w10_l0p28 in circuit pt_lo_obs (0)(10 instances)
+Flattening unmatched subcell p_pfet_03v3_w8_l0p28 in circuit pt_lo_obs (0)(5 instances)
+Flattening unmatched subcell p_pfet_03v3_w2_l0p28 in circuit pt_lo_obs (0)(1 instance)
+Flattening unmatched subcell p_pfet_03v3_w10_l0p28 in circuit pt_lo_obs (0)(2 instances)
+Flattening unmatched subcell p_nfet_03v3_w2_l0p28 in circuit pt_lo_obs (0)(1 instance)
+Flattening unmatched subcell p_ppolyf_u_1k_w1_l36 in circuit pt_lo_obs (0)(1 instance)
+Flattening unmatched subcell p_nfet_03v3_w4_l0p28 in circuit pt_lo_obs (0)(1 instance)
+
+Class pt_lo_obs (0):  Merged 8 parallel devices.
+Class pt_lo_obs (1):  Merged 8 parallel devices.
+Subcircuit summary:
+Circuit 1: pt_lo_obs                       |Circuit 2: pt_lo_obs                       
+-------------------------------------------|-------------------------------------------
+ppolyf_u_1k (5)                            |ppolyf_u_1k (5)                            
+nfet_03v3 (30->25)                         |nfet_03v3 (30->25)                         
+pfet_03v3 (12->9)                          |pfet_03v3 (12->9)                          
+ct_tspc2 (2)                               |ct_tspc2 (2)                               
+Number of devices: 41                      |Number of devices: 41                      
+Number of nets: 28                         |Number of nets: 28                         
+---------------------------------------------------------------------------------------
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: pt_lo_obs                       |Circuit 2: pt_lo_obs                       
+-------------------------------------------|-------------------------------------------
+EN                                         |EN                                         
+LP                                         |LP                                         
+LN                                         |LN                                         
+OBS                                        |OBS                                        
+VSS                                        |VSS                                        
+VDD                                        |VDD                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pt_lo_obs and pt_lo_obs are equivalent.
+
+Final result: Circuits match uniquely.
+.

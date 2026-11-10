@@ -19,18 +19,40 @@ import sims
 import wrx_flow as f
 
 CEILING = dict(termination=200000, rxlevel=50000, rxselect=80000, ctle=200000, slicer=360000, detect=180000,
-               cdr=300000, wmon_sel=None)   # cdr: lead reallocated 300k for the speed pass
+               cdr=300000, wmon_sel=None, ptrim=60000)   # cdr: lead reallocated 300k for the speed pass
 CORNERS = [(c, t, v) for c in ('typical', 'ss', 'ff') for t in (22, 32) for v in (3.15, 3.35)]
 NOMINAL = ('typical', 27, 3.3)
 # one StrongARM sampler per device row keeps its sensitive nets row-local
 COLUMNS = dict(slicer=40, detect=30, cdr=20)
 
 
+def layout_block_slicer():
+    """pt_slicer r2: compact cells + macro assembly (slicer_compact.py), same report keys as layout_block."""
+    import slicer_compact as sc
+    cells = {n: sc.build_cell(n) for n in sc.CELLS}
+    top = sc.build_top()
+    sub = f.parse_spice(f.HERE / 'slicer.spice')
+    rep = dict(block='slicer', subckt=sub.name, devices=len(sub.devices), nets=len(sub.nets),
+               drc_errors=top['drc_errors'] + sum(c['drc_errors'] for c in cells.values()), drc_details='',
+               lvs_unique_match=bool(top['lvs']['unique_match'] and all(c['lvs']['unique_match'] for c in cells.values())),
+               lvs_final=top['lvs']['summary'].strip(), size_um=top['layout']['size_um'], area_um2=top['layout']['area_um2'],
+               area_ceiling_um2=CEILING['slicer'], gds_export=top['gds_export'],
+               revision='r2 compact (slicer_compact.py: ws_sa x8 + ws_ctl, layout_engine macro assembly)',
+               cells={n: dict(drc_errors=c['drc_errors'], lvs_unique=c['lvs']['unique_match'], size_um=c['size_um'],
+                              devices=c['devices']) for n, c in cells.items()},
+               extraction='flat (ext2spice hierarchy off, cthresh 0, C only)')
+    (f.GENERATED / 'slicer-layout.json').write_text(json.dumps(rep, indent=1, default=str) + '\n')
+    return rep
+
+
 def layout_block(block):
+    if block == 'slicer':
+        return layout_block_slicer()
     sub = f.parse_spice(f.HERE / f'{block}.spice')
     work = f.SCRATCH / 'layout' / block
     lay = f.generate_layout(sub, work, columns=COLUMNS.get(block))
-    lv = f.lvs(work, f'{sub.name}.lvs.spice', sub.name, f.HERE / f'{block}.spice', sub.name)
+    ref = f.lvs_reference(f.HERE / f'{block}.spice', sub.name, lay.get('antenna_diodes'), work / 'lvs_reference.spice')
+    lv = f.lvs(work, f'{sub.name}.lvs.spice', sub.name, ref, sub.name)
     f.GENERATED.mkdir(exist_ok=True)
     # Publishable GDS: re-export the saved flat cell with the analog image's Magic 8.3.678
     # (the canary's 8.3.623 drops HRES 62/0 on ppolyf_u_1k) and run KLayout GF180 DRC on it.
@@ -41,6 +63,8 @@ def layout_block(block):
     shutil.copy(work / f'{sub.name}.mag', exp / f'{sub.name}.mag')
     gds_export = f.export_gds(exp, sub.name, sum(d.model.startswith('ppolyf') for d in sub.devices))
     shutil.copy(exp / f'{sub.name}.gds', f.GENERATED / f'{block}.gds')
+    from gds_uniquify import publish_checked   # analog/ (on sys.path via wrx_flow)
+    precheck = publish_checked(f.GENERATED / f'{block}.gds', block, sub.name)   # unique names + KLayout precheck
     for ext in ('mag', 'ext.spice'):
         shutil.copy(work / f'{sub.name}.{ext}', f.GENERATED / f'{block}.{ext}')
     shutil.copy(work / 'lvs.txt', f.SCRATCH / 'layout' / f'{block}-lvs.txt')
@@ -49,7 +73,7 @@ def layout_block(block):
                drc_errors=lay['drc_count'], drc_details=drc_lines[:2000] if lay['drc_count'] else '',
                lvs_unique_match=lv['unique_match'], lvs_final=lv['final_result'],
                size_um=lay['size_um'], area_um2=lay['area_um2'], area_ceiling_um2=CEILING.get(block),
-               gds_export=gds_export,
+               gds_export=gds_export, klayout_precheck=precheck,
                grid=dict(columns=lay['columns'], rows=lay['rows'], pitch_um=lay['pitch_um']))
     (f.GENERATED / f'{block}-layout.json').write_text(json.dumps(rep, indent=1) + '\n')
     return rep
@@ -63,12 +87,14 @@ def sim_block(block, netkind, corner, temp, vdd):
     tag = f'{netkind}_{corner}_{temp}_{vdd}'
     benches = sims.BENCHES[block]
     if block == 'slicer':
-        dl = f.slicer_delays(sub, net, (1e9, 480e6), tag, corner, temp, vdd)
-        benches = [lambda s, n, **k: sims.tb_slicer(s, n, delays=dl, **k)]
+        rates = tuple(4 * fr for fr in sims.RING_PLAN)
+        dl = f.slicer_delays(sub, net, rates, tag, corner, temp, vdd)
+        benches = [lambda s, n, **k: sims.tb_slicer_plan(s, n, delays=dl, **k),
+                   lambda s, n, **k: sims.tb_slicer(s, n, rates=(), usb=False, **k)]   # offset / trim ramps
     return f.run_cases(block, sub, net, benches, tag, corner=corner, temp=temp, vdd=vdd)
 
 
-MAXRATE = dict(slicer=(1.5e9, 2e9, 2.5e9, 2.97e9))
+MAXRATE = dict(slicer=(3.6e9, 4e9))   # above the ring plan (3.24 Gb/s quarter): margin, non-gating
 
 
 def maxrate_block(block, corner, temp, vdd):
@@ -163,6 +189,83 @@ CLOSED = [  # extracted runs with timing's pll_ring.ext (tt/27C/3.3V): name, kin
     ('dual_half_1g25_no_fll', 'closed', False, dict(rate=1.25e9, bpc=2, T=4.4e-6, thold=1.6e-6, tpre=0.2e-6,
                                                     vc0=1.15, settle=1.2e-6))]
 CLOSED_STORE = f.SCRATCH / 'cdr-closed.json'
+
+# AC-3 (2026-11-10): pt_cdr r-ac3 + pll_ring (HOLD from t=0) + slicer r2, all extracted, tt/27C/3.3V.
+# Line rates are set relative to the measured free-running ring f1 at vc0 (the FLL result stand-in):
+# the loop must pull in the static offset with the integral path alone (no hand-over).  name, gating, kwargs
+AC3 = [('ac3_q_p600', True, dict(bpc=4, ppm=600)),
+       ('ac3_q_m5600', True, dict(bpc=4, ppm=-5600)),
+       ('ac3_h_p600', True, dict(bpc=2, ppm=600)),
+       ('ac3_h_m5600', True, dict(bpc=2, ppm=-5600)),
+       # SSC slope: -400 ppm/us ramp (> the 330 ppm/us of a 33 kHz 0..-5000 ppm triangle) from release
+       ('ac3_q_ramp', True, dict(bpc=4, ppm=0, ppm_per_us=-400, T=5.0e-6)),
+       # sinusoidal jitter points (jitter tolerance), +600 ppm static offset
+       ('ac3_q_sj03_2m', False, dict(bpc=4, ppm=600, sj_ui=0.3, sj_hz=2e6, T=5.0e-6)),
+       ('ac3_q_sj01_10m', False, dict(bpc=4, ppm=600, sj_ui=0.1, sj_hz=10e6))]
+AC3_STORE = f.SCRATCH / 'cdr-ac3.json'
+
+
+def ac3_free(vc0=1.16, rate=2.5e9, bpc=4, tpre=0.8e-6):
+    """Free-running RX ring with HOLD_PLL=1 from t=0 and VCTRL released from vc0 at tpre (no votes)."""
+    work = f.SCRATCH / 'ac3' / f'free_bpc{bpc}'
+    work.mkdir(parents=True, exist_ok=True)
+    shutil.copy(f.PROJECT / 'analog/timing/generated/pll_ring.ext.spice', work / 'pll.spice')
+    shutil.copy(f.GENERATED / 'cdr.ext.spice', work / 'cdr.spice')
+    shutil.copy(f.GENERATED / 'slicer.ext.spice', work / 'sl.spice')
+    psub = sims.subckt_ports(work / 'pll.spice', 'pt_pll_ring')
+    body, ctl, an = sims.tb_cdr_ac3(psub, f.parse_spice(work / 'sl.spice'), f.parse_spice(work / 'cdr.spice'),
+                                    rate=rate, bpc=bpc, T=tpre + 0.8e-6, tpre=tpre, vc0=vc0, bb=False,
+                                    vz_node=vz_node(work / 'pll.spice'), settle=0.2e-6)
+    (work / 'tb.cir').write_text('\n'.join([f'* ac3 free', sims.sim_header('typical', 27), '.include pll.spice',
+                                            '.include sl.spice', '.include cdr.spice', body, '.control', ctl, '.endc', '.end']))
+    log = f.ngspice(work, 'tb.cir', timeout=10 * 3600)
+    r = an(log, work / 'tran.txt')
+    r['pll_ring_ext_sha256'] = f.sha256(work / 'pll.spice')
+    r['cdr_ext_sha256'] = f.sha256(work / 'cdr.spice')
+    return r, work
+
+
+def ac3_one(name, kw, f1, src):
+    kw = dict(kw)
+    bpc = kw.pop('bpc')
+    work = f.SCRATCH / 'ac3' / name
+    work.mkdir(parents=True, exist_ok=True)
+    for n in ('pll.spice', 'cdr.spice', 'sl.spice'):
+        shutil.copy(src / n, work / n)
+    psub = sims.subckt_ports(work / 'pll.spice', 'pt_pll_ring')
+    rate = bpc * f1     # ppm/ramp/SJ are applied relative to the free-running ring
+    body, ctl, an = sims.tb_cdr_ac3(psub, f.parse_spice(work / 'sl.spice'), f.parse_spice(work / 'cdr.spice'),
+                                    rate=rate, bpc=bpc, vz_node=vz_node(work / 'pll.spice'), **kw)
+    (work / 'tb.cir').write_text('\n'.join([f'* {name}', sims.sim_header('typical', 27), '.include pll.spice',
+                                            '.include sl.spice', '.include cdr.spice', body, '.control', ctl, '.endc', '.end']))
+    log = f.ngspice(work, 'tb.cir', timeout=10 * 3600)
+    try:
+        r = an(log, work / 'tran.txt')
+    except Exception as exc:
+        r = dict(error=repr(exc)[:300], log_tail=log[-500:], **{'pass': False})
+    r.update(kwargs=kw, free_running_ring_hz=f1, pll_ring_ext_sha256=f.sha256(work / 'pll.spice'),
+             cdr_ext_sha256=f.sha256(work / 'cdr.spice'), slicer_ext_sha256=f.sha256(work / 'sl.spice'))
+    return r
+
+
+def run_ac3(only=None, jobs=1):
+    """Free-running reference first (one per rate mode), then the AC-3 cases; results in AC3_STORE."""
+    res = json.loads(AC3_STORE.read_text()) if AC3_STORE.exists() else {}
+    free = {}
+    for bpc in sorted({k['bpc'] for n, g, k in AC3 if not only or n in only}):
+        r, work = ac3_free(bpc=bpc)
+        res[f'free_bpc{bpc}'] = r
+        AC3_STORE.write_text(json.dumps(res, indent=1, default=float))
+        free[bpc] = (r.get('ring_hz_end_fit'), work)
+        print('ac3 free', bpc, r.get('ring_hz_end_fit'), flush=True)
+    cases = [(n, g, k) for n, g, k in AC3 if not only or n in only]
+    with ThreadPoolExecutor(jobs) as ex:
+        futs = {n: (g, ex.submit(ac3_one, n, k, *free[k['bpc']])) for n, g, k in cases}
+        for n, (g, fu) in futs.items():
+            res[n] = dict(fu.result(), gating=g)
+            AC3_STORE.write_text(json.dumps(res, indent=1, default=float))
+            print('ac3', n, {k: res[n].get(k) for k in ('bits_checked', 'bit_errors', 'ring_hz_end_fit', 'pass', 'error')}, flush=True)
+    return res
 
 
 def vz_node(pll_ext):
@@ -308,18 +411,16 @@ def main():
     if 'cdr' in a.blocks:
         results['cdr']['rtl'] = json.loads(Path(a.rtl_json).read_text()) if a.rtl_json else rtl_check()
         if not a.no_closed:
-            with ThreadPoolExecutor(3) as ex:     # at most 3 simulation containers
-                futs = {n: (g, ex.submit(closed_one, n, k, kw)) for n, k, g, kw in CLOSED}
-                results['cdr']['closed'] = {n: dict(fu.result(), gating=g) for n, (g, fu) in futs.items()}
-            CLOSED_STORE.write_text(json.dumps(results['cdr']['closed'], indent=1, default=float))
-        elif CLOSED_STORE.exists():
-            # --no-closed: reuse the last extracted closed-loop results (each records its pll_ring sha)
-            results['cdr']['closed'] = dict(json.loads(CLOSED_STORE.read_text()), reused_from=str(CLOSED_STORE))
-            print('closed', {n: (r.get('bit_errors'), r.get('bits_checked')) for n, r in results['cdr']['closed'].items()
-                             if isinstance(r, dict)}, flush=True)
+            results['cdr']['ac3'] = run_ac3()
+        elif AC3_STORE.exists():
+            # --no-closed: reuse the last AC-3 extracted closed-loop results (each records its netlist shas)
+            results['cdr']['ac3'] = dict(json.loads(AC3_STORE.read_text()), reused_from=str(AC3_STORE))
     for b in a.blocks:
         (f.SCRATCH / f'{b}-results.json').write_text(json.dumps(results[b], indent=1, default=str))
-    import evidence
+    import importlib.util    # by path: slicer_compact/wrx_compact put analog/timing (with its own evidence.py) on sys.path
+    spec = importlib.util.spec_from_file_location('wrx_evidence', f.HERE / 'evidence.py')
+    evidence = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(evidence)
     for b in a.blocks:
         evidence.write(b, results[b])
 

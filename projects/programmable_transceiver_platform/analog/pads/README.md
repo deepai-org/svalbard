@@ -32,6 +32,24 @@ the tapeout-plan tests, not ESD/HBM/CDM ratings.
 All five layouts are DRC 0, netgen LVS match and pass the independent device
 audit (`extract_audit.py`).
 
+### 2026-11-10 changes (pads owner): LU-01 tap stripes, RF_TX pad, isolation clamps, ring regulator
+
+- **LU-01 (shunt v2.2, `rail_shunt_v2.py`).** Each shunt bank is built from 14 guarded
+  16-finger sub-banks whose shared guard columns are p+ tap stripes (20.96 µm pitch,
+  farthest NCOMP 10.3 µm from a tap; DRM LU.3 asks ≤ 15 µm). Fingers 53.6 µm × 224 per
+  stage = 12,006 µm (≥ the selected 12,000 µm). LU audit of the five rebuilt compact
+  families: 0 µm² of n-diffusion beyond 15 µm (was 7,193 µm²). `run_first_pass.lvs` now
+  also fails on netgen property errors (a W/L/m mismatch used to pass as a match).
+  Rebuild: `scratch/pads-lu01/` (`build.sh`, `kl.sh`, `sims.sh`, `lu_audit.py`).
+- **RF_TX (`rftx_shunt.py`, cell `pad_rftxpad`, ESD-04).** The RF_TX pads rest at 3.3 V and
+  peak at ~4.1 V, so the static shunt conducted. The RF_TX macro replaces the stack with one
+  gate-coupled nfet_06v0 bank (Cc 32 pF MIM, Rg 6 kΩ). It has no 10 µA onset up to 5.4 V,
+  the clamp averages ≤ 3.3 µA under the TX swing, HD3 ≤ −43 dBc, and stress and HBM-like
+  peaks are below the rf_pair at every corner. Build: `scratch/pads-esd04/` (`esd04.py`,
+  `layout/build_rftx.sh`).
+- **Isolation clamps:** see `analog/island_support/README.md` §2a.
+- **Ring-PLL regulator `pt_pll_vreg`:** see `scratch/pdn04-ldo/` and interface-changes PD9.
+
 ### Protection foundation (drop-in macro v2.1, `network-shunt/`)
 
 - Canonical isolated-rail `protection_network`: 4 + 4 steering diodes of
@@ -98,7 +116,7 @@ pad 2.52–3.00 V. A 3.63 V peer draws ≤ 28.6 mA at ff/85 °C, into VSS only.
 | --- | --- | --- |
 | Wired TX | 3.3 V-referenced high levels droop up to ~0.3 V at ff | Board resistors or AC coupling instead of on-chip termination |
 | USB FS | High level loaded by up to ~5–6 mA at ff | External board PHY |
-| Reference | Single-ended peaks near 2.65 V compressed at ff | Source ≤ 0.55 V peak, or `AUX_CLK` |
+| Reference | As a reference clock into `diff_clk_rx`: single-ended peaks near 2.65 V compressed at ff | Source ≤ 0.55 V peak, or `AUX_CLK`. This limit is for the clock-reference use only. As the external LO (`pt_lo_ext`, board B3: 3.0–4.0 Vpp open-circuit from 50 Ω, 10 pF coupling, 1.5 nH bond wire) the pad peaks stay ≤ 1.95 V in the simulated window and 13/13 envelope points pass at 3.0 Vpp in steady state (`analog/timing/generated/lo_ext-pad-evidence.json`, refpad on `REF_IN`, rf pair on `AUX_CLK`). The pad DC is still rising slowly at 300 ns (VCM bias through the 10 pF board coupling), so the steady-state peak is not simulated directly. |
 | RF RX / TX | Unaffected below ~2.1 V; higher driver peaks clipped | LNA bypass with external LNA; mixer output to external PA |
 
 The TX ss/3.15 V swing (0.50 / 0.81 V) is the same on the canonical layout

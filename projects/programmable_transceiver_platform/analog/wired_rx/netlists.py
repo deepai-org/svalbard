@@ -323,34 +323,22 @@ def _ms_flop(c, tag, d, clk, clkb, vdd, vss):
 
 
 def slicer():
-    ports = ['VDD_WIRE_SW', 'VSS', 'slicer_en', 'SL_P', 'SL_N'] + [f'CKP{k}' for k in range(8)] + ['QCK',
-             'D0', 'E0', 'D1', 'E1', 'D2', 'E2', 'D3', 'E3']
-    trims = []
-    for s_ in ('d0', 'e0', 'd1', 'e1'):
-        trims.append([f'trim_{s_}_{b}' for b in ('p0', 'p1', 'n0', 'n1')])
-        ports += trims[-1]
-    c = Net('pt_slicer', ports,
-            """Quarter-rate sampler bank: eight PMOS-input StrongARM samplers on the eight 45-degree
-quarter-rate clocks CKP0..CKP7 from pt_cdr (line_rate/4; 625 MHz at 2.5 Gb/s):
+    """pt_slicer r2 (2026-11-09): compact StrongARM bank built by slicer_compact.py (8 x ws_sa + ws_ctl).
+    The netlist here is the flattened intended netlist of those cells, so the schematic and the
+    compact layout cannot diverge.  r1 (generic gencell layout, _strongarm) failed extracted at ss."""
+    import slicer_compact as sc
+    c = Net('pt_slicer', list(sc.TOP_PORTS),
+            """Quarter-rate sampler bank (r2 compact, slicer_compact.py): eight PMOS-input StrongARM samplers on
+the eight 45-degree ring clocks CKP0..CKP7 (ring 480-810 MHz):
 D0@CKP0, E0@CKP1, D1@CKP2, E1@CKP3, D2@CKP4, E2@CKP5, D3@CKP6, E3@CKP7 (E_i = edge after D_i).
-Each sampler's tail/reset is driven by the opposite phase (CKP(k+4)), so it evaluates for half a
-quarter-rate period (0.8 ns at 2.5 Gb/s); a NOR SR latch holds the decision for one period.
+Each sampler's tail/reset is driven by the opposite phase (CKP(k+4)): reset while high, evaluates
+for half a ring period; a NOR SR latch holds the decision for one period.
 QCK = buffered CKP0 for the RTL (capture D0..E1 on QCK rising, D2..E3 on QCK falling).
 Input CM 0..~1.5 V, so the same bank is the USB 2.0 HS receiver (CM ~0.2 V).
-Offset trim: 2+2 bits of switched diffusion capacitance, shared by the two samplers of a phase.
-slicer_en=0: shared tail header off, outputs forced low.""")
+Offset trim (r3, MT-01): 3+3 bits of switched diffusion capacitance per sampler (r2: 2+2 shared by a phase pair).
+slicer_en=0: per-sampler tail headers off, outputs forced low.""")
     c.vdd = 'VDD_WIRE_SW'
-    c.en, c.enb = 'slicer_en', 'enb'
-    c.sa_k, c.sa_rst, c.sa_latch, c.sa_buf = 2, 4, 2, True
-    V = 'VDD_WIRE_SW'
-    c.inv('slicer_en', 'enb')
-    c.p('vdd_sa', 'enb', V, w=20, m=8)                  # sampler tail header
-    c.nand(['CKP0', 'slicer_en'], 'qck_b', wn=2, wp=4)   # QCK held low (static) when disabled
-    c.inv('qck_b', 'QCK', wn=4, wp=8)
-    plan = [('sd0', 0, 'D0', 0), ('se0', 1, 'E0', 1), ('sd1', 2, 'D1', 2), ('se1', 3, 'E1', 3),
-            ('sd2', 4, 'D2', 0), ('se2', 5, 'E2', 1), ('sd3', 6, 'D3', 2), ('se3', 7, 'E3', 3)]
-    for tag, k, out, ti in plan:
-        _strongarm(c, tag, None, 'SL_P', 'SL_N', out, trim=trims[ti], ckn_ext=f'CKP{(k + 4) % 8}', tail_src='vdd_sa')
+    c.lines += sc.flat_lines()
     return c
 
 
@@ -469,91 +457,135 @@ def _long_stack(c, kind, d, g, s_, w, l_each, n, b=None):
 
 
 def cdr():
-    ports = ['VDD_PLL_SW', 'VSS', 'IBIAS', 'cdr_en', 'freq_hold', 'bb_gain', 'BB_UP', 'BB_DN', 'IB_PLL', 'VCTRL',
-             'REF_IN', 'REF_PLL', 'FBCK_IN', 'atb_cdr_pbias']
+    """AC-3 (2026-11-10): see the Net docstring."""
+    ports = ['VDD_PLL_SW', 'VSS', 'IBIAS', 'cdr_en', 'pfd_mode', 'ref_sel', 'g0', 'g1', 'g2',
+             'UP0', 'UP1', 'UP2', 'UP3', 'DN0', 'DN1', 'DN2', 'DN3', 'FUP', 'FDN',
+             'IB_PLL', 'HOLD_PLL', 'VCTRL', 'REF_IN', 'WCK_IN', 'REF_PLL', 'atb_cdr_pbias']
     c = Net('pt_cdr', ports,
-            """Dual-loop CDR analog cell (no phase interpolator).  Works with a second instance of the timing
-family's pt_pll_ring (analog/timing/pll_ring.spice, instantiated unchanged at integration):
-  * IB_PLL -> pt_pll_ring.IBIAS: 10 uA bias for the ring PLL's charge pump.  freq_hold=0: the PLL's
-    PFD/charge pump lock the RX ring to the reference (frequency loop).  freq_hold=1 freezes it:
-  * At the first FBCK_IN (<- pt_pll_ring.FBCK) falling edge after freq_hold, REF_IN -> REF_PLL
-    (-> pt_pll_ring.REF) is held low and IB_PLL is clamped to VSS together, so the PLL's PFD parks
-    (DN on) onto an already unbiased pump.  cdr_en=0 also clamps IB_PLL, holds REF_PLL low and stops
-    the hand-over flops' clock.
-  * VCTRL <-> pt_pll_ring.ATB_VCTRL (the loop-filter node): a weak bang-bang charge pump driven by
-    BB_UP / BB_DN from pt_wrx_cdr_loop (one word period per decision) adds/removes ~60 nA
-    (bb_gain=1: ~120 nA).  Through the PLL's 20 kohm series resistor this is the proportional path,
-    the filter capacitors integrate it (phase loop with frequency tracking).
-  * cdr_en=0: no current, IB_PLL clamped, BB pump switches open.
+            """AC-3 CDR analog cell (r-ac3, 2026-11-10; replaces the dual-loop hand-over cell).  Works with a
+second instance of timing's pt_pll_ring (unchanged ports):
+  * No HOLD hand-over.  pfd_mode=0 (wired CDR, all half/quarter rates): HOLD_PLL=1 from enable, so the
+    ring PLL's PFD stays in reset and its pump is idle; the reference keeps toggling REF_PLL so the
+    pll_ring HOLD flop (clocked by the reference) registers HOLD.  Frequency acquisition is the RTL FLL
+    on FUP/FDN and phase tracking is the per-bit Alexander votes UP0..3/DN0..3, both on the SAME pump
+    legs into VCTRL (= pt_pll_ring.ATB_VCTRL): one continuous integral node, nothing changes hands.
+  * pfd_mode=1 (HDMI/DVI, or line-PLL use): HOLD_PLL=0, the PLL PFD locks the ring to REF_PLL and the
+    vote legs still add phase-only tracking.
+  * ref_sel: REF_PLL = ref_sel ? WCK_IN (forwarded TMDS clock from pt_diff_clk_rx) : REF_IN.
+  * Pump: 4 legs (one per bit slot), each a source and a sink of unit current
+    8 nA x (1 + g0 + 2 g1 + 4 g2) = 8..64 nA (loop bandwidth code, cdr.config.loop_bw), current-steered
+    between VCTRL and VDUMP (unity-gain follower of VCTRL), so a source never changes voltage.
+    UPk = data k and edge k differ (clock late) -> source; DNk = edge k and data k+1 differ -> sink.
+    FUP/FDN (FLL) drive all four legs.  UP and DN of one leg can both be high only on a metastable
+    vote; then source and sink cancel.
+  * IB_PLL: 10 uA bias for the PLL charge pump (needed in both modes; in pfd_mode=0 HOLD keeps it idle).
+  * cdr_en=0: every current off, IB_PLL clamped, REF_PLL low, HOLD_PLL high.
 IBIAS: 10 uA sunk from the island bias distribution.""")
     V = 'VDD_PLL_SW'
     c.vdd = V
     c.inv('cdr_en', 'enb')
-    c.inv('freq_hold', 'holdb')
-    c.nand(['cdr_en', 'freq_hold'], 'holdon_b', wn=2, wp=4)  # low = ramp the PLL pump bias down
-    c.inv('holdon_b', 'holdon', wn=1, wp=2)
-    # Hand-over (extracted lessons): ramping the PLL pump bias while its PFD runs left the UP source
-    # (slow PMOS mirror node) on longer than the DN sink (+1..3 % ring step); gating REF while the pump
-    # is biased parked DN on a live 20 uA sink (VCTRL collapse; with the clamp one FBCK edge later
-    # still ~130 fC = -2 %).  Now, at the first FBCK falling edge after freq_hold (mid-cycle: when
-    # locked, REF and FB rise together half a period away), REF_PLL is held low AND IB_PLL is clamped
-    # to VSS in the same instant.  The PFD is idle then; at the next FB edge it parks with DN on, onto
-    # a sink that is already dead, and UP stays off.  Leaving hold restores both at a falling edge.
-    c.nand(['FBCK_IN', 'cdr_en'], 'fbck_b', wn=1, wp=2)    # flops not clocked when disabled
-    _dff(c, 'holdon', 'fbck_b', 'hq1')
-    c.nand(['hq1', 'cdr_en'], 'gref_b', wn=2, wp=4)
-    c.nand(['REF_IN', 'gref_b', 'cdr_en'], 'refg_b', wn=2, wp=8)   # REF_PLL low when disabled
-    c.inv('refg_b', 'REF_PLL', wn=8, wp=8)    # stiff low: REF_IN feedthrough when off (85 C)
-    c.nand(['cdr_en', 'gref_b'], 'ibclamp', wn=2, wp=4)     # high = IB_PLL source off and clamped
-    c.nand(['cdr_en', 'freq_hold'], 'bbon_b', wn=2, wp=4)    # BB pump on = en & hold
-    c.inv('bbon_b', 'bbon', wn=2, wp=4)
-    # reference: IBIAS -> switch -> NMOS diode (4/2) -> PMOS diode (8/2, atb_cdr_pbias)
+    # reference clock select and HOLD
+    c.inv('ref_sel', 'rsb', wn=1, wp=2)
+    c.nand(['REF_IN', 'rsb', 'cdr_en'], 'r0b', wn=2, wp=4)
+    c.nand(['WCK_IN', 'ref_sel', 'cdr_en'], 'r1b', wn=2, wp=4)
+    c.nand(['r0b', 'r1b'], 'refm', wn=2, wp=4)
+    c.inv('refm', 'refmb', wn=2, wp=4)
+    c.inv('refmb', 'REF_PLL', wn=8, wp=8)
+    c.nand(['cdr_en', 'pfd_mode'], 'HOLD_PLL', wn=2, wp=4)
+    # bias reference: IBIAS -> switch -> NMOS diode (4/2) -> PMOS diode (8/2, atb_cdr_pbias)
     c.n('nbd', 'cdr_en', 'IBIAS', w=4)
     c.n('nbd', 'nbd', 'VSS', w=4, l=2)
     c.n('nbd', 'enb', 'VSS', w=1)
     c.n('atb_cdr_pbias', 'nbd', 'VSS', w=4, l=2)
     c.p('atb_cdr_pbias', 'atb_cdr_pbias', V, w=8, l=2)
-    c.p('atb_cdr_pbias', 'cdr_en', V, w=2)                   # bias gate to VDD when off
-    # IB_PLL: 10 uA PMOS copy of the reference; off and clamped to VSS when disabled or in hold
+    c.p('atb_cdr_pbias', 'cdr_en', V, w=2)
+    # IB_PLL: 10 uA PMOS copy, clamped to VSS when disabled
     c.p('ibs', 'atb_cdr_pbias', V, w=8, l=2)
-    c.p('IB_PLL', 'ibclamp', 'ibs', w=4)
-    c.n('IB_PLL', 'ibclamp', 'VSS', w=4)
-    # Bang-bang pump, current steering (extracted lesson: a switch in series with a long-channel source
-    # starves it -- the stack's channel charge (~0.2 pC) must be rebuilt by its own 50 nA, so a word-long
-    # pulse delivered ~nothing; a plain drain-side switch dumps fC per toggle, more than the 0.4 fC a
-    # decision is worth).  The sources run continuously and NMOS switches steer each current either onto
-    # VCTRL or onto VDUMP, which a unity-gain OTA (~0.6 uA, on whenever cdr_en) holds at VCTRL, so the
-    # source drains never change voltage.
-    #   OTA: NMOS pair (VCTRL +, VDUMP -), PMOS mirror, output VDUMP
+    c.p('IB_PLL', 'enb', 'ibs', w=4)
+    c.n('IB_PLL', 'enb', 'VSS', w=4)
+    # pump unit reference: 1 uA PMOS copy (W/L 0.4 vs 4) into an NMOS diode nu (2/1); nu mirrors 1 uA into
+    # the PMOS diode pu (2/1).  Units: 0.5/32 (W/L 1/64 of the diodes' 2/1 -> ~8 nA at 1:128, subthreshold)
+    c.p('nu', 'atb_cdr_pbias', V, w=0.8, l=2)
+    c.n('nu', 'nu', 'VSS', w=2, l=1)
+    c.n('nu', 'enb', 'VSS', w=1)
+    c.n('pu', 'nu', 'VSS', w=2, l=1)
+    c.p('pu', 'pu', V, w=2, l=1)
+    c.p('pu', 'cdr_en', V, w=1)
+    #   OTA follower: NMOS pair (VCTRL +, VDUMP -), PMOS mirror, output VDUMP (~0.6 uA tail).  A 10 uA OTA
+    #   with 1 pF on VDUMP was tried: the vote-rate error grew to 0.9-1.6 uA (make-before-break overlap of
+    #   the two steering switches shorts a stiffer VDUMP to VCTRL), so the weak follower stays.
     c.n('ota_t', 'nbd', 'ota_e', w=.5, l=4)
     c.n('ota_e', 'cdr_en', 'VSS', w=1)
     c.n('ota_1', 'VCTRL', 'ota_t', w=2, l=1)
     c.n('VDUMP', 'VDUMP', 'ota_t', w=2, l=1)
     c.p('ota_1', 'ota_1', V, w=1, l=2)
     c.p('VDUMP', 'ota_1', V, w=1, l=2)
-    #   steering controls (bbon = cdr_en & freq_hold)
-    c.nand(['BB_UP', 'bbon'], 'up_n', wn=1, wp=2)
-    c.inv('up_n', 'up_on', wn=1, wp=2)
-    c.nand(['BB_DN', 'bbon'], 'dn_n', wn=1, wp=2)
-    c.inv('dn_n', 'dn_on', wn=1, wp=2)
-    c.nand(['up_on', 'bb_gain'], 'up2_n', wn=1, wp=2)
-    c.inv('up2_n', 'up2_on', wn=1, wp=2)
-    c.nand(['dn_on', 'bb_gain'], 'dn2_n', wn=1, wp=2)
-    c.inv('dn2_n', 'dn2_on', wn=1, wp=2)
-    for k, (src_on, src_off, kind) in enumerate((('up_on', 'up_n', 'p'), ('up2_on', 'up2_n', 'p'),
-                                                 ('dn_on', 'dn_n', 'n'), ('dn2_on', 'dn2_n', 'n'))):
-        node = f'bbs{k}'
-        if kind == 'p':
-            _long_stack(c, 'p', node, 'atb_cdr_pbias', V, 1, 10, 4, b=V)
-        else:
-            _long_stack(c, 'n', node, 'nbd', 'VSS', .5, 10, 4)
-        c.n('VCTRL', src_on, node, w=.5)       # steer to the loop filter
-        c.n('VDUMP', src_off, node, w=.5)      # ... or to the follower
+    # gain code buffers
+    for g in ('g0', 'g1', 'g2'):
+        c.inv(g, g + 'b', wn=1, wp=2)
+        c.inv(g + 'b', g + 'l', wn=1, wp=2)
+    c.nor(['FUP', 'enb'], 'fupb', wn=1, wp=2)      # FLL pulses, gated by enable
+    c.nor(['FDN', 'enb'], 'fdnb', wn=1, wp=2)
+    c.inv('fupb', 'fupl', wn=1, wp=2)
+    c.inv('fdnb', 'fdnl', wn=1, wp=2)
+    # segments: (weight in units, gain enable or None)
+    segs = ((1, None), (1, 'g0l'), (2, 'g1l'), (4, 'g2l'))
+    for k in range(4):
+        for d, vote, fl, kind in (('u', f'UP{k}', 'fupl', 'p'), ('d', f'DN{k}', 'fdnl', 'n')):
+            on = f'{d}{k}on'
+            c.nor([vote, fl], f'{d}{k}b', wn=1, wp=2)      # low = this leg votes
+            c.inv(f'{d}{k}b', on, wn=1, wp=2)
+            for j, (wgt, g) in enumerate(segs):
+                node = f'{d}{k}s{j}'
+                if g is None:
+                    xs = on
+                else:
+                    c.nand([on, g], f'{d}{k}e{j}b', wn=1, wp=2)
+                    c.inv(f'{d}{k}e{j}b', f'{d}{k}e{j}', wn=1, wp=2)
+                    xs = f'{d}{k}e{j}'
+                s_on, s_off = xs, (f'{d}{k}b' if g is None else f'{d}{k}e{j}b')
+                # (tried: matched INV-INV / TG-INV drive with a cross-coupled pair: error 0.2-0.58 uA,
+                # not better; see README "AC-3 pump: vote-rate error")
+                # unit widths balanced on the schematic DC bench (P mirror chain 0.84x, N 1.33x of nominal)
+                if kind == 'p':
+                    _long_stack(c, 'p', node, 'pu', V, 0.6 * wgt, 8, 4, b=V)
+                else:
+                    _long_stack(c, 'n', node, 'nu', 'VSS', 0.375 * wgt, 8, 4)
+                # minimum steering switches; a half-size dummy (drain = source = VCTRL) on the opposite
+                # phase absorbs the on-switch's channel charge at VCTRL (each vote is worth only ~0.1 fC)
+                c.n('VCTRL', s_on, node, w=.44)
+                c.n('VCTRL', s_off, 'VCTRL', w=.22)
+                c.n('VDUMP', s_off, node, w=.44)
+    return c
+
+
+def ptrim():
+    ports = ['VDD_WIRE_SW', 'VSS', 'ptrim_en'] + [f'PH{k}' for k in range(8)] + [f'CKP{k}' for k in range(8)] + \
+        [f'T{k}_{b}' for k in range(8) for b in range(5)]
+    c = Net('pt_ptrim', ports,
+            """AC-3 per-phase delay trim (2026-11-10) between the RX pt_pll_ring PH0..7 and the slicer/capture
+CKP0..7: NAND(PHk, ptrim_en) -> trim node (5-bit binary switched MOS caps, T{k}_4..0 = cdr.phase_trim[k]) ->
+three inverters (2/4, 4/8, 8/16), non-inverting.  ptrim_en=0: every CKPk low.  Calibrated per board from
+edge-sampler histograms (digital).  Requirement: step <= 1 deg and range covering the ring's static
+spacing error (r7 extracted 4.5-5.7 deg) so the residual is <= 3 deg (spec AC-3).""")
+    V = 'VDD_WIRE_SW'
+    c.vdd = V
+    for k in range(8):
+        n = f'tn{k}'
+        c.nand([f'PH{k}', 'ptrim_en'], n, wn=2, wp=4)
+        for b in range(5):
+            cn = f'tc{k}_{b}'
+            m = 1 << b
+            c.n(cn, f'T{k}_{b}', n, w=0.6, m=m)          # switch: unit cap grounded when T=0 is floating
+            c.ncap(cn, 0.8, 0.45, m=m)                    # ~1.8 fF per unit (gate cap to VSS)
+        c.inv(n, f'ta{k}', wn=2, wp=4)
+        c.inv(f'ta{k}', f'tb{k}', wn=4, wp=8)
+        c.inv(f'tb{k}', f'CKP{k}', wn=8, wp=16)
     return c
 
 
 BLOCKS = dict(termination=termination, rxlevel=rxlevel, rxselect=rxselect, wmon_sel=wmon_sel,
-              ctle=ctle, slicer=slicer, detect=detect, cdr=cdr)
+              ctle=ctle, slicer=slicer, detect=detect, cdr=cdr, ptrim=ptrim)
 
 
 def write_all():

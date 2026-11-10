@@ -64,10 +64,10 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
         if ext_switch_t is None:
             L += ['VSER SER_EN 0 0', f'VEXT WTX_EXT 0 {vdd}']
         else:  # serializer running first, then handover to external data
-            L += [f'VSER SER_EN 0 PWL(0 0 {ser_on} 0 {ser_on+1e-10} {vdd})',
-                  f'VEXT WTX_EXT 0 PWL(0 0 {ext_switch_t} 0 {ext_switch_t+1e-10} {vdd})']
+            L += [S.pwl_bits('SER', 'SER_EN', [(0.0, 0), (ser_on, 1)], vdd),
+                  S.pwl_bits('EXT', 'WTX_EXT', [(0.0, 0), (ext_switch_t, 1)], vdd)]
     else:
-        L += [f'VSER SER_EN 0 PWL(0 0 {ser_on} 0 {ser_on+1e-10} {vdd})', 'VEXT WTX_EXT 0 0']
+        L += [S.pwl_bits('SER', 'SER_EN', [(0.0, 0), (ser_on, 1)], vdd), 'VEXT WTX_EXT 0 0']
     if dx_bits is not None and rx:
         # shared receiver (timing family's extracted pt_diff_clk_rx) on WTX_EXT_P/N:
         # 500 mVpp differential, AC-coupled through 10 pF per leg
@@ -83,7 +83,7 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
                             f'{1.65 + sign*0.125*(2*b-1):g}']
                     lvl = b
             # AC-coupled (10 pF) like the receiver's other uses; it self-biases to its trip point
-            L.append(f'VX{leg} SRC_{leg} 0 PWL({" ".join(pts)})')
+            L.append(f'BX{leg} SRC_{leg} 0 V=pwl(time, {", ".join(pts)})')   # no breakpoints
             L.append(f'CX{leg} SRC_{leg} WTX_EXT_{leg} 10p')
         L.append('.include rx.spice')
         L.append('XRX WTX_EXT_N WTX_EXT_P WTX_EXT VSS DXB DX PRESENT ATB_DET VDD VSS pt_diff_clk_rx')
@@ -105,6 +105,7 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
         tv = [(0.0, words[0][i])] + [(word_t0 + k * tw + tw / 4, w[i]) for k, w in enumerate(words)]
         L.append(S.pwl_bits(f'D{i}', f'D{i}', tv, vdd))
     L.append('CWCK WORD_CLK 0 50f')
+    L = S.driver_impedance(L)   # realistic DUT-input driver resistance (see sim_wiredtx)
     L.append('X0 ' + ' '.join(ports) + f' {subckt}')
     for c in BRANCH_CMDS:
         L.append(f'XSB_{c} VDD VSS {c} {c[4:]} tx_steering_buffer_flat_physical')
@@ -187,7 +188,9 @@ def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, 
     txt, names, _ = deck(pdir / Path(dut).name, subckt, mode=mode, rate=rate, words=[[0] * 20], word_t0=1,
                          tstop=2e-9 + 3 * tw, vdd=vdd, corner=corner, temp=temp, codes=codes, lossy=lossy, bpc=bpc)
     (pdir / 'tb.sp').write_text(txt)
-    tools.ngspice_host(pdir, 'tb.sp')
+    _, _log = tools.ngspice_host(pdir, 'tb.sp')
+    if S.sim_abort(_log):
+        return dict(ok=False, reason='simulator abort: ' + S.sim_abort(_log))
     w = tools.read_wrdata(pdir / 'wave.txt', names)
     rises = S.crossings(w['time'], w['WORD_CLK'], rising=True)
     rises = rises[rises > 2e-9]
@@ -201,7 +204,9 @@ def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, 
                            tstop=word_t0 + (nwords + 3) * tw, vdd=vdd, corner=corner, temp=temp, codes=codes,
                            lossy=lossy, bpc=bpc)
     (ddir / 'tb.sp').write_text(txt)
-    tools.ngspice_host(ddir, 'tb.sp')
+    _, _log = tools.ngspice_host(ddir, 'tb.sp')
+    if S.sim_abort(_log):
+        return dict(ok=False, reason='simulator abort: ' + S.sim_abort(_log))
     w = tools.read_wrdata(ddir / 'wave.txt', names)
     t0, t1 = word_t0 + 2 * tw, word_t0 + (nwords - 1) * tw
     r = dict(mode=mode, bit_rate_bps=rate, bits_per_ring_cycle=bpc, corner=corner, temp_c=temp, vdd=vdd,
@@ -241,7 +246,9 @@ def run_ext(work, dut, subckt='pt_wiredtx', *, rate=1e9, nbits=48, handover=Fals
                          tstop=tstop, vdd=vdd, corner=corner, temp=temp, dx_bits=bits, dx_rate=rate,
                          ext_switch_t=sw, rx=rx)
     (d / 'tb.sp').write_text(txt)
-    tools.ngspice_host(d, 'tb.sp')
+    _, _log = tools.ngspice_host(d, 'tb.sp')
+    if S.sim_abort(_log):
+        return dict(ok=False, reason='simulator abort: ' + S.sim_abort(_log))
     w = tools.read_wrdata(d / 'wave.txt', names)
     r = dict(mode='ext', rate_bps=rate, corner=corner, temp_c=temp, vdd=vdd, handover=handover,
              receiver=('timing extracted pt_diff_clk_rx (DX from OUTN, legs swapped), 500 mVpp diff, AC-coupled 10 pF/leg, 128-bit 1010 preamble' if rx else 'ideal DX source'))

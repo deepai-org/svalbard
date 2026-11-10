@@ -392,6 +392,12 @@ SRBIT = srbit()
 SR5 = sr5()
 DIV5 = div5()
 NAND_O = nand2('wtx_nand2o', wn=4, wp=4)
+NAND3_O = nand3('wtx_nand3o', 6, 4)
+# window gates of the compact quarter core: fast rise at the NAND output and fast fall at
+# the inverter output make the window close early relative to its opening, so adjacent
+# windows do not overlap (the AND-OR mux would OR two bits)
+NAND2W = nand2('wtx_nand2w', wn=8, wp=8)
+INVW = inv('wtx_invw', 8, 20)
 
 
 def bbm():
@@ -414,26 +420,32 @@ def bbm():
 
 
 def predrv():
-    """Data select (serializer / external) and per-branch gated complementary commands."""
+    """Data select (generic serializer / compact quarter-rate core / external)
+    and per-branch gated complementary commands."""
     outs = ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N']
-    c = Cell('wtx_predrv', ['D', 'DB', 'DP', 'DPB', 'DX', 'SER', 'EXT', 'EN_MAIN', 'EN_POST',
-                            'EN_TMDS', 'ISLAND_OFF', 'EXT_DATA'] + outs + ['VDD', 'VSS'], row_width=150)
+    c = Cell('wtx_predrv', ['D', 'DB', 'DP', 'DPB', 'DQ', 'DQB', 'DPQ', 'DPQB', 'DX', 'SERG', 'SERQ', 'EXT',
+                            'EN_MAIN', 'EN_POST', 'EN_TMDS', 'ISLAND_OFF', 'EXT_DATA'] + outs + ['VDD', 'VSS'],
+             row_width=150)
     V = dict(VDD='VDD', VSS='VSS')
     c.inst('XB', INV1, A='DX', Y='DXB', **V)
     c.inst('XO', INV1, A='DXB', Y='EXT_DATA', **V)   # status copy of the external data
-    # serializer / external select: two NAND levels (DS = D&SER | DX&EXT)
-    c.inst('S1', NAND_O, A='D', B='SER', Y='NS1', **V)
+    # three-way select, two gate levels: DS = D&SERG | DQ&SERQ | DX&EXT (one-hot enables)
+    c.inst('S1', NAND_O, A='D', B='SERG', Y='NS1', **V)
+    c.inst('Q1', NAND_O, A='DQ', B='SERQ', Y='NQ1', **V)
     c.inst('X1', NAND_O, A='DX', B='EXT', Y='NX1', **V)
-    c.inst('O1', NAND_O, A='NS1', B='NX1', Y='DS', **V)
-    c.inst('S2', NAND_O, A='DB', B='SER', Y='NS2', **V)
+    c.inst('O1', NAND3_O, A='NS1', B='NQ1', C='NX1', Y='DS', **V)
+    c.inst('S2', NAND_O, A='DB', B='SERG', Y='NS2', **V)
+    c.inst('Q2', NAND_O, A='DQB', B='SERQ', Y='NQ2', **V)
     c.inst('X2', NAND_O, A='DXB', B='EXT', Y='NX2', **V)
-    c.inst('O2', NAND_O, A='NS2', B='NX2', Y='DSB', **V)
-    # postcursor (serializer only): the same two NAND levels, so it keeps
+    c.inst('O2', NAND3_O, A='NS2', B='NQ2', C='NX2', Y='DSB', **V)
+    # postcursor (serializers only): the same two gate levels, so it keeps
     # its one-UI offset from the main data at the outputs
-    c.inst('P1', NAND_O, A='DP', B='SER', Y='NP1', **V)
-    c.inst('P1O', NAND_O, A='NP1', B='VDD', Y='DPS', **V)
-    c.inst('P2', NAND_O, A='DPB', B='SER', Y='NP2', **V)
-    c.inst('P2O', NAND_O, A='NP2', B='VDD', Y='DPSB', **V)
+    c.inst('P1', NAND_O, A='DP', B='SERG', Y='NP1', **V)
+    c.inst('PQ1', NAND_O, A='DPQ', B='SERQ', Y='NPQ1', **V)
+    c.inst('P1O', NAND3_O, A='NP1', B='NPQ1', C='VDD', Y='DPS', **V)
+    c.inst('P2', NAND_O, A='DPB', B='SERG', Y='NP2', **V)
+    c.inst('PQ2', NAND_O, A='DPQB', B='SERQ', Y='NPQ2', **V)
+    c.inst('P2O', NAND3_O, A='NP2', B='NPQ2', C='VDD', Y='DPSB', **V)
     for br, (pos, neg, en) in {'MAIN': ('DSB', 'DS', 'EN_MAIN'), 'TMDS': ('DSB', 'DS', 'EN_TMDS'),
                                'POST': ('DPS', 'DPSB', 'EN_POST')}.items():
         for leg, data in (('P', pos), ('N', neg)):
@@ -514,6 +526,128 @@ def serq():
     return c
 
 
+DIV_PHASE = 'C2R'
+
+
+def serq4():
+    """Compact quarter-rate 20:1 core (MODE_H = MODE_F = 0), all timing on
+    the four gated ring phases Q0..Q3 (Q k rises at k UI); no derived clock.
+
+    * Four 5-bit parallel-load shift registers (stream s = D[s], D[s+4], ..
+      D[s+16]) of timing's TSPC flops (ct_tspcd), all on Q2, loaded by
+      LD0 = NOR(A, C) of a ct_div5 on Q2: one clock domain, so the load
+      needs no phase crossing.
+    * Each stream then reaches the phase that centres it on its 4:1-mux
+      window k = Q(k) & Q(k-1) through retiming hops of +3 UI or +4 UI only,
+      so every crossing has >= 4 UI - 3 UI ... i.e. (hop - tcq) >= 1.7 UI of
+      margin with tcq ~ 1.3 UI (0.4 ns) at 3.24 Gb/s:
+        stream 0: Q2 -> Q2 -> Q2          (+4 +4)
+        stream 1: Q2 -> Q1 -> Q0 -> Q3    (+3 +3 +3)
+        stream 2: Q2 -> Q1 -> Q0 -> Q0    (+3 +3 +4)
+        stream 3: Q2 -> Q1 -> Q1 -> Q1    (+3 +4 +4)
+      All four streams reach the line 3 register periods after the load, in
+      order, and each final stream F k changes about tcq after phase k+2:
+      2 UI - tcq before window k opens, and it holds through window k+1.
+    * The postcursor mux uses F(k-1) in window k (the main bit one UI
+      later): no extra flops.
+    Reset: SERQ = 0 stops Q0..Q3 low and resets every TSPC flop (outputs 0)."""
+    ports = [f'D{i}' for i in range(20)] + ['PH0', 'PH90', 'PH180', 'PH270', 'SERQ', 'MQ', 'MH', 'MF',
+                                             'Y', 'YB', 'DP', 'DPB', 'WCKQ', 'VDD', 'VSS']
+    c = Cell('wtx_serq4', ports, row_width=260)
+    V = dict(VDD='VDD', VSS='VSS')
+    c.inst('RI', INV2, A='SERQ', Y='QRA', **V)
+    c.inst('RJ', INV4, A='QRA', Y='QRB', **V)
+    c.inst('RK', INV8, A='QRB', Y='QRST', **V)        # ENB of every TSPC flop (1 = reset)
+    # Four equally spaced core phases C0..C3 (one UI apart) in every mode, one-hot MQ/MH/MF:
+    #   quarter: the ring phases;
+    #   half:    ring/2 from TSPC flops on the gated ring: a toggles on PH0, b = a @PH0
+    #            (= !a), c = a @PH180 (90 deg), d = c @PH180 (= !c); every phase is a flop Q,
+    #            so all four carry the same clock-to-Q;
+    #   full:    ring/4 twisted ring on PH0: j0 <- !j1, j1 <- j0, j2 <- j1 (= !j0), j3 <- j2 (= !j1).
+    c.inst('G0N', NAND2E, A='PH0', B='SERQ', Y='G0B', **V)
+    c.inst('G0I', INV8, A='G0B', Y='G0', **V)
+    c.inst('G2N', NAND2E, A='PH180', B='SERQ', Y='G2B', **V)
+    c.inst('G2I', INV8, A='G2B', Y='G2', **V)
+    # equal load on every ring-phase input: dummies matching G0N/G2N on PH90/PH270
+    c.inst('G1N', NAND2E, A='PH90', B='SERQ', Y='G1B', **V)
+    c.inst('G1I', INV8, A='G1B', Y='G1X', **V)
+    c.inst('G3N', NAND2E, A='PH270', B='SERQ', Y='G3B', **V)
+    c.inst('G3I', INV8, A='G3B', Y='G3X', **V)
+    c.inst('HA', TSPCD, CK='G0', D='HAB', Q='HA_', ENB='QRST', **V)
+    c.inst('HAI', INV1, A='HA_', Y='HAB', **V)
+    c.inst('HB', TSPCD, CK='G0', D='HA_', Q='HB_', ENB='QRST', **V)
+    c.inst('HC', TSPCD, CK='G2', D='HA_', Q='HC_', ENB='QRST', **V)
+    c.inst('HD', TSPCD, CK='G2', D='HC_', Q='HD_', ENB='QRST', **V)
+    c.inst('JA', TSPCD, CK='G0', D='JBB', Q='JA_', ENB='QRST', **V)
+    c.inst('JB', TSPCD, CK='G0', D='JA_', Q='JB_', ENB='QRST', **V)
+    c.inst('JBI', INV1, A='JB_', Y='JBB', **V)
+    c.inst('JC', TSPCD, CK='G0', D='JB_', Q='JC_', ENB='QRST', **V)
+    c.inst('JD', TSPCD, CK='G0', D='JC_', Q='JD_', ENB='QRST', **V)
+    for k, (q, h, f) in enumerate((('PH0', 'HA_', 'JA_'), ('PH90', 'HC_', 'JB_'), ('PH180', 'HB_', 'JC_'),
+                                   ('PH270', 'HD_', 'JD_'))):
+        c.inst(f'CS{k}', SEL3, A=q, B=h, C=f, Q='MQ', H='MH', F='MF', Y=f'CR{k}', **V)
+        c.inst(f'CB{k}', INV4, A=f'CR{k}', Y=f'CN{k}', **V)     # SEL3 is weak: buffer before
+        c.inst(f'CC{k}', INV16, A=f'CN{k}', Y=f'C{k}', **V)     # the phase drivers
+        # second, identical copy per phase: C2's copy (C2R) clocks the register bank and the
+        # divider; the other copies are equal-load dummies, so C0..C3 stay balanced
+        c.inst(f'CD{k}', INV4, A=f'CR{k}', Y=f'CRN{k}', **V)
+        c.inst(f'CE{k}', INV16, A=f'CRN{k}', Y=f'C{k}R', **V)
+        if k != 2:
+            for d in range(3):
+                c.inst(f'CX{k}_{d}', NAND2E, A=f'C{k}R', B='SERQ', Y=f'CXN{k}_{d}', **V)
+    ph = ['C0', 'C1', 'C2', 'C3']
+    # gated phases (stopped low), three sets so that loads are balanced:
+    #   QW k: window gates only (each drives exactly two NAND2E inputs)
+    #   Q k : retiming hops;  QR: the 20 register flops and the divider (PH180)
+    for k in range(4):
+        c.inst(f'PW{k}', NAND2E, A=ph[k], B='SERQ', Y=f'QWN{k}', **V)
+        c.inst(f'PX{k}', INV8, A=f'QWN{k}', Y=f'QW{k}', **V)
+        c.inst(f'PG{k}', NAND2E, A=ph[k], B='SERQ', Y=f'QN{k}', **V)
+        c.inst(f'PB{k}', INV8, A=f'QN{k}', Y=f'Q{k}', **V)
+    # register bank on PH180: two drivers (streams 0-1 / 2-3, ten flops each).  The
+    # divider has its own light driver (a slow shared edge let ct_div5 race to /4 at
+    # ff).  LD/LDB are buffered; measured at 3.24 Gb/s LD changes 1.2-2.1 UI after a
+    # register edge and 1.9-2.8 UI before the next (ss/tt/ff, schematic).
+    for h in '01':
+        c.inst(f'PR{h}', NAND2E, A='C2R', B='SERQ', Y=f'QKN{h}', **V)
+        c.inst(f'PRB{h}', INV16, A=f'QKN{h}', Y=f'QK{h}', **V)
+    c.inst('PD', NAND2E, A=DIV_PHASE, B='SERQ', Y='QDN', **V)
+    c.inst('PDB', INV8, A='QDN', Y='QD', **V)
+    c.inst('DV', DIV5C, CK='QD', ENB='QRST', A='DA', B='DB', C='DC', **V)
+    # LD / LDB each drive 20 NAND2 inputs: buffered (a minimum NOR alone put LD
+    # 2-2.8 UI after the divider clock at 3.24 Gb/s)
+    c.inst('LN', NOR2X, A='DA', B='DC', Y='LD0', **V)
+    c.inst('LI', INV8, A='LD0', Y='LDB', **V)
+    c.inst('LJ', INV16, A='LDB', Y='LD', **V)
+    c.inst('WA', INV4, A='DC', Y='WCN', **V)
+    c.inst('WB', INV16, A='WCN', Y='WCKQ', **V)
+    for k in range(4):
+        for j in range(5):
+            nxt = 'VSS' if j == 4 else f'B{k}_{j+1}'
+            c.inst(f'M{k}_{j}A', NAND, A=f'D{k + 4*j}', B='LD', Y=f'MA{k}_{j}', **V)
+            c.inst(f'M{k}_{j}B', NAND, A=nxt, B='LDB', Y=f'MB{k}_{j}', **V)
+            c.inst(f'M{k}_{j}O', NAND, A=f'MA{k}_{j}', B=f'MB{k}_{j}', Y=f'X{k}_{j}', **V)
+            c.inst(f'F{k}_{j}', TSPCD, CK='QK0' if k < 2 else 'QK1', D=f'X{k}_{j}', Q=f'B{k}_{j}', ENB='QRST', **V)
+    hops = {0: (2, 2), 1: (1, 0, 3), 2: (1, 0, 0), 3: (1, 1, 1)}
+    for k, seq in hops.items():
+        prev = f'B{k}_0'
+        for i, q in enumerate(seq):
+            out = f'F{k}' if i == len(seq) - 1 else f'R{k}_{i}'
+            c.inst(f'H{k}_{i}', TSPCD, CK=f'Q{q}', D=prev, Q=out, ENB='QRST', **V)
+            prev = out
+    c.inst('CI', CINV8, **{f'A{k}': f'F{k}' for k in range(4)}, **{f'A{k+4}': 'VSS' for k in range(4)},
+           **{f'Y{k}': f'FN{k}' for k in range(4)}, **{f'Y{k+4}': f'CU{k}' for k in range(4)}, **V)
+    for k in range(4):                                  # windows k = Q(k) & Q(k-1)
+        c.inst(f'WN{k}', NAND2W, A=f'QW{k}', B=f'QW{(k - 1) % 4}', Y=f'SN{k}', **V)
+        c.inst(f'WI{k}', INVW, A=f'SN{k}', Y=f'S{k}', **V)
+    S = {f'S{k}': f'S{k}' for k in range(4)}
+    c.inst('MY', MUX4W, **{f'A{k}': f'F{k}' for k in range(4)}, Y='Y', **S, **V)
+    c.inst('MYB', MUX4W, **{f'A{k}': f'FN{k}' for k in range(4)}, Y='YB', **S, **V)
+    c.inst('MD', MUX4W, **{f'A{k}': f'F{(k - 1) % 4}' for k in range(4)}, Y='DP', **S, **V)
+    c.inst('MDB', MUX4W, **{f'A{k}': f'FN{(k - 1) % 4}' for k in range(4)}, Y='DPB', **S, **V)
+    return c
+
+
 def wiredtx():
     codes = {b: [f'{b}_CODE{k}' for k in range(8)] for b in ('MAIN', 'POST', 'TMDS')}
     ports = (['WTX_PH0', 'WTX_PH90', 'WTX_PH180', 'WTX_PH270', 'MODE_H', 'MODE_F'] + [f'D{i}' for i in range(20)] + ['WORD_CLK', 'SER_EN', 'WTX_EXT', 'DX',
@@ -524,12 +658,38 @@ def wiredtx():
     c = Cell('pt_wiredtx', ports, row_width=420)
     V = dict(VDD='VDD', VSS='VSS')
     c.inst('BBM', BBM, SER_EN='SER_EN', WTX_EXT='WTX_EXT', SER='SER', EXT='EXT', **V)
+    # rate decode: quarter (MODE_H = MODE_F = 0) runs the compact core
+    # (SERQ), half/full the generic serializer (SERG); one-hot with EXT
+    # rate field (MODE_H, MODE_F): 00 quarter, 10 half, 01 full -> compact core (SERQ);
+    # 11 (formerly illegal) -> generic serializer in half rate, kept as the fallback (SERG)
+    c.inst('MHI', INV1, A='MODE_H', Y='MHB', **V)
+    c.inst('MFI', INV1, A='MODE_F', Y='MFB', **V)
+    c.inst('MQN', NOR, A='MODE_H', B='MODE_F', Y='MQ', **V)
+    c.inst('MHN', NOR, A='MHB', B='MODE_F', Y='MHC', **V)
+    c.inst('MFN', NOR, A='MODE_H', B='MFB', Y='MFC', **V)
+    c.inst('MGN', NAND, A='MODE_H', B='MODE_F', Y='MGB', **V)
+    c.inst('MGI', INV1, A='MGB', Y='MG', **V)
+    c.inst('SQN', NAND, A='SER', B='MGB', Y='SERQN', **V)
+    c.inst('SQI', INV4, A='SERQN', Y='SERQ', **V)
+    c.inst('SGN', NAND, A='SER', B='MG', Y='SERGN', **V)
+    c.inst('SGI', INV4, A='SERGN', Y='SERG', **V)
     W = {f'W{ab}{k}': f'W{ab}{k}' for k in range(4) for ab in 'AB'}
-    c.inst('CG', PHBUF, PH0='WTX_PH0', PH90='WTX_PH90', PH180='WTX_PH180', PH270='WTX_PH270', SER='SER',
-           MODE_H='MODE_H', MODE_F='MODE_F', FCK='FCK', FCKB='FCKB', RSTB='RSTB', **W, **V)
+    # dummies matching the generic phase buffer's extra counter-clock gates on PH0/PH180
+    c.inst('DG1', NAND2E, A='WTX_PH90', B='SERG', Y='DGB1', **V)
+    c.inst('DG1I', INV8, A='DGB1', Y='DGX1', **V)
+    c.inst('DG3', NAND2E, A='WTX_PH270', B='SERG', Y='DGB3', **V)
+    c.inst('DG3I', INV8, A='DGB3', Y='DGX3', **V)
+    c.inst('CG', PHBUF, PH0='WTX_PH0', PH90='WTX_PH90', PH180='WTX_PH180', PH270='WTX_PH270', SER='SERG',
+           MODE_H='VDD', MODE_F='VSS', FCK='FCK', FCKB='FCKB', RSTB='RSTB', **W, **V)
     c.inst('SR', SERQ, **{f'D{i}': f'D{i}' for i in range(20)}, **W, FCK='FCK', FCKB='FCKB', RSTB='RSTB',
-           WORD_CLK='WORD_CLK', Y='SD', YB='SDB', DP='SDP', DPB='SDPB', **V)
-    c.inst('PD', PREDRV, D='SD', DB='SDB', DP='SDP', DPB='SDPB', DX='DX', SER='SER', EXT='EXT',
+           WORD_CLK='WCKG', Y='SD', YB='SDB', DP='SDP', DPB='SDPB', **V)
+    c.inst('SQ', SERQ4, **{f'D{i}': f'D{i}' for i in range(20)}, PH0='WTX_PH0', PH90='WTX_PH90',
+           PH180='WTX_PH180', PH270='WTX_PH270', SERQ='SERQ', MQ='MQ', MH='MHC', MF='MFC', Y='QD', YB='QDB', DP='QDP', DPB='QDPB',
+           WCKQ='WCKQ', **V)
+    c.inst('WCO', NOR, A='WCKG', B='WCKQ', Y='WCKN', **V)
+    c.inst('WCB', INV16, A='WCKN', Y='WORD_CLK', **V)
+    c.inst('PD', PREDRV, D='SD', DB='SDB', DP='SDP', DPB='SDPB', DQ='QD', DQB='QDB', DPQ='QDP', DPQB='QDPB',
+           DX='DX', SERG='SERG', SERQ='SERQ', EXT='EXT',
            EN_MAIN='EN_MAIN', EN_POST='EN_POST', EN_TMDS='EN_TMDS', ISLAND_OFF='ISLAND_OFF',
            EXT_DATA='WTX_EXT_DATA', **{o: o for o in ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P',
                                                       'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N']}, **V)
@@ -555,7 +715,12 @@ def biasen():
 
 
 BBM = bbm()
+TSPCD = Macro('ct_tspcd')
+DIV5C = Macro('ct_div5')
+MUX4W = Macro('wtx_mux4')
+CINV8 = Macro('wtx_cinv8')
 SERQ = serq()
+SERQ4 = serq4()
 PHBUF = phbuf()
 PREDRV = predrv()
 BIASEN = biasen()
@@ -598,7 +763,7 @@ HSBIAS = hsbias()
 # each clock divider sits between the stage it is clocked with and the
 # stage it clocks.
 LAYOUT_ORDER = ['BBM/', 'CG/', 'SR/MY/', 'SR/MYB/', 'SR/MD/', 'SR/MDB/', 'SR/C3/', 'SR/B', 'SR/A', 'SR/D5/',
-                'SR/R0/', 'SR/R1/', 'SR/R2/', 'SR/R3/', 'SR/DI', 'PD/', '']
+                'SR/R0/', 'SR/R1/', 'SR/R2/', 'SR/R3/', 'SR/DI', 'SQ/', 'PD/', '']
 
 
 def layout_devices(cell=None):

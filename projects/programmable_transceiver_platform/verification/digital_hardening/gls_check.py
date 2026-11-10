@@ -15,6 +15,7 @@
    island power-good and fault status.
 """
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -50,6 +51,22 @@ def main():
     out = Path(a.out)
     exp = json.loads((out / 'expect.json').read_text())
     res = dict(status='fail')
+    project = Path(__file__).resolve().parents[2]
+    manifest = out / 'sources.sha256'
+    hashes = {}
+    stale = []
+    if manifest.exists():
+        for line in manifest.read_text().splitlines():
+            digest, name = line.split(maxsplit=1)
+            assert name.startswith('/src/'), name
+            name = name.removeprefix('/src/')
+            hashes[name] = 'sha256:'+digest
+            path = project / name
+            if not path.exists() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+                stale.append(name)
+    else:
+        stale.append('missing simulation source manifest')
+    res.update(source_hashes=hashes, stale_sources=stale)
     try:
         rtl, gl = parse(out / 'regfile/rtl/tb.log'), parse(out / 'regfile/gl/tb.log')
     except FileNotFoundError as e:
@@ -177,7 +194,7 @@ def main():
     except (FileNotFoundError, ValueError) as e:
         lb['error'] = str(e)
     res['host_link_loopback'] = lb
-    ok = not lock and not mm and not viol and not obs_bad and rs >= 4 and lb.get('status') == 'pass'
+    ok = bool(hashes) and not stale and not lock and not mm and not viol and not obs_bad and rs >= 4 and lb.get('status') == 'pass'
     res['status'] = 'pass' if ok else 'fail'
     (out / 'gls-report.json').write_text(json.dumps(res, indent=1) + '\n')
     print(json.dumps(res, indent=1))

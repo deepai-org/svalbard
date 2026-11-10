@@ -196,28 +196,70 @@ def emit(path, subs):
 
 
 # ---------------------------------------------------------------- LNA
+LNA_CT_SIDE = (5.6, 7.9, 11.1)  # D-RX-1 shunt-C trim per leg (ct0..ct2): ~62.5/125/246 fF MIM sides (11.18/11.2 trip MIMTM.2)
+LNA_WCT = 80.                    # trim switch width for ct0 (x2, x4): one differential switch per bit
+LNA_WSE, LNA_WRT = 60., 10.      # SE switch (D-RX-2), 200 ohm/leg termination switch (RC-9)
+
+
 def lna():
-    s = Sub('pt_lna', ['rf_in_p', 'rf_in_n', 'rf_out_p', 'rf_out_n', 'ibias', 'en', 'gain_lo', 'byp',
-                       'island_off', 'atb_nbias', 'atb_vdcm', 'VDD', 'VSS'])
+    """Two-stage split-I/Q LNA (RC-8/RC-8a). Stage 1: R-feedback CS pair (4 mA, 160/0.28 per side,
+    RL ~400 ohm, RF ~3 kohm). Stage 2: two tail-coupled transconductors (4 mA each, 100/0.28 per side,
+    RL ~500 ohm), one per mixer (rf_out_* -> rxmix_i, rf_outq_* -> rxmix_q), so the I and Q quads do not
+    share an RF node. Package-tolerance network (sizing: scratch/rfconv-owner/lna/trim, NF cost <= 0.3 dB):
+    ct0..ct2 shunt-C trim, one differential switch per bit between the two legs' MIMs, MIM bottoms biased
+    to ct_b through ~40 kohm (off: junctions reverse-biased; 40k vs 200k: no NF difference); se closes RF_RX_N to VSS through a 5 pF MIM;
+    rt closes 2 x ~200 ohm across the stage-1 gates (opt-in real input, behind the 2 pF DC blocks)."""
+    s = Sub('pt_lna', ['rf_in_p', 'rf_in_n', 'rf_out_p', 'rf_out_n', 'rf_outq_p', 'rf_outq_n', 'ibias', 'en',
+                       'gain_lo', 'byp', 'ct0', 'ct1', 'ct2', 'se', 'rt', 'island_off', 'atb_nbias', 'atb_vdcm',
+                       'VDD', 'VSS'])
     s.x('pt_rfrx_inv', 'en', 'enb', 'VDD', 'VSS')
     s.x('pt_rfrx_inv', 'gain_lo', 'glb', 'VDD', 'VSS')
-    # bias: ibias diode, 280:1 tail (2.8 mA)
+    # bias: ibias diode, 400:1 tails (4 mA each: stage 1, stage 2 I, stage 2 Q)
     s.nmos('atb_nbias', 'atb_nbias', 'VSS', 2., .5)
     s.nmos('atb_nbias', 'enb', 'VSS', 2.)
     s.res('ibias', 'atb_nbias', 2., 2.)           # ~1 kohm series: separates the ATB tap name from the pin
-    s.nmos_m('tail', 'atb_nbias', 'VSS', 20., 28, .5)
-    s.pmos_m('vtop', 'enb', 'VDD', 20., 3)        # load supply switch (no current when off)
+    s.nmos_m('tail', 'atb_nbias', 'VSS', 20., 40, .5)
+    s.pmos_m('vtop', 'enb', 'VDD', 20., 10)       # load supply switch (no current when off)
+    s.res('vtop', 'vb2', 20., 1.)                 # stage-2 gate bias divider (~1.4 V)
+    s.res('vb2', 'VSS', 14., 1.)
+    for br, (op, on) in (('i', ('rf_out_p', 'rf_out_n')), ('q', ('rf_outq_p', 'rf_outq_n'))):
+        s.nmos_m(f'tail2{br}', 'atb_nbias', 'VSS', 20., 40, .5)
+        for sd, out in (('p', op), ('n', on)):
+            d, g2, d2 = f'd_{sd}', f'g2{br}_{sd}', f'd2{br}_{sd}'
+            s.cap(d, g2, 20.)                     # interstage coupling ~0.8 pF
+            s.res('vb2', g2, 20., 1.)
+            s.nmos_m(d2, g2, f'tail2{br}', 20., 5)
+            s.res('vtop', d2, 1., 2.)             # RL2 ~500 ohm
+            s.cap(out, d2, 32.)                   # output coupling ~2 pF
+            s.nmos(out, 'island_off', 'VSS', 1., 10.)   # weak clamp (~tens of uA)
+            if br == 'i':
+                s.res(d2, 'atb_vdcm', 20.)        # stage-2 drain common-mode sense for the ATB
     for sd in 'pn':
         g, d = f'g_{sd}', f'd_{sd}'
         s.cap(g, f'rf_in_{sd}', 32.)              # input coupling ~2 pF (bottom plate on pad side)
-        s.nmos_m(d, g, 'tail', 20., 5)            # input device 100/0.28
-        s.res('vtop', d, 2., 2.)                  # RL ~1 kohm
-        s.res(d, g, 4., 1.)                       # RF ~4 kohm feedback (NF/gain optimum with a board match)
-        s.cap(f'rf_out_{sd}', d, 32.)             # output coupling ~2 pF
-        s.nmos_m(g, 'byp', f'rf_out_{sd}', 20., 3)  # bypass: pad -> Cin -> g -> mixer input
-        s.nmos(f'rf_out_{sd}', 'island_off', 'VSS', 1., 10.)   # weak clamp (~tens of uA)
-        s.res(d, 'atb_vdcm', 20.)                 # drain common-mode sense for the ATB
-    s.pmos('g_n', 'glb', 'g_p', 100.)             # gain_lo: differential input shunt (~35 ohm switch)
+        s.nmos_m(d, g, 'tail', 20., 8)            # input device 160/0.28
+        s.res('vtop', d, 2., 5.)                  # RL1 ~400 ohm (L >= 1 um: HRES.3)
+        s.res(d, g, 3., 1.)                       # RF ~3 kohm feedback
+        s.nmos_m(g, 'byp', f'rf_out_{sd}', 20., 3)    # bypass: pad -> Cin -> g -> both mixer feeds
+        s.nmos_m(g, 'byp', f'rf_outq_{sd}', 20., 3)
+    s.pmos('g_n', 'glb', 'g_p', 100.)             # gain_lo: differential input shunt
+    # D-RX-1 shunt-C trim (per leg 0..437 fF in 62.5 fF steps)
+    for k, side in enumerate(LNA_CT_SIDE):
+        s.x('pt_rfrx_inv', f'ct{k}', f'ct{k}_b', 'VDD', 'VSS')
+        for sd in 'pn':
+            s.cap(f'rf_in_{sd}', f'x{k}_{sd}', side)
+            s.res(f'x{k}_{sd}', f'ct{k}_b', 40., 1.)
+        s.nmos(f'x{k}_p', f'ct{k}', f'x{k}_n', LNA_WCT * (1 << k))
+    # D-RX-2 single-ended mode: RF_RX_N AC-grounded through 5 pF
+    s.x('pt_rfrx_inv', 'se', 'se_b', 'VDD', 'VSS')
+    s.cap('rf_in_n', 'se_x', 35.)                 # 2 x ~2.45 pF (a single 50 um plate trips MIMTM.2)
+    s.cap('rf_in_n', 'se_x', 35.)
+    s.res('se_x', 'se_b', 40., 1.)
+    s.nmos('se_x', 'se', 'VSS', LNA_WSE)
+    # RC-9 opt-in termination: ~200 ohm per leg (ppoly 2 um x 10 um) across the gates
+    s.res('g_p', 'rt_p', 2., 10.)
+    s.res('g_n', 'rt_n', 2., 10.)
+    s.nmos('rt_p', 'rt', 'rt_n', LNA_WRT)
     return [inv(), s]
 
 
@@ -273,7 +315,7 @@ def bbfilter(name):
              'out_rx_p', 'out_rx_n', 'out_tx_p', 'out_tx_n', 'obs_p', 'obs_n',
              'ibias', 'en', 'dir_tx', 'inj', 'rx_direct', 'byp_s1', 'byp_s23', 'obs_sel0', 'obs_sel1',
              'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3', 'gain4', 'gain5',
-             'gainc0', 'gainc1', 'island_off',
+             'gainc0', 'gainc1', 'qt0', 'qt1', 'island_off',
              'atb_vcm', 'atb_vbp', 'VDD', 'VSS']
     s = Sub(name, ports)
     I = lambda a, y: s.x('pt_rfrx_inv', a, y, 'VDD', 'VSS')
@@ -282,7 +324,7 @@ def bbfilter(name):
     # ---- control decode (island-powered; all off when en=0 or island unpowered)
     for c in ('en', 'dir_tx', 'rx_direct', 'byp_s1', 'byp_s23', 'obs_sel0', 'obs_sel1',
               'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3', 'gain4', 'gain5',
-              'gainc0', 'gainc1'):
+              'gainc0', 'gainc1', 'qt0', 'qt1'):
         I(c, c + '_b')
     N3('en_b', 'dir_tx', 'inj', 'k_inrx')          # rx_in -> core
     N3('en_b', 'dir_tx_b', 'inj', 'k_intx')        # tx_in -> core
@@ -309,6 +351,7 @@ def bbfilter(name):
     BW = ['bw0', 'bw0_b', 'bw1', 'bw1_b', 'bw2', 'bw2_b', 'bw3', 'bw3_b']
     GN = [x for k in range(6) for x in (f'gain{k}', f'gain{k}_b')]
     COM = ['atb_vcm', 'atb_vbp']
+    QT = ['qt0', 'qt0_b', 'qt1', 'qt1_b']
 
     def T(size, a, b, k):
         s.x(f'pt_rfrx_tg{size}', a, b, k, k + 'b' if k.startswith('k_') else k + '_b', 'VDD', 'VSS')
@@ -323,8 +366,8 @@ def bbfilter(name):
         s.x('pt_bbf_gpole', ci, f's1_{o}', *COM, 'pd1', *GN, *BW, 'VDD', 'VSS')
         T('m', ci, s1, 'k_s1byp')
         # stages 2 and 3: Tow-Thomas biquads (Q1, Q2), non-inverting low-pass outputs
-        s.x('pt_bbf_tt1', s1, f'bp1_{h}', f'lp1_{h}', *COM, 'pd23', 'gainc0', 'gainc0_b', *BW, 'VDD', 'VSS')
-        s.x('pt_bbf_tt2', f'lp1_{h}', f'bp2_{h}', f'co_{h}', *COM, 'pd23', 'gainc1', 'gainc1_b', *BW,
+        s.x('pt_bbf_tt1', s1, f'bp1_{h}', f'lp1_{h}', *COM, 'pd23', 'gainc0', 'gainc0_b', *QT, *BW, 'VDD', 'VSS')
+        s.x('pt_bbf_tt2', f'lp1_{h}', f'bp2_{h}', f'co_{h}', *COM, 'pd23', 'gainc1', 'gainc1_b', *QT, *BW,
             'VDD', 'VSS')
         T('m', s1, f'co_{h}', 'k_s23byp')          # bypass keeps the differential sign
         # outputs and direction
@@ -380,10 +423,17 @@ def bbf_int(name='pt_bbf_int', ota_cell='pt_rfrx_otaf'):
     return s
 
 
-def _tt(s, vin, v1, v2, q):
-    """Tow-Thomas core: A1 lossy integrator (Rq = q R), A2 integrator, A3 inverter."""
+QT_MULT = (4.0, 2.0)   # Q-trim: qt0 adds 4*Rq, qt1 adds 2*Rq in parallel with Rq -> Q x 1, 0.8, 0.67, 0.57
+
+
+def _tt(s, vin, v1, v2, q, trim=True):
+    """Tow-Thomas core: A1 lossy integrator (Rq = q R), A2 integrator, A3 inverter.
+    Q-trim (qt1:qt0): switched damping resistors in parallel with Rq; the TG sits on the virtual-ground side."""
     s.res('v3', 'a', R_UNIT_L)
     s.res(v1, 'a', q * R_UNIT_L)
+    for bit, mult in (zip(('qt0', 'qt1'), QT_MULT) if trim else ()):
+        s.res(v1, f'q_{bit}', mult * q * R_UNIT_L)
+        s.x('pt_rfrx_tgs', f'q_{bit}', 'a', bit, bit + '_b', 'VDD', 'VSS')
     s.x('pt_bbf_int', 'a', v1, 'vcm', 'vbp', 'pd', *BWP, 'VDD', 'VSS')
     s.res(v1, 'b', R_UNIT_L)
     if CC_LEAD:
@@ -400,7 +450,7 @@ def _tt(s, vin, v1, v2, q):
 def bbf_tt(name, q):
     """Tow-Thomas biquad (v1 band-pass, v2 low-pass); passband gain 1, or 4 (+12 dB) with gc:
     an extra R/3 input branch.  Input resistors set only the gain, not w0 or Q."""
-    s = Sub(name, ['vin', 'v1', 'v2', 'vcm', 'vbp', 'pd', 'gc', 'gc_b', *BWP, 'VDD', 'VSS'])
+    s = Sub(name, ['vin', 'v1', 'v2', 'vcm', 'vbp', 'pd', 'gc', 'gc_b', 'qt0', 'qt0_b', 'qt1', 'qt1_b', *BWP, 'VDD', 'VSS'])
     s.res('vin', 'a', R_UNIT_L)
     s.res('vin', 'gx', R_UNIT_L / 3)
     s.x('pt_rfrx_tgm', 'gx', 'a', 'gc', 'gc_b', 'VDD', 'VSS')
@@ -408,7 +458,7 @@ def bbf_tt(name, q):
         s.x('pt_rfrx_tgs', 'v1', 'lx', 'gc', 'gc_b', 'VDD', 'VSS')
         s.cap('lx', 'ly', CC_LEAD_GC)            # two in series: a single ~30 fF MIM is below the DRC-clean PCell sizes
         s.cap('ly', 'b', CC_LEAD_GC)
-    _tt(s, 'vin', 'v1', 'v2', q)
+    _tt(s, 'vin', 'v1', 'v2', q, trim=(q == Q1))
     return s
 
 

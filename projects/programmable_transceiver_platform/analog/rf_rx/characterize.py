@@ -82,6 +82,18 @@ def do_lna(quick, chain):
     sch = tb.lna_ac(w, 'sch', NOM, 'active')
     bm = tb.board_match(complex(act['zin_re_ohm'], act['zin_im_ohm']))
     actm = tb.lna_ac(w, 'ext', NOM, 'active', match=bm)
+    # package-tolerance network (RC-8a/RC-9/RC-10): C-trim codes, SE mode, opt-in 200 ohm termination;
+    # each point re-matched (ideal lossless board L-match), as the per-board calibration would
+    def trim_point(ct, se=False, rt=False):
+        u = tb.lna_ac(w, 'ext', NOM, 'active', ct=ct, se=se, rt=rt)
+        if u.get('zin_re_ohm') is None:
+            return {'unmatched': u}
+        mm = tb.board_match(complex(u['zin_re_ohm'], u['zin_im_ohm']))
+        return {'unmatched': u, 'matched': tb.lna_ac(w, 'ext', NOM, 'active', match=mm, ct=ct, se=se, rt=rt),
+                'match_q': mm.get('q')}
+    TRIM = [(0, False, False), (7, False, False), (4, False, True), (4, True, False)]
+    trims = dict(zip([f'ct{c}{"_se" if s else ""}{"_rt" if r else ""}' for c, s, r in TRIM],
+                     par([(lambda a=a: trim_point(*a)) for a in TRIM])))
     byp_coff = tb.off_capacitance(w, 'lna_bypass', '\n'.join(
         f'XM{i} a off b VSS nfet_03v3 w=5u l=0.28u' for i in range(12)).replace('XM', 'MXM').replace('VSS', '0'), 2.4e9)
     nominal_ok = act.get('gain_db') is not None and act['idd_a'] > 1e-3
@@ -97,7 +109,16 @@ def do_lna(quick, chain):
          'extracted_nominal': [act.get('zin_re_ohm'), act.get('zin_im_ohm')]},
         {'metric': 'gain_lo step (dB)', 'target': 'codes -6/0/10/20 dB', 'extracted_nominal':
             (glo['gain_db'] - act['gain_db']) if glo.get('gain_db') and act.get('gain_db') else None},
-        {'metric': 'supply current active (mA)', 'target': 3.0, 'extracted_nominal': act['idd_a'] * 1e3 if act.get('idd_a') else None},
+        {'metric': 'supply current active (mA)', 'target': '11.7 (RC-8a, coordinator-approved +9 mA; was 3.0)',
+         'extracted_nominal': act['idd_a'] * 1e3 if act.get('idd_a') else None},
+        {'metric': 'package-tolerance network at reset (ct=4, se=0, rt=0) vs other codes: matched NF / gain (dB), Zin (ohm), match Q',
+         'target': 'trim/SE/RT network costs <= 0.5 dB NF (item 2); rt is opt-in',
+         'extracted_nominal': {'ct4 (reset)': [actm.get('nf_db'), actm.get('gain_db'), act.get('zin_re_ohm'), act.get('zin_im_ohm'), bm.get('q')],
+                               **{k: [v.get('matched', {}).get('nf_db'), v.get('matched', {}).get('gain_db'),
+                                      v['unmatched'].get('zin_re_ohm'), v['unmatched'].get('zin_im_ohm'), v.get('match_q')]
+                                  for k, v in trims.items()}},
+         'note': 'switch cost vs ideal switches (schematic, scratch/rfconv-owner/lna/trim): +0.10/+0.21/+0.27 dB at ct 0/4/7. '
+                 'se: RF_RX_N to VSS through 4.9 pF (single-ended source on RF_RX_P). rt: 2 x 200 ohm across the stage-1 gates.'},
         {'metric': 'IIP3 (dBm)', 'target': 0.0, 'extracted_nominal': None, 'note': 'not simulated'},
     ]
     if chain:
@@ -147,7 +168,8 @@ def do_lna(quick, chain):
     rec['performance_vs_target'] = perf
     rec['excluded_coverage'] = ['IIP3/P1dB not simulated', 'S11 with a real board network not simulated (ideal L-match only)',
                                 'gain codes implemented: active (high) and gain_lo shunt only; -6/0/10/20 dB mapping open',
-                                'ESD/pad network modelled as 0.5 pF per leg only', 'no Monte Carlo']
+                                'ESD/pad network modelled as 0.5 pF per leg only (COB chain + compact pad C: scratch/rfconv-owner/lna)',
+                                'no Monte Carlo']
     return rec
 
 
@@ -212,6 +234,10 @@ def do_rxmix(block, quick, chain):
 
 # ---------------------------------------------------------------- baseband filter
 BW7 = ('en', 'bw0', 'bw1', 'bw2', 'bw3')   # narrowest (all 4 bandwidth bits)
+def _tagc(c):
+    return {'mos': c[0], 'temp_c': c[1], 'vdd_v': c[2]}
+
+
 def pga_on(db):
     """Control set for PGA code `db` (-6..42 dB, netlists.GAIN_TABLE)."""
     import netlists
@@ -282,7 +308,15 @@ def do_bbf(block, quick):
          'detail': settle},
     ]
     if not quick:
-        perf.append({'metric': 'corner sweep (ext, RX widest, gain 0)', 'rows': corner_table(
+        QC = [('ff', 32, 3.15), ('typical', 27, 3.3), ('ss', 32, 3.15)]
+        qjobs = [(c, g, q) for c in QC for g in (0, 42) for q in range(4)]
+        qres = par([(lambda c=c, g=g, q=q: tb.bbf_ac(w, 'ext', c, block, on=pga_on(g), tag=f'qt_g{g}', qt=q)) for c, g, q in qjobs])
+        perf.append({'metric': 'Q-trim code sweep (qt 0..3), PGA 0 / 42 dB, widest bw: peaking dB above DC, f3db Hz',
+                     'target': 'a code with <= 1 dB peaking and >= 10 MHz at every corner (bring-up trim, RC-6)',
+                     'rows': [{'corner': _tagc(c), 'pga_db': g, 'qt': q,
+                               'peaking_db': (r['peak_gain_db'] - r['dc_gain_db']) if r.get('peak_gain_db') is not None and r.get('dc_gain_db') is not None else None,
+                               'f3db_hz': r.get('f3db_hz'), 'error': r.get('error')} for (c, g, q), r in zip(qjobs, qres)]})
+        perf.append({'metric': 'corner sweep (ext, RX widest, gain 0)', 'note': 'Q-trim code per process: tt/ss 1 (reset), ff 2 (tb.QT_BY_PROC)', 'rows': corner_table(
             lambda c: tb.bbf_ac(w, 'ext', c, block, tag='rx'), ['f3db_hz', 'dc_gain_db', 'peak_gain_db', 'idd_a', 'out_cm_v'])})
         perf.append({'metric': 'corner sweep (ext, RX top PGA code 42 dB)', 'rows': corner_table(
             lambda c: tb.bbf_ac(w, 'ext', c, block, on=G15, tag='rx_g15'), ['dc_gain_db', 'peak_gain_db', 'f3db_hz', 'out_cm_v'])})

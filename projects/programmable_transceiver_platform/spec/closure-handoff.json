@@ -1,14 +1,14 @@
 {
  "status": "in_progress",
- "updated_at": "2026-11-10T05:11:27.592886+00:00",
+ "updated_at": "2026-11-10T08:34:38.480835+00:00",
  "objective": "achieve digital rate area closure, physical chip assembly, observation wiring",
- "stopping_policy": "Digital closure agent active. CLOSE_R2 (current sources) runs via run_digital_hardening.sh pnr then export/sta/gls/pads/report; driver log scratch/closure-r2-driver.log.",
+ "stopping_policy": "No digital job running. Latest routed run: scratch/digital-hardening-closure-r2 (CLOSE_R2); evidence/digital-hardening-evidence.json regenerated from it.",
  "maintained_state": {
   "rtl": "Paired core retained. Added: reduced-rate fallback debug.host_link.rate (pt_host_rate_clock, tb_host_rate_clock), header delay-line reclaim, registered PRBS saturation, en_eff/island_off decode outputs, cdr.config.cap_rcsel (W1), slow-slew host pad reset, static DAC bus when invalid. Adopted next architecture: AC-1/S2/S3 (40-bit core at word/4, 40-bit wired boundary).",
   "storage": {
-   "routed_netlist_ff": 8149,
+   "routed_netlist_ff": 8150,
    "cap_bits": 8192,
-   "source": "scratch/digital-hardening-closure-r1/design/runs/CLOSE_R1/final/nl (flattened, one module)",
+   "source": "scratch/digital-hardening-closure-r2/design/runs/CLOSE_R2/final/nl (flattened, one module)",
    "reclaim": "pt_dense_header ALIGN=0 removes the 90-bit data delay line in the production encoder"
   },
   "physical": "Maintained flow make transceiver-core-bias-routing (verification/run_core_bias_routing.py + core_bias_routing/): supply-first routing of the 7 supply nets (4 um (VDD/VSS) / 2 um (rails) NDR on Metal2-4, min-width Metal5 at the 0.6 um bank pin pitch, every supply via filled to the layer overlap with a cut array), then 143 signal nets around the FIXED special supply wiring with POWER/GROUND roles and master pin types restored. Run scratch/core-bias-routing-20261109-101927: router 0/0 violations, independent audit 150 nets/278 terminals/120 pins pass (incl. route-vs-master-internal-metal shorts), 5 negative controls rejected, DEF vs GDS XOR 0 with shift control, all 8 masters XOR 0, GF180 KLayout DRC 0, black-box routing LVS unique (36 instances/150 nets; bridge control rejected), Magic C extraction 1616 caps. Supply IR/EM pass against GF180MCU DRM 14.2 limits with spec currents (see tapeout-readiness core bias physical_routing note); overall flow status pass.",
@@ -20,7 +20,7 @@
    "recipe": "verification/digital_hardening/Dockerfile",
    "scope": "Guarded image pins OpenROAD c74892e7b under a LibreLane built for an older engine. Compatibility patches (prepare_toolchain.py): scene-name list helpers, corner dict name->scene object, set_cmd_scene via find_scene; config works around odb area units (explicit IO_PIN_*_LENGTH) and stray PAD_LIBS. Canary image (matched engine) is unusable: repair_design runaway (23 GiB) below 3 ns transition."
   },
-  "hardening": "CLOSE_R1 (scratch/digital-hardening-closure-r1): full flow completes. Magic/KLayout DRC 0, LVS 0, antenna 0, routing DRC 0, util 64.1 %, stdcell 1.555 mm2 in 1580x1580. In-window timing (tt Liberty; ss_window 1.54 / ff_window 0.71 derates in pt_digital_macro.sdc): setup WNS -15.08 ss_window, -7.01 tt, -3.31 ff_window at full rate; hold >= +0.04 everywhere. /2,/4 fallback modes close hcore/hpair at /4 but rate-independent domains still fail. GLS for R1 invalid (netlist predates later RTL edits); CLOSE_R2 repeats on current sources. Recipe: transition 2.0 ns, cap 0.15 pF, no wire-length repair, density 68, pin_order.cfg, RSZ/STA corners tt, PAD_LIBS {}, IO pin length 2 um.",
+  "hardening": "CLOSE_R2 (scratch/digital-hardening-closure-r2, current sources): Magic/KLayout DRC 0, export DRC/antenna 0, XOR 0, LVS 0, antenna 0, route DRC 0; stdcell 1.592 mm2, util 65.7 % in 1580x1580; GLS pass (lockstep 0, model 0, reset safety, loopback 3 modes). In-window setup WNS -16.38 ss_window / -7.71 tt / -3.27 ff_window at full rate; /2 and /4: -12.32 ss_window (rate-independent domains); hold >= +0.04 all modes. Recipe: transition 2.0 ns, cap 0.15 pF, no wire-length repair, density 68, pin_order.cfg, RSZ/STA corners tt, PAD_LIBS {}, IO pin length 2 um. CLOSE_R1 superseded (reports only kept).",
   "evidence_reporting": "Historical hard-coded verdicts removed. Missing stages stay open; GLS needs a fresh source manifest; absent RTL copies cannot be called current; generated/shared-egress clocks are covered by STA. New final routed GLS/STA signoff remains unrun."
  },
  "validation": {

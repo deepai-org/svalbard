@@ -1,8 +1,8 @@
 {
  "generated_by": "spec/budgets/power_budget.py",
  "inputs": {
-  "spec/analog-architecture.json": "8b9a22c82ddf6d19",
-  "evidence/digital-hardening-evidence.json": "69ace099059a7df2",
+  "spec/analog-architecture.json": "6113db8a7561e966",
+  "evidence/digital-hardening-evidence.json": "e31e29c0caa1f5d1",
   "evidence/host-power-allocation-screen.json": "edb8eeb4ad534cfe",
   "evidence/artix-load-power-screen.json": "953a22d507e7d6da",
   "evidence/clock-power-screen.json": "299953a59d6eadc3",
@@ -60,9 +60,9 @@
    },
    "lower_bound_ma": 24.5,
    "lower_bound_basis": "evidence/clock-power-screen.json: Liberty clock-pin charging only, older netlist; excludes tree, wires, internal, data",
-   "upper_bound_ma": 207.19,
+   "upper_bound_ma": 81.79,
    "upper_bound_basis": "evidence/digital-hardening-evidence.json metrics_snapshot.power__total (FREEZE1, OpenROAD vectorless, nom_tt_025C_3v30, all SDC clocks at target, no mode gating, RTL 18/26 stale)",
-   "budget_case_ma": 207.19,
+   "budget_case_ma": 81.79,
    "status": "unverified: allocation is 5.7x below the only post-route power number"
   },
   "hostio": {
@@ -79,23 +79,23 @@
    "mode": "rf_rx",
    "branch_override": "external_rf_clock",
    "ceiling_ma": 240,
-   "allocation_ma": 224.09,
-   "allocation_margin_ma": 15.91,
-   "evidence_bound_ma": 418.6,
-   "evidence_margin_ma": -178.6,
-   "with_digital_requirement_ma": 193.0,
-   "with_digital_requirement_margin_ma": 47.0
+   "allocation_ma": 233.09,
+   "allocation_margin_ma": 6.91,
+   "evidence_bound_ma": 302.2,
+   "evidence_margin_ma": -62.2,
+   "with_digital_requirement_ma": 202.0,
+   "with_digital_requirement_margin_ma": 38.0
   },
   "rf_autonomous": {
    "mode": "rf_rx",
    "branch_override": null,
    "ceiling_ma": 240,
-   "allocation_ma": 253.02,
-   "allocation_margin_ma": -13.02,
-   "evidence_bound_ma": 447.53,
-   "evidence_margin_ma": -207.53,
-   "with_digital_requirement_ma": 221.93,
-   "with_digital_requirement_margin_ma": 18.07
+   "allocation_ma": 262.02,
+   "allocation_margin_ma": -22.02,
+   "evidence_bound_ma": 331.13,
+   "evidence_margin_ma": -91.13,
+   "with_digital_requirement_ma": 230.93,
+   "with_digital_requirement_margin_ma": 9.07
   },
   "wired_onchip_pll": {
    "mode": "wired",
@@ -103,8 +103,8 @@
    "ceiling_ma": 292,
    "allocation_ma": 244.82,
    "allocation_margin_ma": 47.18,
-   "evidence_bound_ma": 422.33,
-   "evidence_margin_ma": -130.33,
+   "evidence_bound_ma": 296.93,
+   "evidence_margin_ma": -4.93,
    "with_digital_requirement_ma": 275.14,
    "with_digital_requirement_margin_ma": 16.86
   },
@@ -114,8 +114,8 @@
    "ceiling_ma": 292,
    "allocation_ma": 248.05,
    "allocation_margin_ma": 43.95,
-   "evidence_bound_ma": 425.56,
-   "evidence_margin_ma": -133.56,
+   "evidence_bound_ma": 300.16,
+   "evidence_margin_ma": -8.16,
    "with_digital_requirement_ma": 278.37,
    "with_digital_requirement_margin_ma": 13.63
   },
@@ -125,8 +125,8 @@
    "ceiling_ma": 292,
    "allocation_ma": 224.82,
    "allocation_margin_ma": 67.18,
-   "evidence_bound_ma": 402.33,
-   "evidence_margin_ma": -110.33,
+   "evidence_bound_ma": 276.93,
+   "evidence_margin_ma": 15.07,
    "with_digital_requirement_ma": 255.14,
    "with_digital_requirement_margin_ma": 36.86
   },
@@ -136,8 +136,8 @@
    "ceiling_ma": 292,
    "allocation_ma": 231.25,
    "allocation_margin_ma": 60.75,
-   "evidence_bound_ma": 408.76,
-   "evidence_margin_ma": -116.76,
+   "evidence_bound_ma": 283.36,
+   "evidence_margin_ma": 8.64,
    "with_digital_requirement_ma": 261.57,
    "with_digital_requirement_margin_ma": 30.43
   },
@@ -192,30 +192,30 @@
  },
  "supply_drop": {
   "allocation": {
-   "i_max_ma": 253.02,
-   "board_mv": 5.1,
-   "bond_mv": 25.3,
-   "grid_mv": 25.3,
+   "i_max_ma": 262.02,
+   "board_mv": 5.2,
+   "bond_mv": 26.2,
+   "grid_mv": 26.2,
    "island_switch_mv": 19.9,
-   "total_mv": 75.5,
+   "total_mv": 77.5,
    "available_mv": 117.0,
-   "margin_mv": 41.5,
+   "margin_mv": 39.5,
    "supply_cells_needed_at_60ma": 5,
    "supply_cells_available": 8,
-   "cell_utilization_even_share": 0.527
+   "cell_utilization_even_share": 0.546
   },
   "evidence_bound": {
-   "i_max_ma": 447.53,
-   "board_mv": 9.0,
-   "bond_mv": 44.7,
-   "grid_mv": 44.8,
+   "i_max_ma": 331.13,
+   "board_mv": 6.6,
+   "bond_mv": 33.1,
+   "grid_mv": 33.1,
    "island_switch_mv": 19.9,
-   "total_mv": 118.3,
+   "total_mv": 92.7,
    "available_mv": 117.0,
-   "margin_mv": -1.3,
-   "supply_cells_needed_at_60ma": 8,
+   "margin_mv": 24.3,
+   "supply_cells_needed_at_60ma": 6,
    "supply_cells_available": 8,
-   "cell_utilization_even_share": 0.932
+   "cell_utilization_even_share": 0.69
   },
   "with_digital_requirement": {
    "i_max_ma": 278.37,
@@ -233,23 +233,23 @@
  },
  "thermal": {
   "allocation": {
-   "p_max_w": 0.899,
+   "p_max_w": 0.929,
    "p_stopped_w": 0.015,
    "free_air_rise_c": [
-    36.0,
-    89.9
+    37.2,
+    92.9
    ],
-   "required_theta_junction_to_controlled_plate_c_per_w": 9.05,
+   "required_theta_junction_to_controlled_plate_c_per_w": 8.75,
    "note": "Tj window 10 C minus 2 C control tolerance must absorb the full stopped-to-max power step (mode switches are faster than any plate loop)."
   },
   "evidence_bound": {
-   "p_max_w": 1.551,
+   "p_max_w": 1.161,
    "p_stopped_w": 0.015,
    "free_air_rise_c": [
-    62.0,
-    155.1
+    46.4,
+    116.1
    ],
-   "required_theta_junction_to_controlled_plate_c_per_w": 5.21,
+   "required_theta_junction_to_controlled_plate_c_per_w": 6.98,
    "note": "Tj window 10 C minus 2 C control tolerance must absorb the full stopped-to-max power step (mode switches are faster than any plate loop)."
   },
   "with_digital_requirement": {

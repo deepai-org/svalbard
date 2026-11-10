@@ -22,7 +22,7 @@ CORNER_LIBS = {'tt': ('typical', 'res_typical'), 'ss': ('ss', 'res_ss'), 'ff': (
 PORTS = {
     'txmix': 'VDD VSS bb_p bb_n dac_p dac_n lo_p lo_n out_p out_n ibias en sel_dac atb_bias atb_tail',
     'txsum': 'VDD VSS i_p i_n q_p q_n out_p out_n en atb_cm',
-    'rfdriver': 'VDD VSS in_p in_n pad_p pad_n ibias en mute bypass g0 g1 g2 g3 atb_bias atb_pre atb_cm',
+    'rfdriver': 'VDD VSS in_p in_n pad_p pad_n ibias en mute bypass g0 g1 g2 g3 se atb_bias atb_pre atb_cm',
 }
 
 
@@ -103,7 +103,7 @@ def design_match(y_pad, f=F_LO):
                 balun_loss_db=BOARD['balun_loss_db'], r_out_ohm=float(1 / y_pad.real), pad_susceptance_S=float(b))
 
 
-def zout_deck(view, gain=15, f=F_LO, out='w.txt', corner='tt', temp=27, vdd=3.3, bypass=0, rs_in=0.001):
+def zout_deck(view, gain=15, f=F_LO, out='w.txt', corner='tt', temp=27, vdd=3.3, bypass=0, rs_in=0.001, se=0):
     """Differential admittance at the pad (after the 2 ohm + 1 pF pad model). bypass=1: driver off,
     bypass on; the input is then driven through rs_in per leg (txsum output impedance stand-in)."""
     g = [vdd * ((gain >> k) & 1) for k in range(4)]
@@ -122,7 +122,8 @@ VIP inps 0 2.82
 VIN inns 0 2.82
 RIP inps inp {rs_in}
 RIN inns inn {rs_in}
-X1 vdd VSS inp inn pad_p pad_n ib en mute byp g0 g1 g2 g3 ab ap ac pt_rfdriver
+VSE se 0 {vdd * se}
+X1 vdd VSS inp inn pad_p pad_n ib en mute byp g0 g1 g2 g3 se ab ap ac pt_rfdriver
 RPP pad_p padx_p 2
 RPN pad_n padx_n 2
 CPP padx_p 0 1p
@@ -151,7 +152,7 @@ def bb_sources(name, vdiff_i, vdiff_q, fbb=None, cm=1.65):
 
 def chain_deck(view, *, vdd=3.3, corner='tt', temp=27, vin_i=0.3, vin_q=0.0, fbb=None, sel_dac=0,
                en=(1, 1, 1, 1), mute=0, bypass=0, gain=15, tstop=8e-9, out='w.txt', lo_high=3.3, ibias=10e-6,
-               f_lo=F_LO, match=None, sat=0):
+               f_lo=F_LO, match=None, sat=0, se=0):
     """Full TX chain: two mixers -> txsum -> rfdriver -> pad model."""
     v = lambda b: vdd * b
     en_mi, en_mq, en_s, en_d = en
@@ -183,7 +184,8 @@ IBD 0 ib_d {ibias}
 XMI vdd_mi VSS bbip bbin dacip dacin loip loin ip in ib_mi en_mi sel satm atbmi_b atbmi_t pt_txmix_i
 XMQ vdd_mq VSS bbqp bbqn dacqp dacqn loqp loqn qp qn ib_mq en_mq sel satm atbmq_b atbmq_t pt_txmix_q
 XS vdd_s VSS ip in qp qn sp sn en_s atbs_cm pt_txsum
-XD vdd_d VSS sp sn pad_p pad_n ib_d en_d mute byp g0 g1 g2 g3 atbd_b atbd_p atbd_c pt_rfdriver
+VSE se 0 {vdd * se}
+XD vdd_d VSS sp sn pad_p pad_n ib_d en_d mute byp g0 g1 g2 g3 se atbd_b atbd_p atbd_c pt_rfdriver
 {pad_load(match=match)}
 .control
 tran 1p {tstop} 0 2p

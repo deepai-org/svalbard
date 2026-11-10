@@ -113,11 +113,15 @@ def g_nor2(pre, a, b, y, wn, wp):
     return cols, net
 
 
+# Window gates (NAND2W, INVW): strong opening path (series NMOS, INVW PMOS), weak closing path, so the
+# extracted 1-UI windows reach 0 to +20 ps overlap at ss / 3.24 Gb/s instead of 21-33 ps gaps (a gap
+# lets a run of ones dip through the AND-OR mux; an overlap only delays a falling edge).  Earlier
+# sizes 8/8 and 8/20 (gate-level core); NAND2W PMOS 8 -> 7 um (8/4 gave 425-444 ps windows, 12/4 + 6/24 560 ps).
 GATES = dict(inv=g_inv, nand2=g_nand2, nand3=g_nand3, nor2=g_nor2)
 # sizes of the previous gate-level core (cells.py)
 SIZE = dict(INV1=('inv', 1, 2), INV2=('inv', 2, 4), INV4=('inv', 4, 8), INV8=('inv', 8, 16),
             INV16=('inv', 16, 32), INVW=('inv', 8, 20), NAND=('nand2', 2, 2), NAND2E=('nand2', 8, 8),
-            NAND2W=('nand2', 8, 8), NAND4=('nand2', 4, 4), NAND3S=('nand3', 3, 2), NOR2X=('nor2', 4, 16))
+            NAND2W=('nand2', 8, 7), NAND4=('nand2', 4, 4), NAND3S=('nand3', 3, 2), NOR2X=('nor2', 4, 16))
 
 
 def row_of(name, gates, ports):

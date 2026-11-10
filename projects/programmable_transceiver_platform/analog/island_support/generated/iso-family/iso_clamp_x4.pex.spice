@@ -1,0 +1,32 @@
+* PEX produced on Tue Nov 10 06:57:28 AM CET 2026 using /foss/tools/sak/sak-pex.sh with m=2 and s=1
+* NGSPICE file created from iso_clamp_x4_pex.ext - technology: gf180mcuD
+
+.subckt iso_clamp_x4_pex A ISO Y VDD VSS
+X0 NY AN Y VDD pfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=0.28u
+X1 NY ISO VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=0.28u
+X2 VSS AN Y VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X3 VSS ISO Y VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X4 VDD ISO NY VDD pfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=0.28u
+X5 VDD A AN VDD pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X6 Y AN NY VDD pfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=0.28u
+X7 VSS A AN VSS nfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=0.28u
+C0 AN A 4.85667f
+C1 AN Y 1.20007f
+C2 NY A 0.12741f
+C3 AN ISO 0.30016f
+C4 NY Y 1.68627f
+C5 NY ISO 1.39066f
+C6 AN NY 0.37598f
+C7 A VDD 1.85578f
+C8 VDD Y 0.69146f
+C9 ISO VDD 1.51293f
+C10 A Y 1.56062f
+C11 AN VDD 2.08805f
+C12 A ISO 0.33787f
+C13 ISO Y 3.98094f
+C14 NY VDD 3.21937f
+C15 Y VSS 7.65924f
+C16 VDD VSS 26.86309f
+C17 NY VSS 5.46373f
+.ends
+

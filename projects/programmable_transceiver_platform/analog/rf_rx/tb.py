@@ -13,10 +13,10 @@ import simlib as S
 HERE = flow.HERE
 CTRL_BBF = ['en', 'dir_tx', 'inj', 'rx_direct', 'byp_s1', 'byp_s23', 'obs_sel0', 'obs_sel1',
             'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3', 'gain4', 'gain5', 'gainc0', 'gainc1',
-            'island_off']
+            'qt0', 'qt1', 'island_off']
 BBF_PINS = ('rx_in_p rx_in_n tx_in_p tx_in_n inj_p inj_n out_rx_p out_rx_n out_tx_p out_tx_n obs_p obs_n '
             'ibias en dir_tx inj rx_direct byp_s1 byp_s23 obs_sel0 obs_sel1 bw0 bw1 bw2 bw3 gain0 gain1 gain2 '
-            'gain3 gain4 gain5 gainc0 gainc1 island_off atb_vcm atb_vbp VDD 0')
+            'gain3 gain4 gain5 gainc0 gainc1 qt0 qt1 island_off atb_vcm atb_vbp VDD 0')
 
 
 def netlist(work, block, view):
@@ -26,6 +26,21 @@ def netlist(work, block, view):
 
 PGA_GAIN_BITS = ('gain0', 'gain1', 'gain2', 'gain3', 'gain4', 'gain5', 'gainc0', 'gainc1')
 PGA_UNITY = ('gain2',)    # PGA code for 0 dB (k = 4, coarse off): the register reset value
+# Q-trim (RC-6): reset code 1 (qt0); the trim is set per part at bring-up. Benches that do not name a
+# code use the per-process code from the extracted Q-trim study: tt/ss 1, ff 2 (ff peaks 6.4 dB at code 0).
+QT_RESET = 1
+QT_BY_PROC = {'typical': 1, 'ss': 1, 'ff': 2}
+# LNA package-tolerance controls (RC-8a/RC-9/RC-10): C-trim reset code 4, se/rt off.
+LNA_CT_RESET = 4
+
+
+def qt_bits(code):
+    return tuple(b for k, b in enumerate(('qt0', 'qt1')) if (code >> k) & 1)
+
+
+def _lna_trim(vdd, ct=LNA_CT_RESET, se=False, rt=False):
+    return '\n'.join([f'Vct{k} ct{k} 0 {vdd if (ct >> k) & 1 else 0}' for k in range(3)] +
+                     [f'Vse se 0 {vdd if se else 0}', f'Vrt rt 0 {vdd if rt else 0}'])
 
 
 def _ctl(names, on, vdd):
@@ -34,6 +49,9 @@ def _ctl(names, on, vdd):
     on = set(on)
     if 'gain2' in names and 'en' in on and not on & set(PGA_GAIN_BITS):
         on |= set(PGA_UNITY)
+    if 'qt0' in names and 'qtx' not in on and not on & {'qt0', 'qt1'}:
+        on |= set(qt_bits(QT_RESET))
+    on.discard('qtx')     # 'qtx' = explicit qt code 0
     return '\n'.join(f'V{c} {c} 0 {vdd if c in on else 0}' for c in names)
 
 
@@ -72,7 +90,7 @@ def tone(path, f, t0, t1, col=1):
 
 
 # ---------------------------------------------------------------- LNA
-def lna_ac(work, view, corner=('typical', 27, 3.3), mode='active', f=2.4e9, match=None):
+def lna_ac(work, view, corner=('typical', 27, 3.3), mode='active', f=2.4e9, match=None, ct=LNA_CT_RESET, se=False, rt=False):
     c, t, vdd = corner
     if match:
         src = 'Ep e_p 0 s 0 0.5\nEn e_n 0 s 0 -0.5\nRsp e_p sp 50\nRsn e_n sn 50\n' + _match_net(match)
@@ -92,8 +110,11 @@ Cpn rf_in_n 0 0.5p
 * passive-mixer input approximation: 50 ohm per leg to an AC ground at VCM
 Rmp rf_out_p vm 50
 Rmn rf_out_n vm 50
+Rmqp rf_outq_p vm 50
+Rmqn rf_outq_n vm 50
 Vm vm 0 1.65
-X1 rf_in_p rf_in_n rf_out_p rf_out_n ibias en gain_lo byp island_off atb_nbias atb_vdcm VDD 0 pt_lna
+{_lna_trim(vdd, ct, se, rt)}
+X1 rf_in_p rf_in_n rf_out_p rf_out_n rf_outq_p rf_outq_n ibias en gain_lo byp ct0 ct1 ct2 se rt island_off atb_nbias atb_vdcm VDD 0 pt_lna
 .control
 op
 let idd=-i(VDD)
@@ -111,7 +132,8 @@ let nf=10*log10(inoise_spectrum^2/(4*1.380649e-23*{273.15 + t}*100))
 print nf
 .endc
 """
-    log, m = run(work, f'lna_{mode}_{int(f / 1e6)}_{"m" if match else "u"}_{view}_{_tag(corner)}.cir', body, corner)
+    trim = '' if (ct, se, rt) == (LNA_CT_RESET, False, False) else f'ct{ct}{"se" if se else ""}{"rt" if rt else ""}_'
+    log, m = run(work, f'lna_{trim}{mode}_{int(f / 1e6)}_{"m" if match else "u"}_{view}_{_tag(corner)}.cir', body, corner)
     return dict(idd_a=m.get('idd'), gain_db=m.get('gv'), zin_re_ohm=m.get('zr'), zin_im_ohm=m.get('zi'),
                 nf_db=m.get('nf'), vd_cm_v=m.get('vdcm'))
 
@@ -126,14 +148,19 @@ Ven en 0 {vctl}
 Vgl gain_lo 0 {vctl}
 Vby byp 0 {vctl}
 Viso island_off 0 {vctl}
+Vct0 ct0 0 {vctl}
+Vct1 ct1 0 {vctl}
+Vct2 ct2 0 {vctl}
+Vse se 0 {vctl}
+Vrt rt 0 {vctl}
 Vrp rf_in_p 0 {vctl}
 Vrn rf_in_n 0 0
-X1 rf_in_p rf_in_n rf_out_p rf_out_n ibias en gain_lo byp island_off atb_nbias atb_vdcm VDD 0 pt_lna
+X1 rf_in_p rf_in_n rf_out_p rf_out_n rf_outq_p rf_outq_n ibias en gain_lo byp ct0 ct1 ct2 se rt island_off atb_nbias atb_vdcm VDD 0 pt_lna
 .option abstol=1e-15 reltol=1e-6 vntol=1e-9 itl1=500
 .control
 op
 let ipad=abs(i(Vrp))+abs(i(Vrn))
-let ictl=abs(i(Ven))+abs(i(Vgl))+abs(i(Vby))+abs(i(Viso))
+let ictl=abs(i(Ven))+abs(i(Vgl))+abs(i(Vby))+abs(i(Viso))+abs(i(Vct0))+abs(i(Vct1))+abs(i(Vct2))+abs(i(Vse))+abs(i(Vrt))
 let irail=abs(i(VDD))
 print ipad ictl irail
 .endc
@@ -265,10 +292,15 @@ print ocm
 
 
 def bbf_ac(work, view, corner=('typical', 27, 3.3), block='bbfilter_i', on=('en',), src='rx', out='out_rx',
-           inj_drive=False, tag='rx'):
+           inj_drive=False, tag='rx', qt=None):
+    """qt: Q-trim code 0..3; None = the per-process code QT_BY_PROC (tt/ss 1 = reset, ff 2)."""
     c, t, vdd = corner
     nl = netlist(work, block, view)
-    body = _bbf_deck(nl, vdd, set(on), src, inj_drive).replace('{blk}', block) + f"""
+    q = QT_BY_PROC.get(c, QT_RESET) if qt is None else qt
+    on = set(on) | (set(qt_bits(q)) or {'qtx'})
+    if qt is not None:
+        tag = f'{tag}_qt{qt}'
+    body = _bbf_deck(nl, vdd, on, src, inj_drive).replace('{blk}', block) + f"""
 .control
 op
 let idd=-i(VDD)
@@ -289,7 +321,7 @@ wrdata {block}_{tag}_{view}_{_tag(corner)}.ac g
     log, m = run(work, f'{block}_{tag}_{view}_{_tag(corner)}.cir', body, corner)
     return dict(idd_a=m.get('idd'), dc_gain_db=m.get('g_dc'), peak_gain_db=m.get('g_max'),
                 f3db_hz=m.get('f3db'), gain_20mhz_db=m.get('g_20m'),
-                out_cm_v=m.get('ocm'), vcm_v=m.get('vcm'))
+                out_cm_v=m.get('ocm'), vcm_v=m.get('vcm'), qt_code=q)
 
 
 def bbf_direction_settle(work, view, corner=('typical', 27, 3.3), block='bbfilter_i'):
@@ -549,11 +581,12 @@ Cpn rf_in_n 0 0.5p
 {lo('lin', 1, 0)}
 {lo('lqp', 0, per / 4)}
 {lo('lqn', 1, per / 4)}
-XL rf_in_p rf_in_n rfo_p rfo_n ib1 en gain_lo byp island_off nb vdcm VDD 0 pt_lna
+{_lna_trim(vdd)}
+XL rf_in_p rf_in_n rfo_p rfo_n rfq_p rfq_n ib1 en gain_lo byp ct0 ct1 ct2 se rt island_off nb vdcm VDD 0 pt_lna
 {_ofs(ofs, vdd, 'i')}
 {_ofs(ofs_q, vdd, 'q')}
 XI rfo_p rfo_n lip lin bip bin ib2 enm ofs0i ofs1i ofs2i ofs3i ofs4i ofs_signi island_off avi abi VDD 0 pt_rxmix_i
-XQ rfo_p rfo_n lqp lqn bqp bqn ib3 enm ofs0q ofs1q ofs2q ofs3q ofs4q ofs_signq island_off avq abq VDD 0 pt_rxmix_q
+XQ rfq_p rfq_n lqp lqn bqp bqn ib3 enm ofs0q ofs1q ofs2q ofs3q ofs4q ofs_signq island_off avq abq VDD 0 pt_rxmix_q
 Cbi1 bip 0 1p
 Cbi2 bin 0 1p
 Cbq1 bqp 0 1p
@@ -632,9 +665,10 @@ Vlip lip 0 {vdd}
 Vlin lin 0 0
 Vlqp lqp 0 {vdd}
 Vlqn lqn 0 0
-XL rf_in_p rf_in_n rfo_p rfo_n ib1 en gain_lo byp island_off nb vdcm VDD 0 pt_lna
+{_lna_trim(vdd)}
+XL rf_in_p rf_in_n rfo_p rfo_n rfq_p rfq_n ib1 en gain_lo byp ct0 ct1 ct2 se rt island_off nb vdcm VDD 0 pt_lna
 XI rfo_p rfo_n lip lin bip bin ib2 enm ofs0i ofs1i ofs2i ofs3i ofs4i ofs_signi island_off avi abi VDD 0 pt_rxmix_i
-XQ rfo_p rfo_n lqp lqn bqp bqn ib3 enm ofs0q ofs1q ofs2q ofs3q ofs4q ofs_signq island_off avq abq VDD 0 pt_rxmix_q
+XQ rfq_p rfq_n lqp lqn bqp bqn ib3 enm ofs0q ofs1q ofs2q ofs3q ofs4q ofs_signq island_off avq abq VDD 0 pt_rxmix_q
 .control
 noise v(bip,bin) Vs lin 1 {f} {f}
 setplot noise1
@@ -868,9 +902,10 @@ Blip lip 0 V={vdd / 2}+{vdd / 2}*tanh(8*sin(2*pi*2.4e9*time))
 Blin lin 0 V={vdd / 2}-{vdd / 2}*tanh(8*sin(2*pi*2.4e9*time))
 Blqp lqp 0 V={vdd / 2}-{vdd / 2}*tanh(8*cos(2*pi*2.4e9*time))
 Blqn lqn 0 V={vdd / 2}+{vdd / 2}*tanh(8*cos(2*pi*2.4e9*time))
-XL rf_in_p rf_in_n rfo_p rfo_n ib1 en gain_lo byp island_off nb vdcm VDD 0 pt_lna
+{_lna_trim(vdd)}
+XL rf_in_p rf_in_n rfo_p rfo_n rfq_p rfq_n ib1 en gain_lo byp ct0 ct1 ct2 se rt island_off nb vdcm VDD 0 pt_lna
 XI rfo_p rfo_n lip lin bip bin ib2 enm ofs0i ofs1i ofs2i ofs3i ofs4i ofs_signi island_off avi abi VDD 0 pt_rxmix_i
-XQ rfo_p rfo_n lqp lqn bqp bqn ib3 enm ofs0q ofs1q ofs2q ofs3q ofs4q ofs_signq island_off avq abq VDD 0 pt_rxmix_q
+XQ rfq_p rfq_n lqp lqn bqp bqn ib3 enm ofs0q ofs1q ofs2q ofs3q ofs4q ofs_signq island_off avq abq VDD 0 pt_rxmix_q
 Cbi1 bip 0 1p
 Cbi2 bin 0 1p
 Cbq1 bqp 0 1p

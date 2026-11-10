@@ -141,16 +141,28 @@ def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical'
     for b, code in zip(('MAIN', 'POST', 'TMDS'), codes):
         for k, bit in enumerate(code_bits(code)):
             lines.append(f'V{b}C{k} {b}_CODE{k} 0 {bit*vdd}')
-    # data words: launched T_word/4 after each WORD_CLK rising edge
-    for i in range(20):
-        tv = [(0.0, words[0][i])]
-        for k, w in enumerate(words):
-            tv.append((word_t0 + k * tw + tw / 4, w[i]))
-        lines.append(pwl_bits(f'D{i}', f'D{i}', tv, vdd))
+    # data words: launched T_word/4 after each WORD_CLK rising edge (20-bit port), or, with the
+    # 40-bit boundary (D20..D39 present), pairs of words launched T_word/4 after each WORD_CLK40
+    # rising edge (word_t0 is then a WORD_CLK40 rising edge): word 2m on D0..D19, 2m+1 on D20..D39
+    if 'D39' in ports:
+        pairs = [(words[2 * m], words[2 * m + 1] if 2 * m + 1 < len(words) else words[2 * m])
+                 for m in range((len(words) + 1) // 2)]
+        for i in range(40):
+            h, j = divmod(i, 20)
+            tv = [(0.0, pairs[0][h][j])] + [(word_t0 + 2 * m * tw + tw / 4, pr[h][j]) for m, pr in enumerate(pairs)]
+            lines.append(pwl_bits(f'D{i}', f'D{i}', tv, vdd))
+    else:
+        for i in range(20):
+            tv = [(0.0, words[0][i])]
+            for k, w in enumerate(words):
+                tv.append((word_t0 + k * tw + tw / 4, w[i]))
+            lines.append(pwl_bits(f'D{i}', f'D{i}', tv, vdd))
     for o in ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N']:
         if load_f:
             lines.append(f'C{o} {o} 0 {load_f}')
     lines.append(f'CWCK WORD_CLK 0 50f')
+    if 'WORD_CLK40' in ports:
+        lines.append('CWCK40 WORD_CLK40 0 50f')
     # Tail-gate load of the pad output stage (MAIN/POST: 8x4 fingers, TMDS: 8x2 fingers of W20/L1,
     # ~1-3 pF on <b>_BIAS), with the drain tied to the source.  The tail current is NOT measured
     # here: an ideal source on the drain of these pF devices (the earlier bench) makes the source's
@@ -163,7 +175,7 @@ def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical'
     lines.append(extra)
     lines = driver_impedance(lines)
     lines.append('X0 ' + ' '.join(nets[p] for p in ports) + f' {subckt}')
-    probes = probes or ['WTX_PH0', 'WORD_CLK', 'CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N',
+    probes = probes or ['WTX_PH0', 'WORD_CLK40' if 'WORD_CLK40' in ports else 'WORD_CLK', 'CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N',
                         'CMD_TMDS_P', 'CMD_TMDS_N', 'MAIN_BIAS', 'TMDS_BIAS', 'WTX_EXT_DATA']
     vecs = ' '.join(f'v({p})' for p in probes) + ' i(VDD)'
     # ngspice sizes its output buffer for every node at the print step, which overflows for the
@@ -239,7 +251,7 @@ def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, v
     pdir = work / f'{tag}_phase'; pdir.mkdir(exist_ok=True)
     (pdir / Path(dut).name).write_text(Path(dut).read_text())
     zero = [[0] * 20]
-    deck, names = build(dut, subckt, rate=rate, words=zero, word_t0=1, tstop=ser_on + 3 * tw, vdd=vdd,
+    deck, names = build(dut, subckt, rate=rate, words=zero, word_t0=1, tstop=ser_on + 8 * tw, vdd=vdd,
                         corner=corner, temp=temp, codes=codes, en=en, extra=extra, ser_on=ser_on, bpc=bpc,
                         fallback=fallback)
     (pdir / 'tb.sp').write_text(deck)
@@ -248,12 +260,15 @@ def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, v
     if abort:
         return dict(ok=False, reason='simulator abort (phase pass): ' + abort, dut_sha256=tools.sha(dut))
     w = tools.read_wrdata(pdir / 'wave.txt', names)
-    rises = crossings(w['time'], w['WORD_CLK'], rising=True)
+    wck = 'WORD_CLK40' if 'WORD_CLK40' in w else 'WORD_CLK'
+    rises = crossings(w['time'], w[wck], rising=True)
     rises = rises[rises > ser_on]
+    if wck == 'WORD_CLK40' and len(rises) > 2:
+        rises = rises[1:]       # first WORD_CLK40 period after the enable may be short (start-up)
     if len(rises) < 2:
         return dict(ok=False, reason='WORD_CLK not running', dut_sha256=tools.sha(dut), log_tail=log[-2000:])
     word_t0 = float(rises[0])
-    measured_tw = float(np.mean(np.diff(rises)))
+    measured_tw = float(np.mean(np.diff(rises))) / (2 if wck == 'WORD_CLK40' else 1)
     # pass 2: data
     if words is None:
         bits = prbs7_bits(20 * nwords)

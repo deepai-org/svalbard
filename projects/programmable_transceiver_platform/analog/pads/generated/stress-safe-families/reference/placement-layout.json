@@ -1,5 +1,6 @@
 {
   "status": "generated_candidate_requires_connectivity_and_rule_review",
+  "antenna_diodes": [],
   "family": "reference_clock",
   "flat_cell": "tx_with_primary",
   "marker_export": {
@@ -12,9 +13,9 @@
     },
     "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
     "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
-    "before_gds_sha256": "9712af46673db1928fdcbe4432a817f092f4dc1f19c2a8f0049eaac023ee5407",
-    "after_gds_sha256": "158c55d8d7cefd08dd12f7e5f26b2d5f060fac2c55d0cd82a0e9213d03292ca3",
-    "physical_magic_sha256": "d8170605faaf58872f905cb7c0194c53f3cbe38b966a2d826307cbfdc6f80fd1",
+    "before_gds_sha256": "1fc8ceaec46cc768ccbb9940bed272c12b0fed8239f4cbca9b803ce7d02df760",
+    "after_gds_sha256": "3caf278c77e79c2c7000824506026dfdbde4a741e85fabe4c6dd48994c26c4ed",
+    "physical_magic_sha256": "cb3b9130321012a74e62fcdf837aa45f8e33da83743777b94af07e931d38d3b3",
     "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
   },
   "serial_tail_units": null,
@@ -38,10 +39,10 @@
   "stock_export_returncode": 0,
   "requires_attached_primary_protection": false,
   "pad_transverse_width_um": 6.0,
-  "pad_trunk_width_um": 0.44,
+  "pad_trunk_width_um": 4.0,
   "pad_trunk_widths_um": {
-    "P": 0.44,
-    "N": 0.44
+    "P": 4.0,
+    "N": 4.0
   },
   "net_track_x_um": {
     "BIAS_N_0": 3.0,
@@ -58,10 +59,10 @@
     "BIAS_P_4": 14.0,
     "BIAS_P_5": 15.0,
     "BIAS_P_6": 16.0,
-    "PAD_N": 17.0,
-    "PAD_P": 18.0,
-    "VCM": 19.0,
-    "VSS": 24.22
+    "PAD_N": 19.22,
+    "PAD_P": 24.22,
+    "VCM": 27.44,
+    "VSS": 32.66
   },
   "net_trunk_widths_um": {
     "BIAS_N_0": 0.44,
@@ -78,8 +79,8 @@
     "BIAS_P_4": 0.44,
     "BIAS_P_5": 0.44,
     "BIAS_P_6": 0.44,
-    "PAD_N": 0.44,
-    "PAD_P": 0.44,
+    "PAD_N": 4.0,
+    "PAD_P": 4.0,
     "VCM": 0.44,
     "VSS": 8.0
   },
@@ -87,31 +88,31 @@
   "net_trunk_spans_um": {
     "BIAS_N_0": [
       441.3,
-      473.9
+      519.5
     ],
     "BIAS_N_1": [
-      473.7,
-      477.1
+      519.3,
+      522.7
     ],
     "BIAS_N_2": [
-      476.90000000000003,
-      480.3
+      522.5,
+      525.9
     ],
     "BIAS_N_3": [
-      480.1,
-      483.5
+      525.6999999999999,
+      545.5
     ],
     "BIAS_N_4": [
-      483.3,
-      486.7
+      545.3,
+      548.7
     ],
     "BIAS_N_5": [
-      486.5,
-      493.5
+      548.5,
+      551.9
     ],
     "BIAS_N_6": [
-      493.3,
-      496.7
+      551.6999999999999,
+      571.5
     ],
     "BIAS_P_0": [
       444.5,
@@ -119,51 +120,57 @@
     ],
     "BIAS_P_1": [
       447.7,
-      451.1
-    ],
-    "BIAS_P_2": [
-      450.90000000000003,
-      454.3
-    ],
-    "BIAS_P_3": [
-      454.1,
-      457.5
-    ],
-    "BIAS_P_4": [
-      457.3,
-      460.7
-    ],
-    "BIAS_P_5": [
-      460.5,
       467.5
     ],
-    "BIAS_P_6": [
+    "BIAS_P_2": [
       467.3,
       470.7
     ],
+    "BIAS_P_3": [
+      470.5,
+      473.9
+    ],
+    "BIAS_P_4": [
+      473.7,
+      493.5
+    ],
+    "BIAS_P_5": [
+      493.3,
+      496.7
+    ],
+    "BIAS_P_6": [
+      496.5,
+      499.9
+    ],
     "PAD_N": [
       435.5,
-      441.5
+      912.69
     ],
     "PAD_P": [
       435.5,
-      444.7
+      912.69
     ],
     "VCM": [
-      470.5,
-      524.5
+      499.7,
+      912.69
     ],
     "VSS": [
       435.5,
-      524.5
+      912.69
     ]
   },
   "port_heights_um": {
-    "PAD_P": 438.0,
-    "PAD_N": 438.0,
-    "VSS": 524.0,
-    "VCM": 524.0
+    "PAD_P": 912.19,
+    "PAD_N": 912.19,
+    "VSS": 912.19,
+    "VCM": 912.19
   },
+  "columns": 3,
+  "port_top_um": 912.19,
+  "bond_y_offsets_um": [
+    14.0,
+    6.0
+  ],
   "reference_pair_size_um": [
     286.0,
     350
@@ -233,7 +240,7 @@
       0,
       418.0,
       150.0,
-      525.0
+      603.0
     ],
     [
       150.0,
@@ -243,101 +250,101 @@
     ],
     [
       79.945,
-      538.0,
+      438.0,
       354.5,
-      828.0
+      728.0
     ],
     [
-      85.76499999999999,
-      841.0,
-      383.235,
-      1013.41
+      86.16499999999999,
+      741.0,
+      382.83500000000004,
+      924.21
     ],
     [
       100.0,
-      828.0,
+      728.0,
       130.0,
-      841.0
+      741.0
     ],
     [
       180.0,
-      828.0,
+      728.0,
       210.0,
-      841.0
+      741.0
     ],
     [
       33.5,
-      396.0,
+      392.0,
       372.0,
-      404.0
+      400.0
     ],
     [
       364.0,
-      396.0,
+      392.0,
       372.0,
-      584.0
+      484.0
     ],
     [
       262.0,
-      576.0,
+      476.0,
       372.0,
-      584.0
+      484.0
     ],
     [
       244.5,
-      408.0,
+      402.0,
       388.0,
-      416.0
+      410.0
     ],
     [
       380.0,
-      408.0,
+      402.0,
       388.0,
-      604.0
+      504.0
     ],
     [
       266.0,
-      596.0,
+      496.0,
       388.0,
-      604.0
+      504.0
     ],
     [
       216.0,
-      542.0,
+      442.0,
       402.0,
-      546.0
+      446.0
     ],
     [
       396.0,
-      520.0,
+      411.0,
       404.0,
-      548.0
+      448.0
     ],
     [
-      22.22,
-      522.0,
+      30.659999999999997,
+      413.0,
       402.0,
-      526.0
+      417.0
     ]
   ],
   "area_ceiling_um2": 185000,
   "fits_assigned_area": true,
   "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
   "sources_sha256": {
-    "analog/pads/layout.py": "04f98a9bff0374c6fba37f130b3ec7b6f97cc216bc2906dd803a3f4f8e5f3729",
+    "analog/pads/layout.py": "747c7be03aef948ba6a117258abe2715d45f607945b93932ca37dd6e4f8ebe8d",
     "analog/pads/gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
     "analog/pads/generated/provider-sites.json": "c58790b22d45497c45bfd20e8cc60e698d8286010856fcc6fa18ab7021d26df4",
     "analog/pads/circuits.py": "1c212fbefc7157c2fb50594b3c137aa9ce2f94bfd30075c9386c05a0fa55e2b3",
     "analog/pads/design.py": "7330ebd9a33ffcfe6a0c9949cd8d51d08a8e6564521b14ae4ec57fd66a1a40f9",
-    "analog/pads/wired_receive.py": "117711d681b59df45eb9e8df153021d000a46835db261ec865a27c2a92ca3b6d",
+    "analog/pads/wired_receive.py": "955c3b046b5b62c338143ed9fc3c6a141a12e3f067713d05d3868306ff244a37",
     "analog/pads/folded_tail.py": "7d8ddd4f655ac25e8ebbfdcb4c1599b53374f7b6b795e521ecdade18da2ed386",
-    "spec/analog-architecture.json": "5314a56b1a5f2167c120b70839e21a8db3472e6b01091bbaeab55ce7c76d4fa1",
+    "spec/analog-architecture.json": "8c21c072f5c4eddef381d0aca7212672fb90e742c68e3101978b7f89de6118f8",
     "spec/contract.json": "712a142ab5e6fa1f2fe50b30c23be83207125c47caee8b18c79fd134eb7b693c",
     "spec/schematic-implementation.json": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332"
   },
   "drc_count": "0",
   "pcell_terminal_coordinates": {
-    "primitive_0": [
+    "pad_reference_clock__primitive_0": [
       [
         0.0,
         6.68
@@ -364,22 +371,22 @@
   "base_net_count": 18,
   "base_candidate_size_um": [
     286.0,
-    524.0
+    602.0
   ],
-  "base_area_um2": 149864.0,
+  "base_area_um2": 172172.0,
   "physical_bbox_um": [
     2.7800000000000002,
     0.0,
     404.0,
-    1012.91
+    923.71
   ],
   "candidate_size_um": [
     404.0,
-    1012.91
+    923.71
   ],
-  "area_um2": 179237.1327,
+  "area_um2": 181026.5457,
   "area_basis": "Allocated nonrectangular union, not material area or bounding rectangle.",
-  "allocation_union_um2": 179237.1327,
+  "allocation_union_um2": 181026.5457,
   "connected_primary_candidate": true,
-  "device_count": 897
+  "device_count": 849
 }

@@ -86,21 +86,21 @@ Device classes ppolyf_u_1k_6p0 and ppolyf_u_1k_6p0 are equivalent.
 Flattening unmatched subcell pad_reference_clock in circuit expected (1)(1 instance)
 Flattening unmatched subcell network_flat in circuit expected (1)(1 instance)
 
-Class combined_flat (0):  Merged 849 parallel devices.
+Class combined_flat (0):  Merged 801 parallel devices.
 Class combined_flat (0):  Merged 25 series devices.
-Class expected (1):  Merged 849 parallel devices.
+Class expected (1):  Merged 801 parallel devices.
 Class expected (1):  Merged 25 series devices.
 Subcircuit summary:
 Circuit 1: combined_flat                   |Circuit 2: expected                        
 -------------------------------------------|-------------------------------------------
-nfet_06v0 (813->7)                         |nfet_06v0 (813->7)                         
+nfet_06v0 (765->7)                         |nfet_06v0 (765->7)                         
 pfet_06v0 (31->3)                          |pfet_06v0 (31->3)                          
 diode_nd2ps_06v0 (12->3)                   |diode_nd2ps_06v0 (12->3)                   
-ppolyf_u_1k (16->2)                        |ppolyf_u_1k (16->2)                        
+cap_mim_2f0_m4m5_noshield (2)              |cap_mim_2f0_m4m5_noshield (2)              
 diode_pd2nw_06v0 (8->2)                    |diode_pd2nw_06v0 (8->2)                    
+ppolyf_u_1k (16->2)                        |ppolyf_u_1k (16->2)                        
 ppolyf_u (12->1)                           |ppolyf_u (12->1)                           
 ppolyf_u_1k_6p0 (3)                        |ppolyf_u_1k_6p0 (3)                        
-cap_mim_2f0_m4m5_noshield (2)              |cap_mim_2f0_m4m5_noshield (2)              
 Number of devices: 23                      |Number of devices: 23                      
 Number of nets: 12                         |Number of nets: 12                         
 ---------------------------------------------------------------------------------------
@@ -113,8 +113,8 @@ Circuit 1: combined_flat                   |Circuit 2: expected
 -------------------------------------------|-------------------------------------------
 ATB_ESD_RAIL                               |ATB_ESD_RAIL                               
 VCM                                        |VCM                                        
-VSS                                        |VSS                                        
 ESD_RAIL                                   |ESD_RAIL                                   
+VSS                                        |VSS                                        
 PAD_P                                      |PAD_P                                      
 PAD_N                                      |PAD_N                                      
 ---------------------------------------------------------------------------------------

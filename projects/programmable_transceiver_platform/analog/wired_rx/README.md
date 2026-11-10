@@ -439,6 +439,13 @@ vote density ≈ 3500 ppm/µs (≥ 400 required).  `generated/cdr-model.json`.
   `ct_div5` (/10; N5 = REF/2 + /10, same trick as N4), and switched-conductance FT legs (`KP0..2` binary,
   `FU0..3/FD0..3`) on the tail (VT) and header replica (VPB).  Sizes pending the Kp bench.
 
+* **pll_ring r8 FT legs, schematic tt/27/3.3 open loop (`r4pi/kp/`, VCTRL 0.9 V, ~462 MHz).**  Three iterations:
+  (1) legs on the tail plus header-replica (VPB): **the ring stopped** (the replica-side legs sink µA from the
+  1/12 replica diode).  (2) Tail-only: very asymmetric (+1370/−12,500 ppm per vote at code 7, header-limited).
+  (3) **Tail NMOS + header PMOS (gate = complement), each unit an 8-device stack 0.22/8×42 µm:** symmetric,
+  +2860/−2600 ppm per vote at code 7 and +334 ppm per vote at code 1, so code 2 gives ≈ 600–700 ppm.  Pending:
+  ring-rate alternation (average offset), the 625/810 MHz operating points, corners, N10/N5.
+
 ## Known limitations and open items
 
 0. **`pt_wrx_cap`: the slicer → capture re-capture phase is not closed.**

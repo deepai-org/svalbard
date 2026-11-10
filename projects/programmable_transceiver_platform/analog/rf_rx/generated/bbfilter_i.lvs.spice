@@ -1,9 +1,32 @@
 * NGSPICE file created from pt_bbfilter_i.ext - technology: gf180mcuD
 
+.subckt pt_rfrx_tgm a b on onb VDD VSS
+X0 a onb b VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1 b onb a VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X2 b on a VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X3 a onb b VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X4 a on b VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X5 b onb a VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+.ends
+
 .subckt pt_rfrx_tgs a b on onb VDD VSS
 X0 a onb b VDD pfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=0.28u
 X1 b onb a VDD pfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=0.28u
 X2 a on b VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt pt_rfrx_nor3 a b c y VDD VSS
+X0 y c a_4966_4308# VDD pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X1 a_4966_4308# b a_3810_4308# VDD pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X2 y c VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X3 y b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X4 a_3810_4308# a VDD VDD pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X5 y a VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+.ends
+
+.subckt pt_rfrx_inv a y VDD VSS
+X0 y a VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X1 y a VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
 .ends
 
 .subckt pt_rfrx_nsw a b on VSS
@@ -20,88 +43,6 @@ X0 a_5682_2166# a VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0
 X1 y b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
 X2 y a VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
 X3 y b a_5682_2166# VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
-.ends
-
-.subckt pt_rfrx_inv a y VDD VSS
-X0 y a VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
-X1 y a VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
-.ends
-
-.subckt pt_rfrx_tgm a b on onb VDD VSS
-X0 a onb b VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
-X1 b onb a VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
-X2 b on a VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
-X3 a onb b VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
-X4 a on b VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
-X5 b onb a VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
-.ends
-
-.subckt pt_rfrx_otaf inp inn out vbp pd VDD VSS
-X0 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X1 a_5846_2616# pd VDD VDD pfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=0.28u
-X2 out d2 VSS VSS nfet_03v3 ad=1.17p pd=5.02u as=1.98p ps=9.88u w=4.5u l=0.5u
-X3 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X4 d2 inp a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
-X5 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X6 VSS d2 out VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
-X7 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X8 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X9 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X10 a_9638_2456# inn a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
-X11 a_7626_2616# inp d2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
-X12 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X13 a_5846_2616# pd VDD VDD pfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=0.28u
-X14 a_7318_5858# pd VDD VDD pfet_03v3 ad=2.112p pd=10.48u as=1.248p ps=5.32u w=4.8u l=0.28u
-X15 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X16 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X17 d2 pd VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
-X18 d2 cz VSS ppolyf_u_1k r_width=1u r_length=3u
-X19 VSS d2 out VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
-X20 a_7626_2616# vbp a_5846_2616# VDD pfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=1u
-X21 VSS a_9638_2456# a_9638_2456# VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=1u
-X22 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=2.112p ps=10.48u w=4.8u l=0.28u
-X23 a_9638_2456# inn a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
-X24 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X25 a_7626_2616# vbp a_5846_2616# VDD pfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=1u
-X26 d2 inp a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
-X27 d2 inp a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
-X28 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X29 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X30 a_7626_2616# inn a_9638_2456# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
-X31 a_7626_2616# inp d2 VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
-X32 VSS d2 out VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
-X33 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X34 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X35 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X36 out d2 VSS VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
-X37 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X38 d2 a_9638_2456# VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=1u
-X39 a_5846_2616# vbp a_7626_2616# VDD pfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=1u
-X40 a_7626_2616# inn a_9638_2456# VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
-X41 cz out cap_mim_2f0_m4m5_noshield c_width=12.2u c_length=12.2u
-X42 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=2.112p ps=10.48u w=4.8u l=1u
-X43 a_7626_2616# inn a_9638_2456# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
-X44 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X45 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X46 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X47 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X48 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X49 a_9638_2456# a_9638_2456# VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=1u
-X50 out d2 VSS VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
-X51 out d2 VSS VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
-X52 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X53 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X54 out vbp a_7318_5858# VDD pfet_03v3 ad=2.112p pd=10.48u as=1.248p ps=5.32u w=4.8u l=1u
-X55 a_5846_2616# vbp a_7626_2616# VDD pfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=1u
-X56 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X57 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
-X58 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
-X59 VSS a_9638_2456# d2 VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=1u
-X60 VSS d2 out VSS nfet_03v3 ad=1.98p pd=9.88u as=1.17p ps=5.02u w=4.5u l=0.5u
-X61 VDD pd a_5846_2616# VDD pfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=0.28u
-X62 VDD pd a_5846_2616# VDD pfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=0.28u
-X63 a_7626_2616# inp d2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
-X64 a_9638_2456# inn a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
 .ends
 
 .subckt pt_rfrx_otag inp inn out vbp pd VDD VSS
@@ -229,13 +170,72 @@ X120 out vbp os VDD pfet_03v3 ad=1.2922p pd=5.49u as=1.2922p ps=5.49u w=4.97u l=
 X121 VSS a_6670_2606# d2 VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=1u
 .ends
 
-.subckt pt_rfrx_nor3 a b c y VDD VSS
-X0 y c a_4966_4308# VDD pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
-X1 a_4966_4308# b a_3810_4308# VDD pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
-X2 y c VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
-X3 y b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
-X4 a_3810_4308# a VDD VDD pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
-X5 y a VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+.subckt pt_rfrx_otaf inp inn out vbp pd VDD VSS
+X0 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X1 a_5846_2616# pd VDD VDD pfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=0.28u
+X2 out d2 VSS VSS nfet_03v3 ad=1.17p pd=5.02u as=1.98p ps=9.88u w=4.5u l=0.5u
+X3 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X4 d2 inp a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X5 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X6 VSS d2 out VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
+X7 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X8 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X9 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X10 a_9638_2456# inn a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X11 a_7626_2616# inp d2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X12 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X13 a_5846_2616# pd VDD VDD pfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=0.28u
+X14 a_7318_5858# pd VDD VDD pfet_03v3 ad=2.112p pd=10.48u as=1.248p ps=5.32u w=4.8u l=0.28u
+X15 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X16 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X17 d2 pd VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X18 d2 cz VSS ppolyf_u_1k r_width=1u r_length=3u
+X19 VSS d2 out VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
+X20 a_7626_2616# vbp a_5846_2616# VDD pfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=1u
+X21 VSS a_9638_2456# a_9638_2456# VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=1u
+X22 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=2.112p ps=10.48u w=4.8u l=0.28u
+X23 a_9638_2456# inn a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
+X24 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X25 a_7626_2616# vbp a_5846_2616# VDD pfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=1u
+X26 d2 inp a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
+X27 d2 inp a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X28 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X29 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X30 a_7626_2616# inn a_9638_2456# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X31 a_7626_2616# inp d2 VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
+X32 VSS d2 out VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
+X33 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X34 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X35 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X36 out d2 VSS VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
+X37 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X38 d2 a_9638_2456# VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=1u
+X39 a_5846_2616# vbp a_7626_2616# VDD pfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=1u
+X40 a_7626_2616# inn a_9638_2456# VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
+X41 cz out cap_mim_2f0_m4m5_noshield c_width=12.2u c_length=12.2u
+X42 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=2.112p ps=10.48u w=4.8u l=1u
+X43 a_7626_2616# inn a_9638_2456# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X44 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X45 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X46 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X47 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X48 out vbp a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X49 a_9638_2456# a_9638_2456# VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=1u
+X50 out d2 VSS VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
+X51 out d2 VSS VSS nfet_03v3 ad=1.17p pd=5.02u as=1.17p ps=5.02u w=4.5u l=0.5u
+X52 a_7318_5858# pd VDD VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X53 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X54 out vbp a_7318_5858# VDD pfet_03v3 ad=2.112p pd=10.48u as=1.248p ps=5.32u w=4.8u l=1u
+X55 a_5846_2616# vbp a_7626_2616# VDD pfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=1u
+X56 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X57 VDD pd a_7318_5858# VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=0.28u
+X58 a_7318_5858# vbp out VDD pfet_03v3 ad=1.248p pd=5.32u as=1.248p ps=5.32u w=4.8u l=1u
+X59 VSS a_9638_2456# d2 VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=1u
+X60 VSS d2 out VSS nfet_03v3 ad=1.98p pd=9.88u as=1.17p ps=5.02u w=4.5u l=0.5u
+X61 VDD pd a_5846_2616# VDD pfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=0.28u
+X62 VDD pd a_5846_2616# VDD pfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=0.28u
+X63 a_7626_2616# inp d2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X64 a_9638_2456# inn a_7626_2616# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
 .ends
 
 .subckt pt_rfrx_tgl a b on onb VDD VSS
@@ -263,319 +263,458 @@ X4 ibias enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
 
 .subckt pt_bbfilter_i rx_in_p rx_in_n tx_in_p tx_in_n inj_p inj_n out_rx_p out_rx_n
 + out_tx_p out_tx_n obs_p obs_n ibias en dir_tx inj rx_direct byp_s1 byp_s23 obs_sel0
-+ obs_sel1 bw0 bw1 bw2 bw3 gain0 gain1 gain2 gain3 gain4 gain5 gainc0 gainc1 island_off
-+ atb_vcm atb_vbp VDD VSS
-XXX67 co_n obs_n k_obs3 k_obs3b VDD VSS pt_rfrx_tgs
-XXX56 tx_in_n inj_n k_intx VSS pt_rfrx_nsw
-XXX23 en_b dir_tx_b k_otx VDD VSS pt_rfrx_nor2
++ obs_sel1 bw0 bw1 bw2 bw3 gain0 gain1 gain2 gain3 gain4 gain5 gainc0 gainc1 qt0 qt1
++ island_off atb_vcm atb_vbp VDD VSS
+XXX61_X1 X61_gx X61_a gainc0 gainc0_b VDD VSS pt_rfrx_tgm
+XXX61_X5_X3 X61_a XX61_X5_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
+XXX23 en_b dir_tx_b inj k_intx VDD VSS pt_rfrx_nor3
+XXX67 rx_in_n obs_n k_obs1 k_obs1b VDD VSS pt_rfrx_tgs
 XXX12 gain0 gain0_b VDD VSS pt_rfrx_inv
-XXX34 k_s1byp k_s1bypb VDD VSS pt_rfrx_inv
-XXX45 inj_p s1_p k_s1byp k_s1bypb VDD VSS pt_rfrx_tgm
-XXX59_X1 XX59_X1/a X59_a gainc0 gainc0_b VDD VSS pt_rfrx_tgm
+XXX34 k_inrx k_inrxb VDD VSS pt_rfrx_inv
+XXX45 tx_in_p inj_p k_intx VSS pt_rfrx_nsw
+XXX56 co_p obs_p k_obs3 k_obs3b VDD VSS pt_rfrx_tgs
+XXX48_X2 bp1_p X48_lx gainc0 gainc0_b VDD VSS pt_rfrx_tgs
+XXX49_X4_X3 X49_b XX49_X4_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
+XXX59_X1 X59_g0 X59_a gain0 gain0_b VDD VSS pt_rfrx_tgs
+XXX61_X5_X4 X61_a XX61_X5_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
 XXX1 en en_b VDD VSS pt_rfrx_inv
-XXX47_X4_X1 atb_vcm X47_b co_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX24 en_b rx_direct_b k_rxd VDD VSS pt_rfrx_nor2
+XXX61_X2 bp1_n X61_lx gainc0 gainc0_b VDD VSS pt_rfrx_tgs
+XXX24 en_b dir_tx rx_direct k_orx VDD VSS pt_rfrx_nor3
+XXX68 s1_n obs_n k_obs2 k_obs2b VDD VSS pt_rfrx_tgs
 XXX13 gain1 gain1_b VDD VSS pt_rfrx_inv
-XXX35 k_s23byp k_s23bypb VDD VSS pt_rfrx_inv
-XXX59_X2 bp1_n X59_lx gainc0 gainc0_b VDD VSS pt_rfrx_tgs
+XXX35 k_otx k_otxb VDD VSS pt_rfrx_inv
+XXX48_X3 X48_q_qt0 X48_a qt0 qt0_b VDD VSS pt_rfrx_tgs
+XXX49_X4_X4 X49_b XX49_X4_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
+XXX57 rx_in_n inj_n k_inrx k_inrxb VDD VSS pt_rfrx_tgm
+XXX61_X5_X5 X61_a X61_X5_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
 XXX2 dir_tx dir_tx_b VDD VSS pt_rfrx_inv
-XXX47_X4_X2 X47_b XX47_X4_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
-XXX58 inj_n s1_n k_s1byp k_s1bypb VDD VSS pt_rfrx_tgm
-XXX46_X4_X1 atb_vcm X46_b lp1_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX25 en_b byp_s1 k_s1run VDD VSS pt_rfrx_nor2
+XXX59_X2 X59_g1 X59_a gain1 gain1_b VDD VSS pt_rfrx_tgs
+XXX61_X3 X61_q_qt0 X61_a qt0 qt0_b VDD VSS pt_rfrx_tgs
+XXX69 co_n obs_n k_obs3 k_obs3b VDD VSS pt_rfrx_tgs
 XXX14 gain2 gain2_b VDD VSS pt_rfrx_inv
-XXX36 k_obs1 k_obs1b VDD VSS pt_rfrx_inv
+XXX25 en_b dir_tx_b k_otx VDD VSS pt_rfrx_nor2
+XXX36 k_s1byp k_s1bypb VDD VSS pt_rfrx_inv
+XXX47 inj_p s1_p k_s1byp k_s1bypb VDD VSS pt_rfrx_tgm
+XXX58 tx_in_n inj_n k_intx VSS pt_rfrx_nsw
+XXX48_X4 X48_q_qt1 X48_a qt1 qt1_b VDD VSS pt_rfrx_tgs
+XXX49_X4_X5 X49_b XX49_X4_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
+XXX59_X3 X59_g2 X59_a gain2 gain2_b VDD VSS pt_rfrx_tgs
 XXX3 rx_direct rx_direct_b VDD VSS pt_rfrx_inv
-XXX47_X4_X3 X47_b XX47_X4_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
-XXX26 en_b byp_s1_b k_s1byp VDD VSS pt_rfrx_nor2
+XXX61_X4 X61_q_qt1 X61_a qt1 qt1_b VDD VSS pt_rfrx_tgs
+XXX46_X7_X1 atb_vcm X46_a s1_n atb_vbp pd1 VDD VSS pt_rfrx_otag
 XXX15 gain3 gain3_b VDD VSS pt_rfrx_inv
-XXX37 k_obs2 k_obs2b VDD VSS pt_rfrx_inv
-XXX46_X4_X2 X46_b XX46_X4_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
-XXX48 s1_p co_p k_s23byp k_s23bypb VDD VSS pt_rfrx_tgm
+XXX26 en_b rx_direct_b k_rxd VDD VSS pt_rfrx_nor2
+XXX37 k_s23byp k_s23bypb VDD VSS pt_rfrx_inv
 XXX4 byp_s1 byp_s1_b VDD VSS pt_rfrx_inv
-XXX47_X4_X4 X47_b X47_X4_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XXX27 en_b byp_s23 k_s23run VDD VSS pt_rfrx_nor2
+XXX59_X4 X59_g3 X59_a gain3 gain3_b VDD VSS pt_rfrx_tgm
+XXX46_X7_X2 X46_a XX46_X7_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
 XXX16 gain4 gain4_b VDD VSS pt_rfrx_inv
-XXX38 k_obs3 k_obs3b VDD VSS pt_rfrx_inv
-XXX46_X4_X3 X46_b XX46_X4_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
-XXX49 co_p out_rx_p k_orx VSS pt_rfrx_nsw
-XXX59_X5 atb_vcm X59_c X59_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX59_X4_X1 atb_vcm X59_b lp1_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX27 en_b byp_s1 XX41/a VDD VSS pt_rfrx_nor2
+XXX38 k_obs1 k_obs1b VDD VSS pt_rfrx_inv
+XXX59_X5 X59_g4 X59_a gain4 gain4_b VDD VSS pt_rfrx_tgm
 XXX5 byp_s23 byp_s23_b VDD VSS pt_rfrx_inv
-XXX47_X4_X5 X47_b XX47_X4_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
-XXX28 en_b byp_s23_b k_s23byp VDD VSS pt_rfrx_nor2
+XXX46_X7_X3 X46_a XX46_X7_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
+XXX48_X7 atb_vcm X48_c X48_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
 XXX17 gain5 gain5_b VDD VSS pt_rfrx_inv
-XXX39 k_s1run pd1 VDD VSS pt_rfrx_inv
-XXX46_X4_X4 X46_b XX46_X4_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
-XXX44_X7_X1 atb_vcm X44_a s1_n atb_vbp pd1 VDD VSS pt_rfrx_otag
+XXX28 en_b byp_s1_b k_s1byp VDD VSS pt_rfrx_nor2
+XXX39 k_obs2 k_obs2b VDD VSS pt_rfrx_inv
+XXX59_X7_X1 atb_vcm X59_a s1_p atb_vbp pd1 VDD VSS pt_rfrx_otag
 XXX6 obs_sel0 obs_sel0_b VDD VSS pt_rfrx_inv
-XXX59_X4_X2 X59_b XX59_X4_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
-XXX29 en_b obs_sel1 obs_sel0_b k_obs1 VDD VSS pt_rfrx_nor3
+XXX59_X6 X59_g5 X59_a gain5 gain5_b VDD VSS pt_rfrx_tgl
+XXX61_X7 atb_vcm X61_c X61_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX46_X7_X4 X46_a XX46_X7_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
 XXX18 gainc0 gainc0_b VDD VSS pt_rfrx_inv
-XXX46_X4_X5 X46_b XX46_X4_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
-XXX44_X7_X2 X44_a XX44_X7_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
-XXX59_X4_X3 X59_b XX59_X4_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
+XXX29 en_b byp_s23 k_s23run VDD VSS pt_rfrx_nor2
+XXX59_X7_X2 X59_a XX59_X7_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
 XXX7 obs_sel1 obs_sel1_b VDD VSS pt_rfrx_inv
+XXX46_X7_X5 X46_a XX46_X7_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
 XXX19 gainc1 gainc1_b VDD VSS pt_rfrx_inv
-XXX44_X7_X3 X44_a XX44_X7_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
-XXX59_X4_X4 X59_b XX59_X4_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
+XXX59_X7_X3 X59_a XX59_X7_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
 XXX8 bw0 bw0_b VDD VSS pt_rfrx_inv
-XXX57_X7_X1 atb_vcm X57_a s1_p atb_vbp pd1 VDD VSS pt_rfrx_otag
-XXX44_X7_X4 X44_a XX44_X7_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
+XXX62_X3_X1 atb_vcm X62_a bp2_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX59_X7_X4 X59_a XX59_X7_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
 XXX9 bw1 bw1_b VDD VSS pt_rfrx_inv
-XXX59_X4_X5 X59_b XX59_X4_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
-XXX57_X7_X2 X57_a XX57_X7_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
-XXX44_X7_X5 X44_a XX44_X7_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
-XXX57_X7_X3 X57_a XX57_X7_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
-XXX60_X3_X1 atb_vcm X60_a bp2_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX57_X7_X4 X57_a X57_X7_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XXX46_X1 XX46_X1/a X46_a gainc0 gainc0_b VDD VSS pt_rfrx_tgm
-XXX60_X3_X2 X60_a XX60_X3_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
-XXX57_X7_X5 X57_a XX57_X7_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
-XXX57_X1 X57_g0 X57_a gain0 gain0_b VDD VSS pt_rfrx_tgs
-XXX46_X2 bp1_p X46_lx gainc0 gainc0_b VDD VSS pt_rfrx_tgs
-XXX60_X3_X3 X60_a XX60_X3_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
-XXX57_X2 X57_g1 X57_a gain1 gain1_b VDD VSS pt_rfrx_tgs
-XXX60_X3_X4 X60_a XX60_X3_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
-XXX57_X3 X57_g2 X57_a gain2 gain2_b VDD VSS pt_rfrx_tgs
-XXX60_X3_X5 X60_a XX60_X3_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
-XXX46_X5 atb_vcm X46_c X46_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX57_X4 X57_g3 X57_a gain3 gain3_b VDD VSS pt_rfrx_tgm
-XXX57_X5 XX57_X5/a X57_a gain4 gain4_b VDD VSS pt_rfrx_tgm
-XXX57_X6 X57_g5 X57_a gain5 gain5_b VDD VSS pt_rfrx_tgl
-XXX44_X1 X44_g0 X44_a gain0 gain0_b VDD VSS pt_rfrx_tgs
-XXX60_X4_X1 atb_vcm X60_b co_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX47_X1 XX47_X1/a X47_a gainc1 gainc1_b VDD VSS pt_rfrx_tgm
-XXX60_X1 XX60_X1/a X60_a gainc1 gainc1_b VDD VSS pt_rfrx_tgm
-XXX44_X2 X44_g1 X44_a gain1 gain1_b VDD VSS pt_rfrx_tgs
-XXX60_X4_X2 X60_b XX60_X4_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
-XXX47_X2 bp2_p X47_lx gainc1 gainc1_b VDD VSS pt_rfrx_tgs
-XXX60_X2 bp2_n X60_lx gainc1 gainc1_b VDD VSS pt_rfrx_tgs
-XXX44_X3 X44_g2 X44_a gain2 gain2_b VDD VSS pt_rfrx_tgs
-XXX60_X4_X3 X60_b XX60_X4_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
-XXX47_X3_X1 atb_vcm X47_a bp2_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX44_X4 X44_g3 X44_a gain3 gain3_b VDD VSS pt_rfrx_tgm
-XXX60_X4_X4 X60_b XX60_X4_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
-XXX47_X3_X2 X47_a XX47_X3_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
-XXX46_X3_X1 atb_vcm X46_a bp1_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX44_X5 XX44_X5/a X44_a gain4 gain4_b VDD VSS pt_rfrx_tgm
-XXX60_X4_X5 X60_b X60_X4_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XXX47_X3_X3 X47_a XX47_X3_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
-XXX46_X3_X2 X46_a XX46_X3_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
-XXX47_X5 atb_vcm X47_c X47_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX60_X5 atb_vcm X60_c X60_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX44_X6 X44_g5 X44_a gain5 gain5_b VDD VSS pt_rfrx_tgl
-XXX47_X3_X4 X47_a XX47_X3_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
-XXX46_X3_X3 X46_a XX46_X3_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
-XXX59_X3_X1 atb_vcm X59_a bp1_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XXX47_X3_X5 X47_a XX47_X3_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
-XXX46_X3_X4 X46_a XX46_X3_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
-XXX59_X3_X2 X59_a XX59_X3_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
-XXX46_X3_X5 X46_a XX46_X3_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
-XXX61 s1_n co_n k_s23byp k_s23bypb VDD VSS pt_rfrx_tgm
-XXX50 co_p out_tx_p k_otx k_otxb VDD VSS pt_rfrx_tgm
-XXX59_X3_X3 X59_a XX59_X3_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
-XXX62 co_n out_rx_n k_orx VSS pt_rfrx_nsw
-XXX40 k_s23run pd23 VDD VSS pt_rfrx_inv
-XXX51 rx_in_p out_rx_p k_rxd VSS pt_rfrx_nsw
-XXX59_X3_X4 X59_a XX59_X3_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
-XXX63 co_n out_tx_n k_otx k_otxb VDD VSS pt_rfrx_tgm
-XXX30 en_b obs_sel1_b obs_sel0 k_obs2 VDD VSS pt_rfrx_nor3
-XXX41 ibias en en_b atb_vbp VDD VSS pt_rfrx_bias
-XXX52 rx_in_p obs_p k_obs1 k_obs1b VDD VSS pt_rfrx_tgs
-XXX59_X3_X5 X59_a XX59_X3_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
-XXX64 rx_in_n out_rx_n k_rxd VSS pt_rfrx_nsw
-XXX20 en_b dir_tx inj k_inrx VDD VSS pt_rfrx_nor3
-XXX31 en_b obs_sel1_b obs_sel0_b k_obs3 VDD VSS pt_rfrx_nor3
-XXX42 rx_in_p inj_p k_inrx k_inrxb VDD VSS pt_rfrx_tgm
-XXX53 s1_p obs_p k_obs2 k_obs2b VDD VSS pt_rfrx_tgs
-XXX65 rx_in_n obs_n k_obs1 k_obs1b VDD VSS pt_rfrx_tgs
-XXX21 en_b dir_tx_b inj k_intx VDD VSS pt_rfrx_nor3
+XXX62_X3_X2 X62_a XX62_X3_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
+XXX59_X7_X5 X59_a XX59_X7_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
+XXX61_X6_X1 atb_vcm X61_b lp1_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX62_X3_X3 X62_a XX62_X3_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
+XXX62_X3_X4 X62_a XX62_X3_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
+XXX61_X6_X2 X61_b XX61_X6_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
+XXX46_X1 X46_g0 X46_a gain0 gain0_b VDD VSS pt_rfrx_tgs
+XXX49_X1 XX49_X1/a X49_a gainc1 gainc1_b VDD VSS pt_rfrx_tgm
+XXX48_X5_X1 atb_vcm X48_a bp1_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX62_X3_X5 X62_a XX62_X3_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
+XXX62_X1 XX62_X1/a X62_a gainc1 gainc1_b VDD VSS pt_rfrx_tgm
+XXX61_X6_X3 X61_b XX61_X6_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
+XXX46_X2 X46_g1 X46_a gain1 gain1_b VDD VSS pt_rfrx_tgs
+XXX49_X2 bp2_p X49_lx gainc1 gainc1_b VDD VSS pt_rfrx_tgs
+XXX62_X2 bp2_n X62_lx gainc1 gainc1_b VDD VSS pt_rfrx_tgs
+XXX61_X6_X4 X61_b XX61_X6_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
+XXX46_X3 X46_g2 X46_a gain2 gain2_b VDD VSS pt_rfrx_tgs
+XXX48_X5_X2 X48_a XX48_X5_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
+XXX61_X6_X5 X61_b XX61_X6_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
+XXX46_X4 X46_g3 X46_a gain3 gain3_b VDD VSS pt_rfrx_tgm
+XXX48_X5_X3 X48_a XX48_X5_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
+XXX46_X5 XX46_X5/a X46_a gain4 gain4_b VDD VSS pt_rfrx_tgm
+XXX48_X5_X4 X48_a XX48_X5_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
+XXX49_X5 atb_vcm X49_c X49_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX62_X5 atb_vcm X62_c X62_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX46_X6 X46_g5 X46_a gain5 gain5_b VDD VSS pt_rfrx_tgl
+XXX48_X5_X5 X48_a XX48_X5_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
+XXX62_X4_X1 atb_vcm X62_b co_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX62_X4_X2 X62_b XX62_X4_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
+XXX49_X3_X1 atb_vcm X49_a bp2_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX62_X4_X3 X62_b X62_X4_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
+XXX62_X4_X4 X62_b XX62_X4_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
+XXX49_X3_X2 X49_a XX49_X3_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
+XXX48_X6_X1 atb_vcm X48_b lp1_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX62_X4_X5 X62_b XX62_X4_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
+XXX49_X3_X3 X49_a XX49_X3_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
+XXX48_X6_X2 X48_b XX48_X6_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
+XXX49_X3_X4 X49_a XX49_X3_X4/b bw2 bw2_b VDD VSS pt_rfrx_tgs
+XXX48_X6_X3 X48_b XX48_X6_X3/b bw1 bw1_b VDD VSS pt_rfrx_tgs
+XXX49_X3_X5 X49_a XX49_X3_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
+XXX48_X6_X4 X48_b X48_X6_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
+XXX48_X6_X5 X48_b XX48_X6_X5/b bw3 bw3_b VDD VSS pt_rfrx_tgs
+XXX60 inj_n s1_n k_s1byp k_s1bypb VDD VSS pt_rfrx_tgm
+XXX50 s1_p co_p k_s23byp k_s23bypb VDD VSS pt_rfrx_tgm
+XXX40 k_obs3 k_obs3b VDD VSS pt_rfrx_inv
+XXX51 co_p out_rx_p k_orx VSS pt_rfrx_nsw
+XXX63 s1_n co_n k_s23byp k_s23bypb VDD VSS pt_rfrx_tgm
+XXX30 en_b byp_s23_b k_s23byp VDD VSS pt_rfrx_nor2
+XXX41 XX41/a pd1 VDD VSS pt_rfrx_inv
+XXX52 co_p out_tx_p k_otx k_otxb VDD VSS pt_rfrx_tgm
+XXX31 en_b obs_sel1 obs_sel0_b k_obs1 VDD VSS pt_rfrx_nor3
+XXX64 co_n out_rx_n k_orx VSS pt_rfrx_nsw
+XXX20 qt0 qt0_b VDD VSS pt_rfrx_inv
+XXX42 k_s23run pd23 VDD VSS pt_rfrx_inv
+XXX53 rx_in_p out_rx_p k_rxd VSS pt_rfrx_nsw
+XXX61_X5_X1 atb_vcm X61_a bp1_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX49_X4_X1 atb_vcm X49_b co_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
+XXX43 ibias en en_b atb_vbp VDD VSS pt_rfrx_bias
+XXX32 en_b obs_sel1_b obs_sel0 k_obs2 VDD VSS pt_rfrx_nor3
+XXX65 co_n out_tx_n k_otx k_otxb VDD VSS pt_rfrx_tgm
 XXX10 bw2 bw2_b VDD VSS pt_rfrx_inv
-XXX32 k_inrx k_inrxb VDD VSS pt_rfrx_inv
-XXX43 tx_in_p inj_p k_intx VSS pt_rfrx_nsw
-XXX54 co_p obs_p k_obs3 k_obs3b VDD VSS pt_rfrx_tgs
-XXX66 s1_n obs_n k_obs2 k_obs2b VDD VSS pt_rfrx_tgs
-XXX22 en_b dir_tx rx_direct k_orx VDD VSS pt_rfrx_nor3
+XXX21 qt1 qt1_b VDD VSS pt_rfrx_inv
+XXX54 rx_in_p obs_p k_obs1 k_obs1b VDD VSS pt_rfrx_tgs
+XXX61_X5_X2 X61_a XX61_X5_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
+XXX33 en_b obs_sel1_b obs_sel0_b k_obs3 VDD VSS pt_rfrx_nor3
+XXX22 en_b dir_tx inj k_inrx VDD VSS pt_rfrx_nor3
+XXX66 rx_in_n out_rx_n k_rxd VSS pt_rfrx_nsw
 XXX11 bw3 bw3_b VDD VSS pt_rfrx_inv
-XXX33 k_otx k_otxb VDD VSS pt_rfrx_inv
-XXX55 rx_in_n inj_n k_inrx k_inrxb VDD VSS pt_rfrx_tgm
-X0 lp1_p XX47_X1/a VSS ppolyf_u_1k r_width=1u r_length=13.33u
-X1 a_43852_67720# a_44984_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X2 XX44_X7_X4/b s1_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-X3 a_74592_55126# a_75724_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X4 a_31400_67720# X47_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X5 bp2_p X47_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X6 lp1_n a_76680_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X7 co_n a_84604_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X8 m3_87120_172916# X47_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X9 a_57612_55126# a_58744_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X10 XX46_X3_X5/b bp1_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-X11 XX47_X3_X2/b bp2_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-X12 XX44_X7_X3/b s1_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-X13 bp1_n a_67624_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X14 XX57_X7_X2/b s1_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-X15 a_90440_55126# X44_g1 VSS ppolyf_u_1k r_width=1u r_length=20u
-X16 inj_p X44_g3 VSS ppolyf_u_1k r_width=1u r_length=20u
-X17 a_50644_67720# X57_g0 VSS ppolyf_u_1k r_width=1u r_length=20u
-X18 bp1_n X59_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X19 a_81384_55126# a_82516_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X20 a_73460_55126# a_74592_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X21 a_61008_55126# a_62140_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X22 a_76856_55126# atb_vcm VSS ppolyf_u_1k r_width=1u r_length=20u
-X23 a_33664_67720# X47_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X24 a_82340_67720# X60_b VSS ppolyf_u_1k r_width=1u r_length=20u
-X25 XX44_X7_X5/b s1_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-X26 inj_n X57_g5 VSS ppolyf_u_1k r_width=1u r_length=5u
-X27 a_69888_67720# X59_b VSS ppolyf_u_1k r_width=1u r_length=20u
-X28 X60_v3 a_86868_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X29 a_64404_55126# a_65536_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X30 bp1_p a_22344_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X31 X59_v3 a_74416_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X32 obs_p island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
-X33 a_65360_67720# X59_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X34 a_96100_55126# s1_n VSS ppolyf_u_1k r_width=1u r_length=20u
-X35 a_52908_67720# a_54040_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X36 bp1_n a_69888_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X37 XX59_X4_X5/b lp1_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-X38 inj_n a_57436_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X39 XX46_X3_X4/b bp1_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-X40 a_80252_55126# a_81384_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X41 inj_p X44_g5 VSS ppolyf_u_1k r_width=1u r_length=5u
-X42 bp2_p a_37060_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X43 X47_v3 a_41588_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X44 XX46_X4_X5/b lp1_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-X45 a_71196_55126# a_72328_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X46 s1_n XX59_X1/a VSS ppolyf_u_1k r_width=1u r_length=13.33u
-X47 m3_81120_172916# X46_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X48 XX59_X3_X3/b bp1_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-X49 a_26872_67720# X46_c VSS ppolyf_u_1k r_width=1u r_length=20u
-X50 a_72152_67720# X59_c VSS ppolyf_u_1k r_width=1u r_length=20u
-X51 bp2_n X60_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X52 X57_a s1_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-X53 XX59_X3_X5/b bp1_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-X54 bp2_p X47_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X55 a_98364_55126# X46_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X56 a_63096_67720# X59_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X57 X60_a bp2_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-X58 a_85912_55126# X44_g0 VSS ppolyf_u_1k r_width=1u r_length=20u
-X59 X60_b co_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-X60 out_tx_n island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
-X61 a_46116_67720# a_47248_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X62 a_70064_55126# a_71196_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X63 inj_n a_67800_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X64 XX46_X3_X3/b bp1_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-X65 a_78944_67720# X60_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X66 X47_a bp2_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-X67 XX47_X3_X5/b bp2_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-X68 out_rx_p island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
-X69 X57_a a_60832_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X70 XX46_X4_X4/b lp1_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-X71 s1_n a_63096_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X72 inj_n XX57_X5/a VSS ppolyf_u_1k r_width=1u r_length=10u
-X73 inj_n X57_g3 VSS ppolyf_u_1k r_width=1u r_length=20u
-X74 XX46_X4_X2/b lp1_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-X75 XX46_X3_X2/b bp1_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-X76 XX59_X3_X2/b bp1_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-X77 m3_21284_182568# X60_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X78 inj_n a_43852_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X79 XX59_X4_X4/b lp1_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-X80 s1_p XX46_X1/a VSS ppolyf_u_1k r_width=1u r_length=13.33u
-X81 lp1_p a_31400_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X82 lp1_p a_26872_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X83 XX59_X4_X3/b lp1_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-X84 X60_v3 a_78944_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X85 a_56480_55126# a_57612_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X86 inj_p XX44_X5/a VSS ppolyf_u_1k r_width=1u r_length=10u
-X87 bp1_p X46_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X88 a_89308_55126# a_90440_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X89 XX60_X4_X3/b co_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-X90 obs_n island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
-X91 a_92704_55126# X44_g2 VSS ppolyf_u_1k r_width=1u r_length=20u
-X92 a_49512_67720# a_50644_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X93 XX47_X3_X4/b bp2_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-X94 a_48380_67720# a_49512_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X95 a_72328_55126# a_73460_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X96 XX59_X3_X4/b bp1_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-X97 XX46_X4_X3/b lp1_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-X98 X46_lx m3_81120_172916# cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X99 bp2_n a_82340_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X100 X59_lx m3_94252_172916# cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X101 a_75724_55126# a_76856_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X102 X47_v3 a_33664_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X103 XX47_X4_X3/b co_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-X104 XX60_X4_X2/b co_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-X105 a_84604_67720# X60_c VSS ppolyf_u_1k r_width=1u r_length=20u
-X106 a_63272_55126# a_64404_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X107 a_20080_67720# X46_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X108 inj_p a_56480_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X109 bp1_p a_24608_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X110 X59_v3 a_65360_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X111 a_58744_55126# a_59876_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X112 X44_a a_96100_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X113 a_67624_67720# X59_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X114 XX44_X7_X2/b s1_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-X115 X46_b lp1_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-X116 XX47_X4_X2/b co_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-X117 a_47248_67720# a_48380_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X118 a_55172_67720# X57_g1 VSS ppolyf_u_1k r_width=1u r_length=20u
-X119 X59_a bp1_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-X120 a_79120_55126# a_80252_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X121 XX59_X4_X2/b lp1_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-X122 XX57_X7_X5/b s1_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-X123 a_82516_55126# a_83648_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X124 inj_p a_79120_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X125 a_39324_67720# X47_c VSS ppolyf_u_1k r_width=1u r_length=20u
-X126 a_86868_67720# X60_c VSS ppolyf_u_1k r_width=1u r_length=20u
-X127 co_p a_39324_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X128 bp2_n X60_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X129 a_62140_55126# a_63272_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X130 X46_v3 a_20080_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X131 XX47_X3_X3/b bp2_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-X132 a_65536_55126# atb_vcm VSS ppolyf_u_1k r_width=1u r_length=20u
-X133 a_22344_67720# X46_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X134 lp1_n a_72152_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X135 a_74416_67720# X59_c VSS ppolyf_u_1k r_width=1u r_length=20u
-X136 X60_lx m3_21284_182568# cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X137 s1_p a_98364_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X138 a_54040_67720# a_55172_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X139 X46_a bp1_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-X140 out_rx_n island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
-X141 a_57436_67720# X57_g2 VSS ppolyf_u_1k r_width=1u r_length=20u
-X142 X47_lx m3_87120_172916# cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X143 a_88176_55126# a_89308_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X144 a_44984_67720# a_46116_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X145 a_68932_55126# a_70064_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X146 a_37060_67720# X47_b VSS ppolyf_u_1k r_width=1u r_length=20u
-X147 XX60_X4_X4/b co_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-X148 XX60_X3_X4/b bp2_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-X149 a_29136_67720# X46_c VSS ppolyf_u_1k r_width=1u r_length=20u
-X150 X46_v3 a_29136_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X151 a_59876_55126# a_61008_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X152 XX47_X4_X5/b co_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-X153 X57_X7_c_bw2 s1_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-X154 m3_94252_172916# X59_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-X155 X44_a s1_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-X156 lp1_n XX60_X1/a VSS ppolyf_u_1k r_width=1u r_length=13.33u
-X157 X60_X4_c_bw3 co_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-X158 X59_b lp1_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-X159 a_84780_55126# a_85912_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X160 inj_p a_88176_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X161 a_41588_67720# X47_c VSS ppolyf_u_1k r_width=1u r_length=20u
-X162 XX60_X3_X5/b bp2_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-X163 XX57_X7_X3/b s1_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-X164 a_67800_55126# a_68932_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X165 a_24608_67720# X46_b VSS ppolyf_u_1k r_width=1u r_length=20u
-X166 a_76680_67720# X60_a VSS ppolyf_u_1k r_width=1u r_length=20u
-X167 atb_vcm VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
-X168 XX60_X3_X3/b bp2_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-X169 a_60832_67720# s1_p VSS ppolyf_u_1k r_width=1u r_length=20u
-X170 X47_b co_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-X171 inj_p a_92704_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X172 a_83648_55126# a_84780_55126# VSS ppolyf_u_1k r_width=1u r_length=20u
-X173 out_tx_p island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
-X174 X47_X4_c_bw2 co_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-X175 inj_n a_52908_67720# VSS ppolyf_u_1k r_width=1u r_length=20u
-X176 XX60_X3_X2/b bp2_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+XXX44 rx_in_p inj_p k_inrx k_inrxb VDD VSS pt_rfrx_tgm
+XXX48_X1 XX48_X1/a X48_a gainc0 gainc0_b VDD VSS pt_rfrx_tgm
+XXX49_X4_X2 X49_b XX49_X4_X2/b bw0 bw0_b VDD VSS pt_rfrx_tgs
+XXX55 s1_p obs_p k_obs2 k_obs2b VDD VSS pt_rfrx_tgs
+X0 a_90932_131258# X61_a VSS ppolyf_u_1k r_width=1u r_length=20u
+X1 a_104516_131258# X61_r6_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
+X2 a_97912_119264# a_99044_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D0 VSS bw2 diode_nd2ps_03v3 pj=3.2u area=0.64p
+X3 a_100176_119264# a_101308_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D1 VSS bw0_b diode_nd2ps_03v3 pj=2.52u area=0.3969p
+X4 inj_p X46_g5 VSS ppolyf_u_1k r_width=1u r_length=5u
+D2 VSS gain3 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D3 VSS gain1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D4 VSS gainc1 diode_nd2ps_03v3 pj=3.84u area=0.9216p
+D5 VSS k_inrx diode_nd2ps_03v3 pj=2.4u area=0.36p
+X5 a_21880_139984# X61_q_qt1 VSS ppolyf_u_1k r_width=1u r_length=20u
+X6 bp2_n X62_a VSS ppolyf_u_1k r_width=1u r_length=20u
+X7 lp1_p XX49_X1/a VSS ppolyf_u_1k r_width=1u r_length=13.33u
+X8 a_27540_131258# s1_n VSS ppolyf_u_1k r_width=1u r_length=20u
+X9 a_54708_131258# X48_c VSS ppolyf_u_1k r_width=1u r_length=20u
+X10 a_86404_131258# s1_p VSS ppolyf_u_1k r_width=1u r_length=20u
+X11 a_98856_131258# a_99988_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X12 X48_b lp1_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
+D6 VSS gainc0 diode_nd2ps_03v3 pj=3.64u area=0.8281p
+X13 X49_v3 a_67160_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D7 VSS gain1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X14 inj_p a_95648_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D8 VSS bw3 diode_nd2ps_03v3 pj=3.84u area=0.9216p
+D9 VSS bw1 diode_nd2ps_03v3 pj=2.56u area=0.4096p
+X15 XX49_X4_X3/b co_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
+X16 a_74140_119264# a_75272_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D10 VSS en_b diode_nd2ps_03v3 pj=3.6u area=0.81p
+X17 XX49_X3_X3/b bp2_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
+D11 VSS qt1 diode_nd2ps_03v3 pj=4.16u area=1.0816p
+D12 VSS bw1_b diode_nd2ps_03v3 pj=3.04u area=0.5776p
+X18 XX61_X6_X4/b lp1_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
+X19 XX49_X3_X4/b bp2_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
+X20 XX62_X3_X4/b bp2_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
+X21 a_88668_131258# X61_a VSS ppolyf_u_1k r_width=1u r_length=20u
+X22 X61_a bp1_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
+X23 inj_n a_83008_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D13 VSS bw3 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X24 inj_p a_24144_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X25 a_50180_131258# X48_b VSS ppolyf_u_1k r_width=1u r_length=20u
+X26 X61_v3 a_90932_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X27 a_96780_119264# a_97912_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X28 bp1_p a_36596_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X29 a_62632_131258# X49_b VSS ppolyf_u_1k r_width=1u r_length=20u
+D14 VSS bw3_b diode_nd2ps_03v3 pj=2.8u area=0.49p
+X30 a_73952_131258# a_75084_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D15 VSS k_obs2 diode_nd2ps_03v3 pj=3.52u area=0.7744p
+D16 VSS k_otx diode_nd2ps_03v3 pj=2.72u area=0.4624p
+X31 XX49_X4_X5/b co_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
+D17 VSS gain4 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X32 XX48_X5_X5/b bp1_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
+X33 out_tx_n island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+X34 a_82064_119264# atb_vcm VSS ppolyf_u_1k r_width=1u r_length=20u
+D18 VSS gainc1_b diode_nd2ps_03v3 pj=3.4u area=0.7225p
+X35 lp1_n a_26408_139984# VSS ppolyf_u_1k r_width=1u r_length=20u
+X36 a_102440_119264# X46_g0 VSS ppolyf_u_1k r_width=1u r_length=20u
+X37 XX61_X5_X3/b bp1_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
+X38 XX62_X4_X5/b co_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
+X39 X62_v3 a_33200_139984# VSS ppolyf_u_1k r_width=1u r_length=20u
+X40 m3_48816_780# X49_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+X41 a_56972_131258# X49_a VSS ppolyf_u_1k r_width=1u r_length=20u
+X42 a_96592_131258# a_97724_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D19 VSS bw1_b diode_nd2ps_03v3 pj=2.4u area=0.36p
+X43 XX59_X7_X2/b s1_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+X44 XX61_X5_X4/b bp1_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
+X45 a_37728_131258# a_38860_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X46 XX61_X6_X2/b lp1_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+D20 VSS gain3 diode_nd2ps_03v3 pj=3.68u area=0.8464p
+D21 VSS gain0 diode_nd2ps_03v3 pj=3.36u area=0.7056p
+X47 X48_v3 a_32068_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X48 a_70556_131258# a_71688_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D22 VSS gain4 diode_nd2ps_03v3 pj=3.16u area=0.6241p
+X49 a_77536_119264# a_78668_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D23 VSS k_s1bypb diode_nd2ps_03v3 pj=3.24u area=0.6561p
+D24 VSS bw1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D25 VSS gain3 diode_nd2ps_03v3 pj=2.92u area=0.5329p
+X50 a_84328_119264# a_85460_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X51 X49_lx m3_48816_780# cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+D26 VSS bw2_b diode_nd2ps_03v3 pj=2.52u area=0.3969p
+D27 VSS bw2_b diode_nd2ps_03v3 pj=2.4u area=0.36p
+X52 a_102252_131258# X61_q_qt0 VSS ppolyf_u_1k r_width=1u r_length=20u
+D28 VSS bw1 diode_nd2ps_03v3 pj=2.6u area=0.4225p
+D29 VSS en diode_nd2ps_03v3 pj=3.8u area=0.9025p
+D30 VSS bw1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X53 XX62_X3_X3/b bp2_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
+X54 lp1_n XX62_X1/a VSS ppolyf_u_1k r_width=1u r_length=13.33u
+X55 X48_v3 a_54708_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D31 VSS bw0 diode_nd2ps_03v3 pj=3.36u area=0.7056p
+X56 bp1_p X48_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+X57 X62_v3 a_41124_139984# VSS ppolyf_u_1k r_width=1u r_length=20u
+X58 bp2_p X49_a VSS ppolyf_u_1k r_width=1u r_length=20u
+X59 X61_r6_s2 a_21880_139984# VSS ppolyf_u_1k r_width=1u r_length=20u
+X60 bp1_p a_34332_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X61 a_64896_131258# X49_c VSS ppolyf_u_1k r_width=1u r_length=20u
+X62 a_72820_131258# a_73952_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X63 a_45652_131258# a_46784_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X64 inj_n X59_g3 VSS ppolyf_u_1k r_width=1u r_length=20u
+X65 XX59_X7_X5/b s1_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
+X66 obs_p island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+D32 VSS inj diode_nd2ps_03v3 pj=4.04u area=1.0201p
+X67 XX62_X4_X2/b co_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+X68 XX62_X3_X2/b bp2_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+D33 VSS k_obs3 diode_nd2ps_03v3 pj=3.92u area=0.9604p
+X69 a_92252_119264# a_93384_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D34 VSS qt0_b diode_nd2ps_03v3 pj=2.96u area=0.5476p
+X70 m3_42816_780# X48_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+D35 VSS bw2 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X71 bp1_n X61_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+X72 out_rx_p island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+D36 VSS k_obs1b diode_nd2ps_03v3 pj=3.24u area=0.6561p
+X73 s1_p a_29804_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D37 VSS dir_tx_b diode_nd2ps_03v3 pj=3.52u area=0.7744p
+D38 VSS byp_s23 diode_nd2ps_03v3 pj=4.32u area=1.1664p
+X74 X61_v3 a_28672_139984# VSS ppolyf_u_1k r_width=1u r_length=20u
+X75 a_29804_131258# X48_a VSS ppolyf_u_1k r_width=1u r_length=20u
+X76 X48_lx m3_42816_780# cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+D39 VSS k_obs3b diode_nd2ps_03v3 pj=3.76u area=0.8836p
+D40 VSS bw2_b diode_nd2ps_03v3 pj=2.4u area=0.36p
+D41 VSS bw0_b diode_nd2ps_03v3 pj=3.84u area=0.9216p
+D42 VSS qt0 diode_nd2ps_03v3 pj=3.28u area=0.6724p
+X77 m3_55948_780# X61_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+X78 a_41124_131258# a_42256_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X79 a_80744_131258# X59_g1 VSS ppolyf_u_1k r_width=1u r_length=20u
+X80 a_75272_119264# a_76404_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X81 a_87724_119264# a_88856_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D43 VSS k_obs1 diode_nd2ps_03v3 pj=3.52u area=0.7744p
+D44 VSS bw2 diode_nd2ps_03v3 pj=4.04u area=1.0201p
+X82 X46_a s1_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
+X83 bp1_n a_93196_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D45 VSS k_intx diode_nd2ps_03v3 pj=2.56u area=0.4096p
+X84 X61_X5_c_bw3 bp1_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
+X85 a_99988_131258# a_101120_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X86 XX61_X6_X3/b lp1_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
+D46 VSS k_inrx diode_nd2ps_03v3 pj=3.2u area=0.64p
+D47 VSS gain0_b diode_nd2ps_03v3 pj=2.8u area=0.49p
+X87 XX48_X6_X2/b lp1_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+D48 VSS k_inrxb diode_nd2ps_03v3 pj=2.4u area=0.36p
+X88 X61_lx m3_55948_780# cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+D49 VSS k_obs3 diode_nd2ps_03v3 pj=3.76u area=0.8836p
+X89 XX46_X7_X2/b s1_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+X90 a_36596_131258# a_37728_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D50 VSS dir_tx diode_nd2ps_03v3 pj=3.64u area=0.8281p
+X91 bp1_n a_24144_139984# VSS ppolyf_u_1k r_width=1u r_length=20u
+X92 a_43388_131258# X48_q_qt0 VSS ppolyf_u_1k r_width=1u r_length=20u
+X93 a_47916_131258# X48_q_qt1 VSS ppolyf_u_1k r_width=1u r_length=20u
+X94 a_75084_131258# a_76216_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D51 VSS k_otx diode_nd2ps_03v3 pj=2.4u area=0.36p
+X95 bp2_n a_36596_139984# VSS ppolyf_u_1k r_width=1u r_length=20u
+X96 lp1_p a_56972_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X97 s1_n a_88668_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X98 a_67160_131258# X49_c VSS ppolyf_u_1k r_width=1u r_length=20u
+X99 bp1_n a_95460_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X100 inj_n a_84328_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X101 a_89988_119264# a_91120_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D52 VSS bw1 diode_nd2ps_03v3 pj=3.6u area=0.81p
+X102 inj_p a_104704_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X103 XX48_X5_X3/b bp1_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
+D53 VSS bw0 diode_nd2ps_03v3 pj=4.32u area=1.1664p
+X104 XX48_X5_X4/b bp1_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
+D54 VSS bw2 diode_nd2ps_03v3 pj=3u area=0.5625p
+X105 X62_b co_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
+X106 co_n a_38860_139984# VSS ppolyf_u_1k r_width=1u r_length=20u
+X107 a_30936_139984# X62_a VSS ppolyf_u_1k r_width=1u r_length=20u
+D55 VSS k_otxb diode_nd2ps_03v3 pj=2.4u area=0.36p
+X108 XX46_X7_X5/b s1_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
+X109 a_24144_131258# X46_g2 VSS ppolyf_u_1k r_width=1u r_length=20u
+X110 lp1_p a_52444_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D56 VSS gain1_b diode_nd2ps_03v3 pj=3.16u area=0.6241p
+X111 X48_a bp1_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
+X112 XX46_X7_X4/b s1_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
+X113 X49_b co_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
+X114 co_p a_64896_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X115 bp1_n a_104516_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D57 VSS gain2_b diode_nd2ps_03v3 pj=3.44u area=0.7396p
+X116 X59_a s1_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
+D58 VSS bw1_b diode_nd2ps_03v3 pj=3.68u area=0.8464p
+D59 VSS bw3 diode_nd2ps_03v3 pj=2.92u area=0.5329p
+X117 s1_p XX48_X1/a VSS ppolyf_u_1k r_width=1u r_length=13.33u
+D60 VSS gain2 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X118 bp2_p X49_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+X119 X61_b lp1_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
+X120 a_33200_139984# X62_a VSS ppolyf_u_1k r_width=1u r_length=20u
+X121 a_46784_131258# a_47916_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D61 VSS obs_sel0 diode_nd2ps_03v3 pj=4.28u area=1.1449p
+X122 X46_a a_27540_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X123 X49_v3 a_59236_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X124 X59_a a_86404_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X125 a_97724_131258# a_98856_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D62 VSS k_obs1 diode_nd2ps_03v3 pj=3.24u area=0.6561p
+X126 atb_vcm VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
+X127 a_38860_131258# a_39992_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D63 VSS bw3_b diode_nd2ps_03v3 pj=2.72u area=0.4624p
+X128 bp2_n X62_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+X129 a_59236_131258# X49_a VSS ppolyf_u_1k r_width=1u r_length=20u
+X130 inj_n a_78480_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X131 a_93384_119264# atb_vcm VSS ppolyf_u_1k r_width=1u r_length=20u
+D64 VSS k_s1byp diode_nd2ps_03v3 pj=3.48u area=0.7569p
+D65 VSS gain1 diode_nd2ps_03v3 pj=3.64u area=0.8281p
+X132 XX49_X4_X2/b co_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+D66 VSS bw3_b diode_nd2ps_03v3 pj=2.4u area=0.36p
+X133 X62_a bp2_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
+X134 obs_n island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+X135 a_73008_119264# a_74140_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D67 VSS bw0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X136 XX49_X3_X2/b bp2_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+X137 XX59_X7_X4/b s1_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
+X138 a_85460_119264# a_86592_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D68 VSS bw1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X139 XX61_X6_X5/b lp1_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
+D69 VSS bw0_b diode_nd2ps_03v3 pj=3.28u area=0.6724p
+D70 VSS bw0 diode_nd2ps_03v3 pj=3.8u area=0.9025p
+D71 VSS gain5 diode_nd2ps_03v3 pj=3.4u area=0.7225p
+X140 a_28672_139984# X61_c VSS ppolyf_u_1k r_width=1u r_length=20u
+X141 s1_n X61_gx VSS ppolyf_u_1k r_width=1u r_length=13.33u
+X142 inj_p XX46_X5/a VSS ppolyf_u_1k r_width=1u r_length=10u
+X143 m3_61948_780# X62_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+X144 X49_a bp2_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
+X145 out_rx_n island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+X146 a_99044_119264# a_100176_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X147 lp1_n a_30936_139984# VSS ppolyf_u_1k r_width=1u r_length=20u
+D72 VSS gain5_b diode_nd2ps_03v3 pj=2.4u area=0.36p
+X148 a_41124_139984# X62_c VSS ppolyf_u_1k r_width=1u r_length=20u
+X149 a_21880_131258# X46_g1 VSS ppolyf_u_1k r_width=1u r_length=20u
+X150 bp2_p a_62632_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X151 a_93196_131258# X61_a VSS ppolyf_u_1k r_width=1u r_length=20u
+D73 VSS gainc1 diode_nd2ps_03v3 pj=3.8u area=0.9025p
+X152 a_34332_131258# X48_a VSS ppolyf_u_1k r_width=1u r_length=20u
+D74 VSS gain2 diode_nd2ps_03v3 pj=2.6u area=0.4225p
+D75 VSS k_obs2 diode_nd2ps_03v3 pj=3.72u area=0.8649p
+D76 VSS bw0 diode_nd2ps_03v3 pj=3.2u area=0.64p
+X153 X62_lx m3_61948_780# cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+D77 VSS gain5 diode_nd2ps_03v3 pj=2.44u area=0.3721p
+D78 VSS gain4_b diode_nd2ps_03v3 pj=2.4u area=0.36p
+D79 VSS bw3 diode_nd2ps_03v3 pj=3.4u area=0.7225p
+X154 a_80932_119264# a_82064_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D80 VSS bw0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D81 VSS rx_direct diode_nd2ps_03v3 pj=4.16u area=1.0816p
+X155 XX61_X5_X2/b bp1_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+X156 a_101308_119264# a_102440_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X157 a_36596_139984# X62_b VSS ppolyf_u_1k r_width=1u r_length=20u
+D82 VSS bw0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X158 X48_X6_c_bw2 lp1_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
+D83 VSS rx_direct diode_nd2ps_03v3 pj=3.56u area=0.7921p
+X159 inj_n a_69424_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X160 XX49_X3_X5/b bp2_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
+X161 inj_n X59_g4 VSS ppolyf_u_1k r_width=1u r_length=10u
+X162 inj_n X59_g5 VSS ppolyf_u_1k r_width=1u r_length=5u
+X163 a_69424_131258# a_70556_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D84 VSS en diode_nd2ps_03v3 pj=4.72u area=1.3924p
+X164 a_42256_131258# a_43388_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X165 a_76404_119264# a_77536_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X166 a_88856_119264# a_89988_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D85 VSS k_obs2b diode_nd2ps_03v3 pj=3.52u area=0.7744p
+D86 VSS gain3_b diode_nd2ps_03v3 pj=3.24u area=0.6561p
+D87 VSS bw2_b diode_nd2ps_03v3 pj=3.56u area=0.7921p
+X167 bp1_p a_50180_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X168 a_95648_119264# a_96780_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D88 VSS en diode_nd2ps_03v3 pj=3.36u area=0.7056p
+X169 out_tx_p island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+X170 a_101120_131258# a_102252_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X171 XX48_X6_X5/b lp1_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
+D89 VSS k_rxd diode_nd2ps_03v3 pj=2.4u area=0.36p
+D90 VSS byp_s1 diode_nd2ps_03v3 pj=4.12u area=1.0609p
+D91 VSS bw1_b diode_nd2ps_03v3 pj=2.4u area=0.36p
+D92 VSS bw0_b diode_nd2ps_03v3 pj=2.72u area=0.4624p
+X172 XX48_X6_X3/b lp1_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
+X173 inj_p X46_g3 VSS ppolyf_u_1k r_width=1u r_length=20u
+D93 VSS bw2 diode_nd2ps_03v3 pj=2.56u area=0.4096p
+D94 VSS bw2 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D95 VSS qt0 diode_nd2ps_03v3 pj=3.96u area=0.9801p
+X174 a_32068_131258# X48_a VSS ppolyf_u_1k r_width=1u r_length=20u
+X175 a_71688_131258# a_72820_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+D96 VSS bw3 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X176 XX46_X7_X3/b s1_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
+X177 a_24144_139984# X61_b VSS ppolyf_u_1k r_width=1u r_length=20u
+X178 bp1_p a_45652_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X179 a_76216_131258# X59_g0 VSS ppolyf_u_1k r_width=1u r_length=20u
+X180 a_78668_119264# a_79800_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X181 XX48_X5_X2/b bp1_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
+X182 a_83008_131258# X59_g2 VSS ppolyf_u_1k r_width=1u r_length=20u
+X183 inj_p a_73008_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X184 XX62_X4_X4/b co_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
+X185 a_95460_131258# a_96592_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X186 a_79800_119264# a_80932_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+D97 VSS gain2 diode_nd2ps_03v3 pj=3.88u area=0.9409p
+X187 a_91120_119264# a_92252_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X188 a_104704_119264# X46_r2_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
+D98 VSS bw3_b diode_nd2ps_03v3 pj=3.36u area=0.7056p
+D99 VSS bw1 diode_nd2ps_03v3 pj=4.16u area=1.0816p
+D100 VSS qt1_b diode_nd2ps_03v3 pj=3.28u area=0.6724p
+D101 VSS obs_sel0 diode_nd2ps_03v3 pj=3.48u area=0.7569p
+X189 X62_X4_c_bw1 co_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
+D102 VSS gain0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D103 VSS bw1_b diode_nd2ps_03v3 pj=2.4u area=0.36p
+D104 VSS qt1 diode_nd2ps_03v3 pj=3.6u area=0.81p
+X190 XX62_X3_X5/b bp2_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
+X191 a_26408_139984# X61_c VSS ppolyf_u_1k r_width=1u r_length=20u
+X192 a_78480_131258# a_79612_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X193 a_38860_139984# X62_c VSS ppolyf_u_1k r_width=1u r_length=20u
+D105 VSS bw2_b diode_nd2ps_03v3 pj=2.4u area=0.36p
+D106 VSS obs_sel1 diode_nd2ps_03v3 pj=4.48u area=1.2544p
+X194 a_39992_131258# a_41124_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X195 a_79612_131258# a_80744_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X196 a_86592_119264# a_87724_119264# VSS ppolyf_u_1k r_width=1u r_length=20u
+X197 X46_r2_s2 a_21880_131258# VSS ppolyf_u_1k r_width=1u r_length=20u
+X198 a_52444_131258# X48_c VSS ppolyf_u_1k r_width=1u r_length=20u
+D107 VSS bw2 diode_nd2ps_03v3 pj=2.64u area=0.4356p
+D108 VSS bw3 diode_nd2ps_03v3 pj=3.36u area=0.7056p
+X199 XX49_X4_X4/b co_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
+X200 XX59_X7_X3/b s1_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
 .ends
 

@@ -16,8 +16,7 @@ starting replacements. The detailed scratch checkpoint is
    (`checkpoint-2-audit.json`); keep this fixture result separate from
    full-chip observation gates.
 2. Digital: legalization is resolved and the flow completes with routed DRC, LVS and antenna
-   clean (section 1, CLOSE_R1). Setup does not close: in-window ss WNS is −15.1 ns. Next:
-   - collect CLOSE_R2 (current sources, GLS);
+   clean and GLS passing (section 1, CLOSE_R2). Setup does not close: in-window ss WNS is −16.4 ns. Next:
    - implement the AC-1/S2/S3 core (40-bit at word/4);
    - pipeline the rate-independent domains.
 3. Core-bias routing is a maintained flow (`make transceiver-core-bias-routing`).
@@ -48,9 +47,9 @@ control is RTL; current digital hardening and full-chip signoff remain open.
 The selected digital implementation uses paired transport engines at
 156.25 MHz behind the 312.5 MHz ten-bit host boundary. Functional checks pass
 2.5 Gb/s bidirectional wired service and 40 MS/s I/Q service. The current
-main RTL has a routed 1580 × 1580 µm run (CLOSE_R1) with DRC, LVS and antenna clean. Hold
-meets in every in-window mode. Setup misses by 15.1 ns at in-window ss and 7.0 ns at tt.
-The routed netlist contains 8149 flip-flops against the 8192 cap.
+main RTL has a routed 1580 × 1580 µm run (CLOSE_R2) with DRC, LVS and antenna clean and GLS
+passing. Hold meets in every in-window mode. Setup misses by 16.4 ns at in-window ss and 7.7 ns at tt.
+The routed netlist contains 8150 flip-flops against the 8192 cap.
 
 All five island power-good outputs are observable through the real SPI pads.
 The observation ledger has 4 passed, 41 open and 2 retired entries. Most
@@ -73,23 +72,26 @@ release is synchronized in each domain. The RX queue uses registered full
 status for admission, independently of downstream unpacker readiness. The
 transport contract is in [streaming-transport-v2.md](streaming-transport-v2.md).
 
-### Status 2026-11-10 (routed run CLOSE_R1, scratch/digital-hardening-closure-r1)
+### Status 2026-11-10 (routed run CLOSE_R2, scratch/digital-hardening-closure-r2)
 
-The physical flow now completes end to end on the current RTL in the pinned guarded image.
-Physical signoff passes. Timing does not close.
+The physical flow completes end to end on the current RTL in the pinned guarded image.
+Physical signoff and gate-level simulation pass. Timing does not close. CLOSE_R1 (same
+recipe, previous pin plan, superseded) gave the same picture: WNS −15.08 / −7.01 / −3.31 ns.
 
 | Item | Result |
 | --- | --- |
-| Footprint | 1580 × 1580 µm (2.496 mm²), standard-cell area 1.555 mm², utilization 64.1 % |
-| Flip-flops | 8149 in the flattened routed netlist (cap 8192) |
-| DRC | Magic 0, KLayout 0 (flow GDS), KLayout 0 on the Magic 8.3.678 export, routing DRC 0 |
+| Footprint | 1580 × 1580 µm (2.496 mm²), standard-cell area 1.592 mm², utilization 65.7 % |
+| Flip-flops | 8150 in the flattened routed netlist (cap 8192) |
+| DRC | Magic 0, KLayout 0 (flow GDS), KLayout main/antenna 0 on the Magic 8.3.678 export, export XOR 0, routing DRC 0 |
 | LVS | Netgen 0 errors |
-| Antenna | 0 violating nets/pins (46 diodes) |
-| Hold | met in every in-window mode (worst +0.04 ns at ss_window) |
-| Setup, full rate (rate1) | WNS −15.08 ns at ss_window, −7.01 ns at tt, −3.31 ns at ff_window |
-| Setup, /2 and /4 fallback | hcore/hpair close at /4 (hcore −1.13 ns, hpair +4.1 ns at ss_window), but the rate-independent domains (wired, ref, freq-counter, SPI) still fail, so no mode closes |
-| fmax at tt (MHz) | hword 189, wtx 96, wrx 72, ctw 120, rftx 51, rfrx 76, ref 64, fc 85, sclk 19 |
-| GLS | invalid for this run: the netlist predates two later RTL edits (map 0x097D vs 0x179E). CLOSE_R2 repeats the flow on the current sources. |
+| Antenna | 0 violating nets/pins |
+| GLS (current sources, no stale files) | pass: RTL lockstep 0 mismatches, register model 0, reset safety, observability, host-link loopback in DDR/SDR/SDR-reduced |
+| Hold | met in every in-window mode (worst +0.04 ns, ff_window) |
+| Setup, full rate | WNS −16.38 ns at ss_window, −7.71 ns at tt, −3.27 ns at ff_window |
+| Setup, /2 and /4 fallback | ss_window WNS −12.32 ns in both. /4 removes the host-core violations, but the rate-independent domains (wired, ref, freq counter, SPI) still fail |
+| fmax at tt (MHz) | hword 200, wtx 96, wrx 78, ctw 123, rftx 52, rfrx 82, ref 71, fc 89, sclk 20 |
+| fmax at ss_window (MHz) | hword 137, wtx 64, wrx 49, ctw 82, rftx 33, rfrx 53, ref 46, fc 59, sclk 15 |
+| Vectorless power (flow) | 270 mW, all clocks at target (not an activity estimate) |
 
 Timing is judged inside the operating envelope only (22–32 °C, 3.15–3.35 V). The PDK ships one
 in-window Liberty (tt_025C_3v30). In-window ss/ff are global derates on it, defined in
@@ -142,9 +144,17 @@ Open items:
 1. Implement AC-1/S2/S3 in RTL, then re-harden and close setup in all in-window modes, including /2 and /4.
 2. Pipeline the rate-independent domains (freq counter, PRBS checker, clocktree slow, SPI
    memory readback), which AC-1 does not slow down.
-3. Run GLS on a source-consistent netlist (CLOSE_R2).
-4. Decap: the library `fillcap` gives about 0.4 nF in the macro, against 2.5–4.7 nF required. A thin-oxide decap cell is proposed (interface-changes.md).
-5. Activity-based power (S9). The flow's vectorless figure is 258 mW, all clocks at target.
+3. Decap: the library `fillcap` gives about 0.4 nF in the macro, against 2.5–4.7 nF required. A thin-oxide decap cell is proposed (interface-changes.md).
+4. Activity-based power (S9). The flow's vectorless figure is 270 mW, all clocks at target.
+5. Queued register/RTL requests, recorded in scratch/reviews/interface-changes.md:
+   - R3 timeout re-encoding (frees about 64 FF), then the AC-3 CDR controls;
+   - SUB-04 aosc enable;
+   - LU-02 interlocks;
+   - ring-regulator bypass and sequencing;
+   - the 2× DAC interpolator (SP-03), which needs about 150 FF and so needs R3 first;
+   - per-board calibration sequencer;
+   - D2H launch stagger.
+6. Macro shape 1716 × 1455 µm (I12) for the next run.
 
 Useful checks:
 

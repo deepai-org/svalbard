@@ -34,6 +34,7 @@ SWEEP = [(1.92e9, 4), (2.5e9, 4), (2.97e9, 4), (3.24e9, 4), (0.96e9, 2), (1.25e9
 NW = 14            # 280 bits: nominal / integration runs, more than two PRBS7 periods (127 bits)
 NWC = 10           # 200 bits per envelope-corner run (> 1.5 PRBS7 periods)
 QRATES = (2.5e9, 3.24e9)   # quarter rate: PCIe Gen1 and the top of the 480-810 MHz ring plan
+ROW_W = 540.0   # parent row width = width of the hand-placed core macro (wtx_serq4, row 0)
 
 
 def with_antenna_diodes(src, dst, top, summary, cell=None):
@@ -71,7 +72,7 @@ def stage_layout():
     subprocess.run([sys.executable, str(tools.HERE / 'cells.py')], check=True)
     if LAY.exists():
         shutil.rmtree(LAY)
-    summary = layoutgen.generate(LAY)
+    summary = layoutgen.generate(LAY, row_width=ROW_W)
     with_antenna_diodes(tools.HERE / 'wiredtx.spice', LAY / 'wiredtx.spice', 'pt_wiredtx', summary)
     lvs = tools.netgen_lvs(LAY, 'pt_wiredtx_lvs.spice', 'pt_wiredtx', 'wiredtx.spice')
     gds = tools.gds_export_analog(LAY, 'pt_wiredtx')
@@ -168,6 +169,16 @@ def jobs():
           ('int_serial_q3g24', lambda: I.run(iw, PEX, mode='serial', rate=3.24e9, bpc=4, nwords=NW, tag='serial_q3g24')),
           ('int_stretch_5g_lossy', lambda: I.run(iw, PEX, mode='serial', rate=5e9, bpc=4, nwords=6, lossy=True,
                                                  tag='stretch_q5g_lossy')),
+          # package channel (spec/package-channel.md): bond, COB, connector, carrier P1..P4, AC caps (B22)
+          ('int_pkg_q3g24_P1', lambda: I.run(iw, PEX, mode='serial', rate=3.24e9, bpc=4, nwords=NW,
+                                             codes=(200, 0, 125), pkg=('P1', 0.0), tag='pkg_q3g24_P1')),
+          ('int_pkg_q2g5_main200_P4', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
+                                                    codes=(200, 0, 125), pkg=('P4', 0.3), tag='pkg_q2g5_main200_P4')),
+          # PCIe-style -3.5 dB (post 48 with main 200) and -6 dB (post 80) de-emphasis, P4 (worst placement)
+          ('int_pkg_q2g5_deemph35_P4', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
+                                                     codes=(200, 48, 125), pkg=('P4', 0.3), tag='pkg_q2g5_de35_P4')),
+          ('int_pkg_q2g5_deemph6_P4', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
+                                                    codes=(200, 80, 125), pkg=('P4', 0.3), tag='pkg_q2g5_de6_P4')),
           ('ext_ideal_1g', lambda: I.run_ext(iw, PEX, rate=1e9, tag='ext_ideal_1g')),
           ('ext_rx_0g5', lambda: I.run_ext(iw, PEX, rate=0.5e9, rx=True, tag='ext_rx_0g5')),
           ('ext_rx_1g', lambda: I.run_ext(iw, PEX, rate=1e9, rx=True, tag='ext_rx_1g')),

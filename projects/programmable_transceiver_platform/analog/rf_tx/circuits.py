@@ -63,6 +63,9 @@ class Circuit:
     def p(self, name, d, g, s, w, l, nf=1, b='VDD'):
         self.devices.append(Mos(name, d, g, s, b, 'pfet_03v3', w, l, nf))
 
+    def n6(self, name, d, g, s, w, l, nf=1, b='VSS'):
+        self.devices.append(Mos(name, d, g, s, b, 'nfet_06v0', w, l, nf))
+
     def r(self, name, a, b, w, l, model='ppolyf_u_1k', body='VSS'):
         self.devices.append(Res(name, a, b, body, model, w, l))
 
@@ -159,6 +162,12 @@ DRV = dict(
     hdr_w=20.0, hdr_nf=48,                    # output-load PMOS header
     byp_w=20.0, byp_nf=2,                     # external-PA bypass PMOS per leg
     clamp_w=1.0, clamp_l=2.0,
+    cas=True,                                 # RC-3: nfet_06v0 cascode between the output pair and the pads.
+    cas_w=20.0, cas_nf=48, cas_l=0.7,         # 960/0.7 per leg; gate ~VDD (AC-grounded by a MOS cap): the
+                                              # nfet_03v3 pair stays <= ~2.5 V Vds while the pad peaks 4.1-4.4 V
+    casdc_w=10.0, casdc_l=4.0, casdc_nf=4,    # cascode-gate MOS decap per leg (~0.8 pF)
+    se_w=20.0, se_nf=4,                       # D-TX-2: SE mode (se=1) turns the pad_n cascode off and steers that
+                                              # leg's current into an on-chip PMOS dummy load (80/0.28, ~25 ohm)
     pad_clamp=False,                          # off-state pad pull-downs removed: with the board DC feed they
                                               # sank ~0.28 mA from the rail in reset; pads now rest at the feed
 )
@@ -222,7 +231,7 @@ def txsum(name='pt_txsum'):
 
 def rfdriver(name='pt_rfdriver'):
     c = Circuit(name, ['VDD', 'VSS', 'in_p', 'in_n', 'pad_p', 'pad_n', 'ibias', 'en', 'mute', 'bypass',
-                       'g0', 'g1', 'g2', 'g3', 'atb_bias', 'atb_pre', 'atb_cm'])
+                       'g0', 'g1', 'g2', 'g3', 'se', 'atb_bias', 'atb_pre', 'atb_cm'])
     c.notes += ['Two resistively loaded pre-amplifiers, NMOS source followers and a differential output pair with four binary',
                 'switched tail slices (g3..g0 = rfdriver.gain code[7:4]); ~20 ohm/leg source resistors behind',
                 'a PMOS header. bypass=1 turns the header and all tails off and connects in_* to pad_* through',
@@ -258,9 +267,22 @@ def rfdriver(name='pt_rfdriver'):
             c.n(f'SF_{leg}', 'VDD', f'p2_{leg}', f'p3_{leg}', d['sf_w'], 0.28, d['sf_nf'])
             c.n(f'TS_{leg}', f'p3_{leg}', 'vbp', 'VSS', d['unit_w'], d['unit_l'], d['sf_tail_nf'])
         gate = 'p3'
-    # Output pair: pad_p follows p2_p.
-    c.n('O_P', 'pad_n', f'{gate}_p', 'to', d['out_w'], d['out_l'], d['out_nf'])
-    c.n('O_N', 'pad_p', f'{gate}_n', 'to', d['out_w'], d['out_l'], d['out_nf'])
+    # Output pair: pad_p follows p2_p. With the cascode the pair drains are cp/cn (inside the block).
+    dp, dn = ('cp', 'cn') if d.get('cas') else ('pad_p', 'pad_n')
+    c.n('O_P', dn, f'{gate}_p', 'to', d['out_w'], d['out_l'], d['out_nf'])
+    c.n('O_N', dp, f'{gate}_n', 'to', d['out_w'], d['out_l'], d['out_nf'])
+    if d.get('cas'):
+        # nfet_06v0 cascodes (drains on the pads). Gates: vcp from a tie-high inverter, vcn = se_b, both
+        # MOS-cap decoupled. Unpowered: gates at 0 V, so pad stress lands on the 6 V devices only.
+        c.inv('ISE', 'se', 'se_b')
+        c.inv('IHI', 'VSS', 'vcp')
+        c.n6('CAS_P', 'pad_p', 'vcp', 'cp', d['cas_w'], d['cas_l'], d['cas_nf'])
+        c.n6('CAS_N', 'pad_n', 'se_b', 'cn', d['cas_w'], d['cas_l'], d['cas_nf'])
+        c.n('CDC_P', 'VSS', 'vcp', 'VSS', d['casdc_w'], d['casdc_l'], d['casdc_nf'])
+        c.n('CDC_N', 'VSS', 'se_b', 'VSS', d['casdc_w'], d['casdc_l'], d['casdc_nf'])
+        # SE dummy loads (pad_n leg on in SE; the pad_p twin is always off, for symmetry)
+        c.p('DUM_P', 'cp', 'VDD', 'VDD', d['se_w'], 0.28, d['se_nf'])
+        c.p('DUM_N', 'cn', 'se_b', 'VDD', d['se_w'], 0.28, d['se_nf'])
     for k, nf in enumerate(d['out_tail_nf']):
         c.nand2(f'GS{k}', 'act', f'g{k}', f'sk{k}_b')
         c.inv(f'IS{k}', f'sk{k}_b', f'sk{k}')

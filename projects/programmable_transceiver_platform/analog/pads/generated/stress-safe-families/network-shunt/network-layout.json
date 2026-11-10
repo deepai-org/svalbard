@@ -41,14 +41,14 @@
     "return_route_length_um": 388.095
   },
   "array_well_capacitance_removed_ff": 68.33433600000001,
-  "extracted_spice_sha256": "d15b488b710c94f4f43ab78cca61558fb6b75e44724c5361102a10aa99890a32",
+  "extracted_spice_sha256": "5a31c265eaa7e2ac1bd3ab2b5c8d876a66c73f143c86495fa106f5ca89458dc9",
   "limitations": [
     "Stress shunt is not inside this footprint; it must be attached through RAIL/VSS",
     "Gate tap is a single 1 um metal3 jog; resistor current is small but the jog is not EM-reviewed",
     "No ESD rating, core-survival or current-capacity claim"
   ],
   "source_sha256": {
-    "rail_shunt_v2.py": "cf11c23f226bd29d9bef53cf094ac8cbc21d2fe39434f60c263bbc72727cfc45"
+    "rail_shunt_v2.py": "8595ab6f99165a427b050dd25a5e2b32b90bbeec7473527f53fc1969a3f028a6"
   },
   "gds_roundtrip": {
     "method": "DRC, extraction and LVS run on Magic reading the written GDS",
@@ -122,9 +122,9 @@
       },
       "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
       "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
-      "before_gds_sha256": "ad7629f7a0b7876e379ecaf3ed7efcedef5300cae35ad1ea6602f4f54ea72a92",
-      "after_gds_sha256": "ecddb176e4acb79baf72677a1308a06202aa352d53fbf65c8399b4c85e12e815",
-      "physical_magic_sha256": "473cb817f469beffe1fcf8a37601f5e5c21bd05fcab7ce3cea27d2ae8d0e9799",
+      "before_gds_sha256": "1462fecbad536b435b8e94675ce571657d09624cd6f31359a8a09010e4b20816",
+      "after_gds_sha256": "82682ac83a355c6d1a6150482e946c4ef3b571aebe42f0f8394d5e7c0fee4884",
+      "physical_magic_sha256": "4de07c95d79968f837c8b01cdb845ac4ddc3ef9dd03dc287fbd1c6907504e36b",
       "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
     },
     "atb_res": {
@@ -137,34 +137,34 @@
       },
       "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
       "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
-      "before_gds_sha256": "ad8e77f4794a158129cfec066bccc877f9da6150eaa656bca609702bd530ea2d",
-      "after_gds_sha256": "4866f5d6848ff9b03d237b9d66160cdb38c952c83af3be42b771356d248a3491",
-      "physical_magic_sha256": "97d813099bef4f106cf2f52965c1d317534d58540a062c927918d9f6ae3bc8aa",
+      "before_gds_sha256": "a92cb6904c81f676d0b557f93728bfaaa77b468dddba6b3441d7f56c699857f0",
+      "after_gds_sha256": "66e9c2d04cb059d3ebca2d382eabc6b2244aa141e964c083394717390fb392c5",
+      "physical_magic_sha256": "475f479ad8dd1e6674b7ec81fe201e57a7ded00b2b7897ed2bdb8c9e087f6cf9",
       "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
     }
   },
   "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
   "pdk": "/pdk/gf180mcuD",
-  "canonical_network_gds_sha256": "0b7c25860190af02dfaffab9c180d5734f5d9eb771111367adc97ae98fcf493d",
-  "gds_sha256": "bd7adab65585a251d2aa88d21ae9b01049c3013f08c15adf1b12de12966fd4ee",
+  "canonical_network_gds_sha256": "38556ed379dc3a6029b676adc99b33b41ebc301022094852265d815cb28d9e30",
+  "gds_sha256": "ad35347b5ae862bc865774bd4530dd64d598fe297d63c64df824dfb3fae49090",
   "shunt": {
-    "version": 2,
+    "version": "2.2-lu",
     "stages": 3,
-    "fingers_per_stage": 240,
+    "fingers_per_stage": 224,
     "offset_um": [
       155.0,
-      327.935
+      329.735
     ],
-    "gds_sha256": "bb56883c679ef61d570ec5188d392b7ba0a5957771f305c53f1ded720c32e3ce"
+    "gds_sha256": "50bfb8b80fe9c51c59e9592d2616f987c8ccd0e6c977a1267685aaa676538d36"
   },
   "straps": {
     "rail": {
       "layer": "metal5",
       "width_um": 30.0,
-      "length_um": 56.435,
+      "length_um": 58.235000000000014,
       "cuts": {
-        "rail_via4": 600,
-        "rail_via3": 600
+        "rail_via4": 660,
+        "rail_via3": 660
       }
     },
     "vss": {
@@ -173,33 +173,33 @@
         "metal5 (above y=290)"
       ],
       "width_um": 30.0,
-      "metal4_length_um": 201.575,
-      "metal5_length_um": 176.575,
+      "metal4_length_um": 212.57500000000005,
+      "metal5_length_um": 187.57500000000005,
       "metal4_only_um": 2.0,
       "metal4_base_width_um": 63.0,
       "cuts": {
         "vss_via4_low": 300,
-        "vss_via4_high": 600,
-        "vss_via3": 600
+        "vss_via4_high": 660,
+        "vss_via3": 660
       }
     }
   },
   "wiring_resistance": {
     "nominal": {
-      "rail_strap_ohm": 0.09024666666666667,
-      "vss_strap_ohm": 0.18831171765569607,
-      "plate_end_to_end_ohm": 0.6152127906976745,
-      "banks_bound_ohm": 3.6912767441860472,
-      "total_bound_ohm": 3.96983512850841,
-      "drop_at_100mA_v": 0.396983512850841
+      "rail_strap_ohm": 0.09128303030303032,
+      "vss_strap_ohm": 0.19745229634360764,
+      "plate_end_to_end_ohm": 0.5613223404255319,
+      "banks_bound_ohm": 3.367934042553191,
+      "total_bound_ohm": 3.6566693691998293,
+      "drop_at_100mA_v": 0.365666936919983
     },
     "high": {
-      "rail_strap_ohm": 0.14217716666666666,
-      "vss_strap_ohm": 0.2640752898297741,
-      "plate_end_to_end_ohm": 0.710912558139535,
-      "banks_bound_ohm": 4.26547534883721,
-      "total_bound_ohm": 4.671727805333651,
-      "drop_at_100mA_v": 0.46717278053336514
+      "rail_strap_ohm": 0.14057171212121214,
+      "vss_strap_ohm": 0.27305174712029145,
+      "plate_end_to_end_ohm": 0.6486391489361703,
+      "banks_bound_ohm": 3.8918348936170215,
+      "total_bound_ohm": 4.305458352858525,
+      "drop_at_100mA_v": 0.43054583528585255
     }
   },
   "allocation_regions_um": [
@@ -210,10 +210,10 @@
       288.0
     ],
     [
-      5.764999999999986,
+      6.164999999999992,
       301.0,
-      303.235,
-      473.40999999999997
+      302.83500000000004,
+      484.21000000000004
     ],
     [
       20.0,

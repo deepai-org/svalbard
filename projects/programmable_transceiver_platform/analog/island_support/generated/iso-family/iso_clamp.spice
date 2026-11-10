@@ -1,0 +1,8 @@
+.subckt iso_clamp A ISO Y VDD VSS
+XMIP AN A VDD VDD pfet_03v3 w=1u l=0.28u
+XMIN AN A VSS VSS nfet_03v3 w=0.5u l=0.28u
+XMP1 NY ISO VDD VDD pfet_03v3 w=2u l=0.28u
+XMP2 Y AN NY VDD pfet_03v3 w=2u l=0.28u
+XMN1 Y AN VSS VSS nfet_03v3 w=0.5u l=0.28u
+XMN2 Y ISO VSS VSS nfet_03v3 w=0.5u l=0.28u
+.ends iso_clamp

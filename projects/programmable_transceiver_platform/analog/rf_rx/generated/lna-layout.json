@@ -4,10 +4,10 @@
  "bbox_um": [
   1.5,
   -0.2,
-  178.14,
-  110.98
+  310.8,
+  253.12
  ],
- "area_um2": 19639.0,
+ "area_um2": 78352.0,
  "lvs": {
   "unique_match": true,
   "final_result": "Circuits match uniquely.",
@@ -33,36 +33,60 @@
   },
   "pt_lna": {
    "size_um": [
-    180.22,
-    112.78
+    312.92,
+    254.92
    ],
-   "rows": 4,
-   "nets": 21,
-   "bank_um": 23.9,
+   "rows": 8,
+   "nets": 59,
+   "bank_um": 64.3,
    "row_report": [
     [
      6,
-     8.5,
+     10.0,
      35.3,
-     155.3
+     216.0
+    ],
+    [
+     19,
+     15.3,
+     38.3,
+     247.6
+    ],
+    [
+     17,
+     16.0,
+     23.6,
+     241.5
     ],
     [
      2,
      5.5,
-     15.5,
-     53.4
+     8.2,
+     205.2
     ],
     [
      3,
-     7.0,
+     5.5,
      8.2,
-     154.8
+     210.1
     ],
     [
-     13,
-     13.0,
+     4,
+     7.8,
      8.2,
-     145.2
+     240.7
+    ],
+    [
+     12,
+     16.0,
+     11.2,
+     201.2
+    ],
+    [
+     20,
+     19.0,
+     8.2,
+     244.4
     ]
    ]
   }
@@ -73,20 +97,25 @@
   "by_rule": {},
   "deck": "gf180mcuD klayout (sak-drc.sh -k)"
  },
+ "klayout_precheck": {
+  "clean": true,
+  "main": 0,
+  "antenna": 0
+ },
  "block": "lna",
  "top_cell": "pt_lna",
  "digital_image": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
  "drc_details": "",
  "sources": {
-  "lna.spice": "sha256:ac5dfd439b8fda5b5df5ddd48ae9db0cccc2cc2fea47b01211749c0745b2f663",
-  "netlists.py": "sha256:fb4f51b6eede1d916e5a24128fdbfc250408585f135fdfdde4622b62084fbd93",
-  "rfrx_flow.py": "sha256:6fa4ba2ff246182b7c47dd4d2a9c95652d70c09a833ab3674ecb170dd0ee15a1"
+  "lna.spice": "sha256:a3e861377aa34b874ef4698165831210013e7b981b513ee1d01080e557a26346",
+  "netlists.py": "sha256:a32cdea2b799cbcd4373ab3c5ffe83daf7efd06fadfa34846eb3a6736c3a9a18",
+  "rfrx_flow.py": "sha256:5cba470266fb413cc419522d9a55778cddd8ce2d169e46d12ac516dda8fd9dc9"
  },
  "artifacts": {
-  "lna.gds": "sha256:461087f9dcae15f046ded92ae6019cfc6f988d34ec69ddfe2b48670edb87ea62",
-  "lna.mag": "sha256:1a35a2c015bc8b394362823eef8fe07eb84d04a2fe54dae087462fc67f75e1e8",
-  "lna.ext.spice": "sha256:a34c6f51d6eee29688d623c0d361c51d2d6d13182c3c946e276551e3d96d29bf",
-  "lna-lvs.txt": "sha256:b3f2d5fc0d8e17787f7953383e607f4686dd0b62831639dc7203df5a60284951"
+  "lna.gds": "sha256:40e828947209df7c6f7f3aab24b7fe617f98b2e36c7bb87f830309972ca44e99",
+  "lna.mag": "sha256:e77dd5c574ef5d66130f4379629d73a220d3b531cd56f6b410712114785ec164",
+  "lna.ext.spice": "sha256:35bc7031dea86d7e6d3bfa345825073d687d31ffc1bea499c23362687a03553d",
+  "lna-lvs.txt": "sha256:cdd94ceb86166b3e4af7ebc455471e28712abf987dd2ce56e01a0b161b124715"
  }
 }

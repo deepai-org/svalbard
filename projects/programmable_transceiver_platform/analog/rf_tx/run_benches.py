@@ -108,7 +108,7 @@ wrdata {out} vm(ip) vm(op)
 
 
 def driver_deck(view, *, amp=0.15, cm=2.82, gain=15, mute=0, bypass=0, en=1, out='w.txt', corner='tt', temp=27,
-                vdd=3.3, rs=0.0, match=None):
+                vdd=3.3, rs=0.0, match=None, se=0):
     v = lambda b: vdd * b
     g = [v((gain >> k) & 1) for k in range(4)]
     src = (f'VIP sp 0 SIN({cm} {amp / 2} {S.F_LO})\nVIN sn 0 SIN({cm} {-amp / 2} {S.F_LO})\n'
@@ -125,7 +125,8 @@ VG2 g2 0 {g[2]}
 VG3 g3 0 {g[3]}
 IB 0 ib 10u
 {src}
-X1 vdd VSS inp inn pad_p pad_n ib en mute byp g0 g1 g2 g3 ab ap ac pt_rfdriver
+VSE se 0 {vdd * se}
+X1 vdd VSS inp inn pad_p pad_n ib en mute byp g0 g1 g2 g3 se ab ap ac pt_rfdriver
 {S.pad_load(match=match, feed='vdd')}
 .control
 tran 1p 5n 0 2p
@@ -181,7 +182,8 @@ VBB bbcm 0 1.65
 XMI vdd_mi VSS bbcm bbcm bbcm bbcm loip loin ip in ib_mi en sel satc a1 a2 pt_txmix_i
 XMQ vdd_mq VSS bbcm bbcm bbcm bbcm loqp loqn qp qn ib_mq en sel satc a3 a4 pt_txmix_q
 XS vdd_s VSS ip in qp qn sp sn en a5 pt_txsum
-XD vdd_d VSS sp sn pad_p pad_n ib_d en mute byp g0 g1 g2 g3 a6 a7 a8 pt_rfdriver
+VSE se 0 0
+XD vdd_d VSS sp sn pad_p pad_n ib_d en mute byp g0 g1 g2 g3 se a6 a7 a8 pt_rfdriver
 {pad}
 .control
 op
@@ -244,7 +246,7 @@ Vloqn loqn 0 3.3
 XMI vdd_mi VSS bbcm bbcm bbcm bbcm loip loin ip in ib_mi en zero zero a1 a2 pt_txmix_i
 XMQ vdd_mq VSS bbcm bbcm bbcm bbcm loqp loqn qp qn ib_mq en zero zero a3 a4 pt_txmix_q
 XS vdd_s VSS ip in qp qn sp sn en a5 pt_txsum
-XD vdd_d VSS sp sn pad_p pad_n ib_d en mute zero zero zero zero zero a6 a7 a8 pt_rfdriver
+XD vdd_d VSS sp sn pad_p pad_n ib_d en mute zero zero zero zero zero zero a6 a7 a8 pt_rfdriver
 {S.pad_load()}
 .control
 tran 0.5n 600n 0 0.5n
@@ -264,7 +266,7 @@ def cap_deck(view, block, node, dc, ctrl, out='w.txt'):
     else:
         fix = (f"VIP inp 0 2.8\nVIN inn 0 2.8\nIB 0 ib 10u\nVEN en 0 {ctrl['en']}\nVMUTE mute 0 {ctrl.get('mute', 0)}\n"
                f"VBYP byp 0 {ctrl.get('bypass', 0)}\nVG g 0 3.3\n" + S.pad_load(feed='vdd'))
-        dut = 'X1 vdd VSS inp inn pad_p pad_n ib en mute byp g g g g ab ap ac pt_rfdriver'
+        dut = 'X1 vdd VSS inp inn pad_p pad_n ib en mute byp g g g g VSS ab ap ac pt_rfdriver'
     # replace the probed node's fixture source by a DC+AC source with a current sense
     lines = [l for l in fix.splitlines() if not l.split()[1:2] == [node] or l.startswith(('R', 'C'))]
     fix = '\n'.join(lines) + f"\nVPROBE {node} 0 DC {dc} AC 1\n"

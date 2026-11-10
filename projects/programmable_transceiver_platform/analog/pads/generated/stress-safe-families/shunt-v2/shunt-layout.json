@@ -1,8 +1,17 @@
 {
+  "lu": {
+    "sub_nf": 16,
+    "sub_banks": 14,
+    "tap_column_pitch_um": 20.96,
+    "max_ndiff_to_ptap_x_um": 10.365,
+    "rule": "GF180 DRM LU.3 (MV NCOMP <= 15 um from Psub tap)"
+  },
+  "width_per_stage_um": 12006.4,
+  "finger_um": 53.6,
   "status": "v2_shunt_macro_DRC_LVS_roundtrip_recorded_not_ESD_qualification",
-  "version": 2,
+  "version": "2.2-lu",
   "stages": 3,
-  "fingers_per_stage": 240,
+  "fingers_per_stage": 224,
   "drc_count": 0,
   "netgen_lvs_match": true,
   "gds_roundtrip": {
@@ -10,19 +19,19 @@
     "device_graph_match": true,
     "extraction_error": null,
     "expected_models": {
-      "nfet_06v0": 720
+      "nfet_06v0": 672
     },
     "actual_models": {
-      "nfet_06v0": 720
+      "nfet_06v0": 672
     },
     "missing_devices": [],
     "unexpected_devices": [],
-    "gds_sha256": "bb56883c679ef61d570ec5188d392b7ba0a5957771f305c53f1ded720c32e3ce",
-    "reference_sha256": "1ce528f2c2c2f3bb80dc458a9e236b576ede32fc6a4f85a0e29d734bf573d47d"
+    "gds_sha256": "50bfb8b80fe9c51c59e9592d2616f987c8ccd0e6c977a1267685aaa676538d36",
+    "reference_sha256": "d643e1473d1a23e21f26e49ebb1aae4db0beb700e0ac8b212e99b8ec70e53840"
   },
-  "gds_sha256": "bb56883c679ef61d570ec5188d392b7ba0a5957771f305c53f1ded720c32e3ce",
+  "gds_sha256": "50bfb8b80fe9c51c59e9592d2616f987c8ccd0e6c977a1267685aaa676538d36",
   "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
   "source_sha256": {
-    "rail_shunt_v2.py": "0e358660c2d8ef7171342d0354ad21cbe00a68c3a7baa3aa86a72962e8120ece"
+    "rail_shunt_v2.py": "6ccf5967f8a183cd5b58bab22ef84d64aea99c576132ebfa8f132bd262c3ca11"
   }
 }

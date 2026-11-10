@@ -1,0 +1,43 @@
+{
+  "status": "rftx_gate_coupled_shunt_DRC_LVS_recorded_not_ESD_qualification",
+  "version": "rftx-1",
+  "stages": 1,
+  "gate_coupled": true,
+  "fingers_per_stage": 224,
+  "finger_um": 53.6,
+  "width_um": 12006.4,
+  "lu": null,
+  "rg": {
+    "model": "ppolyf_u_1k_6p0",
+    "w_um": 1.0,
+    "l_um": 6.0
+  },
+  "cc": {
+    "model": "cap_mim_2p0fF",
+    "side_um": 90.0,
+    "count": 2
+  },
+  "drc_count": 0,
+  "netgen_lvs_match": true,
+  "high_r_marker_repair": {
+    "added_area_um2": {
+      "62": 14.436,
+      "55": 14.436
+    },
+    "selected_poly_components": {
+      "mvnhighres": 1
+    },
+    "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+    "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+    "before_gds_sha256": "f056976558be0045213e3c6fdb2ec1fc333909568b6e52273bab8d3c5d5f7d74",
+    "after_gds_sha256": "b8ffa9bb9982e844a768ef721fff433ee04fbbc956b7b36c5184c7a45f8a87bd",
+    "physical_magic_sha256": "2b6da5fa8e089fb9a02e024a9193ff4975326a803c7d73051cc39c59ac7575fd",
+    "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+  },
+  "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "gds_sha256": "b8ffa9bb9982e844a768ef721fff433ee04fbbc956b7b36c5184c7a45f8a87bd",
+  "source_sha256": {
+    "rftx_shunt.py": "bba025f4c8991d2b18291c5682cff9f02ef76a5228f1cff836f56d98b104160a",
+    "rail_shunt_v2.py": "0482af45229339275f581408e338c5f098b60cf1025eff3b5ed418066c05892a"
+  }
+}

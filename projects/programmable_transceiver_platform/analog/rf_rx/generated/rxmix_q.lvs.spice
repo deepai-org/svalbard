@@ -225,18 +225,24 @@ XXX4 rf_p rf_n lo_p lo_n x_p x_n VSS pt_rxmix_quad
 XXX5 x_p x_n vbpf ofs0 ofs1 ofs2 ofs3 ofs4 ofs_sign VDD VSS pt_rxmix_ofsdac
 XXX6 atb_vcm x_p bb_n vbpf enb VDD VSS pt_rfrx_otan
 XXX7 atb_vcm x_n bb_p vbpf enb VDD VSS pt_rfrx_otan
+D0 VSS enb diode_nd2ps_03v3 pj=2.4u area=0.36p
 X0 VDD vbpf cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
 X1 a_47896_4336# a_49028_4336# VSS ppolyf_u_1k r_width=1u r_length=20u
+D1 VSS ofs0 diode_nd2ps_03v3 pj=2.4u area=0.36p
 X2 bb_p island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
 X3 x_p x_n cap_mim_2f0_m4m5_noshield c_width=44.7u c_length=44.7u
 X4 x_p bb_n cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
 X5 atb_vbp a_45632_4336# VSS ppolyf_u_1k r_width=1u r_length=20u
+D2 VSS ofs3 diode_nd2ps_03v3 pj=2.4u area=0.36p
 X6 x_n bb_p cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
 X7 a_45632_4336# a_46764_4336# VSS ppolyf_u_1k r_width=1u r_length=20u
 X8 a_49028_4336# vbpf VSS ppolyf_u_1k r_width=1u r_length=20u
+D3 VSS ofs1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D4 VSS ofs4 diode_nd2ps_03v3 pj=2.4u area=0.36p
 X9 a_46764_4336# a_47896_4336# VSS ppolyf_u_1k r_width=1u r_length=20u
 X10 x_p bb_n VSS ppolyf_u_1k r_width=1u r_length=20u
 X11 x_n bb_p VSS ppolyf_u_1k r_width=1u r_length=20u
+D5 VSS ofs2 diode_nd2ps_03v3 pj=2.4u area=0.36p
 X12 bb_n island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
 .ends
 

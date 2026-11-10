@@ -178,7 +178,7 @@ Extracted checks (`scratch/iso-family/sims/iso_sims.py`, `iso-sims.json`):
 
 ISO source: `ISLAND_OFF_<driving island>` = NOT `island_on[k]` (honours
 `pgood_override`, mismatch I3); the switch's own ISO stays the backstop.
-Placement list for assembly: `scratch/iso-family/publish/iso-placement.json`
+Placement list for assembly: `generated/iso-family/iso-placement.json` (cells, PEX, sims and KLayout records in the same directory)
 (13 cells, 8.4k µm²). Two v3 binding defects block two of the nets:
 `ct_word_clk` and `island_on[0]` each have two drivers (see interface-changes
 "Pads owner: LU-01 / ESD-04 / LU-02 / PDN-04").

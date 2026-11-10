@@ -428,7 +428,10 @@ def predrv():
              row_width=150)
     V = dict(VDD='VDD', VSS='VSS')
     c.inst('XB', INV1, A='DX', Y='DXB', **V)
-    c.inst('XO', INV1, A='DXB', Y='EXT_DATA', **V)   # status copy of the external data
+    # status copy of the external data, gated with EXT: it toggles only in WTX_EXT mode (it coupled
+    # ~0.6 V glitches onto the adjacent word input D13 while DX toggled in serializer mode)
+    c.inst('XN', NAND, A='DX', B='EXT', Y='EXDN', **V)
+    c.inst('XO', INV1, A='EXDN', Y='EXT_DATA', **V)
     # three-way select, two gate levels: DS = D&SERG | DQ&SERQ | DX&EXT (one-hot enables)
     c.inst('S1', NAND_O, A='D', B='SERG', Y='NS1', **V)
     c.inst('Q1', NAND_O, A='DQ', B='SERQ', Y='NQ1', **V)
@@ -456,7 +459,7 @@ def predrv():
     return c
 
 
-def idac(diode_fingers):
+def idac(diode_fingers, scale=1.0, name=None):
     """8-bit binary PMOS current DAC into a diode that mirrors into a pad tail.
 
     LSB = 5 uA into the diode (unit PMOS W=1/L=1 against a W=2/L=1 reference
@@ -464,7 +467,7 @@ def idac(diode_fingers):
     selected pad tail for that branch, so the tail LSB is about 80 uA.
     """
     codes = [f'C{k}' for k in range(8)]
-    c = Cell(f'wtx_idac{diode_fingers}', ['NB', 'EN', 'ISLAND_OFF'] + codes + ['BIAS', 'PB', 'VDD', 'VSS'],
+    c = Cell(name or f'wtx_idac{diode_fingers}', ['NB', 'EN', 'ISLAND_OFF'] + codes + ['BIAS', 'PB', 'VDD', 'VSS'],
              row_width=150)
     V = dict(VDD='VDD', VSS='VSS')
     c.inst('EI', INV1, A='EN', Y='ENB', **V)
@@ -477,7 +480,7 @@ def idac(diode_fingers):
         w = 2 ** k
         nf = max(1, w // 16)
         for f in range(nf):
-            c.dev(f'MS{k}_{f}' if nf > 1 else f'MS{k}', P, f'S{k}', 'PB', 'VDD', min(w, 16), 1.0)
+            c.dev(f'MS{k}_{f}' if nf > 1 else f'MS{k}', P, f'S{k}', 'PB', 'VDD', round(min(w, 16) * scale, 3), 1.0)
         c.dev(f'SW{k}', P, 'BIAS', f'CB{k}', f'S{k}', 2 if k < 5 else 4 * 2 ** (k - 5))
     for f in range(diode_fingers):
         c.dev(f'MD{f}' if diode_fingers > 1 else 'MD', N, 'BIAS', 'BIAS', 'VSS', 20, 1.0)
@@ -487,6 +490,9 @@ def idac(diode_fingers):
 
 
 IDAC2 = idac(2)
+# MAIN tail DAC with 1.2x unit sources (package demand D-WT-2: >= 24 mA): LSB 6 uA -> tail LSB ~100 uA,
+# code 255 -> ~25.4 mA, code 200 -> ~19.9 mA, code 240 -> ~23.9 mA (POST / TMDS unchanged)
+IDAC2M = idac(2, scale=1.2, name='wtx_idac2m')
 IDAC1 = idac(1)
 
 
@@ -648,9 +654,22 @@ def serq4():
     return c
 
 
+def w40():
+    """WORD_CLK40 toggle: SEL toggles on every WORD_CLK rising edge; reset (RB = SER_EN low, WORD_CLK
+    stopped low) gives SEL = 0, so the first WORD_CLK edge sets SEL = 1 (D0..D19) and WORD_CLK40 rises."""
+    c = Cell('wtx_w40', ['CK', 'RB', 'SEL', 'SELB', 'W40', 'VDD', 'VSS'])
+    V = dict(VDD='VDD', VSS='VSS')
+    c.inst('CI', INV1, A='CK', Y='CKB', **V)
+    c.inst('F', DFF, D='SELB', CK='CK', CKB='CKB', RB='RB', Q='SEL', QB='SELB', **V)
+    c.inst('O1', INV2, A='SEL', Y='W40N', **V)
+    c.inst('O2', INV4, A='W40N', Y='W40', **V)
+    return c
+
+
 def wiredtx():
     codes = {b: [f'{b}_CODE{k}' for k in range(8)] for b in ('MAIN', 'POST', 'TMDS')}
-    ports = (['WTX_PH0', 'WTX_PH90', 'WTX_PH180', 'WTX_PH270', 'MODE_H', 'MODE_F'] + [f'D{i}' for i in range(20)] + ['WORD_CLK', 'SER_EN', 'WTX_EXT', 'DX',
+    ports = (['WTX_PH0', 'WTX_PH90', 'WTX_PH180', 'WTX_PH270', 'MODE_H', 'MODE_F'] + [f'D{i}' for i in range(40)]
+             + ['WORD_CLK', 'WORD_CLK40', 'SER_EN', 'WTX_EXT', 'DX',
              'EN_MAIN', 'EN_POST', 'EN_TMDS', 'ISLAND_OFF', 'IBIAS']
              + codes['MAIN'] + codes['POST'] + codes['TMDS']
              + ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N',
@@ -681,9 +700,17 @@ def wiredtx():
     c.inst('DG3I', INV8, A='DGB3', Y='DGX3', **V)
     c.inst('CG', PHBUF, PH0='WTX_PH0', PH90='WTX_PH90', PH180='WTX_PH180', PH270='WTX_PH270', SER='SERG',
            MODE_H='VDD', MODE_F='VSS', FCK='FCK', FCKB='FCKB', RSTB='RSTB', **W, **V)
-    c.inst('SR', SERQ, **{f'D{i}': f'D{i}' for i in range(20)}, **W, FCK='FCK', FCKB='FCKB', RSTB='RSTB',
+    # 40-bit boundary (S3 / interface WT5): the digital launches a 40-bit quad word D0..D39 (D0 first on
+    # the line) on WORD_CLK40 rising (line/40, 50 % duty).  A toggle flop on WORD_CLK (line/20) selects
+    # D0..D19 for the load after WORD_CLK40 rises and D20..D39 for the next one; both serializers see
+    # the selected 20-bit word DW0..DW19 at the same timing as the earlier 20-bit port.
+    c.inst('WS', W40, CK='WORD_CLK', RB='SER_EN', SEL='WSEL', SELB='WSELB', W40='WORD_CLK40', **V)
+    for i in range(20):
+        c.inst(f'WM{i}', MUX, A=f'D{i}', B=f'D{i + 20}', S='WSEL', SB='WSELB', Y=f'DWB{i}', **V)
+        c.inst(f'WI{i}', INV1, A=f'DWB{i}', Y=f'DW{i}', **V)
+    c.inst('SR', SERQ, **{f'D{i}': f'DW{i}' for i in range(20)}, **W, FCK='FCK', FCKB='FCKB', RSTB='RSTB',
            WORD_CLK='WCKG', Y='SD', YB='SDB', DP='SDP', DPB='SDPB', **V)
-    c.inst('SQ', SERQ4, **{f'D{i}': f'D{i}' for i in range(20)}, PH0='WTX_PH0', PH90='WTX_PH90',
+    c.inst('SQ', SERQ4, **{f'D{i}': f'DW{i}' for i in range(20)}, PH0='WTX_PH0', PH90='WTX_PH90',
            PH180='WTX_PH180', PH270='WTX_PH270', SERQ='SERQ', MQ='MQ', MH='MHC', MF='MFC', Y='QD', YB='QDB', DP='QDP', DPB='QDPB',
            WCKQ='WCKQ', **V)
     c.inst('WCO', NOR, A='WCKG', B='WCKQ', Y='WCKN', **V)
@@ -698,7 +725,7 @@ def wiredtx():
     c.dev('SWI', N, 'IBIAS', 'BEN', 'ATB_NBIAS', 4)
     c.dev('MN0', N, 'ATB_NBIAS', 'ATB_NBIAS', 'VSS', 2, 2.0)
     c.dev('PDN', N, 'ATB_NBIAS', 'BENB', 'VSS', 2)
-    for b, cell, en in (('MAIN', IDAC2, 'EN_MAIN'), ('POST', IDAC2, 'EN_POST'), ('TMDS', IDAC1, 'EN_TMDS')):
+    for b, cell, en in (('MAIN', IDAC2M, 'EN_MAIN'), ('POST', IDAC2, 'EN_POST'), ('TMDS', IDAC1, 'EN_TMDS')):
         c.inst(f'DAC_{b}', cell, NB='ATB_NBIAS', EN=en, ISLAND_OFF='ISLAND_OFF', BIAS=f'{b}_BIAS',
                PB='ATB_PBIAS' if b == 'MAIN' else f'PB_{b}',
                **{f'C{k}': codes[b][k] for k in range(8)}, **V)
@@ -719,8 +746,12 @@ TSPCD = Macro('ct_tspcd')
 DIV5C = Macro('ct_div5')
 MUX4W = Macro('wtx_mux4')
 CINV8 = Macro('wtx_cinv8')
+W40 = w40()
 SERQ = serq()
-SERQ4 = serq4()
+# The compact core is the hand-placed macro built by serq4_macro.py (generated/fast/wtx_serq4.*):
+# schematic, layout and LVS read its intended netlist.  serq4() above is the earlier gate-level core
+# (kept for reference; it failed extracted, see README).
+SERQ4 = Macro('wtx_serq4')
 PHBUF = phbuf()
 PREDRV = predrv()
 BIASEN = biasen()
@@ -768,7 +799,8 @@ LAYOUT_ORDER = ['BBM/', 'CG/', 'SR/MY/', 'SR/MYB/', 'SR/MD/', 'SR/MDB/', 'SR/C3/
 
 def layout_devices(cell=None):
     devs = (cell or TOP).flat_devices()
-    rank = lambda d: next(i for i, p in enumerate(LAYOUT_ORDER) if d.name.startswith(p))
+    # the hand-placed core macro (SQ) alone in row 0: no parent metal crosses it
+    rank = lambda d: -1 if d.name == 'SQ' else next(i for i, p in enumerate(LAYOUT_ORDER) if d.name.startswith(p))
     return sorted(devs, key=rank)
 
 if __name__ == '__main__':

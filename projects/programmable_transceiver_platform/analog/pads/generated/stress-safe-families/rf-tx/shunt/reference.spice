@@ -1,0 +1,5 @@
+.subckt rftx_shunt RAIL VSS
+XGCN RAIL GC VSS VSS nfet_06v0 w=53.6u l=0.7u m=224
+XGCR GC VSS VSS ppolyf_u_1k_6p0 r_width=1.0u r_length=6.0u
+XGCC RAIL GC cap_mim_2f0_m4m5_noshield c_width=90.0u c_length=90.0u m=2
+.ends rftx_shunt

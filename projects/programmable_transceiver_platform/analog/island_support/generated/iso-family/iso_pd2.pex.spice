@@ -1,0 +1,13 @@
+* PEX produced on Tue Nov 10 06:57:44 AM CET 2026 using /foss/tools/sak/sak-pex.sh with m=2 and s=1
+* NGSPICE file created from iso_pd2_pex.ext - technology: gf180mcuD
+
+.subckt iso_pd2_pex P N ISO VSS
+X0 VSS ISO N VSS nfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=0.28u
+X1 VSS ISO P VSS nfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=0.28u
+C0 P ISO 0.40038f
+C1 N P 0.01415f
+C2 N ISO 0.43501f
+C3 N VSS 2.58531f
+C4 P VSS 0.69097f
+.ends
+

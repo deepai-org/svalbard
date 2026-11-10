@@ -1,0 +1,902 @@
+{
+ "image_id": "svalbard/transceiver-pad-sim:ngspice47-corrected",
+ "models": {
+  "rfpad": {
+   "path": "/home/ubuntu/svalbard/scratch/pads-esd04/layout/rftxpad3/pad-extracted.spice",
+   "sha256": "41775484773370bcc1204d40ec207dab3fe317fab3dcc8cebd68bca07351b6a0"
+  }
+ },
+ "shunt_model": "drawn in the family layouts (extracted with the layout)",
+ "results": [
+  {
+   "family": "rfpad",
+   "case": "pulse_P_pos",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -7.47796475e-17,
+    2.51372518
+   ],
+   "pad_n_range_v": [
+    -8.35664076e-17,
+    0.163835067
+   ],
+   "rail_max_v": 1.34855794,
+   "pad_peak_abs_v": 2.51372518,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.0,
+   "atb_range_v": [
+    -8.38582893e-16,
+    0.00595334966
+   ],
+   "supply_current_end_a": -0.0,
+   "peer_current_end_a": [
+    -1.2976174880808082e-06,
+    -7.205475324595958e-08
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "6a618b968e62d0e28a9e47839d43c0b8b8678d4ba6b306ea6a46615512bf4e1f",
+   "waveform_sha256": "c3bb3fad12a84aa6d8e3d61c53fe82eefb555b7eed19a9352b9bda1d60966fdf"
+  },
+  {
+   "family": "rfpad",
+   "case": "pulse_P_pos",
+   "process": "ss",
+   "temp_c": 0,
+   "complete": true,
+   "pad_p_range_v": [
+    -2.76400414e-16,
+    2.76563803
+   ],
+   "pad_n_range_v": [
+    -3.10002553e-16,
+    0.187915025
+   ],
+   "rail_max_v": 1.55825448,
+   "pad_peak_abs_v": 2.76563803,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.0,
+   "atb_range_v": [
+    -5.34155564e-18,
+    0.00614284763
+   ],
+   "supply_current_end_a": -0.0,
+   "peer_current_end_a": [
+    -1.5539270851204057e-06,
+    -9.426992378605831e-08
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "7259ac6a48cb67bd8388b356ccf1cf622dd0399612f1f84af0a01ed8b640e138",
+   "waveform_sha256": "abe7e7c67c57f2ba909e470699c1af987dc641aee287149786e5b1576a92abfe"
+  },
+  {
+   "family": "rfpad",
+   "case": "pulse_P_neg",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -1.21687237,
+    1.57814056e-16
+   ],
+   "pad_n_range_v": [
+    -0.0680543448,
+    0.0433751188
+   ],
+   "rail_max_v": -6.80356689e-16,
+   "pad_peak_abs_v": 1.21687237,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.0,
+   "atb_range_v": [
+    -2.62645436e-05,
+    -8.36125442e-16
+   ],
+   "supply_current_end_a": -0.0,
+   "peer_current_end_a": [
+    6.066060685419753e-07,
+    1.1372596643086418e-08
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "a5bc7b3e149a0b29f3b468548d458d0b3d43ffa2054c682fb66c2bae4fefe74d",
+   "waveform_sha256": "48cc287f1a4ef2cc0cd25e4249fe4fb7523284dce676f539d036ecbd0b957718"
+  },
+  {
+   "family": "rfpad",
+   "case": "pulse_P_neg",
+   "process": "ss",
+   "temp_c": 0,
+   "complete": true,
+   "pad_p_range_v": [
+    -1.28266736,
+    1.81658141e-16
+   ],
+   "pad_n_range_v": [
+    -0.0583848966,
+    0.0317168997
+   ],
+   "rail_max_v": -1.38356457e-23,
+   "pad_peak_abs_v": 1.28266736,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.0,
+   "atb_range_v": [
+    -2.39881496e-05,
+    -1.30500542e-23
+   ],
+   "supply_current_end_a": -0.0,
+   "peer_current_end_a": [
+    6.656629236699874e-07,
+    1.2325556595753425e-08
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "e2a20459010384fa5ff869ed51a6660b66382b972e322eaa7d2d1c6803b4fc21",
+   "waveform_sha256": "0422e47ea689eb46b6bcc35d25f8eecb509fd4d4cade80f5c2dbeb67bc075b2f"
+  },
+  {
+   "family": "rfpad",
+   "case": "pulse_N_pos",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -7.47796475e-17,
+    0.164487977
+   ],
+   "pad_n_range_v": [
+    -8.35664076e-17,
+    2.51290532
+   ],
+   "rail_max_v": 1.3483938,
+   "pad_peak_abs_v": 2.51290532,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.0,
+   "atb_range_v": [
+    -8.38582893e-16,
+    0.00595283142
+   ],
+   "supply_current_end_a": -0.0,
+   "peer_current_end_a": [
+    -7.315127429207233e-08,
+    -1.2974860961752433e-06
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "59f717e623695718c550030e19c32a4aece1789800b4ef32cee6ba851c2857d4",
+   "waveform_sha256": "190756582d49861839b2730ff710bffe11ba3b29a5a905b11fbe3abb32f22542"
+  },
+  {
+   "family": "rfpad",
+   "case": "pulse_N_pos",
+   "process": "ss",
+   "temp_c": 0,
+   "complete": true,
+   "pad_p_range_v": [
+    -2.76400414e-16,
+    0.188662188
+   ],
+   "pad_n_range_v": [
+    -3.10002553e-16,
+    2.76575087
+   ],
+   "rail_max_v": 1.55812275,
+   "pad_peak_abs_v": 2.76575087,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.0,
+   "atb_range_v": [
+    -5.34155564e-18,
+    0.00614234778
+   ],
+   "supply_current_end_a": -0.0,
+   "peer_current_end_a": [
+    -9.540835241597719e-08,
+    -1.553334501340942e-06
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "b82408710e7d110bc44aa9876964be6496e465225665a5a0c7e927ac14242247",
+   "waveform_sha256": "0cb62c7403b1e6eb242b56d730cebaa31383346cb963ecb3c4fb1c0d631abe82"
+  },
+  {
+   "family": "rfpad",
+   "case": "pulse_N_neg",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -0.0691303269,
+    0.0449092533
+   ],
+   "pad_n_range_v": [
+    -1.21671241,
+    1.56619718e-16
+   ],
+   "rail_max_v": -6.80356689e-16,
+   "pad_peak_abs_v": 1.21671241,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.0,
+   "atb_range_v": [
+    -2.52489406e-05,
+    -8.36125442e-16
+   ],
+   "supply_current_end_a": -0.0,
+   "peer_current_end_a": [
+    1.1151828417907269e-08,
+    6.058679283433584e-07
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "518676cda29761bc98ce3fcfbef79d697933a30129326933468bd94bbd04812d",
+   "waveform_sha256": "936f22e537d5353d7ce40913c7b0bc0c75e709f82b01215de534ddf21533d478"
+  },
+  {
+   "family": "rfpad",
+   "case": "pulse_N_neg",
+   "process": "ss",
+   "temp_c": 0,
+   "complete": true,
+   "pad_p_range_v": [
+    -0.0684911447,
+    0.0424408843
+   ],
+   "pad_n_range_v": [
+    -1.28238814,
+    1.79204797e-16
+   ],
+   "rail_max_v": -1.38356457e-23,
+   "pad_peak_abs_v": 1.28238814,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.0,
+   "atb_range_v": [
+    -2.31774296e-05,
+    -1.30500542e-23
+   ],
+   "supply_current_end_a": -0.0,
+   "peer_current_end_a": [
+    1.2119627469422336e-08,
+    6.65218943644416e-07
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "0bc61a41a9113fe9631048332e496851061a216612f21bd3dc982cbeba0256fc",
+   "waveform_sha256": "1b2aa41100f48193a970bb1c904873038eb1e3aa222c1d1459abc7865226dbbe"
+  },
+  {
+   "family": "rfpad",
+   "case": "ramp_fast",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -1.17908761e-15,
+    1.16152067e-15
+   ],
+   "pad_n_range_v": [
+    -8.29916503e-16,
+    8.57851415e-16
+   ],
+   "rail_max_v": -5.7748099e-16,
+   "pad_peak_abs_v": 1.17908761e-15,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 3.56007631,
+   "atb_range_v": [
+    -5.95586639e-16,
+    -5.56922248e-16
+   ],
+   "supply_current_end_a": 0.085955464421598,
+   "peer_current_end_a": [
+    -1.6324820636054934e-20,
+    -6.788224081129839e-21
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "76d866d043f06b785ca5eb153c78b350cf7af6f659c94d5b59da1011bd4051c3",
+   "waveform_sha256": "3e163bae98dff3349aa86b245a6df84222fcf956424c5401886d941daf9c8b23"
+  },
+  {
+   "family": "rfpad",
+   "case": "ramp_slow",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -3.79443407e-17,
+    3.87480374e-17
+   ],
+   "pad_n_range_v": [
+    -4.02495622e-17,
+    4.21836451e-17
+   ],
+   "rail_max_v": 2.79607054e-16,
+   "pad_peak_abs_v": 4.21836451e-17,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 3.63,
+   "atb_range_v": [
+    -5.5692302e-16,
+    -4.51268058e-16
+   ],
+   "supply_current_end_a": 4.7457054278372096e-09,
+   "peer_current_end_a": [
+    7.205987990102989e-22,
+    1.4518270655215943e-21
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "9841c3205cea93598c1c0a73d50a172af0031aa2b56040887238f61ee5f68729",
+   "waveform_sha256": "aa896d95974e9c17d7002e8c2462ff421b0c046deaf8f02ce54073a2a2455332"
+  },
+  {
+   "family": "rfpad",
+   "case": "peer",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    3.62998523,
+    3.62998527
+   ],
+   "pad_n_range_v": [
+    3.62998522,
+    3.62998527
+   ],
+   "rail_max_v": 3.05354367,
+   "pad_peak_abs_v": 3.62998527,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.0,
+   "atb_range_v": [
+    2.91132237,
+    2.91132279
+   ],
+   "supply_current_end_a": -0.0,
+   "peer_current_end_a": [
+    2.9519351076654185e-07,
+    2.951935783470662e-07
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "07dc06d1777bfb3a0f14e4c87152e3964ddc86e26567f8bf830839602928cf7e",
+   "waveform_sha256": "6eeb60f8f67ca11b76a2045c3190288bb0091edaacb0127ce104c8cad6bc9807"
+  },
+  {
+   "family": "rfpad",
+   "case": "peer",
+   "process": "ff",
+   "temp_c": 85,
+   "complete": true,
+   "pad_p_range_v": [
+    3.62997598,
+    3.62997609
+   ],
+   "pad_n_range_v": [
+    3.62997596,
+    3.62997609
+   ],
+   "rail_max_v": 3.17462533,
+   "pad_peak_abs_v": 3.62997609,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.0,
+   "atb_range_v": [
+    3.06045441,
+    3.06045573
+   ],
+   "supply_current_end_a": -0.0,
+   "peer_current_end_a": [
+    4.795043469325842e-07,
+    4.795045097278402e-07
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 0,
+    "exceeding": 0,
+    "worst": []
+   },
+   "op_fallback": false,
+   "deck_sha256": "4b1bb23c39f29a984adc96aff14c37b79f3a0cf08658a01748a84756e0cf100b",
+   "waveform_sha256": "177540ef2ab7fff55ebac005478edf5bb53faa44e96b83208c2bfa3e03b1e885"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "typical",
+   "temp_c": 27,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.075236597020922,
+    -6.338610186948056
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "1c6ed061012b8477a3a318b86a61dde9c70821ca6275176a7a4fc9c8cac44953"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "typical",
+   "temp_c": 27,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.075683707593164,
+    -6.3400356763216195
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "cd269b2c1772630510179323424ce856ae5cae8d9bdd6bb6cde6936f244c1086"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "typical",
+   "temp_c": 22,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.07504053836288,
+    -6.337518093849436
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "c7d6ea23c8dc2f944dbbc881cac1fef0f9bd345f692a736c87d341ef62d76438"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "typical",
+   "temp_c": 22,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.0755737071173055,
+    -6.339440819007614
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "f67b8ce12ab482d39b1cab1ade25ac82fa2b1fedc9aee1fa7dc825d048a15fb8"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "typical",
+   "temp_c": 22,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.07504053836288,
+    -6.337518093849436
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "c7d6ea23c8dc2f944dbbc881cac1fef0f9bd345f692a736c87d341ef62d76438"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "typical",
+   "temp_c": 22,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.0755737071173055,
+    -6.339440819007614
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "f67b8ce12ab482d39b1cab1ade25ac82fa2b1fedc9aee1fa7dc825d048a15fb8"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "typical",
+   "temp_c": 32,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.075420197273809,
+    -6.339628377912455
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "c92301253c07addfb9eef4dbbfaa2bae5af524e17fe973ba5eaddb82ebffe31b"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "typical",
+   "temp_c": 32,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.075790549038164,
+    -6.340613067581699
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "4fed3f0bdce2bee8f1684e891e5f0bf6c06872be136eb5c628d526f73dbd8ded"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "typical",
+   "temp_c": 32,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.075420197273809,
+    -6.339628377912455
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "c92301253c07addfb9eef4dbbfaa2bae5af524e17fe973ba5eaddb82ebffe31b"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "typical",
+   "temp_c": 32,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.075790549038164,
+    -6.340613067581699
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "4fed3f0bdce2bee8f1684e891e5f0bf6c06872be136eb5c628d526f73dbd8ded"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ss",
+   "temp_c": 22,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.078886153124516,
+    -6.359204816012037
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "bbb6aa34ae39a7f373d1cbdc257519a20aec67c037a8351306b89472fb20888f"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ss",
+   "temp_c": 22,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.079462595049517,
+    -6.361464111583578
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "a8d84c03c3e971c01838358308fbfdfef333a40582ea48d0e0bce8b1fbf5e8bd"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ss",
+   "temp_c": 22,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.078886153124516,
+    -6.359204816012037
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "bbb6aa34ae39a7f373d1cbdc257519a20aec67c037a8351306b89472fb20888f"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ss",
+   "temp_c": 22,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.079462595049517,
+    -6.361464111583578
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "a8d84c03c3e971c01838358308fbfdfef333a40582ea48d0e0bce8b1fbf5e8bd"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ss",
+   "temp_c": 32,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.0793224067225875,
+    -6.361628922593665
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "57baa329c2ce410cea531a7b4174897ed808153b3ecb8803e5f7c18e51ddc45a"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ss",
+   "temp_c": 32,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.07971016351205,
+    -6.362810221799372
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "340733fa9ab715ff778109544f26c2a8613ddd19262b0c929f7a17ff82c3b612"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ss",
+   "temp_c": 32,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.0793224067225875,
+    -6.361628922593665
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "57baa329c2ce410cea531a7b4174897ed808153b3ecb8803e5f7c18e51ddc45a"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ss",
+   "temp_c": 32,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.07971016351205,
+    -6.362810221799372
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "340733fa9ab715ff778109544f26c2a8613ddd19262b0c929f7a17ff82c3b612"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ff",
+   "temp_c": 22,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.071363218444422,
+    -6.316694261207363
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "7beb48248c6ebf48e228365f9b395fbfcc3ca24d859daed3ae94bdae00223c60"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ff",
+   "temp_c": 22,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.0718789076064015,
+    -6.318362746362322
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "7718996be2c739e8c2a80fa9d4e0f70f2c22c0795bb59cf2a4657c63f794768b"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ff",
+   "temp_c": 22,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.071363218444422,
+    -6.316694261207363
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "7beb48248c6ebf48e228365f9b395fbfcc3ca24d859daed3ae94bdae00223c60"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ff",
+   "temp_c": 22,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.0718789076064015,
+    -6.318362746362322
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "7718996be2c739e8c2a80fa9d4e0f70f2c22c0795bb59cf2a4657c63f794768b"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ff",
+   "temp_c": 32,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.071714577702037,
+    -6.318641121293095
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "1f62cb87b2031d1b6f7b33120cc293bd81a2dda14f77d31fc1331a8c7f9000f2"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ff",
+   "temp_c": 32,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.072079294252319,
+    -6.319416330252738
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "05775b65ac927a7d4eae72d9d06fd78ae732b8b0367cd39c0f54c120aebffb16"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ff",
+   "temp_c": 32,
+   "bias_v": 0.9,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.071714577702037,
+    -6.318641121293095
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "1f62cb87b2031d1b6f7b33120cc293bd81a2dda14f77d31fc1331a8c7f9000f2"
+  },
+  {
+   "family": "rfpad",
+   "kind": "ac",
+   "process": "ff",
+   "temp_c": 32,
+   "bias_v": 1.65,
+   "frequency_hz": [
+    1000000000.0,
+    2450000000.0
+   ],
+   "diff_transfer_db": [
+    -6.072079294252319,
+    -6.319416330252738
+   ],
+   "ideal_50ohm_divider_db": -6.020599913279624,
+   "deck_sha256": "05775b65ac927a7d4eae72d9d06fd78ae732b8b0367cd39c0f54c120aebffb16"
+  }
+ ],
+ "source_sha256": {
+  "stress_safe_family_sims.py": "946fc7562bd1cbc3e3262dce4e6ac94ac6a3e6d257f64bcb7acd318f14473e27",
+  "stress_safe_clamp.py": "3a96cc1fd51fd64d83e65df66e452d01a2cb87291a9615b24cfe6589fc8c6145"
+ }
+}

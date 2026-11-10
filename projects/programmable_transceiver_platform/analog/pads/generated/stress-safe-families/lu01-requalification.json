@@ -1,0 +1,13 @@
+{
+ "date": "2026-11-10",
+ "scope": "LU-01 / RA-4: rail shunt v2.2 (p+ tap stripes through every bank) in all five compact families; refpad released (LO8); rf_pair rebuilt but held for P2; new pad_rftxpad (ESD-04, rf-tx/)",
+ "build": "scratch/pads-lu01/build.sh on scratch/pads-lu01/macro (rail_shunt_v2.py v2.2 + pads-kldrc/net_ss); tops renamed with gds_uniquify (kl.sh)",
+ "lu_geometry": "lu01-geometry-audit.json (after) vs lu01-geometry-audit-before.json: n-diff > 15 um from p-tap 7193.49 -> 0 um2, > 20 um 3664.2 -> 0 um2 in all five; residual: 84.2 um2 RC-clamp-trigger PMOS cluster with an open n+ ring (<= 10 um from its n-tap)",
+ "physical": "Magic DRC 0, netgen unique (property errors now fail), independent device graph match; KLayout precheck main 0 / antenna 0 for pad_txpad, pad_wirepad, pad_refpad, pad_single_leg, pad_rftxpad (published *-kldrc.json) and the held pad_rf_pair (scratch)",
+ "family_sims": "lu01-family-sims.json: 116 runs, 0 errors, 0 exposures, pad peak <= 4.74 V, within 16 mV of compact-v2; lifecycle within 1.4 mV pp / 10.6 mV mean; RF AC within 0.0002 dB",
+ "debug_sites": "lu01-debug-sites.json: 0 errors, largest change 1.4 % (Zin real part 2.15 -> 2.19 ohm)",
+ "published": ["wired-transmit/ (pad_txpad)", "wired-receive-usb/ (pad_wirepad)", "reference/ (pad_refpad, released)", "single-leg/ (pad_single_leg)", "shunt-v2/ and network-shunt/ (v2.2)", "rf-tx/ (pad_rftxpad, new)"],
+ "held": {"rf_pair": "scratch/pads-lu01/rf-pair/pad_rf_pair.gds (LU rebuilt, clean, passes) waits for P2"},
+ "backup": "../stress-safe-families-prelu-20261110/",
+ "stale": "shunt-v2/wiring-ladder-*.spice and wiring-resistance-check.json predate v2.2 (finger height 50 -> 53.6 um; lumped plate bound 4.67 -> 4.31 ohm, i.e. lower)"
+}

@@ -1,0 +1,34 @@
+{
+ "date": "2026-11-10",
+ "owner": "pads (isolation-clamp cells), consumer: assembly (floorplan v4)",
+ "risk": "LU-02 / RA-2 / RA-3",
+ "cells": {
+  "iso_clamp":    {"function": "Y = A AND NOT ISO", "ports": "A ISO Y VDD VSS", "supply": "receiver domain (core VDD for macro inputs)", "size_um": [31.28, 28.96], "gds": "projects/programmable_transceiver_platform/analog/island_support/generated/iso-family/iso_clamp.gds", "load_on_A": "gate only (1/0.5 um inverter)"},
+  "iso_clamp_x4": {"function": "Y = A AND NOT ISO, 4x output (clock nets, ~1 mm route)", "ports": "A ISO Y VDD VSS", "supply": "core VDD", "size_um": [32.88, 31.18], "gds": "projects/programmable_transceiver_platform/analog/island_support/generated/iso-family/iso_clamp_x4.gds"},
+  "iso_pd":       {"function": "analog/RF: nfet_03v3 0.5/0.28 pull-down Y->VSS while ISO=1; no series element", "ports": "Y ISO VSS", "size_um": [9.3, 10.21], "gds": "projects/programmable_transceiver_platform/analog/island_support/generated/iso-family/iso_pd.gds", "load_on_Y_fF": "1.75 extracted (1.40 to VSS + 0.35 to ISO) + 0.22 um2 junction"}
+ },
+ "iso_control": "ISO = ISLAND_OFF_<driving island> = NOT island_on[k] (glue inverter, VDD domain; honours the RTL pgood_override). Fallback if assembly prefers no glue: the isw_<island> ISO output (= NAND(EN,PG), VDD domain). island index: 0 wired, 1 rf, 2 pll, 4 conv, 5 debug.",
+ "placements": [
+  {"net": "LO_IP", "cell": "iso_pd", "ISO": "ISLAND_OFF_pll", "driver": "lo_ext.LO_IP (pll)", "receivers": "rxmix_i.lo_p, txmix_i.lo_p (rf)", "where": "LO hub at the lo_ext outputs, next to the DBG-02 clk_obs tap; all four LO cells identical orientation and equal stub (<= 5 um), RA-19/RA-20 symmetry"},
+  {"net": "LO_IN", "cell": "iso_pd", "ISO": "ISLAND_OFF_pll", "driver": "lo_ext.LO_IN", "receivers": "rxmix_i.lo_n, txmix_i.lo_n", "where": "LO hub, as LO_IP"},
+  {"net": "LO_QP", "cell": "iso_pd", "ISO": "ISLAND_OFF_pll", "driver": "lo_ext.LO_QP", "receivers": "rxmix_q.lo_p, txmix_q.lo_p", "where": "LO hub, as LO_IP"},
+  {"net": "LO_QN", "cell": "iso_pd", "ISO": "ISLAND_OFF_pll", "driver": "lo_ext.LO_QN", "receivers": "rxmix_q.lo_n, txmix_q.lo_n", "where": "LO hub, as LO_IP"},
+  {"net": "WMON_IN", "cell": "iso_pd", "ISO": "ISLAND_OFF_wired", "driver": "wmon_sel (wired)", "receivers": "bb_tap_wmon.in_p (debug)", "where": "at the bb_tap_wmon input pin"},
+  {"net": "fc_src[0]", "cell": "iso_clamp_x4", "ISO": "ISLAND_OFF_pll", "A": "pll_tx.FBCK", "Y": "digital.fc_src[0]", "where": "within 30 um of the macro pin (core VDD)"},
+  {"net": "fc_src[1]", "cell": "iso_clamp_x4", "ISO": "ISLAND_OFF_pll", "A": "pll_cdr.FBCK (cdr.FBCK_IN stays on the A side)", "Y": "digital.fc_src[1]", "where": "at the macro pin"},
+  {"net": "fc_src[2]", "cell": "iso_clamp_x4", "ISO": "ISLAND_OFF_debug", "A": "ring_osc.OUT", "Y": "digital.fc_src[2]", "where": "at the macro pin"},
+  {"net": "fc_src[3]", "cell": "iso_clamp_x4", "ISO": "ISLAND_OFF_debug", "A": "vco_replica.OUT", "Y": "digital.fc_src[3]", "where": "at the macro pin"},
+  {"net": "ct_wclk", "cell": "iso_clamp_x4", "ISO": "ISLAND_OFF_pll", "A": "prescale.CK_OUT", "Y": "digital.ct_wclk", "where": "at the macro pin"},
+  {"net": "ct_word_clk", "cell": "iso_clamp_x4", "ISO": "ISLAND_OFF_pll or ISLAND_OFF_wired (per the surviving driver)", "A": "wordclk.WORD_CLK and/or wiredtx.WORD_CLK", "Y": "digital.ct_word_clk", "where": "at the macro pin", "blocker": "v3 binds TWO outputs to ct_word_clk (pt_wordclk.WORD_CLK and pt_wiredtx.WORD_CLK, both inverter outputs): contention. Assembly/digital must pick one (or mux) before the clamp is bound."},
+  {"net": "analog_status[0]", "cell": "iso_clamp", "ISO": "ISLAND_OFF_pll", "A": "pll_tx.LOCK", "Y": "digital.analog_status[0]", "where": "at the macro pin"},
+  {"net": "WTX_EXT_DATA", "cell": "iso_clamp", "ISO": "ISLAND_OFF_wired", "A": "rx_wtx_ext output (debug)", "Y": "wiredtx.WTX_EXT_DATA", "supply": "core VDD", "where": "at the wiredtx pin; removes the p-diff injection path into an off wired island (with the RA-3 digital interlock as a second layer)"}
+ ],
+ "not_clamped_with_reason": {
+  "island_pgood[0..5]": "driven by the isw PG inverters, which are VDD-powered (island_support design.py MPG2P/N): not island-driven (A6 false positive)",
+  "cdr_freq_locked, ct_ser_run, rx_en_*, hsbias C*/EN, atb1_sw[*], island_en[*]": "macro outputs into island gates (core -> island, gate-only): no injection, the receiving island is either powered or its gates are unpowered",
+  "island_on[0]": "BLOCKER: v3 binds pt_wtx_fallback_control.WIRED_ON (an output) to island_on[0], which is also a macro output -> two drivers. Fix the binding first (WIRED_ON should go to a macro input or to the bring-up mux); if the fallback signal must reach core_bias.ON_wired, put an iso_clamp (ISO=ISLAND_OFF_wired) on that branch.",
+  "LO_*/REF_IN/AUX_CLK pads into lo_ext": "pad-driven (board): LU-03 power-before-drive rule; on-chip the rf_pair/refpad protection limits injection",
+  "ATBN_* T-switch p-diff": "RA-3 digital interlock (reject ATB codes of a non-pgood island)"
+ },
+ "area_um2": "4 x 95 (LO) + 95 (WMON) + 6 x 1025 + 2 x 906 = 8,437 um2 total"
+}

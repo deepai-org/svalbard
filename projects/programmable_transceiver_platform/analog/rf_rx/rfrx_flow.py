@@ -72,7 +72,8 @@ STATIC_PINS = {'pt_rfrx_inv': '*', 'pt_rfrx_nor2': '*', 'pt_rfrx_nor3': '*', 'pt
                'pt_rfrx_tgl': {'on', 'onb'}, 'pt_rfrx_nsw': {'on'}, 'pt_rfrx_ota': {'inp', 'vbp', 'pd'}}
 STATIC_PORTS = {'ibias', 'en', 'dir_tx', 'inj', 'rx_direct', 'byp_s1', 'byp_s23', 'obs_sel0', 'obs_sel1',
                 'bw0', 'bw1', 'bw2', 'bw3', 'gain0', 'gain1', 'gain2', 'gain3', 'gain4', 'gain5', 'gainc0', 'gainc1', 'fz', 'island_off', 'atb_vcm', 'atb_vbp',
-                'gain_lo', 'byp', 'atb_nbias', 'obs_en', 'inj_en'}
+                'gain_lo', 'byp', 'atb_nbias', 'obs_en', 'inj_en',
+                'qt0', 'qt1', 'ct0', 'ct1', 'ct2', 'se', 'rt'}
 _PIN_NAMES = {}
 
 

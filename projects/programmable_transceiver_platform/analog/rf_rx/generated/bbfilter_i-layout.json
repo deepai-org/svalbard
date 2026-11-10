@@ -4,10 +4,10 @@
  "bbox_um": [
   1.5,
   -0.2,
-  500.56,
-  931.99
+  532.26,
+  931.59
  ],
- "area_um2": 465219.0,
+ "area_um2": 494557.0,
  "lvs": {
   "unique_match": true,
   "final_result": "Circuits match uniquely.",
@@ -216,84 +216,42 @@
   },
   "pt_bbfilter_i": {
    "size_um": [
-    502.72,
-    933.79
+    534.32,
+    935.19
    ],
-   "rows": 21,
-   "nets": 234,
-   "bank_um": 98.9,
+   "rows": 20,
+   "nets": 262,
+   "bank_um": 107.9,
    "row_report": [
     [
-     4,
-     10.0,
-     61.2,
-     344.9
-    ],
-    [
-     4,
-     10.8,
-     45.0,
-     392.1
-    ],
-    [
-     4,
-     10.8,
-     45.0,
-     392.1
-    ],
-    [
-     5,
-     13.8,
-     45.0,
-     367.7
-    ],
-    [
-     44,
-     21.2,
-     30.9,
-     402.7
-    ],
-    [
-     63,
+     27,
      30.2,
-     23.6,
-     398.7
+     15.5,
+     411.4
     ],
     [
      15,
-     25.0,
-     15.5,
-     400.8
-    ],
-    [
-     12,
-     19.0,
+     25.8,
      18.2,
-     402.8
-    ],
-    [
-     14,
-     28.0,
-     20.0,
-     401.3
-    ],
-    [
-     12,
-     16.0,
-     20.0,
-     375.0
+     414.5
     ],
     [
      13,
-     13.8,
-     19.0,
-     391.1
+     19.8,
+     18.2,
+     415.9
     ],
     [
-     12,
-     14.5,
+     15,
+     25.8,
      20.0,
-     372.6
+     408.0
+    ],
+    [
+     13,
+     20.5,
+     20.0,
+     415.6
     ],
     [
      12,
@@ -302,52 +260,88 @@
      387.7
     ],
     [
-     11,
-     22.0,
+     13,
+     14.5,
      20.0,
-     402.2
+     415.0
+    ],
+    [
+     11,
+     11.5,
+     19.0,
+     413.4
     ],
     [
      14,
-     24.2,
+     31.0,
      20.0,
-     378.9
+     406.9
+    ],
+    [
+     13,
+     18.2,
+     20.0,
+     414.1
     ],
     [
      12,
-     16.0,
+     18.2,
      20.0,
-     375.0
-    ],
-    [
-     11,
-     12.2,
-     19.0,
-     375.0
+     350.0
     ],
     [
      12,
      13.8,
      20.0,
-     372.6
+     421.5
     ],
     [
-     10,
-     12.2,
+     14,
+     14.5,
      19.0,
-     332.6
+     423.0
     ],
     [
-     19,
-     26.5,
+     12,
+     20.5,
      20.0,
-     394.8
+     423.0
     ],
     [
-     9,
-     9.2,
-     9.3,
-     123.0
+     37,
+     19.8,
+     30.9,
+     425.4
+    ],
+    [
+     75,
+     27.2,
+     23.6,
+     424.5
+    ],
+    [
+     22,
+     18.2,
+     45.0,
+     339.2
+    ],
+    [
+     4,
+     10.8,
+     45.0,
+     392.1
+    ],
+    [
+     4,
+     10.8,
+     45.0,
+     392.1
+    ],
+    [
+     4,
+     11.5,
+     61.2,
+     407.3
     ]
    ]
   }
@@ -358,20 +352,25 @@
   "by_rule": {},
   "deck": "gf180mcuD klayout (sak-drc.sh -k)"
  },
+ "klayout_precheck": {
+  "clean": true,
+  "main": 0,
+  "antenna": 0
+ },
  "block": "bbfilter_i",
  "top_cell": "pt_bbfilter_i",
  "digital_image": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
  "drc_details": "",
  "sources": {
-  "bbfilter_i.spice": "sha256:eda866832587abd15c86113700973c94b12e651e6dc6180084da472717e39799",
-  "netlists.py": "sha256:fb4f51b6eede1d916e5a24128fdbfc250408585f135fdfdde4622b62084fbd93",
-  "rfrx_flow.py": "sha256:6fa4ba2ff246182b7c47dd4d2a9c95652d70c09a833ab3674ecb170dd0ee15a1"
+  "bbfilter_i.spice": "sha256:8706945c75d03958880a5572bb302bf5f94f7ef7bcc979df6aafb3b5b0332da1",
+  "netlists.py": "sha256:a32cdea2b799cbcd4373ab3c5ffe83daf7efd06fadfa34846eb3a6736c3a9a18",
+  "rfrx_flow.py": "sha256:5cba470266fb413cc419522d9a55778cddd8ce2d169e46d12ac516dda8fd9dc9"
  },
  "artifacts": {
-  "bbfilter_i.gds": "sha256:463936126a69431a799f3a286114177335e452ef07c8f6f6edf2765e2b11c50b",
-  "bbfilter_i.mag": "sha256:f56e47bb1eb2a955aae9438e14eb567050d2e775cc9ed43c85c1b1ca93781821",
-  "bbfilter_i.ext.spice": "sha256:4f91a30479494d5671937a51cf66acd9bee9adca3eac3d673cc78dc9fb33a2da",
-  "bbfilter_i-lvs.txt": "sha256:eb37baadf1feebad8f1320cecfb854e4f8fede17c4e8f165b432451f83546934"
+  "bbfilter_i.gds": "sha256:e614fb43a524216ada6db9c97d8f3bdf952c5a7a034330bcc6f969d698180c48",
+  "bbfilter_i.mag": "sha256:4ed03ebdcd186e0b34641a8eade1b35765f3c9c3ea23de1d2e5e8ceb3320c7c0",
+  "bbfilter_i.ext.spice": "sha256:8217c8171b01e8d51e1f81dda50e491b58cbbbd63a532501e4e261a187cb117d",
+  "bbfilter_i-lvs.txt": "sha256:e061d40f4e8b653a0b2c6a5d66a758479a2f787940fbc5118a140e645c05be25"
  }
 }

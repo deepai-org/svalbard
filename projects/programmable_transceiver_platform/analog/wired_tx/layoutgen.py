@@ -84,10 +84,14 @@ class MacroPrim:
         self.bbox = tuple(meta['bbox'])
         self.pinnames = list(meta['ports'])
         self.pins, self.kind = {}, {}
+        top_pins = meta.get('pin_layer') == 'metal3'
         for n, (x, y) in meta['pins'].items():
-            self.pins[n], self.kind[n] = (x, y), 'm2'
+            self.pins[n], self.kind[n] = (x, y), ('m3' if top_pins else 'm2')
         for i, (n, (x, y)) in enumerate(sorted(meta['rails'].items())):
             self.pins[n], self.kind[n] = (0.6 + 1.0 * i, y), 'm1'
+        # hand-placed macro (serq4_macro.py): M3 pin stacks at the top edge, one per power strap
+        self.power_pins = [(n, (x, y)) for n, x, y in meta.get('power_pins', [])]
+        self.children = meta.get('children', [])
         self.esc = {n: v[0] for n, v in self.pins.items()}
         self.x0, self.x1 = self.bbox[0], self.bbox[2]
         self.width = self.x1 - self.x0
@@ -156,6 +160,8 @@ def place(cell, prims, row_width, power_trunk_pitch=90.0):
         p = prims[(d.model, d.w, d.l)]
         cx = ex - p.x0
         for pn, net in zip(pin_names(p), d.nodes):
+            if pn not in p.pins:            # macro power ports reached through power_pins
+                continue
             net_rows.setdefault(net, set()).add(r)
             net_x.setdefault(net, []).append(cx + p.esc[pn])
     trunks = []  # (net, x, rlo, rhi_or_top, width)
@@ -221,6 +227,9 @@ def generate(work, cell=None, row_width=330.0):
     for m in macros:
         shutil.copy(tools.GENERATED / 'fast' / f'{m}.mag', work / f'{m}.mag')
         prims[(m, 0.0, 0.0)] = MacroPrim(m)
+        for ch in prims[(m, 0.0, 0.0)].children:       # hierarchical macro: its child cells
+            if ch != m:
+                shutil.copy(tools.GENERATED / 'fast' / 'serq4_mag' / f'{ch}.mag', work / f'{ch}.mag')
     devs, rows, placed, trunks, W = place(cell, prims, row_width)
     sc = Script()
     name = cell.name
@@ -246,7 +255,11 @@ def generate(work, cell=None, row_width=330.0):
             keepouts.append((cx + p.bbox[0], cy + p.bbox[1], cx + p.bbox[2], cy + p.bbox[3]))
             if not isinstance(d, C.MacroDev) and d.model.startswith('nfet'):   # guard ring = P-substrate tap
                 taps.append(keepouts[-1])
+            for n_, (px, py) in getattr(p, 'power_pins', []):
+                pin_geo.append((r, n_, cx + px, cy + py, cx + px, 'm3'))
             for pn, net in zip(pin_names(p), d.nodes):
+                if pn not in p.pins:
+                    continue
                 px, py = p.pins[pn]
                 pin_geo.append((r, net, cx + p.esc[pn], cy + py, cx + px, getattr(p, 'kind', {}).get(pn, 'm1')))
                 if isinstance(d, C.MacroDev):
@@ -295,7 +308,8 @@ def generate(work, cell=None, row_width=330.0):
             sc.via(px, ey, 1, 2)
             if abs(px - ex) > 1e-6:
                 sc.hwire('metal2', px, ex, ey, 0.4)
-        sc.via(ex, ey, 2, 3)
+        if kind != 'm3':          # m3: the macro's own M3-M5 pin stack is the landing
+            sc.via(ex, ey, 2, 3)
         sc.vwire('metal3', ex, ey, sy, 0.4)
         sc.via(ex, sy, 3, 4)
     trunk_span = {}

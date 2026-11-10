@@ -1,0 +1,887 @@
+{
+ "scope": "Debug-site protection: loading/isolation checks with the drawn stress-safe pads.\n\nPads: the regenerated stress-safe pair (BB_I, BB_Q, AUX_CLK, WCLK_IN, WTX_EXT;\nsame physical protection as rfpad/refpad) and the single-leg cell (WMON; the\nsame cell as ESD_TEST), both Magic-extracted with the v2.1 shunt.\nDebug cells (owned elsewhere, used read-only):\n  bb_tap  analog/rf_rx/generated/bb_tap.ext.spice (pt_bb_tap)   BB_I/BB_Q, WMON\n  diff_clk_rx  analog/timing/generated/diff_clk_rx.ext.spice     AUX_CLK, WCLK_IN, WTX_EXT\nChecks (tt/27, ss/22, ff/32; VDD 3.3 V):\n  tap_load    bb_tap disabled (obs_en=inj_en=0, island on): capacitance added to the\n              tapped nodes in_p (observed) and inj_p (injected) by the pad + protection,\n              at 10 MHz / 100 MHz / 1 GHz (difference with and without the pad)\n  tap_iso     bb_tap disabled: 1 V at the pad through 50 ohm, tapped nodes held by\n              1 kohm to their DC level: |V(in_p)|, |V(inj_p)| in dB\n  rx_load     diff_clk_rx enabled and disabled: differential input capacitance at the\n              pad seen from a 50 ohm/leg source at 742.5 MHz and 2.45 GHz\n  rx_iso      diff_clk_rx disabled: 0.5 V differential at 2.45 GHz on the pads;\n              |OUTP-OUTN| (transient)\nPad ESD for these sites is the stress-safe macro (pulse/peer/ramp evidence: the\nrfpad runs in family-sims.json use the same physical pair; single-leg pulses are\nrun here as single_pulse).",
+ "pads": {
+  "pair": {
+   "path": "/home/ubuntu/svalbard/scratch/pads-lu01/rf-pair/pad-extracted.spice",
+   "sha256": "9522462494f0af3b312e7316bb58243904209e94ea65810410ef468afdc6e948"
+  },
+  "single": {
+   "path": "/home/ubuntu/svalbard/scratch/pads-lu01/rf-single/pad-extracted.spice",
+   "sha256": "2eb99a9815b6b0eb772d2a505e11462db21b03569eec4efd1c999a9ca7efaf97"
+  }
+ },
+ "cells": {
+  "bb_tap": {
+   "path": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/rf_rx/generated/bb_tap.ext.spice",
+   "sha256": "7c0ac37566230b65158b58a003059d4c681755db2f21e78992692324984a1cd8"
+  },
+  "diff_clk_rx": {
+   "path": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/timing/generated/diff_clk_rx.ext.spice",
+   "sha256": "30c50235b050376af270b2a0b82ac2bb34db357adf90244e7cb1bd248d2ab001"
+  }
+ },
+ "results": [
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "True",
+    "IN_P",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "80b0e8413674a972d2e5030c731f6cb637fb0f875b518627058902c0f043b69c",
+   "capacitance_f": {
+    "1e+07": 1.5049016824627833e-13,
+    "1e+08": 1.4884342133461605e-13,
+    "1e+09": 1.2746219916271993e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "False",
+    "IN_P",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "a1ef34dd02230a11040ba3692d8df46b1fa89ed5b54a9a1815f7672ddaece320",
+   "capacitance_f": {
+    "1e+07": 1.5049009121528588e-13,
+    "1e+08": 1.4884493298826553e-13,
+    "1e+09": 1.2744152748209137e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "True",
+    "INJ_P",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "82e24236c0f97ffa8056a398db6eb260b1db99ce88f500e6f88785c4b0e11659",
+   "capacitance_f": {
+    "1e+07": 7.893589759851152e-14,
+    "1e+08": 7.889350620195418e-14,
+    "1e+09": 7.737792269861252e-14
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "False",
+    "INJ_P",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "69b6209516a5a9c25669231f926db8a7cd600ddb3a485a7c06509625c54d2044",
+   "capacitance_f": {
+    "1e+07": 7.886230737676975e-14,
+    "1e+08": 7.881920423930689e-14,
+    "1e+09": 7.726710311173763e-14
+   }
+  },
+  {
+   "job": [
+    "tap_iso",
+    "pair",
+    "True",
+    "IN_P",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "8ba5f7ccd5c79bafe98df1f3eac032c6ced55928b5df59652579f8facd784c82",
+   "isolation_db": {
+    "1e+07": {
+     "in_p": -101.08142589377856,
+     "inj_p": -72.92606381181798
+    },
+    "1e+08": {
+     "in_p": -71.0721138719109,
+     "inj_p": -52.873002960104216
+    },
+    "1e+09": {
+     "in_p": -40.21458010615391,
+     "inj_p": -31.99701604986113
+    }
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "True",
+    "IN_P",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "63370cc0cce4c6e2d759c579e37fefb1878750728e2620d3676381da0e3d562a",
+   "capacitance_f": {
+    "1e+07": 1.504901459645863e-13,
+    "1e+08": 1.488433845698242e-13,
+    "1e+09": 1.2745724100877777e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "False",
+    "IN_P",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "55e7c21ae76961688df76e22b3b45db8039dbaa5e785a9430799f694aab13a8d",
+   "capacitance_f": {
+    "1e+07": 1.5049007163922787e-13,
+    "1e+08": 1.4884489351783965e-13,
+    "1e+09": 1.2743574904357252e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "True",
+    "INJ_P",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "a2297bb094d2561107724ed55c026ea119bec19a74f116167e98d4a05c7d6843",
+   "capacitance_f": {
+    "1e+07": 7.89356031618668e-14,
+    "1e+08": 7.889329118362606e-14,
+    "1e+09": 7.737760343379667e-14
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "False",
+    "INJ_P",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "a20c84f1f561570d346f2e769df5feb061c6d6bf5c3ae9c11921c836d9f930b9",
+   "capacitance_f": {
+    "1e+07": 7.886230737676975e-14,
+    "1e+08": 7.881920423930689e-14,
+    "1e+09": 7.726711711737262e-14
+   }
+  },
+  {
+   "job": [
+    "tap_iso",
+    "single",
+    "True",
+    "IN_P",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "f867a505107d941c9b9a6998ba57244e5828f4707022deeadd108189354ea98d",
+   "isolation_db": {
+    "1e+07": {
+     "in_p": -101.07969563314512,
+     "inj_p": -72.9260096545884
+    },
+    "1e+08": {
+     "in_p": -71.07169723654391,
+     "inj_p": -52.87383395705278
+    },
+    "1e+09": {
+     "in_p": -40.16998030638668,
+     "inj_p": -31.971085233364242
+    }
+   }
+  },
+  {
+   "job": [
+    "rx_load",
+    "True",
+    "742500000.0",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "c54509344332c48ff328f90a6757461a1734c19ca64e3120bc59812ebd2a5147",
+   "zin_diff_ohm": [
+    12.38619817269341,
+    -540.5061628323101
+   ],
+   "cdiff_f": 3.96572891200794e-13,
+   "vdiff_over_source": 0.980603643506804
+  },
+  {
+   "job": [
+    "rx_load",
+    "True",
+    "2450000000.0",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "95b99dc07dcaefb0cac9f92eb2cba21b1202248b5e784d7edacf8c812fc55fe9",
+   "zin_diff_ohm": [
+    4.302083764836482,
+    -165.3952640264171
+   ],
+   "cdiff_f": 3.9276336988477756e-13,
+   "vdiff_over_source": 0.8534960825857238
+  },
+  {
+   "job": [
+    "rx_load",
+    "False",
+    "742500000.0",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "4615b36493907c338896a734ecced63664e95dd94d61ca472ec99df3242b9e13",
+   "zin_diff_ohm": [
+    3.7248135481095783,
+    -558.4120225212284
+   ],
+   "cdiff_f": 3.8385651286386415e-13,
+   "vdiff_over_source": 0.9845114921640479
+  },
+  {
+   "job": [
+    "rx_load",
+    "False",
+    "2450000000.0",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "1f070dfa3920d7c030887b161774c54eb842399dc5f15394606196b4c1b34c14",
+   "zin_diff_ohm": [
+    2.185431915839896,
+    -170.2464946598035
+   ],
+   "cdiff_f": 3.8157144669443783e-13,
+   "vdiff_over_source": 0.865154846287815
+  },
+  {
+   "job": [
+    "rx_iso",
+    "False",
+    "2450000000.0",
+    "typical",
+    "27"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "e5892e82a6d910acde3a812271350130d025988c84570f0a81861d280e7bcfee",
+   "out_diff_pp_v": 7.96519557999531e-06,
+   "pad_diff_pp_v": 0.86220699
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "True",
+    "IN_P",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "d968db8ff65dbe719cd1a1dff3b8bd8b7102ebbaf42a1db38dad2cb280e27e7e",
+   "capacitance_f": {
+    "1e+07": 1.5147417057912935e-13,
+    "1e+08": 1.4955175759758037e-13,
+    "1e+09": 1.2785368944666702e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "False",
+    "IN_P",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "1e74e24d4db6c8ecf1cb29293d859ab8fca022542ad8f7a839513d0adf844a28",
+   "capacitance_f": {
+    "1e+07": 1.514740873410941e-13,
+    "1e+08": 1.49552692792026e-13,
+    "1e+09": 1.2783827990592193e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "True",
+    "INJ_P",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "c9d9cf6afb5a19ae0ba0d84830797d76a695f4506fb5ae193488648f9affdab0",
+   "capacitance_f": {
+    "1e+07": 7.989111469089011e-14,
+    "1e+08": 7.98341297409809e-14,
+    "1e+09": 7.808051760615976e-14
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "False",
+    "INJ_P",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "d2e6e465702d599d779a470ed2fc0de6dcff42fba37c7733f1d8f36e3754f70d",
+   "capacitance_f": {
+    "1e+07": 7.981622671974237e-14,
+    "1e+08": 7.975842482751027e-14,
+    "1e+09": 7.795972775787487e-14
+   }
+  },
+  {
+   "job": [
+    "tap_iso",
+    "pair",
+    "True",
+    "IN_P",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "ca99a6bc085b248c38fe7db76af4bedd293f33627724d01cbb1d15ea06f295dd",
+   "isolation_db": {
+    "1e+07": {
+     "in_p": -101.10409147844628,
+     "inj_p": -72.61747827436105
+    },
+    "1e+08": {
+     "in_p": -71.26881870048939,
+     "inj_p": -52.54451543111384
+    },
+    "1e+09": {
+     "in_p": -40.428746208446526,
+     "inj_p": -31.44218877995514
+    }
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "True",
+    "IN_P",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "6c6ed7463ffc13cab236110dcc3f7a0480d9d45ed49930e61260d7221db4f77b",
+   "capacitance_f": {
+    "1e+07": 1.5147414829743734e-13,
+    "1e+08": 1.4955171542152045e-13,
+    "1e+09": 1.278494153406703e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "False",
+    "IN_P",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "7964c49c6ba1b5506b466ab8f49f9584f8ee20fbd837c6c242052ad6e625866a",
+   "capacitance_f": {
+    "1e+07": 1.5147406760588116e-13,
+    "1e+08": 1.4955264727371226e-13,
+    "1e+09": 1.2783342058719944e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "True",
+    "INJ_P",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "ea26546222d2b9f75c65651af7f9d112f3e9d7a892863da14adf60c450299233",
+   "capacitance_f": {
+    "1e+07": 7.989083059931669e-14,
+    "1e+08": 7.983401164801314e-14,
+    "1e+09": 7.807905847364149e-14
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "False",
+    "INJ_P",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "b3d0399f80578b46fa8824526ab5f283f5cf9aed94cec16dc99467fce00dace3",
+   "capacitance_f": {
+    "1e+07": 7.981622671974237e-14,
+    "1e+08": 7.975842498666521e-14,
+    "1e+09": 7.795975003956691e-14
+   }
+  },
+  {
+   "job": [
+    "tap_iso",
+    "single",
+    "True",
+    "IN_P",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "bdc8c5225d22572b396f3f61bd3154561c4427501d73c7306e23b50c0bcfa75e",
+   "isolation_db": {
+    "1e+07": {
+     "in_p": -101.10233089829138,
+     "inj_p": -72.61743381063873
+    },
+    "1e+08": {
+     "in_p": -71.26895756245032,
+     "inj_p": -52.545924889986836
+    },
+    "1e+09": {
+     "in_p": -40.36758120935053,
+     "inj_p": -31.40682056965825
+    }
+   }
+  },
+  {
+   "job": [
+    "rx_load",
+    "True",
+    "742500000.0",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "1fdc076812b86491befcdd7c89ae0d4ac1e71b83b7daac5048b012c79491397b",
+   "zin_diff_ohm": [
+    10.545302322468592,
+    -525.0190637352987
+   ],
+   "cdiff_f": 4.082710638757419e-13,
+   "vdiff_over_source": 0.980065166235604
+  },
+  {
+   "job": [
+    "rx_load",
+    "True",
+    "2450000000.0",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "3290ffcefd2b3147df67eea54742bc09e1b89da943b408e068f2f994898f31c1",
+   "zin_diff_ohm": [
+    4.161090262952681,
+    -160.8272088708778
+   ],
+   "cdiff_f": 4.039192231095239e-13,
+   "vdiff_over_source": 0.8469415072022094
+  },
+  {
+   "job": [
+    "rx_load",
+    "False",
+    "742500000.0",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "567096580a4804e3472ae9e78aa00126847ce5ef5a98aeff4a0f19a2cdb71457",
+   "zin_diff_ohm": [
+    3.58000912708568,
+    -541.7283972569054
+   ],
+   "cdiff_f": 3.956781530959775e-13,
+   "vdiff_over_source": 0.9835719617133556
+  },
+  {
+   "job": [
+    "rx_load",
+    "False",
+    "2450000000.0",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "9fe00d5b520083d1a34b89b1ca08bc33b55d036244f88d891670ca62266447a0",
+   "zin_diff_ohm": [
+    2.14503337129329,
+    -165.181407956575
+   ],
+   "cdiff_f": 3.9327187039764146e-13,
+   "vdiff_over_source": 0.8582098911913305
+  },
+  {
+   "job": [
+    "rx_iso",
+    "False",
+    "2450000000.0",
+    "ss",
+    "22"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "c3667a204c48e5889f53d1856b6e36586be1dbcdce578b13b347be2548b92473",
+   "out_diff_pp_v": 8.984397599665073e-06,
+   "pad_diff_pp_v": 0.8553784000000002
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "True",
+    "IN_P",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "8363ce130bcd2fdba2e4ce35d73f7ffcbaec99533aa4e6f6e8a109c9b8b42bd6",
+   "capacitance_f": {
+    "1e+07": 1.4738251423873406e-13,
+    "1e+08": 1.460225694683266e-13,
+    "1e+09": 1.2571360772973356e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "False",
+    "IN_P",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "f974512a1ca198961230bde1181df5053743f512e0e87d40732dbd421f5bbceb",
+   "capacitance_f": {
+    "1e+07": 1.473824232021066e-13,
+    "1e+08": 1.4602314433598104e-13,
+    "1e+09": 1.257044814669868e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "True",
+    "INJ_P",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "a5e5e3b0f52584ffc09e19e3b797c534aa9cc5ef245e87f45b56eb3e88bfde58",
+   "capacitance_f": {
+    "1e+07": 7.79730897702771e-14,
+    "1e+08": 7.794146647885947e-14,
+    "1e+09": 7.665404559207504e-14
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "pair",
+    "False",
+    "INJ_P",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "1487e2496ae084bb5b3980613eb0ee1c534887ab36f14d01577ae7800e0632e7",
+   "capacitance_f": {
+    "1e+07": 7.7901779761405e-14,
+    "1e+08": 7.786964001219704e-14,
+    "1e+09": 7.655421597233053e-14
+   }
+  },
+  {
+   "job": [
+    "tap_iso",
+    "pair",
+    "True",
+    "IN_P",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "912175bb146452e955755fabf4480eedfd5a470a2fa32b04dadf2e72e270a68a",
+   "isolation_db": {
+    "1e+07": {
+     "in_p": -101.015967404589,
+     "inj_p": -73.62730609970085
+    },
+    "1e+08": {
+     "in_p": -70.55436709986198,
+     "inj_p": -53.584439653489
+    },
+    "1e+09": {
+     "in_p": -39.72459344288312,
+     "inj_p": -32.8086679479751
+    }
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "True",
+    "IN_P",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "0218761171cecc93b3587b6accad7c25d78128196d30e727d7de3a4c41d3fd6e",
+   "capacitance_f": {
+    "1e+07": 1.4738249418521123e-13,
+    "1e+08": 1.4602253795564784e-13,
+    "1e+09": 1.2570779952924037e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "False",
+    "IN_P",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "95e7883ab2c771e1563d8f909d06fd9b15c6ed0e7c04666b77392c610266efb0",
+   "capacitance_f": {
+    "1e+07": 1.473824058542178e-13,
+    "1e+08": 1.4602311107259794e-13,
+    "1e+09": 1.256977587621906e-13
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "True",
+    "INJ_P",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "ef64eb969451ea5c5450f4745f6836637592db6a5687f4cd63a7839822856301",
+   "capacitance_f": {
+    "1e+07": 7.797279485616755e-14,
+    "1e+08": 7.794122265348666e-14,
+    "1e+09": 7.66540949301074e-14
+   }
+  },
+  {
+   "job": [
+    "tap_load",
+    "single",
+    "False",
+    "INJ_P",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "b1bf0f64a12b30cdb94e3091cce1526ca9072f278cef4f6a9aba0e68bb1b280d",
+   "capacitance_f": {
+    "1e+07": 7.7901779761405e-14,
+    "1e+08": 7.786964001219704e-14,
+    "1e+09": 7.655422186106343e-14
+   }
+  },
+  {
+   "job": [
+    "tap_iso",
+    "single",
+    "True",
+    "IN_P",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "bd7ef98bad6f7ff6b84c5f6c952f172098d7f61de0fa342a96970107d0229f43",
+   "isolation_db": {
+    "1e+07": {
+     "in_p": -101.0142618667619,
+     "inj_p": -73.62724210489999
+    },
+    "1e+08": {
+     "in_p": -70.55378229609519,
+     "inj_p": -53.58493111837273
+    },
+    "1e+09": {
+     "in_p": -39.69418172318282,
+     "inj_p": -32.78909471998066
+    }
+   }
+  },
+  {
+   "job": [
+    "rx_load",
+    "True",
+    "742500000.0",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "beba391f256eaa875f16646354d603a7267d592f44160b16a0448d0ac9fa8e76",
+   "zin_diff_ohm": [
+    17.75193492559972,
+    -554.9310144576164
+   ],
+   "cdiff_f": 3.8626439345034597e-13,
+   "vdiff_over_source": 0.9799689973775072
+  },
+  {
+   "job": [
+    "rx_load",
+    "True",
+    "2450000000.0",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "7e2d5900964c39eb2186dd62c1f74579f6226e74e73fb47a2d59ff011f37f1a1",
+   "zin_diff_ohm": [
+    4.715267434365199,
+    -169.6834290276553
+   ],
+   "cdiff_f": 3.828376267161044e-13,
+   "vdiff_over_source": 0.8586866776195848
+  },
+  {
+   "job": [
+    "rx_load",
+    "False",
+    "742500000.0",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "dbf844f9048d798f638d1b6a5d9d5fce0a45d4bded596283c7b938b41b29d7d8",
+   "zin_diff_ohm": [
+    6.62038322670829,
+    -573.7734908454796
+   ],
+   "cdiff_f": 3.7357963573814185e-13,
+   "vdiff_over_source": 0.9845057715909923
+  },
+  {
+   "job": [
+    "rx_load",
+    "False",
+    "2450000000.0",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "71c08531df56d6f00bfadb47ff42def2d75a29f4dd4b09b6b344d43aaf0a85f1",
+   "zin_diff_ohm": [
+    2.480293458331161,
+    -174.90959707000204
+   ],
+   "cdiff_f": 3.713987245422527e-13,
+   "vdiff_over_source": 0.870592632828474
+  },
+  {
+   "job": [
+    "rx_iso",
+    "False",
+    "2450000000.0",
+    "ff",
+    "32"
+   ],
+   "op_fallback": false,
+   "deck_sha256": "69af627952e6a09139d5c8b9d5076e3158c16c88c053fabf42133a7ff346b9d4",
+   "out_diff_pp_v": 8.273180395867996e-06,
+   "pad_diff_pp_v": 0.8672064800000001
+  },
+  {
+   "job": [
+    "single_pulse",
+    "pos",
+    "typical",
+    "27"
+   ],
+   "pad_max_v": 4.22640644,
+   "pad_min_v": -2.7017816e-16,
+   "rail_max_v": 3.08523856,
+   "op_fallback": false,
+   "deck_sha256": "f6657e2fb92debedf4973e48d9f445ccf41433d61f6251eb2ba539b4bd46658e"
+  },
+  {
+   "job": [
+    "single_pulse",
+    "neg",
+    "typical",
+    "27"
+   ],
+   "pad_max_v": 2.1394171e-17,
+   "pad_min_v": -1.15463613,
+   "rail_max_v": 5.83638475e-17,
+   "op_fallback": false,
+   "deck_sha256": "40a253f17006636a7ef84bdcfd5a9b8b9a093481d66b07d893a22ffe80a05fb1"
+  },
+  {
+   "job": [
+    "single_pulse",
+    "pos",
+    "ss",
+    "0"
+   ],
+   "pad_max_v": 4.72915973,
+   "pad_min_v": -1.08578415e-16,
+   "rail_max_v": 3.54269552,
+   "op_fallback": false,
+   "deck_sha256": "9ffc5b672ff0c684b8fed5a793e8c7c12685bce6155e67cf54f454cbb11fc524"
+  },
+  {
+   "job": [
+    "single_pulse",
+    "neg",
+    "ss",
+    "0"
+   ],
+   "pad_max_v": 6.15777629e-17,
+   "pad_min_v": -1.21324932,
+   "rail_max_v": 4.07265963e-16,
+   "op_fallback": false,
+   "deck_sha256": "4ca525af537f59a3255467dfe033e70a68827bf9d22933dda17f95c7333aa5da"
+  }
+ ],
+ "source_sha256": {
+  "stress_safe_debug.py": "146aae906e04f285d3abad6e75a2020794ddf89cad19422ebc316a80ee3369f3"
+ }
+}

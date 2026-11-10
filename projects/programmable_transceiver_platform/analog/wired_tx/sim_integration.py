@@ -49,8 +49,48 @@ def channel(lines, sections=10, length_cm=5.0, z0=50.0, er=4.2, r_per_cm=0.6):
                 delay_s=td_cm * length_cm)
 
 
+# Package channel (spec/package-channel.md, scratch/cob/channel.json, WIRE_TX_P/N geometry): bond wire
+# 0.832 nH/mm (25 um Au over In1), finger 0.08 pF, F.Cu 86.6 ohm microstrip (eeff 3.14), via, B.Cu
+# microstrip, connector land 0.06 pF, connector contact (L per contact, 0.25 pF), then the carrier 50-ohm
+# line to the AC-coupling cap (B22, 100 nF) and the far-end 50-ohm termination.  Placement points
+# P1..P4 = carrier line 2 / 10 / 30 / 50 mm; bond length +-0.3 mm at P1..P4 (spec section 6).
+PKG = dict(P=dict(bond_mm=2.44, f_mm=1.11, b_mm=4.05, via_nH=0.278, conn_nH=0.99),
+           N=dict(bond_mm=2.42, f_mm=1.06, b_mm=2.08, via_nH=0.452, conn_nH=0.85))
+PLACEMENT_MM = dict(P1=2.0, P2=10.0, P3=30.0, P4=50.0)
+
+
+def _tline(lines, name, a, b, z0, eeff, length_mm, nseg=None, r_per_mm=0.0):
+    td = (eeff ** 0.5) / 3e8 * length_mm * 1e-3
+    nseg = nseg or max(1, int(length_mm / 2.0) + 1)
+    lt, ct = z0 * td / nseg, td / z0 / nseg
+    prev = a
+    for i in range(nseg):
+        nxt = b if i == nseg - 1 else f'{name}{i}'
+        mid = f'{name}m{i}'
+        lines += [f'R{name}{i} {prev} {mid} {max(r_per_mm * length_mm / nseg, 1e-3):.4g}',
+                  f'L{name}{i} {mid} {nxt} {lt:.4g}', f'C{name}{i} {nxt} 0 {ct:.4g}']
+        prev = nxt
+
+
+def pkg_chain(lines, placement='P1', dbond_mm=0.0):
+    for leg in ('P', 'N'):
+        g = PKG[leg]
+        lb = (g['bond_mm'] + dbond_mm) * 0.832e-9
+        lines += [f'RBW{leg} PAD_{leg} BW{leg} 0.2', f'LBW{leg} BW{leg} FG{leg} {lb:.4g}', f'CFG{leg} FG{leg} 0 0.08p']
+        _tline(lines, f'TF{leg}', f'FG{leg}', f'VA{leg}', 86.6, 3.14, g['f_mm'], nseg=1)
+        lines += [f'LVA{leg} VA{leg} VB{leg} {g["via_nH"]}n', f'CVA{leg} VB{leg} 0 0.1p']
+        _tline(lines, f'TB{leg}', f'VB{leg}', f'LD{leg}', 86.6, 3.14, g['b_mm'], nseg=2)
+        lines += [f'CLD{leg} LD{leg} 0 0.06p', f'LCN{leg} LD{leg} CN{leg} {g["conn_nH"]}n', f'CCN{leg} CN{leg} 0 0.25p']
+        _tline(lines, f'TC{leg}', f'CN{leg}', f'BOARD_{leg}', 50.0, 3.3, PLACEMENT_MM[placement], r_per_mm=0.01)
+        lines += [f'CAC{leg} BOARD_{leg} FAR_{leg} 100n', f'RFAR_{leg} FAR_{leg} FARCM 50']
+    lines.append('CFARCM FARCM 0 10p')
+    return dict(topology='package (bond, COB 87 ohm, via, connector) + carrier line + 100 nF AC + 50 ohm far end',
+                placement=placement, carrier_mm=PLACEMENT_MM[placement], dbond_mm=dbond_mm, geometry=PKG)
+
+
 def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typical', temp=27,
-         codes=(109, 20, 125), lossy=False, dx_bits=None, dx_rate=None, ext_switch_t=None, rx=False, bpc=4):
+         codes=(109, 20, 125), lossy=False, dx_bits=None, dx_rate=None, ext_switch_t=None, rx=False, bpc=4,
+         pkg=None):
     ports = S.ports_of(Path(dut).read_text(), subckt)
     tw = 20 / rate
     L = ['* pt_wiredtx + pads extracted TX output stage', tools.model_header_dir(corner, temp, tools.PAD_MODELS)]
@@ -101,9 +141,19 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
     for b, code in zip(('MAIN', 'POST', 'TMDS'), codes):
         for k, bit in enumerate(S.code_bits(code)):
             L.append(f'V{b}C{k} {b}_CODE{k} 0 {bit*vdd}')
-    for i in range(20):
-        tv = [(0.0, words[0][i])] + [(word_t0 + k * tw + tw / 4, w[i]) for k, w in enumerate(words)]
-        L.append(S.pwl_bits(f'D{i}', f'D{i}', tv, vdd))
+    w40 = 'D39' in ports     # 40-bit boundary: word pairs launched on WORD_CLK40 rising (see sim_wiredtx)
+    if w40:
+        pairs = [(words[2 * m], words[2 * m + 1] if 2 * m + 1 < len(words) else words[2 * m])
+                 for m in range((len(words) + 1) // 2)]
+        for i in range(40):
+            h, j = divmod(i, 20)
+            tv = [(0.0, pairs[0][h][j])] + [(word_t0 + 2 * m * tw + tw / 4, pr[h][j]) for m, pr in enumerate(pairs)]
+            L.append(S.pwl_bits(f'D{i}', f'D{i}', tv, vdd))
+        L.append('CWCK40 WORD_CLK40 0 50f')
+    else:
+        for i in range(20):
+            tv = [(0.0, words[0][i])] + [(word_t0 + k * tw + tw / 4, w[i]) for k, w in enumerate(words)]
+            L.append(S.pwl_bits(f'D{i}', f'D{i}', tv, vdd))
     L.append('CWCK WORD_CLK 0 50f')
     L = S.driver_impedance(L)   # realistic DUT-input driver resistance (see sim_wiredtx)
     L.append('X0 ' + ' '.join(ports) + f' {subckt}')
@@ -118,10 +168,14 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
         L += ['VTERMEN TERM_EN_SRC 0 0', 'RTERMEN TERM_EN_SRC TERM_ENABLE 100', 'RTVCM TERM_VCM 0 1meg']
     L.append('XPAD PAD_P PAD_N VDD VSS CASCODE MAIN_P MAIN_N MAIN_BIAS POST_P POST_N POST_BIAS TMDS_P TMDS_N '
              'TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM tx_protected_pad')
-    for leg in ('P', 'N'):
-        L += [f'RB{leg} BOARD_{leg} BOND_{leg} 1', f'LB{leg} BOND_{leg} PAD_{leg} 1n']
+    if not pkg:
+        for leg in ('P', 'N'):
+            L += [f'RB{leg} BOARD_{leg} BOND_{leg} 1', f'LB{leg} BOND_{leg} PAD_{leg} 1n']
     net = {}
-    if mode == 'tmds':
+    if pkg and mode == 'serial':
+        net = pkg_chain(L, *pkg)
+        out = ('FAR_P', 'FAR_N')
+    elif mode == 'tmds':
         L.append(f'VPEER PEER 0 {vdd}')
         L += ['RPU_P PEER BOARD_P 50', 'RPU_N PEER BOARD_N 50']
         net = dict(topology='split_pullup_50ohm_to_independent_3v3')
@@ -135,7 +189,7 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
             L.append('RDIFF BOARD_P BOARD_N 100')
             net = dict(topology='100ohm_differential')
             out = ('BOARD_P', 'BOARD_N')
-    probes = [f'v({out[0]},{out[1]})', f'v({out[0]})', f'v({out[1]})', 'v(WORD_CLK)', 'v(CMD_MAIN_N)',
+    probes = [f'v({out[0]},{out[1]})', f'v({out[0]})', f'v({out[1]})', 'v(WORD_CLK40)' if w40 else 'v(WORD_CLK)', 'v(CMD_MAIN_N)',
               'v(CMD_TMDS_N)', 'v(PAD_P)', 'v(PAD_N)', 'v(x0.SER)', 'v(x0.EXT)', 'i(VDD)', 'v(MAIN_BIAS)', 'v(TMDS_BIAS)']
     names = ['DIFF', 'OUTP', 'OUTN', 'WORD_CLK', 'CMD_MAIN_N', 'CMD_TMDS_N', 'PAD_P', 'PAD_N', 'SER', 'EXT',
              'I_VDD', 'MAIN_BIAS', 'TMDS_BIAS']
@@ -176,7 +230,7 @@ def eye(w, rate, t0, t1, expected=None, node='DIFF'):
 
 
 def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, corner='typical', temp=27,
-        vdd=3.3, lossy=False, codes=(109, 20, 125), tag=None, bpc=4):
+        vdd=3.3, lossy=False, codes=(109, 20, 125), tag=None, bpc=4, pkg=None):
     work = Path(work); tag = tag or f'{mode}_{rate/1e9:g}G'
     tw = 20 / rate
     def prep(d):
@@ -186,7 +240,8 @@ def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, 
         (d / 'pad.spice').write_text(clean_lib(PAD.read_text()))
     pdir = work / f'{tag}_phase'; prep(pdir)
     txt, names, _ = deck(pdir / Path(dut).name, subckt, mode=mode, rate=rate, words=[[0] * 20], word_t0=1,
-                         tstop=2e-9 + 3 * tw, vdd=vdd, corner=corner, temp=temp, codes=codes, lossy=lossy, bpc=bpc)
+                         tstop=2e-9 + 8 * tw, vdd=vdd, corner=corner, temp=temp, codes=codes, lossy=lossy, bpc=bpc,
+                         pkg=pkg)
     (pdir / 'tb.sp').write_text(txt)
     _, _log = tools.ngspice_host(pdir, 'tb.sp')
     if S.sim_abort(_log):
@@ -194,6 +249,8 @@ def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, 
     w = tools.read_wrdata(pdir / 'wave.txt', names)
     rises = S.crossings(w['time'], w['WORD_CLK'], rising=True)
     rises = rises[rises > 2e-9]
+    if 'D39' in S.ports_of(Path(dut).read_text(), subckt) and len(rises) > 2:
+        rises = rises[1:]       # WORD_CLK40: skip the start-up period
     if len(rises) < 1:
         return dict(ok=False, reason='WORD_CLK not running')
     word_t0 = float(rises[0])
@@ -202,7 +259,7 @@ def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, 
     ddir = work / f'{tag}_data'; prep(ddir)
     txt, names, net = deck(ddir / Path(dut).name, subckt, mode=mode, rate=rate, words=words, word_t0=word_t0,
                            tstop=word_t0 + (nwords + 3) * tw, vdd=vdd, corner=corner, temp=temp, codes=codes,
-                           lossy=lossy, bpc=bpc)
+                           lossy=lossy, bpc=bpc, pkg=pkg)
     (ddir / 'tb.sp').write_text(txt)
     _, _log = tools.ngspice_host(ddir, 'tb.sp')
     if S.sim_abort(_log):

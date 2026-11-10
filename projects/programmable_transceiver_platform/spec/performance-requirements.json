@@ -1934,6 +1934,186 @@
    "fallback": [
     "B38a"
    ]
+  },
+  {
+   "id": "RF-HT40-TX",
+   "requirement": "HT40/HE40 TX: 40 MHz mask, MCS0-4 EVM <= -19 dB at >= -13 dBm; DAC 80 MS/s host-fed",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital + converters + rf_rx (filter) + rf_tx",
+   "evidence": [],
+   "status": "fails",
+   "basis": "Halfband passes only ~0.2 fs_in; 40 MS/s ZOH image at 21 MHz is 0.9 dB below the 19 MHz edge; widest filter corner 11.3 MHz worst corner",
+   "primary_fix": "GX-2 tx_interp=external (80 MS/s host-fed), GX-1 wide filter code, full-rate H2D in this mode",
+   "fallback": []
+  },
+  {
+   "id": "RF-HT40-RX",
+   "requirement": "HT40/HE40 RX sensitivity class (MCS0 -79, MCS7 -61 dBm); droop <= 3 dB at 19.1 MHz all corners; ACR declared not met",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx (bbfilter) + digital",
+   "evidence": [
+    "analog/rf_rx/generated/rf_rx_chain.json"
+   ],
+   "status": "fails",
+   "basis": "Widest corner 11.3-21.2 MHz over corners: -10.7 dB at 19 MHz for a 15 MHz corner; 40 MS/s complex is critically sampled",
+   "primary_fix": "GX-1 wide bw code (corner 20-30 MHz all corners after Q-trim)",
+   "fallback": [
+    "debug.rf_bb_bypass.rxfilter"
+   ]
+  },
+  {
+   "id": "RF-XLO-RANGE",
+   "requirement": "External-LO RX/TX 0.6-2.8 GHz with band board kits; 2.2-2.8 GHz NF <= +1 dB, Pout >= -1.5 dB vs 2.45 GHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + rf_tx + timing (lo_ext) + digital (clock plan) + board (B42)",
+   "evidence": [
+    "analog/rf_rx/generated/rf_rx_chain.json"
+   ],
+   "status": "unverified",
+   "basis": "Chain gain 45.4/50 dB at 1.2/0.6 GHz (ideal LO), TX +1.4..+3.1 dBm at 1.22/0.61 GHz unmatched; no 2.2-2.8 GHz or COB-model runs",
+   "primary_fix": "Chain sims at 0.9/1.2/1.6/2.2/2.7 GHz with COB model; GX-5 converter clock from host_follow + per-band spur plan",
+   "fallback": [
+    "B42"
+   ]
+  },
+  {
+   "id": "RF-QVCO-RANGE",
+   "requirement": "QVCO band codes and frequency loop accept any target in the tank range; 2.40-2.50 GHz guaranteed, 2.3-2.7 GHz per-die",
+   "source": "spec/interface-requirements.md",
+   "owner": "timing (lcvco, frequency loop)",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Tank tt 2.16-2.82 GHz, all-corner 2.38-2.615 GHz (schematic r2); frequency loop not built",
+   "primary_fix": "GX-6 loop N/fraction and band codes over the full tank range",
+   "fallback": [
+    "rf_lo_external_ref"
+   ]
+  },
+  {
+   "id": "RF-SUBG-PROF",
+   "requirement": "Sub-GHz / L-band profiles (LoRa 868/915, 802.15.4g/Wi-SUN, 802.11ah, 23 cm, DECT) via RF-XLO-RANGE",
+   "source": "spec/interface-requirements.md",
+   "owner": "FPGA + board (B42, B5)",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Mapping row; inherits RF-XLO-RANGE",
+   "primary_fix": "Close RF-XLO-RANGE; FPGA PHYs",
+   "fallback": [
+    "B5"
+   ]
+  },
+  {
+   "id": "RF-GNSS-RX",
+   "requirement": "GNSS L1/L2/L5/E5/E6 RX: >= 21 MHz gap-free capture, NF <= 3 dB with B44, no clock harmonic in main lobe +-1 MHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "board (B44) + digital (clock plan) + FPGA",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "78.125 MHz core 15th harmonic is 4.6 MHz from L5; 62.5 MHz core clears by 11.05 MHz",
+   "primary_fix": "Per-band clock plan (GX-5); B44 front end",
+   "fallback": [
+    "B44"
+   ]
+  },
+  {
+   "id": "RF-DUPLEX",
+   "requirement": "Simultaneous TX+RX on one LO: validator accepts filter-RX + tx_dac_direct and filter-TX + rx_direct; TX->RX isolation >= 30 dB; RX works with -30 dBm self-leakage",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (validator) + rf_rx + rf_tx + pads",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Hardware paths exist (rf_tx README, bbfilter decode); validator/warm-hop acceptance and isolation not checked",
+   "primary_fix": "GX-3 validator rule + RTL test; GX-9 isolation sim with COB model",
+   "fallback": [
+    "B43"
+   ]
+  },
+  {
+   "id": "RF-RADAR",
+   "requirement": "CW-Doppler (offset IF), FMCW (external ramp <= 83.5 MHz or +-20 MHz digital chirp), stepped-frequency; leakage <= -30 dBm at RF_RX",
+   "source": "spec/interface-requirements.md",
+   "owner": "FPGA + board (B43) + rf_rx",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "No system sim; depends on RF-DUPLEX",
+   "primary_fix": "RF-DUPLEX + leakage/PN-correlation system sim",
+   "fallback": [
+    "B43"
+   ]
+  },
+  {
+   "id": "RF-BLE-CTE",
+   "requirement": "BLE AoA/AoD CTE: switch via FPGA GPIO +-125 ns to sample index; filter settles <= 2 deg in 0.5 us; gain/DC/LO hold; RF_TX survives 100 ns hot switch",
+   "source": "spec/interface-requirements.md",
+   "owner": "FPGA + digital (IX-8) + rf_rx + rf_tx (GX-8) + board (B41)",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "No antenna-switch step-response or hot-switch sim",
+   "primary_fix": "Step-response sim at the CTE bw code; GX-8 open/short sim; IX-8 latency",
+   "fallback": [
+    "B41"
+   ]
+  },
+  {
+   "id": "RF-SDR-CAPTURE",
+   "requirement": "Gap-free I/Q stream 40/20/10/5 MS/s >= 1 h, span >= 36 MHz (wide code), concurrent multi-protocol RX, RSSI +-3 dB after cal",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (transport) + rf_rx + FPGA",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "No soak test; span limited by widest corner 11.3 MHz worst corner",
+   "primary_fix": "Transport soak test; GX-1; per-board gain-table cal",
+   "fallback": [
+    "rf_bb_external_adc"
+   ]
+  },
+  {
+   "id": "RF-SDR-SCAN",
+   "requirement": "Spectrum scan: warm hop <= 50 us/step, gain tagged per step; 2.2-2.7 GHz in <= 2 ms",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (warm hop) + board (B35/B42)",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Warm hop 50 us allocated; external synth range not specified beyond 2.4-2.5 GHz",
+   "primary_fix": "Warm-hop RTL test; B42 synthesizer range",
+   "fallback": [
+    "B42"
+   ]
+  },
+  {
+   "id": "RF-SELFTEST",
+   "requirement": "Loopback BIST: IRR, LO leakage, filter corner/Q-trim, DC table, gain steps via mute-leakage loopback",
+   "source": "spec/interface-requirements.md",
+   "owner": "FPGA + digital (GX-3) + rf_rx + rf_tx",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Leakage 22-24 dB measured; recipe not written",
+   "primary_fix": "GX-3 duplex config; FPGA recipe into D-CAL-1",
+   "fallback": []
+  },
+  {
+   "id": "RF-PROF-SWITCH",
+   "requirement": "Atomic profile switch (LO hop + bw/wide + rx_direct/tx_dac_direct + gain) at a warm-hop epoch <= 50 us",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (regfile update class, warm hop) + rf_rx",
+   "evidence": [],
+   "status": "fails",
+   "basis": "consolidation.bbfilter.* fields are stopped-only today",
+   "primary_fix": "GX-4 epoch-updatable bbfilter fields",
+   "fallback": []
+  },
+  {
+   "id": "RF-MULTICHIP",
+   "requirement": "Phase-coherent multi-die: one LO, one H2D-derived sample clock, sync_arm aligns sample epochs to the same sample; inter-die phase drift <= 2 deg rms / 10 min after cal",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (clocktree sync) + board (B45)",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "sync_arm/sync_epoch exist; cross-die determinism not verified",
+   "primary_fix": "GX-7 deterministic sync latency test",
+   "fallback": [
+    "B45"
+   ]
   }
  ]
 }

@@ -59,55 +59,68 @@ samples require a separately qualified error budget.
 
 ## Implementation and command boundary
 
-`pt_core` instantiates `pt_core_pair` and `pt_dense_pair_link_tx/rx`. Two chronological ten-bit words
-are processed at 156.25 MHz; the external ten-bit word port stays at 312.5 MHz.
-The receive side
-validates metadata before releasing payload, rejecting nonzero inactive-source
-counts. TX starts with an empty frame, then reserves available words near the
-end of each preceding frame. It subtracts every still-advertised current-frame
-word before reserving the next frame; no other consumer can drain that source.
-Credit arithmetic and parity are pipelined before header publication. Payload
-words come directly from the source FIFO on their advertised beats, with no
-full-frame staging bank. Commands and counts share the same snapshot.
+AC-1 architecture ([interface-architecture-changes.md](interface-architecture-changes.md#ac-1-host-link-keep-101-pins-per-direction-at-3125-mbs-per-pin-and-fix-the-divider-rule-and-the-core-gearbox)).
+The host word clock (line/8, 312.5 MHz at 2.5 Gb/s) reaches only the pad-edge host
+link (`rtl/pt_host_link.sv`). One divider there makes a 156.25 MHz clock for the
+pad-edge DDR registers and 1:4 / 4:1 gearboxes and a 78.125 MHz clock for the
+whole transport core, which handles four chronological ten-bit words (a 40-bit
+quad, word 0 in bits [9:0]) per clock. The ten-bit pin word stream, frame
+geometry and codec are unchanged.
 
-The wired ingress CDC FIFO is 64 pairs (1280 storage bits). The paired framer
-counts complete FIFO pairs plus its held odd word before the 59-word clamp.
-Its next-frame snapshot is pair beat24 of32 and subtracts all current-frame
-reservations. A one-word guard payload can leave a held odd word across frame
-boundaries; chronological order remains unchanged. The prior 32-pair FIFO
-overflowed in the full-rate test. `make transceiver-dense-transport` checks 840
-frames against the independent codec, including both owners and 112 negative
-cases. `make transceiver-dense-service` runs both wired directions at 312.5 MHz
-host / 2.5 Gb/s line for 200 µs at five clock phases, checking word order and
-FIFO faults; a 250 MHz host case must reject overload. These are functional RTL
-checks, not physical timing, clock-tolerance or interruption qualification.
+- **D2H (south region).** The core launches one quad per core clock. A core
+  register holds the running XOR prefix of the word stream; each pin is the XOR
+  of a rising-edge and a falling-edge flop of the 156.25 MHz clock that load
+  consecutive prefixes, so each pin toggles exactly once per word with no logic
+  or clock-as-data in the fast paths. The gearbox hold register samples the
+  prefix only on the 156.25 MHz edges that coincide with core edges (a 2-cycle
+  path; `transceiver-pair-word-formal` proves it and the word order on the pin).
+  The forwarded clock is unchanged (hlink/2 toggling on the falling edge in DDR,
+  inverted hlink in SDR).
+- **H2D (top rows).** DDR (or SDR) capture on the forwarded H2D clock, quad
+  assembly in that clock domain, and an eight-quad Gray-pointer FIFO into the
+  core clock whose write enables are registered one clock ahead and replicated.
+  The quad phase of the word stream is arbitrary; the receiver acquires the
+  training prefix in any of the four word rotations.
+- **Frame engines** (`rtl/pt_quad_link.sv`). A frame is 16 quads: quad 0 is the
+  protected header (words 0–3), quad 1 is {w7, w6, w5, guard 0x2d3}, quads 2–15
+  carry payload. TX takes 3 words in the guard beat and 4 per payload beat from
+  the head quad of the selected FIFO, holding up to three residual words of a
+  popped quad across beats and frames. Its next-frame snapshot is quad beat 9
+  of 16 (available = 4 × FIFO quads + residual words) and subtracts all
+  current-frame reservations; credit and parity are pipelined before header
+  publication at beat 15. RX validates parity, tag, sequence, ownership, counts
+  and command during header beat 0 (guard compared one beat early) and releases
+  up to three words in the guard beat and four per payload beat; one collector
+  rebuilds a contiguous quad stream for the egress bank.
+- **Storage.** Exclusive ownership allows one ingress and one egress bank, each
+  behind a stopped-only clock mux: a 32-quad ingress (wired RX quads, or I/Q
+  samples packed into quads at the RF sample clock) and a 24-quad egress (wired
+  TX quads, or I/Q quads unpacked into one sample per request at the RF sample
+  clock). Both use `pt_cdc_fifo` (any even depth; registered, conservative
+  counts; egress admission keeps two spare entries for the collector register).
+  The wired output starts at 8 quads (32 words, as before), RF at 5 quads plus
+  one prefetched sample. Disable flushes every bank and RF reservoir even with
+  stopped clocks; changing owners requires disable and a flush
+  (`transceiver-shared-egress-lifecycle`).
+- **Wired boundary (S3).** 40-bit quads per WCLK40 (RX) / WORD_CLK40 (TX) edge,
+  line/40 = 62.5 MHz at 2.5 Gb/s. D0..D19 are launched from falling-edge flops
+  half a quad period before the serializer's first load, D20..D39 from
+  rising-edge flops.
+- **Latency.** Relative to the paired core, the H2D path adds the quad assembly
+  and FIFO (about two core clocks) and the D2H path the prefix and gearbox
+  stages (about two core clocks); 25.6 ns per direction at 78.125 MHz.
 
-`make transceiver-dense-pair` independently codec-checks the selected paired
-engine: 720 frames, 235 odd-word carry cases and 114 corruption/refusal cases.
-`transceiver-dense-pair-link` checks training, both word alignments and five
-capture phases for both owners. The I/Q TX and RX queues hold twelve and seven
-pairs. RX admission uses its registered full flag; downstream unpacker
-readiness affects dequeue only.
-RF ingress holds eight samples; a 32-entry, 24-bit egress FIFO is shared with
-the wired owner. Its read clock selects the stopped owner's output clock;
-disable asserts queue reset even while clocks are stopped, with synchronous
-release after restart. Changing owners requires disable and a queue flush.
-`transceiver-shared-egress-lifecycle` checks both transitions with stopped
-host and output clocks. `transceiver-sync-fifo-depth` independently models
-wrap, overflow, underflow and reset for the seven/twelve-entry conservative
-queues, plus full replacement in the generic six-entry lookahead case. The nibble-based sample/pair converters accept and emit simultaneously; `transceiver-pair-gearbox` checks every occupancy with
-backpressure/reset, and `transceiver-dense-rf-service` checks both directions
-at 40 MS/s for both sample widths over five clock phases.
-`transceiver-dense-rf-burst` also checks actual full 59-word H2D frames with
-finite FPGA buffering and a bounded initial burst followed by 40 MS/s service.
-These smaller queues do not establish an interruption or clock-drift allowance.
-
-Fast launch uses local per-bit phase drivers and synchronized reset release.
-`transceiver-pair-word-formal` proves coherent phases and the low-word capture
-window. Only the twenty launch-pair registers have a two-word setup path;
-fast word-register paths remain 3.2 ns. A kept GF180 clock buffer isolates
-divider feedback from the engine clock tree. Full physical timing, storage
-and area closure remain open.
+Checks (target names kept from the paired core): `transceiver-dense-pair`
+(quad engines against the ten-bit codec: 720 frames, all residual counts, 114
+corruption/refusal cases), `transceiver-dense-pair-link` (both pad-edge
+gearboxes in loopback, DDR and SDR, all four word rotations, five capture
+phases), `transceiver-pair-gearbox[-formal]` (sample/quad converters),
+`transceiver-dense-service` (2.5 Gb/s wired both directions at 312.5 MHz host,
+five phases; a 250 MHz host must reject overload), `transceiver-dense-rf-service`
+/`-burst` (40 MS/s both widths, at full rate and at div2), and the CDC FIFO and
+40-bit end-to-end checks in `transceiver-digital-rtl-checks`. These are
+functional RTL checks, not physical timing, clock-tolerance or interruption
+qualification.
 
 Base commands are no-op(arg0), wired-idle(arg0/1) and RF-mute(arg0/1). Extensions
 below are normative behavioral encodings, not all implemented in RTL. Reserved
@@ -120,7 +133,8 @@ it qualifies interruptions or clock tolerance.
 
 The TX wrapper holds the payload engine reset while sending
 `3A5 05A 2D3 12C 369 096 21E 1E1`, then starts frame0/header0. RX searches only
-while unlocked after reset, with a 1024 receiving-edge acquisition timeout.
+while unlocked after reset, with a 255 core-clock (1020-word) acquisition timeout,
+in any of the four word rotations of the quad stream.
 Once locked it never scans payload for training markers. Arm RX before TX;
 a missed prefix requires coordinated restart. Seeing the prefix does not prove
 header acceptance, DDR phase, lane alignment or physical timing.

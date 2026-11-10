@@ -2493,7 +2493,7 @@
    }
   },
   "rf_lo_division": {
-   "class": "lower-frequency RF via LO \u00f72/\u00f74",
+   "class": "lower-frequency RF via LO ÷2/÷4",
    "gating": false,
    "cost_allowed": "none",
    "source": "spec/exclusive-engine-policy.md#rf-band-stretch-goals",
@@ -2599,5 +2599,110 @@
    ],
    "state": "open"
   }
- ]
+ ],
+ "interfaces": {
+  "source": "spec/interface-requirements.md; traced in spec/performance-requirements.json",
+  "note": "Interface list for readiness. 'added_2026_11_10' entries are user-approved additions; they reuse existing requirement IDs where the PHY is shared and are not yet in spec/mathematical-closure.json.",
+  "baseline": {
+   "PCIe Gen1 x1 (2.5 GT/s)": "WR-PCIE-*",
+   "1000BASE-X / SGMII (1.25 GBd)": "WR-GBE-*",
+   "SATA Gen1 (1.5 Gb/s)": "WR-SATA-*",
+   "DisplayPort RBR (1.62 Gb/s)": "WR-DP-*",
+   "HDMI/DVI TMDS (742.5 Mb/s, 1.485 Gb/s)": "WR-TMDS-*",
+   "HD-SDI (1.485 Gb/s)": "WR-SDI-*",
+   "USB 2.0 HS/FS/LS": "WR-USB-*",
+   "Wi-Fi 802.11ax HE20": "RF-WIFI-*",
+   "BLE 1M/2M": "RF-BLE-*",
+   "Bluetooth BR/EDR": "RF-BT-EDR",
+   "IEEE 802.15.4 O-QPSK": "RF-154-*",
+   "LoRa 2.4 GHz": "RF-LORA-SENS"
+  },
+  "added_2026_11_10": {
+   "SATA Gen2 (3.0 Gb/s)": {
+    "new": "WR-SATA2-*",
+    "reuses": [
+     "WR-SATA-PPM",
+     "WR-SATA-SSC",
+     "WR-SATA-OOB"
+    ]
+   },
+   "DisplayPort HBR (2.7 Gb/s)": {
+    "new": "WR-DPHBR-*",
+    "reuses": [
+     "WR-DP-TXSWING",
+     "WR-DP-PPM",
+     "WR-DP-SSC",
+     "WR-DP-AUX",
+     "WR-DP-BER"
+    ]
+   },
+   "2500BASE-X (3.125 GBd)": {
+    "new": "WR-3G1-*",
+    "reuses": [
+     "WR-GBE-PPM",
+     "WR-GBE-SSC"
+    ]
+   },
+   "XAUI lane (3.125 Gb/s)": {
+    "new": "WR-3G1-*",
+    "reuses": []
+   },
+   "Continuous line rate 0.48-3.24 Gb/s (and below)": {
+    "new": "WR-RATE-CONT, WR-RATE-EDGE, WR-RATE-LOW",
+    "reuses": [
+     "wire_cdr_fpga_oversample"
+    ]
+   },
+   "Host-link fit above 2.5 Gb/s": {
+    "new": "WR-HL-LINECODE",
+    "reuses": [
+     "HL-RATE"
+    ]
+   },
+   "BLE LE Coded S=2/S=8": {
+    "new": "RF-BLE-CODED-*",
+    "reuses": [
+     "RF-BLE-MOD",
+     "RF-BLE-IBE",
+     "RF-BLE-BLOCK",
+     "RF-TX-POUT",
+     "RF-LO-JIT"
+    ]
+   },
+   "BLE Channel Sounding (Core 6.0)": {
+    "new": "RF-CS-*",
+    "reuses": [
+     "RF-BLE-MOD",
+     "RF-BLE-SENS",
+     "RF-RX-IRR",
+     "RF-TX-IRR",
+     "RF-LO-JIT"
+    ]
+   },
+   "Thread": {
+    "new": "RF-THREAD-CSL, RF-154-TURN, RF-154-CCA, RF-154-FTOL",
+    "reuses": [
+     "RF-154-EVM",
+     "RF-154-PSD",
+     "RF-154-SENS"
+    ]
+   },
+   "Zigbee": {
+    "new": "RF-PROF-ZIGBEE (mapping only)",
+    "reuses": [
+     "RF-154-*"
+    ]
+   },
+   "Matter": {
+    "new": "RF-PROF-MATTER (mapping only)",
+    "reuses": [
+     "RF-THREAD-CSL",
+     "RF-154-*",
+     "RF-WIFI-*",
+     "RF-BLE-*"
+    ]
+   }
+  },
+  "hardware_demands": "scratch/reviews/interface-changes.md, section 'Added interfaces (2026-11-10)': IX-1..IX-8"
+ }
 }

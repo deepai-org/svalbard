@@ -203,7 +203,10 @@
     "bias": [],
     "monitor": [],
     "digital": [],
-    "hostio": []
+    "hostio": [],
+    "pllvreg": [
+      "pll"
+    ]
   },
   "gating_rule": "A control output whose island list is non-empty is driven to all-zero (isolation value) unless every listed island has its switch enabled and reports power-good (or has pgood_override set). Zero is the off/disconnected/disabled encoding of every state, enable, branch and select field. Register contents keep their programmed values; only the outputs are clamped, so re-enabling an island restores the committed configuration. Island status (0x0A): power-good is a ratiometric rail-up flag, so power-good = 1 with debug.island_power = 0 is the back-drive signature (the island rail is being powered through a control, pad or bias path; analog/island_support README I4).",
   "clock_sources": [
@@ -1390,6 +1393,16 @@
           "maximum": 1,
           "unit": "code",
           "meaning": "reserved: the finite-zero hardware was removed (analog/rf_rx/README.md); reset 0, reads 0"
+        },
+        "qtrim": {
+          "bits": 2,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "live": true,
+          "direct": true,
+          "meaning": "RC-6 bbfilter_i/q Q-trim ports qt1:qt0 (shared by I and Q): 4Rq/2Rq damping across Rq of the Q=1 biquad. Reset 1 (tt/ss); ff parts 2/3. Direct live trim."
         }
       }
     },
@@ -1960,6 +1973,55 @@
           "minimum": 0,
           "maximum": 65535,
           "unit": "counts per window"
+        }
+      }
+    },
+    "core.aosc": {
+      "description": "SUB-04/RA-1: always-on oscillator pt_aosc EN (consumers: fc_src[4] and debug observation). Live; reset on. While an RF payload runs (ENABLE=1 with digital.transport_config.payload_iq = 1 (I/Q owner)) the register file forces the output to 0 regardless of this field, so the aosc cannot spur the RF receive chain.",
+      "update": "live",
+      "islands": [],
+      "live": true,
+      "base": "0x5E",
+      "fields": {
+        "enable": {
+          "bits": 1,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "clear_when_running": [
+            "digital.transport_config.payload_iq",
+            1
+          ]
+        }
+      }
+    },
+    "debug.calibration": {
+      "description": "D-CAL-1 per-board calibration record. The calibration sequence (spec/register-map.md \"Per-board calibration sequence\") runs from the host over SPI using the on-chip measurements (loopback, detectors, ATB, ADC); it writes its results into the trim fields themselves and then stamps this record. Direct live fields (no commit needed).",
+      "update": "live",
+      "islands": [],
+      "live": true,
+      "base": "0x5F",
+      "fields": {
+        "tag": {
+          "bits": 8,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 255,
+          "unit": "code",
+          "live": true,
+          "direct": true,
+          "meaning": "host-chosen calibration run tag (e.g. board serial low byte or epoch)"
+        },
+        "valid": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "live": true,
+          "direct": true,
+          "meaning": "1 = the trims hold a completed calibration for this tag"
         }
       }
     }
@@ -3422,7 +3484,7 @@
     }
   },
   "status_registers": {
-    "description": "Read-only status registers (fixed block address_policy.status_base..status_limit = 0xF0-0xFF, so status addresses do not move as control groups grow). Each field is a pt_regfile input port, synchronized bitwise into SCLK by two flops (reset by rst_n). Multi-bit counters must be Gray-coded at the source (one bit changes per step, saturating without wrap) and are converted to binary after synchronization, so a read never tears by more than one count. Writes to these addresses are rejected as address errors.",
+    "description": "Read-only status registers (fixed block address_policy.status_base..status_limit = 0xF0-0xFF, so status addresses do not move as control groups grow). Each field is a pt_regfile input port, synchronized bitwise into SCLK by two flops (reset by rst_n), unless it is marked sync=false because its source is already an SCLK-domain register. Multi-bit counters must be Gray-coded at the source (one bit changes per step, saturating without wrap) and are converted to binary after synchronization, so a read never tears by more than one count. Writes to these addresses are rejected as address errors.",
     "groups": {
       "status.pattern": {
         "description": "PRBS/pattern checker in pt_digital (pass-2 P2-6).",
@@ -3451,52 +3513,60 @@
         "fields": {}
       },
       "status.freq_count_a": {
-        "description": "Frequency counter a results, held by a req/ack handshake in RTL (no tearing; plain binary).",
+        "description": "Frequency counter a results, held by a req/ack handshake in RTL (no tearing; plain binary). The values are already SCLK-domain registers (pt_freq_count req/ack handshake copy), so they are read directly without the two-flop status synchronizer (sync=false; FF reclaim, scratch/reviews/interface-changes.md).",
         "fields": {
           "locked": {
             "bits": 1,
             "port": "fca_locked",
-            "meaning": "live level"
+            "meaning": "live level",
+            "sync": false
           },
           "lost_lock": {
             "bits": 1,
             "port": "fca_lost",
-            "meaning": "sticky until source=off"
+            "meaning": "sticky until source=off",
+            "sync": false
           },
           "diff": {
             "bits": 14,
             "port": "fca_diff",
-            "meaning": "count - target, two's complement, saturated"
+            "meaning": "count - target, two's complement, saturated",
+            "sync": false
           },
           "count": {
             "bits": 16,
             "port": "fca_count",
-            "meaning": "last window count, saturating"
+            "meaning": "last window count, saturating",
+            "sync": false
           }
         }
       },
       "status.freq_count_b": {
-        "description": "Frequency counter b results, held by a req/ack handshake in RTL (no tearing; plain binary).",
+        "description": "Frequency counter b results, held by a req/ack handshake in RTL (no tearing; plain binary). The values are already SCLK-domain registers (pt_freq_count req/ack handshake copy), so they are read directly without the two-flop status synchronizer (sync=false; FF reclaim, scratch/reviews/interface-changes.md).",
         "fields": {
           "locked": {
             "bits": 1,
             "port": "fcb_locked",
-            "meaning": "live level"
+            "meaning": "live level",
+            "sync": false
           },
           "lost_lock": {
             "bits": 1,
             "port": "fcb_lost",
-            "meaning": "sticky until source=off"
+            "meaning": "sticky until source=off",
+            "sync": false
           },
           "diff": {
             "bits": 14,
             "port": "fcb_diff",
-            "meaning": "count - target, two's complement, saturated"
+            "meaning": "count - target, two's complement, saturated",
+            "sync": false
           },
           "count": {
             "bits": 16,
             "port": "fcb_count",
-            "meaning": "last window count, saturating"
+            "meaning": "last window count, saturating",
+            "sync": false
           }
         }
       }

@@ -28,14 +28,14 @@ unfinished.
 
 | Application | Intended capabilities with suitable external logic | System boundary |
 | --- | --- | --- |
-| Gigabit networking | 1000BASE-X and SGMII interfaces | FPGA supplies coding, PCS/MAC and link management as needed; this is not a 1000BASE-T copper PHY |
-| FPGA peripherals and storage | PCIe Gen1 x1 and SATA Gen1 | FPGA supplies endpoint/controller and protocol logic |
+| Gigabit networking | 1000BASE-X and SGMII interfaces; 2500BASE-X and one XAUI lane at 3.125 GBd | FPGA supplies coding, PCS/MAC and link management as needed; this is not a 1000BASE-T copper PHY |
+| FPGA peripherals and storage | PCIe Gen1 x1, SATA Gen1 and SATA Gen2 (3.0 Gb/s) | FPGA supplies endpoint/controller and protocol logic |
 | USB peripherals and hosts | USB 2.0 High Speed, both device and host | FPGA supplies controller; host VBUS power switching/protection is external |
-| Digital displays and video bridges | HDMI/DVI, initially 720p60 and 1080p60 at 8 bits/color; DisplayPort RBR, one lane | HDMI/DVI uses three identical lane chips plus an external clock interface; FPGA supplies encoding, control and lane coordination |
+| Digital displays and video bridges | HDMI/DVI, initially 720p60 and 1080p60 at 8 bits/color; DisplayPort RBR and HBR (2.7 Gb/s), one lane | HDMI/DVI uses three identical lane chips plus an external clock interface; FPGA supplies encoding, control and lane coordination |
 | Professional video | HD-SDI at 1.485 and 1.485/1.001 Gb/s | External coax driver/equalizer and FPGA framing/scrambling |
 | Wi-Fi and SDR | 20 MHz 2.4 GHz Wi-Fi, including an 802.11ax/HE20 waveform target; custom I/Q radios | FPGA supplies modem, synchronization, FEC and MAC; MCS0–7 interoperability target; coded 64-QAM and ideal-MAC lifecycle evidence, not router interoperability |
-| Personal-area and IoT radio | Bluetooth LE, Bluetooth Classic BR/EDR, IEEE 802.15.4 for Zigbee/Thread-class systems, and 2.4 GHz LoRa | External modem/protocol implementation; LoRa here does not imply sub-GHz coverage |
-| Custom links and instruments | Proprietary GFSK, intermediate serial rates, selectable RF bandwidth/gain/sample rate, capture and waveform playback | Use generic resources within their eventual characterized operating envelope |
+| Personal-area and IoT radio | Bluetooth LE (1M, 2M, LE Coded S=2/S=8) including Bluetooth 6.0 Channel Sounding (phase-based ranging and RTT), Bluetooth Classic BR/EDR, IEEE 802.15.4 with Thread, Zigbee and Matter profiles, and 2.4 GHz LoRa | External modem/protocol implementation; LoRa here does not imply sub-GHz coverage |
+| Custom links and instruments | Proprietary GFSK, continuous serial line rates 0.48–3.24 Gb/s (lower by oversampling), selectable RF bandwidth/gain/sample rate, capture and waveform playback | Use generic resources within their eventual characterized operating envelope |
 
 Fractional video clocks such as 74.25/1.001 and 148.5/1.001 MHz are part of the
 numeric timing design. Narrower RF settings aim to serve low-rate radios without
@@ -127,7 +127,10 @@ and the recommended next steps are in [`spec/path-to-tapeout.md`](spec/path-to-t
 | [`analog/wired_tx`](analog/wired_tx/README.md) | Serializer, TMDS configuration, USB HS bias DAC |
 
 All 17 intended interfaces remain in the [closure inventory](spec/mathematical-closure.json)
-with unresolved capability verdicts. These are pre-silicon results: no protocol
+with unresolved capability verdicts. Interfaces added 2026-11-10 (SATA Gen2, DP HBR, 2500BASE-X/XAUI,
+LE Coded, Channel Sounding, Thread/Zigbee/Matter profiles, continuous line-rate coverage) are specified in
+[interface requirements](spec/interface-requirements.md) §1.9–1.13 and §2.1 and traced in
+[performance requirements](spec/performance-requirements.md); they are not yet in the closure inventory. These are pre-silicon results: no protocol
 compliance, interoperability or silicon performance is claimed. Use the
 [model guide](system_model/architecture_fast/README.md) for behavioral checks.
 

@@ -22,7 +22,7 @@ At 95 % CL, N = 3.0/BER.
 
 | ID | Requirement | Bits | Test time at line rate |
 |---|---|---|---|
-| WR-BER-SIGNOFF | BER ≤ 1e-12 at 95 % CL, zero errors, PRBS7 (8b/10b links: also K28.5/CJPAT-class pattern; SDI: pathological SDI check field) | 3.0e12 | 2.5 G: 20 min; 1.62 G: 31 min; 1.5 G: 33 min; 1.485 G: 34 min; 1.25 G: 40 min; 742.5 M: 67 min; 480 M: 104 min |
+| WR-BER-SIGNOFF | BER ≤ 1e-12 at 95 % CL, zero errors, PRBS7 (8b/10b links: also K28.5/CJPAT-class pattern; SDI: pathological SDI check field) | 3.0e12 | 2.5 G: 20 min; 1.62 G: 31 min; 1.5 G: 33 min; 1.485 G: 34 min; 1.25 G: 40 min; 742.5 M: 67 min; 480 M: 104 min; 2.7 G: 19 min; 3.0 G: 17 min; 3.125 G: 16 min |
 | WR-BER-PRESCREEN | BER ≤ 1e-9 at 95 % CL (3.0e9 bits, 1.2–6.3 s); used per corner/temperature point and in JTOL sweeps (one point per mask frequency) | 3.0e9 | ≤ 6.3 s |
 | WR-BER-SIM | Simulation acceptance: statistical eye / bathtub extrapolated to 1e-12 with ≥0.1 UI horizontal and ≥ receiver sensitivity vertical opening; short transient windows (41–61 bits) are smoke tests only | — | — |
 
@@ -134,6 +134,94 @@ the RX CDR (on-chip half/quarter-rate CDR is the primary route).
 | WR-SLICER-OFFSET | Residual offset after trim ≤ 10 mV (≤ 1/6 of 60 mVppd sensitivity) | Sensitivity gate |
 | WR-PAD-C | Wired pad C ≤ 1.6 pF effective at 1.25 GHz (or compensated by T-coil/peaking, L≈R²C) for ≥10 dB RL | 50 Ω ∥ C with matched source: |Γ| = x/√(4+x²), x = ωRC; RL = 10 dB (|Γ| = 0.316) ⇒ x ≤ 0.666 ⇒ C ≤ 1.70 pF at 1.25 GHz; 1.6 pF gives 10.5 dB. Today 2.35 (RX) / 2.71 (TX) pF ⇒ 7.6 / 6.6 dB. Bode–Fano permits ≥25 dB with matching (scratch/reviews/physical-limits.md L3) |
 
+### 1.9 Added interfaces (user-approved 2026-11-10): reuse map
+
+The rows below add only what is new. Everything else is inherited by ID:
+
+| New interface | Reuses unchanged | New rows |
+|---|---|---|
+| SATA Gen2 3.0 Gb/s | WR-SATA-PPM, WR-SATA-SSC, WR-SATA-OOB (OOB signalling is rate-independent), WR-BER-SIGNOFF, WR-PLL-JIT, WR-SLICER-OFFSET | WR-SATA2-* (§1.10), WR-RATE-*, WR-HL-LINECODE |
+| DisplayPort HBR 2.7 Gb/s | WR-DP-TXSWING (same levels/pre-emphasis), WR-DP-PPM, WR-DP-SSC, WR-DP-AUX, WR-DP-BER (1e-12 on primary route) | WR-DPHBR-* (§1.11), WR-RATE-*, WR-HL-LINECODE |
+| 2500BASE-X 3.125 GBd, XAUI lane 3.125 Gb/s | WR-GBE-BER/-PPM (±100 ppm), WR-GBE-SSC (none); 2500BASE-X uses the 1000BASE-X PCS (802.3 cl.36) clocked 2.5× | WR-3G1-* (§1.12) shared by both, WR-RATE-*, WR-HL-LINECODE |
+| Continuous line-rate coverage | — | WR-RATE-CONT, WR-RATE-EDGE, WR-RATE-LOW (§1.13) |
+
+BER signoff test time (WR-BER-SIGNOFF, 3.0e12 bits): 3.125 G 16 min; 3.0 G 17 min; 2.7 G 19 min.
+
+**Package check (all four new rates).** `scratch/cob/channel_model.py` `pulse()` rerun at the new rates
+(2026-11-10): WIRE_RX eye fraction (1 − ISI) 0.96 / 0.94 / 0.91 / 0.86 at 2.7 / 3.0 / 3.125 / 3.24 Gb/s with
+today's 2.35 pF; 0.97 / 0.94 / 0.92 / 0.92 with the S7 target 1.6 pF; WIRE_TX 0.97 / 0.95 / 0.92 / 0.93.
+The COB channel alone does not close any new eye; as at 2.5 Gb/s, **return loss and the on-die serializer/CDR
+are binding, not the package.**
+
+### 1.10 SATA Gen2, 3.0 Gb/s (SATA rev 3.x, Gen2i/Gen2m)
+
+| ID | Value (standard) | First-die adaptation | Verification |
+|---|---|---|---|
+| WR-SATA2-BER | 1e-12 | WR-BER-SIGNOFF (17 min at 3.0 G) | BERT / FPGA PRBS + ALIGN/CJTPAT-class pattern |
+| WR-SATA2-TXSWING | Gen2i 400–700 mVppd *(verify)* | 400–700 mVppd over envelope (WR-SATA-TXSWING is 400–600 for Gen1i) | Extracted TX |
+| WR-SATA2-TXJIT | Gen2i TJ ≤ 0.37 UI, DJ ≤ 0.19 UI at fbaud/500; TJ ≤ 0.55 UI at fbaud/10 *(verify)*; UI 333 ps | Same | Statistical eye, scope TIE |
+| WR-SATA2-JTOL | Gen2i RX TJ ≤ 0.60 UI, DJ ≤ 0.42 UI at fbaud/500; TJ ≤ 0.65 UI at fbaud/10 *(verify)* | Same mask, bench channel; CDR BW per S4 (0.5–4 MHz) must not filter below fbaud/500 = 6 MHz corner | JTOL |
+| WR-SATA2-RXSENS | Gen2i 275 mVppd min at RX *(verify)* | Same | Swept amplitude |
+| WR-SATA2-RL | Gen2i diff RL ≥ 18/14/10/8/3 dB over 150–300 M / 300–600 M / 0.6–1.2 G / 1.2–2.4 G / 2.4–3.0 GHz, RX and TX *(verify)* | ≥ 14 dB to 600 MHz, ≥ 10 dB to 1.2 GHz, **≥ 8 dB to 2.4 GHz** | VNA / extracted S-params |
+
+Feasibility: the 8 dB band to 2.4 GHz sets **C_pad ≤ 1.15 pF** (|Γ| = x/√(4+x²) ≤ 0.398 ⇒ x ≤ 0.868 ⇒
+C ≤ 0.868/(2π·2.4 GHz·50 Ω)); the S7 target 1.6 pF gives 5.7 dB at 2.4 GHz. At the 1.5 GHz Nyquist, 1.6 pF gives
+9.0 dB (passes 8 dB). The package-channel axis already demands ≥ 8 dB at 2.5 GHz (package-channel.md §6), so
+this is a tightening of S7, not a new axis: low-C variant or T-coil (interface-changes IX-3).
+
+### 1.11 DisplayPort HBR, 2.7 Gb/s (DP 1.2 PHY)
+
+| ID | Value (standard) | First-die adaptation | Verification |
+|---|---|---|---|
+| WR-DPHBR-TXJIT | HBR TX TJ at TP2 ≤ 0.53 UI *(verify — DP 1.2 TP2 HBR mask)*; UI 370 ps | Same; non-ISI part ≤ 0.25 UI | Scope |
+| WR-DPHBR-JTOL | HBR sink JTOL per DP CTS mask, corner 10–20 MHz *(verify)* | Until verified: PCIe Gen1 shape (WR-PCIE-JTOL) scaled to 2.7 G | JTOL |
+| WR-DPHBR-RL | RX diff RL ≥ 12 dB to 1.35 GHz class *(verify)* | ≥ 10 dB to 1.35 GHz (C_pad ≤ 1.57 pF; the S7 1.6 pF target gives 9.9 dB, i.e. borderline) | VNA |
+
+DP RBR (1.62 Gb/s) sits on the 810 MHz top edge of the half-rate band today (0 % margin); WR-RATE-EDGE fixes that.
+
+### 1.12 3.125 GBd: XAUI lane (IEEE 802.3 cl.47) and 2500BASE-X
+
+2500BASE-X is not an IEEE clause; it is the 1000BASE-X PCS at 3.125 GBd, with electrical specs taken from
+XAUI (cl.47) or 2.5GBASE-KX (802.3cb-2018 cl.128) *(verify which the target partner uses)*. Both profiles share
+these rows; differences are noted.
+
+| ID | Value (standard) | First-die adaptation | Verification |
+|---|---|---|---|
+| WR-3G1-BER | 1e-12 | WR-BER-SIGNOFF (16 min at 3.125 G) | BERT, PRBS7 + CJPAT |
+| WR-3G1-TXSWING | XAUI 800–1600 mVppd *(verify)*; 2.5GBASE-KX 800–1200 mVppd *(verify)* | ≥ 800 mVppd over envelope (same CML tail fix as WR-PCIE-TXSWING, S8) | Extracted TX |
+| WR-3G1-TXJIT | XAUI TJ ≤ 0.35 UI (112 ps), DJ ≤ 0.17 UI *(verify)* | Same | Statistical eye |
+| WR-3G1-JTOL | XAUI RX TJ 0.65 UI, DJ 0.37 UI; sinusoidal mask corner baud/1667 = 1.875 MHz *(verify)* | Same mask, bench channel | JTOL |
+| WR-3G1-PPM | ±100 ppm, no SSC | Same (inherits WR-GBE-PPM range) | Offset sweep |
+| WR-3G1-RL | XAUI diff RL ≥ 10 dB 100–625 MHz, then 10 − 10·log10(f/625 MHz) to 3.125 GHz *(verify)* | Same: ≥ 6.0 dB at the 1.5625 GHz Nyquist (1.6 pF gives 8.7 dB, passes) | VNA |
+
+### 1.13 Line-rate coverage (continuous, 0.48–3.24 Gb/s and below)
+
+Today the ring PLL covers 480–810 MHz, so the full/half/quarter-rate bands are 0.48–0.81, 0.96–1.62 and
+1.92–3.24 Gb/s, with **gaps at 0.81–0.96 and 1.62–1.92 Gb/s**, DP RBR (1.62) on an edge and 3.125/3.24 Gb/s
+within 3.6 % / 0 % of the top. With N ∈ {1, 2, 4} the bands are gap-free only if f_max ≥ 2·f_min; with a margin
+m at every edge, f_max ≥ 2·f_min·(1+m)².
+
+| ID | Requirement | Basis |
+|---|---|---|
+| WR-RATE-CONT | Every line rate in 0.48–3.24 Gb/s is reachable on the primary on-chip route (TX serializer + RX CDR, same ring) with no gaps, in at least one of full/half/quarter-rate mode, across tt/ss/ff × 22–32 °C × 3.15–3.35 V | User 2026-11-10; standards in §1.1–1.12 plus "intermediate serial rates" (README) |
+| WR-RATE-EDGE | ≥ 3 % tuning margin at every band edge, i.e. ring f_min ≤ 393 MHz and f_max ≥ 834 MHz on the **regulated** ring rail (tuning ratio ≥ 2.12:1, coarse band codes allowed). The 3 % covers −5000/+300 ppm SSC/offset (0.53 %), ±1 % PVT drift between calibrations within the envelope, and the CDR integral range (S4: +600…−5600 ppm) | Margin derivation here; ring headroom: analog/pll_vreg/README.md "810 MHz at ss needs ≥ 3.02 V" |
+| WR-RATE-LOW | Below 0.48 Gb/s: TX by ring ÷2^k word/serializer clocking (down to USB FS 12 Mb/s class), RX by FPGA oversampling of the full-rate slicer output (`wire_cdr_fpga_oversample`) at ≥ 4× ≤ 120 Mb/s, or full-rate CDR at ring/2^k ≥ 240 Mb/s *(verify CDR loop at reduced ring rate)* | Existing fallback route promoted to a documented rate mode |
+
+Feasibility against current evidence:
+
+- Ring core: `vco_replica` tunes 258 MHz (VCTRL 0.9 V, tt) to 1093 MHz; ss reaches ≥ 852 MHz only at VCTRL = VDD = 3.3 V
+  (analog/timing/README.md). On the regulated rail the ss top is 733 MHz (2.75 V) to 778 MHz (2.9 V); 810 MHz runs
+  in `BYP` with A3 jitter (≈ 29–33 ps pk DJ, analog/pll_vreg/README.md). **834 MHz regulated at ss needs the
+  ring resized for ≥ 900 MHz at 2.6 V ss** (already named there). Low end ≤ 393 MHz needs VCTRL ≈ 1.0–1.1 V at ff
+  *(not simulated)* or one extra coarse band.
+- Samplers / capture: S4 already demands 625 and 810 MHz; WR-RATE-EDGE raises this to 834 MHz (half-rate up to
+  1.67 Gb/s, quarter-rate to 3.34 Gb/s). `wrx_cap` fails above 480 MHz today.
+- TX: the 4:1 mux fails 1.92–2.97 Gb/s today (WR-PCIE-TXJIT); the new top is 3.34 Gb/s.
+- Word clock: `pt_wordclk` CK→LD ≈ 1.15 ns at tt "close to a period at 810 MHz"; at 834 MHz the period is 1.20 ns.
+- Host link: see WR-HL-LINECODE (§3.3).
+- Fallbacks: `wire_rx_board_retimer` / B13, `wire_tx_board_serializer` / B14, `wire_board_phy_bypass` (FPGA GTs
+  carry the lane, chip unused) for rates the primary route misses.
+
 ## 2. Radio interfaces (2.4–2.5 GHz)
 
 Output powers are mean power at the RF_TX pad into the board match, before
@@ -164,6 +252,50 @@ whole radio and are listed so the on-chip spurious budget has a target.
 | RF-RX-IIP3 | IIP3 ≥ −10 dBm at max gain (−0 dBm at min gain per AA lna) to meet BLE/Wi-Fi blocking | derived from RF-BLE-BLOCK, RF-WIFI-ACR | Same | PSS/HB |
 | RF-TX-MUTE | Mute isolation ≥ 40 dB (TDD spurious into own RX / regulatory off-state) | derived | Same | Sim |
 | RF-LO-JIT | LO integrated jitter ≤ 1.05 ps rms total, ≤ 0.3–0.5 ps per on-chip slot; I/Q skew ≤ 1° (1.16 ps) | clock-feasibility-envelope.md | Same | Sim + bench |
+
+### 2.1 Added radio interfaces (user-approved 2026-11-10): reuse map
+
+| New interface | Reuses unchanged | New rows |
+|---|---|---|
+| BLE LE Coded S=2 (500 kb/s) / S=8 (125 kb/s) | RF-BLE-MOD (same 1 Msym/s GFSK, h = 0.5, ±250 kHz), RF-BLE-IBE, RF-BLE-BLOCK out-of-band blocking, RF-TX-POUT, RF-TX-HARM, RF-RX-IIP3, RF-LO-JIT; T_IFS 150 µs as for 1M | RF-BLE-CODED-SENS, RF-BLE-CODED-CI, RF-BLE-CODED-PKT |
+| BLE Channel Sounding (Core 6.0, Vol 6 Part A/B/H) | RF-BLE-MOD/-IBE (CS uses LE 1M or 2M for CS_SYNC; tones are unmodulated), RF-BLE-SENS, RF-RX-IRR, RF-TX-IRR, RF-LO-JIT | RF-CS-HOP, RF-CS-TIP, RF-CS-PHASE, RF-CS-IQ, RF-CS-RTT, RF-CS-ANT, RF-CS-RANGE |
+| 802.15.4 base (gaps in RF-154-*) | RF-154-EVM, RF-154-PSD, RF-154-SENS | RF-154-TURN, RF-154-CCA, RF-154-FTOL |
+| Thread (1.3/1.4) | All RF-154-*; MAC/MLE/IPv6 in FPGA/host | RF-THREAD-CSL |
+| Zigbee (R22/R23, 2.4 GHz O-QPSK) | All RF-154-* — Zigbee adds no PHY or PHY-timing requirement beyond 802.15.4 | RF-PROF-ZIGBEE (mapping only) |
+| Matter (1.x) | Over Thread: RF-THREAD-CSL + RF-154-*; commissioning over BLE 1M: RF-BLE-*; over Wi-Fi: RF-WIFI-* | RF-PROF-MATTER (mapping only) |
+
+Source for all BLE rows: Bluetooth Core Specification v6.0 (Vol 6 Part A RF PHY, Part B Link Layer CS,
+Part H CS security/procedures) and RF-PHY.TS. Source for 802.15.4: IEEE 802.15.4-2020 §10/§12 (O-QPSK 2.4 GHz).
+Thread: Thread 1.3/1.4 specification (CSL, enhanced ACK). All numbers transcribed from memory are *(verify)*.
+
+| ID | Requirement | Standard | First-die adaptation | Verification |
+|---|---|---|---|---|
+| RF-BLE-CODED-SENS | Reference sensitivity S=8 (125 kb/s) ≤ −82 dBm, S=2 (500 kb/s) ≤ −75 dBm at 30.8 % PER, 37-byte payload *(verify)* | BT Core 6.0 Vol 6 Part A §4.1 | Target S=8 ≤ −95 dBm, S=2 ≤ −90 dBm (on-chip LNA, FPGA Viterbi/pattern-map demod) | Cascade + bench with CMW/tester |
+| RF-BLE-CODED-CI | Co-channel C/I S=8 ≤ 12 dB, S=2 ≤ 17 dB *(verify)*; adjacent ±1/±2/≥±3 MHz per the Coded table *(verify)* | BT Core 6.0 Vol 6 Part A §4.2 | Same; on-chip filter and ADC as for 1M | Sim + tester |
+| RF-BLE-CODED-PKT | Packets up to 17.04 ms (S=8, 255 B); carrier drift ≤ ±50 kHz over the packet, drift rate ≤ 400 Hz/µs *(verify)* | BT Core 6.0 Vol 6 Part A §3.1 | RX gain/AGC, DC-offset loop and LO stay fixed for ≥ 17.1 ms (no AGC re-step mid-packet unless the FPGA commands it); TX drift as RF-BLE-MOD over 17 ms | Sim (LO + DC loop over 17 ms) + bench |
+| RF-CS-HOP | Every CS step changes channel (72 channels, 2402–2480 MHz, 1 MHz grid excluding advertising channels *(verify)*); frequency-change period T_FCS ∈ {15, 20, 30, 40, 50, 60, 80, 100, 120, 150} µs, chosen from the slower device's capability *(verify)* | BT Core 6.0 Vol 6 Part B §4.5.18 / Part H | Advertise T_FCS = 80 µs (stretch 50 µs): LO **phase**-settled (≤ 2° from final trajectory) and RX/TX path settled within T_FCS − 5 µs; current warm-hop allocation is 50 µs with 35 µs external-source settling (block-diagram.md "Warm RF hopping") | Sim + bench (phase vs time after hop) |
+| RF-CS-TIP | T_IP1/T_IP2 ∈ {10, 20, 30, 40, 50, 60, 80, 145} µs, T_PM ∈ {10, 20, 40} µs *(verify)* | BT Core 6.0 Vol 6 Part B | Advertise T_IP2 ≤ 40 µs, T_PM = 40 µs: **TX↔RX direction change on the same channel with the LO running and phase-continuous**, ≤ 30 µs including converter/filter settling | Sim + bench |
+| RF-CS-PHASE | Mode-2 PBR: per-tone round-trip phase coherent within a step; Core sets the procedure, not an accuracy | BT Core 6.0 Vol 6 Part H | Derived: LO phase drift between the TX tone and the RX tone of one step ≤ 2° rms (at 80 µs separation ⇒ residual frequency transient ≤ 70 Hz, after FFO compensation); random per-tone round-trip phase error ≤ 5° rms; frequency-dependent systematic phase (linear part) ≤ 10° across 2402–2480 MHz after loopback calibration (≈ 5 cm bias). LO supply pushing of `lo_ext` 0.0025 ps/mV ⇒ 2° = 2.3 ps ⇒ ≤ 900 mV, not binding | Sim (LO + TX/RX switch), bench with reference initiator |
+| RF-CS-IQ | Tone phase from IQ imbalance | derived | IQ-induced tone phase error ≤ 1° (⇔ RX image rejection ≥ 35 dB after cal, = RF-RX-IRR post-cal) **held across the 78 MHz span** (per-channel or ≤ 5 MHz-bin cal table on the FPGA); on-chip LO I/Q trim D-LO-2 (±15°, ≤ 1° step) remains the coarse stage | Loopback cal + bench |
+| RF-CS-RTT | Mode-1 RTT: ToA/ToD timestamp precision capability 150 ns / 10 ns class, CS_SYNC on LE 1M/2M *(verify)* | BT Core 6.0 Vol 6 Part B | Fixed, readable TX-launch → RX-sample latency (deterministic to ≤ 5 ns rms after per-mode calibration); sub-tick timestamp (the action clock tick is 25.6 ns) by FPGA correlation on ADC samples ≥ 8 MS/s; ToA precision ≤ 10 ns rms at −60 dBm | RTL timing + bench |
+| RF-CS-ANT | N_AP 1–4 antenna paths, antenna-switch period T_SW ∈ {0, 1, 2, 4, 10} µs *(verify)* | BT Core 6.0 Vol 6 Part B | First die: N_AP = 1 (no switching). Multi-antenna via an external RF switch driven by FPGA GPIO, timed from the chip's tone/step boundaries (± 0.5 µs); **no chip pin** | Bench |
+| RF-CS-RANGE | Ranging accuracy (not a Core requirement; application target) | derived / market practice *(verify)* | PBR ≤ 0.5 m rms, RTT ≤ 3 m rms, cabled/attenuated link at path loss equal to 1–10 m free space; LOS bench ≤ 1 m (95 %). Error budget: σ_d ≈ 0.125 m/rad · σφ (72 tones over 78 MHz) + 0.306 m/rad · linear phase error | Bench vs reference CS device |
+| RF-154-TURN | RX↔TX turnaround ≤ aTurnaroundTime = 12 symbols = 192 µs; ACK sent at aTurnaroundTime ± … *(verify)*; channel switch ≤ 500 µs *(verify)* | 802.15.4-2020 §10.2.? / §8.? *(verify)* | Same: chip TDD switch ≤ 40 µs (shared with RF-CS-TIP) + host/FPGA latency; channel switch uses the 50 µs warm hop | Sim + bench |
+| RF-154-CCA | CCA over 8 symbols (128 µs); ED threshold ≤ 10 dB above RF-154-SENS; ED range ≥ 40 dB, ±6 dB accuracy *(verify)* | 802.15.4-2020 §10.2.5/10.2.6 *(verify)* | RSSI from ADC + known gain state; gain state readable in ≤ 128 µs | Bench |
+| RF-154-FTOL | TX centre frequency tolerance ±40 ppm (≈ ±98 kHz) | 802.15.4-2020 §12.? *(verify)* | Same (external LO / QVCO PLL reference accuracy) | Bench |
+| RF-THREAD-CSL | Coordinated Sampled Listening: receiver wakes in a CSL window; transmitter schedules to the CSL phase; CSL accuracy/uncertainty fields in ppm/10 µs units; enhanced ACK with IEs at aTurnaroundTime *(verify)* | Thread 1.3/1.4 §? *(verify)* | Chip: TX launch and RX-window start scheduled on the action clock with deterministic latency ≤ ±16 µs (1 symbol) after calibration; RX warm-up (bias on → valid samples) ≤ 100 µs; enhanced ACK built by FPGA within RF-154-TURN | RTL + bench |
+| RF-PROF-ZIGBEE | Zigbee profile = 802.15.4 O-QPSK 250 kb/s, channels 11–26 | Zigbee R23 | Inherits RF-154-* (incl. -TURN, -CCA, -FTOL); no new PHY demand | — |
+| RF-PROF-MATTER | Matter transports: Thread, Wi-Fi, BLE (commissioning) | Matter 1.x | Inherits RF-THREAD-CSL, RF-154-*, RF-WIFI-*, RF-BLE-*; no new PHY demand | — |
+
+Feasibility and host link (radio): LE Coded raw air rate is 1 Msym/s and CS tones are CW, so the RF host link is
+unchanged (well inside HL-RATE at div2, PWR-HOST-RF). RF-BLE-SENS meets −70 dBm with a 10–18 dB cascade margin
+(≈ −80…−88 dBm at 1M); the S=8 code adds ≈ 8–12 dB *(analytic, verify by demod sim)* ⇒ ≈ −88…−100 dBm vs −82 dBm.
+CS feasibility is gated by three hardware items with no evidence today: hop **phase** settling (the 35 µs external
+allocation is a frequency number; the on-chip QVCO frequency loop is still open, analog/timing/README.md),
+a phase-continuous TX↔RX direction change (warm-hop rejects "a direction change disguised as a hop"; the direction
+path is not yet timed), and a TX→RX loopback for IQ and group-delay calibration. Fallback: `rf_lo_external_ref` /
+B3 with a fast-hopping, phase-settling board synthesizer; `rf_tx_external_baseband` and `rf_bb_external_adc` keep
+FPGA timestamping working if on-chip converters miss timing.
 
 ## 3. Host-link IO timing budget (source-synchronous DDR, 156.25 MHz forwarded clock)
 
@@ -207,3 +339,4 @@ by the host-family numbers once chosen).
 | HL-TRAIN | FPGA-side per-bit deskew (IDELAY or equivalent) with ≥ 50 ps resolution; chip provides a training pattern |
 | HL-LATENCY | Control/response latency ≤ 400 ns at achieved clocks (USB HS turnaround) |
 | HL-WIDE | Proposed architecture variant (parent spec): pads stay 10-bit DDR at 156.25 MHz; core moves to a 40-bit / 78.125 MHz gearbox. **This IO timing budget is unchanged** by that variant; only HL-CORE moves. |
+| WR-HL-LINECODE | **Host-link fit for line rates above 2.5 Gb/s** (added 2026-11-10). Per-direction dense payload capacity is 10 pins × 312.5 Mb/s × 59/64 = 2.88 Gb/s; the S1 rule (host word = line/8) needs 337.5 / 375 / 390.6 MHz at 2.7 / 3.0 / 3.125 Gb/s, above the 312.5 MHz pad budget (and bi_24t input f_DDR,max 193.2 MHz tt). Raw line bits therefore **do not fit** at 3.0 and 3.125 Gb/s (104 % / 109 % of capacity) and fit at 2.7 Gb/s only with a rate-independent 312.5 MHz host word clock (94 %). Requirement: (a) for > 2.5 Gb/s the host word clock is a fixed 312.5 MHz (not line-divided), with the existing per-frame payload counts absorbing the rate difference; (b) an optional 8b/10b line-code offload in the wired boundary (RX: comma align + 10b→8b + K flag = 9 bits/symbol; TX: inverse with running disparity) so the host carries 0.9 × line: SATA Gen2 2.70 (94 %), DP HBR 2.43 (84 %), 3.125 GBd 2.81 (98 %; with XAUI ‖I‖/‖A‖ or SATA ALIGN deletion and FPGA re-insertion ≤ 95 %). Fallback: `wire_board_phy_bypass` (FPGA GT carries the lane), `debug.host_link.rate` for reduced-rate test |

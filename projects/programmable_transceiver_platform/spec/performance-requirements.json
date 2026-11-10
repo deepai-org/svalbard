@@ -1004,6 +1004,572 @@
     "rf_lo_external_ref",
     "B3"
    ]
+  },
+  {
+   "id": "WR-SATA2-BER",
+   "requirement": "3.0 Gb/s BER 1e-12 at 95 % CL (3.0e12 bits)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + wired_tx + timing + digital",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "CDR tracking fails extracted; 4:1 mux fails 1.92-2.97 Gb/s; ring 750 MHz in band but regulated-ss top 733-778 MHz",
+   "primary_fix": "AC-3 CDR + IX-1 ring/sampler range + IX-2 host fit",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_board_phy_bypass",
+    "B13",
+    "wire_tx_board_serializer",
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-SATA2-TXSWING",
+   "requirement": "Gen2i 400-700 mVppd",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "578.5 mVppd tt at lower rates; ss/3.15 V 0.50 V; 3.0 Gb/s not simulated",
+   "primary_fix": "Corner swing trim; 3.0 Gb/s extracted bench",
+   "fallback": [
+    "wire_tx_board_serializer",
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-SATA2-TXJIT",
+   "requirement": "Gen2i TJ <= 0.37 UI, DJ <= 0.19 UI (fbaud/500)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx + timing",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "4:1 mux fails 1.92-2.97 Gb/s; serializer DJ 0.38 UI at 1.25 G",
+   "primary_fix": "Compact-cell 4:1 mux to 3.34 Gb/s (IX-1)",
+   "fallback": [
+    "wire_tx_board_serializer",
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-SATA2-JTOL",
+   "requirement": "Gen2i JTOL TJ 0.60 / DJ 0.42 UI",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + timing",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_board_phy_bypass",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-SATA2-RXSENS",
+   "requirement": "RX >= 275 mVppd",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (ctle, slicer)",
+   "evidence": [
+    "analog/wired_rx/generated/slicer-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no 3.0 Gb/s sensitivity sim; slicer offset fails 10 mV today",
+   "primary_fix": "Slicer trim (WR-SLICER-OFFSET) + 3.0 Gb/s statistical eye",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_board_phy_bypass",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-SATA2-RL",
+   "requirement": "Diff RL >= 8 dB to 2.4 GHz (>= 10 dB to 1.2 GHz)",
+   "source": "spec/interface-requirements.md",
+   "owner": "pads + wired_rx/tx",
+   "evidence": [
+    "analog/pads/README.md",
+    "spec/package-channel.md"
+   ],
+   "status": "fails",
+   "basis": "needs C_pad <= 1.15 pF; today 2.35/2.71 pF, S7 target 1.6 pF gives 5.7 dB at 2.4 GHz",
+   "primary_fix": "IX-3 low-C pad or T-coil to <= 1.15 pF effective",
+   "fallback": [
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-DPHBR-TXJIT",
+   "requirement": "HBR TX TJ at TP2 per DP 1.2 (verify)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx + timing",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "4:1 mux fails 1.92-2.97 Gb/s",
+   "primary_fix": "Compact-cell 4:1 mux (IX-1)",
+   "fallback": [
+    "wire_tx_board_serializer",
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-DPHBR-JTOL",
+   "requirement": "HBR sink JTOL per DP CTS (verify)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + timing",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no JTOL evidence",
+   "primary_fix": "AC-3 CDR closure",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_board_phy_bypass",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-DPHBR-RL",
+   "requirement": "RX diff RL >= 10 dB to 1.35 GHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "pads + wired_rx",
+   "evidence": [
+    "analog/pads/README.md"
+   ],
+   "status": "fails",
+   "basis": "needs C_pad <= 1.57 pF; today 2.35 pF",
+   "primary_fix": "S7 / IX-3",
+   "fallback": [
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-3G1-BER",
+   "requirement": "3.125 GBd BER 1e-12 at 95 % CL (XAUI lane / 2500BASE-X)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + wired_tx + timing + digital",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "analog/wired_tx/generated/wiredtx-evidence.json",
+    "analog/timing/generated/pll_ring-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "ring 781 MHz needed: 3.6 % below 810 MHz edge, above regulated ss top 733-778 MHz; serializer fails > 1.92 Gb/s; host link 109 % of capacity",
+   "primary_fix": "IX-1 ring/sampler/serializer range + IX-2 8b/10b offload",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_board_phy_bypass",
+    "B13",
+    "wire_tx_board_serializer",
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-3G1-TXSWING",
+   "requirement": ">= 800 mVppd (XAUI 800-1600)",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "578.5 mVppd tt",
+   "primary_fix": "S8 CML tail >= 16 mA",
+   "fallback": [
+    "wire_tx_board_serializer",
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-3G1-TXJIT",
+   "requirement": "TJ <= 0.35 UI (112 ps), DJ <= 0.17 UI",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_tx + timing",
+   "evidence": [
+    "analog/wired_tx/generated/wiredtx-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "serializer DJ 305 ps pp at 1.25 G; 810 MHz in BYP has ~29-33 ps pk supply DJ",
+   "primary_fix": "Compact retiming + IX-1 regulated 834 MHz ring",
+   "fallback": [
+    "wire_tx_board_serializer",
+    "B14"
+   ]
+  },
+  {
+   "id": "WR-3G1-JTOL",
+   "requirement": "RX TJ 0.65 / DJ 0.37 UI, corner 1.875 MHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx + timing",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no JTOL evidence",
+   "primary_fix": "AC-3 CDR closure at 781 MHz quarter rate",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_board_phy_bypass",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-3G1-PPM",
+   "requirement": "+-100 ppm, no SSC",
+   "source": "spec/interface-requirements.md",
+   "owner": "wired_rx (cdr)",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-rtl-check.json"
+   ],
+   "status": "unverified",
+   "basis": "FLL behavioural only",
+   "primary_fix": "AC-3 continuous integral path",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_board_phy_bypass",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-3G1-RL",
+   "requirement": "Diff RL >= 10 dB to 625 MHz, >= 6 dB at 1.5625 GHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "pads + wired_rx/tx",
+   "evidence": [
+    "analog/pads/README.md",
+    "spec/package-channel.md"
+   ],
+   "status": "fails",
+   "basis": "2.35/2.71 pF -> 6.0/5.1 dB at 1.5625 GHz; 1.6 pF gives 8.7 dB",
+   "primary_fix": "S7",
+   "fallback": [
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-RATE-CONT",
+   "requirement": "Every line rate 0.48-3.24 Gb/s reachable on the primary route, no gaps",
+   "source": "spec/interface-requirements.md",
+   "owner": "timing (pll_ring) + wired_rx + wired_tx + digital (clocktree)",
+   "evidence": [
+    "analog/timing/generated/pll_ring-evidence.json",
+    "analog/timing/README.md"
+   ],
+   "status": "fails",
+   "basis": "ring 480-810 MHz modes: gaps 0.81-0.96 and 1.62-1.92 Gb/s",
+   "primary_fix": "IX-1 ring tuning ratio >= 2.12:1 (393-834 MHz regulated) with coarse bands",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "wire_tx_board_serializer",
+    "wire_board_phy_bypass"
+   ]
+  },
+  {
+   "id": "WR-RATE-EDGE",
+   "requirement": ">= 3 % margin at every band edge (ring <= 393 MHz and >= 834 MHz regulated)",
+   "source": "spec/interface-requirements.md",
+   "owner": "timing (pll_ring, pll_vreg) + wired_rx (samplers, wrx_cap) + wired_tx",
+   "evidence": [
+    "analog/timing/generated/pll_ring-evidence.json",
+    "analog/pll_vreg/README.md"
+   ],
+   "status": "fails",
+   "basis": "regulated ss top 733-778 MHz; 810 MHz only in BYP; DP RBR on the 810 MHz edge; wrx_cap fails > 480 MHz",
+   "primary_fix": "IX-1 ring resize >= 900 MHz at 2.6 V ss; samplers/wordclk to 834 MHz",
+   "fallback": [
+    "wire_rx_board_retimer",
+    "B13"
+   ]
+  },
+  {
+   "id": "WR-RATE-LOW",
+   "requirement": "Rates below 0.48 Gb/s via ring /2^k TX and FPGA oversampling / reduced-rate CDR",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (clocktree) + wired_rx",
+   "evidence": [
+    "analog/wired_rx/generated/cdr-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "oversample route exists as fallback only; no CDR run at ring/2^k",
+   "primary_fix": "Document and test the low-rate mode (IX-4)",
+   "fallback": [
+    "wire_cdr_fpga_oversample"
+   ]
+  },
+  {
+   "id": "WR-HL-LINECODE",
+   "requirement": "Host link carries > 2.5 Gb/s lines: fixed 312.5 MHz host word clock + optional 8b/10b offload",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (wired boundary, transport) + hostio",
+   "evidence": [
+    "evidence/digital-hardening-evidence.json",
+    "spec/streaming-transport-v2.md"
+   ],
+   "status": "fails",
+   "basis": "dense capacity 2.88 Gb/s/dir: 3.0 / 3.125 Gb/s raw = 104 / 109 %; line/8 needs 375 / 391 MHz > 312.5 MHz",
+   "primary_fix": "IX-2 rate-independent host clock + 8b/10b offload (0.9 x line)",
+   "fallback": [
+    "wire_board_phy_bypass",
+    "debug.host_link.rate div2/div4"
+   ]
+  },
+  {
+   "id": "RF-BLE-CODED-SENS",
+   "requirement": "LE Coded S=8 <= -82 dBm, S=2 <= -75 dBm (target -95 / -90)",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + FPGA demod",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "projected -88..-100 dBm (S=8) from RF-BLE-SENS cascade + 8-12 dB coding gain; no coded demod sim",
+   "primary_fix": "Coded demod sim on extracted RX chain",
+   "fallback": [
+    "rf_lna_bypass",
+    "B5"
+   ]
+  },
+  {
+   "id": "RF-BLE-CODED-CI",
+   "requirement": "LE Coded C/I co-channel 12 dB (S=8) / 17 dB (S=2), adjacent per table",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + converters",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "not simulated (as RF-BLE-BLOCK)",
+   "primary_fix": "Interferer sim with real filter/ADC",
+   "fallback": [
+    "rf_bb_external_adc"
+   ]
+  },
+  {
+   "id": "RF-BLE-CODED-PKT",
+   "requirement": "17.04 ms packets: gain/DC loop/LO stable; drift <= +-50 kHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + timing (LO) + digital (AGC)",
+   "evidence": [
+    "analog/timing/generated/lo_ext-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "no long-packet sim",
+   "primary_fix": "17 ms LO + DC-loop sim",
+   "fallback": [
+    "rf_lo_external_ref",
+    "B3"
+   ]
+  },
+  {
+   "id": "RF-CS-HOP",
+   "requirement": "CS step hop: LO phase-settled (<= 2 deg) within T_FCS - 5 us; advertise T_FCS 80 us",
+   "source": "spec/interface-requirements.md",
+   "owner": "timing (rf PLL/QVCO, lo_ext) + board LO + digital",
+   "evidence": [
+    "analog/timing/generated/lo_ext-evidence.json",
+    "analog/timing/README.md",
+    "spec/block-diagram.md"
+   ],
+   "status": "unverified",
+   "basis": "warm hop 50 us allocation is frequency settling (35 us external); on-chip QVCO frequency loop open",
+   "primary_fix": "IX-5 phase-settling spec for B3 synthesizer and on-chip PLL",
+   "fallback": [
+    "rf_lo_external_ref",
+    "B3"
+   ]
+  },
+  {
+   "id": "RF-CS-TIP",
+   "requirement": "TX<->RX direction change on same channel <= 30 us, LO phase-continuous (T_IP2 <= 40 us)",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx + rf_rx + timing + digital",
+   "evidence": [
+    "analog/timing/generated/lo_ext-evidence.json",
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "direction change not timed; warm-hop rejects direction change as hop",
+   "primary_fix": "IX-6 timed phase-continuous TDD switch",
+   "fallback": [
+    "rf_lo_external_ref"
+   ]
+  },
+  {
+   "id": "RF-CS-PHASE",
+   "requirement": "Per-tone round-trip phase: <= 2 deg LO drift TX->RX tone, <= 5 deg rms random, <= 10 deg linear across band after cal",
+   "source": "spec/interface-requirements.md",
+   "owner": "timing (LO) + rf_rx + rf_tx",
+   "evidence": [
+    "analog/timing/generated/lo_ext-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "lo_ext supply pushing 0.0025 ps/mV (not binding); no phase-drift sim",
+   "primary_fix": "LO phase-drift sim across TX/RX switch + IX-7 loopback cal",
+   "fallback": [
+    "rf_lo_external_ref",
+    "B3"
+   ]
+  },
+  {
+   "id": "RF-CS-IQ",
+   "requirement": "IQ tone-phase error <= 1 deg (IRR >= 35 dB after cal) across 2402-2480 MHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + timing (LO I/Q trim) + FPGA cal",
+   "evidence": [
+    "analog/rf_rx/generated/rxmix_i-evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "~29 dB uncorrected (tt); COB LO hybrid 6-10 deg needs D-LO-2 trim; no across-band cal",
+   "primary_fix": "D-LO-2 trim + IX-7 loopback per-bin cal",
+   "fallback": [
+    "rf_lo_external_ref",
+    "B19"
+   ]
+  },
+  {
+   "id": "RF-CS-RTT",
+   "requirement": "Deterministic TX-launch -> RX-sample latency <= 5 ns rms; ToA <= 10 ns rms",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (scheduler, converters FIFO) + converters",
+   "evidence": [
+    "spec/streaming-transport-v2.md"
+   ],
+   "status": "unverified",
+   "basis": "action clock 25.6 ns ticks; epoch FIFO latency not characterised",
+   "primary_fix": "IX-8 fixed, readable latency + FPGA sub-tick timestamp",
+   "fallback": [
+    "rf_bb_external_adc"
+   ]
+  },
+  {
+   "id": "RF-CS-ANT",
+   "requirement": "N_AP=1 first die; multi-antenna via FPGA-driven external switch, no chip pin",
+   "source": "spec/interface-requirements.md",
+   "owner": "board + FPGA",
+   "evidence": [
+    "spec/block-diagram.md"
+   ],
+   "status": "unverified",
+   "basis": "procedure-level only",
+   "primary_fix": "Board recipe; FPGA tone-boundary timing from action clock",
+   "fallback": [
+    "B17"
+   ]
+  },
+  {
+   "id": "RF-CS-RANGE",
+   "requirement": "PBR <= 0.5 m rms, RTT <= 3 m rms (cabled 1-10 m equivalent)",
+   "source": "spec/interface-requirements.md",
+   "owner": "system (rf_rx + rf_tx + timing + FPGA)",
+   "evidence": [
+    "analog/timing/generated/lo_ext-evidence.json",
+    "analog/rf_rx/generated/rxmix_i-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "depends on RF-CS-PHASE/-IQ/-RTT",
+   "primary_fix": "Close RF-CS-PHASE, -IQ, -RTT; bench vs reference device",
+   "fallback": [
+    "rf_lo_external_ref",
+    "B3"
+   ]
+  },
+  {
+   "id": "RF-154-TURN",
+   "requirement": "RX<->TX turnaround <= 192 us (12 symbols); channel switch <= 500 us",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_tx + rf_rx + digital",
+   "evidence": [
+    "spec/block-diagram.md"
+   ],
+   "status": "unverified",
+   "basis": "warm hop 50 us; direction change not timed",
+   "primary_fix": "IX-6 TDD switch <= 40 us",
+   "fallback": [
+    "rf_lo_external_ref"
+   ]
+  },
+  {
+   "id": "RF-154-CCA",
+   "requirement": "CCA/ED over 128 us, ED range >= 40 dB, +-6 dB",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + converters + digital",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "gain state + ADC RSSI not characterised",
+   "primary_fix": "RSSI calibration vs gain code",
+   "fallback": [
+    "rf_bb_external_adc"
+   ]
+  },
+  {
+   "id": "RF-154-FTOL",
+   "requirement": "TX frequency +-40 ppm",
+   "source": "spec/interface-requirements.md",
+   "owner": "timing (LO ref) + board",
+   "evidence": [
+    "analog/timing/generated/lo_ext-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "set by REF_IN / B3 source accuracy",
+   "primary_fix": "Board XO/synth accuracy",
+   "fallback": [
+    "B3"
+   ]
+  },
+  {
+   "id": "RF-THREAD-CSL",
+   "requirement": "CSL scheduled TX/RX with deterministic latency <= +-16 us; RX warm-up <= 100 us",
+   "source": "spec/interface-requirements.md",
+   "owner": "digital (scheduler) + rf_rx",
+   "evidence": [
+    "spec/streaming-transport-v2.md"
+   ],
+   "status": "unverified",
+   "basis": "scheduler latency modelled at full clock only",
+   "primary_fix": "Latency characterisation (shared with RF-CS-RTT)",
+   "fallback": [
+    "rf_bb_external_adc"
+   ]
+  },
+  {
+   "id": "RF-PROF-ZIGBEE",
+   "requirement": "Zigbee = RF-154-* profile, no new PHY demand",
+   "source": "spec/interface-requirements.md",
+   "owner": "spec",
+   "evidence": [
+    "spec/interface-requirements.md"
+   ],
+   "status": "unverified",
+   "basis": "inherits RF-154-*",
+   "primary_fix": "Close RF-154-*",
+   "fallback": []
+  },
+  {
+   "id": "RF-PROF-MATTER",
+   "requirement": "Matter = Thread / Wi-Fi / BLE profile, no new PHY demand",
+   "source": "spec/interface-requirements.md",
+   "owner": "spec",
+   "evidence": [
+    "spec/interface-requirements.md"
+   ],
+   "status": "unverified",
+   "basis": "inherits RF-THREAD-CSL, RF-154-*, RF-WIFI-*, RF-BLE-*",
+   "primary_fix": "Close inherited rows",
+   "fallback": []
   }
  ]
 }

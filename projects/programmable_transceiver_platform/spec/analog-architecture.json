@@ -5516,11 +5516,18 @@
           ]
         },
         "acquisition_timeout_ui": {
-          "bits": 24,
-          "default": 1024,
-          "maximum": 16777215,
+          "address_slots": 2,
+          "bits": 10,
+          "decode": "mant_exp",
+          "decoded_bits": 24,
+          "default": 192,
+          "description": "R3 re-encoding (frees FF; scratch/reviews/interface-changes.md): 10-bit code e[9:5]:m[4:0]. The macro exports the decoded 24-bit value on analog_cfg: m for e = 0 (1..31 exact), (32 + m) << (e - 1) for 1 <= e <= 19 (relative step <= 1/32), 16777215 for e >= 20. Same 1..16777215 range as the former 24-bit field; host software converts with pt_regmap.mant_exp_code(). Reset code 192 = 1024 UI (unchanged).",
+          "mantissa_bits": 5,
+          "maximum": 1023,
           "minimum": 1,
-          "unit": "code"
+          "unit": "code",
+          "value_maximum": 16777215,
+          "value_minimum": 1
         },
         "cap_rcsel": {
           "bits": 2,
@@ -5528,7 +5535,7 @@
           "maximum": 2,
           "minimum": 0,
           "unit": "code",
-          "description": "pt_wrx_cap static re-capture select (interface-changes W1): slicer output S_j re-captured on CKP(j+k), k = 2, 4, 6 for codes 0, 1, 2. Reset 1 (k = 4, the fixed r1 behaviour). Calibrated from raw words."
+          "description": "pt_wrx_cap re-capture select, bound as RCS = cap_rcsel[1] (W1-r3/AC3-W4, wired_rx r3a): code 1 (reset) = slicer output re-captured T/2 after sampling (r2f behaviour); code 2 = re-captured one full ring period after sampling (needed by the r2 slicer at 810 MHz and 625 MHz ss). Code 0 aliases 1. Calibrated from raw words (0 PRBS/comma errors, EW consistent with DW)."
         },
         "burst_acquire_rows": {
           "bits": 5,
@@ -5604,11 +5611,18 @@
           ]
         },
         "scheduled_quiet_limit_ui": {
-          "bits": 24,
+          "address_slots": 2,
+          "bits": 10,
+          "decode": "mant_exp",
+          "decoded_bits": 24,
           "default": 1,
-          "maximum": 16777215,
+          "description": "R3 re-encoding (frees FF; scratch/reviews/interface-changes.md): 10-bit code e[9:5]:m[4:0]. The macro exports the decoded 24-bit value on analog_cfg: m for e = 0 (1..31 exact), (32 + m) << (e - 1) for 1 <= e <= 19 (relative step <= 1/32), 16777215 for e >= 20. Same 1..16777215 range as the former 24-bit field; host software converts with pt_regmap.mant_exp_code(). Reset code 1 = 1 UI (unchanged).",
+          "mantissa_bits": 5,
+          "maximum": 1023,
           "minimum": 1,
-          "unit": "code"
+          "unit": "code",
+          "value_maximum": 16777215,
+          "value_minimum": 1
         },
         "periodic_tracking_enable": {
           "bits": 1,
@@ -5969,11 +5983,18 @@
           "unit": "code"
         },
         "test_timeout_ticks": {
-          "bits": 24,
-          "default": 250000,
-          "maximum": 16777215,
+          "address_slots": 2,
+          "bits": 10,
+          "decode": "mant_exp",
+          "decoded_bits": 24,
+          "default": 445,
+          "description": "R3 re-encoding (frees FF; scratch/reviews/interface-changes.md): 10-bit code e[9:5]:m[4:0]. The macro exports the decoded 24-bit value on analog_cfg: m for e = 0 (1..31 exact), (32 + m) << (e - 1) for 1 <= e <= 19 (relative step <= 1/32), 16777215 for e >= 20. Same 1..16777215 range as the former 24-bit field; host software converts with pt_regmap.mant_exp_code(). Reset code 445 = 249856 ticks (was 250000; 0.5..1 ms window unchanged).",
+          "mantissa_bits": 5,
+          "maximum": 1023,
           "minimum": 1,
-          "unit": "code"
+          "unit": "code",
+          "value_maximum": 16777215,
+          "value_minimum": 1
         }
       },
       "update": "scheduled_test_only_stopped_thresholds"
@@ -5995,25 +6016,43 @@
     "digital.guard_config": {
       "fields": {
         "gain_settle_ticks": {
-          "bits": 16,
+          "bits": 9,
+          "decode": "mant_exp",
+          "decoded_bits": 16,
+          "mantissa_bits": 5,
           "default": 8,
-          "maximum": 65535,
           "minimum": 1,
-          "unit": "ticks"
+          "maximum": 511,
+          "unit": "code",
+          "value_minimum": 1,
+          "value_maximum": 65535,
+          "description": "FF reclaim (same encoding as R3): 9-bit code e[8:5]:m[4:0]; the macro exports the decoded 16-bit value: m for e = 0, (2^5 + m) << (e - 1) up to 2^16 - 1 (saturating). Same 1..65535 range as the former 16-bit field, relative step <= 1/2^5 above 2^5. Reset code 8 = 8 (ticks; unchanged)."
         },
         "rx_to_tx_ticks": {
-          "bits": 16,
+          "bits": 9,
+          "decode": "mant_exp",
+          "decoded_bits": 16,
+          "mantissa_bits": 5,
           "default": 32,
-          "maximum": 65535,
           "minimum": 1,
-          "unit": "ticks"
+          "maximum": 511,
+          "unit": "code",
+          "value_minimum": 1,
+          "value_maximum": 65535,
+          "description": "FF reclaim (same encoding as R3): 9-bit code e[8:5]:m[4:0]; the macro exports the decoded 16-bit value: m for e = 0, (2^5 + m) << (e - 1) up to 2^16 - 1 (saturating). Same 1..65535 range as the former 16-bit field, relative step <= 1/2^5 above 2^5. Reset code 32 = 32 (ticks; unchanged)."
         },
         "tx_to_rx_ticks": {
-          "bits": 16,
+          "bits": 9,
+          "decode": "mant_exp",
+          "decoded_bits": 16,
+          "mantissa_bits": 5,
           "default": 32,
-          "maximum": 65535,
           "minimum": 1,
-          "unit": "ticks"
+          "maximum": 511,
+          "unit": "code",
+          "value_minimum": 1,
+          "value_maximum": 65535,
+          "description": "FF reclaim (same encoding as R3): 9-bit code e[8:5]:m[4:0]; the macro exports the decoded 16-bit value: m for e = 0, (2^5 + m) << (e - 1) up to 2^16 - 1 (saturating). Same 1..65535 range as the former 16-bit field, relative step <= 1/2^5 above 2^5. Reset code 32 = 32 (ticks; unchanged)."
         },
         "wire_trim_settle_ui": {
           "bits": 8,
@@ -6059,6 +6098,15 @@
           "maximum": 1,
           "minimum": 0,
           "unit": "boolean"
+        },
+        "tx_interp": {
+          "bits": 1,
+          "default": "bypass",
+          "values": [
+            "bypass",
+            "halfband"
+          ],
+          "description": "SP-03/RA-14 TX DAC update: bypass = DAC at the 40 MS/s sample rate (ZOH, rf_tx_clk = 40 MHz); halfband = on-chip 2x halfband interpolator (rtl/pt_interp2x.sv), DAC at 80 MS/s with rf_tx_clk = 80 MHz, core RF TX side on rf_tx_clk/2."
         }
       },
       "update": "stopped_only; requires trained100MHz SDR host_follow, warmed480MHz line clock, both FIFO epochs reset and initial credits acknowledged"
@@ -6085,6 +6133,14 @@
           "maximum": 1,
           "minimum": 0,
           "unit": "code"
+        },
+        "d2h_stagger": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "D-DG-2: 2-group D2H launch stagger (~200 ps between the two lane groups), off by default."
         }
       },
       "update": "stopped"
@@ -6128,11 +6184,18 @@
           "unit": "code"
         },
         "qualification_ticks": {
-          "bits": 32,
-          "default": 1200,
-          "maximum": 4294967295,
+          "bits": 11,
+          "decode": "mant_exp",
+          "decoded_bits": 32,
+          "mantissa_bits": 6,
+          "default": 331,
           "minimum": 1,
-          "unit": "code"
+          "maximum": 2047,
+          "unit": "code",
+          "value_minimum": 1,
+          "value_maximum": 4294967295,
+          "description": "FF reclaim (same encoding as R3): 11-bit code e[10:6]:m[5:0]; the macro exports the decoded 32-bit value: m for e = 0, (2^6 + m) << (e - 1) up to 2^32 - 1 (saturating). Same 1..4294967295 range as the former 32-bit field, relative step <= 1/2^6 above 2^6. Reset code 331 = 1200 (ticks; unchanged).",
+          "address_slots": 2
         },
         "require_input_clock": {
           "bits": 1,
@@ -6423,6 +6486,14 @@
           "maximum": 255,
           "minimum": 0,
           "unit": "code"
+        },
+        "single_ended": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "D-TX-2 single-ended output (one leg into an on-chip dummy load, -3 dB Pout). Hardware not built yet (RC-11); field reserved so the board recipe and binding exist."
         }
       },
       "update": "stopped"
@@ -7285,6 +7356,172 @@
         }
       },
       "update": "stopped_or_scheduled_direction"
+    },
+    "cdr.ac3": {
+      "base": "0xE5",
+      "update": "stopped",
+      "description": "AC-3 CDR loop controls (interface-changes AC3-W1..W3): pump-leg bang-bang loop with the RTL FLL on the same legs.",
+      "fields": {
+        "integral_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "Continuous integral (frequency) path enable after FLL hand-over."
+        },
+        "loop_bw": {
+          "bits": 3,
+          "default": 2,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "description": "Pump unit-leg current 8/16/32/64 nA (codes 0..3) -> BB loop bandwidth about 0.5/1/2/4 MHz at 0.05 UI rms (AC3-W2, replaces bb_gain). Reset 2 = 32 nA (2.5 Gb/s default). Codes 4..7 reserved."
+        },
+        "fll_ref_wck": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "AC3-W3: 1 = forwarded TMDS clock (WCK, <= 150 MHz) is the RX FLL count reference (HDMI/DVI); 0 = REF."
+        }
+      }
+    },
+    "cdr.phase_trim": {
+      "base": "0xEC",
+      "update": "live_trim",
+      "description": "AC-3 per-phase sampling-phase trim cdr.phase_trim[7:0][4:0] (one 5-bit code per ring phase). Direct live trims: a write takes effect at once (no shadow/commit), so calibration loops can sweep them while receiving.",
+      "fields": {
+        "p0": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "p1": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "p2": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "p3": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "p4": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "p5": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "p6": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "p7": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        }
+      }
+    },
+    "lna.match": {
+      "base": "0xE6",
+      "update": "stopped",
+      "description": "LNA input match (RC-9/RC-10, package D-RX-1/2): shunt C trim ct0..ct2 (62.5/125/250 fF per leg), opt-in 200 ohm/leg termination, single-ended RX (RF_RX_N AC-grounded).",
+      "fields": {
+        "ctrim": {
+          "bits": 3,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "code",
+          "description": "lna ports ct0..ct2: shunt C per leg = 62.5 fF x code. Direct live trim (per-board calibration).",
+          "live": true,
+          "direct": true
+        },
+        "rterm": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "lna port rterm: 200 ohm/leg input termination, opt-in robustness mode (costs 1.5-4 dB NF)."
+        },
+        "se": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "lna port se: single-ended RX, RF_RX_N to VSS through 5 pF MIM + NMOS (reset 0 = differential)."
+        }
+      }
+    },
+    "pllvreg.config": {
+      "base": "0xE7",
+      "update": "stopped",
+      "description": "pt_pll_vreg ring-supply regulators (PD9/RA-17), one per ring. Reset = bypassed (VOUT = VIN through the BYP PMOS). After a regulator is taken out of bypass, or its island powers up, pt_vreg_seq holds that ring's PLL enable low for >= 50 us (5000 REF cycles at <= 100 MHz) so VOUT settles (start-up <= 37 us).",
+      "fields": {
+        "tx_bypass": {
+          "bits": 1,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "TX/host ring regulator BYP (1 = bypassed). 810 MHz at ss needs the ring at >= 3.02 V: run that mode bypassed."
+        },
+        "rx_bypass": {
+          "bits": 1,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "CDR (RX) ring regulator BYP (1 = bypassed)."
+        }
+      }
     }
   },
   "control_semantics": {

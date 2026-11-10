@@ -1310,16 +1310,17 @@
   },
   {
    "id": "WR-HL-LINECODE",
-   "requirement": "Host link carries > 2.5 Gb/s lines: fixed 312.5 MHz host word clock + optional 8b/10b offload",
+   "requirement": "Host link carries 3.0-3.24 Gb/s lines with >= 4 % margin: fixed 312.5 MHz host word clock, 8b/10b offload both directions, L=256 frames (HL-FRAME), reversible north bank RX2 for raw RX (HL-DIR)",
    "source": "spec/interface-requirements.md",
    "owner": "digital (wired boundary, transport) + hostio",
    "evidence": [
     "evidence/digital-hardening-evidence.json",
-    "spec/streaming-transport-v2.md"
+    "spec/streaming-transport-v2.md",
+    "../../scratch/reviews/host-link-bandwidth.md"
    ],
    "status": "fails",
-   "basis": "dense capacity 2.88 Gb/s/dir: 3.0 / 3.125 Gb/s raw = 104 / 109 %; line/8 needs 375 / 391 MHz > 312.5 MHz",
-   "primary_fix": "IX-2 rate-independent host clock + 8b/10b offload (0.9 x line)",
+   "basis": "today 2.88 Gb/s/dir (59/64): raw 3.0/3.125/3.24 = 104/109/112 %, 8b/10b 94/98/101 %; planned: 8b/10b at L=256 = 88/92/95 % each direction (full duplex), raw RX in RX2 = 52/54/56 % of 5.76 Gb/s; L=256, RX2 and d2h_stagger not yet in RTL",
+   "primary_fix": "HB-1..HB-6 (interface-changes.md): stagger + fast slew, L=256 frames, 8b/10b both ways, per-direction rate, hold-padding, RX2 bank reversal",
    "fallback": [
     "wire_board_phy_bypass",
     "debug.host_link.rate div2/div4"

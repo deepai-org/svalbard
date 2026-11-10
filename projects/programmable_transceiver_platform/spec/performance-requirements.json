@@ -1570,6 +1570,209 @@
    "basis": "inherits RF-THREAD-CSL, RF-154-*, RF-WIFI-*, RF-BLE-*",
    "primary_fix": "Close inherited rows",
    "fallback": []
+  },
+  {
+   "id": "RF-RX-MAXIN",
+   "requirement": "Max input: Wi-Fi -20 dBm mean, BLE -10 dBm, 15.4 -20 dBm without TIA/LNA clipping",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx",
+   "evidence": [
+    "analog/rf_rx/generated/rxmix_i-evidence.json",
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "Estimate: TIA clips at ~-34 dBm CW at LNA high gain (41.7 dB to TIA out, +-0.8 V swing assumed; +-6 dB), ~-20 dBm via bypass: ~24 dB short (RXR-01)",
+   "primary_fix": "TIA feedback-R steps + LNA stage-2 attenuation (>= 30 dB pre-filter range)",
+   "fallback": [
+    "rf_lna_bypass"
+   ]
+  },
+  {
+   "id": "RF-RX-AGC",
+   "requirement": "Gain range >= 70 dB (>= 30 dB pre-filter, <= 6 dB steps); step settle <= 0.5 us; decision->gain <= 1 us; AGC <= 4 us",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + digital (opcode4) + FPGA",
+   "evidence": [
+    "analog/rf_rx/generated/bbfilter_i-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "Pre-filter range 3 dB (+ bypass); opcode4 fast gain not in RTL; SPI write 1.6 us/step -> ~7.6 us for 2 steps vs 8 us L-STF (RXR-03)",
+   "primary_fix": "Implement opcode4 in receiver RTL; add pre-filter gain steps (RXR-01)",
+   "fallback": []
+  },
+  {
+   "id": "RF-RX-OVLD",
+   "requirement": "Pre-filter overload flag at TIA output within 0.2 us, in status + D2H stream",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + digital",
+   "evidence": [],
+   "status": "fails",
+   "basis": "No detector exists; RSSI is post-filter only (RXR-09)",
+   "primary_fix": "2 latched comparators per path at the TIA output + status bit",
+   "fallback": []
+  },
+  {
+   "id": "RF-RX-RECOV",
+   "requirement": "Recovery <= 2 us after pulsed in-band blocker at every gain state",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Not simulated (RXR-08)",
+   "primary_fix": "Overload-recovery transient with the RXR-01 sim",
+   "fallback": []
+  },
+  {
+   "id": "RF-RX-DCOC",
+   "requirement": "DC offset at ADC <= 5 % FS at every PGA code used; dynamic offset <= 5 % FS",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + FPGA",
+   "evidence": [
+    "analog/rf_rx/generated/rxmix_i-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "TIA trim residual <= 4.5 mV x PGA: 24 dB 8 %, 30 dB 16 %, 42 dB 65 % FS; signal-dependent shift ~20 mV (RXR-02)",
+   "primary_fix": "Second offset DAC / finer LSB after the PGA, per-gain-code table; FPGA DC tracking; low IF for narrowband",
+   "fallback": []
+  },
+  {
+   "id": "RF-RX-IIP2",
+   "requirement": "IIP2 >= +47 dBm at max gain (or low-IF operation)",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Not simulated (RXR-05)",
+   "primary_fix": "Two-tone sim; low-IF recipe for narrowband protocols",
+   "fallback": []
+  },
+  {
+   "id": "RF-RX-FLICK",
+   "requirement": "Low-IF/zero-IF channel NF <= 5-9 MHz NF + 3 dB",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "NF 4.45 dB (5-9 MHz) vs 5.97 dB (2-9 MHz), sub-2 MHz unmodelled (RXR-05)",
+   "primary_fix": "Transient-noise NF vs IF 10 kHz-10 MHz; low-IF recipe",
+   "fallback": []
+  },
+  {
+   "id": "RF-RX-LOPN",
+   "requirement": "LO phase noise mask <= -107 dBc/Hz @3 MHz, -120 @40 MHz, -130 @>=100 MHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "board (B35) + timing (future on-chip LO)",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "No mask existed; reciprocal-mixing limits derived (RXR-06)",
+   "primary_fix": "Board synth selection to B35",
+   "fallback": [
+    "B35"
+   ]
+  },
+  {
+   "id": "RF-RX-FREF",
+   "requirement": "LO and sample clock from one +-10 ppm reference; FPGA CFO range >= +-250 kHz",
+   "source": "spec/interface-requirements.md",
+   "owner": "board (B35) + FPGA",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "Not required before (RXR-11)",
+   "primary_fix": "B35 common TCXO; FPGA AFC/SFO tracking",
+   "fallback": [
+    "B35"
+   ]
+  },
+  {
+   "id": "RF-RX-LOLEAK",
+   "requirement": "LO leakage at RF_RX <= -57 dBm (LO, 2LO)",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + assembly",
+   "evidence": [
+    "analog/rf_rx/generated/rxmix_i-evidence.json"
+   ],
+   "status": "unverified",
+   "basis": "Estimate -50..-65 dBm (IQ-01/XT-08), 0-7 dB short at the pessimistic end",
+   "primary_fix": "Extracted mixer + LNA reverse-isolation sim with the routed LO (A4)",
+   "fallback": []
+  },
+  {
+   "id": "RF-RX-SPUR",
+   "requirement": "CW spur <= -100 dBm input-referred on channels in use",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + assembly + digital (clock plan)",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "A5: macro 31st harmonic -88..-69 dBm (moved by clock plan), conv 40 MHz 2400/2440/2480 -103..-84 dBm",
+   "primary_fix": "AGND_RX pad + clock plan; conv-clock selection per channel",
+   "fallback": []
+  },
+  {
+   "id": "RF-RX-COEX",
+   "requirement": "Co-located LTE/NR/5 GHz Wi-Fi: desense <= 3 dB at +13 dBm with B34",
+   "source": "spec/interface-requirements.md",
+   "owner": "board (B34) + rf_rx",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "No on-chip selectivity; ~45 dB short without B34 (RXR-04)",
+   "primary_fix": "Board BAW coex filter B34",
+   "fallback": [
+    "B34"
+   ]
+  },
+  {
+   "id": "RF-RX-NFSYS",
+   "requirement": "System NF at antenna <= 8 dB incl. balun, match, T/R switch, coex filter at P2",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + board",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "marginal",
+   "basis": "lna4_b 4.45 + pkg 0.61 + balun 0.8 + switch 0.5 + BAW 2.0 = 8.4 dB (scratch, unpublished; published chain 12.1 dB)",
+   "primary_fix": "Promote lna4_b; low-loss BAW/balun selection",
+   "fallback": []
+  },
+  {
+   "id": "RF-RX-ESD",
+   "requirement": "RF_RX: 2 kV HBM and +10 dBm CW survivable; board TVS for IEC +-8 kV",
+   "source": "spec/interface-requirements.md",
+   "owner": "pads + rf_rx + board (B36)",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "+10 dBm estimate ~3.7 V gate peak vs ~3.6 V; HBM margin 0.105 V (ESD-02) (RXR-07)",
+   "primary_fix": "+10 dBm transient on the RF pad model; B36 TVS",
+   "fallback": [
+    "B36"
+   ]
+  },
+  {
+   "id": "RF-RX-PSRR",
+   "requirement": "RX with board ripple (B37): spurs <= RF-RX-SPUR, desense <= 0.5 dB",
+   "source": "spec/interface-requirements.md",
+   "owner": "rf_rx + board (B37)",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "No RX PSRR evidence (RXR-10)",
+   "primary_fix": "AC PSRR sim of TIA+filter; B37",
+   "fallback": [
+    "B37"
+   ]
+  },
+  {
+   "id": "RF-COEX-PTA",
+   "requirement": "3-wire PTA in FPGA; grant-to-mute <= 2 us",
+   "source": "spec/interface-requirements.md",
+   "owner": "FPGA + digital",
+   "evidence": [],
+   "status": "unverified",
+   "basis": "No coex interface defined; no chip pin needed",
+   "primary_fix": "FPGA PTA block using the scheduled RF unmute",
+   "fallback": []
   }
  ]
 }

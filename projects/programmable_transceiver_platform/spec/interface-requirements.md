@@ -297,6 +297,31 @@ path is not yet timed), and a TX→RX loopback for IQ and group-delay calibratio
 B3 with a fast-hopping, phase-settling board synthesizer; `rf_tx_external_baseband` and `rf_bb_external_adc` keep
 FPGA timestamping working if on-chip converters miss timing.
 
+### 2.2 Receiver robustness in real-world environments (added 2026-11-10, RX robustness review)
+
+Source analysis: `scratch/reviews/rx-robustness-review.md` (risks RXR-01..12). These rows fill gaps not covered by
+RF-*-SENS/-BLOCK/-ACR, RF-RX-IIP3/-IRR and RF-LO-JIT; they do not restate those. Levels are at the RF_RX connector
+of the carrier (after any board coex filter) unless stated. Standard values transcribed from memory are *(verify)*.
+
+| ID | Requirement | Standard | First-die adaptation | Verification |
+|---|---|---|---|---|
+| RF-RX-MAXIN | Maximum input level with PER within spec: 802.11g/n/ax 2.4 GHz −20 dBm mean (OFDM) *(verify)*, 802.11b −10 dBm *(verify)*; BLE −10 dBm; 802.15.4 −20 dBm *(verify)* | 802.11 §17/§19/§27 "receiver maximum input level"; BT Core Vol 6 Part A §4.4; 802.15.4 §12 | Same, via the on-chip AGC states (LNA/TIA/PGA/bypass); no state may clip the TIA output or LNA for the stated level plus 10 dB OFDM crest | Two-tone/compression sim at each gain state; bench |
+| RF-RX-AGC | Gain control | derived | Total RX gain range ≥ 70 dB with ≥ 30 dB **before the channel filter** in ≤ 6 dB steps and the PGA in ≤ 3 dB steps; each step settles (≤ 0.5 dB, ≤ 10 % of the DC-offset LSB) in ≤ 0.5 µs; FPGA decision → gain applied ≤ 1.0 µs through the in-band fast gain command (streaming-transport-v2 "Atomic RF gain metadata"); full AGC ≤ 4 µs (half of the Wi-Fi L-STF, BLE 1M/2M 8 µs preamble); gain held for the packet (RF-BLE-CODED-PKT); gain state time-tagged in the D2H stream | Sim (gain steps), RTL (opcode4), FPGA model |
+| RF-RX-OVLD | Overload visibility | derived | Pre-filter overload detector at the TIA output (both paths): flag set within 0.2 µs of crossing ≈ 75 % of the TIA linear swing, readable in a status bit and the D2H stream; ADC clip counting in the FPGA | Sim + RTL |
+| RF-RX-RECOV | Recovery after a pulsed in-band blocker (microwave oven 2.45 GHz ± 20 MHz, nearby Wi-Fi bursts) up to RF-RX-MAXIN + 10 dB | derived | Gain within 1 dB and DC offset within RF-RX-DCOC ≤ 2 µs after the blocker ends, at every gain state | Transient sim |
+| RF-RX-DCOC | DC offset at the ADC | derived | Static residual ≤ 5 % of ADC full scale at **every PGA code used** (per-gain-code calibration table); signal-dependent (self-mixing) offset change ≤ 5 % FS at RF-RX-MAXIN; FPGA digital DC tracking after the ADC; narrowband modes (BLE/15.4/LoRa) may use low IF (LO offset 1–3 MHz) instead | Sim + bench cal |
+| RF-RX-IIP2 | Second-order intercept | derived from RF-BLE-BLOCK OOB (−30 dBm) and AM cellular blockers | IIP2 ≥ +47 dBm at max gain (after calibration if any), or the protocol runs low IF so IM2 at DC falls outside the channel | Two-tone sim |
+| RF-RX-FLICK | Noise at low IF | derived | Chain NF integrated over the protocol's channel at its IF (BLE 1M zero-IF 0–0.5 MHz or low-IF, 15.4 0–1 MHz) ≤ the 5–9 MHz NF + 3 dB; otherwise the FPGA recipe fixes a low IF | Transient-noise sim 10 kHz–10 MHz |
+| RF-RX-LOPN | LO phase noise at the mixers (external synthesizer and any future on-chip LO) | derived from RF-BLE-BLOCK, RF-WIFI-ACR, OOB blocking | L(f) ≤ −95 dBc/Hz @ 1 MHz, ≤ −107 @ 3 MHz, ≤ −115 @ 20 MHz, ≤ −120 @ 40 MHz, ≤ −130 @ ≥ 100 MHz (≥ 6 dB under the reciprocal-mixing limits); integrated per RF-LO-JIT | Board synth datasheet + bench |
+| RF-RX-FREF | Frequency reference and tracking | BLE ±50 ppm, 802.11 ±20/25 ppm, 802.15.4 ±40 ppm *(verify)* | LO and converter sample clock derived from one board reference (±10 ppm TCXO); FPGA CFO estimation range ≥ ±250 kHz and sample-clock offset tracking | Bench |
+| RF-RX-LOLEAK | LO leakage at RF_RX | EN 300 328 receiver spurious ≤ −57 dBm (30 MHz–1 GHz), ≤ −47 dBm (1–12.75 GHz) *(verify)* | ≤ −57 dBm at the LO and 2·LO in RX state (keeps nearby receivers and the own DC offset quiet) | Sim + SA |
+| RF-RX-SPUR | Self-generated spurs | derived (risk register SUB-03/SP-01, A5) | Any CW spur ≤ −100 dBm input-referred on a channel in use, with the clock plan of register-map.md "Macro clock plan" | Spur map + bench |
+| RF-RX-COEX | Co-located radios (LTE/NR B40 2300–2400, B41/n41 2496–2690, B7 UL 2500–2570 MHz, B1/B3 UE TX, 5 GHz Wi-Fi) | product practice *(verify)* | With board requirement B34 fitted: desense ≤ 3 dB on channels ≥ 10 MHz from the band edge with +13 dBm (UE TX +23 dBm, 10 dB antenna isolation) at the antenna; without B34 the product declares no cellular coexistence | Bench |
+| RF-RX-NFSYS | System NF at the antenna connector | derived from RF-WIFI-SENS | ≤ 8 dB including balun, match, T/R switch (B33) and coex filter (B34) at carrier placement P2 (10 mm), measured over the 5–9 MHz and protocol IF bands | Cascade + bench |
+| RF-RX-ESD | Antenna-port robustness | IEC 61000-4-2 *(product)*; HBM per ESD-02 | Chip: RF_RX survives 2 kV HBM and +10 dBm CW (powered and unpowered) with no parametric shift; board: low-C TVS (B36) for ±8 kV contact at the antenna | Pulse/transient sim; bench |
+| RF-RX-PSRR | RX with board supply noise | derived | Board ripple per B37 gives spurs ≤ RF-RX-SPUR and ≤ 0.5 dB desense; chip TIA+filter PSRR characterized 10 kHz–20 MHz | AC sim + bench |
+| RF-COEX-PTA | Packet traffic arbitration with other radios in the product | 3-wire PTA practice *(verify)* | In the FPGA (no chip pin): REQUEST/PRIORITY/GRANT GPIOs; chip TX/RX state and schedule exposed so grant-to-mute ≤ 2 µs (RF unmute is FPGA-scheduled) | FPGA RTL + bench |
+
 ## 3. Host-link IO timing budget (source-synchronous DDR, 156.25 MHz forwarded clock)
 
 UI = 3.2 ns (312.5 Mb/s per pin), 10 data + 1 clock per direction, LVCMOS33,

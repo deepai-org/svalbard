@@ -75,8 +75,8 @@ module pt_host_link(
     wire dr_n = drs[1];
     // The divider gets its own copy of the release flop (same edge as drs[1]): its recovery check at
     // 6.4 ns no longer rides on dr_n's gearbox fanout (run TC2A: -4.2 ns, divider RN).
-    (* async_reg = "true" *) reg drs_c;
-    always @(posedge link_clk or negedge rst_n) if (!rst_n) drs_c <= 1'b0; else drs_c <= drs[0];
+    wire drs_c;   // kept copy (pt_rep_dff) so synthesis cannot merge it back into drs[1]
+    pt_rep_dff drs_copy(.clk(link_clk), .rst_n(rst_n), .d(drs[0]), .q(drs_c));
     pt_host_divider divider(.clk(link_clk), .rst_n(drs_c), .core_clk(core_clk));
     (* async_reg = "true" *) reg [1:0] crs;
     always @(posedge core_clk or negedge rst_n) if (!rst_n) crs <= 2'b00; else crs <= {crs[0], 1'b1};
@@ -164,6 +164,7 @@ module pt_rep_dff(input wire clk, rst_n, d, output reg q);
     always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
 endmodule
 
+
 // D2H 4:1 gearbox + DDR launch (hddr domain). After reset the first hddr edge is an hcore edge
 // (pt_host_divider) and `load` is 1 exactly before hcore edges (edge k below):
 //   rise k   (load): x <= prefix quad P0..P3 (hcore register, unchanged for two hddr periods:
@@ -250,8 +251,12 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     always @(posedge h2d_clk or negedge hr_n) if (!hr_n) hrun <= 1'b0; else hrun <= 1'b1;
     // phase[0] is 1 before the rising edges that write a DDR quad (`take`); nsel copies it to the
     // falling edge before, i.e. fh is written 1.5 periods before every take.
-    wire nsel;
+    wire nsel; wire [4:0] nselg;   // nselg[g]: replicated copies for fh pin groups (fanout 4 each)
     pt_ddr_nphase hn0(.clk(h2d_clk), .rst_n(hr_n), .run(hrun), .phase(~phase[0]), .nsel(nsel));
+    genvar gn;
+    generate for (gn = 0; gn < 5; gn = gn + 1) begin : hnr
+        pt_ddr_nphase hn(.clk(h2d_clk), .rst_n(hr_n), .run(hrun), .phase(~phase[0]), .nsel(nselg[gn]));
+    end endgenerate
     // Falling-edge registers: their reset release may land on either of two falling edges (a
     // half-period recovery path, not timed); they only hold pin data, so either is equivalent.
     integer i;
@@ -263,7 +268,7 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
         else begin
             f <= h2d_pin;
             for (i = 0; i < 10; i = i + 1)
-                if (nsel) begin fh[i] <= f[i]; fh[i+10] <= h2d_pin[i]; end
+                if (nselg[i/2]) begin fh[i] <= f[i]; fh[i+10] <= h2d_pin[i]; end
         end
     // Write side: one-hot pointer, per-entry enables registered one clock ahead (one flop per
     // entry, preserved); Gray pointer for the reader.
@@ -273,7 +278,8 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     reg         wr_now;                      // a write happens at this edge (any we)
     reg  [39:0] mem [0:7];
     reg  [3:0]  rb, rgray, wg1, wg2;
-    wire full = wg == {~rg2[3:2], rg2[1:0]};
+    // full is a register evaluated on the next-state pointers (identical value; timing 2026-11-11)
+    reg full;
     wire take = phase[0];
     wire done = ddr ? take : &phase;                       // a quad is written at this edge
     wire next_done = ddr ? !phase[0] : phase == 2'b10;     // ... at the next edge
@@ -292,8 +298,9 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     always @(posedge h2d_clk or negedge hr_n)
         if (!hr_n) begin
             phase <= 2'd0; wr_now <= 1'b0;
-            woh <= 8'b00000001; wb <= 4'd0; wg <= 4'd0; wbn <= 4'd1; wgn <= 4'd1; rg1 <= 4'd0; rg2 <= 4'd0; overflow <= 1'b0;
+            woh <= 8'b00000001; wb <= 4'd0; wg <= 4'd0; wbn <= 4'd1; wgn <= 4'd1; rg1 <= 4'd0; rg2 <= 4'd0; overflow <= 1'b0; full <= 1'b0;
         end else begin
+            full <= (any_we ? wgn : wg) == {~rg1[3:2], rg1[1:0]};
             phase <= phase + 1'b1;
             rg1 <= rgray; rg2 <= rg1;
             if (done && !any_we && hrun) overflow <= 1'b1;   // a complete quad found no free entry

@@ -102,11 +102,11 @@ module pt_freq_count #(parameter integer CW = 18)(
         end
     wire [2:0] src_cfg = cfg_src_r;
     wire en_r = cfg_loaded && src_cfg != 3'd0 && src_cfg <= 3'd6;
-    reg [2:0] src_q; reg run;
+    reg [2:0] src_q; reg run; (* keep *) reg run_e;   // run_e: replica for the evaluation block (fanout)
     // `run` is registered (timing): a source change or disable clears the state one cycle later.
     always @(posedge ref_clk or negedge rst_n)
-        if (!rst_n) begin src_q <= 3'd0; run <= 1'b0; end
-        else begin src_q <= src_cfg; run <= en_r && src_q == src_cfg; end
+        if (!rst_n) begin src_q <= 3'd0; run <= 1'b0; run_e <= 1'b0; end
+        else begin src_q <= src_cfg; run <= en_r && src_q == src_cfg; run_e <= en_r && src_q == src_cfg; end
     // ---------------- reference domain: synchronized source state
     (* async_reg = "true" *) reg [2*HW+3:0] s1, s2;
     always @(posedge ref_clk or negedge rst_n)
@@ -150,7 +150,7 @@ module pt_freq_count #(parameter integer CW = 18)(
             wl <= 13'h1388; tick <= 1'b0; snap_h <= 0; snap_l <= 0; fb_prev <= 0; ev_cnt <= 0; ev_go <= 1'b0;
             primed <= 1'b0; have_snap <= 1'b0; cfg_fresh <= 1'b0; good <= 0; r_locked <= 1'b0; r_lost <= 1'b0;
             r_diff <= 0; r_count <= 0;
-        end else if (!run) begin
+        end else if (!run_e) begin
             wl <= seed; tick <= 1'b0; ev_cnt <= 0; ev_go <= 1'b0; primed <= 1'b0; have_snap <= 1'b0; cfg_fresh <= 1'b0; good <= 0;
             r_locked <= 1'b0; r_lost <= 1'b0; r_diff <= 0; r_count <= 0;
         end else begin

@@ -204,9 +204,11 @@ module pt_ct_detect_div(
     wire [2:0] n_q    = nm1 + 3'd1;
     wire       wrapc  = |(coh & last_oh);
     wire [2:0] nm1_n  = div - 3'd1;
+    reg en_q;   // synchronized enable re-registered before its fanout (timing 2026-11-11)
+    always @(posedge clk or negedge rst_n) if (!rst_n) en_q <= 1'b0; else en_q <= en;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin nm1 <= 3'd0; last_oh <= 5'd1; lt_mask <= 5'd0; coh <= 5'd1; a <= 0; end
-        else if (!en) begin
+        else if (!en_q) begin
             nm1 <= nm1_n; last_oh <= 5'd1 << nm1_n;
             lt_mask <= (5'd1 << (nm1_n >> 1)) - 5'd1;   // bits i < nm1 >> 1
             coh <= 5'd1; a <= 0;

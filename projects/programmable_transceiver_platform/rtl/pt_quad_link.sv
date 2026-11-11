@@ -279,7 +279,12 @@ module pt_quad_link_rx(input wire clk,rst_n,payload_iq,
  genvar k;
  wire payload_fault;
  assign fault=acquisition_fault||payload_fault;
- pt_quad_rx engine(clk,rst_n&&locked,payload_iq,aligned,wire_ready,iq_ready,data,
+ // aligned quad registered before the engine (its header checks start from a flop, not the 40-bit
+ // rotation select); the engine's reset release is delayed by the same clock (locked_d).
+ reg[39:0]aligned_r;reg locked_d;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin aligned_r<=0;locked_d<=0;end else begin aligned_r<=aligned;locked_d<=locked;end
+ pt_quad_rx engine(clk,rst_n&&locked_d,payload_iq,aligned_r,wire_ready,iq_ready,data,
   wire_count,iq_count,command_valid,payload_fault,opcode,argument);
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin inq_d<=0;prev_d<=0;eq0<=0;eq1<=0;eqv<=0;first_seen<=0;rotation<=0;rot_oh<=4'b0001;wait_count<=0;acquisition_fault<=0;locked<=0;end

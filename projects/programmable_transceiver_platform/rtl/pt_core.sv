@@ -44,6 +44,12 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // flush them even while those clocks are stopped (owner change lifecycle).
  pt_enable_release e4(rf_rx_clk,rst_n,enable,err);pt_enable_release e5(rf_tx_clk,rst_n,enable,ert);
  wire crst=rst_n&&eh;
+ // Timing closure 2026-11-11: the hcore engines take their reset from replicated local release flops
+ // (all sample 1 on the first host_clk edge after crst deasserts, so they release on the same edge);
+ // the core_rst_n -> thousands-of-RN recovery tree becomes four local trees.
+ wire crst_tx,crst_rx,crst_col,crst_gm;
+ pt_rst_rep rr_tx(host_clk,crst,crst_tx);pt_rst_rep rr_rx(host_clk,crst,crst_rx);
+ pt_rst_rep rr_col(host_clk,crst,crst_col);pt_rst_rep rr_gm(host_clk,crst,crst_gm);
  // Bank reset: in memory mode (SPI-only fallback, possibly no host clock) the banks release from
  // ENABLE itself; each bank re-synchronizes its release per side (pt_cdc_fifo wr_reset/rd_reset).
  wire mem_mode=mem_capture||mem_play;
@@ -101,24 +107,24 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
   .flush(gain_flush),.drop(gain_drop),.gain(rx_gain),.active(rx_gain_active),.gap(gain_gap),
   .mark_ptr(mark_ptr),.mark_toggle(mark_toggle));
  wire mark_sync;reg mark_ack;
- pt_sync_bit gm(host_clk,crst,mark_toggle,mark_sync);
+ pt_sync_bit gm(host_clk,crst_gm,mark_toggle,mark_sync);
  wire mk_seen=mark_sync!=mark_ack;
  // complete older quads still in the FIFO: (mark_ptr - rd_ptr) mod 2*DEPTH
  wire[WIRE_IN_A+1:0]pre_diff={1'b0,mark_ptr}-{1'b0,in_rd_ptr};
  wire[WIRE_IN_A+1:0]pre_wrap=pre_diff+2*WIRE_IN_DEPTH;
  wire[WIRE_IN_A:0]pre_quads=pre_diff[WIRE_IN_A+1] ? pre_wrap[WIRE_IN_A:0] : pre_diff[WIRE_IN_A:0];
  wire wr_ov=!payload_iq&&in_ov,wr_un=!payload_iq&&in_un,rf_ov=payload_iq&&in_ov,rf_un=payload_iq&&in_un;
- pt_quad_link_tx #(.CW(WIRE_IN_A)) frame_tx(host_clk,crst,payload_iq,in_head,in_head,in_quads,in_quads,
+ pt_quad_link_tx #(.CW(WIRE_IN_A)) frame_tx(host_clk,crst_tx,payload_iq,in_head,in_head,in_quads,in_quads,
   4'd0,8'd0,wr_pop,iq_pop,d2h_quad,gain_commit,gain_arg,mk_seen,pre_quads,gain_gap,gain_echo);
  // ---------------- H2D
  wire[39:0]received;wire[2:0]wire_words,iq_words;
  wire wire_ready,iq_ready,command_valid,rx_fault,locked;
  wire[3:0]opcode;wire[7:0]argument;
- pt_quad_link_rx frame_rx(host_clk,crst,payload_iq,h2d_quad,wire_ready,iq_ready,
+ pt_quad_link_rx frame_rx(host_clk,crst_rx,payload_iq,h2d_quad,wire_ready,iq_ready,
   received,wire_words,iq_words,command_valid,rx_fault,locked,opcode,argument);
  // One collector serves the exclusive owner (the inactive count is zero).
  wire[39:0]rx_quad;wire rx_push;
- pt_quad_collect collect(host_clk,crst,received,wire_words|iq_words,rx_quad,rx_push);
+ pt_quad_collect collect(host_clk,crst_col,received,wire_words|iq_words,rx_quad,rx_push);
  // Exclusive ownership permits one storage bank. Owner changes occur only
  // while disabled; asynchronous disable holds both FIFO domains reset even
  // if the core clock has stopped before the selected output clock changes.

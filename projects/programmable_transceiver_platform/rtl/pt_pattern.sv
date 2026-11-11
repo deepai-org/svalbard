@@ -213,8 +213,9 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
     // registered with psum, psum >= 1 whenever psum_v; dec implies pend >= 1). Same values.
     reg  [PW-1:0] psum_m1;
     wire          dec    = step_cnt && !ovf;
-    wire [QW:0]   s_p    = {1'b0, pend} + psum, s_pm1 = {1'b0, pend} + psum_m1;
-    wire [QW:0]   s_m1   = {1'b0, pend} - 1'b1;
+    // kept nets: synthesis must not fold the late select back in front of the adders
+    (* keep *) wire [QW:0] s_p = {1'b0, pend} + psum, s_pm1 = {1'b0, pend} + psum_m1;
+    (* keep *) wire [QW:0] s_m1 = {1'b0, pend} - 1'b1;
     wire [QW:0]   pend_sum = psum_v ? (dec ? s_pm1 : s_p) : (dec ? s_m1 : {1'b0, pend});
 
     always @(posedge clk or negedge rst_n) begin

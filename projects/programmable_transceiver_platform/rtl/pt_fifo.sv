@@ -243,3 +243,11 @@ assign empty=playing?pe:empty_r;
   end
  end
 endmodule
+
+// Replicated reset-release flop (kept): async assert, release on the first clock edge after rst_n.
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_rst_rep(input wire clk, rst_n, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= 1'b1;
+endmodule

@@ -84,12 +84,40 @@ def terminals(path):
     return [center(drain), center(gate), center(source), (bx, bodyrect[3]-.2)]
 
 
+def shared_tracks(nets, base_nets, spans, ports, width_overrides_um=None, margin=1.5, target_x=None, quiet=()):
+    """PD28: the canonical allocation of base_nets defines the track slots. Ports of the base set keep their
+    canonical slot (x unchanged, exclusive; `ports` may include other pinned nets); every other net (old internal nets, new nets, new ports) is packed
+    into the remaining 0.44 um slots by interval partitioning of its y-span (M5 trunks are bounded to their spans,
+    >= margin um apart on a shared slot)."""
+    base=[n for n in base_nets if n in nets]
+    slots,widths0=trunk_geometry(base,width_overrides_um={k:v for k,v in (width_overrides_um or {}).items() if k in base})
+    tracks,widths={},{}
+    for n in base:
+        if n in ports or widths0[n]!=.44:
+            tracks[n]=slots[n];widths[n]=widths0[n]
+    free=sorted(x for n,x in slots.items() if n not in tracks)
+    last={x:-1e9 for x in free}
+    for n in sorted((n for n in nets if n not in tracks),key=lambda n:spans[n][0]):
+        lo,hi=spans[n]
+        ok=[x for x in free if last[x]+margin<=lo]
+        # keep repacked nets off the slots next to pinned quiet (pad-side) trunks over the same y range
+        near=[x for x in ok if any(abs(x-tracks[q])<1.2 and spans[q][0]<hi and lo<spans[q][1] for q in quiet if q in tracks)]
+        ok=[x for x in ok if x not in near] or ok
+        # nearest feasible slot to the net's devices keeps the M4 lanes short (target_x: mean device x)
+        x=min(ok,key=lambda s:abs(s-target_x[n])) if ok and target_x and n in target_x else (ok[0] if ok else None)
+        if x is None:raise ValueError('No shared trunk track for '+n)
+        tracks[n]=x;widths[n]=.44;last[x]=hi
+    return tracks,widths
+
 def generate(work,family='wired_transmit', *, external_primary=False, serial_tail_units=None, folded_tails=False, fs_high_width_um=20., fs_series_geometry_um=None, trunk_width_overrides_um=None,
-             columns=7, port_top_um=None, bond_y_offsets_um=(12.,4.)):
+             columns=7, port_top_um=None, bond_y_offsets_um=(12.,4.), keep_tracks_of=None):
     # Compact-family options (defaults reproduce the canonical layout exactly):
     #   columns: devices per placement row (the M4 route rows need columns*3.2+2.4 <= 26 um, so <= 7);
     #   port_top_um: draw every cell port's M5 trunk up to this y and label it there (boundary pins);
     #   bond_y_offsets_um: depth of the P/N bond M4 transverses below active_origin.
+    #   keep_tracks_of (PD28, opt-in): nets that keep the trunk x of the canonical allocation for exactly that net
+    #     set; every other (new) net shares an existing 0.44 um signal track whose y-span it does not overlap
+    #     (shared_tracks below). Lets an extended circuit fit the full 146 um trunk bank with unchanged port x.
     if serial_tail_units is not None:
         if family!='wired_transmit':raise ValueError('Serial tail sizing applies only to wired TX')
         from circuits import wired_transmit
@@ -217,7 +245,7 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     layout_spec=PROJECT/'spec/schematic-implementation.json'
     selected_layout=json.loads(layout_spec.read_text())['io_pad_first_pass'].get('layout_parameters',{}).get(family,{})
     if trunk_width_overrides_um is None:trunk_width_overrides_um=selected_layout.get('trunk_width_overrides_um',{})
-    tracks,trunk_widths=trunk_geometry(nets,width_overrides_um=trunk_width_overrides_um)
+    tracks,trunk_widths=trunk_geometry(nets if keep_tracks_of is None else [n for n in nets if n in keep_tracks_of],width_overrides_um=trunk_width_overrides_um)  # PD28: new nets placed by shared_tracks below
     port_heights={port:(active_origin-2 if bounded_routes and port in signal_ports else height)
                   for port in circuit.ports}
     if port_top_um is not None:
@@ -233,6 +261,16 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
         for net in ('PAD_P','PAD_N','VSS'):endpoints[net].append(active_origin-4)
         if any(not points for points in endpoints.values()):raise ValueError('Unrouted physical net')
         net_spans={net:(min(points)-.5,max(points)+.5) for net,points in endpoints.items()}
+    if keep_tracks_of is not None:
+        tx={}
+        for index,device in enumerate(core_devices):
+            for net in device.nodes:tx.setdefault(net,[]).append(placements[index][0])
+        # pad-side nets (any net of a device touching PAD/RX) keep their canonical x as well, so the pad node
+        # parasitics stay those of the canonical allocation; only control/logic nets are repacked.
+        padside={n for d in core_devices if signal_ports.intersection(d.nodes) for n in d.nodes}
+        tracks,trunk_widths=shared_tracks(nets,keep_tracks_of,net_spans,set(circuit.ports)|(padside&set(keep_tracks_of)),
+                                          trunk_width_overrides_um,target_x={n:sum(v)/len(v) for n,v in tx.items()},
+                                          quiet=padside&set(keep_tracks_of)-{'VDD','VSS'})
     commands = ['crashbackups stop', f'set ::env(PDKPATH) {PDK}',
                 f'path search +{PDK}/libs.ref/gf180mcu_fd_io/mag',
                 'load '+circuit.name, 'units microns']

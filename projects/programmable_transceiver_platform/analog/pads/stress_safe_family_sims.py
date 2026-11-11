@@ -240,7 +240,7 @@ def lifecycle_deck(family, process, temp_c, vdd, work, name, baseline=False):
         if l.startswith('Xpad ') and l.endswith(' tx_protected_pad'):
             # PD28: candidate models with extra trim ports (TERM_TRIM<k>, wirepad usbfix6v2) get them tied to
             # VSS (trim code 0) in the published fixture; models without them are unchanged.
-            trims = '' if baseline else ''.join(' VSS' for p in ports if p.startswith('TERM_TRIM'))
+            trims = '' if baseline else ''.join(' VSS' for p in ports if p.startswith('TERM_TRIM') or p == 'LS_SLOW')   # PD28: LS_SLOW low (FS mode)
             out[i] = l[:-len(' tx_protected_pad')] + trims + xpad_extra + ' tx_protected_pad'
         if l.split()[:2] == ['VDD', 'VDD'] and 'PWL(' in l:
             out[i] = re.sub(r'(?<=[ (])3\.3(?=[ )])', f'{vdd}', l)

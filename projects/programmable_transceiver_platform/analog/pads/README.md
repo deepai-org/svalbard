@@ -38,8 +38,13 @@ audit (`extract_audit.py`).
 Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`).
 
 - **attached_tx_buffer compacted (PD38):** `termination_buffer_array_layout.py` (multi-finger strapped arrays, same 280 devices)
-  + unchanged compensation → `generated/termination-buffer-candidate/compact-array/`, **0.0298 mm² (was 0.1557)**, Magic DRC 0,
-  device graph match (also GDS round trip), KLayout clean; readiness-deck equivalence in `equivalence.json`.
+  + unchanged compensation → `generated/termination-buffer-candidate/compact-array/`.
+  - **PD40 rework after the independent review:**
+    - power straps: tall S/D bars, M3+M4 straps with via area arrays straight to the 8 µm trunks;
+    - contacted top/bottom ring strips (LU ≤ 12 µm);
+    - result **0.062 mm² (was 0.156)**.
+  - **Steering buffer:** `steering_buffer.py --compact` → `generated/steering-buffer-compact/`, **0.0071 mm² per instance (was 0.115)**.
+  - **Readiness:** `readiness-settle.json` (held enable); the pessimistic corner is ss22/3.15 V at 184 ns. Interface-changes PD40.
 
 - **`rf-pair/` republished = the compact GC rf_pair** (`scratch/pads-pd12/v2/rf-pair`, top `pad_rf_pair`): I8 inner-edge
   pins, LU taps, gate-coupled shunt (PD13 macro). Magic DRC 0, netgen LVS unique, independent device audit 388/388,
@@ -62,11 +67,26 @@ Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`
 - **TX pad termination / SST** (`scratch/pads-pd28/tx/DECISION.md`): SST rejected for this tapeout; the 6 V-switch fix
   clears HBM but costs return loss, not published (interface-changes PD30). (risk: ESD-05)
 - **Ring regulators:** PD28 packed `pt_pll_vreg` (0.241 mm²), then **PD36 `pt_pll_vreg2`, one 0.175 mm² cell for pll_tx + pll_cdr** (`analog/pll_vreg/README.md` "PD36"). Coordinator decisions: TX TERM switches risk-accepted (ESD-05), USB-01, ESD-06, ESD_TEST dropped (interface-changes PD34/PD35). (risk: ESD-05)
-- **USB wirepad on 6 V pad-side devices: candidate v9, not published** (`scratch/pads-pd28/usb/`, mode `usbfix6v2`;
-  opt-in args in `wired_receive.py`, `stress_safe_compact_layout.py`, `receive_pad_layout.py`, `stress_safe_usb.py --term-trim`).
-  HBM 0 of 593 MOS over the screen; HS termination 44.1–47.5 Ω at every corner with a new 3-bit trim (`TERM_TRIM0..2`);
-  FS edges in window; FS rise/fall matching 1.13–1.32 at tt/ss still outside 0.90–1.11 (published cell 1.23–1.48);
-  +78 µm depth. Waiting on digital (trim field + calibration), assembly (+78 µm, ports) and the USB owner (interface-changes PD32). (risk: USB-01)
+- **USB wirepad on 6 V pad-side devices + LS slow-edge mode: PUBLISHED** (`wired-receive-usb/`, top `pad_wirepad`;
+  build `stress_safe_compact_layout.py wired_receive_usb <dir> <network-gc-d2 macro> usbfix6v2ls 14`; working dir
+  `scratch/pads-pd28/usbls/`, backup of the previous cell `scratch/pads-pd28/backup-published/wired-receive-usb-pre-pd28ls/`).
+  v9 (every pad-tracking device 6 V, 3-bit trim `TERM_TRIM0..2`) plus port `LS_SLOW` (`wired_receive.py ls_slow`): each FS
+  high side keeps its R/drain/well, its PMOS units split 10 (always) + 14 (gated off by LS_SLOW in their control path);
+  the FS low side (base shunt bank) splits 3 (own inverter) + 7 (NOR with LS_SLOW). LS_SLOW = 0 = the v9 drivers and
+  termination. Trunk tracks: pad-side nets keep their v9 x, control nets share free tracks (`layout.shared_tracks`).
+  Magic DRC 0, LVS + device audit match, KLayout main 0 / antenna 0. **HBM 2 kV 0 of 613 MOS** (pad 5.04–5.41 V),
+  ±100 mA 2.37–2.62 V, peer 0.30/0.49 µA. USB (extracted, trim tt 4 / ss 7 / ff 0): HS term 44.2–47.8 Ω, HS 17.5–18.2 mA,
+  FS 5.7–11.1 ns (ratio 0.99–1.33, as v9), **LS (LS_SLOW = 1, 450 pF) rise 101–178 / fall 104–163 ns, ratio 0.97–1.09,
+  VOH ≥ 3.11 V, VOL 0** at tt27/ss22/ss32/ff22/ff32; pad C 2.644–2.699 pF (≤ 2.7, 1 fF margin at ss32/3.15).
+  Outline 286 × 1720 µm base (+130 µm vs v9, +208 vs the PD13 cell). Evidence `pd28-usb-ls.json`, `pd28-family-sims.json`.
+  **Independent review (PD41), open blockers:**
+  - **LS at light load:** at 50 pF the LS edges are 12–21 ns, so LS is not compliant at light load. Needs a slew-controlled pre-driver.
+  - **Trim gating:** `TERM_TRIM = term_trim AND TERM_ENABLE` has no owner. The raw reset code shunts the pad.
+  - **No term-trim calibration path:** at reset code 4 the termination is 37–54.5 Ω.
+  - **Capacitance budget:** the pad C excludes the bypass-on RX load.
+  - **Area:** the outline exceeds its area ceiling.
+  - **LS_SLOW must be 0 whenever termination/HS is used:** it disables 7 of 10 base termination switches.
+  - **Not all pad-side devices are 6 V:** the floating-well FS/pull-up PMOS remain 3.3 V by design (HBM-screened).
 
 ### PD21 (pads owner): low-C SATA/PCIe RX pad pair `pad_hspad`, network-gc-d2, HBM pad-side devices
 

@@ -8,6 +8,7 @@ Cases:
   fs   FS J then K at 60 ns: per leg 15 kohm host pull-down and 50 pF; VOH/VOL
        and 10-90 % edge times (USB 2.0 FS: VOH >= 2.8 V, VOL <= 0.3 V, 4-20 ns)
   ls   same drivers into 450 pF (LS needs 75-300 ns; no slew control exists)
+  ls_slow  (PD28, opt-in --ls-slow) the ls case with LS_SLOW high (wirepad LS slow-edge mode)
   hs   HS_P switch with HS_PBIAS = VDD - 3.11 V (lifecycle bias) into a far-end
        45 ohm to ground, with and without the on-chip termination; reports the
        delivered current against 17.78 mA (17.78 mA x 22.5 ohm = 400 mV)
@@ -49,9 +50,11 @@ def deck(case, process, temp_c, vdd, work, name, canonical=False):
     f.FAMILIES.update(f.FAMILIES_V3)
     d = f.header() + model + f'VSS VSS 0 0\nVDD VDD 0 {vdd}\nRATB ATB 0 10meg\n'
     on = {}
-    if case in ('fs', 'ls'):
+    if case in ('fs', 'ls', 'ls_slow'):
         on = {'FS_HIGH_P': f'PWL(0 {vdd} 60n {vdd} 60.1n 0)', 'FS_LOW_N': f'PWL(0 {vdd} 60n {vdd} 60.1n 0)',
               'FS_HIGH_N': f'PWL(0 0 60n 0 60.1n {vdd})', 'FS_LOW_P': f'PWL(0 0 60n 0 60.1n {vdd})'}
+        if case == 'ls_slow':
+            on['LS_SLOW'] = f'{vdd}'
     elif case.startswith('hs'):
         on = {'HS_P': f'{vdd}'}
         if case in ('hs_term', 'hs_vsweep'):
@@ -82,11 +85,11 @@ def deck(case, process, temp_c, vdd, work, name, canonical=False):
             val = on.get('TERM_ENABLE', '0')     # trim[k] AND term_en (digital, PD27 convention)
         d += f'V{p} {p} 0 {val}\n'
     d += 'Xpad ' + ' '.join('ATB' if p == 'ATB_ESD_RAIL' else p for p in ports) + f' {cell}\n'
-    if case in ('fs', 'ls', 'handoff'):
-        c = '450p' if case == 'ls' else '50p'
+    if case in ('fs', 'ls', 'ls_slow', 'handoff'):
+        c = '450p' if case in ('ls', 'ls_slow') else '50p'
         for leg in ('P', 'N'):
             d += f'RHOST_{leg} PAD_{leg} 0 15k\nCLOAD_{leg} PAD_{leg} 0 {c}\n'
-        stop = 1200e-9 if case == 'ls' else 120e-9
+        stop = 1200e-9 if case in ('ls', 'ls_slow') else 120e-9
         an = f'tran .02n {stop * 1e9:.0f}n'
         vec = 'v(PAD_P) v(PAD_N)'
     elif case == 'term':
@@ -113,7 +116,7 @@ def run(case, process, temp_c, vdd, work, canonical=False):
     x = np.atleast_2d(s.run(work, name, d, timeout_s=3600))
     r = dict(case=case, process=process, temp_c=temp_c, vdd_v=vdd, canonical_layout=canonical, op_fallback=f.op_fallback(work, name),
              deck_sha256=hashlib.sha256(d.encode()).hexdigest())
-    if case in ('fs', 'ls'):
+    if case in ('fs', 'ls', 'ls_slow'):
         t = x[:, 0]
         settle = (t > 0.8 * 60e-9) & (t < 60e-9)
         voh, vol = float(x[settle, 1].mean()), float(x[settle, 2].mean())
@@ -164,6 +167,7 @@ def main():
     p.add_argument('--only', nargs='*', help='run only these per-corner cases (e.g. hs_vsweep)')
     p.add_argument('--wirepad-model', type=Path, help='candidate wirepad extraction (requalification before publication)')
     p.add_argument('--term-trim', nargs='*', default=[], help='PD28: process=code TERM_TRIM codes (e.g. typical=5 ss=10 ff=0)')
+    p.add_argument('--ls-slow', action='store_true', help='PD28: add the ls_slow case (LS_SLOW high) at the five envelope corners')
     a = p.parse_args()
     global MIRROR_BIAS, WIREPAD_MODEL
     TERM_TRIM.update({k: int(v) for k, v in (x.split('=') for x in a.term_trim)})
@@ -183,6 +187,8 @@ def main():
              ('cap', 'typical', 27, 3.3), ('cap', 'ss', 22, 3.3), ('cap', 'ff', 32, 3.3)]
       # Same fixture on the original (pre-stress-safe) layout, nominal point.
       jobs += [(c, 'typical', 27, 3.3, True) for c in ('fs', 'hs', 'hs_term', 'handoff', 'cap')]
+    if a.ls_slow:
+      jobs += [('ls_slow', pr, t, v) for pr, t, v in (('typical', 27, 3.3), ('ss', 22, 3.15), ('ss', 32, 3.15), ('ff', 22, 3.35), ('ff', 32, 3.35))]
 
     def go(j):
         try:

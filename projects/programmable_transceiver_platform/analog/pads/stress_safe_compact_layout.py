@@ -44,9 +44,18 @@ family = sys.argv[1]; work = Path(sys.argv[2]); net = Path(sys.argv[3])
 # binary-weighted 6 V trim bank (TERM_TRIM0..2; 4 bits overflow the 146 um trunk bank), FS fast-off/control sizing for the 6 V high side.
 USB6V2 = dict(termination_geometry_um=(16., 1.48, 1), termination_switch_units=10,
               termination_trim=dict(poly=(4., 2.4), switch_w=5., bits=3), term_gate_drive=2.5, fast_off_width_um=16., control_width_um=8.)
-if len(sys.argv) > 4 and sys.argv[4] == 'usbfix6v2':
+# usbfix6v2ls (PD28, opt-in): usbfix6v2 + LS slow-edge mode (wired_receive ls_slow, port LS_SLOW); the v9 nets keep
+# their trunk x (RX_P/N 98/97, VSS, ports) and the new nets share free signal tracks (layout.shared_tracks).
+USB_LS = dict(high_a_units=10, low_a_units=3)
+KEEP_TRACKS = None
+if len(sys.argv) > 4 and sys.argv[4] in ('usbfix6v2', 'usbfix6v2ls'):
     import functools, wired_receive
-    wired_receive.build = functools.partial(wired_receive.build, **{**USB_FIX, **USB6V2}, pad_side_6v=True)
+    _canonical_build = wired_receive.build
+    wired_receive.build = functools.partial(_canonical_build, **{**USB_FIX, **USB6V2}, pad_side_6v=True)
+    if sys.argv[4] == 'usbfix6v2ls':
+        _v9 = wired_receive.build
+        wired_receive.build = functools.partial(_canonical_build, **{**USB_FIX, **USB6V2}, pad_side_6v=True, ls_slow=USB_LS)
+        KEEP_TRACKS = _v9
 if len(sys.argv) > 4 and sys.argv[4] in ('usbfix', 'usbfix6v'):
     import functools, wired_receive
     # usbfix6v (PD21, HBM item a): USB fixes + every pad-tracking 3.3 V device on 6 V oxide (wired_receive.pad_side_6v)
@@ -56,8 +65,11 @@ cfg = json.loads((PROJECT/'spec/schematic-implementation.json').read_text())['io
 work.mkdir(parents=True)
 params = dict(cfg['generation_parameters'].get(family, {}))
 params.update(COMPACT[family]['base'])
-if len(sys.argv) > 5 and sys.argv[4] == 'usbfix6v2':
+if len(sys.argv) > 5 and sys.argv[4] in ('usbfix6v2', 'usbfix6v2ls'):
     params['fs_high_width_um'] = float(sys.argv[5])   # optional FS high-side unit width override (cfg 14)
+if KEEP_TRACKS is not None:
+    gp = {k: v for k, v in params.items() if k in ('fs_high_width_um', 'fs_series_geometry_um')}
+    params['keep_tracks_of'] = sorted({n for d in KEEP_TRACKS(**gp).devices for n in d.nodes})
 base_layout(work/'base', family, external_primary=True, bond_y_offsets_um=BOND_Y_OFFSETS, **params)
 base = work/'base'
 if family == 'wired_receive_usb':

@@ -30,7 +30,7 @@ def build(n_widths_um=(2.,8.,32.,128.), p_to_n_ratio=2., unit_width_um=16., leng
         'Default-off input behavior, upstream power-domain crossings and shared supply impedance require integration.'])
 
 
-def generate(work):
+def generate(work, compact=False):
     """Build the shared selected recipe and verify its physical implementation."""
     import hashlib
     import json
@@ -40,7 +40,11 @@ def generate(work):
     from design import PROJECT, build_integration_candidate
     from termination_buffer_layout import generate as layout_generate
     circuit=build_integration_candidate('tx_steering_buffer')
-    layout_generate(work,circuit=circuit,cell_name='tx_steering_buffer')
+    if compact:   # PD40: multi-finger arrays with OUT power straps (termination_buffer_array_layout.py)
+        from termination_buffer_array_layout import generate as array_generate
+        array_generate(work,circuit=circuit,cell_name='tx_steering_buffer',power_nets=('OUT',))
+    else:
+        layout_generate(work,circuit=circuit,cell_name='tx_steering_buffer')
     report_path=work/'layout.json'
     report=json.loads(report_path.read_text())
     report['source_sha256'].update({str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest()
@@ -65,4 +69,5 @@ if __name__=='__main__':
     from pathlib import Path
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output-dir',type=Path,required=True)
-    args=parser.parse_args();generate(args.output_dir.resolve())
+    parser.add_argument('--compact',action='store_true',help='PD40 compact array layout (generated/steering-buffer-compact/)')
+    args=parser.parse_args();generate(args.output_dir.resolve(),args.compact)

@@ -1,0 +1,94 @@
+{
+  "status": "compact_array_layout_candidate",
+  "circuit": "tx_steering_buffer",
+  "flat_cell": "tx_steering_buffer_flat",
+  "drc_count": 0,
+  "device_count": 34,
+  "placed_units": 8,
+  "device_graph_matches": true,
+  "envelope_um": [
+    119.54,
+    80.42
+  ],
+  "envelope_area_um2": 9613.4,
+  "power_straps": [
+    {
+      "unit": 0,
+      "net": "OUT",
+      "nf": 8,
+      "strap_um": [
+        2.78,
+        9.64,
+        45.23,
+        15.99
+      ]
+    },
+    {
+      "unit": 0,
+      "net": "VSS",
+      "nf": 8,
+      "strap_um": [
+        20.78,
+        17.57,
+        45.23,
+        23.92
+      ]
+    },
+    {
+      "unit": 1,
+      "net": "OUT",
+      "nf": 16,
+      "strap_um": [
+        2.78,
+        33.5,
+        51.63,
+        39.85
+      ]
+    },
+    {
+      "unit": 1,
+      "net": "VDD",
+      "nf": 16,
+      "strap_um": [
+        11.78,
+        41.43,
+        51.63,
+        47.78
+      ]
+    }
+  ],
+  "source_sha256": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_array_layout.py": "aecc6d43b2ed6094d8291abaf1a04e7b682e12e9217d69980fff117172d7e4f7",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "9b73b61646c07d00d7bef6092a32d42a8389bdd3d3c7732a1755c5d3274839ff",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/design.py": "7330ebd9a33ffcfe6a0c9949cd8d51d08a8e6564521b14ae4ec57fd66a1a40f9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/steering_buffer.py": "500eee45cd9d6021d7520a0e2560f5872c6253967cb4cfb627f94bff60a0815d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332"
+  },
+  "drawn_bbox_um": [
+    2.78,
+    3.5,
+    95.5,
+    79.92
+  ],
+  "drawn_area_um2": 7085.7,
+  "gds_marker_repair": {
+    "status": "no_high_resistance_devices",
+    "before_gds_sha256": "92279ee45cbfb97353940be51782c7442b70f88f88f7931ae4c4363471cc6f39",
+    "after_gds_sha256": "92279ee45cbfb97353940be51782c7442b70f88f88f7931ae4c4363471cc6f39"
+  },
+  "gds_roundtrip": {
+    "drc_count": 0,
+    "device_graph_matches": true
+  },
+  "trunk_widths_um": {
+    "OUT": 8.0,
+    "VDD": 8.0,
+    "VSS": 8.0,
+    "IN": 0.44,
+    "STAGE_0": 0.44,
+    "STAGE_1": 0.44,
+    "STAGE_2": 0.44
+  },
+  "physical_sha256": "8701db4b027d190b719600252540003b44df859d2de539b7da7f495fb1939b93",
+  "scope": "One steering buffer; repeated instances and electrical acceptance belong to the connected TX fixture."
+}

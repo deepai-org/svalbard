@@ -32,7 +32,7 @@ def _cols(r):
     return sorted(r[diff], key=lambda a: a[0])
 
 
-def strapped(work, name, pcell_cmd, nf):
+def strapped(work, name, pcell_cmd, nf, power=False):
     """Build <name> = PCell (nf fingers) + gate bar + S/D bars; return pin points (D, G, S, B) and bbox."""
     (work / f'{name}_p.tcl').write_text('\n'.join([
         'crashbackups stop', 'load workspace', 'units internal', f'set cell [{pcell_cmd}]', 'load $cell',
@@ -58,27 +58,42 @@ def strapped(work, name, pcell_cmd, nf):
 
     box('metal1', min(a[0] for a in pcs), gy0 - .1, max(a[2] for a in pcs), gy1 + .1)  # gate bar (contains the router's 0.38 um via pad)
     h = y1 - y0
-    sb = (y0 + .62 * h, y0 + .62 * h + min(2.0, .25 * h))                              # S bar (upper)
-    db = (y0 + .38 * h - min(2.0, .25 * h), y0 + .38 * h)                              # D bar (lower)
+    if power:   # PD38 review: tall bars for the load-current path (strapped to M3/M4 power straps by the router)
+        sb, db = (y0 + .55 * h, y0 + .95 * h), (y0 + .05 * h, y0 + .45 * h)
+    else:
+        sb = (y0 + .62 * h, y0 + .62 * h + min(2.0, .25 * h))                          # S bar (upper)
+        db = (y0 + .38 * h - min(2.0, .25 * h), y0 + .38 * h)                          # D bar (lower)
+    if min(sb[1] - sb[0], db[1] - db[0]) < .6 or sb[0] - db[1] < .5:
+        raise ValueError(f'{name}: device too narrow for S/D strap bars')
     for (ya, yb), parity in ((sb, 0), (db, 1)):
         box('metal2', xs[0] - .3, ya, xs[-1] + .3, yb)
         for k, x in enumerate(xs):
             if k % 2 == parity:
                 via1(x, ya + .1, yb - .1)
+    # PD38 review (latch-up): the PCell ring is contacted on its two vertical sides only; contact the top and
+    # bottom strips too, so no channel is more than ~W/2 + 2 um from a contacted tap.
+    strip = next(k for k in ('mvpsubdiff', 'psubdiff', 'nsubdiff', 'mvnsubdiff', 'mvnsdiff', 'nsdiff') if k in r)
+    cont = {'mvpsubdiff': 'mvpsubdiffcont', 'psubdiff': 'psubdiffcont', 'nsubdiff': 'nsubdiffcont',
+            'mvnsubdiff': 'mvnsubdiffcont', 'mvnsdiff': 'mvnsdiffc', 'nsdiff': 'nsdiffc'}[strip]
+    hs = [a for a in r[strip] if a[2] - a[0] > 5 * (a[3] - a[1])]
+    bottom_strip = min(hs, key=lambda a: a[1])
+    for a in hs:
+        box(cont, a[0] + .5, a[1] + .065, a[2] - .5, a[3] - .065)   # CO.4 diffusion enclosure
     cmds += ['save', 'quit -noprompt']
     (work / f'{name}.tcl').write_text('\n'.join(cmds) + '\n')
     magic(work, f'{name}.tcl')
-    r2 = rectangles(work / f'{name}.mag') if (work / f'{name}.mag').exists() else r
     body = next(k for k in ('mvpsubdiffcont', 'psubdiffcont', 'nsubdiffcont', 'mvnsubdiffcont', 'mvnsdiffc', 'nsdiffc', 'nwellc') if k in r)
     bodyrect = max(r[body], key=lambda a: a[2])
     pcx = sorted(((a[0] + a[2]) / 2 for a in pcs))
-    gx = pcx[min(5, nf - 1)]                 # on a polycontact of the gate bar, >= 1.5 pitches from the S/D risers
+    gx = pcx[min(5, nf - 1)]                 # nf >= 6: on polycontact 5 (>= 2.5 pitches from the D riser); nf < 6 jogs out (router)
     d_col = 3 if nf >= 4 else 1
-    pins = [(xs[d_col], sum(db) / 2), (gx, (gy0 + gy1) / 2), (xs[0], sum(sb) / 2),
-            ((bodyrect[0] + bodyrect[2]) / 2, bodyrect[3] - .2)]
+    bpin = ((xs[1] + xs[2]) / 2 if nf >= 2 else xs[0], (bottom_strip[1] + bottom_strip[3]) / 2) if power else \
+           ((bodyrect[0] + bodyrect[2]) / 2, bodyrect[3] - .2)
+    pins = [(xs[d_col], sum(db) / 2), (gx, (gy0 + gy1) / 2), (xs[0], sum(sb) / 2), bpin]
+    strap = dict(s=sb, d=db, x0=xs[0] - .3, x1=xs[-1] + .3)
     allr = [a for k, v in r.items() if k != 'checkpaint' for a in v]
     bbox = (min(a[0] for a in allr), min(a[1] for a in allr), max(a[2] for a in allr), max(a[3] for a in allr))
-    return pins, bbox
+    return pins, bbox, strap
 
 
 def pcell_cmd(model, w, l, nf):
@@ -88,7 +103,10 @@ def pcell_cmd(model, w, l, nf):
             'gate_to_polycont 0.6 gate_extension 0.8 diff_gate_space 0.3')
 
 
-def generate(work, circuit=None, cell_name='buffer_core'):
+POWER_NETS = ('TOP', 'BOTTOM', 'LOCAL_OUT', 'OUT', 'BUFFER_COMPLEMENT_WELL')
+
+
+def generate(work, circuit=None, cell_name='buffer_core', power_nets=POWER_NETS, wide_nets=()):
     work.mkdir(parents=True, exist_ok=False)
     if circuit is None:
         from design import build_integration_candidate
@@ -97,7 +115,6 @@ def generate(work, circuit=None, cell_name='buffer_core'):
     groups = defaultdict(list)
     for d in circuit.devices:
         groups[(d.model, d.w_um, d.l_um, tuple(d.nodes))].append(d)
-    probe_pitch = {}
     units = []                     # (kind key, nodes, names)
     for (model, w, l, nodes), ds in groups.items():
         if model.startswith('ppoly') or len(ds) == 1:
@@ -112,10 +129,13 @@ def generate(work, circuit=None, cell_name='buffer_core'):
         for s in sizes:
             units.append(((model, w, l, s), nodes, [d.name for d in ds[k:k + s]]))
             k += s
+    # PD38 review: arrays on the load-current path get tall S/D bars strapped on M3+M4 straight to their M5 trunks
+    units = [((m, w, l, nf, bool(nf > 1 and not m.startswith('ppoly') and (nodes[0] in power_nets or nodes[2] in power_nets))), nodes, names)
+             for (m, w, l, nf), nodes, names in units]
     kinds = sorted({u[0] for u in units}, key=str)
-    cells, pins, boxes = {}, {}, {}
+    cells, pins, boxes, straps = {}, {}, {}, {}
     for i, kk in enumerate(kinds):
-        model, w, l, nf = kk
+        model, w, l, nf, power = kk
         name = f'{cell_name}__arr_{i}'
         cells[kk] = name
         if nf == 1:
@@ -127,34 +147,42 @@ def generate(work, circuit=None, cell_name='buffer_core'):
             allr = [a for k2, v in r.items() if k2 != 'checkpaint' for a in v]
             boxes[kk] = (min(a[0] for a in allr), min(a[1] for a in allr), max(a[2] for a in allr), max(a[3] for a in allr))
         else:
-            pins[kk], boxes[kk] = strapped(work, name, pcell_cmd(model, w, l, nf), nf)
-    # ---- placement: shelf packing, widest first
-    units.sort(key=lambda u: -(boxes[u[0]][2] - boxes[u[0]][0]))
-    rows, row, x = [], [], 6.
-    for u in units:
+            pins[kk], boxes[kk], straps[kk] = strapped(work, name, pcell_cmd(model, w, l, nf), nf, power=power)
+    nets = sorted({n for d in circuit.devices for n in d.nodes})
+    big = {'VDD', 'VSS'} | set(power_nets) | set(wide_nets)
+    order = [n for n in nets if n in big] + [n for n in nets if n not in big]     # wide trunks first in the left bank
+    tracks, widths, edge = {}, {}, 2.78
+    for net in order:
+        width = 8. if net in big else .44
+        tracks[net] = edge + width / 2; widths[net] = width; edge += width + 1.
+    x0 = edge + 2.                                                       # devices right of the trunk bank
+    width_w = max(boxes[u[0]][2] - boxes[u[0]][0] for u in units)
+    row_w = max(width_w, 80.)
+    # ---- placement: power arrays one per row; the rest shelf-packed, widest first
+    power_units = [u for u in units if u[0][4]]
+    other = sorted([u for u in units if not u[0][4]], key=lambda u: -(boxes[u[0]][2] - boxes[u[0]][0]))
+    rows, row, x = [], [], x0
+    for u in other:
         bw = boxes[u[0]][2] - boxes[u[0]][0]
         slot = max(bw, 10.) if u[0][3] == 1 else bw     # singles keep the canonical +-2.5/+4 um escapes clear
-        if row and (x + slot > 6 + ROW_W or 4 * (len(row) + 1) * LANE + 2 > 40):
-            rows.append(row); row, x = [], 6.
+        if row and (x + slot > x0 + row_w or 4 * (len(row) + 1) * LANE + 2 > 40):
+            rows.append(row); row, x = [], x0
         row.append((u, x + (slot - bw) / 2)); x += slot + 2.0
-    rows.append(row)
-    nets = sorted({n for d in circuit.devices for n in d.nodes})
-    tracks, widths, edge = {}, {}, 2.78
-    for net in nets:
-        width = 8. if net in {'VDD', 'VSS', 'TOP', 'BOTTOM', 'LOCAL_OUT', 'OUT', 'BUFFER_COMPLEMENT_WELL'} else .44
-        tracks[net] = edge + width / 2; widths[net] = width; edge += width + 1.
-    if edge > 146:
-        raise ValueError('Buffer trunk bank exceeds placement reservation')
+    if row:
+        rows.append(row)
     origin = 4.
     placed, y = [], origin
+    for u in power_units:                                                 # lanes (G, B) under the cell
+        b = boxes[u[0]]
+        placed.append(dict(u=u, cx=x0 - b[0], cy=y + 3.2 - b[1], lane0=y + 1, power=True))
+        y += 3.2 + (b[3] - b[1]) + 1.5
     for row in rows:
         lanes = 4 * len(row)
         hmax = max(boxes[u[0]][3] - boxes[u[0]][1] for u, _ in row)
         band = max(hmax + 2.5, lanes * LANE + 2.5)
-        for j, (u, x0) in enumerate(row):
+        for j, (u, xx0) in enumerate(row):
             kk = u[0]; b = boxes[kk]
-            cx, cy = x0 - b[0], y + 1.2 - b[1] + (band - 2.5 - (b[3] - b[1])) / 2
-            placed.append(dict(u=u, cx=cx, cy=cy, lane0=y + 1 + 4 * j * LANE))
+            placed.append(dict(u=u, cx=xx0 - b[0], cy=y + 1.2 - b[1] + (band - 2.5 - (b[3] - b[1])) / 2, lane0=y + 1 + 4 * j * LANE, power=False))
         y += band
     height = y + 6
     commands = ['crashbackups stop', f'load {cell_name}', 'units microns']
@@ -173,21 +201,38 @@ def generate(work, circuit=None, cell_name='buffer_core'):
         hh = .22 if layer == 'metal5' else .2
         rect(layer, min(x1, x2) - hh, min(y1, y2) - hh, max(x1, x2) + hh, max(y1, y2) + hh)
     access = defaultdict(list)
+    lanes_of = lambda p: ({1: 0, 3: 1} if p['power'] else {0: 0, 1: 1, 2: 2, 3: 3})  # noqa: E731
     for p in placed:
         for pin, net in enumerate(p['u'][1]):
-            access[net].append(p['lane0'] + pin * LANE)
+            if p['power'] and pin in (0, 2):
+                st = straps[p['u'][0]]['s' if pin == 2 else 'd']
+                access[net] += [p['cy'] + st[0], p['cy'] + st[1]]
+            else:
+                access[net].append(p['lane0'] + lanes_of(p)[pin] * LANE)
     spans = {net: ([min(access[net]) - .5, max(access[net]) + .5] if net not in circuit.ports else [origin - .5, height + .5]) for net in nets}
     for net, xx in tracks.items():
         rect('metal5', xx - widths[net] / 2, spans[net][0], xx + widths[net] / 2, spans[net][1])
+    strap_report = []
     for i, p in enumerate(placed):
         kk, nodes, names = p['u']
         commands += [f'getcell {cells[kk]} child 0 0 parent {p["cx"]:.4f} {p["cy"]:.4f}', f'identify XU{i}']
         is_res = kk[0].startswith('ppoly')
         for pin, ((dx, dy), net) in enumerate(zip(pins[kk], nodes)):
             xx, yy = p['cx'] + dx, p['cy'] + dy
-            ry = p['lane0'] + pin * LANE
-            if kk[3] > 1:
-                esc = xx                                   # array pins are on distinct columns (>= 2.4 um apart)
+            if p['power'] and pin in (0, 2):
+                st = straps[kk]; ya, yb = (p['cy'] + v for v in st['s' if pin == 2 else 'd'])
+                xa, xb = p['cx'] + st['x0'], p['cx'] + st['x1']
+                tl = tracks[net] - widths[net] / 2
+                rect('metal3', tl, ya, xb, yb); rect('metal4', tl, ya, xb, yb)
+                rect('via2', xa + .3, ya + .3, xb - .3, yb - .3); rect('via3', xa + .3, ya + .3, xb - .3, yb - .3)
+                rect('via4', tl + .3, ya + .3, tl + widths[net] - .3, yb - .3)
+                strap_report.append(dict(unit=i, net=net, nf=kk[3], strap_um=[round(tl, 2), round(ya, 2), round(xb, 2), round(yb, 2)]))
+                continue
+            ry = p['lane0'] + lanes_of(p)[pin] * LANE
+            if kk[3] > 1 and kk[3] < 6 and pin == 1:
+                esc = p['cx'] + boxes[kk][2] + 1.0         # small arrays: gate riser outside the cell (M2 jog on the gate bar)
+            elif kk[3] > 1:
+                esc = xx                                   # array pins are on distinct columns
             else:
                 esc = p['cx'] + ((-2.5, 0, 4) if is_res else (2.5, 0, -2.5, 4))[pin]
             via(xx, yy, 1, 2); wire('metal2', xx, yy, esc, yy); via(esc, yy, 2, 3)
@@ -208,10 +253,16 @@ def generate(work, circuit=None, cell_name='buffer_core'):
     export_extracted(work / (cell_name + '_flat.ext'), work / 'physical.spice', capacitance=True)
     report = dict(status='compact_array_layout_candidate', circuit=circuit.name, flat_cell=cell_name + '_flat',
                   drc_count=int((work / 'drc-count.txt').read_text()), device_count=len(circuit.devices), placed_units=len(placed),
-                  device_graph_matches=actual == expected, envelope_um=[150, round(height + 1, 2)], envelope_area_um2=round(150 * (height + 1), 1),
+                  device_graph_matches=actual == expected, envelope_um=[round(x0 + row_w + 2, 2), round(height + 1, 2)], envelope_area_um2=round((x0 + row_w + 2) * (height + 1), 1), power_straps=strap_report,
                   source_sha256={str(f.resolve()): hashlib.sha256(f.read_bytes()).hexdigest() for f in [Path(__file__), Path(__file__).with_name('termination_buffer.py'), Path(__file__).with_name('design.py')]})
     if actual != expected:
         report['graph_diff'] = dict(missing=[str(k) for k in (expected - actual)][:10], extra=[str(k) for k in (actual - expected)][:10])
+    xs_, ys_ = [], []
+    for line in (work / f'{cell_name}_flat.mag').read_text().splitlines():
+        if line.startswith('rect '):
+            v = [int(q) * .005 for q in line.split()[1:5]]; xs_ += [v[0], v[2]]; ys_ += [v[1], v[3]]
+    report['drawn_bbox_um'] = [round(min(xs_), 3), round(min(ys_), 3), round(max(xs_), 3), round(max(ys_), 3)]
+    report['drawn_area_um2'] = round((max(xs_) - min(xs_)) * (max(ys_) - min(ys_)), 1)   # authoritative (envelope_um is the placement estimate)
     from gds_markers import repair
     report['gds_marker_repair'] = repair(work, cell_name + '_flat')
     rt = work / 'roundtrip'; rt.mkdir(); shutil.copyfile(work / (cell_name + '_flat.gds'), rt / (cell_name + '_flat.gds'))

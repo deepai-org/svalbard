@@ -195,29 +195,34 @@ XI Y0 Y VDD VSS pt_t_inv2
 XN A GN B VSS nfet_03v3 w=2u l=0.28u
 XP A GP B VDD pfet_03v3 w=4u l=0.28u
 .ends
-* rising-edge D flop, Q = 0 while RST = 1.  Local clock inverters are inv4: with inv1 the
-* extracted CKB/CKI overlapped by ~1 ns at ss and the master never wrote a 1.
-.subckt pt_m_sdff D CK RST Q VDD VSS
-XC1 CK CKB VDD VSS pt_t_inv4
-XC2 CKB CKI VDD VSS pt_t_inv4
+* rising-edge D flop, Q = 0 while RST = 1; complementary clocks CKB/CKI come from the
+* cell's shared clock buffer (r3: per-flop inv4 clock pairs loaded the previous cell's output
+* with 3 inv4 gates; extracted clock-to-Q of a CMOS cell was 1.43 ns at ss and the
+* MOD return path C->D->C missed the 2.69 ns cell-C period for N >= 64).
+.subckt pt_m_sdff D CKB CKI RST Q VDD VSS
 XT1 D M1 CKB CKI VDD VSS pt_m_tg
 XM1 M1 RST M2 VDD VSS pt_t_nor2
 XM2 M2 M1F VDD VSS pt_t_inv1
 XT2 M1F M1 CKI CKB VDD VSS pt_m_tg
 XT3 M2 S1 CKI CKB VDD VSS pt_m_tg
-XS1 S1 RST Q VDD VSS pt_t_nor2
+XS1 S1 RST Q VDD VSS pt_t_nor2x
 XS2 Q S1F VDD VSS pt_t_inv1
 XT4 S1F S1 CKB CKI VDD VSS pt_m_tg
 .ends
-.subckt pt_m_ccell CK MODIN P RST Q1P MP VDD VSS
+* CMOS 2/3 cell; Q1P is buffered (QO, inv2 + inv4) before it clocks the next cell
+.subckt pt_m_ccell CK MODIN P RST QO MP VDD VSS
+XC1 CK CKB VDD VSS pt_t_inv8
+XC2 CKB CKI VDD VSS pt_t_inv8
 XN1 Q1P Q2P D1P VDD VSS pt_t_nor2
 XN2 MODIN D1P DMN VDD VSS pt_t_nand2
 XN2I DMN DMP VDD VSS pt_t_inv1
 XN3 MP P D2N VDD VSS pt_t_nand2
 XN3I D2N D2P VDD VSS pt_t_inv1
-XF1 D1P CK RST Q1P VDD VSS pt_m_sdff
-XFM DMP CK RST MP VDD VSS pt_m_sdff
-XF2 D2P CK RST Q2P VDD VSS pt_m_sdff
+XF1 D1P CKB CKI RST Q1P VDD VSS pt_m_sdff
+XFM DMP CKB CKI RST MP VDD VSS pt_m_sdff
+XF2 D2P CKB CKI RST Q2P VDD VSS pt_m_sdff
+XQ1 Q1P Q1B VDD VSS pt_t_inv2
+XQ2 Q1B QO VDD VSS pt_t_inv4
 .ends
 
 .subckt pt_lo_mmd LP LN EN N0 N1 N2 N3 N4 N5 FB VDD VSS

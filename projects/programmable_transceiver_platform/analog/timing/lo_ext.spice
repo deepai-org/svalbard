@@ -42,6 +42,10 @@ XTP CG EXTPB LO VDD pfet_03v3 w=10u l=0.28u m=4
 * = gate of the CML driver's EXT input pair, biased to VLI (0.55 VDD, on only with CMLSEL) through 2 k
 XCA PAD M cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
 XRL M VLI VSS ppolyf_u_1k r_width=1u r_length=2u
+* HBM: the MIM couples the zap onto M (EXT-pair gates 3.9-4.5 V unclamped, hbm_core_screen r4h): rail clamps
+* (off MOS diodes: drain-junction to VDD / VSS)
+XKP M VDD VDD VDD pfet_03v3 w=4u l=0.28u
+XKN M VSS VSS VSS nfet_03v3 w=4u l=0.28u
 XRB LO VB VSS ppolyf_u_1k r_width=1u r_length=20u
 XCL LO OFF VSS VSS nfet_03v3 w=1u l=0.28u
 * (internal driver: pt_lo_cml per pair, in pt_lo_ext)

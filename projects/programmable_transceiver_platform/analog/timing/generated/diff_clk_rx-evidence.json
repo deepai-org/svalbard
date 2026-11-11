@@ -1,20 +1,20 @@
 {
  "block": "diff_clk_rx",
  "source_hashes": {
-  "diff_clk_rx.spice": "sha256:fe1910d801200671dd8dd4e56640934648a980a66898eff77216c3d17eeb9646",
+  "diff_clk_rx.spice": "sha256:fa10bdb0ec2a9ad141a530ccf82d25ed201df82446e4d8a75e686d7b62ec1175",
   "timing_cells.spice": "sha256:f9f1f38f3d190cf34a8c02560d70c0061ccefe7951a3022b1803d74656139452",
-  "layout_engine.py": "sha256:acb531c9c30a6b3f4a76c124bc9ea8e9274a532a7a9e1769d40ff535ab61f0ae",
-  "netlist.py": "sha256:9eb8d5c8d7d044a76b560ebebd23c768aefd2b0c1183d38313964e89a1d30ab3",
-  "run_timing.py": "sha256:0ffa242409850c1211baf29172da2a7a542b21e6d88ffb5e03b87cde437056b3",
-  "timing_flow.py": "sha256:ae25349b5de22a22b47a77687abf481166efaac60013c748078420666f8e0b28",
-  "fast/ct_rxin.spice": "sha256:8be755399b3b509d14d318e89ee14af91043cc9c7bf2970d38b99216247419f3",
-  "fast/ct_rxout.spice": "sha256:611fa94bdb6e5e6272cda3f1684fb2811dd54a7ae61f0b7ac78aa5468d4d6ead"
+  "layout_engine.py": "sha256:144772a3322112f90a14a5767595d99b7b7986b8a8f9de2af95e03f547875883",
+  "netlist.py": "sha256:1dc84f872bc944cfec4c7f8aaaec075d19fa599eccc27c65c9b8c2290e571e0f",
+  "run_timing.py": "sha256:34a8adf2d72746a82b04a5c652d63f2e3d3b5b3b0634a6c1a29398de0b8d7c41",
+  "timing_flow.py": "sha256:eeb7105936db76649fd055591ee1b5930769942bca66661e02a2a2f63e4634cd",
+  "fast/ct_rxamp.spice": "sha256:9fd50d9965ea4511c672e803ad0fa75ea376b1d40ac3cf3120f52fc8299d34b7",
+  "fast/ct_rxout.spice": "sha256:077977affeafce5e9f422b8bb54bea7c0d2ed3b098b24181a852db6cc5c783a3"
  },
  "generated_hashes": {
-  "diff_clk_rx.ext.spice": "sha256:30c50235b050376af270b2a0b82ac2bb34db357adf90244e7cb1bd248d2ab001",
-  "diff_clk_rx.mag": "sha256:f3927f283383a5968e06fc11761cfa815a6bb587b33f523dda83e9a5fab51f98",
-  "diff_clk_rx.lvs.spice": "sha256:7ab4a82c43a3d89b24419571cd3f55855e36dbd4f02b20cc8d39c8ae4784fa8a",
-  "diff_clk_rx.gds": "sha256:de2ab775ce550c72c19b0c3dd543760f0547d02f0c0085990cd2563eb01093fd"
+  "diff_clk_rx.ext.spice": "sha256:24a20eb88ab823172574b6e449f53d9effe035478dc281e268e59c27f9831c25",
+  "diff_clk_rx.mag": "sha256:e6529820eb47778006a49752f7901c96ce22e7851a4ac619d89f2e842169e22b",
+  "diff_clk_rx.lvs.spice": "sha256:68f53c5eeaaf6b62b187f695bc3aa6d17265412b32e568b6ac5ca55b30acd961",
+  "diff_clk_rx.gds": "sha256:48c9ceb302207db60f29b7d428d766f702a53e4b0fa200167076b2f5b581ff95"
  },
  "images": {
   "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -33,12 +33,12 @@
      "temp_c": 27,
      "vdd_v": 3.3,
      "netlist": "extracted",
-     "i_vdd_avg_ua": -0.0152693,
-     "i_vdd_peak_ua": 412.321,
+     "i_vdd_avg_ua": 0.607041,
+     "i_vdd_peak_ua": 112.446,
      "output_max_v": {
-      "outp": 0.000135964,
-      "outn": 3.30072,
-      "present": 2.27187e-05
+      "outp": 4.96277e-05,
+      "outn": 3.30011,
+      "present": 0.000288549
      },
      "deck": "scratch/timing/diff_clk_rx/sim/safe_tt_27_3.3.spice",
      "errors": []
@@ -49,12 +49,12 @@
      "temp_c": 85,
      "vdd_v": 3.63,
      "netlist": "extracted",
-     "i_vdd_avg_ua": 0.019676,
-     "i_vdd_peak_ua": 364.246,
+     "i_vdd_avg_ua": 0.6208089999999999,
+     "i_vdd_peak_ua": 117.29499999999999,
      "output_max_v": {
-      "outp": 0.000135302,
-      "outn": 3.63067,
-      "present": 2.27023e-05
+      "outp": 5.3802e-05,
+      "outn": 3.6301,
+      "present": 0.000279953
      },
      "deck": "scratch/timing/diff_clk_rx/sim/safe_ff_85_3.63.spice",
      "errors": []
@@ -65,12 +65,12 @@
      "temp_c": 0,
      "vdd_v": 3.63,
      "netlist": "extracted",
-     "i_vdd_avg_ua": -0.013895699999999999,
-     "i_vdd_peak_ua": 407.717,
+     "i_vdd_avg_ua": 0.5733130000000001,
+     "i_vdd_peak_ua": 108.89,
      "output_max_v": {
-      "outp": 0.000137394,
-      "outn": 3.63071,
-      "present": 2.22764e-05
+      "outp": 4.63428e-05,
+      "outn": 3.63011,
+      "present": 0.000287254
      },
      "deck": "scratch/timing/diff_clk_rx/sim/safe_ss_0_3.63.spice",
      "errors": []
@@ -81,9 +81,9 @@
      "temp_c": 27,
      "vdd_v": 0,
      "netlist": "extracted",
-     "i_pad_inp_na": 0.00383414,
-     "i_pad_inn_na": 0.00383413,
-     "i_rail_na": -5.3842900000000006e-05,
+     "i_pad_inp_na": 0.00361955,
+     "i_pad_inn_na": 0.0036195199999999998,
+     "i_rail_na": 1.6930800000000002e-10,
      "deck": "scratch/timing/diff_clk_rx/sim/safe_island_off.spice",
      "errors": []
     }
@@ -100,9 +100,24 @@
      "ran": true,
      "violations": 0,
      "by_rule": {},
-     "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+     "deck": "gf180mcuD KLayout (sak-drc.sh -k)",
+     "precheck": {
+      "clean": true,
+      "main": 0,
+      "antenna": 0
+     },
+     "precheck_clean": true
     },
-    "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii"
+    "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii",
+    "klayout_precheck": {
+     "required": true,
+     "ok": true,
+     "record": "generated/diff_clk_rx-kldrc.json",
+     "decks": {
+      "main": 0,
+      "antenna": 0
+     }
+    }
    },
    "lvs": {
     "unique_match": true,
@@ -125,10 +140,10 @@
     "results": [
      {
       "input": "diff 0.1 GHz, 500 mVpp differential",
-      "f_out_hz": 100010001.0001,
-      "duty": 0.5208810881088108,
-      "p_to_n_skew_ps": 305.916,
-      "i_on_ma": 1.42881,
+      "f_out_hz": 100000500.0025,
+      "duty": 0.49849449247246225,
+      "p_to_n_skew_ps": 107.307,
+      "i_on_ma": 3.48724,
       "present": 3.30001,
       "pass": true,
       "netlist": "extracted",
@@ -139,11 +154,11 @@
      },
      {
       "input": "single-ended 1 GHz, 600 mVpp on INP, INN AC-grounded, SE=1",
-      "f_out_hz": 1000015000.2250034,
+      "f_out_hz": 999999999.9999999,
       "duty": null,
-      "p_to_n_skew_ps": 163.997,
-      "i_on_ma": 3.17389,
-      "present": 3.30003,
+      "p_to_n_skew_ps": 105.34400000000001,
+      "i_on_ma": 5.0961799999999995,
+      "present": 3.30018,
       "pass": true,
       "netlist": "extracted",
       "corner": "tt",
@@ -160,17 +175,17 @@
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.7389999999999645,
-       "jitter_pp_ui": 0.13799999999999765
+       "latency_ns": 0.7549999999999826,
+       "jitter_pp_ui": 0.05349999999999449
       },
       "outn": {
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.9179999999999292,
-       "jitter_pp_ui": 0.0879999999999939
+       "latency_ns": 0.8959999999999572,
+       "jitter_pp_ui": 0.0770000000000079
       },
-      "i_on_ma": 1.38339,
+      "i_on_ma": 3.5195600000000002,
       "pass": true,
       "netlist": "extracted",
       "corner": "tt",
@@ -209,17 +224,17 @@
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.7829999999999614,
-       "jitter_pp_ui": 0.20899999999999874
+       "latency_ns": 0.7599999999999618,
+       "jitter_pp_ui": 0.061000000000042694
       },
       "outn": {
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.9199999999999844,
-       "jitter_pp_ui": 0.08399999999998936
+       "latency_ns": 0.8949999999999826,
+       "jitter_pp_ui": 0.12000000000003018
       },
-      "i_on_ma": 1.6927299999999998,
+      "i_on_ma": 3.75244,
       "pass": true,
       "netlist": "extracted",
       "corner": "tt",
@@ -258,17 +273,17 @@
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.654999999999975,
-       "jitter_pp_ui": 0.35840000000006755
+       "latency_ns": 0.7159999999999913,
+       "jitter_pp_ui": 0.12640000000001628
       },
       "outn": {
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.8779999999999897,
-       "jitter_pp_ui": 0.12320000000001265
+       "latency_ns": 0.8219999999999792,
+       "jitter_pp_ui": 0.2208000000000386
       },
-      "i_on_ma": 2.06237,
+      "i_on_ma": 4.0297600000000005,
       "pass": true,
       "netlist": "extracted",
       "corner": "tt",
@@ -307,17 +322,17 @@
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.7079999999999822,
-       "jitter_pp_ui": 0.4384000000000312
+       "latency_ns": 0.7749999999999788,
+       "jitter_pp_ui": 0.13280000000002354
       },
       "outn": {
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.9279999999999935,
-       "jitter_pp_ui": 0.25120000000003073
+       "latency_ns": 0.8809999999999931,
+       "jitter_pp_ui": 0.2256000000000017
       },
-      "i_on_ma": 2.18005,
+      "i_on_ma": 4.04073,
       "pass": true,
       "netlist": "extracted",
       "corner": "tt",
@@ -356,17 +371,17 @@
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.6070000000000001,
-       "jitter_pp_ui": 0.3408000000000476
+       "latency_ns": 0.6909999999999894,
+       "jitter_pp_ui": 0.1184000000000072
       },
       "outn": {
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.7819999999999867,
-       "jitter_pp_ui": 0.17920000000003378
+       "latency_ns": 0.7959999999999762,
+       "jitter_pp_ui": 0.21280000000002955
       },
-      "i_on_ma": 1.94194,
+      "i_on_ma": 4.00195,
       "pass": true,
       "netlist": "extracted",
       "corner": "tt",
@@ -405,17 +420,17 @@
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 0.8619999999999716,
-       "jitter_pp_ui": 0.2855000000000193
+       "latency_ns": 0.8190000000000023,
+       "jitter_pp_ui": 0.09749999999999144
       },
       "outn": {
        "crossings": 64,
        "expected": 64,
        "errors": 0,
-       "latency_ns": 1.0209999999999666,
-       "jitter_pp_ui": 0.1825000000000084
+       "latency_ns": 0.9559999999999723,
+       "jitter_pp_ui": 0.12600000000001052
       },
-      "i_on_ma": 1.49777,
+      "i_on_ma": 3.53946,
       "pass": true,
       "netlist": "extracted",
       "corner": "tt",
@@ -449,11 +464,11 @@
    },
    "layout": {
     "size_um": [
-     192.86,
-     76.07
+     199.99,
+     112.34
     ],
-    "area_um2": 14670.9,
-    "devices": 33,
+    "area_um2": 22466.9,
+    "devices": 54,
     "gds": "generated/diff_clk_rx.gds",
     "mag": "generated/diff_clk_rx.mag",
     "extracted": "generated/diff_clk_rx.ext.spice"
@@ -488,9 +503,9 @@
    "input": "diff 1 GHz, 500 mVpp differential",
    "f_out_hz": 999999999.9999999,
    "duty": null,
-   "p_to_n_skew_ps": 205.156,
-   "i_on_ma": 3.54949,
-   "present": 3.29807,
+   "p_to_n_skew_ps": 105.58999999999999,
+   "i_on_ma": 5.0979600000000005,
+   "present": 3.3003,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -501,10 +516,10 @@
   {
    "kind": "nominal_extracted",
    "input": "diff 0.1 GHz, 500 mVpp differential",
-   "f_out_hz": 100010001.0001,
-   "duty": 0.5208810881088108,
-   "p_to_n_skew_ps": 305.916,
-   "i_on_ma": 1.42881,
+   "f_out_hz": 100000500.0025,
+   "duty": 0.49849449247246225,
+   "p_to_n_skew_ps": 107.307,
+   "i_on_ma": 3.48724,
    "present": 3.30001,
    "pass": true,
    "netlist": "extracted",
@@ -519,8 +534,8 @@
    "f_out_hz": null,
    "duty": null,
    "p_to_n_skew_ps": null,
-   "i_on_ma": 1.8322,
-   "present": 3.29997,
+   "i_on_ma": 3.40006,
+   "present": 3.30002,
    "pass": false,
    "netlist": "extracted",
    "corner": "tt",
@@ -542,8 +557,8 @@
    "f_out_hz": null,
    "duty": null,
    "p_to_n_skew_ps": null,
-   "i_on_ma": 2.10806,
-   "present": 3.29993,
+   "i_on_ma": 4.4182,
+   "present": 2.95735e-05,
    "pass": false,
    "netlist": "extracted",
    "corner": "tt",
@@ -562,34 +577,26 @@
   {
    "kind": "nominal_extracted",
    "input": "diff 1 GHz, 200 mVpp differential",
-   "f_out_hz": null,
+   "f_out_hz": 1000015000.2250034,
    "duty": null,
-   "p_to_n_skew_ps": null,
-   "i_on_ma": 2.15266,
-   "present": 3.3,
-   "pass": false,
+   "p_to_n_skew_ps": -891.192,
+   "i_on_ma": 5.13324,
+   "present": 3.29934,
+   "pass": true,
    "netlist": "extracted",
    "corner": "tt",
    "temp_c": 27,
    "vdd_v": 3.3,
-   "deck": "scratch/timing/diff_clk_rx/sim/nom_diff_1g_200mv.spice",
-   "sim_messages": [
-    "Error: measure  per  trig(TRIG) : out of interval",
-    "Error: measure  thi  trig(TRIG) : out of interval",
-    "Error: measure  skew  trig(TRIG) : out of interval",
-    ".measure tran per trig v(outp) val=    1.650000000000000e+00     td=4.199999999999999e-08 rise=1 targ v(outp) val=    1.650000000000000e+00     td=4.199999999999999e-08 rise=3 failed!",
-    ".measure tran thi trig v(outp) val=    1.650000000000000e+00     td=4.199999999999999e-08 rise=1 targ v(outp) val=    1.650000000000000e+00     td=4.199999999999999e-08 fall=1 failed!",
-    ".measure tran skew trig v(outp) val=    1.650000000000000e+00     td=4.199999999999999e-08 rise=1 targ v(outn) val=    1.650000000000000e+00     td=4.199999999999999e-08 fall=1 failed!"
-   ]
+   "deck": "scratch/timing/diff_clk_rx/sim/nom_diff_1g_200mv.spice"
   },
   {
    "kind": "nominal_extracted",
    "input": "diff 1 GHz, 1200 mVpp differential",
-   "f_out_hz": 1000015000.2250034,
+   "f_out_hz": 999999999.9999999,
    "duty": null,
-   "p_to_n_skew_ps": 172.106,
-   "i_on_ma": 3.31839,
-   "present": 3.30003,
+   "p_to_n_skew_ps": 105.604,
+   "i_on_ma": 5.09141,
+   "present": 3.30006,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -600,10 +607,10 @@
   {
    "kind": "nominal_extracted",
    "input": "square 10 MHz rail-to-rail",
-   "f_out_hz": 9999900.00099999,
-   "duty": 0.5039529604703953,
-   "p_to_n_skew_ps": 195.167,
-   "i_on_ma": 0.364887,
+   "f_out_hz": 9999950.000249999,
+   "duty": 0.49969150154249226,
+   "p_to_n_skew_ps": 107.191,
+   "i_on_ma": 3.10977,
    "present": 3.30001,
    "pass": true,
    "netlist": "extracted",
@@ -615,11 +622,11 @@
   {
    "kind": "nominal_extracted",
    "input": "single-ended 1 GHz, 600 mVpp on INP, INN AC-grounded, SE=1",
-   "f_out_hz": 1000015000.2250034,
+   "f_out_hz": 999999999.9999999,
    "duty": null,
-   "p_to_n_skew_ps": 163.997,
-   "i_on_ma": 3.17389,
-   "present": 3.30003,
+   "p_to_n_skew_ps": 105.34400000000001,
+   "i_on_ma": 5.0961799999999995,
+   "present": 3.30018,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -633,8 +640,8 @@
    "f_out_hz": null,
    "duty": null,
    "p_to_n_skew_ps": null,
-   "i_on_ma": 1.87623,
-   "present": 3.29989,
+   "i_on_ma": 3.5927200000000004,
+   "present": 3.30008,
    "pass": false,
    "netlist": "extracted",
    "corner": "tt",
@@ -660,17 +667,17 @@
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.7389999999999645,
-    "jitter_pp_ui": 0.13799999999999765
+    "latency_ns": 0.7549999999999826,
+    "jitter_pp_ui": 0.05349999999999449
    },
    "outn": {
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.9179999999999292,
-    "jitter_pp_ui": 0.0879999999999939
+    "latency_ns": 0.8959999999999572,
+    "jitter_pp_ui": 0.0770000000000079
    },
-   "i_on_ma": 1.38339,
+   "i_on_ma": 3.5195600000000002,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -710,17 +717,17 @@
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.7829999999999614,
-    "jitter_pp_ui": 0.20899999999999874
+    "latency_ns": 0.7599999999999618,
+    "jitter_pp_ui": 0.061000000000042694
    },
    "outn": {
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.9199999999999844,
-    "jitter_pp_ui": 0.08399999999998936
+    "latency_ns": 0.8949999999999826,
+    "jitter_pp_ui": 0.12000000000003018
    },
-   "i_on_ma": 1.6927299999999998,
+   "i_on_ma": 3.75244,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -760,17 +767,17 @@
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.654999999999975,
-    "jitter_pp_ui": 0.35840000000006755
+    "latency_ns": 0.7159999999999913,
+    "jitter_pp_ui": 0.12640000000001628
    },
    "outn": {
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.8779999999999897,
-    "jitter_pp_ui": 0.12320000000001265
+    "latency_ns": 0.8219999999999792,
+    "jitter_pp_ui": 0.2208000000000386
    },
-   "i_on_ma": 2.06237,
+   "i_on_ma": 4.0297600000000005,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -810,17 +817,17 @@
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.7079999999999822,
-    "jitter_pp_ui": 0.4384000000000312
+    "latency_ns": 0.7749999999999788,
+    "jitter_pp_ui": 0.13280000000002354
    },
    "outn": {
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.9279999999999935,
-    "jitter_pp_ui": 0.25120000000003073
+    "latency_ns": 0.8809999999999931,
+    "jitter_pp_ui": 0.2256000000000017
    },
-   "i_on_ma": 2.18005,
+   "i_on_ma": 4.04073,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -860,17 +867,17 @@
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.6070000000000001,
-    "jitter_pp_ui": 0.3408000000000476
+    "latency_ns": 0.6909999999999894,
+    "jitter_pp_ui": 0.1184000000000072
    },
    "outn": {
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.7819999999999867,
-    "jitter_pp_ui": 0.17920000000003378
+    "latency_ns": 0.7959999999999762,
+    "jitter_pp_ui": 0.21280000000002955
    },
-   "i_on_ma": 1.94194,
+   "i_on_ma": 4.00195,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -909,19 +916,19 @@
    "outp": {
     "crossings": 64,
     "expected": 64,
-    "errors": 64,
-    "latency_ns": 0.5429999999999805,
-    "jitter_pp_ui": 0.3600000000000376
+    "errors": 0,
+    "latency_ns": 0.6979999999999709,
+    "jitter_pp_ui": 0.21799999999998249
    },
    "outn": {
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.8349999999999939,
-    "jitter_pp_ui": 0.25599999999997264
+    "latency_ns": 0.8009999999999818,
+    "jitter_pp_ui": 0.339999999999962
    },
-   "i_on_ma": 2.2975399999999997,
-   "pass": false,
+   "i_on_ma": 4.21272,
+   "pass": true,
    "netlist": "extracted",
    "corner": "tt",
    "temp_c": 27,
@@ -957,20 +964,20 @@
    "vpp_diff_v": 0.5,
    "bits_checked": 127,
    "outp": {
-    "crossings": 62,
+    "crossings": 61,
     "expected": 63,
-    "errors": 5,
-    "latency_ns": 0.7940000000000004,
-    "jitter_pp_ui": 0.6533500000000017
+    "errors": 4,
+    "latency_ns": 0.7569999999999849,
+    "jitter_pp_ui": 0.4801000000000004
    },
    "outn": {
-    "crossings": 63,
+    "crossings": 61,
     "expected": 63,
-    "errors": 2,
-    "latency_ns": 0.9179999999999822,
-    "jitter_pp_ui": 0.5136999999999992
+    "errors": 4,
+    "latency_ns": 0.8959999999999837,
+    "jitter_pp_ui": 0.5085999999999996
    },
-   "i_on_ma": 1.45652,
+   "i_on_ma": 3.55759,
    "pass": false,
    "netlist": "extracted",
    "corner": "tt",
@@ -978,26 +985,26 @@
    "vdd_v": 3.3,
    "deck": "scratch/timing/diff_clk_rx/sim/data_start_0g5_500mv.spice",
    "sim_messages": [
+    "Error: measure  cp62  when(WHEN) : out of interval",
+    "Error: measure  cn62  when(WHEN) : out of interval",
     "Error: measure  cp63  when(WHEN) : out of interval",
+    "Error: measure  cn63  when(WHEN) : out of interval",
     "Error: measure  cp64  when(WHEN) : out of interval",
     "Error: measure  cn64  when(WHEN) : out of interval",
     "Error: measure  cp65  when(WHEN) : out of interval",
     "Error: measure  cn65  when(WHEN) : out of interval",
     "Error: measure  cp66  when(WHEN) : out of interval",
     "Error: measure  cn66  when(WHEN) : out of interval",
-    "Error: measure  cp67  when(WHEN) : out of interval",
-    "Error: measure  cn67  when(WHEN) : out of interval",
-    "Error: measure  cp68  when(WHEN) : out of interval",
+    ".measure tran cp62 when v(outp)=1.65 cross=62 td=0.0 failed!",
+    ".measure tran cn62 when v(outn)=1.65 cross=62 td=0.0 failed!",
     ".measure tran cp63 when v(outp)=1.65 cross=63 td=0.0 failed!",
+    ".measure tran cn63 when v(outn)=1.65 cross=63 td=0.0 failed!",
     ".measure tran cp64 when v(outp)=1.65 cross=64 td=0.0 failed!",
     ".measure tran cn64 when v(outn)=1.65 cross=64 td=0.0 failed!",
     ".measure tran cp65 when v(outp)=1.65 cross=65 td=0.0 failed!",
     ".measure tran cn65 when v(outn)=1.65 cross=65 td=0.0 failed!",
     ".measure tran cp66 when v(outp)=1.65 cross=66 td=0.0 failed!",
-    ".measure tran cn66 when v(outn)=1.65 cross=66 td=0.0 failed!",
-    ".measure tran cp67 when v(outp)=1.65 cross=67 td=0.0 failed!",
-    ".measure tran cn67 when v(outn)=1.65 cross=67 td=0.0 failed!",
-    ".measure tran cp68 when v(outp)=1.65 cross=68 td=0.0 failed!"
+    ".measure tran cn66 when v(outn)=1.65 cross=66 td=0.0 failed!"
    ]
   },
   {
@@ -1010,17 +1017,17 @@
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 0.8619999999999716,
-    "jitter_pp_ui": 0.2855000000000193
+    "latency_ns": 0.8190000000000023,
+    "jitter_pp_ui": 0.09749999999999144
    },
    "outn": {
     "crossings": 64,
     "expected": 64,
     "errors": 0,
-    "latency_ns": 1.0209999999999666,
-    "jitter_pp_ui": 0.1825000000000084
+    "latency_ns": 0.9559999999999723,
+    "jitter_pp_ui": 0.12600000000001052
    },
-   "i_on_ma": 1.49777,
+   "i_on_ma": 3.53946,
    "pass": true,
    "netlist": "extracted",
    "corner": "tt",
@@ -1051,8 +1058,338 @@
    ]
   },
   {
+   "kind": "nominal_extracted",
+   "input": "PRBS7 NRZ 2 Gb/s, 300 mVpp differential, 50 ohm, AC-coupled 10pF per side, last of 3 PRBS periods checked",
+   "rate_bps": 2000000000.0,
+   "vpp_diff_v": 0.3,
+   "bits_checked": 127,
+   "outp": {
+    "crossings": 64,
+    "expected": 64,
+    "errors": 0,
+    "latency_ns": 0.7459999999999724,
+    "jitter_pp_ui": 0.25399999999997036
+   },
+   "outn": {
+    "crossings": 64,
+    "expected": 64,
+    "errors": 0,
+    "latency_ns": 1.0169999999999773,
+    "jitter_pp_ui": 0.37799999999995215
+   },
+   "i_on_ma": 4.2218100000000005,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/diff_clk_rx/sim/data_2g_300mv.spice",
+   "sim_messages": [
+    "Error: measure  cp65  when(WHEN) : out of interval",
+    "Error: measure  cn65  when(WHEN) : out of interval",
+    "Error: measure  cp66  when(WHEN) : out of interval",
+    "Error: measure  cn66  when(WHEN) : out of interval",
+    "Error: measure  cp67  when(WHEN) : out of interval",
+    "Error: measure  cn67  when(WHEN) : out of interval",
+    "Error: measure  cp68  when(WHEN) : out of interval",
+    "Error: measure  cn68  when(WHEN) : out of interval",
+    "Error: measure  cp69  when(WHEN) : out of interval",
+    "Error: measure  cn69  when(WHEN) : out of interval",
+    ".measure tran cp65 when v(outp)=1.65 cross=65 td=1.27e-07 failed!",
+    ".measure tran cn65 when v(outn)=1.65 cross=65 td=1.27e-07 failed!",
+    ".measure tran cp66 when v(outp)=1.65 cross=66 td=1.27e-07 failed!",
+    ".measure tran cn66 when v(outn)=1.65 cross=66 td=1.27e-07 failed!",
+    ".measure tran cp67 when v(outp)=1.65 cross=67 td=1.27e-07 failed!",
+    ".measure tran cn67 when v(outn)=1.65 cross=67 td=1.27e-07 failed!",
+    ".measure tran cp68 when v(outp)=1.65 cross=68 td=1.27e-07 failed!",
+    ".measure tran cn68 when v(outn)=1.65 cross=68 td=1.27e-07 failed!",
+    ".measure tran cp69 when v(outp)=1.65 cross=69 td=1.27e-07 failed!",
+    ".measure tran cn69 when v(outn)=1.65 cross=69 td=1.27e-07 failed!"
+   ]
+  },
+  {
+   "kind": "nominal_extracted",
+   "input": "PRBS7 NRZ 2 Gb/s, 300 mVpp differential, 50 ohm, AC-coupled 10pF per side, 40-bit 1010 preamble, checked from the first PRBS bit (start-up)",
+   "rate_bps": 2000000000.0,
+   "vpp_diff_v": 0.3,
+   "bits_checked": 127,
+   "outp": {
+    "crossings": 63,
+    "expected": 63,
+    "errors": 0,
+    "latency_ns": 0.8527000000000002,
+    "jitter_pp_ui": 0.19340000000000224
+   },
+   "outn": {
+    "crossings": 63,
+    "expected": 63,
+    "errors": 0,
+    "latency_ns": 0.9972999999999974,
+    "jitter_pp_ui": 0.31440000000000706
+   },
+   "i_on_ma": 4.22431,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/diff_clk_rx/sim/data_idle_2g_300mv.spice",
+   "sim_messages": [
+    "Error: measure  cp65  when(WHEN) : out of interval",
+    "Error: measure  cn65  when(WHEN) : out of interval",
+    "Error: measure  cp66  when(WHEN) : out of interval",
+    "Error: measure  cn66  when(WHEN) : out of interval",
+    "Error: measure  cp67  when(WHEN) : out of interval",
+    "Error: measure  cn67  when(WHEN) : out of interval",
+    "Error: measure  cp68  when(WHEN) : out of interval",
+    "Error: measure  cn68  when(WHEN) : out of interval",
+    "Error: measure  cp69  when(WHEN) : out of interval",
+    "Error: measure  cn69  when(WHEN) : out of interval",
+    ".measure tran cp65 when v(outp)=1.65 cross=65 td=2.025e-08 failed!",
+    ".measure tran cn65 when v(outn)=1.65 cross=65 td=2.025e-08 failed!",
+    ".measure tran cp66 when v(outp)=1.65 cross=66 td=2.025e-08 failed!",
+    ".measure tran cn66 when v(outn)=1.65 cross=66 td=2.025e-08 failed!",
+    ".measure tran cp67 when v(outp)=1.65 cross=67 td=2.025e-08 failed!",
+    ".measure tran cn67 when v(outn)=1.65 cross=67 td=2.025e-08 failed!",
+    ".measure tran cp68 when v(outp)=1.65 cross=68 td=2.025e-08 failed!",
+    ".measure tran cn68 when v(outn)=1.65 cross=68 td=2.025e-08 failed!",
+    ".measure tran cp69 when v(outp)=1.65 cross=69 td=2.025e-08 failed!",
+    ".measure tran cn69 when v(outn)=1.65 cross=69 td=2.025e-08 failed!"
+   ]
+  },
+  {
+   "kind": "nominal_extracted",
+   "input": "PRBS7 NRZ 0.5 Gb/s, 300 mVpp differential, 50 ohm, AC-coupled 10pF per side, 20-bit 1010 preamble, checked from the first PRBS bit (start-up)",
+   "rate_bps": 500000000.0,
+   "vpp_diff_v": 0.3,
+   "bits_checked": 127,
+   "outp": {
+    "crossings": 63,
+    "expected": 63,
+    "errors": 0,
+    "latency_ns": 0.8119999999999943,
+    "jitter_pp_ui": 0.09710000000000289
+   },
+   "outn": {
+    "crossings": 63,
+    "expected": 63,
+    "errors": 0,
+    "latency_ns": 0.9549999999999976,
+    "jitter_pp_ui": 0.1258500000000024
+   },
+   "i_on_ma": 3.53756,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd_v": 3.3,
+   "deck": "scratch/timing/diff_clk_rx/sim/data_idle_0g5_300mv.spice",
+   "sim_messages": [
+    "Error: measure  cp64  when(WHEN) : out of interval",
+    "Error: measure  cn64  when(WHEN) : out of interval",
+    "Error: measure  cp65  when(WHEN) : out of interval",
+    "Error: measure  cn65  when(WHEN) : out of interval",
+    "Error: measure  cp66  when(WHEN) : out of interval",
+    "Error: measure  cn66  when(WHEN) : out of interval",
+    "Error: measure  cp67  when(WHEN) : out of interval",
+    "Error: measure  cn67  when(WHEN) : out of interval",
+    "Error: measure  cp68  when(WHEN) : out of interval",
+    "Error: measure  cn68  when(WHEN) : out of interval",
+    ".measure tran cp64 when v(outp)=1.65 cross=64 td=4.1e-08 failed!",
+    ".measure tran cn64 when v(outn)=1.65 cross=64 td=4.1e-08 failed!",
+    ".measure tran cp65 when v(outp)=1.65 cross=65 td=4.1e-08 failed!",
+    ".measure tran cn65 when v(outn)=1.65 cross=65 td=4.1e-08 failed!",
+    ".measure tran cp66 when v(outp)=1.65 cross=66 td=4.1e-08 failed!",
+    ".measure tran cn66 when v(outn)=1.65 cross=66 td=4.1e-08 failed!",
+    ".measure tran cp67 when v(outp)=1.65 cross=67 td=4.1e-08 failed!",
+    ".measure tran cn67 when v(outn)=1.65 cross=67 td=4.1e-08 failed!",
+    ".measure tran cp68 when v(outp)=1.65 cross=68 td=4.1e-08 failed!",
+    ".measure tran cn68 when v(outn)=1.65 cross=68 td=4.1e-08 failed!"
+   ]
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 99999500.0025,
+   "duty": 0.49849150754246235,
+   "p_to_n_skew_ps": 111.261,
+   "i_on_ma": 3.2299300000000004,
+   "present": 3.15001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_tt_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100000500.0025,
+   "duty": 0.49854549272746357,
+   "p_to_n_skew_ps": 104.83500000000001,
+   "i_on_ma": 3.54893,
+   "present": 3.35001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_tt_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100002000.04000081,
+   "duty": 0.4983519670393408,
+   "p_to_n_skew_ps": 113.315,
+   "i_on_ma": 3.26479,
+   "present": 3.15001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_tt_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100000500.0025,
+   "duty": 0.4984894924474622,
+   "p_to_n_skew_ps": 107.103,
+   "i_on_ma": 3.5858,
+   "present": 3.35001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "tt",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_tt_32_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100000500.0025,
+   "duty": 0.49816549082745404,
+   "p_to_n_skew_ps": 133.523,
+   "i_on_ma": 2.57509,
+   "present": 3.15001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_ss_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100000500.0025,
+   "duty": 0.4983744918724593,
+   "p_to_n_skew_ps": 125.619,
+   "i_on_ma": 2.84065,
+   "present": 3.35001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_ss_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100000500.0025,
+   "duty": 0.4980714903574517,
+   "p_to_n_skew_ps": 136.841,
+   "i_on_ma": 2.60354,
+   "present": 3.15001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_ss_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100000500.0025,
+   "duty": 0.4982744913724568,
+   "p_to_n_skew_ps": 128.44899999999998,
+   "i_on_ma": 2.87084,
+   "present": 3.35001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_ss_32_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100000500.0025,
+   "duty": 0.49841849209246036,
+   "p_to_n_skew_ps": 93.4021,
+   "i_on_ma": 4.18657,
+   "present": 3.15001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_ff_22_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100000000.0,
+   "duty": 0.49849999999999994,
+   "p_to_n_skew_ps": 89.06309999999999,
+   "i_on_ma": 4.58345,
+   "present": 3.35002,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_ff_22_3.35.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100000000.0,
+   "duty": 0.498358,
+   "p_to_n_skew_ps": 95.6177,
+   "i_on_ma": 4.23039,
+   "present": 3.15001,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.15,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_ff_32_3.15.spice"
+  },
+  {
+   "kind": "corner_extracted",
+   "input": "diff 0.1 GHz, 500 mVpp differential",
+   "f_out_hz": 100002000.04000081,
+   "duty": 0.4984619692393848,
+   "p_to_n_skew_ps": 91.0174,
+   "i_on_ma": 4.62984,
+   "present": 3.35002,
+   "pass": true,
+   "netlist": "extracted",
+   "corner": "ff",
+   "temp_c": 32,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/diff_clk_rx/sim/c_ff_32_3.35.spice"
+  },
+  {
    "kind": "area",
-   "area_um2": 14670.9,
+   "area_um2": 22466.9,
    "ceiling_um2": 180000,
    "ceiling_source": "analog-architecture.json blocks.refinput (per instance)",
    "fits": true

@@ -36,7 +36,9 @@ def add_rg(text, per_um=RG_PER_UM):
             w = float(re.search(r'\bw=([0-9.]+)u', line).group(1))
             name, d, g, s, b, mod, rest = m.groups()
             gi = f'{g}_rg{name}'.replace('#', '')
-            out.append(f'R{name}_g {g} {gi} {per_um * w:.1f}')
+            mult = re.search(r'\bm=(\d+)', rest)
+            # m parallel devices each carry their own gate contact: effective Rg / m (r4f)
+            out.append(f'R{name}_g {g} {gi} {per_um * w / (int(mult.group(1)) if mult else 1):.1f}')
             if 'ad=' not in rest:   # schematic: add the layout engine's diffusion (nf=1, 0.44 um S/D)
                 rest += f' ad={w * 0.44:.3g}p as={w * 0.44:.3g}p pd={2 * (w + 0.44):.3g}u ps={2 * (w + 0.44):.3g}u'
             out.append(f'{name} {d} {gi} {s} {b} {mod}{rest}')
@@ -58,7 +60,8 @@ def stage(extracted=False):
 
 def header(corner, temp):
     c = {'tt': 'typical'}.get(corner, corner)
-    return tf.header(corner, temp) + f'.lib {tf.MODELS}/sm141064.ngspice mimcap_{c}\n'
+    return (tf.header(corner, temp) + f'.lib {tf.MODELS}/sm141064.ngspice mimcap_{c}\n'
+            + f'.lib {tf.MODELS}/sm141064.ngspice moscap_{c}\n')   # fork G: C2 is an n-well varactor
 
 
 def load():
@@ -141,7 +144,7 @@ IB vdd ib 10u
 VREF ref 0 {ref}
 VFB fb 0 {fb}
 VEN en 0 {v}
-VPRE pre 0 0
+VPRE pre 0 pwl(0 {v} 1n {v} 1.05n 0)
 VVT vt 0 1.65
 X1 ref fb en pre ib vt vdd 0 pt_lo_pfdcp
 .control
@@ -166,6 +169,9 @@ def run_cp_dc(corners, codes=(0,)):
                 tf.ngspice(WORK, name, header(corner, temp) + tb_cp_dc('lo_pfdcp.spice', v, code, which) + '.end\n')
                 log = (WORK / f'{name}.log').read_text(errors='replace')
                 vals = [float(x) for x in re.findall(r'^ii\s*=\s*([-+0-9.eE]+)', log, re.M)]
+                if len(vals) == 2 * len(VT_GRID):      # ngspice echoes each meas twice inside .control loops
+                    vals = vals[::2]
+                assert len(vals) == len(VT_GRID), (name, len(vals))
                 row[which + '_ua'] = [abs(x) * 1e6 for x in vals]
             mm = [(u - d) / ((u + d) / 2) * 100 if (u + d) > 0 else None for u, d in zip(row['up_ua'], row['dn_ua'])]
             row['mismatch_pct'] = mm
@@ -185,7 +191,7 @@ def noise_netlist():
     body = t[s:e].replace('.subckt pt_lo_pfdcp', '.subckt pt_lo_cpnoise')
     lines = []
     for ln in body.splitlines():
-        if ln.startswith(('XSU ', 'XSD ', 'XRS', 'XU1', 'XD1', 'XD2')):
+        if ln.startswith(('XSU ', 'XSD ', 'XRS', 'XU1', 'XD1', 'XD2', 'XKU', 'XKD')):   # PFD + keepers (floating UP/DN)
             continue
         ln = re.sub(r'^(XSU1 \S+) UPB ', r'\1 VSS ', ln)
         ln = re.sub(r'^(XSU2 \S+) UP ', r'\1 VDD ', ln)
@@ -265,15 +271,24 @@ X1 ref fb en pre ib vt vdd 0 pt_lo_pfdcp
 
 # ------------------------------------------------------------------- closed-loop lock
 def tb_lock(mmd_inc, cp_inc, v, n=48, fref=50e6, kv=60e6, df0=-2e6, vt0=1.65, code=0, amp=0.5, t_end=6e-6,
-            dphi0=0.3, cm=1.7, step=20e-12):
+            dphi0=0.3, cm=1.7, step=20e-12, behav_div=False, c2node='x'):
     """MMD + PFD/CP + filter (transistor level) with a BEHAVIOURAL VCO: excess phase
     dphi (cycles) integrated on a 1 F node, d(dphi)/dt = kv (VTUNE - vt0) + df0;
     LP/LN = cm +- amp sin(2 pi (n fref t + dphi)).  VTUNE and the filter start at vt0
     (band-search preset hand-off), initial phase offset dphi0 cycles."""
     b = code_bits(code)
     nb = ''.join(f'VN{k} n{k} 0 {v * x}\n' for k, x in enumerate(nbits(n)))
+    w = 6.283185307179586
+    if behav_div:   # BEHAVIOURAL divider too: FB = rising edge each n VCO cycles (no MMD delay)
+        mmd_line, vco_lines = '', ''
+        div_line = f'BFB fb 0 v={{ {v / 2} * (1 + tanh(40 * sin({w} * ({fref} * time + v(dphi) / {n})))) }}'
+    else:
+        mmd_line = f'.include {mmd_inc}'
+        vco_lines = (f'BLP lp 0 v={{ {cm} + {amp} * sin({w} * ({n * fref} * time + v(dphi))) }}\n'
+                     f'BLN ln 0 v={{ {cm} - {amp} * sin({w} * ({n * fref} * time + v(dphi))) }}')
+        div_line = 'XM lp ln en n0 n1 n2 n3 n4 n5 fb vdd 0 pt_lo_mmd'
     return f"""* closed-loop lock, N={n}, Kv={kv / 1e6:g} MHz/V, df0={df0 / 1e6:g} MHz
-.include {mmd_inc}
+{mmd_line}
 .include {cp_inc}
 .include lo_lf.spice
 VDD vdd 0 {v}
@@ -282,18 +297,17 @@ VEN en 0 {v}
 VPRE pre 0 0
 VREF ref 0 pulse(0 {v} 2n 100p 100p {0.5 / fref - 100e-12} {1 / fref})
 {nb}CPH dphi 0 1
-GPH 0 dphi cur={{ {kv} * (v(vtune) - {vt0}) + {df0} }}
-BLP lp 0 v={{ {cm} + {amp} * sin(6.283185307179586 * ({n * fref} * time + v(dphi))) }}
-BLN ln 0 v={{ {cm} - {amp} * sin(6.283185307179586 * ({n * fref} * time + v(dphi))) }}
-XM lp ln en n0 n1 n2 n3 n4 n5 fb vdd 0 pt_lo_mmd
+GPH 0 dphi cur={{ {kv} * (v(vt) - {vt0}) + {df0} }}
+{vco_lines}
+{div_line}
 XP ref fb en pre ib vtune vdd 0 pt_lo_pfdcp
-XL vtune 0 pt_lo_lf
-.ic v(dphi)={dphi0} v(vtune)={vt0} v(xl.x)={vt0}
+XL vtune vt 0 pt_lo_lf
+.ic v(dphi)={dphi0} v(vtune)={vt0} v(vt)={vt0} v(xl.{c2node})={vt0}
 .option interp
 .tran {step} {t_end}
 .control
 run
-wrdata lock_out.txt v(ref) v(fb) v(vtune) v(dphi)
+wrdata lock_out.txt v(ref) v(fb) v(vt) v(dphi)
 .endc
 """
 
@@ -318,7 +332,7 @@ def analyse_lock(path, fref=50e6, n=49, kv=60e6, v=3.3):
     bad = np.where(abs(lo_deg) > 2.0)[0]
     out.update(static_phase_offset_ps=spo * 1e12,
                t_lock_2deg_lo_s=float(er[bad[-1] + 1]) if len(bad) and bad[-1] + 1 < len(er) else None,
-               t_lock_10ps_s=float(er[np.where(abs(dt - spo) > 10e-12)[0][-1] + 1]) if np.any(abs(dt - spo) > 10e-12) else 0.0,
+               t_lock_10ps_s=(float(er[min(np.where(abs(dt - spo) > 10e-12)[0][-1] + 1, len(er) - 1)]) if np.any(abs(dt - spo) > 10e-12) else 0.0),
                last20_dt_pp_ps=float((tail.max() - tail.min()) * 1e12),
                vtune_final_v=float(vt[-1]))
     s = t > t[-1] - 1e-6
@@ -340,6 +354,12 @@ def run_lock(extracted=False, corner='tt', temp=27, v=3.3, tag='', **kw):
         src = (HERE.parent / 'generated' / 'lo_pfdcp.ext.spice').read_text()
         lf = (HERE.parent / 'generated' / 'lo_lf.ext.spice').read_text()
         (WORK / 'lk_lf.spice').write_text(tf.uniquify_subckts(lf, 'lf', keep=('pt_lo_lf',)))
+        # fork G: the extracted C2 node is not named X; find the net shared with R (X R0 other end) and the C2 units
+        body = lf[lf.index('.subckt pt_lo_lf'):]
+        body = body[:body.index('.ends')]
+        c2n = {ln.split()[1] for ln in body.splitlines() if ln.startswith('XXC2_')}
+        assert len(c2n) == 1, c2n
+        kw.setdefault('c2node', c2n.pop())
     else:
         strip = lambda s: '\n'.join(l for l in s.splitlines() if not l.lower().startswith('.include'))
         src = '\n'.join(strip((HERE.parent / f).read_text()) for f in ('timing_cells.spice', 'pll.spice', 'lo_pfdcp.spice'))
@@ -349,7 +369,7 @@ def run_lock(extracted=False, corner='tt', temp=27, v=3.3, tag='', **kw):
     deck = deck.replace('lock_out.txt', f'{name}.txt')
     if extracted:   # extracted filter too
         deck = deck.replace('.include lo_lf.spice', '.include lk_lf.spice')
-    tf.ngspice(WORK, name, deck, timeout=6 * 3600)
+    tf.ngspice(WORK, name, deck, timeout=11 * 3600)
     r = analyse_lock(WORK / f'{name}.txt', n=kw.get('n', 48), kv=kw.get('kv', 60e6), v=v)
     r.update(corner=corner, temp_c=temp, vdd=v, netlist='extracted' if extracted else 'schematic', settings=kw,
              vco='BEHAVIOURAL (B-source phase integrator, sine on LP/LN)', deck=str((WORK / name).relative_to(REPO)) + '.spice')
@@ -362,28 +382,49 @@ MIM_F_PER_UM2 = 2e-15
 MIM_SIDE_MAX = 50.0
 
 
-def write_lf(r_ohm=LF_DEFAULT['r_ohm'], c1_f=LF_DEFAULT['c1_f'], c2_f=LF_DEFAULT['c2_f'], rsq_ohm=1000.0):
-    """Generate lo_lf.spice: 3rd-order passive filter (C1 on VTUNE, R + C2), MIM caps
-    split into equal squares <= 50 um, R in ppolyf_u_1k 1 um wide (1 k/sq nominal)."""
+def write_lf(r_ohm=13.09e3, c1_f=6.96e-12, c2_f=347e-12, r3_ohm=10e3, c3_f=15.9e-12, rsq_ohm=1000.0,
+             c2_mos=True, mos_f_per_um2=4.6e-15, mos_side=20.0, c2_var=True, var_f_per_um2=3.6e-15, var_side=40.0):
+    """Generate lo_lf.spice (round 4): 4th-order passive filter.  CP drives node CP:
+    C1 (MIM) on CP, R + C2 from CP (C2 = NMOS inversion cap, gate on X, S/D/B on VSS,
+    valid for VTUNE >= ~0.8 V, the lock window), R3 from CP to VT and C3 (MIM) on VT.
+    The VCO varactor sees VT."""
     def caps(name, a, b, c):
         area = c / MIM_F_PER_UM2
         n = max(1, math.ceil(area / MIM_SIDE_MAX ** 2))
         side = round(math.sqrt(area / n), 1)
         return ''.join(f'X{name}{k} {a} {b} cap_mim_2f0_m4m5_noshield c_width={side}u c_length={side}u\n' for k in range(n)), n * side * side * MIM_F_PER_UM2
-    c1, c1a = caps('C1', 'VTUNE', 'VSS', c1_f)
-    c2, c2a = caps('C2', 'X', 'VSS', c2_f)
-    nsq = r_ohm / rsq_ohm
-    nseg = max(1, math.ceil(nsq / 40))
-    rs = ''
-    for k in range(nseg):
-        a = 'VTUNE' if k == 0 else f'R{k}'
-        b = 'X' if k == nseg - 1 else f'R{k + 1}'
-        rs += f'XR{k} {a} {b} VSS ppolyf_u_1k r_width=1u r_length={nsq / nseg:.2f}u\n'
-    text = (f'* SPDX-License-Identifier: Apache-2.0\n* pt_lo_lf: RF-LO loop filter (LO13), generated by lcvco/run_loop.py write_lf\n'
-            f'* R = {r_ohm / 1e3:.2f} k (ppolyf_u_1k, nominal 1 k/sq), C1 = {c1a * 1e12:.2f} pF, C2 = {c2a * 1e12:.2f} pF (MIM 2 fF/um2)\n'
-            f'.subckt pt_lo_lf VTUNE VSS\n{c1}{rs}{c2}.ends\n')
+
+    def res(name, a, b, r):
+        nsq = r / rsq_ohm
+        nseg = max(1, math.ceil(nsq / 40))
+        out = ''
+        for k in range(nseg):
+            x = a if k == 0 else f'{name}{k}'
+            y = b if k == nseg - 1 else f'{name}{k + 1}'
+            out += f'X{name}{k} {x} {y} VSS ppolyf_u_1k r_width=1u r_length={nsq / nseg:.2f}u\n'
+        return out
+    c1, c1a = caps('C1', 'CP', 'VSS', c1_f)
+    c3, c3a = caps('C3', 'VT', 'VSS', c3_f)
+    if c2_var:   # round 4 fork G: n-well accumulation varactor, gate X / well VSS: valid over VTUNE 0.3-3.0 V
+        unit = var_side * var_side * var_f_per_um2   # (tt 3.6-4.0 fF/um2 for 0.3-3.0 V; ff 0.3 V 3.3; ss 4.0-4.4)
+        m = math.ceil(c2_f / unit)
+        c2 = ''.join(f'XC2_{k} X VSS cap_nmos_03v3_b c_width={var_side}u c_length={var_side}u\n' for k in range(m))
+        c2a = m * unit
+    elif c2_mos:
+        unit = mos_side * mos_side * mos_f_per_um2
+        m = math.ceil(c2_f / unit)
+        c2 = ''.join(f'XC2_{k} VSS X VSS VSS nfet_03v3 w={mos_side}u l={mos_side}u\n' for k in range(m))
+        c2a = m * unit
+    else:
+        c2, c2a = caps('C2', 'X', 'VSS', c2_f)
+    c2desc = ('n-well accumulation varactor (gate X, well VSS), design ' + str(var_f_per_um2 * 1e15) + ' fF/um2, valid VTUNE 0.3-3.0 V') if c2_var else (('NMOS inversion cap, design value ' + str(mos_f_per_um2 * 1e15) + ' fF/um2') if c2_mos else 'MIM')
+    text = (f'* SPDX-License-Identifier: Apache-2.0\n* pt_lo_lf: RF-LO loop filter (round 4, 4th order), generated by lcvco/run_loop.py write_lf\n'
+            f'* R = {r_ohm / 1e3:.2f} k, C1 = {c1a * 1e12:.2f} pF MIM, C2 = {c2a * 1e12:.1f} pF '
+            f'({c2desc}), '
+            f'R3 = {r3_ohm / 1e3:.2f} k, C3 = {c3a * 1e12:.2f} pF MIM (pole {1 / (2 * math.pi * r3_ohm * c3a) / 1e6:.2f} MHz)\n'
+            f'.subckt pt_lo_lf CP VT VSS\n{c1}{res("R", "CP", "X", r_ohm)}{c2}{res("R3_", "CP", "VT", r3_ohm)}{c3}.ends\n')
     (HERE.parent / 'lo_lf.spice').write_text(text)
-    return dict(r_ohm=r_ohm, c1_f=c1a, c2_f=c2a)
+    return dict(r_ohm=r_ohm, c1_f=c1a, c2_f=c2a, r3_ohm=r3_ohm, c3_f=c3a, c2_mos=c2_mos and not c2_var, c2_var=c2_var)
 
 
 if __name__ == '__main__':

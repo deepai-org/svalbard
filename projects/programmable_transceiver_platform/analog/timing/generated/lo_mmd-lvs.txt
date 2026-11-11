@@ -12,21 +12,6 @@ Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield
 Cell pin lists are equivalent.
 Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
 
-Circuit 1 cell nfet_03v3 and Circuit 2 cell nfet_03v3 are black boxes.
-Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
-Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: nfet_03v3                       |Circuit 2: nfet_03v3                       
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
-3                                          |3                                          
-4                                          |4                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes nfet_03v3 and nfet_03v3 are equivalent.
-
 Circuit 1 cell pfet_03v3 and Circuit 2 cell pfet_03v3 are black boxes.
 Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
 Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
@@ -42,6 +27,21 @@ Circuit 1: pfet_03v3                       |Circuit 2: pfet_03v3
 Cell pin lists are equivalent.
 Device classes pfet_03v3 and pfet_03v3 are equivalent.
 
+Circuit 1 cell nfet_03v3 and Circuit 2 cell nfet_03v3 are black boxes.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_03v3                       |Circuit 2: nfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_03v3 and nfet_03v3 are equivalent.
+
 Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
 Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
 Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
@@ -55,19 +55,19 @@ Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
-Flattening unmatched subcell p_nfet_03v3_w2_l0p28 in circuit pt_lo_mmd (0)(56 instances)
+Flattening unmatched subcell p_pfet_03v3_w8_l0p28 in circuit pt_lo_mmd (0)(37 instances)
+Flattening unmatched subcell p_nfet_03v3_w2_l0p28 in circuit pt_lo_mmd (0)(77 instances)
 Flattening unmatched subcell p_nfet_03v3_w32_l0p28 in circuit pt_lo_mmd (0)(14 instances)
 Flattening unmatched subcell p_pfet_03v3_w2_l0p28 in circuit pt_lo_mmd (0)(52 instances)
-Flattening unmatched subcell p_pfet_03v3_w4_l0p28 in circuit pt_lo_mmd (0)(81 instances)
+Flattening unmatched subcell p_pfet_03v3_w4_l0p28 in circuit pt_lo_mmd (0)(66 instances)
 Flattening unmatched subcell p_nfet_03v3_w10_l0p28 in circuit pt_lo_mmd (0)(46 instances)
-Flattening unmatched subcell p_nfet_03v3_w4_l0p28 in circuit pt_lo_mmd (0)(21 instances)
 Flattening unmatched subcell p_nfet_03v3_w40_l0p28 in circuit pt_lo_mmd (0)(8 instances)
-Flattening unmatched subcell p_nfet_03v3_w1_l0p28 in circuit pt_lo_mmd (0)(76 instances)
+Flattening unmatched subcell p_nfet_03v3_w1_l0p28 in circuit pt_lo_mmd (0)(58 instances)
+Flattening unmatched subcell p_nfet_03v3_w8_l0p28 in circuit pt_lo_mmd (0)(33 instances)
 Flattening unmatched subcell p_nfet_03v3_w64_l0p28 in circuit pt_lo_mmd (0)(7 instances)
 Flattening unmatched subcell p_nfet_03v3_w6_l0p28 in circuit pt_lo_mmd (0)(44 instances)
-Flattening unmatched subcell p_pfet_03v3_w8_l0p28 in circuit pt_lo_mmd (0)(22 instances)
-Flattening unmatched subcell p_nfet_03v3_w8_l0p28 in circuit pt_lo_mmd (0)(27 instances)
 Flattening unmatched subcell p_nfet_03v3_w20_l0p28 in circuit pt_lo_mmd (0)(10 instances)
+Flattening unmatched subcell p_nfet_03v3_w4_l0p28 in circuit pt_lo_mmd (0)(6 instances)
 Flattening unmatched subcell p_ppolyf_u_1k_w1p25_l2 in circuit pt_lo_mmd (0)(12 instances)
 Flattening unmatched subcell p_nfet_03v3_w30_l0p28 in circuit pt_lo_mmd (0)(6 instances)
 Flattening unmatched subcell p_ppolyf_u_1k_w2p5_l2 in circuit pt_lo_mmd (0)(12 instances)
@@ -82,18 +82,18 @@ Flattening unmatched subcell p_cap_mim_2f0_m4m5_noshield_w20_l20 in circuit pt_l
 Flattening unmatched subcell p_cap_mim_2f0_m4m5_noshield_w20_l20_c in circuit pt_lo_mmd (0)(2 instances)
 Flattening unmatched subcell p_ppolyf_u_1k_w5_l2 in circuit pt_lo_mmd (0)(4 instances)
 
-Class pt_lo_mmd (0):  Merged 13 parallel devices.
-Class pt_lo_mmd (1):  Merged 13 parallel devices.
+Class pt_lo_mmd (0):  Merged 17 parallel devices.
+Class pt_lo_mmd (1):  Merged 17 parallel devices.
 Subcircuit summary:
 Circuit 1: pt_lo_mmd                       |Circuit 2: pt_lo_mmd                       
 -------------------------------------------|-------------------------------------------
-nfet_03v3 (327->321)                       |nfet_03v3 (327->321)                       
-pfet_03v3 (157->156)                       |pfet_03v3 (157->156)                       
+pfet_03v3 (157->150)                       |pfet_03v3 (157->150)                       
+nfet_03v3 (321->315)                       |nfet_03v3 (321->315)                       
 ppolyf_u_1k (33)                           |ppolyf_u_1k (33)                           
 cap_mim_2f0_m4m5_noshield (2)              |cap_mim_2f0_m4m5_noshield (2)              
-diode_nd2ps_03v3 (24->18)                  |diode_nd2ps_03v3 (24->18)                  
-Number of devices: 530                     |Number of devices: 530                     
-Number of nets: 250                        |Number of nets: 250                        
+diode_nd2ps_03v3 (15->11)                  |diode_nd2ps_03v3 (15->11)                  
+Number of devices: 511                     |Number of devices: 511                     
+Number of nets: 244                        |Number of nets: 244                        
 ---------------------------------------------------------------------------------------
 Netlists match uniquely.
 
@@ -102,16 +102,16 @@ Circuit 1: pt_lo_mmd                       |Circuit 2: pt_lo_mmd
 -------------------------------------------|-------------------------------------------
 LP                                         |LP                                         
 LN                                         |LN                                         
-N5                                         |N5                                         
-N3                                         |N3                                         
-FB                                         |FB                                         
-VDD                                        |VDD                                        
 EN                                         |EN                                         
 N0                                         |N0                                         
 N1                                         |N1                                         
 N4                                         |N4                                         
 N2                                         |N2                                         
 VSS                                        |VSS                                        
+N3                                         |N3                                         
+FB                                         |FB                                         
+VDD                                        |VDD                                        
+N5                                         |N5                                         
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes pt_lo_mmd and pt_lo_mmd are equivalent.

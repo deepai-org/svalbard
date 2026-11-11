@@ -1,42 +1,107 @@
 * NGSPICE file created from pt_lo_lf.ext - technology: gf180mcuD
 
-.subckt p_ppolyf_u_1k_w1_l22p1 a_n100_2210# a_n100_n2332# a_n312_n2544#
-X0 a_n100_2210# a_n100_n2332# a_n312_n2544# ppolyf_u_1k r_width=1u r_length=22.1u
+.subckt p_ppolyf_u_1k_w1_l13p09 a_n312_n1643# a_n100_1309# a_n100_n1431#
+X0 a_n100_1309# a_n100_n1431# a_n312_n1643# ppolyf_u_1k r_width=1u r_length=13.09u
 .ends
 
-.subckt p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9_c m4_n5130_n5010# m4_n5010_n4890#
-X0 m4_n5010_n4890# m4_n5130_n5010# cap_mim_2f0_m4m5_noshield c_width=48.9u c_length=48.9u
+.subckt p_cap_nmos_03v3_b_w40_l40_c a_n4000_n4092# w_n4112_n4116#
+X0 a_n4000_n4092# w_n4112_n4116# cap_nmos_03v3_b c_width=40u c_length=40u
 .ends
 
-.subckt p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9 m4_4900_n5023# m1_n158_5325#
-Xp_cap_mim_2f0_m4m5_noshield_w48p9_l48p9_c_0 m4_4900_n5023# m1_n158_5325# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9_c
+.subckt p_cap_nmos_03v3_b_w40_l40 p_cap_nmos_03v3_b_w40_l40_c_0/a_n4000_n4092# m1_n4090_n38#
+Xp_cap_nmos_03v3_b_w40_l40_c_0 p_cap_nmos_03v3_b_w40_l40_c_0/a_n4000_n4092# m1_n4090_n38#
++ p_cap_nmos_03v3_b_w40_l40_c
 .ends
 
-.subckt p_cap_mim_2f0_m4m5_noshield_w36p1_l36p1_c m4_n3850_n3730# m4_n3730_n3610#
-X0 m4_n3730_n3610# m4_n3850_n3730# cap_mim_2f0_m4m5_noshield c_width=36.1u c_length=36.1u
+.subckt p_cap_mim_2f0_m4m5_noshield_w44p6_l44p6_c m4_n4580_n4460# m4_n4700_n4580#
+X0 m4_n4580_n4460# m4_n4700_n4580# cap_mim_2f0_m4m5_noshield c_width=44.6u c_length=44.6u
 .ends
 
-.subckt p_cap_mim_2f0_m4m5_noshield_w36p1_l36p1 m4_3620_n3743# m1_n158_4045#
-Xp_cap_mim_2f0_m4m5_noshield_w36p1_l36p1_c_0 m4_3620_n3743# m1_n158_4045# p_cap_mim_2f0_m4m5_noshield_w36p1_l36p1_c
+.subckt p_cap_mim_2f0_m4m5_noshield_w44p6_l44p6 m1_n158_4895# m4_4470_n4593#
+Xp_cap_mim_2f0_m4m5_noshield_w44p6_l44p6_c_0 m1_n158_4895# m4_4470_n4593# p_cap_mim_2f0_m4m5_noshield_w44p6_l44p6_c
 .ends
 
-.subckt pt_lo_lf VTUNE VSS
-XXR0 VTUNE m1_5562_22726# VSS p_ppolyf_u_1k_w1_l22p1
-XXC20 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC21 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC10 VSS VTUNE p_cap_mim_2f0_m4m5_noshield_w36p1_l36p1
-XXC22 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC11 VSS VTUNE p_cap_mim_2f0_m4m5_noshield_w36p1_l36p1
-XXC23 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC24 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC25 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC210 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC211 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC27 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC26 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC212 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC28 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC213 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
-XXC29 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+.subckt p_cap_mim_2f0_m4m5_noshield_w41p7_l41p7_c m4_n4290_n4170# m4_n4410_n4290#
+X0 m4_n4290_n4170# m4_n4410_n4290# cap_mim_2f0_m4m5_noshield c_width=41.7u c_length=41.7u
+.ends
+
+.subckt p_cap_mim_2f0_m4m5_noshield_w41p7_l41p7 m4_4180_n4303# m1_n158_4605#
+Xp_cap_mim_2f0_m4m5_noshield_w41p7_l41p7_c_0 m1_n158_4605# m4_4180_n4303# p_cap_mim_2f0_m4m5_noshield_w41p7_l41p7_c
+.ends
+
+.subckt p_ppolyf_u_1k_w1_l10 a_n100_1000# a_n100_n1122# a_n312_n1334#
+X0 a_n100_1000# a_n100_n1122# a_n312_n1334# ppolyf_u_1k r_width=1u r_length=10u
+.ends
+
+.subckt pt_lo_lf CP VT VSS
+XXR0 VSS CP m1_4826_18962# p_ppolyf_u_1k_w1_l13p09
+XXC2_0 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_1 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_2 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC30 VT VSS p_cap_mim_2f0_m4m5_noshield_w44p6_l44p6
+XXC2_3 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC31 VT VSS p_cap_mim_2f0_m4m5_noshield_w44p6_l44p6
+XXC2_4 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC32 VT VSS p_cap_mim_2f0_m4m5_noshield_w44p6_l44p6
+XXC2_60 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_6 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_5 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC10 VSS CP p_cap_mim_2f0_m4m5_noshield_w41p7_l41p7
+XXC33 VT VSS p_cap_mim_2f0_m4m5_noshield_w44p6_l44p6
+XXC2_50 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_7 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC11 VSS CP p_cap_mim_2f0_m4m5_noshield_w41p7_l41p7
+XXC2_51 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_40 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_8 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_52 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_41 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_30 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_9 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_53 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_42 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_31 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_20 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_54 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_43 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_32 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_21 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_10 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_55 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_44 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_33 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_22 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_11 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_57 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_56 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_46 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_45 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_35 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_34 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_24 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_23 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_13 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_12 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_58 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_47 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_36 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_25 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_14 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_59 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_48 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_37 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_26 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_15 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_49 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_38 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_27 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_16 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_39 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_28 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_17 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_29 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXC2_18 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
+XXR3_0 CP VT VSS p_ppolyf_u_1k_w1_l10
+XXC2_19 m1_4826_18962# VSS p_cap_nmos_03v3_b_w40_l40
 .ends
 

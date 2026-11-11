@@ -46,7 +46,6 @@ TRUNK_SPACE = 0.6
 POWER_NETS = ('VDD', 'VSS')
 
 
-ANTENNA_IGNORE_SD = {'pt_pll_ring'}   # cells whose antenna planning ignores driver diffusion (see generate())
 
 
 def snap(v):
@@ -363,6 +362,7 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
     terminals = []    # (x, y, net, 'g'|'sd'|'x', gate area) at each pin landing, for antenna planning
     pin_info = {d.model: ad.macro_pin_info(FAST / f'{d.model}.spice', d.model)
                 for d in devices if (FAST / f'{d.model}.pins.json').exists()}
+    pin_diff = {m: ad.macro_pin_diff(FAST / f'{m}.spice', m) for m in pin_info}
     placements = {}
     y_row = 2.0
     tracks = {}       # (row, net) -> y
@@ -420,8 +420,13 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
                     if d.model in pin_info:
                         pr, ga = pin_info[d.model].get(t, (True, 0.))
                         kind = 'sd' if pr else 'g'
+                        dif = pin_diff.get(d.model, {}).get(t, 0.)
+                        if pr and dif > 0:     # macro pin on diffusion: finite (deck-like) protection
+                            if ga > 0:
+                                terminals.append((cx + p.pins[t][0], cy + p.pins[t][1], terms[t], 'g', ga))
+                            kind, ga = 'sdA', dif
                     elif d.model.startswith(('nfet', 'pfet')):
-                        kind, ga = ('g', d.w * d.l) if t == 'g' else ('sd', 0.) if t in ('d', 's') else ('x', 0.)
+                        kind, ga = ('g', d.w * d.l) if t == 'g' else ('sdA', d.w * 0.44 * getattr(d, 'm', 1)) if t in ('d', 's') else ('x', 0.)
                     else:
                         kind, ga = 'x', 0.
                     terminals.append((px, py, terms[t], kind, ga))
@@ -566,11 +571,11 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
         keepouts.append((cx + b[0], cy + b[1], cx + b[2], cy + b[3]))
         if by_name[n].model.startswith('nfet'):   # NMOS PCell guard ring = P-substrate tap (macros: rails only)
             taps.append(keepouts[-1])
-    # The deck counts a driver's drain diffusion as a finite diode (ratio = perimeter / (gate + 2*diff)), but the
-    # planner treats any 'sd' landing as full protection.  pt_pll_ring r9: NX and N16B (one small inverter drain,
-    # 1.32 um^2, driving ~880 um M5 trunks) failed ANT.16_i_ANT.6 at ratio 426-427.  For cells listed in
-    # ANTENNA_IGNORE_SD the planner ignores driver diffusion, i.e. every long gate net gets its own diode.
-    terms_ad = [(x, y, n, 'x' if (k == 'sd' and cell in ANTENNA_IGNORE_SD) else k, ga) for x, y, n, k, ga in terminals]
+    # The deck counts a driver's drain diffusion as a finite diode (ratio = metal / (gate + 2*diff)).  Driver
+    # landings are passed as kind 'sdA' with their real diffusion area (primitive w x 0.44 um, macro outputs summed
+    # from the macro netlist), so a long net driven by one small inverter gets a diode (pt_pll_ring r9 NX/N16B:
+    # 1.32 um^2 drain, ~880 um M5, ratio 426).  Pins that are both gate and diffusion stay 'sd' (as before).
+    terms_ad = terminals
     req = ad.requests_from_shapes(L.shapes, terms_ad)
     dcmds, diodes = ad.plan(req, [s[:5] for s in L.shapes], keepouts, taps=taps)
     L.cmds += dcmds

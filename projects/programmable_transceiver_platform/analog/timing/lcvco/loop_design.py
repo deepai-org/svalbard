@@ -261,7 +261,10 @@ if __name__ == '__main__' and __import__('sys').argv[1:] != ['r4']:
 #  PFD/divider retimed jitter 0.3 ps rms (white).  XO floor -150 dBc/Hz x N^2.
 #  Sigma-delta: MASH 1-1-1, fractional step 2 VCO cycles (CML /2 prescaler, fork B) -> x4.
 #  4th-order filter pole at 4*fc.  VCO: 1/f^2 from L(1 MHz).
-R4_CP_10K, R4_CP_FLOOR = -84.4, -106.0
+R4_CP_10K, R4_CP_FLOOR = -84.4, -106.0     # fork-B r1 CP (as measured, pt_pfd reset)
+# fork-F r2 CP/PFD (lo_pfdcp.spice, schematic, fixed noise bench): -125.1 dBc/Hz in-band @10 kHz at t_on 0.193 ns,
+# ~-129 @1 MHz  ->  equivalent to a 33.5 dB flicker improvement and a -120.9 floor when referenced to 0.98 ns.
+R4F_FLICK_IMPR, R4F_FLOOR = 33.5, -128.0 + 7.06
 
 
 def r4_jitter(fc, vco_l1m, flick_impr_db, t_on_ns, n=49, fpfd=FREF, f0=2.45e9, ref_floor=-150.0, pfd_jit=0.3e-12,
@@ -292,9 +295,15 @@ def r4_main():
             for fc in (100e3, 150e3, 250e3, 400e3):
                 r = r4_jitter(fc, vco, fi, ton)
                 out[f'vco{vco}_{name}_fc{int(fc/1e3)}k'] = dict(jitter_ps=r['jitter_ps'], pn_at_mask=r['pn_at_mask'], mask_ok=r['mask_ok'])
-    sel = r4_jitter(250e3, -112.0, 15, 2.2)
+    global R4_CP_FLOOR
+    floor0 = R4_CP_FLOOR
+    R4_CP_FLOOR = R4F_FLOOR
+    out['r2_measured_cp'] = {f'vco{v}_kv{int(k/1e6)}': (lambda r: dict(jitter_ps=r['jitter_ps'], pn_at_mask=r['pn_at_mask'], mask_ok=r['mask_ok']))(
+        r4_jitter(250e3, v, R4F_FLICK_IMPR, 2.2, kv=k)) for v in (-112.0, -114.6) for k in (40e6, 60e6, 120e6)}
+    sel = r4_jitter(250e3, -112.0, R4F_FLICK_IMPR, 2.2)
+    R4_CP_FLOOR = floor0
     out['selected'] = dict(note='fpfd 50 MHz XO, Icp 100 uA, fc 250 kHz, PM 74 incl. R3/C3 pole at 1 MHz, MASH 1-1-1 step 2; '
-                                'CP flicker -15 dB vs measured + fast PFD; VCO -112 dBc/Hz@1MHz (extracted-RC estimate, fork A)',
+                                'measured r2 CP/PFD (fork F, schematic) with fracN on-time 2.2 ns; VCO -112 dBc/Hz@1MHz (pessimistic; r5 RC-extracted tt is -114.6)',
                            filter=dict(r_ohm=sel['design']['r_ohm'], c1_f=sel['design']['c1_f'], c2_f=sel['design']['c2_f'], r3_ohm=10e3, c3_f=15.9e-12),
                            jitter_ps=sel['jitter_ps'], pn_at_mask=sel['pn_at_mask'], mask_ok=sel['mask_ok'])
     return out

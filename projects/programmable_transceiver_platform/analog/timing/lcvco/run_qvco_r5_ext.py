@@ -287,10 +287,13 @@ def passive_deck(rfwork, kind, cname, code, vt, rload=300.0):
     tank common mode from the lo_ext pre-amp's 300 ohm loads to VDD.  AC current into IP-IN; resonance = peak |Z|."""
     d = deck(rfwork, kind, cname, code, vt)
     d = d.replace('VCS cmlsel 0 0', f"VCS cmlsel 0 {CORNERS[cname]['v']}").replace('IB vdd ibias 10u', 'IB vdd ibias 0')
-    d = d.replace('IK ip in pulse(0 200u 0.2n 50p 50p 0.3n 1)', 'IK ip in dc 0 ac 1\nIKQ qp qn dc 0 ac 0')
-    d = d[:d.index('.tran')] + ''.join(f'RL{n} {n} vdd {rload}\n' for n in ('ip', 'in', 'qp', 'qn')) + """.ac lin 801 1.5g 3.5g
-.measure ac zmax max vm(di)
-.measure ac fres when vm(di)=zmax
+    # AC analysis aborts on the behavioural varactor (ngspice "doAnalyses: not found"): ring-down instead,
+    # 1 mA x 50 ps kick, frequency from the zero crossings 1-6 ns after the kick
+    d = d.replace('IK ip in pulse(0 200u 0.2n 50p 50p 0.3n 1)', 'IK ip in pulse(0 1m 0.2n 20p 20p 50p 1)')
+    d = d[:d.index('.tran')] + ''.join(f'RL{n} {n} vdd {rload}\n' for n in ('ip', 'in', 'qp', 'qn')) + """.tran 1p 8n
+.measure tran per trig v(di) val=0 td=1.5n rise=1 targ v(di) val=0 td=1.5n rise=8
+.measure tran a1 max v(di) from=1.5n to=2.5n
+.measure tran a2 max v(di) from=5.5n to=6.5n
 .end
 """
     return d
@@ -303,11 +306,13 @@ def passive(tag, rfwork, kind, cnames, codes, vt):
         c, b = j
         name = f'{tag}_{kind}_{c}_b{b}_vt{vt}'
         m = tf.ngspice(SIM, name, passive_deck(rfwork, kind, c, b, vt))
-        return name, dict(cname=c, band=b, vtune=vt, f_res_hz=m.get('fres'), zmax_ohm=m.get('zmax'), errors=m.get('_errors'))
+        f = 7 / m['per'] if m.get('per') else None
+        q = (math.pi * f * 4e-9 / math.log(m['a1'] / m['a2'])) if f and m.get('a1') and m.get('a2') and m['a2'] > 0 else None
+        return name, dict(cname=c, band=b, vtune=vt, f_res_hz=f, q_loaded=q, errors=m.get('_errors'))
     with ThreadPoolExecutor(PAR) as ex:
         for name, r in ex.map(run, jobs):
             out[name] = r
-            print(name, r['f_res_hz'], r['zmax_ohm'], flush=True)
+            print(name, r['f_res_hz'], r['q_loaded'], flush=True)
     save('passive_' + tag, out)
 
 

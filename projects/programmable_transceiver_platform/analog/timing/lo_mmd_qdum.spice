@@ -1,0 +1,31 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_lo_mmd_qdum: matched Q-tank load dummy for pt_lo_mmd (LO13 round 4, fork F 2026-11-11).
+* The I tank drives pt_lo_mmd's AC-coupled CML /2 prescaler; this block presents the same load
+* to the Q tank: identical coupling caps (20x20 um MIM, bottom plate on the tank side), 20 k bias
+* resistors to a replica VCB divider, and a replica /2 prescaler (two pt_m_latp, 2.6 mA each,
+* biased like the MMD) with its follower pair, so the gate capacitances see the same operating
+* point.  The replica divides (QDP/QDN = Q-phase /2, unloaded, left as an optional probe point).
+* EN=0: bias off (same as pt_lo_mmd).
+.include lo_mmd.spice
+
+.subckt pt_lo_mmd_qdum LP LN EN QDP QDN VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+XBS BT ENB VDD VDD pfet_03v3 w=4u l=0.28u
+XRB BT NB VSS ppolyf_u_1k r_width=1u r_length=32u
+XBD NB NB VSS VSS nfet_03v3 w=4u l=0.28u
+XBC NB ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XVS VT ENB VDD VDD pfet_03v3 w=2u l=0.28u
+XRV1 VT VCB VSS ppolyf_u_1k r_width=1u r_length=53u
+XRV2 VCB VSS VSS ppolyf_u_1k r_width=1u r_length=47u
+XCV VSS VCB VSS VSS nfet_03v3 w=10u l=10u
+XCCP BIP LP cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+XCCN BIN LN cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+XRCP BIP VCB VSS ppolyf_u_1k r_width=1u r_length=20u
+XRCN BIN VCB VSS ppolyf_u_1k r_width=1u r_length=20u
+XPM PQN PQP PAP PAN BIN BIP NB VDD VSS pt_m_latp
+XPS PAP PAN PQP PQN BIP BIN NB VDD VSS pt_m_latp
+XK0 VDD PQP QDP VSS nfet_03v3 w=30u l=0.28u
+XK0N VDD PQN QDN VSS nfet_03v3 w=30u l=0.28u
+XK0T QDP NB VSS VSS nfet_03v3 w=64u l=0.28u
+XK0NT QDN NB VSS VSS nfet_03v3 w=64u l=0.28u
+.ends

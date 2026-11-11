@@ -70,6 +70,7 @@ Mode totals in mA. The "with requirement" column holds digital to PWR-DIG
   - **PWR-DIG-WIRED** ≤ 60 mA and **PWR-DIG-RF** ≤ 40 mA, with unused domains clock-gated.
   - Signoff by SAIF-annotated power from the dense-service simulations.
   - **PWR-HOST-RF**: RF modes run `debug.host_link.rate=div2`.
+    **Full-rate exception (GX-2 host-fed 80 MS/s TX, 12-bit):** H2D may run at full rate when `rf_tx_clk` = 80 MHz with the interpolator bypassed; D2H stays at div2 or lower, which needs HB-4 `d2h_rate`. H2D inputs cost the chip no driver current, so the hostio budget is unchanged. Without HB-4, the mode uses MODE8 samples at div2 (1.28 of 1.44 Gb/s; RF-HT40-TX). Full rate on D2H in RF modes is not allowed.
 - The 8 pF host load leaves hostio 6.8 mA over its 110 mA allocation. The budget carries the evidence value.
 
 External-clock RF is the qualified primary RF case. Autonomous RF exceeding the

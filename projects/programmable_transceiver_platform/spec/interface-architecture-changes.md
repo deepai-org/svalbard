@@ -95,4 +95,4 @@ Computed by `spec/budgets/power_budget.py` and summarized in [power-partition.md
 |---|---|
 | PWR-DIG-WIRED | Digital macro ≤ 60 mA in wired/USB modes with RF domains gated |
 | PWR-DIG-RF | ≤ 40 mA in RF modes with wired domains gated |
-| PWR-HOST-RF | RF modes run the host link at `debug.host_link.rate=div2` or lower (1.44 Gb/s framed ≥ 0.96 Gb/s at 40 MS/s), halving pin switching current |
+| PWR-HOST-RF | RF modes run the host link at `debug.host_link.rate=div2` or lower (1.44 Gb/s framed ≥ 0.96 Gb/s at 40 MS/s), halving pin switching current. **Full-rate exception (GX-2 host-fed 80 MS/s TX, 12-bit):** H2D may run at full rate when `rf_tx_clk` = 80 MHz with the interpolator bypassed; D2H stays at div2 or lower, which needs HB-4 `d2h_rate`. H2D inputs cost the chip no driver current, so the hostio budget is unchanged. Without HB-4, the mode uses MODE8 samples at div2 (1.28 of 1.44 Gb/s; RF-HT40-TX). Full rate on D2H in RF modes is not allowed. |

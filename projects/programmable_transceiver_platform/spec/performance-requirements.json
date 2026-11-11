@@ -128,7 +128,7 @@
   },
   {
    "id": "PWR-HOST-RF",
-   "requirement": "RF modes run host link at div2",
+   "requirement": "RF modes run the host link at div2 (D2H always); exception: H2D full rate for GX-2 80 MS/s 12-bit TX, with D2H <= div2 (needs HB-4), else MODE8 at div2",
    "source": "spec/power-partition.md",
    "owner": "digital (recipe)",
    "evidence": [
@@ -1449,7 +1449,7 @@
    ],
    "status": "unverified",
    "basis": "action clock 25.6 ns ticks; epoch FIFO latency not characterised",
-   "primary_fix": "IX-8 fixed, readable latency + FPGA sub-tick timestamp",
+   "primary_fix": "IX-8 as reworded (HL-MARK): chip TX-launch/fast-apply marks in the D2H stream + fixed published per-mode latency; FPGA 64-bit sample counters and sub-tick timestamp",
    "fallback": [
     "rf_bb_external_adc"
    ]
@@ -2050,7 +2050,7 @@
    "evidence": [],
    "status": "unverified",
    "basis": "No antenna-switch step-response or hot-switch sim",
-   "primary_fix": "Step-response sim at the CTE bw code; GX-8 open/short sim; IX-8 latency",
+   "primary_fix": "Step-response sim at the CTE bw code; GX-8 open/short sim; IX-8 marks + published latency (HL-MARK)",
    "fallback": [
     "B41"
    ]

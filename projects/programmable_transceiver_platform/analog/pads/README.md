@@ -37,6 +37,10 @@ audit (`extract_audit.py`).
 
 Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`).
 
+- **attached_tx_buffer compacted (PD38):** `termination_buffer_array_layout.py` (multi-finger strapped arrays, same 280 devices)
+  + unchanged compensation → `generated/termination-buffer-candidate/compact-array/`, **0.0298 mm² (was 0.1557)**, Magic DRC 0,
+  device graph match (also GDS round trip), KLayout clean; readiness-deck equivalence in `equivalence.json`.
+
 - **`rf-pair/` republished = the compact GC rf_pair** (`scratch/pads-pd12/v2/rf-pair`, top `pad_rf_pair`): I8 inner-edge
   pins, LU taps, gate-coupled shunt (PD13 macro). Magic DRC 0, netgen LVS unique, independent device audit 388/388,
   KLayout main 0 / antenna 0 (`pad_rf_pair-kldrc.json`). PD13 family sims on this model: 18 safe/HBM runs, 0 of 348 MOS

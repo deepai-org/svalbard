@@ -1,0 +1,61 @@
+{
+ "status": "connected_buffer_compensation_candidate",
+ "drc_count": 0,
+ "intended_device_graph_matches": true,
+ "export_device_graph_matches": true,
+ "device_count": 282,
+ "limitations": [
+  "No resistor trim or resistance acceptance; no bias-passive layout, pad hookup or current-capacity qualification.",
+  "Electrical rerun required before adoption; no resistance extraction."
+ ],
+ "source_sha256": {
+  "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_compensation_layout.py": "518b832bb9505b45b6b59b5ef17a9f18b0152cd1535b80ce72b9bbd78abc0b19",
+  "/home/ubuntu/svalbard/scratch/pads-pd28/tbuf/a1/physical.spice": "0ec24db4be5fb885fc1f9eaf929ab8794bc26217e72115f385bb6f97388a3fe9",
+  "/home/ubuntu/svalbard/scratch/pads-pd28/tbuf/a1/buffer_core_flat.gds": "2c934e450ab4fa5f07cfa29a08c6d6aa80ceecc9e62fd55dcec2a0d714781cd7",
+  "/home/ubuntu/svalbard/scratch/pad-buffer-compensation-mim/feedforward_mim.mag": "6469c894d8a0440f160b6601b25e0b88041518a96dc0e0264e4bc904d4286838"
+ },
+ "gds_marker_repair": {
+  "added_area_um2": {
+   "62": 209.088,
+   "55": 0.0
+  },
+  "selected_poly_components": {
+   "nhighres": 8
+  },
+  "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+  "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+  "before_gds_sha256": "63d43d331ec4b38d8354166074352db4e39c3a628fede50d83d57ee6d0abb75d",
+  "after_gds_sha256": "8df104dc29efec2ab531bf4b23aca6d7745b71a0b8bcb72d5a162489c79ff48f",
+  "physical_magic_sha256": "9764e91f930065651e76e40b27373f64286cd7e69794d7fac83489d35224f964",
+  "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+ },
+ "gds_roundtrip": {
+  "drc_count": 0,
+  "device_graph_matches": true
+ },
+ "physical_sha256": "f11a8fcac3f61113fd6bcadea5c57f2309272eadaa89f04f85c7b27d6161e45a",
+ "gds_sha256": "8df104dc29efec2ab531bf4b23aca6d7745b71a0b8bcb72d5a162489c79ff48f",
+ "pd38": {
+  "generator": "analog/pads/termination_buffer_array_layout.py (core) + termination_compensation_layout.py (unchanged)",
+  "bbox_um": [
+   2.78,
+   3.5,
+   140.25,
+   220.38
+  ],
+  "area_um2": 29815,
+  "canonical_area_um2": 155658,
+  "core": {
+   "envelope_um": [
+    150,
+    151.42
+   ],
+   "placed_units": 27,
+   "devices": 280,
+   "drc": 0,
+   "device_graph_matches": true
+  },
+  "marker_merge": "PP.2: 1 PPLUS gap filled (marker_merge.py), then Magic GDS round trip DRC 0 / device graph 282 match; KLayout precheck main 0 / antenna 0 (attached_tx_buffer_compact-kldrc.json)",
+  "equivalence": "equivalence.json: published readiness deck (txpad+interlock+buffer, 300 ns) old vs new, tt27/ss22/ff32"
+ }
+}

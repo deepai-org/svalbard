@@ -101,7 +101,8 @@ module pt_digital(input wire rst_n,ref_clk,
  rf_rx_sample,rf_rx_valid,stream_rf,stream_rf_valid,rf_tx_request,core_status,stream_wire_idle,stream_rf_mute,
  analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__PAYLOAD_IQ_LSB],linecode,rx_gain,rx_gain_active,
  // MEMORY v3 (sharing S1): capture/playback in the transport banks; pt_memory is deleted.
- capture_enable,playback_enable,memory_loop,memory_last,host_sclk,memory_write,index,memory_wdata,capture_data,capture_done);
+ capture_enable,playback_enable,memory_loop,memory_last,host_sclk,memory_write,index,memory_wdata,capture_data,capture_done,
+ prbs_select,prbs_word);
  wire tx_enabled;pt_sync_bit e(wire_tx_clk,rst_n,enable,tx_enabled);
  // Shared wired pattern generator/checker (rtl/pt_pattern.sv, consolidation P2-6): 40-bit cores directly
  // on the 40-bit quad clocks (AC-1 S3: no gearbox, no clock gate). CDC: the quasi-static
@@ -128,7 +129,9 @@ module pt_digital(input wire rst_n,ref_clk,
  pt_pattern_check #(.W(40),.CW(16)) prbs_check(.clk(wire_rx_clk),.rst_n(rst_n),.ce(1'b1),.enable(rx_check_en),.valid(wire_rx_valid),
   .data(wire_rx_data),.cfg_mode(pat_rx_cfg[3:1]),.cfg_invert(pat_rx_cfg[0]),.clear(!rx_check_en||(pat_clr_s&&!pat_clr_d)),
   .locked(pattern_locked),.lost_lock(pattern_lost_lock),.errors(prbs_errors),.errors_gray(pattern_errors_gray));
- assign wire_tx_data=prbs_select?prbs_word:stream_wire;
+ // The pattern word shares the core's wire lane registers (falling-edge low half, rising-edge high
+ // half), so wire_tx_data always leaves from the same launch flops (ff-corner hold, AC1_R4 -0.34 ns).
+ assign wire_tx_data=stream_wire;
  assign wire_tx_valid=prbs_select?tx_enabled&&prbs_ready:stream_wire_valid;
  assign wire_idle=prbs_select?!tx_enabled:stream_wire_idle;
  // The DAC data bus is held static (all zero) whenever no sample is valid, e.g. throughout

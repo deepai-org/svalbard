@@ -208,12 +208,19 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
         for (gi = 0; gi < NP; gi = gi + 1) ptree[NP-1+gi] = pair[4*gi+:4];
         for (gi = NP-2; gi >= 0; gi = gi - 1) ptree[gi] = ptree[2*gi+1] + ptree[2*gi+2];
     end
-    wire [QW:0]   pend_sum = {1'b0, pend} + (psum_v ? psum : {PW{1'b0}}) - (step_cnt && !ovf ? 1'b1 : 1'b0);
+    // pend + psum - dec as four parallel candidates selected late by {psum_v, dec} (timing closure
+    // 2026-11-11: the pend != 0 decision no longer sits in front of the adder; psum_m1 = psum - 1 is
+    // registered with psum, psum >= 1 whenever psum_v; dec implies pend >= 1). Same values.
+    reg  [PW-1:0] psum_m1;
+    wire          dec    = step_cnt && !ovf;
+    wire [QW:0]   s_p    = {1'b0, pend} + psum, s_pm1 = {1'b0, pend} + psum_m1;
+    wire [QW:0]   s_m1   = {1'b0, pend} - 1'b1;
+    wire [QW:0]   pend_sum = psum_v ? (dec ? s_pm1 : s_p) : (dec ? s_m1 : {1'b0, pend});
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             h <= 31'h7fffffff; run <= 0; bad <= 0; locked <= 1'b0; lost_lock <= 1'b0; errors <= 0;
-            mism_q <= 0; grp <= 0; pair <= 0; pair_v <= 1'b0; psum <= 0; psum_v <= 1'b0; mism_v <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
+            mism_q <= 0; grp <= 0; pair <= 0; pair_v <= 1'b0; psum <= 0; psum_m1 <= 0; psum_v <= 1'b0; mism_v <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
             v1 <= 1'b0; nz1 <= 1'b0;
         end else if (ce) begin
             // stage 1: predictor update and mismatch vector of this word
@@ -244,6 +251,7 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
                 pair[4*gs+:4] <= {1'b0, grp[6*gs+:3]} + ((2*gs+1 < NG) ? {1'b0, grp[(6*gs+3)%(3*NG)+:3]} : 4'd0);
             pair_v <= mism_v && !clear;
             psum   <= ptree[0][PW-1:0];
+            psum_m1 <= ptree[0][PW-1:0] - 1'b1;
             psum_v <= pair_v && !clear;
             if (clear) begin
                 errors <= 0; lost_lock <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;

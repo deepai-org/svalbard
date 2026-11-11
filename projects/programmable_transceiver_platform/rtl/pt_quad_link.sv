@@ -52,7 +52,16 @@ module pt_quad_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
   2'd0:avail=cat[69:30];2'd1:avail=cat[59:20];
   2'd2:avail=cat[49:10];default:avail=cat[39:0];
  endcase
- wire pop=take>{1'b0,rcnt};
+ // pop (take > rcnt) is a REGISTER computed from the next-state take / rcnt (identical values): the
+ // FIFO pop / read select no longer starts behind a compare (AC1_R4 hcore -14.4 ns, take -> ingress empty).
+ reg pop;reg[2:0]take_n;
+ wire[1:0]rcnt_n=rcnt+(pop?3'd4:3'd0)-take;
+ always @*case(beat)
+  4'd0:take_n=left>=6'd3 ?3'd3:{1'b0,left[1:0]};
+  4'd1:take_n=|guard_left[5:2]?3'd4:guard_left[2:0];
+  4'd15:take_n=3'd0;
+  default:take_n=|left[5:3]?3'd4:left[2]?{1'b0,left[1:0]}:3'd0;
+ endcase
  assign wire_pop=pop&&!payload_iq;
  assign iq_pop=pop&&payload_iq;
  wire guard=beat==4'd1;
@@ -61,7 +70,7 @@ module pt_quad_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
  assign out_quad=beat==4'd0 ?(first?40'ha000000000:encoded):guard?{words[29:0],10'h2d3}:words;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   beat<=0;seq<=0;left<=0;pending<=0;guard_left<=0;take<=0;rcnt<=0;res<=0;
+   beat<=0;seq<=0;left<=0;pending<=0;guard_left<=0;take<=0;rcnt<=0;res<=0;pop<=0;
    raw_count<=0;raw_left<=0;credit<=0;pending_command<=0;first<=1;
    barrier<=0;echo_next<=0;bar_r<=0;mk_r<=0;safe<=0;before_r<=0;echo_wc<=0;gain_echo<=0;
   end else begin
@@ -70,25 +79,22 @@ module pt_quad_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
    else if(barrier&&!mk_seen)safe<=safe-take;
    beat<=beat+1'b1;
    if(pop)res<=head[39:10];
-   rcnt<=rcnt+(pop?3'd4:3'd0)-take;
+   rcnt<=rcnt_n;take<=take_n;pop<=take_n>{1'b0,rcnt_n};
    // left counts the reserved words of this frame before the current beat.
    case(beat)
     4'd0:begin
      first<=0;seq<=seq+1'b1;
-     take<=left>=6'd3 ?3'd3:{1'b0,left[1:0]};
      guard_left<=left>=6'd3 ?left-6'd3:6'd0;
     end
     4'd1:begin
      left<=guard_left;
-     take<=|guard_left[5:2]?3'd4:guard_left[2:0];
     end
     4'd15:begin
-     left<=pending;take<=0;
+     left<=pending;
      if(echo_next)begin barrier<=0;gain_echo<=1;end
     end
     default:begin
      left<=|left[5:2]?{left[5:2]-1'b1,left[1:0]}:6'd0;
-     take<=|left[5:3]?3'd4:left[2]?{1'b0,left[1:0]}:3'd0;
     end
    endcase
    // credit snapshot (beat 11): available words, words still reserved for this frame and, under a
@@ -143,26 +149,48 @@ module pt_quad_rx(input wire clk,rst_n,payload_iq,input wire[39:0]in_quad,
  wire[5:0]advertised=payload_iq?fields[11:6]:fields[5:0];
  wire[5:0]inactive=payload_iq?fields[5:0]:fields[11:6];
  wire[3:0]op=fields[21:18];wire[7:0]arg=fields[29:22];
- // opcode4 (fast gain): RF ownership only, no payload (wc = qc = 0), argument bit7 zero, PGA 0..16.
- wire legal=(op==0&&arg==0)||((op==1||op==2)&&arg<=1)||
-            (op==4&&payload_iq&&advertised==0&&!arg[7]&&arg[4:0]<=5'd16);
- wire header_good=syndrome(q)==0&&q[39:37]==3'b101&&advertised<=59&&inactive==0&&
-     fields[17:12]==expected_seq&&legal;
+ // opcode4 (fast gain): RF ownership only, no payload (wc = qc = 0), argument bit7 zero, PGA 0..16
+ // (legal_n below, evaluated on in_quad and registered into hpre).
+ // Header checks that depend only on the quad (syndrome, tag, counts, legality) are evaluated on
+ // in_quad and registered together with q (hpre == checks(q), reset value checks(0) = 0); only the
+ // sequence compare (expected_seq changes at beat 15) is left at the header beat (timing closure
+ // 2026-11-11: the 36-bit syndrome tree was in front of header_ok / the released amount).
+ wire[29:0]fields_n=decode(in_quad);
+ wire[5:0]adv_n=payload_iq?fields_n[11:6]:fields_n[5:0];
+ wire[5:0]inact_n=payload_iq?fields_n[5:0]:fields_n[11:6];
+ wire[3:0]op_n=fields_n[21:18];wire[7:0]arg_n=fields_n[29:22];
+ wire legal_n=(op_n==0&&arg_n==0)||((op_n==1||op_n==2)&&arg_n<=1)||
+              (op_n==4&&payload_iq&&adv_n==0&&!arg_n[7]&&arg_n[4:0]<=5'd16);
+ reg hpre;
+ wire header_good=hpre&&fields[17:12]==expected_seq;
  wire header_beat=qv&&beat==4'd0,guard=qv&&beat==4'd1,payload=qv&&beat>=4'd2;
  wire good=header_ok&&guard_ok;
- wire[2:0]amount=guard?(good?guard_take:3'd0):payload?take:3'd0;
+ // amount (words released this beat) is a REGISTER loaded with the value it takes next clock
+ // (next beat / header / take state from this clock), so the collector and the egress push see a
+ // flop instead of the beat decode (AC1_R4: frame_rx.beat -> collect.res, 14-18 levels).
+ // The guard-beat amount needs this frame's header check (header_ok/guard_ok, registered at the header
+ // beat), so it is formed from registers at the guard beat (guard_r: registered beat == 1); payload
+ // amounts (pay_r) and the guard flag are registered one clock ahead. The header syndrome thus never
+ // feeds the amount register (run TC1: frame_rx.fields -> amount).
+ reg[2:0]pay_r;reg guard_r;
+ wire[3:0]beat_n=qv?beat+1'b1:beat;
+ wire[2:0]take_n=guard?(|guard_left[5:2]?3'd4:guard_left[2:0]):
+                 payload?(|left[5:3]?3'd4:left[2]?{1'b0,left[1:0]}:3'd0):take;
+ wire[2:0]amount=guard_r?(good?guard_take:3'd0):pay_r;
  wire ready=payload_iq?iq_ready:wire_ready;
  wire accepted=!fault&&ready;
  assign wire_count=accepted&&!payload_iq?amount:3'd0;
  assign iq_count=accepted&&payload_iq?amount:3'd0;
- assign data=guard?{10'd0,q[39:10]}:q;
- assign command_valid=!fault&&guard&&good;
+ assign data=guard_r?{10'd0,q[39:10]}:q;
+ assign command_valid=!fault&&guard_r&&good;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    q<=0;qv<=0;beat<=0;expected_seq<=0;left<=0;guard_left<=0;take<=0;guard_take<=0;
-   header_ok<=0;guard_ok<=0;fault<=0;opcode<=0;argument<=0;
+   header_ok<=0;guard_ok<=0;fault<=0;opcode<=0;argument<=0;pay_r<=0;guard_r<=0;hpre<=0;
   end else begin
    q<=in_quad;qv<=1;
+   hpre<=syndrome(in_quad)==0&&in_quad[39:37]==3'b101&&adv_n<=59&&inact_n==0&&legal_n;
+   guard_r<=beat_n==4'd1;pay_r<=beat_n>=4'd2 ?take_n:3'd0;   // qv is 1 from the next clock on
    if(qv)begin
     beat<=beat+1'b1;
     if(header_beat)begin
@@ -229,32 +257,37 @@ module pt_quad_link_rx(input wire clk,rst_n,payload_iq,
  output wire command_valid,fault,output reg locked,
  output wire[3:0]opcode,output wire[7:0]argument);
  localparam[39:0]T0={10'h12c,10'h2d3,10'h05a,10'h3a5},T1={10'h1e1,10'h21e,10'h096,10'h369};
- reg[29:0]previous;reg[3:0]first_seen;reg[1:0]rotation;
+ // Timing closure 2026-11-11: the four 40-bit training compares are REGISTERED (eq0/eq1, one clock)
+ // and the whole receiver (acquisition decisions, rotation select, engine) runs one quad clock later
+ // on the delayed stream {inq_d, prev_d}: identical decisions and data, one hcore of extra latency.
+ reg[39:0]inq_d;reg[29:0]prev_d;reg[3:0]first_seen;reg[1:0]rotation;
  reg[7:0]wait_count;reg acquisition_fault;
- wire[69:0]cat={in_quad,previous};
- wire[39:0]shifted[0:3];
+ reg[3:0]eq0,eq1;reg eqv;
+ wire[69:0]cat={in_quad,inq_d[39:10]};     // current stream (compares)
+ wire[69:0]cat_d={inq_d,prev_d};           // the same, one clock later (data)
+ wire[39:0]shifted[0:3],shifted_d[0:3];
  assign shifted[0]=cat[69:30];assign shifted[1]=cat[59:20];
  assign shifted[2]=cat[49:10];assign shifted[3]=cat[39:0];
+ assign shifted_d[0]=cat_d[69:30];assign shifted_d[1]=cat_d[59:20];
+ assign shifted_d[2]=cat_d[49:10];assign shifted_d[3]=cat_d[39:0];
  // rotation is fixed after lock: a registered one-hot copy drives the 40-bit AND-OR select
  // directly (no decode in front of the fanout).
  reg[3:0]rot_oh;
- wire[39:0]aligned=({40{rot_oh[0]}}&shifted[0])|({40{rot_oh[1]}}&shifted[1])|
-                   ({40{rot_oh[2]}}&shifted[2])|({40{rot_oh[3]}}&shifted[3]);
- wire[3:0]is_first,is_second;
+ wire[39:0]aligned=({40{rot_oh[0]}}&shifted_d[0])|({40{rot_oh[1]}}&shifted_d[1])|
+                   ({40{rot_oh[2]}}&shifted_d[2])|({40{rot_oh[3]}}&shifted_d[3]);
+ wire[3:0]is_first=eq0,is_second=first_seen&eq1;
  genvar k;
- generate for(k=0;k<4;k=k+1)begin:rotations
-  assign is_first[k]=shifted[k]==T0;
-  assign is_second[k]=first_seen[k]&&shifted[k]==T1;
- end endgenerate
  wire payload_fault;
  assign fault=acquisition_fault||payload_fault;
  pt_quad_rx engine(clk,rst_n&&locked,payload_iq,aligned,wire_ready,iq_ready,data,
   wire_count,iq_count,command_valid,payload_fault,opcode,argument);
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin previous<=0;first_seen<=0;rotation<=0;rot_oh<=4'b0001;wait_count<=0;acquisition_fault<=0;locked<=0;end
+  if(!rst_n)begin inq_d<=0;prev_d<=0;eq0<=0;eq1<=0;eqv<=0;first_seen<=0;rotation<=0;rot_oh<=4'b0001;wait_count<=0;acquisition_fault<=0;locked<=0;end
   else begin
-   previous<=in_quad[39:10];
-   if(!locked&&!acquisition_fault)begin
+   inq_d<=in_quad;prev_d<=inq_d[39:10];eqv<=1;
+   eq0<={shifted[3]==T0,shifted[2]==T0,shifted[1]==T0,shifted[0]==T0};
+   eq1<={shifted[3]==T1,shifted[2]==T1,shifted[1]==T1,shifted[0]==T1};
+   if(eqv&&!locked&&!acquisition_fault)begin
     first_seen<=is_first;
     if(|is_second)begin
      locked<=1;
@@ -270,13 +303,18 @@ endmodule
 // ---------------------------------------------------------------------------
 // Rebuild a contiguous quad stream from 0..4 released words per beat.
 // Residual words (0..3) are held right-aligned; at most one quad per clock (registered output).
+// Timing closure 2026-11-11: the released words are registered masked (incoming) with their count
+// first, so the merge / residual select starts from registers (one more hcore of H2D latency; the
+// egress bank's admission SPARE grows from 3 to 4 for this register, pt_core).
 module pt_quad_collect(input wire clk,rst_n,input wire[39:0]data,input wire[2:0]count,
  output reg[39:0]quad,output reg push);
  reg[29:0]res;reg[1:0]rc;
  wire[39:0]keep={{10{count>3'd3}},{10{count>3'd2}},{10{count>3'd1}},{10{count>3'd0}}};
- wire[39:0]incoming=data&keep;
+ reg[39:0]incoming;reg[2:0]cnt;
  wire[69:0]merged={30'd0,incoming}<<(10*rc)|{40'd0,res};
- wire[3:0]total={2'd0,rc}+{1'b0,count};
+ wire[3:0]total={2'd0,rc}+{1'b0,cnt};
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin incoming<=0;cnt<=0;end else begin incoming<=data&keep;cnt<=count;end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin res<=0;rc<=0;quad<=0;push<=0;end
   else begin

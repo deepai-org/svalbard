@@ -12,12 +12,16 @@
 // four parallel 10b->9b decoders, 36 -> 40 repacking. Invalid code groups decode to {K=1, 0x00}
 // (not a valid control character) and, once aligned, set the sticky `code_error`. Running
 // disparity is not checked (protocol checks belong to the FPGA).
-// Pipeline (three quad clocks): (1) the window {din, previous quad} is barrel-shifted by the
+// Pipeline (four quad clocks; decode split in two, 2026-11-11): (1) the window {din, previous quad} is barrel-shifted by the
 // registered offset and searched for commas; (2) decode; (3) repack. The quad whose commas change
 // the offset was shifted with the old one and is not delivered.
 module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din_valid,
     output wire [39:0] dout, output wire dout_valid, output reg aligned, code_error);
 `include "pt_linecode_tables.svh"
+    // en (stopped-only level: linecode && synchronized ENABLE && !payload_iq) is re-registered here
+    // before its ~300-flop fanout (AC1_R4: the ENABLE synchronizer e2.q drove it as data, -12 ns).
+    reg en_r;
+    always @(posedge clk or negedge rst_n) if (!rst_n) en_r <= 1'b0; else en_r <= en;
     reg [39:0] cur;                 // previous input quad
     reg [3:0]  off;                 // adopted bit offset 0..9
     // ---- stage 1: window, comma search, barrel shift by the registered offset
@@ -40,7 +44,7 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
     reg [39:0] sym; reg [9:0] hit; reg s1v, s1ok;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin cur <= 40'd0; sym <= 40'd0; hit <= 10'd0; s1v <= 1'b0; s1ok <= 1'b0; end
-        else if (!en) begin s1v <= 1'b0; hit <= 10'd0; end
+        else if (!en_r) begin s1v <= 1'b0; hit <= 10'd0; end
         else begin
             s1v <= din_valid; s1ok <= aligned;
             if (din_valid) begin cur <= din; sym <= sym_n; hit <= hit_n; end
@@ -52,29 +56,42 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
     reg [3:0] cand; reg cand_v;
     wire adopt = s1v && |hit && (!aligned || hit_off != off) && cand_v && cand == hit_off;
     wire deliver = s1v && s1ok && aligned && !adopt;
-    // ---- stage 2: decode four symbols
+    // ---- stage 2: decode four symbols, split in two clocks (timing closure 2026-11-11, wrx at 12.3 ns):
+    // 2a registers the per-symbol table lookups (k28, 5b/6b {ok, EDCBA}, K28 3b/4b, 3b/4b, the 4b group),
+    // 2b assembles the 9-bit symbols and the error flag. One extra wire_rx_clk of latency; same symbols.
+    reg [75:0] pa;              // per symbol s: {k28, ok, x[4:0], dk[3:0], d4r[3:0], c4[3:0]} at 19*s
     reg [35:0] dec_n; reg bad_n;
     integer s;
-    reg [5:0] c6; reg [3:0] c4, d4r, dk; reg [4:0] x; reg k28, kk, ok;
+    reg [5:0] c6; reg [3:0] c4, d4r, dk; reg [4:0] x; reg k28, ok;
+    reg [75:0] pa_n;
     always @* begin
-        bad_n = 1'b0;
         for (s = 0; s < 4; s = s + 1) begin
-            c6 = sym[10*s +: 6]; c4 = sym[10*s+6 +: 4]; kk = 1'b0;
+            c6 = sym[10*s +: 6]; c4 = sym[10*s+6 +: 4];
             k28 = c6 == 6'b111100 || c6 == 6'b000011;
             {ok, x} = lc_d6(c6);
             dk = lc_dk4(c6 == 6'b111100 ? c4 : ~c4);
             d4r = lc_d4(c4);
-            if (k28) begin
-                dec_n[9*s +: 9] = dk[3] ? {1'b1, dk[2:0], 5'd28} : 9'h100;
-                bad_n = bad_n | !dk[3];
-            end else if (!ok || !d4r[3]) begin
-                dec_n[9*s +: 9] = 9'h100; bad_n = 1'b1;
+            pa_n[19*s +: 19] = {k28, ok, x, dk, d4r, c4};
+        end
+    end
+    // (separate variables: two always @* blocks sharing temporaries retrigger each other forever)
+    reg [3:0] bc4, bd4r, bdk; reg [4:0] bx; reg bk28, bkk, bok; integer t;
+    always @* begin
+        bad_n = 1'b0;
+        for (t = 0; t < 4; t = t + 1) begin
+            {bk28, bok, bx, bdk, bd4r, bc4} = pa[19*t +: 19]; bkk = 1'b0;
+            if (bk28) begin
+                dec_n[9*t +: 9] = bdk[3] ? {1'b1, bdk[2:0], 5'd28} : 9'h100;
+                bad_n = bad_n | !bdk[3];
+            end else if (!bok || !bd4r[3]) begin
+                dec_n[9*t +: 9] = 9'h100; bad_n = 1'b1;
             end else begin
-                kk = (c4 == 4'b1110 || c4 == 4'b0001) && (x == 5'd23 || x == 5'd27 || x == 5'd29 || x == 5'd30);
-                dec_n[9*s +: 9] = {kk, d4r[2:0], x};
+                bkk = (bc4 == 4'b1110 || bc4 == 4'b0001) && (bx == 5'd23 || bx == 5'd27 || bx == 5'd29 || bx == 5'd30);
+                dec_n[9*t +: 9] = {bkk, bd4r[2:0], bx};
             end
         end
     end
+    reg v2a;
     reg [35:0] dec; reg bad, v2;
     // ---- stage 3: 36 -> 40 repacking. After this clock's emit the reservoir holds 4k bits
     // (k = 0..9, one-hot `koh`); a delivered group is inserted at bit 4k. Next state:
@@ -90,14 +107,15 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             R <= 72'd0; koh <= 10'd1; emit <= 1'b0; off <= 4'd0; aligned <= 1'b0; code_error <= 1'b0; cand <= 4'd0; cand_v <= 1'b0;
-            dec <= 36'd0; bad <= 1'b0; v2 <= 1'b0;
-        end else if (!en) begin R <= 72'd0; koh <= 10'd1; emit <= 1'b0; aligned <= 1'b0; cand_v <= 1'b0; v2 <= 1'b0; end
+            dec <= 36'd0; bad <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; pa <= 76'd0;
+        end else if (!en_r) begin R <= 72'd0; koh <= 10'd1; emit <= 1'b0; aligned <= 1'b0; cand_v <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; end
         else begin
             if (adopt) begin off <= hit_off; aligned <= 1'b1; cand_v <= 1'b0; end
             else if (s1v && |hit && aligned && hit_off == off) cand_v <= 1'b0;
             else if (s1v && |hit) begin cand <= hit_off; cand_v <= 1'b1; end
-            v2 <= deliver; bad <= bad_n;
-            if (deliver) dec <= dec_n;
+            v2a <= deliver; v2 <= v2a; bad <= bad_n;
+            pa <= pa_n;     // unconditional: consumed only in the clocks after a delivery (v2a, v2)
+            dec <= dec_n;
             R <= kept | (v2 ? ins : 72'd0);
             emit <= v2 && !koh[0];
             if (v2) koh <= {koh[0], koh[9:1]};   // k -> k-1, 0 -> 9
@@ -153,7 +171,12 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
     // ---- unpack: reservoir ures holds u bits (multiple of 4, <= 72)
     reg [71:0] ures; reg [6:0] u;
     reg [35:0] sA; reg [3:0] rdA; reg sAv; reg rdn; reg [15:0] dA;   // rdn: RD- at the end of the groups taken so far
-    wire advB = sAv && (!q_valid || take);
+    // Encoded output: a two-entry queue (q = registered FWFT head, q2 behind it). Stage B advances
+    // whenever the second slot is free, so advB / advA / pop are functions of registers only and the
+    // consumer's late `take` steers just the 40-bit head reload (AC1_R4: take -> advB -> advA -> pop
+    // -> one-hot flags was 16 levels, wtx -8.1 ns). The output stream is unchanged.
+    reg [39:0] q2; reg qv2;
+    wire advB = sAv && !qv2;
     // u-derived flags and one-hot insert positions are registers (computed from the next u), so no
     // compare on u sits in front of the 72-bit insert fanout (AC-1 ss32 timing at 12.3 ns).
     reg uge36, ult72; reg [8:0] oh_n, oh_a;   // oh_n[i]: u == 4i; oh_a[i]: u == 4i + 36
@@ -189,8 +212,8 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
                        lc_enc3(sA[17:9], rdA[1], dA[4], dA[5], dA[6], dA[7]),
                        lc_enc3(sA[8:0], rdA[0], dA[0], dA[1], dA[2], dA[3])};
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin ures <= 72'd0; u <= 7'd0; uge36 <= 1'b0; ult72 <= 1'b1; oh_n <= 9'd1; oh_a <= 9'd0; sA <= 36'd0; dA <= 16'd0; rdA <= 4'b1111; sAv <= 1'b0; rdn <= 1'b1; q <= 40'd0; q_valid <= 1'b0; end
-        else if (!en) begin ures <= 72'd0; u <= 7'd0; uge36 <= 1'b0; ult72 <= 1'b1; oh_n <= 9'd1; oh_a <= 9'd0; sAv <= 1'b0; rdn <= 1'b1; q_valid <= 1'b0; end
+        if (!rst_n) begin ures <= 72'd0; u <= 7'd0; uge36 <= 1'b0; ult72 <= 1'b1; oh_n <= 9'd1; oh_a <= 9'd0; sA <= 36'd0; dA <= 16'd0; rdA <= 4'b1111; sAv <= 1'b0; rdn <= 1'b1; q <= 40'd0; q_valid <= 1'b0; q2 <= 40'd0; qv2 <= 1'b0; end
+        else if (!en) begin ures <= 72'd0; u <= 7'd0; uge36 <= 1'b0; ult72 <= 1'b1; oh_n <= 9'd1; oh_a <= 9'd0; sAv <= 1'b0; rdn <= 1'b1; q_valid <= 1'b0; qv2 <= 1'b0; end
         else begin
             ures <= kept | (pop ? (advA ? ins_a : ins_n) : 72'd0);
             u <= u_next;
@@ -203,8 +226,15 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
             if (advA) begin sA <= ures[35:0]; rdA <= r_at; rdn <= rdn ^ (^f);
                 dA <= {dec_of(ures[35:27]), dec_of(ures[26:18]), dec_of(ures[17:9]), dec_of(ures[8:0])}; end
             sAv <= advA || (sAv && !advB);
-            if (advB) q <= enc;
-            q_valid <= advB || (q_valid && !take);
+            if (q_valid && take) begin          // head consumed: second entry or the new group moves up
+                if (qv2) q <= q2; else if (advB) q <= enc;
+                q_valid <= qv2 || advB; qv2 <= 1'b0;
+            end else if (!q_valid) begin        // (qv2 is 0 here)
+                if (advB) q <= enc;
+                q_valid <= advB;
+            end else if (advB) begin            // head held, second slot free
+                q2 <= enc; qv2 <= 1'b1;
+            end
         end
 endmodule
 `default_nettype wire

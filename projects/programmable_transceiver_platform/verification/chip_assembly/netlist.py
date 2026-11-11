@@ -114,9 +114,8 @@ PATHS = {
     'prescale.CK_OUT': 'ct_wclk', 'wordclk.WORD_CLK': 'ct_word_clk',
     'pll_tx.FBCK': 'fc_src[0]', 'pll_cdr.FBCK': 'fc_src[1]', 'ring_osc.OUT': 'fc_src[2]', 'vco_replica.OUT': 'fc_src[3]',
     'aosc.CLK': 'fc_src[4]', 'pll_tx.LOCK': 'analog_status[0]',
-    # pt_pll_ring r9 (AC3-W11): non-CDR ring instances tie the CDR fast-tune / N5 / N10 pins low
-    **{f'{i}.{p}': 'VSS' for i in ('pll_tx', 'pll_host') for p in ('N5', 'N10', 'KP0', 'KP1', 'KP2', 'FU0', 'FU1', 'FU2', 'FU3',
-                                                               'FD0', 'FD1', 'FD2', 'FD3')},
+    # consolidation pass 3 X4: pll_tx (and pll_host if PT_PLL_RINGS=3) use pt_pll_ring_core, which has no
+    # N5/N10/KP/FU/FD pins; only pll_cdr (pt_pll_ring r9c) keeps them (AC3-W9).
     'cdr.VCTRL': 'CDR_VCTRL', 'cdr.FBCK_IN': 'fc_src[1]', 'cdr.REF_IN': 'ref_clk', 'cdr.freq_hold': 'cdr_freq_locked',
     # POR (cold start; RESET_N supervisor covers slow ramps, board B1)
     'por.vdd3v3': 'VDD', 'por.vss': 'VSS', 'por.ena': 'VDD', 'por.porb': 'por_n', 'por.por': 'POR_HIGH',

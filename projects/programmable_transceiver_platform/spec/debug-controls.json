@@ -630,6 +630,14 @@
       "kind": "bias",
       "force": "sense_only",
       "note": "core_support spare idac1 output, current sensed into an SMU on ATB1"
+    },
+    {
+      "code": 58,
+      "name": "vco_replica_vctrl",
+      "island": "pll",
+      "kind": "control_voltage",
+      "force": "allowed",
+      "note": "MOD-00 item 1 (model-uncertainty audit): vco_replica VCTRL sense/force, with CLK_OBS vco_replica gives the ring tuning curve f(VCTRL)."
     }
   ],
   "atb_policy": "ATB0 is the force bus and ATB1 the sense bus. Each bus closes at most one switch (code 0 = all open). ATB1 may select any node. ATB0 may select only device replicas, matching structures and the six overridable bias/reference nodes; selecting an overridable node on ATB0 requires its bias_override bit, and setting a bias_override bit requires ATB0 to select that node, so the internal source and the bench never drive one node together and an overridden mirror is never left floating. Island nodes are disconnected while their island is off; supply monitor taps are not gated so a switched-off island can be confirmed dead. Nodes marked hardware=false have no tap: their codes are rejected on both buses. Core reference-chain nodes (VBG, ROOT_REF, TRK_<island>) carry the force preconditions of analog/core_support/README.md as commit rules instead of override bits. ATB all-off gap: >= 20 ns from deselect to the next select on one bus (atb_switch_dead_time_s; group/pad non-overlap up to 5.7 ns). The break-before-make rule puts a zero commit between two non-zero codes, i.e. at least one 32-clock SPI transaction, which exceeds 20 ns for any SCLK below 1.6 GHz. control_semantics.switch_dead_time_s (4 ns) remains the analog-switch figure for other selects.",
@@ -1070,7 +1078,7 @@
           "bits": 6,
           "default": 0,
           "minimum": 0,
-          "maximum": 57,
+          "maximum": 58,
           "unit": "code",
           "atb_bus": 0
         },
@@ -1078,7 +1086,7 @@
           "bits": 6,
           "default": 0,
           "minimum": 0,
-          "maximum": 57,
+          "maximum": 58,
           "unit": "code",
           "atb_bus": 1,
           "live": true
@@ -1161,7 +1169,7 @@
       }
     },
     "debug.clk_obs": {
-      "description": "CLK_OBS source and power-of-two divider (analog-side prescaler). off = pad tristated. pt_clk_obs has 8 inputs and N<=7: sources without a cell input are rejected (analog/timing/README.md register-map gap).",
+      "description": "CLK_OBS source and power-of-two divider (analog-side prescaler). off = pad tristated. pt_clk_obs has 8 inputs and N<=7: sources without a cell input are rejected (analog/timing/README.md register-map gap). Codes 15-17 (char_ro33, char_ro50, char_cmldiv; MOD-00 item 1) select the analog/characterization speed cells; the selected cell runs only while selected (select = enable, no extra enable bits).",
       "update": "stopped",
       "islands": [
         "debug"
@@ -1169,7 +1177,7 @@
       "live": true,
       "fields": {
         "source": {
-          "bits": 4,
+          "bits": 5,
           "default": "off",
           "values": [
             "off",
@@ -1186,7 +1194,10 @@
             "vco_replica",
             "aosc",
             "host_tx_clk",
-            "cdr_recovered"
+            "cdr_recovered",
+            "char_ro33",
+            "char_ro50",
+            "char_cmldiv"
           ],
           "forbidden": [
             "wire_line",
@@ -3585,7 +3596,8 @@
           35,
           36,
           55,
-          56
+          56,
+          58
         ]
       },
       {
@@ -3652,7 +3664,8 @@
           27,
           28,
           40,
-          41
+          41,
+          58
         ]
       },
       {

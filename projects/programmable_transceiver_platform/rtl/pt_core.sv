@@ -32,7 +32,11 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // stopped-only (regfile accepts 0x23 only while ENABLE=0); SPI port on spi_clk (writes on its fall).
  input wire mem_capture,mem_play,mem_loop,input wire[4:0]mem_last,
  input wire spi_clk,mem_we,input wire[4:0]mem_idx,input wire[39:0]mem_wdata,
- output wire[39:0]mem_rdata,output reg capture_done);
+ output wire[39:0]mem_rdata,output reg capture_done,
+ // Shared wired pattern lane (plan step 4): with pat_sel (stopped-only debug level) the pattern
+ // generator's word (wire_tx_clk register) goes out through the same wire_low (falling) /
+ // wire_high (rising) launch registers as payload, instead of straight from rising-edge flops.
+ input wire pat_sel,input wire[39:0]pat_word);
  wire eh,ewr,ewt,err,ert;
  pt_enable_release e0(host_clk,rst_n,enable,eh);
  pt_sync_bit e2(wire_rx_clk,rst_n,enable,ewr);pt_sync_bit e3(wire_tx_clk,rst_n,enable,ewt);
@@ -77,6 +81,7 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  always @(posedge ingress_clk or negedge rst_n)
   if(!rst_n)capture_done<=0;else capture_done<=mem_capture&&(payload_iq?err:ewr)&&in_full;
  wire[39:0]in_head;wire[WIRE_IN_A:0]in_quads_raw,in_wr_ptr,in_rd_ptr;wire wr_pop,iq_pop,in_ov,in_un;
+ wire[39:0]mem_peek;   // declared before use (strict elaboration, container iverilog)
  pt_cdc_fifo #(.W(40),.A(WIRE_IN_A),.DEPTH(WIRE_IN_DEPTH),.MEMORY(1)) ingress(
   .wr_clk(ingress_clk),.rd_clk(host_clk),.rst_n(frst),
   .din(lane_in),.push(lane_in_valid&&!(mem_capture&&in_full)),.pop((wr_pop||iq_pop)&&!mem_capture),
@@ -85,7 +90,7 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
   .peek_idx(mem_idx),.peek(mem_peek),.play(1'b0),.play_loop(1'b0),.play_last(5'd0),
   .spi_clk(1'b0),.spi_we(1'b0),.spi_idx(5'd0),.spi_d(40'd0));
  // capture readback is 0 until the capture is complete (legacy MEMORY semantics; no array X/garbage)
- wire[39:0]mem_peek;assign mem_rdata=capture_done?mem_peek:40'd0;
+ assign mem_rdata=capture_done?mem_peek:40'd0;
  wire[WIRE_IN_A:0]in_quads=mem_capture?{(WIRE_IN_A+1){1'b0}}:in_quads_raw;   // capture: host engine idles
  // ---------------- fast gain: commit (hcore), apply/discard/mark (rf_rx), report (hcore)
  reg gain_toggle,gain_pending,gain_rejected;reg[6:0]gain_arg;
@@ -125,8 +130,8 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  wire egress_pop=payload_iq?(rf_unpack_ready&&!egress_empty):
                  linecode?lc_pop:(wire_tx_request&&wire_running&&!egress_empty);
  // Admission uses only the registered, conservative ready (no backpressure:
- // a refused word faults the receiver). SPARE=3 covers the collector register.
- pt_cdc_fifo #(.W(40),.A(EGRESS_A),.DEPTH(EGRESS_DEPTH),.MEMORY(2)) egress(
+ // a refused word faults the receiver). SPARE=4 covers the collector's input and output registers.
+ pt_cdc_fifo #(.W(40),.A(EGRESS_A),.DEPTH(EGRESS_DEPTH),.SPARE(4),.MEMORY(2)) egress(
   .wr_clk(host_clk),.rd_clk(egress_clk),.rst_n(frst),
   .din(rx_quad),.push(rx_push&&!mem_play),.pop(egress_pop),
   .dout(egress_head),.full(egress_full),.empty(egress_empty),.ready(egress_ready),.rd_count(egress_count),
@@ -147,14 +152,15 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // IX-2 8b/10b transmit offload (wire_tx_clk): a registered FWFT head in front of the serializer
  wire wire_out_empty=payload_iq||(linecode?!lc_qv:egress_empty);
  pt_lc_tx lc_tx(.clk(wire_tx_clk),.rst_n(rst_n),.en(linecode&&ewt&&!payload_iq),.head(egress_head),.head_valid(!egress_empty),
-  .pop(lc_pop),.q(lc_q),.q_valid(lc_qv),.take(wire_tx_request&&wire_running&&!wire_out_empty));
+  .pop(lc_pop),.q(lc_q),.q_valid(lc_qv),.take(wire_tx_request&&wire_running&&lc_qv));   // = !wire_out_empty while linecode
  wire[39:0]wire_head=linecode?lc_q:egress_head;
  wire[EGRESS_A:0]wire_out_count=payload_iq?0:egress_count;
  reg[19:0]wire_low,wire_high;
+ wire[39:0]lane_out=pat_sel?pat_word:payload_iq?40'd0:wire_head;
  always @(negedge wire_tx_clk or negedge rst_n)
-  if(!rst_n)wire_low<=0;else wire_low<=payload_iq?20'd0:wire_head[19:0];
+  if(!rst_n)wire_low<=0;else wire_low<=lane_out[19:0];
  always @(posedge wire_tx_clk or negedge rst_n)
-  if(!rst_n)wire_high<=0;else wire_high<=payload_iq?20'd0:wire_head[39:20];
+  if(!rst_n)wire_high<=0;else wire_high<=lane_out[39:20];
  assign wire_tx_data={wire_high,wire_low};
  assign wire_tx_valid=wire_running&&!wire_out_empty&&!rx_fault_wire&&!wire_starved;
  assign wire_idle=!wire_tx_valid||idle_sync;

@@ -73,7 +73,11 @@ module pt_host_link(
     (* async_reg = "true" *) reg [1:0] drs;
     always @(posedge link_clk or negedge rst_n) if (!rst_n) drs <= 2'b00; else drs <= {drs[0], 1'b1};
     wire dr_n = drs[1];
-    pt_host_divider divider(.clk(link_clk), .rst_n(dr_n), .core_clk(core_clk));
+    // The divider gets its own copy of the release flop (same edge as drs[1]): its recovery check at
+    // 6.4 ns no longer rides on dr_n's gearbox fanout (run TC2A: -4.2 ns, divider RN).
+    (* async_reg = "true" *) reg drs_c;
+    always @(posedge link_clk or negedge rst_n) if (!rst_n) drs_c <= 1'b0; else drs_c <= drs[0];
+    pt_host_divider divider(.clk(link_clk), .rst_n(drs_c), .core_clk(core_clk));
     (* async_reg = "true" *) reg [1:0] crs;
     always @(posedge core_clk or negedge rst_n) if (!rst_n) crs <= 2'b00; else crs <= {crs[0], 1'b1};
     assign core_rst_n = crs[1];
@@ -111,7 +115,7 @@ module pt_host_link(
         if (!rst_n) en_sdr <= 1'b0; else en_sdr <= en_d && mode_d != 2'd0;
     reg sdr_sel;   // quasi-static: mode changes only while stopped
     always @(posedge link_clk or negedge dr_n) if (!dr_n) sdr_sel <= 1'b0; else sdr_sel <= mode_d != 2'd0;
-    assign d2h_clk_pin = sdr_sel ? (~word_clk & en_sdr) : ddr_fwd;
+    pt_out_mux clk_out(.I0(ddr_fwd), .I1(~word_clk & en_sdr), .S(sdr_sel), .Z(d2h_clk_pin));
     assign d2h_oe = d2h_enable;
 
     // ---------------- H2D
@@ -122,8 +126,8 @@ endmodule
 // hcore divider: one hddr toggle flop behind a kept root buffer (STA: generated clock hcore =
 // hddr/2 at the buffer output). The first hddr edge after reset is an hcore rising edge.
 module pt_host_divider(input wire clk, rst_n, output wire core_clk);
-    reg c;
-    always @(posedge clk or negedge rst_n) if (!rst_n) c <= 1'b0; else c <= ~c;
+    wire c;
+    pt_clock_dff cdiv(.clk(clk), .rst_n(rst_n), .d(~c), .q(c));
     pt_clock_buf core_root(.I(c), .Z(core_clk));
 endmodule
 
@@ -251,8 +255,11 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     // Falling-edge registers: their reset release may land on either of two falling edges (a
     // half-period recovery path, not timed); they only hold pin data, so either is equivalent.
     integer i;
-    always @(negedge h2d_clk or negedge hr_n)
-        if (!hr_n) begin f <= 10'd0; fh <= 20'd0; end
+    // Pin-data registers (f, fh, r..r3) are reset by rst_n itself, not by the synchronized hr_n: they
+    // only hold pin words, so an asynchronous release is harmless, and hr_n's synchronous-release
+    // fanout (recovery timing at 6.4 ns, run TC1 -3.0 ns) is left to the control registers.
+    always @(negedge h2d_clk or negedge rst_n)
+        if (!rst_n) begin f <= 10'd0; fh <= 20'd0; end
         else begin
             f <= h2d_pin;
             for (i = 0; i < 10; i = i + 1)
@@ -261,7 +268,7 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     // Write side: one-hot pointer, per-entry enables registered one clock ahead (one flop per
     // entry, preserved); Gray pointer for the reader.
     reg  [7:0]  woh;
-    wire [7:0]  we;                      // entry e
+    wire [7:0]  we, we_hi;               // entry e (bits 19:0 / 39:20)
     reg  [3:0]  wb, wg, rg1, rg2, wbn, wgn;   // wbn/wgn: wb+1 and its Gray code, precomputed
     reg         wr_now;                      // a write happens at this edge (any we)
     reg  [39:0] mem [0:7];
@@ -276,13 +283,17 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     genvar ge;
     generate for (ge = 0; ge < 8; ge = ge + 1) begin : entries
         pt_rep_dff enable(.clk(h2d_clk), .rst_n(hr_n), .d(next_done && woh[ge] && !full), .q(we[ge]));
+        // second copy for the upper 20 bits (fanout 20 per flop; AC1_R4 h2d -4.5 ns on fanout 40)
+        pt_rep_dff enable_hi(.clk(h2d_clk), .rst_n(hr_n), .d(next_done && woh[ge] && !full), .q(we_hi[ge]));
     end endgenerate
+    always @(posedge h2d_clk or negedge rst_n)
+        if (!rst_n) begin r <= 10'd0; r1 <= 10'd0; r2 <= 10'd0; r3 <= 10'd0; end
+        else begin r <= h2d_pin; r1 <= r; r2 <= r1; r3 <= r2; end
     always @(posedge h2d_clk or negedge hr_n)
         if (!hr_n) begin
-            r <= 10'd0; r1 <= 10'd0; r2 <= 10'd0; r3 <= 10'd0; phase <= 2'd0; wr_now <= 1'b0;
+            phase <= 2'd0; wr_now <= 1'b0;
             woh <= 8'b00000001; wb <= 4'd0; wg <= 4'd0; wbn <= 4'd1; wgn <= 4'd1; rg1 <= 4'd0; rg2 <= 4'd0; overflow <= 1'b0;
         end else begin
-            r <= h2d_pin; r1 <= r; r2 <= r1; r3 <= r2;
             phase <= phase + 1'b1;
             rg1 <= rgray; rg2 <= rg1;
             if (done && !any_we && hrun) overflow <= 1'b1;   // a complete quad found no free entry
@@ -313,7 +324,7 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
 `endif
     always @(posedge h2d_clk)
         for (e = 0; e < 8; e = e + 1)
-            if (we[e]) mem[e] <= wdata;
+            begin if (we[e]) mem[e][19:0] <= wdata[19:0]; if (we_hi[e]) mem[e][39:20] <= wdata[39:20]; end
     // ---- core domain: start after two quads, then one quad per clock
     reg run;
     wire [3:0] wbin = {wg2[3], ^wg2[3:2], ^wg2[3:1], ^wg2[3:0]};

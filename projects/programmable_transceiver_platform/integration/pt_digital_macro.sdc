@@ -3,7 +3,11 @@
 #
 # Clock targets (ns). Override any period by setting the Tcl variable before sourcing
 # (verification/digital_hardening/sta_signoff.tcl re-sources this file at other rates).
-#   sclk      SPI SCLK. Bench uses 10 MHz; spec starts at <=1 MHz. Constrained at 20 MHz.
+#   sclk      SPI SCLK. Bench uses 10 MHz; spec starts at <=1 MHz. Constrained at 10 MHz (2026-11-11; was
+#             20 MHz with no spec basis): Mode 0 makes the register-file write (data validation on the
+#             last data bit) and the read response a HALF-period path; post-route ss_032C_3v15 needs
+#             ~36 ns for the write validation, which 20 MHz (25 ns) cannot give. The address/command
+#             decode is multicycle (pt_spi cmd_r/rd_addr) and reads use registered candidates.
 #   ref       reference into the calibrator (REF_IN after the clocktree; the calibrator is a
 #             slow SAR, any slower reference is fine). 100 MHz.
 #   hword     host DDR clock from the clocktree (transport rework 2026-11-10): line/16, or the fixed
@@ -23,7 +27,7 @@
 #   fc0..fc5  frequency-counter sources (pt_freq_count, P3-7): ring FBCKs (VCO/16 <= ~69 MHz), ring_osc,
 #             vco_replica, aosc (~35-56 MHz), LC prescale; all constrained at 156.25 MHz. They reach the
 #             counters through a stopped-only select mux, so they are logically exclusive with each other.
-foreach {v d} {SCLK_PERIOD 50.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WRX_PERIOD 12.3
+foreach {v d} {SCLK_PERIOD 100.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WRX_PERIOD 12.3
                RFTX_PERIOD 20.0 RFRX_PERIOD 20.0 CTW_PERIOD 6.4 CTDET_PERIOD 6.4 FC_PERIOD 6.4} {
     if {![info exists $v]} { set $v $d }
 }
@@ -43,9 +47,16 @@ if {![info exists CTREF_PERIOD]} { set CTREF_PERIOD [expr {10.0 * $CTW_PERIOD}] 
 # This custom SDC replaces the flow's base.sdc. Apply electrical limits here
 # as well as in the flow configuration so repair sees the intended load/slew
 # limits. Standalone STA uses the same defaults; flow overrides remain explicit.
+# Limits are AT ss_032C_3v15 (the flow's repair corner since 2026-11-11). Measured on the AC-1 netlist
+# (repair_design after global placement, 1716x1455): 1.0 ns -> +151 % cell area (120 % utilization,
+# illegal), 1.8 ns -> +57 % (75 %), 2.0 ns -> +48 % (71 %), 2.5 ns / 0.2 pF -> +36 % (65 %). The
+# electrical limit only bounds non-critical nets; critical paths are sized by repair_timing at ss.
+# Run TC1 at 2.5 ns / 0.2 pF ended at ~71 % utilization and detailed routing stalled (31.7k DRCs after
+# 8 iterations; AC1_R4 at 62 % reached 0 by iteration 6), so the limit is 3.0 ns / 0.25 pF (about the
+# former tt 2.0 ns limit expressed at ss).
 foreach {constraint_variable constraint_command constraint_default} {
-    MAX_TRANSITION_CONSTRAINT set_max_transition 1.0
-    MAX_CAPACITANCE_CONSTRAINT set_max_capacitance 0.1
+    MAX_TRANSITION_CONSTRAINT set_max_transition 3.0
+    MAX_CAPACITANCE_CONSTRAINT set_max_capacitance 0.25
     MAX_FANOUT_CONSTRAINT set_max_fanout 12
 } {
     set constraint_value $constraint_default
@@ -79,6 +90,8 @@ if {[llength $interp_mux]} {
     if {!$PT_TX_INTERP} {
         # bypass: the FIR registers are unused (samples pass combinationally); no timing on them
         set_false_path -to [get_cells -quiet -hierarchical {*interp.x* *interp.mid_q* *interp.lane* *interp.v* *interp.y* *interp.yv*}]
+        # ... and nothing they launch is used: out_sample/out_valid = in_sample/in_valid (halfband = 0)
+        set_false_path -from [get_cells -quiet -hierarchical {*interp.x* *interp.mid_q* *interp.lane* *interp.v* *interp.y* *interp.yv*}]
     }
     if {$PT_TX_INTERP} {
         set hb [get_pins -hierarchical *interp.half_clock_buf.cell/Z]
@@ -234,10 +247,11 @@ if {![info exists PT_TIMING_CORNER]} {
     if {[info exists ::env(PT_TIMING_CORNER)]} { set PT_TIMING_CORNER $::env(PT_TIMING_CORNER) }
 }
 set pt_envelope_derate [dict get {ss_window 1.54 tt 1.0 ff_window 0.71} $PT_TIMING_CORNER]
-# Inside the LibreLane PnR flow (STEP_ID set) the resizer works on tt x derate. The characterized
-# ss_032C library is worse at path level than 1.54 (CLOSE_R2: -19.2 ns vs -16.4 ns, D14), so the
-# flow optimizes at 1.75; signoff STA (sta_signoff.py) uses the characterized libraries, no derate.
-if {[info exists ::env(STEP_ID)] && $PT_TIMING_CORNER eq "ss_window"} { set pt_envelope_derate 1.75 }
+# Inside the LibreLane PnR flow (STEP_ID set) the corner libraries ARE the characterized in-window
+# ones (verification/digital_hardening/config.json LIB/RSZ_CORNERS: setup on ss_032C_3v15, hold on
+# ff_022C/ff_032C_3v35), so the flow optimizes against the signoff library itself, no derate.
+# (Former flow: tt x 1.75 with repair_design at tt x 1.0 -- it left 2-5 ns slews at ss and never converged.)
+if {[info exists ::env(STEP_ID)]} { set PT_LIB_CHARACTERIZED 1 }
 # Characterized in-window libraries (verification/digital_hardening/libchar.py; ss/ff at 22/32 C and
 # 3.15/3.35 V): the corner is in the Liberty itself, so no envelope derate is applied.
 if {![info exists PT_LIB_CHARACTERIZED]} {
@@ -284,7 +298,12 @@ pt_io rftx $RFTX_PERIOD {rf_tx_request} {rf_tx_sample* rf_tx_valid rf_mute}
 pt_io ref  $REF_PERIOD  {calibration_above_target} {calibration_trial* cdr_freq_locked}
 pt_io ctref $CTREF_PERIOD {ct_marker} {ct_armed ct_marker_seen ct_launched ct_arm_fault}
 pt_io ctw  $CTW_PERIOD  {} {ct_word_clk ct_word_load ct_ser_run ct_bit_phase ct_qualified}
-pt_io ctdet $CTDET_PERIOD {} {ct_det_div* ct_det_clk}
+pt_io ctdet $CTDET_PERIOD {} {ct_det_div*}
+# ct_det_clk is the detector's divided CLOCK (det_clk = gated clk / a / a&b of pt_ct_detect_div), not
+# data: no register captures it against ctdet, so it is a generated clock at the port (its duty /
+# pulse width come from the divider registers) instead of a data output delay (AC1_R4: -4.2 ns on
+# a 0.2 x period budget that has no receiver).
+create_generated_clock -name ctdet_out -master_clock ctdet -source [get_ports ct_det_clk_in] -divide_by 1 -add [get_ports ct_det_clk]
 
 # SPI (Mode 0). Host launches MOSI/CS_N on the falling edge; allow 10 ns host + board + pad.
 # MISO launches on our falling edge; host samples on the next rising edge with 10 ns budget.
@@ -332,8 +351,28 @@ set_input_delay -min [expr {$h2d_ui/2.0 - $h2d_skew}] -clock h2d -clock_fall -ad
 # hddr edge); the DDR forwarded clock d2h_clk_pin = c_r ^ c_f is built the same way (edge-aligned).
 # Checked in sta_signoff as a skew window (arrival min/max of data vs clock pin); here only a
 # launch-side budget so the resizer keeps the data and clock paths equally short.
-set_output_delay [expr {0.2 * $HLINK_PERIOD}] -clock hddr [get_ports {d2h_pin* d2h_clk_pin}]
-set_output_delay [expr {0.2 * $HLINK_PERIOD}] -clock hddr -clock_fall -add_delay [get_ports {d2h_pin* d2h_clk_pin}]
+# D2H is SOURCE-SYNCHRONOUS (timing closure 2026-11-11). At full rate (DDR, HOST_RATE_DIV 1) the
+# forwarded D2H_CLK pin (c_r ^ c_f, edge-aligned like DQS; the FPGA centres it) is a generated clock
+# and each data pin must change within +-D2H_SKEW of the clock pin edge it belongs to: the
+# requirement is the data-to-clock skew at the macro pins, not the absolute insertion delay of
+# hddr (the former hddr-referenced output delay failed by -7.7 ns on 3.6-7 ns of tree latency
+# that the forwarded clock carries equally). Launch hddr rise/fall -> the next d2h_fwd edge one UI
+# later (setup: data <= clock + S), hold against the same edge (data >= clock - S).
+# Reduced rates (SDR forwarded clock = gated ~word_clk) keep the hddr-referenced budget (>= 12.8 ns periods).
+if {![info exists D2H_SKEW]} { set D2H_SKEW [expr {0.2 * $HLINK_PERIOD}] }
+set sdr_sel_q [get_pins -quiet -hierarchical *host.clk_out.cell/S]
+if {$HOST_RATE_DIV == 1 && [llength $sdr_sel_q] == 1} {
+    set_case_analysis 0 $sdr_sel_q
+    create_generated_clock -name d2h_fwd -master_clock hddr -source $rate_mux -divide_by 1 -add [get_ports d2h_clk_pin]
+    set_output_delay [expr {$HLINK_PERIOD - $D2H_SKEW}] -max -clock d2h_fwd [get_ports d2h_pin*]
+    set_output_delay [expr {$HLINK_PERIOD - $D2H_SKEW}] -max -clock d2h_fwd -clock_fall -add_delay [get_ports d2h_pin*]
+    set_output_delay [expr {$D2H_SKEW}] -min -clock d2h_fwd [get_ports d2h_pin*]
+    set_output_delay [expr {$D2H_SKEW}] -min -clock d2h_fwd -clock_fall -add_delay [get_ports d2h_pin*]
+    if {[llength [get_clocks -quiet hsdr]]} { set_false_path -from [get_clocks hsdr] -to [get_ports d2h_clk_pin] }
+} else {
+    set_output_delay [expr {0.2 * $HLINK_PERIOD}] -clock hddr [get_ports {d2h_pin* d2h_clk_pin}]
+    set_output_delay [expr {0.2 * $HLINK_PERIOD}] -clock hddr -clock_fall -add_delay [get_ports {d2h_pin* d2h_clk_pin}]
+}
 # HB-1 two-group launch stagger (rtl/pt_cells.sv pt_stagger, pt_host_link): every D2H lane passes one
 # kept mux; odd lanes can select a kept two-buf_1 delay (~0.4-0.8 ns, a deliberate fixed offset the
 # FPGA IDELAY absorbs). Launch budgets and the signoff skew window are checked with the stagger off;
@@ -444,7 +483,9 @@ foreach {f wrs rds} [list *core.ingress $ingress_clks hcore *core.egress hcore $
 #    after ENABLE=1 releases the reader (synchronized). Protocol-protected; bounded to the reader.
 set cb [pt_cells {*core.ingress.mem*}]
 if {[llength $cb]} { pt_bound_xing $SCLK_PERIOD -from $cb -to [get_clocks sclk] }
-set cd [pt_cells {*core.capture_done*}]
+# capture_done is a pt_core output register; synthesis names it after the pt_digital net
+# (digital.capture_done_<cell>), so match it anywhere (AC1 run0: the bound silently missed it).
+set cd [pt_cells {*capture_done*}]
 if {[llength $cd]} { pt_bound_xing $SCLK_PERIOD -from $cd -to [get_clocks sclk] }
 if {[llength $mem_clks]} {
     foreach c [concat $egress_clks hcore] { set_false_path -from [get_clocks egress_mem_sclk] -to [get_clocks $c] }
@@ -463,10 +504,18 @@ foreach inst {fca fcb} {
     # cfg_src_r (source) is not in the list: a source change must clear the state through `run` in one
     # cycle. Synthesis names r_diff/r_count after the `cur` bus and r_locked after locked_ref.
     set evf [concat [pt_cells "*${inst}.snap_*"] [pt_cells "*${inst}.fb_prev*"] [pt_cells "*${inst}.cfg_r*"]]
+    # good / r_locked change only at ev_go (or are held clear while !run), so their own update
+    # (good != need, good + 1 >= need) is the same window-evaluation multicycle.
+    set evf [concat $evf [pt_cells "*${inst}.good*"] [pt_cells "*${inst}.r_locked*"]]
+    if {$inst eq "fcb"} { set evf [concat $evf [pt_cells "cdr_freq_locked*"]] }
     set evt {}
     foreach pat {r_diff* r_count* cur* good* r_locked* locked_ref* r_lost* fb_prev*} {
         set evt [concat $evt [pt_cells "*${inst}.$pat"]]
     }
+    # instance b's r_locked drives the cdr_freq_locked port and synthesis names the flop after the
+    # port (cdr_freq_locked_<cell>_Q): include it, or the 5-cycle window rule silently misses it
+    # (AC1_R4: ref -26.5 ns on fcb.snap_h -> cdr_freq_locked, a 32-level single-cycle path).
+    if {$inst eq "fcb"} { set evt [concat $evt [pt_cells "cdr_freq_locked*"]] }
     if {[llength $evf] && [llength $evt]} {
         set_multicycle_path 5 -setup -from $evf -to $evt
         set_multicycle_path 4 -hold -from $evf -to $evt
@@ -492,6 +541,94 @@ foreach c [lrange $all_clk_names 1 end] {
 # output. Build that shared tree once, using its faster (8 ns wired) mode.
 # LibreLane re-reads PNR_SDC_FILE for each subsequent step, restoring BOTH
 # alternatives for repair and STA; standalone/signoff STA also keeps both.
+# ---------------- SPI write decode (timing closure 2026-11-11). pt_spi captures the command byte (cmd_r,
+# 8th rising edge) and the address (rd_addr = wr_addr, 16th rising edge) into registers held until CS_N
+# rises; the write lands on the falling edge after the 32nd rising edge, >= 16 SCLK periods later.
+# Only the data word (shift[15:0]) and count==32 are half-period paths into the register file.
+# The read path rd_addr -> rd_data -> spi.read_value/miso_bit is NOT relaxed (excluded below).
+# (synthesis names the address flops after the register-file port they drive: regs.wr_addr / regs.rd_addr)
+set spi_held [concat [pt_cells *control.spi.rd_addr*] [pt_cells *control.regs.rd_addr*] [pt_cells *control.regs.wr_addr*] \
+                     [pt_cells *control.rd_addr*] [pt_cells *control.wr_addr*] [pt_cells *control.spi.cmd_r*]]
+set spi_wdst [pt_cells *control.regs.*]
+if {[llength $spi_held] && [llength $spi_wdst]} {
+    set_multicycle_path 4 -setup -end -from $spi_held -to $spi_wdst
+    set_multicycle_path 3 -hold -end -from $spi_held -to $spi_wdst
+    if {[llength $mem_clks]} {
+        set_multicycle_path 4 -setup -end -from $spi_held -to [get_clocks egress_mem_sclk]
+        set_multicycle_path 3 -hold -end -from $spi_held -to [get_clocks egress_mem_sclk]
+    }
+}
+
+# SPI read candidates (pt_spi cand0/cand1, 16th rising edge): register-file CONFIGURATION registers
+# (falling-edge flops) change only at write edges of earlier transactions (>= 16 SCLK before the read
+# capture), so they are multicycle sources; only rd_hi (the shift register, one full period) and the
+# synchronized STATUS stages (st*/s*/c*/pg*/on*/f*, which can change on any SCLK fall) stay single-cycle.
+set rd_cand [concat [pt_cells *control.spi.cand0*] [pt_cells *control.spi.cand1*]]
+set rd_cfg {}
+foreach c [pt_cells *control.regs.*] {
+    set n [get_full_name $c]
+    if {![regexp {regs\.(st[12]_|s[12]\[|s[12]_|c[12]_|pg[12]|on[12]|f[12]|wr_|rd_)} $n]} { lappend rd_cfg $c }
+}
+if {[llength $rd_cand] && [llength $rd_cfg]} {
+    set_multicycle_path 8 -setup -end -from $rd_cfg -to $rd_cand
+    set_multicycle_path 7 -hold -end -from $rd_cfg -to $rd_cand
+}
+
+# ---------------- Pattern generator/checker configuration (debug.pattern mode/invert/user word):
+# synchronized copies of fields that change only by COMMIT while ENABLE=0, when the generator is held
+# in reset (prbs_rst_n = rst_n && synchronized ENABLE) and the checker is disabled; ENABLE needs a
+# later SPI transaction (>= 32 SCLK), so they are settled long before either runs. Static, not timed.
+set pat_cfg [concat [pt_cells *pat_tx_cfg*] [pt_cells *pat_rx_cfg*] [pt_cells *ptxc.q*] [pt_cells *prxc.q*]]
+if {[llength $pat_cfg]} { set_false_path -from $pat_cfg }
+
+# ---------------- Host-link mode (debug.host_link.mode) synchronized copies: stopped-only (the regfile
+# accepts it only while ENABLE=0; the H2D/D2H paths are idle), so they are static for timing.
+set hl_mode [concat [pt_cells *h2d.mode_h*] [pt_cells *h2d.smh.q*] [pt_cells *host.mode_d*]]
+if {[llength $hl_mode]} { set_false_path -from $hl_mode }
+
+# ---------------- Exclusive-owner and handshake crossings (timing closure 2026-11-11). Each one was
+# timed as a synchronous path with an arbitrary common-period alignment in AC1_R4.
+# (a) Shared banks: the egress/ingress bank clocks are a stopped-only mux of the wired and the RF
+#     owner clock (payload_iq changes only while ENABLE=0 holds both FIFO sides in reset). The
+#     inactive owner's logic never launches into, or captures from, the selected bank clock.
+foreach {a b} {rftx egress_wtx rfhalf egress_wtx wtx egress_rftx wrx ingress_rfrx ingress_wrx rfrx ingress_wrx rftx} {
+    if {[llength [get_clocks -quiet $a]] && [llength [get_clocks -quiet $b]]} { set_false_path -from [get_clocks $a] -to [get_clocks $b] }
+}
+# (b) Playback memory: SPI writes (egress_mem_sclk) only with play=1, transport writes (hcore) only
+#     with play=0; play is stopped-only (ENABLE=0). sclk -> * is already false (static registers).
+if {[llength $mem_clks]} {
+    set_false_path -from [get_clocks hcore] -to [get_clocks egress_mem_sclk]
+    # SPI playback writes: the array captures on the SCLK fall after the 32nd rising edge of a 0x22
+    # write (memory_write). Every SCLK-domain input of that write (index, staged play_i/play_h,
+    # playback_enable, ENABLE: falling-edge registers that change only at OTHER transactions' write
+    # edges, where memory_write = 0; shift data/count stop at the 32nd edge) is stable from >= 1 SCLK
+    # before to >= 1 SCLK after it, so the same-edge hold check against the ~10 ns later array clock
+    # (mux + tree) is not a real race.
+    set_false_path -hold -from [get_clocks sclk] -to [get_clocks egress_mem_sclk]
+}
+# (c) Fast gain (opcode4) toggle handshake. hcore -> rfrx: gain_arg is held from the toggle flip
+#     until the gain-status frame; the toggle crosses through gain_rx.t1/t2 (two flops), so gain_arg
+#     is sampled >= 2 rf_rx_clk periods after it settled: bounded to one rfrx period, no hold.
+#     rfrx -> hcore: mark_ptr/gap are written one clock before mark_toggle flips and are stable
+#     until the next gain command; mark_toggle crosses through core.gm (pt_sync_bit).
+set g_t1 [pt_cells *gain_rx.t1*]
+if {[llength $g_t1]} { set_false_path -to $g_t1 }
+set g_arg [pt_cells *gain_arg*]
+if {[llength $g_arg]} { pt_bound_xing $RFRX_PERIOD -from $g_arg -to [get_clocks rfrx] }
+# Clock-level bounds: the only rfrx -> hcore data are mark_ptr / gap (synthesis names those flops after
+# their consumer, e.g. frame_tx.engine.gap, so cell patterns are fragile) plus mark_toggle into the
+# core.gm synchronizer; the only hcore -> rfrx data are gain_arg and gain_toggle (into gain_rx.t1).
+# mark_ptr/gap settle >= 1 rf_rx_clk before mark_toggle flips; the toggle then needs the two core.gm
+# synchronizer flops before mk_seen can use them, so two hcore periods bound the data.
+pt_bound_xing [expr {2.0 * $HCORE_PERIOD}] -from [get_clocks rfrx] -to [get_clocks hcore]
+pt_bound_xing $RFRX_PERIOD -from [get_clocks hcore] -to [get_clocks rfrx]
+# (d) The applied fast gain (rf_rx_clk levels rx_gain/rx_gain_active) overrides the LNA/PGA bits of
+#     the static analog_cfg/debug_cfg outputs. Analog controls with no capturing clock: the gain
+#     command discards the next GAIN_SETTLE (20) samples, so one RF sample period from the rfrx
+#     register to the pin is the budget (the sclk output delay is not a requirement for these).
+set_max_delay [expr {$RFRX_PERIOD + 0.2 * $SCLK_PERIOD}] -from [get_clocks rfrx] -to [get_ports {analog_cfg* debug_cfg*}]
+set_false_path -hold -from [get_clocks rfrx] -to [get_ports {analog_cfg* debug_cfg*}]
+
 if {[info exists ::env(STEP_ID)] && $::env(STEP_ID) eq "OpenROAD.CTS"} {
     if {[llength $egress_clks]} { delete_clock [get_clocks egress_rftx] }
     if {[llength $ingress_clks]} { delete_clock [get_clocks ingress_rfrx] }

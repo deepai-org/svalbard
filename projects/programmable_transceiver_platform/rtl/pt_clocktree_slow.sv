@@ -43,29 +43,60 @@ module pt_ct_word #(parameter integer QUAL_CYCLES = 64)(
     wire [5:0] d_cyc  = cfg_half_rate ? {1'b0, d_ui[5:1]} : d_ui;
 
 
+    reg wrap, lt1, pok; reg [6:0] inc1, inc2;   // precomputed decodes (declared before use; see below)
+    wire period_ok, good;
     wire launch_ev = ref_rise && pend && !launching;
     reg  dz;                 // registered (dly == 0) while launching: keeps the decrement off the rephase path
     wire rephase   = launching ? dz : (launch_ev && d_cyc == 0);
-    wire [3:0] cnt_next = rephase ? 4'd0 : (cnt >= m_last ? 4'd0 : cnt + 4'd1);
+    wire zero_next = rephase || wrap;
+    wire [3:0] cnt_inc = cnt + 4'd1;
+    wire [3:0] cnt_next = zero_next ? 4'd0 : cnt_inc;
     wire [3:0] hi = cfg_half_rate ? 4'd2 : 4'd5;
+    // next values of wrap / lt1 for both cnt_next alternatives (0 or cnt + 1), from registers only
+    wire wrap_inc = cnt_inc >= m_last, lt1_inc = cnt_inc + 4'd1 < hi;
+    wire wrap_zero = 4'd0 >= m_last, lt1_zero = 4'd1 < hi;
+    wire [3:0] since_next = ref_rise ? 4'd0 : (since != 4'hf ? since + 4'd1 : since);
+    wire clear = !lock || since == 4'hf;
+    wire step  = !clear && ref_rise;
+    // stable's next value is 0, stable, or sat_inc(stable) = inc1
+    wire to_zero = clear || (ref_rise && !good);
+    wire to_inc  = step && good;
 
     // Phase window: the reference edge must land in the same wclk cycle every
     // period, i.e. exactly M cycles apart. With a free-running modulus-M divider
     // this is equivalent to a constant divider phase at the edge, and it is
     // unaffected by the deliberate launch re-phase. Resolution is one wclk cycle;
     // the sub-UI 0.0625 UI target is the analog PFD/lock detector's (`lock`).
-    wire period_ok = since == m_last;
-    wire good      = lock && period_ok;
+    // Timing (closure 2026-11-11, ctw at 6.4 ns in ss_032C_3v15): the next-cycle decodes of the
+    // word divider, the reference period check and the qualification counter's increments are
+    // registers computed one clock ahead (identical values), so no compare / increment sits between
+    // ref_ev / launching / cnt and the word_clk / word_load / cnt / stable registers.
+    //   wrap   = (cnt >= m_last)                   (register, from cnt_next)
+    //   lt1    = (cnt + 1 < hi)                    (register, from cnt_next)
+    //   pok    = (since == m_last)                 (register, from since's next value)
+    //   inc1/2 = sat(stable + 1), sat(stable + 2)  (registers, from stable's next value)
+    assign period_ok = pok;
+    assign good      = lock && period_ok;
     assign qualified = stable == QUAL_CYCLES;
+    function automatic [6:0] sat_inc(input [6:0] v);
+        sat_inc = v == QUAL_CYCLES ? v : v + 7'd1;
+    endfunction
 
     always @(posedge wclk or negedge rst_n) begin
         if (!rst_n) begin
             cnt <= 0; word_clk <= 1'b0; word_load <= 1'b0; ser_run <= 1'b0; bit_phase <= 1'b0;
             launching <= 1'b0; dly <= 0; dz <= 1'b0; since <= 4'hf; stable <= 0;
+            wrap <= 1'b0; lt1 <= 1'b1; pok <= 1'b0;   // m_last >= 4, hi >= 2, since = 15 (any cfg)
+            inc1 <= sat_inc(7'd0); inc2 <= sat_inc(sat_inc(7'd0));
         end else begin
             cnt       <= cnt_next;
-            word_load <= cnt_next == 0;
-            word_clk  <= cnt_next < hi;
+            word_load <= zero_next;                 // == (cnt_next == 0): cnt <= m_last <= 9
+            word_clk  <= zero_next || lt1;          // == (cnt_next < hi)
+            wrap      <= zero_next ? wrap_zero : wrap_inc;
+            lt1       <= zero_next ? lt1_zero : lt1_inc;
+            pok       <= since_next == m_last;
+            if (to_zero) begin inc1 <= sat_inc(7'd0); inc2 <= sat_inc(sat_inc(7'd0)); end
+            else if (to_inc) begin inc1 <= inc2; inc2 <= sat_inc(inc2); end
             // launch: fixed latency from the qualified reference edge, then d_cyc cycles
             if (launch_ev && d_cyc != 0) begin launching <= 1'b1; dly <= d_cyc - 6'd1; dz <= d_cyc == 6'd1; end
             else if (launching && !dz) begin dly <= dly - 6'd1; dz <= dly == 6'd1; end
@@ -73,10 +104,20 @@ module pt_ct_word #(parameter integer QUAL_CYCLES = 64)(
             if (rephase) begin ser_run <= 1'b1; bit_phase <= cfg_half_rate & d_ui[0]; end
             // qualification
             if (ref_rise) since <= 0; else if (since != 4'hf) since <= since + 4'd1;
-            if (!lock || since == 4'hf) stable <= 0;
-            else if (ref_rise) stable <= !good ? 7'd0 : (stable == QUAL_CYCLES ? stable : stable + 7'd1);
+            if (to_zero) stable <= 0;
+            else if (to_inc) stable <= inc1;
         end
     end
+`ifdef FORMAL
+    // invariants of the precomputed registers (k-induction)
+    always @(posedge wclk) if (rst_n) begin
+        assert (wrap == (cnt >= m_last));
+        assert (lt1 == (cnt + 4'd1 < hi));
+        assert (pok == (since == m_last));
+        assert (inc1 == sat_inc(stable));
+        assert (inc2 == sat_inc(inc1));
+    end
+`endif
 endmodule
 
 // ---------------------------------------------------------------------------
@@ -152,15 +193,25 @@ module pt_ct_detect_div(
 );
     pt_ct_detect_rule rule_i(.cfg_div(cfg_div), .cfg_rate_khz(cfg_rate_khz), .div(div));
 
-    reg [2:0] nm1, c;        // nm1 = N - 1, loaded while disabled (timing: no N - 1 on the divider path)
+    reg [2:0] nm1;           // nm1 = N - 1, loaded while disabled (timing: no N - 1 on the divider path)
+    // Timing (closure 2026-11-11, ctdet at 6.4 ns): the phase counter is ONE-HOT (coh[i]: c == i) and the
+    // wrap position (c == nm1) and the high-phase set (c < nm1 >> 1) are one-hot / mask registers loaded
+    // with nm1, so wrap and `a` are an AND-OR of registers. Same sequence as the former binary c:
+    //   c_next = (c >= nm1) ? 0 : c + 1;  a <= c_next < half, half = (nm1 >> 1) + 1
+    //   <=> a <= (c >= nm1) || (c < nm1 >> 1)   (c never exceeds nm1 once enabled: it starts at 0)
+    reg [4:0] coh, last_oh, lt_mask;
     reg       a, b, en_n;
     wire [2:0] n_q    = nm1 + 3'd1;
-    wire [2:0] c_next = c >= nm1 ? 3'd0 : c + 3'd1;
-    wire [2:0] half   = {1'b0, nm1[2:1]} + 3'd1;     // (N + 1) >> 1 high cycles of `a`
+    wire       wrapc  = |(coh & last_oh);
+    wire [2:0] nm1_n  = div - 3'd1;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin nm1 <= 3'd0; c <= 0; a <= 0; end
-        else if (!en) begin nm1 <= div - 3'd1; c <= 0; a <= 0; end
-        else begin c <= c_next; a <= c_next < half; end
+        if (!rst_n) begin nm1 <= 3'd0; last_oh <= 5'd1; lt_mask <= 5'd0; coh <= 5'd1; a <= 0; end
+        else if (!en) begin
+            nm1 <= nm1_n; last_oh <= 5'd1 << nm1_n;
+            lt_mask <= (5'd1 << (nm1_n >> 1)) - 5'd1;   // bits i < nm1 >> 1
+            coh <= 5'd1; a <= 0;
+        end
+        else begin coh <= wrapc ? 5'd1 : {coh[3:0], 1'b0}; a <= wrapc || |(coh & lt_mask); end
     end
     // b: `a` half a cycle later (odd-N 50 % duty). en_n: falling-edge enable, so the
     // N = 1 gate clk & en_n only changes while clk is low (glitch-free, no latch).

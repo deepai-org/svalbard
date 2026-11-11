@@ -145,7 +145,7 @@ module pt_cdc_fifo #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0)(
  wire wr_ready=wr_reset[1],rd_ready=rd_reset[1];
  assign wr_active=wr_ready,rd_active=rd_ready;
  reg[W-1:0]mem[0:DEPTH-1];
- reg[A:0]wb,rb,wg,rg,rg1,rg2,wg1,wg2,rbin,rbd,wbin;
+ reg[A:0]wb,rb,wg,wgp,rg,rg1,rg2,wg1,wg2,rbin,rbd,wbin;
  reg[DEPTH-1:0]woh;
  function automatic[A:0]gray(input[A:0]b);
   begin gray=(b+OFFSET)^((b+OFFSET)>>1);end endfunction
@@ -165,7 +165,13 @@ module pt_cdc_fifo #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0)(
  reg play_done;
  wire playing=MEMORY==2&&play;
  wire[A-1:0]lastc=play_last>=DEPTH?DEPTH-1:play_last;   // clamp: at most the whole bank
- assign empty=playing?(play_done||!rd_ready):empty_r;
+ // playback empty is a REGISTER (pe): asynchronously set while the read side is in reset and loaded
+// with the next play_done value, so the reset synchronizer output rd_ready never reaches the
+// pop / take / 40-bit read-select logic as data (AC1_R4: egress.rd_active -> empty -> take was the
+// -15.6 ns egress_wtx path). Same values as play_done || !rd_ready except one extra empty clock
+// right after the read-side reset release (the first pop can only come a clock later).
+reg pe;
+assign empty=playing?pe:empty_r;
  wire put=push&&!full,take=pop&&!empty;
  wire[A:0]wb_next=put?wn:wb,rb_next=take?rn:rb;
  // next-state compares from registers only, kept as separate nets so the late put / take is a final 2:1
@@ -181,9 +187,10 @@ module pt_cdc_fifo #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0)(
   else if(take)begin roh<=roh1;
    roh1<=(playing&&roh1[lastc])?{{(DEPTH-1){1'b0}},1'b1}:{roh1[DEPTH-2:0],roh1[DEPTH-1]};end
  // playback: entries 0..play_last (one-hot head reaches play_last), then stop or wrap
+ wire play_done_n=play_done||(playing&&take&&roh[lastc]&&!play_loop);
  always @(posedge rd_clk or negedge rd_ready)
-  if(!rd_ready)play_done<=0;
-  else if(playing&&take&&roh[lastc]&&!play_loop)play_done<=1;
+  if(!rd_ready)begin play_done<=0;pe<=1;end
+  else begin play_done<=play_done_n;pe<=play_done_n;end
  reg[W-1:0]sel0,sel1;integer j;
  always @*begin sel0=0;sel1=0;
   for(j=0;j<DEPTH;j=j+1)begin sel0=sel0|({W{roh[j]}}&mem[j]);sel1=sel1|({W{roh1[j]}}&mem[j]);end end
@@ -191,24 +198,34 @@ module pt_cdc_fifo #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0)(
  assign dout=dq;
  assign wr_ptr=wb,rd_ptr=rb;
  integer i;
+ // Write port pipelined (timing closure 2026-11-11): the per-entry write enables are REGISTERS
+ // (we_r = put & one-hot pointer, one flop per entry) and the data is registered with them, so the
+ // late push/full decision drives DEPTH flops instead of the DEPTH x W array enables (AC1_R4:
+ // lane_in_valid -> 1,120 ingress flops, -7.7 ns). The array is written one clock after the push;
+ // the Gray write pointer seen by the reader (wgp) is published one clock later to match.
+ reg[DEPTH-1:0]we_r;reg[W-1:0]din_r;
+ always @(posedge wr_clk or negedge wr_ready)
+  if(!wr_ready)we_r<=0;else we_r<=put?woh:{DEPTH{1'b0}};
+ always @(posedge wr_clk)din_r<=din;
  generate if(MEMORY==2)begin:spi_port
   // one stopped-only clock mux on the array write clock (SPI writes land on the SCLK fall)
   wire mem_clk;
   pt_clock_mux memory_clock_mux(.I0(wr_clk),.I1(~spi_clk),.S(play),.Z(mem_clk));
   always @(posedge mem_clk)
    for(i=0;i<DEPTH;i=i+1)
-    if(play?(spi_we&&spi_idx==i):(put&&woh[i]))mem[i]<=play?spi_d:din;
+    if(play?(spi_we&&spi_idx==i):we_r[i])mem[i]<=play?spi_d:din_r;
   assign peek={W{1'b0}};
  end else begin:wr_port
   always @(posedge wr_clk)
-   for(i=0;i<DEPTH;i=i+1)if(put&&woh[i])mem[i]<=din;
+   for(i=0;i<DEPTH;i=i+1)if(we_r[i])mem[i]<=din_r;
   if(MEMORY==1)begin:peek_port assign peek=mem[peek_idx];end
   else begin:no_peek assign peek={W{1'b0}};end
  end endgenerate
  always @(posedge wr_clk or negedge wr_ready)begin
-  if(!wr_ready)begin wb<=0;wg<=gray(0);rg1<=gray(0);rg2<=gray(0);rbin<=0;rbd<=DEPTH;woh<=1;overflow<=0;ready<=0;full_r<=0;end
+  if(!wr_ready)begin wb<=0;wg<=gray(0);wgp<=gray(0);rg1<=gray(0);rg2<=gray(0);rbin<=0;rbd<=DEPTH;woh<=1;overflow<=0;ready<=0;full_r<=0;end
   else begin
    full_r<=put?f_put:f_hold;
+   wgp<=wg;   // published after the array write (we_r) lands
    rg1<=rg;rg2<=rg1;rbin<=binary(rg2);rbd<=plus_depth(binary(rg2));
    ready<=occupancy<=DEPTH-SPARE;
    if(put)begin wb<=wn;wg<=gray(wn);woh<={woh[DEPTH-2:0],woh[DEPTH-1]};end
@@ -219,7 +236,7 @@ module pt_cdc_fifo #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0)(
   if(!rd_ready)begin rb<=0;rg<=gray(0);wg1<=gray(0);wg2<=gray(0);wbin<=0;rd_count<=0;underflow<=0;empty_r<=1;end
   else begin
    empty_r<=take?e_take:e_hold;
-   wg1<=wg;wg2<=wg1;wbin<=binary(wg2);
+   wg1<=wgp;wg2<=wg1;wbin<=binary(wg2);
    rd_count<=playing?FULLC:take?distance(wbin,rn):distance(wbin,rb);   // both from registers; `take` selects late
    if(take)begin rb<=rn;rg<=gray(rn);end
    if(pop&&empty)underflow<=1;

@@ -511,6 +511,9 @@ def emit_sv(model):
     a(' input wire por_n, // POR alone (rst_n = RESET_N AND por_n); sets the sticky POR flag')
     a(' input wire wr_en,input wire[7:0]wr_addr,input wire[15:0]wr_data,')
     a(' input wire[7:0]rd_addr,output reg[15:0]rd_data,')
+    a(' // Read candidates for the two possible last address bits (pt_spi registers both on the 16th')
+    a(' // rising SCLK edge from rd_hi = address bits 7:1, then selects with bit 0 on the fall).')
+    a(' input wire[6:0]rd_hi,output reg[15:0]rd_data0,rd_data1,')
     a(' // Legacy pt_control boundary (unchanged addresses 0x01-0x04, 0x10-0x12; MEMORY 0x20-0x26 is v3).')
     a(' input wire[15:0]status,output reg enable,mode8,output reg[15:0]rf_trim,wire_trim,clock_trim,')
     a(' output wire memory_write,output wire[4:0]memory_index,output wire[39:0]memory_wdata,')
@@ -788,7 +791,10 @@ def emit_sv(model):
     a('   end')
     a('  end')
     a(' end')
-    # Readback.
+    # Readback: the same case on rd_addr (rd_data) and on the two candidates {rd_hi, 0/1}.
+    rb = []
+    _a = a
+    a = rb.append
     a(' always @*begin')
     a("  rd_data=16'h0000;")
     a('  case(rd_addr)')
@@ -819,6 +825,10 @@ def emit_sv(model):
     a('   default:begin end')
     a('  endcase')
     a(' end')
+    a = _a
+    for tgt, selx in (('rd_data', 'rd_addr'), ('rd_data0', "{rd_hi,1'b0}"), ('rd_data1', "{rd_hi,1'b1}")):
+        for ln in rb:
+            a(ln.replace('rd_data', tgt).replace('case(rd_addr)', f'case({selx})'))
     emit_formal(model, a, by_name)
     a('endmodule')
     a('')
@@ -835,15 +845,17 @@ def emit_sv(model):
     a(' output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe,')
     a(' output wire commit_toggle,config_error' +
       ''.join(f',\n input wire[{sf["bits"] - 1}:0]{sf["port"]}' for sf in model['status_fields']) + ');')
-    a(' wire wr_en;wire[7:0]wr_addr,rd_addr;wire[15:0]wr_data,rd_data;')
+    a(' wire wr_en;wire[7:0]wr_addr,rd_addr;wire[15:0]wr_data,rd_data,rd_data0,rd_data1;wire[6:0]rd_hi;')
     a(' pt_spi spi(.rst_n(rst_n),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso),.miso_oe(miso_oe),')
-    a('  .wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),.rd_addr(rd_addr),.rd_data(rd_data));')
+    a('  .wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),.rd_addr(rd_addr),.rd_data(rd_data),')
+    a('  .rd_hi(rd_hi),.rd_data0(rd_data0),.rd_data1(rd_data1));')
     a(' // pt_spi presents each write from registers while count==32; the register file (and pt_memory\'s')
     a(' // SPI port) take it on the falling SCLK edge after the 32nd rising edge (STA: launch/capture on')
     a(' // the sclk fall edge, output budgets relative to it in integration/pt_digital_macro.sdc).')
     a(' wire sclk_regs=~sclk;')
     a(' pt_regfile regs(.rst_n(rst_n),.por_n(por_n),.sclk(sclk_regs),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),')
-    a('  .rd_addr(rd_addr),.rd_data(rd_data),.status(status),.enable(enable),.mode8(mode8),')
+    a('  .rd_addr(rd_addr),.rd_data(rd_data),.rd_hi(rd_hi),.rd_data0(rd_data0),.rd_data1(rd_data1),')
+    a('  .status(status),.enable(enable),.mode8(mode8),')
     a('  .rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),.memory_write(memory_write),')
     a('  .memory_index(memory_index),.memory_wdata(memory_wdata),.capture_data(capture_data),')
     a('  .capture_done(capture_done),.playback_enable(playback_enable),.capture_enable(capture_enable),')

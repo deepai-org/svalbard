@@ -52,6 +52,8 @@ MASTERS = {
     'refbuf': (A+'converters/generated/refbuf.gds', 'pt_refbuf', A+'converters/generated/refbuf.ext.spice', 'pt_refbuf', 'conv'),
     # pll island (analog-architecture supply 'pll': rfpll, wirepll, clockmux, clocktree, quadrature, cdr, refinput)
     'pll_ring': (A+'timing/generated/pll_ring.gds', 'pt_pll_ring', A+'timing/generated/pll_ring.ext.spice', 'pt_pll_ring', 'pll'),
+    # consolidation pass 3 X4: line (TX) ring without the CDR-only fast-tune array / N5 N10 path
+    'pll_ring_core': (A+'timing/generated/pll_ring_core.gds', 'pt_pll_ring_core', A+'timing/generated/pll_ring_core.ext.spice', 'pt_pll_ring_core', 'pll'),
     'clockmux': (A+'timing/generated/clockmux.gds', 'pt_clockmux', A+'timing/generated/clockmux.ext.spice', 'pt_clockmux', 'pll'),
     'prescale': (A+'timing/generated/prescale.gds', 'pt_prescale', A+'timing/generated/prescale.ext.spice', 'pt_prescale', 'pll'),
     'wordclk': (A+'timing/generated/wordclk.gds', 'pt_wordclk', A+'timing/generated/wordclk.ext.spice', 'pt_wordclk', 'pll'),
@@ -262,7 +264,7 @@ MITIGATION_HALO_UM = {n: 20.0 for n in ('lna', 'lo_ext', 'polyphase', 'pll_host'
 MITIGATION_DEMANDED = {}     # instance -> risk-register ID (empty: register not yet published)
 
 # Aggressor masters keep >= AGGRESSOR_KEEPOUT_UM from victim blocks during automatic placement (MANDATE rule 3).
-AGGRESSOR_MASTERS = {'ring_osc', 'vco_replica', 'clk_obs', 'pll_ring'}
+AGGRESSOR_MASTERS = {'ring_osc', 'vco_replica', 'clk_obs', 'pll_ring', 'pll_ring_core'}
 VICTIM_INSTANCES = {'lna', 'rxmix_i', 'rxmix_q', 'core_bias', 'adc_i', 'adc_q', 'refbuf', 'lo_ext', 'polyphase'}
 AGGRESSOR_KEEPOUT_UM = 60.0
 
@@ -270,7 +272,9 @@ AGGRESSOR_KEEPOUT_UM = 60.0
 # rule; digital side confirmed in scratch/reviews/interface-changes.md). Selected with
 # PT_PLL_RINGS=2; the default keeps the three instances of the current netlists.
 import os
-PLL_RINGS = ('pll_tx', 'pll_cdr', 'pll_host') if os.environ.get('PT_PLL_RINGS', '3') == '3' else ('pll_tx', 'pll_cdr')
+# consolidation pass 3 X1 (coordinator-approved 2026-11-11): pll_host deleted, host_follow runs on pll_cdr (Ring C);
+# PT_PLL_RINGS=3 restores the old three-ring netlist for comparison only.
+PLL_RINGS = ('pll_tx', 'pll_cdr', 'pll_host') if os.environ.get('PT_PLL_RINGS', '2') == '3' else ('pll_tx', 'pll_cdr')
 
 
 def instances(have_wrx_cap):
@@ -282,7 +286,7 @@ def instances(have_wrx_cap):
         # Clocking: RF PLL (pll_host) in the north-west column away from the LNA and >= 200 um
         # from the macro; wired rings next to their samplers (pll_cdr at the CDR, pll_tx at the
         # serializer); clock tree next to the macro.
-        *[(n, 'pll_ring', 'pll', {'pll_tx': (2450, 2250), 'pll_cdr': (2700, 1450), 'pll_host': (1150, 3200)}[n])
+        *[(n, 'pll_ring_core' if n in ('pll_tx', 'pll_host') else 'pll_ring', 'pll', {'pll_tx': (2450, 2250), 'pll_cdr': (2700, 1450), 'pll_host': (1150, 3200)}[n])
           for n in PLL_RINGS],
         ('lo_ext', 'lo_ext', 'pll', (0, 0)), ('polyphase', 'polyphase', 'pll', (0, 0)),
         ('clockmux', 'clockmux', 'pll', (1100, 3900)), ('prescale', 'prescale', 'pll', (1100, 3950)),
@@ -513,7 +517,7 @@ if FLOORPLAN == 'v4':
         'wmon_sel': (2650.0, 880.0), 'hsbias': (2950.0, 2080.0), 'bb_tap_wmon': (3400.0, 4100.0),
         'wrx_cap': (2900.0, 1500.0), 'bb_tap_q': (1100.0, 4600.0), 'attached_tx_interlock': (3300.0, 4200.0),
     }
-    AGGRESSOR_MASTERS = {'ring_osc', 'vco_replica', 'clk_obs', 'clk_obs16', 'pll_ring', 'clockmux', 'prescale', 'wordclk'}
+    AGGRESSOR_MASTERS = {'ring_osc', 'vco_replica', 'clk_obs', 'clk_obs16', 'pll_ring', 'pll_ring_core', 'clockmux', 'prescale', 'wordclk'}
     VICTIM_INSTANCES = {'lna', 'rxmix_i', 'rxmix_q', 'core_bias', 'adc_i', 'adc_q', 'refbuf', 'lo_ext', 'polyphase',
                         'bbfilter_i', 'bbfilter_q', 'por'}
     # The SUB-01 north p+ ring (and DNW pockets in the square fallback) are inside adc_i (converters v4); the floorplan

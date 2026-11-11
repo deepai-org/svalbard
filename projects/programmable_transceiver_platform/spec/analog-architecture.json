@@ -7150,6 +7150,14 @@
             "fs",
             "ls"
           ]
+        },
+        "ls_slow": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "meaning": "PD37 / USB-02: LS_SLOW of pad_wirepad v9 (current-starved FS pre-driver, LS edges 75-300 ns into 450 pF); set in low-speed mode."
         }
       },
       "update": "scheduled_enables_pulls_stopped_trim"
@@ -7226,6 +7234,14 @@
           "maximum": 1,
           "minimum": 0,
           "unit": "code"
+        },
+        "term_trim": {
+          "bits": 3,
+          "default": 4,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "code",
+          "meaning": "PD37 / PAD-03: USB HS termination trim TERM_TRIM0..2 of pad_wirepad v9, applied only while the pad termination is enabled (AND with TERM_ENABLE at the pad boundary). Start-up calibration by firmware/FPGA: HS drive into the pad termination with no device attached, read the pad DC through the ATB/ADC path against the 400 mV reference, step the code."
         }
       },
       "update": "scheduled_enables_stopped_trim"

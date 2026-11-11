@@ -37,7 +37,8 @@ module pt_transport_harness #(parameter HOST_MODE=0,LINECODE=0)(input wire rst_n
   .rf_tx_request(rf_tx_request),.status(status),.wire_idle(wire_idle),.rf_mute(rf_mute),.payload_iq(payload_iq),
   .linecode(1'(LINECODE)),.rx_gain(rx_gain),.rx_gain_active(rx_gain_active),
   .mem_capture(1'b0),.mem_play(1'b0),.mem_loop(1'b0),.mem_last(5'd0),.spi_clk(1'b0),.mem_we(1'b0),.mem_idx(5'd0),
-  .mem_wdata(40'd0),.mem_rdata(),.capture_done());
+  .mem_wdata(40'd0),.mem_rdata(),.capture_done(),
+  .pat_sel(1'b0),.pat_word(40'd0));
  // The host FIFO must never over/underflow once the link runs (mesochronous).
  always @(posedge core_clk)if(rst_n&&(h2d_overflow||h2d_underflow))
   $fatal(1,"H2D quad FIFO %s",h2d_overflow?"overflow":"underflow");

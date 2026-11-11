@@ -23,12 +23,14 @@ module tb_pt_freq_count;
  // the window is marked fresh) hold from the snapshot edge to the result-load edge 5 cycles later.
  reg[63:0]hist[0:5];integer hk,ev_viol=0,ev_seen=0;
  wire[63:0]evsrc={dut.snap_h,dut.snap_l,dut.fb_prev,dut.cfg_src_r,dut.cfg_r};
+ // good / r_locked (timing closure 2026-11-11: also multicycle sources of their own update) hold too
+ reg[4:0]ghist[0:5];wire[4:0]gsrc={dut.good,dut.r_locked};
  always @(posedge ref_clk)begin
   if(dut.run&&dut.ev_go)begin
    ev_seen=ev_seen+1;
-   for(hk=0;hk<4;hk=hk+1)if(hist[hk][63:26]!==evsrc[63:26]||(!dut.cfg_fresh&&hist[hk][25:0]!==evsrc[25:0]))ev_viol=ev_viol+1;
+   for(hk=0;hk<4;hk=hk+1)if(hist[hk][63:26]!==evsrc[63:26]||(!dut.cfg_fresh&&hist[hk][25:0]!==evsrc[25:0])||ghist[hk]!==gsrc)ev_viol=ev_viol+1;
   end
-  for(hk=5;hk>0;hk=hk-1)hist[hk]=hist[hk-1];hist[0]=evsrc;
+  for(hk=5;hk>0;hk=hk-1)begin hist[hk]=hist[hk-1];ghist[hk]=ghist[hk-1];end hist[0]=evsrc;ghist[0]=gsrc;
  end
  integer errs=0;
  task check(input l,input lo,input integer dlo,input integer dhi,input integer clo,input integer chi,input[8*40-1:0]what);

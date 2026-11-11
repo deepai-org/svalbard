@@ -30,8 +30,15 @@ module tb_digital_prbs;
   for (j=0;j<w;j=j+1) dbg[lsb+j] = (v>>j)&1; end endtask
 
  integer taken=0, errors=0, lockat;
+ // Serializer model (as tb_digital_wire40): the word taken at a rising edge is D0..D19 sampled at that
+ // edge (falling-edge launch half a period before) and D20..D39 sampled half a period later (rising-edge
+ // launch at that edge). The pattern word shares the core's wire lane registers (timing closure 2026-11-11).
+ reg [19:0] ser_lo; reg ser_v, ser_err;
+ always @(negedge wire_tx_clk) begin
+  wire_rx_valid <= ser_v; wire_rx_data <= {wire_tx_data[39:20], ser_lo} ^ (ser_err ? 40'h10 : 40'h0);
+ end
  always @(posedge wire_tx_clk) begin
-  wire_rx_valid <= wire_tx_valid && wire_tx_request; wire_rx_data <= wire_tx_data ^ (line_err ? 40'h10 : 40'h0);
+  ser_lo <= wire_tx_data[19:0]; ser_v <= wire_tx_valid && wire_tx_request; ser_err <= line_err;
   if (wire_tx_valid && wire_tx_request) taken <= taken + 1;
   if (wire_tx_valid && wire_tx_request && line_err) line_err <= 0;
  end

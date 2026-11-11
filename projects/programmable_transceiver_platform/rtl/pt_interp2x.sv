@@ -24,8 +24,8 @@ module pt_interp2x(
     output wire        out_valid
 );
     // ---------------- clocking
-    reg div;
-    always @(posedge clk_fast or negedge rst_n) if (!rst_n) div <= 1'b0; else div <= halfband ? ~div : 1'b0;
+    wire div;
+    pt_clock_dff hdiv(.clk(clk_fast), .rst_n(rst_n), .d(halfband ? ~div : 1'b0), .q(div));
     wire half_clk;
     pt_clock_buf half_clock_buf(.I(div), .Z(half_clk));
     pt_clock_mux core_clock_mux(.I0(clk_fast), .I1(half_clk), .S(halfband), .Z(core_clk));

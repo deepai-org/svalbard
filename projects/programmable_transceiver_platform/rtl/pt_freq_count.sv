@@ -52,9 +52,13 @@ module pt_freq_count #(parameter integer CW = 18)(
     wire fb_clk = src[cfg_source == 3'd0 ? 3'd0 : cfg_source - 3'd1] & en;
     wire en_f;
     pt_sync_bit sf(.clk(fb_clk), .rst_n(rst_n), .d(en), .q(en_f));
-    reg [3:0] fj;                              // Johnson: 0000,0001,0011,0111,1111,1110,1100,1000
+    wire [3:0] fj;                             // Johnson: 0000,0001,0011,0111,1111,1110,1100,1000
+    reg [2:0] fjl;
     always @(posedge fb_clk or negedge rst_n)
-        if (!rst_n) fj <= 4'd0; else if (en_f) fj <= {fj[2:0], ~fj[3]};
+        if (!rst_n) fjl <= 3'd0; else if (en_f) fjl <= {fjl[1:0], ~fj[3]};
+    // fj[3] becomes blk_clk: a kept x4 source flop (pt_clock_dff), not a synthesized x1
+    pt_clock_dff fjc(.clk(fb_clk), .rst_n(rst_n), .d(en_f ? fjl[2] : fj[3]), .q(fj[3]));
+    assign fj[2:0] = fjl;
     wire blk_clk;                              // source / 8; rises entering code 4, falls entering 0
     pt_clock_buf blk_clock_buf(.I(fj[3]), .Z(blk_clk));
     function automatic [CW-1:0] g2b(input [CW-1:0] g);

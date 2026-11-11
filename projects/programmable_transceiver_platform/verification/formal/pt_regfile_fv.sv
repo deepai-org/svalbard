@@ -12,7 +12,7 @@ module pt_regfile_fv(input wire rst_n,por_n,sclk,wr_en,input wire[7:0]wr_addr,in
  initial assume(!rst_n&&!por_n);
  always @*assume(por_n||!rst_n);
  pt_regfile dut(.rst_n(rst_n),.por_n(por_n),.sclk(sclk),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),.rd_addr(rd_addr),
-  .rd_data(),.status(status),.enable(),.mode8(),.rf_trim(),.wire_trim(),.clock_trim(),.memory_write(),
+  .rd_data(),.rd_hi(7'd0),.rd_data0(),.rd_data1(),.status(status),.enable(),.mode8(),.rf_trim(),.wire_trim(),.clock_trim(),.memory_write(),
   .memory_index(),.memory_wdata(),.capture_data(capture_data),.capture_done(capture_done),.playback_enable(),
   .capture_enable(),.fault(fault),.island_pgood(island_pgood),.obs_status(obs_status),.wire_status(wire_status),
   .analog_cfg(),.debug_cfg(),.island_en(),.island_on(),.atb0_sw(),.atb1_sw(),.rx_en_aux(),.rx_en_wclk(),

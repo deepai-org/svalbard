@@ -1,0 +1,36 @@
+{
+  "status": "physical_MOS_resistor_diode_MIM_graph_comparison",
+  "device_graph_matches": true,
+  "physical_devices": 1178,
+  "simulated_devices": 1178,
+  "missing": [],
+  "unexpected": [],
+  "supplemental_device_counts": {
+    "csubckt:cap_mim_2f0_m4m5_noshield": 2,
+    "ndiode:diode_nd2ps_06v0": 12,
+    "pdiode:diode_pd2nw_06v0": 8,
+    "ndiode:diode_nd2ps_03v3": 8
+  },
+  "excluded_devices": {
+    "explicit_well_replacement": [
+      "DWELL_ARRAY VSS ESD_RAIL diode_nw2ps_06v0 area=569.4528p pj=470.72u"
+    ]
+  },
+  "scope": "MOS/resistor bodies and sizes, steering-diode polarity/area/perimeter, and ordered MIM terminals/dimensions checked. Explicit well replacement and parasitic values not certified; no ESD rating.",
+  "source_sha256": {
+    "/home/ubuntu/svalbard/scratch/pad-compact-v2/wired_receive_usb/pad/combined_flat.ext": "18dc3f74041bd64cda63a83f0f0eb931085b06eb2ee687bf546d1e6ab65011db",
+    "/home/ubuntu/svalbard/scratch/pad-compact-v2/wired_receive_usb/pad/physical.spice": "bbf0da45db0fe06d4f578ca1ed673ca59c45f828365d754de000c71cc61d6828",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_device_audit.py": "faca1155b3ec8d51ec1db7a43fd2d1102d0e0441cf036f494fc71c4b318512f5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "bad120a087209826ea0c283eda4c11ee39c8b59abab4dc11917deb5cf9a66fe0",
+    "/home/ubuntu/svalbard/scratch/pad-compact-v2/wired_receive_usb/pad/combined_flat.spice": "75caed544588710b9b8812b7e0f810d3aae2593a071cec427e194010b64259d6"
+  },
+  "well_replacement": {
+    "extracted_well_area_um2": 569.4528,
+    "extracted_well_perimeter_um": 470.72,
+    "linear_capacitance_removed_ff": 68.33433600000012,
+    "expected_removal_ff": 68.33433600000001,
+    "other_extracted_capacitances_unchanged": true,
+    "scope": "Terminal well areas assume isolated, nonshared array wells as established by array geometry; no nonlinear junction accuracy or ESD qualification.",
+    "raw_spice_sha256": "75caed544588710b9b8812b7e0f810d3aae2593a071cec427e194010b64259d6"
+  }
+}

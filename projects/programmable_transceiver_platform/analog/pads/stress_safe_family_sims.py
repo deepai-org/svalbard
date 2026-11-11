@@ -57,6 +57,7 @@ FAMILIES = {
 DRAWN_SHUNT = False
 HIGH_DEFAULT = ('CASCODE', 'DETECT_PBIAS', 'HS_PBIAS')
 MOS = ('nfet_03v3', 'pfet_03v3', 'nfet_06v0', 'pfet_06v0')
+CORE_SIDE = ('RX_P', 'RX_N', 'VCM')     # loaded/driven core-side ports, observed directly (PD13)
 
 
 def header():
@@ -68,6 +69,9 @@ def model_text(family):
     """Pad model with the extracted shunt instanced inside the physical subckt."""
     text = re.sub(r'\n\+\s*', ' ', FAMILIES[family]['model'].read_text())
     text = '\n'.join(l for l in text.splitlines() if not l.startswith('.lib '))
+    # PD13: extracted node names end in '#' (not addressable in ngspice vectors); rename so every
+    # internal MOS terminal (RC-clamp trigger chain, clamp gate, GC shunt gate) can be observed.
+    text = re.sub(r'#(?=[\s=)]|$)', '_h', text, flags=re.M)
     lines = text.splitlines()
     inner = next(i for i, l in enumerate(lines) if l.startswith('.subckt ') and 'ESD_RAIL' in l.split()[2:])
     end = next(i for i in range(inner, len(lines)) if lines[i].startswith('.ends'))
@@ -100,7 +104,7 @@ def safe_deck(family, case, process, temp_c, work, name):
     peer = 3.63 if case == 'peer' else 0.
     for leg in ('P', 'N'):
         # Pulses: bare die, no board peer (1 Mohm, 1 pF). Ramps/peer: 50 ohm peer.
-        rp, cb = ('1meg', '1p') if case.startswith('pulse') else ('50', '10p')
+        rp, cb = ('1meg', '1p') if case.startswith(('pulse', 'hbm')) else ('50', '10p')
         d += f'VPEER_{leg} PEER_{leg} 0 {peer}\nRPEER_{leg} PEER_{leg} BRD_{leg} {rp}\nCBRD_{leg} BRD_{leg} 0 {cb}\nLB_{leg} BRD_{leg} PAD_{leg} 1n\n'
     known = ['PAD_P', 'PAD_N', 'VDD', 'ATB']
     for p in ports:
@@ -118,25 +122,61 @@ def safe_deck(family, case, process, temp_c, work, name):
         a, b = ('VSS', f'PAD_{leg}') if sign == 'pos' else (f'PAD_{leg}', 'VSS')
         d += f'IINJECT {a} {b} PULSE(0 .1 100n .1n .1n 2n 20u)\n'
         analysis, stop = 'tran .02n 140n', 140e-9
+    elif case.startswith('hbm'):
+        # PD13: HBM-like 2 kV (1.33 A peak, 2 ns rise, 150 ns decay; same waveform as esd04.hbm),
+        # unpowered bare die. Compact-model diagnostic, not HBM qualification.
+        _, leg, sign = case.split('_')
+        a, b = ('VSS', f'PAD_{leg}') if sign == 'pos' else (f'PAD_{leg}', 'VSS')
+        d += f'IINJECT {a} {b} EXP(0 1.3333 5n 2n 15n 150n)\n'
+        analysis, stop = 'tran .05n 600n', 600e-9
     elif case == 'ramp_slow':
         analysis, stop = 'tran 1n 3u', 3e-6
     else:
         analysis, stop = 'tran .05n 400n', 400e-9
     vec = ['v(PAD_P)', 'v(PAD_N)', 'v(VDD)', 'v(ATB)', 'v(xpad.esd_rail)', 'i(VDDSRC)', 'i(VPEER_P)', 'i(VPEER_N)']
+    vec += [f'v(xpad.{inst}.{n})' for inst, n in internal_mos_nodes(model)]
+    vec += [f'v({q})' for q in CORE_SIDE if q in ports]       # core-side ports (after the internal nodes)
     d = s.corner(d, process, temp_c)
     d += s.control(work, name, analysis, ' '.join(vec))
     return d, ports, stop
 
 
+def internal_mos_nodes(deck_model):
+    """(instance, node) for every internal (non-port) MOS terminal of the inner ESD_RAIL subckt."""
+    lines = deck_model.splitlines()
+    head = next(l for l in lines if l.startswith('.subckt ') and 'ESD_RAIL' in l.split()[2:])
+    inner, iports = head.split()[1], set(head.split()[2:])
+    inst = next(l.split()[0] for l in lines if l.startswith('X') and l.split()[-1] == inner).lower()
+    out, inside = [], False
+    for l in lines:
+        if l == head:
+            inside = True; continue
+        if inside and l.startswith('.ends'):
+            break
+        f = l.split()
+        if inside and len(f) > 5 and f[0].startswith('X') and f[5] in MOS:
+            for n in f[1:5]:
+                if n not in iports and n not in ('0',) and (inst, n) not in out:
+                    out.append((inst, n))
+    return out
+
+
 def exposure(deck_model, ports, x, mask):
-    """Gate-terminal screen on devices whose terminals are all observed nodes."""
+    """Gate-terminal screen on devices whose terminals are all observed nodes (PD13: internal MOS
+    terminals are saved too, so the RC-clamp trigger chain and the shunt gates are observed)."""
     limits, _ = s.gate_limits()
     known = {'VSS': np.zeros(len(x)), '0': np.zeros(len(x)), 'PAD_P': x[:, 1], 'PAD_N': x[:, 2], 'VDD': x[:, 3],
              'ATB_ESD_RAIL': x[:, 4], 'ESD_RAIL': x[:, 5]}
     for p in ports:
         if p not in known and p not in ('RX_P', 'RX_N', 'VCM'):
             known[p] = known['VDD'] if p in HIGH_DEFAULT else np.zeros(len(x))
-    inside, worst, exceeded, seen = False, [], 0, 0
+    nodes = internal_mos_nodes(deck_model)
+    for k, (_, n) in enumerate(nodes):
+        known.setdefault(n, x[:, 9 + k])
+    for j, q in enumerate([q for q in CORE_SIDE if q in ports]):
+        if x.shape[1] > 9 + len(nodes) + j:
+            known[q] = x[:, 9 + len(nodes) + j]
+    inside, worst, exceeded, seen, partial = False, [], 0, 0, 0
     for line in deck_model.splitlines():
         if line.startswith('.subckt ') and 'ESD_RAIL' in line.split()[2:]:
             inside = True; continue
@@ -150,13 +190,15 @@ def exposure(deck_model, ports, x, mask):
                 a, b = (nodes[c] for c in pair)
                 if a in known and b in known:
                     vals[pair] = float(np.max(np.abs(known[a] - known[b])[mask]))
+            if len(vals) < 3:
+                partial += 1
             if vals:
                 seen += 1
                 v = max(vals.values()); bad = v > limits[f[5]]
                 exceeded += bad
                 worst.append((v / limits[f[5]], f[0], f[5], round(v, 3)))
     worst.sort(reverse=True)
-    return dict(observed_mos=seen, exceeding=int(exceeded), worst=[dict(device=w[1], model=w[2], gate_v=w[3]) for w in worst[:4]])
+    return dict(observed_mos=seen, partially_observed_mos=partial, exceeding=int(exceeded), worst=[dict(device=w[1], model=w[2], gate_v=w[3]) for w in worst[:4]])
 
 
 def run_safe(family, case, process, temp_c, work):
@@ -196,7 +238,10 @@ def lifecycle_deck(family, process, temp_c, vdd, work, name, baseline=False):
     out = lines[:start] + block + lines[end + 1:]
     for i, l in enumerate(out):
         if l.startswith('Xpad ') and l.endswith(' tx_protected_pad'):
-            out[i] = l[:-len(' tx_protected_pad')] + xpad_extra + ' tx_protected_pad'
+            # PD28: candidate models with extra trim ports (TERM_TRIM<k>, wirepad usbfix6v2) get them tied to
+            # VSS (trim code 0) in the published fixture; models without them are unchanged.
+            trims = '' if baseline else ''.join(' VSS' for p in ports if p.startswith('TERM_TRIM'))
+            out[i] = l[:-len(' tx_protected_pad')] + trims + xpad_extra + ' tx_protected_pad'
         if l.split()[:2] == ['VDD', 'VDD'] and 'PWL(' in l:
             out[i] = re.sub(r'(?<=[ (])3\.3(?=[ )])', f'{vdd}', l)
     d = '\n'.join(out) + '\n'
@@ -249,6 +294,7 @@ def run_rf_ac(process, temp_c, bias_v, work):
                 ideal_50ohm_divider_db=float(20 * np.log10(0.5)), deck_sha256=hashlib.sha256(d.encode()).hexdigest())
 
 
+HBM = [(c, p, t) for c in ('hbm_P_pos', 'hbm_N_neg') for p, t in (('typical', 27), ('ss', 0), ('ff', 85))]
 ENVELOPE = [('typical', 27, 3.3)] + [(p, t, v) for p in ('typical', 'ss', 'ff') for t in (22, 32) for v in (3.15, 3.35)]
 SAFE = [(c, p, t) for c in ('pulse_P_pos', 'pulse_P_neg', 'pulse_N_pos', 'pulse_N_neg') for p, t in (('typical', 27), ('ss', 0))] + \
        [('ramp_fast', 'typical', 27), ('ramp_slow', 'typical', 27), ('peer', 'typical', 27), ('peer', 'ff', 85)]
@@ -278,6 +324,8 @@ def main():
     for f in a.families:
         if 'safe' in a.parts:
             jobs += [('safe', f, c, pr, t) for c, pr, t in SAFE]
+        if 'hbm' in a.parts:
+            jobs += [('safe', f, c, pr, t) for c, pr, t in HBM]
         if 'function' in a.parts:
             if f == 'rfpad':
                 jobs += [('rfac', pr, t, b) for pr, t, _ in ENVELOPE for b in (0.9, 1.65)]

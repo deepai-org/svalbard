@@ -1,0 +1,4537 @@
+{
+ "date": "2026-11-11",
+ "owner": "pads (PD28 item 3)",
+ "tool": "analog/pads/hbm_core_screen.py",
+ "method": "stress_safe_family_sims HBM-like 2 kV bench (1.33 A, 2 ns / 150 ns, unpowered, VDD 0 V via 1 ohm + 100 nF) + every consumer block on the pad nets (chip_assembly/netlist.py PATHS), flattened from the published extracted netlists; all consumer MOS observed; gate screen = spec limit (3.63 V 3.3 V devices, 6.0 V 6 V devices). Unbound consumer ports 100 kohm to 0; *_jn adds 10 um2 n+/p+ drain junctions of the unpowered driver. Matrix P_pos tt/27, P_pos ss/0, P_neg ss/0. Compact-model diagnostic, not HBM qualification.",
+ "summary": {
+  "aux_clk": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 6.91283052,
+   "max_exceeding": 9,
+   "exceeding_gate_nets": [
+    [
+     "nfet_03v3",
+     "PAD_P"
+    ],
+    [
+     "nfet_03v3",
+     "U0_EXT"
+    ],
+    [
+     "nfet_03v3",
+     "U1_EN"
+    ],
+    [
+     "pfet_03v3",
+     "PAD_P"
+    ]
+   ]
+  },
+  "aux_clk_published_static_stack": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 8.58298655,
+   "max_exceeding": 9,
+   "exceeding_gate_nets": [
+    [
+     "nfet_03v3",
+     "PAD_P"
+    ],
+    [
+     "nfet_03v3",
+     "U0_EXT"
+    ],
+    [
+     "nfet_03v3",
+     "U1_EN"
+    ],
+    [
+     "pfet_03v3",
+     "PAD_P"
+    ]
+   ]
+  },
+  "bb_tap": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 6.91285588,
+   "max_exceeding": 20,
+   "exceeding_gate_nets": [
+    [
+     "nfet_03v3",
+     "c0_inj_on"
+    ],
+    [
+     "nfet_03v3",
+     "c0_obs_on"
+    ]
+   ]
+  },
+  "ref_lo_ext": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 6.9126929,
+   "max_exceeding": 6,
+   "exceeding_gate_nets": [
+    [
+     "nfet_03v3",
+     "U0_EXT"
+    ]
+   ]
+  },
+  "rf_rx_lna_compact_gc": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 6.91237583,
+   "max_exceeding": 0,
+   "exceeding_gate_nets": []
+  },
+  "rf_tx_rfdriver": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 6.90001204,
+   "max_exceeding": 54,
+   "exceeding_gate_nets": [
+    [
+     "nfet_03v3",
+     "U0_in_p"
+    ],
+    [
+     "nfet_06v0",
+     "c0_vcp"
+    ]
+   ]
+  },
+  "rf_tx_rfdriver_jn": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 6.89901786,
+   "max_exceeding": 48,
+   "exceeding_gate_nets": [
+    [
+     "nfet_06v0",
+     "c0_vcp"
+    ]
+   ]
+  },
+  "wclk_wtx_ext": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 6.91288454,
+   "max_exceeding": 3,
+   "exceeding_gate_nets": [
+    [
+     "nfet_03v3",
+     "PAD_P"
+    ],
+    [
+     "nfet_03v3",
+     "U0_EN"
+    ],
+    [
+     "pfet_03v3",
+     "PAD_P"
+    ]
+   ]
+  },
+  "wire_tx_detect": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 6.89415777,
+   "max_exceeding": 2,
+   "exceeding_gate_nets": [
+    [
+     "nfet_03v3",
+     "c0_inj"
+    ],
+    [
+     "nfet_03v3",
+     "c0_tx"
+    ]
+   ]
+  },
+  "wirepad_rx_core": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 6.90463512,
+   "max_exceeding": 0,
+   "exceeding_gate_nets": []
+  },
+  "wmon_bb_tap": {
+   "runs": 3,
+   "complete": 3,
+   "pad_peak_v": 6.91283824,
+   "max_exceeding": 20,
+   "exceeding_gate_nets": [
+    [
+     "nfet_03v3",
+     "c0_inj_on"
+    ],
+    [
+     "nfet_03v3",
+     "c0_obs_on"
+    ]
+   ]
+  }
+ },
+ "results": {
+  "aux_clk": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.02278569e-16,
+     6.44900488
+    ],
+    "pad_n_range_v": [
+     -8.9269163e-17,
+     0.27289467
+    ],
+    "consumer_mos": 372,
+    "exceeding": 9,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "PAD_P"
+     ],
+     [
+      "nfet_03v3",
+      "U0_EXT"
+     ],
+     [
+      "nfet_03v3",
+      "U1_EN"
+     ],
+     [
+      "pfet_03v3",
+      "PAD_P"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c1_XXLP_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 6.449,
+      "vds_v": 0.045,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_230_",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c1_XXLP_C_X4",
+      "model": "pfet_03v3",
+      "gate_v": 6.449,
+      "vds_v": 0.475,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_3760_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c1_XXLP_SW_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.297,
+      "vds_v": 5.783,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_m1_11612_634_",
+       "G": "U1_EN",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.194,
+      "vds_v": 6.378,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_1_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.194,
+      "vds_v": 6.378,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_2_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.194,
+      "vds_v": 6.378,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_3_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.194,
+      "vds_v": 6.378,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_4_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.194,
+      "vds_v": 6.378,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.21380668e-16,
+     6.91283052
+    ],
+    "pad_n_range_v": [
+     -1.78831481e-16,
+     0.306743026
+    ],
+    "consumer_mos": 372,
+    "exceeding": 9,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "PAD_P"
+     ],
+     [
+      "nfet_03v3",
+      "U0_EXT"
+     ],
+     [
+      "nfet_03v3",
+      "U1_EN"
+     ],
+     [
+      "pfet_03v3",
+      "PAD_P"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c1_XXLP_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 6.913,
+      "vds_v": 0.053,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_230_",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c1_XXLP_C_X4",
+      "model": "pfet_03v3",
+      "gate_v": 6.913,
+      "vds_v": 0.497,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_3760_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c1_XXLP_SW_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.748,
+      "vds_v": 6.193,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_m1_11612_634_",
+       "G": "U1_EN",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.634,
+      "vds_v": 6.833,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_1_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.634,
+      "vds_v": 6.833,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_2_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.634,
+      "vds_v": 6.833,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_3_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.634,
+      "vds_v": 6.833,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_4_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.634,
+      "vds_v": 6.833,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.03268405,
+     1.73753208e-17
+    ],
+    "pad_n_range_v": [
+     -0.620189838,
+     2.42763579e-17
+    ],
+    "consumer_mos": 372,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c1_XXLP_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 1.033,
+      "vds_v": 0.622,
+      "exceeds": false,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_230_",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c1_XXLP_C_X4",
+      "model": "pfet_03v3",
+      "gate_v": 1.033,
+      "vds_v": 0.479,
+      "exceeds": false,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_3760_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c1_XXLP_SW_X0",
+      "model": "nfet_03v3",
+      "gate_v": 1.022,
+      "vds_v": 0.796,
+      "exceeds": false,
+      "nodes": {
+       "D": "c1_m1_11612_634_",
+       "G": "U1_EN",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.962,
+      "vds_v": 0.805,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_1_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.962,
+      "vds_v": 0.805,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_2_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.962,
+      "vds_v": 0.805,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_3_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.962,
+      "vds_v": 0.805,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_4_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.962,
+      "vds_v": 0.805,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   }
+  ],
+  "aux_clk_published_static_stack": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -2.48262137e-16,
+     7.89972649
+    ],
+    "pad_n_range_v": [
+     -2.4646912e-16,
+     0.399333195
+    ],
+    "consumer_mos": 372,
+    "exceeding": 9,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "PAD_P"
+     ],
+     [
+      "nfet_03v3",
+      "U0_EXT"
+     ],
+     [
+      "nfet_03v3",
+      "U1_EN"
+     ],
+     [
+      "pfet_03v3",
+      "PAD_P"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c1_XXLP_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 7.9,
+      "vds_v": 0.045,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_230_",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c1_XXLP_C_X4",
+      "model": "pfet_03v3",
+      "gate_v": 7.9,
+      "vds_v": 0.531,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_3760_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c1_XXLP_SW_X0",
+      "model": "nfet_03v3",
+      "gate_v": 7.718,
+      "vds_v": 7.232,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_m1_11612_634_",
+       "G": "U1_EN",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 7.586,
+      "vds_v": 7.793,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_1_X0",
+      "model": "nfet_03v3",
+      "gate_v": 7.586,
+      "vds_v": 7.793,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_2_X0",
+      "model": "nfet_03v3",
+      "gate_v": 7.586,
+      "vds_v": 7.793,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_3_X0",
+      "model": "nfet_03v3",
+      "gate_v": 7.586,
+      "vds_v": 7.793,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_4_X0",
+      "model": "nfet_03v3",
+      "gate_v": 7.586,
+      "vds_v": 7.793,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-pair/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -1.67739992e-16,
+     8.58298655
+    ],
+    "pad_n_range_v": [
+     -4.03691471e-17,
+     0.471221482
+    ],
+    "consumer_mos": 372,
+    "exceeding": 9,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "PAD_P"
+     ],
+     [
+      "nfet_03v3",
+      "U0_EXT"
+     ],
+     [
+      "nfet_03v3",
+      "U1_EN"
+     ],
+     [
+      "pfet_03v3",
+      "PAD_P"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c1_XXLP_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 8.583,
+      "vds_v": 0.053,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_230_",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c1_XXLP_C_X4",
+      "model": "pfet_03v3",
+      "gate_v": 8.583,
+      "vds_v": 0.545,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_3760_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c1_XXLP_SW_X0",
+      "model": "nfet_03v3",
+      "gate_v": 8.383,
+      "vds_v": 7.861,
+      "exceeds": true,
+      "nodes": {
+       "D": "c1_m1_11612_634_",
+       "G": "U1_EN",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 8.238,
+      "vds_v": 8.483,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_1_X0",
+      "model": "nfet_03v3",
+      "gate_v": 8.238,
+      "vds_v": 8.483,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_2_X0",
+      "model": "nfet_03v3",
+      "gate_v": 8.238,
+      "vds_v": 8.483,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_3_X0",
+      "model": "nfet_03v3",
+      "gate_v": 8.238,
+      "vds_v": 8.483,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_4_X0",
+      "model": "nfet_03v3",
+      "gate_v": 8.238,
+      "vds_v": 8.483,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-pair/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -1.03268527,
+     7.40237263e-17
+    ],
+    "pad_n_range_v": [
+     -0.620270535,
+     1.5358912e-16
+    ],
+    "consumer_mos": 372,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c1_XXLP_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 1.033,
+      "vds_v": 0.622,
+      "exceeds": false,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_230_",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c1_XXLP_C_X4",
+      "model": "pfet_03v3",
+      "gate_v": 1.033,
+      "vds_v": 0.479,
+      "exceeds": false,
+      "nodes": {
+       "D": "c1_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c1_XLP_C_a_236_3760_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c1_XXLP_SW_X0",
+      "model": "nfet_03v3",
+      "gate_v": 1.022,
+      "vds_v": 0.795,
+      "exceeds": false,
+      "nodes": {
+       "D": "c1_m1_11612_634_",
+       "G": "U1_EN",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.961,
+      "vds_v": 0.802,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_1_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.961,
+      "vds_v": 0.802,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_2_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.961,
+      "vds_v": 0.802,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_3_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.961,
+      "vds_v": 0.802,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXQP_SW_4_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.961,
+      "vds_v": 0.802,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_71670_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-pair/pad-extracted.spice",
+    "error": null
+   }
+  ],
+  "bb_tap": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -4.80258895e-18,
+     6.4490061
+    ],
+    "pad_n_range_v": [
+     -3.92114377e-17,
+     0.265062539
+    ],
+    "consumer_mos": 146,
+    "exceeding": 20,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "c0_inj_on"
+     ],
+     [
+      "nfet_03v3",
+      "c0_obs_on"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_X9",
+      "model": "nfet_03v3",
+      "gate_v": 6.1,
+      "vds_v": 6.311,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X27",
+      "model": "nfet_03v3",
+      "gate_v": 6.1,
+      "vds_v": 6.311,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X40",
+      "model": "nfet_03v3",
+      "gate_v": 6.1,
+      "vds_v": 6.311,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X59",
+      "model": "nfet_03v3",
+      "gate_v": 6.1,
+      "vds_v": 6.311,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X62",
+      "model": "nfet_03v3",
+      "gate_v": 6.1,
+      "vds_v": 6.311,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X108",
+      "model": "nfet_03v3",
+      "gate_v": 6.1,
+      "vds_v": 6.311,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X126",
+      "model": "nfet_03v3",
+      "gate_v": 6.1,
+      "vds_v": 6.311,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X133",
+      "model": "nfet_03v3",
+      "gate_v": 6.1,
+      "vds_v": 6.311,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -3.37801924e-17,
+     6.91285588
+    ],
+    "pad_n_range_v": [
+     -2.90830388e-17,
+     0.309890026
+    ],
+    "consumer_mos": 146,
+    "exceeding": 20,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "c0_inj_on"
+     ],
+     [
+      "nfet_03v3",
+      "c0_obs_on"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_X9",
+      "model": "nfet_03v3",
+      "gate_v": 6.497,
+      "vds_v": 6.767,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X27",
+      "model": "nfet_03v3",
+      "gate_v": 6.497,
+      "vds_v": 6.767,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X40",
+      "model": "nfet_03v3",
+      "gate_v": 6.497,
+      "vds_v": 6.767,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X59",
+      "model": "nfet_03v3",
+      "gate_v": 6.497,
+      "vds_v": 6.767,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X62",
+      "model": "nfet_03v3",
+      "gate_v": 6.497,
+      "vds_v": 6.767,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X108",
+      "model": "nfet_03v3",
+      "gate_v": 6.497,
+      "vds_v": 6.767,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X126",
+      "model": "nfet_03v3",
+      "gate_v": 6.497,
+      "vds_v": 6.767,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X133",
+      "model": "nfet_03v3",
+      "gate_v": 6.497,
+      "vds_v": 6.767,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.04208626,
+     1.56940934e-17
+    ],
+    "pad_n_range_v": [
+     -0.0369737915,
+     2.41304433e-17
+    ],
+    "consumer_mos": 146,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_X9",
+      "model": "nfet_03v3",
+      "gate_v": 0.753,
+      "vds_v": 0.752,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X27",
+      "model": "nfet_03v3",
+      "gate_v": 0.753,
+      "vds_v": 0.752,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X40",
+      "model": "nfet_03v3",
+      "gate_v": 0.753,
+      "vds_v": 0.752,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X59",
+      "model": "nfet_03v3",
+      "gate_v": 0.753,
+      "vds_v": 0.752,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X62",
+      "model": "nfet_03v3",
+      "gate_v": 0.753,
+      "vds_v": 0.752,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X108",
+      "model": "nfet_03v3",
+      "gate_v": 0.753,
+      "vds_v": 0.752,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X126",
+      "model": "nfet_03v3",
+      "gate_v": 0.753,
+      "vds_v": 0.752,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X133",
+      "model": "nfet_03v3",
+      "gate_v": 0.753,
+      "vds_v": 0.752,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   }
+  ],
+  "ref_lo_ext": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -1.02662133e-16,
+     6.44883174
+    ],
+    "pad_n_range_v": [
+     -9.56399602e-17,
+     0.431681009
+    ],
+    "consumer_mos": 296,
+    "exceeding": 6,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "U0_EXT"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_XXIP_SW_0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.185,
+      "vds_v": 6.375,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_1_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.185,
+      "vds_v": 6.375,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_2_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.185,
+      "vds_v": 6.375,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_3_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.185,
+      "vds_v": 6.375,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_4_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.185,
+      "vds_v": 6.375,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_5_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.185,
+      "vds_v": 6.375,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXON_PB_X0",
+      "model": "pfet_03v3",
+      "gate_v": 1.107,
+      "vds_v": 0.205,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_a_23206_83044_",
+       "G": "U0_INT",
+       "S": "c0_m1_3582_1078_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_XXON_NB_X0",
+      "model": "nfet_03v3",
+      "gate_v": 1.107,
+      "vds_v": 0.033,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_a_23206_83044_",
+       "G": "U0_INT",
+       "S": "0",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/reference/physical.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -4.83337174e-17,
+     6.9126929
+    ],
+    "pad_n_range_v": [
+     -1.0607882e-16,
+     0.47955088
+    ],
+    "consumer_mos": 296,
+    "exceeding": 6,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "U0_EXT"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_XXIP_SW_0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.625,
+      "vds_v": 6.83,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_1_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.625,
+      "vds_v": 6.83,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_2_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.625,
+      "vds_v": 6.83,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_3_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.625,
+      "vds_v": 6.83,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_4_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.625,
+      "vds_v": 6.83,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_5_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.625,
+      "vds_v": 6.83,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXON_PB_X0",
+      "model": "pfet_03v3",
+      "gate_v": 1.189,
+      "vds_v": 0.224,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_a_23206_83044_",
+       "G": "U0_INT",
+       "S": "c0_m1_3582_1078_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_XXON_NB_X0",
+      "model": "nfet_03v3",
+      "gate_v": 1.189,
+      "vds_v": 0.038,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_a_23206_83044_",
+       "G": "U0_INT",
+       "S": "0",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/reference/physical.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -1.03537364,
+     2.02074297e-17
+    ],
+    "pad_n_range_v": [
+     -0.542790254,
+     2.43239083e-17
+    ],
+    "consumer_mos": 296,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_XXIP_SW_0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.968,
+      "vds_v": 0.801,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_1_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.968,
+      "vds_v": 0.801,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_2_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.968,
+      "vds_v": 0.801,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_3_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.968,
+      "vds_v": 0.801,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_4_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.968,
+      "vds_v": 0.801,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXIP_SW_5_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.968,
+      "vds_v": 0.801,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_1070_65142_",
+       "G": "U0_EXT",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXCVP_X0",
+      "model": "nfet_03v3",
+      "gate_v": 0.634,
+      "vds_v": 0.0,
+      "exceeds": false,
+      "nodes": {
+       "D": "0",
+       "G": "c0_m1_8584_64098_",
+       "S": "0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXVPP_X0",
+      "model": "pfet_03v3",
+      "gate_v": 0.618,
+      "vds_v": 0.634,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_21766_1078_",
+       "G": "c0_a_23206_83044_",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/reference/physical.spice",
+    "error": null
+   }
+  ],
+  "rf_rx_lna_compact_gc": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -2.80415417e-17,
+     6.44861631
+    ],
+    "pad_n_range_v": [
+     -1.15924332e-17,
+     0.543062389
+    ],
+    "consumer_mos": 876,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 1.769,
+      "vds_v": 2.088,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_n",
+       "G": "U0_ct2",
+       "S": "c0_x2_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X6",
+      "model": "nfet_03v3",
+      "gate_v": 1.769,
+      "vds_v": 2.088,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_n",
+       "G": "U0_ct2",
+       "S": "c0_x2_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X16",
+      "model": "nfet_03v3",
+      "gate_v": 1.769,
+      "vds_v": 2.088,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_p",
+       "G": "U0_ct2",
+       "S": "c0_x2_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X39",
+      "model": "nfet_03v3",
+      "gate_v": 1.769,
+      "vds_v": 2.088,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_p",
+       "G": "U0_ct2",
+       "S": "c0_x2_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X48",
+      "model": "nfet_03v3",
+      "gate_v": 1.769,
+      "vds_v": 2.088,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_n",
+       "G": "U0_ct2",
+       "S": "c0_x2_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X54",
+      "model": "nfet_03v3",
+      "gate_v": 1.769,
+      "vds_v": 2.088,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_n",
+       "G": "U0_ct2",
+       "S": "c0_x2_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X65",
+      "model": "nfet_03v3",
+      "gate_v": 1.769,
+      "vds_v": 2.088,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_p",
+       "G": "U0_ct2",
+       "S": "c0_x2_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X84",
+      "model": "nfet_03v3",
+      "gate_v": 1.769,
+      "vds_v": 2.088,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_p",
+       "G": "U0_ct2",
+       "S": "c0_x2_n",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -5.46737621e-17,
+     6.91237583
+    ],
+    "pad_n_range_v": [
+     -1.05137746e-16,
+     0.516520912
+    ],
+    "consumer_mos": 876,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_X0",
+      "model": "nfet_03v3",
+      "gate_v": 2.085,
+      "vds_v": 2.458,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_n",
+       "G": "U0_ct2",
+       "S": "c0_x2_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X6",
+      "model": "nfet_03v3",
+      "gate_v": 2.085,
+      "vds_v": 2.458,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_n",
+       "G": "U0_ct2",
+       "S": "c0_x2_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X16",
+      "model": "nfet_03v3",
+      "gate_v": 2.085,
+      "vds_v": 2.458,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_p",
+       "G": "U0_ct2",
+       "S": "c0_x2_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X39",
+      "model": "nfet_03v3",
+      "gate_v": 2.085,
+      "vds_v": 2.458,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_p",
+       "G": "U0_ct2",
+       "S": "c0_x2_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X48",
+      "model": "nfet_03v3",
+      "gate_v": 2.085,
+      "vds_v": 2.458,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_n",
+       "G": "U0_ct2",
+       "S": "c0_x2_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X54",
+      "model": "nfet_03v3",
+      "gate_v": 2.085,
+      "vds_v": 2.458,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_n",
+       "G": "U0_ct2",
+       "S": "c0_x2_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X65",
+      "model": "nfet_03v3",
+      "gate_v": 2.085,
+      "vds_v": 2.458,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_p",
+       "G": "U0_ct2",
+       "S": "c0_x2_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X84",
+      "model": "nfet_03v3",
+      "gate_v": 2.085,
+      "vds_v": 2.458,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_x2_p",
+       "G": "U0_ct2",
+       "S": "c0_x2_n",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -4.26251162,
+     5.49449869e-17
+    ],
+    "pad_n_range_v": [
+     -0.369773125,
+     0.0775877772
+    ],
+    "consumer_mos": 876,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_X1",
+      "model": "nfet_03v3",
+      "gate_v": 0.91,
+      "vds_v": 0.451,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_tail",
+       "G": "c0_g_p",
+       "S": "c0_d_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X34",
+      "model": "nfet_03v3",
+      "gate_v": 0.91,
+      "vds_v": 0.451,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_d_p",
+       "G": "c0_g_p",
+       "S": "c0_tail",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X79",
+      "model": "nfet_03v3",
+      "gate_v": 0.91,
+      "vds_v": 0.451,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_d_p",
+       "G": "c0_g_p",
+       "S": "c0_tail",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X92",
+      "model": "nfet_03v3",
+      "gate_v": 0.91,
+      "vds_v": 0.451,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_d_p",
+       "G": "c0_g_p",
+       "S": "c0_tail",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X105",
+      "model": "nfet_03v3",
+      "gate_v": 0.91,
+      "vds_v": 0.451,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_d_p",
+       "G": "c0_g_p",
+       "S": "c0_tail",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X131",
+      "model": "nfet_03v3",
+      "gate_v": 0.91,
+      "vds_v": 0.451,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_tail",
+       "G": "c0_g_p",
+       "S": "c0_d_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X155",
+      "model": "nfet_03v3",
+      "gate_v": 0.91,
+      "vds_v": 0.451,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_d_p",
+       "G": "c0_g_p",
+       "S": "c0_tail",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X183",
+      "model": "nfet_03v3",
+      "gate_v": 0.91,
+      "vds_v": 0.451,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_tail",
+       "G": "c0_g_p",
+       "S": "c0_d_p",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   }
+  ],
+  "rf_tx_rfdriver": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -3.15752528e-17,
+     6.43541031
+    ],
+    "pad_n_range_v": [
+     -2.48915245e-16,
+     0.956343113
+    ],
+    "consumer_mos": 709,
+    "exceeding": 6,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "U0_in_p"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_X18",
+      "model": "nfet_03v3",
+      "gate_v": 6.363,
+      "vds_v": 0.016,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_t1",
+       "G": "U0_in_p",
+       "S": "c0_p1_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X232",
+      "model": "nfet_03v3",
+      "gate_v": 6.363,
+      "vds_v": 0.016,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_p1_n",
+       "G": "U0_in_p",
+       "S": "c0_t1",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X357",
+      "model": "nfet_03v3",
+      "gate_v": 6.363,
+      "vds_v": 0.016,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_t1",
+       "G": "U0_in_p",
+       "S": "c0_p1_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X413",
+      "model": "nfet_03v3",
+      "gate_v": 6.363,
+      "vds_v": 0.016,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_p1_n",
+       "G": "U0_in_p",
+       "S": "c0_t1",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X555",
+      "model": "nfet_03v3",
+      "gate_v": 6.363,
+      "vds_v": 0.016,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_t1",
+       "G": "U0_in_p",
+       "S": "c0_p1_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X585",
+      "model": "nfet_03v3",
+      "gate_v": 6.363,
+      "vds_v": 0.016,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_p1_n",
+       "G": "U0_in_p",
+       "S": "c0_t1",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X2",
+      "model": "nfet_06v0",
+      "gate_v": 5.783,
+      "vds_v": 6.042,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_vcp",
+       "S": "c0_cp",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X8",
+      "model": "nfet_06v0",
+      "gate_v": 5.783,
+      "vds_v": 6.042,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "c0_vcp",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-tx/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -9.79697499e-18,
+     6.90001204
+    ],
+    "pad_n_range_v": [
+     -9.91948422e-18,
+     1.00819856
+    ],
+    "consumer_mos": 709,
+    "exceeding": 54,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "U0_in_p"
+     ],
+     [
+      "nfet_06v0",
+      "c0_vcp"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_X18",
+      "model": "nfet_03v3",
+      "gate_v": 6.82,
+      "vds_v": 0.015,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_t1",
+       "G": "U0_in_p",
+       "S": "c0_p1_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X232",
+      "model": "nfet_03v3",
+      "gate_v": 6.82,
+      "vds_v": 0.015,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_p1_n",
+       "G": "U0_in_p",
+       "S": "c0_t1",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X357",
+      "model": "nfet_03v3",
+      "gate_v": 6.82,
+      "vds_v": 0.015,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_t1",
+       "G": "U0_in_p",
+       "S": "c0_p1_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X413",
+      "model": "nfet_03v3",
+      "gate_v": 6.82,
+      "vds_v": 0.015,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_p1_n",
+       "G": "U0_in_p",
+       "S": "c0_t1",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X555",
+      "model": "nfet_03v3",
+      "gate_v": 6.82,
+      "vds_v": 0.015,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_t1",
+       "G": "U0_in_p",
+       "S": "c0_p1_n",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X585",
+      "model": "nfet_03v3",
+      "gate_v": 6.82,
+      "vds_v": 0.015,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_p1_n",
+       "G": "U0_in_p",
+       "S": "c0_t1",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X2",
+      "model": "nfet_06v0",
+      "gate_v": 6.176,
+      "vds_v": 6.463,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_vcp",
+       "S": "c0_cp",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X8",
+      "model": "nfet_06v0",
+      "gate_v": 6.176,
+      "vds_v": 6.463,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "c0_vcp",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-tx/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": null,
+    "pad_p_range_v": [
+     -1.0113129,
+     4.09216005e-16
+    ],
+    "pad_n_range_v": [
+     -0.697746395,
+     4.75193941e-16
+    ],
+    "consumer_mos": 709,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_X6",
+      "model": "pfet_03v3",
+      "gate_v": 0.812,
+      "vds_v": 0.812,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "VDD",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X61",
+      "model": "pfet_03v3",
+      "gate_v": 0.812,
+      "vds_v": 0.812,
+      "exceeds": false,
+      "nodes": {
+       "D": "VDD",
+       "G": "VDD",
+       "S": "c0_cp",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X231",
+      "model": "pfet_03v3",
+      "gate_v": 0.812,
+      "vds_v": 0.812,
+      "exceeds": false,
+      "nodes": {
+       "D": "VDD",
+       "G": "VDD",
+       "S": "c0_cp",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X533",
+      "model": "pfet_03v3",
+      "gate_v": 0.812,
+      "vds_v": 0.812,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "VDD",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X33",
+      "model": "pfet_03v3",
+      "gate_v": 0.691,
+      "vds_v": 0.854,
+      "exceeds": false,
+      "nodes": {
+       "D": "VDD",
+       "G": "c0_pre_off",
+       "S": "c0_hdrv",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X73",
+      "model": "pfet_03v3",
+      "gate_v": 0.691,
+      "vds_v": 0.854,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_hdrv",
+       "G": "c0_pre_off",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X114",
+      "model": "pfet_03v3",
+      "gate_v": 0.691,
+      "vds_v": 0.854,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_hdrv",
+       "G": "c0_pre_off",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X117",
+      "model": "pfet_03v3",
+      "gate_v": 0.691,
+      "vds_v": 0.854,
+      "exceeds": false,
+      "nodes": {
+       "D": "VDD",
+       "G": "c0_pre_off",
+       "S": "c0_hdrv",
+       "B": "VDD"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-tx/pad-extracted.spice",
+    "error": null
+   }
+  ],
+  "rf_tx_rfdriver_jn": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": true,
+    "pad_p_range_v": [
+     -1.66566758e-16,
+     6.43376143
+    ],
+    "pad_n_range_v": [
+     -4.51784874e-17,
+     0.814811912
+    ],
+    "consumer_mos": 709,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_X2",
+      "model": "nfet_06v0",
+      "gate_v": 5.782,
+      "vds_v": 6.046,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_vcp",
+       "S": "c0_cp",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X8",
+      "model": "nfet_06v0",
+      "gate_v": 5.782,
+      "vds_v": 6.046,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "c0_vcp",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X9",
+      "model": "nfet_06v0",
+      "gate_v": 5.782,
+      "vds_v": 6.046,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "c0_vcp",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X20",
+      "model": "nfet_06v0",
+      "gate_v": 5.782,
+      "vds_v": 6.046,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_vcp",
+       "S": "c0_cp",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X36",
+      "model": "nfet_06v0",
+      "gate_v": 5.782,
+      "vds_v": 6.046,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_vcp",
+       "S": "c0_cp",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X44",
+      "model": "nfet_06v0",
+      "gate_v": 5.782,
+      "vds_v": 6.046,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "c0_vcp",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X65",
+      "model": "nfet_06v0",
+      "gate_v": 5.782,
+      "vds_v": 6.046,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_vcp",
+       "S": "c0_cp",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X87",
+      "model": "nfet_06v0",
+      "gate_v": 5.782,
+      "vds_v": 6.046,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "c0_vcp",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-tx/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": true,
+    "pad_p_range_v": [
+     -9.73483857e-18,
+     6.89901786
+    ],
+    "pad_n_range_v": [
+     -9.88857675e-18,
+     0.872407308
+    ],
+    "consumer_mos": 709,
+    "exceeding": 48,
+    "exceeding_devices": [
+     [
+      "nfet_06v0",
+      "c0_vcp"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_X2",
+      "model": "nfet_06v0",
+      "gate_v": 6.176,
+      "vds_v": 6.468,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_vcp",
+       "S": "c0_cp",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X8",
+      "model": "nfet_06v0",
+      "gate_v": 6.176,
+      "vds_v": 6.468,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "c0_vcp",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X9",
+      "model": "nfet_06v0",
+      "gate_v": 6.176,
+      "vds_v": 6.468,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "c0_vcp",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X20",
+      "model": "nfet_06v0",
+      "gate_v": 6.176,
+      "vds_v": 6.468,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_vcp",
+       "S": "c0_cp",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X36",
+      "model": "nfet_06v0",
+      "gate_v": 6.176,
+      "vds_v": 6.468,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_vcp",
+       "S": "c0_cp",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X44",
+      "model": "nfet_06v0",
+      "gate_v": 6.176,
+      "vds_v": 6.468,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "c0_vcp",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X65",
+      "model": "nfet_06v0",
+      "gate_v": 6.176,
+      "vds_v": 6.468,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_vcp",
+       "S": "c0_cp",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X87",
+      "model": "nfet_06v0",
+      "gate_v": 6.176,
+      "vds_v": 6.468,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "c0_vcp",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-tx/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": true,
+    "pad_p_range_v": [
+     -1.0113134,
+     4.83282906e-16
+    ],
+    "pad_n_range_v": [
+     -0.697584373,
+     4.99944396e-16
+    ],
+    "consumer_mos": 709,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_X6",
+      "model": "pfet_03v3",
+      "gate_v": 0.812,
+      "vds_v": 0.812,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "VDD",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X61",
+      "model": "pfet_03v3",
+      "gate_v": 0.812,
+      "vds_v": 0.812,
+      "exceeds": false,
+      "nodes": {
+       "D": "VDD",
+       "G": "VDD",
+       "S": "c0_cp",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X231",
+      "model": "pfet_03v3",
+      "gate_v": 0.812,
+      "vds_v": 0.812,
+      "exceeds": false,
+      "nodes": {
+       "D": "VDD",
+       "G": "VDD",
+       "S": "c0_cp",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X533",
+      "model": "pfet_03v3",
+      "gate_v": 0.812,
+      "vds_v": 0.812,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cp",
+       "G": "VDD",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X33",
+      "model": "pfet_03v3",
+      "gate_v": 0.691,
+      "vds_v": 0.854,
+      "exceeds": false,
+      "nodes": {
+       "D": "VDD",
+       "G": "c0_pre_off",
+       "S": "c0_hdrv",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X73",
+      "model": "pfet_03v3",
+      "gate_v": 0.691,
+      "vds_v": 0.854,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_hdrv",
+       "G": "c0_pre_off",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X114",
+      "model": "pfet_03v3",
+      "gate_v": 0.691,
+      "vds_v": 0.854,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_hdrv",
+       "G": "c0_pre_off",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X117",
+      "model": "pfet_03v3",
+      "gate_v": 0.691,
+      "vds_v": 0.854,
+      "exceeds": false,
+      "nodes": {
+       "D": "VDD",
+       "G": "c0_pre_off",
+       "S": "c0_hdrv",
+       "B": "VDD"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-tx/pad-extracted.spice",
+    "error": null
+   }
+  ],
+  "wclk_wtx_ext": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.09560154e-17,
+     6.44898549
+    ],
+    "pad_n_range_v": [
+     -1.07314824e-17,
+     0.290408907
+    ],
+    "consumer_mos": 76,
+    "exceeding": 3,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "PAD_P"
+     ],
+     [
+      "nfet_03v3",
+      "U0_EN"
+     ],
+     [
+      "pfet_03v3",
+      "PAD_P"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_XXLP_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 6.449,
+      "vds_v": 0.044,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c0_XLP_C_a_236_230_",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X4",
+      "model": "pfet_03v3",
+      "gate_v": 6.449,
+      "vds_v": 0.475,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c0_XLP_C_a_236_3760_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_XXLP_SW_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.297,
+      "vds_v": 5.783,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_11612_634_",
+       "G": "U0_EN",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X6",
+      "model": "pfet_03v3",
+      "gate_v": 0.727,
+      "vds_v": 0.071,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_A2",
+       "G": "c0_XLP_C_A1",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X7",
+      "model": "nfet_03v3",
+      "gate_v": 0.727,
+      "vds_v": 0.071,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_A2",
+       "G": "c0_XLP_C_A1",
+       "S": "0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X5",
+      "model": "nfet_03v3",
+      "gate_v": 0.661,
+      "vds_v": 0.727,
+      "exceeds": false,
+      "nodes": {
+       "D": "0",
+       "G": "c0_XO_ENB",
+       "S": "c0_XLP_C_A1",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X10",
+      "model": "nfet_03v3",
+      "gate_v": 0.553,
+      "vds_v": 0.728,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_a_236_230_",
+       "G": "U0_EN",
+       "S": "0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLN_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 0.29,
+      "vds_v": 0.021,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLN_C_A1",
+       "G": "PAD_N",
+       "S": "c0_XLN_C_a_236_230_",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -5.51976402e-17,
+     6.91288454
+    ],
+    "pad_n_range_v": [
+     -1.63378766e-16,
+     0.326161689
+    ],
+    "consumer_mos": 76,
+    "exceeding": 3,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "PAD_P"
+     ],
+     [
+      "nfet_03v3",
+      "U0_EN"
+     ],
+     [
+      "pfet_03v3",
+      "PAD_P"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_XXLP_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 6.913,
+      "vds_v": 0.054,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c0_XLP_C_a_236_230_",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X4",
+      "model": "pfet_03v3",
+      "gate_v": 6.913,
+      "vds_v": 0.497,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c0_XLP_C_a_236_3760_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_XXLP_SW_X0",
+      "model": "nfet_03v3",
+      "gate_v": 6.748,
+      "vds_v": 6.193,
+      "exceeds": true,
+      "nodes": {
+       "D": "c0_m1_11612_634_",
+       "G": "U0_EN",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X6",
+      "model": "pfet_03v3",
+      "gate_v": 0.784,
+      "vds_v": 0.086,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_A2",
+       "G": "c0_XLP_C_A1",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X7",
+      "model": "nfet_03v3",
+      "gate_v": 0.784,
+      "vds_v": 0.086,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_A2",
+       "G": "c0_XLP_C_A1",
+       "S": "0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X5",
+      "model": "nfet_03v3",
+      "gate_v": 0.716,
+      "vds_v": 0.784,
+      "exceeds": false,
+      "nodes": {
+       "D": "0",
+       "G": "c0_XO_ENB",
+       "S": "c0_XLP_C_A1",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X10",
+      "model": "nfet_03v3",
+      "gate_v": 0.599,
+      "vds_v": 0.785,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_a_236_230_",
+       "G": "U0_EN",
+       "S": "0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLN_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 0.326,
+      "vds_v": 0.023,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLN_C_A1",
+       "G": "PAD_N",
+       "S": "c0_XLN_C_a_236_230_",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.3009903,
+     4.31866774e-18
+    ],
+    "pad_n_range_v": [
+     -0.0335033626,
+     1.10088619e-25
+    ],
+    "consumer_mos": 76,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_XXLP_C_X1",
+      "model": "nfet_03v3",
+      "gate_v": 1.301,
+      "vds_v": 0.618,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c0_XLP_C_a_236_230_",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X4",
+      "model": "pfet_03v3",
+      "gate_v": 1.301,
+      "vds_v": 0.322,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_A1",
+       "G": "PAD_P",
+       "S": "c0_XLP_C_a_236_3760_",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_XXLP_SW_X0",
+      "model": "nfet_03v3",
+      "gate_v": 1.267,
+      "vds_v": 0.817,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_m1_11612_634_",
+       "G": "U0_EN",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X6",
+      "model": "pfet_03v3",
+      "gate_v": 0.668,
+      "vds_v": 0.065,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_A2",
+       "G": "c0_XLP_C_A1",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X7",
+      "model": "nfet_03v3",
+      "gate_v": 0.668,
+      "vds_v": 0.065,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_A2",
+       "G": "c0_XLP_C_A1",
+       "S": "0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X5",
+      "model": "nfet_03v3",
+      "gate_v": 0.645,
+      "vds_v": 0.668,
+      "exceeds": false,
+      "nodes": {
+       "D": "0",
+       "G": "c0_XO_ENB",
+       "S": "c0_XLP_C_A1",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_XXLP_C_X9",
+      "model": "pfet_03v3",
+      "gate_v": 0.413,
+      "vds_v": 0.435,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XLP_C_a_236_3760_",
+       "G": "c0_XO_ENB",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_XXO_X0",
+      "model": "pfet_03v3",
+      "gate_v": 0.085,
+      "vds_v": 0.007,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_XO_A2P",
+       "G": "c0_XO_A3P",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/scratch/pads-pd12/v2/rf-pair/pad-extracted.spice",
+    "error": null
+   }
+  ],
+  "wire_tx_detect": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.66480252e-17,
+     6.42402783
+    ],
+    "pad_n_range_v": [
+     -0.0952323735,
+     0.327721105
+    ],
+    "consumer_mos": 245,
+    "exceeding": 2,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "c0_inj"
+     ],
+     [
+      "nfet_03v3",
+      "c0_tx"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_X243",
+      "model": "nfet_03v3",
+      "gate_v": 6.14,
+      "vds_v": 6.365,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_tx",
+       "S": "c0_DP_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X158",
+      "model": "nfet_03v3",
+      "gate_v": 6.135,
+      "vds_v": 6.334,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj",
+       "S": "c0_inj_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X12",
+      "model": "nfet_03v3",
+      "gate_v": 1.075,
+      "vds_v": 0.043,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cdp_ckn",
+       "G": "U0_det_en",
+       "S": "c0_cdp_ckn_s0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X21",
+      "model": "nfet_03v3",
+      "gate_v": 1.075,
+      "vds_v": 0.066,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_enb",
+       "G": "U0_det_en",
+       "S": "0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X48",
+      "model": "pfet_03v3",
+      "gate_v": 1.075,
+      "vds_v": 0.066,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_enb",
+       "G": "U0_det_en",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X52",
+      "model": "pfet_03v3",
+      "gate_v": 1.075,
+      "vds_v": 0.114,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_csn_ckn",
+       "G": "U0_det_en",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X60",
+      "model": "pfet_03v3",
+      "gate_v": 1.075,
+      "vds_v": 0.057,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_inj_b",
+       "G": "U0_det_en",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X80",
+      "model": "pfet_03v3",
+      "gate_v": 1.075,
+      "vds_v": 0.067,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_ln_b",
+       "G": "U0_det_en",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-transmit/physical.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -4.34952058e-17,
+     6.89415777
+    ],
+    "pad_n_range_v": [
+     -0.139658954,
+     0.393354828
+    ],
+    "consumer_mos": 245,
+    "exceeding": 2,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "c0_inj"
+     ],
+     [
+      "nfet_03v3",
+      "c0_tx"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_X243",
+      "model": "nfet_03v3",
+      "gate_v": 6.563,
+      "vds_v": 6.832,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_tx",
+       "S": "c0_DP_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X158",
+      "model": "nfet_03v3",
+      "gate_v": 6.56,
+      "vds_v": 6.797,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj",
+       "S": "c0_inj_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X12",
+      "model": "nfet_03v3",
+      "gate_v": 1.155,
+      "vds_v": 0.052,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cdp_ckn",
+       "G": "U0_det_en",
+       "S": "c0_cdp_ckn_s0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X21",
+      "model": "nfet_03v3",
+      "gate_v": 1.155,
+      "vds_v": 0.074,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_enb",
+       "G": "U0_det_en",
+       "S": "0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X48",
+      "model": "pfet_03v3",
+      "gate_v": 1.155,
+      "vds_v": 0.074,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_enb",
+       "G": "U0_det_en",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X52",
+      "model": "pfet_03v3",
+      "gate_v": 1.155,
+      "vds_v": 0.116,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_csn_ckn",
+       "G": "U0_det_en",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X60",
+      "model": "pfet_03v3",
+      "gate_v": 1.155,
+      "vds_v": 0.066,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_inj_b",
+       "G": "U0_det_en",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X80",
+      "model": "pfet_03v3",
+      "gate_v": 1.155,
+      "vds_v": 0.075,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_ln_b",
+       "G": "U0_det_en",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-transmit/physical.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.00615735,
+     4.80307734e-25
+    ],
+    "pad_n_range_v": [
+     -0.642534915,
+     1.3976097e-17
+    ],
+    "consumer_mos": 245,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_X2",
+      "model": "pfet_03v3",
+      "gate_v": 0.833,
+      "vds_v": 0.014,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cdp_1pa",
+       "G": "c0_DP_P",
+       "S": "c0_cdp_x",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X39",
+      "model": "pfet_03v3",
+      "gate_v": 0.833,
+      "vds_v": 0.013,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_cdn_4pb",
+       "G": "c0_DP_P",
+       "S": "c0_cdn_x",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X162",
+      "model": "pfet_03v3",
+      "gate_v": 0.833,
+      "vds_v": 0.027,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_csp_1pa",
+       "G": "c0_DP_P",
+       "S": "c0_csp_x",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X141",
+      "model": "pfet_03v3",
+      "gate_v": 0.83,
+      "vds_v": 0.861,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_inj_P",
+       "G": "c0_dpb",
+       "S": "VDD",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c0_X158",
+      "model": "nfet_03v3",
+      "gate_v": 0.829,
+      "vds_v": 0.831,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj",
+       "S": "c0_inj_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X243",
+      "model": "nfet_03v3",
+      "gate_v": 0.827,
+      "vds_v": 0.88,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_tx",
+       "S": "c0_DP_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X99",
+      "model": "nfet_03v3",
+      "gate_v": 0.812,
+      "vds_v": 0.833,
+      "exceeds": false,
+      "nodes": {
+       "D": "c0_DP_P",
+       "G": "c0_enb",
+       "S": "0",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X209",
+      "model": "nfet_03v3",
+      "gate_v": 0.769,
+      "vds_v": 0.716,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_RX_P",
+       "G": "c0_ln",
+       "S": "c0_DP_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-transmit/physical.spice",
+    "error": null
+   }
+  ],
+  "wirepad_rx_core": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.58177658e-17,
+     6.43885643
+    ],
+    "pad_n_range_v": [
+     -1.68420979e-17,
+     0.406794497
+    ],
+    "consumer_mos": 517,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c2_X152",
+      "model": "pfet_03v3",
+      "gate_v": 0.088,
+      "vds_v": 0.088,
+      "exceeds": false,
+      "nodes": {
+       "D": "RX_P",
+       "G": "c2_ln_b",
+       "S": "c2_DP_P",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c2_X209",
+      "model": "nfet_03v3",
+      "gate_v": 0.088,
+      "vds_v": 0.088,
+      "exceeds": false,
+      "nodes": {
+       "D": "RX_P",
+       "G": "c2_ln",
+       "S": "c2_DP_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X0",
+      "model": "pfet_03v3",
+      "gate_v": 0.087,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X62",
+      "model": "pfet_03v3",
+      "gate_v": 0.087,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X98",
+      "model": "pfet_03v3",
+      "gate_v": 0.087,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X99",
+      "model": "pfet_03v3",
+      "gate_v": 0.087,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X153",
+      "model": "pfet_03v3",
+      "gate_v": 0.087,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X183",
+      "model": "pfet_03v3",
+      "gate_v": 0.087,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-usb/physical.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -8.69344156e-18,
+     6.90463512
+    ],
+    "pad_n_range_v": [
+     -8.87988634e-18,
+     0.441700705
+    ],
+    "consumer_mos": 517,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_X0",
+      "model": "pfet_03v3",
+      "gate_v": 0.094,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X62",
+      "model": "pfet_03v3",
+      "gate_v": 0.094,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X98",
+      "model": "pfet_03v3",
+      "gate_v": 0.094,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X99",
+      "model": "pfet_03v3",
+      "gate_v": 0.094,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X153",
+      "model": "pfet_03v3",
+      "gate_v": 0.094,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X183",
+      "model": "pfet_03v3",
+      "gate_v": 0.094,
+      "vds_v": 0.005,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c2_X152",
+      "model": "pfet_03v3",
+      "gate_v": 0.094,
+      "vds_v": 0.095,
+      "exceeds": false,
+      "nodes": {
+       "D": "RX_P",
+       "G": "c2_ln_b",
+       "S": "c2_DP_P",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c2_X209",
+      "model": "nfet_03v3",
+      "gate_v": 0.094,
+      "vds_v": 0.095,
+      "exceeds": false,
+      "nodes": {
+       "D": "RX_P",
+       "G": "c2_ln",
+       "S": "c2_DP_P",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-usb/physical.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -0.999907429,
+     1.04554305e-16
+    ],
+    "pad_n_range_v": [
+     -0.763928289,
+     1.50143718e-16
+    ],
+    "consumer_mos": 517,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c2_X152",
+      "model": "pfet_03v3",
+      "gate_v": 0.789,
+      "vds_v": 0.742,
+      "exceeds": false,
+      "nodes": {
+       "D": "RX_P",
+       "G": "c2_ln_b",
+       "S": "c2_DP_P",
+       "B": "VDD"
+      }
+     },
+     {
+      "device": "c2_X209",
+      "model": "nfet_03v3",
+      "gate_v": 0.787,
+      "vds_v": 0.742,
+      "exceeds": false,
+      "nodes": {
+       "D": "RX_P",
+       "G": "c2_ln",
+       "S": "c2_DP_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X0",
+      "model": "pfet_03v3",
+      "gate_v": 0.784,
+      "vds_v": 0.508,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X62",
+      "model": "pfet_03v3",
+      "gate_v": 0.784,
+      "vds_v": 0.508,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X98",
+      "model": "pfet_03v3",
+      "gate_v": 0.784,
+      "vds_v": 0.508,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X99",
+      "model": "pfet_03v3",
+      "gate_v": 0.784,
+      "vds_v": 0.508,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X153",
+      "model": "pfet_03v3",
+      "gate_v": 0.784,
+      "vds_v": 0.508,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     },
+     {
+      "device": "c0_X183",
+      "model": "pfet_03v3",
+      "gate_v": 0.784,
+      "vds_v": 0.508,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_CTLE_N",
+       "G": "RX_P",
+       "S": "c0_sp",
+       "B": "c0_sp"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-usb/physical.spice",
+    "error": null
+   }
+  ],
+  "wmon_bb_tap": [
+   {
+    "hbm": "hbm_P_pos",
+    "process": "typical",
+    "temp_c": 27,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.68679581e-17,
+     6.44896934
+    ],
+    "pad_n_range_v": [
+     -1.68679581e-17,
+     6.44896934
+    ],
+    "consumer_mos": 146,
+    "exceeding": 20,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "c0_inj_on"
+     ],
+     [
+      "nfet_03v3",
+      "c0_obs_on"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_X9",
+      "model": "nfet_03v3",
+      "gate_v": 6.122,
+      "vds_v": 6.313,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X27",
+      "model": "nfet_03v3",
+      "gate_v": 6.122,
+      "vds_v": 6.313,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X40",
+      "model": "nfet_03v3",
+      "gate_v": 6.122,
+      "vds_v": 6.313,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X59",
+      "model": "nfet_03v3",
+      "gate_v": 6.122,
+      "vds_v": 6.313,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X62",
+      "model": "nfet_03v3",
+      "gate_v": 6.122,
+      "vds_v": 6.313,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X108",
+      "model": "nfet_03v3",
+      "gate_v": 6.122,
+      "vds_v": 6.313,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X126",
+      "model": "nfet_03v3",
+      "gate_v": 6.122,
+      "vds_v": 6.313,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X133",
+      "model": "nfet_03v3",
+      "gate_v": 6.122,
+      "vds_v": 6.313,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/single-leg/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_pos",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.17098394e-16,
+     6.91283824
+    ],
+    "pad_n_range_v": [
+     -1.17098394e-16,
+     6.91283824
+    ],
+    "consumer_mos": 146,
+    "exceeding": 20,
+    "exceeding_devices": [
+     [
+      "nfet_03v3",
+      "c0_inj_on"
+     ],
+     [
+      "nfet_03v3",
+      "c0_obs_on"
+     ]
+    ],
+    "worst": [
+     {
+      "device": "c0_X9",
+      "model": "nfet_03v3",
+      "gate_v": 6.524,
+      "vds_v": 6.768,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X27",
+      "model": "nfet_03v3",
+      "gate_v": 6.524,
+      "vds_v": 6.768,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X40",
+      "model": "nfet_03v3",
+      "gate_v": 6.524,
+      "vds_v": 6.768,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X59",
+      "model": "nfet_03v3",
+      "gate_v": 6.524,
+      "vds_v": 6.768,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X62",
+      "model": "nfet_03v3",
+      "gate_v": 6.524,
+      "vds_v": 6.768,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X108",
+      "model": "nfet_03v3",
+      "gate_v": 6.524,
+      "vds_v": 6.768,
+      "exceeds": true,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X126",
+      "model": "nfet_03v3",
+      "gate_v": 6.524,
+      "vds_v": 6.768,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X133",
+      "model": "nfet_03v3",
+      "gate_v": 6.524,
+      "vds_v": 6.768,
+      "exceeds": true,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/single-leg/pad-extracted.spice",
+    "error": null
+   },
+   {
+    "hbm": "hbm_P_neg",
+    "process": "ss",
+    "temp_c": 0,
+    "complete": true,
+    "junction_model": false,
+    "pad_p_range_v": [
+     -1.04208548,
+     8.64059297e-20
+    ],
+    "pad_n_range_v": [
+     -1.04208548,
+     8.64059297e-20
+    ],
+    "consumer_mos": 146,
+    "exceeding": 0,
+    "exceeding_devices": [],
+    "worst": [
+     {
+      "device": "c0_X9",
+      "model": "nfet_03v3",
+      "gate_v": 0.756,
+      "vds_v": 0.745,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X27",
+      "model": "nfet_03v3",
+      "gate_v": 0.756,
+      "vds_v": 0.745,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X40",
+      "model": "nfet_03v3",
+      "gate_v": 0.756,
+      "vds_v": 0.745,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X59",
+      "model": "nfet_03v3",
+      "gate_v": 0.756,
+      "vds_v": 0.745,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X62",
+      "model": "nfet_03v3",
+      "gate_v": 0.756,
+      "vds_v": 0.745,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X108",
+      "model": "nfet_03v3",
+      "gate_v": 0.756,
+      "vds_v": 0.745,
+      "exceeds": false,
+      "nodes": {
+       "D": "U0_inj_p",
+       "G": "c0_inj_on",
+       "S": "PAD_P",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X126",
+      "model": "nfet_03v3",
+      "gate_v": 0.756,
+      "vds_v": 0.745,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     },
+     {
+      "device": "c0_X133",
+      "model": "nfet_03v3",
+      "gate_v": 0.756,
+      "vds_v": 0.745,
+      "exceeds": false,
+      "nodes": {
+       "D": "PAD_P",
+       "G": "c0_inj_on",
+       "S": "U0_inj_p",
+       "B": "0"
+      }
+     }
+    ],
+    "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/single-leg/pad-extracted.spice",
+    "error": null
+   }
+  ]
+ }
+}

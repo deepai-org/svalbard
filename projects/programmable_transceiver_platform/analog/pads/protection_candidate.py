@@ -14,7 +14,9 @@ from pathlib import Path
 import numpy as np
 from analog_screen import screen
 
-CLAMP_CAPACITORS = dict(model="cap_mim_2f0_m4m5_noshield", pcell="cap_mim_2p0fF", timing_side_um=31.6, rail_side_um=31.6)
+# PD13 (2026-11-10): timing MIM 31.6 -> 14 um (tau 0.72 -> 0.14 us) so the RC clamp no longer fires on
+# us supply/feed ramps (1 us TX-feed ramp: 36-48 -> <1 mA/leg); HBM-like peak unchanged with the GC shunt.
+CLAMP_CAPACITORS = dict(model="cap_mim_2f0_m4m5_noshield", pcell="cap_mim_2p0fF", timing_side_um=14.0, rail_side_um=31.6)
 
 
 def completion_flags(value,path=''):
@@ -25,6 +27,25 @@ def completion_flags(value,path=''):
             if key=='transient_complete':flags[location]=bool(child)
             else:flags.update(completion_flags(child,location))
     return flags
+
+
+def native_clamp_lines(pdk,timing_cap_side_um,rail_cap_side_um):
+    """Native gf180mcu_fd_io dvdd clamp with its two MOS capacitors replaced by MIMs (timing X3, rail X21)."""
+    library=pdk.parent/'gf180mcu_fd_io.spice'
+    native=library.read_text().split('.SUBCKT gf180mcu_fd_io__dvdd ',1)[1].split('.ENDS',1)[0]
+    clamp=['.subckt pad_isolated_rail_clamp '+native.splitlines()[0]]
+    replaced=0
+    for line in native.splitlines()[1:]:
+        fields=line.split()
+        if len(fields)>3 and fields[3]=='cap_nmos_06v0':
+            side=timing_cap_side_um if fields[0]=='X3' else rail_cap_side_um
+            if fields[0] not in ('X3','X21'):raise ValueError('Unexpected native clamp capacitor')
+            line=' '.join(fields[:3])+f' {CLAMP_CAPACITORS["model"]} c_length={side}u c_width={side}u'
+            replaced+=1
+        clamp.append(line)
+    if replaced!=2:raise ValueError('Native clamp topology changed')
+    clamp.append('.ends pad_isolated_rail_clamp')
+    return clamp
 
 
 def build_candidate(physical,primitives,pdk,*,timing_cap_side_um=None,rail_cap_side_um=None,clamp_physical=None,array_physical=None,network_physical=None):
@@ -58,20 +79,7 @@ def build_candidate(physical,primitives,pdk,*,timing_cap_side_um=None,rail_cap_s
             kept.append(line)
         else:kept.append(line)
     if removed!=4:raise ValueError('Expected four existing protection units')
-    library=pdk.parent/'gf180mcu_fd_io.spice'
-    native=library.read_text().split('.SUBCKT gf180mcu_fd_io__dvdd ',1)[1].split('.ENDS',1)[0]
-    clamp=['.subckt pad_isolated_rail_clamp '+native.splitlines()[0]]
-    replaced=0
-    for line in native.splitlines()[1:]:
-        fields=line.split()
-        if len(fields)>3 and fields[3]=='cap_nmos_06v0':
-            side=timing_cap_side_um if fields[0]=='X3' else rail_cap_side_um
-            if fields[0] not in ('X3','X21'):raise ValueError('Unexpected native clamp capacitor')
-            line=' '.join(fields[:3])+f' {CLAMP_CAPACITORS["model"]} c_length={side}u c_width={side}u'
-            replaced+=1
-        clamp.append(line)
-    if replaced!=2:raise ValueError('Native clamp topology changed')
-    clamp.append('.ends pad_isolated_rail_clamp')
+    clamp=native_clamp_lines(pdk,timing_cap_side_um,rail_cap_side_um)
     extra=[]
     if clamp_physical is not None:
         manifest_path=clamp_physical.parent/'clamp-layout.json'

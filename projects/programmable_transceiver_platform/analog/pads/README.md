@@ -28,9 +28,67 @@ the tapeout-plan tests, not ESD/HBM/CDM ratings.
 | `refpad` (differential reference) | Protection/bias network; receiver is behavioral | `reference/` | 897 | 179,237 / 185,000 |
 | `rfpad` = `rftxpad` (one physical pair) | Protection network, steering diodes, isolated clamp rail, MIMs, bleed; LNA and RF driver are behavioral | `rf-pair/` | — | 175,909 / 180,000 |
 | Single-leg cell (WMON, `ESD_TEST`) | Native bond on `PAD_P`, `PADN` tied to VSS | `single-leg/` | — | 158,302 |
+| `hspad` (SATA/PCIe RX, PD21) | Protection shell on `network-gc-d2` + two `pt_hs_leg` (segmented 4-bit termination, 4.9 pF AC-coupling MIM, RX bias/clamps, rail precharge); CTLE is the wired RX block | `wired-receive-hs/` | 508 | 531,000 bbox (478 × 1111 µm) |
 
 All five layouts are DRC 0, netgen LVS match and pass the independent device
 audit (`extract_audit.py`).
+
+### PD28 (pads owner, 2026-11-11): rf_pair compact published, core-gate HBM screen, TX termination decision, pll_vreg packed
+
+Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`).
+
+- **`rf-pair/` republished = the compact GC rf_pair** (`scratch/pads-pd12/v2/rf-pair`, top `pad_rf_pair`): I8 inner-edge
+  pins, LU taps, gate-coupled shunt (PD13 macro). Magic DRC 0, netgen LVS unique, independent device audit 388/388,
+  KLayout main 0 / antenna 0 (`pad_rf_pair-kldrc.json`). PD13 family sims on this model: 18 safe/HBM runs, 0 of 348 MOS
+  over the screen, ±100 mA 2.51–2.77 V, HBM-like pad 6.18–6.91 V (was 7.9–8.6 V with the static stack, see below),
+  50 Ω AC −6.338 dB at 2.45 GHz (canonical −6.344). Pad C +42/+53 fF per leg vs the old cell (inner-edge stub). Backup:
+  `scratch/pads-pd28/backup-published/rf-pair-pre-pd28/`. The top cell name changes from `rf_protected_pad_pair` to
+  `pad_rf_pair` (assembly).
+- **Core-gate HBM screen** (`hbm_core_screen.py`, evidence `generated/stress-safe-families/pd28-core-gate-hbm-screen.json`):
+  the PD13 HBM-like bench plus every consumer block that `chip_assembly/netlist.py` attaches to a pad net, flattened
+  from its published extraction, every consumer MOS observed, unchanged gate screen (3.63 V / 6.0 V). P_pos tt27 + ss0,
+  P_neg ss0. Clean: **LNA on RF_RX (876 MOS, pad 6.91 V: the input gate sits behind the 2 pF MIM and the p+/n-well
+  junctions on that node into the (held) rail keep it at ≤ 0.94 V; worst LNA device 1.77 V)**, wirepad RX core (ctle/rxselect/detect/wmon_sel, 517 MOS). **Fail** (3.3 V devices whose
+  source/drain IS the pad net, 6.2–6.9 V): `lo_ext` EXT switches (REF_IN, AUX_CLK), `diff_clk_rx` input gate
+  (`ct_rxin` LP_C) and its LP_SW switch (AUX_CLK, WCLK_IN, WTX_EXT), `bb_tap` inj/obs switches (BB_I, BB_Q, WMON),
+  `detect` TX-side switches (WIRE_TX). `rfdriver` (RF_TX): 6 V cascode gate–drain 6.18 V at ss/0 °C only (tt 6.36 V pad:
+  passes); the 3.3 V `in_p` hit is a bench artifact (bypass PMOS conducts to an undriven input; with the driver's drain
+  junctions modelled, 0). Even network-gc-d2 (pad ≤ 5.41 V) cannot bring a 3.3 V device on a pad net under 3.63 V, so
+  the fixes are in the consumer blocks (interface-changes PD29).
+- **TX pad termination / SST** (`scratch/pads-pd28/tx/DECISION.md`): SST rejected for this tapeout; the 6 V-switch fix
+  clears HBM but costs return loss, not published (interface-changes PD30).
+- **pt_pll_vreg packed cell published** (0.241 mm², two instances): `analog/pll_vreg/README.md` "PD28".
+- **USB wirepad on 6 V pad-side devices: candidate v9, not published** (`scratch/pads-pd28/usb/`, mode `usbfix6v2`;
+  opt-in args in `wired_receive.py`, `stress_safe_compact_layout.py`, `receive_pad_layout.py`, `stress_safe_usb.py --term-trim`).
+  HBM 0 of 593 MOS over the screen; HS termination 44.1–47.5 Ω at every corner with a new 3-bit trim (`TERM_TRIM0..2`);
+  FS edges in window; FS rise/fall matching 1.13–1.32 at tt/ss still outside 0.90–1.11 (published cell 1.23–1.48);
+  +78 µm depth. Waiting on digital (trim field + calibration), assembly (+78 µm, ports) and the USB owner (interface-changes PD32).
+
+### PD21 (pads owner): low-C SATA/PCIe RX pad pair `pad_hspad`, network-gc-d2, HBM pad-side devices
+
+User decision: SATA/PCIe get their own low-capacitance pad pair; USB FS/HS stay on `wirepad` (moved to the
+WCLK_OBS/WDBG_OBS sites). Working notes: `scratch/pads-pd21/NOTES.md`.
+
+- **`network-gc-d2`** (`generated/stress-safe-families/network-gc-d2/`): the GC network/shunt macro with one extra
+  4-finger pad→rail diode row per leg (`protection_array.py --extra-up-rows 1`; default 0 = canonical). HBM-like
+  2 kV pad peak 6.18–6.91 → **5.04–5.41 V** (rail unchanged 3.9–4.6 V), so every 6 V device on a pad node stays
+  under its 6.0 V screen; +0.14 pF/leg (+0.12 with the rail precharged).
+- **`pad_hspad`** (`wired-receive-hs/`, top `pad_hspad`, ports `PAD_P PAD_N RX_P RX_N VBIAS TERM_VCM TERM_ENABLE
+  TERM_TRIM0..3 VDD VSS`): `shell/` = `protection_pad_ss` pair on network-gc-d2 (escape 8 µm, 12 µm trunks);
+  `leg/` = `pt_hs_leg` (`hs_leg_layout.py`, convkit): 10 base units (ppolyf_u 2×3.05 + nfet_06v0 20/0.7) on
+  TERM_ENABLE and 15 trim units (2×2.0 + 12/0.7) on TERM_TRIM0..3 (1/2/4/8) to TERM_VCM; MIM 2×35×35 µm (4.9 pF,
+  bottom plate on PAD) to RX; 40 kΩ RX→VBIAS; 4 µm 6 V drain-diode clamps RX→VDD/VSS; a pfet_06v0 drain diode
+  VDD→ATB_ESD_RAIL tap precharges the protection rail (2.4–2.75 V, 0.2–0.35 µA). Composed by `hs_pad_compose.py`.
+  Magic DRC 0, netgen LVS unique, independent device audit 508/508, KLayout precheck main 0 / antenna 0, LU audit 0.
+- **Qualification (extracted, `wired-receive-hs/pd21-*.json`):** safe/HBM with the unchanged
+  `stress_safe_family_sims` benches: 18 runs, 404 MOS fully observed, **0 exceedances**; HBM pad 5.04–5.41 V; ±100 mA
+  2.37–2.62 V; unpowered 3.63 V peer 0.15–0.34 µA; RX node −1.0…+1.0 V during HBM. Termination: code 0 64.8–116 Ω,
+  code 15 24.4–38.7 Ω (VCM 0.3–0.5 V), 2–3.5 Ω/LSB near 50 Ω. AC (CTLE 120 fF/leg assumed, VCM 0.4 V, trimmed to
+  ≈50 Ω): **1.11–1.14 pF/leg**, die RL at 2.4 GHz 8.0–8.5 dB; COB RL 13.0–16.7 dB (0.1–1.25 GHz), 5.7–6.5 dB
+  (1.25–2.5 GHz, package-limited). RX path: HPF 0.67–1.07 MHz, 0.27–0.33 dB MIM loss, flat to 2.4 GHz.
+  Power-up 10 ns/1 µs: no shunt trigger, VDD ≤ 80 µA peak.
+- **TERM_VCM 0.3–0.5 V** (6 V NMOS switches; at 0.8 V the 40 Ω end moves to 44 Ω at ss). The CTLE CM comes from
+  VBIAS through the MIM, not from the termination.
 
 ### 2026-11-10 changes (pads owner): LU-01 tap stripes, RF_TX pad, isolation clamps, ring regulator
 
@@ -48,7 +106,33 @@ audit (`extract_audit.py`).
   peaks are below the rf_pair at every corner. Build: `scratch/pads-esd04/` (`esd04.py`,
   `layout/build_rftx.sh`).
 - **Isolation clamps:** see `analog/island_support/README.md` §2a.
-- **Ring-PLL regulator `pt_pll_vreg`:** see `scratch/pdn04-ldo/` and interface-changes PD9.
+- **Ring-PLL regulator `pt_pll_vreg`:** see `analog/pll_vreg/README.md` (laid out, PD15) and interface-changes PD9.
+
+### 2026-11-10 PD13: gate-coupled shunt on every family, RC-trigger fixes (pads owner)
+
+- **All families now use the gate-coupled shunt** (`rftx_shunt.py` macro: one nfet_06v0 bank W 12,006 µm,
+  gate GC, Cc 2 × 90² µm MIM ≈ 32 pF from `ESD_RAIL`, Rg 6 kΩ to VSS) instead of the static three-stage
+  diode-connected stack: txpad, wirepad, refpad, single_leg and rftxpad (the rf_pair layout on the same macro;
+  `rf_pair` itself stays held for P2). Pad C is unchanged (the shunt sits behind the steering diodes; the
+  1.25 GHz pad C changes by < 1 fF). Published macro copy: `generated/stress-safe-families/network-gc/`.
+- **RC-clamp trigger time constant** (`protection_candidate.CLAMP_CAPACITORS`): timing MIM 31.6 → 14 µm
+  (≈ 2.0 → 0.4 pF; R 360 kΩ; τ ≈ 0.72 → 0.14 µs). The clamp no longer fires on µs feed ramps (1 µs TX feed ramp:
+  36–48 → < 1 mA per leg); the HBM-like peak is unchanged because the GC shunt carries the event.
+  `clamp_layout.py` now builds one MIM master per side (`clamp_mim`, `clamp_mim_t`).
+- **Trigger-PMOS n+ ring closed** (`clamp_layout.close_trigger_ring`): the native U-shaped n-tap around the RC
+  trigger PMOS row (X0/X1/X2, 84 µm² p-diffusion) is closed by an n-tap bar under the row; the three poly gate
+  combs, their contact row and gate pads move up 0.27 µm, the drain-comb bars 0.12 µm, nwell and DUALGATE are
+  extended. Devices and nets unchanged (clamp LVS unique, Magic DRC 0, KLayout precheck clean). LU audit: every
+  p-diffusion of every family now sits inside a closed n+ ring (`pmos_to_ntap_diff_in_ring_frac` 1.0, was
+  0.68–0.96).
+- **Stress screen extended** (`stress_safe_family_sims.py`): every internal MOS terminal of the inner pad subckt
+  (RC trigger chain, clamp gate, GC gate, attachment internals) and the core-side ports are saved and screened, so
+  all MOS are fully observed (the RC clamp and trigger devices were never observed before). New `hbm` part: the
+  esd04 HBM-like waveform (2 kV, 1.33 A, 2 ns / 150 ns) into every family. Extracted node names ending in `#` are
+  renamed `_h` for this.
+- Evidence and rebuild: `scratch/pads-pd12/` (`NOTES.md`, `v2/build.sh`, `sims4.sh`/`sims5.sh`,
+  `compare.py`); backup of the previous published tree: `scratch/pads-pd12/backup-published/`.
+  Results: see interface-changes PD13–PD17.
 
 ### Protection foundation (drop-in macro v2.1, `network-shunt/`)
 

@@ -9,7 +9,8 @@ from design import PROJECT, resolve
 
 
 def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_width_um=20., fs_high_width_um=20., fs_series_geometry_um=None,
-          termination_geometry_um=None, high_side_fast_off=False, hs_mirror_reference=False):
+          termination_geometry_um=None, high_side_fast_off=False, hs_mirror_reference=False, pad_side_6v=False,
+          termination_switch_units=8, termination_trim=None, term_gate_drive=1., fast_off_width_um=4., control_width_um=2.):
     # Stress-safe USB revision (opt-in; defaults reproduce the canonical cell):
     # termination_geometry_um=(w, l, n): n parallel unsalicided ppolyf_u segments
     #   (ppolyf_s 24 ohm spans 14..60 ohm across res corners; ppolyf_u ~+/-19 %)
@@ -17,6 +18,19 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
     #   when the enable falls (the bleed chain alone turns it off in ~100 ns)
     # hs_mirror_reference: diode-connected reference PMOS on HS_PBIAS; HS_PBIAS becomes
     #   a current input (I_leg / hs_units) from the trimmed bias DAC
+    # PD21 (HBM item a), opt-in: every 3.3 V device with a terminal that follows the pad during an unpowered
+    #   2 kV event becomes a 6 V device: shunt/termination switches (USB-only after the SATA/PCIe split, so
+    #   TERM_VCM = 0 V and 6 V NMOS switches keep full gate drive), divider ground, pull-down, and on each
+    #   back-to-back high side the VDD-side PMOS (its gate follows the floating well, i.e. the pad - 0.7 V)
+    #   plus the well restore / fast-off PMOS and the supply-gated ground switch. The pad-side PMOS keeps
+    #   3.3 V oxide: all its terminals stay within one junction drop of each other.
+    # PD28 (USB on 6 V, opt-in; defaults reproduce the canonical cell): termination_switch_units = parallel
+    #   20 um shunt switches per leg (8 canonical); termination_trim = dict(poly=(w, l), switch_w=um, bits=n):
+    #   binary-weighted parallel units (poly width and switch width x 2^k) from PAD to TERM_VCM, gated by
+    #   TERM_TRIM<k> (digital supplies trim[k] AND term_en, as for the HS pair, PD27). Base + trim brings the
+    #   ppolyf_u +/-16 % corner spread back inside 45 ohm +/- 10 %.
+    N6 = ('nfet_06v0', .7) if pad_side_6v else ('nfet_03v3', .28)
+    P6 = ('pfet_06v0', .55) if pad_side_6v else ('pfet_03v3', .28)
     if any(type(n) is not int or n < 1 for n in (hs_units,fs_high_units,differential_units)):
         raise ValueError('Positive integer unit counts required')
     if not .8<=differential_width_um<=20.:
@@ -30,6 +44,8 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
     ports=['PAD_P','PAD_N','VDD','VSS','TERM_VCM','TERM_ENABLE','DIFF_ENABLE','DIV_ENABLE','BYPASS_ENABLE',
            'RX_P','RX_N','HS_PBIAS','HS_P','HS_N','FS_HIGH_P','FS_HIGH_N','FS_LOW_P','FS_LOW_N',
            'PULLUP_P','PULLUP_N','PULLDOWN_P','PULLDOWN_N']
+    if termination_trim:
+        ports += [f'TERM_TRIM{k}' for k in range(termination_trim['bits'])]
     def mos(name,d,g,s,b,model='nfet_03v3',w=8.,l=.28):
         devices.append(Mos(name,(d,g,s,b),model,w,l))
     def resistor(name,a,b,ohm,model='ppolyf_u_1k',width=1.):
@@ -41,20 +57,20 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
         # VDD. Passive gate-to-source bias keeps the pair off without power.
         well=name+'_WELL';gate=name+'_GATE';out=name+'_OUT'
         for i in range(units):
-            mos(f'{name}_SUP_{i}','VDD',gate,well,well,'pfet_03v3',width,.28)
+            mos(f'{name}_SUP_{i}','VDD',gate,well,well,P6[0],width,P6[1])
             mos(f'{name}_PAD_{i}',out,gate,well,well,'pfet_03v3',width,.28)
         # Series ground switch opens when the local supply disappears, even
         # if the external enable remains asserted. No ideal power-good signal.
         # The floating gate can undershoot during VDD collapse while a
         # retained request remains high; use the 6V gate-oxide device here.
-        mos(name+'_CONTROL',gate,enable,name+'_CONTROL_S','VSS','nfet_06v0',2.,.7)
-        mos(name+'_POWER',name+'_CONTROL_S','VDD','VSS','VSS',w=4.)
+        mos(name+'_CONTROL',gate,enable,name+'_CONTROL_S','VSS','nfet_06v0',control_width_um if name.startswith('FS_') else 2.,.7)  # PD28 opt-in (2 canonical)
+        mos(name+'_POWER',name+'_CONTROL_S','VDD','VSS','VSS',N6[0],max(4.,2.*control_width_um) if name.startswith('FS_') else 4.,N6[1])
         # A falling VDD turns on a well-referenced PMOS that restores the
         # pass gates toward their floating source, avoiding a resistor-only
         # 100kohm discharge delay. Its body follows the same local well.
-        mos(name+'_RESTORE',gate,'VDD',well,well,'pfet_03v3',4.,.28)
+        mos(name+'_RESTORE',gate,'VDD',well,well,P6[0],4.,P6[1])
         if high_side_fast_off and name.startswith('FS_'):
-            mos(name+'_FASTOFF',gate,enable,well,well,'pfet_03v3',4.,.28)
+            mos(name+'_FASTOFF',gate,enable,well,well,P6[0],fast_off_width_um,P6[1])  # PD28: width opt-in (4 canonical)
         previous=well
         for i in range(8):
             following=gate if i==7 else f'{name}_BLEED_{i}'
@@ -68,15 +84,18 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
         # Static CMOS complex gate: TERM_ENABLE OR (FS_LOW AND VCM_LOW_OK).
         # Bias qualification blocks a lone FS-low request at serial common
         # mode; TERM_ENABLE remains a distinct intentional shunt request.
+        # PD28 term_gate_drive (opt-in): scales the local TERM_GATE driver for the 6 V shunt bank gate load
+        # (output stage x term_gate_drive, capped at 20 um; first stage x sqrt). 1.0 = canonical sizes.
+        g2=min(term_gate_drive,2.5);g1=round(g2**.5,3) if term_gate_drive!=1. else 1.
         low='FS_LOW_'+leg;inv='TERM_OR_'+leg+'_B';out='TERM_GATE_'+leg;series='TERM_OR_'+leg+'_S'
-        mos('TERM_OR_'+leg+'_N0',inv,'TERM_ENABLE','VSS','VSS',w=2.)
-        mos('TERM_OR_'+leg+'_N1',inv,low,'TERM_OR_'+leg+'_NS','VSS',w=2.)
-        mos('TERM_OR_'+leg+'_QUAL_N','TERM_OR_'+leg+'_NS','VCM_LOW_OK','VSS','VSS',w=4.)
-        mos('TERM_OR_'+leg+'_P0',series,'TERM_ENABLE','VDD','VDD','pfet_03v3',4.,.28)
-        mos('TERM_OR_'+leg+'_P1',inv,low,series,'VDD','pfet_03v3',4.,.28)
-        mos('TERM_OR_'+leg+'_QUAL_P',inv,'VCM_LOW_OK',series,'VDD','pfet_03v3',4.,.28)
-        mos('TERM_OR_'+leg+'_OUT_N',out,inv,'VSS','VSS',w=4.)
-        mos('TERM_OR_'+leg+'_OUT_P',out,inv,'VDD','VDD','pfet_03v3',8.,.28)
+        mos('TERM_OR_'+leg+'_N0',inv,'TERM_ENABLE','VSS','VSS',w=2.*g1)
+        mos('TERM_OR_'+leg+'_N1',inv,low,'TERM_OR_'+leg+'_NS','VSS',w=2.*g1)
+        mos('TERM_OR_'+leg+'_QUAL_N','TERM_OR_'+leg+'_NS','VCM_LOW_OK','VSS','VSS',w=4.*g1)
+        mos('TERM_OR_'+leg+'_P0',series,'TERM_ENABLE','VDD','VDD','pfet_03v3',4.*g1,.28)
+        mos('TERM_OR_'+leg+'_P1',inv,low,series,'VDD','pfet_03v3',4.*g1,.28)
+        mos('TERM_OR_'+leg+'_QUAL_P',inv,'VCM_LOW_OK',series,'VDD','pfet_03v3',4.*g1,.28)
+        mos('TERM_OR_'+leg+'_OUT_N',out,inv,'VSS','VSS',w=4.*g2)
+        mos('TERM_OR_'+leg+'_OUT_P',out,inv,'VDD','VDD','pfet_03v3',8.*g2,.28)
         previous=out
         for i in range(4):
             following='VSS' if i==3 else f'TERM_GATE_{leg}_BLEED_{i}'
@@ -102,13 +121,22 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
             w_um, l_um, segments = termination_geometry_um
             for k in range(segments):
                 devices.append(Resistor('TERM_'+leg+('' if segments == 1 else f'_SEG{k}'),(pad,'TERM_'+leg+'_R','VSS'),'ppolyf_u',w_um,l_um))
-        for i in range(8):
-            mos(f'TERM_{leg}_{i}','TERM_'+leg+'_R',local_enable,'TERM_VCM','VSS',w=20.)
+        for i in range(termination_switch_units):
+            mos(f'TERM_{leg}_{i}','TERM_'+leg+'_R',local_enable,'TERM_VCM','VSS',N6[0],20.,N6[1])
+        if termination_trim:
+            tw, tl = termination_trim['poly']
+            for k in range(termination_trim['bits']):
+                node = f'TRIM_{leg}_{k}_R'
+                devices.append(Resistor(f'TRIM_{leg}_{k}', (pad, node, 'VSS'), 'ppolyf_u', tw * 2 ** k, tl))
+                total = termination_trim['switch_w'] * 2 ** k
+                pieces = -(-total // 20)
+                for j in range(int(pieces)):
+                    mos(f'TRIM_{leg}_{k}_{j}', node, f'TERM_TRIM{k}', 'TERM_VCM', 'VSS', N6[0], total / pieces, N6[1])
         # Divider switch is on the low-voltage side of the upper resistor.
         # This avoids an NMOS pass-gate ceiling at the 3.3V bond input.
         resistor('DIV_TOP_'+leg,pad,'DIV_'+leg,blocks['rxlevel']['parameters']['series_r_ohm'])
         resistor('DIV_BOTTOM_'+leg,'DIV_'+leg,'DIV_LOW_'+leg,blocks['rxlevel']['parameters']['shunt_r_ohm'])
-        mos('DIV_GROUND_'+leg,'DIV_LOW_'+leg,'DIV_ENABLE','VSS','VSS',w=20.)
+        mos('DIV_GROUND_'+leg,'DIV_LOW_'+leg,'DIV_ENABLE','VSS','VSS',N6[0],20.,N6[1])
         mos('DIV_SELECT_'+leg,'DIV_'+leg,'DIV_ENABLE','RX_'+leg,'VSS','nfet_06v0',20.,.7)
         for i in range(4):
             mos(f'BYPASS_{leg}_{i}',pad,'BYPASS_ENABLE','RX_'+leg,'VSS','nfet_06v0',20.,.7)
@@ -120,13 +148,13 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
         high_side('FS_'+leg,pad,'FS_HIGH_'+leg,15.8,fs_high_units,fs_high_width_um,fs_series_geometry_um)
         high_side('PULLUP_'+leg,pad,'PULLUP_'+leg,blocks['usbfs']['parameters']['pullup_ohm']-320,4)
         resistor('PULLDOWN_'+leg,pad,'PULLDOWN_'+leg+'_R',blocks['usbfs']['parameters']['pulldown_ohm']-800)
-        mos('PULLDOWN_'+leg,'PULLDOWN_'+leg+'_R','PULLDOWN_'+leg,'VSS','VSS')
+        mos('PULLDOWN_'+leg,'PULLDOWN_'+leg+'_R','PULLDOWN_'+leg,'VSS','VSS',N6[0],8.,N6[1])
     # Bridge the inner resistor nodes, reusing both pad-side termination
     # resistors. Ground/common-mode switches stay off in differential mode.
     # All branches remain attached in every configuration; no ideal switch
     # erases the off bridge's capacitance. Control exclusion remains local work.
     for i in range(differential_units):
-        mos(f'DIFF_TERM_{i}','TERM_P_R','DIFF_ENABLE','TERM_N_R','VSS',w=differential_width_um)
+        mos(f'DIFF_TERM_{i}','TERM_P_R','DIFF_ENABLE','TERM_N_R','VSS',N6[0],differential_width_um,N6[1])
     return Circuit('pad_wired_receive_usb',ports,devices,required,[
         'FS_LOW_P/N reuse the shunt bank through bias-qualified local CMOS controls. The nominal bias detector blocks lone FS-low requests at serial common mode; it does not ground TERM_VCM, override TERM_ENABLE, or enforce differential/FS exclusion. Trip variation and transient qualification remain open.',
         'RX_P/N connect to the shared serial receiver; USB differential/single-ended sensing attaches at PAD_P/N. Receivers are core boundaries.',

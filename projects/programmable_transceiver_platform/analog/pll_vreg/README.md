@@ -1,7 +1,10 @@
 # `pt_pll_vreg`: ring-PLL supply regulator (PDN-04 / RA-17)
 
-Owner: pads (2026-11-10). Consumer: wired RX (`pll_ring`: pll_tx, pll_cdr, pll_host), one instance per ring.
-Status: **schematic-level design with simulations. No layout yet.**
+Owner: pads (2026-11-10). Consumer: wired RX (`pll_ring`): **two instances, pll_tx and pll_cdr** (PD25/PD28; pll_host
+runs on the raw pll island rail). **PD28 (2026-11-11): the published cell is the packed variant, 0.241 mm² per instance**
+(gate cap 15,000 µm², output cap 10,000 µm²); see "PD28" at the end. Sections below describe the PD20 cell (0.285 mm²).
+Status: **laid out** (`pll_vreg_layout.py` → `generated/pt_pll_vreg.gds`, Magic DRC 0, LVS unique, KLayout precheck clean);
+extracted reruns in `evidence/pll_vreg-ext*.json` (see "Layout" below).
 
 ## Why
 
@@ -49,7 +52,94 @@ Area estimate: ≈ 0.08 mm² per instance (pass 16k µm² of gate, caps 50k µm�
   runs in `BYP` (unregulated, A3 jitter), unless the ring is resized for ≥ 900 MHz at 2.6 V ss (wider header/tail).
   480/625 MHz modes run regulated with margin.
 - VOUT tracks 0.9 × VIN below ~100 kHz. That is inside the PLL bandwidth (2.6 MHz) and corrected by VCTRL.
-- No layout yet. The next step is a Magic generator (native NMOS PCell array, MOS-cap tiles, ppolyf snakes),
-  then extracted reruns of the same benches.
+- Layout: see the "Layout" section.
 - Needed bits: one `BYP` register bit per instance, **reset 1** (bypassed, i.e. the v3 behaviour; firmware clears it
   for the 480/625 MHz modes after the island is up), and two ATB leaves per instance (ATB_OUT, ATB_G).
+
+## Layout (2026-11-10, pads)
+
+`pll_vreg_layout.py layout` builds the cell with the converter netlist-to-layout kit (`analog/converters/lib/convkit.py`:
+PCell rows, private Metal2 risers, Metal3 channel tracks, Metal4 trunks; VIN/VOUT/VSS trunks 4 µm, VG 1 µm) and
+publishes `generated/pt_pll_vreg.gds` (top `pt_pll_vreg`), `pt_pll_vreg.ext.spice` (Magic, C threshold 0), the LVS
+report and `pt_pll_vreg-layout.json` / `-kldrc.json`. Layout netlist: `pt_pll_vreg_layout.spice`.
+
+Implementation mappings versus `pt_pll_vreg.spice` (the extracted reruns use the drawn cell, not these mappings):
+pass device 60 × W 100 µm units (same W 6000 µm, L 2.7 µm; 100 µm is the native model's W bin limit); bypass PMOS 20 × W 50 µm; MOS caps unchanged
+(20 × 38.73², 40 × 22.36²); resistors as 50 µm series units of `ppolyf_u_1k` (3.3 V high-R poly; every resistor
+sees ≤ VIN) instead of `ppolyf_u_1k_6p0`.
+
+Native device (NAT rules): Magic's GF180 tech grows NAT only 0.26 µm over the native COMP, which fails NAT.1
+(2 µm). The generator draws the native units with the guard ring 2.4 µm from the channel COMP (NAT.2) and all gate
+poly inside NAT (NAT.9), then `nat_fix()` regrows NAT to 2 µm and extends DUALGATE over it (NAT.8, DV.2) in the
+exported GDS. That GDS is re-extracted by Magic and LVS-compared again (unique match).
+
+Checks: Magic DRC 0; netgen LVS unique (layout and NAT-fixed GDS round trip); KLayout tapeout precheck main 0 /
+antenna 0. Size **452 × 632 µm = 0.285 mm²** per instance (the 0.08 mm² estimate counted gate area only; guard
+rings, the 2 µm NAT surround and the routing channels triple it).
+
+### Extracted reruns (`pll_vreg_ext.py`, evidence `evidence/pll_vreg-ext.json`, `pll_vreg-ext-ring.json`)
+
+Same benches as the schematic, with `generated/pt_pll_vreg.ext.spice` (Magic, all parasitic C):
+
+| Check | Extracted | Schematic |
+| --- | --- | --- |
+| DC dropout (VIN 3.05–3.35 V, 3/8 mA, tt27/ss22/ss32/ff22/ff32) | 0.31–0.50 V (saturated everywhere) | 0.31–0.50 V |
+| AC PSRR worst 10–200 MHz (6 mA, VIN 3.15 V) | **−25.7 dB** tt, −27.1 ss32, −26.3 ff32 (−27.3 dB at 78 MHz, −29.6 at 156 MHz, tt) | −26.0 / −27.4 / −26.7 |
+| Ring Kvdd at 78 MHz, 60 mV rail ripple, extracted `pt_pll_ring` | **9.65 / 10.3 / 11.4 MHz/V** (tt/ss32/ff22) | 9.2 / 8.8 / 11.0 |
+| Ring DJ (peak, 625 MHz) / spur at 78 MHz | **1.89 / 2.02 / 2.23 ps**, −48.6 / −48.1 / −47.2 dBc | 1.81 / 1.72 / 2.15 ps |
+| 156 MHz ripple (tt) | 0.75 ps, −56.6 dBc | 0.69 ps |
+| 10 MHz ripple (tt) | 10.9 MHz/V (0.28 ps per mV) | 10.9 MHz/V |
+| BYP = 1 (bypass, 78 MHz) | 169 MHz/V, 33.0 ps, −23.8 dBc (= A3) | 169 MHz/V, 33 ps |
+| A2 worst ripple (90 mV at 78 MHz), scaled | ≤ 3.4 ps (criterion < 5 ps) | ≤ 3.2 ps |
+| Start-up (10 µs VIN ramp, 7 mA) | t95 26–38 µs, no overshoot, VOUT never above VIN | ≤ 37 µs |
+| Bypass drop at 8 mA | 33–43 mV | 33–43 mV |
+
+The layout costs ≈ 0.3–1.4 dB of PSRR and ≤ 0.3 ps of DJ against the schematic; every criterion still passes.
+The 810 MHz limit above is unchanged (it is a headroom limit of the ring, not of the regulator).
+
+## PD28 (2026-11-11, pads): packed cell published, two instances
+
+- **Instances: pll_tx and pll_cdr only.** pll_host (312.5 Mb/s host link) takes the unregulated A3 supply DJ
+  (≈ 29–33 ps pk at 40–90 mV, 78 MHz ≈ 0.9 % UI); its `BYP` bit and ATB leaves are not needed (`pllvreg.config` already
+  has only `tx_bypass` / `rx_bypass`). Ring area 3 × 0.285 = 0.856 mm² → **2 × 0.241 = 0.482 mm²**.
+- **Packed cell** (`pll_vreg_layout.py`, default `packed=True`; `layout --pd20` rebuilds the PD20 cell): gate cap 2 × 5 ×
+  38.73² µm², output cap 20 × 22.36² µm², packed into the resistor rows. `generated/pt_pll_vreg.gds` **398 × 606 µm
+  (bbox −23…375 × 0…605.6 µm) = 0.241 mm²**; Magic DRC 0, netgen LVS unique (layout and NAT-fixed GDS round trip),
+  KLayout precheck main 0 / antenna 0. The width is set by the 2 × 30 native pass units (W 6000 µm at L 2.7 µm is
+  needed for the 0.31–0.50 V dropout), so it does not shrink further. Schematic `pt_pll_vreg.spice` / `pll_vreg.P` updated
+  to the same caps. Backup of the PD20 outputs: `scratch/pads-pd28/backup-published/pll_vreg-pre-pd28/`.
+- **Extracted reruns** (`pll_vreg_ext.py`, `PLL_VREG_EXT` override added; evidence `evidence/pd28-vreg-packed-ext.json`,
+  `evidence/pll_vreg-ext-packed.json`). Ring load is now the **r9** extracted ring (`timing/generated/pll_ring.ext.spice`);
+  the PD20 cell was rerun on the same bench for comparison.
+
+| Check (extracted) | Packed (published) | PD20 cell, same bench | Criterion |
+| --- | --- | --- | --- |
+| AC PSRR worst 10–200 MHz (6 mA, VIN 3.15 V) | −23.1 tt / −24.0 ss32 / −24.0 ff22 / −24.0 ss22 / −23.9 ff32 dB | −25.7 / −27.1 / −26.3 (PD20 evidence) | ≥ 20 dB |
+| Dropout (VIN 3.05–3.35 V, 3/8 mA, 5 corners) | 0.31–0.50 V | 0.31–0.50 V | saturated |
+| Ring at 78 MHz, 60 mV: Kvdd / DJ pk / spur, tt27 (VCTRL 1.5 V, 934 MHz) | 12.8 MHz/V, **2.51 ps**, −46.2 dBc | 8.4 MHz/V, 1.65 ps, −49.8 dBc | |
+| same, ss32 (VCTRL 1.5 V, 675 MHz) | 8.5 MHz/V, **1.67 ps**, −49.7 dBc | — | |
+| same, ff22 at VCTRL 1.1 V (771 MHz, in band) | 14.0 MHz/V, **2.73 ps**, −45.4 dBc | 10.3 MHz/V, 2.02 ps, −48.0 dBc | |
+| A2 worst ripple 90 mV, scaled | ≤ 4.1 ps | ≤ 3.0 ps | < 5 ps |
+| Start-up t95 (1 µs / 10 µs VIN ramp) | 10–15 / 18–24 µs, no overshoot | 16 / 26–38 µs | ≤ 50 µs (digital wait) |
+| BYP = 1 drop at 8 mA | 33–43 mV | 33–43 mV | |
+
+  ff22 at the default VCTRL 1.5 V runs the r9 ring at 1234 MHz, outside its 393–834 MHz band: 27.1 MHz/V, 5.30 ps
+  (reported, not a valid operating point). The packing costs ≈ 2.5–3 dB of PSRR and ≈ 0.7–0.9 ps of DJ at 60 mV; every
+  criterion still passes, with less margin (4.1 of 5 ps at the A2 worst case).
+
+### PD33 (2026-11-11): area is still too large for v5, so a dual-output cell is proposed (schematic only)
+
+The coordinator needs ≤ 0.06 mm² per ring. The area is set by guard-ring overhead. The 60 single-finger native PCells
+take 0.058 mm²; one nf = 60 PCell measures 0.021 mm². The pass device itself cannot shrink: L 1.8 costs
+2.5–3.6 dB of PSRR, and a smaller W runs out of ss dropout.
+
+Proposal `pt_pll_vreg2` (one cell for pll_tx and pll_cdr, about 0.12 mm²):
+- a shared divider (30k/270k), OTA and gate cap (30,000 µm²);
+- two native followers, each with its own 3,000 µm² Cout and BYP.
+
+Schematic results for the open-loop output, with the extracted r9 ring:
+- PSRR −23.3 / −24.4 / −24.3 dB (tt/ss/ff);
+- DJ 2.54 / 1.93 / 2.71 ps at 60 mV.
+
+These match the published packed cell. Evidence: `evidence/pd28-vreg-area-options.json`; interface-changes PD33.
+Not laid out yet. It needs a strapped nf = 60 native sub-macro, because the PCell does not strap its fingers.

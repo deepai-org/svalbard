@@ -13,6 +13,83 @@ import re
 import sys
 
 
+# PD14 (2026-11-10): close the n+ guard ring of the RC-trigger PMOS row (X0/X1/X2, native GF_NI_DVDD_BASE).
+# The native n-tap is a U open at the bottom where the three poly gate combs exit to their contact row.
+# Clamp frame, um: p+ substrate-tap ring top edge 143.27; poly bus 143.96-, contacts 144.06-144.28; nwell
+# bottom 144.51; n-tap arms from 144.925; trigger p-diffusion 145.32-150.32. New stack (GF180 MV rules):
+# nwell down to 143.45 (DF.17_MV 0.16 from the p-tap), n-tap bar COMP 143.63-143.93 (DF.3a_MV 0.36 to the p-tap,
+# DF.4d_MV 0.16, DF.1a_MV 0.3) joined to both arms, its nplus 143.47-144.09 (NP.5d 0.16; NP.12: no nplus on the
+# p-gate poly), poly bus moved to 144.23-144.59 (PL.5a_MV 0.3), contacts 144.30-144.52 (CO.3 0.07, CO.8 0.17),
+# metal1 gate pads extended over them, drain-comb bars raised 0.12 um, DUALGATE extended over the closed ring.
+# Devices, nets and the rest of the native geometry are unchanged.
+CLOSE_TRIGGER_RING=True
+RING=dict(x0=16.305,x1=58.585,arm_w=.45,nw=(15.89,143.45,59.0,144.6),bar=(143.63,143.93),np=(143.47,144.09),
+          poly=(144.23,144.59),cont=(144.30,144.52),old_cont=(144.0,144.35),win=(17.0,143.9,58.0,144.5))
+
+
+def close_trigger_ring(layout,root,k):
+    root.flatten(True)
+    # flattening lifts native labels (e.g. VRC) to the top level next to ours: keep only DVSS/DVDD/TIMING
+    for ix in layout.layer_indexes():
+        for s in list(root.shapes(ix).each()):
+            if s.is_text() and s.text.string not in ('DVSS','DVDD','TIMING'):s.delete()
+    dbu=layout.dbu
+    def L(n):return layout.layer(n,0)
+    def B(x0,y0,x1,y1):return k.DBox(x0,y0,x1,y1).to_itype(dbu)
+    R=RING;x0,x1=R['x0'],R['x1']
+    sh=lambda n:root.shapes(L(n))
+    # contacts of the old poly row -> removed (their centres move up with the bus)
+    moved=[]
+    for s in list(sh(33).each()):
+        b=s.bbox().to_dtype(dbu);cx,cy=(b.left+b.right)/2,(b.bottom+b.top)/2
+        if R['old_cont'][0]<cy<R['old_cont'][1] and R['win'][0]<cx<R['win'][2]:
+            moved.append(cx);s.delete()
+    if len(moved)<10:raise ValueError('trigger PMOS poly contact row not found (%d)'%len(moved))
+    # poly: clip the combs below the new bus, add one bus per comb at the new height
+    poly=k.Region(sh(30));win=k.Region(B(R['win'][0]-1.5,143.5,R['win'][2]+1.5,145.4))
+    combs=(poly&win).merged()
+    heads=k.Region()
+    for pg in combs.each():
+        bb=pg.bbox().to_dtype(dbu)
+        if bb.bottom<143.8 or bb.bottom>144.1:raise ValueError('unexpected poly comb at %s'%bb)
+        heads.insert(B(bb.left,R['poly'][0],bb.right,R['poly'][1]))
+    keep=(poly-win)+((poly&win)-k.Region(B(R['win'][0]-1.5,143.5,R['win'][2]+1.5,R['poly'][0])))+heads
+    sh(30).clear();sh(30).insert(keep.merged())
+    # new contacts + metal1 pads (old gate pads extended upward over them)
+    c0,c1=R['cont']
+    for cx in moved:
+        sh(33).insert(B(cx-.11,c0,cx+.11,c1))
+    m1=k.Region(sh(34))
+    pads=k.Region();xs=sorted(moved);run=[xs[0]]
+    for cx in xs[1:]+[None]:
+        if cx is not None and cx-run[-1]<.6:run.append(cx);continue
+        pads.insert(B(run[0]-.17,144.0,run[-1]+.17,c1+.005))   # one pad per contact cluster (same gate net); CO.6 0.005
+        if cx is not None:run=[cx]
+    # the three drain-comb bars above the contact row start at 144.64; raise their bottom edge to 144.76
+    # (bar 144.76-145.02 = 0.26 >= M1.1) so the moved gate pads keep M1.2a 0.23. The vertical links of each
+    # comb (x 22.795-23.175, 26.455-26.835, 56.825-57.205) are kept.
+    cut=k.Region(B(17.5,144.57,58.,144.76))
+    links=k.Region()
+    for lx0,lx1 in ((22.795,23.175),(26.455,26.835),(56.825,57.205)):links.insert(B(lx0,144.3,lx1,144.8))
+    m1=(m1-cut)+(m1&cut&links)
+    sh(34).clear();sh(34).insert((m1+pads).merged())
+    # nwell extension, n-tap bar joined to the two arms, its nplus
+    nw=k.Region(sh(21))+k.Region(B(*R['nw']));sh(21).clear();sh(21).insert(nw.merged())
+    b0,b1=R['bar'];aw=R['arm_w']
+    comp=k.Region(sh(22))+k.Region(B(x0,b0,x1,b1))+k.Region(B(x0,b0,x0+aw,144.95))+k.Region(B(x1-aw,b0,x1,144.95))
+    sh(22).clear();sh(22).insert(comp.merged())
+    n0,n1=R['np']
+    npl=k.Region(sh(32))+k.Region(B(x0-.16,n0,x1+.16,n1))+k.Region(B(x0-.16,n0,x0+aw+.16,144.95))+k.Region(B(x1-aw-.16,n0,x1+.16,144.95))
+    sh(32).clear();sh(32).insert(npl.merged())
+    # DUALGATE: the closed ring is one COMP touching the 6 V PMOS DUALGATE, so DUALGATE now encloses the whole
+    # ring by 0.24 (DV.6/DV.7) and is merged with the NMOS-row DUALGATE below across the p+ substrate-tap bar
+    # (substrate taps may be partially overlapped; DV.2 merges gaps < 0.44).
+    dg=k.Region(sh(55))+k.Region(B(x0-.24,142.4,x1+.24,151.785+.24))
+    sh(55).clear();sh(55).insert(dg.merged())
+    return dict(closed=True,contacts_moved=len(moved),poly_combs=combs.count(),nwell_bottom_um=R['nw'][1],
+                bar_um=[x0,b0,x1,b1],poly_bus_um=list(R['poly']),contact_row_um=list(R['cont']))
+
+
 def assemble(work):
     import klayout.db as k
     config=json.loads((work/'config.json').read_text())
@@ -78,7 +155,11 @@ def assemble(work):
             else:
                 for shape in list(cell.each_shape(ix)):
                     if shape.is_text():shape.delete()
-    layout.read(str(work/'clamp_mim.gds'));mim=layout.cell('clamp_mim')
+    layout.read(str(work/'clamp_mim.gds'));mims={'rail':layout.cell('clamp_mim'),'timing':layout.cell('clamp_mim')}
+    if (work/'clamp_mim_t.gds').exists():
+        layout.read(str(work/'clamp_mim_t.gds'));mims['timing']=layout.cell('clamp_mim_t')
+    # PCell metal4 extends side/2+1.2 um from the centre; the return wire lands 1 um into its left overhang.
+    m4_left={kind:105.-config[kind+'_side_um']/2-1.2 for kind in ('timing','rail')}
     root=layout.create_cell('pad_isolated_rail_clamp_layout')
     root.insert(k.DCellInstArray(base.cell_index(),k.DTrans()))
     layers={1:34,2:36,3:42,4:46,5:81};vias={1:35,2:38,3:40,4:41}
@@ -96,24 +177,25 @@ def assemble(work):
     for kind,y in [('timing',175.),('rail',245.)]:
         x0,y0=timing_anchor if kind=='timing' else rail_anchor
         anchors[kind]=[x0,y0];placements[kind]=[105.,y]
-        root.insert(k.DCellInstArray(mim.cell_index(),k.DTrans(105.,y)))
+        root.insert(k.DCellInstArray(mims[kind].cell_index(),k.DTrans(105.,y)))
         stack(x0,y0,1 if kind=='timing' else 3,5)
         wire(81,(x0,y0),(105.,y0),1.)
         wire(81,(105.,y0),(105.,y),1.)
         # Both capacitor bottom plates are on the return net. The PCell's
         # left M4 overhang is outside its top plate, avoiding a via ambiguity.
-        wire(46,(80.,y),(89.,y),2.)
+        wire(46,(80.,y),(m4_left[kind]+1.,y),2.)
     ground=ground_anchor
     stack(*ground,3,4)
     wire(46,ground,(80.,ground[1]),2.)
     wire(46,(80.,175.),(80.,ground[1]),2.)
     for text,(x,y),layer in [('DVSS',ground,46),('DVDD',anchors['rail'],81),('TIMING',anchors['timing'],81)]:
         root.shapes(layout.layer(layer,10)).insert(k.DText(text,k.DTrans(x,y)))
+    ring=close_trigger_ring(layout,root,k) if CLOSE_TRIGGER_RING else None
     opts=k.SaveLayoutOptions();opts.add_cell(root.cell_index());layout.write(str(work/'clamp.gds'),opts)
     report=dict(status='generated_clamp_requires_extraction_and_rule_review',native_base=base.name,
         source_gds_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),removed_mos_capacitors=removed,
         preserved_leaf_layers=[34,35,36,38,42],gate_landings_um=anchors,ground_landing_um=ground,mim_centers_um=placements,
-        bbox_um=str(root.dbbox()),capacitor_parameters=config,
+        bbox_um=str(root.dbbox()),capacitor_parameters=config,trigger_pmos_ring=ring,
         limitations=['Native transistor/resistor/diode geometry retained; modified clamp is not inherited ESD qualification.',
             'New interconnect uses single vias and is not discharge-current qualified.',
             'Standalone clamp macro; no pad array, protection rail or whole-ring integration.'])
@@ -126,17 +208,20 @@ def generate(work):
     from run_first_pass import lvs
     from native_loading import capacitances
     from design import PROJECT
-    if CLAMP_CAPACITORS['timing_side_um']!=CLAMP_CAPACITORS['rail_side_um']:
-        raise ValueError('Separate MIM masters required for unequal capacitor sizes')
     work.mkdir(parents=True,exist_ok=False)
     (work/'config.json').write_text(json.dumps(CLAMP_CAPACITORS,indent=2)+'\n')
-    side=CLAMP_CAPACITORS['timing_side_um'];pcell=CLAMP_CAPACITORS['pcell']
-    script=f'''crashbackups stop
+    pcell=CLAMP_CAPACITORS['pcell']
+    # One MIM master per distinct side: clamp_mim (rail decoupling), clamp_mim_t (RC timing) when it differs.
+    masters=[('clamp_mim',CLAMP_CAPACITORS['rail_side_um'])]
+    if CLAMP_CAPACITORS['timing_side_um']!=CLAMP_CAPACITORS['rail_side_um']:
+        masters.append(('clamp_mim_t',CLAMP_CAPACITORS['timing_side_um']))
+    for name,side in masters:
+        script=f'''crashbackups stop
 load workspace
 units internal
 set cell [magic::gencell_makecell gf180mcu::{pcell} w {side} l {side}]
 load $cell
-save clamp_mim
+save {name}
 select top cell
 expand
 drc check
@@ -145,10 +230,10 @@ puts "MIM_DRC [drc list count total]"
 extract all
 ext2spice lvs
 ext2spice
-gds write clamp_mim.gds
+gds write {name}.gds
 quit -noprompt
 '''
-    (work/'mim.tcl').write_text(script);magic(work,'mim.tcl')
+        (work/f'{name}.tcl').write_text(script);magic(work,f'{name}.tcl')
     (work/'clamp_layout.py').write_text(Path(__file__).read_text())
     subprocess.run(['docker','run','--rm','--network','none','--entrypoint','python3',
         '--mount',f'type=bind,src={work},dst=/work',IMAGE,'/work/clamp_layout.py','--inside','--output-dir','/work'],check=True,timeout=60)
@@ -177,8 +262,8 @@ quit -noprompt
     topology=capacitances(work/'clamp_flat.ext','gf180mcu_fd_io__dvdd')
     pdk=PROJECT.parents[1]/'scratch/transceiver-pad-pdk/ngspice'
     generated=Path(__file__).with_name('generated').resolve()
-    candidate,deps=build_candidate(generated/'rf-receive-extracted-c.spice',generated/'protection-primitives',pdk)
-    reference=re.search(r'(?ms)^.subckt pad_isolated_rail_clamp .*?^.ends pad_isolated_rail_clamp',candidate).group()
+    from protection_candidate import native_clamp_lines
+    reference='\n'.join(native_clamp_lines(pdk,CLAMP_CAPACITORS['timing_side_um'],CLAMP_CAPACITORS['rail_side_um']))
     reference=reference.replace('.subckt pad_isolated_rail_clamp DVDD DVSS VSS','.subckt clamp_reference DVSS DVDD TIMING').replace('.ends pad_isolated_rail_clamp','.ends clamp_reference')
     reference=re.sub(r'\bn8\b','TIMING',reference)
     (work/'reference.spice').write_text(reference+'\n')

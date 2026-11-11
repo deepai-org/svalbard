@@ -101,19 +101,6 @@ Circuit 1: ppolyf_u                        |Circuit 2: ppolyf_u
 Cell pin lists are equivalent.
 Device classes ppolyf_u and ppolyf_u are equivalent.
 
-Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
-Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
-Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield       
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
-
 Circuit 1 cell ppolyf_u_1k_6p0 and Circuit 2 cell ppolyf_u_1k_6p0 are black boxes.
 Warning: Equate pins:  cell ppolyf_u_1k_6p0 is a placeholder, treated as a black box.
 Warning: Equate pins:  cell ppolyf_u_1k_6p0 is a placeholder, treated as a black box.
@@ -127,29 +114,42 @@ Circuit 1: ppolyf_u_1k_6p0                 |Circuit 2: ppolyf_u_1k_6p0
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes ppolyf_u_1k_6p0 and ppolyf_u_1k_6p0 are equivalent.
+
+Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
 Flattening unmatched subcell pad_wired_transmit in circuit expected (1)(1 instance)
 Flattening unmatched subcell network_flat in circuit expected (1)(1 instance)
 
-Class combined_flat (0):  Merged 887 parallel devices.
+Class combined_flat (0):  Merged 442 parallel devices.
 Class combined_flat (0):  Merged 25 series devices.
-Class expected (1):  Merged 887 parallel devices.
+Class expected (1):  Merged 442 parallel devices.
 Class expected (1):  Merged 25 series devices.
 Subcircuit summary:
 Circuit 1: combined_flat                   |Circuit 2: expected                        
 -------------------------------------------|-------------------------------------------
-nfet_06v0 (803->29)                        |nfet_06v0 (803->29)                        
+nfet_06v0 (355->27)                        |nfet_06v0 (355->27)                        
+cap_mim_2f0_m4m5_noshield (4->3)           |cap_mim_2f0_m4m5_noshield (4->3)           
 nfet_03v3 (144->74)                        |nfet_03v3 (144->74)                        
-cap_mim_2f0_m4m5_noshield (2)              |cap_mim_2f0_m4m5_noshield (2)              
 diode_nd2ps_06v0 (12->3)                   |diode_nd2ps_06v0 (12->3)                   
+ppolyf_u_1k_6p0 (4)                        |ppolyf_u_1k_6p0 (4)                        
 pfet_06v0 (35->7)                          |pfet_06v0 (35->7)                          
-ppolyf_u_1k_6p0 (3)                        |ppolyf_u_1k_6p0 (3)                        
 diode_pd2nw_06v0 (8->2)                    |diode_pd2nw_06v0 (8->2)                    
 ppolyf_u_1k (17->3)                        |ppolyf_u_1k (17->3)                        
 ppolyf_s (2)                               |ppolyf_s (2)                               
 pfet_03v3 (2)                              |pfet_03v3 (2)                              
 ppolyf_u (12->1)                           |ppolyf_u (12->1)                           
 Number of devices: 128                     |Number of devices: 128                     
-Number of nets: 74                         |Number of nets: 74                         
+Number of nets: 73                         |Number of nets: 73                         
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
 Resolving symmetries by pin name.

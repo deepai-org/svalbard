@@ -1,0 +1,925 @@
+{
+  "status": "generated_candidate_requires_connectivity_and_rule_review",
+  "family": "wired_transmit",
+  "flat_cell": "tx_with_primary",
+  "marker_export": {
+    "added_area_um2": {
+      "62": 429.43199999999996,
+      "55": 0.0
+    },
+    "selected_poly_components": {
+      "nhighres": 17
+    },
+    "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
+    "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
+    "before_gds_sha256": "73857e9f9ff5474961e23623b926844a85e96cda2892f669f2f553f432c0e58d",
+    "after_gds_sha256": "04c18ea7153a14e9504bbfcf212eb6204b25f664cf4c9ca4f0cc15b8ca8ceee0",
+    "physical_magic_sha256": "2c809d87730c78d9efa01fea5d9869f295872c916c0f302172de72ae2977396f",
+    "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
+  },
+  "serial_tail_units": 4,
+  "folded_tail_layout": null,
+  "fs_high_width_um": 20.0,
+  "fs_series_geometry_um": null,
+  "bond_template": {
+    "cell": "Bondpad_5LM",
+    "source": "gf180mcu_fd_io",
+    "reference_parent": "5LM_METAL_RAIL_PAD_60",
+    "reference_offset_um": [
+      5.5,
+      0
+    ],
+    "opening_um": [
+      60,
+      60
+    ],
+    "scope": "Native bond geometry only; ring rails and provider placement remain open."
+  },
+  "stock_export_returncode": 0,
+  "requires_attached_primary_protection": false,
+  "pad_transverse_width_um": 6.0,
+  "pad_trunk_width_um": 8.0,
+  "pad_trunk_widths_um": {
+    "P": 8.0,
+    "N": 8.0
+  },
+  "net_track_x_um": {
+    "CASCODE": 3.0,
+    "DETECT_BLEED_0": 4.0,
+    "DETECT_BLEED_1": 5.0,
+    "DETECT_BLEED_2": 6.0,
+    "DETECT_BLEED_3": 7.0,
+    "DETECT_BLEED_4": 8.0,
+    "DETECT_BLEED_5": 9.0,
+    "DETECT_BLEED_6": 10.0,
+    "DETECT_ENABLE": 11.0,
+    "DETECT_ENABLE_B": 12.0,
+    "DETECT_ENABLE_LOCAL": 13.0,
+    "DETECT_N_I": 14.0,
+    "DETECT_PBIAS": 15.0,
+    "DETECT_P_I": 16.0,
+    "MAIN_BIAS": 17.0,
+    "MAIN_N": 18.0,
+    "MAIN_P": 19.0,
+    "MAIN_TAIL_0": 20.0,
+    "MAIN_TAIL_1": 21.0,
+    "MAIN_TAIL_2": 22.0,
+    "MAIN_TAIL_3": 23.0,
+    "MAIN_TAIL_4": 24.0,
+    "MAIN_TAIL_5": 25.0,
+    "MAIN_TAIL_6": 26.0,
+    "MAIN_TAIL_7": 27.0,
+    "PAD_N": 32.22,
+    "PAD_P": 41.22,
+    "POST_BIAS": 46.44,
+    "POST_N": 47.44,
+    "POST_P": 48.44,
+    "POST_TAIL_0": 49.44,
+    "POST_TAIL_1": 50.44,
+    "POST_TAIL_2": 51.44,
+    "POST_TAIL_3": 52.44,
+    "POST_TAIL_4": 53.44,
+    "POST_TAIL_5": 54.44,
+    "POST_TAIL_6": 55.44,
+    "POST_TAIL_7": 56.44,
+    "SUM_N_D_0": 57.44,
+    "SUM_N_D_1": 58.44,
+    "SUM_N_D_2": 59.44,
+    "SUM_N_D_3": 60.44,
+    "SUM_N_D_4": 61.44,
+    "SUM_N_D_5": 62.44,
+    "SUM_N_D_6": 63.44,
+    "SUM_N_D_7": 64.44,
+    "SUM_P_D_0": 65.44,
+    "SUM_P_D_1": 66.44,
+    "SUM_P_D_2": 67.44,
+    "SUM_P_D_3": 68.44,
+    "SUM_P_D_4": 69.44,
+    "SUM_P_D_5": 70.44,
+    "SUM_P_D_6": 71.44,
+    "SUM_P_D_7": 72.44,
+    "TERM_BLEED_0": 73.44,
+    "TERM_BLEED_1": 74.44,
+    "TERM_BLEED_2": 75.44,
+    "TERM_BLEED_3": 76.44,
+    "TERM_BLEED_4": 77.44,
+    "TERM_BLEED_5": 78.44,
+    "TERM_BLEED_6": 79.44,
+    "TERM_ENABLE": 80.44,
+    "TERM_ENABLE_B": 81.44,
+    "TERM_ENABLE_LOCAL": 82.44,
+    "TERM_N_R": 87.66,
+    "TERM_P_R": 96.66,
+    "TERM_VCM": 105.66,
+    "TMDS_BIAS": 110.88,
+    "TMDS_N": 111.88,
+    "TMDS_P": 112.88,
+    "TMDS_TAIL_0": 113.88,
+    "TMDS_TAIL_1": 114.88,
+    "TMDS_TAIL_2": 115.88,
+    "TMDS_TAIL_3": 116.88,
+    "TMDS_TAIL_4": 117.88,
+    "TMDS_TAIL_5": 118.88,
+    "TMDS_TAIL_6": 119.88,
+    "TMDS_TAIL_7": 120.88,
+    "VDD": 126.1,
+    "VSS": 135.1
+  },
+  "net_trunk_widths_um": {
+    "CASCODE": 0.44,
+    "DETECT_BLEED_0": 0.44,
+    "DETECT_BLEED_1": 0.44,
+    "DETECT_BLEED_2": 0.44,
+    "DETECT_BLEED_3": 0.44,
+    "DETECT_BLEED_4": 0.44,
+    "DETECT_BLEED_5": 0.44,
+    "DETECT_BLEED_6": 0.44,
+    "DETECT_ENABLE": 0.44,
+    "DETECT_ENABLE_B": 0.44,
+    "DETECT_ENABLE_LOCAL": 0.44,
+    "DETECT_N_I": 0.44,
+    "DETECT_PBIAS": 0.44,
+    "DETECT_P_I": 0.44,
+    "MAIN_BIAS": 0.44,
+    "MAIN_N": 0.44,
+    "MAIN_P": 0.44,
+    "MAIN_TAIL_0": 0.44,
+    "MAIN_TAIL_1": 0.44,
+    "MAIN_TAIL_2": 0.44,
+    "MAIN_TAIL_3": 0.44,
+    "MAIN_TAIL_4": 0.44,
+    "MAIN_TAIL_5": 0.44,
+    "MAIN_TAIL_6": 0.44,
+    "MAIN_TAIL_7": 0.44,
+    "PAD_N": 8.0,
+    "PAD_P": 8.0,
+    "POST_BIAS": 0.44,
+    "POST_N": 0.44,
+    "POST_P": 0.44,
+    "POST_TAIL_0": 0.44,
+    "POST_TAIL_1": 0.44,
+    "POST_TAIL_2": 0.44,
+    "POST_TAIL_3": 0.44,
+    "POST_TAIL_4": 0.44,
+    "POST_TAIL_5": 0.44,
+    "POST_TAIL_6": 0.44,
+    "POST_TAIL_7": 0.44,
+    "SUM_N_D_0": 0.44,
+    "SUM_N_D_1": 0.44,
+    "SUM_N_D_2": 0.44,
+    "SUM_N_D_3": 0.44,
+    "SUM_N_D_4": 0.44,
+    "SUM_N_D_5": 0.44,
+    "SUM_N_D_6": 0.44,
+    "SUM_N_D_7": 0.44,
+    "SUM_P_D_0": 0.44,
+    "SUM_P_D_1": 0.44,
+    "SUM_P_D_2": 0.44,
+    "SUM_P_D_3": 0.44,
+    "SUM_P_D_4": 0.44,
+    "SUM_P_D_5": 0.44,
+    "SUM_P_D_6": 0.44,
+    "SUM_P_D_7": 0.44,
+    "TERM_BLEED_0": 0.44,
+    "TERM_BLEED_1": 0.44,
+    "TERM_BLEED_2": 0.44,
+    "TERM_BLEED_3": 0.44,
+    "TERM_BLEED_4": 0.44,
+    "TERM_BLEED_5": 0.44,
+    "TERM_BLEED_6": 0.44,
+    "TERM_ENABLE": 0.44,
+    "TERM_ENABLE_B": 0.44,
+    "TERM_ENABLE_LOCAL": 0.44,
+    "TERM_N_R": 8.0,
+    "TERM_P_R": 8.0,
+    "TERM_VCM": 8.0,
+    "TMDS_BIAS": 0.44,
+    "TMDS_N": 0.44,
+    "TMDS_P": 0.44,
+    "TMDS_TAIL_0": 0.44,
+    "TMDS_TAIL_1": 0.44,
+    "TMDS_TAIL_2": 0.44,
+    "TMDS_TAIL_3": 0.44,
+    "TMDS_TAIL_4": 0.44,
+    "TMDS_TAIL_5": 0.44,
+    "TMDS_TAIL_6": 0.44,
+    "TMDS_TAIL_7": 0.44,
+    "VDD": 8.0,
+    "VSS": 8.0
+  },
+  "bounded_internal_routes": true,
+  "net_trunk_spans_um": {
+    "CASCODE": [
+      441.3,
+      1226.5
+    ],
+    "DETECT_BLEED_0": [
+      1065.3,
+      1068.7
+    ],
+    "DETECT_BLEED_1": [
+      1068.5,
+      1071.9
+    ],
+    "DETECT_BLEED_2": [
+      1071.7,
+      1075.1
+    ],
+    "DETECT_BLEED_3": [
+      1074.8999999999999,
+      1078.3
+    ],
+    "DETECT_BLEED_4": [
+      1078.1,
+      1081.5
+    ],
+    "DETECT_BLEED_5": [
+      1081.3,
+      1084.7
+    ],
+    "DETECT_BLEED_6": [
+      1084.5,
+      1091.5
+    ],
+    "DETECT_ENABLE": [
+      1048.8999999999999,
+      1226.5
+    ],
+    "DETECT_ENABLE_B": [
+      1048.1,
+      1059.5
+    ],
+    "DETECT_ENABLE_LOCAL": [
+      558.0999999999999,
+      1065.5
+    ],
+    "DETECT_N_I": [
+      557.3,
+      1201.9
+    ],
+    "DETECT_PBIAS": [
+      1198.5,
+      1226.5
+    ],
+    "DETECT_P_I": [
+      560.5,
+      1198.7
+    ],
+    "MAIN_BIAS": [
+      574.5,
+      1226.5
+    ],
+    "MAIN_N": [
+      590.5,
+      1226.5
+    ],
+    "MAIN_P": [
+      587.3,
+      1226.5
+    ],
+    "MAIN_TAIL_0": [
+      573.7,
+      592.3000000000001
+    ],
+    "MAIN_TAIL_1": [
+      596.5,
+      615.1
+    ],
+    "MAIN_TAIL_2": [
+      615.7,
+      637.9
+    ],
+    "MAIN_TAIL_3": [
+      638.5,
+      660.7
+    ],
+    "MAIN_TAIL_4": [
+      661.3,
+      683.5
+    ],
+    "MAIN_TAIL_5": [
+      684.1,
+      706.3000000000001
+    ],
+    "MAIN_TAIL_6": [
+      706.9,
+      729.1
+    ],
+    "MAIN_TAIL_7": [
+      729.7,
+      748.3000000000001
+    ],
+    "PAD_N": [
+      435.5,
+      564.7
+    ],
+    "PAD_P": [
+      435.5,
+      571.5
+    ],
+    "POST_BIAS": [
+      753.3,
+      1226.5
+    ],
+    "POST_N": [
+      769.3,
+      1226.5
+    ],
+    "POST_P": [
+      766.0999999999999,
+      1226.5
+    ],
+    "POST_TAIL_0": [
+      752.5,
+      771.1
+    ],
+    "POST_TAIL_1": [
+      771.7,
+      793.9
+    ],
+    "POST_TAIL_2": [
+      794.5,
+      816.7
+    ],
+    "POST_TAIL_3": [
+      817.3,
+      839.5
+    ],
+    "POST_TAIL_4": [
+      840.1,
+      862.3000000000001
+    ],
+    "POST_TAIL_5": [
+      862.9,
+      885.1
+    ],
+    "POST_TAIL_6": [
+      885.7,
+      904.3000000000001
+    ],
+    "POST_TAIL_7": [
+      908.5,
+      927.1
+    ],
+    "SUM_N_D_0": [
+      442.1,
+      941.9
+    ],
+    "SUM_N_D_1": [
+      454.90000000000003,
+      954.7
+    ],
+    "SUM_N_D_2": [
+      471.3,
+      971.1
+    ],
+    "SUM_N_D_3": [
+      484.1,
+      987.5
+    ],
+    "SUM_N_D_4": [
+      500.5,
+      1000.3
+    ],
+    "SUM_N_D_5": [
+      513.3000000000001,
+      1016.7
+    ],
+    "SUM_N_D_6": [
+      529.7,
+      1029.5
+    ],
+    "SUM_N_D_7": [
+      546.1,
+      1045.9
+    ],
+    "SUM_P_D_0": [
+      445.3,
+      938.7
+    ],
+    "SUM_P_D_1": [
+      458.1,
+      951.5
+    ],
+    "SUM_P_D_2": [
+      474.5,
+      967.9
+    ],
+    "SUM_P_D_3": [
+      487.3,
+      980.7
+    ],
+    "SUM_P_D_4": [
+      503.70000000000005,
+      997.1
+    ],
+    "SUM_P_D_5": [
+      520.1,
+      1013.5
+    ],
+    "SUM_P_D_6": [
+      532.9,
+      1026.3
+    ],
+    "SUM_P_D_7": [
+      549.3000000000001,
+      1042.7
+    ],
+    "TERM_BLEED_0": [
+      1107.3,
+      1110.7
+    ],
+    "TERM_BLEED_1": [
+      1110.5,
+      1117.5
+    ],
+    "TERM_BLEED_2": [
+      1117.3,
+      1120.7
+    ],
+    "TERM_BLEED_3": [
+      1120.5,
+      1123.9
+    ],
+    "TERM_BLEED_4": [
+      1123.7,
+      1127.1
+    ],
+    "TERM_BLEED_5": [
+      1126.8999999999999,
+      1130.3
+    ],
+    "TERM_BLEED_6": [
+      1130.1,
+      1133.5
+    ],
+    "TERM_ENABLE": [
+      1094.5,
+      1226.5
+    ],
+    "TERM_ENABLE_B": [
+      1093.7,
+      1105.1
+    ],
+    "TERM_ENABLE_LOCAL": [
+      1100.1,
+      1196.3
+    ],
+    "TERM_N_R": [
+      564.5,
+      1195.5
+    ],
+    "TERM_P_R": [
+      571.3,
+      1162.7
+    ],
+    "TERM_VCM": [
+      1137.3,
+      1226.5
+    ],
+    "TMDS_BIAS": [
+      928.5,
+      1226.5
+    ],
+    "TMDS_N": [
+      941.6999999999999,
+      1226.5
+    ],
+    "TMDS_P": [
+      938.5,
+      1226.5
+    ],
+    "TMDS_TAIL_0": [
+      927.7,
+      943.5
+    ],
+    "TMDS_TAIL_1": [
+      944.1,
+      956.3000000000001
+    ],
+    "TMDS_TAIL_2": [
+      960.5,
+      972.7
+    ],
+    "TMDS_TAIL_3": [
+      973.3,
+      989.1
+    ],
+    "TMDS_TAIL_4": [
+      989.7,
+      1001.9
+    ],
+    "TMDS_TAIL_5": [
+      1002.5,
+      1018.3000000000001
+    ],
+    "TMDS_TAIL_6": [
+      1018.9,
+      1031.1
+    ],
+    "TMDS_TAIL_7": [
+      1031.7,
+      1047.5
+    ],
+    "VDD": [
+      1052.8999999999999,
+      1226.5
+    ],
+    "VSS": [
+      435.5,
+      1226.5
+    ]
+  },
+  "port_heights_um": {
+    "PAD_P": 438.0,
+    "PAD_N": 438.0,
+    "VDD": 1226.0,
+    "VSS": 1226.0,
+    "CASCODE": 1226.0,
+    "MAIN_P": 1226.0,
+    "MAIN_N": 1226.0,
+    "MAIN_BIAS": 1226.0,
+    "POST_P": 1226.0,
+    "POST_N": 1226.0,
+    "POST_BIAS": 1226.0,
+    "TMDS_P": 1226.0,
+    "TMDS_N": 1226.0,
+    "TMDS_BIAS": 1226.0,
+    "DETECT_ENABLE": 1226.0,
+    "DETECT_PBIAS": 1226.0,
+    "TERM_ENABLE": 1226.0,
+    "TERM_VCM": 1226.0
+  },
+  "reference_pair_size_um": [
+    286.0,
+    350
+  ],
+  "bond_pitch_um": 211.0,
+  "escape_layer": "metal2",
+  "escape_width_um": 4.0,
+  "active_origin_um": 440.0,
+  "core_clearance_depth_um": 416.0,
+  "reference_sites": [
+    "bidir[20].pad",
+    "bidir[21].pad"
+  ],
+  "fits_reference_height": false,
+  "near_bond_ground_landings_um": [
+    [
+      9.0,
+      77.305,
+      11.0,
+      79.305
+    ],
+    [
+      220.0,
+      77.305,
+      222.0,
+      79.305
+    ]
+  ],
+  "allocation_regions_um": [
+    [
+      0,
+      0,
+      75,
+      104
+    ],
+    [
+      211.0,
+      0,
+      286.0,
+      104
+    ],
+    [
+      8.5,
+      104,
+      11.5,
+      440.0
+    ],
+    [
+      219.5,
+      104,
+      222.5,
+      440.0
+    ],
+    [
+      35.3,
+      76,
+      39.7,
+      440.0
+    ],
+    [
+      246.3,
+      76,
+      250.7,
+      440.0
+    ],
+    [
+      0,
+      418.0,
+      150.0,
+      1227.0
+    ],
+    [
+      150.0,
+      418.0,
+      286.0,
+      440.0
+    ],
+    [
+      159.945,
+      698.0,
+      434.5,
+      988.0
+    ],
+    [
+      165.765,
+      1001.0,
+      463.235,
+      1173.4099999999999
+    ],
+    [
+      180.0,
+      988.0,
+      210.0,
+      1001.0
+    ],
+    [
+      260.0,
+      988.0,
+      290.0,
+      1001.0
+    ],
+    [
+      33.5,
+      396.0,
+      452.0,
+      404.0
+    ],
+    [
+      444.0,
+      396.0,
+      452.0,
+      744.0
+    ],
+    [
+      342.0,
+      736.0,
+      452.0,
+      744.0
+    ],
+    [
+      244.5,
+      408.0,
+      468.0,
+      416.0
+    ],
+    [
+      460.0,
+      408.0,
+      468.0,
+      764.0
+    ],
+    [
+      346.0,
+      756.0,
+      468.0,
+      764.0
+    ],
+    [
+      296.0,
+      702.0,
+      482.0,
+      706.0
+    ],
+    [
+      476.0,
+      700.0,
+      484.0,
+      1230.0
+    ],
+    [
+      133.1,
+      1224.0,
+      482.0,
+      1228.0
+    ]
+  ],
+  "area_ceiling_um2": 300000,
+  "fits_assigned_area": true,
+  "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
+  "sources_sha256": {
+    "analog/pads/layout.py": "04f98a9bff0374c6fba37f130b3ec7b6f97cc216bc2906dd803a3f4f8e5f3729",
+    "analog/pads/gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
+    "analog/pads/generated/provider-sites.json": "c58790b22d45497c45bfd20e8cc60e698d8286010856fcc6fa18ab7021d26df4",
+    "analog/pads/circuits.py": "1c212fbefc7157c2fb50594b3c137aa9ce2f94bfd30075c9386c05a0fa55e2b3",
+    "analog/pads/design.py": "7330ebd9a33ffcfe6a0c9949cd8d51d08a8e6564521b14ae4ec57fd66a1a40f9",
+    "analog/pads/wired_receive.py": "117711d681b59df45eb9e8df153021d000a46835db261ec865a27c2a92ca3b6d",
+    "analog/pads/folded_tail.py": "7d8ddd4f655ac25e8ebbfdcb4c1599b53374f7b6b795e521ecdade18da2ed386",
+    "spec/analog-architecture.json": "5314a56b1a5f2167c120b70839e21a8db3472e6b01091bbaeab55ce7c76d4fa1",
+    "spec/contract.json": "712a142ab5e6fa1f2fe50b30c23be83207125c47caee8b18c79fd134eb7b693c",
+    "spec/schematic-implementation.json": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332"
+  },
+  "drc_count": "0",
+  "pcell_terminal_coordinates": {
+    "primitive_0": [
+      [
+        0.4,
+        0.0
+      ],
+      [
+        0.0,
+        -10.6
+      ],
+      [
+        -0.4,
+        0.0
+      ],
+      [
+        1.09,
+        10.680000000000001
+      ]
+    ],
+    "primitive_1": [
+      [
+        0.76,
+        0.0
+      ],
+      [
+        0.0,
+        -10.6
+      ],
+      [
+        -0.76,
+        0.0
+      ],
+      [
+        1.45,
+        10.680000000000001
+      ]
+    ],
+    "primitive_2": [
+      [
+        0.61,
+        0.0
+      ],
+      [
+        0.0,
+        -1.6
+      ],
+      [
+        -0.61,
+        0.0
+      ],
+      [
+        1.33,
+        1.6800000000000002
+      ]
+    ],
+    "primitive_3": [
+      [
+        0.61,
+        0.0
+      ],
+      [
+        0.0,
+        -2.5999999999999996
+      ],
+      [
+        -0.61,
+        0.0
+      ],
+      [
+        1.33,
+        2.6799999999999997
+      ]
+    ],
+    "primitive_4": [
+      [
+        0.61,
+        0.0
+      ],
+      [
+        0.0,
+        -8.6
+      ],
+      [
+        -0.61,
+        0.0
+      ],
+      [
+        1.33,
+        8.680000000000001
+      ]
+    ],
+    "primitive_5": [
+      [
+        1.26,
+        0.0
+      ],
+      [
+        0.0,
+        -2.5999999999999996
+      ],
+      [
+        -1.26,
+        0.0
+      ],
+      [
+        1.95,
+        2.6799999999999997
+      ]
+    ],
+    "primitive_6": [
+      [
+        0.535,
+        0.0
+      ],
+      [
+        0.0,
+        -2.5999999999999996
+      ],
+      [
+        -0.535,
+        0.0
+      ],
+      [
+        1.2550000000000001,
+        2.6799999999999997
+      ]
+    ],
+    "primitive_7": [
+      [
+        0.0,
+        1.08
+      ],
+      [
+        0.0,
+        -1.08
+      ],
+      [
+        1.09,
+        1.12
+      ]
+    ],
+    "primitive_8": [
+      [
+        0.0,
+        6.68
+      ],
+      [
+        0.0,
+        -6.68
+      ],
+      [
+        1.3800000000000001,
+        7.14
+      ]
+    ],
+    "primitive_9": [
+      [
+        0.0,
+        1.43
+      ],
+      [
+        0.0,
+        -1.43
+      ],
+      [
+        1.8800000000000001,
+        1.89
+      ]
+    ]
+  },
+  "limitations": [
+    "Grounded-gate drain-SAB devices are protection candidates, not a qualified ESD clamp.",
+    "Sense comparator uses the same PAD_P/N nodes; comparator and core DACs are external to this cell.",
+    "Source termination includes switched resistors and a passive TERM_VCM discharge resistor; impedance trim and the physical current-limited buffer remain unimplemented.",
+    "Detection enable has a local supply-powered buffer and passive discharge; reset and brownout supervision remain unimplemented.",
+    "Protection capacitance, cascode compliance and driver current must be measured, not assumed.",
+    "Provider ring metal rails not yet integrated."
+  ],
+  "base_device_count": 207,
+  "base_net_count": 80,
+  "base_candidate_size_um": [
+    286.0,
+    1226.0
+  ],
+  "base_area_um2": 350636.0,
+  "physical_bbox_um": [
+    2.7800000000000002,
+    0.0,
+    484.0,
+    1230.0
+  ],
+  "candidate_size_um": [
+    484.0,
+    1230.0
+  ],
+  "area_um2": 292666.2527,
+  "area_basis": "Allocated nonrectangular union, not material area or bounding rectangle.",
+  "allocation_union_um2": 292666.2527,
+  "connected_primary_candidate": true,
+  "device_count": 1088
+}

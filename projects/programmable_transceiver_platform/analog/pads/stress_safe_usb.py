@@ -33,6 +33,7 @@ ENV = f.ENVELOPE
 MIRROR_BIAS = False
 WIREPAD_MODEL = None
 HS_TRIM = 1.0
+TERM_TRIM = {}   # PD28 opt-in: process -> TERM_TRIM code (calibrated per corner); empty = canonical fixture
 
 
 def deck(case, process, temp_c, vdd, work, name, canonical=False):
@@ -77,6 +78,8 @@ def deck(case, process, temp_c, vdd, work, name, canonical=False):
                 d += f'VHS_PBIAS HS_PBIAS 0 {vdd - 3.11 if case.startswith("hs") else vdd}\n'
             continue
         val = on.get(p, '0')
+        if p.startswith('TERM_TRIM') and TERM_TRIM.get(process, 0) >> int(p[9:]) & 1:
+            val = on.get('TERM_ENABLE', '0')     # trim[k] AND term_en (digital, PD27 convention)
         d += f'V{p} {p} 0 {val}\n'
     d += 'Xpad ' + ' '.join('ATB' if p == 'ATB_ESD_RAIL' else p for p in ports) + f' {cell}\n'
     if case in ('fs', 'ls', 'handoff'):
@@ -159,11 +162,16 @@ def main():
     p.add_argument('--jobs', type=int, default=2)
     p.add_argument('--usbfix', action='store_true', help='USB-fixed wirepad layout + mirror-biased HS source')
     p.add_argument('--only', nargs='*', help='run only these per-corner cases (e.g. hs_vsweep)')
+    p.add_argument('--wirepad-model', type=Path, help='candidate wirepad extraction (requalification before publication)')
+    p.add_argument('--term-trim', nargs='*', default=[], help='PD28: process=code TERM_TRIM codes (e.g. typical=5 ss=10 ff=0)')
     a = p.parse_args()
     global MIRROR_BIAS, WIREPAD_MODEL
+    TERM_TRIM.update({k: int(v) for k, v in (x.split('=') for x in a.term_trim)})
     if a.usbfix:
         MIRROR_BIAS = True
         WIREPAD_MODEL = f.PADS / 'generated/stress-safe-families/wired-receive-usb/physical.spice'
+    if a.wirepad_model:
+        WIREPAD_MODEL = a.wirepad_model.resolve()
     work = a.output_dir.resolve()
     p_cases = ('fs', 'hs', 'hs_term') + (('term',) if a.usbfix else ())
     if a.only:
@@ -185,7 +193,7 @@ def main():
         res = list(pool.map(go, jobs))
     m = WIREPAD_MODEL or f.FAMILIES_V3['wirepad']['model']
     a.report.write_text(json.dumps(dict(scope=__doc__.strip(), model=str(m), usbfix=a.usbfix, mirror_bias=MIRROR_BIAS,
-                                        model_sha256=s.sha(m), results=res,
+                                        model_sha256=s.sha(m), results=res, **({'term_trim': TERM_TRIM} if TERM_TRIM else {}),
                                         source_sha256={n: s.sha(Path(__file__).with_name(n)) for n in ('stress_safe_usb.py', 'stress_safe_family_sims.py')}), indent=1) + '\n')
 
 

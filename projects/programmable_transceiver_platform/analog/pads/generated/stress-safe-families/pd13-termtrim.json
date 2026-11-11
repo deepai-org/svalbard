@@ -1,0 +1,90 @@
+{
+ "scope": "Item 5b: on-die termination trim for the wired RX/USB pad (wirepad), schematic-on-extraction study.\nThe drawn termination per leg is 8 x 20 um nfet_03v3 switches (TERM_GATE_x) in series with a 16/1.3 ppolyf_u\nstrap to TERM_VCM: 46 / 53 / 40 ohm (tt/ss/ff), i.e. switch-dominated. Trim = split the switch into a base\nsection (always on with TERM_ENABLE) plus 4 binary sections (TERM_TRIM[3:0]): W = 105 + 7.5*k um (k = 0..15).\nHere each code is emulated by scaling the eight extracted switch devices of each leg to W/8 (geometry\nparasitics of the extra width are not drawn yet). Bench = stress_safe_usb 'term' (8.9 mA into PAD_P,\nR = (V(PAD_P) - VCM) / 8.9 mA) at TERM_VCM 0 / 1.0 V, and 'cap' (all off) for the maximum-W case.\n    python3 termtrim.py <out.json>",
+ "codes": {
+  "0": {
+   "w_um": 105.0,
+   "R_ohm": {
+    "typical_27_3.3_vcm0": 51.992564719101125,
+    "typical_27_3.3_vcm1": 59.29388539325842,
+    "ss_32_3.15_vcm0": 60.02773067415731,
+    "ss_32_3.15_vcm1": 73.4523,
+    "ss_22_3.15_vcm0": 59.59788674157304,
+    "ss_22_3.15_vcm1": 72.35579101123597,
+    "ff_22_3.35_vcm0": 44.732377528089884,
+    "ff_22_3.35_vcm1": 49.66731910112361,
+    "ff_32_3.35_vcm0": 44.99838303370787,
+    "ff_32_3.35_vcm1": 50.19031460674157
+   }
+  },
+  "3": {
+   "w_um": 127.5,
+   "R_ohm": {
+    "typical_27_3.3_vcm0": 49.00241393258427,
+    "typical_27_3.3_vcm1": 54.61750000000001,
+    "ss_32_3.15_vcm0": 56.518068539325846,
+    "ss_32_3.15_vcm1": 66.4600213483146,
+    "ss_22_3.15_vcm0": 56.20142674157303,
+    "ss_22_3.15_vcm1": 65.6680191011236,
+    "ff_22_3.35_vcm0": 42.07567157303371,
+    "ff_22_3.35_vcm1": 45.92363258426966,
+    "ff_32_3.35_vcm0": 42.266417191011236,
+    "ff_32_3.35_vcm1": 46.3134786516854
+   }
+  },
+  "7": {
+   "w_um": 157.5,
+   "R_ohm": {
+    "typical_27_3.3_vcm0": 46.41618505617977,
+    "typical_27_3.3_vcm1": 50.707462921348316,
+    "ss_32_3.15_vcm0": 53.50999764044944,
+    "ss_32_3.15_vcm1": 60.89800561797754,
+    "ss_22_3.15_vcm0": 53.288672134831465,
+    "ss_22_3.15_vcm1": 60.33243033707865,
+    "ff_22_3.35_vcm0": 39.76652887640449,
+    "ff_22_3.35_vcm1": 42.73981235955057,
+    "ff_32_3.35_vcm0": 39.892582921348314,
+    "ff_32_3.35_vcm1": 43.01904606741572
+   }
+  },
+  "11": {
+   "w_um": 187.5,
+   "R_ohm": {
+    "typical_27_3.3_vcm0": 44.68993,
+    "typical_27_3.3_vcm1": 48.16045730337079,
+    "ss_32_3.15_vcm0": 51.515805393258425,
+    "ss_32_3.15_vcm1": 57.39092696629213,
+    "ss_22_3.15_vcm0": 51.35683842696629,
+    "ss_22_3.15_vcm1": 56.962115730337075,
+    "ff_22_3.35_vcm0": 38.21946797752809,
+    "ff_22_3.35_vcm1": 40.640751685393255,
+    "ff_32_3.35_vcm0": 38.30254606741573,
+    "ff_32_3.35_vcm1": 40.84828876404496
+   }
+  },
+  "15": {
+   "w_um": 217.5,
+   "R_ohm": {
+    "typical_27_3.3_vcm0": 43.45570224719101,
+    "typical_27_3.3_vcm1": 46.3681191011236,
+    "ss_32_3.15_vcm0": 50.096506516853935,
+    "ss_32_3.15_vcm1": 54.9715404494382,
+    "ss_22_3.15_vcm0": 49.981530561797754,
+    "ss_22_3.15_vcm1": 54.63468202247191,
+    "ff_22_3.35_vcm0": 37.11056561797753,
+    "ff_22_3.35_vcm1": 39.1521382022472,
+    "ff_32_3.35_vcm0": 37.16301584269663,
+    "ff_32_3.35_vcm1": 39.30938988764046
+   }
+  }
+ },
+ "cap": {
+  "160": {
+   "typical_27": 2.3053541940659477e-12,
+   "ff_32": 2.298590140815531e-12
+  },
+  "217.5": {
+   "typical_27": 2.3605132707215386e-12,
+   "ff_32": 2.3544611016160773e-12
+  }
+ }
+}

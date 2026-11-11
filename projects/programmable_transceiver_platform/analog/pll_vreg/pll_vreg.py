@@ -18,7 +18,7 @@ import numpy as np
 import os
 W = Path(os.environ.get('PLL_VREG_WORK', str(Path(__file__).resolve().parents[4] / 'scratch/pdn04-ldo')))   # sims + caches (ring netlist copied to <W>/sch)
 IMG = 'sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305'
-P = dict(nf=300, fw=20., l=2.7, cg_um2=30000., cout_um2=20000., wbyp=1000.)   # variant B of explore2.json
+P = dict(nf=300, fw=20., l=2.7, cg_um2=15000., cout_um2=10000., wbyp=1000.)   # variant B of explore2.json; caps halved PD28 (was 30000/20000)
 
 def netlist(p=P, name='pt_pll_vreg'):
     """v2: the gate is driven by a slow OTA that holds VOUT = k * VIN(filtered), k = R2/(R1+R2) = 0.9, i.e. a
@@ -91,7 +91,8 @@ def ring_ripple(c, t, vin, am, fm, byp, vct=1.5, T=300e-9):
     d = hdr(c, t) + netlist() + '.include /w/pll_ring.ext.spice\n' + f'.ic v(x1.VG)={vg0:.4f}\n'
     d += f'VIN VIN 0 sin({vin} {am} {fm} 0)\nVB BYP 0 {3.3*byp}\nX1 VIN VR 0 BYP AO AG pt_pll_vreg\nRAO AO 0 1g\nRAG AG 0 1g\n'
     d += f'VEN en 0 pwl(0 0 2n 0 2.1n 3.3)\nIB VR ibias 10u\nVREF ref 0 0\nVCT vctrl 0 {vct}\nVN4 n4 0 0\nVN8 n8 0 0\nVHOLD hold 0 0\n'
-    d += 'XR ref en n4 n8 hold ibias ph0 ph1 ph2 ph3 ph4 ph5 ph6 ph7 lock fbck refo vctrl VR 0 pt_pll_ring\n'
+    d += 'VN5 n5 0 0\nVN10 n10 0 0\nVFT kp0 0 0\n'  # r9 ports: N5/N10 off, CDR fast-tune idle
+    d += 'XR ref en n4 n8 hold ibias ph0 ph1 ph2 ph3 ph4 ph5 ph6 ph7 lock fbck refo vctrl n5 n10' + ' kp0' * 11 + ' VR 0 pt_pll_ring\n'
     d += ''.join(f'CP{k} ph{k} 0 20f\n' for k in range(8)) + 'CRO refo 0 20f\n.option method=gear reltol=1e-3\n'
     d += f'.tran 2p {T}\n'
     x = run('sch', n, d, 'v(ph0) v(VR)')

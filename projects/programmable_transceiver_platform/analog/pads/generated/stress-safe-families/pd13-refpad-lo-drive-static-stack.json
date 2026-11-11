@@ -1,0 +1,84 @@
+{
+ "scope": "PD12 (RA-21): refpad (REF_IN / AUX_CLK) under the B3 external-LO drive, old static stack vs GC shunt.\nPer leg: sine 2.45 GHz, Vpp open-circuit from 50 ohm, 10 pF coupling, 1.5 nH + 0.2 ohm bond; legs in\nanti-phase; VDD 3.3 V; VCM = VDD/2 (refpad bias port); the disabled diff_clk_rx is not attached (pad-only\nquestion: does the protection conduct). Window: last 24 periods of 200 ns. Reports pad peak/trough, the\naverage and harmonic content of the pad current (protection conduction) and ESD_RAIL.\n    python3 auxclip.py <tag> <model> <out.json>",
+ "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/reference/physical.spice",
+ "results": [
+  {
+   "vpp_open": 3.5,
+   "process": "ss",
+   "temp_c": 32,
+   "pad_p_peak_v": 2.756929145444908,
+   "pad_p_min_v": -0.7407826078489821,
+   "pad_pp_v": 3.49771175329389,
+   "pad_dc_v": 1.0066266086322906,
+   "rail_v": 2.008131905359529,
+   "i_h1_mA": 19.606877946453448,
+   "i_h3_rel_dB": -38.933465365117335,
+   "i_h2_rel_dB": -58.24125176367186
+  },
+  {
+   "vpp_open": 3.5,
+   "process": "typical",
+   "temp_c": 27,
+   "pad_p_peak_v": 2.7579218985877554,
+   "pad_p_min_v": -0.7549430779061329,
+   "pad_pp_v": 3.5128649764938884,
+   "pad_dc_v": 1.000287135957149,
+   "rail_v": 1.9959049944608622,
+   "i_h1_mA": 19.144014840870163,
+   "i_h3_rel_dB": -39.14732212162038,
+   "i_h2_rel_dB": -57.88706334299326
+  },
+  {
+   "vpp_open": 3.5,
+   "process": "ff",
+   "temp_c": 32,
+   "pad_p_peak_v": 2.6750969181061204,
+   "pad_p_min_v": -0.8060274243461154,
+   "pad_pp_v": 3.481124342452236,
+   "pad_dc_v": 0.9345009570857357,
+   "rail_v": 1.8718010042952298,
+   "i_h1_mA": 18.62068486401923,
+   "i_h3_rel_dB": -36.50740983867007,
+   "i_h2_rel_dB": -56.14745309904366
+  },
+  {
+   "vpp_open": 5.3,
+   "process": "ss",
+   "temp_c": 32,
+   "pad_p_peak_v": 1.9884731461632643,
+   "pad_p_min_v": -0.957554585994304,
+   "pad_pp_v": 2.9460277321575683,
+   "pad_dc_v": 0.5146363009495292,
+   "rail_v": 1.0409307336553417,
+   "i_h1_mA": 30.215754861449977,
+   "i_h3_rel_dB": -18.52776453764937,
+   "i_h2_rel_dB": -46.86404745851977
+  },
+  {
+   "vpp_open": 5.3,
+   "process": "typical",
+   "temp_c": 27,
+   "pad_p_peak_v": 1.825462930538774,
+   "pad_p_min_v": -0.9557366384849103,
+   "pad_pp_v": 2.781199569023684,
+   "pad_dc_v": 0.4369562306274787,
+   "rail_v": 0.885306547130382,
+   "i_h1_mA": 30.380439113387215,
+   "i_h3_rel_dB": -18.475493546752304,
+   "i_h2_rel_dB": -46.72645017883426
+  },
+  {
+   "vpp_open": 5.3,
+   "process": "ff",
+   "temp_c": 32,
+   "pad_p_peak_v": 3.283486768171438,
+   "pad_p_min_v": -0.9077185968481676,
+   "pad_pp_v": 4.191205365019606,
+   "pad_dc_v": 1.1925396229650564,
+   "rail_v": 2.393579517378085,
+   "i_h1_mA": 27.190692960621107,
+   "i_h3_rel_dB": -19.853770152591718,
+   "i_h2_rel_dB": -54.11220139206213
+  }
+ ]
+}

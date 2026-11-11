@@ -40,14 +40,24 @@ COMPACT = {
 USB_FIX = dict(termination_geometry_um=(16., 1.3, 1), high_side_fast_off=True, hs_mirror_reference=False)
 
 family = sys.argv[1]; work = Path(sys.argv[2]); net = Path(sys.argv[3])
-if len(sys.argv) > 4 and sys.argv[4] == 'usbfix':
+# usbfix6v2 (PD28, opt-in): usbfix6v + 16 base 6 V termination switches, shorter base poly and a 4-bit
+# binary-weighted 6 V trim bank (TERM_TRIM0..2; 4 bits overflow the 146 um trunk bank), FS fast-off/control sizing for the 6 V high side.
+USB6V2 = dict(termination_geometry_um=(16., 1.48, 1), termination_switch_units=10,
+              termination_trim=dict(poly=(4., 2.4), switch_w=5., bits=3), term_gate_drive=2.5, fast_off_width_um=16., control_width_um=8.)
+if len(sys.argv) > 4 and sys.argv[4] == 'usbfix6v2':
     import functools, wired_receive
-    wired_receive.build = functools.partial(wired_receive.build, **USB_FIX)
+    wired_receive.build = functools.partial(wired_receive.build, **{**USB_FIX, **USB6V2}, pad_side_6v=True)
+if len(sys.argv) > 4 and sys.argv[4] in ('usbfix', 'usbfix6v'):
+    import functools, wired_receive
+    # usbfix6v (PD21, HBM item a): USB fixes + every pad-tracking 3.3 V device on 6 V oxide (wired_receive.pad_side_6v)
+    wired_receive.build = functools.partial(wired_receive.build, **USB_FIX, **({'pad_side_6v': True} if sys.argv[4] == 'usbfix6v' else {}))
 pdk = PROJECT.parents[1]/'scratch/transceiver-pad-pdk/ngspice'
 cfg = json.loads((PROJECT/'spec/schematic-implementation.json').read_text())['io_pad_first_pass']
 work.mkdir(parents=True)
 params = dict(cfg['generation_parameters'].get(family, {}))
 params.update(COMPACT[family]['base'])
+if len(sys.argv) > 5 and sys.argv[4] == 'usbfix6v2':
+    params['fs_high_width_um'] = float(sys.argv[5])   # optional FS high-side unit width override (cfg 14)
 base_layout(work/'base', family, external_primary=True, bond_y_offsets_um=BOND_Y_OFFSETS, **params)
 base = work/'base'
 if family == 'wired_receive_usb':

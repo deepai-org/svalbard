@@ -47,10 +47,10 @@
         288.0
       ],
       [
-        5.764999999999986,
+        6.164999999999992,
         301.0,
-        303.235,
-        473.40999999999997
+        302.83500000000004,
+        468.87
       ],
       [
         20.0,
@@ -65,7 +65,9 @@
         301.0
       ]
     ],
-    "single_leg": false
+    "single_leg": false,
+    "boundary_port_width_um": 4.0,
+    "network_top_um": 472.91
   },
   "network_routing": {
     "bbox_um": "(-0.055,-2;274.5,288)",
@@ -164,6 +166,19 @@
             ],
             "width_um": 12.0,
             "role": "protection transverse"
+          },
+          {
+            "layer": 5,
+            "start_um": [
+              288.0,
+              480.0
+            ],
+            "end_um": [
+              288.0,
+              910.9100000000001
+            ],
+            "width_um": 4.0,
+            "role": "boundary pin"
           }
         ]
       },
@@ -228,6 +243,19 @@
             ],
             "width_um": 12.0,
             "role": "protection transverse"
+          },
+          {
+            "layer": 5,
+            "start_um": [
+              304.0,
+              500.0
+            ],
+            "end_um": [
+              304.0,
+              910.9100000000001
+            ],
+            "width_um": 4.0,
+            "role": "boundary pin"
           }
         ]
       }
@@ -312,10 +340,10 @@
         728.0
       ],
       [
-        5.764999999999986,
+        6.164999999999992,
         741.0,
-        303.235,
-        913.41
+        302.83500000000004,
+        908.87
       ],
       [
         20.0,
@@ -396,6 +424,12 @@
         486.0
       ],
       [
+        286.0,
+        478.0,
+        290.0,
+        912.9100000000001
+      ],
+      [
         236.5,
         50.0,
         260.5,
@@ -418,6 +452,12 @@
         494.0,
         310.0,
         506.0
+      ],
+      [
+        302.0,
+        498.0,
+        306.0,
+        912.9100000000001
       ],
       [
         6.0,
@@ -450,23 +490,23 @@
         446.0
       ]
     ],
-    "allocation_union_um2": 175909.0227,
+    "allocation_union_um2": 176899.84144999998,
     "native_bond_source_sha256": "c8ccb709da1935bb7c0276fa8abb55b957f45c14d0a2f97b0852ac30dcb98893"
   },
   "fits_assigned_area": false,
-  "extracted_spice_sha256": "3663c2ee42eaad46ab78656584fcafc5ed458054998cf06c1e511fcca12f5df7",
+  "extracted_spice_sha256": "3fb43461e7d61db7902782d2165f6c81da19b2091ec7d9faaaa8007047bb0c81",
   "limitations": [
     "Area overrun is explicit; not adopted in the provider ring.",
     "Native rail module is not included in this standalone view.",
     "Signal and return resistance, current capacity and ESD stress remain unqualified; protection taps are behind the long bond corridors."
   ],
   "source_sha256": {
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_pad_ss.py": "0d5c67b9ce582a84e5d8de14fc2d3bee56ffb4c82787476337df7688e454b378",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_pad_ss.py": "55fe5fe761b297092195fd9ec0bf730266d62dcc5027216afcf105f1ba04a9e3",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_device_audit.py": "faca1155b3ec8d51ec1db7a43fd2d1102d0e0441cf036f494fc71c4b318512f5",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "b3e9f311401ea251c5adb47f406d9e6170448865026108ad3ca7dd14c67d3b68",
-    "/home/ubuntu/svalbard/scratch/pad-network-shunt-v21/network.gds": "bd7adab65585a251d2aa88d21ae9b01049c3013f08c15adf1b12de12966fd4ee",
-    "/home/ubuntu/svalbard/scratch/pad-network-shunt-v21/network-layout.json": "99a368efa0d9c29ac3042bd00833acec3b7f0b69b2b8daeb5907d0386a14eda7",
-    "/home/ubuntu/svalbard/scratch/pad-network-shunt-v21/network-with-well.spice": "6d864b087415f406a9f5ff9b7aa9da6140e43c0f2af6d84be30e1aeb99564212",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "bad120a087209826ea0c283eda4c11ee39c8b59abab4dc11917deb5cf9a66fe0",
+    "/home/ubuntu/svalbard/scratch/pads-pd12/v2/macro/network.gds": "577ecad611c90844f57d1d17ce912f6616fdc5840cac28b211fc8141dddadf70",
+    "/home/ubuntu/svalbard/scratch/pads-pd12/v2/macro/network-layout.json": "729347c9b90fd2411ad46e09fca3d4ab530cf8ae4fa8bc9f42b8ba14099b3bc1",
+    "/home/ubuntu/svalbard/scratch/pads-pd12/v2/macro/network-with-well.spice": "2ce0d773a35f869d86a138f7a7af66d469b5e13d742fb816aafe93d793e84525",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-receive-layout.json": "af5a10880ad2a25481680eca0f0396febd1d83b6412ea3195b0333491366ec22",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/rf-transmit-layout.json": "67415893e4415099409dce31b9d8a137fa29868a8f0772d3dc5a1a518336b06a"
   }

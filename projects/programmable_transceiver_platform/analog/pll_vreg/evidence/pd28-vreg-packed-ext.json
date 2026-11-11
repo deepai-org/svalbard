@@ -1,0 +1,168 @@
+{
+ "date": "2026-11-11",
+ "owner": "pads PD28 item 4",
+ "candidate": "packed pt_pll_vreg (gate cap 15,000 um2, out cap 10,000 um2), 375.04+23 x 605.56 um = 0.241 mm2",
+ "model": "scratch/pads-pd28/vreg/gen/pt_pll_vreg.ext.spice (published as generated/pt_pll_vreg.ext.spice)",
+ "ring_netlist": "analog/timing/generated/pll_ring.ext.spice (r9, AC3-W11)",
+ "bench": "pll_vreg.ring_ripple: rail 3.25 V + 60 mV sine at 78.125 MHz, BYP=0, VCTRL 1.5 V (default) and 1.1 V at ff (ring in its 393-834 MHz band)",
+ "ring_packed": {
+  "typical_27_fm78.125_byp0": {
+   "f0_MHz": 934.2697641527232,
+   "dev_MHz": 0.769292466247336,
+   "Kvdd_eff_MHz_per_V_of_rail": 12.821541104122268,
+   "vout_mean": 2.863850847633603,
+   "vout_ripple_mV": 3.7472828689219955,
+   "psrr_tran_dB": -24.08869545444322,
+   "beta_rad": 0.0098469435679659,
+   "dj_pk_ps_at_625MHz": 2.5075035891019484,
+   "spur_dBc": -46.1545709328758
+  },
+  "ss_32_fm78.125_byp0": {
+   "f0_MHz": 675.2392752745496,
+   "dev_MHz": 0.5124339643609547,
+   "Kvdd_eff_MHz_per_V_of_rail": 8.540566072682578,
+   "vout_mean": 2.7646470099795,
+   "vout_ripple_mV": 2.7419713383446465,
+   "psrr_tran_dB": -26.801766791191028,
+   "beta_rad": 0.00655915474382022,
+   "dj_pk_ps_at_625MHz": 1.670275039973828,
+   "spur_dBc": -49.68364237499352
+  },
+  "ff_22_fm78.125_byp0": {
+   "f0_MHz": 1234.0036211020363,
+   "dev_MHz": 1.6252975941817223,
+   "Kvdd_eff_MHz_per_V_of_rail": 27.08829323636204,
+   "vout_mean": 2.8760480542281317,
+   "vout_ripple_mV": 3.880819426811846,
+   "psrr_tran_dB": -23.78455629491658,
+   "beta_rad": 0.020803809205526044,
+   "dj_pk_ps_at_625MHz": 5.297646512320234,
+   "spur_dBc": -39.6577426702962
+  },
+  "typical_27_fm156.25_byp0": {
+   "f0_MHz": 934.2618787730675,
+   "dev_MHz": 0.8572261919639766,
+   "Kvdd_eff_MHz_per_V_of_rail": 14.287103199399612,
+   "vout_mean": 2.863853017723769,
+   "vout_ripple_mV": 3.084431989856578,
+   "psrr_tran_dB": -25.779521033373157,
+   "beta_rad": 0.0054862476285694505,
+   "dj_pk_ps_at_625MHz": 1.3970614865808269,
+   "spur_dBc": -51.23509179069403
+  },
+  "ff_22_vct1.1": {
+   "f0_MHz": 771.322587724949,
+   "dev_MHz": 0.8378358761380637,
+   "Kvdd_eff_MHz_per_V_of_rail": 13.963931268967727,
+   "vout_mean": 2.90890194441213,
+   "vout_ripple_mV": 3.6622833930233707,
+   "psrr_tran_dB": -24.287986055086613,
+   "beta_rad": 0.010724299214567214,
+   "dj_pk_ps_at_625MHz": 2.730920369911845,
+   "spur_dBc": -45.41322146200008
+  }
+ },
+ "ring_published_same_bench": {
+  "typical_27_fm78.125_byp0": {
+   "f0_MHz": 936.3739835948924,
+   "dev_MHz": 0.5048101929056689,
+   "Kvdd_eff_MHz_per_V_of_rail": 8.413503215094481,
+   "vout_mean": 2.878455930649994,
+   "vout_ripple_mV": 2.598215073278956,
+   "psrr_tran_dB": -27.2695230485121,
+   "beta_rad": 0.006461570469192561,
+   "dj_pk_ps_at_625MHz": 1.6454254084937816,
+   "spur_dBc": -49.81383821216191
+  },
+  "ff_22_vct1.1": {
+   "f0_MHz": 771.5683485572578,
+   "dev_MHz": 0.6193020957903304,
+   "Kvdd_eff_MHz_per_V_of_rail": 10.321701596505505,
+   "vout_mean": 2.9172108375981867,
+   "vout_ripple_mV": 2.644795795728723,
+   "psrr_tran_dB": -27.11518209054578,
+   "beta_rad": 0.007927066826116227,
+   "dj_pk_ps_at_625MHz": 2.0186109913538877,
+   "spur_dBc": -48.038349526020205
+  }
+ },
+ "psrr_worst_10_200MHz_dB": {
+  "typical_27": -23.0974978,
+  "ss_32": -23.9666207,
+  "ff_22": -23.9656979,
+  "ss_22": -24.017286,
+  "ff_32": -23.9261289
+ },
+ "startup": {
+  "typical_27": [
+   {
+    "rise": "1u",
+    "vout_final": 2.89527896,
+    "t95_us": 13.495000000000001,
+    "overshoot_mV": 0.0,
+    "vout_minus_vin_max": 6.39343198e-120
+   },
+   {
+    "rise": "10u",
+    "vout_final": 2.90137989,
+    "t95_us": 21.05,
+    "overshoot_mV": 0.0,
+    "vout_minus_vin_max": 6.39343198e-120
+   }
+  ],
+  "ss_32": [
+   {
+    "rise": "1u",
+    "vout_final": 2.73763582,
+    "t95_us": 15.294999999999998,
+    "overshoot_mV": 0.0,
+    "vout_minus_vin_max": -3.52135216e-20
+   },
+   {
+    "rise": "10u",
+    "vout_final": 2.77445681,
+    "t95_us": 23.55,
+    "overshoot_mV": 0.0,
+    "vout_minus_vin_max": -3.52135216e-20
+   }
+  ],
+  "ff_22": [
+   {
+    "rise": "1u",
+    "vout_final": 2.92157427,
+    "t95_us": 10.125,
+    "overshoot_mV": 0.0,
+    "vout_minus_vin_max": -1.46080552e-17
+   },
+   {
+    "rise": "10u",
+    "vout_final": 2.92194557,
+    "t95_us": 17.65,
+    "overshoot_mV": 0.0,
+    "vout_minus_vin_max": -1.46080552e-17
+   }
+  ]
+ },
+ "bypass": {
+  "typical_27": {
+   "vout": 3.01225592,
+   "vg": 1.5814359,
+   "dropout": 0.03774407999999996
+  },
+  "ss_32": {
+   "vout": 3.00685695,
+   "vg": 1.48679548,
+   "dropout": 0.04314304999999985
+  },
+  "ff_22": {
+   "vout": 3.01691039,
+   "vg": 1.67697741,
+   "dropout": 0.03308960999999977
+  }
+ },
+ "dropout_range_v": [
+  0.30766793000000003,
+  0.49654700000000007
+ ],
+ "note": "ff/22 at VCTRL 1.5 V runs the r9 ring at 1234 MHz (outside its band): Kvdd 27.1 MHz/V, 5.30 ps; reported, not used for the criterion."
+}

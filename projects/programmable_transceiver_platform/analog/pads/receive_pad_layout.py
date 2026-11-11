@@ -37,7 +37,9 @@ def assemble(w):
       target=(163.45,455.765);wire(5,(outer,y),(outer,target[1]));stack(outer,target[1],4,5);wire(4,(outer,target[1]),target);stack(*target,1,4)
      else:
       target=(177.45,455.765);wire(5,(outer,y),(outer,453.));stack(outer,453.,4,5);wire(4,(outer,453.),(target[0],453.));stack(target[0],453.,4,5);wire(5,(target[0],453.),target);stack(*target,1,5)
-    wire(2,(168.55,452.),(168.55,447.));wire(2,(168.55,447.),(190.,447.));stack(190.,447.,2,5);wire(5,(190.,447.),(190.,1512.));stack(190.,1512.,4,5);wire(4,(190.,1512.),(131.22,1512.));stack(131.22,1512.,4,5)
+    va=json.loads((w/'vss-access.json').read_text()) if (w/'vss-access.json').exists() else dict(x=131.22,y=1512.)
+    vx,vy=va['x'],va['y']
+    wire(2,(168.55,452.),(168.55,447.));wire(2,(168.55,447.),(190.,447.));stack(190.,447.,2,5);wire(5,(190.,447.),(190.,vy));stack(190.,vy,4,5);wire(4,(190.,vy),(vx,vy));stack(vx,vy,4,5)
     # Check actual metal connectivity before any label-based extraction.
     root.flatten(False);tr=k.LayoutToNetlist(k.RecursiveShapeIterator(l,root,[]));layers={n:tr.make_layer(l.layer(n,0),'L'+str(n)) for n in list(metals.values())+list(vias.values())}
     for layer in layers.values():tr.connect(layer)
@@ -45,7 +47,7 @@ def assemble(w):
     tr.extract_netlist()
     def net(level,x,y):
      n=tr.probe_net(layers[metals[level]],k.DPoint(x,y));return None if n is None else n.cluster_id
-    pairs={'P':(net(5,98,437.75),net(1,163.45,455.765)),'N':(net(5,97,437.75),net(1,177.45,455.765)),'VSS':(net(5,131.22,1511.75),net(2,168.55,452))}
+    pairs={'P':(net(5,98,437.75),net(1,163.45,455.765)),'N':(net(5,97,437.75),net(1,177.45,455.765)),'VSS':(net(5,vx,vy-.25),net(2,168.55,452))}
     (w/'metal-check.json').write_text(json.dumps(pairs,indent=2)+'\n');assert all(a is not None and a==b for a,b in pairs.values()),pairs;assert len({a for a,b in pairs.values()})==3,pairs
     opt=k.SaveLayoutOptions();opt.select_cell(root.cell_index());l.write(str(w/'combined.gds'),opt)
     
@@ -66,10 +68,12 @@ def generate(work, pad_dir, core_dir):
     from extract_audit import converted_graph, extracted_graph, export_extracted
     work.mkdir(parents=True, exist_ok=False)
     metadata=json.loads((pad_dir/'wired-receive-usb-layout.json').read_text())
-    expected_access={'RX_P':(98.,438.),'RX_N':(97.,438.),'VSS':(131.22,1512.)}
+    expected_access={'RX_P':(98.,438.),'RX_N':(97.,438.),'VSS':(None,None)}
     for name,(x,y) in expected_access.items():
-        if metadata['net_track_x_um'][name]!=x or metadata['port_heights_um'][name]!=y:
+        if (x is not None and metadata['net_track_x_um'][name]!=x) or (y is not None and metadata['port_heights_um'][name]!=y):
             raise ValueError('Re-route receiver integration for changed access: '+name)
+    # PD28: the VSS landing follows the array top (1512 for the canonical cell; taller for the 6 V USB variant).
+    (work/'vss-access.json').write_text(json.dumps(dict(x=metadata['net_track_x_um']['VSS'],y=metadata['port_heights_um']['VSS']))+'\n')
     for source,target in [(pad_dir/'wired-receive-usb.gds','pad.gds'),
                           (pad_dir/'wired-receive-usb-layout.json','base-layout.json'),
                           (core_dir/'receiver-core.gds','discharge.gds')]:

@@ -35,9 +35,14 @@ def assemble(work):
         rect(v,x-h,y-h,x+h,y+h)
     buses={'VSS':-12.,'RAIL':-20.,'PADP':36.,'PADN':40.}
     placements=[]
-    for leg,pad in enumerate(('PADP','PADN')):
-        for upper,model in enumerate(cfg['primitives']):
-            y=leg*80+upper*40
+    # PD21 (HBM item a): optional extra up-diode rows (pad -> RAIL), one per leg above the canonical
+    # four rows (y 160 + 40*leg), same fingers and bus taps. extra_up_rows=0 reproduces the canonical array.
+    extra=cfg.get('extra_up_rows',0)
+    rows=[(leg,pad,upper,model,leg*80+upper*40) for leg,pad in enumerate(('PADP','PADN')) for upper,model in enumerate(cfg['primitives'])]
+    up_model=[m for m in cfg['primitives'] if m=='diode_pd2nw_06v0'][0]
+    rows+=[(leg,pad,1,up_model,160+40*(2*r+leg)) for r in range(extra) for leg,pad in enumerate(('PADP','PADN'))]
+    for leg,pad,upper,model,y in rows:
+        if True:
             mappings={'A':pad,'K':'RAIL','SUB':'VSS'} if upper else {'A':'VSS','K':pad}
             offsets={'A':0.,'K':8.,'SUB':-8.} if upper else {'A':-8.,'K':0.}
             for finger in range(cfg['fingers']):
@@ -52,8 +57,9 @@ def assemble(work):
                     landing=k.Region(k.DBox(tx-x-.10,ty-y-.10,tx-x+.10,ty-y+.10).to_itype(layout.dbu))
                     if not (landing-m1).is_empty():raise ValueError('Terminal via misses primitive M1: '+terminal)
                     via(tx,ty,1);wire(36,(tx,ty),(buses[net],ty),.48);via(buses[net],ty,2)
+    top=136.+80.*extra
     for net,x in buses.items():
-        wire(42,(x,-16.),(x,136.),2.)
+        wire(42,(x,-16.),(x,top),2.)
         root.shapes(layout.layer(42,10)).insert(k.DText(net,k.DTrans(x,-16.)))
     opts=k.SaveLayoutOptions();opts.add_cell(root.cell_index());layout.write(str(work/'array.gds'),opts)
     wells=k.Region(root.begin_shapes_rec(layout.layer(21,0))).merged()
@@ -61,12 +67,13 @@ def assemble(work):
     (work/'geometry.json').write_text(json.dumps(dict(bbox_um=str(root.dbbox()),placements=placements,buses_um=buses,wells=well_geometry),indent=2)+'\n')
 
 
-def generate(work,primitives,fingers):
+def generate(work,primitives,fingers,extra_up_rows=0):
     from layout import magic,IMAGE
     if not 1<=fingers<=4:raise ValueError('Current bus envelope supports one to four fingers')
     work.mkdir(parents=True,exist_ok=False)
     data=json.loads((primitives/'protection-primitives.json').read_text())
     cfg=dict(primitives=data['primitives'],fingers=fingers)
+    if extra_up_rows:cfg['extra_up_rows']=extra_up_rows
     (work/'config.json').write_text(json.dumps(cfg))
     for model in cfg['primitives']:shutil.copy2(primitives/(model+'.gds'),work/(model+'.gds'))
     shutil.copy2(Path(__file__),work/'protection_array.py')
@@ -96,7 +103,7 @@ quit -noprompt
     physical=(work/'array_flat.spice').read_text()
     devices=[line.split() for line in physical.splitlines() if line.startswith('D')]
     expected={('VSS',pad,'diode_nd2ps_06v0'):fingers for pad in ('PADP','PADN')}
-    expected.update({(pad,'RAIL','diode_pd2nw_06v0'):fingers for pad in ('PADP','PADN')})
+    expected.update({(pad,'RAIL','diode_pd2nw_06v0'):fingers*(1+extra_up_rows) for pad in ('PADP','PADN')})
     actual={}
     for d in devices:
         key=tuple(d[1:4]);actual[key]=actual.get(key,0)+1
@@ -106,7 +113,7 @@ quit -noprompt
     # Replace only the linear well-area term, preserving routed coupling.
     geometry=json.loads((work/'geometry.json').read_text())
     well=geometry['wells'];unit=data['primitives']['diode_pd2nw_06v0']
-    if well['count']!=2*fingers or abs(well['area_um2']-2*fingers*unit['nwell_area_um2'])>1e-5:
+    if well['count']!=2*fingers*(1+extra_up_rows) or abs(well['area_um2']-2*fingers*(1+extra_up_rows)*unit['nwell_area_um2'])>1e-5:
         raise ValueError('Unexpected merged or missing wells')
     tech=subprocess.run(['docker','run','--rm','--network','none','--entrypoint','python3',IMAGE,'-c','from pathlib import Path; print(Path("/pdk/gf180mcuD/libs.tech/magic/gf180mcuD.tech").read_text(),end="")'],capture_output=True,text=True,check=True,timeout=30).stdout
     if hashlib.sha256(tech.encode()).hexdigest()!=data['extraction_technology_sha256']:
@@ -136,12 +143,12 @@ quit -noprompt
     corrected=residual.replace('.ends',f"DWELL VSS RAIL diode_nw2ps_06v0 area={well['area_um2']}p pj={well['perimeter_um']}u\n.ends")
     (work/'array-with-well.spice').write_text(corrected)
     subprocess.run([sys.executable,str(Path(__file__).with_name('render.py').resolve()),str(work/'array_flat.mag'),'--output',str(work/'array.png'),'--title','Differential steering array','--primitive'],check=True,timeout=30)
-    report=dict(status='connected_array_DRC_and_diode_graph_pass_not_ESD_qualification',drc_count=0,fingers_per_diode=fingers,diode_count=len(devices),geometry=geometry,removed_linear_well_capacitance_ff=removed,well_capacitance_rounding_bound_ff=rounding_bound,extracted_spice_sha256=hashlib.sha256(corrected.encode()).hexdigest(),limitations=['Not connected to pads or clamp yet.','Single terminal vias are not discharge-current qualified.','Nonlinear well junction reconstructed from isolated physical wells; linear well-area term removed, other extracted coupling retained.'],source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),primitives/'protection-primitives.json',*[primitives/(m+'.gds') for m in cfg['primitives']]]})
+    report=dict(status='connected_array_DRC_and_diode_graph_pass_not_ESD_qualification',drc_count=0,fingers_per_diode=fingers,extra_up_rows=extra_up_rows,diode_count=len(devices),geometry=geometry,removed_linear_well_capacitance_ff=removed,well_capacitance_rounding_bound_ff=rounding_bound,extracted_spice_sha256=hashlib.sha256(corrected.encode()).hexdigest(),limitations=['Not connected to pads or clamp yet.','Single terminal vias are not discharge-current qualified.','Nonlinear well junction reconstructed from isolated physical wells; linear well-area term removed, other extracted coupling retained.'],source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [Path(__file__),primitives/'protection-primitives.json',*[primitives/(m+'.gds') for m in cfg['primitives']]]})
     (work/'array-layout.json').write_text(json.dumps(report,indent=2)+'\n')
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--inside',action='store_true');p.add_argument('--primitives',type=Path,default=Path(__file__).with_name('generated')/'protection-primitives');p.add_argument('--fingers',type=int,default=4)
+    p=argparse.ArgumentParser();p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--inside',action='store_true');p.add_argument('--primitives',type=Path,default=Path(__file__).with_name('generated')/'protection-primitives');p.add_argument('--fingers',type=int,default=4);p.add_argument('--extra-up-rows',type=int,default=0)
     a=p.parse_args()
     if a.inside:assemble(a.output_dir.resolve())
-    else:generate(a.output_dir.resolve(),a.primitives.resolve(),a.fingers)
+    else:generate(a.output_dir.resolve(),a.primitives.resolve(),a.fingers,a.extra_up_rows)

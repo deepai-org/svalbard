@@ -1,0 +1,23 @@
+* NGSPICE file created from wtx_q4ctlc.ext - technology: gf180mcuD
+
+.subckt wtx_q4ctlc SERQ QRST DC WCKQ VDD VSS
+X0 VDD WCN WCKQ VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
+X1 WCN DC VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X2 WCN DC VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X3 QRB QRA VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X4 WCKQ WCN VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X5 VDD WCN WCKQ VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X6 VSS WCN WCKQ VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X7 QRST QRB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X8 WCKQ WCN VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X9 QRA SERQ VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X10 WCKQ WCN VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X11 QRB QRA VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X12 VDD QRB QRST VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X13 QRA SERQ VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X14 QRST QRB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X15 VSS WCN WCKQ VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X16 WCKQ WCN VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X17 VSS QRB QRST VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+.ends
+

@@ -40,7 +40,64 @@ TIMING = tools.PROJECT / 'analog/timing'
 sys.path.insert(0, str(TIMING))
 import compact  # noqa: E402
 import layout_engine as le  # noqa: E402
-from fastcells import C, G, BRK, _tspc_cols, _tspc_nand_cols, div5core  # noqa: E402
+from fastcells import C, G, BRK, _tspc_cols, fet, div5core  # noqa: E402
+
+
+SREG_FAST_LD = __import__('os').environ.get('SREG_FAST_LD', '1') == '1'
+NAND_TSPC_WPI = float(__import__('os').environ.get('NAND_TSPC_WPI', '3'))
+NAND_TSPC_WPC = float(__import__('os').environ.get('NAND_TSPC_WPC', '4'))
+
+
+def _tspc_nand_cols(ck, ins, q, qb, x, y, pre):
+    """2-input merged-NAND TSPC flop (Q <= AND(ins)), charge-sharing safe (session 7).
+
+    timing's fastcells._tspc_nand_cols puts the clock PMOS at VDD and the parallel input PMOS between
+    its node n1 and X.  With CK high and both inputs high, n1 floats at VDD (plus its routed wire); when
+    one input then falls (the shift data B j+1 changes right after the edge), n1 dumps onto the low X:
+    extracted ff/22/3.35 at a 480 MHz ring X rose to 1.3 V inside the CK-high phase, the second stage
+    evaluated, and B j flipped half a period early (43/140 errors, core 1.92 Gb/s).  Here the input
+    PMOS sit at VDD and a clock PMOS sits next to X.  Layout: each input PMOS has its own clock PMOS
+    (X | CK | ma | A | VDD | B | mb | CK | X), so ma / mb stay unrouted diffusion; with CK high X is
+    isolated from both.  NMOS stack unchanged (VSS | A | s0 | B | X)."""
+    assert len(ins) == 2
+    # sizes: the series input + clock PMOS must charge X within the CK-low half period at ss/32/3.15 (3.24 Gb/s
+    # core: the 2 + 3 um version lost loaded bits, 17 errors); input 3 um, clock 4 um, NMOS 4 um.
+    wn, wpi, wpc = 4, NAND_TSPC_WPI, NAND_TSPC_WPC
+    a, b = ins
+    ma, mb = pre + 'ma', pre + 'mb'
+    cols = [dict(k='c', n='-', p=x), G(ck, p=True, n=False, wp=wpc), dict(k='c', n='VSS', p=None), G(a, wn, wpi),
+            dict(k='c', n=None, p='VDD'), G(b, wn, wpi), dict(k='c', n=x, p=None), G(ck, p=True, n=False, wp=wpc),
+            dict(k='c', n='-', p=x), BRK]
+    net = [fet(pre + 'P2A', x, ck, ma, 'VDD', wpc, 'p'), fet(pre + 'P1A', ma, a, 'VDD', 'VDD', wpi, 'p'),
+           fet(pre + 'P1B', mb, b, 'VDD', 'VDD', wpi, 'p'), fet(pre + 'P2B', x, ck, mb, 'VDD', wpc, 'p'),
+           fet(pre + 'N10', pre + 's0', a, 'VSS', 'VSS', wn), fet(pre + 'N11', x, b, pre + 's0', 'VSS', wn)]
+    tc, tn = _tspc_cols(ck, 'UNUSED', q, qb, x, y, pre)
+    cols += tc[5:]
+    net += [l for l in tn if not any(l.startswith(f'X{pre}{t} ') for t in ('N1', 'P1', 'P2'))]
+    return cols, net
+
+
+def _tspc_ld_cols(ck, d, q, qb, x, y, pre, wo=(4, 8)):
+    """TSPC flop for the stream load flag (session 7): the _tspc_cols stages 1-3 without the ENB reset and
+    with a plain INV output (wo n / p um) instead of NOR(QB, ENB).  Its output drives the five load NANDs
+    directly as LD (LDB = INV4(LD)); the earlier NOR output -> INV4 -> INV4 chain put LD 0.62 T after the
+    clock edge, and the loaded bit's X node then had < 0.3 T to charge before the load edge (extracted
+    ss/32/3.15, 3.24 Gb/s core: 13-17 errors in the word's even slots).  No reset is needed: while SERQ
+    is low the stream flops are held by their own ENB."""
+    cols = [C('VSS', 'VDD'), G(d, 2, 4), C(x, None, same=False), G(ck, p=True, n=False, wp=4), dict(k='c', n='-', p=x),
+            dict(k='c', n=y, p='-'), G(x, 2, n=True, p=False), dict(k='c', n=None, p='VDD'), G(ck, 2, 4),
+            C('VSS', y, same=False), BRK,
+            dict(k='c', n=qb, p='-'), G(ck, 2, n=True, p=False), dict(k='c', n=None, p='VDD'), G(y, 2, 4),
+            C('VSS', qb, same=False), BRK, C('VSS', 'VDD', same=False), G(qb, wo[0], wo[1]), C(q)]
+    net = [fet(pre + 'N1', x, d, 'VSS', 'VSS', 2), fet(pre + 'P1', pre + 'm1', d, 'VDD', 'VDD', 4, 'p'),
+           fet(pre + 'P2', x, ck, pre + 'm1', 'VDD', 4, 'p'),
+           fet(pre + 'N2', y, x, pre + 'm2', 'VSS', 2), fet(pre + 'N3', pre + 'm2', ck, 'VSS', 'VSS', 2),
+           fet(pre + 'P3', y, ck, 'VDD', 'VDD', 4, 'p'),
+           fet(pre + 'N4', qb, ck, pre + 'm3', 'VSS', 2), fet(pre + 'N5', pre + 'm3', y, 'VSS', 'VSS', 2),
+           fet(pre + 'P4', qb, y, 'VDD', 'VDD', 4, 'p'),
+           fet(pre + 'NO', q, qb, 'VSS', 'VSS', wo[0]), fet(pre + 'PO', q, qb, 'VDD', 'VDD', wo[1], 'p')]
+    return cols, net
+
 
 FAST = tools.GENERATED / 'fast'
 SCRATCH = tools.SCRATCH / 'serq4_macro'
@@ -173,8 +230,12 @@ def sreg5():
     and the output mux complements are swapped (Y uses the FN data path, see top_instances).
     B0 leaves the row through an INV2 -> INV4 buffer (BO)."""
     ports = [f'D{j}' for j in range(5)] + ['Z', 'LDA', 'CK', 'ENB', 'BO']
-    cols, net = _tspc_cols('CK', 'LDA', 'LDQ', 'LQB', 'LX', 'LY', 'lf')
-    gates = [('li', 'INV4', 'LDQ', 'LDB'), ('lj', 'INV4', 'LDB', 'LD')]
+    if SREG_FAST_LD:
+        cols, net = _tspc_ld_cols('CK', 'LDA', 'LD', 'LQB', 'LX', 'LY', 'lf')
+        gates = [('li', 'INV4', 'LD', 'LDB')]
+    else:
+        cols, net = _tspc_cols('CK', 'LDA', 'LDQ', 'LQB', 'LX', 'LY', 'lf')
+        gates = [('li', 'INV4', 'LDQ', 'LDB'), ('lj', 'INV4', 'LDB', 'LD')]
     gates += [(f'i{j}', 'INV1', f'D{j}', f'DI{j}') for j in (1, 3)]
     for j in range(5):
         d = f'DI{j}' if j % 2 else f'D{j}'
@@ -205,9 +266,8 @@ def q4ctl():
     earlier core: four register periods after WORD_CLK rises (was three).  The word is stable from
     1.25 to 6.25 register periods after WORD_CLK rises, so the load sits 2.75 periods after the
     launch and 2.25 before the next one."""
-    ports = ['SERQ', 'QRST', 'HA', 'HAB', 'JB', 'JBB', 'DA', 'DC', 'LDA', 'WCKQ']
+    ports = ['SERQ', 'QRST', 'DA', 'DC', 'LDA', 'WCKQ']
     gates = [('ri', 'INV2', 'SERQ', 'QRA'), ('rj', 'INV4', 'QRA', 'QRB'), ('rk', 'INV8', 'QRB', 'QRST'),
-             ('ha', 'INV1', 'HA', 'HAB'), ('jb', 'INV1', 'JB', 'JBB'),
              ('ln', 'NOR2X', 'DA', 'DC', 'LN0'), ('lb', 'INV4', 'LN0', 'LN1'), ('lc', 'INV8', 'LN1', 'LDA'),
              ('wa', 'INV4', 'DC', 'WCN'), ('wb', 'INV16', 'WCN', 'WCKQ')]
     return row_of('wtx_q4ctl', gates, ports)
@@ -219,10 +279,15 @@ def q4ck():
     return row_of('wtx_q4ck', gates, ports)
 
 
-def tspcb(name='wtx_tspcb', wo=(4, 8)):
+def tspcb(name='wtx_tspcb', wo=(4, 8), qn=False):
     """timing's ct_tspcd core (same devices, Q_int = NOR(QB, ENB)) plus an INV2 -> INV4 output
     buffer in the same row.  The bare NOR output (series 4/4 um PMOS, ~6 kohm) gave 350 ps edges
-    on 19 fF of routed wire and 1.2-1.7 ns on the 80-150 fF stream outputs in the extracted core."""
+    on 19 fF of routed wire and 1.2-1.7 ns on the 80-150 fF stream outputs in the extracted core.
+    qn=True (wtx_tspcbn) also brings out QN (= !Q, the buffer's first stage) for local feedback: the
+    half-rate toggle (HA: D = own QN) and the full-rate Johnson ring (JA: D = JB's QN).  Their
+    earlier feedback inverters were INV1s in wtx_q4ctl at the far end of the row; at ss/22/3.15
+    (extracted) JB tcq 0.56 ns + that inverter on ~300 um of wire exceeded the 1.235 ns ring period
+    and the full-rate ring divided by 5 (WORD_CLK = line/25)."""
     cols, net = _tspc_cols('CK', 'D', 'QI', 'QB', 'X', 'Y', '')
     c, n = g_inv('ba', 'QI', 'QN', 2, 4, 2, 4)
     cols += [BRK] + c
@@ -230,7 +295,7 @@ def tspcb(name='wtx_tspcb', wo=(4, 8)):
     c, n = g_inv('bb', 'QN', 'Q', wo[0], wo[1], 2, 4)
     cols += c[1:] if cols[-1] == c[0] else [BRK] + c
     net += n
-    ports = ['CK', 'D', 'Q', 'ENB']
+    ports = ['CK', 'D', 'Q', 'ENB'] + (['QN'] if qn else [])
     return compact.Row(name, cols, ports=ports, wn=2, wp=4), ports + ['VDD', 'VSS'], net
 
 
@@ -291,8 +356,47 @@ def omux():
     return compact.Row('wtx_omux', cols, ports=ports, wn=4, wp=8), p_, net
 
 
+def _dff6(p, d, ck, q, qb):
+    """Static positive-edge D flop from six NAND gates (three SR latches); no dynamic node."""
+    return [(f'{p}1', 'NAND', f'{p}n4', f'{p}n2', f'{p}n1'), (f'{p}2', 'NAND', ck, f'{p}n1', f'{p}n2'),
+            (f'{p}3', 'NAND3S', ck, f'{p}n2', f'{p}n4', f'{p}n3'), (f'{p}4', 'NAND', f'{p}n3', d, f'{p}n4'),
+            (f'{p}5', 'NAND', f'{p}n2', qb, q), (f'{p}6', 'NAND', f'{p}n3', q, qb)]
+
+
+def div5s():
+    """Static /5 word counter (replaces the TSPC ct_div5 in wtx_div5b): a <- NOR(b, c), b <- a, c <- b
+    (abc 000 -> 100 -> 110 -> 011 -> 001, self-starting from every state).  Ports as wtx_div5b
+    (AO = A, CO = C buffered; ENB unused but kept: the stopped clock holds the state).
+    Why: in full rate the counter clock is ring/4 (2.5 ns high phase at 810 MHz); the TSPC A flop,
+    whose merged-NAND first stage sees QB_b fall early in the high phase, lost its state 1.6 ns
+    into the high phase and the counter ran /4 (schematic tt: WORD_CLK = line/16, LD irregular;
+    extracted ss: first half of every word lost).  Quarter rate (0.6 ns high phase) was unaffected."""
+    gates = [('nr', 'NOR2X', 'B', 'C', 'DA')] + _dff6('fa', 'DA', 'CK', 'A', 'AN') + \
+        _dff6('fb', 'A', 'CK', 'B', 'BN') + _dff6('fc', 'B', 'CK', 'C', 'CN') + \
+        [('aa', 'INV2', 'A', 'AB2'), ('ab', 'INV4', 'AB2', 'AO'), ('ca', 'INV2', 'C', 'CB2'), ('cb', 'INV4', 'CB2', 'CO'),
+         ('ed', 'INV1', 'ENB', 'ENX')]
+    return row_of('wtx_div5s', gates, ['CK', 'ENB', 'AO', 'CO'])
+
+
+def omux2():
+    """Half-rate CMOS 2:1 stage in front of the CML final 2:1 (cml_ser.wtx_cml2), one row:
+    FN k = !F k (INV2), E = QW0 ? F0 : F2, O = QW1 ? F1 : F3 and their complements EB, OB from FN,
+    all NAND-NAND with the select phase on the fast (output-side) input.  E / O change only at the
+    select edges (2-UI windows); the CML flops sample the window centres."""
+    ports = [f'QW{k}' for k in range(4)] + [f'F{k}' for k in range(4)] + ['E', 'EB', 'O', 'OB']
+    gates = [(f'c{k}', 'INV2', f'F{k}', f'FN{k}') for k in range(4)]
+    for o, (s0, s1), (d0, d1) in (('E', ('QW0', 'QW2'), ('F0', 'F2')), ('EB', ('QW0', 'QW2'), ('FN0', 'FN2')),
+                                  ('O', ('QW1', 'QW3'), ('F1', 'F3')), ('OB', ('QW1', 'QW3'), ('FN1', 'FN3'))):
+        gates += [(f'{o.lower()}a', 'NAND4', s0, d0, f'{o}A'), (f'{o.lower()}b', 'NAND4', s1, d1, f'{o}BN'),
+                  (f'{o.lower()}o', 'NAND4', f'{o}A', f'{o}BN', o)]
+    return row_of('wtx_omux2', gates, ports)
+
+
 CELLS = dict(wtx_qph=qph, wtx_sreg5=sreg5, wtx_q4ctl=q4ctl, wtx_q4ck=q4ck, wtx_tspcb=tspcb,
-             wtx_tspcbx=lambda: tspcb('wtx_tspcbx', (8, 16)), wtx_omux=omux, wtx_div5b=div5b)
+             wtx_tspcbx=lambda: tspcb('wtx_tspcbx', (8, 16)), wtx_tspcbn=lambda: tspcb('wtx_tspcbn', qn=True),
+             wtx_omux=omux, wtx_omux2=omux2, wtx_div5b=div5b, wtx_div5s=div5s)
+import cml_ser as _cml  # noqa: E402  (CML final 2:1 transistor rows)
+CELLS.update({_n: (lambda _n=_n: _cml.row_cell(_n)) for _n in _cml.ROWDEF})
 
 
 def subckt(name, ports, net):
@@ -331,16 +435,20 @@ def build_cell(name):
 TOP_PORTS = [f'D{i}' for i in range(20)] + ['PH0', 'PH90', 'PH180', 'PH270', 'SERQ', 'MQ', 'MH', 'MF',
                                             'Y', 'YB', 'DP', 'DPB', 'WCKQ', 'VDD', 'VSS']
 HOPS = {0: (2, 2), 1: (1, 0, 3), 2: (1, 0, 0), 3: (1, 1, 1)}
-HALF = {0: ('HA_', 'JA_'), 1: ('HC_', 'JB_'), 2: ('HB_', 'JC_'), 3: ('HD_', 'JD_')}
+# half rate: HA toggles on G0 (PH0); HB = HA@G0 (= !HA); HY = HA@G3 (PH270, 0.75 T budget);
+# HC = HY@G2 (PH180, 0.75 T); HD = HC@G2.  HC = HA delayed 1.5 T = !(HA delayed T/2), so the phase
+# one UI (T/2) after HA is HD, and three UI after it HC.  (Earlier HC = HA@G2 had only T/2 = 617 ps
+# for HA's clock-to-Q at 810 MHz; extracted ss tcq ~0.6 ns, so HC stuck and C1/C3 never toggled.)
+HALF = {0: ('HA_', 'JA_'), 1: ('HD_', 'JB_'), 2: ('HB_', 'JC_'), 3: ('HC_', 'JD_')}
 
 
 def top_instances():
     """(instance, cell, connections in cell port order).  Same connectivity as the previous
     gate-level cells.serq4 (net names kept)."""
     V = ['VDD', 'VSS']
-    out = [('XCTL', 'wtx_q4ctl', ['SERQ', 'QRST', 'HA_', 'HAB', 'JB_', 'JBB', 'DA', 'DC', 'LDA', 'WCKQ'] + V),
+    out = [('XCTL', 'wtx_q4ctl', ['SERQ', 'QRST', 'DA', 'DC', 'LDA', 'WCKQ'] + V),
            ('XCK', 'wtx_q4ck', ['QKN0', 'QKN1', 'QDN', 'QK0', 'QK1', 'QD'] + V),
-           ('XDV', 'wtx_div5b', ['QD', 'QRST', 'DA', 'DC'] + V)]
+           ('XDV', 'wtx_div5s', ['QD', 'QRST', 'DA', 'DC'] + V)]
     ph = ['PH0', 'PH90', 'PH180', 'PH270']
     for k in range(4):
         xn = ['QKN0', 'QKN1', 'QDN'] if k == 2 else [f'CXN{k}_{d}' for d in range(3)]
@@ -357,25 +465,80 @@ def top_instances():
             cell = 'wtx_tspcbx' if i == len(seq) - 1 else 'wtx_tspcb'    # stream outputs F k: stronger
             out.append((f'XH{k}_{i}', cell, [f'Q{q}', prev, o, 'QRST'] + V))
             prev = o
-    tsp = [('HA', 'G0', 'HAB', 'HA_'), ('HB', 'G0', 'HA_', 'HB_'), ('HC', 'G2', 'HA_', 'HC_'), ('HD', 'G2', 'HC_', 'HD_'),
-           ('JA', 'G0', 'JBB', 'JA_'), ('JB', 'G0', 'JA_', 'JB_'), ('JC', 'G0', 'JB_', 'JC_'), ('JD', 'G0', 'JC_', 'JD_')]
+    out.append(('XHA', 'wtx_tspcbn', ['G0', 'HAB', 'HA_', 'QRST', 'HAB'] + V))     # toggle: D = own QN
+    out.append(('XJB', 'wtx_tspcbn', ['G0', 'JA_', 'JB_', 'QRST', 'JBB'] + V))     # Johnson feedback
+    tsp = [('HB', 'G0', 'HA_', 'HB_'), ('HY', 'G3X', 'HA_', 'HY_'), ('HC', 'G2', 'HY_', 'HC_'), ('HD', 'G2', 'HC_', 'HD_'),
+           ('HZ', 'G1X', 'VSS', 'HZ_'),            # dummy: G1X carries the same flop load as G3X
+           ('JA', 'G0', 'JBB', 'JA_'), ('JC', 'G0', 'JB_', 'JC_'), ('JD', 'G0', 'JC_', 'JD_')]
     for n, ck, d, q in tsp:
         out.append((f'X{n}', 'wtx_tspcb', [ck, d, q, 'QRST'] + V))
     # streams arrive inverted (sreg5): F k = NOT(bit), so the complement outputs are swapped
-    out.append(('XO', 'wtx_omux', [f'QW{k}' for k in range(4)] + [f'F{k}' for k in range(4)]
-                + ['YB', 'Y', 'DPB', 'DP'] + [f'S{k}' for k in range(4)] + V))
+    # half-rate CMOS 2:1 (E = QW0 ? F0 : F2, O = QW1 ? F1 : F3) + CML final 2:1 (cml_ser.wtx_cml2).
+    # The streams arrive inverted (sreg5), so E / O carry NOT(bit) and the CML outputs are swapped.
+    out.append(('XO', 'wtx_omux2', [f'QW{k}' for k in range(4)] + [f'F{k}' for k in range(4)]
+                + ['EN_', 'E_', 'ON_', 'O_'] + V))
+    out.append(('XC', 'wtx_cml2', ['E_', 'EN_', 'O_', 'ON_'] + [f'QW{k}' for k in range(4)]
+                + ['SERQ', 'YB', 'Y', 'DPB', 'DP'] + V))
     return out
+
+
+def _cml_rows():
+    """Device rows of the CML stage inside the macro (flattened names C_<inst>_<dev>).
+
+    Session 5 compact cluster: the CML stage occupies its own ~330 um wide column of rows at the left of
+    the macro (the session-4 rows spread it over the full 530 um and carried 50-150 fF of wire on KP,
+    the XOR inputs, the mux selects and the latch inputs).  Rows (bottom to top):
+      c1  omux2 + clock-input buffers (QW -> P / PL) + first data delay buffers (E / O from omux2 local)
+      c2  XOR + clock pre-driver (XOR inputs one row down) + second data delay buffers
+      c3  E flop: driver, master, slave + output mux MY (EF and CKE local)
+      c4  Y converter: level shift, two converters, inverters, feedback R, bias (YC one row down)
+      c5  O flop + its dummy mux select (OF reaches MY two rows down and PM one row up)
+      c6  postcursor O2 flop + postcursor mux MD (O2 and CKP local)
+      c7  postcursor E2 flop + its dummy mux select (E2 one row down to MD)
+      c8  DP converter (DC two rows down)
+    Every clock driver sits next to its own latch pair; KP runs from c2 to the four drivers."""
+    cmr = {'BL0', 'BL1', 'DKE', 'DKO', 'DKP', 'DKQ'}     # leaves with a common-mode drop resistor
+
+    def g(*insts, t=True, r=True):
+        out = []
+        for i in insts:
+            out += ([f'C_{i}_RCM'] if i in cmr else [])
+            out += ([f'C_{i}_RLP'] if r else []) + ([f'C_{i}_T'] if t else []) + ([f'C_{i}_RLN'] if r else [])
+        return out
+    bias = ['C_PEN_0', 'C_PEN_1', 'C_PEN_2', 'C_PEN_3', 'C_NEI', 'C_PEI', 'C_RREF',
+            'C_MREF_0', 'C_MREF_1', 'C_MREF_2', 'C_MREF_3', 'C_MOFF']
+
+    def conv(outs, pairs):
+        d = []
+        for o in outs:
+            d += [f'C_{o}C_T', f'C_{o}I1N', f'C_{o}I1P', f'C_{o}RF', f'C_{o}I2N', f'C_{o}I2P']
+        for x in pairs:
+            d += [f'C_K{x}N', f'C_K{x}P']
+        return d
+    return [['O'] + g('BC0', 'BL0', 'BC1', 'BL1', 'DE1', 'DO1'),
+            g('DE2', 'XK', 'DK', 'DO2'),
+            g('DKE', 'EM', 'ES', 'MY'),
+            g('LY', r=False) + conv(('Y', 'YB'), ('YV', 'YBV')) + bias,
+            g('DKO', 'OM', 'OS', 'MXO'),
+            g('DKP', 'PM', 'PS', 'MD'),
+            g('DKQ', 'QM', 'QS', 'MXQ'),
+            g('LD', r=False) + conv(('DP', 'DPB'), ('DPV', 'DPBV'))]
+
+
+CML_K_GAP = 0.0
 
 
 # Floorplan (bottom to top).  Each stream's load mux, its five register flops and its retiming hops
 # share a row; the four identical phase slices and the output row (window gates + muxes) sit in the
 # middle, so every stream output F and every hop phase Q spans at most two rows and the four QW
 # nets run from one slice row to the adjacent output row.
-ROWS = [['CTL', 'DV', 'CK', 'HA', 'HB', 'HC', 'HD', 'JA', 'JB', 'JC', 'JD'],
+# Session 5: all four stream rows below the phase slices (F0..F3 reach omux2 in the first CML row), the
+# CML stage as a compact column of rows above them (_cml_rows).
+ROWS = [['CTL', 'DV', 'CK', 'HZ', 'HA', 'HB', 'HY', 'HC', 'HD', 'JA', 'JB', 'JC', 'JD'],
         ['L0', 'H0_0', 'H0_1', 'L1', 'H1_0', 'H1_1', 'H1_2'],
+        ['L2', 'H2_0', 'H2_1', 'H2_2', 'L3', 'H3_0', 'H3_1', 'H3_2'],
         ['P0', 'P1', 'P2', 'P3'],
-        ['O'],
-        ['L2', 'H2_0', 'H2_1', 'H2_2', 'L3', 'H3_0', 'H3_1', 'H3_2']]
+        *_cml_rows()]
 
 
 def macro_text():
@@ -386,9 +549,37 @@ def macro_text():
     return txt
 
 
+def _inline(cell, inst, conns, lib, out):
+    """Flatten subckt `cell` (instance name inst, port connections conns) down to compact-row macros
+    and primitives, with le.generate's names (devices <inst>_<dev>, internal nets <inst>.<net>), so
+    the reference netlist carries the same net names as the antenna-diode lines."""
+    ports, lines = lib[cell]
+    m = dict(zip(ports, conns))
+    m.update(VDD='VDD', VSS='VSS')
+    for l in lines:
+        tk = l.split()
+        name, rest = tk[0][1:], tk[1:]
+        sub = next((x for x in rest if '=' not in x and x in lib), None)
+        params = [x for x in rest if '=' in x]
+        nets = [x for x in rest if '=' not in x]
+        model = nets[-1]
+        nets = [m.get(n, f'{inst}.{n}') for n in nets[:-1]]
+        if model in lib:
+            _inline(model, f'{inst}_{name}', nets, lib, out)
+        else:
+            out.append(f'X{inst}_{name} {" ".join(nets)} {model} {" ".join(params)}'.rstrip())
+
+
 def top_spice(diodes=()):
     body = [f'.subckt wtx_serq4 {" ".join(TOP_PORTS)}']
-    body += [f'{i} {" ".join(c)} {cell}' for i, cell, c in top_instances()]
+    lib = {}
+    for c in _cml.lib_compact() + [_cml.cml2()]:
+        lib[c.name] = (c.ports, c.lines)
+    for i, cell, c in top_instances():
+        if cell in lib:
+            _inline(cell, i[1:], c, lib, body)
+        else:
+            body.append(f'{i} {" ".join(c)} {cell}')
     body += list(diodes)
     return '\n'.join(body + ['.ends wtx_serq4']) + '\n'
 
@@ -404,34 +595,59 @@ def _labels(magfile):
     return out
 
 
-def build_top():
+def _rects(magfile, layer):
+    """Rectangles (um) of one layer in a Magic .mag written with units internal (0.005 um)."""
+    out, cur = [], None
+    for line in Path(magfile).read_text().splitlines():
+        if line.startswith('<< '):
+            cur = line[3:-3].strip()
+        elif cur == layer and line.startswith('rect '):
+            x1, y1, x2, y2 = (int(v) * 0.005 for v in line.split()[1:5])
+            out.append((x1, y1, x2, y2))
+    return out
+
+
+def build_le(name, ports_list, inst_spice, children_text, rows, macros, max_row_width=400.0, workname=None, net_space=None):
+    """Generic hand-floorplanned macro (le.generate) with the M3-M5 parent pin stacks of build_top."""
     import netlist as tn
     le.FAST = FAST
-    for n in list(CELLS):
+    for n in macros:
         tn.MACROS[n] = json.loads((FAST / f'{n}.pins.json').read_text())['ports']
-    work = SCRATCH / 'top'
+    work = SCRATCH / (workname or name)
     if work.exists():
         shutil.rmtree(work)
     work.mkdir(parents=True)
-    (work / 'top.spice').write_text(top_spice())
-    ports, devices = tn.load(work / 'top.spice', 'wtx_serq4')
-    rep = le.generate(work, 'wtx_serq4', ports, devices, rows=ROWS, max_row_width=400.0)
+    (work / 'top.spice').write_text(children_text + inst_spice)
+    ports, devices = tn.load(work / 'top.spice', name)
+    if net_space:
+        net_space = {n: v for n, v in (net_space(devices) if callable(net_space) else net_space).items()}
+    rep = le.generate(work, name, ports, devices, rows=rows, max_row_width=max_row_width, net_space=net_space)
     W, H = rep['size_um']
     # pins for the parent (layoutgen): an M3-M5 via stack on each port trunk / power strap just
     # under the top edge; the parent's M3 riser starts there.  Above the last routing channel the
     # macro has only M5 (trunks, straps), so the stacks and risers cannot touch internal wiring.
-    lab = _labels(work / 'wtx_serq4.mag')
+    lab = _labels(work / f'{name}.mag')
     pin_y = round(H - 0.75, 3)
     pins, power = {}, []
     sig = [p for p in ports if p not in RAILS]
     for p in sig:
         pins[p] = [round(lab[p][0], 3), pin_y]
-    x = 2.0 + 3.0
-    while x < W - 2.0:
-        for k, n in enumerate(('VDD', 'VSS')):
-            power.append([n, round(x + 3.0 * k, 3), pin_y])
-        x += le.STRAP_PITCH
-    cmds = ['crashbackups stop', 'load wtx_serq4', 'units microns', 'snap internal']
+    # power pins on the straps as drawn (layout_engine report, cross-checked against the M5 geometry
+    # of the saved .mag); never re-derived from the strap pitch
+    m5 = _rects(work / f'{name}.mag', 'metal5')
+    for n, sx in rep['straps']:
+        hit = [r for r in m5 if r[0] - 1e-3 <= sx - le.STRAP_W / 2 and r[2] + 1e-3 >= sx + le.STRAP_W / 2
+               and r[3] >= pin_y + 0.3]
+        if not hit:
+            raise RuntimeError(f'{name}: no M5 strap under power pin {n} x={sx}')
+        power.append([n, round(sx, 3), pin_y])
+    # the M3/M4 parts of every pin stack must land on empty M3/M4 (above the last channel)
+    m34 = _rects(work / f'{name}.mag', 'metal3') + _rects(work / f'{name}.mag', 'metal4')
+    for px in [v[0] for v in pins.values()] + [v[1] for v in power]:
+        for r in m34:
+            if r[0] < px + 0.9 and r[2] > px - 0.9 and r[1] < pin_y + 0.5 and r[3] > pin_y - 0.5:
+                raise RuntimeError(f'{name}: pin stack at x={px} overlaps M3/M4 {r}')
+    cmds = ['crashbackups stop', f'load {name}', 'units microns', 'snap internal']
     L = le.Layout()
     for p, (px, py) in pins.items():
         L.via(px, py, 3, 5)
@@ -445,27 +661,50 @@ def build_top():
     # re-run DRC / extraction / GDS after the pin stacks
     for script in ('drc.tcl', 'check.tcl'):
         le.docker_magic(work, script)
-    sch = macro_text() + top_spice(le.ad.spice_lines(rep.get('antenna_diodes', [])))
+    dl = '\n'.join(le.ad.spice_lines(rep.get('antenna_diodes', [])))
+    sch = children_text + inst_spice.replace(f'.ends {name}', (dl + '\n' if dl else '') + f'.ends {name}')
     (work / 'schematic.spice').write_text(sch)
-    lvs = le.netgen_lvs(work, 'wtx_serq4.lvs.spice', 'wtx_serq4', 'schematic.spice', 'wtx_serq4')
+    lvs = le.netgen_lvs(work, f'{name}.lvs.spice', f'{name}', 'schematic.spice', f'{name}')
     drc = le.drc_errors((work / 'drc-count.txt').read_text())
-    (FAST / 'serq4_mag').mkdir(exist_ok=True)
+    magdir = FAST / ('serq4_mag' if name == 'wtx_serq4' else f'{name}_mag')
+    magdir.mkdir(exist_ok=True)
     for f in work.glob('*.mag'):
-        shutil.copy(f, FAST / 'serq4_mag' / f.name)
-    shutil.copy(work / 'wtx_serq4.mag', FAST / 'wtx_serq4.mag')
+        shutil.copy(f, magdir / f.name)
+    shutil.copy(work / f'{name}.mag', FAST / f'{name}.mag')
     for suf in ('.gds', '.ext.spice', '.lvs.spice'):
-        if (work / f'wtx_serq4{suf}').exists():
-            shutil.copy(work / f'wtx_serq4{suf}', FAST / f'wtx_serq4{suf}')
-    (FAST / 'wtx_serq4.spice').write_text('* generated by serq4_macro.py (intended netlist, hierarchical)\n' + sch)
-    meta = dict(ports=TOP_PORTS, pins=pins, power_pins=power, rails={}, pin_layer='metal3',
+        if (work / f'{name}{suf}').exists():
+            shutil.copy(work / f'{name}{suf}', FAST / f'{name}{suf}')
+    (FAST / f'{name}.spice').write_text('* generated by serq4_macro.py (intended netlist, hierarchical)\n' + sch)
+    meta = dict(ports=ports_list, pins=pins, power_pins=power, rails={}, pin_layer='metal3',
                 bbox=[0.0, 0.0, W, H], children=sorted(f.stem for f in work.glob('*.mag')))
-    (FAST / 'wtx_serq4.pins.json').write_text(json.dumps(meta, indent=1))
+    (FAST / f'{name}.pins.json').write_text(json.dumps(meta, indent=1))
     res = dict(size_um=[W, H], area_um2=round(W * H, 1), drc_errors=drc, lvs=lvs,
                rows=rep['rows'], antenna_diodes=len([d for d in rep.get('antenna_diodes', []) if d.get('placed')]),
                devices=sum(1 for l in sch.splitlines() if l.startswith('X') and 'fet_03v3' in l))
-    (FAST / 'wtx_serq4-check.json').write_text(json.dumps(res, indent=1, default=str))
+    (FAST / f'{name}-check.json').write_text(json.dumps(res, indent=1, default=str))
     print(json.dumps({k: v for k, v in res.items() if k != 'rows'}, default=str)[:1200])
     return res
+
+
+
+# Session 5: extracted, the router put each CML pair's true / complement on adjacent M4 tracks and M5
+# trunks (KP / KPB 51 fF, EF / EFB 39 fF of mutual C: for a differential signal that counts twice, so KP
+# saw ~130 fF effective per side) and a full-swing output trunk next to a latch output (Y -> OF 10 fF).
+# Every CML signal net, and the full-swing nets that run through the CML rows, get extra clearance.
+CML_SPACE_UM = 0.8
+CML_AGGRESSORS = ['Y', 'YB', 'DP', 'DPB', 'E_', 'EN_', 'O_', 'ON_'] + [f'QW{k}' for k in range(4)]
+
+
+def cml_net_space(devices):
+    nets = {n for d in devices for n in d.nodes}
+    sp = {n: CML_SPACE_UM for n in nets if n.startswith('C.') and n not in ('C.NB', 'C.RT', 'C.ENB')}
+    sp.update({n: CML_SPACE_UM for n in CML_AGGRESSORS if n in nets})
+    return sp
+
+
+def build_top():
+    return build_le('wtx_serq4', TOP_PORTS, top_spice(), macro_text(), ROWS, list(CELLS), max_row_width=560.0,
+                    workname='top', net_space=cml_net_space)
 
 
 if __name__ == '__main__':

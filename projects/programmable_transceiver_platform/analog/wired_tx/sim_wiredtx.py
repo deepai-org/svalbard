@@ -101,6 +101,26 @@ def phase_sources(rate, vdd, stopped=False, bpc=4, fallback=False):
 # source's branch current a pure C/h image of the gate nodes' Newton updates; at source
 # breakpoints ngspice could not converge it and aborted ("Timestep too small ... vd19#branch").
 R_PHASE, R_LOGIC = 150.0, 1000.0
+# 40-bit boundary: the digital launches D0..D39 on WORD_CLK40 rising; LAUNCH_S models its clock-to-Q
+# plus routing (session 7; the earlier T_word/4 launch, 1.5-2.6 ns, was later than the block's own
+# W40 -> load budget allows at 3.24 Gb/s core and is not what the digital does).
+LAUNCH_S = float(__import__('os').environ.get('WTX_LAUNCH_S', '1.0e-9'))
+
+
+def launch_offset(tw, w40):
+    return LAUNCH_S if w40 else tw / 4
+
+
+def realign_t0(t, wck, word_t0, tol=0.1e-9):
+    """The /5 word counter is not reset, so its start state (hence the WORD_CLK40 phase) can differ
+    between the phase pass and the data pass (seen: one register period, 1.6 ns at 2.5 Gb/s, which
+    put the launch on the wrong side of the load).  Returns the data-pass WORD_CLK40 rising edge
+    nearest the assumed word_t0, or None if they agree within tol."""
+    r = crossings(t, wck, rising=True)
+    if not len(r):
+        return None
+    k = int(np.argmin(abs(r - word_t0)))
+    return None if abs(r[k] - word_t0) < tol else float(r[k])
 _NO_R = ('VDD', 'VSS', 'VT', 'VX')   # VX*: AC-coupled receiver sources (sim_integration)
 
 
@@ -120,7 +140,7 @@ def driver_impedance(lines):
 
 def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical', temp=27, bpc=4,
           mode='serial', codes=(109, 32, 125), en=(1, 1, 0), wtx_ext=0, dx_pattern=None,
-          load_f=20e-15, extra='', probes=None, ser_on=2e-9, fallback=False):
+          load_f=20e-15, extra='', probes=None, ser_on=2e-9, fallback=False, post_pol=0):
     text = Path(dut).read_text()
     ports = ports_of(text, subckt)
     tw = 20 / rate
@@ -137,6 +157,8 @@ def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical'
     for nm, v in zip(('EN_MAIN', 'EN_POST', 'EN_TMDS'), en):
         lines.append(f'V{nm} {nm} 0 {v*vdd}')
     lines.append('VISO ISLAND_OFF 0 0')
+    if 'POST_POL' in ports:      # IX-9 postcursor polarity (0 = de-emphasis)
+        lines.append(f'VPOL POST_POL 0 {post_pol * vdd}')
     lines.append(f'IREF VDD IBIAS 10u')
     for b, code in zip(('MAIN', 'POST', 'TMDS'), codes):
         for k, bit in enumerate(code_bits(code)):
@@ -149,7 +171,8 @@ def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical'
                  for m in range((len(words) + 1) // 2)]
         for i in range(40):
             h, j = divmod(i, 20)
-            tv = [(0.0, pairs[0][h][j])] + [(word_t0 + 2 * m * tw + tw / 4, pr[h][j]) for m, pr in enumerate(pairs)]
+            tv = [(0.0, pairs[0][h][j])] + [(word_t0 + 2 * m * tw + launch_offset(tw, True), pr[h][j])
+                                            for m, pr in enumerate(pairs)]
             lines.append(pwl_bits(f'D{i}', f'D{i}', tv, vdd))
     else:
         for i in range(20):
@@ -227,7 +250,9 @@ def decode(w, node, rate, t_start, t_end, vdd=3.3):
 def sim_abort(log):
     """Return the ngspice abort line (e.g. 'Timestep too small ...') or None."""
     for line in log.replace('\r', '\n').splitlines():
-        if 'too small' in line or 'simulation(s) aborted' in line or 'run simulation(s) aborted' in line:
+        # 'too small' alone also matched the pad models' harmless "IKR too small - model effect disabled"
+        # load warnings (session 6), which made every pad-model deck look aborted
+        if 'timestep too small' in line.lower() or 'simulation(s) aborted' in line:
             return line.strip()[:200]
     return None
 
@@ -277,23 +302,31 @@ def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, v
     tstop = word_t0 + (nwords + 3) * tw
     ddir = work / f'{tag}_data'; ddir.mkdir(exist_ok=True)
     (ddir / Path(dut).name).write_text(Path(dut).read_text())
-    deck, names = build(dut, subckt, rate=rate, words=words, word_t0=word_t0, tstop=tstop, vdd=vdd,
-                        corner=corner, temp=temp, codes=codes, en=en, extra=extra, ser_on=ser_on, bpc=bpc,
-                        fallback=fallback)
-    (ddir / 'tb.sp').write_text(deck)
-    _, log = tools.ngspice(ddir, 'tb.sp', mounts=mounts)
-    abort = sim_abort(log)
-    if abort:
-        return dict(ok=False, reason='simulator abort: ' + abort, dut_sha256=tools.sha(dut), bit_rate_bps=rate,
-                    bits_per_ring_cycle=bpc, ring_hz=rate / bpc, corner=corner, temp_c=temp, vdd=vdd,
-                    log_tail=log[-1500:])
-    w = tools.read_wrdata(ddir / 'wave.txt', names)
+    realigned = 0
+    for _ in range(3):
+        tstop = word_t0 + (nwords + 3) * tw
+        deck, names = build(dut, subckt, rate=rate, words=words, word_t0=word_t0, tstop=tstop, vdd=vdd,
+                            corner=corner, temp=temp, codes=codes, en=en, extra=extra, ser_on=ser_on, bpc=bpc,
+                            fallback=fallback)
+        (ddir / 'tb.sp').write_text(deck)
+        _, log = tools.ngspice(ddir, 'tb.sp', mounts=mounts)
+        abort = sim_abort(log)
+        if abort:
+            return dict(ok=False, reason='simulator abort: ' + abort, dut_sha256=tools.sha(dut), bit_rate_bps=rate,
+                        bits_per_ring_cycle=bpc, ring_hz=rate / bpc, corner=corner, temp_c=temp, vdd=vdd,
+                        log_tail=log[-1500:])
+        w = tools.read_wrdata(ddir / 'wave.txt', names)
+        nt0 = realign_t0(w['time'], w[wck], word_t0) if wck == 'WORD_CLK40' else None
+        if nt0 is None:
+            break
+        word_t0, realigned = nt0, realigned + 1
     expected = [b for wd in words for b in wd]
     t0 = word_t0 + 2 * tw
     t1 = word_t0 + (nwords - 1) * tw
     res = dict(dut_sha256=tools.sha(dut), serializer='generic (fallback, rate code 11)' if fallback else 'compact core',
                bit_rate_bps=rate, bits_per_ring_cycle=bpc, ring_hz=rate / bpc, corner=corner, temp_c=temp, vdd=vdd,
-               word_clk_period_s=measured_tw, word_t0_s=word_t0)
+               word_clk_period_s=measured_tw, word_t0_s=word_t0, launch_after_wck40_s=LAUNCH_S,
+               word_t0_realigned=realigned)
     for node in ('CMD_MAIN_N', 'CMD_MAIN_P'):
         d = decode(w, node, rate, t0, t1)
         if d is None:

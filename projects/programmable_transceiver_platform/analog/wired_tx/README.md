@@ -8,10 +8,30 @@ Nothing here is qualified; numbers are extracted (Magic C) unless noted, and
 
 | Block | Layout | DRC (Magic / KLayout) | LVS | Extracted function | Four-test (safe / clean / observable / fallback) |
 | --- | --- | --- | --- | --- | --- |
-| `wiredtx` (`pt_wiredtx`) | 335.8 × 591.7 µm = 0.199 mm² (allocation 0.30), 1427 devices | 0 / 0 | unique | 0.96 Gb/s half rate (ring 480 MHz): 0 errors at tt and all 12 corners; 1.25 Gb/s passes tt/ff, fails ss | pass / pass / pass / pass |
+| `wiredtx` (`pt_wiredtx`) | 546.9 × 609.9 µm = 0.334 mm² (cap 0.30 incl. attached_tx_buffer: **over**, WT18), 1067 devices incl. core macro `wtx_serq4c` 532 × 298 µm | 0 / 0 | unique | core macro: 60/60 envelope runs 0 errors (2.5 Gb/s q, 1.62 h = 3.24 core rep2, 0.48 f = 1.92 core rep4); block: 1.25 Gb/s h tt 0/221 errors, eye 744 ps; block envelope in progress | pass / pass / pass / pass (risk: INT-02) |
 | `tmds` | configuration of `wiredtx` + pad TMDS branch | (wiredtx) | (wiredtx) | 1.25 Gb/s into 50 Ω pull-ups: eye 955 mV / 663 ps, 1.16 Vpp diff | pass / pass / pass / pass |
 | `wtx_ext_rx` | instance of timing's `pt_diff_clk_rx` (`wtx_ext_rx.spice`) | timing | timing | ideal DX: 1 Gb/s, 0 errors, eye 388 mV / 965 ps at the pad; through the extracted receiver: 5/43 errors at 0.5 Gb/s (start-up), no output at 2 Gb/s | pass / pass / pass / n/a |
 | `usb_hs_bias` (`pt_wtx_hsbias`) | 125.8 × 76.0 µm = 9,552 µm², 53 devices | 0 / 0 | unique | 0–0.58 V full scale (tt), monotonic at all corners, settles to 1 LSB in 0.47 µs | pass / pass / open / n/a |
+
+**Status 2026-11-11 (session 7, path A = CMOS quarter-rate core + WT12 repetition).**
+
+* **Core macro `wtx_serq4c` extracted, 20 in-window corners × {2.5 Gb/s quarter, 3.24 Gb/s core rep2
+  (1.62 Gb/s line), 1.92 Gb/s core rep4 (0.48 Gb/s line)}: 60/60 pass, 0 errors.**  Worst eyes: 2.5 Gb/s
+  227 ps of 400 (ss/32/3.15); 3.24 rep2 427 ps of 617 (ss/32/3.15); 1.92 rep4 2065 ps of 2083.
+  (scratch/wired_tx/s7/env, netlist sha256 87b28e23.)
+* Two real core bugs fixed (both were failing the session-6 envelope):
+  1. merged-NAND TSPC (timing's `_tspc_nand_cols`) charge-shared its clock-PMOS node onto X during
+     CK high: at ff and the 480 MHz ring the shift flops flipped half a period early (43/140 errors).
+     `serq4_macro._tspc_nand_cols` is now charge-sharing safe (a clock PMOS next to X per input).
+  2. stream load flag: NOR -> INV4 -> INV4 left the loaded bit < 0.3 T to settle at ss/32/3.15 and
+     the 3.24 Gb/s core rate; the LD flop now has an INV output that drives LD directly.
+* Block benches: the /5 word counter has no reset, so `WORD_CLK40`'s phase differed between the
+  phase pass and the data pass (by one register period); data was launched on the wrong side of the
+  load and every extracted block run failed.  The benches now re-align on the measured `WORD_CLK40`
+  edge and launch the 40-bit word 1.0 ns after it (the digital's clock-to-Q; interface WT16). (risk: WTX-02)
+* Layout published: Magic DRC 0, LVS unique, KLayout 0.  pt_wiredtx has no poly resistors.
+* Open: block-level envelope (priority corners running), postcursor in rep modes (DP is one *core*
+  UI, i.e. ½ / ¼ user UI late in half / full rate), area (WT18), X5, CML stretch (does not fit the cap). (risk: WTX-06)
 
 **Status 2026-11-10 (this pass).**  The serializer was rebuilt around a
 compact TSPC core (`wtx_serq4`) that serves quarter, half and full rate; the

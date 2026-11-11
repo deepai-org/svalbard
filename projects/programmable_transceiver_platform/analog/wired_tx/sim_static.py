@@ -27,8 +27,10 @@ def _common(dut, subckt, *, vdd, corner, temp, phases='stopped', ctrl=None, code
     for n in ('SER_EN', 'WTX_EXT', 'DX', 'EN_MAIN', 'EN_POST', 'EN_TMDS'):
         L.append(f'V{n} {n} 0 {ctrl.get(n, 0.0)}')
     L.append(f'VISO ISLAND_OFF 0 {iso}')
-    for i in range(20):
+    for i in range(40 if 'D39' in ports else 20):
         L.append(f'VD{i} D{i} 0 {ctrl.get("D", 0.0)}')
+    if 'POST_POL' in ports:
+        L.append(f'VPOL POST_POL 0 {ctrl.get("POST_POL", 0.0)}')
     for b, code in codes.items():
         for k, bit in enumerate(S.code_bits(code)):
             L.append(f'V{b}C{k} {b}_CODE{k} 0 {bit*vhi}')

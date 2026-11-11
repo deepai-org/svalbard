@@ -1,5 +1,64 @@
 * NGSPICE file created from wtx_serq4.ext - technology: gf180mcuD
 
+.subckt wtx_cmlt_lat D DB CK CKB Q QB NB VDD VSS
+X0 LB CKB T VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X1 LB Q QB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X2 Q QB LB VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X3 QB Q LB VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X4 Q DB LA VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X5 LB Q QB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X6 LB QB Q VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X7 T CK LA VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X8 T CKB LB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X9 T CK LA VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X10 Q QB LB VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X11 QB Q LB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X12 LB Q QB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X13 LB QB Q VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X14 VSS NB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X15 LA DB Q VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X16 QB D LA VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X17 LB CKB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X18 T CKB LB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X19 T NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X20 Q QB LB VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X21 QB Q LB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X22 LA CK T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X23 LB QB Q VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X24 T NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X25 LA CK T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X26 T CKB LB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X27 LB CKB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X28 VSS NB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X29 T NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X30 VSS NB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X31 T CKB LB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X32 LA D QB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X33 LA CK T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X34 LA DB Q VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X35 T CK LA VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X36 VSS NB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X37 T NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X38 Q DB LA VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X39 LB CKB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X40 T CKB LB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X41 LA D QB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X42 T CK LA VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X43 Q DB LA VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X44 LA CK T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X45 T CK LA VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X46 LA DB Q VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X47 LA CK T VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X48 QB D LA VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X49 LB CKB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X50 T CKB LB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X51 LA CK T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X52 LB CKB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X53 QB D LA VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X54 LA D QB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X55 T CK LA VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+.ends
+
 .subckt wtx_tspcb CK D Q ENB VDD VSS
 X0 a_278_2210# D VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.78p ps=9.39u w=4u l=0.28u
 X1 VSS QN Q VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
@@ -21,6 +80,155 @@ X16 VSS CK a_844_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0
 X17 Q QN VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
 X18 Y CK VDD VDD pfet_03v3 ad=2.78p pd=9.39u as=2.78p ps=9.39u w=4u l=0.28u
 X19 VDD QN Q VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+.ends
+
+.subckt p_nfet_03v3_w2_l0p28 a_n36_n356# a_n116_n200# a_n254_n492# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# a_n254_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt wtx_cmlt_ckp A AB Y YB NB VDD VSS
+X0 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X1 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X2 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X3 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X4 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X5 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X6 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X7 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X8 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X9 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X10 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X11 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X12 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X13 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X14 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X15 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X16 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X17 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X18 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X19 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X20 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X21 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X22 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X23 YB A S VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X24 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X25 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X26 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X27 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X28 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X29 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X30 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X31 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X32 S NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X33 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X34 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X35 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X36 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X37 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X38 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X39 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X40 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X41 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X42 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X43 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X44 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X45 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X46 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X47 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X48 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X49 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X50 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X51 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X52 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X53 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X54 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X55 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X56 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X57 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X58 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X59 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X60 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X61 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X62 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X63 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X64 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X65 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X66 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X67 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X68 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X69 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X70 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X71 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X72 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X73 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X74 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X75 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X76 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X77 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X78 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X79 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X80 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X81 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X82 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X83 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X84 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X85 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X86 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X87 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X88 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X89 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X90 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X91 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X92 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X93 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X94 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X95 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X96 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X97 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X98 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X99 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X100 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X101 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X102 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X103 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X104 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X105 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X106 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X107 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X108 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X109 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X110 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X111 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X112 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X113 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X114 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X115 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X116 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X117 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X118 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X119 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X120 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X121 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X122 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X123 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X124 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X125 S A YB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+.ends
+
+.subckt p_ppolyf_u_1k_w1_l6 a_n100_600# a_n100_n722# a_n312_n934#
+X0 a_n100_600# a_n100_n722# a_n312_n934# ppolyf_u_1k r_width=1u r_length=6u
+.ends
+
+.subckt p_ppolyf_u_1k_w4_l3 a_n400_n422# a_n612_n634# a_n400_300#
+X0 a_n400_300# a_n400_n422# a_n612_n634# ppolyf_u_1k r_width=4u r_length=3u
+.ends
+
+.subckt p_ppolyf_u_1k_w4_l2 a_n400_200# a_n400_n322# a_n612_n534#
+X0 a_n400_200# a_n400_n322# a_n612_n534# ppolyf_u_1k r_width=4u r_length=2u
+.ends
+
+.subckt p_pfet_03v3_w8_l0p28 a_n36_n956# a_n116_n800# a_28_n800# w_n278_n1116#
+X0 a_28_n800# a_n36_n956# a_n116_n800# w_n278_n1116# pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
 .ends
 
 .subckt wtx_tspcbx CK D Q ENB VDD VSS
@@ -50,43 +258,262 @@ X22 Y CK VDD VDD pfet_03v3 ad=2.78p pd=9.39u as=2.78p ps=9.39u w=4u l=0.28u
 X23 VDD QN Q VDD pfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
 .ends
 
-.subckt wtx_q4ctl SERQ QRST HA HAB JB JBB DA DC LDA WCKQ VDD VSS
-X0 VSS DC LN0 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X1 LN0 DC VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X2 LN1 LN0 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=1.715p ps=5.02u w=4u l=0.28u
-X3 QRA SERQ VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X4 HAB HA VSS VSS nfet_03v3 ad=0.485p pd=2.97u as=1.5525p ps=5.02u w=1u l=0.28u
-X5 VDD WCN WCKQ VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X6 WCKQ WCN VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X7 VSS WCN WCKQ VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X8 VDD DA a_3062_3510# VDD pfet_03v3 ad=4.08p pd=9.02u as=4.08p ps=9.02u w=8u l=0.28u
-X9 QRB QRA VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X10 JBB JB VSS VSS nfet_03v3 ad=0.485p pd=2.97u as=0.695p ps=3.39u w=1u l=0.28u
-X11 LN0 DC a_2626_3510# VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X12 VDD LN1 LDA VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X13 VSS LN1 LDA VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X14 WCKQ WCN VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X15 LDA LN1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X16 HAB HA VDD VDD pfet_03v3 ad=0.97p pd=4.97u as=3.105p ps=9.02u w=2u l=0.28u
-X17 WCN DC VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X18 a_3062_3510# DC LN0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X19 QRA SERQ VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X20 WCKQ WCN VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X21 LN1 LN0 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
-X22 VDD WCN WCKQ VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
-X23 QRST QRB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X24 WCN DC VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
-X25 a_2626_3510# DA VDD VDD pfet_03v3 ad=4.08p pd=9.02u as=5.56p ps=17.39u w=8u l=0.28u
-X26 QRST QRB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X27 VSS WCN WCKQ VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X28 LN0 DA VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28u
-X29 VSS DA LN0 VSS nfet_03v3 ad=1.715p pd=5.02u as=1.02p ps=3.02u w=2u l=0.28u
-X30 JBB JB VDD VDD pfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X31 LDA LN1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X32 QRB QRA VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
-X33 VDD QRB QRST VDD pfet_03v3 ad=3.105p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X34 VSS QRB QRST VSS nfet_03v3 ad=1.5525p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X35 WCKQ WCN VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+.subckt wtx_cmlt_buf A AB Y YB NB VDD VSS
+X0 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X1 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X2 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X3 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X4 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X5 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X6 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X7 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X8 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X9 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X10 S NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X11 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X12 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X13 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X14 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X15 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X16 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X17 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X18 YB A S VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X19 S A YB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+.ends
+
+.subckt p_ppolyf_u_1k_w4_l1p2 a_n400_n242# a_n612_n454# a_n400_120#
+X0 a_n400_120# a_n400_n242# a_n612_n454# ppolyf_u_1k r_width=4u r_length=1.2u
+.ends
+
+.subckt p_nfet_03v3_w0p5_l0p28 a_n254_n342# a_n36_n206# a_n116_n50# a_28_n50#
+X0 a_28_n50# a_n36_n206# a_n116_n50# a_n254_n342# nfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=0.28u
+.ends
+
+.subckt p_pfet_03v3_w4_l0p28 a_28_n400# a_n36_n556# w_n278_n716# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# w_n278_n716# pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt wtx_cmlt_lsh A AB AS ABS NB VDDN VDD VSS
+X0 VSS NB ABS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X1 ABS NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X2 VDDN A AS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X3 VSS NB ABS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X4 VDDN A AS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X5 AS A VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X6 AS A VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X7 VSS NB AS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X8 AS NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X9 VDDN A AS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X10 AS NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X11 VSS NB AS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X12 VDDN AB ABS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X13 AS NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X14 VDDN AB ABS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X15 ABS AB VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X16 ABS AB VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X17 ABS NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X18 VSS NB AS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X19 ABS AB VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X20 VDDN AB ABS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X21 ABS NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X22 AS A VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X23 VSS NB ABS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+.ends
+
+.subckt p_pfet_03v3_w2_l0p28 w_n278_n516# a_n36_n356# a_n116_n200# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# w_n278_n516# pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt p_pfet_03v3_w1_l0p28 a_28_n100# w_n278_n416# a_n36_n256# a_n116_n100#
+X0 a_28_n100# a_n36_n256# a_n116_n100# w_n278_n416# pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+.ends
+
+.subckt wtx_cmlt_bufl A AB Y YB NB VDD VSS
+X0 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X1 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X2 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X3 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X4 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X5 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X6 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X7 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X8 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X9 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X10 S NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X11 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X12 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X13 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X14 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X15 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X16 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X17 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X18 YB A S VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X19 S A YB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+.ends
+
+.subckt p_nfet_03v3_w4_l0p28 a_n254_n692# a_28_n400# a_n36_n556# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# a_n254_n692# nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt wtx_cmlt_c2c A AB Y NB VDD VSS
+X0 VDD X X VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X1 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X2 Y A S VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X3 Y X VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X4 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X5 S A Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X6 X AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X7 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X8 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X9 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X10 S AB X VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X11 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X12 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X13 S A Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X14 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X15 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X16 Y A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X17 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X18 S AB X VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X19 Y A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X20 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X21 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X22 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X23 VDD X Y VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X24 S A Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X25 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X26 X AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X27 S NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X28 X X VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X29 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X30 X AB S VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X31 S AB X VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+.ends
+
+.subckt p_nfet_03v3_w1_l0p28 a_n254_n392# a_28_n100# a_n36_n256# a_n116_n100#
+X0 a_28_n100# a_n36_n256# a_n116_n100# a_n254_n392# nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+.ends
+
+.subckt wtx_q4ctl SERQ QRST DA DC LDA WCKQ VDD VSS
+X0 VSS DA LN0 VSS nfet_03v3 ad=1.715p pd=5.02u as=1.02p ps=3.02u w=2u l=0.28u
+X1 WCKQ WCN VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X2 VSS WCN WCKQ VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X3 LN0 DA VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=1.715p ps=5.02u w=2u l=0.28u
+X4 VSS WCN WCKQ VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X5 QRB QRA VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X6 a_1670_2910# DA VDD VDD pfet_03v3 ad=4.08p pd=9.02u as=4.08p ps=9.02u w=8u l=0.28u
+X7 WCKQ WCN VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X8 WCKQ WCN VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X9 LDA LN1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X10 VDD WCN WCKQ VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
+X11 WCN DC VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X12 a_2106_2910# DC LN0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X13 WCN DC VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X14 VSS LN1 LDA VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X15 VDD WCN WCKQ VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X16 QRA SERQ VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X17 LDA LN1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X18 QRST QRB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X19 LN1 LN0 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X20 VDD LN1 LDA VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X21 QRST QRB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X22 QRB QRA VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X23 VDD QRB QRST VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X24 QRA SERQ VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X25 LN1 LN0 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=1.715p ps=5.02u w=4u l=0.28u
+X26 VDD DA a_2106_2910# VDD pfet_03v3 ad=4.08p pd=9.02u as=4.08p ps=9.02u w=8u l=0.28u
+X27 LN0 DC VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X28 WCKQ WCN VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X29 VSS DC LN0 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X30 LN0 DC a_1670_2910# VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X31 VSS QRB QRST VSS nfet_03v3 ad=1.715p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+.ends
+
+.subckt wtx_cmlt_ckb A AB Y YB NB VDD VSS
+X0 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X1 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X2 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X3 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X4 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X5 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X6 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X7 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X8 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X9 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X10 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X11 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X12 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X13 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X14 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X15 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X16 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X17 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X18 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X19 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X20 YB A S VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X21 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X22 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X23 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X24 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X25 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X26 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X27 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X28 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X29 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X30 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X31 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X32 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X33 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X34 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X35 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X36 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X37 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X38 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X39 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X40 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X41 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X42 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X43 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X44 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X45 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X46 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X47 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X48 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X49 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X50 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X51 S NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X52 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X53 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X54 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X55 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X56 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X57 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X58 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X59 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X60 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X61 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X62 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X63 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X64 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X65 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X66 Y AB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X67 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X68 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X69 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X70 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X71 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X72 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X73 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X74 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X75 S A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X76 S AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X77 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X78 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X79 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X80 S NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X81 S A YB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X82 YB A S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X83 VSS NB S VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
 .ends
 
 .subckt wtx_qph PH SERQ MQ MH MF HB FC G XN0 XN1 XN2 QW Q VDD VSS
@@ -192,6 +619,37 @@ X98 VDD QWN QW VDD pfet_03v3 ad=3.43p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
 X99 QW QWN VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.43p ps=9.02u w=8u l=0.28u
 X100 XN0 SERQ VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=3.43p ps=9.02u w=4u l=0.28u
 X101 a_236_230# SERQ VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+.ends
+
+.subckt p_ppolyf_u_1k_w8_l1p7 a_n1012_n504# a_n800_170# a_n800_n292#
+X0 a_n800_170# a_n800_n292# a_n1012_n504# ppolyf_u_1k r_width=8u r_length=1.7u
+.ends
+
+.subckt p_ppolyf_u_1k_w2_l10p5 a_n200_1050# a_n200_n1172# a_n412_n1384#
+X0 a_n200_1050# a_n200_n1172# a_n412_n1384# ppolyf_u_1k r_width=2u r_length=10.5u
+.ends
+
+.subckt wtx_q4ck QKN0 QKN1 QDN QK0 QK1 QD VDD VSS
+X0 VSS QKN1 QK1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X1 QK1 QKN1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X2 VSS QDN QD VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X3 QK1 QKN1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X4 QD QDN VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X5 VDD QKN1 QK1 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X6 QK0 QKN0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X7 VSS QKN1 QK1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X8 QD QDN VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X9 VDD QKN0 QK0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X10 QK0 QKN0 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X11 VSS QKN0 QK0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X12 QK0 QKN0 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X13 VDD QKN1 QK1 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X14 QK0 QKN0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X15 QK1 QKN1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X16 QK1 QKN1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X17 VSS QKN0 QK0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X18 VDD QDN QD VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
+X19 VDD QKN0 QK0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
 .ends
 
 .subckt wtx_sreg5 D0 D1 D2 D3 D4 Z LDA CK ENB BO VDD VSS
@@ -345,330 +803,577 @@ X146 QB2 Y2 VDD VDD pfet_03v3 ad=2.78p pd=9.39u as=2.78p ps=9.39u w=4u l=0.28u
 X147 VSS Y2 a_20576_230# VSS nfet_03v3 ad=0.8575p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
 .ends
 
-.subckt wtx_q4ck QKN0 QKN1 QDN QK0 QK1 QD VDD VSS
-X0 VSS QKN1 QK1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X1 QK1 QKN1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X2 VSS QDN QD VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X3 QK1 QKN1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X4 QD QDN VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X5 VDD QKN1 QK1 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X6 QK0 QKN0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X7 VSS QKN1 QK1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X8 QD QDN VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X9 VDD QKN0 QK0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X10 QK0 QKN0 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X11 VSS QKN0 QK0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X12 QK0 QKN0 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X13 VDD QKN1 QK1 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X14 QK0 QKN0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X15 QK1 QKN1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X16 QK1 QKN1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X17 VSS QKN0 QK0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X18 VDD QDN QD VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
-X19 VDD QKN0 QK0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+.subckt wtx_cmlt_mux A1 A1B A0 A0B S SB Y YB NB VDD VSS
+X0 S1 S T VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X1 S1 S T VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X2 T S S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X3 T NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X4 T SB S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X5 T SB S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X6 S1 S T VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X7 T SB S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X8 Y A1B S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X9 S1 S T VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X10 T SB S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X11 VSS NB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X12 T S S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X13 T SB S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X14 T S S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X15 VSS NB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X16 S0 A0B Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X17 S1 S T VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X18 T SB S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X19 S0 SB T VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X20 S1 S T VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X21 T S S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X22 S0 SB T VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X23 S1 A1B Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X24 YB A1 S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X25 S0 SB T VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X26 T NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X27 VSS NB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X28 T NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X29 T S S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X30 S0 SB T VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X31 S0 SB T VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X32 T NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X33 Y A0B S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X34 S0 SB T VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X35 T S S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X36 S0 SB T VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X37 T S S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X38 T NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X39 VSS NB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X40 S0 A0B Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X41 S0 SB T VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X42 T NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X43 VSS NB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X44 S1 A1 YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X45 S0 A0 YB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X46 YB A0 S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X47 T S S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X48 S0 A0 YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X49 S1 A1B Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X50 Y A0B S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X51 VSS NB T VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X52 Y A1B S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X53 S0 A0 YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X54 S0 A0B Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X55 S1 A1 YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X56 Y A1B S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X57 YB A0 S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X58 S0 A0 YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X59 S1 A1B Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X60 Y A0B S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X61 YB A0 S0 VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X62 YB A1 S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X63 Y A1B S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X64 S0 A0B Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X65 S1 A1 YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X66 YB A0 S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X67 YB A1 S1 VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X68 S1 A1B Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X69 Y A0B S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X70 YB A1 S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X71 S1 S T VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X72 T SB S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X73 S1 A1 YB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X74 T SB S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X75 S1 S T VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
 .ends
 
-.subckt wtx_div5b CK ENB AO CO VDD VSS
-X0 YA CK VDD VDD pfet_03v3 ad=2.78p pd=9.39u as=2.78p ps=9.39u w=4u l=0.28u
-X1 a_5884_3910# QBB VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X2 CO CN VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
-X3 VSS CN CO VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
-X4 a_3666_3910# A VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X5 A ENB a_2970_3910# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X6 CO CN VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X7 XB CK a_3666_3910# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X8 VSS CK a_4190_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
-X9 VSS ENB C VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
-X10 AO AN VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X11 CN C VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X12 VSS AN AO VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X13 YB CK VDD VDD pfet_03v3 ad=2.78p pd=9.39u as=2.78p ps=9.39u w=4u l=0.28u
-X14 VSS CK a_1192_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
-X15 AN A VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X16 VDD CN CO VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X17 a_4190_230# XB YB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
-X18 a_2970_3910# QBA VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X19 a_7104_230# XC YC VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
-X20 CN C VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
-X21 fan1 QBC XA VDD pfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
-X22 a_1192_230# XA YA VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
-X23 B ENB a_5884_3910# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X24 VSS CK a_7104_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
-X25 a_454_230# QBB VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X26 AO AN VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
-X27 QBC YC VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X28 VSS ENB A VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
-X29 YC CK VDD VDD pfet_03v3 ad=2.78p pd=9.39u as=2.78p ps=9.39u w=4u l=0.28u
-X30 a_6580_3910# B VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X31 XA QBC a_454_230# VSS nfet_03v3 ad=2.085p pd=7.39u as=1.53p ps=4.02u w=3u l=0.28u
-X32 QBA ENB VSS VSS nfet_03v3 ad=0.695p pd=3.39u as=0.8575p ps=3.02u w=1u l=0.28u
-X33 QBA YA VDD VDD pfet_03v3 ad=2.78p pd=9.39u as=2.78p ps=9.39u w=4u l=0.28u
-X34 VSS YB a_4928_230# VSS nfet_03v3 ad=0.5425p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X35 VSS YC a_7842_230# VSS nfet_03v3 ad=0.5425p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X36 VDD AN AO VDD pfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X37 C ENB a_8798_3910# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X38 VSS YA a_1930_230# VSS nfet_03v3 ad=0.8575p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
-X39 fan1 CK VDD VDD pfet_03v3 ad=1.085p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X40 XC CK a_6580_3910# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X41 XB A VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X42 a_4928_230# CK QBB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
-X43 a_7842_230# CK QBC VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
-X44 VSS ENB B VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
-X45 XC B VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X46 a_8798_3910# QBC VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X47 a_1930_230# CK QBA VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
-X48 A QBA VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
-X49 AN A VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X50 XA QBB fan1 VDD pfet_03v3 ad=1.02p pd=3.02u as=1.085p ps=4.6u w=2u l=0.28u
-X51 QBB YB VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X52 QBB ENB VSS VSS nfet_03v3 ad=0.695p pd=3.39u as=0.5425p ps=2.6u w=1u l=0.28u
-X53 B QBB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
-X54 QBC ENB VSS VSS nfet_03v3 ad=0.695p pd=3.39u as=0.5425p ps=2.6u w=1u l=0.28u
-X55 C QBC VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+.subckt p_ppolyf_u_1k_w4_l3p2 a_n400_n442# a_n612_n654# a_n400_320#
+X0 a_n400_320# a_n400_n442# a_n612_n654# ppolyf_u_1k r_width=4u r_length=3.2u
 .ends
 
-.subckt wtx_omux QW0 QW1 QW2 QW3 F0 F1 F2 F3 Y YB DP DPB S0 S1 S2 S3 VDD VSS
-X0 a_20462_230# S1 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X1 yXB yX VSS VSS nfet_03v3 ad=1.455p pd=6.97u as=2.085p ps=7.39u w=3u l=0.28u
-X2 S3 SN3 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.55p ps=6.02u w=5u l=0.28u
-X3 VSS dXB DP VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X4 VSS ybXB YB VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X5 yZ3 S3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X6 dZ3 S3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X7 VDD FN2 dbZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X8 ybZ3 FN3 a_16680_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X9 SN2 QW1 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=2.30625p ps=6.02u w=3.5u l=0.28u
-X10 yZ1 S1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X11 dbXB dbX VSS VSS nfet_03v3 ad=1.455p pd=6.97u as=2.085p ps=7.39u w=3u l=0.28u
-X12 VDD SN0 S0 VDD pfet_03v3 ad=2.55p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X13 dZ1 S1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X14 a_14592_230# S0 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X15 S3 SN3 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.30625p ps=6.02u w=5u l=0.28u
-X16 VDD yZ3 yX VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X17 VDD QW2 SN2 VDD pfet_03v3 ad=1.785p pd=4.52u as=1.785p ps=4.52u w=3.5u l=0.28u
-X18 VDD dbZ1 dbX VDD pfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X19 S2 SN2 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.55p ps=6.02u w=5u l=0.28u
-X20 a_17896_230# ybZ2 a_17636_230# VSS nfet_03v3 ad=3.06p pd=7.02u as=3.06p ps=7.02u w=6u l=0.28u
-X21 a_17376_230# ybZ0 VSS VSS nfet_03v3 ad=3.06p pd=7.02u as=2.91p ps=12.97u w=6u l=0.28u
-X22 SN0 QW0 a_236_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X23 VDD dbXB DPB VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
-X24 VDD SN3 S3 VDD pfet_03v3 ad=2.3875p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X25 dbX dbZ2 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X26 VDD dZ1 dX VDD pfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X27 a_16680_230# S3 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X28 VDD QW1 SN1 VDD pfet_03v3 ad=1.785p pd=4.52u as=1.785p ps=4.52u w=3.5u l=0.28u
-X29 VDD F2 yZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X30 VDD SN3 S3 VDD pfet_03v3 ad=2.55p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X31 dbZ3 S3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X32 a_15984_230# S2 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X33 VSS QW3 a_756_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X34 VDD SN2 S2 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X35 ybZ1 S1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X36 a_756_230# QW0 SN0 VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X37 a_28244_230# dbZ2 a_27984_230# VSS nfet_03v3 ad=3.06p pd=7.02u as=3.06p ps=7.02u w=6u l=0.28u
-X38 VDD SN2 S2 VDD pfet_03v3 ad=2.55p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X39 VDD F0 yZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X40 VDD FN0 ybZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X41 ybZ2 S2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X42 dbZ0 FN3 a_24940_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X43 yXB yX VDD VDD pfet_03v3 ad=2.91p pd=12.97u as=4.17p ps=13.39u w=6u l=0.28u
-X44 VDD ybZ1 ybX VDD pfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X45 SN0 QW0 VDD VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
-X46 a_26332_230# S2 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X47 VDD FN2 ybZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X48 yZ2 S2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X49 a_25636_230# S1 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X50 a_10114_230# S1 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X51 VDD FN1 dbZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X52 dXB dX VSS VSS nfet_03v3 ad=1.455p pd=6.97u as=2.085p ps=7.39u w=3u l=0.28u
-X53 dbX dbZ3 a_28244_230# VSS nfet_03v3 ad=2.91p pd=12.97u as=3.06p ps=7.02u w=6u l=0.28u
-X54 VSS yXB Y VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X55 VSS dbXB DPB VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X56 Y yXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X57 SN0 QW3 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=1.6975p ps=7.97u w=3.5u l=0.28u
-X58 S2 SN2 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.30625p ps=6.02u w=5u l=0.28u
-X59 dbZ3 FN2 a_27028_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X60 ybXB ybX VSS VSS nfet_03v3 ad=1.455p pd=6.97u as=2.085p ps=7.39u w=3u l=0.28u
-X61 a_9418_230# S0 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X62 VDD QW3 SN3 VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
-X63 yX yZ0 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X64 a_24940_230# S0 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X65 yZ2 F2 a_10810_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X66 S1 SN1 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.55p ps=6.02u w=5u l=0.28u
-X67 VDD F1 dZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X68 S0 SN0 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
-X69 SN1 QW0 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=2.30625p ps=6.02u w=3.5u l=0.28u
-X70 DPB dbXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X71 Y yXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X72 a_12722_230# yZ2 a_12462_230# VSS nfet_03v3 ad=3.06p pd=7.02u as=3.06p ps=7.02u w=6u l=0.28u
-X73 SN2 QW2 a_3892_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X74 VDD QW3 SN0 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.05p ps=4.1u w=3.5u l=0.28u
-X75 dbZ2 FN1 a_26332_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X76 a_12202_230# yZ0 VSS VSS nfet_03v3 ad=3.06p pd=7.02u as=2.91p ps=12.97u w=6u l=0.28u
-X77 VDD F3 dZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X78 SN1 QW1 a_2064_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X79 VDD F3 yZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X80 dbZ1 FN0 a_25636_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X81 yZ1 F1 a_10114_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X82 FN1 F1 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X83 S1 SN1 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.30625p ps=6.02u w=5u l=0.28u
-X84 ybXB ybX VDD VDD pfet_03v3 ad=2.91p pd=12.97u as=4.17p ps=13.39u w=6u l=0.28u
-X85 dbZ1 S1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X86 a_11506_230# S3 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X87 S0 SN0 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X88 VDD F1 yZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X89 dbXB dbX VDD VDD pfet_03v3 ad=2.91p pd=12.97u as=4.17p ps=13.39u w=6u l=0.28u
-X90 a_27724_230# dbZ0 VSS VSS nfet_03v3 ad=3.06p pd=7.02u as=2.91p ps=12.97u w=6u l=0.28u
-X91 a_27028_230# S3 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X92 yZ0 F0 a_9418_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X93 dZ0 F3 a_19766_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X94 a_10810_230# S2 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X95 SN2 QW2 VDD VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
-X96 VDD SN1 S1 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X97 ybZ0 S0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X98 dXB dX VDD VDD pfet_03v3 ad=2.91p pd=12.97u as=4.17p ps=13.39u w=6u l=0.28u
-X99 yX yZ3 a_12722_230# VSS nfet_03v3 ad=2.91p pd=12.97u as=3.06p ps=7.02u w=6u l=0.28u
-X100 FN3 F3 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X101 a_4412_230# QW2 SN2 VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X102 a_12462_230# yZ1 a_12202_230# VSS nfet_03v3 ad=3.06p pd=7.02u as=3.06p ps=7.02u w=6u l=0.28u
-X103 a_2584_230# QW1 SN1 VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X104 VDD QW2 SN3 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.785p ps=4.52u w=3.5u l=0.28u
-X105 yX yZ2 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X106 VDD ybZ3 ybX VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X107 a_2064_230# QW0 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.715p ps=5.02u w=4u l=0.28u
-X108 ybX ybZ0 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X109 dbX dbZ0 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X110 VDD dbZ3 dbX VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X111 yZ3 F3 a_11506_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X112 VSS SN1 S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X113 VSS SN0 S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X114 SN1 QW1 VDD VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
-X115 FN3 F3 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X116 VDD SN0 S0 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X117 VDD FN3 dbZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X118 a_27984_230# dbZ1 a_27724_230# VSS nfet_03v3 ad=3.06p pd=7.02u as=3.06p ps=7.02u w=6u l=0.28u
-X119 S2 SN2 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
-X120 S1 SN1 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
-X121 VDD yXB Y VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
-X122 VDD FN3 ybZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X123 a_19766_230# S0 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X124 VDD dZ3 dX VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X125 VDD QW1 SN2 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.05p ps=4.1u w=3.5u l=0.28u
-X126 dX dZ0 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X127 VDD dXB DP VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
-X128 dZ2 S2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X129 dX dZ3 a_23070_230# VSS nfet_03v3 ad=2.91p pd=12.97u as=3.06p ps=7.02u w=6u l=0.28u
-X130 VSS SN1 S1 VSS nfet_03v3 ad=1.715p pd=5.02u as=0.6p ps=2.6u w=2u l=0.28u
-X131 YB ybXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X132 FN2 F2 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X133 VSS SN0 S0 VSS nfet_03v3 ad=1.715p pd=5.02u as=0.6p ps=2.6u w=2u l=0.28u
-X134 DPB dbXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X135 S1 SN1 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X136 FN1 F1 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X137 dZ0 S0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X138 S3 SN3 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X139 S0 SN0 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.55p ps=6.02u w=5u l=0.28u
-X140 VDD F0 dZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X141 S2 SN2 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X142 VDD QW0 SN1 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.05p ps=4.1u w=3.5u l=0.28u
-X143 VSS QW2 a_6156_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X144 DP dXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X145 dZ3 F2 a_21854_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X146 VSS QW1 a_4412_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X147 dZ2 F1 a_21158_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X148 VSS QW0 a_2584_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X149 ybX ybZ2 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X150 DP dXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X151 YB ybXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X152 yZ0 S0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X153 FN0 F0 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
-X154 VDD F2 dZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X155 dbZ0 S0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X156 ybZ2 FN2 a_15984_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X157 a_5720_230# QW2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.715p ps=5.02u w=4u l=0.28u
-X158 a_23070_230# dZ2 a_22810_230# VSS nfet_03v3 ad=3.06p pd=7.02u as=3.06p ps=7.02u w=6u l=0.28u
-X159 a_22550_230# dZ0 VSS VSS nfet_03v3 ad=3.06p pd=7.02u as=2.91p ps=12.97u w=6u l=0.28u
-X160 a_3892_230# QW1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.715p ps=5.02u w=4u l=0.28u
-X161 ybZ1 FN1 a_15288_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X162 dZ1 F0 a_20462_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X163 FN0 F0 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.3875p ps=6.02u w=4u l=0.28u
-X164 VDD ybXB YB VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
-X165 VDD QW0 SN0 VDD pfet_03v3 ad=1.785p pd=4.52u as=1.785p ps=4.52u w=3.5u l=0.28u
-X166 VSS SN3 S3 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X167 SN3 QW3 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=1.05p ps=4.1u w=3.5u l=0.28u
-X168 VDD yZ1 yX VDD pfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X169 VSS SN2 S2 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X170 dbZ2 S2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X171 S3 SN3 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
-X172 a_21854_230# S3 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X173 ybZ0 FN0 a_14592_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X174 a_6156_230# QW3 SN3 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X175 S0 SN0 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.30625p ps=6.02u w=5u l=0.28u
-X176 a_21158_230# S2 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X177 FN2 F2 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X178 SN3 QW2 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=2.30625p ps=6.02u w=3.5u l=0.28u
-X179 VDD FN1 ybZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X180 ybZ3 S3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X181 VSS SN3 S3 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X182 dX dZ2 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X183 VDD FN0 dbZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X184 a_17636_230# ybZ1 a_17376_230# VSS nfet_03v3 ad=3.06p pd=7.02u as=3.06p ps=7.02u w=6u l=0.28u
-X185 SN3 QW3 a_5720_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X186 VDD SN1 S1 VDD pfet_03v3 ad=2.55p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X187 a_22810_230# dZ1 a_22550_230# VSS nfet_03v3 ad=3.06p pd=7.02u as=3.06p ps=7.02u w=6u l=0.28u
-X188 ybX ybZ3 a_17896_230# VSS nfet_03v3 ad=2.91p pd=12.97u as=3.06p ps=7.02u w=6u l=0.28u
-X189 VSS SN2 S2 VSS nfet_03v3 ad=1.715p pd=5.02u as=0.6p ps=2.6u w=2u l=0.28u
-X190 a_15288_230# S1 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X191 a_236_230# QW3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+.subckt p_ppolyf_u_1k_w3_l1 a_n512_n434# a_n300_100# a_n300_n222#
+X0 a_n300_100# a_n300_n222# a_n512_n434# ppolyf_u_1k r_width=3u r_length=1u
+.ends
+
+.subckt wtx_div5s CK ENB AO CO VDD VSS
+X0 fan3 CK VDD VDD pfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X1 ENX ENB VDD VDD pfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X2 VDD fan2 A VDD pfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X3 B BN VDD VDD pfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X4 fcn4 B VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X5 C CN VDD VDD pfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X6 a_7532_230# fbn2 a_7272_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X7 fbn2 CK a_6576_230# VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X8 VDD fan3 fan4 VDD pfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X9 a_9008_230# BN VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X10 B fbn2 a_9008_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X11 fan2 fan1 VDD VDD pfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X12 BN B VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X13 CB2 C VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X14 a_5100_230# A VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28u
+X15 fbn4 fbn3 a_8228_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X16 fbn3 CK VDD VDD pfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X17 fbn3 CK a_7532_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X18 a_6576_230# fbn1 VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28u
+X19 a_7272_230# fbn4 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X20 VDD fan2 fan3 VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X21 VDD fbn2 B VDD pfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X22 fan3 CK a_2928_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X23 fbn1 fbn4 a_5796_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X24 AN A VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28u
+X25 AO AB2 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X26 AN fan3 a_5100_230# VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X27 fcn3 CK a_12094_230# VSS nfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X28 a_11138_230# fcn1 VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28u
+X29 a_714_5160# C DA VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X30 A AN VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X31 VDD CK fbn2 VDD pfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X32 VDD fcn4 fcn1 VDD pfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X33 VDD CK fcn2 VDD pfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X34 a_2928_230# fan2 a_2668_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X35 a_3624_230# DA VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X36 a_5796_230# fbn2 VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X37 fbn4 A VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X38 CO CB2 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X39 a_12094_230# fcn2 a_11834_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X40 C fcn2 a_13570_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X41 VDD fbn4 fbn1 VDD pfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X42 VDD fcn2 C VDD pfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X43 CN C VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X44 fcn2 CK a_11138_230# VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X45 CB2 C VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X46 DA C a_278_5160# VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X47 fcn3 CK VDD VDD pfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X48 VSS C DA VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X49 fcn4 fcn3 a_12790_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X50 a_13570_230# CN VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X51 fan1 fan2 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=3.105p ps=9.02u w=2u l=0.28u
+X52 a_2668_230# fan4 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X53 fan4 fan3 a_3624_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X54 fan3 fan4 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X55 a_11834_230# fcn4 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X56 fcn1 fcn4 a_10358_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X57 ENX ENB VSS VSS nfet_03v3 ad=0.485p pd=2.97u as=0.695p ps=3.39u w=1u l=0.28u
+X58 DA B VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28u
+X59 a_12790_230# B VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X60 VDD CK fan2 VDD pfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X61 fbn1 fbn2 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X62 fbn2 fbn1 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28u
+X63 fcn1 fcn2 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X64 fan4 DA VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X65 BN fbn3 a_9662_230# VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X66 AB2 A VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X67 a_10358_230# fcn2 VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X68 VDD fbn2 fbn3 VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X69 DA C VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X70 a_278_5160# B VDD VDD pfet_03v3 ad=4.08p pd=9.02u as=5.56p ps=17.39u w=8u l=0.28u
+X71 VDD fan3 AN VDD pfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X72 VDD fcn2 fcn3 VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X73 A fan2 a_4362_230# VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X74 VDD fcn3 fcn4 VDD pfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X75 AB2 A VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X76 a_1234_230# fan2 VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X77 a_9662_230# B VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X78 AO AB2 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X79 VDD B a_714_5160# VDD pfet_03v3 ad=3.105p pd=9.02u as=4.08p ps=9.02u w=8u l=0.28u
+X80 VSS B DA VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X81 fan2 CK a_2014_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X82 a_14224_230# C VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X83 CO CB2 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X84 VDD fbn3 fbn4 VDD pfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X85 VDD fbn3 BN VDD pfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X86 fcn2 fcn1 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28u
+X87 VDD fcn3 CN VDD pfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X88 fan1 fan4 a_1234_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X89 a_2014_230# fan1 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X90 a_4362_230# AN VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X91 fcn3 fcn4 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X92 VDD fan4 fan1 VDD pfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X93 CN fcn3 a_14224_230# VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X94 fbn3 fbn4 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X95 a_8228_230# A VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+.ends
+
+.subckt wtx_omux2 QW0 QW1 QW2 QW3 F0 F1 F2 F3 E EB O OB VDD VSS
+X0 VDD QW1 OA VDD pfet_03v3 ad=2.78p pd=9.39u as=2.04p ps=5.02u w=4u l=0.28u
+X1 a_2886_230# F2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X2 O OA a_7884_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X3 EBA FN0 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X4 OB OBA a_9972_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X5 FN1 F1 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X6 a_2148_230# F0 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X7 OBBN QW3 a_9276_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X8 FN3 F3 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X9 OBA FN1 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X10 VDD QW2 EBBN VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X11 a_4320_230# FN0 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X12 OBA QW1 a_8580_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X13 FN2 F2 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X14 VDD EBA EB VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X15 EA QW0 a_2148_230# VSS nfet_03v3 ad=2.78p pd=9.39u as=2.04p ps=5.02u w=4u l=0.28u
+X16 a_3624_230# EBN VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X17 EBBN QW2 a_5016_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X18 a_6408_230# F1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X19 a_9276_230# FN3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X20 FN3 F3 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X21 EBA QW0 a_4320_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X22 EA F0 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X23 a_5712_230# EBBN VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X24 a_8580_230# FN1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X25 FN1 F1 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X26 EBBN FN2 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X27 E EA a_3624_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X28 a_5016_230# FN2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X29 a_7884_230# OBN VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X30 E EBN VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X31 OBN F3 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X32 OA QW1 a_6408_230# VSS nfet_03v3 ad=2.78p pd=9.39u as=2.04p ps=5.02u w=4u l=0.28u
+X33 OA F1 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X34 FN0 F0 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X35 EB EBA a_5712_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X36 FN0 F0 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X37 O OBN VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X38 a_9972_230# OBBN VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X39 VDD QW0 EBA VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X40 VDD QW3 OBBN VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X41 EBN QW2 a_2886_230# VSS nfet_03v3 ad=2.78p pd=9.39u as=2.04p ps=5.02u w=4u l=0.28u
+X42 VDD OA O VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X43 a_7146_230# F3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X44 FN2 F2 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X45 EBN F2 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X46 OBN QW3 a_7146_230# VSS nfet_03v3 ad=2.78p pd=9.39u as=2.04p ps=5.02u w=4u l=0.28u
+X47 VDD QW2 EBN VDD pfet_03v3 ad=2.78p pd=9.39u as=2.04p ps=5.02u w=4u l=0.28u
+X48 VDD OBA OB VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X49 EB EBBN VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X50 VDD QW0 EA VDD pfet_03v3 ad=2.78p pd=9.39u as=2.04p ps=5.02u w=4u l=0.28u
+X51 OBBN FN3 VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X52 VDD EA E VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X53 VDD QW3 OBN VDD pfet_03v3 ad=2.78p pd=9.39u as=2.04p ps=5.02u w=4u l=0.28u
+X54 VDD QW1 OBA VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X55 OB OBBN VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+.ends
+
+.subckt p_ppolyf_u_1k_w6_l1p2 a_n600_120# a_n600_n242# a_n812_n454#
+X0 a_n600_120# a_n600_n242# a_n812_n454# ppolyf_u_1k r_width=6u r_length=1.2u
+.ends
+
+.subckt wtx_cmlt_xor A AB B BB AL ALB BL BLB Y YB NB VDD VSS
+X0 T_0 ALB S0_0 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X1 T_0 AL S1_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X2 VSS NB T_0 VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X3 T_1 BLB S0_1 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X4 T_1 NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X5 S0_0 B YB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X6 T_0 AL S1_0 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X7 S0_0 ALB T_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X8 T_0 ALB S0_0 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X9 T_0 NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X10 VSS NB T_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X11 YB BB S1_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X12 T_1 BL S1_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X13 T_1 BLB S0_1 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X14 S1_1 BL T_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X15 S0_0 B YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X16 S1_0 AL T_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X17 VSS NB T_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X18 S0_1 A YB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X19 S0_1 AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X20 S0_1 BLB T_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X21 Y BB S0_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X22 S0_0 BB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X23 T_0 ALB S0_0 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X24 S1_0 BB YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X25 Y B S1_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X26 S1_0 AL T_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X27 S0_0 ALB T_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X28 S0_1 A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X29 T_1 BL S1_1 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X30 S1_1 BL T_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X31 T_1 BLB S0_1 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X32 T_1 NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X33 YB B S0_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X34 T_0 AL S1_0 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X35 VSS NB T_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X36 Y AB S0_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X37 S0_0 BB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X38 Y BB S0_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X39 S1_0 AL T_0 VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X40 S0_1 AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X41 T_1 NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X42 YB A S0_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X43 T_1 BL S1_1 VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X44 S0_1 BLB T_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X45 VSS NB T_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X46 S0_0 BB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X47 Y AB S0_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X48 T_1 NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X49 S1_1 BL T_1 VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X50 S1_0 B Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X51 YB B S0_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X52 S1_1 AB YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X53 VSS NB T_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X54 S1_1 A Y VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X55 Y AB S0_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X56 S1_0 BB YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X57 Y BB S0_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X58 YB AB S1_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X59 S0_1 AB Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X60 VSS NB T_1 VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X61 YB BB S1_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X62 S1_1 A Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X63 YB A S0_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X64 S0_0 B YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X65 S1_0 B Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X66 T_0 NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X67 YB AB S1_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X68 YB BB S1_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X69 YB B S0_0 VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X70 S1_1 AB YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X71 S1_0 BB YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X72 Y A S1_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X73 YB AB S1_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X74 S0_1 A YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X75 S1_1 A Y VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X76 Y B S1_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X77 YB A S0_1 VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X78 T_0 NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X79 Y A S1_1 VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X80 VSS NB T_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X81 S1_1 AB YB VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X82 Y A S1_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X83 Y B S1_0 VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X84 S0_0 ALB T_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X85 T_0 NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X86 VSS NB T_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X87 S1_0 B Y VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X88 VSS NB T_0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X89 S0_1 BLB T_1 VSS nfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+.ends
+
+.subckt wtx_tspcbn CK D Q ENB QN VDD VSS
+X0 a_278_2210# D VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.78p ps=9.39u w=4u l=0.28u
+X1 VSS QN Q VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X2 Q QN VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X3 QN QI VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X4 QN QI VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X5 QB ENB VSS VSS nfet_03v3 ad=0.695p pd=3.39u as=0.8575p ps=3.02u w=1u l=0.28u
+X6 QI QB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X7 VSS Y a_1582_230# VSS nfet_03v3 ad=0.8575p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
+X8 VSS ENB QI VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X9 a_1582_230# CK QB VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X10 a_2622_2210# QB VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X11 QB Y VDD VDD pfet_03v3 ad=2.78p pd=9.39u as=2.78p ps=9.39u w=4u l=0.28u
+X12 X D VSS VSS nfet_03v3 ad=1.39p pd=5.39u as=1.39p ps=5.39u w=2u l=0.28u
+X13 a_844_230# X Y VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X14 QI ENB a_2622_2210# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X15 X CK a_278_2210# VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X16 VSS CK a_844_230# VSS nfet_03v3 ad=1.39p pd=5.39u as=1.02p ps=3.02u w=2u l=0.28u
+X17 Q QN VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X18 Y CK VDD VDD pfet_03v3 ad=2.78p pd=9.39u as=2.78p ps=9.39u w=4u l=0.28u
+X19 VDD QN Q VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
 .ends
 
 .subckt wtx_serq4 D0 D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 D16 D17 D18
 + D19 PH0 PH90 PH180 PH270 SERQ MQ MH MF Y YB DP DPB WCKQ VDD VSS
+XXC_PM_T XC_PM_T/D XC_PM_T/DB XC_MD_T/S XC_PS_T/CK XC_PS_T/D XC_PS_T/DB XC_YC_T/NB
++ VDD VSS wtx_cmlt_lat
 XXHD XP2/G XHD/D XHD/Q XL3/ENB VDD VSS wtx_tspcb
+XXC_ES_T XC_ES_T/D XC_ES_T/DB XC_MY_T/SB XC_MY_T/S XC_QM_T/D XC_QM_T/DB XC_YC_T/NB
++ VDD VSS wtx_cmlt_lat
+XXC_DPBI1N XC_DPBC_T/Y VSS VSS a_44342_132571# p_nfet_03v3_w2_l0p28
+XXC_DK_T XC_XK_T/Y XC_XK_T/YB XC_DK_T/Y XC_DK_T/YB XC_YC_T/NB VDD VSS wtx_cmlt_ckp
+XXC_YBRF a_44342_98570# XC_YBC_T/Y VSS p_ppolyf_u_1k_w1_l6
 XXH0_0 XP2/Q XL0/BO XH0_1/D XL3/ENB VDD VSS wtx_tspcb
+XXC_DO2_RLN XC_OM_T/DB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_MXO_RLN VDD VDD VSS p_ppolyf_u_1k_w4_l2
+XXC_DPBI2P a_44342_132571# VDD DP VDD p_pfet_03v3_w8_l0p28
+XXC_ES_RLP XC_QM_T/D VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DPBRF a_44342_132571# XC_DPBC_T/Y VSS p_ppolyf_u_1k_w1_l6
 XXH0_1 XP2/Q XH0_1/D XO/F0 XL3/ENB VDD VSS wtx_tspcbx
-XXCTL SERQ XL3/ENB XHC/D XHA/D XJC/D XJA/D XDV/AO XDV/CO XL3/LDA WCKQ VDD VSS wtx_q4ctl
-XXP0 PH0 SERQ MQ MH MF XHC/D XJB/D XP0/G XP0/XN0 XP0/XN1 XP0/XN2 XP0/QW XP0/Q VDD
+XXC_DE2_T XC_DE2_T/A XC_DE2_T/AB XC_EM_T/D XC_EM_T/DB XC_YC_T/NB VDD VSS wtx_cmlt_buf
+XXC_DKP_RLN XC_PS_T/CK VSS m1_1748_111652# p_ppolyf_u_1k_w4_l1p2
+XXC_KDPBVN VSS a_44342_132571# VSS a_41830_132125# p_nfet_03v3_w0p5_l0p28
+XXC_DPBI1P a_44342_132571# XC_DPBC_T/Y VDD VDD p_pfet_03v3_w4_l0p28
+XXC_BC0_T XP0/QW XP2/QW XC_XK_T/A XC_XK_T/AB XC_YC_T/NB VDD VSS wtx_cmlt_buf
+XXC_KYBVN VSS a_44342_98570# VSS a_41830_98114# p_nfet_03v3_w0p5_l0p28
+XXC_QS_T XC_QS_T/D XC_QS_T/DB XC_QS_T/CK XC_QM_T/CK XC_QS_T/Q XC_QS_T/QB XC_YC_T/NB
++ VDD VSS wtx_cmlt_lat
+XXC_DO2_RLP XC_OM_T/D VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_MXO_RLP VDD VDD VSS p_ppolyf_u_1k_w4_l2
+XXC_DKP_RLP XC_MD_T/S VSS m1_1748_111652# p_ppolyf_u_1k_w4_l1p2
+XXC_BC1_RLN XC_XK_T/BB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DE2_RLN XC_EM_T/DB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_LY_T XC_MY_T/Y XC_MY_T/YB XC_YC_T/A XC_YC_T/AB XC_YC_T/NB VDD VDD VSS wtx_cmlt_lsh
+XXC_MD_RLN VDD XC_MD_T/YB VSS p_ppolyf_u_1k_w4_l2
+XXC_PEI VDD SERQ VDD m1_47254_95470# p_pfet_03v3_w2_l0p28
+XXC_QM_RLN XC_QS_T/DB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_KYBVP a_41830_98114# VDD a_44342_98570# VDD p_pfet_03v3_w1_l0p28
+XXC_BL0_T XP0/QW XP2/QW XC_XK_T/AL XC_XK_T/ALB XC_YC_T/NB VDD VSS wtx_cmlt_bufl
+XXC_KDPBVP a_41830_132125# VDD a_44342_132571# VDD p_pfet_03v3_w1_l0p28
+XXC_PEN_0 m1_47334_95990# m1_47254_95470# VDD VDD p_pfet_03v3_w4_l0p28
+XXC_YBI2N VSS Y a_44342_98570# VSS p_nfet_03v3_w4_l0p28
+XXC_PEN_1 m1_47334_95990# m1_47254_95470# VDD VDD p_pfet_03v3_w4_l0p28
+XXC_BC1_RLP XC_XK_T/B VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DE2_RLP XC_EM_T/D VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DPBC_T XC_LD_T/ABS XC_LD_T/AS XC_DPBC_T/Y XC_YC_T/NB VDD VSS wtx_cmlt_c2c
+XXC_MD_RLP VDD XC_MD_T/Y VSS p_ppolyf_u_1k_w4_l2
+XXC_MREF_0 XC_YC_T/NB VSS VSS XC_YC_T/NB p_nfet_03v3_w2_l0p28
+XXC_QM_RLP XC_QS_T/D VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_YBI1N XC_YBC_T/Y VSS VSS a_44342_98570# p_nfet_03v3_w2_l0p28
+XXC_PEN_2 m1_47334_95990# m1_47254_95470# VDD VDD p_pfet_03v3_w4_l0p28
+XXC_MOFF VSS XC_YC_T/NB m1_47254_95470# VSS p_nfet_03v3_w1_l0p28
+XXC_MREF_1 XC_YC_T/NB VSS VSS XC_YC_T/NB p_nfet_03v3_w2_l0p28
+XXCTL SERQ XL3/ENB XDV/AO XDV/CO XL3/LDA WCKQ VDD VSS wtx_q4ctl
+XXC_YBI2P a_44342_98570# VDD Y VDD p_pfet_03v3_w8_l0p28
+XXC_NEI VSS m1_47254_95470# SERQ VSS p_nfet_03v3_w1_l0p28
+XXC_DKQ_T XC_DK_T/Y XC_DK_T/YB XC_QS_T/CK XC_QM_T/CK XC_YC_T/NB VDD VSS wtx_cmlt_ckb
+XXC_PEN_3 m1_47334_95990# m1_47254_95470# VDD VDD p_pfet_03v3_w4_l0p28
+XXP0 PH0 SERQ MQ MH MF XHY/D XJB/D XP0/G XP0/XN0 XP0/XN1 XP0/XN2 XP0/QW XP0/Q VDD
 + VSS wtx_qph
-XXP1 PH90 SERQ MQ MH MF XHD/D XJC/D XP1/G XP1/XN0 XP1/XN1 XP1/XN2 XP1/QW XP1/Q VDD
+XXC_MREF_2 XC_YC_T/NB VSS VSS XC_YC_T/NB p_nfet_03v3_w2_l0p28
+XXC_YBI1P a_44342_98570# XC_YBC_T/Y VDD VDD p_pfet_03v3_w4_l0p28
+XXC_MREF_3 XC_YC_T/NB VSS VSS XC_YC_T/NB p_nfet_03v3_w2_l0p28
+XXP1 PH90 SERQ MQ MH MF XHD/Q XJC/D XP1/G XP1/XN0 XP1/XN1 XP1/XN2 XP1/QW XP1/Q VDD
 + VSS wtx_qph
-XXP3 PH270 SERQ MQ MH MF XHD/Q XJD/Q XP3/G XP3/XN0 XP3/XN1 XP3/XN2 XP3/QW XP3/Q VDD
-+ VSS wtx_qph
+XXC_DPRF a_41830_132125# XC_DPC_T/Y VSS p_ppolyf_u_1k_w1_l6
+XXC_EM_T XC_EM_T/D XC_EM_T/DB XC_MY_T/S XC_MY_T/SB XC_ES_T/D XC_ES_T/DB XC_YC_T/NB
++ VDD VSS wtx_cmlt_lat
+XXC_DKP_RCM VSS VDD m1_1748_111652# p_ppolyf_u_1k_w8_l1p7
+XXC_QS_RLN XC_QS_T/QB VSS VDD p_ppolyf_u_1k_w4_l3
 XXP2 PH180 SERQ MQ MH MF XHB/Q XJD/D XP2/G XP2/XN0 XP2/XN1 XP2/XN2 XP2/QW XP2/Q VDD
 + VSS wtx_qph
-XXL0 D0 D4 D8 D12 D16 VSS XL3/LDA XL1/CK XL3/ENB XL0/BO VDD VSS wtx_sreg5
+XXC_RREF m1_47334_95990# XC_YC_T/NB VSS p_ppolyf_u_1k_w2_l10p5
+XXC_DKO_T XC_DK_T/Y XC_DK_T/YB XC_OS_T/CK XC_OM_T/CK XC_YC_T/NB VDD VSS wtx_cmlt_ckb
+XXP3 PH270 SERQ MQ MH MF XHD/D XJD/Q XP3/G XP3/XN0 XP3/XN1 XP3/XN2 XP3/QW XP3/Q VDD
++ VSS wtx_qph
+XXC_YI2N VSS YB a_41830_98114# VSS p_nfet_03v3_w4_l0p28
+XXC_KDPVN VSS a_41830_132125# VSS a_44342_132571# p_nfet_03v3_w0p5_l0p28
 XXCK XP2/XN0 XP2/XN1 XP2/XN2 XL1/CK XL3/CK XDV/CK VDD VSS wtx_q4ck
+XXC_BL1_RLN XC_XK_T/BLB VSS m1_50570_58566# p_ppolyf_u_1k_w4_l3
+XXC_QS_RLP XC_QS_T/Q VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_QM_T XC_QM_T/D XC_QM_T/DB XC_QM_T/CK XC_QS_T/CK XC_QS_T/D XC_QS_T/DB XC_YC_T/NB
++ VDD VSS wtx_cmlt_lat
+XXL0 D0 D4 D8 D12 D16 VSS XL3/LDA XL1/CK XL3/ENB XL0/BO VDD VSS wtx_sreg5
+XXC_DO1_RLN XC_DO2_T/AB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_YBC_T XC_YC_T/AB XC_YC_T/A XC_YBC_T/Y XC_YC_T/NB VDD VSS wtx_cmlt_c2c
+XXC_YI1N XC_YC_T/Y VSS VSS a_41830_98114# p_nfet_03v3_w2_l0p28
+XXC_DPI2N VSS DPB a_41830_132125# VSS p_nfet_03v3_w4_l0p28
+XXC_DKO_RLN XC_OM_T/CK VSS m1_1748_103306# p_ppolyf_u_1k_w4_l1p2
 XXL1 D1 D5 D9 D13 D17 VSS XL3/LDA XL1/CK XL3/ENB XL1/BO VDD VSS wtx_sreg5
-XXH3_0 XP1/Q XL3/BO XH3_1/D XL3/ENB VDD VSS wtx_tspcb
+XXC_YI2P a_41830_98114# VDD YB VDD p_pfet_03v3_w8_l0p28
+XXC_KDPVP a_44342_132571# VDD a_41830_132125# VDD p_pfet_03v3_w1_l0p28
+XXC_DPI1N XC_DPC_T/Y VSS VSS a_41830_132125# p_nfet_03v3_w2_l0p28
+XXC_BL1_RLP XC_XK_T/BL VSS m1_50570_58566# p_ppolyf_u_1k_w4_l3
 XXL2 D2 D6 D10 D14 D18 VSS XL3/LDA XL3/CK XL3/ENB XL2/BO VDD VSS wtx_sreg5
-XXH3_1 XP1/Q XH3_1/D XH3_2/D XL3/ENB VDD VSS wtx_tspcb
+XXH3_0 XP1/Q XL3/BO XH3_1/D XL3/ENB VDD VSS wtx_tspcb
+XXC_DO1_RLP XC_DO2_T/A VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_OS_T XC_OS_T/D XC_OS_T/DB XC_OS_T/CK XC_OM_T/CK XC_PM_T/D XC_PM_T/DB XC_YC_T/NB
++ VDD VSS wtx_cmlt_lat
+XXC_YI1P a_41830_98114# XC_YC_T/Y VDD VDD p_pfet_03v3_w4_l0p28
+XXC_DPI2P a_41830_132125# VDD DPB VDD p_pfet_03v3_w8_l0p28
+XXC_MXQ_RLN VDD VDD VSS p_ppolyf_u_1k_w4_l2
+XXC_DKO_RLP XC_OS_T/CK VSS m1_1748_103306# p_ppolyf_u_1k_w4_l1p2
 XXL3 D3 D7 D11 D15 D19 VSS XL3/LDA XL3/CK XL3/ENB XL3/BO VDD VSS wtx_sreg5
+XXH3_1 XP1/Q XH3_1/D XH3_2/D XL3/ENB VDD VSS wtx_tspcb
+XXC_BC0_RLN XC_XK_T/AB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DE1_RLN XC_DE2_T/AB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DPI1P a_41830_132125# XC_DPC_T/Y VDD VDD p_pfet_03v3_w4_l0p28
+XXC_PM_RLN XC_PS_T/DB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DKE_RLN XC_MY_T/SB VSS m1_1748_85984# p_ppolyf_u_1k_w4_l1p2
 XXH3_2 XP1/Q XH3_2/D XO/F3 XL3/ENB VDD VSS wtx_tspcbx
+XXC_DO2_T XC_DO2_T/A XC_DO2_T/AB XC_OM_T/D XC_OM_T/DB XC_YC_T/NB VDD VSS wtx_cmlt_buf
+XXC_MY_T XC_QM_T/D XC_QM_T/DB XC_PM_T/D XC_PM_T/DB XC_MY_T/S XC_MY_T/SB XC_MY_T/Y
++ XC_MY_T/YB XC_YC_T/NB VDD VSS wtx_cmlt_mux
+XXC_MXQ_RLP VDD VDD VSS p_ppolyf_u_1k_w4_l2
+XXC_BC0_RLP XC_XK_T/A VSS VDD p_ppolyf_u_1k_w4_l3
 XXH1_0 XP1/Q XL1/BO XH1_1/D XL3/ENB VDD VSS wtx_tspcb
+XXC_DE1_RLP XC_DE2_T/A VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_PM_RLP XC_PS_T/D VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DKE_RLP XC_MY_T/S VSS m1_1748_85984# p_ppolyf_u_1k_w4_l1p2
 XXH1_1 XP0/Q XH1_1/D XH1_2/D XL3/ENB VDD VSS wtx_tspcb
+XXC_YC_T XC_YC_T/A XC_YC_T/AB XC_YC_T/Y XC_YC_T/NB VDD VSS wtx_cmlt_c2c
+XXC_DPC_T XC_LD_T/AS XC_LD_T/ABS XC_DPC_T/Y XC_YC_T/NB VDD VSS wtx_cmlt_c2c
 XXH1_2 XP3/Q XH1_2/D XO/F1 XL3/ENB VDD VSS wtx_tspcbx
-XXDV XDV/CK XL3/ENB XDV/AO XDV/CO VDD VSS wtx_div5b
-XXO XP0/QW XP1/QW XP2/QW XP3/QW XO/F0 XO/F1 XO/F2 XO/F3 YB Y DPB DP XO/S0 XO/S1 XO/S2
-+ XO/S3 VDD VSS wtx_omux
+XXC_BC1_T XP1/QW XP3/QW XC_XK_T/B XC_XK_T/BB XC_YC_T/NB VDD VSS wtx_cmlt_buf
+XXC_LD_T XC_MD_T/Y XC_MD_T/YB XC_LD_T/AS XC_LD_T/ABS XC_YC_T/NB VDD VDD VSS wtx_cmlt_lsh
+XXC_BL1_RCM m1_50570_58566# VSS VDD p_ppolyf_u_1k_w4_l3p2
+XXHY XP3/G XHY/D XHY/Q XL3/ENB VDD VSS wtx_tspcb
+XXC_XK_RLN VSS VDD XC_XK_T/YB p_ppolyf_u_1k_w3_l1
+XXC_DKO_RCM VSS VDD m1_1748_103306# p_ppolyf_u_1k_w8_l1p7
+XXC_BL1_T XP1/QW XP3/QW XC_XK_T/BL XC_XK_T/BLB XC_YC_T/NB VDD VSS wtx_cmlt_bufl
+XXC_PS_RLN XC_PS_T/QB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DE1_T XO/EB XO/E XC_DE2_T/A XC_DE2_T/AB XC_YC_T/NB VDD VSS wtx_cmlt_buf
+XXDV XDV/CK XL3/ENB XDV/AO XDV/CO VDD VSS wtx_div5s
+XXHZ XP1/G VSS XHZ/Q XL3/ENB VDD VSS wtx_tspcb
+XXC_BL0_RLN XC_XK_T/ALB VSS m1_27186_58566# p_ppolyf_u_1k_w4_l3
+XXC_XK_RLP VSS VDD XC_XK_T/Y p_ppolyf_u_1k_w3_l1
+XXC_PS_RLP XC_PS_T/Q VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DKE_RCM VSS VDD m1_1748_85984# p_ppolyf_u_1k_w8_l1p7
+XXC_OM_T XC_OM_T/D XC_OM_T/DB XC_OM_T/CK XC_OS_T/CK XC_OS_T/D XC_OS_T/DB XC_YC_T/NB
++ VDD VSS wtx_cmlt_lat
+XXC_MY_RLN VDD XC_MY_T/YB VSS p_ppolyf_u_1k_w4_l2
+XXC_BL0_RLP XC_XK_T/AL VSS m1_27186_58566# p_ppolyf_u_1k_w4_l3
+XXC_PS_T XC_PS_T/D XC_PS_T/DB XC_PS_T/CK XC_MD_T/S XC_PS_T/Q XC_PS_T/QB XC_YC_T/NB
++ VDD VSS wtx_cmlt_lat
+XXC_MY_RLP VDD XC_MY_T/Y VSS p_ppolyf_u_1k_w4_l2
+XXC_OM_RLN XC_OS_T/DB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DKQ_RLN XC_QM_T/CK VSS m1_1748_121214# p_ppolyf_u_1k_w4_l1p2
+XXO XP0/QW XP1/QW XP2/QW XP3/QW XO/F0 XO/F1 XO/F2 XO/F3 XO/E XO/EB XO/O XO/OB VDD
++ VSS wtx_omux2
+XXC_DK_RLN VDD XC_DK_T/YB VSS p_ppolyf_u_1k_w6_l1p2
+XXC_DKE_T XC_DK_T/Y XC_DK_T/YB XC_MY_T/S XC_MY_T/SB XC_YC_T/NB VDD VSS wtx_cmlt_ckb
+XXC_DKP_T XC_DK_T/Y XC_DK_T/YB XC_MD_T/S XC_PS_T/CK XC_YC_T/NB VDD VSS wtx_cmlt_ckb
+XXC_YRF a_41830_98114# XC_YC_T/Y VSS p_ppolyf_u_1k_w1_l6
+XXC_OM_RLP XC_OS_T/D VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DKQ_RLP XC_QS_T/CK VSS m1_1748_121214# p_ppolyf_u_1k_w4_l1p2
+XXC_XK_T XC_XK_T/A XC_XK_T/AB XC_XK_T/B XC_XK_T/BB XC_XK_T/AL XC_XK_T/ALB XC_XK_T/BL
++ XC_XK_T/BLB XC_XK_T/Y XC_XK_T/YB XC_YC_T/NB VDD VSS wtx_cmlt_xor
+XXC_DK_RLP VDD XC_DK_T/Y VSS p_ppolyf_u_1k_w6_l1p2
+XXC_EM_RLN XC_ES_T/DB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_KYVN VSS a_41830_98114# VSS a_44342_98570# p_nfet_03v3_w0p5_l0p28
 XXJA XP0/G XJA/D XJB/D XL3/ENB VDD VSS wtx_tspcb
-XXJB XP0/G XJB/D XJC/D XL3/ENB VDD VSS wtx_tspcb
-XXH2_0 XP1/Q XL2/BO XH2_1/D XL3/ENB VDD VSS wtx_tspcb
+XXC_BL0_RCM m1_27186_58566# VSS VDD p_ppolyf_u_1k_w4_l3p2
+XXC_MXQ_T VSS VSS VSS VSS XC_QS_T/CK XC_QM_T/CK VDD VDD VSS VDD VSS wtx_cmlt_mux
+XXC_MD_T XC_PS_T/Q XC_PS_T/QB XC_QS_T/Q XC_QS_T/QB XC_MD_T/S XC_PS_T/CK XC_MD_T/Y
++ XC_MD_T/YB XC_YC_T/NB VDD VSS wtx_cmlt_mux
+XXC_EM_RLP XC_ES_T/D VSS VDD p_ppolyf_u_1k_w4_l3
+XXJB XP0/G XJB/D XJC/D XL3/ENB XJA/D VDD VSS wtx_tspcbn
+XXC_OS_RLN XC_PM_T/DB VSS VDD p_ppolyf_u_1k_w4_l3
+XXHA XP0/G XHA/D XHY/D XL3/ENB XHA/D VDD VSS wtx_tspcbn
 XXJC XP0/G XJC/D XJD/D XL3/ENB VDD VSS wtx_tspcb
-XXHA XP0/G XHA/D XHC/D XL3/ENB VDD VSS wtx_tspcb
-XXH2_1 XP0/Q XH2_1/D XH2_2/D XL3/ENB VDD VSS wtx_tspcb
+XXC_KYVP a_44342_98570# VDD a_41830_98114# VDD p_pfet_03v3_w1_l0p28
+XXH2_0 XP1/Q XL2/BO XH2_1/D XL3/ENB VDD VSS wtx_tspcb
+XXHB XP0/G XHY/D XHB/Q XL3/ENB VDD VSS wtx_tspcb
 XXJD XP0/G XJD/D XJD/Q XL3/ENB VDD VSS wtx_tspcb
-XXHB XP0/G XHC/D XHB/Q XL3/ENB VDD VSS wtx_tspcb
+XXC_OS_RLP XC_PM_T/D VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_MXO_T VSS VSS VSS VSS XC_OS_T/CK XC_OM_T/CK VDD VDD VSS VDD VSS wtx_cmlt_mux
+XXH2_1 XP0/Q XH2_1/D XH2_2/D XL3/ENB VDD VSS wtx_tspcb
+XXC_DKQ_RCM VSS VDD m1_1748_121214# p_ppolyf_u_1k_w8_l1p7
+XXHC XP2/G XHY/Q XHD/D XL3/ENB VDD VSS wtx_tspcb
+XXC_DPBI2N VSS DP a_44342_132571# VSS p_nfet_03v3_w4_l0p28
 XXH2_2 XP0/Q XH2_2/D XO/F2 XL3/ENB VDD VSS wtx_tspcbx
-XXHC XP2/G XHC/D XHD/D XL3/ENB VDD VSS wtx_tspcb
-D0 VSS D13 diode_nd2ps_03v3 pj=3.88u area=0.9409p
-D1 VSS D0 diode_nd2ps_03v3 pj=3.56u area=0.7921p
-D2 VSS D17 diode_nd2ps_03v3 pj=3.4u area=0.7225p
-D3 VSS D1 diode_nd2ps_03v3 pj=3.48u area=0.7569p
-D4 VSS D16 diode_nd2ps_03v3 pj=3.52u area=0.7744p
-D5 VSS D5 diode_nd2ps_03v3 pj=3.88u area=0.9409p
-D6 VSS D9 diode_nd2ps_03v3 pj=3.44u area=0.7396p
-D7 VSS D8 diode_nd2ps_03v3 pj=3.56u area=0.7921p
-D8 VSS D4 diode_nd2ps_03v3 pj=4u area=1p
-D9 VSS D12 diode_nd2ps_03v3 pj=4u area=1p
+XXC_ES_RLN XC_QM_T/DB VSS VDD p_ppolyf_u_1k_w4_l3
+XXC_DO1_T XO/OB XO/O XC_DO2_T/A XC_DO2_T/AB XC_YC_T/NB VDD VSS wtx_cmlt_buf
+D0 VSS D13 diode_nd2ps_03v3 pj=7.12u area=3.1684p
+D1 VSS D6 diode_nd2ps_03v3 pj=6.56u area=2.6896p
+D2 VSS D3 diode_nd2ps_03v3 pj=6.24u area=2.4336p
+D3 VSS D1 diode_nd2ps_03v3 pj=6.88u area=2.9584p
+D4 VSS D9 diode_nd2ps_03v3 pj=6.88u area=2.9584p
+D5 VSS D4 diode_nd2ps_03v3 pj=7.2u area=3.24p
+D6 VSS D0 diode_nd2ps_03v3 pj=6.96u area=3.0276p
+D7 VSS D10 diode_nd2ps_03v3 pj=6.32u area=2.4964p
+D8 VSS D12 diode_nd2ps_03v3 pj=7.16u area=3.2041p
+D9 VSS XJB/D diode_nd2ps_03v3 pj=2.44u area=0.3721p
+D10 VSS D11 diode_nd2ps_03v3 pj=6.2u area=2.4025p
+D11 VSS D19 diode_nd2ps_03v3 pj=6.2u area=2.4025p
+D12 VSS D16 diode_nd2ps_03v3 pj=6.92u area=2.9929p
+D13 VSS XJC/D diode_nd2ps_03v3 pj=2.4u area=0.36p
+D14 VSS D2 diode_nd2ps_03v3 pj=6.32u area=2.4964p
+D15 VSS D7 diode_nd2ps_03v3 pj=6.48u area=2.6244p
+D16 VSS D18 diode_nd2ps_03v3 pj=6.28u area=2.4649p
+D17 VSS D17 diode_nd2ps_03v3 pj=6.88u area=2.9584p
+D18 VSS D15 diode_nd2ps_03v3 pj=6.48u area=2.6244p
+D19 VSS a_44342_132571# diode_nd2ps_03v3 pj=2.4u area=0.36p
+D20 VSS a_41830_132125# diode_nd2ps_03v3 pj=2.4u area=0.36p
+D21 VSS a_41830_98114# diode_nd2ps_03v3 pj=2.4u area=0.36p
+D22 VSS D14 diode_nd2ps_03v3 pj=6.56u area=2.6896p
+D23 VSS D8 diode_nd2ps_03v3 pj=6.96u area=3.0276p
+D24 VSS a_44342_98570# diode_nd2ps_03v3 pj=2.4u area=0.36p
+D25 VSS D5 diode_nd2ps_03v3 pj=7.12u area=3.1684p
 .ends
 

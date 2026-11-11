@@ -90,7 +90,7 @@ def pkg_chain(lines, placement='P1', dbond_mm=0.0):
 
 def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typical', temp=27,
          codes=(109, 20, 125), lossy=False, dx_bits=None, dx_rate=None, ext_switch_t=None, rx=False, bpc=4,
-         pkg=None):
+         pkg=None, post_pol=0):
     ports = S.ports_of(Path(dut).read_text(), subckt)
     tw = 20 / rate
     L = ['* pt_wiredtx + pads extracted TX output stage', tools.model_header_dir(corner, temp, tools.PAD_MODELS)]
@@ -134,10 +134,12 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
         L.append(S.pwl_bits('DX', 'DX', tv, vdd, edge=0.1 * ui))
     else:
         L.append('VDX DX 0 0')
-    en = {'serial': (1, 1, 0), 'tmds': (0, 0, 1), 'ext': (1, 0, 0)}[mode]
+    en = {'serial': (1, 1, 0), 'tmds': (0, 0, 1), 'ext': (1, 0, 0), 'mlt3': (1, 1, 0)}[mode]
     for nm, v in zip(('EN_MAIN', 'EN_POST', 'EN_TMDS'), en):
         L.append(f'V{nm} {nm} 0 {v*vdd}')
     L += ['VISO ISLAND_OFF 0 0', 'IREF VDD IBIAS 10u']
+    if 'POST_POL' in ports:      # IX-9 postcursor polarity (0 = de-emphasis, 1 = MAIN + POST sum)
+        L.append(f'VPOL POST_POL 0 {post_pol * vdd}')
     for b, code in zip(('MAIN', 'POST', 'TMDS'), codes):
         for k, bit in enumerate(S.code_bits(code)):
             L.append(f'V{b}C{k} {b}_CODE{k} 0 {bit*vdd}')
@@ -147,7 +149,8 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
                  for m in range((len(words) + 1) // 2)]
         for i in range(40):
             h, j = divmod(i, 20)
-            tv = [(0.0, pairs[0][h][j])] + [(word_t0 + 2 * m * tw + tw / 4, pr[h][j]) for m, pr in enumerate(pairs)]
+            tv = [(0.0, pairs[0][h][j])] + [(word_t0 + 2 * m * tw + S.launch_offset(tw, True), pr[h][j])
+                                            for m, pr in enumerate(pairs)]
             L.append(S.pwl_bits(f'D{i}', f'D{i}', tv, vdd))
         L.append('CWCK40 WORD_CLK40 0 50f')
     else:
@@ -175,6 +178,14 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
     if pkg and mode == 'serial':
         net = pkg_chain(L, *pkg)
         out = ('FAR_P', 'FAR_N')
+    elif mode == 'mlt3':
+        # board B39 (spec/board-requirements.md): 49.9 ohm back-termination per leg to a 3.3 V centre-tap
+        # rail, 98 nH series per leg, 19.6 pF differential shunt, 100 ohm transformer / line load
+        L += ['VCT CT 0 3.3', 'RBT_P CT BOARD_P 49.9', 'RBT_N CT BOARD_N 49.9',
+              'LF_P BOARD_P FILT_P 98n', 'LF_N BOARD_N FILT_N 98n', 'CF FILT_P FILT_N 19.6p',
+              'RLINE FILT_P FILT_N 100']
+        net = dict(topology='B39: 49.9 ohm to 3.3 V CT per leg, 2 x 98 nH, 19.6 pF diff, 100 ohm load; on-die term off')
+        out = ('FILT_P', 'FILT_N')
     elif mode == 'tmds':
         L.append(f'VPEER PEER 0 {vdd}')
         L += ['RPU_P PEER BOARD_P 50', 'RPU_N PEER BOARD_N 50']
@@ -230,7 +241,7 @@ def eye(w, rate, t0, t1, expected=None, node='DIFF'):
 
 
 def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, corner='typical', temp=27,
-        vdd=3.3, lossy=False, codes=(109, 20, 125), tag=None, bpc=4, pkg=None):
+        vdd=3.3, lossy=False, codes=(109, 20, 125), tag=None, bpc=4, pkg=None, post_pol=0):
     work = Path(work); tag = tag or f'{mode}_{rate/1e9:g}G'
     tw = 20 / rate
     def prep(d):
@@ -241,7 +252,7 @@ def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, 
     pdir = work / f'{tag}_phase'; prep(pdir)
     txt, names, _ = deck(pdir / Path(dut).name, subckt, mode=mode, rate=rate, words=[[0] * 20], word_t0=1,
                          tstop=2e-9 + 8 * tw, vdd=vdd, corner=corner, temp=temp, codes=codes, lossy=lossy, bpc=bpc,
-                         pkg=pkg)
+                         pkg=pkg, post_pol=post_pol)
     (pdir / 'tb.sp').write_text(txt)
     _, _log = tools.ngspice_host(pdir, 'tb.sp')
     if S.sim_abort(_log):
@@ -257,17 +268,25 @@ def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, 
     bits = S.prbs7_bits(20 * nwords)
     words = [bits[20 * k:20 * k + 20] for k in range(nwords)]
     ddir = work / f'{tag}_data'; prep(ddir)
-    txt, names, net = deck(ddir / Path(dut).name, subckt, mode=mode, rate=rate, words=words, word_t0=word_t0,
-                           tstop=word_t0 + (nwords + 3) * tw, vdd=vdd, corner=corner, temp=temp, codes=codes,
-                           lossy=lossy, bpc=bpc, pkg=pkg)
-    (ddir / 'tb.sp').write_text(txt)
-    _, _log = tools.ngspice_host(ddir, 'tb.sp')
-    if S.sim_abort(_log):
-        return dict(ok=False, reason='simulator abort: ' + S.sim_abort(_log))
-    w = tools.read_wrdata(ddir / 'wave.txt', names)
+    w40 = 'D39' in S.ports_of(Path(dut).read_text(), subckt)
+    realigned = 0
+    for _ in range(3):       # see S.realign_t0: the word counter's start state is not reset
+        txt, names, net = deck(ddir / Path(dut).name, subckt, mode=mode, rate=rate, words=words, word_t0=word_t0,
+                               tstop=word_t0 + (nwords + 3) * tw, vdd=vdd, corner=corner, temp=temp, codes=codes,
+                               lossy=lossy, bpc=bpc, pkg=pkg, post_pol=post_pol)
+        (ddir / 'tb.sp').write_text(txt)
+        _, _log = tools.ngspice_host(ddir, 'tb.sp')
+        if S.sim_abort(_log):
+            return dict(ok=False, reason='simulator abort: ' + S.sim_abort(_log))
+        w = tools.read_wrdata(ddir / 'wave.txt', names)
+        nt0 = S.realign_t0(w['time'], w['WORD_CLK'], word_t0) if w40 else None
+        if nt0 is None:
+            break
+        word_t0, realigned = nt0, realigned + 1
     t0, t1 = word_t0 + 2 * tw, word_t0 + (nwords - 1) * tw
     r = dict(mode=mode, bit_rate_bps=rate, bits_per_ring_cycle=bpc, corner=corner, temp_c=temp, vdd=vdd,
-             codes=dict(zip(('main', 'post', 'tmds'), codes)), network=net, lossy_channel=lossy)
+             codes=dict(zip(('main', 'post', 'tmds'), codes)), network=net, lossy_channel=lossy,
+             launch_after_wck40_s=S.LAUNCH_S, word_t0_realigned=realigned)
     r['eye'] = eye(w, rate, t0, t1, bits)
     sel = w['time'] > t0
     r['pad_levels_v'] = dict(p_min=float(w['PAD_P'][sel].min()), p_max=float(w['PAD_P'][sel].max()),
@@ -275,6 +294,97 @@ def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, 
     r['vdd_current_avg_a'] = float(-np.mean(w['I_VDD'][sel]))
     r['bias_v'] = dict(main=float(np.mean(w['MAIN_BIAS'][sel])), tmds=float(np.mean(w['TMDS_BIAS'][sel])))
     r['ok'] = bool(r['eye'].get('errors', 1) == 0)
+    return r
+
+
+def mlt3_bits(nsym=40, os_=8):
+    """MLT-3 symbol stream from PRBS7 NRZI data, each symbol os_ line bits for the MAIN + POST sum
+    (POST = MAIN one UI later, same sign): +1 -> all ones, -1 -> all zeros, 0 -> 1010.. (cancels)."""
+    data = S.prbs7_bits(nsym, seed=0x7F)
+    seq, syms = [0, 1, 0, -1], []
+    k = 0
+    for d in data:
+        if d:
+            k = (k + 1) % 4
+        syms.append(seq[k])
+    bits = []
+    for sy in syms:
+        bits += [1] * os_ if sy > 0 else [0] * os_ if sy < 0 else [1, 0] * (os_ // 2)
+    return syms, bits
+
+
+def run_mlt3(work, dut, subckt='pt_wiredtx', *, rate=1.0e9, bpc=2, os_=8, nsym=48, codes=(200, 200, 125),
+             corner='typical', temp=27, vdd=3.3, tag='mlt3'):
+    """IX-9 bench: MLT-3 at rate/os_ symbols per second through the B39 board network (POST_POL = 1)."""
+    work = Path(work)
+    tw = 20 / rate
+
+    def prep(d):
+        d.mkdir(parents=True, exist_ok=True)
+        (d / Path(dut).name).write_text(Path(dut).read_text())
+        (d / 'steer.spice').write_text(clean_lib(STEER.read_text()))
+        (d / 'pad.spice').write_text(clean_lib(PAD.read_text()))
+    pdir = work / f'{tag}_phase'; prep(pdir)
+    txt, names, _ = deck(pdir / Path(dut).name, subckt, mode='mlt3', rate=rate, words=[[0] * 20], word_t0=1,
+                         tstop=2e-9 + 8 * tw, vdd=vdd, corner=corner, temp=temp, codes=codes, bpc=bpc, post_pol=1)
+    (pdir / 'tb.sp').write_text(txt)
+    _, _log = tools.ngspice_host(pdir, 'tb.sp')
+    if S.sim_abort(_log):
+        return dict(ok=False, reason='simulator abort: ' + S.sim_abort(_log))
+    w = tools.read_wrdata(pdir / 'wave.txt', names)
+    rises = S.crossings(w['time'], w['WORD_CLK'], rising=True)
+    rises = rises[rises > 2e-9]
+    if len(rises) > 2:
+        rises = rises[1:]
+    if len(rises) < 1:
+        return dict(ok=False, reason='WORD_CLK not running')
+    word_t0 = float(rises[0])
+    syms, bits = mlt3_bits(nsym, os_)
+    nwords = len(bits) // 20
+    words = [bits[20 * k:20 * k + 20] for k in range(nwords)]
+    ddir = work / f'{tag}_data'; prep(ddir)
+    txt, names, net = deck(ddir / Path(dut).name, subckt, mode='mlt3', rate=rate, words=words, word_t0=word_t0,
+                           tstop=word_t0 + (nwords + 3) * tw, vdd=vdd, corner=corner, temp=temp, codes=codes,
+                           bpc=bpc, post_pol=1)
+    (ddir / 'tb.sp').write_text(txt)
+    _, _log = tools.ngspice_host(ddir, 'tb.sp')
+    if S.sim_abort(_log):
+        return dict(ok=False, reason='simulator abort: ' + S.sim_abort(_log))
+    w = tools.read_wrdata(ddir / 'wave.txt', names)
+    # symbol-centre levels: find the latency by best fit of the expected symbol train
+    ts = os_ / rate
+    t0, t1 = word_t0 + 2 * tw, word_t0 + (nwords - 1) * tw
+    best = None
+    for lag in np.arange(0, 6 * tw, ts / 8):
+        tc = word_t0 + lag + (np.arange(len(syms)) + 0.5) * ts
+        ok = (tc > t0) & (tc < t1)
+        if ok.sum() < 10:
+            continue
+        v = np.interp(tc[ok], w['time'], w['DIFF'])
+        e = np.array(syms)[ok]
+        a = float(np.dot(v, e) / max(np.dot(e, e), 1))
+        r = float(np.sqrt(np.mean((v - a * e) ** 2)))
+        if best is None or r < best[1]:
+            best = (lag, r, a, v, e)
+    if best is None:
+        return dict(ok=False, reason='no symbols in window')
+    lag, rms, a, v, e = best
+    lv = {k: dict(mean=float(np.mean(v[e == k])), min=float(np.min(v[e == k])), max=float(np.max(v[e == k])))
+          for k in (-1, 0, 1) if np.any(e == k)}
+    peak = max(abs(lv[1]['mean']), abs(lv[-1]['mean'])) if 1 in lv and -1 in lv else None
+    zero_res = max(abs(lv[0]['min']), abs(lv[0]['max'])) if 0 in lv else None
+    sel = w['time'] > t0
+    pk_i = float(np.max(np.abs(w['I_VDD'][sel])))
+    r = dict(mode='mlt3', bit_rate_bps=rate, symbol_rate_bd=rate / os_, bits_per_ring_cycle=bpc, corner=corner,
+             temp_c=temp, vdd=vdd, codes=dict(zip(('main', 'post', 'tmds'), codes)), post_pol=1, network=net,
+             symbols=int(len(e)), levels_v=lv, peak_v=peak, zero_residue_v=zero_res,
+             zero_residue_pct_of_peak=round(100 * zero_res / peak, 2) if peak else None, fit_rms_v=rms,
+             pad_levels_v=dict(p_min=float(w['PAD_P'][sel].min()), p_max=float(w['PAD_P'][sel].max()),
+                               n_min=float(w['PAD_N'][sel].min()), n_max=float(w['PAD_N'][sel].max())),
+             vdd_current_avg_a=float(-np.mean(w['I_VDD'][sel])))
+    # pass: three separated levels (|+-1| >= 0.8 V nominal, 0 residue <= 5 % of peak at symbol centres)
+    r['ok'] = bool(peak and peak >= 0.8 and zero_res is not None and zero_res <= 0.05 * peak
+                   and lv[1]['min'] > 0.5 * peak and lv[-1]['max'] < -0.5 * peak)
     return r
 
 

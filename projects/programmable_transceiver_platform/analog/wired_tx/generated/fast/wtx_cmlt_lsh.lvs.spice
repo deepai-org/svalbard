@@ -1,0 +1,29 @@
+* NGSPICE file created from wtx_cmlt_lsh.ext - technology: gf180mcuD
+
+.subckt wtx_cmlt_lsh A AB AS ABS NB VDDN VDD VSS
+X0 VSS NB ABS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X1 ABS NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X2 VDDN A AS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X3 VSS NB ABS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X4 VDDN A AS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X5 AS A VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X6 AS A VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X7 VSS NB AS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X8 AS NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X9 VDDN A AS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X10 AS NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X11 VSS NB AS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X12 VDDN AB ABS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X13 AS NB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X14 VDDN AB ABS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X15 ABS AB VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X16 ABS AB VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X17 ABS NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X18 VSS NB AS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X19 ABS AB VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X20 VDDN AB ABS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X21 ABS NB VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X22 AS A VDDN VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X23 VSS NB ABS VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+.ends
+

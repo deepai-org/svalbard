@@ -14,6 +14,7 @@ from pathlib import Path
 import numpy as np
 
 import sim_wiredtx as S
+import cml_ser
 import tools
 
 FAST = tools.GENERATED / 'fast'
@@ -21,6 +22,9 @@ DUTS = dict(sch=FAST / 'wtx_serq4.spice', ext=FAST / 'wtx_serq4.ext.spice')
 PROBES = ['PH0', 'WCKQ', 'Y', 'YB', 'DP', 'DPB']
 import os
 EXTRA = [x for x in os.environ.get('CORE_PROBES', '').split(',') if x]   # debug: internal nets
+
+
+MACRO = os.environ.get('CORE_MACRO', 'wtx_serq4')
 
 
 def deck(dut, *, rate, bpc, words, word_t0, tstop, corner, temp, vdd, ser_on=2e-9, load_f=20e-15, rg=0.0):
@@ -48,8 +52,8 @@ def deck(dut, *, rate, bpc, words, word_t0, tstop, corner, temp, vdd, ser_on=2e-
         L.append(f'C{o} {o} 0 {load_f}')
     L.append('CWCK WCKQ 0 30f')
     text = Path(dut).read_text()
-    ports = S.ports_of(text, 'wtx_serq4')
-    L.append('X0 ' + ' '.join(ports) + ' wtx_serq4')
+    ports = S.ports_of(text, MACRO)
+    L.append('X0 ' + ' '.join(ports) + f' {MACRO}')
     vecs = ' '.join(f'v({p})' for p in PROBES) + ' i(VDD)'
     if EXTRA:
         vecs = ' '.join(f'v({p})' for p in PROBES + EXTRA) + ' i(VDD)'
@@ -60,13 +64,14 @@ def deck(dut, *, rate, bpc, words, word_t0, tstop, corner, temp, vdd, ser_on=2e-
     return '\n'.join(L) + '\n', names + ['I_VDD']
 
 
-def run(work, dut, *, rate, bpc=4, corner='typical', temp=27, vdd=3.3, nwords=10, tag='core'):
+def run(work, dut, *, rate, bpc=4, corner='typical', temp=27, vdd=3.3, nwords=10, tag='core', rep=1):
+    """rep > 1: WT12 bit repetition (every user bit repeated rep times on the core; line rate = rate / rep)."""
     work = Path(work)
     tw = 20 / rate
     ser_on = 2e-9
     pdir = work / f'{tag}_phase'
     pdir.mkdir(parents=True, exist_ok=True)
-    (pdir / Path(dut).name).write_text(Path(dut).read_text().replace('/', '__'))
+    (pdir / Path(dut).name).write_text(cml_ser.add_gate_r(Path(dut).read_text()).replace('/', '__'))  # explicit Rg on CML devices
     d, names = deck(dut, rate=rate, bpc=bpc, words=[[0] * 20], word_t0=1, tstop=ser_on + 3 * tw, corner=corner,
                     temp=temp, vdd=vdd)
     (pdir / 'tb.sp').write_text(d)
@@ -80,11 +85,12 @@ def run(work, dut, *, rate, bpc=4, corner='typical', temp=27, vdd=3.3, nwords=10
     if len(rises) < 2:
         return dict(ok=False, reason='WCKQ not running', log_tail=log[-800:])
     t0w = float(rises[0])
-    bits = S.prbs7_bits(20 * nwords)
+    ubits = S.prbs7_bits(20 * nwords // rep)
+    bits = [b for b in ubits for _ in range(rep)]
     words = [bits[20 * k:20 * k + 20] for k in range(nwords)]
     ddir = work / f'{tag}_data'
     ddir.mkdir(parents=True, exist_ok=True)
-    (ddir / Path(dut).name).write_text(Path(dut).read_text().replace('/', '__'))
+    (ddir / Path(dut).name).write_text(cml_ser.add_gate_r(Path(dut).read_text()).replace('/', '__'))  # explicit Rg on CML devices
     tstop = t0w + (nwords + 3) * tw
     d, names = deck(dut, rate=rate, bpc=bpc, words=words, word_t0=t0w, tstop=tstop, corner=corner, temp=temp,
                     vdd=vdd)
@@ -94,12 +100,13 @@ def run(work, dut, *, rate, bpc=4, corner='typical', temp=27, vdd=3.3, nwords=10
     if ab:
         return dict(ok=False, reason='abort: ' + ab)
     w = tools.read_wrdata(ddir / 'wave.txt', names)
-    expected = [b for wd in words for b in wd]
+    expected = list(ubits)
+    lrate = rate / rep
     ta, tb_ = t0w + 2 * tw, t0w + (nwords - 1) * tw
-    res = dict(dut=str(dut.name), dut_sha256=tools.sha(dut), rate=rate, bpc=bpc, corner=corner, temp=temp, vdd=vdd,
+    res = dict(dut=str(dut.name), dut_sha256=tools.sha(dut), rate=rate, rep=rep, line_rate=lrate, bpc=bpc, corner=corner, temp=temp, vdd=vdd,
                word_clk_period_s=float(np.mean(np.diff(rises))))
     for node, inv in (('Y', False), ('YB', True)):
-        dd = S.decode(w, node, rate, ta, tb_)
+        dd = S.decode(w, node, lrate, ta, tb_)
         if dd is None:
             res[node] = dict(ok=False, reason='no transitions')
             continue
@@ -109,7 +116,7 @@ def run(work, dut, *, rate, bpc=4, corner='typical', temp=27, vdd=3.3, nwords=10
                          eye_width_ps=round(dd['eye_width_est'] * 1e12, 1), vmargin_v=round(dd['vertical_margin'], 3))
     # postcursor: DP must equal Y delayed by one UI
     dy = S.decode(w, 'Y', rate, ta, tb_)
-    if dy is not None:
+    if dy is not None and rep == 1:
         ui = 1 / rate
         ts = np.arange(ta - (ta % ui) + (dy['cross_phase'] + ui / 2) % ui, tb_, ui)
         y = (np.interp(ts, w['time'], w['Y']) > S.VTH).astype(int)
@@ -118,7 +125,7 @@ def run(work, dut, *, rate, bpc=4, corner='typical', temp=27, vdd=3.3, nwords=10
     sel = w['time'] > ta
     res['idd_avg_a'] = float(-np.mean(w['I_VDD'][sel]))
     m = res.get('Y', {})
-    res['ok'] = bool(m.get('errors', 1) == 0 and m.get('bits', 0) >= 20 * (nwords - 4)
+    res['ok'] = bool(m.get('errors', 1) == 0 and m.get('bits', 0) >= 20 * (nwords - 4) // rep
                      and res.get('YB', {}).get('errors', 1) == 0)
     return res
 
@@ -133,10 +140,18 @@ if __name__ == '__main__':
     ap.add_argument('--vdd', type=float, default=3.3)
     ap.add_argument('--nwords', type=int, default=10)
     ap.add_argument('--out', default=None)
+    ap.add_argument('--macro', default=None, help='core macro name (default wtx_serq4; wtx_serq4c = CMOS path A)')
+    ap.add_argument('--work', default=None)
+    ap.add_argument('--rep', type=int, default=1)
     a = ap.parse_args()
-    tag = f'{a.dut}_{a.bpc}_{a.rate / 1e9:g}_{a.corner}_{a.temp:g}_{a.vdd:g}'
-    r = run(tools.SCRATCH / 'core', DUTS[a.dut], rate=a.rate, bpc=a.bpc, corner=a.corner, temp=a.temp, vdd=a.vdd,
-            nwords=a.nwords, tag=tag)
+    if a.macro:
+        MACRO = a.macro
+        DUTS = dict(sch=FAST / f'{a.macro}.spice', ext=FAST / f'{a.macro}.ext.spice')
+    tag = f'{a.dut}_{a.bpc}_{a.rate / 1e9:g}_{a.corner}_{a.temp:g}_{a.vdd:g}' + (f'_r{a.rep}' if a.rep > 1 else '')
+    wk = Path(a.work) if a.work else tools.SCRATCH / 'core'
+    wk.mkdir(parents=True, exist_ok=True)
+    r = run(wk, DUTS[a.dut], rate=a.rate, bpc=a.bpc, corner=a.corner, temp=a.temp, vdd=a.vdd,
+            nwords=a.nwords, tag=tag, rep=a.rep)
     print(json.dumps(r))
-    out = Path(a.out) if a.out else tools.SCRATCH / 'core' / f'{tag}.json'
+    out = Path(a.out) if a.out else wk / f'{tag}.json'
     out.write_text(json.dumps(r, indent=1))

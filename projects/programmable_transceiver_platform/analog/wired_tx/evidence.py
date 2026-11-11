@@ -117,7 +117,7 @@ def build():
     lvs = bool((lay.get('lvs') or {}).get('unique_match'))
     # clean gate: 0.96 Gb/s half rate (lowest ring frequency, 480 MHz) - the highest
     # simulated point that passes all twelve required corners; 1.25 Gb/s is recorded
-    nominal = sims.get('nominal_0g96')
+    nominal = sims.get('nominal')
     corners = {}
     env = [(c, tt, v) for c in ('typical', 'ss', 'ff', 'sf', 'fs') for tt in (22, 32) for v in (3.15, 3.35)]
     need = {f'corner096_{c}_{tt}_{v}' for c, tt, v in env}
@@ -125,16 +125,16 @@ def build():
     corners_pass = not missing_corners and all(c and c['pass_'] for c in corners.values())
     # quarter rate (compact core): 2.5 Gb/s gates clean; 3.24 Gb/s (ring 810 MHz) is recorded
     qsets = {}
-    slow = [(c, tt, v) for c in ('ss', 'sf', 'fs') for tt, v in ((22, 3.15), (32, 3.15))]
-    for q, pre, pts in (('quarter 2.5', 'cornerq2.5_', env), ('quarter 3.24', 'cornerq3.24_', env),
-                        ('half 1.62', 'cornerh1.62_', env), ('full 0.81', 'cornerf0.81_', slow)):
+    for q, pre, pts in (('quarter 2.5', 'cornerq2.5_', env), ('half 1.62', 'cornerh1.62_', env),
+                        ('full 0.48', 'cornerf0.48_', env)):
         got = {k: _summary(v) for k, v in sims.items() if k.startswith(pre)}
         miss = sorted({f'{pre}{c}_{tt}_{v}' for c, tt, v in pts} - set(got))
         qsets[q] = dict(runs=got, missing=miss, all_pass=not miss and all(s and s['pass_'] for s in got.values()),
                         points=len(pts))
-    # clean gate: PCIe-rate quarter rate and the top half rate (covers TMDS 1.485, SATA 1.5, DP 1.62)
-    # on all 20 envelope points; 3.24 Gb/s quarter and full rate are recorded
-    gating = ('quarter 2.5', 'half 1.62')
+    # clean gate (path A, session 6): PCIe-rate quarter rate (2.5), the top half rate (1.62 = ring 810 MHz,
+    # core at 3.24 Gb/s internally; covers TMDS / SDI 1.485, SATA 1.5, SGMII 1.25) and full rate at the
+    # slowest ring (0.48 = USB HS, ring 480 MHz) on all 20 envelope points
+    gating = ('quarter 2.5', 'half 1.62', 'full 0.48')
     clean_pass = drc0 and kl0 and lvs and _serial_ok(nominal) and all(qsets[g]['all_pass'] for g in gating)
     off = [sims.get(k) for k in ('unpowered_tt', 'unpowered_ff_85_3v63')]
     qs = [sims.get(k) for k in ('quiescent_stopped_tt', 'quiescent_stopped_ff_85_3v63')]
@@ -166,16 +166,20 @@ def build():
             s = _summary(v)
             s['run'] = k + (' (schematic, no parasitics)' if k.startswith('schematic') else ' (extracted)')
             perf.append(dict(metric='serializer data at pre-driver outputs vs bit rate / mode', **s))
-    for k in ('int_serial_h1g25', 'int_serial_q2g5', 'int_tmds_h1g25', 'int_tmds_q2g97', 'int_stretch_5g_lossy'):
+    for k in sorted(x for x in sims if x.startswith('int_') and x != 'int_mlt3_125mbd_b39'):
         if sims.get(k):
             perf.append(dict(metric='pad eye (pt_wiredtx extracted + pads steering buffers + extracted pad)',
                              run=k, **_eye(sims[k])))
     for q, s in qsets.items():
         for k, v in s['runs'].items():
             perf.append(dict(metric=f'{q} Gb/s (compact core) across the envelope', run=k, **v))
-    for k, v in sims.items():
-        if k.startswith('fallback_'):
-            perf.append(dict(metric='generic serializer (fallback, rate code 11, half rate)', run=k, **_summary(v)))
+    if sims.get('int_mlt3_125mbd_b39'):
+        m = sims['int_mlt3_125mbd_b39']
+        perf.append(dict(metric='IX-9 MLT-3 125 MBd (MAIN + POST, POST_POL = 1) through board network B39',
+                         run='int_mlt3_125mbd_b39', **{k: m.get(k) for k in (
+                             'bit_rate_bps', 'symbol_rate_bd', 'codes', 'network', 'symbols', 'levels_v', 'peak_v',
+                             'zero_residue_v', 'zero_residue_pct_of_peak', 'pad_levels_v', 'vdd_current_avg_a', 'ok',
+                             'reason')}))
     for k, v in sims.items():
         if k.startswith('corner_'):
             perf.append(dict(metric='1.25 Gb/s half-rate across the corner set (stretch over nominal)', run=k,
@@ -201,14 +205,14 @@ def build():
                             klayout=lay.get('klayout'), gds_export=lay.get('gds_export')),
                    lvs=dict(unique_match=lvs, summary=(lay.get('lvs') or {}).get('summary'),
                             report=REL(GEN / 'wiredtx-lvs.txt')),
-                   extracted_nominal=dict(point='tt, 27 C, 3.3 V, 0.96 Gb/s, 2 bits per ring cycle (ring 480 MHz), '
-                                                'PRBS7 20-bit double words, extracted C (Magic)',
+                   extracted_nominal=dict(point='tt, 27 C, 3.3 V, 1.25 Gb/s half rate (MODE 10 = WT12 rep2, ring '
+                                                '625 MHz, core 2.5 Gb/s), PRBS7, extracted C (Magic)',
                                           **(_summary(nominal) or {})),
                    corner_sets={f'{q} Gb/s': dict(points=s['points'], all_pass=s['all_pass'], missing=s['missing'],
                                                   gating=q in gating,
                                                   failing=sorted(k for k, v in s['runs'].items() if not v['pass_']))
                                 for q, s in qsets.items()},
-                   envelope='tt/ss/ff/sf/fs x 22/32 C x 3.15/3.35 V (20 points); slow subset for full rate',
+                   envelope='tt/ss/ff/sf/fs x 22/32 C x 3.15/3.35 V (20 points) for every gating set',
                    area_um2=lr.get('area_um2'), area_allocation_um2=300000, devices=lr.get('devices')),
         observable=dict(state='pass' if dac.get('rows') and ext1 else 'open',
                         atb_taps=['ATB_NBIAS (bias reference diode)', 'ATB_PBIAS (MAIN DAC PMOS mirror gate)',
@@ -222,9 +226,10 @@ def build():
         fallback=dict(state='pass' if fallback_pass else 'open',
                       routes=['wire_tx_external_data (debug.wtx_ext): WTX_EXT_P/N -> pt_diff_clk_rx (timing) -> DX '
                               '-> break-before-make select in pt_wtx_predrv -> MAIN/TMDS steering commands',
-                              'generic serializer (rate field MODE_H=MODE_F=1): the earlier static-CMOS 20:1 '
-                              'serializer in half rate, independent of the compact core except the pre-driver'],
-                      generic_serializer={k: _summary(v) for k, v in sims.items() if k.startswith('fallback_')},
+                              'reduced-rate modes of the same core (MODE 10 / 01 = WT12 2x / 4x repetition): every '
+                              'line rate down to 0.48 Gb/s with the core at <= 3.24 Gb/s internally',
+                              'session 6: the generic static-CMOS serializer (MODE 11) was removed (interface WT13); '
+                              'MODE 11 now runs half rate on the core'],
                       bypass_loading_fF=dict(DX_routing=_pex_cap_ff('DX'),
                                              DX_gates='INV1 (1/2 um) + NAND (4/4 um) gates, ~15 fF estimate'),
                       evidence=dict(ideal_dx_1g=_eye(ext1), shared_receiver={k: _eye(v) for k, v in exr.items()},

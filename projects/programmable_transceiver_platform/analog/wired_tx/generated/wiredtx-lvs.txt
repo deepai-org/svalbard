@@ -79,39 +79,30 @@ Q                                          |Q
 Cell pin lists are equivalent.
 Device classes wtx_tspcbx and wtx_tspcbx are equivalent.
 
-Class wtx_q4ctl (0):  Merged 12 parallel devices.
-Class wtx_q4ctl (1):  Merged 12 parallel devices.
+Class wtx_q4ctlc (0):  Merged 8 parallel devices.
+Class wtx_q4ctlc (1):  Merged 8 parallel devices.
 Subcircuit summary:
-Circuit 1: wtx_q4ctl                       |Circuit 2: wtx_q4ctl                       
+Circuit 1: wtx_q4ctlc                      |Circuit 2: wtx_q4ctlc                      
 -------------------------------------------|-------------------------------------------
-nfet_03v3 (18->11)                         |nfet_03v3 (18->11)                         
-pfet_03v3 (18->13)                         |pfet_03v3 (18->13)                         
-Number of devices: 24                      |Number of devices: 24                      
-Number of nets: 19                         |Number of nets: 19                         
+pfet_03v3 (9->5)                           |pfet_03v3 (9->5)                           
+nfet_03v3 (9->5)                           |nfet_03v3 (9->5)                           
+Number of devices: 10                      |Number of devices: 10                      
+Number of nets: 9                          |Number of nets: 9                          
 ---------------------------------------------------------------------------------------
-Resolving symmetries by property value.
-Resolving symmetries by pin name.
-Resolving symmetries by net name.
-Netlists match with 3 symmetries.
+Netlists match uniquely.
 
 Subcircuit pins:
-Circuit 1: wtx_q4ctl                       |Circuit 2: wtx_q4ctl                       
+Circuit 1: wtx_q4ctlc                      |Circuit 2: wtx_q4ctlc                      
 -------------------------------------------|-------------------------------------------
-DA                                         |DA                                         
-VDD                                        |VDD                                        
 SERQ                                       |SERQ                                       
-HAB                                        |HAB                                        
-JBB                                        |JBB                                        
-HA                                         |HA                                         
-JB                                         |JB                                         
-QRST                                       |QRST                                       
-LDA                                        |LDA                                        
-WCKQ                                       |WCKQ                                       
 DC                                         |DC                                         
+QRST                                       |QRST                                       
+WCKQ                                       |WCKQ                                       
 VSS                                        |VSS                                        
+VDD                                        |VDD                                        
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes wtx_q4ctl and wtx_q4ctl are equivalent.
+Device classes wtx_q4ctlc and wtx_q4ctlc are equivalent.
 
 Class wtx_qph (0):  Merged 34 parallel devices.
 Class wtx_qph (1):  Merged 34 parallel devices.
@@ -150,37 +141,6 @@ VDD                                        |VDD
 Cell pin lists are equivalent.
 Device classes wtx_qph and wtx_qph are equivalent.
 
-Class wtx_sreg5 (0):  Merged 2 parallel devices.
-Class wtx_sreg5 (1):  Merged 2 parallel devices.
-Subcircuit summary:
-Circuit 1: wtx_sreg5                       |Circuit 2: wtx_sreg5                       
--------------------------------------------|-------------------------------------------
-pfet_03v3 (68->67)                         |pfet_03v3 (68->67)                         
-nfet_03v3 (80->79)                         |nfet_03v3 (80->79)                         
-Number of devices: 146                     |Number of devices: 146                     
-Number of nets: 90                         |Number of nets: 90                         
----------------------------------------------------------------------------------------
-Netlists match uniquely.
-
-Subcircuit pins:
-Circuit 1: wtx_sreg5                       |Circuit 2: wtx_sreg5                       
--------------------------------------------|-------------------------------------------
-CK                                         |CK                                         
-ENB                                        |ENB                                        
-VSS                                        |VSS                                        
-VDD                                        |VDD                                        
-LDA                                        |LDA                                        
-D3                                         |D3                                         
-D1                                         |D1                                         
-D4                                         |D4                                         
-D2                                         |D2                                         
-D0                                         |D0                                         
-Z                                          |Z                                          
-BO                                         |BO                                         
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes wtx_sreg5 and wtx_sreg5 are equivalent.
-
 Class wtx_q4ck (0):  Merged 14 parallel devices.
 Class wtx_q4ck (1):  Merged 14 parallel devices.
 Subcircuit summary:
@@ -210,91 +170,125 @@ VDD                                        |VDD
 Cell pin lists are equivalent.
 Device classes wtx_q4ck and wtx_q4ck are equivalent.
 
-Class wtx_div5b (0):  Merged 4 parallel devices.
-Class wtx_div5b (1):  Merged 4 parallel devices.
+Class wtx_sreg5 (0):  Merged 2 parallel devices.
+Class wtx_sreg5 (1):  Merged 2 parallel devices.
 Subcircuit summary:
-Circuit 1: wtx_div5b                       |Circuit 2: wtx_div5b                       
+Circuit 1: wtx_sreg5                       |Circuit 2: wtx_sreg5                       
 -------------------------------------------|-------------------------------------------
-pfet_03v3 (25->23)                         |pfet_03v3 (25->23)                         
-nfet_03v3 (31->29)                         |nfet_03v3 (31->29)                         
-Number of devices: 52                      |Number of devices: 52                      
-Number of nets: 33                         |Number of nets: 33                         
+pfet_03v3 (71->70)                         |pfet_03v3 (71->70)                         
+nfet_03v3 (77->76)                         |nfet_03v3 (77->76)                         
+Number of devices: 146                     |Number of devices: 146                     
+Number of nets: 93                         |Number of nets: 93                         
 ---------------------------------------------------------------------------------------
 Netlists match uniquely.
 
 Subcircuit pins:
-Circuit 1: wtx_div5b                       |Circuit 2: wtx_div5b                       
+Circuit 1: wtx_sreg5                       |Circuit 2: wtx_sreg5                       
 -------------------------------------------|-------------------------------------------
 ENB                                        |ENB                                        
 VSS                                        |VSS                                        
-AO                                         |AO                                         
-CO                                         |CO                                         
-VDD                                        |VDD                                        
 CK                                         |CK                                         
+LDA                                        |LDA                                        
+D3                                         |D3                                         
+D1                                         |D1                                         
+Z                                          |Z                                          
+D4                                         |D4                                         
+D0                                         |D0                                         
+D2                                         |D2                                         
+BO                                         |BO                                         
+VDD                                        |VDD                                        
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes wtx_div5b and wtx_div5b are equivalent.
+Device classes wtx_sreg5 and wtx_sreg5 are equivalent.
 
-Class wtx_omux (0):  Merged 40 parallel devices.
-Class wtx_omux (1):  Merged 40 parallel devices.
+Class wtx_div5r (0):  Merged 2 parallel devices.
+Class wtx_div5r (1):  Merged 2 parallel devices.
 Subcircuit summary:
-Circuit 1: wtx_omux                        |Circuit 2: wtx_omux                        
+Circuit 1: wtx_div5r                       |Circuit 2: wtx_div5r                       
 -------------------------------------------|-------------------------------------------
-nfet_03v3 (96->80)                         |nfet_03v3 (96->80)                         
-pfet_03v3 (96->72)                         |pfet_03v3 (96->72)                         
-Number of devices: 152                     |Number of devices: 152                     
-Number of nets: 86                         |Number of nets: 86                         
+nfet_03v3 (62->61)                         |nfet_03v3 (62->61)                         
+pfet_03v3 (62->61)                         |pfet_03v3 (62->61)                         
+Number of devices: 122                     |Number of devices: 122                     
+Number of nets: 65                         |Number of nets: 65                         
+---------------------------------------------------------------------------------------
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: wtx_div5r                       |Circuit 2: wtx_div5r                       
+-------------------------------------------|-------------------------------------------
+CK                                         |CK                                         
+VDD                                        |VDD                                        
+VSS                                        |VSS                                        
+CO                                         |CO                                         
+LDO                                        |LDO                                        
+ENB                                        |ENB                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes wtx_div5r and wtx_div5r are equivalent.
+
+Class wtx_omuxt (0):  Merged 64 parallel devices.
+Class wtx_omuxt (1):  Merged 64 parallel devices.
+Subcircuit summary:
+Circuit 1: wtx_omuxt                       |Circuit 2: wtx_omuxt                       
+-------------------------------------------|-------------------------------------------
+nfet_03v3 (136->120)                       |nfet_03v3 (136->120)                       
+pfet_03v3 (136->88)                        |pfet_03v3 (136->88)                        
+Number of devices: 208                     |Number of devices: 208                     
+Number of nets: 114                        |Number of nets: 114                        
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
 Resolving symmetries by pin name.
 Resolving symmetries by net name.
-Netlists match with 12 symmetries.
+Netlists match with 48 symmetries.
 
 Subcircuit pins:
-Circuit 1: wtx_omux                        |Circuit 2: wtx_omux                        
+Circuit 1: wtx_omuxt                       |Circuit 2: wtx_omuxt                       
 -------------------------------------------|-------------------------------------------
-VDD                                        |VDD                                        
-QW3                                        |QW3                                        
-QW0                                        |QW0                                        
-QW2                                        |QW2                                        
-QW1                                        |QW1                                        
-F3                                         |F3                                         
-F1                                         |F1                                         
-F0                                         |F0                                         
-F2                                         |F2                                         
-VSS                                        |VSS                                        
-S0                                         |S0                                         
-S3                                         |S3                                         
 S1                                         |S1                                         
+S3                                         |S3                                         
 S2                                         |S2                                         
+S0                                         |S0                                         
+VDD                                        |VDD                                        
+VSS                                        |VSS                                        
+QW1                                        |QW1                                        
+QW3                                        |QW3                                        
+QW2                                        |QW2                                        
+QW0                                        |QW0                                        
+F2                                         |F2                                         
+F1                                         |F1                                         
+F3                                         |F3                                         
+F0                                         |F0                                         
 Y                                          |Y                                          
 DP                                         |DP                                         
 DPB                                        |DPB                                        
 YB                                         |YB                                         
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes wtx_omux and wtx_omux are equivalent.
+Device classes wtx_omuxt and wtx_omuxt are equivalent.
 
 Subcircuit summary:
-Circuit 1: wtx_serq4                       |Circuit 2: wtx_serq4                       
+Circuit 1: wtx_serq4c                      |Circuit 2: wtx_serq4c                      
 -------------------------------------------|-------------------------------------------
-wtx_tspcb (15)                             |wtx_tspcb (15)                             
+wtx_tspcb (7)                              |wtx_tspcb (7)                              
 wtx_tspcbx (4)                             |wtx_tspcbx (4)                             
-wtx_q4ctl (1)                              |wtx_q4ctl (1)                              
+wtx_q4ctlc (1)                             |wtx_q4ctlc (1)                             
 wtx_qph (4)                                |wtx_qph (4)                                
-wtx_sreg5 (4)                              |wtx_sreg5 (4)                              
 wtx_q4ck (1)                               |wtx_q4ck (1)                               
-wtx_div5b (1)                              |wtx_div5b (1)                              
-wtx_omux (1)                               |wtx_omux (1)                               
+wtx_sreg5 (4)                              |wtx_sreg5 (4)                              
+wtx_div5r (1)                              |wtx_div5r (1)                              
+wtx_omuxt (1)                              |wtx_omuxt (1)                              
 diode_nd2ps_03v3 (10)                      |diode_nd2ps_03v3 (10)                      
-Number of devices: 41                      |Number of devices: 41                      
-Number of nets: 95                         |Number of nets: 95                         
+Number of devices: 33                      |Number of devices: 33                      
+Number of nets: 84                         |Number of nets: 84                         
 ---------------------------------------------------------------------------------------
 Netlists match uniquely.
 
 Subcircuit pins:
-Circuit 1: wtx_serq4                       |Circuit 2: wtx_serq4                       
+Circuit 1: wtx_serq4c                      |Circuit 2: wtx_serq4c                      
 -------------------------------------------|-------------------------------------------
+MH                                         |MH                                         
+MF                                         |MF                                         
+MQ                                         |MQ                                         
 WCKQ                                       |WCKQ                                       
 PH0                                        |PH0                                        
 PH90                                       |PH90                                       
@@ -314,9 +308,6 @@ YB                                         |YB
 Y                                          |Y                                          
 DPB                                        |DPB                                        
 DP                                         |DP                                         
-MQ                                         |MQ                                         
-MH                                         |MH                                         
-MF                                         |MF                                         
 SERQ                                       |SERQ                                       
 VSS                                        |VSS                                        
 VDD                                        |VDD                                        
@@ -332,46 +323,42 @@ D17                                        |D17
 D16                                        |D16                                        
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes wtx_serq4 and wtx_serq4 are equivalent.
-Flattening unmatched subcell pt_wiredtx__p2 in circuit pt_wiredtx (0)(236 instances)
-Flattening unmatched subcell pt_wiredtx__p17 in circuit pt_wiredtx (0)(212 instances)
-Flattening unmatched subcell pt_wiredtx__p0 in circuit pt_wiredtx (0)(303 instances)
-Flattening unmatched subcell pt_wiredtx__p21 in circuit pt_wiredtx (0)(162 instances)
-Flattening unmatched subcell pt_wiredtx__p9 in circuit pt_wiredtx (0)(18 instances)
-Flattening unmatched subcell pt_wiredtx__p14 in circuit pt_wiredtx (0)(328 instances)
-Flattening unmatched subcell pt_wiredtx__p11 in circuit pt_wiredtx (0)(75 instances)
-Flattening unmatched subcell pt_wiredtx__p5 in circuit pt_wiredtx (0)(122 instances)
+Device classes wtx_serq4c and wtx_serq4c are equivalent.
+Flattening unmatched subcell pt_wiredtx__p13 in circuit pt_wiredtx (0)(265 instances)
+Flattening unmatched subcell pt_wiredtx__p10 in circuit pt_wiredtx (0)(159 instances)
+Flattening unmatched subcell pt_wiredtx__p2 in circuit pt_wiredtx (0)(258 instances)
+Flattening unmatched subcell pt_wiredtx__p7 in circuit pt_wiredtx (0)(11 instances)
+Flattening unmatched subcell pt_wiredtx__p0 in circuit pt_wiredtx (0)(104 instances)
+Flattening unmatched subcell pt_wiredtx__p17 in circuit pt_wiredtx (0)(54 instances)
+Flattening unmatched subcell pt_wiredtx__p4 in circuit pt_wiredtx (0)(120 instances)
 Flattening unmatched subcell pt_wiredtx__p3 in circuit pt_wiredtx (0)(4 instances)
-Flattening unmatched subcell pt_wiredtx__p7 in circuit pt_wiredtx (0)(70 instances)
-Flattening unmatched subcell pt_wiredtx__p13 in circuit pt_wiredtx (0)(1 instance)
-Flattening unmatched subcell pt_wiredtx__p25 in circuit pt_wiredtx (0)(30 instances)
-Flattening unmatched subcell pt_wiredtx__p16 in circuit pt_wiredtx (0)(1 instance)
-Flattening unmatched subcell pt_wiredtx__p20 in circuit pt_wiredtx (0)(8 instances)
-Flattening unmatched subcell pt_wiredtx__p19 in circuit pt_wiredtx (0)(1 instance)
-Flattening unmatched subcell pt_wiredtx__p4 in circuit pt_wiredtx (0)(27 instances)
-Flattening unmatched subcell pt_wiredtx__p6 in circuit pt_wiredtx (0)(12 instances)
-Flattening unmatched subcell pt_wiredtx__p15 in circuit pt_wiredtx (0)(13 instances)
-Flattening unmatched subcell pt_wiredtx__p23 in circuit pt_wiredtx (0)(1 instance)
+Flattening unmatched subcell pt_wiredtx__p9 in circuit pt_wiredtx (0)(2 instances)
+Flattening unmatched subcell pt_wiredtx__p22 in circuit pt_wiredtx (0)(30 instances)
 Flattening unmatched subcell pt_wiredtx__p12 in circuit pt_wiredtx (0)(2 instances)
-Flattening unmatched subcell pt_wiredtx__p26 in circuit pt_wiredtx (0)(15 instances)
-Flattening unmatched subcell pt_wiredtx__p18 in circuit pt_wiredtx (0)(2 instances)
-Flattening unmatched subcell pt_wiredtx__p24 in circuit pt_wiredtx (0)(29 instances)
+Flattening unmatched subcell pt_wiredtx__p15 in circuit pt_wiredtx (0)(2 instances)
+Flattening unmatched subcell pt_wiredtx__p21 in circuit pt_wiredtx (0)(15 instances)
+Flattening unmatched subcell pt_wiredtx__p19 in circuit pt_wiredtx (0)(2 instances)
+Flattening unmatched subcell pt_wiredtx__p11 in circuit pt_wiredtx (0)(12 instances)
+Flattening unmatched subcell pt_wiredtx__p16 in circuit pt_wiredtx (0)(4 instances)
 Flattening unmatched subcell pt_wiredtx__p1 in circuit pt_wiredtx (0)(8 instances)
-Flattening unmatched subcell pt_wiredtx__p22 in circuit pt_wiredtx (0)(2 instances)
-Flattening unmatched subcell pt_wiredtx__p8 in circuit pt_wiredtx (0)(4 instances)
-Flattening unmatched subcell pt_wiredtx__p10 in circuit pt_wiredtx (0)(5 instances)
+Flattening unmatched subcell pt_wiredtx__p5 in circuit pt_wiredtx (0)(1 instance)
+Flattening unmatched subcell pt_wiredtx__p6 in circuit pt_wiredtx (0)(5 instances)
+Flattening unmatched subcell pt_wiredtx__p20 in circuit pt_wiredtx (0)(5 instances)
+Flattening unmatched subcell pt_wiredtx__p8 in circuit pt_wiredtx (0)(1 instance)
+Flattening unmatched subcell pt_wiredtx__p14 in circuit pt_wiredtx (0)(1 instance)
+Flattening unmatched subcell pt_wiredtx__p18 in circuit pt_wiredtx (0)(1 instance)
 
-Class pt_wiredtx (0):  Merged 47 parallel devices.
-Class pt_wiredtx (1):  Merged 47 parallel devices.
+Class pt_wiredtx (0):  Merged 36 parallel devices.
+Class pt_wiredtx (1):  Merged 36 parallel devices.
 Subcircuit summary:
 Circuit 1: pt_wiredtx                      |Circuit 2: pt_wiredtx                      
 -------------------------------------------|-------------------------------------------
-nfet_03v3 (809->805)                       |nfet_03v3 (809->805)                       
-pfet_03v3 (882->843)                       |pfet_03v3 (882->843)                       
-wtx_serq4 (1)                              |wtx_serq4 (1)                              
-diode_nd2ps_03v3 (17->13)                  |diode_nd2ps_03v3 (17->13)                  
-Number of devices: 1662                    |Number of devices: 1662                    
-Number of nets: 786                        |Number of nets: 786                        
+pfet_03v3 (566->532)                       |pfet_03v3 (566->532)                       
+nfet_03v3 (500->498)                       |nfet_03v3 (500->498)                       
+wtx_serq4c (1)                             |wtx_serq4c (1)                             
+diode_nd2ps_03v3 (16)                      |diode_nd2ps_03v3 (16)                      
+Number of devices: 1047                    |Number of devices: 1047                    
+Number of nets: 446                        |Number of nets: 446                        
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
 Netlists match uniquely.
@@ -379,100 +366,101 @@ Netlists match uniquely.
 Subcircuit pins:
 Circuit 1: pt_wiredtx                      |Circuit 2: pt_wiredtx                      
 -------------------------------------------|-------------------------------------------
-IBIAS                                      |IBIAS                                      
-MAIN_BIAS                                  |MAIN_BIAS                                  
-POST_BIAS                                  |POST_BIAS                                  
-ATB_PBIAS                                  |ATB_PBIAS                                  
-TMDS_BIAS                                  |TMDS_BIAS                                  
-EN_MAIN                                    |EN_MAIN                                    
-ISLAND_OFF                                 |ISLAND_OFF                                 
-EN_TMDS                                    |EN_TMDS                                    
-EN_POST                                    |EN_POST                                    
 WTX_PH0                                    |WTX_PH0                                    
 WTX_PH90                                   |WTX_PH90                                   
 WTX_PH180                                  |WTX_PH180                                  
 WTX_PH270                                  |WTX_PH270                                  
+IBIAS                                      |IBIAS                                      
+EN_MAIN                                    |EN_MAIN                                    
+ISLAND_OFF                                 |ISLAND_OFF                                 
+EN_TMDS                                    |EN_TMDS                                    
+EN_POST                                    |EN_POST                                    
+MODE_H                                     |MODE_H                                     
+MAIN_BIAS                                  |MAIN_BIAS                                  
+ATB_PBIAS                                  |ATB_PBIAS                                  
+POST_BIAS                                  |POST_BIAS                                  
+TMDS_BIAS                                  |TMDS_BIAS                                  
+WTX_EXT_DATA                               |WTX_EXT_DATA                               
+WORD_CLK40                                 |WORD_CLK40                                 
+D22                                        |D22                                        
+D24                                        |D24                                        
+D29                                        |D29                                        
+D23                                        |D23                                        
+D28                                        |D28                                        
+D20                                        |D20                                        
+D21                                        |D21                                        
+D25                                        |D25                                        
+D26                                        |D26                                        
+D27                                        |D27                                        
+D38                                        |D38                                        
+D32                                        |D32                                        
+D39                                        |D39                                        
+D31                                        |D31                                        
+D34                                        |D34                                        
+D36                                        |D36                                        
+D30                                        |D30                                        
+D33                                        |D33                                        
+D35                                        |D35                                        
+D37                                        |D37                                        
+D9                                         |D9                                         
+D2                                         |D2                                         
+D4                                         |D4                                         
+D3                                         |D3                                         
+D8                                         |D8                                         
+D0                                         |D0                                         
+D1                                         |D1                                         
+D5                                         |D5                                         
+D6                                         |D6                                         
+D7                                         |D7                                         
+D12                                        |D12                                        
+D19                                        |D19                                        
+D10                                        |D10                                        
+D13                                        |D13                                        
+D15                                        |D15                                        
+D17                                        |D17                                        
+D11                                        |D11                                        
+D14                                        |D14                                        
+D16                                        |D16                                        
+D18                                        |D18                                        
+MAIN_CODE2                                 |MAIN_CODE2                                 
+MAIN_CODE4                                 |MAIN_CODE4                                 
+MAIN_CODE1                                 |MAIN_CODE1                                 
+MAIN_CODE3                                 |MAIN_CODE3                                 
+MAIN_CODE0                                 |MAIN_CODE0                                 
+MAIN_CODE5                                 |MAIN_CODE5                                 
+MAIN_CODE6                                 |MAIN_CODE6                                 
+MAIN_CODE7                                 |MAIN_CODE7                                 
+POST_CODE3                                 |POST_CODE3                                 
+POST_CODE0                                 |POST_CODE0                                 
+POST_CODE2                                 |POST_CODE2                                 
+POST_CODE4                                 |POST_CODE4                                 
+POST_CODE1                                 |POST_CODE1                                 
+POST_CODE5                                 |POST_CODE5                                 
+POST_CODE6                                 |POST_CODE6                                 
+POST_CODE7                                 |POST_CODE7                                 
+TMDS_CODE2                                 |TMDS_CODE2                                 
+TMDS_CODE4                                 |TMDS_CODE4                                 
+TMDS_CODE1                                 |TMDS_CODE1                                 
+TMDS_CODE3                                 |TMDS_CODE3                                 
+TMDS_CODE0                                 |TMDS_CODE0                                 
+TMDS_CODE5                                 |TMDS_CODE5                                 
+TMDS_CODE6                                 |TMDS_CODE6                                 
+TMDS_CODE7                                 |TMDS_CODE7                                 
 WTX_EXT                                    |WTX_EXT                                    
-CMD_POST_P                                 |CMD_POST_P                                 
-CMD_POST_N                                 |CMD_POST_N                                 
 CMD_MAIN_N                                 |CMD_MAIN_N                                 
 CMD_MAIN_P                                 |CMD_MAIN_P                                 
 CMD_TMDS_N                                 |CMD_TMDS_N                                 
 CMD_TMDS_P                                 |CMD_TMDS_P                                 
-MODE_H                                     |MODE_H                                     
+CMD_POST_P                                 |CMD_POST_P                                 
+CMD_POST_N                                 |CMD_POST_N                                 
 MODE_F                                     |MODE_F                                     
-WORD_CLK                                   |WORD_CLK                                   
-WTX_EXT_DATA                               |WTX_EXT_DATA                               
-WORD_CLK40                                 |WORD_CLK40                                 
-D12                                        |D12                                        
-D14                                        |D14                                        
-D15                                        |D15                                        
-D2                                         |D2                                         
-D9                                         |D9                                         
-D19                                        |D19                                        
-D6                                         |D6                                         
-D16                                        |D16                                        
-D3                                         |D3                                         
-D13                                        |D13                                        
-D0                                         |D0                                         
-D10                                        |D10                                        
-D7                                         |D7                                         
-D17                                        |D17                                        
-D4                                         |D4                                         
-D1                                         |D1                                         
-D11                                        |D11                                        
-D18                                        |D18                                        
-D8                                         |D8                                         
-D5                                         |D5                                         
-D34                                        |D34                                        
-D32                                        |D32                                        
-D30                                        |D30                                        
-D27                                        |D27                                        
-D37                                        |D37                                        
-D24                                        |D24                                        
-D21                                        |D21                                        
-D31                                        |D31                                        
-D28                                        |D28                                        
-D38                                        |D38                                        
-D25                                        |D25                                        
-D35                                        |D35                                        
-D22                                        |D22                                        
-D29                                        |D29                                        
-D39                                        |D39                                        
-D26                                        |D26                                        
-D36                                        |D36                                        
-D33                                        |D33                                        
-D23                                        |D23                                        
-D20                                        |D20                                        
-TMDS_CODE6                                 |TMDS_CODE6                                 
-MAIN_CODE5                                 |MAIN_CODE5                                 
-MAIN_CODE7                                 |MAIN_CODE7                                 
-MAIN_CODE6                                 |MAIN_CODE6                                 
-MAIN_CODE0                                 |MAIN_CODE0                                 
-MAIN_CODE1                                 |MAIN_CODE1                                 
-MAIN_CODE2                                 |MAIN_CODE2                                 
-MAIN_CODE3                                 |MAIN_CODE3                                 
-MAIN_CODE4                                 |MAIN_CODE4                                 
-POST_CODE6                                 |POST_CODE6                                 
-POST_CODE5                                 |POST_CODE5                                 
-POST_CODE7                                 |POST_CODE7                                 
-POST_CODE0                                 |POST_CODE0                                 
-POST_CODE1                                 |POST_CODE1                                 
-POST_CODE2                                 |POST_CODE2                                 
-POST_CODE3                                 |POST_CODE3                                 
-POST_CODE4                                 |POST_CODE4                                 
-TMDS_CODE5                                 |TMDS_CODE5                                 
-TMDS_CODE7                                 |TMDS_CODE7                                 
-TMDS_CODE0                                 |TMDS_CODE0                                 
-TMDS_CODE1                                 |TMDS_CODE1                                 
-TMDS_CODE2                                 |TMDS_CODE2                                 
-TMDS_CODE3                                 |TMDS_CODE3                                 
-TMDS_CODE4                                 |TMDS_CODE4                                 
-ATB_NBIAS                                  |ATB_NBIAS                                  
-VDD                                        |VDD                                        
-DX                                         |DX                                         
 VSS                                        |VSS                                        
 SER_EN                                     |SER_EN                                     
+DX                                         |DX                                         
+POST_POL                                   |POST_POL                                   
+ATB_NBIAS                                  |ATB_NBIAS                                  
+WORD_CLK                                   |WORD_CLK                                   
+VDD                                        |VDD                                        
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes pt_wiredtx and pt_wiredtx are equivalent.

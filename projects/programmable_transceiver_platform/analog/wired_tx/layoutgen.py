@@ -229,7 +229,8 @@ def generate(work, cell=None, row_width=330.0):
         prims[(m, 0.0, 0.0)] = MacroPrim(m)
         for ch in prims[(m, 0.0, 0.0)].children:       # hierarchical macro: its child cells
             if ch != m:
-                shutil.copy(tools.GENERATED / 'fast' / 'serq4_mag' / f'{ch}.mag', work / f'{ch}.mag')
+                mdir = tools.GENERATED / 'fast' / ('serq4_mag' if m == 'wtx_serq4' else f'{m}_mag')
+                shutil.copy(mdir / f'{ch}.mag', work / f'{ch}.mag')
     devs, rows, placed, trunks, W = place(cell, prims, row_width)
     sc = Script()
     name = cell.name
@@ -358,13 +359,19 @@ def generate(work, cell=None, row_width=330.0):
                'drc euclidean on', 'drc style drc(full)', 'drc check', 'drc catchup',
                'set f [open drc-count.txt w]', 'puts $f [drc list count total]', 'close $f',
                'set f [open drc-why.txt w]', 'puts $f [drc listall why]', 'close $f',
-               f'load {name}', 'select top cell',
-               'extract all',
-               'ext2spice lvs', f'ext2spice -o {name}_lvs.spice',
-               'ext2spice lvs', 'ext2spice cthresh 0', 'ext2spice format ngspice', f'ext2spice -o {name}_pex.spice',
                'quit -noprompt']
     (work / 'cells.tcl').write_text('\n'.join(sc.cmd) + '\n')
     tools.magic(work, 'cells.tcl')
+    # Extraction in its own session on the saved hierarchy.  In Magic 8.3.6xx, extracting in the
+    # drawing session or after `drc style drc(full)` drops the ppolyf_u_1k devices (the CML loads in
+    # wtx_serq4): the 2026-11-10 top LVS failed with 0 of 49 poly resistors extracted, and netgen's
+    # net matching then reported VDD/VSS merged with internal CML nets.
+    ext = ['crashbackups stop', f'load {name}', 'select top cell', 'extract all',
+           'ext2spice lvs', f'ext2spice -o {name}_lvs.spice',
+           'ext2spice lvs', 'ext2spice cthresh 0', 'ext2spice format ngspice', f'ext2spice -o {name}_pex.spice',
+           'quit -noprompt']
+    (work / 'extract.tcl').write_text('\n'.join(ext) + '\n')
+    tools.magic(work, 'extract.tcl')
     summary = dict(cell=name, devices=len(devs), rows=len(rows), W_um=round(W, 2), H_um=round(H, 2),
                    area_um2=round(W * H, 1), trunks=len(trunks), row_width_um=row_width,
                    drc_count=int((work / 'drc-count.txt').read_text().split()[0]), antenna_diodes=diodes)

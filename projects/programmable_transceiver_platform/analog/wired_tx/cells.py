@@ -420,10 +420,17 @@ def bbm():
 
 
 def predrv():
-    """Data select (generic serializer / compact quarter-rate core / external)
-    and per-branch gated complementary commands."""
+    """Data select (compact quarter-rate core / external) and per-branch gated complementary commands.
+
+    Session 6: the generic serializer (rate code 11) is removed (path A, the CMOS core + WT12 repetition,
+    covers every rate it served at every envelope corner), so the select is two-way.
+    IX-9 (coordinator, 2026-11-10): POST_POL selects the postcursor polarity.  POST_POL = 0: the POST
+    tail steers opposite to MAIN one UI later (de-emphasis, as before); POST_POL = 1: same sign, so
+    MAIN + POST sum (MLT-3 / PAM-3 / duobinary).  Every leg (MAIN, TMDS, POST) passes the same two
+    NAND levels between the select and the enable gate (MAIN / TMDS with the select input tied), so the
+    one-UI MAIN -> POST offset is unchanged."""
     outs = ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N']
-    c = Cell('wtx_predrv', ['D', 'DB', 'DP', 'DPB', 'DQ', 'DQB', 'DPQ', 'DPQB', 'DX', 'SERG', 'SERQ', 'EXT',
+    c = Cell('wtx_predrv', ['DQ', 'DQB', 'DPQ', 'DPQB', 'DX', 'SERQ', 'EXT', 'POST_POL',
                             'EN_MAIN', 'EN_POST', 'EN_TMDS', 'ISLAND_OFF', 'EXT_DATA'] + outs + ['VDD', 'VSS'],
              row_width=150)
     V = dict(VDD='VDD', VSS='VSS')
@@ -432,28 +439,31 @@ def predrv():
     # ~0.6 V glitches onto the adjacent word input D13 while DX toggled in serializer mode)
     c.inst('XN', NAND, A='DX', B='EXT', Y='EXDN', **V)
     c.inst('XO', INV1, A='EXDN', Y='EXT_DATA', **V)
-    # three-way select, two gate levels: DS = D&SERG | DQ&SERQ | DX&EXT (one-hot enables)
-    c.inst('S1', NAND_O, A='D', B='SERG', Y='NS1', **V)
+    # two-way select, two gate levels: DS = DQ&SERQ | DX&EXT (one-hot enables)
     c.inst('Q1', NAND_O, A='DQ', B='SERQ', Y='NQ1', **V)
     c.inst('X1', NAND_O, A='DX', B='EXT', Y='NX1', **V)
-    c.inst('O1', NAND3_O, A='NS1', B='NQ1', C='NX1', Y='DS', **V)
-    c.inst('S2', NAND_O, A='DB', B='SERG', Y='NS2', **V)
+    c.inst('O1', NAND_O, A='NQ1', B='NX1', Y='DS', **V)
     c.inst('Q2', NAND_O, A='DQB', B='SERQ', Y='NQ2', **V)
     c.inst('X2', NAND_O, A='DXB', B='EXT', Y='NX2', **V)
-    c.inst('O2', NAND3_O, A='NS2', B='NQ2', C='NX2', Y='DSB', **V)
-    # postcursor (serializers only): the same two gate levels, so it keeps
-    # its one-UI offset from the main data at the outputs
-    c.inst('P1', NAND_O, A='DP', B='SERG', Y='NP1', **V)
+    c.inst('O2', NAND_O, A='NQ2', B='NX2', Y='DSB', **V)
+    # postcursor (core only): the same two gate levels, so it keeps its one-UI offset
     c.inst('PQ1', NAND_O, A='DPQ', B='SERQ', Y='NPQ1', **V)
-    c.inst('P1O', NAND3_O, A='NP1', B='NPQ1', C='VDD', Y='DPS', **V)
-    c.inst('P2', NAND_O, A='DPB', B='SERG', Y='NP2', **V)
+    c.inst('P1O', NAND_O, A='NPQ1', B='VDD', Y='DPS', **V)
     c.inst('PQ2', NAND_O, A='DPQB', B='SERQ', Y='NPQ2', **V)
-    c.inst('P2O', NAND3_O, A='NP2', B='NPQ2', C='VDD', Y='DPSB', **V)
+    c.inst('P2O', NAND_O, A='NPQ2', B='VDD', Y='DPSB', **V)
+    c.inst('PPI', INV1, A='POST_POL', Y='POLB', **V)
     for br, (pos, neg, en) in {'MAIN': ('DSB', 'DS', 'EN_MAIN'), 'TMDS': ('DSB', 'DS', 'EN_TMDS'),
                                'POST': ('DPS', 'DPSB', 'EN_POST')}.items():
-        for leg, data in (('P', pos), ('N', neg)):
+        for leg, data, alt in (('P', pos, neg), ('N', neg, pos)):
             o = f'CMD_{br}_{leg}'
-            c.inst(f'G_{br}_{leg}', NAND_O, A=data, B=en, Y=f'NB_{br}_{leg}', **V)
+            if br == 'POST':     # polarity mux: POL ? alt : data
+                c.inst(f'MA_{br}_{leg}', NAND_O, A=data, B='POLB', Y=f'MAN_{br}_{leg}', **V)
+                c.inst(f'MB_{br}_{leg}', NAND_O, A=alt, B='POST_POL', Y=f'MBN_{br}_{leg}', **V)
+            else:                # matched: same two levels, select tied
+                c.inst(f'MA_{br}_{leg}', NAND_O, A=data, B='VDD', Y=f'MAN_{br}_{leg}', **V)
+                c.inst(f'MB_{br}_{leg}', NAND_O, A='VSS', B='VDD', Y=f'MBN_{br}_{leg}', **V)
+            c.inst(f'M_{br}_{leg}', NAND_O, A=f'MAN_{br}_{leg}', B=f'MBN_{br}_{leg}', Y=f'PD_{br}_{leg}', **V)
+            c.inst(f'G_{br}_{leg}', NAND_O, A=f'PD_{br}_{leg}', B=en, Y=f'NB_{br}_{leg}', **V)
             c.inst(f'O_{br}_{leg}', INV4, A=f'NB_{br}_{leg}', Y=o, **V)
             c.dev(f'CL_{br}_{leg}', N, o, 'ISLAND_OFF', 'VSS', 2)
     return c
@@ -666,10 +676,76 @@ def w40():
     return c
 
 
+# WT12 (approved 2026-11-10): the compact core always runs at quarter rate; half / full rate are 2x / 4x
+# bit repetition of the 40-bit user word inside the block.  Johnson counter on WORD_CLK (core line/20):
+#   rep1 (quarter core / generic fallback): 1 stage, J0 toggles            -> 2 loads per 40-bit word
+#   rep2 (MODE 10):                         J0 <- !J1                       -> 4 loads, 10 user bits each
+#   rep4 (MODE 01):                         J0 <- !J3, J1..J3 shift         -> 8 loads,  5 user bits each
+# J0 is high for the first half of every user word in every mode, so it is both the half-word select
+# (D0..D19 vs D20..D39, as the earlier WORD_CLK40 toggle) and WORD_CLK40 (= user line/40, 50 % duty,
+# rises on the first WORD_CLK edge after SER_EN).  Within a half word the sub-chunk is one-hot from
+# adjacent Johnson stages: rep2 q0 = J0^J1, q1 = !(J0^J1); rep4 q0 = J0^J1, q1 = J1^J2, q2 = J2^J3,
+# q3 = !(J3^J0).  Static CMOS at <= 162 MHz (WORD_CLK at 3.24 Gb/s), conventional cells only.
+def xor2(name='wtx_xor2'):
+    """Y = A ^ B, YB = !(A ^ B) (four NAND2 + inverter)."""
+    c = Cell(name, ['A', 'B', 'Y', 'YB', 'VDD', 'VSS'])
+    V = dict(VDD='VDD', VSS='VSS')
+    c.inst('N1', NAND, A='A', B='B', Y='M', **V)
+    c.inst('N2', NAND, A='A', B='M', Y='U', **V)
+    c.inst('N3', NAND, A='B', B='M', Y='W', **V)
+    c.inst('N4', NAND, A='U', B='W', Y='Y', **V)
+    c.inst('I', INV1, A='Y', Y='YB', **V)
+    return c
+
+
+def rep():
+    """Johnson counter + one-hot select lines for the WT12 repetition expander."""
+    T = ['T1', 'T2A', 'T2B', 'T4A', 'T4B', 'T4C', 'T4D']
+    c = Cell('wtx_rep', ['CK', 'RB', 'R2', 'R4', 'SEL', 'SELB', 'W40'] + T + [t + 'N' for t in T] + ['VDD', 'VSS'])
+    V = dict(VDD='VDD', VSS='VSS')
+    c.inst('CI', INV1, A='CK', Y='CKB', **V)
+    # mode decode: R1 = !R2 & !R4
+    c.inst('R1N', NOR, A='R2', B='R4', Y='R1', **V)
+    c.inst('R2I', INV1, A='R2', Y='R2B', **V)
+    c.inst('R4I', INV1, A='R4', Y='R4B', **V)
+    # J0 feedback: rep1 !J0, rep2 !J1, rep4 !J3 (AOI from the flops' QB outputs)
+    c.inst('FA', NAND, A='R1', B='J0B', Y='FAN', **V)
+    c.inst('FB', NAND, A='R2', B='J1B', Y='FBN', **V)
+    c.inst('FC', NAND, A='R4', B='J3B', Y='FCN', **V)
+    c.dev('FPA', P, 'JD', 'FAN', 'VDD', 2); c.dev('FPB', P, 'JD', 'FBN', 'VDD', 2); c.dev('FPC', P, 'JD', 'FCN', 'VDD', 2)
+    c.dev('FNA', N, 'JD', 'FAN', 'FX1', 2); c.dev('FNB', N, 'FX1', 'FBN', 'FX2', 2); c.dev('FNC', N, 'FX2', 'FCN', 'VSS', 2)
+    c.inst('J0', DFF, D='JD', CK='CK', CKB='CKB', RB='RB', Q='J0', QB='J0B', **V)
+    c.inst('J1', DFF, D='J0', CK='CK', CKB='CKB', RB='RB', Q='J1', QB='J1B', **V)
+    c.inst('J2', DFF, D='J1', CK='CK', CKB='CKB', RB='RB', Q='J2', QB='J2B', **V)
+    c.inst('J3', DFF, D='J2', CK='CK', CKB='CKB', RB='RB', Q='J3', QB='J3B', **V)
+    c.inst('X01', XOR2, A='J0', B='J1', Y='Q01', YB='Q01B', **V)
+    c.inst('X12', XOR2, A='J1', B='J2', Y='Q12', YB='Q12B', **V)
+    c.inst('X23', XOR2, A='J2', B='J3', Y='Q23', YB='Q23B', **V)
+    c.inst('X30', XOR2, A='J3', B='J0', Y='Q30', YB='Q30B', **V)
+    terms = dict(T1=('R1', 'VDD'), T2A=('R2', 'Q01'), T2B=('R2', 'Q01B'), T4A=('R4', 'Q01'), T4B=('R4', 'Q12'),
+                 T4C=('R4', 'Q23'), T4D=('R4', 'Q30B'))
+    for t, (a, b) in terms.items():
+        c.inst(f'S{t}', NAND, A=a, B=b, Y=f'{t}X', **V)          # {t}X = !T
+        c.inst(f'B{t}N', INV2, A=f'{t}X', Y=f'{t}I', **V)
+        c.inst(f'B{t}', INV4, A=f'{t}I', Y=f'{t}N', **V)          # TN = !T (buffered)
+        c.inst(f'B{t}P', INV4, A=f'{t}X', Y=t, **V)               # T (buffered)
+    c.inst('O1', INV2, A='J0', Y='W40N', **V)
+    c.inst('O2', INV4, A='W40N', Y='W40', **V)
+    c.inst('SB1', INV2, A='J0', Y='SELB', **V)
+    c.inst('SB2', INV2, A='J0', Y='SELN', **V)
+    c.inst('SB3', INV4, A='SELN', Y='SEL', **V)
+    return c
+
+
+def rep_src(i):
+    """Half-word bit feeding core bit i under each select line (WT12)."""
+    return dict(T1=i, T2A=i // 2, T2B=10 + i // 2, T4A=i // 4, T4B=5 + i // 4, T4C=10 + i // 4, T4D=15 + i // 4)
+
+
 def wiredtx():
     codes = {b: [f'{b}_CODE{k}' for k in range(8)] for b in ('MAIN', 'POST', 'TMDS')}
     ports = (['WTX_PH0', 'WTX_PH90', 'WTX_PH180', 'WTX_PH270', 'MODE_H', 'MODE_F'] + [f'D{i}' for i in range(40)]
-             + ['WORD_CLK', 'WORD_CLK40', 'SER_EN', 'WTX_EXT', 'DX',
+             + ['WORD_CLK', 'WORD_CLK40', 'SER_EN', 'WTX_EXT', 'DX', 'POST_POL',
              'EN_MAIN', 'EN_POST', 'EN_TMDS', 'ISLAND_OFF', 'IBIAS']
              + codes['MAIN'] + codes['POST'] + codes['TMDS']
              + ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N',
@@ -677,46 +753,41 @@ def wiredtx():
     c = Cell('pt_wiredtx', ports, row_width=420)
     V = dict(VDD='VDD', VSS='VSS')
     c.inst('BBM', BBM, SER_EN='SER_EN', WTX_EXT='WTX_EXT', SER='SER', EXT='EXT', **V)
-    # rate decode: quarter (MODE_H = MODE_F = 0) runs the compact core
-    # (SERQ), half/full the generic serializer (SERG); one-hot with EXT
-    # rate field (MODE_H, MODE_F): 00 quarter, 10 half, 01 full -> compact core (SERQ);
-    # 11 (formerly illegal) -> generic serializer in half rate, kept as the fallback (SERG)
-    c.inst('MHI', INV1, A='MODE_H', Y='MHB', **V)
+    # rate field (MODE_H, MODE_F), WT12: the compact CMOS core (wtx_serq4c, path A) always runs at quarter
+    # rate; 00 = quarter (rep1), 10 = half (rep2), 01 = full (rep4); 11 = half (rep2).  Session 6: the
+    # generic static-CMOS serializer that code 11 used to select is removed (interface WT13).
     c.inst('MFI', INV1, A='MODE_F', Y='MFB', **V)
-    c.inst('MQN', NOR, A='MODE_H', B='MODE_F', Y='MQ', **V)
-    c.inst('MHN', NOR, A='MHB', B='MODE_F', Y='MHC', **V)
-    c.inst('MFN', NOR, A='MODE_H', B='MFB', Y='MFC', **V)
-    c.inst('MGN', NAND, A='MODE_H', B='MODE_F', Y='MGB', **V)
-    c.inst('MGI', INV1, A='MGB', Y='MG', **V)
-    c.inst('SQN', NAND, A='SER', B='MGB', Y='SERQN', **V)
+    c.inst('MFN', NOR, A='MODE_H', B='MFB', Y='MFC', **V)          # R4 = !MODE_H & MODE_F
+    c.inst('SQN', INV1, A='SER', Y='SERQN', **V)
     c.inst('SQI', INV4, A='SERQN', Y='SERQ', **V)
-    c.inst('SGN', NAND, A='SER', B='MG', Y='SERGN', **V)
-    c.inst('SGI', INV4, A='SERGN', Y='SERG', **V)
-    W = {f'W{ab}{k}': f'W{ab}{k}' for k in range(4) for ab in 'AB'}
-    # dummies matching the generic phase buffer's extra counter-clock gates on PH0/PH180
-    c.inst('DG1', NAND2E, A='WTX_PH90', B='SERG', Y='DGB1', **V)
-    c.inst('DG1I', INV8, A='DGB1', Y='DGX1', **V)
-    c.inst('DG3', NAND2E, A='WTX_PH270', B='SERG', Y='DGB3', **V)
-    c.inst('DG3I', INV8, A='DGB3', Y='DGX3', **V)
-    c.inst('CG', PHBUF, PH0='WTX_PH0', PH90='WTX_PH90', PH180='WTX_PH180', PH270='WTX_PH270', SER='SERG',
-           MODE_H='VDD', MODE_F='VSS', FCK='FCK', FCKB='FCKB', RSTB='RSTB', **W, **V)
     # 40-bit boundary (S3 / interface WT5): the digital launches a 40-bit quad word D0..D39 (D0 first on
     # the line) on WORD_CLK40 rising (line/40, 50 % duty).  A toggle flop on WORD_CLK (line/20) selects
     # D0..D19 for the load after WORD_CLK40 rises and D20..D39 for the next one; both serializers see
     # the selected 20-bit word DW0..DW19 at the same timing as the earlier 20-bit port.
-    c.inst('WS', W40, CK='WORD_CLK', RB='SER_EN', SEL='WSEL', SELB='WSELB', W40='WORD_CLK40', **V)
+    # WT12: Johnson counter / repetition expander (rep2 = half incl. MODE 11, rep4 = full on the core;
+    # quarter rate uses rep1 = the earlier 40->20 toggle)
+    TL = ['T1', 'T2A', 'T2B', 'T4A', 'T4B', 'T4C', 'T4D']
+    c.inst('WS', REP, CK='WORD_CLK', RB='SER_EN', R2='MODE_H', R4='MFC', SEL='WSEL', SELB='WSELB',
+           W40='WORD_CLK40', **{t: f'W{t}' for t in TL}, **{t + 'N': f'W{t}N' for t in TL}, **V)
     for i in range(20):
-        c.inst(f'WM{i}', MUX, A=f'D{i}', B=f'D{i + 20}', S='WSEL', SB='WSELB', Y=f'DWB{i}', **V)
-        c.inst(f'WI{i}', INV1, A=f'DWB{i}', Y=f'DW{i}', **V)
-    c.inst('SR', SERQ, **{f'D{i}': f'DW{i}' for i in range(20)}, **W, FCK='FCK', FCKB='FCKB', RSTB='RSTB',
-           WORD_CLK='WCKG', Y='SD', YB='SDB', DP='SDP', DPB='SDPB', **V)
+        # session 7: x2 mux, 2/4 um expander gates and an INV4 into the ~300 um DW route (the 1/2 um mux +
+        # TG + INV1 path took 1.7 ns from D to the core pin, extracted typical)
+        c.inst(f'WM{i}', MUXF, A=f'D{i}', B=f'D{i + 20}', S='WSEL', SB='WSELB', Y=f'DWB{i}', **V)
+    for i in range(20):
+        srcs = {}
+        for t, j in rep_src(i).items():
+            srcs.setdefault(j, []).append(t)
+        for t, j in rep_src(i).items():          # one-hot transmission gates DWB[j] -> DX i
+            c.dev(f'WT{i}_{t}_N', N, f'DX{i}', f'W{t}', f'DWB{j}', 2)
+            c.dev(f'WT{i}_{t}_P', P, f'DX{i}', f'W{t}N', f'DWB{j}', 4)
+        c.inst(f'WI{i}', INV4, A=f'DX{i}', Y=f'DW{i}', **V)
     c.inst('SQ', SERQ4, **{f'D{i}': f'DW{i}' for i in range(20)}, PH0='WTX_PH0', PH90='WTX_PH90',
-           PH180='WTX_PH180', PH270='WTX_PH270', SERQ='SERQ', MQ='MQ', MH='MHC', MF='MFC', Y='QD', YB='QDB', DP='QDP', DPB='QDPB',
+           PH180='WTX_PH180', PH270='WTX_PH270', SERQ='SERQ', MQ='VDD', MH='VSS', MF='VSS', Y='QD', YB='QDB', DP='QDP', DPB='QDPB',
            WCKQ='WCKQ', **V)
-    c.inst('WCO', NOR, A='WCKG', B='WCKQ', Y='WCKN', **V)
+    c.inst('WCO', INV2, A='WCKQ', Y='WCKN', **V)
     c.inst('WCB', INV16, A='WCKN', Y='WORD_CLK', **V)
-    c.inst('PD', PREDRV, D='SD', DB='SDB', DP='SDP', DPB='SDPB', DQ='QD', DQB='QDB', DPQ='QDP', DPQB='QDPB',
-           DX='DX', SERG='SERG', SERQ='SERQ', EXT='EXT',
+    c.inst('PD', PREDRV, DQ='QD', DQB='QDB', DPQ='QDP', DPQB='QDPB',
+           DX='DX', SERQ='SERQ', EXT='EXT', POST_POL='POST_POL',
            EN_MAIN='EN_MAIN', EN_POST='EN_POST', EN_TMDS='EN_TMDS', ISLAND_OFF='ISLAND_OFF',
            EXT_DATA='WTX_EXT_DATA', **{o: o for o in ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P',
                                                       'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N']}, **V)
@@ -725,7 +796,7 @@ def wiredtx():
     c.dev('SWI', N, 'IBIAS', 'BEN', 'ATB_NBIAS', 4)
     c.dev('MN0', N, 'ATB_NBIAS', 'ATB_NBIAS', 'VSS', 2, 2.0)
     c.dev('PDN', N, 'ATB_NBIAS', 'BENB', 'VSS', 2)
-    for b, cell, en in (('MAIN', IDAC2M, 'EN_MAIN'), ('POST', IDAC2, 'EN_POST'), ('TMDS', IDAC1, 'EN_TMDS')):
+    for b, cell, en in (('MAIN', IDAC2M, 'EN_MAIN'), ('POST', IDAC2M, 'EN_POST'), ('TMDS', IDAC1, 'EN_TMDS')):
         c.inst(f'DAC_{b}', cell, NB='ATB_NBIAS', EN=en, ISLAND_OFF='ISLAND_OFF', BIAS=f'{b}_BIAS',
                PB='ATB_PBIAS' if b == 'MAIN' else f'PB_{b}',
                **{f'C{k}': codes[b][k] for k in range(8)}, **V)
@@ -747,11 +818,13 @@ DIV5C = Macro('ct_div5')
 MUX4W = Macro('wtx_mux4')
 CINV8 = Macro('wtx_cinv8')
 W40 = w40()
+XOR2 = xor2()
+REP = rep()
 SERQ = serq()
 # The compact core is the hand-placed macro built by serq4_macro.py (generated/fast/wtx_serq4.*):
 # schematic, layout and LVS read its intended netlist.  serq4() above is the earlier gate-level core
 # (kept for reference; it failed extracted, see README).
-SERQ4 = Macro('wtx_serq4')
+SERQ4 = Macro('wtx_serq4c')   # path A: CMOS quarter-rate core (serq4c_macro.py)
 PHBUF = phbuf()
 PREDRV = predrv()
 BIASEN = biasen()

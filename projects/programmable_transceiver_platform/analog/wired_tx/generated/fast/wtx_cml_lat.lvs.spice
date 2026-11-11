@@ -1,0 +1,47 @@
+* NGSPICE file created from wtx_cml_lat.ext - technology: gf180mcuD
+
+.subckt p_nfet_03v3_w2_l0p28 a_n36_n356# a_n116_n200# a_n254_n492# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# a_n254_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt p_nfet_03v3_w2_l0p5 a_50_n200# a_n276_n492# a_n138_n200# a_n50_n360#
+X0 a_50_n200# a_n50_n360# a_n138_n200# a_n276_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.5u
+.ends
+
+.subckt p_ppolyf_u_1k_w2_l3 a_n200_300# a_n412_n634# a_n200_n422#
+X0 a_n200_300# a_n200_n422# a_n412_n634# ppolyf_u_1k r_width=2u r_length=3u
+.ends
+
+.subckt wtx_cml_lat D DB CK CKB Q QB NB VDD VSS
+XXMDB_0 DB m1_1070_6706# VSS Q p_nfet_03v3_w2_l0p28
+XXMDB_1 DB m1_1070_6706# VSS Q p_nfet_03v3_w2_l0p28
+XXMT_0 m1_910_6706# VSS VSS NB p_nfet_03v3_w2_l0p5
+XXMDB_2 DB m1_1070_6706# VSS Q p_nfet_03v3_w2_l0p28
+XXMT_2 m1_910_6706# VSS VSS NB p_nfet_03v3_w2_l0p5
+XXMT_1 m1_910_6706# VSS VSS NB p_nfet_03v3_w2_l0p5
+XXMT_3 m1_910_6706# VSS VSS NB p_nfet_03v3_w2_l0p5
+XXMR_1 Q m1_910_4066# VSS QB p_nfet_03v3_w2_l0p28
+XXMR_0 Q m1_910_4066# VSS QB p_nfet_03v3_w2_l0p28
+XXMR_2 Q m1_910_4066# VSS QB p_nfet_03v3_w2_l0p28
+XXRLN VDD VSS QB p_ppolyf_u_1k_w2_l3
+XXRLP VDD VSS Q p_ppolyf_u_1k_w2_l3
+XXMC_0 CK m1_910_6706# VSS m1_1070_6706# p_nfet_03v3_w2_l0p28
+XXMC_1 CK m1_910_6706# VSS m1_1070_6706# p_nfet_03v3_w2_l0p28
+XXMC_3 CK m1_910_6706# VSS m1_1070_6706# p_nfet_03v3_w2_l0p28
+XXMC_2 CK m1_910_6706# VSS m1_1070_6706# p_nfet_03v3_w2_l0p28
+XXMC_4 CK m1_910_6706# VSS m1_1070_6706# p_nfet_03v3_w2_l0p28
+XXMC_5 CK m1_910_6706# VSS m1_1070_6706# p_nfet_03v3_w2_l0p28
+XXMCB_1 CKB m1_910_6706# VSS m1_910_4066# p_nfet_03v3_w2_l0p28
+XXMCB_0 CKB m1_910_6706# VSS m1_910_4066# p_nfet_03v3_w2_l0p28
+XXMCB_2 CKB m1_910_6706# VSS m1_910_4066# p_nfet_03v3_w2_l0p28
+XXMCB_3 CKB m1_910_6706# VSS m1_910_4066# p_nfet_03v3_w2_l0p28
+XXMD_0 D m1_1070_6706# VSS QB p_nfet_03v3_w2_l0p28
+XXMCB_4 CKB m1_910_6706# VSS m1_910_4066# p_nfet_03v3_w2_l0p28
+XXMRB_1 QB m1_910_4066# VSS Q p_nfet_03v3_w2_l0p28
+XXMRB_0 QB m1_910_4066# VSS Q p_nfet_03v3_w2_l0p28
+XXMD_1 D m1_1070_6706# VSS QB p_nfet_03v3_w2_l0p28
+XXMCB_5 CKB m1_910_6706# VSS m1_910_4066# p_nfet_03v3_w2_l0p28
+XXMRB_2 QB m1_910_4066# VSS Q p_nfet_03v3_w2_l0p28
+XXMD_2 D m1_1070_6706# VSS QB p_nfet_03v3_w2_l0p28
+.ends
+

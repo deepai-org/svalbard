@@ -64,7 +64,12 @@ def model_header(corner='typical', temp=27, pdk=ANALOG_PDK):
     return (f'.include {pdk}/libs.tech/ngspice/design.ngspice\n'
             f'.lib {pdk}/libs.tech/ngspice/sm141064.ngspice {corner}\n'
             f'.lib {pdk}/libs.tech/ngspice/sm141064.ngspice {_diode(corner)}\n'   # antenna diodes (extracted)
+            f'.lib {pdk}/libs.tech/ngspice/sm141064.ngspice {_res(corner)}\n'     # ppolyf loads (CML stage)
             f'.temp {temp}\n.option savecurrents=0\n')
+
+
+def _res(corner):
+    return {'ss': 'res_ss', 'ff': 'res_ff'}.get(corner, 'res_typical')
 
 
 def _diode(corner):

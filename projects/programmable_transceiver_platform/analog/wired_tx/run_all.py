@@ -29,11 +29,14 @@ NOMINAL = dict(rate=1.25e9, bpc=2)          # half-rate mode, ring 625 MHz
 # Performance envelope (spec/tapeout-plan.md, MANDATE.md): every process corner at 22/32 C and
 # 3.15/3.35 V (20 points; sf/fs were missing before).  Safety benches stay wide (sim_static).
 CORNERS = [(c, t, v) for c in ('typical', 'ss', 'ff', 'sf', 'fs') for t in (22, 32) for v in (3.15, 3.35)]
-SWEEP = [(1.92e9, 4), (2.5e9, 4), (2.97e9, 4), (3.24e9, 4), (0.96e9, 2), (1.25e9, 2), (1.62e9, 2), (0.48e9, 1),
-         (0.81e9, 1)]
+# Path A (session 6): the CMOS quarter-rate core (wtx_serq4c) always runs at ring x 4; half / full rate are
+# WT12 2x / 4x bit repetition (bpc 2 / 1 here = MODE 10 / 01; ring = rate / bpc as before).  Target rates
+# <= 2.5 Gb/s: PCIe Gen1 2.5 (q), SATA Gen1 1.5 / HDMI-SDI 1.485 / SGMII 1.25 / DP RBR 1.62 (h), USB HS 0.48 (f).
+SWEEP = [(1.92e9, 4), (2.5e9, 4), (3.24e9, 4), (0.96e9, 2), (1.25e9, 2), (1.485e9, 2), (1.5e9, 2), (1.62e9, 2),
+         (0.48e9, 1), (0.81e9, 1)]
 NW = 14            # 280 bits: nominal / integration runs, more than two PRBS7 periods (127 bits)
 NWC = 10           # 200 bits per envelope-corner run (> 1.5 PRBS7 periods)
-QRATES = (2.5e9, 3.24e9)   # quarter rate: PCIe Gen1 and the top of the 480-810 MHz ring plan
+QRATES = (2.5e9,)          # quarter rate envelope: PCIe Gen1 (3.24 Gb/s quarter = stretch path B, sweep only)
 ROW_W = 540.0   # parent row width = width of the hand-placed core macro (wtx_serq4, row 0)
 
 
@@ -77,6 +80,14 @@ def stage_layout():
     lvs = tools.netgen_lvs(LAY, 'pt_wiredtx_lvs.spice', 'pt_wiredtx', 'wiredtx.spice')
     gds = tools.gds_export_analog(LAY, 'pt_wiredtx')
     kl = tools.klayout_drc(LAY, gds, 'pt_wiredtx')
+    gate = dict(magic_drc=summary['drc_count'] == 0, lvs=bool(lvs['unique_match']),
+                klayout=bool(kl.get('ran')) and kl.get('violations', 1) == 0)
+    if not all(gate.values()):
+        # never publish a layout that fails any check (coordinator rule, 2026-11-10): the
+        # candidate stays in scratch/wired_tx/layout, generated/ keeps the last clean layout
+        res = dict(published=False, gate=gate, layout=summary, lvs=lvs, klayout=kl)
+        tools.write_json(W / 'layout-result.json', res)
+        raise SystemExit(f'layout not published, checks failed: {gate}')
     GEN.mkdir(exist_ok=True)
     shutil.copy(gds, GEN / 'wiredtx.gds')
     precheck = publish_gds(GEN / 'wiredtx.gds', 'wiredtx', 'pt_wiredtx', LAY)
@@ -92,7 +103,7 @@ def stage_layout():
     shutil.copy(LAY / 'lvs.out', GEN / 'wiredtx-lvs.txt')
     (GEN / 'wiredtx-drc.txt').write_text(f"magic drc(full) flat error count: {summary['drc_count']}\n"
                                          + (LAY / 'drc-why.txt').read_text())
-    res = dict(layout=summary, lvs=lvs, klayout=kl, klayout_precheck=precheck,
+    res = dict(published=True, gate=gate, layout=summary, lvs=lvs, klayout=kl, klayout_precheck=precheck,
                gds_export='analog image Magic 8.3.678, cif ostyle gdsii',
                magic_drc_lvs_extract_image=tools.DIGITAL_IMAGE)
     tools.write_json(W / 'layout-result.json', res)
@@ -128,8 +139,8 @@ def stage_hsbias():
 def jobs():
     j = []
     j.append(('nominal', lambda: S.run_case(W / 'sim', PEX, 'pt_wiredtx', nwords=NW, tag='nominal', **NOMINAL)))
-    j.append(('schematic_q3g24', lambda: S.run_case(W / 'sim', tools.HERE / 'wiredtx.spice', 'pt_wiredtx',
-                                                    rate=3.24e9, bpc=4, nwords=NW, tag='sch_q3g24')))
+    j.append(('schematic_q2g5', lambda: S.run_case(W / 'sim', tools.HERE / 'wiredtx.spice', 'pt_wiredtx',
+                                                   rate=2.5e9, bpc=4, nwords=NW, tag='sch_q2g5')))
     for rate, bpc in SWEEP:
         j.append((f'sweep_{bpc}_{rate/1e9:g}', lambda r=rate, b=bpc: S.run_case(
             W / 'sim', PEX, 'pt_wiredtx', rate=r, bpc=b, nwords=NW, tag=f'sweep_{b}_{r/1e9:g}')))
@@ -144,41 +155,44 @@ def jobs():
         k = f'cornerh1.62_{c}_{t}_{v}'
         j.append((k, lambda c=c, t=t, v=v, k=k: S.run_case(
             W / 'sim', PEX, 'pt_wiredtx', rate=1.62e9, bpc=2, nwords=NWC, corner=c, temp=t, vdd=v, tag=k)))
-    # full rate (compact core, UI >= 1.23 ns): slow/skewed corners
-    for c, t, v in [(c, t, v) for c in ('ss', 'sf', 'fs') for t, v in ((22, 3.15), (32, 3.15))]:
-        k = f'cornerf0.81_{c}_{t}_{v}'
+    # full rate (rep4, USB HS 480 Mb/s at the slowest ring, 480 MHz: the hold-critical end of the core's
+    # register timing) across the envelope
+    for c, t, v in CORNERS:
+        k = f'cornerf0.48_{c}_{t}_{v}'
         j.append((k, lambda c=c, t=t, v=v, k=k: S.run_case(
-            W / 'sim', PEX, 'pt_wiredtx', rate=0.81e9, bpc=1, nwords=NWC, corner=c, temp=t, vdd=v, tag=k)))
+            W / 'sim', PEX, 'pt_wiredtx', rate=0.48e9, bpc=1, nwords=NWC, corner=c, temp=t, vdd=v, tag=k)))
     j.append(('nominal_0g96', lambda: S.run_case(W / 'sim', PEX, 'pt_wiredtx', rate=0.96e9, bpc=2, nwords=NW,
                                                 tag='nominal_0g96')))
-    # generic serializer, kept as the fallback (rate code 11 = half rate)
-    for rate, (c, t, v) in ((0.96e9, ('typical', 27, 3.3)), (0.96e9, ('ss', 22, 3.15)), (1.25e9, ('typical', 27, 3.3))):
-        k = f'fallback_h{rate/1e9:g}_{c}_{t}_{v}'
-        j.append((k, lambda r=rate, c=c, t=t, v=v, k=k: S.run_case(
-            W / 'sim', PEX, 'pt_wiredtx', rate=r, bpc=2, nwords=NW, corner=c, temp=t, vdd=v, tag=k, fallback=True)))
     iw = W / 'integration'
     j += [('int_serial_h1g25', lambda: I.run(iw, PEX, mode='serial', rate=1.25e9, bpc=2, nwords=NW, tag='serial_h1g25')),
-          ('int_tmds_h1g25', lambda: I.run(iw, PEX, mode='tmds', rate=1.25e9, bpc=2, nwords=NW, tag='tmds_h1g25')),
           ('int_tmds_h1g485', lambda: I.run(iw, PEX, mode='tmds', rate=1.485e9, bpc=2, nwords=NW, tag='tmds_h1g485')),
-          ('int_tmds_q2g97', lambda: I.run(iw, PEX, mode='tmds', rate=2.97e9, bpc=4, nwords=NW, tag='tmds_q2g97')),
           ('int_serial_q2g5', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW, tag='serial_q2g5')),
+          # PCIe swing recipe (WT4/WT10: code 200 ~ 19.9 mA, 240 ~ 23.9 mA)
           ('int_serial_q2g5_main200', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
                                                     codes=(200, 32, 125), tag='serial_q2g5_main200')),
           ('int_serial_q2g5_main240', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
                                                     codes=(240, 32, 125), tag='serial_q2g5_main240')),
-          ('int_serial_q3g24', lambda: I.run(iw, PEX, mode='serial', rate=3.24e9, bpc=4, nwords=NW, tag='serial_q3g24')),
-          ('int_stretch_5g_lossy', lambda: I.run(iw, PEX, mode='serial', rate=5e9, bpc=4, nwords=6, lossy=True,
-                                                 tag='stretch_q5g_lossy')),
           # package channel (spec/package-channel.md): bond, COB, connector, carrier P1..P4, AC caps (B22)
-          ('int_pkg_q3g24_P1', lambda: I.run(iw, PEX, mode='serial', rate=3.24e9, bpc=4, nwords=NW,
-                                             codes=(200, 0, 125), pkg=('P1', 0.0), tag='pkg_q3g24_P1')),
+          ('int_pkg_q2g5_main200_P1', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
+                                                    codes=(200, 0, 125), pkg=('P1', 0.0), tag='pkg_q2g5_main200_P1')),
           ('int_pkg_q2g5_main200_P4', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
                                                     codes=(200, 0, 125), pkg=('P4', 0.3), tag='pkg_q2g5_main200_P4')),
+          ('int_pkg_q2g5_main240_P4', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
+                                                    codes=(240, 0, 125), pkg=('P4', 0.3), tag='pkg_q2g5_main240_P4')),
+          ('int_pkg_h1g62_main200_P4', lambda: I.run(iw, PEX, mode='serial', rate=1.62e9, bpc=2, nwords=NW,
+                                                     codes=(200, 0, 125), pkg=('P4', 0.3), tag='pkg_h1g62_main200_P4')),
+          ('int_pkg_h1g5_main200_P4', lambda: I.run(iw, PEX, mode='serial', rate=1.5e9, bpc=2, nwords=NW,
+                                                    codes=(200, 0, 125), pkg=('P4', 0.3), tag='pkg_h1g5_main200_P4')),
+          ('int_pkg_h1g25_main200_P4', lambda: I.run(iw, PEX, mode='serial', rate=1.25e9, bpc=2, nwords=NW,
+                                                     codes=(200, 0, 125), pkg=('P4', 0.3), tag='pkg_h1g25_main200_P4')),
           # PCIe-style -3.5 dB (post 48 with main 200) and -6 dB (post 80) de-emphasis, P4 (worst placement)
           ('int_pkg_q2g5_deemph35_P4', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
                                                      codes=(200, 48, 125), pkg=('P4', 0.3), tag='pkg_q2g5_de35_P4')),
           ('int_pkg_q2g5_deemph6_P4', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
                                                     codes=(200, 80, 125), pkg=('P4', 0.3), tag='pkg_q2g5_de6_P4')),
+          # IX-9: MLT-3 at 125 MBd (8x oversampled, 1.0 Gb/s half rate, ring 500 MHz), POST_POL = 1,
+          # MAIN = POST = code 200, on-die termination off, board network B39
+          ('int_mlt3_125mbd_b39', lambda: I.run_mlt3(iw, PEX, tag='mlt3_125mbd_b39')),
           ('ext_ideal_1g', lambda: I.run_ext(iw, PEX, rate=1e9, tag='ext_ideal_1g')),
           ('ext_rx_0g5', lambda: I.run_ext(iw, PEX, rate=0.5e9, rx=True, tag='ext_rx_0g5')),
           ('ext_rx_1g', lambda: I.run_ext(iw, PEX, rate=1e9, rx=True, tag='ext_rx_1g')),
@@ -221,7 +235,10 @@ def stage_sims(only=None):
     with ThreadPoolExecutor(int(__import__('os').environ.get('WTX_JOBS', '3'))) as ex:
         for k, r in ex.map(wrap, todo):
             results[k] = r
-            tools.write_json(out_path, results)
+            # merge on write: several `--stage sims --only ...` runs may share the results file
+            cur = json.loads(out_path.read_text()) if out_path.exists() else {}
+            cur[k] = r
+            tools.write_json(out_path, cur)
             print(k, 'ok' if r.get('ok', True) else 'FAIL', flush=True)
     return results
 

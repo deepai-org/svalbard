@@ -7,7 +7,7 @@ module pt_control(input wire rst_n,sclk,cs_n,mosi,output wire miso,miso_oe,
  output reg playback_enable,capture_enable);
  wire wr_en;wire[7:0]wa,ra;wire[15:0]wd;reg[15:0]rd;
  reg[4:0]index;reg[11:0]play_i;reg rejected;reg[15:0]s1,s2;reg c1,c2;
- pt_spi spi(rst_n,sclk,cs_n,mosi,miso,miso_oe,wr_en,wa,wd,ra,rd);
+ pt_spi_legacy spi(rst_n,sclk,cs_n,mosi,miso,miso_oe,wr_en,wa,wd,ra,rd);
  assign memory_index=index;assign memory_wdata={wd[11:0],play_i};
  assign memory_write=wr_en&&wa==8'h22&&!enable;
  always @*begin

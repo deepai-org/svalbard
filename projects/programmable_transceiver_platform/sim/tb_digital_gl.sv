@@ -17,7 +17,7 @@ module tb_digital_gl;
  supply1 vdd;supply0 vss;
  wire gclk=fclk&run_clk;
  wire spi_miso,spi_miso_oe,d2h_clk_pin,d2h_oe,d2h_sl,wire_tx_valid,wire_idle,rf_tx_valid,rf_mute,enable,mode8;
- wire[9:0]d2h_pin;wire[19:0]wire_tx_data;wire[1:0]d2h_pdrv;wire[23:0]rf_tx_sample;wire[15:0]rf_trim,wire_trim,clock_trim;
+ wire[9:0]d2h_pin;wire[39:0]wire_tx_data;wire[1:0]d2h_pdrv;wire[23:0]rf_tx_sample;wire[15:0]rf_trim,wire_trim,clock_trim;
  wire[11:0]calibration_trial;
  wire[`PT_ANALOG_CFG_W-1:0]analog_cfg;wire[`PT_DEBUG_CFG_W-1:0]debug_cfg;
  wire[`PT_ISLAND_W-1:0]island_en,island_on;wire[`PT_ATB0_GRP_W-1:0]atb0_grp;wire[`PT_ATB1_GRP_W-1:0]atb1_grp;wire atb0_en,atb1_en;wire[`PT_ATB_W-1:0]atb0_sw,atb1_sw;
@@ -25,25 +25,29 @@ module tb_digital_gl;
  wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe,commit_toggle;
  wire ct_word_clk,ct_word_load,ct_ser_run,ct_bit_phase,ct_qualified,ct_armed,ct_marker_seen,ct_launched,ct_arm_fault,ct_det_clk;
  wire[2:0]ct_det_div;
+ // Loopback FPGA model: the DDR forwarded D2H clock is edge-aligned (transport rework 2026-11-10), so
+ // the looped clock is centred with a quarter host-DDR-clock delay (5 ns at the 50 MHz bench clock),
+ // as the FPGA's input delay would; the SDR clock (reduced rates) is mid-word already and tolerates it.
+ wire #5 d2h_clk_lb = d2h_clk_pin;
  pt_digital_macro dut(
 `ifdef USE_POWER_PINS
   .VDD(vdd),.VSS(vss),
 `endif
-  .reset_n_pad(reset_n_pad),.por_n(por_n),.spi_sclk(sclk),.spi_cs_n(cs_n),.spi_mosi(mosi),
+  .reset_n_pad(reset_n_pad),.por_n(por_n),.wire_linecode(1'b0),.spi_sclk(sclk),.spi_cs_n(cs_n),.spi_mosi(mosi),
   .spi_miso(spi_miso),.spi_miso_oe(spi_miso_oe),.host_word_clk(gclk),
 `ifdef PT_LOOPBACK
-  .h2d_clk(d2h_clk_pin),.h2d_pin(d2h_pin),   // D2H pins looped to H2D pins (host-link test)
+  .h2d_clk(d2h_clk_lb),.h2d_pin(d2h_pin),    // D2H pins looped to H2D pins (host-link test)
 `else
   .h2d_clk(gclk),.h2d_pin(10'h155),
 `endif
   .d2h_pin(d2h_pin),.d2h_clk_pin(d2h_clk_pin),.d2h_oe(d2h_oe),.d2h_pdrv(d2h_pdrv),.d2h_sl(d2h_sl),
   .ref_clk(gclk),.wire_rx_clk(gclk),.wire_tx_clk(gclk),.rf_rx_clk(gclk),.rf_tx_clk(gclk),
-  .wire_rx_data(20'h0),.wire_rx_valid(1'b0),.wire_tx_data(wire_tx_data),.wire_tx_valid(wire_tx_valid),
+  .wire_rx_data(40'h0),.wire_rx_valid(1'b0),.wire_tx_data(wire_tx_data),.wire_tx_valid(wire_tx_valid),
   .wire_idle(wire_idle),.wire_tx_request(1'b0),.rf_rx_sample(24'h0),.rf_rx_valid(1'b0),.rf_tx_sample(rf_tx_sample),
   .rf_tx_valid(rf_tx_valid),.rf_mute(rf_mute),.rf_tx_request(1'b0),.enable(enable),.mode8(mode8),.rf_trim(rf_trim),
   .wire_trim(wire_trim),.clock_trim(clock_trim),.calibration_above_target(1'b0),.calibration_trial(calibration_trial),
   .fault(fault),.island_pgood(pgood),.analog_status(astat),.wire_analog_status(wstat),.analog_cfg(analog_cfg),
-  .debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),.atb0_grp(atb0_grp),.atb1_grp(atb1_grp),.atb0_en(atb0_en),.atb1_en(atb1_en),.atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.rx_en_aux(rx_en_aux),
+  .debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),.wired_on_ext(1'b0),.atb0_grp(atb0_grp),.atb1_grp(atb1_grp),.atb0_en(atb0_en),.atb1_en(atb1_en),.atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.rx_en_aux(rx_en_aux),
   .rx_en_wclk(rx_en_wclk),.rx_en_wtx_ext(rx_en_wtx_ext),.clk_obs_oe(clk_obs_oe),.wclk_obs_oe(wclk_obs_oe),
   .dbg_obs0(dbg_obs0),.dbg_obs0_oe(dbg_obs0_oe),.dbg_obs1(dbg_obs1),.dbg_obs1_oe(dbg_obs1_oe),.wdbg_obs(wdbg_obs),
   .wdbg_obs_oe(wdbg_obs_oe),.commit_toggle(commit_toggle),

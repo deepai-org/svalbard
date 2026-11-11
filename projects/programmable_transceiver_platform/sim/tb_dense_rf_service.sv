@@ -3,10 +3,13 @@ module tb_dense_rf_service;
  parameter MODE8=0;
  parameter HOST_BURST=0;
  parameter real RF_PHASE=0.0;
+ // Host word clock half period: 1.6 ns full rate (312.5 MHz), 3.2 ns the reduced div2 rate
+ // that RF modes use (spec AC-4 PWR-HOST-RF; core clock 39.06 MHz < 40 MS/s).
+ parameter real HOST_HALF=1.6;
  reg hclk=0,rclk=0,tclk=0,wclk=0,rst_n=1,en=0,source_on=0;
  reg peer_tx_reset=1,peer_rx_reset=1;
- always #1.6 hclk=~hclk;
- always #4 wclk=~wclk;
+ always #(HOST_HALF) hclk=~hclk;
+ always #8 wclk=~wclk;
  initial begin #(RF_PHASE);forever #12.5 rclk=~rclk;end
  initial begin #(RF_PHASE+0.7);forever #12.5 tclk=~tclk;end
  reg[23:0]samples[0:9999];reg[9:0]words[0:23999];
@@ -25,11 +28,11 @@ module tb_dense_rf_service;
  pt_dense_link_rx peer_rx(hclk,peer_rx_reset,1'b1,d2h,1'b1,1'b1,peer_data,
   peer_wv,peer_qv,peer_cv,peer_fault,peer_locked,peer_op,peer_arg);
  wire[23:0]tx_sample;wire tx_valid,rf_mute,wire_valid,wire_idle;
- wire[19:0]wire_data;wire[15:0]status;
- pt_core core(.rst_n(rst_n),.enable(en),.mode8(1'(MODE8)),
-  .host_tx_clk(hclk),.host_rx_clk(hclk),.wire_rx_clk(wclk),.wire_tx_clk(wclk),
+ wire[39:0]wire_data;wire[15:0]status;
+ pt_transport_harness core(.rst_n(rst_n),.enable(en),.mode8(1'(MODE8)),
+  .hclk(hclk),.wire_rx_clk(wclk),.wire_tx_clk(wclk),
   .rf_rx_clk(rclk),.rf_tx_clk(tclk),.h2d_word(h2d),.d2h_word(d2h),
-  .wire_rx_data(20'hfffff),.wire_rx_valid(source_on),.wire_tx_data(wire_data),
+  .wire_rx_data(40'hffffffffff),.wire_rx_valid(source_on),.wire_tx_data(wire_data),
   .wire_tx_valid(wire_valid),.wire_tx_request(1'b1),
   .rf_rx_sample(samples[produced]),.rf_rx_valid(source_on),.rf_tx_sample(tx_sample),
   .rf_tx_valid(tx_valid),.rf_tx_request(1'b1),.status(status),
@@ -74,7 +77,7 @@ module tb_dense_rf_service;
   #200000;
   if(tx_samples<7900||rx_samples<7900||!peer_locked||!status[9])$fatal(1,"Insufficient RF service");
   if(HOST_BURST)$fclose(trace);
-  $display("DENSE_RF_PASS mode8=%d phase=%f burst=%d tx_samples=%d rx_samples=%d status=%h",MODE8,RF_PHASE,HOST_BURST,tx_samples,rx_samples,status);
+  $display("DENSE_RF_PASS mode8=%d host_half=%f phase=%f burst=%d tx_samples=%d rx_samples=%d status=%h",MODE8,HOST_HALF,RF_PHASE,HOST_BURST,tx_samples,rx_samples,status);
   $finish;
  end
 endmodule

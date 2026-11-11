@@ -144,9 +144,13 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
     reg  [30:0]   h;
     reg  [RW-1:0] run, bad;
     reg  [W-1:0]  mism_q;            // mismatch bits of a counted word
-    localparam integer WL = W / 2, WH = W - W / 2;
-    reg  [PW-1:0] pop_q, pop_h;      // their count, low and high halves (shorter adder trees)
-    reg           mism_v, err_v;
+    reg           mism_v;
+    // Two-stage check (timing at W=40 / 62.5 MHz, 2026-11-10): stage 1 registers the word's mismatch
+    // vector (mism_q) with its valid/nonzero flags; stage 2 decides lock, unlock and error counting
+    // from the registered vector, one word later. The predictor (h) is updated in stage 1 from the
+    // registered lock state, so a lock change takes effect one word later than before.
+    reg           v1, nz1;
+    wire          zero1 = mism_q == {W{1'b0}};
 
     function automatic [W+30:0] prbs_step(input [30:0] s, input [2:0] mode);
         reg [30:0] t; reg [W-1:0] o; reg b; integer i;
@@ -185,37 +189,62 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
     wire [W+30:0] p    = cfg_mode == 3'd1 ? p7 : cfg_mode == 3'd2 ? p15 : p31;
     wire [W-1:0]  mism = r ^ p[W-1:0];
     wire          nz   = cfg_mode == 3'd1 ? h[6:0] != 0 : cfg_mode == 3'd2 ? h[14:0] != 0 : h != 0;
-    wire          good = (mism == 0) && nz;
     wire          step_cnt = !at_max && (ovf || pend != 0);
-    wire [QW:0]   pend_sum = {1'b0, pend} + (err_v ? pop_q + pop_h : {PW{1'b0}}) - (step_cnt && !ovf ? 1'b1 : 1'b0);
+    // Error popcount as a pipelined tree (AC-1 timing at 12.3 ns, ss32): stage P1 registers 5-bit group
+    // counts of the mismatch vector, P2a pair sums, P2b their balanced sum, then the accumulator.
+    // Errors are counted three words later than the lock decision; counts are unchanged.
+    localparam integer NG = (W + 4) / 5;
+    function automatic [2:0] pop5(input [4:0] v);
+        pop5 = ({2'b0, v[0]} + {2'b0, v[1]}) + ({2'b0, v[2]} + {2'b0, v[3]}) + {2'b0, v[4]};
+    endfunction
+    reg  [3*NG-1:0] grp;             // group counts of the word flagged by mism_v (same edge)
+    reg  [PW-1:0]   psum; reg psum_v;
+    reg  [4*((NG+1)/2)-1:0] pair; reg pair_v;   // P2a: sums of group pairs (<= 10 each)
+    wire [5*NG-1:0] mism_pad = {{(5*NG-W){1'b0}}, mism_q};
+    integer gi, gs;   // separate loop variables per always block (a shared one breaks synthesis)
+    localparam integer NP = (NG + 1) / 2;
+    reg  [PW+2:0]   ptree [0:2*NP-2];
+    always @* begin
+        for (gi = 0; gi < NP; gi = gi + 1) ptree[NP-1+gi] = pair[4*gi+:4];
+        for (gi = NP-2; gi >= 0; gi = gi - 1) ptree[gi] = ptree[2*gi+1] + ptree[2*gi+2];
+    end
+    wire [QW:0]   pend_sum = {1'b0, pend} + (psum_v ? psum : {PW{1'b0}}) - (step_cnt && !ovf ? 1'b1 : 1'b0);
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             h <= 31'h7fffffff; run <= 0; bad <= 0; locked <= 1'b0; lost_lock <= 1'b0; errors <= 0;
-            mism_q <= 0; pop_q <= 0; pop_h <= 0; mism_v <= 1'b0; err_v <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
+            mism_q <= 0; grp <= 0; pair <= 0; pair_v <= 1'b0; psum <= 0; psum_v <= 1'b0; mism_v <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
+            v1 <= 1'b0; nz1 <= 1'b0;
         end else if (ce) begin
+            // stage 1: predictor update and mismatch vector of this word
+            if (on && valid) h <= locked ? p[W+30:W] : shift_in(h, r);
+            mism_q <= mism;
+            v1     <= on && valid;
+            nz1    <= nz;
+            // stage 2: lock decisions on the previous word (mism_q)
             if (!on) begin
                 locked <= 1'b0; run <= 0; bad <= 0;
-            end else if (valid) begin
+            end else if (v1) begin
                 if (!locked) begin
-                    h   <= shift_in(h, r);
                     bad <= 0;
-                    if (!good) run <= 0;
+                    if (!(zero1 && nz1)) run <= 0;
                     else if (run == LOCK_WORDS - 1) begin locked <= 1'b1; run <= 0; end
                     else run <= run + 1'b1;
                 end else begin
-                    h <= p[W+30:W];
-                    if (mism == 0) bad <= 0;
+                    if (zero1) bad <= 0;
                     else if (bad == UNLOCK_WORDS - 1) begin
                         locked <= 1'b0; bad <= 0; run <= 0;
                     end else bad <= bad + 1'b1;
                 end
             end
-            mism_q <= mism;
-            mism_v <= on && valid && locked && mism != 0 && !clear;
-            pop_q  <= popcount({{WH{1'b0}}, mism_q[WL-1:0]}) & {PW{1'b1}};
-            pop_h  <= popcount({mism_q[W-1:WL], {WL{1'b0}}}) & {PW{1'b1}};
-            err_v  <= mism_v && !clear;
+            // error count of a word checked while locked: flag and popcount of the same word (mism_q)
+            mism_v <= on && v1 && locked && !zero1 && !clear;
+            for (gs = 0; gs < NG; gs = gs + 1) grp[3*gs+:3] <= pop5(mism_pad[5*gs+:5]);
+            for (gs = 0; gs < NP; gs = gs + 1)
+                pair[4*gs+:4] <= {1'b0, grp[6*gs+:3]} + ((2*gs+1 < NG) ? {1'b0, grp[(6*gs+3)%(3*NG)+:3]} : 4'd0);
+            pair_v <= mism_v && !clear;
+            psum   <= ptree[0][PW-1:0];
+            psum_v <= pair_v && !clear;
             if (clear) begin
                 errors <= 0; lost_lock <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
             end else begin
@@ -223,7 +252,7 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
                 if (at_max) pend <= 0;
                 else if (pend_sum[QW]) begin ovf <= 1'b1; pend <= 0; end
                 else pend <= pend_sum[QW-1:0];
-                if (on && valid && locked && mism != 0 && bad == UNLOCK_WORDS - 1) lost_lock <= 1'b1;
+                if (on && v1 && locked && !zero1 && bad == UNLOCK_WORDS - 1) lost_lock <= 1'b1;
             end
         end
     end

@@ -6,7 +6,9 @@
 // changes every clock is encoded consistently. ALIGN=0 omits that 90-bit delay line: valid only
 // when value is held for at least three clocks before packet is sampled, as in pt_dense_pair_tx
 // (pending/seq settle at the clamp edge, four engine clocks before the publish edge).
-module pt_dense_header #(parameter ALIGN=1)(input wire clk,input wire[29:0]value,output reg[39:0]packet);
+// STAGES=3 (default, reference model): three registered parity stages. STAGES=1 (AC-1 quad engine at
+// word/4, value held >= 3 clocks): one registered parity stage (seven 18-input XOR trees).
+module pt_dense_header #(parameter ALIGN=1,STAGES=3)(input wire clk,input wire[29:0]value,output reg[39:0]packet);
  function automatic[17:0]row(input[29:0]data,input integer which);
  integer p,d,n,weight,k;begin
   row=0;d=0;n=0;
@@ -18,18 +20,26 @@ module pt_dense_header #(parameter ALIGN=1)(input wire clk,input wire[29:0]value
    d=d+1;
   end
  end endfunction
- reg[41:0]first;reg[13:0]second;reg[6:0]parity;
+ reg[6:0]parity;
  wire[29:0]data3;
  genvar r,g;
- generate for(r=0;r<7;r=r+1)begin:rows
-  wire[17:0]bits=row(value,r);
-  for(g=0;g<6;g=g+1)begin:first_groups
-   always @(posedge clk)first[r*6+g]<=^bits[g*3+:3];
+ generate if(STAGES==1)begin:single
+  for(r=0;r<7;r=r+1)begin:rows
+   wire[17:0]bits=row(value,r);
+   always @(posedge clk)parity[r]<=^bits;
   end
-  for(g=0;g<2;g=g+1)begin:second_groups
-   always @(posedge clk)second[r*2+g]<=^first[r*6+g*3+:3];
+ end else begin:tree
+  reg[41:0]first;reg[13:0]second;
+  for(r=0;r<7;r=r+1)begin:rows
+   wire[17:0]bits=row(value,r);
+   for(g=0;g<6;g=g+1)begin:first_groups
+    always @(posedge clk)first[r*6+g]<=^bits[g*3+:3];
+   end
+   for(g=0;g<2;g=g+1)begin:second_groups
+    always @(posedge clk)second[r*2+g]<=^first[r*6+g*3+:3];
+   end
+   always @(posedge clk)parity[r]<=^second[r*2+:2];
   end
-  always @(posedge clk)parity[r]<=^second[r*2+:2];
  end endgenerate
  generate if(ALIGN)begin:aligned
   reg[29:0]data1,data2,data_q;

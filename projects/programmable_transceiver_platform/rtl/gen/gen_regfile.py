@@ -78,7 +78,12 @@ def build_model():
                      live=bool(s.get('live', group_live)), unit=s.get('unit'),
                      meaning=s.get('meaning') or s.get('description'), update=g.get('update'),
                      split=s['bits'] > 16, sv=sv_name(full), bus=None, bus_lsb=None, chunks=[],
-                     atb_bus=s.get('atb_bus'), gate_and=s.get('gate_and'), decode=s.get('decode'))
+                     atb_bus=s.get('atb_bus'), gate_and=s.get('gate_and'), decode=s.get('decode'),
+                     decoded_bits=s.get('decoded_bits'), mantissa_bits=s.get('mantissa_bits'),
+                     address_slots=s.get('address_slots', 1), direct=bool(s.get('direct', False)),
+                     clear_when_running=s.get('clear_when_running'))
+            if f['direct'] and (not f['live'] or f['split']):
+                raise SpecError(f'{full}: a direct (no-shadow) field must be live and at most 16 bits')
             for i in f['islands']:
                 if i not in islands:
                     raise SpecError(f'{full}: unknown island {i}')
@@ -114,6 +119,12 @@ def build_model():
     by_name = {f['name']: f for f in fields}
     if len(by_name) != len(fields):
         raise SpecError('duplicate field names')
+    for f in fields:
+        if f['clear_when_running'] is not None:
+            other, value = f['clear_when_running']
+            if other not in by_name or f['bits'] != 1 or f['islands']:
+                raise SpecError(f"{f['name']}: clear_when_running needs a 1-bit core field and a known selector")
+            f['clear_when_running'] = [other, encode(by_name[other], value)]
     for need in ['debug.island_power.' + i for i in islands] + ['debug.pgood_override.' + i for i in islands]:
         if need not in by_name:
             raise SpecError(f'missing {need}')
@@ -138,6 +149,15 @@ def build_model():
                         registers.append(reg)
                         g['registers'].append(addr)
                         addr += 1
+                    cur = None
+                    continue
+                if f['address_slots'] > 1:
+                    # A re-encoded field that keeps the address footprint of its previous wider form:
+                    # one dedicated register, then (address_slots - 1) unallocated addresses.
+                    reg = dict(addr=addr, group=g['name'], kind=kind, chunks=[[f['name'], 0, f['bits'], 0]], used=f['bits'])
+                    registers.append(reg)
+                    g['registers'].append(addr)
+                    addr += f['address_slots']
                     cur = None
                     continue
                 if cur is None or cur['used'] + f['bits'] > 16:
@@ -174,7 +194,10 @@ def build_model():
                 status_regs.append(cur)
                 addr += 1
             name = f'{gname}.{fname}'
+            if sf.get('sync', True) is False and sf.get('encoding', 'binary') != 'binary':
+                raise SpecError(f'{gname}.{fname}: an unsynchronized status field must be binary')
             status_fields.append(dict(name=name, group=gname, field=fname, bits=sf['bits'], port=sf['port'],
+                                      sync=sf.get('sync', True) is not False,
                                       reserved=bool(g.get('reserved', False)),
                                       encoding=sf.get('encoding', 'binary'), meaning=sf.get('meaning'),
                                       addr=cur['addr'], reg_lsb=cur['used']))
@@ -246,6 +269,13 @@ def build_model():
             if f['values'] is not None or f['store'] != [f['bits'] - 1, 0]:
                 raise SpecError(f"{f['name']}: thermometer decode needs an untrimmed numeric count")
             f['bus_bits'] = f['maximum']
+        elif f['decode'] == 'mant_exp':
+            mb, db = f['mantissa_bits'], f['decoded_bits']
+            if f['values'] is not None or f['store'] != [f['bits'] - 1, 0] or not mb or not db or \
+                    f['bits'] <= mb or f['minimum'] != 1 or f['maximum'] != (1 << f['bits']) - 1 or \
+                    (1 << (f['bits'] - mb)) - 1 <= db - mb:
+                raise SpecError(f"{f['name']}: mant_exp decode needs an untrimmed code 1..2^bits-1 whose exponent reaches saturation")
+            f['bus_bits'] = db
         elif f['decode'] is not None:
             raise SpecError(f"{f['name']}: unknown decode {f['decode']}")
         widths[f['kind']] += f['bus_bits']
@@ -397,6 +427,16 @@ def validate(model, dbg, readiness):
 
 # ---------------------------------------------------------------- SystemVerilog
 
+def mant_exp_value(code, mb, db):
+    """Decoded value of a mant_exp code (same function as regmap_runtime.mant_exp_value)."""
+    e, m = code >> mb, code & ((1 << mb) - 1)
+    if e == 0:
+        return m
+    if e > db - mb:
+        return (1 << db) - 1
+    return ((1 << mb) | m) << (e - 1)
+
+
 def sv_const(width, value):
     return f"{width}'d{value}"
 
@@ -471,10 +511,11 @@ def emit_sv(model):
     a(' input wire por_n, // POR alone (rst_n = RESET_N AND por_n); sets the sticky POR flag')
     a(' input wire wr_en,input wire[7:0]wr_addr,input wire[15:0]wr_data,')
     a(' input wire[7:0]rd_addr,output reg[15:0]rd_data,')
-    a(' // Legacy pt_control boundary (unchanged addresses 0x01-0x04, 0x10-0x12, 0x20-0x26).')
+    a(' // Legacy pt_control boundary (unchanged addresses 0x01-0x04, 0x10-0x12; MEMORY 0x20-0x26 is v3).')
     a(' input wire[15:0]status,output reg enable,mode8,output reg[15:0]rf_trim,wire_trim,clock_trim,')
-    a(' output wire memory_write,output wire[4:0]memory_index,output wire[23:0]memory_wdata,')
-    a(' input wire[23:0]capture_data,input wire capture_done,output reg playback_enable,capture_enable,')
+    a(' output wire memory_write,output wire[4:0]memory_index,output wire[39:0]memory_wdata,')
+    a(' input wire[39:0]capture_data,input wire capture_done,output reg playback_enable,capture_enable,')
+    a(' output reg memory_loop,output reg[4:0]memory_last, // MEMORY v3: playback loop / last quad index')
     a(' // Generated control boundary.')
     a(f' input wire fault,input wire[{nisl - 1}:0]island_pgood,input wire[31:0]obs_status,input wire[15:0]wire_status,')
     a(f' output wire[{aw - 1}:0]analog_cfg,output wire[{dw - 1}:0]debug_cfg,')
@@ -484,10 +525,12 @@ def emit_sv(model):
     a(' output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe,')
     a(' output reg commit_toggle,output wire config_error' +
       ''.join(f',\n input wire[{sf["bits"] - 1}:0]{sf["port"]}' for sf in model['status_fields']) + ');')
-    a(f' localparam[15:0]ID=16\'h5356,ABI_VERSION=16\'h{0x0002:04X},MAP_HASH=16\'h{model["map_hash16"]:04X};')
+    a(f' localparam[15:0]ID=16\'h5356,ABI_VERSION=16\'h{0x0003:04X},MAP_HASH=16\'h{model["map_hash16"]:04X};')
     a(' // Legacy state (identical behaviour to pt_control).')
-    a(' reg[4:0]index;reg[11:0]play_i;reg rejected;reg[15:0]s1,s2;reg c1,c2;')
-    a(' assign memory_index=index;assign memory_wdata={wr_data[11:0],play_i};')
+    a(' // MEMORY v3 (AC-1 sharing S1): capture/playback live in the transport banks, quad (40-bit) indexed.')
+    a(' // 0x21/0x24 stage quad bits [15:0]/[31:16]; a 0x22 write stores {wr_data[7:0],stage} at INDEX.')
+    a(' reg[4:0]index;reg[15:0]play_i,play_h;reg rejected;reg[15:0]s1,s2;reg c1,c2;')
+    a(' assign memory_index=index;assign memory_wdata={wr_data[7:0],play_h,play_i};')
     a(" assign memory_write=wr_en&&wr_addr==8'h22&&!enable;")
     a(' // Commit/status state.')
     a(f' reg view,last_ok;reg[7:0]commit_count,err_code,err_addr;reg[6:0]cfg_err;')
@@ -504,6 +547,9 @@ def emit_sv(model):
         if sf['reserved']:
             continue
         w, n = sf['bits'], sf['port']
+        if not sf['sync']:
+            a(f' wire[{w - 1}:0]stv_{n}={n}; // already an SCLK-domain register at the source (no synchronizer)')
+            continue
         a(f' reg[{w - 1}:0]st1_{n},st2_{n};wire[{w - 1}:0]stv_{n};')
         if sf['encoding'] == 'gray':
             for i in range(w):
@@ -518,6 +564,9 @@ def emit_sv(model):
         b = f['bits']
         if f['store'] is None:
             a(f' wire[{b - 1}:0]s_{f["sv"]}={b}\'d0,a_{f["sv"]}={b}\'d0;wire[{b - 1}:0]o_{f["sv"]};')
+        elif f['store'] == [b - 1, 0] and f['direct']:
+            # Direct (no-shadow) live trim: a write takes effect at once; shadow and active are one register.
+            a(f' reg[{b - 1}:0]s_{f["sv"]};wire[{b - 1}:0]a_{f["sv"]}=s_{f["sv"]};wire[{b - 1}:0]o_{f["sv"]};')
         elif f['store'] == [b - 1, 0]:
             a(f' reg[{b - 1}:0]s_{f["sv"]},a_{f["sv"]};wire[{b - 1}:0]o_{f["sv"]};')
         else:
@@ -533,14 +582,26 @@ def emit_sv(model):
     for isl, bit in islands.items():
         a(f' assign island_en[{bit}]=a_debug_island_power__{isl}[0];')
         a(f' assign island_on[{bit}]=a_debug_island_power__{isl}[0]&&(island_pgood[{bit}]||a_debug_pgood_override__{isl}[0]);')
+    # LU-02: a bias-override field whose ATB node sits in an island needs that island's real
+    # power-good too, like the ATB switch it pairs with (no forced node into an unpowered island).
+    ovr_pg = {}
+    for n in model['atb_nodes']:
+        if n['force'] == 'override' and n['island']:
+            ovr_pg.setdefault('debug.bias_override.' + n['override'], set()).add(islands[n['island']])
     for f in fields:
-        gate = '&&'.join(f'island_on[{islands[i]}]' for i in f['islands']) or "1'b1"
+        gate = '&&'.join([f'island_on[{islands[i]}]' for i in f['islands']] +
+                         [f'island_pgood[{k}]' for k in sorted(ovr_pg.get(f['name'], ()))]) or "1'b1"
         val = f'a_{f["sv"]}'
         if f['gate_and']:
             val = f'(a_{f["sv"]}&a_{by_name[f["gate_and"]]["sv"]})'
         if f['name'] in model['fault_forced']:
             val = f'(fault ? {sv_const(f["bits"], model["fault_forced"][f["name"]])} : {val})'
-        if f['islands']:
+        if f['clear_when_running'] is not None:
+            other, code = f['clear_when_running']
+            g = by_name[other]
+            val = f"((enable&&a_{g['sv']}=={sv_const(g['bits'], code)}) ? 1'b0 : {val})"
+            a(f" // {f['name']}: forced 0 while running (ENABLE=1) with {other} = {g['values'][code] if g['values'] else code}")
+        if gate != "1'b1":
             a(f' assign o_{f["sv"]}=({gate}) ? {val} : {sv_const(f["bits"], 0)};')
         else:
             a(f' assign o_{f["sv"]}={val};')
@@ -553,13 +614,24 @@ def emit_sv(model):
                     n = f['bus_bits']
                     a(f' /* verilator lint_off UNUSEDSIGNAL */ wire[{n}:0]th_{f["sv"]}=({n + 1}\'d1<<o_{f["sv"]})-{n + 1}\'d1; /* verilator lint_on UNUSEDSIGNAL */ // count -> thermometer')
                     a(f' assign {bus}_cfg[{f["bus_lsb"] + n - 1}:{f["bus_lsb"]}]=th_{f["sv"]}[{n - 1}:0];')
+                elif f['decode'] == 'mant_exp':
+                    b, mb, db = f['bits'], f['mantissa_bits'], f['decoded_bits']
+                    eb, sv = b - mb, f['sv']
+                    a(f' // {f["name"]}: code e:m -> value m (e=0), (2^{mb}+m)<<(e-1) (1<=e<={db - mb}), 2^{db}-1 above')
+                    a(f' wire[{eb - 1}:0]me_e_{sv}=o_{sv}[{b - 1}:{mb}];wire[{mb - 1}:0]me_m_{sv}=o_{sv}[{mb - 1}:0];')
+                    a(f" wire[{db - 1}:0]me_n_{sv}={{{db - mb - 1}'d0,1'b1,me_m_{sv}}}<<(me_e_{sv}-{eb}'d1);")
+                    a(f" assign {bus}_cfg[{f['bus_lsb'] + db - 1}:{f['bus_lsb']}]=(me_e_{sv}=={eb}'d0)?{{{db - mb}'d0,me_m_{sv}}}:"
+                      f"(me_e_{sv}>{eb}'d{db - mb})?{{{db}{{1'b1}}}}:me_n_{sv};")
                 else:
                     a(f' assign {bus}_cfg[{f["bus_lsb"] + f["bus_bits"] - 1}:{f["bus_lsb"]}]=o_{f["sv"]}[{hi}:{lo}];')
     # ATB one-hot decode with node gating.
     a(' // ATB: one-hot switch vectors, bit k-1 = node code k; island nodes open while the island is off.')
+    a(' // LU-02 / RA-3 interlock: an island node also needs the island\'s real power-good; the bring-up')
+    a(' // pgood override (which feeds island_on) never closes an ATB switch into an unpowered island.')
     for bus in (0, 1):
         for n in model['atb_nodes']:
-            gate = f'&&island_on[{islands[n["island"]]}]' if n['island'] else ''
+            k = islands[n['island']] if n['island'] else None
+            gate = f'&&island_on[{k}]&&island_pgood[{k}]' if n['island'] else ''
             a(f' assign atb{bus}_sw[{n["code"] - 1}]=(o_debug_atb__atb{bus}==6\'d{n["code"]}){gate};')
     a(' // ATB group and pad selects: ORs of the island-gated leaf lines (analog/island_support README A1).')
     for bus in (0, 1):
@@ -577,6 +649,10 @@ def emit_sv(model):
     a(' assign rx_en_wclk=island_on[%d]&&(' % islands['debug'] + '||'.join([f'o_{f["sv"]}==3\'d{wclk}' for f in clk_sel] +
                                          [f'o_debug_clk_obs__source==4\'d{obs_src.index("wclk_in")}',
                                           f'o_debug_wclk_obs__source==3\'d{wobs_src.index("wclk_in")}']) + ');')
+    if 'wired' not in by_name['debug.wtx_ext.enable']['islands']:
+        raise SpecError('LU-02/RA-3: debug.wtx_ext.enable must be gated by the wired island')
+    a(' // LU-02 / RA-3: o_debug_wtx_ext__enable is island-gated by island_on[wired], so WTX_EXT_DATA never')
+    a(' // reaches the wired TX p-diff while the wired island is off.')
     a(' assign rx_en_wtx_ext=island_on[%d]&&o_debug_wtx_ext__enable[0]; // debug-pad receivers sit on the debug island' % islands['debug'])
     a(" assign clk_obs_oe=o_debug_clk_obs__source!=4'd0;")
     a(" assign wclk_obs_oe=o_debug_wclk_obs__source!=3'd0;")
@@ -611,7 +687,7 @@ def emit_sv(model):
         a(f' assign bbm_ok[{i}]=!(a_{f["sv"]}!={z}&&s_{f["sv"]}!={z}&&s_{f["sv"]}!=a_{f["sv"]}); // {name}')
     nonlive = [f for f in fields if not f['live'] and f['store'] is not None]
     a(' wire nonlive_diff=' + '||'.join(f's_{f["sv"]}!=a_{f["sv"]}' for f in nonlive) + ';')
-    a(' wire pending=' + '||'.join(f's_{f["sv"]}!=a_{f["sv"]}' for f in fields if f['store'] is not None) + ';')
+    a(' wire pending=' + '||'.join(f's_{f["sv"]}!=a_{f["sv"]}' for f in fields if f['store'] is not None and not f['direct']) + ';')
     a(' reg[7:0]commit_code;')
     a(' always @*begin')
     a("  commit_code=8'h00;")
@@ -641,11 +717,11 @@ def emit_sv(model):
     a(' always @(posedge sclk or negedge rst_n)begin')
     a('  if(!rst_n)begin')
     a('   enable<=0;mode8<=0;rf_trim<=0;wire_trim<=0;clock_trim<=0;index<=0;play_i<=0;')
-    a('   rejected<=0;s1<=0;s2<=0;c1<=0;c2<=0;playback_enable<=0;capture_enable<=0;')
+    a('   rejected<=0;s1<=0;s2<=0;c1<=0;c2<=0;playback_enable<=0;capture_enable<=0;play_h<=0;memory_loop<=0;memory_last<=0;')
     a('   view<=0;last_ok<=0;commit_count<=0;err_code<=0;err_addr<=0;cfg_err<=0;commit_toggle<=0;')
     a('   pg1<=0;pg2<=0;on1<=0;on2<=0;f1<=0;f2<=0;')
     for sf in model['status_fields']:
-        if sf['reserved']:
+        if sf['reserved'] or not sf['sync']:
             continue
         a(f'   st1_{sf["port"]}<=0;st2_{sf["port"]}<=0;')
     for f in fields:
@@ -653,38 +729,41 @@ def emit_sv(model):
             continue
         hi, lo = f['store']
         d = sv_const(hi - lo + 1, f['default'] >> lo)
-        a(f'   {store_reg(f, "s")[0]}<={d};{store_reg(f, "a")[0]}<={d};')
+        if f['direct']:
+            a(f'   {store_reg(f, "s")[0]}<={d};')
+        else:
+            a(f'   {store_reg(f, "s")[0]}<={d};{store_reg(f, "a")[0]}<={d};')
     a('  end else begin')
     a('   s1<=status;s2<=s1;c1<=capture_done;c2<=c1;')
     a('   pg1<=island_pgood;pg2<=pg1;on1<=island_on;on2<=on1;f1<=fault;f2<=f1;')
     for sf in model['status_fields']:
-        if sf['reserved']:
+        if sf['reserved'] or not sf['sync']:
             continue
         a(f'   st1_{sf["port"]}<={sf["port"]};st2_{sf["port"]}<=st1_{sf["port"]};')
     a('   if(wr_en)begin')
     a('    case(wr_addr)')
     a("     8'h01:enable<=wr_data[0];")
     a("     8'h20:index<=wr_data[4:0];")
-    a("     8'h02,8'h04,8'h10,8'h11,8'h12,8'h21,8'h22,8'h23:")
+    a("     8'h02,8'h04,8'h10,8'h11,8'h12,8'h21,8'h22,8'h23,8'h24:")
     a('      if(enable)begin rejected<=1;cfg_err[6]<=1;err_addr<=wr_addr;end')
     a('      else case(wr_addr)')
     a("       8'h02:mode8<=wr_data[0];8'h04:rejected<=0;")
     a("       8'h10:rf_trim<=wr_data;8'h11:wire_trim<=wr_data;8'h12:clock_trim<=wr_data;")
-    a("       8'h21:play_i<=wr_data[11:0];")
-    a("       8'h23:begin playback_enable<=wr_data[0];capture_enable<=wr_data[1];end")
+    a("       8'h21:play_i<=wr_data;8'h24:play_h<=wr_data;")
+    a("       8'h23:begin playback_enable<=wr_data[0];capture_enable<=wr_data[1];memory_loop<=wr_data[2];memory_last<=wr_data[12:8];end")
     a('       default:begin end')
     a('      endcase')
     a("     8'h05:cfg_err<=cfg_err&~wr_data[6:0];")
     a("     8'h06:if(wr_data==16'h0001)begin")
     a('       if(commit_ok)begin')
     for f in fields:
-        if f['store'] is not None:
+        if f['store'] is not None and not f['direct']:
             a(f'        {store_reg(f, "a")[0]}<={store_reg(f, "s")[0]};')
     a('        commit_toggle<=!commit_toggle;commit_count<=commit_count+1\'b1;last_ok<=1;err_code<=0;')
     a('       end else begin last_ok<=0;err_code<=commit_code;cfg_err<=cfg_err|commit_err;end')
     a("      end else if(wr_data==16'h0002)begin")
     for f in fields:
-        if f['store'] is not None:
+        if f['store'] is not None and not f['direct']:
             a(f'       {store_reg(f, "s")[0]}<={store_reg(f, "a")[0]};')
     a('      end else begin cfg_err[0]<=1;err_addr<=wr_addr;end')
     a("     8'h0D:begin end // RESET_STATUS: write-1-to-clear handled by the flag flops")
@@ -720,8 +799,8 @@ def emit_sv(model):
     pad = 8 - nisl
     a(f"   8'h0A:rd_data={{{pad}'b0,pg2,{pad}'b0,on2}};8'h0B:rd_data={{15'b0,f2}};8'h0C:rd_data={{err_code,err_addr}};8'h0D:rd_data={{14'b0,rst_flag,por_flag}};")
     a("   8'h10:rd_data=rf_trim;8'h11:rd_data=wire_trim;8'h12:rd_data=clock_trim;")
-    a("   8'h20:rd_data={11'b0,index};8'h23:rd_data={14'b0,capture_enable,playback_enable};")
-    a("   8'h24:rd_data={15'b0,c2};8'h25:rd_data=capture_data[15:0];8'h26:rd_data={8'b0,capture_data[23:16]};")
+    a("   8'h20:rd_data={11'b0,index};8'h23:rd_data={3'b0,memory_last,5'b0,memory_loop,capture_enable,playback_enable};")
+    a("   8'h24:rd_data={capture_data[39:32],7'b0,c2};8'h25:rd_data=capture_data[15:0];8'h26:rd_data=capture_data[31:16];")
     for r in model['status_registers']:
         parts = []
         for name, fl, w, rl in r['chunks']:
@@ -745,8 +824,9 @@ def emit_sv(model):
     a('')
     a('module pt_mgmt(input wire rst_n,por_n,sclk,cs_n,mosi,output wire miso,miso_oe,')
     a(' input wire[15:0]status,output wire enable,mode8,output wire[15:0]rf_trim,wire_trim,clock_trim,')
-    a(' output wire memory_write,output wire[4:0]memory_index,output wire[23:0]memory_wdata,')
-    a(' input wire[23:0]capture_data,input wire capture_done,output wire playback_enable,capture_enable,')
+    a(' output wire memory_write,output wire[4:0]memory_index,output wire[39:0]memory_wdata,')
+    a(' input wire[39:0]capture_data,input wire capture_done,output wire playback_enable,capture_enable,')
+    a(' output wire memory_loop,output wire[4:0]memory_last,')
     a(f' input wire fault,input wire[{nisl - 1}:0]island_pgood,input wire[31:0]obs_status,input wire[15:0]wire_status,')
     a(f' output wire[{aw - 1}:0]analog_cfg,output wire[{dw - 1}:0]debug_cfg,')
     a(f' output wire[{nisl - 1}:0]island_en,island_on,output wire[{natb - 1}:0]atb0_sw,atb1_sw,')
@@ -758,11 +838,16 @@ def emit_sv(model):
     a(' wire wr_en;wire[7:0]wr_addr,rd_addr;wire[15:0]wr_data,rd_data;')
     a(' pt_spi spi(.rst_n(rst_n),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso),.miso_oe(miso_oe),')
     a('  .wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),.rd_addr(rd_addr),.rd_data(rd_data));')
-    a(' pt_regfile regs(.rst_n(rst_n),.por_n(por_n),.sclk(sclk),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),')
+    a(' // pt_spi presents each write from registers while count==32; the register file (and pt_memory\'s')
+    a(' // SPI port) take it on the falling SCLK edge after the 32nd rising edge (STA: launch/capture on')
+    a(' // the sclk fall edge, output budgets relative to it in integration/pt_digital_macro.sdc).')
+    a(' wire sclk_regs=~sclk;')
+    a(' pt_regfile regs(.rst_n(rst_n),.por_n(por_n),.sclk(sclk_regs),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),')
     a('  .rd_addr(rd_addr),.rd_data(rd_data),.status(status),.enable(enable),.mode8(mode8),')
     a('  .rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),.memory_write(memory_write),')
     a('  .memory_index(memory_index),.memory_wdata(memory_wdata),.capture_data(capture_data),')
     a('  .capture_done(capture_done),.playback_enable(playback_enable),.capture_enable(capture_enable),')
+    a('  .memory_loop(memory_loop),.memory_last(memory_last),')
     a('  .fault(fault),.island_pgood(island_pgood),.obs_status(obs_status),.wire_status(wire_status),')
     a('  .analog_cfg(analog_cfg),.debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),')
     a('  .atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.atb0_grp(atb0_grp),.atb1_grp(atb1_grp),.atb0_en(atb0_en),.atb1_en(atb1_en),')
@@ -796,6 +881,8 @@ def emit_formal(model, a, by_name):
                 v = f['default'] >> f['store'][1]
                 if f['decode'] == 'thermometer':
                     v = (1 << v) - 1
+                elif f['decode'] == 'mant_exp':
+                    v = mant_exp_value(v, f['mantissa_bits'], f['decoded_bits'])
                 if f['gate_and']:
                     v &= by_name[f['gate_and']]['default']
                 image |= v << f['bus_lsb']
@@ -906,7 +993,7 @@ def emit_markdown(model):
     a('`debug-controls.json`. Do not edit; regenerate. The machine-readable map is')
     a('`register-map.json`; bench headers are `rtl/gen/pt_regmap.h` and `rtl/gen/pt_regmap.py`.')
     a('')
-    a(f'Map hash `0x{model["map_hash16"]:04X}` (read at 0x09), ABI version `0x0002` (0x08), ID `0x5356` (0x00).')
+    a(f'Map hash `0x{model["map_hash16"]:04X}` (read at 0x09), ABI version `0x0003` (0x08), ID `0x5356` (0x00).')
     a(f'{len(regs)} generated registers ({sum(1 for r in regs if r["kind"] == "debug")} debug/fallback at '
       f'0x40-0x{model["last_debug"]:02X}, {sum(1 for r in regs if r["kind"] == "analog")} analog at '
       f'0x60-0x{model["last_analog"]:02X}) carrying {len(fields)} fields '
@@ -918,6 +1005,46 @@ def emit_markdown(model):
     a('address8 / data16. Command 0x80 writes, 0x00 reads (read data is shifted out during the last')
     a('16 clocks). The flat 8-bit address space holds every register, so no page register is used.')
     a('The register file is clocked only by `HOST_SCLK` and works with every PLL and oscillator stopped.')
+    a('A write (and a COMMIT) takes effect on the SCLK falling edge that follows the 32nd rising edge;')
+    a('in mode 0 SCLK returns low before CS_N rises, so that edge is always present. Clocks beyond the')
+    a('32nd never repeat a write.')
+    a('')
+    a('Encoded wide fields (`decode: mant_exp`): the register holds a code e:m (mantissa width per')
+    a('field); the analog_cfg bus carries the decoded value m (e = 0), (2^mb + m) << (e - 1), saturating')
+    a('at the decoded width. `rtl/gen/pt_regmap.py` provides `mant_exp_code(value, mb, db)` and')
+    a('`mant_exp_value(code, mb, db)`. Fields marked direct (no shadow) take effect on the write itself;')
+    a('COMMIT/REVERT do not touch them.')
+    a('')
+    a('## Per-board calibration sequence')
+    a('')
+    a('Host-run (FPGA over SPI) using on-chip measurements; every result is written into its trim field,')
+    a('then `debug.calibration.tag`/`valid` record the run (D-CAL-1, package placement tolerance):')
+    a('')
+    a('1. Power: core, then islands (`debug.island_power`), check `ISLAND_STATUS`; regulated ring PLLs')
+    a('   (`pllvreg.config.*_bypass` = 0) are held off for >= 50 us by the macro.')
+    a('2. LO termination and level: step the LO termination code, read the LO amplitude detector on ATB')
+    a('   (ADC or ATB pad); keep the code with the on-level inside the B3 window.')
+    a('3. I/Q phase and amplitude: TX->RX loopback tone, measure the image with the RX ADC capture')
+    a('   (`MEM_CAPTURE`), minimise with the quadrature phase/amplitude trims.')
+    a('4. RX match: sweep `lna.match.ctrim` (direct trim) for the best loopback or detector level;')
+    a('   `lna.match.rterm`/`se` only for the documented fallback boards.')
+    a('5. TX back-off: `rfdriver.gain.code` for the board loss (P1..P4 placement), checked on the')
+    a('   detector/ATB.')
+    a('6. Wired: termination trim, CTLE code and de-emphasis from PRBS loopback error counts')
+    a('   (`debug.pattern`, `status.pattern`), CDR phase trims `cdr.phase_trim.p0..p7` (direct) and')
+    a('   `cdr.config.cap_rcsel` from raw-word PRBS/comma errors.')
+    a('7. Bandpass ripple: `consolidation.bbfilter.qtrim` (direct) from the BB_I/Q tap response.')
+    a('8. Write `debug.calibration.tag` (board id or epoch) and `valid` = 1.')
+    a('')
+    a('## Macro clock plan (SP-01)')
+    a('')
+    a('Macro clock harmonics within +/-1 MHz of the RF channel are avoided by the host word rate')
+    a('(FPGA) and `debug.host_link.rate`: 312.5 Mword/s full rate (core 78.125 MHz; harmonics')
+    a('2343.75/2421.875/2500 MHz) for every 2.4 GHz channel except channel 3 (2422 MHz, 0.125 MHz from')
+    a('the 31st harmonic), which uses 250 Mword/s full rate (core 62.5 MHz; 15.5 MHz clear). The')
+    a('reduced-rate fallbacks are clear by > 1 MHz except: half rate ch 3 (0.12) and ch 11 (1.06);')
+    a('quarter rate ch 3, 7 (0.59), 11 (1.06) at 312.5 Mword/s and ch 3, 6, 9, 14 at 250 Mword/s. The')
+    a('RF sample clock (40/80 MHz) has harmonics at 2400/2440/2480 MHz (>= 2 MHz from every channel).')
     a('')
     a('## System and legacy registers')
     a('')
@@ -932,14 +1059,14 @@ def emit_markdown(model):
         ('0x05', 'CONFIG_ERROR', 'R/W1C', 'b0 write range/reserved encoding, b1 bad address, b2 split-field range at commit, b3 rule violation at commit, b4 break-before-make at commit, b5 commit while running, b6 legacy register locked.'),
         ('0x06', 'COMMIT', 'RW', 'Write 0x0001 = validate and commit shadow to active; 0x0002 = revert shadow to active; other values rejected. Read: b0 commit toggle, b1 last commit accepted, b2 shadow differs from active, b15:8 accepted-commit count.'),
         ('0x07', 'VIEW', 'RW', 'b0: 0 = generated registers read the shadow copy, 1 = the active copy.'),
-        ('0x08', 'ABI_VERSION', 'R', '0x0002 (was 0x0001 for the pt_control map).'),
+        ('0x08', 'ABI_VERSION', 'R', '0x0003 (0x0002 before MEMORY v3; 0x0001 for the pt_control map).'),
         ('0x09', 'MAP_HASH', 'R', 'Low 16 bits of the SHA-256 of the generated map; must match the bench header.'),
         ('0x0A', 'ISLAND_STATUS', 'R', 'b5:0 island effective-on (switch and power-good or override), b13:8 island power-good; SCLK-synchronized. Power-good = 1 with debug.island_power = 0 is the back-drive signature. Bit 3 (usb) is reserved and reads 0.'),
         ('0x0B', 'FAULT_STATUS', 'R', 'b0 monitor fault input, SCLK-synchronized.'),
         ('0x0D', 'RESET_STATUS', 'R/W1C', 'b0 POR occurred (set by POR, survives RESET_N), b1 reset occurred (set by POR or RESET_N). b1 with b0 clear after clearing both = a RESET_N-only reset. Flags live in the never-switched core domain; see macro-contract.md.'),
         ('0x0C', 'ERROR_INFO', 'R', 'b7:0 address of the last rejected write; b15:8 last commit result: 0 ok, 0x01-0x7F rule index+1, 0x80+i break-before-make field i, 0xC0+i split field i out of range, 0xFF non-live change while ENABLE=1.'),
         ('0x10-0x12', 'RF/WIRE/CLOCK_TRIM', 'RW', 'Legacy 16-bit trim words (wire_trim[15] selects PRBS, clock_trim[15] starts calibration); locked while ENABLE.'),
-        ('0x20-0x26', 'MEMORY', 'mixed', 'Legacy capture/playback memory service, unchanged (SPI capture/playback is the last host-link fallback).'),
+        ('0x20-0x26', 'MEMORY', 'mixed', 'MEMORY v3 (ABI 0x0003, AC-1 sharing S1): capture/playback in the shared transport banks, 40-bit quad indexed, owner-generic (IQ quads via the sample packer, wired raw/8b10b quads). 0x20 INDEX; 0x21 W stage[15:0]; 0x24 W stage[31:16], R {capture[39:32],7b0,done}; 0x22 W stores {wr_data[7:0],stage} into egress[INDEX] (ENABLE=0); 0x23 b0 playback, b1 capture, b2 loop, b12:8 last playback quad; 0x25/0x26 R capture[15:0]/[31:16] of ingress[INDEX]. Capture fills the ingress bank (28 quads) from the active lane while ENABLE=1, then stops (done); playback sends egress quads 0..last once or looped. SPI only: no host clock needed. The memory is the last host-link fallback.'),
         ('0x30-0x3F', 'reserved', '-', 'Reserved for the recovery mailbox (not implemented). Writes rejected, reads 0.'),
     ]:
         a('| ' + ' | '.join(row) + ' |')
@@ -1089,7 +1216,7 @@ def emit_c(model):
     a('#define PT_SPI_CMD_WRITE 0x80u')
     a('#define PT_SPI_CMD_READ 0x00u')
     a('#define PT_ID_VALUE 0x5356u')
-    a('#define PT_ABI_VERSION 0x0002u')
+    a('#define PT_ABI_VERSION 0x0003u')
     a(f'#define PT_MAP_HASH 0x{model["map_hash16"]:04X}u')
     a('#define PT_COMMIT_CMD 0x0001u')
     a('#define PT_REVERT_CMD 0x0002u')

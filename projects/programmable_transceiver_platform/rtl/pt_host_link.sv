@@ -1,128 +1,357 @@
-// Host GPIO link logic (hostio, digital half). The provider gf180mcu_fd_io pad cells
-// (bi_24t / bi_t, in_c, in_s at the contract.json assembly_policy sites) own the electrical
-// pad: ESD, level, drive, slew, pulls and the PAD->Y receiver. Everything clocked lives here and
-// is hardened inside pt_digital_macro:
-//   * H2D capture on the forwarded H2D_CLK (pin clock): rising-edge register r and, in DDR mode,
-//     falling-edge register f. Word order on the pins: word 0 with the rising edge, word 1 with
-//     the following falling edge (DDR); one word per rising edge (SDR).
-//   * The captured pair {word1, word0} crosses into the core host word clock through a
-//     Gray-pointer async FIFO (pt_async_fifo, 2-flop synchronizers) and is replayed one word per
-//     word clock. The FPGA derives H2D timing from D2H (pin plan "synchronous profile"), so the
-//     two clocks are mesochronous; the FIFO absorbs phase, not a frequency offset.
-//   * D2H launch on the word clock rising edge (registered, only flop clock-to-output reaches
-//     the pad). Forwarded D2H_CLK, centre aligned:
-//       DDR (mode 0): toggle flop on the word-clock FALLING edge -> D2H_CLK = word clock / 2 with
-//                     its edges in the middle of each data word.
-//       SDR (mode 1, 2): inverted word clock, gated glitch-free by d2h_enable synchronized on the
-//                     rising edge (enable changes only while the inverted clock is low). The FPGA
-//                     captures on its rising D2H_CLK edge = our falling edge = mid-word.
-//   * Mode 2 (reduced-rate SDR) is mode 1 logic on a slower word clock chosen by the clocktree
-//     divider; the pins and logic are identical.
-// host_link_mode and d2h_enable are regfile fields: stopped-only / quasi-static (P5 of the
-// regfile formal proof). They pass through 2-flop synchronizers here anyway.
-// Reset: D2H output enable 0 (pads tristated), data and forwarded clock 0.
+// Host GPIO link logic (hostio, digital half), AC-1 pad-edge architecture
+// (spec/interface-architecture-changes.md AC-1). The provider gf180mcu_fd_io
+// pad cells (integration/pt_chip.sv pt_host_physical) own ESD, level, drive,
+// slew and the PAD->Y receiver; everything clocked lives here, inside
+// pt_digital_macro, in two small pad-edge regions.
+//
+// Clocking (transport rework 2026-11-10, in-window ss Liberty). In the
+// characterized ss_032C_3v15 library a dffrnq_1 has 1.86 ns clk->Q and
+// 0.84 ns setup, so no logic can run at 312.5 MHz with margin, and a
+// half-cycle path at 156.25 MHz has <= 10 %. Hence:
+//   * the macro receives the host DDR clock directly (host_word_clk input =
+//     line/16, 156.25 MHz at 2.5 Gb/s; one ten-bit word per pin per EDGE);
+//     pt_host_rate_clock selects /1 /2 /4 of it: link_clk (hddr).
+//   hddr               D2H DDR launch + 4:1 gearbox (south region).
+//   hcore = hddr/2     78.125 MHz: the 40-bit transport core (core_clk).
+//   h2d_clk            forwarded H2D pin clock (DDR, = hddr rate): capture,
+//                      1:4 gearbox, write side of the H2D quad FIFO (north).
+//   * data never crosses between the rising and falling halves of a clock in
+//     half a period: falling-edge registers take their data from registers
+//     held for two periods (1.5-period multicycle, proven formally in
+//     verification/formal/pt_d2h_gearbox_fv.sv / pt_h2d_gearbox_fv.sv). The
+//     only half-period paths are one direct flop -> flop phase copy per four
+//     to ten bits (no logic) and reset release into falling-edge flops, which
+//     the design tolerates in either of the two possible edges.
+//
+// Word order on the pins is chronological; quad word 0 (earliest) is [9:0].
+//
+// D2H. The core hands one quad per hcore clock. A hcore register stores the
+// running XOR prefix P_k = w_0 ^ ... ^ w_k of the word stream (P0..P3 of each
+// quad, carried across quads). The pad pin is q_r ^ q_f where q_r (hddr
+// rising) and q_f (hddr falling) hold consecutive prefixes, so each pin
+// changes exactly once per word, by one flop toggling: no clock-as-data mux,
+// no glitch and no logic in the fast flops' output paths.
+// Forwarded D2H_CLK (DDR, modes 0): the same structure carrying 1,0,1,0:
+// c_r toggles on every hddr rising edge and c_f copies it on the falling
+// edge, so the pin is an hddr-rate clock whose edges are produced exactly like
+// the data edges (EDGE-ALIGNED, like a DDR DQS; the FPGA centres it by its
+// input delay / phase training, spec/fpga-host-screen.md "phase training").
+// SDR (modes 1, 2): the inverted word clock (2 x hddr), gated glitch-free;
+// it exists only at the reduced rates (div2 / div4), because the full-rate
+// word clock would be 312.5 MHz, above the pad's f_max.
+//
+// H2D. Rising- and falling-edge capture on h2d_clk (DDR) or rising only
+// (SDR); words are assembled into quads in the pin-clock domain and cross to
+// hcore through an eight-quad Gray-pointer FIFO whose write enables are
+// registered one clock ahead and replicated. The FPGA derives H2D from D2H, so
+// the clocks are mesochronous and the FIFO absorbs phase only. The quad phase
+// of the word stream is arbitrary; the transport receiver acquires all four
+// word rotations. The receive path is NOT reset by ENABLE (the receiver must
+// be armed before the peer's training prefix). Reset: D2H OE 0, data and
+// forwarded clock 0.
 `default_nettype none
 module pt_host_link(
-    input  wire       rst_n,
-    input  wire [1:0] mode,          // debug.host_link.mode: 0 DDR, 1 SDR, 2 SDR reduced
-    input  wire       d2h_enable,    // hostio.controls.d2h_enable (SCLK domain, quasi-static)
-    // H2D pins (pad Y outputs)
-    input  wire       h2d_clk,
-    input  wire [9:0] h2d_pin,
-    // core side, host word clock domain
-    input  wire       word_clk,
-    output reg  [9:0] h2d_word,
-    input  wire [9:0] d2h_word,
-    // D2H pins (pad A / OE inputs)
-    output reg  [9:0] d2h_pin,
-    output wire       d2h_clk_pin,
-    output wire       d2h_oe,
-    output wire       h2d_overflow, h2d_underflow
+    input  wire        rst_n,
+    input  wire [1:0]  mode,          // debug.host_link.mode: 0 DDR, 1 SDR, 2 SDR reduced
+    input  wire        d2h_enable,    // hostio.controls.d2h_enable (SCLK domain, quasi-static)
+    input  wire        h2d_clk,
+    input  wire [9:0]  h2d_pin,
+    input  wire        link_clk,      // hddr: host DDR clock after the reduced-rate select
+    input  wire        word_clk,      // 2 x hddr word clock (SDR forwarded clock; reduced rates only)
+    output wire        core_clk,      // hcore = hddr/2
+    output wire        core_rst_n,    // rst_n released synchronously to hcore
+    output wire [39:0] h2d_quad,      // core_clk domain register, one quad per clock (0 = idle/underflow)
+    input  wire [39:0] d2h_quad,      // core_clk domain register
+    output wire [9:0]  d2h_pin,
+    output wire        d2h_clk_pin,
+    input  wire        d2h_stagger,   // hostio.controls.d2h_stagger (HB-1, quasi-static): odd lanes late
+    output wire        d2h_oe,
+    output wire        h2d_overflow, h2d_underflow
 );
-    // ---------------- H2D: pin-clock domain. The receive path runs whenever its clocks run (it
-    // is NOT reset by ENABLE): the stream receiver must be armed before the peer sends its
-    // training prefix (spec/streaming-transport-v2.md), so the path adds only its fixed latency.
-    // A mode change (stopped only) can slip one word while stopped; ENABLE 0->1 then restarts the
-    // frame receiver. Reset assertion is asynchronous; release is synchronized per clock domain.
-    wire rx_rst_n = rst_n;
-    reg [1:0] hrs, wrs;
-    always @(posedge h2d_clk or negedge rx_rst_n) if (!rx_rst_n) hrs <= 2'b00; else hrs <= {hrs[0], 1'b1};
-    always @(posedge word_clk or negedge rx_rst_n) if (!rx_rst_n) wrs <= 2'b00; else wrs <= {wrs[0], 1'b1};
-    wire hr_n = hrs[1], wr_n = wrs[1];
-    wire [1:0] mode_h;
-    pt_sync_vec #(2) smh(.clk(h2d_clk), .rst_n(hr_n), .d(mode), .q(mode_h));
-    wire ddr_h = mode_h == 2'd0;
-    reg [9:0] r, f, h0;
-    reg       ph, push;
-    reg [19:0] pair;
-    always @(negedge h2d_clk or negedge hr_n)
-        if (!hr_n) f <= 10'd0; else f <= h2d_pin;
-    always @(posedge h2d_clk or negedge hr_n)
-        if (!hr_n) begin r <= 10'd0; h0 <= 10'd0; ph <= 1'b0; push <= 1'b0; pair <= 20'd0; end
-        else begin
-            r  <= h2d_pin;
-            ph <= ~ph;
-            if (ddr_h) begin pair <= {f, r}; push <= 1'b1; end        // r: rising word, f: next falling word
-            else begin h0 <= r; if (ph) begin pair <= {r, h0}; push <= 1'b1; end else push <= 1'b0; end
-        end
-    // ---------------- H2D: pin clock -> word clock
-    wire [19:0] head; wire empty, full; wire [3:0] rd_count;
-    reg  pop, run, sel;
-    pt_async_fifo #(.W(20), .A(3), .REG_OUT(1)) h2d_fifo(.wr_clk(h2d_clk), .rd_clk(word_clk), .rst_n(rx_rst_n),
-        .din(pair), .push(push), .pop(pop), .dout(head), .full(full), .empty(empty),
-        .wr_count(), .rd_count(rd_count), .overflow(h2d_overflow), .underflow(h2d_underflow),
-        .wr_active(), .rd_active());
-    reg [9:0] w1;
-    // Start after two pairs are buffered, then replay continuously: word0 then word1 of each pair.
-    always @(posedge word_clk or negedge wr_n)
-        if (!wr_n) begin run <= 1'b0; sel <= 1'b0; pop <= 1'b0; h2d_word <= 10'd0; w1 <= 10'd0; end
-        else begin
-            if (!run && rd_count >= 4'd2) run <= 1'b1;
-            pop <= 1'b0;
-            if (run) begin
-                sel <= ~sel;
-                if (!sel) begin
-                    if (!empty) begin h2d_word <= head[9:0]; w1 <= head[19:10]; pop <= 1'b1; end
-                    else h2d_word <= 10'd0;                  // underflow: idle word; flagged by the FIFO
-                end else h2d_word <= w1;
+    // ---------------- hddr-domain reset release, then the hcore divider. The
+    // divider and the gearbox load phases leave reset on the same hddr edge.
+    (* async_reg = "true" *) reg [1:0] drs;
+    always @(posedge link_clk or negedge rst_n) if (!rst_n) drs <= 2'b00; else drs <= {drs[0], 1'b1};
+    wire dr_n = drs[1];
+    pt_host_divider divider(.clk(link_clk), .rst_n(dr_n), .core_clk(core_clk));
+    (* async_reg = "true" *) reg [1:0] crs;
+    always @(posedge core_clk or negedge rst_n) if (!rst_n) crs <= 2'b00; else crs <= {crs[0], 1'b1};
+    assign core_rst_n = crs[1];
+
+    // ---------------- D2H, core domain: enable gate and XOR prefix
+    wire en_c;
+    pt_sync_vec #(1) sen(.clk(core_clk), .rst_n(core_rst_n), .d(d2h_enable), .q(en_c));
+    wire [39:0] w = en_c ? d2h_quad : 40'd0;
+    reg  [39:0] prefix;
+    wire [9:0]  carry = prefix[39:30];
+    wire [9:0]  p0 = carry ^ w[9:0];
+    wire [9:0]  p1 = carry ^ (w[9:0] ^ w[19:10]);
+    wire [9:0]  p2 = (carry ^ w[9:0]) ^ (w[19:10] ^ w[29:20]);
+    wire [9:0]  p3 = (carry ^ w[9:0]) ^ (w[19:10] ^ (w[29:20] ^ w[39:30]));
+    always @(posedge core_clk or negedge core_rst_n)
+        if (!core_rst_n) prefix <= 40'd0; else prefix <= {p3, p2, p1, p0};
+
+    // ---------------- D2H, hddr domain: 4:1 gearbox, DDR launch, forwarded clock
+    wire [1:0] mode_d; wire en_d;
+    pt_sync_vec #(3) smd(.clk(link_clk), .rst_n(dr_n), .d({mode, d2h_enable}), .q({mode_d, en_d}));
+    wire ddr_fwd; wire [9:0] d2h_launch;
+    pt_d2h_gearbox gearbox(.ddr_clk(link_clk), .rst_n(dr_n), .nrst_n(dr_n), .prefix(prefix), .clk_en(en_d && mode_d == 2'd0),
+        .d2h_pin(d2h_launch), .clk_pin(ddr_fwd));
+    // HB-1: two-group launch stagger (SSN). Odd lanes go through a fixed ~0.4-0.8 ns delay when
+    // d2h_stagger=1; the even lanes and the forwarded clock are the early group. The FPGA per-bit
+    // input delay absorbs the offset. Every lane passes one kept mux, so both groups match otherwise.
+    genvar gl;
+    generate for (gl = 0; gl < 10; gl = gl + 1) begin : stagger
+        pt_stagger lane(.I(d2h_launch[gl]), .S(d2h_stagger && (gl % 2 == 1)), .Z(d2h_pin[gl]));
+    end endgenerate
+    // SDR forwarded clock: inverted word clock, enable registered on its rising edge (the AND
+    // output is low then, so it cannot glitch).
+    reg en_sdr;
+    always @(posedge word_clk or negedge rst_n)
+        if (!rst_n) en_sdr <= 1'b0; else en_sdr <= en_d && mode_d != 2'd0;
+    reg sdr_sel;   // quasi-static: mode changes only while stopped
+    always @(posedge link_clk or negedge dr_n) if (!dr_n) sdr_sel <= 1'b0; else sdr_sel <= mode_d != 2'd0;
+    assign d2h_clk_pin = sdr_sel ? (~word_clk & en_sdr) : ddr_fwd;
+    assign d2h_oe = d2h_enable;
+
+    // ---------------- H2D
+    pt_h2d_gearbox h2d(.rst_n(rst_n), .mode(mode), .h2d_clk(h2d_clk), .h2d_pin(h2d_pin),
+        .core_clk(core_clk), .core_rst_n(core_rst_n), .quad(h2d_quad), .overflow(h2d_overflow), .underflow(h2d_underflow));
+endmodule
+
+// hcore divider: one hddr toggle flop behind a kept root buffer (STA: generated clock hcore =
+// hddr/2 at the buffer output). The first hddr edge after reset is an hcore rising edge.
+module pt_host_divider(input wire clk, rst_n, output wire core_clk);
+    reg c;
+    always @(posedge clk or negedge rst_n) if (!rst_n) c <= 1'b0; else c <= ~c;
+    pt_clock_buf core_root(.I(c), .Z(core_clk));
+endmodule
+
+// Local load-phase drivers: one flop per group of output bits, preserved across synthesis so the
+// phase net never becomes one high-fanout tree. `load` is 1 before every hcore rising edge.
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_ddr_phase(input wire clk, rst_n, output reg load);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) load <= 1'b1; else load <= ~load;
+endmodule
+
+// Falling-edge phase copy: lp (rising, no reset, no logic before it except the reset gate) is
+// sampled by the falling-edge flop nsel half a period later. This direct flop -> flop transfer is
+// the only half-period path of a DDR group (no logic). nsel is 1 on the falling edges where the
+// two-period data register `x` must be taken, 0 where the held copy is taken. After reset nsel is
+// 0 and lp is 0 for one period; every register it selects between is still 0 then.
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_ddr_nphase(input wire clk, rst_n, run, phase, output reg nsel);
+    reg lp;
+    always @(posedge clk) lp <= phase & run;
+    always @(negedge clk or negedge rst_n) if (!rst_n) nsel <= 1'b0; else nsel <= lp;
+endmodule
+
+// Replicated control flop (write-enable fanout split), preserved across
+// synthesis so identical copies are not merged.
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_rep_dff(input wire clk, rst_n, d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+endmodule
+
+// D2H 4:1 gearbox + DDR launch (hddr domain). After reset the first hddr edge is an hcore edge
+// (pt_host_divider) and `load` is 1 exactly before hcore edges (edge k below):
+//   rise k   (load): x <= prefix quad P0..P3 (hcore register, unchanged for two hddr periods:
+//                    2-period multicycle); q_r <= x.P2 of the previous quad
+//   fall k+.5      : q_f <= f3   (P3 of the previous quad, held since rise k-1: 1.5 periods)
+//   rise k+1       : q_r <= x.P0; f3 <= x.P3
+//   fall k+1.5     : q_f <= x.P1 (x held since rise k: 1.5 periods)
+// so the pin q_r ^ q_f steps P3'^P2', P0^P3', P1^P0, P2^P1, P3^P2, ... one word per hddr edge.
+// The falling flops only ever take a register that has been stable for 1.5 periods (the other mux
+// input changed half a period before, but is not selected): SDC multicycle 2 from x/f3 to q_f.
+// Forwarded clock: c_r toggles on rising edges while enabled, c_f takes c_r on the falling edge
+// (a direct phase copy, as pt_ddr_nphase), clk_pin = c_r ^ c_f: 1 after rising, 0 after falling.
+module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] prefix, input wire clk_en,
+    output wire [9:0] d2h_pin, output wire clk_pin);
+    wire [4:0] load, nsel;
+    reg run;   // 0 until the first hddr edge after reset
+    always @(posedge ddr_clk or negedge rst_n) if (!rst_n) run <= 1'b0; else run <= 1'b1;
+    genvar g;
+    generate for (g = 0; g < 5; g = g + 1) begin : phases
+        pt_ddr_phase phase(.clk(ddr_clk), .rst_n(rst_n), .load(load[g]));
+        pt_ddr_nphase nphase(.clk(ddr_clk), .rst_n(nrst_n), .run(run), .phase(load[g]), .nsel(nsel[g]));
+    end endgenerate
+    reg [39:0] x;
+    reg [9:0]  q_r, f3, q_f;
+    integer b;
+    always @(posedge ddr_clk or negedge rst_n)
+        if (!rst_n) begin x <= 40'd0; q_r <= 10'd0; f3 <= 10'd0; end
+        else for (b = 0; b < 10; b = b + 1) begin
+            if (load[b/2]) begin
+                x[b] <= prefix[b]; x[b+10] <= prefix[b+10]; x[b+20] <= prefix[b+20]; x[b+30] <= prefix[b+30];
+                q_r[b] <= x[b+20];
+            end else begin
+                q_r[b] <= x[b]; f3[b] <= x[b+30];
             end
         end
-    // ---------------- D2H: word clock domain
-    wire [1:0] mode_w; wire en_w;
-    pt_sync_vec #(3) smw(.clk(word_clk), .rst_n(rst_n), .d({mode, d2h_enable}), .q({mode_w, en_w}));
-    always @(posedge word_clk or negedge rst_n)
-        if (!rst_n) d2h_pin <= 10'd0; else d2h_pin <= en_w ? d2h_word : 10'd0;
-    reg tq, en_ddr;
-    always @(negedge word_clk or negedge rst_n)
-        if (!rst_n) begin tq <= 1'b0; en_ddr <= 1'b0; end
-        else begin en_ddr <= en_w && mode_w == 2'd0; tq <= en_ddr ? ~tq : 1'b0; end
-    reg en_sdr;  // rising-edge update: ~word_clk is low then, so the AND below cannot glitch
-    always @(posedge word_clk or negedge rst_n)
-        if (!rst_n) en_sdr <= 1'b0; else en_sdr <= en_w && mode_w != 2'd0;
-    assign d2h_clk_pin = tq | (~word_clk & en_sdr);
-    assign d2h_oe = d2h_enable;
+    // nrst_n = rst_n in the macro; a separate port only so that formal can release the
+    // falling-edge flops one falling edge late (the untimed half-period recovery case).
+    integer bf;
+    always @(negedge ddr_clk or negedge nrst_n)
+        if (!nrst_n) q_f <= 10'd0;
+        else for (bf = 0; bf < 10; bf = bf + 1) q_f[bf] <= nsel[bf/2] ? x[bf+10] : f3[bf];
+    assign d2h_pin = q_r ^ q_f;
+`ifdef FORMAL
+    // 1.5-period multicycle into the falling flops (SDC: x/f3 -> q_f): on every falling edge the
+    // selected register did not change on the rising edge half a period before.
+    reg [39:0] f_xd; reg [9:0] f_f3d; reg [2:0] f_rises;
+    always @(posedge ddr_clk) begin f_xd <= x; f_f3d <= f3; end
+    always @(posedge ddr_clk or negedge rst_n) if (!rst_n) f_rises <= 3'd0; else if (f_rises != 3'd7) f_rises <= f_rises + 1'b1;
+    always @(negedge ddr_clk) if (rst_n && nrst_n && f_rises >= 3'd2) begin
+        assert(nsel == {5{nsel[0]}});
+        if (nsel[0]) assert(x[19:10] == f_xd[19:10]); else assert(f3 == f_f3d);
+    end
+`endif
+    reg c_r, c_f;
+    always @(posedge ddr_clk or negedge rst_n) if (!rst_n) c_r <= 1'b0; else if (clk_en) c_r <= ~c_r;
+    always @(negedge ddr_clk or negedge nrst_n) if (!nrst_n) c_f <= 1'b0; else c_f <= c_r;
+    assign clk_pin = c_r ^ c_f;
+endmodule
+
+// H2D capture, 1:4 gearbox and pin-clock -> hcore quad FIFO (8 entries: two synchronizer stages on
+// each side hide about three quads of occupancy).
+// DDR word order: a_j on rising edge j, b_j on the falling edge after it. Rising words go through
+// rising-edge registers only (r, r1, r2, r3); falling words are captured by f on every falling edge
+// and, on every other falling edge (nsel = 1), the pair {pin, f} = {b_(j+1), b_j} is copied into
+// fh, which then holds for two periods. The quad {b_(j+1), a_(j+1), b_j, a_j} is written into the
+// FIFO memory on the rising edge 1.5 periods after fh was written (`take`, SDC multicycle 2 from fh
+// to host.h2d.mem), straight from r1/r2 and fh. SDR: rising-edge words only, {r, r1, r2, r3} on
+// every fourth edge. The per-entry write enables are registered one clock ahead (the write edge is
+// known from the phase counter).
+module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_clk,
+    input wire [9:0] h2d_pin, input wire core_clk, core_rst_n, output reg [39:0] quad,
+    output reg overflow, underflow);
+    // ---- pin-clock domain
+    (* async_reg = "true" *) reg [1:0] hrs;
+    always @(posedge h2d_clk or negedge rst_n) if (!rst_n) hrs <= 2'b00; else hrs <= {hrs[0], 1'b1};
+    wire hr_n = hrs[1];
+    wire [1:0] mode_h;
+    pt_sync_vec #(2) smh(.clk(h2d_clk), .rst_n(hr_n), .d(mode), .q(mode_h));
+    wire ddr = mode_h == 2'd0;
+    reg [9:0]  r, r1, r2, r3, f;
+    reg [19:0] fh;
+    reg [1:0]  phase;
+    reg        hrun;
+    always @(posedge h2d_clk or negedge hr_n) if (!hr_n) hrun <= 1'b0; else hrun <= 1'b1;
+    // phase[0] is 1 before the rising edges that write a DDR quad (`take`); nsel copies it to the
+    // falling edge before, i.e. fh is written 1.5 periods before every take.
+    wire nsel;
+    pt_ddr_nphase hn0(.clk(h2d_clk), .rst_n(hr_n), .run(hrun), .phase(~phase[0]), .nsel(nsel));
+    // Falling-edge registers: their reset release may land on either of two falling edges (a
+    // half-period recovery path, not timed); they only hold pin data, so either is equivalent.
+    integer i;
+    always @(negedge h2d_clk or negedge hr_n)
+        if (!hr_n) begin f <= 10'd0; fh <= 20'd0; end
+        else begin
+            f <= h2d_pin;
+            for (i = 0; i < 10; i = i + 1)
+                if (nsel) begin fh[i] <= f[i]; fh[i+10] <= h2d_pin[i]; end
+        end
+    // Write side: one-hot pointer, per-entry enables registered one clock ahead (one flop per
+    // entry, preserved); Gray pointer for the reader.
+    reg  [7:0]  woh;
+    wire [7:0]  we;                      // entry e
+    reg  [3:0]  wb, wg, rg1, rg2, wbn, wgn;   // wbn/wgn: wb+1 and its Gray code, precomputed
+    reg         wr_now;                      // a write happens at this edge (any we)
+    reg  [39:0] mem [0:7];
+    reg  [3:0]  rb, rgray, wg1, wg2;
+    wire full = wg == {~rg2[3:2], rg2[1:0]};
+    wire take = phase[0];
+    wire done = ddr ? take : &phase;                       // a quad is written at this edge
+    wire next_done = ddr ? !phase[0] : phase == 2'b10;     // ... at the next edge
+    wire [39:0] wdata = ddr ? {fh[19:10], r1, fh[9:0], r2} : {r, r1, r2, r3};
+    wire any_we = wr_now;
+    integer e, k;
+    genvar ge;
+    generate for (ge = 0; ge < 8; ge = ge + 1) begin : entries
+        pt_rep_dff enable(.clk(h2d_clk), .rst_n(hr_n), .d(next_done && woh[ge] && !full), .q(we[ge]));
+    end endgenerate
+    always @(posedge h2d_clk or negedge hr_n)
+        if (!hr_n) begin
+            r <= 10'd0; r1 <= 10'd0; r2 <= 10'd0; r3 <= 10'd0; phase <= 2'd0; wr_now <= 1'b0;
+            woh <= 8'b00000001; wb <= 4'd0; wg <= 4'd0; wbn <= 4'd1; wgn <= 4'd1; rg1 <= 4'd0; rg2 <= 4'd0; overflow <= 1'b0;
+        end else begin
+            r <= h2d_pin; r1 <= r; r2 <= r1; r3 <= r2;
+            phase <= phase + 1'b1;
+            rg1 <= rgray; rg2 <= rg1;
+            if (done && !any_we && hrun) overflow <= 1'b1;   // a complete quad found no free entry
+            wr_now <= next_done && !full;
+            if (any_we) begin
+                woh <= {woh[6:0], woh[7]};
+                wb <= wbn; wg <= wgn; wbn <= wbn + 1'b1; wgn <= (wbn + 1'b1) ^ ((wbn + 1'b1) >> 1);
+            end
+        end
+`ifdef FORMAL
+    // DDR word order and the 1.5-period multicycle fh -> mem (SDC): on every write edge fh did not
+    // change on the falling edge half a period before, and the written quad is the four
+    // chronological pin words {fall T-1.5, rise T-2, fall T-2.5, rise T-3}.
+    reg [9:0] f_ra0, f_ra1, f_ra2, f_fb0, f_fb1, f_fb2; reg [19:0] f_fhd; reg [2:0] f_n;
+    always @(posedge h2d_clk) begin f_ra0 <= h2d_pin; f_ra1 <= f_ra0; f_ra2 <= f_ra1; end
+    always @(negedge h2d_clk) begin f_fb0 <= h2d_pin; f_fb1 <= f_fb0; f_fb2 <= f_fb1; f_fhd <= fh; end
+    always @(posedge h2d_clk or negedge hr_n)
+        if (!hr_n) f_n <= 3'd0;
+        else begin
+            if (f_n != 3'd7) f_n <= f_n + 1'b1;
+            if (f_n >= 3'd5 && ddr && take) begin
+                assert(fh == f_fhd);
+                assert(wdata == {f_fb1, f_ra1, f_fb2, f_ra2});
+            end
+            if (any_we) assert(done);
+            cover(f_n == 3'd7 && any_we && wdata != 40'd0);
+        end
+`endif
+    always @(posedge h2d_clk)
+        for (e = 0; e < 8; e = e + 1)
+            if (we[e]) mem[e] <= wdata;
+    // ---- core domain: start after two quads, then one quad per clock
+    reg run;
+    wire [3:0] wbin = {wg2[3], ^wg2[3:2], ^wg2[3:1], ^wg2[3:0]};
+    wire empty = rgray == wg2;
+    wire [3:0] avail = wbin - rb;
+    wire ctake = run && !empty;
+    always @(posedge core_clk or negedge core_rst_n)
+        if (!core_rst_n) begin rb <= 4'd0; rgray <= 4'd0; wg1 <= 4'd0; wg2 <= 4'd0; run <= 1'b0; quad <= 40'd0; underflow <= 1'b0; end
+        else begin
+            wg1 <= wg; wg2 <= wg1;
+            if (!run && avail >= 4'd2) run <= 1'b1;
+            quad <= ctake ? mem[rb[2:0]] : 40'd0;   // underflow: idle quad, flagged
+            if (ctake) begin rb <= rb + 1'b1; rgray <= (rb + 1'b1) ^ ((rb + 1'b1) >> 1); end
+            if (run && empty) underflow <= 1'b1;
+        end
 endmodule
 
 // Reduced-rate fallback for the whole host transport (debug.host_link.rate):
-// 0 = full (core word clock = host word clock), 1 = /2, 2 or 3 = /4. The
-// selected clock drives pt_host_link (word side), both paired-core host
-// boundaries and every engine behind them, so the chip stays fully
-// functional at 1/2 or 1/4 throughput (the FPGA follows the forwarded D2H
-// clock; the wired/RF line rates must be lowered to match through the
-// clocktree dividers). The field is stopped-only: a change first holds
-// the host link and transport core in reset (hold_n=0), switches the
-// clock-select register while every destination is in reset, then
-// releases. Runt pulses at the switch therefore only reach reset flops.
-// STA constrains each setting as a separate mode (HOST_RATE_DIV in
-// integration/pt_digital_macro.sdc); the select register is case-analysed.
+// 0 = full (hddr = host DDR clock), 1 = /2, 2 or 3 = /4. The selected clock
+// drives pt_host_link (DDR side) and, through its /2 divider, the transport
+// core and every engine behind it, so the chip stays fully functional at 1/2
+// or 1/4 throughput (the FPGA follows the forwarded D2H clock; the wired/RF
+// line rates must be lowered to match through the clocktree dividers). The
+// field is stopped-only: a change first holds the host link and transport
+// core in reset (hold_n=0), switches the clock-select register while every
+// destination is in reset, then releases. Runt pulses at the switch
+// therefore only reach reset flops. STA constrains each setting as a
+// separate mode (HOST_RATE_DIV in integration/pt_digital_macro.sdc); the
+// select register is case-analysed. word_clk = 2 x out_clk for the SDR
+// forwarded clock at the reduced rates (at full rate it equals clk).
 module pt_host_rate_clock(input wire clk,rst_n,input wire[1:0]rate,
- output wire out_clk,output reg hold_n);
+ output wire out_clk,word_clk,output reg hold_n);
  reg[1:0]div;   // div[0] = clk/2, div[1] = clk/4 (both 50 % duty, rising together)
  reg[1:0]cur;   // applied select: 0 full, 1 /2, 2 /4
  reg[1:0]gap;
  wire[1:0]rate_s;
  pt_sync_vec #(2) rate_sync(clk,rst_n,rate,rate_s);
- reg[1:0]want;   // normalized request, registered (off the 3.2 ns compare path)
+ reg[1:0]want;   // normalized request, registered
  always @(posedge clk or negedge rst_n)
   if(!rst_n)div<=0;else div<=div+1'b1;
  always @(posedge clk or negedge rst_n)begin
@@ -143,14 +372,13 @@ module pt_host_rate_clock(input wire clk,rst_n,input wire[1:0]rate,
   .I0(div[0]),.I1(div[1]),.S(cur[1]),.Z(slow_clk));
  (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__mux2_2 rate_clock_mux(
   .I0(clk),.I1(slow_clk),.S(cur != 2'd0),.Z(out_clk));
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__mux2_2 word_clock_mux(
+  .I0(clk),.I1(div[0]),.S(cur[1]),.Z(word_clk));
 `else
  assign slow_clk=cur[1] ? div[1] : div[0];
  assign out_clk=(cur != 2'd0) ? slow_clk : clk;
+ assign word_clk=cur[1] ? div[0] : clk;
 `endif
 endmodule
 
-`ifdef SYNTHESIS
-(* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__mux2_2(input wire I0,I1,S,output wire Z);
-endmodule
-`endif
 `default_nettype wire

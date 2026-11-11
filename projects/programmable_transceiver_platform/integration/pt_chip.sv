@@ -21,7 +21,7 @@ module pt_chip(
  VDD_WIRE_A,VSS_WIRE_A,VDD_WIRE_B,VSS_WIRE_B,VDD_RF,VSS_RF,VDD_PLL,VSS_PLL);
  wire pad_rst_n,por_n,rst_n,ref_clk,sclk,cs_n,mosi,miso,miso_oe;
  wire ht,h2d_clk,wr,wt,rr,rt,enable,mode8,wv,wvalid,wrequest,rv,rvalid,rrequest,idle,mute,above;
- wire[9:0]h2d_pin,d2h_pin;wire[19:0]wire_rx,wire_tx; // wired boundary: 20-bit double words (P3-6)
+ wire[9:0]h2d_pin,d2h_pin;wire[39:0]wire_rx,wire_tx; // wired boundary: 40-bit quads (AC-1 S3)
  wire[23:0]rf_rx,rf_tx;wire d2h_clk_pin,d2h_oe,d2h_sl;wire[1:0]d2h_pdrv;
  wire[15:0]rf_trim,wire_trim,clock_trim;wire[11:0]trial;
  // Generated control boundary.
@@ -66,7 +66,9 @@ module pt_chip(
  .clock_trim(clock_trim),.calibration_above_target(above),.calibration_trial(trial),
  .fault(fault),.island_pgood(island_pgood),.analog_status(analog_status),.wire_analog_status(wire_analog_status),
  .fc_src(fc_src),.cdr_freq_locked(cdr_freq_locked),
- .analog_cfg(analog_cfg),.debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),.atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.atb0_grp(atb0_grp),.atb1_grp(atb1_grp),.atb0_en(atb0_en),.atb1_en(atb1_en),
+ .analog_cfg(analog_cfg),.debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),.wired_on_ext(1'b0), // PD8: WIRED_ON of pt_wtx_fallback_control (assembly binding)
+ .wire_linecode(1'b0), // IX-2 8b/10b offload select: strapped off until the register field exists (interface-changes T7)
+ .atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.atb0_grp(atb0_grp),.atb1_grp(atb1_grp),.atb0_en(atb0_en),.atb1_en(atb1_en),
  .rx_en_aux(rx_en_aux),.rx_en_wclk(rx_en_wclk),.rx_en_wtx_ext(rx_en_wtx_ext),.clk_obs_oe(clk_obs_oe),
  .wclk_obs_oe(wclk_obs_oe),.dbg_obs0(dbg_obs0),.dbg_obs0_oe(dbg_obs0_oe),.dbg_obs1(dbg_obs1),
  .dbg_obs1_oe(dbg_obs1_oe),.wdbg_obs(wdbg_obs),.wdbg_obs_oe(wdbg_obs_oe),.commit_toggle(commit_toggle),
@@ -117,7 +119,7 @@ endmodule
  input wire rst_n,output wire ref_clk,input wire enable,mode8,input wire[15:0]rf_trim,wire_trim,clock_trim,
  input wire[11:0]calibration_trial,output wire calibration_above_target,
  output wire host_tx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
- output wire[19:0]wire_rx_data,output wire wire_rx_valid,input wire[19:0]wire_tx_data, // 20-bit double words, word 0 in [9:0]
+ output wire[39:0]wire_rx_data,output wire wire_rx_valid,input wire[39:0]wire_tx_data, // 40-bit quads (AC-1 S3), word 0 in [9:0]
  input wire wire_tx_valid,output wire wire_tx_request,input wire wire_idle,
  output wire[23:0]rf_rx_sample,output wire rf_rx_valid,input wire[23:0]rf_tx_sample,
  input wire rf_tx_valid,output wire rf_tx_request,input wire rf_mute,

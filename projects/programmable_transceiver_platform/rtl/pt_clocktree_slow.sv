@@ -44,7 +44,8 @@ module pt_ct_word #(parameter integer QUAL_CYCLES = 64)(
 
 
     wire launch_ev = ref_rise && pend && !launching;
-    wire rephase   = launching ? dly == 0 : (launch_ev && d_cyc == 0);
+    reg  dz;                 // registered (dly == 0) while launching: keeps the decrement off the rephase path
+    wire rephase   = launching ? dz : (launch_ev && d_cyc == 0);
     wire [3:0] cnt_next = rephase ? 4'd0 : (cnt >= m_last ? 4'd0 : cnt + 4'd1);
     wire [3:0] hi = cfg_half_rate ? 4'd2 : 4'd5;
 
@@ -60,15 +61,15 @@ module pt_ct_word #(parameter integer QUAL_CYCLES = 64)(
     always @(posedge wclk or negedge rst_n) begin
         if (!rst_n) begin
             cnt <= 0; word_clk <= 1'b0; word_load <= 1'b0; ser_run <= 1'b0; bit_phase <= 1'b0;
-            launching <= 1'b0; dly <= 0; since <= 4'hf; stable <= 0;
+            launching <= 1'b0; dly <= 0; dz <= 1'b0; since <= 4'hf; stable <= 0;
         end else begin
             cnt       <= cnt_next;
             word_load <= cnt_next == 0;
             word_clk  <= cnt_next < hi;
             // launch: fixed latency from the qualified reference edge, then d_cyc cycles
-            if (launch_ev && d_cyc != 0) begin launching <= 1'b1; dly <= d_cyc - 6'd1; end
-            else if (launching && dly != 0) dly <= dly - 6'd1;
-            else if (launching) launching <= 1'b0;
+            if (launch_ev && d_cyc != 0) begin launching <= 1'b1; dly <= d_cyc - 6'd1; dz <= d_cyc == 6'd1; end
+            else if (launching && !dz) begin dly <= dly - 6'd1; dz <= dly == 6'd1; end
+            else if (launching) begin launching <= 1'b0; dz <= 1'b0; end
             if (rephase) begin ser_run <= 1'b1; bit_phase <= cfg_half_rate & d_ui[0]; end
             // qualification
             if (ref_rise) since <= 0; else if (since != 4'hf) since <= since + 4'd1;
@@ -151,19 +152,20 @@ module pt_ct_detect_div(
 );
     pt_ct_detect_rule rule_i(.cfg_div(cfg_div), .cfg_rate_khz(cfg_rate_khz), .div(div));
 
-    reg [2:0] n_q, c;
+    reg [2:0] nm1, c;        // nm1 = N - 1, loaded while disabled (timing: no N - 1 on the divider path)
     reg       a, b, en_n;
-    wire [2:0] c_next = c >= n_q - 3'd1 ? 3'd0 : c + 3'd1;
-    wire [2:0] half   = (n_q + 3'd1) >> 1;          // high cycles of `a`
+    wire [2:0] n_q    = nm1 + 3'd1;
+    wire [2:0] c_next = c >= nm1 ? 3'd0 : c + 3'd1;
+    wire [2:0] half   = {1'b0, nm1[2:1]} + 3'd1;     // (N + 1) >> 1 high cycles of `a`
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin n_q <= 3'd1; c <= 0; a <= 0; end
-        else if (!en) begin n_q <= div; c <= 0; a <= 0; end
+        if (!rst_n) begin nm1 <= 3'd0; c <= 0; a <= 0; end
+        else if (!en) begin nm1 <= div - 3'd1; c <= 0; a <= 0; end
         else begin c <= c_next; a <= c_next < half; end
     end
     // b: `a` half a cycle later (odd-N 50 % duty). en_n: falling-edge enable, so the
     // N = 1 gate clk & en_n only changes while clk is low (glitch-free, no latch).
     always @(negedge clk or negedge rst_n) if (!rst_n) begin b <= 0; en_n <= 0; end else begin b <= a; en_n <= en; end
-    assign det_clk = n_q == 3'd1 ? (clk & en_n) : (n_q[0] ? (a & b) : a);
+    assign det_clk = nm1 == 3'd0 ? (clk & en_n) : (!nm1[0] ? (a & b) : a);
 endmodule
 
 // ---------------------------------------------------------------------------
@@ -199,13 +201,17 @@ module pt_clocktree_slow #(parameter integer QUAL_CYCLES = 64)(
     // synchronizers into wclk: reference (as data), launch request, lock
     (* async_reg = "true" *) reg [2:0] ref_s;
     (* async_reg = "true" *) reg [1:0] pend_s, lock_s;
+    reg ref_ev;   // registered reference-edge event (timing, 2026-11-10): one fixed wclk cycle of latency
     wire pend_n;
     always @(posedge wclk or negedge wr[1])
-        if (!wr[1]) begin ref_s <= 0; pend_s <= 0; lock_s <= 0; end
-        else begin ref_s <= {ref_s[1:0], ref_clk}; pend_s <= {pend_s[0], pend_n}; lock_s <= {lock_s[0], pll_lock}; end
+        if (!wr[1]) begin ref_s <= 0; pend_s <= 0; lock_s <= 0; ref_ev <= 1'b0; end
+        else begin
+            ref_s <= {ref_s[1:0], ref_clk}; pend_s <= {pend_s[0], pend_n}; lock_s <= {lock_s[0], pll_lock};
+            ref_ev <= ref_s[1] && !ref_s[2];
+        end
     wire [3:0] cnt, since; wire launching; wire [6:0] stable; wire [5:0] dly;
     pt_ct_word #(.QUAL_CYCLES(QUAL_CYCLES)) word(.wclk(wclk), .rst_n(wr[1]), .cfg_half_rate(cfg_half_rate),
-        .cfg_bit_delay(cfg_bit_delay), .cfg_word_delay(cfg_word_delay), .ref_rise(ref_s[1] && !ref_s[2]),
+        .cfg_bit_delay(cfg_bit_delay), .cfg_word_delay(cfg_word_delay), .ref_rise(ref_ev),
         .pend(pend_s[1]), .lock(lock_s[1]), .cnt(cnt), .word_clk(word_clk), .word_load(word_load),
         .ser_run(ser_run), .bit_phase(bit_phase), .launching(launching), .qualified(qualified), .stable(stable), .since(since), .dly(dly));
 

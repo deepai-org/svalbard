@@ -4,10 +4,12 @@ module pt_digital(input wire rst_n,ref_clk,
  input wire core_rst_n,
  input wire host_sclk,host_cs_n,host_mosi,output wire host_miso,host_miso_oe,
  input wire host_tx_clk,host_rx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
- input wire[9:0]h2d_word,output wire[9:0]d2h_word,
- // Wired boundary (consolidation P3-6): 20-bit double words, word 0 (earlier on the line) in [9:0],
- // one double word per wire_tx_clk / wire_rx_clk edge (<= 125 MHz). valid/request are per double word.
- input wire[19:0]wire_rx_data,input wire wire_rx_valid,output wire[19:0]wire_tx_data,
+ // Host transport quads (AC-1): four ten-bit words per host_tx_clk (= host_rx_clk = core clock,
+ // host word clock / 4) from/to the pad-edge gearboxes in pt_host_link; word 0 (earliest) in [9:0].
+ input wire[39:0]h2d_quad,output wire[39:0]d2h_quad,
+ // Wired boundary (AC-1 S3): 40-bit quads, word 0 (earlier on the line) in [9:0], one quad per
+ // wire_tx_clk (WORD_CLK40) / wire_rx_clk (WCLK40) edge (<= 62.5 MHz). valid/request are per quad.
+ input wire[39:0]wire_rx_data,input wire wire_rx_valid,output wire[39:0]wire_tx_data,
  output wire wire_tx_valid,wire_idle,input wire wire_tx_request,
  input wire[23:0]rf_rx_sample,input wire rf_rx_valid,output wire[23:0]rf_tx_sample,
  output wire rf_tx_valid,rf_mute,input wire rf_tx_request,
@@ -28,8 +30,12 @@ module pt_digital(input wire rst_n,ref_clk,
  output wire[`PT_ISLAND_W-1:0]island_on,output wire[`PT_ATB_W-1:0]atb0_sw,atb1_sw,
  output wire[`PT_ATB0_GRP_W-1:0]atb0_grp,output wire[`PT_ATB1_GRP_W-1:0]atb1_grp,output wire atb0_en,atb1_en,
  output wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,wclk_obs_oe,
- output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe,commit_toggle);
- wire memory_write,capture_done,playback_enable,capture_enable;wire[4:0]index;wire[23:0]memory_wdata,capture_data;
+ output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe,commit_toggle,
+ // IX-2 8b/10b wired line-code offload (stopped-only level) and the RXR-D2 fast gain (opcode4) state:
+ // rf_rx_clk-domain levels; rx_gain = {LNA index[6:5], PGA index[4:0]} as the opcode4 argument.
+ input wire linecode,output wire[6:0]rx_gain,output wire rx_gain_active);
+ wire memory_write,capture_done,playback_enable,capture_enable,memory_loop;wire[4:0]index,memory_last;
+ wire[39:0]memory_wdata,capture_data;
  wire config_error,cal_busy,cal_done,host_rx_div;
  // Observation vectors; order is spec/debug-controls.json obs_status / wire_status. Raw, unsynchronized.
  // analog_status: 0 pll_lock,1 ref_present,2 bias_ready,3 refbuf_ready,4 por_n,5 cdr_qualified,6 cdr_loss,
@@ -46,6 +52,7 @@ module pt_digital(input wire rst_n,ref_clk,
   .status(status),.enable(enable),.mode8(mode8),.rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),
   .memory_write(memory_write),.memory_index(index),.memory_wdata(memory_wdata),.capture_data(capture_data),
   .capture_done(capture_done),.playback_enable(playback_enable),.capture_enable(capture_enable),
+  .memory_loop(memory_loop),.memory_last(memory_last),
   .fault(fault),.island_pgood(island_pgood),.obs_status(obs_status),.wire_status(wire_status),
   .analog_cfg(analog_cfg),.debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),
   .atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.atb0_grp(atb0_grp),.atb1_grp(atb1_grp),.atb0_en(atb0_en),.atb1_en(atb1_en),.rx_en_aux(rx_en_aux),.rx_en_wclk(rx_en_wclk),.rx_en_wtx_ext(rx_en_wtx_ext),
@@ -61,31 +68,43 @@ module pt_digital(input wire rst_n,ref_clk,
   .cfg_tol(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__TOLERANCE_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__TOLERANCE_W]),
   .cfg_count(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__COUNT_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__COUNT_W]),
   .cfg_target(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__TARGET_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__TARGET_W]),
-  .src(fc_src),.ref_clk(ref_clk),.sclk(host_sclk),.locked_ref(),.locked(fca_locked),.lost_lock(fca_lost),.diff(fca_diff),.count(fca_count));
+  .src(fc_src),.ref_clk(ref_clk),.sclk(host_sclk),.locked_ref(),.locked(fca_locked),.lost_lock(fca_lost),.diff(fca_diff),.count(fca_count),
+  .commit_toggle(commit_toggle));
  pt_freq_count fcb(.rst_n(rst_n),.cfg_source(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_B__SOURCE_LSB+:`PT_D_DEBUG_FREQ_COUNT_B__SOURCE_W]),
   .cfg_window(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_B__WINDOW_LSB+:`PT_D_DEBUG_FREQ_COUNT_B__WINDOW_W]),
   .cfg_tol(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_B__TOLERANCE_LSB+:`PT_D_DEBUG_FREQ_COUNT_B__TOLERANCE_W]),
   .cfg_count(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_B__COUNT_LSB+:`PT_D_DEBUG_FREQ_COUNT_B__COUNT_W]),
   .cfg_target(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_B__TARGET_LSB+:`PT_D_DEBUG_FREQ_COUNT_B__TARGET_W]),
-  .src(fc_src),.ref_clk(ref_clk),.sclk(host_sclk),.locked_ref(cdr_freq_locked),.locked(fcb_locked),.lost_lock(fcb_lost),.diff(fcb_diff),.count(fcb_count));
- wire[19:0]stream_wire,prbs_word;wire stream_wire_valid,stream_wire_idle;
- wire[23:0]stream_rf,play_rf;wire stream_rf_valid,stream_rf_mute,play_valid;wire[15:0]core_status;
+  .src(fc_src),.ref_clk(ref_clk),.sclk(host_sclk),.locked_ref(cdr_freq_locked),.locked(fcb_locked),.lost_lock(fcb_lost),.diff(fcb_diff),.count(fcb_count),
+  .commit_toggle(commit_toggle));
+ wire[39:0]stream_wire,prbs_word;wire stream_wire_valid,stream_wire_idle;
+ wire[23:0]stream_rf;wire stream_rf_valid,stream_rf_mute;wire[15:0]core_status;
  // debug.pattern fields (spec/register-map.md 0x58-0x59). tx_mode 0 (payload) keeps the legacy
  // behaviour: wire_trim[15] alone selects the generator (PRBS31).
  wire[2:0]pat_tx_mode=debug_cfg[`PT_D_DEBUG_PATTERN__TX_MODE_LSB+:`PT_D_DEBUG_PATTERN__TX_MODE_W];
  wire[2:0]pat_check_mode=debug_cfg[`PT_D_DEBUG_PATTERN__CHECK_MODE_LSB+:`PT_D_DEBUG_PATTERN__CHECK_MODE_W];
  wire[2:0]pat_tx_eff=pat_tx_mode!=3'd0 ? pat_tx_mode : 3'd3;
  wire[2:0]pat_check_eff=pat_check_mode!=3'd0 ? pat_check_mode : pat_tx_eff;
- wire prbs_select=wire_trim[15]||pat_tx_mode!=3'd0,play_select=playback_enable;
- pt_core core(core_rst_n,enable,mode8,host_tx_clk,host_rx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
- h2d_word,d2h_word,wire_rx_data,wire_rx_valid,stream_wire,stream_wire_valid,wire_tx_request&&!prbs_select,
- rf_rx_sample,rf_rx_valid,stream_rf,stream_rf_valid,rf_tx_request&&!play_select,core_status,stream_wire_idle,stream_rf_mute,
- analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__PAYLOAD_IQ_LSB]);
- pt_memory memory(rst_n,host_sclk,memory_write,index,memory_wdata,capture_data,rf_rx_clk,rf_tx_clk,
- capture_enable&&enable,playback_enable&&enable,rf_rx_sample,rf_rx_valid,capture_done,play_rf,play_valid,rf_tx_request);
+ wire prbs_select=wire_trim[15]||pat_tx_mode!=3'd0;
+ // SP-03 2x halfband TX interpolator (rtl/pt_interp2x.sv): with tx_interp = halfband the RF TX side of
+ // the core (incl. bank playback) runs on rf_core_clk = rf_tx_clk / 2 (DAC at rf_tx_clk = 80 MHz);
+ // with bypass (reset) rf_core_clk = rf_tx_clk and the samples pass straight through.
+ wire rf_core_clk,rf_tx_valid_core;wire[23:0]rf_tx_sample_core;
+ pt_interp2x interp(.rst_n(rst_n),.clk_fast(rf_tx_clk),.halfband(analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__TX_INTERP_LSB]),
+  .core_clk(rf_core_clk),.in_sample(rf_tx_sample_core),.in_valid(rf_tx_valid_core),.out_sample(rf_tx_sample),.out_valid(rf_tx_valid));
+ // MEMORY v3 is the host-link fallback: with capture or playback selected (stopped-only, ENABLE=0
+ // to change) the core leaves the host-link reset (core_rst_n needs the host word clock) and uses
+ // RESET_N; every core domain still releases through its own synchronized ENABLE.
+ wire core_reset_n=(capture_enable||playback_enable)?rst_n:core_rst_n;
+ pt_core core(core_reset_n,enable,mode8,host_tx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_core_clk,
+ h2d_quad,d2h_quad,wire_rx_data,wire_rx_valid,stream_wire,stream_wire_valid,wire_tx_request&&!prbs_select,
+ rf_rx_sample,rf_rx_valid,stream_rf,stream_rf_valid,rf_tx_request,core_status,stream_wire_idle,stream_rf_mute,
+ analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__PAYLOAD_IQ_LSB],linecode,rx_gain,rx_gain_active,
+ // MEMORY v3 (sharing S1): capture/playback in the transport banks; pt_memory is deleted.
+ capture_enable,playback_enable,memory_loop,memory_last,host_sclk,memory_write,index,memory_wdata,capture_data,capture_done);
  wire tx_enabled;pt_sync_bit e(wire_tx_clk,rst_n,enable,tx_enabled);
- // Shared wired pattern generator/checker (rtl/pt_pattern.sv, consolidation P2-6): 20-bit cores directly
- // on the 20-bit double-word clocks (P3-6: no 10<->20 gearbox, no clock gate). CDC: the quasi-static
+ // Shared wired pattern generator/checker (rtl/pt_pattern.sv, consolidation P2-6): 40-bit cores directly
+ // on the 40-bit quad clocks (AC-1 S3: no gearbox, no clock gate). CDC: the quasi-static
  // debug.pattern fields (change only by commit while ENABLE=0, when the generator is in reset and the
  // checker disabled) pass through 2-flop synchronizers per bit; inject and check_clear are live levels,
  // synchronized and edge-detected (one error / one clear per 0->1 transition).
@@ -98,15 +117,15 @@ module pt_digital(input wire rst_n,ref_clk,
  // and advances on every clock where the consumer takes it (wire_tx_request with prbs_select).
  reg prbs_ready;wire prbs_rst_n=rst_n&&tx_enabled;
  always @(posedge wire_tx_clk or negedge prbs_rst_n)if(!prbs_rst_n)prbs_ready<=0;else prbs_ready<=1;
- pt_pattern_gen #(.W(20)) prbs(.clk(wire_tx_clk),.rst_n(prbs_rst_n),.ce(1'b1),.step(wire_tx_request&&prbs_select&&prbs_ready),
-  .cfg_mode(pat_tx_cfg[13:11]),.cfg_invert(pat_tx_cfg[10]),.cfg_user({pat_tx_cfg[9:0],pat_tx_cfg[9:0]}),.data_in(20'd0),
+ pt_pattern_gen #(.W(40)) prbs(.clk(wire_tx_clk),.rst_n(prbs_rst_n),.ce(1'b1),.step(wire_tx_request&&prbs_select&&prbs_ready),
+  .cfg_mode(pat_tx_cfg[13:11]),.cfg_invert(pat_tx_cfg[10]),.cfg_user({4{pat_tx_cfg[9:0]}}),.data_in(40'd0),
   .inject(pat_inj_s&&!pat_inj_d),.word(prbs_word));
  wire rx_check_en,pat_clr_s;reg pat_clr_d;wire[3:0]pat_rx_cfg;wire[15:0]prbs_errors;
  pt_sync_bit rxc(wire_rx_clk,rst_n,enable&&(wire_trim[15]||debug_cfg[`PT_D_DEBUG_PATTERN__CHECK_ENABLE_LSB]),rx_check_en);
  pt_sync_vec #(4) prxc(wire_rx_clk,rst_n,{pat_check_eff,debug_cfg[`PT_D_DEBUG_PATTERN__CHECK_INVERT_LSB]},pat_rx_cfg);
  pt_sync_bit prxl(wire_rx_clk,rst_n,debug_cfg[`PT_D_DEBUG_PATTERN__CHECK_CLEAR_LSB],pat_clr_s);
  always @(posedge wire_rx_clk or negedge rst_n)if(!rst_n)pat_clr_d<=0;else pat_clr_d<=pat_clr_s;
- pt_pattern_check #(.W(20),.CW(16)) prbs_check(.clk(wire_rx_clk),.rst_n(rst_n),.ce(1'b1),.enable(rx_check_en),.valid(wire_rx_valid),
+ pt_pattern_check #(.W(40),.CW(16)) prbs_check(.clk(wire_rx_clk),.rst_n(rst_n),.ce(1'b1),.enable(rx_check_en),.valid(wire_rx_valid),
   .data(wire_rx_data),.cfg_mode(pat_rx_cfg[3:1]),.cfg_invert(pat_rx_cfg[0]),.clear(!rx_check_en||(pat_clr_s&&!pat_clr_d)),
   .locked(pattern_locked),.lost_lock(pattern_lost_lock),.errors(prbs_errors),.errors_gray(pattern_errors_gray));
  assign wire_tx_data=prbs_select?prbs_word:stream_wire;
@@ -114,12 +133,13 @@ module pt_digital(input wire rst_n,ref_clk,
  assign wire_idle=prbs_select?!tx_enabled:stream_wire_idle;
  // The DAC data bus is held static (all zero) whenever no sample is valid, e.g. throughout
  // receive-only operation, so idle DAC inputs do not toggle next to the receive path.
- assign rf_tx_valid=play_select?play_valid:stream_rf_valid;
- assign rf_tx_sample=rf_tx_valid?(play_select?play_rf:stream_rf):24'd0;
- wire cal_start;
- pt_sync_bit cs(ref_clk,rst_n,clock_trim[15]&&!enable,cal_start);
- pt_calibrator calibration(ref_clk,rst_n,cal_start,calibration_above_target,calibration_trial,cal_busy,cal_done);
- assign rf_mute=cal_busy||(play_select?!play_valid:stream_rf_mute);
+ assign rf_tx_valid_core=stream_rf_valid;
+ assign rf_tx_sample_core=rf_tx_valid_core?stream_rf:24'd0;
+ // pt_calibrator (ref-trim SAR) removed (FPGA offload audit, D11: no on-chip sequencer; no analog
+ // consumer of calibration_trial / calibration_above_target). The ports stay until integration drops
+ // them (interface-changes.md); cal_busy / cal_done read 0.
+ assign calibration_trial=12'd0;assign cal_busy=1'b0;assign cal_done=1'b0;
+ assign rf_mute=cal_busy||stream_rf_mute;
  assign status=core_status|{cal_done,cal_busy,capture_done,13'b0};
 endmodule
 

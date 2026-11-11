@@ -87,6 +87,18 @@ Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`
   - **Area:** the outline exceeds its area ceiling.
   - **LS_SLOW must be 0 whenever termination/HS is used:** it disables 7 of 10 base termination switches.
   - **Not all pad-side devices are 6 V:** the floating-well FS/pull-up PMOS remain 3.3 V by design (HBM-screened).
+  **PD43–PD45 (pads fork, 2026-11-11; work dir `scratch/pads-pd42/usb/`):**
+  - **Trim gating:** closed by digital DT-7 (`gate_and` + ls_slow interlock).
+  - **Term calibration (PD43, no pad change):** half-scale HS current into the termination, read V(RX_P) through the
+    bypass on a new wired-RX ATB leaf, firmware picks the code. Extracted v9, 5 corners × 8 codes, HS reference ±5 %,
+    ADC ±1 % / ±2 mV: **41.45–49.18 Ω after calibration (pass, thin at ss)**. `pd43-term-cal.json`.
+  - **LS slew (PD44, proof of concept, not laid out):** all FS units on in LS, limiter-starved pre-drivers mirrored from
+    HS_PBIAS, 1.5 pF Miller MIM per driver via a pad-side TG. Extracted v9 + schematic additions (`slew/m7b.spice`):
+    **LS 108–186 ns at 50 and 450 pF, all corners; FS 5.9–11.4 ns, VCRS 1.55–1.77 V; pad C +15 fF.** Layout, LVS/DRC and
+    HBM rerun open.
+  - **Pad C with bypass + RX load (PD45): 2.82–3.25 pF at 1.65 V, 3.57–3.58 pF at 0.2 V: fails 2.7 pF** (budget to
+    re-derive for USB alone). `padc-wired-receive-usb.json`.
+  - **Area:** unchanged, 352,213 vs 340,000 µm² (fails).
 
 ### PD21 (pads owner): low-C SATA/PCIe RX pad pair `pad_hspad`, network-gc-d2, HBM pad-side devices
 

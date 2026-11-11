@@ -80,7 +80,8 @@ module tb_pt_clocktree_slow;
         if (qat < 64 || qat > 67) begin fail("qualification time /10"); $display("  qualified after %0d reference edges", qat); end
         else $display("qualified after %0d reference edges (/10)", qat);
         check_divider;
-        @(negedge wclk); lock = 0; repeat (4) @(posedge wclk); #1 if (qualified) fail("lock loss not seen within 4 cycles");
+        // TC6 timing pipeline: registered tz/ti decision (+1) and registered `qualified` (+1): 6 cycles (was 4)
+        @(negedge wclk); lock = 0; repeat (6) @(posedge wclk); #1 if (qualified) fail("lock loss not seen within 6 cycles");
         lock = 1; wait_qual(100); if (qat < 64) fail("requalification");
         // arm refused while not qualified; abort when qualification drops while counting
         lock = 0; repeat (5) @(posedge wclk);

@@ -70,7 +70,32 @@ module pt_pattern_gen #(parameter integer W=10)(
     endfunction
 
     // Three fixed-polynomial networks then a mode mux (shallower than a mux per bit step).
-    wire [W+30:0] n7 = prbs_step(h, 3'd1), n15 = prbs_step(h, 3'd2), n31 = prbs_step(h, 3'd3);
+    // GF(2) form of prbs_step (timing 2026-11-11, wtx/wrx at 12.3 ns): every output bit and every next
+    // history bit is a fixed XOR of history bits. The bit-serial recurrence chained up to W/6 XOR levels
+    // (post-synthesis wtx -3.5 ns at W=40); the masks are elaboration-time constants, so each bit is
+    // one balanced XOR tree of <= 31 inputs. Values are identical to prbs_step.
+    function automatic [31*(W+31)-1:0] prbs_masks(input [2:0] mode);
+        reg [31*31-1:0] t; reg [30:0] b; integer i, j;
+        begin
+            for (j = 0; j < 31; j = j + 1) t[31*j+:31] = 31'd1 << j;
+            for (i = 0; i < W; i = i + 1) begin
+                case (mode)
+                    3'd1:    b = t[31*6+:31]  ^ t[31*5+:31];
+                    3'd2:    b = t[31*14+:31] ^ t[31*13+:31];
+                    default: b = t[31*30+:31] ^ t[31*27+:31];
+                endcase
+                prbs_masks[31*i+:31] = b;
+                t = {t[31*30-1:0], b};
+            end
+            for (j = 0; j < 31; j = j + 1) prbs_masks[31*(W+j)+:31] = t[31*j+:31];
+        end
+    endfunction
+    localparam [31*(W+31)-1:0] M7 = prbs_masks(3'd1), M15 = prbs_masks(3'd2), M31 = prbs_masks(3'd3);
+    function automatic [W+30:0] prbs_apply(input [30:0] s, input [31*(W+31)-1:0] m);
+        integer k;
+        for (k = 0; k < W + 31; k = k + 1) prbs_apply[k] = ^(s & m[31*k+:31]);
+    endfunction
+    wire [W+30:0] n7 = prbs_apply(h, M7), n15 = prbs_apply(h, M15), n31 = prbs_apply(h, M31);
     wire [W+30:0] n = cfg_mode == 3'd1 ? n7 : cfg_mode == 3'd2 ? n15 : n31;
     reg  [W-1:0]  nx;
     always @* begin
@@ -116,6 +141,22 @@ endmodule
 // (sustained error rate above one per `ce` cycle) the count runs to saturation, i.e.
 // it reports "at least the maximum" instead of a wrong exact value. `clear` (held >= 2
 // clocks when ce toggles) resets everything at once, a multi-bit Gray change.
+// Kept 2:1 select (late-select structure; see pt_sel2 in pt_fifo.sv).
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_pat_sel1(input wire s, a, b, output wire z);
+    assign z = s ? b : a;
+endmodule
+// W-bit wrapper (flattened) of kept 1-bit selects: a parameterized kept module would survive
+// synthesis as a $paramod instance, which the flow counts as an unmapped cell.
+module pt_pat_sel2 #(parameter integer W=1)(input wire s, input wire [W-1:0] a, b, output wire [W-1:0] z);
+    genvar i;
+    generate for (i = 0; i < W; i = i + 1) begin : b_
+        pt_pat_sel1 m(.s(s), .a(a[i]), .b(b[i]), .z(z[i]));
+    end endgenerate
+endmodule
+
 module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
                           parameter integer LOCK_WORDS=4, parameter integer UNLOCK_WORDS=4)(
     input  wire          clk,
@@ -133,7 +174,7 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
     output reg  [CW-1:0] errors_gray // the same count, Gray-coded
 );
     localparam integer QW = 8;       // pending-error accumulator width
-    reg  [QW-1:0] pend;
+    reg  [QW:0]   pend;              // QW bits + overflow bit (cleared the clock after it sets)
     reg           ovf;               // pend overflowed: run the count to saturation
     wire [CW-1:0] errors_n = errors + 1'b1;
     // Saturation flag kept as a register (always equal to &errors: errors only changes by
@@ -185,11 +226,37 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
 
     wire          on   = enable && (cfg_mode == 3'd1 || cfg_mode == 3'd2 || cfg_mode == 3'd3);
     wire [W-1:0]  r    = cfg_invert ? ~data : data;
-    wire [W+30:0] p7   = prbs_step(h, 3'd1), p15 = prbs_step(h, 3'd2), p31 = prbs_step(h, 3'd3);
+    // GF(2) form of prbs_step (timing 2026-11-11, wtx/wrx at 12.3 ns): every output bit and every next
+    // history bit is a fixed XOR of history bits. The bit-serial recurrence chained up to W/6 XOR levels
+    // (post-synthesis wtx -3.5 ns at W=40); the masks are elaboration-time constants, so each bit is
+    // one balanced XOR tree of <= 31 inputs. Values are identical to prbs_step.
+    function automatic [31*(W+31)-1:0] prbs_masks(input [2:0] mode);
+        reg [31*31-1:0] t; reg [30:0] b; integer i, j;
+        begin
+            for (j = 0; j < 31; j = j + 1) t[31*j+:31] = 31'd1 << j;
+            for (i = 0; i < W; i = i + 1) begin
+                case (mode)
+                    3'd1:    b = t[31*6+:31]  ^ t[31*5+:31];
+                    3'd2:    b = t[31*14+:31] ^ t[31*13+:31];
+                    default: b = t[31*30+:31] ^ t[31*27+:31];
+                endcase
+                prbs_masks[31*i+:31] = b;
+                t = {t[31*30-1:0], b};
+            end
+            for (j = 0; j < 31; j = j + 1) prbs_masks[31*(W+j)+:31] = t[31*j+:31];
+        end
+    endfunction
+    localparam [31*(W+31)-1:0] M7 = prbs_masks(3'd1), M15 = prbs_masks(3'd2), M31 = prbs_masks(3'd3);
+    function automatic [W+30:0] prbs_apply(input [30:0] s, input [31*(W+31)-1:0] m);
+        integer k;
+        for (k = 0; k < W + 31; k = k + 1) prbs_apply[k] = ^(s & m[31*k+:31]);
+    endfunction
+    wire [W+30:0] p7   = prbs_apply(h, M7), p15 = prbs_apply(h, M15), p31 = prbs_apply(h, M31);
     wire [W+30:0] p    = cfg_mode == 3'd1 ? p7 : cfg_mode == 3'd2 ? p15 : p31;
     wire [W-1:0]  mism = r ^ p[W-1:0];
     wire          nz   = cfg_mode == 3'd1 ? h[6:0] != 0 : cfg_mode == 3'd2 ? h[14:0] != 0 : h != 0;
-    wire          step_cnt = !at_max && (ovf || pend != 0);
+    reg           pend_nz;           // register == (pend != 0) (loaded with the next value's flag)
+    wire          step_cnt = !at_max && (ovf || pend_nz);
     // Error popcount as a pipelined tree (AC-1 timing at 12.3 ns, ss32): stage P1 registers 5-bit group
     // counts of the mismatch vector, P2a pair sums, P2b their balanced sum, then the accumulator.
     // Errors are counted three words later than the lock decision; counts are unchanged.
@@ -199,14 +266,17 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
     endfunction
     reg  [3*NG-1:0] grp;             // group counts of the word flagged by mism_v (same edge)
     reg  [PW-1:0]   psum; reg psum_v;
+    reg  [PW-1:0]   ptot; reg ptot_v;
     reg  [4*((NG+1)/2)-1:0] pair; reg pair_v;   // P2a: sums of group pairs (<= 10 each)
     wire [5*NG-1:0] mism_pad = {{(5*NG-W){1'b0}}, mism_q};
     integer gi, gs;   // separate loop variables per always block (a shared one breaks synthesis)
     localparam integer NP = (NG + 1) / 2;
-    reg  [PW+2:0]   ptree [0:2*NP-2];
+    localparam integer NQ = (NP + 1) / 2;
+    reg  [(PW+2)*NQ-1:0] quad; reg quad_v;
+    reg  [PW+2:0]   qtree [0:2*NQ-2];
     always @* begin
-        for (gi = 0; gi < NP; gi = gi + 1) ptree[NP-1+gi] = pair[4*gi+:4];
-        for (gi = NP-2; gi >= 0; gi = gi - 1) ptree[gi] = ptree[2*gi+1] + ptree[2*gi+2];
+        for (gi = 0; gi < NQ; gi = gi + 1) qtree[NQ-1+gi] = {1'b0, quad[(PW+2)*gi+:PW+2]};
+        for (gi = NQ-2; gi >= 0; gi = gi - 1) qtree[gi] = qtree[2*gi+1] + qtree[2*gi+2];
     end
     // pend + psum - dec as four parallel candidates selected late by {psum_v, dec} (timing closure
     // 2026-11-11: the pend != 0 decision no longer sits in front of the adder; psum_m1 = psum - 1 is
@@ -214,14 +284,29 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
     reg  [PW-1:0] psum_m1;
     wire          dec    = step_cnt && !ovf;
     // kept nets: synthesis must not fold the late select back in front of the adders
-    (* keep *) wire [QW:0] s_p = {1'b0, pend} + psum, s_pm1 = {1'b0, pend} + psum_m1;
-    (* keep *) wire [QW:0] s_m1 = {1'b0, pend} - 1'b1;
-    wire [QW:0]   pend_sum = psum_v ? (dec ? s_pm1 : s_p) : (dec ? s_m1 : {1'b0, pend});
+    // (kept-hierarchy selects, pt_pat_sel2: with plain ?: synthesis shared the adders behind an operand
+    // mux, TC4/TC5 wrx -9.8 ns); each candidate carries its own nonzero flag so pend_nz is a register.
+    // nonzero flags without a compare after the adders: psum >= 1 whenever psum_v and dec implies
+    // pend >= 1, so pend + psum and pend + psum - 1 are >= 1; pend - 1 is nonzero iff pend != 1
+    // (a compare on the pend register, parallel to the adders).
+    // Overflow (timing 2026-11-11): pend carries a ninth bit; a sum that reaches it is cleared (and ovf
+    // set) on the next clock from the register, so no carry-out select sits behind the adder.
+    // pend < 2^QW whenever a sum is used, so pend + psum < 2^(QW+1).
+    wire [QW:0] s_p = pend + psum, s_pm1 = pend + psum_m1;
+    wire [QW:0] s_m1 = pend - 1'b1;
+    wire [QW+1:0] c_p = {1'b1, s_p}, c_pm1 = {1'b1, s_pm1}, c_m1 = {pend != 1, s_m1},
+                  c_h = {pend_nz, pend};
+    wire [QW+1:0] c_v, c_nv, c_sel;
+    pt_pat_sel2 #(QW+2) sel_v (.s(dec), .a(c_p), .b(c_pm1), .z(c_v));
+    pt_pat_sel2 #(QW+2) sel_nv(.s(dec), .a(c_h), .b(c_m1), .z(c_nv));
+    pt_pat_sel2 #(QW+2) sel_ps(.s(psum_v), .a(c_nv), .b(c_v), .z(c_sel));
+    wire [QW:0]   pend_sum = c_sel[QW:0];
+    wire          sum_nz = c_sel[QW+1];
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             h <= 31'h7fffffff; run <= 0; bad <= 0; locked <= 1'b0; lost_lock <= 1'b0; errors <= 0;
-            mism_q <= 0; grp <= 0; pair <= 0; pair_v <= 1'b0; psum <= 0; psum_m1 <= 0; psum_v <= 1'b0; mism_v <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
+            mism_q <= 0; grp <= 0; pair <= 0; pair_v <= 1'b0; quad <= 0; quad_v <= 1'b0; ptot <= 0; ptot_v <= 1'b0; psum <= 0; psum_m1 <= 0; psum_v <= 1'b0; mism_v <= 1'b0; pend <= 0; pend_nz <= 1'b0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
             v1 <= 1'b0; nz1 <= 1'b0;
         end else if (ce) begin
             // stage 1: predictor update and mismatch vector of this word
@@ -251,16 +336,23 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
             for (gs = 0; gs < NP; gs = gs + 1)
                 pair[4*gs+:4] <= {1'b0, grp[6*gs+:3]} + ((2*gs+1 < NG) ? {1'b0, grp[(6*gs+3)%(3*NG)+:3]} : 4'd0);
             pair_v <= mism_v && !clear;
-            psum   <= ptree[0][PW-1:0];
-            psum_m1 <= ptree[0][PW-1:0] - 1'b1;
-            psum_v <= pair_v && !clear;
+            // P2c (timing 2026-11-11): the pair-sum tree total is registered before psum / psum - 1
+            // P2b' (timing 2026-11-11): pair sums are added in two registered levels (quad, then total)
+            for (gs = 0; gs < NQ; gs = gs + 1)
+                quad[(PW+2)*gs+:PW+2] <= {2'b00, pair[8*gs+:4]} + ((2*gs+1 < NP) ? {2'b00, pair[(8*gs+4)%(4*NP)+:4]} : 0);
+            quad_v <= pair_v && !clear;
+            ptot   <= qtree[0][PW-1:0];
+            ptot_v <= quad_v && !clear;
+            psum   <= ptot;
+            psum_m1 <= ptot - 1'b1;
+            psum_v <= ptot_v && !clear;
             if (clear) begin
-                errors <= 0; lost_lock <= 1'b0; pend <= 0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
+                errors <= 0; lost_lock <= 1'b0; pend <= 0; pend_nz <= 1'b0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
             end else begin
                 if (step_cnt) begin errors <= errors_n; errors_gray <= errors_n ^ (errors_n >> 1); at_max <= &errors_n; end
-                if (at_max) pend <= 0;
-                else if (pend_sum[QW]) begin ovf <= 1'b1; pend <= 0; end
-                else pend <= pend_sum[QW-1:0];
+                if (at_max || pend[QW]) begin pend <= 0; pend_nz <= 1'b0; end
+                else begin pend <= pend_sum; pend_nz <= sum_nz; end
+                if (pend[QW] && !at_max) ovf <= 1'b1;
                 if (on && v1 && locked && !zero1 && bad == UNLOCK_WORDS - 1) lost_lock <= 1'b1;
             end
         end

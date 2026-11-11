@@ -116,6 +116,9 @@ PATHS = {
     'aosc.CLK': 'fc_src[4]', 'pll_tx.LOCK': 'analog_status[0]',
     # consolidation pass 3 X4: pll_tx (and pll_host if PT_PLL_RINGS=3) use pt_pll_ring_core, which has no
     # N5/N10/KP/FU/FD pins; only pll_cdr (pt_pll_ring r9c) keeps them (AC3-W9).
+    # WT21 ring band bit (r9d, AC3-W13): BAND=1 high band.  Tied high until the digital owner provides
+    # ring_l.band / ring_c.band register bits (interface-changes AC3-W13); the low band (<=360 MHz) needs them.
+    'pll_tx.BAND': 'VDD', 'pll_cdr.BAND': 'VDD', 'pll_host.BAND': 'VDD',
     'cdr.VCTRL': 'CDR_VCTRL', 'cdr.FBCK_IN': 'fc_src[1]', 'cdr.REF_IN': 'ref_clk', 'cdr.freq_hold': 'cdr_freq_locked',
     # POR (cold start; RESET_N supervisor covers slow ramps, board B1)
     'por.vdd3v3': 'VDD', 'por.vss': 'VSS', 'por.ena': 'VDD', 'por.porb': 'por_n', 'por.por': 'POR_HIGH',

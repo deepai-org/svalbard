@@ -129,6 +129,7 @@ module pt_cdc_fifo #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0)(
  output wire[W-1:0]dout,output wire full,empty,output reg ready,
  output reg[A:0]rd_count,output reg overflow,underflow,output wire wr_active,rd_active,
  output wire[A:0]wr_ptr,rd_ptr,   // binary pointers (write / read domain), modulo 2*DEPTH
+ output wire[A:0]rd_ptr_step,output wire rd_take,   // step(rd_ptr) (register) and this clock's read
  input wire[A-1:0]peek_idx,output wire[W-1:0]peek,
  input wire play,play_loop,input wire[A-1:0]play_last,
  input wire spi_clk,spi_we,input wire[A-1:0]spi_idx,input wire[W-1:0]spi_d);
@@ -150,13 +151,17 @@ module pt_cdc_fifo #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0)(
  function automatic[A:0]gray(input[A:0]b);
   begin gray=(b+OFFSET)^((b+OFFSET)>>1);end endfunction
  function automatic[A:0]binary(input[A:0]g);
- integer k;reg[A:0]t;begin t[A]=g[A];for(k=A-1;k>=0;k=k-1)t[k]=t[k+1]^g[k];binary=t-OFFSET;end endfunction
+ integer k;reg[A:0]t;begin for(k=A;k>=0;k=k-1)t[k]=^(g>>k);binary=t-OFFSET;end endfunction   // per-bit XOR trees
  function automatic[A:0]step(input[A:0]p);begin step=p==LAST?{(A+1){1'b0}}:p+1'b1;end endfunction
  function automatic[A:0]distance(input[A:0]a,b);   // (a-b) mod 2*DEPTH
- reg[A+1:0]d;begin d={1'b0,a}-{1'b0,b};distance=d[A+1]?d+SPAN:d;end endfunction
+ reg[A+1:0]d,e;begin d={1'b0,a}-{1'b0,b};e={1'b0,a}+(SPAN-{1'b0,b});distance=d[A+1]?e[A:0]:d[A:0];end endfunction
+ // (the wrapped candidate a + SPAN - b is a parallel adder, not a second adder after the first)
  function automatic[A:0]plus_depth(input[A:0]p);     // (p+DEPTH) mod 2*DEPTH
  reg[A+1:0]d;begin d={1'b0,p}+DEPTH;plus_depth=d>=SPAN?d-SPAN:d;end endfunction
- wire[A:0]wn=step(wb),rn=step(rb);
+ // rn = step(rb) is a REGISTER (rnr, maintained with rb; timing 2026-11-11: rb -> increment / wrap
+ // compare -> distance -> rd_count was the post-synthesis egress_wtx worst path)
+ reg[A:0]rnr;
+ wire[A:0]wn=step(wb),rn=rnr;
  // full / empty are REGISTERS: the same compares evaluated on next-state values one clock early
  // (both alternatives in parallel, the late put / take only select), so no pointer compare sits
  // between a flop and the 40-bit write-enable / read-select fanout.
@@ -175,28 +180,72 @@ assign empty=playing?pe:empty_r;
  wire put=push&&!full,take=pop&&!empty;
  wire[A:0]wb_next=put?wn:wb,rb_next=take?rn:rb;
  // next-state compares from registers only, kept as separate nets so the late put / take is a final 2:1
- (* keep *) wire f_put=POW2?(gray(wn)=={~rg1[A:A-1],rg1[A-2:0]}):(wn==plus_depth(binary(rg2)));
- (* keep *) wire f_hold=POW2?(wg=={~rg1[A:A-1],rg1[A-2:0]}):(wb==plus_depth(binary(rg2)));
- (* keep *) wire e_take=rn==binary(wg2),e_hold=rb==binary(wg2);
+ // Non-power-of-two DEPTH (timing 2026-11-11, ingress_wrx -1.4 ns: wb -> step -> compare with
+ // plus_depth(binary(rg2)) -> full): both operands are registers, wnr = step(wb) and rbd = the read
+ // pointer + DEPTH registered one writer clock after rg2. rbd lags rg2 by one clock, so full can stay
+ // set one writer clock longer after a read (conservative: never an overflow, never a false not-full).
+ reg[A:0]wnr;
+ (* keep *) wire f_put=POW2?(gray(wn)=={~rg1[A:A-1],rg1[A-2:0]}):(wnr==rbd);
+ (* keep *) wire f_hold=POW2?(wg=={~rg1[A:A-1],rg1[A-2:0]}):(wb==rbd);
+ // empty compares against wbin (binary(wg2) registered one reader clock later; timing 2026-11-11:
+ // wg2 -> Gray decode -> compare -> empty_r was the post-synthesis egress_wtx worst path). The write
+ // pointer is seen one clock later: empty stays set one clock longer (conservative, never early).
+ (* keep *) wire e_take=rn==wbin,e_hold=rb==wbin;
  wire[A:0]occupancy=distance(wb,rbin);
- // Read port: registered ONE-HOT entry selects (head and head+1) drive two AND-OR trees straight
- // from flops (no decode before the 40-bit fanout); the late `take` only drives the final 2:1.
- reg[W-1:0]dq;reg[DEPTH-1:0]roh,roh1;
+ (* keep *) wire[A:0]cnt_take=distance(wbin,rn),cnt_hold=distance(wbin,rb);
+ // The late put / take select the precomputed alternatives through kept-hierarchy 2:1 muxes:
+ // with plain ?: synthesis (opt_share) merged the two compares / subtractors into one behind a
+ // pointer mux, putting take back in front of the arithmetic (post-synthesis egress_wtx -1.4 ns).
+ wire empty_n,full_n;wire[A:0]cnt_n;
+ pt_sel2 #(.W(1)) empty_sel(.s(take),.a(e_hold),.b(e_take),.z(empty_n));
+ pt_sel2 #(.W(1)) full_sel(.s(put),.a(f_hold),.b(f_put),.z(full_n));
+ pt_sel2 #(.W(A+1)) cnt_sel(.s(take),.a(cnt_hold),.b(cnt_take),.z(cnt_n));
+ // Read port, two pipeline stages (timing 2026-11-11: the 28 x 40 AND-OR read trees spanning the
+ // array were the hcore / bounded-CDC worst paths, -4.7 / -2.5 ns post-CTS in TC6).
+ // Registered ONE-HOT selects for the head and the next two entries (roh, roh1, roh2 = rb, rb+1,
+ // rb+2 with the playback wrap) select, per half of the array, three candidate partial words that
+ // are REGISTERED (p*a / p*b); the next clock ORs the halves and the late takes pick the candidate:
+ //   dq(t+1) = mem[rb(t) + take(t)] = mem[rb(t-1) + take(t-1) + take(t)] = candidate take_d + take.
+ // A readable entry was written at least three reader clocks before the reader can see it (array
+ // write, then wgp, wg1, wg2, wbin), so the one-clock-older array sample is the same data; dq
+ // reloads every clock, so an entry that becomes readable later is picked up as before.
+ reg[W-1:0]dq;reg[DEPTH-1:0]roh,roh1,roh2;reg take_d;
+ function automatic[DEPTH-1:0]oh_next(input[DEPTH-1:0]v);
+  begin oh_next=(playing&&v[lastc])?{{(DEPTH-1){1'b0}},1'b1}:{v[DEPTH-2:0],v[DEPTH-1]};end endfunction
+ // roh2 = oh_next(roh1): constant reset value 4, corrected on the first clock after the release (the
+ // playback wrap may make it 1); candidate 2 is only used after two consecutive takes.
+ reg roh_init;
  always @(posedge rd_clk or negedge rd_ready)
-  if(!rd_ready)begin roh<=1;roh1<=2;end
-  else if(take)begin roh<=roh1;
-   roh1<=(playing&&roh1[lastc])?{{(DEPTH-1){1'b0}},1'b1}:{roh1[DEPTH-2:0],roh1[DEPTH-1]};end
+  if(!rd_ready)begin roh<=1;roh1<=2;roh2<=4;take_d<=1'b0;roh_init<=1'b1;end
+  else begin
+   take_d<=take;roh_init<=1'b0;
+   if(take)begin roh<=roh1;roh1<=roh2;roh2<=oh_next(roh2);end
+   else if(roh_init)roh2<=oh_next(roh1);
+  end
  // playback: entries 0..play_last (one-hot head reaches play_last), then stop or wrap
  wire play_done_n=play_done||(playing&&take&&roh[lastc]&&!play_loop);
  always @(posedge rd_clk or negedge rd_ready)
   if(!rd_ready)begin play_done<=0;pe<=1;end
   else begin play_done<=play_done_n;pe<=play_done_n;end
- reg[W-1:0]sel0,sel1;integer j;
- always @*begin sel0=0;sel1=0;
-  for(j=0;j<DEPTH;j=j+1)begin sel0=sel0|({W{roh[j]}}&mem[j]);sel1=sel1|({W{roh1[j]}}&mem[j]);end end
- always @(posedge rd_clk)dq<=take?sel1:sel0;
+ localparam HALF=(DEPTH+1)/2;
+ reg[W-1:0]c0a,c0b,c1a,c1b,c2a,c2b;integer j;
+ always @*begin
+  c0a=0;c0b=0;c1a=0;c1b=0;c2a=0;c2b=0;
+  for(j=0;j<DEPTH;j=j+1)
+   if(j<HALF)begin c0a=c0a|({W{roh[j]}}&mem[j]);c1a=c1a|({W{roh1[j]}}&mem[j]);c2a=c2a|({W{roh2[j]}}&mem[j]);end
+   else begin c0b=c0b|({W{roh[j]}}&mem[j]);c1b=c1b|({W{roh1[j]}}&mem[j]);c2b=c2b|({W{roh2[j]}}&mem[j]);end
+ end
+ reg[W-1:0]p0a,p0b,p1a,p1b,p2a,p2b;
+ always @(posedge rd_clk)begin p0a<=c0a;p0b<=c0b;p1a<=c1a;p1b<=c1b;p2a<=c2a;p2b<=c2b;end
+ wire[W-1:0]s0=p0a|p0b,s1=p1a|p1b,s2=p2a|p2b;
+ // the late takes drive only kept-hierarchy 2:1s (pt_sel2) after the registered partials
+ wire[W-1:0]s_lo,s_hi,dq_n;
+ pt_sel2 #(.W(W)) dq_sel_lo(.s(take_d),.a(s0),.b(s1),.z(s_lo));
+ pt_sel2 #(.W(W)) dq_sel_hi(.s(take_d),.a(s1),.b(s2),.z(s_hi));
+ pt_sel2 #(.W(W)) dq_sel(.s(take),.a(s_lo),.b(s_hi),.z(dq_n));
+ always @(posedge rd_clk)dq<=dq_n;
  assign dout=dq;
- assign wr_ptr=wb,rd_ptr=rb;
+ assign wr_ptr=wb,rd_ptr=rb,rd_ptr_step=rnr,rd_take=take;
  integer i;
  // Write port pipelined (timing closure 2026-11-11): the per-entry write enables are REGISTERS
  // (we_r = put & one-hot pointer, one flop per entry) and the data is registered with them, so the
@@ -222,23 +271,23 @@ assign empty=playing?pe:empty_r;
   else begin:no_peek assign peek={W{1'b0}};end
  end endgenerate
  always @(posedge wr_clk or negedge wr_ready)begin
-  if(!wr_ready)begin wb<=0;wg<=gray(0);wgp<=gray(0);rg1<=gray(0);rg2<=gray(0);rbin<=0;rbd<=DEPTH;woh<=1;overflow<=0;ready<=0;full_r<=0;end
+  if(!wr_ready)begin wb<=0;wnr<=1;wg<=gray(0);wgp<=gray(0);rg1<=gray(0);rg2<=gray(0);rbin<=0;rbd<=DEPTH;woh<=1;overflow<=0;ready<=0;full_r<=0;end
   else begin
-   full_r<=put?f_put:f_hold;
+   full_r<=full_n;
    wgp<=wg;   // published after the array write (we_r) lands
    rg1<=rg;rg2<=rg1;rbin<=binary(rg2);rbd<=plus_depth(binary(rg2));
    ready<=occupancy<=DEPTH-SPARE;
-   if(put)begin wb<=wn;wg<=gray(wn);woh<={woh[DEPTH-2:0],woh[DEPTH-1]};end
+   if(put)begin wb<=wn;wnr<=step(wn);wg<=gray(wn);woh<={woh[DEPTH-2:0],woh[DEPTH-1]};end
    if(push&&full)overflow<=1;
   end
  end
  always @(posedge rd_clk or negedge rd_ready)begin
-  if(!rd_ready)begin rb<=0;rg<=gray(0);wg1<=gray(0);wg2<=gray(0);wbin<=0;rd_count<=0;underflow<=0;empty_r<=1;end
+  if(!rd_ready)begin rb<=0;rnr<=step(0);rg<=gray(0);wg1<=gray(0);wg2<=gray(0);wbin<=0;rd_count<=0;underflow<=0;empty_r<=1;end
   else begin
-   empty_r<=take?e_take:e_hold;
+   empty_r<=empty_n;
    wg1<=wgp;wg2<=wg1;wbin<=binary(wg2);
-   rd_count<=playing?FULLC:take?distance(wbin,rn):distance(wbin,rb);   // both from registers; `take` selects late
-   if(take)begin rb<=rn;rg<=gray(rn);end
+   rd_count<=playing?FULLC:cnt_n;   // both alternatives from registers; `take` selects late (pt_sel2)
+   if(take)begin rb<=rn;rnr<=step(rn);rg<=gray(rn);end
    if(pop&&empty)underflow<=1;
   end
  end
@@ -250,4 +299,21 @@ endmodule
 `endif
 module pt_rst_rep(input wire clk, rst_n, output reg q);
     always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= 1'b1;
+endmodule
+
+// Kept 2:1 select (z = s ? b : a): a hierarchy boundary so synthesis cannot share the logic in front
+// of the two inputs into one operator behind a select (late-select timing structure).
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_sel1(input wire s, a, b, output wire z);
+ assign z = s ? b : a;
+endmodule
+// W-bit wrapper (flattened) of kept 1-bit selects: a parameterized kept module would survive
+// synthesis as a $paramod instance, which the flow counts as an unmapped cell.
+module pt_sel2 #(parameter integer W=1)(input wire s, input wire [W-1:0] a, b, output wire [W-1:0] z);
+ genvar i;
+ generate for (i = 0; i < W; i = i + 1) begin : b_
+  pt_sel1 m(.s(s), .a(a[i]), .b(b[i]), .z(z[i]));
+ end endgenerate
 endmodule

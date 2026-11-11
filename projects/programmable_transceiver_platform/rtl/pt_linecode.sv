@@ -59,34 +59,48 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
     // ---- stage 2: decode four symbols, split in two clocks (timing closure 2026-11-11, wrx at 12.3 ns):
     // 2a registers the per-symbol table lookups (k28, 5b/6b {ok, EDCBA}, K28 3b/4b, 3b/4b, the 4b group),
     // 2b assembles the 9-bit symbols and the error flag. One extra wire_rx_clk of latency; same symbols.
-    reg [75:0] pa;              // per symbol s: {k28, ok, x[4:0], dk[3:0], d4r[3:0], c4[3:0]} at 19*s
+    // Timing 2026-11-11 (wrx, post-synthesis sym -> compare -> c4 mux -> dk table -> pa -3.0 ns): the
+    // K28 3b/4b table is looked up on both polarities in parallel and the c6 == 111100 compare only
+    // selects (kept 2:1); the Dx.A7/Kx.7 condition parts are decoded here too (kx: the 5b/6b data
+    // value is 23/27/29/30, c4k: c4 is 1110 or 0001) so stage 2b is a short select.
+    reg [75:0] pa;              // per symbol s: {k28, ok, x[4:0], dk[3:0], d4r[3:0], kx, c4k, 2'b0} at 19*s
     reg [35:0] dec_n; reg bad_n;
     integer s;
-    reg [5:0] c6; reg [3:0] c4, d4r, dk; reg [4:0] x; reg k28, ok;
+    reg [5:0] c6; reg [3:0] c4, d4r; reg [4:0] x; reg k28, ok, kx, c4k;
     reg [75:0] pa_n;
+    wire [15:0] dk_sel;
+    genvar sk;
+    generate for (sk = 0; sk < 4; sk = sk + 1) begin : dkp
+        wire [3:0] c4s = sym[10*sk+6 +: 4];
+        wire [3:0] dk_p = lc_dk4(c4s), dk_n = lc_dk4(~c4s);
+        wire k28p;   // c6 == 111100 in its own kept hierarchy (synthesis merged it into the 5b/6b table logic)
+        pt_lc_is_k28p eq(.a(sym[10*sk +: 6]), .z(k28p));
+        pt_lc_sel2 #(4) sel(.s(k28p), .a(dk_n), .b(dk_p), .z(dk_sel[4*sk +: 4]));
+    end endgenerate
     always @* begin
         for (s = 0; s < 4; s = s + 1) begin
             c6 = sym[10*s +: 6]; c4 = sym[10*s+6 +: 4];
             k28 = c6 == 6'b111100 || c6 == 6'b000011;
             {ok, x} = lc_d6(c6);
-            dk = lc_dk4(c6 == 6'b111100 ? c4 : ~c4);
+            kx = x == 5'd23 || x == 5'd27 || x == 5'd29 || x == 5'd30;
+            c4k = c4 == 4'b1110 || c4 == 4'b0001;
             d4r = lc_d4(c4);
-            pa_n[19*s +: 19] = {k28, ok, x, dk, d4r, c4};
+            pa_n[19*s +: 19] = {k28, ok, x, dk_sel[4*s +: 4], d4r, kx, c4k, 2'b00};
         end
     end
     // (separate variables: two always @* blocks sharing temporaries retrigger each other forever)
-    reg [3:0] bc4, bd4r, bdk; reg [4:0] bx; reg bk28, bkk, bok; integer t;
+    reg [3:0] bd4r, bdk; reg [4:0] bx; reg [1:0] bpad; reg bk28, bkk, bok, bkx, bc4k; integer t;
     always @* begin
         bad_n = 1'b0;
         for (t = 0; t < 4; t = t + 1) begin
-            {bk28, bok, bx, bdk, bd4r, bc4} = pa[19*t +: 19]; bkk = 1'b0;
+            {bk28, bok, bx, bdk, bd4r, bkx, bc4k, bpad} = pa[19*t +: 19]; bkk = 1'b0;
             if (bk28) begin
                 dec_n[9*t +: 9] = bdk[3] ? {1'b1, bdk[2:0], 5'd28} : 9'h100;
                 bad_n = bad_n | !bdk[3];
             end else if (!bok || !bd4r[3]) begin
                 dec_n[9*t +: 9] = 9'h100; bad_n = 1'b1;
             end else begin
-                bkk = (bc4 == 4'b1110 || bc4 == 4'b0001) && (bx == 5'd23 || bx == 5'd27 || bx == 5'd29 || bx == 5'd30);
+                bkk = bc4k && bkx;
                 dec_n[9*t +: 9] = {bkk, bd4r[2:0], bx};
             end
         end
@@ -130,6 +144,36 @@ endmodule
 // class does not depend on the disparity it is encoded with, so RD before symbol s is
 // rd ^ u_0 ^ .. ^ u_(s-1), from cheap per-symbol flags); (B) four independent 9b->10b encoders.
 // The encoded quad q is a registered FWFT head: `take` consumes it.
+// Kept enable replica (identical copies must not be merged by synthesis).
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_lc_en_rep(input wire clk, rst_n, d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+endmodule
+
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_lc_sel1(input wire s, a, b, output wire z);
+    assign z = s ? b : a;
+endmodule
+// W-bit wrapper (flattened) of kept 1-bit selects: a parameterized kept module would survive
+// synthesis as a $paramod instance, which the flow counts as an unmapped cell.
+module pt_lc_sel2 #(parameter integer W=1)(input wire s, input wire [W-1:0] a, b, output wire [W-1:0] z);
+    genvar i;
+    generate for (i = 0; i < W; i = i + 1) begin : b_
+        pt_lc_sel1 m(.s(s), .a(a[i]), .b(b[i]), .z(z[i]));
+    end endgenerate
+endmodule
+
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_lc_is_k28p(input wire [5:0] a, output wire z);   // a == 6'b111100
+    assign z = a == 6'b111100;
+endmodule
+
 module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire head_valid,
     output wire pop, output reg [39:0] q, output reg q_valid, input wire take);
 `include "pt_linecode_tables.svh"
@@ -181,8 +225,18 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
     // compare on u sits in front of the 72-bit insert fanout (AC-1 ss32 timing at 12.3 ns).
     reg uge36, ult72; reg [8:0] oh_n, oh_a;   // oh_n[i]: u == 4i; oh_a[i]: u == 4i + 36
     wire advA = uge36 && (!sAv || advB);
-    assign pop = en && head_valid && (advA ? ult72 : !uge36);
-    wire [6:0] u_next = u - (advA ? 7'd36 : 7'd0) + (pop ? 7'd40 : 7'd0);
+    // en (the synchronized ENABLE & linecode) is re-registered in three kept copies, one per register
+    // group (timing 2026-11-11, wtx: e3.q -> en -> ~300 flops was -4.5 ns); every group sees the same
+    // one-clock-later enable, so the stream is unchanged (it starts one WORD_CLK40 later).
+    wire en_a, en_b, en_c;
+    pt_lc_en_rep rep_a(.clk(clk), .rst_n(rst_n), .d(en), .q(en_a));
+    pt_lc_en_rep rep_b(.clk(clk), .rst_n(rst_n), .d(en), .q(en_b));
+    pt_lc_en_rep rep_c(.clk(clk), .rst_n(rst_n), .d(en), .q(en_c));
+    assign pop = en_a && head_valid && (advA ? ult72 : !uge36);
+    wire [6:0] u_p0, u_p1, u_next;   // u - 36 advA + 40 pop, alternatives from u only
+    pt_lc_sel2 #(7) su_p0(.s(pop), .a(u), .b(u + 7'd40), .z(u_p0));
+    pt_lc_sel2 #(7) su_p1(.s(pop), .a(u - 7'd36), .b(u + 7'd4), .z(u_p1));
+    pt_lc_sel2 #(7) su_a (.s(advA), .a(u_p0), .b(u_p1), .z(u_next));
     // next flags for each of the four (advA, pop) cases, from registers only; the late advA / pop
     // only select (kept nets: synthesis must not fold the select back into the adders)
     function automatic [19:0] flags_of(input [6:0] v);
@@ -193,6 +247,12 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
     endfunction
     (* keep *) wire [19:0] fl_00 = flags_of(u), fl_01 = flags_of(u + 7'd40),
                            fl_10 = flags_of(u - 7'd36), fl_11 = flags_of(u + 7'd4);
+    // the late advA / pop select through kept-hierarchy 2:1s (plain case/?: let synthesis share the
+    // four adders/compares into one behind a u mux: post-synthesis egress_wtx sAv -> ... -> u adder)
+    wire [19:0] fl_p0, fl_p1, fl_sel;
+    pt_lc_sel2 #(20) s_p0(.s(pop), .a(fl_00), .b(fl_01), .z(fl_p0));
+    pt_lc_sel2 #(20) s_p1(.s(pop), .a(fl_10), .b(fl_11), .z(fl_p1));
+    pt_lc_sel2 #(20) s_a (.s(advA), .a(fl_p0), .b(fl_p1), .z(fl_sel));
     wire [71:0] kept = advA ? {36'd0, ures[71:36]} : ures;
     reg [71:0] ins_a, ins_n;   // head inserted at u - 36 (after advA) or at u
     integer i;
@@ -212,20 +272,25 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
                        lc_enc3(sA[17:9], rdA[1], dA[4], dA[5], dA[6], dA[7]),
                        lc_enc3(sA[8:0], rdA[0], dA[0], dA[1], dA[2], dA[3])};
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin ures <= 72'd0; u <= 7'd0; uge36 <= 1'b0; ult72 <= 1'b1; oh_n <= 9'd1; oh_a <= 9'd0; sA <= 36'd0; dA <= 16'd0; rdA <= 4'b1111; sAv <= 1'b0; rdn <= 1'b1; q <= 40'd0; q_valid <= 1'b0; q2 <= 40'd0; qv2 <= 1'b0; end
-        else if (!en) begin ures <= 72'd0; u <= 7'd0; uge36 <= 1'b0; ult72 <= 1'b1; oh_n <= 9'd1; oh_a <= 9'd0; sAv <= 1'b0; rdn <= 1'b1; q_valid <= 1'b0; qv2 <= 1'b0; end
+        if (!rst_n) begin ures <= 72'd0; u <= 7'd0; uge36 <= 1'b0; ult72 <= 1'b1; oh_n <= 9'd1; oh_a <= 9'd0; end
+        else if (!en_a) begin ures <= 72'd0; u <= 7'd0; uge36 <= 1'b0; ult72 <= 1'b1; oh_n <= 9'd1; oh_a <= 9'd0; end
         else begin
             ures <= kept | (pop ? (advA ? ins_a : ins_n) : 72'd0);
             u <= u_next;
-            case ({advA, pop})
-                2'b00: {uge36, ult72, oh_n, oh_a} <= fl_00;
-                2'b01: {uge36, ult72, oh_n, oh_a} <= fl_01;
-                2'b10: {uge36, ult72, oh_n, oh_a} <= fl_10;
-                default: {uge36, ult72, oh_n, oh_a} <= fl_11;
-            endcase
+            {uge36, ult72, oh_n, oh_a} <= fl_sel;
+        end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin sA <= 36'd0; dA <= 16'd0; rdA <= 4'b1111; sAv <= 1'b0; rdn <= 1'b1; end
+        else if (!en_b) begin sAv <= 1'b0; rdn <= 1'b1; end
+        else begin
             if (advA) begin sA <= ures[35:0]; rdA <= r_at; rdn <= rdn ^ (^f);
                 dA <= {dec_of(ures[35:27]), dec_of(ures[26:18]), dec_of(ures[17:9]), dec_of(ures[8:0])}; end
             sAv <= advA || (sAv && !advB);
+        end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin q <= 40'd0; q_valid <= 1'b0; q2 <= 40'd0; qv2 <= 1'b0; end
+        else if (!en_c) begin q_valid <= 1'b0; qv2 <= 1'b0; end
+        else begin
             if (q_valid && take) begin          // head consumed: second entry or the new group moves up
                 if (qv2) q <= q2; else if (advB) q <= enc;
                 q_valid <= qv2 || advB; qv2 <= 1'b0;

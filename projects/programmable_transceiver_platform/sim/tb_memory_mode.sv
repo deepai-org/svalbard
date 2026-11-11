@@ -23,7 +23,7 @@ module tb_memory_mode;
   .linecode(1'b0),.rx_gain(gain),.rx_gain_active(gact),
   .mem_capture(cap),.mem_play(play),.mem_loop(loop),.mem_last(last),.spi_clk(sclk),.mem_we(we),.mem_idx(idx),
   .mem_wdata(wd),.mem_rdata(rdata),.capture_done(done),
-  .pat_sel(1'b0),.pat_word(40'd0));
+  .pat_sel(1'b0),.pat_word(40'd0),.pat_valid(1'b0),.pat_idle(1'b1),.wire_req_int());
  always #8 wclk=~wclk;
  always #12.5 rclk=~rclk;
  always #12.5 fclk=~fclk;

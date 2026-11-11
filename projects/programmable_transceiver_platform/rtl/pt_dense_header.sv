@@ -7,7 +7,8 @@
 // when value is held for at least three clocks before packet is sampled, as in pt_dense_pair_tx
 // (pending/seq settle at the clamp edge, four engine clocks before the publish edge).
 // STAGES=3 (default, reference model): three registered parity stages. STAGES=1 (AC-1 quad engine at
-// word/4, value held >= 3 clocks): one registered parity stage (seven 18-input XOR trees).
+// word/4, value held >= 3 clocks): one registered parity stage (seven 18-input XOR trees). STAGES=0:
+// combinational parity (no register).
 module pt_dense_header #(parameter ALIGN=1,STAGES=3)(input wire clk,input wire[29:0]value,output reg[39:0]packet);
  function automatic[17:0]row(input[29:0]data,input integer which);
  integer p,d,n,weight,k;begin
@@ -23,7 +24,12 @@ module pt_dense_header #(parameter ALIGN=1,STAGES=3)(input wire clk,input wire[2
  reg[6:0]parity;
  wire[29:0]data3;
  genvar r,g;
- generate if(STAGES==1)begin:single
+ generate if(STAGES==0)begin:comb   // combinational parity (linear-split use in pt_quad_tx)
+  for(r=0;r<7;r=r+1)begin:rows
+   wire[17:0]bits=row(value,r);
+   always @*parity[r]=^bits;
+  end
+ end else if(STAGES==1)begin:single
   for(r=0;r<7;r=r+1)begin:rows
    wire[17:0]bits=row(value,r);
    always @(posedge clk)parity[r]<=^bits;

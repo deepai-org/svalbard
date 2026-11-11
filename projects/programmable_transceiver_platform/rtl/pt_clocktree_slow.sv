@@ -15,6 +15,15 @@
 `default_nettype none
 
 // ---------------------------------------------------------------------------
+// Replicated control flop (fanout split / dedicated source), kept so identical copies are not merged.
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_ct_rep(input wire clk, rst_n, d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+endmodule
+
+// ---------------------------------------------------------------------------
 // Serializer-clock domain core: word divider, phase-window qualification and
 // launch re-phasing. Inputs ref_rise/pend/lock are already synchronized to wclk.
 module pt_ct_word #(parameter integer QUAL_CYCLES = 64)(
@@ -25,6 +34,7 @@ module pt_ct_word #(parameter integer QUAL_CYCLES = 64)(
     input  wire [1:0] cfg_word_delay,// 0..3 words
     input  wire       ref_rise,      // one wclk cycle per reference rising edge (synchronized)
     input  wire       pend,          // launch request from the reference domain (synchronized)
+    input  wire       lreq_next,     // (ref_rise && pend) as they will be after the next edge (TC6)
     input  wire       lock,          // analog PLL lock / phase-window indication (synchronized)
     output reg  [3:0] cnt,           // word-divider phase, 0..M-1
     output reg        word_clk,      // M/2 (or 2 of 5) cycles high, rises at word zero
@@ -32,7 +42,7 @@ module pt_ct_word #(parameter integer QUAL_CYCLES = 64)(
     output reg        ser_run,       // serializer reset release; set at the launched word zero
     output reg        bit_phase,     // half-rate: start on the second DDR half (odd delay)
     output reg        launching,     // launch accepted, delay running
-    output wire       qualified,
+    output reg        qualified,     // registered (stable == QUAL), see timing note below
     output reg  [6:0] stable,        // consecutive good reference cycles (saturating)
     output reg  [3:0] since,         // wclk cycles since the last reference edge (saturating 15)
     output reg  [5:0] dly            // remaining launch delay while `launching`
@@ -43,24 +53,65 @@ module pt_ct_word #(parameter integer QUAL_CYCLES = 64)(
     wire [5:0] d_cyc  = cfg_half_rate ? {1'b0, d_ui[5:1]} : d_ui;
 
 
-    reg wrap, lt1, pok; reg [6:0] inc1, inc2;   // precomputed decodes (declared before use; see below)
+    reg wrap, lt1, pok;
+    // TC6: stable = {sh, sl} counts with a registered low-digit carry flag l7 (sl == 7) and registered
+    // saturation flags sq (stable == QUAL) / sq1 (stable == QUAL - 1): no 7-bit increment or compare
+    // behind the decision registers (QUAL_CYCLES >= 2).
+    reg l7, sq, sq1;
+    reg hq;   // registered (!sq && l7), computed from their next-state values: high-digit step = ti && hq
+    reg [15:0] soh;   // one-hot shadow of since (soh[i] == (since == i)): pok / clear without compares   // precomputed decodes (declared before use; see below)
     wire period_ok, good;
     wire launch_ev = ref_rise && pend && !launching;
     reg  dz;                 // registered (dly == 0) while launching: keeps the decrement off the rephase path
-    wire rephase   = launching ? dz : (launch_ev && d_cyc == 0);
+    // dc0/dn0: registered (d_cyc == 0) / (d_cyc != 0): static configuration, off the rephase path.
+    // Both read 0 in the first clock after reset (and rph uses dc0 one clock ahead): `pend` is 0 for
+    // far longer after reset (a launch request needs arm + 64-edge qualification in the reference
+    // domain), so no launch can be accepted before they are valid.
+    reg  dc0, dn0;
+    // TC6: the launch-delay load values are registers too (dcm1 = d_cyc - 1, dc1 = (d_cyc == 1),
+    // dc2 = (d_cyc == 2)) and d1 = (dly == 1) is kept one step ahead, so dz/dly/launching see no
+    // configuration adder or compare behind launch_ev.
+    reg  [5:0] dcm1, dcm2; reg dc1, dc2, d1, dcz;   // dcz = (dcm2[2:0] == 0)
+    // dm == dly - 1 (invariant) as two 3-bit digits with a registered low-digit-zero flag dlz, so the
+    // countdown has no 6-bit borrow chain (TC6).
+    reg  [2:0] dmh, dml; reg dlz;
+    wire [5:0] dm = {dmh, dml};
+    // rephase is a REGISTER (TC6): rph <= next-cycle value of launching ? dz : (launch_ev && dc0),
+    // from the next-state expressions below and lreq_next (the parent's synchronizer stage before
+    // ref_ev / pend_s[1]). bp = cfg_half_rate & d_ui[0] registered (static configuration).
+    reg  rph, bp;
+    wire launching_n = launching ? !dz : (launch_ev && dn0);
+    wire dz_n        = (launching && !dz) ? d1 : dc1;
+    wire rephase   = rph;
     wire zero_next = rephase || wrap;
     wire [3:0] cnt_inc = cnt + 4'd1;
     wire [3:0] cnt_next = zero_next ? 4'd0 : cnt_inc;
     wire [3:0] hi = cfg_half_rate ? 4'd2 : 4'd5;
     // next values of wrap / lt1 for both cnt_next alternatives (0 or cnt + 1), from registers only
-    wire wrap_inc = cnt_inc >= m_last, lt1_inc = cnt_inc + 4'd1 < hi;
+    // TC6: one-hot shadow of cnt (ccoh[i] == (cnt == i)) and static masks (each bit is a constant or
+    // cfg_half_rate itself), so the cnt + 1 decodes are AND-ORs: wmask = {i : i + 1 >= m_last},
+    // lmask = {i : i + 2 < hi}.
+    reg [9:0] ccoh;
+    wire [9:0] wmask = cfg_half_rate ? 10'b1111111000 : 10'b1100000000;   // i >= 3 / i >= 8
+    wire [9:0] lmask = cfg_half_rate ? 10'b0000000000 : 10'b0000000111;   // i < 0  / i < 3
+    wire wrap_inc = |(ccoh & wmask), lt1_inc = |(ccoh & lmask);
     wire wrap_zero = 4'd0 >= m_last, lt1_zero = 4'd1 < hi;
     wire [3:0] since_next = ref_rise ? 4'd0 : (since != 4'hf ? since + 4'd1 : since);
-    wire clear = !lock || since == 4'hf;
+    wire clear = !lock || soh[15];   // since == 15
     wire step  = !clear && ref_rise;
-    // stable's next value is 0, stable, or sat_inc(stable) = inc1
-    wire to_zero = clear || (ref_rise && !good);
-    wire to_inc  = step && good;
+    // stable's next value is 0, stable, or sat_inc(stable) = inc1. Timing (TC6, 2026-11-11): the
+    // decisions are REGISTERS (tz/ti, three kept copies each: sl/l7, sh, sq/sq1), so the
+    // qualification counter steps one wclk cycle after the reference event (pure 1-cycle latency;
+    // `qualified` is a further register: +2 wclk cycles in total vs the pre-TC6 RTL).
+    wire to_zero_n = clear || (ref_rise && !good);
+    wire to_inc_n  = step && good;
+    wire tz_s, tz_1, tz_2, ti_s, ti_1, ti_2;
+    pt_ct_rep rtz0(.clk(wclk), .rst_n(rst_n), .d(to_zero_n), .q(tz_s));
+    pt_ct_rep rtz1(.clk(wclk), .rst_n(rst_n), .d(to_zero_n), .q(tz_1));
+    pt_ct_rep rtz2(.clk(wclk), .rst_n(rst_n), .d(to_zero_n), .q(tz_2));
+    pt_ct_rep rti0(.clk(wclk), .rst_n(rst_n), .d(to_inc_n),  .q(ti_s));
+    pt_ct_rep rti1(.clk(wclk), .rst_n(rst_n), .d(to_inc_n),  .q(ti_1));
+    pt_ct_rep rti2(.clk(wclk), .rst_n(rst_n), .d(to_inc_n),  .q(ti_2));
 
     // Phase window: the reference edge must land in the same wclk cycle every
     // period, i.e. exactly M cycles apart. With a free-running modulus-M divider
@@ -74,38 +125,57 @@ module pt_ct_word #(parameter integer QUAL_CYCLES = 64)(
     //   wrap   = (cnt >= m_last)                   (register, from cnt_next)
     //   lt1    = (cnt + 1 < hi)                    (register, from cnt_next)
     //   pok    = (since == m_last)                 (register, from since's next value)
-    //   inc1/2 = sat(stable + 1), sat(stable + 2)  (registers, from stable's next value)
+    //   l7/sq/sq1 = (stable[2:0] == 7), (stable == QUAL), (stable == QUAL - 1)  (registers)
     assign period_ok = pok;
     assign good      = lock && period_ok;
-    assign qualified = stable == QUAL_CYCLES;
-    function automatic [6:0] sat_inc(input [6:0] v);
-        sat_inc = v == QUAL_CYCLES ? v : v + 7'd1;
-    endfunction
 
     always @(posedge wclk or negedge rst_n) begin
         if (!rst_n) begin
             cnt <= 0; word_clk <= 1'b0; word_load <= 1'b0; ser_run <= 1'b0; bit_phase <= 1'b0;
             launching <= 1'b0; dly <= 0; dz <= 1'b0; since <= 4'hf; stable <= 0;
             wrap <= 1'b0; lt1 <= 1'b1; pok <= 1'b0;   // m_last >= 4, hi >= 2, since = 15 (any cfg)
-            inc1 <= sat_inc(7'd0); inc2 <= sat_inc(sat_inc(7'd0));
+            ccoh <= 10'd1; hq <= 1'b0; soh <= 16'h8000;
+            l7 <= 1'b0; sq <= 1'b0; sq1 <= QUAL_CYCLES == 1; qualified <= 1'b0; dc0 <= 1'b0; dn0 <= 1'b0; rph <= 1'b0; bp <= 1'b0;
+            dcm1 <= 6'd0; dcm2 <= 6'h3f; dmh <= 3'h7; dml <= 3'h7; dlz <= 1'b0; dcz <= 1'b0; dc1 <= 1'b0; dc2 <= 1'b0; d1 <= 1'b0;
         end else begin
+            dc0       <= d_cyc == 6'd0;
+            bp        <= cfg_half_rate & d_ui[0];
+            rph       <= launching_n ? dz_n : (lreq_next && dc0);
+            dn0       <= d_cyc != 6'd0;
+            dcm1      <= d_cyc - 6'd1; dcm2 <= d_cyc - 6'd2; dcz <= (d_cyc[2:0] - 3'd2) == 3'd0; dc1 <= d_cyc == 6'd1; dc2 <= d_cyc == 6'd2;
+            qualified <= sq;                        // == (stable == QUAL_CYCLES), one clock later
             cnt       <= cnt_next;
+            ccoh      <= zero_next ? 10'd1 : {ccoh[8:0], 1'b0};
             word_load <= zero_next;                 // == (cnt_next == 0): cnt <= m_last <= 9
             word_clk  <= zero_next || lt1;          // == (cnt_next < hi)
             wrap      <= zero_next ? wrap_zero : wrap_inc;
             lt1       <= zero_next ? lt1_zero : lt1_inc;
-            pok       <= since_next == m_last;
-            if (to_zero) begin inc1 <= sat_inc(7'd0); inc2 <= sat_inc(sat_inc(7'd0)); end
-            else if (to_inc) begin inc1 <= inc2; inc2 <= sat_inc(inc2); end
+            pok       <= !ref_rise && (cfg_half_rate ? soh[3] : soh[8]);   // == (since_next == m_last)
+            soh       <= ref_rise ? 16'd1 : (soh[15] ? soh : {soh[14:0], 1'b0});
+            if (tz_2) begin sq <= 1'b0; sq1 <= QUAL_CYCLES == 1; end
+            else if (ti_2 && !sq) begin sq <= sq1; sq1 <= stable == QUAL_CYCLES - 2; end
             // launch: fixed latency from the qualified reference edge, then d_cyc cycles
-            if (launch_ev && d_cyc != 0) begin launching <= 1'b1; dly <= d_cyc - 6'd1; dz <= d_cyc == 6'd1; end
-            else if (launching && !dz) begin dly <= dly - 6'd1; dz <= dly == 6'd1; end
-            else if (launching) begin launching <= 1'b0; dz <= 1'b0; end
-            if (rephase) begin ser_run <= 1'b1; bit_phase <= cfg_half_rate & d_ui[0]; end
+            // Data registers are selected by `launching` alone (TC6): while idle they continuously
+            // reload the launch values (dly/dm/dz/d1 are only meaningful while launching), so no
+            // launch_ev term sits on the dly/dm/dz/d1 data paths.
+            if (!launching) begin
+                dly <= dcm1; {dmh, dml} <= dcm2; dlz <= dcz; dz <= dc1; d1 <= dc2;
+                if (launch_ev && dn0) launching <= 1'b1;
+            end else if (!dz) begin
+                dly <= dm; dml <= dml - 3'd1; if (dlz) dmh <= dmh - 3'd1; dlz <= dml == 3'd1;
+                dz <= d1; d1 <= dly == 6'd2;
+            end
+            else begin launching <= 1'b0; dz <= dc1; dly <= dcm1; {dmh, dml} <= dcm2; dlz <= dcz; d1 <= dc2; end
+            if (rephase) begin ser_run <= 1'b1; bit_phase <= bp; end
             // qualification
             if (ref_rise) since <= 0; else if (since != 4'hf) since <= since + 4'd1;
-            if (to_zero) stable <= 0;
-            else if (to_inc) stable <= inc1;
+            if (tz_s) begin stable[2:0] <= 3'd0; l7 <= 1'b0; end
+            else if (ti_s && !sq) begin stable[2:0] <= stable[2:0] + 3'd1; l7 <= stable[2:0] == 3'd6; end
+            if (tz_1) stable[6:3] <= 4'd0;
+            else if (ti_1 && hq) stable[6:3] <= stable[6:3] + 4'd1;
+            // next values of sq / l7 from the updates above
+            hq <= !(tz_2 ? 1'b0 : (ti_2 && !sq) ? sq1 : sq)
+                           &&  (tz_s ? 1'b0 : (ti_s && !sq) ? (stable[2:0] == 3'd6) : l7);
         end
     end
 `ifdef FORMAL
@@ -114,8 +184,22 @@ module pt_ct_word #(parameter integer QUAL_CYCLES = 64)(
         assert (wrap == (cnt >= m_last));
         assert (lt1 == (cnt + 4'd1 < hi));
         assert (pok == (since == m_last));
-        assert (inc1 == sat_inc(stable));
-        assert (inc2 == sat_inc(inc1));
+        assert (l7 == (stable[2:0] == 3'd7));
+        assert (ccoh == (10'd1 << cnt));
+        assert (soh == (16'd1 << since));
+        assert (hq == (!sq && l7));
+        assert (sq == (stable == QUAL_CYCLES) && sq1 == (stable == QUAL_CYCLES - 1));
+        assert (tz_s == tz_1 && tz_1 == tz_2 && ti_s == ti_1 && ti_1 == ti_2);
+        assert (!(tz_s && ti_s));
+        assert (rph == (launching ? dz : (ref_rise && pend && !launching && dc0)));
+        if ($past(rst_n)) assert (bp == (cfg_half_rate & d_ui[0]));
+        if ($past(rst_n)) assert (dc0 == (d_cyc == 0) && dn0 == (d_cyc != 0) && dcm1 == d_cyc - 6'd1
+                                  && dc1 == (d_cyc == 1) && dc2 == (d_cyc == 2));
+        if (launching && !dz) assert (d1 == (dly == 1));
+        if (launching) assert (dz == (dly == 0));
+        if ($past(rst_n)) assert (dm == dly - 6'd1 && dlz == (dml == 3'd0));
+        if ($past(rst_n)) assert (dcz == (dcm2[2:0] == 3'd0));
+        if ($past(rst_n)) assert (dcm2 == d_cyc - 6'd2);
     end
 `endif
 endmodule
@@ -185,7 +269,8 @@ endmodule
 module pt_ct_detect_div(
     input  wire        clk,          // selected TX wire clock
     input  wire        rst_n,
-    input  wire        en,           // synchronized enable
+    input  wire        en,           // synchronized enable (rising-edge synchronizer)
+    input  wire        en_fall,      // the same async enable through a FALLING-edge synchronizer
     input  wire [2:0]  cfg_div,      // 0: rule from cfg_rate_khz; 1..5 explicit (6, 7 -> 5)
     input  wire [21:0] cfg_rate_khz, // wire clock in kHz (480000..2500000)
     output wire [2:0]  div,          // applied N
@@ -199,25 +284,49 @@ module pt_ct_detect_div(
     // with nm1, so wrap and `a` are an AND-OR of registers. Same sequence as the former binary c:
     //   c_next = (c >= nm1) ? 0 : c + 1;  a <= c_next < half, half = (nm1 >> 1) + 1
     //   <=> a <= (c >= nm1) || (c < nm1 >> 1)   (c never exceeds nm1 once enabled: it starts at 0)
-    reg [4:0] coh, last_oh, lt_mask;
-    reg       a, b, en_n;
+    reg [4:0] coh, last_oh, lt_mask, amask;   // amask = last_oh | lt_mask (TC6: a = |(coh_next & ...))
+    reg       a, b, en_n;   // en_n: alias of en_fall (falling-edge synchronizer output)
     wire [2:0] n_q    = nm1 + 3'd1;
     wire       wrapc  = |(coh & last_oh);
     wire [2:0] nm1_n  = div - 3'd1;
-    reg en_q;   // synchronized enable re-registered before its fanout (timing 2026-11-11)
-    always @(posedge clk or negedge rst_n) if (!rst_n) en_q <= 1'b0; else en_q <= en;
+    // Synchronized enable re-registered before its fanout (timing 2026-11-11), split (TC6): en_q for
+    // nm1/last_oh/lt_mask, en_c for coh/a. The falling-edge gate enable en_n (N = 1) is the output of
+    // its own falling-edge two-flop synchronizer (en_fall), so no rising->falling half-period data path
+    // remains (TC4 -1.66 ns). en_n may change up to ~1 clk apart from en_q: the configuration is
+    // quasi-static (nm1 reloads continuously while disabled) and det_clk is only used once enabled.
+    wire en_q, en_c, en_m;   // en_m: lt_mask/amask copy (fanout split)
+    pt_ct_rep ren_q(.clk(clk), .rst_n(rst_n), .d(en), .q(en_q));
+    pt_ct_rep ren_m(.clk(clk), .rst_n(rst_n), .d(en), .q(en_m));
+    pt_ct_rep ren_c(.clk(clk), .rst_n(rst_n), .d(en), .q(en_c));
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin nm1 <= 3'd0; last_oh <= 5'd1; lt_mask <= 5'd0; coh <= 5'd1; a <= 0; end
-        else if (!en_q) begin
-            nm1 <= nm1_n; last_oh <= 5'd1 << nm1_n;
-            lt_mask <= (5'd1 << (nm1_n >> 1)) - 5'd1;   // bits i < nm1 >> 1
-            coh <= 5'd1; a <= 0;
+        if (!rst_n) begin nm1 <= 3'd0; last_oh <= 5'd1; lt_mask <= 5'd0; amask <= 5'd1; end
+        else begin
+            if (!en_q) begin nm1 <= nm1_n; last_oh <= 5'd1 << nm1_n; end
+            if (!en_m) begin
+                lt_mask <= (5'd1 << (nm1_n >> 1)) - 5'd1;   // bits i < nm1 >> 1
+                amask   <= (5'd1 << nm1_n) | ((5'd1 << (nm1_n >> 1)) - 5'd1);
+            end
         end
-        else begin coh <= wrapc ? 5'd1 : {coh[3:0], 1'b0}; a <= wrapc || |(coh & lt_mask); end
     end
+    // en_q and en_c are identical copies (same D, same clock), so the split is exact.
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin coh <= 5'd1; a <= 0; end
+        else if (!en_c) begin coh <= 5'd1; a <= 0; end
+        else begin coh <= wrapc ? 5'd1 : {coh[3:0], 1'b0}; a <= |(coh & amask); end   // == wrapc || |(coh & lt_mask)
+    end
+    // a_b: kept identical copy of `a` (same D, reset, clock), fanout 1 into the falling-edge `b`
+    // (half-period path; TC6).
+    wire a_b;
+    // (kept x4 cell in synthesis: fastest clock-to-Q into the half-period path)
+`ifdef SYNTHESIS
+    (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__dffrnq_4 ra_b(.D(en_c && |(coh & amask)), .RN(rst_n), .CLK(clk), .Q(a_b));
+`else
+    pt_ct_rep ra_b(.clk(clk), .rst_n(rst_n), .d(en_c && |(coh & amask)), .q(a_b));
+`endif
     // b: `a` half a cycle later (odd-N 50 % duty). en_n: falling-edge enable, so the
     // N = 1 gate clk & en_n only changes while clk is low (glitch-free, no latch).
-    always @(negedge clk or negedge rst_n) if (!rst_n) begin b <= 0; en_n <= 0; end else begin b <= a; en_n <= en; end
+    always @(negedge clk or negedge rst_n) if (!rst_n) b <= 0; else b <= a_b;
+    always @* en_n = en_fall;
     assign det_clk = nm1 == 3'd0 ? (clk & en_n) : (!nm1[0] ? (a & b) : a);
 endmodule
 
@@ -265,7 +374,7 @@ module pt_clocktree_slow #(parameter integer QUAL_CYCLES = 64)(
     wire [3:0] cnt, since; wire launching; wire [6:0] stable; wire [5:0] dly;
     pt_ct_word #(.QUAL_CYCLES(QUAL_CYCLES)) word(.wclk(wclk), .rst_n(wr[1]), .cfg_half_rate(cfg_half_rate),
         .cfg_bit_delay(cfg_bit_delay), .cfg_word_delay(cfg_word_delay), .ref_rise(ref_ev),
-        .pend(pend_s[1]), .lock(lock_s[1]), .cnt(cnt), .word_clk(word_clk), .word_load(word_load),
+        .pend(pend_s[1]), .lreq_next(ref_s[1] && !ref_s[2] && pend_s[0]), .lock(lock_s[1]), .cnt(cnt), .word_clk(word_clk), .word_load(word_load),
         .ser_run(ser_run), .bit_phase(bit_phase), .launching(launching), .qualified(qualified), .stable(stable), .since(since), .dly(dly));
 
     // synchronizers into ref_clk: sync_arm, qualified
@@ -280,7 +389,9 @@ module pt_clocktree_slow #(parameter integer QUAL_CYCLES = 64)(
 
     (* async_reg = "true" *) reg [1:0] den_s;
     always @(posedge det_clk_in or negedge dr[1]) if (!dr[1]) den_s <= 0; else den_s <= {den_s[0], cfg_det_en};
-    pt_ct_detect_div detect(.clk(det_clk_in), .rst_n(dr[1]), .en(den_s[1]), .cfg_div(cfg_det_div),
+    (* async_reg = "true" *) reg [1:0] den_f;   // falling-edge enable synchronizer (gate enable en_n)
+    always @(negedge det_clk_in or negedge dr[1]) if (!dr[1]) den_f <= 0; else den_f <= {den_f[0], cfg_det_en};
+    pt_ct_detect_div detect(.clk(det_clk_in), .rst_n(dr[1]), .en(den_s[1]), .en_fall(den_f[1]), .cfg_div(cfg_det_div),
         .cfg_rate_khz(cfg_rate_khz), .div(det_div), .det_clk(det_clk));
 endmodule
 `default_nettype wire

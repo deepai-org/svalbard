@@ -7,6 +7,8 @@
 endmodule
 (* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__mux2_2(input wire I0,I1,S,output wire Z);
 endmodule
+(* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__clkbuf_8(input wire I,output wire Z);
+endmodule
 (* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__buf_4(input wire I,output wire Z);
 endmodule
 (* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__buf_1(input wire I,output wire Z);
@@ -32,9 +34,11 @@ endmodule
 // Clock root buffer at a divider output: keeps the divider's own feedback
 // ahead of the generated clock's tree (otherwise CTS can route the divider
 // feedback through the whole tree it drives).
+// (timing 2026-11-11: clkbuf_8; OpenROAD ignores the Verilog keep / dont_touch attributes for sizing,
+// so the divider flop in front may be resized down: it then drives only this buffer.)
 module pt_clock_buf(input wire I,output wire Z);
 `ifdef SYNTHESIS
- (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__buf_4 cell(.I(I),.Z(Z));
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__clkbuf_8 cell(.I(I),.Z(Z));
 `else
  assign Z=I;
 `endif
@@ -42,9 +46,13 @@ endmodule
 
 // Stopped-only clock select (S changes only while every destination is held
 // in reset), kept as one physical mux so STA can define clocks at its output.
+// Drive (timing 2026-11-11): a kept mux2_2 into a kept clkbuf_8 (the generated clock is defined at
+// cell/Z). TC4: the mux2_1 alone took 5.2 ns to the CTS root (rf_tx_clk insertion 9.7 ns at ss).
 module pt_clock_mux(input wire I0,I1,S,output wire Z);
 `ifdef SYNTHESIS
- (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__mux2_1 cell(.I0(I0),.I1(I1),.S(S),.Z(Z));
+ wire m;
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__mux2_2 cell(.I0(I0),.I1(I1),.S(S),.Z(m));
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__clkbuf_8 drv(.I(m),.Z(Z));
 `else
  assign Z=S?I1:I0;
 `endif

@@ -56,7 +56,11 @@ pnr)
     echo "$LL_OVERRIDE" > "$OUT/config-override.json"
   fi
   pnr_rc=0
-  dk "$DIGITAL_IMAGE" "$CPUS" "$MEM" "set -e; cd /out/design; librelane --version > /out/librelane-version.txt 2>&1 || true
+  # Gain-based fanout buffering in repair_design (OpenROAD -buffer_gain; the LibreLane step reads
+  # DESIGN_REPAIR_BUFFER_GAIN from the environment): builds balanced repeater trees instead of the
+  # serial buf_1/buf_2 chains the slew-driven repair left on high-fanout control nets (TC1-TC4).
+  BUFFER_GAIN="${PT_REPAIR_BUFFER_GAIN:-4.0}"; echo "$BUFFER_GAIN" > "$OUT/repair-buffer-gain.txt"
+  dk "$DIGITAL_IMAGE" "$CPUS" "$MEM" "set -e; cd /out/design; export DESIGN_REPAIR_BUFFER_GAIN=$BUFFER_GAIN; librelane --version > /out/librelane-version.txt 2>&1 || true
     if [ -f /opt/svalbard/toolchain.json ]; then cp /opt/svalbard/toolchain.json /out/toolchain.json; fi
     librelane --manual-pdk --pdk-root /pdk -p gf180mcuD -s gf180mcu_fd_sc_mcu7t5v0 -j $CPUS --run-tag $TAG \
       --hide-progress-bar config.json > /out/librelane.log 2>&1" || pnr_rc=$?

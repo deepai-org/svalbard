@@ -3,7 +3,8 @@
 
 pt_sample_pack: one 24-bit (or mode8 16-bit) sample per valid clock in, a
 40-bit quad out whenever 40 bits are held, no backpressure. pt_sample_unpack:
-quads in when no more than 20 bits remain after this clock's output, one
+quads in whenever at most 44 bits are held (registered, independent of this clock's
+output; 84-bit reservoir, timing 2026-11-11), one
 sample out per accepted request. Random valid/ready with reset flushing.
 (Make target name kept from the paired engine: transceiver-pair-gearbox.)
 """
@@ -44,8 +45,7 @@ def check(out):
             qvalue = sum(bit << i for i, bit in enumerate(pack[:40]))
             out_valid = len(unpack) >= width
             take = out_valid and uready
-            remaining = len(unpack)-(width if take else 0)
-            in_ready = remaining <= 20
+            in_ready = len(unpack) <= 44   # registered: held bits before this clock's take
             svalue = sum(bit << i for i, bit in enumerate(unpack[:width]))
             expected.append((int(push), qvalue if push else None, int(in_ready), int(out_valid),
                              svalue if out_valid else None))

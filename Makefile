@@ -437,6 +437,8 @@ transceiver-digital-rtl-checks: transceiver-dense-transport transceiver-dense-se
 	vvp -n /tmp/pt_wire40.vvp | grep -q WIRE40_PASS && \
 	iverilog -g2012 -s tb_cdc_fifo -o /tmp/pt_cdc_fifo.vvp rtl/pt_fifo.sv sim/tb_cdc_fifo.sv && \
 	vvp -n /tmp/pt_cdc_fifo.vvp | grep -q CDC_FIFO_PASS && \
+	iverilog -g2012 -I rtl -s tb_rf_out_reg -o /tmp/pt_rf_out_reg.vvp sim/tb_rf_out_reg.sv rtl/pt_digital.sv && \
+	vvp -n /tmp/pt_rf_out_reg.vvp | grep -q RF_OUT_PASS && \
 	iverilog -g2012 -I rtl -s tb_memory_mode -o /tmp/pt_memory_mode.vvp sim/tb_memory_mode.sv rtl/pt_core.sv rtl/pt_fifo.sv rtl/pt_quad_link.sv rtl/pt_quad_gearbox.sv rtl/pt_linecode.sv rtl/pt_dense_header.sv rtl/pt_cells.sv && \
 	vvp -n /tmp/pt_memory_mode.vvp | grep -q MEMORY_MODE_PASS && \
 	iverilog -g2012 -s tb_host_rate_clock -o /tmp/pt_host_rate_clock.vvp rtl/pt_host_link.sv rtl/pt_pattern.sv sim/tb_host_rate_clock.sv && \

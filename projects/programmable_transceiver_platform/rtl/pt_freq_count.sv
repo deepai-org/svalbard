@@ -52,12 +52,25 @@ module pt_freq_count #(parameter integer CW = 18)(
     wire fb_clk = src[cfg_source == 3'd0 ? 3'd0 : cfg_source - 3'd1] & en;
     wire en_f;
     pt_sync_bit sf(.clk(fb_clk), .rst_n(rst_n), .d(en), .q(en_f));
+    // Timing (TC6): en_f (x1 synchronizer flop, fanout 4) is re-registered into one kept copy per
+    // Johnson flop (fanout 1 each); the counter starts one source cycle later (no effect: the first
+    // window after enable only sets the reference point).
+    wire [3:0] en_j;
+    genvar gj;
+    generate for (gj = 0; gj < 4; gj = gj + 1) begin : enrep
+        pt_fc_rep r(.clk(fb_clk), .rst_n(rst_n), .d(en_f), .q(en_j[gj]));
+    end endgenerate
     wire [3:0] fj;                             // Johnson: 0000,0001,0011,0111,1111,1110,1100,1000
     reg [2:0] fjl;
     always @(posedge fb_clk or negedge rst_n)
-        if (!rst_n) fjl <= 3'd0; else if (en_f) fjl <= {fjl[1:0], ~fj[3]};
+        if (!rst_n) fjl <= 3'd0;
+        else begin
+            if (en_j[0]) fjl[0] <= ~fj[3];
+            if (en_j[1]) fjl[1] <= fjl[0];
+            if (en_j[2]) fjl[2] <= fjl[1];
+        end
     // fj[3] becomes blk_clk: a kept x4 source flop (pt_clock_dff), not a synthesized x1
-    pt_clock_dff fjc(.clk(fb_clk), .rst_n(rst_n), .d(en_f ? fjl[2] : fj[3]), .q(fj[3]));
+    pt_clock_dff fjc(.clk(fb_clk), .rst_n(rst_n), .d(en_j[3] ? fjl[2] : fj[3]), .q(fj[3]));
     assign fj[2:0] = fjl;
     wire blk_clk;                              // source / 8; rises entering code 4, falls entering 0
     pt_clock_buf blk_clock_buf(.I(fj[3]), .Z(blk_clk));
@@ -85,7 +98,15 @@ module pt_freq_count #(parameter integer CW = 18)(
     wire ct_r;
     pt_sync_bit sct(.clk(ref_clk), .rst_n(rst_n), .d(commit_toggle), .q(ct_r));
     reg ct_d, cfg_loaded;
-    wire cfg_load = !cfg_loaded || ct_r != ct_d;
+    // Timing (TC6, TC4 ref -3.66 ns: ct_r -> xnor -> cfg_loaded -> 26-flop enable chain): the load
+    // decision is a REGISTER, replicated (kept) per group of <= 8 destinations. The capture happens
+    // one reference cycle later than before (the bus is stable >= 2 edges before the toggle is seen).
+    wire cfg_load_n = !cfg_loaded || ct_r != ct_d;
+    wire [3:0] ld;
+    genvar gl;
+    generate for (gl = 0; gl < 4; gl = gl + 1) begin : ldrep
+        pt_fc_rep r(.clk(ref_clk), .rst_n(rst_n), .d(cfg_load_n), .q(ld[gl]));
+    end endgenerate
     reg [2:0]  cfg_src_r;                      // source (single-cycle restart path through `run`)
     reg [22:0] cfg_r;                          // {window, tol, count, target} (multicycle into the evaluation)
     always @(posedge ref_clk or negedge rst_n)
@@ -94,11 +115,10 @@ module pt_freq_count #(parameter integer CW = 18)(
             ct_d <= ct_r;
             // After reset the configuration is static (reset defaults) until the first commit, whose
             // toggle is seen here >= 2 reference edges after the bus changed.
-            if (cfg_load) begin
-                cfg_src_r <= cfg_source;
-                cfg_r <= {cfg_window, cfg_tol, cfg_count, cfg_target};
-                cfg_loaded <= 1'b1;
-            end
+            if (ld[0]) begin cfg_src_r <= cfg_source; cfg_loaded <= 1'b1; cfg_r[22:16] <= {cfg_window, cfg_tol, cfg_count}; end
+            if (ld[1]) cfg_r[15:10] <= cfg_target[15:10];
+            if (ld[2]) cfg_r[9:5]   <= cfg_target[9:5];
+            if (ld[3]) cfg_r[4:0]   <= cfg_target[4:0];
         end
     wire [2:0] src_cfg = cfg_src_r;
     wire en_r = cfg_loaded && src_cfg != 3'd0 && src_cfg <= 3'd6;
@@ -107,6 +127,9 @@ module pt_freq_count #(parameter integer CW = 18)(
     always @(posedge ref_clk or negedge rst_n)
         if (!rst_n) begin src_q <= 3'd0; run <= 1'b0; run_e <= 1'b0; end
         else begin src_q <= src_cfg; run <= en_r && src_q == src_cfg; run_e <= en_r && src_q == src_cfg; end
+    // run_g: kept copy of run_e for the lock-decision registers (TC6 fanout split; identical value)
+    wire run_g;
+    pt_fc_rep rrun_g(.clk(ref_clk), .rst_n(rst_n), .d(en_r && src_q == src_cfg), .q(run_g));
     // ---------------- reference domain: synchronized source state
     (* async_reg = "true" *) reg [2*HW+3:0] s1, s2;
     always @(posedge ref_clk or negedge rst_n)
@@ -138,6 +161,11 @@ module pt_freq_count #(parameter integer CW = 18)(
     reg [HW-1:0] snap_h; reg [3:0] snap_l; reg [CW-1:0] fb_prev; reg [2:0] ev_cnt;
     // ev_go: registered evaluation strobe
     reg primed, have_snap, cfg_fresh, ev_go; reg [3:0] good; reg r_locked, r_lost;
+    // TC6 timing: the evaluation's decisions are registers computed from next-state values (pm =
+    // primed && !cfg_fresh as they will be at the next edge) or from registers that cannot change in
+    // the cycle before ev_go (gsat = good + 1 >= need, gne = good != need: good only changes at ev_go,
+    // need only with a configuration load, which sets cfg_fresh and suppresses that evaluation).
+    reg pm, gsat, gne, evp; reg [3:0] needm1, ginc;   // evp == ev_go && pm; ginc == good + 1   // needm1 = need - 1 (registered configuration)
     reg [13:0] r_diff; reg [15:0] r_count;
     wire [CW-1:0] snap_n = {g2b({{(CW-HW){1'b0}}, snap_h}), 3'b000} + {{(CW-4){snap_l[3]}}, snap_l};
     wire [CW-1:0] delta = snap_n - fb_prev;
@@ -148,17 +176,20 @@ module pt_freq_count #(parameter integer CW = 18)(
     always @(posedge ref_clk or negedge rst_n)
         if (!rst_n) begin
             wl <= 13'h1388; tick <= 1'b0; snap_h <= 0; snap_l <= 0; fb_prev <= 0; ev_cnt <= 0; ev_go <= 1'b0;
-            primed <= 1'b0; have_snap <= 1'b0; cfg_fresh <= 1'b0; good <= 0; r_locked <= 1'b0; r_lost <= 1'b0;
+            primed <= 1'b0; have_snap <= 1'b0; cfg_fresh <= 1'b0;
+            r_diff <= 0; r_count <= 0; pm <= 1'b0; evp <= 1'b0;
+        end else if (!run_e) begin pm <= 1'b0; evp <= 1'b0;
+            wl <= seed; tick <= 1'b0; ev_cnt <= 0; ev_go <= 1'b0; primed <= 1'b0; have_snap <= 1'b0; cfg_fresh <= 1'b0;
             r_diff <= 0; r_count <= 0;
-        end else if (!run_e) begin
-            wl <= seed; tick <= 1'b0; ev_cnt <= 0; ev_go <= 1'b0; primed <= 1'b0; have_snap <= 1'b0; cfg_fresh <= 1'b0; good <= 0;
-            r_locked <= 1'b0; r_lost <= 1'b0; r_diff <= 0; r_count <= 0;
         end else begin
             tick <= wl == 13'h1FFF;
+            pm   <= (ev_go || primed) && !(ld[3] || (!tick && cfg_fresh));
+            // evp: ev_go and pm as they will be at the next edge (same expressions, registered once)
+            evp  <= (have_snap && !tick && ev_cnt == 3'd2) && (ev_go || primed) && !(ld[3] || (!tick && cfg_fresh));
             wl <= tick ? seed : {wl[11:0], wl_fb};
             // A configuration capture between snapshot and evaluation suppresses that window's metric
             // update (fb_prev still advances), so the target/tolerance/need paths are multicycle too.
-            if (cfg_load) cfg_fresh <= 1'b1; else if (tick) cfg_fresh <= 1'b0;
+            if (ld[3]) cfg_fresh <= 1'b1; else if (tick) cfg_fresh <= 1'b0;   // ld[3] == ld[0] (copies)
             if (tick) begin                    // window end: snapshot the selected block count and L
                 snap_h <= use_a ? has : hbs;
                 snap_l <= ls;
@@ -169,17 +200,28 @@ module pt_freq_count #(parameter integer CW = 18)(
             if (ev_go) begin                               // evaluation (multicycle from snapshot)
                 fb_prev <= snap_n;
                 primed <= 1'b1;
-                if (primed && !cfg_fresh) begin
+                if (evp) begin                             // == pm (primed && !cfg_fresh) at this ev_go
                     r_diff <= d_sat;
                     r_count <= c_sat;
-                    if (in_tol) begin
-                        if (good != need) good <= good + 1'b1;
-                        if (good + 1'b1 >= need) r_locked <= 1'b1;
-                    end else begin
-                        good <= 0;
-                        if (r_locked) r_lost <= 1'b1;
-                        r_locked <= 1'b0;
-                    end
+                end
+            end
+        end
+    // lock decision registers (run_g copy; evp is only ever 1 in an ev_go cycle)
+    always @(posedge ref_clk or negedge rst_n)
+        if (!rst_n) begin good <= 0; r_locked <= 1'b0; r_lost <= 1'b0; gsat <= 1'b0; gne <= 1'b0; needm1 <= 4'd0; ginc <= 4'd1; end
+        else if (!run_g) begin good <= 0; r_locked <= 1'b0; r_lost <= 1'b0; gsat <= 1'b0; gne <= 1'b0; needm1 <= need - 4'd1; ginc <= 4'd1; end
+        else begin
+            ginc <= good + 1'b1;
+            needm1 <= need - 4'd1;
+            gsat <= good >= needm1; gne <= good != need;      // good + 1 >= need  <=>  good >= need - 1
+            if (evp) begin
+                if (in_tol) begin
+                    if (gne) good <= ginc;
+                    if (gsat) r_locked <= 1'b1;
+                end else begin
+                    good <= 0;
+                    if (r_locked) r_lost <= 1'b1;
+                    r_locked <= 1'b0;
                 end
             end
         end
@@ -206,6 +248,14 @@ module pt_freq_count #(parameter integer CW = 18)(
         if (!rst_n) begin ack <= 1'b0; locked <= 1'b0; lost_lock <= 1'b0; diff <= 14'd0; count <= 16'd0; end
         else if (req_s != ack) begin ack <= req_s; {count, lost_lock, locked, diff} <= hold; end
     pt_sync_bit sa(.clk(ref_clk), .rst_n(rst_n), .d(ack), .q(ack_r));
+endmodule
+
+// Replicated control flop (fanout split), kept so identical copies are not merged.
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_fc_rep(input wire clk, rst_n, d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
 endmodule
 
 // Compare the observed count against target-relative bounds in parallel.

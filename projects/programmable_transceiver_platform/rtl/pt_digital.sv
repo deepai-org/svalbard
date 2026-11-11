@@ -89,21 +89,36 @@ module pt_digital(input wire rst_n,ref_clk,
  // SP-03 2x halfband TX interpolator (rtl/pt_interp2x.sv): with tx_interp = halfband the RF TX side of
  // the core (incl. bank playback) runs on rf_core_clk = rf_tx_clk / 2 (DAC at rf_tx_clk = 80 MHz);
  // with bypass (reset) rf_core_clk = rf_tx_clk and the samples pass straight through.
+ wire wire_req_int,tx_enabled;reg prbs_ready;
  wire rf_core_clk,rf_tx_valid_core;wire[23:0]rf_tx_sample_core;
- pt_interp2x interp(.rst_n(rst_n),.clk_fast(rf_tx_clk),.halfband(analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__TX_INTERP_LSB]),
-  .core_clk(rf_core_clk),.in_sample(rf_tx_sample_core),.in_valid(rf_tx_valid_core),.out_sample(rf_tx_sample),.out_valid(rf_tx_valid));
+ wire[23:0]rf_tx_sample_i;wire rf_tx_valid_i;
+ wire tx_halfband=analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__TX_INTERP_LSB];
+ pt_interp2x interp(.rst_n(rst_n),.clk_fast(rf_tx_clk),.halfband(tx_halfband),
+  .core_clk(rf_core_clk),.in_sample(rf_tx_sample_core),.in_valid(rf_tx_valid_core),.out_sample(rf_tx_sample_i),.out_valid(rf_tx_valid_i));
+ // RF TX output register (timing 2026-11-11, coordinator decision; interface row RF/assembly): the
+ // DAC captures on the opposite rf_tx_clk edge, so rf_tx_sample / rf_tx_valid / rf_mute leave from
+ // rising-edge rf_tx_clk flops. Bypass: a one-entry valid/ready output register keeps the port
+ // handshake (a sample transfers on a clock with rf_tx_request && rf_tx_valid; an untaken sample is
+ // held); the core sees request = (!o_v || rf_tx_request), so it delivers the next sample as the
+ // held one leaves. Halfband: the interpolator stream is free-running (no request), the register is
+ // a plain one-clock delay. Port latency +1 rf_tx_clk; the bus stays all-zero when nothing is valid.
+ wire rf_req_core;
+ // cleared asynchronously by disable (as the core's valid is, through the RF reservoir reset)
+ pt_rf_out_reg rf_out(.clk(rf_tx_clk),.rst_n(rst_n&&enable),.halfband(tx_halfband),.in_sample(rf_tx_sample_i),.in_valid(rf_tx_valid_i),
+  .in_mute(cal_busy||stream_rf_mute),.req_core(rf_req_core),.sample(rf_tx_sample),.valid(rf_tx_valid),.mute(rf_mute),
+  .request(rf_tx_request));
  // MEMORY v3 is the host-link fallback: with capture or playback selected (stopped-only, ENABLE=0
  // to change) the core leaves the host-link reset (core_rst_n needs the host word clock) and uses
  // RESET_N; every core domain still releases through its own synchronized ENABLE.
  wire core_reset_n=(capture_enable||playback_enable)?rst_n:core_rst_n;
  pt_core core(core_reset_n,enable,mode8,host_tx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_core_clk,
- h2d_quad,d2h_quad,wire_rx_data,wire_rx_valid,stream_wire,stream_wire_valid,wire_tx_request&&!prbs_select,
- rf_rx_sample,rf_rx_valid,stream_rf,stream_rf_valid,rf_tx_request,core_status,stream_wire_idle,stream_rf_mute,
+ h2d_quad,d2h_quad,wire_rx_data,wire_rx_valid,stream_wire,stream_wire_valid,wire_tx_request,
+ rf_rx_sample,rf_rx_valid,stream_rf,stream_rf_valid,rf_req_core,core_status,stream_wire_idle,stream_rf_mute,
  analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__PAYLOAD_IQ_LSB],linecode,rx_gain,rx_gain_active,
  // MEMORY v3 (sharing S1): capture/playback in the transport banks; pt_memory is deleted.
  capture_enable,playback_enable,memory_loop,memory_last,host_sclk,memory_write,index,memory_wdata,capture_data,capture_done,
- prbs_select,prbs_word);
- wire tx_enabled;pt_sync_bit e(wire_tx_clk,rst_n,enable,tx_enabled);
+ prbs_select,prbs_word,tx_enabled&&prbs_ready,!tx_enabled,wire_req_int);
+ pt_sync_bit e(wire_tx_clk,rst_n,enable,tx_enabled);
  // Shared wired pattern generator/checker (rtl/pt_pattern.sv, consolidation P2-6): 40-bit cores directly
  // on the 40-bit quad clocks (AC-1 S3: no gearbox, no clock gate). CDC: the quasi-static
  // debug.pattern fields (change only by commit while ENABLE=0, when the generator is in reset and the
@@ -116,9 +131,9 @@ module pt_digital(input wire rst_n,ref_clk,
  always @(posedge wire_tx_clk or negedge rst_n)if(!rst_n)pat_inj_d<=0;else pat_inj_d<=pat_inj_s;
  // The generator's word is a register; it loads on the first clock after reset (ready the clock after)
  // and advances on every clock where the consumer takes it (wire_tx_request with prbs_select).
- reg prbs_ready;wire prbs_rst_n=rst_n&&tx_enabled;
+ wire prbs_rst_n=rst_n&&tx_enabled;
  always @(posedge wire_tx_clk or negedge prbs_rst_n)if(!prbs_rst_n)prbs_ready<=0;else prbs_ready<=1;
- pt_pattern_gen #(.W(40)) prbs(.clk(wire_tx_clk),.rst_n(prbs_rst_n),.ce(1'b1),.step(wire_tx_request&&prbs_select&&prbs_ready),
+ pt_pattern_gen #(.W(40)) prbs(.clk(wire_tx_clk),.rst_n(prbs_rst_n),.ce(1'b1),.step(wire_req_int&&prbs_select&&prbs_ready),
   .cfg_mode(pat_tx_cfg[13:11]),.cfg_invert(pat_tx_cfg[10]),.cfg_user({4{pat_tx_cfg[9:0]}}),.data_in(40'd0),
   .inject(pat_inj_s&&!pat_inj_d),.word(prbs_word));
  wire rx_check_en,pat_clr_s;reg pat_clr_d;wire[3:0]pat_rx_cfg;wire[15:0]prbs_errors;
@@ -132,8 +147,10 @@ module pt_digital(input wire rst_n,ref_clk,
  // The pattern word shares the core's wire lane registers (falling-edge low half, rising-edge high
  // half), so wire_tx_data always leaves from the same launch flops (ff-corner hold, AC1_R4 -0.34 ns).
  assign wire_tx_data=stream_wire;
- assign wire_tx_valid=prbs_select?tx_enabled&&prbs_ready:stream_wire_valid;
- assign wire_idle=prbs_select?!tx_enabled:stream_wire_idle;
+ // The core's wired output stage (lane_q / valid / idle registers, valid/ready) serves both the stream
+ // and the pattern word (timing 2026-11-11); the generator steps when the stage takes its word.
+ assign wire_tx_valid=stream_wire_valid;
+ assign wire_idle=stream_wire_idle;
  // The DAC data bus is held static (all zero) whenever no sample is valid, e.g. throughout
  // receive-only operation, so idle DAC inputs do not toggle next to the receive path.
  assign rf_tx_valid_core=stream_rf_valid;
@@ -142,8 +159,24 @@ module pt_digital(input wire rst_n,ref_clk,
  // consumer of calibration_trial / calibration_above_target). The ports stay until integration drops
  // them (interface-changes.md); cal_busy / cal_done read 0.
  assign calibration_trial=12'd0;assign cal_busy=1'b0;assign cal_done=1'b0;
- assign rf_mute=cal_busy||stream_rf_mute;
+
  assign status=core_status|{cal_done,cal_busy,capture_done,13'b0};
+endmodule
+
+// RF TX output register (see pt_digital): bypass = one-entry valid/ready register (port transfer on
+// request && valid, an untaken sample is held, the producer sees req_core = !valid || request);
+// halfband = plain one-clock delay of the free-running interpolator stream. mute is loaded with the
+// sample (= !valid || mute command for that sample, as the core's); while a sample is held untaken the
+// mute level is held too (independent review 2026-11-11).
+module pt_rf_out_reg(input wire clk,rst_n,halfband,input wire[23:0]in_sample,input wire in_valid,in_mute,
+ output wire req_core,output reg[23:0]sample,output reg valid,mute,input wire request);
+ assign req_core=halfband?request:(!valid||request);
+ wire load=halfband||!valid||request;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin sample<=24'd0;valid<=1'b0;mute<=1'b1;end
+  else begin
+   if(load)begin sample<=in_sample;valid<=in_valid;mute<=in_mute;end   // mute stays aligned with the held sample
+  end
 endmodule
 
 // Divide-by-two toggle used only as a DBG_OBS liveness indicator for a clock domain.

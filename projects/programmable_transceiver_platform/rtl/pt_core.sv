@@ -36,7 +36,11 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // Shared wired pattern lane (plan step 4): with pat_sel (stopped-only debug level) the pattern
  // generator's word (wire_tx_clk register) goes out through the same wire_low (falling) /
  // wire_high (rising) launch registers as payload, instead of straight from rising-edge flops.
- input wire pat_sel,input wire[39:0]pat_word);
+ input wire pat_sel,input wire[39:0]pat_word,
+ // Wired output stage handshake (timing 2026-11-11): pat_valid / pat_idle are the pattern source's
+ // valid / idle; wire_req_int = the stage's load (!wire_tx_valid || wire_tx_request) is the request
+ // the sources see (the pattern generator steps on wire_req_int && its valid).
+ input wire pat_valid,pat_idle,output wire wire_req_int);
  wire eh,ewr,ewt,err,ert;
  pt_enable_release e0(host_clk,rst_n,enable,eh);
  pt_sync_bit e2(wire_rx_clk,rst_n,enable,ewr);pt_sync_bit e3(wire_tx_clk,rst_n,enable,ewt);
@@ -86,13 +90,14 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  wire in_full;
  always @(posedge ingress_clk or negedge rst_n)
   if(!rst_n)capture_done<=0;else capture_done<=mem_capture&&(payload_iq?err:ewr)&&in_full;
- wire[39:0]in_head;wire[WIRE_IN_A:0]in_quads_raw,in_wr_ptr,in_rd_ptr;wire wr_pop,iq_pop,in_ov,in_un;
+ wire[39:0]in_head;wire[WIRE_IN_A:0]in_quads_raw,in_wr_ptr,in_rd_ptr,in_rd_step;wire in_rd_take;wire wr_pop,iq_pop,in_ov,in_un;
  wire[39:0]mem_peek;   // declared before use (strict elaboration, container iverilog)
  pt_cdc_fifo #(.W(40),.A(WIRE_IN_A),.DEPTH(WIRE_IN_DEPTH),.MEMORY(1)) ingress(
   .wr_clk(ingress_clk),.rd_clk(host_clk),.rst_n(frst),
   .din(lane_in),.push(lane_in_valid&&!(mem_capture&&in_full)),.pop((wr_pop||iq_pop)&&!mem_capture),
   .dout(in_head),.full(in_full),.empty(),.ready(),.rd_count(in_quads_raw),
   .overflow(in_ov),.underflow(in_un),.wr_active(),.rd_active(),.wr_ptr(in_wr_ptr),.rd_ptr(in_rd_ptr),
+  .rd_ptr_step(in_rd_step),.rd_take(in_rd_take),
   .peek_idx(mem_idx),.peek(mem_peek),.play(1'b0),.play_loop(1'b0),.play_last(5'd0),
   .spi_clk(1'b0),.spi_we(1'b0),.spi_idx(5'd0),.spi_d(40'd0));
  // capture readback is 0 until the capture is complete (legacy MEMORY semantics; no array X/garbage)
@@ -109,10 +114,18 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  wire mark_sync;reg mark_ack;
  pt_sync_bit gm(host_clk,crst_gm,mark_toggle,mark_sync);
  wire mk_seen=mark_sync!=mark_ack;
- // complete older quads still in the FIFO: (mark_ptr - rd_ptr) mod 2*DEPTH
- wire[WIRE_IN_A+1:0]pre_diff={1'b0,mark_ptr}-{1'b0,in_rd_ptr};
- wire[WIRE_IN_A+1:0]pre_wrap=pre_diff+2*WIRE_IN_DEPTH;
- wire[WIRE_IN_A:0]pre_quads=pre_diff[WIRE_IN_A+1] ? pre_wrap[WIRE_IN_A:0] : pre_diff[WIRE_IN_A:0];
+ // complete older quads still in the FIFO: (mark_ptr - rd_ptr) mod 2*DEPTH. Timing 2026-11-11 (hcore,
+ // in_rd_ptr -> subtract -> wrap -> frame_tx before_r): a REGISTER holding the distance to the read
+ // pointer this FIFO read side will have after this clock (both candidates from registers, the
+ // late take selects), i.e. the same value as the combinational distance one clock later. mark_ptr
+ // (rf_rx domain) is stable long before mk_seen (two-flop synchronized toggle) makes it count.
+ function automatic[WIRE_IN_A:0]in_dist(input[WIRE_IN_A:0]a,b);
+  reg[WIRE_IN_A+1:0]d,e;begin d={1'b0,a}-{1'b0,b};e={1'b0,a}+(2*WIRE_IN_DEPTH-{1'b0,b});
+  in_dist=d[WIRE_IN_A+1]?e[WIRE_IN_A:0]:d[WIRE_IN_A:0];end endfunction
+ wire[WIRE_IN_A:0]pre_take=in_dist(mark_ptr,in_rd_step),pre_hold=in_dist(mark_ptr,in_rd_ptr);wire[WIRE_IN_A:0]pre_n;
+ pt_sel2 #(.W(WIRE_IN_A+1)) pre_sel(.s(in_rd_take),.a(pre_hold),.b(pre_take),.z(pre_n));
+ reg[WIRE_IN_A:0]pre_quads;
+ always @(posedge host_clk or negedge crst_tx)if(!crst_tx)pre_quads<=0;else pre_quads<=pre_n;
  wire wr_ov=!payload_iq&&in_ov,wr_un=!payload_iq&&in_un,rf_ov=payload_iq&&in_ov,rf_un=payload_iq&&in_un;
  pt_quad_link_tx #(.CW(WIRE_IN_A)) frame_tx(host_clk,crst_tx,payload_iq,in_head,in_head,in_quads,in_quads,
   4'd0,8'd0,wr_pop,iq_pop,d2h_quad,gain_commit,gain_arg,mk_seen,pre_quads,gain_gap,gain_echo);
@@ -133,8 +146,9 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  wire[39:0]egress_head;wire[EGRESS_A:0]egress_count;wire egress_full,egress_empty,egress_ov,egress_un,egress_ready;
  wire rf_unpack_ready;
  wire lc_pop,lc_qv;wire[39:0]lc_q;
+ wire wreq;   // stream consumer request behind the wired output stage (declared before use)
  wire egress_pop=payload_iq?(rf_unpack_ready&&!egress_empty):
-                 linecode?lc_pop:(wire_tx_request&&wire_running&&!egress_empty);
+                 linecode?lc_pop:(wreq&&wire_running&&!egress_empty);
  // Admission uses only the registered, conservative ready (no backpressure:
  // a refused word faults the receiver). SPARE=4 covers the collector's input and output registers.
  pt_cdc_fifo #(.W(40),.A(EGRESS_A),.DEPTH(EGRESS_DEPTH),.SPARE(4),.MEMORY(2)) egress(
@@ -158,23 +172,45 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // IX-2 8b/10b transmit offload (wire_tx_clk): a registered FWFT head in front of the serializer
  wire wire_out_empty=payload_iq||(linecode?!lc_qv:egress_empty);
  pt_lc_tx lc_tx(.clk(wire_tx_clk),.rst_n(rst_n),.en(linecode&&ewt&&!payload_iq),.head(egress_head),.head_valid(!egress_empty),
-  .pop(lc_pop),.q(lc_q),.q_valid(lc_qv),.take(wire_tx_request&&wire_running&&lc_qv));   // = !wire_out_empty while linecode
+  .pop(lc_pop),.q(lc_q),.q_valid(lc_qv),.take(wreq&&wire_running&&lc_qv));   // = !wire_out_empty while linecode
  wire[39:0]wire_head=linecode?lc_q:egress_head;
  wire[EGRESS_A:0]wire_out_count=payload_iq?0:egress_count;
  reg[19:0]wire_low,wire_high;
  wire[39:0]lane_out=pat_sel?pat_word:payload_iq?40'd0:wire_head;
- always @(negedge wire_tx_clk or negedge rst_n)
-  if(!rst_n)wire_low<=0;else wire_low<=lane_out[19:0];
+ // Output stage (timing 2026-11-11, coordinator decision for wtx): the lane word and its valid / idle
+ // are registered once (lane_q / wire_valid_q / wire_idle_q, rising WORD_CLK40) before the launch flops,
+ // as a one-entry valid/ready stage: it loads when empty or when the serializer takes the word
+ // (wire_tx_request && wire_tx_valid), an untaken word is held, and the sources (egress / 8b10b /
+ // pattern) see the stage's load as their request. Port protocol unchanged (a word transfers on a
+ // clock with request && valid); data and valid both one WORD_CLK40 later, and the WT20 D-bus launch
+ // is unchanged (D0..D19 from wire_low on the fall, D20..D39 from wire_high on the rise, both from
+ // lane_q). No egress-empty -> output-port path, and wire_low no longer takes the head / pattern
+ // select on a half-period path. valid / idle clear asynchronously on disable (rst_n && enable), as
+ // the combinational valid did through the bank reset, without needing the host clock.
+ reg[39:0]lane_q;reg wire_valid_q,wire_idle_q;
+ wire wire_load=!wire_valid_q||wire_tx_request;
+ assign wire_req_int=wire_load;
+ assign wreq=wire_load&&!pat_sel;
+ wire wire_valid_n=wire_running&&!wire_out_empty&&!rx_fault_wire&&!wire_starved;
+ wire stage_valid_n=wire_load?(pat_sel?pat_valid:wire_valid_n):wire_valid_q;
+ wire out_rst_n=rst_n&&enable;
+ always @(posedge wire_tx_clk or negedge out_rst_n)
+  if(!out_rst_n)begin wire_valid_q<=1'b0;wire_idle_q<=1'b1;end
+  else begin wire_valid_q<=stage_valid_n;wire_idle_q<=pat_sel?pat_idle:(!stage_valid_n||idle_sync);end
  always @(posedge wire_tx_clk or negedge rst_n)
-  if(!rst_n)wire_high<=0;else wire_high<=lane_out[39:20];
+  if(!rst_n)lane_q<=0;else if(wire_load)lane_q<=lane_out;
+ always @(negedge wire_tx_clk or negedge rst_n)
+  if(!rst_n)wire_low<=0;else wire_low<=lane_q[19:0];
+ always @(posedge wire_tx_clk or negedge rst_n)
+  if(!rst_n)wire_high<=0;else wire_high<=lane_q[39:20];
  assign wire_tx_data={wire_high,wire_low};
- assign wire_tx_valid=wire_running&&!wire_out_empty&&!rx_fault_wire&&!wire_starved;
- assign wire_idle=!wire_tx_valid||idle_sync;
+ assign wire_tx_valid=wire_valid_q;
+ assign wire_idle=wire_idle_q;
  always @(posedge wire_tx_clk or negedge rst_n)begin
   if(!rst_n)begin wire_running<=0;wire_starved<=0;end
   else if(!ewt)begin wire_running<=0;wire_starved<=0;end
   else if(!wire_running&&wire_out_count>=WIRE_START)wire_running<=1;
-  else if(wire_running&&wire_tx_request&&wire_out_empty)wire_starved<=1;
+  else if(wire_running&&wreq&&wire_out_empty)wire_starved<=1;
  end
  // ---------------- RF output: quads unpacked into one sample per request in
  // the sample-clock domain (reservoir reset while the domain is disabled; it
@@ -235,16 +271,19 @@ module pt_gain_rx #(parameter A=5,SETTLE=20)(input wire clk,rst_n,toggle,input w
  output reg[A:0]mark_ptr,output reg mark_toggle);
  (* async_reg="true" *) reg t1,t2;reg t3,settling;reg[5:0]left;
  always @(posedge clk or negedge rst_n)if(!rst_n)begin t1<=0;t2<=0;end else begin t1<=toggle;t2<=t1;end
- wire change=t2!=t3;
+ // change is a REGISTER (timing 2026-11-11, rfrx: t2 ^ t3 -> flush -> 60-bit packer reservoir and
+ // the drop gate): the commit toggle takes effect one rf_rx clock later (a third synchronizer
+ // stage in effect); flush, drop, gain, gap and mark_ptr all follow the same registered change.
+ reg change;
  // pairs not completely delivered: ceil(base / nibbles-per-pair)
  wire[3:0]base3=base+4'd3;
  wire[2:0]partial=mode8 ? {1'b0,base3[3:2]} : (base==4'd0) ? 3'd0 : (base<=4'd6) ? 3'd1 : 3'd2;
  assign flush=change;
  assign drop=change||settling;
  always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin t3<=0;settling<=0;left<=0;gain<=0;active<=0;gap<=0;mark_ptr<=0;mark_toggle<=0;end
+  if(!rst_n)begin t3<=0;change<=0;settling<=0;left<=0;gain<=0;active<=0;gap<=0;mark_ptr<=0;mark_toggle<=0;end
   else begin
-   t3<=t2;
+   t3<=t2;change<=t2!=t3;
    if(change)begin
     gain<=gain_h;active<=1;settling<=1;
     gap<={4'd0,partial}+{6'd0,valid};left<=SETTLE[5:0]-{5'd0,valid};

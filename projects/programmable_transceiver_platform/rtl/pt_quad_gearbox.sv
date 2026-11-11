@@ -49,48 +49,47 @@ endmodule
 // the FWFT source when no more than five nibbles remain after this clock's
 // output (reservoir <= 15 nibbles). Ready is decoded from the registered
 // occupancy before the late request.
+// Timing (closure 2026-11-11, rftx 20 ns): in_ready no longer depends on this clock's take (the DAC
+// request reached the egress pop / read select through take -> room_after_take). The reservoir is
+// 84 bits (21 nibbles) and in_ready = (held <= 44 bits), a REGISTER loaded with the next-state compare:
+// a quad is accepted whenever at most 44 bits are held, so the reservoir never holds fewer than one
+// sample once primed (44 + 40 = 84 bits max) and one sample per clock is sustained (10 nibbles in per
+// accepted quad, 4 or 6 out per sample). out_valid is likewise a register (next held >= width).
 module pt_sample_unpack(input wire clk,rst_n,mode8,input wire[39:0]quad,input wire in_valid,
  output wire in_ready,output wire[23:0]sample,output wire out_valid,input wire out_ready);
- reg[59:0]bits;reg[3:0]nibbles;
- wire[3:0]outgoing=mode8?4'd4:4'd6;
- assign out_valid=nibbles>=outgoing;
- wire take=out_valid&&out_ready;
- wire room_now=nibbles<=4'd5;
- wire room_after_take=nibbles<=(mode8?4'd9:4'd11);
- assign in_ready=room_now||(take&&room_after_take);
- wire put=in_valid&&in_ready;
- wire[59:0]shifted=mode8?bits>>16:bits>>24;
- function automatic[59:0]aligned(input[3:0]offset,input[39:0]value);
-  begin case(offset)
-   4'd0:aligned=60'(value);    4'd1:aligned=60'(value)<<4;  4'd2:aligned=60'(value)<<8;
-   4'd3:aligned=60'(value)<<12;4'd4:aligned=60'(value)<<16; default:aligned=60'(value)<<20;
-  endcase end
- endfunction
- wire[59:0]after_take=shifted|((in_valid&&room_after_take)?aligned(nibbles-outgoing,quad):60'd0);
- wire[59:0]without_take=bits|((in_valid&&room_now)?aligned(nibbles,quad):60'd0);
+ reg[83:0]bits;reg[4:0]nibbles;reg rdy,ov;
+ wire[4:0]outgoing=mode8?5'd4:5'd6;
+ assign out_valid=ov;
+ assign in_ready=rdy;
+ wire take=ov&&out_ready;
+ wire put=in_valid&&rdy;
+ wire[4:0]remaining=nibbles-(take?outgoing:5'd0);
+ wire[4:0]nibbles_n=remaining+(put?5'd10:5'd0);
+ wire[83:0]shifted=mode8?bits>>16:bits>>24;
+ wire[83:0]base_bits=take?shifted:bits;
+ reg[83:0]aligned;
+ always @*begin aligned=84'd0;if(put)aligned=84'(quad)<<(4*remaining);end
  assign sample=mode8?{8'd0,bits[15:0]}:bits[23:0];
 `ifdef FORMAL
- // Compare the factored implementation with ordered reservoir arithmetic
- // for every reachable occupancy, data pattern, mode and transfer case.
  reg f_past=0;
  always @(posedge clk)f_past<=1;
  always @*if(!f_past)assume(!rst_n);
- wire[3:0]reference_remaining=nibbles-(take?outgoing:4'd0);
- wire reference_ready=reference_remaining<=4'd5;
- wire[59:0]reference_next=(take?shifted:bits)|
-     ((in_valid&&reference_ready)?(60'(quad)<<(4*reference_remaining)):60'd0);
- always @*if(f_past)begin
-  assert(nibbles<=4'd15);
+ always @*if(f_past&&rst_n)begin
+  assert(nibbles<=5'd21);
   assert((bits>>(4*nibbles))==0);
-  assert(in_ready==reference_ready);
-  if(take||put)assert((take?after_take:without_take)==reference_next);
+  assert(rdy==(nibbles<=5'd11));
+  assert(ov==(nibbles>=outgoing));
  end
+ // mode8 is static while out of reset
+ always @(posedge clk)if(f_past&&rst_n)assume($stable(mode8));
 `endif
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin bits<=0;nibbles<=0;end
+  if(!rst_n)begin bits<=0;nibbles<=0;rdy<=1'b1;ov<=1'b0;end
   else begin
-   if(take||put)bits<=take?after_take:without_take;
-   nibbles<=nibbles-(take?outgoing:4'd0)+(put?4'd10:4'd0);
+   if(take||put)bits<=base_bits|aligned;
+   nibbles<=nibbles_n;
+   rdy<=nibbles_n<=5'd11;
+   ov<=nibbles_n>=outgoing;
   end
  end
 endmodule

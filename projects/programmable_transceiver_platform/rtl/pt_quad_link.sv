@@ -34,14 +34,24 @@ module pt_quad_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
  reg[2:0]take;reg[1:0]rcnt;reg[29:0]res;
  reg[8:0]raw_count,raw_left;reg signed[9:0]credit;
  reg[11:0]pending_command;reg first;
- reg barrier,echo_next,bar_r,mk_r;reg[8:0]safe,before_r;reg[5:0]echo_wc;
+ reg barrier,echo_next,bar_r,mk_r,lt_r,eq_r;reg[8:0]safe,before_r;reg[5:0]echo_wc;
  wire[39:0]head=payload_iq?iq_data:wire_data;
  wire[CW:0]quads=payload_iq?iq_quads:wire_quads;
  wire[39:0]encoded;
  // The header is taken straight from the encoder at beat 0: every encoder input is stable from
  // beat 14 (pending) through beat 0 of the next frame (seq increments after beat 0).
- pt_dense_header #(.ALIGN(0),.STAGES(1)) encoder(clk,{pending_command[7:0],pending_command[11:8],seq,
-                       payload_iq?pending:6'd0,payload_iq?(echo_next?echo_wc:6'd0):pending},encoded);
+ // Timing (2026-11-11, hcore: echo_next -> select -> 18-input XOR tree -> parity register): the code is
+ // linear, so the header is split. Part A (everything but `pending`: pending_command / echo_* written
+ // at beat 12, seq at beat 0, so stable during beats 13..0) goes through the three-stage registered
+ // encoder (inputs need only be stable for the three clocks before the beat-0 sample); part B (`pending` alone, written at beat 14) is encoded combinationally
+ // (<= 6 inputs per parity row) and XORed in. Same codeword: packet(A) ^ packet(B), with B's fixed
+ // 3'b101 tag bits masked so the tag survives.
+ wire[39:0]encoded_a,encoded_b;
+ pt_dense_header #(.ALIGN(0),.STAGES(3)) encoder(clk,{pending_command[7:0],pending_command[11:8],seq,
+                       6'd0,payload_iq?(echo_next?echo_wc:6'd0):6'd0},encoded_a);
+ pt_dense_header #(.ALIGN(0),.STAGES(0)) encoder_b(clk,{12'd0,6'd0,
+                       payload_iq?pending:6'd0,payload_iq?6'd0:pending},encoded_b);
+ assign encoded=encoded_a^{3'b000,encoded_b[36:0]};
  // words available now / words known to precede the new-gain samples
  wire[8:0]avail_words={1'b0,quads,2'b00}+rcnt;
  wire[8:0]before_words=mk_seen?{1'b0,pre_quads,2'b00}+rcnt:safe;
@@ -72,7 +82,7 @@ module pt_quad_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
   if(!rst_n)begin
    beat<=0;seq<=0;left<=0;pending<=0;guard_left<=0;take<=0;rcnt<=0;res<=0;pop<=0;
    raw_count<=0;raw_left<=0;credit<=0;pending_command<=0;first<=1;
-   barrier<=0;echo_next<=0;bar_r<=0;mk_r<=0;safe<=0;before_r<=0;echo_wc<=0;gain_echo<=0;
+   barrier<=0;echo_next<=0;bar_r<=0;mk_r<=0;lt_r<=0;eq_r<=0;safe<=0;before_r<=0;echo_wc<=0;gain_echo<=0;
   end else begin
    gain_echo<=0;
    if(gain_commit)begin barrier<=1;safe<=avail_words;end
@@ -101,14 +111,17 @@ module pt_quad_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
    // gain barrier, the words known to precede the new-gain samples; decided at beat 12
    if(beat==4'd11)begin
     raw_count<=avail_words;raw_left<={3'd0,left};before_r<=before_words;bar_r<=barrier;mk_r<=mk_seen;
+    // beat-12 compares registered here (timing 2026-11-11: before_r / raw_count -> compare -> raw_count
+    // was a post-synthesis hcore path); avail_words / before_words are concatenations or registers
+    lt_r<=before_words<avail_words;eq_r<=before_words=={3'd0,left};
    end
    if(beat==4'd12)begin
-    if(bar_r&&mk_r&&before_r==raw_left)begin
+    if(bar_r&&mk_r&&eq_r)begin
      // every older word is in this frame: the next frame is the gain-status frame
      echo_next<=1;pending_command<={4'd4,gap[6],gain_arg};echo_wc<=gap[5:0];
     end else begin
      echo_next<=0;pending_command<={opcode,argument};
-     if(bar_r&&before_r<raw_count)raw_count<=before_r;
+     if(bar_r&&lt_r)raw_count<=before_r;
     end
    end
    if(beat==4'd13)credit<=$signed({1'b0,raw_count})-$signed({1'b0,raw_left});
@@ -226,16 +239,20 @@ module pt_quad_link_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
  input wire[6:0]gap,output wire gain_echo);
  reg[1:0]training;reg running;
  wire[39:0]payload;
- pt_quad_tx #(.CW(CW)) engine(clk,rst_n&&running,payload_iq,wire_data,iq_data,wire_quads,iq_quads,
+ // engine reset from its own register with the same next value as `running` (async-cleared by rst_n,
+ // so identical to rst_n && running): no AND gate in front of the engine's RN tree.
+ reg eng_rn;
+ pt_quad_tx #(.CW(CW)) engine(clk,eng_rn,payload_iq,wire_data,iq_data,wire_quads,iq_quads,
   opcode,argument,wire_pop,iq_pop,payload,gain_commit,gain_arg,mk_seen,pre_quads,gap,gain_echo);
  // Output: reset 0, training quads T0 and T1 on the two clocks after reset, then the engine.
  reg started;
  always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin training<=0;running<=0;started<=0;end
+  if(!rst_n)begin training<=0;running<=0;started<=0;eng_rn<=0;end
   else begin
    started<=1;
    if(started&&!running)training<=training+1'b1;
    running<=running||(started&&training==2'd1);
+   eng_rn<=running||(started&&training==2'd1);
   end
  // Registered output (AC-1 ss32 timing): the framer's beat/count decode no longer feeds the host
  // link's XOR prefix in the same hcore cycle (one hcore of D2H latency, +40 FF).
@@ -284,7 +301,12 @@ module pt_quad_link_rx(input wire clk,rst_n,payload_iq,
  reg[39:0]aligned_r;reg locked_d;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin aligned_r<=0;locked_d<=0;end else begin aligned_r<=aligned;locked_d<=locked;end
- pt_quad_rx engine(clk,rst_n&&locked_d,payload_iq,aligned_r,wire_ready,iq_ready,data,
+ // engine reset = locked_d itself (async-cleared by rst_n, so identical to rst_n && locked_d) from
+ // its own register: no AND gate between the reset release and the engine's RN tree (TC4 recovery
+ // rr_rx -> and2 -> 12 buffers, -1.9 ns).
+ reg eng_rn;
+ always @(posedge clk or negedge rst_n)if(!rst_n)eng_rn<=1'b0;else eng_rn<=locked;
+ pt_quad_rx engine(clk,eng_rn,payload_iq,aligned_r,wire_ready,iq_ready,data,
   wire_count,iq_count,command_valid,payload_fault,opcode,argument);
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin inq_d<=0;prev_d<=0;eq0<=0;eq1<=0;eqv<=0;first_seen<=0;rotation<=0;rot_oh<=4'b0001;wait_count<=0;acquisition_fault<=0;locked<=0;end

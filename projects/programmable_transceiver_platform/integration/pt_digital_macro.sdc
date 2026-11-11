@@ -304,9 +304,16 @@ pt_io rftx $RFTX_PERIOD {rf_tx_request} {}
 # difference macro pin vs DAC clock pin (1.2 ns) = 3.0 ns, until RF/assembly give their number.
 # Hold: the DAC's falling-edge capture half a period after the launch; data must not change before
 # it + 0.5 ns hold (checked against the falling edge before the launch, trivially met).
-if {![info exists RFTX_DAC_MARGIN]} { set RFTX_DAC_MARGIN 3.0 }
-set_output_delay -max $RFTX_DAC_MARGIN -clock rftx -clock_fall [get_ports {rf_tx_sample* rf_tx_valid rf_mute}]
-set_output_delay -min -0.5 -clock rftx -clock_fall [get_ports {rf_tx_sample* rf_tx_valid rf_mute}]
+# DT-6 (coordinator 2026-11-11, supersedes the RFTX_DAC_MARGIN budget above): the RF TX outputs are
+# SOURCE-SYNCHRONOUS with rf_tx_clk_out (pt_digital rfc_r ^ rfc_f, same rf_tx_clk tree as rf_o_*);
+# the DAC captures on the FALLING edge of rf_tx_clk_out. The macro-side requirement is the data-to-
+# forwarded-clock skew at the pins: data launched at a rise must be valid RFTX_SKEW before the
+# forwarded fall half a period later and held RFTX_SKEW after the forwarded fall before it.
+# RFTX_SKEW = DAC capture setup/hold 0.6 ns + macro->DAC route mismatch 0.4 ns (design-assumptions.md).
+if {![info exists RFTX_SKEW]} { set RFTX_SKEW 1.0 }
+create_generated_clock -name rftx_fwd -master_clock rftx -source [get_ports rf_tx_clk] -divide_by 1 -add [get_ports rf_tx_clk_out]
+set_output_delay -max $RFTX_SKEW -clock rftx_fwd -clock_fall [get_ports {rf_tx_sample* rf_tx_valid rf_mute}]
+set_output_delay -min [expr {-$RFTX_SKEW}] -clock rftx_fwd -clock_fall [get_ports {rf_tx_sample* rf_tx_valid rf_mute}]
 pt_io ref  $REF_PERIOD  {calibration_above_target} {calibration_trial* cdr_freq_locked}
 pt_io ctref $CTREF_PERIOD {ct_marker} {ct_armed ct_marker_seen ct_launched ct_arm_fault}
 pt_io ctw  $CTW_PERIOD  {} {ct_word_clk ct_word_load ct_ser_run ct_bit_phase ct_qualified}

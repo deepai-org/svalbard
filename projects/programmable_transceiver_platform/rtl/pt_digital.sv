@@ -12,7 +12,7 @@ module pt_digital(input wire rst_n,ref_clk,
  input wire[39:0]wire_rx_data,input wire wire_rx_valid,output wire[39:0]wire_tx_data,
  output wire wire_tx_valid,wire_idle,input wire wire_tx_request,
  input wire[23:0]rf_rx_sample,input wire rf_rx_valid,output wire[23:0]rf_tx_sample,
- output wire rf_tx_valid,rf_mute,input wire rf_tx_request,
+ output wire rf_tx_valid,rf_mute,input wire rf_tx_request,output wire rf_tx_clk_out,
  output wire enable,mode8,output wire[15:0]rf_trim,wire_trim,clock_trim,
  input wire calibration_above_target,output wire[11:0]calibration_trial,
  output wire[15:0]status,
@@ -102,6 +102,15 @@ module pt_digital(input wire rst_n,ref_clk,
  // held); the core sees request = (!o_v || rf_tx_request), so it delivers the next sample as the
  // held one leaves. Halfband: the interpolator stream is free-running (no request), the register is
  // a plain one-clock delay. Port latency +1 rf_tx_clk; the bus stays all-zero when nothing is valid.
+ // DT-6 (coordinator 2026-11-11): forwarded DAC clock, built like the D2H forwarded clock: c_r toggles
+ // on every rf_tx_clk rise, c_f copies it on the fall, rf_tx_clk_out = c_r ^ c_f (1 after a rise, 0
+ // after a fall) leaves through the same kept mux2_2 output cell type as the data. The flops sit in the
+ // same rf_tx_clk tree as the output register, so the macro's insertion delay cancels; the DAC captures
+ // on the falling edge of rf_tx_clk_out (half a period after the data launch), skew budget in the SDC.
+ reg rfc_r,rfc_f;
+ always @(posedge rf_tx_clk or negedge rst_n)if(!rst_n)rfc_r<=1'b0;else rfc_r<=~rfc_r;
+ always @(negedge rf_tx_clk or negedge rst_n)if(!rst_n)rfc_f<=1'b0;else rfc_f<=rfc_r;
+ pt_out_mux rf_clk_out(.I0(rfc_r^rfc_f),.I1(1'b0),.S(1'b0),.Z(rf_tx_clk_out));
  wire rf_req_core;
  // cleared asynchronously by disable (as the core's valid is, through the RF reservoir reset)
  pt_rf_out_reg rf_out(.clk(rf_tx_clk),.rst_n(rst_n&&enable),.halfband(tx_halfband),.in_sample(rf_tx_sample_i),.in_valid(rf_tx_valid_i),

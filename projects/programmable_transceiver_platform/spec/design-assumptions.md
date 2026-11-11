@@ -60,7 +60,7 @@ Confidence: **H** means foundry-characterized or measured; **M** means physics p
 | Supply (safety) | 0–3.63 V | — | MANDATE | H | 3.63 V | — |
 | Junction temperature (performance) | 22–32 °C | depends on board cooling | MANDATE; top-side cold finger 6–8 °C/W | M | **37 °C** (cooling set point error) | all performance checks stop at 32 °C |
 | Junction temperature (safety) | 0–85 °C | — | MANDATE | H | 85 °C | — |
-| RF TX macro-output -> DAC margin (digital timing, 2026-11-11) | 3.0 ns before the DAC's opposite (falling) rf_tx_clk edge at the macro clock pin (`RFTX_DAC_MARGIN` in `integration/pt_digital_macro.sdc`) | DAC capture flop setup ~0.4 ns at ss + macro-to-DAC route + clock arrival difference | estimate (no RF/assembly number yet) | L | **3.0 ns** = setup 0.6 + route 1.2 + clock arrival difference 1.2 | digital macro STA (rftx outputs); confirm with RF/assembly |
+| RF TX source-synchronous skew budget (digital timing, DT-6, 2026-11-11) | RFTX_SKEW 1.0 ns data-to-rf_tx_clk_out skew at the macro pins (DAC captures on the forwarded clock falling edge) | DAC flop setup/hold ~0.4 ns + route mismatch | estimate | L | **1.0 ns** = setup/hold 0.6 + route mismatch 0.4 | digital macro STA; RF/assembly to route rf_tx_clk_out matched to rf_tx_sample |
 | Substrate resistivity | 8–20 Ω·cm assumed | unpublished | none | L | **5 Ω·cm** | inductor Q, substrate coupling (MOD-02) |
 
 ## Blocks verified only at nominal or optimistic values

@@ -34,6 +34,7 @@ module pt_digital_macro(
  output wire wire_tx_valid, wire_idle, input wire wire_tx_request,
  input  wire[23:0] rf_rx_sample, input wire rf_rx_valid, output wire[23:0] rf_tx_sample,
  output wire rf_tx_valid, rf_mute, input wire rf_tx_request,
+ output wire rf_tx_clk_out, // DT-6: forwarded DAC capture clock (source-synchronous with rf_tx_sample/valid/mute)
  output wire enable, mode8, output wire[15:0] rf_trim, wire_trim, clock_trim,
  input  wire calibration_above_target, output wire[11:0] calibration_trial,
  // generated control boundary
@@ -125,7 +126,7 @@ module pt_digital_macro(
   .h2d_quad(h2d_quad), .d2h_quad(d2h_quad), .wire_rx_data(wire_rx_data), .wire_rx_valid(wire_rx_valid),
   .wire_tx_data(wire_tx_data), .wire_tx_valid(wire_tx_valid), .wire_idle(wire_idle), .wire_tx_request(wire_tx_request),
   .rf_rx_sample(rf_rx_sample), .rf_rx_valid(rf_rx_valid), .rf_tx_sample(rf_tx_sample), .rf_tx_valid(rf_tx_valid),
-  .rf_mute(rf_mute), .rf_tx_request(rf_tx_request), .enable(enable), .mode8(mode8), .rf_trim(rf_trim),
+  .rf_mute(rf_mute), .rf_tx_request(rf_tx_request), .rf_tx_clk_out(rf_tx_clk_out), .enable(enable), .mode8(mode8), .rf_trim(rf_trim),
   .wire_trim(wire_trim), .clock_trim(clock_trim), .calibration_above_target(calibration_above_target),
   .calibration_trial(calibration_trial), .status(status), .por_n(por_n), .fault(fault), .island_pgood(island_pgood), .fc_src(fc_src), .cdr_freq_locked(cdr_freq_locked),
   .analog_status(analog_status), .wire_analog_status(wire_analog_status), .analog_cfg(analog_cfg_reg), .debug_cfg(debug_cfg_reg),

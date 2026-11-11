@@ -78,3 +78,6 @@ Confidence: **H** means foundry-characterized or measured; **M** means physics p
 | ADC / DAC | mismatch (no MC), flicker |
 | pll_vreg | Rg-free amplifier, +25 % C (3 dB PSRR margin). Covered by bypass. |
 | Bias / bandgap | flicker corner. Trim covers the DC errors. |
+
+## Two-sided bounds (2026-11-11)
+For every row that isn't known exactly, the pessimistic value applies in BOTH directions: blocks are checked at the low and the high bound, whichever is worse for each check. Rows that list only one pessimistic value still need the opposite bound; until a row lists it, use the best estimate mirrored by the same margin.

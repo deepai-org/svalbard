@@ -146,15 +146,29 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  wire[39:0]egress_head;wire[EGRESS_A:0]egress_count;wire egress_full,egress_empty,egress_ov,egress_un,egress_ready;
  wire rf_unpack_ready;
  wire lc_pop,lc_qv;wire[39:0]lc_q;
- wire wreq;   // stream consumer request behind the wired output stage (declared before use)
- wire egress_pop=payload_iq?(rf_unpack_ready&&!egress_empty):
-                 linecode?lc_pop:(wreq&&wire_running&&!egress_empty);
+ wire wreq,wire_load;   // stream consumer request behind the wired output stage (declared before use)
+ // Egress pop decode (timing TC9, egress_wtx: empty -> owner muxes -> pop -> take was the worst path):
+ // the stopped-only owner selects, pat_sel and the wired start state are folded into per-owner gate
+ // REGISTERS, and the FIFO's `nonempty` is a plain register (POPQ=1: take = pop), so take is one
+ // AND-OR of registers and the late requests: rf_unpack_ready (register), lc_pop, wire_load.
+ // eg_w = the next value of (wired owner && !pat_sel && wire_running); the owner / pat_sel bits are seen
+ // one clock later (they change only while stopped). Same pops as the former owner mux otherwise.
+ wire egress_ne;reg eg_r,eg_l,eg_w;wire wire_running_n;
+ wire eg_rst_n=rst_n&&enable;
+ always @(posedge rf_tx_clk or negedge eg_rst_n)if(!eg_rst_n)eg_r<=1'b0;else eg_r<=payload_iq;
+ always @(posedge wire_tx_clk or negedge eg_rst_n)
+  if(!eg_rst_n)begin eg_l<=1'b0;eg_w<=1'b0;end
+  else begin eg_l<=!payload_iq&&linecode;eg_w<=!payload_iq&&!linecode&&!pat_sel&&wire_running_n;end
+ // The gates clear ASYNCHRONOUSLY on disable (rst_n && enable; owner / linecode / pat_sel change only while
+ // disabled), so a gate whose TX clock has stopped cannot stay set across an owner change (independent
+ // review: eg_r stale after rf_tx_clk stops and the owner switches to wired).
+ wire egress_pop=(rf_unpack_ready&&eg_r&&egress_ne)||(lc_pop&&eg_l)||(wire_load&&eg_w&&egress_ne);
  // Admission uses only the registered, conservative ready (no backpressure:
  // a refused word faults the receiver). SPARE=4 covers the collector's input and output registers.
- pt_cdc_fifo #(.W(40),.A(EGRESS_A),.DEPTH(EGRESS_DEPTH),.SPARE(4),.MEMORY(2)) egress(
+ pt_cdc_fifo #(.W(40),.A(EGRESS_A),.DEPTH(EGRESS_DEPTH),.SPARE(4),.MEMORY(2),.POPQ(1),.CNTPIPE(1)) egress(
   .wr_clk(host_clk),.rd_clk(egress_clk),.rst_n(frst),
   .din(rx_quad),.push(rx_push&&!mem_play),.pop(egress_pop),
-  .dout(egress_head),.full(egress_full),.empty(egress_empty),.ready(egress_ready),.rd_count(egress_count),
+  .dout(egress_head),.full(egress_full),.empty(egress_empty),.nonempty(egress_ne),.ready(egress_ready),.rd_count(egress_count),
   .overflow(egress_ov),.underflow(egress_un),.wr_active(),.rd_active(),.wr_ptr(),.rd_ptr(),
   .peek_idx(5'd0),.peek(),.play(mem_play),.play_loop(mem_loop),.play_last(mem_last),
   .spi_clk(spi_clk),.spi_we(mem_we),.spi_idx(mem_idx),.spi_d(mem_wdata));
@@ -171,7 +185,7 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  pt_sync_bit f3(rf_tx_clk,rst_n,mute_command,mute_sync);
  // IX-2 8b/10b transmit offload (wire_tx_clk): a registered FWFT head in front of the serializer
  wire wire_out_empty=payload_iq||(linecode?!lc_qv:egress_empty);
- pt_lc_tx lc_tx(.clk(wire_tx_clk),.rst_n(rst_n),.en(linecode&&ewt&&!payload_iq),.head(egress_head),.head_valid(!egress_empty),
+ pt_lc_tx lc_tx(.clk(wire_tx_clk),.rst_n(rst_n),.en(linecode&&ewt&&!payload_iq),.head(egress_head),.head_valid(egress_ne),
   .pop(lc_pop),.q(lc_q),.q_valid(lc_qv),.take(wreq&&wire_running&&lc_qv));   // = !wire_out_empty while linecode
  wire[39:0]wire_head=linecode?lc_q:egress_head;
  wire[EGRESS_A:0]wire_out_count=payload_iq?0:egress_count;
@@ -188,7 +202,7 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // select on a half-period path. valid / idle clear asynchronously on disable (rst_n && enable), as
  // the combinational valid did through the bank reset, without needing the host clock.
  reg[39:0]lane_q;reg wire_valid_q,wire_idle_q;
- wire wire_load=!wire_valid_q||wire_tx_request;
+ assign wire_load=!wire_valid_q||wire_tx_request;
  assign wire_req_int=wire_load;
  assign wreq=wire_load&&!pat_sel;
  wire wire_valid_n=wire_running&&!wire_out_empty&&!rx_fault_wire&&!wire_starved;
@@ -206,6 +220,7 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  assign wire_tx_data={wire_high,wire_low};
  assign wire_tx_valid=wire_valid_q;
  assign wire_idle=wire_idle_q;
+ assign wire_running_n=ewt&&(wire_running||wire_out_count>=WIRE_START);   // next wire_running
  always @(posedge wire_tx_clk or negedge rst_n)begin
   if(!rst_n)begin wire_running<=0;wire_starved<=0;end
   else if(!ewt)begin wire_running<=0;wire_starved<=0;end
@@ -225,7 +240,9 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  always @(posedge rf_tx_clk or negedge rst_n)begin
   if(!rst_n)begin rf_running<=0;rf_starved<=0;end
   else if(!ert)begin rf_running<=0;rf_starved<=0;end
-  else if(!rf_running&&rf_sample_ready&&egress_count>=RF_START)rf_running<=1;
+  // egress rd_count is pipelined (CNTPIPE): it can miss the last two pops, and the unpacker prefetches
+  // before rf_running, so the start threshold carries +2 (same or more quads than RF_START at the start).
+  else if(!rf_running&&rf_sample_ready&&egress_count>=RF_START+2)rf_running<=1;
   else if(rf_running&&rf_tx_request&&!rf_sample_ready)rf_starved<=1;
  end
  // opcode4 commit: one pending update only; a command arriving before the previous gain-status

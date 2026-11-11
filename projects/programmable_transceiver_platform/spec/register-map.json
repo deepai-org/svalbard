@@ -10,7 +10,8 @@
      35,
      36,
      55,
-     56
+     56,
+     58
     ],
     "name": "core_ref_trunks"
    },
@@ -77,7 +78,8 @@
      27,
      28,
      40,
-     41
+     41,
+     58
     ],
     "name": "wired"
    },
@@ -532,11 +534,19 @@
    "kind": "bias",
    "name": "idac1_source_ibias",
    "note": "core_support spare idac1 output, current sensed into an SMU on ATB1"
+  },
+  {
+   "code": 58,
+   "force": "allowed",
+   "island": "pll",
+   "kind": "control_voltage",
+   "name": "vco_replica_vctrl",
+   "note": "MOD-00 item 1 (model-uncertainty audit): vco_replica VCTRL sense/force, with CLK_OBS vco_replica gives the ring tuning curve f(VCTRL)."
   }
  ],
  "atb_policy": "ATB0 is the force bus and ATB1 the sense bus. Each bus closes at most one switch (code 0 = all open). ATB1 may select any node. ATB0 may select only device replicas, matching structures and the six overridable bias/reference nodes; selecting an overridable node on ATB0 requires its bias_override bit, and setting a bias_override bit requires ATB0 to select that node, so the internal source and the bench never drive one node together and an overridden mirror is never left floating. Island nodes are disconnected while their island is off; supply monitor taps are not gated so a switched-off island can be confirmed dead. Nodes marked hardware=false have no tap: their codes are rejected on both buses. Core reference-chain nodes (VBG, ROOT_REF, TRK_<island>) carry the force preconditions of analog/core_support/README.md as commit rules instead of override bits. ATB all-off gap: >= 20 ns from deselect to the next select on one bus (atb_switch_dead_time_s; group/pad non-overlap up to 5.7 ns). The break-before-make rule puts a zero commit between two non-zero codes, i.e. at least one 32-clock SPI transaction, which exceeds 20 ns for any SCLK below 1.6 GHz. control_semantics.switch_dead_time_s (4 ns) remains the analog-switch figure for other selects.",
  "atb_switch_dead_time_s": 2e-08,
- "atb_width": 57,
+ "atb_width": 58,
  "break_before_make": [
   "debug.clk_select.rf_lo",
   "debug.clk_select.wire_line",
@@ -560,8 +570,8 @@
  ],
  "break_before_make_rule": "A commit may not change one of these fields directly from one non-zero code to a different non-zero code; it must commit the zero (stopped/off/open) code first. Two SPI transactions separate the commits, far exceeding the 4 ns switch dead time in control_semantics.switch_dead_time_s.",
  "bus_widths": {
-  "analog": 568,
-  "debug": 255
+  "analog": 573,
+  "debug": 256
  },
  "cdc_semantics": "The register file is clocked only by SPI SCLK and asynchronously reset by RESET_N AND POR. Active fields are quasi-static: they change only on a successful commit, which also toggles commit_toggle. A consuming clock domain that must see a coherent multi-bit value synchronizes commit_toggle through two flops and reloads its local copy on a toggle edge; the next commit cannot occur for at least one more 32-clock SPI transaction. Purely analog consumers see each field change once per commit; stopped-only fields are changed only while their outputs are isolated.",
  "commit_semantics": "SPI writes go to shadow registers (write-time range/encoding check per register; fields wider than 16 bits are range-checked at commit). Writing COMMIT (0x06 bit 0) validates the complete shadow (split-field ranges, every rule above, break-before-make against the active set, and - while the legacy payload ENABLE is 1 - that only live fields differ) and copies shadow to active in one SCLK edge, or rejects the commit, keeps the prior active configuration and latches CONFIG_ERROR (control_semantics.illegal). Bit 1 reverts shadow to active.",
@@ -1833,7 +1843,8 @@
     53,
     54,
     55,
-    56
+    56,
+    58
    ],
    "atb_bus": 0,
    "bits": 6,
@@ -1859,7 +1870,7 @@
    "kind": "debug",
    "live": false,
    "mantissa_bits": null,
-   "maximum": 57,
+   "maximum": 58,
    "meaning": null,
    "minimum": 0,
    "name": "debug.atb.atb0",
@@ -1902,7 +1913,7 @@
    "kind": "debug",
    "live": true,
    "mantissa_bits": null,
-   "maximum": 57,
+   "maximum": 58,
    "meaning": null,
    "minimum": 0,
    "name": "debug.atb.atb1",
@@ -2254,19 +2265,22 @@
     9,
     10,
     11,
-    12
+    12,
+    15,
+    16,
+    17
    ],
    "atb_bus": null,
-   "bits": 4,
+   "bits": 5,
    "bus": "debug",
-   "bus_bits": 4,
+   "bus_bits": 5,
    "bus_lsb": 38,
    "chunks": [
     {
      "addr": 76,
      "field_lsb": 0,
      "reg_lsb": 0,
-     "width": 4
+     "width": 5
     }
    ],
    "clear_when_running": null,
@@ -2289,10 +2303,10 @@
    "name": "debug.clk_obs.source",
    "split": false,
    "store": [
-    3,
+    4,
     0
    ],
-   "store_mask": 15,
+   "store_mask": 31,
    "sv": "debug_clk_obs__source",
    "trim": null,
    "unit": null,
@@ -2312,7 +2326,10 @@
     "vco_replica",
     "aosc",
     "host_tx_clk",
-    "cdr_recovered"
+    "cdr_recovered",
+    "char_ro33",
+    "char_ro50",
+    "char_cmldiv"
    ]
   },
   {
@@ -2322,12 +2339,12 @@
    "bits": 4,
    "bus": "debug",
    "bus_bits": 4,
-   "bus_lsb": 42,
+   "bus_lsb": 43,
    "chunks": [
     {
      "addr": 76,
      "field_lsb": 0,
-     "reg_lsb": 4,
+     "reg_lsb": 5,
      "width": 4
     }
    ],
@@ -2374,7 +2391,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 46,
+   "bus_lsb": 47,
    "chunks": [
     {
      "addr": 77,
@@ -2427,7 +2444,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 49,
+   "bus_lsb": 50,
    "chunks": [
     {
      "addr": 77,
@@ -2474,7 +2491,7 @@
    "bits": 6,
    "bus": "debug",
    "bus_bits": 6,
-   "bus_lsb": 52,
+   "bus_lsb": 53,
    "chunks": [
     {
      "addr": 78,
@@ -2518,7 +2535,7 @@
    "bits": 6,
    "bus": "debug",
    "bus_bits": 6,
-   "bus_lsb": 58,
+   "bus_lsb": 59,
    "chunks": [
     {
      "addr": 78,
@@ -2562,7 +2579,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 5,
-   "bus_lsb": 64,
+   "bus_lsb": 65,
    "chunks": [
     {
      "addr": 79,
@@ -2606,7 +2623,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 69,
+   "bus_lsb": 70,
    "chunks": [
     {
      "addr": 80,
@@ -2652,7 +2669,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 70,
+   "bus_lsb": 71,
    "chunks": [
     {
      "addr": 80,
@@ -2745,7 +2762,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 71,
+   "bus_lsb": 72,
    "chunks": [
     {
      "addr": 80,
@@ -2795,7 +2812,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 74,
+   "bus_lsb": 75,
    "chunks": [
     {
      "addr": 81,
@@ -2847,7 +2864,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 76,
+   "bus_lsb": 77,
    "chunks": [
     {
      "addr": 81,
@@ -2899,7 +2916,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 78,
+   "bus_lsb": 79,
    "chunks": [
     {
      "addr": 82,
@@ -2949,7 +2966,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 80,
+   "bus_lsb": 81,
    "chunks": [
     {
      "addr": 82,
@@ -2995,7 +3012,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 81,
+   "bus_lsb": 82,
    "chunks": [
     {
      "addr": 82,
@@ -3041,7 +3058,7 @@
    "bits": 4,
    "bus": "debug",
    "bus_bits": 4,
-   "bus_lsb": 82,
+   "bus_lsb": 83,
    "chunks": [
     {
      "addr": 82,
@@ -3087,7 +3104,7 @@
    "bits": 4,
    "bus": "debug",
    "bus_bits": 4,
-   "bus_lsb": 86,
+   "bus_lsb": 87,
    "chunks": [
     {
      "addr": 82,
@@ -3180,7 +3197,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 90,
+   "bus_lsb": 91,
    "chunks": [
     {
      "addr": 82,
@@ -3230,7 +3247,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 92,
+   "bus_lsb": 93,
    "chunks": [
     {
      "addr": 83,
@@ -3287,7 +3304,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 94,
+   "bus_lsb": 95,
    "chunks": [
     {
      "addr": 83,
@@ -3345,7 +3362,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 97,
+   "bus_lsb": 98,
    "chunks": [
     {
      "addr": 83,
@@ -3401,7 +3418,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 99,
+   "bus_lsb": 100,
    "chunks": [
     {
      "addr": 83,
@@ -3634,7 +3651,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 101,
+   "bus_lsb": 102,
    "chunks": [
     {
      "addr": 84,
@@ -3687,7 +3704,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 102,
+   "bus_lsb": 103,
    "chunks": [
     {
      "addr": 84,
@@ -3741,7 +3758,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 104,
+   "bus_lsb": 105,
    "chunks": [
     {
      "addr": 84,
@@ -3791,7 +3808,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 106,
+   "bus_lsb": 107,
    "chunks": [
     {
      "addr": 85,
@@ -3896,7 +3913,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 107,
+   "bus_lsb": 108,
    "chunks": [
     {
      "addr": 87,
@@ -3951,7 +3968,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 108,
+   "bus_lsb": 109,
    "chunks": [
     {
      "addr": 88,
@@ -4004,7 +4021,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 111,
+   "bus_lsb": 112,
    "chunks": [
     {
      "addr": 88,
@@ -4048,7 +4065,7 @@
    "bits": 10,
    "bus": "debug",
    "bus_bits": 10,
-   "bus_lsb": 112,
+   "bus_lsb": 113,
    "chunks": [
     {
      "addr": 88,
@@ -4092,7 +4109,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 122,
+   "bus_lsb": 123,
    "chunks": [
     {
      "addr": 88,
@@ -4136,7 +4153,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 123,
+   "bus_lsb": 124,
    "chunks": [
     {
      "addr": 88,
@@ -4189,7 +4206,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 124,
+   "bus_lsb": 125,
    "chunks": [
     {
      "addr": 89,
@@ -4242,7 +4259,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 127,
+   "bus_lsb": 128,
    "chunks": [
     {
      "addr": 89,
@@ -4286,7 +4303,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 128,
+   "bus_lsb": 129,
    "chunks": [
     {
      "addr": 89,
@@ -4330,7 +4347,7 @@
    "bits": 6,
    "bus": "debug",
    "bus_bits": 6,
-   "bus_lsb": 129,
+   "bus_lsb": 130,
    "chunks": [
     {
      "addr": 90,
@@ -4376,7 +4393,7 @@
    "bits": 6,
    "bus": "debug",
    "bus_bits": 6,
-   "bus_lsb": 135,
+   "bus_lsb": 136,
    "chunks": [
     {
      "addr": 90,
@@ -4422,7 +4439,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 141,
+   "bus_lsb": 142,
    "chunks": [
     {
      "addr": 91,
@@ -4466,7 +4483,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 142,
+   "bus_lsb": 143,
    "chunks": [
     {
      "addr": 91,
@@ -4510,7 +4527,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 143,
+   "bus_lsb": 144,
    "chunks": [
     {
      "addr": 91,
@@ -4554,7 +4571,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 144,
+   "bus_lsb": 145,
    "chunks": [
     {
      "addr": 91,
@@ -4598,7 +4615,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 5,
-   "bus_lsb": 145,
+   "bus_lsb": 146,
    "chunks": [
     {
      "addr": 91,
@@ -4642,7 +4659,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 5,
-   "bus_lsb": 150,
+   "bus_lsb": 151,
    "chunks": [
     {
      "addr": 91,
@@ -4686,7 +4703,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 155,
+   "bus_lsb": 156,
    "chunks": [
     {
      "addr": 92,
@@ -4730,7 +4747,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 158,
+   "bus_lsb": 159,
    "chunks": [
     {
      "addr": 92,
@@ -4774,7 +4791,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 5,
-   "bus_lsb": 160,
+   "bus_lsb": 161,
    "chunks": [
     {
      "addr": 92,
@@ -4818,7 +4835,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 165,
+   "bus_lsb": 166,
    "chunks": [
     {
      "addr": 92,
@@ -4862,7 +4879,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 168,
+   "bus_lsb": 169,
    "chunks": [
     {
      "addr": 92,
@@ -4906,7 +4923,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 171,
+   "bus_lsb": 172,
    "chunks": [
     {
      "addr": 93,
@@ -4950,7 +4967,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 16,
-   "bus_lsb": 172,
+   "bus_lsb": 173,
    "chunks": [
     {
      "addr": 93,
@@ -4994,7 +5011,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 188,
+   "bus_lsb": 189,
    "chunks": [
     {
      "addr": 93,
@@ -5038,7 +5055,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 189,
+   "bus_lsb": 190,
    "chunks": [
     {
      "addr": 93,
@@ -5082,7 +5099,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 190,
+   "bus_lsb": 191,
    "chunks": [
     {
      "addr": 93,
@@ -5126,7 +5143,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 191,
+   "bus_lsb": 192,
    "chunks": [
     {
      "addr": 93,
@@ -5170,7 +5187,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 192,
+   "bus_lsb": 193,
    "chunks": [
     {
      "addr": 93,
@@ -5222,7 +5239,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 193,
+   "bus_lsb": 194,
    "chunks": [
     {
      "addr": 232,
@@ -5279,7 +5296,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 196,
+   "bus_lsb": 197,
    "chunks": [
     {
      "addr": 232,
@@ -5337,7 +5354,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 198,
+   "bus_lsb": 199,
    "chunks": [
     {
      "addr": 232,
@@ -5395,7 +5412,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 201,
+   "bus_lsb": 202,
    "chunks": [
     {
      "addr": 232,
@@ -5444,7 +5461,7 @@
    "bits": 16,
    "bus": "debug",
    "bus_bits": 16,
-   "bus_lsb": 203,
+   "bus_lsb": 204,
    "chunks": [
     {
      "addr": 233,
@@ -5496,7 +5513,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 219,
+   "bus_lsb": 220,
    "chunks": [
     {
      "addr": 234,
@@ -5553,7 +5570,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 222,
+   "bus_lsb": 223,
    "chunks": [
     {
      "addr": 234,
@@ -5611,7 +5628,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 224,
+   "bus_lsb": 225,
    "chunks": [
     {
      "addr": 234,
@@ -5669,7 +5686,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 227,
+   "bus_lsb": 228,
    "chunks": [
     {
      "addr": 234,
@@ -5718,7 +5735,7 @@
    "bits": 16,
    "bus": "debug",
    "bus_bits": 16,
-   "bus_lsb": 229,
+   "bus_lsb": 230,
    "chunks": [
     {
      "addr": 235,
@@ -5762,7 +5779,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 245,
+   "bus_lsb": 246,
    "chunks": [
     {
      "addr": 94,
@@ -5809,7 +5826,7 @@
    "bits": 8,
    "bus": "debug",
    "bus_bits": 8,
-   "bus_lsb": 246,
+   "bus_lsb": 247,
    "chunks": [
     {
      "addr": 95,
@@ -5853,7 +5870,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 254,
+   "bus_lsb": 255,
    "chunks": [
     {
      "addr": 95,
@@ -14572,6 +14589,50 @@
   },
   {
    "address_slots": 1,
+   "allowed": null,
+   "atb_bus": null,
+   "bits": 1,
+   "bus": "analog",
+   "bus_bits": 1,
+   "bus_lsb": 475,
+   "chunks": [
+    {
+     "addr": 213,
+     "field_lsb": 0,
+     "reg_lsb": 12,
+     "width": 1
+    }
+   ],
+   "clear_when_running": null,
+   "decode": null,
+   "decoded_bits": null,
+   "default": 0,
+   "direct": false,
+   "field": "ls_slow",
+   "gate_and": null,
+   "group": "usbfs.config",
+   "islands": [],
+   "kind": "analog",
+   "live": false,
+   "mantissa_bits": null,
+   "maximum": 1,
+   "meaning": "PD37 / USB-02: LS_SLOW of pad_wirepad v9 (current-starved FS pre-driver, LS edges 75-300 ns into 450 pF); set in low-speed mode.",
+   "minimum": 0,
+   "name": "usbfs.config.ls_slow",
+   "split": false,
+   "store": [
+    0,
+    0
+   ],
+   "store_mask": 1,
+   "sv": "usbfs_config__ls_slow",
+   "trim": null,
+   "unit": "code",
+   "update": "scheduled_enables_pulls_stopped_trim",
+   "values": null
+  },
+  {
+   "address_slots": 1,
    "allowed": [
     0,
     1,
@@ -14581,7 +14642,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 475,
+   "bus_lsb": 476,
    "chunks": [
     {
      "addr": 214,
@@ -14629,7 +14690,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 477,
+   "bus_lsb": 478,
    "chunks": [
     {
      "addr": 215,
@@ -14675,7 +14736,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 485,
+   "bus_lsb": 486,
    "chunks": [
     {
      "addr": 215,
@@ -14721,7 +14782,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 486,
+   "bus_lsb": 487,
    "chunks": [
     {
      "addr": 216,
@@ -14908,7 +14969,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 494,
+   "bus_lsb": 495,
    "chunks": [
     {
      "addr": 217,
@@ -14949,6 +15010,98 @@
   },
   {
    "address_slots": 1,
+   "allowed": null,
+   "atb_bus": null,
+   "bits": 3,
+   "bus": "analog",
+   "bus_bits": 3,
+   "bus_lsb": 496,
+   "chunks": [
+    {
+     "addr": 217,
+     "field_lsb": 0,
+     "reg_lsb": 10,
+     "width": 3
+    }
+   ],
+   "clear_when_running": null,
+   "decode": null,
+   "decoded_bits": null,
+   "default": 4,
+   "direct": false,
+   "field": "term_trim",
+   "gate_and": "usbhs.config.term_enable",
+   "group": "usbhs.config",
+   "islands": [
+    "wired"
+   ],
+   "kind": "analog",
+   "live": false,
+   "mantissa_bits": null,
+   "maximum": 7,
+   "meaning": "PD37 / PAD-03 / PD41: USB HS termination trim TERM_TRIM0..2 of pad_wirepad v9, applied only while the pad termination is enabled: the register file drives TERM_TRIM = term_trim AND term_enable (gate_and). Start-up calibration by firmware/FPGA: HS drive into the pad termination with no device attached, read the pad DC through the ATB/ADC path against the 400 mV reference, step the code.",
+   "minimum": 0,
+   "name": "usbhs.config.term_trim",
+   "split": false,
+   "store": [
+    2,
+    0
+   ],
+   "store_mask": 7,
+   "sv": "usbhs_config__term_trim",
+   "trim": null,
+   "unit": "code",
+   "update": "scheduled_enables_stopped_trim",
+   "values": null
+  },
+  {
+   "address_slots": 1,
+   "allowed": null,
+   "atb_bus": null,
+   "bits": 1,
+   "bus": "analog",
+   "bus_bits": 1,
+   "bus_lsb": 499,
+   "chunks": [
+    {
+     "addr": 217,
+     "field_lsb": 0,
+     "reg_lsb": 13,
+     "width": 1
+    }
+   ],
+   "clear_when_running": null,
+   "decode": null,
+   "decoded_bits": null,
+   "default": 0,
+   "direct": false,
+   "field": "term_enable",
+   "gate_and": null,
+   "group": "usbhs.config",
+   "islands": [
+    "wired"
+   ],
+   "kind": "analog",
+   "live": false,
+   "mantissa_bits": null,
+   "maximum": 1,
+   "meaning": "PD41: TERM_ENABLE of pad_wirepad v9 (USB HS pad termination). Gates TERM_TRIM (term_trim AND term_enable); with term_enable or tx_enable set, usbfs.config.ls_slow must be 0 (rule usb_ls_slow_vs_termination).",
+   "minimum": 0,
+   "name": "usbhs.config.term_enable",
+   "split": false,
+   "store": [
+    0,
+    0
+   ],
+   "store_mask": 1,
+   "sv": "usbhs_config__term_enable",
+   "trim": null,
+   "unit": "code",
+   "update": "scheduled_enables_stopped_trim",
+   "values": null
+  },
+  {
+   "address_slots": 1,
    "allowed": [
     0,
     1,
@@ -14958,7 +15111,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 495,
+   "bus_lsb": 500,
    "chunks": [
     {
      "addr": 218,
@@ -15008,7 +15161,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 497,
+   "bus_lsb": 502,
    "chunks": [
     {
      "addr": 219,
@@ -15054,7 +15207,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 505,
+   "bus_lsb": 510,
    "chunks": [
     {
      "addr": 219,
@@ -15147,7 +15300,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 513,
+   "bus_lsb": 518,
    "chunks": [
     {
      "addr": 221,
@@ -15197,7 +15350,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 514,
+   "bus_lsb": 519,
    "chunks": [
     {
      "addr": 222,
@@ -15590,7 +15743,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 516,
+   "bus_lsb": 521,
    "chunks": [
     {
      "addr": 229,
@@ -15636,7 +15789,7 @@
    "bits": 3,
    "bus": "analog",
    "bus_bits": 3,
-   "bus_lsb": 517,
+   "bus_lsb": 522,
    "chunks": [
     {
      "addr": 229,
@@ -15682,7 +15835,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 520,
+   "bus_lsb": 525,
    "chunks": [
     {
      "addr": 229,
@@ -15728,7 +15881,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 521,
+   "bus_lsb": 526,
    "chunks": [
     {
      "addr": 236,
@@ -15774,7 +15927,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 526,
+   "bus_lsb": 531,
    "chunks": [
     {
      "addr": 236,
@@ -15820,7 +15973,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 531,
+   "bus_lsb": 536,
    "chunks": [
     {
      "addr": 236,
@@ -15866,7 +16019,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 536,
+   "bus_lsb": 541,
    "chunks": [
     {
      "addr": 237,
@@ -15912,7 +16065,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 541,
+   "bus_lsb": 546,
    "chunks": [
     {
      "addr": 237,
@@ -15958,7 +16111,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 546,
+   "bus_lsb": 551,
    "chunks": [
     {
      "addr": 237,
@@ -16004,7 +16157,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 551,
+   "bus_lsb": 556,
    "chunks": [
     {
      "addr": 238,
@@ -16050,7 +16203,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 556,
+   "bus_lsb": 561,
    "chunks": [
     {
      "addr": 238,
@@ -16096,7 +16249,7 @@
    "bits": 3,
    "bus": "analog",
    "bus_bits": 3,
-   "bus_lsb": 561,
+   "bus_lsb": 566,
    "chunks": [
     {
      "addr": 230,
@@ -16142,7 +16295,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 564,
+   "bus_lsb": 569,
    "chunks": [
     {
      "addr": 230,
@@ -16188,7 +16341,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 565,
+   "bus_lsb": 570,
    "chunks": [
     {
      "addr": 230,
@@ -16234,7 +16387,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 566,
+   "bus_lsb": 571,
    "chunks": [
     {
      "addr": 231,
@@ -16280,7 +16433,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 567,
+   "bus_lsb": 572,
    "chunks": [
     {
      "addr": 231,
@@ -16526,7 +16679,7 @@
    "update": "stopped"
   },
   {
-   "description": "CLK_OBS source and power-of-two divider (analog-side prescaler). off = pad tristated. pt_clk_obs has 8 inputs and N<=7: sources without a cell input are rejected (analog/timing/README.md register-map gap).",
+   "description": "CLK_OBS source and power-of-two divider (analog-side prescaler). off = pad tristated. pt_clk_obs has 8 inputs and N<=7: sources without a cell input are rejected (analog/timing/README.md register-map gap). Codes 15-17 (char_ro33, char_ro50, char_cmldiv; MOD-00 item 1) select the analog/characterization speed cells; the selected cell runs only while selected (select = enable, no extra enable bits).",
    "fallback_routes": [],
    "fields": [
     "debug.clk_obs.source",
@@ -17928,7 +18081,8 @@
     "usbfs.config.pulldown_p",
     "usbfs.config.pullup_n",
     "usbfs.config.pullup_p",
-    "usbfs.config.slew"
+    "usbfs.config.slew",
+    "usbfs.config.ls_slow"
    ],
    "kind": "analog",
    "name": "usbfs.config",
@@ -17972,7 +18126,9 @@
     "usbhs.config.disconnect_code",
     "usbhs.config.rx_enable",
     "usbhs.config.squelch_code",
-    "usbhs.config.tx_enable"
+    "usbhs.config.tx_enable",
+    "usbhs.config.term_trim",
+    "usbhs.config.term_enable"
    ],
    "kind": "analog",
    "name": "usbhs.config",
@@ -18149,7 +18305,7 @@
  },
  "last_analog": 228,
  "last_debug": 93,
- "map_hash16": 15532,
+ "map_hash16": 1874,
  "obs_status": [
   "island_pgood_wired",
   "island_pgood_rf",
@@ -18503,20 +18659,20 @@
     [
      "debug.clk_obs.source",
      0,
-     4,
+     5,
      0
     ],
     [
      "debug.clk_obs.divider_log2",
      0,
      4,
-     4
+     5
     ]
    ],
    "group": "debug.clk_obs",
    "kind": "debug",
    "reset": 0,
-   "writable_mask": 255
+   "writable_mask": 511
   },
   {
    "addr": 77,
@@ -21250,12 +21406,18 @@
      0,
      1,
      11
+    ],
+    [
+     "usbfs.config.ls_slow",
+     0,
+     1,
+     12
     ]
    ],
    "group": "usbfs.config",
    "kind": "analog",
    "reset": 64,
-   "writable_mask": 4095
+   "writable_mask": 8191
   },
   {
    "addr": 214,
@@ -21334,12 +21496,24 @@
      0,
      1,
      9
+    ],
+    [
+     "usbhs.config.term_trim",
+     0,
+     3,
+     10
+    ],
+    [
+     "usbhs.config.term_enable",
+     0,
+     1,
+     13
     ]
    ],
    "group": "usbhs.config",
    "kind": "analog",
-   "reset": 0,
-   "writable_mask": 1023
+   "reset": 4096,
+   "writable_mask": 16383
   },
   {
    "addr": 218,
@@ -22846,6 +23020,38 @@
    "then_all": [
     [
      "debug.island_power.debug",
+     "eq",
+     [
+      0
+     ]
+    ]
+   ]
+  },
+  {
+   "cls": "pad",
+   "id": "usb_ls_slow_vs_termination",
+   "if_all": [],
+   "if_any": [
+    [
+     "usbhs.config.term_enable",
+     "eq",
+     [
+      1
+     ]
+    ],
+    [
+     "usbhs.config.tx_enable",
+     "eq",
+     [
+      1
+     ]
+    ]
+   ],
+   "node": "USB wirepad (pad_wirepad v9): LS_SLOW pre-driver vs HS termination / HS drive (PD41)",
+   "source": "spec/debug-controls.json",
+   "then_all": [
+    [
+     "usbfs.config.ls_slow",
      "eq",
      [
       0

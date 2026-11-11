@@ -7241,7 +7241,16 @@
           "minimum": 0,
           "maximum": 7,
           "unit": "code",
-          "meaning": "PD37 / PAD-03: USB HS termination trim TERM_TRIM0..2 of pad_wirepad v9, applied only while the pad termination is enabled (AND with TERM_ENABLE at the pad boundary). Start-up calibration by firmware/FPGA: HS drive into the pad termination with no device attached, read the pad DC through the ATB/ADC path against the 400 mV reference, step the code."
+          "gate_and": "usbhs.config.term_enable",
+          "meaning": "PD37 / PAD-03 / PD41: USB HS termination trim TERM_TRIM0..2 of pad_wirepad v9, applied only while the pad termination is enabled: the register file drives TERM_TRIM = term_trim AND term_enable (gate_and). Start-up calibration by firmware/FPGA: HS drive into the pad termination with no device attached, read the pad DC through the ATB/ADC path against the 400 mV reference, step the code."
+        },
+        "term_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "meaning": "PD41: TERM_ENABLE of pad_wirepad v9 (USB HS pad termination). Gates TERM_TRIM (term_trim AND term_enable); with term_enable or tx_enable set, usbfs.config.ls_slow must be 0 (rule usb_ls_slow_vs_termination)."
         }
       },
       "update": "scheduled_enables_stopped_trim"

@@ -12,7 +12,7 @@
 // four parallel 10b->9b decoders, 36 -> 40 repacking. Invalid code groups decode to {K=1, 0x00}
 // (not a valid control character) and, once aligned, set the sticky `code_error`. Running
 // disparity is not checked (protocol checks belong to the FPGA).
-// Pipeline (four quad clocks; decode split in two, 2026-11-11): (1) the window {din, previous quad} is barrel-shifted by the
+// Pipeline (five quad clocks; decode split in three, 2026-11-11 / TC9): (1) the window {din, previous quad} is barrel-shifted by the
 // registered offset and searched for commas; (2) decode; (3) repack. The quad whose commas change
 // the offset was shifted with the old one and is not delivered.
 module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din_valid,
@@ -68,24 +68,31 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
     integer s;
     reg [5:0] c6; reg [3:0] c4, d4r; reg [4:0] x; reg k28, ok, kx, c4k;
     reg [75:0] pa_n;
-    wire [15:0] dk_sel;
+    // Timing TC9 (wrx, sym -> 5b/6b + 3b/4b tables -> pa): one more decode stage. 2a0 registers the raw
+    // per-symbol lookups pb (k28, k28p, {ok, x}, dk on both polarities, d4r, c4k); 2a1 selects dk by k28p
+    // and decodes kx into pa. One more wire_rx_clk of latency; same symbols.
+    reg [83:0] pb, pb_n;        // per symbol s at 21*s: {k28, k28p, ok, x[4:0], dkp[3:0], dkn[3:0], d4r[3:0], c4k}
+    wire [3:0] k28p_n;
     genvar sk;
     generate for (sk = 0; sk < 4; sk = sk + 1) begin : dkp
-        wire [3:0] c4s = sym[10*sk+6 +: 4];
-        wire [3:0] dk_p = lc_dk4(c4s), dk_n = lc_dk4(~c4s);
-        wire k28p;   // c6 == 111100 in its own kept hierarchy (synthesis merged it into the 5b/6b table logic)
-        pt_lc_is_k28p eq(.a(sym[10*sk +: 6]), .z(k28p));
-        pt_lc_sel2 #(4) sel(.s(k28p), .a(dk_n), .b(dk_p), .z(dk_sel[4*sk +: 4]));
+        pt_lc_is_k28p eq(.a(sym[10*sk +: 6]), .z(k28p_n[sk]));
     end endgenerate
     always @* begin
         for (s = 0; s < 4; s = s + 1) begin
             c6 = sym[10*s +: 6]; c4 = sym[10*s+6 +: 4];
             k28 = c6 == 6'b111100 || c6 == 6'b000011;
             {ok, x} = lc_d6(c6);
-            kx = x == 5'd23 || x == 5'd27 || x == 5'd29 || x == 5'd30;
             c4k = c4 == 4'b1110 || c4 == 4'b0001;
             d4r = lc_d4(c4);
-            pa_n[19*s +: 19] = {k28, ok, x, dk_sel[4*s +: 4], d4r, kx, c4k, 2'b00};
+            pb_n[21*s +: 21] = {k28, k28p_n[s], ok, x, lc_dk4(c4), lc_dk4(~c4), d4r, c4k};
+        end
+    end
+    reg [3:0] ad4r, adkp, adkn; reg [4:0] ax; reg ak28, ak28p, aok, ac4k; integer sa;
+    always @* begin
+        for (sa = 0; sa < 4; sa = sa + 1) begin
+            {ak28, ak28p, aok, ax, adkp, adkn, ad4r, ac4k} = pb[21*sa +: 21];
+            pa_n[19*sa +: 19] = {ak28, aok, ax, ak28p ? adkp : adkn, ad4r,
+                                 ax == 5'd23 || ax == 5'd27 || ax == 5'd29 || ax == 5'd30, ac4k, 2'b00};
         end
     end
     // (separate variables: two always @* blocks sharing temporaries retrigger each other forever)
@@ -105,7 +112,7 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
             end
         end
     end
-    reg v2a;
+    reg v2a, v2b;
     reg [35:0] dec; reg bad, v2;
     // ---- stage 3: 36 -> 40 repacking. After this clock's emit the reservoir holds 4k bits
     // (k = 0..9, one-hot `koh`); a delivered group is inserted at bit 4k. Next state:
@@ -121,14 +128,14 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             R <= 72'd0; koh <= 10'd1; emit <= 1'b0; off <= 4'd0; aligned <= 1'b0; code_error <= 1'b0; cand <= 4'd0; cand_v <= 1'b0;
-            dec <= 36'd0; bad <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; pa <= 76'd0;
-        end else if (!en_r) begin R <= 72'd0; koh <= 10'd1; emit <= 1'b0; aligned <= 1'b0; cand_v <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; end
+            dec <= 36'd0; bad <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0; pa <= 76'd0; pb <= 84'd0;
+        end else if (!en_r) begin R <= 72'd0; koh <= 10'd1; emit <= 1'b0; aligned <= 1'b0; cand_v <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0; end
         else begin
             if (adopt) begin off <= hit_off; aligned <= 1'b1; cand_v <= 1'b0; end
             else if (s1v && |hit && aligned && hit_off == off) cand_v <= 1'b0;
             else if (s1v && |hit) begin cand <= hit_off; cand_v <= 1'b1; end
-            v2a <= deliver; v2 <= v2a; bad <= bad_n;
-            pa <= pa_n;     // unconditional: consumed only in the clocks after a delivery (v2a, v2)
+            v2a <= deliver; v2b <= v2a; v2 <= v2b; bad <= bad_n;
+            pb <= pb_n; pa <= pa_n;     // unconditional: consumed only in the clocks after a delivery (v2a, v2)
             dec <= dec_n;
             R <= kept | (v2 ? ins : 72'd0);
             emit <= v2 && !koh[0];
@@ -221,10 +228,16 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
     // -> one-hot flags was 16 levels, wtx -8.1 ns). The output stream is unchanged.
     reg [39:0] q2; reg qv2;
     wire advB = sAv && !qv2;
+    // Stage P (timing TC9, wtx: ures -> flip / decode -> running-disparity XOR -> rdA / dA was the
+    // worst wtx path): the group taken from ures is registered with its per-symbol flip flags and
+    // decodes (sP / fP / dP); stage A then only XORs the registered flags into the running disparity.
+    // One more WORD_CLK40 of latency, full throughput, the encoded stream is unchanged.
+    reg [35:0] sP; reg [3:0] fP; reg [15:0] dP; reg sPv;
+    wire advP2A = sPv && (!sAv || advB);
     // u-derived flags and one-hot insert positions are registers (computed from the next u), so no
     // compare on u sits in front of the 72-bit insert fanout (AC-1 ss32 timing at 12.3 ns).
     reg uge36, ult72; reg [8:0] oh_n, oh_a;   // oh_n[i]: u == 4i; oh_a[i]: u == 4i + 36
-    wire advA = uge36 && (!sAv || advB);
+    wire advA = uge36 && (!sPv || advP2A);   // ures -> stage P
     // en (the synchronized ENABLE & linecode) is re-registered in three kept copies, one per register
     // group (timing 2026-11-11, wtx: e3.q -> en -> ~300 flops was -4.5 ns); every group sees the same
     // one-clock-later enable, so the stream is unchanged (it starts one WORD_CLK40 later).
@@ -232,10 +245,26 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
     pt_lc_en_rep rep_a(.clk(clk), .rst_n(rst_n), .d(en), .q(en_a));
     pt_lc_en_rep rep_b(.clk(clk), .rst_n(rst_n), .d(en), .q(en_b));
     pt_lc_en_rep rep_c(.clk(clk), .rst_n(rst_n), .d(en), .q(en_c));
-    assign pop = en_a && head_valid && (advA ? ult72 : !uge36);
+    // Input skid buffer (timing TC9, wtx: egress empty -> pop -> 72-bit insert / u adders through a long
+    // buffer tree was -4.0 ns mid-PnR in TC8): the egress head enters a two-entry queue (hq = head entry,
+    // hq1 behind it; hv / hf = one / two entries, registers). The egress take (pop) is head_valid && !hf,
+    // registers only, and the wide insert fanout sees pop_i, a function of lc_tx registers only.
+    // Full throughput; the symbol stream is unchanged (one or two WORD_CLK40 more latency).
+    reg [39:0] hq, hq1; reg hv, hf;
+    wire pop_i = en_a && hv && (advA ? ult72 : !uge36);
+    assign pop = en_a && head_valid && !hf;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin hv <= 1'b0; hf <= 1'b0; hq <= 40'd0; hq1 <= 40'd0; end
+        else if (!en_a) begin hv <= 1'b0; hf <= 1'b0; end
+        else case ({pop_i, pop})
+            2'b01: begin if (!hv) hq <= head; else hq1 <= head; hf <= hv; hv <= 1'b1; end
+            2'b10: begin hq <= hq1; hv <= hf; hf <= 1'b0; end
+            2'b11: begin if (hf) begin hq <= hq1; hq1 <= head; end else hq <= head; end
+            default: ;
+        endcase
     wire [6:0] u_p0, u_p1, u_next;   // u - 36 advA + 40 pop, alternatives from u only
-    pt_lc_sel2 #(7) su_p0(.s(pop), .a(u), .b(u + 7'd40), .z(u_p0));
-    pt_lc_sel2 #(7) su_p1(.s(pop), .a(u - 7'd36), .b(u + 7'd4), .z(u_p1));
+    pt_lc_sel2 #(7) su_p0(.s(pop_i), .a(u), .b(u + 7'd40), .z(u_p0));
+    pt_lc_sel2 #(7) su_p1(.s(pop_i), .a(u - 7'd36), .b(u + 7'd4), .z(u_p1));
     pt_lc_sel2 #(7) su_a (.s(advA), .a(u_p0), .b(u_p1), .z(u_next));
     // next flags for each of the four (advA, pop) cases, from registers only; the late advA / pop
     // only select (kept nets: synthesis must not fold the select back into the adders)
@@ -250,8 +279,8 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
     // the late advA / pop select through kept-hierarchy 2:1s (plain case/?: let synthesis share the
     // four adders/compares into one behind a u mux: post-synthesis egress_wtx sAv -> ... -> u adder)
     wire [19:0] fl_p0, fl_p1, fl_sel;
-    pt_lc_sel2 #(20) s_p0(.s(pop), .a(fl_00), .b(fl_01), .z(fl_p0));
-    pt_lc_sel2 #(20) s_p1(.s(pop), .a(fl_10), .b(fl_11), .z(fl_p1));
+    pt_lc_sel2 #(20) s_p0(.s(pop_i), .a(fl_00), .b(fl_01), .z(fl_p0));
+    pt_lc_sel2 #(20) s_p1(.s(pop_i), .a(fl_10), .b(fl_11), .z(fl_p1));
     pt_lc_sel2 #(20) s_a (.s(advA), .a(fl_p0), .b(fl_p1), .z(fl_sel));
     wire [71:0] kept = advA ? {36'd0, ures[71:36]} : ures;
     reg [71:0] ins_a, ins_n;   // head inserted at u - 36 (after advA) or at u
@@ -259,33 +288,49 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
     always @* begin
         ins_a = 72'd0; ins_n = 72'd0;
         for (i = 0; i < 9; i = i + 1) begin
-            ins_a = ins_a | ({72{oh_a[i]}} & ({32'd0, head} << (4*i)));
-            ins_n = ins_n | ({72{oh_n[i]}} & ({32'd0, head} << (4*i)));
+            ins_a = ins_a | ({72{oh_a[i]}} & ({32'd0, hq} << (4*i)));
+            ins_n = ins_n | ({72{oh_n[i]}} & ({32'd0, hq} << (4*i)));
         end
     end
     // stage A: per-symbol running disparity from the flags
     wire [3:0] f = {flip_of(ures[35:27]), flip_of(ures[26:18]), flip_of(ures[17:9]), flip_of(ures[8:0])};
-    wire [3:0] r_at = {rdn ^ f[0] ^ f[1] ^ f[2], rdn ^ f[0] ^ f[1], rdn ^ f[0], rdn};
+    wire [3:0] r_at = {rdn ^ fP[0] ^ fP[1] ^ fP[2], rdn ^ fP[0] ^ fP[1], rdn ^ fP[0], rdn};
     // stage B: four independent encoders
-    wire [39:0] enc = {lc_enc3(sA[35:27], rdA[3], dA[12], dA[13], dA[14], dA[15]),
-                       lc_enc3(sA[26:18], rdA[2], dA[8], dA[9], dA[10], dA[11]),
-                       lc_enc3(sA[17:9], rdA[1], dA[4], dA[5], dA[6], dA[7]),
-                       lc_enc3(sA[8:0], rdA[0], dA[0], dA[1], dA[2], dA[3])};
+    // TC11 (wtx, sA -> encoder -> q -0.21 ns mid-PnR): the 3b/4b disparity r1 and the A7 decision are
+    // registered in stage A (r1A / a7A, from the registered running disparity and decodes), so stage B is
+    // the two table lookups only. Same code groups.
+    reg [3:0] r1A, a7A;
+    wire [3:0] r1_n, a7_n;
+    genvar ga;
+    generate for (ga = 0; ga < 4; ga = ga + 1) begin : a7p
+        assign r1_n[ga] = r_at[ga] ^ dP[4*ga];
+        assign a7_n[ga] = sP[9*ga+7 -: 3] == 3'd7 && (sP[9*ga+8] || (r1_n[ga] && dP[4*ga+2]) || (!r1_n[ga] && dP[4*ga+3]));
+    end endgenerate
+    function automatic [9:0] lc_enc4(input [8:0] v, input rn, input k28, input r1, input a7);
+        lc_enc4 = {lc_e4(v[7:5], k28, a7, r1), lc_e6(v[4:0], k28, rn)};
+    endfunction
+    wire [39:0] enc = {lc_enc4(sA[35:27], rdA[3], dA[13], r1A[3], a7A[3]),
+                       lc_enc4(sA[26:18], rdA[2], dA[9], r1A[2], a7A[2]),
+                       lc_enc4(sA[17:9], rdA[1], dA[5], r1A[1], a7A[1]),
+                       lc_enc4(sA[8:0], rdA[0], dA[1], r1A[0], a7A[0])};
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin ures <= 72'd0; u <= 7'd0; uge36 <= 1'b0; ult72 <= 1'b1; oh_n <= 9'd1; oh_a <= 9'd0; end
         else if (!en_a) begin ures <= 72'd0; u <= 7'd0; uge36 <= 1'b0; ult72 <= 1'b1; oh_n <= 9'd1; oh_a <= 9'd0; end
         else begin
-            ures <= kept | (pop ? (advA ? ins_a : ins_n) : 72'd0);
+            ures <= kept | (pop_i ? (advA ? ins_a : ins_n) : 72'd0);
             u <= u_next;
             {uge36, ult72, oh_n, oh_a} <= fl_sel;
         end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin sA <= 36'd0; dA <= 16'd0; rdA <= 4'b1111; sAv <= 1'b0; rdn <= 1'b1; end
-        else if (!en_b) begin sAv <= 1'b0; rdn <= 1'b1; end
+        if (!rst_n) begin sA <= 36'd0; dA <= 16'd0; rdA <= 4'b1111; sAv <= 1'b0; rdn <= 1'b1;
+            sP <= 36'd0; fP <= 4'd0; dP <= 16'd0; sPv <= 1'b0; r1A <= 4'd0; a7A <= 4'd0; end
+        else if (!en_b) begin sAv <= 1'b0; rdn <= 1'b1; sPv <= 1'b0; end
         else begin
-            if (advA) begin sA <= ures[35:0]; rdA <= r_at; rdn <= rdn ^ (^f);
-                dA <= {dec_of(ures[35:27]), dec_of(ures[26:18]), dec_of(ures[17:9]), dec_of(ures[8:0])}; end
-            sAv <= advA || (sAv && !advB);
+            if (advA) begin sP <= ures[35:0]; fP <= f;
+                dP <= {dec_of(ures[35:27]), dec_of(ures[26:18]), dec_of(ures[17:9]), dec_of(ures[8:0])}; end
+            sPv <= advA || (sPv && !advP2A);
+            if (advP2A) begin sA <= sP; rdA <= r_at; rdn <= rdn ^ (^fP); dA <= dP; r1A <= r1_n; a7A <= a7_n; end
+            sAv <= advP2A || (sAv && !advB);
         end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin q <= 40'd0; q_valid <= 1'b0; q2 <= 40'd0; qv2 <= 1'b0; end

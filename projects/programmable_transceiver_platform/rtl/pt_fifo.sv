@@ -124,9 +124,9 @@ endmodule
 //    ~spi_clk through one stopped-only clock mux and spi_we writes spi_d at spi_idx; the read side
 //    then ignores the write pointer: entries 0..play_last are sent once (empty after the last) or
 //    looped, and rd_count reads DEPTH so the owner's start threshold is met.
-module pt_cdc_fifo #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0)(
+module pt_cdc_fifo #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0,POPQ=0,CNTPIPE=0)(
  input wire wr_clk,rd_clk,rst_n,input wire[W-1:0]din,input wire push,pop,
- output wire[W-1:0]dout,output wire full,empty,output reg ready,
+ output wire[W-1:0]dout,output wire full,empty,output wire nonempty,output reg ready,
  output reg[A:0]rd_count,output reg overflow,underflow,output wire wr_active,rd_active,
  output wire[A:0]wr_ptr,rd_ptr,   // binary pointers (write / read domain), modulo 2*DEPTH
  output wire[A:0]rd_ptr_step,output wire rd_take,   // step(rd_ptr) (register) and this clock's read
@@ -177,7 +177,11 @@ module pt_cdc_fifo #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0)(
 // right after the read-side reset release (the first pop can only come a clock later).
 reg pe;
 assign empty=playing?pe:empty_r;
- wire put=push&&!full,take=pop&&!empty;
+ // POPQ=1 (timing TC9, egress): the caller qualifies pop with `nonempty` (a plain register, = !empty,
+ // no playback mux) so take = pop; the caller's pop must never be set while empty.
+ reg ne_r;
+ assign nonempty=ne_r;
+ wire put=push&&!full,take=POPQ?pop:(pop&&!empty);
  wire[A:0]wb_next=put?wn:wb,rb_next=take?rn:rb;
  // next-state compares from registers only, kept as separate nets so the late put / take is a final 2:1
  // Non-power-of-two DEPTH (timing 2026-11-11, ingress_wrx -1.4 ns: wb -> step -> compare with
@@ -185,6 +189,14 @@ assign empty=playing?pe:empty_r;
  // pointer + DEPTH registered one writer clock after rg2. rbd lags rg2 by one clock, so full can stay
  // set one writer clock longer after a read (conservative: never an overflow, never a false not-full).
  reg[A:0]wnr;
+ // ready (TC9, hcore -2.1 ns mid-PnR: wb/rbin -> distance -> compare -> ready rippled through ~12 levels):
+ // occupancy <= DEPTH-SPARE  <=>  wb lies in the window rbin .. rbin+DEPTH-SPARE (mod 2*DEPTH); the window end
+ // rlim and its wrap flag are registered with rbin (same rg2 sample), so ready is two compares from registers.
+ reg[A:0]rlim;reg rwrap;
+ localparam[A+1:0]KREADY=DEPTH-SPARE;
+ function automatic[A:0]plus_k(input[A:0]p);
+ reg[A+1:0]d;begin d={1'b0,p}+KREADY;plus_k=d>=SPAN?d-SPAN:d;end endfunction
+ wire ready_n=rwrap?(wb>=rbin||wb<=rlim):(wb>=rbin&&wb<=rlim);
  (* keep *) wire f_put=POW2?(gray(wn)=={~rg1[A:A-1],rg1[A-2:0]}):(wnr==rbd);
  (* keep *) wire f_hold=POW2?(wg=={~rg1[A:A-1],rg1[A-2:0]}):(wb==rbd);
  // empty compares against wbin (binary(wg2) registered one reader clock later; timing 2026-11-11:
@@ -227,6 +239,8 @@ assign empty=playing?pe:empty_r;
  always @(posedge rd_clk or negedge rd_ready)
   if(!rd_ready)begin play_done<=0;pe<=1;end
   else begin play_done<=play_done_n;pe<=play_done_n;end
+ always @(posedge rd_clk or negedge rd_ready)
+  if(!rd_ready)ne_r<=1'b0;else ne_r<=!(playing?play_done_n:empty_n);
  localparam HALF=(DEPTH+1)/2;
  reg[W-1:0]c0a,c0b,c1a,c1b,c2a,c2b;integer j;
  always @*begin
@@ -246,6 +260,26 @@ assign empty=playing?pe:empty_r;
  always @(posedge rd_clk)dq<=dq_n;
  assign dout=dq;
  assign wr_ptr=wb,rd_ptr=rb,rd_ptr_step=rnr,rd_take=take;
+ // CNTPIPE=1 (TC11, egress_wtx: rnr -> 6-bit distance ripple -> rd_count was -0.43 ns at 12.3 ns): rd_count is
+ // distance(wbin, rb) of the PREVIOUS clock in two stages: stage 1 registers the 3-bit low difference with its
+ // borrow and the four high-part candidates (borrow 0/1, wrapped +SPAN/8 or not; SPAN is a multiple of 8),
+ // stage 2 only selects. The count is distance(wbin, rb) one clock old: it lags the writer (under-count) but
+ // can miss the last two takes (over-count by <= 2); consumers that pop before a start threshold add 2.
+ reg[2:0]cp_lo;reg cp_lob;reg[A-2:0]cp_h0,cp_h1,cp_h0w,cp_h1w;reg cp_n0,cp_n1;
+ wire[3:0]cp_lo4={1'b0,wbin[2:0]}-{1'b0,rb[2:0]};
+ wire[A-2:0]cp_ah=wbin[A:3],cp_bh=rb[A:3];
+ wire[A-1:0]cp_d0={1'b0,cp_ah}-{1'b0,cp_bh},cp_d1=cp_d0-1'b1;
+ localparam[A-2:0]SPAN8=SPAN/8;
+ wire[A-2:0]cp_sel=cp_lob?(cp_n1?cp_h1w:cp_h1):(cp_n0?cp_h0w:cp_h0);
+ wire[A:0]cp_count={cp_sel,cp_lo};
+ always @(posedge rd_clk or negedge rd_ready)
+  if(!rd_ready)begin cp_lo<=0;cp_lob<=0;cp_h0<=0;cp_h1<=0;cp_h0w<=0;cp_h1w<=0;cp_n0<=0;cp_n1<=0;end
+  else begin
+   cp_lo<=cp_lo4[2:0];cp_lob<=cp_lo4[3];
+   cp_h0<=cp_d0[A-2:0];cp_h1<=cp_d1[A-2:0];cp_n0<=cp_d0[A-1];cp_n1<=cp_d1[A-1];
+   cp_h0w<=cp_d0[A-2:0]+SPAN8;cp_h1w<=cp_d1[A-2:0]+SPAN8;
+  end
+ initial if(CNTPIPE&&(SPAN%8)!=0)$fatal(1,"CNTPIPE needs 2*DEPTH to be a multiple of 8");
  integer i;
  // Write port pipelined (timing closure 2026-11-11): the per-entry write enables are REGISTERS
  // (we_r = put & one-hot pointer, one flop per entry) and the data is registered with them, so the
@@ -271,12 +305,16 @@ assign empty=playing?pe:empty_r;
   else begin:no_peek assign peek={W{1'b0}};end
  end endgenerate
  always @(posedge wr_clk or negedge wr_ready)begin
-  if(!wr_ready)begin wb<=0;wnr<=1;wg<=gray(0);wgp<=gray(0);rg1<=gray(0);rg2<=gray(0);rbin<=0;rbd<=DEPTH;woh<=1;overflow<=0;ready<=0;full_r<=0;end
+  if(!wr_ready)begin wb<=0;wnr<=1;wg<=gray(0);wgp<=gray(0);rg1<=gray(0);rg2<=gray(0);rbin<=0;rbd<=DEPTH;rlim<=KREADY;rwrap<=1'b0;woh<=1;overflow<=0;ready<=0;full_r<=0;end
   else begin
    full_r<=full_n;
    wgp<=wg;   // published after the array write (we_r) lands
    rg1<=rg;rg2<=rg1;rbin<=binary(rg2);rbd<=plus_depth(binary(rg2));
-   ready<=occupancy<=DEPTH-SPARE;
+   rlim<=plus_k(binary(rg2));rwrap<=binary(rg2)>=SPAN-KREADY;
+   ready<=ready_n;   // == (occupancy <= DEPTH-SPARE)
+`ifdef FORMAL
+   assert(ready_n==(occupancy<=DEPTH-SPARE));
+`endif
    if(put)begin wb<=wn;wnr<=step(wn);wg<=gray(wn);woh<={woh[DEPTH-2:0],woh[DEPTH-1]};end
    if(push&&full)overflow<=1;
   end
@@ -286,7 +324,8 @@ assign empty=playing?pe:empty_r;
   else begin
    empty_r<=empty_n;
    wg1<=wgp;wg2<=wg1;wbin<=binary(wg2);
-   rd_count<=playing?FULLC:cnt_n;   // both alternatives from registers; `take` selects late (pt_sel2)
+   if(!CNTPIPE)rd_count<=playing?FULLC:cnt_n;   // both alternatives from registers; `take` selects late (pt_sel2)
+   else rd_count<=playing?FULLC:cp_count;
    if(take)begin rb<=rn;rnr<=step(rn);rg<=gray(rn);end
    if(pop&&empty)underflow<=1;
   end

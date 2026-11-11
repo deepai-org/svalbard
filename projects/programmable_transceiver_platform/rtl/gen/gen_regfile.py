@@ -361,8 +361,8 @@ def validate(model, dbg, readiness):
     for f in model['fields']:
         if f['gate_and'] is not None:
             g = by_name.get(f['gate_and'])
-            if g is None or g['bits'] != 1 or f['bits'] != 1 or g['islands'] != f['islands'] or f['name'] in model['fault_forced']:
-                raise SpecError(f"{f['name']}: gate_and needs a 1-bit field with the same islands")
+            if g is None or g['bits'] != 1 or g['islands'] != f['islands'] or f['name'] in model['fault_forced']:
+                raise SpecError(f"{f['name']}: gate_and needs a 1-bit gate field with the same islands")
         if f['store'] is not None and not ns['field_ok'](f, f['default']):
             raise SpecError(f"{f['name']}: default out of range")
     for r in model['rules']:
@@ -596,7 +596,7 @@ def emit_sv(model):
                          [f'island_pgood[{k}]' for k in sorted(ovr_pg.get(f['name'], ()))]) or "1'b1"
         val = f'a_{f["sv"]}'
         if f['gate_and']:
-            val = f'(a_{f["sv"]}&a_{by_name[f["gate_and"]]["sv"]})'
+            val = f'(a_{f["sv"]}&{{{f["bits"]}{{a_{by_name[f["gate_and"]]["sv"]}}}}})'  # multi-bit: every bit gated
         if f['name'] in model['fault_forced']:
             val = f'(fault ? {sv_const(f["bits"], model["fault_forced"][f["name"]])} : {val})'
         if f['clear_when_running'] is not None:
@@ -702,8 +702,21 @@ def emit_sv(model):
         a(f"  if(!split_ok[{i}])commit_code=8'h{0xC0 + i:02X};")
     a("  if(enable&&nonlive_diff)commit_code=8'hFF;")
     a(' end')
-    a(" wire commit_ok=commit_code==8'h00;")
-    a(" wire[6:0]commit_err=(commit_code==8'hFF)?7'h20:(commit_code>=8'hC0)?7'h04:(commit_code>=8'h80)?7'h10:7'h08;")
+    a(' // Timing TC9 (sclk: shadow/applied compare -> rule checks -> commit_code -> 573-bit apply fanout was')
+    a(' // ~50 ns of the 50 ns half-period path): commit_code is evaluated on registers that change only on')
+    a(' // SPI writes / commits, so it is REGISTERED every sclk (commit_code_r); a commit frame arrives at')
+    a(' // least one SPI frame (>= 16 sclk) after the last shadow / applied change, so the value is identical.')
+    a(' // cc_fresh: no register write in the previous clock, so commit_code_r == commit_code (asserted');
+    a(' // below). A commit right after another write (impossible with SPI framing) is refused (8\'hFE).')
+    a(' reg[7:0]commit_code_r;reg cc_fresh;')
+    a(" always @(posedge sclk or negedge rst_n)if(!rst_n)begin commit_code_r<=8'h00;cc_fresh<=1'b0;end")
+    a("  else begin commit_code_r<=commit_code;cc_fresh<=!wr_en;end")
+    a(" wire[7:0]commit_code_q=cc_fresh?commit_code_r:8'hFE;")
+    a(" wire commit_ok=commit_code_q==8'h00;")
+    a(' `ifdef FORMAL')
+    a(' always @(posedge sclk)if(rst_n&&cc_fresh)assert(commit_code_r==commit_code);')
+    a(' `endif')
+    a(" wire[6:0]commit_err=(commit_code_q==8'hFF||commit_code_q==8'hFE)?7'h20:(commit_code_q>=8'hC0)?7'h04:(commit_code_q>=8'h80)?7'h10:7'h08;")
     # Write-time checks.
     a(' // Write-time checks: reserved bits zero and every non-split field encoding accepted.')
     for reg in regs:
@@ -763,7 +776,7 @@ def emit_sv(model):
         if f['store'] is not None and not f['direct']:
             a(f'        {store_reg(f, "a")[0]}<={store_reg(f, "s")[0]};')
     a('        commit_toggle<=!commit_toggle;commit_count<=commit_count+1\'b1;last_ok<=1;err_code<=0;')
-    a('       end else begin last_ok<=0;err_code<=commit_code;cfg_err<=cfg_err|commit_err;end')
+    a('       end else begin last_ok<=0;err_code<=commit_code_q;cfg_err<=cfg_err|commit_err;end')
     a("      end else if(wr_data==16'h0002)begin")
     for f in fields:
         if f['store'] is not None and not f['direct']:
@@ -896,7 +909,7 @@ def emit_formal(model, a, by_name):
                 elif f['decode'] == 'mant_exp':
                     v = mant_exp_value(v, f['mantissa_bits'], f['decoded_bits'])
                 if f['gate_and']:
-                    v &= by_name[f['gate_and']]['default']
+                    v = v if by_name[f['gate_and']]['default'] else 0
                 image |= v << f['bus_lsb']
         w = model['bus_widths'][bus]
         a(f"   assert({bus}_cfg=={w}'h{image:X}); // island-gated fields 0, ungated core fields at defaults")

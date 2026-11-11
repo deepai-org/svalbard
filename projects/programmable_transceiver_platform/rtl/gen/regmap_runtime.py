@@ -183,7 +183,7 @@ def outputs(active, pgood, fault, enable=0):
             out[f['name']] = 0
     for f in FIELDS:
         if f.get('gate_and'):
-            out[f['name']] &= out[f['gate_and']]
+            out[f['name']] = out[f['name']] if out[f['gate_and']] else 0   # multi-bit fields: all bits gated
     buses = {'analog': 0, 'debug': 0}
     for f in FIELDS:
         if f['bus'] is not None:

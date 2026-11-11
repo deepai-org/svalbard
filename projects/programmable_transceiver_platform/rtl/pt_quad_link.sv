@@ -174,7 +174,10 @@ module pt_quad_rx(input wire clk,rst_n,payload_iq,input wire[39:0]in_quad,
  wire[3:0]op_n=fields_n[21:18];wire[7:0]arg_n=fields_n[29:22];
  wire legal_n=(op_n==0&&arg_n==0)||((op_n==1||op_n==2)&&arg_n<=1)||
               (op_n==4&&payload_iq&&adv_n==0&&!arg_n[7]&&arg_n[4:0]<=5'd16);
- reg hpre;
+ // TC9 (hcore, aligned_r -> syndrome -> hpre -1.1 ns mid-PnR): the syndrome bits and the four other
+ // check flags are registered separately with q; hpre is their AND (same value, checks(q)).
+ reg[6:0]hsyn;reg htag,hadv,hina,hleg;
+ wire hpre=hsyn==7'd0&&htag&&hadv&&hina&&hleg;
  wire header_good=hpre&&fields[17:12]==expected_seq;
  wire header_beat=qv&&beat==4'd0,guard=qv&&beat==4'd1,payload=qv&&beat>=4'd2;
  wire good=header_ok&&guard_ok;
@@ -199,10 +202,10 @@ module pt_quad_rx(input wire clk,rst_n,payload_iq,input wire[39:0]in_quad,
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    q<=0;qv<=0;beat<=0;expected_seq<=0;left<=0;guard_left<=0;take<=0;guard_take<=0;
-   header_ok<=0;guard_ok<=0;fault<=0;opcode<=0;argument<=0;pay_r<=0;guard_r<=0;hpre<=0;
+   header_ok<=0;guard_ok<=0;fault<=0;opcode<=0;argument<=0;pay_r<=0;guard_r<=0;hsyn<=0;htag<=0;hadv<=0;hina<=0;hleg<=0;
   end else begin
    q<=in_quad;qv<=1;
-   hpre<=syndrome(in_quad)==0&&in_quad[39:37]==3'b101&&adv_n<=59&&inact_n==0&&legal_n;
+   hsyn<=syndrome(in_quad);htag<=in_quad[39:37]==3'b101;hadv<=adv_n<=59;hina<=inact_n==0;hleg<=legal_n;
    guard_r<=beat_n==4'd1;pay_r<=beat_n>=4'd2 ?take_n:3'd0;   // qv is 1 from the next clock on
    if(qv)begin
     beat<=beat+1'b1;

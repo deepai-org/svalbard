@@ -176,7 +176,9 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
     localparam integer QW = 8;       // pending-error accumulator width
     reg  [QW:0]   pend;              // QW bits + overflow bit (cleared the clock after it sets)
     reg           ovf;               // pend overflowed: run the count to saturation
-    wire [CW-1:0] errors_n = errors + 1'b1;
+    // errors_n = errors + 1 is a REGISTER (TC10: errors -> 16-bit increment -> Gray -> errors_gray was the
+    // post-synthesis hword worst path); it steps with errors, so the increment is off the step path.
+    reg  [CW-1:0] errors_n;
     // Saturation flag kept as a register (always equal to &errors: errors only changes by
     // clear, reset or the +1 step below), so the 16-bit AND is off the pend/step path.
     reg           at_max;
@@ -305,7 +307,7 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            h <= 31'h7fffffff; run <= 0; bad <= 0; locked <= 1'b0; lost_lock <= 1'b0; errors <= 0;
+            h <= 31'h7fffffff; run <= 0; bad <= 0; locked <= 1'b0; lost_lock <= 1'b0; errors <= 0; errors_n <= 1;
             mism_q <= 0; grp <= 0; pair <= 0; pair_v <= 1'b0; quad <= 0; quad_v <= 1'b0; ptot <= 0; ptot_v <= 1'b0; psum <= 0; psum_m1 <= 0; psum_v <= 1'b0; mism_v <= 1'b0; pend <= 0; pend_nz <= 1'b0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
             v1 <= 1'b0; nz1 <= 1'b0;
         end else if (ce) begin
@@ -347,9 +349,9 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
             psum_m1 <= ptot - 1'b1;
             psum_v <= ptot_v && !clear;
             if (clear) begin
-                errors <= 0; lost_lock <= 1'b0; pend <= 0; pend_nz <= 1'b0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
+                errors <= 0; errors_n <= 1; lost_lock <= 1'b0; pend <= 0; pend_nz <= 1'b0; ovf <= 1'b0; errors_gray <= 0; at_max <= 1'b0;
             end else begin
-                if (step_cnt) begin errors <= errors_n; errors_gray <= errors_n ^ (errors_n >> 1); at_max <= &errors_n; end
+                if (step_cnt) begin errors <= errors_n; errors_n <= errors_n + 1'b1; errors_gray <= errors_n ^ (errors_n >> 1); at_max <= &errors_n; end
                 if (at_max || pend[QW]) begin pend <= 0; pend_nz <= 1'b0; end
                 else begin pend <= pend_sum; pend_nz <= sum_nz; end
                 if (pend[QW] && !at_max) ovf <= 1'b1;

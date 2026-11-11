@@ -2934,6 +2934,30 @@
           0
         ]
       ]
+    },
+    {
+      "id": "usb_ls_slow_vs_termination",
+      "class": "pad",
+      "node": "USB wirepad (pad_wirepad v9): LS_SLOW pre-driver vs HS termination / HS drive (PD41)",
+      "if_any": [
+        [
+          "usbhs.config.term_enable",
+          "eq",
+          1
+        ],
+        [
+          "usbhs.config.tx_enable",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "usbfs.config.ls_slow",
+          "eq",
+          0
+        ]
+      ]
     }
   ],
   "break_before_make": [

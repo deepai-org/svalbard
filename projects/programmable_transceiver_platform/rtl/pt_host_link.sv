@@ -77,6 +77,11 @@ module pt_host_link(
     // 6.4 ns no longer rides on dr_n's gearbox fanout (run TC2A: -4.2 ns, divider RN).
     wire drs_c;   // kept copy (pt_rep_dff) so synthesis cannot merge it back into drs[1]
     pt_rep_dff drs_copy(.clk(link_clk), .rst_n(rst_n), .d(drs[0]), .q(drs_c));
+    // TC11 (hddr, dr_n -> ~100 gearbox reset pins was the hddr recovery worst group): the gearbox's rising-
+    // and falling-edge reset nets get their own kept release copies (same edge as drs[1]).
+    wire drs_g, drs_ng;
+    pt_rep_dff drs_gcopy(.clk(link_clk), .rst_n(rst_n), .d(drs[0]), .q(drs_g));
+    pt_rep_dff drs_ngcopy(.clk(link_clk), .rst_n(rst_n), .d(drs[0]), .q(drs_ng));
     pt_host_divider divider(.clk(link_clk), .rst_n(drs_c), .core_clk(core_clk));
     (* async_reg = "true" *) reg [1:0] crs;
     always @(posedge core_clk or negedge rst_n) if (!rst_n) crs <= 2'b00; else crs <= {crs[0], 1'b1};
@@ -99,7 +104,7 @@ module pt_host_link(
     wire [1:0] mode_d; wire en_d;
     pt_sync_vec #(3) smd(.clk(link_clk), .rst_n(dr_n), .d({mode, d2h_enable}), .q({mode_d, en_d}));
     wire ddr_fwd; wire [9:0] d2h_launch;
-    pt_d2h_gearbox gearbox(.ddr_clk(link_clk), .rst_n(dr_n), .nrst_n(dr_n), .prefix(prefix), .clk_en(en_d && mode_d == 2'd0),
+    pt_d2h_gearbox gearbox(.ddr_clk(link_clk), .rst_n(drs_g), .nrst_n(drs_ng), .prefix(prefix), .clk_en(en_d && mode_d == 2'd0),
         .d2h_pin(d2h_launch), .clk_pin(ddr_fwd));
     // HB-1: two-group launch stagger (SSN). Odd lanes go through a fixed ~0.4-0.8 ns delay when
     // d2h_stagger=1; the even lanes and the forwarded clock are the early group. The FPGA per-bit

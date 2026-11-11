@@ -1,0 +1,253 @@
+#!/usr/bin/env python3
+"""QVCO frequency loop (LO3 / GX-6 / IX-5): architecture numbers, behavioural
+lock + phase-settling simulation, and closed-loop phase-noise budget against
+RF-RX-LOPN.  BEHAVIOURAL ONLY (no transistor-level loop exists yet): the VCO
+tuning curves are the r3 transistor-level QVCO results (results.json
+'extremes'); PFD/CP/divider are ideal-with-nonidealities models stated below.
+
+Architecture (proposal, LO owner 2026-11-11):
+  REF_IN 50 MHz XO (B23 lists 50.625 MHz for the wired FLL; any ref works fractionally, already on the board for the wired FLL; in internal-LO
+  mode REF_IN is not carrying the external LO) -> PFD at 50 MHz
+  PRE (QVCO I+ tap) -> extended 2/3 multi-modulus divider, N = 32..127
+  (custom TSPC, first cell toggles at <= 3.1 GHz), fractional via a 3rd-order
+  MASH 1-1-1 sigma-delta (16-bit fraction, std cells at 50 MHz).
+  Lock range of the divider: (32+3)*50 = 1.75 .. (127-4)*50 = 6.15 GHz (MMD input limit ~3.1-3.5 GHz),
+  which covers the whole r3 tank at every simulated corner (1.927-2.975 GHz):
+  GX-6 satisfied with no clamp.
+  Band search: digital FLL (counts PRE/16 against REF for 1.28 us, 4-bit
+  binary search over BAND[3:0] with VTUNE pre-set to VDD/2) -> 4 x 1.6 us.
+  Then type-II CP loop, 3rd-order passive filter.
+
+    python3 loop_design.py      # prints + writes results to lcvco/loop_design.json
+"""
+import json
+import math
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+FREF = 50e6
+VDD = 3.3
+VT_LO, VT_HI = 0.3, 3.0
+
+
+def tank_points():
+    r = json.loads((HERE / 'results.json').read_text())['extremes']
+    pts = {}
+    for k, v in r.items():
+        pts[k] = v['f_hz']
+    return pts
+
+
+def kvco_table(pts):
+    """MHz/V per (corner/variant, band) from the VTUNE 0.3 / 3.0 pair."""
+    out = {}
+    for k, f in pts.items():
+        if k.endswith('_vt0.3'):
+            base = k[:-6]
+            f2 = pts.get(base + '_vt3.0')
+            if f and f2:
+                out[base] = dict(f_lo=f, f_hi=f2, kvco_mhz_v=(f2 - f) / (VT_HI - VT_LO) / 1e6)
+    return out
+
+
+# ---------------- loop filter (3rd-order passive: C1 || (R + C2)... classic) -------------
+# Z(s) = (1 + s R C2) / (s (C1 + C2) (1 + s R C1 C2/(C1+C2)))   (C2 = zero cap, C1 = ripple cap)
+def design(fc, pm_deg, icp, kvco_hz_v, n):
+    wc = 2 * math.pi * fc
+    pm = math.radians(pm_deg)
+    b = (math.tan(pm) + 1 / math.cos(pm)) ** 2        # pole/zero spread for max phase at wc
+    tz = math.sqrt(b) / wc                             # R C2
+    tp = 1 / (wc * math.sqrt(b))                       # R C1 C2/(C1+C2)
+    kv = 2 * math.pi * kvco_hz_v
+    # |G(jwc)| = icp/(2pi) * kv/n * |Z(jwc)| / wc = 1
+    zmag_per_ct = abs((1 + 1j * wc * tz) / (1j * wc * (1 + 1j * wc * tp)))
+    ct = icp / (2 * math.pi) * kv / n * zmag_per_ct / wc
+    c2 = ct * (1 - tp / tz)
+    c1 = ct - c2
+    r = tz / c2
+    return dict(fc_hz=fc, pm_deg=pm_deg, icp_a=icp, kvco_hz_v=kvco_hz_v, n=n, c1_f=c1, c2_f=c2, r_ohm=r, b=b)
+
+
+def open_loop(f, d, kvco_hz_v=None, n=None):
+    s = 2j * math.pi * np.asarray(f)
+    c1, c2, r = d['c1_f'], d['c2_f'], d['r_ohm']
+    z = (1 + s * r * c2) / (s * (c1 + c2) * (1 + s * r * c1 * c2 / (c1 + c2)))
+    kv = 2 * math.pi * (kvco_hz_v or d['kvco_hz_v'])
+    return d['icp_a'] / (2 * math.pi) * kv / (n or d['n']) * z / s
+
+
+def margins(d, kvco_hz_v, n):
+    f = np.logspace(3, 8, 20000)
+    g = open_loop(f, d, kvco_hz_v, n)
+    i = np.argmin(abs(abs(g) - 1))
+    return f[i], 180 + math.degrees(np.angle(g[i]))
+
+
+# ---------------- time-domain behavioural hop simulation ----------------
+def hop_sim(d, f_from, f_to, kv_curve, t_end=100e-6, cp_mismatch=0.05, leak_a=2e-9, t_rst=150e-12,
+            vt0=VDD / 2, nsub=40):
+    """Cycle-accurate behavioural model (one iteration per reference cycle, exact
+    edge times, no time-step quantization): tri-state PFD with a `t_rst` reset
+    pulse during which both pumps conduct with `cp_mismatch` UP/DN mismatch,
+    constant `leak_a` VTUNE leakage, CP headroom roll-off outside VT_LO..VT_HI,
+    3rd-order passive filter (C1 on VTUNE, R + C2) integrated in `nsub` sub-steps
+    per cycle, VCO f(VTUNE) = kv_curve (r3 transistor-level end points), divider
+    N = f_to / FREF exactly (sigma-delta noise is in the noise budget, not here).
+    The loop closes after band search with VTUNE preset to vt0 and the PFD and
+    divider reset.  'Phase-settled' = LO phase within 2 deg of its final
+    trajectory (phase sampled at the reference edges, i.e. ref-spur ripple
+    excluded; the spur is reported separately as a VTUNE ripple)."""
+    n = f_to / FREF
+    tref = 1 / FREF
+    c1, c2, r, icp = d['c1_f'], d['c2_f'], d['r_ohm'], d['icp_a']
+    v1 = v2 = vt0
+    ph = 0.0                       # VCO phase, cycles, at the current ref edge, relative to n*k
+    ncyc = int(t_end / tref)
+    err, fr, rip = [], [], []
+    for k in range(ncyc):
+        # divider edge time relative to the ref edge: phase deficit / f
+        f0 = kv_curve(v1)
+        dt_e = -ph / f0            # >0: divider edge late -> UP pulse of width dt_e
+        dt_e = max(min(dt_e, 0.95 * tref), -0.95 * tref)
+        width = abs(dt_e)
+        sgn = 1 if dt_e > 0 else -1
+        iu = icp * (1 + cp_mismatch / 2) * (1 if v1 < VT_HI else max(0.0, (VDD - 0.1 - v1) / (VDD - 0.1 - VT_HI)))
+        idn = icp * (1 - cp_mismatch / 2) * (1 if v1 > VT_LO else max(0.0, (v1 - 0.1) / (VT_LO - 0.1)))
+        # net charge: main pulse plus both-on reset pulse (mismatch)
+        q = (iu if sgn > 0 else -idn) * width + (iu - idn) * t_rst - leak_a * tref
+        v1 += q / c1
+        # free evolution over the cycle (R between C1 and C2), integrate VCO phase
+        h = tref / nsub
+        phase_cyc = 0.0
+        vmax, vmin = v1, v1
+        for _ in range(nsub):
+            ir = (v1 - v2) / r
+            v1 -= ir / c1 * h
+            v2 += ir / c2 * h
+            phase_cyc += kv_curve(v1) * h
+            vmax, vmin = max(vmax, v1), min(vmin, v1)
+        ph += phase_cyc - n
+        err.append(ph * 360.0)
+        fr.append(phase_cyc / tref)
+        rip.append(vmax - vmin)
+    t = np.arange(ncyc) * tref
+    e = np.array(err)
+    final = np.mean(e[t > t_end - 5e-6])
+    ed = e - final
+    bad = np.where(abs(ed) > 2.0)[0]
+    t_settle = float(t[bad[-1] + 1]) if len(bad) and bad[-1] + 1 < len(t) else (0.0 if not len(bad) else None)
+    fa = np.array(fr)
+    i80 = int(80e-6 / tref)
+    return dict(f_from_hz=f_from, f_to_hz=f_to, n=n, t_phase_settle_2deg_s=t_settle,
+                f_err_at_80us_hz=float(np.mean(fa[i80 - 50:i80 + 50]) - f_to), vtune_final_v=v1,
+                max_err_deg_after_40us=float(np.max(abs(ed[t > 40e-6]))),
+                vtune_ripple_pp_v_final=float(np.mean(np.array(rip)[-100:])),
+                static_phase_offset_ps=float(-final / 360.0 / f_to * 1e12))
+
+
+def lin_curve(fa, fb):
+    """VCO tuning curve through (0.3 V, fa) and (3.0 V, fb), saturating outside
+    0..VDD (the accumulation varactor flattens towards the rails)."""
+    def f(v):
+        v = min(max(v, 0.0), VDD)
+        return fa + (fb - fa) * (v - VT_LO) / (VT_HI - VT_LO)
+    return f
+
+
+# ---------------- phase noise budget ----------------
+def pn_budget(d, f_off, vco_l1m_dbc, fpfd=FREF, n=49, ref_floor_dbc=-150.0, pfd_fom=-208.0, mash_order=3):
+    """Closed-loop L(f) at the LO.  Contributions:
+    VCO: 1/f^2 from the Leeson number at 1 MHz (run_lcvco.phase_noise), high-passed by 1/(1+G).
+    REF: 25 MHz XO floor ref_floor_dbc (B23 asks <= 1 ps rms 12k-5M, which a -150 dBc/Hz floor meets) x N^2, low-passed.
+    PFD/CP/divider in-band floor: normalized pfd_fom dBc/Hz (1 Hz, 1 Hz PFD) + 10log fpfd + 20log N
+      (-208 is a conservative mature-CMOS value; GF180 at 25 MHz assumed 5-10 dB worse than the -215..-220 literature).
+    Sigma-delta MASH 1-1-1 quantization: S_phi = (2pi)^2/(12 fpfd) (2 sin(pi f/fpfd))^(2(m-1)) rad^2/Hz at the divider
+      output referred to the VCO by x1 (phase in VCO cycles) then low-passed; L = S_phi/2."""
+    f = np.asarray(f_off, float)
+    g = open_loop(f, d, d['kvco_hz_v'], n)
+    h_lp = abs(g / (1 + g)) ** 2
+    h_hp = abs(1 / (1 + g)) ** 2
+    vco = 10 ** (vco_l1m_dbc / 10) * (1e6 / f) ** 2 * h_hp
+    ref = 10 ** (ref_floor_dbc / 10) * n ** 2 * h_lp
+    pfd = 10 ** ((pfd_fom + 10 * math.log10(fpfd) + 20 * math.log10(n)) / 10) * h_lp
+    sd = (2 * math.pi) ** 2 / (12 * fpfd) * (2 * np.sin(np.pi * f / fpfd)) ** (2 * (mash_order - 1)) * h_lp / 2
+    tot = vco + ref + pfd + sd
+    db = lambda x: 10 * np.log10(x)
+    return dict(f_hz=f.tolist(), total_dbc_hz=db(tot).tolist(), vco=db(vco).tolist(), ref=db(ref).tolist(),
+                pfd_cp_div=db(pfd).tolist(), sigma_delta=db(sd).tolist())
+
+
+def integrated_jitter(d, vco_l1m, n=49, f0=2.45e9, f1=1e4, f2=100e6):
+    f = np.logspace(math.log10(f1), math.log10(f2), 4000)
+    b = pn_budget(d, f, vco_l1m, n=n)
+    l = 10 ** (np.array(b['total_dbc_hz']) / 10)
+    phi2 = 2 * np.trapezoid(l, f)
+    return math.sqrt(phi2) / (2 * math.pi * f0) * 1e12
+
+
+MASK = {1e6: -95, 3e6: -107, 20e6: -115, 40e6: -120, 100e6: -130}
+
+
+def main():
+    pts = tank_points()
+    kt = kvco_table(pts)
+    f_min_all = min(v['f_lo'] for v in kt.values())
+    f_max_all = max(v['f_hi'] for v in kt.values())
+    guaranteed = (max(v['f_lo'] for k, v in kt.items() if '_b15' in k), min(v['f_hi'] for k, v in kt.items() if '_b0' in k))
+    kv = [v['kvco_mhz_v'] for v in kt.values()]
+    n_lo, n_hi = 32 + 3, 127 - 4          # MASH 1-1-1 swings N by -3..+4
+    div_range = (n_lo * FREF, n_hi * FREF)
+    res = dict(note='BEHAVIOURAL loop model; VCO curves from r3 transistor-level QVCO extremes (schematic QVCO, spiral model)',
+               fref_hz=FREF, divider='extended 2/3 MMD (Vaucher, 7 cells, range-extension to N=32) N=32..127, MASH 1-1-1 fractional', divider_lock_range_hz=div_range,
+               tank_all_corners_hz=(f_min_all, f_max_all), tank_guaranteed_all_corners_hz=guaranteed,
+               gx6_covered=bool(div_range[0] <= f_min_all and div_range[1] >= f_max_all),
+               kvco_mhz_v_range=(min(kv), max(kv)), kvco_table=kt)
+    # loop: fc 400 kHz at the nominal Kvco (60 MHz/V), PM 60; Icp 100 uA
+    d = design(400e3, 60, 100e-6, 60e6, 49)
+    res['loop'] = d
+    res['loop_area_um2_mos_cap_5ff_um2'] = (d['c1_f'] + d['c2_f']) / 5e-15
+    res['margins_over_kvco_n'] = []
+    for kvv in (min(kv) * 1e6, 60e6, max(kv) * 1e6):
+        for n in (38, 49, 60):
+            fc, pm = margins(d, kvv, n)
+            res['margins_over_kvco_n'].append(dict(kvco_mhz_v=kvv / 1e6, n=n, fc_hz=fc, pm_deg=pm))
+    # IX-5 hops: 78 MHz BLE CS hops (2402 <-> 2480) at the steepest and flattest curves,
+    # VTUNE pre-set to VDD/2 after band search (the band search leaves the target within the band)
+    hops = []
+    for name, (fa, fb) in {'tt_b6': (2.3993e9 * 0.98, 2.5566e9 * 0.98),     # r2 codes x r3 load shift
+                           'flat_40MHz_V': (2.40e9, 2.40e9 + 2.7 * 40e6),
+                           'steep_75MHz_V': (2.36e9, 2.36e9 + 2.7 * 75e6)}.items():
+        cur = lin_curve(fa, fb)
+        for f_to in (2.402e9, 2.480e9):
+            if not (fa <= f_to <= fb):
+                continue
+            r = hop_sim(d, None, f_to, cur)
+            r['curve'] = name
+            hops.append(r)
+            print(name, f_to, {k: r[k] for k in ('t_phase_settle_2deg_s', 'f_err_at_80us_hz', 'vtune_final_v', 'max_err_deg_after_40us')}, flush=True)
+    res['ix5_hops'] = hops
+    band_search_s = 4 * 1.6e-6
+    worst = max((h['t_phase_settle_2deg_s'] or 1) for h in hops)
+    res['ix5_total_s'] = band_search_s + worst
+    res['ix5_pass_75us'] = bool(res['ix5_total_s'] <= 75e-6)
+    # phase noise: VCO 1 MHz numbers from run_lcvco.phase_noise (nominal / low-Q)
+    pn = {}
+    for case, l1m in (('nominal_q', -124.5), ('low_q', -117.7)):
+        b = pn_budget(d, list(MASK), l1m)
+        pn[case] = dict(vco_l1m_dbc_hz=l1m, at_mask=[dict(f_hz=f, total=t, mask=MASK[f], margin_db=MASK[f] - t,
+                                                             vco=v, ref=rr, pfd=p, sd=s)
+                                                        for f, t, v, rr, p, s in zip(b['f_hz'], b['total_dbc_hz'], b['vco'], b['ref'], b['pfd_cp_div'], b['sigma_delta'])],
+                        rms_jitter_ps_10k_100M=integrated_jitter(d, l1m))
+        pn[case]['meets_mask'] = all(x['margin_db'] >= 0 for x in pn[case]['at_mask'])
+    res['phase_noise'] = pn
+    (HERE / 'loop_design.json').write_text(json.dumps(res, indent=1, default=float) + '\n')
+    print(json.dumps({k: res[k] for k in ('divider_lock_range_hz', 'tank_all_corners_hz', 'tank_guaranteed_all_corners_hz', 'gx6_covered',
+                                          'kvco_mhz_v_range', 'loop', 'loop_area_um2_mos_cap_5ff_um2', 'margins_over_kvco_n', 'ix5_total_s', 'ix5_pass_75us')}, indent=1, default=float))
+    for c, v in pn.items():
+        print(c, v['meets_mask'], round(v['rms_jitter_ps_10k_100M'], 3), [(x['f_hz'], round(x['total'], 1), round(x['margin_db'], 1)) for x in v['at_mask']])
+
+
+if __name__ == '__main__':
+    main()

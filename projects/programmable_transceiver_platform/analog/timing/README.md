@@ -359,6 +359,122 @@ Scratch: `scratch/timing/{lo_ext,lo_obs,obs_pre4,clk_obs16,lo_ext_pad*,loobs}`. 
 * **`pt_obs_pre4`** (TSPC /4 at the fast CMOS sources) and **`pt_clk_obs16` r2** (code 15 = OR of the three CH1 outputs): both clean; corners are queued.
 * **Open:** D-LO-1/2/4 (termination, amplitude detector, I/Q trim, polyphase fallback; see LO9); QVCO layout and the frequency loop (LO3); the 13-point envelope at P3.
 
+## `pt_pll_ring` r9: ring resize, tail-proportional fast-tune (CDR/pll_ring owner, 2026-11-10)
+
+Scratch: `scratch/wired_rx/r4pi/r9/` (`STATUS.md`, benches `fsweep.py`, `ring9.py`, `gen_r9.py`). Backups of the
+files changed here: `r9/backup/`. **Promoted:** `pll_ring.spice` (r9; r8 ports), `fastcells.py` `ct_ring9`,
+`generated/fast/ct_ring9.*`, `generated/pll_ring.*` (r9 layout). The LO instance and `run_timing.tb_pll_ring`
+still use r7 positional ports and must be updated (see interface-changes AC3-W11).
+
+* **Why the extracted ring was slow:** ct_ring8 cell wiring, 25-30 fF per ring node. ss/32 C/2.835 V, VCTRL = VDD:
+  schematic 1307 MHz, ring cell extracted 763, full r7 extracted 759. **ct_ring9** (each stage followed by its own
+  restore inverters, ring devices 8/16, keepers 1/2): 945 MHz (cell extracted, 2.835 V); full r9 extracted
+  891 MHz at 2.71 V (the pt_pll_vreg output at VIN 3.15 V, ss/32 C, ~6 mA). Magic DRC 0, LVS unique.
+* **Range, one band, regulated supply:** 393-834 MHz needs VCTRL 0.87 V (ff/22/3.015 V) .. 2.02-2.03 V
+  (ss/32/2.71 V). Full r9 extracted: ss/32/2.71 V 833 MHz at 2.02 V, 891 at VDD (7 % top margin); ff/22/3.015 V 396 MHz at 0.87 V; tt KP=3 930 ppm/vote at 629 MHz. No coarse band.
+* **Fast-tune (P) units:** tail/header copies (NMOS W 0.44 L 20 on VT, gate VCTRL through 100 k; PMOS W 0.44
+  L 1.75 on VH, gate VPB through 20 k), rail-end switches as r8. KP=3 ppm/vote (schematic, ring cell extracted):
+  tt 919 / 932 / 913 at 393 / 630 / 834 MHz; ss 999 / 514; ff 917 / 861. The r8 conductance stacks on this ring
+  gave 15-380 ppm/vote (ppm ~ 1/I_ring).
+* **Layout (r9):** 202.9 x 921.2 µm, 665 devices, Magic DRC 0, LVS unique, KLayout main 0, **antenna 12
+  (ANT.16, M5 trunks of NX/N16B/REFG/S16B/PFD/LOCK/FD2/XHD22_x nets where the diode planner placed no diode):
+  not clean, open.**
+* Phase error (ring cell extracted, ss 834-945 MHz): up to 7.5 deg (ct_ring8: up to 8.1 deg). Not trimmed here.
+
+## RF LO owner round 3: queue review, frequency loop, D-LO-1/2 (2026-11-11)
+
+**Queue review (`scratch/timing/queue.status`, all six done).** `lo_ext` full r-cml2, `obs_pre4`,
+`lo_obs` and `clk_obs16` completed. Findings on the `lcvco` runs:
+- r3 extremes (CML-direct tank, no buffers): the tank moved down about 2 % from r2. Results:
+  tt 2.116–2.722 GHz; ss/32/3.15 lhi_lowq 1.927–2.550; ff/22/3.35 llo_lowq 2.322–2.975.
+  **All-corner guaranteed 2.33–2.53 GHz** (r2 claimed 2.38–2.615); all-corner span 1.93–2.98 GHz.
+- Every ff point was flagged `cml_drive_ok = false`. The cause was the tank common mode of 2.14–2.19 V
+  against a 2.1 V criterion edge. New chains at ff with band 0 (`r4_chain_ff22_*`, extracted
+  `pt_lo_ext`) show the drive is fine there: on 1.19–1.21 V, off ≤ 0.24 V, 2.80 / 3.00 GHz.
+  The CM window is now 1.3–2.2 V and all 20 extremes pass.
+- The chain bench clamped its pass to 2.4–2.5 GHz. That is the GX-6 clamp, so it now passes on the
+  tank range (1.9–3.1 GHz) and reports `in_ism_band` separately.
+- The `codes` and `startup` results were r2 (with the removed buffers). They moved to
+  `r2_superseded` and were rerun with the r3 loads:
+  - start-up 12/12 envelope points with low-Q +10 % L, band 15 / 0.3 V: 1.93–2.10 GHz, tank 1.13–1.35 V diff peak, Q−I 88.7–89.5°
+  - tt codes: every band overlaps the next, 2.117–2.722 GHz
+  - `generated/lcvco-evidence.json` regenerated: verdict pass, schematic QVCO only
+- **I/Q error through the extracted `pt_lo_ext` is systematic, 2.5–3.7°.** The tank alone is
+  89.2–89.5°. On the 5 chain points, Q−I is −92.5 to −93.7° at the LO pins, against RF-LO-JIT
+  I/Q skew ≤ 1.16 ps (1.0°). This fails without D-LO-2 trim, and it matches the 93.5° seen in
+  external mode, so the skew is in the `pt_lo_ext` layout.
+
+**D-LO-2 I/Q phase trim (`lcvco/run_lotrim.py`, transistor level, extracted `pt_lo_ext` + schematic QVCO).**
+Proposed cell `pt_lo_iqtrim`: a binary bank of NMOS-in-n-well accumulation varactors
+(`cap_nmos_03v3_b`) on each `LO_*` mixer-gate node. The well is driven by the trim bit:
+0 → accumulation, high C; 1 → low C. There is no series switch. The LO node is common to the
+internal and external modes, so one trim covers both. The LSB is 4 µm² (≈ 12 fF swing). Code +k
+loads I, −k loads Q.
+
+| Point | code 0 | +4 | −4 | +15 | −15 | on / off at ±15 |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| tt/27/3.3, band 6 | −93.3° | −96.5° | **−90.0°** | −104.6° | −82.0° | 1.11 / 0.33 V |
+| ss/32/3.15 lhi_lowq, band 0 | −93.7° | | | −105.5° | −81.9° | 1.02 / 0.38 V |
+| ff/22/3.35 llo, band 15 | −92.5° | | | −102.5° | −82.5° | 1.14 / 0.30 V |
+
+The slope is 0.67–0.82° per LSB, and 4 bits give ±10–12°. **Proposal: 5 bits with the same LSB
+(±20–24°, ≤ 0.82°/step), which meets ±15° in ≤ 1° steps.** Code −4 nulls the tt chain error
+(−90.0°). The amplitude cost at full code is ≤ 55 mV of on-level; the worst case, ss, gives
+1.02 V against 0.9 V. Not done: the ±1 dB I/Q amplitude trim, a layout, and the 5-bit run.
+
+**D-LO-1 termination (`scratch/lo/dlo1.py`, extracted `pt_lo_ext` + drawn pads + COB chain at P3 = 30 mm).**
+The test used a per-leg 50 Ω shunt (NMOS switch + R to a decoupled VDD/2 node) on the existing
+passive (transmission-gate) external path:
+
+| Source (Vpp open circuit) | ss/32/3.15 on / off (V) | ff/22/3.35 on / off (V) | Pad peak / trough |
+| ---: | --- | --- | --- |
+| 4 | 0.77 / 0.58 ✗ | 0.87 / 0.50 ✗ | 3.00 / 0.59 V (ss) |
+| 6 | 0.84 / 0.47 ✗ | 0.96 / 0.36 ✓ | 3.10 / 0.09 |
+| 8 | 1.00 / 0.33 ✓ | 1.13 / 0.15 ✓ | 3.18 / −0.40 |
+| 10 | 1.09 / 0.23 ✓ | 1.27 / 0.05 ✓ | 3.25 / −0.70 (diode) |
+
+With 50 Ω, the passive path needs +18 to +20 dBm per leg. The pad then swings past the 2.1 V
+clamp onset and into the ESD diode, and the usable range is < 2 dB. **A shunt termination on the
+passive path cannot deliver the ≥ 10 dB amplitude tolerance.** Counter-proposal (interface LO11):
+route the external LO through the existing `pt_lo_cml` limiter, i.e. pads → AC-couple → `LOI_*`.
+Its output level is set by the tail and load, not by the input. Keep the termination as an
+optional match (100/200 Ω) for return loss only. This still needs a bench: the CML input
+sensitivity floor and the pad clamp give the range.
+
+**Frequency loop (LO3, GX-6, IX-5): behavioural design `lcvco/loop_design.py` → `lcvco/loop_design.json`.**
+No transistor-level loop exists yet. The VCO curves are the r3 extremes.
+- Architecture: 50 MHz XO on `REF_IN`. B23 already lists 50.625 MHz; any reference works
+  fractionally. Then a PFD at 50 MHz and an extended 2/3 MMD N = 32–127 in custom TSPC. The first
+  cell must toggle at ≤ 3.1 GHz; it is not yet checked at ss. A MASH 1-1-1 ΣΔ (16-bit) and the
+  band-search FSM run in standard cells at 50 MHz. The 4-step binary band search counts PRE/16
+  for 1.28 µs per step, about 6.4 µs total. Last comes the type-II CP loop: Icp 100 µA,
+  R 22.1 kΩ, C2 67 pF, C1 5.2 pF (≈ 14.5k µm² as MOS cap), fc 400 kHz, PM 60°.
+- **GX-6:** the divider covers 1.75 GHz to the MMD input limit, more than the 1.93–2.98 GHz tank
+  at every corner. Over Kvco 39–79 MHz/V and N 38–60, fc stays 0.23–0.63 MHz and PM 56–60°.
+  There is no 2.4–2.5 GHz clamp anywhere.
+- **IX-5:** the bench is cycle-accurate: exact edge times, 5 % UP/DN mismatch, 150 ps reset,
+  2 nA leakage, CP headroom roll-off. After band search, a 78 MHz hop (2402 ↔ 2480 MHz) on
+  tt / 40 / 75 MHz/V curves settles to LO phase within 2° of its final trajectory in 7.5–11.9 µs.
+  With band search that totals **18.3 µs, against T_FCS − 5 µs = 75 µs (pass, behavioural)**.
+  The frequency error at 80 µs is 0 Hz to model precision. Reference spurs are not assessed by
+  this model.
+- **Phase noise vs RF-RX-LOPN (budget, not simulated):**
+
+  | Offset | Mask (dBc/Hz) | Total | Margin |
+  | --- | ---: | ---: | ---: |
+  | 1 MHz | −95 | −104.5 | 9.5 dB |
+  | 3 MHz | −107 | −114.5 | 7.5 dB |
+  | 20 MHz | −115 | −120.2 | 5.2 dB |
+  | 40 MHz | −120 | −140.1 | 20 dB |
+  | 100 MHz | −130 | −157.7 | 27.7 dB |
+
+  The low-Q VCO Leeson number is −117.7 dBc/Hz at 1 MHz. The other inputs are an XO floor of
+  −150 dBc/Hz, an assumed PFD/CP/divider floor of −208 dBc/Hz/Hz, and MASH-1-1-1 quantization.
+  At 25 MHz the PFD failed 3 MHz by 5.9 dB (ΣΔ), which is why the loop uses 50 MHz.
+  **Integrated 10 kHz–100 MHz: 1.35 ps rms, against RF-LO-JIT ≤ 1.05 ps: FAIL.** The PFD floor
+  (in band) and ΣΔ (20 MHz) dominate. Open: a 4th-order filter pole, or a lower ΣΔ order with
+  dither, plus a transistor-level PN sim of the QVCO.
+
 ## Known limitations and open items
 
 1. **`pll_ring` HOLD fails extracted (r7: +19 636 ppm step, limit 200; see above).**  r7 schematic gave +273 ppm.  Under
@@ -373,10 +489,11 @@ Scratch: `scratch/timing/{lo_ext,lo_obs,obs_pre4,clk_obs16,lo_ext_pad*,loobs}`. 
 2. **`polyphase` fails extracted.**  The autonomous-LO plan (P3-4) uses the
    passive network only, without limiters; the block in this directory
    still carries the limiters.
-3. **Autonomous RF LO (`lcvco/`, r2):** the quadrature LC VCO now starts and
-   covers 2.4–2.5 GHz at every checked corner (section below), but the
-   frequency loop (PRE tap → prescaler → PFD/CP against the `REF_IN` crystal)
-   is not built, so it is not yet an LO. The first-die RF LO baseline stays
+3. **Autonomous RF LO (`lcvco/`, r3):** the quadrature LC VCO covers
+   2.33–2.53 GHz at every corner (r3; section "round 3"). The frequency loop is
+   designed behaviourally only (`lcvco/loop_design.py`); there is no
+   transistor-level loop, no QVCO layout (only the spiral) and no extraction,
+   so it is not yet an LO. The first-die RF LO baseline stays
    the passive external route `rf_lo_external_ref` (section "External LO
    through the real pads").
 4. `lo_ext` internal mode draws 16.0 mA, and it is not qualified at ss (see

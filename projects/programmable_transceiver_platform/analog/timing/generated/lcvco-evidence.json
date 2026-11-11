@@ -1,13 +1,13 @@
 {
  "block": "lcvco (pt_lc_qvco)",
- "generated_utc": "2026-11-10T02:51:09Z",
+ "generated_utc": "2026-11-11T06:01:30Z",
  "netlist": "schematic QVCO; tank inductor = lcvco/spiral.py model variants; pt_lo_ext extracted in chain runs",
  "source_hashes": {
-  "qvco.spice": "sha256:97f463325c8c76b0164a7544cd5412d5d5c09621f1bcea552094fc3e3d9f20a8",
+  "qvco.spice": "sha256:580e27e3657a2852322f370f778c0fd293c87eb2d88d734b53cd0d93309cca10",
   "spiral.spice": "sha256:f3ed97dd982466a7f790bb26a04ef385b5a7d6fbc640438f9c70a8c6bfbf3f80",
   "spiral.py": "sha256:f5cde926a6565c2599b959e2e34588cbac037a9d3e4a4f046f4022a397aa8ba4",
-  "run_lcvco.py": "sha256:cc331288633667726392ecb9f6c3f00afbafbce1c67666618ca43ca96e354754",
-  "lo_ext.ext.spice": "sha256:a3bce1ff75c5f1f1186810c121bebbdfa6a6f79722593e943fd7fbb2b6d2d558"
+  "run_lcvco.py": "sha256:8a4237344831f12dc3a1e7dad6bba22be1dc48bc3b2667a01fb1954a3f03d75a",
+  "lo_ext.ext.spice": "sha256:8cc157e989d9dcbd7d28b095be1a1280b9661c46a26e607d365efcebc27c1c4e"
  },
  "criteria": {
   "coverage": "per extreme: f(band 0, VTUNE 3.0) >= 2.5 GHz and f(band 15, VTUNE 0.3) <= 2.4 GHz, oscillating, 80<|Q-I|<100 deg, LOI rail to rail (>90 %/<10 % VDD)",
@@ -23,8 +23,8 @@
    "temp_c": 27,
    "vdd_v": 3.3,
    "spiral": "pt_spiral",
-   "f_max_hz": 2814713068.1498327,
-   "f_min_hz": 2159939176.1128006,
+   "f_max_hz": 2722132845.5271273,
+   "f_min_hz": 2116491703.3525229,
    "oscillates": true,
    "quadrature_ok": true,
    "loi_rail_to_rail": true,
@@ -35,8 +35,8 @@
    "temp_c": 32,
    "vdd_v": 3.15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_max_hz": 2635518353.7498155,
-   "f_min_hz": 1964420417.4000502,
+   "f_max_hz": 2550148673.667675,
+   "f_min_hz": 1926837962.5615385,
    "oscillates": true,
    "quadrature_ok": true,
    "loi_rail_to_rail": true,
@@ -47,8 +47,8 @@
    "temp_c": 22,
    "vdd_v": 3.35,
    "spiral": "pt_spiral_llo",
-   "f_max_hz": 3059142400.0195785,
-   "f_min_hz": 2380759652.790012,
+   "f_max_hz": 2951881381.598562,
+   "f_min_hz": 2328353760.7569942,
    "oscillates": true,
    "quadrature_ok": true,
    "loi_rail_to_rail": true,
@@ -59,8 +59,8 @@
    "temp_c": 22,
    "vdd_v": 3.35,
    "spiral": "pt_spiral_llo_lowq",
-   "f_max_hz": 3087610961.018912,
-   "f_min_hz": 2376521865.1894207,
+   "f_max_hz": 2975110227.833941,
+   "f_min_hz": 2322233059.3098326,
    "oscillates": true,
    "quadrature_ok": true,
    "loi_rail_to_rail": true,
@@ -71,8 +71,8 @@
    "temp_c": 32,
    "vdd_v": 3.15,
    "spiral": "pt_spiral_lhi",
-   "f_max_hz": 2614748225.8933287,
-   "f_min_hz": 1976761195.38703,
+   "f_max_hz": 2533229639.8000774,
+   "f_min_hz": 1940131424.5026958,
    "oscillates": true,
    "quadrature_ok": true,
    "loi_rail_to_rail": true,
@@ -82,83 +82,83 @@
  "band_codes_tt": [
   {
    "band": 0,
-   "f_vt_lo": 2611429705.5351863,
-   "f_vt_hi": 2814713068.1498327
+   "f_vt_lo": 2536255776.3225307,
+   "f_vt_hi": 2722132845.5271273
   },
   {
    "band": 1,
-   "f_vt_lo": 2570628004.42148,
-   "f_vt_hi": 2764439357.876026
+   "f_vt_lo": 2498781843.851123,
+   "f_vt_hi": 2676501919.051876
   },
   {
    "band": 2,
-   "f_vt_lo": 2533691766.261867,
-   "f_vt_hi": 2719179460.406028
+   "f_vt_lo": 2464784392.9852233,
+   "f_vt_hi": 2635309991.514302
   },
   {
    "band": 3,
-   "f_vt_lo": 2496317931.0516987,
-   "f_vt_hi": 2673668112.2298927
+   "f_vt_lo": 2430293117.6529202,
+   "f_vt_hi": 2593757862.3285203
   },
   {
    "band": 4,
-   "f_vt_lo": 2465155033.600063,
-   "f_vt_hi": 2635886540.8997335
+   "f_vt_lo": 2401479311.2557335,
+   "f_vt_hi": 2559181062.0601406
   },
   {
    "band": 5,
-   "f_vt_lo": 2430641640.7803335,
-   "f_vt_hi": 2594289450.0625224
+   "f_vt_lo": 2369505413.1351166,
+   "f_vt_hi": 2521012640.357379
   },
   {
    "band": 6,
-   "f_vt_lo": 2399261027.603498,
-   "f_vt_hi": 2556642412.6523123
+   "f_vt_lo": 2340380218.1702437,
+   "f_vt_hi": 2486387031.005246
   },
   {
    "band": 7,
-   "f_vt_lo": 2367368196.775645,
-   "f_vt_hi": 2518574486.8404484
+   "f_vt_lo": 2310722909.6622877,
+   "f_vt_hi": 2451286803.0072384
   },
   {
    "band": 8,
-   "f_vt_lo": 2341487172.1625276,
-   "f_vt_hi": 2487784975.7689743
+   "f_vt_lo": 2286618479.993232,
+   "f_vt_hi": 2422850386.565779
   },
   {
    "band": 9,
-   "f_vt_lo": 2311780602.7736745,
-   "f_vt_hi": 2452621484.4736795
+   "f_vt_lo": 2258896664.5131855,
+   "f_vt_hi": 2390303018.7136827
   },
   {
    "band": 10,
-   "f_vt_lo": 2284669865.204478,
-   "f_vt_hi": 2420651058.308643
+   "f_vt_lo": 2233563762.6615148,
+   "f_vt_hi": 2360650784.2081904
   },
   {
    "band": 11,
-   "f_vt_lo": 2257015368.017641,
-   "f_vt_hi": 2388179466.910579
+   "f_vt_lo": 2207676089.7641096,
+   "f_vt_hi": 2330475393.675556
   },
   {
    "band": 12,
-   "f_vt_lo": 2233798261.2114334,
-   "f_vt_hi": 2360996340.4556723
+   "f_vt_lo": 2185916576.6797676,
+   "f_vt_hi": 2305172576.7449584
   },
   {
    "band": 13,
-   "f_vt_lo": 2207900308.8852534,
-   "f_vt_hi": 2330801306.1810517
+   "f_vt_lo": 2161605986.7839413,
+   "f_vt_hi": 2277017380.473665
   },
   {
    "band": 14,
-   "f_vt_lo": 2184192995.293064,
-   "f_vt_hi": 2303250577.5400825
+   "f_vt_lo": 2139316573.9272933,
+   "f_vt_hi": 2251283794.583862
   },
   {
    "band": 15,
-   "f_vt_lo": 2159939176.1128006,
-   "f_vt_hi": 2275162731.014336
+   "f_vt_lo": 2116491703.3525229,
+   "f_vt_hi": 2225005951.890921
   }
  ],
  "band_overlap_tt": true,
@@ -167,28 +167,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 2052166061.2776785,
-   "q_minus_i_tank_deg": -89.32734100843439,
-   "q_minus_i_loi_deg": -89.24385889306163,
-   "tank_diff_peak_v": 1.33184,
-   "tank_q_diff_peak_v": 1.32607,
+   "f_hz": 2009666495.8450146,
+   "q_minus_i_tank_deg": -89.33602628643777,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.30215,
+   "tank_q_diff_peak_v": 1.29639,
    "tank_ip_v": [
-    1.16241,
-    2.4972
+    1.17542,
+    2.48023
    ],
-   "loi_ip_v": [
-    0.0374909,
-    3.14848
+   "tank_qp_v": [
+    1.17974,
+    2.47681
    ],
-   "loi_qp_v": [
-    0.0388349,
-    3.14754
-   ],
-   "loi_duty": 0.5416322928851403,
-   "i_core_ma": 14.043999999999999,
-   "i_buf_ma": 8.760499999999999,
+   "tank_cm_v": 1.83257,
+   "i_core_ma": 14.029,
+   "i_buf_ma": 1.9583500000000003,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_tt22_3.15_lowq",
    "corner": "tt",
@@ -201,28 +198,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 2052422987.958434,
-   "q_minus_i_tank_deg": -89.2978866200493,
-   "q_minus_i_loi_deg": -89.21291630834781,
-   "tank_diff_peak_v": 1.34284,
-   "tank_q_diff_peak_v": 1.3369,
+   "f_hz": 2009896731.5059352,
+   "q_minus_i_tank_deg": -89.30646503382656,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.31285,
+   "tank_q_diff_peak_v": 1.30694,
    "tank_ip_v": [
-    1.3555,
-    2.70121
+    1.36877,
+    2.68422
    ],
-   "loi_ip_v": [
-    0.0528696,
-    3.3364
+   "tank_qp_v": [
+    1.37316,
+    2.68075
    ],
-   "loi_qp_v": [
-    0.0544756,
-    3.33517
-   ],
-   "loi_duty": 0.5417514146325444,
-   "i_core_ma": 14.0878,
-   "i_buf_ma": 10.4045,
+   "tank_cm_v": 2.0318,
+   "i_core_ma": 14.072700000000001,
+   "i_buf_ma": 2.35168,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_tt22_3.35_lowq",
    "corner": "tt",
@@ -235,28 +229,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 2051568218.74641,
-   "q_minus_i_tank_deg": -89.30796500845247,
-   "q_minus_i_loi_deg": -89.22450721331386,
-   "tank_diff_peak_v": 1.30345,
-   "tank_q_diff_peak_v": 1.29719,
+   "f_hz": 2009081046.3294091,
+   "q_minus_i_tank_deg": -89.32374331980552,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.27313,
+   "tank_q_diff_peak_v": 1.26698,
    "tank_ip_v": [
-    1.17677,
-    2.48309
+    1.19023,
+    2.46596
    ],
-   "loi_ip_v": [
-    0.0495799,
-    3.13845
+   "tank_qp_v": [
+    1.19473,
+    2.46228
    ],
-   "loi_qp_v": [
-    0.0511597,
-    3.13726
-   ],
-   "loi_duty": 0.5434378538955178,
-   "i_core_ma": 13.8919,
-   "i_buf_ma": 8.908009999999999,
+   "tank_cm_v": 1.8328,
+   "i_core_ma": 13.876700000000001,
+   "i_buf_ma": 1.9771099999999997,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_tt32_3.15_lowq",
    "corner": "tt",
@@ -269,28 +260,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 2051808155.93742,
-   "q_minus_i_tank_deg": -89.2763067453193,
-   "q_minus_i_loi_deg": -89.19136188766349,
-   "tank_diff_peak_v": 1.31437,
-   "tank_q_diff_peak_v": 1.30794,
+   "f_hz": 2009294998.6638186,
+   "q_minus_i_tank_deg": -89.29274825342031,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.28375,
+   "tank_q_diff_peak_v": 1.27745,
    "tank_ip_v": [
-    1.36995,
-    2.68715
+    1.38366,
+    2.66998
    ],
-   "loi_ip_v": [
-    0.0667774,
-    3.32415
+   "tank_qp_v": [
+    1.38826,
+    2.66623
    ],
-   "loi_qp_v": [
-    0.068652,
-    3.32265
-   ],
-   "loi_duty": 0.5437147986663248,
-   "i_core_ma": 13.934000000000001,
-   "i_buf_ma": 10.565700000000001,
+   "tank_cm_v": 2.03204,
+   "i_core_ma": 13.918800000000001,
+   "i_buf_ma": 2.3664,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_tt32_3.35_lowq",
    "corner": "tt",
@@ -303,28 +291,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 1965088242.28752,
-   "q_minus_i_tank_deg": -89.21775732339262,
-   "q_minus_i_loi_deg": -88.17075830790185,
-   "tank_diff_peak_v": 1.20879,
-   "tank_q_diff_peak_v": 1.20039,
+   "f_hz": 1927528773.1857617,
+   "q_minus_i_tank_deg": -89.09184481851352,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.16832,
+   "tank_q_diff_peak_v": 1.15941,
    "tank_ip_v": [
-    1.05074,
-    2.26284
+    1.06892,
+    2.24017
    ],
-   "loi_ip_v": [
-    0.0660891,
-    3.12454
+   "tank_qp_v": [
+    1.07429,
+    2.2342
    ],
-   "loi_qp_v": [
-    0.0661117,
-    3.12006
-   ],
-   "loi_duty": 0.5506963290186546,
-   "i_core_ma": 13.9372,
-   "i_buf_ma": 7.21687,
+   "tank_cm_v": 1.65711,
+   "i_core_ma": 13.894200000000001,
+   "i_buf_ma": 1.54981,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_ss22_3.15_lowq",
    "corner": "ss",
@@ -337,28 +322,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 1964976263.0867417,
-   "q_minus_i_tank_deg": -89.19569591599334,
-   "q_minus_i_loi_deg": -88.3079196403308,
-   "tank_diff_peak_v": 1.22291,
-   "tank_q_diff_peak_v": 1.21455,
+   "f_hz": 1927409888.7691753,
+   "q_minus_i_tank_deg": -89.08426828774687,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.182,
+   "tank_q_diff_peak_v": 1.17326,
    "tank_ip_v": [
-    1.24209,
-    2.46837
+    1.26054,
+    2.44551
    ],
-   "loi_ip_v": [
-    0.0822141,
-    3.30887
+   "tank_qp_v": [
+    1.26588,
+    2.43962
    ],
-   "loi_qp_v": [
-    0.0826016,
-    3.30397
-   ],
-   "loi_duty": 0.5494211179928946,
-   "i_core_ma": 14.0173,
-   "i_buf_ma": 8.64611,
+   "tank_cm_v": 1.85606,
+   "i_core_ma": 13.973899999999999,
+   "i_buf_ma": 1.8740899999999998,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_ss22_3.35_lowq",
    "corner": "ss",
@@ -371,28 +353,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 1964420417.4000502,
-   "q_minus_i_tank_deg": -89.01983278853406,
-   "q_minus_i_loi_deg": -87.41733718883586,
-   "tank_diff_peak_v": 1.16966,
-   "tank_q_diff_peak_v": 1.1587,
+   "f_hz": 1926837962.5615385,
+   "q_minus_i_tank_deg": -88.73805601317957,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.12824,
+   "tank_q_diff_peak_v": 1.11519,
    "tank_ip_v": [
-    1.07034,
-    2.24312
+    1.08919,
+    2.22024
    ],
-   "loi_ip_v": [
-    0.0837991,
-    3.11031
+   "tank_qp_v": [
+    1.09639,
+    2.21199
    ],
-   "loi_qp_v": [
-    0.0831423,
-    3.10406
-   ],
-   "loi_duty": 0.554383014835303,
-   "i_core_ma": 13.7725,
-   "i_buf_ma": 7.35458,
+   "tank_cm_v": 1.65807,
+   "i_core_ma": 13.729,
+   "i_buf_ma": 1.57611,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_ss32_3.15_lowq",
    "corner": "ss",
@@ -405,28 +384,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 1964289221.945039,
-   "q_minus_i_tank_deg": -89.01105894831956,
-   "q_minus_i_loi_deg": -87.66324225578978,
-   "tank_diff_peak_v": 1.18377,
-   "tank_q_diff_peak_v": 1.17302,
+   "f_hz": 1926704314.4689715,
+   "q_minus_i_tank_deg": -88.75201581438903,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.14188,
+   "tank_q_diff_peak_v": 1.12928,
    "tank_ip_v": [
-    1.26172,
-    2.44865
+    1.28082,
+    2.42556
    ],
-   "loi_ip_v": [
-    0.101876,
-    3.29253
+   "tank_qp_v": [
+    1.28785,
+    2.41756
    ],
-   "loi_qp_v": [
-    0.101836,
-    3.28582
-   ],
-   "loi_duty": 0.5532931308805908,
-   "i_core_ma": 13.8509,
-   "i_buf_ma": 8.79954,
+   "tank_cm_v": 1.85702,
+   "i_core_ma": 13.807,
+   "i_buf_ma": 1.89934,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_ss32_3.35_lowq",
    "corner": "ss",
@@ -439,28 +415,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 2149557621.0415897,
-   "q_minus_i_tank_deg": -89.48075286106119,
-   "q_minus_i_loi_deg": -89.37164131621711,
-   "tank_diff_peak_v": 1.36541,
-   "tank_q_diff_peak_v": 1.36171,
+   "f_hz": 2100897713.5930183,
+   "q_minus_i_tank_deg": -89.4805950582684,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.34077,
+   "tank_q_diff_peak_v": 1.33709,
    "tank_ip_v": [
-    1.30185,
-    2.66926
+    1.31305,
+    2.65573
    ],
-   "loi_ip_v": [
-    0.033837,
-    3.14945
+   "tank_qp_v": [
+    1.31625,
+    2.65372
    ],
-   "loi_qp_v": [
-    0.0346849,
-    3.14886
-   ],
-   "loi_duty": 0.5394228867699028,
-   "i_core_ma": 13.8668,
-   "i_buf_ma": 10.947999999999999,
+   "tank_cm_v": 1.98079,
+   "i_core_ma": 13.8711,
+   "i_buf_ma": 2.5564199999999997,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_ff22_3.15_lowq",
    "corner": "ff",
@@ -473,28 +446,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 2150075252.6338425,
-   "q_minus_i_tank_deg": -89.46127714470008,
-   "q_minus_i_loi_deg": -89.35059127069445,
-   "tank_diff_peak_v": 1.37459,
-   "tank_q_diff_peak_v": 1.37078,
+   "f_hz": 2101378924.850487,
+   "q_minus_i_tank_deg": -89.4617528021888,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.34969,
+   "tank_q_diff_peak_v": 1.34593,
    "tank_ip_v": [
-    1.49562,
-    2.8722
+    1.50712,
+    2.85871
    ],
-   "loi_ip_v": [
-    0.0507715,
-    3.3373
+   "tank_qp_v": [
+    1.51038,
+    2.85665
    ],
-   "loi_qp_v": [
-    0.051811,
-    3.33651
-   ],
-   "loi_duty": 0.5403268114384004,
-   "i_core_ma": 13.8909,
-   "i_buf_ma": 12.9004,
+   "tank_cm_v": 2.1795,
+   "i_core_ma": 13.8939,
+   "i_buf_ma": 3.02909,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_ff22_3.35_lowq",
    "corner": "ff",
@@ -507,28 +477,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 2148970965.2532887,
-   "q_minus_i_tank_deg": -89.45246368776313,
-   "q_minus_i_loi_deg": -89.34415555111434,
-   "tank_diff_peak_v": 1.34218,
-   "tank_q_diff_peak_v": 1.33814,
+   "f_hz": 2100324080.005545,
+   "q_minus_i_tank_deg": -89.45162638595136,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.31724,
+   "tank_q_diff_peak_v": 1.31322,
    "tank_ip_v": [
-    1.3143,
-    2.65851
+    1.32578,
+    2.64494
    ],
-   "loi_ip_v": [
-    0.0446283,
-    3.1412
+   "tank_qp_v": [
+    1.32921,
+    2.64274
    ],
-   "loi_qp_v": [
-    0.04565,
-    3.14044
-   ],
-   "loi_duty": 0.5411581664120136,
-   "i_core_ma": 13.7261,
-   "i_buf_ma": 11.1096,
+   "tank_cm_v": 1.98313,
+   "i_core_ma": 13.730300000000002,
+   "i_buf_ma": 2.5709600000000004,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_ff32_3.15_lowq",
    "corner": "ff",
@@ -541,28 +508,25 @@
    "vtune_v": 0.3,
    "band": 15,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_hz": 2149465213.0549917,
-   "q_minus_i_tank_deg": -89.43202531210234,
-   "q_minus_i_loi_deg": -89.32291845788768,
-   "tank_diff_peak_v": 1.35145,
-   "tank_q_diff_peak_v": 1.34731,
+   "f_hz": 2100787375.1081903,
+   "q_minus_i_tank_deg": -89.43203112526574,
+   "q_minus_i_loi_deg": null,
+   "tank_diff_peak_v": 1.32625,
+   "tank_q_diff_peak_v": 1.32213,
    "tank_ip_v": [
-    1.50803,
-    2.86151
+    1.51981,
+    2.84797
    ],
-   "loi_ip_v": [
-    0.0632468,
-    3.32694
+   "tank_qp_v": [
+    1.5233,
+    2.84571
    ],
-   "loi_qp_v": [
-    0.0644635,
-    3.32596
-   ],
-   "loi_duty": 0.5421166213845995,
-   "i_core_ma": 13.7506,
-   "i_buf_ma": 13.069,
+   "tank_cm_v": 2.18183,
+   "i_core_ma": 13.754199999999999,
+   "i_buf_ma": 3.0379500000000004,
    "oscillates": true,
    "quadrature_ok": true,
+   "cml_drive_ok": true,
    "loi_rail_to_rail": true,
    "case": "su_ff32_3.35_lowq",
    "corner": "ff",
@@ -574,92 +538,148 @@
  },
  "startup_pass": true,
  "chain": {
-  "chain_tt27_b6_vt1.65": {
+  "r3_chain_tt27_b6_vt1.65": {
    "vtune_v": 1.65,
    "band": 6,
    "spiral": "pt_spiral",
-   "f_lo_hz": 2431285785.487655,
+   "f_lo_hz": 2384088592.7321057,
    "lo_i_v": [
-    1.12115,
-    3.20852
+    1.82571,
+    2.85684
    ],
    "lo_q_v": [
-    0.707176,
-    3.18955
+    1.82643,
+    2.86626
    ],
-   "q_minus_i_deg": -74.80635538104326,
-   "rx_switch_vgs_on_v": 1.5585200000000001,
-   "rx_switch_vgs_off_v": -0.5288499999999998,
-   "i_vdd_ma": 28.6643,
-   "i_buf_ma": 9.42932,
-   "pass": false,
-   "case": "chain_tt27_b6_vt1.65",
+   "q_minus_i_deg": -93.26926492588463,
+   "rx_switch_vgs_on_v": 1.2068400000000001,
+   "rx_switch_vgs_off_v": 0.1764300000000001,
+   "duty_at_vb": 0.49637558931689907,
+   "i_vdd_ma": 24.7773,
+   "i_buf_ma": 1.88805,
+   "pass": true,
+   "case": "r3_chain_tt27_b6_vt1.65",
    "corner": "tt",
    "temp_c": 27,
    "vdd_v": 3.3,
-   "deck": "scratch/timing/lcvco/sim/chain_tt27_b6_vt1.65.spice",
-   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+   "deck": "scratch/timing/lcvco/sim/r3_chain_tt27_b6_vt1.65.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs",
+   "in_ism_band": true
   },
-  "chain_ss32_lhi_lowq_b0_vt1.65": {
+  "r3_chain_ss32_lhi_lowq_b0_vt1.65": {
    "vtune_v": 1.65,
    "band": 0,
    "spiral": "pt_spiral_lhi_lowq",
-   "f_lo_hz": null,
+   "f_lo_hz": 2410262899.4257545,
    "lo_i_v": [
-    3.14612,
-    3.15838
+    1.80076,
+    2.69663
    ],
    "lo_q_v": [
-    2.98198,
-    3.17414
+    1.79711,
+    2.70566
    ],
-   "q_minus_i_deg": null,
-   "rx_switch_vgs_on_v": 1.5083800000000003,
-   "rx_switch_vgs_off_v": 1.49612,
-   "i_vdd_ma": 17.8561,
-   "i_buf_ma": 7.47756,
-   "pass": false,
-   "case": "chain_ss32_lhi_lowq_b0_vt1.65",
+   "q_minus_i_deg": -93.70060919394783,
+   "rx_switch_vgs_on_v": 1.12163,
+   "rx_switch_vgs_off_v": 0.22575999999999996,
+   "duty_at_vb": 0.48168139939863935,
+   "i_vdd_ma": 22.865099999999998,
+   "i_buf_ma": 1.44982,
+   "pass": true,
+   "case": "r3_chain_ss32_lhi_lowq_b0_vt1.65",
    "corner": "ss",
    "temp_c": 32,
    "vdd_v": 3.15,
-   "deck": "scratch/timing/lcvco/sim/chain_ss32_lhi_lowq_b0_vt1.65.spice",
+   "deck": "scratch/timing/lcvco/sim/r3_chain_ss32_lhi_lowq_b0_vt1.65.spice",
    "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs",
-   "sim_messages": [
-    "Error: measure  per  trig(TRIG) : out of interval",
-    "Error: measure  tiq  trig(TRIG) : out of interval",
-    ".measure tran per trig v(loip) val=1.575 td=2.3999999999999997e-08 rise=1 targ v(loip) val=1.575 td=2.3999999999999997e-08 rise=5 failed!",
-    ".measure tran tiq trig v(loip) val=1.575 td=2.3999999999999997e-08 rise=1 targ v(loqp) val=1.575 td=2.3999999999999997e-08 rise=1 failed!"
-   ]
+   "in_ism_band": true
   },
-  "chain_ff22_llo_b15_vt3.0": {
+  "r3_chain_ff22_llo_b15_vt3.0": {
    "vtune_v": 3.0,
    "band": 15,
    "spiral": "pt_spiral_llo",
-   "f_lo_hz": 2493501312.2050653,
+   "f_lo_hz": 2447875550.0070376,
    "lo_i_v": [
-    0.348314,
-    3.20849
+    1.87076,
+    2.90332
    ],
    "lo_q_v": [
-    0.221571,
-    3.23707
+    1.86904,
+    2.91231
    ],
-   "q_minus_i_deg": -90.8804927158593,
-   "rx_switch_vgs_on_v": 1.55849,
-   "rx_switch_vgs_off_v": -1.301686,
-   "i_vdd_ma": 31.8573,
-   "i_buf_ma": 12.5984,
+   "q_minus_i_deg": -92.56626705098313,
+   "rx_switch_vgs_on_v": 1.2283199999999999,
+   "rx_switch_vgs_off_v": 0.19575999999999993,
+   "duty_at_vb": 0.4786845116794262,
+   "i_vdd_ma": 27.2618,
+   "i_buf_ma": 2.78512,
    "pass": true,
-   "case": "chain_ff22_llo_b15_vt3.0",
+   "case": "r3_chain_ff22_llo_b15_vt3.0",
    "corner": "ff",
    "temp_c": 22,
    "vdd_v": 3.35,
-   "deck": "scratch/timing/lcvco/sim/chain_ff22_llo_b15_vt3.0.spice",
-   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs"
+   "deck": "scratch/timing/lcvco/sim/r3_chain_ff22_llo_b15_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs",
+   "in_ism_band": true
+  },
+  "r4_chain_ff22_llo_b0_vt0.3": {
+   "vtune_v": 0.3,
+   "band": 0,
+   "spiral": "pt_spiral_llo",
+   "f_lo_hz": 2795130882.0035496,
+   "lo_i_v": [
+    1.88274,
+    2.8894
+   ],
+   "lo_q_v": [
+    1.88087,
+    2.89859
+   ],
+   "q_minus_i_deg": -92.83837155674814,
+   "rx_switch_vgs_on_v": 1.2144000000000001,
+   "rx_switch_vgs_off_v": 0.20774000000000004,
+   "duty_at_vb": 0.4782468939108074,
+   "i_vdd_ma": 27.1204,
+   "i_buf_ma": 2.70051,
+   "pass": true,
+   "case": "r4_chain_ff22_llo_b0_vt0.3",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/r4_chain_ff22_llo_b0_vt0.3.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs",
+   "in_ism_band": false
+  },
+  "r4_chain_ff22_llo_lowq_b0_vt3.0": {
+   "vtune_v": 3.0,
+   "band": 0,
+   "spiral": "pt_spiral_llo_lowq",
+   "f_lo_hz": 3001493242.888337,
+   "lo_i_v": [
+    1.91041,
+    2.86216
+   ],
+   "lo_q_v": [
+    1.90886,
+    2.87161
+   ],
+   "q_minus_i_deg": -93.24401689840697,
+   "rx_switch_vgs_on_v": 1.1871599999999998,
+   "rx_switch_vgs_off_v": 0.2354099999999999,
+   "duty_at_vb": 0.4672244441609701,
+   "i_vdd_ma": 27.306,
+   "i_buf_ma": 3.0915600000000003,
+   "pass": true,
+   "case": "r4_chain_ff22_llo_lowq_b0_vt3.0",
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd_v": 3.35,
+   "deck": "scratch/timing/lcvco/sim/r4_chain_ff22_llo_lowq_b0_vt3.0.spice",
+   "netlist": "schematic QVCO + spiral model; lo_ext extracted in chain runs",
+   "in_ism_band": false
   }
  },
- "chain_pass": false,
+ "chain_pass": true,
  "negative": {
   "neg_en0": {
    "vtune_v": 1.65,
@@ -740,28 +760,28 @@
  "negative_checks_fail_as_expected": true,
  "phase_noise_estimate": {
   "nominal": {
-   "L_1e+05_dbc_hz": -104.5202567227424,
-   "L_1e+06_dbc_hz": -124.5202567227424,
-   "L_3e+06_dbc_hz": -134.06268181713565,
-   "jitter_rms_ps_outside_bw": 0.05459541970151976,
+   "L_1e+05_dbc_hz": -104.41411050137427,
+   "L_1e+06_dbc_hz": -124.41411050137427,
+   "L_3e+06_dbc_hz": -133.95653559576752,
+   "jitter_rms_ps_outside_bw": 0.05526669829570064,
    "q": 9.2,
-   "vpk_diff": 1.93312,
+   "vpk_diff": 1.90964,
    "rp_ohm": 375.3009415831438,
-   "psig_w": 0.0024893042624915176,
+   "psig_w": 0.0024292004932207904,
    "noise_factor": 3.0,
    "qvco_penalty_db": 3.0,
    "loop_bw_hz": 1000000.0,
    "budget_ps": "0.524 ps per contribution at -30 dB EVM (spec/clock-feasibility-envelope.md)"
   },
   "low_q": {
-   "L_1e+05_dbc_hz": -97.67842836806817,
-   "L_1e+06_dbc_hz": -117.67842836806817,
-   "L_3e+06_dbc_hz": -127.2208534624614,
-   "jitter_rms_ps_outside_bw": 0.12001834305552024,
+   "L_1e+05_dbc_hz": -97.36526546264456,
+   "L_1e+06_dbc_hz": -117.36526546264456,
+   "L_3e+06_dbc_hz": -126.90769055703782,
+   "jitter_rms_ps_outside_bw": 0.12442446211650023,
    "q": 5.2,
-   "vpk_diff": 1.16966,
+   "vpk_diff": 1.12824,
    "rp_ohm": 212.12661915569,
-   "psig_w": 0.0016123677936382438,
+   "psig_w": 0.0015001953817329946,
    "noise_factor": 3.0,
    "qvco_penalty_db": 3.0,
    "loop_bw_hz": 1000000.0,
@@ -1067,5 +1087,5 @@
    "Q": "Q_eff spans the nominal and the low-Q variants; the design must start and cover the band with low-Q."
   }
  },
- "verdict": "fail"
+ "verdict": "pass"
 }

@@ -134,7 +134,10 @@ def tb_vco(v=3.3, vt=1.65, code=8, variant='pt_spiral', T=30e-9, en=True, couple
         # (lodrv2 schematic study: the CML passes at 0.58 V about 1.7 V; tail headroom).
         amp_i = (m['ipmax'] - m['ipmin']) / 2 if 'ipmax' in m and 'ipmin' in m else 0
         amp_q = (m['qpmax'] - m['qpmin']) / 2 if 'qpmax' in m and 'qpmin' in m else 0
-        r['cml_drive_ok'] = bool(min(amp_i, amp_q) >= 0.3 and m.get('ipavg') is not None and 1.3 <= m['ipavg'] <= 2.1)
+        # CM window 1.3-2.2 V (2026-11-11): ff tanks sit at 2.14-2.19 V and the chain with the
+        # extracted pt_lo_ext passes there (r4_chain_ff22_*: on 1.19-1.21 V, off <= 0.24 V); the old
+        # 2.1 V edge came from a schematic study and flagged every ff point.
+        r['cml_drive_ok'] = bool(min(amp_i, amp_q) >= 0.3 and m.get('ipavg') is not None and 1.3 <= m['ipavg'] <= 2.2)
         r['loi_rail_to_rail'] = r['cml_drive_ok']   # legacy key used by evidence(); r3 meaning = cml_drive_ok
         return r
     return body, an
@@ -182,7 +185,10 @@ RQN padqn 0 50
                  rx_switch_vgs_off_v=(max(m['lomin'], m.get('qmin', 9)) - v / 2) if 'lomin' in m else None,
                  duty_at_vb=((m['thi'] * f) % 1 if f and 'thi' in m else None),
                  i_vdd_ma=-m.get('icore', math.nan) * 1e3, i_buf_ma=-m.get('ibuf', math.nan) * 1e3)
-        r['pass'] = bool(f and F_LO * 0.99 <= f <= F_HI * 1.01 and r['rx_switch_vgs_on_v'] is not None
+        # GX-6 (2026-11-11): the chain must work over the whole tank, not only 2.4-2.5 GHz;
+        # in_ism_band is kept as information.  Frequency criterion = tank lock range 1.9-3.1 GHz.
+        r['in_ism_band'] = bool(f and F_LO * 0.99 <= f <= F_HI * 1.01)
+        r['pass'] = bool(f and 1.9e9 <= f <= 3.1e9 and r['rx_switch_vgs_on_v'] is not None
                          and r['rx_switch_vgs_on_v'] >= 0.9 and r['rx_switch_vgs_off_v'] <= 0.5
                          and ph is not None and 80 < abs(ph) < 100)
         return r

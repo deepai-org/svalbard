@@ -506,8 +506,10 @@ rotated spiral (equal 60–67 µm feeds), `CMLSEL` PMOS header, ATB taps `ATB_VT
 2.40–2.4835 GHz is covered with ≥ 3 % margin both sides at every case (RF-QVCO-RANGE → 2.30–2.70 GHz guaranteed).
 All 17 band-end points start (≥ 1.10 V diff), Q−I −86.4…−88.4° (inside the trim), 17–18 mA. PN (tt, injected
 tank noise, transient zero-crossing method; no flicker upconversion): −114.6 dBc/Hz @1 MHz, −135.8 @20 MHz.
-Kvco 38–122 MHz/V across VTUNE. The full 16-code overlap sweep and the PESS PN point were still running at the
-time of writing.
+16-code sweep (C-only) at tt, PESS and OPT: every band oscillates (OPT 1.61–1.99 V diff), steps 28–52 MHz, bands
+104–204 MHz wide, adjacent overlap ≥ 60 MHz (≥ 75 MHz at OPT), no gaps. Kvco 25–40 MHz/V below VTUNE 1.65 V and
+95–150 MHz/V above it. PESS PN (b8, 2.16 GHz, RC): −105.7 dBc/Hz @1 MHz, −128.6 @20 MHz (see jitter below).
+Data `scratch/lo/r4_qvco2/design.json` (`bands_C`).
 
 **Frequency loop (`lo_mmd`, `lo_mmd_qdum`, `lo_pfdcp`, `lo_lf`, `lcvco/run_loop.py`, `loop_tl.json`).**
 * MMD: a 2/3 cell cannot toggle at 3 GHz in GF180 (zero margin schematic, fails extracted at ss), so the chain is

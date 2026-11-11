@@ -146,7 +146,7 @@ VFB fb 0 {fb}
 VEN en 0 {v}
 VPRE pre 0 pwl(0 {v} 1n {v} 1.05n 0)
 VVT vt 0 1.65
-X1 ref fb en pre ib vt vdd 0 pt_lo_pfdcp
+X1 ref fb en pre ib vt vdd 0 pt_lo_pfdcp vdd vdd
 .control
 let k = 0
 foreach vv {loop}
@@ -262,7 +262,7 @@ VFB fb 0 pulse(0 {v} {5e-9 + skew} 50p 50p 9.9n 20n)
 VEN en 0 {v}
 VPRE pre 0 0
 VVT vt 0 {vt}
-X1 ref fb en pre ib vt vdd 0 pt_lo_pfdcp
+X1 ref fb en pre ib vt vdd 0 pt_lo_pfdcp vdd vdd
 .tran 5p 125n
 .measure tran wup trig v(x1.up) val={v / 2} td=84n rise=1 targ v(x1.up) val={v / 2} td=84n fall=1
 .measure tran wdn trig v(x1.dn) val={v / 2} td=84n rise=1 targ v(x1.dn) val={v / 2} td=84n fall=1
@@ -300,7 +300,7 @@ VREF ref 0 pulse(0 {v} 2n 100p 100p {0.5 / fref - 100e-12} {1 / fref})
 GPH 0 dphi cur={{ {kv} * (v(vt) - {vt0}) + {df0} }}
 {vco_lines}
 {div_line}
-XP ref fb en pre ib vtune vdd 0 pt_lo_pfdcp
+XP ref fb en pre ib vtune vdd 0 pt_lo_pfdcp vdd vdd
 XL vtune vt 0 pt_lo_lf
 .ic v(dphi)={dphi0} v(vtune)={vt0} v(vt)={vt0} v(xl.{c2node})={vt0}
 .option interp

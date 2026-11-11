@@ -519,23 +519,35 @@ time of writing.
 * Loop filter: Icp 100 µA, fc 250 kHz, R 13.09 k, C1 6.96 pF MIM, C2 351 pF n-well accumulation varactor
   (valid 0.3–3.0 V), R3 10 k / C3 15.9 pF (pole 1 MHz). Analytic: fc 125 kHz / PM 55.7° at 40 MHz/V,
   303 kHz / 42.6° at 120 MHz/V.
-* Lock: extracted PFD/CP/LF + behavioural MMD/VCO lock in ≤ 29 µs (phase error < 100 ps), static offset ≈ −150 ps,
-  VTUNE ripple 0.01–0.03 mV pp (ref spur −118…−127 dBc). The extracted-MMD lock run was still running.
+* Lock: **no valid closed-loop result yet.** An earlier "≤ 29 µs" figure is retracted: the audit
+  (`scratch/reviews/lo-lock-sim-audit.md`) found that bench started already locked (zero frequency error, preset VTUNE and
+  phase), used a lock check that could not fail, stale PFD/CP, C-only parasitics, N = 62 out of band, integer-N only and 2×
+  the intended loop gain. The audit's validation ladder (ideal loop vs analytic and must-fail cases, then one extracted block
+  at a time, RC-extracted MMD, fractional-N) is in progress.
 
-**Integrated jitter (`loop_design.py r4` → `loop_design.json["r4"]`): closed.** The r3 budget used one
-−208 dBc/Hz FOM; the measured r1 CP (−84 dBc/Hz in-band @10 kHz, flicker) would have given ≈ 1.4 ps. With the r2
-CP/PFD, MASH 1-1-1 with the 2-cycle step (+6 dB), XO −150 dBc/Hz × N², 0.3 ps divider jitter, a 2.2 ns
-fractional-N on-time and a 4th-order pole:
+**Integrated jitter (`loop_design.py r4` → `loop_design.json["r4"]`): OPEN, depends on the VCO flicker corner.**
+The r3 budget used one −208 dBc/Hz FOM; the measured r1 CP (−84 dBc/Hz in-band @10 kHz, flicker) gave ≈ 1.4 ps.
+Audit rebuild (`["r4"]["audit_rebuild"]`): extracted worst-corner CP (ff, −123.4 dBc/Hz @10 kHz), LO18 Icp scaling,
+N 44–56, Kvco 38–200 MHz/V, MASH 1-1-1 with the 2-cycle step, XO −150 dBc/Hz × N², 0.3 ps divider jitter (assumed),
+2.2 ns fractional-N on-time (assumed), 4th-order pole. Worst case vs RF-LO-JIT ≤ 1.05 ps:
 
-| VCO L(1 MHz) | Kvco 40 | 60 | 120 MHz/V | mask |
-| --- | ---: | ---: | ---: | --- |
-| −112 (pessimistic) | 0.84 ps | 0.75 | 0.72 | pass (≥ 4.7 dB at 1 MHz) |
-| −114.6 (r5 extracted tt) | 0.63 | 0.57 | 0.61 | pass |
+| VCO L(1 MHz) | no flicker upconversion | 1/f³ corner 300 kHz | 1 MHz |
+| --- | ---: | ---: | ---: |
+| −112 (bound) | 0.86 ps (fc 250 kHz) | 1.10 ps (best fc ≈ 400 kHz) | 1.63 ps |
+| −114.6 (r5 tt, no flicker) | 0.65 ps | 1.13 ps (fc 250 kHz) | 1.81 ps (fc 250 kHz) |
 
-RF-LO-JIT ≤ 1.05 ps. Options rejected by numbers: integer-N (2–5 MHz compare raises the in-band floor 10–14 dB);
-MASH-4 (≤ 0.03 ps gain); 100 MHz compare (needs the shared `REF_IN` XO changed; 50 MHz kept); fc alone without the
-CP fix (≥ 1.4 ps). IX-5: 78 MHz hop phase-settled in 14–20 µs + 6.4 µs band search (limit 75 µs, behavioural).
-Reference spurs (4th pole): mismatch 3 % × 0.2 ns −127 dBc, 100 nA leakage −117 dBc, 5 % bleed −83 dBc.
+With the r5 RC-extracted **PESS** point (−105.7 dBc/Hz @1 MHz, b8 at 2.16 GHz, no flicker) the worst case is **1.65 ps** (best fc ≈ 400 kHz, Kvco 25–150 MHz/V).
+
+**The PESS QVCO point fails RF-LO-JIT even without flicker** (−105.7 dBc/Hz @1 MHz, −128.6 @20 MHz; low-Q tank,
+L +10 %, +3 Ω/branch). Closing it needs a better pessimistic-corner tank Q / swing (or a narrower loop with a
+lower CP/ΣΔ floor). With fc ≈ 400 kHz and the tt VCO, a 1/f³ corner ≤ 100 kHz gives 0.89 ps. Kvco (r5, C-only
+16-code sweep) is 25–40 MHz/V below VTUNE 1.65 V and 95–150 MHz/V above it: the loop must cover 25–150 MHz/V (LO18
+Icp scaling) or the band search must keep VTUNE in the low-Kvco half. The QVCO flicker corner is not yet simulated (the
+injected-noise PN method has no flicker), so the jitter requirement is **not** closed. Mask (RF-RX-LOPN) passes in
+every case. Options rejected by numbers: integer-N (2–5 MHz compare raises the in-band floor 10–14 dB), MASH-4
+(≤ 0.03 ps), 100 MHz compare (needs the shared `REF_IN` XO changed). IX-5 (behavioural, r4 3rd-order filter): 41 µs
+including band search, limit 75 µs; not yet confirmed at transistor level. Reference spurs (4th pole, analytic):
+mismatch 3 % × 0.2 ns −127 dBc, 100 nA leakage −117 dBc, 5 % bleed −83 dBc.
 
 **I/Q (`pt_lo_ext`).** The ~3° skew came from the LOI wiring load (I ≈ 7.5 fF/node heavier) converted by the QVCO,
 not the driver (0.3–0.8°). Chain Q−I on the promoted r4h: −90.29 / −90.13 / −89.94° (tt/ss/ff). 5-bit + sign

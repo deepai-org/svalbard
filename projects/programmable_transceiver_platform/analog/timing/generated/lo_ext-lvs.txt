@@ -105,8 +105,9 @@ Device classes ct_locml and ct_locml are equivalent.
 Flattening unmatched subcell p_pfet_03v3_w4_l0p28 in circuit pt_lo_ext (0)(11 instances)
 Flattening unmatched subcell p_pfet_03v3_w10_l0p28 in circuit pt_lo_ext (0)(16 instances)
 Flattening unmatched subcell p_nfet_03v3_w40_l0p28 in circuit pt_lo_ext (0)(16 instances)
-Flattening unmatched subcell p_ppolyf_u_1k_w8_l1 in circuit pt_lo_ext (0)(4 instances)
 Flattening unmatched subcell p_ppolyf_u_1k_w1_l20 in circuit pt_lo_ext (0)(5 instances)
+Flattening unmatched subcell p_ppolyf_u_1k_w8_l1 in circuit pt_lo_ext (0)(4 instances)
+Flattening unmatched subcell p_ppolyf_u_1k_w1_l25 in circuit pt_lo_ext (0)(24 instances)
 Flattening unmatched subcell p_nfet_03v3_w8_l1 in circuit pt_lo_ext (0)(8 instances)
 Flattening unmatched subcell p_nfet_03v3_w1_l0p28 in circuit pt_lo_ext (0)(15 instances)
 Flattening unmatched subcell p_cap_mim_2f0_m4m5_noshield_w10_l10 in circuit pt_lo_ext (0)(4 instances)
@@ -122,58 +123,58 @@ Flattening unmatched subcell p_ppolyf_u_1k_w1_l10 in circuit pt_lo_ext (0)(9 ins
 Flattening unmatched subcell p_nfet_03v3_w2_l1 in circuit pt_lo_ext (0)(2 instances)
 Flattening unmatched subcell p_nfet_03v3_w10_l1 in circuit pt_lo_ext (0)(48 instances)
 Flattening unmatched subcell p_nfet_03v3_w10_l10 in circuit pt_lo_ext (0)(3 instances)
-Flattening unmatched subcell p_ppolyf_u_1k_w1_l100 in circuit pt_lo_ext (0)(6 instances)
 Flattening unmatched subcell p_cap_mim_2f0_m4m5_noshield_w31p6_l31p6 in circuit pt_lo_ext (0)(4 instances)
 Flattening unmatched subcell p_cap_mim_2f0_m4m5_noshield_w31p6_l31p6_c in circuit pt_lo_ext (0)(4 instances)
 Flattening unmatched subcell p_nfet_03v3_w4_l1 in circuit pt_lo_ext (0)(2 instances)
 Flattening unmatched subcell p_ppolyf_u_1k_w1_l11p5 in circuit pt_lo_ext (0)(1 instance)
 Flattening unmatched subcell p_nfet_03v3_w20_l15 in circuit pt_lo_ext (0)(8 instances)
 Flattening unmatched subcell p_ppolyf_u_1k_w1_l32p5 in circuit pt_lo_ext (0)(1 instance)
+Flattening unmatched subcell p_nfet_03v3_w1_l0p5 in circuit pt_lo_ext (0)(2 instances)
 Flattening unmatched subcell p_ppolyf_u_1k_w1_l9 in circuit pt_lo_ext (0)(1 instance)
 Flattening unmatched subcell p_nfet_03v3_w2_l2 in circuit pt_lo_ext (0)(2 instances)
 Flattening unmatched subcell p_pfet_03v3_w4_l1 in circuit pt_lo_ext (0)(8 instances)
 Flattening unmatched subcell p_ppolyf_u_1k_w1_l11 in circuit pt_lo_ext (0)(1 instance)
 Flattening unmatched subcell p_ppolyf_u_1k_w18_l1 in circuit pt_lo_ext (0)(2 instances)
 
-Class pt_lo_ext (0):  Merged 172 parallel devices.
-Class pt_lo_ext (1):  Merged 172 parallel devices.
+Class pt_lo_ext (0):  Merged 169 parallel devices.
+Class pt_lo_ext (0):  Merged 18 series devices.
+Class pt_lo_ext (1):  Merged 169 parallel devices.
+Class pt_lo_ext (1):  Merged 18 series devices.
 Subcircuit summary:
 Circuit 1: pt_lo_ext                       |Circuit 2: pt_lo_ext                       
 -------------------------------------------|-------------------------------------------
 ct_locml (2)                               |ct_locml (2)                               
 pfet_03v3 (42->26)                         |pfet_03v3 (42->26)                         
-nfet_03v3 (153->57)                        |nfet_03v3 (153->57)                        
-ppolyf_u_1k (34)                           |ppolyf_u_1k (34)                           
+nfet_03v3 (155->59)                        |nfet_03v3 (155->59)                        
+ppolyf_u_1k (52->34)                       |ppolyf_u_1k (52->34)                       
 cap_mim_2f0_m4m5_noshield (8)              |cap_mim_2f0_m4m5_noshield (8)              
 nfet_06v0 (60->4)                          |nfet_06v0 (60->4)                          
-diode_nd2ps_03v3 (8->4)                    |diode_nd2ps_03v3 (8->4)                    
-Number of devices: 135                     |Number of devices: 135                     
+diode_nd2ps_03v3 (4->3)                    |diode_nd2ps_03v3 (4->3)                    
+Number of devices: 136                     |Number of devices: 136                     
 Number of nets: 77                         |Number of nets: 77                         
 ---------------------------------------------------------------------------------------
-Resolving symmetries by property value.
-Resolving symmetries by pin name.
 Netlists match uniquely.
 
 Subcircuit pins:
 Circuit 1: pt_lo_ext                       |Circuit 2: pt_lo_ext                       
 -------------------------------------------|-------------------------------------------
 CMLSEL                                     |CMLSEL                                     
-EXT_QP                                     |EXT_QP                                     
+EXT                                        |EXT                                        
+ATB_VB                                     |ATB_VB                                     
 EXT_IP                                     |EXT_IP                                     
 EXT_IN                                     |EXT_IN                                     
+EXT_QP                                     |EXT_QP                                     
 EXT_QN                                     |EXT_QN                                     
 INT                                        |INT                                        
 VSS                                        |VSS                                        
 VDD                                        |VDD                                        
-EXT                                        |EXT                                        
-ATB_VB                                     |ATB_VB                                     
-LO_QP                                      |LO_QP                                      
-LO_IP                                      |LO_IP                                      
-LO_QN                                      |LO_QN                                      
-LO_IN                                      |LO_IN                                      
 LOI_QP                                     |LOI_QP                                     
-LOI_IP                                     |LOI_IP                                     
 LOI_QN                                     |LOI_QN                                     
+LO_IP                                      |LO_IP                                      
+LO_IN                                      |LO_IN                                      
+LO_QP                                      |LO_QP                                      
+LO_QN                                      |LO_QN                                      
+LOI_IP                                     |LOI_IP                                     
 LOI_IN                                     |LOI_IN                                     
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.

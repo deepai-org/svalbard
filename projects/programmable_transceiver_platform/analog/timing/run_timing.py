@@ -2,7 +2,11 @@
 + evidence JSON for every block.  Usage:
     python3 run_timing.py [--blocks a,b] [--skip-layout] [--skip-corners]
 Raw simulation output goes to <repo>/scratch/timing/<block>/; committed
-artifacts go to analog/timing/generated/.
+artifacts go to analog/timing/generated/ ONLY on pass: the layout is built into
+scratch/timing/<block>/stage/, the benches run on the staged extraction, and the stage is
+published when the layout is clean (Magic DRC 0, LVS unique, KLayout precheck clean) and no
+bench that passed in the published baseline (generated/<block>-benchpass.json, else the
+previous scratch results.json) now fails.  --publish force|never overrides.
 """
 import argparse
 import json
@@ -1044,6 +1048,40 @@ def run_sims(block, cases, extracted=True, corners=False):
         return list(ex.map(one, jobs))
 
 
+def _case(r):
+    if r.get('deck'):
+        return Path(r['deck']).stem
+    return '_'.join(str(r.get(k, '')) for k in ('case', 'corner', 'temp_c', 'vdd_v'))
+
+
+def pass_names(rec):
+    out = set()
+    for key in ('nominal', 'safe', 'corners'):
+        for r in rec.get(key) or []:
+            if isinstance(r, dict) and r.get('pass'):
+                out.add(f'{key}:{_case(r)}')
+    return out
+
+
+def published_baseline(block, rec_before):
+    p = tf.GENERATED / f'{block}-benchpass.json'
+    if p.exists():
+        return set(json.loads(p.read_text()))
+    return pass_names(rec_before)
+
+
+def publish_gate(rec, baseline):
+    lay = rec.get('layout') or {}
+    kl = lay.get('klayout') or {}
+    if not tf.layout_clean(lay.get('drc_errors'), lay.get('lvs'), kl):
+        return False, f"layout not clean (drc={lay.get('drc_errors')}, lvs_unique={(lay.get('lvs') or {}).get('unique_match')}, precheck={kl.get('precheck_clean')})"
+    ran = {f'{k}:{_case(r)}' for k in ('nominal', 'safe', 'corners') for r in rec.get(k) or [] if isinstance(r, dict)}
+    lost = sorted((baseline & ran) - pass_names(rec))
+    if lost:
+        return False, f'bench regression vs published baseline: {lost[:8]}'
+    return True, 'layout clean, no bench regression'
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--blocks', default=','.join(TB))
@@ -1054,6 +1092,8 @@ def main():
     ap.add_argument('--nominal-only', action='store_true', help='rerun nominal cases only, merging by case name')
     ap.add_argument('--cases', default='', help='with --nominal-only: comma list of case names (default all)')
     ap.add_argument('--corners-only', action='store_true')
+    ap.add_argument('--publish', choices=('auto', 'force', 'never'), default='auto',
+                    help='auto: publish the staged layout only on pass (default); never: stage only; force: old behaviour')
     a = ap.parse_args()
     blocks = a.blocks.split(',')
     if a.quick:
@@ -1076,8 +1116,13 @@ def main():
             rec_path.write_text(json.dumps(rec, indent=1, default=str))
             print(b, 'nominal merged', flush=True)
             continue
+        baseline = published_baseline(b, rec)
+        staged = None
         if not a.skip_layout:
-            lay = tf.build_layout(b, max_row_width=WIDTH.get(b, 200))
+            lay = tf.build_layout(b, max_row_width=WIDTH.get(b, 200), publish='force' if a.publish == 'force' else 'never')
+            if a.publish != 'force':
+                staged = lay['stage']
+                tf.STAGED[b] = staged
             rec['layout'] = dict(drc_errors=lay['drc_errors'], lvs=lay['lvs'], devices=lay['devices'],
                                  size_um=lay['layout']['size_um'], area_um2=lay['layout']['area_um2'],
                                  image=lay['layout']['image'], klayout=lay.get('klayout'))
@@ -1097,6 +1142,18 @@ def main():
         if not a.skip_corners and CORNER_CASES[b]:
             rec['corners'] = run_sims(b, CORNER_CASES[b], corners=True)
             rec_path.write_text(json.dumps(rec, indent=1, default=str))
+        if staged:
+            ok, why = publish_gate(rec, baseline)
+            rec['publish'] = dict(staged=staged, published=bool(ok and a.publish == 'auto'), reason=why)
+            if ok and a.publish == 'auto':
+                tf.publish_stage(b)
+                (tf.GENERATED / f'{b}-benchpass.json').write_text(json.dumps(sorted(pass_names(rec)), indent=1) + '\n')
+            else:
+                tf.STAGED.pop(b, None)
+                print(f'{b}: NOT published ({why}); generated/ untouched, stage in {staged}', flush=True)
+            rec_path.write_text(json.dumps(rec, indent=1, default=str))
+        elif a.publish == 'force' and not a.skip_layout:
+            (tf.GENERATED / f'{b}-benchpass.json').write_text(json.dumps(sorted(pass_names(rec)), indent=1) + '\n')
         print(b, 'done', flush=True)
 
 

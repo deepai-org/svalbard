@@ -21,7 +21,7 @@ XN2 UPB CK N2 VSS nfet_03v3 w=6u l=0.28u
 XN3 N2 N1 VSS VSS nfet_03v3 w=6u l=0.28u
 .ends
 
-.subckt pt_lo_pfdcp REF FB EN PRE IBIAS VTUNE VDD VSS
+.subckt pt_lo_pfdcp REF FB EN PRE IBIAS VTUNE VDD VSS ICP0 ICP1
 XEI EN ENB VDD VSS pt_t_inv1
 XPI PRE PREB VDD VSS pt_t_inv1
 XRN EN PREB RUNN VDD VSS pt_t_nand2
@@ -55,17 +55,70 @@ XRPC VDD SPC VSS ppolyf_u_1k r_width=8u r_length=16u
 XND BND BND SND VSS nfet_03v3 w=40u l=4u m=2
 XRND SND VSS VSS ppolyf_u_1k r_width=4u r_length=16u
 * RC filters on the mirror gates
-XRFP BPD RFPM VSS ppolyf_u_1k r_width=1u r_length=400u
-XRFP2 RFPM VBP VSS ppolyf_u_1k r_width=1u r_length=400u
+XRFPS0 BPD XRFP_1 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFPS1 XRFP_1 XRFP_2 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFPS2 XRFP_2 XRFP_3 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFPS3 XRFP_3 XRFP_4 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFPS4 XRFP_4 XRFP_5 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFPS5 XRFP_5 XRFP_6 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFPS6 XRFP_6 XRFP_7 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFPS7 XRFP_7 RFPM VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFP2S0 RFPM XRFP2_1 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFP2S1 XRFP2_1 XRFP2_2 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFP2S2 XRFP2_2 XRFP2_3 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFP2S3 XRFP2_3 XRFP2_4 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFP2S4 XRFP2_4 XRFP2_5 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFP2S5 XRFP2_5 XRFP2_6 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFP2S6 XRFP2_6 XRFP2_7 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFP2S7 XRFP2_7 VBP VSS ppolyf_u_1k r_width=1u r_length=50u
 XCFP VDD VBP VDD VDD pfet_03v3 w=80u l=40u m=2
-XRFN BND RFNM VSS ppolyf_u_1k r_width=1u r_length=400u
-XRFN2 RFNM VBN VSS ppolyf_u_1k r_width=1u r_length=400u
+XRFNS0 BND XRFN_1 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFNS1 XRFN_1 XRFN_2 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFNS2 XRFN_2 XRFN_3 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFNS3 XRFN_3 XRFN_4 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFNS4 XRFN_4 XRFN_5 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFNS5 XRFN_5 XRFN_6 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFNS6 XRFN_6 XRFN_7 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFNS7 XRFN_7 RFNM VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFN2S0 RFNM XRFN2_1 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFN2S1 XRFN2_1 XRFN2_2 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFN2S2 XRFN2_2 XRFN2_3 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFN2S3 XRFN2_3 XRFN2_4 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFN2S4 XRFN2_4 XRFN2_5 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFN2S5 XRFN2_5 XRFN2_6 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFN2S6 XRFN2_6 XRFN2_7 VSS ppolyf_u_1k r_width=1u r_length=50u
+XRFN2S7 XRFN2_7 VBN VSS ppolyf_u_1k r_width=1u r_length=50u
 XCFN VSS VBN VSS VSS nfet_03v3 w=80u l=40u m=2
 * ---- pump ----
-XNS NS VBN SNS VSS nfet_03v3 w=40u l=4u m=2
-XRNS SNS VSS VSS ppolyf_u_1k r_width=4u r_length=16u
-XPS PS VBP SPS VDD pfet_03v3 w=50u l=4u m=8
-XRPS VDD SPS VSS ppolyf_u_1k r_width=8u r_length=16u
+* programmable Icp = 25 * (1 + ICP0 + 2*ICP1) uA: four 25 uA unit legs per side (leg 0 always on,
+* leg 1 = ICP0, legs 2/3 = ICP1).  Each leg: mirror device + 4x degeneration + a rail-side switch (identical
+* in every leg, the always-on one tied on), so the output node only sees the device drains.
+XII0 ICP0 ICP0B VDD VSS pt_t_inv1
+XII1 ICP1 ICP1B VDD VSS pt_t_inv1
+XNS0 NS VBN SNS0 VSS nfet_03v3 w=20u l=4u
+XRNS0 SNS0 RNS0 VSS ppolyf_u_1k r_width=1u r_length=16u
+XWN0 RNS0 VDD VSS VSS nfet_03v3 w=20u l=0.28u
+XPS0 PS VBP SPS0 VDD pfet_03v3 w=50u l=4u m=2
+XRPS0 SPS0 RPS0 VSS ppolyf_u_1k r_width=2u r_length=16u
+XWP0 RPS0 VSS VDD VDD pfet_03v3 w=40u l=0.28u
+XNS1 NS VBN SNS1 VSS nfet_03v3 w=20u l=4u
+XRNS1 SNS1 RNS1 VSS ppolyf_u_1k r_width=1u r_length=16u
+XWN1 RNS1 ICP0 VSS VSS nfet_03v3 w=20u l=0.28u
+XPS1 PS VBP SPS1 VDD pfet_03v3 w=50u l=4u m=2
+XRPS1 SPS1 RPS1 VSS ppolyf_u_1k r_width=2u r_length=16u
+XWP1 RPS1 ICP0B VDD VDD pfet_03v3 w=40u l=0.28u
+XNS2 NS VBN SNS2 VSS nfet_03v3 w=20u l=4u
+XRNS2 SNS2 RNS2 VSS ppolyf_u_1k r_width=1u r_length=16u
+XWN2 RNS2 ICP1 VSS VSS nfet_03v3 w=20u l=0.28u
+XPS2 PS VBP SPS2 VDD pfet_03v3 w=50u l=4u m=2
+XRPS2 SPS2 RPS2 VSS ppolyf_u_1k r_width=2u r_length=16u
+XWP2 RPS2 ICP1B VDD VDD pfet_03v3 w=40u l=0.28u
+XNS3 NS VBN SNS3 VSS nfet_03v3 w=20u l=4u
+XRNS3 SNS3 RNS3 VSS ppolyf_u_1k r_width=1u r_length=16u
+XWN3 RNS3 ICP1 VSS VSS nfet_03v3 w=20u l=0.28u
+XPS3 PS VBP SPS3 VDD pfet_03v3 w=50u l=4u m=2
+XRPS3 SPS3 RPS3 VSS ppolyf_u_1k r_width=2u r_length=16u
+XWP3 RPS3 ICP1B VDD VDD pfet_03v3 w=40u l=0.28u
 XSU1 VTUNE UPB PS VDD pfet_03v3 w=4u l=0.28u
 XSU2 VDUM UP PS VDD pfet_03v3 w=4u l=0.28u
 XSD1 VTUNE DN NS VSS nfet_03v3 w=4u l=0.5u

@@ -265,17 +265,22 @@ R4_CP_10K, R4_CP_FLOOR = -84.4, -106.0     # fork-B r1 CP (as measured, pt_pfd r
 # fork-F r2 CP/PFD (lo_pfdcp.spice, schematic, fixed noise bench): -125.1 dBc/Hz in-band @10 kHz at t_on 0.193 ns,
 # ~-129 @1 MHz  ->  equivalent to a 33.5 dB flicker improvement and a -120.9 floor when referenced to 0.98 ns.
 R4F_FLICK_IMPR, R4F_FLOOR = 33.5, -128.0 + 7.06
+# worst EXTRACTED corner (fork G, g/cp_noise_ext.json): ff -123.4 dBc/Hz @10 kHz (1.7 dB worse than the schematic tt value)
+R4X_FLICK_IMPR, R4X_FLOOR = 31.8, -126.3 + 7.06
 
 
 def r4_jitter(fc, vco_l1m, flick_impr_db, t_on_ns, n=49, fpfd=FREF, f0=2.45e9, ref_floor=-150.0, pfd_jit=0.3e-12,
-              sd_step=2, mash=3, fp3_ratio=4.0, kv=60e6):
+              sd_step=2, mash=3, fp3_ratio=4.0, kv=60e6, vco_f3_corner=0.0, icp_scale=False):
+    """vco_f3_corner: 1/f^3 (flicker-upconversion) corner of the VCO in Hz (0 = none).
+    icp_scale: LO18 Icp = 100 uA * min(1, 60 MHz/V / Kvco); CP phase noise scales ~ 1/Icp (in^2 ~ Icp)."""
+    icp_ratio = min(1.0, 60e6 / kv) if icp_scale else 1.0
     f = np.logspace(4, 8, 4000)
     s = 2j * np.pi * f
     d = design(fc, 60 + math.degrees(math.atan(1 / fp3_ratio)), 100e-6, 60e6, n)
-    g = open_loop(f, d, kv, n) / (1 + s / (2 * np.pi * fp3_ratio * fc))
+    g = open_loop(f, d, kv, n) * icp_ratio / (1 + s / (2 * np.pi * fp3_ratio * fc))
     lp, hp = abs(g / (1 + g)) ** 2, abs(1 / (1 + g)) ** 2
-    ts = 10 * math.log10(t_on_ns / 0.98)
-    c = dict(vco=10 ** (vco_l1m / 10) * (1e6 / f) ** 2 * hp,
+    ts = 10 * math.log10(t_on_ns / 0.98) - 10 * math.log10(icp_ratio)
+    c = dict(vco=10 ** (vco_l1m / 10) * (1e6 / f) ** 2 * (1 + vco_f3_corner / f) * hp,
              ref=10 ** (ref_floor / 10) * n ** 2 * lp,
              cp=(10 ** ((R4_CP_10K - flick_impr_db + ts) / 10) * (1e4 / f) + 10 ** ((R4_CP_FLOOR + ts) / 10)) * lp,
              pfd_div=(2 * np.pi * f0 * pfd_jit) ** 2 / fpfd / 2 * lp,
@@ -301,6 +306,20 @@ def r4_main():
     out['r2_measured_cp'] = {f'vco{v}_kv{int(k/1e6)}': (lambda r: dict(jitter_ps=r['jitter_ps'], pn_at_mask=r['pn_at_mask'], mask_ok=r['mask_ok']))(
         r4_jitter(250e3, v, R4F_FLICK_IMPR, 2.2, kv=k)) for v in (-112.0, -114.6) for k in (40e6, 60e6, 120e6)}
     sel = r4_jitter(250e3, -112.0, R4F_FLICK_IMPR, 2.2)
+    # audit rebuild (2026-11-11 late): extracted worst-corner CP, LO18 Icp scaling, N 44/49/56,
+    # VCO bound with flicker upconversion (1/f^3 corner 0.3 and 1 MHz; no simulated flicker value exists yet)
+    R4_CP_FLOOR = R4X_FLOOR
+    rb = {}
+    for vco in (-112.0, -114.6):
+        for f3 in (0.0, 300e3, 1e6):
+            for kvv in (38e6, 60e6, 122e6, 200e6):
+                for nn in (44, 49, 56):
+                    r = r4_jitter(250e3, vco, R4X_FLICK_IMPR, 2.2, n=nn, kv=kvv, vco_f3_corner=f3, icp_scale=True)
+                    rb[f'vco{vco}_f3c{int(f3/1e3)}k_kv{int(kvv/1e6)}_n{nn}'] = dict(total_ps=r['jitter_ps']['total'], mask_ok=r['mask_ok'],
+                                                                                   pn_at_mask=r['pn_at_mask'])
+    out['audit_rebuild'] = rb
+    out['audit_rebuild_worst'] = {f'vco{v}_f3c{int(f3/1e3)}k': max(x['total_ps'] for k, x in rb.items() if k.startswith(f'vco{v}_f3c{int(f3/1e3)}k_'))
+                                  for v in (-112.0, -114.6) for f3 in (0.0, 300e3, 1e6)}
     R4_CP_FLOOR = floor0
     out['selected'] = dict(note='fpfd 50 MHz XO, Icp 100 uA, fc 250 kHz, PM 74 incl. R3/C3 pole at 1 MHz, MASH 1-1-1 step 2; '
                                 'measured r2 CP/PFD (fork F, schematic) with fracN on-time 2.2 ns; VCO -112 dBc/Hz@1MHz (pessimistic; r5 RC-extracted tt is -114.6)',
@@ -313,5 +332,18 @@ if __name__ == '__main__' and __import__('sys').argv[1:] == ['r4']:
     r = r4_main()
     j = json.loads((HERE / 'loop_design.json').read_text())
     j['r4'] = r
+    if 'loop_lo13_superseded' not in j:
+        j['loop_lo13_superseded'] = j['loop']
+    d4 = design(250e3, 60 + math.degrees(math.atan(0.25)), 100e-6, 60e6, 49)
+    d4.update(r3_ohm=10e3, c3_f=15.9e-12, note='r4 filter; the R3/C3 pole is NOT in hop_sim (3rd-order model)')
+    j['loop'] = d4
+    hops = []
+    for name, (fa, fb) in {'flat_40MHz_V': (2.40e9, 2.40e9 + 2.7 * 40e6), 'steep_75MHz_V': (2.36e9, 2.36e9 + 2.7 * 75e6)}.items():
+        for f_to in (2.402e9, 2.480e9):
+            h = hop_sim(d4, None, f_to, lin_curve(fa, fb)); h['curve'] = name; hops.append(h)
+    j['ix5_hops'] = hops
+    j['ix5_total_s'] = 4 * 1.6e-6 + max((h['t_phase_settle_2deg_s'] or 1) for h in hops)
+    j['ix5_pass_75us'] = bool(j['ix5_total_s'] <= 75e-6)
+    j['ix5_note'] = 'behavioural cycle model, r4 3rd-order filter, starts from VTUNE=VDD/2 after band search; not yet confirmed by the transistor-level ladder'
     (HERE / 'loop_design.json').write_text(json.dumps(j, indent=1, default=float) + '\n')
     print(json.dumps(r['selected'], indent=1, default=float))

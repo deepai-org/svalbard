@@ -28,7 +28,10 @@
 * PD29-RX style bootstrap: gate through 100 k poly from EXT, MIM gate-to-pad (~200 fF, 10x10 um) so
 * the gate tracks the pad during a zap (Vgd/Vgs < 6 V) and in normal operation.
 XSW PS EXTG PAD VSS nfet_06v0 w=10u l=0.7u m=15
-XRG EXT EXTG VSS ppolyf_u_1k r_width=1u r_length=100u
+XRG0 EXT RG1 VSS ppolyf_u_1k r_width=1u r_length=25u
+XRG1 RG1 RG2 VSS ppolyf_u_1k r_width=1u r_length=25u
+XRG2 RG2 RG3 VSS ppolyf_u_1k r_width=1u r_length=25u
+XRG3 RG3 EXTG VSS ppolyf_u_1k r_width=1u r_length=25u
 XCG EXTG PAD cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
 XRP PS VPAD VSS ppolyf_u_1k r_width=1u r_length=10u
 XCC PS CG PS VSS nfet_03v3 w=20u l=15u m=2
@@ -64,7 +67,10 @@ XCL LO OFF VSS VSS nfet_03v3 w=1u l=0.28u
 * pair's tail is open, and the tank never sees the EXT pair (no added tank load in INT mode).
 .subckt pt_lo_cml AP AN YP YN VB INT INTB EP EN CMLSEL CMLSELB VDD VSS
 XBS BT INTB VDD VDD pfet_03v3 w=2u l=0.28u
-XRB BT NO VSS ppolyf_u_1k r_width=1u r_length=100u
+XRB0 BT RB1 VSS ppolyf_u_1k r_width=1u r_length=25u
+XRB1 RB1 RB2 VSS ppolyf_u_1k r_width=1u r_length=25u
+XRB2 RB2 RB3 VSS ppolyf_u_1k r_width=1u r_length=25u
+XRB3 RB3 NO VSS ppolyf_u_1k r_width=1u r_length=25u
 XBD NO NO VSS VSS nfet_03v3 w=2u l=1u
 XOT OS NO VSS VSS nfet_03v3 w=4u l=1u
 XO1 OD VSN OS VSS nfet_03v3 w=8u l=1u m=2
@@ -136,6 +142,9 @@ XQP EXT_QP LO_QP MQP VPAD ATB_VB VLI EXT EXTP EXTPB OFF VDD VSS pt_lo_ext_leg
 XQN EXT_QN LO_QN MQN VPAD ATB_VB VLI EXT EXTP EXTPB OFF VDD VSS pt_lo_ext_leg
 XDI LOI_IP LOI_IN LO_IP LO_IN ATB_VB INT INTB MIP MIN CMLSEL CMLSELB VDD VSS pt_lo_cml
 XDQ LOI_QP LOI_QN LO_QP LO_QN ATB_VB INT INTB MQP MQN CMLSEL CMLSELB VDD VSS pt_lo_cml
+* r4 area relayout: LOI_Q* again lighter than LOI_I* (6.4/7.5 vs 14.3/17.8 fF) -> small gate-cap dummies beside the Q core
+XDQ_DMP VSS LOI_QP VSS VSS nfet_03v3 w=1u l=0.5u
+XDQ_DMN VSS LOI_QN VSS VSS nfet_03v3 w=1u l=0.5u
 * r4 I/Q skew fix: the extracted LOI_I* wiring is ~7.5 fF/node heavier than LOI_Q* (13.7/15.1 vs
 * 6.2/7.6 fF); the QVCO turns that tank-load mismatch into ~2.2 deg of the 3.3 deg Q-I error
 * (scratch/lo/r4_trim/diag.py).  r4h: the LOI_Q dummies are removed (with the EXT pair beside the cores the routed LOI_Q* is already the heavier side).

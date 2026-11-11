@@ -92,7 +92,11 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
          codes=(109, 20, 125), lossy=False, dx_bits=None, dx_rate=None, ext_switch_t=None, rx=False, bpc=4,
          pkg=None, post_pol=0):
     ports = S.ports_of(Path(dut).read_text(), subckt)
-    tw = 20 / rate
+    rep = S.REP[bpc]                  # WT19: the digital repeats each user bit rep times -> core words
+    if rep > 1:
+        cb = [b for wd in words for b in wd for _ in range(rep)]
+        words = [cb[20 * k:20 * k + 20] for k in range(len(cb) // 20)]
+    tw = 20 / (rate * rep)
     L = ['* pt_wiredtx + pads extracted TX output stage', tools.model_header_dir(corner, temp, tools.PAD_MODELS)]
     for sec in ('res_typical', 'diode_typical', 'mimcap_typical'):
         L.append(f'.lib {tools.PAD_MODELS}/sm141064.ngspice {sec}')
@@ -149,7 +153,7 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
                  for m in range((len(words) + 1) // 2)]
         for i in range(40):
             h, j = divmod(i, 20)
-            tv = [(0.0, pairs[0][h][j])] + [(word_t0 + 2 * m * tw + S.launch_offset(tw, True), pr[h][j])
+            tv = [(0.0, pairs[0][h][j])] + [(word_t0 + 2 * m * tw + S.launch_offset(tw, True, h), pr[h][j])
                                             for m, pr in enumerate(pairs)]
             L.append(S.pwl_bits(f'D{i}', f'D{i}', tv, vdd))
         L.append('CWCK40 WORD_CLK40 0 50f')
@@ -246,7 +250,7 @@ def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, 
     tw = 20 / rate
     def prep(d):
         d.mkdir(parents=True, exist_ok=True)
-        (d / Path(dut).name).write_text(Path(dut).read_text())
+        (d / Path(dut).name).write_text(S.dut_text(dut))
         (d / 'steer.spice').write_text(clean_lib(STEER.read_text()))
         (d / 'pad.spice').write_text(clean_lib(PAD.read_text()))
     pdir = work / f'{tag}_phase'; prep(pdir)
@@ -286,7 +290,7 @@ def run(work, dut, subckt='pt_wiredtx', *, mode='serial', rate=2.5e9, nwords=8, 
     t0, t1 = word_t0 + 2 * tw, word_t0 + (nwords - 1) * tw
     r = dict(mode=mode, bit_rate_bps=rate, bits_per_ring_cycle=bpc, corner=corner, temp_c=temp, vdd=vdd,
              codes=dict(zip(('main', 'post', 'tmds'), codes)), network=net, lossy_channel=lossy,
-             launch_after_wck40_s=S.LAUNCH_S, word_t0_realigned=realigned)
+             launch_lo_after_fall_s=S.LAUNCH_LO, launch_hi_after_rise_s=S.LAUNCH_HI, word_t0_realigned=realigned)
     r['eye'] = eye(w, rate, t0, t1, bits)
     sel = w['time'] > t0
     r['pad_levels_v'] = dict(p_min=float(w['PAD_P'][sel].min()), p_max=float(w['PAD_P'][sel].max()),
@@ -321,7 +325,7 @@ def run_mlt3(work, dut, subckt='pt_wiredtx', *, rate=1.0e9, bpc=2, os_=8, nsym=4
 
     def prep(d):
         d.mkdir(parents=True, exist_ok=True)
-        (d / Path(dut).name).write_text(Path(dut).read_text())
+        (d / Path(dut).name).write_text(S.dut_text(dut))
         (d / 'steer.spice').write_text(clean_lib(STEER.read_text()))
         (d / 'pad.spice').write_text(clean_lib(PAD.read_text()))
     pdir = work / f'{tag}_phase'; prep(pdir)
@@ -399,7 +403,7 @@ def run_ext(work, dut, subckt='pt_wiredtx', *, rate=1e9, nbits=48, handover=Fals
     d.mkdir(parents=True, exist_ok=True)
     if rx:
         (d / 'rx.spice').write_text(clean_lib(RX.read_text()))
-    (d / Path(dut).name).write_text(Path(dut).read_text())
+    (d / Path(dut).name).write_text(S.dut_text(dut))
     (d / 'steer.spice').write_text(clean_lib(STEER.read_text()))
     (d / 'pad.spice').write_text(clean_lib(PAD.read_text()))
     payload = S.prbs7_bits(nbits)

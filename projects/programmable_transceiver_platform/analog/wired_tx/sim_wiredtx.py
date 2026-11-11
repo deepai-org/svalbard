@@ -107,8 +107,55 @@ R_PHASE, R_LOGIC = 150.0, 1000.0
 LAUNCH_S = float(__import__('os').environ.get('WTX_LAUNCH_S', '1.0e-9'))
 
 
-def launch_offset(tw, w40):
-    return LAUNCH_S if w40 else tw / 4
+PESSIMISTIC = __import__('os').environ.get('WTX_PESSIMISTIC', '0') == '1'
+
+
+def pessimize(text, rg_per_um=20.0, cdev_per_um=0.47e-15, cscale=1.15):
+    """spec/design-assumptions.md pessimistic values on an extracted netlist (simulation only):
+    gate R 200 ohm per 10 um device (rg_per_um * w in series with every gate), +25 % device C
+    (Cgg ~ 1.9 fF/um at L = 0.28 um -> +0.47 fF/um of width from the internal gate node to the source),
+    +15 % on every extracted capacitor."""
+    import re
+    out, k = [], 0
+    for line in text.splitlines():
+        t = line.split()
+        if t and t[0][:1] in 'Cc' and len(t) >= 4 and not t[0].lower().startswith('cc'):
+            m = re.fullmatch(r'([-+0-9.eE]+)([a-zA-Z]*)', t[3])
+            if m:
+                t[3] = f'{float(m.group(1)) * cscale:g}{m.group(2)}'
+                line = ' '.join(t)
+        elif t and t[0][:1] in 'Xx' and len(t) >= 6 and 'fet_03v3' in t[5]:
+            w = next((float(x[2:].rstrip('u')) for x in t if x.startswith('w=')), 1.0)
+            k += 1
+            g = f'pg_{k}'
+            out.append(f'RPG{k} {t[2]} {g} {rg_per_um * w:g}')
+            out.append(f'CPG{k} {g} {t[3]} {cdev_per_um * w * 1e15:g}f')
+            t[2] = g
+            line = ' '.join(t)
+        out.append(line)
+    return '\n'.join(out) + '\n'
+
+
+def dut_text(path):
+    t = Path(path).read_text()
+    return pessimize(t) if PESSIMISTIC else t
+
+
+REP = {4: 1, 2: 2, 1: 4}   # bits per ring cycle -> repetition factor (WT12 / WT19)
+
+
+# Session 8 / T26 contract (digital timing reply): D0..D19 come from FALLING-edge flops (launched at the
+# WORD_CLK40 fall before the rise, valid until the next fall), D20..D39 from RISING-edge flops.  Worst-case
+# (ss) clock-to-Q + buffer + route: LAUNCH_LO after the fall, LAUNCH_HI after the rise.
+LAUNCH_LO = float(__import__('os').environ.get('WTX_LAUNCH_LO', '2.0e-9'))
+LAUNCH_HI = float(__import__('os').environ.get('WTX_LAUNCH_HI', '3.5e-9'))
+
+
+def launch_offset(tw, w40, half=0):
+    """Data change time relative to the WORD_CLK40 rising edge word_t0 (period 2 tw)."""
+    if not w40:
+        return tw / 4
+    return -tw + LAUNCH_LO if half == 0 else LAUNCH_HI
 
 
 def realign_t0(t, wck, word_t0, tol=0.1e-9):
@@ -143,7 +190,7 @@ def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical'
           load_f=20e-15, extra='', probes=None, ser_on=2e-9, fallback=False, post_pol=0):
     text = Path(dut).read_text()
     ports = ports_of(text, subckt)
-    tw = 20 / rate
+    tw = 20 / (rate * REP[bpc])        # WT19: words are CORE words (digital repeats the user bits)
     nets = {p: p for p in ports}
     lines = ['* pt_wiredtx transient testbench', tools.model_header(corner, temp), f'.include {Path(dut).name}',
              f'VDD VDD 0 {vdd}', 'VSS VSS 0 0']
@@ -171,7 +218,7 @@ def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical'
                  for m in range((len(words) + 1) // 2)]
         for i in range(40):
             h, j = divmod(i, 20)
-            tv = [(0.0, pairs[0][h][j])] + [(word_t0 + 2 * m * tw + launch_offset(tw, True), pr[h][j])
+            tv = [(0.0, pairs[0][h][j])] + [(word_t0 + 2 * m * tw + launch_offset(tw, True, h), pr[h][j])
                                             for m, pr in enumerate(pairs)]
             lines.append(pwl_bits(f'D{i}', f'D{i}', tv, vdd))
     else:
@@ -270,11 +317,12 @@ def align(bits, expected):
 def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, vdd=3.3, mode='serial', bpc=4,
              words=None, codes=(109, 32, 125), en=(1, 1, 0), extra='', tag='case', mounts=(), fallback=False):
     work = Path(work); work.mkdir(parents=True, exist_ok=True)
-    tw = 20 / rate
+    rep = REP[bpc]
+    tw = 20 / (rate * rep)
     ser_on = 2e-9
     # pass 1: word clock phase
     pdir = work / f'{tag}_phase'; pdir.mkdir(exist_ok=True)
-    (pdir / Path(dut).name).write_text(Path(dut).read_text())
+    (pdir / Path(dut).name).write_text(dut_text(dut))
     zero = [[0] * 20]
     deck, names = build(dut, subckt, rate=rate, words=zero, word_t0=1, tstop=ser_on + 8 * tw, vdd=vdd,
                         corner=corner, temp=temp, codes=codes, en=en, extra=extra, ser_on=ser_on, bpc=bpc,
@@ -296,12 +344,15 @@ def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, v
     measured_tw = float(np.mean(np.diff(rises))) / (2 if wck == 'WORD_CLK40' else 1)
     # pass 2: data
     if words is None:
-        bits = prbs7_bits(20 * nwords)
+        ubits = prbs7_bits(20 * nwords // rep)
+        bits = [b for b in ubits for _ in range(rep)]       # the digital's repetition (WT19)
         words = [bits[20 * k:20 * k + 20] for k in range(nwords)]
+    else:
+        ubits = [b for wd in words for b in wd][::rep]
     nwords = len(words)
     tstop = word_t0 + (nwords + 3) * tw
     ddir = work / f'{tag}_data'; ddir.mkdir(exist_ok=True)
-    (ddir / Path(dut).name).write_text(Path(dut).read_text())
+    (ddir / Path(dut).name).write_text(dut_text(dut))
     realigned = 0
     for _ in range(3):
         tstop = word_t0 + (nwords + 3) * tw
@@ -320,12 +371,12 @@ def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, v
         if nt0 is None:
             break
         word_t0, realigned = nt0, realigned + 1
-    expected = [b for wd in words for b in wd]
+    expected = list(ubits)
     t0 = word_t0 + 2 * tw
     t1 = word_t0 + (nwords - 1) * tw
     res = dict(dut_sha256=tools.sha(dut), serializer='generic (fallback, rate code 11)' if fallback else 'compact core',
                bit_rate_bps=rate, bits_per_ring_cycle=bpc, ring_hz=rate / bpc, corner=corner, temp_c=temp, vdd=vdd,
-               word_clk_period_s=measured_tw, word_t0_s=word_t0, launch_after_wck40_s=LAUNCH_S,
+               word_clk_period_s=measured_tw, word_t0_s=word_t0, launch_lo_after_fall_s=LAUNCH_LO, launch_hi_after_rise_s=LAUNCH_HI,
                word_t0_realigned=realigned)
     for node in ('CMD_MAIN_N', 'CMD_MAIN_P'):
         d = decode(w, node, rate, t0, t1)
@@ -352,7 +403,8 @@ def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, v
     res['bias_v'] = {b: float(np.mean(w[f'{b}_BIAS'][sel])) for b in ('MAIN', 'TMDS')}
     res['supply_current_avg_a'] = float(-np.mean(w['I_VDD'][sel]))
     m = res.get('CMD_MAIN_N', {})
-    res['ok'] = bool(m.get('errors', 1) == 0 and m.get('bits_compared', 0) >= 20 * (nwords - 4))
+    res['ok'] = bool(m.get('errors', 1) == 0 and m.get('bits_compared', 0) >= 20 * (nwords - 4) // rep
+                     and (not en[1] or res.get('CMD_POST_P', {}).get('mismatches_vs_main_delayed_1ui', 1) == 0))
     return res
 
 

@@ -27,7 +27,7 @@ EXTRA = [x for x in os.environ.get('CORE_PROBES', '').split(',') if x]   # debug
 MACRO = os.environ.get('CORE_MACRO', 'wtx_serq4')
 
 
-def deck(dut, *, rate, bpc, words, word_t0, tstop, corner, temp, vdd, ser_on=2e-9, load_f=20e-15, rg=0.0):
+def deck(dut, *, rate, bpc, words, word_t0, tstop, corner, temp, vdd, ser_on=2e-9, load_f=20e-15, rg=0.0, rep=1):
     tw = 20 / rate
     tq = bpc / rate
     tr = min(50e-12, tq / 16)
@@ -42,6 +42,11 @@ def deck(dut, *, rate, bpc, words, word_t0, tstop, corner, temp, vdd, ser_on=2e-
     for n, on in (('MQ', bpc == 4), ('MH', bpc == 2), ('MF', bpc == 1)):
         L.append(f'V{n} {n}_drv 0 {vdd if on else 0}')
         L.append(f'R{n} {n}_drv {n} {S.R_LOGIC:g}')
+    text0 = Path(dut).read_text()
+    if 'R2' in S.ports_of(text0, MACRO):      # session 8: repetition mode -> postcursor latch
+        for n, on in (('R2', rep == 2), ('R4', rep == 4)):
+            L.append(f'V{n} {n}_drv 0 {vdd if on else 0}')
+            L.append(f'R{n} {n}_drv {n} {S.R_LOGIC:g}')
     L.append(S.pwl_bits('SER', 'SERQ_drv', [(0.0, 0), (ser_on, 1)], vdd))
     L.append(f'RSER SERQ_drv SERQ {S.R_LOGIC:g}')
     for i in range(20):
@@ -71,9 +76,9 @@ def run(work, dut, *, rate, bpc=4, corner='typical', temp=27, vdd=3.3, nwords=10
     ser_on = 2e-9
     pdir = work / f'{tag}_phase'
     pdir.mkdir(parents=True, exist_ok=True)
-    (pdir / Path(dut).name).write_text(cml_ser.add_gate_r(Path(dut).read_text()).replace('/', '__'))  # explicit Rg on CML devices
+    (pdir / Path(dut).name).write_text(cml_ser.add_gate_r(S.dut_text(dut)).replace('/', '__'))  # explicit Rg on CML devices
     d, names = deck(dut, rate=rate, bpc=bpc, words=[[0] * 20], word_t0=1, tstop=ser_on + 3 * tw, corner=corner,
-                    temp=temp, vdd=vdd)
+                    temp=temp, vdd=vdd, rep=rep)
     (pdir / 'tb.sp').write_text(d)
     _, log = tools.ngspice(pdir, 'tb.sp')
     ab = S.sim_abort(log)
@@ -90,10 +95,10 @@ def run(work, dut, *, rate, bpc=4, corner='typical', temp=27, vdd=3.3, nwords=10
     words = [bits[20 * k:20 * k + 20] for k in range(nwords)]
     ddir = work / f'{tag}_data'
     ddir.mkdir(parents=True, exist_ok=True)
-    (ddir / Path(dut).name).write_text(cml_ser.add_gate_r(Path(dut).read_text()).replace('/', '__'))  # explicit Rg on CML devices
+    (ddir / Path(dut).name).write_text(cml_ser.add_gate_r(S.dut_text(dut)).replace('/', '__'))  # explicit Rg on CML devices
     tstop = t0w + (nwords + 3) * tw
     d, names = deck(dut, rate=rate, bpc=bpc, words=words, word_t0=t0w, tstop=tstop, corner=corner, temp=temp,
-                    vdd=vdd)
+                    vdd=vdd, rep=rep)
     (ddir / 'tb.sp').write_text(d)
     _, log = tools.ngspice(ddir, 'tb.sp')
     ab = S.sim_abort(log)
@@ -114,19 +119,23 @@ def run(work, dut, *, rate, bpc=4, corner='typical', temp=27, vdd=3.3, nwords=10
         lat, err = S.align(b, expected)
         res[node] = dict(bits=int(len(b)), errors=int(err), latency=int(lat), jitter_pp_ps=round(dd['jitter_pp'] * 1e12, 1),
                          eye_width_ps=round(dd['eye_width_est'] * 1e12, 1), vmargin_v=round(dd['vertical_margin'], 3))
-    # postcursor: DP must equal Y delayed by one UI
-    dy = S.decode(w, 'Y', rate, ta, tb_)
-    if dy is not None and rep == 1:
-        ui = 1 / rate
+    # postcursor: DP must equal Y delayed by one LINE UI (session 8: also in the repetition modes)
+    dy = S.decode(w, 'Y', lrate, ta, tb_)
+    if dy is not None:
+        ui = 1 / lrate
         ts = np.arange(ta - (ta % ui) + (dy['cross_phase'] + ui / 2) % ui, tb_, ui)
         y = (np.interp(ts, w['time'], w['Y']) > S.VTH).astype(int)
         dp = (np.interp(ts, w['time'], w['DP']) > S.VTH).astype(int)
         res['DP_vs_Y_delayed_1ui_mismatch'] = int(np.sum(dp[1:] != y[:-1]))
+        dd = S.decode(w, 'DP', lrate, ta, tb_)
+        if dd is not None:
+            res['DP'] = dict(eye_width_ps=round(dd['eye_width_est'] * 1e12, 1), jitter_pp_ps=round(dd['jitter_pp'] * 1e12, 1),
+                             skew_vs_Y_ps=round(((dd['cross_phase'] - dy['cross_phase'] + ui / 2) % ui - ui / 2) * 1e12, 1))
     sel = w['time'] > ta
     res['idd_avg_a'] = float(-np.mean(w['I_VDD'][sel]))
     m = res.get('Y', {})
     res['ok'] = bool(m.get('errors', 1) == 0 and m.get('bits', 0) >= 20 * (nwords - 4) // rep
-                     and res.get('YB', {}).get('errors', 1) == 0)
+                     and res.get('YB', {}).get('errors', 1) == 0 and res.get('DP_vs_Y_delayed_1ui_mismatch', 1) == 0)
     return res
 
 
@@ -147,7 +156,7 @@ if __name__ == '__main__':
     if a.macro:
         MACRO = a.macro
         DUTS = dict(sch=FAST / f'{a.macro}.spice', ext=FAST / f'{a.macro}.ext.spice')
-    tag = f'{a.dut}_{a.bpc}_{a.rate / 1e9:g}_{a.corner}_{a.temp:g}_{a.vdd:g}' + (f'_r{a.rep}' if a.rep > 1 else '')
+    tag = ('pes_' if S.PESSIMISTIC else '') + f'{a.dut}_{a.bpc}_{a.rate / 1e9:g}_{a.corner}_{a.temp:g}_{a.vdd:g}' + (f'_r{a.rep}' if a.rep > 1 else '')
     wk = Path(a.work) if a.work else tools.SCRATCH / 'core'
     wk.mkdir(parents=True, exist_ok=True)
     r = run(wk, DUTS[a.dut], rate=a.rate, bpc=a.bpc, corner=a.corner, temp=a.temp, vdd=a.vdd,

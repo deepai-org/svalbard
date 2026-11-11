@@ -392,6 +392,7 @@ SRBIT = srbit()
 SR5 = sr5()
 DIV5 = div5()
 NAND_O = nand2('wtx_nand2o', wn=4, wp=4)
+NANDG = nand2('wtx_nand2g', wn=8, wp=8)
 NAND3_O = nand3('wtx_nand3o', 6, 4)
 # window gates of the compact quarter core: fast rise at the NAND output and fast fall at
 # the inverter output make the window close early relative to its opening, so adjacent
@@ -439,32 +440,31 @@ def predrv():
     # ~0.6 V glitches onto the adjacent word input D13 while DX toggled in serializer mode)
     c.inst('XN', NAND, A='DX', B='EXT', Y='EXDN', **V)
     c.inst('XO', INV1, A='EXDN', Y='EXT_DATA', **V)
-    # two-way select, two gate levels: DS = DQ&SERQ | DX&EXT (one-hot enables)
+    # Session 8: four dynamic levels on every leg (was five plus an INV4 after IX-9; extracted ss/32/3.15
+    # 2.5 Gb/s: 20/141 errors, 340-420 ps edges at CMD).  Level 1/2: NAND-NAND select (MAIN/TMDS: core or
+    # external data; POST: DP or DPB by POST_POL, the polarity folded into static enables SP = SERQ & !POL,
+    # SPP = SERQ & POL); level 3: NAND with the branch enable; level 4: INV16 onto the CMD route.
+    c.inst('PPI', INV1, A='POST_POL', Y='POLB', **V)
+    c.inst('SPA', NAND, A='SERQ', B='POLB', Y='SPN', **V)
+    c.inst('SPB', INV2, A='SPN', Y='SP', **V)
+    c.inst('SQA', NAND, A='SERQ', B='POST_POL', Y='SQN', **V)
+    c.inst('SQB', INV2, A='SQN', Y='SPP', **V)
     c.inst('Q1', NAND_O, A='DQ', B='SERQ', Y='NQ1', **V)
     c.inst('X1', NAND_O, A='DX', B='EXT', Y='NX1', **V)
-    c.inst('O1', NAND_O, A='NQ1', B='NX1', Y='DS', **V)
+    c.inst('O1', NANDG, A='NQ1', B='NX1', Y='DS', **V)
     c.inst('Q2', NAND_O, A='DQB', B='SERQ', Y='NQ2', **V)
     c.inst('X2', NAND_O, A='DXB', B='EXT', Y='NX2', **V)
-    c.inst('O2', NAND_O, A='NQ2', B='NX2', Y='DSB', **V)
-    # postcursor (core only): the same two gate levels, so it keeps its one-UI offset
-    c.inst('PQ1', NAND_O, A='DPQ', B='SERQ', Y='NPQ1', **V)
-    c.inst('P1O', NAND_O, A='NPQ1', B='VDD', Y='DPS', **V)
-    c.inst('PQ2', NAND_O, A='DPQB', B='SERQ', Y='NPQ2', **V)
-    c.inst('P2O', NAND_O, A='NPQ2', B='VDD', Y='DPSB', **V)
-    c.inst('PPI', INV1, A='POST_POL', Y='POLB', **V)
+    c.inst('O2', NANDG, A='NQ2', B='NX2', Y='DSB', **V)
+    for leg, a_, b_ in (('P', 'DPQ', 'DPQB'), ('N', 'DPQB', 'DPQ')):
+        c.inst(f'PA{leg}', NAND_O, A=a_, B='SP', Y=f'NPA{leg}', **V)
+        c.inst(f'PB{leg}', NAND_O, A=b_, B='SPP', Y=f'NPB{leg}', **V)
+        c.inst(f'PO{leg}', NANDG, A=f'NPA{leg}', B=f'NPB{leg}', Y=f'PS{leg}', **V)
     for br, (pos, neg, en) in {'MAIN': ('DSB', 'DS', 'EN_MAIN'), 'TMDS': ('DSB', 'DS', 'EN_TMDS'),
-                               'POST': ('DPS', 'DPSB', 'EN_POST')}.items():
-        for leg, data, alt in (('P', pos, neg), ('N', neg, pos)):
+                               'POST': ('PSP', 'PSN', 'EN_POST')}.items():
+        for leg, data in (('P', pos), ('N', neg)):
             o = f'CMD_{br}_{leg}'
-            if br == 'POST':     # polarity mux: POL ? alt : data
-                c.inst(f'MA_{br}_{leg}', NAND_O, A=data, B='POLB', Y=f'MAN_{br}_{leg}', **V)
-                c.inst(f'MB_{br}_{leg}', NAND_O, A=alt, B='POST_POL', Y=f'MBN_{br}_{leg}', **V)
-            else:                # matched: same two levels, select tied
-                c.inst(f'MA_{br}_{leg}', NAND_O, A=data, B='VDD', Y=f'MAN_{br}_{leg}', **V)
-                c.inst(f'MB_{br}_{leg}', NAND_O, A='VSS', B='VDD', Y=f'MBN_{br}_{leg}', **V)
-            c.inst(f'M_{br}_{leg}', NAND_O, A=f'MAN_{br}_{leg}', B=f'MBN_{br}_{leg}', Y=f'PD_{br}_{leg}', **V)
-            c.inst(f'G_{br}_{leg}', NAND_O, A=f'PD_{br}_{leg}', B=en, Y=f'NB_{br}_{leg}', **V)
-            c.inst(f'O_{br}_{leg}', INV4, A=f'NB_{br}_{leg}', Y=o, **V)
+            c.inst(f'G_{br}_{leg}', NANDG, A=data, B=en, Y=f'NB_{br}_{leg}', **V)
+            c.inst(f'O_{br}_{leg}', INV16, A=f'NB_{br}_{leg}', Y=o, **V)
             c.dev(f'CL_{br}_{leg}', N, o, 'ISLAND_OFF', 'VSS', 2)
     return c
 
@@ -764,25 +764,16 @@ def wiredtx():
     # the line) on WORD_CLK40 rising (line/40, 50 % duty).  A toggle flop on WORD_CLK (line/20) selects
     # D0..D19 for the load after WORD_CLK40 rises and D20..D39 for the next one; both serializers see
     # the selected 20-bit word DW0..DW19 at the same timing as the earlier 20-bit port.
-    # WT12: Johnson counter / repetition expander (rep2 = half incl. MODE 11, rep4 = full on the core;
-    # quarter rate uses rep1 = the earlier 40->20 toggle)
-    TL = ['T1', 'T2A', 'T2B', 'T4A', 'T4B', 'T4C', 'T4D']
-    c.inst('WS', REP, CK='WORD_CLK', RB='SER_EN', R2='MODE_H', R4='MFC', SEL='WSEL', SELB='WSELB',
-           W40='WORD_CLK40', **{t: f'W{t}' for t in TL}, **{t + 'N': f'W{t}N' for t in TL}, **V)
+    # WT19 (session 8, approved): the bit repetition of half / full rate is done by the digital; the
+    # block always takes 40 CORE bits per WORD_CLK40 (= core line / 40 in every mode).  The toggle flop
+    # on WORD_CLK selects D0..D19, then D20..D39 (WT8).  MODE still tells the core the repetition factor
+    # (R2 / R4) for its postcursor latch (one LINE bit, not one core bit, late).
+    c.inst('WS', W40, CK='WORD_CLK', RB='SER_EN', SEL='WSEL', SELB='WSELB', W40='WORD_CLK40', **V)
     for i in range(20):
-        # session 7: x2 mux, 2/4 um expander gates and an INV4 into the ~300 um DW route (the 1/2 um mux +
-        # TG + INV1 path took 1.7 ns from D to the core pin, extracted typical)
         c.inst(f'WM{i}', MUXF, A=f'D{i}', B=f'D{i + 20}', S='WSEL', SB='WSELB', Y=f'DWB{i}', **V)
-    for i in range(20):
-        srcs = {}
-        for t, j in rep_src(i).items():
-            srcs.setdefault(j, []).append(t)
-        for t, j in rep_src(i).items():          # one-hot transmission gates DWB[j] -> DX i
-            c.dev(f'WT{i}_{t}_N', N, f'DX{i}', f'W{t}', f'DWB{j}', 2)
-            c.dev(f'WT{i}_{t}_P', P, f'DX{i}', f'W{t}N', f'DWB{j}', 4)
-        c.inst(f'WI{i}', INV4, A=f'DX{i}', Y=f'DW{i}', **V)
+        c.inst(f'WI{i}', INV4, A=f'DWB{i}', Y=f'DW{i}', **V)
     c.inst('SQ', SERQ4, **{f'D{i}': f'DW{i}' for i in range(20)}, PH0='WTX_PH0', PH90='WTX_PH90',
-           PH180='WTX_PH180', PH270='WTX_PH270', SERQ='SERQ', MQ='VDD', MH='VSS', MF='VSS', Y='QD', YB='QDB', DP='QDP', DPB='QDPB',
+           PH180='WTX_PH180', PH270='WTX_PH270', SERQ='SERQ', MQ='VDD', MH='VSS', MF='VSS', R2='MODE_H', R4='MFC', Y='QD', YB='QDB', DP='QDP', DPB='QDPB',
            WCKQ='WCKQ', **V)
     c.inst('WCO', INV2, A='WCKQ', Y='WCKN', **V)
     c.inst('WCB', INV16, A='WCKN', Y='WORD_CLK', **V)
@@ -819,7 +810,7 @@ MUX4W = Macro('wtx_mux4')
 CINV8 = Macro('wtx_cinv8')
 W40 = w40()
 XOR2 = xor2()
-REP = rep()
+W40 = w40()
 SERQ = serq()
 # The compact core is the hand-placed macro built by serq4_macro.py (generated/fast/wtx_serq4.*):
 # schematic, layout and LVS read its intended netlist.  serq4() above is the earlier gate-level core

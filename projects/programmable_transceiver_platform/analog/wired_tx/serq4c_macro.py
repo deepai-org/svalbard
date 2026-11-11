@@ -20,6 +20,30 @@ import serq4_macro as M
 NAME = 'wtx_serq4c'
 OMUX_CELL = os.environ.get('SERQ4C_OMUX', 'wtx_omuxt')
 TOP_PORTS = [p for p in M.TOP_PORTS]          # D0..D19 PH* SERQ MQ MH MF Y YB DP DPB WCKQ VDD VSS
+TOP_PORTS = TOP_PORTS[:-2] + ['R2', 'R4'] + TOP_PORTS[-2:]   # session 8: repetition mode (postcursor latch)
+
+
+def g_tg(pre, a, en, enb, y, wn, wp):
+    """Transmission gate a -> y (N gate en, P gate enb)."""
+    cols = [dict(k='c', n=a, p='-'), M.G(en, wn, n=True, p=False), dict(k='c', n=y, p='-'), M.BRK,
+            dict(k='c', n='-', p=a), M.G(enb, p=True, n=False, wp=wp), dict(k='c', n='-', p=y)]
+    net = [M._fet(f'{pre}n', y, en, a, 'n', wn), M._fet(f'{pre}p', y, enb, a, 'p', wp)]
+    return cols, net
+
+
+M.GATES['tg'] = g_tg
+
+
+def g_tsinv(pre, a, en, enb, y, wn, wp):
+    """Clocked (tristate) inverter y = !a while en (C2MOS: a next to the rails, en / enb next to y)."""
+    cols = [M.C('VSS', 'VDD', same=False), M.G(a, wn, wp), dict(k='c', n=None, p=None),
+            M.G(en, wn, wp, netn=en, netp=enb), M.C(y, y)]
+    net = [M._fet(f'{pre}na', f'{pre}mn', a, 'VSS', 'n', wn), M._fet(f'{pre}ne', y, en, f'{pre}mn', 'n', wn),
+           M._fet(f'{pre}pa', f'{pre}mp', a, 'VDD', 'p', wp), M._fet(f'{pre}pe', y, enb, f'{pre}mp', 'p', wp)]
+    return cols, net
+
+
+M.GATES['tsinv'] = g_tsinv
 
 
 def omuxt():
@@ -31,20 +55,52 @@ def omuxt():
     output node) gave slow, data-dependent falling edges: 371 ps pp jitter, 2 errors (session 3).
     Every stage here is a 2-stack, so rise / fall are fast and symmetric at every corner."""
     ports = [f'QW{k}' for k in range(4)] + [f'F{k}' for k in range(4)] + ['Y', 'YB', 'DP', 'DPB'] + \
-        [f'S{k}' for k in range(4)]
+        [f'S{k}' for k in range(4)] + ['dA1', 'dA2', 'dA3', 'dbA1', 'dbA2', 'dbA3']
+    # Session 8 postcursor in the repetition modes (WT19: the digital repeats each user bit rep times on the
+    # core, aligned to word bit 0).  The postcursor must be one LINE bit late.  DP window k normally carries
+    # F(k-1); per mode the four window inputs A k are (static selects, mode bits R2 / R4):
+    #   rep1: F3 F0 F1 F2      rep2: F3 F3 F1 F1      rep4: F3 F3 G G
+    # F k is stable from window k-1 to window k+2 (hop timing), so F3 serves windows 0-1 and F1 windows 2-3.
+    # rep4 needs the previous cycle's bit in windows 2-3 too, after F3 has moved on: G is F3 caught by a
+    # clocked-inverter latch transparent in window 1 (S1) and held through windows 2-3.  The window selects
+    # S k and the output path are unchanged, so MAIN -> POST skew is as before.  (A window-rate latch on DP,
+    # tried first, needed a < 1 core-UI enable that the ss corner could not drive: DP stuck at 0.7 V.)
     gates = []
     for k in range(4):
         gates += [(f'w{k}n', 'NAND2W', f'QW{k}', f'QW{(k - 1) % 4}', f'SN{k}'), (f'w{k}i', 'INVW', f'SN{k}', f'S{k}')]
     gates += [(f'c{k}', 'INV2', f'F{k}', f'FN{k}') for k in range(4)]
     for m, a, y in (('y', [f'F{k}' for k in range(4)], 'Y'), ('yb', [f'FN{k}' for k in range(4)], 'YB'),
-                    ('d', [f'F{(k - 1) % 4}' for k in range(4)], 'DP'),
-                    ('db', [f'FN{(k - 1) % 4}' for k in range(4)], 'DPB')):
+                    ('d', ['F3', 'dA1', 'dA2', 'dA3'], 'DP'),
+                    ('db', ['FN3', 'dbA1', 'dbA2', 'dbA3'], 'DPB')):
         gates += [(f'{m}z{k}', 'NANDZ', f'S{k}', a[k], f'{m}Z{k}') for k in range(4)]
         gates += [(f'{m}u0', 'NANDU', f'{m}Z0', f'{m}Z1', f'{m}U0'), (f'{m}u1', 'NANDU', f'{m}Z2', f'{m}Z3', f'{m}U1'),
                   (f'{m}v0', 'INVV', f'{m}U0', f'{m}V0'), (f'{m}v1', 'INVV', f'{m}U1', f'{m}V1'),
                   (f'{m}o', 'NANDO', f'{m}V0', f'{m}V1', f'{m}X'), (f'{m}b', 'INVB', f'{m}X', f'{m}XB'),
                   (f'{m}p', 'INVP', f'{m}XB', y)]
     return M.row_of('wtx_omuxt', gates, ports)
+
+
+def ppost():
+    """Postcursor sources for the repetition modes (session 8), a row of its own next to the counter so
+    the output-mux row keeps its size (its growth cost the 3.24 Gb/s ss margin: 27 errors).  See omuxt:
+    window inputs rep1 F3 F0 F1 F2, rep2 F3 F3 F1 F1, rep4 F3 F3 G G; G = F3 caught in window 0
+    (clocked inverter on S0, held windows 1-3; F3 changes at window 2.4, probe s8/p2).  The sources have >= 1.5 windows of slack, so the extra
+    gate levels and the route to the output-mux row are off the critical path."""
+    ports = [f'F{k}' for k in range(4)] + ['S0', 'R2', 'R4', 'dA1', 'dA2', 'dA3', 'dbA1', 'dbA2', 'dbA3']
+    gates = [('ra', 'NOR2S', 'R2', 'R4', 'R1'), ('rb', 'INV1', 'R1', 'R1N'), ('rc', 'INV1', 'R4', 'R4N'),
+             ('s0', 'INV2', 'S0', 'SN0')]
+    gates += [(f'c{k}', 'INV2', f'F{k}', f'FN{k}') for k in range(4)]
+    gates += [('gl', 'TSL', 'F3', 'S0', 'SN0', 'GB'), ('gi', 'INV4', 'GB', 'G')]
+    for m, F, Gs in (('d', 'F', 'G'), ('db', 'FN', 'GB')):
+        gates += [(f'{m}a1', 'NAND4', f'{F}0', 'R1', f'{m}A1a'), (f'{m}a1b', 'NAND4', f'{F}3', 'R1N', f'{m}A1b'),
+                  (f'{m}a1o', 'NANDP', f'{m}A1a', f'{m}A1b', f'{m}A1'),
+                  (f'{m}a2', 'NAND4', f'{F}1', 'R4N', f'{m}A2a'), (f'{m}a2b', 'NAND4', Gs, 'R4', f'{m}A2b'),
+                  (f'{m}a2o', 'NANDP', f'{m}A2a', f'{m}A2b', f'{m}A2'),
+                  (f'{m}a3', 'NAND4', f'{F}2', 'R1', f'{m}A3a'), (f'{m}a3b', 'NAND4', f'{F}1', 'R2', f'{m}A3b'),
+                  (f'{m}a3c', 'NAND4', Gs, 'R4', f'{m}A3c'), (f'{m}a3o', 'NAND3P', f'{m}A3a', f'{m}A3b', f'{m}A3c', f'{m}A3')]
+    r, p_, n_ = M.row_of('wtx_ppost', gates, ports)
+    r.track_order = ['S0', 'SN0']     # split S0 / SN0 gate column of the G latch: N net on the lower track
+    return r, p_, n_
 
 
 def sreg5d():
@@ -99,10 +155,10 @@ def q4ctlc():
 
 
 # sizes (n um, p um) of the tree; the window pulse drives NANDZ's series input next to the output
-M.SIZE.update(NANDZ=('nand2', 4, 3), NANDU=('nand2', 6, 4), INVV=('inv', 4, 8), NANDO=('nand2', 8, 6),
+M.SIZE.update(TSL=('tsinv', 4, 8), NANDP=('nand2', 6, 6), NAND3P=('nand3', 4, 6), NANDZ=('nand2', 4, 3), NANDU=('nand2', 6, 4), INVV=('inv', 4, 8), NANDO=('nand2', 8, 6),
               INVB=('inv', 4, 8), INVP=('inv', 8, 16), NOR2L=('nor2', 2, 8), NOR2S=('nor2', 1, 4), NANDQ=('nand2', 4, 4))
-M.CELLS.update(wtx_omuxt=omuxt, wtx_sreg5d=sreg5d, wtx_q4ctlc=q4ctlc, wtx_div5r=div5r)
-CELLS = ['wtx_qph', 'wtx_sreg5', 'wtx_q4ctlc', 'wtx_q4ck', 'wtx_tspcb', 'wtx_tspcbx', 'wtx_div5r', OMUX_CELL]
+M.CELLS.update(wtx_ppost=ppost, wtx_omuxt=omuxt, wtx_sreg5d=sreg5d, wtx_q4ctlc=q4ctlc, wtx_div5r=div5r)
+CELLS = ['wtx_qph', 'wtx_sreg5', 'wtx_q4ctlc', 'wtx_q4ck', 'wtx_tspcb', 'wtx_tspcbx', 'wtx_div5r', 'wtx_ppost', OMUX_CELL]
 
 
 def top_instances():
@@ -127,7 +183,10 @@ def top_instances():
             prev = o
     # streams arrive inverted (sreg5): F k = NOT(bit), so the true / complement outputs are swapped
     out.append(('XO', OMUX_CELL, [f'QW{k}' for k in range(4)] + [f'F{k}' for k in range(4)]
-                + ['YB', 'Y', 'DPB', 'DP'] + [f'S{k}' for k in range(4)] + V))
+                + ['YB', 'Y', 'DPB', 'DP'] + [f'S{k}' for k in range(4)]
+                + ['PA1', 'PA2', 'PA3', 'PB1', 'PB2', 'PB3'] + V))
+    out.append(('XPP', 'wtx_ppost', [f'F{k}' for k in range(4)] + ['S0', 'R2', 'R4',
+                                     'PA1', 'PA2', 'PA3', 'PB1', 'PB2', 'PB3'] + V))
     return out
 
 
@@ -136,7 +195,7 @@ def top_instances():
 # (Session 6 area pass: the control / counter cells had a 171-um row of their own; 530 x 353 -> see build log.)
 ROWS = [['L0', 'H0_0', 'H0_1', 'L1', 'H1_0', 'H1_1', 'H1_2'],
         ['P0', 'P1', 'P2', 'P3', 'CK', 'CTL'],
-        ['O', 'DV'],
+        ['O', 'PP', 'DV'],
         ['L2', 'H2_0', 'H2_1', 'H2_2', 'L3', 'H3_0', 'H3_1', 'H3_2']]
 
 

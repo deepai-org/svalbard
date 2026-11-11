@@ -152,7 +152,7 @@ OFFS4 = (1.2, 0., -1.2, 2.0)  # D, G, S, B escape x offsets from the device cent
 OFFS3 = (-1.2, 0., 1.2)       # resistor A (top), B (bottom), body
 
 
-def generate_layout(sub, work, *, columns=None, quiet=None):
+def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False):
     """Write <name>.mag/.gds, DRC counts and extraction products into `work`."""
     work.mkdir(parents=True, exist_ok=True)
     for old in work.glob('*'):
@@ -271,6 +271,10 @@ def generate_layout(sub, work, *, columns=None, quiet=None):
             if nt.endswith('_4pb'):
                 slot += 3
         band_top = ybase + .6 + slot * track_pitch + 1.6
+        if over_dev:
+            # r6 AREA (cdr): the primitives use Metal1 only, so the row's Metal4 tracks (and the Metal2/3
+            # escapes) run over the devices; the row is max(device height, band) tall instead of their sum
+            band_h, band_top = band_top - ybase, ybase + 1.0
         row_hmax = 0.
         # compact placement: each device gets max(bbox,3.6um)+GAP of width, escapes stay
         # inside +/-2um of the device centre
@@ -322,7 +326,7 @@ def generate_layout(sub, work, *, columns=None, quiet=None):
             via(trunk_x[net], ry, 4, 5)
             span[net][0] = min(span[net][0], ry)
             span[net][1] = max(span[net][1], ry)
-        ybase = band_top + row_hmax + 1.5
+        ybase = band_top + (max(row_hmax, band_h - 1.0) if over_dev else row_hmax) + 1.5
         max_row_w = max(locals().get('max_row_w', 0.), row_w)
     height = ybase + 1.
     width = max_row_w

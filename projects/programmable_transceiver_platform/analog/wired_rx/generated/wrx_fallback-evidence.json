@@ -2,19 +2,38 @@
  "block": "wrx_fallback",
  "subckt": "pt_slicer + pt_wrx_cap",
  "source_hashes": {
-  "run_fallback.py": "sha256:4a8475ad39b67f835f67872ce2ff0e5905b3a2db14fe9b15ed43a5d6605c9715",
-  "capture.py": "sha256:6f5807473381af7ff18ae82b31b423949524691e835c185f4aec8a9d14fdc579",
-  "generated/wrx_cap.ext.spice": "sha256:cd41ee41a87f181053307e3afa533ba45f2fb4915df053556947a4037f9a14cc",
-  "generated/slicer.ext.spice": "sha256:898f1d1dfef07b71035a5fbf41fc40bdc8551e2852745dec143543893654e198"
+  "run_fallback.py": "sha256:a336983d7dec66b7fe4d4f18fcfa1412644d1b4da3ba6428e03398481b211b00",
+  "capture.py": "sha256:85a09e73070f1bf49ca4e98192e8f1d16bbe46f51694f801956420d74f35dade",
+  "generated/wrx_cap.ext.spice": "sha256:469357beb638442de8ab4a02352dc0e0d1164b5419ce62b8c0345351e07bfe49",
+  "generated/slicer.ext.spice": "sha256:3a96e7e994ad1175dc35fd5dceac2dfbffb40202608b0feabc69aacde0e11f97"
  },
- "scope": "WCLK_IN raw-word fallback, extracted slicer + extracted capture, tt/27C/3.3V, ideal CK/!CK on CKP0..3/CKP4..7 (the diff_clk_rx/clockmux path and its skew are not included), eye centred on the CK edges, half mode (2 bits per CK cycle).",
+ "scope": "WCLK_IN raw-word fallback, extracted slicer + extracted capture, tt/27C/3.3V and ss/32C/3.15V, both RCS values, ideal CK/!CK on CKP0..3/CKP4..7 (the diff_clk_rx/clockmux path and its skew are not included), eye centred on the CK edges, half mode (2 bits per CK cycle).",
+ "criterion": "per rate (480/625/810 MHz) one RCS value with 0 DW errors and EW == DW at tt and at ss/32C/3.15V; plus fb625_vd100_r1",
  "tests": {
   "fallback": {
    "state": "fail",
+   "rates": {
+    "480MHz": {
+     "pass_": false,
+     "rcs_passing": []
+    },
+    "625MHz": {
+     "pass_": false,
+     "rcs_passing": []
+    },
+    "810MHz": {
+     "pass_": false,
+     "rcs_passing": []
+    }
+   },
    "cases": {
     "fb480": {
      "f": 480000000.0,
      "vd": null,
+     "rcs": null,
+     "corner": null,
+     "temp": null,
+     "vdd": null,
      "words": 9,
      "bits": 180,
      "bit_errors": 43,
@@ -23,9 +42,43 @@
      "pass": false,
      "error": null
     },
+    "fb480_r1": {
+     "f": 480000000.0,
+     "vd": null,
+     "rcs": 1,
+     "corner": null,
+     "temp": null,
+     "vdd": null,
+     "words": 10,
+     "bits": 200,
+     "bit_errors": 4,
+     "ew_vs_dw_mismatch": 4,
+     "i_mA": 37.3955,
+     "pass": false,
+     "error": null
+    },
+    "fb480_ss_r1": {
+     "f": 480000000.0,
+     "vd": null,
+     "rcs": 1,
+     "corner": "ss",
+     "temp": 32,
+     "vdd": 3.15,
+     "words": 9,
+     "bits": 180,
+     "bit_errors": 0,
+     "ew_vs_dw_mismatch": 0,
+     "i_mA": 32.9388,
+     "pass": true,
+     "error": null
+    },
     "fb625": {
      "f": 625000000.0,
      "vd": null,
+     "rcs": null,
+     "corner": null,
+     "temp": null,
+     "vdd": null,
      "words": 9,
      "bits": 180,
      "bit_errors": 0,
@@ -34,9 +87,43 @@
      "pass": false,
      "error": null
     },
+    "fb625_r1": {
+     "f": 625000000.0,
+     "vd": null,
+     "rcs": 1,
+     "corner": null,
+     "temp": null,
+     "vdd": null,
+     "words": 9,
+     "bits": 180,
+     "bit_errors": 34,
+     "ew_vs_dw_mismatch": 34,
+     "i_mA": 45.5316,
+     "pass": false,
+     "error": null
+    },
+    "fb625_ss_r1": {
+     "f": 625000000.0,
+     "vd": null,
+     "rcs": 1,
+     "corner": "ss",
+     "temp": 32,
+     "vdd": 3.15,
+     "words": 9,
+     "bits": 180,
+     "bit_errors": 2,
+     "ew_vs_dw_mismatch": 0,
+     "i_mA": 42.08,
+     "pass": false,
+     "error": null
+    },
     "fb625_vd100": {
      "f": 625000000.0,
      "vd": 0.1,
+     "rcs": null,
+     "corner": null,
+     "temp": null,
+     "vdd": null,
      "words": 9,
      "bits": 180,
      "bit_errors": 0,
@@ -45,14 +132,63 @@
      "pass": true,
      "error": null
     },
+    "fb625_vd100_r1": {
+     "f": 625000000.0,
+     "vd": 0.1,
+     "rcs": 1,
+     "corner": null,
+     "temp": null,
+     "vdd": null,
+     "words": 9,
+     "bits": 180,
+     "bit_errors": 0,
+     "ew_vs_dw_mismatch": 0,
+     "i_mA": 46.2686,
+     "pass": true,
+     "error": null
+    },
     "fb810": {
      "f": 810000000.0,
      "vd": null,
+     "rcs": null,
+     "corner": null,
+     "temp": null,
+     "vdd": null,
      "words": 9,
      "bits": 180,
      "bit_errors": 8,
      "ew_vs_dw_mismatch": 0,
      "i_mA": 36.9643,
+     "pass": false,
+     "error": null
+    },
+    "fb810_r1": {
+     "f": 810000000.0,
+     "vd": null,
+     "rcs": 1,
+     "corner": null,
+     "temp": null,
+     "vdd": null,
+     "words": 0,
+     "bits": 0,
+     "bit_errors": 0,
+     "ew_vs_dw_mismatch": 0,
+     "i_mA": 52.672200000000004,
+     "pass": false,
+     "error": null
+    },
+    "fb810_ss_r1": {
+     "f": 810000000.0,
+     "vd": null,
+     "rcs": 1,
+     "corner": "ss",
+     "temp": 32,
+     "vdd": 3.15,
+     "words": 0,
+     "bits": 0,
+     "bit_errors": 0,
+     "ew_vs_dw_mismatch": 0,
+     "i_mA": 42.642199999999995,
      "pass": false,
      "error": null
     }

@@ -109,14 +109,21 @@ class Net:
 # ------------------------------------------------------------------ blocks
 def termination():
     c = Net('pt_termination',
-            ['VDD_WIRE_SW', 'VSS', 'term_en', 'term_mode0', 'term_mode1',
-             'TERM_ENABLE', 'DIFF_ENABLE', 'TERM_VCM'],
-            """Control and common-mode source for the pad-resident RX termination bank
-(analog/pads wired_receive: 24 ohm + 8x20um shunt switches per leg, 5x20um bridge).
-term_mode[1:0]: 00 off | 01 shunt to TERM_VCM=1.2 V divider | 10 100 ohm differential bridge
-| 11 shunt to TERM_VCM=VSS (USB HS 45 ohm to ground). term_en=0 forces off.
-TERM_VCM is grounded whenever the divider is not selected (incl. off), bleed 50k when unpowered.""")
+            ['VDD_WIRE_SW', 'VSS', 'term_en', 'term_mode0', 'term_mode1', 'hs_en', 'hs_term_en',
+             'hs_trim0', 'hs_trim1', 'hs_trim2', 'hs_trim3',
+             'TERM_ENABLE', 'DIFF_ENABLE', 'TERM_VCM',
+             'HS_TERM_ENABLE', 'HS_TERM_TRIM0', 'HS_TERM_TRIM1', 'HS_TERM_TRIM2', 'HS_TERM_TRIM3', 'HS_TERM_VCM', 'HS_VBIAS'],
+            """Control and bias for the two RX pad termination banks.
+r3 (2026-11-11, PD21/PD22/PD27): USB/legacy pair (pad_wirepad, USB_DP/DN on bond 24/25): term_mode[1:0]
+00 off | 01 shunt to TERM_VCM=1.2 V divider | 10 100 ohm differential bridge | 11 shunt to TERM_VCM=VSS (USB HS
+45 ohm to ground); term_en=0 forces off; TERM_VCM grounded whenever the divider is not selected, bleed 50k.
+HS pair (pad_hspad, bond 20/21, on-die AC coupled): hs_en=1 turns on HS_TERM_VCM (0.4 V divider, ~200 uA, PD27
+0.3-0.5 V) and HS_VBIAS (1.0 V divider, ~100 uA: the CTLE input common mode behind the pad MIM, load 2 x 40 k);
+both are grounded when hs_en=0.  HS_TERM_ENABLE = hs_en & hs_term_en; HS_TERM_TRIM[3:0] = hs_trim & HS_TERM_ENABLE
+(4-bit, pad bank 1/2/4/8 units; register reset code 5).  r2's TERM_TRIM0..2 (case-colliding with term_trim0..2,
+which ngspice treats as one net, and wired to nothing on pad_wirepad) are removed.""")
     c.vdd = 'VDD_WIRE_SW'
+    V = 'VDD_WIRE_SW'
     c.inv('term_mode0', 'm0b'); c.inv('term_mode1', 'm1b')
     # TERM_ENABLE = en & mode0
     c.nand(['term_en', 'term_mode0'], 'te_b'); c.inv('te_b', 'TERM_ENABLE', wn=2, wp=4)
@@ -124,15 +131,33 @@ TERM_VCM is grounded whenever the divider is not selected (incl. off), bleed 50k
     c.nand(['term_en', 'term_mode1', 'm0b'], 'de_b'); c.inv('de_b', 'DIFF_ENABLE', wn=2, wp=4)
     # Divider on = en & mode0 & !mode1
     c.nand(['term_en', 'term_mode0', 'm1b'], 'dv_b'); c.inv('dv_b', 'dv', wn=2, wp=4)
-    c.p('vtop', 'dv_b', 'VDD_WIRE_SW', w=20)          # top switch
+    c.p('vtop', 'dv_b', V, w=20)                     # top switch
     c.r('vtop', 'TERM_VCM', 2, 3.5)                  # 1.75k
     c.r('TERM_VCM', 'vbot', 2, 2)                    # 1.0k
     c.n('vbot', 'dv', 'VSS', w=10)                   # bottom switch
     # Ground switch: on whenever divider is off (USB HS, diff, off)
     c.n('TERM_VCM', 'dv_b', 'VSS', w=20, m=40)
-    # Decoupling on TERM_VCM (~1.8 pF) and unpowered bleed
     c.ncap('TERM_VCM', 20, 5, m=4)
     c.r('TERM_VCM', 'vbl1', 1, 25); c.r('vbl1', 'VSS', 1, 25)
+    # ---- HS pair
+    c.nand(['hs_en', 'hs_en'], 'hsb'); c.inv('hsb', 'hsq', wn=2, wp=4)
+    c.nand(['hsq', 'hs_term_en'], 'hte_b'); c.inv('hte_b', 'HS_TERM_ENABLE', wn=2, wp=4)
+    for k in range(4):
+        c.nand(['HS_TERM_ENABLE', f'hs_trim{k}'], f'htt{k}_b'); c.inv(f'htt{k}_b', f'HS_TERM_TRIM{k}', wn=2, wp=4)
+    # HS_TERM_VCM: 14.5 k / 2 k divider (0.40 V at 3.3 V, 0.38-0.41 V over 3.15-3.35 V)
+    c.p('hvtop', 'hsb', V, w=4)
+    c.r('hvtop', 'HS_TERM_VCM', 1, 14.5)
+    c.r('HS_TERM_VCM', 'hvbot', 1, 2)
+    c.n('hvbot', 'hsq', 'VSS', w=4)
+    c.n('HS_TERM_VCM', 'hsb', 'VSS', w=4)
+    c.ncap('HS_TERM_VCM', 20, 5, m=4)
+    # HS_VBIAS: 23 k / 10 k divider (1.0 V)
+    c.p('hbtop', 'hsb', V, w=4)
+    c.r('hbtop', 'HS_VBIAS', 1, 23)
+    c.r('HS_VBIAS', 'hbbot', 1, 10)
+    c.n('hbbot', 'hsq', 'VSS', w=4)
+    c.n('HS_VBIAS', 'hsb', 'VSS', w=4)
+    c.ncap('HS_VBIAS', 20, 5, m=4)
     return c
 
 
@@ -202,55 +227,127 @@ wmon_en=0: all gates open, WMON_IN clamped to VSS.""")
 
 
 def ctle():
+    """pt_ctle r2 (PKG-W1, 2026-11-10): peaking range 0-12 dB.  r1 had a 2-bit binary Rs (0.40/0.56/0.93/2.8 k):
+    peaking 0/0.6/2.1/7.3 dB extracted nominal, max 8.1 dB over corners.  The peaking of a source-degenerated
+    pair is ~ (1 + gm*Rs/2) up to the output pole, so 12 dB needs Rs/2 ~ 4 x RL with the same loads; r2 adds a
+    third code bit and a log-spaced Rs ladder (0.4 ... 4.1 k, ratio 1.39) made of a 4.1 k base plus seven
+    thermometer-decoded legs (leg poly = target - estimated switch Ron), a longer/wider tail (r1's was near triode
+    at ss and its output resistance shunted Rs/2) and a wider input pair (HF gain)."""
     c = Net('pt_ctle', ['VDD_WIRE_SW', 'VSS', 'IBIAS', 'ctle_en', 'wire_ctle_bypass', 'ctle_peak0', 'ctle_peak1',
-                        'RX_P', 'RX_N', 'CTLE_P', 'CTLE_N', 'atb_ctle_pbias', 'atb_ctle_src'],
-            """Source-degenerated PMOS-input CTLE (input CM 0.5-1.5 V, output CM ~1.0 V into slicer).
-2 x 2.5 mA PMOS tails; degeneration Rs = 0.40/0.56/0.93/2.8 kohm (ctle_peak[1:0]=0..3) with ~0.4 pF per side;
-400 ohm loads to VSS
-through enable switches. IBIAS: 10 uA sunk from the island bias distribution.
+                        'ctle_peak2', 'lf_zero0', 'lf_zero1', 'lf_zero2', 'RX_P', 'RX_N', 'CTLE_P', 'CTLE_N',
+                        'atb_ctle_pbias', 'atb_ctle_src'],
+            """Source-degenerated PMOS-input CTLE r2 (input CM 0.2-1.6 V, output CM ~1.0 V into slicer).
+2 x 2.5 mA PMOS tails; degeneration Rs (between the sources) = 0.4/0.56/0.78/1.08/1.51/2.1/2.93/4.1 kohm for
+ctle_peak[2:0] = 0..7 (0 = flat, 7 = most, >= 12 dB) with the tail drain capacitance to VDD; 480 ohm loads
+to VSS through enable switches.  IBIAS: 10 uA sunk from the island bias distribution.
 wire_ctle_bypass=1: amplifier forced off, load switches open, transmission gates connect RX->CTLE.
-Neither enable nor bypass: loads/clamps hold CTLE_P/N at VSS; no bias current.""")
+Neither enable nor bypass: loads/clamps hold CTLE_P/N at VSS; no bias current.
+r3 (IX-13): lf_zero[2:0] (binary, reset 0 = r2 response) switches a low-frequency zero bank onto both source
+nodes: per side, groups of 1/2/4 NMOS gate capacitors (80 x 6.2 um, channel at VSS, ~2.1 pF each) through PMOS
+switches 8/16/32 um (68 ohm per side with all on = 136 ohm floating equivalent) (gate = !(lf_zero[k] & ena)); an off group's gates are pulled to VSS.  Per-side shunt C is the
+differential equivalent of a floating 1.2/2.4/4.9 pF across the sources: at peak code 7 (Rs 4.1 k) the zero moves
+from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost.""")
     c.vdd = 'VDD_WIRE_SW'
     V = 'VDD_WIRE_SW'
+    # r3 low-frequency zero bank (IX-13).  Emitted first so the generic placer puts it in the bottom rows: port
+    # trunks run from their lowest row to the top-edge pins, so RX_P/N (pad C budget) and CTLE_P/N do not grow
+    for k in range(3):
+        c.nand([f'lf_zero{k}', 'ena'], f'lzn{k}', wn=2, wp=4)
+        for side, tagz in (('sp', 'a'), ('atb_ctle_src', 'b')):
+            g = f'lz{k}{tagz}'
+            c.p(g, f'lzn{k}', side, b='VDD_WIRE_SW', w=CTLE_LFZ_SW, m=2 ** k)
+            c.n(g, f'lzn{k}', 'VSS', w=1)
+            for _ in range(CTLE_LFZ_UNITS * 2 ** k):
+                c.ncap(g, CTLE_LFZ_CAP[0], CTLE_LFZ_CAP[1])
     # control
     c.inv('wire_ctle_bypass', 'bypb')
     c.nand(['ctle_en', 'bypb'], 'ena_b'); c.inv('ena_b', 'ena', wn=2, wp=4)
     c.nor(['ena', 'wire_ctle_bypass'], 'clamp')
     c.inv('wire_ctle_bypass', 'byp_bb', wn=2, wp=4)    # byp_bb = !bypass  (TG pmos gate)
     c.inv('byp_bb', 'byp_q', wn=2, wp=4)               # buffered bypass (TG nmos gate)
-    # branch switch gates (PMOS, on when low): on = ena & !peak  ->  gate = NAND(ena, !peak)
-    c.inv('ctle_peak0', 'pk0i'); c.inv('ctle_peak1', 'pk1i')
-    c.nand(['pk0i', 'ena'], 'pk0_n'); c.nand(['pk1i', 'ena'], 'pk1_n')
+    # thermometer decode: leg k on  <=>  code <= k  (code 0: all seven legs on, code 7: base only)
+    b0, b1, b2 = 'ctle_peak0', 'ctle_peak1', 'ctle_peak2'
+    c.nor([b2, b1, b0], 'on0')
+    c.nor([b2, b1], 'on1')
+    c.nand([b1, b0], 'a10'); c.inv('a10', 'n10'); c.nor([b2, 'n10'], 'on2')
+    c.inv(b2, 'on3')
+    c.nor([b1, b0], 'o10'); c.inv('o10', 'r10'); c.nand([b2, 'r10'], 'on4')
+    c.nand([b2, b1], 'on5')
+    c.nand([b2, b1, b0], 'on6')
+    for k in range(7):                                 # PMOS switch gate: low = leg on (and enabled)
+        c.nand([f'on{k}', 'ena'], f'lg{k}_n')
     # bias: IBIAS -> switch -> nmos diode; nmos mirror x2.5 -> pmos diode (atb_ctle_pbias)
     c.n('nbias', 'ena', 'IBIAS', w=4)
     c.n('nbias', 'nbias', 'VSS', w=2, l=1)
     c.n('nbias', 'ena_b', 'VSS', w=1)
     c.n('atb_ctle_pbias', 'nbias', 'VSS', w=5, l=1)
-    c.p('atb_ctle_pbias', 'atb_ctle_pbias', V, w=2, l=.5)
+    tw, tl, tm, dw = CTLE_TAIL
+    c.p('atb_ctle_pbias', 'atb_ctle_pbias', V, w=dw, l=tl)
     c.p('atb_ctle_pbias', 'ena', V, w=2)               # pull bias gate to VDD when off
-    # tails (10 x 20/0.5 per side ~ ratio 100 -> 2.5 mA)
-    c.p('sp', 'atb_ctle_pbias', V, w=20, l=.5, m=10)
-    c.p('atb_ctle_src', 'atb_ctle_pbias', V, w=20, l=.5, m=10)
-    # input pair, body tied to source
-    # speed pass: 48 um input pair (was 80) to cut the RX_P load; loads raised to 480 ohm
-    c.p('CTLE_N', 'RX_P', 'sp', b='sp', w=16, m=3)
-    c.p('CTLE_P', 'RX_N', 'atb_ctle_src', b='atb_ctle_src', w=16, m=3)
-    # degeneration: Rs = 2.8k || (pk0 ? open : 1.4k) || (pk1 ? open : 0.7k); fixed ~0.4 pF per side
-    # code 00 -> 0.40k (least peaking, highest DC gain) ... 11 -> 2.8k (most peaking)
-    c.r('sp', 'atb_ctle_src', 1, 2.8)
-    c.r('sp', 'rsb', 2, 2.8); c.p('rsb', 'pk0_n', 'atb_ctle_src', b='VDD_WIRE_SW', w=20)
-    c.r('sp', 'rsa', 2, 1.4); c.p('rsa', 'pk1_n', 'atb_ctle_src', b='VDD_WIRE_SW', w=20)
+    # tails (ratio 100 to the diode -> 2.5 mA per side).  r2: L 0.5 -> 1 um and W/L x2: the tail output
+    # resistance shunts Rs/2 in the differential half circuit and the r1 tail (0.43 V Vsd at ss/3.15 V, Vsg of
+    # the input pair 1.65 V) was near triode, which is why r1 peaked only 1.6 dB at ss (8.1 dB at ff)
+    c.p('sp', 'atb_ctle_pbias', V, w=tw, l=tl, m=tm)
+    c.p('atb_ctle_src', 'atb_ctle_pbias', V, w=tw, l=tl, m=tm)
+    # degeneration ladder: base 7.2 k (always) || legs (poly kohm, switch W um); switch Ron ~3.8 kohm*um / W
+    c.r('sp', 'atb_ctle_src', 1, CTLE_RBASE)
+    for k, (rk, wsw) in enumerate(CTLE_LEGS):
+        c.r('sp', f'rl{k}', 2, round(2 * rk, 2))
+        c.p(f'rl{k}', f'lg{k}_n', 'atb_ctle_src', b='VDD_WIRE_SW', w=wsw)
     for side in ('sp', 'atb_ctle_src'):
-        c.ncap(side, 20, 4)
+        if CTLE_CS_M:
+            c.ncap(side, 20, 4, m=CTLE_CS_M)
     # loads through enable switches
     for out in ('CTLE_P', 'CTLE_N'):
         c.r(out, f'{out}_rl', 5, 2.4)
         c.n(f'{out}_rl', 'ena', 'VSS', w=20)
         c.n(out, 'clamp', 'VSS', w=2)
+    # input pair, body tied to source (r3: emitted last with the bypass gates = top rows, next to the pins)
+    c.p('CTLE_N', 'RX_P', 'sp', b='sp', w=16, m=CTLE_PAIR_M)
+    c.p('CTLE_P', 'RX_N', 'atb_ctle_src', b='atb_ctle_src', w=16, m=CTLE_PAIR_M)
     # bypass transmission gates
     c.tg('RX_P', 'CTLE_P', 'byp_q', 'byp_bb', wn=20, wp=20)
     c.tg('RX_N', 'CTLE_N', 'byp_q', 'byp_bb', wn=20, wp=20)
+    # r3 placement order (generic placer: rows bottom-up in netlist order, port trunks from their lowest row to
+    # the top-edge pins): control/bias, LF-bank decode and pull-downs, bank capacitors, bank switches (one row next
+    # to the tails), then the r2 order (tails, input pair, Rs ladder, loads, bypass gates).  RX_P/N and CTLE_P/N
+    # span the same rows as in r2 and sp/src gain only the switch row.
+    def rank(line):
+        t = line.split()
+        nodes = [x for x in t[1:] if '=' not in x]
+        lz = any(n.startswith('lz') for n in nodes)
+        if any(n in ('RX_P', 'RX_N') for n in nodes) and 'byp_q' not in nodes and 'byp_bb' not in nodes:
+            return 5
+        if 'byp_q' in nodes[1:2] or 'byp_bb' in nodes[1:2]:
+            return 8 if any(n in ('RX_P', 'RX_N') for n in nodes) else 0
+        if any(n.endswith('_rl') or n == 'clamp' for n in nodes):
+            return 7
+        if 'atb_ctle_pbias' == nodes[1] and nodes[0] in ('sp', 'atb_ctle_src'):
+            return 4
+        if any(n.startswith('rl') or n.startswith('sp_atb_ctle_src') for n in nodes) or (
+                'ppolyf' in line and 'sp' in nodes and 'atb_ctle_src' in nodes):
+            return 6
+        if lz and t[0].startswith('XMC'):
+            return 2
+        if lz and ('sp' in nodes or 'atb_ctle_src' in nodes):
+            return 3
+        if lz:
+            return 1
+        return 0
+    c.lines = sorted(c.lines, key=lambda l: rank(l) if l.startswith('X') else 0)
     return c
+
+
+# r2 ladder legs (poly kohm, PMOS switch W um): targets 1.2/1.8/2.52/4.2/6.1/9.6/14.4 k incl. Ron (3.8 k*um/W)
+# targets Rs = 0.4/0.558/0.777/1.083/1.51/2.10/2.93/4.1 k (ratio 1.394): the top code is set so that the DC gain
+# stays above -12 dB (sims.tb_ctle limit) at ff while the peaking exceeds 12 dB at every corner (schematic sweep
+# scratch/wired_rx/r2front, variants A/C)
+CTLE_RBASE = 4.1
+CTLE_LEGS = ((1.25, 24), (1.74, 16), (2.43, 12), (3.35, 8), (4.74, 6), (6.46, 4), (9.0, 3))
+CTLE_TAIL = (20, 1.0, 40, 8)      # tail finger W, L, fingers per side; bias diode W (same L): W/L ratio 100
+CTLE_PAIR_M = 6                   # input pair fingers of 16 um per side (r1: 3): HF gain for 12 dB at gdc > -12 dB
+CTLE_LFZ_UNITS, CTLE_LFZ_CAP, CTLE_LFZ_SW = 1, (80, 6.2), 8   # r3 IX-13 bank: units of group 0, cap W/L, switch W per unit
+CTLE_CS_M = 0                     # source caps (20x4 NMOS) per side: r2 relies on the tail drain capacitance
 
 
 def _strongarm(c, tag, ck, inp, inn, outp_name, ref=None, trim=None, ckn_ext=None, tail_src=None):
@@ -342,6 +439,9 @@ slicer_en=0: per-sampler tail headers off, outputs forced low.""")
     return c
 
 
+CLR, CLN, CLW = (28, 160), (4, 5), (30, 160)   # detect TX-pad clamps (F, S branch): poly R length, stack height, width
+
+
 def detect():
     c = Net('pt_detect', ['VDD_WIRE_SW', 'VSS', 'IBIAS', 'det_en', 'det_clk', 'RX_P', 'RX_N', 'TX_P', 'TX_N',
                           'det_thr0', 'det_thr1', 'det_se0', 'det_se1', 'det_src_tx', 'det_inject',
@@ -391,9 +491,23 @@ Vthr (det_thr[1:0]): 0 / 62.5 / 125 / 670 mV nominal (extracted effective ~0 / 6
     c.inv('det_src_tx', 'srcb')
     c.nand(['det_en', 'srcb'], 'ln_b'); c.inv('ln_b', 'ln')
     c.nand(['det_en', 'det_src_tx'], 'tx_b'); c.inv('tx_b', 'tx')
+    # r6 (PD29 HBM core-gate screen): no 3.3 V gate faces a TX pad.  TX_x -> 2 kohm poly -> TXF_x / TXS_x, each clamped
+    # by a 5-high stack of diode-connected 6 V NMOS (off below ~3.6 V, ~5.5 V at mA HBM current), and the pass and
+    # injection switches on TXF_x are 6 V NMOS (L 0.7 um).
+    def n6(d, g, s_, w=4., l=.7, m=1):
+        c.lines.append(f'X{c._id("HV")} {d} {g} {s_} VSS nfet_06v0 w={w:g}u l={l:g}u' + (f' m={m}' if m > 1 else ''))
     for leg in 'PN':
         c.tg(f'RX_{leg}', f'DP_{leg}', 'ln', 'ln_b', wn=2, wp=4)
-        c.n(f'TX_{leg}', 'tx', f'DP_{leg}', w=4)
+        # F: injection branch (4-high clamp); S: zero-current sense branch straight from the pad (5-high clamp,
+        # larger R, no I*R offset).  Clamp leakage at 3.63 V (unpowered pad, both legs) < 1 uA.
+        for br, rl, n, w in (('F', CLR[0], CLN[0], CLW[0]), ('S', CLR[1], CLN[1], CLW[1])):
+            c.r(f'TX_{leg}', f'TX{br}_{leg}', 2, rl)
+            prev = f'TX{br}_{leg}'
+            for k in range(n):
+                nxt = 'VSS' if k == n - 1 else f'TXC{br}{k}_{leg}'
+                n6(prev, prev, nxt, w=w / -(-w // 80), l=.7, m=int(-(-w // 80)))   # PDK bin: w <= 100 um
+                prev = nxt
+        n6(f'TXS_{leg}', 'tx', f'DP_{leg}')
         c.n(f'DP_{leg}', 'enb', 'VSS', w=1)
     # comparators
     _strongarm(c, 'cdp', 'det_clk', 'DP_P', 'DP_N', 'DIFF_POS', ref=('VTHP', 'VREFN'))
@@ -410,7 +524,7 @@ Vthr (det_thr[1:0]): 0 / 62.5 / 125 / 670 mV nominal (extracted effective ~0 / 6
     c.p('dpb', 'enq', V, w=2)
     for leg in 'PN':
         c.p(f'inj_{leg}', 'dpb', V, w=20, l=1)
-        c.n(f'TX_{leg}', 'inj', f'inj_{leg}', w=4)
+        n6(f'TXF_{leg}', 'inj', f'inj_{leg}', w=20)
     return c
 
 
@@ -457,29 +571,28 @@ def _long_stack(c, kind, d, g, s_, w, l_each, n, b=None):
 
 
 def cdr():
-    """AC-3 (2026-11-10): see the Net docstring."""
+    """AC-3 r-pi / r9 (2026-11-10): see the Net docstring."""
     ports = ['VDD_PLL_SW', 'VSS', 'IBIAS', 'cdr_en', 'pfd_mode', 'ref_sel', 'g0', 'g1', 'g2',
              'UP0', 'UP1', 'UP2', 'UP3', 'DN0', 'DN1', 'DN2', 'DN3', 'FUP', 'FDN',
              'IB_PLL', 'HOLD_PLL', 'VCTRL', 'REF_IN', 'WCK_IN', 'REF_PLL', 'atb_cdr_pbias']
     c = Net('pt_cdr', ports,
-            """AC-3 CDR analog cell (r-ac3, 2026-11-10; replaces the dual-loop hand-over cell).  Works with a
-second instance of timing's pt_pll_ring (unchanged ports):
-  * No HOLD hand-over.  pfd_mode=0 (wired CDR, all half/quarter rates): HOLD_PLL=1 from enable, so the
-    ring PLL's PFD stays in reset and its pump is idle; the reference keeps toggling REF_PLL so the
-    pll_ring HOLD flop (clocked by the reference) registers HOLD.  Frequency acquisition is the RTL FLL
-    on FUP/FDN and phase tracking is the per-bit Alexander votes UP0..3/DN0..3, both on the SAME pump
-    legs into VCTRL (= pt_pll_ring.ATB_VCTRL): one continuous integral node, nothing changes hands.
-  * pfd_mode=1 (HDMI/DVI, or line-PLL use): HOLD_PLL=0, the PLL PFD locks the ring to REF_PLL and the
-    vote legs still add phase-only tracking.
-  * ref_sel: REF_PLL = ref_sel ? WCK_IN (forwarded TMDS clock from pt_diff_clk_rx) : REF_IN.
-  * Pump: 4 legs (one per bit slot), each a source and a sink of unit current
-    8 nA x (1 + g0 + 2 g1 + 4 g2) = 8..64 nA (loop bandwidth code, cdr.config.loop_bw), current-steered
-    between VCTRL and VDUMP (unity-gain follower of VCTRL), so a source never changes voltage.
-    UPk = data k and edge k differ (clock late) -> source; DNk = edge k and data k+1 differ -> sink.
-    FUP/FDN (FLL) drive all four legs.  UP and DN of one leg can both be high only on a metastable
-    vote; then source and sink cancel.
-  * IB_PLL: 10 uA bias for the PLL charge pump (needed in both modes; in pfd_mode=0 HOLD keeps it idle).
-  * cdr_en=0: every current off, IB_PLL clamped, REF_PLL low, HOLD_PLL high.
+            """AC-3 CDR analog cell, r-pi integral path (r9, 2026-11-10, CDR/pll_ring owner; AC3-W9).  Works with the
+RX instance of timing's pt_pll_ring r9 (ports N5 N10 KP0..2 FU0..3 FD0..3 after ATB_VCTRL):
+  * Proportional path is NOT in this cell: the capture votes UPk/DNk drive pt_pll_ring FUk/FDk directly
+    (tail-proportional fast-tune units, KP code).  This cell is the integral path only.
+  * pfd_mode=0 (wired CDR): HOLD_PLL=1 from enable (ring PFD in reset, pump idle); FLL (FUP/FDN) and the
+    votes drive one continuous integral node VCTRL.  pfd_mode=1 (HDMI/DVI, line PLL): HOLD_PLL=0, the
+    ring PLL locks to REF_PLL and this cell's output is off.  ref_sel: REF_PLL = ref_sel ? WCK_IN : REF_IN.
+  * Integral: per vote leg two always-on 0.6 uA PMOS half currents, steered (never switched on/off) between
+    AVP and AVN (UP: half A to AVP; DN: half B to AVN); AVP/AVN = 250 kOhm || MOS C (tau ~32 ring cycles,
+    1 vote ~ 0.25 V differential).  FUP/FDN steer a x4 pair.  A PMOS-input OTA turns AVP-AVN into a
+    current into VCTRL, saturating near 1 vote.
+  * r9: OTA tail = I_U x 2^g, I_U ~ 1.5 nA (g[2:0] = cdr.config integral gain, exponential, 2x steps,
+    ~1.5..80 nA).  The r-pi draft's 4.68 uA tail slewed the ring ~700 MHz/us (1.5e6 ppm/us), ~3000x the
+    loop design point (500-800 ppm/us = I x dlnf/dVCTRL / C_vctrl, C_vctrl ~7 pF, dlnf/dV 0.24..4.2 /V).
+    Choose g per rate/corner band for ~800 ppm/us full scale (table in analog/wired_rx/README).
+  * IB_PLL: 10 uA bias for the PLL charge pump.  cdr_en=0: every current off, OTA output open and
+    clamped, IB_PLL clamped, REF_PLL low, HOLD_PLL high.
 IBIAS: 10 uA sunk from the island bias distribution.""")
     V = 'VDD_PLL_SW'
     c.vdd = V
@@ -503,59 +616,64 @@ IBIAS: 10 uA sunk from the island bias distribution.""")
     c.p('ibs', 'atb_cdr_pbias', V, w=8, l=2)
     c.p('IB_PLL', 'enb', 'ibs', w=4)
     c.n('IB_PLL', 'enb', 'VSS', w=4)
-    # pump unit reference: 1 uA PMOS copy (W/L 0.4 vs 4) into an NMOS diode nu (2/1); nu mirrors 1 uA into
-    # the PMOS diode pu (2/1).  Units: 0.5/32 (W/L 1/64 of the diodes' 2/1 -> ~8 nA at 1:128, subthreshold)
-    c.p('nu', 'atb_cdr_pbias', V, w=0.8, l=2)
-    c.n('nu', 'nu', 'VSS', w=2, l=1)
-    c.n('nu', 'enb', 'VSS', w=1)
-    c.n('pu', 'nu', 'VSS', w=2, l=1)
-    c.p('pu', 'pu', V, w=2, l=1)
-    c.p('pu', 'cdr_en', V, w=1)
-    #   OTA follower: NMOS pair (VCTRL +, VDUMP -), PMOS mirror, output VDUMP (~0.6 uA tail).  A 10 uA OTA
-    #   with 1 pF on VDUMP was tried: the vote-rate error grew to 0.9-1.6 uA (make-before-break overlap of
-    #   the two steering switches shorts a stiffer VDUMP to VCTRL), so the weak follower stays.
-    c.n('ota_t', 'nbd', 'ota_e', w=.5, l=4)
-    c.n('ota_e', 'cdr_en', 'VSS', w=1)
-    c.n('ota_1', 'VCTRL', 'ota_t', w=2, l=1)
-    c.n('VDUMP', 'VDUMP', 'ota_t', w=2, l=1)
-    c.p('ota_1', 'ota_1', V, w=1, l=2)
-    c.p('VDUMP', 'ota_1', V, w=1, l=2)
-    # gain code buffers
-    for g in ('g0', 'g1', 'g2'):
-        c.inv(g, g + 'b', wn=1, wp=2)
-        c.inv(g + 'b', g + 'l', wn=1, wp=2)
-    c.nor(['FUP', 'enb'], 'fupb', wn=1, wp=2)      # FLL pulses, gated by enable
+    # ---------------- r9 integral path (pt_cdr_int, merged)
+    c.inv('pfd_mode', 'pfdb', wn=1, wp=2)
+    c.nand(['pfdb', 'cdr_en'], 'oeb', wn=1, wp=2)       # oeb = 0: integral output active
+    c.inv('oeb', 'oe', wn=1, wp=2)
+    pb = 'atb_cdr_pbias'                                  # 10 uA PMOS diode W/L 8/2
+    def steer(tag, a_gate, b_gate, to_a, to_b, m=1):
+        hs, s0 = f'{tag}h', f'{tag}s'
+        c.p(s0, pb, hs, w=1, l=4, m=m)                    # 0.6 uA half current (x m)
+        c.p(hs, 'enb', V, w=1, m=m)
+        c.p(to_a, a_gate, s0, w=.5, m=m)
+        c.p(to_b, b_gate, s0, w=.5, m=m)
+    for k in range(4):
+        c.inv(f'UP{k}', f'up{k}b', wn=1, wp=2)
+        c.inv(f'DN{k}', f'dn{k}b', wn=1, wp=2)
+        steer(f'iu{k}', f'up{k}b', f'UP{k}', 'AVP', 'AVN')   # UP: current to AVP
+        steer(f'id{k}', f'dn{k}b', f'DN{k}', 'AVN', 'AVP')   # DN: current to AVN
+    c.nor(['FUP', 'enb'], 'fupb', wn=1, wp=2)
     c.nor(['FDN', 'enb'], 'fdnb', wn=1, wp=2)
     c.inv('fupb', 'fupl', wn=1, wp=2)
     c.inv('fdnb', 'fdnl', wn=1, wp=2)
-    # segments: (weight in units, gain enable or None)
-    segs = ((1, None), (1, 'g0l'), (2, 'g1l'), (4, 'g2l'))
-    for k in range(4):
-        for d, vote, fl, kind in (('u', f'UP{k}', 'fupl', 'p'), ('d', f'DN{k}', 'fdnl', 'n')):
-            on = f'{d}{k}on'
-            c.nor([vote, fl], f'{d}{k}b', wn=1, wp=2)      # low = this leg votes
-            c.inv(f'{d}{k}b', on, wn=1, wp=2)
-            for j, (wgt, g) in enumerate(segs):
-                node = f'{d}{k}s{j}'
-                if g is None:
-                    xs = on
-                else:
-                    c.nand([on, g], f'{d}{k}e{j}b', wn=1, wp=2)
-                    c.inv(f'{d}{k}e{j}b', f'{d}{k}e{j}', wn=1, wp=2)
-                    xs = f'{d}{k}e{j}'
-                s_on, s_off = xs, (f'{d}{k}b' if g is None else f'{d}{k}e{j}b')
-                # (tried: matched INV-INV / TG-INV drive with a cross-coupled pair: error 0.2-0.58 uA,
-                # not better; see README "AC-3 pump: vote-rate error")
-                # unit widths balanced on the schematic DC bench (P mirror chain 0.84x, N 1.33x of nominal)
-                if kind == 'p':
-                    _long_stack(c, 'p', node, 'pu', V, 0.6 * wgt, 8, 4, b=V)
-                else:
-                    _long_stack(c, 'n', node, 'nu', 'VSS', 0.375 * wgt, 8, 4)
-                # minimum steering switches; a half-size dummy (drain = source = VCTRL) on the opposite
-                # phase absorbs the on-switch's channel charge at VCTRL (each vote is worth only ~0.1 fC)
-                c.n('VCTRL', s_on, node, w=.44)
-                c.n('VCTRL', s_off, 'VCTRL', w=.22)
-                c.n('VDUMP', s_off, node, w=.44)
+    steer('ifu', 'fupb', 'fupl', 'AVP', 'AVN', m=4)
+    steer('ifd', 'fdnb', 'fdnl', 'AVN', 'AVP', m=4)
+    for nd in ('AVP', 'AVN'):
+        c.r(nd, 'VSS', 1, 250)
+        c.ncap(nd, 10, 10)
+    # nA unit bias: pb -> PMOS 0.5/8 -> NMOS diode 8/1 -> NMOS 0.5/40 -> PMOS diode PU 2/4
+    c.p('ina', pb, 'inah', w=.5, l=8)
+    c.p('inah', 'enb', V, w=1)
+    c.n('ina', 'ina', 'VSS', w=8, l=1)
+    c.n('ipu', 'ina', 'VSS', w=.5, l=40)
+    c.p('ipu', 'ipu', V, w=2, l=4)
+    c.p('ipu', 'cdr_en', V, w=1)
+    # thermometer t_j = (g >= j)
+    for g in ('g0', 'g1', 'g2'):
+        c.inv(g, g + 'b', wn=1, wp=2)
+    def or2(a, b, y):
+        c.nor([a, b], y + 'n', wn=1, wp=2); c.inv(y + 'n', y, wn=1, wp=2)
+    def and2(a, b, y):
+        c.nand([a, b], y + 'n', wn=1, wp=2); c.inv(y + 'n', y, wn=1, wp=2)
+    c.nand(['g0b', 'g1b', 'g2b'], 't1', wn=1, wp=2)
+    or2('g1', 'g2', 't2')
+    and2('g1', 'g0', 't3a'); or2('t3a', 'g2', 't3')
+    c.inv('g2b', 't4', wn=1, wp=2)
+    or2('g0', 'g1', 't5a'); and2('t5a', 'g2', 't5')
+    and2('g1', 'g2', 't6')
+    and2('t3a', 'g2', 't7')
+    for j, m in enumerate((1, 1, 2, 4, 8, 16, 32, 64)):
+        ge = 'oeb' if j == 0 else f'ge{j}'
+        if j:
+            c.nand([f't{j}', 'oe'], ge, wn=1, wp=2)
+        c.p('ot', 'ipu', f'ot{j}', w=2, l=4, m=m)
+        c.p(f'ot{j}', ge, V, w=1, m=1 if m < 8 else m // 8)
+    c.p('ota1', 'AVP', 'ot', w=8, l=2)
+    c.p('ota2', 'AVN', 'ot', w=8, l=2)
+    c.n('ota1', 'ota1', 'VSS', w=.5, l=2)
+    c.n('ota2', 'ota1', 'VSS', w=.5, l=2)
+    c.n('VCTRL', 'oe', 'ota2', w=2)                       # output switch
+    c.n('ota2', 'oeb', 'VSS', w=1)                        # clamp when off
     return c
 
 
@@ -584,8 +702,46 @@ spacing error (r7 extracted 4.5-5.7 deg) so the residual is <= 3 deg (spec AC-3)
     return c
 
 
+def vthdac():
+    """r6 (2026-11-11, IX-10): two 8-bit offset-binary (sign + 7-bit magnitude, code 128 = 0) current-steering
+    threshold DACs VTH_A / VTH_B for the edge samplers' auxiliary pairs (pt_slicer ws_sae)."""
+    ports = ['VDD_WIRE_SW', 'VSS', 'vth_en'] + [f'A{b}' for b in range(8)] + [f'B{b}' for b in range(8)] + \
+        ['VTAP', 'VTAN', 'VTBP', 'VTBN']
+    c = Net('pt_vthdac', ports,
+            """IX-10 threshold DACs (r6).  Self-biased reference: diode PMOS (32 units) + R_B to VSS through the enable
+NMOS, Iref ~ (VDD - Vsg) / R_B ~ 25 uA; unit source W1/L2 (~0.78 uA).  Per DAC 255 units, bit b = 2^b units,
+steered by PMOS switches to VTxP (bit = 1) or VTxN (bit = 0); 8 kOhm poly loads to VSS and ~80 fF PMOS decaps:
+VTxP + VTxN = I_FS * R_L ~ 1.6 V (CM ~ 0.8 V), VTxP - VTxN = (2*code - 255)/255 * ~1.6 V.  vth_en=0: reference
+off, every source off, outputs pulled to VSS by the loads (0 current).  Referred to SL_P - SL_N through the
+ws_sae aux pair (W ratio ~ 1/6): LSB ~2-3 mV, range >= +/-250 mV (FPGA-calibrated against the fine trim).""")
+    V = 'VDD_WIRE_SW'
+    c.vdd = V
+    c.inv('vth_en', 'enb', wn=1, wp=2)
+    c.p('pb', 'pb', V, w=8, l=2, m=4)                     # reference diode (32 unit widths)
+    c.p('pb', 'vth_en', V, w=1)                           # off: gates at VDD
+    c.r('pb', 'rbm', 1, 94)                               # R_B ~ 94 kOhm
+    c.n('rbm', 'vth_en', 'VSS', w=2)
+    for d in ('A', 'B'):
+        for b in range(8):
+            m = 1 << b
+            c.inv(f'{d}{b}', f'{d.lower()}{b}b', wn=1, wp=2)
+            # r6c: bits 0-2 one device of 2^b um, bits 3-7 2^(b-3) x 8 um (r6b: 255 x 1 um units, 869 devices and
+            # 0.18 mm^2 in the generic grid layout); steering switches W = 2^b / 2 um (min 2 um), 8 um fingers
+            if m < 8:
+                c.p(f'{d.lower()}s{b}', 'pb', V, w=m, l=2)
+            else:
+                c.p(f'{d.lower()}s{b}', 'pb', V, w=8, l=2, m=m // 8)
+            sw, sm = (max(2, m // 2), 1) if m <= 16 else (8, m // 16)
+            c.p(f'VT{d}P', f'{d.lower()}{b}b', f'{d.lower()}s{b}', w=sw, m=sm)
+            c.p(f'VT{d}N', f'{d}{b}', f'{d.lower()}s{b}', w=sw, m=sm)
+        for o in ('P', 'N'):
+            c.r(f'VT{d}{o}', 'VSS', 2, 16)                # R_L 8 kOhm
+            c.pcap(f'VT{d}{o}', 4, 4)                     # r6c: 4x4 (8x8 first cut); the ws_aux AX decaps load it too
+    return c
+
+
 BLOCKS = dict(termination=termination, rxlevel=rxlevel, rxselect=rxselect, wmon_sel=wmon_sel,
-              ctle=ctle, slicer=slicer, detect=detect, cdr=cdr, ptrim=ptrim)
+              ctle=ctle, slicer=slicer, detect=detect, cdr=cdr, ptrim=ptrim, vthdac=vthdac)
 
 
 def write_all():

@@ -475,6 +475,13 @@ No transistor-level loop exists yet. The VCO curves are the r3 extremes.
   (in band) and ΣΔ (20 MHz) dominate. Open: a 4th-order filter pole, or a lower ΣΔ order with
   dither, plus a transistor-level PN sim of the QVCO. (risk: LO-04)
 
+## `pt_pll_ring` r9d / `pt_pll_ring_core` (wired_rx RINGAREA, 2026-11-11)
+
+Compact CDR fast-tune array, new line-ring master without FT/N5/N10 (pll_tx), WT21 `BAND` port before `VDD`
+(tail 8×10/1 high band, half in low band), pll_host deleted (X1).  Areas, extracted range and the vote-rate
+injection finding: `analog/wired_rx/README.md` "Resume 6 / RINGAREA"; interface-changes AC3-W13/W14/W14a.
+`generated/pll_ring-evidence.json` predates r9 (not regenerated).
+
 ## Known limitations and open items
 
 1. **`pll_ring` HOLD fails extracted (r7: +19 636 ppm step, limit 200; see above).**  r7 schematic gave +273 ppm.  Under

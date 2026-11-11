@@ -44,6 +44,11 @@ CASES = [('q625', 4, dict(f=625e6, words=12)),
          ('h625_r1', 2, dict(f=625e6, words=12, rcs=1, d_lat=0.47e-9)),
          ('q625_ss_r1', 4, dict(f=625e6, words=12, corner='ss', temp=32, vdd=3.15, rcs=1, d_lat=0.47e-9)),
          ('q810_ss_r1', 4, dict(f=810e6, words=12, corner='ss', temp=32, vdd=3.15, rcs=1, d_lat=0.47e-9)),
+         # r5 (2026-11-10): IX-1 top rate (ring 834 MHz) and the fast-corner hold side at the bottom rate
+         ('q834_r1', 4, dict(f=834e6, words=12, rcs=1, d_lat=0.47e-9)),
+         ('q834_ss_r1', 4, dict(f=834e6, words=12, corner='ss', temp=32, vdd=3.15, rcs=1, d_lat=0.47e-9)),
+         ('q480_ff', 4, dict(f=480e6, words=12, corner='ff', temp=22, vdd=3.35)),
+         ('q480_ff_r1', 4, dict(f=480e6, words=12, corner='ff', temp=22, vdd=3.35, rcs=1, d_lat=0.47e-9)),
          # safe state: EN=0, clocks/samples/LDE toggling; < 10 uA and every output < 0.3 V
          ('safe_q625', 4, dict(f=625e6, words=4, en_off=True))]
 MIN_BITS = {4: 150, 2: 120, 1: 60}

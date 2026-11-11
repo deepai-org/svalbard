@@ -14,8 +14,15 @@ import re
 PRIMITIVES = {
     'nfet_03v3': ('d', 'g', 's', 'b'),
     'pfet_03v3': ('d', 'g', 's', 'b'),
+    # PD29: 6 V devices for pad-side switches (Magic gf180mcu::nfet_06v0 pcell, DUALGATE drawn by the pcell)
+    'nfet_06v0': ('d', 'g', 's', 'b'),
+    'pfet_06v0': ('d', 'g', 's', 'b'),
     'ppolyf_u_1k': ('p', 'n', 'b'),
+    # capacitors (c_width/c_length, microns): MIM top/bottom plate, n-well accumulation varactor gate/well
+    'cap_mim_2f0_m4m5_noshield': ('t', 'b'),
+    'cap_nmos_03v3_b': ('g', 'w'),
 }
+CAPS = ('cap_mim_2f0_m4m5_noshield', 'cap_nmos_03v3_b')
 
 
 # Compact fast cells (fastcells.py) are placed as macros: treated as leaf
@@ -53,6 +60,8 @@ class Device:
             return f'X{self.name} {" ".join(self.nodes)} {self.model}'
         if self.model.startswith('ppolyf'):
             return f'X{self.name} {" ".join(self.nodes)} {self.model} r_width={self.w:g}u r_length={self.l:g}u'
+        if self.model in CAPS:
+            return f'X{self.name} {" ".join(self.nodes)} {self.model} c_width={self.w:g}u c_length={self.l:g}u'
         return f'X{self.name} {" ".join(self.nodes)} {self.model} w={self.w:g}u l={self.l:g}u'
 
 
@@ -120,6 +129,9 @@ def flatten(subckts, top, prefix='', mapping=None, out=None):
             if cell.startswith('ppolyf'):
                 w = value(params['r_width']) * 1e6
                 l = value(params['r_length']) * 1e6
+            elif cell in CAPS:
+                w = value(params['c_width']) * 1e6
+                l = value(params['c_length']) * 1e6
             else:
                 w = value(params['w']) * 1e6
                 l = value(params['l']) * 1e6

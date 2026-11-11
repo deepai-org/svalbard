@@ -1,0 +1,167 @@
+* SPDX-License-Identifier: Apache-2.0
+* VERSION: pt_pll_ring_core r9d (2026-11-11, RINGAREA, consolidation pass 3 X4, WT21 BAND bit) -- ports REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL BAND VDD VSS
+* Line (TX) ring variant of pt_pll_ring r9c WITHOUT the CDR-only fast-tune array and WITHOUT the N5/N10 /10 path
+* (feedback /8 (N8|N4) or /16, reference /2 on N4).  Same ct_ring9 core, phase buffer, PFD/pump/filter and divider tap.
+* r9 (IX-1, PD9, AC3-W9; 2026-11-10): (1) ring cell ct_ring9 (interleaved layout, 2x ring devices): the extracted
+*   ct_ring8 lost 42 % of its speed to cell wiring; r9 runs on the pt_pll_vreg output (VDD = ring supply, ~0.9 x rail)
+*   and covers 393-834 MHz in ONE band with VCTRL 0.87..2.02 V (ff/22/3.015 .. ss/32/2.71 V; ring cell extracted).
+*   (2) fast-tune units are tail/header copies (gate VCF / VPBF) so ppm/vote tracks the ring current (see below).
+*   Low rates (IX-4) need no ring change: full-rate phase mapping with the ring at 2 x the bit rate (OSR 2).
+* r8 (AC3-W7, AC3-W8): (1) N = 10 (N10: feedback VCO -> ct_div5 -> /2 = /10) and N = 5 (N5: REF/2 into the PFD with
+*   the same /10 feedback, as N4 does with /8) for HDMI/DVI x10 (720p full rate, 1080p half rate).  Priority
+*   N5/N10 > N4/N8.  The /5 counter is held in reset unless EN & (N5|N10).  Pump 10 uA in /10 modes.
+* (2) CDR fast-tune (proportional) port: per vote leg k two gate-switched current legs on the ring tail
+*   (VT) with 1/12-size copies on the header replica (VPB), so both rails move: leg on when FUk=1 and leg on
+*   when FDk=0 -> FU only: +1 unit, FD only: -1 unit, neither/both: 0 (vs the idle level, a static offset
+*   the integral path absorbs).  Unit = KP code (0..7, cdr.config kp bits) x one switched long-channel
+*   conductance.  FUk/FDk come straight from the capture PD (one ring cycle each).  KP=0: path off.
+* pt_pll_ring: wired-side PLL with the compact 8-phase ring (P3/P4 first cut).
+* Shared loop pieces from pll.spice (PFD, charge pump, filter, lock detector);
+* VCO = ct_ring8 (4-stage pseudo-differential ring, O0..O7 at 45 deg) with an
+* NMOS tail on VT (gate VCTRL) and a PMOS header on VH; feedback = four
+* ct_tspc2 TSPC /2 stages; N = 16 (N4=N8=0), 8 (N8=1) or 4 (N4=1, host_follow
+* from the 125/156.25 MHz H2D_CLK).  N=4 is realised as REF/2 (TSPC) into the
+* PFD with feedback /8, so the PFD never runs above ~80 MHz (an extracted
+* PFD at 125-156 MHz did not hold lock).  This is the single PLL design for every loop (P3-2).  PH0..PH7 are the eight
+* ring phases at the VCO rate (wired_rx phase-interpolator interface).
+* EN=0: REF gated, PFD reset, filter discharged, header and tail off, phase
+* outputs and TSPC stages clamped, LOCK=0.
+.include timing_cells.spice
+.include pll.spice
+.include generated/fast/ct_ring9.spice
+.include generated/fast/ct_tspc2.spice
+.include generated/fast/ct_phbuf8.spice
+.include generated/fast/ct_mux4.spice
+.include generated/fast/ct_tspcd.spice
+.include generated/fast/ct_div5.spice
+
+.subckt pt_pll_ring_core REF EN N4 N8 HOLD IBIAS PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 LOCK FBCK REFO ATB_VCTRL BAND VDD VSS
+* r8 mode decode: NX = N5|N10 (/10 feedback), R45 = N4|N5 (reference /2)
+XEI EN ENB VDD VSS pt_t_inv1
+* bias and charge pump (as pt_pll)
+XNB IBIAS IBIAS NBS VSS nfet_03v3 w=4u l=2u
+XNBS NBS EN VSS VSS nfet_03v3 w=4u l=0.28u
+XNBC IBIAS ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XNM1 PB IBIAS VSS VSS nfet_03v3 w=4u l=2u
+XPB PB PB VDD VDD pfet_03v3 w=8u l=2u
+XRG REF EN REFB VDD VSS pt_t_nand2
+XRGI REFB REFG VDD VSS pt_t_inv1
+* N4 (host_follow): reference /2, held in reset unless EN & N4
+XRDE EN N4 RD2RB VDD VSS pt_t_nand2
+XRD2 REFG REFD2 RD2RB VDD VSS ct_tspc2
+XRSN N4 N4N VDD VSS pt_t_inv1
+XRSM REFG REFD2 VSS VSS N4N N4 VSS VSS REFP VDD VSS ct_mux4
+* clean reference and feedback copies for the standard-cell lock checker
+XRO1 REFP REFOB VDD VSS pt_t_inv1
+XRO2 REFOB REFO VDD VSS pt_t_inv2
+* HOLD (r6, for the CDR hand-over): HOLD is sampled on the falling edge of
+* the PFD reference (mid-cycle, when no pump pulse is active in lock); the
+* registered HOLDS keeps the PFD in reset, so UP/DN stay off and the loop
+* filter floats with no truncated pump pulse.  The VCO keeps running on the
+* held VCTRL; an external pump (pt_cdr bang-bang) may still drive ATB_VCTRL.
+* HOLD=0 releases at the next reference falling edge; the PFD restarts from
+* reset (normal re-acquisition).
+* r6a (2026-11-09): the HOLD flop clock is NOR(REFP, ENB), not !REFP.  With
+* EN=0 REFP is held low, so an inverter held CK high and ct_tspcd's reset
+* NMOS (XNR) fought its Y-gated pull-up (XP4): 509 uA static in the disabled
+* state (safe bench, schematic and extracted).  CK low in reset removes the fight.
+XHI REFP ENB REFPN VDD VSS pt_t_nor2
+XHF REFPN HOLD HOLDS ENB VDD VSS ct_tspcd
+XHN HOLDS HOLDSB VDD VSS pt_t_inv1
+XPEN EN HOLDSB PENB VDD VSS pt_t_nand2
+XPEI PENB PEN VDD VSS pt_t_inv1
+XPFD REFP FB PEN UP DN VDD VSS pt_pfd
+XUI UP UPB VDD VSS pt_t_inv1
+* charge pump scaled with the feedback divider so the loop bandwidth and
+* phase margin do not change: 20 uA for /16 (N=16), 10 uA for /8 (N=8, and
+* N=4 = REF/2 with /8), as a 10 uA leg plus a 10 uA leg enabled by N16
+* (L = 2 um mirrors).
+XN16I N16 N16B VDD VSS pt_t_inv1
+* r8: 20 uA only for /16 (S16 = N16 & !NX)
+XS16N N16 S16B VDD VSS pt_t_inv1
+XS16I S16B S16 VDD VSS pt_t_inv1
+XPS0 PS PB VDD VDD pfet_03v3 w=8u l=2u
+XPS2 PS2 PB VDD VDD pfet_03v3 w=8u l=2u
+XPE2 PS S16B PS2 VDD pfet_03v3 w=2u l=0.28u
+XPU ATB_VCTRL UPB PS VDD pfet_03v3 w=2u l=0.28u
+XND ATB_VCTRL DN NS VSS nfet_03v3 w=1u l=0.28u
+* r7 (2026-11-09) current steering: while UP (DN) is off its current source is steered into
+* VDUM, which a unity-gain PMOS-input OTA holds at VCTRL.  r6a let PS float to VDD and NS to VSS
+* between pulses; at switch-on PS dumped its charge into VCTRL (schematic: +35 mV in a 0.64 ns
+* UP/DN overlap, i.e. ~48 uA effective vs a 20 uA pump), which the loop cancelled with ~1 ns of
+* DN-only per reference cycle: 38 mV VCTRL ripple, PFD activity 6.5 % (analog LOCK dropped at
+* 625/810 MHz) and part of the HOLD step.  r7 schematic: ripple 3.6 mV, activity 3.2 %, HOLD step
+* +273 ppm (r6a +850 ppm).  In HOLD both sources run into VDUM, so the off switches see ~0 V.
+* EN=0: OTA tail is the PB mirror (no current), VDUM clamped to VSS.
+XDI DN DNB VDD VSS pt_t_inv1
+XPUD VDUM UP PS VDD pfet_03v3 w=2u l=0.28u
+XNDD VDUM DNB NS VSS nfet_03v3 w=1u l=0.28u
+XAT TL PB VDD VDD pfet_03v3 w=8u l=2u
+XA1 AM ATB_VCTRL TL VDD pfet_03v3 w=8u l=1u
+XA2 VDUM VDUM TL VDD pfet_03v3 w=8u l=1u
+XA3 AM AM VSS VSS nfet_03v3 w=4u l=2u
+XA4 VDUM AM VSS VSS nfet_03v3 w=4u l=2u
+XCD VSS VDUM VSS VSS nfet_03v3 w=10u l=10u m=2
+XCLD VDUM ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XNS0 NS IBIAS VSS VSS nfet_03v3 w=4u l=2u
+XNS2 NS2 IBIAS VSS VSS nfet_03v3 w=4u l=2u
+XNE2 NS S16 NS2 VSS nfet_03v3 w=2u l=0.28u
+XC2A VSS ATB_VCTRL VSS VSS nfet_03v3 w=10u l=10u m=2
+XR ATB_VCTRL VZ VSS ppolyf_u_1k r_width=1u r_length=20u
+XC1 VSS VZ VSS VSS nfet_03v3 w=20u l=20u m=5
+XCLV ATB_VCTRL ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XCLZ VZ ENB VSS VSS nfet_03v3 w=1u l=0.28u
+* VCO (r9c: tail m 6 -> 8 and replica 5 -> 6.67 um, keeping the 1/12 replica ratio: +33 % current at a given VCTRL, for 810/834 MHz at ss/32/2.69 V with +15 % ring C and gate R (model-uncertainty audit))
+* WT21 band bit (r9d): BAND=1 high band (tail 8 x 10/1, replica 6.67/1), BAND=0 low band (half: tail 4 x, replica 3.33):
+* the switched halves have their gate VTG = ATB_VCTRL through a static transmission gate (no series switch in the
+* tail current path), pulled to VSS when BAND=0.
+XBI BAND BANDB VDD VSS pt_t_inv1
+XBGN ATB_VCTRL BAND VTG VSS nfet_03v3 w=2u l=0.28u
+XBGP ATB_VCTRL BANDB VTG VDD pfet_03v3 w=4u l=0.28u
+XBGD VTG BANDB VSS VSS nfet_03v3 w=1u l=0.28u
+XTL VT ATB_VCTRL VSS VSS nfet_03v3 w=10u l=1u m=4
+XTLB VT VTG VSS VSS nfet_03v3 w=10u l=1u m=4
+* symmetric starving: the header is a PMOS current source mirrored from a
+* 1/12 replica of the tail (VCTRL -> XRPN -> diode XRPD -> VPB), so both ring
+* rails move with the tuning current.  The ring common mode is not
+* controlled: VT stays near 0.25 V and VH tracks the current (1.9-3.0 V);
+* ct_ring8 restores each node with a low-threshold (~1.25 V) inverter.  EN=0: replica path open, VPB pulled to VDD (header off).
+XRPN VPB ATB_VCTRL RPS VSS nfet_03v3 w=3.33u l=1u
+XRPNB VPB VTG RPS VSS nfet_03v3 w=3.34u l=1u
+XRPE RPS EN VSS VSS nfet_03v3 w=4u l=0.28u
+XRPD VPB VPB VDD VDD pfet_03v3 w=6.5u l=0.28u
+XRPU VPB EN VDD VDD pfet_03v3 w=1u l=0.28u
+XHD VH VPB VDD VDD pfet_03v3 w=10u l=0.28u m=8
+XRING O0 O1 O2 O3 O4 O5 O6 O7 ENB VT VH VDD VSS ct_ring9
+* common-mode-insensitive phase restore + balanced port drivers
+XPHB O4 O5 O6 O7 O0 O1 O2 O3 PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 ODC VDD VSS ct_phbuf8
+* feedback /16 from the dedicated divider tap
+* divider clock ODC from ct_phbuf8 (tapped at input 0, dummy-balanced)
+XD1 ODC Q1 ENB VDD VSS ct_tspc2
+XD2 Q1 Q2 ENB VDD VSS ct_tspc2
+XD3 Q2 Q3 ENB VDD VSS ct_tspc2
+XD4 Q3 Q4 ENB VDD VSS ct_tspc2
+* feedback divider select: /8 (N8 or N4) or /16 (N16 = neither)
+XNSN N4 N8 N16 VDD VSS pt_t_nor2
+XS8N N16B S8B VDD VSS pt_t_inv1
+XS8I S8B S8 VDD VSS pt_t_inv1
+* r8 /10: VCO (ODC, gated + buffered) -> /5 (ct_div5) -> TSPC /2; reset unless EN & NX
+* clock gated low in reset and re-buffered (as pt_wordclk): sharp edges into the three TSPC flops
+* /2 after the /5 (ct_div5 is dynamic: it divides by 4 with a 235 MHz VCO/2 clock, so it runs at the VCO rate)
+XNSM Q3 Q4 VSS VSS S8 S16 VSS VSS FB VDD VSS ct_mux4
+XFB FB FBB VDD VSS pt_t_inv1
+XFB2 FBB FBCK VDD VSS pt_t_inv2
+* analog lock indicator (demoted: informative only; the qualified lock check is
+* the standard-cell REFO-vs-FBCK counter in the register-file RTL)
+XLO UP DN UDN VDD VSS pt_t_nor2
+XLOI UDN ORUD VDD VSS pt_t_inv1
+* lock qualification: LK charges at ~3 uA and is discharged at ~15x that
+* while UP or DN is active, so LOCK=1 only when PFD activity < ~15 % of time
+XLU LK ENB VDD VDD pfet_03v3 w=0.5u l=5u
+XLD LK ORUD LDS VSS nfet_03v3 w=0.5u l=2u
+XLDE LDS EN VSS VSS nfet_03v3 w=1u l=0.28u
+XLC VSS LK VSS VSS nfet_03v3 w=4u l=10u
+XLK LK ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XLI1 LK LKB VDD VSS pt_t_inv1
+XLN LKB ENB LOCK VDD VSS pt_t_nor2
+.ends

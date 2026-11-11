@@ -61,13 +61,23 @@ def tb_termination(sub, netfile, corner='typical', temp=27, vdd=3.3):
     m0 = [(0, 0), (t[1], 1), (t[3], 0)]
     m1 = [(0, 0), (t[2], 1)]
     m = dict(VDD_WIRE_SW='vdd', VSS='0', term_en='en', term_mode0='m0', term_mode1='m1',
-             TERM_ENABLE='te', DIFF_ENABLE='de', TERM_VCM='vcm')
+             TERM_ENABLE='te', DIFF_ENABLE='de', TERM_VCM='vcm',
+             term_trim0='vdd', term_trim1='0', term_trim2='vdd', TERM_TRIM0='tr0', TERM_TRIM1='tr1', TERM_TRIM2='tr2',
+             # r3 HS pair (pad_hspad): hs_en with the USB enable, hs_term_en from 100 ns, trim code 0101
+             hs_en='en', hs_term_en='hte', hs_trim0='vdd', hs_trim1='0', hs_trim2='vdd', hs_trim3='0',
+             HS_TERM_ENABLE='hte_o', HS_TERM_TRIM0='htr0', HS_TERM_TRIM1='htr1', HS_TERM_TRIM2='htr2',
+             HS_TERM_TRIM3='htr3', HS_TERM_VCM='hvcm', HS_VBIAS='hvb')
+    m = {k: v for k, v in m.items() if k in sub.ports}       # r1 netlists have no trim ports
+    hs = 'HS_VBIAS' in sub.ports
     body = '\n'.join([
         f'VDD vdd 0 {V}', step_src('VEN', 'en', en, V), step_src('VM0', 'm0', m0, V), step_src('VM1', 'm1', m1, V),
         # pad bank model on TERM_VCM: two legs of 24 ohm + switch into a 25 ohm (100 ohm diff, AC-coupled) line;
         # common-mode load only: legs are a DC-isolated source here, plus 17.8 mA HS driver current in USB mode
         'CL1 te 0 300f', 'CL2 de 0 200f',
         'Iusb 0 vcm PWL(0 0 400n 0 400.1n 17.8m 450n 17.8m 450.1n 0)',
+        # HS loads: pad bank gates (~0.3 pF each), 2 x 40 kohm RX bias resistors behind the MIM (DC 0), 1 pF CM on VCM
+        *(['VHTE hte 0 PWL(0 0 100n 0 100.1n {V})'.format(V=V), 'CH1 hte_o 0 300f', 'CH2 hvcm 0 1p', 'CH3 hvb 0 0.4p']
+          + [f'CHT{k} htr{k} 0 300f' for k in range(4)] if hs else []),
         inst(sub, m)])
     ctl = '\n'.join([
         'tran 0.2n 900n', 'set wr_singlescale', 'wrdata tran.txt v(vcm) v(te) v(de) i(VDD)',
@@ -77,7 +87,16 @@ def tb_termination(sub, netfile, corner='typical', temp=27, vdd=3.3):
         'meas tran vcm_diff find v(vcm) at=690n', 'meas tran idd_div avg i(VDD) from=250n to=290n',
         'meas tran idd_off avg i(VDD) from=800n to=890n', 'meas tran idd_reset avg i(VDD) from=10n to=45n',
         'meas tran te_off find v(te) at=890n', 'meas tran vcm_off find v(vcm) at=890n',
-        'meas tran t_settle when v(vcm)=1.14 rise=1 td=50n'])
+        'meas tran t_settle when v(vcm)=1.14 rise=1 td=50n'] +
+        (['meas tran tr0_on find v(tr0) at=290n', 'meas tran tr1_on find v(tr1) at=290n',
+          'meas tran tr2_on find v(tr2) at=290n', 'meas tran tr0_off find v(tr0) at=890n'] if 'TERM_TRIM0' in sub.ports else []) +
+        (['meas tran hvcm_on find v(hvcm) at=290n', 'meas tran hvb_on find v(hvb) at=290n',
+          'meas tran hte_on find v(hte_o) at=290n', 'meas tran hte_pre find v(hte_o) at=90n',
+          'meas tran htr0_on find v(htr0) at=290n', 'meas tran htr1_on find v(htr1) at=290n',
+          'meas tran htr2_on find v(htr2) at=290n', 'meas tran htr3_on find v(htr3) at=290n',
+          'meas tran htr0_pre find v(htr0) at=90n', 'meas tran hvcm_off find v(hvcm) at=890n',
+          'meas tran hvb_off find v(hvb) at=890n', 'meas tran hte_off find v(hte_o) at=890n',
+          'meas tran t_hvb when v(hvb)=0.9 rise=1 td=50n'] if 'HS_VBIAS' in sub.ports else []))
 
     def analyse(log, data):
         r = parse_meas(log)
@@ -86,6 +105,17 @@ def tb_termination(sub, netfile, corner='typical', temp=27, vdd=3.3):
         r['pass'] = bool(abs(r.get('vcm_div', 0) - 1.2) < .1 and r.get('te_div', 0) > .9 * V and r.get('de_div', 1) < .1
                          and r.get('vcm_gnd_ron_ohm', 99) < 3 and r.get('de_diff', 0) > .9 * V and r.get('te_diff', 1) < .1
                          and r.get('te_off', 1) < .1 and abs(r.get('idd_off', 1)) < 1e-6)
+        if 'HS_VBIAS' in sub.ports:      # r3 HS pair: PD27 VCM 0.3-0.5 V; VBIAS 0.9-1.1 V (CTLE r2 CM window is
+            # 0.8-1.2 V at ss, 0.8-1.4/1.6 V tt/ff); trim 0101 gated by the enables
+            r['hvb_settle_ns'] = (r['t_hvb'] - 50e-9) * 1e9 if 't_hvb' in r else None
+            r['pass'] = bool(r['pass'] and 0.3 <= r.get('hvcm_on', 0) <= 0.5 and 0.9 <= r.get('hvb_on', 0) <= 1.1
+                             and r.get('hte_on', 0) > .9 * V and r.get('hte_pre', 1) < .1 and r.get('htr0_pre', 1) < .1
+                             and r.get('htr0_on', 0) > .9 * V and r.get('htr1_on', 1) < .1 and r.get('htr2_on', 0) > .9 * V
+                             and r.get('htr3_on', 1) < .1 and r.get('hvcm_off', 1) < .02 and r.get('hvb_off', 1) < .02
+                             and r.get('hte_off', 1) < .1)
+        if 'TERM_TRIM0' in sub.ports:    # r2: trim code 101 passed while enabled, all low when disabled
+            r['pass'] = bool(r['pass'] and r.get('tr0_on', 0) > .9 * V and r.get('tr1_on', 1) < .1
+                             and r.get('tr2_on', 0) > .9 * V and r.get('tr0_off', 1) < .1)
         return r
     return [('modes', deck(sub, netfile, body, ctl, corner, temp, 'termination modes'), analyse)]
 
@@ -189,26 +219,37 @@ def tb_wmon_sel(sub, netfile, corner='typical', temp=27, vdd=3.3):
 def tb_ctle(sub, netfile, corner='typical', temp=27, vdd=3.3, cm=1.0):
     cases = []
     base = dict(VDD_WIRE_SW='vdd', VSS='0', IBIAS='ib', ctle_en='en', wire_ctle_bypass='byp', ctle_peak0='p0',
-                ctle_peak1='p1', RX_P='inp', RX_N='inn', CTLE_P='outp', CTLE_N='outn',
-                atb_ctle_pbias='pb', atb_ctle_src='src')
-    for en, byp, code in ((1, 0, 0), (1, 0, 1), (1, 0, 2), (1, 0, 3), (0, 1, 0), (0, 0, 0)):
+                ctle_peak1='p1', ctle_peak2='p2', RX_P='inp', RX_N='inn', CTLE_P='outp', CTLE_N='outn',
+                atb_ctle_pbias='pb', atb_ctle_src='src', lf_zero0='lz0', lf_zero1='lz1', lf_zero2='lz2')
+    ncode = 8 if 'ctle_peak2' in sub.ports else 4       # r2: 3-bit peaking code
+    nlfz = 8 if 'lf_zero0' in sub.ports else 0          # r3 (IX-13): LF zero bank at peak code 7
+    for en, byp, code, lfz in ([(1, 0, k, 0) for k in range(ncode)] + [(0, 1, 0, 0), (0, 0, 0, 0)]
+                               + [(1, 0, 7, z) for z in range(1, nlfz)] + ([(1, 0, 0, 7)] if nlfz else [])):
         body = '\n'.join([f'VDD vdd 0 {vdd}', 'RIB vdd ib 260k', f'VEN en 0 {en * vdd}', f'VBY byp 0 {byp * vdd}',
-                          f'VP0 p0 0 {(code & 1) * vdd}', f'VP1 p1 0 {(code >> 1) * vdd}',
+                          f'VP0 p0 0 {(code & 1) * vdd}', f'VP1 p1 0 {((code >> 1) & 1) * vdd}', f'VP2 p2 0 {(code >> 2) * vdd}',
+                          *[f'VLZ{j} lz{j} 0 {((lfz >> j) & 1) * vdd}' for j in range(3)],
                           f'VIP vip 0 DC {cm} AC 0.5', f'VIN vin 0 DC {cm} AC -0.5',
                           'RSP vip inp 25', 'RSN vin inn 25',
                           'CLP outp 0 150f', 'CLN outn 0 150f', inst(sub, base)])
         ctl = '\n'.join(['op', 'print v(outp) v(outn) v(src) v(pb) i(VDD)', 'let idd=-i(VDD)', 'print idd',
-                         'ac dec 40 1e6 2e10', 'let g=db(v(outp)-v(outn))',
-                         'meas ac gdc find g at=1e6', 'meas ac gpk max g',
+                         'ac dec 40 1e4 2e10', 'let g=db(v(outp)-v(outn))',
+                         'meas ac gdc find g at=1e6', 'meas ac gpk max g', 'meas ac glf find g at=1e4',
+                         'meas ac g100m find g at=1e8', 'let gz=glf+3', 'meas ac fz when g=gz rise=1',
                          'meas ac g625 find g at=625e6', 'meas ac g1g25 find g at=1.25e9', 'meas ac g2g5 find g at=2.5e9',
                          'let gt=gdc-3', 'meas ac bw3db when g=gt fall=last',
                          'set wr_singlescale', 'wrdata ac.txt g'])
 
-        def analyse(log, data, en=en, byp=byp):
+        def analyse(log, data, en=en, byp=byp, lfz=lfz, code=code):
             r = parse_meas(log)
             m = __import__('re').search(r'idd = ([-+0-9.eE]+)', log)
             r['idd_a'] = float(m.group(1)) if m else None
-            if en:
+            if en and lfz:
+                # IX-13: zero (gain 3 dB above the 10 kHz level) 4.4-35 MHz for codes 1-7 at peak code 7; the LF->100 MHz
+                # boost stays >= 12 dB; monotonicity is judged across codes in the evidence summary
+                r['boost_lf_db'] = r.get('g100m', 0) - r.get('glf', 0)
+                r['boost_db'] = r.get('gpk', 0) - r.get('glf', 0)
+                r['pass'] = bool((code == 0) or (3e6 < r.get('fz', 0) < 40e6 and r['boost_db'] > 12))
+            elif en:
                 r['peaking_db'] = r.get('gpk', 0) - r.get('gdc', 0)
                 r['pass'] = bool(-12 < r.get('gdc', -99) < 4 and r.get('g1g25', -99) > -3 and (r['idd_a'] or 0) < 12e-3)
             elif byp:
@@ -216,13 +257,15 @@ def tb_ctle(sub, netfile, corner='typical', temp=27, vdd=3.3, cm=1.0):
             else:
                 r['pass'] = bool(r.get('gdc', 0) < -30 and abs(r['idd_a'] or 1) < 1e-6)
             return r
-        name = f'ac_code{code}' if en else ('ac_bypass' if byp else 'ac_off')
+        name = (f'ac_code{code}' + (f'_lfz{lfz}' if lfz else '')) if en else ('ac_bypass' if byp else 'ac_off')
         cases.append((name, deck(sub, netfile, body, ctl, corner, temp, f'ctle {name}'), analyse))
     return cases
 
 
 # ------------------------------------------------------------------ slicer
-def _slicer_body(sub, per, vd, cm, trims, vdd, n_bits=24, seed=1, ramp=None, tstop=None, delay=0., rep=1):
+def _slicer_body(sub, per, vd, cm, trims, vdd, n_bits=24, seed=1, ramp=None, tstop=None, delay=0., rep=1, aux=None, vt=None):
+    # r6 (IX-10): aux = {edge sampler: select (0 off, 1 VTH_A, 2/3 VTH_B)}; vt = {VTAP/VTAN/VTBP/VTBN: volts}
+    # (default every line at the DAC mid-scale CM 0.8 V); pre-r6 netlists have no such ports
     # per = 2 quarter-rate UI; the eight ring clocks CKPk (period 2*per) are k*per/4 apart.
     # rep: line bit length in quarter-rate UI (1 quarter, 2 half, 4 full rate at the same ring frequency)
     m = dict(VDD_WIRE_SW='vdd', VSS='0', slicer_en='en', SL_P='inp', SL_N='inn', QCK='qck',
@@ -232,9 +275,15 @@ def _slicer_body(sub, per, vd, cm, trims, vdd, n_bits=24, seed=1, ramp=None, tst
         if port.startswith('trim_'):
             _, s, b = port.split('_')
             m[port] = 'tvdd' if trims.get(s, {}).get(b) else '0'
+        elif port.startswith('vsel_'):
+            _, s, b = port.split('_')
+            m[port] = 'tvdd' if ((aux or {}).get(s, 0) >> int(b)) & 1 else '0'
+        elif port in ('VTAP', 'VTAN', 'VTBP', 'VTBN'):
+            m[port] = port.lower()
     P = 2 * per
     tr = P / 40
     lines = [f'VDD vdd 0 {vdd}', f'VT tvdd 0 {vdd}', f'VEN en 0 PWL(0 0 0.5n {vdd})']
+    lines += [f'V{q} {q.lower()} 0 {(vt or {}).get(q, 0.8)}' for q in ('VTAP', 'VTAN', 'VTBP', 'VTBN') if q in sub.ports]
     for k in range(8):
         name = 'ck0' if k == 0 else f'ckp{k}'
         lines.append(f'V{name} {name} 0 PULSE(0 {vdd} {1e-9 + k * P / 8:.4g} {tr:.3g} {tr:.3g} {P / 2 - tr:.4g} {P:.4g})')
@@ -343,6 +392,48 @@ def tb_slicer(sub, netfile, corner='typical', temp=27, vdd=3.3, rates=(1e9,), vd
             return r
         cases.append((f'offset_{label}', deck(sub, netfile, body, ctl, corner, temp, f'slicer offset {label}'), analyse))
     return cases
+
+
+def tb_slicer_trim(sub, netfile, corner='typical', temp=27, vdd=3.3, codes=None, window=(-0.09, 0.09)):
+    """r4 (MT01-W2) fine offset-trim characterisation: slow differential ramp over `window` in 400 decisions per
+    sampler (0.45 mV/decision for +/-90 mV), 500 MHz CK0, every sampler on the same code.  codes: {label: {bit: 1}}
+    with bits p0..p2 (coarse, negative), n0..n2 (coarse, positive), f0..f2 (fine unequal pairs, positive).
+    The step/range judgement is made over the set of codes (slicer_trim_summary)."""
+    full = lambda bits: {k: {b: 1 for b in bits} for k in SAMPLERS}
+    codes = codes or {'t0': ()}
+    cases = []
+    per = 1e-9
+    lo, hi = window
+    t_end = 800e-9
+    for label, bits_ in codes.items():
+        body, _ = _slicer_body(sub, per, 0, 1.0, full(bits_), vdd, ramp=(lo, hi, t_end))
+        ctl = '\n'.join([f'tran 20p {t_end:.4g}', 'set wr_singlescale',
+                         'wrdata tran.txt v(d0) v(e0) v(d1) v(e1) v(d2) v(e2) v(d3) v(e3)'])
+
+        def analyse(log, data, t_end=t_end, lo=lo, hi=hi):
+            d = load(data)
+            t = d[:, 0]
+            r = {}
+            for col, name in enumerate(SAMPLERS, 1):
+                ups = [u for u in crossings(t, d[:, col], vdd / 2, True) if u > 5e-9]
+                r[f'offset_mV_{name}'] = 1e3 * (lo + (hi - lo) * ups[0] / t_end) if ups else None
+            r['resolution_mV'] = 1e3 * (hi - lo) / (t_end / (2 * per))
+            r['pass'] = all(r[f'offset_mV_{n}'] is not None for n in SAMPLERS)
+            r['gating'] = False
+            return r
+        cases.append((f'trim_{label}', deck(sub, netfile, body, ctl, corner, temp, f'slicer trim {label}'), analyse))
+    return cases
+
+
+# fine code k = f2 f1 f0 (binary, weights ~2/4/8 mV); p0 / n0 = one coarse LSB each way; p0f7 checks that the fine
+# span covers the coarse LSB (contiguous codes)
+TRIM_CODES_R4 = dict({f'f{k}': tuple(f'f{b}' for b in range(3) if (k >> b) & 1) for k in range(8)},
+                     p0=('p0',), p0f7=('p0', 'f0', 'f1', 'f2'), n0=('n0',))
+TRIM_RANGE_R4 = {'p7': ('p0', 'p1', 'p2'), 'n7f7': ('n0', 'n1', 'n2', 'f0', 'f1', 'f2')}
+# r6: four fine bits (f3 = the new ~1 mV pair); fine code k = f3..f0 bits of k
+TRIM_CODES_R6 = dict({f'f{k}': tuple(f'f{b}' for b in range(4) if (k >> b) & 1) for k in range(16)},
+                     p0=('p0',), p0f15=('p0', 'f0', 'f1', 'f2', 'f3'), n0=('n0',))
+TRIM_RANGE_R6 = {'p7': ('p0', 'p1', 'p2'), 'n7f15': ('n0', 'n1', 'n2', 'f0', 'f1', 'f2', 'f3')}
 
 
 RING_PLAN = (480e6, 625e6, 810e6)          # pt_pll_ring range used by the wired RX
@@ -484,7 +575,9 @@ def tb_detect(sub, netfile, corner='typical', temp=27, vdd=3.3):
                      'RTP txp 0 10k', 'CTP txp 0 1p', 'RTN txn 0 10k', 'CTN txn 0 50p', inst(sub, base)])
     ctl = '\n'.join(['tran 0.1n 400n', 'set wr_singlescale', 'wrdata tran.txt v(txp) v(txn) v(sep) v(sen)',
                      'meas tran v_txp find v(txp) at=390n', 'meas tran v_txn_100n find v(txn) at=100n',
-                     'meas tran t_sep when v(sep)=1.65 rise=1', 'meas tran t_sen when v(sen)=1.65 rise=1',
+                     # r6: from 10 ns (after the first det_clk sample): the SR output latch powers up in an
+                     # undefined state at det_en and is only valid after a clocked decision
+                     'meas tran t_sep when v(sep)=1.65 rise=1 td=10n', 'meas tran t_sen when v(sen)=1.65 rise=1 td=10n',
                      'meas tran iavg avg i(VDD) from=300n to=400n'])
 
     def rxdet(log, data):
@@ -663,17 +756,20 @@ BENCHES = dict(termination=[tb_termination], rxlevel=[tb_rxlevel], rxselect=[tb_
 
 # ------------------------------------------------------------------ generic safety benches
 PORTS = dict(
-    termination=dict(ctrl=['term_en', 'term_mode0', 'term_mode1'], clk=[], ain=[], bias=[],
-                     out=['TERM_ENABLE', 'DIFF_ENABLE', 'TERM_VCM']),
+    termination=dict(ctrl=['term_en', 'term_mode0', 'term_mode1', 'hs_en', 'hs_term_en', 'hs_trim0', 'hs_trim1', 'hs_trim2',
+                           'hs_trim3'], clk=[], ain=[], bias=[],
+                     out=['TERM_ENABLE', 'DIFF_ENABLE', 'TERM_VCM', 'HS_TERM_ENABLE', 'HS_TERM_TRIM0', 'HS_TERM_TRIM1',
+                          'HS_TERM_TRIM2', 'HS_TERM_TRIM3', 'HS_TERM_VCM', 'HS_VBIAS']),
     rxlevel=dict(ctrl=['rxlevel_en', 'rxlevel_half'], clk=[], ain=[], bias=[], out=['DIV_ENABLE', 'BYPASS_ENABLE']),
     rxselect=dict(ctrl=['rxselect_en', 'rxselect_direct'], clk=[], ain=['CTLE_P', 'CTLE_N', 'RX_P', 'RX_N'], bias=[],
                   out=['SL_P', 'SL_N']),
     wmon_sel=dict(ctrl=['wmon_en', 'wmon_sel0', 'wmon_sel1'], clk=[], ain=['RX_P', 'RX_N', 'CTLE_P', 'CTLE_N'], bias=[],
                   out=['WMON_IN']),
-    ctle=dict(ctrl=['ctle_en', 'wire_ctle_bypass', 'ctle_peak0', 'ctle_peak1'], clk=[], ain=['RX_P', 'RX_N'],
+    ctle=dict(ctrl=['ctle_en', 'wire_ctle_bypass', 'ctle_peak0', 'ctle_peak1', 'ctle_peak2', 'lf_zero0', 'lf_zero1',
+                    'lf_zero2'], clk=[], ain=['RX_P', 'RX_N'],
               bias=['IBIAS'], out=['CTLE_P', 'CTLE_N'], atb=['atb_ctle_pbias', 'atb_ctle_src']),
     slicer=dict(ctrl=['slicer_en'] + [f'trim_{s}_{b}' for s in ('d0', 'e0', 'd1', 'e1', 'd2', 'e2', 'd3', 'e3')
-                                      for b in ('p0', 'p1', 'p2', 'n0', 'n1', 'n2')],
+                                      for b in ('p0', 'p1', 'p2', 'n0', 'n1', 'n2', 'f0', 'f1', 'f2')],
                 clk=[f'CKP{k}' for k in range(8)], ain=['SL_P', 'SL_N'], bias=[], out=['D0', 'E0', 'D1', 'E1', 'D2', 'E2', 'D3', 'E3', 'QCK']),
     detect=dict(ctrl=['det_en', 'det_thr0', 'det_thr1', 'det_se0', 'det_se1', 'det_src_tx', 'det_inject'],
                 clk=['det_clk'], ain=['RX_P', 'RX_N', 'TX_P', 'TX_N'], bias=['IBIAS'],

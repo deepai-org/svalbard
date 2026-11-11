@@ -1,0 +1,284 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_lo_mmd: RF-LO frequency-loop feedback divider (LO13), r2 2026-11-11 (LO owner, round 4).
+* Total ratio = 2 x N[5:0], N[5:0] = 16..63 (VCO/FB = 32..126, even).  Fractional-N
+* steps are therefore 2 VCO cycles (the sigma-delta drives N[5:0]; its quantization
+* noise is +6 dB vs a 1-cycle MMD, see loop_tl.json).  Why: a 2/3 cell at the full
+* 2.98-3.1 GHz tank rate did not survive realistic loading in GF180 3.3 V devices
+* (schematic with diffusion C passed with ~0 margin; +30 fF per node or the
+* extracted layout failed at ss/32/3.15); a plain CML /2 with 2.6 mA latches is the
+* only logic that runs there.
+* Chain: tank I pair LP/LN -> 0.5 pF MIM AC coupling (bias VCB) -> CML /2 prescaler
+* -> source followers -> cell A (CML 2/3, <= 1.55 GHz) -> followers -> cell B (CML
+* 2/3, <= 0.78 GHz) -> CML-to-CMOS -> cells C, D (CMOS 2/3) -> cell E (CMOS 2/3, range
+* extension, active for N >= 32).
+* Cell logic (all flops rising on the cell input clock):
+*   Q1 <= NOR(Q1, Q2)   Fo = Q1          M <= MODIN & NOR(Q1, Q2)   Q2 <= M & P
+*   MODIN(i) = M(i+1) | !E(i+1); the last active cell has MODIN = 1.
+* Cell A is reduced to Q1 <= NOR(Q1,Q2), Q2 <= Q1 & G with G <= M(B) & P(A) a flop in
+* cell B's clock domain (equivalent; exhaustively checked for N = 16..63 by
+* scratch/lo/r4_loop/mmdmodel5.py).  FB = M of cell C (one pulse per 2N VCO cycles).
+* CML: GF180 3.3 V devices leave no headroom for series-gated logic, so every
+* AND/NOR is a single-level CURRENT-THRESHOLD latch (pt_m_land2/3): one clocked unit
+* per input steers into QN when true, plus (k-1) clocked offset units into QP;
+* QP = AND of the inputs, then 2 units regenerate in hold.  NOR(Q1,Q2) = AND(!Q1,!Q2).
+* Tank loading: the prescaler clock pairs (2 x 20 um per side) + 0.5 pF MIM bottom
+* plate; the Q tank pair needs a matched dummy (integration).
+* EN=0 (reset): bias and tails off, CMOS cells reset, FB low.
+.include timing_cells.spice
+
+* ---- CML latches (unit = 0.5 mA: tail w=32u l=0.28u = 8 x the 4u bias diode; tails are single
+* wide devices to keep the generated layout compact) ----
+* prescaler latch (3.1 GHz at ss): 2.6 mA, 400 ohm loads, 20u data/hold, 30u clock pair.
+* Sizing sweep (scratch/lo/r4_loop/latp.sh, ss/32/3.15, 3.1 GHz, +40..80 fF/node): smaller
+* devices or < 400 ohm do not regenerate; needs >= 0.45 V/side clock at the gates.
+.subckt pt_m_latp DP DN QP QN CS CH NB VDD VSS
+XT T NB VSS VSS nfet_03v3 w=40u l=0.28u m=4
+XCS S CS T VSS nfet_03v3 w=30u l=0.28u
+XCH H CH T VSS nfet_03v3 w=30u l=0.28u
+XD1 QN DP S VSS nfet_03v3 w=20u l=0.28u
+XD2 QP DN S VSS nfet_03v3 w=20u l=0.28u
+XH1 QN QP H VSS nfet_03v3 w=20u l=0.28u
+XH2 QP QN H VSS nfet_03v3 w=20u l=0.28u
+XR1 VDD QP VSS ppolyf_u_1k r_width=5u r_length=2u
+XR2 VDD QN VSS ppolyf_u_1k r_width=5u r_length=2u
+.ends
+* plain latch, 1.0 mA: transparent while CS > CH; QP follows DP
+.subckt pt_m_lat DP DN QP QN CS CH NB VDD VSS
+XT T NB VSS VSS nfet_03v3 w=64u l=0.28u
+XCS S CS T VSS nfet_03v3 w=10u l=0.28u
+XCH H CH T VSS nfet_03v3 w=10u l=0.28u
+XD1 QN DP S VSS nfet_03v3 w=10u l=0.28u
+XD2 QP DN S VSS nfet_03v3 w=10u l=0.28u
+XH1 QN QP H VSS nfet_03v3 w=10u l=0.28u
+XH2 QP QN H VSS nfet_03v3 w=10u l=0.28u
+XR1 VDD QP VSS ppolyf_u_1k r_width=2.5u r_length=2u
+XR2 VDD QN VSS ppolyf_u_1k r_width=2.5u r_length=2u
+.ends
+* threshold AND latch, 2 inputs: QP = AP & BP while transparent
+.subckt pt_m_land2 AP AN BP BN QP QN CS CH NB VDD VSS
+XTA TA NB VSS VSS nfet_03v3 w=32u l=0.28u
+XTB TB NB VSS VSS nfet_03v3 w=32u l=0.28u
+XTO TO NB VSS VSS nfet_03v3 w=32u l=0.28u
+XCSA SA CS TA VSS nfet_03v3 w=6u l=0.28u
+XCHA H CH TA VSS nfet_03v3 w=6u l=0.28u
+XCSB SB CS TB VSS nfet_03v3 w=6u l=0.28u
+XCHB H CH TB VSS nfet_03v3 w=6u l=0.28u
+XCSO QP CS TO VSS nfet_03v3 w=6u l=0.28u
+XCHO VDD CH TO VSS nfet_03v3 w=6u l=0.28u
+XA1 QN AP SA VSS nfet_03v3 w=6u l=0.28u
+XA2 QP AN SA VSS nfet_03v3 w=6u l=0.28u
+XB1 QN BP SB VSS nfet_03v3 w=6u l=0.28u
+XB2 QP BN SB VSS nfet_03v3 w=6u l=0.28u
+XH1 QN QP H VSS nfet_03v3 w=10u l=0.28u
+XH2 QP QN H VSS nfet_03v3 w=10u l=0.28u
+XR1 VDD QP VSS ppolyf_u_1k r_width=2.5u r_length=2u
+XR2 VDD QN VSS ppolyf_u_1k r_width=2.5u r_length=2u
+.ends
+* threshold AND latch, 3 inputs: QP = AP & BP & CP (2 offset units)
+.subckt pt_m_land3 AP AN BP BN CP CN QP QN CS CH NB VDD VSS
+XTA TA NB VSS VSS nfet_03v3 w=32u l=0.28u
+XTB TB NB VSS VSS nfet_03v3 w=32u l=0.28u
+XTC TC NB VSS VSS nfet_03v3 w=32u l=0.28u
+XTO TO NB VSS VSS nfet_03v3 w=64u l=0.28u
+XCSA SA CS TA VSS nfet_03v3 w=6u l=0.28u
+XCHA H CH TA VSS nfet_03v3 w=6u l=0.28u
+XCSB SB CS TB VSS nfet_03v3 w=6u l=0.28u
+XCHB H CH TB VSS nfet_03v3 w=6u l=0.28u
+XCSC SC CS TC VSS nfet_03v3 w=6u l=0.28u
+XCHC VDD CH TC VSS nfet_03v3 w=6u l=0.28u
+XCSO QP CS TO VSS nfet_03v3 w=10u l=0.28u
+XCHO VDD CH TO VSS nfet_03v3 w=10u l=0.28u
+XA1 QN AP SA VSS nfet_03v3 w=6u l=0.28u
+XA2 QP AN SA VSS nfet_03v3 w=6u l=0.28u
+XB1 QN BP SB VSS nfet_03v3 w=6u l=0.28u
+XB2 QP BN SB VSS nfet_03v3 w=6u l=0.28u
+XC1 QN CP SC VSS nfet_03v3 w=6u l=0.28u
+XC2 QP CN SC VSS nfet_03v3 w=6u l=0.28u
+XH1 QN QP H VSS nfet_03v3 w=10u l=0.28u
+XH2 QP QN H VSS nfet_03v3 w=10u l=0.28u
+XR1 VDD QP VSS ppolyf_u_1k r_width=2.5u r_length=2u
+XR2 VDD QN VSS ppolyf_u_1k r_width=2.5u r_length=2u
+.ends
+* cell-1 variants (b): 0.25 mA units, 1.6 k loads, 8u clock devices (<= 1.5 GHz)
+* plain latch, 0.5 mA: transparent while CS > CH; QP follows DP
+.subckt pt_m_latb DP DN QP QN CS CH NB VDD VSS
+XT T NB VSS VSS nfet_03v3 w=32u l=0.28u
+XCS S CS T VSS nfet_03v3 w=8u l=0.28u
+XCH H CH T VSS nfet_03v3 w=8u l=0.28u
+XD1 QN DP S VSS nfet_03v3 w=10u l=0.28u
+XD2 QP DN S VSS nfet_03v3 w=10u l=0.28u
+XH1 QN QP H VSS nfet_03v3 w=10u l=0.28u
+XH2 QP QN H VSS nfet_03v3 w=10u l=0.28u
+XR1 VDD QP VSS ppolyf_u_1k r_width=1.25u r_length=2u
+XR2 VDD QN VSS ppolyf_u_1k r_width=1.25u r_length=2u
+.ends
+* threshold AND latch, 2 inputs: QP = AP & BP while transparent
+.subckt pt_m_land2b AP AN BP BN QP QN CS CH NB VDD VSS
+XTA TA NB VSS VSS nfet_03v3 w=16u l=0.28u
+XTB TB NB VSS VSS nfet_03v3 w=16u l=0.28u
+XTO TO NB VSS VSS nfet_03v3 w=16u l=0.28u
+XCSA SA CS TA VSS nfet_03v3 w=8u l=0.28u
+XCHA H CH TA VSS nfet_03v3 w=8u l=0.28u
+XCSB SB CS TB VSS nfet_03v3 w=8u l=0.28u
+XCHB H CH TB VSS nfet_03v3 w=8u l=0.28u
+XCSO QP CS TO VSS nfet_03v3 w=8u l=0.28u
+XCHO VDD CH TO VSS nfet_03v3 w=8u l=0.28u
+XA1 QN AP SA VSS nfet_03v3 w=6u l=0.28u
+XA2 QP AN SA VSS nfet_03v3 w=6u l=0.28u
+XB1 QN BP SB VSS nfet_03v3 w=6u l=0.28u
+XB2 QP BN SB VSS nfet_03v3 w=6u l=0.28u
+XH1 QN QP H VSS nfet_03v3 w=10u l=0.28u
+XH2 QP QN H VSS nfet_03v3 w=10u l=0.28u
+XR1 VDD QP VSS ppolyf_u_1k r_width=1.25u r_length=2u
+XR2 VDD QN VSS ppolyf_u_1k r_width=1.25u r_length=2u
+.ends
+* threshold AND latch, 3 inputs: QP = AP & BP & CP (2 offset units)
+.subckt pt_m_land3b AP AN BP BN CP CN QP QN CS CH NB VDD VSS
+XTA TA NB VSS VSS nfet_03v3 w=16u l=0.28u
+XTB TB NB VSS VSS nfet_03v3 w=16u l=0.28u
+XTC TC NB VSS VSS nfet_03v3 w=16u l=0.28u
+XTO TO NB VSS VSS nfet_03v3 w=32u l=0.28u
+XCSA SA CS TA VSS nfet_03v3 w=8u l=0.28u
+XCHA H CH TA VSS nfet_03v3 w=8u l=0.28u
+XCSB SB CS TB VSS nfet_03v3 w=8u l=0.28u
+XCHB H CH TB VSS nfet_03v3 w=8u l=0.28u
+XCSC SC CS TC VSS nfet_03v3 w=8u l=0.28u
+XCHC VDD CH TC VSS nfet_03v3 w=8u l=0.28u
+XCSO QP CS TO VSS nfet_03v3 w=8u l=0.28u
+XCHO VDD CH TO VSS nfet_03v3 w=8u l=0.28u
+XA1 QN AP SA VSS nfet_03v3 w=6u l=0.28u
+XA2 QP AN SA VSS nfet_03v3 w=6u l=0.28u
+XB1 QN BP SB VSS nfet_03v3 w=6u l=0.28u
+XB2 QP BN SB VSS nfet_03v3 w=6u l=0.28u
+XC1 QN CP SC VSS nfet_03v3 w=6u l=0.28u
+XC2 QP CN SC VSS nfet_03v3 w=6u l=0.28u
+XH1 QN QP H VSS nfet_03v3 w=10u l=0.28u
+XH2 QP QN H VSS nfet_03v3 w=10u l=0.28u
+XR1 VDD QP VSS ppolyf_u_1k r_width=1.25u r_length=2u
+XR2 VDD QN VSS ppolyf_u_1k r_width=1.25u r_length=2u
+.ends
+* cell 0: Q1 <= NOR(Q1,Q2), Q2 <= Q1 & G (rising CKP)
+.subckt pt_m_cell0 CKP CKN GP GN Q1P Q1N NB VDD VSS
+XA1 Q1N Q1P Q2N Q2P A1P A1N CKN CKP NB VDD VSS pt_m_land2
+XA2 A1P A1N Q1P Q1N CKP CKN NB VDD VSS pt_m_lat
+XC1 Q1P Q1N GP GN C1P C1N CKN CKP NB VDD VSS pt_m_land2
+XC2 C1P C1N Q2P Q2N CKP CKN NB VDD VSS pt_m_lat
+.ends
+* cell 1: full 2/3 cell + G <= M & P0 for cell 0.  MODIN/P/P0: CMOS complementary pairs
+* (the G flop uses the full-speed 0.5 mA latches: G must settle within one cell-A input
+* period, 2 VCO cycles; with the 0.25 mA latches the extracted N with P0 = 1 failed at ss >= 2.98 GHz)
+.subckt pt_m_cell1 CKP CKN MODIN MODINB P PB P0 P0B Q1P Q1N GP GN NB VDD VSS
+XA1 Q1N Q1P Q2N Q2P A1P A1N CKN CKP NB VDD VSS pt_m_land2b
+XA2 A1P A1N Q1P Q1N CKP CKN NB VDD VSS pt_m_latb
+XB1 Q1N Q1P Q2N Q2P MODIN MODINB B1P B1N CKN CKP NB VDD VSS pt_m_land3b
+XB2 B1P B1N MP MN CKP CKN NB VDD VSS pt_m_latb
+XC1 MP MN P PB C1P C1N CKN CKP NB VDD VSS pt_m_land2b
+XC2 C1P C1N Q2P Q2N CKP CKN NB VDD VSS pt_m_latb
+XG1 MP MN P0 P0B G1P G1N CKN CKP NB VDD VSS pt_m_land2
+XG2 G1P G1N GP GN CKP CKN NB VDD VSS pt_m_lat
+.ends
+* CML -> CMOS (rail-to-rail) converter, Y follows AP; Y = 0 when EN = 0.
+* Inputs must be level-shifted CML (CM ~1.7 V, source followers) so Z reaches < 1 V.
+.subckt pt_m_c2c AP AN Y NB EN VDD VSS
+XT T NB VSS VSS nfet_03v3 w=32u l=0.28u
+XA X AP T VSS nfet_03v3 w=10u l=0.28u
+XB Z AN T VSS nfet_03v3 w=10u l=0.28u
+XP1 X X VDD VDD pfet_03v3 w=6u l=0.28u
+XP2 Z X VDD VDD pfet_03v3 w=6u l=0.28u
+XC Z EN Y0 VDD VSS pt_t_nand2
+XI Y0 Y VDD VSS pt_t_inv2
+.ends
+* ---- CMOS 2/3 cell (static transmission-gate flops, local clock inverters) ----
+* (r2: the pseudo-differential C2MOS flops needed tightly complementary clock pairs and
+* divided by 3 instead of 2 extracted at 388 MHz)
+.subckt pt_m_tg A B GN GP VDD VSS
+XN A GN B VSS nfet_03v3 w=2u l=0.28u
+XP A GP B VDD pfet_03v3 w=4u l=0.28u
+.ends
+* rising-edge D flop, Q = 0 while RST = 1.  Local clock inverters are inv4: with inv1 the
+* extracted CKB/CKI overlapped by ~1 ns at ss and the master never wrote a 1.
+.subckt pt_m_sdff D CK RST Q VDD VSS
+XC1 CK CKB VDD VSS pt_t_inv4
+XC2 CKB CKI VDD VSS pt_t_inv4
+XT1 D M1 CKB CKI VDD VSS pt_m_tg
+XM1 M1 RST M2 VDD VSS pt_t_nor2
+XM2 M2 M1F VDD VSS pt_t_inv1
+XT2 M1F M1 CKI CKB VDD VSS pt_m_tg
+XT3 M2 S1 CKI CKB VDD VSS pt_m_tg
+XS1 S1 RST Q VDD VSS pt_t_nor2
+XS2 Q S1F VDD VSS pt_t_inv1
+XT4 S1F S1 CKB CKI VDD VSS pt_m_tg
+.ends
+.subckt pt_m_ccell CK MODIN P RST Q1P MP VDD VSS
+XN1 Q1P Q2P D1P VDD VSS pt_t_nor2
+XN2 MODIN D1P DMN VDD VSS pt_t_nand2
+XN2I DMN DMP VDD VSS pt_t_inv1
+XN3 MP P D2N VDD VSS pt_t_nand2
+XN3I D2N D2P VDD VSS pt_t_inv1
+XF1 D1P CK RST Q1P VDD VSS pt_m_sdff
+XFM DMP CK RST MP VDD VSS pt_m_sdff
+XF2 D2P CK RST Q2P VDD VSS pt_m_sdff
+.ends
+
+.subckt pt_lo_mmd LP LN EN N0 N1 N2 N3 N4 N5 FB VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+XEB ENB ENI VDD VSS pt_t_inv1
+* bias: ~65 uA reference into a 4u diode; units 8x
+XBS BT ENB VDD VDD pfet_03v3 w=4u l=0.28u
+XRB BT NB VSS ppolyf_u_1k r_width=1u r_length=32u
+XBD NB NB VSS VSS nfet_03v3 w=4u l=0.28u
+XBC NB ENB VSS VSS nfet_03v3 w=1u l=0.28u
+* prescaler clock bias VCB ~ 0.47 VDD (off when EN = 0); AC coupling from the tank
+* (0.8 pF MIM, bottom plate on the tank side, 20 k to VCB)
+XVS VT ENB VDD VDD pfet_03v3 w=2u l=0.28u
+XRV1 VT VCB VSS ppolyf_u_1k r_width=1u r_length=53u
+XRV2 VCB VSS VSS ppolyf_u_1k r_width=1u r_length=47u
+XCV VSS VCB VSS VSS nfet_03v3 w=10u l=10u
+XCCP BIP LP cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+XCCN BIN LN cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+XRCP BIP VCB VSS ppolyf_u_1k r_width=1u r_length=20u
+XRCN BIN VCB VSS ppolyf_u_1k r_width=1u r_length=20u
+* program bits (complementary CMOS for the CML threshold pairs)
+XP0 N0 P0B VDD VSS pt_t_inv1
+XP0I P0B P0 VDD VSS pt_t_inv1
+XP1 N1 P1B VDD VSS pt_t_inv1
+XP1I P1B P1 VDD VSS pt_t_inv1
+XP4 N4 N5 P4B VDD VSS pt_t_nand2
+XP4I P4B P4 VDD VSS pt_t_inv1
+* fixed /2 prescaler (CML, 2.6 mA latches, tank clock)
+XPM PQN PQP PAP PAN BIN BIP NB VDD VSS pt_m_latp
+XPS PAP PAN PQP PQN BIP BIN NB VDD VSS pt_m_latp
+* cell A clock: source followers
+XK0 VDD PQP K0P VSS nfet_03v3 w=30u l=0.28u
+XK0N VDD PQN K0N VSS nfet_03v3 w=30u l=0.28u
+XK0T K0P NB VSS VSS nfet_03v3 w=64u l=0.28u
+XK0NT K0N NB VSS VSS nfet_03v3 w=64u l=0.28u
+* cell A (CML 2/3, <= 1.55 GHz)
+XC0 K0P K0N GP GN F0P F0N NB VDD VSS pt_m_cell0
+* cell B clock: source followers
+XF1 VDD F0P K1P VSS nfet_03v3 w=20u l=0.28u
+XF2 VDD F0N K1N VSS nfet_03v3 w=20u l=0.28u
+XF1T K1P NB VSS VSS nfet_03v3 w=64u l=0.28u
+XF2T K1N NB VSS VSS nfet_03v3 w=64u l=0.28u
+* cell B (CML 2/3, <= 0.78 GHz)
+XC1 K1P K1N MOD1 MOD1B P1 P1B P0 P0B F1P F1N GP GN NB VDD VSS pt_m_cell1
+* CML -> CMOS: cell-B output clock
+XS1 VDD F1P L1P VSS nfet_03v3 w=10u l=0.28u
+XS2 VDD F1N L1N VSS nfet_03v3 w=10u l=0.28u
+XS1T L1P NB VSS VSS nfet_03v3 w=16u l=0.28u
+XS2T L1N NB VSS VSS nfet_03v3 w=16u l=0.28u
+XK2 L1P L1N CK2 NB ENI VDD VSS pt_m_c2c
+* clock driver for cell C (single-ended; the flops make their own complements)
+XK2I CK2 CK2N VDD VSS pt_t_inv4
+XK2P CK2N CK2P0 VDD VSS pt_t_inv8
+* cells C, D, E (CMOS, <= 390 MHz); MOD1 = M of cell C; cell E is the range extension (N >= 32)
+XC2 CK2P0 MOD2 N2 ENB Q2P MOD1 VDD VSS pt_m_ccell
+XC3 Q2P MOD3 N3 ENB Q3P MOD2 VDD VSS pt_m_ccell
+XE4 M4N N5 MOD3 VDD VSS pt_t_nand2
+XM4I M4P M4N VDD VSS pt_t_inv1
+XC4 Q3P VDD P4 ENB Q4P M4P VDD VSS pt_m_ccell
+XM1I MOD1 MOD1B VDD VSS pt_t_inv1
+* FB = M of cell C
+XO1 MOD1 FBB VDD VSS pt_t_inv2
+XO2 FBB FB VDD VSS pt_t_inv4
+.ends

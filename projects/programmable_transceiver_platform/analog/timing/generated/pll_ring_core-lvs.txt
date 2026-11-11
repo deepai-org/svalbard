@@ -1,0 +1,262 @@
+
+Circuit 1 cell nfet_03v3 and Circuit 2 cell nfet_03v3 are black boxes.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_03v3                       |Circuit 2: nfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_03v3 and nfet_03v3 are equivalent.
+
+Circuit 1 cell pfet_03v3 and Circuit 2 cell pfet_03v3 are black boxes.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: pfet_03v3                       |Circuit 2: pfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pfet_03v3 and pfet_03v3 are equivalent.
+
+Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k                     
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
+
+Subcircuit summary:
+Circuit 1: ct_tspcd                        |Circuit 2: ct_tspcd                        
+-------------------------------------------|-------------------------------------------
+nfet_03v3 (8)                              |nfet_03v3 (8)                              
+pfet_03v3 (6)                              |pfet_03v3 (6)                              
+Number of devices: 14                      |Number of devices: 14                      
+Number of nets: 13                         |Number of nets: 13                         
+---------------------------------------------------------------------------------------
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: ct_tspcd                        |Circuit 2: ct_tspcd                        
+-------------------------------------------|-------------------------------------------
+VDD                                        |VDD                                        
+D                                          |D                                          
+CK                                         |CK                                         
+VSS                                        |VSS                                        
+ENB                                        |ENB                                        
+Q                                          |Q                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ct_tspcd and ct_tspcd are equivalent.
+
+Class ct_mux4 (0):  Merged 2 parallel devices.
+Class ct_mux4 (1):  Merged 2 parallel devices.
+Subcircuit summary:
+Circuit 1: ct_mux4                         |Circuit 2: ct_mux4                         
+-------------------------------------------|-------------------------------------------
+pfet_03v3 (15->14)                         |pfet_03v3 (15->14)                         
+nfet_03v3 (15->14)                         |nfet_03v3 (15->14)                         
+Number of devices: 28                      |Number of devices: 28                      
+Number of nets: 24                         |Number of nets: 24                         
+---------------------------------------------------------------------------------------
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: ct_mux4                         |Circuit 2: ct_mux4                         
+-------------------------------------------|-------------------------------------------
+VSS                                        |VSS                                        
+VDD                                        |VDD                                        
+S3                                         |S3                                         
+S1                                         |S1                                         
+S2                                         |S2                                         
+S0                                         |S0                                         
+A1                                         |A1                                         
+A2                                         |A2                                         
+A3                                         |A3                                         
+A0                                         |A0                                         
+Y                                          |Y                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ct_mux4 and ct_mux4 are equivalent.
+
+Class ct_phbuf8 (0):  Merged 16 parallel devices.
+Class ct_phbuf8 (1):  Merged 16 parallel devices.
+Subcircuit summary:
+Circuit 1: ct_phbuf8                       |Circuit 2: ct_phbuf8                       
+-------------------------------------------|-------------------------------------------
+pfet_03v3 (33->25)                         |pfet_03v3 (33->25)                         
+nfet_03v3 (33->25)                         |nfet_03v3 (33->25)                         
+Number of devices: 50                      |Number of devices: 50                      
+Number of nets: 35                         |Number of nets: 35                         
+---------------------------------------------------------------------------------------
+Resolving symmetries by property value.
+Resolving symmetries by pin name.
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: ct_phbuf8                       |Circuit 2: ct_phbuf8                       
+-------------------------------------------|-------------------------------------------
+VSS                                        |VSS                                        
+VDD                                        |VDD                                        
+I0                                         |I0                                         
+I1                                         |I1                                         
+I2                                         |I2                                         
+I3                                         |I3                                         
+I4                                         |I4                                         
+I5                                         |I5                                         
+I6                                         |I6                                         
+I7                                         |I7                                         
+PH1                                        |PH1                                        
+PH2                                        |PH2                                        
+PH3                                        |PH3                                        
+PH4                                        |PH4                                        
+PH5                                        |PH5                                        
+PH6                                        |PH6                                        
+PH7                                        |PH7                                        
+PH0                                        |PH0                                        
+DK                                         |DK                                         
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ct_phbuf8 and ct_phbuf8 are equivalent.
+
+Subcircuit summary:
+Circuit 1: ct_tspc2                        |Circuit 2: ct_tspc2                        
+-------------------------------------------|-------------------------------------------
+pfet_03v3 (6)                              |pfet_03v3 (6)                              
+nfet_03v3 (8)                              |nfet_03v3 (8)                              
+Number of devices: 14                      |Number of devices: 14                      
+Number of nets: 12                         |Number of nets: 12                         
+---------------------------------------------------------------------------------------
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: ct_tspc2                        |Circuit 2: ct_tspc2                        
+-------------------------------------------|-------------------------------------------
+CK                                         |CK                                         
+VSS                                        |VSS                                        
+ENB                                        |ENB                                        
+Q                                          |Q                                          
+VDD                                        |VDD                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ct_tspc2 and ct_tspc2 are equivalent.
+
+Subcircuit summary:
+Circuit 1: ct_ring9                        |Circuit 2: ct_ring9                        
+-------------------------------------------|-------------------------------------------
+nfet_03v3 (40)                             |nfet_03v3 (40)                             
+pfet_03v3 (32)                             |pfet_03v3 (32)                             
+Number of devices: 72                      |Number of devices: 72                      
+Number of nets: 29                         |Number of nets: 29                         
+---------------------------------------------------------------------------------------
+Resolving symmetries by property value.
+Resolving symmetries by pin name.
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: ct_ring9                        |Circuit 2: ct_ring9                        
+-------------------------------------------|-------------------------------------------
+VDD                                        |VDD                                        
+ENB                                        |ENB                                        
+VT                                         |VT                                         
+VH                                         |VH                                         
+VSS                                        |VSS                                        
+O2                                         |O2                                         
+O5                                         |O5                                         
+O4                                         |O4                                         
+O7                                         |O7                                         
+O3                                         |O3                                         
+O0                                         |O0                                         
+O6                                         |O6                                         
+O1                                         |O1                                         
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ct_ring9 and ct_ring9 are equivalent.
+Flattening unmatched subcell p_nfet_03v3_w2_l0p28 in circuit pt_pll_ring_core (0)(46 instances)
+Flattening unmatched subcell p_pfet_03v3_w2_l0p28 in circuit pt_pll_ring_core (0)(83 instances)
+Flattening unmatched subcell p_nfet_03v3_w1_l0p28 in circuit pt_pll_ring_core (0)(43 instances)
+Flattening unmatched subcell p_nfet_03v3_w3_l0p28 in circuit pt_pll_ring_core (0)(12 instances)
+Flattening unmatched subcell p_pfet_03v3_w10_l0p28 in circuit pt_pll_ring_core (0)(8 instances)
+Flattening unmatched subcell p_pfet_03v3_w4_l0p28 in circuit pt_pll_ring_core (0)(11 instances)
+Flattening unmatched subcell p_nfet_03v3_w3p33_l1 in circuit pt_pll_ring_core (0)(1 instance)
+Flattening unmatched subcell p_pfet_03v3_w0p5_l5 in circuit pt_pll_ring_core (0)(1 instance)
+Flattening unmatched subcell p_pfet_03v3_w8_l2 in circuit pt_pll_ring_core (0)(4 instances)
+Flattening unmatched subcell p_pfet_03v3_w1_l0p28 in circuit pt_pll_ring_core (0)(1 instance)
+Flattening unmatched subcell p_nfet_03v3_w10_l10 in circuit pt_pll_ring_core (0)(4 instances)
+Flattening unmatched subcell p_nfet_03v3_w4_l2 in circuit pt_pll_ring_core (0)(6 instances)
+Flattening unmatched subcell p_nfet_03v3_w10_l1 in circuit pt_pll_ring_core (0)(8 instances)
+Flattening unmatched subcell p_pfet_03v3_w8_l1 in circuit pt_pll_ring_core (0)(2 instances)
+Flattening unmatched subcell p_nfet_03v3_w20_l20 in circuit pt_pll_ring_core (0)(5 instances)
+Flattening unmatched subcell p_ppolyf_u_1k_w1_l20 in circuit pt_pll_ring_core (0)(1 instance)
+Flattening unmatched subcell p_nfet_03v3_w4_l10 in circuit pt_pll_ring_core (0)(1 instance)
+Flattening unmatched subcell p_nfet_03v3_w0p5_l2 in circuit pt_pll_ring_core (0)(1 instance)
+Flattening unmatched subcell p_nfet_03v3_w4_l0p28 in circuit pt_pll_ring_core (0)(2 instances)
+Flattening unmatched subcell p_pfet_03v3_w6p5_l0p28 in circuit pt_pll_ring_core (0)(1 instance)
+Flattening unmatched subcell p_nfet_03v3_w3p34_l1 in circuit pt_pll_ring_core (0)(1 instance)
+
+Class pt_pll_ring_core (0):  Merged 19 parallel devices.
+Class pt_pll_ring_core (1):  Merged 19 parallel devices.
+Subcircuit summary:
+Circuit 1: pt_pll_ring_core                |Circuit 2: pt_pll_ring_core                
+-------------------------------------------|-------------------------------------------
+nfet_03v3 (130->118)                       |nfet_03v3 (130->118)                       
+pfet_03v3 (111->104)                       |pfet_03v3 (111->104)                       
+ct_tspcd (1)                               |ct_tspcd (1)                               
+ct_mux4 (2)                                |ct_mux4 (2)                                
+ct_phbuf8 (1)                              |ct_phbuf8 (1)                              
+ct_tspc2 (5)                               |ct_tspc2 (5)                               
+ppolyf_u_1k (1)                            |ppolyf_u_1k (1)                            
+ct_ring9 (1)                               |ct_ring9 (1)                               
+diode_nd2ps_03v3 (6)                       |diode_nd2ps_03v3 (6)                       
+Number of devices: 239                     |Number of devices: 239                     
+Number of nets: 142                        |Number of nets: 142                        
+---------------------------------------------------------------------------------------
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: pt_pll_ring_core                |Circuit 2: pt_pll_ring_core                
+-------------------------------------------|-------------------------------------------
+PH0                                        |PH0                                        
+PH1                                        |PH1                                        
+PH2                                        |PH2                                        
+PH3                                        |PH3                                        
+PH4                                        |PH4                                        
+PH5                                        |PH5                                        
+PH6                                        |PH6                                        
+PH7                                        |PH7                                        
+ATB_VCTRL                                  |ATB_VCTRL                                  
+EN                                         |EN                                         
+IBIAS                                      |IBIAS                                      
+BAND                                       |BAND                                       
+REF                                        |REF                                        
+LOCK                                       |LOCK                                       
+N4                                         |N4                                         
+VDD                                        |VDD                                        
+HOLD                                       |HOLD                                       
+N8                                         |N8                                         
+REFO                                       |REFO                                       
+FBCK                                       |FBCK                                       
+VSS                                        |VSS                                        
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pt_pll_ring_core and pt_pll_ring_core are equivalent.
+
+Final result: Circuits match uniquely.
+.

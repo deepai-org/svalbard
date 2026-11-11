@@ -1,5 +1,18 @@
 * SPDX-License-Identifier: Apache-2.0
-* VERSION: pt_pll_ring r7 (2026-11-09; r6a 2026-11-09, r6 2026-11-08) -- ports REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL VDD VSS
+* VERSION: pt_pll_ring r9d (2026-11-11, RINGAREA: WT21 BAND bit, tail m8 + replica 6.67 (r9c), compact FT legs, VCTRL->VCF 100k folded 5x20u; r9 2026-11-10; r8 and r7 2026-11-09/10) -- ports REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL N5 N10 KP0..KP2 FU0..FU3 FD0..FD3 BAND VDD VSS
+* r9 (IX-1, PD9, AC3-W9; 2026-11-10): (1) ring cell ct_ring9 (interleaved layout, 2x ring devices): the extracted
+*   ct_ring8 lost 42 % of its speed to cell wiring; r9 runs on the pt_pll_vreg output (VDD = ring supply, ~0.9 x rail)
+*   and covers 393-834 MHz in ONE band with VCTRL 0.87..2.02 V (ff/22/3.015 .. ss/32/2.71 V; ring cell extracted).
+*   (2) fast-tune units are tail/header copies (gate VCF / VPBF) so ppm/vote tracks the ring current (see below).
+*   Low rates (IX-4) need no ring change: full-rate phase mapping with the ring at 2 x the bit rate (OSR 2).
+* r8 (AC3-W7, AC3-W8): (1) N = 10 (N10: feedback VCO -> ct_div5 -> /2 = /10) and N = 5 (N5: REF/2 into the PFD with
+*   the same /10 feedback, as N4 does with /8) for HDMI/DVI x10 (720p full rate, 1080p half rate).  Priority
+*   N5/N10 > N4/N8.  The /5 counter is held in reset unless EN & (N5|N10).  Pump 10 uA in /10 modes.
+* (2) CDR fast-tune (proportional) port: per vote leg k two gate-switched current legs on the ring tail
+*   (VT) with 1/12-size copies on the header replica (VPB), so both rails move: leg on when FUk=1 and leg on
+*   when FDk=0 -> FU only: +1 unit, FD only: -1 unit, neither/both: 0 (vs the idle level, a static offset
+*   the integral path absorbs).  Unit = KP code (0..7, cdr.config kp bits) x one switched long-channel
+*   conductance.  FUk/FDk come straight from the capture PD (one ring cycle each).  KP=0: path off.
 * pt_pll_ring: wired-side PLL with the compact 8-phase ring (P3/P4 first cut).
 * Shared loop pieces from pll.spice (PFD, charge pump, filter, lock detector);
 * VCO = ct_ring8 (4-stage pseudo-differential ring, O0..O7 at 45 deg) with an
@@ -13,13 +26,19 @@
 * outputs and TSPC stages clamped, LOCK=0.
 .include timing_cells.spice
 .include pll.spice
-.include generated/fast/ct_ring8.spice
+.include generated/fast/ct_ring9.spice
 .include generated/fast/ct_tspc2.spice
 .include generated/fast/ct_phbuf8.spice
 .include generated/fast/ct_mux4.spice
 .include generated/fast/ct_tspcd.spice
+.include generated/fast/ct_div5.spice
 
-.subckt pt_pll_ring REF EN N4 N8 HOLD IBIAS PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 LOCK FBCK REFO ATB_VCTRL VDD VSS
+.subckt pt_pll_ring REF EN N4 N8 HOLD IBIAS PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 LOCK FBCK REFO ATB_VCTRL N5 N10 KP0 KP1 KP2 FU0 FU1 FU2 FU3 FD0 FD1 FD2 FD3 BAND VDD VSS
+* r8 mode decode: NX = N5|N10 (/10 feedback), R45 = N4|N5 (reference /2)
+XNXN N5 N10 NXB VDD VSS pt_t_nor2
+XNXI NXB NX VDD VSS pt_t_inv1
+XR4N N4 N5 R45B VDD VSS pt_t_nor2
+XR4I R45B R45 VDD VSS pt_t_inv1
 XEI EN ENB VDD VSS pt_t_inv1
 * bias and charge pump (as pt_pll)
 XNB IBIAS IBIAS NBS VSS nfet_03v3 w=4u l=2u
@@ -30,10 +49,10 @@ XPB PB PB VDD VDD pfet_03v3 w=8u l=2u
 XRG REF EN REFB VDD VSS pt_t_nand2
 XRGI REFB REFG VDD VSS pt_t_inv1
 * N4 (host_follow): reference /2, held in reset unless EN & N4
-XRDE EN N4 RD2RB VDD VSS pt_t_nand2
+XRDE EN R45 RD2RB VDD VSS pt_t_nand2
 XRD2 REFG REFD2 RD2RB VDD VSS ct_tspc2
-XRSN N4 N4N VDD VSS pt_t_inv1
-XRSM REFG REFD2 VSS VSS N4N N4 VSS VSS REFP VDD VSS ct_mux4
+XRSN R45 N4N VDD VSS pt_t_inv1
+XRSM REFG REFD2 VSS VSS N4N R45 VSS VSS REFP VDD VSS ct_mux4
 * clean reference and feedback copies for the standard-cell lock checker
 XRO1 REFP REFOB VDD VSS pt_t_inv1
 XRO2 REFOB REFO VDD VSS pt_t_inv2
@@ -60,9 +79,12 @@ XUI UP UPB VDD VSS pt_t_inv1
 * N=4 = REF/2 with /8), as a 10 uA leg plus a 10 uA leg enabled by N16
 * (L = 2 um mirrors).
 XN16I N16 N16B VDD VSS pt_t_inv1
+* r8: 20 uA only for /16 (S16 = N16 & !NX)
+XS16N N16 NXB S16B VDD VSS pt_t_nand2
+XS16I S16B S16 VDD VSS pt_t_inv1
 XPS0 PS PB VDD VDD pfet_03v3 w=8u l=2u
 XPS2 PS2 PB VDD VDD pfet_03v3 w=8u l=2u
-XPE2 PS N16B PS2 VDD pfet_03v3 w=2u l=0.28u
+XPE2 PS S16B PS2 VDD pfet_03v3 w=2u l=0.28u
 XPU ATB_VCTRL UPB PS VDD pfet_03v3 w=2u l=0.28u
 XND ATB_VCTRL DN NS VSS nfet_03v3 w=1u l=0.28u
 * r7 (2026-11-09) current steering: while UP (DN) is off its current source is steered into
@@ -85,25 +107,167 @@ XCD VSS VDUM VSS VSS nfet_03v3 w=10u l=10u m=2
 XCLD VDUM ENB VSS VSS nfet_03v3 w=1u l=0.28u
 XNS0 NS IBIAS VSS VSS nfet_03v3 w=4u l=2u
 XNS2 NS2 IBIAS VSS VSS nfet_03v3 w=4u l=2u
-XNE2 NS N16 NS2 VSS nfet_03v3 w=2u l=0.28u
+XNE2 NS S16 NS2 VSS nfet_03v3 w=2u l=0.28u
 XC2A VSS ATB_VCTRL VSS VSS nfet_03v3 w=10u l=10u m=2
 XR ATB_VCTRL VZ VSS ppolyf_u_1k r_width=1u r_length=20u
 XC1 VSS VZ VSS VSS nfet_03v3 w=20u l=20u m=5
 XCLV ATB_VCTRL ENB VSS VSS nfet_03v3 w=1u l=0.28u
 XCLZ VZ ENB VSS VSS nfet_03v3 w=1u l=0.28u
-* VCO
-XTL VT ATB_VCTRL VSS VSS nfet_03v3 w=10u l=1u m=6
+* VCO (r9c: tail m 6 -> 8 and replica 5 -> 6.67 um, keeping the 1/12 replica ratio: +33 % current at a given VCTRL, for 810/834 MHz at ss/32/2.69 V with +15 % ring C and gate R (model-uncertainty audit))
+* WT21 band bit (r9d): BAND=1 high band (tail 8 x 10/1, replica 6.67/1), BAND=0 low band (half: tail 4 x, replica 3.33):
+* the switched halves have their gate VTG = ATB_VCTRL through a static transmission gate (no series switch in the
+* tail current path), pulled to VSS when BAND=0.
+XBI BAND BANDB VDD VSS pt_t_inv1
+XBGN ATB_VCTRL BAND VTG VSS nfet_03v3 w=2u l=0.28u
+XBGP ATB_VCTRL BANDB VTG VDD pfet_03v3 w=4u l=0.28u
+XBGD VTG BANDB VSS VSS nfet_03v3 w=1u l=0.28u
+XTL VT ATB_VCTRL VSS VSS nfet_03v3 w=10u l=1u m=4
+XTLB VT VTG VSS VSS nfet_03v3 w=10u l=1u m=4
 * symmetric starving: the header is a PMOS current source mirrored from a
 * 1/12 replica of the tail (VCTRL -> XRPN -> diode XRPD -> VPB), so both ring
 * rails move with the tuning current.  The ring common mode is not
 * controlled: VT stays near 0.25 V and VH tracks the current (1.9-3.0 V);
 * ct_ring8 restores each node with a low-threshold (~1.25 V) inverter.  EN=0: replica path open, VPB pulled to VDD (header off).
-XRPN VPB ATB_VCTRL RPS VSS nfet_03v3 w=5u l=1u
+XRPN VPB ATB_VCTRL RPS VSS nfet_03v3 w=3.33u l=1u
+XRPNB VPB VTG RPS VSS nfet_03v3 w=3.34u l=1u
 XRPE RPS EN VSS VSS nfet_03v3 w=4u l=0.28u
 XRPD VPB VPB VDD VDD pfet_03v3 w=6.5u l=0.28u
 XRPU VPB EN VDD VDD pfet_03v3 w=1u l=0.28u
 XHD VH VPB VDD VDD pfet_03v3 w=10u l=0.28u m=8
-XRING O0 O1 O2 O3 O4 O5 O6 O7 ENB VT VH VDD VSS ct_ring8
+* r9c FT legs, compact form (RINGAREA 2026-11-11): per vote leg k and side (U/D) three binary tail/header
+* copies (KP bit j, width 0.44*2^j) each behind a static KP switch, joined at one node and switched by ONE
+* vote switch per side (total width = the r9 per-unit switches summed).  No per-unit logic: U NMOS switch
+* gate = FUk, U PMOS switch gate = FUk inverted; D unit on when FDk=0 (NMOS gate = FDk inverted, PMOS gate = FDk).
+XKPI0 KP0 KPB0 VDD VSS pt_t_inv1
+XKPI1 KP1 KPB1 VDD VSS pt_t_inv1
+XKPI2 KP2 KPB2 VDD VSS pt_t_inv1
+XFUN0 FU0 FUB0 VDD VSS pt_t_inv1
+XFDN0 FD0 FDB0 VDD VSS pt_t_inv1
+XTU00 VT VCF XTU00_y VSS nfet_03v3 w=0.44u l=20u
+XTU00k XTU00_y KP0 XTU0_x VSS nfet_03v3 w=0.44u l=0.28u
+XHU00 VH VPBF XHU00_y VDD pfet_03v3 w=0.44u l=1.75u
+XHU00k XHU00_y KPB0 XHU0_x VDD pfet_03v3 w=0.44u l=0.28u
+XTU01 VT VCF XTU01_y VSS nfet_03v3 w=0.88u l=20u
+XTU01k XTU01_y KP1 XTU0_x VSS nfet_03v3 w=0.88u l=0.28u
+XHU01 VH VPBF XHU01_y VDD pfet_03v3 w=0.88u l=1.75u
+XHU01k XHU01_y KPB1 XHU0_x VDD pfet_03v3 w=0.88u l=0.28u
+XTU02 VT VCF XTU02_y VSS nfet_03v3 w=1.76u l=20u
+XTU02k XTU02_y KP2 XTU0_x VSS nfet_03v3 w=1.76u l=0.28u
+XHU02 VH VPBF XHU02_y VDD pfet_03v3 w=1.76u l=1.75u
+XHU02k XHU02_y KPB2 XHU0_x VDD pfet_03v3 w=1.76u l=0.28u
+XTU0s XTU0_x FU0 VSS VSS nfet_03v3 w=3.08u l=0.28u
+XHU0s XHU0_x FUB0 VDD VDD pfet_03v3 w=3.08u l=0.28u
+XTD00 VT VCF XTD00_y VSS nfet_03v3 w=0.44u l=20u
+XTD00k XTD00_y KP0 XTD0_x VSS nfet_03v3 w=0.44u l=0.28u
+XHD00 VH VPBF XHD00_y VDD pfet_03v3 w=0.44u l=1.75u
+XHD00k XHD00_y KPB0 XHD0_x VDD pfet_03v3 w=0.44u l=0.28u
+XTD01 VT VCF XTD01_y VSS nfet_03v3 w=0.88u l=20u
+XTD01k XTD01_y KP1 XTD0_x VSS nfet_03v3 w=0.88u l=0.28u
+XHD01 VH VPBF XHD01_y VDD pfet_03v3 w=0.88u l=1.75u
+XHD01k XHD01_y KPB1 XHD0_x VDD pfet_03v3 w=0.88u l=0.28u
+XTD02 VT VCF XTD02_y VSS nfet_03v3 w=1.76u l=20u
+XTD02k XTD02_y KP2 XTD0_x VSS nfet_03v3 w=1.76u l=0.28u
+XHD02 VH VPBF XHD02_y VDD pfet_03v3 w=1.76u l=1.75u
+XHD02k XHD02_y KPB2 XHD0_x VDD pfet_03v3 w=1.76u l=0.28u
+XTD0s XTD0_x FDB0 VSS VSS nfet_03v3 w=3.08u l=0.28u
+XHD0s XHD0_x FD0 VDD VDD pfet_03v3 w=3.08u l=0.28u
+XFUN1 FU1 FUB1 VDD VSS pt_t_inv1
+XFDN1 FD1 FDB1 VDD VSS pt_t_inv1
+XTU10 VT VCF XTU10_y VSS nfet_03v3 w=0.44u l=20u
+XTU10k XTU10_y KP0 XTU1_x VSS nfet_03v3 w=0.44u l=0.28u
+XHU10 VH VPBF XHU10_y VDD pfet_03v3 w=0.44u l=1.75u
+XHU10k XHU10_y KPB0 XHU1_x VDD pfet_03v3 w=0.44u l=0.28u
+XTU11 VT VCF XTU11_y VSS nfet_03v3 w=0.88u l=20u
+XTU11k XTU11_y KP1 XTU1_x VSS nfet_03v3 w=0.88u l=0.28u
+XHU11 VH VPBF XHU11_y VDD pfet_03v3 w=0.88u l=1.75u
+XHU11k XHU11_y KPB1 XHU1_x VDD pfet_03v3 w=0.88u l=0.28u
+XTU12 VT VCF XTU12_y VSS nfet_03v3 w=1.76u l=20u
+XTU12k XTU12_y KP2 XTU1_x VSS nfet_03v3 w=1.76u l=0.28u
+XHU12 VH VPBF XHU12_y VDD pfet_03v3 w=1.76u l=1.75u
+XHU12k XHU12_y KPB2 XHU1_x VDD pfet_03v3 w=1.76u l=0.28u
+XTU1s XTU1_x FU1 VSS VSS nfet_03v3 w=3.08u l=0.28u
+XHU1s XHU1_x FUB1 VDD VDD pfet_03v3 w=3.08u l=0.28u
+XTD10 VT VCF XTD10_y VSS nfet_03v3 w=0.44u l=20u
+XTD10k XTD10_y KP0 XTD1_x VSS nfet_03v3 w=0.44u l=0.28u
+XHD10 VH VPBF XHD10_y VDD pfet_03v3 w=0.44u l=1.75u
+XHD10k XHD10_y KPB0 XHD1_x VDD pfet_03v3 w=0.44u l=0.28u
+XTD11 VT VCF XTD11_y VSS nfet_03v3 w=0.88u l=20u
+XTD11k XTD11_y KP1 XTD1_x VSS nfet_03v3 w=0.88u l=0.28u
+XHD11 VH VPBF XHD11_y VDD pfet_03v3 w=0.88u l=1.75u
+XHD11k XHD11_y KPB1 XHD1_x VDD pfet_03v3 w=0.88u l=0.28u
+XTD12 VT VCF XTD12_y VSS nfet_03v3 w=1.76u l=20u
+XTD12k XTD12_y KP2 XTD1_x VSS nfet_03v3 w=1.76u l=0.28u
+XHD12 VH VPBF XHD12_y VDD pfet_03v3 w=1.76u l=1.75u
+XHD12k XHD12_y KPB2 XHD1_x VDD pfet_03v3 w=1.76u l=0.28u
+XTD1s XTD1_x FDB1 VSS VSS nfet_03v3 w=3.08u l=0.28u
+XHD1s XHD1_x FD1 VDD VDD pfet_03v3 w=3.08u l=0.28u
+XFUN2 FU2 FUB2 VDD VSS pt_t_inv1
+XFDN2 FD2 FDB2 VDD VSS pt_t_inv1
+XTU20 VT VCF XTU20_y VSS nfet_03v3 w=0.44u l=20u
+XTU20k XTU20_y KP0 XTU2_x VSS nfet_03v3 w=0.44u l=0.28u
+XHU20 VH VPBF XHU20_y VDD pfet_03v3 w=0.44u l=1.75u
+XHU20k XHU20_y KPB0 XHU2_x VDD pfet_03v3 w=0.44u l=0.28u
+XTU21 VT VCF XTU21_y VSS nfet_03v3 w=0.88u l=20u
+XTU21k XTU21_y KP1 XTU2_x VSS nfet_03v3 w=0.88u l=0.28u
+XHU21 VH VPBF XHU21_y VDD pfet_03v3 w=0.88u l=1.75u
+XHU21k XHU21_y KPB1 XHU2_x VDD pfet_03v3 w=0.88u l=0.28u
+XTU22 VT VCF XTU22_y VSS nfet_03v3 w=1.76u l=20u
+XTU22k XTU22_y KP2 XTU2_x VSS nfet_03v3 w=1.76u l=0.28u
+XHU22 VH VPBF XHU22_y VDD pfet_03v3 w=1.76u l=1.75u
+XHU22k XHU22_y KPB2 XHU2_x VDD pfet_03v3 w=1.76u l=0.28u
+XTU2s XTU2_x FU2 VSS VSS nfet_03v3 w=3.08u l=0.28u
+XHU2s XHU2_x FUB2 VDD VDD pfet_03v3 w=3.08u l=0.28u
+XTD20 VT VCF XTD20_y VSS nfet_03v3 w=0.44u l=20u
+XTD20k XTD20_y KP0 XTD2_x VSS nfet_03v3 w=0.44u l=0.28u
+XHD20 VH VPBF XHD20_y VDD pfet_03v3 w=0.44u l=1.75u
+XHD20k XHD20_y KPB0 XHD2_x VDD pfet_03v3 w=0.44u l=0.28u
+XTD21 VT VCF XTD21_y VSS nfet_03v3 w=0.88u l=20u
+XTD21k XTD21_y KP1 XTD2_x VSS nfet_03v3 w=0.88u l=0.28u
+XHD21 VH VPBF XHD21_y VDD pfet_03v3 w=0.88u l=1.75u
+XHD21k XHD21_y KPB1 XHD2_x VDD pfet_03v3 w=0.88u l=0.28u
+XTD22 VT VCF XTD22_y VSS nfet_03v3 w=1.76u l=20u
+XTD22k XTD22_y KP2 XTD2_x VSS nfet_03v3 w=1.76u l=0.28u
+XHD22 VH VPBF XHD22_y VDD pfet_03v3 w=1.76u l=1.75u
+XHD22k XHD22_y KPB2 XHD2_x VDD pfet_03v3 w=1.76u l=0.28u
+XTD2s XTD2_x FDB2 VSS VSS nfet_03v3 w=3.08u l=0.28u
+XHD2s XHD2_x FD2 VDD VDD pfet_03v3 w=3.08u l=0.28u
+XFUN3 FU3 FUB3 VDD VSS pt_t_inv1
+XFDN3 FD3 FDB3 VDD VSS pt_t_inv1
+XTU30 VT VCF XTU30_y VSS nfet_03v3 w=0.44u l=20u
+XTU30k XTU30_y KP0 XTU3_x VSS nfet_03v3 w=0.44u l=0.28u
+XHU30 VH VPBF XHU30_y VDD pfet_03v3 w=0.44u l=1.75u
+XHU30k XHU30_y KPB0 XHU3_x VDD pfet_03v3 w=0.44u l=0.28u
+XTU31 VT VCF XTU31_y VSS nfet_03v3 w=0.88u l=20u
+XTU31k XTU31_y KP1 XTU3_x VSS nfet_03v3 w=0.88u l=0.28u
+XHU31 VH VPBF XHU31_y VDD pfet_03v3 w=0.88u l=1.75u
+XHU31k XHU31_y KPB1 XHU3_x VDD pfet_03v3 w=0.88u l=0.28u
+XTU32 VT VCF XTU32_y VSS nfet_03v3 w=1.76u l=20u
+XTU32k XTU32_y KP2 XTU3_x VSS nfet_03v3 w=1.76u l=0.28u
+XHU32 VH VPBF XHU32_y VDD pfet_03v3 w=1.76u l=1.75u
+XHU32k XHU32_y KPB2 XHU3_x VDD pfet_03v3 w=1.76u l=0.28u
+XTU3s XTU3_x FU3 VSS VSS nfet_03v3 w=3.08u l=0.28u
+XHU3s XHU3_x FUB3 VDD VDD pfet_03v3 w=3.08u l=0.28u
+XTD30 VT VCF XTD30_y VSS nfet_03v3 w=0.44u l=20u
+XTD30k XTD30_y KP0 XTD3_x VSS nfet_03v3 w=0.44u l=0.28u
+XHD30 VH VPBF XHD30_y VDD pfet_03v3 w=0.44u l=1.75u
+XHD30k XHD30_y KPB0 XHD3_x VDD pfet_03v3 w=0.44u l=0.28u
+XTD31 VT VCF XTD31_y VSS nfet_03v3 w=0.88u l=20u
+XTD31k XTD31_y KP1 XTD3_x VSS nfet_03v3 w=0.88u l=0.28u
+XHD31 VH VPBF XHD31_y VDD pfet_03v3 w=0.88u l=1.75u
+XHD31k XHD31_y KPB1 XHD3_x VDD pfet_03v3 w=0.88u l=0.28u
+XTD32 VT VCF XTD32_y VSS nfet_03v3 w=1.76u l=20u
+XTD32k XTD32_y KP2 XTD3_x VSS nfet_03v3 w=1.76u l=0.28u
+XHD32 VH VPBF XHD32_y VDD pfet_03v3 w=1.76u l=1.75u
+XHD32k XHD32_y KPB2 XHD3_x VDD pfet_03v3 w=1.76u l=0.28u
+XTD3s XTD3_x FDB3 VSS VSS nfet_03v3 w=3.08u l=0.28u
+XHD3s XHD3_x FD3 VDD VDD pfet_03v3 w=3.08u l=0.28u
+XRVC0 ATB_VCTRL VCF_r1 VSS ppolyf_u_1k r_width=1u r_length=20u
+XRVC1 VCF_r1 VCF_r2 VSS ppolyf_u_1k r_width=1u r_length=20u
+XRVC2 VCF_r2 VCF_r3 VSS ppolyf_u_1k r_width=1u r_length=20u
+XRVC3 VCF_r3 VCF_r4 VSS ppolyf_u_1k r_width=1u r_length=20u
+XRVC4 VCF_r4 VCF VSS ppolyf_u_1k r_width=1u r_length=20u
+XRVP VPB VPBF VSS ppolyf_u_1k r_width=1u r_length=20u
+XRING O0 O1 O2 O3 O4 O5 O6 O7 ENB VT VH VDD VSS ct_ring9
 * common-mode-insensitive phase restore + balanced port drivers
 XPHB O4 O5 O6 O7 O0 O1 O2 O3 PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 ODC VDD VSS ct_phbuf8
 * feedback /16 from the dedicated divider tap
@@ -114,7 +278,20 @@ XD3 Q2 Q3 ENB VDD VSS ct_tspc2
 XD4 Q3 Q4 ENB VDD VSS ct_tspc2
 * feedback divider select: /8 (N8 or N4) or /16 (N16 = neither)
 XNSN N4 N8 N16 VDD VSS pt_t_nor2
-XNSM Q3 Q4 VSS VSS N16B N16 VSS VSS FB VDD VSS ct_mux4
+XS8N N16B NXB S8B VDD VSS pt_t_nand2
+XS8I S8B S8 VDD VSS pt_t_inv1
+* r8 /10: VCO (ODC, gated + buffered) -> /5 (ct_div5) -> TSPC /2; reset unless EN & NX
+XD5E EN NX D5RB VDD VSS pt_t_nand2
+* clock gated low in reset and re-buffered (as pt_wordclk): sharp edges into the three TSPC flops
+XD5C D5RB D5EN VDD VSS pt_t_inv1
+XD5A ODC D5EN D5K0 VDD VSS pt_t_nand2
+XD5B D5K0 D5K1 VDD VSS pt_t_inv2
+XD5F D5K1 D5K2 VDD VSS pt_t_inv4
+XD5G D5K2 D5CK VDD VSS pt_t_inv8
+XD5 D5CK D5RB A5 B5 C5 VDD VSS ct_div5
+* /2 after the /5 (ct_div5 is dynamic: it divides by 4 with a 235 MHz VCO/2 clock, so it runs at the VCO rate)
+XD5H C5 D10 D5RB VDD VSS ct_tspc2
+XNSM Q3 Q4 D10 VSS S8 S16 NX VSS FB VDD VSS ct_mux4
 XFB FB FBB VDD VSS pt_t_inv1
 XFB2 FBB FBCK VDD VSS pt_t_inv2
 * analog lock indicator (demoted: informative only; the qualified lock check is

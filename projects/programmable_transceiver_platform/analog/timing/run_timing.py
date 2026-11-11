@@ -79,7 +79,7 @@ CL2 outn 0 20f
     return body, analyse
 
 
-def tb_diff_clk_rx_data(inc, v=VDD, rate=1e9, vpp=0.5, cc='10p', nper=3, first=False, pre=0):
+def tb_diff_clk_rx_data(inc, v=VDD, rate=1e9, vpp=0.5, cc='10p', nper=3, first=False, pre=0, idle=0):
     """Data mode (WTX_EXT fallback): PRBS7 NRZ, differential, vpp = differential
     peak-to-peak (each side vpp/2), 50 ohm per side, AC-coupled through cc into
     INP/INN, EN=1 from t=0.  Runs nper PRBS periods; the last period is checked:
@@ -92,20 +92,30 @@ def tb_diff_clk_rx_data(inc, v=VDD, rate=1e9, vpp=0.5, cc='10p', nper=3, first=F
         nb = ((st >> 6) ^ (st >> 5)) & 1
         st = ((st << 1) | nb) & 0x7f
         bits.append(nb)
-    seq = [k % 2 for k in range(pre)] + bits * nper   # optional DC-balanced 1010 preamble
+    # optional electrical idle (both legs at the common mode, `idle` UI), then an optional
+    # DC-balanced 1010 preamble, then the PRBS.  Without idle the source starts parked at the
+    # first bit's level (the coupling caps charged to it at t=0).
+    seq = [None] * idle + [k % 2 for k in range(pre)] + bits * nper
+    pre = pre + idle
     tr = min(0.2 * ui, 100e-12)
     a = vpp / 4
+    lvl = lambda b: 0.0 if b is None else (a if b else -a)
     def pwl(sign):
-        pts, last = [f'0 {sign * (a if seq[0] else -a)}'], seq[0]
+        pts, last = [f'0 {sign * lvl(seq[0])}'], seq[0]
         for i, b in enumerate(seq[1:], 1):
             if b != last:
                 t = i * ui
-                pts += [f'{t:.6e} {sign * (a if last else -a)}', f'{t + tr:.6e} {sign * (a if b else -a)}']
+                pts += [f'{t:.6e} {sign * lvl(last)}', f'{t + tr:.6e} {sign * lvl(b)}']
                 last = b
         return ' '.join(pts)
     T = len(seq) * ui
     t_start = pre * ui if first else (pre + (nper - 1) * 127) * ui   # first: check from the first PRBS bit
-    trans = [i * ui + tr / 2 for i in range(1, len(seq)) if seq[i] != seq[i - 1] and i * ui >= t_start - 2 * ui]
+    # an edge out of electrical idle is not counted (the latched output may already be at
+    # that level); every data edge after it is
+    if first and idle:
+        t_start += 0.5 * ui
+    trans = [i * ui + tr / 2 for i in range(1, len(seq)) if seq[i] != seq[i - 1] and seq[i - 1] is not None
+             and i * ui >= t_start - 2 * ui]
     nmeas = sum(1 for t in trans if t >= t_start) + 6
     body = f""".param vth={v / 2}
 .include {inc}
@@ -139,21 +149,28 @@ CL2 outn 0 20f
                 if d:
                     offs.append(min(d))
             offs.sort()
-            lat = offs[len(offs) // 2] if offs else None
-            exp = [t + lat for t in win if t + lat <= T - 0.1e-9]
-            got = [x for x in xs if x <= T - 0.1e-9]
-            # pair crossings to expected edges within half a UI
-            errs, dev, j = 0, [], 0
-            used = set()
-            for e in exp:
-                cand = [k for k, x in enumerate(got) if abs(x - e) < 0.5 * ui and k not in used]
-                if not cand:
-                    errs += 1
-                    continue
-                k = min(cand, key=lambda k: abs(got[k] - e))
-                used.add(k)
-                dev.append(got[k] - e)
-            errs += len(got) - len(used)        # extra crossings
+            got0 = [x for x in xs if x <= T - 0.1e-9]
+
+            def score(lat):
+                exp = [t + lat for t in win if t + lat <= T - 0.1e-9]
+                # after electrical idle, the output's own move to the first bit's level is not an edge
+                got = [x for x in got0 if not (idle and first and exp and x < exp[0] - 0.5 * ui)]
+                # pair crossings to expected edges within half a UI
+                errs, dev, used = 0, [], set()
+                for e in exp:
+                    cand = [k for k, x in enumerate(got) if abs(x - e) < 0.5 * ui and k not in used]
+                    if not cand:
+                        errs += 1
+                        continue
+                    k = min(cand, key=lambda k: abs(got[k] - e))
+                    used.add(k)
+                    dev.append(got[k] - e)
+                return errs + len(got) - len(used), exp, dev, got     # + extra crossings
+            # latency: the median nearest-edge offset, or (when the latency exceeds a UI and
+            # the nearest edge is ambiguous) the whole-UI shift of it that gives the fewest errors
+            lat0 = offs[len(offs) // 2] if offs else 0.0
+            lat = min((lat0 + k * ui for k in range(0, int((2e-9 + 3 * ui) / ui) + 1)), key=lambda L: score(L)[0])
+            errs, exp, dev, got = score(lat)
             out[nm] = dict(crossings=len(got), expected=len(exp), errors=errs,
                            latency_ns=lat * 1e9 if lat is not None else None,
                            jitter_pp_ui=((max(dev) - min(dev)) / ui) if dev else None)
@@ -409,7 +426,7 @@ VTXD txd 0 2.5
 VTXS txs 0 1.0
 VEXT ext 0 {ext}
 VINT int 0 {inn}
-{src}{loads}X1 padip padin padqp padqn loiip loiin loiqp loiqn ext int loip loin loqp loqn vb vdd 0 pt_lo_ext
+{src}{loads}X1 padip padin padqp padqn loiip loiin loiqp loiqn ext int 0 loip loin loqp loqn vb vdd 0 pt_lo_ext
 .tran 1p {T}
 .measure tran lomax max v(loip) from={T - 4e-9} to={T}
 .measure tran lomin min v(loip) from={T - 4e-9} to={T}
@@ -575,7 +592,11 @@ IB vdd ibias 10u
 VN4 n4 0 {v if n == 4 else 0}
 VN8 n8 0 {v if n == 8 else 0}
 VHOLD hold 0 {('0' if hold_at is None else (str(v) if hold_at == 0 else f'pwl(0 0 {hold_at} 0 {hold_at + 1e-10} {v})'))}
-X1 ref en n4 n8 hold ibias ph0 ph1 ph2 ph3 ph4 ph5 ph6 ph7 lock fbck refo vctrl vdd 0 pt_pll_ring
+* r9 ports: N5/N10 off, CDR fast-tune KP/FU/FD idle (TX/host use)
+VN5 n5 0 0
+VN10 n10 0 0
+VFT kp0 0 0
+X1 ref en n4 n8 hold ibias ph0 ph1 ph2 ph3 ph4 ph5 ph6 ph7 lock fbck refo vctrl n5 n10 kp0 kp0 kp0 kp0 kp0 kp0 kp0 kp0 kp0 kp0 kp0 vdd vdd 0 pt_pll_ring
 CRO refo 0 20f
 {phl}.tran 2p {T}
 {period_meas('ph0', T - wv, nv, 'per_vco')}{period_meas('fbck', T - (150e-9 if mode == 'open' else wf), (2 if mode == 'open' else nfb), 'per_fb')}""" + ''.join(f'.measure tran t{k}_{j} when v(ph{k})={v / 2} rise={j} td={T - wv}\n' for k in range(8) for j in range(1, NE + 1)) + f""".measure tran ion avg i(VDD) from={T - 30e-9} to={T}
@@ -816,7 +837,7 @@ def simulate(block, name, tbfun, kwargs, extracted=True, corner='tt', temp=27, v
     tf.stage_sources(work, block)
     inc = f'{block}.ext.spice' if extracted else f'{block}.spice'
     body, analyse = tbfun(inc, v=v, **kwargs)
-    deck = tf.header(corner, temp) + body + '.end\n'
+    deck = _hdr(corner, temp) + body + '.end\n'
     m = tf.ngspice(work, name, deck)
     r = analyse(m)
     r.update(netlist='extracted' if extracted else 'schematic', corner=corner, temp_c=temp, vdd_v=v,
@@ -909,6 +930,12 @@ def tb_safe(block, inc, v=3.63, island_off=False):
     return '\n'.join(lines) + '\n'
 
 
+def _hdr(corner, temp):
+    """tf.header plus the MIM-cap model section (diff_clk_rx r4 series MIM; harmless for blocks without MIMs)."""
+    c = {'tt': 'typical', 'typical': 'typical', 'ss': 'ss', 'ff': 'ff'}.get(corner, 'typical')
+    return tf.header(corner, temp) + f'.lib {tf.MODELS}/sm141064.ngspice mimcap_{c}\n'
+
+
 def safe_cases(block, extracted=True):
     work = tf.SCRATCH / block / 'sim'
     tf.stage_sources(work, block)
@@ -916,7 +943,7 @@ def safe_cases(block, extracted=True):
     cases = []
     for corner, temp, v in (('tt', 27, 3.3), ('ff', 85, 3.63), ('ss', 0, 3.63)):
         name = f'safe_{corner}_{temp}_{v}'
-        m = tf.ngspice(work, name, tf.header(corner, temp) + tb_safe(block, inc, v) + '.end\n')
+        m = tf.ngspice(work, name, _hdr(corner, temp) + tb_safe(block, inc, v) + '.end\n')
         outs = {k[4:]: val for k, val in m.items() if k.startswith('max_')}
         cases.append(dict(case='reset-default controls (all 0), sources toggling', corner=corner, temp_c=temp, vdd_v=v,
                           netlist='extracted' if extracted else 'schematic',
@@ -926,7 +953,7 @@ def safe_cases(block, extracted=True):
                           errors=m['_errors']))
     if block in ('diff_clk_rx', 'lo_ext'):
         name = 'safe_island_off'
-        m = tf.ngspice(work, name, tf.header('tt', 27) + tb_safe(block, inc, island_off=True) + '.end\n')
+        m = tf.ngspice(work, name, _hdr('tt', 27) + tb_safe(block, inc, island_off=True) + '.end\n')
         cases.append(dict(case='island rail at 0 V, both pads held at 3.3 V', corner='tt', temp_c=27, vdd_v=0,
                           netlist='extracted' if extracted else 'schematic',
                           i_pad_inp_na=-m.get('ipad_inp', m.get('ipad_ext_ip', math.nan)) * 1e9,
@@ -949,7 +976,11 @@ NOMINAL = dict(
                  ('data_1g6_500mv', dict(kind='data', rate=1.6e9, vpp=0.5)), ('data_1g6_300mv', dict(kind='data', rate=1.6e9, vpp=0.3)),
                  ('data_1g6_800mv', dict(kind='data', rate=1.6e9, vpp=0.8)), ('data_2g_500mv', dict(kind='data', rate=2e9, vpp=0.5)),
                  ('data_start_0g5_500mv', dict(kind='data', rate=0.5e9, vpp=0.5, nper=1, first=True)),
-                 ('data_pre128_0g5_300mv', dict(kind='data', rate=0.5e9, vpp=0.3, nper=1, first=True, pre=128))],
+                 ('data_pre128_0g5_300mv', dict(kind='data', rate=0.5e9, vpp=0.3, nper=1, first=True, pre=128)),
+                 # r4 (TIM-08): 2 Gb/s at 300 mV, and start from electrical idle with no preamble
+                 ('data_2g_300mv', dict(kind='data', rate=2e9, vpp=0.3)),
+                 ('data_idle_2g_300mv', dict(kind='data', rate=2e9, vpp=0.3, nper=1, first=True, idle=40)),
+                 ('data_idle_0g5_300mv', dict(kind='data', rate=0.5e9, vpp=0.3, nper=1, first=True, idle=20))],
     clk_obs=[('nom', dict(f=0.5e9)), ('nom_in1g', dict(f=1e9))], ring_osc=[('nom', {})],
     lo_obs=[('nom_2g45', dict(f=2.45e9)), ('nom_2g5_a0p3', dict(f=2.5e9, amp=0.3)), ('nom_2g4_a1p1', dict(f=2.4e9, amp=1.1, cm=1.95))],
     obs_pre4=[('nom_1g', dict(f=1e9)), ('nom_810m', dict(f=0.81e9)), ('nom_1g25', dict(f=1.25e9)), ('nom_50m', dict(f=50e6))],

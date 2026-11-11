@@ -19,25 +19,66 @@
 * is high and one while OUTN is high; PRESENT=1 only while both toggle.
 * ATB_DET exposes detector node A for the analog test bus.
 .include timing_cells.spice
-.include generated/fast/ct_rxin.spice
 .include generated/fast/ct_rxout.spice
+.include generated/fast/ct_rxamp.spice
 
-* Leg (revision 3): compact self-biased input stage + two inverters
-* (fastcells.py ct_rxin) with the 40 k feedback resistor and its EN switch.
-.subckt pt_rx_leg IN EN ENB A3 VDD VSS
-XC IN A1 A3 EN ENB VDD VSS ct_rxin
-XRF1 A1 RM VSS ppolyf_u_1k r_width=1u r_length=20u
-XRF2 RM RS VSS ppolyf_u_1k r_width=1u r_length=20u
-XSW RS EN IN VSS nfet_03v3 w=2u l=0.28u
+* Revision 4 (PD29 + TIM-08): fixed-bias differential front end.
+* Pad side: each pad reaches the die only through one 6 V (DUALGATE) series
+* nfet whose gate is bootstrapped (100 k from EN, 200 fF MIM to the pad), so
+* an HBM zap lifts the gate with the pad; EN=0 or island off -> gate at 0 and
+* the pad sees one 6 V drain junction (high-Z: REF_IN/AUX_CLK also carry the
+* external LO with this receiver disabled, B3).  Behind it, node G is held at
+* VCM (~VDD/2, 20 k divider, on with EN, 165 uA) through 500 ohm: the input
+* sits at its decision point without any self-bias loop, and the 500 ohm x
+* 10 pF (board AC cap) = 5 ns high-pass makes start-up after any idle level a
+* few ns.  Long runs are carried by the stage-1 latch (hysteresis ~+-13 mV):
+* each data edge sets it, the decayed input between edges holds it.
+.subckt pt_rx_pad IN G EN VSS
+XRG1 EN RG1 VSS ppolyf_u_1k r_width=1u r_length=20u
+XRG2 RG1 RG2 VSS ppolyf_u_1k r_width=1u r_length=20u
+XRG3 RG2 RG3 VSS ppolyf_u_1k r_width=1u r_length=20u
+XRG4 RG3 RG4 VSS ppolyf_u_1k r_width=1u r_length=20u
+XRG5 RG4 PG VSS ppolyf_u_1k r_width=1u r_length=20u
+XCB PG IN cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+XPS IN PG G VSS nfet_06v0 w=20u l=0.7u
+.ends
+
+* CML preamp with hysteresis (cross-coupled pair) and one 5T comparator.
+* A3P = !(INP>INN) (high when INN > INP), as ct_rxout expects.
+.subckt pt_rx_amp GP GN EN ENB A3P VDD VSS
+* bias: ~100 uA reference, mirrored into the compact core's tails (L=0.28u);
+* off (VBN=0) with EN=0
+XRR1 VDD RR1 VSS ppolyf_u_1k r_width=1u r_length=12u
+XRR2 RR1 RR2 VSS ppolyf_u_1k r_width=1u r_length=12u
+XREN RR2 EN VBN VSS nfet_03v3 w=4u l=0.28u
+XREF VBN VBN VSS VSS nfet_03v3 w=4u l=0.28u
+XROF VBN ENB VSS VSS nfet_03v3 w=1u l=0.28u
+* stage-1 loads (1.2 k each, VDD to O1N/O1P)
+XRL1 VDD O1N VSS ppolyf_u_1k r_width=2.5u r_length=3u
+XRL2 VDD O1P VSS ppolyf_u_1k r_width=2.5u r_length=3u
+* compact core (fastcells.py ct_rxamp): CML pair 32/32 u + tail 80 u, hysteresis
+* pair 24/24 u + tail 13 u, one 5T comparator (16 u pair/mirror, 48 u tail),
+* its EN pull-up and the Y -> A3P inverter
+XK GP GN O1P O1N VBN EN A3P VDD VSS ct_rxamp
 .ends
 
 .subckt pt_diff_clk_rx INP INN EN SE OUTP OUTN PRESENT ATB_DET VDD VSS
 XEI EN ENB VDD VSS pt_t_inv1
 XSEI SE SEB VDD VSS pt_t_inv1
-XLP INP EN ENB A3P VDD VSS pt_rx_leg
-XLN INN EN ENB A3N VDD VSS pt_rx_leg
+XPP INP GP EN VSS pt_rx_pad
+XPN INN GN EN VSS pt_rx_pad
+XVH VH ENB VDD VDD pfet_03v3 w=4u l=0.28u
+XV1 VH VM1 VSS ppolyf_u_1k r_width=1u r_length=10u
+XV2 VM1 VCM VSS ppolyf_u_1k r_width=1u r_length=10u
+XV3 VCM VM3 VSS ppolyf_u_1k r_width=1u r_length=10u
+XV4 VM3 VSS VSS ppolyf_u_1k r_width=1u r_length=10u
+XBP GP VCM VSS ppolyf_u_1k r_width=1u r_length=5u
+XBN GN VCM VSS ppolyf_u_1k r_width=1u r_length=5u
+XA GP GN EN ENB A3P VDD VSS pt_rx_amp
+* OUTP and OUTN both come from the one decision A3P: ct_rxout's SE path (A2P = !A3P)
+* is selected permanently; the SE port is kept for compatibility and has no effect.
 * compact gating/SE-select/output drivers (fastcells.py ct_rxout)
-XO A3P A3N SE SEB ENB OUTP OUTN VDD VSS ct_rxout
+XO A3P VSS VDD VSS ENB OUTP OUTN VDD VSS ct_rxout
 * clock-present detector
 XUA ATB_DET ENB VDD VDD pfet_03v3 w=0.5u l=10u
 XDA ATB_DET OUTP DSA VSS nfet_03v3 w=0.5u l=1u

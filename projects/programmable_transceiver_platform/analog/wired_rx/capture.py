@@ -112,6 +112,11 @@ class Cell:
         if keep:
             self.nor2(q, 'ENB', p + 'QB', 1, 1)
 
+    def diode(self, net, k=1):
+        """r6 (antenna, KLayout ANT.16_i_ANT.3 = M2): k contact columns of bare N+ diffusion on `net` (an N+/Psub
+        protection diode; no device, so LVS is unchanged).  For gate-only input ports with long in-cell M2."""
+        self._add([dict(k='c', n=net, p='-') for _ in range(k)], [])
+
     def aoi3(self, pairs, y):
         """y = a0&b0 | a1&b1 | a2&b2 (NAND2 x3 -> NAND3)."""
         zs = []
@@ -120,6 +125,22 @@ class Cell:
             self.nand([a, b], z)
             zs.append(z)
         self.nand(zs, y)
+
+    def reverse_groups(self):
+        """Mirror the placement order of the gate groups (each group keeps its own column order)."""
+        groups, cur = [], []
+        for col in self.cols:
+            if col is BRK:
+                groups.append(cur)
+                cur = []
+            else:
+                cur.append(col)
+        groups.append(cur)
+        self.cols = []
+        for g_ in reversed(groups):
+            if self.cols:
+                self.cols.append(BRK)
+            self.cols += g_
 
     def row(self, ports, track_order=None):
         r = compact.Row(self.name, self.cols, ports=ports, wn=2, wp=4)
@@ -139,8 +160,14 @@ def pair():
     c.ff('GCL', 'DLN', 'RD')
     c.ff('GCL', 'ELN', 'RE')
     c.buf('GW', 'GWL')
-    c.ff('GWL', 'RD', 'DW', keep=True)  # word outputs: static NOR output stage of the TSPC flop
-    c.ff('GWL', 'RE', 'EW', keep=True)
+    c.ff('GWL', 'RD', 'DWq', keep=True)  # word outputs: static NOR output stage of the TSPC flop
+    c.ff('GWL', 'RE', 'EWq', keep=True)
+    # r5 (2026-11-10): strong output buffers.  r4 routed DW to the wc_gear row as well (L and DX flop inputs):
+    # DW grew from 7-55 fF to 165-203 fF extracted, the keeper-flop output then took 1.2-2 ns and once
+    # double-switched after GW (probe scratch/wired_rx/cap/sim/dbg_r4_q625): the q625 40/200 / f480 1/120 data
+    # errors, with 0 edge errors (EW was not routed to the gear).  EW gets the same buffer (equal DW/EW delay).
+    c.bufx('DWq', 'DW')
+    c.bufx('EWq', 'EW')
     ports = ['GCK', 'GW', 'DLN', 'ELN', 'ENB', 'DW', 'EW']
     return c.row(ports)
 
@@ -193,6 +220,9 @@ def slot(half):
         if i != 19:                       # pair 19 has no successor (wc_ctl keeps its own copy)
             c.bufx(f'ELQ{i}q', f'ELQ{i}')
     xin = ['ELQ6', 'ELQ7', 'ELQ8', 'ELQ9']          # slot1 pairs 10..13 follow slot0 pairs 6..9
+    if half:      # r6 antenna: ELQ6/ELQ7 were 402-444 (ANT.3 limit 400); diodes on all four inputs
+        for n in xin:
+            c.diode(n)
     # r2d: wc_ctl rebuilds pair 19's enable locally from its predecessors (ELQ15/17/18)
     ports = ['CK', 'CKN', 'ENB', 'BQ', 'BH', 'BF'] + (xin if half else ['INJ']) + \
         [f'GCK{i}' for i in range(10 * half, 10 * half + 10)] + (['ELQ15', 'ELQ17', 'ELQ18'] if half else xin)
@@ -235,6 +265,7 @@ def ctl():
     c.inv('GW0', 'GWX', 2, 4)
     c.inv('GWX', 'GW', 4, 8)
     c.inv('GWX', 'GW', 4, 8)
+    c.inv('GWX', 'GWT', 4, 8)           # r5: private copy for wc_gear (r5c on GW itself: 310 -> 552 fF extracted)
     c.buf('GW', 'GWL')
     # phase-select / slip shadow clock: the last slot's own capture edge (CK fall), so the lanes have a
     # full period to settle before slot 0 of the next word
@@ -260,9 +291,11 @@ def ctl():
     c.nor2('B2', 'B1', 'BQ', 2, 4)
     c.buf('B2', 'BH')
     c.buf('B1', 'BF')
-    c.buf('ELW', 'ELWO')                # r4: word-load enable for wc_gear (buffered: keeps the latch light)
+    c.diode('CKP0')    # r6 antenna: CKP0 ratio 414 (ANT.3 limit 400)
+    # r5: no gear outputs here any more (r4 exported ELWO and loaded CK/CKN with the gear row; wc_gear now runs
+    # from GW alone, see gear())
     ports = ['EN', 'CKP0', 'ELQ15', 'ELQ17', 'ELQ18', 'PSEL0', 'PSEL1', 'PSEL2', 'SLIPP', 'SLIPM', 'B2', 'B1',
-             'ENB', 'CK', 'CKN', 'GW', 'BQ', 'BH', 'BF', 'SLP', 'SLM'] + [f'PS{k}' for k in range(8)] + ['ELWO']
+             'ENB', 'CK', 'CKN', 'GW', 'BQ', 'BH', 'BF', 'SLP', 'SLM'] + [f'PS{k}' for k in range(8)] + ['GWT']
     return c.row(ports)
 
 
@@ -341,6 +374,10 @@ def front():
         c.bufx(f'OP{j}r', f'OP{j}')
     ports = [f'CKP{k}' for k in range(8)] + [f'S{j}' for j in range(8)] + ['ENB', 'RCS'] + \
         [f'O{j}' for j in range(8)] + [f'OP{j}' for j in range(4, 8)]
+    # r5: gate groups in reverse order, so the O/OP output stage sits at the LEFT end of the 1356 um row, over the
+    # lane and PD cells (x 0-740 um): r4's O nets ran ~1000 um along the row edge, 240 fF each with 107 fF to each
+    # neighbour, and O changed 1.1-1.5 ns after CKP0 extracted (probe), which every O consumer (lanes, PD) pays
+    c.reverse_groups()
     return c.row(ports)
 
 
@@ -366,7 +403,11 @@ def lane():
         # r2: each lane drives 5 pairs across the pair array (r1: NAND3 with a 2 um pull-up, ~1.3 ns)
         c.bufx(f'DL{j}r', f'DL{j}')
         c.bufx(f'EL{j}r', f'EL{j}')
-    ports = [f'O{j}' for j in range(8)] + [f'OP{j}' for j in range(4, 8)] + [f'PS{k}' for k in range(8)] + ['BQ', 'BH', 'BF'] + \
+    # r5: port (= top channel-track) order interleaves the octet with the static phase/mode selects, so no O/OP track
+    # runs beside another switching O/OP track (r4: ~107 fF O(k)-O(k+1) over the LN/PD channel, data-dependent
+    # Miller doubling, O delay 1.1-1.5 ns after CKP0)
+    ports = [x for j in range(8) for x in (f'O{j}', f'PS{j}')] + \
+        [x for j, sel in zip(range(4, 8), ('BQ', 'BH', 'BF', None)) for x in ((f'OP{j}', sel) if sel else (f'OP{j}',))] + \
         [f'DL{j}' for j in range(4)] + [f'EL{j}' for j in range(4)]
     return c.row(ports)
 
@@ -376,16 +417,27 @@ def pd():
     Quarter (BQ): UPk = O(2k) ^ O(2k+1) (data k vs edge k: clock late), DNk = O(2k+1) ^ O(2k+2) (edge k vs
     data k+1: clock early); data 4 is the next cycle's O0, so DN3 = OP7 (previous E3) ^ O0.  Half (BH):
     data O0/O4, edges O2/O6: UP0 = O0^O2, DN0 = O2^O4, UP1 = O4^O6, DN1 = OP6 ^ O0; legs 2,3 off.  Full
-    rate (BF): all off (blind phase picker).  O and OP change ~0.5 ns after CKP0; the votes are
-    registered on CKP1 one ring cycle later (T + T/8), so the XOR + mode select has more than a period
-    (two NAND levels each).  Outputs one ring cycle wide into pt_cdr UPk/DNk (strong buffers: they cross
-    to the cdr cell).  Latency from the sampling edge ~5 ring cycles (O is at 4)."""
+    rate (BF): all off (blind phase picker).  r5: the votes are registered ~1.1 ns after the CKP0 that follows the
+    octet launch (see the clock comment below; r4 assumed O ~0.5 ns after CKP0 and used CKP1).  Outputs one ring
+    cycle wide into pt_cdr UPk/DNk (strong buffers: they cross to the cdr cell).  Latency from the sampling edge
+    ~5 ring cycles (O is at 4)."""
     c = Cell('wc_pd')
     c.inv('ENB', 'ENL', 2, 4)
-    c.nand(['CKP1', 'ENL'], 'CKV_g', 2, 4)
-    c.inv('CKV_g', 'CKV0', 2, 4)
-    c.nand(['CKP1', 'ENL'], 'CKW_g', 2, 4)
-    c.inv('CKW_g', 'CKV1', 2, 4)
+    # r5g: votes registered PD_DELAY inverters (~1.1-1.2 ns tt) after the NEXT CKP0 rise, strongly buffered.  The octet
+    # is launched ~1.15-1.3 ns after CKP0 (extracted, probes dbg_r4_q625 / dbg_r5f_q625) and the XOR of two octet
+    # bits glitches for up to ~0.6 ns after that (bit-to-bit skew through NAND levels), so the settled vote window is
+    # ~[launch + 1.9 ns, launch + T + 1.3 ns]: a clock at CKP0 + ~1.1 ns sits inside it from 480 to 834 MHz and, being
+    # made of the same gates, moves with the corner.  r4 sampled on CKP1 (+T/8: inside the transition), r5d/f on a
+    # CKN-derived 2/4 gate (the clock reached only 2.6 V, ~1.5 ns late, and caught the XOR glitch: DN 0.09-0.13).
+    c.nand(['CKP0', 'ENL'], 'CKV_g', 2, 4)
+    c.inv('CKV_g', 'CKVd0', 2, 4)
+    prev = 'CKVd0'
+    for k in range(PD_DELAY):
+        nxt = 'CKVr' if k == PD_DELAY - 1 else f'CKVd{k + 1}'
+        c.inv(prev, nxt, 2, 4)
+        prev = nxt
+    c.bufx('CKVr', 'CKV0')
+    c.bufx('CKVr', 'CKV1')
     for n in [f'O{j}' for j in range(8)] + ['OP6', 'OP7']:
         c.inv(n, n + 'n', 1, 2)
 
@@ -410,44 +462,66 @@ def pd():
                 c.inv(f'{y}a', f'{y}m', 1, 2)
             c.ff('CKV0' if d == 'u' else 'CKV1', f'{y}m', f'{y}r')
             c.bufx(f'{y}r', y)
-    ports = [f'O{j}' for j in range(8)] + ['OP6', 'OP7', 'CKP1', 'ENB', 'BQ', 'BH'] + \
+    ports = [f'O{j}' for j in range(8)] + ['OP6', 'OP7', 'CKP0', 'ENB', 'BQ', 'BH'] + \
         [f'UP{k}' for k in range(4)] + [f'DN{k}' for k in range(4)]
     return c.row(ports)
 
 
 def gear():
-    """r4 (AC-1/S3 40-bit boundary): one extra 2:1 stage after the 20-bit word.
-    ELWD2 = ELW delayed two CK rises; GWD = CKN & ELWD2 rises 1.5 ring cycles after the word load (GW), so
-    DW has 1.5 periods of setup and the next load is >= 3.5 periods away (quarter: 5 cycles per word).
-    T toggles at every GWD fall (stable while GWD is high).  T = 0: L <= DW (the earlier word); T = 1:
-    DX[19:0] <= L, DX[39:20] <= DW, so DX holds {later, earlier} for two words, word 0 (earliest) in the
-    low bits.  L and DX are clocked by disjoint GWD pulses (no same-edge hand-off).  WCLK40 = T: DX
-    changes while WCLK40 is high, half a ring cycle before its fall, so the macro samples DX on the
-    WCLK40 rise (about one word time of setup and of hold).  All flops clocked once per two words keep
-    their QB (keeper), as the W flops."""
+    """r5 (AC-1/S3 40-bit boundary): one extra 2:1 stage after the 20-bit word, clocked by a delayed copy of the
+    word-load pulse (GWT, wc_ctl's private GW copy) alone: the gear loads the word just loaded into DW, GEAR_DELAY
+    inverters after GW (see below), with the rest of the word time as hold.  T toggles at every delayed-GW
+    fall (stable while the delayed GW is high).  T = 0: L <= DW; T = 1: DX[19:0] <= L, DX[39:20] <= DW, so DX holds {later,
+    earlier} for two words, word 0 (earliest) in the low bits.  WCLK40 = T: DX changes at a GW rise while WCLK40 is
+    high, half a ring cycle before its fall; the macro samples DX on the WCLK40 rise (contract unchanged, AC3-W5).
+    r4 clocked the gear from CK/CKN and a word-load enable ELWO routed from wc_ctl: extracted, ELWO (half-period
+    path over ~600 um, 149 fF coupling to the r5b private CK copy) mis-timed GWD and DX never loaded (q625 5/5 DX
+    words wrong), and the gear loaded the shared CK/CKN nets."""
     c = Cell('wc_gear')
-    c.buf('CK', 'CKG')
-    c.ff('CKG', 'ELWO', 'ELWD1')
-    c.ff('CKG', 'ELWD1', 'ELWD2')
-    c.nand(['CKN', 'ELWD2'], 'GWDB')
-    c.inv('GWDB', 'GWD', 2, 4)
-    c.inv('GWD', 'GWDN', 2, 4)
-    c.ff('GWDN', 'TB', 'T', keep=True)
-    c.inv('T', 'TB', 1, 2)
-    c.nand(['GWD', 'TB'], 'GLB')        # T = 0 words: load L
-    c.nand(['GWD', 'T'], 'GXB')         # T = 1 words: load DX
-    for blk in range(5):
-        c.inv('GLB', f'GL{blk}', 2, 4)
+    # r5d: the gear loads the NEW word, GEAR_DELAY inverters after GW.  r5c captured the previous word on the GW
+    # rise itself, a race between two equal-depth paths (GW -> pair buffer -> W flop -> DW bufx, ~7 gates, against
+    # GWT -> gear clock, ~5 gates): schematic q625 took the new word (DX 5/5 wrong).  A delay of 20 inverters plus
+    # the 4-gate clock path (~24 gate delays vs ~7 for DW) scales with corner like the DW path, and the next GW is
+    # >= 5 ring cycles away (quarter rate).
+    c.buf('GWT', 'GWD0')
+    prev = 'GWD0'
+    for k in range(GEAR_DELAY):
+        nxt = 'GWGr' if k == GEAR_DELAY - 1 else f'GWD{k + 1}'
+        c.inv(prev, nxt, 1, 2)
+        prev = nxt
+    # r5f: the T flop clock is low while EN = 0 (NOR with ENB): an inverter of the (low) pulse held it high, so the
+    # TSPC reset fought the clock -- the r4 gear did the same with GWDN (schematic safe_q625 410 uA, limit 10 uA)
+    c.nor2('GWGr', 'ENB', 'GWN', 2, 4)
+    c.ff('GWN', 'TB', 'Tq', keep=True)
+    c.inv('Tq', 'TB', 1, 2)
+    # r5e: the pulse and T are distributed along the 1.3 mm row by strong buffers and every block makes its own
+    # clock (NAND + inverter).  r5d drove one NAND output (2 um) per word type into 5/10 block inverters spread over
+    # the row: extracted, the 0.8 ns pulse never reached the far blocks (DX never loaded; schematic was clean).
+    c.bufx('GWGr', 'GWG')
+    c.bufx('Tq', 'T')
+    for blk in range(5):                 # T = 0 words: load L
+        c.inv('T', f'TL{blk}', 1, 2)
+        c.nand(['GWG', f'TL{blk}'], f'GLB{blk}')
+        c.inv(f'GLB{blk}', f'GL{blk}', 2, 4)
         for i in range(4 * blk, 4 * blk + 4):
             c.ff(f'GL{blk}', f'DW{i}', f'L{i}', keep=True)
-    for blk in range(10):
-        c.inv('GXB', f'GX{blk}', 2, 4)
+    for blk in range(10):                # T = 1 words: load DX
+        c.nand(['GWG', 'T'], f'GXB{blk}')
+        c.inv(f'GXB{blk}', f'GX{blk}', 2, 4)
         for i in range(4 * blk, 4 * blk + 4):
             src = f'L{i}' if i < 20 else f'DW{i - 20}'
             c.ff(f'GX{blk}', src, f'DX{i}', keep=True)
-    c.bufx('T', 'WCLK40')
-    ports = ['CK', 'CKN', 'ENB', 'ELWO'] + [f'DW{i}' for i in range(20)] + [f'DX{i}' for i in range(40)] + ['WCLK40']
+    c.bufx('Tq', 'WCLK40')
+    # r6 antenna: GWT ratio 1763, DW0/DW1 403-409 (ANT.3 limit 400): N+ diodes on GWT (3 columns) and every DW input
+    c.diode('GWT', 3)
+    for i in range(20):
+        c.diode(f'DW{i}')
+    ports = ['GWT', 'ENB'] + [f'DW{i}' for i in range(20)] + [f'DX{i}' for i in range(40)] + ['WCLK40']
     return c.row(ports)
+
+
+PD_DELAY = 6         # r5g PD vote-clock delay after CKP0 (inverters, even)
+GEAR_DELAY = 20      # r5d gear load delay (inverters, even): ~1.3 ns tt, > 2x the DW path
 
 
 CELLS = dict(wc_pair=pair, wc_cnt=cnt, wc_slot0=lambda: slot(0), wc_slot1=lambda: slot(1),
@@ -540,7 +614,7 @@ def prbs(n, seed=0x5A):
 
 
 def bench(bpc, f=625e6, words=12, psel=0, corner='typical', temp=27, vdd=3.3, d_lat=300e-12, slip_seq=None,
-          ext_clock=False, lde_delay=0.3e-9, en_off=False, rcs=0):
+          ext_clock=False, lde_delay=0.3e-9, en_off=False, rcs=0, s_static=False):
     """Ideal ring phases + ideal sampler outputs (S_j changes d_lat after its phase edge, value = line at
     the phase edge) driving pt_wrx_cap.  Line: PRBS7 at bpc bits per ring cycle, data sampler centred.
     ext_clock: only CKP0/CKP4 toggle (CKP1-3 = CKP0, CKP5-7 = CKP4), as in the WCLK_IN fallback."""
@@ -564,6 +638,8 @@ def bench(bpc, f=625e6, words=12, psel=0, corner='typical', temp=27, vdd=3.3, d_
         for n in range(ncyc):
             ts = t0 + n * T + j * T / 8 + 1e-12
             v = vdd * line(ts + 0.25 * ui if (j not in dj) else ts)   # edge samplers: right after the boundary
+            if s_static:   # r6: system safe state (slicer_en follows the capture EN, S held low by pt_slicer)
+                v = 0.
             tc = ts + d_lat
             pts += [(tc, pts[-1][1]), (tc + 30e-12, v)]
         lines.append(f'VS{j} s{j} 0 {sims_pwl(pts)}')
@@ -732,9 +808,15 @@ def build_top(rows=None, max_row_width=420.0):
     (work / 'top.spice').write_text(top_netlist(include_cells=False))
     ports, devices = tn.load(work / 'top.spice', 'pt_wrx_cap')
     if rows is None:
-        rows = [['CTL'], ['FR'], ['PD', 'LN'], ['CN', 'SL0'], ['SL1'], ['GR']] + \
-               [[f'P{i}' for i in range(k, min(k + 4, 20))] for k in range(0, 20, 4)]
-    rep = le.generate(work, 'pt_wrx_cap', ports, devices, rows=rows, max_row_width=max_row_width)
+        # r5: GR below the pairs and LN at the left of its row (next to the pairs).  r4 put the 66 um gear row
+        # (+51 um channel) between the slots and the pairs and LN right of PD: the lane nets DL/EL grew
+        # 120 -> 200-255 fF extracted and the lane -> slot flop half-period path failed (q625 40/200 errors).
+        rows = [['CTL'], ['FR'], ['LN', 'PD'], ['CN', 'SL0'], ['SL1']] + \
+               [[f'P{i}' for i in range(k, min(k + 4, 20))] for k in range(0, 20, 4)] + [['GR']]
+    # r5h: the vote outputs as one trunk group flanked by static mode/select ports (r5g: CKP0's trunk beside UP3,
+    # 68 fF: 0.6 V spikes on UP3 with EN = 0 and an extra 68 fF on one ring phase)
+    rep = le.generate(work, 'pt_wrx_cap', ports, devices, rows=rows, max_row_width=max_row_width,
+                      trunk_groups=[['RCS'] + [f'UP{k}' for k in range(4)] + [f'DN{k}' for k in range(4)] + ['B2']])
     defs = ''.join((FAST / f'{m}.spice').read_text() for m in CELLS)
     top_sp = tn.flat_spice(ports, devices, 'pt_wrx_cap')
     ant = le.ad.spice_lines(rep.get('antenna_diodes', []))   # K1 antenna diodes -> LVS reference

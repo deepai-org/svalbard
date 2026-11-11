@@ -122,15 +122,93 @@ XMN47 tx tx_b VSS VSS nfet_03v3 w=1u l=0.28u
 XMP47 tx tx_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=2u l=0.28u
 XMN48 RX_P ln DP_P VSS nfet_03v3 w=2u l=0.28u
 XMP48 RX_P ln_b DP_P VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
-XMN49 TX_P tx DP_P VSS nfet_03v3 w=4u l=0.28u
-XMN50 DP_P enb VSS VSS nfet_03v3 w=1u l=0.28u
-XMN51 RX_N ln DP_N VSS nfet_03v3 w=2u l=0.28u
+XR15 TX_P TX_P_TXF_P_r0 VSS ppolyf_u_1k r_width=2u r_length=5.6u
+XR16 TX_P_TXF_P_r0 TX_P_TXF_P_r1 VSS ppolyf_u_1k r_width=2u r_length=5.6u
+XR17 TX_P_TXF_P_r1 TX_P_TXF_P_r2 VSS ppolyf_u_1k r_width=2u r_length=5.6u
+XR18 TX_P_TXF_P_r2 TX_P_TXF_P_r3 VSS ppolyf_u_1k r_width=2u r_length=5.6u
+XR19 TX_P_TXF_P_r3 TXF_P VSS ppolyf_u_1k r_width=2u r_length=5.6u
+XHV1 TXF_P TXF_P TXCF0_P VSS nfet_06v0 w=30u l=0.7u
+XHV2 TXCF0_P TXCF0_P TXCF1_P VSS nfet_06v0 w=30u l=0.7u
+XHV3 TXCF1_P TXCF1_P TXCF2_P VSS nfet_06v0 w=30u l=0.7u
+XHV4 TXCF2_P TXCF2_P VSS VSS nfet_06v0 w=30u l=0.7u
+XR20 TX_P TX_P_TXS_P_r0 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR21 TX_P_TXS_P_r0 TX_P_TXS_P_r1 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR22 TX_P_TXS_P_r1 TX_P_TXS_P_r2 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR23 TX_P_TXS_P_r2 TX_P_TXS_P_r3 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR24 TX_P_TXS_P_r3 TX_P_TXS_P_r4 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR25 TX_P_TXS_P_r4 TX_P_TXS_P_r5 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR26 TX_P_TXS_P_r5 TX_P_TXS_P_r6 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR27 TX_P_TXS_P_r6 TX_P_TXS_P_r7 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR28 TX_P_TXS_P_r7 TX_P_TXS_P_r8 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR29 TX_P_TXS_P_r8 TX_P_TXS_P_r9 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR30 TX_P_TXS_P_r9 TX_P_TXS_P_r10 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR31 TX_P_TXS_P_r10 TX_P_TXS_P_r11 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR32 TX_P_TXS_P_r11 TX_P_TXS_P_r12 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR33 TX_P_TXS_P_r12 TX_P_TXS_P_r13 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR34 TX_P_TXS_P_r13 TX_P_TXS_P_r14 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR35 TX_P_TXS_P_r14 TX_P_TXS_P_r15 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR36 TX_P_TXS_P_r15 TX_P_TXS_P_r16 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR37 TX_P_TXS_P_r16 TX_P_TXS_P_r17 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR38 TX_P_TXS_P_r17 TX_P_TXS_P_r18 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR39 TX_P_TXS_P_r18 TX_P_TXS_P_r19 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR40 TX_P_TXS_P_r19 TX_P_TXS_P_r20 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR41 TX_P_TXS_P_r20 TX_P_TXS_P_r21 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR42 TX_P_TXS_P_r21 TX_P_TXS_P_r22 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR43 TX_P_TXS_P_r22 TX_P_TXS_P_r23 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR44 TX_P_TXS_P_r23 TXS_P VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XHV5 TXS_P TXS_P TXCS0_P VSS nfet_06v0 w=80u l=0.7u m=2
+XHV6 TXCS0_P TXCS0_P TXCS1_P VSS nfet_06v0 w=80u l=0.7u m=2
+XHV7 TXCS1_P TXCS1_P TXCS2_P VSS nfet_06v0 w=80u l=0.7u m=2
+XHV8 TXCS2_P TXCS2_P TXCS3_P VSS nfet_06v0 w=80u l=0.7u m=2
+XHV9 TXCS3_P TXCS3_P VSS VSS nfet_06v0 w=80u l=0.7u m=2
+XHV10 TXS_P tx DP_P VSS nfet_06v0 w=4u l=0.7u
+XMN49 DP_P enb VSS VSS nfet_03v3 w=1u l=0.28u
+XMN50 RX_N ln DP_N VSS nfet_03v3 w=2u l=0.28u
 XMP49 RX_N ln_b DP_N VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
-XMN52 TX_N tx DP_N VSS nfet_03v3 w=4u l=0.28u
-XMN53 DP_N enb VSS VSS nfet_03v3 w=1u l=0.28u
+XR45 TX_N TX_N_TXF_N_r0 VSS ppolyf_u_1k r_width=2u r_length=5.6u
+XR46 TX_N_TXF_N_r0 TX_N_TXF_N_r1 VSS ppolyf_u_1k r_width=2u r_length=5.6u
+XR47 TX_N_TXF_N_r1 TX_N_TXF_N_r2 VSS ppolyf_u_1k r_width=2u r_length=5.6u
+XR48 TX_N_TXF_N_r2 TX_N_TXF_N_r3 VSS ppolyf_u_1k r_width=2u r_length=5.6u
+XR49 TX_N_TXF_N_r3 TXF_N VSS ppolyf_u_1k r_width=2u r_length=5.6u
+XHV11 TXF_N TXF_N TXCF0_N VSS nfet_06v0 w=30u l=0.7u
+XHV12 TXCF0_N TXCF0_N TXCF1_N VSS nfet_06v0 w=30u l=0.7u
+XHV13 TXCF1_N TXCF1_N TXCF2_N VSS nfet_06v0 w=30u l=0.7u
+XHV14 TXCF2_N TXCF2_N VSS VSS nfet_06v0 w=30u l=0.7u
+XR50 TX_N TX_N_TXS_N_r0 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR51 TX_N_TXS_N_r0 TX_N_TXS_N_r1 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR52 TX_N_TXS_N_r1 TX_N_TXS_N_r2 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR53 TX_N_TXS_N_r2 TX_N_TXS_N_r3 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR54 TX_N_TXS_N_r3 TX_N_TXS_N_r4 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR55 TX_N_TXS_N_r4 TX_N_TXS_N_r5 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR56 TX_N_TXS_N_r5 TX_N_TXS_N_r6 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR57 TX_N_TXS_N_r6 TX_N_TXS_N_r7 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR58 TX_N_TXS_N_r7 TX_N_TXS_N_r8 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR59 TX_N_TXS_N_r8 TX_N_TXS_N_r9 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR60 TX_N_TXS_N_r9 TX_N_TXS_N_r10 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR61 TX_N_TXS_N_r10 TX_N_TXS_N_r11 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR62 TX_N_TXS_N_r11 TX_N_TXS_N_r12 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR63 TX_N_TXS_N_r12 TX_N_TXS_N_r13 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR64 TX_N_TXS_N_r13 TX_N_TXS_N_r14 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR65 TX_N_TXS_N_r14 TX_N_TXS_N_r15 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR66 TX_N_TXS_N_r15 TX_N_TXS_N_r16 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR67 TX_N_TXS_N_r16 TX_N_TXS_N_r17 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR68 TX_N_TXS_N_r17 TX_N_TXS_N_r18 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR69 TX_N_TXS_N_r18 TX_N_TXS_N_r19 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR70 TX_N_TXS_N_r19 TX_N_TXS_N_r20 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR71 TX_N_TXS_N_r20 TX_N_TXS_N_r21 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR72 TX_N_TXS_N_r21 TX_N_TXS_N_r22 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR73 TX_N_TXS_N_r22 TX_N_TXS_N_r23 VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XR74 TX_N_TXS_N_r23 TXS_N VSS ppolyf_u_1k r_width=2u r_length=6.4u
+XHV15 TXS_N TXS_N TXCS0_N VSS nfet_06v0 w=80u l=0.7u m=2
+XHV16 TXCS0_N TXCS0_N TXCS1_N VSS nfet_06v0 w=80u l=0.7u m=2
+XHV17 TXCS1_N TXCS1_N TXCS2_N VSS nfet_06v0 w=80u l=0.7u m=2
+XHV18 TXCS2_N TXCS2_N TXCS3_N VSS nfet_06v0 w=80u l=0.7u m=2
+XHV19 TXCS3_N TXCS3_N VSS VSS nfet_06v0 w=80u l=0.7u m=2
+XHV20 TXS_N tx DP_N VSS nfet_06v0 w=4u l=0.7u
+XMN51 DP_N enb VSS VSS nfet_03v3 w=1u l=0.28u
 * ROWBREAK
-XMN54 cdp_ckn_s0 det_clk VSS VSS nfet_03v3 w=8u l=0.28u
-XMN55 cdp_ckn det_en cdp_ckn_s0 VSS nfet_03v3 w=8u l=0.28u
+XMN52 cdp_ckn_s0 det_clk VSS VSS nfet_03v3 w=8u l=0.28u
+XMN53 cdp_ckn det_en cdp_ckn_s0 VSS nfet_03v3 w=8u l=0.28u
 XMP50 cdp_ckn det_clk VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP51 cdp_ckn det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP52 cdp_x cdp_ckn VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=16u l=0.28u
@@ -140,28 +218,28 @@ XMP55 cdp_1pa VREFN cdp_x VDD_WIRE_SW pfet_03v3 w=12u l=0.28u
 XMP56 cdp_4pb VTHP cdp_x VDD_WIRE_SW pfet_03v3 w=12u l=0.28u
 XMP57 cdp_2oa cdp_3ob cdp_1pa VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP58 cdp_3ob cdp_2oa cdp_4pb VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN56 cdp_2oa cdp_3ob VSS VSS nfet_03v3 w=4u l=0.28u
-XMN57 cdp_3ob cdp_2oa VSS VSS nfet_03v3 w=4u l=0.28u
-XMN58 cdp_1pa cdp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN59 cdp_4pb cdp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN60 cdp_2oa cdp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN61 cdp_3ob cdp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN54 cdp_2oa cdp_3ob VSS VSS nfet_03v3 w=4u l=0.28u
+XMN55 cdp_3ob cdp_2oa VSS VSS nfet_03v3 w=4u l=0.28u
+XMN56 cdp_1pa cdp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN57 cdp_4pb cdp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN58 cdp_2oa cdp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN59 cdp_3ob cdp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
 XMP59 cdp_q_s0 cdp_2oa VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
 XMP60 cdp_q cdp_qb cdp_q_s0 VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
-XMN62 cdp_q cdp_2oa VSS VSS nfet_03v3 w=1u l=0.28u
-XMN63 cdp_q cdp_qb VSS VSS nfet_03v3 w=1u l=0.28u
+XMN60 cdp_q cdp_2oa VSS VSS nfet_03v3 w=1u l=0.28u
+XMN61 cdp_q cdp_qb VSS VSS nfet_03v3 w=1u l=0.28u
 XMP61 cdp_qb_s0 cdp_3ob VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
 XMP62 cdp_qb cdp_q cdp_qb_s0 VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
-XMN64 cdp_qb cdp_3ob VSS VSS nfet_03v3 w=1u l=0.28u
-XMN65 cdp_qb cdp_q VSS VSS nfet_03v3 w=1u l=0.28u
+XMN62 cdp_qb cdp_3ob VSS VSS nfet_03v3 w=1u l=0.28u
+XMN63 cdp_qb cdp_q VSS VSS nfet_03v3 w=1u l=0.28u
 XMP63 DIFF_POS_s0 cdp_qb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP64 DIFF_POS enb DIFF_POS_s0 VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN66 DIFF_POS cdp_qb VSS VSS nfet_03v3 w=2u l=0.28u
-XMN67 DIFF_POS enb VSS VSS nfet_03v3 w=2u l=0.28u
+XMN64 DIFF_POS cdp_qb VSS VSS nfet_03v3 w=2u l=0.28u
+XMN65 DIFF_POS enb VSS VSS nfet_03v3 w=2u l=0.28u
 * ROWBREAK
 * ROWBREAK
-XMN68 cdn_ckn_s0 det_clk VSS VSS nfet_03v3 w=8u l=0.28u
-XMN69 cdn_ckn det_en cdn_ckn_s0 VSS nfet_03v3 w=8u l=0.28u
+XMN66 cdn_ckn_s0 det_clk VSS VSS nfet_03v3 w=8u l=0.28u
+XMN67 cdn_ckn det_en cdn_ckn_s0 VSS nfet_03v3 w=8u l=0.28u
 XMP65 cdn_ckn det_clk VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP66 cdn_ckn det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP67 cdn_x cdn_ckn VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=16u l=0.28u
@@ -171,28 +249,28 @@ XMP70 cdn_1pa VREFN cdn_x VDD_WIRE_SW pfet_03v3 w=12u l=0.28u
 XMP71 cdn_4pb VTHP cdn_x VDD_WIRE_SW pfet_03v3 w=12u l=0.28u
 XMP72 cdn_2oa cdn_3ob cdn_1pa VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP73 cdn_3ob cdn_2oa cdn_4pb VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN70 cdn_2oa cdn_3ob VSS VSS nfet_03v3 w=4u l=0.28u
-XMN71 cdn_3ob cdn_2oa VSS VSS nfet_03v3 w=4u l=0.28u
-XMN72 cdn_1pa cdn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN73 cdn_4pb cdn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN74 cdn_2oa cdn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN75 cdn_3ob cdn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN68 cdn_2oa cdn_3ob VSS VSS nfet_03v3 w=4u l=0.28u
+XMN69 cdn_3ob cdn_2oa VSS VSS nfet_03v3 w=4u l=0.28u
+XMN70 cdn_1pa cdn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN71 cdn_4pb cdn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN72 cdn_2oa cdn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN73 cdn_3ob cdn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
 XMP74 cdn_q_s0 cdn_2oa VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
 XMP75 cdn_q cdn_qb cdn_q_s0 VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
-XMN76 cdn_q cdn_2oa VSS VSS nfet_03v3 w=1u l=0.28u
-XMN77 cdn_q cdn_qb VSS VSS nfet_03v3 w=1u l=0.28u
+XMN74 cdn_q cdn_2oa VSS VSS nfet_03v3 w=1u l=0.28u
+XMN75 cdn_q cdn_qb VSS VSS nfet_03v3 w=1u l=0.28u
 XMP76 cdn_qb_s0 cdn_3ob VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
 XMP77 cdn_qb cdn_q cdn_qb_s0 VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
-XMN78 cdn_qb cdn_3ob VSS VSS nfet_03v3 w=1u l=0.28u
-XMN79 cdn_qb cdn_q VSS VSS nfet_03v3 w=1u l=0.28u
+XMN76 cdn_qb cdn_3ob VSS VSS nfet_03v3 w=1u l=0.28u
+XMN77 cdn_qb cdn_q VSS VSS nfet_03v3 w=1u l=0.28u
 XMP78 DIFF_NEG_s0 cdn_qb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP79 DIFF_NEG enb DIFF_NEG_s0 VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN80 DIFF_NEG cdn_qb VSS VSS nfet_03v3 w=2u l=0.28u
-XMN81 DIFF_NEG enb VSS VSS nfet_03v3 w=2u l=0.28u
+XMN78 DIFF_NEG cdn_qb VSS VSS nfet_03v3 w=2u l=0.28u
+XMN79 DIFF_NEG enb VSS VSS nfet_03v3 w=2u l=0.28u
 * ROWBREAK
 * ROWBREAK
-XMN82 csp_ckn_s0 det_clk VSS VSS nfet_03v3 w=8u l=0.28u
-XMN83 csp_ckn det_en csp_ckn_s0 VSS nfet_03v3 w=8u l=0.28u
+XMN80 csp_ckn_s0 det_clk VSS VSS nfet_03v3 w=8u l=0.28u
+XMN81 csp_ckn det_en csp_ckn_s0 VSS nfet_03v3 w=8u l=0.28u
 XMP80 csp_ckn det_clk VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP81 csp_ckn det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP82 csp_x csp_ckn VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=16u l=0.28u
@@ -200,28 +278,28 @@ XMP83 csp_1pa DP_P csp_x VDD_WIRE_SW pfet_03v3 w=12u l=0.28u
 XMP84 csp_4pb VSE csp_x VDD_WIRE_SW pfet_03v3 w=12u l=0.28u
 XMP85 csp_2oa csp_3ob csp_1pa VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP86 csp_3ob csp_2oa csp_4pb VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN84 csp_2oa csp_3ob VSS VSS nfet_03v3 w=4u l=0.28u
-XMN85 csp_3ob csp_2oa VSS VSS nfet_03v3 w=4u l=0.28u
-XMN86 csp_1pa csp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN87 csp_4pb csp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN88 csp_2oa csp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN89 csp_3ob csp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN82 csp_2oa csp_3ob VSS VSS nfet_03v3 w=4u l=0.28u
+XMN83 csp_3ob csp_2oa VSS VSS nfet_03v3 w=4u l=0.28u
+XMN84 csp_1pa csp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN85 csp_4pb csp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN86 csp_2oa csp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN87 csp_3ob csp_ckn VSS VSS nfet_03v3 w=1u l=0.28u
 XMP87 csp_q_s0 csp_2oa VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
 XMP88 csp_q csp_qb csp_q_s0 VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
-XMN90 csp_q csp_2oa VSS VSS nfet_03v3 w=1u l=0.28u
-XMN91 csp_q csp_qb VSS VSS nfet_03v3 w=1u l=0.28u
+XMN88 csp_q csp_2oa VSS VSS nfet_03v3 w=1u l=0.28u
+XMN89 csp_q csp_qb VSS VSS nfet_03v3 w=1u l=0.28u
 XMP89 csp_qb_s0 csp_3ob VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
 XMP90 csp_qb csp_q csp_qb_s0 VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
-XMN92 csp_qb csp_3ob VSS VSS nfet_03v3 w=1u l=0.28u
-XMN93 csp_qb csp_q VSS VSS nfet_03v3 w=1u l=0.28u
+XMN90 csp_qb csp_3ob VSS VSS nfet_03v3 w=1u l=0.28u
+XMN91 csp_qb csp_q VSS VSS nfet_03v3 w=1u l=0.28u
 XMP91 SE_P_s0 csp_qb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP92 SE_P enb SE_P_s0 VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN94 SE_P csp_qb VSS VSS nfet_03v3 w=2u l=0.28u
-XMN95 SE_P enb VSS VSS nfet_03v3 w=2u l=0.28u
+XMN92 SE_P csp_qb VSS VSS nfet_03v3 w=2u l=0.28u
+XMN93 SE_P enb VSS VSS nfet_03v3 w=2u l=0.28u
 * ROWBREAK
 * ROWBREAK
-XMN96 csn_ckn_s0 det_clk VSS VSS nfet_03v3 w=8u l=0.28u
-XMN97 csn_ckn det_en csn_ckn_s0 VSS nfet_03v3 w=8u l=0.28u
+XMN94 csn_ckn_s0 det_clk VSS VSS nfet_03v3 w=8u l=0.28u
+XMN95 csn_ckn det_en csn_ckn_s0 VSS nfet_03v3 w=8u l=0.28u
 XMP93 csn_ckn det_clk VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP94 csn_ckn det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP95 csn_x csn_ckn VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=16u l=0.28u
@@ -229,39 +307,39 @@ XMP96 csn_1pa DP_N csn_x VDD_WIRE_SW pfet_03v3 w=12u l=0.28u
 XMP97 csn_4pb VSE csn_x VDD_WIRE_SW pfet_03v3 w=12u l=0.28u
 XMP98 csn_2oa csn_3ob csn_1pa VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP99 csn_3ob csn_2oa csn_4pb VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN98 csn_2oa csn_3ob VSS VSS nfet_03v3 w=4u l=0.28u
-XMN99 csn_3ob csn_2oa VSS VSS nfet_03v3 w=4u l=0.28u
-XMN100 csn_1pa csn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN101 csn_4pb csn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN102 csn_2oa csn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
-XMN103 csn_3ob csn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN96 csn_2oa csn_3ob VSS VSS nfet_03v3 w=4u l=0.28u
+XMN97 csn_3ob csn_2oa VSS VSS nfet_03v3 w=4u l=0.28u
+XMN98 csn_1pa csn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN99 csn_4pb csn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN100 csn_2oa csn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
+XMN101 csn_3ob csn_ckn VSS VSS nfet_03v3 w=1u l=0.28u
 XMP100 csn_q_s0 csn_2oa VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
 XMP101 csn_q csn_qb csn_q_s0 VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
-XMN104 csn_q csn_2oa VSS VSS nfet_03v3 w=1u l=0.28u
-XMN105 csn_q csn_qb VSS VSS nfet_03v3 w=1u l=0.28u
+XMN102 csn_q csn_2oa VSS VSS nfet_03v3 w=1u l=0.28u
+XMN103 csn_q csn_qb VSS VSS nfet_03v3 w=1u l=0.28u
 XMP102 csn_qb_s0 csn_3ob VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
 XMP103 csn_qb csn_q csn_qb_s0 VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
-XMN106 csn_qb csn_3ob VSS VSS nfet_03v3 w=1u l=0.28u
-XMN107 csn_qb csn_q VSS VSS nfet_03v3 w=1u l=0.28u
+XMN104 csn_qb csn_3ob VSS VSS nfet_03v3 w=1u l=0.28u
+XMN105 csn_qb csn_q VSS VSS nfet_03v3 w=1u l=0.28u
 XMP104 SE_N_s0 csn_qb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 XMP105 SE_N enb SE_N_s0 VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN108 SE_N csn_qb VSS VSS nfet_03v3 w=2u l=0.28u
-XMN109 SE_N enb VSS VSS nfet_03v3 w=2u l=0.28u
+XMN106 SE_N csn_qb VSS VSS nfet_03v3 w=2u l=0.28u
+XMN107 SE_N enb VSS VSS nfet_03v3 w=2u l=0.28u
 * ROWBREAK
-XMN110 inj_b_s0 det_en VSS VSS nfet_03v3 w=2u l=0.28u
-XMN111 inj_b det_inject inj_b_s0 VSS nfet_03v3 w=2u l=0.28u
+XMN108 inj_b_s0 det_en VSS VSS nfet_03v3 w=2u l=0.28u
+XMN109 inj_b det_inject inj_b_s0 VSS nfet_03v3 w=2u l=0.28u
 XMP106 inj_b det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=2u l=0.28u
 XMP107 inj_b det_inject VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=2u l=0.28u
-XMN112 inj inj_b VSS VSS nfet_03v3 w=1u l=0.28u
+XMN110 inj inj_b VSS VSS nfet_03v3 w=1u l=0.28u
 XMP108 inj inj_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=2u l=0.28u
-XMN113 dnb enq IBIAS VSS nfet_03v3 w=4u l=0.28u
-XMN114 dnb dnb VSS VSS nfet_03v3 w=2u l=1u
-XMN115 dnb enb VSS VSS nfet_03v3 w=1u l=0.28u
-XMN116 dpb dnb VSS VSS nfet_03v3 w=2u l=1u
+XMN111 dnb enq IBIAS VSS nfet_03v3 w=4u l=0.28u
+XMN112 dnb dnb VSS VSS nfet_03v3 w=2u l=1u
+XMN113 dnb enb VSS VSS nfet_03v3 w=1u l=0.28u
+XMN114 dpb dnb VSS VSS nfet_03v3 w=2u l=1u
 XMP109 dpb dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=2u l=1u
 XMP110 dpb enq VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=2u l=0.28u
 XMP111 inj_P dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=20u l=1u
-XMN117 TX_P inj inj_P VSS nfet_03v3 w=4u l=0.28u
+XHV21 TXF_P inj inj_P VSS nfet_06v0 w=20u l=0.7u
 XMP112 inj_N dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=20u l=1u
-XMN118 TX_N inj inj_N VSS nfet_03v3 w=4u l=0.28u
+XHV22 TXF_N inj inj_N VSS nfet_06v0 w=20u l=0.7u
 .ends pt_detect

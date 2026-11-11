@@ -249,5 +249,60 @@ def main():
         print(c, v['meets_mask'], round(v['rms_jitter_ps_10k_100M'], 3), [(x['f_hz'], round(x['total'], 1), round(x['margin_db'], 1)) for x in v['at_mask']])
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' and __import__('sys').argv[1:] != ['r4']:
     main()
+
+
+# ---------------- round 4: jitter closure (LO owner, 2026-11-11) ----------------
+# Component-level in-band model replacing the single -208 dBc/Hz FOM:
+#  CP: measured schematic pt_lo_pfdcp noise (fork B, loop_tl.json): CP-only in-band at the VCO
+#      -84.4 dBc/Hz @10 kHz (flicker, ~1/f) with t_on 0.98 ns, fpfd 50 MHz, N 49; thermal floor ~-106.
+#      Scales with 10log(t_on) and with the flicker improvement (mirror W*L / degeneration).
+#  PFD/divider retimed jitter 0.3 ps rms (white).  XO floor -150 dBc/Hz x N^2.
+#  Sigma-delta: MASH 1-1-1, fractional step 2 VCO cycles (CML /2 prescaler, fork B) -> x4.
+#  4th-order filter pole at 4*fc.  VCO: 1/f^2 from L(1 MHz).
+R4_CP_10K, R4_CP_FLOOR = -84.4, -106.0
+
+
+def r4_jitter(fc, vco_l1m, flick_impr_db, t_on_ns, n=49, fpfd=FREF, f0=2.45e9, ref_floor=-150.0, pfd_jit=0.3e-12,
+              sd_step=2, mash=3, fp3_ratio=4.0, kv=60e6):
+    f = np.logspace(4, 8, 4000)
+    s = 2j * np.pi * f
+    d = design(fc, 60 + math.degrees(math.atan(1 / fp3_ratio)), 100e-6, 60e6, n)
+    g = open_loop(f, d, kv, n) / (1 + s / (2 * np.pi * fp3_ratio * fc))
+    lp, hp = abs(g / (1 + g)) ** 2, abs(1 / (1 + g)) ** 2
+    ts = 10 * math.log10(t_on_ns / 0.98)
+    c = dict(vco=10 ** (vco_l1m / 10) * (1e6 / f) ** 2 * hp,
+             ref=10 ** (ref_floor / 10) * n ** 2 * lp,
+             cp=(10 ** ((R4_CP_10K - flick_impr_db + ts) / 10) * (1e4 / f) + 10 ** ((R4_CP_FLOOR + ts) / 10)) * lp,
+             pfd_div=(2 * np.pi * f0 * pfd_jit) ** 2 / fpfd / 2 * lp,
+             sd=sd_step ** 2 * (2 * np.pi) ** 2 / (12 * fpfd) * (2 * np.sin(np.pi * f / fpfd)) ** (2 * (mash - 1)) * lp / 2)
+    j = {k: math.sqrt(2 * np.trapezoid(v, f)) / (2 * np.pi * f0) * 1e12 for k, v in c.items()}
+    j['total'] = math.sqrt(sum(x * x for x in j.values()))
+    tot = sum(c.values())
+    at = {fm: float(10 * np.log10(np.interp(fm, f, tot))) for fm in MASK}
+    return dict(design=d, jitter_ps=j, pn_at_mask=at, mask_ok=all(at[k] <= MASK[k] for k in MASK))
+
+
+def r4_main():
+    out = {}
+    cases = {'as_measured_cp': (0, 0.98), 'cp_fix_-15dB_ton1.4': (15, 1.4), 'cp_fix_-15dB_ton2.2_fracN': (15, 2.2)}
+    for vco in (-112.0, -117.7):
+        for name, (fi, ton) in cases.items():
+            for fc in (100e3, 150e3, 250e3, 400e3):
+                r = r4_jitter(fc, vco, fi, ton)
+                out[f'vco{vco}_{name}_fc{int(fc/1e3)}k'] = dict(jitter_ps=r['jitter_ps'], pn_at_mask=r['pn_at_mask'], mask_ok=r['mask_ok'])
+    sel = r4_jitter(250e3, -112.0, 15, 2.2)
+    out['selected'] = dict(note='fpfd 50 MHz XO, Icp 100 uA, fc 250 kHz, PM 74 incl. R3/C3 pole at 1 MHz, MASH 1-1-1 step 2; '
+                                'CP flicker -15 dB vs measured + fast PFD; VCO -112 dBc/Hz@1MHz (extracted-RC estimate, fork A)',
+                           filter=dict(r_ohm=sel['design']['r_ohm'], c1_f=sel['design']['c1_f'], c2_f=sel['design']['c2_f'], r3_ohm=10e3, c3_f=15.9e-12),
+                           jitter_ps=sel['jitter_ps'], pn_at_mask=sel['pn_at_mask'], mask_ok=sel['mask_ok'])
+    return out
+
+
+if __name__ == '__main__' and __import__('sys').argv[1:] == ['r4']:
+    r = r4_main()
+    j = json.loads((HERE / 'loop_design.json').read_text())
+    j['r4'] = r
+    (HERE / 'loop_design.json').write_text(json.dumps(j, indent=1, default=float) + '\n')
+    print(json.dumps(r['selected'], indent=1, default=float))

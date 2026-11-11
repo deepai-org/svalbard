@@ -1,0 +1,84 @@
+* SPDX-License-Identifier: Apache-2.0
+* pt_lo_pfdcp r2: RF-LO frequency-loop PFD + low-noise charge pump (LO13), 2026-11-11.
+* r1 (pt_pfd + L=1 um 10x mirrors) had a 0.6-1.0 ns UP/DN reset overlap and a flicker
+* floor of ~-195 dBc/Hz/Hz at 10 kHz; r2 targets <= 0.2 ns and >= 15 dB less flicker.
+* PFD: dynamic TSPC-style (Lee/Kim type) per side, reset = NOR(UPB, DNB) (one gate).
+* CP: Icp = 100 uA.  Sink / source are long (L = 4 um), wide, source-degenerated (0.4 V NMOS /
+* 0.2 V PMOS, W/L 80/4 and 400/4) devices; their bias diodes are 1:1 replicas, and the bias gates are RC-filtered
+* (400 k + 80x80 um MOS cap, ~13 kHz).  Off-state current is steered into VDUM (unity OTA follows VTUNE).
+* PRE=1: PFD held in reset, VTUNE preset to VDD/2.  EN=0: PFD reset, bias off.
+* IBIAS: 10 uA sink from the bias block.
+.include timing_cells.spice
+
+* one PFD side: UP rises on CK rising edge, cleared by RST
+.subckt pt_lo_pfdside CK RST RUNB UPB VDD VSS
+XP0 A RUNB VDD VDD pfet_03v3 w=4u l=0.28u
+XP1 N1 CK A VDD pfet_03v3 w=4u l=0.28u
+XN1 N1 RST VSS VSS nfet_03v3 w=4u l=0.28u
+XN1B N1 RUNB VSS VSS nfet_03v3 w=2u l=0.28u
+XP2 UPB N1 VDD VDD pfet_03v3 w=6u l=0.28u
+XN2 UPB CK N2 VSS nfet_03v3 w=6u l=0.28u
+XN3 N2 N1 VSS VSS nfet_03v3 w=6u l=0.28u
+.ends
+
+.subckt pt_lo_pfdcp REF FB EN PRE IBIAS VTUNE VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+XPI PRE PREB VDD VSS pt_t_inv1
+XRN EN PREB RUNN VDD VSS pt_t_nand2
+* RUNN = !(EN & !PRE): high holds the PFD in reset
+XSU REF RST RUNN UPB VDD VSS pt_lo_pfdside
+XSD FB RST RUNN DNB VDD VSS pt_lo_pfdside
+* reset NOR, wide series PMOS (the rising RST edge sets the overlap)
+XRSP1 RSX UPB VDD VDD pfet_03v3 w=16u l=0.28u
+XRSP2 RST DNB RSX VDD pfet_03v3 w=16u l=0.28u
+XRSN1 RST UPB VSS VSS nfet_03v3 w=2u l=0.28u
+XRSN2 RST DNB VSS VSS nfet_03v3 w=2u l=0.28u
+XU1 UPB UP VDD VSS pt_t_inv2
+XD1 DNB DN VDD VSS pt_t_inv2
+* weak keepers on the dynamic UPB/DNB nodes (static hold of UP/DN, defined DC state)
+XKU1 UPB UP VDD VDD pfet_03v3 w=0.5u l=2u
+XKU2 UPB UP VSS VSS nfet_03v3 w=0.5u l=2u
+XKD1 DNB DN VDD VDD pfet_03v3 w=0.5u l=2u
+XKD2 DNB DN VSS VSS nfet_03v3 w=0.5u l=2u
+XD2 DN DNBB VDD VSS pt_t_inv2
+* ---- bias: IBIAS 10 uA -> x10 -> PMOS diode (100 uA) -> 1:1 -> NMOS diode ----
+XB1 IBIAS IBIAS SB1 VSS nfet_03v3 w=10u l=16u
+XRB1 SB1 VSS VSS ppolyf_u_1k r_width=1u r_length=40u
+XB1S IBIAS ENB VSS VSS nfet_03v3 w=2u l=0.28u
+XB2 BPD IBIAS SB2 VSS nfet_03v3 w=50u l=16u m=2
+XRB2 SB2 VSS VSS ppolyf_u_1k r_width=1u r_length=4u
+XPD BPD BPD SPD VDD pfet_03v3 w=50u l=4u m=8
+XRPD VDD SPD VSS ppolyf_u_1k r_width=1u r_length=2u
+XPDS BPD EN VDD VDD pfet_03v3 w=2u l=0.28u
+XPC BND BPD SPC VDD pfet_03v3 w=50u l=4u m=8
+XRPC VDD SPC VSS ppolyf_u_1k r_width=1u r_length=2u
+XND BND BND SND VSS nfet_03v3 w=40u l=4u m=2
+XRND SND VSS VSS ppolyf_u_1k r_width=1u r_length=4u
+* RC filters on the mirror gates
+XRFP BPD VBP VSS ppolyf_u_1k r_width=1u r_length=400u
+XCFP VDD VBP VDD VDD pfet_03v3 w=80u l=40u m=2
+XRFN BND VBN VSS ppolyf_u_1k r_width=1u r_length=400u
+XCFN VSS VBN VSS VSS nfet_03v3 w=80u l=40u m=2
+* ---- pump ----
+XNS NS VBN SNS VSS nfet_03v3 w=40u l=4u m=2
+XRNS SNS VSS VSS ppolyf_u_1k r_width=1u r_length=4u
+XPS PS VBP SPS VDD pfet_03v3 w=50u l=4u m=8
+XRPS VDD SPS VSS ppolyf_u_1k r_width=1u r_length=2u
+XSU1 VTUNE UPB PS VDD pfet_03v3 w=4u l=0.28u
+XSU2 VDUM UP PS VDD pfet_03v3 w=4u l=0.28u
+XSD1 VTUNE DN NS VSS nfet_03v3 w=2u l=0.28u
+XSD2 VDUM DNBB NS VSS nfet_03v3 w=2u l=0.28u
+* VDUM unity buffer (5T OTA, 100 uA replica tail) + hold cap
+XOT OT VBN SOT VSS nfet_03v3 w=40u l=4u m=2
+XROT SOT VSS VSS ppolyf_u_1k r_width=1u r_length=4u
+XOA OX VTUNE OT VSS nfet_03v3 w=10u l=0.5u
+XOB VDUM VDUM OT VSS nfet_03v3 w=10u l=0.5u
+XOP1 OX OX VDD VDD pfet_03v3 w=6u l=0.5u
+XOP2 VDUM OX VDD VDD pfet_03v3 w=6u l=0.5u
+XOC VDUM VSS cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+* preset to VDD/2
+XRP1 VDD RP1 VSS ppolyf_u_1k r_width=1u r_length=40u
+XRP2 RP2 VSS VSS ppolyf_u_1k r_width=1u r_length=40u
+XSP1 VTUNE PRE RP1 VSS nfet_03v3 w=4u l=0.28u
+XSP2 VTUNE PREB RP2 VDD pfet_03v3 w=4u l=0.28u
+.ends

@@ -163,7 +163,7 @@ RPI padip 0 50
 RPN padin 0 50
 RQP padqp 0 50
 RQN padqn 0 50
-{loads}XLO padip padin padqp padqn ip in qp qn ext int loip loin loqp loqn vb vdd 0 pt_lo_ext
+{loads}XLO padip padin padqp padqn ip in qp qn ext int 0 loip loin loqp loqn vb vdd 0 pt_lo_ext
 .tran 1p {T}
 .measure tran per trig v(loip) val={0.739 * v} td={td} rise=1 targ v(loip) val={0.739 * v} td={td} rise=5
 .measure tran thi trig v(loip) val={0.739 * v} td={td} rise=1 targ v(loip) val={0.739 * v} td={td} fall=1

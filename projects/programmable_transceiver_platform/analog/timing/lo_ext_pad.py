@@ -137,7 +137,7 @@ def deck(corner, temp, vdd, vpp, pad=True, lbond=1.5, T=T, windows=None):
     # RX mixer switch drain/source DC = the mixer's VCM = VDD/2 (rf_rx/rxmix_i.spice
     # pt_rfrx_vcm: equal resistor divider; the OTA holds x_p/x_n at VCM).  The first
     # benches used a fixed 1.65 V, which is pessimistic at 3.15 V and optimistic at 3.35 V.
-    d += f'VDD vdd 0 {vdd}\nVEXT ext 0 {vdd}\nVINT int 0 0\nVRXD rxd 0 {vdd / 2}\nVRXS rxs 0 {vdd / 2}\nVTXD txd 0 2.5\nVTXS txs 0 1.0\n'
+    d += f'VDD vdd 0 {vdd}\nVEXT ext 0 {vdd}\nVINT int 0 0\nVCSL cmlsel 0 0\nVRXD rxd 0 {vdd / 2}\nVRXS rxs 0 {vdd / 2}\nVTXD txd 0 2.5\nVTXS txs 0 1.0\n'
     for n, ph, sg in (('ip', 0, 1), ('in', 0, -1), ('qp', q, 1), ('qn', q, -1)):
         # board: 50 ohm source, 10 pF C0G AC coupling (B19); package (B21): bond wire
         # 1 nH/mm, lbond nH per leg, 0.2 ohm (gold, skin at 2.45 GHz); pad-to-pad 0.1 pF below
@@ -159,7 +159,7 @@ def deck(corner, temp, vdd, vpp, pad=True, lbond=1.5, T=T, windows=None):
     # disabled receivers on both pairs (EN=0, SE=0)
     d += 'XRXI padip padin 0 0 rio rion rip riatb vdd 0 pt_diff_clk_rx\n'
     d += 'XRXQ padqp padqn 0 0 rqo rqon rqp rqatb vdd 0 pt_diff_clk_rx\n'
-    d += 'X1 padip padin padqp padqn loiip loiin loiqp loiqn ext int loip loin loqp loqn vb vdd 0 pt_lo_ext\n'
+    d += 'X1 padip padin padqp padqn loiip loiin loiqp loiqn ext int cmlsel loip loin loqp loqn vb vdd 0 pt_lo_ext\n'
     td = T - 4e-9
     # differential LO legs for the phase/period measures (zero crossings do not
     # depend on where the bias settles; the fixed 2.45 V threshold missed at ss)

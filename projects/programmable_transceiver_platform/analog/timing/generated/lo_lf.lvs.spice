@@ -1,0 +1,42 @@
+* NGSPICE file created from pt_lo_lf.ext - technology: gf180mcuD
+
+.subckt p_ppolyf_u_1k_w1_l22p1 a_n100_2210# a_n100_n2332# a_n312_n2544#
+X0 a_n100_2210# a_n100_n2332# a_n312_n2544# ppolyf_u_1k r_width=1u r_length=22.1u
+.ends
+
+.subckt p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9_c m4_n5130_n5010# m4_n5010_n4890#
+X0 m4_n5010_n4890# m4_n5130_n5010# cap_mim_2f0_m4m5_noshield c_width=48.9u c_length=48.9u
+.ends
+
+.subckt p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9 m4_4900_n5023# m1_n158_5325#
+Xp_cap_mim_2f0_m4m5_noshield_w48p9_l48p9_c_0 m4_4900_n5023# m1_n158_5325# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9_c
+.ends
+
+.subckt p_cap_mim_2f0_m4m5_noshield_w36p1_l36p1_c m4_n3850_n3730# m4_n3730_n3610#
+X0 m4_n3730_n3610# m4_n3850_n3730# cap_mim_2f0_m4m5_noshield c_width=36.1u c_length=36.1u
+.ends
+
+.subckt p_cap_mim_2f0_m4m5_noshield_w36p1_l36p1 m4_3620_n3743# m1_n158_4045#
+Xp_cap_mim_2f0_m4m5_noshield_w36p1_l36p1_c_0 m4_3620_n3743# m1_n158_4045# p_cap_mim_2f0_m4m5_noshield_w36p1_l36p1_c
+.ends
+
+.subckt pt_lo_lf VTUNE VSS
+XXR0 VTUNE m1_5562_22726# VSS p_ppolyf_u_1k_w1_l22p1
+XXC20 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC21 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC10 VSS VTUNE p_cap_mim_2f0_m4m5_noshield_w36p1_l36p1
+XXC22 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC11 VSS VTUNE p_cap_mim_2f0_m4m5_noshield_w36p1_l36p1
+XXC23 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC24 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC25 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC210 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC211 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC27 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC26 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC212 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC28 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC213 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+XXC29 VSS m1_5562_22726# p_cap_mim_2f0_m4m5_noshield_w48p9_l48p9
+.ends
+

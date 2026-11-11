@@ -1,71 +1,77 @@
 * NGSPICE file created from pt_slicer.ext - technology: gf180mcuD
 
-.subckt ws_sa CK INP INN TP0 TP1 TP2 TN0 TN1 TN2 ENB Q VDD VSS
-X0 x INP 1pa VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X1 a_7548_5310# 2oa VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.78p ps=9.39u w=4u l=0.28u
-X2 t0p TP0 1pa VSS nfet_03v3 ad=0.3475p pd=2.39u as=0.99875p ps=4.6u w=0.5u l=0.28u
-X3 1pa TP1 t1p VSS nfet_03v3 ad=0.485p pd=2.97u as=0.695p ps=3.39u w=1u l=0.28u
-X4 Q o2 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
-X5 VSS ENB o1d VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
-X6 VSA ENB VDD VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X7 1pa CK VSS VSS nfet_03v3 ad=0.99875p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X8 2oa CK VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
-X9 x CK VSA VDD pfet_03v3 ad=3.43p pd=9.02u as=1.2p ps=4.6u w=4u l=0.28u
-X10 x INP 1pa VDD pfet_03v3 ad=3.43p pd=9.02u as=4.08p ps=9.02u w=8u l=0.28u
-X11 4pb 2oa 3ob VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
-X12 VSS CK 3ob VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
-X13 VSS CK 4pb VSS nfet_03v3 ad=2.04p pd=5.02u as=0.99875p ps=4.6u w=4u l=0.28u
-X14 VSS ENB o1 VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
-X15 VSA CK x VDD pfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X16 VSA ENB VDD VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X17 o2 o1 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
-X18 t1n TN1 4pb VSS nfet_03v3 ad=0.695p pd=3.39u as=0.485p ps=2.97u w=1u l=0.28u
-X19 4pb TN0 t0n VSS nfet_03v3 ad=0.99875p pd=4.6u as=0.3475p ps=2.39u w=0.5u l=0.28u
-X20 3ob 2oa 4pb VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X21 Q o2 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X22 x CK VSA VDD pfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X23 VSS CK 2oa VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X24 3ob 2oa VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X25 VDD o2 Q VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X26 lqb 3ob VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X27 2oa 3ob 1pa VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X28 1pa INP x VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X29 x CK VSA VDD pfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X30 VDD ENB VSA VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X31 VSS o2 Q VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X32 VSA CK x VDD pfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X33 x INN 4pb VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X34 Q o2 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X35 lq lqb a_7548_5310# VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X36 1pa 3ob 2oa VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X37 VSA ENB VDD VDD pfet_03v3 ad=4.08p pd=9.02u as=3.88p ps=16.97u w=8u l=0.28u
-X38 VSS 2oa 3ob VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X39 VSS lq lqb VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X40 o1 lqb VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28u
-X41 lqb lq a_8286_5310# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X42 VSA CK x VDD pfet_03v3 ad=1.2p pd=4.6u as=3.43p ps=9.02u w=4u l=0.28u
-X43 VSS 2oa VSS VSS nfet_03v3 ad=0.2425p pd=1.97u as=44.19p ps=0.14714m w=0.5u l=0.28u
-X44 a_8286_5310# 3ob VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X45 a_9720_5310# lq VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X46 2oa 3ob VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X47 x CK VSA VDD pfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X48 VSA CK x VDD pfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X49 o2 o1 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X50 a_8982_5310# lqb VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.78p ps=9.39u w=4u l=0.28u
-X51 lq 2oa VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.78p ps=9.39u w=4u l=0.28u
-X52 4pb INN x VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X53 o1d lq VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
-X54 o1 ENB a_8982_5310# VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X55 Q o2 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X56 VDD ENB VSA VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
-X57 o1d ENB a_9720_5310# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X58 3ob CK VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+.subckt ws_sa TP0 TP1 TP2 TF0 INP INN TF1 TN0 TN1 TN2 TF2 ENB Q CK VDD VSS
+X0 1pa INP x VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X1 o1 ENB a_10978_6660# VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X2 x CK VSA VDD pfet_03v3 ad=3.43p pd=9.02u as=1.2p ps=4.6u w=4u l=0.28u
+X3 4pb 2oa 3ob VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
+X4 f1a TF1 1pa VSS nfet_03v3 ad=0.3475p pd=2.39u as=0.255p ps=1.52u w=0.5u l=0.28u
+X5 Q o2 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X6 a_9544_6660# 2oa VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.78p ps=9.39u w=4u l=0.28u
+X7 VSA CK x VDD pfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X8 2oa 3ob VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X9 lqb 3ob VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X10 Q o2 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X11 f2b TF2 4pb VSS nfet_03v3 ad=0.556p pd=2.99u as=0.8945p ps=3.22u w=0.8u l=0.28u
+X12 VSS o2 Q VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X13 x CK VSA VDD pfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X14 VDD ENB VSA VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X15 Q o2 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X16 2oa 3ob 1pa VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X17 VSA CK x VDD pfet_03v3 ad=1.2p pd=4.6u as=3.43p ps=9.02u w=4u l=0.28u
+X18 x CK VSA VDD pfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X19 VDD ENB VSA VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X20 o2 o1 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X21 VSS 3ob 2oa VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X22 3ob CK VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
+X23 o1 lqb VSS VSS nfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28u
+X24 VSA CK x VDD pfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X25 x INN 4pb VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X26 4pb TN2 t2n VSS nfet_03v3 ad=0.8945p pd=3.22u as=1.067p ps=5.37u w=2.2u l=0.28u
+X27 VSS lq lqb VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X28 Q o2 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X29 VSS 2oa VSS VSS nfet_03v3 ad=0.2425p pd=1.97u as=44.19p ps=0.14714m w=0.5u l=0.28u
+X30 1pa 3ob 2oa VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X31 VDD ENB VSA VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X32 VSA ENB VDD VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X33 1pa CK VSS VSS nfet_03v3 ad=1.00162p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X34 t0p TP0 1pa VSS nfet_03v3 ad=0.38225p pd=2.49u as=1.00162p ps=4.6u w=0.55u l=0.28u
+X35 1pa TP1 t1p VSS nfet_03v3 ad=0.5335p pd=3.17u as=0.7645p ps=3.59u w=1.1u l=0.28u
+X36 4pb INN x VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X37 2oa CK VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X38 VSA ENB VDD VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X39 lq lqb a_9544_6660# VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X40 VSS CK 3ob VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X41 VSA ENB VDD VDD pfet_03v3 ad=4.08p pd=9.02u as=3.88p ps=16.97u w=8u l=0.28u
+X42 VSS CK 4pb VSS nfet_03v3 ad=2.04p pd=5.02u as=1.00162p ps=4.6u w=4u l=0.28u
+X43 4pb TF1 f1b VSS nfet_03v3 ad=0.3035p pd=1.69u as=0.32495p ps=2.31u w=0.67u l=0.28u
+X44 o1d lq VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.39p ps=5.39u w=2u l=0.28u
+X45 o2 o1 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X46 a_10282_6660# 3ob VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X47 t1n TN1 4pb VSS nfet_03v3 ad=0.7645p pd=3.59u as=0.5335p ps=3.17u w=1.1u l=0.28u
+X48 4pb TN0 t0n VSS nfet_03v3 ad=1.00162p pd=4.6u as=0.38225p ps=2.49u w=0.55u l=0.28u
+X49 lq 2oa VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.78p ps=9.39u w=4u l=0.28u
+X50 x CK VSA VDD pfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X51 VDD o2 Q VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X52 VSA CK x VDD pfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X53 VSS CK 2oa VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X54 t2p TP2 1pa VSS nfet_03v3 ad=1.529p pd=5.79u as=0.84575p ps=3.22u w=2.2u l=0.28u
+X55 3ob 2oa VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X56 f0b TF0 4pb VSS nfet_03v3 ad=0.30232p pd=2.26u as=0.3035p ps=1.69u w=0.435u l=0.28u
+X57 lqb lq a_10282_6660# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X58 o1d ENB a_11716_6660# VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
 X59 VSS lqb lq VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X60 4pb INN x VDD pfet_03v3 ad=4.08p pd=9.02u as=3.43p ps=9.02u w=8u l=0.28u
-X61 VDD ENB VSA VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
-X62 1pa TP2 t2p VSS nfet_03v3 ad=1.39p pd=5.39u as=0.97p ps=4.97u w=2u l=0.28u
-X63 VSS 3ob 2oa VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X64 t2n TN2 4pb VSS nfet_03v3 ad=1.39p pd=5.39u as=0.97p ps=4.97u w=2u l=0.28u
+X60 1pa TF2 f2a VSS nfet_03v3 ad=0.84575p pd=3.22u as=0.2425p ps=1.97u w=0.5u l=0.28u
+X61 x INP 1pa VDD pfet_03v3 ad=3.43p pd=9.02u as=4.08p ps=9.02u w=8u l=0.28u
+X62 VSS ENB o1d VSS nfet_03v3 ad=1.39p pd=5.39u as=0.6p ps=2.6u w=2u l=0.28u
+X63 x INP 1pa VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X64 4pb INN x VDD pfet_03v3 ad=4.08p pd=9.02u as=3.43p ps=9.02u w=8u l=0.28u
+X65 a_11716_6660# lq VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X66 3ob 2oa 4pb VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X67 a_10978_6660# lqb VDD VDD pfet_03v3 ad=2.04p pd=5.02u as=2.78p ps=9.39u w=4u l=0.28u
+X68 1pa TF0 f0a VSS nfet_03v3 ad=0.255p pd=1.52u as=0.2425p ps=1.97u w=0.5u l=0.28u
+X69 VSS 2oa 3ob VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X70 VSS ENB o1 VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
 .ends
 
 .subckt ws_ctl EN CKP0 ENB QCK VDD VSS
@@ -81,81 +87,108 @@ X7 QCK qb VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
 
 .subckt pt_slicer VDD_WIRE_SW VSS slicer_en SL_P SL_N CKP0 CKP1 CKP2 CKP3 CKP4 CKP5
 + CKP6 CKP7 QCK D0 E0 D1 E1 D2 E2 D3 E3 trim_d0_p0 trim_d0_p1 trim_d0_p2 trim_d0_n0
-+ trim_d0_n1 trim_d0_n2 trim_e0_p0 trim_e0_p1 trim_e0_p2 trim_e0_n0 trim_e0_n1 trim_e0_n2
-+ trim_d1_p0 trim_d1_p1 trim_d1_p2 trim_d1_n0 trim_d1_n1 trim_d1_n2 trim_e1_p0 trim_e1_p1
-+ trim_e1_p2 trim_e1_n0 trim_e1_n1 trim_e1_n2 trim_d2_p0 trim_d2_p1 trim_d2_p2 trim_d2_n0
-+ trim_d2_n1 trim_d2_n2 trim_e2_p0 trim_e2_p1 trim_e2_p2 trim_e2_n0 trim_e2_n1 trim_e2_n2
-+ trim_d3_p0 trim_d3_p1 trim_d3_p2 trim_d3_n0 trim_d3_n1 trim_d3_n2 trim_e3_p0 trim_e3_p1
-+ trim_e3_p2 trim_e3_n0 trim_e3_n1 trim_e3_n2
-XXSE0 CKP5 SL_P SL_N trim_e0_p0 trim_e0_p1 trim_e0_p2 trim_e0_n0 trim_e0_n1 trim_e0_n2
-+ XSE3/ENB E0 VDD_WIRE_SW VSS ws_sa
-XXSD0 CKP4 SL_P SL_N trim_d0_p0 trim_d0_p1 trim_d0_p2 trim_d0_n0 trim_d0_n1 trim_d0_n2
-+ XSE3/ENB D0 VDD_WIRE_SW VSS ws_sa
-XXSD1 CKP6 SL_P SL_N trim_d1_p0 trim_d1_p1 trim_d1_p2 trim_d1_n0 trim_d1_n1 trim_d1_n2
-+ XSE3/ENB D1 VDD_WIRE_SW VSS ws_sa
-XXSE1 CKP7 SL_P SL_N trim_e1_p0 trim_e1_p1 trim_e1_p2 trim_e1_n0 trim_e1_n1 trim_e1_n2
-+ XSE3/ENB E1 VDD_WIRE_SW VSS ws_sa
-XXSE2 CKP1 SL_P SL_N trim_e2_p0 trim_e2_p1 trim_e2_p2 trim_e2_n0 trim_e2_n1 trim_e2_n2
-+ XSE3/ENB E2 VDD_WIRE_SW VSS ws_sa
++ trim_d0_n1 trim_d0_n2 trim_d0_f0 trim_d0_f1 trim_d0_f2 trim_e0_p0 trim_e0_p1 trim_e0_p2
++ trim_e0_n0 trim_e0_n1 trim_e0_n2 trim_e0_f0 trim_e0_f1 trim_e0_f2 trim_d1_p0 trim_d1_p1
++ trim_d1_p2 trim_d1_n0 trim_d1_n1 trim_d1_n2 trim_d1_f0 trim_d1_f1 trim_d1_f2 trim_e1_p0
++ trim_e1_p1 trim_e1_p2 trim_e1_n0 trim_e1_n1 trim_e1_n2 trim_e1_f0 trim_e1_f1 trim_e1_f2
++ trim_d2_p0 trim_d2_p1 trim_d2_p2 trim_d2_n0 trim_d2_n1 trim_d2_n2 trim_d2_f0 trim_d2_f1
++ trim_d2_f2 trim_e2_p0 trim_e2_p1 trim_e2_p2 trim_e2_n0 trim_e2_n1 trim_e2_n2 trim_e2_f0
++ trim_e2_f1 trim_e2_f2 trim_d3_p0 trim_d3_p1 trim_d3_p2 trim_d3_n0 trim_d3_n1 trim_d3_n2
++ trim_d3_f0 trim_d3_f1 trim_d3_f2 trim_e3_p0 trim_e3_p1 trim_e3_p2 trim_e3_n0 trim_e3_n1
++ trim_e3_n2 trim_e3_f0 trim_e3_f1 trim_e3_f2
+XXSE0 trim_e0_p0 trim_e0_p1 trim_e0_p2 trim_e0_f0 SL_P SL_N trim_e0_f1 trim_e0_n0
++ trim_e0_n1 trim_e0_n2 trim_e0_f2 XSE3/ENB E0 CKP5 VDD_WIRE_SW VSS ws_sa
+XXSD0 trim_d0_p0 trim_d0_p1 trim_d0_p2 trim_d0_f0 SL_P SL_N trim_d0_f1 trim_d0_n0
++ trim_d0_n1 trim_d0_n2 trim_d0_f2 XSE3/ENB D0 CKP4 VDD_WIRE_SW VSS ws_sa
+XXSD1 trim_d1_p0 trim_d1_p1 trim_d1_p2 trim_d1_f0 SL_P SL_N trim_d1_f1 trim_d1_n0
++ trim_d1_n1 trim_d1_n2 trim_d1_f2 XSE3/ENB D1 CKP6 VDD_WIRE_SW VSS ws_sa
+XXSE1 trim_e1_p0 trim_e1_p1 trim_e1_p2 trim_e1_f0 SL_P SL_N trim_e1_f1 trim_e1_n0
++ trim_e1_n1 trim_e1_n2 trim_e1_f2 XSE3/ENB E1 CKP7 VDD_WIRE_SW VSS ws_sa
+XXSE2 trim_e2_p0 trim_e2_p1 trim_e2_p2 trim_e2_f0 SL_P SL_N trim_e2_f1 trim_e2_n0
++ trim_e2_n1 trim_e2_n2 trim_e2_f2 XSE3/ENB E2 CKP1 VDD_WIRE_SW VSS ws_sa
 XXCTL slicer_en CKP0 XSE3/ENB QCK VDD_WIRE_SW VSS ws_ctl
-XXSD2 CKP0 SL_P SL_N trim_d2_p0 trim_d2_p1 trim_d2_p2 trim_d2_n0 trim_d2_n1 trim_d2_n2
-+ XSE3/ENB D2 VDD_WIRE_SW VSS ws_sa
-XXSE3 CKP3 SL_P SL_N trim_e3_p0 trim_e3_p1 trim_e3_p2 trim_e3_n0 trim_e3_n1 trim_e3_n2
-+ XSE3/ENB E3 VDD_WIRE_SW VSS ws_sa
-XXSD3 CKP2 SL_P SL_N trim_d3_p0 trim_d3_p1 trim_d3_p2 trim_d3_n0 trim_d3_n1 trim_d3_n2
-+ XSE3/ENB D3 VDD_WIRE_SW VSS ws_sa
-D0 VSS trim_e2_p2 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D1 VSS trim_e1_p1 diode_nd2ps_03v3 pj=3.64u area=0.8281p
-D2 VSS trim_d1_p1 diode_nd2ps_03v3 pj=3.76u area=0.8836p
-D3 VSS trim_d2_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D4 VSS trim_e0_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D5 VSS trim_e0_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D6 VSS trim_d2_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D7 VSS trim_d3_p1 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D8 VSS trim_e3_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D9 VSS trim_d0_n2 diode_nd2ps_03v3 pj=4.04u area=1.0201p
-D10 VSS trim_e1_n1 diode_nd2ps_03v3 pj=3.64u area=0.8281p
-D11 VSS trim_d1_p0 diode_nd2ps_03v3 pj=3.16u area=0.6241p
-D12 VSS trim_d0_n0 diode_nd2ps_03v3 pj=3.96u area=0.9801p
-D13 VSS trim_e3_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D14 VSS trim_e0_n2 diode_nd2ps_03v3 pj=3.96u area=0.9801p
-D15 VSS trim_d2_n2 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D16 VSS trim_e2_n1 diode_nd2ps_03v3 pj=2.64u area=0.4356p
-D17 VSS trim_d3_n1 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D18 VSS trim_e1_n2 diode_nd2ps_03v3 pj=3.08u area=0.5929p
-D19 VSS trim_d2_p2 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D20 VSS trim_e0_p0 diode_nd2ps_03v3 pj=3.92u area=0.9604p
-D21 VSS trim_d2_n1 diode_nd2ps_03v3 pj=2.8u area=0.49p
-D22 VSS trim_d1_n0 diode_nd2ps_03v3 pj=3.12u area=0.6084p
-D23 VSS trim_e1_n0 diode_nd2ps_03v3 pj=3u area=0.5625p
-D24 VSS trim_d1_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D25 VSS trim_d0_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D26 VSS trim_e2_p1 diode_nd2ps_03v3 pj=2.72u area=0.4624p
-D27 VSS trim_e0_n1 diode_nd2ps_03v3 pj=4.4u area=1.21p
-D28 VSS trim_d2_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D29 VSS trim_e2_n2 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D30 VSS trim_d3_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D31 VSS trim_d0_p1 diode_nd2ps_03v3 pj=4.48u area=1.2544p
-D32 VSS trim_e1_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D33 VSS trim_e0_p2 diode_nd2ps_03v3 pj=4u area=1p
-D34 VSS trim_d2_p1 diode_nd2ps_03v3 pj=2.8u area=0.49p
-D35 VSS trim_d1_n1 diode_nd2ps_03v3 pj=3.72u area=0.8649p
-D36 VSS trim_d0_n1 diode_nd2ps_03v3 pj=4.44u area=1.2321p
-D37 VSS trim_d0_p0 diode_nd2ps_03v3 pj=4u area=1p
-D38 VSS trim_e3_n1 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D39 VSS trim_e2_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D40 VSS trim_e2_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D41 VSS trim_d0_p2 diode_nd2ps_03v3 pj=4.08u area=1.0404p
-D42 VSS trim_e1_p2 diode_nd2ps_03v3 pj=3.16u area=0.6241p
-D43 VSS trim_d1_n2 diode_nd2ps_03v3 pj=3.24u area=0.6561p
-D44 VSS trim_e0_p1 diode_nd2ps_03v3 pj=4.4u area=1.21p
-D45 VSS trim_e1_p0 diode_nd2ps_03v3 pj=3.04u area=0.5776p
-D46 VSS trim_d3_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D47 VSS trim_e3_p1 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D48 VSS trim_e1_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D49 VSS trim_d0_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D50 VSS trim_d1_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D51 VSS trim_e0_n0 diode_nd2ps_03v3 pj=3.88u area=0.9409p
-D52 VSS trim_d1_p2 diode_nd2ps_03v3 pj=3.24u area=0.6561p
+XXSD2 trim_d2_p0 trim_d2_p1 trim_d2_p2 trim_d2_f0 SL_P SL_N trim_d2_f1 trim_d2_n0
++ trim_d2_n1 trim_d2_n2 trim_d2_f2 XSE3/ENB D2 CKP0 VDD_WIRE_SW VSS ws_sa
+XXSE3 trim_e3_p0 trim_e3_p1 trim_e3_p2 trim_e3_f0 SL_P SL_N trim_e3_f1 trim_e3_n0
++ trim_e3_n1 trim_e3_n2 trim_e3_f2 XSE3/ENB E3 CKP3 VDD_WIRE_SW VSS ws_sa
+XXSD3 trim_d3_p0 trim_d3_p1 trim_d3_p2 trim_d3_f0 SL_P SL_N trim_d3_f1 trim_d3_n0
++ trim_d3_n1 trim_d3_n2 trim_d3_f2 XSE3/ENB D3 CKP2 VDD_WIRE_SW VSS ws_sa
+D0 VSS trim_e1_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D1 VSS trim_d0_n2 diode_nd2ps_03v3 pj=4.44u area=1.2321p
+D2 VSS trim_d0_p1 diode_nd2ps_03v3 pj=4.92u area=1.5129p
+D3 VSS trim_d2_n1 diode_nd2ps_03v3 pj=3u area=0.5625p
+D4 VSS trim_d2_p2 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D5 VSS trim_d2_f1 diode_nd2ps_03v3 pj=3u area=0.5625p
+D6 VSS trim_d3_f0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D7 VSS trim_e0_p1 diode_nd2ps_03v3 pj=4.8u area=1.44p
+D8 VSS trim_e2_n2 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D9 VSS trim_e2_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D10 VSS trim_e3_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D11 VSS trim_d2_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D12 VSS trim_d1_p1 diode_nd2ps_03v3 pj=4.08u area=1.0404p
+D13 VSS trim_e1_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D14 VSS trim_e0_p0 diode_nd2ps_03v3 pj=4.36u area=1.1881p
+D15 VSS trim_d3_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D16 VSS trim_d2_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D17 VSS trim_e1_p0 diode_nd2ps_03v3 pj=3.44u area=0.7396p
+D18 VSS trim_e1_f1 diode_nd2ps_03v3 pj=3.88u area=0.9409p
+D19 VSS trim_d0_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D20 VSS trim_e2_f1 diode_nd2ps_03v3 pj=2.8u area=0.49p
+D21 VSS trim_d0_n1 diode_nd2ps_03v3 pj=4.84u area=1.4641p
+D22 VSS trim_d2_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D23 VSS trim_e0_n1 diode_nd2ps_03v3 pj=4.76u area=1.4161p
+D24 VSS trim_e0_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D25 VSS trim_e2_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D26 VSS trim_e0_n0 diode_nd2ps_03v3 pj=4.32u area=1.1664p
+D27 VSS trim_e1_n1 diode_nd2ps_03v3 pj=3.92u area=0.9604p
+D28 VSS trim_e2_p2 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D29 VSS trim_e0_f0 diode_nd2ps_03v3 pj=4.84u area=1.4641p
+D30 VSS trim_d0_p2 diode_nd2ps_03v3 pj=4.52u area=1.2769p
+D31 VSS trim_d3_n1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D32 VSS trim_e2_n1 diode_nd2ps_03v3 pj=2.84u area=0.5041p
+D33 VSS trim_e2_f2 diode_nd2ps_03v3 pj=2.68u area=0.4489p
+D34 VSS trim_e1_n0 diode_nd2ps_03v3 pj=3.4u area=0.7225p
+D35 VSS trim_e2_p1 diode_nd2ps_03v3 pj=2.92u area=0.5329p
+D36 VSS trim_d2_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D37 VSS trim_e2_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D38 VSS trim_d3_f1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D39 VSS trim_d2_f0 diode_nd2ps_03v3 pj=3.16u area=0.6241p
+D40 VSS trim_d2_f2 diode_nd2ps_03v3 pj=2.84u area=0.5041p
+D41 VSS trim_d0_f0 diode_nd2ps_03v3 pj=4.96u area=1.5376p
+D42 VSS trim_e1_p2 diode_nd2ps_03v3 pj=3.48u area=0.7569p
+D43 VSS trim_d0_f1 diode_nd2ps_03v3 pj=4.84u area=1.4641p
+D44 VSS trim_d3_f2 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D45 VSS trim_e1_p1 diode_nd2ps_03v3 pj=3.96u area=0.9801p
+D46 VSS trim_e2_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D47 VSS trim_d0_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D48 VSS trim_e0_f2 diode_nd2ps_03v3 pj=4.68u area=1.3689p
+D49 VSS trim_d1_n1 diode_nd2ps_03v3 pj=4.04u area=1.0201p
+D50 VSS trim_e1_f2 diode_nd2ps_03v3 pj=3.8u area=0.9025p
+D51 VSS trim_e3_p1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D52 VSS trim_d0_n0 diode_nd2ps_03v3 pj=4.44u area=1.2321p
+D53 VSS trim_d3_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D54 VSS trim_e0_n2 diode_nd2ps_03v3 pj=4.32u area=1.1664p
+D55 VSS trim_d0_p0 diode_nd2ps_03v3 pj=4.48u area=1.2544p
+D56 VSS trim_e1_f0 diode_nd2ps_03v3 pj=4u area=1p
+D57 VSS trim_e0_p2 diode_nd2ps_03v3 pj=4.4u area=1.21p
+D58 VSS trim_d2_p1 diode_nd2ps_03v3 pj=3.08u area=0.5929p
+D59 VSS trim_d2_n2 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D60 VSS trim_d1_f0 diode_nd2ps_03v3 pj=4.12u area=1.0609p
+D61 VSS trim_d1_f1 diode_nd2ps_03v3 pj=4u area=1p
+D62 VSS trim_d1_f2 diode_nd2ps_03v3 pj=3.92u area=0.9604p
+D63 VSS trim_d1_n0 diode_nd2ps_03v3 pj=3.52u area=0.7744p
+D64 VSS trim_e1_n2 diode_nd2ps_03v3 pj=3.4u area=0.7225p
+D65 VSS trim_d1_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D66 VSS trim_d0_f2 diode_nd2ps_03v3 pj=4.76u area=1.4161p
+D67 VSS trim_d3_p1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D68 VSS trim_d1_p2 diode_nd2ps_03v3 pj=3.6u area=0.81p
+D69 VSS trim_d1_n2 diode_nd2ps_03v3 pj=3.52u area=0.7744p
+D70 VSS trim_e0_f1 diode_nd2ps_03v3 pj=4.72u area=1.3924p
+D71 VSS trim_e3_f0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D72 VSS trim_e3_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D73 VSS trim_d1_p0 diode_nd2ps_03v3 pj=3.6u area=0.81p
+D74 VSS trim_d1_p0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D75 VSS trim_e2_f0 diode_nd2ps_03v3 pj=2.96u area=0.5476p
+D76 VSS trim_e0_n0 diode_nd2ps_03v3 pj=2.4u area=0.36p
 .ends
 

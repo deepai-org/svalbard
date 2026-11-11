@@ -90,6 +90,43 @@ def ring8():
     return row, allports, net
 
 
+# --------------------------------------------------------------- ct_ring9
+def ring9(WN=8, WP=16, KN=1, KP=2, name='ct_ring9'):
+    """ct_ring8 topology for pll_ring r9 (CDR/pll_ring owner, 2026-11-10).  ct_ring8's extracted ring nodes carry
+    25-30 fF of wiring (all restore inverters after the four stages: long Metal2 tracks), so the extracted ring ran
+    at 763 MHz vs 1307 MHz schematic (ss/32 C/2.835 V, VCTRL = VDD).  r9: each stage is followed by the restore/port
+    inverters and clamps of the two phases it drives (short tracks), ring devices 8/16 (2x), keepers kept at 1/2
+    (stronger keepers cost speed, no phase-error benefit).  Extracted-cell speed: 945 MHz at ss/2.835 V, 892 MHz at
+    ss/2.71 V (the pt_pll_vreg output at VIN 3.15 V, ss/32 C)."""
+    ph = ['P0', 'P1', 'P2', 'P3', 'N0', 'N1', 'N2', 'N3']
+    stages = [('P0', 'N0', 'P1', 'N1'), ('P1', 'N1', 'P2', 'N2'), ('P2', 'N2', 'P3', 'N3'), ('P3', 'N3', 'N0', 'P0')]
+    S = dict(k='c', n='VT', p='VH')
+    V = C('VSS', 'VDD', same=False)
+    cols, net = [], []
+    def restore(k):
+        nonlocal cols, net
+        cols += [BRK, V, G(ph[k], 4, 2), C(f'A{k}'), BRK, V, G(f'A{k}', 2, 4), C(f'O{k}')]
+        net += [fet(f'R{k}n', f'A{k}', ph[k], 'VSS', 'VSS', 4), fet(f'R{k}p', f'A{k}', ph[k], 'VDD', 'VDD', 2, 'p'),
+                fet(f'S{k}n', f'O{k}', f'A{k}', 'VSS', 'VSS', 2), fet(f'S{k}p', f'O{k}', f'A{k}', 'VDD', 'VDD', 4, 'p')]
+    for k, (ip, inn, op, on) in enumerate(stages):
+        if k:
+            cols.append(BRK)
+        cols += [C(on), G(ip, WN, WP), S, G(inn, WN, WP), C(op), G(on, KN, KP), S, G(op, KN, KP), C(on)]
+        net += [fet(f'M{k}a', on, ip, 'VT', 'VSS', WN), fet(f'M{k}b', on, ip, 'VH', 'VDD', WP, 'p'),
+                fet(f'M{k}c', op, inn, 'VT', 'VSS', WN), fet(f'M{k}d', op, inn, 'VH', 'VDD', WP, 'p'),
+                fet(f'K{k}a', op, on, 'VT', 'VSS', KN), fet(f'K{k}b', op, on, 'VH', 'VDD', KP, 'p'),
+                fet(f'K{k}c', on, op, 'VT', 'VSS', KN), fet(f'K{k}d', on, op, 'VH', 'VDD', KP, 'p')]
+        # restore inverters of the two driven phases, right next to the stage; clamps for them too
+        for n_ in (op, on):
+            restore(ph.index(n_))
+        cols += [BRK, CN(op), G('ENB', 0.5, p=False), CN('VSS'), G('ENB', 0.5, p=False), CN(on)]
+        net += [fet(f'C{k}a', op, 'ENB', 'VSS', 'VSS', 0.5), fet(f'C{k}b', on, 'ENB', 'VSS', 'VSS', 0.5)]
+    ports = [f'O{k}' for k in range(8)] + ['ENB']
+    row = compact.Row(name, cols, rail_n='VT', tap_n='VSS', rail_p='VH', tap_p='VDD', ports=ports, wn=1, wp=2)
+    row.track_order = ph + [f'A{k}' for k in range(8)] + [f'O{k}' for k in range(8)] + ['ENB']
+    return row, ports + ['VT', 'VH', 'VDD', 'VSS'], net
+
+
 # --------------------------------------------------------------- ct_tspc2
 def tspc2():
     cols = [C('VSS', 'VDD'), G('QB', 2, 4), C('X', None, same=False), G('CK', p=True, n=False, wp=4), dict(k='c', n='-', p='X'),
@@ -179,25 +216,27 @@ def lim():
 def rxout():
     """diff_clk_rx output stage: OUTP = INP & EN (via A3P = !INP),
     OUTN = INN | !EN (diff, A3N = !INN) or !INP | !EN (SE=1, via A2P = !A3P).
-    Three gate levels per leg: NOR2/inv/inv (P) and AOI22/NOR2/inv (N)."""
+    Three gate levels per leg: NOR2/inv/inv (P) and AOI22/NOR2/inv (N).
+    r5 (diff_clk_rx TIM-08): N path upsized (AOI22 4/8, NOR2 P 12, A2P inverter 2/4) so OUTN keeps
+    pace with OUTP at 2 Gb/s; only diff_clk_rx uses this cell."""
     S = C('VSS', 'VDD', same=False)
-    cols = [S, G('A3P', 1, 2), C('A2P'),                                   # A2P = !A3P
-            BRK, C('Y', 'm', same=False), G('A3N', 2, 4), C(None, 'VDD', same=False), G('SEB', 2, 4),
-            C('VSS', 'm', same=False), G('SE', 2, 4), C(None, 'Y', same=False), G('A2P', 2, 4), C('Y', 'm', same=False),
+    cols = [S, G('A3P', 2, 4), C('A2P'),                                   # A2P = !A3P
+            BRK, C('Y', 'm', same=False), G('A3N', 4, 8), C(None, 'VDD', same=False), G('SEB', 4, 8),
+            C('VSS', 'm', same=False), G('SE', 4, 8), C(None, 'Y', same=False), G('A2P', 4, 8), C('Y', 'm', same=False),
             BRK, S, G('A3P', 2, 8), C('GP', None, same=False), G('ENB', 2, 8), C('VSS', 'GP', same=False),   # GP = NOR(A3P, ENB)
-            BRK, S, G('Y', 2, 8), C('GN', None, same=False), G('ENB', 2, 8), C('VSS', 'GN', same=False),     # GN = NOR(Y, ENB)
+            BRK, S, G('Y', 2, 12), C('GN', None, same=False), G('ENB', 2, 12), C('VSS', 'GN', same=False),     # GN = NOR(Y, ENB)
             BRK, S, G('GP', 2, 4), C('BP'),
             BRK, S, G('BP', 4, 8), C('OUTP'), G('BP', 4, 8), S,
             BRK, S, G('GN', 4, 8), C('OUTN'), G('GN', 4, 8), S]
-    net = [fet('i1', 'A2P', 'A3P', 'VSS', 'VSS', 1), fet('i2', 'A2P', 'A3P', 'VDD', 'VDD', 2, 'p'),
-           fet('a1', 'Y', 'A3N', 'n1', 'VSS', 2), fet('a2', 'n1', 'SEB', 'VSS', 'VSS', 2),
-           fet('a3', 'Y', 'A2P', 'n2', 'VSS', 2), fet('a4', 'n2', 'SE', 'VSS', 'VSS', 2),
-           fet('a5', 'm', 'A3N', 'VDD', 'VDD', 4, 'p'), fet('a6', 'm', 'SEB', 'VDD', 'VDD', 4, 'p'),
-           fet('a7', 'Y', 'SE', 'm', 'VDD', 4, 'p'), fet('a8', 'Y', 'A2P', 'm', 'VDD', 4, 'p'),
+    net = [fet('i1', 'A2P', 'A3P', 'VSS', 'VSS', 2), fet('i2', 'A2P', 'A3P', 'VDD', 'VDD', 4, 'p'),
+           fet('a1', 'Y', 'A3N', 'n1', 'VSS', 4), fet('a2', 'n1', 'SEB', 'VSS', 'VSS', 4),
+           fet('a3', 'Y', 'A2P', 'n2', 'VSS', 4), fet('a4', 'n2', 'SE', 'VSS', 'VSS', 4),
+           fet('a5', 'm', 'A3N', 'VDD', 'VDD', 8, 'p'), fet('a6', 'm', 'SEB', 'VDD', 'VDD', 8, 'p'),
+           fet('a7', 'Y', 'SE', 'm', 'VDD', 8, 'p'), fet('a8', 'Y', 'A2P', 'm', 'VDD', 8, 'p'),
            fet('n1', 'GP', 'A3P', 'VSS', 'VSS', 2), fet('n2', 'GP', 'ENB', 'VSS', 'VSS', 2),
            fet('n3', 'q1', 'A3P', 'VDD', 'VDD', 8, 'p'), fet('n4', 'GP', 'ENB', 'q1', 'VDD', 8, 'p'),
            fet('m1', 'GN', 'Y', 'VSS', 'VSS', 2), fet('m2', 'GN', 'ENB', 'VSS', 'VSS', 2),
-           fet('m3', 'q2', 'Y', 'VDD', 'VDD', 8, 'p'), fet('m4', 'GN', 'ENB', 'q2', 'VDD', 8, 'p'),
+           fet('m3', 'q2', 'Y', 'VDD', 'VDD', 12, 'p'), fet('m4', 'GN', 'ENB', 'q2', 'VDD', 12, 'p'),
            fet('b1', 'BP', 'GP', 'VSS', 'VSS', 2), fet('b2', 'BP', 'GP', 'VDD', 'VDD', 4, 'p'),
            fet('o1', 'OUTP', 'BP', 'VSS', 'VSS', 4), fet('o2', 'OUTP', 'BP', 'VDD', 'VDD', 8, 'p'),
            fet('o3', 'OUTP', 'BP', 'VSS', 'VSS', 4), fet('o4', 'OUTP', 'BP', 'VDD', 'VDD', 8, 'p'),
@@ -372,7 +411,60 @@ def locml(units=10, wn=6, wp=4):
     row.track_order = ['DN', 'GA', 'GB', 'DP', 'INTB', 'VHN', 'VHP']
     return row, ports + ['TS', 'VS', 'VDD', 'VSS'], net
 
-CELLS = dict(ct_locml=locml, ct_div5=div5core, ct_tspcn3=tspcn3, ct_mux4=mux4, ct_tspcd=tspcd, ct_phbuf8=phbuf8, ct_rxout=rxout, ct_lim=lim, ct_ring8=ring8, ct_tspc2=tspc2, ct_lodrv=lodrv, ct_rxin=rxin)
+# --------------------------------------------------------------- ct_rxamp
+def rxamp(F=8):
+    """diff_clk_rx r5 (PD29/TIM-08) amplifier core, MOS only: CML preamp (pair GP/GN -> O1N/O1P, 4 x 8 um per
+    side, tail 10 x 8 um on VBN), cross-coupled hysteresis pair (4 x 6 um per side, tail 2 x 6.5 um), and two 5T
+    comparator (pair 2 x 8 um, PMOS mirror 2 x 8 um, tail 6 x 8 um) with an EN pull-up and the output
+    inverter YA -> A3P.  r5b: one comparator only; ct_rxout derives OUTN from A3P (its SE path), so OUTP and
+    OUTN come from the same decision (a second, mirrored comparator gave OUTN its own offset and duty error).  Poly loads, bias reference and the enable gating stay in the block (pt_rx_amp)."""
+    cols, net = [], []
+    k = [0]
+
+    def nf(d, g, s_, w):
+        net.append(fet(f'M{k[0]}', d, g, s_, 'VSS', w)); k[0] += 1
+
+    def pf(d, g, s_, w):
+        net.append(fet(f'M{k[0]}', d, g, s_, 'VDD', w, 'p')); k[0] += 1
+    # stage 1: input pair, two units of [S1 GP O1N GP S1 GN O1P GN]
+    for u in range(2):
+        cols += [CN('S1'), G('GP', F, p=False), CN('O1N'), G('GP', F, p=False), CN('S1'), G('GN', F, p=False), CN('O1P'),
+                 G('GN', F, p=False)]
+        nf('O1N', 'GP', 'S1', F); nf('O1N', 'GP', 'S1', F); nf('O1P', 'GN', 'S1', F); nf('O1P', 'GN', 'S1', F)
+    cols.append(CN('S1'))
+    for u in range(5):                           # tail, 10 fingers
+        cols += [G('VBN', F, p=False), CN('VSS'), G('VBN', F, p=False), CN('S1')]
+        nf('S1', 'VBN', 'VSS', F); nf('S1', 'VBN', 'VSS', F)
+    cols.append(BRK)
+    # hysteresis pair, two units of [SH O1P O1N O1P SH O1N O1P O1N]
+    for u in range(2):
+        cols += [CN('SH'), G('O1P', 6, p=False), CN('O1N'), G('O1P', 6, p=False), CN('SH'), G('O1N', 6, p=False), CN('O1P'),
+                 G('O1N', 6, p=False)]
+        nf('O1N', 'O1P', 'SH', 6); nf('O1N', 'O1P', 'SH', 6); nf('O1P', 'O1N', 'SH', 6); nf('O1P', 'O1N', 'SH', 6)
+    cols += [CN('SH'), G('VBN', 6.5, p=False), CN('VSS'), G('VBN', 6.5, p=False), CN('SH')]
+    nf('SH', 'VBN', 'VSS', 6.5); nf('SH', 'VBN', 'VSS', 6.5)
+    # two 5T comparators: (Y, D, gate of the D-side input, gate of the Y-side input, tail node, inverter out)
+    for y, d, gd, gy, st, out in (('YA', 'DA', 'O1P', 'O1N', 'S2', 'A3P'),):
+        cols += [BRK, C(d, d), G(None, F, F, netn=gd, netp=d), C(st, 'VDD', same=False), G(None, F, F, netn=gy, netp=d),
+                 C(y, y), G(None, F, F, netn=gy, netp=d), C(st, 'VDD', same=False), G(None, F, F, netn=gd, netp=d), C(d, d)]
+        nf(d, gd, st, F); nf(y, gy, st, F); nf(y, gy, st, F); nf(d, gd, st, F)
+        pf(d, d, 'VDD', F); pf(y, d, 'VDD', F); pf(y, d, 'VDD', F); pf(d, d, 'VDD', F)
+        cols += [BRK, CN(st)]
+        for u in range(3):                       # tail, 6 fingers
+            cols += [G('VBN', F, p=False), CN('VSS'), G('VBN', F, p=False), CN(st)]
+            nf(st, 'VBN', 'VSS', F); nf(st, 'VBN', 'VSS', F)
+        # EN pull-up on Y, then the inverter Y -> out (N 2 x 1 um, P 2 x 6 um)
+        cols += [BRK, dict(k='c', n='-', p=y), G('EN', wp=1, n=False), dict(k='c', n='-', p='VDD'),
+                 BRK, C('VSS', 'VDD', same=False), G(y, 1, 6), C(out), G(y, 1, 6), C('VSS', 'VDD', same=False)]
+        pf(y, 'EN', 'VDD', 1)
+        nf(out, y, 'VSS', 1); pf(out, y, 'VDD', 6); nf(out, y, 'VSS', 1); pf(out, y, 'VDD', 6)
+    ports = ['GP', 'GN', 'O1P', 'O1N', 'VBN', 'EN', 'A3P']
+    row = compact.Row('ct_rxamp', cols, ports=ports, wn=F, wp=F)
+    row.track_order = ['S1', 'SH', 'S2', 'S3', 'O1N', 'O1P', 'GP', 'GN', 'VBN', 'DA', 'DB', 'YA', 'YB', 'EN', 'A3P', 'A3N']
+    return row, ports + ['VDD', 'VSS'], net
+
+
+CELLS = dict(ct_rxamp=rxamp, ct_locml=locml, ct_div5=div5core, ct_tspcn3=tspcn3, ct_mux4=mux4, ct_tspcd=tspcd, ct_phbuf8=phbuf8, ct_rxout=rxout, ct_lim=lim, ct_ring8=ring8, ct_ring9=ring9, ct_tspc2=tspc2, ct_lodrv=lodrv, ct_rxin=rxin)
 
 
 def subckt(name, ports, net):

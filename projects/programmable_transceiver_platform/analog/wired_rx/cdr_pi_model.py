@@ -37,14 +37,15 @@ def run(f_ring=625e6, bpc=4, kp=300e-6, ki=10e-6, m_dec=16, lat=5, ppm=0.0, ssc=
         sj_ui=0.0, sj_f=1e6, rj_ui=0.02, isi_ui=0.088, ring_rw_ps=0.6, ptrim_ui=0.033, half_eye=0.42,
         n_cyc=150_000, settle=30_000, seed=1, phase0=0.4, fll_res_ppm=1000.0, pump_offset=0.0,
         int_lat=None, density=0.5, int_mode='dec', tau_avg=32.0, ki_rate=0.8e-6, vsat=0.5,
-        vote_bias=0.0, kz=0.0):
+        vote_bias=0.0, kz=0.0, ota_tau=0.0):
     """pump_offset: fraction of one integral packet delivered (signed) on every packet regardless of
     sign (switch-charge error that survives decimation).
     int_mode='analog' (r-pi choice): net votes (+ vote_bias, in vote units: switch injection and OTA
     offset referred to the averaging node) -> first-order RC average with tau_avg ring cycles -> OTA
     (tanh, saturating at +-vsat vote units) -> integral node slews ki_rate (fraction) per ring cycle at
     full output.  kz: OTA current also crosses the 20 kOhm filter R -> extra frequency term kz*tanh
-    (fraction) on VCTRL (lagging proportional term).  Returns dict."""
+    (fraction) on VCTRL (lagging proportional term).  ota_tau (ring cycles, r9): first-order lag of the OTA
+    output (the nA OTA's internal mirror pole; 0 = none).  Returns dict."""
     rng = np.random.default_rng(seed)
     T = 1 / f_ring
     rw = ring_rw_ps * 1e-12 * f_ring * bpc            # UI per ring cycle (rms)
@@ -61,6 +62,7 @@ def run(f_ring=625e6, bpc=4, kp=300e-6, ki=10e-6, m_dec=16, lat=5, ppm=0.0, ssc=
     ber_sum = 0.0
     nbits = 0
     phis = []
+    y = 0.0
     for n in range(n_cyc):
         t = n * T
         fr = ppm * 1e-6
@@ -70,7 +72,8 @@ def run(f_ring=625e6, bpc=4, kp=300e-6, ki=10e-6, m_dec=16, lat=5, ppm=0.0, ssc=
         net = pend.pop(0)
         if int_mode == 'analog':
             acc = acc + (net + vote_bias - acc) / tau_avg          # RC averaging node (vote units)
-            y = math.tanh(acc / vsat)
+            y0 = math.tanh(acc / vsat)
+            y = y0 if not ota_tau else y + (y0 - y) / ota_tau
             f_int += ki_rate * y
             fvco = f_int + kz * y + kp * net
         else:                                                      # decimated sign packets

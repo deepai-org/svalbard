@@ -161,7 +161,7 @@ if {[llength $nrn]} { set_false_path -to $nrn }
 # Shared ingress bank (exclusive owners, like egress below): its write clock is the selected
 # owner's input clock after one physical mux.
 set ingress_clks {}
-set ingress_mux [get_pins -quiet -hierarchical *core.ingress_clock_mux*/Z]
+set ingress_mux [get_pins -quiet -hierarchical *core.ingress_clock_mux.cell/Z]
 if {[llength $ingress_mux]} {
     if {[llength $ingress_mux] != 1} {error "Expected one shared ingress clock mux"}
     create_generated_clock -name ingress_wrx -master_clock wrx -source [get_ports wire_rx_clk] -combinational $ingress_mux
@@ -175,7 +175,7 @@ if {[llength $ingress_mux]} {
 # after its physical mux so only these local alternatives are exclusive;
 # both primary wired/RF clocks may continue running elsewhere in the macro.
 set egress_clks {}
-set egress_mux [get_pins -quiet -hierarchical *core.egress_clock_mux*/Z]
+set egress_mux [get_pins -quiet -hierarchical *core.egress_clock_mux.cell/Z]
 if {[llength $egress_mux]} {
     if {[llength $egress_mux] != 1} {error "Expected one shared egress clock mux"}
     create_generated_clock -name egress_wtx -master_clock wtx -source [get_ports wire_tx_clk] -combinational $egress_mux
@@ -218,7 +218,7 @@ set_clock_groups -logically_exclusive {*}$fc_groups
 # changes only with ENABLE=0 (both writers idle). Two generated clocks, physically exclusive; the
 # SCLK alternative stays timed from the register file (it is NOT in the sclk false-path list).
 set mem_clks {}
-set mem_mux [get_pins -quiet -hierarchical *memory_clock_mux*/Z]
+set mem_mux [get_pins -quiet -hierarchical *memory_clock_mux.cell/Z]
 if {[llength $mem_mux]} {
     if {[llength $mem_mux] != 1} {error "Expected one egress memory clock mux"}
     create_generated_clock -name egress_mem_hcore -master_clock hcore -source $core_root -combinational $mem_mux
@@ -294,7 +294,19 @@ set_output_delay -clock wtx -min [expr {-(0.2 * $WTX_PERIOD + 0.3)}] [get_ports 
 set_output_delay -clock wtx -max [expr {0.3 * $WTX_PERIOD + 0.5}] [get_ports $wtx_hi]
 set_output_delay -clock wtx -min [expr {0.3 * $WTX_PERIOD - 0.3}] [get_ports $wtx_hi]
 pt_io rfrx $RFRX_PERIOD {rf_rx_sample* rf_rx_valid} {}
-pt_io rftx $RFTX_PERIOD {rf_tx_request} {rf_tx_sample* rf_tx_valid rf_mute}
+pt_io rftx $RFTX_PERIOD {rf_tx_request} {}
+# RF TX outputs (coordinator decision 2026-11-11; interface row RF/assembly): the DAC captures on the
+# OPPOSITE rf_tx_clk edge of the same clock the macro uses, and the budget is defined at the macro's
+# rf_tx_clk pin. The outputs leave from rising-edge flops (pt_digital rf_o_*) and must be valid
+# RFTX_DAC_MARGIN before the next falling edge at the pin: required = T/2 - margin from the rising
+# edge, the macro's own clock insertion counted against it. RFTX_DAC_MARGIN (design-assumptions.md):
+# DAC capture-flop setup at ss (0.6 ns) + macro-pin -> DAC route (1.2 ns) + rf_tx_clk arrival
+# difference macro pin vs DAC clock pin (1.2 ns) = 3.0 ns, until RF/assembly give their number.
+# Hold: the DAC's falling-edge capture half a period after the launch; data must not change before
+# it + 0.5 ns hold (checked against the falling edge before the launch, trivially met).
+if {![info exists RFTX_DAC_MARGIN]} { set RFTX_DAC_MARGIN 3.0 }
+set_output_delay -max $RFTX_DAC_MARGIN -clock rftx -clock_fall [get_ports {rf_tx_sample* rf_tx_valid rf_mute}]
+set_output_delay -min -0.5 -clock rftx -clock_fall [get_ports {rf_tx_sample* rf_tx_valid rf_mute}]
 pt_io ref  $REF_PERIOD  {calibration_above_target} {calibration_trial* cdr_freq_locked}
 pt_io ctref $CTREF_PERIOD {ct_marker} {ct_armed ct_marker_seen ct_launched ct_arm_fault}
 pt_io ctw  $CTW_PERIOD  {} {ct_word_clk ct_word_load ct_ser_run ct_bit_phase ct_qualified}

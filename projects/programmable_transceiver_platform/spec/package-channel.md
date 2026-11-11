@@ -2,7 +2,7 @@
 
 Status: analytic model, 2026-11-10. This is not an EM solve, and the connector values are estimates. Data: [package-channel.json](package-channel.json).
 Scripts: `scratch/cob/` (`kparse.py`, `channel_model.py`, `placement.py`, `lo_sweep.py`, `lo_term.py`, `pdn_thermal.py`).
-Risks: PKG-01..08 in `scratch/reviews/risk-register.md`. Demands: `scratch/reviews/interface-changes.md`, section "Package channel (TT01 COB)".
+Risks: PKG-01..08 in [`risk-register.md`](risk-register.md). Demands: `scratch/reviews/interface-changes.md`, section "Package channel (TT01 COB)".
 
 **Policy (user, 2026-11-10):** the package mostly changes *performance*, not feasibility. Off-chip passives stay useful.
 So every external part is evaluated over a range of placements, and the chip must tolerate wherever the user puts them.

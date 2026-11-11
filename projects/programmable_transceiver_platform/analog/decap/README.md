@@ -28,13 +28,13 @@ This is the cross-coupled tie used by the PDK `fillcap` cells. MNT holds GB at V
 | ESR | 47 ohm | 42 ohm | 34 ohm |
 | Q | 910 | 10.3 | 1.4 |
 
-  * Across the narrow envelope (tt/ss/ff, 22/32 C, 3.15/3.35 V): C is 3.58-3.88 pF at 1 MHz, Q at 100 MHz is 9.5-11.0, and Q at 1 GHz is 1.3-1.4.
+  * Across the narrow envelope (tt/ss/ff, 22/32 C, 3.15/3.35 V): C is 3.58-3.88 pF at 1 MHz, Q at 100 MHz is 9.5-11.0, and Q at 1 GHz is 1.3-1.4. (risk: PDN-02)
   * Static current per tile is about 1e-18 A at tt/27/3.3 and ff/85/3.63. The PDK models have no gate tunnelling, so treat this number as a model artefact and expect measured leakage to be higher.
   * VDD ramps 0 to 3.63 V in 10 ns and in 1 us: the tie settles (G = VDD, GB = 0) with no lock-up. The worst oxide voltage is 3.63 V.
   * A 5 V, 2 ns over-voltage on VDD puts about 5.0 V across the MPCAP oxide. Any MOS decap sees this; it is informative only, and the pad/rail clamps are what limit it.
 
-## Density versus the I7 target
+## Density versus the I7 target (risk: PDN-02)
 
-* The tile gives 2.33 fF/um^2, so 0.30 mm^2 of tiles is about **0.70 nF** (about 0.62 nF at ss).
+* The tile gives 2.33 fF/um^2, so 0.30 mm^2 of tiles is about **0.70 nF** (about 0.62 nF at ss). (risk: PDN-02)
 * The 1.5 nF target needs 5 fF/um^2. That is above the 3.3 V gate-oxide Cox (about 4.5 fF/um^2) even at 100 % gate coverage, so a MOS-only decap cannot reach it in 0.30 mm^2.
 * Because Metal3-5 are free, a MIM layer (M4/M5, as assembly's `decap_mim_unit`) over the same tiles can add its own capacitance in the notches where no routing passes.

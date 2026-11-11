@@ -20,7 +20,7 @@ an extracted netlist with parasitic C, and extracted ngspice runs.
   ss corners, 5.73 mA; 45 MS/s ss margin probe fails. (Magic layout is not
   bit-reproducible run to run, so evidence is always re-run after relayout.)
 * **Next (v4, risk register SUB-01):** DNW pockets under adc_i NMOS near the
-  digital macro + north p+ ring; ss/ff FFTs deferred to the v4 layout.
+  digital macro + north p+ ring; ss/ff FFTs deferred to the v4 layout. (risk: SUB-01)
 * **DAC v3** (`circuits.dac`): per-cell NMOS cascode (W = 2 x CS, L = 0.5 µm,
   bias 10 µA into a W1/L3 diode, CS Vds ~0.5 V; standalone check: cell
   current changes 0.014 % over a 1.2–2.2 V leg) and an on-block CM loop
@@ -30,7 +30,7 @@ an extracted netlist with parasitic C, and extracted ngspice runs.
   gain/offset fit for ADC and DAC (was relaxed to 32); ADC fallback loading
   limit is 100 fF/leg (was moved to 0.5 pF). With 100 fF the v3 ADC
   (2 cores on INP/INN, 209–232 fF) **fails** the fallback criterion; it is
-  reported open, not relaxed.
+  reported open, not relaxed. (risk: CNV-02)
 * FFT bench (`adc_fft.py`): 1024 points, tone bin 487 (19.02 MHz at 40 MS/s,
   near Nyquist), extracted refbuf in the loop, run at tt, ss/32 °C/3.15 V and
   ff/22 °C/3.35 V.
@@ -160,7 +160,7 @@ monotonic, |error| < 32 LSB. ADC fallback = no DC path and < 0.5 pF/leg.
 | Metric | Result |
 | --- | --- |
 | ADC conversion time | 34.8 ns tt/27 C/3.3 V; ~28 ns ff/22 C/3.35 V; 45 ns ss/32 C/3.15 V |
-| ADC rate | correct at 20 MS/s (10 ns acq.) tt and ff; 16 MS/s at ss (20 MS/s fails at ss); 25 MS/s tt codes correct but DONE 0.8 ns late (not claimed); 40 MS/s and 80 MS/s not met |
+| ADC rate | correct at 20 MS/s (10 ns acq.) tt and ff; 16 MS/s at ss (20 MS/s fails at ss); 25 MS/s tt codes correct but DONE 0.8 ns late (not claimed); 40 MS/s and 80 MS/s not met (risk: MOD-04) |
 | ADC transfer (tt, 20 MS/s) | 586 codes/V (FS ≈ ±0.87 V), offset +7 codes, DC points within 1 code of fit |
 | ADC FFT (32 pt, 1.875 MHz, 0.8 V pk diff, 20 MS/s, tt) | SNDR 50.2 dB, ENOB 8.0, SFDR 53.2 dB |
 | ADC `input_test` | zero → +14; ±VREF/4 → +126 / −130 (ideal ±128) |
@@ -181,24 +181,24 @@ changed after some runs: `circuits.py`, `lib/convkit.py`, `flow.py`,
 `benches.py` after `refbuf`, `dac_i`, `dac_q` evidence; `benches.py` after
 `adc_i-evidence.json`; `rtl/adc_sar_logic.v`, `rtl/adc_sar_delay.v` after
 `dac_i-evidence.json` and `generated/macros/dac_logic.json` (not inputs of
-those blocks). `adc_q-evidence.json` and `adc_i-fft.json` are current.
+those blocks). `adc_q-evidence.json` and `adc_i-fft.json` are current. (risk: MOD-05)
 
 ## Limitations and open items
 
 1. ADC rate: 20 MS/s at tt/ff, 16 MS/s at ss/32 C/3.15 V; the 40 MS/s
    allocation is not met, so 20 MHz Wi-Fi at ss relies on the
-   `rf_bb_external_adc` fallback.
+   `rf_bb_external_adc` fallback. (risk: CNV-02)
 2. ADC dynamics from one 32-point FFT at one corner; no INL/DNL sweep, noise
    or Monte Carlo. No comparator trim (offset +7..+14 codes, digital removal).
    Handshake capture margin (~0.6 ns capture vs ~1 ns reset path, tt) not
-   characterised under mismatch.
+   characterised under mismatch. (risk: MOD-04)
 3. DAC output CM 1.43 V and VDD/corner-dependent (no CM loop); the TX filter
    must accept it. No glitch, SFDR or full-code INL/DNL run. `gain_trim` /
-   `offset_trim` have no effect.
+   `offset_trim` have no effect. (risk: CNV-03)
 4. `dac_logic` and `adc_code_reg` are 5 V-rated `mcu7t5v0` cells run at 3.3 V
-   without 3.3 V Liberty sign-off.
+   without 3.3 V Liberty sign-off. (risk: CNV-04)
 5. refbuf `READY` has no upper bound; no noise/PSRR; load model is a pulse
-   train, not the ADC. ADC/DAC benches use an ideal VREF.
+   train, not the ADC. ADC/DAC benches use an ideal VREF. (risk: MOD-13)
 6. `circuits.adc2()` builds on `circuits.adc()`, which still instantiates the
    `adc_sar_logic` macro (removed again in `adc2`) and reads its LEF; removing
    that dependency would let `generated/macros/adc_sar_logic.*` and

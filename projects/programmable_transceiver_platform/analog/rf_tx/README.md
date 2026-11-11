@@ -93,20 +93,20 @@ bias-tee chokes and a DC-blocked 50 Ω differential load. Modulation results:
 | Magic DRC / Netgen LVS / KLayout DRC, all blocks | 0 / unique / 0 | 0 / unique / 0 | pass |
 | Mixer conversion gm, linear / sat=1 | 1 mS | 1.51 / 2.72 mS, 1.00 mA | pass |
 | Mixer DAC input (filter bypass) | works | 1.51 mS | pass |
-| txsum transimpedance / input impedance, 2.44 GHz | 1000 Ω / ≤ 100 Ω | 220 Ω / 262 Ω | miss |
+| txsum transimpedance / input impedance, 2.44 GHz | 1000 Ω / ≤ 100 Ω | 220 Ω / 262 Ω | miss (risk: RFT-04) |
 | rfdriver gain (summed_rf → pad, 50 mV, bias tee into 50 Ω) | 5.36 V/V | 5.24 V/V (was 1.68) | ≈ target |
 | Matched SSB, linear (0.3 V I/Q, 61 MHz), after 1 dB balun loss | 0 dBm | +3.7 dBm (was −5.6, balun loss excluded) | pass |
 | Matched SSB, saturated (1.0 V I/Q, sat=1), after balun loss | 0 dBm | +8.05 dBm (image −30 dBc) | pass |
 | Chain AM-AM (CW, linear mode), after balun loss: P1dB / Psat | — | +3.8 / +5.9 dBm | — |
 | Driver alone into the board: Psat | — | +9.0 dBm | — |
-| HE20 64QAM OFDM at 0 dBm mean (after balun): EVM / ACLR / mask margin | ≤ −27 dB (MCS7) / — / ≥ 0 | −22.8 dB / 29.9 dB / +0.1 dB (sat=1 mode: −22.6 / 29.9 / +1.7) | MCS0–5 pass, **MCS7 miss by ~1 dB** (−1.0 dBm max) |
-| Harmonics after ideal balun, 0.3–1.0 V drive | — | H2 −41…−52 dBc, H3 −52…−66 dBc | recorded (needs board LPF for FCC 15.247) |
-| LO quadrature skew 2 / 5 / 10 / 20 ps (transistor level) | — | IRR 36 / 29 / 23 / 17 dB; EVM at 0 dBm −22.5 / −21.9 / −20.3 / −16.8 dB | ≤5 ps needed |
+| HE20 64QAM OFDM at 0 dBm mean (after balun): EVM / ACLR / mask margin | ≤ −27 dB (MCS7) / — / ≥ 0 | −22.8 dB / 29.9 dB / +0.1 dB (sat=1 mode: −22.6 / 29.9 / +1.7) | MCS0–5 pass, **MCS7 miss by ~1 dB** (−1.0 dBm max) (risk: RFT-01) |
+| Harmonics after ideal balun, 0.3–1.0 V drive | — | H2 −41…−52 dBc, H3 −52…−66 dBc | recorded (needs board LPF for FCC 15.247) (risk: EMI-02) |
+| LO quadrature skew 2 / 5 / 10 / 20 ps (transistor level) | — | IRR 36 / 29 / 23 / 17 dB; EVM at 0 dBm −22.5 / −21.9 / −20.3 / −16.8 dB | ≤5 ps needed (risk: LO-06) |
 | LO white jitter 0.3 / 1 / 2 ps rms | — | EVM unchanged (compression-limited); mask margin +0.2 / −0.5 / −2.1 dB | ≤0.5 ps needed |
 | Chain image rejection / LO suppression, matched linear (ideal LO) | — | 48.9 dB / 33.9 dBc | — |
 | Saturated power control, code 1/4/8/15 (matched) | monotonic | see `rf_tx-sim-ext.json` match_code*_sat | pass |
 | Matched linear / saturated vs corners (12 env) | 0 dBm | −2.8..+5.0 / +4.5..+6.1 dBm (worst ss/32 °C/3.15 V) | ss linear marginal |
-| rfdriver current incl. board feed, code 15 | 28.9 mA (old allocation) | 53–59 mA tt; 41–56 mA over corners | **budget raised** (interface-changes.md) |
+| rfdriver current incl. board feed, code 15 | 28.9 mA (old allocation) | 53–59 mA tt; 41–56 mA over corners | **budget raised** (interface-changes.md) (risk: PWR-09) |
 | Stretch: LO/2 1.22 GHz / LO/4 610 MHz, unmatched (0.3 / 0.7 V) | — | +1.4 / +2.3; +2.9 / +3.1 dBm | non-gating |
 
 ## Four tapeout tests
@@ -128,20 +128,20 @@ bias-tee chokes and a DC-blocked 50 Ω differential load. Modulation results:
   grounded peer: 29 mA into the peer; 3.3 V behind 50 Ω with rail off: 90 mA
   through rfdriver PMOS junctions, out of contract). Off states: mixer current
   outputs unclamped (tail off, gm gates clamped), txsum clamps to VSS, rfdriver
-  pads held by weak NMOS clamps.
+  pads held by weak NMOS clamps. (risk: BRD-01)
 - **clean**: Magic DRC 0, Netgen unique, KLayout GF180 DRC 0 on the 8.3.678 GDS
   with HRES 62/0 on every `ppolyf_u_1k`. `ppolyf_s/u` resistors are drawn
   without their PCell guard ring (the ring trips KLayout PP.2); their substrate
   terminal is the VSS-tied p-substrate, LVS-confirmed. Extracted nominal runs
   show upconversion, summation, drive and bypass.
 - **observable: open** — ATB nodes simulated on/off, but `atb_tap` cells, mux
-  codes and register fields are not assigned. No clocks or status bits.
+  codes and register fields are not assigned. No clocks or status bits. (risk: INT-04)
 - **fallback**: rfdriver route `rf_tx_low_power_external_pa` implemented and
   simulated (−24.8 dBm best case → external PA needs ~25 dB gain). txmix/txsum
   route `rf_tx_external_upconverter` depends on the `bb_tap` observe path
   (rf_rx) and stays open; disabled-mixer loading on the baseband node 31 fF;
   filter-bypass input demonstrated in the chain (SSB via `dac_*`: −7.0 dBm
-  unmatched).
+  unmatched). (risk: BRD-01)
 
 Evidence currency: all `source_hashes` in `generated/*-evidence.json` match the
 current sources.
@@ -158,29 +158,29 @@ current sources.
    saturated −0.1 dBm tt (−2.8 dBm ss). Limited by gm/C at 2.44 GHz without
    inductors and by wiring capacitance (~4 dB vs schematic). Top-level wiring
    will cost more; board L-match values depend on unmodelled bond-wire/package
-   parasitics and must be tuned on the bench.
+   parasitics and must be tuned on the bench. (risk: RFT-01)
 2. **LO feedthrough is layout-symmetry sensitive** (~5 fF asymmetry between LO
    and mixer-output routing can collapse LO suppression); top-level routing of
-   `lo_*` and `out_*` must keep separation and shielding.
+   `lo_*` and `out_*` must keep separation and shielding. (risk: RFT-05)
 3. **Bypass route** works but is weak (−25 dBm at best).
 4. **Pad bias / stress**: pads now sit at the island rail (~3.3 V) with peaks
    to ~4.1 V; output-device Vds stays ≤ ~3.5 V. The rftxpad stress-safe clamp
    (2.1 V onset at ff) is incompatible and must be replaced (interface-changes.md).
-   The bypass route with the board feed passes ~1.6 mA DC from the feed into txsum.
+   The bypass route with the board feed passes ~1.6 mA DC from the feed into txsum. (risk: ESD-04)
 5. **Saturated-mode spectrum**: image ~33 dB and LO ~38 dB down: fine for
-   GFSK / O-QPSK / LoRa, not OFDM.
+   GFSK / O-QPSK / LoRa, not OFDM. (risk: RFT-05)
 7. **Gate resistance not in the benches** (PDK rgatemod=0). Estimate
    (2026-11-10, not simulated): 20 µm fingers at 120–300 Ω each
    (60–150 Ω per 10 µm), Cgg ≈ 40 fF (L 0.28) / 64 fF (L 0.5), give gate poles
    at 13 / 8 GHz, i.e. 0.15–0.36 dB per stage and ≤ ~1 dB over 4 stages at
    2.45 GHz. Linear output (+3.7 dBm) keeps margin over 0 dBm. The MCS7 EVM gap
-   (~1 dB) may grow. An Rg-annotated extracted rerun is open.
+   (~1 dB) may grow. An Rg-annotated extracted rerun is open. (risk: MOD-01)
 6. **txsum** misses its transimpedance and input-impedance targets (a
    low-impedance current summer does not fit 3.3 V headroom with a
-   rail-to-rail LO).
+   rail-to-rail LO). (risk: RFT-04)
 7. Not covered: wire/via resistance (C-only extraction; ~9 mA per leg through
    single-PCell-wide via stacks, IR/EM unchecked), package/bond-wire/supply/
    substrate models, noise, mismatch/Monte Carlo, EVM, spectral mask; LO,
    baseband and DAC sources ideal; block-level DRC only (no antenna/density, no
    integrated DRC/LVS). `txmix_q` evidence reuses the I-cell block bench (both
-   cells exercised in the chain).
+   cells exercised in the chain). (risk: MOD-16)

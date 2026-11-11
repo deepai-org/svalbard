@@ -25,8 +25,8 @@ Operating envelope (tapeout plan):
 
 | Block | safe | clean | observable | Summary |
 | --- | --- | --- | --- | --- |
-| `monitor` (POR) | **pass**, with the plan's system conditions | **pass** | open | Clean reset on every 1 µs–100 ms ramp and on every power cycle. It ignores brownouts that stay ≥ 1.5 V and can miss 1 s ramps (4 of 54 runs). Both gaps go to the board supervisor on `RESET_N`, with `rst_n = porb & RESET_N`. |
-| `bias` (bandgap + patched biasgen + distribution) | **pass** | **pass** (capacitance-only extraction; bandgap LVS needs a PNP device-name mapping) | open | Two local biasgen patches: the `dvdd` pin fix (the vendored pin sits on ground) and `vfb` compensation (vendored loop −28° at 3.3 V, −49° at 5 V, oscillates; patched loop 53–79°, settles in every fast-ramp and enable case). The imported bandgap starts on every 1 µs–1 s ramp at 0–85 °C and gives 1.207–1.219 V. With the whole chain, the 23 switched outputs give 7.6–12.1 µA before the per-die `idac2` trim. ATB0 force of `VBG` (bandgap disabled) is the fallback. |
+| `monitor` (POR) | **pass**, with the plan's system conditions | **pass** | open | Clean reset on every 1 µs–100 ms ramp and on every power cycle. It ignores brownouts that stay ≥ 1.5 V and can miss 1 s ramps (4 of 54 runs). Both gaps go to the board supervisor on `RESET_N`, with `rst_n = porb & RESET_N`. (risk: PWR-02) |
+| `bias` (bandgap + patched biasgen + distribution) | **pass** | **pass** (capacitance-only extraction; bandgap LVS needs a PNP device-name mapping) | open | Two local biasgen patches: the `dvdd` pin fix (the vendored pin sits on ground) and `vfb` compensation (vendored loop −28° at 3.3 V, −49° at 5 V, oscillates; patched loop 53–79°, settles in every fast-ramp and enable case). The imported bandgap starts on every 1 µs–1 s ramp at 0–85 °C and gives 1.207–1.219 V. With the whole chain, the 23 switched outputs give 7.6–12.1 µA before the per-die `idac2` trim. ATB0 force of `VBG` (bandgap disabled) is the fallback. (risk: MOD-17) |
 
 `fallback` is `waived_core`. These states match `spec/tapeout-readiness.json`;
 see [Readiness](#readiness-four-tests).
@@ -56,7 +56,7 @@ means `porb > VDD/2` with VDD ≥ 1.0 V.
   ss slowest). Supply current after release is 1.96–3.59 µA. The hold-off
   node is a 7.2 pF MIM capacitor charged at about 56 V/s, i.e. roughly 0.4 nA.
   It trips at `vcap` ≈ 2.18 V (tt).
-- **Ramps to 3.63 V, tt/ss/ff × 0/27/85 °C (54 runs).**
+- **Ramps to 3.63 V, tt/ss/ff × 0/27/85 °C (54 runs).** (risk: PWR-02)
   - Rise times of 1 µs, 10 µs, 1 ms and 10 ms: clean reset in all 36 runs,
     released 34–55 ms after the ramp starts.
   - 100 ms ramps: reset is asserted first, then released at VDD = 1.36–3.48 V,
@@ -85,7 +85,7 @@ any case. Per the plan decision (`spec/tapeout-plan.md`, POR / reset row), a
 board reset supervisor on `RESET_N` covers slow ramps and brownout. That
 external part is not simulated here.
 
-### Required reset integration (for the RTL owner; not implemented here)
+### Required reset integration (for the RTL owner; not implemented here) (risk: PWR-02)
 
 - `rst_n_core = porb & RESET_N_pad`. Assertion is asynchronous and reset
   dominates. Release is synchronized to the clock domain that uses it. For the
@@ -449,7 +449,7 @@ group.
 | `TRK_RF`, `TRK_CONV`, `TRK_PLL`, `TRK_WIRE`, `TRK_DEBUG` | ≈ 2.0 V (island on) | current out of node, 10 µA | voltage | `dist.en_<island>=0` |
 | `idac1_source_ibias` (spare) | — | — | current, into an SMU at ≈ 1 V | `bias.idac1_source` ≠ 0 |
 
-## What is not verified
+## What is not verified (risk: MOD-17)
 
 - **Biasgen extraction.** It is capacitance-only. Magic R+C extraction
   segfaults on it.
@@ -487,7 +487,7 @@ States as recorded in `spec/tapeout-readiness.json`. Evidence paths are relative
 | --- | --- | --- | --- |
 | `monitor` | safe | `pass`, with the system conditions in the plan (`porb & RESET_N`, board supervisor) | `#por.safety_ramps_3v63`, `#por.repeated_ramps`, `#por.brownout_dips`, `#por.falling_rail` |
 | `monitor` | clean | `pass` | `#clean.por`, `#por.function_window_pex` |
-| `monitor` | observable | `open` | needs the `por_event`/live `porb` register and `DBG_OBS` entries |
+| `monitor` | observable | `open` | needs the `por_event`/live `porb` register and `DBG_OBS` entries (risk: INT-04) |
 | `bias` | safe | `pass` | `#bandgap.startup_safe_range`, `#bandgap.atb0_force_1v2`, `#biasgen.startup`, `#biasgen.bandgap_mode_probes`, `#biasgen.disabled`, `#distribution.disabled`, `#distribution.island_rail_off`, `#distribution.supply_ramps` |
 | `bias` | clean | `pass` (C-only extraction; bandgap LVS via the PNP name mapping) | `#clean.bandgap`, `#bandgap.chain_function_window`, `#clean.biasgen_patched`, `#biasgen.bandgap_loop_gain`, `#biasgen.window_currents_pex`, `#distribution.layout`, `#distribution.function_window_ideal_10uA_reference` |
 | `bias` | observable | `open` | ATB nodes exist (`ROOT_REF`, `TRK_*`, `vbg`); ATB mux codes and register entries not yet assigned |

@@ -204,7 +204,7 @@ python3 rffet.py layout && python3 rffet.py export
   table (1–57) has no `vco_replica_vctrl` or `vco_replica_vtail` node. As
   specified, the replica cannot be swept on the die. This is recorded as an
   open register request in `spec/tapeout-readiness.json`: a force-allowed code
-  for VCTRL and a sense code for ATB_VTAIL, on the debug island.
+  for VCTRL and a sense code for ATB_VTAIL, on the debug island. (risk: INT-04)
 - **The `vco_replica` evidence hash is stale only on `run_timing.py`.** That is
   the shared timing-flow script edited for `pll_ring`. Its `vco_replica` code
   path did not change. See `generated/referenced-structures.json`.
@@ -212,23 +212,23 @@ python3 rffet.py layout && python3 rffet.py export
   `rf_protected_pad_pair`. That is the same name as the RF pair, the protected
   pair and both RF assembly GDS files, and the subcell names are shared too. A
   naive GDS merge in the assembly would silently keep one of them. The
-  assembly must rename on import, or `analog/pads` must publish unique names.
+  assembly must rename on import, or `analog/pads` must publish unique names. (risk: MOD-06)
 - **Every convkit-built GDS names its PCell masters `prim_0`, `prim_1`, …**
   (`char_atb.gds` and the converter family's blocks too). Different blocks'
   `prim_3` are different devices. A naive GDS merge keeps one of them. The new
   speed cells are uniquified; `char_atb.gds` is not yet (its evidence hashes
   the GDS) and the converter blocks are owned elsewhere. Flagged to the
-  assembly in `interface-changes.md`.
+  assembly in `interface-changes.md`. (risk: MOD-06)
 - **The convkit layout dilutes the speed structures.** Its private-riser
   routing roughly doubles the node capacitance: the 3.3 V ring runs at 1.16 GHz
   schematic and 605 MHz extracted, and the CML S0 at 1.55 GHz and 0.86 GHz.
   The calibration still holds, because silicon is compared with the extracted
   prediction, but each ring's sensitivity to device speed is about halved. A
   compact hand-placed version (timing `fastcells.py` style) would be the
-  better second-die structure.
+  better second-die structure. (risk: MOD-14)
 - **The speed structures need register/ATB/CLK_OBS codes** (three CLK_OBS
   sources, three enables, one ATB sense code); requested in
-  `interface-changes.md`. Until granted they are not observable.
+  `interface-changes.md`. Until granted they are not observable. (risk: INT-04)
 - **The ATB extracted cells are taken from a scratch run** of island_support.
   They are copied and hashed here, but the island_support flow does not
-  publish them.
+  publish them. (risk: MOD-14)

@@ -71,7 +71,7 @@ Each switch has these parts:
   - a VDD M5 edge bar on top (ring side) and a VISL M5 edge bar on the bottom (island side);
   - arrays about twice as wide as they are tall;
   - the control strip stacked under the array.
-- **Integration requirement:** the ring, and the island grid, must strap to their edge bars at at least 4 evenly spaced points, or continuously. The RC check models exactly 4 feed points; a single centre feed gives 21.5–25 mV on the wired switch.
+- **Integration requirement:** the ring, and the island grid, must strap to their edge bars at at least 4 evenly spaced points, or continuously. The RC check models exactly 4 feed points; a single centre feed gives 21.5–25 mV on the wired switch. (risk: ISL-01)
 - **Bias trunk:** each island's bias distributor (core_support) should enter the island behind its `ISO`. Bias branches open when ISO = 1, so an off island neither loads the master bias nor is biased into a back-powered state. These cells have no bias input.
 
 **Sizing.** Design current = peak allocation × 1.25, rounded up to 5 mA. The device is sized for 12 mV at the worst functional point, using Ron·W = 5.27 kΩ·µm at ss/32 °C/3.15 V (4.47 kΩ·µm at tt/27 °C). That leaves about 8 mV for metal.
@@ -89,14 +89,14 @@ The switches total **0.236 mm²** (bounding boxes), within the 0.35 mm² granted
 **The DEBUG current is an estimate** (`design.py:DEBUG_ESTIMATE_MA`). Only
 bb_tap is characterized (1.01 mA, `analog/rf_rx`). The rest are planning
 estimates; the debug blocks have no allocation entry in
-`analog-architecture.json`.
+`analog-architecture.json`. (risk: MOD-15)
 
 **Results.** All criteria pass on all five islands.
 
 | Check | Result |
 | --- | --- |
-| Drop at design current, full-RC extracted, 13 functional points | wired 19.9, rf 16.5, pll 17.3, conv 14.4, debug 15.5 mV (tt/27 °C: 18.1, 14.9, 15.5, 12.7, 13.8 mV). Device alone: ≤ 11.8 mV |
-| Soft start (DC-corrected common-ring PDN) | Ring dip below its settled value: **0 mV** (schematic and extracted). Abrupt gate drive: 121–286 mV. Peak switch current equals the island load (23–62 mA), vs 147–334 mA abrupt. Rail 10–90 % in 1.0–4.6 µs. EN→PG ≤ 7.8 µs |
+| Drop at design current, full-RC extracted, 13 functional points | wired 19.9, rf 16.5, pll 17.3, conv 14.4, debug 15.5 mV (tt/27 °C: 18.1, 14.9, 15.5, 12.7, 13.8 mV). Device alone: ≤ 11.8 mV (risk: PDN-05) |
+| Soft start (DC-corrected common-ring PDN) | Ring dip below its settled value: **0 mV** (schematic and extracted). Abrupt gate drive: 121–286 mV. Peak switch current equals the island load (23–62 mA), vs 147–334 mA abrupt. Rail 10–90 % in 1.0–4.6 µs. EN→PG ≤ 7.8 µs (risk: PDN-07) |
 | Off leakage, pass device | ≤ 13.5 nA at 3.35 V, 22–32 °C. ≤ 0.43 µA at 3.63 V, 0–85 °C. ≤ 3.7 µA at 125 °C (exploratory) |
 | Reverse blocking: peer at 3.63 V behind 10 Ω; ring at 0/1.5/3.15/3.3 V; 0–85 °C; tt/ss/ff | Current into ring ≤ 0.43 µA |
 | Same, other topologies (wired size) | Edwards-style body-on-ring: 0.30 A. Back-to-back: 0.27 µA |
@@ -111,7 +111,7 @@ NMOS from the back-driven rail; none of it reaches the ring.
 **RF_TX back-drive.** The pad at 3.3 or
 3.63 V feeds the RF rail through the driver output junctions, modelled as a
 diode plus 28 Ω. The model is calibrated to 89–93 mA into a 0 V rail. With the
-RF island off:
+RF island off: (risk: LU-03)
 
 - **Into the ring:** ≤ 0.27 µA, with the ring at 0 or 3.3 V, 0–85 °C.
 - **Island rail with decap only:** it is not clamped. It floats to 2.6–3.5 V, and the pad supplies ≤ 0.85 mA.
@@ -147,9 +147,9 @@ the clamp is transparent with the island on.
 | Verdict | **pass** | **pass** |
 
 The hot-plug ring current peak (0.77–0.83 mA) is capacitive displacement through
-the off pass device during the 100 ns pad edge, not DC conduction.
+the off pass device during the 100 ns pad edge, not DC conduction. (risk: PDN-08)
 
-### 2a. Isolation-clamp family for LU-02 (pads owner, 2026-11-10)
+### 2a. Isolation-clamp family for LU-02 (pads owner, 2026-11-10) (risk: LU-02)
 
 Risk register LU-02 / RA-2: v3 had no clamp instances. The family adds a
 clock-strength logic clamp and an analog/RF clamp with no series element
@@ -181,7 +181,7 @@ ISO source: `ISLAND_OFF_<driving island>` = NOT `island_on[k]` (honours
 Placement list for assembly: `generated/iso-family/iso-placement.json` (cells, PEX, sims and KLayout records in the same directory)
 (13 cells, 8.4k µm²). Two v3 binding defects block two of the nets:
 `ct_word_clk` and `island_on[0]` each have two drivers (see interface-changes
-"Pads owner: LU-01 / ESD-04 / LU-02 / PDN-04").
+"Pads owner: LU-01 / ESD-04 / LU-02 / PDN-04"). (risk: LU-02)
 
 ## 3. Analog test bus
 
@@ -273,15 +273,15 @@ Sources: `spec/register-map.md`, `spec/debug-controls.json` (`islands`, `atb_nod
 
 | # | Item | Register map today | These cells | Proposed fix |
 | --- | --- | --- | --- | --- |
-| A1 | Group and pad enables | Only per-node one-hot `atb0_sw`/`atb1_sw` | `atb_grp` and `atb_pad` need `atbX_grp[g]` and `atbX_en` | Add them as ORs of the island-gated `atbX_sw` lines; or the integration step adds an analog OR. The first is cheaper. |
+| A1 | Group and pad enables | Only per-node one-hot `atb0_sw`/`atb1_sw` | `atb_grp` and `atb_pad` need `atbX_grp[g]` and `atbX_en` | Add them as ORs of the island-gated `atbX_sw` lines; or the integration step adds an analog OR. The first is cheaper. (risk: INT-22) |
 | A2 | Dead time | `control_semantics.switch_dead_time_s` = 4 ns | Needs ≥ 20 ns. The group/pad non-overlap delay alone is up to 5.7 ns | Raise the ATB entry to ≥ 20 ns. The zero-commit rule already gives far more, so no RTL change is needed. |
-| A3 | USB nodes | Code 10 `usb_vdd_sw_sense`; codes 40 `usbhs_ibias` and 41 `usbfs_vref` gated by island `usb` | There is no USB island switch | Code 10: mark `hardware=false` (no USB rail). Codes 40 and 41: gate by `wired` (usbhs) and leave ungated (usbfs, host domain). |
+| A3 | USB nodes | Code 10 `usb_vdd_sw_sense`; codes 40 `usbhs_ibias` and 41 `usbfs_vref` gated by island `usb` | There is no USB island switch | Code 10: mark `hardware=false` (no USB rail). Codes 40 and 41: gate by `wired` (usbhs) and leave ungated (usbfs, host domain). (risk: INT-22) |
 | A4 | Code range | `debug.atb` max 57 (code 57 `idac1_source_ibias` added); `PT_ATB_W` 57 | One sense leaf per hardware code: 54 | Consistent. No change. |
 | A5 | Force legality | ATB0 legal on 20 codes, enforced at commit | One force leaf per legal code | Consistent. |
 | I1 | Island bits | `islands` has 6 bits: wired 0, rf 1, pll 2, usb 3, conv 4, debug 5 | 5 switches: wired, rf, pll, conv, debug | Drop `usb` (bit 3), or leave it reserved with `island_en[3]` unconnected and `island_pgood[3]` tied 0. Then `island_on[3]` = 0 and every control that lists `usb` stays clamped. Re-point the `usbhs`/`usbdrive` island lists to `wired` only. `usbfs` is on the host domain and should have no island. |
 | I2 | Island membership text | `islands.wired.description` omits usbhs/usbdrive. `islands.pll` includes the AUX_CLK/WCLK_IN receivers | The wired switch carries all 12 wire-domain blocks including USB HS/drive. The DEBUG switch carries the AUX_CLK/WCLK_IN/WTX_EXT receivers | Update the descriptions, and decide whether the debug-pad receivers sit on `pll` or `debug`. |
-| I3 | Boundary isolation | `island_on` = `island_en` AND (`pgood` OR `pgood_override`) exists inside `pt_regfile`/`pt_digital` but is not an output port | `iso_clamp` needs an ISO per island. The cell's own ISO = NAND(EN, PG) would keep clamping when PG fails and `pgood_override` is set | Export `island_on[5:0]` (or `island_iso[5:0]` = ~`island_on`) from `pt_digital` and drive every `iso_clamp` ISO from it. That keeps boundary clamping, control-output gating (`gating_rule`) and status 0x0A identical. The cell ISO stays as an unused backstop. |
-| I4 | Power-good semantics | Status 0x0A b13:8 = power-good, b5:0 = effective-on | PG is a ratiometric threshold (the island rail crossed a skewed-inverter threshold; the threshold voltage is not characterized here). It is 1 whenever the rail is up, including back-drive with EN = 0 | Document PG = 1 with `island_power` = 0 as the back-drive signature. No register change. |
+| I3 | Boundary isolation | `island_on` = `island_en` AND (`pgood` OR `pgood_override`) exists inside `pt_regfile`/`pt_digital` but is not an output port | `iso_clamp` needs an ISO per island. The cell's own ISO = NAND(EN, PG) would keep clamping when PG fails and `pgood_override` is set | Export `island_on[5:0]` (or `island_iso[5:0]` = ~`island_on`) from `pt_digital` and drive every `iso_clamp` ISO from it. That keeps boundary clamping, control-output gating (`gating_rule`) and status 0x0A identical. The cell ISO stays as an unused backstop. (risk: INT-22) |
+| I4 | Power-good semantics | Status 0x0A b13:8 = power-good, b5:0 = effective-on | PG is a ratiometric threshold (the island rail crossed a skewed-inverter threshold; the threshold voltage is not characterized here). It is 1 whenever the rail is up, including back-drive with EN = 0 | Document PG = 1 with `island_power` = 0 as the back-drive signature. No register change. (risk: INT-22) |
 
 ## 4. Physical status
 
@@ -309,22 +309,22 @@ from the verdicts; they match `spec/tapeout-readiness.json`.
 | --- | --- | --- |
 | safe | **pass** | `island_switch.*.{default_off,reverse_blocking,discharge,off_leakage}`, `rf_tx_backdrive`, `integration_rf_tx_backdrive_iso`, `atb.verdicts.pad_overvoltage` |
 | clean | **pass**, cell scope | `physical`, `physical_crosscheck_librelane_image`, `island_switch.*.drop` (full RC), `atb.verdicts`. Ring decap and top-level assembly belong to freeze stage 4 |
-| observable | **open** | PG/ISO and the VISL ATB taps are designed. The `EN`/`PG`/`ISO` register fields and the ATB select decode are not in `rtl/` |
+| observable | **open** | PG/ISO and the VISL ATB taps are designed. The `EN`/`PG`/`ISO` register fields and the ATB select decode are not in `rtl/` (risk: INT-04) |
 | fallback | waived_core | — |
 
 ## Open risks
 
-1. **Register interface gaps** (A1, A3, I1–I3 above). The ISO export (I3) is needed before the boundary clamps can be wired.
-2. **Ring strapping requirement:** the 20 mV drop needs the ring and island grid strapped to the edge bars at ≥ 4 points. The wired switch has 0.13 mV of margin. A single feed point gives 21.5–25 mV.
-3. **Back-drive powers the island:** pad back-drive powers an off island (1.8–3.5 V). The ring is protected and the boundary is clamped. The pad-side protection and the board DC block remain the owners of the island stress.
-4. **Auto-bulk dead zone** (|VISL−VDD| or |PAD−VDD| below a PMOS threshold voltage): the wells float there. It is handled at switch turn-off by the MB3 delay. The `atb_pad` 56 µA bench-load case is accepted.
-5. **Bare-leaf select disturbance:** up to 54 mV on a 1 pF bias node when a force leaf closes. It recovers with the node's RC; avoid force leaves on nodes with very small capacitance.
+1. **Register interface gaps** (A1, A3, I1–I3 above). The ISO export (I3) is needed before the boundary clamps can be wired. (risk: INT-22)
+2. **Ring strapping requirement:** the 20 mV drop needs the ring and island grid strapped to the edge bars at ≥ 4 points. The wired switch has 0.13 mV of margin. A single feed point gives 21.5–25 mV. (risk: ISL-01)
+3. **Back-drive powers the island:** pad back-drive powers an off island (1.8–3.5 V). The ring is protected and the boundary is clamped. The pad-side protection and the board DC block remain the owners of the island stress. (risk: LU-03)
+4. **Auto-bulk dead zone** (|VISL−VDD| or |PAD−VDD| below a PMOS threshold voltage): the wells float there. It is handled at switch turn-off by the MB3 delay. The `atb_pad` 56 µA bench-load case is accepted. (risk: ISL-02)
+5. **Bare-leaf select disturbance:** up to 54 mV on a 1 pF bias node when a force leaf closes. It recovers with the node's RC; avoid force leaves on nodes with very small capacitance. (risk: ISL-03)
 6. **Extraction tool caveats:**
    - The C-coupled extraction has no resistance; DC drop comes from the full-RC run only.
    - ext2spice `lvs` mode misattributes the capacitance of gate-only nets, so the ATB results use the default-mode extraction.
-7. **DEBUG island current** is mostly estimated, not simulated.
-8. **Area figures** are bounding boxes without routing. The ATB bus routing (two buses to 7 groups, then 74 leaf lines from the register file) is not counted.
-9. **Not done:**
+7. **DEBUG island current** is mostly estimated, not simulated. (risk: MOD-15)
+8. **Area figures** are bounding boxes without routing. The ATB bus routing (two buses to 7 groups, then 74 leaf lines from the register file) is not counted. (risk: MOD-15)
+9. **Not done:** (risk: MOD-15)
    - placement and wiring of the taps and buses;
    - interaction with the provider pad's ESD;
    - mismatch and Monte Carlo;

@@ -154,7 +154,7 @@ pull-up, 509 µA static (schematic and extracted); r6a clocks the flop with
 `NOR(REFP, ENB)` and safe is back to the 10 µA IBIAS (tt/ff 85 °C/ss 0 °C).
 `run_timing.py` overwrote the HOLD bench verdict with `locked`, so HOLD
 cases could never fail; fixed, and the two stored HOLD results were
-re-judged with the corrected criterion (`pass_recomputed_note`).
+re-judged with the corrected criterion (`pass_recomputed_note`). (risk: MOD-05)
 
 **`pll_ring` r7 (2026-11-09, this pass): charge-pump current steering.**
 Diagnosis from a schematic HOLD bench (`scratch/timing/pll_ring/dbg_hold`):
@@ -201,7 +201,7 @@ step is therefore not the settling tail; it is a charge event at the HOLD edge t
 not show (suspect: the steering switches dumping VDUM/PS charge into VCTRL when both pump halves are
 forced off, through extracted coupling).  Not debugged yet.  Consequence: the wired CDR no longer
 uses a HOLD hand-over at all (AC-3, wired_rx README: HOLD=1 from enable, FLL and PD on the same pump);
-host_follow still relies on HOLD and is affected.
+host_follow still relies on HOLD and is affected. (risk: TIM-04)
 
 **`pll_ring` r7 + K1 antenna diodes (2026-11-10, wired_rx owner):** regenerated from the K1-patched
 `layout_engine` (9 antenna diodes on HOLD, REF, UP, DN and PFD internals): 236 devices, 75,772 µm², Magic DRC
@@ -234,7 +234,7 @@ model. Evidence: `generated/lo_ext-pad-evidence.json` (verdict pass).
   slowly. The evidence therefore projects each window's waveform about
   VB(t = 0). A 300 ns run of the current design at ss/32/3.15/3 Vpp converges
   to that projection: on 0.66 → 0.92 V by 300 ns, projected 0.949 V. Allow
-  ≥ 1 µs after enabling the LO before receiving.
+  ≥ 1 µs after enabling the LO before receiving. (risk: PKG-05)
 * **Design change:** VB 0.773·VDD → 0.716·VDD (`lo_ext.spice` divider 12.5k /
   31.5k), which centres Vgs (0.63–0.70 V) between the limits. With the old VB
   the steady state failed the off level at ss/3 Vpp (projected 0.53 V).
@@ -254,7 +254,7 @@ leg, target 3.5 Vpp. The pads README `Reference` limit (≤ 0.55 V peak) is for
 rising at 300 ns (VCM through the 10 pF coupling, about a 1 µs time
 constant), so the steady-state pad peak is not simulated directly. The
 block-level `tb_lo_ext` (`run_timing.py`) uses the same VCM reference and
-steady-state projection: 12/12 corners pass at 4 Vpp with its ideal 1 pF pad.
+steady-state projection: 12/12 corners pass at 4 Vpp with its ideal 1 pF pad. (risk: LO-05)
 
 ## Autonomous RF LO: quadrature LC VCO (`lcvco/`, r2, 2026-11-10)
 
@@ -322,7 +322,7 @@ ss, re-layout `ct_lodrv` and `pt_lo_ext`, and set the QVCO buffer duty to 50 %
 (differential-to-single-ended stage). This was never covered before: the
 block's internal-mode case ran at tt only with ideal inputs. External mode is
 unaffected (the driver is tristated). Also open: the frequency loop (PRE →
-prescaler → PFD/CP against the `REF_IN` crystal of B23) and a QVCO layout.
+prescaler → PFD/CP against the `REF_IN` crystal of B23) and a QVCO layout. (risk: LO-07)
 
 **External tank option (MANDATE "off-chip passives"): evaluated, not used.**
 The tank needs 2.4–2.9 nH differential. Two bond wires alone are 3.0 ± 1.0 nH
@@ -330,7 +330,7 @@ The tank needs 2.4–2.9 nH differential. Two bond wires alone are 3.0 ± 1.0 nH
 inductor fits in series. The ±33 % L tolerance moves the frequency ±15 %, more
 than the bank's tuning range. The only spare pair (`AUX_CLK`) carries the
 stress-safe clamp (10 µA onset 2.1 V at ff), and the tank nodes swing about
-1.6 ± 1.2 V. No pin requested (`interface-changes.md` LO4).
+1.6 ± 1.2 V. No pin requested (`interface-changes.md` LO4). (risk: LO-04)
 
 ## RF LO r-cml2: CML driver, LO observation, B3 on the COB chain (2026-11-10, round 2)
 
@@ -364,7 +364,7 @@ Scratch: `scratch/timing/{lo_ext,lo_obs,obs_pre4,clk_obs16,lo_ext_pad*,loobs}`. 
 Scratch: `scratch/wired_rx/r4pi/r9/` (`STATUS.md`, benches `fsweep.py`, `ring9.py`, `gen_r9.py`). Backups of the
 files changed here: `r9/backup/`. **Promoted:** `pll_ring.spice` (r9; r8 ports), `fastcells.py` `ct_ring9`,
 `generated/fast/ct_ring9.*`, `generated/pll_ring.*` (r9 layout). The LO instance and `run_timing.tb_pll_ring`
-still use r7 positional ports and must be updated (see interface-changes AC3-W11).
+still use r7 positional ports and must be updated (see interface-changes AC3-W11). (risk: INT-23)
 
 * **Why the extracted ring was slow:** ct_ring8 cell wiring, 25-30 fF per ring node. ss/32 C/2.835 V, VCTRL = VDD:
   schematic 1307 MHz, ring cell extracted 763, full r7 extracted 759. **ct_ring9** (each stage followed by its own
@@ -378,8 +378,8 @@ still use r7 positional ports and must be updated (see interface-changes AC3-W11
   gave 15-380 ppm/vote (ppm ~ 1/I_ring).
 * **Layout (r9):** 202.9 x 921.2 µm, 665 devices, Magic DRC 0, LVS unique, KLayout main 0, **antenna 12
   (ANT.16, M5 trunks of NX/N16B/REFG/S16B/PFD/LOCK/FD2/XHD22_x nets where the diode planner placed no diode):
-  not clean, open.**
-* Phase error (ring cell extracted, ss 834-945 MHz): up to 7.5 deg (ct_ring8: up to 8.1 deg). Not trimmed here.
+  not clean, open.** (risk: INT-05)
+* Phase error (ring cell extracted, ss 834-945 MHz): up to 7.5 deg (ct_ring8: up to 8.1 deg). Not trimmed here. (risk: WRX-15)
 
 ## RF LO owner round 3: queue review, frequency loop, D-LO-1/2 (2026-11-11)
 
@@ -402,7 +402,7 @@ still use r7 positional ports and must be updated (see interface-changes AC3-W11
 - **I/Q error through the extracted `pt_lo_ext` is systematic, 2.5–3.7°.** The tank alone is
   89.2–89.5°. On the 5 chain points, Q−I is −92.5 to −93.7° at the LO pins, against RF-LO-JIT
   I/Q skew ≤ 1.16 ps (1.0°). This fails without D-LO-2 trim, and it matches the 93.5° seen in
-  external mode, so the skew is in the `pt_lo_ext` layout.
+  external mode, so the skew is in the `pt_lo_ext` layout. (risk: TIM-07)
 
 **D-LO-2 I/Q phase trim (`lcvco/run_lotrim.py`, transistor level, extracted `pt_lo_ext` + schematic QVCO).**
 Proposed cell `pt_lo_iqtrim`: a binary bank of NMOS-in-n-well accumulation varactors
@@ -424,7 +424,7 @@ The slope is 0.67–0.82° per LSB, and 4 bits give ±10–12°. **Proposal: 5 b
 
 **D-LO-1 termination (`scratch/lo/dlo1.py`, extracted `pt_lo_ext` + drawn pads + COB chain at P3 = 30 mm).**
 The test used a per-leg 50 Ω shunt (NMOS switch + R to a decoupled VDD/2 node) on the existing
-passive (transmission-gate) external path:
+passive (transmission-gate) external path: (risk: LO-05)
 
 | Source (Vpp open circuit) | ss/32/3.15 on / off (V) | ff/22/3.35 on / off (V) | Pad peak / trough |
 | ---: | --- | --- | --- |
@@ -473,7 +473,7 @@ No transistor-level loop exists yet. The VCO curves are the r3 extremes.
   At 25 MHz the PFD failed 3 MHz by 5.9 dB (ΣΔ), which is why the loop uses 50 MHz.
   **Integrated 10 kHz–100 MHz: 1.35 ps rms, against RF-LO-JIT ≤ 1.05 ps: FAIL.** The PFD floor
   (in band) and ΣΔ (20 MHz) dominate. Open: a 4th-order filter pole, or a lower ΣΔ order with
-  dither, plus a transistor-level PN sim of the QVCO.
+  dither, plus a transistor-level PN sim of the QVCO. (risk: LO-04)
 
 ## Known limitations and open items
 
@@ -485,27 +485,27 @@ No transistor-level loop exists yet. The VCO curves are the r3 extremes.
    Cold start locks at 480 and 810 MHz.  r6a port phase error is 9.0–10.8°
    (r5: 4.6–5.5°) and the analog `LOCK` flag is wrong at 625/810 MHz and
    host_follow (informative only).  Closed-loop lock is nominal-only;
-   jitter/phase noise and reference spurs are not covered.
+   jitter/phase noise and reference spurs are not covered. (risk: TIM-04, TIM-05)
 2. **`polyphase` fails extracted.**  The autonomous-LO plan (P3-4) uses the
    passive network only, without limiters; the block in this directory
-   still carries the limiters.
+   still carries the limiters. (risk: TIM-06)
 3. **Autonomous RF LO (`lcvco/`, r3):** the quadrature LC VCO covers
    2.33–2.53 GHz at every corner (r3; section "round 3"). The frequency loop is
    designed behaviourally only (`lcvco/loop_design.py`); there is no
    transistor-level loop, no QVCO layout (only the spiral) and no extraction,
    so it is not yet an LO. The first-die RF LO baseline stays
    the passive external route `rf_lo_external_ref` (section "External LO
-   through the real pads").
+   through the real pads"). (risk: LO-04)
 4. `lo_ext` internal mode draws 16.0 mA, and it is not qualified at ss (see
    the LC VCO section: `ct_lodrv` too slow at 2.45 GHz extracted). External
-   mode: board B3 window 3.0–4.0 Vpp open-circuit per leg.
+   mode: board B3 window 3.0–4.0 Vpp open-circuit per leg. (risk: LO-07)
 5. `clk_obs` has 8 inputs and /2^0..7, smaller than `debug.clk_obs`
-   (two instances needed; `divider_log2` 8..15 unsupported).
+   (two instances needed; `divider_log2` 8..15 unsupported). (risk: TIM-09)
 6. `vco_replica` has no `vco_coarse` DAC or divider select (VCTRL from ATB,
    fixed /16).
 7. ~~`aosc` is below 40 MHz at ss.~~ Fixed in r3 (above); `scratch/aosc/` keeps the r1/r2 evidence.
 8. `diff_clk_rx` data mode needs a ≥ 128-bit DC-balanced preamble after
-   idle; no hysteresis.
+   idle; no hysteresis. (risk: TIM-08)
 9. Not covered: mismatch/Monte Carlo, IR drop and RC clock skew (C-only
    extraction), substrate coupling, ESD (pads family), integration with
-   `atb_tap` and the island switch.
+   `atb_tap` and the island switch. (risk: MOD-02)

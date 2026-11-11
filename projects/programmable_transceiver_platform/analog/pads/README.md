@@ -43,7 +43,7 @@ Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`
   over the screen, ±100 mA 2.51–2.77 V, HBM-like pad 6.18–6.91 V (was 7.9–8.6 V with the static stack, see below),
   50 Ω AC −6.338 dB at 2.45 GHz (canonical −6.344). Pad C +42/+53 fF per leg vs the old cell (inner-edge stub). Backup:
   `scratch/pads-pd28/backup-published/rf-pair-pre-pd28/`. The top cell name changes from `rf_protected_pad_pair` to
-  `pad_rf_pair` (assembly).
+  `pad_rf_pair` (assembly). (risk: INT-21)
 - **Core-gate HBM screen** (`hbm_core_screen.py`, evidence `generated/stress-safe-families/pd28-core-gate-hbm-screen.json`):
   the PD13 HBM-like bench plus every consumer block that `chip_assembly/netlist.py` attaches to a pad net, flattened
   from its published extraction, every consumer MOS observed, unchanged gate screen (3.63 V / 6.0 V). P_pos tt27 + ss0,
@@ -54,15 +54,15 @@ Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`
   `detect` TX-side switches (WIRE_TX). `rfdriver` (RF_TX): 6 V cascode gate–drain 6.18 V at ss/0 °C only (tt 6.36 V pad:
   passes); the 3.3 V `in_p` hit is a bench artifact (bypass PMOS conducts to an undriven input; with the driver's drain
   junctions modelled, 0). Even network-gc-d2 (pad ≤ 5.41 V) cannot bring a 3.3 V device on a pad net under 3.63 V, so
-  the fixes are in the consumer blocks (interface-changes PD29).
+  the fixes are in the consumer blocks (interface-changes PD29). (risk: PAD-02, ESD-06)
 - **TX pad termination / SST** (`scratch/pads-pd28/tx/DECISION.md`): SST rejected for this tapeout; the 6 V-switch fix
-  clears HBM but costs return loss, not published (interface-changes PD30).
-- **Ring regulators:** PD28 packed `pt_pll_vreg` (0.241 mm²), then **PD36 `pt_pll_vreg2`, one 0.175 mm² cell for pll_tx + pll_cdr** (`analog/pll_vreg/README.md` "PD36"). Coordinator decisions: TX TERM switches risk-accepted (ESD-05), USB-01, ESD-06, ESD_TEST dropped (interface-changes PD34/PD35).
+  clears HBM but costs return loss, not published (interface-changes PD30). (risk: ESD-05)
+- **Ring regulators:** PD28 packed `pt_pll_vreg` (0.241 mm²), then **PD36 `pt_pll_vreg2`, one 0.175 mm² cell for pll_tx + pll_cdr** (`analog/pll_vreg/README.md` "PD36"). Coordinator decisions: TX TERM switches risk-accepted (ESD-05), USB-01, ESD-06, ESD_TEST dropped (interface-changes PD34/PD35). (risk: ESD-05)
 - **USB wirepad on 6 V pad-side devices: candidate v9, not published** (`scratch/pads-pd28/usb/`, mode `usbfix6v2`;
   opt-in args in `wired_receive.py`, `stress_safe_compact_layout.py`, `receive_pad_layout.py`, `stress_safe_usb.py --term-trim`).
   HBM 0 of 593 MOS over the screen; HS termination 44.1–47.5 Ω at every corner with a new 3-bit trim (`TERM_TRIM0..2`);
   FS edges in window; FS rise/fall matching 1.13–1.32 at tt/ss still outside 0.90–1.11 (published cell 1.23–1.48);
-  +78 µm depth. Waiting on digital (trim field + calibration), assembly (+78 µm, ports) and the USB owner (interface-changes PD32).
+  +78 µm depth. Waiting on digital (trim field + calibration), assembly (+78 µm, ports) and the USB owner (interface-changes PD32). (risk: USB-01)
 
 ### PD21 (pads owner): low-C SATA/PCIe RX pad pair `pad_hspad`, network-gc-d2, HBM pad-side devices
 
@@ -86,7 +86,7 @@ WCLK_OBS/WDBG_OBS sites). Working notes: `scratch/pads-pd21/NOTES.md`.
   code 15 24.4–38.7 Ω (VCM 0.3–0.5 V), 2–3.5 Ω/LSB near 50 Ω. AC (CTLE 120 fF/leg assumed, VCM 0.4 V, trimmed to
   ≈50 Ω): **1.11–1.14 pF/leg**, die RL at 2.4 GHz 8.0–8.5 dB; COB RL 13.0–16.7 dB (0.1–1.25 GHz), 5.7–6.5 dB
   (1.25–2.5 GHz, package-limited). RX path: HPF 0.67–1.07 MHz, 0.27–0.33 dB MIM loss, flat to 2.4 GHz.
-  Power-up 10 ns/1 µs: no shunt trigger, VDD ≤ 80 µA peak.
+  Power-up 10 ns/1 µs: no shunt trigger, VDD ≤ 80 µA peak. (risk: WRX-04)
 - **TERM_VCM 0.3–0.5 V** (6 V NMOS switches; at 0.8 V the 40 Ω end moves to 44 Ω at ss). The CTLE CM comes from
   VBIAS through the MIM, not from the termination.
 
@@ -98,7 +98,7 @@ WCLK_OBS/WDBG_OBS sites). Working notes: `scratch/pads-pd21/NOTES.md`.
   stage = 12,006 µm (≥ the selected 12,000 µm). LU audit of the five rebuilt compact
   families: 0 µm² of n-diffusion beyond 15 µm (was 7,193 µm²). `run_first_pass.lvs` now
   also fails on netgen property errors (a W/L/m mismatch used to pass as a match).
-  Rebuild: `scratch/pads-lu01/` (`build.sh`, `kl.sh`, `sims.sh`, `lu_audit.py`).
+  Rebuild: `scratch/pads-lu01/` (`build.sh`, `kl.sh`, `sims.sh`, `lu_audit.py`). (risk: LU-01, ESD-04)
 - **RF_TX (`rftx_shunt.py`, cell `pad_rftxpad`, ESD-04).** The RF_TX pads rest at 3.3 V and
   peak at ~4.1 V, so the static shunt conducted. The RF_TX macro replaces the stack with one
   gate-coupled nfet_06v0 bank (Cc 32 pF MIM, Rg 6 kΩ). It has no 10 µA onset up to 5.4 V,
@@ -156,7 +156,7 @@ Pad ports are `PAD_P`/`PAD_N`, `VDD`, `VSS`, the isolated `ESD_RAIL` and
 (`circuits.py`). USB HS bias `HS_PBIAS` is a VSS-referenced gate voltage from
 the wired-TX `wtx_idac` (0–0.6 V, board-calibrated code;
 `families-report.json:usb_attachment.hs_interface`). The island_support ATB
-leaf for `ATB_ESD_RAIL` and its register entry do not exist yet.
+leaf for `ATB_ESD_RAIL` and its register entry do not exist yet. (risk: INT-04)
 
 ## Results
 
@@ -173,7 +173,7 @@ screens: 6.0 V (06v0), 3.63 V (03v3) on observed terminals.
 | **3-stage 12000 µm shunt (selected)** | **5.81 V ss/0 °C, 5.15 V tt/27 °C; 5.87–5.90 V with drawn wiring R** | **0 at 7 corners** | selected |
 
 Margin at ss/0 °C with wiring resistance: **0.105 V**. Only 88 of 1077 MOS are
-fully observed in the selection fixture.
+fully observed in the selection fixture. (risk: ESD-02)
 
 Per-family runs on the drawn layouts (`family-sims.json`):
 
@@ -200,7 +200,7 @@ pad 2.52–3.00 V. A 3.63 V peer draws ≤ 28.6 mA at ff/85 °C, into VSS only.
 | --- | --- | --- |
 | Wired TX | 3.3 V-referenced high levels droop up to ~0.3 V at ff | Board resistors or AC coupling instead of on-chip termination |
 | USB FS | High level loaded by up to ~5–6 mA at ff | External board PHY |
-| Reference | As a reference clock into `diff_clk_rx`: single-ended peaks near 2.65 V compressed at ff | Source ≤ 0.55 V peak, or `AUX_CLK`. This limit is for the clock-reference use only. As the external LO (`pt_lo_ext`, board B3: 3.0–4.0 Vpp open-circuit from 50 Ω, 10 pF coupling, 1.5 nH bond wire) the pad peaks stay ≤ 1.95 V in the simulated window and 13/13 envelope points pass at 3.0 Vpp in steady state (`analog/timing/generated/lo_ext-pad-evidence.json`, refpad on `REF_IN`, rf pair on `AUX_CLK`). The pad DC is still rising slowly at 300 ns (VCM bias through the 10 pF board coupling), so the steady-state peak is not simulated directly. |
+| Reference | As a reference clock into `diff_clk_rx`: single-ended peaks near 2.65 V compressed at ff | Source ≤ 0.55 V peak, or `AUX_CLK`. This limit is for the clock-reference use only. As the external LO (`pt_lo_ext`, board B3: 3.0–4.0 Vpp open-circuit from 50 Ω, 10 pF coupling, 1.5 nH bond wire) the pad peaks stay ≤ 1.95 V in the simulated window and 13/13 envelope points pass at 3.0 Vpp in steady state (`analog/timing/generated/lo_ext-pad-evidence.json`, refpad on `REF_IN`, rf pair on `AUX_CLK`). The pad DC is still rising slowly at 300 ns (VCM bias through the 10 pF board coupling), so the steady-state peak is not simulated directly. (risk: PKG-05) |
 | RF RX / TX | Unaffected below ~2.1 V; higher driver peaks clipped | LNA bypass with external LNA; mixer output to external PA |
 
 The TX ss/3.15 V swing (0.50 / 0.81 V) is the same on the canonical layout
@@ -218,7 +218,7 @@ corners), and a well-sourced fast-off PMOS on each FS high-side gate.
 | FS high / low | 3.08–3.34 V / 0 V | — |
 | FS edges | 5.8–11 ns | — |
 | D+ after J→K | reaches 0 V | — |
-| LS edges | 33–67 ns — **fails** | 75–300 ns (external PHY fallback) |
+| LS edges | 33–67 ns — **fails** | 75–300 ns (external PHY fallback) (risk: USB-02) |
 | Pull-up level | 2.72–2.93 V | — |
 | Disabled loading | 2.34–2.35 pF | ≤ 2.7 pF |
 
@@ -239,7 +239,7 @@ cells (WMON, ESD_TEST): 1,196,149 µm² against a 1.2 mm² budget.
 - ATB0/1 on provider `asig_5p0`: forcing 3.63 V while powered draws ≤ 3.7 µA;
   unpowered it drives 54–56 mA through 50 Ω into the ring
   (`atb-provider-pad-force.json`). Force only when powered or at ≤ 1 mA
-  compliance.
+  compliance. (risk: PAD-04)
 
 ### Composition comparison (`generated/pad-composition-comparison.json`)
 
@@ -267,7 +267,7 @@ retained ring has one common supply net and one common ground net: **use one
 common external supply**. The 81.6 mA powered-host backfeed
 (`powered-host-backfeed.json`) enters through the 12 provider `bi_t` host pads,
 not wirepad; board requirement: host lines high-Z while unpowered, an Ioff bus
-switch on those lines, never a floating chip supply.
+switch on those lines, never a floating chip supply. (risk: PAD-04)
 
 ## Readiness (four tests)
 
@@ -277,21 +277,21 @@ switch on those lines, never a floating chip supply.
 
 `safe` rests on compact-model pulse/ramp/peer runs with a 0.105 V margin, not
 HBM/CDM/TLP. `clean` covers DRC/LVS/device audit, envelope function runs and
-area fit. `observable` needs the `ATB_ESD_RAIL` leaf and register entry.
+area fit. `observable` needs the `ATB_ESD_RAIL` leaf and register entry. (risk: INT-04)
 
 ## Known limitations and open items
 
 | Item | State |
 | --- | --- |
-| Stress margin | 0.105 V at ss/0 °C with drawn shunt wiring, excluding network-internal routing; partial terminal observation; 2 kV HBM / 500 V CDM targets not established |
-| USB | LS edge rate fails (no slew control; no room in the 4.9k µm² headroom). HS amplitude needs a board-calibrated `wtx_idac` gate code, ~0.3 mV/mV supply sensitivity, no headroom to centre at ss/3.15 V |
-| Wired TX | Recorded disabled loading 2.706/2.713 pF vs 2.7 pF; asymmetric bond-to-core resistance (~8.34/11.67 Ω); static currents miss intended settings; bias/serializer readiness partly idealized |
+| Stress margin | 0.105 V at ss/0 °C with drawn shunt wiring, excluding network-internal routing; partial terminal observation; 2 kV HBM / 500 V CDM targets not established (risk: ESD-02) |
+| USB | LS edge rate fails (no slew control; no room in the 4.9k µm² headroom). HS amplitude needs a board-calibrated `wtx_idac` gate code, ~0.3 mV/mV supply sensitivity, no headroom to centre at ss/3.15 V (risk: USB-02) |
+| Wired TX | Recorded disabled loading 2.706/2.713 pF vs 2.7 pF; asymmetric bond-to-core resistance (~8.34/11.67 Ω); static currents miss intended settings; bias/serializer readiness partly idealized (risk: PAD-05) |
 | Wired RX/USB | Brownout controls, off-state gate stress and termination/pull handoff need connected acceptance |
 | RF / reference | Real LNA, RF output stage and differential clock receiver are behavioral at the pad boundary |
-| Autonomous disable | Rail supervisor candidate (`rail_supervisor.py`) trips at 2.625–2.7 V but has low-rail/overlap problems; not selected |
-| Integration | Shared debug macros not drawn; full-ring LVS, integrated DRC, density, antenna, EM, package coupling and full-bank switching open |
+| Autonomous disable | Rail supervisor candidate (`rail_supervisor.py`) trips at 2.625–2.7 V but has low-rail/overlap problems; not selected (risk: PAD-08) |
+| Integration | Shared debug macros not drawn; full-ring LVS, integrated DRC, density, antenna, EM, package coupling and full-bank switching open (risk: INT-20) |
 | Distributed resistance | Not in capacitance extraction; `wire_resistance.py`, `rf_route.py`, `protected_rf_route.py` are scoped sensitivity models |
-| Reproducibility | The stress fixtures (`stress_safe_clamp.py`, `shunt_wiring_check.py`, `stress_safe_native_clamp.py`) read the retained RX/USB deck from `scratch/pad-supervised-receive`; `usb-attachment.json` was run with the replica-mirror HS bias still enabled in `stress_safe_usb.py --usbfix` (HS figures above come from the gate sweep); `atb-provider-pad-force.json`, `lifecycle-active-windows.json`, `tx-swing-investigation.json` and `powered-host-backfeed.json` have no generator script in this directory; `protection_pad_ss.generate(network=..., single_leg=...)` has no CLI flags |
+| Reproducibility | The stress fixtures (`stress_safe_clamp.py`, `shunt_wiring_check.py`, `stress_safe_native_clamp.py`) read the retained RX/USB deck from `scratch/pad-supervised-receive`; `usb-attachment.json` was run with the replica-mirror HS bias still enabled in `stress_safe_usb.py --usbfix` (HS figures above come from the gate sweep); `atb-provider-pad-force.json`, `lifecycle-active-windows.json`, `tx-swing-investigation.json` and `powered-host-backfeed.json` have no generator script in this directory; `protection_pad_ss.generate(network=..., single_leg=...)` has no CLI flags (risk: INT-20) |
 
 **Evidence currency.** `usb-attachment.json` and `families-report.json` predate
 the current `stress_safe_usb.py`; `shunt-v2/shunt-layout.json` and
@@ -302,7 +302,7 @@ the current `stress_safe_usb.py`; `shunt-v2/shunt-layout.json` and
 `rail-supervisor-screen.json` and `pad-composition-comparison.json` predate the
 opt-in `wired_receive.py` options (defaults unchanged);
 `rf-receive-extraction.json` / `rf-transmit-extraction.json` record older
-`circuits.py` and `physical.spice` hashes. `strap-capacity.json` is current.
+`circuits.py` and `physical.spice` hashes. `strap-capacity.json` is current. (risk: MOD-05)
 
 ## Reproduction
 

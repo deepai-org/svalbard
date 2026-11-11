@@ -92,7 +92,7 @@ both input switches.
 **bb_tap (`pt_bb_tap`)** — per leg: NMOS source follower (80/0.28) with 0.5 mA
 sink, PMOS supply switch, NMOS-only series switch (60/0.28) to the pad; inject
 via NMOS-only switch (40/0.28) pad → `inj_x`. Only NMOS drains touch the pads;
-`inj_en` wins over `obs_en`. Pad CM in observe ≈ 0.8 V.
+`inj_en` wins over `obs_en`. Pad CM in observe ≈ 0.8 V. (risk: PAD-02)
 
 ## 4. Ports, controls, ATB
 
@@ -369,7 +369,7 @@ in the code).
 Evidence currency: `netlists.py` changed after `lna-evidence.json` /
 `lna-layout.json` were written; rerunning it regenerates all six `.spice`
 files byte-identically, so the LNA results still apply (rerun
-`run_rf_rx.sh` to refresh the hash). All other records match current sources.
+`run_rf_rx.sh` to refresh the hash). All other records match current sources. (risk: MOD-05)
 
 ## 7. Limitations and open items
 
@@ -378,28 +378,28 @@ files byte-identically, so the LNA results still apply (rerun
    tone). Calibrated per envelope point with the offset DAC (codes −5..−7) the
    residual is ≤ 4.5 mV (target 10 mV); one tt code reused everywhere leaves
    more, so the FPGA should recalibrate on temperature/supply change. Filter OTA
-   offsets are not corrected.
+   offsets are not corrected. (risk: RXR-02)
 2. **Chain NF** (`tb.chain_tnoise`, transient noise with real LO switching,
    I output): 12.1 dB in 5–9 MHz (14.1 dB over 2–9 MHz), 22.2 dB via the LNA
    bypass; with a board LNA (15 dB, 1.5 dB NF): 2.8 dB, or 8.2 dB via bypass.
    ±1.5 dB statistical uncertainty; switch, VCM/bias and sub-2 MHz flicker noise
-   not modelled. Dominated by TIA noise through the modest LNA gm (3 mA budget).
+   not modelled. Dominated by TIA noise through the modest LNA gm (3 mA budget). (risk: RFR-01)
 3. **LNA**: −11 dB voltage gain into the 50 Ω/leg model, NF 3.3 dB only with an
    ideal board match, Zin 4.3 − j161 Ω unmatched; IIP3/P1dB and real board S11
-   not simulated; only two gain levels (gain_lo step −3 dB).
+   not simulated; only two gain levels (gain_lo step −3 dB). (risk: RFR-01)
 4. **Filter**: widest cutoff 15.2 MHz tt, 11.3–21.2 MHz over corners (≥ 10 MHz
    holds); narrowest 0.78 MHz; 1.7 dB peaking at tt widest (up to 3.7 dB at
    corners, target ≤ 1 dB); PGA 0..23 dB (target −6..42 dB); 5.8 mA per path
-   (target 4.5 mA). Fixed Qs, finite zeros not implemented.
+   (target 4.5 mA). Fixed Qs, finite zeros not implemented. (risk: RFR-02)
 5. **Mixer**: 1.9 mA (target 1.0 mA); output CM 1.61 V, which the filter passes
-   through to the ADC/txmix.
+   through to the ADC/txmix. (risk: PWR-08)
 6. **bb_tap**: pad CM ~0.8 V (external ADC must accept it); NMOS-only switches
-   limit inject to ≲ 2 V on the pad.
+   limit inject to ≲ 2 V on the pad. (risk: RFR-09)
 7. **Layout sensitivity**: extracted/schematic cutoff ratio ~0.86; recheck
-   extracted bandwidth after any re-layout.
+   extracted bandwidth after any re-layout. (risk: RFR-02)
 8. LO modelled as ideal 0/VDD square (LO generator not co-simulated); I/Q
    mismatch, IIP2/IIP3, LO leakage, Monte Carlo, aging and EM of the 0.4 µm M4
-   LNA supply tracks not covered.
+   LNA supply tracks not covered. (risk: RFR-05)
 
 Stretch (non-gating): 20 MHz corner only at fast corners (−15.5 dB at 20 MHz,
 tt); RX active current 18.2 mA (LNA 2.75 + 2 × 1.90 + 2 × 5.82), +1.0 mA per

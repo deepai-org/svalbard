@@ -127,7 +127,7 @@ Revision r2 (2026-11-09; `capture.py` docstrings carry the reasons):
   2026-11-09).  So the T/2 re-capture is valid only while
   T/2 + hold < delay < 1.5 T − setup.  At tt that means about 590 MHz–1 GHz,
   so 480 MHz fails.  The capture benches drive ideal sampler outputs with a
-  300 ps delay and do not see this.
+  300 ps delay and do not see this. (risk: WRX-09)
 
 | Signal | Dir | Meaning / timing |
 | --- | --- | --- |
@@ -217,7 +217,7 @@ corners (200 mVppd); 4.0 Gb/s fails at ss/22/3.15 and ss/32/3.15 (8/34 errors at
 (`generated/slicer-window.json`, 3.24 Gb/s, ss/22/3.15 and tt): data shifted ±0.2/0.3/0.4 quarter-UI
 against the assumed instant still 0 errors.  Output: D0 changes 0.47–0.58 ns (ff), 0.59–0.72 ns (tt),
 0.69–0.95 ns (ss) after QCK rises (r1: 0.95–1.63 ns) — `pt_wrx_cap`/fallback/CDR benches that use
-`slicer.ext.spice` must be rerun against r2.
+`slicer.ext.spice` must be rerun against r2. (risk: WRX-03)
 
 Why r1 failed and what changed: r1 passed 3.24 Gb/s at ss as a schematic but failed extracted (18/33
 errors at ss/22/3.15; 1/34 even at 1.92 Gb/s).  Probed: ~45 fF routing on each StrongARM output node
@@ -229,7 +229,7 @@ trims, NOR SR latch, enable gating) in one hand-placed row per sampler (`ws_sa`,
 when the bank is disabled with all clocks running; worst 0.087 V).
 
 **CDR extracted runs** (tt; `pll_ring.ext` r5 + `cdr.ext` [+ `slicer.ext`],
-analog-behavioural phase detector standing in for the RTL):
+analog-behavioural phase detector standing in for the RTL): (risk: WRX-01)
 
 | Run | Result |
 | --- | --- |
@@ -278,11 +278,11 @@ LVS unique.  Every r2 revision was 0 errors in schematic.  The bench now also
 checks EW (EW_k must equal data bit k+1; negative controls fail with 95 and 10
 errors), runs an EN = 0 safe case (< 10 µA, outputs < 0.3 V), and reports a
 95 % BER bound (3/bits checked, about 0.75 % for 400 bits).  That bound is
-weak; it is not a BER qualification.
+weak; it is not a BER qualification. (risk: WRX-12)
 
 **`WCLK_IN` fallback** (`run_fallback.py`, extracted slicer + extracted r2c
 capture, half mode, CKP0..3 = CK, CKP4..7 = !CK, eye centred on the CK
-edges, 2026-11-09):
+edges, 2026-11-09): (risk: WRX-09)
 
 | Case | DW errors | EW ≠ DW |
 | --- | --- | --- |
@@ -302,7 +302,7 @@ r2c run and is **fail**; rerun after the front fix.
 `cdr-evidence.json` and `cdr-rtl-check.json`; `netlists.py`, `sims.py`,
 `run_family.py` and `evidence.py` changed after every other evidence file
 (the block netlists and layouts themselves match).  Rerun
-`run_wired_rx.sh`.
+`run_wired_rx.sh`. (risk: MOD-12)
 
 ## W1 r3 and AC-3 status (2026-11-10 resume)
 
@@ -318,7 +318,7 @@ interface-changes.md W1-r3).  Why RCS=1 is needed: the r2 slicer's clock-to-outp
 the T/2 re-capture (0.62 ns at 810 MHz, 0.80 ns at 625 MHz) lands inside it; one period (1.23 ns at
 810 MHz) clears 0.95 ns + setup and the 0.15 ns local clock delay is below the 0.47 ns minimum delay.
 Layout: wc_front 1264 devices, 1356 × 45 µm; all cells and top Magic DRC 0, LVS unique.
-Simulation results: see the r3 table below (filled in as runs finish).
+Simulation results: see the r3 table below (filled in as runs finish). (risk: WRX-12)
 
 **AC-3 loop sizing (`cdr_model.py`, behavioural, not circuit evidence):** PFD held off from enable,
 RTL FLL and PD votes on the same pump legs (no hand-over), 4 legs × 32 nA into the existing 20 kΩ /
@@ -369,7 +369,7 @@ vote density ≈ 3500 ppm/µs (≥ 400 required).  `generated/cdr-model.json`.
   filter, leaving only a slow integral pump; (2) aggregate votes over M ring cycles before the pump
   (M = 8 cuts toggling 8×, adds 8 cycles of latency); (3) break-before-make steering with cascoded
   sources (source-node C ~1.5 fF instead of ~10 fF).  Estimate for (3) alone: still ~50 nA error at c3,
-  not enough.
+  not enough. (risk: MOD-12)
 * **Capture r4 (AC-3 PD + 40-bit boundary), schematic only so far.**  `capture.py` r4 adds `wc_pd`
   (per-bit Alexander votes UP0..3/DN0..3 from the aligned octet O/OP, registered on CKP1 one ring cycle
   later; quarter/half/full mode select) and `wc_gear` (2:1 after the 20-bit word: `DX[39:0]` = {later,
@@ -378,14 +378,14 @@ vote density ≈ 3500 ppm/µs (≥ 400 required).  `generated/cdr-model.json`.
   now checks the votes (with edge samples just after each boundary every transition must give UP on
   its leg and no DN, unused legs quiet) and the DX words (consecutive stream words).  PD latency from
   the sampling edge is about 5 ring cycles: **AC-3's ≤ 2 ring cycles is not met** (the loop model passes
-  with 6, but the requirement stands).
+  with 6, but the requirement stands). (risk: WRX-11)
 * **Phase trim `pt_ptrim` (new block, AC-3 ≤ 3°):** 8 channels PHk → CKPk, NAND + 5-bit binary switched
   MOS caps (~1.8 fF unit) + 3 inverters.  Schematic code sweep at 810 MHz, 150 fF load
   (`scratch/wired_rx/regen/ptrim_sch.json`): monotonic, step 0.80–0.86° (tt), 0.84–0.96° (ss/32/3.15),
   0.72–0.80° (ff/22/3.35), range 26.0/28.4/24.0°, so any error within ±5.7° trims to ≤ 0.5° (schematic;
   not extracted, trim-stage jitter not simulated).
   The generic row layout is DRC/LVS/KLayout clean but **290,000 µm² and not symmetric** (generic
-  router on clock nets): not usable as laid out; it needs a compact matched-row layout like the slicer.
+  router on clock nets): not usable as laid out; it needs a compact matched-row layout like the slicer. (risk: WRX-15)
 
 * **Slicer r3 (MT-01, coordinator request):** per-sampler trims (48 ports, 3+3 bits; r2 shared a code between
   the two samplers of a phase pair), dummy NOR balancing the SR-latch load, 0.5 µm balance gate on 2oa.
@@ -394,7 +394,7 @@ vote density ≈ 3500 ppm/µs (≥ 400 required).  `generated/cdr-model.json`.
   track control in the top router).  The r2 extraction and cells are kept in
   `scratch/wired_rx/regen/slicer_r2_published/`.  Requalification is pending: offsets/trim range and the
   ring plan at nominal (queued, `scratch/wired_rx/regen/queue.log`), then the 12 corners and a run with
-  the extracted CTLE driving SL_P/N.
+  the extracted CTLE driving SL_P/N. (risk: INT-05)
 * **Queue (one sim at a time, `scratch/wired_rx/regen/queue.sh`):** slicer r3 extracted nominal → pt_cdr
   r-ac3 extracted unit bench → WCLK_IN fallback on capture r4 + slicer r3 (RCS=1, 480/625/810 MHz tt and
   ss/32 °C/3.15 V, 100 mV).  Capture r4 benches (schematic + extracted: q625, q810/h625 RCS=1, f480,
@@ -408,7 +408,7 @@ vote density ≈ 3500 ppm/µs (≥ 400 required).  `generated/cdr-model.json`.
 * **Package demands (coordinator, spec/package-channel.md), open:** RX RL is 10.0 dB at 1.25 GHz (0 dB margin). The
   demands are 40–60 Ω termination trim (none today), CTLE 0–12 dB (extracted 1.6–8.1 dB today), a wide input CM, and
   qualification at P1–P4 (carrier 2/10/30/50 mm, bond ±0.3 mm; channel ISI 9–12 % at 2.5 Gb/s). No wired_rx bench
-  includes the package model yet.  Tracked as interface-changes.md PKG-W1.
+  includes the package model yet.  Tracked as interface-changes.md PKG-W1. (risk: WRX-04)
 
 ## Resume 4 (2026-11-10, in progress): CDR r-pi architecture (fixes AC3-W8)
 
@@ -463,7 +463,7 @@ vote density ≈ 3500 ppm/µs (≥ 400 required).  `generated/cdr-model.json`.
    equal margin either way, as today), direct to `O` for u ≥ 9; the octet
    latency is unchanged.  k is calibrated from raw words.  Two more items
    are pending and open: the `WORD_CLK`-to-word-load offset with the real
-   `pt_wordclk`, and the AC-3 40-bit/62.5 MHz boundary (an extra 2:1 stage).
+   `pt_wordclk`, and the AC-3 40-bit/62.5 MHz boundary (an extra 2:1 stage). (risk: WRX-09)
 1. **CDR is not demonstrated end to end extracted** (half/quarter).  Rerun
    2026-11-09 with `pll_ring` r6a extracted (`pll_ring_ext_sha256`
    e0fc5063… in `scratch/wired_rx/cdr-closed.json`): `acq_625m` passes its criterion but the
@@ -474,21 +474,21 @@ vote density ≈ 3500 ppm/µs (≥ 400 required).  `generated/cdr-model.json`.
    the extracted tracking runs fail.  Suspects: the PD stand-in timing and
    formula, ring port-phase skew, one-word decision latency.  Open: SSC
    acquisition after a hand-over, half-rate FLL margin, lock at corners,
-   use of `pt_pll_ring.HOLD`.
+   use of `pt_pll_ring.HOLD`. (risk: WRX-01)
 2. **`pt_wrx_cap` r2f evidence pending** (flow running, see above).  The
    capture benches are short (12 words); BER and jitter tolerance are not
-   measured.
-3. **Redesigned `pt_cdr` is unsimulated** (see Evidence currency).
+   measured. (risk: WRX-12)
+3. **Redesigned `pt_cdr` is unsimulated** (see Evidence currency). (risk: MOD-12)
 4. Slicer r2: ring plan closed at every corner (open loop, ideal clocks).  Open: margin above the plan is
    thin at ss/3.15 V (4 Gb/s fails); trim range is −23..+42 mV around a +14 mV systematic offset (target
    ±50 mV not met); ring phase error/jitter and the CKPk clock-tree load are not in the bench; the macro
    routing couples 12–21 fF between CKPk and outputs/trims/other phases and **34 fF CKP5→SL_P**: the
    bench drives SL_P/N from ideal sources, so clock kick-back into the CTLE/rxselect output is not
-   covered (rerun with the extracted CTLE/rxselect driving SL_P/N, or reroute SL_P/N away from CKP5).
-5. CTLE loses ~4.1 dB at 2.5 GHz; 5 Gb/s is exploration only.
+   covered (rerun with the extracted CTLE/rxselect driving SL_P/N, or reroute SL_P/N away from CKP5). (risk: WRX-03)
+5. CTLE loses ~4.1 dB at 2.5 GHz; 5 Gb/s is exploration only. (risk: WRX-13)
 6. Not implemented: termination trim, 8-bit detect thresholds, test-current
    trim, burst samplers, 96-bin phase bank, holdover, SSC qualification.
-   Not simulated: noise, metastability, mismatch Monte Carlo.
+   Not simulated: noise, metastability, mismatch Monte Carlo. (risk: WRX-14)
 7. Fallback routes `wire_wmon_scope`, `wire_detect_via_wmon`,
    `wire_cdr_external_clock`, `wire_cdr_fpga_oversample` are open
    (integration items); `wire_ctle_bypass` and `wire_board_termination` pass.

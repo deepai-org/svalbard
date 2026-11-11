@@ -30,20 +30,7 @@ safe and clean; host I/O pad hookup is checked at assembly.
 
 ## Open-issue register
 
-| Area | Current state | Open requirement |
-| --- | --- | --- |
-| Wired CDR | Frequency loop on `pll_ring` locks extracted. Phase tracking fails extracted at half and quarter rate. The behavioral loop passes ±300 ppm and SSC. | `HOLD` input on `pll_ring`, four-edge phase detector, fast RX capture block in compact cells, extracted tracking. The external-clock fallback (`WCLK_IN`) must be shown extracted. |
-| Wired TX speed | Serializer clean at 0.96 Gb/s across all corners; 1.25 Gb/s at tt/ff. Quarter rate (2.5–2.97 Gb/s) fails extracted. | Port the 4:1 mux and retiming to the compact fast cells. |
-| Slicer at ss | Quarter-rate slicer reaches 2.97 Gb/s at tt/ff, 1.5–2.0 Gb/s at ss. | Compact-cell rebuild for ss. |
-| Digital timing and area | Fast clocks reach 53–72 MHz at tt; host DDR pin clock limited to about 33 MHz; macro is 3.24 mm² of flip-flop arrays (no SRAM macros). | Pipelining (FIFO read muxes, stream framer, commit path) or reduced-rate operation; re-floorplan. |
-| ADC rate | 20 MS/s at tt/ff, 16 MS/s at ss; ENOB about 8 (coarse FFT). | 20 MHz Wi-Fi at ss uses the external-ADC route. |
-| RF RX noise | Chain NF 12.1 dB with board match; 2.8 dB with a board LNA. | Board LNA for sensitivity (B5). |
-| RF TX power | Saturated −0.1 dBm, linear −5.6 dBm with board match. | Linear-mode power is short of 0 dBm. |
-| Autonomous RF LO | Internal LO drive works extracted at 16 mA. LC VCO and passive polyphase are not built; autonomous RF exceeds the 240 mA ceiling. | Decided 2026-11-09: first die relies on the passive external LO (`rf_lo_external_ref`, requalified 12/12 corners). The analytical spiral has no EM/layout basis and the LC VCO bench does not reach 2.45 GHz; autonomous LO stays a post-first-die item. |
-| Observability | Test-bus cells, bias trunks and status registers exist; block taps are not wired to the test bus. | Integration: tap placement, mux codes, register hookup. |
-| Characterization structures | ESD_TEST, ring oscillator and VCO replica exist. Device replicas and resistor/MIM matching pairs are built as `pt_char_atb` (`analog/characterization`, ATB codes 43–54): DRC/LVS clean with LEF, extracted force/sense through the extracted ATB chain passes at 5 corners. | The VCO replica's VCTRL has no ATB code, so it floats when enabled (open register request `vco_replica_vctrl_atb`). The ESD_TEST GDS top-cell name collides with the RF pad pair. |
-| Top-level assembly | Obligations listed in `tapeout-readiness.json:top_assembly_obligations`. | Floorplan, ring routing, decap, full-chip DRC/LVS, package checks. |
-| Reproducibility | Evidence JSONs record source hashes and image IDs; the digital image is a non-byte-identical rebuild (`env/images/librelane-gf180-canary/rebuild-2026-11-08.json`). | Evidence marked stale in a block README must be regenerated with that block's run script before freeze. |
+Risks and open issues, in priority (score) order, live only in [`risk-register.md`](risk-register.md).
 
 ## Current architecture decisions
 

@@ -1,0 +1,74 @@
+/* pt_decap50 filler decap cells (verification/digital_hardening/decap/gen_decap.py). No signal pins and
+ * no timing; area and power pins only, so STA/power tools accept them in the netlist. */
+library(pt_decap50) {
+  delay_model : table_lookup ;
+  time_unit : 1ns ;
+  voltage_unit : 1V ;
+  current_unit : 1mA ;
+  capacitive_load_unit(1, pf) ;
+  leakage_power_unit : 1uW ;
+  nom_process : 1 ;
+  nom_temperature : 25 ;
+  nom_voltage : 3.3 ;
+  voltage_map(VDD, 3.3) ;
+  voltage_map(VNW, 3.3) ;
+  voltage_map(VSS, 0) ;
+  voltage_map(VPW, 0) ;
+  operating_conditions(typical) { process : 1 ; temperature : 25 ; voltage : 3.3 ; }
+  default_operating_conditions : typical ;
+  cell(pt_decap50_4) {
+    area : 8.7808 ;
+    dont_touch : true ;
+    dont_use : true ;
+    is_filler_cell : true ;
+    cell_leakage_power : 0 ;
+    pg_pin(VDD) { pg_type : primary_power ; voltage_name : VDD ; }
+    pg_pin(VSS) { pg_type : primary_ground ; voltage_name : VSS ; }
+    pg_pin(VNW) { pg_type : nwell ; voltage_name : VNW ; }
+    pg_pin(VPW) { pg_type : pwell ; voltage_name : VPW ; }
+  }
+  cell(pt_decap50_8) {
+    area : 17.5616 ;
+    dont_touch : true ;
+    dont_use : true ;
+    is_filler_cell : true ;
+    cell_leakage_power : 0 ;
+    pg_pin(VDD) { pg_type : primary_power ; voltage_name : VDD ; }
+    pg_pin(VSS) { pg_type : primary_ground ; voltage_name : VSS ; }
+    pg_pin(VNW) { pg_type : nwell ; voltage_name : VNW ; }
+    pg_pin(VPW) { pg_type : pwell ; voltage_name : VPW ; }
+  }
+  cell(pt_decap50_16) {
+    area : 35.1232 ;
+    dont_touch : true ;
+    dont_use : true ;
+    is_filler_cell : true ;
+    cell_leakage_power : 0 ;
+    pg_pin(VDD) { pg_type : primary_power ; voltage_name : VDD ; }
+    pg_pin(VSS) { pg_type : primary_ground ; voltage_name : VSS ; }
+    pg_pin(VNW) { pg_type : nwell ; voltage_name : VNW ; }
+    pg_pin(VPW) { pg_type : pwell ; voltage_name : VPW ; }
+  }
+  cell(pt_decap50_32) {
+    area : 70.2464 ;
+    dont_touch : true ;
+    dont_use : true ;
+    is_filler_cell : true ;
+    cell_leakage_power : 0 ;
+    pg_pin(VDD) { pg_type : primary_power ; voltage_name : VDD ; }
+    pg_pin(VSS) { pg_type : primary_ground ; voltage_name : VSS ; }
+    pg_pin(VNW) { pg_type : nwell ; voltage_name : VNW ; }
+    pg_pin(VPW) { pg_type : pwell ; voltage_name : VPW ; }
+  }
+  cell(pt_decap50_64) {
+    area : 140.4928 ;
+    dont_touch : true ;
+    dont_use : true ;
+    is_filler_cell : true ;
+    cell_leakage_power : 0 ;
+    pg_pin(VDD) { pg_type : primary_power ; voltage_name : VDD ; }
+    pg_pin(VSS) { pg_type : primary_ground ; voltage_name : VSS ; }
+    pg_pin(VNW) { pg_type : nwell ; voltage_name : VNW ; }
+    pg_pin(VPW) { pg_type : pwell ; voltage_name : VPW ; }
+  }
+}

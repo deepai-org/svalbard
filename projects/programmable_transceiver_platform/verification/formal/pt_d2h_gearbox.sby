@@ -1,0 +1,23 @@
+[tasks]
+prove
+cover
+
+[options]
+prove: mode prove
+cover: mode cover
+depth 28
+multiclock on
+
+[engines]
+prove: abc pdr
+cover: smtbmc yices
+
+[script]
+read -formal -sv pt_cells.sv pt_pattern.sv pt_host_link.sv pt_d2h_gearbox_fv.sv
+prep -top pt_d2h_gearbox_fv -flatten
+
+[files]
+../../rtl/pt_cells.sv
+../../rtl/pt_pattern.sv
+../../rtl/pt_host_link.sv
+pt_d2h_gearbox_fv.sv

@@ -97,7 +97,9 @@ def build_loopback():
     for mode in (0, 1, 2):
         s.write(0x01, 0x0000)
         s.cmds.append('9 1 1 0')           # ENABLE=0 must reach the word-clock domains: run 1 us
-        s.set_fields({'hostio.controls.d2h_enable': 1, 'debug.host_link.mode': mode})
+        # SDR forwarded clocks exist only at the reduced rates (rtl/pt_host_link.sv): SDR modes run at div2.
+        s.set_fields({'hostio.controls.d2h_enable': 1, 'debug.host_link.mode': mode,
+                      'debug.host_link.rate': 0 if mode == 0 else 1})
         s.commit()
         s.write(0x01, 0x0001)
         s.cmds.append('9 1 30 0')          # 30 us of 50 MHz word clock

@@ -20,26 +20,53 @@ separate mode.
 """
 import argparse
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
 
 LIB = '/pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/lib/gf180mcu_fd_sc_mcu7t5v0__{}.lib'
+# Characterized in-window libraries (libchar.py): 'char:<pvt>' selects
+# verification/digital_hardening/liberty/gf180mcu_fd_sc_mcu7t5v0__<pvt>.lib and turns the SDC envelope
+# derate off (PT_LIB_CHARACTERIZED). PT_STA_LEGACY_DERATE=1 restores the former tt x 1.54 / 0.71 corners.
+CHAR_LIB = str(Path(__file__).resolve().parent / 'liberty' / 'gf180mcu_fd_sc_mcu7t5v0__{}.lib')
 CORNERS = [  # (name, liberty pvt, rc, envelope timing corner, host rate divider)
-    ('ss_window_max_rate1', 'tt_025C_3v30', 'max', 'ss_window', 1),
+    ('ss32_window_max_rate1', 'char:ss_032C_3v15', 'max', 'ss_window', 1),
+    ('ss22_window_max_rate1', 'char:ss_022C_3v15', 'max', 'ss_window', 1),
     ('tt_nom_rate1', 'tt_025C_3v30', 'nom', 'tt', 1),
-    ('ff_window_min_rate1', 'tt_025C_3v30', 'min', 'ff_window', 1),
-    ('ss_window_max_rate2', 'tt_025C_3v30', 'max', 'ss_window', 2),
-    ('ff_window_min_rate2', 'tt_025C_3v30', 'min', 'ff_window', 2),
-    ('ss_window_max_rate4', 'tt_025C_3v30', 'max', 'ss_window', 4),
-    ('ff_window_min_rate4', 'tt_025C_3v30', 'min', 'ff_window', 4),
+    ('ff22_window_min_rate1', 'char:ff_022C_3v35', 'min', 'ff_window', 1),
+    ('ff32_window_min_rate1', 'char:ff_032C_3v35', 'min', 'ff_window', 1),
+    ('ss32_window_max_rate2', 'char:ss_032C_3v15', 'max', 'ss_window', 2),
+    ('ff22_window_min_rate2', 'char:ff_022C_3v35', 'min', 'ff_window', 2),
+    ('ss32_window_max_rate4', 'char:ss_032C_3v15', 'max', 'ss_window', 4),
+    ('ff22_window_min_rate4', 'char:ff_022C_3v35', 'min', 'ff_window', 4),
 ]
-CLOCKS = ['sclk', 'ref', 'hword', 'hcore', 'h2d', 'hpair_tx', 'hpair_rx', 'egress_wtx', 'egress_rftx',
+if os.environ.get('PT_STA_LEGACY_DERATE') == '1':
+    CORNERS = [
+        ('ss_window_max_rate1', 'tt_025C_3v30', 'max', 'ss_window', 1),
+        ('tt_nom_rate1', 'tt_025C_3v30', 'nom', 'tt', 1),
+        ('ff_window_min_rate1', 'tt_025C_3v30', 'min', 'ff_window', 1),
+        ('ss_window_max_rate2', 'tt_025C_3v30', 'max', 'ss_window', 2),
+        ('ff_window_min_rate2', 'tt_025C_3v30', 'min', 'ff_window', 2),
+        ('ss_window_max_rate4', 'tt_025C_3v30', 'max', 'ss_window', 4),
+        ('ff_window_min_rate4', 'tt_025C_3v30', 'min', 'ff_window', 4),
+    ]
+
+
+def lib_path(pvt):
+    return CHAR_LIB.format(pvt[5:]) if pvt.startswith('char:') else LIB.format(pvt)
+# AC-1 host clocks (transport rework 2026-11-10): hword (pin, host DDR clock line/16), hddr (after the
+# reduced-rate select: pad-edge DDR and gearboxes), hcore (hddr/2: 40-bit transport core); shared
+# ingress/egress banks have mux clocks.
+CLOCKS = ['sclk', 'ref', 'hword', 'hddr', 'hcore', 'h2d', 'ingress_wrx', 'ingress_rfrx', 'egress_wtx', 'egress_rftx',
           'wtx', 'wrx', 'rftx', 'rfrx', 'ctw', 'ctref', 'ctdet', 'fc0', 'fc1', 'fc2', 'fc3', 'fc4', 'fc5']
 PERIOD_VAR = dict(sclk='SCLK_PERIOD', ref='REF_PERIOD', hword='HWORD_PERIOD', wtx='WTX_PERIOD', wrx='WRX_PERIOD',
                   rftx='RFTX_PERIOD', rfrx='RFRX_PERIOD', ctw='CTW_PERIOD', ctdet='CTDET_PERIOD',
                   fc0='FC_PERIOD')
 FMAX_CLOCKS = ['hword', 'wtx', 'wrx', 'ctw', 'ctdet', 'rftx', 'rfrx', 'sclk', 'ref', 'fc0']
+# Generated host clocks are swept through the host DDR clock period: the reported value is the host
+# DDR clock fmax that this domain allows (hddr runs at 1/HOST_RATE_DIV, hcore at half of that).
+FMAX_DERIVED = [('hddr', 'HWORD_PERIOD'), ('hcore', 'HWORD_PERIOD')]
 
 TCL = r'''
 read_liberty {lib}
@@ -47,7 +74,7 @@ read_verilog {netlist}
 link_design pt_digital_macro
 read_spef {spef}
 proc pt_load_sdc {{}} {{
-  global PT_TIMING_CORNER HOST_RATE_DIV HCORE_PERIOD SCLK_PERIOD REF_PERIOD HWORD_PERIOD WTX_PERIOD WRX_PERIOD RFTX_PERIOD RFRX_PERIOD CTW_PERIOD CTDET_PERIOD FC_PERIOD H2D_PERIOD CTREF_PERIOD
+  global PT_TIMING_CORNER PT_LIB_CHARACTERIZED HOST_RATE_DIV HLINK_PERIOD HDDR_PERIOD HCORE_PERIOD SCLK_PERIOD REF_PERIOD HWORD_PERIOD WTX_PERIOD WRX_PERIOD RFTX_PERIOD RFRX_PERIOD CTW_PERIOD CTDET_PERIOD FC_PERIOD H2D_PERIOD CTREF_PERIOD
   source {sdc}
   set_propagated_clock [all_clocks]
 }}
@@ -67,6 +94,7 @@ proc pt_paths {{clk dly n}} {{
   return $out
 }}
 set PT_TIMING_CORNER {tcorner}
+set PT_LIB_CHARACTERIZED {charlib}
 set HOST_RATE_DIV {rate}
 proc pt_default_periods {{}} {{
   global PT_TIMING_CORNER HOST_RATE_DIV SCLK_PERIOD REF_PERIOD HWORD_PERIOD WTX_PERIOD WRX_PERIOD RFTX_PERIOD RFRX_PERIOD CTW_PERIOD CTDET_PERIOD FC_PERIOD H2D_PERIOD CTREF_PERIOD
@@ -74,7 +102,7 @@ proc pt_default_periods {{}} {{
 }}
 pt_default_periods
 pt_load_sdc
-puts "PT_TARGETS [list sclk $SCLK_PERIOD ref $REF_PERIOD hword $HWORD_PERIOD h2d $H2D_PERIOD hcore $HCORE_PERIOD hpair_tx [expr {{2*$HCORE_PERIOD}}] hpair_rx [expr {{2*$HCORE_PERIOD}}] egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD ctw $CTW_PERIOD ctref $CTREF_PERIOD ctdet $CTDET_PERIOD]"
+puts "PT_TARGETS [list sclk $SCLK_PERIOD ref $REF_PERIOD hword $HWORD_PERIOD h2d $H2D_PERIOD hlink $HLINK_PERIOD hddr $HDDR_PERIOD hcore $HCORE_PERIOD ingress_wrx $WRX_PERIOD ingress_rfrx $RFRX_PERIOD egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD ctw $CTW_PERIOD ctref $CTREF_PERIOD ctdet $CTDET_PERIOD]"
 foreach c {{{clocks}}} {{
   puts "PT_SLACK $c [pt_slack $c max] [pt_slack $c min]"
   puts "PT_WORST_SETUP $c [list [pt_paths $c max 3]]"
@@ -134,13 +162,13 @@ def run_corner(name, pvt, rc, tcorner, rate, run, sdc, out):
     netlist = next((run / 'final/nl').glob('*.nl.v'))
     spefs = sorted((run / 'final/spef').rglob('*.spef'))
     spef = next((s for s in spefs if f'{rc}_' in s.parent.name or s.parent.name == rc or f'.{rc}' in s.name), spefs[0])
-    fmax = ' '.join(f'{c} {PERIOD_VAR[c]}' for c in FMAX_CLOCKS)
-    tcl = TCL.format(lib=LIB.format(pvt), netlist=netlist, spef=spef, sdc=sdc, clocks=' '.join(CLOCKS), fmax=fmax,
-                     out=out, corner=name, tcorner=tcorner, rate=rate)
+    fmax = ' '.join([f'{c} {PERIOD_VAR[c]}' for c in FMAX_CLOCKS]+[f'{c} {v}' for c, v in FMAX_DERIVED])
+    tcl = TCL.format(lib=lib_path(pvt), netlist=netlist, spef=spef, sdc=sdc, clocks=' '.join(CLOCKS), fmax=fmax,
+                     out=out, corner=name, tcorner=tcorner, rate=rate, charlib=int(pvt.startswith('char:')))
     (out / f'{name}.tcl').write_text(tcl)
     r = subprocess.run(['sta', '-no_init', '-exit', str(out / f'{name}.tcl')], capture_output=True, text=True)
     (out / f'{name}.log').write_text(r.stdout + r.stderr)
-    res = dict(timing_corner=tcorner, host_rate_div=rate, liberty=LIB.format(pvt).rsplit('/', 1)[1], spef=str(spef).split('/final/')[-1], netlist=netlist.name,
+    res = dict(timing_corner=tcorner, host_rate_div=rate, liberty=lib_path(pvt).rsplit('/', 1)[1], spef=str(spef).split('/final/')[-1], netlist=netlist.name,
                slack={}, worst_setup={}, worst_hold={}, crossings=[], fmax_mhz={}, rc=r.returncode)
     for ln in r.stdout.splitlines():
         t = ln.split()

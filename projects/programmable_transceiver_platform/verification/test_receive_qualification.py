@@ -16,7 +16,10 @@ class ReceiveQualificationTests(unittest.TestCase):
         import baseline_envelope
         from design_definition import load_design
         field=load_design().architecture['control_fields']['cdr.config']['fields']['acquisition_timeout_ui']
-        self.assertEqual(field['bits'],24)
+        # R3 re-encoding: a 10-bit mant_exp code whose decoded value spans the former 24-bit range.
+        self.assertEqual(field.get('decoded_bits',field['bits']),24)
+        maximum_ui=field.get('value_maximum',field['maximum'])
+        self.assertEqual(maximum_ui,(1<<24)-1)
         ui=1/2.5e9
         rx=ReceiveQualification(ui_s=ui,acquisition_ui=300000,count_recovered_edges=True)
         rx.observe(0.,recovered_edge_count=0)
@@ -24,11 +27,11 @@ class ReceiveQualificationTests(unittest.TestCase):
         self.assertEqual(waiting.state,'acquiring');self.assertFalse(waiting.valid)
         self.assertTrue(rx.observe(265000*ui,transition=True,phase_qualified=True,recovered_edge_count=265000).valid)
         self.assertEqual(rx.observe(265065*ui,recovered_edge_count=265065).fault,'unexpected_rx_loss')
-        maximum=ReceiveQualification(ui_s=ui,acquisition_ui=field['maximum'],count_recovered_edges=True)
+        maximum=ReceiveQualification(ui_s=ui,acquisition_ui=maximum_ui,count_recovered_edges=True)
         maximum.observe(0.,recovered_edge_count=0)
-        self.assertEqual(maximum.observe(field['maximum']*ui,transition=True,phase_qualified=True,
-            recovered_edge_count=field['maximum']).fault,'acquisition_timeout')
-        with self.assertRaises(ValueError):ReceiveQualification(ui_s=ui,acquisition_ui=field['maximum']+1)
+        self.assertEqual(maximum.observe(maximum_ui*ui,transition=True,phase_qualified=True,
+            recovered_edge_count=maximum_ui).fault,'acquisition_timeout')
+        with self.assertRaises(ValueError):ReceiveQualification(ui_s=ui,acquisition_ui=maximum_ui+1)
         with self.assertRaises(ValueError):ReceiveQualification(ui_s=ui,holdover_ui=65536)
 
     def test_many_packet_gaps_preserve_session_without_fault(self):

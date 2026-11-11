@@ -11,6 +11,9 @@ from pathlib import Path
 import subprocess
 
 PROJECT = Path(__file__).resolve().parents[1]
+# AC-1 transport: pad-edge host link + 40-bit core (sim/pt_transport_harness.sv wraps both).
+TRANSPORT_RTL = ['pt_host_link.sv', 'pt_core.sv', 'pt_quad_link.sv', 'pt_quad_gearbox.sv', 'pt_linecode.sv',
+                 'pt_dense_header.sv', 'pt_fifo.sv', 'pt_cells.sv', 'pt_pattern.sv']
 ROOT = PROJECT.parents[1]
 
 
@@ -18,8 +21,7 @@ def check(out):
     out.mkdir(parents=True, exist_ok=True)
     (out/'report.json').write_text('{"status":"incomplete"}\n')
     sources = [PROJECT/'sim/tb_dense_service.sv']+[PROJECT/'rtl'/name for name in
-               ['pt_core.sv', 'pt_core_pair.sv', 'pt_pair_gearbox.sv', 'pt_dense_pair.sv',
-                'pt_dense_pair_link.sv', 'pt_dense_header.sv', 'pt_fifo.sv']]+[PROJECT/'sim/reference/pt_dense_transport.sv']
+               TRANSPORT_RTL]+[PROJECT/'sim/pt_transport_harness.sv', PROJECT/'sim/reference/pt_dense_transport.sv']
     checked_sources = sources+[Path(__file__).resolve()]
     hashes = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in checked_sources}
     results = []

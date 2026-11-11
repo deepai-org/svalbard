@@ -12,10 +12,10 @@ from pathlib import Path
 P = Path(__file__).resolve().parents[2]
 ROOT = P.parents[1]
 SOURCES = ['rtl/pt_digital_macro.sv', 'rtl/pt_host_link.sv', 'rtl/pt_digital.sv', 'rtl/pt_regfile.sv', 'rtl/pt_spi.sv',
-           'rtl/pt_dense_header.sv', 'rtl/pt_core.sv', 'rtl/pt_core_pair.sv', 'rtl/pt_dense_pair.sv', 'rtl/pt_dense_pair_link.sv',
-           'rtl/pt_pair_gearbox.sv', 'rtl/pt_fifo.sv', 'rtl/pt_memory.sv', 'rtl/pt_pattern.sv', 'rtl/pt_helpers.sv',
+           'rtl/pt_dense_header.sv', 'rtl/pt_core.sv', 'rtl/pt_quad_link.sv', 'rtl/pt_quad_gearbox.sv', 'rtl/pt_cells.sv',
+           'rtl/pt_fifo.sv', 'rtl/pt_pattern.sv', 'rtl/pt_helpers.sv',
            'rtl/pt_clocktree_slow.sv', 'rtl/pt_freq_count.sv', 'rtl/pt_regmap_defs.svh', 'spec/debug-controls.json',
-           'sim/tb_pt_freq_count.sv', 'sim/tb_digital_wire20.sv', 'sim/reference/pt_dense_transport.sv', 'integration/pt_digital_macro.sdc',
+           'sim/tb_pt_freq_count.sv', 'sim/tb_digital_wire40.sv', 'sim/reference/pt_dense_transport.sv', 'integration/pt_digital_macro.sdc',
            'verification/digital_hardening/config.json', 'sim/tb_digital_gl.sv', 'sim/tb_async_fifo_regout.sv',
            'verification/run_digital_hardening.sh', 'verification/digital_hardening/report.py',
            'verification/digital_hardening/Dockerfile', 'verification/digital_hardening/prepare_toolchain.py',

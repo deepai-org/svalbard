@@ -333,8 +333,11 @@ transceiver-dense-service:
 transceiver-atb-tree:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_atb_tree.py --output-dir scratch/atb-tree-current
 
-# The default paired core also needs codec, gear conversion and RF service
-# evidence. Functional passes do not establish routed rate closure.
+# The AC-1 quad core (40-bit at host word clock / 4, pad-edge DDR gearboxes) also needs codec,
+# gear conversion and RF service evidence. The target names are kept from the paired core:
+# dense-pair = quad engine codec, dense-pair-link = quad link through both pad-edge gearboxes,
+# pair-gearbox[-formal] = sample/quad converters, pair-word-formal = D2H gearbox/MCP proof.
+# Functional passes do not establish routed rate closure.
 .PHONY: transceiver-dense-pair transceiver-dense-pair-link transceiver-core-bias-observation transceiver-pair-gearbox transceiver-dense-rf-service transceiver-pair-word-formal transceiver-freq-count-formal transceiver-sync-fifo-depth transceiver-shared-egress-lifecycle transceiver-dense-rf-burst
 transceiver-dense-pair:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_dense_pair.py
@@ -419,19 +422,30 @@ DIGITAL_HARDENING_STAGES ?=
 transceiver-digital-hardening: transceiver-digital-rtl-checks transceiver-pair-word-formal transceiver-pair-gearbox-formal transceiver-freq-count-formal
 	bash projects/programmable_transceiver_platform/verification/run_digital_hardening.sh $(DIGITAL_HARDENING_STAGES)
 # RTL checks of the blocks added for the hardened macro: registered-read FIFO equivalence,
-# frequency counter (P3-7) and the 20-bit wired boundary end to end (P3-6).
+# frequency counter (P3-7), the AC-1 40-bit wired boundary end to end through the pad-edge host
+# link (S2/S3), the AC-1 transport CDC FIFO (any even depth, conservative counts), the IX-2 8b/10b
+# offload and the RXR-D2 fast gain command (opcode4) end to end.
 transceiver-digital-rtl-checks: transceiver-dense-transport transceiver-dense-service transceiver-dense-pair transceiver-dense-pair-link transceiver-pair-gearbox transceiver-dense-rf-service transceiver-sync-fifo-depth transceiver-shared-egress-lifecycle transceiver-dense-rf-burst
 	cd projects/programmable_transceiver_platform && \
 	iverilog -g2012 -s tb_async_fifo_regout -o /tmp/pt_fifo_regout.vvp rtl/pt_fifo.sv sim/tb_async_fifo_regout.sv && \
 	vvp -n /tmp/pt_fifo_regout.vvp | grep -q FIFO_REGOUT_PASS && \
-	iverilog -g2012 -s tb_pt_freq_count -o /tmp/pt_freq_count.vvp rtl/pt_freq_count.sv rtl/pt_fifo.sv rtl/pt_pattern.sv sim/tb_pt_freq_count.sv && \
+	iverilog -g2012 -s tb_pt_freq_count -o /tmp/pt_freq_count.vvp rtl/pt_freq_count.sv rtl/pt_fifo.sv rtl/pt_pattern.sv rtl/pt_cells.sv sim/tb_pt_freq_count.sv && \
 	vvp -n /tmp/pt_freq_count.vvp | grep -q FREQ_COUNT_PASS && \
-	iverilog -g2012 -s tb_freq_gray_prefix -o /tmp/pt_freq_gray_prefix.vvp rtl/pt_freq_count.sv rtl/pt_fifo.sv rtl/pt_pattern.sv sim/tb_freq_gray_prefix.sv && \
+	iverilog -g2012 -s tb_freq_gray_prefix -o /tmp/pt_freq_gray_prefix.vvp rtl/pt_freq_count.sv rtl/pt_fifo.sv rtl/pt_pattern.sv rtl/pt_cells.sv sim/tb_freq_gray_prefix.sv && \
 	vvp -n /tmp/pt_freq_gray_prefix.vvp | grep -q FREQ_GRAY_PREFIX_PASS && \
-	iverilog -g2012 -I rtl -s tb_digital_wire20 -o /tmp/pt_wire20.vvp sim/tb_digital_wire20.sv sim/reference/pt_dense_transport.sv rtl/*.sv && \
-	vvp -n /tmp/pt_wire20.vvp | grep -q WIRE20_PASS && \
+	iverilog -g2012 -I rtl -s tb_digital_wire40 -o /tmp/pt_wire40.vvp sim/tb_digital_wire40.sv sim/reference/pt_dense_transport.sv rtl/*.sv && \
+	vvp -n /tmp/pt_wire40.vvp | grep -q WIRE40_PASS && \
+	iverilog -g2012 -s tb_cdc_fifo -o /tmp/pt_cdc_fifo.vvp rtl/pt_fifo.sv sim/tb_cdc_fifo.sv && \
+	vvp -n /tmp/pt_cdc_fifo.vvp | grep -q CDC_FIFO_PASS && \
+	iverilog -g2012 -I rtl -s tb_memory_mode -o /tmp/pt_memory_mode.vvp sim/tb_memory_mode.sv rtl/pt_core.sv rtl/pt_fifo.sv rtl/pt_quad_link.sv rtl/pt_quad_gearbox.sv rtl/pt_linecode.sv rtl/pt_dense_header.sv rtl/pt_cells.sv && \
+	vvp -n /tmp/pt_memory_mode.vvp | grep -q MEMORY_MODE_PASS && \
 	iverilog -g2012 -s tb_host_rate_clock -o /tmp/pt_host_rate_clock.vvp rtl/pt_host_link.sv rtl/pt_pattern.sv sim/tb_host_rate_clock.sv && \
-	vvp -n /tmp/pt_host_rate_clock.vvp | grep -q HOST_RATE_CLOCK_PASS
+	vvp -n /tmp/pt_host_rate_clock.vvp | grep -q HOST_RATE_CLOCK_PASS && \
+	iverilog -g2012 -s tb_pt_vreg_seq -o /tmp/pt_vreg_seq.vvp rtl/pt_vreg_seq.sv rtl/pt_fifo.sv sim/tb_pt_vreg_seq.sv && \
+	vvp -n /tmp/pt_vreg_seq.vvp | grep -q VREG_SEQ_PASS && \
+	$(PYTHON) verification/check_interp2x.py | grep -q INTERP2X_PASS && \
+	$(PYTHON) verification/check_linecode.py | grep -q LINECODE_PASS && \
+	$(PYTHON) verification/check_fast_gain.py | grep -q FAST_GAIN_PASS
 
 .PHONY: transceiver-gpio-screen
 transceiver-gpio-screen:

@@ -1,12 +1,13 @@
 {
  "generated_by": "spec/budgets/power_budget.py",
  "inputs": {
-  "spec/analog-architecture.json": "6113db8a7561e966",
+  "spec/analog-architecture.json": "541d2bfa83633d99",
   "evidence/digital-hardening-evidence.json": "e31e29c0caa1f5d1",
   "evidence/host-power-allocation-screen.json": "edb8eeb4ad534cfe",
   "evidence/artix-load-power-screen.json": "953a22d507e7d6da",
   "evidence/clock-power-screen.json": "299953a59d6eadc3",
-  "analog/island_support/evidence.json": "b3c1a38508b3d3dd"
+  "analog/island_support/evidence.json": "b3c1a38508b3d3dd",
+  "analog/rf_tx/generated/rf_tx-sim-ext.json": "cfde186674a94a21"
  },
  "envelope": {
   "tj_c": [
@@ -72,6 +73,13 @@
    "basis": "evidence/host-power-allocation-screen.json, evidence/artix-load-power-screen.json (two-pad extrapolation + 25 % and 2 mA allowances; nominal; no SSO)",
    "budget_case_ma": 116.82,
    "status": "marginal: 8 pF Artix load exceeds the 110 mA allocation by 6.8 mA"
+  },
+  "rfdriver": {
+   "allocation_ma": 28.92,
+   "budget_case_ma": 58.73,
+   "worst_bench": "drv_a600",
+   "basis": "analog/rf_tx/generated/rf_tx-sim-ext.json: max rfdriver supply (island rail + board DC feed through the RF_TX chokes) over every extracted code-15/linear/saturated/corner bench at the envelope",
+   "status": "evidence: allocation is 29.8 mA low"
   }
  },
  "cases": {
@@ -151,6 +159,39 @@
    "evidence_margin_ma": 287.38,
    "with_digital_requirement_ma": 4.62,
    "with_digital_requirement_margin_ma": 287.38
+  },
+  "rf_tx_external_clock": {
+   "mode": "rf_tx",
+   "branch_override": "external_rf_clock",
+   "ceiling_ma": 240,
+   "allocation_ma": 253.9,
+   "allocation_margin_ma": -13.9,
+   "evidence_bound_ma": 323.01,
+   "evidence_margin_ma": -83.01,
+   "with_digital_requirement_ma": 222.81,
+   "with_digital_requirement_margin_ma": 17.19
+  },
+  "rf_tx_autonomous": {
+   "mode": "rf_tx",
+   "branch_override": null,
+   "ceiling_ma": 240,
+   "allocation_ma": 282.83,
+   "allocation_margin_ma": -42.83,
+   "evidence_bound_ma": 351.94,
+   "evidence_margin_ma": -111.94,
+   "with_digital_requirement_ma": 251.74,
+   "with_digital_requirement_margin_ma": -11.74
+  },
+  "rf_duplex_external_clock": {
+   "mode": "rf_rx",
+   "branch_override": "external_rf_clock",
+   "ceiling_ma": 240,
+   "allocation_ma": 262.9,
+   "allocation_margin_ma": -22.9,
+   "evidence_bound_ma": 332.01,
+   "evidence_margin_ma": -92.01,
+   "with_digital_requirement_ma": 231.81,
+   "with_digital_requirement_margin_ma": 8.19
   }
  },
  "island_switch": {
@@ -192,30 +233,30 @@
  },
  "supply_drop": {
   "allocation": {
-   "i_max_ma": 262.02,
-   "board_mv": 5.2,
-   "bond_mv": 26.2,
-   "grid_mv": 26.2,
+   "i_max_ma": 282.83,
+   "board_mv": 5.7,
+   "bond_mv": 28.3,
+   "grid_mv": 28.3,
    "island_switch_mv": 19.9,
-   "total_mv": 77.5,
+   "total_mv": 82.1,
    "available_mv": 117.0,
-   "margin_mv": 39.5,
+   "margin_mv": 34.9,
    "supply_cells_needed_at_60ma": 5,
    "supply_cells_available": 8,
-   "cell_utilization_even_share": 0.546
+   "cell_utilization_even_share": 0.589
   },
   "evidence_bound": {
-   "i_max_ma": 331.13,
-   "board_mv": 6.6,
-   "bond_mv": 33.1,
-   "grid_mv": 33.1,
+   "i_max_ma": 351.94,
+   "board_mv": 7.0,
+   "bond_mv": 35.2,
+   "grid_mv": 35.2,
    "island_switch_mv": 19.9,
-   "total_mv": 92.7,
+   "total_mv": 97.3,
    "available_mv": 117.0,
-   "margin_mv": 24.3,
+   "margin_mv": 19.7,
    "supply_cells_needed_at_60ma": 6,
    "supply_cells_available": 8,
-   "cell_utilization_even_share": 0.69
+   "cell_utilization_even_share": 0.733
   },
   "with_digital_requirement": {
    "i_max_ma": 278.37,
@@ -233,23 +274,23 @@
  },
  "thermal": {
   "allocation": {
-   "p_max_w": 0.929,
+   "p_max_w": 0.999,
    "p_stopped_w": 0.015,
    "free_air_rise_c": [
-    37.2,
-    92.9
+    40.0,
+    99.9
    ],
-   "required_theta_junction_to_controlled_plate_c_per_w": 8.75,
+   "required_theta_junction_to_controlled_plate_c_per_w": 8.13,
    "note": "Tj window 10 C minus 2 C control tolerance must absorb the full stopped-to-max power step (mode switches are faster than any plate loop)."
   },
   "evidence_bound": {
-   "p_max_w": 1.161,
+   "p_max_w": 1.23,
    "p_stopped_w": 0.015,
    "free_air_rise_c": [
-    46.4,
-    116.1
+    49.2,
+    123.0
    ],
-   "required_theta_junction_to_controlled_plate_c_per_w": 6.98,
+   "required_theta_junction_to_controlled_plate_c_per_w": 6.58,
    "note": "Tj window 10 C minus 2 C control tolerance must absorb the full stopped-to-max power step (mode switches are faster than any plate loop)."
   },
   "with_digital_requirement": {

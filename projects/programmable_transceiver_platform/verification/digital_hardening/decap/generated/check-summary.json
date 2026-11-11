@@ -1,0 +1,48 @@
+{
+ "drc_categories": {
+  "drc-pt_decap50_test-main": {
+   "DF.13_MV": 19,
+   "DF.14_MV": 18
+  },
+  "drc-pt_decap50_test-antenna": {},
+  "drc-pt_decap50_64-main": {
+   "DF.13_MV": 1,
+   "DF.14_MV": 1
+  },
+  "drc-pt_decap50_64-antenna": {}
+ },
+ "drc_note": "DF.13_MV/DF.14_MV are well-tap distance rules (no tap inside a filler, as the library fillcap); taps come from the flow tap cells. Everything else 0, abutted to library cells in mirrored rows.",
+ "lvs": {
+  "pt_decap50_4": "match",
+  "pt_decap50_8": "match",
+  "pt_decap50_16": "match",
+  "pt_decap50_32": "match",
+  "pt_decap50_64": "match"
+ },
+ "lvs_method": "KLayout gf180mcu run_lvs.py --variant=D --top_lvl_pins --run_mode=flat, calibrated: the library fillcap_8 matches with the same reference form",
+ "capacitance": {
+  "unit": "fF at 100 MHz, ss/32C/3.15V (typical in parentheses)",
+  "fillcap_16": 19.0,
+  "pt_decap50_16": 23.5,
+  "fillcap_32": 38.0,
+  "pt_decap50_32": 49.6,
+  "fillcap_64": 76.0,
+  "pt_decap50_64": 91.5,
+  "pt_decap50_4": 4.8,
+  "fillcap_4_equiv": 4.8,
+  "pt_decap50_8": 9.5,
+  "fillcap_8": 9.5,
+  "density_fF_per_um2": {
+   "fillcap": 0.541,
+   "pt_decap50_16": 0.67,
+   "pt_decap50_32": 0.707,
+   "pt_decap50_64": 0.651
+  },
+  "thin_oxide_gate_density_fF_per_um2": {
+   "nfet_03v3": 3.99,
+   "pfet_03v3": 4.08,
+   "nfet_05v0": 2.12,
+   "pfet_05v0": 2.11
+  }
+ }
+}

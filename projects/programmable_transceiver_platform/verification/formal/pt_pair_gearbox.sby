@@ -4,15 +4,15 @@ unpack
 
 [options]
 mode prove
-depth 1
+depth 2
 
 [engines]
 smtbmc yices
 
 [script]
-read -formal -sv pt_pair_gearbox.sv
-unpack: chparam -set PACK 0 pt_pair_gearbox
-prep -top pt_pair_gearbox
+read -formal -sv pt_quad_gearbox.sv
+pack: prep -top pt_sample_pack
+unpack: prep -top pt_sample_unpack
 
 [files]
-../../rtl/pt_pair_gearbox.sv
+../../rtl/pt_quad_gearbox.sv

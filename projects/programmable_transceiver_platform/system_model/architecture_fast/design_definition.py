@@ -178,7 +178,9 @@ def _validate(contract, architecture):
             if isinstance(delay,bool) or not isinstance(delay,(float,int)) or not math.isfinite(delay) or delay<=0:
                 raise ValueError('Positive periodic-clock processing delay required')
             timeout=cdr.get('acquisition_timeout_ui')
-            maximum=_required(architecture,'control_fields')['cdr.config']['fields']['acquisition_timeout_ui']['maximum']
+            field=_required(architecture,'control_fields')['cdr.config']['fields']['acquisition_timeout_ui']
+            # R3: the field may be a mant_exp code; the timeout range is the decoded value range.
+            maximum=field.get('value_maximum',field['maximum'])
             if type(timeout) is not int or not 1<=timeout<=maximum:
                 raise ValueError('Periodic-clock acquisition timeout outside control range')
             if cdr.get('periodic_observation_link') is not None:

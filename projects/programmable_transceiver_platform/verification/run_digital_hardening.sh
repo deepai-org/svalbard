@@ -46,6 +46,9 @@ pnr)
   rm -rf "$OUT/design"; mkdir -p "$OUT/design/rtl" "$OUT/home" "$OUT/tmp"
   cp "$PROJ"/rtl/*.sv "$PROJ"/rtl/*.svh "$PROJ"/rtl/*.vh "$OUT/design/rtl/"
   cp "$PROJ/integration/pt_digital_macro.sdc" "$PROJ/verification/digital_hardening/config.json" "$PROJ/verification/digital_hardening/pin_order.cfg" "$OUT/design/"
+  # In-window characterized Liberty (libchar.py): synthesis, placement, CTS and resizer optimize setup
+  # against ss_032C_3v15 (and hold against ff) directly, not a derated tt library.
+  mkdir -p "$OUT/design/lib"; cp "$PROJ"/verification/digital_hardening/liberty/*.lib "$OUT/design/lib/"
   # Optional overrides (recorded in the evidence), e.g. LL_OVERRIDE='{"RT_MAX_LAYER": "Metal5"}'
   if [ -n "${LL_OVERRIDE:-}" ]; then
     python3 -c 'import json,sys;p=sys.argv[1];c=json.load(open(p));c.update(json.loads(sys.argv[2]));json.dump(c,open(p,"w"),indent=2)' \

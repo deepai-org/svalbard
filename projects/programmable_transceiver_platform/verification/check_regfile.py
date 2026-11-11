@@ -116,7 +116,7 @@ class Model:
         elif M.register_at(a):
             reg = M.register_at(a)
             if M.reg_write_ok(reg, d):
-                M.reg_apply(reg, d, self.shadow)
+                M.reg_apply(reg, d, self.shadow, self.active)
             else:
                 self.cfg_err |= M.ERR_WRITE_RANGE
                 self.err_addr = a
@@ -130,7 +130,7 @@ class Model:
         return int(any(self.shadow[k] != self.active[k] for k in self.shadow))
 
     def read(self, a):
-        on = M.outputs(self.active, self.pgood, self.fault)['island_on']
+        on = M.outputs(self.active, self.pgood, self.fault, self.enable)['island_on']
         fixed = {0x00: M.ID_VALUE, 0x01: self.enable, 0x02: self.mode8, 0x03: STATUS, 0x04: self.rejected,
                  0x05: self.cfg_err, 0x06: (self.count << 8) | (self.pending() << 2) | (self.last_ok << 1) | self.toggle,
                  0x07: self.view, 0x08: M.ABI_VERSION, 0x09: M.MAP_HASH, 0x0A: (self.pgood << 8) | on,
@@ -148,7 +148,7 @@ class Model:
         return 0
 
     def snapshot(self, in_reset=False, mid=False):
-        o = M.outputs(self.active, self.pgood, self.fault)
+        o = M.outputs(self.active, self.pgood, self.fault, self.enable)
         v = o['fields']
         cs = F['debug.clk_select.rf_lo']['values']
         obs_src = F['debug.clk_obs.source']['values']
@@ -383,7 +383,7 @@ def build(seed, n_random):
             'debug.bb_tap.mode': 1, 'consolidation.pll.owner': 1, 'consolidation.pll.feedback_n': 2, 'rfpll.state.state': 1,
             'consolidation.bbfilter.direction': 1, 'consolidation.bbfilter.bw': 5, 'consolidation.bbfilter.gain': 9,
             'slicer.offset.data': 0xAB, 'rfdriver.gain.code': 0xD7, 'adc_i.config.decision_ns': 77,
-            'monitor.config.qualification_ticks': 0x12345678,
+            'monitor.config.qualification_ticks': 0x5A3,  # mant_exp code (decoded 32-bit value on analog_cfg)
             'usbhs.bias.code': 0x7F, 'usbhs.bias.enable': 1}
     s.reset()
     s.set_fields(rich)
@@ -653,7 +653,7 @@ def main():
     leg = out / 'legacy'
     leg.mkdir(parents=True, exist_ok=True)
     subprocess.run(['iverilog', '-g2012', '-I', str(P / 'rtl'), '-o', str(leg / 'tb.vvp'), str(P / 'sim/tb_regfile_legacy.sv'),
-                    str(P / 'rtl/pt_spi.sv'), str(P / 'sim/reference/pt_control.sv'), args.rtl], check=True)
+                    str(P / 'rtl/pt_spi.sv'), str(P / 'sim/reference/pt_spi_legacy.sv'), str(P / 'sim/reference/pt_control.sv'), args.rtl], check=True)
     lines = subprocess.run(['vvp', '-n', str(leg / 'tb.vvp')], capture_output=True, text=True, check=True).stdout.splitlines()
     report['legacy_equivalence'] = [ln for ln in lines if ln.startswith('legacy') or ln in ('PASS', 'FAIL')]
     ok = ok and 'PASS' in lines

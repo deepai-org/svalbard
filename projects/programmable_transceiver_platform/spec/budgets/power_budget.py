@@ -22,6 +22,7 @@ HOST_TYP = ROOT / 'evidence/host-power-allocation-screen.json'
 HOST_ART = ROOT / 'evidence/artix-load-power-screen.json'
 CLKPIN = ROOT / 'evidence/clock-power-screen.json'
 ISL = ROOT / 'analog/island_support/evidence.json'
+RFTX = ROOT / 'analog/rf_tx/generated/rf_tx-sim-ext.json'   # extracted rf_tx benches (rfdriver supply incl. board feed)
 OUT = ROOT / 'spec/budgets/power-budget.json'
 
 MODES = ['rf_rx', 'rf_tx', 'wired', 'usb', 'stopped']
@@ -69,6 +70,11 @@ def main(check=False):
         'wired_tmds': ('wired_tmds', 'wired'),
         'usb': (None, 'usb'),
         'stopped': (None, 'stopped'),
+        # rf_tx cases (rfdriver at its extracted code-15 current, not the 28.92 mA allocation); duplex = the
+        # rf_rx allocation (LNA on) with the driver also at its extracted current (GX-3 TX+RX).
+        'rf_tx_external_clock': ('external_rf_clock', 'rf_tx'),
+        'rf_tx_autonomous': (None, 'rf_tx'),
+        'rf_duplex_external_clock': ('external_rf_clock', 'rf_rx'),
     }
     # ---- evidence for the two allocation-only blocks ----
     p_dig_w = dh['metrics_snapshot']['power__total']
@@ -98,12 +104,29 @@ def main(check=False):
             'status': 'marginal: 8 pF Artix load exceeds the 110 mA allocation by %.1f mA' % (host_8pf - 110),
         },
     }
+    rt = json.loads(RFTX.read_text())['results']
+    drv = []
+    for k, v in rt.items():
+        sm = (v.get('result') or {}).get('supply_mA')
+        if isinstance(sm, dict): sm = sm.get('rfdriver')
+        if isinstance(sm, (int, float)) and (k.startswith(('drv_', 'chain_', 'match_', 'corner_', 'mcorner_', 'scorner_', 'amam'))):
+            drv.append((sm, k))
+    drv_max, drv_case = max(drv)
+    evidence['rfdriver'] = {
+        'allocation_ma': aa['blocks']['rfdriver']['resource_allocation']['current_budget_ma']['rf_tx'],
+        'budget_case_ma': round(drv_max, 2), 'worst_bench': drv_case,
+        'basis': 'analog/rf_tx/generated/rf_tx-sim-ext.json: max rfdriver supply (island rail + board DC feed through the '
+                 'RF_TX chokes) over every extracted code-15/linear/saturated/corner bench at the envelope',
+        'status': 'evidence: allocation is %.1f mA low' % (drv_max - aa['blocks']['rfdriver']['resource_allocation']['current_budget_ma']['rf_tx']),
+    }
     # ---- mode totals ----
     out_cases = {}
     for name, (branch, m) in cases.items():
         per = mode_totals(aa, branch)[m]
         alloc = sum(per.values())
         ev = dict(per)
+        if name.startswith(('rf_tx', 'rf_duplex')):
+            ev['rfdriver'] = evidence['rfdriver']['budget_case_ma']
         if m != 'stopped':
             ev['digital'] = evidence['digital']['budget_case_ma']
             ev['hostio'] = evidence['hostio']['budget_case_ma']
@@ -118,6 +141,8 @@ def main(check=False):
             if rf: tgt['hostio'] = round(evidence['hostio']['budget_case_ma'] * HOST_RF_RATE_FACTOR, 2)
         tgt_total = sum(tgt.values())
         c = ceil[m]
+        if name.startswith(('rf_tx', 'rf_duplex')):
+            alloc = alloc - per['rfdriver'] + evidence['rfdriver']['budget_case_ma']   # measured, not allocated
         out_cases[name] = {
             'mode': m, 'branch_override': branch, 'ceiling_ma': c,
             'allocation_ma': round(alloc, 2), 'allocation_margin_ma': round(c - alloc, 2),
@@ -165,7 +190,7 @@ def main(check=False):
                           'note': 'Tj window 10 C minus 2 C control tolerance must absorb the full stopped-to-max power step (mode switches are faster than any plate loop).'}
     res = {
         'generated_by': 'spec/budgets/power_budget.py',
-        'inputs': {str(p.relative_to(ROOT)): sha(p) for p in (AA, DH, HOST_TYP, HOST_ART, CLKPIN, ISL)},
+        'inputs': {str(p.relative_to(ROOT)): sha(p) for p in (AA, DH, HOST_TYP, HOST_ART, CLKPIN, ISL, RFTX)},
         'envelope': {'tj_c': TJ_WINDOW, 'v_die': [V_DIE_MIN, V_DIE_MAX], 'v_source': [round(V_SRC_MIN, 3), round(V_SRC_MAX, 3)]},
         'assumptions': {'r_bond_each_ohm': R_BOND_EACH, 'supply_bonds': N_SUPPLY, 'return_bonds': N_RETURN,
                         'unequal_share_derate': SHARE_DERATE, 'r_bond_effective_ohm': round(r_bond, 4),
@@ -180,11 +205,11 @@ def main(check=False):
         'cases': out_cases, 'island_switch': island, 'supply_drop': drop, 'thermal': thermal,
     }
     OUT.write_text(json.dumps(res, indent=1) + '\n')
-    fails = [n for n, c in out_cases.items() if c['allocation_margin_ma'] < 0 and n != 'rf_autonomous']
+    fails = [n for n, c in out_cases.items() if c['allocation_margin_ma'] < 0 and n not in ('rf_autonomous', 'rf_tx_autonomous')]
     print(json.dumps({k: {kk: c[kk] for kk in ('ceiling_ma', 'allocation_ma', 'evidence_bound_ma', 'with_digital_requirement_ma')} for k, c in out_cases.items()}, indent=1))
     print(json.dumps(drop, indent=1)); print(json.dumps(thermal, indent=1))
     if check:
-        ev_fail = [n for n, c in out_cases.items() if c['with_digital_requirement_margin_ma'] < 0 and n != 'rf_autonomous']
+        ev_fail = [n for n, c in out_cases.items() if c['with_digital_requirement_margin_ma'] < 0 and n not in ('rf_autonomous', 'rf_tx_autonomous')]
         if fails or ev_fail or drop['with_digital_requirement']['margin_mv'] < 0:
             print('CHECK FAIL', fails, ev_fail); return 1
     return 0

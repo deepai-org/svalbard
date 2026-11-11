@@ -6,9 +6,9 @@ set -u
 NL="$1"
 SC=/pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog
 RTL="/src/rtl/pt_digital_macro.sv /src/rtl/pt_host_link.sv /src/rtl/pt_digital.sv /src/rtl/pt_regfile.sv /src/rtl/pt_spi.sv
- /src/rtl/pt_dense_header.sv /src/rtl/pt_core.sv /src/rtl/pt_core_pair.sv /src/rtl/pt_dense_pair.sv /src/rtl/pt_dense_pair_link.sv
- /src/rtl/pt_pair_gearbox.sv /src/rtl/pt_fifo.sv /src/rtl/pt_memory.sv /src/rtl/pt_pattern.sv /src/rtl/pt_helpers.sv
- /src/rtl/pt_clocktree_slow.sv /src/rtl/pt_freq_count.sv"
+ /src/rtl/pt_dense_header.sv /src/rtl/pt_core.sv /src/rtl/pt_quad_link.sv /src/rtl/pt_quad_gearbox.sv /src/rtl/pt_cells.sv
+ /src/rtl/pt_fifo.sv /src/rtl/pt_pattern.sv /src/rtl/pt_helpers.sv
+ /src/rtl/pt_clocktree_slow.sv /src/rtl/pt_freq_count.sv /src/rtl/pt_linecode.sv /src/rtl/pt_vreg_seq.sv /src/rtl/pt_interp2x.sv"
 sha256sum $RTL /src/rtl/*.svh /src/rtl/*.vh /src/sim/tb_digital_gl.sv \
   /src/verification/digital_hardening/gls.sh /src/verification/digital_hardening/gls_check.py > sources.sha256
 iverilog -V 2>&1 | head -1 > iverilog-version.txt

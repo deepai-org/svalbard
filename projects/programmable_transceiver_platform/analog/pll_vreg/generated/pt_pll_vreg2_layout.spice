@@ -1,0 +1,176 @@
+* pt_pll_vreg2 layout netlist (pll_vreg2_layout.py); dual-output PD33
+.subckt pt_pll_vreg2 VIN VOUT_TX VOUT_CDR VSS BYP_TX BYP_CDR ATB_OUT ATB_G
+XMPA VIN VG VOUT_TX VSS pt_vreg_pass
+XMPB VIN VG VOUT_CDR VSS pt_vreg_pass
+XR10_0 VIN INP VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XR20_0 INP R2_1 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XR21_0 R2_1 R2_2 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XR22_0 R2_2 R2_3 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XR23_0 R2_3 R2_4 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XR24_0 R2_4 R2_5 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XR25_0 R2_5 R2_6 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XR26_0 R2_6 R2_7 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XR27_0 R2_7 R2_8 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XR28_0 R2_8 VSS VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB0_0 VIN RB_1 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB1_0 RB_1 RB_2 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB2_0 RB_2 RB_3 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB3_0 RB_3 RB_4 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB4_0 RB_4 RB_5 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB5_0 RB_5 RB_6 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB6_0 RB_6 RB_7 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB7_0 RB_7 RB_8 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB8_0 RB_8 RB_9 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB9_0 RB_9 RB_10 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB10_0 RB_10 RB_11 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB11_0 RB_11 RB_12 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB12_0 RB_12 RB_13 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB13_0 RB_13 RB_14 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB14_0 RB_14 RB_15 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB15_0 RB_15 RB_16 VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XRB16_0 RB_16 NB VSS ppolyf_u_1k r_width=1.0u r_length=30.0u
+XMCR_0 VSS INP VSS VSS nfet_03v3 w=10.0u l=10.0u
+XMCR_1 VSS INP VSS VSS nfet_03v3 w=10.0u l=10.0u
+XMCR_2 VSS INP VSS VSS nfet_03v3 w=10.0u l=10.0u
+XMCR_3 VSS INP VSS VSS nfet_03v3 w=10.0u l=10.0u
+XMN1_0 X1 INP T VSS nfet_03v3 w=4.0u l=1.0u
+XMN2_0 VG VOUT_TX T VSS nfet_03v3 w=4.0u l=1.0u
+XMP1_0 X1 X1 VIN VIN pfet_03v3 w=2.0u l=1.0u
+XMP2_0 VG X1 VIN VIN pfet_03v3 w=2.0u l=1.0u
+XMT_0 T NB VSS VSS nfet_03v3 w=2.0u l=2.0u
+XMB_0 NB NB VSS VSS nfet_03v3 w=2.0u l=2.0u
+XMST_0 VG VOUT_TX VIN VIN pfet_03v3 w=2.0u l=1.0u
+XMCG0_0 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG0_1 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG0_2 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG0_3 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG0_4 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG0_5 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG0_6 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG0_7 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG0_8 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG1_0 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG1_1 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG1_2 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG1_3 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG1_4 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG1_5 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG1_6 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG1_7 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG1_8 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG2_0 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCG2_1 VSS VG VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCOA_0 VSS VOUT_TX VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCOA_1 VSS VOUT_TX VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCOB_0 VSS VOUT_CDR VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMCOB_1 VSS VOUT_CDR VSS VSS nfet_03v3 w=38.73u l=38.73u
+XMBYPTX_0 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_1 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_2 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_3 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_4 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_5 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_6 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_7 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_8 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_9 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_10 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_11 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_12 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_13 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_14 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_15 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_16 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_17 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_18 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPTX_19 VOUT_TX BYPN_TX VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBIPTX_0 BYPN_TX BYP_TX VIN VIN pfet_03v3 w=4.0u l=0.28u
+XMBINTX_0 BYPN_TX BYP_TX VSS VSS nfet_03v3 w=2.0u l=0.28u
+XMBYPCDR_0 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_1 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_2 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_3 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_4 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_5 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_6 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_7 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_8 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_9 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_10 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_11 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_12 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_13 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_14 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_15 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_16 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_17 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_18 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBYPCDR_19 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 w=50.0u l=0.28u
+XMBIPCDR_0 BYPN_CDR BYP_CDR VIN VIN pfet_03v3 w=4.0u l=0.28u
+XMBINCDR_0 BYPN_CDR BYP_CDR VSS VSS nfet_03v3 w=2.0u l=0.28u
+XRATO_0 VOUT_TX ATB_OUT VSS ppolyf_u_1k r_width=1.0u r_length=20.0u
+XRATG_0 VG ATB_G VSS ppolyf_u_1k r_width=1.0u r_length=20.0u
+.ends
+
+.subckt pt_vreg_pass D G S B
+XM0 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM1 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM2 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM3 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM4 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM5 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM6 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM7 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM8 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM9 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM10 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM11 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM12 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM13 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM14 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM15 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM16 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM17 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM18 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM19 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM20 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM21 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM22 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM23 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM24 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM25 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM26 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM27 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM28 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM29 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM30 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM31 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM32 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM33 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM34 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM35 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM36 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM37 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM38 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM39 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM40 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM41 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM42 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM43 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM44 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM45 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM46 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM47 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM48 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM49 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM50 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM51 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM52 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM53 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM54 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM55 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM56 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM57 D G S B nfet_06v0_nvt w=100u l=2.7u
+XM58 S G D B nfet_06v0_nvt w=100u l=2.7u
+XM59 D G S B nfet_06v0_nvt w=100u l=2.7u
+.ends pt_vreg_pass

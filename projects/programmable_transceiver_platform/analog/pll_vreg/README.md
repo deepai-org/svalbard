@@ -143,3 +143,53 @@ Schematic results for the open-loop output, with the extracted r9 ring:
 
 These match the published packed cell. Evidence: `evidence/pd28-vreg-area-options.json`; interface-changes PD33.
 Not laid out yet. It needs a strapped nf = 60 native sub-macro, because the PCell does not strap its fingers.
+
+### PD36 (2026-11-11): `pt_pll_vreg2` built and published (the coordinator approved PD33)
+
+This is the cell to instantiate: **one cell for pll_tx and pll_cdr** (pll_host is deleted, X1). The PD28 single
+`pt_pll_vreg` stays in `generated/` only as the fallback.
+
+**Files**
+- Generators: `pll_vreg2_pass.py` (pass macro) and `pll_vreg2_layout.py` (top cell).
+- Outputs: `generated/pt_pll_vreg2.{gds,ext.spice}`, `-lvs.txt`, `-layout.json`, `-kldrc.json`, `pt_pll_vreg2_layout.spice`, `generated/pt_vreg_pass/`.
+
+**Ports** `VIN VOUT_TX VOUT_CDR VSS BYP_TX BYP_CDR ATB_OUT ATB_G`
+- VOUT_TX is the output inside the OTA loop; VOUT_CDR follows the same gate.
+- ATB_OUT observes VOUT_TX.
+- BYP = 1 shorts that output to VIN.
+
+**Circuit**
+- Shared: divider 30k/270k, OTA, gate cap 30,000 µm² (20 × 38.73² MOS units).
+- Per output: one `pt_vreg_pass`, a 3,000 µm² output cap and a W 1000 µm BYP PMOS with its own inverter.
+- OTA bias resistor: 17 × 30 µm units (510 kΩ, was 500 kΩ).
+
+**Pass macro `pt_vreg_pass`**
+- One nfet_06v0_nvt PCell, W 100 / L 2.7, nf = 60, strapped by hand:
+  - a Metal1 gate bar on the polycontact row;
+  - 2 + 2 Via1/Metal2 bars on the source and drain columns;
+  - Metal2 edge pins.
+- 199.1 × 102.9 µm. Magic DRC 0, LVS unique against 60 parallel devices.
+
+**Cell checks**
+- Size: 447.9 × 390.5 µm (bbox −29…418.9 × 0…390.5) = **0.175 mm² for both rings**. That replaces 2 × 0.241 = 0.482 mm² (−0.307 mm²).
+- Magic DRC 0; netgen LVS unique, including the NAT-fixed GDS round trip.
+- KLayout precheck: main 0 / antenna 0.
+- The PD33 estimate was 0.12 mm²; the convkit routing channels (about 19 µm × 4) cost the difference.
+
+**Extracted reruns**
+- Same benches as `pll_vreg.py`, via `pll_vreg2_ext.py`. The output under test is the open-loop VOUT_CDR (worst case); the other output carries 7 mA.
+- Ring load: the extracted r9 ring.
+- Evidence: `evidence/pll_vreg2-ext-*.json`.
+
+| Check (extracted) | pt_pll_vreg2, VOUT_CDR | Criterion |
+| --- | --- | --- |
+| PSRR worst 10–200 MHz (6 mA, VIN 3.15 V) | −22.8 tt / −23.4 ss32 / −23.6 ff22 / −23.4 ss22 / −23.5 ff32 dB | ≥ 20 dB |
+| Dropout (VIN 3.05–3.35 V, 3/8 mA) | 0.26–0.50 V | saturated |
+| Ring at 78 MHz, 60 mV (tt27 and ss32 at VCTRL 1.5 V; ff22 at VCTRL 1.1 V, 771 MHz): Kvdd / DJ pk / spur | tt 13.9 MHz/V, **2.71 ps**, −45.5 dBc; ss 10.3, **2.02 ps**, −48.1; ff 14.7, **2.88 ps**, −45.0 | |
+| VOUT_TX (in-loop) at tt | 13.9 MHz/V, 2.71 ps (same as VOUT_CDR) | |
+| A2 worst case (90 mV), scaled | ≤ 4.3 ps | < 5 ps |
+| Start-up t95, 10 µs VIN ramp | 26–37 µs, no overshoot | ≤ 50 µs |
+| BYP = 1 drop at 8 mA | 33–43 mV | |
+
+**Not simulated:** ring-to-ring coupling through the shared gate (both extracted rings on one cell). Estimated
+Cgd/Cg ≈ −30 dB. Rerun it at chip level with both rings.

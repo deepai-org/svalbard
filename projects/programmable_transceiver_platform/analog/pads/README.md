@@ -2,7 +2,7 @@
 
 One reusable protection/bond foundation with functional attachments serves
 every custom pad: wired TX, wired RX/USB, differential reference, RF RX, RF TX,
-the analog debug pairs and `ESD_TEST`. Generic digital/host pads, digital
+the analog debug pairs (the `ESD_TEST` site was dropped 2026-11-11, interface-changes PD35). Generic digital/host pads, digital
 observe outputs and ATB use the unchanged provider cells and are not simulated
 here. **No family is production-qualified**; the readiness states below are
 the tapeout-plan tests, not ESD/HBM/CDM ratings.
@@ -27,7 +27,7 @@ the tapeout-plan tests, not ESD/HBM/CDM ratings.
 | `wirepad` (wired RX/USB) | Protected network, discharge, divider/bypass, terminations, HS/FS drive and pulls, USB fixes | `wired-receive-usb/` | 1,170 | 335,069 / 340,000 |
 | `refpad` (differential reference) | Protection/bias network; receiver is behavioral | `reference/` | 897 | 179,237 / 185,000 |
 | `rfpad` = `rftxpad` (one physical pair) | Protection network, steering diodes, isolated clamp rail, MIMs, bleed; LNA and RF driver are behavioral | `rf-pair/` | — | 175,909 / 180,000 |
-| Single-leg cell (WMON, `ESD_TEST`) | Native bond on `PAD_P`, `PADN` tied to VSS | `single-leg/` | — | 158,302 |
+| Single-leg cell (WMON; `ESD_TEST` dropped, PD35) | Native bond on `PAD_P`, `PADN` tied to VSS | `single-leg/` | — | 158,302 |
 | `hspad` (SATA/PCIe RX, PD21) | Protection shell on `network-gc-d2` + two `pt_hs_leg` (segmented 4-bit termination, 4.9 pF AC-coupling MIM, RX bias/clamps, rail precharge); CTLE is the wired RX block | `wired-receive-hs/` | 508 | 531,000 bbox (478 × 1111 µm) |
 
 All five layouts are DRC 0, netgen LVS match and pass the independent device
@@ -57,7 +57,7 @@ Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`
   the fixes are in the consumer blocks (interface-changes PD29).
 - **TX pad termination / SST** (`scratch/pads-pd28/tx/DECISION.md`): SST rejected for this tapeout; the 6 V-switch fix
   clears HBM but costs return loss, not published (interface-changes PD30).
-- **pt_pll_vreg packed cell published** (0.241 mm², two instances): `analog/pll_vreg/README.md` "PD28".
+- **Ring regulators:** PD28 packed `pt_pll_vreg` (0.241 mm²), then **PD36 `pt_pll_vreg2`, one 0.175 mm² cell for pll_tx + pll_cdr** (`analog/pll_vreg/README.md` "PD36"). Coordinator decisions: TX TERM switches risk-accepted (ESD-05), USB-01, ESD-06, ESD_TEST dropped (interface-changes PD34/PD35).
 - **USB wirepad on 6 V pad-side devices: candidate v9, not published** (`scratch/pads-pd28/usb/`, mode `usbfix6v2`;
   opt-in args in `wired_receive.py`, `stress_safe_compact_layout.py`, `receive_pad_layout.py`, `stress_safe_usb.py --term-trim`).
   HBM 0 of 593 MOS over the screen; HS termination 44.1–47.5 Ω at every corner with a new 3-bit trim (`TERM_TRIM0..2`);

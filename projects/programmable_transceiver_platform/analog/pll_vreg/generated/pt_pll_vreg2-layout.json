@@ -1,0 +1,77 @@
+{
+  "antenna_diodes": [
+    {
+      "net": "BYP_CDR",
+      "placed": true,
+      "x": 117.445,
+      "y": 235.0,
+      "top": "metal3",
+      "side": 0.9,
+      "area": 0.81,
+      "pj": 3.6
+    },
+    {
+      "net": "BYP_TX",
+      "placed": true,
+      "x": 114.505,
+      "y": 234.0,
+      "top": "metal3",
+      "side": 0.89,
+      "area": 0.7921,
+      "pj": 3.56
+    }
+  ],
+  "trunk_nets": 9,
+  "jumpers": 29,
+  "split_channels": {},
+  "channels": {
+    "0": 4,
+    "1": 3,
+    "2": 2,
+    "3": 9,
+    "4": 10,
+    "5": 6
+  },
+  "bbox_um": [
+    -29.0,
+    0.0,
+    418.92,
+    390.45
+  ],
+  "area_um2": 174890.4,
+  "drc_count": 0,
+  "lvs": "Circuits match uniquely.",
+  "lvs_unique": true,
+  "gds_export": {
+    "magic": "8.3.678",
+    "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+    "marker_shapes": {
+      "HRES 62/0": 29,
+      "RES_MK 110/5": 58
+    },
+    "ppolyf_u_1k_devices": 29,
+    "klayout_drc": {
+      "violations": 130,
+      "by_rule": {
+        "NAT.1": 4,
+        "NAT.8": 6,
+        "NAT.9": 120
+      },
+      "rc": "1"
+    },
+    "hres_ok": true,
+    "published_gds_lvs": "Circuits match uniquely.",
+    "published_gds_lvs_unique": true,
+    "pass": false,
+    "nat_fix": {
+      "log": "NAT_pt_pll_vreg2S 1\n",
+      "published_gds_lvs": "Circuits match uniquely.",
+      "published_gds_lvs_unique": true
+    }
+  },
+  "klayout_precheck": {
+    "clean": true,
+    "main": 0,
+    "antenna": 0
+  }
+}

@@ -1,0 +1,35 @@
+MACRO pt_vreg_pass
+  CLASS BLOCK ;
+  ORIGIN 0 0 ;
+  SIZE 199.080 BY 102.920 ;
+  PIN G
+    DIRECTION INOUT ;
+    ANTENNAGATEAREA 16200.0 ;
+    PORT
+      LAYER Metal2 ;
+        RECT 97.730 0.000 98.130 0.600 ;
+    END
+  END G
+  PIN S
+    DIRECTION INOUT ;
+    PORT
+      LAYER Metal2 ;
+        RECT 100.950 0.000 101.350 0.600 ;
+    END
+  END S
+  PIN D
+    DIRECTION INOUT ;
+    PORT
+      LAYER Metal2 ;
+        RECT 100.950 102.320 101.350 102.920 ;
+    END
+  END D
+  PIN B
+    DIRECTION INOUT ;
+    PORT
+      LAYER Metal2 ;
+        RECT -0.020 0.000 0.380 0.600 ;
+    END
+  END B
+END pt_vreg_pass
+END LIBRARY

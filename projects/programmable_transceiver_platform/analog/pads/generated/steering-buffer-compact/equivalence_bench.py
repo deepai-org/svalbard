@@ -5,10 +5,10 @@ import numpy as np
 sys.path.insert(0, '/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads')
 import stress_safe_clamp as s
 W = Path(__file__).resolve().parent / 'eqw'
-M = {'old': Path('/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/steering-buffer/physical.spice'),
+M = {'pub': Path('/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/steering-buffer-compact/physical.spice'),
      'new': Path(__file__).resolve().parent / 'physical.spice'}
 out = {}
-for p, t, v in (('typical', 27, 3.3), ('ss', 22, 3.15), ('ff', 32, 3.35)):
+for p, t, v in (('typical', 27, 3.3), ('ss', 22, 3.15), ('ss', 32, 3.15), ('ff', 22, 3.35), ('ff', 32, 3.35)):
     for tag, f in M.items():
         txt = f.read_text(); sub = re.search(r'^\.subckt (\S+) (.*)$', txt, re.M)
         ports = sub.group(2).split()

@@ -42,7 +42,9 @@ def generate(work, compact=False):
     circuit=build_integration_candidate('tx_steering_buffer')
     if compact:   # PD40: multi-finger arrays with OUT power straps (termination_buffer_array_layout.py)
         from termination_buffer_array_layout import generate as array_generate
-        array_generate(work,circuit=circuit,cell_name='tx_steering_buffer',power_nets=('OUT',))
+        # PD42 EM (85 C, 3.24 Gb/s use case): STAGE_1/STAGE_2 carry 0.7/2.5 mA average between their pull-up and
+        # pull-down arrays, too much for single-cut pin stacks -> strapped like OUT, on narrow trunks.
+        array_generate(work,circuit=circuit,cell_name='tx_steering_buffer',power_nets=('OUT','STAGE_2','STAGE_1'),trunk_um={'STAGE_2':4.,'STAGE_1':1.5,'VDD':6.,'VSS':6.,'OUT':6.})   # PD46 review: OUT 6 um (via4 cuts), STAGE_2 4 um   # PD46: trunks sized for <= 10.6 mA at 85 C (<= 0.6 of 4.5 mA/um)
     else:
         layout_generate(work,circuit=circuit,cell_name='tx_steering_buffer')
     report_path=work/'layout.json'

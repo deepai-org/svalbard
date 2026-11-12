@@ -3,92 +3,1080 @@
   "circuit": "tx_steering_buffer",
   "flat_cell": "tx_steering_buffer_flat",
   "drc_count": 0,
-  "device_count": 34,
-  "placed_units": 8,
+  "device_count": 128,
+  "placed_units": 14,
   "device_graph_matches": true,
   "envelope_um": [
-    119.54,
-    80.42
+    118.16,
+    162.98
   ],
-  "envelope_area_um2": 9613.4,
+  "envelope_area_um2": 19257.7,
   "power_straps": [
     {
       "unit": 0,
-      "net": "OUT",
-      "nf": 8,
+      "net": "STAGE_1",
+      "nf": 2,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S1_n0",
+        "S1_n1"
+      ],
+      "m1_column_um": 0.5,
       "strap_um": [
-        2.78,
-        9.64,
-        45.23,
-        15.99
+        9.78,
+        9.04,
+        39.05,
+        10.53
       ]
     },
     {
       "unit": 0,
       "net": "VSS",
-      "nf": 8,
+      "nf": 2,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S1_n0",
+        "S1_n1"
+      ],
+      "m1_column_um": 0.5,
       "strap_um": [
-        20.78,
-        17.57,
-        45.23,
-        23.92
+        24.28,
+        11.03,
+        39.05,
+        12.52
       ]
     },
     {
       "unit": 1,
-      "net": "OUT",
-      "nf": 16,
+      "net": "STAGE_1",
+      "nf": 4,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S1_p0",
+        "S1_p1",
+        "S1_p2",
+        "S1_p3"
+      ],
+      "m1_column_um": 0.5,
       "strap_um": [
-        2.78,
-        33.5,
-        51.63,
-        39.85
+        9.78,
+        20.9,
+        40.65,
+        22.39
       ]
     },
     {
       "unit": 1,
       "net": "VDD",
-      "nf": 16,
+      "nf": 4,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S1_p0",
+        "S1_p1",
+        "S1_p2",
+        "S1_p3"
+      ],
+      "m1_column_um": 0.5,
       "strap_um": [
-        11.78,
-        41.43,
-        51.63,
-        47.78
+        17.28,
+        22.89,
+        40.65,
+        24.38
+      ]
+    },
+    {
+      "unit": 2,
+      "net": "STAGE_2",
+      "nf": 8,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S2_n0",
+        "S2_n1",
+        "S2_n2",
+        "S2_n3",
+        "S2_n4",
+        "S2_n5",
+        "S2_n6",
+        "S2_n7"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        12.28,
+        32.76,
+        43.85,
+        34.25
+      ]
+    },
+    {
+      "unit": 2,
+      "net": "VSS",
+      "nf": 8,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S2_n0",
+        "S2_n1",
+        "S2_n2",
+        "S2_n3",
+        "S2_n4",
+        "S2_n5",
+        "S2_n6",
+        "S2_n7"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        24.28,
+        34.75,
+        43.85,
+        36.24
+      ]
+    },
+    {
+      "unit": 3,
+      "net": "STAGE_2",
+      "nf": 16,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S2_p0",
+        "S2_p1",
+        "S2_p2",
+        "S2_p3",
+        "S2_p4",
+        "S2_p5",
+        "S2_p6",
+        "S2_p7",
+        "S2_p8",
+        "S2_p9",
+        "S2_p10",
+        "S2_p11",
+        "S2_p12",
+        "S2_p13",
+        "S2_p14",
+        "S2_p15"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        12.28,
+        44.62,
+        50.25,
+        46.11
+      ]
+    },
+    {
+      "unit": 3,
+      "net": "VDD",
+      "nf": 16,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S2_p0",
+        "S2_p1",
+        "S2_p2",
+        "S2_p3",
+        "S2_p4",
+        "S2_p5",
+        "S2_p6",
+        "S2_p7",
+        "S2_p8",
+        "S2_p9",
+        "S2_p10",
+        "S2_p11",
+        "S2_p12",
+        "S2_p13",
+        "S2_p14",
+        "S2_p15"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        17.28,
+        46.61,
+        50.25,
+        48.1
+      ]
+    },
+    {
+      "unit": 4,
+      "net": "OUT",
+      "nf": 8,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_n0",
+        "S3_n1",
+        "S3_n2",
+        "S3_n3",
+        "S3_n4",
+        "S3_n5",
+        "S3_n6",
+        "S3_n7"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        2.78,
+        56.48,
+        43.85,
+        57.97
+      ]
+    },
+    {
+      "unit": 4,
+      "net": "VSS",
+      "nf": 8,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_n0",
+        "S3_n1",
+        "S3_n2",
+        "S3_n3",
+        "S3_n4",
+        "S3_n5",
+        "S3_n6",
+        "S3_n7"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        24.28,
+        58.47,
+        43.85,
+        59.96
+      ]
+    },
+    {
+      "unit": 5,
+      "net": "OUT",
+      "nf": 8,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_n8",
+        "S3_n9",
+        "S3_n10",
+        "S3_n11",
+        "S3_n12",
+        "S3_n13",
+        "S3_n14",
+        "S3_n15"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        2.78,
+        68.34,
+        43.85,
+        69.83
+      ]
+    },
+    {
+      "unit": 5,
+      "net": "VSS",
+      "nf": 8,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_n8",
+        "S3_n9",
+        "S3_n10",
+        "S3_n11",
+        "S3_n12",
+        "S3_n13",
+        "S3_n14",
+        "S3_n15"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        24.28,
+        70.33,
+        43.85,
+        71.82
+      ]
+    },
+    {
+      "unit": 6,
+      "net": "OUT",
+      "nf": 8,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_n16",
+        "S3_n17",
+        "S3_n18",
+        "S3_n19",
+        "S3_n20",
+        "S3_n21",
+        "S3_n22",
+        "S3_n23"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        2.78,
+        80.2,
+        43.85,
+        81.69
+      ]
+    },
+    {
+      "unit": 6,
+      "net": "VSS",
+      "nf": 8,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_n16",
+        "S3_n17",
+        "S3_n18",
+        "S3_n19",
+        "S3_n20",
+        "S3_n21",
+        "S3_n22",
+        "S3_n23"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        24.28,
+        82.19,
+        43.85,
+        83.68
+      ]
+    },
+    {
+      "unit": 7,
+      "net": "OUT",
+      "nf": 8,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_n24",
+        "S3_n25",
+        "S3_n26",
+        "S3_n27",
+        "S3_n28",
+        "S3_n29",
+        "S3_n30",
+        "S3_n31"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        2.78,
+        92.06,
+        43.85,
+        93.55
+      ]
+    },
+    {
+      "unit": 7,
+      "net": "VSS",
+      "nf": 8,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_n24",
+        "S3_n25",
+        "S3_n26",
+        "S3_n27",
+        "S3_n28",
+        "S3_n29",
+        "S3_n30",
+        "S3_n31"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        24.28,
+        94.05,
+        43.85,
+        95.54
+      ]
+    },
+    {
+      "unit": 8,
+      "net": "OUT",
+      "nf": 16,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_p0",
+        "S3_p1",
+        "S3_p2",
+        "S3_p3",
+        "S3_p4",
+        "S3_p5",
+        "S3_p6",
+        "S3_p7",
+        "S3_p8",
+        "S3_p9",
+        "S3_p10",
+        "S3_p11",
+        "S3_p12",
+        "S3_p13",
+        "S3_p14",
+        "S3_p15"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        2.78,
+        103.92,
+        50.25,
+        105.41
+      ]
+    },
+    {
+      "unit": 8,
+      "net": "VDD",
+      "nf": 16,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_p0",
+        "S3_p1",
+        "S3_p2",
+        "S3_p3",
+        "S3_p4",
+        "S3_p5",
+        "S3_p6",
+        "S3_p7",
+        "S3_p8",
+        "S3_p9",
+        "S3_p10",
+        "S3_p11",
+        "S3_p12",
+        "S3_p13",
+        "S3_p14",
+        "S3_p15"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        17.28,
+        105.91,
+        50.25,
+        107.4
+      ]
+    },
+    {
+      "unit": 9,
+      "net": "OUT",
+      "nf": 16,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_p16",
+        "S3_p17",
+        "S3_p18",
+        "S3_p19",
+        "S3_p20",
+        "S3_p21",
+        "S3_p22",
+        "S3_p23",
+        "S3_p24",
+        "S3_p25",
+        "S3_p26",
+        "S3_p27",
+        "S3_p28",
+        "S3_p29",
+        "S3_p30",
+        "S3_p31"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        2.78,
+        115.78,
+        50.25,
+        117.27
+      ]
+    },
+    {
+      "unit": 9,
+      "net": "VDD",
+      "nf": 16,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_p16",
+        "S3_p17",
+        "S3_p18",
+        "S3_p19",
+        "S3_p20",
+        "S3_p21",
+        "S3_p22",
+        "S3_p23",
+        "S3_p24",
+        "S3_p25",
+        "S3_p26",
+        "S3_p27",
+        "S3_p28",
+        "S3_p29",
+        "S3_p30",
+        "S3_p31"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        17.28,
+        117.77,
+        50.25,
+        119.26
+      ]
+    },
+    {
+      "unit": 10,
+      "net": "OUT",
+      "nf": 16,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_p32",
+        "S3_p33",
+        "S3_p34",
+        "S3_p35",
+        "S3_p36",
+        "S3_p37",
+        "S3_p38",
+        "S3_p39",
+        "S3_p40",
+        "S3_p41",
+        "S3_p42",
+        "S3_p43",
+        "S3_p44",
+        "S3_p45",
+        "S3_p46",
+        "S3_p47"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        2.78,
+        127.64,
+        50.25,
+        129.13
+      ]
+    },
+    {
+      "unit": 10,
+      "net": "VDD",
+      "nf": 16,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_p32",
+        "S3_p33",
+        "S3_p34",
+        "S3_p35",
+        "S3_p36",
+        "S3_p37",
+        "S3_p38",
+        "S3_p39",
+        "S3_p40",
+        "S3_p41",
+        "S3_p42",
+        "S3_p43",
+        "S3_p44",
+        "S3_p45",
+        "S3_p46",
+        "S3_p47"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        17.28,
+        129.63,
+        50.25,
+        131.12
+      ]
+    },
+    {
+      "unit": 11,
+      "net": "OUT",
+      "nf": 16,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_p48",
+        "S3_p49",
+        "S3_p50",
+        "S3_p51",
+        "S3_p52",
+        "S3_p53",
+        "S3_p54",
+        "S3_p55",
+        "S3_p56",
+        "S3_p57",
+        "S3_p58",
+        "S3_p59",
+        "S3_p60",
+        "S3_p61",
+        "S3_p62",
+        "S3_p63"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        2.78,
+        139.5,
+        50.25,
+        140.99
+      ]
+    },
+    {
+      "unit": 11,
+      "net": "VDD",
+      "nf": 16,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "devices": [
+        "S3_p48",
+        "S3_p49",
+        "S3_p50",
+        "S3_p51",
+        "S3_p52",
+        "S3_p53",
+        "S3_p54",
+        "S3_p55",
+        "S3_p56",
+        "S3_p57",
+        "S3_p58",
+        "S3_p59",
+        "S3_p60",
+        "S3_p61",
+        "S3_p62",
+        "S3_p63"
+      ],
+      "m1_column_um": 0.5,
+      "strap_um": [
+        17.28,
+        141.49,
+        50.25,
+        142.98
       ]
     }
   ],
   "source_sha256": {
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_array_layout.py": "aecc6d43b2ed6094d8291abaf1a04e7b682e12e9217d69980fff117172d7e4f7",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer_array_layout.py": "8a04b838afbadcdfc7ec821a6713d44a90d876fc20fac671a9017a6d2d9627a7",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/termination_buffer.py": "9b73b61646c07d00d7bef6092a32d42a8389bdd3d3c7732a1755c5d3274839ff",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/design.py": "7330ebd9a33ffcfe6a0c9949cd8d51d08a8e6564521b14ae4ec57fd66a1a40f9",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/steering_buffer.py": "500eee45cd9d6021d7520a0e2560f5872c6253967cb4cfb627f94bff60a0815d",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332"
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/steering_buffer.py": "89f4c5a4513222ad7ab37be9cc83da587b038b3b3cfcd20262e186ef8e60c27f",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/schematic-implementation.json": "b6a965a27a311ee851a37ce2d925706d5b1ce1e72055a8260d76c187b751c3a8"
   },
   "drawn_bbox_um": [
     2.78,
     3.5,
-    95.5,
-    79.92
+    57.36,
+    162.48
   ],
-  "drawn_area_um2": 7085.7,
+  "drawn_area_um2": 8677.1,
   "gds_marker_repair": {
     "status": "no_high_resistance_devices",
-    "before_gds_sha256": "92279ee45cbfb97353940be51782c7442b70f88f88f7931ae4c4363471cc6f39",
-    "after_gds_sha256": "92279ee45cbfb97353940be51782c7442b70f88f88f7931ae4c4363471cc6f39"
+    "before_gds_sha256": "ad7d8029e86395f505e2dfbc681e58b192e3294b0a67d18a77d46696982505a4",
+    "after_gds_sha256": "ad7d8029e86395f505e2dfbc681e58b192e3294b0a67d18a77d46696982505a4"
   },
   "gds_roundtrip": {
     "drc_count": 0,
     "device_graph_matches": true
   },
   "trunk_widths_um": {
-    "OUT": 8.0,
-    "VDD": 8.0,
-    "VSS": 8.0,
+    "OUT": 6.0,
+    "STAGE_1": 1.5,
+    "STAGE_2": 4.0,
+    "VDD": 6.0,
+    "VSS": 6.0,
     "IN": 0.44,
-    "STAGE_0": 0.44,
-    "STAGE_1": 0.44,
-    "STAGE_2": 0.44
+    "STAGE_0": 0.44
   },
-  "physical_sha256": "8701db4b027d190b719600252540003b44df859d2de539b7da7f495fb1939b93",
+  "units": [
+    {
+      "unit": 0,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 2,
+      "power": true,
+      "nodes": [
+        "STAGE_1",
+        "STAGE_0",
+        "VSS",
+        "VSS"
+      ],
+      "devices": [
+        "S1_n0",
+        "S1_n1"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 1,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 4,
+      "power": true,
+      "nodes": [
+        "STAGE_1",
+        "STAGE_0",
+        "VDD",
+        "VDD"
+      ],
+      "devices": [
+        "S1_p0",
+        "S1_p1",
+        "S1_p2",
+        "S1_p3"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 2,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 8,
+      "power": true,
+      "nodes": [
+        "STAGE_2",
+        "STAGE_1",
+        "VSS",
+        "VSS"
+      ],
+      "devices": [
+        "S2_n0",
+        "S2_n1",
+        "S2_n2",
+        "S2_n3",
+        "S2_n4",
+        "S2_n5",
+        "S2_n6",
+        "S2_n7"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 3,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 16,
+      "power": true,
+      "nodes": [
+        "STAGE_2",
+        "STAGE_1",
+        "VDD",
+        "VDD"
+      ],
+      "devices": [
+        "S2_p0",
+        "S2_p1",
+        "S2_p2",
+        "S2_p3",
+        "S2_p4",
+        "S2_p5",
+        "S2_p6",
+        "S2_p7",
+        "S2_p8",
+        "S2_p9",
+        "S2_p10",
+        "S2_p11",
+        "S2_p12",
+        "S2_p13",
+        "S2_p14",
+        "S2_p15"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 4,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 8,
+      "power": true,
+      "nodes": [
+        "OUT",
+        "STAGE_2",
+        "VSS",
+        "VSS"
+      ],
+      "devices": [
+        "S3_n0",
+        "S3_n1",
+        "S3_n2",
+        "S3_n3",
+        "S3_n4",
+        "S3_n5",
+        "S3_n6",
+        "S3_n7"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 5,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 8,
+      "power": true,
+      "nodes": [
+        "OUT",
+        "STAGE_2",
+        "VSS",
+        "VSS"
+      ],
+      "devices": [
+        "S3_n8",
+        "S3_n9",
+        "S3_n10",
+        "S3_n11",
+        "S3_n12",
+        "S3_n13",
+        "S3_n14",
+        "S3_n15"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 6,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 8,
+      "power": true,
+      "nodes": [
+        "OUT",
+        "STAGE_2",
+        "VSS",
+        "VSS"
+      ],
+      "devices": [
+        "S3_n16",
+        "S3_n17",
+        "S3_n18",
+        "S3_n19",
+        "S3_n20",
+        "S3_n21",
+        "S3_n22",
+        "S3_n23"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 7,
+      "model": "nfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 8,
+      "power": true,
+      "nodes": [
+        "OUT",
+        "STAGE_2",
+        "VSS",
+        "VSS"
+      ],
+      "devices": [
+        "S3_n24",
+        "S3_n25",
+        "S3_n26",
+        "S3_n27",
+        "S3_n28",
+        "S3_n29",
+        "S3_n30",
+        "S3_n31"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 8,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 16,
+      "power": true,
+      "nodes": [
+        "OUT",
+        "STAGE_2",
+        "VDD",
+        "VDD"
+      ],
+      "devices": [
+        "S3_p0",
+        "S3_p1",
+        "S3_p2",
+        "S3_p3",
+        "S3_p4",
+        "S3_p5",
+        "S3_p6",
+        "S3_p7",
+        "S3_p8",
+        "S3_p9",
+        "S3_p10",
+        "S3_p11",
+        "S3_p12",
+        "S3_p13",
+        "S3_p14",
+        "S3_p15"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 9,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 16,
+      "power": true,
+      "nodes": [
+        "OUT",
+        "STAGE_2",
+        "VDD",
+        "VDD"
+      ],
+      "devices": [
+        "S3_p16",
+        "S3_p17",
+        "S3_p18",
+        "S3_p19",
+        "S3_p20",
+        "S3_p21",
+        "S3_p22",
+        "S3_p23",
+        "S3_p24",
+        "S3_p25",
+        "S3_p26",
+        "S3_p27",
+        "S3_p28",
+        "S3_p29",
+        "S3_p30",
+        "S3_p31"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 10,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 16,
+      "power": true,
+      "nodes": [
+        "OUT",
+        "STAGE_2",
+        "VDD",
+        "VDD"
+      ],
+      "devices": [
+        "S3_p32",
+        "S3_p33",
+        "S3_p34",
+        "S3_p35",
+        "S3_p36",
+        "S3_p37",
+        "S3_p38",
+        "S3_p39",
+        "S3_p40",
+        "S3_p41",
+        "S3_p42",
+        "S3_p43",
+        "S3_p44",
+        "S3_p45",
+        "S3_p46",
+        "S3_p47"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 11,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 16,
+      "power": true,
+      "nodes": [
+        "OUT",
+        "STAGE_2",
+        "VDD",
+        "VDD"
+      ],
+      "devices": [
+        "S3_p48",
+        "S3_p49",
+        "S3_p50",
+        "S3_p51",
+        "S3_p52",
+        "S3_p53",
+        "S3_p54",
+        "S3_p55",
+        "S3_p56",
+        "S3_p57",
+        "S3_p58",
+        "S3_p59",
+        "S3_p60",
+        "S3_p61",
+        "S3_p62",
+        "S3_p63"
+      ],
+      "m1_column_um": 0.5,
+      "pitch_um": 0.8,
+      "m1_max_fraction": 0.565
+    },
+    {
+      "unit": 12,
+      "model": "nfet_03v3",
+      "w_um": 2.0,
+      "l_um": 0.28,
+      "nf": 1,
+      "power": false,
+      "nodes": [
+        "STAGE_0",
+        "IN",
+        "VSS",
+        "VSS"
+      ],
+      "devices": [
+        "S0_n0"
+      ],
+      "m1_column_um": null,
+      "pitch_um": null,
+      "m1_max_fraction": null
+    },
+    {
+      "unit": 13,
+      "model": "pfet_03v3",
+      "w_um": 4.0,
+      "l_um": 0.28,
+      "nf": 1,
+      "power": false,
+      "nodes": [
+        "STAGE_0",
+        "IN",
+        "VDD",
+        "VDD"
+      ],
+      "devices": [
+        "S0_p0"
+      ],
+      "m1_column_um": null,
+      "pitch_um": null,
+      "m1_max_fraction": null
+    }
+  ],
+  "physical_sha256": "f2eaa156f705cbea185065166d5fedc3be27e89cd55a0067a9b6be34a5546910",
   "scope": "One steering buffer; repeated instances and electrical acceptance belong to the connected TX fixture."
 }

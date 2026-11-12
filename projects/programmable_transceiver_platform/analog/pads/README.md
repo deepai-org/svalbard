@@ -411,6 +411,21 @@ python3 projects/programmable_transceiver_platform/analog/pads/assembly.py --tem
 converter. Do not add budget-sized ideal capacitors on top of extracted
 capacitance.
 
+### PD46 EM (2026-11-12): steering buffer at 85 °C — PUBLISHED (`generated/steering-buffer-compact/`); termination buffer still open
+
+Steering build `scratch/pads-pd42/pd46g/` (backup of the previous cell `scratch/pads-pd42/backup-published/steering-buffer-compact-pre-pd46/`).
+Generator `termination_buffer_array_layout.py`: via2/via3 along the whole power strap incl. gap and trunk; `MIN_CHUNKS` steering (OUT,VDD)/(OUT,VSS) in 4;
+`steering_buffer.py` trunks STAGE_2 4 µm, VDD/VSS/OUT 6 µm. Magic DRC 0 and netgen unique on the merged GDS, KLayout 0/0, LU clean. Reviews r1–r3 (`scratch/pads-pd42/pd46/review/`): steering GO.
+- **EM screen** (`scratch/pads-pd42/em/em_check.py`, `strap_ladder.py`, `strap_post.py`): per strap bar the peak M4 share at the trunk entry
+  (via4 lands on M4 only) from a 1-D M2/M3/M4 ladder, worst of nominal / M4 0.8× with M2,M3 1.2× / via R halved, current injected over the far
+  half of the strap; via4 crowding; via2/3 peak per cut; via1; contacts. **Bar-imbalance rule:** 1.2× per bar, dropped only for a single bar
+  (review r3: equal-height bars on one trunk still split 1.09–1.13×). Fails on the old M4-only layout (2.14–2.21).
+- **Steering worst at 85 °C (3.24 Gb/s use case, extracted R):** strap M4 0.72, via1 0.81, via4 0.46, trunk ≤ 0.47.
+- **Steering slower:** delay +45–67 ps (+10 %), edges +8–12 ps, supply current +5–6 % vs the previous cell (OUT split in 4) — WT24 / X5 TMDS bench to be re-run with this cell.
+- **Outline:** 54.6 × 159.0 µm per copy (was 92.7 × 76.4; reservation 96 × 80 → re-place).
+- **Termination buffer: NOT fixed.** `scratch/pads-pd42/pd46d/` (published cell unchanged) fails the r3 check (unit 6 OUT/LOCAL_OUT two-bar pins, M4 ≈ 1.0–1.08 at ff 85 °C);
+  the (LOCAL_OUT,OUT) split fix is blocked by the compensation layout's fixed-offset routing (work in progress).
+
 ### PD48c (2026-11-12): d2 restored on wirepad (USB) and hspad for the 250 V CDM floor (coordinator decision)
 
 Supersedes the PD48 no-d2 builds below (kept for the record; backups `scratch/pads-pd48/backup-published/*-pd48-nod2`).

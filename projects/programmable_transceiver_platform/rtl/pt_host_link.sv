@@ -111,7 +111,13 @@ module pt_host_link(
     // input delay absorbs the offset. Every lane passes one kept mux, so both groups match otherwise.
     genvar gl;
     generate for (gl = 0; gl < 10; gl = gl + 1) begin : stagger
-        pt_stagger lane(.I(d2h_launch[gl]), .S(d2h_stagger && (gl % 2 == 1)), .Z(d2h_pin[gl]));
+        wire hio_z;
+        pt_stagger lane(.I(d2h_launch[gl]), .S(d2h_stagger && (gl % 2 == 1)), .Z(hio_z));
+`ifdef SYNTHESIS
+        (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__buf_8 hio_ob(.I(hio_z), .Z(d2h_pin[gl]));
+`else
+        assign d2h_pin[gl] = hio_z;
+`endif
     end endgenerate
     // SDR forwarded clock: inverted word clock, enable registered on its rising edge (the AND
     // output is low then, so it cannot glitch).
@@ -120,7 +126,13 @@ module pt_host_link(
         if (!rst_n) en_sdr <= 1'b0; else en_sdr <= en_d && mode_d != 2'd0;
     reg sdr_sel;   // quasi-static: mode changes only while stopped
     always @(posedge link_clk or negedge dr_n) if (!dr_n) sdr_sel <= 1'b0; else sdr_sel <= mode_d != 2'd0;
-    pt_out_mux clk_out(.I0(ddr_fwd), .I1(~word_clk & en_sdr), .S(sdr_sel), .Z(d2h_clk_pin));
+    wire hio_cz;
+    pt_out_mux clk_out(.I0(ddr_fwd), .I1(~word_clk & en_sdr), .S(sdr_sel), .Z(hio_cz));
+`ifdef SYNTHESIS
+    (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__buf_8 hio_cob(.I(hio_cz), .Z(d2h_clk_pin));
+`else
+    assign d2h_clk_pin = hio_cz;
+`endif
     assign d2h_oe = d2h_enable;
 
     // ---------------- H2D
@@ -195,25 +207,27 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] prefi
         pt_ddr_nphase nphase(.clk(ddr_clk), .rst_n(nrst_n), .run(run), .phase(load[g]), .nsel(nsel[g]));
     end endgenerate
     reg [39:0] x;
-    reg [9:0]  q_r, f3, q_f;
+    reg [9:0]  f3;
     integer b;
     always @(posedge ddr_clk or negedge rst_n)
-        if (!rst_n) begin x <= 40'd0; q_r <= 10'd0; f3 <= 10'd0; end
+        if (!rst_n) begin x <= 40'd0; f3 <= 10'd0; end
         else for (b = 0; b < 10; b = b + 1) begin
             if (load[b]) begin
                 x[b] <= prefix[b]; x[b+10] <= prefix[b+10]; x[b+20] <= prefix[b+20]; x[b+30] <= prefix[b+30];
-                q_r[b] <= x[b+20];
-            end else begin
-                q_r[b] <= x[b]; f3[b] <= x[b+30];
-            end
+            end else f3[b] <= x[b+30];
         end
+    // Launch stage (TC13): the rising (lr = q_r) and falling (lf = q_f) launch flops and the pin xor are
+    // the hand-placed pt_hio_launch cells; only their D inputs are computed here.
+    //   q_r <= load ? x.P2 : x.P0 (rising); q_f <= nsel ? x.P1 : f3 (falling)
     // nrst_n = rst_n in the macro; a separate port only so that formal can release the
     // falling-edge flops one falling edge late (the untimed half-period recovery case).
-    integer bf;
-    always @(negedge ddr_clk or negedge nrst_n)
-        if (!nrst_n) q_f <= 10'd0;
-        else for (bf = 0; bf < 10; bf = bf + 1) q_f[bf] <= nsel[bf] ? x[bf+10] : f3[bf];
-    assign d2h_pin = q_r ^ q_f;
+    wire [9:0] qr_d, qf_d;
+    genvar gq;
+    generate for (gq = 0; gq < 10; gq = gq + 1) begin : lq
+        assign qr_d[gq] = load[gq] ? x[gq+20] : x[gq];
+        assign qf_d[gq] = nsel[gq] ? x[gq+10] : f3[gq];
+        pt_hio_launch l(.clk(ddr_clk), .rst_n(rst_n), .nrst_n(nrst_n), .dr(qr_d[gq]), .df(qf_d[gq]), .z(d2h_pin[gq]));
+    end endgenerate
 `ifdef FORMAL
     // 1.5-period multicycle into the falling flops (SDC: x/f3 -> q_f): on every falling edge the
     // selected register did not change on the rising edge half a period before.
@@ -225,12 +239,13 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] prefi
         if (nsel[0]) assert(x[19:10] == f_xd[19:10]); else assert(f3 == f_f3d);
     end
 `endif
-    // c_r is a kept x4 flop (pt_clock_dff): c_r -> c_f is a half-period flop-to-flop copy, so its
-    // clock-to-Q is the whole path (timing 2026-11-11, hddr +0.03 ns post-synthesis with dffrnq_1).
-    wire c_r; reg c_f;
-    pt_clock_dff c_r_ff(.clk(ddr_clk), .rst_n(rst_n), .d(clk_en ? ~c_r : c_r), .q(c_r));
-    always @(negedge ddr_clk or negedge nrst_n) if (!nrst_n) c_f <= 1'b0; else c_f <= c_r;
-    assign clk_pin = c_r ^ c_f;
+    // Forwarded clock (TC13): c_l toggles on rising edges while enabled (logic copy); the clock lane's
+    // launch cells are the same pt_hio_launch as every data lane: lr takes c_l's next value on the
+    // rising edge (= c_r), lf copies c_l on the falling edge (= c_f), clk_pin = lr ^ lf.
+    reg c_l;
+    wire c_n = clk_en ? ~c_l : c_l;
+    always @(posedge ddr_clk or negedge rst_n) if (!rst_n) c_l <= 1'b0; else c_l <= c_n;
+    pt_hio_launch lc(.clk(ddr_clk), .rst_n(rst_n), .nrst_n(nrst_n), .dr(c_n), .df(c_l), .z(clk_pin));
 endmodule
 
 // H2D capture, 1:4 gearbox and pin-clock -> hcore quad FIFO (8 entries: two synchronizer stages on
@@ -247,24 +262,39 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     input wire [9:0] h2d_pin, input wire core_clk, core_rst_n, output reg [39:0] quad,
     output reg overflow, underflow);
     // ---- pin-clock domain
+    // TC13 pad-edge capture block (hand-placed, FIXED; see pt_cells.sv pt_hio_*): the pin clock enters
+    // through cap_root (clkbuf_8 next to the pin), which clocks only the 30 pin-capture flops (r, f and
+    // the upper half of fh) plus core_root, the root of the CTS tree for the rest of the domain. SDC:
+    // h2d_pin (port) -> generated h2d_cap (cap_root) -> generated h2d (core_root). Every pin passes
+    // one hio_ib clkbuf_8 and the capture flop's kept select (hio_m), so all capture paths are alike.
+    wire cka, ckb;
+    pt_clock_buf cap_root(.I(h2d_clk), .Z(cka));
+    pt_clock_buf core_root(.I(cka), .Z(ckb));
+    wire [9:0] hio_pin;
+    genvar gp;
+    generate for (gp = 0; gp < 10; gp = gp + 1) begin : ib
+        pt_hio_ibuf b(.I(h2d_pin[gp]), .Z(hio_pin[gp]));
+    end endgenerate
     (* async_reg = "true" *) reg [1:0] hrs;
-    always @(posedge h2d_clk or negedge rst_n) if (!rst_n) hrs <= 2'b00; else hrs <= {hrs[0], 1'b1};
+    always @(posedge ckb or negedge rst_n) if (!rst_n) hrs <= 2'b00; else hrs <= {hrs[0], 1'b1};
     wire hr_n = hrs[1];
     wire [1:0] mode_h;
-    pt_sync_vec #(2) smh(.clk(h2d_clk), .rst_n(hr_n), .d(mode), .q(mode_h));
+    pt_sync_vec #(2) smh(.clk(ckb), .rst_n(hr_n), .d(mode), .q(mode_h));
     wire ddr = mode_h == 2'd0;
-    reg [9:0]  r, r1, r2, r3, f;
-    reg [19:0] fh;
+    wire [9:0] r, f, fh_hi;
+    reg [9:0]  r1, r2, r3;
+    reg [9:0]  fh;                       // lower half of the falling-word pair (from f); upper half fhh
+    wire [19:0] fhw = {fh_hi, fh};
     reg [1:0]  phase;
     reg        hrun;
-    always @(posedge h2d_clk or negedge hr_n) if (!hr_n) hrun <= 1'b0; else hrun <= 1'b1;
+    always @(posedge ckb or negedge hr_n) if (!hr_n) hrun <= 1'b0; else hrun <= 1'b1;
     // phase[0] is 1 before the rising edges that write a DDR quad (`take`); nsel copies it to the
     // falling edge before, i.e. fh is written 1.5 periods before every take.
     wire nsel; wire [4:0] nselg;   // nselg[g]: replicated copies for fh pin groups (fanout 4 each)
-    pt_ddr_nphase hn0(.clk(h2d_clk), .rst_n(hr_n), .run(hrun), .phase(~phase[0]), .nsel(nsel));
+    pt_ddr_nphase hn0(.clk(ckb), .rst_n(hr_n), .run(hrun), .phase(~phase[0]), .nsel(nsel));
     genvar gn;
     generate for (gn = 0; gn < 5; gn = gn + 1) begin : hnr
-        pt_ddr_nphase hn(.clk(h2d_clk), .rst_n(hr_n), .run(hrun), .phase(~phase[0]), .nsel(nselg[gn]));
+        pt_ddr_nphase hn(.clk(ckb), .rst_n(hr_n), .run(hrun), .phase(~phase[0]), .nsel(nselg[gn]));
     end endgenerate
     // Falling-edge registers: their reset release may land on either of two falling edges (a
     // half-period recovery path, not timed); they only hold pin data, so either is equivalent.
@@ -272,13 +302,17 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     // Pin-data registers (f, fh, r..r3) are reset by rst_n itself, not by the synchronized hr_n: they
     // only hold pin words, so an asynchronous release is harmless, and hr_n's synchronous-release
     // fanout (recovery timing at 6.4 ns, run TC1 -3.0 ns) is left to the control registers.
-    always @(negedge h2d_clk or negedge rst_n)
-        if (!rst_n) begin f <= 10'd0; fh <= 20'd0; end
-        else begin
-            f <= h2d_pin;
-            for (i = 0; i < 10; i = i + 1)
-                if (nselg[i/2]) begin fh[i] <= f[i]; fh[i+10] <= h2d_pin[i]; end
-        end
+    always @(negedge ckb or negedge rst_n)
+        if (!rst_n) fh <= 10'd0;
+        else for (i = 0; i < 10; i = i + 1) if (nselg[i/2]) fh[i] <= f[i];
+    // pin capture: r (rising), f (falling), fhh = fh[19:10] (falling, pair enable)
+    generate for (gp = 0; gp < 10; gp = gp + 1) begin : cap
+        pt_hio_cap #(0) cr(.clk(cka), .rst_n(rst_n), .en(1'b1), .d(hio_pin[gp]), .q(r[gp]));
+        pt_hio_cap #(1) cf(.clk(cka), .rst_n(rst_n), .en(1'b1), .d(hio_pin[gp]), .q(f[gp]));
+    end endgenerate
+    generate for (gp = 0; gp < 10; gp = gp + 1) begin : fhh
+        pt_hio_cap #(1) c(.clk(cka), .rst_n(rst_n), .en(nselg[gp/2]), .d(hio_pin[gp]), .q(fh_hi[gp]));
+    end endgenerate
     // Write side: one-hot pointer, per-entry enables registered one clock ahead (one flop per
     // entry, preserved); Gray pointer for the reader.
     reg  [7:0]  woh;
@@ -293,7 +327,7 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     wire take = phase[0];
     wire done = ddr ? take : &phase;                       // a quad is written at this edge
     wire next_done = ddr ? !phase[0] : phase == 2'b10;     // ... at the next edge
-    wire [39:0] wdata = ddr ? {fh[19:10], r1, fh[9:0], r2} : {r, r1, r2, r3};
+    wire [39:0] wdata = ddr ? {fh_hi, r1, fh, r2} : {r, r1, r2, r3};
     wire any_we = wr_now;
     // full (timing 2026-11-11, h2d 6.4 ns): every candidate compare is a register, so full's own
     // input is a 4:1 select of registers by two registers. The candidates compare the write pointer
@@ -301,7 +335,7 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     // read-pointer synchronizer cycle. wr_full / wr_last are private copies of wr_now (now / last cycle).
     //   need now: (any_we ? wgn : wg) == g(rg2);  wg = wrote_last ? wgn_prev : wg_prev, wgn likewise
     wire wr_full; reg wr_last; reg c_wg, c_wgn, c_wgnn;   // vs g(rg1) last cycle: wg, wgn, wgnn
-    pt_rep_dff wr_full_copy(.clk(h2d_clk), .rst_n(hr_n), .d(next_done && !full), .q(wr_full));
+    pt_rep_dff wr_full_copy(.clk(ckb), .rst_n(hr_n), .d(next_done && !full), .q(wr_full));
     wire [3:0] rgx = {~rg1[3:2], rg1[1:0]};
     integer e, k;
     genvar ge;
@@ -310,14 +344,14 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
         // 4-buffer chain, TC4 h2d -3.0 ns)
         genvar gs;
         for (gs = 0; gs < 5; gs = gs + 1) begin : slice
-            pt_rep_dff enable(.clk(h2d_clk), .rst_n(hr_n), .d(next_done && woh[ge] && !full), .q(weg[ge][gs]));
+            pt_rep_dff enable(.clk(ckb), .rst_n(hr_n), .d(next_done && woh[ge] && !full), .q(weg[ge][gs]));
         end
         assign we[ge] = weg[ge][0];
     end endgenerate
-    always @(posedge h2d_clk or negedge rst_n)
-        if (!rst_n) begin r <= 10'd0; r1 <= 10'd0; r2 <= 10'd0; r3 <= 10'd0; end
-        else begin r <= h2d_pin; r1 <= r; r2 <= r1; r3 <= r2; end
-    always @(posedge h2d_clk or negedge hr_n)
+    always @(posedge ckb or negedge rst_n)
+        if (!rst_n) begin r1 <= 10'd0; r2 <= 10'd0; r3 <= 10'd0; end
+        else begin r1 <= r; r2 <= r1; r3 <= r2; end
+    always @(posedge ckb or negedge hr_n)
         if (!hr_n) begin
             phase <= 2'd0; wr_now <= 1'b0;
             woh <= 8'b00000001; wb <= 4'd0; wg <= 4'd0; wbn <= 4'd1; wgn <= 4'd1; wgnn <= 4'd3; wr_last <= 1'b0; c_wg <= 1'b0; c_wgn <= 1'b0; c_wgnn <= 1'b0; rg1 <= 4'd0; rg2 <= 4'd0; overflow <= 1'b0; full <= 1'b0;
@@ -340,13 +374,13 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     // chronological pin words {fall T-1.5, rise T-2, fall T-2.5, rise T-3}.
     reg [9:0] f_ra0, f_ra1, f_ra2, f_fb0, f_fb1, f_fb2; reg [19:0] f_fhd; reg [2:0] f_n;
     always @(posedge h2d_clk) begin f_ra0 <= h2d_pin; f_ra1 <= f_ra0; f_ra2 <= f_ra1; end
-    always @(negedge h2d_clk) begin f_fb0 <= h2d_pin; f_fb1 <= f_fb0; f_fb2 <= f_fb1; f_fhd <= fh; end
-    always @(posedge h2d_clk or negedge hr_n)
+    always @(negedge h2d_clk) begin f_fb0 <= h2d_pin; f_fb1 <= f_fb0; f_fb2 <= f_fb1; f_fhd <= fhw; end
+    always @(posedge ckb or negedge hr_n)
         if (!hr_n) f_n <= 3'd0;
         else begin
             if (f_n != 3'd7) f_n <= f_n + 1'b1;
             if (f_n >= 3'd5 && ddr && take) begin
-                assert(fh == f_fhd);
+                assert(fhw == f_fhd);
                 assert(wdata == {f_fb1, f_ra1, f_fb2, f_ra2});
             end
             if (any_we) assert(done);
@@ -357,7 +391,7 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
             cover(f_n == 3'd7 && any_we && wdata != 40'd0);
         end
 `endif
-    always @(posedge h2d_clk)
+    always @(posedge ckb)
         for (e = 0; e < 8; e = e + 1)
             for (k = 0; k < 40; k = k + 1) if (weg[e][k/8]) mem[e][k] <= wdata[k];
     // ---- core domain: start after two quads, then one quad per clock

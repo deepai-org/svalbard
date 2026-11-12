@@ -58,7 +58,7 @@ def lib_path(pvt):
 # AC-1 host clocks (transport rework 2026-11-10): hword (pin, host DDR clock line/16), hddr (after the
 # reduced-rate select: pad-edge DDR and gearboxes), hcore (hddr/2: 40-bit transport core); shared
 # ingress/egress banks have mux clocks.
-CLOCKS = ['sclk', 'ref', 'hword', 'hddr', 'hcore', 'h2d', 'ingress_wrx', 'ingress_rfrx', 'egress_wtx', 'egress_rftx',
+CLOCKS = ['sclk', 'ref', 'hword', 'hddr', 'hcore', 'h2d', 'h2d_cap', 'd2h_fwd', 'ingress_wrx', 'ingress_rfrx', 'egress_wtx', 'egress_rftx',
           'wtx', 'wrx', 'rftx', 'rfrx', 'ctw', 'ctref', 'ctdet', 'fc0', 'fc1', 'fc2', 'fc3', 'fc4', 'fc5']
 PERIOD_VAR = dict(sclk='SCLK_PERIOD', ref='REF_PERIOD', hword='HWORD_PERIOD', wtx='WTX_PERIOD', wrx='WRX_PERIOD',
                   rftx='RFTX_PERIOD', rfrx='RFRX_PERIOD', ctw='CTW_PERIOD', ctdet='CTDET_PERIOD',
@@ -86,6 +86,15 @@ proc pt_slack {{clk dly}} {{
   if {{$s eq "" || $s eq "INF"}} {{ return "none" }}
   return $s
 }}
+proc pt_xslack {{from to dly}} {{
+  # launched by clock `from`, captured by `to` (pin I/O windows: h2d_pin -> h2d_cap, hddr -> d2h_fwd)
+  if {{[llength [get_clocks -quiet $from]] == 0 || [llength [get_clocks -quiet $to]] == 0}} {{ return "none" }}
+  set ps [find_timing_paths -path_delay $dly -group_path_count 1 -endpoint_path_count 1 -sort_by_slack -from [get_clocks $from] -to [get_clocks $to]]
+  if {{[llength $ps] == 0}} {{ return "none" }}
+  set s [get_property [lindex $ps 0] slack]
+  if {{$s eq "" || $s eq "INF"}} {{ return "none" }}
+  return $s
+}}
 proc pt_paths {{clk dly n}} {{
   set out {{}}
   foreach p [find_timing_paths -path_delay $dly -group_path_count $n -endpoint_path_count 1 -sort_by_slack -from [get_clocks $clk] -to [get_clocks $clk]] {{
@@ -102,7 +111,7 @@ proc pt_default_periods {{}} {{
 }}
 pt_default_periods
 pt_load_sdc
-puts "PT_TARGETS [list sclk $SCLK_PERIOD ref $REF_PERIOD hword $HWORD_PERIOD h2d $H2D_PERIOD hlink $HLINK_PERIOD hddr $HDDR_PERIOD hcore $HCORE_PERIOD ingress_wrx $WRX_PERIOD ingress_rfrx $RFRX_PERIOD egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD ctw $CTW_PERIOD ctref $CTREF_PERIOD ctdet $CTDET_PERIOD]"
+puts "PT_TARGETS [list sclk $SCLK_PERIOD ref $REF_PERIOD hword $HWORD_PERIOD h2d $H2D_PERIOD h2d_cap $H2D_PERIOD d2h_fwd $HDDR_PERIOD hlink $HLINK_PERIOD hddr $HDDR_PERIOD hcore $HCORE_PERIOD ingress_wrx $WRX_PERIOD ingress_rfrx $RFRX_PERIOD egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD ctw $CTW_PERIOD ctref $CTREF_PERIOD ctdet $CTDET_PERIOD]"
 foreach c {{{clocks}}} {{
   puts "PT_SLACK $c [pt_slack $c max] [pt_slack $c min]"
   puts "PT_WORST_SETUP $c [list [pt_paths $c max 3]]"
@@ -135,7 +144,8 @@ puts "PT_D2H_DATA_MAX [pt_arr [get_ports d2h_pin*] max]"
 puts "PT_D2H_DATA_MIN [pt_arr [get_ports d2h_pin*] min]"
 puts "PT_D2H_CLK_MAX [pt_arr [get_ports d2h_clk_pin] max]"
 puts "PT_D2H_CLK_MIN [pt_arr [get_ports d2h_clk_pin] min]"
-puts "PT_H2D_SETUP [pt_slack h2d max] PT_H2D_HOLD [pt_slack h2d min]"
+puts "PT_H2D_SETUP [pt_xslack h2d_pin h2d_cap max] PT_H2D_HOLD [pt_xslack h2d_pin h2d_cap min]"
+puts "PT_D2HW_SETUP [pt_xslack hddr d2h_fwd max] PT_D2HW_HOLD [pt_xslack hddr d2h_fwd min]"
 puts "PT_WNS_ALL [sta::worst_slack_cmd max] [sta::worst_slack_cmd min]"
 report_check_types -max_slew -max_capacitance -violators > {out}/{corner}.drv.rpt
 report_checks -path_delay max -group_path_count 1 -format full_clock_expanded -digits 3 > {out}/{corner}.setup.rpt
@@ -186,6 +196,8 @@ def run_corner(name, pvt, rc, tcorner, rate, run, sdc, out):
             res['tns'] = dict(setup=float(t[1]), hold=float(t[2]))
         elif t[0] == 'PT_XING':
             res['crossings'].append(dict(launch=t[1], capture=t[2], slack=float(t[3]), start=t[4], end=t[5]))
+        elif t[0] == 'PT_D2HW_SETUP':
+            res['d2h_window'] = dict(setup=t[1], hold=t[3])
         elif t[0].startswith('PT_D2H'):
             res[t[0][3:].lower()] = [float(x) for x in t[1:]]
         elif t[0] == 'PT_WNS_ALL':

@@ -91,7 +91,11 @@ module pt_digital_macro(
  // RXR-D2 fast gain (opcode4): while the transport has applied an in-band gain (rx_gain_active,
  // cleared by ENABLE=0) the LNA gain_lo and the shared bbfilter PGA gain come from it instead of the
  // SPI fields. Mapping of the opcode4 indices onto today's hardware (analog/rf_rx/README.md):
- //   LNA index 0 (-6 dB) -> lna.gain.gain_db 0 (-6); 1..3 (0/10/20 dB) -> 1 (0 dB; 10/20 dB not built).
+ //   LNA index 0 (-6 dB) -> pre-LNA attenuator lna.match.att = 2 with gain_lo off (lna.gain.gain_db 1):
+ //   RC-16g made gain_lo the attenuator MSB (~27-34 dB), so it can no longer serve the -6 dB step. Code 2
+ //   is the level nearest 6 dB at every corner (analog/rf_rx/generated/lna-evidence.json level table:
+ //   ss32 5.34, tt27 7.05, ff22 8.52 dB). Indices 1..3 (0/10/20 dB) -> att 0, gain_db 1 (0 dB; 10/20 dB
+ //   not built).
  //   PGA index k (-6 + 3k dB) -> bbfilter gain code c with 20 log10(1 + c) nearest, clamped 0..15
  //   (0..24 dB). RXR-D1 (pre-filter steps) will extend this table, not the command.
  wire[6:0] rx_gain; wire rx_gain_active;
@@ -104,7 +108,9 @@ module pt_digital_macro(
  endfunction
  wire[`PT_ANALOG_CFG_W-1:0] analog_cfg_reg; wire[`PT_DEBUG_CFG_W-1:0] debug_cfg_reg;
  assign analog_cfg = rx_gain_active ?
-   {analog_cfg_reg[`PT_ANALOG_CFG_W-1:`PT_A_LNA_GAIN__GAIN_DB_LSB+2], 1'b0, rx_gain[6:5] != 2'd0,
+   {analog_cfg_reg[`PT_ANALOG_CFG_W-1:`PT_A_LNA_MATCH__ATT_LSB+`PT_A_LNA_MATCH__ATT_W],
+    (rx_gain[6:5] == 2'd0) ? 5'd2 : 5'd0,
+    analog_cfg_reg[`PT_A_LNA_MATCH__ATT_LSB-1:`PT_A_LNA_GAIN__GAIN_DB_LSB+2], 2'd1,
     analog_cfg_reg[`PT_A_LNA_GAIN__GAIN_DB_LSB-1:0]} : analog_cfg_reg;
  assign debug_cfg = rx_gain_active ?
    {debug_cfg_reg[`PT_DEBUG_CFG_W-1:`PT_D_CONSOLIDATION_BBFILTER__GAIN_LSB+4], pga_code(rx_gain[4:0]),

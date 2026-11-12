@@ -6,7 +6,7 @@
 #define PT_SPI_CMD_READ 0x00u
 #define PT_ID_VALUE 0x5356u
 #define PT_ABI_VERSION 0x0003u
-#define PT_MAP_HASH 0x0752u
+#define PT_MAP_HASH 0x2102u
 #define PT_COMMIT_CMD 0x0001u
 #define PT_REVERT_CMD 0x0002u
 #define PT_REG_ID 0x00u
@@ -2808,28 +2808,36 @@
 #define PT_CDR_PHASE_TRIM_P7_MAX 31u
 #define PT_LNA_MATCH_CTRIM_ADDR 0xE6u
 #define PT_LNA_MATCH_CTRIM_SHIFT 0u
-#define PT_LNA_MATCH_CTRIM_WIDTH 3u
-#define PT_LNA_MATCH_CTRIM_MASK 0x0007u
-#define PT_LNA_MATCH_CTRIM_DEFAULT 0u
-#define PT_LNA_MATCH_CTRIM_IMPL_MASK 0x7u  /* implemented bits; 0 = no hardware, reads 0 */
+#define PT_LNA_MATCH_CTRIM_WIDTH 4u
+#define PT_LNA_MATCH_CTRIM_MASK 0x000Fu
+#define PT_LNA_MATCH_CTRIM_DEFAULT 7u
+#define PT_LNA_MATCH_CTRIM_IMPL_MASK 0xFu  /* implemented bits; 0 = no hardware, reads 0 */
 #define PT_LNA_MATCH_CTRIM_MIN 0u
-#define PT_LNA_MATCH_CTRIM_MAX 7u
+#define PT_LNA_MATCH_CTRIM_MAX 15u
 #define PT_LNA_MATCH_RTERM_ADDR 0xE6u
-#define PT_LNA_MATCH_RTERM_SHIFT 3u
+#define PT_LNA_MATCH_RTERM_SHIFT 4u
 #define PT_LNA_MATCH_RTERM_WIDTH 1u
-#define PT_LNA_MATCH_RTERM_MASK 0x0008u
+#define PT_LNA_MATCH_RTERM_MASK 0x0010u
 #define PT_LNA_MATCH_RTERM_DEFAULT 0u
 #define PT_LNA_MATCH_RTERM_IMPL_MASK 0x1u  /* implemented bits; 0 = no hardware, reads 0 */
 #define PT_LNA_MATCH_RTERM_MIN 0u
 #define PT_LNA_MATCH_RTERM_MAX 1u
 #define PT_LNA_MATCH_SE_ADDR 0xE6u
-#define PT_LNA_MATCH_SE_SHIFT 4u
+#define PT_LNA_MATCH_SE_SHIFT 5u
 #define PT_LNA_MATCH_SE_WIDTH 1u
-#define PT_LNA_MATCH_SE_MASK 0x0010u
+#define PT_LNA_MATCH_SE_MASK 0x0020u
 #define PT_LNA_MATCH_SE_DEFAULT 0u
 #define PT_LNA_MATCH_SE_IMPL_MASK 0x1u  /* implemented bits; 0 = no hardware, reads 0 */
 #define PT_LNA_MATCH_SE_MIN 0u
 #define PT_LNA_MATCH_SE_MAX 1u
+#define PT_LNA_MATCH_ATT_ADDR 0xE6u
+#define PT_LNA_MATCH_ATT_SHIFT 6u
+#define PT_LNA_MATCH_ATT_WIDTH 5u
+#define PT_LNA_MATCH_ATT_MASK 0x07C0u
+#define PT_LNA_MATCH_ATT_DEFAULT 0u
+#define PT_LNA_MATCH_ATT_IMPL_MASK 0x1Fu  /* implemented bits; 0 = no hardware, reads 0 */
+#define PT_LNA_MATCH_ATT_MIN 0u
+#define PT_LNA_MATCH_ATT_MAX 31u
 #define PT_PLLVREG_CONFIG_TX_BYPASS_ADDR 0xE7u
 #define PT_PLLVREG_CONFIG_TX_BYPASS_SHIFT 0u
 #define PT_PLLVREG_CONFIG_TX_BYPASS_WIDTH 1u

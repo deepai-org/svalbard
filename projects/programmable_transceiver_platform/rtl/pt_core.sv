@@ -163,6 +163,28 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // disabled), so a gate whose TX clock has stopped cannot stay set across an owner change (independent
  // review: eg_r stale after rf_tx_clk stops and the owner switches to wired).
  wire egress_pop=(rf_unpack_ready&&eg_r&&egress_ne)||(lc_pop&&eg_l)||(wire_load&&eg_w&&egress_ne);
+ // Review TC12 assertion (simulation): the owner / linecode / pattern selects that the eg_* gates hold
+ // may change only while the egress is disabled (eg_rst_n low). Checked in both TX clock domains: across
+ // two consecutive edges with eg_rst_n high throughout, {payload_iq, linecode, pat_sel} must be equal.
+`ifndef SYNTHESIS
+`ifndef FORMAL
+ reg[2:0]a_sel_w,a_sel_r;reg a_w_ok,a_r_ok;
+ always @(posedge wire_tx_clk or negedge eg_rst_n)
+  if(eg_rst_n!==1'b1||^{payload_iq,linecode,pat_sel}===1'bx)a_w_ok<=1'b0;   // armed only while enabled with known selects
+  else begin
+   if(a_w_ok&&a_sel_w!=={payload_iq,linecode,pat_sel})
+    $fatal(1,"pt_core: payload_iq/linecode/pat_sel changed while enabled (wire_tx_clk): %b -> %b",a_sel_w,{payload_iq,linecode,pat_sel});
+   a_sel_w<={payload_iq,linecode,pat_sel};a_w_ok<=1'b1;
+  end
+ always @(posedge rf_tx_clk or negedge eg_rst_n)
+  if(eg_rst_n!==1'b1||^{payload_iq,linecode,pat_sel}===1'bx)a_r_ok<=1'b0;   // armed only while enabled with known selects
+  else begin
+   if(a_r_ok&&a_sel_r!=={payload_iq,linecode,pat_sel})
+    $fatal(1,"pt_core: payload_iq/linecode/pat_sel changed while enabled (rf_tx_clk): %b -> %b",a_sel_r,{payload_iq,linecode,pat_sel});
+   a_sel_r<={payload_iq,linecode,pat_sel};a_r_ok<=1'b1;
+  end
+`endif
+`endif
  // Admission uses only the registered, conservative ready (no backpressure:
  // a refused word faults the receiver). SPARE=4 covers the collector's input and output registers.
  pt_cdc_fifo #(.W(40),.A(EGRESS_A),.DEPTH(EGRESS_DEPTH),.SPARE(4),.MEMORY(2),.POPQ(1),.CNTPIPE(1)) egress(

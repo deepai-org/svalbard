@@ -110,7 +110,7 @@ module pt_digital(input wire rst_n,ref_clk,
  reg rfc_r,rfc_f;
  always @(posedge rf_tx_clk or negedge rst_n)if(!rst_n)rfc_r<=1'b0;else rfc_r<=~rfc_r;
  always @(negedge rf_tx_clk or negedge rst_n)if(!rst_n)rfc_f<=1'b0;else rfc_f<=rfc_r;
- pt_out_mux rf_clk_out(.I0(rfc_r^rfc_f),.I1(1'b0),.S(1'b0),.Z(rf_tx_clk_out));
+ pt_out_mux1 rf_clk_out(.I0(rfc_r^rfc_f),.I1(1'b0),.S(1'b0),.Z(rf_tx_clk_out));
  wire rf_req_core;
  // cleared asynchronously by disable (as the core's valid is, through the RF reservoir reset)
  pt_rf_out_reg rf_out(.clk(rf_tx_clk),.rst_n(rst_n&&enable),.halfband(tx_halfband),.in_sample(rf_tx_sample_i),.in_valid(rf_tx_valid_i),

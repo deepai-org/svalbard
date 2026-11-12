@@ -138,13 +138,19 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
         L.append(S.pwl_bits('DX', 'DX', tv, vdd, edge=0.1 * ui))
     else:
         L.append('VDX DX 0 0')
-    en = {'serial': (1, 1, 0), 'tmds': (0, 0, 1), 'ext': (1, 0, 0), 'mlt3': (1, 1, 0)}[mode]
+    x5 = 'EN_TMDS' not in ports      # X5: TMDS on the MAIN branch (MAIN code = the TMDS code)
+    en = {'serial': (1, 1, 0), 'tmds': (1, 0, 0) if x5 else (0, 0, 1), 'ext': (1, 0, 0), 'mlt3': (1, 1, 0)}[mode]
+    if x5 and mode == 'tmds':
+        codes = (codes[2], 0, codes[2])
     for nm, v in zip(('EN_MAIN', 'EN_POST', 'EN_TMDS'), en):
-        L.append(f'V{nm} {nm} 0 {v*vdd}')
+        if nm in ports:
+            L.append(f'V{nm} {nm} 0 {v*vdd}')
     L += ['VISO ISLAND_OFF 0 0', 'IREF VDD IBIAS 10u']
     if 'POST_POL' in ports:      # IX-9 postcursor polarity (0 = de-emphasis, 1 = MAIN + POST sum)
         L.append(f'VPOL POST_POL 0 {post_pol * vdd}')
     for b, code in zip(('MAIN', 'POST', 'TMDS'), codes):
+        if f'{b}_CODE0' not in ports:
+            continue
         for k, bit in enumerate(S.code_bits(code)):
             L.append(f'V{b}C{k} {b}_CODE{k} 0 {bit*vdd}')
     w40 = 'D39' in ports     # 40-bit boundary: word pairs launched on WORD_CLK40 rising (see sim_wiredtx)
@@ -165,7 +171,12 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
     L = S.driver_impedance(L)   # realistic DUT-input driver resistance (see sim_wiredtx)
     L.append('X0 ' + ' '.join(ports) + f' {subckt}')
     for c in BRANCH_CMDS:
-        L.append(f'XSB_{c} VDD VSS {c} {c[4:]} tx_steering_buffer_flat_physical')
+        if c in ports:
+            L.append(f'XSB_{c} VDD VSS {c} {c[4:]} tx_steering_buffer_flat_physical')
+        else:                       # X5: the pad's TMDS branch is unused, its gate inputs tied low
+            L.append(f'R{c}_tie {c[4:]} 0 10')
+    if 'TMDS_BIAS' not in ports:
+        L.append('RTMDSB_tie TMDS_BIAS 0 10')
     # pad control/bias stand-ins, each through a small series resistance
     L += [f'VCAS CAS_SRC 0 {vdd}', 'RCAS CAS_SRC CASCODE 50', 'VDETEN DETEN_SRC 0 0', 'RDETEN DETEN_SRC DETECT_ENABLE 100',
           f'VDETPB DETPB_SRC 0 {vdd}', 'RDETPB DETPB_SRC DETECT_PBIAS 100']
@@ -205,7 +216,7 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
             net = dict(topology='100ohm_differential')
             out = ('BOARD_P', 'BOARD_N')
     probes = [f'v({out[0]},{out[1]})', f'v({out[0]})', f'v({out[1]})', 'v(WORD_CLK40)' if w40 else 'v(WORD_CLK)', 'v(CMD_MAIN_N)',
-              'v(CMD_TMDS_N)', 'v(PAD_P)', 'v(PAD_N)', 'v(x0.SER)', 'v(x0.EXT)', 'i(VDD)', 'v(MAIN_BIAS)', 'v(TMDS_BIAS)']
+              'v(CMD_TMDS_N)' if 'CMD_TMDS_N' in ports else 'v(CMD_MAIN_P)', 'v(PAD_P)', 'v(PAD_N)', 'v(x0.SER)', 'v(x0.EXT)', 'i(VDD)', 'v(MAIN_BIAS)', 'v(TMDS_BIAS)']
     names = ['DIFF', 'OUTP', 'OUTN', 'WORD_CLK', 'CMD_MAIN_N', 'CMD_TMDS_N', 'PAD_P', 'PAD_N', 'SER', 'EXT',
              'I_VDD', 'MAIN_BIAS', 'TMDS_BIAS']
     L += ['.options reltol=1e-3 method=gear rshunt=1e10 interp', f'.tran 20p {tstop:.6e} 0 4p', '.control',

@@ -199,13 +199,16 @@ def row_of(name, gates, ports):
 
 
 # ------------------------------------------------------------------------------------- cells
+QW_NAND, QW_INV = 'NAND2E', 'INV16'   # serq4c overrides (skewed, slot overlap)
+
+
 def qph():
     ports = ['PH', 'SERQ', 'MQ', 'MH', 'MF', 'HB', 'FC', 'G', 'XN0', 'XN1', 'XN2', 'QW', 'Q']
     gates = [('gn', 'NAND2E', 'PH', 'SERQ', 'GB'), ('gi', 'INV8', 'GB', 'G'),
              ('sa', 'NAND', 'PH', 'MQ', 'XA'), ('sb', 'NAND', 'HB', 'MH', 'XB'), ('sc', 'NAND', 'FC', 'MF', 'XC'),
              ('so', 'NAND3S', 'XA', 'XB', 'XC', 'CR'),
              ('cb', 'INV4', 'CR', 'CN'), ('cc', 'INV16', 'CN', 'C'),
-             ('pw', 'NAND2E', 'C', 'SERQ', 'QWN'), ('px', 'INV16', 'QWN', 'QW'),   # QW: two NAND2W inputs + route
+             ('pw', QW_NAND, 'C', 'SERQ', 'QWN'), ('px', QW_INV, 'QWN', 'QW'),   # QW: two NAND2W inputs + route
              ('pg', 'NAND2E', 'C', 'SERQ', 'QN'), ('pb', 'INV8', 'QN', 'Q'),
              ('cd', 'INV4', 'CR', 'CRN'), ('ce', 'INV16', 'CRN', 'CRR'),
              ('x0', 'NAND2E', 'CRR', 'SERQ', 'XN0'), ('x1', 'NAND2E', 'CRR', 'SERQ', 'XN1'),

@@ -157,6 +157,44 @@ def nand2(name='wtx_nand2', wn=2, wp=2):
     return c
 
 
+def aoi21(name, wn, wp, wnc, wpc):
+    """Y = !(A & B | C)."""
+    c = Cell(name, ['A', 'B', 'C', 'Y', 'VDD', 'VSS'])
+    c.dev('MNA', N, 'Y', 'A', 'X', wn)
+    c.dev('MNB', N, 'X', 'B', 'VSS', wn)
+    c.dev('MNC', N, 'Y', 'C', 'VSS', wnc)
+    c.dev('MPA', P, 'Z', 'A', 'VDD', wp)
+    c.dev('MPB', P, 'Z', 'B', 'VDD', wp)
+    c.dev('MPC', P, 'Y', 'C', 'Z', wpc)
+    return c
+
+
+def oai21(name, wn, wp, wnc, wpc):
+    """Y = !((A | B) & C)."""
+    c = Cell(name, ['A', 'B', 'C', 'Y', 'VDD', 'VSS'])
+    c.dev('MNA', N, 'Y', 'A', 'X', wn)
+    c.dev('MNB', N, 'Y', 'B', 'X', wn)
+    c.dev('MNC', N, 'X', 'C', 'VSS', wnc)
+    c.dev('MPA', P, 'Y', 'A', 'Z', wp)
+    c.dev('MPB', P, 'Z', 'B', 'VDD', wp)
+    c.dev('MPC', P, 'Y', 'C', 'VDD', wpc)
+    return c
+
+
+def oai22(name, wn, wp):
+    """Y = !((A1 | A2) & (B1 | B2))."""
+    c = Cell(name, ['A1', 'A2', 'B1', 'B2', 'Y', 'VDD', 'VSS'])
+    c.dev('MNA1', N, 'Y', 'A1', 'X', wn)
+    c.dev('MNA2', N, 'Y', 'A2', 'X', wn)
+    c.dev('MNB1', N, 'X', 'B1', 'VSS', wn)
+    c.dev('MNB2', N, 'X', 'B2', 'VSS', wn)
+    c.dev('MPA1', P, 'Y', 'A1', 'Z1', wp)
+    c.dev('MPA2', P, 'Z1', 'A2', 'VDD', wp)
+    c.dev('MPB1', P, 'Y', 'B1', 'Z2', wp)
+    c.dev('MPB2', P, 'Z2', 'B2', 'VDD', wp)
+    return c
+
+
 def nor2(name='wtx_nor2', wn=1, wp=4):
     c = Cell(name, ['A', 'B', 'Y', 'VDD', 'VSS'])
     c.dev('MPA', P, 'X', 'A', 'VDD', wp)
@@ -393,6 +431,15 @@ SR5 = sr5()
 DIV5 = div5()
 NAND_O = nand2('wtx_nand2o', wn=4, wp=4)
 NANDG = nand2('wtx_nand2g', wn=8, wp=8)
+# session 8 pre-driver drive (extracted ss/32/3.15 2.5 Gb/s: QD eye 286 ps but DS 16 ps; the 4/4 -> 8/8 NAND chain
+# narrowed 0.76-UI pulses to 0.27 UI): series NMOS twice the PMOS, one size step per level
+NANDP1 = nand2('wtx_nand2p1', wn=12, wp=8)
+NANDP2 = nand2('wtx_nand2p2', wn=24, wp=16)
+NANDC = nand2('wtx_nand2c', wn=16, wp=12)   # CMD output stage (rev 2)
+OAIC = oai21('wtx_oai21c', 24, 64, 24, 16)   # rev 4 CMD stage (MAIN)
+OAIP = oai22('wtx_oai22c', 24, 64)          # rev 4 CMD stage (POST)
+AOIC = aoi21('wtx_aoi21c', 16, 48, 8, 80)   # CMD output stage (rev 3): non-overlapping P / N
+NANDG3 = nand2('wtx_nand2g3', wn=24, wp=24)   # enable stage into INV16 (16/12 rose to 1.9 V on 1-UI pulses)
 NAND3_O = nand3('wtx_nand3o', 6, 4)
 # window gates of the compact quarter core: fast rise at the NAND output and fast fall at
 # the inverter output make the window close early relative to its opening, so adjacent
@@ -420,6 +467,21 @@ def bbm():
     return c
 
 
+# X5 (coordinator, conditional on an extracted bench): TMDS is driven by the MAIN branch (as 100BASE-TX),
+# on-die termination off; the TMDS DAC, the TMDS CMD legs and their ports go.
+X5 = __import__('os').environ.get('WTX_X5', '1') == '1'
+SPLIT = __import__('os').environ.get('WTX_SPLIT', '0') == '1'
+SPLIT_XC = None
+SPLIT_TG = tuple(float(x) for x in __import__('os').environ.get('WTX_SPLIT_TG', '2,4').split(','))
+
+
+SPLIT_XC = {'0': None, '1': INV1, '2': INV2}[__import__('os').environ.get('WTX_SPLIT_XC', '2')]
+
+CMD_XC = {'0': None, '2': INV2, '4': INV4, '6': INV6}[__import__('os').environ.get('WTX_CMD_XC', '0')]
+
+PD_REV = int(__import__('os').environ.get('WTX_PD_REV', '2'))
+
+
 def predrv():
     """Data select (compact quarter-rate core / external) and per-branch gated complementary commands.
 
@@ -430,9 +492,10 @@ def predrv():
     MAIN + POST sum (MLT-3 / PAM-3 / duobinary).  Every leg (MAIN, TMDS, POST) passes the same two
     NAND levels between the select and the enable gate (MAIN / TMDS with the select input tied), so the
     one-UI MAIN -> POST offset is unchanged."""
-    outs = ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N']
+    outs = ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N'] + ([] if X5 else ['CMD_TMDS_P', 'CMD_TMDS_N'])
     c = Cell('wtx_predrv', ['DQ', 'DQB', 'DPQ', 'DPQB', 'DX', 'SERQ', 'EXT', 'POST_POL',
-                            'EN_MAIN', 'EN_POST', 'EN_TMDS', 'ISLAND_OFF', 'EXT_DATA'] + outs + ['VDD', 'VSS'],
+                            'EN_MAIN', 'EN_POST'] + ([] if X5 else ['EN_TMDS']) + ['ISLAND_OFF', 'EXT_DATA'] + outs
+             + ['VDD', 'VSS'],
              row_width=150)
     V = dict(VDD='VDD', VSS='VSS')
     c.inst('XB', INV1, A='DX', Y='DXB', **V)
@@ -440,32 +503,74 @@ def predrv():
     # ~0.6 V glitches onto the adjacent word input D13 while DX toggled in serializer mode)
     c.inst('XN', NAND, A='DX', B='EXT', Y='EXDN', **V)
     c.inst('XO', INV1, A='EXDN', Y='EXT_DATA', **V)
-    # Session 8: four dynamic levels on every leg (was five plus an INV4 after IX-9; extracted ss/32/3.15
-    # 2.5 Gb/s: 20/141 errors, 340-420 ps edges at CMD).  Level 1/2: NAND-NAND select (MAIN/TMDS: core or
-    # external data; POST: DP or DPB by POST_POL, the polarity folded into static enables SP = SERQ & !POL,
-    # SPP = SERQ & POL); level 3: NAND with the branch enable; level 4: INV16 onto the CMD route.
+    # Session 8 (rev 2): two dynamic levels per leg.  The select (core / external) and the branch enable are
+    # folded into static enables, so each CMD leg is one AND-OR: CMD = NAND(NAND(data_core, ENS), NAND(data_ext,
+    # ENX)), the output NAND driving the CMD route directly.  The 4-level NAND chain (rev 1) still narrowed
+    # isolated bits at ss/32/3.15, 2.5 Gb/s (QD eye 285 ps -> DS 174 -> CMD 8-161 ps, 2-3 errors): every static
+    # stage added data-dependent rise/fall skew.  POST: polarity folded the same way (SP = SERQ & !POL).
     c.inst('PPI', INV1, A='POST_POL', Y='POLB', **V)
-    c.inst('SPA', NAND, A='SERQ', B='POLB', Y='SPN', **V)
-    c.inst('SPB', INV2, A='SPN', Y='SP', **V)
-    c.inst('SQA', NAND, A='SERQ', B='POST_POL', Y='SQN', **V)
-    c.inst('SQB', INV2, A='SQN', Y='SPP', **V)
-    c.inst('Q1', NAND_O, A='DQ', B='SERQ', Y='NQ1', **V)
-    c.inst('X1', NAND_O, A='DX', B='EXT', Y='NX1', **V)
-    c.inst('O1', NANDG, A='NQ1', B='NX1', Y='DS', **V)
-    c.inst('Q2', NAND_O, A='DQB', B='SERQ', Y='NQ2', **V)
-    c.inst('X2', NAND_O, A='DXB', B='EXT', Y='NX2', **V)
-    c.inst('O2', NANDG, A='NQ2', B='NX2', Y='DSB', **V)
-    for leg, a_, b_ in (('P', 'DPQ', 'DPQB'), ('N', 'DPQB', 'DPQ')):
-        c.inst(f'PA{leg}', NAND_O, A=a_, B='SP', Y=f'NPA{leg}', **V)
-        c.inst(f'PB{leg}', NAND_O, A=b_, B='SPP', Y=f'NPB{leg}', **V)
-        c.inst(f'PO{leg}', NANDG, A=f'NPA{leg}', B=f'NPB{leg}', Y=f'PS{leg}', **V)
-    for br, (pos, neg, en) in {'MAIN': ('DSB', 'DS', 'EN_MAIN'), 'TMDS': ('DSB', 'DS', 'EN_TMDS'),
-                               'POST': ('PSP', 'PSN', 'EN_POST')}.items():
-        for leg, data in (('P', pos), ('N', neg)):
-            o = f'CMD_{br}_{leg}'
-            c.inst(f'G_{br}_{leg}', NANDG, A=data, B=en, Y=f'NB_{br}_{leg}', **V)
-            c.inst(f'O_{br}_{leg}', INV16, A=f'NB_{br}_{leg}', Y=o, **V)
-            c.dev(f'CL_{br}_{leg}', N, o, 'ISLAND_OFF', 'VSS', 2)
+    for nm, a_, b_, c_ in (('EM_S', 'SERQ', 'EN_MAIN', 'ENS_M'), ('EM_X', 'EXT', 'EN_MAIN', 'ENX_M'),
+                           ('EP_S', 'POLB', 'EN_POST', 'ENP0'), ('EP_P', 'POST_POL', 'EN_POST', 'ENP1')):
+        c.inst(nm + 'N', NAND, A=a_, B=b_, Y=c_ + 'N', **V)
+        c.inst(nm + 'I', INV2, A=c_ + 'N', Y=c_ + 'R', **V)
+    # POST also needs SERQ: ENP0/1 & SERQ
+    c.inst('EP_QN', NAND, A='ENP0R', B='SERQ', Y='ENP0N2', **V)
+    c.inst('EP_QI', INV2, A='ENP0N2', Y='ENPS0', **V)
+    c.inst('EP_RN', NAND, A='ENP1R', B='SERQ', Y='ENP1N2', **V)
+    c.inst('EP_RI', INV2, A='ENP1N2', Y='ENPS1', **V)
+    # Phase splitter (session 8): both legs of a branch come from ONE core output (DQ / DPQ): the P leg through
+    # an inverter, the N leg through an always-on transmission gate of matched delay.  Taking the legs from the
+    # core's separate true / complement trees (YB, DPB) put the crossover of P rise and N fall 53-58 ps apart
+    # (extracted block, ss and ff): window overlap delays one tree's falling edge and advances the other's
+    # rising edge, so both pad switches were on (or off) together -> runt pulses at the pad (int_serial).
+    for src, inv_, tg_ in ((('DQ', 'DQI', 'DQT'), ('DPQ', 'DPI', 'DPT')) if SPLIT else ()):
+        c.inst('SP_' + src, INV4, A=src, Y=inv_, **V)
+        c.dev('ST_' + src + 'N', N, tg_, 'VDD', src, SPLIT_TG[0])
+        c.dev('ST_' + src + 'P', P, tg_, 'VSS', src, SPLIT_TG[1])
+        if SPLIT_XC:   # weak cross-coupled pair: forces the P / N leg signals to cross together
+            c.inst('XA_' + src, SPLIT_XC, A=inv_, Y=tg_, **V)
+            c.inst('XB_' + src, SPLIT_XC, A=tg_, Y=inv_, **V)
+    qi, qt, pi, pt = ('DQI', 'DQT', 'DPI', 'DPT') if SPLIT else ('DQB', 'DQ', 'DPQB', 'DPQ')
+    legs = {'CMD_MAIN_P': ((qi, 'ENS_MR'), ('DXB', 'ENX_MR')), 'CMD_MAIN_N': ((qt, 'ENS_MR'), ('DX', 'ENX_MR')),
+            'CMD_POST_P': ((pt, 'ENPS0'), (pi, 'ENPS1')), 'CMD_POST_N': ((pi, 'ENPS0'), (pt, 'ENPS1'))}
+    if not X5:
+        c.inst('ET_S', NAND, A='SERQ', B='EN_TMDS', Y='ENS_TN', **V); c.inst('ET_SI', INV2, A='ENS_TN', Y='ENS_T', **V)
+        c.inst('ET_X', NAND, A='EXT', B='EN_TMDS', Y='ENX_TN', **V); c.inst('ET_XI', INV2, A='ENX_TN', Y='ENX_T', **V)
+        legs.update({'CMD_TMDS_P': ((qi, 'ENS_T'), ('DXB', 'ENX_T')), 'CMD_TMDS_N': ((qt, 'ENS_T'), ('DX', 'ENX_T'))})
+    # rev 4 (OAI from the opposite tree) is kept behind WTX_PD_REV=4: it did not fix the pad-level failure
+    # (the pad steering buffer swallows < 400 ps pulses, see WT24) and cost 0.05 mm^2 and the ss block margin.
+    if PD_REV == 4:
+        # rev 4 (session 8): each CMD leg is ONE gate from the core output, driven from the OPPOSITE core tree and
+        # inverted: CMD_MAIN_P = !DQ & ENS | DXB & ENX = OAI21(DQ, !ENS, NAND(DXB, ENX)).  The core's OR trees
+        # rise early and fall late (deliberate window overlap); inverted, both legs fall early and rise late, so
+        # the P and N legs of a branch can never be high together (the pad steering / interlock swallowed 1-UI
+        # pulses when they were: int_serial tt, steering MAIN_P/N eyes 155 / 49 ps against CMD 256-266 ps).
+        # Cross-coupled AOI gating (rev 3) left 95-160 ps of both-low; this keeps it to the overlap (~50 ps).
+        for src in ('DQ', 'DQB', 'DPQ', 'DPQB'):     # INV4 -> INV16 buffers: the core's INVP sees one INV4 input
+            c.inst(f'BA_{src}', INV4, A=src, Y=f'{src}_1', **V)
+            c.inst(f'BB_{src}', INV16, A=f'{src}_1', Y=f'{src}_2', **V)
+        xb = {'CMD_MAIN_P': ('DQ_2', 'DXB'), 'CMD_MAIN_N': ('DQB_2', 'DX'), 'CMD_TMDS_P': ('DQ_2', 'DXB'), 'CMD_TMDS_N': ('DQB_2', 'DX')}
+        ensn = {'MAIN': ('ENS_MN', 'ENX_MR'), 'TMDS': ('ENS_TN', 'ENX_T')}
+        for o in [x for x in legs if 'POST' not in x]:
+            br = o.split('_')[1]
+            q, xd = xb[o]
+            c.inst(f'B_{o}', NANDP1, A=xd, B=ensn[br][1], Y=f'NB_{o}', **V)
+            c.inst(f'O_{o}', OAIC, A=q, B=ensn[br][0], C=f'NB_{o}', Y=o, **V)
+            c.dev(f'CL_{o}', N, o, 'ISLAND_OFF', 'VSS', 2)
+        # POST: CMD_POST_P = DPQ & SP | DPQB & SPP = !DPQB & SP | !DPQ & SPP = OAI22(DPQB, !SP, DPQ, !SPP)
+        for o, a1, b1 in (('CMD_POST_P', 'DPQB_2', 'DPQ_2'), ('CMD_POST_N', 'DPQ_2', 'DPQB_2')):
+            c.inst(f'O_{o}', OAIP, A1=a1, A2='ENP0N2', B1=b1, B2='ENP1N2', Y=o, **V)
+            c.dev(f'CL_{o}', N, o, 'ISLAND_OFF', 'VSS', 2)
+    else:
+        for o, ((d1, e1), (d2, e2)) in legs.items():
+            c.inst(f'A_{o}', NANDP1, A=d1, B=e1, Y=f'NA_{o}', **V)
+            c.inst(f'B_{o}', NANDP1, A=d2, B=e2, Y=f'NB_{o}', **V)
+            c.inst(f'O_{o}', NANDC, A=f'NA_{o}', B=f'NB_{o}', Y=o, **V)
+            c.dev(f'CL_{o}', N, o, 'ISLAND_OFF', 'VSS', 2)
+    if CMD_XC:      # cross-coupled pair on each P / N output pair: the earlier edge pulls the later one
+        for b_ in [x for x in ('MAIN', 'POST', 'TMDS') if f'CMD_{x}_P' in legs]:
+            c.inst(f'XC_{b_}_A', CMD_XC, A=f'CMD_{b_}_P', Y=f'CMD_{b_}_N', **V)
+            c.inst(f'XC_{b_}_B', CMD_XC, A=f'CMD_{b_}_N', Y=f'CMD_{b_}_P', **V)
     return c
 
 
@@ -743,13 +848,14 @@ def rep_src(i):
 
 
 def wiredtx():
-    codes = {b: [f'{b}_CODE{k}' for k in range(8)] for b in ('MAIN', 'POST', 'TMDS')}
+    brs = ('MAIN', 'POST') if X5 else ('MAIN', 'POST', 'TMDS')
+    codes = {b: [f'{b}_CODE{k}' for k in range(8)] for b in brs}
     ports = (['WTX_PH0', 'WTX_PH90', 'WTX_PH180', 'WTX_PH270', 'MODE_H', 'MODE_F'] + [f'D{i}' for i in range(40)]
-             + ['WORD_CLK', 'WORD_CLK40', 'SER_EN', 'WTX_EXT', 'DX', 'POST_POL',
-             'EN_MAIN', 'EN_POST', 'EN_TMDS', 'ISLAND_OFF', 'IBIAS']
-             + codes['MAIN'] + codes['POST'] + codes['TMDS']
-             + ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N',
-                'MAIN_BIAS', 'POST_BIAS', 'TMDS_BIAS', 'WTX_EXT_DATA', 'ATB_NBIAS', 'ATB_PBIAS', 'VDD', 'VSS'])
+             + ['WORD_CLK', 'WORD_CLK40', 'SER_EN', 'WTX_EXT', 'DX', 'POST_POL']
+             + [f'EN_{b}' for b in brs] + ['ISLAND_OFF', 'IBIAS']
+             + [x for b in brs for x in codes[b]]
+             + [f'CMD_{b}_{l}' for b in brs for l in 'PN']
+             + [f'{b}_BIAS' for b in brs] + ['WTX_EXT_DATA', 'ATB_NBIAS', 'ATB_PBIAS', 'VDD', 'VSS'])
     c = Cell('pt_wiredtx', ports, row_width=420)
     V = dict(VDD='VDD', VSS='VSS')
     c.inst('BBM', BBM, SER_EN='SER_EN', WTX_EXT='WTX_EXT', SER='SER', EXT='EXT', **V)
@@ -779,15 +885,14 @@ def wiredtx():
     c.inst('WCB', INV16, A='WCKN', Y='WORD_CLK', **V)
     c.inst('PD', PREDRV, DQ='QD', DQB='QDB', DPQ='QDP', DPQB='QDPB',
            DX='DX', SERQ='SERQ', EXT='EXT', POST_POL='POST_POL',
-           EN_MAIN='EN_MAIN', EN_POST='EN_POST', EN_TMDS='EN_TMDS', ISLAND_OFF='ISLAND_OFF',
-           EXT_DATA='WTX_EXT_DATA', **{o: o for o in ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P',
-                                                      'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N']}, **V)
+           ISLAND_OFF='ISLAND_OFF', EXT_DATA='WTX_EXT_DATA',
+           **{f'EN_{b}': f'EN_{b}' for b in brs}, **{f'CMD_{b}_{l}': f'CMD_{b}_{l}' for b in brs for l in 'PN'}, **V)
     # bias reference: 10 uA sourced into IBIAS by the island bias output
-    c.inst('BE', BIASEN, A='EN_MAIN', B='EN_POST', C='EN_TMDS', Y='BEN', YB='BENB', **V)
+    c.inst('BE', BIASEN, A='EN_MAIN', B='EN_POST', C='VSS' if X5 else 'EN_TMDS', Y='BEN', YB='BENB', **V)
     c.dev('SWI', N, 'IBIAS', 'BEN', 'ATB_NBIAS', 4)
     c.dev('MN0', N, 'ATB_NBIAS', 'ATB_NBIAS', 'VSS', 2, 2.0)
     c.dev('PDN', N, 'ATB_NBIAS', 'BENB', 'VSS', 2)
-    for b, cell, en in (('MAIN', IDAC2M, 'EN_MAIN'), ('POST', IDAC2M, 'EN_POST'), ('TMDS', IDAC1, 'EN_TMDS')):
+    for b, cell, en in (('MAIN', IDAC2M, 'EN_MAIN'), ('POST', IDAC2M, 'EN_POST'), ('TMDS', IDAC1, 'EN_TMDS'))[:len(brs)]:
         c.inst(f'DAC_{b}', cell, NB='ATB_NBIAS', EN=en, ISLAND_OFF='ISLAND_OFF', BIAS=f'{b}_BIAS',
                PB='ATB_PBIAS' if b == 'MAIN' else f'PB_{b}',
                **{f'C{k}': codes[b][k] for k in range(8)}, **V)

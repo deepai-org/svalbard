@@ -13,6 +13,15 @@ Nothing here is qualified; numbers are extracted (Magic C) unless noted, and
 | `wtx_ext_rx` | instance of timing's `pt_diff_clk_rx` (`wtx_ext_rx.spice`) | timing | timing | ideal DX: 1 Gb/s, 0 errors, eye 388 mV / 965 ps at the pad; through the extracted receiver: 5/43 errors at 0.5 Gb/s (start-up), no output at 2 Gb/s | pass / pass / pass / n/a |
 | `usb_hs_bias` (`pt_wtx_hsbias`) | 125.8 × 76.0 µm = 9,552 µm², 53 devices | 0 / 0 | unique | 0–0.58 V full scale (tt), monotonic at all corners, settles to 1 LSB in 0.47 µs | pass / pass / open / n/a |
 
+**Status 2026-11-12 (session 8).**  Block published 546.9 × 454.2 µm = 0.248 mm² (444 devices, Magic DRC 0,
+LVS unique, KLayout 0).  WT19 (repetition in digital), WT20 (D-bus launch), WT21 (rate plan: core ≤ 2.5 Gb/s, ring
+360–625 MHz), WT22 (X5: TMDS on MAIN), WT23 (3.24 Gb/s plan), WT24 (pad steering-buffer blocker).
+* Core macro (extracted): 46/46 pass incl. pessimistic (Rg 200 Ω/10 µm, +25 % device C, +15 % wire C) 2.5 Gb/s at all 20
+  corners (worst 171 ps of 400, ss/32/3.15) and optimistic (−15 % C) hold cases; postcursor one LINE bit late in ×1/×2/×4.
+* Block (extracted, nominal values): 2.5 Gb/s ss/32/3.15 0 errors (CMD 237/252 ps), ff 288/290 ps, 1.25 ×2 ss, 1.44 ×1 ff,
+  0.48 ×4 ff pass; TMDS 1.485 via MAIN (X5) 1.05 V / 604 ps at tt.  Pessimistic block 2.5 ss: 1 error (open).
+* Pad level: 2.5 Gb/s serial / package benches FAIL at tt because the pads' steering buffer drops < 400-ps pulses (WT24).
+
 **Status 2026-11-11 (session 7, path A = CMOS quarter-rate core + WT12 repetition).**
 
 * **Core macro `wtx_serq4c` extracted, 20 in-window corners × {2.5 Gb/s quarter, 3.24 Gb/s core rep2

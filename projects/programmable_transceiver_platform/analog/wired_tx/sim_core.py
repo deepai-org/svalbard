@@ -156,7 +156,7 @@ if __name__ == '__main__':
     if a.macro:
         MACRO = a.macro
         DUTS = dict(sch=FAST / f'{a.macro}.spice', ext=FAST / f'{a.macro}.ext.spice')
-    tag = ('pes_' if S.PESSIMISTIC else '') + f'{a.dut}_{a.bpc}_{a.rate / 1e9:g}_{a.corner}_{a.temp:g}_{a.vdd:g}' + (f'_r{a.rep}' if a.rep > 1 else '')
+    tag = ('pes_' if S.PESSIMISTIC else 'opt_' if S.OPTIMISTIC else '') + f'{a.dut}_{a.bpc}_{a.rate / 1e9:g}_{a.corner}_{a.temp:g}_{a.vdd:g}' + (f'_r{a.rep}' if a.rep > 1 else '')
     wk = Path(a.work) if a.work else tools.SCRATCH / 'core'
     wk.mkdir(parents=True, exist_ok=True)
     r = run(wk, DUTS[a.dut], rate=a.rate, bpc=a.bpc, corner=a.corner, temp=a.temp, vdd=a.vdd,

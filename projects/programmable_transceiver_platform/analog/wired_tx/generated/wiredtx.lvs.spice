@@ -1,38 +1,38 @@
 * NGSPICE file created from pt_wiredtx.ext - technology: gf180mcuD
 
-.subckt pt_wiredtx__p14 a_28_n400# a_n36_n556# w_n278_n716# a_n116_n400#
+.subckt pt_wiredtx__p13 a_28_n400# a_n36_n556# w_n278_n716# a_n116_n400#
 X0 a_28_n400# a_n36_n556# a_n116_n400# w_n278_n716# pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
 .ends
 
-.subckt pt_wiredtx__p11 w_n278_n516# a_n36_n356# a_n116_n200# a_28_n200#
+.subckt pt_wiredtx__p10 w_n278_n516# a_n36_n356# a_n116_n200# a_28_n200#
 X0 a_28_n200# a_n36_n356# a_n116_n200# w_n278_n516# pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt pt_wiredtx__p6 a_28_n1600# a_n36_n1756# a_n254_n1892# a_n116_n1600#
+X0 a_28_n1600# a_n36_n1756# a_n116_n1600# a_n254_n1892# nfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
 .ends
 
 .subckt pt_wiredtx__p4 a_n254_n692# a_28_n400# a_n36_n556# a_n116_n400#
 X0 a_28_n400# a_n36_n556# a_n116_n400# a_n254_n692# nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
 .ends
 
-.subckt pt_wiredtx__p3 a_n288_n200# a_n200_n360# a_200_n200# a_n426_n492#
-X0 a_200_n200# a_n200_n360# a_n288_n200# a_n426_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
-.ends
-
-.subckt pt_wiredtx__p10 a_n188_n120# a_n100_n280# a_100_n120# w_n350_n436#
-X0 a_100_n120# a_n100_n280# a_n188_n120# w_n350_n436# pfet_03v3 ad=0.528p pd=3.28u as=0.528p ps=3.28u w=1.2u l=1u
-.ends
-
-.subckt pt_wiredtx__p23 a_n188_n1920# a_n100_n2080# w_n350_n2236# a_100_n1920#
-X0 a_100_n1920# a_n100_n2080# a_n188_n1920# w_n350_n2236# pfet_03v3 ad=8.448p pd=39.28u as=8.448p ps=39.28u w=19.2u l=1u
-.ends
-
-.subckt pt_wiredtx__p5 a_n36_n956# a_n116_n800# a_n254_n1092# a_28_n800#
-X0 a_28_n800# a_n36_n956# a_n116_n800# a_n254_n1092# nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
-.ends
-
 .subckt pt_wiredtx__p2 a_n36_n356# a_n116_n200# a_n254_n492# a_28_n200#
 X0 a_28_n200# a_n36_n356# a_n116_n200# a_n254_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
 .ends
 
-.subckt pt_wiredtx__p18 a_n36_n956# a_n116_n800# a_28_n800# w_n278_n1116#
+.subckt pt_wiredtx__p9 a_n188_n120# a_n100_n280# a_100_n120# w_n350_n436#
+X0 a_100_n120# a_n100_n280# a_n188_n120# w_n350_n436# pfet_03v3 ad=0.528p pd=3.28u as=0.528p ps=3.28u w=1.2u l=1u
+.ends
+
+.subckt pt_wiredtx__p20 a_n188_n1920# a_n100_n2080# w_n350_n2236# a_100_n1920#
+X0 a_100_n1920# a_n100_n2080# a_n188_n1920# w_n350_n2236# pfet_03v3 ad=8.448p pd=39.28u as=8.448p ps=39.28u w=19.2u l=1u
+.ends
+
+.subckt pt_wiredtx__p5 a_n36_n1356# a_28_n1200# a_n254_n1492# a_n116_n1200#
+X0 a_28_n1200# a_n36_n1356# a_n116_n1200# a_n254_n1492# nfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+.ends
+
+.subckt pt_wiredtx__p16 a_n36_n956# a_n116_n800# a_28_n800# w_n278_n1116#
 X0 a_28_n800# a_n36_n956# a_n116_n800# w_n278_n1116# pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
 .ends
 
@@ -40,15 +40,11 @@ X0 a_28_n800# a_n36_n956# a_n116_n800# w_n278_n1116# pfet_03v3 ad=3.52p pd=16.88
 X0 a_28_n100# a_n36_n256# a_n116_n100# a_n254_n392# nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
 .ends
 
-.subckt pt_wiredtx__p13 a_n188_n240# a_n100_n400# a_100_n240# w_n350_n556#
+.subckt pt_wiredtx__p12 a_n188_n240# a_n100_n400# a_100_n240# w_n350_n556#
 X0 a_100_n240# a_n100_n400# a_n188_n240# w_n350_n556# pfet_03v3 ad=1.056p pd=5.68u as=1.056p ps=5.68u w=2.4u l=1u
 .ends
 
-.subckt pt_wiredtx__p6 a_28_n1600# a_n36_n1756# a_n254_n1892# a_n116_n1600#
-X0 a_28_n1600# a_n36_n1756# a_n116_n1600# a_n254_n1892# nfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
-.ends
-
-.subckt pt_wiredtx__p16 w_n350_n796# a_n188_n480# a_n100_n640# a_100_n480#
+.subckt pt_wiredtx__p14 w_n350_n796# a_n188_n480# a_n100_n640# a_100_n480#
 X0 a_100_n480# a_n100_n640# a_n188_n480# w_n350_n796# pfet_03v3 ad=2.112p pd=10.48u as=2.112p ps=10.48u w=4.8u l=1u
 .ends
 
@@ -56,44 +52,36 @@ X0 a_100_n480# a_n100_n640# a_n188_n480# w_n350_n796# pfet_03v3 ad=2.112p pd=10.
 X0 a_28_n100# a_n36_n256# a_n116_n100# w_n278_n416# pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
 .ends
 
-.subckt pt_wiredtx__p22 a_n188_n1600# a_n100_n1760# w_n350_n1916# a_100_n1600#
-X0 a_100_n1600# a_n100_n1760# a_n188_n1600# w_n350_n1916# pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=1u
+.subckt pt_wiredtx__p17 a_100_n960# w_n350_n1276# a_n100_n1120# a_n188_n960#
+X0 a_100_n960# a_n100_n1120# a_n188_n960# w_n350_n1276# pfet_03v3 ad=4.224p pd=20.08u as=4.224p ps=20.08u w=9.6u l=1u
 .ends
 
-.subckt pt_wiredtx__p12 a_100_n200# w_n350_n516# a_n188_n200# a_n100_n360#
+.subckt pt_wiredtx__p11 a_100_n200# w_n350_n516# a_n188_n200# a_n100_n360#
 X0 a_100_n200# a_n100_n360# a_n188_n200# w_n350_n516# pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
 .ends
 
-.subckt pt_wiredtx__p20 a_100_n960# w_n350_n1276# a_n100_n1120# a_n188_n960#
-X0 a_100_n960# a_n100_n1120# a_n188_n960# w_n350_n1276# pfet_03v3 ad=4.224p pd=20.08u as=4.224p ps=20.08u w=9.6u l=1u
+.subckt pt_wiredtx__p3 a_n288_n200# a_n200_n360# a_200_n200# a_n426_n492#
+X0 a_200_n200# a_n200_n360# a_n288_n200# a_n426_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
 .ends
 
 .subckt pt_wiredtx__p1 a_n326_n392# a_n188_n100# a_n100_n260# a_100_n100#
 X0 a_100_n100# a_n100_n260# a_n188_n100# a_n326_n392# nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
 .ends
 
-.subckt pt_wiredtx__p21 w_n278_n1916# a_28_n1600# a_n36_n1756# a_n116_n1600#
-X0 a_28_n1600# a_n36_n1756# a_n116_n1600# w_n278_n1916# pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+.subckt pt_wiredtx__p18 a_n36_n1356# w_n278_n1516# a_28_n1200# a_n116_n1200#
+X0 a_28_n1200# a_n36_n1356# a_n116_n1200# w_n278_n1516# pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
 .ends
 
 .subckt pt_wiredtx__p7 a_n326_n2292# a_100_n2000# a_n188_n2000# a_n100_n2160#
 X0 a_100_n2000# a_n100_n2160# a_n188_n2000# a_n326_n2292# nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
 .ends
 
-.subckt pt_wiredtx__p17 a_28_n600# a_n36_n756# w_n278_n916# a_n116_n600#
+.subckt pt_wiredtx__p15 a_28_n600# a_n36_n756# w_n278_n916# a_n116_n600#
 X0 a_28_n600# a_n36_n756# a_n116_n600# w_n278_n916# pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
 .ends
 
-.subckt pt_wiredtx__p9 a_n188_n100# a_n100_n260# a_100_n100# w_n350_n416#
-X0 a_100_n100# a_n100_n260# a_n188_n100# w_n350_n416# pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
-.ends
-
-.subckt pt_wiredtx__p15 a_n188_n400# a_n100_n560# a_100_n400# w_n350_n716#
-X0 a_100_n400# a_n100_n560# a_n188_n400# w_n350_n716# pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
-.ends
-
-.subckt pt_wiredtx__p19 a_100_n800# w_n350_n1116# a_n188_n800# a_n100_n960#
-X0 a_100_n800# a_n100_n960# a_n188_n800# w_n350_n1116# pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+.subckt pt_wiredtx__p19 w_n278_n1916# a_28_n1600# a_n36_n1756# a_n116_n1600#
+X0 a_28_n1600# a_n36_n1756# a_n116_n1600# w_n278_n1916# pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
 .ends
 
 .subckt wtx_tspcb CK D Q ENB VDD VSS
@@ -703,277 +691,293 @@ X123 fcn2 fcn1 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28
 .subckt wtx_omuxt QW0 QW1 QW2 QW3 F0 F1 F2 F3 Y YB DP DPB S0 S1 S2 S3 dA1 dA2 dA3
 + dbA1 dbA2 dbA3 VDD VSS
 X0 VDD QW1 SN1 VDD pfet_03v3 ad=1.785p pd=4.52u as=1.785p ps=4.52u w=3.5u l=0.28u
-X1 yZ2 F2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X2 a_28118_230# dZ3 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
-X3 VDD QW2 SN2 VDD pfet_03v3 ad=1.785p pd=4.52u as=1.785p ps=4.52u w=3.5u l=0.28u
-X4 yU0 yZ0 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X5 dbV1 dbU1 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
-X6 dU1 dZ3 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
-X7 VDD dbZ3 dbU1 VDD pfet_03v3 ad=3.105p pd=9.02u as=1.02p ps=3.02u w=2u l=0.28u
-X8 ybU0 ybZ1 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
-X9 VDD dbZ2 dbU1 VDD pfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X10 dXB dX VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X11 YB ybXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X12 ybX ybV1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X13 VDD dV1 dX VDD pfet_03v3 ad=3.2675p pd=9.02u as=1.53p ps=4.02u w=3u l=0.28u
-X14 a_30424_230# dV0 dX VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X15 ybV0 ybU0 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=1.8775p ps=5.02u w=4u l=0.28u
-X16 VDD SN0 S0 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X17 a_21074_230# ybZ2 ybU1 VSS nfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X18 yV1 yU1 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X19 VDD SN1 S1 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X20 dZ2 dA2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X21 VDD S3 dbZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X22 dU0 dZ0 a_27162_230# VSS nfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X23 ybU1 ybZ2 a_20638_230# VSS nfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X24 dU0 dZ0 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X25 VSS ybZ1 a_20118_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
-X26 dZ3 S3 a_26466_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X27 a_25074_230# dA1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X28 dbXB dbX VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X29 dbX dbV1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X30 dbX dbV0 a_37468_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X31 a_24378_230# F3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X32 VSS yV1 a_15464_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X33 VDD ybXB YB VDD pfet_03v3 ad=3.2675p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X34 dbZ0 FN3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=3.2675p ps=9.02u w=3u l=0.28u
-X35 dV0 dU0 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=1.8775p ps=5.02u w=4u l=0.28u
-X36 a_28554_230# dZ2 dU1 VSS nfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X37 SN0 QW0 a_236_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X38 a_15028_230# yV1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X39 SN0 QW3 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=1.6975p ps=7.97u w=3.5u l=0.28u
-X40 VDD S2 ybZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X41 dU1 dZ2 a_28118_230# VSS nfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X42 dU1 dZ2 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X43 VDD S1 yZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X44 dZ2 S2 a_25770_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X45 VDD S3 yZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X46 yU0 yZ1 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
-X47 ybX ybV0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X48 dbXB dbX VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=3.2675p ps=9.02u w=8u l=0.28u
-X49 VSS dV1 a_30424_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X50 dbV1 dbU1 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X51 FN2 F2 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X52 ybV1 ybU1 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
-X53 VDD S0 dZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X54 VDD S1 dbZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X55 dbU0 dbZ1 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
-X56 VDD dbXB DPB VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
-X57 yX yV0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X58 ybU0 ybZ0 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X59 a_27162_230# dZ1 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X60 VDD QW0 SN1 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.05p ps=4.1u w=3.5u l=0.28u
-X61 VDD S0 ybZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X62 VDD QW1 SN2 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.05p ps=4.1u w=3.5u l=0.28u
-X63 VDD QW2 SN3 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.785p ps=4.52u w=3.5u l=0.28u
-X64 dU0 dZ1 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
-X65 dbX dbV0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X66 a_26466_230# dA3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X67 VSS dbV1 a_37904_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X68 VSS QW3 a_756_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X69 yXB yX VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X70 a_37468_230# dbV1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X71 VSS dZ3 a_28554_230# VSS nfet_03v3 ad=1.8775p pd=5.02u as=1.53p ps=4.02u w=3u l=0.28u
-X72 a_15464_230# yV0 yX VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X73 yXB yX VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=3.2675p ps=9.02u w=8u l=0.28u
-X74 a_756_230# QW0 SN0 VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X75 VDD S0 yZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X76 ybU1 ybZ3 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
-X77 a_27598_230# dZ0 dU0 VSS nfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X78 dbU0 dbZ0 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X79 a_25770_230# dA2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X80 yU1 yZ3 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
-X81 S0 SN0 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.55p ps=6.02u w=5u l=0.28u
-X82 VDD SN2 S2 VDD pfet_03v3 ad=2.55p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X83 ybZ1 FN1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X84 dbU1 dbZ3 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
-X85 VDD SN3 S3 VDD pfet_03v3 ad=2.55p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X86 ybZ3 FN3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X87 dX dV0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X88 a_37904_230# dbV0 dbX VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X89 yV0 yU0 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=3.105p ps=9.02u w=8u l=0.28u
-X90 VDD S0 dbZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X91 a_10114_230# F1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X92 dbZ0 S0 a_31858_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X93 VDD ybZ0 ybU0 VDD pfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X94 dbV0 dbU0 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=3.105p ps=9.02u w=8u l=0.28u
-X95 dXB dX VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=3.2675p ps=9.02u w=8u l=0.28u
-X96 VSS dZ1 a_27598_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
-X97 yV0 yU0 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=1.8775p ps=5.02u w=4u l=0.28u
-X98 VDD SN2 S2 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X99 FN1 F1 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X100 yU1 yZ2 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X101 VDD SN3 S3 VDD pfet_03v3 ad=2.3875p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X102 dV0 dU0 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=3.105p ps=9.02u w=8u l=0.28u
-X103 VDD dXB DP VDD pfet_03v3 ad=3.2675p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X104 a_9418_230# F0 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X105 a_33250_230# dbA2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X106 yU1 yZ2 a_13158_230# VSS nfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X107 VDD yV0 yX VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X108 ybXB ybX VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=3.2675p ps=9.02u w=8u l=0.28u
-X109 VDD S2 dZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X110 dbU1 dbZ2 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X111 DP dXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X112 ybZ3 S3 a_18986_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X113 yZ2 S2 a_10810_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X114 S0 SN0 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
-X115 S0 SN0 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.30625p ps=6.02u w=5u l=0.28u
-X116 yZ1 F1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X117 yZ3 F3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X118 VDD dbV0 dbX VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X119 ybV1 ybU1 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X120 VDD QW3 SN3 VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
-X121 dbZ1 dbA1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X122 SN2 QW2 a_3892_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X123 dbZ3 dbA3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X124 a_32554_230# dbA1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X125 a_12202_230# yZ1 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X126 SN1 QW1 a_2064_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X127 dbZ3 S3 a_33946_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X128 ybZ2 S2 a_18290_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X129 FN1 F1 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X130 yZ1 S1 a_10114_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X131 S0 SN0 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X132 VSS ybV1 a_22944_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X133 a_11506_230# F3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X134 dZ1 dA1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X135 dbV0 dbU0 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=1.8775p ps=5.02u w=4u l=0.28u
-X136 dV1 dU1 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X137 SN0 QW0 VDD VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
-X138 dZ3 dA3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X139 VSS yZ3 a_13594_230# VSS nfet_03v3 ad=1.8775p pd=5.02u as=1.53p ps=4.02u w=3u l=0.28u
-X140 a_22508_230# ybV1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X141 VSS dbZ1 a_35078_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
-X142 VDD yV1 yX VDD pfet_03v3 ad=3.2675p pd=9.02u as=1.53p ps=4.02u w=3u l=0.28u
-X143 yZ0 S0 a_9418_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X144 dbZ2 S2 a_33250_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X145 yZ0 F0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X146 ybZ1 S1 a_17594_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X147 a_13158_230# yZ3 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
-X148 a_12638_230# yZ0 yU0 VSS nfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X149 a_10810_230# F2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X150 S1 SN1 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.30625p ps=6.02u w=5u l=0.28u
-X151 S2 SN2 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.30625p ps=6.02u w=5u l=0.28u
-X152 VDD S3 ybZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X153 VDD dZ0 dU0 VDD pfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X154 ybZ0 S0 a_16898_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X155 VSS yXB Y VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X156 VDD S2 yZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X157 VDD dV0 dX VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X158 ybU1 ybZ2 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X159 a_4412_230# QW2 SN2 VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X160 FN3 F3 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X161 a_34642_230# dbZ1 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X162 dbZ1 S1 a_32554_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X163 yU0 yZ0 a_12202_230# VSS nfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X164 a_2584_230# QW1 SN1 VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X165 a_33946_230# dbA3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X166 ybZ0 FN0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=3.2675p ps=9.02u w=3u l=0.28u
-X167 VDD S2 dbZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X168 a_2064_230# QW0 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.715p ps=5.02u w=4u l=0.28u
-X169 a_18290_230# FN2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X170 VDD dbZ1 dbU0 VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
-X171 VSS SN1 S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X172 VSS dXB DP VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X173 ybXB ybX VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X174 a_22944_230# ybV0 ybX VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X175 yZ3 S3 a_11506_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X176 VSS SN0 S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X177 Y yXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X178 SN1 QW0 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=2.30625p ps=6.02u w=3.5u l=0.28u
-X179 VSS dbZ3 a_36034_230# VSS nfet_03v3 ad=1.8775p pd=5.02u as=1.53p ps=4.02u w=3u l=0.28u
-X180 S1 SN1 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.55p ps=6.02u w=5u l=0.28u
-X181 ybX ybV0 a_22508_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X182 a_13594_230# yZ2 yU1 VSS nfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X183 VDD yZ2 yU1 VDD pfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X184 ybV0 ybU0 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=3.105p ps=9.02u w=8u l=0.28u
-X185 a_35598_230# dbZ3 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
-X186 ybU0 ybZ0 a_19682_230# VSS nfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X187 S2 SN2 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
-X188 a_35078_230# dbZ0 dbU0 VSS nfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X189 S1 SN1 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
-X190 VSS yZ1 a_12638_230# VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
-X191 VDD S1 ybZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X192 a_17594_230# FN1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X193 VSS dbXB DPB VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
-X194 a_16898_230# FN0 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X195 SN1 QW1 VDD VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
-X196 SN2 QW2 VDD VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
-X197 VDD yZ1 yU0 VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
-X198 dV1 dU1 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
-X199 YB ybXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X200 VDD dZ2 dU1 VDD pfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X201 dbU0 dbZ0 a_34642_230# VSS nfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X202 VSS SN1 S1 VSS nfet_03v3 ad=1.715p pd=5.02u as=0.6p ps=2.6u w=2u l=0.28u
-X203 VDD ybV0 ybX VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X204 VDD ybV1 ybX VDD pfet_03v3 ad=3.2675p pd=9.02u as=1.53p ps=4.02u w=3u l=0.28u
-X205 VSS SN0 S0 VSS nfet_03v3 ad=1.715p pd=5.02u as=0.6p ps=2.6u w=2u l=0.28u
-X206 DPB dbXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
-X207 S1 SN1 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X208 SN2 QW1 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=2.30625p ps=6.02u w=3.5u l=0.28u
-X209 Y yXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X210 a_31858_230# FN3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X211 SN3 QW2 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=2.30625p ps=6.02u w=3.5u l=0.28u
-X212 VDD yZ3 yU1 VDD pfet_03v3 ad=3.105p pd=9.02u as=1.02p ps=3.02u w=2u l=0.28u
-X213 ybZ2 FN2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X214 S3 SN3 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X215 a_36034_230# dbZ2 dbU1 VSS nfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X216 FN0 F0 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.3875p ps=6.02u w=4u l=0.28u
-X217 VDD dZ1 dU0 VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
-X218 S2 SN2 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X219 DPB dbXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X220 VSS QW2 a_6156_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
-X221 dbU1 dbZ2 a_35598_230# VSS nfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
-X222 dX dV0 a_29988_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X223 a_19682_230# ybZ1 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X224 FN3 F3 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
-X225 VDD dbV1 dbX VDD pfet_03v3 ad=3.2675p pd=9.02u as=1.53p ps=4.02u w=3u l=0.28u
-X226 VSS QW1 a_4412_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X227 dZ0 F3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=3.2675p ps=9.02u w=3u l=0.28u
-X228 VSS QW0 a_2584_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X229 a_18986_230# FN3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X230 VDD QW0 SN0 VDD pfet_03v3 ad=1.785p pd=4.52u as=1.785p ps=4.52u w=3.5u l=0.28u
-X231 VDD dZ3 dU1 VDD pfet_03v3 ad=3.105p pd=9.02u as=1.02p ps=3.02u w=2u l=0.28u
-X232 FN0 F0 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
-X233 a_29988_230# dV1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X234 VDD yZ0 yU0 VDD pfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X235 yX yV1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X236 a_5720_230# QW2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.715p ps=5.02u w=4u l=0.28u
-X237 SN3 QW3 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=1.05p ps=4.1u w=3.5u l=0.28u
-X238 a_3892_230# QW1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.715p ps=5.02u w=4u l=0.28u
-X239 VDD S1 dZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X240 VDD S3 dZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
-X241 VDD dbZ0 dbU0 VDD pfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X242 VSS SN3 S3 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X243 VDD ybZ1 ybU0 VDD pfet_03v3 ad=1.02p pd=3.02u as=1.02p ps=3.02u w=2u l=0.28u
-X244 VSS SN2 S2 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X245 S2 SN2 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.55p ps=6.02u w=5u l=0.28u
-X246 dX dV1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X247 DP dXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
-X248 S3 SN3 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
-X249 S3 SN3 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.30625p ps=6.02u w=5u l=0.28u
-X250 S3 SN3 VDD VDD pfet_03v3 ad=1.5p pd=5.6u as=2.55p ps=6.02u w=5u l=0.28u
-X251 dbZ2 dbA2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
-X252 a_6156_230# QW3 SN3 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X253 VDD yXB Y VDD pfet_03v3 ad=3.2675p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
-X254 VSS ybZ3 a_21074_230# VSS nfet_03v3 ad=1.8775p pd=5.02u as=1.53p ps=4.02u w=3u l=0.28u
-X255 VDD QW3 SN0 VDD pfet_03v3 ad=2.30625p pd=6.02u as=1.05p ps=4.1u w=3.5u l=0.28u
-X256 FN2 F2 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
-X257 a_20638_230# ybZ3 VSS VSS nfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
-X258 VDD SN0 S0 VDD pfet_03v3 ad=2.55p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X259 dZ1 S1 a_25074_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X260 a_20118_230# ybZ0 ybU0 VSS nfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
-X261 VDD SN1 S1 VDD pfet_03v3 ad=2.55p pd=6.02u as=1.5p ps=5.6u w=5u l=0.28u
-X262 VDD ybZ2 ybU1 VDD pfet_03v3 ad=0.6p pd=2.6u as=1.02p ps=3.02u w=2u l=0.28u
-X263 VDD ybZ3 ybU1 VDD pfet_03v3 ad=3.105p pd=9.02u as=1.02p ps=3.02u w=2u l=0.28u
-X264 VSS SN3 S3 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
-X265 SN3 QW3 a_5720_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
-X266 dZ0 S0 a_24378_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
-X267 VSS SN2 S2 VSS nfet_03v3 ad=1.715p pd=5.02u as=0.6p ps=2.6u w=2u l=0.28u
-X268 VSS ybXB YB VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
-X269 yV1 yU1 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
-X270 a_236_230# QW3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
-X271 yX yV0 a_15028_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X1 VDD dZ2 dU1 VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X2 a_9460_230# F0 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X3 VSS yZ1 a_12680_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X4 VDD QW2 SN2 VDD pfet_03v3 ad=1.785p pd=4.52u as=1.785p ps=4.52u w=3.5u l=0.28u
+X5 dbV1 dbU1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X6 DPB dbXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.755p ps=9.02u w=8u l=0.28u
+X7 yU1 yZ2 a_13200_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X8 VSS ybXB YB VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X9 VDD S2 yZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X10 a_29820_230# dV1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X11 a_18248_230# FN2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X12 a_27992_230# dZ3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X13 VDD S2 dbZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X14 a_27472_230# dZ0 dU0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X15 Y yXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.8775p ps=5.02u w=4u l=0.28u
+X16 VDD S2 dZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X17 VDD dbZ1 dbU0 VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X18 VDD dZ1 dU0 VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X19 yV1 yU1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X20 FN1 F1 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X21 VSS yZ3 a_13636_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X22 ybV1 ybU1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X23 ybX ybV1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=3.2675p ps=9.02u w=3u l=0.28u
+X24 a_17552_230# FN1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X25 YB ybXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.755p ps=9.02u w=8u l=0.28u
+X26 dZ0 F3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=3.2675p ps=9.02u w=3u l=0.28u
+X27 VSS yV1 a_15464_230# VSS nfet_03v3 ad=1.8775p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X28 VDD dbZ2 dbU1 VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X29 SN0 QW0 a_236_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X30 a_15028_230# yV1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X31 SN0 QW3 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=1.6975p ps=7.97u w=3.5u l=0.28u
+X32 VDD ybZ1 ybU0 VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X33 ybZ3 S3 a_18944_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X34 VDD yZ1 yU0 VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X35 a_12680_230# yZ0 yU0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X36 dbXB dbX VDD VDD pfet_03v3 ad=1.8p pd=6.6u as=2.5725p ps=7.02u w=6u l=0.28u
+X37 VSS dU1 dV1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X38 ybZ2 S2 a_18248_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X39 VSS yX yXB VSS nfet_03v3 ad=1.8775p pd=5.02u as=0.9p ps=3.6u w=3u l=0.28u
+X40 yX yV0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X41 ybZ0 FN0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=3.2675p ps=9.02u w=3u l=0.28u
+X42 dbZ0 FN3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=3.2675p ps=9.02u w=3u l=0.28u
+X43 VDD QW0 SN1 VDD pfet_03v3 ad=3.34875p pd=9.02u as=1.05p ps=4.1u w=3.5u l=0.28u
+X44 VDD dZ3 dU1 VDD pfet_03v3 ad=3.2675p pd=9.02u as=1.53p ps=4.02u w=3u l=0.28u
+X45 VDD dU0 dV0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X46 a_19640_230# ybZ1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X47 VDD QW1 SN2 VDD pfet_03v3 ad=3.34875p pd=9.02u as=1.05p ps=4.1u w=3.5u l=0.28u
+X48 VDD QW2 SN3 VDD pfet_03v3 ad=3.34875p pd=9.02u as=1.785p ps=4.52u w=3.5u l=0.28u
+X49 ybZ1 S1 a_17552_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X50 FN3 F3 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X51 VSS QW3 a_756_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X52 FN2 F2 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X53 yXB yX VSS VSS nfet_03v3 ad=0.9p pd=3.6u as=1.8775p ps=5.02u w=3u l=0.28u
+X54 ybXB ybX VDD VDD pfet_03v3 ad=1.8p pd=6.6u as=2.5725p ps=7.02u w=6u l=0.28u
+X55 dX dV0 a_29820_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X56 a_15464_230# yV0 yX VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X57 yXB yX VDD VDD pfet_03v3 ad=1.8p pd=6.6u as=2.5725p ps=7.02u w=6u l=0.28u
+X58 VDD S1 dZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X59 a_756_230# QW0 SN0 VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X60 VSS yXB Y VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X61 VDD S1 ybZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X62 VSS yU1 yV1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X63 ybU0 ybZ1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X64 a_18944_230# FN3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X65 VDD yZ0 yU0 VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X66 dX dV0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X67 VDD yZ3 yU1 VDD pfet_03v3 ad=3.2675p pd=9.02u as=1.53p ps=4.02u w=3u l=0.28u
+X68 VDD yU0 yV0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X69 DP dXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.8775p ps=5.02u w=4u l=0.28u
+X70 ybX ybV0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X71 VDD dbZ0 dbU0 VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X72 S0 SN0 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X73 VDD dbU0 dbV0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X74 VSS dV1 a_30256_230# VSS nfet_03v3 ad=1.8775p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X75 VDD dbX dbXB VDD pfet_03v3 ad=3.755p pd=9.02u as=1.8p ps=6.6u w=6u l=0.28u
+X76 VDD SN2 S2 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X77 yZ0 F0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X78 VDD S1 yZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X79 VDD SN3 S3 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X80 a_32344_230# dbA1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X81 ybU0 ybZ0 a_19640_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X82 dXB dX VDD VDD pfet_03v3 ad=1.8p pd=6.6u as=2.5725p ps=7.02u w=6u l=0.28u
+X83 DP dXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.755p ps=9.02u w=8u l=0.28u
+X84 FN2 F2 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X85 dZ2 dA2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X86 a_31648_230# FN3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X87 dU0 dZ1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X88 dbV0 dbU0 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X89 a_16856_230# FN0 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X90 dbU1 dbZ2 a_35388_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X91 VSS dbZ1 a_34868_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X92 VDD S3 ybZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X93 VDD ybU0 ybV0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X94 VDD dU1 dV1 VDD pfet_03v3 ad=3.2675p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X95 dbZ2 S2 a_33040_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X96 VSS dX dXB VSS nfet_03v3 ad=1.8775p pd=5.02u as=0.9p ps=3.6u w=3u l=0.28u
+X97 VDD yZ2 yU1 VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X98 FN0 F0 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X99 yZ2 F2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X100 VDD yV0 yX VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X101 dXB dX VSS VSS nfet_03v3 ad=0.9p pd=3.6u as=1.8775p ps=5.02u w=3u l=0.28u
+X102 VDD S0 ybZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X103 S0 SN0 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
+X104 a_30256_230# dV0 dX VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X105 S0 SN0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.34875p ps=9.02u w=8u l=0.28u
+X106 VDD dbZ3 dbU1 VDD pfet_03v3 ad=3.2675p pd=9.02u as=1.53p ps=4.02u w=3u l=0.28u
+X107 a_34432_230# dbZ1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X108 dbZ2 dbA2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X109 VDD dbV0 dbX VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X110 dbZ1 S1 a_32344_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X111 ybV0 ybU0 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X112 a_33736_230# dbA3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X113 VDD QW3 SN3 VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
+X114 SN2 QW2 a_3892_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X115 dbZ0 S0 a_31648_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X116 VSS ybZ1 a_20076_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X117 VDD yU1 yV1 VDD pfet_03v3 ad=3.2675p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X118 SN1 QW1 a_2064_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X119 VSS dXB DP VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X120 VDD yXB Y VDD pfet_03v3 ad=3.2675p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X121 VSS dbZ3 a_35824_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X122 VDD S3 dZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X123 dU1 dZ2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X124 S0 SN0 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X125 a_37216_230# dbV1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X126 VDD dbU1 dbV1 VDD pfet_03v3 ad=3.2675p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X127 a_35388_230# dbZ3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X128 SN0 QW0 VDD VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
+X129 VDD ybZ2 ybU1 VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X130 VDD ybZ3 ybU1 VDD pfet_03v3 ad=3.2675p pd=9.02u as=1.53p ps=4.02u w=3u l=0.28u
+X131 a_33040_230# dbA2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X132 VDD ybV1 ybX VDD pfet_03v3 ad=2.5725p pd=7.02u as=1.53p ps=4.02u w=3u l=0.28u
+X133 FN0 F0 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X134 VDD yV1 yX VDD pfet_03v3 ad=2.5725p pd=7.02u as=1.53p ps=4.02u w=3u l=0.28u
+X135 ybZ1 FN1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X136 VSS dbX dbXB VSS nfet_03v3 ad=1.8775p pd=5.02u as=0.9p ps=3.6u w=3u l=0.28u
+X137 VSS dbU0 dbV0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X138 S1 SN1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.34875p ps=9.02u w=8u l=0.28u
+X139 dV0 dU0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.2675p ps=9.02u w=8u l=0.28u
+X140 VDD dbV1 dbX VDD pfet_03v3 ad=2.5725p pd=7.02u as=1.53p ps=4.02u w=3u l=0.28u
+X141 S2 SN2 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.34875p ps=9.02u w=8u l=0.28u
+X142 dbU0 dbZ0 a_34432_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X143 VDD S3 yZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X144 yU0 yZ1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X145 VSS ybV1 a_22860_230# VSS nfet_03v3 ad=1.8775p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X146 yU1 yZ2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X147 dbZ3 S3 a_33736_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X148 VSS ybZ3 a_21032_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X149 VDD S1 dbZ1 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X150 a_4412_230# QW2 SN2 VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X151 VDD S3 dbZ3 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X152 dbU0 dbZ1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X153 a_37652_230# dbV0 dbX VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X154 a_2584_230# QW1 SN1 VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X155 dbXB dbX VSS VSS nfet_03v3 ad=0.9p pd=3.6u as=1.8775p ps=5.02u w=3u l=0.28u
+X156 a_20596_230# ybZ3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X157 a_2064_230# QW0 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X158 a_35824_230# dbZ2 dbU1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X159 a_20076_230# ybZ0 ybU0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X160 VSS SN1 S1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X161 dbX dbV0 a_37216_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X162 a_24252_230# F3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X163 VDD yX yXB VDD pfet_03v3 ad=3.755p pd=9.02u as=1.8p ps=6.6u w=6u l=0.28u
+X164 VDD dV1 dX VDD pfet_03v3 ad=2.5725p pd=7.02u as=1.53p ps=4.02u w=3u l=0.28u
+X165 VSS SN0 S0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X166 a_22424_230# ybV1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X167 SN1 QW0 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=1.6975p ps=7.97u w=3.5u l=0.28u
+X168 S1 SN1 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X169 dZ1 dA1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X170 dU1 dZ2 a_27992_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X171 VSS ybU0 ybV0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X172 S2 SN2 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
+X173 S1 SN1 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
+X174 DPB dbXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.8775p ps=5.02u w=4u l=0.28u
+X175 VDD S0 yZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X176 dbV1 dbU1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X177 dZ1 S1 a_24948_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X178 VDD S2 ybZ2 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X179 dU0 dZ0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X180 SN1 QW1 VDD VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
+X181 ybXB ybX VSS VSS nfet_03v3 ad=0.9p pd=3.6u as=1.8775p ps=5.02u w=3u l=0.28u
+X182 SN2 QW2 VDD VDD pfet_03v3 ad=1.05p pd=4.1u as=1.785p ps=4.52u w=3.5u l=0.28u
+X183 a_21032_230# ybZ2 ybU1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X184 yU1 yZ3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X185 VDD ybU1 ybV1 VDD pfet_03v3 ad=3.2675p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X186 VDD ybX ybXB VDD pfet_03v3 ad=3.755p pd=9.02u as=1.8p ps=6.6u w=6u l=0.28u
+X187 VSS dbV1 a_37652_230# VSS nfet_03v3 ad=1.8775p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X188 a_26340_230# dA3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X189 ybU1 ybZ2 a_20596_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X190 VDD dX dXB VDD pfet_03v3 ad=3.755p pd=9.02u as=1.8p ps=6.6u w=6u l=0.28u
+X191 dbU1 dbZ3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X192 dbX dbV1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=3.2675p ps=9.02u w=3u l=0.28u
+X193 S1 SN1 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X194 dZ0 S0 a_24252_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X195 SN2 QW1 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=1.6975p ps=7.97u w=3.5u l=0.28u
+X196 dU1 dZ3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X197 dX dV1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=3.2675p ps=9.02u w=3u l=0.28u
+X198 ybX ybV0 a_22424_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X199 SN3 QW2 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=1.6975p ps=7.97u w=3.5u l=0.28u
+X200 ybU0 ybZ0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X201 VDD dbXB DPB VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
+X202 S3 SN3 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X203 yZ2 S2 a_10852_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X204 YB ybXB VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=1.8775p ps=5.02u w=4u l=0.28u
+X205 VSS ybU1 ybV1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X206 VDD dV0 dX VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X207 S2 SN2 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X208 a_34868_230# dbZ0 dbU0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X209 yU0 yZ0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X210 VDD ybV0 ybX VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X211 VSS QW2 a_6156_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X212 yZ1 S1 a_10156_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X213 ybV1 ybU1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X214 VDD S0 dZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X215 dZ3 dA3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X216 dbU0 dbZ0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X217 VSS QW1 a_4412_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X218 a_25644_230# dA2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X219 ybZ3 FN3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X220 dbV0 dbU0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.2675p ps=9.02u w=8u l=0.28u
+X221 VSS QW0 a_2584_230# VSS nfet_03v3 ad=1.715p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X222 dU0 dZ0 a_27036_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X223 a_12244_230# yZ1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X224 a_24948_230# dA1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X225 VDD QW0 SN0 VDD pfet_03v3 ad=1.785p pd=4.52u as=1.785p ps=4.52u w=3.5u l=0.28u
+X226 ybU1 ybZ3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.53p ps=4.02u w=3u l=0.28u
+X227 FN1 F1 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X228 a_11548_230# F3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X229 VSS dU0 dV0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X230 VDD dXB DP VDD pfet_03v3 ad=3.2675p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X231 yX yV1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=3.2675p ps=9.02u w=3u l=0.28u
+X232 VDD ybXB YB VDD pfet_03v3 ad=3.2675p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X233 a_5720_230# QW2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X234 dV0 dU0 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X235 SN3 QW3 VDD VDD pfet_03v3 ad=1.785p pd=4.52u as=1.05p ps=4.1u w=3.5u l=0.28u
+X236 a_3892_230# QW1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X237 a_28428_230# dZ2 dU1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X238 dbU1 dbZ2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X239 dZ3 S3 a_26340_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X240 yV0 yU0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.2675p ps=9.02u w=8u l=0.28u
+X241 dbX dbV0 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X242 yZ0 S0 a_9460_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X243 a_13200_230# yZ3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X244 yZ3 F3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X245 ybV0 ybU0 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.2675p ps=9.02u w=8u l=0.28u
+X246 VSS dbU1 dbV1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X247 dbZ1 dbA1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X248 VSS SN3 S3 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X249 a_10852_230# F2 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X250 dV1 dU1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X251 VDD S0 dbZ0 VDD pfet_03v3 ad=1.455p pd=6.97u as=1.53p ps=4.02u w=3u l=0.28u
+X252 dbZ3 dbA3 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X253 VSS SN2 S2 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.6p ps=2.6u w=2u l=0.28u
+X254 VSS ybX ybXB VSS nfet_03v3 ad=1.8775p pd=5.02u as=0.9p ps=3.6u w=3u l=0.28u
+X255 S2 SN2 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X256 S3 SN3 VSS VSS nfet_03v3 ad=0.6p pd=2.6u as=1.715p ps=5.02u w=2u l=0.28u
+X257 VSS dZ1 a_27472_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X258 S3 SN3 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.34875p ps=9.02u w=8u l=0.28u
+X259 S3 SN3 VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X260 a_6156_230# QW3 SN3 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X261 a_10156_230# F1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X262 VSS dbXB DPB VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X263 dZ2 S2 a_25644_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X264 VSS yU0 yV0 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X265 VDD QW3 SN0 VDD pfet_03v3 ad=3.34875p pd=9.02u as=1.05p ps=4.1u w=3.5u l=0.28u
+X266 FN3 F3 VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X267 a_27036_230# dZ1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X268 ybU1 ybZ2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=0.9p ps=3.6u w=3u l=0.28u
+X269 yU0 yZ0 a_12244_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X270 VDD SN0 S0 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X271 VDD dZ0 dU0 VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X272 a_13636_230# yZ2 yU1 VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X273 yV0 yU0 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X274 VDD SN1 S1 VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X275 VDD ybZ0 ybU0 VDD pfet_03v3 ad=0.9p pd=3.6u as=1.53p ps=4.02u w=3u l=0.28u
+X276 yZ3 S3 a_11548_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X277 dV1 dU1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X278 yZ1 F1 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X279 a_22860_230# ybV0 ybX VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X280 SN3 QW3 a_5720_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X281 VSS dZ3 a_28428_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X282 ybZ0 S0 a_16856_230# VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X283 yV1 yU1 VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=4.08p ps=9.02u w=8u l=0.28u
+X284 Y yXB VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=3.755p ps=9.02u w=8u l=0.28u
+X285 ybZ2 FN2 VDD VDD pfet_03v3 ad=1.53p pd=4.02u as=1.455p ps=6.97u w=3u l=0.28u
+X286 a_236_230# QW3 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X287 yX yV0 a_15028_230# VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
 .ends
 
 .subckt wtx_serq4c D0 D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 D16 D17 D18
@@ -1021,547 +1025,466 @@ D9 VSS D17 diode_nd2ps_03v3 pj=3.68u area=0.8464p
 .subckt pt_wiredtx WTX_PH0 WTX_PH90 WTX_PH180 WTX_PH270 MODE_H MODE_F D0 D1 D2 D3
 + D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 D15 D16 D17 D18 D19 D20 D21 D22 D23 D24 D25
 + D26 D27 D28 D29 D30 D31 D32 D33 D34 D35 D36 D37 D38 D39 WORD_CLK WORD_CLK40 SER_EN
-+ WTX_EXT DX POST_POL EN_MAIN EN_POST EN_TMDS ISLAND_OFF IBIAS MAIN_CODE0 MAIN_CODE1
-+ MAIN_CODE2 MAIN_CODE3 MAIN_CODE4 MAIN_CODE5 MAIN_CODE6 MAIN_CODE7 POST_CODE0 POST_CODE1
-+ POST_CODE2 POST_CODE3 POST_CODE4 POST_CODE5 POST_CODE6 POST_CODE7 TMDS_CODE0 TMDS_CODE1
-+ TMDS_CODE2 TMDS_CODE3 TMDS_CODE4 TMDS_CODE5 TMDS_CODE6 TMDS_CODE7 CMD_MAIN_P CMD_MAIN_N
-+ CMD_POST_P CMD_POST_N CMD_TMDS_P CMD_TMDS_N MAIN_BIAS POST_BIAS TMDS_BIAS WTX_EXT_DATA
-+ ATB_NBIAS ATB_PBIAS VDD VSS
-XWM2_IP DWB2 WM2__X VDD VDD pt_wiredtx__p14
-XBBM_XI_MP VDD WTX_EXT VDD BBM__XRB pt_wiredtx__p11
++ WTX_EXT DX POST_POL EN_MAIN EN_POST ISLAND_OFF IBIAS MAIN_CODE0 MAIN_CODE1 MAIN_CODE2
++ MAIN_CODE3 MAIN_CODE4 MAIN_CODE5 MAIN_CODE6 MAIN_CODE7 POST_CODE0 POST_CODE1 POST_CODE2
++ POST_CODE3 POST_CODE4 POST_CODE5 POST_CODE6 POST_CODE7 CMD_MAIN_P CMD_MAIN_N CMD_POST_P
++ CMD_POST_N MAIN_BIAS POST_BIAS WTX_EXT_DATA ATB_NBIAS ATB_PBIAS VDD VSS
+XWM2_IP DWB2 WM2__X VDD VDD pt_wiredtx__p13
+XBBM_XI_MP VDD WTX_EXT VDD BBM__XRB pt_wiredtx__p10
+XPD_O_CMD_POST_N_MNB PD__O_CMD_POST_N__X PD__NB_CMD_POST_N VSS VSS pt_wiredtx__p6
 XWI16_MN VSS DW16 DWB16 VSS pt_wiredtx__p4
-XWM0_TB_P VDD WSEL D20 WM0__X pt_wiredtx__p11
-XWM5_TA_P VDD WSELB D5 WM5__X pt_wiredtx__p11
-XDAC_TMDS_MN1 VSS ATB_NBIAS DAC_TMDS__M1 VSS pt_wiredtx__p3
-XDAC_MAIN_MS0 VDD ATB_PBIAS DAC_MAIN__S0 VDD pt_wiredtx__p10
-XDAC_POST_MS7_5 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p23
-XPD_G_POST_N_MNA PD__PSN PD__G_POST_N__X VSS PD__NB_POST_N pt_wiredtx__p5
-XWM5_IP DWB5 WM5__X VDD VDD pt_wiredtx__p14
-XPD_SPA_MNA SERQ PD__SPA__X VSS PD__SPN pt_wiredtx__p2
-XPD_G_TMDS_P_MPA PD__DSB VDD PD__NB_TMDS_P VDD pt_wiredtx__p18
-XWI10_MP DWB10 VDD DW10 VDD pt_wiredtx__p18
+XWM0_TB_P VDD WSEL D20 WM0__X pt_wiredtx__p10
+XWM5_TA_P VDD WSELB D5 WM5__X pt_wiredtx__p10
+XPD_EP_RI_MN PD__ENP1N2 VSS VSS PD__ENPS1 pt_wiredtx__p2
+XDAC_MAIN_MS0 VDD ATB_PBIAS DAC_MAIN__S0 VDD pt_wiredtx__p9
+XDAC_POST_MS7_5 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p20
+XPD_A_CMD_MAIN_P_MNB PD__ENS_MR PD__A_CMD_MAIN_P__X VSS VSS pt_wiredtx__p5
+XWM5_IP DWB5 WM5__X VDD VDD pt_wiredtx__p13
+XPD_EP_QN_MPA VDD PD__ENP0R VDD PD__ENP0N2 pt_wiredtx__p10
+XWI10_MP DWB10 VDD DW10 VDD pt_wiredtx__p16
+XPD_A_CMD_POST_P_MPA QDP VDD PD__NA_CMD_POST_P VDD pt_wiredtx__p16
 XWM3_TB_N VSS WM3__X WSELB D23 pt_wiredtx__p0
 XWI19_MN VSS DW19 DWB19 VSS pt_wiredtx__p4
 XWM8_TA_N VSS WM8__X WSEL D8 pt_wiredtx__p0
-XPD_X1_MPA PD__NX1 DX VDD VDD pt_wiredtx__p14
-XPD_CL_MAIN_P ISLAND_OFF VSS VSS CMD_MAIN_P pt_wiredtx__p2
-XWS_O1_MP WS__W40N WSEL VDD VDD pt_wiredtx__p14
-XWM13_TB_P VDD WSEL D33 WM13__X pt_wiredtx__p11
+XWS_O1_MP WS__W40N WSEL VDD VDD pt_wiredtx__p13
+XWM13_TB_P VDD WSEL D33 WM13__X pt_wiredtx__p10
 XWS_F_T4N VSS WS__F__X2 WS__CKB WSELB pt_wiredtx__p0
-XWM18_TA_P VDD WSELB D18 WM18__X pt_wiredtx__p11
-XWM8_IP DWB8 WM8__X VDD VDD pt_wiredtx__p14
-XWI13_MP DWB13 VDD DW13 VDD pt_wiredtx__p18
-XDAC_MAIN_MS1 VDD ATB_PBIAS DAC_MAIN__S1 VDD pt_wiredtx__p13
-XDAC_POST_MS7_6 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p23
-XPD_G_POST_N_MNB EN_POST VSS VSS PD__G_POST_N__X pt_wiredtx__p5
-XPD_O_TMDS_P_MN CMD_TMDS_P PD__NB_TMDS_P VSS VSS pt_wiredtx__p6
-XPD_SPA_MNB PD__POLB VSS VSS PD__SPA__X pt_wiredtx__p2
-XPD_G_TMDS_P_MPB EN_TMDS VDD PD__NB_TMDS_P VDD pt_wiredtx__p18
+XWM8_IP DWB8 WM8__X VDD VDD pt_wiredtx__p13
+XWM18_TA_P VDD WSELB D18 WM18__X pt_wiredtx__p10
+XDAC_MAIN_MS1 VDD ATB_PBIAS DAC_MAIN__S1 VDD pt_wiredtx__p12
+XWI13_MP DWB13 VDD DW13 VDD pt_wiredtx__p16
+XDAC_POST_MS7_6 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p20
+XPD_EP_QN_MPB VDD SERQ VDD PD__ENP0N2 pt_wiredtx__p10
+XPD_A_CMD_POST_P_MPB PD__ENPS0 VDD PD__NA_CMD_POST_P VDD pt_wiredtx__p16
 XWM16_TB_N VSS WM16__X WSELB D36 pt_wiredtx__p0
-XPD_X1_MPB PD__NX1 EXT VDD VDD pt_wiredtx__p14
 XWI2_MN VSS DW2 DWB2 VSS pt_wiredtx__p4
-XBE_PA BE__X1 EN_MAIN VDD VDD pt_wiredtx__p14
-XWI16_MP DWB16 VDD DW16 VDD pt_wiredtx__p18
-XPD_O_MAIN_P_MN CMD_MAIN_P PD__NB_MAIN_P VSS VSS pt_wiredtx__p6
+XBE_PA BE__X1 EN_MAIN VDD VDD pt_wiredtx__p13
+XWI16_MP DWB16 VDD DW16 VDD pt_wiredtx__p16
 XWS_F_T3N WORD_CLK WS__F__MB VSS WS__F__X2 pt_wiredtx__p2
-XDAC_MAIN_MS2 VDD VDD ATB_PBIAS DAC_MAIN__S2 pt_wiredtx__p16
-XDAC_POST_MS7_7 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p23
+XPD_EP_RI_MP PD__ENPS1 PD__ENP1N2 VDD VDD pt_wiredtx__p13
+XDAC_MAIN_MS2 VDD VDD ATB_PBIAS DAC_MAIN__S2 pt_wiredtx__p14
+XDAC_POST_MS7_7 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p20
 XWS_F_SN VSS WSEL WS__F__X2 VSS pt_wiredtx__p4
-XPD_G_TMDS_P_MNA PD__DSB PD__G_TMDS_P__X VSS PD__NB_TMDS_P pt_wiredtx__p5
+XPD_EP_QN_MNA PD__ENP0R PD__EP_QN__X VSS PD__ENP0N2 pt_wiredtx__p2
+XPD_A_CMD_POST_P_MNA QDP PD__NA_CMD_POST_P VSS PD__A_CMD_POST_P__X pt_wiredtx__p5
 XWI5_MN VSS DW5 DWB5 VSS pt_wiredtx__p4
-XWI19_MP DWB19 VDD DW19 VDD pt_wiredtx__p18
-XWM3_TB_P VDD WSEL D23 WM3__X pt_wiredtx__p11
-XWM8_TA_P VDD WSELB D8 WM8__X pt_wiredtx__p11
-XPD_X1_MNA VSS PD__NX1 DX PD__X1__X pt_wiredtx__p4
-XDAC_TMDS_CI0_MN VSS DAC_TMDS__CB0 TMDS_CODE0 VSS pt_wiredtx__p0
-XBE_PB BE__X2 EN_POST VDD BE__X1 pt_wiredtx__p14
+XWI19_MP DWB19 VDD DW19 VDD pt_wiredtx__p16
+XWM3_TB_P VDD WSEL D23 WM3__X pt_wiredtx__p10
+XWM8_TA_P VDD WSELB D8 WM8__X pt_wiredtx__p10
+XBE_PB BE__X2 EN_POST VDD BE__X1 pt_wiredtx__p13
 XWS_F_T2N VSS WS__F__X1 WORD_CLK WS__F__MF pt_wiredtx__p0
 XWS_F_T4P WS__F__X2 VDD WORD_CLK WSELB pt_wiredtx__p8
-XDAC_TMDS_MS6_0 VDD PB_TMDS VDD DAC_TMDS__S6 pt_wiredtx__p22
 XWI8_MN VSS DW8 DWB8 VSS pt_wiredtx__p4
-XDAC_MAIN_MP0 ATB_PBIAS VDD VDD ATB_PBIAS pt_wiredtx__p12
-XDAC_MAIN_MS3 DAC_MAIN__S3 VDD ATB_PBIAS VDD pt_wiredtx__p20
-XPD_PAP_MPA PD__NPAP QDP VDD VDD pt_wiredtx__p14
+XDAC_MAIN_MS3 DAC_MAIN__S3 VDD ATB_PBIAS VDD pt_wiredtx__p17
+XDAC_MAIN_MP0 ATB_PBIAS VDD VDD ATB_PBIAS pt_wiredtx__p11
 XWM6_TB_N VSS WM6__X WSELB D26 pt_wiredtx__p0
-XDAC_TMDS_CI3_MN VSS DAC_TMDS__CB3 TMDS_CODE3 VSS pt_wiredtx__p0
-XPD_G_TMDS_P_MNB EN_TMDS VSS VSS PD__G_TMDS_P__X pt_wiredtx__p5
-XWM16_TB_P VDD WSEL D36 WM16__X pt_wiredtx__p11
-XPD_X1_MNB VSS PD__X1__X EXT VSS pt_wiredtx__p4
-XBBM_SN_MPA BBM__SN__X BBM__SRB VDD VDD pt_wiredtx__p14
-XWI2_MP DWB2 VDD DW2 VDD pt_wiredtx__p18
-XBE_PC BENB EN_TMDS VDD BE__X2 pt_wiredtx__p14
+XPD_EP_QN_MNB SERQ VSS VSS PD__EP_QN__X pt_wiredtx__p2
+XPD_A_CMD_POST_P_MNB PD__ENPS0 PD__A_CMD_POST_P__X VSS VSS pt_wiredtx__p5
+XWM16_TB_P VDD WSEL D36 WM16__X pt_wiredtx__p10
+XBBM_SN_MPA BBM__SN__X BBM__SRB VDD VDD pt_wiredtx__p13
+XWI2_MP DWB2 VDD DW2 VDD pt_wiredtx__p16
 XBE_NA VSS BENB EN_MAIN VSS pt_wiredtx__p0
+XBE_PC BENB VSS VDD BE__X2 pt_wiredtx__p13
 XWS_F_T1N WS__CKB WSELB VSS WS__F__X1 pt_wiredtx__p2
-XWS_F_T3P WS__F__X2 WS__CKB VDD WS__F__MB pt_wiredtx__p14
-XDAC_TMDS_CI6_MN VSS DAC_TMDS__CB6 TMDS_CODE6 VSS pt_wiredtx__p0
-XDAC_TMDS_MS6_1 VDD PB_TMDS VDD DAC_TMDS__S6 pt_wiredtx__p22
-XDAC_POST_MS0 VDD PB_POST DAC_POST__S0 VDD pt_wiredtx__p10
-XDAC_MAIN_MS4 VDD ATB_PBIAS VDD DAC_MAIN__S4 pt_wiredtx__p23
-XPD_PAP_MPB PD__NPAP PD__SP VDD VDD pt_wiredtx__p14
-XWS_F_SP WS__F__X2 VDD WSEL VDD pt_wiredtx__p18
+XWS_F_T3P WS__F__X2 WS__CKB VDD WS__F__MB pt_wiredtx__p13
+XDAC_POST_MS0 VDD PB_POST DAC_POST__S0 VDD pt_wiredtx__p9
+XDAC_MAIN_MS4 VDD ATB_PBIAS VDD DAC_MAIN__S4 pt_wiredtx__p20
+XWS_F_SP WS__F__X2 VDD WSEL VDD pt_wiredtx__p16
 XWM19_TB_N VSS WM19__X WSELB D39 pt_wiredtx__p0
-XPD_XN_MPA VDD DX VDD PD__EXDN pt_wiredtx__p11
-XWI5_MP DWB5 VDD DW5 VDD pt_wiredtx__p18
+XPD_XN_MPA VDD DX VDD PD__EXDN pt_wiredtx__p10
+XWI5_MP DWB5 VDD DW5 VDD pt_wiredtx__p16
 XDAC_POST_CI1_MN VSS DAC_POST__CB1 POST_CODE1 VSS pt_wiredtx__p0
 XWM11_TA_N VSS WM11__X WSEL D11 pt_wiredtx__p0
-XDAC_TMDS_CI0_MP VDD TMDS_CODE0 VDD DAC_TMDS__CB0 pt_wiredtx__p11
-XBBM_SN_MPB SER BBM__EXTD VDD BBM__SN__X pt_wiredtx__p14
+XBBM_SN_MPB SER BBM__EXTD VDD BBM__SN__X pt_wiredtx__p13
 XBE_NB VSS BENB EN_POST VSS pt_wiredtx__p0
 XWS_F_T2P WS__F__X1 VDD WS__CKB WS__F__MF pt_wiredtx__p8
-XDAC_TMDS_MS6_2 VDD PB_TMDS VDD DAC_TMDS__S6 pt_wiredtx__p22
-XDAC_POST_MS1 VDD PB_POST DAC_POST__S1 VDD pt_wiredtx__p13
-XPD_PAP_MNA VSS PD__NPAP QDP PD__PAP__X pt_wiredtx__p4
-XWI8_MP DWB8 VDD DW8 VDD pt_wiredtx__p18
-XWM6_TB_P VDD WSEL D26 WM6__X pt_wiredtx__p11
-XPD_XN_MPB VDD EXT VDD PD__EXDN pt_wiredtx__p11
+XDAC_POST_MS1 VDD PB_POST DAC_POST__S1 VDD pt_wiredtx__p12
+XWI8_MP DWB8 VDD DW8 VDD pt_wiredtx__p16
+XWM6_TB_P VDD WSEL D26 WM6__X pt_wiredtx__p10
+XPD_XN_MPB VDD EXT VDD PD__EXDN pt_wiredtx__p10
 XDAC_POST_CI4_MN VSS DAC_POST__CB4 POST_CODE4 VSS pt_wiredtx__p0
-XDAC_TMDS_CI3_MP VDD TMDS_CODE3 VDD DAC_TMDS__CB3 pt_wiredtx__p11
 XPD_PPI_MN VSS PD__POLB POST_POL VSS pt_wiredtx__p0
 XBBM_SN_MNA VSS SER BBM__SRB VSS pt_wiredtx__p0
-XBE_NC VSS BENB EN_TMDS VSS pt_wiredtx__p0
+XBE_NC VSS BENB VSS VSS pt_wiredtx__p0
 XWM9_TB_N VSS WM9__X WSELB D29 pt_wiredtx__p0
-XDAC_TMDS_EI_MN VSS DAC_TMDS__ENB EN_TMDS VSS pt_wiredtx__p0
-XWS_F_T1P WS__F__X1 WORD_CLK VDD WSELB pt_wiredtx__p14
-XDAC_TMDS_CI6_MP VDD TMDS_CODE6 VDD DAC_TMDS__CB6 pt_wiredtx__p11
-XDAC_TMDS_MS6_3 VDD PB_TMDS VDD DAC_TMDS__S6 pt_wiredtx__p22
+XWS_F_T1P WS__F__X1 WORD_CLK VDD WSELB pt_wiredtx__p13
 XDAC_POST_CI7_MN VSS DAC_POST__CB7 POST_CODE7 VSS pt_wiredtx__p0
-XDAC_POST_MS2 VDD VDD PB_POST DAC_POST__S2 pt_wiredtx__p16
-XPD_PAP_MNB VSS PD__PAP__X PD__SP VSS pt_wiredtx__p4
+XDAC_POST_MS2 VDD VDD PB_POST DAC_POST__S2 pt_wiredtx__p14
 XDAC_MAIN_MN1 VSS ATB_NBIAS DAC_MAIN__M1 VSS pt_wiredtx__p3
-XWM19_TB_P VDD WSEL D39 WM19__X pt_wiredtx__p11
+XWM19_TB_P VDD WSEL D39 WM19__X pt_wiredtx__p10
 XWM11_IN WM11__X VSS VSS DWB11 pt_wiredtx__p2
 XPD_XN_MNA DX PD__XN__X VSS PD__EXDN pt_wiredtx__p2
 XWM1_TA_N VSS WM1__X WSEL D1 pt_wiredtx__p0
-XPD_Q1_MPA PD__NQ1 QD VDD VDD pt_wiredtx__p14
 XBBM_DE0_MN VSS VSS EXT BBM__ED0 pt_wiredtx__p1
-XDAC_POST_CI1_MP VDD POST_CODE1 VDD DAC_POST__CB1 pt_wiredtx__p11
+XDAC_POST_CI1_MP VDD POST_CODE1 VDD DAC_POST__CB1 pt_wiredtx__p10
 XBBM_SN_MNB VSS SER BBM__EXTD VSS pt_wiredtx__p0
-XWM11_TA_P VDD WSELB D11 WM11__X pt_wiredtx__p11
+XWM11_TA_P VDD WSELB D11 WM11__X pt_wiredtx__p10
 XWM14_IN WM14__X VSS VSS DWB14 pt_wiredtx__p2
-XDAC_POST_MS3 DAC_POST__S3 VDD PB_POST VDD pt_wiredtx__p20
-XDAC_POST_MP0 PB_POST VDD VDD PB_POST pt_wiredtx__p12
+XDAC_POST_MS3 DAC_POST__S3 VDD PB_POST VDD pt_wiredtx__p17
+XDAC_POST_MP0 PB_POST VDD VDD PB_POST pt_wiredtx__p11
 XDAC_MAIN_CI0_MN VSS DAC_MAIN__CB0 MAIN_CODE0 VSS pt_wiredtx__p0
-XDAC_TMDS_PDE DAC_TMDS__ENB VSS VSS TMDS_BIAS pt_wiredtx__p2
 XBBM_DE3_MN VSS VSS BBM__ED2 BBM__EXTD pt_wiredtx__p1
-XDAC_POST_CI4_MP VDD POST_CODE4 VDD DAC_POST__CB4 pt_wiredtx__p11
+XDAC_POST_CI4_MP VDD POST_CODE4 VDD DAC_POST__CB4 pt_wiredtx__p10
 XPD_XN_MNB EXT VSS VSS PD__XN__X pt_wiredtx__p2
 XWM14_TA_N VSS WM14__X WSEL D14 pt_wiredtx__p0
-XPD_Q1_MPB PD__NQ1 SERQ VDD VDD pt_wiredtx__p14
-XPD_PPI_MP VDD POST_POL VDD PD__POLB pt_wiredtx__p11
+XPD_PPI_MP VDD POST_POL VDD PD__POLB pt_wiredtx__p10
+XPD_O_CMD_MAIN_P_MPA PD__NA_CMD_MAIN_P VDD CMD_MAIN_P VDD pt_wiredtx__p18
 XWM17_IN WM17__X VSS VSS DWB17 pt_wiredtx__p2
-XPD_O_TMDS_N_MP_0 VDD CMD_TMDS_N PD__NB_TMDS_N VDD pt_wiredtx__p21
 XDAC_MAIN_CI3_MN VSS DAC_MAIN__CB3 MAIN_CODE3 VSS pt_wiredtx__p0
-XDAC_TMDS_EI_MP VDD EN_TMDS VDD DAC_TMDS__ENB pt_wiredtx__p11
-XWM9_TB_P VDD WSEL D29 WM9__X pt_wiredtx__p11
-XDAC_POST_CI7_MP VDD POST_CODE7 VDD DAC_POST__CB7 pt_wiredtx__p11
-XDAC_POST_MS4 VDD PB_POST VDD DAC_POST__S4 pt_wiredtx__p23
+XWM9_TB_P VDD WSEL D29 WM9__X pt_wiredtx__p10
+XDAC_POST_CI7_MP VDD POST_CODE7 VDD DAC_POST__CB7 pt_wiredtx__p10
+XDAC_POST_MS4 VDD PB_POST VDD DAC_POST__S4 pt_wiredtx__p20
 XBBM_DS1_MN VSS VSS BBM__SD0 BBM__SD1 pt_wiredtx__p1
 XWS_F_MN WS__F__X1 VSS VSS WS__F__MB pt_wiredtx__p2
-XWM11_IP DWB11 WM11__X VDD VDD pt_wiredtx__p14
-XWM1_TA_P VDD WSELB D1 WM1__X pt_wiredtx__p11
+XWM11_IP DWB11 WM11__X VDD VDD pt_wiredtx__p13
+XWM1_TA_P VDD WSELB D1 WM1__X pt_wiredtx__p10
 XDAC_MAIN_CI6_MN VSS DAC_MAIN__CB6 MAIN_CODE6 VSS pt_wiredtx__p0
-XPD_Q1_MNA VSS PD__NQ1 QD PD__Q1__X pt_wiredtx__p4
-XBBM_DE0_MP BBM__ED0 VDD VDD EXT pt_wiredtx__p12
-XPD_O_TMDS_N_MP_1 VDD CMD_TMDS_N PD__NB_TMDS_N VDD pt_wiredtx__p21
-XPD_G_MAIN_P_MPA PD__DSB VDD PD__NB_MAIN_P VDD pt_wiredtx__p18
-XWM14_IP DWB14 WM14__X VDD VDD pt_wiredtx__p14
+XPD_O_CMD_MAIN_P_MPB PD__NB_CMD_MAIN_P VDD CMD_MAIN_P VDD pt_wiredtx__p18
+XBBM_DE0_MP BBM__ED0 VDD VDD EXT pt_wiredtx__p11
+XWM14_IP DWB14 WM14__X VDD VDD pt_wiredtx__p13
 XWM4_TA_N VSS WM4__X WSEL D4 pt_wiredtx__p0
+XDAC_MAIN_CI0_MP VDD MAIN_CODE0 VDD DAC_MAIN__CB0 pt_wiredtx__p10
 XMN0 VSS ATB_NBIAS ATB_NBIAS VSS pt_wiredtx__p3
-XDAC_MAIN_CI0_MP VDD MAIN_CODE0 VDD DAC_MAIN__CB0 pt_wiredtx__p11
 XWM0_IN WM0__X VSS VSS DWB0 pt_wiredtx__p2
-XBBM_DE3_MP BBM__EXTD VDD VDD BBM__ED2 pt_wiredtx__p12
-XWM14_TA_P VDD WSELB D14 WM14__X pt_wiredtx__p11
+XBBM_DE3_MP BBM__EXTD VDD VDD BBM__ED2 pt_wiredtx__p11
+XWM14_TA_P VDD WSELB D14 WM14__X pt_wiredtx__p10
 XPD_XB_MN VSS PD__DXB DX VSS pt_wiredtx__p0
-XPD_Q1_MNB VSS PD__Q1__X SERQ VSS pt_wiredtx__p4
-XWM17_IP DWB17 WM17__X VDD VDD pt_wiredtx__p14
+XPD_O_CMD_MAIN_P_MNA CMD_MAIN_P PD__NA_CMD_MAIN_P VSS PD__O_CMD_MAIN_P__X pt_wiredtx__p6
+XPD_EM_XI_MN PD__ENX_MN VSS VSS PD__ENX_MR pt_wiredtx__p2
+XWM17_IP DWB17 WM17__X VDD VDD pt_wiredtx__p13
 XWS_F_QBN VSS WSELB WSEL VSS pt_wiredtx__p4
-XDAC_MAIN_CI3_MP VDD MAIN_CODE3 VDD DAC_MAIN__CB3 pt_wiredtx__p11
+XDAC_MAIN_CI3_MP VDD MAIN_CODE3 VDD DAC_MAIN__CB3 pt_wiredtx__p10
+XPD_B_CMD_MAIN_N_MPA DX VDD PD__NB_CMD_MAIN_N VDD pt_wiredtx__p16
 XWM3_IN WM3__X VSS VSS DWB3 pt_wiredtx__p2
-XPD_G_MAIN_P_MPB EN_MAIN VDD PD__NB_MAIN_P VDD pt_wiredtx__p18
 XWM17_TA_N VSS WM17__X WSEL D17 pt_wiredtx__p0
 XWM12_TB_N VSS WM12__X WSELB D32 pt_wiredtx__p0
 XDAC_POST_MN1 VSS ATB_NBIAS DAC_POST__M1 VSS pt_wiredtx__p3
-XBBM_DS1_MP BBM__SD1 VDD VDD BBM__SD0 pt_wiredtx__p12
-XWS_F_MP WS__F__MB WS__F__X1 VDD VDD pt_wiredtx__p14
-XDAC_TMDS_SWN EN_TMDS DAC_TMDS__M1 VSS PB_TMDS pt_wiredtx__p2
-XDAC_MAIN_CI6_MP VDD MAIN_CODE6 VDD DAC_MAIN__CB6 pt_wiredtx__p11
+XBBM_DS1_MP BBM__SD1 VDD VDD BBM__SD0 pt_wiredtx__p11
+XWS_F_MP WS__F__MB WS__F__X1 VDD VDD pt_wiredtx__p13
+XPD_O_CMD_MAIN_P_MNB PD__O_CMD_MAIN_P__X PD__NB_CMD_MAIN_P VSS VSS pt_wiredtx__p6
+XDAC_MAIN_CI6_MP VDD MAIN_CODE6 VDD DAC_MAIN__CB6 pt_wiredtx__p10
 XWM6_IN WM6__X VSS VSS DWB6 pt_wiredtx__p2
+XPD_O_CMD_POST_P_MPA PD__NA_CMD_POST_P VDD CMD_POST_P VDD pt_wiredtx__p18
 XWI11_MN VSS DW11 DWB11 VSS pt_wiredtx__p4
-XPD_G_MAIN_P_MNA PD__DSB PD__G_MAIN_P__X VSS PD__NB_MAIN_P pt_wiredtx__p5
-XWM4_TA_P VDD WSELB D4 WM4__X pt_wiredtx__p11
+XPD_B_CMD_MAIN_N_MPB PD__ENX_MR VDD PD__NB_CMD_MAIN_N VDD pt_wiredtx__p16
+XWM4_TA_P VDD WSELB D4 WM4__X pt_wiredtx__p10
+XPD_EP_QI_MN PD__ENP0N2 VSS VSS PD__ENPS0 pt_wiredtx__p2
 XWS_O2_MN VSS WORD_CLK40 WS__W40N VSS pt_wiredtx__p4
-XDAC_TMDS_PDI ISLAND_OFF VSS VSS TMDS_BIAS pt_wiredtx__p2
-XWM0_IP DWB0 WM0__X VDD VDD pt_wiredtx__p14
+XWM0_IP DWB0 WM0__X VDD VDD pt_wiredtx__p13
 XWM9_IN WM9__X VSS VSS DWB9 pt_wiredtx__p2
-XPD_O_POST_P_MP_0 VDD CMD_POST_P PD__NB_POST_P VDD pt_wiredtx__p21
+XPD_EM_XN_MPA VDD EXT VDD PD__ENX_MN pt_wiredtx__p10
 XWI14_MN VSS DW14 DWB14 VSS pt_wiredtx__p4
-XPD_XB_MP VDD DX VDD PD__DXB pt_wiredtx__p11
-XDAC_MAIN_MS6_0 VDD ATB_PBIAS VDD DAC_MAIN__S6 pt_wiredtx__p23
+XPD_XB_MP VDD DX VDD PD__DXB pt_wiredtx__p10
+XPD_EP_PN_MPA VDD POST_POL VDD PD__ENP1N pt_wiredtx__p10
+XPD_EM_XI_MP PD__ENX_MR PD__ENX_MN VDD VDD pt_wiredtx__p13
+XDAC_MAIN_MS6_0 VDD ATB_PBIAS VDD DAC_MAIN__S6 pt_wiredtx__p20
 XWM2_TB_N VSS WM2__X WSELB D22 pt_wiredtx__p0
 XWCB_MN WORD_CLK WCKN VSS VSS pt_wiredtx__p6
+XPD_O_CMD_POST_P_MPB PD__NB_CMD_POST_P VDD CMD_POST_P VDD pt_wiredtx__p18
 XWM7_TA_N VSS WM7__X WSEL D7 pt_wiredtx__p0
-XWS_F_QBP WSEL VDD WSELB VDD pt_wiredtx__p18
-XWM3_IP DWB3 WM3__X VDD VDD pt_wiredtx__p14
-XPD_G_MAIN_P_MNB EN_MAIN VSS VSS PD__G_MAIN_P__X pt_wiredtx__p5
-XWM12_TB_P VDD WSEL D32 WM12__X pt_wiredtx__p11
-XPD_O_MAIN_N_MP_0 VDD CMD_MAIN_N PD__NB_MAIN_N VDD pt_wiredtx__p21
+XPD_B_CMD_MAIN_N_MNA DX PD__NB_CMD_MAIN_N VSS PD__B_CMD_MAIN_N__X pt_wiredtx__p5
+XWS_F_QBP WSEL VDD WSELB VDD pt_wiredtx__p16
+XWM3_IP DWB3 WM3__X VDD VDD pt_wiredtx__p13
+XWM12_TB_P VDD WSEL D32 WM12__X pt_wiredtx__p10
 XWI17_MN VSS DW17 DWB17 VSS pt_wiredtx__p4
-XWM17_TA_P VDD WSELB D17 WM17__X pt_wiredtx__p11
+XWM17_TA_P VDD WSELB D17 WM17__X pt_wiredtx__p10
 XSQN_MN VSS SERQN SER VSS pt_wiredtx__p0
 XWS_F_MFN VSS WS__F__MF WS__F__MB VSS pt_wiredtx__p0
-XPD_G_POST_P_MPA PD__PSP VDD PD__NB_POST_P VDD pt_wiredtx__p18
-XPD_O_POST_P_MP_1 VDD CMD_POST_P PD__NB_POST_P VDD pt_wiredtx__p21
-XWM6_IP DWB6 WM6__X VDD VDD pt_wiredtx__p14
-XDAC_MAIN_MS6_1 VDD ATB_PBIAS VDD DAC_MAIN__S6 pt_wiredtx__p23
+XPD_EM_XN_MPB VDD EN_MAIN VDD PD__ENX_MN pt_wiredtx__p10
+XPD_EP_PN_MPB VDD EN_POST VDD PD__ENP1N pt_wiredtx__p10
+XWM6_IP DWB6 WM6__X VDD VDD pt_wiredtx__p13
+XDAC_MAIN_MS6_1 VDD ATB_PBIAS VDD DAC_MAIN__S6 pt_wiredtx__p20
 XWM15_TB_N VSS WM15__X WSELB D35 pt_wiredtx__p0
-XWI11_MP DWB11 VDD DW11 VDD pt_wiredtx__p18
-XPD_O_TMDS_N_MN CMD_TMDS_N PD__NB_TMDS_N VSS VSS pt_wiredtx__p6
-XPD_O_MAIN_N_MP_1 VDD CMD_MAIN_N PD__NB_MAIN_N VDD pt_wiredtx__p21
-XWS_O2_MP WS__W40N VDD WORD_CLK40 VDD pt_wiredtx__p18
-XPD_G_POST_P_MPB EN_POST VDD PD__NB_POST_P VDD pt_wiredtx__p18
-XWM9_IP DWB9 WM9__X VDD VDD pt_wiredtx__p14
+XWI11_MP DWB11 VDD DW11 VDD pt_wiredtx__p16
+XPD_B_CMD_MAIN_N_MNB PD__ENX_MR PD__B_CMD_MAIN_N__X VSS VSS pt_wiredtx__p5
+XPD_O_CMD_POST_P_MNA CMD_POST_P PD__NA_CMD_POST_P VSS PD__O_CMD_POST_P__X pt_wiredtx__p6
+XPD_EP_QI_MP PD__ENPS0 PD__ENP0N2 VDD VDD pt_wiredtx__p13
+XPD_B_CMD_POST_N_MPA QDP VDD PD__NB_CMD_POST_N VDD pt_wiredtx__p16
+XWS_O2_MP WS__W40N VDD WORD_CLK40 VDD pt_wiredtx__p16
+XWM9_IP DWB9 WM9__X VDD VDD pt_wiredtx__p13
 XDAC_MAIN_PDE DAC_MAIN__ENB VSS VSS MAIN_BIAS pt_wiredtx__p2
 XWI0_MN VSS DW0 DWB0 VSS pt_wiredtx__p4
-XWI14_MP DWB14 VDD DW14 VDD pt_wiredtx__p18
-XPD_O_MAIN_N_MN CMD_MAIN_N PD__NB_MAIN_N VSS VSS pt_wiredtx__p6
-XDAC_MAIN_MS6_2 VDD ATB_PBIAS VDD DAC_MAIN__S6 pt_wiredtx__p23
-XWM2_TB_P VDD WSEL D22 WM2__X pt_wiredtx__p11
-XWM7_TA_P VDD WSELB D7 WM7__X pt_wiredtx__p11
-XPD_PON_MPA PD__NPAN VDD PD__PSN VDD pt_wiredtx__p18
+XPD_EM_XN_MNA EXT PD__EM_XN__X VSS PD__ENX_MN pt_wiredtx__p2
+XWI14_MP DWB14 VDD DW14 VDD pt_wiredtx__p16
+XPD_EP_PN_MNA POST_POL PD__EP_PN__X VSS PD__ENP1N pt_wiredtx__p2
+XDAC_MAIN_MS6_2 VDD ATB_PBIAS VDD DAC_MAIN__S6 pt_wiredtx__p20
+XWM2_TB_P VDD WSEL D22 WM2__X pt_wiredtx__p10
+XWM7_TA_P VDD WSELB D7 WM7__X pt_wiredtx__p10
+XPD_O_CMD_POST_P_MNB PD__O_CMD_POST_P__X PD__NB_CMD_POST_P VSS VSS pt_wiredtx__p6
+XPD_B_CMD_POST_N_MPB PD__ENPS1 VDD PD__NB_CMD_POST_N VDD pt_wiredtx__p16
 XWI3_MN VSS DW3 DWB3 VSS pt_wiredtx__p4
-XWI17_MP DWB17 VDD DW17 VDD pt_wiredtx__p18
-XSQN_MP VDD SER VDD SERQN pt_wiredtx__p11
-XPD_PBN_MPA PD__NPBN QDP VDD VDD pt_wiredtx__p14
-XPD_G_POST_P_MNA PD__PSP PD__G_POST_P__X VSS PD__NB_POST_P pt_wiredtx__p5
-XWS_F_MFP VDD WS__F__MB VDD WS__F__MF pt_wiredtx__p11
+XWI17_MP DWB17 VDD DW17 VDD pt_wiredtx__p16
+XSQN_MP VDD SER VDD SERQN pt_wiredtx__p10
+XPD_EP_SN_MPA VDD PD__POLB VDD PD__ENP0N pt_wiredtx__p10
+XWS_F_MFP VDD WS__F__MB VDD WS__F__MF pt_wiredtx__p10
 XWM5_TB_N VSS WM5__X WSELB D25 pt_wiredtx__p0
+XPD_EM_XN_MNB EN_MAIN VSS VSS PD__EM_XN__X pt_wiredtx__p2
 XDAC_MAIN_EI_MN VSS DAC_MAIN__ENB EN_MAIN VSS pt_wiredtx__p0
-XDAC_MAIN_MS6_3 VDD ATB_PBIAS VDD DAC_MAIN__S6 pt_wiredtx__p23
+XPD_EP_PN_MNB EN_POST VSS VSS PD__EP_PN__X pt_wiredtx__p2
+XDAC_MAIN_MS6_3 VDD ATB_PBIAS VDD DAC_MAIN__S6 pt_wiredtx__p20
 XWI6_MN VSS DW6 DWB6 VSS pt_wiredtx__p4
-XWM15_TB_P VDD WSEL D35 WM15__X pt_wiredtx__p11
-XPD_PON_MPB PD__NPBN VDD PD__PSN VDD pt_wiredtx__p18
-XDAC_POST_MS6_0 VDD PB_POST VDD DAC_POST__S6 pt_wiredtx__p23
-XDAC_TMDS_CI1_MN VSS DAC_TMDS__CB1 TMDS_CODE1 VSS pt_wiredtx__p0
+XWM15_TB_P VDD WSEL D35 WM15__X pt_wiredtx__p10
+XDAC_POST_MS6_0 VDD PB_POST VDD DAC_POST__S6 pt_wiredtx__p20
+XPD_B_CMD_POST_N_MNA QDP PD__NB_CMD_POST_N VSS PD__B_CMD_POST_N__X pt_wiredtx__p5
 XDAC_MAIN_MD0 VSS MAIN_BIAS VSS MAIN_BIAS pt_wiredtx__p7
-XPD_PBN_MPB PD__NPBN PD__SPP VDD VDD pt_wiredtx__p14
-XPD_G_POST_P_MNB EN_POST VSS VSS PD__G_POST_P__X pt_wiredtx__p5
-XBBM_EN_MPA BBM__EN__X BBM__XRB VDD VDD pt_wiredtx__p14
-XWI0_MP DWB0 VDD DW0 VDD pt_wiredtx__p18
-XWM18_TB_N VSS WM18__X WSELB D38 pt_wiredtx__p0
+XPD_EP_SN_MPB VDD EN_POST VDD PD__ENP0N pt_wiredtx__p10
+XBBM_EN_MPA BBM__EN__X BBM__XRB VDD VDD pt_wiredtx__p13
+XWI0_MP DWB0 VDD DW0 VDD pt_wiredtx__p16
 XWI9_MN VSS DW9 DWB9 VSS pt_wiredtx__p4
+XWM18_TB_N VSS WM18__X WSELB D38 pt_wiredtx__p0
 XSWI VSS IBIAS BEN ATB_NBIAS pt_wiredtx__p4
-XDAC_TMDS_CI4_MN VSS DAC_TMDS__CB4 TMDS_CODE4 VSS pt_wiredtx__p0
-XPD_PON_MNA PD__NPAN PD__PON__X VSS PD__PSN pt_wiredtx__p5
 XWM10_TA_N VSS WM10__X WSEL D10 pt_wiredtx__p0
-XDAC_POST_MS6_1 VDD PB_POST VDD DAC_POST__S6 pt_wiredtx__p23
-XDAC_TMDS_MD VSS TMDS_BIAS VSS TMDS_BIAS pt_wiredtx__p7
-XWI3_MP DWB3 VDD DW3 VDD pt_wiredtx__p18
+XDAC_POST_MS6_1 VDD PB_POST VDD DAC_POST__S6 pt_wiredtx__p20
+XWI3_MP DWB3 VDD DW3 VDD pt_wiredtx__p16
 XDAC_MAIN_MD1 VSS MAIN_BIAS VSS MAIN_BIAS pt_wiredtx__p7
-XPD_PBN_MNA VSS PD__NPBN QDP PD__PBN__X pt_wiredtx__p4
-XBBM_EN_MPB EXT BBM__SERD VDD BBM__EN__X pt_wiredtx__p14
-XDAC_TMDS_CI7_MN VSS DAC_TMDS__CB7 TMDS_CODE7 VSS pt_wiredtx__p0
-XWM5_TB_P VDD WSEL D25 WM5__X pt_wiredtx__p11
-XDAC_MAIN_EI_MP VDD EN_MAIN VDD DAC_MAIN__ENB pt_wiredtx__p11
-XDAC_TMDS_SW0 VDD DAC_TMDS__CB0 DAC_TMDS__S0 TMDS_BIAS pt_wiredtx__p11
+XPD_B_CMD_POST_N_MNB PD__ENPS1 PD__B_CMD_POST_N__X VSS VSS pt_wiredtx__p5
+XPD_EP_SN_MNA PD__POLB PD__EP_SN__X VSS PD__ENP0N pt_wiredtx__p2
+XBBM_EN_MPB EXT BBM__SERD VDD BBM__EN__X pt_wiredtx__p13
+XWM5_TB_P VDD WSEL D25 WM5__X pt_wiredtx__p10
+XDAC_MAIN_EI_MP VDD EN_MAIN VDD DAC_MAIN__ENB pt_wiredtx__p10
 XDAC_MAIN_SWN EN_MAIN DAC_MAIN__M1 VSS ATB_PBIAS pt_wiredtx__p2
-XWI6_MP DWB6 VDD DW6 VDD pt_wiredtx__p18
-XPD_PON_MNB PD__NPBN VSS VSS PD__PON__X pt_wiredtx__p5
-XDAC_POST_MS6_2 VDD PB_POST VDD DAC_POST__S6 pt_wiredtx__p23
+XWI6_MP DWB6 VDD DW6 VDD pt_wiredtx__p16
+XDAC_POST_MS6_2 VDD PB_POST VDD DAC_POST__S6 pt_wiredtx__p20
 XDAC_POST_CI2_MN VSS DAC_POST__CB2 POST_CODE2 VSS pt_wiredtx__p0
-XDAC_TMDS_CI1_MP VDD TMDS_CODE1 VDD DAC_TMDS__CB1 pt_wiredtx__p11
 XWM8_TB_N VSS WM8__X WSELB D28 pt_wiredtx__p0
-XPD_PBN_MNB VSS PD__PBN__X PD__SPP VSS pt_wiredtx__p4
+XPD_EP_SN_MNB EN_POST VSS VSS PD__EP_SN__X pt_wiredtx__p2
 XDAC_POST_PDE DAC_POST__ENB VSS VSS POST_BIAS pt_wiredtx__p2
 XDAC_MAIN_PDI ISLAND_OFF VSS VSS MAIN_BIAS pt_wiredtx__p2
 XBBM_EN_MNA VSS EXT BBM__XRB VSS pt_wiredtx__p0
-XWM18_TB_P VDD WSEL D38 WM18__X pt_wiredtx__p11
-XWI9_MP DWB9 VDD DW9 VDD pt_wiredtx__p18
-XDAC_TMDS_SW1 VDD DAC_TMDS__CB1 DAC_TMDS__S1 TMDS_BIAS pt_wiredtx__p11
+XWM18_TB_P VDD WSEL D38 WM18__X pt_wiredtx__p10
+XWI9_MP DWB9 VDD DW9 VDD pt_wiredtx__p16
 XWM0_TA_N VSS WM0__X WSEL D0 pt_wiredtx__p0
 XDAC_POST_CI5_MN VSS DAC_POST__CB5 POST_CODE5 VSS pt_wiredtx__p0
 XDAC_POST_EI_MN VSS DAC_POST__ENB EN_POST VSS pt_wiredtx__p0
-XPD_O2_MPA PD__NQ2 VDD PD__DSB VDD pt_wiredtx__p18
-XDAC_TMDS_CI4_MP VDD TMDS_CODE4 VDD DAC_TMDS__CB4 pt_wiredtx__p11
-XDAC_POST_MS6_3 VDD PB_POST VDD DAC_POST__S6 pt_wiredtx__p23
-XWM10_TA_P VDD WSELB D10 WM10__X pt_wiredtx__p11
+XDAC_POST_MS6_3 VDD PB_POST VDD DAC_POST__S6 pt_wiredtx__p20
+XWM10_TA_P VDD WSELB D10 WM10__X pt_wiredtx__p10
 XBBM_EN_MNB VSS EXT BBM__SERD VSS pt_wiredtx__p0
-XDAC_TMDS_CI7_MP VDD TMDS_CODE7 VDD DAC_TMDS__CB7 pt_wiredtx__p11
-XDAC_TMDS_SW2 VDD DAC_TMDS__CB2 DAC_TMDS__S2 TMDS_BIAS pt_wiredtx__p11
 XWM13_TA_N VSS WM13__X WSEL D13 pt_wiredtx__p0
 XWM12_IN WM12__X VSS VSS DWB12 pt_wiredtx__p2
-XPD_O2_MPB PD__NX2 VDD PD__DSB VDD pt_wiredtx__p18
 XBBM_DE1_MN VSS VSS BBM__ED0 BBM__ED1 pt_wiredtx__p1
-XDAC_POST_CI2_MP VDD POST_CODE2 VDD DAC_POST__CB2 pt_wiredtx__p11
-XWM8_TB_P VDD WSEL D28 WM8__X pt_wiredtx__p11
+XDAC_POST_CI2_MP VDD POST_CODE2 VDD DAC_POST__CB2 pt_wiredtx__p10
+XWM8_TB_P VDD WSEL D28 WM8__X pt_wiredtx__p10
 XDAC_POST_MD0 VSS POST_BIAS VSS POST_BIAS pt_wiredtx__p7
 XWM15_IN WM15__X VSS VSS DWB15 pt_wiredtx__p2
+XPD_A_CMD_MAIN_N_MPA QD VDD PD__NA_CMD_MAIN_N VDD pt_wiredtx__p16
 XDAC_MAIN_CI1_MN VSS DAC_MAIN__CB1 MAIN_CODE1 VSS pt_wiredtx__p0
-XWM0_TA_P VDD WSELB D0 WM0__X pt_wiredtx__p11
-XDAC_TMDS_SW3 VDD DAC_TMDS__CB3 DAC_TMDS__S3 TMDS_BIAS pt_wiredtx__p11
-XDAC_TMDS_MS7_0 VDD PB_TMDS VDD DAC_TMDS__S7 pt_wiredtx__p22
-XDAC_POST_CI5_MP VDD POST_CODE5 VDD DAC_POST__CB5 pt_wiredtx__p11
-XPD_SQB_MN PD__SQN VSS VSS PD__SPP pt_wiredtx__p2
-XPD_O2_MNA PD__NQ2 PD__O2__X VSS PD__DSB pt_wiredtx__p5
-XDAC_POST_EI_MP VDD EN_POST VDD DAC_POST__ENB pt_wiredtx__p11
+XPD_CL_CMD_POST_N ISLAND_OFF VSS VSS CMD_POST_N pt_wiredtx__p2
+XWM0_TA_P VDD WSELB D0 WM0__X pt_wiredtx__p10
+XDAC_POST_CI5_MP VDD POST_CODE5 VDD DAC_POST__CB5 pt_wiredtx__p10
+XDAC_POST_EI_MP VDD EN_POST VDD DAC_POST__ENB pt_wiredtx__p10
 XWM18_IN WM18__X VSS VSS DWB18 pt_wiredtx__p2
 XDAC_MAIN_CI4_MN VSS DAC_MAIN__CB4 MAIN_CODE4 VSS pt_wiredtx__p0
 XDAC_POST_MD1 VSS POST_BIAS VSS POST_BIAS pt_wiredtx__p7
 XWM3_TA_N VSS WM3__X WSEL D3 pt_wiredtx__p0
+XPD_A_CMD_MAIN_N_MPB PD__ENS_MR VDD PD__NA_CMD_MAIN_N VDD pt_wiredtx__p16
 XBBM_DS2_MN VSS VSS BBM__SD1 BBM__SD2 pt_wiredtx__p1
-XDAC_TMDS_SW4 VDD DAC_TMDS__CB4 DAC_TMDS__S4 TMDS_BIAS pt_wiredtx__p11
-XDAC_TMDS_MS7_1 VDD PB_TMDS VDD DAC_TMDS__S7 pt_wiredtx__p22
 XDAC_POST_SWN EN_POST DAC_POST__M1 VSS PB_POST pt_wiredtx__p2
-XWM13_TA_P VDD WSELB D13 WM13__X pt_wiredtx__p11
-XWM12_IP DWB12 WM12__X VDD VDD pt_wiredtx__p14
-XPD_O2_MNB PD__NX2 VSS VSS PD__O2__X pt_wiredtx__p5
+XWM13_TA_P VDD WSELB D13 WM13__X pt_wiredtx__p10
+XWM12_IP DWB12 WM12__X VDD VDD pt_wiredtx__p13
 XDAC_MAIN_CI7_MN VSS DAC_MAIN__CB7 MAIN_CODE7 VSS pt_wiredtx__p0
-XBBM_DE1_MP BBM__ED1 VDD VDD BBM__ED0 pt_wiredtx__p12
-XPD_O_POST_P_MN CMD_POST_P PD__NB_POST_P VSS VSS pt_wiredtx__p6
+XBBM_DE1_MP BBM__ED1 VDD VDD BBM__ED0 pt_wiredtx__p11
 XWM16_TA_N VSS WM16__X WSEL D16 pt_wiredtx__p0
 XWM11_TB_N VSS WM11__X WSELB D31 pt_wiredtx__p0
-XWM15_IP DWB15 WM15__X VDD VDD pt_wiredtx__p14
+XWM15_IP DWB15 WM15__X VDD VDD pt_wiredtx__p13
 XDAC_POST_PDI ISLAND_OFF VSS VSS POST_BIAS pt_wiredtx__p2
-XDAC_MAIN_CI1_MP VDD MAIN_CODE1 VDD DAC_MAIN__CB1 pt_wiredtx__p11
+XPD_A_CMD_MAIN_N_MNA QD PD__NA_CMD_MAIN_N VSS PD__A_CMD_MAIN_N__X pt_wiredtx__p5
+XPD_CL_CMD_POST_P ISLAND_OFF VSS VSS CMD_POST_P pt_wiredtx__p2
+XDAC_MAIN_CI1_MP VDD MAIN_CODE1 VDD DAC_MAIN__CB1 pt_wiredtx__p10
 XWM1_IN WM1__X VSS VSS DWB1 pt_wiredtx__p2
-XDAC_TMDS_SW5 TMDS_BIAS DAC_TMDS__CB5 VDD DAC_TMDS__S5 pt_wiredtx__p14
-XWS_F_PR2 WS__F__X2 SER_EN VDD VDD pt_wiredtx__p17
-XDAC_TMDS_MS7_2 VDD PB_TMDS VDD DAC_TMDS__S7 pt_wiredtx__p22
-XPD_O_TMDS_P_MP_0 VDD CMD_TMDS_P PD__NB_TMDS_P VDD pt_wiredtx__p21
-XPD_SQB_MP PD__SPP PD__SQN VDD VDD pt_wiredtx__p14
+XWS_F_PR2 WS__F__X2 SER_EN VDD VDD pt_wiredtx__p15
 XBE_IN VSS BEN BENB VSS pt_wiredtx__p0
-XWM18_IP DWB18 WM18__X VDD VDD pt_wiredtx__p14
-XDAC_MAIN_CI4_MP VDD MAIN_CODE4 VDD DAC_MAIN__CB4 pt_wiredtx__p11
+XWM18_IP DWB18 WM18__X VDD VDD pt_wiredtx__p13
+XDAC_MAIN_CI4_MP VDD MAIN_CODE4 VDD DAC_MAIN__CB4 pt_wiredtx__p10
 XWM4_IN WM4__X VSS VSS DWB4 pt_wiredtx__p2
-XWM3_TA_P VDD WSELB D3 WM3__X pt_wiredtx__p11
-XBBM_DS2_MP BBM__SD2 VDD VDD BBM__SD1 pt_wiredtx__p12
-XDAC_TMDS_SW6 DAC_TMDS__CB6 DAC_TMDS__S6 TMDS_BIAS VDD pt_wiredtx__p18
-XDAC_TMDS_MS7_3 VDD PB_TMDS VDD DAC_TMDS__S7 pt_wiredtx__p22
-XPD_O_TMDS_P_MP_1 VDD CMD_TMDS_P PD__NB_TMDS_P VDD pt_wiredtx__p21
-XPD_G_TMDS_N_MPA PD__DS VDD PD__NB_TMDS_N VDD pt_wiredtx__p18
-XDAC_MAIN_SW0 VDD DAC_MAIN__CB0 DAC_MAIN__S0 MAIN_BIAS pt_wiredtx__p11
-XDAC_MAIN_CI7_MP VDD MAIN_CODE7 VDD DAC_MAIN__CB7 pt_wiredtx__p11
-XDAC_TMDS_MS5_0 VDD PB_TMDS VDD DAC_TMDS__S5 pt_wiredtx__p22
+XPD_EP_PI_MN PD__ENP1N VSS VSS PD__ENP1R pt_wiredtx__p2
+XWM3_TA_P VDD WSELB D3 WM3__X pt_wiredtx__p10
+XPD_A_CMD_MAIN_N_MNB PD__ENS_MR PD__A_CMD_MAIN_N__X VSS VSS pt_wiredtx__p5
+XBBM_DS2_MP BBM__SD2 VDD VDD BBM__SD1 pt_wiredtx__p11
+XPD_CL_CMD_MAIN_N ISLAND_OFF VSS VSS CMD_MAIN_N pt_wiredtx__p2
+XPD_A_CMD_POST_N_MPA QDPB VDD PD__NA_CMD_POST_N VDD pt_wiredtx__p16
+XDAC_MAIN_SW0 VDD DAC_MAIN__CB0 DAC_MAIN__S0 MAIN_BIAS pt_wiredtx__p10
+XDAC_MAIN_CI7_MP VDD MAIN_CODE7 VDD DAC_MAIN__CB7 pt_wiredtx__p10
 XWM1_TB_N VSS WM1__X WSELB D21 pt_wiredtx__p0
 XWM7_IN WM7__X VSS VSS DWB7 pt_wiredtx__p2
 XWM6_TA_N VSS WM6__X WSEL D6 pt_wiredtx__p0
 XWI12_MN VSS DW12 DWB12 VSS pt_wiredtx__p4
 XSQI_MN VSS SERQ SERQN VSS pt_wiredtx__p4
-XWM11_TB_P VDD WSEL D31 WM11__X pt_wiredtx__p11
-XWM16_TA_P VDD WSELB D16 WM16__X pt_wiredtx__p11
-XPD_SQA_MPA VDD SERQ VDD PD__SQN pt_wiredtx__p11
-XWM1_IP DWB1 WM1__X VDD VDD pt_wiredtx__p14
-XDAC_TMDS_SW7 VDD TMDS_BIAS DAC_TMDS__CB7 DAC_TMDS__S7 pt_wiredtx__p21
-XMFN_MPA MFN__X MODE_H VDD VDD pt_wiredtx__p14
-XDAC_TMDS_MS7_4 VDD PB_TMDS VDD DAC_TMDS__S7 pt_wiredtx__p22
-XPD_G_TMDS_N_MPB EN_TMDS VDD PD__NB_TMDS_N VDD pt_wiredtx__p18
+XWM11_TB_P VDD WSEL D31 WM11__X pt_wiredtx__p10
+XWM16_TA_P VDD WSELB D16 WM16__X pt_wiredtx__p10
+XWM1_IP DWB1 WM1__X VDD VDD pt_wiredtx__p13
+XMFN_MPA MFN__X MODE_H VDD VDD pt_wiredtx__p13
+XPD_A_CMD_POST_N_MPB PD__ENPS0 VDD PD__NA_CMD_POST_N VDD pt_wiredtx__p16
+XDAC_MAIN_SW1 VDD DAC_MAIN__CB1 DAC_MAIN__S1 MAIN_BIAS pt_wiredtx__p10
 XWI15_MN VSS DW15 DWB15 VSS pt_wiredtx__p4
-XDAC_MAIN_SW1 VDD DAC_MAIN__CB1 DAC_MAIN__S1 MAIN_BIAS pt_wiredtx__p11
-XDAC_TMDS_MS5_1 VDD PB_TMDS VDD DAC_TMDS__S5 pt_wiredtx__p22
-XBE_IP VDD BENB VDD BEN pt_wiredtx__p11
+XPD_B_CMD_MAIN_P_MPA PD__DXB VDD PD__NB_CMD_MAIN_P VDD pt_wiredtx__p16
+XBE_IP VDD BENB VDD BEN pt_wiredtx__p10
 XWM19_TA_N VSS WM19__X WSEL D19 pt_wiredtx__p0
 XWM14_TB_N VSS WM14__X WSELB D34 pt_wiredtx__p0
-XWM4_IP DWB4 WM4__X VDD VDD pt_wiredtx__p14
-XPD_SQA_MPB VDD POST_POL VDD PD__SQN pt_wiredtx__p11
+XWM4_IP DWB4 WM4__X VDD VDD pt_wiredtx__p13
+XPD_EP_PI_MP PD__ENP1R PD__ENP1N VDD VDD pt_wiredtx__p13
 XWI18_MN VSS DW18 DWB18 VSS pt_wiredtx__p4
 XPD_XO_MN VSS WTX_EXT_DATA PD__EXDN VSS pt_wiredtx__p0
-XDAC_TMDS_MS7_5 VDD PB_TMDS VDD DAC_TMDS__S7 pt_wiredtx__p22
-XMFN_MPB MFC MFB VDD MFN__X pt_wiredtx__p14
-XPD_G_TMDS_N_MNA PD__DS PD__G_TMDS_N__X VSS PD__NB_TMDS_N pt_wiredtx__p5
-XDAC_MAIN_SW2 VDD DAC_MAIN__CB2 DAC_MAIN__S2 MAIN_BIAS pt_wiredtx__p11
-XWM7_IP DWB7 WM7__X VDD VDD pt_wiredtx__p14
-XWM1_TB_P VDD WSEL D21 WM1__X pt_wiredtx__p11
-XWM6_TA_P VDD WSELB D6 WM6__X pt_wiredtx__p11
-XWI12_MP DWB12 VDD DW12 VDD pt_wiredtx__p18
-XSQI_MP SERQN VDD SERQ VDD pt_wiredtx__p18
-XDAC_TMDS_PBU PB_TMDS VDD EN_TMDS VDD pt_wiredtx__p8
-XPD_SQA_MNA SERQ PD__SQA__X VSS PD__SQN pt_wiredtx__p2
-XPD_PAN_MPA PD__NPAN QDPB VDD VDD pt_wiredtx__p14
-XPD_CL_TMDS_N ISLAND_OFF VSS VSS CMD_TMDS_N pt_wiredtx__p2
+XMFN_MPB MFC MFB VDD MFN__X pt_wiredtx__p13
+XPD_A_CMD_POST_N_MNA QDPB PD__NA_CMD_POST_N VSS PD__A_CMD_POST_N__X pt_wiredtx__p5
+XDAC_MAIN_SW2 VDD DAC_MAIN__CB2 DAC_MAIN__S2 MAIN_BIAS pt_wiredtx__p10
+XPD_CL_CMD_MAIN_P ISLAND_OFF VSS VSS CMD_MAIN_P pt_wiredtx__p2
+XPD_B_CMD_MAIN_P_MPB PD__ENX_MR VDD PD__NB_CMD_MAIN_P VDD pt_wiredtx__p16
+XWM7_IP DWB7 WM7__X VDD VDD pt_wiredtx__p13
+XWM1_TB_P VDD WSEL D21 WM1__X pt_wiredtx__p10
+XWM6_TA_P VDD WSELB D6 WM6__X pt_wiredtx__p10
+XWI12_MP DWB12 VDD DW12 VDD pt_wiredtx__p16
+XPD_EP_SI_MN PD__ENP0N VSS VSS PD__ENP0R pt_wiredtx__p2
+XSQI_MP SERQN VDD SERQ VDD pt_wiredtx__p16
+XPD_EP_RN_MPA VDD PD__ENP1R VDD PD__ENP1N2 pt_wiredtx__p10
 XWM4_TB_N VSS WM4__X WSELB D24 pt_wiredtx__p0
-XDAC_TMDS_MS7_6 VDD PB_TMDS VDD DAC_TMDS__S7 pt_wiredtx__p22
 XMFN_MNA VSS MFC MODE_H VSS pt_wiredtx__p0
 XWM9_TA_N VSS WM9__X WSEL D9 pt_wiredtx__p0
-XPD_G_TMDS_N_MNB EN_TMDS VSS VSS PD__G_TMDS_N__X pt_wiredtx__p5
 XWI1_MN VSS DW1 DWB1 VSS pt_wiredtx__p4
-XPD_X2_MPA PD__NX2 PD__DXB VDD VDD pt_wiredtx__p14
-XWI15_MP DWB15 VDD DW15 VDD pt_wiredtx__p18
-XDAC_MAIN_SW3 VDD DAC_MAIN__CB3 DAC_MAIN__S3 MAIN_BIAS pt_wiredtx__p11
-XWM14_TB_P VDD WSEL D34 WM14__X pt_wiredtx__p11
-XPD_O_MAIN_P_MP_0 VDD CMD_MAIN_P PD__NB_MAIN_P VDD pt_wiredtx__p21
-XWM19_TA_P VDD WSELB D19 WM19__X pt_wiredtx__p11
-XPD_PAN_MPB PD__NPAN PD__SP VDD VDD pt_wiredtx__p14
+XPD_A_CMD_POST_N_MNB PD__ENPS0 PD__A_CMD_POST_N__X VSS VSS pt_wiredtx__p5
+XDAC_MAIN_SW3 VDD DAC_MAIN__CB3 DAC_MAIN__S3 MAIN_BIAS pt_wiredtx__p10
+XWI15_MP DWB15 VDD DW15 VDD pt_wiredtx__p16
+XPD_B_CMD_MAIN_P_MNA PD__DXB PD__NB_CMD_MAIN_P VSS PD__B_CMD_MAIN_P__X pt_wiredtx__p5
+XWM14_TB_P VDD WSEL D34 WM14__X pt_wiredtx__p10
+XWM19_TA_P VDD WSELB D19 WM19__X pt_wiredtx__p10
+XPD_EP_RN_MPB VDD SERQ VDD PD__ENP1N2 pt_wiredtx__p10
 XWI4_MN VSS DW4 DWB4 VSS pt_wiredtx__p4
 XPDN BENB VSS VSS ATB_NBIAS pt_wiredtx__p2
-XWI18_MP DWB18 VDD DW18 VDD pt_wiredtx__p18
-XPD_SQA_MNB POST_POL VSS VSS PD__SQA__X pt_wiredtx__p2
-XPD_XO_MP VDD PD__EXDN VDD WTX_EXT_DATA pt_wiredtx__p11
+XWI18_MP DWB18 VDD DW18 VDD pt_wiredtx__p16
+XPD_XO_MP VDD PD__EXDN VDD WTX_EXT_DATA pt_wiredtx__p10
 XMFN_MNB VSS MFC MFB VSS pt_wiredtx__p0
 XWM17_TB_N VSS WM17__X WSELB D37 pt_wiredtx__p0
-XDAC_TMDS_MS7_7 VDD PB_TMDS VDD DAC_TMDS__S7 pt_wiredtx__p22
-XDAC_POST_SW0 VDD DAC_POST__CB0 DAC_POST__S0 POST_BIAS pt_wiredtx__p11
+XDAC_POST_SW0 VDD DAC_POST__CB0 DAC_POST__S0 POST_BIAS pt_wiredtx__p10
 XWCO_MN WCKQ VSS VSS WCKN pt_wiredtx__p2
-XPD_X2_MPB PD__NX2 EXT VDD VDD pt_wiredtx__p14
-XDAC_MAIN_SW4 VDD DAC_MAIN__CB4 DAC_MAIN__S4 MAIN_BIAS pt_wiredtx__p11
-XPD_O_MAIN_P_MP_1 VDD CMD_MAIN_P PD__NB_MAIN_P VDD pt_wiredtx__p21
+XDAC_MAIN_SW4 VDD DAC_MAIN__CB4 DAC_MAIN__S4 MAIN_BIAS pt_wiredtx__p10
+XPD_B_CMD_MAIN_P_MNB PD__ENX_MR PD__B_CMD_MAIN_P__X VSS VSS pt_wiredtx__p5
 XWI7_MN VSS DW7 DWB7 VSS pt_wiredtx__p4
-XDAC_TMDS_CI2_MN VSS DAC_TMDS__CB2 TMDS_CODE2 VSS pt_wiredtx__p0
-XPD_PAN_MNA VSS PD__NPAN QDPB PD__PAN__X pt_wiredtx__p4
-XPD_CL_TMDS_P ISLAND_OFF VSS VSS CMD_TMDS_P pt_wiredtx__p2
-XWM4_TB_P VDD WSEL D24 WM4__X pt_wiredtx__p11
-XWM9_TA_P VDD WSELB D9 WM9__X pt_wiredtx__p11
-XDAC_POST_SW1 VDD DAC_POST__CB1 DAC_POST__S1 POST_BIAS pt_wiredtx__p11
-XDAC_MAIN_SW5 MAIN_BIAS DAC_MAIN__CB5 VDD DAC_MAIN__S5 pt_wiredtx__p14
-XPD_X2_MNA VSS PD__NX2 PD__DXB PD__X2__X pt_wiredtx__p4
-XWI1_MP DWB1 VDD DW1 VDD pt_wiredtx__p18
-XPD_POP_MPA PD__NPAP VDD PD__PSP VDD pt_wiredtx__p18
-XDAC_TMDS_CI5_MN VSS DAC_TMDS__CB5 TMDS_CODE5 VSS pt_wiredtx__p0
-XDAC_MAIN_MS7_0 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p23
-XPD_PBP_MPA PD__NPBP QDPB VDD VDD pt_wiredtx__p14
+XPD_EP_SI_MP PD__ENP0R PD__ENP0N VDD VDD pt_wiredtx__p13
+XPD_B_CMD_POST_P_MPA QDPB VDD PD__NB_CMD_POST_P VDD pt_wiredtx__p16
+XPD_EP_RN_MNA PD__ENP1R PD__EP_RN__X VSS PD__ENP1N2 pt_wiredtx__p2
+XWM4_TB_P VDD WSEL D24 WM4__X pt_wiredtx__p10
+XWM9_TA_P VDD WSELB D9 WM9__X pt_wiredtx__p10
+XDAC_POST_SW1 VDD DAC_POST__CB1 DAC_POST__S1 POST_BIAS pt_wiredtx__p10
+XWI1_MP DWB1 VDD DW1 VDD pt_wiredtx__p16
+XDAC_MAIN_SW5 MAIN_BIAS DAC_MAIN__CB5 VDD DAC_MAIN__S5 pt_wiredtx__p13
+XPD_B_CMD_POST_P_MPB PD__ENPS1 VDD PD__NB_CMD_POST_P VDD pt_wiredtx__p16
+XDAC_MAIN_MS7_0 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p20
 XWM7_TB_N VSS WM7__X WSELB D27 pt_wiredtx__p0
-XWI4_MP DWB4 VDD DW4 VDD pt_wiredtx__p18
-XPD_PAN_MNB VSS PD__PAN__X PD__SP VSS pt_wiredtx__p4
-XWM17_TB_P VDD WSEL D37 WM17__X pt_wiredtx__p11
+XWI4_MP DWB4 VDD DW4 VDD pt_wiredtx__p16
+XPD_EP_RN_MNB SERQ VSS VSS PD__EP_RN__X pt_wiredtx__p2
+XWM17_TB_P VDD WSEL D37 WM17__X pt_wiredtx__p10
 XDAC_POST_CI0_MN VSS DAC_POST__CB0 POST_CODE0 VSS pt_wiredtx__p0
-XDAC_POST_SW2 VDD DAC_POST__CB2 DAC_POST__S2 POST_BIAS pt_wiredtx__p11
-XDAC_MAIN_SW6 DAC_MAIN__CB6 DAC_MAIN__S6 MAIN_BIAS VDD pt_wiredtx__p18
-XWCO_MP WCKN WCKQ VDD VDD pt_wiredtx__p14
-XPD_O1_MPA PD__NQ1 VDD PD__DS VDD pt_wiredtx__p18
-XPD_X2_MNB VSS PD__X2__X EXT VSS pt_wiredtx__p4
-XPD_POP_MPB PD__NPBP VDD PD__PSP VDD pt_wiredtx__p18
+XDAC_POST_SW2 VDD DAC_POST__CB2 DAC_POST__S2 POST_BIAS pt_wiredtx__p10
+XWCO_MP WCKN WCKQ VDD VDD pt_wiredtx__p13
+XDAC_MAIN_SW6 DAC_MAIN__CB6 DAC_MAIN__S6 MAIN_BIAS VDD pt_wiredtx__p16
 XWS_CI_MN VSS WS__CKB WORD_CLK VSS pt_wiredtx__p0
-XWI7_MP DWB7 VDD DW7 VDD pt_wiredtx__p18
-XDAC_MAIN_MS7_1 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p23
-XPD_PBP_MPB PD__NPBP PD__SPP VDD VDD pt_wiredtx__p14
+XPD_EM_SI_MN PD__ENS_MN VSS VSS PD__ENS_MR pt_wiredtx__p2
+XPD_B_CMD_POST_P_MNA QDPB PD__NB_CMD_POST_P VSS PD__B_CMD_POST_P__X pt_wiredtx__p5
+XWI7_MP DWB7 VDD DW7 VDD pt_wiredtx__p16
+XDAC_MAIN_MS7_1 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p20
 XDAC_POST_CI3_MN VSS DAC_POST__CB3 POST_CODE3 VSS pt_wiredtx__p0
-XDAC_TMDS_CI2_MP VDD TMDS_CODE2 VDD DAC_TMDS__CB2 pt_wiredtx__p11
-XDAC_POST_SW3 VDD DAC_POST__CB3 DAC_POST__S3 POST_BIAS pt_wiredtx__p11
-XDAC_MAIN_SW7 VDD MAIN_BIAS DAC_MAIN__CB7 DAC_MAIN__S7 pt_wiredtx__p21
+XDAC_POST_SW3 VDD DAC_POST__CB3 DAC_POST__S3 POST_BIAS pt_wiredtx__p10
+XPD_O_CMD_MAIN_N_MPA PD__NA_CMD_MAIN_N VDD CMD_MAIN_N VDD pt_wiredtx__p18
 XWM12_TA_N VSS WM12__X WSEL D12 pt_wiredtx__p0
-XPD_O1_MPB PD__NX1 VDD PD__DS VDD pt_wiredtx__p18
-XPD_POP_MNA PD__NPAP PD__POP__X VSS PD__PSP pt_wiredtx__p5
+XDAC_MAIN_SW7 VDD MAIN_BIAS DAC_MAIN__CB7 DAC_MAIN__S7 pt_wiredtx__p19
 XDAC_POST_CI6_MN VSS DAC_POST__CB6 POST_CODE6 VSS pt_wiredtx__p0
-XDAC_TMDS_CI5_MP VDD TMDS_CODE5 VDD DAC_TMDS__CB5 pt_wiredtx__p11
-XDAC_MAIN_MS7_2 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p23
-XDAC_TMDS_MS0 VDD PB_TMDS DAC_TMDS__S0 VDD pt_wiredtx__p9
-XPD_PBP_MNA VSS PD__NPBP QDPB PD__PBP__X pt_wiredtx__p4
+XPD_B_CMD_POST_P_MNB PD__ENPS1 PD__B_CMD_POST_P__X VSS VSS pt_wiredtx__p5
+XDAC_MAIN_MS7_2 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p20
 XWM10_IN WM10__X VSS VSS DWB10 pt_wiredtx__p2
-XWM7_TB_P VDD WSEL D27 WM7__X pt_wiredtx__p11
-XDAC_POST_CI0_MP VDD POST_CODE0 VDD DAC_POST__CB0 pt_wiredtx__p11
-XDAC_POST_SW4 VDD DAC_POST__CB4 DAC_POST__S4 POST_BIAS pt_wiredtx__p11
-XPD_SPB_MN PD__SPN VSS VSS PD__SP pt_wiredtx__p2
-XPD_O1_MNA PD__NQ1 PD__O1__X VSS PD__DS pt_wiredtx__p5
-XPD_POP_MNB PD__NPBP VSS VSS PD__POP__X pt_wiredtx__p5
+XWM7_TB_P VDD WSEL D27 WM7__X pt_wiredtx__p10
+XDAC_POST_CI0_MP VDD POST_CODE0 VDD DAC_POST__CB0 pt_wiredtx__p10
+XDAC_POST_SW4 VDD DAC_POST__CB4 DAC_POST__S4 POST_BIAS pt_wiredtx__p10
+XPD_O_CMD_MAIN_N_MPB PD__NB_CMD_MAIN_N VDD CMD_MAIN_N VDD pt_wiredtx__p18
 XWM13_IN WM13__X VSS VSS DWB13 pt_wiredtx__p2
-XWS_CI_MP VDD WORD_CLK VDD WS__CKB pt_wiredtx__p11
-XDAC_MAIN_MS7_3 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p23
-XPD_G_MAIN_N_MPA PD__DS VDD PD__NB_MAIN_N VDD pt_wiredtx__p18
-XDAC_TMDS_MS1 DAC_TMDS__S1 VDD VDD PB_TMDS pt_wiredtx__p12
+XWS_CI_MP VDD WORD_CLK VDD WS__CKB pt_wiredtx__p10
+XPD_EM_SI_MP PD__ENS_MR PD__ENS_MN VDD VDD pt_wiredtx__p13
+XPD_EM_SN_MPA VDD SERQ VDD PD__ENS_MN pt_wiredtx__p10
+XDAC_MAIN_MS7_3 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p20
 XBBM_DE2_MN VSS VSS BBM__ED1 BBM__ED2 pt_wiredtx__p1
-XPD_PBP_MNB VSS PD__PBP__X PD__SPP VSS pt_wiredtx__p4
-XDAC_POST_CI3_MP VDD POST_CODE3 VDD DAC_POST__CB3 pt_wiredtx__p11
-XDAC_MAIN_MS5_0 VDD ATB_PBIAS VDD DAC_MAIN__S5 pt_wiredtx__p23
+XDAC_POST_CI3_MP VDD POST_CODE3 VDD DAC_POST__CB3 pt_wiredtx__p10
 XMFI_MN VSS MFB MODE_F VSS pt_wiredtx__p0
-XDAC_POST_MS7_0 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p23
+XDAC_MAIN_MS5_0 VDD ATB_PBIAS VDD DAC_MAIN__S5 pt_wiredtx__p20
+XDAC_POST_MS7_0 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p20
 XWM2_TA_N VSS WM2__X WSEL D2 pt_wiredtx__p0
 XDAC_MAIN_PBU ATB_PBIAS VDD EN_MAIN VDD pt_wiredtx__p8
-XPD_Q2_MPA PD__NQ2 QDB VDD VDD pt_wiredtx__p14
-XPD_CL_POST_N ISLAND_OFF VSS VSS CMD_POST_N pt_wiredtx__p2
 XWM16_IN WM16__X VSS VSS DWB16 pt_wiredtx__p2
-XDAC_POST_SW5 POST_BIAS DAC_POST__CB5 VDD DAC_POST__S5 pt_wiredtx__p14
-XBBM_SR_MPA VDD SER_EN VDD BBM__SRB pt_wiredtx__p11
+XDAC_POST_SW5 POST_BIAS DAC_POST__CB5 VDD DAC_POST__S5 pt_wiredtx__p13
+XPD_O_CMD_MAIN_N_MNA CMD_MAIN_N PD__NA_CMD_MAIN_N VSS PD__O_CMD_MAIN_N__X pt_wiredtx__p6
+XBBM_SR_MPA VDD SER_EN VDD BBM__SRB pt_wiredtx__p10
 XDAC_MAIN_CI2_MN VSS DAC_MAIN__CB2 MAIN_CODE2 VSS pt_wiredtx__p0
-XWM12_TA_P VDD WSELB D12 WM12__X pt_wiredtx__p11
-XPD_O1_MNB PD__NX1 VSS VSS PD__O1__X pt_wiredtx__p5
-XDAC_POST_CI6_MP VDD POST_CODE6 VDD DAC_POST__CB6 pt_wiredtx__p11
-XDAC_MAIN_MS7_4 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p23
-XPD_G_MAIN_N_MPB EN_MAIN VDD PD__NB_MAIN_N VDD pt_wiredtx__p18
+XWM12_TA_P VDD WSELB D12 WM12__X pt_wiredtx__p10
+XDAC_POST_CI6_MP VDD POST_CODE6 VDD DAC_POST__CB6 pt_wiredtx__p10
+XPD_EM_SN_MPB VDD EN_MAIN VDD PD__ENS_MN pt_wiredtx__p10
 XBBM_DS0_MN VSS VSS SER BBM__SD0 pt_wiredtx__p1
-XDAC_TMDS_MS2 VDD PB_TMDS DAC_TMDS__S2 VDD pt_wiredtx__p15
-XWM10_IP DWB10 WM10__X VDD VDD pt_wiredtx__p14
+XDAC_MAIN_MS7_4 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p20
+XWM10_IP DWB10 WM10__X VDD VDD pt_wiredtx__p13
 XWM19_IN WM19__X VSS VSS DWB19 pt_wiredtx__p2
-XDAC_MAIN_MS5_1 VDD ATB_PBIAS VDD DAC_MAIN__S5 pt_wiredtx__p23
-XDAC_POST_MS7_1 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p23
-XDAC_MAIN_CI5_MN VSS DAC_MAIN__CB5 MAIN_CODE5 VSS pt_wiredtx__p0
+XDAC_MAIN_MS5_1 VDD ATB_PBIAS VDD DAC_MAIN__S5 pt_wiredtx__p20
+XDAC_POST_MS7_1 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p20
 XWM15_TA_N VSS WM15__X WSEL D15 pt_wiredtx__p0
 XWM10_TB_N VSS WM10__X WSELB D30 pt_wiredtx__p0
-XPD_O_POST_N_MN CMD_POST_N PD__NB_POST_N VSS VSS pt_wiredtx__p6
-XPD_Q2_MPB PD__NQ2 SERQ VDD VDD pt_wiredtx__p14
-XBBM_SR_MPB VDD BBM__XRB VDD BBM__SRB pt_wiredtx__p11
-XDAC_POST_SW6 DAC_POST__CB6 DAC_POST__S6 POST_BIAS VDD pt_wiredtx__p18
+XDAC_MAIN_CI5_MN VSS DAC_MAIN__CB5 MAIN_CODE5 VSS pt_wiredtx__p0
+XPD_O_CMD_MAIN_N_MNB PD__O_CMD_MAIN_N__X PD__NB_CMD_MAIN_N VSS VSS pt_wiredtx__p6
+XBBM_SR_MPB VDD BBM__XRB VDD BBM__SRB pt_wiredtx__p10
+XDAC_POST_SW6 DAC_POST__CB6 DAC_POST__S6 POST_BIAS VDD pt_wiredtx__p16
 XBBM_DS3_MN VSS VSS BBM__SD2 BBM__SERD pt_wiredtx__p1
-XPD_SPB_MP PD__SP PD__SPN VDD VDD pt_wiredtx__p14
-XWM13_IP DWB13 WM13__X VDD VDD pt_wiredtx__p14
-XDAC_MAIN_MS7_5 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p23
-XWCB_MP_0 VDD WORD_CLK WCKN VDD pt_wiredtx__p21
-XDAC_TMDS_MS3 DAC_TMDS__S3 VDD VDD PB_TMDS pt_wiredtx__p19
-XDAC_TMDS_MP0 PB_TMDS VDD VDD PB_TMDS pt_wiredtx__p12
-XBBM_DE2_MP BBM__ED2 VDD VDD BBM__ED1 pt_wiredtx__p12
-XPD_G_MAIN_N_MNA PD__DS PD__G_MAIN_N__X VSS PD__NB_MAIN_N pt_wiredtx__p5
-XMFI_MP VDD MODE_F VDD MFB pt_wiredtx__p11
-XDAC_POST_MS7_2 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p23
-XWM2_TA_P VDD WSELB D2 WM2__X pt_wiredtx__p11
-XPD_Q2_MNA VSS PD__NQ2 QDB PD__Q2__X pt_wiredtx__p4
-XPD_CL_POST_P ISLAND_OFF VSS VSS CMD_POST_P pt_wiredtx__p2
-XWM16_IP DWB16 WM16__X VDD VDD pt_wiredtx__p14
-XPD_O_POST_N_MP_0 VDD CMD_POST_N PD__NB_POST_N VDD pt_wiredtx__p21
-XDAC_MAIN_CI2_MP VDD MAIN_CODE2 VDD DAC_MAIN__CB2 pt_wiredtx__p11
+XWM13_IP DWB13 WM13__X VDD VDD pt_wiredtx__p13
+XPD_O_CMD_POST_N_MPA PD__NA_CMD_POST_N VDD CMD_POST_N VDD pt_wiredtx__p18
+XPD_EM_SN_MNA SERQ PD__EM_SN__X VSS PD__ENS_MN pt_wiredtx__p2
+XWCB_MP_0 VDD WORD_CLK WCKN VDD pt_wiredtx__p19
+XDAC_MAIN_MS7_5 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p20
+XBBM_DE2_MP BBM__ED2 VDD VDD BBM__ED1 pt_wiredtx__p11
+XMFI_MP VDD MODE_F VDD MFB pt_wiredtx__p10
+XDAC_POST_MS7_2 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p20
+XPD_A_CMD_MAIN_P_MPA QDB VDD PD__NA_CMD_MAIN_P VDD pt_wiredtx__p16
+XWM2_TA_P VDD WSELB D2 WM2__X pt_wiredtx__p10
+XWM16_IP DWB16 WM16__X VDD VDD pt_wiredtx__p13
+XDAC_MAIN_CI2_MP VDD MAIN_CODE2 VDD DAC_MAIN__CB2 pt_wiredtx__p10
 XSQ DW0 DW1 DW2 DW3 DW4 DW5 DW6 DW7 DW8 DW9 DW10 DW11 DW12 DW13 DW14 DW15 DW16 DW17
 + DW18 DW19 WTX_PH0 WTX_PH90 WTX_PH180 WTX_PH270 SERQ VDD VSS VSS QD QDB QDP QDPB
 + WCKQ MODE_H MFC VDD VSS wtx_serq4c
-XDAC_POST_SW7 VDD POST_BIAS DAC_POST__CB7 DAC_POST__S7 pt_wiredtx__p21
+XDAC_POST_SW7 VDD POST_BIAS DAC_POST__CB7 DAC_POST__S7 pt_wiredtx__p19
 XBBM_SR_MNA SER_EN BBM__SR__X VSS BBM__SRB pt_wiredtx__p2
 XWM2_IN WM2__X VSS VSS DWB2 pt_wiredtx__p2
 XBBM_XI_MN VSS BBM__XRB WTX_EXT VSS pt_wiredtx__p0
+XPD_O_CMD_POST_N_MPB PD__NB_CMD_POST_N VDD CMD_POST_N VDD pt_wiredtx__p18
 XWM0_TB_N VSS WM0__X WSELB D20 pt_wiredtx__p0
-XBBM_DS0_MP BBM__SD0 VDD VDD SER pt_wiredtx__p12
+XPD_EM_SN_MNB EN_MAIN VSS VSS PD__EM_SN__X pt_wiredtx__p2
+XBBM_DS0_MP BBM__SD0 VDD VDD SER pt_wiredtx__p11
 XWM5_TA_N VSS WM5__X WSEL D5 pt_wiredtx__p0
-XWCB_MP_1 VDD WORD_CLK WCKN VDD pt_wiredtx__p21
-XDAC_TMDS_MS4 VDD PB_TMDS VDD DAC_TMDS__S4 pt_wiredtx__p22
-XDAC_MAIN_MS7_6 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p23
-XPD_G_MAIN_N_MNB EN_MAIN VSS VSS PD__G_MAIN_N__X pt_wiredtx__p5
-XWM19_IP DWB19 WM19__X VDD VDD pt_wiredtx__p14
-XDAC_POST_MS7_3 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p23
-XWM10_TB_P VDD WSEL D30 WM10__X pt_wiredtx__p11
-XDAC_MAIN_CI5_MP VDD MAIN_CODE5 VDD DAC_MAIN__CB5 pt_wiredtx__p11
-XPD_G_POST_N_MPA PD__PSN VDD PD__NB_POST_N VDD pt_wiredtx__p18
+XWCB_MP_1 VDD WORD_CLK WCKN VDD pt_wiredtx__p19
+XDAC_MAIN_MS7_6 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p20
+XWM19_IP DWB19 WM19__X VDD VDD pt_wiredtx__p13
+XDAC_POST_MS7_3 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p20
+XPD_A_CMD_MAIN_P_MPB PD__ENS_MR VDD PD__NA_CMD_MAIN_P VDD pt_wiredtx__p16
+XWM10_TB_P VDD WSEL D30 WM10__X pt_wiredtx__p10
+XDAC_MAIN_CI5_MP VDD MAIN_CODE5 VDD DAC_MAIN__CB5 pt_wiredtx__p10
 XWM5_IN WM5__X VSS VSS DWB5 pt_wiredtx__p2
-XWM15_TA_P VDD WSELB D15 WM15__X pt_wiredtx__p11
-XDAC_POST_MS5_0 VDD PB_POST VDD DAC_POST__S5 pt_wiredtx__p23
-XPD_SPA_MPA VDD SERQ VDD PD__SPN pt_wiredtx__p11
-XPD_Q2_MNB VSS PD__Q2__X SERQ VSS pt_wiredtx__p4
-XPD_O_POST_N_MP_1 VDD CMD_POST_N PD__NB_POST_N VDD pt_wiredtx__p21
+XWM15_TA_P VDD WSELB D15 WM15__X pt_wiredtx__p10
+XDAC_POST_MS5_0 VDD PB_POST VDD DAC_POST__S5 pt_wiredtx__p20
 XWI10_MN VSS DW10 DWB10 VSS pt_wiredtx__p4
 XBBM_SR_MNB BBM__XRB VSS VSS BBM__SR__X pt_wiredtx__p2
-XBBM_DS3_MP BBM__SERD VDD VDD BBM__SD2 pt_wiredtx__p12
-XPD_CL_MAIN_N ISLAND_OFF VSS VSS CMD_MAIN_N pt_wiredtx__p2
+XBBM_DS3_MP BBM__SERD VDD VDD BBM__SD2 pt_wiredtx__p11
+XPD_O_CMD_POST_N_MNA CMD_POST_N PD__NA_CMD_POST_N VSS PD__O_CMD_POST_N__X pt_wiredtx__p6
 XWS_O1_MN WSEL VSS VSS WS__W40N pt_wiredtx__p2
+XWM8_IN WM8__X VSS VSS DWB8 pt_wiredtx__p2
 XWM18_TA_N VSS WM18__X WSEL D18 pt_wiredtx__p0
 XWM13_TB_N VSS WM13__X WSELB D33 pt_wiredtx__p0
-XWM8_IN WM8__X VSS VSS DWB8 pt_wiredtx__p2
-XDAC_MAIN_MS7_7 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p23
+XDAC_MAIN_MS7_7 VDD ATB_PBIAS VDD DAC_MAIN__S7 pt_wiredtx__p20
 XDAC_POST_PBU PB_POST VDD EN_POST VDD pt_wiredtx__p8
 XWI13_MN VSS DW13 DWB13 VSS pt_wiredtx__p4
-XDAC_POST_MS7_4 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p23
-XPD_G_POST_N_MPB EN_POST VDD PD__NB_POST_N VDD pt_wiredtx__p18
-XDAC_POST_MS5_1 VDD PB_POST VDD DAC_POST__S5 pt_wiredtx__p23
-XPD_SPA_MPB VDD PD__POLB VDD PD__SPN pt_wiredtx__p11
-D0 VSS TMDS_CODE1 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D1 VSS DW2 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D2 VSS ISLAND_OFF diode_nd2ps_03v3 pj=3.92u area=0.9604p
-D3 VSS TMDS_CODE1 diode_nd2ps_03v3 pj=3u area=0.5625p
-D4 VSS DW19 diode_nd2ps_03v3 pj=3.16u area=0.6241p
-D5 VSS DW12 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D6 VSS WTX_EXT diode_nd2ps_03v3 pj=4.24u area=1.1236p
-D7 VSS DAC_TMDS__ENB diode_nd2ps_03v3 pj=5.08u area=1.6129p
-D8 VSS DW4 diode_nd2ps_03v3 pj=3.08u area=0.5929p
-D9 VSS MODE_F diode_nd2ps_03v3 pj=2.4u area=0.36p
-D10 VSS DW17 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D11 VSS DW6 diode_nd2ps_03v3 pj=3.8u area=0.9025p
-D12 VSS SER diode_nd2ps_03v3 pj=3.48u area=0.7569p
-D13 VSS EN_TMDS diode_nd2ps_03v3 pj=3.4u area=0.7225p
-D14 VSS DW8 diode_nd2ps_03v3 pj=2.76u area=0.4761p
-D15 VSS DAC_MAIN__ENB diode_nd2ps_03v3 pj=3u area=0.5625p
-D16 VSS DW15 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D17 VSS DW10 diode_nd2ps_03v3 pj=2.4u area=0.36p
+XDAC_POST_MS7_4 VDD PB_POST VDD DAC_POST__S7 pt_wiredtx__p20
+XPD_A_CMD_MAIN_P_MNA QDB PD__NA_CMD_MAIN_P VSS PD__A_CMD_MAIN_P__X pt_wiredtx__p5
+XDAC_POST_MS5_1 VDD PB_POST VDD DAC_POST__S5 pt_wiredtx__p20
+D0 VSS ISLAND_OFF diode_nd2ps_03v3 pj=2.4u area=0.36p
+D1 VSS DW10 diode_nd2ps_03v3 pj=2.96u area=0.5476p
+D2 VSS WTX_EXT diode_nd2ps_03v3 pj=4.24u area=1.1236p
+D3 VSS SER diode_nd2ps_03v3 pj=4.24u area=1.1236p
+D4 VSS DW14 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D5 VSS DW4 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D6 VSS DW6 diode_nd2ps_03v3 pj=2.92u area=0.5329p
+D7 VSS DW19 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D8 VSS DW8 diode_nd2ps_03v3 pj=3u area=0.5625p
+D9 VSS SER_EN diode_nd2ps_03v3 pj=2.4u area=0.36p
+D10 VSS DW12 diode_nd2ps_03v3 pj=2.76u area=0.4761p
 .ends
 

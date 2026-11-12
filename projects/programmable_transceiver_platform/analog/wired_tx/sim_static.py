@@ -25,7 +25,10 @@ def _common(dut, subckt, *, vdd, corner, temp, phases='stopped', ctrl=None, code
     if phases in ('stopped', 'high'):
         L += [f'VMODEH MODE_H 0 {ctrl.get("MODE_H", 0.0)}', f'VMODEF MODE_F 0 {ctrl.get("MODE_F", 0.0)}']
     for n in ('SER_EN', 'WTX_EXT', 'DX', 'EN_MAIN', 'EN_POST', 'EN_TMDS'):
-        L.append(f'V{n} {n} 0 {ctrl.get(n, 0.0)}')
+        L.append(f'V{n} {n} 0 {ctrl.get(n, 0.0)}')     # (X5: EN_TMDS is then a dangling bench node)
+    for n in ('TMDS_BIAS', 'CMD_TMDS_P', 'CMD_TMDS_N'):   # X5: no TMDS branch; keep the benches' probes valid (0 V)
+        if n not in ports:
+            L.append(f'RX5_{n} {n} 0 1meg')
     L.append(f'VISO ISLAND_OFF 0 {iso}')
     for i in range(40 if 'D39' in ports else 20):
         L.append(f'VD{i} D{i} 0 {ctrl.get("D", 0.0)}')
@@ -33,6 +36,8 @@ def _common(dut, subckt, *, vdd, corner, temp, phases='stopped', ctrl=None, code
         L.append(f'VPOL POST_POL 0 {ctrl.get("POST_POL", 0.0)}')
     for b, code in codes.items():
         for k, bit in enumerate(S.code_bits(code)):
+            if f'{b}_CODE{k}' not in ports:
+                L.append(f'RX5_{b}C{k} {b}_CODE{k} 0 1meg')
             L.append(f'V{b}C{k} {b}_CODE{k} 0 {bit*vhi}')
     # bias reference: 10 uA from the island bias distributor (Norton, 3.3 V compliance)
     if ibias:   # PMOS-like source from a 3.3 V core rail: 10 uA, falls to 0 at 3.3 V compliance

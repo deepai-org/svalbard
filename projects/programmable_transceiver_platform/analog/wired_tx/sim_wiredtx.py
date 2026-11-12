@@ -136,9 +136,33 @@ def pessimize(text, rg_per_um=20.0, cdev_per_um=0.47e-15, cscale=1.15):
     return '\n'.join(out) + '\n'
 
 
+OPTIMISTIC = __import__('os').environ.get('WTX_OPTIMISTIC', '0') == '1'
+
+
+def scale_c(text, k):
+    import re
+    out = []
+    for line in text.splitlines():
+        t = line.split()
+        if t and t[0][:1] in 'Cc' and len(t) >= 4:
+            m = re.fullmatch(r'([-+0-9.eE]+)([a-zA-Z]*)', t[3])
+            if m:
+                t[3] = f'{float(m.group(1)) * k:g}{m.group(2)}'
+                line = ' '.join(t)
+        out.append(line)
+    return '\n'.join(out) + '\n'
+
+
 def dut_text(path):
+    """WTX_PESSIMISTIC=1: slow bound (Rg, +25 % device C, +15 % wire C).  WTX_OPTIMISTIC=1: fast bound for
+    hold / race, overlap glitches and ringing (MANDATE: uncertain values bounded on both sides): extracted
+    C -15 %, no gate R (the models carry none), device C as modelled (fT as modelled = the high end)."""
     t = Path(path).read_text()
-    return pessimize(t) if PESSIMISTIC else t
+    if PESSIMISTIC:
+        return pessimize(t)
+    if OPTIMISTIC:
+        return scale_c(t, 0.85)
+    return t
 
 
 REP = {4: 1, 2: 2, 1: 4}   # bits per ring cycle -> repetition factor (WT12 / WT19)
@@ -202,12 +226,15 @@ def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical'
     else:
         lines.append(dx_pattern)
     for nm, v in zip(('EN_MAIN', 'EN_POST', 'EN_TMDS'), en):
-        lines.append(f'V{nm} {nm} 0 {v*vdd}')
+        if nm in ports:
+            lines.append(f'V{nm} {nm} 0 {v*vdd}')
     lines.append('VISO ISLAND_OFF 0 0')
     if 'POST_POL' in ports:      # IX-9 postcursor polarity (0 = de-emphasis)
         lines.append(f'VPOL POST_POL 0 {post_pol * vdd}')
     lines.append(f'IREF VDD IBIAS 10u')
     for b, code in zip(('MAIN', 'POST', 'TMDS'), codes):
+        if f'{b}_CODE0' not in ports:
+            continue
         for k, bit in enumerate(code_bits(code)):
             lines.append(f'V{b}C{k} {b}_CODE{k} 0 {bit*vdd}')
     # data words: launched T_word/4 after each WORD_CLK rising edge (20-bit port), or, with the
@@ -228,7 +255,7 @@ def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical'
                 tv.append((word_t0 + k * tw + tw / 4, w[i]))
             lines.append(pwl_bits(f'D{i}', f'D{i}', tv, vdd))
     for o in ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N']:
-        if load_f:
+        if load_f and o in ports:
             lines.append(f'C{o} {o} 0 {load_f}')
     lines.append(f'CWCK WORD_CLK 0 50f')
     if 'WORD_CLK40' in ports:
@@ -241,12 +268,14 @@ def build(dut, subckt, *, rate, words, word_t0, tstop, vdd=3.3, corner='typical'
     # vttmds#branch" at ss/22/3.15, "vtpost#branch" elsewhere) at the end of a phase-source ramp.
     # Tail currents are measured by the DC benches (sim_static.dac_sweep / quiescent).
     for b, m in (('MAIN', 32), ('POST', 32), ('TMDS', 16)):
-        lines.append(f'XT{b} 0 {b}_BIAS 0 0 nfet_03v3 w=20u l=1u m={m}')
+        if f'{b}_BIAS' in ports:
+            lines.append(f'XT{b} 0 {b}_BIAS 0 0 nfet_03v3 w=20u l=1u m={m}')
     lines.append(extra)
     lines = driver_impedance(lines)
     lines.append('X0 ' + ' '.join(nets[p] for p in ports) + f' {subckt}')
     probes = probes or ['WTX_PH0', 'WORD_CLK40' if 'WORD_CLK40' in ports else 'WORD_CLK', 'CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N',
                         'CMD_TMDS_P', 'CMD_TMDS_N', 'MAIN_BIAS', 'TMDS_BIAS', 'WTX_EXT_DATA']
+    probes = [p_ for p_ in probes if p_ in ports]
     vecs = ' '.join(f'v({p})' for p in probes) + ' i(VDD)'
     # ngspice sizes its output buffer for every node at the print step, which overflows for the
     # extracted netlist without `interp` ("memory required ... more than available"): print on a
@@ -400,7 +429,7 @@ def run_case(work, dut, subckt, *, rate, nwords=10, corner='typical', temp=27, v
         res['CMD_POST_P']['bits_compared'] = int(len(post) - 1)
     sel = w['time'] > t0
     res['tail_current_a'] = None   # measured by sim_static (DC), see build()
-    res['bias_v'] = {b: float(np.mean(w[f'{b}_BIAS'][sel])) for b in ('MAIN', 'TMDS')}
+    res['bias_v'] = {b: float(np.mean(w[f'{b}_BIAS'][sel])) for b in ('MAIN', 'TMDS') if f'{b}_BIAS' in w}
     res['supply_current_avg_a'] = float(-np.mean(w['I_VDD'][sel]))
     m = res.get('CMD_MAIN_N', {})
     res['ok'] = bool(m.get('errors', 1) == 0 and m.get('bits_compared', 0) >= 20 * (nwords - 4) // rep

@@ -67,8 +67,8 @@ def omuxt():
     # tried first, needed a < 1 core-UI enable that the ss corner could not drive: DP stuck at 0.7 V.)
     gates = []
     for k in range(4):
-        gates += [(f'w{k}n', 'NAND2W', f'QW{k}', f'QW{(k - 1) % 4}', f'SN{k}'), (f'w{k}i', 'INVW', f'SN{k}', f'S{k}')]
-    gates += [(f'c{k}', 'INV2', f'F{k}', f'FN{k}') for k in range(4)]
+        gates += [(f'w{k}n', 'NAND2W', f'QW{k}', f'QW{(k - 1) % 4}', f'SN{k}'), (f'w{k}i', 'INVWS', f'SN{k}', f'S{k}')]
+    gates += [(f'c{k}', 'INV4', f'F{k}', f'FN{k}') for k in range(4)]
     for m, a, y in (('y', [f'F{k}' for k in range(4)], 'Y'), ('yb', [f'FN{k}' for k in range(4)], 'YB'),
                     ('d', ['F3', 'dA1', 'dA2', 'dA3'], 'DP'),
                     ('db', ['FN3', 'dbA1', 'dbA2', 'dbA3'], 'DPB')):
@@ -77,6 +77,11 @@ def omuxt():
                   (f'{m}v0', 'INVV', f'{m}U0', f'{m}V0'), (f'{m}v1', 'INVV', f'{m}U1', f'{m}V1'),
                   (f'{m}o', 'NANDO', f'{m}V0', f'{m}V1', f'{m}X'), (f'{m}b', 'INVB', f'{m}X', f'{m}XB'),
                   (f'{m}p', 'INVP', f'{m}XB', y)]
+    # Session 8 slot overlap: probe s8/p3 (ss/32/3.15, 2.5 Gb/s): windows overlap 0.16 UI at nominal C but leave
+    # 0.05-UI gaps with the pessimistic C (+25 % device, +15 % wire), and a gap glitches the OR tree for two equal
+    # bits.  The window driver INVW is skewed (wider PMOS, narrower NMOS: S k rises early and falls late) to
+    # add a fixed overlap.  (A NOR set/reset latch on the true/complement trees, tried first, was too slow to
+    # follow 0.5-UI tree pulses at ss: 23 errors.)
     return M.row_of('wtx_omuxt', gates, ports)
 
 
@@ -155,9 +160,22 @@ def q4ctlc():
 
 
 # sizes (n um, p um) of the tree; the window pulse drives NANDZ's series input next to the output
-M.SIZE.update(TSL=('tsinv', 4, 8), NANDP=('nand2', 6, 6), NAND3P=('nand3', 4, 6), NANDZ=('nand2', 4, 3), NANDU=('nand2', 6, 4), INVV=('inv', 4, 8), NANDO=('nand2', 8, 6),
-              INVB=('inv', 4, 8), INVP=('inv', 8, 16), NOR2L=('nor2', 2, 8), NOR2S=('nor2', 1, 4), NANDQ=('nand2', 4, 4))
-M.CELLS.update(wtx_ppost=ppost, wtx_omuxt=omuxt, wtx_sreg5d=sreg5d, wtx_q4ctlc=q4ctlc, wtx_div5r=div5r)
+M.SIZE.update(INVWS=('inv', float(os.environ.get('INVWS_N', '6')), float(os.environ.get('INVWS_P', '24'))), NANDQW=('nand2', 12, 6), INVQW=('inv', 8, 40), TSL=('tsinv', 4, 8), NANDP=('nand2', 6, 6), NAND3P=('nand3', 4, 6), NANDZ=('nand2', 4, 3), NANDU=('nand2', 8, 6), INVV=('inv', 8, 16), NANDO=('nand2', 8, 6),
+              INVB=('inv', 6, 12), INVP=('inv', 8, 16), NOR2L=('nor2', 2, 8), NOR2S=('nor2', 1, 4), NANDQ=('nand2', 4, 4))
+def qphw():
+    """wtx_qph with a skewed QW driver (session 8, slot overlap): QW high must exceed 2 core UI so the windows
+    S k = QW k & QW k-1 overlap.  Measured QW 1.75 UI wide and S k 0.95 UI with 0.05-UI gaps (pessimistic ss:
+    S at 2.9 V, glitches in the NAND-OR tree).  Fast QW rise (strong NAND pull-down, wide PMOS) and slow fall
+    (narrow NMOS) widen QW."""
+    M.QW_NAND, M.QW_INV = 'NANDQW', 'INVQW'
+    try:
+        return M.qph()
+    finally:
+        M.QW_NAND, M.QW_INV = 'NAND2E', 'INV16'
+
+
+M.CELLS.update(wtx_ppost=ppost,   # qphw (skewed QW) tried session 8: ss 2.5 nominal 0 -> 13 errors; not used
+                wtx_omuxt=omuxt, wtx_sreg5d=sreg5d, wtx_q4ctlc=q4ctlc, wtx_div5r=div5r)
 CELLS = ['wtx_qph', 'wtx_sreg5', 'wtx_q4ctlc', 'wtx_q4ck', 'wtx_tspcb', 'wtx_tspcbx', 'wtx_div5r', 'wtx_ppost', OMUX_CELL]
 
 

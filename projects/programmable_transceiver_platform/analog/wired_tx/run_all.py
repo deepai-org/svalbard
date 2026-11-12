@@ -32,8 +32,10 @@ CORNERS = [(c, t, v) for c in ('typical', 'ss', 'ff', 'sf', 'fs') for t in (22, 
 # Path A (session 6): the CMOS quarter-rate core (wtx_serq4c) always runs at ring x 4; half / full rate are
 # WT12 2x / 4x bit repetition (bpc 2 / 1 here = MODE 10 / 01; ring = rate / bpc as before).  Target rates
 # <= 2.5 Gb/s: PCIe Gen1 2.5 (q), SATA Gen1 1.5 / HDMI-SDI 1.485 / SGMII 1.25 / DP RBR 1.62 (h), USB HS 0.48 (f).
-SWEEP = [(1.92e9, 4), (2.5e9, 4), (3.24e9, 4), (0.96e9, 2), (1.25e9, 2), (1.485e9, 2), (1.5e9, 2), (1.62e9, 2),
-         (0.48e9, 1), (0.81e9, 1)]
+# WT21 rate plan (session 8): the core never runs above 2.5 Gb/s; ring 360-625 MHz.  x1 (bpc 4) for line
+# 1.44-2.5 Gb/s, x2 (bpc 2) for 0.72-1.25, x4 (bpc 1) for 0.36-0.625.
+SWEEP = [(2.5e9, 4), (1.62e9, 4), (1.5e9, 4), (1.485e9, 4), (1.44e9, 4), (1.25e9, 2), (0.96e9, 2), (0.72e9, 2),
+         (0.625e9, 1), (0.48e9, 1)]
 NW = 14            # 280 bits: nominal / integration runs, more than two PRBS7 periods (127 bits)
 NWC = 10           # 200 bits per envelope-corner run (> 1.5 PRBS7 periods)
 QRATES = (2.5e9,)          # quarter rate envelope: PCIe Gen1 (3.24 Gb/s quarter = stretch path B, sweep only)
@@ -151,10 +153,14 @@ def jobs():
             j.append((k, lambda c=c, t=t, v=v, r=rate, k=k: S.run_case(
                 W / 'sim', PEX, 'pt_wiredtx', rate=r, bpc=4, nwords=NWC, corner=c, temp=t, vdd=v, tag=k)))
     # half rate (compact core): top of the half-rate range (ring 810 MHz) across the envelope
-    for c, t, v in CORNERS:
-        k = f'cornerh1.62_{c}_{t}_{v}'
+    for c, t, v in CORNERS:      # x2 at the top of its range (core 2.5 Gb/s)
+        k = f'cornerh1.25_{c}_{t}_{v}'
         j.append((k, lambda c=c, t=t, v=v, k=k: S.run_case(
-            W / 'sim', PEX, 'pt_wiredtx', rate=1.62e9, bpc=2, nwords=NWC, corner=c, temp=t, vdd=v, tag=k)))
+            W / 'sim', PEX, 'pt_wiredtx', rate=1.25e9, bpc=2, nwords=NWC, corner=c, temp=t, vdd=v, tag=k)))
+    for c, t, v in CORNERS:      # x1 at the ring's low end (core 1.44 Gb/s, hold-critical)
+        k = f'cornerq1.44_{c}_{t}_{v}'
+        j.append((k, lambda c=c, t=t, v=v, k=k: S.run_case(
+            W / 'sim', PEX, 'pt_wiredtx', rate=1.44e9, bpc=4, nwords=NWC, corner=c, temp=t, vdd=v, tag=k)))
     # full rate (rep4, USB HS 480 Mb/s at the slowest ring, 480 MHz: the hold-critical end of the core's
     # register timing) across the envelope
     for c, t, v in CORNERS:
@@ -165,7 +171,7 @@ def jobs():
                                                 tag='nominal_0g96')))
     iw = W / 'integration'
     j += [('int_serial_h1g25', lambda: I.run(iw, PEX, mode='serial', rate=1.25e9, bpc=2, nwords=NW, tag='serial_h1g25')),
-          ('int_tmds_h1g485', lambda: I.run(iw, PEX, mode='tmds', rate=1.485e9, bpc=2, nwords=NW, tag='tmds_h1g485')),
+          ('int_tmds_q1g485', lambda: I.run(iw, PEX, mode='tmds', rate=1.485e9, bpc=4, nwords=NW, tag='tmds_q1g485')),
           ('int_serial_q2g5', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW, tag='serial_q2g5')),
           # PCIe swing recipe (WT4/WT10: code 200 ~ 19.9 mA, 240 ~ 23.9 mA)
           ('int_serial_q2g5_main200', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
@@ -179,9 +185,9 @@ def jobs():
                                                     codes=(200, 0, 125), pkg=('P4', 0.3), tag='pkg_q2g5_main200_P4')),
           ('int_pkg_q2g5_main240_P4', lambda: I.run(iw, PEX, mode='serial', rate=2.5e9, bpc=4, nwords=NW,
                                                     codes=(240, 0, 125), pkg=('P4', 0.3), tag='pkg_q2g5_main240_P4')),
-          ('int_pkg_h1g62_main200_P4', lambda: I.run(iw, PEX, mode='serial', rate=1.62e9, bpc=2, nwords=NW,
+          ('int_pkg_h1g62_main200_P4', lambda: I.run(iw, PEX, mode='serial', rate=1.62e9, bpc=4, nwords=NW,
                                                      codes=(200, 0, 125), pkg=('P4', 0.3), tag='pkg_h1g62_main200_P4')),
-          ('int_pkg_h1g5_main200_P4', lambda: I.run(iw, PEX, mode='serial', rate=1.5e9, bpc=2, nwords=NW,
+          ('int_pkg_h1g5_main200_P4', lambda: I.run(iw, PEX, mode='serial', rate=1.5e9, bpc=4, nwords=NW,
                                                     codes=(200, 0, 125), pkg=('P4', 0.3), tag='pkg_h1g5_main200_P4')),
           ('int_pkg_h1g25_main200_P4', lambda: I.run(iw, PEX, mode='serial', rate=1.25e9, bpc=2, nwords=NW,
                                                      codes=(200, 0, 125), pkg=('P4', 0.3), tag='pkg_h1g25_main200_P4')),

@@ -12228,5 +12228,1022 @@
   "status": "TARGET >= 250 V, NOT VERIFIED",
   "reviewer_surrogate": "scratch/pads-pd48/review/cdm (1 ns, 2 A into PAD_P, typical): wirepad 6.97 -> 9.18 V, hspad 6.98 -> 9.24 V pad peak after d2 removal (+2.2 V); at 1.2 A 6.58/6.62 V",
   "die_c_estimate": "COB bare die 1.72 x 1.64 mm: ~0.5-1 pF to a nearby field plate (eps0*A/d at 0.5 mm = 0.05 pF plus fringe/handling-tool coupling); 250 V CDM peak ~1-3 A for small-C devices (JS-002 small-module scale) -> at >= 2 A the pad-cell 6 V gates exceed the 8.0 V transient limit (1 ns credit not taken). Unresolved: needs a proper die-C extraction and a CDM bench including secondary clamps; option = keep d2 on USB/hspad (+0.14 pF/leg) if a CDM rating is required."
+ },
+ "pd48c": {
+  "decision": "Coordinator 2026-11-12: d2 extra up-diode row restored on wirepad (USB) and hspad to hold the 250 V CDM floor (machine handling); 1 kV HBM kept on rftxpad/txpad.",
+  "published": {
+   "wirepad": {
+    "gds_sha256": "4e4b9d9285f5b597a1bdb1bc8a8af0bce67aa66aa58b450ab5c3617fc2e5484e",
+    "netlist_sha256": "7704d5a6f3c1f262d23b0d90402d6a1b106bf246c82c3a716637223fede46431",
+    "equals": "PD47 cell (scratch/pads-pd46/l1/pad)"
+   },
+   "hspad": {
+    "gds_sha256": "7bf4d7910a9c1231891ac5d6684f2d1340afc8b81bf19eeab4adbc6089293b8e",
+    "netlist_sha256": "1f1c589da9af8b0c3e5d2fc2575fd689969225c3393541bd0af263a93df3e805",
+    "equals": "PD21 cell (scratch/pads-pd21/hspad3)"
+   }
+  },
+  "layout_checks": "unchanged files: KLayout main 0 / antenna 0 (records match GDS sha), LVS unique (combined-lvs.txt / pad-lvs.txt), device audit, LU (wirepad lu.json = scratch/pads-pd46 audit of the same GDS; hspad lu.json PD21)",
+  "hbm_1kv": {
+   "hbm_kv": 1,
+   "source_peak_a": 0.667,
+   "wirepad": {
+    "image_id": "svalbard/transceiver-pad-sim:ngspice47-corrected",
+    "models": {
+     "wirepad": {
+      "path": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-usb/physical.spice",
+      "sha256": "7704d5a6f3c1f262d23b0d90402d6a1b106bf246c82c3a716637223fede46431"
+     }
+    },
+    "shunt_model": "drawn in the family layouts (extracted with the layout)",
+    "results": [
+     {
+      "family": "wirepad",
+      "case": "hbm_P_pos",
+      "process": "typical",
+      "temp_c": 27,
+      "complete": true,
+      "pad_p_range_v": [
+       -1.24105159e-16,
+       4.48420927
+      ],
+      "pad_n_range_v": [
+       -7.37615042e-17,
+       0.43363938
+      ],
+      "rail_max_v": 3.6217169,
+      "pad_peak_abs_v": 4.48420927,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 4.76260725e-05,
+      "atb_range_v": [
+       -7.69310151e-19,
+       0.317069363
+      ],
+      "supply_current_end_a": -1.249185611515404e-06,
+      "peer_current_end_a": [
+       -4.411624921540384e-06,
+       -4.283487367776852e-07
+      ],
+      "vdd_backfeed_peak_a": 4.76260725e-05,
+      "exposure": {
+       "observed_mos": 615,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X665",
+         "model": "nfet_06v0",
+         "gate_v": 4.484
+        },
+        {
+         "device": "X605",
+         "model": "nfet_06v0",
+         "gate_v": 4.484
+        },
+        {
+         "device": "X589",
+         "model": "nfet_06v0",
+         "gate_v": 4.484
+        },
+        {
+         "device": "X586",
+         "model": "nfet_06v0",
+         "gate_v": 4.484
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "9dedf21f9c92347661b1d5f716fcdeb0eabac9924de4536c91d347db71e6714d",
+      "waveform_sha256": "39ada966639cd618765c0c299266e4456d5dc466327ef58e83d24b978841e977"
+     },
+     {
+      "family": "wirepad",
+      "case": "hbm_P_pos",
+      "process": "ss",
+      "temp_c": 0,
+      "complete": true,
+      "pad_p_range_v": [
+       -8.67884646e-17,
+       4.35797946
+      ],
+      "pad_n_range_v": [
+       -8.83184621e-17,
+       0.430032219
+      ],
+      "rail_max_v": 3.45457373,
+      "pad_peak_abs_v": 4.35797946,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 5.44348301e-05,
+      "atb_range_v": [
+       -2.5078661e-22,
+       0.256105137
+      ],
+      "supply_current_end_a": -9.777360803896754e-07,
+      "peer_current_end_a": [
+       -4.294926637302249e-06,
+       -4.254162371290591e-07
+      ],
+      "vdd_backfeed_peak_a": 5.44348301e-05,
+      "exposure": {
+       "observed_mos": 615,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X665",
+         "model": "nfet_06v0",
+         "gate_v": 4.358
+        },
+        {
+         "device": "X605",
+         "model": "nfet_06v0",
+         "gate_v": 4.358
+        },
+        {
+         "device": "X589",
+         "model": "nfet_06v0",
+         "gate_v": 4.358
+        },
+        {
+         "device": "X586",
+         "model": "nfet_06v0",
+         "gate_v": 4.358
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "30b60aab38fc06f9fac766f51fd216bf5c820b0eee401b5b6ef7a811ad14fdd3",
+      "waveform_sha256": "e2528b1f4a5d16dfa048cc36a453650d2c7c85f21f84137213fa9f456cb222d3"
+     },
+     {
+      "family": "wirepad",
+      "case": "hbm_P_pos",
+      "process": "ff",
+      "temp_c": 85,
+      "complete": true,
+      "pad_p_range_v": [
+       -6.97405142e-17,
+       4.66485774
+      ],
+      "pad_n_range_v": [
+       -6.73501263e-17,
+       0.415423007
+      ],
+      "rail_max_v": 3.88696343,
+      "pad_peak_abs_v": 4.66485774,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 4.2207997e-05,
+      "atb_range_v": [
+       1.58825982e-18,
+       0.428293064
+      ],
+      "supply_current_end_a": -1.4676411860449627e-06,
+      "peer_current_end_a": [
+       -4.5876190362864275e-06,
+       -4.1069424436219814e-07
+      ],
+      "vdd_backfeed_peak_a": 4.2207997e-05,
+      "exposure": {
+       "observed_mos": 615,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X665",
+         "model": "nfet_06v0",
+         "gate_v": 4.665
+        },
+        {
+         "device": "X605",
+         "model": "nfet_06v0",
+         "gate_v": 4.665
+        },
+        {
+         "device": "X589",
+         "model": "nfet_06v0",
+         "gate_v": 4.665
+        },
+        {
+         "device": "X586",
+         "model": "nfet_06v0",
+         "gate_v": 4.665
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "f5dacecf4fcf968310dd22d92b9fe7d3b9b1ffbf0db37137e17b0e187c681259",
+      "waveform_sha256": "975a4fa4e297c4661541bd4726201297ba8eb78d03760a2493e2f5085391adef"
+     },
+     {
+      "family": "wirepad",
+      "case": "hbm_N_neg",
+      "process": "typical",
+      "temp_c": 27,
+      "complete": true,
+      "pad_p_range_v": [
+       -0.716581551,
+       8.91379925e-23
+      ],
+      "pad_n_range_v": [
+       -0.959053071,
+       6.73323471e-17
+      ],
+      "rail_max_v": 7.88167643e-17,
+      "pad_peak_abs_v": 0.959053071,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 2.33282706e-08,
+      "atb_range_v": [
+       -0.000964161216,
+       8.12715421e-22
+      ],
+      "supply_current_end_a": 8.221219808068285e-09,
+      "peer_current_end_a": [
+       5.841622913871773e-07,
+       8.394085115653622e-07
+      ],
+      "vdd_backfeed_peak_a": 2.33282706e-08,
+      "exposure": {
+       "observed_mos": 615,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X251",
+         "model": "pfet_03v3",
+         "gate_v": 0.825
+        },
+        {
+         "device": "X448",
+         "model": "pfet_03v3",
+         "gate_v": 0.825
+        },
+        {
+         "device": "X612",
+         "model": "pfet_03v3",
+         "gate_v": 0.823
+        },
+        {
+         "device": "X157",
+         "model": "pfet_03v3",
+         "gate_v": 0.823
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "afffd702f89de2be59cb7f7aa2ebe1d8feb5c53c58013e2fac8a76d7a8ea6aa1",
+      "waveform_sha256": "2e5f3812bbf7cf3ed4659bbc5c32abdd578c01ac18f390e628ad5174aaa9cd20"
+     },
+     {
+      "family": "wirepad",
+      "case": "hbm_N_neg",
+      "process": "ss",
+      "temp_c": 0,
+      "complete": true,
+      "pad_p_range_v": [
+       -0.761840828,
+       9.54479418e-17
+      ],
+      "pad_n_range_v": [
+       -0.987053792,
+       7.39176827e-17
+      ],
+      "rail_max_v": 2.99434017e-16,
+      "pad_peak_abs_v": 0.987053792,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 3.7241554e-08,
+      "atb_range_v": [
+       -0.000915396097,
+       1.21782616e-19
+      ],
+      "supply_current_end_a": -7.743314589809575e-09,
+      "peer_current_end_a": [
+       6.741354632223147e-07,
+       8.828178787876768e-07
+      ],
+      "vdd_backfeed_peak_a": 3.7241554e-08,
+      "exposure": {
+       "observed_mos": 615,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X251",
+         "model": "pfet_03v3",
+         "gate_v": 0.859
+        },
+        {
+         "device": "X448",
+         "model": "pfet_03v3",
+         "gate_v": 0.859
+        },
+        {
+         "device": "X157",
+         "model": "pfet_03v3",
+         "gate_v": 0.858
+        },
+        {
+         "device": "X612",
+         "model": "pfet_03v3",
+         "gate_v": 0.858
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "ba9b73c3c7389f53550c195311991d67fef23cda6e90be8b811020a94b9e73a3",
+      "waveform_sha256": "6efb334d1248309103e4e204683d89cf842b45e0971b7053dfb23301269e9340"
+     },
+     {
+      "family": "wirepad",
+      "case": "hbm_N_neg",
+      "process": "ff",
+      "temp_c": 85,
+      "complete": true,
+      "pad_p_range_v": [
+       -0.616360342,
+       2.86320808e-17
+      ],
+      "pad_n_range_v": [
+       -0.89529477,
+       7.97125284e-17
+      ],
+      "rail_max_v": 2.1393324e-16,
+      "pad_peak_abs_v": 0.89529477,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 2.54333875e-08,
+      "atb_range_v": [
+       -0.000992569148,
+       2.08655653e-18
+      ],
+      "supply_current_end_a": 1.753869857892848e-08,
+      "peer_current_end_a": [
+       4.769138791565362e-07,
+       7.471078143805162e-07
+      ],
+      "vdd_backfeed_peak_a": 2.54333875e-08,
+      "exposure": {
+       "observed_mos": 615,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X612",
+         "model": "pfet_03v3",
+         "gate_v": 0.741
+        },
+        {
+         "device": "X157",
+         "model": "pfet_03v3",
+         "gate_v": 0.741
+        },
+        {
+         "device": "X251",
+         "model": "pfet_03v3",
+         "gate_v": 0.741
+        },
+        {
+         "device": "X448",
+         "model": "pfet_03v3",
+         "gate_v": 0.741
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "871223a58c891d80fb26d67ae8aeb94fb27cb3ca3582e9404ff09afcf73bdced",
+      "waveform_sha256": "cebd319224a33ad416054c0e47d36aa225b9096d01e8fb7f6e07ddc53b246bdf"
+     }
+    ],
+    "source_sha256": {
+     "stress_safe_family_sims.py": "9d45d0e62dfc044a05c695a3ed26f1e734fe2ae9edb4ff81023e073c1c597ecd",
+     "stress_safe_clamp.py": "3a96cc1fd51fd64d83e65df66e452d01a2cb87291a9615b24cfe6589fc8c6145"
+    }
+   },
+   "hspad": {
+    "image_id": "svalbard/transceiver-pad-sim:ngspice47-corrected",
+    "models": {
+     "hspad": {
+      "path": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-hs/physical.spice",
+      "sha256": "1f1c589da9af8b0c3e5d2fc2575fd689969225c3393541bd0af263a93df3e805"
+     }
+    },
+    "shunt_model": "drawn in the family layouts (extracted with the layout)",
+    "results": [
+     {
+      "family": "hspad",
+      "case": "hbm_P_pos",
+      "process": "typical",
+      "temp_c": 27,
+      "complete": true,
+      "pad_p_range_v": [
+       -3.3724341e-18,
+       4.48420997
+      ],
+      "pad_n_range_v": [
+       -6.0028502e-17,
+       0.22909794
+      ],
+      "rail_max_v": 3.62172584,
+      "pad_peak_abs_v": 4.48420997,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 0.000130092138,
+      "atb_range_v": [
+       0.0,
+       0.0
+      ],
+      "supply_current_end_a": -5.413468933888426e-07,
+      "peer_current_end_a": [
+       -4.411528225786844e-06,
+       -1.270800984371357e-07
+      ],
+      "vdd_backfeed_peak_a": 0.000130092138,
+      "exposure": {
+       "observed_mos": 404,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X259",
+         "model": "nfet_06v0",
+         "gate_v": 4.484
+        },
+        {
+         "device": "X469",
+         "model": "nfet_06v0",
+         "gate_v": 4.484
+        },
+        {
+         "device": "X212",
+         "model": "nfet_06v0",
+         "gate_v": 4.484
+        },
+        {
+         "device": "X358",
+         "model": "nfet_06v0",
+         "gate_v": 4.484
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "56da7371b2a4bcbfad108f22b0c6ea7ca0b7b95709bb36d4db8ff1dec27d05c1",
+      "waveform_sha256": "4d9d68fbb2fb1bde9957f4dd2e10bcb85982db6c819cdd89f68840088b0cd382"
+     },
+     {
+      "family": "hspad",
+      "case": "hbm_P_pos",
+      "process": "ss",
+      "temp_c": 0,
+      "complete": true,
+      "pad_p_range_v": [
+       -8.32238563e-17,
+       4.35794307
+      ],
+      "pad_n_range_v": [
+       -9.0325217e-17,
+       0.271044145
+      ],
+      "rail_max_v": 3.45454362,
+      "pad_peak_abs_v": 4.35794307,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 0.000159714261,
+      "atb_range_v": [
+       0.0,
+       0.0
+      ],
+      "supply_current_end_a": -6.366826127535387e-07,
+      "peer_current_end_a": [
+       -4.294912867318901e-06,
+       -1.2256136128726063e-07
+      ],
+      "vdd_backfeed_peak_a": 0.000159714261,
+      "exposure": {
+       "observed_mos": 404,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X259",
+         "model": "nfet_06v0",
+         "gate_v": 4.358
+        },
+        {
+         "device": "X469",
+         "model": "nfet_06v0",
+         "gate_v": 4.358
+        },
+        {
+         "device": "X212",
+         "model": "nfet_06v0",
+         "gate_v": 4.358
+        },
+        {
+         "device": "X358",
+         "model": "nfet_06v0",
+         "gate_v": 4.358
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "2362af4d1bad9bf6245cb228d21a1bd378d47d115865b7c69b36f04463459158",
+      "waveform_sha256": "08dc77f4c6c3c529d9e8b7aa956a17df5407b787b8057380bfa85521fcec565c"
+     },
+     {
+      "family": "hspad",
+      "case": "hbm_P_pos",
+      "process": "ff",
+      "temp_c": 85,
+      "complete": true,
+      "pad_p_range_v": [
+       -3.51844866e-17,
+       4.66505226
+      ],
+      "pad_n_range_v": [
+       -1.98457037e-17,
+       0.194554432
+      ],
+      "rail_max_v": 3.88715953,
+      "pad_peak_abs_v": 4.66505226,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 0.000108026681,
+      "atb_range_v": [
+       0.0,
+       0.0
+      ],
+      "supply_current_end_a": -5.362706317510409e-07,
+      "peer_current_end_a": [
+       -4.587773332139883e-06,
+       -1.3414299274104915e-07
+      ],
+      "vdd_backfeed_peak_a": 0.000108026681,
+      "exposure": {
+       "observed_mos": 404,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X259",
+         "model": "nfet_06v0",
+         "gate_v": 4.665
+        },
+        {
+         "device": "X469",
+         "model": "nfet_06v0",
+         "gate_v": 4.665
+        },
+        {
+         "device": "X212",
+         "model": "nfet_06v0",
+         "gate_v": 4.665
+        },
+        {
+         "device": "X358",
+         "model": "nfet_06v0",
+         "gate_v": 4.665
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "3a7668204de16e8d4164b0a9b8554a1d59860cf7f09dcd88d574fd5069a2e039",
+      "waveform_sha256": "b0b25dd8f3abcc57f71bb40fa6f8e875ab92a80e56c1e7b34d63f44d10455a46"
+     },
+     {
+      "family": "hspad",
+      "case": "hbm_N_neg",
+      "process": "typical",
+      "temp_c": 27,
+      "complete": true,
+      "pad_p_range_v": [
+       -0.0261837718,
+       1.79449865e-16
+      ],
+      "pad_n_range_v": [
+       -2.29063662,
+       1.42764989e-16
+      ],
+      "rail_max_v": -1.434695e-13,
+      "pad_peak_abs_v": 2.29063662,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 2.02574203e-08,
+      "atb_range_v": [
+       0.0,
+       0.0
+      ],
+      "supply_current_end_a": 2.852089380699417e-09,
+      "peer_current_end_a": [
+       2.722101238667777e-09,
+       8.929571639933388e-07
+      ],
+      "vdd_backfeed_peak_a": 2.02574203e-08,
+      "exposure": {
+       "observed_mos": 404,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X113",
+         "model": "nfet_06v0",
+         "gate_v": 0.954
+        },
+        {
+         "device": "X442",
+         "model": "pfet_06v0",
+         "gate_v": 0.954
+        },
+        {
+         "device": "X86",
+         "model": "nfet_06v0",
+         "gate_v": 0.901
+        },
+        {
+         "device": "X81",
+         "model": "nfet_06v0",
+         "gate_v": 0.901
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "7c9c2549b278499f27f565a7d8330b8f01c30e52344226d212aefb2fbffb0afd",
+      "waveform_sha256": "f9efd805244e481470a09b3f1fbd0e791164d50afb4a0b7ea38c0ec0f05a3399"
+     },
+     {
+      "family": "hspad",
+      "case": "hbm_N_neg",
+      "process": "ss",
+      "temp_c": 0,
+      "complete": true,
+      "pad_p_range_v": [
+       -0.0284219643,
+       1.76357538e-17
+      ],
+      "pad_n_range_v": [
+       -2.46294129,
+       4.06223808e-17
+      ],
+      "rail_max_v": 2.36842976e-17,
+      "pad_peak_abs_v": 2.46294129,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 2.24379563e-08,
+      "atb_range_v": [
+       0.0,
+       0.0
+      ],
+      "supply_current_end_a": 2.653091759833472e-09,
+      "peer_current_end_a": [
+       2.515732073288926e-09,
+       9.434722310757702e-07
+      ],
+      "vdd_backfeed_peak_a": 2.24379563e-08,
+      "exposure": {
+       "observed_mos": 404,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X113",
+         "model": "nfet_06v0",
+         "gate_v": 0.989
+        },
+        {
+         "device": "X442",
+         "model": "pfet_06v0",
+         "gate_v": 0.989
+        },
+        {
+         "device": "X430",
+         "model": "nfet_06v0",
+         "gate_v": 0.933
+        },
+        {
+         "device": "X216",
+         "model": "nfet_06v0",
+         "gate_v": 0.933
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "ee633c0570e9da8d99586e5fd75ebfd44ac87041f2a68b71a814be25d48543fa",
+      "waveform_sha256": "19dbb3d26ba567f5ea9e6d73bfb5a49060bdcdd5f16da17139d63339712b01e2"
+     },
+     {
+      "family": "hspad",
+      "case": "hbm_N_neg",
+      "process": "ff",
+      "temp_c": 85,
+      "complete": true,
+      "pad_p_range_v": [
+       -0.023243183,
+       3.8392755e-17
+      ],
+      "pad_n_range_v": [
+       -2.08031672,
+       5.95633389e-17
+      ],
+      "rail_max_v": -1.03957072e-16,
+      "pad_peak_abs_v": 2.08031672,
+      "pad_within_6v0_screen": true,
+      "vdd_max_v": 1.79873264e-08,
+      "atb_range_v": [
+       0.0,
+       0.0
+      ],
+      "supply_current_end_a": 2.2254179543213984e-09,
+      "peer_current_end_a": [
+       2.6576177682847628e-09,
+       7.940512675986678e-07
+      ],
+      "vdd_backfeed_peak_a": 1.79873264e-08,
+      "exposure": {
+       "observed_mos": 404,
+       "partially_observed_mos": 0,
+       "exceeding": 0,
+       "worst": [
+        {
+         "device": "X113",
+         "model": "nfet_06v0",
+         "gate_v": 0.874
+        },
+        {
+         "device": "X442",
+         "model": "pfet_06v0",
+         "gate_v": 0.874
+        },
+        {
+         "device": "X86",
+         "model": "nfet_06v0",
+         "gate_v": 0.83
+        },
+        {
+         "device": "X81",
+         "model": "nfet_06v0",
+         "gate_v": 0.83
+        }
+       ]
+      },
+      "op_fallback": false,
+      "deck_sha256": "056e4f0d3728c14abb89d916a794ff4ed35ea98d1aa808733a3712e75c14c03f",
+      "waveform_sha256": "d6b50d24d22238c399388ad7cbacd35032a506e8c600bb1f2c69555a05519c0a"
+     }
+    ],
+    "source_sha256": {
+     "stress_safe_family_sims.py": "9d45d0e62dfc044a05c695a3ed26f1e734fe2ae9edb4ff81023e073c1c597ecd",
+     "stress_safe_clamp.py": "3a96cc1fd51fd64d83e65df66e452d01a2cb87291a9615b24cfe6589fc8c6145"
+    }
+   }
+  },
+  "hbm_2kv": "wirepad: PD47 family sims (pd47-usb-ls-miller.json family_sims, 0/615, pad 5.04-5.41 V); hspad: pd21-hspad-safe-hbm.json (0/404, 5.04-5.41 V), same netlist sha",
+  "cdm_surrogate": {
+   "method": "1 ns current pulse (0.2 ns rise) into PAD_P, typical 27 C, scratch/pads-pd48c/cdm.py (reviewer bench); exceeding counts vs DC 6.0 V screen; transient limit 8.0 V (6 V oxide); run sequentially (I1: the earlier threaded run mis-scored exposure; invalid copies in scratch/pads-pd48c/cdm_threaded_invalid)",
+   "results": [
+    {
+     "tag": "new",
+     "ipk": 1.0,
+     "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-usb/physical.spice",
+     "complete": true,
+     "pad_peak": 4.77879043,
+     "rail_max": 2.70395454,
+     "exposure": {
+      "observed_mos": 615,
+      "partially_observed_mos": 0,
+      "exceeding": 0,
+      "worst": [
+       {
+        "device": "X286",
+        "model": "nfet_06v0",
+        "gate_v": 4.779
+       },
+       {
+        "device": "X464",
+        "model": "nfet_06v0",
+        "gate_v": 4.779
+       },
+       {
+        "device": "X665",
+        "model": "nfet_06v0",
+        "gate_v": 4.779
+       },
+       {
+        "device": "X605",
+        "model": "nfet_06v0",
+        "gate_v": 4.779
+       }
+      ]
+     }
+    },
+    {
+     "tag": "hs_new",
+     "ipk": 1.0,
+     "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-hs/physical.spice",
+     "complete": true,
+     "pad_peak": 4.80006384,
+     "rail_max": 2.71244701,
+     "exposure": {
+      "observed_mos": 404,
+      "partially_observed_mos": 0,
+      "exceeding": 0,
+      "worst": [
+       {
+        "device": "X469",
+        "model": "nfet_06v0",
+        "gate_v": 4.8
+       },
+       {
+        "device": "X259",
+        "model": "nfet_06v0",
+        "gate_v": 4.8
+       },
+       {
+        "device": "X327",
+        "model": "nfet_06v0",
+        "gate_v": 4.8
+       },
+       {
+        "device": "X212",
+        "model": "nfet_06v0",
+        "gate_v": 4.8
+       }
+      ]
+     }
+    },
+    {
+     "tag": "new",
+     "ipk": 2.0,
+     "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-usb/physical.spice",
+     "complete": true,
+     "pad_peak": 6.96452944,
+     "rail_max": 3.75701224,
+     "exposure": {
+      "observed_mos": 615,
+      "partially_observed_mos": 0,
+      "exceeding": 59,
+      "worst": [
+       {
+        "device": "X114",
+        "model": "nfet_06v0",
+        "gate_v": 6.965
+       },
+       {
+        "device": "X464",
+        "model": "nfet_06v0",
+        "gate_v": 6.965
+       },
+       {
+        "device": "X286",
+        "model": "nfet_06v0",
+        "gate_v": 6.965
+       },
+       {
+        "device": "X665",
+        "model": "nfet_06v0",
+        "gate_v": 6.965
+       }
+      ]
+     }
+    },
+    {
+     "tag": "hs_new",
+     "ipk": 2.0,
+     "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-hs/physical.spice",
+     "complete": true,
+     "pad_peak": 6.98296411,
+     "rail_max": 3.77168981,
+     "exposure": {
+      "observed_mos": 404,
+      "partially_observed_mos": 0,
+      "exceeding": 25,
+      "worst": [
+       {
+        "device": "X469",
+        "model": "nfet_06v0",
+        "gate_v": 6.983
+       },
+       {
+        "device": "X259",
+        "model": "nfet_06v0",
+        "gate_v": 6.983
+       },
+       {
+        "device": "X327",
+        "model": "nfet_06v0",
+        "gate_v": 6.983
+       },
+       {
+        "device": "X212",
+        "model": "nfet_06v0",
+        "gate_v": 6.983
+       }
+      ]
+     }
+    },
+    {
+     "tag": "new",
+     "ipk": 3.0,
+     "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-usb/physical.spice",
+     "complete": true,
+     "pad_peak": 9.00112892,
+     "rail_max": 4.69547046,
+     "exposure": {
+      "observed_mos": 615,
+      "partially_observed_mos": 0,
+      "exceeding": 103,
+      "worst": [
+       {
+        "device": "X114",
+        "model": "nfet_06v0",
+        "gate_v": 9.002
+       },
+       {
+        "device": "X665",
+        "model": "nfet_06v0",
+        "gate_v": 9.001
+       },
+       {
+        "device": "X605",
+        "model": "nfet_06v0",
+        "gate_v": 9.001
+       },
+       {
+        "device": "X589",
+        "model": "nfet_06v0",
+        "gate_v": 9.001
+       }
+      ]
+     }
+    },
+    {
+     "tag": "hs_new",
+     "ipk": 3.0,
+     "model": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-hs/physical.spice",
+     "complete": true,
+     "pad_peak": 9.03305952,
+     "rail_max": 4.70557747,
+     "exposure": {
+      "observed_mos": 404,
+      "partially_observed_mos": 0,
+      "exceeding": 25,
+      "worst": [
+       {
+        "device": "X327",
+        "model": "nfet_06v0",
+        "gate_v": 9.033
+       },
+       {
+        "device": "X469",
+        "model": "nfet_06v0",
+        "gate_v": 9.033
+       },
+       {
+        "device": "X259",
+        "model": "nfet_06v0",
+        "gate_v": 9.033
+       },
+       {
+        "device": "X212",
+        "model": "nfet_06v0",
+        "gate_v": 9.033
+       }
+      ]
+     }
+    }
+   ],
+   "summary": "pad 4.78/4.80 V @1 A, 6.97/6.98 V @2 A (<= 8.0 V), 9.00/9.03 V @3 A (> 8.0 V); holds to ~2.5 A. No-d2 build was 9.18/9.24 V @2 A.",
+   "cdm_status": "250 V CDM NOT verified: die C estimated 0.5-1 pF (~1-3 A at 250 V); surrogate covers up to ~2.5 A",
+   "exceeding_dc_6v0": {
+    "wirepad": {
+     "1A": 0,
+     "2A": 59,
+     "3A": 103
+    },
+    "hspad": {
+     "1A": 0,
+     "2A": 25,
+     "3A": 25
+    },
+    "note": "vs DC 6.0 V screen; all gates <= 8.0 V transient limit at <= 2 A"
+   }
+  },
+  "pad_c": {
+   "wirepad": "PD47 padc-pad-physical: worst 3.37 pF (bypass on, 0.2 V), budget 5.0 pF USB 2.0 7.1.6.2",
+   "hspad_c_leg_pf": [
+    1.113,
+    1.113,
+    1.136
+   ]
+  },
+  "b40_ladder": {
+   "file": "scratch/pads-pd21/rl/rl_fix_pd48c.json",
+   "ladder": [
+    0.9,
+    4.0,
+    0.2
+   ],
+   "nominal_db": [
+    12.33,
+    12.44
+   ],
+   "worst_db_by_c1_position": {
+    "0.5": 8.17,
+    "2.0": 6.34,
+    "5.0": 4.13
+   }
+  },
+  "superseded": "PD48 no-d2 builds of wirepad/hspad (backup scratch/pads-pd48/backup-published/*-pd48-nod2) and their numbers in this file above (pd48 wirepad/hspad sections)"
  }
 }

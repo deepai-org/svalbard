@@ -411,11 +411,25 @@ python3 projects/programmable_transceiver_platform/analog/pads/assembly.py --tem
 converter. Do not add budget-sized ideal capacitors on top of extracted
 capacitance.
 
-### PD48 (pads ESD-tiering fork, 2026-11-12): 1 kV tier, transient oxide limit, TLP site (reviewed: HBM/oxide GO; TLP/board/CDM fixes PD48b, re-review pending)
+### PD48c (2026-11-12): d2 restored on wirepad (USB) and hspad for the 250 V CDM floor (coordinator decision)
+
+Supersedes the PD48 no-d2 builds below (kept for the record; backups `scratch/pads-pd48/backup-published/*-pd48-nod2`).
+Work `scratch/pads-pd48c/`; evidence `pd48-esd-tiering.json` → `pd48c`; per-folder `SUPERSEDED.md` lists current vs historical files.
+- **Published cells = PD47 wirepad and PD21 hspad** (d2 extra up-diode row present; byte-identical to the pre-PD48 backups).
+  Layout evidence unchanged and matched by SHA: KLayout main 0 / antenna 0, LVS unique, device audit, LU.
+- **HBM:** 2 kV qualified (wirepad 0/615, pad 5.04–5.41 V, PD47; hspad 0/404, 5.04–5.41 V, PD21 on the same netlist). 1 kV rerun:
+  wirepad 4.36–4.66 V, hspad 4.36–4.67 V, 0 exceedances.
+- **CDM-speed surrogate** (1 ns pulse, `scratch/pads-pd48c/cdm.py`): pad 4.78/4.80 V at 1 A, 6.97/6.98 V at 2 A (≤ 8.0 V transient limit),
+  9.00/9.03 V at 3 A (over); holds to ≈ 2.5 A (no-d2 was 9.2 V at 2 A). **250 V CDM still NOT verified** (die C only estimated 0.5–1 pF ≈ 1–3 A).
+- **Pad C:** wirepad worst 3.37 pF (USB budget 5.0 pF, PD47); hspad 1.113–1.136 pF/leg (PD21). B40 ladder unchanged (0.9 pF / 4.0 nH / 0.2 pF):
+  COB RL 12.33–12.44 dB nominal, worst 8.17 dB (C1 at 0.5 mm), 6.34 dB (2 mm), 4.13 dB (5 mm) (`scratch/pads-pd21/rl/rl_fix_pd48c.json`).
+- **Unchanged from PD48:** rftxpad/txpad at 1 kV, transient oxide limit + core-gate screen, TLP site, board rules (B48 levels updated).
+
+### PD48 (pads ESD-tiering fork, 2026-11-12): 1 kV tier, transient oxide limit, TLP site (reviewed GO; wirepad/hspad no-d2 parts SUPERSEDED by PD48c)
 
 Work dir `scratch/pads-pd48/`; backups `scratch/pads-pd48/backup-published/`; evidence `generated/stress-safe-families/pd48-esd-tiering.json`.
-- **Tiers (MANDATE "ESD tiering"):** 2 kV supplies/host/debug/RF_RX/clocks; 1 kV RF_TX, WIRE_RX (hspad), WIRE_TX, USB; **CDM ≥ 250 V is a target, NOT verified.** Removing d2 cost ≈ 2.2 V of CDM-speed headroom (reviewer 1 ns surrogate at 2 A: pad 6.97 → 9.18 V wirepad, 6.98 → 9.24 V hspad; 6.6 V at 1.2 A). Die C / CDM current not established (est. 1–3 A at 250 V); if a CDM rating is required, d2 must return on USB/hspad (+0.14 pF/leg).
-- **wirepad (USB) and hspad rebuilt on the plain v2 macro** (`scratch/pads-pd12/v2/macro`, same footprint) = the d2 extra
+- **Tiers (MANDATE "ESD tiering"):** 2 kV supplies/host/debug/RF_RX/clocks; 1 kV RF_TX, WIRE_TX (USB and WIRE_RX/hspad back to 2 kV with d2, PD48c); **CDM ≥ 250 V is a target, NOT verified.** Removing d2 cost ≈ 2.2 V of CDM-speed headroom (reviewer 1 ns surrogate at 2 A: pad 6.97 → 9.18 V wirepad, 6.98 → 9.24 V hspad; 6.6 V at 1.2 A). Die C / CDM current not established (est. 1–3 A at 250 V); if a CDM rating is required, d2 must return on USB/hspad (+0.14 pF/leg).
+- **[SUPERSEDED by PD48c] wirepad (USB) and hspad rebuilt on the plain v2 macro** (`scratch/pads-pd12/v2/macro`, same footprint) = the d2 extra
   up-diode row removed; main diodes, GC shunt and secondary clamps unchanged. Both: Magic DRC 0, LVS unique, device audit,
   KLayout main 0 / antenna 0, LU clean. Areas unchanged (wirepad 316,021 µm², hspad 478 × 1111 µm).
   - wirepad 1 kV: pad 4.52–4.70 V, 0 of 615 MOS; ±100 mA 2.50–2.76 V; peer ≤ 0.49 µA; ramp_slow 4 at exactly 3.63 V (as before).

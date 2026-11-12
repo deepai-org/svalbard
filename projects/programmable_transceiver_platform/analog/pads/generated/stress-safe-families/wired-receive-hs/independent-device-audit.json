@@ -1,35 +1,35 @@
 {
   "status": "physical_MOS_resistor_diode_MIM_graph_comparison",
   "device_graph_matches": true,
-  "physical_devices": 500,
-  "simulated_devices": 500,
+  "physical_devices": 508,
+  "simulated_devices": 508,
   "missing": [],
   "unexpected": [],
   "supplemental_device_counts": {
     "csubckt:cap_mim_2f0_m4m5_noshield": 8,
     "ndiode:diode_nd2ps_06v0": 12,
-    "pdiode:diode_pd2nw_06v0": 8
+    "pdiode:diode_pd2nw_06v0": 16
   },
   "excluded_devices": {
     "explicit_well_replacement": [
-      "DWELL_ARRAY VSS ESD_RAIL diode_nw2ps_06v0 area=569.4528p pj=470.72u"
+      "DWELL_ARRAY VSS ESD_RAIL diode_nw2ps_06v0 area=1138.9056p pj=941.44u"
     ]
   },
   "scope": "MOS/resistor bodies and sizes, steering-diode polarity/area/perimeter, and ordered MIM terminals/dimensions checked. Explicit well replacement and parasitic values not certified; no ESD rating.",
   "source_sha256": {
-    "/home/ubuntu/svalbard/scratch/pads-pd48/hspad/pad_hspad_flat.ext": "6c6ff2fe143a0ef9b0a6365419a23e0ff0d17d450e135c8c8d8ef5d29b2f8d22",
-    "/home/ubuntu/svalbard/scratch/pads-pd48/hspad/physical.spice": "7018513a0b7f9a835d6a9bfd78984f3a82937b5fe9ff2d8e208930b3393ade44",
+    "/home/ubuntu/svalbard/scratch/pads-pd21/hspad3/pad_hspad_flat.ext": "70b488764331c4c4ee284ce57847905f73ea32ae9bfb29b1f6cde4a22067ce83",
+    "/home/ubuntu/svalbard/scratch/pads-pd21/hspad3/physical.spice": "1f1c589da9af8b0c3e5d2fc2575fd689969225c3393541bd0af263a93df3e805",
     "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_device_audit.py": "faca1155b3ec8d51ec1db7a43fd2d1102d0e0441cf036f494fc71c4b318512f5",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "298878a66dd11de1d63d3f7bef18a0673b083a5a4045b09cf60b8c739690e646",
-    "/home/ubuntu/svalbard/scratch/pads-pd48/hspad/pad_hspad_flat.spice": "928288207299d0f7b7758b070f47bcd5642381dd231d3ca8e8e4d0560378ffbb"
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "bad120a087209826ea0c283eda4c11ee39c8b59abab4dc11917deb5cf9a66fe0",
+    "/home/ubuntu/svalbard/scratch/pads-pd21/hspad3/pad_hspad_flat.spice": "7e9a929bff1717471ca35786c6dadeb824dc4b8ff0d60e420d67aef4ec4f7cc0"
   },
   "well_replacement": {
-    "extracted_well_area_um2": 569.4528,
-    "extracted_well_perimeter_um": 470.72,
-    "linear_capacitance_removed_ff": 68.33433999999943,
-    "expected_removal_ff": 68.33433600000001,
+    "extracted_well_area_um2": 1138.9056,
+    "extracted_well_perimeter_um": 941.44,
+    "linear_capacitance_removed_ff": 136.66866999999957,
+    "expected_removal_ff": 136.66867200000002,
     "other_extracted_capacitances_unchanged": true,
     "scope": "Terminal well areas assume isolated, nonshared array wells as established by array geometry; no nonlinear junction accuracy or ESD qualification.",
-    "raw_spice_sha256": "928288207299d0f7b7758b070f47bcd5642381dd231d3ca8e8e4d0560378ffbb"
+    "raw_spice_sha256": "7e9a929bff1717471ca35786c6dadeb824dc4b8ff0d60e420d67aef4ec4f7cc0"
   }
 }

@@ -24,7 +24,7 @@ the tapeout-plan tests, not ESD/HBM/CDM ratings.
 | Block | Implemented boundary | Stress-safe layout (`generated/stress-safe-families/`) | Devices | Area used / ceiling (µm²) |
 | --- | --- | --- | --- | --- |
 | `txpad` (wired TX) | Protected pad, steering/TMDS drive, detection, terminations, extracted buffer and interlock | `wired-transmit/` | 1,088 | 292,666 / 300,000 |
-| `wirepad` (wired RX/USB) | Protected network, discharge, divider/bypass, terminations, HS/FS drive and pulls, USB fixes | `wired-receive-usb/` | 1,170 | 335,069 / 340,000 |
+| `wirepad` (wired RX/USB) | Protected network, discharge, divider/bypass, terminations, HS/FS drive and pulls, Miller LS slew (PD47) | `wired-receive-usb/` | 739 (extracted, combined) | 316,021 / 340,000 |
 | `refpad` (differential reference) | Protection/bias network; receiver is behavioral | `reference/` | 897 | 179,237 / 185,000 |
 | `rfpad` = `rftxpad` (one physical pair) | Protection network, steering diodes, isolated clamp rail, MIMs, bleed; LNA and RF driver are behavioral | `rf-pair/` | — | 175,909 / 180,000 |
 | Single-leg cell (WMON; `ESD_TEST` dropped, PD35) | Native bond on `PAD_P`, `PADN` tied to VSS | `single-leg/` | — | 158,302 |
@@ -99,6 +99,23 @@ Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`
   - **Pad C with bypass + RX load (PD45): 2.82–3.25 pF at 1.65 V, 3.57–3.58 pF at 0.2 V: fails 2.7 pF** (budget to
     re-derive for USB alone). `padc-wired-receive-usb.json`.
   - **Area:** unchanged, 352,213 vs 340,000 µm² (fails).
+  **PD47 (2026-11-12): PD44 laid out, pad C re-budgeted, area fixed. PUBLISHED** (`wired-receive-usb/`, top `pad_wirepad`;
+  build `stress_safe_compact_layout.py wired_receive_usb <dir> <network-gc-d2 macro> usbfix6v2lsm 14`; work `scratch/pads-pd46/`;
+  backup `scratch/pads-pd46/backup-published/wired-receive-usb-pre-pd47/`; evidence `pd47-usb-ls-miller.json`).
+  - **Circuit** (`wired_receive.py` `ls_slow['miller']`): the PD44 POC exactly (no A/B split; limiters mirrored from HS_PBIAS
+    with LS_SLOW bypasses; 1.5 pF MIM per driver via a pad-side TG). Generator support: `circuits.Capacitor`, MIMs in the
+    strip right of the trunk bank (`layout.py`), `extract_audit` csubckt; identical parallel FETs drawn as 2-finger pairs.
+  - **Checks:** Magic DRC 0, netgen unique, device audit 739/739 (ordered MIM terminals), KLayout main 0 / antenna 0, LU clean.
+  - **LS (extracted, HS bias on):** 94.7–201 ns at 50 / 450 pF, 5 corners, MIM ss/ff crossed, HS ref ±5 % (81.5–232 ns at ±20 %);
+    ratio 0.92–1.06, VCRS 1.34–1.52 V. **FS 50 pF:** 5.9–11.3 ns, VCRS 1.61–1.81 V, ratio 0.96–1.23 (USB-01 residual at ss, risk-accepted, not a pass).
+  - **HBM 2 kV:** 0 of 615 MOS over the screen, pad 5.04–5.41 V; ramp_slow 4 at exactly 3.63 V (v9: 8). MIM ≤ 5.14 V (HBM) / 3.63 V (peer) vs 6 V PDK max.
+  - **HS:** termination 44.2–47.6 Ω (codes tt 4 / ss 7 / ff 0), HS current 16.9–18.2 mA; PD43 calibration rerun on this cell: 41.35–49.06 Ω after calibration (pass).
+  - **Pad C (USB-only budget, USB 2.0 §7.1.6.2):** die ≤ 5.0 pF/line, P/N ≤ 1.0 pF. Bypass on + RX loads: 2.08–3.37 pF
+    (bypass off 2.28–2.33 pF), P/N ≤ 0.08 pF, differential ≈ 1.75 pF; pessimistic 3.9 pF → **pass**. TDR bench
+    (`scratch/pads-pd46/tdr/`) passes to ≥ 10 pF with the pessimistic package, so the 5 pF guideline binds.
+  - **Area: 316,021 µm² (was 352,213) → pass**; outline 2.78..524 × 0..1434.72 µm (base 286 × 1434, −286 µm depth).
+  - **Review** (`scratch/pads-pd46/review/REVIEW.md`): GO for all three, conditions: LS needs `usbhs.bias.enable` (interlock
+    requested, PD47), change LS_SLOW only with the driver off; open: host-role LS load (spot ratio 1.21/1.25), HS TX eye on the extracted pad.
 
 ### PD21 (pads owner): low-C SATA/PCIe RX pad pair `pad_hspad`, network-gc-d2, HBM pad-side devices
 
@@ -393,3 +410,33 @@ python3 projects/programmable_transceiver_platform/analog/pads/assembly.py --tem
 `extract_audit.py` reads device/body connectivity independently of the stock
 converter. Do not add budget-sized ideal capacitors on top of extracted
 capacitance.
+
+### PD48 (pads ESD-tiering fork, 2026-11-12): 1 kV tier, transient oxide limit, TLP site (reviewed: HBM/oxide GO; TLP/board/CDM fixes PD48b, re-review pending)
+
+Work dir `scratch/pads-pd48/`; backups `scratch/pads-pd48/backup-published/`; evidence `generated/stress-safe-families/pd48-esd-tiering.json`.
+- **Tiers (MANDATE "ESD tiering"):** 2 kV supplies/host/debug/RF_RX/clocks; 1 kV RF_TX, WIRE_RX (hspad), WIRE_TX, USB; **CDM ≥ 250 V is a target, NOT verified.** Removing d2 cost ≈ 2.2 V of CDM-speed headroom (reviewer 1 ns surrogate at 2 A: pad 6.97 → 9.18 V wirepad, 6.98 → 9.24 V hspad; 6.6 V at 1.2 A). Die C / CDM current not established (est. 1–3 A at 250 V); if a CDM rating is required, d2 must return on USB/hspad (+0.14 pF/leg).
+- **wirepad (USB) and hspad rebuilt on the plain v2 macro** (`scratch/pads-pd12/v2/macro`, same footprint) = the d2 extra
+  up-diode row removed; main diodes, GC shunt and secondary clamps unchanged. Both: Magic DRC 0, LVS unique, device audit,
+  KLayout main 0 / antenna 0, LU clean. Areas unchanged (wirepad 316,021 µm², hspad 478 × 1111 µm).
+  - wirepad 1 kV: pad 4.52–4.70 V, 0 of 615 MOS; ±100 mA 2.50–2.76 V; peer ≤ 0.49 µA; ramp_slow 4 at exactly 3.63 V (as before).
+    Pad C −0.14..−0.19 pF (worst 3.37 → 3.23 pF, bypass on). LS 100.2 / 193.2 ns (ff 50 pF / ss 450 pF), FS unchanged.
+  - hspad 1 kV: 0 of 404 MOS. C/leg 1.113/1.113/1.136 → 0.999/0.990/1.031 pF; die RL @2.4 GHz 8.49/8.43/7.97 →
+    9.30/9.32/8.68 dB (tt c6 / ss32 c9 / ff22 c2); COB 1.25–2.5 GHz 5.7–6.5 → 6.05–6.99 dB (still package-limited, PD26 ladder still needed).
+  - txpad, rftxpad: layouts unchanged (they never had d2); screened at 1 kV (compact-model diagnostic, not qualification): rftxpad 0/348;
+    txpad passes only on the transient limit (8 TERM nfet_03v3 at 4.37–4.69 V, over the 3.63 V DC screen; ESD-05 risk-accepted). Screen can fail: the no-d2 wirepad at 2 kV gives 31–66 exceedances (6.17–6.91 V).
+- **Transient gate-oxide limit** (`spec/design-assumptions.md`, derivation `scratch/pads-pd48/oxide-transient-limit.md`):
+  3.3 V oxide 5.0 V, 6 V oxide 8.0 V for ~150 ns events (DC checks keep 3.63/6.0 V). `hbm_core_screen.py` uses it, with
+  the tier level per case (`TIER_KV`, `HBM_CORE_KV`, `HBM_CORE_DC_LIMITS=1` restores the DC screen; `HBM_CORE_DIR`).
+  `stress_safe_family_sims.py` gained `HBM_KV` (default 2 kV, unchanged). **PD29 screen rerun (PD48b: tt27/ss0/ff85 P_pos + ss0 P_neg, consumer SHAs recorded, Vds screen 5.5 V / 9.0 V), all 10 cases: 0 exceedances**;
+  worst: LNA nfet_03v3 gate 4.72 V (2 kV), 6 V gates 5.38 V (aux/wclk ff), rfdriver 4.12 V (1 kV); Vds ≤ 4.70 V (3.3 V) / 5.67 V (6 V).
+  Fail demo: LNA at 3 kV → 188–302 exceedances (gate up to 6.22 V). **LNA regression:** its worst gate moved 2.09 V (PD28) → 4.72 V from the
+  uncommitted rf_rx LNA rework (input device now exposed); passes the transient limit with 0.28 V margin, fails the DC screen — flagged to the RF RX owner (risk RXR-ESD-1).
+- **TLP site** `generated/tlp-site/` (`pad_tlp_flat`, generator `tlp_site.py --output-dir`, repo inputs only): one native bond pad +
+  one leg's primary steering diodes (4 × nd2ps PAD→VSS, 4 × pd2nw PAD→VDD); 5–11 via1 cuts per diode terminal; 68 × 124 µm incl. the bond.
+  Magic DRC 0, netgen unique, KLayout clean. **Proposed location: east `bidir[25]` (the old ESD_TEST site freed by PD35, next to WMON),
+  VDD/VSS strapped to the ring rails of that provider site; requested in interface-changes PD48b — not placed until assembly accepts.**
+  **Measurement plan:** TLP 100 ns / 10 ns rise, PAD vs ring VSS probe pad, both polarities, VDD grounded and VDD floating, steps of 0.05 A to
+  It2 (failure = leakage at 3.3 V > 10× the pre-stress value or > 1 µA); VF-TLP 1–5 ns (CDM speed) to 3 A; extract Ron and Vt per diode
+  string to calibrate the 1.2–1.7 Ω pad-to-rail and diode models used by all HBM surrogates.
+- **Board:** B36 made mandatory; new B46 (USB TVS), B47 (wired HS connectors / clocks), B48 (handling/EPA rules, per-pin levels).
+- **Open:** independent review (not run by this fork); CDM not simulated; no silicon ESD data.

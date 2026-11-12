@@ -40,7 +40,7 @@ def extracted_graph(path):
     result=Counter()
     for fields in lines:
         if not fields or fields[0]!='device':continue
-        if fields[1] not in ('msubckt','rsubckt','ndiode'):
+        if fields[1] not in ('msubckt','rsubckt','ndiode','csubckt'):
             raise ValueError('Unsupported extracted device '+fields[1])
         model=fields[2]
         index=7; dimensions={}
@@ -52,12 +52,19 @@ def extracted_graph(path):
             result[diode_key(model,resolve(fields[index+4]),resolve(fields[index+1]),
                              dimensions['a']*.005*.005,dimensions['p']*.005)]+=1
             continue
+        if fields[1]=='csubckt':   # PD46 MIM: substrate, top (gate slot), bottom (first terminal); ordered, square
+            result[cap_key(model,resolve(fields[index+1]),resolve(fields[index+4]),dimensions['w']*.005,dimensions['l']*.005)]+=1
+            continue
         body,gate=fields[index:index+2]
         source,drain=fields[index+4],fields[index+7]
         nodes=(drain,source,body) if fields[1]=='rsubckt' else (drain,gate,source,body)
         result[key(model,[resolve(n) for n in nodes],
                    dimensions['w']*.005,dimensions['l']*.005)]+=1
     return result
+
+
+def cap_key(model,top,bottom,w_um,l_um):
+    return (model,top,bottom,*sorted((round(w_um,5),round(l_um,5))))
 
 
 def diode_key(model,anode,cathode,area_um2,perimeter_um):
@@ -73,6 +80,10 @@ def converted_graph(path):
             continue
         if not line.startswith('X'):continue
         fields=line.split()
+        if len(fields)>3 and fields[3].startswith('cap_mim'):
+            d=dict(item.split('=') for item in fields[4:] if '=' in item)
+            result[cap_key(fields[3],fields[1],fields[2],float(d['c_width'].removesuffix('u')),float(d['c_length'].removesuffix('u')))]+=1
+            continue
         resistor=fields[4].startswith('ppoly')
         pos=4 if resistor else 5
         dimensions=dict(item.split('=') for item in fields[pos+1:] if '=' in item)
@@ -112,7 +123,7 @@ def export_extracted(path,output,*,capacitance=True):
         if not r:continue
         if r[0]=='use':raise ValueError('Flatten hierarchy before export')
         if r[0]=='device':
-            if r[1] not in ('msubckt','rsubckt','ndiode'):raise ValueError('Unsupported device')
+            if r[1] not in ('msubckt','rsubckt','ndiode','csubckt'):raise ValueError('Unsupported device')
             index=7;dim={}
             while '=' in r[index]:
                 k,v=r[index].split('=');dim[k]=float(v);index+=1
@@ -121,6 +132,9 @@ def export_extracted(path,output,*,capacitance=True):
                 cathode,anode=r[index+1],r[index+4]
                 lines.append(f"D{count} {net(anode)} {net(cathode)} {r[2]} area={dim['a']*length_um**2:.8g}p "
                              f"pj={dim['p']*length_um:.8g}u");count+=1
+                continue
+            if r[1]=='csubckt':   # PD46 MIM (top, bottom)
+                lines.append(f"X{count} {net(r[index+1])} {net(r[index+4])} {r[2]} c_width={dim['w']*length_um:.8g}u c_length={dim['l']*length_um:.8g}u");count+=1
                 continue
             body,gate=r[index:index+2]
             source,drain=r[index+4],r[index+7]

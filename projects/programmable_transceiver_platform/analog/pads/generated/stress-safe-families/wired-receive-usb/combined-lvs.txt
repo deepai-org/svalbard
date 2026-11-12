@@ -1,4 +1,17 @@
 
+Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
+
 Circuit 1 cell ppolyf_u_1k_6p0 and Circuit 2 cell ppolyf_u_1k_6p0 are black boxes.
 Warning: Equate pins:  cell ppolyf_u_1k_6p0 is a placeholder, treated as a black box.
 Warning: Equate pins:  cell ppolyf_u_1k_6p0 is a placeholder, treated as a black box.
@@ -12,6 +25,20 @@ Circuit 1: ppolyf_u_1k_6p0                 |Circuit 2: ppolyf_u_1k_6p0
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes ppolyf_u_1k_6p0 and ppolyf_u_1k_6p0 are equivalent.
+
+Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k                     
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
 
 Circuit 1 cell nfet_06v0 and Circuit 2 cell nfet_06v0 are black boxes.
 Warning: Equate pins:  cell nfet_06v0 is a placeholder, treated as a black box.
@@ -41,20 +68,6 @@ Circuit 1: ppolyf_s                        |Circuit 2: ppolyf_s
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes ppolyf_s and ppolyf_s are equivalent.
-
-Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
-Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
-Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k                     
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
-3                                          |3                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
 
 Circuit 1 cell ppolyf_u and Circuit 2 cell ppolyf_u are black boxes.
 Warning: Equate pins:  cell ppolyf_u is a placeholder, treated as a black box.
@@ -114,43 +127,30 @@ Circuit 1: pfet_06v0                       |Circuit 2: pfet_06v0
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes pfet_06v0 and pfet_06v0 are equivalent.
-
-Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
-Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
-Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield       
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
 Flattening unmatched subcell rx_pad_with_discharge_physical in circuit expected (1)(1 instance)
 Flattening unmatched subcell network_flat in circuit expected (1)(1 instance)
 
 Class combined_flat (0):  Merged 490 parallel devices.
-Class combined_flat (0):  Merged 59 series devices.
+Class combined_flat (0):  Merged 53 series devices.
 Class expected (1):  Merged 490 parallel devices.
-Class expected (1):  Merged 59 series devices.
+Class expected (1):  Merged 53 series devices.
 Subcircuit summary:
 Circuit 1: combined_flat                   |Circuit 2: expected                        
 -------------------------------------------|-------------------------------------------
-pfet_03v3 (98->48)                         |pfet_03v3 (98->48)                         
-nfet_06v0 (402->64)                        |nfet_06v0 (402->64)                        
-pfet_06v0 (97->19)                         |pfet_06v0 (97->19)                         
-ppolyf_u_1k (66->18)                       |ppolyf_u_1k (66->18)                       
-diode_nd2ps_03v3 (5)                       |diode_nd2ps_03v3 (5)                       
-diode_pd2nw_06v0 (16->2)                   |diode_pd2nw_06v0 (16->2)                   
+pfet_06v0 (97->17)                         |pfet_06v0 (97->17)                         
+nfet_06v0 (404->62)                        |nfet_06v0 (404->62)                        
+ppolyf_u_1k (56->14)                       |ppolyf_u_1k (56->14)                       
+pfet_03v3 (99->47)                         |pfet_03v3 (99->47)                         
+cap_mim_2f0_m4m5_noshield (8->7)           |cap_mim_2f0_m4m5_noshield (8->7)           
 ppolyf_u_1k_6p0 (6)                        |ppolyf_u_1k_6p0 (6)                        
-nfet_03v3 (16)                             |nfet_03v3 (16)                             
+nfet_03v3 (15)                             |nfet_03v3 (15)                             
+diode_pd2nw_06v0 (8->2)                    |diode_pd2nw_06v0 (8->2)                    
+diode_nd2ps_03v3 (4)                       |diode_nd2ps_03v3 (4)                       
 ppolyf_u (20->9)                           |ppolyf_u (20->9)                           
-ppolyf_s (2)                               |ppolyf_s (2)                               
-cap_mim_2f0_m4m5_noshield (4->3)           |cap_mim_2f0_m4m5_noshield (4->3)           
 diode_nd2ps_06v0 (12->3)                   |diode_nd2ps_06v0 (12->3)                   
-Number of devices: 195                     |Number of devices: 195                     
-Number of nets: 111                        |Number of nets: 111                        
+ppolyf_s (2)                               |ppolyf_s (2)                               
+Number of devices: 188                     |Number of devices: 188                     
+Number of nets: 110                        |Number of nets: 110                        
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
 Resolving symmetries by pin name.
@@ -160,34 +160,34 @@ Netlists match with 6 symmetries.
 Subcircuit pins:
 Circuit 1: combined_flat                   |Circuit 2: expected                        
 -------------------------------------------|-------------------------------------------
+TERM_VCM                                   |TERM_VCM                                   
+LS_SLOW                                    |LS_SLOW                                    
 HS_PBIAS                                   |HS_PBIAS                                   
 DIFF_ENABLE                                |DIFF_ENABLE                                
 PULLUP_N                                   |PULLUP_N                                   
 PULLDOWN_P                                 |PULLDOWN_P                                 
 PULLDOWN_N                                 |PULLDOWN_N                                 
 ATB_ESD_RAIL                               |ATB_ESD_RAIL                               
-VDD                                        |VDD                                        
 PAD_P                                      |PAD_P                                      
 PAD_N                                      |PAD_N                                      
 HS_P                                       |HS_P                                       
 HS_N                                       |HS_N                                       
 BYPASS_ENABLE                              |BYPASS_ENABLE                              
-PULLUP_P                                   |PULLUP_P                                   
-TERM_TRIM1                                 |TERM_TRIM1                                 
-TERM_TRIM2                                 |TERM_TRIM2                                 
-ESD_RAIL                                   |ESD_RAIL                                   
-VSS                                        |VSS                                        
-TERM_VCM                                   |TERM_VCM                                   
-TERM_ENABLE                                |TERM_ENABLE                                
-DIV_ENABLE                                 |DIV_ENABLE                                 
 FS_HIGH_N                                  |FS_HIGH_N                                  
 FS_HIGH_P                                  |FS_HIGH_P                                  
-LS_SLOW                                    |LS_SLOW                                    
-RX_N                                       |RX_N                                       
+PULLUP_P                                   |PULLUP_P                                   
+TERM_TRIM2                                 |TERM_TRIM2                                 
+TERM_TRIM1                                 |TERM_TRIM1                                 
+TERM_TRIM0                                 |TERM_TRIM0                                 
 RX_P                                       |RX_P                                       
+RX_N                                       |RX_N                                       
 FS_LOW_P                                   |FS_LOW_P                                   
 FS_LOW_N                                   |FS_LOW_N                                   
-TERM_TRIM0                                 |TERM_TRIM0                                 
+ESD_RAIL                                   |ESD_RAIL                                   
+DIV_ENABLE                                 |DIV_ENABLE                                 
+VSS                                        |VSS                                        
+VDD                                        |VDD                                        
+TERM_ENABLE                                |TERM_ENABLE                                
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes combined_flat and expected are equivalent.

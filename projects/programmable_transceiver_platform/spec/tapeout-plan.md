@@ -115,10 +115,10 @@ taps.
 | East | `bidir[18]`, `bidir[19]` | `WCLK_OBS`, `WDBG_OBS`: recovered/divided wired clock and wired status. |
 | East | `bidir[22]`, `bidir[23]` | `WTX_EXT_P/N`: external serial data into the wired TX output stage. |
 | East | `bidir[24]` | `WMON`: buffered, bandwidth-limited wired analog monitor. |
-| East | `bidir[25]` | `ESD_TEST`: standalone pad carrying the selected clamp variant, for direct I–V and TLP characterization. |
+| East | `bidir[25]` (proposed, PD48b) | `TLP_DIODE`: minimal TLP site `pads/generated/tlp-site/pad_tlp_flat` (bond + one leg of primary steering diodes) replacing the dropped ESD_TEST (PD35); pending assembly acceptance. |
 
 Characterization structures in the reserve area, all reached through the
-analog test bus or `ESD_TEST`: NMOS/PMOS device replicas at the sizes used in
+analog test bus (the `ESD_TEST` pad was removed in PD35): NMOS/PMOS device replicas at the sizes used in
 the LNA, mixer, sampler and driver; a ring-oscillator speed monitor; one VCO
 replica with its own divider to `CLK_OBS`; and resistor and MIM-capacitor
 matching arrays. The device replicas and matching pairs are `pt_char_atb` in

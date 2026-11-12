@@ -4,7 +4,7 @@ All branches remain physically connected. Controls are voltages supplied by the
 core, not protocol names. Dimensions are candidate sizes, not achieved specs.
 """
 import json
-from circuits import Circuit, Mos, Resistor, foundation_devices
+from circuits import Capacitor, Circuit, Mos, Resistor, foundation_devices
 from design import PROJECT, resolve
 
 
@@ -36,7 +36,17 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
     #   The FS low side (base shunt bank) is split the same way: k switches (A) driven by their own inverter of the
     #   OR gate, the rest (B) by NOR(TERM_OR_B, LS_SLOW). LS_SLOW = 0: A + B = the canonical drivers and the canonical
     #   termination (no added pad-side device); LS_SLOW = 1: only A drives (LS edges).
+    # PD46 (PD44 laid out, opt-in): ls_slow = dict(miller=dict(c_um=s, control_w=w, ...)) replaces the A/B split by
+    #   load-independent Miller-integrated LS edges. No B units: every FS unit / base shunt switch stays on one gate.
+    #   High side: the gate pull-down (POWER NMOS) gets a series saturated limiter nfet_03v3 mirrored from HS_PBIAS
+    #   (LSBP/LSBN, ~50 uA) bypassed by an NMOS on LS_SLOW_B. Low side: TERM_GATE is driven by one inverter whose
+    #   PMOS source sits on a PMOS limiter (gate HS_PBIAS) bypassed by a PMOS on LS_SLOW. Per driver a square
+    #   s x s um MIM (top = M node, bottom = the gate) joins the driver's pad-side node (FS_OUT / TERM_R) through a
+    #   pad-side transmission gate (nfet_06v0 gate LS_SLOW, pfet_06v0 gate LS_SLOW_B, body = the leg's FS well),
+    #   closed only with LS_SLOW = 1. LS_SLOW = 0: limiters bypassed, TGs open (FS/HS/termination as v9).
+    #   Needs the HS bias reference on (HS_PBIAS = mirror gate) in LS mode.
     N6 = ('nfet_06v0', .7) if pad_side_6v else ('nfet_03v3', .28)
+    lsm = (ls_slow or {}).get('miller')
     P6 = ('pfet_06v0', .55) if pad_side_6v else ('pfet_03v3', .28)
     if any(type(n) is not int or n < 1 for n in (hs_units,fs_high_units,differential_units)):
         raise ValueError('Positive integer unit counts required')
@@ -74,12 +84,18 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
         # if the external enable remains asserted. No ideal power-good signal.
         # The floating gate can undershoot during VDD collapse while a
         # retained request remains high; use the 6V gate-oxide device here.
-        mos(name+'_CONTROL',gate,enable,name+'_CONTROL_S','VSS','nfet_06v0',control_width_um if name.startswith('FS_') else 2.,.7)  # PD28 opt-in (2 canonical)
+        mos(name+'_CONTROL',gate,enable,name+'_CONTROL_S','VSS','nfet_06v0',(lsm['control_w'] if lsm else control_width_um) if name.startswith('FS_') else 2.,.7)  # PD28 opt-in (2 canonical)
         power_d=name+'_CONTROL_S'
         if control_gate is not None:   # PD28 LS slow: series enable in the control path of the B high side
             power_d=name+'_CONTROL_LS'
             mos(name+'_LSGATE',name+'_CONTROL_S',control_gate,power_d,'VSS','nfet_03v3',max(4.,2.*control_width_um),.28)
-        mos(name+'_POWER',power_d,'VDD','VSS','VSS',N6[0],max(4.,2.*control_width_um) if name.startswith('FS_') else 4.,N6[1])
+        if lsm and name.startswith('FS_'):   # PD46: series limiter || bypass between CONTROL_S and the POWER drain
+            for k in range(2):   # 2 x control_w (one 2*control_w device would overflow the 26 um placement row)
+                mos(f'{name}_POWER_{k}',name+'_CTLX','VDD','VSS','VSS',N6[0],lsm['control_w'],N6[1])
+            mos(name+'_LIMIT',name+'_CONTROL_S','LSNB',name+'_CTLX','VSS','nfet_03v3',lsm['limit_n'][0],lsm['limit_n'][1])
+            mos(name+'_LIMIT_BYPASS',name+'_CONTROL_S','LS_SLOW_B',name+'_CTLX','VSS','nfet_03v3',lsm['bypass_n_w'],.28)
+        else:
+            mos(name+'_POWER',power_d,'VDD','VSS','VSS',N6[0],max(4.,2.*control_width_um) if name.startswith('FS_') else 4.,N6[1])
         # A falling VDD turns on a well-referenced PMOS that restores the
         # pass gates toward their floating source, avoiding a resistor-only
         # 100kohm discharge delay. Its body follows the same local well.
@@ -111,7 +127,13 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
         mos('TERM_OR_'+leg+'_P0',series,'TERM_ENABLE','VDD','VDD','pfet_03v3',4.*g1,.28)
         mos('TERM_OR_'+leg+'_P1',inv,low,series,'VDD','pfet_03v3',4.*g1,.28)
         mos('TERM_OR_'+leg+'_QUAL_P',inv,'VCM_LOW_OK',series,'VDD','pfet_03v3',4.*g1,.28)
-        if ls_slow:
+        if lsm:
+            # PD46: one inverter drives every base switch; PMOS source on the LS limiter || bypass
+            mos('TERM_OR_'+leg+'_OUT_N',out,inv,'VSS','VSS',w=lsm['inv_n_w'])
+            mos('TERM_OR_'+leg+'_OUT_P',out,inv,'TERM_LS_'+leg+'_S','VDD','pfet_03v3',lsm['inv_p_w'],.28)
+            mos('TERM_LS_'+leg+'_LIMIT','TERM_LS_'+leg+'_S','HS_PBIAS','VDD','VDD','pfet_03v3',lsm['limit_p'][0],lsm['limit_p'][1])
+            mos('TERM_LS_'+leg+'_LIMIT_BYPASS','TERM_LS_'+leg+'_S','LS_SLOW','VDD','VDD','pfet_03v3',lsm['bypass_p_w'],.28)
+        elif ls_slow:
             # base bank split: B switches (all but low_a_units) on NOR(inv, LS_SLOW) = the canonical driver plus an
             # LS_SLOW pull-down / series pull-up; A switches on their own inverter of inv (always enabled).
             mos('TERM_OR_'+leg+'_OUT_N',out,inv,'VSS','VSS',w=4.*g2)
@@ -125,8 +147,9 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
             mos('TERM_OR_'+leg+'_OUT_N',out,inv,'VSS','VSS',w=4.*g2)
             mos('TERM_OR_'+leg+'_OUT_P',out,inv,'VDD','VDD','pfet_03v3',8.*g2,.28)
         previous=out
-        for i in range(4):
-            following='VSS' if i==3 else f'TERM_GATE_{leg}_BLEED_{i}'
+        nb=lsm['term_bleed_segments'] if lsm else 4   # PD46: 12.5 kohm segments (PD44 POC: 100 kohm)
+        for i in range(nb):
+            following='VSS' if i==nb-1 else f'TERM_GATE_{leg}_BLEED_{i}'
             resistor(f'TERM_GATE_{leg}_BLEED_{i}',previous,following,12500)
             previous=following
         return out
@@ -137,6 +160,9 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
     if ls_slow:
         mos('LS_SLOW_INV_N','LS_SLOW_B','LS_SLOW','VSS','VSS',w=2.)
         mos('LS_SLOW_INV_P','LS_SLOW_B','LS_SLOW','VDD','VDD','pfet_03v3',4.,.28)
+    if lsm:   # PD46: LS limiter bias, mirrored from the HS reference (HS_PBIAS)
+        mos('LS_BIAS_P','LSNB','HS_PBIAS','VDD','VDD','pfet_03v3',lsm['limit_p'][0],lsm['limit_p'][1])
+        mos('LS_BIAS_N','LSNB','LSNB','VSS','VSS','nfet_03v3',lsm['limit_n'][0],lsm['limit_n'][1])
     mos('VCM_LOW_SENSE_N','VCM_LOW_OK','TERM_VCM','VSS','VSS',w=8.)
     mos('VCM_LOW_SENSE_P','VCM_LOW_OK','TERM_VCM','VDD','VDD','pfet_03v3',2.,.28)
     for leg in ('P','N'):
@@ -153,7 +179,7 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
             for k in range(segments):
                 devices.append(Resistor('TERM_'+leg+('' if segments == 1 else f'_SEG{k}'),(pad,'TERM_'+leg+'_R','VSS'),'ppolyf_u',w_um,l_um))
         for i in range(termination_switch_units):
-            g=local_enable if not ls_slow or i>=ls_slow['low_a_units'] else 'TERM_LSA_GATE_'+leg   # PD28 LS: A switches
+            g=local_enable if not ls_slow or lsm or i>=ls_slow['low_a_units'] else 'TERM_LSA_GATE_'+leg   # PD28 LS: A switches
             mos(f'TERM_{leg}_{i}','TERM_'+leg+'_R',g,'TERM_VCM','VSS',N6[0],20.,N6[1])
         if termination_trim:
             tw, tl = termination_trim['poly']
@@ -177,7 +203,16 @@ def build(*, hs_units=14, fs_high_units=24, differential_units=5, differential_w
             current=f'HS_{leg}_{i}'
             mos(current+'_SOURCE',current,'HS_PBIAS','VDD','VDD','pfet_03v3',20.,1.)
             mos(current+'_ISOLATE',current,'HS_'+leg,pad,'VSS','nfet_06v0',20.,.7)
-        if ls_slow:
+        if lsm:
+            high_side('FS_'+leg,pad,'FS_HIGH_'+leg,15.8,fs_high_units,fs_high_width_um,fs_series_geometry_um)
+            # Miller integrators (PD46): pad-side TG + MIM per driver
+            well='FS_'+leg+'_WELL'
+            for side,node,gate in (('H','FS_'+leg+'_OUT','FS_'+leg+'_GATE'),('L','TERM_'+leg+'_R','TERM_GATE_'+leg)):
+                m=f'LSM_{side}_{leg}'
+                mos(m+'_TGN',node,'LS_SLOW',m,'VSS','nfet_06v0',lsm['tg_w'],.7)
+                mos(m+'_TGP',node,'LS_SLOW_B',m,well,'pfet_06v0',lsm['tg_w'],.55)
+                devices.append(Capacitor(m+'_CAP',(m,gate),'cap_mim_2f0_m4m5_noshield',lsm['c_um'],lsm['c_um']))
+        elif ls_slow:
             a=ls_slow['high_a_units'];b=fs_high_units-a
             high_side('FS_'+leg,pad,'FS_HIGH_'+leg,15.8,a,fs_high_width_um,fs_series_geometry_um)
             high_side('FS_'+leg+'B',pad,'FS_HIGH_'+leg,15.8,b,fs_high_width_um,None,control_gate='LS_SLOW_B',

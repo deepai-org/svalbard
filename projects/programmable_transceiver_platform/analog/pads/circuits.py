@@ -43,6 +43,21 @@ class Mos:
                 f" pd={2*(self.w_um+drain)}u ps={2*(self.w_um+source)}u{sab}")
 
 
+@dataclass(frozen=True)
+class Capacitor:
+    """PD46: square MIM (cap_mim_2f0_m4m5_noshield). nodes = (top, bottom); the bottom plate (metal4)
+    carries the substrate parasitic in extraction."""
+    name: str
+    nodes: tuple
+    model: str
+    w_um: float
+    l_um: float
+
+    def spice(self):
+        return (f"X{self.name} {' '.join(self.nodes)} {self.model} "
+                f"c_width={self.w_um}u c_length={self.l_um}u")
+
+
 @dataclass
 class Circuit:
     name: str

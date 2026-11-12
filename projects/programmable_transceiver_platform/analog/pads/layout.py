@@ -110,7 +110,8 @@ def shared_tracks(nets, base_nets, spans, ports, width_overrides_um=None, margin
     return tracks,widths
 
 def generate(work,family='wired_transmit', *, external_primary=False, serial_tail_units=None, folded_tails=False, fs_high_width_um=20., fs_series_geometry_um=None, trunk_width_overrides_um=None,
-             columns=7, port_top_um=None, bond_y_offsets_um=(12.,4.), keep_tracks_of=None):
+             columns=7, port_top_um=None, bond_y_offsets_um=(12.,4.), keep_tracks_of=None, pair_prefixes=(), cap_x_um=166.,
+             cap_min_y_um=560., circuit_override=None):
     # Compact-family options (defaults reproduce the canonical layout exactly):
     #   columns: devices per placement row (the M4 route rows need columns*3.2+2.4 <= 26 um, so <= 7);
     #   port_top_um: draw every cell port's M5 trunk up to this y and label it there (boundary pins);
@@ -118,12 +119,20 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     #   keep_tracks_of (PD28, opt-in): nets that keep the trunk x of the canonical allocation for exactly that net
     #     set; every other (new) net shares an existing 0.44 um signal track whose y-span it does not overlap
     #     (shared_tracks below). Lets an extended circuit fit the full 146 um trunk bank with unchanged port x.
+    #   pair_prefixes (PD46, opt-in): MOS whose names start with one of these and that share model/size/all four
+    #     nodes with another such MOS are drawn pairwise as one 2-finger PCell (S-D-S, outer sources strapped on M2,
+    #     the two gate contacts strapped on M1): one placement and four M4 rows per pair instead of two. Same devices
+    #     and sizes in the extraction (Magic extracts one device per finger).
+    #   Capacitor devices (PD46, cap_mim_2f0_m4m5_noshield) sit off-array in the strip right of the trunk bank
+    #     (centre x cap_x_um, y >= cap_min_y_um), next to their nets' rows; bottom plate (M4) and top plate (M5 ->
+    #     via4 -> M4) each reach their net trunk on an M4 wire in a free inter-row gap (rows use y0+1..y0+22.8).
+    #   circuit_override: use this Circuit instead of build(family).
     if serial_tail_units is not None:
         if family!='wired_transmit':raise ValueError('Serial tail sizing applies only to wired TX')
         from circuits import wired_transmit
         circuit=wired_transmit(serial_tail_units=serial_tail_units)
-    else:circuit = build(family)
-    if fs_high_width_um!=20. or fs_series_geometry_um is not None:
+    else:circuit = build(family) if circuit_override is None else circuit_override
+    if (fs_high_width_um!=20. or fs_series_geometry_um is not None) and circuit_override is None:
         if family!='wired_receive_usb':raise ValueError('FS sizing applies only to RX/USB')
         from wired_receive import build as receive_build
         circuit=receive_build(fs_high_width_um=fs_high_width_um,fs_series_geometry_um=fs_series_geometry_um)
@@ -151,10 +160,27 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
     work.mkdir(parents=True, exist_ok=True)
     if list(work.glob('*.mag')):
         raise FileExistsError('Use an empty output directory: Magic must not merge a previous layout')
-    kinds = sorted({(d.model, d.w_um, d.l_um) for d in circuit.devices})
+    from circuits import Capacitor
+    caps=[d for d in circuit.devices if isinstance(d,Capacitor)]
+    pair_of={}
+    if pair_prefixes:
+        pend={}
+        for d in circuit.devices:
+            if isinstance(d,Capacitor) or 'fet' not in d.model or not d.name.startswith(tuple(pair_prefixes)):continue
+            k=(d.model,d.w_um,d.l_um,d.nodes)
+            if k in pend:pair_of[pend.pop(k).name]=d
+            else:pend[k]=d
+    paired={d.name for d in pair_of.values()}
+    def kkey(d):return (d.model,d.w_um,d.l_um)+((2,) if d.name in pair_of else ())
+    kinds = sorted({kkey(d) for d in circuit.devices if d.name not in paired}, key=str)
     keys = {k: f'{circuit.name}__primitive_{i}' for i,k in enumerate(kinds)}  # block-unique (chip GDS merge)
     commands = ['crashbackups stop', 'load primitive_workspace']
-    for (model, width, length), name in keys.items():
+    for kind, name in keys.items():
+        model, width, length = kind[:3]
+        if model.startswith('cap_mim'):
+            commands += ['units internal', f'set cell [magic::gencell_makecell gf180mcu::cap_mim_2p0fF w {width} l {length}]',
+                         'load $cell', f'save {name}', 'load primitive_workspace']
+            continue
         if model.startswith('ppoly'):
             commands += ['units internal', f'set cell [magic::gencell_makecell gf180mcu::{model} w {width} l {length} guard 1 full_metal 1]',
                          'load $cell',f'save {name}','load primitive_workspace']
@@ -187,18 +213,34 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
                 paint('metal1',left-.78,y-.18,right+.78,y+.18)
             commands += ['save', 'load primitive_workspace']
             continue
-        commands += ['units internal', f'set cell [magic::gencell_makecell gf180mcu::{model} w {width} l {length} nf 1 guard 1 topc 0 botc 1 full_metal 1 gate_to_polycont 0.6 gate_extension 0.8 diff_gate_space 0.3]',
+        commands += ['units internal', f'set cell [magic::gencell_makecell gf180mcu::{model} w {width} l {length} nf {kind[3] if len(kind)>3 else 1} guard 1 topc 0 botc 1 full_metal 1 gate_to_polycont 0.6 gate_extension 0.8 diff_gate_space 0.3]',
                      'load $cell', f'save {name}', 'load primitive_workspace']
     commands += ['quit -noprompt']
     (work/'primitives.tcl').write_text('\n'.join(commands)+'\n')
     magic(work, 'primitives.tcl')
-    pinloc = {k: terminals(work/(name+'.mag')) for k,name in keys.items()}
+    def cap_terminals(path):   # (top: M5 over the contact, left edge; bottom: left M4 frame column), cell bbox
+        r=rectangles(path);c=r['mimcapcontact'][0];f=min(r['metal4'],key=lambda a:(a[0],-(a[3]-a[1])))
+        return [(c[0]+.3,(c[1]+c[3])/2),((f[0]+f[2])/2,(f[1]+f[3])/2)],c,f
+    def pair_terminals(path):   # 2-finger: drain = centre contact, source = left outer contact
+        r=rectangles(path)
+        diff=next(k for k in ('mvndiffc','ndiffc','pdiffc','mvpdiffc') if k in r)
+        body=next(k for k in ('mvpsubdiffcont','psubdiffcont','nsubdiffcont','mvnsubdiffcont','mvnsdiffc','nsdiffc','nwellc') if k in r)
+        cs=sorted(r[diff],key=lambda a:a[0]);g=sorted(r['polycontact'],key=lambda a:a[0])
+        if len(cs)!=3 or len(g)!=2:raise ValueError('Unexpected 2-finger PCell')
+        ctr=lambda a:((a[0]+a[2])/2,(a[1]+a[3])/2)
+        br=max(r[body],key=lambda a:a[2])
+        return [ctr(cs[1]),ctr(g[0]),ctr(cs[0]),(ctr(br)[0],br[3]-.2)],dict(sources=[ctr(cs[0]),ctr(cs[2])],src_top=cs[0][3],gates=[ctr(g[0]),ctr(g[1])],gate_box=(g[0][0],g[0][1],g[1][2],g[1][3]))
+    pinloc,pairgeo,capgeo={},{},{}
+    for k,name in keys.items():
+        if k[0].startswith('cap_mim'):pinloc[k],*capgeo[k]=cap_terminals(work/(name+'.mag'))
+        elif len(k)>3:pinloc[k],pairgeo[k]=pair_terminals(work/(name+'.mag'))
+        else:pinloc[k]=terminals(work/(name+'.mag'))
     nets = sorted({n for d in circuit.devices for n in d.nodes})
     pitch, row_height = 21., 26.
     if not 1<=columns<=7:raise ValueError('M4 route rows support at most 7 columns per 26 um row')
     folded_names=set();folded_meta=None
     core_reservation_width = 143. if family=="wired_receive_usb" else 150.
-    core_devices = [d for d in circuit.devices if not d.name.startswith("ESD_")]
+    core_devices = [d for d in circuit.devices if not d.name.startswith("ESD_") and d.name not in paired and not isinstance(d,Capacitor)]
     protection_devices = [d for d in circuit.devices if d.name.startswith("ESD_")]
     bounded_routes = True
     signal_ports={'PAD_P','PAD_N','RX_P','RX_N'}
@@ -242,6 +284,18 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
         placements=[(12+(i%columns)*pitch,active_origin+(i//columns)*row_height+13,
                      active_origin+(i//columns)*row_height+1+(i%columns)*4*.8) for i in range(len(core_devices))]
         height = active_origin + math.ceil(len(core_devices)/columns)*row_height + 6
+    cap_place={}
+    if caps:
+        nrows=math.ceil(len(core_devices)/columns)
+        gap=lambda r:active_origin+r*row_height+24.9
+        used=set()
+        for cd in caps:
+            ys=[placements[i][1] for i,d in enumerate(core_devices) if cd.nodes[1] in d.nodes or cd.nodes[0] in d.nodes]
+            want=sum(ys)/len(ys)
+            ok=[r for r in range(nrows-1) if gap(r)-2.>=cap_min_y_um and not {r-1,r,r+1,r+2}&used]
+            if not ok:raise ValueError('No room for capacitor '+cd.name)
+            r=min(ok,key=lambda r:abs(gap(r)+13.5-want));used|={r,r+1}
+            cap_place[cd]=(gap(r)+13.2,(gap(r+1),gap(r)))   # (centre y, (top route y, bottom route y))
     layout_spec=PROJECT/'spec/schematic-implementation.json'
     selected_layout=json.loads(layout_spec.read_text())['io_pad_first_pass'].get('layout_parameters',{}).get(family,{})
     if trunk_width_overrides_um is None:trunk_width_overrides_um=selected_layout.get('trunk_width_overrides_um',{})
@@ -258,6 +312,8 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
             for terminal,net in enumerate(device.nodes):
                 endpoints[net].append(placements[index][2]+terminal*.8)
         for port,y in port_heights.items():endpoints[port].append(y)
+        for cd,(cy_,gy) in cap_place.items():
+            for net,yy in zip(cd.nodes,gy):endpoints[net].append(yy)
         for net in ('PAD_P','PAD_N','VSS'):endpoints[net].append(active_origin-4)
         if any(not points for points in endpoints.values()):raise ValueError('Unrouted physical net')
         net_spans={net:(min(points)-.5,max(points)+.5) for net,points in endpoints.items()}
@@ -265,6 +321,8 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
         tx={}
         for index,device in enumerate(core_devices):
             for net in device.nodes:tx.setdefault(net,[]).append(placements[index][0])
+        for cd in cap_place:
+            for net in cd.nodes:tx.setdefault(net,[]).append(140.)
         # pad-side nets (any net of a device touching PAD/RX) keep their canonical x as well, so the pad node
         # parasitics stay those of the canonical allocation; only control/logic nets are repacked.
         padside={n for d in core_devices if signal_ports.intersection(d.nodes) for n in d.nodes}
@@ -301,18 +359,25 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
              x+trunk_widths[net]/2,net_spans[net][1]+.22)
     for index, device in enumerate(core_devices):
         cx,cy,route_base=placements[index]
-        key = (device.model,device.w_um,device.l_um)
+        key = kkey(device)
         cell='folded_tail' if device.name in folded_names else keys[key]
         pins=[folded_meta['pins'][n][:2] for n in ('D','G','S','B')] if device.name in folded_names else pinloc[key]
         commands += [f'getcell {cell} child 0 0 parent {cx} {cy}', f'identify X{device.name}']
         bb=prim_bbox(cell);keepouts.append((cx+bb[0],cy+bb[1],cx+bb[2],cy+bb[3]))
         if 'nfet' in device.model:taps.append(keepouts[-1])   # NMOS guard ring = P-substrate tap
+        if device.name in pair_of:   # PD46 2-finger pair: strap the outer sources (M2) and the two gate contacts (M1)
+            pg=pairgeo[key];(s1x,s1y),(s2x,s2y)=pg['sources'];ys=cy+min(pg['src_top']-1.,s1y+4.)
+            cur[0]=device.nodes[2]
+            for sx in (s1x,s2x):via(cx+sx,ys,1,2)
+            wire('metal2',cx+s1x,ys,cx+s2x,ys)
+            cur[0]=device.nodes[1];g0=pg['gate_box']
+            rect('metal1',cx+g0[0]-.06,cy+g0[1],cx+g0[2]+.06,cy+g0[3])
         for terminal, ((dx,dy), net) in enumerate(zip(pins,device.nodes)):
             x,y = cx+dx,cy+dy
             cur[0]=net
             mos='fet' in device.model and len(device.nodes)==4
             ant_terms.append((x,y,net,('g' if terminal==1 else 'sd' if terminal in (0,2) else 'x') if mos else 'x',
-                              device.w_um*device.l_um if mos and terminal==1 else 0.))
+                              device.w_um*device.l_um*(2 if device.name in pair_of else 1) if mos and terminal==1 else 0.))
             # Distinct local vertical escapes, with a unique M4 row per pin.
             offsets=(-2.5,0.,4.) if len(device.nodes)==3 else (2.5,0.,-2.5,4.)
             escape = cx + offsets[terminal]
@@ -324,6 +389,19 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
             via(escape,route_y,3,4)
             wire('metal4',escape,route_y,tracks[net],route_y)
             via(tracks[net],route_y,4,5)
+    for cd,(cy,(ytop,ybot)) in cap_place.items():
+        key=kkey(cd);cx=cap_x_um;(tx_,ty_),(bx_,by_)=pinloc[key];contact,frame=capgeo[key]
+        commands += [f'getcell {keys[key]} child 0 0 parent {cx} {cy}', f'identify X{cd.name}']
+        bb=prim_bbox(keys[key]);keepouts.append((cx+bb[0],cy+bb[1],cx+bb[2],cy+bb[3]))
+        if not (cy+contact[1]+.3<=ytop<=cy+contact[3]-.3 and cy+frame[1]+.3<=ybot<=cy+frame[3]-.3):raise ValueError('Capacitor route rows miss its plates')
+        top,bottom=cd.nodes;xv=cx+bb[0]-3.2   # via4 landing left of the bottom-plate frame
+        if xv-.3<146.:raise ValueError('Capacitor strip too close to the trunk bank')
+        cur[0]=top
+        wire('metal5',xv,ytop,cx+contact[0]+1.,ytop,width=.6)   # onto the top-plate contact (M5)
+        via(xv,ytop,4,5);wire('metal4',tracks[top],ytop,xv,ytop);via(tracks[top],ytop,4,5)
+        cur[0]=bottom
+        wire('metal4',tracks[bottom],ybot,cx+frame[2],ybot);via(tracks[bottom],ybot,4,5)
+        ant_terms.append((tracks[top],ytop,top,'x',0.));ant_terms.append((tracks[bottom],ybot,bottom,'x',0.))
     cur[0]=None
     # Keep protection directly behind each bond. M1 local ground wiring and
     # M2 signal wiring fit below the restored M3..M5 rail module. The explicit
@@ -431,7 +509,10 @@ def generate(work,family='wired_transmit', *, external_primary=False, serial_tai
                     [8.5,104,11.5,active_origin],[8.5+bond_pitch,104,11.5+bond_pitch,active_origin],
                     [37.5-escape_width/2-.2,76,37.5+escape_width/2+.2,max(active_origin,active_origin-4+escape_width/2)],
                     [37.5+bond_pitch-escape_width/2-.2,76,37.5+bond_pitch+escape_width/2+.2,max(active_origin,active_origin-4+escape_width/2)],
-                    [0,active_origin-22,core_reservation_width,height+1],[core_reservation_width,active_origin-22,candidate_width,active_origin]],
+                    [0,active_origin-22,core_reservation_width,height+1],[core_reservation_width,active_origin-22,candidate_width,active_origin]]
+                    +[[core_reservation_width,cy-16.,cap_x_um+16.,cy+16.] for cd,(cy,_) in cap_place.items()],   # PD46 MIM strip (plates + route stubs)
+                  capacitors=[dict(name=cd.name,nodes=list(cd.nodes),centre_um=[cap_x_um,cy],route_y_um=dict(top=ys[0],bottom=ys[1])) for cd,(cy,ys) in cap_place.items()],
+                  paired_devices={a:b.name for a,b in pair_of.items()},
                   area_ceiling_um2=circuit.requirements['area_ceiling_um2'],
                   fits_assigned_area=candidate_width*height<=circuit.requirements['area_ceiling_um2'],
                   image_id=IMAGE,

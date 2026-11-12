@@ -127,7 +127,8 @@ def safe_deck(family, case, process, temp_c, work, name):
         # unpowered bare die. Compact-model diagnostic, not HBM qualification.
         _, leg, sign = case.split('_')
         a, b = ('VSS', f'PAD_{leg}') if sign == 'pos' else (f'PAD_{leg}', 'VSS')
-        d += f'IINJECT {a} {b} EXP(0 1.3333 5n 2n 15n 150n)\n'
+        # PD48 (ESD tiering): HBM_KV env selects the level (peak = kV / 1.5 kohm); default 2 kV unchanged
+        d += f'IINJECT {a} {b} EXP(0 {HBM_KV / 1.5:.4f} 5n 2n 15n 150n)\n'
         analysis, stop = 'tran .05n 600n', 600e-9
     elif case == 'ramp_slow':
         analysis, stop = 'tran 1n 3u', 3e-6
@@ -294,6 +295,7 @@ def run_rf_ac(process, temp_c, bias_v, work):
                 ideal_50ohm_divider_db=float(20 * np.log10(0.5)), deck_sha256=hashlib.sha256(d.encode()).hexdigest())
 
 
+HBM_KV = float(__import__('os').environ.get('HBM_KV', '2'))
 HBM = [(c, p, t) for c in ('hbm_P_pos', 'hbm_N_neg') for p, t in (('typical', 27), ('ss', 0), ('ff', 85))]
 ENVELOPE = [('typical', 27, 3.3)] + [(p, t, v) for p in ('typical', 'ss', 'ff') for t in (22, 32) for v in (3.15, 3.35)]
 SAFE = [(c, p, t) for c in ('pulse_P_pos', 'pulse_P_neg', 'pulse_N_pos', 'pulse_N_neg') for p, t in (('typical', 27), ('ss', 0))] + \

@@ -37,6 +37,8 @@ Confidence: **H** means foundry-characterized or measured; **M** means physics p
 | MOS varactor C(V) | PDK tanh C(V) | ±10 % | PDK | M | ±15 % | QVCO tuning range |
 | MOS varactor Q | infinite in the model; we add 2 Ω per side | Q 10–30 at 2.4 GHz | **no PDK data** | L | **Q = 8** | QVCO |
 | MIM C density | 1.5/2.0 fF/µm² ± PDK corner | = PDK | PDK | H | PDK corner | — |
+| MIM (cap_mim_2f0) voltage | not modelled | max operating 6 V; BVox(10 µA) ≥ 10 V min, 24 V typ | GF180MCU PDK elec. specs 6.2 (gf180mcu-pdk.readthedocs.io elec_specs_6_4) | M | **6 V transient and DC (no credit for BVox)** | wirepad LS Miller MIM (PD47): ≤ 5.14 V in 2 kV HBM, 3.63 V unpowered peer |
+| Gate oxide transient limit (~150 ns ESD, ≤ 1000 events) | DC 3.63 V / 6.0 V (DRM 14.1, 10-yr TDDB) | TDDB E-model from tox (PDK models 7.9–8.0 nm / 15.6 nm) | derived, `scratch/pads-pd48/oxide-transient-limit.md` | L–M | **3.3 V oxide 5.0 V, 6 V oxide 8.0 V** (tox −3σ−corner, γ 4 dec/(MV/cm), hard-BD 10 MV/cm × 0.8, −15 %) | `hbm_core_screen.py` (PD48); DC checks keep 3.63/6.0 V |
 | MIM series R / bottom-plate parasitic | 0 (none in the model) | 1–3 Ω; bottom plate 5–10 % of C | typical | L | **5 Ω; 15 %** | QVCO band bank, refbuf 100 pF, LNA coupling |
 | Pad + ESD C, wired RX | 2.35 pF (extracted metal + clamp) | 2.0–2.6 pF | extraction | M | **2.8 pF** | CTLE return loss (already fails at 2.35 pF) |
 | Pad + ESD C, wired TX | 1.8 pF | 1.6–2.2 | extraction | M | **2.3 pF** | wired TX eye (core only, at 1.8 pF) |

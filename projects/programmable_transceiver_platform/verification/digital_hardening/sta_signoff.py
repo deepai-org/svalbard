@@ -58,7 +58,7 @@ def lib_path(pvt):
 # AC-1 host clocks (transport rework 2026-11-10): hword (pin, host DDR clock line/16), hddr (after the
 # reduced-rate select: pad-edge DDR and gearboxes), hcore (hddr/2: 40-bit transport core); shared
 # ingress/egress banks have mux clocks.
-CLOCKS = ['sclk', 'ref', 'hword', 'hddr', 'hcore', 'h2d', 'h2d_cap', 'd2h_fwd', 'ingress_wrx', 'ingress_rfrx', 'egress_wtx', 'egress_rftx',
+CLOCKS = ['sclk', 'ref', 'hword', 'hddr', 'hcore', 'h2d', 'h2d_cap', 'd2h_oddr', 'd2h_osel', 'd2h_fwd', 'ingress_wrx', 'ingress_rfrx', 'egress_wtx', 'egress_rftx',
           'wtx', 'wrx', 'rftx', 'rfrx', 'ctw', 'ctref', 'ctdet', 'fc0', 'fc1', 'fc2', 'fc3', 'fc4', 'fc5']
 PERIOD_VAR = dict(sclk='SCLK_PERIOD', ref='REF_PERIOD', hword='HWORD_PERIOD', wtx='WTX_PERIOD', wrx='WRX_PERIOD',
                   rftx='RFTX_PERIOD', rfrx='RFRX_PERIOD', ctw='CTW_PERIOD', ctdet='CTDET_PERIOD',
@@ -111,7 +111,7 @@ proc pt_default_periods {{}} {{
 }}
 pt_default_periods
 pt_load_sdc
-puts "PT_TARGETS [list sclk $SCLK_PERIOD ref $REF_PERIOD hword $HWORD_PERIOD h2d $H2D_PERIOD h2d_cap $H2D_PERIOD d2h_fwd $HDDR_PERIOD hlink $HLINK_PERIOD hddr $HDDR_PERIOD hcore $HCORE_PERIOD ingress_wrx $WRX_PERIOD ingress_rfrx $RFRX_PERIOD egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD ctw $CTW_PERIOD ctref $CTREF_PERIOD ctdet $CTDET_PERIOD]"
+puts "PT_TARGETS [list sclk $SCLK_PERIOD ref $REF_PERIOD hword $HWORD_PERIOD h2d $H2D_PERIOD h2d_cap $H2D_PERIOD d2h_oddr $HDDR_PERIOD d2h_osel $HDDR_PERIOD d2h_fwd $HDDR_PERIOD hlink $HLINK_PERIOD hddr $HDDR_PERIOD hcore $HCORE_PERIOD ingress_wrx $WRX_PERIOD ingress_rfrx $RFRX_PERIOD egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD ctw $CTW_PERIOD ctref $CTREF_PERIOD ctdet $CTDET_PERIOD]"
 foreach c {{{clocks}}} {{
   puts "PT_SLACK $c [pt_slack $c max] [pt_slack $c min]"
   puts "PT_WORST_SETUP $c [list [pt_paths $c max 3]]"
@@ -145,7 +145,7 @@ puts "PT_D2H_DATA_MIN [pt_arr [get_ports d2h_pin*] min]"
 puts "PT_D2H_CLK_MAX [pt_arr [get_ports d2h_clk_pin] max]"
 puts "PT_D2H_CLK_MIN [pt_arr [get_ports d2h_clk_pin] min]"
 puts "PT_H2D_SETUP [pt_xslack h2d_pin h2d_cap max] PT_H2D_HOLD [pt_xslack h2d_pin h2d_cap min]"
-puts "PT_D2HW_SETUP [pt_xslack hddr d2h_fwd max] PT_D2HW_HOLD [pt_xslack hddr d2h_fwd min]"
+puts "PT_D2HW_SETUP [pt_xslack d2h_osel d2h_fwd max] PT_D2HW_HOLD [pt_xslack d2h_osel d2h_fwd min]"
 puts "PT_WNS_ALL [sta::worst_slack_cmd max] [sta::worst_slack_cmd min]"
 report_check_types -max_slew -max_capacitance -violators > {out}/{corner}.drv.rpt
 report_checks -path_delay max -group_path_count 1 -format full_clock_expanded -digits 3 > {out}/{corner}.setup.rpt

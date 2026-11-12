@@ -82,17 +82,21 @@ endmodule
 // lane including the clock so every xor sees the same load), hio_m (mux2_2), then hio_ob (buf_8) -> pin,
 // instantiated in pt_host_link with its Z on the port bit itself (a module port in between aliases a
 // 1-bit wire to a bit of the d2h_pin bus and the flow's insbuf pass adds a buf_1 to the data lanes only).
-module pt_hio_launch(input wire clk,rst_n,nrst_n,dr,df,output wire z);
+module pt_hio_launch(input wire clk,sel,rst_n,nrst_n,dr,df,output wire z);
+// ODDR launch (TC13 r4, coordinator decision): z = sel ? q_f : q_r, sel = the hddr clock through the
+// block's dedicated select buffer. q_r changes after the rising edge while q_f is selected and q_f
+// after the falling edge while q_r is selected, so every pin edge is the select edge through the mux
+// (identical cells, edge and placement on the clock lane and the data lanes), not a flop clk->Q.
 `ifdef SYNTHESIS
  wire hio_qr,hio_qf;
  gf180mcu_fd_sc_mcu7t5v0__dffrnq_1 lr(.D(dr),.RN(rst_n),.CLK(clk),.Q(hio_qr));
  gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1 lf(.D(df),.RN(nrst_n),.CLKN(clk),.Q(hio_qf));
- (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__xor2_1 hio_x(.A1(hio_qr),.A2(hio_qf),.Z(z));
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__mux2_2 hio_x(.I0(hio_qr),.I1(hio_qf),.S(sel),.Z(z));
 `else
  reg qr,qf;
  always @(posedge clk or negedge rst_n) if(!rst_n) qr<=1'b0; else qr<=dr;
  always @(negedge clk or negedge nrst_n) if(!nrst_n) qf<=1'b0; else qf<=df;
- assign z=qr^qf;
+ assign z=sel?qf:qr;
 `endif
 endmodule
 

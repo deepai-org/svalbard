@@ -166,8 +166,7 @@ endmodule
 `ifndef FORMAL
 (* keep_hierarchy = "yes" *)
 `endif
-module pt_ddr_nphase(input wire clk, rst_n, run, phase, output reg nsel);
-    reg lp;
+module pt_ddr_nphase(input wire clk, rst_n, run, phase, output reg nsel, output reg lp);
     always @(posedge clk) lp <= phase & run;
     always @(negedge clk or negedge rst_n) if (!rst_n) nsel <= 1'b0; else nsel <= lp;
 endmodule
@@ -198,13 +197,13 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] prefi
     output wire [9:0] d2h_pin, output wire clk_pin);
     // One load / nsel phase-flop pair per pin bit (timing 2026-11-11: per-2-bit groups had fanout 12
     // on `load`, TC4 hddr +0.004 ns against a 0.64 ns target).
-    wire [9:0] load, nsel;
+    wire [9:0] load, nsel, lpq;
     reg run;   // 0 until the first hddr edge after reset
     always @(posedge ddr_clk or negedge rst_n) if (!rst_n) run <= 1'b0; else run <= 1'b1;
     genvar g;
     generate for (g = 0; g < 10; g = g + 1) begin : phases
         pt_ddr_phase phase(.clk(ddr_clk), .rst_n(rst_n), .load(load[g]));
-        pt_ddr_nphase nphase(.clk(ddr_clk), .rst_n(nrst_n), .run(run), .phase(load[g]), .nsel(nsel[g]));
+        pt_ddr_nphase nphase(.clk(ddr_clk), .rst_n(nrst_n), .run(run), .phase(load[g]), .nsel(nsel[g]), .lp(lpq[g]));
     end endgenerate
     reg [39:0] x;
     reg [9:0]  f3;
@@ -222,11 +221,41 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] prefi
     // nrst_n = rst_n in the macro; a separate port only so that formal can release the
     // falling-edge flops one falling edge late (the untimed half-period recovery case).
     wire [9:0] qr_d, qf_d;
+    // ODDR clock: one fixed clkbuf in the hand-placed block; its net clocks the lane launch flops (and hr)
+    // AND drives the 11 lane mux selects, so CTS gives the select and the flops one tree (pC: a separate
+    // select subtree landed 4.4 ns after the flops' clock and broke the hand-over).
+    // Two buffers, two SDC generated clocks: CTS balances latency between the subnets of one clock and
+    // treats the mux selects as macro sinks; on one net with the flops it added 13 delay buffers (6.6 ns)
+    // to the selects only (pC3). hio_s clocks the launch flops and hr, hio_ms drives the 11 selects.
+    wire hio_s, hio_ms;
+`ifdef SYNTHESIS
+    (* keep=1 *) gf180mcu_fd_sc_mcu7t5v0__clkbuf_8 hio_sel(.I(ddr_clk), .Z(hio_s));
+    (* keep=1 *) gf180mcu_fd_sc_mcu7t5v0__clkbuf_8 hio_msel(.I(ddr_clk), .Z(hio_ms));
+`else
+    assign hio_s = ddr_clk;
+    assign hio_ms = ddr_clk;
+`endif
     genvar gq;
     generate for (gq = 0; gq < 10; gq = gq + 1) begin : lq
         assign qr_d[gq] = load[gq] ? x[gq+20] : x[gq];
         assign qf_d[gq] = nsel[gq] ? x[gq+10] : f3[gq];
-        pt_hio_launch l(.clk(ddr_clk), .rst_n(rst_n), .nrst_n(nrst_n), .dr(qr_d[gq]), .df(qf_d[gq]), .z(d2h_pin[gq]));
+        // ODDR form of the former pin = q_r ^ q_f (a_k = q_r after rising edge k, b_k = q_f after falling
+        // edge k; the pin shows a_k ^ b_(k-1) while hddr is high, a_k ^ b_k while it is low):
+        //  * the rising flop (shown in the low half) takes a_(k+1) ^ b_(k+1) at rising edge k+1: q_r_d, and
+        //    q_f_d with nsel replaced by lp (nsel copies lp on the falling edge; lp is stable for the whole
+        //    period, and the selected x/f3 bit does not change on the rising edge before that falling
+        //    edge: the 1.5-period invariant asserted below) -> rising-edge sources only, full period;
+        //  * the falling flop (shown in the high half) takes a_(k+1) ^ b_k at falling edge k. hr computes it
+        //    one rising edge earlier from the next state of x / f3 (x' = load ? prefix : x, f3' = load ? f3
+        //    : x.P3) and lp, so the falling flop takes a register directly (no logic in the half period, like
+        //    lp -> nsel).
+        wire s_r = lpq[gq] & run;
+        wire lr_d = qr_d[gq] ^ (s_r ? x[gq+10] : f3[gq]);
+        wire hr_d = (load[gq] ? prefix[gq] : x[gq+20]) ^
+                    (s_r ? (load[gq] ? prefix[gq+10] : x[gq+10]) : (load[gq] ? f3[gq] : x[gq+30]));
+        reg hr;
+        always @(posedge hio_s or negedge rst_n) if (!rst_n) hr <= 1'b0; else hr <= hr_d;
+        pt_hio_launch l(.clk(hio_s), .sel(hio_ms), .rst_n(rst_n), .nrst_n(nrst_n), .dr(lr_d), .df(hr), .z(d2h_pin[gq]));
     end endgenerate
 `ifdef FORMAL
     // 1.5-period multicycle into the falling flops (SDC: x/f3 -> q_f): on every falling edge the
@@ -239,13 +268,9 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] prefi
         if (nsel[0]) assert(x[19:10] == f_xd[19:10]); else assert(f3 == f_f3d);
     end
 `endif
-    // Forwarded clock (TC13): c_l toggles on rising edges while enabled (logic copy); the clock lane's
-    // launch cells are the same pt_hio_launch as every data lane: lr takes c_l's next value on the
-    // rising edge (= c_r), lf copies c_l on the falling edge (= c_f), clk_pin = lr ^ lf.
-    reg c_l;
-    wire c_n = clk_en ? ~c_l : c_l;
-    always @(posedge ddr_clk or negedge rst_n) if (!rst_n) c_l <= 1'b0; else c_l <= c_n;
-    pt_hio_launch lc(.clk(ddr_clk), .rst_n(rst_n), .nrst_n(nrst_n), .dr(c_n), .df(c_l), .z(clk_pin));
+    // Forwarded clock (TC13 r4): the same ODDR lane fed a fixed pattern: the rising flop shows 0 during
+    // the low half, the falling flop shows clk_en during the high half -> clk_pin = hddr while enabled.
+    pt_hio_launch lc(.clk(hio_s), .sel(hio_ms), .rst_n(rst_n), .nrst_n(nrst_n), .dr(1'b0), .df(clk_en), .z(clk_pin));
 endmodule
 
 // H2D capture, 1:4 gearbox and pin-clock -> hcore quad FIFO (8 entries: two synchronizer stages on

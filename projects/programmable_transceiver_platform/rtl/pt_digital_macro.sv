@@ -40,6 +40,7 @@ module pt_digital_macro(
  // generated control boundary
  input  wire fault, input wire[`PT_ISLAND_W-1:0] island_pgood,
  input  wire[5:0] fc_src,                       // frequency-counter sources (P3-7, see pt_digital)
+ output wire wire_rx_ptrim_en,                  // SLI7-R / W6-SAFE interlock: wired_rx ptrim_en (ring phases to the slicer)
  output wire cdr_freq_locked,                   // CDR frequency-to-phase handover (freq_count_b lock)
  input  wire[11:0] analog_status, input wire[12:0] wire_analog_status,
  output wire[`PT_ANALOG_CFG_W-1:0] analog_cfg, output wire[`PT_DEBUG_CFG_W-1:0] debug_cfg,
@@ -115,6 +116,10 @@ module pt_digital_macro(
  assign debug_cfg = rx_gain_active ?
    {debug_cfg_reg[`PT_DEBUG_CFG_W-1:`PT_D_CONSOLIDATION_BBFILTER__GAIN_LSB+4], pga_code(rx_gain[4:0]),
     debug_cfg_reg[`PT_D_CONSOLIDATION_BBFILTER__GAIN_LSB-1:0]} : debug_cfg_reg;
+ // SLI7-R (W6-SAFE): the slicer's ring-phase clocks (ptrim_en) are gated in hardware whenever the slicer
+ // is not active: slicer.state off (0) and warm (1) both give ptrim_en = 0, so ptrim_en = 0 whenever
+ // slicer_en = 0 for any assembly decode of slicer_en from the state (off -> 0 in all of them).
+ assign wire_rx_ptrim_en = analog_cfg[`PT_A_SLICER_STATE__STATE_LSB +: 2] == 2'd2;
  wire[39:0] h2d_quad, d2h_quad;
  // Reduced-rate fallback (debug.host_link.rate, stopped-only): the host link and the whole
  // transport core run from link_clk = host_word_clk / {1,2,4} (core clock = link_clk / 2). A rate

@@ -81,7 +81,7 @@ def build_model():
                      atb_bus=s.get('atb_bus'), gate_and=s.get('gate_and'), decode=s.get('decode'),
                      decoded_bits=s.get('decoded_bits'), mantissa_bits=s.get('mantissa_bits'),
                      address_slots=s.get('address_slots', 1), direct=bool(s.get('direct', False)),
-                     clear_when_running=s.get('clear_when_running'))
+                     clear_when_running=s.get('clear_when_running'), range_text=s.get('range_text'))
             if f['direct'] and (not f['live'] or f['split']):
                 raise SpecError(f'{full}: a direct (no-shadow) field must be live and at most 16 bits')
             for i in f['islands']:
@@ -991,6 +991,8 @@ def emit_formal(model, a, by_name):
 # ---------------------------------------------------------------- documents and headers
 
 def field_range_text(f):
+    if f.get('range_text'):
+        return f['range_text']
     if f['values'] is not None:
         allowed = [f['values'][i] for i in f['allowed']]
         text = ', '.join(f'{i}={v}' for i, v in enumerate(f['values']) if v in allowed)

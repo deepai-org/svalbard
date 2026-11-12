@@ -20,8 +20,13 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
 `include "pt_linecode_tables.svh"
     // en (stopped-only level: linecode && synchronized ENABLE && !payload_iq) is re-registered here
     // before its ~300-flop fanout (AC1_R4: the ENABLE synchronizer e2.q drove it as data, -12 ns).
-    reg en_r;
-    always @(posedge clk or negedge rst_n) if (!rst_n) en_r <= 1'b0; else en_r <= en;
+    // TC13 r4 (wrx, en_r -> ~400 flops was -2.5 ns post-CTS): two kept replicas, one per control group
+    // (stage 1 / stages 2-3), and the data-only registers (cur, sym, pb, pa, dec, bad) are no longer
+    // gated: they are consumed only behind the valid chain (s1v, v2a, v2b, v2, emit), which the enable
+    // still clears, so the delivered stream is unchanged.
+    wire en_r, en_r2;
+    pt_lc_en_rep rep_r1(.clk(clk), .rst_n(rst_n), .d(en), .q(en_r));
+    pt_lc_en_rep rep_r2(.clk(clk), .rst_n(rst_n), .d(en), .q(en_r2));
     reg [39:0] cur;                 // previous input quad
     reg [3:0]  off;                 // adopted bit offset 0..9
     // ---- stage 1: window, comma search, barrel shift by the registered offset
@@ -43,12 +48,15 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
     endcase
     reg [39:0] sym; reg [9:0] hit; reg s1v, s1ok;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cur <= 40'd0; sym <= 40'd0; hit <= 10'd0; s1v <= 1'b0; s1ok <= 1'b0; end
+        if (!rst_n) begin hit <= 10'd0; s1v <= 1'b0; s1ok <= 1'b0; end
         else if (!en_r) begin s1v <= 1'b0; hit <= 10'd0; end
         else begin
             s1v <= din_valid; s1ok <= aligned;
-            if (din_valid) begin cur <= din; sym <= sym_n; hit <= hit_n; end
+            if (din_valid) hit <= hit_n;
         end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cur <= 40'd0; sym <= 40'd0; end
+        else if (din_valid) begin cur <= din; sym <= sym_n; end
     // offset decision on the registered hits (lowest hit offset)
     reg [3:0] hit_off;
     integer h;
@@ -128,20 +136,22 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             R <= 72'd0; koh <= 10'd1; emit <= 1'b0; off <= 4'd0; aligned <= 1'b0; code_error <= 1'b0; cand <= 4'd0; cand_v <= 1'b0;
-            dec <= 36'd0; bad <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0; pa <= 76'd0; pb <= 84'd0;
-        end else if (!en_r) begin R <= 72'd0; koh <= 10'd1; emit <= 1'b0; aligned <= 1'b0; cand_v <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0; end
+            v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0;
+        end else if (!en_r2) begin R <= 72'd0; koh <= 10'd1; emit <= 1'b0; aligned <= 1'b0; cand_v <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0; end
         else begin
             if (adopt) begin off <= hit_off; aligned <= 1'b1; cand_v <= 1'b0; end
             else if (s1v && |hit && aligned && hit_off == off) cand_v <= 1'b0;
             else if (s1v && |hit) begin cand <= hit_off; cand_v <= 1'b1; end
-            v2a <= deliver; v2b <= v2a; v2 <= v2b; bad <= bad_n;
-            pb <= pb_n; pa <= pa_n;     // unconditional: consumed only in the clocks after a delivery (v2a, v2)
-            dec <= dec_n;
+            v2a <= deliver; v2b <= v2a; v2 <= v2b;
             R <= kept | (v2 ? ins : 72'd0);
             emit <= v2 && !koh[0];
             if (v2) koh <= {koh[0], koh[9:1]};   // k -> k-1, 0 -> 9
             if (v2 && bad) code_error <= 1'b1;
         end
+    // data-only pipeline registers (see en_r above): consumed only in the clocks after a delivery
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin dec <= 36'd0; bad <= 1'b0; pa <= 76'd0; pb <= 84'd0; end
+        else begin pb <= pb_n; pa <= pa_n; dec <= dec_n; bad <= bad_n; end
     assign dout = R[39:0];
     assign dout_valid = emit;
 endmodule

@@ -447,7 +447,9 @@ transceiver-digital-rtl-checks: transceiver-dense-transport transceiver-dense-se
 	vvp -n /tmp/pt_vreg_seq.vvp | grep -q VREG_SEQ_PASS && \
 	$(PYTHON) verification/check_interp2x.py | grep -q INTERP2X_PASS && \
 	$(PYTHON) verification/check_linecode.py | grep -q LINECODE_PASS && \
-	$(PYTHON) verification/check_fast_gain.py | grep -q FAST_GAIN_PASS
+	$(PYTHON) verification/check_fast_gain.py | grep -q FAST_GAIN_PASS && \
+	iverilog -g2012 -I rtl -s tb_agc_override -o /tmp/pt_agc_override.vvp rtl/*.sv sim/tb_agc_override.sv && \
+	vvp -n /tmp/pt_agc_override.vvp | grep -q AGC_OVERRIDE_PASS
 
 .PHONY: transceiver-gpio-screen
 transceiver-gpio-screen:

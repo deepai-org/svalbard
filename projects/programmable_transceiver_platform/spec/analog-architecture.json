@@ -2766,7 +2766,7 @@
         "area_group": "rf",
         "current_budget_ma": {
           "rf_rx": 28.92,
-          "rf_tx": 28.92,
+          "rf_tx": 61.7,
           "stopped": 0,
           "usb": 0.7,
           "wired": 0.7
@@ -6155,7 +6155,9 @@
             0,
             10,
             20
-          ]
+          ],
+          "description": "Code 0 asserts lna gain_lo, which since RC-16g is the pre-LNA attenuator MSB (about 27-34 dB at ss..ff, analog/rf_rx/generated/lna-evidence.json), not a -6 dB step; small steps use lna.match.att (the opcode4 fast-gain -6 dB index maps to att 2 with gain_db 1).",
+          "range_text": "0 = attenuator MSB (gain_lo) on, about -30\u2026-40 dB (RC-16h; the -6 dB AGC step uses `lna.match.att`=2), 1 = 0 dB"
         }
       },
       "update": "scheduled_with_settling"
@@ -7495,15 +7497,15 @@
     "lna.match": {
       "base": "0xE6",
       "update": "stopped",
-      "description": "LNA input match (RC-9/RC-10, package D-RX-1/2): shunt C trim ct0..ct2 (62.5/125/250 fF per leg), opt-in 200 ohm/leg termination, single-ended RX (RF_RX_N AC-grounded).",
+      "description": "LNA input match and pre-LNA attenuator (RC-9/RC-10, RC-16e/RC-16g, package D-RX-1/2): shunt C trim ct0..ct3, opt-in 200 ohm/leg termination, single-ended RX (RF_RX_N AC-grounded), attenuator att0..att4 (gain_lo is the attenuator MSB, driven by lna.gain).",
       "fields": {
         "ctrim": {
-          "bits": 3,
-          "default": 0,
+          "bits": 4,
+          "default": 7,
           "minimum": 0,
-          "maximum": 7,
+          "maximum": 15,
           "unit": "code",
-          "description": "lna ports ct0..ct2: shunt C per leg = 62.5 fF x code. Direct live trim (per-board calibration).",
+          "description": "lna ports ct0..ct3: shunt C trim code (RC-16e: 4 bits, reset 7; board match derived at 7, envelope corners land on 3..12). Direct live trim (per-board calibration).",
           "live": true,
           "direct": true
         },
@@ -7522,6 +7524,14 @@
           "maximum": 1,
           "unit": "code",
           "description": "lna port se: single-ended RX, RF_RX_N to VSS through 5 pF MIM + NMOS (reset 0 = differential)."
+        },
+        "att": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "description": "lna ports att0..att4 (RC-16g): pre-LNA attenuator code bits 0-4 (weighted NMOS switches 1,2,4,8,16); bit 5 of the attenuator is gain_lo (lna.gain / AGC table). Levels are not uniform in binary order: use the level table in lna-evidence.json."
         }
       }
     },

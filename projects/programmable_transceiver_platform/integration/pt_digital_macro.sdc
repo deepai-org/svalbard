@@ -69,7 +69,18 @@ foreach {constraint_variable constraint_command constraint_default} {
 create_clock -name sclk  -period $SCLK_PERIOD  [get_ports spi_sclk]
 create_clock -name ref   -period $REF_PERIOD   [get_ports ref_clk]
 create_clock -name hword -period $HWORD_PERIOD [get_ports host_word_clk]
-create_clock -name h2d   -period $H2D_PERIOD   [get_ports h2d_clk]
+# H2D pin clock (TC13 pad-edge capture block, rtl/pt_host_link.sv pt_h2d_gearbox): the port clock
+# h2d_pin is the reference of the pin input delays; it reaches the 30 pin-capture flops through the
+# kept, hand-placed cap_root buffer (generated clock h2d_cap) and the rest of the domain through
+# core_root behind it (generated clock h2d, the CTS tree). Both are divide-by-1 copies with
+# propagated latency from the port, so the capture window and every h2d_cap -> h2d transfer are timed
+# with the real insertion delays (no relaxation).
+create_clock -name h2d_pin -period $H2D_PERIOD [get_ports h2d_clk]
+set h2d_cap_root [get_pins -quiet -hierarchical *host.h2d.cap_root.cell/Z]
+set h2d_core_root [get_pins -quiet -hierarchical *host.h2d.core_root.cell/Z]
+if {[llength $h2d_cap_root] != 1 || [llength $h2d_core_root] != 1} {error "Expected the H2D cap_root and core_root buffers"}
+create_generated_clock -name h2d_cap -source [get_ports h2d_clk] -divide_by 1 $h2d_cap_root
+create_generated_clock -name h2d -master_clock h2d_cap -source $h2d_cap_root -divide_by 1 $h2d_core_root
 create_clock -name wtx   -period $WTX_PERIOD   [get_ports wire_tx_clk]
 create_clock -name wrx   -period $WRX_PERIOD   [get_ports wire_rx_clk]
 # SP-03 TX interpolator mode (rtl/pt_interp2x.sv, digital.transport_config.tx_interp, stopped-only):
@@ -133,14 +144,14 @@ set gearbox_regs [get_cells -of_objects [get_pins -hierarchical *host.gearbox.x*
 if {[llength $gearbox_regs] != 40} {error "Expected 40 D2H gearbox hold registers ([llength $gearbox_regs])"}
 set_multicycle_path 2 -setup -end -from [get_clocks hcore] -to $gearbox_regs
 set_multicycle_path 1 -hold -end -from [get_clocks hcore] -to $gearbox_regs
-# D2H falling launch: q_f (hddr falling) takes x (held two periods) or f3 (held two periods), and the
-# selected one is always 1.5 periods old (same proof, `ifdef FORMAL in pt_d2h_gearbox): the next
-# falling edge but one is the capture edge.
-set qf_regs [get_cells -of_objects [get_pins -hierarchical *host.gearbox.q_f*/Q]]
-set x3_regs [concat $gearbox_regs [get_cells -of_objects [get_pins -hierarchical *host.gearbox.f3*/Q]]]
-if {[llength $qf_regs] != 10} {error "Expected 10 D2H falling launch registers ([llength $qf_regs])"}
-set_multicycle_path 2 -setup -end -from $x3_regs -to $qf_regs
-set_multicycle_path 1 -hold -end -from $x3_regs -to $qf_regs
+# ODDR launch (TC13 r4): the falling launch flop lf takes the per-lane register hr directly (no x / f3
+# path into lf any more: the former 1.5-period multicycle is gone). hr (rising, on the hio_s clock net)
+# loads from the hcore prefix on exactly the edges where x does (same load[] condition), so it takes
+# the same two-period crossing; its other terms (x, f3, lp) are full-period hddr paths.
+set hr_regs [get_cells -of_objects [get_pins -hierarchical *host.gearbox.lq*.hr*/Q]]
+if {[llength $hr_regs] != 10} {error "Expected 10 D2H ODDR hr registers ([llength $hr_regs])"}
+set_multicycle_path 2 -setup -end -from [get_clocks hcore] -to $hr_regs
+set_multicycle_path 1 -hold -end -from [get_clocks hcore] -to $hr_regs
 # H2D: the falling-word hold register fh is written into the quad FIFO memory on the rising edge
 # 1.5 periods after it was written (proof: verification/formal/pt_h2d_gearbox_fv.sv).
 set fh_regs [get_cells -of_objects [get_pins -hierarchical *host.h2d.fh*/Q]]
@@ -226,7 +237,7 @@ if {[llength $mem_mux]} {
     set_clock_groups -physically_exclusive -group egress_mem_hcore -group egress_mem_sclk
     set mem_clks {egress_mem_hcore}
 }
-set all_clk_names [concat {sclk ref hword h2d wtx wrx rftx rfrx ctw ctref ctdet} $fc_clks $host_clks $ingress_clks $egress_clks $mem_clks]
+set all_clk_names [concat {sclk ref hword h2d h2d_cap h2d_pin wtx wrx rftx rfrx ctw ctref ctdet} $fc_clks $host_clks $ingress_clks $egress_clks $mem_clks]
 
 set_clock_uncertainty 0.25 [all_clocks]
 
@@ -362,10 +373,10 @@ set_false_path -from [get_ports wired_on_ext]
 # on data and clock, so only the macro-internal skew is checked here; pad DCD is in evidence.
 set h2d_ui [expr {$H2D_PERIOD / 2.0}]
 set h2d_skew 0.4
-set_input_delay -max [expr {$h2d_ui/2.0 + $h2d_skew}] -clock h2d [get_ports h2d_pin*]
-set_input_delay -min [expr {$h2d_ui/2.0 - $h2d_skew}] -clock h2d [get_ports h2d_pin*]
-set_input_delay -max [expr {$h2d_ui/2.0 + $h2d_skew}] -clock h2d -clock_fall -add_delay [get_ports h2d_pin*]
-set_input_delay -min [expr {$h2d_ui/2.0 - $h2d_skew}] -clock h2d -clock_fall -add_delay [get_ports h2d_pin*]
+set_input_delay -max [expr {$h2d_ui/2.0 + $h2d_skew}] -clock h2d_pin [get_ports h2d_pin*]
+set_input_delay -min [expr {$h2d_ui/2.0 - $h2d_skew}] -clock h2d_pin [get_ports h2d_pin*]
+set_input_delay -max [expr {$h2d_ui/2.0 + $h2d_skew}] -clock h2d_pin -clock_fall -add_delay [get_ports h2d_pin*]
+set_input_delay -min [expr {$h2d_ui/2.0 - $h2d_skew}] -clock h2d_pin -clock_fall -add_delay [get_ports h2d_pin*]
 # D2H: each pin is q_r ^ q_f, toggled by a hddr rising-edge or falling-edge flop (one word per
 # hddr edge); the DDR forwarded clock d2h_clk_pin = c_r ^ c_f is built the same way (edge-aligned).
 # Checked in sta_signoff as a skew window (arrival min/max of data vs clock pin); here only a
@@ -379,14 +390,66 @@ set_input_delay -min [expr {$h2d_ui/2.0 - $h2d_skew}] -clock h2d -clock_fall -ad
 # later (setup: data <= clock + S), hold against the same edge (data >= clock - S).
 # Reduced rates (SDR forwarded clock = gated ~word_clk) keep the hddr-referenced budget (>= 12.8 ns periods).
 if {![info exists D2H_SKEW]} { set D2H_SKEW [expr {0.2 * $HLINK_PERIOD}] }
-set sdr_sel_q [get_pins -quiet -hierarchical *host.clk_out.cell/S]
+set sdr_sel_q [get_pins -quiet -hierarchical *host.clk_out.hio_m/S]
 if {$HOST_RATE_DIV == 1 && [llength $sdr_sel_q] == 1} {
     set_case_analysis 0 $sdr_sel_q
-    create_generated_clock -name d2h_fwd -master_clock hddr -source $rate_mux -divide_by 1 -add [get_ports d2h_clk_pin]
-    set_output_delay [expr {$HLINK_PERIOD - $D2H_SKEW}] -max -clock d2h_fwd [get_ports d2h_pin*]
-    set_output_delay [expr {$HLINK_PERIOD - $D2H_SKEW}] -max -clock d2h_fwd -clock_fall -add_delay [get_ports d2h_pin*]
-    set_output_delay [expr {$D2H_SKEW}] -min -clock d2h_fwd [get_ports d2h_pin*]
-    set_output_delay [expr {$D2H_SKEW}] -min -clock d2h_fwd -clock_fall -add_delay [get_ports d2h_pin*]
+    # ODDR launch (TC13 r4): pin = sel ? q_f : q_r through each lane's hio_x mux; the pin edge is the
+    # select (hddr through host.gearbox.hio_sel) edge, the flops settle while unselected. The flop ->
+    # mux data arcs are therefore not pin timing: disabled, and replaced by a glitch check of each
+    # flop against the select edge that hands its value to the pin (data_check, below). Every pin
+    # (clock lane and data lanes) is then reached by hddr only through identical cells.
+    # Flow vs sign-off (TC13 r4): the D2H pin windows are clock-as-data paths through hand-placed cells
+    # the resizer cannot improve, and OpenSTA asserted (RequiredVisitor) during LibreLane's multi-corner
+    # repair_timing with them present (pC). Inside LibreLane steps (STEP_DIR set) the windows and glitch
+    # checks are left out; sta_signoff.py and the probes (no STEP_DIR) apply them. Override: PT_ODDR_CHECKS.
+    if {![info exists PT_ODDR_CHECKS]} { set PT_ODDR_CHECKS [expr {![info exists ::env(STEP_DIR)]}] }
+    set hio_x [get_cells -quiet -hierarchical -filter "ref_name == gf180mcu_fd_sc_mcu7t5v0__mux2_2" *gearbox.l*.hio_x]
+    foreach c $hio_x {
+        set_disable_timing -from I0 -to Z $c
+        set_disable_timing -from I1 -to Z $c
+        set n [get_full_name $c]
+        if {!$PT_ODDR_CHECKS} { continue }
+        if {[string match *gearbox.lc.* $n]} { continue }   ;# clock lane: constant pattern (case analysis below)
+        # q_r (rising launch) must be stable before the select falls (it is shown while sel is low) and
+        # must not change before the select has risen away from it; q_f the same against the opposite edges.
+        set_data_check -fall_from [get_pins $n/S] -to [get_pins $n/I0] -setup 0
+        set_data_check -rise_from [get_pins $n/S] -to [get_pins $n/I0] -hold 0
+        set_data_check -rise_from [get_pins $n/S] -to [get_pins $n/I1] -setup 0
+        set_data_check -fall_from [get_pins $n/S] -to [get_pins $n/I1] -hold 0
+        # the data check takes the previous select edge by default: hand-over is the NEXT one
+        set_multicycle_path 1 -setup -to [get_pins "$n/I0 $n/I1"]
+        set_multicycle_path -1 -hold -to [get_pins "$n/I0 $n/I1"]
+    }
+    # clock lane: enabled pattern q_r = 0 / q_f = 1 makes its mux a positive-unate buffer of the select
+    # (pin rises with hddr rise), so the generated clock below has its real polarity.
+    set lc_x [get_cells -quiet -hierarchical *gearbox.lc.hio_x]
+    if {[llength $lc_x]} { set_case_analysis 0 [get_pins [get_full_name $lc_x]/I0]; set_case_analysis 1 [get_pins [get_full_name $lc_x]/I1] }
+    # The ODDR net hio_s (launch flops, hr and the 11 selects) is its own generated clock: CTS balances
+    # latency per clock, and as part of hddr it delayed the select subtree by 13 delay buffers (6.6 ns)
+    # against the flops on the same net (pC2 glitch hold -5.4). d2h_fwd derives from it.
+    set hio_sel [get_cells -quiet -hierarchical *host.gearbox.hio_sel]
+    if {[llength $hio_sel] != 1} {error "Expected the D2H ODDR select buffer host.gearbox.hio_sel"}
+    set hio_sel_n [get_full_name $hio_sel]
+    create_generated_clock -name d2h_oddr -master_clock hddr -source [get_pins $hio_sel_n/I] -divide_by 1 [get_pins $hio_sel_n/Z]
+    set hio_msel [get_cells -quiet -hierarchical *host.gearbox.hio_msel]
+    if {[llength $hio_msel] != 1} {error "Expected the D2H ODDR mux-select buffer host.gearbox.hio_msel"}
+    set hio_msel_n [get_full_name $hio_msel]
+    # selects: a second generated clock (CTS balanced the select subnet against the flops of one clock)
+    create_generated_clock -name d2h_osel -master_clock hddr -source [get_pins $hio_msel_n/I] -divide_by 1 [get_pins $hio_msel_n/Z]
+    create_generated_clock -name d2h_fwd -master_clock d2h_osel -source [get_pins $hio_msel_n/Z] -divide_by 1 -add [get_ports d2h_clk_pin]
+    # Same-edge window: the data pin edge made by an hddr edge lies within +-D2H_SKEW of the clock pin
+    # edge made by that same hddr edge (rise <-> rise, fall <-> fall); clock-as-data through the select.
+    set d2h_d [get_ports d2h_pin*]
+    if {$PT_ODDR_CHECKS} {
+    set_output_delay [expr {-$D2H_SKEW}] -max -clock d2h_fwd $d2h_d
+    set_output_delay [expr {-$D2H_SKEW}] -max -clock d2h_fwd -clock_fall -add_delay $d2h_d
+    set_output_delay $D2H_SKEW -min -clock d2h_fwd $d2h_d
+    set_output_delay $D2H_SKEW -min -clock d2h_fwd -clock_fall -add_delay $d2h_d
+    set_multicycle_path 0 -setup -from [get_clocks d2h_osel] -to $d2h_d
+    set_multicycle_path -1 -hold -from [get_clocks d2h_osel] -to $d2h_d
+    set_false_path -rise_from [get_clocks d2h_osel] -fall_to [get_clocks d2h_fwd]
+    set_false_path -fall_from [get_clocks d2h_osel] -rise_to [get_clocks d2h_fwd]
+    }
     if {[llength [get_clocks -quiet hsdr]]} { set_false_path -from [get_clocks hsdr] -to [get_ports d2h_clk_pin] }
 } else {
     set_output_delay [expr {0.2 * $HLINK_PERIOD}] -clock hddr [get_ports {d2h_pin* d2h_clk_pin}]
@@ -396,7 +459,7 @@ if {$HOST_RATE_DIV == 1 && [llength $sdr_sel_q] == 1} {
 # kept mux; odd lanes can select a kept two-buf_1 delay (~0.4-0.8 ns, a deliberate fixed offset the
 # FPGA IDELAY absorbs). Launch budgets and the signoff skew window are checked with the stagger off;
 # the staggered-group offset is a report item (sta_signoff), not a window violation.
-set stg_sel [get_pins -quiet -hierarchical *stagger*lane.cell/S]
+set stg_sel [get_pins -quiet -hierarchical *stagger*lane.hio_m/S]
 if {[llength $stg_sel]} { set_case_analysis 0 $stg_sel }
 
 # Static/asynchronous inputs: island_pgood, fault, analog_status, wire_analog_status,

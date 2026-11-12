@@ -5,7 +5,7 @@
 `define PT_ISLAND_W 6
 `define PT_ATB0_GRP_W 2
 `define PT_ATB1_GRP_W 5
-`define PT_MAP_HASH 16'h2102
+`define PT_MAP_HASH 16'h2C7C
 // Field positions in analog_cfg (PT_A_*) and debug_cfg (PT_D_*): _LSB and _W.
 `define PT_D_DEBUG_ISLAND_POWER__WIRED_LSB 0
 `define PT_D_DEBUG_ISLAND_POWER__WIRED_W 1

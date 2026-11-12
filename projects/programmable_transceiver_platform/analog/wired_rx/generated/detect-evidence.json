@@ -2,15 +2,15 @@
  "block": "detect",
  "subckt": "pt_detect",
  "source_hashes": {
-  "detect.spice": "sha256:0dee8fd3150ec77ad8a069b8533049af5783daa8a22b359fa30a6d574a4c8a24",
-  "generated/detect.ext.spice": "sha256:1ebfef8783eeccaebf70542d6ff97eeaa31b1db3377e0da56f25c402d04fab59",
-  "generated/detect.gds": "sha256:5ee9d7f49e4f9d02344ede10b7b273641192dea52d3243b01c99dfcee4a62a71",
-  "netlists.py": "sha256:46d3148a4ffc8f51981f4fa4563fc4d6be85dd1cec1e515cee225cb5e28e1e3d",
-  "wrx_flow.py": "sha256:adb1f3b9b6dcd3b6c6fa6379e8abea316ea1dbb450a6d4b3f3dfbf854269dfe9",
-  "sims.py": "sha256:40d76522f9148374fef7a4a6c22548b3700af77ea01f1ddcaafec9eaa75e3ce8",
-  "run_family.py": "sha256:6fb0665eae5cd295f37006aed8560c4d0146f4d91069128ba304c470ce82c515",
-  "evidence.py": "sha256:3c12981c66dfcecceaa045968230951753809b64f9e38d5f5fe60997b52d25b8",
-  "run_wired_rx.sh": "sha256:a1dca456de988cdc00d6d947449c8a7dc3b0131b5f99f1995e61244bbfa60f83"
+  "detect.spice": "sha256:a61360025976b9756f0816c18455c28f7a9f9735312c9736e77b542cfaf04ff0",
+  "generated/detect.ext.spice": "sha256:8eec35f28ddaa72bb34d1edd8fcb51a71e724e6117f76b296800ed4aa1c704f2",
+  "generated/detect.gds": "sha256:c468072e40a62cd72b0a0e71b50a350e74f3439ee9dfb20669308193dfa4fe84",
+  "netlists.py": "sha256:a4d3e33921a93818ba6267aa64aaebddb0ca8dc62f9aa878b5d7b12ffafc78d4",
+  "wrx_flow.py": "sha256:e17615c16e391e9e3342617f2b1189732ee79dc7432bc93efa65520c67663907",
+  "sims.py": "sha256:9f3e7be11372cbd06620edb9674cadfeaabd141e81abf83c38c0b8d187f47ef6",
+  "run_family.py": "sha256:467566f354909dae3902c2728db857b70f3b923e7a9d4fe88810c9bfcaddb945",
+  "evidence.py": "sha256:25273105554617398e92176939bd163a42ddb5e7a5a826279c1d6b75f5048efa",
+  "run_wired_rx.sh": "sha256:e198a45b7682b442875f690a7a51c4c593b33662c9eb22d03d259a84db872948"
  },
  "images": {
   "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -26,56 +26,56 @@
    "cases": [
     {
      "case": "off_0C",
-     "i_rail": -8.74854e-07,
-     "vmax_diff_pos": 0.00172344,
-     "vmax_diff_neg": 0.00135582,
-     "vmax_se_p": 0.000960988,
-     "vmax_se_n": 0.000540028,
-     "i_rail_A": 8.74854e-07,
+     "i_rail": -8.78887e-07,
+     "vmax_diff_pos": 0.00236441,
+     "vmax_diff_neg": 0.00190065,
+     "vmax_se_p": 0.0009223,
+     "vmax_se_n": 0.000506134,
+     "i_rail_A": 8.78887e-07,
      "outputs_low": true,
      "pass": true
     },
     {
      "case": "off_27C",
-     "i_rail": -8.9078e-07,
-     "vmax_diff_pos": 0.0025335,
-     "vmax_diff_neg": 0.00205264,
-     "vmax_se_p": 0.00101639,
-     "vmax_se_n": 0.000575625,
-     "i_rail_A": 8.9078e-07,
+     "i_rail": -8.98037e-07,
+     "vmax_diff_pos": 0.00175008,
+     "vmax_diff_neg": 0.00137668,
+     "vmax_se_p": 0.000969237,
+     "vmax_se_n": 0.000534623,
+     "i_rail_A": 8.98037e-07,
      "outputs_low": true,
      "pass": true
     },
     {
      "case": "off_85C",
-     "i_rail": -1.02304e-06,
-     "vmax_diff_pos": 0.00266763,
-     "vmax_diff_neg": 0.00217262,
-     "vmax_se_p": 0.00160185,
-     "vmax_se_n": 0.000953068,
-     "i_rail_A": 1.02304e-06,
+     "i_rail": -1.03111e-06,
+     "vmax_diff_pos": 0.00254561,
+     "vmax_diff_neg": 0.00206036,
+     "vmax_se_p": 0.00149556,
+     "vmax_se_n": 0.000859672,
+     "i_rail_A": 1.03111e-06,
      "outputs_low": true,
      "pass": true
     },
     {
      "case": "stuck_on",
-     "i_rail": -0.00120527,
-     "i_peak": -0.00683397,
-     "i_rail_A": 0.00120527,
+     "i_rail": -0.00120533,
+     "i_peak": -0.0100721,
+     "i_rail_A": 0.00120533,
      "pass": true
     },
     {
      "case": "unpowered",
-     "v_rail": 0.0866051,
-     "i_ain": -3.91843e-07,
-     "i_ctl": -7.24094e-08,
+     "v_rail": 0.0642519,
+     "i_ain": -7.19942e-07,
+     "i_ctl": -1.19293e-07,
      "pass": true
     },
     {
      "case": "unpowered_internal_driven",
-     "v_rail": 2.85716,
-     "i_ain": -0.000892427,
-     "i_ctl": -2.00213e-07,
+     "v_rail": 2.86419,
+     "i_ain": -0.000758847,
+     "i_ctl": -1.8033e-07,
      "pass": false,
      "gating": false
     }
@@ -97,8 +97,8 @@
      "magic": "8.3.678",
      "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
      "marker_shapes": {
-      "HRES 62/0": 14,
-      "RES_MK 110/5": 28
+      "HRES 62/0": 84,
+      "RES_MK 110/5": 168
      },
      "hres_ok": true
     }
@@ -107,59 +107,109 @@
     "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
     "unique_match": true,
     "final": "Circuits match uniquely.",
-    "devices": 259
+    "devices": 424
    },
    "extracted_nominal": {
-    "usb_hs_squelch": {
-     "iavg": -0.00135442,
-     "vref_v": 0.447952,
+    "usb_hs_squelch_cm-50": {
+     "iavg": -0.00225385,
+     "vref_v": 0.497176,
      "hits_above_threshold_window": 1,
      "fraction_hit_above": 1.0,
      "fraction_hit_below": 0.0,
-     "pass": true
+     "pass": true,
+     "gating": true
+    },
+    "usb_hs_disconnect_cm-50": {
+     "iavg": -0.00224393,
+     "vref_v": 0.496553,
+     "hits_above_threshold_window": 1,
+     "fraction_hit_above": 1.0,
+     "fraction_hit_below": 0.0,
+     "pass": true,
+     "gating": true
+    },
+    "usb_hs_squelch": {
+     "iavg": -0.00222235,
+     "vref_v": 0.497295,
+     "hits_above_threshold_window": 1,
+     "fraction_hit_above": 1.0,
+     "fraction_hit_below": 0.0,
+     "pass": true,
+     "gating": true
     },
     "usb_hs_disconnect": {
-     "iavg": -0.00133712,
-     "vref_v": 0.451428,
+     "iavg": -0.00221554,
+     "vref_v": 0.49679,
      "hits_above_threshold_window": 1,
      "fraction_hit_above": 1.0,
      "fraction_hit_below": 0.0,
-     "pass": true
+     "pass": true,
+     "gating": true
+    },
+    "usb_hs_disconnect_cm360": {
+     "iavg": -0.0021972,
+     "vref_v": 0.496951,
+     "hits_above_threshold_window": 1,
+     "fraction_hit_above": 1.0,
+     "fraction_hit_below": 0.0,
+     "pass": true,
+     "gating": true
+    },
+    "usb_hs_squelch_cm500": {
+     "iavg": -0.00218197,
+     "vref_v": 0.497454,
+     "hits_above_threshold_window": 1,
+     "fraction_hit_above": 1.0,
+     "fraction_hit_below": 0.0,
+     "pass": true,
+     "gating": true
+    },
+    "usb_hs_disconnect_cm500": {
+     "iavg": -0.00218058,
+     "vref_v": 0.497099,
+     "hits_above_threshold_window": 1,
+     "fraction_hit_above": 0.9968231556653724,
+     "fraction_hit_below": 0.0,
+     "pass": true,
+     "gating": true
     },
     "usb_fs_line_state": {
-     "sep_j": 3.29969,
-     "sen_j": -0.000255977,
-     "sep_k": -0.000316276,
-     "sen_k": 3.29971,
-     "sep_se0": 6.5101e-06,
-     "sen_se0": 7.79606e-05,
+     "sep_j": 3.29982,
+     "sen_j": 1.34577e-05,
+     "sep_k": -1.2134e-05,
+     "sen_k": 3.29989,
+     "sep_se0": 6.51552e-05,
+     "sen_se0": 8.44897e-05,
      "pass": true
     },
     "rx_detect": {
-     "v_txp": 1.02893,
-     "v_txn_100n": 0.143248,
-     "t_sep": 4.21098e-08,
-     "iavg": -0.00146416,
-     "inject_current_uA_est": 102.89299999999999,
+     "v_txp": 1.17661,
+     "v_txn_100n": 0.155471,
+     "t_sep": 6.61353e-08,
+     "iavg": -0.00230819,
+     "inject_current_uA_est": 117.661,
      "present_leg_slower": true,
      "pass": true
     },
     "off": {
-     "iavg": -1.78622e-08,
-     "itxp": 1.7767e-07,
-     "dpos_max": 0.00321256,
-     "sep_max": 0.00115047,
+     "iavg": -1.80811e-08,
+     "itxp": 1.94364e-07,
+     "dpos_max": 0.00306588,
+     "sep_max": 0.00110914,
      "pass": true
     }
    },
-   "corner_failures": [],
+   "corner_failures": [
+    "ext_ss_22C_3.15V:usb_hs_disconnect_cm500",
+    "ext_ss_32C_3.15V:usb_hs_disconnect_cm500"
+   ],
    "non_gating_failures": [],
    "area": {
     "size_um": [
-     235.26,
-     411.54
+     251.26,
+     690.44
     ],
-    "area_um2": 96818.9,
+    "area_um2": 173480.0,
     "ceiling_um2": 180000
    }
   },
@@ -184,16 +234,16 @@
     }
    ],
    "bypass_loading_fF": {
-    "rx_p_detect_off": 93.21117000000001,
-    "tx_p_detect_off": 110.5972
+    "rx_p_detect_off": 154.475,
+    "tx_p_detect_off": 142.05079999999998
    }
   }
  },
  "performance_vs_target": [
   {
-   "case": "usb_hs_squelch",
+   "case": "usb_hs_squelch_cm-50",
    "metric": "fraction_hit_above",
-   "target": "fires on 200 mV diff (> 125 mV threshold)",
+   "target": "fires on 150 mV diff (USB squelch edge), line CM -0.05 V",
    "extracted_nominal": 1.0,
    "schematic_nominal": 1.0,
    "corner_min": 1.0,
@@ -202,8 +252,98 @@
   },
   {
    "case": "usb_hs_squelch",
+   "metric": "fraction_hit_above",
+   "target": "fires on 150 mV diff (USB squelch edge), line CM 0.2 V",
+   "extracted_nominal": 1.0,
+   "schematic_nominal": 1.0,
+   "corner_min": 1.0,
+   "corner_max": 1.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_squelch_cm500",
+   "metric": "fraction_hit_above",
+   "target": "fires on 150 mV diff (USB squelch edge), line CM 0.5 V",
+   "extracted_nominal": 1.0,
+   "schematic_nominal": 1.0,
+   "corner_min": 1.0,
+   "corner_max": 1.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_squelch_cm-50",
    "metric": "fraction_hit_below",
-   "target": "silent on 60 mV diff (squelch)",
+   "target": "silent on 100 mV diff, line CM -0.05 V",
+   "extracted_nominal": 0.0,
+   "schematic_nominal": 0.0,
+   "corner_min": 0.0,
+   "corner_max": 0.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_squelch",
+   "metric": "fraction_hit_below",
+   "target": "silent on 100 mV diff, line CM 0.2 V",
+   "extracted_nominal": 0.0,
+   "schematic_nominal": 0.0,
+   "corner_min": 0.0,
+   "corner_max": 0.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_squelch_cm500",
+   "metric": "fraction_hit_below",
+   "target": "silent on 100 mV diff, line CM 0.5 V",
+   "extracted_nominal": 0.0,
+   "schematic_nominal": 0.0,
+   "corner_min": 0.0,
+   "corner_max": 0.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_disconnect_cm-50",
+   "metric": "fraction_hit_above",
+   "target": "fires on 625 mV diff (USB disconnect edge), line CM -0.05 V",
+   "extracted_nominal": 1.0,
+   "schematic_nominal": 0.0,
+   "corner_min": 1.0,
+   "corner_max": 1.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_disconnect",
+   "metric": "fraction_hit_above",
+   "target": "fires on 625 mV diff (USB disconnect edge), line CM 0.2 V",
+   "extracted_nominal": 1.0,
+   "schematic_nominal": 0.0,
+   "corner_min": 1.0,
+   "corner_max": 1.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_disconnect_cm360",
+   "metric": "fraction_hit_above",
+   "target": "fires on 625 mV diff (USB disconnect edge), line CM 0.36 V",
+   "extracted_nominal": 1.0,
+   "schematic_nominal": 0.0,
+   "corner_min": 0.9925795053003533,
+   "corner_max": 1.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_disconnect_cm500",
+   "metric": "fraction_hit_above",
+   "target": "fires on 625 mV diff (USB disconnect edge), line CM 0.5 V",
+   "extracted_nominal": 0.9968231556653724,
+   "schematic_nominal": 0.0,
+   "corner_min": 0.3145075891281327,
+   "corner_max": 1.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_disconnect_cm-50",
+   "metric": "fraction_hit_below",
+   "target": "silent on 525 mV diff, line CM -0.05 V",
    "extracted_nominal": 0.0,
    "schematic_nominal": 0.0,
    "corner_min": 0.0,
@@ -212,18 +352,28 @@
   },
   {
    "case": "usb_hs_disconnect",
-   "metric": "fraction_hit_above",
-   "target": "fires on 800 mV diff (625 mV threshold)",
-   "extracted_nominal": 1.0,
-   "schematic_nominal": 1.0,
-   "corner_min": 1.0,
-   "corner_max": 1.0,
+   "metric": "fraction_hit_below",
+   "target": "silent on 525 mV diff, line CM 0.2 V",
+   "extracted_nominal": 0.0,
+   "schematic_nominal": 0.0,
+   "corner_min": 0.0,
+   "corner_max": 0.0,
    "corners_reported": 12
   },
   {
-   "case": "usb_hs_disconnect",
+   "case": "usb_hs_disconnect_cm360",
    "metric": "fraction_hit_below",
-   "target": "silent on 400 mV diff",
+   "target": "silent on 525 mV diff, line CM 0.36 V",
+   "extracted_nominal": 0.0,
+   "schematic_nominal": 0.0,
+   "corner_min": 0.0,
+   "corner_max": 0.0,
+   "corners_reported": 12
+  },
+  {
+   "case": "usb_hs_disconnect_cm500",
+   "metric": "fraction_hit_below",
+   "target": "silent on 525 mV diff, line CM 0.5 V",
    "extracted_nominal": 0.0,
    "schematic_nominal": 0.0,
    "corner_min": 0.0,
@@ -233,21 +383,21 @@
   {
    "case": "rx_detect",
    "metric": "inject_current_uA_est",
-   "target": "100 uA per leg",
-   "extracted_nominal": 102.89299999999999,
-   "schematic_nominal": 101.107,
-   "corner_min": 91.14,
-   "corner_max": 110.40700000000001,
+   "target": "60-160 uA per leg (TX pad > Vse 0.8 V into 10 kohm)",
+   "extracted_nominal": 117.661,
+   "schematic_nominal": 115.449,
+   "corner_min": 95.9925,
+   "corner_max": 130.306,
    "corners_reported": 12
   },
   {
    "case": "usb_hs_squelch",
    "metric": "iavg",
    "target": "wired budget 4 mA",
-   "extracted_nominal": -0.00135442,
-   "schematic_nominal": -0.000731304,
-   "corner_min": -0.00142289,
-   "corner_max": -0.00125287,
+   "extracted_nominal": -0.00222235,
+   "schematic_nominal": -0.00162141,
+   "corner_min": -0.00238094,
+   "corner_max": -0.00199634,
    "corners_reported": 12
   },
   {
@@ -275,7 +425,7 @@
    "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
    "target": "above nominal rate",
    "extracted_nominal": {
-    "threshold_mV": 65.78119514155325,
+    "threshold_mV": 65.64785010858242,
     "wrong_side_fired": false,
     "pass": true,
     "gating": false
@@ -286,7 +436,7 @@
    "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
    "target": "above nominal rate",
    "extracted_nominal": {
-    "threshold_mV": 65.53153483715542,
+    "threshold_mV": 65.61000316173009,
     "wrong_side_fired": false,
     "pass": true,
     "gating": false
@@ -297,7 +447,7 @@
    "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
    "target": "above nominal rate",
    "extracted_nominal": {
-    "threshold_mV": 125.61956504073316,
+    "threshold_mV": 115.81829087322724,
     "wrong_side_fired": false,
     "pass": true,
     "gating": false
@@ -308,7 +458,7 @@
    "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
    "target": "above nominal rate",
    "extracted_nominal": {
-    "threshold_mV": 125.46496126656814,
+    "threshold_mV": 115.85693363873821,
     "wrong_side_fired": false,
     "pass": true,
     "gating": false
@@ -319,7 +469,7 @@
    "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
    "target": "above nominal rate",
    "extracted_nominal": {
-    "threshold_mV": 545.5909535090042,
+    "threshold_mV": 566.1173072547138,
     "wrong_side_fired": false,
     "pass": true,
     "gating": false
@@ -330,7 +480,7 @@
    "metric": "exploratory (non-gating, extracted tt/27C/3.3V)",
    "target": "above nominal rate",
    "extracted_nominal": {
-    "threshold_mV": 535.6601466474214,
+    "threshold_mV": 575.6547755560009,
     "wrong_side_fired": false,
     "pass": true,
     "gating": false

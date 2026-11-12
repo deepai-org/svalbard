@@ -347,3 +347,65 @@ if __name__ == '__main__' and __import__('sys').argv[1:] == ['r4']:
     j['ix5_note'] = 'behavioural cycle model, r4 3rd-order filter, starts from VTUNE=VDD/2 after band search; not yet confirmed by the transistor-level ladder'
     (HERE / 'loop_design.json').write_text(json.dumps(j, indent=1, default=float) + '\n')
     print(json.dumps(r['selected'], indent=1, default=float))
+
+
+# ---------------- round 5 (LO owner, 2026-11-12): two-sided loop re-optimisation ----------------
+# VCO model from the validated r5 PN method (scratch/lo/r5_pn): white L(1 MHz) + 1/f^3 corner (quasi-static bias flicker).
+# Two-sided loop values (worst end per check): Kvco 25..200 MHz/V (r5 C-only sweep 25-150, OPT +33 %), LO18 Icp code
+# (100 uA x min(1, 60/Kv), 2-bit: 100/75/50/25 uA, nearest code >= the ideal), Icp +-20 %, N 44..56, loop R +-20 %
+# (ppolyf res corners), C1/C3 MIM +-10 %, C2 MOS +-15 % (and its C(V) droop at the VTUNE window edges, folded into -15 %).
+# Extracted worst-corner CP (R4X), MASH 1-1-1 step 2, XO -150 x N^2, divider 0.3 ps, fracN on-time 2.2 ns, R3/C3 pole.
+ICP_CODES = (100e-6, 75e-6, 50e-6, 25e-6)
+
+
+def lo18_icp(kv):
+    """FSM code choice: the 2-bit code nearest (log ratio) to 100 uA x min(1, 60 MHz/V / Kv_measured)."""
+    ideal = 100e-6 * min(1.0, 60e6 / kv)
+    return min(ICP_CODES, key=lambda c: abs(math.log(c / ideal)))
+
+
+def r5_eval(fc, fp3_ratio, vco_l1m, f3c, kv, n, icp_tol=1.0, r_tol=1.0, c_tol=1.0, c2_tol=1.0, pm_nom=None,
+            f0=2.45e9, fpfd=FREF, ref_floor=-150.0, pfd_jit=0.3e-12, sd_step=2, mash=3, t_on_ns=2.2, kv_meas_err=1.0):
+    pm_nom = pm_nom if pm_nom is not None else 60 + math.degrees(math.atan(1 / fp3_ratio))
+    d = design(fc, pm_nom, 100e-6, 60e6, 49)
+    icp = lo18_icp(kv * kv_meas_err) * icp_tol
+    r, c1, c2 = d['r_ohm'] * r_tol, d['c1_f'] * c_tol, d['c2_f'] * c2_tol
+    f = np.logspace(4, 8, 3000)
+    s = 2j * np.pi * f
+    z = (1 + s * r * c2) / (s * (c1 + c2) * (1 + s * r * c1 * c2 / (c1 + c2)))
+    g = icp / (2 * np.pi) * 2 * np.pi * kv / n * z / s / (1 + s / (2 * np.pi * fp3_ratio * fc / (r_tol * c_tol)))
+    lp, hp = abs(g / (1 + g)) ** 2, abs(1 / (1 + g)) ** 2
+    i = int(np.argmin(abs(abs(g) - 1)))
+    fcx, pm = float(f[i]), float(180 + math.degrees(np.angle(g[i])))
+    ts = 10 * math.log10(t_on_ns / 0.98) - 10 * math.log10(icp / 100e-6)
+    c = dict(vco=10 ** (vco_l1m / 10) * (1e6 / f) ** 2 * (1 + f3c / f) * hp,
+             ref=10 ** (ref_floor / 10) * n ** 2 * lp,
+             cp=(10 ** ((R4_CP_10K - R4X_FLICK_IMPR + ts) / 10) * (1e4 / f) + 10 ** ((R4X_FLOOR + ts) / 10)) * lp,
+             pfd_div=(2 * np.pi * f0 * pfd_jit) ** 2 / fpfd / 2 * lp,
+             sd=sd_step ** 2 * (2 * np.pi) ** 2 / (12 * fpfd) * (2 * np.sin(np.pi * f / fpfd)) ** (2 * (mash - 1)) * lp / 2)
+    j = {k: math.sqrt(2 * np.trapezoid(v, f)) / (2 * np.pi * f0) * 1e12 for k, v in c.items()}
+    j['total'] = math.sqrt(sum(x * x for x in j.values()))
+    tot = sum(c.values())
+    at = {fm: float(10 * np.log10(np.interp(fm, f, tot))) for fm in MASK if fm <= 1e8}
+    peak = float(10 * np.log10(np.max(abs(1 / (1 + g)) ** 2)))
+    return dict(fc_hz=fcx, pm_deg=pm, jitter_ps=j, pn_at_mask=at, mask_ok=all(at[k] <= MASK[k] for k in at),
+                hp_peaking_db=peak, design=d, icp_a=icp)
+
+
+def r5_worst(fc, fp3_ratio, vco_l1m, f3c, kvs=(25e6, 38e6, 60e6, 100e6, 150e6, 200e6), ns=(44, 49, 56), pm_nom=None):
+    """Worst jitter and worst PM over the two-sided grid."""
+    wj, wp = None, None
+    for kv in kvs:
+        for n in ns:
+            for it in (0.8, 1.2):
+                for rt in (0.8, 1.2):
+                    for ct in (0.9, 1.1):
+                        for c2t in (0.85, 1.15):
+                          for ke in (0.85, 1.15):     # FSM Kvco measurement error -> either neighbouring ICP code
+                            r = r5_eval(fc, fp3_ratio, vco_l1m, f3c, kv, n, it, rt, ct, c2t, pm_nom=pm_nom, kv_meas_err=ke)
+                            r['case'] = dict(kv=kv, n=n, icp_tol=it, r_tol=rt, c_tol=ct, c2_tol=c2t, kv_meas_err=ke)
+                            if wj is None or r['jitter_ps']['total'] > wj['jitter_ps']['total']:
+                                wj = r
+                            if wp is None or r['pm_deg'] < wp['pm_deg']:
+                                wp = r
+    return wj, wp

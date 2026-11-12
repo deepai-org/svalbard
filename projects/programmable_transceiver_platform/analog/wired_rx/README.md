@@ -842,6 +842,16 @@ COB chain + CTLE, RL and eye), `usbq.py` (USB path), `cin.py` (CTLE input C with
 * Not done: BAND-mode ppm/vote and alternation on r9d; ss LO-band minimum; full 12-corner range table; closed-loop
   lock on r9d; ANTENNA_IGNORE_SD not keyed on `pt_pll_ring_core` (layouts are antenna-clean as built).
 
+
+### Resume 7 / RING (fork RING7, 2026-11-11; scratch `scratch/wired_rx/r7ring/`, see STATUS.md; nothing in generated/ replaced)
+* Vote injection mechanism (r9d schematic): switched-source long-L FT copies recharge their source node while off; alternation +4834 ppm.
+  Header-side current steering + VHD follower (r9k/r9m) gives -90 ppm schematic (810 ppm/vote KP3), but **extracted r9m -5010 ppm**
+  (vote-synchronous bench) from FU/FD/FUB/FDB coupling into VHD/steered drains (-475 ppm with those caps removed). Open, WRX-16.
+* 1050 vs 632 MHz: schematic `generated/fast/ct_ring9.spice` is the intended netlist (no wiring): 1158 MHz at 1.21 V tt vs 614-727 extracted.
+* `cdr_pi_model.run(inj_alt_ppm=)` models the injection: 625 MHz JTOL 1.19x -> 0.73-0.80x at +-4360 ppm; unchanged at -240 ppm.
+* ptrim (schematic, 834 MHz) 29.1 deg ss/fs covers the 17-21 deg ring spread; published ptrim.ext.spice does not toggle.
+* Antenna planner: finite driver diffusion rule (RG7-1). Ring table / evidence regen not done (ring not republished).
+
 ## Known limitations and open items
 
 0. **`pt_wrx_cap`: the slicer → capture re-capture phase is not closed.**
@@ -918,3 +928,243 @@ COB chain + CTLE, RL and eye), `usbq.py` (USB path), `cin.py` (CTLE input C with
   42–50 ns schematic but 97–109 ns extracted (fails 50 ns)**.
 * Open: fix the r6 ss regression (or move the aux/TF3 load off 1pa/4pb) before publishing; DAC load R / settling and area;
   re-run evidence flow on the published r6 slicer; d1 fine gap 2.2 mV at ff.
+
+### Resume 7 / SLICER (fork SLI7, 2026-11-11; scratch `scratch/wired_rx/r7slicer/`)
+
+`pt_slicer` r7 and `pt_vthdac` r7 **published** (`generated/slicer.*`, `generated/vthdac.*`, `vthdac-evidence.json`).
+r6 source changes (TF3, N+ antenna diodes, IX-10 ws_sae/ws_aux) kept.  "Pessimistic" below = spec/design-assumptions.md:
+ss/32 °C/3.15 V, Rg 200 Ω·W/10 µm on all 760 3.3 V devices, +25 % device C (extra 0.25·Cox·W·L gate–source cap),
++15 % on every extracted C (`r7slicer/pess.py`).
+* **Cause of the r6 834 MHz ss regression (isolated, extracted probes):** only the e-samplers (ws_sae) failed (E1–E3; D0–D3
+  0 errors).  Their StrongARM still resolved (2oa/3ob cross 1.5 V 440–520 ps after CK, as the d-samplers), but 2oa/3ob
+  peaked at only 2.29/2.37 V (d: 2.43/2.45) before reset, and the 4 µm NMOS of the NOR SR latch could not flip it in that
+  pulse (lq only down to 0.66 V, lqb ≤ 0.86 V → E2/E3 stuck high).  The extra ws_sae load (aux pair diffusion on x/1pa/4pb,
+  x routed to both core ends, +6 fF x wiring) was the last straw on a marginal latch.  Removing the aux devices alone
+  did not fix it (still 6/35 errors); doubling the SR NMOS did (0 errors).  SL_P/SL_N C is irrelevant to this bench
+  (ideal sources).
+* **Fix (r7):** second 4 µm NMOS finger on the SR-latch set/reset inputs (2oa→lq, 3ob→lqb); 1pa/4pb reset NMOS 4 → 2 µm;
+  tail 8 × 4 → 8 × 5 µm (needed at the pessimistic values: 750 MHz e-samplers 5/51 errors without it).  **Cost: +8 µm of
+  PMOS tail gate on every CKPk (≈ +11–13 fF per ring phase, all eight phases equally; ring/phase-buffer owner to note).**
+* **Ring plan, extracted r7 (gating cases, 834 MHz):** ss/32/3.15 0/51 quarter, 0/59 half; ss + Rg 150 Ω·W/10 µm 0/0;
+  tt 0/0; ff 0/0 (r6: 14/51, 10/59 at ss).  **Pessimistic:** 625 MHz 0/51, 0/59; 750 MHz 0/51, 0/59; **834 MHz FAILS
+  23/51, 28/59** (StrongARM 2oa peak only ~1.9 V within the 600 ps evaluation half-period).  WT21 caps the ring in use
+  at 625 MHz, and 742.5/750 MHz (WRX-06) pass, so 834 MHz is beyond the rate plan; it is not claimed at the pessimistic values.
+  Non-gating 60 mVpp trimmed case at 834 MHz (fixed TRIM_NOMINAL code, not re-derived for the r7 weights): tt 0/51,
+  ss 6/51, ff 4/51 (r4c on the same bench: ss 23/51).
+* **Input C:** SL_P/SL_N wiring **291.7 / 288.9 fF** before the safe-bench fix below, **282.6 / 300.7 fF published**
+  (r6 361.7 / 337.8, r4c 305.6 / 286.5; sum 583 vs r4c 592).  Two changes: ws_sae INP/INN pins
+  on the cell's LEFT edge next to the SL trunk (`wrx_compact.Row.left_ports`, default off; in-cell INP 19.1 → 13.1 fF) and
+  SL_P/SL_N taken out of the trunk group and given `net_space` 1 µm (a free trunk column on each side; SL_P–SL_N mutual
+  158 → 106 fF, to trims 100 → 57 fF).  Clock coupling onto SL_P/N ≤ 0.64 fF per CKP (r4c ≤ 0.69).
+* **Trim (all 16 fine codes, extracted r7, 200 ns ramps, 0.22 mV resolution; `trimfast2.py`, `trim16_<c>_summary.json`):**
+  - max fine step **tt 1.54, ss 1.31, ff 1.76 mV** (r6 2.0 / 1.59 / 2.2).  Coarse/fine seams: p side overlaps at every
+    corner (p0+f15 ≥ f0 by 0.07–2.3 mV); n side n0 − f15 ≤ 0.42 mV.
+  - **range ss: p7 −55.5…−62.6, n7f15 +51.0…+56.9 mV** (target ±50 ✓; r6 −45.4 / +43.1); tt −68.9 / +62.1; ff −77.4 /
+    +68.3 mV (r7c, coarse widths unchanged in r7d).
+  - Changes: per-side coarse widths TP (0.665, 1.33, 2.665) / TN (0.635, 1.275, 2.55) µm (fine-code-0 offset moved from
+    ≈ −3 mV to ≈ 0 with the r7 core); f2 delta 0.28 → 0.26; d-sampler (ws_sa) f3 delta −0.055 (ws_sae keeps −0.075).
+    Measured: the ws_sa f3 weight falls as its delta goes more negative (−0.09 gave 0.0–0.5 mV at ff).
+  - Caveat: the 200 ns-ramp (r7) and 400 ns-ramp (r6/r7b) methods differ by up to ~0.6 mV on single weights at ff;
+    the published numbers are from one method on the published layout.
+* **IX-10 on r7 (extracted slicer, ss/32/3.15, extracted r7 DAC end points):** e-sampler threshold −393…−397 /
+  +385…+388 mV (A and B paths equal), 3.3 mV/LSB at mid-scale, aux off = A128 within 0.4 mV.
+* **pt_vthdac r7:** R_B 94 → 63 kΩ (current × 1.5), R_L 8 → 5.33 kΩ (same swing), steering switches 2 µm (bits 0–5),
+  8 µm (bit 6), 2 × 8 µm (bit 7) (r6c: 130 µm of drain per line); layout `over_dev` + all ports quiet
+  (`run_family.LAYOUT_OPTS`), 16 columns.  **140.4 × 170.1 µm = 23.9k µm²** (r6c 80.9k; target ≤ 25k), DRC 0, LVS unique,
+  KLayout main 0 / antenna 0.  **Extracted, 700 fF per line, 0 → 255 step to 1 LSB: tt 41.9, ss 42.8, ff 37.4 ns**
+  (≤ 50 ✓; r6c 97–109).  LSB 11.2 / 10.0 / 11.9 mV at the DAC (tt/ss/ff), mid-scale DNL step 1.15–1.18 LSB,
+  current 525 / 388 / 695 µA (r6c 263–481) with vth_en = 1, 0 with vth_en = 0.
+* **Evidence flow (reduced, `r7slicer/evflow.py`):** layout published through `run_family.layout_block('slicer')`;
+  schematic + extracted nominal and extracted ss/32/3.15 + ff/22/3.35 (the envelope speed extremes) with the standard
+  ring-plan/trim benches, plus safe; the other 9 envelope corners were not rerun (box load), recorded in
+  `slicer-evidence.json` `corner_set`.  `netlists.write_all()` was NOT used (it rewrites every wired_rx netlist,
+  incl. the unpublished detect work); only `slicer.spice` and `vthdac.spice` were regenerated.
+* **Safe "off" bench (slicer_en = 0, clocks running) — pre-existing failure found and fixed.**  `sims.tb_safe` could not
+  bind the r6 ports (f3 trims, vsel, VT lines; fixed: ctrl/ain lists), so r6 never ran it.  Run on r7 it failed: D0/E0
+  kicked to ±0.21 V (limit 0.1 V).  The r4c netlist fails the same bench (0.175 V), so the published r4c "4 mV" safe evidence
+  was stale.  Cause: the trunk planner put every D/E trunk beside its own sampler clock trunk (CKP4→D0 45 fF), and the cell's
+  Q and CK pins were 0.9 µm apart.  Fix: `net_space` 1 µm on D0..E3 and the ENB pin moved between Q and CK
+  (internal sampler nets unchanged to 0.01 fF, so the trim data stand): CKP→D0 17.7 fF; off 0/27/85 °C: max 0.074 /
+  0.099 / 0.095 V (D0/E0; other outputs ≤ 0.072 V) — **passes, thin margin**.  Cost: SL_N 300.7 fF (SL_P 282.6; r4c 286.5 /
+  305.6), outline 300.8 × 367.3 µm.  Ring plan rerun on this final layout: 834 MHz ss / ss+Rg / tt / ff 0 errors,
+  pessimistic 625 and 750 MHz 0 errors.
+* Port lists unchanged from r6 (MT01-W3, IX10-W1).  Open: independent review; 834 MHz at the pessimistic values;
+  the CKPk tail-load increase in the ring/phase-buffer budget; safe-off margin 5 %.
+* **Review round (SLI7, conditions from the independent review):**
+  - Provenance: the pessimistic 834 MHz 23/51 figure is from r7c (sl2); the trimmed ss 834 MHz case is 5/51 on the published
+    layout (sl6); trim and IX-10 numbers are from r7d (sl3), whose sampler internals match sl6 to 0.01 fF.
+    `slicer-window.json` is marked superseded (r4c data). `slicer-layout.json` revision label fixed. ws_sae/ws_aux added
+    to `source_hashes`. `tests.clean` = "partial (2/12 envelope corners + nominal)"; the other 10 corners were not rerun.
+  - **pess.py fixed:** it now also derates S/D junction C (ad/as/pd/ps ×1.25) and overlap C (+0.025 fF/µm gate–drain and
+    gate–source). On the published sl6: 625 MHz 0/51, 0/59 ✓; **750 MHz 15/51, 19/59 FAIL; 810 MHz 25/50, 27/58 FAIL;
+    834 MHz 28/50, 31/58 FAIL.**  The earlier "750 MHz passes pessimistic" claim (Cgs-only derate) is withdrawn.  At the
+    full pessimistic values the slicer is qualified only to ring 625 MHz (2.5 Gb/s, the WT21 core maximum).  The WRX-06
+    742.5/750 MHz CDR points are therefore NOT covered at the pessimistic values (open; needs a faster sampler core).
+    810 MHz stays in the nominal-corner gating set (it passes there); it is not claimed at the pessimistic values.
+  - IX-10 LSB at ff (extracted sl6, r7 DAC end points): 3.45–3.6 mV at mid-scale (≤ 4 ✓).
+  - r7 per-sampler calibrated trim codes (`r7slicer/trim_r7_cal.json`, |residual| ≤ 0.5 mV): 60 mVpp trimmed at ss
+    810 MHz 0/51 ✓, 834 MHz 5/51 (non-gating).
+  - **Safe bench at ss/32 °C, 3.63 V, slicer_en = 0 with ring-rate clocks (625 MHz, 8 phases in real order, 30 ps edges):
+    FAILS — D0/E0 kicked to 0.215/0.222 V (limit 0.1 V), E1 0.17, E2 0.12; I_rail 2.7 µA.**  The standard bench
+    (one 250 MHz clock, 0.1 ns edges) passes at 0.099 V.  Open: needs either more CKP→D/E isolation or a stronger
+    output hold, or the W6-SAFE rule that the ring phases are gated (ptrim_en = 0) whenever slicer_en = 0.
+  - Not done (box load): tt mismatch MC and the CTLE-driven kick-back rerun on r7.
+* **Round 3 (pessimistic 750 MHz speed-up attempt, NOT published; candidate source `r7slicer/slicer_compact.r7g.py`, layout `r7slicer/sl7`):**
+  where the 667 ps window goes (full pessimistic, ss/32/3.15, 750 MHz, extracted probe of D2): 2oa crosses 1.575 V 555 ps
+  after CK (VSA droops through the 6 × 8 µm header), lq falls at 626 ps, lqb rises at 980 ps, Q at 1160 ps.  Levers tried on
+  the extraction (errors /51 quarter): tail ×1.4 7, SR-NOR PMOS ×2 21 (worse: more 2oa/3ob load), NMOS cross pair ×1.5 15,
+  header ×2 1, header ×2 + tail ×1.2 0/0.  Built as r7g (NHDR 12, tail 8 × 6 µm, **+8 µm tail gate ≈ +11 fF per CKPk over
+  r7, ≈ +24 fF over r6**): pessimistic 625 MHz 0/0; **750 MHz 1/51, 1/59 (not 0)** (with tail 7 µm or header 16 also 1–6
+  errors: at the edge of this topology); nominal 834 MHz ss 0/0, ss+Rg 0/0, tt 0/0, ff 0/0 with the measured aperture
+  (5/51 with the fixed 100 ps aperture assumption, i.e. the sampling instant moves ~13 ps earlier at ff); safe 0.092 V @ 85 °C;
+  ss trim max step 1.54 mV, range −61.8/+55.9 mV; **ff trim fails: max step 2.2 mV and p-seam up to 5.9 mV (f0/f3 weights
+  collapse to ≈ 0 on the ws_sa samplers)**.  So r7g is not publishable; `slicer_compact.py` is back at the published r7 values.
+  Low-risk alternative for the pessimistic 750 MHz point: a separate header per sampler pair is already in place; the next
+  options are an NMOS-input StrongARM (needs CM ≥ 1.2 V from the CTLE), or keeping 750 MHz for nominal corners only and
+  running the 1.485/1.5 Gb/s modes ×1 (one bit per sampler, quarter-rate sampling) on a 371–375 MHz ring (BAND=0, WT21; no ring above 625 MHz).
+* Safe state: relies only on the SLI7-R hardware interlock (requested, pending digital acceptance) (ptrim_en forced low whenever slicer_en is low); the
+  ring-clock-running 'off' case is not a supported state.
+* Not done (box load): optimistic fast/low-C bounds (hold/race to capture, SR metastability window, trim at optimistic ff).
+* **Round 4 (decision: pessimistic gate ring ≤ 625 MHz; 742.5/750/810/834 MHz nominal-corner only; interface row SLI7-G):**
+  the reverted source rebuilds the published layout exactly (776 devices, every net C identical; DRC 0, LVS unique, KLayout 0/0).
+  **Fast-side bounds on the published r7** (optimistic netlist `r7slicer/opt.py`: extracted C ×0.85, S/D junction ×0.75,
+  no Rg; ff/22/3.35):
+  - ring plan with the measured aperture (80.5–80.8 ps): 625 and 834 MHz quarter/half 0 errors.
+  - **minimum sampler clock-to-output** (sampling instant → D/E edge): 327 ps (D1) … 402 ps (E0), i.e. 0.20 T at 625 MHz
+    and 0.27 T at 834 MHz; outputs then hold for one ring period.  This is the hold/race bound the pt_wrx_cap
+    re-capture select (k) must clear (capture owner: check against the CKP(j+k) edge plus capture hold at its own fast corner).
+  - trim at optimistic ff: max fine step 1.76 mV; coarse/fine seam measured directly (p0+f15 vs fine minimum) ≤ 1.25 mV
+    (e3), n side ≤ 0.86 mV; range −80.8 / +69.7 mV.
+  - SR-latch metastability window: NOT measured (needs a dedicated sub-mV static-input bench; open).
+* **Round 5: StrongARM/SR-latch metastability (published r7; `r7slicer/meta.py`, static input, ring 625 MHz, sampler D0):**
+  regeneration τ from the exponential growth of |2oa−3ob|: **ss/32/3.15 75.5–78.9 ps; optimistic ff/22/3.35 42.8–45.2 ps.**
+  Resolution time (|2oa−3ob| = 0.3 V after CK) for 10 mV beyond the trip point: ss 579 ps, ff-opt 311 ps.
+  The ramp-measured offset was off for the static bench (the effective δ of the "≈0" runs was 1.2 mV at ss and 6.7 mV at ff),
+  so the window comes from t(δ) = t10 + τ·ln(10 mV/δ), not from a measured sub-mV sweep.
+  - Unresolved-input window when the StrongARM resets (half-period 800 ps): **ss ≈ 0.6 mV, ff-opt ≈ 0.15 µV.**
+  - If the SR latch continues with the same τ up to the re-capture (~1.1 ns, assumption: SR τ not separately measured):
+    ss ≈ 14 µV.
+  - Rate: D samplers sample mid-eye (≥ tens of mV), so metastable events there are negligible for an open eye.
+  - **Edge samplers sample the transitions by design.** With a 4 mV/ps data edge and transitions spread over ±200 ps,
+    the estimate is P ≈ 1.7e-5 per edge sample at ss → ~2e4 metastable E events/s at 625 MHz quarter rate
+    (MTBF ≈ 50 µs; at the 800 ps window ~1e6/s).
+  - The E bits feed only the bang-bang phase detector, which already treats them as random at the crossing.  But the
+    capture flops must not see an unresolved level, so pt_wrx_cap / digital must re-time E0..E3 through a second flop
+    stage before any logic (capture owner).
+  - Not done: a dedicated SR-only τ and the capture-flop τ.
+* **Round 6 (re-review conditions):**
+  - Trim data provenance: the published-layout trim numbers are `r7slicer/sl3/tf2_<c>_fine16.json` (sl3 sampler internals ==
+    sl6), summarized per stage in `r7slicer/trim16_sl3_<c>_summary.json`; optimistic ff in `trim16_sl6opt_ff_summary.json`.
+  - **Fine-weight disclosure:** at optimistic ff the ws_sa (d) samplers' f0/f3 weights shrink to 0.0–0.66 mV, and e3's f0/f3
+    weights are slightly negative (−0.21/−0.22 mV), so the fine code is NOT monotonic there.  Not fixed (cheap fixes move other
+    corners); calibration must search the 16 measured codes per sampler and must not assume monotonicity (as MT01-W3 already
+    states).  The coarse/fine seam: the **real gap is the directly measured one, ≤ 1.25 mV** (|p0+f15 − min(fine)|, e3,
+    optimistic ff); the 4.0 mV "seam_p" figure is the additive estimate coarse_p − span, which ignores that p0+f15 is measured
+    together and overlaps — it is not a gap.
+  - BAND=0 rate (WT21 1.485/1.5 Gb/s ×1): ring 371 MHz ss/32/3.15 extracted, ideal stand-in ring clocks: 0/68 quarter, 0/68 half.
+  - **E-sampler τ at the pessimistic values (ss, Rg 200, +25 % device incl. junction/overlap, +15 % wiring; E0, 625 MHz):
+    96 ps**, 10 mV beyond trip resolves (|2oa−3ob| = 0.3 V) at 744 ps of the 800 ps window; at δ ≈ 0 it did not resolve
+    within the window (expected).  Window at the StrongARM reset ≈ 5.6 mV; with SR continuation to ~1.1 ns re-capture
+    ≈ 0.25 mV → many E-sampler metastable events per second at 625 MHz (≈ 3e5/s with the round-5 edge-slope model).
+    The E0..E3 re-time stage (interface row SLI7-M) is therefore mandatory.
+
+### Resume 7 / DETECT (fork DET7, 2026-11-11; scratch `scratch/wired_rx/r7detect/`; published `generated/detect.*`)
+
+`pt_detect` r7, ports unchanged (interface DT7-1..3).  **173.5k µm² (≤ 180k), Magic DRC 0, LVS unique (424 dev), KLayout
+main 0 / antenna 0.**  Not yet independently reviewed.
+* **HBM (PD29 item 4, risk PAD-02):** per TX leg, series poly R (3 → 6 kΩ injection branch TXF, 20 kΩ sense branch TXS) +
+  a 7-high string of p+/nwell junction diodes to VSS (pfet_06v0, S=D=anode, G=B=cathode, own well; injection branch 2×
+  area) + an off nfet_06v0 negative clamp; every device on TXF/TXS is 6 V.  A rail diode (TXF→VDD) was rejected: it
+  back-feeds the island from an unpowered 3.63 V TX pad.  `pads/hbm_core_screen.py` on the extraction:
+  **wire_tx_detect 0 of 340 MOS over the screen** (tt27 / ss0 P_pos, ss0 P_neg; worst 5.57 V on a 6 V gate at ss0 vs
+  6.0 V, was 6.89 V with 4 exceedances in r6); **wirepad_rx_core 0 of 658**.  The junction diodes are BSIM S/D
+  junctions, not a qualified diode model: pads asked for a qualified secondary-clamp cell / diode support (DT7-2).
+* **Receiver detect at ss (was failing):** injection mirror 10→12×, 6 V switch 20→40 µm: inject 96–130 µA over the 12
+  corners (limit 60–160), present/absent discrimination passes everywhere.  6-diode strings leaked 1.75 µA unpowered;
+  7-high: **unpowered `i_ain` 0.72 µA (≤ 1 µA)**, off 0/27/85 °C pass.
+* **USB squelch/disconnect level shift:** the r6 4-input comparators compared the RX pair (line CM) with ladder taps at
+  0.5 V CM; extracted thresholds moved 32 %/V with line CM (disconnect 446–616 mV over CM −0.05…0.45 V vs the
+  525–625 window).  r7: matched 400 µA PMOS source followers (own wells) feed the diff comparators; their reference
+  VTHP/VREFN = CM ± Vthr/2 floats on the followers' CM (100k sense pair + 5T-OTA buffer), Vthr = poly ratio × the VDD-ratio
+  ladder tap via an OTA V-to-I (10 µA).  Equal 0.45 pF on both reference nodes (kick-back; undecoupled they sat ~180 mV
+  below the inputs at the decision edge); RX transfer gates 3× (DP edge was TG-RC limited, ~1 ns).  **Extracted
+  thresholds** (ramp bench): squelch (code 2) 116–126 mV, disconnect (code 3) 557–605 mV over ss/32/3.15 CM −0.05 …
+  ff/22/3.35 CM 0.5 (CM sensitivity ≈ 2 %/V).
+* **Gating benches tightened to the USB edges** (`tb_detect`): squelch fires at 150 mV / silent at 100 mV, disconnect
+  fires at 625 / silent at 525 mV (r6 used 300/60 and 800/400 mV), at line CM −0.05 / 0.2 / 0.5 V (squelch) and −0.05 /
+  0.2 / 0.36 V (disconnect; current-mode CM = Vdiff/2 + 50 mV offset).  **12 corners + nominal extracted: all gating
+  cases pass** (min fire fraction 0.99, max silent-window fraction 0), FS line state and receiver detect pass, supply
+  ≤ 2.38 mA (budget 4).  **FAIL (gating, coordinator restored it): disconnect at CM 0.5 V at ss/22 and ss/32 3.15 V**
+  (fire fraction 0.31; follower output ~1.75 V is above the PMOS comparators' working CM range).  It was briefly
+  made non-gating; that was reverted, and the evidence now lists both corners as failures.
+* **Enable time (new):** DIFF_POS/DIFF_NEG valid 100 ns after `det_en` (bias/reference settling); benches start the
+  stimulus at 100 ns.  Digital masks DIFF_* for ≥ 100 ns (DT7-1).
+* **Open / weaknesses (for the reviewer):** (1) **schematic nominal fails the disconnect cases** (schematic code 3 =
+  674 mV vs extracted 566–586): the threshold depends on comparator kick-back into the LS/reference nodes, i.e. on
+  the extracted LS wiring C; the calibration is on the extraction.  This is a parasitic-sensitive design point.
+  (2) USB RX loading with detect off 154 fF (published r5 93 fF), TX 142 fF (111): pads to recheck the v9 2.7 pF USB
+  C budget (DT7-3).  (3) Not simulated with the v9 wirepad model in the loop (ideal line sources at the RX port);
+  480 Mb/s data patterns, mismatch MC and noise not run.  (4) The −0.05 V CM disconnect case is not physical for a
+  current-mode bus (one line at −0.36 V) but passes.
+* **Follow-up attempt (not published; `scratch/wired_rx/r7detect/netlists.r7h_wip.py`).** I tried three fixes for the
+  CM 0.5 V failure and the kick-back sensitivity:
+  - **Follower + I·R down-shift.** A single fixed shift cannot cover the range: line −0.36…0.81 V plus the PMOS Vsg
+    corner spread (~0.3 V) is wider than the 0.2…1.6 V window of the comparator and chain sink.
+  - **0.75 poly divider after the followers, chain scaled by the same ratio.** In schematic, CM 0.5 and −0.05 V
+    disconnect pass at ss and ff (thresholds 124 / 574 mV at tt).  Extracted: thresholds 8 % low (526–536 mV at tt,
+    497 mV at ss) and 1.5 ns edges (fire fraction ~0.52).
+  - **Removing the decoupling caps** (10× chain current to match the node impedances): schematic code 3 moves to
+    694 mV.
+
+  Conclusion: the 4-input comparator's threshold depends on kick-back into the four input nodes, so the ×0.85/×1.15
+  extracted-C requirement cannot be met by tuning.  The proposed fix is an architecture change.  Insert ±Vthr/2 as
+  I·R offsets on each follower output (sink/source currents from the V-to-I converter, selected by code), so each
+  diff comparator becomes a symmetric 2-input comparator: the same structure on both inputs, a ratio-set threshold,
+  and no CM dependence.  Not built yet.  Also not done: the v9 wirepad-in-the-loop check.
+* **r7i (approved I·R threshold-shift architecture), not published; `scratch/wired_rx/r7detect/STATUS.md`.**
+  - Schematic: CM-independent (code 3 714 mV at both CM 0.2 and −0.05 before calibration).  After calibration:
+    124–134 mV / 554–604 mV over tt, ss CM 0.5 and ff CM −0.05.  All gating cases pass at tt and ss, but the
+    disconnect fire fraction is only about 0.52.
+  - Extracted, 20 µA strings in w2 poly (178.7k µm²): disconnect never fires at ss/ff, squelch fires in 25 % of the
+    silent window, and pos/neg thresholds split by up to 50 mV.  The tap nodes sit at ~8.7 kΩ against the routing C.
+  - The fast version (100 µA, w10 strings) is 240–258k µm², over the 180k ceiling.  Blocked pending a decision on
+    area vs current (see the report to the coordinator).
+
+
+### Resume 7 / CAPTURE (fork CAP7, 2026-11-11/12; scratch `scratch/wired_rx/r7cap/`, see STATUS.md; generated/ NOT replaced)
+
+* **Gearbox moved to the digital macro (coordinator decision 1; interface W7-GEAR).**  `wc_gear` is deleted from
+  `capture.py`; ports `DX0..39`/`WCLK40` → one `WSTB` (wc_ctl's private GW copy GWT).  The macro registers
+  DW/EW/SLP/SLM on the WSTB rise (= the word loaded at the previous strobe), puts a second flop on EW (metastability),
+  and does the 2:1 gear and S3 40-bit boundary itself.  The bench now checks that consecutive WSTB-rise samples are
+  consecutive 20-bit PRBS words (replaces the DX check) and reports the DW/EW change time after the WSTB rise.
+* **Floorplan:** `split(fn, cuts, rev)` folds `wc_front` into 2 rows at gate group 102, where only H/Z (into the CKP0
+  P/Q stage) and static nets cross (asserted: no gated clock crosses).  A first column-balanced 3-way cut put
+  CKF2/CNF/CKQ2 across rows (ext q625 15 errors, wrong PD votes); a clock-safe 3-way cut also crossed FR0..7/F5..7
+  (half-period RCS=1 paths).  Piece 1 is mirrored (snake).  Pair rows hold one slot cell's pairs each, grouped by lane
+  and lane-aligned, directly below SL0/SL1 (a lane-ordered build with SL1 four rows away gave 1 error on pair 2).
+  Antenna: N+ diodes on gate-only crossing nets, on mirrored static ports (RCS, ENB) and on the pair GCK input.
+  **1181.3 × 241.5 µm = 0.285 mm²** (r6 published 0.938), Magic DRC 0, LVS unique, KLayout main 0 / antenna 0.
+* **Safe state:** an intermediate build drew 15.9 µA (EN=0, S static); a per-instance supply probe showed 8.7 µA in
+  `wc_cnt` (LDE toggling into the transparent TSPC input stage) and 6.9 µA in the front input piece.  `wc_cnt` now
+  gates LDE with EN (NAND, LDE on the ground-side device).  Final: **7.31 µA**, outputs ≤ 0.03 V (limit 10 µA).  The
+  interlock is now a hardware AND in the macro (W7-SAFE).
+* **Extracted results, final layout** (`stage/results.json`; ideal ring phases and sampler outputs):
+
+  | case | corner | result |
+  |---|---|---|
+  | q625 (RCS 0) | tt/27/3.3 | 0/200 data, 0 edge, PD ok, strobe words ok; DW after WSTB 0.955–1.069 ns |
+  | safe, S static | tt | 7.31 µA, outputs ≤ 0.03 V |
+  | q480_r1, d_lat 327 ps | ff/22/3.35, extracted C × 0.9 | 0/200, 0 edge, PD ok; DW after WSTB 0.752–0.854 ns |
+  | q480, q625_lde60, q625_r1 ff/opt, q625_ss_r1 | | see STATUS.md / results.json (filled in on completion) |
+
+  327 ps is slicer r7's earliest output edge at its optimistic fast corner (RCS=1 hold check: local clock delay +
+  hold < slicer minimum delay).
+* **q834 fails (pre-existing, not an area regression).**  On the pre-LDE-gate build of the same floorplan: ext q834_r1 tt
+  21/200 data, 30 edge errors, PD DN votes 0.20–0.34 (must be 0); ss/32/3.15 q834_r1: no word ever loads (WSTB never
+  rises).  The published r5h never passed it either (stored ext q834_r1: 3 data / 8 edge, DN 0.22–0.29).  The PD
+  failure is common to both, so the front/PD at T = 1.2 ns is the limiter; the r7 split adds wire on the H/Z
+  crossings.  Not fixed here: WT21 caps the ring at 625 MHz and SLI7-R passes only 625 MHz at the pessimistic values.
+  Coordinator decision needed: drop the q834 gate (publish r7) or a front/PD re-pipelining round for 834 MHz.
+* **Capture flop τ** (`r7cap/tau`, schematic ss/32/3.15, keeper TSPC, 10 fF): 0.19–0.22 ns (clock-to-Q 0.53 → 0.78 ns as the
+  data edge approaches the 36.5 ps boundary).  MTBF in W7-GEAR.

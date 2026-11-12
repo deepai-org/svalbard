@@ -41,6 +41,7 @@ import fastcells as fc                            # noqa: E402
 C, G, BRK, fet = fc.C, fc.G, fc.BRK, fc.fet
 S_ = C('VSS', 'VDD', same=False)
 FAST = HERE / 'generated' / 'fast'
+GEN = HERE / 'generated'          # r7: staging drivers point FAST/SCRATCH/GEN at scratch and publish only when clean
 SCRATCH = HERE.parents[3] / 'scratch' / 'wired_rx' / 'cap'
 
 
@@ -53,6 +54,7 @@ class Cell:
             self.cols.append(BRK)
         self.cols += cols
         self.net += net
+        self.groups = getattr(self, 'groups', []) + [(list(cols), list(net))]
 
     def pre(self):
         self.k += 1
@@ -141,11 +143,13 @@ class Cell:
             if self.cols:
                 self.cols.append(BRK)
             self.cols += g_
+        self.groups = list(reversed(getattr(self, 'groups', [])))
 
     def row(self, ports, track_order=None):
         r = compact.Row(self.name, self.cols, ports=ports, wn=2, wp=4)
         if track_order:
             r.track_order = track_order
+        r._cell = self
         return r, ports + ['VDD', 'VSS'], self.net
 
 
@@ -154,6 +158,7 @@ def pair():
     """Bit pair i: two slot flops on the pair's gated clock GCK (one pulse per word, from wc_slot), two
     word flops on GW.  No ring-rate clock reaches the pairs."""
     c = Cell('wc_pair')
+    c.diode('GCK')    # r7 antenna: lane-ordered pair rows give GCK4/GCK6 ~650 um of M4 (ANT.16_i_ANT.5 on the r7 build)
     c.buf('GCK', 'GCL')
     # r2f: keepers on the word flops only (r2e kept R too: the keeper slowed R enough to miss the
     # half-period R -> W hand-off at 810 MHz extracted, pair 16)
@@ -178,7 +183,14 @@ def cnt():
     counter (LDE, state, enable) and resolves a marginal first sample of LDE (any wordclk phase)."""
     c = Cell('wc_cnt')
     c.buf('CK', 'CKM')
-    c.ff('CKM', 'LDE', 'INJ1')
+    # r7 safe state: LDE gated by EN before the first flop (NAND with LDE on the ground-side device, so a toggling
+    # LDE with EN = 0 moves no node to VDD).  Extracted r7 EN=0 probe: the ungated LDE into the TSPC input stage
+    # (transparent while CK is gated low) drew 8.7 uA of the 15.9 uA safe-state supply (limit 10 uA).  LDE has no
+    # phase relation to CK (second register resolves), so two gate delays here cost nothing.
+    c.inv('ENB', 'ENC', 1, 2)
+    c.nand(['LDE', 'ENC'], 'LDGB')
+    c.inv('LDGB', 'LDG', 1, 2)
+    c.ff('CKM', 'LDG', 'INJ1')
     c.ff('CKM', 'INJ1', 'INJQ')
     c.buf('INJQ', 'INJ')
     ports = ['CK', 'ENB', 'LDE', 'INJ']
@@ -467,65 +479,55 @@ def pd():
     return c.row(ports)
 
 
-def gear():
-    """r5 (AC-1/S3 40-bit boundary): one extra 2:1 stage after the 20-bit word, clocked by a delayed copy of the
-    word-load pulse (GWT, wc_ctl's private GW copy) alone: the gear loads the word just loaded into DW, GEAR_DELAY
-    inverters after GW (see below), with the rest of the word time as hold.  T toggles at every delayed-GW
-    fall (stable while the delayed GW is high).  T = 0: L <= DW; T = 1: DX[19:0] <= L, DX[39:20] <= DW, so DX holds {later,
-    earlier} for two words, word 0 (earliest) in the low bits.  WCLK40 = T: DX changes at a GW rise while WCLK40 is
-    high, half a ring cycle before its fall; the macro samples DX on the WCLK40 rise (contract unchanged, AC3-W5).
-    r4 clocked the gear from CK/CKN and a word-load enable ELWO routed from wc_ctl: extracted, ELWO (half-period
-    path over ~600 um, 149 fF coupling to the r5b private CK copy) mis-timed GWD and DX never loaded (q625 5/5 DX
-    words wrong), and the gear loaded the shared CK/CKN nets."""
-    c = Cell('wc_gear')
-    # r5d: the gear loads the NEW word, GEAR_DELAY inverters after GW.  r5c captured the previous word on the GW
-    # rise itself, a race between two equal-depth paths (GW -> pair buffer -> W flop -> DW bufx, ~7 gates, against
-    # GWT -> gear clock, ~5 gates): schematic q625 took the new word (DX 5/5 wrong).  A delay of 20 inverters plus
-    # the 4-gate clock path (~24 gate delays vs ~7 for DW) scales with corner like the DW path, and the next GW is
-    # >= 5 ring cycles away (quarter rate).
-    c.buf('GWT', 'GWD0')
-    prev = 'GWD0'
-    for k in range(GEAR_DELAY):
-        nxt = 'GWGr' if k == GEAR_DELAY - 1 else f'GWD{k + 1}'
-        c.inv(prev, nxt, 1, 2)
-        prev = nxt
-    # r5f: the T flop clock is low while EN = 0 (NOR with ENB): an inverter of the (low) pulse held it high, so the
-    # TSPC reset fought the clock -- the r4 gear did the same with GWDN (schematic safe_q625 410 uA, limit 10 uA)
-    c.nor2('GWGr', 'ENB', 'GWN', 2, 4)
-    c.ff('GWN', 'TB', 'Tq', keep=True)
-    c.inv('Tq', 'TB', 1, 2)
-    # r5e: the pulse and T are distributed along the 1.3 mm row by strong buffers and every block makes its own
-    # clock (NAND + inverter).  r5d drove one NAND output (2 um) per word type into 5/10 block inverters spread over
-    # the row: extracted, the 0.8 ns pulse never reached the far blocks (DX never loaded; schematic was clean).
-    c.bufx('GWGr', 'GWG')
-    c.bufx('Tq', 'T')
-    for blk in range(5):                 # T = 0 words: load L
-        c.inv('T', f'TL{blk}', 1, 2)
-        c.nand(['GWG', f'TL{blk}'], f'GLB{blk}')
-        c.inv(f'GLB{blk}', f'GL{blk}', 2, 4)
-        for i in range(4 * blk, 4 * blk + 4):
-            c.ff(f'GL{blk}', f'DW{i}', f'L{i}', keep=True)
-    for blk in range(10):                # T = 1 words: load DX
-        c.nand(['GWG', 'T'], f'GXB{blk}')
-        c.inv(f'GXB{blk}', f'GX{blk}', 2, 4)
-        for i in range(4 * blk, 4 * blk + 4):
-            src = f'L{i}' if i < 20 else f'DW{i - 20}'
-            c.ff(f'GX{blk}', src, f'DX{i}', keep=True)
-    c.bufx('Tq', 'WCLK40')
-    # r6 antenna: GWT ratio 1763, DW0/DW1 403-409 (ANT.3 limit 400): N+ diodes on GWT (3 columns) and every DW input
-    c.diode('GWT', 3)
-    for i in range(20):
-        c.diode(f'DW{i}')
-    ports = ['GWT', 'ENB'] + [f'DW{i}' for i in range(20)] + [f'DX{i}' for i in range(40)] + ['WCLK40']
-    return c.row(ports)
-
-
 PD_DELAY = 6         # r5g PD vote-clock delay after CKP0 (inverters, even)
-GEAR_DELAY = 20      # r5d gear load delay (inverters, even): ~1.3 ns tt, > 2x the DW path
 
 
+def split(fn, cuts, rev=()):
+    """r7 (area): cut one wide single-row cell into rows at the given gate-group indices.  Each piece exports the
+    original ports it uses plus every net shared with another piece.  The cuts are chosen so that NO locally gated
+    clock (CK*/CN*/PC*/PR*) crosses a piece boundary (r7 first try, column-balanced cuts: CKF2/CNF/CKQ2 crossed
+    rows, extracted q625 15 bit errors and wrong PD votes); only flop-to-flop data and static nets cross.  Pieces
+    in `rev` are mirrored, so with the pieces stacked left-aligned the boundary ends of consecutive pieces sit
+    above each other (snake) and the crossing nets stay short."""
+    def make(idx):
+        r, ports, net = fn()
+        gs = r._cell.groups
+        bnd = [0] + list(cuts) + [len(gs)]
+        parts = [gs[bnd[j]:bnd[j + 1]] for j in range(len(bnd) - 1)]
+
+        def nets(gl):
+            return [n for _, nl in gl for line in nl for n in line.split()[1:5]]
+        used = set(nets(parts[idx]))
+        other = set(n for j, gl in enumerate(parts) if j != idx for n in nets(gl))
+        clk = sorted(n for n in used & other if n.startswith(('CK', 'CN', 'PC', 'PR')) and not n.startswith('CKP'))
+        assert not clk, f'gated clock crosses a split boundary: {clk}'
+        orig = [p for p in ports if p not in ('VDD', 'VSS')]
+        pp = [p for p in orig if p in used] + sorted(n for n in used if n in other and n not in orig
+                                                      and n not in ('VDD', 'VSS'))
+        sub = Cell(f'{r._cell.name}{idx}')
+        for cols, nl in (reversed(parts[idx]) if idx in rev else parts[idx]):
+            sub._add(cols, nl)
+        # antenna: a crossing net received here only on gates gets an N+ diode in this piece (the shared planner
+        # counts the driver's S/D in the other piece as protection; first r7 build: 6 x ANT.16_i_ANT.5 on M4)
+        sd = set(n for _, nl in parts[idx] for line in nl for k, n in enumerate(line.split()[1:5]) if k != 1)
+        for n in pp:
+            if n not in orig and n not in sd:
+                sub.diode(n)
+            # mirrored piece: static gate-only ports now run the full row in M2 to their gate (r7c: RCS, ANT.3)
+            elif idx in rev and n in orig and n not in sd and not n.startswith(('CKP', 'S')):
+                sub.diode(n)
+        return sub.row(pp)
+    return [lambda i=i: make(i) for i in range(len(cuts) + 1)]
+
+
+# r7: the 20->40 gearbox (wc_gear, AC-1/S3) moved into the digital macro (coordinator decision, interface row
+# W7-GEAR): the block now ends at the 20-bit word DW/EW plus the word strobe WSTB (= wc_ctl GWT).
 CELLS = dict(wc_pair=pair, wc_cnt=cnt, wc_slot0=lambda: slot(0), wc_slot1=lambda: slot(1),
-             wc_ctl=ctl, wc_front=front, wc_lane=lane, wc_pd=pd, wc_gear=gear)
+             wc_ctl=ctl, wc_lane=lane, wc_pd=pd)
+SPLIT = dict(wc_front=(front, (102,), {1}))   # r7: the 1.35 mm front row folded into 2 rows (~630 / ~715 um)
+for _nm, (_fn, *_k) in SPLIT.items():
+    for _i, _f in enumerate(split(_fn, *_k)):
+        CELLS[f'{_nm}{_i}'] = _f
 
 
 def subckt(name, ports, net):
@@ -562,8 +564,7 @@ def build_cell(name):
 TOP_PORTS = ([f'S{j}' for j in range(8)] + [f'CKP{k}' for k in range(8)] +
              ['EN', 'LDE', 'RCS', 'B2', 'B1', 'PSEL0', 'PSEL1', 'PSEL2', 'SLIPP', 'SLIPM'] +
              [f'DW{i}' for i in range(20)] + [f'EW{i}' for i in range(20)] + ['SLP', 'SLM'] +
-             [f'UP{k}' for k in range(4)] + [f'DN{k}' for k in range(4)] + [f'DX{i}' for i in range(40)] +
-             ['WCLK40', 'VDD', 'VSS'])
+             [f'UP{k}' for k in range(4)] + [f'DN{k}' for k in range(4)] + ['WSTB', 'VDD', 'VSS'])
 
 
 def top_instances():
@@ -573,14 +574,16 @@ def top_instances():
 
     def add(inst, cell, m):
         out.append((inst, cell, [m.get(p, p) for p in P[cell]]))
-    add('XCTL', 'wc_ctl', {})
-    add('XFR', 'wc_front', {})
+    add('XCTL', 'wc_ctl', dict(GWT='WSTB'))
+    for nm, (fn, cuts, _) in SPLIT.items():
+        orig = set(fn()[1])
+        for i in range(len(cuts) + 1):
+            add(f'X{nm[3:].upper()}{i}', f'{nm}{i}', {q: f'{nm}_{q}' for q in P[f'{nm}{i}'] if q not in orig})
     add('XLN', 'wc_lane', {})
     add('XCN', 'wc_cnt', {})
     add('XSL0', 'wc_slot0', {})
     add('XSL1', 'wc_slot1', {})
     add('XPD', 'wc_pd', {})
-    add('XGR', 'wc_gear', {})
     for i in range(20):
         add(f'XP{i}', 'wc_pair', dict(GCK=f'GCK{i}', DLN=f'DL{i % 4}', ELN=f'EL{i % 4}', DW=f'DW{i}', EW=f'EW{i}'))
     return out
@@ -656,13 +659,13 @@ def bench(bpc, f=625e6, words=12, psel=0, corner='typical', temp=27, vdd=3.3, d_
     conn.update(VDD='vdd', VSS='0')
     lines.append('XCAP ' + ' '.join(conn[p] for p in TOP_PORTS) + ' pt_wrx_cap')
     lines += [f'CDW{i} dw{i} 0 20f' for i in range(20)] + [f'CEW{i} ew{i} 0 20f' for i in range(20)]
-    # r4: vote outputs into the pt_cdr pins (~100 fF of route + gate), DX/WCLK40 into macro pins (~50 fF)
+    # r4: vote outputs into the pt_cdr pins (~100 fF of route + gate); r7: WSTB into the macro pin (~50 fF)
     lines += [f'CUP{k} up{k} 0 100f' for k in range(4)] + [f'CDN{k} dn{k} 0 100f' for k in range(4)]
-    lines += [f'CDX{i} dx{i} 0 50f' for i in range(40)] + ['CWC wclk40 0 50f']
+    lines += ['CWS wstb 0 50f']
     T_end = t0 + ncyc * T
     outs = ' '.join(f'v(dw{i})' for i in range(20)) + ' ' + ' '.join(f'v(ew{i})' for i in range(20))
     outs += ' ' + ' '.join(f'v(up{k})' for k in range(4)) + ' ' + ' '.join(f'v(dn{k})' for k in range(4))
-    outs += ' ' + ' '.join(f'v(dx{i})' for i in range(40)) + ' v(wclk40)'
+    outs += ' v(wstb)'
     ctl = '\n'.join([f'tran 2p {T_end:.4g} 0 10p', 'set wr_singlescale', f'wrdata out.txt v(lde) {outs}',
                      f'meas tran iavg avg i(VDD) from={t0 + 6 * T:.4g} to={T_end:.4g}'])
 
@@ -675,7 +678,7 @@ def bench(bpc, f=625e6, words=12, psel=0, corner='typical', temp=27, vdd=3.3, d_
             for line_ in log.splitlines():
                 if line_.strip().startswith('iavg'):
                     iavg = -float(line_.split('=')[1].split()[0])
-            omax = float(np.max(d[t > 3e-9, 2:91]))
+            omax = float(np.max(d[t > 3e-9, 2:51]))
             return dict(i_uA=iavg * 1e6 if iavg is not None else None, outputs_max_v=omax,
                         pass_=bool(iavg is not None and abs(iavg) < 10e-6 and omax < 0.3))
         # word update instants: clusters of output transitions (W flops all load on one edge)
@@ -722,31 +725,41 @@ def bench(bpc, f=625e6, words=12, psel=0, corner='typical', temp=27, vdd=3.3, d_
         legs = {4: 4, 2: 2, 1: 0}[bpc]
         pd_ok = all((0.2 < act[k] < 0.8) if k < legs else act[k] < 0.02 for k in range(4)) and \
             all(a < 0.02 for a in act[4:])
-        # r4 gear: DX sampled at WCLK40 rises must be two consecutive words of the stream ({later, earlier})
-        wc = d[:, 90] > vdd / 2
-        rises = [t[i] for i in range(1, len(t)) if wc[i] and not wc[i - 1]]
-        dxs = []
+        # r7 word interface (gear in the digital macro): DW/EW sampled at each WSTB rise must be the PREVIOUS word,
+        # i.e. consecutive WSTB-rise samples are consecutive 20-bit words of the line PRBS; and the DW/EW transition
+        # instants after each WSTB rise give the macro's hold (min) / setup (max) numbers.
+        wsv = d[:, 50] > vdd / 2
+        rises = [t[i] for i in range(1, len(t)) if wsv[i] and not wsv[i - 1]]
+        falls = [t[i] for i in range(1, len(t)) if (not wsv[i]) and wsv[i - 1]]
+        sw = []
         for tr_ in rises:
-            k = int(np.searchsorted(t, tr_ - 50e-12))
-            dxs.append([int(v > vdd / 2) for v in d[k, 50:90]])
-        dxs = dxs[2:]
-        dx_err = None
-        if best and dxs:
-            # against the line PRBS itself (the DW stream window above ends before the last DX word)
-            sstr = ''.join(map(str, bits))
-            dx_err = 0
-            prev = None
-            for w in dxs:
-                lo, hi = ''.join(map(str, w[:20])), ''.join(map(str, w[20:]))
-                pos = sstr.find(lo + hi)
-                # consecutive DX words must also be 40 line bits apart (mod the PRBS7 period)
-                ok_ = pos >= 0 and (prev is None or (pos - prev - 40) % 127 == 0)
-                dx_err += 0 if ok_ else 1
-                prev = pos if pos >= 0 else None
-        gear_ok = bool(dxs) and len(dxs) >= max(1, (len(ws) - 4) // 2 - 1) and dx_err == 0
+            k = int(np.searchsorted(t, tr_ - 20e-12))
+            sw.append([int(v > vdd / 2) for v in d[k, 2:22]])
+        sw = sw[3:]
+        sstr = ''.join(map(str, bits))
+        st_err, prev = 0, None
+        for w in sw:
+            pos = sstr.find(''.join(map(str, w)))
+            ok_ = pos >= 0 and (prev is None or (pos - prev - 20) % 127 == 0)
+            st_err += 0 if ok_ else 1
+            prev = pos if pos >= 0 else None
+        dly = []
+        for tr_ in rises[3:]:
+            m = (t > tr_) & (t < tr_ + 0.6 * nw * T)
+            idx = np.where(m)[0]
+            for col in range(2, 42):
+                v = d[idx, col] > vdd / 2
+                ch_ = np.where(v[1:] != v[:-1])[0]
+                if len(ch_):
+                    dly.append(t[idx[ch_[0] + 1]] - tr_)
+        pw = [f_ - r_ for r_, f_ in zip(rises, [f for f in falls if f > rises[0]])] if rises else []
+        word_timing = dict(dw_after_wstb_rise_ns=[round(min(dly) * 1e9, 3), round(max(dly) * 1e9, 3)] if dly else None,
+                           wstb_high_ns=round(float(np.median(pw)) * 1e9, 3) if pw else None,
+                           word_period_ns=round(nw * T * 1e9, 3))
+        gear_ok = len(sw) >= max(1, len(ws) - 4) and st_err == 0
         return dict(words=len(ws), bits=len(stream), offset=best[0] if best else None, dw_err_bitpos=err_pos,
                     vote_activity=dict(zip([f'UP{k}' for k in range(4)] + [f'DN{k}' for k in range(4)], act)),
-                    pd_ok=pd_ok, dx_words=len(dxs), dx_word_errors=dx_err, gear_ok=gear_ok,
+                    pd_ok=pd_ok, strobe_words=len(sw), strobe_word_errors=st_err, word_timing=word_timing, gear_ok=gear_ok,
                     ew_err_bitpos=eerr_pos,
                     bit_errors=best[1] if best else None, edge_bits=len(estream), edge_errors=edge_err,
                     i_mA=iavg * 1e3 if iavg else None,
@@ -776,7 +789,7 @@ def run_bench(tag, bpc, ext=False, assess_only=False, **kw):
         return r
     work.mkdir(parents=True, exist_ok=True)
     if ext:
-        shutil.copy(HERE / 'generated' / 'wrx_cap.ext.spice', work / 'cap.spice')
+        shutil.copy(GEN / 'wrx_cap.ext.spice', work / 'cap.spice')
     else:
         (work / 'cap.spice').write_text(top_netlist())
     body, ctl, an = bench(bpc, **kw)
@@ -793,7 +806,19 @@ def run_bench(tag, bpc, ext=False, assess_only=False, **kw):
 
 
 # ----------------------------------------------------------------------------------------- top layout
-def build_top(rows=None, max_row_width=420.0):
+# r7 floorplan (no gear, 0.3 mm^2 class), rows bottom-up.  The front is folded into 2 rows stacked left-aligned
+# (FRONT1 = S/F/FR input end, mirrored; FRONT0 = O output end), cut where only H/Z (into the CKP0 P/Q stage) cross:
+# the r7b 3-way cut also crossed FR0..7 and F5..7 (half-period paths of the RCS=1 route).  O leaves FRONT0's left
+# end straight up into LN and PD (row above).  Both slot cells sit directly above the two pair rows; each pair row is
+# one slot cell's pairs, grouped by lane (i % 4) and lane-aligned between the rows, so GCK and DL/EL stay short.
+# (r6 AREA's index-ordered 10-wide rows: DL/EL 250-317 fF, 13 errors; r7b lane-ordered rows with SL1 four rows
+# away from its pairs: ext q625 1 error on pair 2.)
+ROWS = [['FRONT1'], ['FRONT0', 'CTL'], ['LN', 'PD', 'CN'], ['SL0', 'SL1'],
+        [f'P{i}' for i in (0, 4, 8, 1, 5, 9, 2, 6, 3, 7)],
+        [f'P{i}' for i in (12, 16, 13, 17, 10, 14, 18, 11, 15, 19)]]
+
+
+def build_top(rows=None, max_row_width=1100.0):
     """Assemble the compact rows with timing's generic macro placer/router (layout_engine), from this
     directory's generated/fast cells.  Writes generated/wrx_cap.{mag,gds,ext.spice,lvs.spice}."""
     import netlist as tn
@@ -811,12 +836,11 @@ def build_top(rows=None, max_row_width=420.0):
         # r5: GR below the pairs and LN at the left of its row (next to the pairs).  r4 put the 66 um gear row
         # (+51 um channel) between the slots and the pairs and LN right of PD: the lane nets DL/EL grew
         # 120 -> 200-255 fF extracted and the lane -> slot flop half-period path failed (q625 40/200 errors).
-        rows = [['CTL'], ['FR'], ['LN', 'PD'], ['CN', 'SL0'], ['SL1']] + \
-               [[f'P{i}' for i in range(k, min(k + 4, 20))] for k in range(0, 20, 4)] + [['GR']]
+        rows = ROWS
     # r5h: the vote outputs as one trunk group flanked by static mode/select ports (r5g: CKP0's trunk beside UP3,
     # 68 fF: 0.6 V spikes on UP3 with EN = 0 and an extra 68 fF on one ring phase)
     rep = le.generate(work, 'pt_wrx_cap', ports, devices, rows=rows, max_row_width=max_row_width,
-                      trunk_groups=[['RCS'] + [f'UP{k}' for k in range(4)] + [f'DN{k}' for k in range(4)] + ['B2']])
+                      trunk_groups=[['RCS'] + [f'UP{k}' for k in range(4)] + [f'DN{k}' for k in range(4)] + ['B2']], over_cell=True)
     defs = ''.join((FAST / f'{m}.spice').read_text() for m in CELLS)
     top_sp = tn.flat_spice(ports, devices, 'pt_wrx_cap')
     ant = le.ad.spice_lines(rep.get('antenna_diodes', []))   # K1 antenna diodes -> LVS reference
@@ -825,7 +849,7 @@ def build_top(rows=None, max_row_width=420.0):
         top_sp = top_sp[:k] + '\n'.join(ant) + '\n' + top_sp[k:]
     (work / 'schematic.spice').write_text(defs + top_sp)
     lvs = le.netgen_lvs(work, 'pt_wrx_cap.lvs.spice', 'pt_wrx_cap', 'schematic.spice', 'pt_wrx_cap')
-    gen = HERE / 'generated'
+    gen = GEN
     for suf in ('.mag', '.ext.spice', '.lvs.spice'):
         f = work / f'pt_wrx_cap{suf}'
         if f.exists():

@@ -23,7 +23,10 @@ CEILING = dict(termination=200000, rxlevel=50000, rxselect=80000, ctle=200000, s
 CORNERS = [(c, t, v) for c in ('typical', 'ss', 'ff') for t in (22, 32) for v in (3.15, 3.35)]
 NOMINAL = ('typical', 27, 3.3)
 # one StrongARM sampler per device row keeps its sensitive nets row-local
-COLUMNS = dict(slicer=40, detect=30, cdr=20)
+COLUMNS = dict(slicer=40, detect=30, cdr=20, vthdac=16)
+# r7 (vthdac): Metal4/escapes over the devices, and every port treated as quiet (A/B codes and VT lines are static or
+# quasi-static, so no 4 um gaps between their trunks): 80.9k -> 23.9k um^2
+LAYOUT_OPTS = dict(vthdac=dict(over_dev=True, quiet=lambda p: True))
 
 
 def layout_block_slicer():
@@ -37,7 +40,7 @@ def layout_block_slicer():
                lvs_unique_match=bool(top['lvs']['unique_match'] and all(c['lvs']['unique_match'] for c in cells.values())),
                lvs_final=top['lvs']['summary'].strip(), size_um=top['layout']['size_um'], area_um2=top['layout']['area_um2'],
                area_ceiling_um2=CEILING['slicer'], gds_export=top['gds_export'],
-               revision='r2 compact (slicer_compact.py: ws_sa x8 + ws_ctl, layout_engine macro assembly)',
+               revision='r7 compact (slicer_compact.py: 4 x ws_sa + 4 x ws_sae + ws_ctl + 4 x ws_aux, layout_engine macro assembly)',
                cells={n: dict(drc_errors=c['drc_errors'], lvs_unique=c['lvs']['unique_match'], size_um=c['size_um'],
                               devices=c['devices']) for n, c in cells.items()},
                extraction='flat (ext2spice hierarchy off, cthresh 0, C only)')
@@ -50,7 +53,7 @@ def layout_block(block):
         return layout_block_slicer()
     sub = f.parse_spice(f.HERE / f'{block}.spice')
     work = f.SCRATCH / 'layout' / block
-    lay = f.generate_layout(sub, work, columns=COLUMNS.get(block))
+    lay = f.generate_layout(sub, work, columns=COLUMNS.get(block), **LAYOUT_OPTS.get(block, {}))
     ref = f.lvs_reference(f.HERE / f'{block}.spice', sub.name, lay.get('antenna_diodes'), work / 'lvs_reference.spice')
     lv = f.lvs(work, f'{sub.name}.lvs.spice', sub.name, ref, sub.name)
     f.GENERATED.mkdir(exist_ok=True)

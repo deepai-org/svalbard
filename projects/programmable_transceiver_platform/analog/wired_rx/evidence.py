@@ -84,11 +84,15 @@ META = dict(
                   'Offset trim is 2+2 bits of switched capacitance per sampler, not a calibrated DAC',
                   'Noise and metastability not simulated']),
     detect=dict(
-        key=[('usb_hs_squelch', 'fraction_hit_above', 'fires on 200 mV diff (> 125 mV threshold)'),
-             ('usb_hs_squelch', 'fraction_hit_below', 'silent on 60 mV diff (squelch)'),
-             ('usb_hs_disconnect', 'fraction_hit_above', 'fires on 800 mV diff (625 mV threshold)'),
-             ('usb_hs_disconnect', 'fraction_hit_below', 'silent on 400 mV diff'),
-             ('rx_detect', 'inject_current_uA_est', '100 uA per leg'),
+        key=[(f'usb_hs_squelch{s}', 'fraction_hit_above', f'fires on 150 mV diff (USB squelch edge), line CM {cm}')
+             for s, cm in (('_cm-50', '-0.05 V'), ('', '0.2 V'), ('_cm500', '0.5 V'))]
+            + [(f'usb_hs_squelch{s}', 'fraction_hit_below', f'silent on 100 mV diff, line CM {cm}')
+               for s, cm in (('_cm-50', '-0.05 V'), ('', '0.2 V'), ('_cm500', '0.5 V'))]
+            + [(f'usb_hs_disconnect{s}', 'fraction_hit_above', f'fires on 625 mV diff (USB disconnect edge), line CM {cm}')
+               for s, cm in (('_cm-50', '-0.05 V'), ('', '0.2 V'), ('_cm360', '0.36 V'), ('_cm500', '0.5 V'))]
+            + [(f'usb_hs_disconnect{s}', 'fraction_hit_below', f'silent on 525 mV diff, line CM {cm}')
+               for s, cm in (('_cm-50', '-0.05 V'), ('', '0.2 V'), ('_cm360', '0.36 V'), ('_cm500', '0.5 V'))] + [
+             ('rx_detect', 'inject_current_uA_est', '60-160 uA per leg (TX pad > Vse 0.8 V into 10 kohm)'),
              ('usb_hs_squelch', 'iavg', 'wired budget 4 mA')],
         atb=['atb_det_vref (ladder base 0.5 V)'], status=['DIFF_POS/DIFF_NEG/SE_P/SE_N sampled outputs -> RTL line-state, '
                                                           'squelch, disconnect, SE0, receiver-detect timing'], clocks=[],

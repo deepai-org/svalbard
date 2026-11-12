@@ -439,7 +439,8 @@ slicer_en=0: per-sampler tail headers off, outputs forced low.""")
     return c
 
 
-CLR, CLN, CLW = (28, 160), (4, 5), (30, 160)   # detect TX-pad clamps (F, S branch): poly R length, stack height, width
+RA, CHAIN = 12.5, ((4, 1.464), (4, 1.738), (1, 3.204))   # detect r7j: threshold-string segments (parallel count, l um; w 2 um poly), 80 uA
+CLR, CLN, CLW = (12, 40), 7, ((20, 2), (10, 1))   # detect TX-pad secondary protection: poly R length (F, S), diode-string height, (w, m) per diode
 
 
 def detect():
@@ -471,47 +472,80 @@ Vthr (det_thr[1:0]): 0 / 62.5 / 125 / 670 mV nominal (extracted effective ~0 / 6
     c.n('lad_bot', 'enq', 'VSS', w=20)
     # threshold decode
     c.inv('det_thr0', 't0b'); c.inv('det_thr1', 't1b'); c.inv('det_se0', 'e0b'); c.inv('det_se1', 'e1b')
-    for i, tap in enumerate(['atb_det_vref', 'B1', 'B2', 'B3']):
-        a = 'det_thr0' if i & 1 else 't0b'
-        b = 'det_thr1' if i & 2 else 't1b'
-        c.nand([a, b], f'tg{i}_b'); c.inv(f'tg{i}_b', f'tg{i}')
-        c.tg(tap, 'VTHP', f'tg{i}', f'tg{i}_b', wn=2, wp=4)
     for i, tap in enumerate(['S0', 'B3', 'S1', 'S2']):
         a = 'det_se0' if i & 1 else 'e0b'
         b = 'det_se1' if i & 2 else 'e1b'
         c.nand([a, b], f'sg{i}_b'); c.inv(f'sg{i}_b', f'sg{i}')
         c.tg(tap, 'VSE', f'sg{i}', f'sg{i}_b', wn=2, wp=4)
-    # reference decoupling against comparator kick-back (~0.45 pF each)
-    # refn reaches the comparators through an always-on copy of the threshold TG so both
-    # reference gates see the same source impedance and kick-back recovery
-    c.tg('atb_det_vref', 'VREFN', V, 'VSS', wn=2, wp=4)
-    for node in ('VREFN', 'VTHP', 'VSE'):
-        c.pcap(node, 20, 1, m=5)
+    c.pcap('VSE', 20, 5)
+    # r7i level shift + threshold (USB squelch/disconnect over line CM -0.05..0.5 V): RX pair -> matched PMOS source
+    # followers (own wells, 800 uA source) LS_x -> 0.75 poly divider (1k/3k) LT_x (comparator CM range at ss / CM 0.5 V
+    # and no headroom limit at the low end).  Threshold: each LT_x feeds an UP and a DN resistor string carrying the
+    # code-independent current I = atb_det_vref / R_A (OTA V-to-I, 80 uA; tap R <= 2.7 kohm for ~0.3 ns settling) sourced into / sunk from its far end, so
+    # tap k sits at LT_x +/- I*R_k.  The tap selected by det_thr (TG, no DC current) drives a 2-input comparator:
+    # DIFF_POS = DN_P > UP_N, i.e. (P - N) > 2*I*R_k / 0.75 (input-referred): a poly ratio times the VDD-ratio ladder
+    # tap, independent of CM, and both comparator inputs are identical structures (kick-back symmetric).  The UP and
+    # DN currents of one leg cancel at LT_x.
+    for leg in 'PN':
+        c.p('VSS', f'DP_{leg}', f'LS_{leg}', b=f'LS_{leg}', w=10, l=.5, m=8)
+        c.p(f'LS_{leg}', 'dpb', V, w=10, l=1, m=16)
+        c.r(f'LS_{leg}', f'LT_{leg}', 2, 2)
+        c.r(f'LT_{leg}', 'VSS', 2, 6)
+    c.p('ot', 'dpb', V, w=8, l=1)
+    c.p('oa1', 'atb_det_vref', 'ot', w=8, l=1)
+    c.p('og', 'va', 'ot', w=8, l=1)
+    c.n('oa1', 'oa1', 'VSS', w=2, l=2); c.n('og', 'oa1', 'VSS', w=2, l=2)
+    c.n('og', 'enb', 'VSS', w=1)
+    c.n('VSS', 'og', 'VSS', w=4, l=4)           # OTA dominant pole (NMOS gate cap)
+    c.n('im', 'og', 'va', w=10, l=.5, m=2)
+    c.r('va', 'VSS', 2, RA)
+    c.p('im', 'im', V, w=10, l=.5, m=2); c.p('im', 'enq', V, w=1)
+    c.p('inm', 'im', V, w=10, l=.5, m=2); c.n('inm', 'inm', 'VSS', w=10, l=.5, m=4); c.n('inm', 'enb', 'VSS', w=1)
+    for i in range(4):
+        a = 'det_thr0' if i & 1 else 't0b'
+        b = 'det_thr1' if i & 2 else 't1b'
+        c.nand([a, b], f'tg{i}_b'); c.inv(f'tg{i}_b', f'tg{i}')
+    for leg in 'PN':
+        for d in ('UP', 'DN'):
+            taps = [f'LT_{leg}'] + [f'{d}{k}_{leg}' for k in (1, 2, 3)]
+            for k, (npar, l) in enumerate(CHAIN):
+                for _ in range(npar):     # short segments as parallel w2 strips (HRES min length)
+                    c.r(taps[k], taps[k + 1], 2, l)
+            if d == 'UP':
+                c.p(taps[3], 'im', V, w=10, l=.5, m=2)
+            else:
+                c.n(taps[3], 'inm', 'VSS', w=10, l=.5, m=4)
+            for i in range(4):
+                c.tg(taps[i], f'{d}_{leg}', f'tg{i}', f'tg{i}_b', wn=2, wp=4)   # series R small vs tap R; drain C small
     # source select
     c.inv('det_src_tx', 'srcb')
     c.nand(['det_en', 'srcb'], 'ln_b'); c.inv('ln_b', 'ln')
     c.nand(['det_en', 'det_src_tx'], 'tx_b'); c.inv('tx_b', 'tx')
-    # r6 (PD29 HBM core-gate screen): no 3.3 V gate faces a TX pad.  TX_x -> 2 kohm poly -> TXF_x / TXS_x, each clamped
-    # by a 5-high stack of diode-connected 6 V NMOS (off below ~3.6 V, ~5.5 V at mA HBM current), and the pass and
-    # injection switches on TXF_x are 6 V NMOS (L 0.7 um).
+    # r7 (PD29 HBM core-gate screen, local secondary protection): TX_x -> series poly R -> TXF_x (injection) /
+    # TXS_x (zero-current sense).  Each node is clamped by a string of CLN p+/nwell junction diodes to VSS (each a
+    # pfet_06v0 with S=D=anode, G=B=cathode, own nwell: stackable; > 3.63 V unpowered pad at < 0.1 uA, ~5 V at mA HBM
+    # current) and by an off 6 V NMOS (drain-psub junction: negative clamp).  Every device on TXF/TXS is 6 V.
     def n6(d, g, s_, w=4., l=.7, m=1):
         c.lines.append(f'X{c._id("HV")} {d} {g} {s_} VSS nfet_06v0 w={w:g}u l={l:g}u' + (f' m={m}' if m > 1 else ''))
+
+    def pd6(a, k, w, m):
+        c.lines.append(f'X{c._id("HD")} {a} {k} {a} {k} pfet_06v0 w={w:g}u l=0.7u' + (f' m={m}' if m > 1 else ''))
     for leg in 'PN':
-        c.tg(f'RX_{leg}', f'DP_{leg}', 'ln', 'ln_b', wn=2, wp=4)
-        # F: injection branch (4-high clamp); S: zero-current sense branch straight from the pad (5-high clamp,
-        # larger R, no I*R offset).  Clamp leakage at 3.63 V (unpowered pad, both legs) < 1 uA.
-        for br, rl, n, w in (('F', CLR[0], CLN[0], CLW[0]), ('S', CLR[1], CLN[1], CLW[1])):
+        # r7: 3x TG (DP edge was TG-RC limited, ~1 ns, behind the level-shift follower gates)
+        c.tg(f'RX_{leg}', f'DP_{leg}', 'ln', 'ln_b', wn=6, wp=12)
+        for br, rl, n, (w, m) in (('F', CLR[0], CLN, CLW[0]), ('S', CLR[1], CLN, CLW[1])):
             c.r(f'TX_{leg}', f'TX{br}_{leg}', 2, rl)
             prev = f'TX{br}_{leg}'
             for k in range(n):
-                nxt = 'VSS' if k == n - 1 else f'TXC{br}{k}_{leg}'
-                n6(prev, prev, nxt, w=w / -(-w // 80), l=.7, m=int(-(-w // 80)))   # PDK bin: w <= 100 um
+                nxt = 'VSS' if k == n - 1 else f'TXD{br}{k}_{leg}'
+                pd6(prev, nxt, w, m)
                 prev = nxt
+            n6(f'TX{br}_{leg}', 'VSS', 'VSS', w=w, m=m)
         n6(f'TXS_{leg}', 'tx', f'DP_{leg}')
         c.n(f'DP_{leg}', 'enb', 'VSS', w=1)
     # comparators
-    _strongarm(c, 'cdp', 'det_clk', 'DP_P', 'DP_N', 'DIFF_POS', ref=('VTHP', 'VREFN'))
-    _strongarm(c, 'cdn', 'det_clk', 'DP_N', 'DP_P', 'DIFF_NEG', ref=('VTHP', 'VREFN'))
+    _strongarm(c, 'cdp', 'det_clk', 'DN_P', 'UP_N', 'DIFF_POS')
+    _strongarm(c, 'cdn', 'det_clk', 'DN_N', 'UP_P', 'DIFF_NEG')
     _strongarm(c, 'csp', 'det_clk', 'DP_P', 'VSE', 'SE_P')
     _strongarm(c, 'csn', 'det_clk', 'DP_N', 'VSE', 'SE_N')
     # receiver-detect injection: IBIAS 10u -> nmos diode -> nmos x1 -> pmos diode -> pmos x10 per leg
@@ -519,12 +553,12 @@ Vthr (det_thr[1:0]): 0 / 62.5 / 125 / 670 mV nominal (extracted effective ~0 / 6
     c.n('dnb', 'enq', 'IBIAS', w=4)
     c.n('dnb', 'dnb', 'VSS', w=2, l=1)
     c.n('dnb', 'enb', 'VSS', w=1)
-    c.n('dpb', 'dnb', 'VSS', w=2, l=1)
-    c.p('dpb', 'dpb', V, w=2, l=1)
+    c.n('dpb', 'dnb', 'VSS', w=8, l=1)     # r7: 40 uA reference leg (dpb settles in ~10 ns; copies = 5 uA per um of w)
+    c.p('dpb', 'dpb', V, w=8, l=1)
     c.p('dpb', 'enq', V, w=2)
     for leg in 'PN':
-        c.p(f'inj_{leg}', 'dpb', V, w=20, l=1)
-        n6(f'TXF_{leg}', 'inj', f'inj_{leg}', w=20)
+        c.p(f'inj_{leg}', 'dpb', V, w=24, l=1)
+        n6(f'TXF_{leg}', 'inj', f'inj_{leg}', w=40)
     return c
 
 
@@ -719,7 +753,8 @@ ws_sae aux pair (W ratio ~ 1/6): LSB ~2-3 mV, range >= +/-250 mV (FPGA-calibrate
     c.inv('vth_en', 'enb', wn=1, wp=2)
     c.p('pb', 'pb', V, w=8, l=2, m=4)                     # reference diode (32 unit widths)
     c.p('pb', 'vth_en', V, w=1)                           # off: gates at VDD
-    c.r('pb', 'rbm', 1, 94)                               # R_B ~ 94 kOhm
+    # r7 (SLI7): R_B 94 -> 63 kOhm (I x1.5) with R_L 8 -> 5.33 kOhm: same swing, tau 2/3 (r6c extracted settling 97-109 ns)
+    c.r('pb', 'rbm', 1, 63)                               # R_B ~ 63 kOhm
     c.n('rbm', 'vth_en', 'VSS', w=2)
     for d in ('A', 'B'):
         for b in range(8):
@@ -731,11 +766,12 @@ ws_sae aux pair (W ratio ~ 1/6): LSB ~2-3 mV, range >= +/-250 mV (FPGA-calibrate
                 c.p(f'{d.lower()}s{b}', 'pb', V, w=m, l=2)
             else:
                 c.p(f'{d.lower()}s{b}', 'pb', V, w=8, l=2, m=m // 8)
-            sw, sm = (max(2, m // 2), 1) if m <= 16 else (8, m // 16)
+            # r7: switches 2 um up to bit 5, bit 6 8 um, bit 7 2 x 8 um (r6c: 130 um of drain per output line)
+            sw, sm = (2, 1) if m <= 32 else ((8, 1) if m == 64 else (8, 2))
             c.p(f'VT{d}P', f'{d.lower()}{b}b', f'{d.lower()}s{b}', w=sw, m=sm)
             c.p(f'VT{d}N', f'{d}{b}', f'{d.lower()}s{b}', w=sw, m=sm)
         for o in ('P', 'N'):
-            c.r(f'VT{d}{o}', 'VSS', 2, 16)                # R_L 8 kOhm
+            c.r(f'VT{d}{o}', 'VSS', 2, 10.667)            # R_L 5.33 kOhm (r7)
             c.pcap(f'VT{d}{o}', 4, 4)                     # r6c: 4x4 (8x8 first cut); the ws_aux AX decaps load it too
     return c
 

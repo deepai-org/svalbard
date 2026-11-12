@@ -1,0 +1,349 @@
+{
+ "block": "vthdac",
+ "subckt": "pt_vthdac",
+ "revision": "r7 (SLI7): R_B 63k (I x1.5), R_L 5.33k, switches 2/8/2x8 um, over_dev + quiet-port layout",
+ "source_hashes": {
+  "vthdac.spice": "sha256:71f2afc80c4aa6232f72faee540d9ec2ffb05221c8ef203b8b0667899ab9f406",
+  "generated/vthdac.ext.spice": "sha256:2fbcae19a62488f2ef4f1a4f086f6a36fbf986408d02c71cdd804ae67bb490be",
+  "generated/vthdac.gds": "sha256:8a95c5fd4733c85801c3012671e2ff6a051cf759604e3f9b2184db6d4b8754dd",
+  "netlists.py": "sha256:a4d3e33921a93818ba6267aa64aaebddb0ca8dc62f9aa878b5d7b12ffafc78d4",
+  "run_family.py": "sha256:467566f354909dae3902c2728db857b70f3b923e7a9d4fe88810c9bfcaddb945"
+ },
+ "bench": "scratch/wired_rx/r7slicer/dacbench.py: codes 128,129,127,0,255,1,254,64,192,128 (200 ns each), 700 fF per line (pessimistic routing+ws_aux load), settle = 0->255 step to within 1 LSB",
+ "limits": {
+  "settle_ns": 50,
+  "area_um2": 25000,
+  "slicer_referred_range_mV": 250
+ },
+ "layout": {
+  "block": "vthdac",
+  "subckt": "pt_vthdac",
+  "devices": 166,
+  "nets": 71,
+  "drc_errors": 0,
+  "drc_details": "",
+  "lvs_unique_match": true,
+  "lvs_final": "Circuits match uniquely.",
+  "size_um": [
+   140.42,
+   170.09
+  ],
+  "area_um2": 23884.0,
+  "area_ceiling_um2": null,
+  "gds_export": {
+   "magic": "8.3.678",
+   "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+   "marker_shapes": {
+    "HRES 62/0": 18,
+    "RES_MK 110/5": 36
+   },
+   "ppolyf_u_1k_devices": 18,
+   "klayout_drc": {
+    "violations": 0,
+    "by_rule": {},
+    "rc": "0",
+    "lyrdb_files": 1
+   },
+   "hres_ok": true,
+   "pass": true
+  },
+  "klayout_precheck": {
+   "clean": true,
+   "main": 0,
+   "antenna": 0
+  },
+  "grid": {
+   "columns": 16,
+   "rows": 11,
+   "pitch_um": 14.0
+  }
+ },
+ "extracted": {
+  "typical": {
+   "codes": {
+    "128": {
+     "diff": 0.00652,
+     "cm": 0.7153
+    },
+    "129": {
+     "diff": 0.0172,
+     "cm": 0.7153
+    },
+    "127": {
+     "diff": -0.00652,
+     "cm": 0.7153
+    },
+    "0": {
+     "diff": -1.42914,
+     "cm": 0.7146
+    },
+    "255": {
+     "diff": 1.42913,
+     "cm": 0.7146
+    },
+    "1": {
+     "diff": -1.41851,
+     "cm": 0.7146
+    },
+    "254": {
+     "diff": 1.41849,
+     "cm": 0.7146
+    },
+    "64": {
+     "diff": -0.71186,
+     "cm": 0.7152
+    },
+    "192": {
+     "diff": 0.72488,
+     "cm": 0.7152
+    }
+   },
+   "lsb_mV": 11.208901960784313,
+   "settle_0to255_ns": 41.90860100000004,
+   "dnl_128_127": 1.1633610540641717,
+   "vtb_diff": 0.0065166399999999625,
+   "i_uA": 524.657
+  },
+  "ss": {
+   "codes": {
+    "128": {
+     "diff": 0.00587,
+     "cm": 0.6368
+    },
+    "129": {
+     "diff": 0.01533,
+     "cm": 0.6368
+    },
+    "127": {
+     "diff": -0.00587,
+     "cm": 0.6368
+    },
+    "0": {
+     "diff": -1.27325,
+     "cm": 0.6366
+    },
+    "255": {
+     "diff": 1.27321,
+     "cm": 0.6366
+    },
+    "1": {
+     "diff": -1.2638,
+     "cm": 0.6366
+    },
+    "254": {
+     "diff": 1.26376,
+     "cm": 0.6366
+    },
+    "64": {
+     "diff": -0.63375,
+     "cm": 0.6368
+    },
+    "192": {
+     "diff": 0.64548,
+     "cm": 0.6368
+    }
+   },
+   "lsb_mV": 9.986117647058823,
+   "settle_0to255_ns": 42.845652000000044,
+   "dnl_128_127": 1.1756320539101341,
+   "vtb_diff": 0.005868209000000069,
+   "i_uA": 388.104
+  },
+  "ff": {
+   "codes": {
+    "128": {
+     "diff": 0.00685,
+     "cm": 0.7606
+    },
+    "129": {
+     "diff": 0.01828,
+     "cm": 0.7606
+    },
+    "127": {
+     "diff": -0.00685,
+     "cm": 0.7606
+    },
+    "0": {
+     "diff": -1.51839,
+     "cm": 0.7592
+    },
+    "255": {
+     "diff": 1.51839,
+     "cm": 0.7592
+    },
+    "1": {
+     "diff": -1.50703,
+     "cm": 0.7592
+    },
+    "254": {
+     "diff": 1.50702,
+     "cm": 0.7592
+    },
+    "64": {
+     "diff": -0.75678,
+     "cm": 0.7604
+    },
+    "192": {
+     "diff": 0.77047,
+     "cm": 0.7604
+    }
+   },
+   "lsb_mV": 11.908941176470588,
+   "settle_0to255_ns": 37.44486500000007,
+   "dnl_128_127": 1.1503961432833463,
+   "vtb_diff": 0.00685057,
+   "i_uA": 694.6850000000001
+  }
+ },
+ "schematic": {
+  "ss": {
+   "codes": {
+    "128": {
+     "diff": 0.00587,
+     "cm": 0.6371
+    },
+    "129": {
+     "diff": 0.01533,
+     "cm": 0.6371
+    },
+    "127": {
+     "diff": -0.00587,
+     "cm": 0.6371
+    },
+    "0": {
+     "diff": -1.27393,
+     "cm": 0.637
+    },
+    "255": {
+     "diff": 1.27393,
+     "cm": 0.637
+    },
+    "1": {
+     "diff": -1.26448,
+     "cm": 0.637
+    },
+    "254": {
+     "diff": 1.26448,
+     "cm": 0.637
+    },
+    "64": {
+     "diff": -0.63409,
+     "cm": 0.6371
+    },
+    "192": {
+     "diff": 0.64584,
+     "cm": 0.6371
+    }
+   },
+   "lsb_mV": 9.991607843137256,
+   "settle_0to255_ns": 29.35237500000002,
+   "dnl_128_127": 1.1749860667383607,
+   "vtb_diff": 0.005871418999999989,
+   "i_uA": 390.979
+  },
+  "typical": {
+   "codes": {
+    "128": {
+     "diff": 0.00652,
+     "cm": 0.7157
+    },
+    "129": {
+     "diff": 0.01721,
+     "cm": 0.7157
+    },
+    "127": {
+     "diff": -0.00652,
+     "cm": 0.7157
+    },
+    "0": {
+     "diff": -1.42993,
+     "cm": 0.715
+    },
+    "255": {
+     "diff": 1.42993,
+     "cm": 0.715
+    },
+    "1": {
+     "diff": -1.41928,
+     "cm": 0.715
+    },
+    "254": {
+     "diff": 1.41928,
+     "cm": 0.715
+    },
+    "64": {
+     "diff": -0.71224,
+     "cm": 0.7156
+    },
+    "192": {
+     "diff": 0.72528,
+     "cm": 0.7156
+    }
+   },
+   "lsb_mV": 11.215137254901961,
+   "settle_0to255_ns": 26.246509000000003,
+   "dnl_128_127": 1.1627142587399384,
+   "vtb_diff": 0.006520193000000063,
+   "i_uA": 527.484
+  },
+  "ff": {
+   "codes": {
+    "128": {
+     "diff": 0.00685,
+     "cm": 0.761
+    },
+    "129": {
+     "diff": 0.01829,
+     "cm": 0.761
+    },
+    "127": {
+     "diff": -0.00685,
+     "cm": 0.761
+    },
+    "0": {
+     "diff": -1.51922,
+     "cm": 0.7596
+    },
+    "255": {
+     "diff": 1.51922,
+     "cm": 0.7596
+    },
+    "1": {
+     "diff": -1.50784,
+     "cm": 0.7596
+    },
+    "254": {
+     "diff": 1.50784,
+     "cm": 0.7596
+    },
+    "64": {
+     "diff": -0.75719,
+     "cm": 0.7609
+    },
+    "192": {
+     "diff": 0.77089,
+     "cm": 0.7609
+    }
+   },
+   "lsb_mV": 11.915450980392157,
+   "settle_0to255_ns": 22.13613400000007,
+   "dnl_128_127": 1.1497676439225393,
+   "vtb_diff": 0.006854275000000021,
+   "i_uA": 697.362
+  }
+ },
+ "corners": {
+  "typical": "27C 3.3V",
+  "ss": "32C 3.15V",
+  "ff": "22C 3.35V"
+ },
+ "pass": true,
+ "source_hash_refresh": {
+  "date": "2026-11-11 (SLI7 round 6)",
+  "changed": [
+   "netlists.py",
+   "run_family.py"
+  ],
+  "why_results_unaffected": "slicer_compact.py: comments and the published parameters restored; rebuild from it reproduces the published extraction exactly (776 devices, all net C identical). sims.py: only the tb_safe port map (safe bench rerun after it) and later bench edits not used by these results. netlists.py/run_family.py: vthdac sizing/layout options (published vthdac built from them) and a slicer revision label. README/benches in scratch do not enter the netlists. generated/*.ext.spice/.gds unchanged since the runs."
+ }
+}

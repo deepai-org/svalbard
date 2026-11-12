@@ -522,37 +522,50 @@ def tb_detect(sub, netfile, corner='typical', temp=27, vdd=3.3):
                 f'VS0 s0 0 {vdd * (se & 1)}', f'VS1 s1 0 {vdd * (se >> 1)}',
                 f'VSRC src 0 {vdd * src}', f'VINJ inj 0 {vdd * inj}']
     # 1) USB HS squelch: thr=125 mV (code 2). lines CM 0.2 V. 200 mV diff alternating for 40n, then 60 mV diff.
+    # r7: window-edge amplitudes (USB 2.0 7.1.7.2: squelch must NOT be reported >= 150 mV and must be reported
+    # <= 100 mV; disconnect must be detected >= 625 mV and not <= 525 mV) at line CM -0.05 / 0.2 / 0.5 V (HS receiver
+    # CM range -50..500 mV).  Stimulus starts TEN = 100 ns after det_en (r7 enable time: level-shift reference
+    # settles in < 100 ns; digital ignores DIFF_POS/NEG for 100 ns after det_en, interface row DT7-1).
+    TEN = 100e-9
+
     def diffwave(amp1, amp2, cm, t_sw, half=8e-9):
-        pts_p, pts_n = [], []
+        pts_p, pts_n = [(0, cm), (TEN - 50e-12, cm)], [(0, cm), (TEN - 50e-12, cm)]
         t = 0.
         sign = 1
         while t < 2 * t_sw:
             a = amp1 if t < t_sw else amp2
-            pts_p += [(t, cm + sign * a / 2), (t + half - 50e-12, cm + sign * a / 2)]
-            pts_n += [(t, cm - sign * a / 2), (t + half - 50e-12, cm - sign * a / 2)]
+            pts_p += [(TEN + t, cm + sign * a / 2), (TEN + t + half - 50e-12, cm + sign * a / 2)]
+            pts_n += [(TEN + t, cm - sign * a / 2), (TEN + t + half - 50e-12, cm - sign * a / 2)]
             sign = -sign
             t += half
         return pwl(pts_p), pwl(pts_n)
-    # USB settings (from tb_detect_thresholds on the extraction): squelch det_thr=2 (effective ~150-176 mV,
-    # above the 100-150 mV USB window), disconnect det_thr=3 (~556-566 mV)
-    for cm, a1, a2, thr, label in ((.2, .3, .06, 2, 'usb_hs_squelch'), (.2, .8, .4, 3, 'usb_hs_disconnect')):
-        pp, pn = diffwave(a1, a2, cm, 64e-9)
-        body = '\n'.join(common(thr, 2) + [f'VLP lp 0 {pp}', f'VLN ln 0 {pn}', 'VTXP txp 0 0', 'VTXN txn 0 0',
-                                            inst(sub, base)])
-        ctl = '\n'.join(['tran 20p 128n', 'set wr_singlescale', 'wrdata tran.txt v(dpos) v(dneg) v(lp) v(ln) v(clk) i(VDD)',
-                         'meas tran iavg avg i(VDD) from=10n to=128n', 'meas tran vref_v find v(vref) at=60n'])
+    # Disconnect is a host-side envelope on the current-mode bus (CM ~ Vdiff/2 plus driver/offset spread): gated at
+    # CM -0.05 / 0.2 / 0.36 / 0.5 V.  (A non-gating CM 0.5 V case was briefly used and reverted: coordinator, no
+    # relaxing a check after seeing the result.)
+    for cm in (-.05, .2, .36, .5):
+        sfx = '' if cm == .2 else f'_cm{int(round(cm * 1000))}'
+        for a1, a2, thr, label in ((.15, .1, 2, 'usb_hs_squelch'), (.625, .525, 3, 'usb_hs_disconnect')):
+            if (cm == .36) != (label == 'usb_hs_disconnect') and cm in (.36,):
+                continue
+            gating = True
+            pp, pn = diffwave(a1, a2, cm, 64e-9)
+            body = '\n'.join(common(thr, 2) + [f'VLP lp 0 {pp}', f'VLN ln 0 {pn}', 'VTXP txp 0 0', 'VTXN txn 0 0',
+                                                inst(sub, base)])
+            ctl = '\n'.join(['tran 20p 228n', 'set wr_singlescale', 'wrdata tran.txt v(dpos) v(dneg) v(lp) v(ln) v(clk) i(VDD)',
+                             'meas tran iavg avg i(VDD) from=110n to=228n', 'meas tran vref_v find v(vref) at=160n'])
 
-        def analyse(log, data, a1=a1, a2=a2):
-            r = parse_meas(log)
-            d = load(data)
-            t = d[:, 0]
-            hit = np.maximum(d[:, 1], d[:, 2]) > vdd / 2
-            r['hits_above_threshold_window'] = int(np.sum(hit[(t > 12e-9) & (t < 64e-9)]) > 0)
-            r['fraction_hit_above'] = float(np.mean(hit[(t > 12e-9) & (t < 64e-9)]))
-            r['fraction_hit_below'] = float(np.mean(hit[(t > 70e-9) & (t < 128e-9)]))
-            r['pass'] = bool(r['fraction_hit_above'] > .5 and r['fraction_hit_below'] < .02)
-            return r
-        cases.append((label, deck(sub, netfile, body, ctl, corner, temp, f'detect {label}'), analyse))
+            def analyse(log, data, gating=gating):
+                r = parse_meas(log)
+                d = load(data)
+                t = d[:, 0] - TEN
+                hit = np.maximum(d[:, 1], d[:, 2]) > vdd / 2
+                r['hits_above_threshold_window'] = int(np.sum(hit[(t > 12e-9) & (t < 64e-9)]) > 0)
+                r['fraction_hit_above'] = float(np.mean(hit[(t > 12e-9) & (t < 64e-9)]))
+                r['fraction_hit_below'] = float(np.mean(hit[(t > 70e-9) & (t < 128e-9)]))
+                r['pass'] = bool(r['fraction_hit_above'] > .5 and r['fraction_hit_below'] < .02)
+                r['gating'] = gating
+                return r
+            cases.append((label + sfx, deck(sub, netfile, body, ctl, corner, temp, f'detect {label}{sfx}'), analyse))
     # 2) USB FS single-ended receivers: Vse=1.4 V (code 2); J/K/SE0 states 0..3.3 V
     seq = [(0, (3.3, 0)), (20e-9, (0, 3.3)), (40e-9, (0, 0)), (60e-9, (3.3, 0))]
     pp = pwl(sum([[(t, a), (t + 19.5e-9, a)] for t, (a, b) in seq], []))
@@ -769,8 +782,10 @@ PORTS = dict(
                     'lf_zero2'], clk=[], ain=['RX_P', 'RX_N'],
               bias=['IBIAS'], out=['CTLE_P', 'CTLE_N'], atb=['atb_ctle_pbias', 'atb_ctle_src']),
     slicer=dict(ctrl=['slicer_en'] + [f'trim_{s}_{b}' for s in ('d0', 'e0', 'd1', 'e1', 'd2', 'e2', 'd3', 'e3')
-                                      for b in ('p0', 'p1', 'p2', 'n0', 'n1', 'n2', 'f0', 'f1', 'f2')],
-                clk=[f'CKP{k}' for k in range(8)], ain=['SL_P', 'SL_N'], bias=[], out=['D0', 'E0', 'D1', 'E1', 'D2', 'E2', 'D3', 'E3', 'QCK']),
+                                      for b in ('p0', 'p1', 'p2', 'n0', 'n1', 'n2', 'f0', 'f1', 'f2', 'f3')]   # r6/r7: f3
+                     + [f'vsel_{e}_{b}' for e in ('e0', 'e1', 'e2', 'e3') for b in range(2)],              # r6 IX-10 selects
+                clk=[f'CKP{k}' for k in range(8)], ain=['SL_P', 'SL_N', 'VTAP', 'VTAN', 'VTBP', 'VTBN'], bias=[],
+                out=['D0', 'E0', 'D1', 'E1', 'D2', 'E2', 'D3', 'E3', 'QCK']),
     detect=dict(ctrl=['det_en', 'det_thr0', 'det_thr1', 'det_se0', 'det_se1', 'det_src_tx', 'det_inject'],
                 clk=['det_clk'], ain=['RX_P', 'RX_N', 'TX_P', 'TX_N'], bias=['IBIAS'],
                 out=['DIFF_POS', 'DIFF_NEG', 'SE_P', 'SE_N'], atb=['atb_det_vref']),
@@ -914,23 +929,24 @@ def tb_detect_thresholds(sub, netfile, corner='typical', temp=27, vdd=3.3, codes
                 atb_det_vref='vref')
     cases = []
     t_end, amax = 360e-9, .9
+    t0 = 100e-9   # r7: ramp starts 100 ns after det_en (enable time, see tb_detect)
     for code in codes:
         for sign in (1, -1):
             body = '\n'.join([f'VDD vdd 0 {vdd}', 'RIB vdd ib 260k', f'VEN en 0 PWL(0 0 2n {vdd})',
                               f'VCK clk 0 PULSE(0 {vdd} 5n 0.1n 0.1n 1.9n 4n)',
                               f'VT0 t0 0 {vdd * (code & 1)}', f'VT1 t1 0 {vdd * (code >> 1)}',
-                              f'VLP lp 0 PWL(0 {cm} {t_end} {cm + sign * amax / 2})',
-                              f'VLN ln 0 PWL(0 {cm} {t_end} {cm - sign * amax / 2})',
+                              f'VLP lp 0 PWL(0 {cm} {t0} {cm} {t0 + t_end} {cm + sign * amax / 2})',
+                              f'VLN ln 0 PWL(0 {cm} {t0} {cm} {t0 + t_end} {cm - sign * amax / 2})',
                               'VTXP txp 0 0', 'VTXN txn 0 0', inst(sub, base)])
-            ctl = '\n'.join([f'tran 50p {t_end:.4g}', 'set wr_singlescale', 'wrdata tran.txt v(dpos) v(dneg)'])
+            ctl = '\n'.join([f'tran 50p {t0 + t_end:.4g}', 'set wr_singlescale', 'wrdata tran.txt v(dpos) v(dneg)'])
 
             def analyse(log, data, sign=sign):
                 d = load(data)
                 col = 1 if sign > 0 else 2
-                ups = [u for u in crossings(d[:, 0], d[:, col], vdd / 2, True) if u > 6e-9]
+                ups = [u - t0 for u in crossings(d[:, 0], d[:, col], vdd / 2, True) if u > t0 + 6e-9]
                 other = d[:, 3 - col] > vdd / 2
                 r = dict(threshold_mV=1e3 * amax * ups[0] / t_end if ups else None,
-                         wrong_side_fired=bool(other[d[:, 0] > 6e-9].any()))
+                         wrong_side_fired=bool(other[d[:, 0] > t0 + 6e-9].any()))
                 r['pass'] = ups != [] and not r['wrong_side_fired']
                 r['gating'] = False
                 return r

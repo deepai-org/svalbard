@@ -16,6 +16,8 @@ import math
 import re
 import shutil
 import sys
+
+import numpy as np
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -427,6 +429,314 @@ def write_lf(r_ohm=13.09e3, c1_f=6.96e-12, c2_f=347e-12, r3_ohm=10e3, c3_f=15.9e
     return dict(r_ohm=r_ohm, c1_f=c1a, c2_f=c2a, r3_ohm=r3_ohm, c3_f=c3a, c2_mos=c2_mos and not c2_var, c2_var=c2_var)
 
 
+
+# ------------------------------------------------------------------- r5 lock ladder (audit lo-lock-sim-audit.md)
+# One directory per run (scratch/lo/r5_ladder/<run>/) with copied includes + md5; pass limits fixed in
+# LADDER_LIMITS before any run; start from the band-search hand-off (VTUNE preset, frequency offset df0,
+# dphi0 = 0); reltol 1e-4; VCO excess phase dphi in cycles starts at 0.
+LADDER = REPO / 'scratch' / 'lo' / 'r5_ladder'
+LF_R4 = dict(r_ohm=13.09e3, c1_f=6.96e-12, c2_f=351e-12, r3_ohm=10e3, c3_f=15.9e-12)
+LADDER_LIMITS = dict(               # fixed 2026-11-11 before the first ladder run; do not edit after results
+    t_lock_max_s=50e-6,             # loop settling to 2 deg LO (IX-5 75 us budget incl. ~25 us band search)
+    hold_window_s=20e-6,            # last 20 us = hold window, split in two 10 us halves
+    lo_phase_err_deg=2.0,           # |FB-REF - spo| x N fref x 360 over the hold window
+    spo_drift_ps=1.0,               # spo(half 1) - spo(half 2)
+    spo_abs_max_ps=1000.0,          # static phase offset bound
+    f_err_max_hz=1e3,               # VCO frequency vs N fref over the hold window (from dphi)
+    vtune_window_v=(0.8, 2.5),      # CP mismatch-valid window (r2 extracted)
+    step_match_rel=0.05)            # rung-1 small step: |sim - analytic| peak and rms <= 5 % of analytic peak
+
+
+def icp_lo18(kv):
+    """LO18: Icp = 100 uA x min(1, 60 MHz/V / Kv), realised as 25 uA x (1 + ICP0 + 2 ICP1); nearest code."""
+    want = 100e-6 * min(1.0, 60e6 / kv) if kv > 0 else 100e-6
+    k = min(range(4), key=lambda k: abs(25e-6 * (k + 1) - want))
+    return 25e-6 * (k + 1), k
+
+
+def z_lf(s, f):
+    """Impedance CP->(VTUNE at C3) transfer: Vvt/Icp for the 4th-order filter (C1 // (R+C2)) then R3-C3."""
+    z1 = 1 / (s * f['c1_f'] + 1 / (f['r_ohm'] + 1 / (s * f['c2_f'])))
+    zc3 = 1 / (s * f['c3_f'])
+    zin = 1 / (1 / z1 + 1 / (f['r3_ohm'] + zc3))   # CP node impedance
+    return zin * zc3 / (f['r3_ohm'] + zc3)
+
+
+def g_open(f_hz, lf, icp, kv, n):
+    s = 2j * math.pi * np.asarray(f_hz)
+    return icp * z_lf(s, lf) * kv / (n * s)        # PFD Icp/2pi x 2pi Kv/s / N (phase in cycles)
+
+
+def loop_margins(lf, icp, kv, n):
+    f = np.logspace(3, 8, 40000)
+    g = g_open(f, lf, icp, kv, n)
+    i = np.argmin(abs(abs(g) - 1))
+    return float(f[i]), float(180 + math.degrees(np.angle(g[i])))
+
+
+def step_analytic(t, lf, icp, kv, n, df):
+    """Linear (averaged-PFD) known answer: VCO excess phase phi (cycles) after the loop, locked at t=0, sees a
+    VCO frequency step df.  States vCP, vX, vVT, phi; i_cp = -Icp phi / N; exact discretisation (expm)."""
+    from scipy.linalg import expm
+    c1, c2, c3, r, r3 = lf['c1_f'], lf['c2_f'], lf['c3_f'], lf['r_ohm'], lf['r3_ohm']
+    A = np.array([[-1 / (r * c1) - 1 / (r3 * c1), 1 / (r * c1), 1 / (r3 * c1), -icp / (n * c1)],
+                  [1 / (r * c2), -1 / (r * c2), 0, 0],
+                  [1 / (r3 * c3), 0, -1 / (r3 * c3), 0],
+                  [0, 0, kv, 0]])
+    B = np.array([0, 0, 0, df])
+    h = 2e-9
+    M = np.zeros((5, 5)); M[:4, :4] = A * h; M[:4, 4] = B * h
+    E = expm(M)
+    x = np.zeros(4); tt = np.arange(0, t[-1] + h, h); ph = np.empty(len(tt))
+    for k in range(len(tt)):
+        ph[k] = x[3]
+        x = E[:4, :4] @ x + E[:4, 4]
+    return np.interp(t, tt, ph)
+
+
+def hop4(lf, icp, kv, n, df0, fref=50e6, t_end=80e-6, m_div=None):
+    """Cycle-accurate reference (cf. loop_design.hop_sim, extended to the r4 4th-order filter): per reference
+    cycle, the tri-state PFD charge Icp x |FB-REF| (clipped at 0.95 Tref, sign kept, no slip), then exact
+    linear free evolution (expm) of C1/R-C2/R3-C3 + VCO phase.  Returns t_lock (2 deg LO, last violation)."""
+    from scipy.linalg import expm
+    m_div = m_div or n
+    c1, c2, c3, r, r3 = lf['c1_f'], lf['c2_f'], lf['c3_f'], lf['r_ohm'], lf['r3_ohm']
+    tr = 1 / fref
+    A = np.zeros((5, 5))
+    A[:3, :3] = [[-1 / (r * c1) - 1 / (r3 * c1), 1 / (r * c1), 1 / (r3 * c1)], [1 / (r * c2), -1 / (r * c2), 0],
+                 [1 / (r3 * c3), 0, -1 / (r3 * c3)]]
+    A[3, 2] = kv; A[3, 4] = 1.0          # phi' = kv vvt + (df0 + n fref - m fref)
+    E = expm(A * tr)
+    x = np.array([0, 0, 0, 0, df0 + (n - m_div) * fref])
+    err = []
+    for k in range(int(t_end / tr)):
+        dt_e = -(x[3] / m_div) * tr                   # FB late (phi<0) -> UP
+        w = min(abs(dt_e), 0.95 * tr)
+        x[0] += (icp if dt_e > 0 else -icp) * w / c1
+        x = E @ x
+        err.append(-(x[3] / m_div) * tr * n * fref * 360)
+    e = np.array(err)
+    final = np.mean(e[-200:])
+    bad = np.where(abs(e - final) > 2.0)[0]
+    return dict(t_lock_2deg_s=float((bad[-1] + 1) * tr) if len(bad) else 0.0, vt_final_dv=float(x[2]),
+                f_err_final_hz=float(kv * x[2] + x[4]))
+
+
+def md5(p):
+    import hashlib
+    return hashlib.md5(Path(p).read_bytes()).hexdigest()
+
+
+def tb_ladder(v, n, m_div, fref, kv, df0, vt0, icp, t_end, pfd='ideal', lf='ideal', lfv=None, en=True,
+              t_rst=150e-12, icp_bits=(1, 1), tmax=None, df_step_at=None):
+    """Ladder deck.  pfd 'ideal' = XSPICE tri-state PFD (d_dff + reset AND with t_rst) + ideal +-Icp sources;
+    pfd 'x' = extracted pt_lo_pfdcp (lk_pfdcp.spice) with ICP code.  lf 'ideal' = ideal R/C1/C2/R3/C3 (lfv),
+    'x' = extracted pt_lo_lf (lk_lf.spice).  VCO behavioural: f = n fref + kv (VT - vt0) + df0;
+    divider (behavioural) divides by m_div (m_div != n = wrong-N must-fail case)."""
+    w = 6.283185307179586
+    lfv = lfv or LF_R4
+    out = [f'* lock ladder: N={n} M={m_div} Kv={kv / 1e6:g} MHz/V df0={df0 / 1e6:g} MHz Icp={icp * 1e6:g} uA pfd={pfd} lf={lf}',
+           f'VDD vdd 0 {v}', f'VREF ref 0 pulse(0 {v} 2n 50p 50p {0.5 / fref - 50e-12} {1 / fref})',
+           'CPH dphi 0 1', f'GPH 0 dphi cur={{ {kv} * (v(vt) - {vt0}) + {df0} }}',
+           f'BFB fb 0 v={{ {v / 2} * (1 + tanh(200 * sin({w} * ({fref * n / m_div} * (time - 2.025e-9) + v(dphi) / {m_div})))) }}']
+    if pfd == 'ideal':
+        out += ['AAD [ref fb] [dref dfb] adcb', '.model adcb adc_bridge(in_low=1.0 in_high=2.0)',
+                'ADU one dref rst upd dmy1 dff', 'ADD one dfb rst dnd dmy2 dff', 'AON one onesrc',
+                '.model onesrc d_pullup', '.model dff d_dff(clk_delay=1e-12 reset_delay=1e-12 set_delay=1e-12)',
+                'ADS nset zsrc', '.model zsrc d_pulldown',
+                'AAND [upd dnd] rst andg', f'.model andg d_and(rise_delay={t_rst} fall_delay=1e-12)',
+                'ADA [upd dnd] [upa dna] dacb', '.model dacb dac_bridge(out_low=0 out_high=1 t_rise=1e-12 t_fall=1e-12)',
+                f'GCP 0 vtune cur={{ {icp if en else 0} * (v(upa) - v(dna)) }}']
+        # d_dff ports: data clk set reset out nout -> fix order below
+        out[out.index('ADU one dref rst upd dmy1 dff')] = 'ADU one dref nset rst upd dmy1 dff'
+        out[out.index('ADD one dfb rst dnd dmy2 dff')] = 'ADD one dfb nset rst dnd dmy2 dff'
+    else:
+        out += ['.include lk_pfdcp.spice', 'IB vdd ib 10u', f'VEN en 0 {v if en else 0}', 'VPRE pre 0 0',
+                f'VI0 icp0 0 {v * icp_bits[0]}', f'VI1 icp1 0 {v * icp_bits[1]}',
+                'XP ref fb en pre ib vtune vdd 0 icp0 icp1 pt_lo_pfdcp']
+    if lf == 'ideal':
+        f = lfv
+        out += [f'C1 vtune 0 {f["c1_f"]}', f'R1 vtune x {f["r_ohm"]}', f'C2 x 0 {f["c2_f"]}',
+                f'R3 vtune vt {f["r3_ohm"]}', f'C3 vt 0 {f["c3_f"]}']
+        c2node = 'x'
+    else:
+        out += ['.include lk_lf.spice', 'XL vtune vt 0 pt_lo_lf']
+        c2node = None
+    ic = f'.ic v(dphi)=0 v(vtune)={vt0} v(vt)={vt0}' + (f' v({c2node})={vt0}' if c2node else '')
+    out += [ic, '.option reltol=1e-4 interp' if False else '.option reltol=1e-4',
+            '.save v(ref) v(fb) v(vt) v(dphi)', f'.tran 10p {t_end} 0 {tmax or 10e-12}',
+            '.control', 'set filetype=binary', 'run', 'write lad.raw v(ref) v(fb) v(vt) v(dphi)', '.endc']
+    return '\n'.join(out) + '\n'
+
+
+def read_raw(path):
+    """ngspice binary rawfile (real transient): returns dict name -> array."""
+    b = Path(path).read_bytes()
+    k = b.index(b'Binary:\n') + 8
+    hdr = b[:k].decode(errors='replace').splitlines()
+    nv = int([l for l in hdr if l.startswith('No. Variables')][0].split(':')[1])
+    names = []
+    i = hdr.index('Variables:')
+    for l in hdr[i + 1:i + 1 + nv]:
+        names.append(l.split()[1].lower())
+    d = np.frombuffer(b[k:], dtype='<f8')
+    d = d[:len(d) // nv * nv].reshape(-1, nv)
+    return {nm: d[:, j] for j, nm in enumerate(names)}
+
+
+def analyse_ladder(path, fref, n, v, t_end, lim=LADDER_LIMITS, analytic=None):
+    w = read_raw(path)
+    t, ref, fb, vt, ph = w['time'], w['v(ref)'], w['v(fb)'], w['v(vt)'], w['v(dphi)']
+
+    def edges(x):
+        i = np.where((x[:-1] < v / 2) & (x[1:] >= v / 2))[0]
+        return t[i] + (v / 2 - x[i]) / (x[i + 1] - x[i]) * (t[i + 1] - t[i])
+    er, ef = edges(ref), edges(fb)
+    r = dict(n_ref_edges=int(len(er)), n_fb_edges=int(len(ef)), dphi_max_abs_cyc=float(abs(ph).max()),
+             vtune_final_v=float(vt[-1]), vtune_min_v=float(vt.min()), vtune_max_v=float(vt.max()))
+    h0, hm = t_end - lim['hold_window_s'], t_end - lim['hold_window_s'] / 2
+    halves = [(h0, hm), (hm, t_end)]
+    cnt = [(int(((er >= a) & (er < b)).sum()), int(((ef >= a) & (ef < b)).sum())) for a, b in halves]
+    r['hold_edge_counts_ref_fb'] = cnt
+    ok = dict(edge_counts=all(a == b and a > 0 for a, b in cnt))
+    # pair each ref edge with nearest fb edge
+    dt = np.array([ef[np.argmin(abs(ef - x))] - x for x in er]) if len(ef) else np.full(len(er), np.nan)
+    spos = [float(np.median(dt[(er >= a) & (er < b)])) if ((er >= a) & (er < b)).any() else math.nan for a, b in halves]
+    spo = float(np.nanmean(spos))
+    deg = (dt - spo) * n * fref * 360
+    hold = er >= h0
+    r.update(spo_ps=spo * 1e12, spo_halves_ps=[x * 1e12 for x in spos],
+             hold_phase_err_max_deg=float(np.nanmax(abs(deg[hold]))) if hold.any() else math.nan)
+    bad = np.where(~(abs(deg) <= lim['lo_phase_err_deg']))[0]
+    r['t_lock_2deg_s'] = (float(er[bad[-1] + 1]) if bad[-1] + 1 < len(er) else None) if len(bad) else float(er[0])
+    s = t >= h0
+    r['f_err_hold_hz'] = float((ph[-1] - ph[s][0]) / (t[-1] - t[s][0]))
+    ok.update(phase_err=r['hold_phase_err_max_deg'] <= lim['lo_phase_err_deg'],
+              spo_drift=abs(spos[0] - spos[1]) * 1e12 <= lim['spo_drift_ps'],
+              spo_abs=abs(spo) * 1e12 <= lim['spo_abs_max_ps'],
+              f_err=abs(r['f_err_hold_hz']) <= lim['f_err_max_hz'],
+              vtune_window=lim['vtune_window_v'][0] <= r['vtune_final_v'] <= lim['vtune_window_v'][1],
+              t_lock=r['t_lock_2deg_s'] is not None and r['t_lock_2deg_s'] <= lim['t_lock_max_s'])
+    if analytic is not None:     # rung-1 small-step comparison on dphi (cycles)
+        a = step_analytic(t, *analytic)
+        pk = float(abs(a).max())
+        r.update(step_sim_peak_cyc=float(abs(ph).max()), step_analytic_peak_cyc=pk,
+                 step_t_peak_sim_s=float(t[np.argmax(abs(ph))]), step_t_peak_analytic_s=float(t[np.argmax(abs(a))]),
+                 step_err_peak_rel=float(abs(abs(ph).max() - pk) / pk),
+                 step_err_rms_rel=float(np.sqrt(np.mean((np.interp(np.linspace(0, t_end, 4000), t, ph)
+                                                        - np.interp(np.linspace(0, t_end, 4000), t, a)) ** 2)) / pk))
+        ok['step_match'] = r['step_err_peak_rel'] <= lim['step_match_rel'] and r['step_err_rms_rel'] <= lim['step_match_rel']
+    r['checks'] = ok
+    r['pass'] = bool(all(ok.values()))
+    return r
+
+
+def run_ladder(run, rung, corner='tt', temp=27, v=3.3, n=49, m_div=None, fref=50e6, kv=60e6, df0=-30e6, vt0=1.65,
+               icp=None, t_end=80e-6, pfd='ideal', lf='ideal', lfv=None, en=True, expect='pass', small_step=False,
+               tmax=None):
+    import numpy  # noqa
+    wd = LADDER / run
+    if wd.exists():
+        shutil.rmtree(wd)
+    wd.mkdir(parents=True)
+    m_div = m_div or n
+    code = None
+    if icp is None:
+        icp, code = icp_lo18(kv) if kv > 0 else (100e-6, 3)
+    else:
+        code = round(icp / 25e-6) - 1
+    bits = (code & 1, (code >> 1) & 1)
+    inc = {}
+    if pfd == 'x':
+        src = (HERE.parent / 'generated' / 'lo_pfdcp.ext.spice').read_text()
+        (wd / 'lk_pfdcp.spice').write_text(add_rg(tf.uniquify_subckts(src, 'pc', keep=('pt_lo_pfdcp',))))
+        inc['generated/lo_pfdcp.ext.spice'] = md5(HERE.parent / 'generated' / 'lo_pfdcp.ext.spice')
+    if lf == 'x':
+        src = (HERE.parent / 'generated' / 'lo_lf.ext.spice').read_text()
+        txt = tf.uniquify_subckts(src, 'lf', keep=('pt_lo_lf',))
+        # C2 (cap_nmos_03v3_b units, PDK C(V) = k (c1 + c2 tanh(c3 V + c4))) -> ONE element i = C(V) dV/dt
+        # (dV/dt from a 1 F copy cap), same PDK constants and corner factor.  The 61 voltage-dependent
+        # 'c=' capacitors stall ngspice (gear, reltol 1e-4) at ~61-68 us (two identical stalls, r2 first attempt).
+        lines = txt.splitlines()
+        c2 = [l for l in lines if l.startswith('XXC2_')]
+        assert c2 and len({l.split()[1] for l in c2}) == 1, 'C2 units'
+        node = c2[0].split()[1]
+        w_um, l_um = (float(x) for x in re.search(r'_w(\d+)_l(\d+)', c2[0].split()[-1]).groups())
+        k = len(c2) * w_um * l_um * 1e-12
+        cv = (f'{k:.6g}*cap_nmos_03v3_b_corner*(0.002458 + 0.001533*tanh(1.515152*v({node},VSS)+0.560606))')
+        out, inside = [], False
+        for l in lines:
+            if l.startswith('.subckt pt_lo_lf'):
+                inside = True
+            if inside and l.startswith('XXC2_'):
+                continue
+            if inside and l.startswith('.ends'):
+                out += [f'EC2C c2cp VSS {node} VSS 1', 'VC2M c2cp c2cm 0', 'CC2U c2cm VSS 1',
+                        f'BC2Q {node} VSS i={{ {cv} * i(VC2M) }}']   # i = C(V) dV/dt (PDK c= form)
+                inside = False
+            out.append(l)
+        (wd / 'lk_lf.spice').write_text('\n'.join(out) + '\n')
+        inc['generated/lo_lf.ext.spice'] = md5(HERE.parent / 'generated' / 'lo_lf.ext.spice')
+        inc['c2_model'] = f'{len(c2)} x cap_nmos_03v3_b w{w_um:g} l{l_um:g} -> one B-source i = C(V) dV/dt (PDK C(V), same constants and corner factor)'
+    for f in wd.glob('lk_*.spice'):
+        inc[f.name] = md5(f)
+    lfv = lfv or LF_R4
+    hdr = header(corner, temp).replace('reltol=1e-3', 'reltol=1e-4') if (pfd == 'x' or lf == 'x') else ''
+    deck = '* ' + run + '\n' + hdr + tb_ladder(v, n, m_div, fref, kv, df0, vt0, icp, t_end, pfd, lf, lfv, en,
+                                                icp_bits=bits, tmax=tmax) + '.end\n'
+    tf.ngspice(wd, 'lad', deck, timeout=11 * 3600)
+    fc, pm = loop_margins(lfv, icp, kv, n) if kv > 0 else (0.0, 0.0)
+    an = (lfv, icp, kv, n, df0) if small_step else None
+    try:
+        r = analyse_ladder(wd / 'lad.raw', fref, n, v, t_end, analytic=an)
+    except Exception as e:  # noqa
+        r = dict(error=repr(e)[:300], log_tail=(wd / 'lad.log').read_text(errors='replace')[-800:])
+        r['pass'] = False
+    r.update(run=run, rung=rung, corner=corner, temp_c=temp, vdd=v, n=n, m_div=m_div, kv_hz_v=kv, df0_hz=df0, vt0=vt0,
+             icp_a=icp, icp_code=code, cp_enabled=en, pfd=pfd, lf=lf, lf_values=lfv, t_end_s=t_end,
+             analytic_fc_hz=fc, analytic_pm_deg=pm, expect=expect, limits=LADDER_LIMITS,
+             includes_md5=inc, deck_md5=md5(wd / 'lad.spice'), dir=str(wd.relative_to(REPO)),
+             vco='behavioural phase integrator', divider='behavioural (exact /m_div of VCO phase)')
+    if pfd == 'ideal' and lf == 'ideal' and not small_step:
+        r['hop4_reference'] = hop4(lfv, icp if en else 0.0, kv, n, df0, fref, t_end, m_div)
+    r['as_expected'] = (r['pass'] == (expect == 'pass')) and 'error' not in r   # a crash is never 'as expected'
+    (wd / 'result.json').write_text(json.dumps(r, indent=1, default=float) + '\n')
+    print(json.dumps({k: r.get(k) for k in ('run', 'pass', 'as_expected', 'checks', 't_lock_2deg_s', 'f_err_hold_hz',
+                                            'spo_ps', 'vtune_final_v', 'analytic_fc_hz', 'analytic_pm_deg',
+                                            'step_err_peak_rel', 'step_err_rms_rel', 'hop4_reference', 'error')}, default=float), flush=True)
+    return r
+
+
+MMD_RC = LADDER / 'mmd_rc_c' / 'pt_lo_mmd_flat.rc.spice'   # Magic extresist (analog image) of generated/lo_mmd.gds
+
+
+def run_mmd_rc(cases, expect='pass'):
+    """Rung 4a: open-loop ratio check of the RC-extracted MMD (flat extresist netlist, wire + poly R; supplies
+    not resisted).  Pass = measured ratio within 0.02 of the set ratio (3 periods) and single period within 0.05."""
+    src = MMD_RC.read_text().replace('.subckt pt_lo_mmd_flat', '.subckt pt_lo_mmd').replace('.ends pt_lo_mmd_flat', '.ends')
+    out = []
+    for (corner, temp, v, f, n, amp, cm) in cases:
+        run = f'r4_mmdrc_{corner}{temp}_{v}_{f / 1e9:.2f}_{n}_{amp}_{cm}'
+        wd = LADDER / run
+        if wd.exists():
+            shutil.rmtree(wd)
+        wd.mkdir(parents=True)
+        (wd / 'mmd_rc.spice').write_text(src)
+        m = tf.ngspice(wd, 'mmd', header(corner, temp) + tb_mmd('mmd_rc.spice', f, n, v, amp, cm) + '.end\n')
+        nm = (m.get('per', 0) / 3) * f if m.get('per') else None
+        n1 = m.get('per1', 0) * f if m.get('per1') else None
+        r = dict(run=run, rung=4, corner=corner, temp_c=temp, vdd=v, f_in_hz=f, n_set=n, amp_v_per_leg=amp, cm_v=cm,
+                 n_measured=nm, n_single=n1, fb_width_ns=m.get('wid', 0) * 1e9, idd_ma=-m.get('idd', math.nan) * 1e3,
+                 netlist='RC-extracted flat (Magic extresist, analog image), no add_rg', includes_md5={
+                     'mmd_rc.spice': md5(wd / 'mmd_rc.spice'), 'generated/lo_mmd.gds': md5(HERE.parent / 'generated' / 'lo_mmd.gds')},
+                 errors=m['_errors'][:3], expect=expect)
+        r['pass'] = bool(nm and abs(nm - n) < 0.02 and n1 and abs(n1 - n) < 0.05)
+        r['as_expected'] = r['pass'] == (expect == 'pass')
+        (wd / 'result.json').write_text(json.dumps(r, indent=1) + '\n')
+        print(json.dumps(r), flush=True)
+        out.append(r)
+    return out
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('bench')
@@ -463,6 +773,16 @@ if __name__ == '__main__':
         r = run_lock(a.extracted, **kw)
         old = [o for o in load().get('lock', []) if o['deck'] != r['deck']]
         save('lock', old + [r])
+    elif a.bench == 'ladder':
+        kw = json.loads(a.cases)
+        r = run_ladder(**kw)
+        old = [o for o in load().get('ladder', []) if o['run'] != r['run']]
+        save('ladder', old + [r])
+    elif a.bench == 'mmdrc':
+        c = json.loads(a.cases)
+        r = run_mmd_rc([tuple(x) for x in c['cases']], c.get('expect', 'pass'))
+        old = [o for o in load().get('ladder_mmd_rc', []) if o['run'] not in {x['run'] for x in r}]
+        save('ladder_mmd_rc', old + r)
     elif a.bench == 'lf':
         vals = json.loads(a.cases) if a.cases else {}
         save('loop_filter', write_lf(**vals))

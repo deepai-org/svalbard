@@ -1,0 +1,128 @@
+.include timing_cells.spice
+* pt_pll_ring_ft: CDR ring fast-tune array (r7ring r9v), header-side current steering, see pll_ring.spice
+.subckt pt_pll_ring_ft VH VPBF KP0 KP1 KP2 FU0 FU1 FU2 FU3 FD0 FD1 FD2 FD3 EN IBIAS VDD VSS
+* r9h FT legs (r7ring, 2026-11-11): HEADER-SIDE CURRENT STEERING.  r9c/r9d switched the SOURCE node of each
+* long-channel tail/header copy; while a leg was off that node (tens of fF of Cgs) recharged from VT/VH and was dumped
+* at the next turn-on, so every vote transition moved charge into the ring: +4360..+4830 ppm for net-zero FU/FD
+* alternation (r9c ext / r9d sch), data-dependent.  r9h: the ring is header-limited (r7ring: tail-only copies give
+* ~1/3 of the gain), so only header copies remain.  Each binary PMOS copy (gate VPBF, source at VDD through its static
+* KP switch) conducts ALWAYS and stays saturated; its drain is steered by a complementary PMOS switch pair into VH
+* (vote active) or into VHD, held at V(VH) by a follower (replica feed-forward + push-pull transconductor, below).
+* The steered drain only moves by |VH - VHD| (mV) on a saturated device, and each switch returns its channel charge
+* within one on/off cycle (half-size dummies on VH cancel the VH-side share).  U: into VH when FUk=1.  D: into VH when FDk=0 (idle offset absorbed by the integral path).
+XKPI0 KP0 KPB0 VDD VSS pt_t_inv1
+XKPI1 KP1 KPB1 VDD VSS pt_t_inv1
+XKPI2 KP2 KPB2 VDD VSS pt_t_inv1
+* VHD follower: (1) feed-forward: a replica of the nominal dump current (4 binary copy sets = one per leg, same
+* KP switches) into an NMOS diode, mirrored 1:1 as a sink on VHD, so at idle the follower carries no current;
+* (2) a push-pull transconductor for the vote-dependent rest: NMOS pair (VHD | VH), PMOS diode loads, x2 mirrors:
+* sink 2*I(VHD side) via an NMOS mirror, source 2*I(VH side); net 0 at balance.  VHD is the only high-impedance
+* node (dominant pole, 4 pF decap).  Tail = 4 x the IBIAS mirror (10 uA each).  EN=0: no bias, VHD shorted to VH (so it starts at V(VH) when the ring starts; no slewing from a rail).
+XHFT HFT IBIAS VSS VSS nfet_03v3 w=4u l=2u m=4
+XHF1 HFA VHD HFT VSS nfet_03v3 w=8u l=1u
+XHF2 HFB VH HFT VSS nfet_03v3 w=8u l=1u
+XHFA HFA HFA VDD VDD pfet_03v3 w=4u l=0.5u
+XHFB HFB HFB VDD VDD pfet_03v3 w=4u l=0.5u
+XHFAM HFN HFA VDD VDD pfet_03v3 w=4u l=0.5u m=2
+XHFND HFN HFN VSS VSS nfet_03v3 w=2u l=0.5u m=2
+XHFNS VHD HFN VSS VSS nfet_03v3 w=2u l=0.5u m=2
+XHFBM VHD HFB VDD VDD pfet_03v3 w=4u l=0.5u m=2
+XHFC VSS VHD VSS VSS nfet_03v3 w=10u l=10u m=8
+XRDD RDN RDN VSS VSS nfet_03v3 w=2u l=0.5u
+XRDS VHD RDN VSS VSS nfet_03v3 w=2u l=0.5u
+XHR0 RDN VPBF ZR0 VDD pfet_03v3 w=0.44u l=1.75u m=4
+XHR0k ZR0 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u m=4
+XHR1 RDN VPBF ZR1 VDD pfet_03v3 w=0.88u l=1.75u m=4
+XHR1k ZR1 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u m=4
+XHR2 RDN VPBF ZR2 VDD pfet_03v3 w=1.76u l=1.75u m=4
+XHR2k ZR2 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u m=4
+XHFZ VHD EN VH VDD pfet_03v3 w=2u l=0.28u
+XFUN0 FU0 FUB0 VDD VSS pt_t_inv1
+XFDN0 FD0 FDB0 VDD VSS pt_t_inv1
+XHU00 YU0 VPBF ZU00 VDD pfet_03v3 w=0.44u l=1.75u
+XHU00k ZU00 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHU01 YU0 VPBF ZU01 VDD pfet_03v3 w=0.88u l=1.75u
+XHU01k ZU01 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHU02 YU0 VPBF ZU02 VDD pfet_03v3 w=1.76u l=1.75u
+XHU02k ZU02 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSU0a YU0 FUB0 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSU0b YU0 FU0 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSU0d VH FU0 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSU0e VHD FUB0 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XHD00 YD0 VPBF ZD00 VDD pfet_03v3 w=0.44u l=1.75u
+XHD00k ZD00 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHD01 YD0 VPBF ZD01 VDD pfet_03v3 w=0.88u l=1.75u
+XHD01k ZD01 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHD02 YD0 VPBF ZD02 VDD pfet_03v3 w=1.76u l=1.75u
+XHD02k ZD02 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSD0a YD0 FD0 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSD0b YD0 FDB0 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSD0d VH FDB0 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSD0e VHD FD0 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XFUN1 FU1 FUB1 VDD VSS pt_t_inv1
+XFDN1 FD1 FDB1 VDD VSS pt_t_inv1
+XHU10 YU1 VPBF ZU10 VDD pfet_03v3 w=0.44u l=1.75u
+XHU10k ZU10 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHU11 YU1 VPBF ZU11 VDD pfet_03v3 w=0.88u l=1.75u
+XHU11k ZU11 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHU12 YU1 VPBF ZU12 VDD pfet_03v3 w=1.76u l=1.75u
+XHU12k ZU12 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSU1a YU1 FUB1 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSU1b YU1 FU1 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSU1d VH FU1 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSU1e VHD FUB1 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XHD10 YD1 VPBF ZD10 VDD pfet_03v3 w=0.44u l=1.75u
+XHD10k ZD10 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHD11 YD1 VPBF ZD11 VDD pfet_03v3 w=0.88u l=1.75u
+XHD11k ZD11 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHD12 YD1 VPBF ZD12 VDD pfet_03v3 w=1.76u l=1.75u
+XHD12k ZD12 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSD1a YD1 FD1 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSD1b YD1 FDB1 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSD1d VH FDB1 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSD1e VHD FD1 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XFUN2 FU2 FUB2 VDD VSS pt_t_inv1
+XFDN2 FD2 FDB2 VDD VSS pt_t_inv1
+XHU20 YU2 VPBF ZU20 VDD pfet_03v3 w=0.44u l=1.75u
+XHU20k ZU20 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHU21 YU2 VPBF ZU21 VDD pfet_03v3 w=0.88u l=1.75u
+XHU21k ZU21 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHU22 YU2 VPBF ZU22 VDD pfet_03v3 w=1.76u l=1.75u
+XHU22k ZU22 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSU2a YU2 FUB2 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSU2b YU2 FU2 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSU2d VH FU2 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSU2e VHD FUB2 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XHD20 YD2 VPBF ZD20 VDD pfet_03v3 w=0.44u l=1.75u
+XHD20k ZD20 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHD21 YD2 VPBF ZD21 VDD pfet_03v3 w=0.88u l=1.75u
+XHD21k ZD21 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHD22 YD2 VPBF ZD22 VDD pfet_03v3 w=1.76u l=1.75u
+XHD22k ZD22 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSD2a YD2 FD2 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSD2b YD2 FDB2 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSD2d VH FDB2 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSD2e VHD FD2 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XFUN3 FU3 FUB3 VDD VSS pt_t_inv1
+XFDN3 FD3 FDB3 VDD VSS pt_t_inv1
+XHU30 YU3 VPBF ZU30 VDD pfet_03v3 w=0.44u l=1.75u
+XHU30k ZU30 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHU31 YU3 VPBF ZU31 VDD pfet_03v3 w=0.88u l=1.75u
+XHU31k ZU31 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHU32 YU3 VPBF ZU32 VDD pfet_03v3 w=1.76u l=1.75u
+XHU32k ZU32 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSU3a YU3 FUB3 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSU3b YU3 FU3 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSU3d VH FU3 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSU3e VHD FUB3 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XHD30 YD3 VPBF ZD30 VDD pfet_03v3 w=0.44u l=1.75u
+XHD30k ZD30 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHD31 YD3 VPBF ZD31 VDD pfet_03v3 w=0.88u l=1.75u
+XHD31k ZD31 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHD32 YD3 VPBF ZD32 VDD pfet_03v3 w=1.76u l=1.75u
+XHD32k ZD32 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSD3a YD3 FD3 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSD3b YD3 FDB3 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSD3d VH FDB3 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSD3e VHD FD3 VHD VDD pfet_03v3 w=0.44u l=0.28u
+.ends pt_pll_ring_ft

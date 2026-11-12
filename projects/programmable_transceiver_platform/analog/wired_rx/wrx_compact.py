@@ -316,7 +316,12 @@ class Row:
         for k, n in enumerate(nets):
             xs = vias.get(n, [])
             lo, hi = (min(xs), max(xs)) if xs else (width, width)
-            if n in self.ports:
+            left = getattr(self, 'left_ports', ())
+            if n in left:     # r7 (slicer SLI7, default off): port brought to the LEFT row edge (x0 margin reserved)
+                lo = 0.6 + 0.9 * left.index(n)
+                hi = max(xs) if xs else lo
+                pins[n] = (s(lo), track[n])
+            elif n in self.ports:
                 hi = width + 0.6 + 0.9 * self.ports.index(n)
                 pins[n] = (s(hi), track[n])
             if hi > lo:

@@ -107,51 +107,6 @@ def publish_stage(block):
     print(f'{block}: published {stage} -> {GENERATED}', flush=True)
 
 
-def _pll_ring_rows(devices):
-    """pt_pll_ring r9r (wired_rx r7ring): the core is width-packed in netlist order; the VHD follower/replica gets
-    its own rows; each FT leg gets one row with its U and D steering groups, the local vote inverter next to its
-    steering pair (copies, VH switch, VH dummy, VHD dummy, VHD switch, inverter)."""
-    names = [d.name for d in devices]
-    by = {d.name: d for d in devices}
-    legs, ft = [], set()
-    for k in range(4):
-        for s_, inv in (('U', f'FUN{k}'), ('D', f'FDN{k}')):
-            g = [n for n in names if n.startswith(f'H{s_}{k}')] + [n for n in (f'S{s_}{k}a', f'S{s_}{k}d', f'S{s_}{k}e', f'S{s_}{k}b') if n in by] + \
-                [n for n in names if n.startswith(inv + '_')]
-            legs.append(g)
-            ft.update(g)
-    fol = [n for n in names if n.startswith(('HF', 'HR', 'RDD', 'RDS'))]
-    ft.update(fol)
-
-    def wid(n):
-        d = by[n]
-        if d.model.startswith(('nfet', 'pfet')):
-            return 5.2 + (d.w if d.l < 2 else max(d.w, d.l))
-        if d.model in ('ct_ring9', 'ct_phbuf8', 'ct_div5'):
-            return 190.0
-        return 8.0 + d.l if d.model.startswith('ppolyf') else 25.0
-
-    def pack(lst, W=190.0):
-        out, cur, w = [], [], 0.0
-        for n in lst:
-            if cur and w + wid(n) > W:
-                out.append(cur)
-                cur, w = [], 0.0
-            cur.append(n)
-            w += wid(n)
-        return out + ([cur] if cur else [])
-    return pack([n for n in names if n not in ft]) + pack(fol) + [legs[i] + legs[i + 1] for i in range(0, len(legs), 2)]
-
-
-# Per-block layout recipe (layout_engine options; other blocks unchanged).  pt_pll_ring r9r: complementary vote nets
-# (FUk/FUBk, FDk/FDBk) in adjacent M5 trunk columns so their coupling into any neighbour cancels, and 1.5 um extra
-# clearance on the ring supply VH, the FT dump node VHD, the steered drains Y* and the copy gate VPB/VPBF
-# (extracted r9m without this recipe: -5010 ppm for net-zero vote alternation; r9r: -765 ppm).
-BLOCK_LAYOUT = {'pll_ring': dict(rows=_pll_ring_rows,
-                                 trunk_groups=[[f'FU{k}', f'FUB{k}'] for k in range(4)] + [[f'FD{k}', f'FDB{k}'] for k in range(4)],
-                                 net_space={n: 1.5 for n in ['VH', 'VHD', 'VPB', 'VPBF'] + [f'Y{s}{k}' for s in 'UD' for k in range(4)]})}
-
-
 def build_layout(block, rows=None, max_row_width=160.0, extra_trunk_nets=(), publish='clean'):
     """publish: 'clean' (default) copies into generated/ only if layout_clean(); 'never' leaves it staged
     (caller runs benches on the stage, then publish_stage()); 'force' = the old unconditional behaviour."""
@@ -162,12 +117,9 @@ def build_layout(block, rows=None, max_row_width=160.0, extra_trunk_nets=(), pub
     if work.exists():
         shutil.rmtree(work)
     work.mkdir(parents=True)
-    recipe = BLOCK_LAYOUT.get(block, {})
-    rows = rows or recipe.get('rows')
     rows_resolved = rows(devices) if callable(rows) else rows
     rep = le.generate(work, top, ports, devices, rows=rows_resolved, max_row_width=max_row_width,
-                      extra_trunk_nets=extra_trunk_nets, trunk_groups=recipe.get('trunk_groups', ()),
-                      net_space=recipe.get('net_space'))
+                      extra_trunk_nets=extra_trunk_nets)
     macros = sorted({d.model for d in devices if d.model in netlist.MACROS})
     defs = ''.join((GENERATED / 'fast' / f'{m}.spice').read_text() for m in macros)
     (work / 'schematic.spice').write_text(defs + with_antenna_diodes(netlist.flat_spice(ports, devices, top), rep))

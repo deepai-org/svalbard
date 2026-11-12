@@ -496,10 +496,18 @@ def lvs_rf(tag='t'):
 
 # ---------------------------------------------------------------- aux cell (layout_engine): bias, PRE taps, bleeds, ATB
 AUX = 'pt_lc_qvco_aux'
-AUX_PORTS = ('EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE VDDCI VDDCQ CMLSEL VDD VSS').split()
+AUX_PORTS = ('EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE VDDCI VDDCQ CMLSEL VDD VSS TAILG').split()
+# r6 (LO owner, 2026-11-12): tail-gate RC filter.  The 10 uA / 2-1 um reference diode's flicker, x800 mirrored, put the
+# QVCO 1/f^3 corner at ~9 MHz (scratch/lo/r5_pn flick.py; Kg = df/dVg = 250 MHz/V extracted PESS).  TAILG = filtered tail
+# gate: RFLT_N x 100 kohm ppolyf_u_1k from IBIAS + CFLT_N x 10x10 um n-well MOS cap (+ ~15 pF of tail gates).
+RFLT_N, CFLT_N = 40, 12
+RFLT_L, CFLT_S = 100, 24     # segment length (um, 1 um wide => 200 kohm) and MOS-cap tile side (um)
+AUX_W = 620.0      # r6: wide, short aux (it sits below the spirals' free area; was 150)
 
 
 def aux_netlist():
+    filt = "".join(f"XRF{k} {'IBIAS' if k == 0 else f'TF{k}'} {'TAILG' if k == RFLT_N - 1 else f'TF{k + 1}'} VSS ppolyf_u_1k r_width=1u r_length={RFLT_L}u\n" for k in range(RFLT_N))
+    filt += "".join(f"XCF{k} TAILG VSS cap_nmos_03v3_b c_width={CFLT_S}u c_length={CFLT_S}u\n" for k in range(CFLT_N))
     return f"""* {AUX}: r5 QVCO aux (bias reference, PRE prescaler tap + 3 matching dummies, CMLSEL bleeds, ATB taps)
 .subckt pt_t_inv1 A Y VDD VSS
 XP Y A VDD VDD pfet_03v3 w=2u l=0.28u
@@ -522,6 +530,7 @@ XEI EN ENB VDD VSS pt_t_inv1
 XNB IBIAS IBIAS NBS VSS nfet_03v3 w=2u l=1u
 XNBS NBS EN VSS VSS nfet_03v3 w=4u l=0.28u
 XNBC IBIAS ENB VSS VSS nfet_03v3 w=1u l=0.28u
+{filt}XNBF TAILG ENB VSS VSS nfet_03v3 w=1u l=0.28u
 XBP IP PREB ENB VDDB VSS pt_lc_acinv
 XBP2 PREB PRE VDDB VSS pt_lc_inv1
 XBD1 IN DD1 ENB VDDB VSS pt_lc_acinv
@@ -533,7 +542,7 @@ XAI ATB_EN ATB_ENB VDD VSS pt_t_inv1
 XRA VTUNE VTA VSS ppolyf_u_1k r_width=1u r_length=20u
 XTN VTA ATB_EN ATB_VTUNE VSS nfet_03v3 w=2u l=0.28u
 XTP VTA ATB_ENB ATB_VTUNE VDD pfet_03v3 w=4u l=0.28u
-XRT ITR IBIAS VSS VSS nfet_03v3 w=25u l=1u
+XRT ITR TAILG VSS VSS nfet_03v3 w=25u l=1u
 XTS ITR ATB_EN ATB_ITAIL VSS nfet_03v3 w=4u l=0.28u
 .ends
 """
@@ -549,7 +558,7 @@ def aux(tag=''):
     src = work / 'aux.spice'
     src.write_text(aux_netlist())
     ports, devices = netlist.load(src, AUX)
-    rep = le.generate(work, AUX, ports, devices, max_row_width=150.0)
+    rep = le.generate(work, AUX, ports, devices, max_row_width=AUX_W)
     (work / 'schematic.spice').write_text(tf.with_antenna_diodes(netlist.flat_spice(ports, devices, AUX), rep))
     lvs = le.netgen_lvs(work, f'{AUX}.lvs.spice', AUX, 'schematic.spice', AUX)
     out = dict(size_um=rep['size_um'], drc=rep['drc_count_raw'][:200], lvs=lvs, trunk_x=rep['trunk_x'], straps=rep['straps'])
@@ -572,7 +581,7 @@ def rf_points():
     for core in ('I', 'Q'):
         gx = (lambda x: x) if core == 'I' else (lambda x: OXQ - x)
         for k, (x, w) in STRAPS.items():
-            net = {'VT': 'VTUNE', 'TS': None, 'VDDC': 'VDDC' + core}.get(k, k)
+            net = {'VT': 'VTUNE', 'TS': None, 'VDDC': 'VDDC' + core, 'IBIAS': 'TAILG'}.get(k, k)
             if net:
                 add(net, gx(x), 4, w)
         for k, b in enumerate(('B0', 'B1', 'B2', 'B3')):
@@ -594,6 +603,8 @@ def top(rftag='t3', auxtag='a1', tag=''):
     info = json.loads((rfw / 'info.json').read_text())
     ax = json.loads((axw / 'result.json').read_text())
     aw, ah = ax['size_um']
+    global AUX_X
+    AUX_X = round(80.0 - aw / 2, 1) if aw > 200 else 6.0   # r6: centre a wide aux under the core
     # tank taps to the aux PRE inputs: extend the outer P strap and the outer N strap of each core to y = -2
     L = XF()
     L.auto_port = False
@@ -613,7 +624,7 @@ def top(rftag='t3', auxtag='a1', tag=''):
     nets_aux = {n: x for n, x in ax['trunk_x'].items() if n in AUX_PORTS}
     pw = {'VDD': [x for n, x in ax['straps'] if n == 'VDD'], 'VSS': [x for n, x in ax['straps'] if n == 'VSS']}
     # tracks
-    order = ['VSS', 'VDD', 'VTUNE', 'IBIAS', 'CMLSEL', 'VDDCI', 'VDDCQ', 'IP', 'IN', 'QP', 'QN']
+    order = ['VSS', 'VDD', 'VTUNE', 'TAILG', 'CMLSEL', 'VDDCI', 'VDDCQ', 'IP', 'IN', 'QP', 'QN']
     widths = {'VSS': 2.0, 'VDD': 2.0, 'VDDCI': 0.8, 'VDDCQ': 0.8}
     y = -3.0
     ytr = {}
@@ -654,7 +665,7 @@ def top(rftag='t3', auxtag='a1', tag=''):
         ap = [nets_aux[n] + AUX_X] if n in nets_aux else []
         if n in pw:
             ap = [x + AUX_X for x in pw[n]]
-        if n in ('VDDCI', 'VDDCQ', 'IP', 'IN', 'QP', 'QN', 'VTUNE', 'IBIAS', 'CMLSEL', 'VDD', 'VSS'):
+        if n in ('VDDCI', 'VDDCQ', 'IP', 'IN', 'QP', 'QN', 'VTUNE', 'TAILG', 'CMLSEL', 'VDD', 'VSS'):
             for x in ap:
                 vw = 2.0 if n in ('VDD', 'VSS') else 0.5
                 L.rect('metal5', x - vw / 2, aux_top - 1.0, x + vw / 2, yt + w / 2)
@@ -668,7 +679,7 @@ def top(rftag='t3', auxtag='a1', tag=''):
         L.rect('metal4', min(xs) - 1.2, yt - w / 2, max(xs) + 1.2, yt + w / 2)
         L.label(n, 'metal4', min(xs), yt, TOP_PORTS.index(n) + 1 if n in TOP_PORTS else None)
     # aux-only ports: M5 stubs below... label on the aux trunk tops (already M5 labels inside aux) -> top labels
-    for n in ('EN', 'PRE', 'VDDB', 'ATB_EN', 'ATB_VTUNE', 'ATB_ITAIL'):
+    for n in ('EN', 'IBIAS', 'PRE', 'VDDB', 'ATB_EN', 'ATB_VTUNE', 'ATB_ITAIL'):
         x = nets_aux[n] + AUX_X
         L.rect('metal5', x - 0.25, aux_top - 1.0, x + 0.25, aux_top + 1.0)
         L.label(n, 'metal5', x, aux_top + 0.5, TOP_PORTS.index(n) + 1)
@@ -692,7 +703,7 @@ def top(rftag='t3', auxtag='a1', tag=''):
 def top_ref(axw):
     rf = ref_netlist(split=False)
     body = [ln for ln in rf.splitlines() if ln.startswith('X')]
-    ren = {'B0': 'BAND0', 'B1': 'BAND1', 'B2': 'BAND2', 'B3': 'BAND3'}
+    ren = {'B0': 'BAND0', 'B1': 'BAND1', 'B2': 'BAND2', 'B3': 'BAND3', 'IBIAS': 'TAILG'}
     out = []
     for ln in body:
         tok = ln.split()
@@ -768,7 +779,7 @@ def schematic():
     aux, generated from the same parameters as the layout) + the two tank spirals (spiral.spice pt_spiral)."""
     rf = ref_netlist(split=False)
     body = [ln for ln in rf.splitlines() if ln.startswith('X')]
-    ren = {'B0': 'BAND0', 'B1': 'BAND1', 'B2': 'BAND2', 'B3': 'BAND3'}
+    ren = {'B0': 'BAND0', 'B1': 'BAND1', 'B2': 'BAND2', 'B3': 'BAND3', 'IBIAS': 'TAILG'}
     body = [' '.join(ren.get(x, x) for x in ln.split()) for ln in body]
     txt = f"""* SPDX-License-Identifier: Apache-2.0
 * pt_lc_qvco5: autonomous RF LO quadrature LC VCO, r5 (LO owner, 2026-11-11).  GENERATED by
@@ -786,7 +797,7 @@ XLQ QP QN VSS pt_spiral
 .ends
 .subckt {TOP} {' '.join(TOP_PORTS)}
 """ + '\n'.join(body) + f"""
-XAUX EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE VDDCI VDDCQ CMLSEL VDD VSS {AUX}
+XAUX EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE VDDCI VDDCQ CMLSEL VDD VSS TAILG {AUX}
 .ends
 """ + aux_netlist()
     (HERE / 'qvco5.spice').write_text(txt)

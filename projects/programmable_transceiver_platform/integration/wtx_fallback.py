@@ -54,7 +54,7 @@ def extension(read, support, pdk, library, scenario):
                           'tx_protected_pad', 'out_')
     protection, protection_cell = model(a/'pads/generated/stress-safe-families/rf-pair/pad-extracted.spice',
                                         'rf_protected_pad', 'in_')
-    steering, steering_cell = model(a/'pads/generated/steering-buffer/physical.spice',
+    steering, steering_cell = model(a/'pads/generated/steering-buffer-compact/physical.spice',
                                     'tx_steering_buffer_flat_physical', 'steer_')
     interlock, interlock_cell = model(a/'pads/generated/transmit-control-candidate/thick-logic/physical.spice',
                                       'tx_mode_interlock_flat_physical', 'ctl_')

@@ -1,18 +1,18 @@
 {
  "block": "rfdriver",
  "source_hashes": {
-  "rfdriver.spice": "sha256:b3131d42fbb4f82ba88b4439777ed00a13ced474d2b400e3a119232ff21bbe4b",
-  "circuits.py": "sha256:c8af6244384cfb858ad85036993c2ab02cf6d720367b4292acfe4df601e1c8af",
-  "layoutlib.py": "sha256:067f29bd000ba2e414787dfd146ba34e49c7f5c7c88bae3d1a4b606447c5c111",
-  "generate.py": "sha256:1d7aac03cecd7bce13996c43a809ebd42d8507039f337402fb45c8e185a12b24",
-  "simulate.py": "sha256:323f5b9eb2f1aebef6e1738227bccabcd40def9bb6404143de875ea422a6c1f5",
-  "run_benches.py": "sha256:ba6e071ba84946c39212a5e6760dd904630b6228628bce6daf12454ee7fd632a",
-  "evidence.py": "sha256:628a1f1b0201014c55c825380c6b74ac092293937b17e1660a32d3a4c1327847",
+  "rfdriver.spice": "sha256:3103c4685f6d9847cf14d676f4471b6019ae44c08cdb4b54ee925d2b2027e089",
+  "circuits.py": "sha256:8a9706fa1e63bb7b34d7a7628d865f68321fb76567886c77d8fb4a873178e96b",
+  "layoutlib.py": "sha256:9fd24006dde1d26c69e9294c21a774ca4c5996bef46a2e11a82e5e2ba81b43d7",
+  "generate.py": "sha256:cc95c9d584bb1e63c126d825421cbe16af35ba33dce053737359070250d1c632",
+  "simulate.py": "sha256:d31b153c3380734f00eb157e4f0b3dfe5acdbcc24810757e72b81f074432e587",
+  "run_benches.py": "sha256:e018f2969f762e225407be830d9031d9eef77202281a4d9f15a75eb9e5ffe582",
+  "evidence.py": "sha256:4a3ba6031b6dea7ef1287a4aac22ce9a8f3f2452d1f67965a4ba7bba811ca890",
   "run_rf_tx.sh": "sha256:d95f600df754504173e6ca304efb1732f7a679c7e903ff7592efb8519c682cd8"
  },
  "output_hashes": {
-  "generated/rfdriver.gds": "sha256:300a5a70b68ac399ac5f86ae6738605c6a8419225f730573c2dfb30197d02cdc",
-  "generated/rfdriver.ext.spice": "sha256:e5048dc5d4162da9d35c64771e66e8d3832910e60e5971ae2a0d6fdbf93c7696"
+  "generated/rfdriver.gds": "sha256:b5b4f46177788c8e0c9ad0247d0004e8b9cb204d17d11ca06228ad1301f4ca25",
+  "generated/rfdriver.ext.spice": "sha256:6ca789116f08afb2f8eb10a64c8664b999b03ec3a1e056bf10d821f6f34590c0"
  },
  "output_notes": "generated/<block>.gds is the Magic 8.3.678 re-export (analog image); DRC, LVS and extraction ran on the canary image from the same .mag.",
  "images": {
@@ -23,11 +23,11 @@
  },
  "pdk": "gf180mcuD, open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (both images)",
  "area": {
-  "width_um": 472.38,
-  "height_um": 235.82,
-  "area_um2": 111396.7,
+  "width_um": 479.98,
+  "height_um": 203.36,
+  "area_um2": 97608.7,
   "ceiling_um2": 98100,
-  "fits": false
+  "fits": true
  },
  "tests": {
   "safe": {
@@ -36,8 +36,8 @@
     {
      "case": "safe_reset_3p3",
      "condition": {},
-     "rail_static_uA": 0.0008,
-     "rail_transient_mean_uA": -5.6953,
+     "rail_static_uA": 0.001,
+     "rail_transient_mean_uA": -0.5641,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -49,8 +49,8 @@
       "vdd": 3.63,
       "temp": 85
      },
-     "rail_static_uA": 0.0024,
-     "rail_transient_mean_uA": -4.5103,
+     "rail_static_uA": 0.003,
+     "rail_transient_mean_uA": -0.3768,
      "bb_dac_source_static_uA": 0.0003,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -62,8 +62,8 @@
       "vdd": 3.63,
       "temp": 0
      },
-     "rail_static_uA": 0.0007,
-     "rail_transient_mean_uA": -6.2777,
+     "rail_static_uA": 0.0014,
+     "rail_transient_mean_uA": -0.6688,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -76,8 +76,8 @@
       "temp": 85,
       "corner": "ff"
      },
-     "rail_static_uA": 0.02,
-     "rail_transient_mean_uA": -3.03,
+     "rail_static_uA": 0.0256,
+     "rail_transient_mean_uA": -0.1653,
      "bb_dac_source_static_uA": 0.0035,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -88,8 +88,8 @@
      "condition": {
       "vdd": 0.0
      },
-     "rail_static_uA": -0.0,
-     "rail_transient_mean_uA": -7.2623,
+     "rail_static_uA": 0.0,
+     "rail_transient_mean_uA": -0.5399,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -106,8 +106,8 @@
       "sel": 1,
       "sat": 1
      },
-     "rail_static_uA": -0.0,
-     "rail_transient_mean_uA": -7.2491,
+     "rail_static_uA": 0.0,
+     "rail_transient_mean_uA": -0.5382,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -120,8 +120,8 @@
       "ctrl": 3.3,
       "bypass": 1
      },
-     "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -7.2837,
+     "rail_static_uA": -0.0,
+     "rail_transient_mean_uA": -0.5679,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -136,8 +136,8 @@
       "bypass": 1,
       "gain": 15
      },
-     "rail_static_uA": 0.01,
-     "rail_transient_mean_uA": -21.7705,
+     "rail_static_uA": 0.0,
+     "rail_transient_mean_uA": -5.0856,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -152,8 +152,8 @@
       "gain": 15,
       "ibias": 0.0
      },
-     "rail_static_uA": 0.0008,
-     "rail_transient_mean_uA": -1.8415,
+     "rail_static_uA": 0.0009,
+     "rail_transient_mean_uA": -0.2813,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -168,8 +168,8 @@
       "gain": 15,
       "lo_on": false
      },
-     "rail_static_uA": 23426.3,
-     "rail_transient_mean_uA": 23426.27,
+     "rail_static_uA": 22848.1,
+     "rail_transient_mean_uA": 22848.0629,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -185,8 +185,8 @@
       "mute": 0,
       "gain": 15
      },
-     "rail_static_uA": 22807.4,
-     "rail_transient_mean_uA": 22792.0824,
+     "rail_static_uA": 22241.2,
+     "rail_transient_mean_uA": 22224.6666,
      "bb_dac_source_static_uA": 0.0001,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -198,10 +198,10 @@
       "vdd": 0.0,
       "pad_drive": 3.3
      },
-     "rail_static_uA": -89217.02,
-     "rail_transient_mean_uA": -89246.0016,
+     "rail_static_uA": -3509.252,
+     "rail_transient_mean_uA": -3510.5149,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": 89.7879,
+     "pad_source_current_mA": 4.1237,
      "criterion": "out of contract: DC-driven RF_TX (board must DC-block RF_TX)",
      "pass": null
     },
@@ -210,10 +210,10 @@
      "condition": {
       "pad_drive": 3.3
      },
-     "rail_static_uA": 0.0007,
-     "rail_transient_mean_uA": -5.7642,
+     "rail_static_uA": 0.001,
+     "rail_transient_mean_uA": -0.6161,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": 0.0002,
+     "pad_source_current_mA": 0.0004,
      "criterion": "out of contract: DC-driven RF_TX (board must DC-block RF_TX)",
      "pass": null
     },
@@ -222,10 +222,10 @@
      "condition": {
       "pad_drive": 0.0
      },
-     "rail_static_uA": 0.001,
-     "rail_transient_mean_uA": -5.6849,
+     "rail_static_uA": 0.0013,
+     "rail_transient_mean_uA": -0.6164,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": 0.0,
+     "pad_source_current_mA": 0.0001,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
      "pass": true
     },
@@ -236,9 +236,9 @@
       "pad_drive": 0.0
      },
      "rail_static_uA": -0.0,
-     "rail_transient_mean_uA": -7.301,
+     "rail_transient_mean_uA": -0.5819,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": 0.0002,
+     "pad_source_current_mA": 0.0004,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
      "pass": true
     },
@@ -251,10 +251,10 @@
       "mute": 0,
       "gain": 15
      },
-     "rail_static_uA": 27560.8,
-     "rail_transient_mean_uA": 27518.0237,
+     "rail_static_uA": 26979.1,
+     "rail_transient_mean_uA": 26954.2812,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": -0.868,
+     "pad_source_current_mA": -0.9308,
      "criterion": "informational (block enabled)",
      "pass": null
     },
@@ -266,10 +266,10 @@
       "en": 1,
       "bypass": 1
      },
-     "rail_static_uA": 0.0009,
-     "rail_transient_mean_uA": -15.381,
+     "rail_static_uA": 0.0011,
+     "rail_transient_mean_uA": -6.033,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": -3.8184,
+     "pad_source_current_mA": -2.1533,
      "criterion": "informational (block enabled)",
      "pass": null
     },
@@ -279,8 +279,8 @@
       "kind": "ramp",
       "en_level": 0.0
      },
-     "family_rail_current_uA_at_3p63V": 9.647,
-     "peak_uA": 361.338,
+     "family_rail_current_uA_at_3p63V": 7.726,
+     "peak_uA": 504.143,
      "criterion": "<= 10.0 uA",
      "pass": true
     },
@@ -290,8 +290,8 @@
       "kind": "ramp",
       "en_level": 3.3
      },
-     "family_rail_current_uA_at_3p63V": 21225.132,
-     "peak_uA": 23413.985,
+     "family_rail_current_uA_at_3p63V": 20396.881,
+     "peak_uA": 22863.635,
      "criterion": "informational (enabled)",
      "pass": null
     }
@@ -308,17 +308,18 @@
    "lvs": {
     "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
     "result": "Final result: Circuits match uniquely.",
-    "report": "generated/rfdriver-lvs.txt"
+    "report": "generated/rfdriver-lvs.txt",
+    "name_equivalent": true
    },
    "gds_export": {
     "rule": "spec/block-deliverables.md GDS export rule",
     "tool": "magic 8.3.678 (analog image), cif ostyle gdsii",
     "image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
     "marker_shapes": {
-     "HRES 62/0": 5,
-     "RES_MK 110/5": 18
+     "HRES 62/0": 6,
+     "RES_MK 110/5": 20
     },
-    "ppolyf_u_1k_in_netlist": 5,
+    "ppolyf_u_1k_in_netlist": 6,
     "hres_present_where_required": true,
     "report": "generated/rfdriver-gds-export.json"
    },
@@ -330,20 +331,20 @@
    },
    "extracted_nominal": {
     "bench": "extracted pt_rfdriver, ideal 2.44 GHz differential input at 2.82 V CM, pad 2 ohm + 1 pF per leg, 50 ohm differential load",
-    "small_signal_voltage_gain": 5.2404,
-    "pad_dBm_at_0p3V_in": 7.82,
-    "pad_dBm_at_0p6V_in": 8.05,
-    "supply_mA": 59.1304,
-    "chain_pad_dBm_0p3V_DC_I": 1.36,
-    "chain_ssb_wanted_dBm": 1.67,
+    "small_signal_voltage_gain": 5.6947,
+    "pad_dBm_at_0p3V_in": 7.1,
+    "pad_dBm_at_0p6V_in": 7.29,
+    "supply_mA": 59.8977,
+    "chain_pad_dBm_0p3V_DC_I": 0.74,
+    "chain_ssb_wanted_dBm": 1.11,
     "source": "generated/rf_tx-sim-ext.json",
-    "board_matched_linear_dBm_0p3V": 3.44,
-    "board_matched_saturated_dBm_1p0V": 6.06,
-    "board_matched_ssb_linear_dBm": 3.7,
-    "board_matched_ssb_saturated_dBm": 8.05,
+    "board_matched_linear_dBm_0p3V": 5.14,
+    "board_matched_saturated_dBm_1p0V": 9.52,
+    "board_matched_ssb_linear_dBm": 5.55,
+    "board_matched_ssb_saturated_dBm": 9.95,
     "board_match": {
-     "r_out_diff_ohm": 181.7,
-     "choke_l_per_leg_H": 2.0665384794295465e-09,
+     "r_out_diff_ohm": 820.5,
+     "choke_l_per_leg_H": 2.2337976401895564e-09,
      "balun_ratio_ohm": 200.0,
      "balun_loss_db": 1.0,
      "inductor_q": 30.0,
@@ -357,19 +358,19 @@
     {
      "port": "atb_bias",
      "node": "bias line vb",
-     "on_V": 0.9498,
-     "off_V": -0.0
+     "on_V": 0.9517,
+     "off_V": 0.0
     },
     {
      "port": "atb_pre",
      "node": "pre-amplifier 2 output common mode",
-     "on_V": 2.628,
+     "on_V": 2.6234,
      "off_V": 3.3
     },
     {
      "port": "atb_cm",
      "node": "RF_TX pad common mode",
-     "on_V": 3.2676,
+     "on_V": 3.2757,
      "off_V": 3.3
     }
    ],
@@ -379,123 +380,218 @@
   },
   "fallback": {
    "state": "pass",
+   "criterion": "bypass=1: chain and board-matched pad power > -40 dBm at 0.3 V baseband, rfdriver supply < 5 mA",
    "routes": [
     {
      "route": "rf_tx_low_power_external_pa",
      "control": "bypass=1 (debug.rf_tx_bypass): header, pre-amplifiers and all output tails off; PMOS switches connect summed_rf to RF_TX",
      "evidence": {
       "chain_bypass": {
-       "pad_fund_mVpk_diff": 7.871,
-       "pad_dBm_50ohm": -32.08,
-       "sum_fund_mVpk_diff": 51.759,
-       "mixi_drain_fund_mVpk_diff": 59.525,
+       "pad_fund_mVpk_diff": 3.8,
+       "pad_dBm_50ohm": -38.4,
+       "sum_fund_mVpk_diff": 58.918,
+       "mixi_drain_fund_mVpk_diff": 64.967,
        "supply_mA": {
         "txmix_i": -0.0001,
         "txmix_q": 0.0002,
-        "txsum": 0.3999,
-        "rfdriver": 1.5981
+        "txsum": 0.7258,
+        "rfdriver": 1.2829
        },
        "atb_V": {
         "rfdriver.atb_bias": 0.9472,
-        "rfdriver.atb_pre": 3.3001,
-        "rfdriver.atb_cm": 3.2984,
-        "txsum.atb_cm": 3.2069,
+        "rfdriver.atb_pre": 3.3,
+        "rfdriver.atb_cm": 3.2987,
+        "txsum.atb_cm": 3.132,
         "txmix_i.atb_bias": 0.9397,
-        "txmix_i.atb_tail": 0.791
+        "txmix_i.atb_tail": 0.7909
        },
-       "pad_cm_V": 3.2983,
-       "sum_cm_V": 3.2063
+       "pad_cm_V": 3.2987,
+       "sum_cm_V": 3.1301
       },
       "chain_bypass_large": {
-       "pad_fund_mVpk_diff": 16.579,
-       "pad_dBm_50ohm": -25.61,
-       "sum_fund_mVpk_diff": 108.956,
-       "mixi_drain_fund_mVpk_diff": 125.285,
+       "pad_fund_mVpk_diff": 8.049,
+       "pad_dBm_50ohm": -31.88,
+       "sum_fund_mVpk_diff": 124.7,
+       "mixi_drain_fund_mVpk_diff": 137.433,
        "supply_mA": {
         "txmix_i": -0.0003,
         "txmix_q": 0.0002,
-        "txsum": 0.4014,
-        "rfdriver": 1.5999
+        "txsum": 0.7275,
+        "rfdriver": 1.2825
        },
        "atb_V": {
         "rfdriver.atb_bias": 0.9472,
-        "rfdriver.atb_pre": 3.3001,
-        "rfdriver.atb_cm": 3.2984,
-        "txsum.atb_cm": 3.2066,
+        "rfdriver.atb_pre": 3.3,
+        "rfdriver.atb_cm": 3.2987,
+        "txsum.atb_cm": 3.1316,
         "txmix_i.atb_bias": 0.9397,
-        "txmix_i.atb_tail": 0.9134
+        "txmix_i.atb_tail": 0.9132
        },
-       "pad_cm_V": 3.2983,
-       "sum_cm_V": 3.207
+       "pad_cm_V": 3.2987,
+       "sum_cm_V": 3.1314
       },
       "standalone_bypass": {
-       "input_mVpk_diff": 299.974,
-       "pad_fund_mVpk_diff": 35.981,
-       "pad_dBm_50ohm": -18.88,
-       "voltage_gain": 0.1199,
-       "supply_mA": 7.3523,
+       "input_mVpk_diff": 299.975,
+       "pad_fund_mVpk_diff": 15.656,
+       "pad_dBm_50ohm": -26.11,
+       "voltage_gain": 0.0522,
+       "supply_mA": 3.3215,
        "atb_bias_V": 0.9471,
        "atb_pre_V": 3.3,
-       "atb_cm_V": 3.2926
+       "atb_cm_V": 3.2967
       },
       "board_matched_bypass": {
-       "pad_fund_mVpk_diff": 11.57,
-       "pad_dBm_50ohm": -28.73,
-       "sum_fund_mVpk_diff": 65.369,
-       "mixi_drain_fund_mVpk_diff": 72.977,
+       "pad_fund_mVpk_diff": 5.529,
+       "pad_dBm_50ohm": -35.15,
+       "sum_fund_mVpk_diff": 59.936,
+       "mixi_drain_fund_mVpk_diff": 65.662,
        "supply_mA": {
         "txmix_i": -0.0001,
         "txmix_q": 0.0002,
-        "txsum": 0.4031,
-        "rfdriver": 1.5956
+        "txsum": 0.728,
+        "rfdriver": 1.2813
        },
        "atb_V": {
         "rfdriver.atb_bias": 0.9472,
-        "rfdriver.atb_pre": 3.3001,
-        "rfdriver.atb_cm": 3.2976,
-        "txsum.atb_cm": 3.2062,
+        "rfdriver.atb_pre": 3.3,
+        "rfdriver.atb_cm": 3.298,
+        "txsum.atb_cm": 3.1315,
         "txmix_i.atb_bias": 0.9397,
-        "txmix_i.atb_tail": 0.791
+        "txmix_i.atb_tail": 0.7909
        },
-       "pad_cm_V": 3.2974,
-       "sum_cm_V": 3.2055
+       "pad_cm_V": 3.2979,
+       "sum_cm_V": 3.1295
       },
       "board_matched_bypass_saturated": {
-       "pad_fund_mVpk_diff": 26.417,
-       "pad_dBm_50ohm": -21.56,
-       "sum_fund_mVpk_diff": 149.228,
-       "mixi_drain_fund_mVpk_diff": 166.565,
+       "pad_fund_mVpk_diff": 12.722,
+       "pad_dBm_50ohm": -27.91,
+       "sum_fund_mVpk_diff": 137.86,
+       "mixi_drain_fund_mVpk_diff": 150.912,
        "supply_mA": {
         "txmix_i": -0.0003,
-        "txmix_q": 0.0003,
-        "txsum": 0.4063,
-        "rfdriver": 1.6026
+        "txmix_q": 0.0002,
+        "txsum": 0.7322,
+        "rfdriver": 1.2847
        },
        "atb_V": {
         "rfdriver.atb_bias": 0.9472,
-        "rfdriver.atb_pre": 3.3001,
-        "rfdriver.atb_cm": 3.2976,
-        "txsum.atb_cm": 3.2055,
+        "rfdriver.atb_pre": 3.3,
+        "rfdriver.atb_cm": 3.298,
+        "txsum.atb_cm": 3.1305,
         "txmix_i.atb_bias": 0.9396,
-        "txmix_i.atb_tail": 1.0334
+        "txmix_i.atb_tail": 1.0332
        },
-       "pad_cm_V": 3.2975,
-       "sum_cm_V": 3.2073
+       "pad_cm_V": 3.298,
+       "sum_cm_V": 3.1328
       },
-      "rfdriver_supply_in_bypass_mA": 1.5981
+      "rfdriver_supply_in_bypass_mA": 1.2829
      },
-     "note": "Function shown at low power (-32.1 dBm at 0.3 V baseband); an external PA needs ~32 dB gain to reach 0 dBm."
+     "note": "Function shown at low power (-38.4 dBm at 0.3 V baseband); an external PA needs ~38 dB gain to reach 0 dBm."
     }
    ],
-   "bypass_loading_fF": 125.92,
-   "notes": "bypass_loading_fF = total rfdriver input capacitance on summed_rf with the driver off and bypass open (includes the off bypass PMOS); 140.4 fF with the driver on."
+   "bypass_loading_fF": 127.04,
+   "notes": "bypass_loading_fF = total rfdriver input capacitance on summed_rf with the driver off and bypass open (includes the off bypass PMOS); 153.5 fF with the driver on."
+  },
+  "stable": {
+   "state": "pass",
+   "criterion": "min Re(Ydiff) > 0 over 10 MHz-20 GHz (ss/tt/ff, input source 0 and 262 ohm per leg); kick ringing decays >= 10x between 30-35 ns and 45-50 ns (ss/tt/ff, 22/100 nH Q20 feed chokes, matched 2 dB balun and pad-side open)",
+   "admittance": {
+    "stab_y_ss_rs0": {
+     "min_re_y_mS": 0.3493,
+     "at_MHz": 10.0
+    },
+    "stab_y_ss_rs262": {
+     "min_re_y_mS": 0.3516,
+     "at_MHz": 10.0
+    },
+    "stab_y_tt_rs0": {
+     "min_re_y_mS": 0.4246,
+     "at_MHz": 10.0
+    },
+    "stab_y_tt_rs262": {
+     "min_re_y_mS": 0.4265,
+     "at_MHz": 10.0
+    },
+    "stab_y_ff_rs0": {
+     "min_re_y_mS": 0.5319,
+     "at_MHz": 10.0
+    },
+    "stab_y_ff_rs262": {
+     "min_re_y_mS": 0.5332,
+     "at_MHz": 10.0
+    }
+   },
+   "kick": {
+    "stab_kick_ss_match_22n": {
+     "kick_V": 2.00821,
+     "late_V": 0.00043,
+     "decay_x": 4620.2
+    },
+    "stab_kick_ss_match_100n": {
+     "kick_V": 2.06991,
+     "late_V": 0.00327,
+     "decay_x": 633.3
+    },
+    "stab_kick_ss_open_22n": {
+     "kick_V": 3.91845,
+     "late_V": 0.00737,
+     "decay_x": 531.8
+    },
+    "stab_kick_ss_open_100n": {
+     "kick_V": 4.25769,
+     "late_V": 0.00141,
+     "decay_x": 3021.7
+    },
+    "stab_kick_tt_match_22n": {
+     "kick_V": 2.06216,
+     "late_V": 0.00037,
+     "decay_x": 5628.4
+    },
+    "stab_kick_tt_match_100n": {
+     "kick_V": 2.19536,
+     "late_V": 0.00245,
+     "decay_x": 897.4
+    },
+    "stab_kick_tt_open_22n": {
+     "kick_V": 4.1976,
+     "late_V": 0.00182,
+     "decay_x": 2308.4
+    },
+    "stab_kick_tt_open_100n": {
+     "kick_V": 4.09628,
+     "late_V": 0.00049,
+     "decay_x": 8372.0
+    },
+    "stab_kick_ff_match_22n": {
+     "kick_V": 2.00825,
+     "late_V": 0.00023,
+     "decay_x": 8780.7
+    },
+    "stab_kick_ff_match_100n": {
+     "kick_V": 2.09908,
+     "late_V": 0.00166,
+     "decay_x": 1263.4
+    },
+    "stab_kick_ff_open_22n": {
+     "kick_V": 3.94995,
+     "late_V": 0.00032,
+     "decay_x": 12414.2
+    },
+    "stab_kick_ff_open_100n": {
+     "kick_V": 3.51819,
+     "late_V": 0.00021,
+     "decay_x": 16440.5
+    }
+   },
+   "bench": "simulate.admittance_deck / kick_deck",
+   "risk": "RFT-09"
   }
  },
  "performance_vs_target": [
   {
    "metric": "board-matched output power, linear mode (50 ohm after chokes + 200:50 balun, 1.0 dB balun loss included)",
    "target": 0.0,
-   "achieved": 3.44,
+   "achieved": 5.14,
    "unit": "dBm",
    "condition": "extracted chain, 0.3 V DC I, choke Q=30",
    "source": "generated/rf_tx-sim-ext.json",
@@ -504,7 +600,7 @@
   {
    "metric": "board-matched output power, linear mode, 0.7 V DC I",
    "target": 0.0,
-   "achieved": 5.75,
+   "achieved": 9.51,
    "unit": "dBm",
    "condition": "extracted chain",
    "source": "generated/rf_tx-sim-ext.json",
@@ -513,7 +609,7 @@
   {
    "metric": "board-matched output power, saturated mode (txmix sat=1, full-scale baseband)",
    "target": 0.0,
-   "achieved": 6.06,
+   "achieved": 9.52,
    "unit": "dBm",
    "condition": "extracted chain, 1.0 V DC I",
    "source": "generated/rf_tx-sim-ext.json",
@@ -523,22 +619,22 @@
    "metric": "board-matched SSB, linear (0.3 V I/Q) / saturated (1.0 V I/Q, sat=1)",
    "target": 0.0,
    "achieved": [
-    3.7,
-    8.05
+    5.55,
+    9.95
    ],
    "unit": "dBm",
    "condition": "extracted chain, 61 MHz offset",
    "source": "generated/rf_tx-sim-ext.json",
-   "note": "saturated SSB image rejection 30.3 dB, LO 37.8 dBc (limiting distortion; acceptable for constant-envelope modulation only)"
+   "note": "saturated SSB image rejection 33.4 dB, LO 39.8 dBc (limiting distortion; acceptable for constant-envelope modulation only)"
   },
   {
    "metric": "saturated-mode power control by gain code 1/4/8/15",
    "target": null,
    "achieved": [
-    -6.28,
-    2.66,
-    5.15,
-    6.06
+    -12.38,
+    0.51,
+    5.72,
+    9.52
    ],
    "unit": "dBm",
    "condition": "extracted chain, matched",
@@ -547,13 +643,13 @@
   },
   {
    "metric": "rfdriver current per mode",
-   "target": 28.92,
+   "target": 61.7,
    "achieved": {
-    "linear (chain, 0.3 V, matched)": 53.1234,
-    "saturated (chain, 1.0 V, sat=1, matched)": 53.7056,
-    "zero input (chain, matched)": 58.1049,
-    "mute": 23.3463,
-    "bypass": 1.5956
+    "linear (chain, 0.3 V, matched)": 52.78,
+    "saturated (chain, 1.0 V, sat=1, matched)": 53.3698,
+    "zero input (chain, matched)": 58.3992,
+    "mute": 22.7543,
+    "bypass": 1.2813
    },
    "unit": "mA",
    "condition": "tt/27C/3.3V",
@@ -568,73 +664,73 @@
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 3.72
+     "value": 5.26
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 3.89
+     "value": 5.45
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 2.9
+     "value": 4.71
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 3.08
+     "value": 4.89
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -2.41
+     "value": -0.65
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -0.83
+     "value": -0.27
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -2.82
+     "value": -0.72
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -1.35
+     "value": -0.37
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 4.87
+     "value": 8.55
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 4.93
+     "value": 8.72
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 4.99
+     "value": 7.87
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 5.04
+     "value": 8.04
     }
    ],
    "unit": "dBm",
@@ -650,73 +746,73 @@
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 6.0
+     "value": 9.63
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 6.05
+     "value": 9.76
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 6.06
+     "value": 9.2
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 6.1
+     "value": 9.34
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 5.05
+     "value": 7.4
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 6.13
+     "value": 7.63
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 4.46
+     "value": 6.88
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 5.57
+     "value": 7.12
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 5.61
+     "value": 10.84
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 6.0
+     "value": 10.96
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 5.55
+     "value": 10.48
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 5.68
+     "value": 10.6
     }
    ],
    "unit": "dBm",
@@ -726,79 +822,79 @@
   },
   {
    "metric": "rfdriver current vs corner, saturated",
-   "target": 28.92,
+   "target": 61.7,
    "achieved": [
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 53.1758
+     "value": 53.0468
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 54.0726
+     "value": 53.6539
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 52.8477
+     "value": 52.7952
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 53.7107
+     "value": 53.4033
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 41.0555
+     "value": 50.0066
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 49.0801
+     "value": 51.048
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 40.9961
+     "value": 49.8504
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 48.8755
+     "value": 50.8811
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 55.8594
+     "value": 55.8386
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 56.4631
+     "value": 56.5241
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 55.5429
+     "value": 55.5116
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 56.0786
+     "value": 56.1862
     }
    ],
    "unit": "mA",
@@ -809,7 +905,7 @@
   {
    "metric": "mute isolation, saturated, matched",
    "target": null,
-   "achieved": 20.28,
+   "achieved": 46.2,
    "unit": "dB",
    "condition": "extracted chain",
    "source": "generated/rf_tx-sim-ext.json",
@@ -820,25 +916,25 @@
    "target": "0 dBm with EVM <= -27 dB (MCS7) and mask margin >= 0",
    "achieved": {
     "cfr_None": {
-     "pout_dBm": 0.32,
-     "evm_dB": -22.84,
+     "pout_dBm": 0.09,
+     "evm_dB": -30.03,
      "aclr_dB_lower_upper": [
-      29.89,
-      29.89
+      39.01,
+      38.99
      ],
-     "mask_margin_dB": 0.1,
-     "bb_vrms": 0.2141,
+     "mask_margin_dB": 3.38,
+     "bb_vrms": 0.1637,
      "cfr_papr_dB": null
     },
     "cfr_8.0": {
-     "pout_dBm": 0.33,
-     "evm_dB": -22.65,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.9,
      "aclr_dB_lower_upper": [
-      30.03,
-      30.03
+      39.22,
+      39.21
      ],
-     "mask_margin_dB": 0.24,
-     "bb_vrms": 0.2141,
+     "mask_margin_dB": 3.37,
+     "bb_vrms": 0.1637,
      "cfr_papr_dB": 8.0
     }
    },
@@ -851,17 +947,17 @@
    "metric": "[linear (txmix sat=0)] max mean output meeting EVM limit and mask, per MCS",
    "target": 0.0,
    "achieved": {
-    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=None": 0.32,
-    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=8.0": 0.33,
-    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=None": 0.32,
-    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=8.0": 0.33,
-    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=None": 0.32,
-    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=8.0": 0.33,
-    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=None": 0.32,
-    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=8.0": 0.33,
-    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=None": -1.01,
-    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=8.0": -1.7,
-    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=None": -11.97,
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=None": 4.66,
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=8.0": 4.67,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=None": 4.66,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=8.0": 4.67,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=None": 4.66,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=8.0": 4.67,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=None": 4.08,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=8.0": 4.08,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=None": 1.5,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=8.0": 1.5,
+    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=None": -2.09,
     "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=8.0": null
    },
    "unit": "dBm",
@@ -873,8 +969,8 @@
    "metric": "[linear (txmix sat=0)] AM-AM: P1dB / Psat after balun loss",
    "target": null,
    "achieved": {
-    "p1dB": 3.768563590458278,
-    "psat": 5.94
+    "p1dB": 8.816236504057649,
+    "psat": 9.68
    },
    "unit": "dBm",
    "condition": "extracted chain, CW",
@@ -886,662 +982,662 @@
    "target": null,
    "achieved": [
     {
-     "pout_dBm": -15.71,
-     "evm_dB": -33.37,
+     "pout_dBm": -14.49,
+     "evm_dB": -27.46,
      "aclr_dB_lower_upper": [
-      47.09,
-      47.06
+      34.23,
+      34.22
      ],
-     "mask_margin_dB": 3.76,
+     "mask_margin_dB": 0.98,
      "bb_vrms": 0.03,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -14.96,
-     "evm_dB": -33.11,
+     "pout_dBm": -13.66,
+     "evm_dB": -28.02,
      "aclr_dB_lower_upper": [
-      45.94,
-      45.92
+      34.63,
+      34.62
      ],
-     "mask_margin_dB": 3.72,
+     "mask_margin_dB": 0.57,
      "bb_vrms": 0.0328,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -14.2,
-     "evm_dB": -32.83,
+     "pout_dBm": -12.82,
+     "evm_dB": -28.68,
      "aclr_dB_lower_upper": [
-      44.89,
-      44.88
+      35.17,
+      35.15
      ],
-     "mask_margin_dB": 3.63,
+     "mask_margin_dB": 0.26,
      "bb_vrms": 0.0359,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -13.46,
-     "evm_dB": -32.55,
+     "pout_dBm": -12.02,
+     "evm_dB": -29.35,
      "aclr_dB_lower_upper": [
-      44.0,
-      43.99
+      35.78,
+      35.76
      ],
-     "mask_margin_dB": 3.62,
+     "mask_margin_dB": 0.19,
      "bb_vrms": 0.0392,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -12.71,
-     "evm_dB": -32.27,
+     "pout_dBm": -11.22,
+     "evm_dB": -30.02,
      "aclr_dB_lower_upper": [
-      43.23,
-      43.23
+      36.51,
+      36.48
      ],
-     "mask_margin_dB": 3.52,
+     "mask_margin_dB": 0.27,
      "bb_vrms": 0.0429,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -11.97,
-     "evm_dB": -32.02,
+     "pout_dBm": -10.43,
+     "evm_dB": -30.63,
      "aclr_dB_lower_upper": [
-      42.6,
-      42.59
+      37.29,
+      37.25
      ],
-     "mask_margin_dB": 3.51,
+     "mask_margin_dB": 0.45,
      "bb_vrms": 0.0469,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -11.23,
-     "evm_dB": -31.8,
+     "pout_dBm": -9.64,
+     "evm_dB": -31.15,
      "aclr_dB_lower_upper": [
-      42.06,
-      42.06
+      38.1,
+      38.06
      ],
-     "mask_margin_dB": 3.49,
+     "mask_margin_dB": 0.64,
      "bb_vrms": 0.0513,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -10.49,
-     "evm_dB": -31.63,
+     "pout_dBm": -8.87,
+     "evm_dB": -31.57,
      "aclr_dB_lower_upper": [
-      41.62,
-      41.61
+      38.92,
+      38.87
      ],
-     "mask_margin_dB": 3.53,
+     "mask_margin_dB": 0.9,
      "bb_vrms": 0.0561,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -9.77,
-     "evm_dB": -31.49,
+     "pout_dBm": -8.1,
+     "evm_dB": -31.88,
      "aclr_dB_lower_upper": [
-      41.27,
-      41.26
+      39.71,
+      39.66
      ],
-     "mask_margin_dB": 3.61,
+     "mask_margin_dB": 1.23,
      "bb_vrms": 0.0613,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -9.04,
-     "evm_dB": -31.39,
+     "pout_dBm": -7.34,
+     "evm_dB": -32.12,
      "aclr_dB_lower_upper": [
-      41.0,
-      40.99
+      40.46,
+      40.39
      ],
-     "mask_margin_dB": 3.59,
+     "mask_margin_dB": 1.59,
      "bb_vrms": 0.067,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -8.3,
-     "evm_dB": -31.32,
+     "pout_dBm": -6.58,
+     "evm_dB": -32.3,
      "aclr_dB_lower_upper": [
-      40.8,
-      40.79
+      41.14,
+      41.07
      ],
-     "mask_margin_dB": 3.55,
+     "mask_margin_dB": 1.89,
      "bb_vrms": 0.0733,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -7.57,
-     "evm_dB": -31.29,
+     "pout_dBm": -5.83,
+     "evm_dB": -32.43,
      "aclr_dB_lower_upper": [
-      40.67,
-      40.67
+      41.73,
+      41.66
      ],
-     "mask_margin_dB": 3.5,
+     "mask_margin_dB": 2.17,
      "bb_vrms": 0.0801,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -6.83,
-     "evm_dB": -31.29,
+     "pout_dBm": -5.07,
+     "evm_dB": -32.52,
      "aclr_dB_lower_upper": [
-      40.61,
-      40.6
+      42.23,
+      42.16
      ],
-     "mask_margin_dB": 3.47,
+     "mask_margin_dB": 2.46,
      "bb_vrms": 0.0876,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -6.1,
-     "evm_dB": -31.31,
+     "pout_dBm": -4.32,
+     "evm_dB": -32.55,
      "aclr_dB_lower_upper": [
-      40.59,
-      40.58
+      42.59,
+      42.53
      ],
-     "mask_margin_dB": 3.44,
+     "mask_margin_dB": 2.67,
      "bb_vrms": 0.0958,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -5.36,
-     "evm_dB": -31.33,
+     "pout_dBm": -3.57,
+     "evm_dB": -32.49,
      "aclr_dB_lower_upper": [
-      40.59,
-      40.58
+      42.74,
+      42.69
      ],
-     "mask_margin_dB": 3.39,
+     "mask_margin_dB": 2.84,
      "bb_vrms": 0.1048,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -4.63,
-     "evm_dB": -31.34,
+     "pout_dBm": -2.83,
+     "evm_dB": -32.32,
      "aclr_dB_lower_upper": [
-      40.57,
-      40.56
+      42.6,
+      42.56
      ],
-     "mask_margin_dB": 3.3,
+     "mask_margin_dB": 2.96,
      "bb_vrms": 0.1145,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -3.89,
-     "evm_dB": -31.28,
+     "pout_dBm": -2.09,
+     "evm_dB": -32.0,
      "aclr_dB_lower_upper": [
-      40.43,
-      40.41
+      42.12,
+      42.08
      ],
-     "mask_margin_dB": 3.26,
+     "mask_margin_dB": 3.17,
      "bb_vrms": 0.1252,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -3.15,
-     "evm_dB": -31.03,
+     "pout_dBm": -1.35,
+     "evm_dB": -31.52,
      "aclr_dB_lower_upper": [
-      39.99,
-      39.93
+      41.32,
+      41.29
      ],
-     "mask_margin_dB": 3.03,
+     "mask_margin_dB": 3.31,
      "bb_vrms": 0.137,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -2.43,
-     "evm_dB": -30.38,
+     "pout_dBm": -0.63,
+     "evm_dB": -30.87,
      "aclr_dB_lower_upper": [
-      38.9,
-      38.78
+      40.28,
+      40.25
      ],
-     "mask_margin_dB": 2.87,
+     "mask_margin_dB": 3.4,
      "bb_vrms": 0.1497,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -1.71,
-     "evm_dB": -29.1,
+     "pout_dBm": 0.09,
+     "evm_dB": -30.03,
      "aclr_dB_lower_upper": [
-      37.0,
-      36.87
+      39.01,
+      38.99
      ],
-     "mask_margin_dB": 2.5,
+     "mask_margin_dB": 3.38,
      "bb_vrms": 0.1637,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -1.01,
-     "evm_dB": -27.21,
+     "pout_dBm": 0.8,
+     "evm_dB": -29.03,
      "aclr_dB_lower_upper": [
-      34.62,
-      34.52
+      37.61,
+      37.59
      ],
-     "mask_margin_dB": 2.08,
+     "mask_margin_dB": 3.48,
      "bb_vrms": 0.179,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -0.32,
-     "evm_dB": -25.02,
+     "pout_dBm": 1.5,
+     "evm_dB": -27.88,
      "aclr_dB_lower_upper": [
-      32.21,
-      32.16
+      36.11,
+      36.09
      ],
-     "mask_margin_dB": 1.2,
+     "mask_margin_dB": 3.62,
      "bb_vrms": 0.1958,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 0.32,
-     "evm_dB": -22.84,
+     "pout_dBm": 2.17,
+     "evm_dB": -26.6,
      "aclr_dB_lower_upper": [
-      29.89,
-      29.89
+      34.54,
+      34.52
      ],
-     "mask_margin_dB": 0.1,
+     "mask_margin_dB": 3.69,
      "bb_vrms": 0.2141,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 0.93,
-     "evm_dB": -20.82,
+     "pout_dBm": 2.83,
+     "evm_dB": -25.23,
      "aclr_dB_lower_upper": [
-      27.79,
-      27.81
+      32.95,
+      32.94
      ],
-     "mask_margin_dB": -1.71,
+     "mask_margin_dB": 3.74,
      "bb_vrms": 0.2341,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 1.49,
-     "evm_dB": -19.03,
+     "pout_dBm": 3.47,
+     "evm_dB": -23.81,
      "aclr_dB_lower_upper": [
-      25.97,
-      25.99
+      31.37,
+      31.36
      ],
-     "mask_margin_dB": -2.75,
+     "mask_margin_dB": 3.8,
      "bb_vrms": 0.2559,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 2.0,
-     "evm_dB": -17.5,
+     "pout_dBm": 4.08,
+     "evm_dB": -22.36,
      "aclr_dB_lower_upper": [
-      24.42,
-      24.44
+      29.8,
+      29.8
      ],
-     "mask_margin_dB": -3.66,
+     "mask_margin_dB": 2.39,
      "bb_vrms": 0.2798,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 2.47,
-     "evm_dB": -16.19,
+     "pout_dBm": 4.66,
+     "evm_dB": -20.94,
      "aclr_dB_lower_upper": [
-      23.11,
-      23.13
+      28.29,
+      28.3
      ],
-     "mask_margin_dB": -4.5,
+     "mask_margin_dB": 0.88,
      "bb_vrms": 0.306,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 2.89,
-     "evm_dB": -15.1,
+     "pout_dBm": 5.21,
+     "evm_dB": -19.57,
      "aclr_dB_lower_upper": [
-      22.0,
-      22.02
+      26.85,
+      26.86
      ],
-     "mask_margin_dB": -5.68,
+     "mask_margin_dB": -0.61,
      "bb_vrms": 0.3346,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 3.27,
-     "evm_dB": -14.19,
+     "pout_dBm": 5.72,
+     "evm_dB": -18.28,
      "aclr_dB_lower_upper": [
-      21.05,
-      21.06
+      25.51,
+      25.52
      ],
-     "mask_margin_dB": -6.77,
+     "mask_margin_dB": -1.98,
      "bb_vrms": 0.3658,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 3.6,
-     "evm_dB": -13.42,
+     "pout_dBm": 6.19,
+     "evm_dB": -17.09,
      "aclr_dB_lower_upper": [
-      20.22,
-      20.22
+      24.26,
+      24.28
      ],
-     "mask_margin_dB": -7.98,
+     "mask_margin_dB": -3.27,
      "bb_vrms": 0.4,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -15.71,
-     "evm_dB": -31.52,
+     "pout_dBm": -14.49,
+     "evm_dB": -27.17,
      "aclr_dB_lower_upper": [
-      47.16,
-      47.18
+      34.22,
+      34.22
      ],
-     "mask_margin_dB": 3.78,
+     "mask_margin_dB": 1.0,
      "bb_vrms": 0.03,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -14.96,
-     "evm_dB": -31.31,
+     "pout_dBm": -13.66,
+     "evm_dB": -27.64,
      "aclr_dB_lower_upper": [
-      45.99,
-      46.01
+      34.63,
+      34.62
      ],
-     "mask_margin_dB": 3.73,
+     "mask_margin_dB": 0.59,
      "bb_vrms": 0.0328,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -14.2,
-     "evm_dB": -31.1,
+     "pout_dBm": -12.82,
+     "evm_dB": -28.17,
      "aclr_dB_lower_upper": [
-      44.92,
-      44.94
+      35.16,
+      35.15
      ],
-     "mask_margin_dB": 3.64,
+     "mask_margin_dB": 0.27,
      "bb_vrms": 0.0359,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -13.46,
-     "evm_dB": -30.89,
+     "pout_dBm": -12.02,
+     "evm_dB": -28.72,
      "aclr_dB_lower_upper": [
-      44.03,
-      44.05
+      35.78,
+      35.77
      ],
-     "mask_margin_dB": 3.62,
+     "mask_margin_dB": 0.2,
      "bb_vrms": 0.0392,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -12.71,
-     "evm_dB": -30.68,
+     "pout_dBm": -11.22,
+     "evm_dB": -29.24,
      "aclr_dB_lower_upper": [
-      43.26,
-      43.27
+      36.51,
+      36.49
      ],
-     "mask_margin_dB": 3.52,
+     "mask_margin_dB": 0.28,
      "bb_vrms": 0.0429,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -11.97,
-     "evm_dB": -30.49,
+     "pout_dBm": -10.43,
+     "evm_dB": -29.7,
      "aclr_dB_lower_upper": [
-      42.62,
-      42.63
+      37.28,
+      37.26
      ],
-     "mask_margin_dB": 3.51,
+     "mask_margin_dB": 0.45,
      "bb_vrms": 0.0469,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -11.23,
-     "evm_dB": -30.33,
+     "pout_dBm": -9.64,
+     "evm_dB": -30.08,
      "aclr_dB_lower_upper": [
-      42.08,
-      42.09
+      38.1,
+      38.07
      ],
-     "mask_margin_dB": 3.49,
+     "mask_margin_dB": 0.66,
      "bb_vrms": 0.0513,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -10.49,
-     "evm_dB": -30.2,
+     "pout_dBm": -8.87,
+     "evm_dB": -30.36,
      "aclr_dB_lower_upper": [
-      41.63,
-      41.64
+      38.92,
+      38.89
      ],
-     "mask_margin_dB": 3.54,
+     "mask_margin_dB": 0.91,
      "bb_vrms": 0.0561,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -9.77,
-     "evm_dB": -30.1,
+     "pout_dBm": -8.1,
+     "evm_dB": -30.57,
      "aclr_dB_lower_upper": [
-      41.28,
-      41.29
+      39.71,
+      39.67
      ],
-     "mask_margin_dB": 3.61,
+     "mask_margin_dB": 1.25,
      "bb_vrms": 0.0613,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -9.04,
-     "evm_dB": -30.03,
+     "pout_dBm": -7.34,
+     "evm_dB": -30.73,
      "aclr_dB_lower_upper": [
-      41.01,
-      41.01
+      40.46,
+      40.41
      ],
-     "mask_margin_dB": 3.59,
+     "mask_margin_dB": 1.59,
      "bb_vrms": 0.067,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -8.3,
-     "evm_dB": -30.0,
+     "pout_dBm": -6.58,
+     "evm_dB": -30.85,
      "aclr_dB_lower_upper": [
-      40.81,
-      40.81
+      41.15,
+      41.1
      ],
-     "mask_margin_dB": 3.54,
+     "mask_margin_dB": 1.89,
      "bb_vrms": 0.0733,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -7.57,
-     "evm_dB": -29.99,
+     "pout_dBm": -5.83,
+     "evm_dB": -30.94,
      "aclr_dB_lower_upper": [
-      40.69,
-      40.69
+      41.76,
+      41.71
      ],
-     "mask_margin_dB": 3.5,
+     "mask_margin_dB": 2.16,
      "bb_vrms": 0.0801,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -6.83,
-     "evm_dB": -30.0,
+     "pout_dBm": -5.07,
+     "evm_dB": -30.97,
      "aclr_dB_lower_upper": [
-      40.63,
-      40.63
+      42.27,
+      42.23
      ],
-     "mask_margin_dB": 3.46,
+     "mask_margin_dB": 2.46,
      "bb_vrms": 0.0876,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -6.1,
-     "evm_dB": -30.02,
+     "pout_dBm": -4.32,
+     "evm_dB": -30.95,
      "aclr_dB_lower_upper": [
-      40.61,
-      40.61
+      42.64,
+      42.61
      ],
-     "mask_margin_dB": 3.43,
+     "mask_margin_dB": 2.67,
      "bb_vrms": 0.0958,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -5.36,
-     "evm_dB": -30.04,
+     "pout_dBm": -3.57,
+     "evm_dB": -30.86,
      "aclr_dB_lower_upper": [
-      40.62,
-      40.62
+      42.81,
+      42.79
      ],
-     "mask_margin_dB": 3.38,
+     "mask_margin_dB": 2.84,
      "bb_vrms": 0.1048,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -4.63,
-     "evm_dB": -30.05,
+     "pout_dBm": -2.83,
+     "evm_dB": -30.72,
      "aclr_dB_lower_upper": [
-      40.63,
-      40.62
+      42.71,
+      42.69
      ],
-     "mask_margin_dB": 3.3,
+     "mask_margin_dB": 2.95,
      "bb_vrms": 0.1145,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -3.89,
-     "evm_dB": -30.01,
+     "pout_dBm": -2.09,
+     "evm_dB": -30.46,
      "aclr_dB_lower_upper": [
-      40.57,
-      40.56
+      42.27,
+      42.25
      ],
-     "mask_margin_dB": 3.27,
+     "mask_margin_dB": 3.17,
      "bb_vrms": 0.1252,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -3.15,
-     "evm_dB": -29.82,
+     "pout_dBm": -1.35,
+     "evm_dB": -30.06,
      "aclr_dB_lower_upper": [
-      40.29,
-      40.26
+      41.48,
+      41.46
      ],
-     "mask_margin_dB": 3.04,
+     "mask_margin_dB": 3.31,
      "bb_vrms": 0.137,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -2.42,
-     "evm_dB": -29.42,
+     "pout_dBm": -0.62,
+     "evm_dB": -29.55,
      "aclr_dB_lower_upper": [
-      39.54,
-      39.44
+      40.47,
+      40.45
      ],
-     "mask_margin_dB": 2.86,
+     "mask_margin_dB": 3.39,
      "bb_vrms": 0.1497,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -1.7,
-     "evm_dB": -28.52,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.9,
      "aclr_dB_lower_upper": [
-      37.86,
-      37.73
+      39.22,
+      39.21
      ],
-     "mask_margin_dB": 2.72,
+     "mask_margin_dB": 3.37,
      "bb_vrms": 0.1637,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -1.0,
-     "evm_dB": -26.85,
+     "pout_dBm": 0.8,
+     "evm_dB": -28.08,
      "aclr_dB_lower_upper": [
-      35.22,
-      35.12
+      37.81,
+      37.8
      ],
-     "mask_margin_dB": 2.07,
+     "mask_margin_dB": 3.48,
      "bb_vrms": 0.179,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -0.32,
-     "evm_dB": -24.76,
+     "pout_dBm": 1.5,
+     "evm_dB": -27.14,
      "aclr_dB_lower_upper": [
-      32.5,
-      32.45
+      36.33,
+      36.31
      ],
-     "mask_margin_dB": 1.28,
+     "mask_margin_dB": 3.62,
      "bb_vrms": 0.1958,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 0.33,
-     "evm_dB": -22.65,
+     "pout_dBm": 2.18,
+     "evm_dB": -26.04,
      "aclr_dB_lower_upper": [
-      30.03,
-      30.03
+      34.76,
+      34.74
      ],
-     "mask_margin_dB": 0.24,
+     "mask_margin_dB": 3.7,
      "bb_vrms": 0.2141,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 0.93,
-     "evm_dB": -20.68,
+     "pout_dBm": 2.84,
+     "evm_dB": -24.83,
      "aclr_dB_lower_upper": [
-      27.86,
-      27.88
+      33.16,
+      33.14
      ],
-     "mask_margin_dB": -1.57,
+     "mask_margin_dB": 3.76,
      "bb_vrms": 0.2341,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 1.49,
-     "evm_dB": -18.93,
+     "pout_dBm": 3.47,
+     "evm_dB": -23.52,
      "aclr_dB_lower_upper": [
-      26.01,
-      26.02
+      31.54,
+      31.53
      ],
-     "mask_margin_dB": -2.65,
+     "mask_margin_dB": 3.88,
      "bb_vrms": 0.2559,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 2.01,
-     "evm_dB": -17.42,
+     "pout_dBm": 4.08,
+     "evm_dB": -22.15,
      "aclr_dB_lower_upper": [
-      24.45,
-      24.46
+      29.93,
+      29.93
      ],
-     "mask_margin_dB": -3.63,
+     "mask_margin_dB": 2.43,
      "bb_vrms": 0.2798,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 2.47,
-     "evm_dB": -16.14,
+     "pout_dBm": 4.67,
+     "evm_dB": -20.79,
      "aclr_dB_lower_upper": [
-      23.13,
-      23.15
+      28.39,
+      28.4
      ],
-     "mask_margin_dB": -4.49,
+     "mask_margin_dB": 0.89,
      "bb_vrms": 0.306,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 2.89,
-     "evm_dB": -15.06,
+     "pout_dBm": 5.21,
+     "evm_dB": -19.47,
      "aclr_dB_lower_upper": [
-      22.02,
-      22.03
+      26.92,
+      26.93
      ],
-     "mask_margin_dB": -5.7,
+     "mask_margin_dB": -0.61,
      "bb_vrms": 0.3346,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 3.27,
-     "evm_dB": -14.16,
+     "pout_dBm": 5.72,
+     "evm_dB": -18.21,
      "aclr_dB_lower_upper": [
-      21.06,
-      21.07
+      25.56,
+      25.57
      ],
-     "mask_margin_dB": -6.81,
+     "mask_margin_dB": -1.98,
      "bb_vrms": 0.3658,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 3.6,
-     "evm_dB": -13.4,
+     "pout_dBm": 6.19,
+     "evm_dB": -17.03,
      "aclr_dB_lower_upper": [
-      20.23,
-      20.23
+      24.3,
+      24.31
      ],
-     "mask_margin_dB": -7.96,
+     "mask_margin_dB": -3.28,
      "bb_vrms": 0.4,
      "cfr_papr_dB": 8.0
     }
@@ -1557,63 +1653,63 @@
    "achieved": [
     {
      "jitter_ps_rms": 0.0,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.65,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.9,
      "aclr_dB_lower_upper": [
-      30.03,
-      30.03
+      39.22,
+      39.21
      ],
-     "mask_margin_dB": 0.24
+     "mask_margin_dB": 3.37
     },
     {
      "jitter_ps_rms": 0.3,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.65,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.9,
      "aclr_dB_lower_upper": [
-      30.02,
-      30.02
+      39.16,
+      39.17
      ],
-     "mask_margin_dB": 0.17
+     "mask_margin_dB": 3.37
     },
     {
      "jitter_ps_rms": 0.5,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.65,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.89,
      "aclr_dB_lower_upper": [
-      30.01,
-      30.01
+      39.07,
+      39.09
      ],
-     "mask_margin_dB": 0.05
+     "mask_margin_dB": 3.22
     },
     {
      "jitter_ps_rms": 1.0,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.64,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.85,
      "aclr_dB_lower_upper": [
-      29.96,
-      29.97
+      38.7,
+      38.75
      ],
-     "mask_margin_dB": -0.51
+     "mask_margin_dB": 2.31
     },
     {
      "jitter_ps_rms": 2.0,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.61,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.72,
      "aclr_dB_lower_upper": [
-      29.77,
-      29.8
+      37.5,
+      37.57
      ],
-     "mask_margin_dB": -2.14
+     "mask_margin_dB": -0.1
     },
     {
      "jitter_ps_rms": 3.0,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.55,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.5,
      "aclr_dB_lower_upper": [
-      29.48,
-      29.52
+      36.03,
+      36.12
      ],
-     "mask_margin_dB": -3.93
+     "mask_margin_dB": -2.6
     }
    ],
    "unit": "dB",
@@ -1627,63 +1723,63 @@
    "achieved": [
     {
      "skew_ps": 0,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.65,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.9,
      "aclr_dB_lower_upper": [
-      30.03,
-      30.03
+      39.22,
+      39.21
      ],
-     "mask_margin_dB": 0.24
+     "mask_margin_dB": 3.37
     },
     {
      "skew_ps": 50,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.65,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.9,
      "aclr_dB_lower_upper": [
-      30.03,
-      30.03
+      39.22,
+      39.21
      ],
-     "mask_margin_dB": 0.24
+     "mask_margin_dB": 3.37
     },
     {
      "skew_ps": 100,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.65,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.89,
      "aclr_dB_lower_upper": [
-      30.03,
-      30.03
+      39.22,
+      39.21
      ],
-     "mask_margin_dB": 0.24
+     "mask_margin_dB": 3.37
     },
     {
      "skew_ps": 250,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.64,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.84,
      "aclr_dB_lower_upper": [
-      30.03,
-      30.03
+      39.22,
+      39.21
      ],
-     "mask_margin_dB": 0.24
+     "mask_margin_dB": 3.37
     },
     {
      "skew_ps": 500,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.6,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.67,
      "aclr_dB_lower_upper": [
-      30.04,
-      30.03
+      39.22,
+      39.2
      ],
-     "mask_margin_dB": 0.24
+     "mask_margin_dB": 3.36
     },
     {
      "skew_ps": 1000,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.44,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.07,
      "aclr_dB_lower_upper": [
-      30.04,
-      30.03
+      39.23,
+      39.2
      ],
-     "mask_margin_dB": 0.2
+     "mask_margin_dB": 3.35
     }
    ],
    "unit": "dB",
@@ -1697,63 +1793,63 @@
    "achieved": [
     {
      "lo_q_skew_ps": 0,
-     "image_rejection_dB_transistor": 48.91,
-     "equiv_phase_err_deg": 0.411,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.65,
+     "image_rejection_dB_transistor": 54.52,
+     "equiv_phase_err_deg": 0.215,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.89,
      "aclr_dB_lower_upper": [
-      30.03,
-      30.03
+      39.22,
+      39.2
      ],
-     "mask_margin_dB": 0.23
+     "mask_margin_dB": 3.37
     },
     {
      "lo_q_skew_ps": 10,
-     "image_rejection_dB_transistor": 23.22,
-     "equiv_phase_err_deg": 7.897,
-     "pout_dBm": 0.32,
-     "evm_dB": -20.31,
+     "image_rejection_dB_transistor": 24.48,
+     "equiv_phase_err_deg": 6.833,
+     "pout_dBm": 0.09,
+     "evm_dB": -23.46,
      "aclr_dB_lower_upper": [
-      29.85,
-      29.83
+      39.1,
+      39.08
      ],
-     "mask_margin_dB": 0.04
+     "mask_margin_dB": 3.4
     },
     {
      "lo_q_skew_ps": 20,
-     "image_rejection_dB_transistor": 17.33,
-     "equiv_phase_err_deg": 15.488,
-     "pout_dBm": 0.3,
-     "evm_dB": -16.81,
+     "image_rejection_dB_transistor": 18.51,
+     "equiv_phase_err_deg": 13.54,
+     "pout_dBm": 0.09,
+     "evm_dB": -18.52,
      "aclr_dB_lower_upper": [
-      29.36,
-      29.33
+      38.78,
+      38.76
      ],
-     "mask_margin_dB": -0.47
+     "mask_margin_dB": 3.42
     },
     {
      "lo_q_skew_ps": 2,
-     "image_rejection_dB_transistor": 35.75,
-     "equiv_phase_err_deg": 1.869,
-     "pout_dBm": 0.33,
-     "evm_dB": -22.5,
+     "image_rejection_dB_transistor": 37.51,
+     "equiv_phase_err_deg": 1.526,
+     "pout_dBm": 0.09,
+     "evm_dB": -28.4,
      "aclr_dB_lower_upper": [
-      30.03,
-      30.02
+      39.21,
+      39.2
      ],
-     "mask_margin_dB": 0.22
+     "mask_margin_dB": 3.38
     },
     {
      "lo_q_skew_ps": 5,
-     "image_rejection_dB_transistor": 28.86,
-     "equiv_phase_err_deg": 4.13,
-     "pout_dBm": 0.33,
-     "evm_dB": -21.9,
+     "image_rejection_dB_transistor": 30.26,
+     "equiv_phase_err_deg": 3.516,
+     "pout_dBm": 0.09,
+     "evm_dB": -26.7,
      "aclr_dB_lower_upper": [
-      29.98,
-      29.97
+      39.18,
+      39.17
      ],
-     "mask_margin_dB": 0.18
+     "mask_margin_dB": 3.38
     }
    ],
    "unit": "dB",
@@ -1766,25 +1862,25 @@
    "target": "0 dBm with EVM <= -27 dB (MCS7) and mask margin >= 0",
    "achieved": {
     "cfr_None": {
-     "pout_dBm": 0.4,
-     "evm_dB": -22.62,
+     "pout_dBm": 0.35,
+     "evm_dB": -27.6,
      "aclr_dB_lower_upper": [
-      29.91,
-      29.9
+      35.68,
+      35.67
      ],
-     "mask_margin_dB": 1.69,
-     "bb_vrms": 0.1048,
+     "mask_margin_dB": 3.48,
+     "bb_vrms": 0.0733,
      "cfr_papr_dB": null
     },
     "cfr_8.0": {
-     "pout_dBm": 0.41,
-     "evm_dB": -22.48,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.88,
      "aclr_dB_lower_upper": [
-      30.1,
-      30.09
+      35.85,
+      35.84
      ],
-     "mask_margin_dB": 1.81,
-     "bb_vrms": 0.1048,
+     "mask_margin_dB": 3.48,
+     "bb_vrms": 0.0733,
      "cfr_papr_dB": 8.0
     }
    },
@@ -1797,17 +1893,17 @@
    "metric": "[high-gain (txmix sat=1)] max mean output meeting EVM limit and mask, per MCS",
    "target": 0.0,
    "achieved": {
-    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=None": 1.0,
-    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=8.0": 1.0,
-    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=None": 1.0,
-    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=8.0": 1.0,
-    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=None": 1.0,
-    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=8.0": 1.0,
-    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=None": 0.4,
-    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=8.0": 0.41,
-    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=None": -1.59,
-    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=8.0": -1.58,
-    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=None": null,
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=None": 3.52,
+    "MCS0 BPSK 1/2 (EVM -5 dB + mask), cfr=8.0": 3.53,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=None": 3.52,
+    "MCS2 QPSK 3/4 (EVM -13 dB + mask), cfr=8.0": 3.53,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=None": 3.52,
+    "MCS4 16QAM 3/4 (EVM -19 dB + mask), cfr=8.0": 3.53,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=None": 2.94,
+    "MCS5 64QAM 2/3 (EVM -22 dB + mask), cfr=8.0": 2.95,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=None": 0.35,
+    "MCS7 64QAM 5/6 (EVM -27 dB + mask), cfr=8.0": -0.34,
+    "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=None": -5.41,
     "MCS9 256QAM 5/6 (EVM -32 dB + mask), cfr=8.0": null
    },
    "unit": "dBm",
@@ -1819,8 +1915,8 @@
    "metric": "[high-gain (txmix sat=1)] AM-AM: P1dB / Psat after balun loss",
    "target": null,
    "achieved": {
-    "p1dB": 1.836405729479085,
-    "psat": 6.06
+    "p1dB": 5.359985645739436,
+    "psat": 9.53
    },
    "unit": "dBm",
    "condition": "extracted chain, CW",
@@ -1832,662 +1928,662 @@
    "target": null,
    "achieved": [
     {
-     "pout_dBm": -9.53,
-     "evm_dB": -31.71,
+     "pout_dBm": -6.92,
+     "evm_dB": -32.6,
      "aclr_dB_lower_upper": [
-      41.76,
-      41.76
+      44.09,
+      44.08
      ],
-     "mask_margin_dB": 3.69,
+     "mask_margin_dB": 3.66,
      "bb_vrms": 0.03,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -8.8,
-     "evm_dB": -31.56,
+     "pout_dBm": -6.17,
+     "evm_dB": -32.37,
      "aclr_dB_lower_upper": [
-      41.43,
-      41.42
+      43.4,
+      43.39
      ],
-     "mask_margin_dB": 3.69,
+     "mask_margin_dB": 3.59,
      "bb_vrms": 0.0328,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -8.06,
-     "evm_dB": -31.42,
+     "pout_dBm": -5.41,
+     "evm_dB": -32.13,
      "aclr_dB_lower_upper": [
-      41.11,
-      41.1
+      42.75,
+      42.73
      ],
-     "mask_margin_dB": 3.68,
+     "mask_margin_dB": 3.47,
      "bb_vrms": 0.0359,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -7.34,
-     "evm_dB": -31.28,
+     "pout_dBm": -4.68,
+     "evm_dB": -31.88,
      "aclr_dB_lower_upper": [
-      40.82,
-      40.82
+      42.13,
+      42.12
      ],
-     "mask_margin_dB": 3.67,
+     "mask_margin_dB": 3.44,
      "bb_vrms": 0.0392,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -6.6,
-     "evm_dB": -31.15,
+     "pout_dBm": -3.93,
+     "evm_dB": -31.58,
      "aclr_dB_lower_upper": [
-      40.56,
-      40.55
+      41.51,
+      41.49
      ],
-     "mask_margin_dB": 3.59,
+     "mask_margin_dB": 3.34,
      "bb_vrms": 0.0429,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -5.88,
-     "evm_dB": -31.02,
+     "pout_dBm": -3.2,
+     "evm_dB": -31.21,
      "aclr_dB_lower_upper": [
-      40.3,
-      40.29
+      40.84,
+      40.82
      ],
-     "mask_margin_dB": 3.54,
+     "mask_margin_dB": 3.32,
      "bb_vrms": 0.0469,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -5.15,
-     "evm_dB": -30.87,
+     "pout_dBm": -2.47,
+     "evm_dB": -30.76,
      "aclr_dB_lower_upper": [
-      40.03,
-      40.02
+      40.08,
+      40.06
      ],
-     "mask_margin_dB": 3.5,
+     "mask_margin_dB": 3.33,
      "bb_vrms": 0.0513,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -4.42,
-     "evm_dB": -30.67,
+     "pout_dBm": -1.75,
+     "evm_dB": -30.18,
      "aclr_dB_lower_upper": [
-      39.69,
-      39.68
+      39.16,
+      39.14
      ],
-     "mask_margin_dB": 3.5,
+     "mask_margin_dB": 3.36,
      "bb_vrms": 0.0561,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -3.71,
-     "evm_dB": -30.39,
+     "pout_dBm": -1.04,
+     "evm_dB": -29.46,
      "aclr_dB_lower_upper": [
-      39.23,
-      39.21
+      38.11,
+      38.09
      ],
-     "mask_margin_dB": 3.47,
+     "mask_margin_dB": 3.44,
      "bb_vrms": 0.0613,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -2.99,
-     "evm_dB": -29.93,
+     "pout_dBm": -0.34,
+     "evm_dB": -28.6,
      "aclr_dB_lower_upper": [
-      38.56,
-      38.53
+      36.94,
+      36.93
      ],
-     "mask_margin_dB": 3.34,
+     "mask_margin_dB": 3.57,
      "bb_vrms": 0.067,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -2.28,
-     "evm_dB": -29.19,
+     "pout_dBm": 0.35,
+     "evm_dB": -27.6,
      "aclr_dB_lower_upper": [
-      37.52,
-      37.46
+      35.68,
+      35.67
      ],
-     "mask_margin_dB": 3.2,
+     "mask_margin_dB": 3.48,
      "bb_vrms": 0.0733,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -1.59,
-     "evm_dB": -28.03,
+     "pout_dBm": 1.02,
+     "evm_dB": -26.47,
      "aclr_dB_lower_upper": [
-      36.01,
-      35.93
+      34.33,
+      34.32
      ],
-     "mask_margin_dB": 3.13,
+     "mask_margin_dB": 3.61,
      "bb_vrms": 0.0801,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -0.9,
-     "evm_dB": -26.44,
+     "pout_dBm": 1.68,
+     "evm_dB": -25.24,
      "aclr_dB_lower_upper": [
-      34.09,
-      34.02
+      32.92,
+      32.91
      ],
-     "mask_margin_dB": 2.77,
+     "mask_margin_dB": 3.54,
      "bb_vrms": 0.0876,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -0.24,
-     "evm_dB": -24.57,
+     "pout_dBm": 2.32,
+     "evm_dB": -23.95,
      "aclr_dB_lower_upper": [
-      32.02,
-      31.97
+      31.5,
+      31.5
      ],
-     "mask_margin_dB": 2.34,
+     "mask_margin_dB": 3.59,
      "bb_vrms": 0.0958,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 0.4,
-     "evm_dB": -22.62,
+     "pout_dBm": 2.94,
+     "evm_dB": -22.66,
      "aclr_dB_lower_upper": [
-      29.91,
-      29.9
+      30.09,
+      30.1
      ],
-     "mask_margin_dB": 1.69,
+     "mask_margin_dB": 2.71,
      "bb_vrms": 0.1048,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 1.0,
-     "evm_dB": -20.74,
+     "pout_dBm": 3.52,
+     "evm_dB": -21.41,
      "aclr_dB_lower_upper": [
-      27.93,
-      27.94
+      28.75,
+      28.76
      ],
-     "mask_margin_dB": 0.2,
+     "mask_margin_dB": 1.32,
      "bb_vrms": 0.1145,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 1.55,
-     "evm_dB": -19.0,
+     "pout_dBm": 4.08,
+     "evm_dB": -20.2,
      "aclr_dB_lower_upper": [
-      26.13,
-      26.14
+      27.46,
+      27.48
      ],
-     "mask_margin_dB": -1.16,
+     "mask_margin_dB": -0.03,
      "bb_vrms": 0.1252,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 2.07,
-     "evm_dB": -17.44,
+     "pout_dBm": 4.62,
+     "evm_dB": -19.06,
      "aclr_dB_lower_upper": [
-      24.52,
-      24.54
+      26.26,
+      26.27
      ],
-     "mask_margin_dB": -2.87,
+     "mask_margin_dB": -1.26,
      "bb_vrms": 0.137,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 2.53,
-     "evm_dB": -16.1,
+     "pout_dBm": 5.11,
+     "evm_dB": -18.01,
      "aclr_dB_lower_upper": [
-      23.14,
-      23.16
+      25.16,
+      25.17
      ],
-     "mask_margin_dB": -4.37,
+     "mask_margin_dB": -2.39,
      "bb_vrms": 0.1497,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 2.95,
-     "evm_dB": -14.95,
+     "pout_dBm": 5.58,
+     "evm_dB": -17.03,
      "aclr_dB_lower_upper": [
-      21.95,
-      21.97
+      24.13,
+      24.14
      ],
-     "mask_margin_dB": -5.69,
+     "mask_margin_dB": -3.48,
      "bb_vrms": 0.1637,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 3.32,
-     "evm_dB": -13.99,
+     "pout_dBm": 6.01,
+     "evm_dB": -16.11,
      "aclr_dB_lower_upper": [
-      20.93,
-      20.94
+      23.17,
+      23.18
      ],
-     "mask_margin_dB": -6.81,
+     "mask_margin_dB": -4.48,
      "bb_vrms": 0.179,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 3.65,
-     "evm_dB": -13.18,
+     "pout_dBm": 6.41,
+     "evm_dB": -15.27,
      "aclr_dB_lower_upper": [
-      20.04,
-      20.05
+      22.27,
+      22.28
      ],
-     "mask_margin_dB": -7.74,
+     "mask_margin_dB": -5.41,
      "bb_vrms": 0.1958,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 3.94,
-     "evm_dB": -12.52,
+     "pout_dBm": 6.78,
+     "evm_dB": -14.49,
      "aclr_dB_lower_upper": [
-      19.29,
-      19.29
+      21.44,
+      21.45
      ],
-     "mask_margin_dB": -8.69,
+     "mask_margin_dB": -6.27,
      "bb_vrms": 0.2141,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 4.2,
-     "evm_dB": -11.97,
+     "pout_dBm": 7.11,
+     "evm_dB": -13.78,
      "aclr_dB_lower_upper": [
-      18.63,
-      18.64
+      20.67,
+      20.68
      ],
-     "mask_margin_dB": -10.26,
+     "mask_margin_dB": -7.06,
      "bb_vrms": 0.2341,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 4.43,
-     "evm_dB": -11.52,
+     "pout_dBm": 7.41,
+     "evm_dB": -13.13,
      "aclr_dB_lower_upper": [
-      18.07,
-      18.07
+      19.96,
+      19.97
      ],
-     "mask_margin_dB": -11.38,
+     "mask_margin_dB": -7.78,
      "bb_vrms": 0.2559,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 4.63,
-     "evm_dB": -11.13,
+     "pout_dBm": 7.68,
+     "evm_dB": -12.53,
      "aclr_dB_lower_upper": [
-      17.59,
-      17.59
+      19.31,
+      19.31
      ],
-     "mask_margin_dB": -12.26,
+     "mask_margin_dB": -8.44,
      "bb_vrms": 0.2798,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 4.81,
-     "evm_dB": -10.8,
+     "pout_dBm": 7.93,
+     "evm_dB": -11.99,
      "aclr_dB_lower_upper": [
-      17.18,
-      17.17
+      18.71,
+      18.71
      ],
-     "mask_margin_dB": -13.08,
+     "mask_margin_dB": -9.36,
      "bb_vrms": 0.306,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 4.97,
-     "evm_dB": -10.51,
+     "pout_dBm": 8.14,
+     "evm_dB": -11.51,
      "aclr_dB_lower_upper": [
-      16.82,
-      16.81
+      18.15,
+      18.16
      ],
-     "mask_margin_dB": -13.9,
+     "mask_margin_dB": -10.6,
      "bb_vrms": 0.3346,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 5.11,
-     "evm_dB": -10.26,
+     "pout_dBm": 8.33,
+     "evm_dB": -11.07,
      "aclr_dB_lower_upper": [
-      16.5,
-      16.49
+      17.65,
+      17.65
      ],
-     "mask_margin_dB": -14.64,
+     "mask_margin_dB": -11.68,
      "bb_vrms": 0.3658,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": 5.24,
-     "evm_dB": -10.03,
+     "pout_dBm": 8.5,
+     "evm_dB": -10.69,
      "aclr_dB_lower_upper": [
-      16.22,
-      16.21
+      17.2,
+      17.19
      ],
-     "mask_margin_dB": -15.35,
+     "mask_margin_dB": -12.68,
      "bb_vrms": 0.4,
      "cfr_papr_dB": null
     },
     {
-     "pout_dBm": -9.53,
-     "evm_dB": -30.25,
+     "pout_dBm": -6.92,
+     "evm_dB": -30.97,
      "aclr_dB_lower_upper": [
-      41.79,
-      41.79
+      44.12,
+      44.14
      ],
-     "mask_margin_dB": 3.69,
+     "mask_margin_dB": 3.68,
      "bb_vrms": 0.03,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -8.8,
-     "evm_dB": -30.13,
+     "pout_dBm": -6.17,
+     "evm_dB": -30.79,
      "aclr_dB_lower_upper": [
-      41.45,
-      41.45
+      43.43,
+      43.45
      ],
-     "mask_margin_dB": 3.7,
+     "mask_margin_dB": 3.6,
      "bb_vrms": 0.0328,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -8.06,
-     "evm_dB": -30.03,
+     "pout_dBm": -5.41,
+     "evm_dB": -30.6,
      "aclr_dB_lower_upper": [
-      41.13,
-      41.13
+      42.79,
+      42.81
      ],
-     "mask_margin_dB": 3.68,
+     "mask_margin_dB": 3.46,
      "bb_vrms": 0.0359,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -7.34,
-     "evm_dB": -29.93,
+     "pout_dBm": -4.68,
+     "evm_dB": -30.42,
      "aclr_dB_lower_upper": [
-      40.86,
-      40.86
+      42.22,
+      42.22
      ],
-     "mask_margin_dB": 3.65,
+     "mask_margin_dB": 3.4,
      "bb_vrms": 0.0392,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -6.6,
-     "evm_dB": -29.83,
+     "pout_dBm": -3.93,
+     "evm_dB": -30.17,
      "aclr_dB_lower_upper": [
-      40.59,
-      40.59
+      41.61,
+      41.61
      ],
-     "mask_margin_dB": 3.57,
+     "mask_margin_dB": 3.33,
      "bb_vrms": 0.0429,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -5.88,
-     "evm_dB": -29.71,
+     "pout_dBm": -3.2,
+     "evm_dB": -29.85,
      "aclr_dB_lower_upper": [
-      40.34,
-      40.34
+      40.95,
+      40.94
      ],
-     "mask_margin_dB": 3.53,
+     "mask_margin_dB": 3.33,
      "bb_vrms": 0.0469,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -5.15,
-     "evm_dB": -29.59,
+     "pout_dBm": -2.47,
+     "evm_dB": -29.47,
      "aclr_dB_lower_upper": [
-      40.08,
-      40.07
+      40.18,
+      40.18
      ],
-     "mask_margin_dB": 3.49,
+     "mask_margin_dB": 3.34,
      "bb_vrms": 0.0513,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -4.42,
-     "evm_dB": -29.44,
+     "pout_dBm": -1.75,
+     "evm_dB": -29.02,
      "aclr_dB_lower_upper": [
-      39.77,
-      39.76
+      39.29,
+      39.28
      ],
-     "mask_margin_dB": 3.48,
+     "mask_margin_dB": 3.34,
      "bb_vrms": 0.0561,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -3.71,
-     "evm_dB": -29.23,
+     "pout_dBm": -1.04,
+     "evm_dB": -28.45,
      "aclr_dB_lower_upper": [
-      39.37,
-      39.36
+      38.28,
+      38.27
      ],
-     "mask_margin_dB": 3.47,
+     "mask_margin_dB": 3.43,
      "bb_vrms": 0.0613,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -2.99,
-     "evm_dB": -28.87,
+     "pout_dBm": -0.34,
+     "evm_dB": -27.72,
      "aclr_dB_lower_upper": [
-      38.77,
-      38.75
+      37.11,
+      37.1
      ],
-     "mask_margin_dB": 3.34,
+     "mask_margin_dB": 3.58,
      "bb_vrms": 0.067,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -2.28,
-     "evm_dB": -28.34,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.88,
      "aclr_dB_lower_upper": [
-      37.88,
-      37.83
+      35.85,
+      35.84
      ],
-     "mask_margin_dB": 3.17,
+     "mask_margin_dB": 3.48,
      "bb_vrms": 0.0733,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -1.58,
-     "evm_dB": -27.5,
+     "pout_dBm": 1.03,
+     "evm_dB": -25.92,
      "aclr_dB_lower_upper": [
-      36.54,
-      36.46
+      34.52,
+      34.52
      ],
-     "mask_margin_dB": 3.15,
+     "mask_margin_dB": 3.6,
      "bb_vrms": 0.0801,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -0.89,
-     "evm_dB": -26.1,
+     "pout_dBm": 1.69,
+     "evm_dB": -24.81,
      "aclr_dB_lower_upper": [
-      34.56,
-      34.49
+      33.08,
+      33.08
      ],
-     "mask_margin_dB": 2.77,
+     "mask_margin_dB": 3.59,
      "bb_vrms": 0.0876,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": -0.23,
-     "evm_dB": -24.37,
+     "pout_dBm": 2.33,
+     "evm_dB": -23.62,
      "aclr_dB_lower_upper": [
-      32.34,
-      32.29
+      31.62,
+      31.62
      ],
-     "mask_margin_dB": 2.42,
+     "mask_margin_dB": 3.7,
      "bb_vrms": 0.0958,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 0.41,
-     "evm_dB": -22.48,
+     "pout_dBm": 2.95,
+     "evm_dB": -22.4,
      "aclr_dB_lower_upper": [
-      30.1,
-      30.09
+      30.18,
+      30.19
      ],
-     "mask_margin_dB": 1.81,
+     "mask_margin_dB": 2.71,
      "bb_vrms": 0.1048,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 1.0,
-     "evm_dB": -20.63,
+     "pout_dBm": 3.53,
+     "evm_dB": -21.22,
      "aclr_dB_lower_upper": [
-      28.03,
-      28.04
+      28.82,
+      28.84
      ],
-     "mask_margin_dB": 0.41,
+     "mask_margin_dB": 1.32,
      "bb_vrms": 0.1145,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 1.56,
-     "evm_dB": -18.91,
+     "pout_dBm": 4.09,
+     "evm_dB": -20.07,
      "aclr_dB_lower_upper": [
-      26.18,
-      26.19
+      27.53,
+      27.54
      ],
-     "mask_margin_dB": -1.17,
+     "mask_margin_dB": -0.03,
      "bb_vrms": 0.1252,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 2.07,
-     "evm_dB": -17.37,
+     "pout_dBm": 4.62,
+     "evm_dB": -18.95,
      "aclr_dB_lower_upper": [
-      24.55,
-      24.56
+      26.31,
+      26.32
      ],
-     "mask_margin_dB": -2.88,
+     "mask_margin_dB": -1.26,
      "bb_vrms": 0.137,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 2.53,
-     "evm_dB": -16.04,
+     "pout_dBm": 5.12,
+     "evm_dB": -17.93,
      "aclr_dB_lower_upper": [
-      23.16,
-      23.18
+      25.2,
+      25.21
      ],
-     "mask_margin_dB": -4.38,
+     "mask_margin_dB": -2.39,
      "bb_vrms": 0.1497,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 2.95,
-     "evm_dB": -14.91,
+     "pout_dBm": 5.58,
+     "evm_dB": -16.96,
      "aclr_dB_lower_upper": [
-      21.97,
-      21.98
+      24.16,
+      24.17
      ],
-     "mask_margin_dB": -5.7,
+     "mask_margin_dB": -3.49,
      "bb_vrms": 0.1637,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 3.32,
-     "evm_dB": -13.95,
+     "pout_dBm": 6.02,
+     "evm_dB": -16.06,
      "aclr_dB_lower_upper": [
-      20.94,
-      20.95
+      23.19,
+      23.21
      ],
-     "mask_margin_dB": -6.82,
+     "mask_margin_dB": -4.49,
      "bb_vrms": 0.179,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 3.65,
-     "evm_dB": -13.15,
+     "pout_dBm": 6.42,
+     "evm_dB": -15.23,
      "aclr_dB_lower_upper": [
-      20.05,
-      20.06
+      22.29,
+      22.3
      ],
-     "mask_margin_dB": -7.75,
+     "mask_margin_dB": -5.42,
      "bb_vrms": 0.1958,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 3.95,
-     "evm_dB": -12.49,
+     "pout_dBm": 6.78,
+     "evm_dB": -14.46,
      "aclr_dB_lower_upper": [
-      19.29,
-      19.3
+      21.45,
+      21.46
      ],
-     "mask_margin_dB": -8.72,
+     "mask_margin_dB": -6.28,
      "bb_vrms": 0.2141,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 4.2,
-     "evm_dB": -11.95,
+     "pout_dBm": 7.11,
+     "evm_dB": -13.75,
      "aclr_dB_lower_upper": [
-      18.64,
-      18.64
+      20.68,
+      20.69
      ],
-     "mask_margin_dB": -10.27,
+     "mask_margin_dB": -7.08,
      "bb_vrms": 0.2341,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 4.43,
-     "evm_dB": -11.5,
+     "pout_dBm": 7.41,
+     "evm_dB": -13.1,
      "aclr_dB_lower_upper": [
-      18.08,
-      18.08
+      19.97,
+      19.98
      ],
-     "mask_margin_dB": -11.38,
+     "mask_margin_dB": -7.79,
      "bb_vrms": 0.2559,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 4.63,
-     "evm_dB": -11.12,
+     "pout_dBm": 7.69,
+     "evm_dB": -12.51,
      "aclr_dB_lower_upper": [
-      17.6,
-      17.59
+      19.31,
+      19.32
      ],
-     "mask_margin_dB": -12.26,
+     "mask_margin_dB": -8.45,
      "bb_vrms": 0.2798,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 4.81,
-     "evm_dB": -10.79,
+     "pout_dBm": 7.93,
+     "evm_dB": -11.97,
      "aclr_dB_lower_upper": [
-      17.18,
-      17.18
+      18.71,
+      18.71
      ],
-     "mask_margin_dB": -13.08,
+     "mask_margin_dB": -9.37,
      "bb_vrms": 0.306,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 4.97,
-     "evm_dB": -10.5,
+     "pout_dBm": 8.14,
+     "evm_dB": -11.49,
      "aclr_dB_lower_upper": [
-      16.82,
-      16.82
+      18.16,
+      18.16
      ],
-     "mask_margin_dB": -13.92,
+     "mask_margin_dB": -10.62,
      "bb_vrms": 0.3346,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 5.11,
-     "evm_dB": -10.25,
+     "pout_dBm": 8.33,
+     "evm_dB": -11.06,
      "aclr_dB_lower_upper": [
-      16.51,
-      16.5
+      17.66,
+      17.65
      ],
-     "mask_margin_dB": -14.65,
+     "mask_margin_dB": -11.69,
      "bb_vrms": 0.3658,
      "cfr_papr_dB": 8.0
     },
     {
-     "pout_dBm": 5.24,
-     "evm_dB": -10.02,
+     "pout_dBm": 8.5,
+     "evm_dB": -10.68,
      "aclr_dB_lower_upper": [
-      16.23,
-      16.21
+      17.2,
+      17.19
      ],
-     "mask_margin_dB": -15.37,
+     "mask_margin_dB": -12.7,
      "bb_vrms": 0.4,
      "cfr_papr_dB": 8.0
     }
@@ -2503,63 +2599,63 @@
    "achieved": [
     {
      "jitter_ps_rms": 0.0,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.48,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.88,
      "aclr_dB_lower_upper": [
-      30.1,
-      30.09
+      35.85,
+      35.84
      ],
-     "mask_margin_dB": 1.81
+     "mask_margin_dB": 3.48
     },
     {
      "jitter_ps_rms": 0.3,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.48,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.87,
      "aclr_dB_lower_upper": [
-      30.09,
-      30.08
+      35.83,
+      35.82
      ],
-     "mask_margin_dB": 1.71
+     "mask_margin_dB": 3.5
     },
     {
      "jitter_ps_rms": 0.5,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.48,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.87,
      "aclr_dB_lower_upper": [
-      30.08,
-      30.08
+      35.78,
+      35.79
      ],
-     "mask_margin_dB": 1.56
+     "mask_margin_dB": 3.29
     },
     {
      "jitter_ps_rms": 1.0,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.47,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.85,
      "aclr_dB_lower_upper": [
-      30.03,
-      30.03
+      35.6,
+      35.63
      ],
-     "mask_margin_dB": 0.86
+     "mask_margin_dB": 2.38
     },
     {
      "jitter_ps_rms": 2.0,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.44,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.76,
      "aclr_dB_lower_upper": [
-      29.84,
-      29.86
+      34.96,
+      35.02
      ],
-     "mask_margin_dB": -1.21
+     "mask_margin_dB": -0.05
     },
     {
      "jitter_ps_rms": 3.0,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.39,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.62,
      "aclr_dB_lower_upper": [
-      29.54,
-      29.58
+      34.08,
+      34.16
      ],
-     "mask_margin_dB": -3.32
+     "mask_margin_dB": -2.62
     }
    ],
    "unit": "dB",
@@ -2573,63 +2669,63 @@
    "achieved": [
     {
      "skew_ps": 0,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.48,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.88,
      "aclr_dB_lower_upper": [
-      30.1,
-      30.09
+      35.85,
+      35.84
      ],
-     "mask_margin_dB": 1.81
+     "mask_margin_dB": 3.48
     },
     {
      "skew_ps": 50,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.48,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.87,
      "aclr_dB_lower_upper": [
-      30.1,
-      30.09
+      35.86,
+      35.84
      ],
-     "mask_margin_dB": 1.81
+     "mask_margin_dB": 3.48
     },
     {
      "skew_ps": 100,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.48,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.87,
      "aclr_dB_lower_upper": [
-      30.1,
-      30.09
+      35.86,
+      35.84
      ],
-     "mask_margin_dB": 1.81
+     "mask_margin_dB": 3.48
     },
     {
      "skew_ps": 250,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.47,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.84,
      "aclr_dB_lower_upper": [
-      30.1,
-      30.09
+      35.86,
+      35.84
      ],
-     "mask_margin_dB": 1.81
+     "mask_margin_dB": 3.49
     },
     {
      "skew_ps": 500,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.43,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.73,
      "aclr_dB_lower_upper": [
-      30.11,
-      30.09
+      35.86,
+      35.84
      ],
-     "mask_margin_dB": 1.82
+     "mask_margin_dB": 3.49
     },
     {
      "skew_ps": 1000,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.28,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.33,
      "aclr_dB_lower_upper": [
-      30.11,
-      30.09
+      35.86,
+      35.84
      ],
-     "mask_margin_dB": 1.82
+     "mask_margin_dB": 3.5
     }
    ],
    "unit": "dB",
@@ -2643,63 +2739,63 @@
    "achieved": [
     {
      "lo_q_skew_ps": 0,
-     "image_rejection_dB_transistor": 48.91,
-     "equiv_phase_err_deg": 0.411,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.48,
+     "image_rejection_dB_transistor": 54.52,
+     "equiv_phase_err_deg": 0.215,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.87,
      "aclr_dB_lower_upper": [
-      30.1,
-      30.09
+      35.85,
+      35.84
      ],
-     "mask_margin_dB": 1.81
+     "mask_margin_dB": 3.48
     },
     {
      "lo_q_skew_ps": 10,
-     "image_rejection_dB_transistor": 23.22,
-     "equiv_phase_err_deg": 7.897,
-     "pout_dBm": 0.4,
-     "evm_dB": -20.22,
+     "image_rejection_dB_transistor": 24.48,
+     "equiv_phase_err_deg": 6.833,
+     "pout_dBm": 0.35,
+     "evm_dB": -22.86,
      "aclr_dB_lower_upper": [
-      29.9,
-      29.89
+      35.74,
+      35.72
      ],
-     "mask_margin_dB": 1.63
+     "mask_margin_dB": 3.51
     },
     {
      "lo_q_skew_ps": 20,
-     "image_rejection_dB_transistor": 17.33,
-     "equiv_phase_err_deg": 15.488,
-     "pout_dBm": 0.38,
-     "evm_dB": -16.8,
+     "image_rejection_dB_transistor": 18.51,
+     "equiv_phase_err_deg": 13.54,
+     "pout_dBm": 0.35,
+     "evm_dB": -18.41,
      "aclr_dB_lower_upper": [
-      29.41,
-      29.38
+      35.46,
+      35.44
      ],
-     "mask_margin_dB": 1.2
+     "mask_margin_dB": 3.39
     },
     {
      "lo_q_skew_ps": 2,
-     "image_rejection_dB_transistor": 35.75,
-     "equiv_phase_err_deg": 1.869,
-     "pout_dBm": 0.41,
-     "evm_dB": -22.33,
+     "image_rejection_dB_transistor": 37.51,
+     "equiv_phase_err_deg": 1.526,
+     "pout_dBm": 0.36,
+     "evm_dB": -26.56,
      "aclr_dB_lower_upper": [
-      30.09,
-      30.08
+      35.85,
+      35.83
      ],
-     "mask_margin_dB": 1.81
+     "mask_margin_dB": 3.49
     },
     {
      "lo_q_skew_ps": 5,
-     "image_rejection_dB_transistor": 28.86,
-     "equiv_phase_err_deg": 4.13,
-     "pout_dBm": 0.41,
-     "evm_dB": -21.76,
+     "image_rejection_dB_transistor": 30.26,
+     "equiv_phase_err_deg": 3.516,
+     "pout_dBm": 0.36,
+     "evm_dB": -25.41,
      "aclr_dB_lower_upper": [
-      30.05,
-      30.03
+      35.82,
+      35.81
      ],
-     "mask_margin_dB": 1.77
+     "mask_margin_dB": 3.5
     }
    ],
    "unit": "dB",
@@ -2713,195 +2809,195 @@
    "achieved": {
     "amam_0020": {
      "vin": 0.02,
-     "pad_dBm_50ohm": -19.166,
-     "h2_dBc": -57.13,
-     "h3_dBc": -51.8,
-     "pad_h2_dBc": -62.86,
-     "pad_h3_dBc": -55.95
+     "pad_dBm_50ohm": -18.948,
+     "h2_dBc": -63.95,
+     "h3_dBc": -55.4,
+     "pad_h2_dBc": -57.44,
+     "pad_h3_dBc": -62.79
     },
     "amam_0050": {
      "vin": 0.05,
-     "pad_dBm_50ohm": -11.265,
-     "h2_dBc": -58.82,
-     "h3_dBc": -53.77,
-     "pad_h2_dBc": -55.43,
-     "pad_h3_dBc": -56.36
+     "pad_dBm_50ohm": -9.686,
+     "h2_dBc": -50.85,
+     "h3_dBc": -58.81,
+     "pad_h2_dBc": -48.7,
+     "pad_h3_dBc": -61.94
     },
     "amam_0100": {
      "vin": 0.1,
-     "pad_dBm_50ohm": -5.644,
-     "h2_dBc": -50.68,
-     "h3_dBc": -56.12,
-     "pad_h2_dBc": -49.56,
-     "pad_h3_dBc": -57.8
+     "pad_dBm_50ohm": -3.869,
+     "h2_dBc": -43.71,
+     "h3_dBc": -58.25,
+     "pad_h2_dBc": -43.19,
+     "pad_h3_dBc": -58.66
     },
     "amam_0150": {
      "vin": 0.15,
-     "pad_dBm_50ohm": -2.334,
-     "h2_dBc": -47.22,
-     "h3_dBc": -57.91,
-     "pad_h2_dBc": -46.67,
-     "pad_h3_dBc": -59.29
+     "pad_dBm_50ohm": -0.49,
+     "h2_dBc": -40.6,
+     "h3_dBc": -55.98,
+     "pad_h2_dBc": -40.36,
+     "pad_h3_dBc": -55.94
     },
     "amam_0200": {
      "vin": 0.2,
-     "pad_dBm_50ohm": 0.079,
-     "h2_dBc": -45.23,
-     "h3_dBc": -59.96,
-     "pad_h2_dBc": -44.89,
-     "pad_h3_dBc": -61.28
+     "pad_dBm_50ohm": 1.951,
+     "h2_dBc": -38.81,
+     "h3_dBc": -54.94,
+     "pad_h2_dBc": -38.67,
+     "pad_h3_dBc": -54.87
     },
     "amam_0300": {
      "vin": 0.3,
-     "pad_dBm_50ohm": 3.444,
-     "h2_dBc": -43.69,
-     "h3_dBc": -65.93,
-     "pad_h2_dBc": -43.47,
-     "pad_h3_dBc": -67.21
+     "pad_dBm_50ohm": 5.138,
+     "h2_dBc": -37.77,
+     "h3_dBc": -54.1,
+     "pad_h2_dBc": -37.69,
+     "pad_h3_dBc": -54.18
     },
     "amam_0400": {
      "vin": 0.4,
-     "pad_dBm_50ohm": 5.41,
-     "h2_dBc": -50.24,
-     "h3_dBc": -60.09,
-     "pad_h2_dBc": -49.08,
-     "pad_h3_dBc": -63.11
+     "pad_dBm_50ohm": 7.162,
+     "h2_dBc": -38.36,
+     "h3_dBc": -50.25,
+     "pad_h2_dBc": -38.3,
+     "pad_h3_dBc": -50.24
     },
     "amam_0500": {
      "vin": 0.5,
-     "pad_dBm_50ohm": 5.229,
-     "h2_dBc": -41.44,
-     "h3_dBc": -57.35,
-     "pad_h2_dBc": -42.69,
-     "pad_h3_dBc": -64.11
+     "pad_dBm_50ohm": 8.45,
+     "h2_dBc": -40.31,
+     "h3_dBc": -47.16,
+     "pad_h2_dBc": -40.25,
+     "pad_h3_dBc": -47.14
     },
     "amam_0600": {
      "vin": 0.6,
-     "pad_dBm_50ohm": 5.494,
-     "h2_dBc": -44.77,
-     "h3_dBc": -50.9,
-     "pad_h2_dBc": -46.52,
-     "pad_h3_dBc": -52.4
+     "pad_dBm_50ohm": 9.17,
+     "h2_dBc": -43.85,
+     "h3_dBc": -45.49,
+     "pad_h2_dBc": -43.77,
+     "pad_h3_dBc": -45.47
     },
     "amam_0800": {
      "vin": 0.8,
-     "pad_dBm_50ohm": 5.877,
-     "h2_dBc": -52.13,
-     "h3_dBc": -51.71,
-     "pad_h2_dBc": -51.08,
-     "pad_h3_dBc": -52.06
+     "pad_dBm_50ohm": 9.637,
+     "h2_dBc": -49.67,
+     "h3_dBc": -44.8,
+     "pad_h2_dBc": -49.52,
+     "pad_h3_dBc": -44.78
     },
     "amam_1000": {
      "vin": 1.0,
-     "pad_dBm_50ohm": 5.93,
-     "h2_dBc": -51.47,
-     "h3_dBc": -52.1,
-     "pad_h2_dBc": -50.44,
-     "pad_h3_dBc": -52.54
+     "pad_dBm_50ohm": 9.671,
+     "h2_dBc": -49.51,
+     "h3_dBc": -44.77,
+     "pad_h2_dBc": -49.37,
+     "pad_h3_dBc": -44.75
     },
     "amam_1300": {
      "vin": 1.3,
-     "pad_dBm_50ohm": 5.939,
-     "h2_dBc": -51.39,
-     "h3_dBc": -52.16,
-     "pad_h2_dBc": -50.38,
-     "pad_h3_dBc": -52.62
+     "pad_dBm_50ohm": 9.677,
+     "h2_dBc": -49.72,
+     "h3_dBc": -44.76,
+     "pad_h2_dBc": -49.57,
+     "pad_h3_dBc": -44.74
     },
     "amamsat_0020": {
      "vin": 0.02,
-     "pad_dBm_50ohm": -12.718,
-     "h2_dBc": -59.77,
-     "h3_dBc": -53.84,
-     "pad_h2_dBc": -63.19,
-     "pad_h3_dBc": -55.61
+     "pad_dBm_50ohm": -10.32,
+     "h2_dBc": -66.94,
+     "h3_dBc": -61.24,
+     "pad_h2_dBc": -66.59,
+     "pad_h3_dBc": -64.81
     },
     "amamsat_0050": {
      "vin": 0.05,
-     "pad_dBm_50ohm": -5.205,
-     "h2_dBc": -61.47,
-     "h3_dBc": -55.89,
-     "pad_h2_dBc": -60.89,
-     "pad_h3_dBc": -56.84
+     "pad_dBm_50ohm": -2.49,
+     "h2_dBc": -63.1,
+     "h3_dBc": -66.38,
+     "pad_h2_dBc": -61.23,
+     "pad_h3_dBc": -66.86
     },
     "amamsat_0100": {
      "vin": 0.1,
-     "pad_dBm_50ohm": 0.418,
-     "h2_dBc": -59.82,
-     "h3_dBc": -57.69,
-     "pad_h2_dBc": -59.4,
-     "pad_h3_dBc": -58.22
+     "pad_dBm_50ohm": 3.118,
+     "h2_dBc": -69.35,
+     "h3_dBc": -59.46,
+     "pad_h2_dBc": -69.49,
+     "pad_h3_dBc": -59.24
     },
     "amamsat_0150": {
      "vin": 0.15,
-     "pad_dBm_50ohm": 3.591,
-     "h2_dBc": -60.04,
-     "h3_dBc": -59.21,
-     "pad_h2_dBc": -60.01,
-     "pad_h3_dBc": -59.54
+     "pad_dBm_50ohm": 6.042,
+     "h2_dBc": -63.9,
+     "h3_dBc": -52.66,
+     "pad_h2_dBc": -64.48,
+     "pad_h3_dBc": -52.71
     },
     "amamsat_0200": {
      "vin": 0.2,
-     "pad_dBm_50ohm": 5.482,
-     "h2_dBc": -55.84,
-     "h3_dBc": -57.65,
-     "pad_h2_dBc": -57.56,
-     "pad_h3_dBc": -59.07
+     "pad_dBm_50ohm": 7.666,
+     "h2_dBc": -53.27,
+     "h3_dBc": -48.88,
+     "pad_h2_dBc": -53.54,
+     "pad_h3_dBc": -48.89
     },
     "amamsat_0300": {
      "vin": 0.3,
-     "pad_dBm_50ohm": 5.473,
-     "h2_dBc": -39.89,
-     "h3_dBc": -50.4,
-     "pad_h2_dBc": -40.45,
-     "pad_h3_dBc": -52.09
+     "pad_dBm_50ohm": 9.009,
+     "h2_dBc": -42.33,
+     "h3_dBc": -45.9,
+     "pad_h2_dBc": -42.4,
+     "pad_h3_dBc": -45.89
     },
     "amamsat_0400": {
      "vin": 0.4,
-     "pad_dBm_50ohm": 5.761,
-     "h2_dBc": -49.97,
-     "h3_dBc": -48.1,
-     "pad_h2_dBc": -52.26,
-     "pad_h3_dBc": -48.95
+     "pad_dBm_50ohm": 9.366,
+     "h2_dBc": -38.87,
+     "h3_dBc": -45.05,
+     "pad_h2_dBc": -38.92,
+     "pad_h3_dBc": -45.03
     },
     "amamsat_0500": {
      "vin": 0.5,
-     "pad_dBm_50ohm": 6.001,
-     "h2_dBc": -54.56,
-     "h3_dBc": -49.83,
-     "pad_h2_dBc": -54.18,
-     "pad_h3_dBc": -50.6
+     "pad_dBm_50ohm": 9.472,
+     "h2_dBc": -38.44,
+     "h3_dBc": -44.83,
+     "pad_h2_dBc": -38.49,
+     "pad_h3_dBc": -44.81
     },
     "amamsat_0600": {
      "vin": 0.6,
-     "pad_dBm_50ohm": 6.044,
-     "h2_dBc": -54.19,
-     "h3_dBc": -50.09,
-     "pad_h2_dBc": -53.57,
-     "pad_h3_dBc": -50.8
+     "pad_dBm_50ohm": 9.496,
+     "h2_dBc": -38.52,
+     "h3_dBc": -44.8,
+     "pad_h2_dBc": -38.57,
+     "pad_h3_dBc": -44.78
     },
     "amamsat_0800": {
      "vin": 0.8,
-     "pad_dBm_50ohm": 6.051,
-     "h2_dBc": -54.12,
-     "h3_dBc": -50.2,
-     "pad_h2_dBc": -53.47,
-     "pad_h3_dBc": -50.91
+     "pad_dBm_50ohm": 9.507,
+     "h2_dBc": -38.71,
+     "h3_dBc": -44.79,
+     "pad_h2_dBc": -38.76,
+     "pad_h3_dBc": -44.76
     },
     "amamsat_1000": {
      "vin": 1.0,
-     "pad_dBm_50ohm": 6.055,
-     "h2_dBc": -54.05,
-     "h3_dBc": -50.3,
-     "pad_h2_dBc": -53.39,
-     "pad_h3_dBc": -51.0
+     "pad_dBm_50ohm": 9.519,
+     "h2_dBc": -38.94,
+     "h3_dBc": -44.78,
+     "pad_h2_dBc": -38.99,
+     "pad_h3_dBc": -44.75
     },
     "amamsat_1300": {
      "vin": 1.3,
-     "pad_dBm_50ohm": 6.062,
-     "h2_dBc": -53.96,
-     "h3_dBc": -50.45,
-     "pad_h2_dBc": -53.3,
-     "pad_h3_dBc": -51.13
+     "pad_dBm_50ohm": 9.535,
+     "h2_dBc": -39.24,
+     "h3_dBc": -44.76,
+     "pad_h2_dBc": -39.29,
+     "pad_h3_dBc": -44.74
     }
    },
    "unit": "dBc",
@@ -2912,7 +3008,7 @@
   {
    "metric": "mean output power into 50 ohm differential, no board matching",
    "target": 0.0,
-   "achieved": 1.36,
+   "achieved": 0.74,
    "unit": "dBm",
    "condition": "full extracted chain, 0.3 V DC I baseband (CW at LO), code 15",
    "source": "generated/rf_tx-sim-ext.json",
@@ -2921,7 +3017,7 @@
   {
    "metric": "SSB output power",
    "target": 0.0,
-   "achieved": 1.67,
+   "achieved": 1.11,
    "unit": "dBm",
    "condition": "full extracted chain, 0.3 V I/Q at 61 MHz",
    "source": "generated/rf_tx-sim-ext.json",
@@ -2930,7 +3026,7 @@
   {
    "metric": "maximum output power (driver standalone, 0.6 V input)",
    "target": 0.0,
-   "achieved": 8.05,
+   "achieved": 7.29,
    "unit": "dBm",
    "condition": "tt/27C/3.3V extracted",
    "source": "generated/rf_tx-sim-ext.json",
@@ -2939,7 +3035,7 @@
   {
    "metric": "driver voltage gain summed_rf -> pad",
    "target": 5.36,
-   "achieved": 5.2404,
+   "achieved": 5.6947,
    "unit": "V/V",
    "condition": "50 mV input, 2.44 GHz, extracted",
    "source": "generated/rf_tx-sim-ext.json",
@@ -2947,8 +3043,8 @@
   },
   {
    "metric": "supply current",
-   "target": 28.92,
-   "achieved": 59.1304,
+   "target": 61.7,
+   "achieved": 59.8977,
    "unit": "mA",
    "condition": "code 15, 0.3 V input",
    "source": "generated/rf_tx-sim-ext.json",
@@ -2958,12 +3054,12 @@
    "metric": "gain-code steps (pad dBm for code 1/2/4/8/12/15)",
    "target": null,
    "achieved": [
-    -9.81,
-    -5.0,
-    0.06,
-    4.61,
-    6.83,
-    7.82
+    -16.32,
+    -9.19,
+    -2.52,
+    3.08,
+    5.83,
+    7.1
    ],
    "unit": "dBm",
    "condition": "standalone, 0.3 V input; code = rfdriver.gain[7:4]",
@@ -2973,7 +3069,7 @@
   {
    "metric": "mute isolation (chain, unmatched)",
    "target": null,
-   "achieved": 24.72,
+   "achieved": 46.93,
    "unit": "dB",
    "condition": "mute=1 vs mute=0, extracted chain",
    "source": "generated/rf_tx-sim-ext.json",
@@ -2982,7 +3078,7 @@
   {
    "metric": "LO suppression at pad (chain SSB)",
    "target": null,
-   "achieved": 30.67,
+   "achieved": 30.05,
    "unit": "dBc",
    "condition": "ideal LO",
    "source": "generated/rf_tx-sim-ext.json",
@@ -2996,73 +3092,73 @@
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 1.46
+     "value": 0.89
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 1.71
+     "value": 1.06
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 0.84
+     "value": 0.31
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 1.1
+     "value": 0.49
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": -5.38
+     "value": -4.88
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": -3.43
+     "value": -4.58
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": -5.57
+     "value": -5.04
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": -3.75
+     "value": -4.75
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 4.39
+     "value": 4.34
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 4.61
+     "value": 4.53
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 3.67
+     "value": 3.66
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 3.9
+     "value": 3.85
     }
    ],
    "unit": "dBm",
@@ -3072,79 +3168,79 @@
   },
   {
    "metric": "rfdriver current vs corner",
-   "target": 28.92,
+   "target": 61.7,
    "achieved": [
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 52.6217
+     "value": 52.7622
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 53.5286
+     "value": 53.3762
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 52.3639
+     "value": 52.5502
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 53.2668
+     "value": 53.1651
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 41.4867
+     "value": 49.9127
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 49.3798
+     "value": 51.021
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 41.1138
+     "value": 49.6598
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 48.9659
+     "value": 50.7752
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 54.9873
+     "value": 55.2573
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 55.6144
+     "value": 55.9577
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 54.6935
+     "value": 54.9942
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 55.3138
+     "value": 55.6813
     }
    ],
    "unit": "mA",
@@ -3156,10 +3252,10 @@
    "metric": "stretch: output at LO/2 (1.22 GHz) and LO/4 (610 MHz)",
    "target": null,
    "achieved": {
-    "stretch_lo_div2": 10.3,
-    "stretch_lo_div2_large": 10.61,
-    "stretch_lo_div4": 10.79,
-    "stretch_lo_div4_large": 10.83
+    "stretch_lo_div2": 9.95,
+    "stretch_lo_div2_large": 10.13,
+    "stretch_lo_div4": 10.65,
+    "stretch_lo_div4_large": 10.68
    },
    "unit": "dBm",
    "condition": "extracted chain, 0.3 V / 0.7 V DC I, no board matching applied (50 ohm differential load)",
@@ -3169,7 +3265,7 @@
   {
    "metric": "schematic (no wiring parasitics) chain output for reference",
    "target": null,
-   "achieved": 5.68,
+   "achieved": 4.01,
    "unit": "dBm",
    "condition": "same bench, source netlists",
    "source": "generated/rf_tx-sim-sch.json",

@@ -407,6 +407,14 @@ def build(view, match=None):
     for lab, kw in safe.items():
         add(lab, safety_deck(view, **kw), 'safety', **{k: v for k, v in kw.items()})
     add('safe_ramp_reset', ramp_deck(view), 'ramp', en_level=0.0)
+    # rfdriver stability (RFT-09): output admittance (positive-real) and kick decay with the board feed chokes
+    for c in ('ss', 'tt', 'ff'):
+        for rs in (0.001, 262.0):
+            add(f'stab_y_{c}_rs{int(rs)}', S.admittance_deck(view, c, rs_in=rs, out='w.txt'), 'stab_y', corner=c, rs_in=rs)
+        for load in ('match', 'open'):
+            for ch in (22e-9, 100e-9):
+                add(f'stab_kick_{c}_{load}_{int(ch * 1e9)}n', S.kick_deck(view, c, load, ch, out='w.txt'), 'stab_kick',
+                    corner=c, load=load, choke_H=ch)
     add('safe_ramp_en_high', ramp_deck(view, en_level=3.3), 'ramp', en_level=3.3)
     return decks, meta
 
@@ -454,6 +462,8 @@ def evaluate(work, meta):
             elif k == 'cap':
                 d = np.atleast_1d(np.loadtxt(Path(work) / f'{name}.txt'))
                 r = dict(capacitance_fF=round(1e15 * float(d[1]), 2))
+            elif k in ('stab_y', 'stab_kick'):
+                r = S.stability_metrics(work, name, 'admittance' if k == 'stab_y' else 'kick')
             elif k == 'ramp':
                 t, y = S.load(work, name)
                 r = dict(rail_current_peak_uA=round(1e6 * float(np.max(np.abs(y[:, 0]))), 3),

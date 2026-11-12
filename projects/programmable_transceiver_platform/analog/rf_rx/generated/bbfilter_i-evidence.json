@@ -2,15 +2,17 @@
  "block": "bbfilter_i",
  "top_cell": "pt_bbfilter_i",
  "source_hashes": {
-  "bbfilter_i.spice": "sha256:eda866832587abd15c86113700973c94b12e651e6dc6180084da472717e39799",
-  "netlists.py": "sha256:fb4f51b6eede1d916e5a24128fdbfc250408585f135fdfdde4622b62084fbd93",
-  "rfrx_flow.py": "sha256:6fa4ba2ff246182b7c47dd4d2a9c95652d70c09a833ab3674ecb170dd0ee15a1"
+  "bbfilter_i.spice": "sha256:895de8ed86157adb26ba8b86430553d712c8783daf1af32266f31d059bf514fd",
+  "netlists.py": "sha256:9dca0e93f76559b50b6f2440cd980159bebec04cfa67dbcd2a345d61accad19c",
+  "rfrx_flow.py": "sha256:c95720b6e4fada3bcf478c3e5559efc5c938169f08421996760c8ea656bc7aaa",
+  "bbf_fd.py": "sha256:454515900721d6e7011cec50f8f0259984c1ba202c010ea87547f70c40f7b732",
+  "bbf_layout.py": "sha256:5347524e6f19e3b8372fb5aed6f42abc7c10a6223fb9ad1f60d4b458fc83c164"
  },
  "artifact_hashes": {
-  "bbfilter_i.gds": "sha256:463936126a69431a799f3a286114177335e452ef07c8f6f6edf2765e2b11c50b",
-  "bbfilter_i.mag": "sha256:f56e47bb1eb2a955aae9438e14eb567050d2e775cc9ed43c85c1b1ca93781821",
-  "bbfilter_i.ext.spice": "sha256:4f91a30479494d5671937a51cf66acd9bee9adca3eac3d673cc78dc9fb33a2da",
-  "bbfilter_i-lvs.txt": "sha256:eb37baadf1feebad8f1320cecfb854e4f8fede17c4e8f165b432451f83546934"
+  "bbfilter_i.gds": "sha256:6b6e363f25d97cf250047f5b1bd0c168984e50635ddfd8ea6003a58ca30db32e",
+  "bbfilter_i.mag": "sha256:c95da5d69e1b995ee3f19584f17f3c3ded83e9a59648602af8e8b63325dfcce0",
+  "bbfilter_i.ext.spice": "sha256:83582277d48f1648a5146f90ccf63e785d4942331585c42aa2c250061c75982c",
+  "bbfilter_i-lvs.txt": "sha256:c59bcfc2fb5baaf0a2945c12c8eca5354f08b112408f883cad27f2ccd636ef61"
  },
  "images": {
   "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -23,10 +25,10 @@
   "bbox_um": [
    1.5,
    -0.2,
-   500.56,
-   931.99
+   587.8,
+   582.95
   ],
-  "area_um2": 465219.0
+  "area_um2": 341901.0
  },
  "tests": {
   "safe": {
@@ -34,42 +36,42 @@
    "cases": [
     {
      "case": "reset/off: all controls 0, island on",
-     "rail_current_a": 1.745699e-09,
+     "rail_current_a": 1.620673e-09,
      "signal_pin_current_a": 7.259309e-11,
      "tx_in_current_a": 1.980001e-11,
      "out_rx_current_a": 4.290231e-11
     },
     {
      "case": "island off (VDD=0, island_off=1); DAC (tx_in) and ADC (out_rx) nodes driven to 1.65 V, 27 C",
-     "rail_current_a": 7.127159e-12,
+     "rail_current_a": 5.681304e-12,
      "signal_pin_current_a": 6.644196e-05,
-     "tx_in_current_a": 2.477038e-11,
+     "tx_in_current_a": 2.483665e-11,
      "out_rx_current_a": 6.644193e-05
     },
     {
      "case": "same 85 C",
-     "rail_current_a": 5.752873e-11,
-     "signal_pin_current_a": 5.329333e-05,
-     "tx_in_current_a": 1.811243e-10,
-     "out_rx_current_a": 5.329247e-05
+     "rail_current_a": 4.881389e-11,
+     "signal_pin_current_a": 5.329331e-05,
+     "tx_in_current_a": 1.74881e-10,
+     "out_rx_current_a": 5.329245e-05
     },
     {
      "case": "same 0 C",
-     "rail_current_a": 1.214379e-12,
+     "rail_current_a": 1.031757e-12,
      "signal_pin_current_a": 7.475824e-05,
-     "tx_in_current_a": 2.067255e-11,
+     "tx_in_current_a": 2.067346e-11,
      "out_rx_current_a": 7.475822e-05
     },
     {
      "case": "same with peer nodes at 3.63 V",
-     "rail_current_a": 1.761805e-11,
+     "rail_current_a": 1.42887e-11,
      "signal_pin_current_a": 7.729214e-05,
-     "tx_in_current_a": 5.366831e-11,
+     "tx_in_current_a": 5.380329e-11,
      "out_rx_current_a": 7.729202e-05
     },
     {
      "case": "filter off: rx_in -> out_rx isolation (dB)",
-     "value": -47.2256
+     "value": -52.1315
     }
    ],
    "notes": "Cross-island pins (tx_in from DAC, out_rx to ADC) use NMOS-only switches: no PMOS junction to VDD_RF_SW. out_rx current with the island off is the weak island_off clamp (W/L=1/10)."
@@ -96,13 +98,14 @@
    },
    "extracted_nominal": {
     "condition": "tt 27 C 3.3 V, extracted with parasitic C, RX direction, bw=0, gain=0",
-    "idd_a": 0.006656039,
-    "dc_gain_db": -0.176253,
-    "peak_gain_db": -0.0199171,
-    "f3db_hz": 20300300.0,
-    "gain_20mhz_db": -2.70004,
-    "out_cm_v": 1.650171,
-    "vcm_v": 1.65
+    "idd_a": 0.005221565,
+    "dc_gain_db": -0.235578,
+    "peak_gain_db": 0.39626,
+    "f3db_hz": 13749400.0,
+    "gain_20mhz_db": -17.1106,
+    "out_cm_v": 1.649648,
+    "vcm_v": 1.649999,
+    "qt_code": 6
    }
   },
   "observable": {
@@ -110,7 +113,7 @@
    "atb_taps": [
     {
      "port": "atb_vcm",
-     "nominal_v": 1.65
+     "nominal_v": 1.649999
     },
     {
      "port": "atb_vbp"
@@ -118,31 +121,34 @@
    ],
    "observe_mux": {
     "obs_sel=1 rx_in (after mixer)": {
-     "idd_a": 0.006656039,
-     "dc_gain_db": -4.64685e-08,
-     "peak_gain_db": 3.40496e-06,
-     "f3db_hz": 181964000.0,
-     "gain_20mhz_db": -0.0610239,
+     "idd_a": 0.005221565,
+     "dc_gain_db": -5.63596e-08,
+     "peak_gain_db": -5.63596e-08,
+     "f3db_hz": null,
+     "gain_20mhz_db": -0.0290048,
      "out_cm_v": 1.65,
-     "vcm_v": 1.65
+     "vcm_v": 1.649999,
+     "qt_code": 6
     },
     "obs_sel=2 after PGA stage": {
-     "idd_a": 0.006656039,
-     "dc_gain_db": -0.179002,
-     "peak_gain_db": -0.178995,
-     "f3db_hz": 32008100.0,
-     "gain_20mhz_db": -1.24379,
-     "out_cm_v": 1.650171,
-     "vcm_v": 1.65
+     "idd_a": 0.005221565,
+     "dc_gain_db": -0.221275,
+     "peak_gain_db": -0.221275,
+     "f3db_hz": 14039500.0,
+     "gain_20mhz_db": -5.09992,
+     "out_cm_v": 1.64966,
+     "vcm_v": 1.649999,
+     "qt_code": 6
     },
     "obs_sel=3 filter output": {
-     "idd_a": 0.006656039,
-     "dc_gain_db": -0.176252,
-     "peak_gain_db": 0.24441,
-     "f3db_hz": 20463800.0,
-     "gain_20mhz_db": -2.41718,
-     "out_cm_v": 1.650171,
-     "vcm_v": 1.65
+     "idd_a": 0.005221565,
+     "dc_gain_db": -0.235578,
+     "peak_gain_db": 0.405967,
+     "f3db_hz": 13783300.0,
+     "gain_20mhz_db": -17.0273,
+     "out_cm_v": 1.649648,
+     "vcm_v": 1.649999,
+     "qt_code": 6
     }
    },
    "status_bits": [],
@@ -155,31 +161,34 @@
      "route": "rf_bb_stage_bypass",
      "control": "byp_s1 (debug.rf_bb_bypass.pga), byp_s23 (debug.rf_bb_bypass.rxfilter)",
      "byp_s1": {
-      "idd_a": 0.004992697,
-      "dc_gain_db": -0.244026,
-      "peak_gain_db": 1.04484,
-      "f3db_hz": 21287900.0,
-      "gain_20mhz_db": -1.29599,
-      "out_cm_v": 1.650001,
-      "vcm_v": 1.650001
+      "idd_a": 0.00363163,
+      "dc_gain_db": -0.495911,
+      "peak_gain_db": 1.74881,
+      "f3db_hz": 15386900.0,
+      "gain_20mhz_db": -12.5405,
+      "out_cm_v": 1.649646,
+      "vcm_v": 1.649997,
+      "qt_code": 6
      },
      "byp_s23": {
-      "idd_a": 0.001673571,
-      "dc_gain_db": -0.178442,
-      "peak_gain_db": -0.178442,
-      "f3db_hz": 32108900.0,
-      "gain_20mhz_db": -1.55346,
-      "out_cm_v": 1.650171,
-      "vcm_v": 1.65
+      "idd_a": 0.001600511,
+      "dc_gain_db": -0.281137,
+      "peak_gain_db": -0.281137,
+      "f3db_hz": 13874300.0,
+      "gain_20mhz_db": -5.19384,
+      "out_cm_v": 1.64966,
+      "vcm_v": 1.649999,
+      "qt_code": 6
      },
      "both": {
-      "idd_a": 1.022933e-05,
-      "dc_gain_db": -0.152238,
-      "peak_gain_db": -0.152238,
-      "f3db_hz": 53657100.0,
-      "gain_20mhz_db": -0.90128,
+      "idd_a": 1.057658e-05,
+      "dc_gain_db": -0.484853,
+      "peak_gain_db": -0.484853,
+      "f3db_hz": 57968800.0,
+      "gain_20mhz_db": -1.37936,
       "out_cm_v": 1.65,
-      "vcm_v": 1.65
+      "vcm_v": 1.65,
+      "qt_code": 6
      }
     },
     {
@@ -191,38 +200,41 @@
      "route": "rf_rx_external_downconverter",
      "control": "inj=1 (+ bb_tap inj_en)",
      "inject_to_out_rx": {
-      "idd_a": 0.006656039,
-      "dc_gain_db": -0.11932,
-      "peak_gain_db": 0.117996,
-      "f3db_hz": 20379100.0,
-      "gain_20mhz_db": -2.52169,
-      "out_cm_v": 1.650171,
-      "vcm_v": 1.65
+      "idd_a": 0.005221565,
+      "dc_gain_db": -0.167181,
+      "peak_gain_db": 0.468074,
+      "f3db_hz": 13752100.0,
+      "gain_20mhz_db": -17.0335,
+      "out_cm_v": 1.649649,
+      "vcm_v": 1.65,
+      "qt_code": 6
      }
     },
     {
      "route": "loopback: TX through filter while RX goes filter-less",
      "control": "dir_tx=1, rx_direct=1",
      "rx_in_to_out_rx": {
-      "idd_a": 0.006656039,
-      "dc_gain_db": -3.54202e-08,
-      "peak_gain_db": -3.54202e-08,
+      "idd_a": 0.005221565,
+      "dc_gain_db": -3.52166e-08,
+      "peak_gain_db": -3.52166e-08,
       "f3db_hz": null,
-      "gain_20mhz_db": -0.00191026,
+      "gain_20mhz_db": -0.00113373,
       "out_cm_v": 1.65,
-      "vcm_v": 1.65
+      "vcm_v": 1.649999,
+      "qt_code": 6
      }
     },
     {
      "route": "rx_direct (filter-less RX)",
      "rx_in_to_out_rx": {
-      "idd_a": 0.006656039,
-      "dc_gain_db": -3.50829e-08,
-      "peak_gain_db": -3.50829e-08,
+      "idd_a": 0.005221565,
+      "dc_gain_db": -3.128e-08,
+      "peak_gain_db": 0.00117796,
       "f3db_hz": null,
-      "gain_20mhz_db": -0.00219019,
+      "gain_20mhz_db": -0.00144675,
       "out_cm_v": 1.65,
-      "vcm_v": 1.65
+      "vcm_v": 1.649999,
+      "qt_code": 6
      }
     },
     {
@@ -230,37 +242,37 @@
      "control": "direction=tx, obs_sel=11 (bb_tap observe_tx), bb_tap obs_en=1",
      "dac_in_to_bb_pad_10pF": [
       {
-       "idd_a": 0.00766958,
-       "pad_cm_v": 0.818557,
-       "lf_gain_db": -1.51816,
-       "f3db_hz": 20003900.0,
-       "gain_10mhz_db": -2.47827,
-       "tone_gain_db": -1.6172829775494173,
-       "hd3_dbc": -67.12683564058547,
+       "idd_a": 0.006235065,
+       "pad_cm_v": 0.8180068,
+       "lf_gain_db": -1.57427,
+       "f3db_hz": 13641400.0,
+       "gain_10mhz_db": -1.15188,
+       "tone_gain_db": -1.5187849444233572,
+       "hd3_dbc": -66.31702108694945,
        "amp_diff_peak_v": 0.2,
        "f_hz": 2000000.0,
        "load": "10 pF || 100 kohm per pad"
       },
       {
-       "idd_a": 0.00766958,
-       "pad_cm_v": 0.818557,
-       "lf_gain_db": -1.51816,
-       "f3db_hz": 20003900.0,
-       "gain_10mhz_db": -2.47827,
-       "tone_gain_db": -1.6198287919748977,
-       "hd3_dbc": -68.45323710366245,
+       "idd_a": 0.006235065,
+       "pad_cm_v": 0.8180068,
+       "lf_gain_db": -1.57427,
+       "f3db_hz": 13641400.0,
+       "gain_10mhz_db": -1.15188,
+       "tone_gain_db": -1.5220300373516118,
+       "hd3_dbc": -69.38141000332777,
        "amp_diff_peak_v": 0.4,
        "f_hz": 2000000.0,
        "load": "10 pF || 100 kohm per pad"
       },
       {
-       "idd_a": 0.00766958,
-       "pad_cm_v": 0.818557,
-       "lf_gain_db": -1.51816,
-       "f3db_hz": 20003900.0,
-       "gain_10mhz_db": -2.47827,
-       "tone_gain_db": -1.6318750202990056,
-       "hd3_dbc": -67.30333722741973,
+       "idd_a": 0.006235065,
+       "pad_cm_v": 0.8180068,
+       "lf_gain_db": -1.57427,
+       "f3db_hz": 13641400.0,
+       "gain_10mhz_db": -1.15188,
+       "tone_gain_db": -1.621222257357811,
+       "hd3_dbc": -41.72284674885981,
        "amp_diff_peak_v": 0.8,
        "f_hz": 2000000.0,
        "load": "10 pF || 100 kohm per pad"
@@ -277,283 +289,303 @@
  },
  "performance_vs_target": [
   {
-   "metric": "RX -3 dB cutoff, widest (bw=0) (Hz)",
-   "target": ">= 10e6 at tt and in the envelope (lead, Wi-Fi 20 MHz)",
-   "extracted_nominal": 20300300.0,
-   "schematic_nominal": 17530100.0
+   "metric": "RX -3 dB cutoff at the reset cap code 8 (bw0) and reset Q code 6 (Hz)",
+   "target": "~10.5e6 class (trimmed per part: CNV-01 row)",
+   "extracted_nominal": 13749400.0,
+   "schematic_nominal": 13764500.0
   },
   {
    "metric": "RX -3 dB cutoff, narrowest (bw=15) (Hz)",
    "target": "1e5 min",
-   "extracted_nominal": 749796.0
+   "extracted_nominal": 1560580.0
   },
   {
-   "metric": "passband peaking at bw=0 (dB above DC)",
+   "metric": "passband peaking at the reset codes (dB above DC)",
    "target": "<= 1 dB ripple",
-   "extracted_nominal": 0.1563359
+   "extracted_nominal": 0.631838
   },
   {
    "metric": "PGA gain range (dB, code -6 .. 42)",
    "target": "-6 .. 42 in 3 dB steps",
    "extracted_nominal": [
-    -6.11309,
-    42.1024
+    -6.15186,
+    41.6193
    ]
   },
   {
-   "metric": "PGA code sweep, bw=0 (code dB: dc gain dB, peaking dB, f3db Hz)",
-   "target": "3 dB steps, <= 1 dB ripple, >= 10 MHz",
+   "metric": "PGA code sweep, reset cap/Q codes (code dB: dc gain dB, peaking dB, f3db Hz)",
+   "target": "3 dB steps (+-0.5 dB), <= 1 dB ripple, cutoff independent of gain",
    "extracted_nominal": {
     "-6": [
-     -6.11309,
-     1.3933399999999994,
-     21389800.0
+     -6.15186,
+     0.7226600000000003,
+     13840400.0
     ],
     "-3": [
-     -2.59344,
-     0.0,
-     20157800.0
+     -2.62976,
+     0.6668200000000002,
+     13776100.0
     ],
     "0": [
-     -0.176253,
-     0.1563359,
-     20300300.0
+     -0.235578,
+     0.631838,
+     13749400.0
     ],
     "3": [
-     3.34132,
-     0.0,
-     19627800.0
+     3.28078,
+     0.5744599999999997,
+     13689300.0
     ],
     "6": [
-     5.82023,
-     0.0,
-     19203500.0
+     5.75466,
+     0.5222799999999994,
+     13638100.0
     ],
     "9": [
-     9.28619,
-     0.0,
-     19008900.0
+     9.20682,
+     0.42433999999999905,
+     13542900.0
     ],
     "12": [
-     12.1118,
-     0.0,
-     18203100.0
+     11.9855,
+     0.32760000000000034,
+     13447600.0
     ],
     "15": [
-     15.0661,
-     0.0,
-     17799200.0
+     14.9292,
+     0.16650000000000098,
+     13267400.0
     ],
     "18": [
-     18.0594,
-     0.0,
-     15442200.0
+     17.8577,
+     0.022299999999997766,
+     13038400.0
     ],
     "21": [
-     21.1919,
-     0.0,
-     17154000.0
+     20.9794,
+     0.38450000000000273,
+     13370200.0
     ],
     "24": [
-     24.0165,
-     0.0,
-     15132000.0
+     23.7559,
+     0.289200000000001,
+     13254500.0
     ],
     "27": [
-     26.9695,
-     0.0,
-     14282300.0
+     26.6963,
+     0.13829999999999742,
+     13052700.0
     ],
     "30": [
-     29.9608,
-     0.0,
-     11813200.0
+     29.6203,
+     0.01670000000000016,
+     12823400.0
     ],
     "33": [
-     33.0991,
-     4.7667,
-     20864700.0
+     32.7472,
+     0.6561999999999983,
+     13105200.0
     ],
     "36": [
-     35.9237,
-     0.0,
-     15628000.0
+     35.5237,
+     0.539200000000001,
+     13012100.0
     ],
     "39": [
-     39.2263,
-     2.3932,
-     14320000.0
+     38.8126,
+     0.3427999999999969,
+     12850900.0
     ],
     "42": [
-     42.1024,
-     0.06639999999999446,
-     15397000.0
+     41.6193,
+     0.09069999999999823,
+     12634800.0
     ]
    }
   },
   {
    "metric": "TX direction (tx_in -> out_tx) cutoff and gain",
    "extracted_nominal": {
-    "idd_a": 0.006656039,
-    "dc_gain_db": -0.146515,
-    "peak_gain_db": -0.0759055,
-    "f3db_hz": 20230200.0,
-    "gain_20mhz_db": -2.78061,
-    "out_cm_v": 1.650171,
-    "vcm_v": 1.65
+    "idd_a": 0.005221565,
+    "dc_gain_db": -0.199869,
+    "peak_gain_db": 0.433377,
+    "f3db_hz": 13749900.0,
+    "gain_20mhz_db": -17.0778,
+    "out_cm_v": 1.649649,
+    "vcm_v": 1.649999,
+    "qt_code": 6
    }
   },
   {
-   "metric": "stretch: gain at 20 MHz with widest setting (dB) (40 MHz channels need ~20 MHz corner)",
-   "extracted_nominal": -2.70004,
-   "note": "widest corner is far below 20 MHz"
+   "metric": "gain at 20 MHz, widest cap code 0, reset Q code 6, PGA 0 dB (dB relative to DC) (40 MHz channels need ~20 MHz corner)",
+   "target": ">= -3 dB (GX-1 trim row: 20..30 MHz per corner)",
+   "extracted_nominal": 1.753604,
+   "f3db_hz": 36985300.0,
+   "pass": true,
+   "note": "review fix: this row previously ran the reset cap code 8"
   },
   {
    "metric": "supply current, RX active (mA)",
-   "target": 4.5,
-   "extracted_nominal": 6.656039
+   "target": "allocation 3.77 mA (analog-architecture.json); previous design 6.66 mA",
+   "extracted_nominal": 5.221565
   },
   {
-   "metric": "output CM minus input CM with input CM at 1.75 V (V), gain 1 / gain 16 (OTAs reference the input CM)",
-   "target": "no PGA-gain multiplication",
+   "metric": "output CM minus input CM with input CM at 1.75 V (V), PGA 0 / 42 dB (FD OTAs with CMFB to the input CM)",
+   "target": "|x| <= 50 mV at every PGA code (no PGA-gain multiplication)",
    "extracted_nominal": [
-    0.0001921293,
-    -0.265818
+    -0.000339337,
+    -0.000340172
    ]
   },
   {
-   "metric": "passband peaking at max PGA gain (dB above DC)",
+   "metric": "passband peaking at max PGA gain, reset codes (dB above DC)",
    "target": "<= 1 dB ripple",
-   "extracted_nominal": 0.06639999999999446
+   "extracted_nominal": 0.09069999999999823
   },
   {
    "metric": "TX observe through bb_tap into 10 pF: -3 dB (Hz) / gain (dB) / HD3 at 0.4 and 0.8 Vpk diff (dBc)",
    "extracted_nominal": [
-    20003900.0,
-    -1.51816,
-    -68.45323710366245,
-    -67.30333722741973
+    13641400.0,
+    -1.57427,
+    -69.38141000332777,
+    -41.72284674885981
    ]
   },
   {
    "metric": "TX->RX direction switch settling to 1 % (s)",
    "target": 1e-06,
-   "extracted_nominal": 2.635500000000002e-07,
+   "extracted_nominal": 1.5063000000000028e-07,
    "detail": {
-    "final_diff_v": 0.0979902,
-    "settle_1pct_after_switch_s": 2.635500000000002e-07
+    "final_diff_v": 0.097321,
+    "settle_1pct_after_switch_s": 1.5063000000000028e-07
    }
   },
   {
-   "metric": "corner sweep (ext, RX widest, gain 0)",
+   "id": "bench-validation",
+   "metric": "bbf_bench self-test: ideal Butterworth AC, resistor-network noise (4kTR), op fallback detector, op/latch detector (bistable stand-in must FAIL), oscillation detector (RHP biquad must FAIL)",
+   "target": "every check reproduces its analytic answer and every broken case fails",
+   "pass": true,
+   "detail": {
+    "ac_ideal_butterworth": {
+     "expect": {
+      "f3db_hz": 10500000.0,
+      "rel_pass_db": -0.6502130162004761,
+      "rel_alias_db": -47.3661519086906,
+      "peaking_db": 0.0
+     },
+     "got": {
+      "f3db_hz": 10483800.0,
+      "rel_pass_db": -0.661505999853732,
+      "rel_alias_db": -47.36099999985373,
+      "peaking_db": 0.0
+     },
+     "state": "pass"
+    },
+    "noise_resistor_network": {
+     "expect_in_nv_rthz": 25.74961894397663,
+     "got_in_nv_rthz": 25.749678799999998,
+     "state": "pass"
+    },
+    "op_fallback_detector": {
+     "expect": {
+      "forced_optran": "optran",
+      "plain": "newton"
+     },
+     "got": {
+      "forced_optran": "optran",
+      "plain": "newton"
+     },
+     "state": "pass"
+    },
+    "op_latch_detector": {
+     "expect": {
+      "butterworth": "pass",
+      "bistable": "fail"
+     },
+     "got": {
+      "butterworth": "pass",
+      "bistable": "fail",
+      "bistable_starts": [
+       {
+        "start": "seed",
+        "method": "newton",
+        "ocm": 2.220446e-16,
+        "odm": -2.4
+       },
+       {
+        "start": "nodeset(seed) Newton re-solve",
+        "method": "newton",
+        "ocm": 2.220446e-16,
+        "odm": -2.4,
+        "n_nodes_compared": 2,
+        "max_node_dev_v": 0.0
+       },
+       {
+        "start": "tran uic from cmlo",
+        "n_nodes": 2,
+        "ocm": 2.22045e-16,
+        "odm": -2.4,
+        "odm_pp": 0.0,
+        "same_equilibrium": true
+       },
+       {
+        "start": "tran uic from cmhi",
+        "n_nodes": 2,
+        "ocm": 2.22045e-16,
+        "odm": 2.4,
+        "odm_pp": 0.0,
+        "same_equilibrium": false
+       },
+       {
+        "start": "tran uic from dmp",
+        "n_nodes": 2,
+        "ocm": 2.22045e-16,
+        "odm": 2.4,
+        "odm_pp": 0.0,
+        "same_equilibrium": false
+       },
+       {
+        "start": "tran uic from dmn",
+        "n_nodes": 2,
+        "ocm": 2.22746e-16,
+        "odm": -2.4,
+        "odm_pp": 4.44089e-16,
+        "same_equilibrium": true
+       }
+      ]
+     },
+     "state": "pass"
+    },
+    "oscillation_detector": {
+     "expect": {
+      "stable": "pass",
+      "unstable": "fail"
+     },
+     "got": {
+      "stable": "pass",
+      "unstable": "fail",
+      "unstable_worst_pp_v": 1.0413640011051113,
+      "unstable_f_hz": 10000000.0
+     },
+     "state": "pass"
+    },
+    "state": "pass"
+   }
+  },
+  {
+   "metric": "Q-trim code sweep (qt 0..15, 6 shown), PGA 0 / 42 dB, widest cap code 0: peaking dB, f3db Hz",
    "rows": [
     {
      "corner": {
-      "mos": "typical",
-      "temp_c": 22,
-      "vdd_v": 3.15
-     },
-     "f3db_hz": 20213800.0,
-     "dc_gain_db": -0.191391,
-     "peak_gain_db": 0.131645,
-     "idd_a": 0.006562705,
-     "out_cm_v": 1.650232
-    },
-    {
-     "corner": {
-      "mos": "typical",
-      "temp_c": 22,
-      "vdd_v": 3.35
-     },
-     "f3db_hz": 20126500.0,
-     "dc_gain_db": -0.168084,
-     "peak_gain_db": -0.168084,
-     "idd_a": 0.006678737,
-     "out_cm_v": 1.650165
-    },
-    {
-     "corner": {
-      "mos": "typical",
-      "temp_c": 32,
-      "vdd_v": 3.15
-     },
-     "f3db_hz": 20485800.0,
-     "dc_gain_db": -0.19821,
-     "peak_gain_db": 0.712027,
-     "idd_a": 0.006560879,
-     "out_cm_v": 1.650234
-    },
-    {
-     "corner": {
-      "mos": "typical",
-      "temp_c": 32,
-      "vdd_v": 3.35
-     },
-     "f3db_hz": 20437500.0,
-     "dc_gain_db": -0.174439,
-     "peak_gain_db": 0.193112,
-     "idd_a": 0.006676977,
-     "out_cm_v": 1.650163
-    },
-    {
-     "corner": {
-      "mos": "ss",
-      "temp_c": 22,
-      "vdd_v": 3.15
-     },
-     "f3db_hz": 14750200.0,
-     "dc_gain_db": -0.218146,
-     "peak_gain_db": -0.218146,
-     "idd_a": 0.006348683,
-     "out_cm_v": 1.650462
-    },
-    {
-     "corner": {
-      "mos": "ss",
-      "temp_c": 22,
-      "vdd_v": 3.35
-     },
-     "f3db_hz": 14035900.0,
-     "dc_gain_db": -0.183157,
-     "peak_gain_db": -0.183157,
-     "idd_a": 0.006554766,
-     "out_cm_v": 1.650258
-    },
-    {
-     "corner": {
-      "mos": "ss",
-      "temp_c": 32,
-      "vdd_v": 3.15
-     },
-     "f3db_hz": 15097900.0,
-     "dc_gain_db": -0.225241,
-     "peak_gain_db": -0.225241,
-     "idd_a": 0.006347672,
-     "out_cm_v": 1.650469
-    },
-    {
-     "corner": {
-      "mos": "ss",
-      "temp_c": 32,
-      "vdd_v": 3.35
-     },
-     "f3db_hz": 14547100.0,
-     "dc_gain_db": -0.189851,
-     "peak_gain_db": -0.189851,
-     "idd_a": 0.006552279,
-     "out_cm_v": 1.65026
-    },
-    {
-     "corner": {
       "mos": "ff",
       "temp_c": 22,
-      "vdd_v": 3.15
+      "vdd_v": 3.35
      },
-     "f3db_hz": 28175400.0,
-     "dc_gain_db": -0.182923,
-     "peak_gain_db": 4.28877,
-     "idd_a": 0.006705723,
-     "out_cm_v": 1.650125
+     "pga_db": 0,
+     "qt": 0,
+     "peaking_db": 8.445478,
+     "f3db_hz": 55439600.0,
+     "error": null
     },
     {
      "corner": {
@@ -561,40 +593,427 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "f3db_hz": 28224100.0,
-     "dc_gain_db": -0.165669,
-     "peak_gain_db": 3.96851,
-     "idd_a": 0.006783812,
-     "out_cm_v": 1.65011
+     "pga_db": 0,
+     "qt": 3,
+     "peaking_db": 6.836046,
+     "f3db_hz": 54371600.0,
+     "error": null
     },
     {
      "corner": {
       "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "pga_db": 0,
+     "qt": 6,
+     "peaking_db": 4.665698,
+     "f3db_hz": 52901600.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "pga_db": 0,
+     "qt": 9,
+     "peaking_db": 2.402803,
+     "f3db_hz": 51153200.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "pga_db": 0,
+     "qt": 12,
+     "peaking_db": 0.3109865,
+     "f3db_hz": 47252600.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "pga_db": 0,
+     "qt": 15,
+     "peaking_db": 0.03370899999999999,
+     "f3db_hz": 41487500.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "pga_db": 42,
+     "qt": 0,
+     "peaking_db": 6.410800000000002,
+     "f3db_hz": 45827700.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "pga_db": 42,
+     "qt": 3,
+     "peaking_db": 4.852699999999999,
+     "f3db_hz": 44882500.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "pga_db": 42,
+     "qt": 6,
+     "peaking_db": 2.612499999999997,
+     "f3db_hz": 43423000.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "pga_db": 42,
+     "qt": 9,
+     "peaking_db": 0.32459999999999667,
+     "f3db_hz": 41297000.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "pga_db": 42,
+     "qt": 12,
+     "peaking_db": 0.0,
+     "f3db_hz": 36172800.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "pga_db": 42,
+     "qt": 15,
+     "peaking_db": 0.0,
+     "f3db_hz": 28843200.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 0,
+     "qt": 0,
+     "peaking_db": 5.4163689999999995,
+     "f3db_hz": 39306600.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 0,
+     "qt": 3,
+     "peaking_db": 4.271442,
+     "f3db_hz": 38377900.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 0,
+     "qt": 6,
+     "peaking_db": 2.598954,
+     "f3db_hz": 36985300.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 0,
+     "qt": 9,
+     "peaking_db": 0.806884,
+     "f3db_hz": 35053600.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 0,
+     "qt": 12,
+     "peaking_db": 0.04209400000000002,
+     "f3db_hz": 31280200.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 0,
+     "qt": 15,
+     "peaking_db": 0.0004989999999999994,
+     "f3db_hz": 26844900.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 42,
+     "qt": 0,
+     "peaking_db": 3.822900000000004,
+     "f3db_hz": 33246800.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 42,
+     "qt": 3,
+     "peaking_db": 2.6448000000000036,
+     "f3db_hz": 32408000.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 42,
+     "qt": 6,
+     "peaking_db": 0.9771000000000001,
+     "f3db_hz": 31002000.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 42,
+     "qt": 9,
+     "peaking_db": 0.004800000000003024,
+     "f3db_hz": 28644300.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 42,
+     "qt": 12,
+     "peaking_db": 0.0,
+     "f3db_hz": 23589600.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 42,
+     "qt": 15,
+     "peaking_db": 0.0,
+     "f3db_hz": 19049700.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "f3db_hz": 28341800.0,
-     "dc_gain_db": -0.189706,
-     "peak_gain_db": 5.19288,
-     "idd_a": 0.006704512,
-     "out_cm_v": 1.650123
+     "pga_db": 0,
+     "qt": 0,
+     "peaking_db": 4.370762999999999,
+     "f3db_hz": 29357900.0,
+     "error": null
     },
     {
      "corner": {
-      "mos": "ff",
+      "mos": "ss",
       "temp_c": 32,
-      "vdd_v": 3.35
+      "vdd_v": 3.15
      },
-     "f3db_hz": 28404300.0,
-     "dc_gain_db": -0.171999,
-     "peak_gain_db": 4.84032,
-     "idd_a": 0.006782312,
-     "out_cm_v": 1.650106
+     "pga_db": 0,
+     "qt": 3,
+     "peaking_db": 3.44872,
+     "f3db_hz": 28684600.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 0,
+     "qt": 6,
+     "peaking_db": 2.044064,
+     "f3db_hz": 27583500.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 0,
+     "qt": 9,
+     "peaking_db": 0.4887,
+     "f3db_hz": 25935300.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 0,
+     "qt": 12,
+     "peaking_db": 0.027110000000000023,
+     "f3db_hz": 23054600.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 0,
+     "qt": 15,
+     "peaking_db": 0.0,
+     "f3db_hz": 20195500.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 42,
+     "qt": 0,
+     "peaking_db": 2.918700000000001,
+     "f3db_hz": 25053500.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 42,
+     "qt": 3,
+     "peaking_db": 1.9972999999999956,
+     "f3db_hz": 24432900.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 42,
+     "qt": 6,
+     "peaking_db": 0.5829000000000022,
+     "f3db_hz": 23314400.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 42,
+     "qt": 9,
+     "peaking_db": 0.0,
+     "f3db_hz": 21354200.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 42,
+     "qt": 12,
+     "peaking_db": 0.0,
+     "f3db_hz": 17712000.0,
+     "error": null
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 42,
+     "qt": 15,
+     "peaking_db": 0.0,
+     "f3db_hz": 14874600.0,
+     "error": null
     }
    ]
   },
   {
-   "metric": "corner sweep (ext, RX top PGA code 42 dB)",
+   "id": "CNV-01",
+   "metric": "Wi-Fi 20 MHz at 40 MS/s: per-corner trim (cap code m: bw = m>>3, fc_fine = m&7; Q code) and a per-PGA-code cap-code offset table (FS-1), checked at EVERY PGA code -6..42 dB: f3 = 10.5 +- 0.5 MHz, droop <= 3 dB at 8.75 MHz, >= 38 dB at 31.25 MHz (alternate-channel alias), peaking <= 1 dB",
+   "target": "pass at all 12 envelope corners x 17 PGA codes",
+   "pass": true,
    "rows": [
     {
      "corner": {
@@ -602,10 +1021,277 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 42.0274,
-     "peak_gain_db": 42.0915,
-     "f3db_hz": 15340500.0,
-     "out_cm_v": 1.665667
+     "cap_code_pga0": 12,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": 0,
+      "9": 0,
+      "12": 0,
+      "15": 0,
+      "18": 0,
+      "21": 0,
+      "24": 0,
+      "27": -1,
+      "30": -1,
+      "33": -1,
+      "36": -1,
+      "39": -1,
+      "42": -1
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 6,
+      "12": 6,
+      "15": 6,
+      "18": 6,
+      "21": 6,
+      "24": 6,
+      "27": 6,
+      "30": 6,
+      "33": 6,
+      "36": 6,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.005154277,
+       "out_cm_minus_in_v": -0.000310832,
+       "dc_gain_db": -6.16069,
+       "f3db_hz": 10655200.0,
+       "peaking_db": 0.65578,
+       "rel_pass_db": 0.05319999999999947,
+       "rel_alias_db": -46.71171,
+       "rel_wide_db": -26.013210000000004,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.005154275,
+       "out_cm_minus_in_v": -0.000311026,
+       "dc_gain_db": -2.63867,
+       "f3db_hz": 10619800.0,
+       "peaking_db": 0.6187899999999997,
+       "rel_pass_db": -0.0047399999999999665,
+       "rel_alias_db": -47.211330000000004,
+       "rel_wide_db": -26.224529999999998,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.005154274,
+       "out_cm_minus_in_v": -0.000311163,
+       "dc_gain_db": -0.253154,
+       "f3db_hz": 10603100.0,
+       "peaking_db": 0.5941799999999999,
+       "rel_pass_db": -0.038044999999999995,
+       "rel_alias_db": -47.143845999999996,
+       "rel_wide_db": -26.240746,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.005154272,
+       "out_cm_minus_in_v": -0.000311362,
+       "dc_gain_db": 3.26283,
+       "f3db_hz": 10567600.0,
+       "peaking_db": 0.5505599999999999,
+       "rel_pass_db": -0.10159000000000029,
+       "rel_alias_db": -47.40913,
+       "rel_wide_db": -26.393230000000003,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.00515427,
+       "out_cm_minus_in_v": -0.000311492,
+       "dc_gain_db": 5.73473,
+       "f3db_hz": 10536800.0,
+       "peaking_db": 0.5094599999999998,
+       "rel_pass_db": -0.15921999999999947,
+       "rel_alias_db": -47.53133,
+       "rel_wide_db": -26.49873,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.005154269,
+       "out_cm_minus_in_v": -0.000311652,
+       "dc_gain_db": 9.18124,
+       "f3db_hz": 10479100.0,
+       "peaking_db": 0.43492,
+       "rel_pass_db": -0.2684300000000004,
+       "rel_alias_db": -47.79854,
+       "rel_wide_db": -26.70644,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.005154268,
+       "out_cm_minus_in_v": -0.000311758,
+       "dc_gain_db": 11.9441,
+       "f3db_hz": 10421200.0,
+       "peaking_db": 0.35809999999999853,
+       "rel_pass_db": -0.3805000000000014,
+       "rel_alias_db": -48.0537,
+       "rel_wide_db": -26.91,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.005154267,
+       "out_cm_minus_in_v": -0.000311851,
+       "dc_gain_db": 14.8828,
+       "f3db_hz": 10321400.0,
+       "peaking_db": 0.22820000000000107,
+       "rel_pass_db": -0.5780999999999992,
+       "rel_alias_db": -48.420500000000004,
+       "rel_wide_db": -27.243499999999997,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.005154266,
+       "out_cm_minus_in_v": -0.000311923,
+       "dc_gain_db": 17.7928,
+       "f3db_hz": 10200600.0,
+       "peaking_db": 0.08670000000000044,
+       "rel_pass_db": -0.813600000000001,
+       "rel_alias_db": -48.8751,
+       "rel_wide_db": -27.63442,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.005154268,
+       "out_cm_minus_in_v": -0.000311652,
+       "dc_gain_db": 20.9386,
+       "f3db_hz": 10351000.0,
+       "peaking_db": 0.36769999999999925,
+       "rel_pass_db": -0.4643000000000015,
+       "rel_alias_db": -48.6001,
+       "rel_wide_db": -27.32673,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.005154267,
+       "out_cm_minus_in_v": -0.000311758,
+       "dc_gain_db": 23.6993,
+       "f3db_hz": 10292200.0,
+       "peaking_db": 0.29129999999999967,
+       "rel_pass_db": -0.5837000000000003,
+       "rel_alias_db": -48.861000000000004,
+       "rel_wide_db": -27.53922,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.005154266,
+       "out_cm_minus_in_v": -0.000311853,
+       "dc_gain_db": 26.6349,
+       "f3db_hz": 10790200.0,
+       "peaking_db": 0.18360000000000198,
+       "rel_pass_db": -0.38789999999999836,
+       "rel_alias_db": -46.863699999999994,
+       "rel_wide_db": -25.430699999999998,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.005154266,
+       "out_cm_minus_in_v": -0.000311925,
+       "dc_gain_db": 29.5405,
+       "f3db_hz": 10639300.0,
+       "peaking_db": 0.04779999999999873,
+       "rel_pass_db": -0.6423000000000023,
+       "rel_alias_db": -47.3595,
+       "rel_wide_db": -25.85857,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.005154268,
+       "out_cm_minus_in_v": -0.000311653,
+       "dc_gain_db": 32.6915,
+       "f3db_hz": 10785700.0,
+       "peaking_db": 0.6088000000000022,
+       "rel_pass_db": 0.10050000000000381,
+       "rel_alias_db": -47.0755,
+       "rel_wide_db": -25.78157,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.005154267,
+       "out_cm_minus_in_v": -0.00031176,
+       "dc_gain_db": 35.4522,
+       "f3db_hz": 10727200.0,
+       "peaking_db": 0.5138999999999996,
+       "rel_pass_db": -0.023499999999998522,
+       "rel_alias_db": -47.3529,
+       "rel_wide_db": -26.00687,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.005154266,
+       "out_cm_minus_in_v": -0.000311862,
+       "dc_gain_db": 38.7358,
+       "f3db_hz": 10611500.0,
+       "peaking_db": 0.34960000000000235,
+       "rel_pass_db": -0.23849999999999483,
+       "rel_alias_db": -47.787459999999996,
+       "rel_wide_db": -26.387299999999996,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.005154266,
+       "out_cm_minus_in_v": -0.000311929,
+       "dc_gain_db": 41.5234,
+       "f3db_hz": 10454700.0,
+       "peaking_db": 0.1385000000000005,
+       "rel_pass_db": -0.5333000000000041,
+       "rel_alias_db": -48.31254,
+       "rel_wide_db": -26.876600000000003,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       12,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -613,10 +1299,277 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 42.1313,
-     "peak_gain_db": 42.1982,
-     "f3db_hz": 15324800.0,
-     "out_cm_v": 1.661219
+     "cap_code_pga0": 12,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": 0,
+      "9": 0,
+      "12": 0,
+      "15": 0,
+      "18": 0,
+      "21": 0,
+      "24": 0,
+      "27": -1,
+      "30": -1,
+      "33": -1,
+      "36": -1,
+      "39": -1,
+      "42": -1
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 6,
+      "12": 6,
+      "15": 6,
+      "18": 6,
+      "21": 6,
+      "24": 6,
+      "27": 6,
+      "30": 6,
+      "33": 6,
+      "36": 6,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.005238621,
+       "out_cm_minus_in_v": -0.00034748,
+       "dc_gain_db": -6.14606,
+       "f3db_hz": 10668700.0,
+       "peaking_db": 0.6381100000000002,
+       "rel_pass_db": 0.051760000000000694,
+       "rel_alias_db": -46.67174,
+       "rel_wide_db": -25.96094,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.00523862,
+       "out_cm_minus_in_v": -0.000347692,
+       "dc_gain_db": -2.62373,
+       "f3db_hz": 10633100.0,
+       "peaking_db": 0.6011200000000003,
+       "rel_pass_db": -0.006159999999999943,
+       "rel_alias_db": -47.16677,
+       "rel_wide_db": -26.171370000000003,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.00523862,
+       "out_cm_minus_in_v": -0.000347845,
+       "dc_gain_db": -0.225036,
+       "f3db_hz": 10617000.0,
+       "peaking_db": 0.577483,
+       "rel_pass_db": -0.03811199999999998,
+       "rel_alias_db": -47.100463999999995,
+       "rel_wide_db": -26.185164,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.00523862,
+       "out_cm_minus_in_v": -0.000348067,
+       "dc_gain_db": 3.29152,
+       "f3db_hz": 10581800.0,
+       "peaking_db": 0.5347400000000002,
+       "rel_pass_db": -0.10049999999999981,
+       "rel_alias_db": -47.36362,
+       "rel_wide_db": -26.33542,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348215,
+       "dc_gain_db": 5.7665,
+       "f3db_hz": 10551500.0,
+       "peaking_db": 0.4946800000000007,
+       "rel_pass_db": -0.15675999999999934,
+       "rel_alias_db": -47.484,
+       "rel_wide_db": -26.4385,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348399,
+       "dc_gain_db": 9.22174,
+       "f3db_hz": 10494400.0,
+       "peaking_db": 0.4213799999999992,
+       "rel_pass_db": -0.2637300000000007,
+       "rel_alias_db": -47.74814000000001,
+       "rel_wide_db": -26.64274,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348523,
+       "dc_gain_db": 12.0048,
+       "f3db_hz": 10436800.0,
+       "peaking_db": 0.3459000000000003,
+       "rel_pass_db": -0.3742000000000001,
+       "rel_alias_db": -48.0013,
+       "rel_wide_db": -26.844099999999997,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348631,
+       "dc_gain_db": 14.9526,
+       "f3db_hz": 10337900.0,
+       "peaking_db": 0.21839999999999904,
+       "rel_pass_db": -0.5681000000000012,
+       "rel_alias_db": -48.3626,
+       "rel_wide_db": -27.1723,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.005238618,
+       "out_cm_minus_in_v": -0.000348716,
+       "dc_gain_db": 17.8823,
+       "f3db_hz": 10220500.0,
+       "peaking_db": 0.07910000000000039,
+       "rel_pass_db": -0.8012000000000015,
+       "rel_alias_db": -48.814800000000005,
+       "rel_wide_db": -27.560670000000002,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348399,
+       "dc_gain_db": 20.996,
+       "f3db_hz": 10357000.0,
+       "peaking_db": 0.33800000000000097,
+       "rel_pass_db": -0.4796999999999976,
+       "rel_alias_db": -48.5487,
+       "rel_wide_db": -27.266489999999997,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348523,
+       "dc_gain_db": 23.7769,
+       "f3db_hz": 10298600.0,
+       "peaking_db": 0.26399999999999935,
+       "rel_pass_db": -0.5973000000000006,
+       "rel_alias_db": -48.807100000000005,
+       "rel_wide_db": -27.47653,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348632,
+       "dc_gain_db": 26.7214,
+       "f3db_hz": 10795800.0,
+       "peaking_db": 0.1595000000000013,
+       "rel_pass_db": -0.40809999999999746,
+       "rel_alias_db": -46.8056,
+       "rel_wide_db": -25.3673,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.005238618,
+       "out_cm_minus_in_v": -0.000348717,
+       "dc_gain_db": 29.6466,
+       "f3db_hz": 10646100.0,
+       "peaking_db": 0.03340000000000032,
+       "rel_pass_db": -0.6596000000000011,
+       "rel_alias_db": -47.298199999999994,
+       "rel_wide_db": -25.79202,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348399,
+       "dc_gain_db": 32.7654,
+       "f3db_hz": 10781000.0,
+       "peaking_db": 0.5668999999999969,
+       "rel_pass_db": 0.05640000000000356,
+       "rel_alias_db": -47.0174,
+       "rel_wide_db": -25.72074,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348524,
+       "dc_gain_db": 35.5463,
+       "f3db_hz": 10722500.0,
+       "peaking_db": 0.47399999999999665,
+       "rel_pass_db": -0.06609999999999872,
+       "rel_alias_db": -47.292100000000005,
+       "rel_wide_db": -25.9435,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348643,
+       "dc_gain_db": 38.8398,
+       "f3db_hz": 10606600.0,
+       "peaking_db": 0.3159000000000063,
+       "rel_pass_db": -0.2774000000000001,
+       "rel_alias_db": -47.720479999999995,
+       "rel_wide_db": -26.318499999999997,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.005238618,
+       "out_cm_minus_in_v": -0.000348723,
+       "dc_gain_db": 41.6484,
+       "f3db_hz": 10449800.0,
+       "peaking_db": 0.11309999999999576,
+       "rel_pass_db": -0.568400000000004,
+       "rel_alias_db": -48.24006,
+       "rel_wide_db": -26.8031,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       12,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -624,10 +1577,277 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 42.0118,
-     "peak_gain_db": 42.3512,
-     "f3db_hz": 15441800.0,
-     "out_cm_v": 1.665763
+     "cap_code_pga0": 12,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": 0,
+      "9": 0,
+      "12": 0,
+      "15": 0,
+      "18": 0,
+      "21": 0,
+      "24": 0,
+      "27": 0,
+      "30": -1,
+      "33": 0,
+      "36": 0,
+      "39": -1,
+      "42": -1
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 6,
+      "12": 6,
+      "15": 6,
+      "18": 6,
+      "21": 6,
+      "24": 6,
+      "27": 6,
+      "30": 6,
+      "33": 6,
+      "36": 6,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.005153065,
+       "out_cm_minus_in_v": -0.000324834,
+       "dc_gain_db": -6.1658,
+       "f3db_hz": 10768600.0,
+       "peaking_db": 0.6796299999999995,
+       "rel_pass_db": 0.15242999999999984,
+       "rel_alias_db": -46.3065,
+       "rel_wide_db": -25.6089,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.005153063,
+       "out_cm_minus_in_v": -0.000325044,
+       "dc_gain_db": -2.64415,
+       "f3db_hz": 10736600.0,
+       "peaking_db": 0.6412999999999998,
+       "rel_pass_db": 0.0951799999999996,
+       "rel_alias_db": -46.799350000000004,
+       "rel_wide_db": -25.81775,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.005153062,
+       "out_cm_minus_in_v": -0.000325191,
+       "dc_gain_db": -0.262286,
+       "f3db_hz": 10720900.0,
+       "peaking_db": 0.615942,
+       "rel_pass_db": 0.06064800000000001,
+       "rel_alias_db": -46.736613999999996,
+       "rel_wide_db": -25.837614000000002,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.00515306,
+       "out_cm_minus_in_v": -0.000325406,
+       "dc_gain_db": 3.2535,
+       "f3db_hz": 10684000.0,
+       "peaking_db": 0.57186,
+       "rel_pass_db": -0.0036199999999997345,
+       "rel_alias_db": -47.002100000000006,
+       "rel_wide_db": -25.9915,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.005153058,
+       "out_cm_minus_in_v": -0.000325546,
+       "dc_gain_db": 5.72443,
+       "f3db_hz": 10650900.0,
+       "peaking_db": 0.5300400000000005,
+       "rel_pass_db": -0.06235999999999997,
+       "rel_alias_db": -47.12753,
+       "rel_wide_db": -26.09973,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.005153057,
+       "out_cm_minus_in_v": -0.000325718,
+       "dc_gain_db": 9.1683,
+       "f3db_hz": 10589100.0,
+       "peaking_db": 0.45040000000000013,
+       "rel_pass_db": -0.17354000000000092,
+       "rel_alias_db": -47.3998,
+       "rel_wide_db": -26.3119,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.005153056,
+       "out_cm_minus_in_v": -0.000325833,
+       "dc_gain_db": 11.9305,
+       "f3db_hz": 10526900.0,
+       "peaking_db": 0.3716999999999988,
+       "rel_pass_db": -0.2881,
+       "rel_alias_db": -47.660900000000005,
+       "rel_wide_db": -26.5206,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.005153055,
+       "out_cm_minus_in_v": -0.000325933,
+       "dc_gain_db": 14.8648,
+       "f3db_hz": 10420300.0,
+       "peaking_db": 0.2367999999999988,
+       "rel_pass_db": -0.48930000000000007,
+       "rel_alias_db": -48.0369,
+       "rel_wide_db": -26.861800000000002,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.005153054,
+       "out_cm_minus_in_v": -0.000326011,
+       "dc_gain_db": 17.7801,
+       "f3db_hz": 10296000.0,
+       "peaking_db": 0.08769999999999811,
+       "rel_pass_db": -0.7304999999999993,
+       "rel_alias_db": -48.5035,
+       "rel_wide_db": -27.26321,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.005153056,
+       "out_cm_minus_in_v": -0.000325718,
+       "dc_gain_db": 20.9291,
+       "f3db_hz": 10457100.0,
+       "peaking_db": 0.3899000000000008,
+       "rel_pass_db": -0.35749999999999815,
+       "rel_alias_db": -48.2188,
+       "rel_wide_db": -26.943199999999997,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.005153055,
+       "out_cm_minus_in_v": -0.000325833,
+       "dc_gain_db": 23.689,
+       "f3db_hz": 10394100.0,
+       "peaking_db": 0.30989999999999895,
+       "rel_pass_db": -0.4798000000000009,
+       "rel_alias_db": -48.4865,
+       "rel_wide_db": -27.16149,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.005153054,
+       "out_cm_minus_in_v": -0.000325933,
+       "dc_gain_db": 26.6201,
+       "f3db_hz": 10285700.0,
+       "peaking_db": 0.17909999999999826,
+       "rel_pass_db": -0.6939999999999991,
+       "rel_alias_db": -48.875600000000006,
+       "rel_wide_db": -27.520629,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.005153053,
+       "out_cm_minus_in_v": -0.000326013,
+       "dc_gain_db": 29.5308,
+       "f3db_hz": 10748500.0,
+       "peaking_db": 0.05250000000000199,
+       "rel_pass_db": -0.5743000000000009,
+       "rel_alias_db": -47.010400000000004,
+       "rel_wide_db": -25.49875,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.005153056,
+       "out_cm_minus_in_v": -0.000325718,
+       "dc_gain_db": 32.6853,
+       "f3db_hz": 10278600.0,
+       "peaking_db": 0.5884,
+       "rel_pass_db": -0.28779999999999717,
+       "rel_alias_db": -49.0644,
+       "rel_wide_db": -27.84095,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.005153055,
+       "out_cm_minus_in_v": -0.000325833,
+       "dc_gain_db": 35.4452,
+       "f3db_hz": 10225200.0,
+       "peaking_db": 0.49840000000000373,
+       "rel_pass_db": -0.40979999999999706,
+       "rel_alias_db": -49.3313,
+       "rel_wide_db": -28.05874,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.005153054,
+       "out_cm_minus_in_v": -0.000325945,
+       "dc_gain_db": 38.7238,
+       "f3db_hz": 10727800.0,
+       "peaking_db": 0.3808000000000007,
+       "rel_pass_db": -0.1325999999999965,
+       "rel_alias_db": -47.45447,
+       "rel_wide_db": -26.047399999999996,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.005153053,
+       "out_cm_minus_in_v": -0.000326018,
+       "dc_gain_db": 41.5158,
+       "f3db_hz": 10562100.0,
+       "peaking_db": 0.1576999999999984,
+       "rel_pass_db": -0.4346999999999994,
+       "rel_alias_db": -47.99424,
+       "rel_wide_db": -26.549599999999998,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       12,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -635,10 +1855,277 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 42.1177,
-     "peak_gain_db": 42.1847,
-     "f3db_hz": 15452500.0,
-     "out_cm_v": 1.6611
+     "cap_code_pga0": 12,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 1,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": 0,
+      "9": 0,
+      "12": 0,
+      "15": 0,
+      "18": 0,
+      "21": 0,
+      "24": 0,
+      "27": 0,
+      "30": -1,
+      "33": 0,
+      "36": 0,
+      "39": -1,
+      "42": -1
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 6,
+      "12": 6,
+      "15": 6,
+      "18": 6,
+      "21": 6,
+      "24": 6,
+      "27": 6,
+      "30": 6,
+      "33": 6,
+      "36": 6,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.005237356,
+       "out_cm_minus_in_v": -0.000363174,
+       "dc_gain_db": -6.15086,
+       "f3db_hz": 10231700.0,
+       "peaking_db": 0.6459700000000002,
+       "rel_pass_db": -0.28196000000000065,
+       "rel_alias_db": -48.44884,
+       "rel_wide_db": -27.897439999999996,
+       "cap_code": 13,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.005237356,
+       "out_cm_minus_in_v": -0.000363404,
+       "dc_gain_db": -2.62892,
+       "f3db_hz": 10750100.0,
+       "peaking_db": 0.6244299999999998,
+       "rel_pass_db": 0.09466999999999981,
+       "rel_alias_db": -46.75538,
+       "rel_wide_db": -25.76248,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.005237355,
+       "out_cm_minus_in_v": -0.000363569,
+       "dc_gain_db": -0.233615,
+       "f3db_hz": 10734900.0,
+       "peaking_db": 0.600056,
+       "rel_pass_db": 0.06152099999999999,
+       "rel_alias_db": -46.693485,
+       "rel_wide_db": -25.779885,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.005237355,
+       "out_cm_minus_in_v": -0.000363811,
+       "dc_gain_db": 3.28274,
+       "f3db_hz": 10700500.0,
+       "peaking_db": 0.5568900000000001,
+       "rel_pass_db": -0.0015299999999998093,
+       "rel_alias_db": -46.95684,
+       "rel_wide_db": -25.931540000000002,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.005237355,
+       "out_cm_minus_in_v": -0.000363971,
+       "dc_gain_db": 5.75682,
+       "f3db_hz": 10668000.0,
+       "peaking_db": 0.5161299999999995,
+       "rel_pass_db": -0.058880000000000265,
+       "rel_alias_db": -47.08042,
+       "rel_wide_db": -26.03732,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.00036417,
+       "dc_gain_db": 9.20959,
+       "f3db_hz": 10606800.0,
+       "peaking_db": 0.4382900000000003,
+       "rel_pass_db": -0.16776000000000124,
+       "rel_alias_db": -47.34939,
+       "rel_wide_db": -26.24579,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.000364305,
+       "dc_gain_db": 11.9924,
+       "f3db_hz": 10544900.0,
+       "peaking_db": 0.3604000000000003,
+       "rel_pass_db": -0.2806999999999995,
+       "rel_alias_db": -47.60850000000001,
+       "rel_wide_db": -26.4523,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.000364422,
+       "dc_gain_db": 14.9359,
+       "f3db_hz": 10439100.0,
+       "peaking_db": 0.22799999999999976,
+       "rel_pass_db": -0.4780999999999995,
+       "rel_alias_db": -47.978899999999996,
+       "rel_wide_db": -26.7881,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.000364514,
+       "dc_gain_db": 17.8713,
+       "f3db_hz": 10315000.0,
+       "peaking_db": 0.08099999999999952,
+       "rel_pass_db": -0.716700000000003,
+       "rel_alias_db": -48.4429,
+       "rel_wide_db": -27.186780000000002,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.00036417,
+       "dc_gain_db": 20.9876,
+       "f3db_hz": 10465300.0,
+       "peaking_db": 0.3613999999999997,
+       "rel_pass_db": -0.3714000000000013,
+       "rel_alias_db": -48.167,
+       "rel_wide_db": -26.88019,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.000364305,
+       "dc_gain_db": 23.7681,
+       "f3db_hz": 10402500.0,
+       "peaking_db": 0.28300000000000125,
+       "rel_pass_db": -0.4919000000000011,
+       "rel_alias_db": -48.432,
+       "rel_wide_db": -27.09597,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.000364422,
+       "dc_gain_db": 26.7083,
+       "f3db_hz": 10295100.0,
+       "peaking_db": 0.15700000000000003,
+       "rel_pass_db": -0.7020000000000017,
+       "rel_alias_db": -48.814800000000005,
+       "rel_wide_db": -27.44947,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.000364515,
+       "dc_gain_db": 29.639,
+       "f3db_hz": 10756400.0,
+       "peaking_db": 0.038000000000000256,
+       "rel_pass_db": -0.5899999999999999,
+       "rel_alias_db": -46.9483,
+       "rel_wide_db": -25.429209999999998,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.00036417,
+       "dc_gain_db": 32.7606,
+       "f3db_hz": 10277600.0,
+       "peaking_db": 0.5502000000000038,
+       "rel_pass_db": -0.32049999999999557,
+       "rel_alias_db": -49.0038,
+       "rel_wide_db": -27.771939999999997,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.000364305,
+       "dc_gain_db": 35.5411,
+       "f3db_hz": 10224100.0,
+       "peaking_db": 0.4620999999999995,
+       "rel_pass_db": -0.4410999999999987,
+       "rel_alias_db": -49.2679,
+       "rel_wide_db": -27.98717,
+       "cap_code": 12,
+       "qt": 6,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.000364435,
+       "dc_gain_db": 38.8298,
+       "f3db_hz": 10725300.0,
+       "peaking_db": 0.3464000000000027,
+       "rel_pass_db": -0.16980000000000217,
+       "rel_alias_db": -47.38629,
+       "rel_wide_db": -25.9754,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.000364521,
+       "dc_gain_db": 41.6432,
+       "f3db_hz": 10559100.0,
+       "peaking_db": 0.13159999999999883,
+       "rel_pass_db": -0.46809999999999974,
+       "rel_alias_db": -47.920410000000004,
+       "rel_wide_db": -26.4727,
+       "cap_code": 11,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       12,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -646,10 +2133,277 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 41.9497,
-     "peak_gain_db": 41.999,
-     "f3db_hz": 11389800.0,
-     "out_cm_v": 1.681109
+     "cap_code_pga0": 8,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": 0,
+      "9": 0,
+      "12": 0,
+      "15": 0,
+      "18": -1,
+      "21": 0,
+      "24": 0,
+      "27": -1,
+      "30": -1,
+      "33": -1,
+      "36": -1,
+      "39": -1,
+      "42": -1
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 4,
+      "9": 4,
+      "12": 4,
+      "15": 4,
+      "18": 7,
+      "21": 4,
+      "24": 4,
+      "27": 7,
+      "30": 6,
+      "33": 7,
+      "36": 7,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.00498618,
+       "out_cm_minus_in_v": -0.00022104,
+       "dc_gain_db": -6.17591,
+       "f3db_hz": 10322900.0,
+       "peaking_db": 0.5644499999999999,
+       "rel_pass_db": -0.3412600000000001,
+       "rel_alias_db": -47.20339,
+       "rel_wide_db": -26.79549,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.004986177,
+       "out_cm_minus_in_v": -0.000221179,
+       "dc_gain_db": -2.65484,
+       "f3db_hz": 10281700.0,
+       "peaking_db": 0.5191500000000002,
+       "rel_pass_db": -0.41811,
+       "rel_alias_db": -47.87096,
+       "rel_wide_db": -27.07546,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.004986175,
+       "out_cm_minus_in_v": -0.000221274,
+       "dc_gain_db": -0.283723,
+       "f3db_hz": 10262800.0,
+       "peaking_db": 0.490209,
+       "rel_pass_db": -0.460961,
+       "rel_alias_db": -47.754977,
+       "rel_wide_db": -27.084477000000003,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.004986172,
+       "out_cm_minus_in_v": -0.00022141,
+       "dc_gain_db": 3.2317,
+       "f3db_hz": 10221000.0,
+       "peaking_db": 0.44177,
+       "rel_pass_db": -0.5424500000000001,
+       "rel_alias_db": -48.099000000000004,
+       "rel_wide_db": -27.2789,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.00498617,
+       "out_cm_minus_in_v": -0.000221497,
+       "dc_gain_db": 5.70076,
+       "f3db_hz": 10510300.0,
+       "peaking_db": 0.7674900000000004,
+       "rel_pass_db": 0.07591000000000037,
+       "rel_alias_db": -48.09736,
+       "rel_wide_db": -27.090059999999998,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.004986168,
+       "out_cm_minus_in_v": -0.000221602,
+       "dc_gain_db": 9.13747,
+       "f3db_hz": 10443900.0,
+       "peaking_db": 0.6683199999999996,
+       "rel_pass_db": -0.06187000000000076,
+       "rel_alias_db": -48.42847,
+       "rel_wide_db": -27.34707,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.004986167,
+       "out_cm_minus_in_v": -0.000221672,
+       "dc_gain_db": 11.8908,
+       "f3db_hz": 10377900.0,
+       "peaking_db": 0.5655999999999999,
+       "rel_pass_db": -0.20220000000000127,
+       "rel_alias_db": -48.7481,
+       "rel_wide_db": -27.599600000000002,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.004986166,
+       "out_cm_minus_in_v": -0.000221731,
+       "dc_gain_db": 14.8156,
+       "f3db_hz": 10264600.0,
+       "peaking_db": 0.3908000000000005,
+       "rel_pass_db": -0.44979999999999976,
+       "rel_alias_db": -49.178200000000004,
+       "rel_wide_db": -28.002299999999998,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.004986165,
+       "out_cm_minus_in_v": -0.00022179,
+       "dc_gain_db": 17.7306,
+       "f3db_hz": 10689100.0,
+       "peaking_db": 0.02880000000000038,
+       "rel_pass_db": -0.6400000000000006,
+       "rel_alias_db": -46.7458,
+       "rel_wide_db": -25.36397,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.004986166,
+       "out_cm_minus_in_v": -0.000221597,
+       "dc_gain_db": 20.8985,
+       "f3db_hz": 10329200.0,
+       "peaking_db": 0.6372,
+       "rel_pass_db": -0.22539999999999694,
+       "rel_alias_db": -49.3194,
+       "rel_wide_db": -28.059359999999998,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.004986164,
+       "out_cm_minus_in_v": -0.000221665,
+       "dc_gain_db": 23.65,
+       "f3db_hz": 10263000.0,
+       "peaking_db": 0.533100000000001,
+       "rel_pass_db": -0.37349999999999994,
+       "rel_alias_db": -49.642399999999995,
+       "rel_wide_db": -28.32089,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.004986163,
+       "out_cm_minus_in_v": -0.000221738,
+       "dc_gain_db": 26.5712,
+       "f3db_hz": 10716900.0,
+       "peaking_db": 0.16859999999999786,
+       "rel_pass_db": -0.5031999999999996,
+       "rel_alias_db": -47.2264,
+       "rel_wide_db": -25.645452000000002,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.004986162,
+       "out_cm_minus_in_v": -0.000221784,
+       "dc_gain_db": 29.4835,
+       "f3db_hz": 10692300.0,
+       "peaking_db": 0.07980000000000231,
+       "rel_pass_db": -0.5881000000000007,
+       "rel_alias_db": -47.743399999999994,
+       "rel_wide_db": -26.003439999999998,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.004986166,
+       "out_cm_minus_in_v": -0.000221598,
+       "dc_gain_db": 32.6549,
+       "f3db_hz": 10748700.0,
+       "peaking_db": 0.6781000000000006,
+       "rel_pass_db": 0.12940000000000396,
+       "rel_alias_db": -47.492399999999996,
+       "rel_wide_db": -26.05097,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.004986165,
+       "out_cm_minus_in_v": -0.000221666,
+       "dc_gain_db": 35.4064,
+       "f3db_hz": 10672900.0,
+       "peaking_db": 0.5609000000000037,
+       "rel_pass_db": -0.022399999999997533,
+       "rel_alias_db": -47.8354,
+       "rel_wide_db": -26.33079,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.004986163,
+       "out_cm_minus_in_v": -0.000221731,
+       "dc_gain_db": 38.6754,
+       "f3db_hz": 10688500.0,
+       "peaking_db": 0.4928999999999988,
+       "rel_pass_db": -0.02740000000000009,
+       "rel_alias_db": -48.27738,
+       "rel_wide_db": -26.639400000000002,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.004986162,
+       "out_cm_minus_in_v": -0.000221774,
+       "dc_gain_db": 41.4673,
+       "f3db_hz": 10498700.0,
+       "peaking_db": 0.21000000000000085,
+       "rel_pass_db": -0.3947000000000003,
+       "rel_alias_db": -48.87241,
+       "rel_wide_db": -27.227400000000003,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       8,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -657,10 +2411,277 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 42.1053,
-     "peak_gain_db": 47.1604,
-     "f3db_hz": 10940500.0,
-     "out_cm_v": 1.66756
+     "cap_code_pga0": 8,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": 0,
+      "9": 0,
+      "12": 0,
+      "15": 0,
+      "18": -1,
+      "21": 0,
+      "24": 0,
+      "27": -1,
+      "30": -1,
+      "33": -1,
+      "36": -1,
+      "39": -1,
+      "42": -1
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 4,
+      "12": 4,
+      "15": 4,
+      "18": 7,
+      "21": 4,
+      "24": 4,
+      "27": 7,
+      "30": 6,
+      "33": 7,
+      "36": 6,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.005145053,
+       "out_cm_minus_in_v": -0.000379445,
+       "dc_gain_db": -6.15376,
+       "f3db_hz": 10342300.0,
+       "peaking_db": 0.51844,
+       "rel_pass_db": -0.3578399999999995,
+       "rel_alias_db": -47.10584,
+       "rel_wide_db": -26.65824,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.005145051,
+       "out_cm_minus_in_v": -0.000379682,
+       "dc_gain_db": -2.63224,
+       "f3db_hz": 10300700.0,
+       "peaking_db": 0.4743200000000001,
+       "rel_pass_db": -0.43416999999999994,
+       "rel_alias_db": -47.755959999999995,
+       "rel_wide_db": -26.93446,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.00514505,
+       "out_cm_minus_in_v": -0.000379849,
+       "dc_gain_db": -0.241366,
+       "f3db_hz": 10283600.0,
+       "peaking_db": 0.448585,
+       "rel_pass_db": -0.472333,
+       "rel_alias_db": -47.638734,
+       "rel_wide_db": -26.936434000000002,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.005145049,
+       "out_cm_minus_in_v": -0.000380093,
+       "dc_gain_db": 3.27489,
+       "f3db_hz": 10244600.0,
+       "peaking_db": 0.40295999999999976,
+       "rel_pass_db": -0.5494699999999999,
+       "rel_alias_db": -47.971289999999996,
+       "rel_wide_db": -27.12269,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.005145048,
+       "out_cm_minus_in_v": -0.000380253,
+       "dc_gain_db": 5.74799,
+       "f3db_hz": 10208100.0,
+       "peaking_db": 0.3601200000000002,
+       "rel_pass_db": -0.6181299999999998,
+       "rel_alias_db": -48.10989,
+       "rel_wide_db": -27.24369,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.005145046,
+       "out_cm_minus_in_v": -0.000380451,
+       "dc_gain_db": 9.19838,
+       "f3db_hz": 10498800.0,
+       "peaking_db": 0.6670400000000001,
+       "rel_pass_db": -0.010770000000000834,
+       "rel_alias_db": -48.26358,
+       "rel_wide_db": -27.141280000000002,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.005145045,
+       "out_cm_minus_in_v": -0.000380584,
+       "dc_gain_db": 11.9821,
+       "f3db_hz": 10435100.0,
+       "peaking_db": 0.5706999999999987,
+       "rel_pass_db": -0.14290000000000092,
+       "rel_alias_db": -48.5688,
+       "rel_wide_db": -27.3811,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.005145045,
+       "out_cm_minus_in_v": -0.000380699,
+       "dc_gain_db": 14.9202,
+       "f3db_hz": 10325900.0,
+       "peaking_db": 0.404300000000001,
+       "rel_pass_db": -0.37539999999999907,
+       "rel_alias_db": -48.9771,
+       "rel_wide_db": -27.7625,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.005145044,
+       "out_cm_minus_in_v": -0.000380793,
+       "dc_gain_db": 17.8648,
+       "f3db_hz": 10644900.0,
+       "peaking_db": 0.01180000000000092,
+       "rel_pass_db": -0.7379999999999995,
+       "rel_alias_db": -46.4987,
+       "rel_wide_db": -25.210829999999998,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.005145046,
+       "out_cm_minus_in_v": -0.000380451,
+       "dc_gain_db": 20.9848,
+       "f3db_hz": 10373900.0,
+       "peaking_db": 0.6086999999999989,
+       "rel_pass_db": -0.1977000000000011,
+       "rel_alias_db": -49.1275,
+       "rel_wide_db": -27.83434,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.005145045,
+       "out_cm_minus_in_v": -0.000380584,
+       "dc_gain_db": 23.7666,
+       "f3db_hz": 10310100.0,
+       "peaking_db": 0.5114999999999981,
+       "rel_pass_db": -0.33699999999999974,
+       "rel_alias_db": -49.4352,
+       "rel_wide_db": -28.08237,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.005145044,
+       "out_cm_minus_in_v": -0.000380703,
+       "dc_gain_db": 26.7009,
+       "f3db_hz": 10653700.0,
+       "peaking_db": 0.10269999999999868,
+       "rel_pass_db": -0.6453000000000024,
+       "rel_alias_db": -46.965900000000005,
+       "rel_wide_db": -25.49062,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.005145044,
+       "out_cm_minus_in_v": -0.000380793,
+       "dc_gain_db": 29.6426,
+       "f3db_hz": 10655500.0,
+       "peaking_db": 0.0440999999999967,
+       "rel_pass_db": -0.6905000000000001,
+       "rel_alias_db": -47.445800000000006,
+       "rel_wide_db": -25.80338,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.005145046,
+       "out_cm_minus_in_v": -0.000380454,
+       "dc_gain_db": 32.7662,
+       "f3db_hz": 10684600.0,
+       "peaking_db": 0.5187000000000026,
+       "rel_pass_db": -0.0882000000000005,
+       "rel_alias_db": -47.223,
+       "rel_wide_db": -25.88732,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.005145045,
+       "out_cm_minus_in_v": -0.000380587,
+       "dc_gain_db": 35.5484,
+       "f3db_hz": 10772600.0,
+       "peaking_db": 0.5630999999999986,
+       "rel_pass_db": 0.05100000000000193,
+       "rel_alias_db": -47.457,
+       "rel_wide_db": -25.97446,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.005145044,
+       "out_cm_minus_in_v": -0.000380714,
+       "dc_gain_db": 38.8316,
+       "f3db_hz": 10645700.0,
+       "peaking_db": 0.3737999999999957,
+       "rel_pass_db": -0.19600000000000506,
+       "rel_alias_db": -47.951710000000006,
+       "rel_wide_db": -26.411900000000003,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.005145044,
+       "out_cm_minus_in_v": -0.000380799,
+       "dc_gain_db": 41.655,
+       "f3db_hz": 10460200.0,
+       "peaking_db": 0.1274000000000015,
+       "rel_pass_db": -0.5433999999999983,
+       "rel_alias_db": -48.52629,
+       "rel_wide_db": -26.974400000000003,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       8,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -668,10 +2689,277 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 41.9304,
-     "peak_gain_db": 41.9798,
-     "f3db_hz": 11576200.0,
-     "out_cm_v": 1.681603
+     "cap_code_pga0": 8,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": 0,
+      "9": 0,
+      "12": 0,
+      "15": 0,
+      "18": 0,
+      "21": 0,
+      "24": 0,
+      "27": 0,
+      "30": -1,
+      "33": -1,
+      "36": -1,
+      "39": -1,
+      "42": -1
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 6,
+      "12": 4,
+      "15": 4,
+      "18": 4,
+      "21": 4,
+      "24": 4,
+      "27": 4,
+      "30": 7,
+      "33": 8,
+      "36": 7,
+      "39": 7,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.004985486,
+       "out_cm_minus_in_v": -0.000231897,
+       "dc_gain_db": -6.18111,
+       "f3db_hz": 10428800.0,
+       "peaking_db": 0.5902799999999999,
+       "rel_pass_db": -0.22195999999999927,
+       "rel_alias_db": -46.80969,
+       "rel_wide_db": -26.40579,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.004985483,
+       "out_cm_minus_in_v": -0.000232047,
+       "dc_gain_db": -2.66036,
+       "f3db_hz": 10386000.0,
+       "peaking_db": 0.5455799999999997,
+       "rel_pass_db": -0.29784999999999995,
+       "rel_alias_db": -47.46894,
+       "rel_wide_db": -26.68254,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.004985481,
+       "out_cm_minus_in_v": -0.00023215,
+       "dc_gain_db": -0.293081,
+       "f3db_hz": 10365600.0,
+       "peaking_db": 0.513899,
+       "rel_pass_db": -0.34233700000000006,
+       "rel_alias_db": -47.358719,
+       "rel_wide_db": -26.696219,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.004985478,
+       "out_cm_minus_in_v": -0.000232297,
+       "dc_gain_db": 3.22214,
+       "f3db_hz": 10322900.0,
+       "peaking_db": 0.46259000000000006,
+       "rel_pass_db": -0.4246500000000002,
+       "rel_alias_db": -47.70284,
+       "rel_wide_db": -26.89224,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.004985476,
+       "out_cm_minus_in_v": -0.000232391,
+       "dc_gain_db": 5.68961,
+       "f3db_hz": 10285800.0,
+       "peaking_db": 0.4156399999999998,
+       "rel_pass_db": -0.49978000000000034,
+       "rel_alias_db": -47.85441,
+       "rel_wide_db": -27.02521,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.004985474,
+       "out_cm_minus_in_v": -0.000232504,
+       "dc_gain_db": 9.12361,
+       "f3db_hz": 10214600.0,
+       "peaking_db": 0.32896000000000036,
+       "rel_pass_db": -0.6399399999999993,
+       "rel_alias_db": -48.19221,
+       "rel_wide_db": -27.28771,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.004985472,
+       "out_cm_minus_in_v": -0.000232579,
+       "dc_gain_db": 11.8758,
+       "f3db_hz": 10473500.0,
+       "peaking_db": 0.5777000000000001,
+       "rel_pass_db": -0.11100000000000065,
+       "rel_alias_db": -48.3704,
+       "rel_wide_db": -27.229300000000002,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.004985471,
+       "out_cm_minus_in_v": -0.000232643,
+       "dc_gain_db": 14.7964,
+       "f3db_hz": 10353300.0,
+       "peaking_db": 0.3963000000000001,
+       "rel_pass_db": -0.36299999999999955,
+       "rel_alias_db": -48.811,
+       "rel_wide_db": -27.640900000000002,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.00498547,
+       "out_cm_minus_in_v": -0.000232693,
+       "dc_gain_db": 17.7154,
+       "f3db_hz": 10211900.0,
+       "peaking_db": 0.19140000000000157,
+       "rel_pass_db": -0.6616999999999997,
+       "rel_alias_db": -49.3782,
+       "rel_wide_db": -28.1271,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.004985472,
+       "out_cm_minus_in_v": -0.000232498,
+       "dc_gain_db": 20.887,
+       "f3db_hz": 10425500.0,
+       "peaking_db": 0.6576999999999984,
+       "rel_pass_db": -0.11980000000000146,
+       "rel_alias_db": -48.957300000000004,
+       "rel_wide_db": -27.69748,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.00498547,
+       "out_cm_minus_in_v": -0.000232572,
+       "dc_gain_db": 23.6367,
+       "f3db_hz": 10355000.0,
+       "peaking_db": 0.5512999999999977,
+       "rel_pass_db": -0.27149999999999963,
+       "rel_alias_db": -49.288,
+       "rel_wide_db": -27.965670000000003,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.004985469,
+       "out_cm_minus_in_v": -0.000232636,
+       "dc_gain_db": 26.5544,
+       "f3db_hz": 10234400.0,
+       "peaking_db": 0.36880000000000024,
+       "rel_pass_db": -0.5371000000000024,
+       "rel_alias_db": -49.7404,
+       "rel_wide_db": -28.39453,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.004985468,
+       "out_cm_minus_in_v": -0.000232699,
+       "dc_gain_db": 29.4687,
+       "f3db_hz": 10639600.0,
+       "peaking_db": 0.03850000000000264,
+       "rel_pass_db": -0.7247999999999983,
+       "rel_alias_db": -47.5055,
+       "rel_wide_db": -25.815959999999997,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.004985472,
+       "out_cm_minus_in_v": -0.000232499,
+       "dc_gain_db": 32.6427,
+       "f3db_hz": 10247000.0,
+       "peaking_db": 0.05030000000000001,
+       "rel_pass_db": -0.9965999999999973,
+       "rel_alias_db": -47.202799999999996,
+       "rel_wide_db": -26.07405,
+       "cap_code": 7,
+       "qt": 8,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.00498547,
+       "out_cm_minus_in_v": -0.000232572,
+       "dc_gain_db": 35.3948,
+       "f3db_hz": 10793600.0,
+       "peaking_db": 0.6156000000000006,
+       "rel_pass_db": 0.11920000000000641,
+       "rel_alias_db": -47.5214,
+       "rel_wide_db": -25.993359999999996,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.004985468,
+       "out_cm_minus_in_v": -0.000232642,
+       "dc_gain_db": 38.6586,
+       "f3db_hz": 10658800.0,
+       "peaking_db": 0.4052999999999969,
+       "rel_pass_db": -0.15059999999999718,
+       "rel_alias_db": -48.05616,
+       "rel_wide_db": -26.469099999999997,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.004985467,
+       "out_cm_minus_in_v": -0.000232688,
+       "dc_gain_db": 41.4533,
+       "f3db_hz": 10613900.0,
+       "peaking_db": 0.2424000000000035,
+       "rel_pass_db": -0.2774000000000001,
+       "rel_alias_db": -48.58869,
+       "rel_wide_db": -26.918799999999997,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       8,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -679,10 +2967,277 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 42.0877,
-     "peak_gain_db": 42.1399,
-     "f3db_hz": 11308200.0,
-     "out_cm_v": 1.667686
+     "cap_code_pga0": 8,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": 0,
+      "9": 0,
+      "12": 0,
+      "15": 0,
+      "18": 0,
+      "21": 0,
+      "24": 0,
+      "27": 0,
+      "30": -1,
+      "33": 0,
+      "36": -1,
+      "39": -1,
+      "42": -1
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 6,
+      "12": 4,
+      "15": 4,
+      "18": 4,
+      "21": 4,
+      "24": 4,
+      "27": 4,
+      "30": 6,
+      "33": 4,
+      "36": 7,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.005143354,
+       "out_cm_minus_in_v": -0.000394172,
+       "dc_gain_db": -6.15871,
+       "f3db_hz": 10451100.0,
+       "peaking_db": 0.5452000000000004,
+       "rel_pass_db": -0.2384599999999999,
+       "rel_alias_db": -46.71429,
+       "rel_wide_db": -26.265990000000002,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.005143352,
+       "out_cm_minus_in_v": -0.000394425,
+       "dc_gain_db": -2.63751,
+       "f3db_hz": 10407800.0,
+       "peaking_db": 0.5007599999999996,
+       "rel_pass_db": -0.31381000000000014,
+       "rel_alias_db": -47.35649,
+       "rel_wide_db": -26.538990000000002,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.005143351,
+       "out_cm_minus_in_v": -0.000394605,
+       "dc_gain_db": -0.250252,
+       "f3db_hz": 10389300.0,
+       "peaking_db": 0.47235799999999994,
+       "rel_pass_db": -0.35355200000000003,
+       "rel_alias_db": -47.244848,
+       "rel_wide_db": -26.545448,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.005143349,
+       "out_cm_minus_in_v": -0.000394867,
+       "dc_gain_db": 3.26581,
+       "f3db_hz": 10348100.0,
+       "peaking_db": 0.4247899999999998,
+       "rel_pass_db": -0.43144000000000027,
+       "rel_alias_db": -47.57741,
+       "rel_wide_db": -26.73321,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.005143348,
+       "out_cm_minus_in_v": -0.000395039,
+       "dc_gain_db": 5.73796,
+       "f3db_hz": 10312700.0,
+       "peaking_db": 0.38126000000000015,
+       "rel_pass_db": -0.5014000000000003,
+       "rel_alias_db": -47.719860000000004,
+       "rel_wide_db": -26.85736,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.005143347,
+       "out_cm_minus_in_v": -0.00039525,
+       "dc_gain_db": 9.18511,
+       "f3db_hz": 10246700.0,
+       "peaking_db": 0.3011999999999997,
+       "rel_pass_db": -0.6326400000000003,
+       "rel_alias_db": -48.04161,
+       "rel_wide_db": -27.10541,
+       "cap_code": 8,
+       "qt": 6,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.005143346,
+       "out_cm_minus_in_v": -0.000395393,
+       "dc_gain_db": 11.968,
+       "f3db_hz": 10534900.0,
+       "peaking_db": 0.5831999999999997,
+       "rel_pass_db": -0.052400000000000446,
+       "rel_alias_db": -48.1927,
+       "rel_wide_db": -27.0073,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.005143345,
+       "out_cm_minus_in_v": -0.000395517,
+       "dc_gain_db": 14.9021,
+       "f3db_hz": 10418800.0,
+       "peaking_db": 0.4101999999999997,
+       "rel_pass_db": -0.289200000000001,
+       "rel_alias_db": -48.6114,
+       "rel_wide_db": -27.3976,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.005143345,
+       "out_cm_minus_in_v": -0.000395614,
+       "dc_gain_db": 17.851,
+       "f3db_hz": 10283800.0,
+       "peaking_db": 0.21390000000000242,
+       "rel_pass_db": -0.572499999999998,
+       "rel_alias_db": -49.1564,
+       "rel_wide_db": -27.863599999999998,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.005143347,
+       "out_cm_minus_in_v": -0.00039525,
+       "dc_gain_db": 20.9744,
+       "f3db_hz": 10474100.0,
+       "peaking_db": 0.6307000000000009,
+       "rel_pass_db": -0.09270000000000067,
+       "rel_alias_db": -48.7663,
+       "rel_wide_db": -27.46847,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.005143346,
+       "out_cm_minus_in_v": -0.000395393,
+       "dc_gain_db": 23.7546,
+       "f3db_hz": 10405900.0,
+       "peaking_db": 0.5304000000000002,
+       "rel_pass_db": -0.23529999999999873,
+       "rel_alias_db": -49.0813,
+       "rel_wide_db": -27.72284,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.005143345,
+       "out_cm_minus_in_v": -0.000395517,
+       "dc_gain_db": 26.6857,
+       "f3db_hz": 10289400.0,
+       "peaking_db": 0.3583999999999996,
+       "rel_pass_db": -0.4847999999999999,
+       "rel_alias_db": -49.5108,
+       "rel_wide_db": -28.129910000000002,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.005143344,
+       "out_cm_minus_in_v": -0.000395618,
+       "dc_gain_db": 29.6298,
+       "f3db_hz": 10772800.0,
+       "peaking_db": 0.05150000000000077,
+       "rel_pass_db": -0.6067,
+       "rel_alias_db": -47.120599999999996,
+       "rel_wide_db": -25.44935,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.005143347,
+       "out_cm_minus_in_v": -0.00039525,
+       "dc_gain_db": 32.7593,
+       "f3db_hz": 10284700.0,
+       "peaking_db": 0.918299999999995,
+       "rel_pass_db": 0.03259999999999508,
+       "rel_alias_db": -49.69930000000001,
+       "rel_wide_db": -28.466770000000004,
+       "cap_code": 8,
+       "qt": 4,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.005143346,
+       "out_cm_minus_in_v": -0.000395397,
+       "dc_gain_db": 35.5379,
+       "f3db_hz": 10737400.0,
+       "peaking_db": 0.4660000000000011,
+       "rel_pass_db": -0.08930000000000149,
+       "rel_alias_db": -47.2281,
+       "rel_wide_db": -25.80655,
+       "cap_code": 7,
+       "qt": 7,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.005143345,
+       "out_cm_minus_in_v": -0.000395533,
+       "dc_gain_db": 38.817,
+       "f3db_hz": 10765800.0,
+       "peaking_db": 0.4176000000000002,
+       "rel_pass_db": -0.07059999999999889,
+       "rel_alias_db": -47.6459,
+       "rel_wide_db": -26.0819,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.005143344,
+       "out_cm_minus_in_v": -0.000395624,
+       "dc_gain_db": 41.6431,
+       "f3db_hz": 10576900.0,
+       "peaking_db": 0.15380000000000393,
+       "rel_pass_db": -0.42619999999999436,
+       "rel_alias_db": -48.23556,
+       "rel_wide_db": -26.658499999999997,
+       "cap_code": 7,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       8,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -690,10 +3245,277 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 42.0034,
-     "peak_gain_db": 45.6599,
-     "f3db_hz": 20587700.0,
-     "out_cm_v": 1.658428
+     "cap_code_pga0": 20,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": -1,
+      "9": -1,
+      "12": -1,
+      "15": -1,
+      "18": -1,
+      "21": -1,
+      "24": -1,
+      "27": -1,
+      "30": -2,
+      "33": -1,
+      "36": -2,
+      "39": -2,
+      "42": -2
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 6,
+      "12": 6,
+      "15": 6,
+      "18": 6,
+      "21": 6,
+      "24": 6,
+      "27": 6,
+      "30": 6,
+      "33": 6,
+      "36": 6,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.00526062,
+       "out_cm_minus_in_v": -0.000292133,
+       "dc_gain_db": -6.15829,
+       "f3db_hz": 10359100.0,
+       "peaking_db": 0.80166,
+       "rel_pass_db": -0.00743000000000027,
+       "rel_alias_db": -48.60451,
+       "rel_wide_db": -27.700409999999998,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.00526062,
+       "out_cm_minus_in_v": -0.000292326,
+       "dc_gain_db": -2.63526,
+       "f3db_hz": 10338800.0,
+       "peaking_db": 0.7750100000000002,
+       "rel_pass_db": -0.048779999999999824,
+       "rel_alias_db": -48.94954,
+       "rel_wide_db": -27.84944,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.005260619,
+       "out_cm_minus_in_v": -0.000292465,
+       "dc_gain_db": -0.246035,
+       "f3db_hz": 10327000.0,
+       "peaking_db": 0.755156,
+       "rel_pass_db": -0.07611400000000001,
+       "rel_alias_db": -48.919465,
+       "rel_wide_db": -27.873065,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.005260619,
+       "out_cm_minus_in_v": -0.000292667,
+       "dc_gain_db": 3.27003,
+       "f3db_hz": 10304200.0,
+       "peaking_db": 0.7203599999999999,
+       "rel_pass_db": -0.12607000000000035,
+       "rel_alias_db": -49.11193,
+       "rel_wide_db": -27.98963,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.005260618,
+       "out_cm_minus_in_v": -0.000292802,
+       "dc_gain_db": 5.74286,
+       "f3db_hz": 10686400.0,
+       "peaking_db": 0.6731400000000001,
+       "rel_pass_db": 0.12939999999999952,
+       "rel_alias_db": -47.54336,
+       "rel_wide_db": -26.42696,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.005260618,
+       "out_cm_minus_in_v": -0.000292969,
+       "dc_gain_db": 9.19227,
+       "f3db_hz": 10639000.0,
+       "peaking_db": 0.6057100000000002,
+       "rel_pass_db": 0.040859999999998564,
+       "rel_alias_db": -47.75717,
+       "rel_wide_db": -26.59607,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.005260618,
+       "out_cm_minus_in_v": -0.00029308,
+       "dc_gain_db": 11.942,
+       "f3db_hz": 10590100.0,
+       "peaking_db": 0.5373999999999999,
+       "rel_pass_db": -0.05269999999999975,
+       "rel_alias_db": -47.9615,
+       "rel_wide_db": -26.7648,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.005260618,
+       "out_cm_minus_in_v": -0.000293179,
+       "dc_gain_db": 14.8895,
+       "f3db_hz": 10507400.0,
+       "peaking_db": 0.41970000000000063,
+       "rel_pass_db": -0.21330000000000027,
+       "rel_alias_db": -48.2773,
+       "rel_wide_db": -27.0434,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.005260617,
+       "out_cm_minus_in_v": -0.000293255,
+       "dc_gain_db": 17.7643,
+       "f3db_hz": 10410600.0,
+       "peaking_db": 0.2822000000000031,
+       "rel_pass_db": -0.4062999999999981,
+       "rel_alias_db": -48.6494,
+       "rel_wide_db": -27.367219999999996,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.005260618,
+       "out_cm_minus_in_v": -0.000292969,
+       "dc_gain_db": 20.9213,
+       "f3db_hz": 10500500.0,
+       "peaking_db": 0.4947000000000017,
+       "rel_pass_db": -0.1795999999999971,
+       "rel_alias_db": -48.5259,
+       "rel_wide_db": -27.179579999999998,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.005260618,
+       "out_cm_minus_in_v": -0.00029308,
+       "dc_gain_db": 23.6684,
+       "f3db_hz": 10450200.0,
+       "peaking_db": 0.4244000000000021,
+       "rel_pass_db": -0.28039999999999665,
+       "rel_alias_db": -48.741,
+       "rel_wide_db": -27.358249999999998,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.005260618,
+       "out_cm_minus_in_v": -0.000293179,
+       "dc_gain_db": 26.6122,
+       "f3db_hz": 10365200.0,
+       "peaking_db": 0.30549999999999855,
+       "rel_pass_db": -0.45289999999999964,
+       "rel_alias_db": -49.069900000000004,
+       "rel_wide_db": -27.65396,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.005260617,
+       "out_cm_minus_in_v": -0.000293254,
+       "dc_gain_db": 29.4818,
+       "f3db_hz": 10628500.0,
+       "peaking_db": 0.14969999999999928,
+       "rel_pass_db": -0.45009999999999906,
+       "rel_alias_db": -47.8639,
+       "rel_wide_db": -26.34729,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.005260618,
+       "out_cm_minus_in_v": -0.000292968,
+       "dc_gain_db": 32.6447,
+       "f3db_hz": 10308400.0,
+       "peaking_db": 0.6370000000000005,
+       "rel_pass_db": -0.20020000000000238,
+       "rel_alias_db": -49.258700000000005,
+       "rel_wide_db": -27.94762,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.005260618,
+       "out_cm_minus_in_v": -0.00029308,
+       "dc_gain_db": 35.3918,
+       "f3db_hz": 10640100.0,
+       "peaking_db": 0.5544999999999973,
+       "rel_pass_db": -0.01850000000000307,
+       "rel_alias_db": -47.856100000000005,
+       "rel_wide_db": -26.48928,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.005260617,
+       "out_cm_minus_in_v": -0.000293189,
+       "dc_gain_db": 38.6845,
+       "f3db_hz": 10548400.0,
+       "peaking_db": 0.4170000000000016,
+       "rel_pass_db": -0.1961999999999975,
+       "rel_alias_db": -48.21877,
+       "rel_wide_db": -26.8062,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.005260617,
+       "out_cm_minus_in_v": -0.00029326,
+       "dc_gain_db": 41.4375,
+       "f3db_hz": 10429600.0,
+       "peaking_db": 0.24139999999999873,
+       "rel_pass_db": -0.43130000000000024,
+       "rel_alias_db": -48.66281,
+       "rel_wide_db": -27.2078,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       20,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -701,10 +3523,277 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 42.08,
-     "peak_gain_db": 45.5056,
-     "f3db_hz": 20627000.0,
-     "out_cm_v": 1.657426
+     "cap_code_pga0": 20,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": -1,
+      "9": -1,
+      "12": -1,
+      "15": -1,
+      "18": -1,
+      "21": -1,
+      "24": -1,
+      "27": -1,
+      "30": -2,
+      "33": -2,
+      "36": -2,
+      "39": -2,
+      "42": -2
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 6,
+      "12": 6,
+      "15": 6,
+      "18": 6,
+      "21": 6,
+      "24": 6,
+      "27": 6,
+      "30": 6,
+      "33": 6,
+      "36": 6,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.005320753,
+       "out_cm_minus_in_v": -0.000299832,
+       "dc_gain_db": -6.14765,
+       "f3db_hz": 10366800.0,
+       "peaking_db": 0.7917799999999993,
+       "rel_pass_db": -0.0027100000000004343,
+       "rel_alias_db": -48.57635,
+       "rel_wide_db": -27.671350000000004,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.005320753,
+       "out_cm_minus_in_v": -0.000300016,
+       "dc_gain_db": -2.62439,
+       "f3db_hz": 10346400.0,
+       "peaking_db": 0.76509,
+       "rel_pass_db": -0.04411999999999994,
+       "rel_alias_db": -48.92091,
+       "rel_wide_db": -27.820210000000003,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.005320753,
+       "out_cm_minus_in_v": -0.000300148,
+       "dc_gain_db": -0.225404,
+       "f3db_hz": 10334800.0,
+       "peaking_db": 0.745528,
+       "rel_pass_db": -0.07105,
+       "rel_alias_db": -48.892896,
+       "rel_wide_db": -27.842896,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300342,
+       "dc_gain_db": 3.29108,
+       "f3db_hz": 10312000.0,
+       "peaking_db": 0.7109699999999997,
+       "rel_pass_db": -0.12071999999999994,
+       "rel_alias_db": -49.08628,
+       "rel_wide_db": -27.95898,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.00030047,
+       "dc_gain_db": 5.76619,
+       "f3db_hz": 10695400.0,
+       "peaking_db": 0.6638799999999998,
+       "rel_pass_db": 0.1309800000000001,
+       "rel_alias_db": -47.51999,
+       "rel_wide_db": -26.396990000000002,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.00030063,
+       "dc_gain_db": 9.22207,
+       "f3db_hz": 10648000.0,
+       "peaking_db": 0.5963999999999992,
+       "rel_pass_db": 0.04285999999999923,
+       "rel_alias_db": -47.73407,
+       "rel_wide_db": -26.565469999999998,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300738,
+       "dc_gain_db": 11.9867,
+       "f3db_hz": 10598800.0,
+       "peaking_db": 0.5277999999999992,
+       "rel_pass_db": -0.05080000000000062,
+       "rel_alias_db": -47.9396,
+       "rel_wide_db": -26.734900000000003,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300833,
+       "dc_gain_db": 14.941,
+       "f3db_hz": 10516000.0,
+       "peaking_db": 0.410499999999999,
+       "rel_pass_db": -0.21090000000000053,
+       "rel_alias_db": -48.2549,
+       "rel_wide_db": -27.012700000000002,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300906,
+       "dc_gain_db": 17.83,
+       "f3db_hz": 10418400.0,
+       "peaking_db": 0.27250000000000085,
+       "rel_pass_db": -0.40449999999999875,
+       "rel_alias_db": -48.6294,
+       "rel_wide_db": -27.338229999999996,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.00030063,
+       "dc_gain_db": 20.9635,
+       "f3db_hz": 10502300.0,
+       "peaking_db": 0.47220000000000084,
+       "rel_pass_db": -0.19350000000000023,
+       "rel_alias_db": -48.5069,
+       "rel_wide_db": -27.15573,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300738,
+       "dc_gain_db": 23.7255,
+       "f3db_hz": 10451700.0,
+       "peaking_db": 0.4021000000000008,
+       "rel_pass_db": -0.29439999999999955,
+       "rel_alias_db": -48.722899999999996,
+       "rel_wide_db": -27.33497,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300833,
+       "dc_gain_db": 26.676,
+       "f3db_hz": 10366500.0,
+       "peaking_db": 0.28440000000000154,
+       "rel_pass_db": -0.46629999999999683,
+       "rel_alias_db": -49.0507,
+       "rel_wide_db": -27.629827,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300906,
+       "dc_gain_db": 29.5598,
+       "f3db_hz": 10631800.0,
+       "peaking_db": 0.13160000000000238,
+       "rel_pass_db": -0.4629999999999974,
+       "rel_alias_db": -47.8442,
+       "rel_wide_db": -26.321849999999998,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.00030063,
+       "dc_gain_db": 32.6988,
+       "f3db_hz": 10688400.0,
+       "peaking_db": 0.6049000000000007,
+       "rel_pass_db": 0.05660000000000309,
+       "rel_alias_db": -47.6135,
+       "rel_wide_db": -26.28306,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300738,
+       "dc_gain_db": 35.4608,
+       "f3db_hz": 10636000.0,
+       "peaking_db": 0.5287000000000006,
+       "rel_pass_db": -0.043900000000000716,
+       "rel_alias_db": -47.8335,
+       "rel_wide_db": -26.463859999999997,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300842,
+       "dc_gain_db": 38.7609,
+       "f3db_hz": 10543800.0,
+       "peaking_db": 0.39220000000000255,
+       "rel_pass_db": -0.22119999999999607,
+       "rel_alias_db": -48.19603,
+       "rel_wide_db": -26.7806,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300911,
+       "dc_gain_db": 41.5291,
+       "f3db_hz": 10424100.0,
+       "peaking_db": 0.2184999999999988,
+       "rel_pass_db": -0.45660000000000167,
+       "rel_alias_db": -48.64008,
+       "rel_wide_db": -27.1827,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       20,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -712,10 +3801,277 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 41.9916,
-     "peak_gain_db": 46.3131,
-     "f3db_hz": 20582600.0,
-     "out_cm_v": 1.658259
+     "cap_code_pga0": 20,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": 0,
+      "9": 0,
+      "12": 0,
+      "15": -1,
+      "18": -1,
+      "21": -1,
+      "24": -1,
+      "27": -1,
+      "30": -1,
+      "33": -1,
+      "36": -1,
+      "39": -2,
+      "42": -2
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 6,
+      "12": 6,
+      "15": 6,
+      "18": 6,
+      "21": 6,
+      "24": 6,
+      "27": 6,
+      "30": 6,
+      "33": 6,
+      "36": 6,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.005259809,
+       "out_cm_minus_in_v": -0.000307396,
+       "dc_gain_db": -6.16354,
+       "f3db_hz": 10463600.0,
+       "peaking_db": 0.8177099999999999,
+       "rel_pass_db": 0.10347000000000062,
+       "rel_alias_db": -48.182660000000006,
+       "rel_wide_db": -27.284559999999995,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.005259809,
+       "out_cm_minus_in_v": -0.000307607,
+       "dc_gain_db": -2.64094,
+       "f3db_hz": 10442500.0,
+       "peaking_db": 0.7898800000000001,
+       "rel_pass_db": 0.06252000000000013,
+       "rel_alias_db": -48.52296,
+       "rel_wide_db": -27.43186,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.005259809,
+       "out_cm_minus_in_v": -0.000307758,
+       "dc_gain_db": -0.255301,
+       "f3db_hz": 10429800.0,
+       "peaking_db": 0.769483,
+       "rel_pass_db": 0.03431200000000001,
+       "rel_alias_db": -48.496598999999996,
+       "rel_wide_db": -27.458199,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.005259808,
+       "out_cm_minus_in_v": -0.000307979,
+       "dc_gain_db": 3.26056,
+       "f3db_hz": 10405600.0,
+       "peaking_db": 0.73427,
+       "rel_pass_db": -0.016289999999999694,
+       "rel_alias_db": -48.68976,
+       "rel_wide_db": -27.57606,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.005259808,
+       "out_cm_minus_in_v": -0.000308125,
+       "dc_gain_db": 5.73242,
+       "f3db_hz": 10384000.0,
+       "peaking_db": 0.7005399999999993,
+       "rel_pass_db": -0.06320000000000014,
+       "rel_alias_db": -48.790119999999995,
+       "rel_wide_db": -27.663420000000002,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308307,
+       "dc_gain_db": 9.17919,
+       "f3db_hz": 10343000.0,
+       "peaking_db": 0.6355400000000007,
+       "rel_pass_db": -0.15300000000000047,
+       "rel_alias_db": -49.00259,
+       "rel_wide_db": -27.83289,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308429,
+       "dc_gain_db": 11.9295,
+       "f3db_hz": 10301400.0,
+       "peaking_db": 0.5673999999999992,
+       "rel_pass_db": -0.2458000000000009,
+       "rel_alias_db": -49.2034,
+       "rel_wide_db": -27.9985,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308537,
+       "dc_gain_db": 14.8723,
+       "f3db_hz": 10614100.0,
+       "peaking_db": 0.426400000000001,
+       "rel_pass_db": -0.1349999999999998,
+       "rel_alias_db": -47.8772,
+       "rel_wide_db": -26.6453,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.00030862,
+       "dc_gain_db": 17.7551,
+       "f3db_hz": 10509700.0,
+       "peaking_db": 0.2826000000000022,
+       "rel_pass_db": -0.3327999999999989,
+       "rel_alias_db": -48.26,
+       "rel_wide_db": -26.97835,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308307,
+       "dc_gain_db": 20.9137,
+       "f3db_hz": 10612500.0,
+       "peaking_db": 0.515500000000003,
+       "rel_pass_db": -0.0840999999999994,
+       "rel_alias_db": -48.1255,
+       "rel_wide_db": -26.77966,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308429,
+       "dc_gain_db": 23.6614,
+       "f3db_hz": 10558300.0,
+       "peaking_db": 0.44010000000000105,
+       "rel_pass_db": -0.18759999999999977,
+       "rel_alias_db": -48.346599999999995,
+       "rel_wide_db": -26.96344,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308537,
+       "dc_gain_db": 26.6002,
+       "f3db_hz": 10466900.0,
+       "peaking_db": 0.3169000000000004,
+       "rel_pass_db": -0.36380000000000123,
+       "rel_alias_db": -48.6844,
+       "rel_wide_db": -27.266573,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.00030862,
+       "dc_gain_db": 29.4776,
+       "f3db_hz": 10359500.0,
+       "peaking_db": 0.1753,
+       "rel_pass_db": -0.5769999999999982,
+       "rel_alias_db": -49.0881,
+       "rel_wide_db": -27.619889999999998,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308307,
+       "dc_gain_db": 32.6424,
+       "f3db_hz": 10412600.0,
+       "peaking_db": 0.6712999999999951,
+       "rel_pass_db": -0.07050000000000267,
+       "rel_alias_db": -48.8818,
+       "rel_wide_db": -27.573690000000003,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308429,
+       "dc_gain_db": 35.3901,
+       "f3db_hz": 10366600.0,
+       "peaking_db": 0.5910000000000011,
+       "rel_pass_db": -0.1739999999999995,
+       "rel_alias_db": -49.1032,
+       "rel_wide_db": -27.757189999999998,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308547,
+       "dc_gain_db": 38.6772,
+       "f3db_hz": 10660700.0,
+       "peaking_db": 0.44239999999999924,
+       "rel_pass_db": -0.09590000000000032,
+       "rel_alias_db": -47.86152,
+       "rel_wide_db": -26.448,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308625,
+       "dc_gain_db": 41.4373,
+       "f3db_hz": 10533100.0,
+       "peaking_db": 0.25789999999999935,
+       "rel_pass_db": -0.33729999999999905,
+       "rel_alias_db": -48.31894,
+       "rel_wide_db": -26.8611,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       20,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
     },
     {
      "corner": {
@@ -723,15 +4079,976 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 42.0703,
-     "peak_gain_db": 46.1478,
-     "f3db_hz": 20626200.0,
-     "out_cm_v": 1.657204
+     "cap_code_pga0": 20,
+     "qt": 6,
+     "offset_by_pga_db": {
+      "-6": 0,
+      "-3": 0,
+      "0": 0,
+      "3": 0,
+      "6": 0,
+      "9": 0,
+      "12": 0,
+      "15": -1,
+      "18": -1,
+      "21": -1,
+      "24": -1,
+      "27": -1,
+      "30": -1,
+      "33": -1,
+      "36": -1,
+      "39": -2,
+      "42": -2
+     },
+     "qt_by_pga_db": {
+      "-6": 6,
+      "-3": 6,
+      "0": 6,
+      "3": 6,
+      "6": 6,
+      "9": 6,
+      "12": 6,
+      "15": 6,
+      "18": 6,
+      "21": 6,
+      "24": 6,
+      "27": 6,
+      "30": 6,
+      "33": 6,
+      "36": 6,
+      "39": 6,
+      "42": 6
+     },
+     "rows": {
+      "-6": {
+       "idd_a": 0.005319642,
+       "out_cm_minus_in_v": -0.00031552,
+       "dc_gain_db": -6.15262,
+       "f3db_hz": 10472700.0,
+       "peaking_db": 0.8096899999999998,
+       "rel_pass_db": 0.10937000000000019,
+       "rel_alias_db": -48.15468,
+       "rel_wide_db": -27.254080000000002,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "-3": {
+       "idd_a": 0.005319642,
+       "out_cm_minus_in_v": -0.000315721,
+       "dc_gain_db": -2.62978,
+       "f3db_hz": 10451500.0,
+       "peaking_db": 0.7810999999999997,
+       "rel_pass_db": 0.06836999999999982,
+       "rel_alias_db": -48.49452,
+       "rel_wide_db": -27.40122,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "0": {
+       "idd_a": 0.005319642,
+       "out_cm_minus_in_v": -0.000315866,
+       "dc_gain_db": -0.23413,
+       "f3db_hz": 10438900.0,
+       "peaking_db": 0.7606440000000001,
+       "rel_pass_db": 0.04055800000000001,
+       "rel_alias_db": -48.47017,
+       "rel_wide_db": -27.426669999999998,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "3": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316077,
+       "dc_gain_db": 3.28216,
+       "f3db_hz": 10414800.0,
+       "peaking_db": 0.72567,
+       "rel_pass_db": -0.00975000000000037,
+       "rel_alias_db": -48.664159999999995,
+       "rel_wide_db": -27.543960000000002,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "6": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316217,
+       "dc_gain_db": 5.75637,
+       "f3db_hz": 10393200.0,
+       "peaking_db": 0.6921899999999992,
+       "rel_pass_db": -0.0563400000000005,
+       "rel_alias_db": -48.764970000000005,
+       "rel_wide_db": -27.630770000000002,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "9": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316392,
+       "dc_gain_db": 9.20976,
+       "f3db_hz": 10352200.0,
+       "peaking_db": 0.6275600000000008,
+       "rel_pass_db": -0.14571999999999896,
+       "rel_alias_db": -48.977959999999996,
+       "rel_wide_db": -27.79976,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "12": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.00031651,
+       "dc_gain_db": 11.9754,
+       "f3db_hz": 10310500.0,
+       "peaking_db": 0.5594000000000001,
+       "rel_pass_db": -0.2386999999999997,
+       "rel_alias_db": -49.1801,
+       "rel_wide_db": -27.966,
+       "cap_code": 20,
+       "qt": 6,
+       "pass_": true
+      },
+      "15": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316614,
+       "dc_gain_db": 14.925,
+       "f3db_hz": 10624300.0,
+       "peaking_db": 0.41809999999999903,
+       "rel_pass_db": -0.13150000000000084,
+       "rel_alias_db": -47.8549,
+       "rel_wide_db": -26.613300000000002,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "18": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316695,
+       "dc_gain_db": 17.8226,
+       "f3db_hz": 10518900.0,
+       "peaking_db": 0.2734999999999985,
+       "rel_pass_db": -0.3301000000000016,
+       "rel_alias_db": -48.2404,
+       "rel_wide_db": -26.94826,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "21": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316393,
+       "dc_gain_db": 20.957,
+       "f3db_hz": 10615700.0,
+       "peaking_db": 0.49370000000000047,
+       "rel_pass_db": -0.096700000000002,
+       "rel_alias_db": -48.1065,
+       "rel_wide_db": -26.75438,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "24": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316511,
+       "dc_gain_db": 23.72,
+       "f3db_hz": 10561100.0,
+       "peaking_db": 0.4186000000000014,
+       "rel_pass_db": -0.2002999999999986,
+       "rel_alias_db": -48.328599999999994,
+       "rel_wide_db": -26.9388,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "27": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316614,
+       "dc_gain_db": 26.6656,
+       "f3db_hz": 10469600.0,
+       "peaking_db": 0.2961999999999989,
+       "rel_pass_db": -0.37590000000000146,
+       "rel_alias_db": -48.6652,
+       "rel_wide_db": -27.241069000000003,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "30": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316695,
+       "dc_gain_db": 29.5576,
+       "f3db_hz": 10361300.0,
+       "peaking_db": 0.15589999999999904,
+       "rel_pass_db": -0.5897000000000006,
+       "rel_alias_db": -49.071200000000005,
+       "rel_wide_db": -27.596130000000002,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "33": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316393,
+       "dc_gain_db": 32.6979,
+       "f3db_hz": 10408400.0,
+       "peaking_db": 0.6433999999999997,
+       "rel_pass_db": -0.0963999999999956,
+       "rel_alias_db": -48.86109999999999,
+       "rel_wide_db": -27.548849999999998,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "36": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316511,
+       "dc_gain_db": 35.4609,
+       "f3db_hz": 10362000.0,
+       "peaking_db": 0.5634999999999977,
+       "rel_pass_db": -0.2003000000000057,
+       "rel_alias_db": -49.083400000000005,
+       "rel_wide_db": -27.73299,
+       "cap_code": 19,
+       "qt": 6,
+       "pass_": true
+      },
+      "39": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316625,
+       "dc_gain_db": 38.7556,
+       "f3db_hz": 10657200.0,
+       "peaking_db": 0.4187999999999974,
+       "rel_pass_db": -0.11950000000000216,
+       "rel_alias_db": -47.8388,
+       "rel_wide_db": -26.421100000000003,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      },
+      "42": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.0003167,
+       "dc_gain_db": 41.5313,
+       "f3db_hz": 10528600.0,
+       "peaking_db": 0.23619999999999663,
+       "rel_pass_db": -0.36120000000000374,
+       "rel_alias_db": -48.296310000000005,
+       "rel_wide_db": -26.8348,
+       "cap_code": 18,
+       "qt": 6,
+       "pass_": true
+      }
+     },
+     "base_tried": [
+      [
+       20,
+       6,
+       true
+      ]
+     ],
+     "state": "pass"
+    }
+   ],
+   "note": "review fix: a single trim gave 9.41-9.58 MHz at PGA 42 dB (stage-1 noise gain 1 + k/4 and the +12 dB biquad steps lower the cutoff ~8 %); the offset table is part of the per-part calibration"
+  },
+  {
+   "id": "GX-1",
+   "metric": "wide range: per-corner cap code (0..7) and a Q code per coarse PGA state (0 / 21 / 42 dB shown) with f3 in 20..30 MHz, peaking <= 1 dB, droop <= 3 dB at 19.1 MHz",
+   "target": "pass at all 12 envelope corners",
+   "pass": true,
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "cap_code": 1,
+     "qt_by_pga_db": {
+      "0": 14,
+      "21": 11,
+      "42": 11
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.005154274,
+       "out_cm_minus_in_v": -0.000311161,
+       "dc_gain_db": -0.258161,
+       "f3db_hz": 23066500.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.28611700000000007,
+       "rel_alias_db": -8.649689,
+       "rel_wide_db": -1.7698990000000001,
+       "qt": 14
+      },
+      "21": {
+       "idd_a": 0.005154268,
+       "out_cm_minus_in_v": -0.00031165,
+       "dc_gain_db": 20.9357,
+       "f3db_hz": 25490500.0,
+       "peaking_db": 0.06029999999999802,
+       "rel_pass_db": 0.022099999999998232,
+       "rel_alias_db": -8.0153,
+       "rel_wide_db": -0.8547000000000011,
+       "qt": 11
+      },
+      "42": {
+       "idd_a": 0.005154266,
+       "out_cm_minus_in_v": -0.000311925,
+       "dc_gain_db": 41.5182,
+       "f3db_hz": 22521800.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.3826999999999998,
+       "rel_alias_db": -12.1208,
+       "rel_wide_db": -1.746299999999998,
+       "qt": 11
+      }
+     },
+     "tried": [
+      [
+       1,
+       14,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "cap_code": 0,
+     "qt_by_pga_db": {
+      "0": 14,
+      "21": 12,
+      "42": 11
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.00523862,
+       "out_cm_minus_in_v": -0.000347844,
+       "dc_gain_db": -0.230337,
+       "f3db_hz": 27524600.0,
+       "peaking_db": 0.0018579999999999985,
+       "rel_pass_db": -0.16353400000000004,
+       "rel_alias_db": -4.722383000000001,
+       "rel_wide_db": -1.145783,
+       "qt": 14
+      },
+      "21": {
+       "idd_a": 0.005238619,
+       "out_cm_minus_in_v": -0.000348397,
+       "dc_gain_db": 20.9917,
+       "f3db_hz": 27443400.0,
+       "peaking_db": 0.013499999999996959,
+       "rel_pass_db": -0.10260000000000247,
+       "rel_alias_db": -4.830000000000002,
+       "rel_wide_db": -1.1316000000000024,
+       "qt": 12
+      },
+      "42": {
+       "idd_a": 0.005238618,
+       "out_cm_minus_in_v": -0.000348721,
+       "dc_gain_db": 41.6428,
+       "f3db_hz": 26051300.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.2843000000000018,
+       "rel_alias_db": -6.927,
+       "rel_wide_db": -1.3351000000000042,
+       "qt": 11
+      }
+     },
+     "tried": [
+      [
+       0,
+       14,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "cap_code": 1,
+     "qt_by_pga_db": {
+      "0": 14,
+      "21": 11,
+      "42": 11
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.005153062,
+       "out_cm_minus_in_v": -0.000325189,
+       "dc_gain_db": -0.26743,
+       "f3db_hz": 23765100.0,
+       "peaking_db": 3.199999999997649e-05,
+       "rel_pass_db": -0.24367900000000003,
+       "rel_alias_db": -8.18908,
+       "rel_wide_db": -1.5843699999999998,
+       "qt": 14
+      },
+      "21": {
+       "idd_a": 0.005153056,
+       "out_cm_minus_in_v": -0.000325716,
+       "dc_gain_db": 20.9261,
+       "f3db_hz": 26053400.0,
+       "peaking_db": 0.07849999999999824,
+       "rel_pass_db": 0.05749999999999744,
+       "rel_alias_db": -7.565700000000001,
+       "rel_wide_db": -0.6956000000000024,
+       "qt": 11
+      },
+      "42": {
+       "idd_a": 0.005153053,
+       "out_cm_minus_in_v": -0.000326014,
+       "dc_gain_db": 41.5104,
+       "f3db_hz": 22987400.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.35539999999999594,
+       "rel_alias_db": -11.786999999999995,
+       "rel_wide_db": -1.5732999999999961,
+       "qt": 11
+      }
+     },
+     "tried": [
+      [
+       1,
+       14,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "cap_code": 1,
+     "qt_by_pga_db": {
+      "0": 14,
+      "21": 11,
+      "42": 11
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.005237355,
+       "out_cm_minus_in_v": -0.000363568,
+       "dc_gain_db": -0.239082,
+       "f3db_hz": 23121500.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.30493499999999996,
+       "rel_alias_db": -8.445198,
+       "rel_wide_db": -1.7918580000000002,
+       "qt": 14
+      },
+      "21": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.000364169,
+       "dc_gain_db": 20.9845,
+       "f3db_hz": 25680100.0,
+       "peaking_db": 0.05269999999999797,
+       "rel_pass_db": 0.00870000000000104,
+       "rel_alias_db": -7.7386,
+       "rel_wide_db": -0.8673000000000002,
+       "qt": 11
+      },
+      "42": {
+       "idd_a": 0.005237354,
+       "out_cm_minus_in_v": -0.00036452,
+       "dc_gain_db": 41.6375,
+       "f3db_hz": 22585800.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.3918000000000035,
+       "rel_alias_db": -11.874300000000002,
+       "rel_wide_db": -1.7626000000000062,
+       "qt": 11
+      }
+     },
+     "tried": [
+      [
+       1,
+       14,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "cap_code": 0,
+     "qt_by_pga_db": {
+      "0": 14,
+      "21": 11,
+      "42": 10
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.004986175,
+       "out_cm_minus_in_v": -0.000221268,
+       "dc_gain_db": -0.287953,
+       "f3db_hz": 20406600.0,
+       "peaking_db": 9.20000000000365e-05,
+       "rel_pass_db": -0.360924,
+       "rel_alias_db": -12.487947,
+       "rel_wide_db": -2.448147,
+       "qt": 14
+      },
+      "21": {
+       "idd_a": 0.004986166,
+       "out_cm_minus_in_v": -0.000221591,
+       "dc_gain_db": 20.8954,
+       "f3db_hz": 22189900.0,
+       "peaking_db": 0.0683000000000007,
+       "rel_pass_db": -0.015699999999998937,
+       "rel_alias_db": -12.790439999999998,
+       "rel_wide_db": -1.535899999999998,
+       "qt": 11
+      },
+      "42": {
+       "idd_a": 0.004986162,
+       "out_cm_minus_in_v": -0.000221755,
+       "dc_gain_db": 41.4633,
+       "f3db_hz": 20012900.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.49099999999999966,
+       "rel_alias_db": -17.272599999999997,
+       "rel_wide_db": -2.4798999999999936,
+       "qt": 10
+      }
+     },
+     "tried": [
+      [
+       0,
+       14,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "cap_code": 0,
+     "qt_by_pga_db": {
+      "0": 13,
+      "21": 10,
+      "42": 9
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.00514505,
+       "out_cm_minus_in_v": -0.000379848,
+       "dc_gain_db": -0.245267,
+       "f3db_hz": 20894400.0,
+       "peaking_db": 0.00039400000000000546,
+       "rel_pass_db": -0.334793,
+       "rel_alias_db": -11.976933,
+       "rel_wide_db": -2.261183,
+       "qt": 13
+      },
+      "21": {
+       "idd_a": 0.005145046,
+       "out_cm_minus_in_v": -0.000380449,
+       "dc_gain_db": 20.9818,
+       "f3db_hz": 22268200.0,
+       "peaking_db": 0.04870000000000019,
+       "rel_pass_db": -0.06449999999999889,
+       "rel_alias_db": -12.33481,
+       "rel_wide_db": -1.5889999999999986,
+       "qt": 10
+      },
+      "42": {
+       "idd_a": 0.005145044,
+       "out_cm_minus_in_v": -0.000380794,
+       "dc_gain_db": 41.6518,
+       "f3db_hz": 20616200.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.4146000000000001,
+       "rel_alias_db": -16.4768,
+       "rel_wide_db": -2.1651000000000025,
+       "qt": 9
+      }
+     },
+     "tried": [
+      [
+       0,
+       14,
+       false
+      ],
+      [
+       0,
+       13,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "cap_code": 0,
+     "qt_by_pga_db": {
+      "0": 14,
+      "21": 11,
+      "42": 10
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.004985481,
+       "out_cm_minus_in_v": -0.000232144,
+       "dc_gain_db": -0.297423,
+       "f3db_hz": 20987100.0,
+       "peaking_db": 0.0012139999999999929,
+       "rel_pass_db": -0.306725,
+       "rel_alias_db": -12.039076999999999,
+       "rel_wide_db": -2.2061070000000003,
+       "qt": 14
+      },
+      "21": {
+       "idd_a": 0.004985472,
+       "out_cm_minus_in_v": -0.000232492,
+       "dc_gain_db": 20.8839,
+       "f3db_hz": 22675500.0,
+       "peaking_db": 0.08689999999999998,
+       "rel_pass_db": 0.03049999999999997,
+       "rel_alias_db": -12.37866,
+       "rel_wide_db": -1.3224000000000018,
+       "qt": 11
+      },
+      "42": {
+       "idd_a": 0.004985468,
+       "out_cm_minus_in_v": -0.00023267,
+       "dc_gain_db": 41.4492,
+       "f3db_hz": 20444700.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.45759999999999934,
+       "rel_alias_db": -17.017899999999997,
+       "rel_wide_db": -2.244799999999998,
+       "qt": 10
+      }
+     },
+     "tried": [
+      [
+       0,
+       14,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "cap_code": 0,
+     "qt_by_pga_db": {
+      "0": 13,
+      "21": 10,
+      "42": 9
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.005143351,
+       "out_cm_minus_in_v": -0.000394603,
+       "dc_gain_db": -0.254262,
+       "f3db_hz": 21490400.0,
+       "peaking_db": 0.0018429999999999835,
+       "rel_pass_db": -0.28554599999999997,
+       "rel_alias_db": -11.531538,
+       "rel_wide_db": -2.0376079999999996,
+       "qt": 13
+      },
+      "21": {
+       "idd_a": 0.005143347,
+       "out_cm_minus_in_v": -0.000395249,
+       "dc_gain_db": 20.9713,
+       "f3db_hz": 22746300.0,
+       "peaking_db": 0.06259999999999977,
+       "rel_pass_db": -0.02079999999999771,
+       "rel_alias_db": -11.92361,
+       "rel_wide_db": -1.3902,
+       "qt": 10
+      },
+      "42": {
+       "idd_a": 0.005143344,
+       "out_cm_minus_in_v": -0.000395618,
+       "dc_gain_db": 41.6397,
+       "f3db_hz": 20987500.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.3847999999999985,
+       "rel_alias_db": -16.211,
+       "rel_wide_db": -1.9478000000000009,
+       "qt": 9
+      }
+     },
+     "tried": [
+      [
+       0,
+       14,
+       false
+      ],
+      [
+       0,
+       13,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "cap_code": 3,
+     "qt_by_pga_db": {
+      "0": 14,
+      "21": 11,
+      "42": 11
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.005260619,
+       "out_cm_minus_in_v": -0.000292464,
+       "dc_gain_db": -0.252101,
+       "f3db_hz": 24557100.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.249961,
+       "rel_alias_db": -7.245239000000001,
+       "rel_wide_db": -1.479899,
+       "qt": 14
+      },
+      "21": {
+       "idd_a": 0.005260618,
+       "out_cm_minus_in_v": -0.000292968,
+       "dc_gain_db": 20.9178,
+       "f3db_hz": 27313300.0,
+       "peaking_db": 0.05590000000000117,
+       "rel_pass_db": 0.045300000000001006,
+       "rel_alias_db": -6.1583000000000006,
+       "rel_wide_db": -0.5225000000000009,
+       "qt": 11
+      },
+      "42": {
+       "idd_a": 0.005260617,
+       "out_cm_minus_in_v": -0.000293259,
+       "dc_gain_db": 41.4312,
+       "f3db_hz": 24512600.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.26370000000000005,
+       "rel_alias_db": -9.532999999999998,
+       "rel_wide_db": -1.2354999999999947,
+       "qt": 11
+      }
+     },
+     "tried": [
+      [
+       3,
+       14,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "cap_code": 3,
+     "qt_by_pga_db": {
+      "0": 14,
+      "21": 11,
+      "42": 11
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.005320753,
+       "out_cm_minus_in_v": -0.000300148,
+       "dc_gain_db": -0.231791,
+       "f3db_hz": 24137400.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.285871,
+       "rel_alias_db": -7.419448999999999,
+       "rel_wide_db": -1.6007689999999999,
+       "qt": 14
+      },
+      "21": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.00030063,
+       "dc_gain_db": 20.9598,
+       "f3db_hz": 27091400.0,
+       "peaking_db": 0.039299999999997226,
+       "rel_pass_db": 0.017099999999999227,
+       "rel_alias_db": -6.293900000000001,
+       "rel_wide_db": -0.6234999999999999,
+       "qt": 11
+      },
+      "42": {
+       "idd_a": 0.005320752,
+       "out_cm_minus_in_v": -0.000300911,
+       "dc_gain_db": 41.5224,
+       "f3db_hz": 24203200.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.28940000000000055,
+       "rel_alias_db": -9.664199999999997,
+       "rel_wide_db": -1.3532999999999973,
+       "qt": 11
+      }
+     },
+     "tried": [
+      [
+       3,
+       14,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "cap_code": 3,
+     "qt_by_pga_db": {
+      "0": 14,
+      "21": 11,
+      "42": 11
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.005259809,
+       "out_cm_minus_in_v": -0.000307757,
+       "dc_gain_db": -0.261537,
+       "f3db_hz": 25214600.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.215661,
+       "rel_alias_db": -6.8088630000000006,
+       "rel_wide_db": -1.3273329999999999,
+       "qt": 14
+      },
+      "21": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308306,
+       "dc_gain_db": 20.9101,
+       "f3db_hz": 27849600.0,
+       "peaking_db": 0.07550000000000168,
+       "rel_pass_db": 0.07280000000000086,
+       "rel_alias_db": -5.725199999999999,
+       "rel_wide_db": -0.3952999999999989,
+       "qt": 11
+      },
+      "42": {
+       "idd_a": 0.005259807,
+       "out_cm_minus_in_v": -0.000308625,
+       "dc_gain_db": 41.4307,
+       "f3db_hz": 24968300.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.2424000000000035,
+       "rel_alias_db": -9.171600000000005,
+       "rel_wide_db": -1.1019000000000005,
+       "qt": 11
+      }
+     },
+     "tried": [
+      [
+       3,
+       14,
+       true
+      ]
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "cap_code": 3,
+     "qt_by_pga_db": {
+      "0": 14,
+      "21": 11,
+      "42": 11
+     },
+     "rows": {
+      "0": {
+       "idd_a": 0.005319642,
+       "out_cm_minus_in_v": -0.000315865,
+       "dc_gain_db": -0.240699,
+       "f3db_hz": 24823600.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.251261,
+       "rel_alias_db": -6.987241,
+       "rel_wide_db": -1.448501,
+       "qt": 14
+      },
+      "21": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.000316392,
+       "dc_gain_db": 20.9533,
+       "f3db_hz": 27612600.0,
+       "peaking_db": 0.054999999999999716,
+       "rel_pass_db": 0.04490000000000194,
+       "rel_alias_db": -5.8637999999999995,
+       "rel_wide_db": -0.49629999999999797,
+       "qt": 11
+      },
+      "42": {
+       "idd_a": 0.005319641,
+       "out_cm_minus_in_v": -0.0003167,
+       "dc_gain_db": 41.5244,
+       "f3db_hz": 24707400.0,
+       "peaking_db": 0.0,
+       "rel_pass_db": -0.26780000000000115,
+       "rel_alias_db": -9.305100000000003,
+       "rel_wide_db": -1.2199000000000026,
+       "qt": 11
+      }
+     },
+     "tried": [
+      [
+       3,
+       14,
+       true
+      ]
+     ],
+     "state": "pass"
     }
    ]
   },
   {
-   "metric": "corner sweep (ext, RX PGA code 21 dB: first coarse step)",
+   "id": "RC-17",
+   "metric": "PGA 42 dB, widest cap code 0, Q code 15: f3db Hz, peaking dB",
+   "target": "f3db >= 10 MHz at every corner (and the trimmed CNV-01 / GX-1 rows above hold at 42 dB)",
+   "pass": true,
    "rows": [
     {
      "corner": {
@@ -739,9 +5056,14 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 21.1603,
-     "peak_gain_db": 21.1603,
-     "f3db_hz": 17160900.0
+     "idd_a": 0.005154266,
+     "out_cm_minus_in_v": -0.000311923,
+     "dc_gain_db": 41.5129,
+     "f3db_hz": 19379800.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -0.6696000000000026,
+     "rel_alias_db": -10.047400000000003,
+     "rel_wide_db": -2.922699999999999
     },
     {
      "corner": {
@@ -749,9 +5071,14 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 21.2077,
-     "peak_gain_db": 21.2077,
-     "f3db_hz": 16850100.0
+     "idd_a": 0.005238618,
+     "out_cm_minus_in_v": -0.000348721,
+     "dc_gain_db": 41.637,
+     "f3db_hz": 18584900.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -0.7250000000000014,
+     "rel_alias_db": -10.348300000000002,
+     "rel_wide_db": -3.1514000000000024
     },
     {
      "corner": {
@@ -759,9 +5086,14 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 21.148,
-     "peak_gain_db": 21.148,
-     "f3db_hz": 17627300.0
+     "idd_a": 0.005153053,
+     "out_cm_minus_in_v": -0.000326012,
+     "dc_gain_db": 41.505,
+     "f3db_hz": 20029000.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -0.6335000000000051,
+     "rel_alias_db": -9.673500000000004,
+     "rel_wide_db": -2.7516999999999996
     },
     {
      "corner": {
@@ -769,9 +5101,14 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 21.1963,
-     "peak_gain_db": 21.1963,
-     "f3db_hz": 17360300.0
+     "idd_a": 0.005237354,
+     "out_cm_minus_in_v": -0.000364519,
+     "dc_gain_db": 41.6316,
+     "f3db_hz": 19173000.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -0.6875,
+     "rel_alias_db": -9.977,
+     "rel_wide_db": -2.979700000000001
     },
     {
      "corner": {
@@ -779,9 +5116,14 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 21.1113,
-     "peak_gain_db": 21.1113,
-     "f3db_hz": 11935600.0
+     "idd_a": 0.004986162,
+     "out_cm_minus_in_v": -0.000221757,
+     "dc_gain_db": 41.4586,
+     "f3db_hz": 14459200.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -1.186799999999998,
+     "rel_alias_db": -19.758699999999997,
+     "rel_wide_db": -5.4990999999999985
     },
     {
      "corner": {
@@ -789,9 +5131,14 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 21.1823,
-     "peak_gain_db": 21.1823,
-     "f3db_hz": 10075100.0
+     "idd_a": 0.005145044,
+     "out_cm_minus_in_v": -0.000380794,
+     "dc_gain_db": 41.6454,
+     "f3db_hz": 13692400.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -1.3143999999999991,
+     "rel_alias_db": -19.678200000000004,
+     "rel_wide_db": -5.919499999999999
     },
     {
      "corner": {
@@ -799,9 +5146,14 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 21.0981,
-     "peak_gain_db": 21.0981,
-     "f3db_hz": 12507700.0
+     "idd_a": 0.004985468,
+     "out_cm_minus_in_v": -0.000232672,
+     "dc_gain_db": 41.4444,
+     "f3db_hz": 14874600.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -1.1300000000000026,
+     "rel_alias_db": -19.470000000000002,
+     "rel_wide_db": -5.224600000000002
     },
     {
      "corner": {
@@ -809,9 +5161,14 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 21.1699,
-     "peak_gain_db": 21.1699,
-     "f3db_hz": 11088700.0
+     "idd_a": 0.005143344,
+     "out_cm_minus_in_v": -0.000395618,
+     "dc_gain_db": 41.6332,
+     "f3db_hz": 14059300.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -1.2543000000000006,
+     "rel_alias_db": -19.374200000000002,
+     "rel_wide_db": -5.649100000000004
     },
     {
      "corner": {
@@ -819,9 +5176,14 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 21.1696,
-     "peak_gain_db": 22.7179,
-     "f3db_hz": 25546600.0
+     "idd_a": 0.005260617,
+     "out_cm_minus_in_v": -0.000293258,
+     "dc_gain_db": 41.4246,
+     "f3db_hz": 30033300.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -0.271099999999997,
+     "rel_alias_db": -3.279599999999995,
+     "rel_wide_db": -1.412399999999998
     },
     {
      "corner": {
@@ -829,9 +5191,14 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 21.2046,
-     "peak_gain_db": 22.5142,
-     "f3db_hz": 25404500.0
+     "idd_a": 0.005320752,
+     "out_cm_minus_in_v": -0.00030091,
+     "dc_gain_db": 41.5154,
+     "f3db_hz": 28843200.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -0.29630000000000223,
+     "rel_alias_db": -3.5512000000000015,
+     "rel_wide_db": -1.5210000000000008
     },
     {
      "corner": {
@@ -839,9 +5206,14 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "dc_gain_db": 21.1578,
-     "peak_gain_db": 23.3853,
-     "f3db_hz": 26134900.0
+     "idd_a": 0.005259807,
+     "out_cm_minus_in_v": -0.000308624,
+     "dc_gain_db": 41.424,
+     "f3db_hz": 31360900.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -0.25139999999999674,
+     "rel_alias_db": -2.9724999999999966,
+     "rel_wide_db": -1.315800000000003
     },
     {
      "corner": {
@@ -849,20 +5221,1374 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "dc_gain_db": 21.1937,
-     "peak_gain_db": 23.1684,
-     "f3db_hz": 26058200.0
+     "idd_a": 0.005319641,
+     "out_cm_minus_in_v": -0.000316699,
+     "dc_gain_db": 41.5172,
+     "f3db_hz": 30132500.0,
+     "peaking_db": 0.0,
+     "rel_pass_db": -0.27609999999999957,
+     "rel_alias_db": -3.2486000000000033,
+     "rel_wide_db": -1.4237000000000037
+    }
+   ]
+  },
+  {
+   "id": "RC-17",
+   "metric": "PGA 42 dB, input CM 1.75 V: DC operating point. ngspice gmin/source homotopies do NOT converge on this netlist (seed = pseudo-transient); proof of a DC solution = plain Newton re-solve from a .nodeset of the seed (no homotopy, no fallback, <= 10 mV from the seed on the signal nodes); latch search = transients (uic) from 4 extreme initial states (CM 0.3 / 3.0 V, +-1 V DM on every stage output and OTA first-stage node) that must settle to the same state",
+   "target": "Newton-verified DC solution, unique across the 4 starts (+-10 mV), output CM = input CM +- 50 mV",
+   "pass": true,
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "converged": true,
+     "method": "newton",
+     "out_cm_minus_in_v": -0.000340172,
+     "out_diff_v": -9.38683e-06,
+     "starts": [
+      {
+       "start": "seed",
+       "method": "optran",
+       "ocm": -0.000510768,
+       "odm": 0.002359644
+      },
+      {
+       "start": "nodeset(seed) Newton re-solve",
+       "method": "newton",
+       "ocm": -0.000340172,
+       "odm": -9.38683e-06,
+       "n_nodes_compared": 20,
+       "max_node_dev_v": 0.0012670000000001291
+      },
+      {
+       "start": "tran uic from cmlo",
+       "n_nodes": 10,
+       "ocm": -0.000340176,
+       "odm": -9.35332e-06,
+       "odm_pp": 8.21663e-09,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from cmhi",
+       "n_nodes": 10,
+       "ocm": -0.000340174,
+       "odm": -9.36971e-06,
+       "odm_pp": 3.93761e-09,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from dmp",
+       "n_nodes": 10,
+       "ocm": -0.000340174,
+       "odm": -9.37125e-06,
+       "odm_pp": 5.85258e-09,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from dmn",
+       "n_nodes": 10,
+       "ocm": -0.000340175,
+       "odm": -9.36384e-06,
+       "odm_pp": 5.96545e-09,
+       "same_equilibrium": true
+      }
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "converged": true,
+     "method": "newton",
+     "out_cm_minus_in_v": -4.91199e-05,
+     "out_diff_v": -1.04279e-05,
+     "starts": [
+      {
+       "start": "seed",
+       "method": "optran",
+       "ocm": -5.7302e-05,
+       "odm": -0.000638126
+      },
+      {
+       "start": "nodeset(seed) Newton re-solve",
+       "method": "newton",
+       "ocm": -4.91199e-05,
+       "odm": -1.04279e-05,
+       "n_nodes_compared": 20,
+       "max_node_dev_v": 0.0003769999999998497
+      },
+      {
+       "start": "tran uic from cmlo",
+       "n_nodes": 10,
+       "ocm": -4.91229e-05,
+       "odm": -1.03776e-05,
+       "odm_pp": 3.2674e-08,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from cmhi",
+       "n_nodes": 10,
+       "ocm": -4.912e-05,
+       "odm": -1.0403e-05,
+       "odm_pp": 1.62987e-08,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from dmp",
+       "n_nodes": 10,
+       "ocm": -4.91199e-05,
+       "odm": -1.04023e-05,
+       "odm_pp": 2.3952e-08,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from dmn",
+       "n_nodes": 10,
+       "ocm": -4.91217e-05,
+       "odm": -1.03923e-05,
+       "odm_pp": 2.4344e-08,
+       "same_equilibrium": true
+      }
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "converged": true,
+     "method": "newton",
+     "out_cm_minus_in_v": -0.000301985,
+     "out_diff_v": -1.34733e-05,
+     "starts": [
+      {
+       "start": "seed",
+       "method": "optran",
+       "ocm": -0.000379204,
+       "odm": 5.380769e-06
+      },
+      {
+       "start": "nodeset(seed) Newton re-solve",
+       "method": "newton",
+       "ocm": -0.000301985,
+       "odm": -1.34733e-05,
+       "n_nodes_compared": 20,
+       "max_node_dev_v": 4.300000000001525e-05
+      },
+      {
+       "start": "tran uic from cmlo",
+       "n_nodes": 10,
+       "ocm": -0.000301988,
+       "odm": -1.3447e-05,
+       "odm_pp": 2.09029e-09,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from cmhi",
+       "n_nodes": 10,
+       "ocm": -0.000301986,
+       "odm": -1.34589e-05,
+       "odm_pp": 9.48276e-10,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from dmp",
+       "n_nodes": 10,
+       "ocm": -0.000301986,
+       "odm": -1.34608e-05,
+       "odm_pp": 1.46731e-09,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from dmn",
+       "n_nodes": 10,
+       "ocm": -0.000301988,
+       "odm": -1.34554e-05,
+       "odm_pp": 1.49749e-09,
+       "same_equilibrium": true
+      }
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "converged": true,
+     "method": "newton",
+     "out_cm_minus_in_v": -0.00033437,
+     "out_diff_v": -1.05513e-05,
+     "starts": [
+      {
+       "start": "seed",
+       "method": "optran",
+       "ocm": -0.000283022,
+       "odm": 0.004003973
+      },
+      {
+       "start": "nodeset(seed) Newton re-solve",
+       "method": "newton",
+       "ocm": -0.00033437,
+       "odm": -1.05513e-05,
+       "n_nodes_compared": 20,
+       "max_node_dev_v": 0.0019260000000000943
+      },
+      {
+       "start": "tran uic from cmlo",
+       "n_nodes": 10,
+       "ocm": -0.000334375,
+       "odm": -1.05044e-05,
+       "odm_pp": 2.65215e-08,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from cmhi",
+       "n_nodes": 10,
+       "ocm": -0.000334372,
+       "odm": -1.05293e-05,
+       "odm_pp": 1.30934e-08,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from dmp",
+       "n_nodes": 10,
+       "ocm": -0.000334372,
+       "odm": -1.05287e-05,
+       "odm_pp": 1.93562e-08,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from dmn",
+       "n_nodes": 10,
+       "ocm": -0.000334374,
+       "odm": -1.05185e-05,
+       "odm_pp": 1.97157e-08,
+       "same_equilibrium": true
+      }
+     ],
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "converged": true,
+     "method": "newton",
+     "out_cm_minus_in_v": -0.000298667,
+     "out_diff_v": -2.00223e-05,
+     "starts": [
+      {
+       "start": "seed",
+       "method": "optran",
+       "ocm": -0.000224974,
+       "odm": -0.000172963
+      },
+      {
+       "start": "nodeset(seed) Newton re-solve",
+       "method": "newton",
+       "ocm": -0.000298667,
+       "odm": -2.00223e-05,
+       "n_nodes_compared": 20,
+       "max_node_dev_v": 0.00019400000000002748
+      },
+      {
+       "start": "tran uic from cmlo",
+       "n_nodes": 10,
+       "ocm": -0.00029867,
+       "odm": -1.99962e-05,
+       "odm_pp": 2.68555e-09,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from cmhi",
+       "n_nodes": 10,
+       "ocm": -0.000298668,
+       "odm": -2.00074e-05,
+       "odm_pp": 1.23548e-09,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from dmp",
+       "n_nodes": 10,
+       "ocm": -0.000298668,
+       "odm": -2.00093e-05,
+       "odm_pp": 1.87673e-09,
+       "same_equilibrium": true
+      },
+      {
+       "start": "tran uic from dmn",
+       "n_nodes": 10,
+       "ocm": -0.000298669,
+       "odm": -2.00043e-05,
+       "odm_pp": 1.9131e-09,
+       "same_equilibrium": true
+      }
+     ],
+     "state": "pass"
+    }
+   ],
+   "note": "review fix: the fork-S row claimed plain Newton but every log showed \"Transient op started\"; bench self-test: bench-validation row (a bistable stand-in fails)"
+  },
+  {
+   "id": "RC-17",
+   "metric": "PGA 42 dB, reset cap/Q codes (8 / 6), input CM 1.75 V: supply + controls ramp 0 -> final in 2 us; output at 18..20 us",
+   "target": "no latch: output CM = input CM +- 50 mV, |diff| < 0.1 V, no oscillation",
+   "pass": true,
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "out_cm_minus_in_v": -0.000340177,
+     "out_diff_v": -9.34605e-06,
+     "out_diff_pp_v": 1.17757e-08,
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "out_cm_minus_in_v": -4.91238e-05,
+     "out_diff_v": -1.03615e-05,
+     "out_diff_pp_v": 4.95353e-08,
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "out_cm_minus_in_v": -0.000301989,
+     "out_diff_v": -1.34423e-05,
+     "out_diff_pp_v": 2.9827e-09,
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "out_cm_minus_in_v": -0.000334376,
+     "out_diff_v": -1.04911e-05,
+     "out_diff_pp_v": 3.93019e-08,
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "out_cm_minus_in_v": -0.000298671,
+     "out_diff_v": -1.99913e-05,
+     "out_diff_pp_v": 3.80829e-09,
+     "state": "pass"
+    }
+   ]
+  },
+  {
+   "id": "RC-17",
+   "metric": "stability, every validator-allowed combination: kick (20 mV, 10 ns) + held +100 mV input-CM step transient at SKEWED corners (MOS and poly-R/MIM corners independent, poly sheet +-25 %: design-assumptions.md); every stage DM and CM (s1, bp1, lp1, bp2, co) residual at 5-6 us. Worst cases by construction: lowest cap code (highest integrator frequency, lowest OTA feedback factor) at the highest allowed Q (validator: cap code <= 1 requires qt >= 6; qt 0 also run), every coarse PGA state (0/21/42 dB); cap codes 2/4/16 at qt 0 and 15; cap code 127 at PGA -6 dB (highest feedback factor)",
+   "target": "every residual < 50 uV or decaying (no sustained / growing oscillation)",
+   "pass": true,
+   "rows": [
+    {
+     "pga_db": 0,
+     "cap_code": 0,
+     "qt": 6,
+     "corner": "ssMOS_ffRC_22",
+     "worst_residual_pp_v": 4.204773240701343e-08,
+     "worst_signal": "c_bp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 2,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_22",
+     "worst_residual_pp_v": 4.140550080578009e-08,
+     "worst_signal": "c_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 0,
+     "qt": 6,
+     "corner": "ssMOS_ffRC_22",
+     "worst_residual_pp_v": 3.83761871169952e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 2,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_22",
+     "worst_residual_pp_v": 4.2237401798317364e-08,
+     "worst_signal": "c_bp2",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": -6,
+     "cap_code": 127,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 1.671721876340272e-06,
+     "worst_signal": "d_bp2",
+     "worst_f_hz": 2000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 0,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.873995657599494e-08,
+     "worst_signal": "c_bp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 0,
+     "qt": 6,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.839069151467811e-08,
+     "worst_signal": "c_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 0,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.853553254273834e-08,
+     "worst_signal": "c_bp2",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 1,
+     "qt": 6,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.8968218651902475e-08,
+     "worst_signal": "c_bp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 1,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.919873181601474e-08,
+     "worst_signal": "c_bp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 2,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.4974278140254e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 2,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.911469037554127e-08,
+     "worst_signal": "c_bp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 4,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.490207589607053e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 4,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.911469037554127e-08,
+     "worst_signal": "c_bp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 16,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.840134832344688e-08,
+     "worst_signal": "c_bp2",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 16,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.4901997736369594e-08,
+     "worst_signal": "c_bp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 21,
+     "cap_code": 0,
+     "qt": 6,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 4.613369619654861e-08,
+     "worst_signal": "c_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 21,
+     "cap_code": 0,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.859039998665992e-08,
+     "worst_signal": "c_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 21,
+     "cap_code": 1,
+     "qt": 6,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.8020199211175054e-08,
+     "worst_signal": "c_bp2",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 21,
+     "cap_code": 1,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.779815993532054e-08,
+     "worst_signal": "c_bp2",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 0,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 4.091764416180865e-08,
+     "worst_signal": "c_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 0,
+     "qt": 6,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 4.3751314349194104e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 0,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 4.1607016054712176e-08,
+     "worst_signal": "c_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 1,
+     "qt": 6,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.630609035631949e-08,
+     "worst_signal": "c_bp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 1,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.642376156243188e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 2,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 4.237406869833649e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 2,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.623829303300852e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 4,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 4.2616427498032294e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 4,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.6252280510851165e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 16,
+     "qt": 0,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 3.7095952754029327e-08,
+     "worst_signal": "c_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 16,
+     "qt": 15,
+     "corner": "ssMOS_ffRC_32",
+     "worst_residual_pp_v": 4.14188734421117e-08,
+     "worst_signal": "c_bp2",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 0,
+     "qt": 6,
+     "corner": "ffMOS_ffRC_22",
+     "worst_residual_pp_v": 2.9666649359327835e-08,
+     "worst_signal": "c_s1",
+     "worst_f_hz": 2000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 2,
+     "qt": 0,
+     "corner": "ffMOS_ffRC_22",
+     "worst_residual_pp_v": 3.145343585586602e-08,
+     "worst_signal": "c_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 0,
+     "qt": 6,
+     "corner": "ffMOS_ffRC_22",
+     "worst_residual_pp_v": 3.486190669477196e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 2,
+     "qt": 0,
+     "corner": "ffMOS_ffRC_22",
+     "worst_residual_pp_v": 3.991610486586694e-08,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": -6,
+     "cap_code": 127,
+     "qt": 0,
+     "corner": "ffMOS_ssRC_22",
+     "worst_residual_pp_v": 6.80212423745737e-05,
+     "worst_signal": "d_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 0,
+     "qt": 6,
+     "corner": "ffMOS_ssRC_22",
+     "worst_residual_pp_v": 8.035970451958363e-06,
+     "worst_signal": "c_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 42,
+     "cap_code": 0,
+     "qt": 6,
+     "corner": "ss_32",
+     "worst_residual_pp_v": 6.841170757665438e-06,
+     "worst_signal": "c_co",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": 0,
+     "cap_code": 0,
+     "qt": 6,
+     "corner": "tt_27",
+     "worst_residual_pp_v": 1.0721053573803374e-06,
+     "worst_signal": "c_lp1",
+     "worst_f_hz": 1000000.0,
+     "state": "pass"
+    },
+    {
+     "pga_db": -6,
+     "cap_code": 127,
+     "qt": 0,
+     "corner": "ff_22",
+     "worst_residual_pp_v": 3.077577873834814e-06,
+     "worst_signal": "d_bp2",
+     "worst_f_hz": 2000000.0,
+     "state": "pass"
+    }
+   ],
+   "note": "review fix (scratch/review-bbf): the fork-S design oscillated at ss MOS / fast R-MIM, cap code 0, qt 12 (2.47 V pp, 31 MHz). AC phase-sign screen over the full cap x Q x PGA grid: scratch/rf-bbf-u/gridx3.out"
+  },
+  {
+   "id": "DCOC-F",
+   "metric": "fine DC-offset DAC (sign + 8 bits into the stage-1 summing nodes): stage-1 output step, range, monotonicity",
+   "target": "LSB < 1 mV at the stage-1 output (<= ~1 % ADC FS at 42 dB), range > +-80 mV, monotonic",
+   "pass": true,
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "lsb_mv": 0.404868273027451,
+     "full_scale_mv": [
+      -103.241409622,
+      103.242290378
+     ],
+     "dnl_lsb_min": -0.10935871239396666,
+     "dnl_lsb_max": 0.32858027125165723,
+     "monotonic": true,
+     "points_mv": {
+      "0:0": 0.0,
+      "0:1": -0.39178962200000006,
+      "0:2": -0.7523826220000001,
+      "0:3": -1.1441396220000002,
+      "0:4": -1.5727896220000002,
+      "0:64": -26.047809622,
+      "0:127": -51.487209622,
+      "0:128": -52.025109622,
+      "0:129": -52.414809622,
+      "0:254": -102.853409622,
+      "0:255": -103.241409622,
+      "1:0": 0.0011807561,
+      "1:1": 0.39297067799999996,
+      "1:2": 0.753563078,
+      "1:3": 1.145323378,
+      "1:4": 1.5739673779999999,
+      "1:64": 26.048990378,
+      "1:127": 51.488390378,
+      "1:128": 52.026250378,
+      "1:129": 52.416020378,
+      "1:254": 102.854490378,
+      "1:255": 103.242290378
+     },
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "lsb_mv": 0.4708523179215686,
+     "full_scale_mv": [
+      -120.06734107,
+      120.06875892999999
+     ],
+     "dnl_lsb_min": -0.10020619231490757,
+     "dnl_lsb_max": 0.33502581610887994,
+     "monotonic": true,
+     "points_mv": {
+      "0:0": 0.0,
+      "0:1": -0.45150807000000004,
+      "0:2": -0.8751780699999999,
+      "0:3": -1.32665107,
+      "0:4": -1.83157107,
+      "0:64": -30.31054107,
+      "0:127": -59.89874107,
+      "0:128": -60.52734107,
+      "0:129": -60.97614107,
+      "0:254": -119.62134107000001,
+      "0:255": -120.06734107,
+      "1:0": 0.0013178600000000001,
+      "1:1": 0.45282603,
+      "1:2": 0.87649603,
+      "1:3": 1.32796593,
+      "1:4": 1.83288693,
+      "1:64": 30.31181893,
+      "1:127": 59.90001893,
+      "1:128": 60.52861893,
+      "1:129": 60.97746893,
+      "1:254": 119.62245893,
+      "1:255": 120.06875892999999
+     },
+     "state": "pass"
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "lsb_mv": 0.3344861167137255,
+     "full_scale_mv": [
+      -85.29395976200001,
+      85.295640238
+     ],
+     "dnl_lsb_min": -0.11849943759444237,
+     "dnl_lsb_max": 0.32346300154177854,
+     "monotonic": true,
+     "points_mv": {
+      "0:0": 0.0,
+      "0:1": -0.326339762,
+      "0:2": -0.621189762,
+      "0:3": -0.947508762,
+      "0:4": -1.2973797620000003,
+      "0:64": -21.506559762,
+      "0:127": -42.520959762000004,
+      "0:128": -42.963559762,
+      "0:129": -43.28845976200001,
+      "0:254": -84.970459762,
+      "0:255": -85.29395976200001,
+      "1:0": 0.0016804758000000001,
+      "1:1": 0.328020338,
+      "1:2": 0.6228700380000001,
+      "1:3": 0.9491893379999999,
+      "1:4": 1.299059238,
+      "1:64": 21.508250238000002,
+      "1:127": 42.52259023799999,
+      "1:128": 42.965270237999995,
+      "1:129": 43.290180238,
+      "1:254": 84.972140238,
+      "1:255": 85.295640238
+     },
+     "state": "pass"
+    }
+   ]
+  },
+  {
+   "id": "RF-RX-NF",
+   "metric": "filter noise (PGA code, reset cap/Q codes): input-referred density at 1 / 5 MHz, output rms 0.1-10 MHz, and the chain NF with the filter (F_chain + (v_in,filter / v_src at the filter input)^2; LNA + mixer gain 35.34 dB, DSB source noise at the filter input 106 nV/rtHz, chain NF without the filter 4.22 dB DSB tt / 5.936 ss (read at run time from generated/rf_rx_chain.json); AGC row = lowest PGA code meeting <= 0.3 dB at BOTH tt and ss)",
+   "target": "AGC requirement: the PGA code at sensitivity keeps the filter penalty <= 0.3 dB",
+   "agc_min_pga_db_for_0p3db": 12,
+   "chain_reference": {
+    "gain_db": 35.34,
+    "gain_db_by": {
+     "tt": 35.34,
+     "ss": 31.49
+    },
+    "nf_dsb_db": {
+     "tt": 4.2197,
+     "ss": 5.9363
+    },
+    "source": "pinned (rf_rx_chain.json as read 2026-11-12 ~00:30 UTC)",
+    "valid_runtime": false,
+    "reason": "I/Q gain differ > 3 dB; LNA gain <= 0 dB; DSB NF >= 10 dB"
+   },
+   "pass": true,
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 0,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.0003395986539732855,
+     "in_rms_v": 0.00033478604966248176,
+     "in_nv_rthz_1mhz": 100.119325,
+     "in_nv_rthz_5mhz": 101.2680411757609,
+     "chain_src_nv_rthz": 106.47700057174113,
+     "delta_f_at_5mhz": 0.904551299058724,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 4.22,
+     "chain_nf_dsb_db_with_filter": 5.498339485936467
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 6,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.0003607998973862178,
+     "in_rms_v": 0.0001797685371552645,
+     "in_nv_rthz_1mhz": 54.1705614,
+     "in_nv_rthz_5mhz": 54.49669532199318,
+     "chain_src_nv_rthz": 106.47700057174113,
+     "delta_f_at_5mhz": 0.2619562215678908,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 4.22,
+     "chain_nf_dsb_db_with_filter": 4.630238972566812
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 12,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.00040650256787652217,
+     "in_rms_v": 0.00010016819995522693,
+     "in_nv_rthz_1mhz": 30.7240394,
+     "in_nv_rthz_5mhz": 30.438427533954826,
+     "chain_src_nv_rthz": 106.47700057174113,
+     "delta_f_at_5mhz": 0.08172083739487393,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 4.22,
+     "chain_nf_dsb_db_with_filter": 4.351986643722627
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 18,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.0004935809168990009,
+     "in_rms_v": 6.342831411708109e-05,
+     "in_nv_rthz_1mhz": 20.022911200000003,
+     "in_nv_rthz_5mhz": 19.263489249029945,
+     "chain_src_nv_rthz": 106.47700057174113,
+     "delta_f_at_5mhz": 0.032730926011525344,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 4.22,
+     "chain_nf_dsb_db_with_filter": 4.273168308533714
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 21,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.001007682253241905,
+     "in_rms_v": 8.786064521461943e-05,
+     "in_nv_rthz_1mhz": 28.099860999999997,
+     "in_nv_rthz_5mhz": 27.25149041617587,
+     "chain_src_nv_rthz": 106.47700057174113,
+     "delta_f_at_5mhz": 0.06550416294562923,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 4.22,
+     "chain_nf_dsb_db_with_filter": 4.326054201308967
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 30,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.0015701924368802798,
+     "in_rms_v": 5.225850842951757e-05,
+     "in_nv_rthz_1mhz": 17.31582456,
+     "in_nv_rthz_5mhz": 16.07766175635053,
+     "chain_src_nv_rthz": 106.47700057174113,
+     "delta_f_at_5mhz": 0.022799963828802335,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 4.22,
+     "chain_nf_dsb_db_with_filter": 4.257014823544466
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 27,
+      "vdd_v": 3.3
+     },
+     "pga_db": 42,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.006205383628750421,
+     "in_rms_v": 5.1364204071524224e-05,
+     "in_nv_rthz_1mhz": 17.0804195,
+     "in_nv_rthz_5mhz": 15.810354834039387,
+     "chain_src_nv_rthz": 106.47700057174113,
+     "delta_f_at_5mhz": 0.022048122672599292,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 4.22,
+     "chain_nf_dsb_db_with_filter": 4.255789445225425
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 0,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.00039069743325916364,
+     "in_rms_v": 0.0004056350125785903,
+     "in_nv_rthz_1mhz": 110.2025702,
+     "in_nv_rthz_5mhz": 117.93518341262228,
+     "chain_src_nv_rthz": 68.35272114853932,
+     "delta_f_at_5mhz": 2.976974785307119,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 5.936,
+     "chain_nf_dsb_db_with_filter": 8.388541511749123
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 6,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.0004115019971500624,
+     "in_rms_v": 0.0002165311075748104,
+     "in_nv_rthz_1mhz": 59.6550612,
+     "in_nv_rthz_5mhz": 63.25284677784266,
+     "chain_src_nv_rthz": 68.35272114853932,
+     "delta_f_at_5mhz": 0.8563445442780098,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 5.936,
+     "chain_nf_dsb_db_with_filter": 6.793779370487039
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 12,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.0004560281165242613,
+     "in_rms_v": 0.00011959761253403424,
+     "in_nv_rthz_1mhz": 33.923068199999996,
+     "in_nv_rthz_5mhz": 35.205410932196685,
+     "chain_src_nv_rthz": 68.35272114853932,
+     "delta_f_at_5mhz": 0.2652816551504802,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 5.936,
+     "chain_nf_dsb_db_with_filter": 6.2204683091679644
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 18,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.0005405989281900814,
+     "in_rms_v": 7.455947634026374e-05,
+     "in_nv_rthz_1mhz": 22.0752582,
+     "in_nv_rthz_5mhz": 22.102811188387975,
+     "chain_src_nv_rthz": 68.35272114853932,
+     "delta_f_at_5mhz": 0.10456429416002425,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 5.936,
+     "chain_nf_dsb_db_with_filter": 6.050538703495302
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 21,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.0010838690807618981,
+     "in_rms_v": 9.923600844309781e-05,
+     "in_nv_rthz_1mhz": 30.9564408,
+     "in_nv_rthz_5mhz": 30.59653426978701,
+     "chain_src_nv_rthz": 68.35272114853932,
+     "delta_f_at_5mhz": 0.20037007206180124,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 5.936,
+     "chain_nf_dsb_db_with_filter": 6.15263438163733
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 30,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.0016525231657828028,
+     "in_rms_v": 5.8408417987728347e-05,
+     "in_nv_rthz_1mhz": 19.0355351,
+     "in_nv_rthz_5mhz": 17.95512174088202,
+     "chain_src_nv_rthz": 68.35272114853932,
+     "delta_f_at_5mhz": 0.06900254212101992,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 5.936,
+     "chain_nf_dsb_db_with_filter": 6.0120229895252635
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "pga_db": 42,
+     "cap_code": 8,
+     "qt": 6,
+     "out_rms_v": 0.006491869991191386,
+     "in_rms_v": 5.72122168484226e-05,
+     "in_nv_rthz_1mhz": 18.7761231,
+     "in_nv_rthz_5mhz": 17.634581332369965,
+     "chain_src_nv_rthz": 68.35272114853932,
+     "delta_f_at_5mhz": 0.06656082396009178,
+     "note": "chain NF with this filter: F_total = F_chain + delta_f (F linear)",
+     "chain_nf_dsb_db_no_filter": 5.936,
+     "chain_nf_dsb_db_with_filter": 6.009365874258271
+    }
+   ],
+   "note": "review fix: noise was not characterised; at PGA 0 dB the filter adds several dB, so the AGC holds the PGA at or above agc_min_pga_db_for_0p3db until the input is well above sensitivity"
+  },
+  {
+   "metric": "corner sweep (ext, RX reset cap code 8 (bw0), gain 0, reset Q code)",
+   "rows": [
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 13646300.0,
+     "dc_gain_db": -0.253398,
+     "peak_gain_db": 0.368757,
+     "idd_a": 0.005154274,
+     "out_cm_v": 1.649689
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 13680600.0,
+     "dc_gain_db": -0.225273,
+     "peak_gain_db": 0.389628,
+     "idd_a": 0.00523862,
+     "out_cm_v": 1.649652
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 13794300.0,
+     "dc_gain_db": -0.262531,
+     "peak_gain_db": 0.390364,
+     "idd_a": 0.005153062,
+     "out_cm_v": 1.649675
+    },
+    {
+     "corner": {
+      "mos": "typical",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 13832400.0,
+     "dc_gain_db": -0.233853,
+     "peak_gain_db": 0.414997,
+     "idd_a": 0.005237355,
+     "out_cm_v": 1.649636
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 10251800.0,
+     "dc_gain_db": -0.283979,
+     "peak_gain_db": 0.206847,
+     "idd_a": 0.004986175,
+     "out_cm_v": 1.649779
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 10273400.0,
+     "dc_gain_db": -0.241605,
+     "peak_gain_db": 0.206982,
+     "idd_a": 0.00514505,
+     "out_cm_v": 1.64962
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 10359100.0,
+     "dc_gain_db": -0.293339,
+     "peak_gain_db": 0.221125,
+     "idd_a": 0.004985481,
+     "out_cm_v": 1.649768
+    },
+    {
+     "corner": {
+      "mos": "ss",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 10383900.0,
+     "dc_gain_db": -0.250493,
+     "peak_gain_db": 0.222709,
+     "idd_a": 0.005143351,
+     "out_cm_v": 1.649605
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 19251600.0,
+     "dc_gain_db": -0.246316,
+     "peak_gain_db": 0.711361,
+     "idd_a": 0.005260619,
+     "out_cm_v": 1.649708
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 19292300.0,
+     "dc_gain_db": -0.22568,
+     "peak_gain_db": 0.738319,
+     "idd_a": 0.005320753,
+     "out_cm_v": 1.6497
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "f3db_hz": 19471400.0,
+     "dc_gain_db": -0.25558,
+     "peak_gain_db": 0.745272,
+     "idd_a": 0.005259809,
+     "out_cm_v": 1.649692
+    },
+    {
+     "corner": {
+      "mos": "ff",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "f3db_hz": 19516200.0,
+     "dc_gain_db": -0.234404,
+     "peak_gain_db": 0.778115,
+     "idd_a": 0.005319642,
+     "out_cm_v": 1.649684
     }
    ]
   }
  ],
  "excluded_coverage": [
-  "Q tuning codes (q1/q2) and zero-position codes not implemented: fixed pre-distorted Butterworth Qs",
-  "cutoff programmable over 4 bits (x1..x16 capacitance) only; arch cutoff_code is 8 bits",
-  "PGA -6..42 dB: stage-1 conductance k/4 (6 bits) x two +12 dB biquad steps (gainc0/1); code table netlists.GAIN_TABLE (register -> bits LUT in the digital); offset correction lives in the mixer TIA (rxmix ofs DAC), not in the filter",
-  "narrowest corner limited by the 1..16x capacitor bank (LoRa 203/406 kHz needs ~4x more range): open",
-  "finite-zero (elliptic) option removed: the extracted single-zero version gave no useful notch; all-pole only",
-  "noise not simulated; linearity only via the TX-observe HD3 points",
-  "no Monte Carlo"
- ]
+  "fully differential 5th-order Butterworth (stage-1 real pole + 2 Tow-Thomas biquads), FD two-stage OTAs with continuous CMFB to atb_vcm (fork S, bbf_fd.py); cutoff: cap code 0..127 (bw0..3 coarse x 8 + fc_fine0..2), Q: 4-bit qt (Q = q_top (1 - 0.032 k), reset 6), both set per part at bring-up (trim rows above are the per-corner codes)",
+  "PGA -6..42 dB: stage-1 conductance k/4 (6 bits) x two +12 dB biquad steps (gainc0/1); netlists.GAIN_TABLE",
+  "narrowest corner limited by the capacitor bank (~1.2 MHz): LoRa 203/406 kHz needs a lower cutoff: open",
+  "noise: rows above (filter alone + chain-NF penalty); linearity only via the TX-observe HD3 points",
+  "validator rule (FS-1): cap code <= 1 requires qt >= 6 (stability margin at the highest integrator frequency)",
+  "no Monte Carlo (CMFB and DCOC range cover mismatch offsets by design, not verified statistically)",
+  "trim search is per corner on the extracted netlist; a production calibration routine (inject + observe) is not modelled"
+ ],
+ "source_hashes_note": "netlists.py/rfrx_flow.py hashes refreshed 2026-11-12 after review: bbfilter_[iq].spice regenerates byte-identical"
 }

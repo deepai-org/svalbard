@@ -2,12 +2,12 @@
  "block": "txmix_q",
  "source_hashes": {
   "txmix_q.spice": "sha256:598f3a32be60da7224f9a57ee22a421578390ebee3fccdde95e3da716aeec5e1",
-  "circuits.py": "sha256:c8af6244384cfb858ad85036993c2ab02cf6d720367b4292acfe4df601e1c8af",
-  "layoutlib.py": "sha256:067f29bd000ba2e414787dfd146ba34e49c7f5c7c88bae3d1a4b606447c5c111",
-  "generate.py": "sha256:1d7aac03cecd7bce13996c43a809ebd42d8507039f337402fb45c8e185a12b24",
-  "simulate.py": "sha256:323f5b9eb2f1aebef6e1738227bccabcd40def9bb6404143de875ea422a6c1f5",
-  "run_benches.py": "sha256:ba6e071ba84946c39212a5e6760dd904630b6228628bce6daf12454ee7fd632a",
-  "evidence.py": "sha256:628a1f1b0201014c55c825380c6b74ac092293937b17e1660a32d3a4c1327847",
+  "circuits.py": "sha256:8a9706fa1e63bb7b34d7a7628d865f68321fb76567886c77d8fb4a873178e96b",
+  "layoutlib.py": "sha256:9fd24006dde1d26c69e9294c21a774ca4c5996bef46a2e11a82e5e2ba81b43d7",
+  "generate.py": "sha256:cc95c9d584bb1e63c126d825421cbe16af35ba33dce053737359070250d1c632",
+  "simulate.py": "sha256:d31b153c3380734f00eb157e4f0b3dfe5acdbcc24810757e72b81f074432e587",
+  "run_benches.py": "sha256:e018f2969f762e225407be830d9031d9eef77202281a4d9f15a75eb9e5ffe582",
+  "evidence.py": "sha256:4a3ba6031b6dea7ef1287a4aac22ce9a8f3f2452d1f67965a4ba7bba811ca890",
   "run_rf_tx.sh": "sha256:d95f600df754504173e6ca304efb1732f7a679c7e903ff7592efb8519c682cd8"
  },
  "output_hashes": {
@@ -37,7 +37,7 @@
      "case": "safe_reset_3p3",
      "condition": {},
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -0.3767,
+     "rail_transient_mean_uA": -0.3695,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -50,7 +50,7 @@
       "temp": 85
      },
      "rail_static_uA": 0.0001,
-     "rail_transient_mean_uA": -0.4823,
+     "rail_transient_mean_uA": -0.4776,
      "bb_dac_source_static_uA": 0.0003,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -63,7 +63,7 @@
       "temp": 0
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -0.3172,
+     "rail_transient_mean_uA": -0.311,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -77,7 +77,7 @@
       "corner": "ff"
      },
      "rail_static_uA": 0.0015,
-     "rail_transient_mean_uA": -0.5827,
+     "rail_transient_mean_uA": -0.5807,
      "bb_dac_source_static_uA": 0.0035,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -89,7 +89,7 @@
       "vdd": 0.0
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -0.3875,
+     "rail_transient_mean_uA": -0.3807,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -107,7 +107,7 @@
       "sat": 1
      },
      "rail_static_uA": -0.0,
-     "rail_transient_mean_uA": -0.3927,
+     "rail_transient_mean_uA": -0.3857,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -121,7 +121,7 @@
       "bypass": 1
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -0.3875,
+     "rail_transient_mean_uA": -0.3806,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
@@ -137,7 +137,7 @@
       "gain": 15
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -0.4914,
+     "rail_transient_mean_uA": -0.5003,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -153,7 +153,7 @@
       "ibias": 0.0
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -0.6441,
+     "rail_transient_mean_uA": -0.6442,
      "bb_dac_source_static_uA": 0.0,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -186,7 +186,7 @@
       "gain": 15
      },
      "rail_static_uA": 0.0002,
-     "rail_transient_mean_uA": -0.6183,
+     "rail_transient_mean_uA": -0.6168,
      "bb_dac_source_static_uA": 0.0001,
      "pad_source_current_mA": null,
      "criterion": "informational (block enabled)",
@@ -199,9 +199,9 @@
       "pad_drive": 3.3
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -1.5568,
+     "rail_transient_mean_uA": -0.3654,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": 89.7879,
+     "pad_source_current_mA": 4.1237,
      "criterion": "out of contract: DC-driven RF_TX (board must DC-block RF_TX)",
      "pass": null
     },
@@ -211,9 +211,9 @@
       "pad_drive": 3.3
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -0.3766,
+     "rail_transient_mean_uA": -0.3695,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": 0.0002,
+     "pad_source_current_mA": 0.0004,
      "criterion": "out of contract: DC-driven RF_TX (board must DC-block RF_TX)",
      "pass": null
     },
@@ -223,9 +223,9 @@
       "pad_drive": 0.0
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -0.3767,
+     "rail_transient_mean_uA": -0.3697,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": 0.0,
+     "pad_source_current_mA": 0.0001,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
      "pass": true
     },
@@ -236,9 +236,9 @@
       "pad_drive": 0.0
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -0.3875,
+     "rail_transient_mean_uA": -0.3808,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": 0.0002,
+     "pad_source_current_mA": 0.0004,
      "criterion": "|static| <= 1.0 uA, |transient mean| <= 10.0 uA, pad peer current < 1 mA",
      "pass": true
     },
@@ -252,9 +252,9 @@
       "gain": 15
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -0.5131,
+     "rail_transient_mean_uA": -0.5115,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": -0.868,
+     "pad_source_current_mA": -0.9308,
      "criterion": "informational (block enabled)",
      "pass": null
     },
@@ -267,9 +267,9 @@
       "bypass": 1
      },
      "rail_static_uA": 0.0,
-     "rail_transient_mean_uA": -1.1142,
+     "rail_transient_mean_uA": -0.6409,
      "bb_dac_source_static_uA": 0.0,
-     "pad_source_current_mA": -3.8184,
+     "pad_source_current_mA": -2.1533,
      "criterion": "informational (block enabled)",
      "pass": null
     },
@@ -279,8 +279,8 @@
       "kind": "ramp",
       "en_level": 0.0
      },
-     "family_rail_current_uA_at_3p63V": 9.647,
-     "peak_uA": 361.338,
+     "family_rail_current_uA_at_3p63V": 7.726,
+     "peak_uA": 504.143,
      "criterion": "<= 10.0 uA",
      "pass": true
     },
@@ -290,8 +290,8 @@
       "kind": "ramp",
       "en_level": 3.3
      },
-     "family_rail_current_uA_at_3p63V": 21225.132,
-     "peak_uA": 23413.985,
+     "family_rail_current_uA_at_3p63V": 20396.881,
+     "peak_uA": 22863.635,
      "criterion": "informational (enabled)",
      "pass": null
     }
@@ -308,7 +308,8 @@
    "lvs": {
     "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
     "result": "Final result: Circuits match uniquely.",
-    "report": "generated/txmix_q-lvs.txt"
+    "report": "generated/txmix_q-lvs.txt",
+    "name_equivalent": null
    },
    "gds_export": {
     "rule": "spec/block-deliverables.md GDS export rule",
@@ -381,30 +382,30 @@
       "dac_path_conversion_mS": 1.5135,
       "unselected_bb_leakage_out_mVpk": 0.28,
       "chain_ssb_dac": {
-       "lsb_dBm": 1.68,
-       "lo_dBm": -29.18,
-       "usb_dBm": -53.07,
-       "lsb3_dBm": -55.31,
-       "usb3_dBm": -47.41,
+       "lsb_dBm": 1.12,
+       "lo_dBm": -29.1,
+       "usb_dBm": -53.46,
+       "lsb3_dBm": -55.43,
+       "usb3_dBm": -49.02,
        "wanted": "lsb",
-       "image_rejection_dB": 54.75,
-       "lo_suppression_dBc": 30.86,
+       "image_rejection_dB": 54.58,
+       "lo_suppression_dBc": 30.22,
        "supply_mA": {
         "txmix_i": 0.0002,
         "txmix_q": 0.0002,
-        "txsum": 2.0056,
-        "rfdriver": 53.6277
+        "txsum": 2.0055,
+        "rfdriver": 53.3065
        },
        "atb_V": {
-        "rfdriver.atb_bias": 0.9349,
-        "rfdriver.atb_pre": 2.6864,
-        "rfdriver.atb_cm": 3.2677,
-        "txsum.atb_cm": 2.8344,
+        "rfdriver.atb_bias": 0.9346,
+        "rfdriver.atb_pre": 2.6928,
+        "rfdriver.atb_cm": 3.2674,
+        "txsum.atb_cm": 2.8345,
         "txmix_i.atb_bias": 0.9388,
         "txmix_i.atb_tail": 0.7162
        },
-       "pad_cm_V": 3.2525,
-       "sum_cm_V": 2.8284
+       "pad_cm_V": 3.2535,
+       "sum_cm_V": 2.8285
       }
      },
      "state": "pass"
@@ -453,7 +454,7 @@
   {
    "metric": "chain image rejection (ideal quadrature LO)",
    "target": null,
-   "achieved": 54.72,
+   "achieved": 54.53,
    "unit": "dB",
    "condition": "SSB 61 MHz, 0.3 V I/Q, extracted chain",
    "source": "generated/rf_tx-sim-ext.json",
@@ -467,73 +468,73 @@
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 95.093
+     "value": 88.95
     },
     {
      "corner": "tt",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 95.473
+     "value": 89.151
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 94.833
+     "value": 89.016
     },
     {
      "corner": "tt",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 95.214
+     "value": 89.228
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 87.072
+     "value": 83.098
     },
     {
      "corner": "ss",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 87.556
+     "value": 83.25
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 87.07
+     "value": 83.205
     },
     {
      "corner": "ss",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 87.512
+     "value": 83.379
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.15,
-     "value": 103.085
+     "value": 95.643
     },
     {
      "corner": "ff",
      "temp_C": 22,
      "vdd_V": 3.35,
-     "value": 103.533
+     "value": 95.92
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.15,
-     "value": 102.576
+     "value": 95.452
     },
     {
      "corner": "ff",
      "temp_C": 32,
      "vdd_V": 3.35,
-     "value": 103.029
+     "value": 95.738
     }
    ],
    "unit": "mVpk diff",
@@ -544,7 +545,7 @@
   {
    "metric": "schematic (no wiring parasitics) chain output for reference",
    "target": null,
-   "achieved": 5.68,
+   "achieved": 4.01,
    "unit": "dBm",
    "condition": "same bench, source netlists",
    "source": "generated/rf_tx-sim-sch.json",

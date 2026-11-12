@@ -68,139 +68,206 @@ XMP1 vbp vbp VDD VDD pfet_03v3 w=2u l=1u
 XMP2 vbp en VDD VDD pfet_03v3 w=2u l=0.28u
 .ends
 
-.subckt pt_rfrx_otaf inp inn out vbp pd VDD VSS
-XMP1 ts pd VDD VDD pfet_03v3 w=4u l=0.28u
-XMP2 ts pd VDD VDD pfet_03v3 w=4u l=0.28u
-XMP3 ts pd VDD VDD pfet_03v3 w=4u l=0.28u
-XMP4 ts pd VDD VDD pfet_03v3 w=4u l=0.28u
-XMP5 tail vbp ts VDD pfet_03v3 w=4u l=1u
-XMP6 tail vbp ts VDD pfet_03v3 w=4u l=1u
-XMP7 tail vbp ts VDD pfet_03v3 w=4u l=1u
-XMP8 tail vbp ts VDD pfet_03v3 w=4u l=1u
-XMP9 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP10 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP11 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP12 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP13 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP14 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP15 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP16 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP17 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP18 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP19 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP20 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMN1 d1 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN2 d1 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN3 d2 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN4 d2 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN5 out d2 VSS VSS nfet_03v3 w=4.5u l=0.5u
-XMN6 out d2 VSS VSS nfet_03v3 w=4.5u l=0.5u
-XMN7 out d2 VSS VSS nfet_03v3 w=4.5u l=0.5u
-XMN8 out d2 VSS VSS nfet_03v3 w=4.5u l=0.5u
-XMN9 out d2 VSS VSS nfet_03v3 w=4.5u l=0.5u
-XMN10 out d2 VSS VSS nfet_03v3 w=4.5u l=0.5u
-XMN11 out d2 VSS VSS nfet_03v3 w=4.5u l=0.5u
-XMN12 out d2 VSS VSS nfet_03v3 w=4.5u l=0.5u
-XMP21 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP22 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP23 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP24 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP25 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP26 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP27 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP28 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP29 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP30 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP31 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP32 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP33 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP34 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP35 os pd VDD VDD pfet_03v3 w=4.8u l=0.28u
-XMP36 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP37 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP38 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP39 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP40 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP41 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP42 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP43 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP44 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP45 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP46 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP47 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP48 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP49 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMP50 out vbp os VDD pfet_03v3 w=4.8u l=1u
-XMN13 d2 pd VSS VSS nfet_03v3 w=1u l=0.28u
-XR1 d2 cz VSS ppolyf_u_1k r_width=1u r_length=3u
-XC1 cz out cap_mim_2f0_m4m5_noshield c_width=12.2u c_length=12.2u
-.ends
-
-.subckt pt_rfrx_otag inp inn out vbp pd VDD VSS
-XMP1 ts pd VDD VDD pfet_03v3 w=4.57u l=0.28u
-XMP2 ts pd VDD VDD pfet_03v3 w=4.57u l=0.28u
-XMP3 ts pd VDD VDD pfet_03v3 w=4.57u l=0.28u
-XMP4 ts pd VDD VDD pfet_03v3 w=4.57u l=0.28u
-XMP5 ts pd VDD VDD pfet_03v3 w=4.57u l=0.28u
-XMP6 ts pd VDD VDD pfet_03v3 w=4.57u l=0.28u
-XMP7 ts pd VDD VDD pfet_03v3 w=4.57u l=0.28u
-XMP8 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
-XMP9 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
-XMP10 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+.subckt pt_bbf_ota inp inn outp outn vref vbp pd VDD VSS
+XMP1 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP2 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP3 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP4 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP5 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP6 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP7 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP8 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP9 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP10 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
 XMP11 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
 XMP12 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
 XMP13 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
 XMP14 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
-XMP15 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP16 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP17 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP18 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP19 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP20 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP21 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP22 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP23 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP24 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP25 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP26 d1 inn tail VDD pfet_03v3 w=5u l=0.5u
-XMP27 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP28 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP29 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP30 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP31 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP32 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP33 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP34 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP35 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP36 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP37 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMP38 d2 inp tail VDD pfet_03v3 w=5u l=0.5u
-XMN1 d1 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN2 d1 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN3 d1 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN4 d1 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN5 d2 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN6 d2 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN7 d2 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN8 d2 d1 VSS VSS nfet_03v3 w=4u l=1u
-XMN9 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN10 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN11 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN12 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN13 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN14 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN15 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN16 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN17 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN18 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN19 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN20 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN21 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN22 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
-XMN23 out d2 VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMP15 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+XMP16 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+XMP17 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+XMP18 xa inp tail VDD pfet_03v3 w=5u l=0.35u
+XMP19 xa inp tail VDD pfet_03v3 w=5u l=0.35u
+XMP20 xa inp tail VDD pfet_03v3 w=5u l=0.35u
+XMP21 xa inp tail VDD pfet_03v3 w=5u l=0.35u
+XMP22 xa inp tail VDD pfet_03v3 w=5u l=0.35u
+XMP23 xa inp tail VDD pfet_03v3 w=5u l=0.35u
+XMP24 xa inp tail VDD pfet_03v3 w=5u l=0.35u
+XMP25 xa inp tail VDD pfet_03v3 w=5u l=0.35u
+XMP26 xb inn tail VDD pfet_03v3 w=5u l=0.35u
+XMP27 xb inn tail VDD pfet_03v3 w=5u l=0.35u
+XMP28 xb inn tail VDD pfet_03v3 w=5u l=0.35u
+XMP29 xb inn tail VDD pfet_03v3 w=5u l=0.35u
+XMP30 xb inn tail VDD pfet_03v3 w=5u l=0.35u
+XMP31 xb inn tail VDD pfet_03v3 w=5u l=0.35u
+XMP32 xb inn tail VDD pfet_03v3 w=5u l=0.35u
+XMP33 xb inn tail VDD pfet_03v3 w=5u l=0.35u
+XMN1 xa cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN2 xa cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN3 xa cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN4 xa cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN5 xb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN6 xb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN7 xb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN8 xb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMP34 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP35 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP36 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP37 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP38 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
 XMP39 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
 XMP40 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
 XMP41 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP42 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP43 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP44 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP45 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP46 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP47 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP48 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP49 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP50 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP51 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP52 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP53 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP54 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP55 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP56 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP57 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP58 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP59 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP60 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP61 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP62 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMN9 outp xa VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN10 outp xa VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN11 outp xa VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN12 outp xa VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN13 outp xa VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN14 outp xa VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN15 outp xa VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN16 outp xa VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN17 outn xb VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN18 outn xb VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN19 outn xb VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN20 outn xb VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN21 outn xb VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN22 outn xb VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN23 outn xb VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMN24 outn xb VSS VSS nfet_03v3 w=4.5u l=0.5u
+XMP63 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP64 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP65 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP66 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP67 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP68 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP69 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP70 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP71 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP72 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP73 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP74 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP75 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP76 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP77 outp vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP78 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP79 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP80 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP81 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP82 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP83 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP84 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP85 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP86 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP87 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP88 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP89 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP90 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP91 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XMP92 outn vbp os VDD pfet_03v3 w=4.8u l=1u
+XR1 xa za VSS ppolyf_u_1k r_width=1u r_length=3u
+XC1 za outp cap_mim_2f0_m4m5_noshield c_width=12.2u c_length=12.2u
+XR2 xb zb VSS ppolyf_u_1k r_width=1u r_length=3u
+XC2 zb outn cap_mim_2f0_m4m5_noshield c_width=12.2u c_length=12.2u
+XR3_0 outp r3_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR3_1 r3_s1 r3_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR3_2 r3_s2 ocm VSS ppolyf_u_1k r_width=1u r_length=20u
+XR4_0 outn r4_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR4_1 r4_s1 r4_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR4_2 r4_s2 ocm VSS ppolyf_u_1k r_width=1u r_length=20u
+XC3 outp ocm cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
+XC4 outn ocm cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
+XMP93 ctl vbp ts VDD pfet_03v3 w=4u l=1u
+XMP94 ctl vbp ts VDD pfet_03v3 w=4u l=1u
+XMP95 ctl vbp ts VDD pfet_03v3 w=4u l=1u
+XMP96 ctl vbp ts VDD pfet_03v3 w=4u l=1u
+XMP97 cmfb ocm ctl VDD pfet_03v3 w=5u l=0.35u
+XMP98 cmfb ocm ctl VDD pfet_03v3 w=5u l=0.35u
+XMP99 cmfb ocm ctl VDD pfet_03v3 w=5u l=0.35u
+XMP100 cmfb ocm ctl VDD pfet_03v3 w=5u l=0.35u
+XMP101 cdump vref ctl VDD pfet_03v3 w=5u l=0.35u
+XMP102 cdump vref ctl VDD pfet_03v3 w=5u l=0.35u
+XMP103 cdump vref ctl VDD pfet_03v3 w=5u l=0.35u
+XMP104 cdump vref ctl VDD pfet_03v3 w=5u l=0.35u
+XMN25 cmfb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN26 cmfb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN27 cdump cdump VSS VSS nfet_03v3 w=4u l=1u
+XMN28 cdump cdump VSS VSS nfet_03v3 w=4u l=1u
+XMN29 xa pd VSS VSS nfet_03v3 w=1u l=0.28u
+XMN30 xb pd VSS VSS nfet_03v3 w=1u l=0.28u
+XMN31 cmfb pd VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+
+.subckt pt_bbf_ota1 inp inn outp outn vref vbp pd VDD VSS
+XMP1 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP2 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP3 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP4 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP5 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP6 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP7 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP8 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP9 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP10 ts pd VDD VDD pfet_03v3 w=4.8u l=0.28u
+XMP11 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+XMP12 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+XMP13 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+XMP14 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+XMP15 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+XMP16 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+XMP17 tail vbp ts VDD pfet_03v3 w=4.57u l=1u
+XMP18 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP19 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP20 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP21 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP22 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP23 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP24 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP25 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP26 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP27 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP28 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP29 xa inp tail VDD pfet_03v3 w=5u l=0.5u
+XMP30 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP31 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP32 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP33 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP34 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP35 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP36 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP37 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP38 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP39 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP40 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMP41 xb inn tail VDD pfet_03v3 w=5u l=0.5u
+XMN1 xa cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN2 xa cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN3 xa cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN4 xa cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN5 xb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN6 xb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN7 xb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN8 xb cmfb VSS VSS nfet_03v3 w=4u l=1u
 XMP42 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
 XMP43 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
 XMP44 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
@@ -227,41 +294,415 @@ XMP64 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
 XMP65 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
 XMP66 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
 XMP67 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
-XMP68 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP69 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP70 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP71 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP72 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP73 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP74 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP75 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP76 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP77 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP78 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP79 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP80 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP81 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP82 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP83 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP84 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP85 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP86 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP87 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP88 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP89 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP90 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP91 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP92 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP93 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP94 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP95 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMP96 out vbp os VDD pfet_03v3 w=4.97u l=1u
-XMN24 d2 pd VSS VSS nfet_03v3 w=1u l=0.28u
-XR1 d2 cz VSS ppolyf_u_1k r_width=1.33333u r_length=2u
-XC1 cz out cap_mim_2f0_m4m5_noshield c_width=12.2u c_length=12.2u
+XMP68 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP69 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP70 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP71 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP72 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP73 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP74 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP75 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP76 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP77 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP78 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP79 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP80 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP81 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP82 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP83 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP84 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP85 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP86 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP87 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP88 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP89 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP90 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP91 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP92 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP93 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP94 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP95 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP96 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP97 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP98 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMP99 os pd VDD VDD pfet_03v3 w=4.97u l=0.28u
+XMN9 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN10 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN11 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN12 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN13 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN14 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN15 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN16 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN17 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN18 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN19 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN20 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN21 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN22 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN23 outp xa VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN24 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN25 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN26 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN27 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN28 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN29 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN30 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN31 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN32 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN33 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN34 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN35 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN36 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN37 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMN38 outn xb VSS VSS nfet_03v3 w=4.8u l=0.5u
+XMP100 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP101 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP102 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP103 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP104 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP105 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP106 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP107 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP108 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP109 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP110 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP111 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP112 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP113 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP114 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP115 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP116 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP117 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP118 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP119 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP120 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP121 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP122 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP123 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP124 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP125 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP126 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP127 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP128 outp vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP129 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP130 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP131 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP132 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP133 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP134 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP135 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP136 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP137 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP138 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP139 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP140 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP141 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP142 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP143 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP144 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP145 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP146 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP147 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP148 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP149 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP150 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP151 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP152 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP153 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP154 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP155 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP156 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XMP157 outn vbp os VDD pfet_03v3 w=4.97u l=1u
+XR1 xa za VSS ppolyf_u_1k r_width=1.33333u r_length=2u
+XC1 za outp cap_mim_2f0_m4m5_noshield c_width=12.2u c_length=12.2u
+XR2 xb zb VSS ppolyf_u_1k r_width=1.33333u r_length=2u
+XC2 zb outn cap_mim_2f0_m4m5_noshield c_width=12.2u c_length=12.2u
+XR3_0 outp r3_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR3_1 r3_s1 r3_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR3_2 r3_s2 ocm VSS ppolyf_u_1k r_width=1u r_length=20u
+XR4_0 outn r4_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR4_1 r4_s1 r4_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR4_2 r4_s2 ocm VSS ppolyf_u_1k r_width=1u r_length=20u
+XC3 outp ocm cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
+XC4 outn ocm cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
+XMP158 ctl vbp ts VDD pfet_03v3 w=4u l=1u
+XMP159 ctl vbp ts VDD pfet_03v3 w=4u l=1u
+XMP160 ctl vbp ts VDD pfet_03v3 w=4u l=1u
+XMP161 ctl vbp ts VDD pfet_03v3 w=4u l=1u
+XMP162 cmfb ocm ctl VDD pfet_03v3 w=5u l=0.5u
+XMP163 cmfb ocm ctl VDD pfet_03v3 w=5u l=0.5u
+XMP164 cmfb ocm ctl VDD pfet_03v3 w=5u l=0.5u
+XMP165 cmfb ocm ctl VDD pfet_03v3 w=5u l=0.5u
+XMP166 cmfb ocm ctl VDD pfet_03v3 w=5u l=0.5u
+XMP167 cmfb ocm ctl VDD pfet_03v3 w=5u l=0.5u
+XMP168 cdump vref ctl VDD pfet_03v3 w=5u l=0.5u
+XMP169 cdump vref ctl VDD pfet_03v3 w=5u l=0.5u
+XMP170 cdump vref ctl VDD pfet_03v3 w=5u l=0.5u
+XMP171 cdump vref ctl VDD pfet_03v3 w=5u l=0.5u
+XMP172 cdump vref ctl VDD pfet_03v3 w=5u l=0.5u
+XMP173 cdump vref ctl VDD pfet_03v3 w=5u l=0.5u
+XMN39 cmfb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN40 cmfb cmfb VSS VSS nfet_03v3 w=4u l=1u
+XMN41 cdump cdump VSS VSS nfet_03v3 w=4u l=1u
+XMN42 cdump cdump VSS VSS nfet_03v3 w=4u l=1u
+XMN43 xa pd VSS VSS nfet_03v3 w=1u l=0.28u
+XMN44 xb pd VSS VSS nfet_03v3 w=1u l=0.28u
+XMN45 cmfb pd VSS VSS nfet_03v3 w=1u l=0.28u
 .ends
 
-.subckt pt_bbfilter_q rx_in_p rx_in_n tx_in_p tx_in_n inj_p inj_n out_rx_p out_rx_n out_tx_p out_tx_n obs_p obs_n ibias en dir_tx inj rx_direct byp_s1 byp_s23 obs_sel0 obs_sel1 bw0 bw1 bw2 bw3 gain0 gain1 gain2 gain3 gain4 gain5 gainc0 gainc1 qt0 qt1 island_off atb_vcm atb_vbp VDD VSS
+.subckt pt_bbf_bank a out bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VSS
+XC1 a out cap_mim_2f0_m4m5_noshield c_width=11.3u c_length=11.3u
+XMN1 a bw0 c0 VSS nfet_03v3 w=4u l=0.28u
+XC2 c0 out cap_mim_2f0_m4m5_noshield c_width=10u c_length=20u
+XMN2 a bw1 c1 VSS nfet_03v3 w=4u l=0.28u
+XMN3 a bw1 c1 VSS nfet_03v3 w=4u l=0.28u
+XC3 c1 out cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+XMN4 a bw2 c2 VSS nfet_03v3 w=4u l=0.28u
+XMN5 a bw2 c2 VSS nfet_03v3 w=4u l=0.28u
+XMN6 a bw2 c2 VSS nfet_03v3 w=4u l=0.28u
+XMN7 a bw2 c2 VSS nfet_03v3 w=4u l=0.28u
+XC4 c2 out cap_mim_2f0_m4m5_noshield c_width=20u c_length=40u
+XMN8 a bw3 c3 VSS nfet_03v3 w=4.57u l=0.28u
+XMN9 a bw3 c3 VSS nfet_03v3 w=4.57u l=0.28u
+XMN10 a bw3 c3 VSS nfet_03v3 w=4.57u l=0.28u
+XMN11 a bw3 c3 VSS nfet_03v3 w=4.57u l=0.28u
+XMN12 a bw3 c3 VSS nfet_03v3 w=4.57u l=0.28u
+XMN13 a bw3 c3 VSS nfet_03v3 w=4.57u l=0.28u
+XMN14 a bw3 c3 VSS nfet_03v3 w=4.57u l=0.28u
+XC5 c3 out cap_mim_2f0_m4m5_noshield c_width=40u c_length=40u
+XMN15 a fc_fine0 f0 VSS nfet_03v3 w=4u l=0.28u
+XC6 f0 f0m cap_mim_2f0_m4m5_noshield c_width=7.07u c_length=7.07u
+XC7 f0m out cap_mim_2f0_m4m5_noshield c_width=7.07u c_length=7.07u
+XMN16 a fc_fine1 f1 VSS nfet_03v3 w=4u l=0.28u
+XC8 f1 out cap_mim_2f0_m4m5_noshield c_width=7.07u c_length=7.07u
+XMN17 a fc_fine2 f2 VSS nfet_03v3 w=4u l=0.28u
+XC9 f2 out cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+.ends
+
+.subckt pt_bbf_bank1 a out bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VSS
+XC1 a out cap_mim_2f0_m4m5_noshield c_width=8u c_length=8u
+XMN1 a bw0 c0 VSS nfet_03v3 w=2u l=0.28u
+XC2 c0 out cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+XMN2 a bw1 c1 VSS nfet_03v3 w=4u l=0.28u
+XC3 c1 out cap_mim_2f0_m4m5_noshield c_width=10u c_length=20u
+XMN3 a bw2 c2 VSS nfet_03v3 w=4u l=0.28u
+XMN4 a bw2 c2 VSS nfet_03v3 w=4u l=0.28u
+XC4 c2 out cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+XMN5 a bw3 c3 VSS nfet_03v3 w=4u l=0.28u
+XMN6 a bw3 c3 VSS nfet_03v3 w=4u l=0.28u
+XMN7 a bw3 c3 VSS nfet_03v3 w=4u l=0.28u
+XMN8 a bw3 c3 VSS nfet_03v3 w=4u l=0.28u
+XC5 c3 out cap_mim_2f0_m4m5_noshield c_width=20u c_length=40u
+XMN9 a fc_fine0 f0 VSS nfet_03v3 w=4u l=0.28u
+XC6 f0 f0m cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
+XC7 f0m out cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
+XMN10 a fc_fine1 f1 VSS nfet_03v3 w=4u l=0.28u
+XC8 f1 out cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
+XMN11 a fc_fine2 f2 VSS nfet_03v3 w=4u l=0.28u
+XC9 f2 out cap_mim_2f0_m4m5_noshield c_width=7.07u c_length=7.07u
+.ends
+
+.subckt pt_bbf_dcdac dci_p dci_n vbp dcf0 dcf1 dcf2 dcf3 dcf4 dcf5 dcf6 dcf7 dcf_sign VDD VSS
+XMP1 nd vbp VDD VDD pfet_03v3 w=0.62u l=8u
+XMN1 nd nd VSS VSS nfet_03v3 w=4u l=4u
+XMN2 m0 nd VSS VSS nfet_03v3 w=0.5u l=16u
+XMN3 idac dcf0 m0 VSS nfet_03v3 w=1u l=0.28u
+XMN4 m1 nd VSS VSS nfet_03v3 w=1u l=16u
+XMN5 idac dcf1 m1 VSS nfet_03v3 w=1u l=0.28u
+XMN6 m2 nd VSS VSS nfet_03v3 w=2u l=16u
+XMN7 idac dcf2 m2 VSS nfet_03v3 w=1u l=0.28u
+XMN8 m3 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN9 idac dcf3 m3 VSS nfet_03v3 w=1u l=0.28u
+XMN10 m4 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN11 m4 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN12 idac dcf4 m4 VSS nfet_03v3 w=1u l=0.28u
+XMN13 m5 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN14 m5 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN15 m5 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN16 m5 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN17 idac dcf5 m5 VSS nfet_03v3 w=1u l=0.28u
+XMN18 m6 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN19 m6 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN20 m6 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN21 m6 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN22 m6 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN23 m6 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN24 m6 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN25 m6 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN26 idac dcf6 m6 VSS nfet_03v3 w=1u l=0.28u
+XMN27 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN28 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN29 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN30 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN31 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN32 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN33 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN34 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN35 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN36 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN37 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN38 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN39 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN40 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN41 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN42 m7 nd VSS VSS nfet_03v3 w=4u l=16u
+XMN43 idac dcf7 m7 VSS nfet_03v3 w=1u l=0.28u
+XX1 dcf_sign sgn_b VDD VSS pt_rfrx_inv
+XMN44 dci_p sgn_b idac VSS nfet_03v3 w=2u l=0.28u
+XMN45 dci_n dcf_sign idac VSS nfet_03v3 w=2u l=0.28u
+.ends
+
+.subckt pt_bbf_s1 in_p in_n outp outn vref vbp pd gain0 gain1 gain2 gain3 gain4 gain5 gain0_b gain1_b gain2_b gain3_b gain4_b gain5_b bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 dcf0 dcf1 dcf2 dcf3 dcf4 dcf5 dcf6 dcf7 dcf_sign VDD VSS
+XX1 dci_p dci_n vbp dcf0 dcf1 dcf2 dcf3 dcf4 dcf5 dcf6 dcf7 dcf_sign VDD VSS pt_bbf_dcdac
+XR1_0 in_p r1_s1 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR1_1 r1_s1 r1_s2 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR1_2 r1_s2 r1_s3 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR1_3 r1_s3 r1_s4 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR1_4 r1_s4 r1_s5 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR1_5 r1_s5 r1_s6 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR1_6 r1_s6 g0p VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XX2 g0p mp gain0 gain0_b VDD VSS pt_rfrx_tgs
+XR2_0 in_p r2_s1 VSS ppolyf_u_1k r_width=1u r_length=16u
+XR2_1 r2_s1 r2_s2 VSS ppolyf_u_1k r_width=1u r_length=16u
+XR2_2 r2_s2 r2_s3 VSS ppolyf_u_1k r_width=1u r_length=16u
+XR2_3 r2_s3 g1p VSS ppolyf_u_1k r_width=1u r_length=16u
+XX3 g1p mp gain1 gain1_b VDD VSS pt_rfrx_tgs
+XR3_0 in_p r3_s1 VSS ppolyf_u_1k r_width=1u r_length=16u
+XR3_1 r3_s1 g2p VSS ppolyf_u_1k r_width=1u r_length=16u
+XX4 g2p mp gain2 gain2_b VDD VSS pt_rfrx_tgs
+XR4 in_p g3p VSS ppolyf_u_1k r_width=1u r_length=16u
+XX5 g3p mp gain3 gain3_b VDD VSS pt_rfrx_tgm
+XR5 in_p g4p VSS ppolyf_u_1k r_width=1u r_length=8u
+XX6 g4p mp gain4 gain4_b VDD VSS pt_rfrx_tgm
+XR6 in_p g5p VSS ppolyf_u_1k r_width=1u r_length=4u
+XX7 g5p mp gain5 gain5_b VDD VSS pt_rfrx_tgl
+XR7_0 mp r7_s1 VSS ppolyf_u_1k r_width=1u r_length=16u
+XR7_1 r7_s1 outp VSS ppolyf_u_1k r_width=1u r_length=16u
+XR8_0 dci_p r8_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR8_1 r8_s1 r8_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR8_2 r8_s2 r8_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR8_3 r8_s3 r8_s4 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR8_4 r8_s4 mp VSS ppolyf_u_1k r_width=1u r_length=20u
+XR9_0 in_n r9_s1 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR9_1 r9_s1 r9_s2 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR9_2 r9_s2 r9_s3 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR9_3 r9_s3 r9_s4 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR9_4 r9_s4 r9_s5 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR9_5 r9_s5 r9_s6 VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XR9_6 r9_s6 g0n VSS ppolyf_u_1k r_width=1u r_length=18.29u
+XX8 g0n mn gain0 gain0_b VDD VSS pt_rfrx_tgs
+XR10_0 in_n r10_s1 VSS ppolyf_u_1k r_width=1u r_length=16u
+XR10_1 r10_s1 r10_s2 VSS ppolyf_u_1k r_width=1u r_length=16u
+XR10_2 r10_s2 r10_s3 VSS ppolyf_u_1k r_width=1u r_length=16u
+XR10_3 r10_s3 g1n VSS ppolyf_u_1k r_width=1u r_length=16u
+XX9 g1n mn gain1 gain1_b VDD VSS pt_rfrx_tgs
+XR11_0 in_n r11_s1 VSS ppolyf_u_1k r_width=1u r_length=16u
+XR11_1 r11_s1 g2n VSS ppolyf_u_1k r_width=1u r_length=16u
+XX10 g2n mn gain2 gain2_b VDD VSS pt_rfrx_tgs
+XR12 in_n g3n VSS ppolyf_u_1k r_width=1u r_length=16u
+XX11 g3n mn gain3 gain3_b VDD VSS pt_rfrx_tgm
+XR13 in_n g4n VSS ppolyf_u_1k r_width=1u r_length=8u
+XX12 g4n mn gain4 gain4_b VDD VSS pt_rfrx_tgm
+XR14 in_n g5n VSS ppolyf_u_1k r_width=1u r_length=4u
+XX13 g5n mn gain5 gain5_b VDD VSS pt_rfrx_tgl
+XR15_0 mn r15_s1 VSS ppolyf_u_1k r_width=1u r_length=16u
+XR15_1 r15_s1 outn VSS ppolyf_u_1k r_width=1u r_length=16u
+XR16_0 dci_n r16_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR16_1 r16_s1 r16_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR16_2 r16_s2 r16_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR16_3 r16_s3 r16_s4 VSS ppolyf_u_1k r_width=1u r_length=20u
+XR16_4 r16_s4 mn VSS ppolyf_u_1k r_width=1u r_length=20u
+XX14 mn mp outp outn vref vbp pd VDD VSS pt_bbf_ota1
+XX15 mp outp bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VSS pt_bbf_bank1
+XX16 mn outn bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VSS pt_bbf_bank1
+.ends
+
+.subckt pt_bbf_tta vin_p vin_n fb_p fb_n v1_p v1_n vref vbp pd gc gc_b qt0 qt0_b qt1 qt1_b qt2 qt2_b qt3 qt3_b bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VDD VSS
+XR1 vin_p mp VSS ppolyf_u_1k r_width=1u r_length=16u
+XR2 vin_p gxp VSS ppolyf_u_1k r_width=1u r_length=5.33u
+XX1 gxp mp gc gc_b VDD VSS pt_rfrx_tgl
+XR3 fb_p mp VSS ppolyf_u_1k r_width=1u r_length=16u
+XR4 v1_p q0p VSS ppolyf_u_1k r_width=5.107u r_length=2u
+XX2 v1_p q0p qt0 qt0_b VDD VSS pt_rfrx_tgs
+XR5 q0p q1p VSS ppolyf_u_1k r_width=2.554u r_length=2u
+XX3 q0p q1p qt1 qt1_b VDD VSS pt_rfrx_tgs
+XR6 q1p q2p VSS ppolyf_u_1k r_width=1.277u r_length=2u
+XX4 q1p q2p qt2 qt2_b VDD VSS pt_rfrx_tgs
+XR7 q2p q3p VSS ppolyf_u_1k r_width=1u r_length=3.13u
+XX5 q2p q3p qt3 qt3_b VDD VSS pt_rfrx_tgs
+XR8 q3p q4p VSS ppolyf_u_1k r_width=3.269u r_length=2u
+XX6 q3p q4p gc gc_b VDD VSS pt_rfrx_tgs
+XR9 q4p mp VSS ppolyf_u_1k r_width=1u r_length=5.75u
+XR10 vin_n mn VSS ppolyf_u_1k r_width=1u r_length=16u
+XR11 vin_n gxn VSS ppolyf_u_1k r_width=1u r_length=5.33u
+XX7 gxn mn gc gc_b VDD VSS pt_rfrx_tgl
+XR12 fb_n mn VSS ppolyf_u_1k r_width=1u r_length=16u
+XR13 v1_n q0n VSS ppolyf_u_1k r_width=5.107u r_length=2u
+XX8 v1_n q0n qt0 qt0_b VDD VSS pt_rfrx_tgs
+XR14 q0n q1n VSS ppolyf_u_1k r_width=2.554u r_length=2u
+XX9 q0n q1n qt1 qt1_b VDD VSS pt_rfrx_tgs
+XR15 q1n q2n VSS ppolyf_u_1k r_width=1.277u r_length=2u
+XX10 q1n q2n qt2 qt2_b VDD VSS pt_rfrx_tgs
+XR16 q2n q3n VSS ppolyf_u_1k r_width=1u r_length=3.13u
+XX11 q2n q3n qt3 qt3_b VDD VSS pt_rfrx_tgs
+XR17 q3n q4n VSS ppolyf_u_1k r_width=3.269u r_length=2u
+XX12 q3n q4n gc gc_b VDD VSS pt_rfrx_tgs
+XR18 q4n mn VSS ppolyf_u_1k r_width=1u r_length=5.75u
+XX13 mn mp v1_p v1_n vref vbp pd VDD VSS pt_bbf_ota
+XX14 mp v1_p bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VSS pt_bbf_bank
+XX15 mn v1_n bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VSS pt_bbf_bank
+.ends
+
+.subckt pt_bbf_ttq vin_p vin_n fb_p fb_n v1_p v1_n vref vbp pd gc gc_b qt0 qt0_b qt1 qt1_b qt2 qt2_b qt3 qt3_b bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VDD VSS
+XR1 vin_p mp VSS ppolyf_u_1k r_width=1u r_length=16u
+XR2 vin_p gxp VSS ppolyf_u_1k r_width=1u r_length=5.33u
+XX1 gxp mp gc gc_b VDD VSS pt_rfrx_tgl
+XR3 fb_p mp VSS ppolyf_u_1k r_width=1u r_length=16u
+XR4 v1_p q0p VSS ppolyf_u_1k r_width=1.951u r_length=2u
+XX2 v1_p q0p qt0 qt0_b VDD VSS pt_rfrx_tgs
+XR5 q0p q1p VSS ppolyf_u_1k r_width=1u r_length=2.05u
+XX3 q0p q1p qt1 qt1_b VDD VSS pt_rfrx_tgs
+XR6 q1p q2p VSS ppolyf_u_1k r_width=1u r_length=4.1u
+XX4 q1p q2p qt2 qt2_b VDD VSS pt_rfrx_tgs
+XR7 q2p q3p VSS ppolyf_u_1k r_width=1u r_length=8.2u
+XX5 q2p q3p qt3 qt3_b VDD VSS pt_rfrx_tgs
+XR8 q3p q4p VSS ppolyf_u_1k r_width=1.248u r_length=2u
+XX6 q3p q4p gc gc_b VDD VSS pt_rfrx_tgs
+XR9 q4p mp VSS ppolyf_u_1k r_width=1u r_length=15.06u
+XR10 vin_n mn VSS ppolyf_u_1k r_width=1u r_length=16u
+XR11 vin_n gxn VSS ppolyf_u_1k r_width=1u r_length=5.33u
+XX7 gxn mn gc gc_b VDD VSS pt_rfrx_tgl
+XR12 fb_n mn VSS ppolyf_u_1k r_width=1u r_length=16u
+XR13 v1_n q0n VSS ppolyf_u_1k r_width=1.951u r_length=2u
+XX8 v1_n q0n qt0 qt0_b VDD VSS pt_rfrx_tgs
+XR14 q0n q1n VSS ppolyf_u_1k r_width=1u r_length=2.05u
+XX9 q0n q1n qt1 qt1_b VDD VSS pt_rfrx_tgs
+XR15 q1n q2n VSS ppolyf_u_1k r_width=1u r_length=4.1u
+XX10 q1n q2n qt2 qt2_b VDD VSS pt_rfrx_tgs
+XR16 q2n q3n VSS ppolyf_u_1k r_width=1u r_length=8.2u
+XX11 q2n q3n qt3 qt3_b VDD VSS pt_rfrx_tgs
+XR17 q3n q4n VSS ppolyf_u_1k r_width=1.248u r_length=2u
+XX12 q3n q4n gc gc_b VDD VSS pt_rfrx_tgs
+XR18 q4n mn VSS ppolyf_u_1k r_width=1u r_length=15.06u
+XX13 mn mp v1_p v1_n vref vbp pd VDD VSS pt_bbf_ota
+XX14 mp v1_p bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VSS pt_bbf_bank
+XX15 mn v1_n bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VSS pt_bbf_bank
+.ends
+
+.subckt pt_bbf_ttb v1_p v1_n v2_p v2_n vref vbp pd bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VDD VSS
+XR1 v1_p mp VSS ppolyf_u_1k r_width=1u r_length=16u
+XC1 v1_p ldp cap_mim_2f0_m4m5_noshield c_width=8.49u c_length=8.49u
+XC2 ldp mp cap_mim_2f0_m4m5_noshield c_width=8.49u c_length=8.49u
+XR2 v1_n mn VSS ppolyf_u_1k r_width=1u r_length=16u
+XC3 v1_n ldn cap_mim_2f0_m4m5_noshield c_width=8.49u c_length=8.49u
+XC4 ldn mn cap_mim_2f0_m4m5_noshield c_width=8.49u c_length=8.49u
+XX1 mn mp v2_p v2_n vref vbp pd VDD VSS pt_bbf_ota
+XX2 mp v2_p bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VSS pt_bbf_bank
+XX3 mn v2_n bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VSS pt_bbf_bank
+.ends
+
+.subckt pt_bbf_ctl en VDD VSS dir_tx rx_direct byp_s1 byp_s23 obs_sel0 obs_sel1 gain0 gain0_b gain1 gain1_b gain2 gain2_b gain3 gain3_b gain4 gain4_b gain5 gain5_b gainc0 gainc0_b gainc1 gainc1_b qt0 qt0_b qt1 qt1_b qt2 qt2_b qt3 qt3_b inj pd1 pd23 ibias atb_vbp inj_p atb_vcm inj_n rx_in_p tx_in_p s1_p co_p out_rx_p out_tx_p obs_p island_off rx_in_n tx_in_n s1_n co_n out_rx_n out_tx_n obs_n
 XX1 en en_b VDD VSS pt_rfrx_inv
 XX2 dir_tx dir_tx_b VDD VSS pt_rfrx_inv
 XX3 rx_direct rx_direct_b VDD VSS pt_rfrx_inv
@@ -269,42 +710,40 @@ XX4 byp_s1 byp_s1_b VDD VSS pt_rfrx_inv
 XX5 byp_s23 byp_s23_b VDD VSS pt_rfrx_inv
 XX6 obs_sel0 obs_sel0_b VDD VSS pt_rfrx_inv
 XX7 obs_sel1 obs_sel1_b VDD VSS pt_rfrx_inv
-XX8 bw0 bw0_b VDD VSS pt_rfrx_inv
-XX9 bw1 bw1_b VDD VSS pt_rfrx_inv
-XX10 bw2 bw2_b VDD VSS pt_rfrx_inv
-XX11 bw3 bw3_b VDD VSS pt_rfrx_inv
-XX12 gain0 gain0_b VDD VSS pt_rfrx_inv
-XX13 gain1 gain1_b VDD VSS pt_rfrx_inv
-XX14 gain2 gain2_b VDD VSS pt_rfrx_inv
-XX15 gain3 gain3_b VDD VSS pt_rfrx_inv
-XX16 gain4 gain4_b VDD VSS pt_rfrx_inv
-XX17 gain5 gain5_b VDD VSS pt_rfrx_inv
-XX18 gainc0 gainc0_b VDD VSS pt_rfrx_inv
-XX19 gainc1 gainc1_b VDD VSS pt_rfrx_inv
-XX20 qt0 qt0_b VDD VSS pt_rfrx_inv
-XX21 qt1 qt1_b VDD VSS pt_rfrx_inv
-XX22 en_b dir_tx inj k_inrx VDD VSS pt_rfrx_nor3
-XX23 en_b dir_tx_b inj k_intx VDD VSS pt_rfrx_nor3
-XX24 en_b dir_tx rx_direct k_orx VDD VSS pt_rfrx_nor3
-XX25 en_b dir_tx_b k_otx VDD VSS pt_rfrx_nor2
-XX26 en_b rx_direct_b k_rxd VDD VSS pt_rfrx_nor2
-XX27 en_b byp_s1 k_s1run VDD VSS pt_rfrx_nor2
-XX28 en_b byp_s1_b k_s1byp VDD VSS pt_rfrx_nor2
-XX29 en_b byp_s23 k_s23run VDD VSS pt_rfrx_nor2
-XX30 en_b byp_s23_b k_s23byp VDD VSS pt_rfrx_nor2
-XX31 en_b obs_sel1 obs_sel0_b k_obs1 VDD VSS pt_rfrx_nor3
-XX32 en_b obs_sel1_b obs_sel0 k_obs2 VDD VSS pt_rfrx_nor3
-XX33 en_b obs_sel1_b obs_sel0_b k_obs3 VDD VSS pt_rfrx_nor3
-XX34 k_inrx k_inrxb VDD VSS pt_rfrx_inv
-XX35 k_otx k_otxb VDD VSS pt_rfrx_inv
-XX36 k_s1byp k_s1bypb VDD VSS pt_rfrx_inv
-XX37 k_s23byp k_s23bypb VDD VSS pt_rfrx_inv
-XX38 k_obs1 k_obs1b VDD VSS pt_rfrx_inv
-XX39 k_obs2 k_obs2b VDD VSS pt_rfrx_inv
-XX40 k_obs3 k_obs3b VDD VSS pt_rfrx_inv
-XX41 k_s1run pd1 VDD VSS pt_rfrx_inv
-XX42 k_s23run pd23 VDD VSS pt_rfrx_inv
-XX43 ibias en en_b atb_vbp VDD VSS pt_rfrx_bias
+XX8 gain0 gain0_b VDD VSS pt_rfrx_inv
+XX9 gain1 gain1_b VDD VSS pt_rfrx_inv
+XX10 gain2 gain2_b VDD VSS pt_rfrx_inv
+XX11 gain3 gain3_b VDD VSS pt_rfrx_inv
+XX12 gain4 gain4_b VDD VSS pt_rfrx_inv
+XX13 gain5 gain5_b VDD VSS pt_rfrx_inv
+XX14 gainc0 gainc0_b VDD VSS pt_rfrx_inv
+XX15 gainc1 gainc1_b VDD VSS pt_rfrx_inv
+XX16 qt0 qt0_b VDD VSS pt_rfrx_inv
+XX17 qt1 qt1_b VDD VSS pt_rfrx_inv
+XX18 qt2 qt2_b VDD VSS pt_rfrx_inv
+XX19 qt3 qt3_b VDD VSS pt_rfrx_inv
+XX20 en_b dir_tx inj k_inrx VDD VSS pt_rfrx_nor3
+XX21 en_b dir_tx_b inj k_intx VDD VSS pt_rfrx_nor3
+XX22 en_b dir_tx rx_direct k_orx VDD VSS pt_rfrx_nor3
+XX23 en_b dir_tx_b k_otx VDD VSS pt_rfrx_nor2
+XX24 en_b rx_direct_b k_rxd VDD VSS pt_rfrx_nor2
+XX25 en_b byp_s1 k_s1run VDD VSS pt_rfrx_nor2
+XX26 en_b byp_s1_b k_s1byp VDD VSS pt_rfrx_nor2
+XX27 en_b byp_s23 k_s23run VDD VSS pt_rfrx_nor2
+XX28 en_b byp_s23_b k_s23byp VDD VSS pt_rfrx_nor2
+XX29 en_b obs_sel1 obs_sel0_b k_obs1 VDD VSS pt_rfrx_nor3
+XX30 en_b obs_sel1_b obs_sel0 k_obs2 VDD VSS pt_rfrx_nor3
+XX31 en_b obs_sel1_b obs_sel0_b k_obs3 VDD VSS pt_rfrx_nor3
+XX32 k_inrx k_inrxb VDD VSS pt_rfrx_inv
+XX33 k_otx k_otxb VDD VSS pt_rfrx_inv
+XX34 k_s1byp k_s1bypb VDD VSS pt_rfrx_inv
+XX35 k_s23byp k_s23bypb VDD VSS pt_rfrx_inv
+XX36 k_obs1 k_obs1b VDD VSS pt_rfrx_inv
+XX37 k_obs2 k_obs2b VDD VSS pt_rfrx_inv
+XX38 k_obs3 k_obs3b VDD VSS pt_rfrx_inv
+XX39 k_s1run pd1 VDD VSS pt_rfrx_inv
+XX40 k_s23run pd23 VDD VSS pt_rfrx_inv
+XX41 ibias en en_b atb_vbp VDD VSS pt_rfrx_bias
 XR1_0 inj_p r1_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
 XR1_1 r1_s1 r1_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
 XR1_2 r1_s2 r1_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
@@ -326,282 +765,39 @@ XR2_7 r2_s7 r2_s8 VSS ppolyf_u_1k r_width=1u r_length=20u
 XR2_8 r2_s8 r2_s9 VSS ppolyf_u_1k r_width=1u r_length=20u
 XR2_9 r2_s9 atb_vcm VSS ppolyf_u_1k r_width=1u r_length=20u
 XC1 atb_vcm VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
-XX44 rx_in_p inj_p k_inrx k_inrxb VDD VSS pt_rfrx_tgm
-XX45 tx_in_p inj_p k_intx VSS pt_rfrx_nsw
-XX46_R1_0 inj_p X46_r1_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R1_1 X46_r1_s1 X46_r1_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R1_2 X46_r1_s2 X46_r1_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R1_3 X46_r1_s3 X46_r1_s4 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R1_4 X46_r1_s4 X46_r1_s5 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R1_5 X46_r1_s5 X46_r1_s6 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R1_6 X46_r1_s6 X46_r1_s7 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R1_7 X46_r1_s7 X46_g0 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_X1 X46_g0 X46_a gain0 gain0_b VDD VSS pt_rfrx_tgs
-XX46_R2_0 inj_p X46_r2_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R2_1 X46_r2_s1 X46_r2_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R2_2 X46_r2_s2 X46_r2_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R2_3 X46_r2_s3 X46_g1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_X2 X46_g1 X46_a gain1 gain1_b VDD VSS pt_rfrx_tgs
-XX46_R3_0 inj_p X46_r3_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R3_1 X46_r3_s1 X46_g2 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_X3 X46_g2 X46_a gain2 gain2_b VDD VSS pt_rfrx_tgs
-XX46_R4 inj_p X46_g3 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_X4 X46_g3 X46_a gain3 gain3_b VDD VSS pt_rfrx_tgm
-XX46_R5 inj_p X46_g4 VSS ppolyf_u_1k r_width=1u r_length=10u
-XX46_X5 X46_g4 X46_a gain4 gain4_b VDD VSS pt_rfrx_tgm
-XX46_R6 inj_p X46_g5 VSS ppolyf_u_1k r_width=1u r_length=5u
-XX46_X6 X46_g5 X46_a gain5 gain5_b VDD VSS pt_rfrx_tgl
-XX46_R7_0 X46_a X46_r7_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_R7_1 X46_r7_s1 s1_n VSS ppolyf_u_1k r_width=1u r_length=20u
-XX46_X7_X1 atb_vcm X46_a s1_n atb_vbp pd1 VDD VSS pt_rfrx_otag
-XX46_X7_C1 X46_a s1_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-XX46_X7_X2 X46_a X46_X7_c_bw0 bw0 bw0_b VDD VSS pt_rfrx_tgs
-XX46_X7_C2 X46_X7_c_bw0 s1_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-XX46_X7_X3 X46_a X46_X7_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
-XX46_X7_C3 X46_X7_c_bw1 s1_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-XX46_X7_X4 X46_a X46_X7_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XX46_X7_C4 X46_X7_c_bw2 s1_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-XX46_X7_X5 X46_a X46_X7_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XX46_X7_C5 X46_X7_c_bw3 s1_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-XX47 inj_p s1_p k_s1byp k_s1bypb VDD VSS pt_rfrx_tgm
-XX48_R1_0 s1_p X48_r1_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R1_1 X48_r1_s1 X48_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R2 s1_p X48_gx VSS ppolyf_u_1k r_width=1u r_length=13.33u
-XX48_X1 X48_gx X48_a gainc0 gainc0_b VDD VSS pt_rfrx_tgm
-XX48_X2 bp1_p X48_lx gainc0 gainc0_b VDD VSS pt_rfrx_tgs
-XX48_C1 X48_lx X48_ly cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX48_C2 X48_ly X48_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX48_R3_0 X48_v3 X48_r3_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R3_1 X48_r3_s1 X48_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R4_0 bp1_p X48_r4_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R4_1 X48_r4_s1 X48_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R5_0 bp1_p X48_r5_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R5_1 X48_r5_s1 X48_r5_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R5_2 X48_r5_s2 X48_r5_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R5_3 X48_r5_s3 X48_r5_s4 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R5_4 X48_r5_s4 X48_r5_s5 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R5_5 X48_r5_s5 X48_r5_s6 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R5_6 X48_r5_s6 X48_r5_s7 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R5_7 X48_r5_s7 X48_q_qt0 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_X3 X48_q_qt0 X48_a qt0 qt0_b VDD VSS pt_rfrx_tgs
-XX48_R6_0 bp1_p X48_r6_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R6_1 X48_r6_s1 X48_r6_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R6_2 X48_r6_s2 X48_r6_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R6_3 X48_r6_s3 X48_q_qt1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_X4 X48_q_qt1 X48_a qt1 qt1_b VDD VSS pt_rfrx_tgs
-XX48_X5_X1 atb_vcm X48_a bp1_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX48_X5_C1 X48_a bp1_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-XX48_X5_X2 X48_a X48_X5_c_bw0 bw0 bw0_b VDD VSS pt_rfrx_tgs
-XX48_X5_C2 X48_X5_c_bw0 bp1_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-XX48_X5_X3 X48_a X48_X5_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
-XX48_X5_C3 X48_X5_c_bw1 bp1_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-XX48_X5_X4 X48_a X48_X5_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XX48_X5_C4 X48_X5_c_bw2 bp1_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-XX48_X5_X5 X48_a X48_X5_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XX48_X5_C5 X48_X5_c_bw3 bp1_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-XX48_R7_0 bp1_p X48_r7_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R7_1 X48_r7_s1 X48_b VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_C3 bp1_p X48_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX48_X6_X1 atb_vcm X48_b lp1_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX48_X6_C1 X48_b lp1_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-XX48_X6_X2 X48_b X48_X6_c_bw0 bw0 bw0_b VDD VSS pt_rfrx_tgs
-XX48_X6_C2 X48_X6_c_bw0 lp1_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-XX48_X6_X3 X48_b X48_X6_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
-XX48_X6_C3 X48_X6_c_bw1 lp1_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-XX48_X6_X4 X48_b X48_X6_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XX48_X6_C4 X48_X6_c_bw2 lp1_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-XX48_X6_X5 X48_b X48_X6_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XX48_X6_C5 X48_X6_c_bw3 lp1_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-XX48_R8_0 lp1_p X48_r8_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R8_1 X48_r8_s1 X48_c VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R9_0 X48_v3 X48_r9_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_R9_1 X48_r9_s1 X48_c VSS ppolyf_u_1k r_width=1u r_length=20u
-XX48_X7 atb_vcm X48_c X48_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX49_R1_0 lp1_p X49_r1_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_R1_1 X49_r1_s1 X49_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_R2 lp1_p X49_gx VSS ppolyf_u_1k r_width=1u r_length=13.33u
-XX49_X1 X49_gx X49_a gainc1 gainc1_b VDD VSS pt_rfrx_tgm
-XX49_X2 bp2_p X49_lx gainc1 gainc1_b VDD VSS pt_rfrx_tgs
-XX49_C1 X49_lx X49_ly cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX49_C2 X49_ly X49_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX49_R3_0 X49_v3 X49_r3_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_R3_1 X49_r3_s1 X49_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_R4 bp2_p X49_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_X3_X1 atb_vcm X49_a bp2_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX49_X3_C1 X49_a bp2_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-XX49_X3_X2 X49_a X49_X3_c_bw0 bw0 bw0_b VDD VSS pt_rfrx_tgs
-XX49_X3_C2 X49_X3_c_bw0 bp2_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-XX49_X3_X3 X49_a X49_X3_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
-XX49_X3_C3 X49_X3_c_bw1 bp2_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-XX49_X3_X4 X49_a X49_X3_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XX49_X3_C4 X49_X3_c_bw2 bp2_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-XX49_X3_X5 X49_a X49_X3_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XX49_X3_C5 X49_X3_c_bw3 bp2_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-XX49_R5_0 bp2_p X49_r5_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_R5_1 X49_r5_s1 X49_b VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_C3 bp2_p X49_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX49_X4_X1 atb_vcm X49_b co_p atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX49_X4_C1 X49_b co_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-XX49_X4_X2 X49_b X49_X4_c_bw0 bw0 bw0_b VDD VSS pt_rfrx_tgs
-XX49_X4_C2 X49_X4_c_bw0 co_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-XX49_X4_X3 X49_b X49_X4_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
-XX49_X4_C3 X49_X4_c_bw1 co_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-XX49_X4_X4 X49_b X49_X4_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XX49_X4_C4 X49_X4_c_bw2 co_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-XX49_X4_X5 X49_b X49_X4_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XX49_X4_C5 X49_X4_c_bw3 co_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-XX49_R6_0 co_p X49_r6_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_R6_1 X49_r6_s1 X49_c VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_R7_0 X49_v3 X49_r7_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_R7_1 X49_r7_s1 X49_c VSS ppolyf_u_1k r_width=1u r_length=20u
-XX49_X5 atb_vcm X49_c X49_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX50 s1_p co_p k_s23byp k_s23bypb VDD VSS pt_rfrx_tgm
-XX51 co_p out_rx_p k_orx VSS pt_rfrx_nsw
-XX52 co_p out_tx_p k_otx k_otxb VDD VSS pt_rfrx_tgm
-XX53 rx_in_p out_rx_p k_rxd VSS pt_rfrx_nsw
-XX54 rx_in_p obs_p k_obs1 k_obs1b VDD VSS pt_rfrx_tgs
-XX55 s1_p obs_p k_obs2 k_obs2b VDD VSS pt_rfrx_tgs
-XX56 co_p obs_p k_obs3 k_obs3b VDD VSS pt_rfrx_tgs
+XX42 rx_in_p inj_p k_inrx k_inrxb VDD VSS pt_rfrx_tgm
+XX43 tx_in_p inj_p k_intx VSS pt_rfrx_nsw
+XX44 inj_p s1_p k_s1byp k_s1bypb VDD VSS pt_rfrx_tgm
+XX45 s1_p co_p k_s23byp k_s23bypb VDD VSS pt_rfrx_tgm
+XX46 co_p out_rx_p k_orx VSS pt_rfrx_nsw
+XX47 co_p out_tx_p k_otx k_otxb VDD VSS pt_rfrx_tgm
+XX48 rx_in_p out_rx_p k_rxd VSS pt_rfrx_nsw
+XX49 rx_in_p obs_p k_obs1 k_obs1b VDD VSS pt_rfrx_tgs
+XX50 s1_p obs_p k_obs2 k_obs2b VDD VSS pt_rfrx_tgs
+XX51 co_p obs_p k_obs3 k_obs3b VDD VSS pt_rfrx_tgs
 XMN1 out_rx_p island_off VSS VSS nfet_03v3 w=1u l=10u
 XMN2 out_tx_p island_off VSS VSS nfet_03v3 w=1u l=10u
 XMN3 obs_p island_off VSS VSS nfet_03v3 w=1u l=10u
-XX57 rx_in_n inj_n k_inrx k_inrxb VDD VSS pt_rfrx_tgm
-XX58 tx_in_n inj_n k_intx VSS pt_rfrx_nsw
-XX59_R1_0 inj_n X59_r1_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R1_1 X59_r1_s1 X59_r1_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R1_2 X59_r1_s2 X59_r1_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R1_3 X59_r1_s3 X59_r1_s4 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R1_4 X59_r1_s4 X59_r1_s5 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R1_5 X59_r1_s5 X59_r1_s6 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R1_6 X59_r1_s6 X59_r1_s7 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R1_7 X59_r1_s7 X59_g0 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_X1 X59_g0 X59_a gain0 gain0_b VDD VSS pt_rfrx_tgs
-XX59_R2_0 inj_n X59_r2_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R2_1 X59_r2_s1 X59_r2_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R2_2 X59_r2_s2 X59_r2_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R2_3 X59_r2_s3 X59_g1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_X2 X59_g1 X59_a gain1 gain1_b VDD VSS pt_rfrx_tgs
-XX59_R3_0 inj_n X59_r3_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R3_1 X59_r3_s1 X59_g2 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_X3 X59_g2 X59_a gain2 gain2_b VDD VSS pt_rfrx_tgs
-XX59_R4 inj_n X59_g3 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_X4 X59_g3 X59_a gain3 gain3_b VDD VSS pt_rfrx_tgm
-XX59_R5 inj_n X59_g4 VSS ppolyf_u_1k r_width=1u r_length=10u
-XX59_X5 X59_g4 X59_a gain4 gain4_b VDD VSS pt_rfrx_tgm
-XX59_R6 inj_n X59_g5 VSS ppolyf_u_1k r_width=1u r_length=5u
-XX59_X6 X59_g5 X59_a gain5 gain5_b VDD VSS pt_rfrx_tgl
-XX59_R7_0 X59_a X59_r7_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_R7_1 X59_r7_s1 s1_p VSS ppolyf_u_1k r_width=1u r_length=20u
-XX59_X7_X1 atb_vcm X59_a s1_p atb_vbp pd1 VDD VSS pt_rfrx_otag
-XX59_X7_C1 X59_a s1_p cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-XX59_X7_X2 X59_a X59_X7_c_bw0 bw0 bw0_b VDD VSS pt_rfrx_tgs
-XX59_X7_C2 X59_X7_c_bw0 s1_p cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-XX59_X7_X3 X59_a X59_X7_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
-XX59_X7_C3 X59_X7_c_bw1 s1_p cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-XX59_X7_X4 X59_a X59_X7_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XX59_X7_C4 X59_X7_c_bw2 s1_p cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-XX59_X7_X5 X59_a X59_X7_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XX59_X7_C5 X59_X7_c_bw3 s1_p cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-XX60 inj_n s1_n k_s1byp k_s1bypb VDD VSS pt_rfrx_tgm
-XX61_R1_0 s1_n X61_r1_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R1_1 X61_r1_s1 X61_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R2 s1_n X61_gx VSS ppolyf_u_1k r_width=1u r_length=13.33u
-XX61_X1 X61_gx X61_a gainc0 gainc0_b VDD VSS pt_rfrx_tgm
-XX61_X2 bp1_n X61_lx gainc0 gainc0_b VDD VSS pt_rfrx_tgs
-XX61_C1 X61_lx X61_ly cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX61_C2 X61_ly X61_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX61_R3_0 X61_v3 X61_r3_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R3_1 X61_r3_s1 X61_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R4_0 bp1_n X61_r4_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R4_1 X61_r4_s1 X61_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R5_0 bp1_n X61_r5_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R5_1 X61_r5_s1 X61_r5_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R5_2 X61_r5_s2 X61_r5_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R5_3 X61_r5_s3 X61_r5_s4 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R5_4 X61_r5_s4 X61_r5_s5 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R5_5 X61_r5_s5 X61_r5_s6 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R5_6 X61_r5_s6 X61_r5_s7 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R5_7 X61_r5_s7 X61_q_qt0 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_X3 X61_q_qt0 X61_a qt0 qt0_b VDD VSS pt_rfrx_tgs
-XX61_R6_0 bp1_n X61_r6_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R6_1 X61_r6_s1 X61_r6_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R6_2 X61_r6_s2 X61_r6_s3 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R6_3 X61_r6_s3 X61_q_qt1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_X4 X61_q_qt1 X61_a qt1 qt1_b VDD VSS pt_rfrx_tgs
-XX61_X5_X1 atb_vcm X61_a bp1_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX61_X5_C1 X61_a bp1_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-XX61_X5_X2 X61_a X61_X5_c_bw0 bw0 bw0_b VDD VSS pt_rfrx_tgs
-XX61_X5_C2 X61_X5_c_bw0 bp1_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-XX61_X5_X3 X61_a X61_X5_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
-XX61_X5_C3 X61_X5_c_bw1 bp1_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-XX61_X5_X4 X61_a X61_X5_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XX61_X5_C4 X61_X5_c_bw2 bp1_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-XX61_X5_X5 X61_a X61_X5_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XX61_X5_C5 X61_X5_c_bw3 bp1_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-XX61_R7_0 bp1_n X61_r7_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R7_1 X61_r7_s1 X61_b VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_C3 bp1_n X61_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX61_X6_X1 atb_vcm X61_b lp1_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX61_X6_C1 X61_b lp1_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-XX61_X6_X2 X61_b X61_X6_c_bw0 bw0 bw0_b VDD VSS pt_rfrx_tgs
-XX61_X6_C2 X61_X6_c_bw0 lp1_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-XX61_X6_X3 X61_b X61_X6_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
-XX61_X6_C3 X61_X6_c_bw1 lp1_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-XX61_X6_X4 X61_b X61_X6_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XX61_X6_C4 X61_X6_c_bw2 lp1_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-XX61_X6_X5 X61_b X61_X6_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XX61_X6_C5 X61_X6_c_bw3 lp1_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-XX61_R8_0 lp1_n X61_r8_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R8_1 X61_r8_s1 X61_c VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R9_0 X61_v3 X61_r9_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_R9_1 X61_r9_s1 X61_c VSS ppolyf_u_1k r_width=1u r_length=20u
-XX61_X7 atb_vcm X61_c X61_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX62_R1_0 lp1_n X62_r1_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_R1_1 X62_r1_s1 X62_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_R2 lp1_n X62_gx VSS ppolyf_u_1k r_width=1u r_length=13.33u
-XX62_X1 X62_gx X62_a gainc1 gainc1_b VDD VSS pt_rfrx_tgm
-XX62_X2 bp2_n X62_lx gainc1 gainc1_b VDD VSS pt_rfrx_tgs
-XX62_C1 X62_lx X62_ly cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX62_C2 X62_ly X62_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX62_R3_0 X62_v3 X62_r3_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_R3_1 X62_r3_s1 X62_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_R4 bp2_n X62_a VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_X3_X1 atb_vcm X62_a bp2_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX62_X3_C1 X62_a bp2_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-XX62_X3_X2 X62_a X62_X3_c_bw0 bw0 bw0_b VDD VSS pt_rfrx_tgs
-XX62_X3_C2 X62_X3_c_bw0 bp2_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-XX62_X3_X3 X62_a X62_X3_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
-XX62_X3_C3 X62_X3_c_bw1 bp2_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-XX62_X3_X4 X62_a X62_X3_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XX62_X3_C4 X62_X3_c_bw2 bp2_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-XX62_X3_X5 X62_a X62_X3_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XX62_X3_C5 X62_X3_c_bw3 bp2_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-XX62_R5_0 bp2_n X62_r5_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_R5_1 X62_r5_s1 X62_b VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_C3 bp2_n X62_b cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
-XX62_X4_X1 atb_vcm X62_b co_n atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX62_X4_C1 X62_b co_n cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
-XX62_X4_X2 X62_b X62_X4_c_bw0 bw0 bw0_b VDD VSS pt_rfrx_tgs
-XX62_X4_C2 X62_X4_c_bw0 co_n cap_mim_2f0_m4m5_noshield c_width=9.6u c_length=9.6u
-XX62_X4_X3 X62_b X62_X4_c_bw1 bw1 bw1_b VDD VSS pt_rfrx_tgs
-XX62_X4_C3 X62_X4_c_bw1 co_n cap_mim_2f0_m4m5_noshield c_width=19.2u c_length=9.6u
-XX62_X4_X4 X62_b X62_X4_c_bw2 bw2 bw2_b VDD VSS pt_rfrx_tgs
-XX62_X4_C4 X62_X4_c_bw2 co_n cap_mim_2f0_m4m5_noshield c_width=38.4u c_length=9.6u
-XX62_X4_X5 X62_b X62_X4_c_bw3 bw3 bw3_b VDD VSS pt_rfrx_tgs
-XX62_X4_C5 X62_X4_c_bw3 co_n cap_mim_2f0_m4m5_noshield c_width=76.8u c_length=9.6u
-XX62_R6_0 co_n X62_r6_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_R6_1 X62_r6_s1 X62_c VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_R7_0 X62_v3 X62_r7_s1 VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_R7_1 X62_r7_s1 X62_c VSS ppolyf_u_1k r_width=1u r_length=20u
-XX62_X5 atb_vcm X62_c X62_v3 atb_vbp pd23 VDD VSS pt_rfrx_otaf
-XX63 s1_n co_n k_s23byp k_s23bypb VDD VSS pt_rfrx_tgm
-XX64 co_n out_rx_n k_orx VSS pt_rfrx_nsw
-XX65 co_n out_tx_n k_otx k_otxb VDD VSS pt_rfrx_tgm
-XX66 rx_in_n out_rx_n k_rxd VSS pt_rfrx_nsw
-XX67 rx_in_n obs_n k_obs1 k_obs1b VDD VSS pt_rfrx_tgs
-XX68 s1_n obs_n k_obs2 k_obs2b VDD VSS pt_rfrx_tgs
-XX69 co_n obs_n k_obs3 k_obs3b VDD VSS pt_rfrx_tgs
+XX52 rx_in_n inj_n k_inrx k_inrxb VDD VSS pt_rfrx_tgm
+XX53 tx_in_n inj_n k_intx VSS pt_rfrx_nsw
+XX54 inj_n s1_n k_s1byp k_s1bypb VDD VSS pt_rfrx_tgm
+XX55 s1_n co_n k_s23byp k_s23bypb VDD VSS pt_rfrx_tgm
+XX56 co_n out_rx_n k_orx VSS pt_rfrx_nsw
+XX57 co_n out_tx_n k_otx k_otxb VDD VSS pt_rfrx_tgm
+XX58 rx_in_n out_rx_n k_rxd VSS pt_rfrx_nsw
+XX59 rx_in_n obs_n k_obs1 k_obs1b VDD VSS pt_rfrx_tgs
+XX60 s1_n obs_n k_obs2 k_obs2b VDD VSS pt_rfrx_tgs
+XX61 co_n obs_n k_obs3 k_obs3b VDD VSS pt_rfrx_tgs
 XMN4 out_rx_n island_off VSS VSS nfet_03v3 w=1u l=10u
 XMN5 out_tx_n island_off VSS VSS nfet_03v3 w=1u l=10u
 XMN6 obs_n island_off VSS VSS nfet_03v3 w=1u l=10u
+.ends
+
+.subckt pt_bbfilter_q rx_in_p rx_in_n tx_in_p tx_in_n inj_p inj_n out_rx_p out_rx_n out_tx_p out_tx_n obs_p obs_n ibias en dir_tx inj rx_direct byp_s1 byp_s23 obs_sel0 obs_sel1 bw0 bw1 bw2 bw3 gain0 gain1 gain2 gain3 gain4 gain5 gainc0 gainc1 qt0 qt1 island_off atb_vcm atb_vbp VDD VSS qt2 qt3 fc_fine0 fc_fine1 fc_fine2 dcf0 dcf1 dcf2 dcf3 dcf4 dcf5 dcf6 dcf7 dcf_sign
+XX1 inj_p inj_n s1_n s1_p atb_vcm atb_vbp pd1 gain0 gain1 gain2 gain3 gain4 gain5 gain0_b gain1_b gain2_b gain3_b gain4_b gain5_b bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 dcf0 dcf1 dcf2 dcf3 dcf4 dcf5 dcf6 dcf7 dcf_sign VDD VSS pt_bbf_s1
+XX2 s1_p s1_n lp1_n lp1_p bp1_p bp1_n atb_vcm atb_vbp pd23 gainc0 gainc0_b qt0 qt0_b qt1 qt1_b qt2 qt2_b qt3 qt3_b bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VDD VSS pt_bbf_tta
+XX3 bp1_p bp1_n lp1_p lp1_n atb_vcm atb_vbp pd23 bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VDD VSS pt_bbf_ttb
+XX4 lp1_p lp1_n co_n co_p bp2_p bp2_n atb_vcm atb_vbp pd23 gainc1 gainc1_b qt0 qt0_b qt1 qt1_b qt2 qt2_b qt3 qt3_b bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VDD VSS pt_bbf_ttq
+XX5 bp2_p bp2_n co_p co_n atb_vcm atb_vbp pd23 bw0 bw1 bw2 bw3 fc_fine0 fc_fine1 fc_fine2 VDD VSS pt_bbf_ttb
+XX6 en VDD VSS dir_tx rx_direct byp_s1 byp_s23 obs_sel0 obs_sel1 gain0 gain0_b gain1 gain1_b gain2 gain2_b gain3 gain3_b gain4 gain4_b gain5 gain5_b gainc0 gainc0_b gainc1 gainc1_b qt0 qt0_b qt1 qt1_b qt2 qt2_b qt3 qt3_b inj pd1 pd23 ibias atb_vbp inj_p atb_vcm inj_n rx_in_p tx_in_p s1_p co_p out_rx_p out_tx_p obs_p island_off rx_in_n tx_in_n s1_n co_n out_rx_n out_tx_n obs_n pt_bbf_ctl
 .ends

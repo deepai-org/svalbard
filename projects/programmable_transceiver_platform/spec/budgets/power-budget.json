@@ -1,13 +1,13 @@
 {
  "generated_by": "spec/budgets/power_budget.py",
  "inputs": {
-  "spec/analog-architecture.json": "541d2bfa83633d99",
+  "spec/analog-architecture.json": "b1504b885f2af546",
   "evidence/digital-hardening-evidence.json": "e31e29c0caa1f5d1",
   "evidence/host-power-allocation-screen.json": "edb8eeb4ad534cfe",
   "evidence/artix-load-power-screen.json": "953a22d507e7d6da",
   "evidence/clock-power-screen.json": "299953a59d6eadc3",
   "analog/island_support/evidence.json": "b3c1a38508b3d3dd",
-  "analog/rf_tx/generated/rf_tx-sim-ext.json": "cfde186674a94a21"
+  "analog/rf_tx/generated/rf_tx-sim-ext.json": "7102d6da72f7fd4a"
  },
  "envelope": {
   "tj_c": [
@@ -75,11 +75,11 @@
    "status": "marginal: 8 pF Artix load exceeds the 110 mA allocation by 6.8 mA"
   },
   "rfdriver": {
-   "allocation_ma": 28.92,
-   "budget_case_ma": 58.73,
-   "worst_bench": "drv_a600",
+   "allocation_ma": 61.7,
+   "budget_case_ma": 61.7,
+   "worst_bench": "allocation (corner-sweep max 61.69 mA, scratch/rf-tx-d3/imax.json)",
    "basis": "analog/rf_tx/generated/rf_tx-sim-ext.json: max rfdriver supply (island rail + board DC feed through the RF_TX chokes) over every extracted code-15/linear/saturated/corner bench at the envelope",
-   "status": "evidence: allocation is 29.8 mA low"
+   "status": "evidence: allocation is 0.0 mA low"
   }
  },
  "cases": {
@@ -87,28 +87,75 @@
    "mode": "rf_rx",
    "branch_override": "external_rf_clock",
    "ceiling_ma": 240,
-   "allocation_ma": 233.09,
-   "allocation_margin_ma": 6.91,
-   "evidence_bound_ma": 302.2,
-   "evidence_margin_ma": -62.2,
-   "with_digital_requirement_ma": 202.0,
-   "with_digital_requirement_margin_ma": 38.0
+   "rf_direction_recipe": {
+    "direction": "rf_rx",
+    "blocks_off": [
+     "rfdriver",
+     "txmix_i",
+     "txmix_q",
+     "txsum",
+     "dac_i",
+     "dac_q"
+    ],
+    "evidence_currents_ma": {
+     "lna": 11.7,
+     "rxmix_i": 1.9,
+     "rxmix_q": 1.9,
+     "rxfilter_i": 6.66,
+     "rxfilter_q": 6.66,
+     "adc_i": 5.73,
+     "adc_q": 5.73,
+     "dac_i": 1.92,
+     "dac_q": 1.92
+    },
+    "hostio_factor": 0.5
+   },
+   "allocation_ma": 146.88,
+   "allocation_margin_ma": 93.12,
+   "evidence_bound_ma": 212.58,
+   "evidence_margin_ma": 27.42,
+   "with_digital_requirement_ma": 170.79,
+   "with_digital_requirement_margin_ma": 69.21
   },
   "rf_autonomous": {
    "mode": "rf_rx",
    "branch_override": null,
    "ceiling_ma": 240,
-   "allocation_ma": 262.02,
-   "allocation_margin_ma": -22.02,
-   "evidence_bound_ma": 331.13,
-   "evidence_margin_ma": -91.13,
-   "with_digital_requirement_ma": 230.93,
-   "with_digital_requirement_margin_ma": 9.07
+   "rf_direction_recipe": {
+    "direction": "rf_rx",
+    "blocks_off": [
+     "rfdriver",
+     "txmix_i",
+     "txmix_q",
+     "txsum",
+     "dac_i",
+     "dac_q"
+    ],
+    "evidence_currents_ma": {
+     "lna": 11.7,
+     "rxmix_i": 1.9,
+     "rxmix_q": 1.9,
+     "rxfilter_i": 6.66,
+     "rxfilter_q": 6.66,
+     "adc_i": 5.73,
+     "adc_q": 5.73,
+     "dac_i": 1.92,
+     "dac_q": 1.92
+    },
+    "hostio_factor": 0.5
+   },
+   "allocation_ma": 175.81,
+   "allocation_margin_ma": 64.19,
+   "evidence_bound_ma": 241.51,
+   "evidence_margin_ma": -1.51,
+   "with_digital_requirement_ma": 199.72,
+   "with_digital_requirement_margin_ma": 40.28
   },
   "wired_onchip_pll": {
    "mode": "wired",
    "branch_override": null,
    "ceiling_ma": 292,
+   "rf_direction_recipe": null,
    "allocation_ma": 244.82,
    "allocation_margin_ma": 47.18,
    "evidence_bound_ma": 296.93,
@@ -120,6 +167,7 @@
    "mode": "wired",
    "branch_override": "external_wired_clock",
    "ceiling_ma": 292,
+   "rf_direction_recipe": null,
    "allocation_ma": 248.05,
    "allocation_margin_ma": 43.95,
    "evidence_bound_ma": 300.16,
@@ -131,6 +179,7 @@
    "mode": "wired",
    "branch_override": "wired_tmds",
    "ceiling_ma": 292,
+   "rf_direction_recipe": null,
    "allocation_ma": 224.82,
    "allocation_margin_ma": 67.18,
    "evidence_bound_ma": 276.93,
@@ -142,6 +191,7 @@
    "mode": "usb",
    "branch_override": null,
    "ceiling_ma": 292,
+   "rf_direction_recipe": null,
    "allocation_ma": 231.25,
    "allocation_margin_ma": 60.75,
    "evidence_bound_ma": 283.36,
@@ -153,6 +203,7 @@
    "mode": "stopped",
    "branch_override": null,
    "ceiling_ma": 292,
+   "rf_direction_recipe": null,
    "allocation_ma": 4.62,
    "allocation_margin_ma": 287.38,
    "evidence_bound_ma": 4.62,
@@ -164,34 +215,88 @@
    "mode": "rf_tx",
    "branch_override": "external_rf_clock",
    "ceiling_ma": 240,
-   "allocation_ma": 253.9,
-   "allocation_margin_ma": -13.9,
-   "evidence_bound_ma": 323.01,
-   "evidence_margin_ma": -83.01,
-   "with_digital_requirement_ma": 222.81,
-   "with_digital_requirement_margin_ma": 17.19
+   "rf_direction_recipe": {
+    "direction": "rf_tx",
+    "blocks_off": [
+     "adc_i",
+     "adc_q"
+    ],
+    "evidence_currents_ma": {
+     "lna": 11.7,
+     "rxmix_i": 1.9,
+     "rxmix_q": 1.9,
+     "rxfilter_i": 6.66,
+     "rxfilter_q": 6.66,
+     "adc_i": 5.73,
+     "adc_q": 5.73,
+     "dac_i": 1.92,
+     "dac_q": 1.92
+    },
+    "hostio_factor": 0.5
+   },
+   "allocation_ma": 202.98,
+   "allocation_margin_ma": 37.02,
+   "evidence_bound_ma": 268.68,
+   "evidence_margin_ma": -28.68,
+   "with_digital_requirement_ma": 226.89,
+   "with_digital_requirement_margin_ma": 13.11
   },
   "rf_tx_autonomous": {
    "mode": "rf_tx",
    "branch_override": null,
    "ceiling_ma": 240,
-   "allocation_ma": 282.83,
-   "allocation_margin_ma": -42.83,
-   "evidence_bound_ma": 351.94,
-   "evidence_margin_ma": -111.94,
-   "with_digital_requirement_ma": 251.74,
-   "with_digital_requirement_margin_ma": -11.74
+   "rf_direction_recipe": {
+    "direction": "rf_tx",
+    "blocks_off": [
+     "adc_i",
+     "adc_q"
+    ],
+    "evidence_currents_ma": {
+     "lna": 11.7,
+     "rxmix_i": 1.9,
+     "rxmix_q": 1.9,
+     "rxfilter_i": 6.66,
+     "rxfilter_q": 6.66,
+     "adc_i": 5.73,
+     "adc_q": 5.73,
+     "dac_i": 1.92,
+     "dac_q": 1.92
+    },
+    "hostio_factor": 0.5
+   },
+   "allocation_ma": 231.91,
+   "allocation_margin_ma": 8.09,
+   "evidence_bound_ma": 297.61,
+   "evidence_margin_ma": -57.61,
+   "with_digital_requirement_ma": 255.82,
+   "with_digital_requirement_margin_ma": -15.82
   },
   "rf_duplex_external_clock": {
    "mode": "rf_rx",
    "branch_override": "external_rf_clock",
    "ceiling_ma": 240,
-   "allocation_ma": 262.9,
-   "allocation_margin_ma": -22.9,
-   "evidence_bound_ma": 332.01,
-   "evidence_margin_ma": -92.01,
-   "with_digital_requirement_ma": 231.81,
-   "with_digital_requirement_margin_ma": 8.19
+   "rf_direction_recipe": {
+    "direction": "rf_duplex",
+    "blocks_off": [],
+    "evidence_currents_ma": {
+     "lna": 11.7,
+     "rxmix_i": 1.9,
+     "rxmix_q": 1.9,
+     "rxfilter_i": 6.66,
+     "rxfilter_q": 6.66,
+     "adc_i": 5.73,
+     "adc_q": 5.73,
+     "dac_i": 1.92,
+     "dac_q": 1.92
+    },
+    "hostio_factor": 0.5
+   },
+   "allocation_ma": 214.44,
+   "allocation_margin_ma": 25.56,
+   "evidence_bound_ma": 280.14,
+   "evidence_margin_ma": -40.14,
+   "with_digital_requirement_ma": 238.35,
+   "with_digital_requirement_margin_ma": 1.65
   }
  },
  "island_switch": {
@@ -233,30 +338,30 @@
  },
  "supply_drop": {
   "allocation": {
-   "i_max_ma": 282.83,
-   "board_mv": 5.7,
-   "bond_mv": 28.3,
-   "grid_mv": 28.3,
+   "i_max_ma": 248.05,
+   "board_mv": 5.0,
+   "bond_mv": 24.8,
+   "grid_mv": 24.8,
    "island_switch_mv": 19.9,
-   "total_mv": 82.1,
+   "total_mv": 74.4,
    "available_mv": 117.0,
-   "margin_mv": 34.9,
+   "margin_mv": 42.6,
    "supply_cells_needed_at_60ma": 5,
    "supply_cells_available": 8,
-   "cell_utilization_even_share": 0.589
+   "cell_utilization_even_share": 0.517
   },
   "evidence_bound": {
-   "i_max_ma": 351.94,
-   "board_mv": 7.0,
-   "bond_mv": 35.2,
-   "grid_mv": 35.2,
+   "i_max_ma": 300.16,
+   "board_mv": 6.0,
+   "bond_mv": 30.0,
+   "grid_mv": 30.0,
    "island_switch_mv": 19.9,
-   "total_mv": 97.3,
+   "total_mv": 85.9,
    "available_mv": 117.0,
-   "margin_mv": 19.7,
+   "margin_mv": 31.1,
    "supply_cells_needed_at_60ma": 6,
    "supply_cells_available": 8,
-   "cell_utilization_even_share": 0.733
+   "cell_utilization_even_share": 0.625
   },
   "with_digital_requirement": {
    "i_max_ma": 278.37,
@@ -274,23 +379,23 @@
  },
  "thermal": {
   "allocation": {
-   "p_max_w": 0.999,
+   "p_max_w": 0.882,
    "p_stopped_w": 0.015,
    "free_air_rise_c": [
-    40.0,
-    99.9
+    35.3,
+    88.2
    ],
-   "required_theta_junction_to_controlled_plate_c_per_w": 8.13,
+   "required_theta_junction_to_controlled_plate_c_per_w": 9.22,
    "note": "Tj window 10 C minus 2 C control tolerance must absorb the full stopped-to-max power step (mode switches are faster than any plate loop)."
   },
   "evidence_bound": {
-   "p_max_w": 1.23,
+   "p_max_w": 1.057,
    "p_stopped_w": 0.015,
    "free_air_rise_c": [
-    49.2,
-    123.0
+    42.3,
+    105.7
    ],
-   "required_theta_junction_to_controlled_plate_c_per_w": 6.58,
+   "required_theta_junction_to_controlled_plate_c_per_w": 7.68,
    "note": "Tj window 10 C minus 2 C control tolerance must absorb the full stopped-to-max power step (mode switches are faster than any plate loop)."
   },
   "with_digital_requirement": {

@@ -1,5 +1,47 @@
 # RF transmit family: `txmix_i`, `txmix_q`, `txsum`, `rfdriver`
 
+> **2026-11-10 (RC-3/RC-18, RF/converters owner): rfdriver output is now 6 V-safe.** nfet_06v0 cascodes
+> (960/0.7 per leg, drains on the pads, gates from 6 V drivers with 6 pF 6 V MOS decaps), the pad bypass
+> switch is a pfet_06v0 in its own n-well `nwb` (10 kΩ from VDD) with an nwb-supplied gate driver, output-pair
+> gates are pulled low when off, and a new `se` port selects the single-ended mode (pad_n cascode off, that
+> leg into an on-chip PMOS dummy). Layout republished (DRC 0, LVS unique, KLayout 0/0, 133,269 µm²).
+> Stress screen with the pads' rf-tx macro and the P2 package bench: `scratch/rfconv-owner/tx/`
+> (`stress.json`, `p2b.json`).
+>
+> **2026-11-11 (RFT-2): reset leak fixed and evidence regenerated.** The P3C gate pull-downs fought the VDD-fed source (risk: RFT-01)
+> followers (2.0–2.4 mA in reset, safe fail); the SF drains now sit on a switched header `sfd` (`SFH_a/b`,
+> 2 × 640 µm, off with `pre_off`). Republished layout 135,222 µm² (DRC 0, LVS unique, KLayout 0/0). sch + ext benches,
+> `tx_modulation.py` and `evidence.py` rerun: safe/clean pass for all four blocks. Extracted: matched linear +3.0 dBm
+> (0.3 V) / +7.9 dBm (0.7 V), saturated +7.9 dBm, HE20 MCS7 at +0.13 dBm (EVM −27.9 dB); rfdriver 52–58.7 mA tt,
+> 38.2 (ss/32/3.15) … 55.8 mA (ff). **ss/32/3.15 linear matched −5.6 dBm (< 0 dBm target)**; saturated +1.9 dBm.
+> Rows below that quote older numbers are historical. `generate.py` also records `lvs_name_equivalent`, an exact
+> by-name device comparison. netgen sees the PDK devices as black boxes, so the 4 binary tail slices are symmetric to it,
+> and a pin-permutation result can occur by chance.
+
+> **2026-11-12 (fork D2, RFT-09 + RFT-01): driver oscillation fixed; ss linear output at the pessimistic fT.** The extracted rfdriver had a negative differential output conductance (−0.9…−4.6 mS, 0.2–0.9 GHz, ss/ff) from same-phase
+> pad→input coupling (≈6 fF/leg through the off bypass PMOS, 2–3 fF pad→p1/p1b): with the ~260 Ω txsum source and a B17
+> ≥22 nH feed choke it oscillated (3–8 V, ss/ff). Fix: T bypass switch `BYPA` (pad→`bm`) + `BYPB` (`bm`→in, 4 µm fingers)
+> + `BSH` (nfet_06v0, `bm`→VSS while bypass=0), pad-side halves in the pad-load row, device gap 0.8 µm. No port change.
+> 97,609 µm² (≤ 98,100); Magic DRC 0, LVS unique + name-equivalent, KLayout 0 / antenna 0. Re(Ydiff) > 0 at ss/tt/ff (source
+> 0 / 262 Ω); kicks decay ≥ 45× at the pessimistic package (review, scratch/review-rfd2), fast end ≥ 380×. tt: matched lin +5.14 dBm (was 4.49), sat +9.52, MCS7 max mean +1.50 dBm
+> (was +2.22), mute isolation 46.2 dB (41.8), LO suppression 30.1 dBc (28.9); bypass path −5.9 dB (−26.1 dBm drv_bypass);
+> stress screens unchanged (pulse/HBM/func identical to fork N). Pessimistic derate (Rg 200 Ω/10 µm, fT 11 / 5.5 GHz),
+> ss/32/3.15: *superseded by the review follow-up below (that derate under-shot fT; numbers were optimistic).* Max rfdriver current 60.16 mA
+> (`drv_a600`, standalone driver overdriven at 0.6 V; the published `drv_a*` decks were broken before and read −50 dBm / 25 mA),
+> chain max 58.4 mA. Work: `scratch/rf-tx-d2/`.
+>
+> **2026-11-12 (review follow-up A–F, RFT-01/RFT-09).** Derate recalibrated so single-device ss/32 °C fT is exactly
+> 11.0 GHz (nfet_03v3) / 5.5 GHz (nfet_06v0) (`scratch/rf-tx-d3/ftcal.json`; the old one gave 12.1 / 4.57), Rg 200 Ω/10 µm.
+> ss/32/3.15 extracted chain, linear (sat=0) / saturated (sat=1):
+> published board (Q30, 1 dB, 200:50): 0.3 V −8.5 dBm, P1dB −0.2 dBm, Psat −0.05 dBm — **0 dBm CE missed by 0.05–0.2 dB**;
+> pessimistic board (Q20, 2 dB balun, pad C +30 %, bond 1.5/3.7 nH/leg, match re-derived incl. balun ratio 50:50 / 400:50):
+> 0.3 V −7.3/−7.5 dBm, P1dB +0.85/+0.70 dBm, Psat +1.05/+0.87 dBm, 0 dBm linear at 0.71/0.74 V BB → **CE/linear margin
+> +0.7…+0.9 dB only with the re-derived board match** (the 200:50 balun mismatches the ~700 Ω pad). HE20 MCS7 max mean
+> −5.6…−6.8 dBm (≥ −10 dBm OFDM target met). SSB at ss: linear 0.7 V IR 35–39 dB, LO 20–21 dBc; saturated IR 28.4–28.7 dB
+> (**< 35 dB**), LO 37–38 dBc. bbfilter_i TX direction at ss (ext, 1 pF/leg txmix load): IM3 −53.2 / −50.7 dBc at 0.65 / 0.76 V
+> diff pk (−34.5 at 1.0 V). Stability is now a bench + evidence test (`stab_*`, `tests.stable`, fails on the pre-fix
+> netlist: −4.56 mS, kick ×0.9). rfdriver max current 61.69 mA (ff/22 °C/3.35 V, overdriven, `imax.json`) → allocation 61.7 mA.
+>
 Transistor-level 2.4 GHz transmit path:
 `bbfilter (TX direction, analog/rf_rx) → txmix_i/q → txsum → rfdriver → RF_TX pad`.
 TX reconstruction filtering is in the shared `bbfilter_i/q`; each mixer also
@@ -65,6 +107,7 @@ Python 3 + NumPy. Raw work: `scratch/rf_tx/`.
 | `sat` | txmix_i/q | new field `txmix.sat_mode` (1 = constant-envelope; 0 = linear/OFDM) | 0 |
 | `en` | txsum | `txsum.enable` AND state ≠ off | 0 |
 | `en` | rfdriver | `rfdriver.state` ≠ off | 0 |
+| `se` | rfdriver | `rfdriver.se` (D-TX-2 single-ended output) | 0 |
 | `mute` | rfdriver | `rfdriver.mute` | 1 |
 | `g3..g0` | rfdriver | `rfdriver.gain.code[7:4]` (default 206 → 12) | 1100 |
 | `bypass` | rfdriver | `debug.rf_tx_bypass` | 0 |

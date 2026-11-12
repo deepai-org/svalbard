@@ -78,13 +78,14 @@ def mag_rects(path):
 # ---------------------------------------------------------------------------
 def prim_key(d):
     if hasattr(d, 'nf'):
-        return ('mos', d.model, d.w, d.l, d.nf)
+        k = ('mos', d.model, d.w, d.l, d.nf)
+        return k + ('iso',) if getattr(d, 'iso', False) else k
     return ('res', d.model, d.w, d.l)
 
 
 def prim_command(key, cell):
     if key[0] == 'mos':
-        _, model, w, l, nf = key
+        _, model, w, l, nf = key[:5]
         return (f'set c [magic::gencell_makecell gf180mcu::{model} w {w} l {l} nf {nf} guard 1 '
                 f'topc 1 botc 0 full_metal 1 gate_to_polycont 0.6 diff_gate_space 0.3]\n'
                 f'load $c\nsave {cell}\nload ws\n')
@@ -94,22 +95,75 @@ def prim_command(key, cell):
             f'load $c\nsave {cell}\nload ws\n')
 
 
+# Isolated p-well (DNWELL) NMOS: the PCell's own p-well and p-tap ring become the isolated body; around it an
+# N+ tap ring (the DNWELL contact, net VDD) and the DNWELL. gf180mcuD rules (Magic deck): DN.1 w>=1.7,
+# DN.2a s>=2.5, pwell-in-dnwell enclosure 2.5, N+ tap enclosure by dnwell 0.62, dnwell-nwell 3.1, pwell-dnwell 1.5.
+ISO_GAP = 1.0        # p-well edge -> N+ ring inner edge
+ISO_RING = 1.0       # N+ tap ring width (its N-well image must meet NW.1a 0.86)
+ISO_DNW = 2.7        # dnwell enclosure of the p-well (>= 2.5, and >= gap + ring + DF.4b 0.62)
+ISO_PG_SPACE = 2.6   # dnwell -> P+ substrate guard ring (DN.3 ring required; DF.18 >= 2.5)
+ISO_PG = 0.8         # P+ guard ring width
+ISO_HALO = 0.4       # keep-out beyond the P+ ring (DF.19 NCOMP 3.2 and dnwell-nwell 3.1 are inside the ring)
+
+
+def _ring(x0, y0, x1, y1, a, b):
+    return [(x0 - b, y0 - b, x1 + b, y0 - a), (x0 - b, y1 + a, x1 + b, y1 + b),
+            (x0 - b, y0 - b, x0 - a, y1 + b), (x1 + a, y0 - b, x1 + b, y1 + b)]
+
+
+def iso_command(cell, path):
+    r = mag_rects(path)
+    x0, y0, x1, y1 = (min(rc[0] for rc in r['pwell']), min(rc[1] for rc in r['pwell']),
+                      max(rc[2] for rc in r['pwell']), max(rc[3] for rc in r['pwell']))
+    cmds = [f'load {cell}', 'units microns']
+    e = 0.08   # contact inset: diffusion (CO.4 0.065) and metal1 (CO.6 0.055) surround
+    pg_a = ISO_DNW + ISO_PG_SPACE
+    for (a, b, diff, cont) in ((ISO_GAP, ISO_GAP + ISO_RING, 'nsubdiff', 'nsubdiffcont'),
+                               (pg_a, pg_a + ISO_PG, 'psubdiff', 'psubdiffcont')):
+        ring = _ring(x0, y0, x1, y1, a, b)
+        for rc in ring:
+            cmds += ['box values ' + ' '.join(str(snap(v)) for v in rc), f'paint {diff}', 'paint metal1']
+        for rc in ring:
+            cmds += ['box values ' + ' '.join(str(snap(v)) for v in (rc[0] + e, rc[1] + e, rc[2] - e, rc[3] - e)),
+                     f'paint {cont}']
+    cmds += ['box values ' + ' '.join(str(snap(v)) for v in (x0 - ISO_DNW, y0 - ISO_DNW, x1 + ISO_DNW, y1 + ISO_DNW)),
+             'paint dnwell', 'units internal', 'save', 'load ws']
+    return '\n'.join(cmds) + '\n'
+
+
 def prim_geometry(key, path):
     """Terminal anchor points (um, cell coordinates) for routing."""
     r = mag_rects(path)
     allx = [v for rects in r.values() for rc in rects for v in (rc[0], rc[2])]
     ally = [v for rects in r.values() for rc in rects for v in (rc[1], rc[3])]
     # The checkpaint layer is a large halo; use well/diffusion extents for the body.
-    body_layers = [k for k in r if k in ('pwell', 'nwell')] or [k for k in r if k != 'checkpaint']
+    iso = 'deepnwell' in r
+    body_layers = (['deepnwell'] if iso else [k for k in r if k in ('pwell', 'nwell')]) or [k for k in r if k != 'checkpaint']
     bb = [min(rc[0] for k in body_layers for rc in r[k]), min(rc[1] for k in body_layers for rc in r[k]),
           max(rc[2] for k in body_layers for rc in r[k]), max(rc[3] for k in body_layers for rc in r[k])]
-    ring = r.get('psubdiffcont', []) + r.get('nsubdiffcont', [])
+    if iso:
+        bb = [bb[0] - ISO_HALO, bb[1] - ISO_HALO, bb[2] + ISO_HALO, bb[3] + ISO_HALO]
+    ring = (r.get('psubdiffcont', []) + ([] if iso else r.get('nsubdiffcont', [])) + r.get('mvpsubdiffcont', [])
+            + r.get('mvnsubdiffcont', []))
+    if iso:   # body tap = the PCell's p-ring inside the p-well (the outer P+ ring is the substrate guard)
+        pw = r['pwell']
+        px0, py0, px1, py1 = (min(rc[0] for rc in pw), min(rc[1] for rc in pw), max(rc[2] for rc in pw), max(rc[3] for rc in pw))
+        inside = lambda rc: rc[0] >= px0 and rc[2] <= px1 and rc[1] >= py0 and rc[3] <= py1
+        pg = [rc for rc in r['psubdiffcont'] if not inside(rc)]
+        ring = [rc for rc in ring if inside(rc)]
     ring_right_x = max((rc[0] + rc[2]) / 2 for rc in ring) if ring else None
     m1 = r.get('metal1') or r['polycontact']
+    if iso:   # the p-tap ring's metal1 only (inside the p-well); the N+ and P+ rings sit outside it
+        m1 = [rc for rc in m1 if inside(rc)]
     ring_bottom_y = min(rc[1] for rc in m1) + 0.115
     geo = dict(bbox=bb, ring_right_x=ring_right_x, ring_bottom_y=ring_bottom_y)
+    if iso:
+        nr = r['nsubdiffcont']
+        geo['nw'] = (max((rc[0] + rc[2]) / 2 for rc in nr), max((rc[1] + rc[3]) / 2 for rc in nr))
+        geo['pg'] = (max((rc[0] + rc[2]) / 2 for rc in pg), min((rc[1] + rc[3]) / 2 for rc in pg))
     if key[0] == 'mos':
-        diffc = sorted(r.get('ndiffc', []) + r.get('pdiffc', []), key=lambda a: a[0])
+        diffc = sorted(r.get('ndiffc', []) + r.get('pdiffc', []) + r.get('mvndiffc', []) + r.get('mvpdiffc', []),
+                       key=lambda a: a[0])   # mv*: 6 V devices (nfet_06v0 cascode)
         cols = [((a[0] + a[2]) / 2, a[1], a[3]) for a in diffc]
         pc = r['polycontact']
         geo.update(cols=cols, gate=[min(a[0] for a in pc), min(a[1] for a in pc),
@@ -171,14 +225,15 @@ UNGUARDED_RES = {'ppolyf_s', 'ppolyf_u'}
 def pin_list(d):
     """(terminal, net, side) with side 'L' or 'R' escape."""
     if hasattr(d, 'nf'):
-        return [('S', d.s, 'L'), ('D', d.d, 'R'), ('G', d.g, 'R'), ('B', d.b, 'R')]
+        pl = [('S', d.s, 'L'), ('D', d.d, 'R'), ('G', d.g, 'R'), ('B', d.b, 'R')]
+        return pl + [('NW', getattr(d, 'iso_net', 'VDD'), 'R'), ('PG', 'VSS', 'R')] if getattr(d, 'iso', False) else pl
     if d.model in UNGUARDED_RES:
         return [('B', d.b, 'L'), ('A', d.a, 'R')]
     return [('B', d.b, 'L'), ('A', d.a, 'R'), ('BODY', d.body, 'R')]
 
 
 def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=None,
-          lane_width=None, gap=1.2, lane_order=None, trunk_order=None):
+          lane_width=None, gap=1.2, lane_order=None, trunk_order=None, inline_trunks=False):
     """Generate layout for ``circuit`` in ``work`` (must be empty). Returns report dict."""
     work = Path(work).resolve()
     work.mkdir(parents=True, exist_ok=True)
@@ -197,6 +252,11 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
     script = 'crashbackups stop\nload ws\nunits internal\n' + ''.join(prim_command(k, cells[k]) for k in keys) + 'quit -noprompt\n'
     (work / 'prims.tcl').write_text(script)
     docker_magic(work, 'prims.tcl')
+    iso_keys = [k for k in keys if k[-1] == 'iso']
+    if iso_keys:
+        (work / 'iso.tcl').write_text('crashbackups stop\n' + ''.join(iso_command(cells[k], work / f'{cells[k]}.mag')
+                                                                    for k in iso_keys) + 'quit -noprompt\n')
+        docker_magic(work, 'iso.tcl')
     geo = {k: prim_geometry(k, work / f'{cells[k]}.mag') for k in keys}
 
     # --- per-device local routing plan (relative coordinates) ------------
@@ -226,6 +286,9 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
             pins['D'] = dict(cols=[c for i, c in enumerate(cols) if i % 2 == 1], y=yd, w=wd)
             pins['G'] = dict(x0=gx0, x1=gx1, y=yg)
             pins['B'] = dict(x=g['ring_right_x'], y=g['ring_bottom_y'])
+            if 'nw' in g:
+                pins['NW'] = dict(x=g['nw'][0], y=g['nw'][1])
+                pins['PG'] = dict(x=g['pg'][0], y=g['pg'][1])
         else:
             bot, top = g['bottom'], g['top']
             pins['B'] = dict(x0=bot[0], x1=bot[2], y=(bot[1] + bot[3]) / 2)
@@ -281,19 +344,53 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
     for n in sorted(trunked, key=tkey):
         x += tw[n] / 2 + 0.3; tx[n] = x; x += tw[n] / 2 + 0.3
     bank_right = x + 1.5
-    # rows top-down
+    if inline_trunks:
+        # inline mode (rfdriver area pass, 2026-11-12): no trunk bank. Each multi-row net's Metal5 trunk runs over
+        # the device rows at an x inside its own escape span, and each row's channel tracks are shared between
+        # nets with disjoint x-spans (left-edge algorithm), instead of one dedicated lane per net.
+        bank_right = 1.5
+    # rows: x placement first
     y_top = 0.0
     lanes = {}  # (row, net) -> y
     rowinfo = []
-    cursor_y = y_top
+    xposs = []
     for ri, row in enumerate(rows):
-        # row device placement along x
         xpos, cx = {}, bank_right
         for name in row:
             L = local[name]
             ox = cx - L['left']
             xpos[name] = ox
             cx = ox + L['right'] + gap
+        xposs.append((xpos, cx))
+    def esc_xs(ri, net):
+        xpos = xposs[ri][0]
+        return [xpos[n] + local[n]['esc'][t] for n in rows[ri] for t, nn, _ in pin_list(byname[n]) if nn == net]
+    if inline_trunks:
+        tx = {}
+        placed_tr = []   # (x, w, rmin, rmax)
+        def span(net):
+            rs = sorted(row_of[net]); return (0 if net in ports else rs[0]), rs[-1]
+        for net in sorted(trunked, key=lambda n: (-(span(n)[1] - span(n)[0]), n)):
+            r0, r1 = span(net)
+            xs = sorted(x for ri in row_of[net] for x in esc_xs(ri, net))
+            lo, hi = xs[0], xs[-1]
+            want = xs[len(xs) // 2]
+            w = tw[net]
+            def ok(x):
+                return all(abs(x - px) >= (w + pw) / 2 + 0.6 for px, pw, a, b in placed_tr if not (b < r0 or a > r1))
+            cand = None
+            for k in range(0, 4000):
+                for x in (want + 0.5 * k, want - 0.5 * k):
+                    if lo - 3 <= x <= hi + 3 and x >= bank_right and ok(x):
+                        cand = x; break
+                if cand is not None:
+                    break
+            if cand is None:
+                raise ValueError(f'no trunk x for {net}')
+            tx[net] = cand; placed_tr.append((cand, w, r0, r1))
+    cursor_y = y_top
+    for ri, row in enumerate(rows):
+        xpos, cx = xposs[ri]
         top_extent = max(local[n]['bbox'][3] for n in row)
         bot_extent = min(min(local[n]['bbox'][1], local[n]['pins'].get('B', {}).get('y', 0) - 0.5,
                              local[n]['pins'].get('BODY', {}).get('y', 0) - 0.5) for n in row)
@@ -302,10 +399,30 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
         row_nets = sorted({net for n in row for _, net, _ in pin_list(byname[n])},
                           key=lambda n: (lorder.index(n) if n in lorder else len(lorder), n))
         ly = oy + bot_extent - 1.0
-        for net in row_nets:
-            ly -= lw[net] / 2
-            lanes[(ri, net)] = ly
-            ly -= lw[net] / 2 + 0.5
+        if inline_trunks:
+            iv = {}
+            for net in row_nets:
+                xs = esc_xs(ri, net) + ([tx[net]] if net in tx else [])
+                iv[net] = (min(xs), max(xs))
+            tracks = []   # [nets, right_end, width]
+            for net in sorted(row_nets, key=lambda n: (iv[n][0], n)):
+                a, b = iv[net]
+                for tr in tracks:
+                    last = tr[0][-1]
+                    if tr[1] + (lw[last] + lw[net]) / 2 + 1.0 < a:
+                        tr[0].append(net); tr[1] = b; tr[2] = max(tr[2], lw[net]); break
+                else:
+                    tracks.append([[net], b, lw[net]])
+            for nets_, _, w in tracks:
+                ly -= w / 2
+                for net in nets_:
+                    lanes[(ri, net)] = ly
+                ly -= w / 2 + 0.5
+        else:
+            for net in row_nets:
+                ly -= lw[net] / 2
+                lanes[(ri, net)] = ly
+                ly -= lw[net] / 2 + 0.5
         rowinfo.append(dict(names=row, xpos=xpos, oy=oy, right=cx, bottom=ly))
         cursor_y = ly - 0.4
 
@@ -375,7 +492,7 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
             xs = [R['xpos'][n] + local[n]['esc'][t] for n in R['names']
                   for t, nn, _ in pin_list(byname[n]) if nn == net]
             if net in tx:
-                P.hwire('metal4', tx[net], max(xs), ly, lw[net])
+                P.hwire('metal4', min(xs + [tx[net]]), max(xs + [tx[net]]), ly, lw[net])
                 P.via(tx[net], ly, 4, 5, w=min(tw[net], 2.0) if tw[net] > 0.44 else 0.4, h=lw[net])
             elif max(xs) > min(xs):
                 P.hwire('metal4', min(xs), max(xs), ly, lw[net])

@@ -28,6 +28,7 @@ class Mos:
     w: float  # per-finger width, um
     l: float
     nf: int = 1
+    iso: bool = False     # isolated p-well (DNWELL, tap on VDD): body may be any net (layoutlib)
 
     @property
     def nodes(self):
@@ -57,11 +58,14 @@ class Circuit:
     notes: list = field(default_factory=list)
 
     # -- primitives -------------------------------------------------------
-    def n(self, name, d, g, s, w, l, nf=1, b='VSS'):
-        self.devices.append(Mos(name, d, g, s, b, 'nfet_03v3', w, l, nf))
+    def n(self, name, d, g, s, w, l, nf=1, b='VSS', iso=False):
+        self.devices.append(Mos(name, d, g, s, b, 'nfet_03v3', w, l, nf, iso))
 
     def p(self, name, d, g, s, w, l, nf=1, b='VDD'):
         self.devices.append(Mos(name, d, g, s, b, 'pfet_03v3', w, l, nf))
+
+    def p6(self, name, d, g, s, w, l, nf=1, b='VDD'):
+        self.devices.append(Mos(name, d, g, s, b, 'pfet_06v0', w, l, nf))
 
     def n6(self, name, d, g, s, w, l, nf=1, b='VSS'):
         self.devices.append(Mos(name, d, g, s, b, 'nfet_06v0', w, l, nf))
@@ -152,7 +156,10 @@ DRV = dict(
     pre3_w=10.0, pre3_nf=6, pre3_tail_nf=14, pre3_rl_w=2.0, pre3_rl_l=2.2,
     n_pre=3,                                  # three pre-amplifiers: the summed_rf level (~0.2 V pk diff at
                                               # full scale) must reach ~0.6 V to drive the output stage to Psat
-    sf_w=10.0, sf_nf=12, sf_tail_nf=36,       # source followers p2 -> p3 (per side), drive the output gates
+    sf_w=10.0, sf_nf=24, sf_tail_nf=34,       # source followers p2 -> p3 (per side), drive the output gates
+    sf_iso=True,                              # RFT-01: SF in isolated p-well, body tied to source; 24 fingers
+                                              # (was 12): ss derated +1.9 dB; tail 36 -> 34 keeps zero-input
+                                              # rfdriver current under the 58.73 mA cap (59.26 at 36)
     out_w=20.0, out_nf=32, out_l=0.28,
     out_tail_nf=(12, 24, 48, 96),             # binary slices (fingers of unit_w/unit_l), ~36 mA at code 15
     ro_w=10.0, ro_l=44.0, ro_par=1,           # ~1.6 kohm ppolyf_u keeper per leg (header on). The output is
@@ -161,11 +168,12 @@ DRV = dict(
                                               # took half the signal current (Psat ~+1 dBm).
     hdr_w=20.0, hdr_nf=48,                    # output-load PMOS header
     byp_w=20.0, byp_nf=2,                     # external-PA bypass PMOS per leg
+    bypb_w=4.0,                               # T bypass: in-side half as 4 um fingers (same total W, low row)
     clamp_w=1.0, clamp_l=2.0,
     cas=True,                                 # RC-3: nfet_06v0 cascode between the output pair and the pads.
     cas_w=20.0, cas_nf=48, cas_l=0.7,         # 960/0.7 per leg; gate ~VDD (AC-grounded by a MOS cap): the
                                               # nfet_03v3 pair stays <= ~2.5 V Vds while the pad peaks 4.1-4.4 V
-    casdc_w=10.0, casdc_l=4.0, casdc_nf=4,    # cascode-gate MOS decap per leg (~0.8 pF)
+    casdc_w=10.0, casdc_l=4.0, casdc_nf=32,   # cascode-gate MOS decap per leg (~6 pF): gate ripple 3.56 -> 3.37 V peak
     se_w=20.0, se_nf=4,                       # D-TX-2: SE mode (se=1) turns the pad_n cascode off and steers that
                                               # leg's current into an on-chip PMOS dummy load (80/0.28, ~25 ohm)
     pad_clamp=False,                          # off-state pad pull-downs removed: with the board DC feed they
@@ -264,8 +272,20 @@ def rfdriver(name='pt_rfdriver'):
     gate = 'p2'
     if d['sf_nf']:
         for leg in 'pn':
-            c.n(f'SF_{leg}', 'VDD', f'p2_{leg}', f'p3_{leg}', d['sf_w'], 0.28, d['sf_nf'])
+            # SF drains on their own switched header `sfd` (SFH, off when pre_off): in reset/bypass the pre-amp
+            # loads hold p2 at VDD, and VDD-fed followers fought the P3C gate pull-downs (2.0-2.4 mA static in
+            # reset, safe test fail, 2026-11-11). P3C is needed (without it the rail-on 100 mA pad pulse puts
+            # 4.0 V on TS_*/SF_* gates: scratch/rf-tx/stress_nop3c). Not `hdrv`: the board feed holds it at the
+            # rail through RO_*. SFH is wide because ss/3.15 V Pout is steep in SF headroom (80 um: -9 dB).
+            # RFT-01 (2026-11-12): followers in an isolated p-well (DNWELL tap on VDD), body = source. Removes the
+            # ~0.4 V body-effect Vt shift that left the output tail in triode at ss/3.15 V (fork I/N, rf-tx-n).
+            iso = d.get('sf_iso', False)
+            c.n(f'SF_{leg}', 'sfd' if d.get('cas') else 'VDD', f'p2_{leg}', f'p3_{leg}', d['sf_w'], 0.28, d['sf_nf'],
+                b=f'p3_{leg}' if iso else 'VSS', iso=iso)
             c.n(f'TS_{leg}', f'p3_{leg}', 'vbp', 'VSS', d['unit_w'], d['unit_l'], d['sf_tail_nf'])
+        if d.get('cas'):
+            for h in 'ab':                                         # 2 x 640 um: ~10 mV at 4.4 mA (ss)
+                c.p(f'SFH_{h}', 'sfd', 'pre_off', 'VDD', d.get('sfh_w', 20.0), 0.28, d.get('sfh_nf', 32))
         gate = 'p3'
     # Output pair: pad_p follows p2_p. With the cascode the pair drains are cp/cn (inside the block).
     dp, dn = ('cp', 'cn') if d.get('cas') else ('pad_p', 'pad_n')
@@ -274,12 +294,15 @@ def rfdriver(name='pt_rfdriver'):
     if d.get('cas'):
         # nfet_06v0 cascodes (drains on the pads). Gates: vcp from a tie-high inverter, vcn = se_b, both
         # MOS-cap decoupled. Unpowered: gates at 0 V, so pad stress lands on the 6 V devices only.
-        c.inv('ISE', 'se', 'se_b')
-        c.inv('IHI', 'VSS', 'vcp')
+        # cascode-gate drivers and decaps on 6 V devices: a pad step couples the gates ~0.6 V above VDD
+        # (100 mA pulse, rail on: 3.87 V on 3.3 V oxide); 6 V oxide screens at 6.0 V
+        for nm, a, y in (('ISE', 'se', 'se_b'), ('IHI', 'VSS', 'vcp')):
+            c.n6(nm + '_N', y, a, 'VSS', 2.0, 0.7)
+            c.p6(nm + '_P', y, a, 'VDD', 4.0, 0.55)   # PL.2: MV L >= 0.55
         c.n6('CAS_P', 'pad_p', 'vcp', 'cp', d['cas_w'], d['cas_l'], d['cas_nf'])
         c.n6('CAS_N', 'pad_n', 'se_b', 'cn', d['cas_w'], d['cas_l'], d['cas_nf'])
-        c.n('CDC_P', 'VSS', 'vcp', 'VSS', d['casdc_w'], d['casdc_l'], d['casdc_nf'])
-        c.n('CDC_N', 'VSS', 'se_b', 'VSS', d['casdc_w'], d['casdc_l'], d['casdc_nf'])
+        c.n6('CDC_P', 'VSS', 'vcp', 'VSS', d['casdc_w'], d['casdc_l'], d['casdc_nf'])
+        c.n6('CDC_N', 'VSS', 'se_b', 'VSS', d['casdc_w'], d['casdc_l'], d['casdc_nf'])
         # SE dummy loads (pad_n leg on in SE; the pad_p twin is always off, for symmetry)
         c.p('DUM_P', 'cp', 'VDD', 'VDD', d['se_w'], 0.28, d['se_nf'])
         c.p('DUM_N', 'cn', 'se_b', 'VDD', d['se_w'], 0.28, d['se_nf'])
@@ -294,12 +317,32 @@ def rfdriver(name='pt_rfdriver'):
     for leg in 'pn':
         for i in range(d['ro_par']):
             c.r(f'RO_{leg}{i}', 'hdrv', f'pad_{leg}', d['ro_w'], d['ro_l'], model='ppolyf_u')
-        c.p(f'BYP_{leg}', f'pad_{leg}', 'byp_b', f'in_{leg}', d['byp_w'], 0.28, d['byp_nf'])
+        if d.get('cas'):
+            # RC-3 follow-up: a pfet_03v3 with its drain on the pad and its n-well on the island rail is a pad->rail
+            # diode (forward above ~VDD+0.6 V: every 4.1 V functional peak, and HBM charged the off rail to >5 V).
+            # pfet_06v0 (6 V oxide, |Vt| ~1 V) in its own n-well `nwb`, fed from VDD through ~10 kohm.
+            # RFT-01/D2 (2026-11-12): T bypass switch. The single pad->in PMOS put ~6 fF/leg of off-state S/D
+            # coupling from each pad onto the in-phase driver input: with the txsum source (~260 ohm) that is
+            # positive feedback (extracted Re(Ydiff) down to -4.6 mS at 0.6-0.9 GHz; sustained 3-8 V oscillation
+            # with B17 >= 22 nH feed chokes at ss/ff, scratch/rf-tx-d2). BYPA (pad -> bm) + BYPB (bm -> in), and
+            # BSH holds bm at VSS whenever bypass = 0 (gate byp_g = nwb level), so the coupling lands on AC ground.
+            c.p6(f'BYPA_{leg}', f'pad_{leg}', 'byp_g', f'bm_{leg}', d['byp_w'], 0.55, 2 * d['byp_nf'], b='nwb')
+            c.p6(f'BYPB_{leg}', f'bm_{leg}', 'byp_g', f'in_{leg}', d['bypb_w'], 0.55, int(round(2 * d['byp_nf'] * d['byp_w'] / d['bypb_w'])), b='nwb')
+            c.n6(f'BSH_{leg}', f'bm_{leg}', 'byp_g', 'VSS', 4.0, 0.7)
+            c.n(f'P3C_{leg}', f'p3_{leg}', 'pre_off', 'VSS', 2.0, 0.28)   # off: hold the output-pair gates low
+        else:
+            c.p(f'BYP_{leg}', f'pad_{leg}', 'byp_b', f'in_{leg}', d['byp_w'], 0.28, d['byp_nf'])
         if d.get('pad_clamp', True):
             c.n(f'CLP_{leg}', f'pad_{leg}', 'off_all', 'VSS', d['clamp_w'], d['clamp_l'])
         c.r(f'RATBC_{leg}', f'pad_{leg}', 'atb_cm', **ATB_R)
         c.r(f'RATBP_{leg}', f'p2_{leg}', 'atb_pre', **ATB_R)
     c.r('RATB_B', 'vb', 'atb_bias', **ATB_R)
+    if d.get('cas'):
+        c.r('RNWB', 'VDD', 'nwb', 1.0, 10.0)        # ~10 kohm n-well feed of the bypass switches
+        # bypass gate driver supplied from nwb (6 V devices): unpowered or under pad stress the gate follows the
+        # pad-charged n-well, so the bypass PMOS stays off (a VDD-supplied gate at 0 V turned it fully on in HBM)
+        c.p6('BG_P', 'byp_g', 'bypass', 'nwb', 4.0, 0.55, b='nwb')
+        c.n6('BG_N', 'byp_g', 'bypass', 'VSS', 2.0, 0.7)
     return c
 
 

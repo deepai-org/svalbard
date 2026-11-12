@@ -9,18 +9,18 @@
  "board_match": {
   "f": 2440000000.0,
   "q_l": 30.0,
-  "choke_l": 2.202294175545964e-09,
+  "choke_l": 2.1183092819427255e-09,
   "balun_ratio_ohm": 200.0,
   "balun_loss_db": 1.0,
-  "r_out_ohm": 195.46003414999532,
-  "pad_susceptance_S": 0.0148089743,
+  "r_out_ohm": 656.4708644936802,
+  "pad_susceptance_S": 0.0153961077,
   "method": "board DC feed to the rf_tx island rail through per-leg chokes (Q=30) that resonate the measured differential pad susceptance (tt, code 15, driver biased by the feed); DC blocks; ideal 200:50 ohm balun followed by a 1.0 dB resistive pad for balun insertion loss; 50 ohm load. All board-matched powers are after the balun loss.",
   "pad_admittance_S": [
-   0.0051161354,
-   0.0148089743
+   0.00152329685,
+   0.0153961077
   ]
  },
- "runtime_s": 568.1,
+ "runtime_s": 1053.0,
  "results": {
   "mix_sat": {
    "meta": {
@@ -217,13 +217,13 @@
    },
    "result": {
     "input_mVpk_diff": 49.996,
-    "pad_fund_mVpk_diff": 322.125,
-    "pad_dBm_50ohm": 0.16,
-    "voltage_gain": 6.443,
-    "supply_mA": 57.9257,
-    "atb_bias_V": 0.9474,
-    "atb_pre_V": 2.6405,
-    "atb_cm_V": 3.2669
+    "pad_fund_mVpk_diff": 306.677,
+    "pad_dBm_50ohm": -0.27,
+    "voltage_gain": 6.134,
+    "supply_mA": 58.3315,
+    "atb_bias_V": 0.9476,
+    "atb_pre_V": 2.6401,
+    "atb_cm_V": 3.2682
    }
   },
   "drv_a150": {
@@ -233,13 +233,13 @@
    },
    "result": {
     "input_mVpk_diff": 149.988,
-    "pad_fund_mVpk_diff": 740.995,
-    "pad_dBm_50ohm": 7.4,
-    "voltage_gain": 4.9404,
-    "supply_mA": 58.7604,
-    "atb_bias_V": 0.9494,
-    "atb_pre_V": 2.6335,
-    "atb_cm_V": 3.2752
+    "pad_fund_mVpk_diff": 640.237,
+    "pad_dBm_50ohm": 6.13,
+    "voltage_gain": 4.2686,
+    "supply_mA": 59.5421,
+    "atb_bias_V": 0.9501,
+    "atb_pre_V": 2.6309,
+    "atb_cm_V": 3.2805
    }
   },
   "drv_a300": {
@@ -249,13 +249,13 @@
    },
    "result": {
     "input_mVpk_diff": 299.976,
-    "pad_fund_mVpk_diff": 847.688,
-    "pad_dBm_50ohm": 8.56,
-    "voltage_gain": 2.8259,
-    "supply_mA": 59.5609,
-    "atb_bias_V": 0.9511,
-    "atb_pre_V": 2.6239,
-    "atb_cm_V": 3.2776
+    "pad_fund_mVpk_diff": 700.62,
+    "pad_dBm_50ohm": 6.91,
+    "voltage_gain": 2.3356,
+    "supply_mA": 60.411,
+    "atb_bias_V": 0.9519,
+    "atb_pre_V": 2.62,
+    "atb_cm_V": 3.2824
    }
   },
   "drv_a600": {
@@ -265,13 +265,13 @@
    },
    "result": {
     "input_mVpk_diff": 599.952,
-    "pad_fund_mVpk_diff": 861.373,
-    "pad_dBm_50ohm": 8.7,
-    "voltage_gain": 1.4357,
-    "supply_mA": 59.7237,
-    "atb_bias_V": 0.9515,
-    "atb_pre_V": 2.6188,
-    "atb_cm_V": 3.2783
+    "pad_fund_mVpk_diff": 710.262,
+    "pad_dBm_50ohm": 7.03,
+    "voltage_gain": 1.1839,
+    "supply_mA": 60.6291,
+    "atb_bias_V": 0.9524,
+    "atb_pre_V": 2.6139,
+    "atb_cm_V": 3.2842
    }
   },
   "drv_code1": {
@@ -281,13 +281,13 @@
    },
    "result": {
     "input_mVpk_diff": 299.976,
-    "pad_fund_mVpk_diff": 105.267,
-    "pad_dBm_50ohm": -9.55,
-    "voltage_gain": 0.3509,
-    "supply_mA": 26.1637,
-    "atb_bias_V": 0.9507,
-    "atb_pre_V": 2.6241,
-    "atb_cm_V": 3.3153
+    "pad_fund_mVpk_diff": 43.994,
+    "pad_dBm_50ohm": -17.13,
+    "voltage_gain": 0.1467,
+    "supply_mA": 26.2056,
+    "atb_bias_V": 0.9515,
+    "atb_pre_V": 2.6199,
+    "atb_cm_V": 3.322
    }
   },
   "drv_code2": {
@@ -297,13 +297,13 @@
    },
    "result": {
     "input_mVpk_diff": 299.976,
-    "pad_fund_mVpk_diff": 185.111,
-    "pad_dBm_50ohm": -4.65,
-    "voltage_gain": 0.6171,
-    "supply_mA": 28.6989,
-    "atb_bias_V": 0.9519,
-    "atb_pre_V": 2.622,
-    "atb_cm_V": 3.3129
+    "pad_fund_mVpk_diff": 102.308,
+    "pad_dBm_50ohm": -9.8,
+    "voltage_gain": 0.3411,
+    "supply_mA": 28.7706,
+    "atb_bias_V": 0.9527,
+    "atb_pre_V": 2.6176,
+    "atb_cm_V": 3.3229
    }
   },
   "drv_code4": {
@@ -313,13 +313,13 @@
    },
    "result": {
     "input_mVpk_diff": 299.976,
-    "pad_fund_mVpk_diff": 335.442,
-    "pad_dBm_50ohm": 0.51,
-    "voltage_gain": 1.1182,
-    "supply_mA": 33.7098,
-    "atb_bias_V": 0.9526,
-    "atb_pre_V": 2.6214,
-    "atb_cm_V": 3.3068
+    "pad_fund_mVpk_diff": 224.649,
+    "pad_dBm_50ohm": -2.97,
+    "voltage_gain": 0.7489,
+    "supply_mA": 33.8543,
+    "atb_bias_V": 0.9535,
+    "atb_pre_V": 2.6168,
+    "atb_cm_V": 3.3179
    }
   },
   "drv_code8": {
@@ -329,13 +329,13 @@
    },
    "result": {
     "input_mVpk_diff": 299.976,
-    "pad_fund_mVpk_diff": 573.971,
-    "pad_dBm_50ohm": 5.18,
-    "voltage_gain": 1.9134,
-    "supply_mA": 43.3908,
-    "atb_bias_V": 0.9521,
-    "atb_pre_V": 2.6227,
-    "atb_cm_V": 3.2962
+    "pad_fund_mVpk_diff": 435.002,
+    "pad_dBm_50ohm": 2.77,
+    "voltage_gain": 1.4501,
+    "supply_mA": 43.7569,
+    "atb_bias_V": 0.953,
+    "atb_pre_V": 2.6184,
+    "atb_cm_V": 3.3053
    }
   },
   "drv_code12": {
@@ -345,13 +345,13 @@
    },
    "result": {
     "input_mVpk_diff": 299.976,
-    "pad_fund_mVpk_diff": 749.322,
-    "pad_dBm_50ohm": 7.49,
-    "voltage_gain": 2.4979,
-    "supply_mA": 52.7104,
-    "atb_bias_V": 0.9516,
-    "atb_pre_V": 2.6233,
-    "atb_cm_V": 3.2859
+    "pad_fund_mVpk_diff": 601.422,
+    "pad_dBm_50ohm": 5.58,
+    "voltage_gain": 2.0049,
+    "supply_mA": 53.3372,
+    "atb_bias_V": 0.9524,
+    "atb_pre_V": 2.6192,
+    "atb_cm_V": 3.2925
    }
   },
   "drv_mute": {
@@ -361,13 +361,13 @@
    },
    "result": {
     "input_mVpk_diff": 299.976,
-    "pad_fund_mVpk_diff": 42.839,
-    "pad_dBm_50ohm": -17.36,
-    "voltage_gain": 0.1428,
-    "supply_mA": 23.7154,
-    "atb_bias_V": 0.9489,
-    "atb_pre_V": 2.6301,
-    "atb_cm_V": 3.3001
+    "pad_fund_mVpk_diff": 0.736,
+    "pad_dBm_50ohm": -52.66,
+    "voltage_gain": 0.0025,
+    "supply_mA": 23.2584,
+    "atb_bias_V": 0.9497,
+    "atb_pre_V": 2.626,
+    "atb_cm_V": 3.3
    }
   },
   "drv_bypass": {
@@ -376,14 +376,14 @@
     "amp": 0.3
    },
    "result": {
-    "input_mVpk_diff": 299.974,
-    "pad_fund_mVpk_diff": 36.482,
-    "pad_dBm_50ohm": -18.76,
-    "voltage_gain": 0.1216,
-    "supply_mA": 7.3524,
+    "input_mVpk_diff": 299.975,
+    "pad_fund_mVpk_diff": 15.376,
+    "pad_dBm_50ohm": -26.26,
+    "voltage_gain": 0.0513,
+    "supply_mA": 3.3214,
     "atb_bias_V": 0.9471,
     "atb_pre_V": 3.3,
-    "atb_cm_V": 3.2926
+    "atb_cm_V": 3.2967
    }
   },
   "drv_bypass_en0": {
@@ -392,14 +392,14 @@
     "amp": 0.3
    },
    "result": {
-    "input_mVpk_diff": 299.974,
-    "pad_fund_mVpk_diff": 36.482,
-    "pad_dBm_50ohm": -18.76,
-    "voltage_gain": 0.1216,
-    "supply_mA": 7.3524,
+    "input_mVpk_diff": 299.975,
+    "pad_fund_mVpk_diff": 15.376,
+    "pad_dBm_50ohm": -26.26,
+    "voltage_gain": 0.0513,
+    "supply_mA": 3.3214,
     "atb_bias_V": 0.0,
     "atb_pre_V": 3.3,
-    "atb_cm_V": 3.2926
+    "atb_cm_V": 3.2967
    }
   },
   "drv_off": {
@@ -409,8 +409,8 @@
    },
    "result": {
     "input_mVpk_diff": 299.976,
-    "pad_fund_mVpk_diff": 0.001,
-    "pad_dBm_50ohm": -114.83,
+    "pad_fund_mVpk_diff": 0.0,
+    "pad_dBm_50ohm": -163.8,
     "voltage_gain": 0.0,
     "supply_mA": 0.0,
     "atb_bias_V": 0.0,
@@ -463,7 +463,7 @@
     "kind": "cap"
    },
    "result": {
-    "capacitance_fF": 126.86
+    "capacitance_fF": 151.38
    }
   },
   "cap_drv_in_off": {
@@ -471,7 +471,7 @@
     "kind": "cap"
    },
    "result": {
-    "capacitance_fF": 87.61
+    "capacitance_fF": 112.23
    }
   },
   "cap_drv_in_bypass": {
@@ -479,7 +479,7 @@
     "kind": "cap"
    },
    "result": {
-    "capacitance_fF": 747.54
+    "capacitance_fF": 138.23
    }
   },
   "chain_dc": {
@@ -488,26 +488,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 608.067,
-    "pad_dBm_50ohm": 5.68,
-    "sum_fund_mVpk_diff": 125.634,
-    "mixi_drain_fund_mVpk_diff": 131.775,
+    "pad_fund_mVpk_diff": 501.529,
+    "pad_dBm_50ohm": 4.01,
+    "sum_fund_mVpk_diff": 116.08,
+    "mixi_drain_fund_mVpk_diff": 121.803,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0097,
-     "rfdriver": 53.7446
+     "txsum": 2.0076,
+     "rfdriver": 53.9006
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9347,
-     "rfdriver.atb_pre": 2.676,
-     "rfdriver.atb_cm": 3.2738,
-     "txsum.atb_cm": 2.8327,
+     "rfdriver.atb_bias": 0.9343,
+     "rfdriver.atb_pre": 2.6795,
+     "rfdriver.atb_cm": 3.2467,
+     "txsum.atb_cm": 2.8331,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7905
     },
-    "pad_cm_V": 3.2743,
-    "sum_cm_V": 2.834
+    "pad_cm_V": 3.2474,
+    "sum_cm_V": 2.8345
    }
   },
   "chain_dcneg": {
@@ -516,26 +516,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 608.124,
-    "pad_dBm_50ohm": 5.68,
-    "sum_fund_mVpk_diff": 125.654,
-    "mixi_drain_fund_mVpk_diff": 131.795,
+    "pad_fund_mVpk_diff": 501.537,
+    "pad_dBm_50ohm": 4.01,
+    "sum_fund_mVpk_diff": 116.099,
+    "mixi_drain_fund_mVpk_diff": 121.822,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0097,
-     "rfdriver": 53.7448
+     "txsum": 2.0076,
+     "rfdriver": 53.8999
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9347,
-     "rfdriver.atb_pre": 2.6759,
-     "rfdriver.atb_cm": 3.2738,
-     "txsum.atb_cm": 2.8327,
+     "rfdriver.atb_bias": 0.9343,
+     "rfdriver.atb_pre": 2.6795,
+     "rfdriver.atb_cm": 3.2467,
+     "txsum.atb_cm": 2.8331,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.6467
     },
-    "pad_cm_V": 3.2741,
-    "sum_cm_V": 2.834
+    "pad_cm_V": 3.2482,
+    "sum_cm_V": 2.8345
    }
   },
   "chain_zero": {
@@ -544,25 +544,25 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 0.093,
-    "pad_dBm_50ohm": -70.67,
-    "sum_fund_mVpk_diff": 0.014,
-    "mixi_drain_fund_mVpk_diff": 0.014,
+    "pad_fund_mVpk_diff": 0.083,
+    "pad_dBm_50ohm": -71.62,
+    "sum_fund_mVpk_diff": 0.013,
+    "mixi_drain_fund_mVpk_diff": 0.013,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0098,
-     "rfdriver": 57.7908
+     "txsum": 2.0097,
+     "rfdriver": 58.1455
     },
     "atb_V": {
      "rfdriver.atb_bias": 0.9471,
      "rfdriver.atb_pre": 2.6414,
-     "rfdriver.atb_cm": 3.2656,
+     "rfdriver.atb_cm": 3.2647,
      "txsum.atb_cm": 2.8326,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7125
     },
-    "pad_cm_V": 3.2656,
+    "pad_cm_V": 3.2647,
     "sum_cm_V": 2.834
    }
   },
@@ -572,26 +572,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 750.82,
-    "pad_dBm_50ohm": 7.51,
-    "sum_fund_mVpk_diff": 264.72,
-    "mixi_drain_fund_mVpk_diff": 277.618,
+    "pad_fund_mVpk_diff": 601.598,
+    "pad_dBm_50ohm": 5.59,
+    "sum_fund_mVpk_diff": 244.708,
+    "mixi_drain_fund_mVpk_diff": 256.727,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0107,
-     "rfdriver": 54.4151
+     "txsum": 2.0086,
+     "rfdriver": 54.6189
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9363,
-     "rfdriver.atb_pre": 2.6689,
-     "rfdriver.atb_cm": 3.2711,
-     "txsum.atb_cm": 2.8325,
+     "rfdriver.atb_bias": 0.936,
+     "rfdriver.atb_pre": 2.6716,
+     "rfdriver.atb_cm": 3.2499,
+     "txsum.atb_cm": 2.8329,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 0.9127
+     "txmix_i.atb_tail": 0.9128
     },
-    "pad_cm_V": 3.2715,
-    "sum_cm_V": 2.8337
+    "pad_cm_V": 3.2507,
+    "sum_cm_V": 2.8342
    }
   },
   "chain_dac": {
@@ -600,26 +600,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 608.067,
-    "pad_dBm_50ohm": 5.68,
-    "sum_fund_mVpk_diff": 125.634,
-    "mixi_drain_fund_mVpk_diff": 131.775,
+    "pad_fund_mVpk_diff": 501.529,
+    "pad_dBm_50ohm": 4.01,
+    "sum_fund_mVpk_diff": 116.08,
+    "mixi_drain_fund_mVpk_diff": 121.803,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0097,
-     "rfdriver": 53.7446
+     "txsum": 2.0076,
+     "rfdriver": 53.9006
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9347,
-     "rfdriver.atb_pre": 2.676,
-     "rfdriver.atb_cm": 3.2738,
-     "txsum.atb_cm": 2.8327,
+     "rfdriver.atb_bias": 0.9343,
+     "rfdriver.atb_pre": 2.6795,
+     "rfdriver.atb_cm": 3.2467,
+     "txsum.atb_cm": 2.8331,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7905
     },
-    "pad_cm_V": 3.2743,
-    "sum_cm_V": 2.834
+    "pad_cm_V": 3.2474,
+    "sum_cm_V": 2.8345
    }
   },
   "chain_bypass": {
@@ -628,26 +628,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 8.757,
-    "pad_dBm_50ohm": -31.15,
-    "sum_fund_mVpk_diff": 56.767,
-    "mixi_drain_fund_mVpk_diff": 65.146,
+    "pad_fund_mVpk_diff": 4.355,
+    "pad_dBm_50ohm": -37.22,
+    "sum_fund_mVpk_diff": 68.594,
+    "mixi_drain_fund_mVpk_diff": 75.458,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 0.3988,
-     "rfdriver": 1.6036
+     "txsum": 0.7243,
+     "rfdriver": 1.2844
     },
     "atb_V": {
      "rfdriver.atb_bias": 0.9471,
      "rfdriver.atb_pre": 3.3,
-     "rfdriver.atb_cm": 3.2983,
-     "txsum.atb_cm": 3.2069,
+     "rfdriver.atb_cm": 3.2987,
+     "txsum.atb_cm": 3.1317,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 0.7912
+     "txmix_i.atb_tail": 0.7911
     },
-    "pad_cm_V": 3.2983,
-    "sum_cm_V": 3.2081
+    "pad_cm_V": 3.2987,
+    "sum_cm_V": 3.1329
    }
   },
   "chain_bypass_large": {
@@ -656,26 +656,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 18.401,
-    "pad_dBm_50ohm": -24.7,
-    "sum_fund_mVpk_diff": 119.279,
-    "mixi_drain_fund_mVpk_diff": 136.886,
+    "pad_fund_mVpk_diff": 9.155,
+    "pad_dBm_50ohm": -30.77,
+    "sum_fund_mVpk_diff": 144.2,
+    "mixi_drain_fund_mVpk_diff": 158.622,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 0.4006,
-     "rfdriver": 1.6058
+     "txsum": 0.7264,
+     "rfdriver": 1.2833
     },
     "atb_V": {
      "rfdriver.atb_bias": 0.9471,
      "rfdriver.atb_pre": 3.3,
-     "rfdriver.atb_cm": 3.2983,
-     "txsum.atb_cm": 3.2066,
+     "rfdriver.atb_cm": 3.2987,
+     "txsum.atb_cm": 3.1313,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 0.9136
+     "txmix_i.atb_tail": 0.9134
     },
-    "pad_cm_V": 3.2984,
-    "sum_cm_V": 3.2076
+    "pad_cm_V": 3.2987,
+    "sum_cm_V": 3.1324
    }
   },
   "chain_mute": {
@@ -684,25 +684,25 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 30.438,
-    "pad_dBm_50ohm": -20.33,
-    "sum_fund_mVpk_diff": 124.911,
-    "mixi_drain_fund_mVpk_diff": 131.051,
+    "pad_fund_mVpk_diff": 0.528,
+    "pad_dBm_50ohm": -55.55,
+    "sum_fund_mVpk_diff": 115.754,
+    "mixi_drain_fund_mVpk_diff": 121.477,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0099,
-     "rfdriver": 23.5089
+     "txsum": 2.0098,
+     "rfdriver": 22.8839
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.948,
-     "rfdriver.atb_pre": 2.6371,
-     "rfdriver.atb_cm": 3.2999,
+     "rfdriver.atb_bias": 0.9476,
+     "rfdriver.atb_pre": 2.6387,
+     "rfdriver.atb_cm": 3.3,
      "txsum.atb_cm": 2.8326,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7905
     },
-    "pad_cm_V": 3.2999,
+    "pad_cm_V": 3.3,
     "sum_cm_V": 2.8339
    }
   },
@@ -712,26 +712,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 272.838,
-    "pad_dBm_50ohm": -1.28,
-    "sum_fund_mVpk_diff": 125.175,
-    "mixi_drain_fund_mVpk_diff": 131.317,
+    "pad_fund_mVpk_diff": 179.119,
+    "pad_dBm_50ohm": -4.94,
+    "sum_fund_mVpk_diff": 115.973,
+    "mixi_drain_fund_mVpk_diff": 121.696,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0098,
-     "rfdriver": 31.6189
+     "txsum": 2.0096,
+     "rfdriver": 31.1206
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9406,
-     "rfdriver.atb_pre": 2.661,
-     "rfdriver.atb_cm": 3.3003,
-     "txsum.atb_cm": 2.8326,
+     "rfdriver.atb_bias": 0.94,
+     "rfdriver.atb_pre": 2.664,
+     "rfdriver.atb_cm": 3.2784,
+     "txsum.atb_cm": 2.8327,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7905
     },
-    "pad_cm_V": 3.3006,
-    "sum_cm_V": 2.8339
+    "pad_cm_V": 3.2785,
+    "sum_cm_V": 2.834
    }
   },
   "chain_lo_low": {
@@ -740,26 +740,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 602.845,
-    "pad_dBm_50ohm": 5.6,
-    "sum_fund_mVpk_diff": 123.724,
-    "mixi_drain_fund_mVpk_diff": 129.752,
+    "pad_fund_mVpk_diff": 497.559,
+    "pad_dBm_50ohm": 3.94,
+    "sum_fund_mVpk_diff": 114.265,
+    "mixi_drain_fund_mVpk_diff": 119.882,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0084,
-     "rfdriver": 53.7347
+     "txsum": 2.0063,
+     "rfdriver": 53.8859
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9347,
-     "rfdriver.atb_pre": 2.6761,
-     "rfdriver.atb_cm": 3.2739,
-     "txsum.atb_cm": 2.8331,
+     "rfdriver.atb_bias": 0.9342,
+     "rfdriver.atb_pre": 2.6797,
+     "rfdriver.atb_cm": 3.2466,
+     "txsum.atb_cm": 2.8335,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7635
     },
-    "pad_cm_V": 3.2744,
-    "sum_cm_V": 2.8343
+    "pad_cm_V": 3.2473,
+    "sum_cm_V": 2.8348
    }
   },
   "stretch_lo_div2": {
@@ -769,26 +769,26 @@
     "f_lo": 1220000000.0
    },
    "result": {
-    "pad_fund_mVpk_diff": 1088.032,
-    "pad_dBm_50ohm": 10.73,
-    "sum_fund_mVpk_diff": 155.431,
-    "mixi_drain_fund_mVpk_diff": 162.582,
+    "pad_fund_mVpk_diff": 1007.073,
+    "pad_dBm_50ohm": 10.06,
+    "sum_fund_mVpk_diff": 152.452,
+    "mixi_drain_fund_mVpk_diff": 159.344,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0067,
-     "rfdriver": 56.5503
+     "txsum": 2.0103,
+     "rfdriver": 57.0531
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9415,
-     "rfdriver.atb_pre": 2.6557,
-     "rfdriver.atb_cm": 3.2632,
-     "txsum.atb_cm": 2.8339,
+     "rfdriver.atb_bias": 0.9426,
+     "rfdriver.atb_pre": 2.6513,
+     "rfdriver.atb_cm": 3.2699,
+     "txsum.atb_cm": 2.8331,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7911
     },
-    "pad_cm_V": 3.2626,
-    "sum_cm_V": 2.8348
+    "pad_cm_V": 3.2693,
+    "sum_cm_V": 2.834
    }
   },
   "stretch_lo_div2_large": {
@@ -798,26 +798,26 @@
     "f_lo": 1220000000.0
    },
    "result": {
-    "pad_fund_mVpk_diff": 1103.141,
-    "pad_dBm_50ohm": 10.85,
-    "sum_fund_mVpk_diff": 330.861,
-    "mixi_drain_fund_mVpk_diff": 345.885,
+    "pad_fund_mVpk_diff": 1012.833,
+    "pad_dBm_50ohm": 10.11,
+    "sum_fund_mVpk_diff": 321.41,
+    "mixi_drain_fund_mVpk_diff": 335.891,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0078,
-     "rfdriver": 57.0141
+     "txsum": 2.0117,
+     "rfdriver": 57.531
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9426,
-     "rfdriver.atb_pre": 2.6502,
-     "rfdriver.atb_cm": 3.2641,
-     "txsum.atb_cm": 2.8337,
+     "rfdriver.atb_bias": 0.9438,
+     "rfdriver.atb_pre": 2.645,
+     "rfdriver.atb_cm": 3.2693,
+     "txsum.atb_cm": 2.8328,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.9134
     },
-    "pad_cm_V": 3.2632,
-    "sum_cm_V": 2.8346
+    "pad_cm_V": 3.2685,
+    "sum_cm_V": 2.8337
    }
   },
   "stretch_lo_div4": {
@@ -827,26 +827,26 @@
     "f_lo": 610000000.0
    },
    "result": {
-    "pad_fund_mVpk_diff": 1100.391,
-    "pad_dBm_50ohm": 10.83,
-    "sum_fund_mVpk_diff": 235.294,
-    "mixi_drain_fund_mVpk_diff": 242.824,
+    "pad_fund_mVpk_diff": 1084.194,
+    "pad_dBm_50ohm": 10.7,
+    "sum_fund_mVpk_diff": 178.91,
+    "mixi_drain_fund_mVpk_diff": 186.594,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9224,
-     "rfdriver": 57.8525
+     "txsum": 2.011,
+     "rfdriver": 57.7501
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9446,
-     "rfdriver.atb_pre": 2.645,
-     "rfdriver.atb_cm": 3.2674,
-     "txsum.atb_cm": 2.854,
+     "rfdriver.atb_bias": 0.9443,
+     "rfdriver.atb_pre": 2.6473,
+     "rfdriver.atb_cm": 3.2663,
+     "txsum.atb_cm": 2.8334,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7914
     },
-    "pad_cm_V": 3.2671,
-    "sum_cm_V": 2.8545
+    "pad_cm_V": 3.2665,
+    "sum_cm_V": 2.8339
    }
   },
   "stretch_lo_div4_large": {
@@ -856,26 +856,26 @@
     "f_lo": 610000000.0
    },
    "result": {
-    "pad_fund_mVpk_diff": 1102.536,
-    "pad_dBm_50ohm": 10.85,
-    "sum_fund_mVpk_diff": 435.048,
-    "mixi_drain_fund_mVpk_diff": 451.187,
+    "pad_fund_mVpk_diff": 1085.57,
+    "pad_dBm_50ohm": 10.71,
+    "sum_fund_mVpk_diff": 376.229,
+    "mixi_drain_fund_mVpk_diff": 392.341,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.926,
-     "rfdriver": 57.9892
+     "txsum": 2.0123,
+     "rfdriver": 57.9425
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9449,
-     "rfdriver.atb_pre": 2.6427,
-     "rfdriver.atb_cm": 3.2671,
-     "txsum.atb_cm": 2.8531,
+     "rfdriver.atb_bias": 0.9447,
+     "rfdriver.atb_pre": 2.6439,
+     "rfdriver.atb_cm": 3.2664,
+     "txsum.atb_cm": 2.8332,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.9137
     },
-    "pad_cm_V": 3.2665,
-    "sum_cm_V": 2.8537
+    "pad_cm_V": 3.2663,
+    "sum_cm_V": 2.8336
    }
   },
   "chain_ssb": {
@@ -885,30 +885,30 @@
     "fbb": 61000000.0
    },
    "result": {
-    "lsb_dBm": 6.17,
-    "lo_dBm": -51.41,
-    "usb_dBm": -57.43,
-    "lsb3_dBm": -61.09,
-    "usb3_dBm": -39.76,
+    "lsb_dBm": 4.59,
+    "lo_dBm": -56.27,
+    "usb_dBm": -63.38,
+    "lsb3_dBm": -69.75,
+    "usb3_dBm": -42.35,
     "wanted": "lsb",
-    "image_rejection_dB": 63.6,
-    "lo_suppression_dBc": 57.58,
+    "image_rejection_dB": 67.97,
+    "lo_suppression_dBc": 60.86,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.01,
-     "rfdriver": 54.0601
+     "txsum": 2.0093,
+     "rfdriver": 54.0787
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9362,
-     "rfdriver.atb_pre": 2.6821,
-     "rfdriver.atb_cm": 3.2684,
-     "txsum.atb_cm": 2.8326,
+     "rfdriver.atb_bias": 0.9356,
+     "rfdriver.atb_pre": 2.6849,
+     "rfdriver.atb_cm": 3.2673,
+     "txsum.atb_cm": 2.8328,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7155
     },
-    "pad_cm_V": 3.2682,
-    "sum_cm_V": 2.8339
+    "pad_cm_V": 3.2675,
+    "sum_cm_V": 2.8341
    }
   },
   "chain_ssb_dac": {
@@ -918,30 +918,30 @@
     "fbb": 61000000.0
    },
    "result": {
-    "lsb_dBm": 6.17,
-    "lo_dBm": -51.41,
-    "usb_dBm": -57.43,
-    "lsb3_dBm": -61.09,
-    "usb3_dBm": -39.76,
+    "lsb_dBm": 4.59,
+    "lo_dBm": -56.27,
+    "usb_dBm": -63.38,
+    "lsb3_dBm": -69.75,
+    "usb3_dBm": -42.35,
     "wanted": "lsb",
-    "image_rejection_dB": 63.6,
-    "lo_suppression_dBc": 57.58,
+    "image_rejection_dB": 67.97,
+    "lo_suppression_dBc": 60.86,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.01,
-     "rfdriver": 54.0601
+     "txsum": 2.0094,
+     "rfdriver": 54.0787
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9362,
-     "rfdriver.atb_pre": 2.6821,
-     "rfdriver.atb_cm": 3.2684,
-     "txsum.atb_cm": 2.8326,
+     "rfdriver.atb_bias": 0.9356,
+     "rfdriver.atb_pre": 2.6849,
+     "rfdriver.atb_cm": 3.2673,
+     "txsum.atb_cm": 2.8328,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7155
     },
-    "pad_cm_V": 3.2682,
-    "sum_cm_V": 2.8339
+    "pad_cm_V": 3.2675,
+    "sum_cm_V": 2.8341
    }
   },
   "match_lin_0p1": {
@@ -950,25 +950,25 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 308.013,
-    "pad_dBm_50ohm": -0.23,
-    "sum_fund_mVpk_diff": 42.513,
-    "mixi_drain_fund_mVpk_diff": 44.591,
+    "pad_fund_mVpk_diff": 357.154,
+    "pad_dBm_50ohm": 1.06,
+    "sum_fund_mVpk_diff": 39.096,
+    "mixi_drain_fund_mVpk_diff": 41.027,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0096,
-     "rfdriver": 54.3019
+     "txsum": 2.0095,
+     "rfdriver": 54.153
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9368,
-     "rfdriver.atb_pre": 2.6709,
-     "rfdriver.atb_cm": 3.25,
+     "rfdriver.atb_bias": 0.936,
+     "rfdriver.atb_pre": 2.675,
+     "rfdriver.atb_cm": 3.2499,
      "txsum.atb_cm": 2.8327,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7374
     },
-    "pad_cm_V": 3.2503,
+    "pad_cm_V": 3.2507,
     "sum_cm_V": 2.834
    }
   },
@@ -978,26 +978,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 584.114,
-    "pad_dBm_50ohm": 5.33,
-    "sum_fund_mVpk_diff": 118.932,
-    "mixi_drain_fund_mVpk_diff": 126.289,
+    "pad_fund_mVpk_diff": 821.846,
+    "pad_dBm_50ohm": 8.3,
+    "sum_fund_mVpk_diff": 116.391,
+    "mixi_drain_fund_mVpk_diff": 122.133,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9429,
-     "rfdriver": 54.0631
+     "txsum": 2.0099,
+     "rfdriver": 53.6562
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9354,
-     "rfdriver.atb_pre": 2.6731,
-     "rfdriver.atb_cm": 3.2468,
-     "txsum.atb_cm": 2.8483,
+     "rfdriver.atb_bias": 0.9342,
+     "rfdriver.atb_pre": 2.6796,
+     "rfdriver.atb_cm": 3.2504,
+     "txsum.atb_cm": 2.8325,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7905
     },
-    "pad_cm_V": 3.2507,
-    "sum_cm_V": 2.85
+    "pad_cm_V": 3.2515,
+    "sum_cm_V": 2.8339
    }
   },
   "match_lin_0p7": {
@@ -1006,26 +1006,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 852.623,
-    "pad_dBm_50ohm": 8.62,
-    "sum_fund_mVpk_diff": 215.949,
-    "mixi_drain_fund_mVpk_diff": 233.213,
+    "pad_fund_mVpk_diff": 985.18,
+    "pad_dBm_50ohm": 9.87,
+    "sum_fund_mVpk_diff": 246.109,
+    "mixi_drain_fund_mVpk_diff": 258.208,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.7181,
-     "rfdriver": 54.592
+     "txsum": 2.0104,
+     "rfdriver": 54.3501
     },
     "atb_V": {
      "rfdriver.atb_bias": 0.9358,
-     "rfdriver.atb_pre": 2.6708,
-     "rfdriver.atb_cm": 3.2476,
-     "txsum.atb_cm": 2.901,
+     "rfdriver.atb_pre": 2.672,
+     "rfdriver.atb_cm": 3.2495,
+     "txsum.atb_cm": 2.8324,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 0.9129
+     "txmix_i.atb_tail": 0.9127
     },
-    "pad_cm_V": 3.2479,
-    "sum_cm_V": 2.902
+    "pad_cm_V": 3.2506,
+    "sum_cm_V": 2.8338
    }
   },
   "match_sat_0p3": {
@@ -1034,26 +1034,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 735.214,
-    "pad_dBm_50ohm": 7.33,
-    "sum_fund_mVpk_diff": 199.967,
-    "mixi_drain_fund_mVpk_diff": 213.758,
+    "pad_fund_mVpk_diff": 970.468,
+    "pad_dBm_50ohm": 9.74,
+    "sum_fund_mVpk_diff": 210.021,
+    "mixi_drain_fund_mVpk_diff": 220.357,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.842,
-     "rfdriver": 54.7572
+     "txsum": 2.0102,
+     "rfdriver": 54.2379
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9365,
-     "rfdriver.atb_pre": 2.672,
-     "rfdriver.atb_cm": 3.2521,
-     "txsum.atb_cm": 2.8716,
+     "rfdriver.atb_bias": 0.9356,
+     "rfdriver.atb_pre": 2.6735,
+     "rfdriver.atb_cm": 3.2496,
+     "txsum.atb_cm": 2.8324,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 0.7556
+     "txmix_i.atb_tail": 0.7555
     },
-    "pad_cm_V": 3.2371,
-    "sum_cm_V": 2.8702
+    "pad_cm_V": 3.2507,
+    "sum_cm_V": 2.8338
    }
   },
   "match_sat_1p0": {
@@ -1062,26 +1062,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 858.353,
-    "pad_dBm_50ohm": 8.67,
-    "sum_fund_mVpk_diff": 237.138,
-    "mixi_drain_fund_mVpk_diff": 255.607,
+    "pad_fund_mVpk_diff": 990.491,
+    "pad_dBm_50ohm": 9.92,
+    "sum_fund_mVpk_diff": 266.277,
+    "mixi_drain_fund_mVpk_diff": 279.358,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.7171,
-     "rfdriver": 54.7047
+     "txsum": 2.0169,
+     "rfdriver": 54.3969
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.936,
-     "rfdriver.atb_pre": 2.6698,
-     "rfdriver.atb_cm": 3.2473,
-     "txsum.atb_cm": 2.9012,
+     "rfdriver.atb_bias": 0.9359,
+     "rfdriver.atb_pre": 2.6713,
+     "rfdriver.atb_cm": 3.2495,
+     "txsum.atb_cm": 2.8309,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 1.033
+     "txmix_i.atb_tail": 1.0329
     },
-    "pad_cm_V": 3.248,
-    "sum_cm_V": 2.9023
+    "pad_cm_V": 3.2506,
+    "sum_cm_V": 2.8323
    }
   },
   "match_zero": {
@@ -1090,25 +1090,25 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 0.11,
-    "pad_dBm_50ohm": -69.14,
-    "sum_fund_mVpk_diff": 0.014,
-    "mixi_drain_fund_mVpk_diff": 0.014,
+    "pad_fund_mVpk_diff": 0.134,
+    "pad_dBm_50ohm": -67.45,
+    "sum_fund_mVpk_diff": 0.013,
+    "mixi_drain_fund_mVpk_diff": 0.013,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0098,
-     "rfdriver": 57.7751
+     "txsum": 2.0097,
+     "rfdriver": 58.1459
     },
     "atb_V": {
      "rfdriver.atb_bias": 0.9471,
      "rfdriver.atb_pre": 2.6414,
-     "rfdriver.atb_cm": 3.2463,
+     "rfdriver.atb_cm": 3.2456,
      "txsum.atb_cm": 2.8326,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7125
     },
-    "pad_cm_V": 3.2463,
+    "pad_cm_V": 3.2456,
     "sum_cm_V": 2.834
    }
   },
@@ -1118,25 +1118,25 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 0.03,
-    "pad_dBm_50ohm": -80.31,
+    "pad_fund_mVpk_diff": 0.037,
+    "pad_dBm_50ohm": -78.64,
     "sum_fund_mVpk_diff": 0.004,
     "mixi_drain_fund_mVpk_diff": 0.004,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0098,
-     "rfdriver": 57.7751
+     "txsum": 2.0097,
+     "rfdriver": 58.1459
     },
     "atb_V": {
      "rfdriver.atb_bias": 0.9471,
      "rfdriver.atb_pre": 2.6414,
-     "rfdriver.atb_cm": 3.2463,
+     "rfdriver.atb_cm": 3.2456,
      "txsum.atb_cm": 2.8326,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7125
     },
-    "pad_cm_V": 3.2463,
+    "pad_cm_V": 3.2456,
     "sum_cm_V": 2.834
    }
   },
@@ -1146,26 +1146,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 13.176,
-    "pad_dBm_50ohm": -27.6,
-    "sum_fund_mVpk_diff": 73.572,
-    "mixi_drain_fund_mVpk_diff": 81.976,
+    "pad_fund_mVpk_diff": 6.484,
+    "pad_dBm_50ohm": -33.76,
+    "sum_fund_mVpk_diff": 70.796,
+    "mixi_drain_fund_mVpk_diff": 77.342,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 0.4021,
-     "rfdriver": 1.6012
+     "txsum": 0.7263,
+     "rfdriver": 1.2833
     },
     "atb_V": {
      "rfdriver.atb_bias": 0.9471,
      "rfdriver.atb_pre": 3.3,
-     "rfdriver.atb_cm": 3.2974,
-     "txsum.atb_cm": 3.2062,
+     "rfdriver.atb_cm": 3.298,
+     "txsum.atb_cm": 3.1313,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 0.7912
+     "txmix_i.atb_tail": 0.7911
     },
-    "pad_cm_V": 3.2974,
-    "sum_cm_V": 3.2073
+    "pad_cm_V": 3.298,
+    "sum_cm_V": 3.1324
    }
   },
   "match_bypass_sat_1p0": {
@@ -1174,26 +1174,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 29.926,
-    "pad_dBm_50ohm": -20.48,
-    "sum_fund_mVpk_diff": 167.129,
-    "mixi_drain_fund_mVpk_diff": 186.213,
+    "pad_fund_mVpk_diff": 14.727,
+    "pad_dBm_50ohm": -26.64,
+    "sum_fund_mVpk_diff": 160.894,
+    "mixi_drain_fund_mVpk_diff": 175.758,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 0.4059,
-     "rfdriver": 1.6092
+     "txsum": 0.7312,
+     "rfdriver": 1.2859
     },
     "atb_V": {
      "rfdriver.atb_bias": 0.9471,
      "rfdriver.atb_pre": 3.3,
-     "rfdriver.atb_cm": 3.2974,
-     "txsum.atb_cm": 3.2054,
+     "rfdriver.atb_cm": 3.298,
+     "txsum.atb_cm": 3.1302,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 1.0338
+     "txmix_i.atb_tail": 1.0337
     },
-    "pad_cm_V": 3.2974,
-    "sum_cm_V": 3.2064
+    "pad_cm_V": 3.298,
+    "sum_cm_V": 3.1313
    }
   },
   "match_mute_sat": {
@@ -1202,19 +1202,19 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 67.209,
-    "pad_dBm_50ohm": -13.45,
-    "sum_fund_mVpk_diff": 284.906,
-    "mixi_drain_fund_mVpk_diff": 298.845,
+    "pad_fund_mVpk_diff": 1.226,
+    "pad_dBm_50ohm": -48.23,
+    "sum_fund_mVpk_diff": 263.806,
+    "mixi_drain_fund_mVpk_diff": 276.793,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0173,
-     "rfdriver": 23.5392
+     "txsum": 2.0172,
+     "rfdriver": 22.9674
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9481,
-     "rfdriver.atb_pre": 2.6343,
+     "rfdriver.atb_bias": 0.948,
+     "rfdriver.atb_pre": 2.6346,
      "rfdriver.atb_cm": 3.3,
      "txsum.atb_cm": 2.831,
      "txmix_i.atb_bias": 0.9397,
@@ -1230,26 +1230,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 487.51,
-    "pad_dBm_50ohm": 3.76,
-    "sum_fund_mVpk_diff": 287.986,
-    "mixi_drain_fund_mVpk_diff": 302.172,
+    "pad_fund_mVpk_diff": 328.209,
+    "pad_dBm_50ohm": 0.32,
+    "sum_fund_mVpk_diff": 264.325,
+    "mixi_drain_fund_mVpk_diff": 277.312,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0119,
-     "rfdriver": 31.8828
+     "txsum": 2.0172,
+     "rfdriver": 31.4527
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9419,
-     "rfdriver.atb_pre": 2.6534,
-     "rfdriver.atb_cm": 3.2859,
-     "txsum.atb_cm": 2.8322,
+     "rfdriver.atb_bias": 0.9417,
+     "rfdriver.atb_pre": 2.6552,
+     "rfdriver.atb_cm": 3.2858,
+     "txsum.atb_cm": 2.831,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 1.0329
     },
-    "pad_cm_V": 3.2863,
-    "sum_cm_V": 2.8334
+    "pad_cm_V": 3.2859,
+    "sum_cm_V": 2.8322
    }
   },
   "match_code8_sat": {
@@ -1258,26 +1258,26 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 706.908,
-    "pad_dBm_50ohm": 6.99,
-    "sum_fund_mVpk_diff": 263.356,
-    "mixi_drain_fund_mVpk_diff": 279.887,
+    "pad_fund_mVpk_diff": 618.015,
+    "pad_dBm_50ohm": 5.82,
+    "sum_fund_mVpk_diff": 264.473,
+    "mixi_drain_fund_mVpk_diff": 277.463,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.8693,
-     "rfdriver": 39.9655
+     "txsum": 2.0171,
+     "rfdriver": 39.5493
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9383,
-     "rfdriver.atb_pre": 2.6621,
-     "rfdriver.atb_cm": 3.2727,
-     "txsum.atb_cm": 2.8657,
+     "rfdriver.atb_bias": 0.938,
+     "rfdriver.atb_pre": 2.6635,
+     "rfdriver.atb_cm": 3.2728,
+     "txsum.atb_cm": 2.831,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 1.033
+     "txmix_i.atb_tail": 1.0329
     },
-    "pad_cm_V": 3.2707,
-    "sum_cm_V": 2.8654
+    "pad_cm_V": 3.2732,
+    "sum_cm_V": 2.8323
    }
   },
   "match_code1_sat": {
@@ -1286,20 +1286,20 @@
     "tstop": 8e-09
    },
    "result": {
-    "pad_fund_mVpk_diff": 167.595,
-    "pad_dBm_50ohm": -5.51,
-    "sum_fund_mVpk_diff": 285.077,
-    "mixi_drain_fund_mVpk_diff": 299.019,
+    "pad_fund_mVpk_diff": 70.419,
+    "pad_dBm_50ohm": -13.05,
+    "sum_fund_mVpk_diff": 263.935,
+    "mixi_drain_fund_mVpk_diff": 276.921,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0173,
-     "rfdriver": 25.75
+     "txsum": 2.0172,
+     "rfdriver": 25.214
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9469,
-     "rfdriver.atb_pre": 2.6393,
-     "rfdriver.atb_cm": 3.2961,
+     "rfdriver.atb_bias": 0.9467,
+     "rfdriver.atb_pre": 2.6401,
+     "rfdriver.atb_cm": 3.2962,
      "txsum.atb_cm": 2.831,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 1.0329
@@ -1315,30 +1315,30 @@
     "fbb": 61000000.0
    },
    "result": {
-    "lsb_dBm": 5.1,
-    "lo_dBm": -36.88,
-    "usb_dBm": -37.86,
-    "lsb3_dBm": -37.7,
-    "usb3_dBm": -39.05,
+    "lsb_dBm": 8.72,
+    "lo_dBm": -48.96,
+    "usb_dBm": -55.53,
+    "lsb3_dBm": -64.01,
+    "usb3_dBm": -39.68,
     "wanted": "lsb",
-    "image_rejection_dB": 42.96,
-    "lo_suppression_dBc": 41.98,
+    "image_rejection_dB": 64.25,
+    "lo_suppression_dBc": 57.68,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.939,
-     "rfdriver": 54.6667
+     "txsum": 2.0101,
+     "rfdriver": 54.0391
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.937,
-     "rfdriver.atb_pre": 2.6789,
-     "rfdriver.atb_cm": 3.2493,
-     "txsum.atb_cm": 2.8492,
+     "rfdriver.atb_bias": 0.9356,
+     "rfdriver.atb_pre": 2.6852,
+     "rfdriver.atb_cm": 3.2495,
+     "txsum.atb_cm": 2.8326,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 0.7156
+     "txmix_i.atb_tail": 0.7155
     },
-    "pad_cm_V": 3.2499,
-    "sum_cm_V": 2.8507
+    "pad_cm_V": 3.2498,
+    "sum_cm_V": 2.8339
    }
   },
   "match_ssb_sat": {
@@ -1348,30 +1348,30 @@
     "fbb": 61000000.0
    },
    "result": {
-    "lsb_dBm": 8.64,
-    "lo_dBm": -38.39,
-    "usb_dBm": -28.94,
-    "lsb3_dBm": -32.27,
-    "usb3_dBm": -7.49,
+    "lsb_dBm": 10.0,
+    "lo_dBm": -36.81,
+    "usb_dBm": -28.82,
+    "lsb3_dBm": -32.16,
+    "usb3_dBm": -6.61,
     "wanted": "lsb",
-    "image_rejection_dB": 37.58,
-    "lo_suppression_dBc": 47.03,
+    "image_rejection_dB": 38.82,
+    "lo_suppression_dBc": 46.81,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.6979,
-     "rfdriver": 55.1882
+     "txsum": 2.0212,
+     "rfdriver": 54.9349
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9379,
-     "rfdriver.atb_pre": 2.6727,
-     "rfdriver.atb_cm": 3.2456,
-     "txsum.atb_cm": 2.9055,
+     "rfdriver.atb_bias": 0.9376,
+     "rfdriver.atb_pre": 2.6733,
+     "rfdriver.atb_cm": 3.2487,
+     "txsum.atb_cm": 2.8302,
      "txmix_i.atb_bias": 0.9373,
-     "txmix_i.atb_tail": 0.8736
+     "txmix_i.atb_tail": 0.8734
     },
-    "pad_cm_V": 3.2454,
-    "sum_cm_V": 2.9068
+    "pad_cm_V": 3.2491,
+    "sum_cm_V": 2.8314
    }
   },
   "amam_0020": {
@@ -1382,14 +1382,14 @@
    },
    "result": {
     "vin": 0.02,
-    "out_re": -0.06405004389881054,
-    "out_im": -0.016840337136345602,
-    "pad_dBm_50ohm": -13.579,
-    "h2_dBc": -68.55,
-    "h3_dBc": -52.91,
-    "pad_h2_dBc": -98.06,
-    "pad_h3_dBc": -53.57,
-    "supply_mA": 57.644
+    "out_re": -0.06973737431836813,
+    "out_im": 0.03979929247810492,
+    "pad_dBm_50ohm": -11.906,
+    "h2_dBc": -71.47,
+    "h3_dBc": -62.51,
+    "pad_h2_dBc": -80.23,
+    "pad_h3_dBc": -64.94,
+    "supply_mA": 57.997
    }
   },
   "amamsat_0020": {
@@ -1401,14 +1401,14 @@
    },
    "result": {
     "vin": 0.02,
-    "out_re": -0.12687494169814356,
-    "out_im": -0.03283555554153947,
-    "pad_dBm_50ohm": -7.651,
-    "h2_dBc": -70.57,
-    "h3_dBc": -53.03,
-    "pad_h2_dBc": -86.35,
-    "pad_h3_dBc": -53.6,
-    "supply_mA": 57.158
+    "out_re": -0.13679734187984688,
+    "out_im": 0.07908331260769179,
+    "pad_dBm_50ohm": -6.026,
+    "h2_dBc": -71.51,
+    "h3_dBc": -63.31,
+    "pad_h2_dBc": -69.96,
+    "pad_h3_dBc": -65.23,
+    "supply_mA": 57.427
    }
   },
   "amam_0050": {
@@ -1419,14 +1419,14 @@
    },
    "result": {
     "vin": 0.05,
-    "out_re": -0.15718803920401928,
-    "out_im": -0.04112900398084098,
-    "pad_dBm_50ohm": -5.784,
-    "h2_dBc": -72.72,
-    "h3_dBc": -53.21,
-    "pad_h2_dBc": -81.84,
-    "pad_h3_dBc": -53.72,
-    "supply_mA": 56.719
+    "out_re": -0.16873706629420046,
+    "out_im": 0.0974072651468601,
+    "pad_dBm_50ohm": -4.207,
+    "h2_dBc": -69.57,
+    "h3_dBc": -63.6,
+    "pad_h2_dBc": -67.45,
+    "pad_h3_dBc": -65.02,
+    "supply_mA": 56.897
    }
   },
   "amamsat_0050": {
@@ -1438,14 +1438,14 @@
    },
    "result": {
     "vin": 0.05,
-    "out_re": -0.29777900337962526,
-    "out_im": -0.07580689449292463,
-    "pad_dBm_50ohm": -0.249,
-    "h2_dBc": -77.16,
-    "h3_dBc": -54.07,
-    "pad_h2_dBc": -71.25,
-    "pad_h3_dBc": -54.34,
-    "supply_mA": 54.305
+    "out_re": -0.3046453798097159,
+    "out_im": 0.18487268750011412,
+    "pad_dBm_50ohm": 1.038,
+    "h2_dBc": -66.8,
+    "h3_dBc": -60.79,
+    "pad_h2_dBc": -65.22,
+    "pad_h3_dBc": -60.95,
+    "supply_mA": 54.157
    }
   },
   "amam_0100": {
@@ -1456,14 +1456,14 @@
    },
    "result": {
     "vin": 0.1,
-    "out_re": -0.2982177608499391,
-    "out_im": -0.07706071808527516,
-    "pad_dBm_50ohm": -0.229,
-    "h2_dBc": -77.12,
-    "h3_dBc": -54.12,
-    "pad_h2_dBc": -71.25,
-    "pad_h3_dBc": -54.4,
-    "supply_mA": 54.302
+    "out_re": -0.30598991507400175,
+    "out_im": 0.18419783664046593,
+    "pad_dBm_50ohm": 1.057,
+    "h2_dBc": -66.8,
+    "h3_dBc": -60.69,
+    "pad_h2_dBc": -65.24,
+    "pad_h3_dBc": -60.85,
+    "supply_mA": 54.153
    }
   },
   "amamsat_0100": {
@@ -1475,14 +1475,14 @@
    },
    "result": {
     "vin": 0.1,
-    "out_re": -0.546236340933013,
-    "out_im": -0.19164763725512812,
-    "pad_dBm_50ohm": 5.252,
-    "h2_dBc": -69.35,
-    "h3_dBc": -58.9,
-    "pad_h2_dBc": -69.67,
-    "pad_h3_dBc": -59.05,
-    "supply_mA": 53.508
+    "out_re": -0.5343012537599162,
+    "out_im": 0.33773379244107604,
+    "pad_dBm_50ohm": 6.016,
+    "h2_dBc": -69.9,
+    "h3_dBc": -52.39,
+    "pad_h2_dBc": -68.97,
+    "pad_h3_dBc": -52.49,
+    "supply_mA": 53.328
    }
   },
   "amam_0150": {
@@ -1493,14 +1493,14 @@
    },
    "result": {
     "vin": 0.15,
-    "out_re": -0.43635422105275656,
-    "out_im": -0.11744065875184684,
-    "pad_dBm_50ohm": 3.101,
-    "h2_dBc": -71.8,
-    "h3_dBc": -55.71,
-    "pad_h2_dBc": -69.0,
-    "pad_h3_dBc": -55.83,
-    "supply_mA": 53.443
+    "out_re": -0.42919902889569017,
+    "out_im": 0.2641841514291147,
+    "pad_dBm_50ohm": 4.048,
+    "h2_dBc": -68.71,
+    "h3_dBc": -56.22,
+    "pad_h2_dBc": -67.42,
+    "pad_h3_dBc": -56.3,
+    "supply_mA": 53.279
    }
   },
   "amamsat_0150": {
@@ -1512,14 +1512,14 @@
    },
    "result": {
     "vin": 0.15,
-    "out_re": -0.5086696098117071,
-    "out_im": -0.2873587170225865,
-    "pad_dBm_50ohm": 5.332,
-    "h2_dBc": -45.91,
-    "h3_dBc": -48.39,
-    "pad_h2_dBc": -45.83,
-    "pad_h3_dBc": -47.85,
-    "supply_mA": 54.041
+    "out_re": -0.683682909582435,
+    "out_im": 0.4448787652002458,
+    "pad_dBm_50ohm": 8.23,
+    "h2_dBc": -73.34,
+    "h3_dBc": -46.91,
+    "pad_h2_dBc": -73.82,
+    "pad_h3_dBc": -46.95,
+    "supply_mA": 53.641
    }
   },
   "amam_0200": {
@@ -1530,14 +1530,14 @@
    },
    "result": {
     "vin": 0.2,
-    "out_re": -0.5475470223161624,
-    "out_im": -0.1967457043408236,
-    "pad_dBm_50ohm": 5.296,
-    "h2_dBc": -68.79,
-    "h3_dBc": -59.2,
-    "pad_h2_dBc": -69.14,
-    "pad_h3_dBc": -59.36,
-    "supply_mA": 53.512
+    "out_re": -0.5382937774238801,
+    "out_im": 0.33789493708779916,
+    "pad_dBm_50ohm": 6.063,
+    "h2_dBc": -69.94,
+    "h3_dBc": -52.26,
+    "pad_h2_dBc": -69.04,
+    "pad_h3_dBc": -52.36,
+    "supply_mA": 53.332
    }
   },
   "amamsat_0200": {
@@ -1549,14 +1549,14 @@
    },
    "result": {
     "vin": 0.2,
-    "out_re": -0.5133360222970504,
-    "out_im": -0.3023238508578568,
-    "pad_dBm_50ohm": 5.501,
-    "h2_dBc": -37.1,
-    "h3_dBc": -41.1,
-    "pad_h2_dBc": -37.28,
-    "pad_h3_dBc": -41.43,
-    "supply_mA": 54.614
+    "out_re": -0.7578369967440768,
+    "out_im": 0.5024684542528651,
+    "pad_dBm_50ohm": 9.174,
+    "h2_dBc": -71.36,
+    "h3_dBc": -44.74,
+    "pad_h2_dBc": -73.01,
+    "pad_h3_dBc": -44.75,
+    "supply_mA": 53.927
    }
   },
   "amam_0300": {
@@ -1567,14 +1567,14 @@
    },
    "result": {
     "vin": 0.3,
-    "out_re": -0.5071480663285043,
-    "out_im": -0.2898112444035058,
-    "pad_dBm_50ohm": 5.33,
-    "h2_dBc": -46.02,
-    "h3_dBc": -48.79,
-    "pad_h2_dBc": -46.01,
-    "pad_h3_dBc": -48.16,
-    "supply_mA": 54.063
+    "out_re": -0.6900115129169494,
+    "out_im": 0.44644635715704667,
+    "pad_dBm_50ohm": 8.296,
+    "h2_dBc": -73.34,
+    "h3_dBc": -46.75,
+    "pad_h2_dBc": -73.95,
+    "pad_h3_dBc": -46.79,
+    "supply_mA": 53.656
    }
   },
   "amamsat_0300": {
@@ -1586,14 +1586,14 @@
    },
    "result": {
     "vin": 0.3,
-    "out_re": -0.6294094788026826,
-    "out_im": -0.3799787081362477,
-    "pad_dBm_50ohm": 7.328,
-    "h2_dBc": -39.44,
-    "h3_dBc": -48.36,
-    "pad_h2_dBc": -40.39,
-    "pad_h3_dBc": -46.78,
-    "supply_mA": 54.757
+    "out_re": -0.8042820195262291,
+    "out_im": 0.5430828314243922,
+    "pad_dBm_50ohm": 9.74,
+    "h2_dBc": -70.47,
+    "h3_dBc": -43.87,
+    "pad_h2_dBc": -72.14,
+    "pad_h3_dBc": -43.87,
+    "supply_mA": 54.238
    }
   },
   "amam_0400": {
@@ -1604,14 +1604,14 @@
    },
    "result": {
     "vin": 0.4,
-    "out_re": -0.5195698503054956,
-    "out_im": -0.3080587659113049,
-    "pad_dBm_50ohm": 5.621,
-    "h2_dBc": -39.61,
-    "h3_dBc": -41.45,
-    "pad_h2_dBc": -39.72,
-    "pad_h3_dBc": -41.69,
-    "supply_mA": 54.611
+    "out_re": -0.7642558849186583,
+    "out_im": 0.5047172397179587,
+    "pad_dBm_50ohm": 9.237,
+    "h2_dBc": -71.12,
+    "h3_dBc": -44.6,
+    "pad_h2_dBc": -72.77,
+    "pad_h3_dBc": -44.62,
+    "supply_mA": 53.954
    }
   },
   "amamsat_0400": {
@@ -1623,14 +1623,14 @@
    },
    "result": {
     "vin": 0.4,
-    "out_re": -0.6963150053107948,
-    "out_im": -0.4933711635951131,
-    "pad_dBm_50ohm": 8.623,
-    "h2_dBc": -66.18,
-    "h3_dBc": -37.83,
-    "pad_h2_dBc": -67.38,
-    "pad_h3_dBc": -37.78,
-    "supply_mA": 54.605
+    "out_re": -0.8137837126426235,
+    "out_im": 0.5565312552218133,
+    "pad_dBm_50ohm": 9.877,
+    "h2_dBc": -70.78,
+    "h3_dBc": -43.75,
+    "pad_h2_dBc": -72.57,
+    "pad_h3_dBc": -43.75,
+    "supply_mA": 54.356
    }
   },
   "amam_0500": {
@@ -1641,14 +1641,14 @@
    },
    "result": {
     "vin": 0.5,
-    "out_re": -0.5867743078415604,
-    "out_im": -0.34295646504100347,
-    "pad_dBm_50ohm": 6.646,
-    "h2_dBc": -37.58,
-    "h3_dBc": -55.52,
-    "pad_h2_dBc": -38.37,
-    "pad_h3_dBc": -53.81,
-    "supply_mA": 54.509
+    "out_re": -0.795290851013914,
+    "out_im": 0.5320423794947146,
+    "pad_dBm_50ohm": 9.617,
+    "h2_dBc": -70.32,
+    "h3_dBc": -43.98,
+    "pad_h2_dBc": -71.94,
+    "pad_h3_dBc": -43.99,
+    "supply_mA": 54.152
    }
   },
   "amamsat_0500": {
@@ -1660,14 +1660,14 @@
    },
    "result": {
     "vin": 0.5,
-    "out_re": -0.7117070796718018,
-    "out_im": -0.4784540077167919,
-    "pad_dBm_50ohm": 8.666,
-    "h2_dBc": -69.59,
-    "h3_dBc": -37.16,
-    "pad_h2_dBc": -71.12,
-    "pad_h3_dBc": -37.13,
-    "supply_mA": 54.68
+    "out_re": -0.8133557578917117,
+    "out_im": 0.5639478716640703,
+    "pad_dBm_50ohm": 9.91,
+    "h2_dBc": -70.71,
+    "h3_dBc": -43.7,
+    "pad_h2_dBc": -72.49,
+    "pad_h3_dBc": -43.7,
+    "supply_mA": 54.391
    }
   },
   "amam_0600": {
@@ -1678,14 +1678,14 @@
    },
    "result": {
     "vin": 0.6,
-    "out_re": -0.664709421185598,
-    "out_im": -0.5073751071528187,
-    "pad_dBm_50ohm": 8.446,
-    "h2_dBc": -51.19,
-    "h3_dBc": -41.1,
-    "pad_h2_dBc": -51.8,
-    "pad_h3_dBc": -40.9,
-    "supply_mA": 54.479
+    "out_re": -0.8089182082515949,
+    "out_im": 0.5457243853393868,
+    "pad_dBm_50ohm": 9.787,
+    "h2_dBc": -70.57,
+    "h3_dBc": -43.83,
+    "pad_h2_dBc": -72.28,
+    "pad_h3_dBc": -43.83,
+    "supply_mA": 54.276
    }
   },
   "amamsat_0600": {
@@ -1697,14 +1697,14 @@
    },
    "result": {
     "vin": 0.6,
-    "out_re": -0.7155900594373706,
-    "out_im": -0.4737558801614806,
-    "pad_dBm_50ohm": 8.672,
-    "h2_dBc": -70.08,
-    "h3_dBc": -37.07,
-    "pad_h2_dBc": -71.65,
-    "pad_h3_dBc": -37.03,
-    "supply_mA": 54.695
+    "out_re": -0.8114901700027032,
+    "out_im": 0.5676722934888727,
+    "pad_dBm_50ohm": 9.916,
+    "h2_dBc": -70.66,
+    "h3_dBc": -43.69,
+    "pad_h2_dBc": -72.44,
+    "pad_h3_dBc": -43.69,
+    "supply_mA": 54.396
    }
   },
   "amam_0800": {
@@ -1715,14 +1715,14 @@
    },
    "result": {
     "vin": 0.8,
-    "out_re": -0.7086342196405511,
-    "out_im": -0.48203417094392936,
-    "pad_dBm_50ohm": 8.66,
-    "h2_dBc": -69.16,
-    "h3_dBc": -37.25,
-    "pad_h2_dBc": -70.64,
-    "pad_h3_dBc": -37.21,
-    "supply_mA": 54.667
+    "out_re": -0.8144964623456475,
+    "out_im": 0.5613329141450742,
+    "pad_dBm_50ohm": 9.906,
+    "h2_dBc": -70.77,
+    "h3_dBc": -43.71,
+    "pad_h2_dBc": -72.56,
+    "pad_h3_dBc": -43.71,
+    "supply_mA": 54.385
    }
   },
   "amamsat_0800": {
@@ -1734,14 +1734,14 @@
    },
    "result": {
     "vin": 0.8,
-    "out_re": -0.7178234228274645,
-    "out_im": -0.4705530640919051,
-    "pad_dBm_50ohm": 8.673,
-    "h2_dBc": -70.18,
-    "h3_dBc": -37.05,
-    "pad_h2_dBc": -71.75,
-    "pad_h3_dBc": -37.02,
-    "supply_mA": 54.702
+    "out_re": -0.8092444909301222,
+    "out_im": 0.5710511815475267,
+    "pad_dBm_50ohm": 9.917,
+    "h2_dBc": -70.72,
+    "h3_dBc": -43.69,
+    "pad_h2_dBc": -72.51,
+    "pad_h3_dBc": -43.68,
+    "supply_mA": 54.397
    }
   },
   "amam_1000": {
@@ -1752,14 +1752,14 @@
    },
    "result": {
     "vin": 1.0,
-    "out_re": -0.7155973474358072,
-    "out_im": -0.4737235018065131,
-    "pad_dBm_50ohm": 8.672,
-    "h2_dBc": -70.06,
-    "h3_dBc": -37.07,
-    "pad_h2_dBc": -71.61,
-    "pad_h3_dBc": -37.04,
-    "supply_mA": 54.695
+    "out_re": -0.8113322289378927,
+    "out_im": 0.5678004155018977,
+    "pad_dBm_50ohm": 9.915,
+    "h2_dBc": -70.79,
+    "h3_dBc": -43.69,
+    "pad_h2_dBc": -72.59,
+    "pad_h3_dBc": -43.68,
+    "supply_mA": 54.395
    }
   },
   "amamsat_1000": {
@@ -1771,14 +1771,14 @@
    },
    "result": {
     "vin": 1.0,
-    "out_re": -0.7188948432933101,
-    "out_im": -0.4689994444347629,
-    "pad_dBm_50ohm": 8.673,
-    "h2_dBc": -70.26,
-    "h3_dBc": -37.05,
-    "pad_h2_dBc": -71.82,
-    "pad_h3_dBc": -37.01,
-    "supply_mA": 54.705
+    "out_re": -0.8081377401171986,
+    "out_im": 0.5727008006341331,
+    "pad_dBm_50ohm": 9.917,
+    "h2_dBc": -70.8,
+    "h3_dBc": -43.69,
+    "pad_h2_dBc": -72.6,
+    "pad_h3_dBc": -43.68,
+    "supply_mA": 54.397
    }
   },
   "amam_1300": {
@@ -1789,14 +1789,14 @@
    },
    "result": {
     "vin": 1.3,
-    "out_re": -0.7174312624609912,
-    "out_im": -0.47108598516870054,
-    "pad_dBm_50ohm": 8.672,
-    "h2_dBc": -70.24,
-    "h3_dBc": -37.07,
-    "pad_h2_dBc": -71.78,
-    "pad_h3_dBc": -37.03,
-    "supply_mA": 54.7
+    "out_re": -0.8094743580679725,
+    "out_im": 0.5705684097843112,
+    "pad_dBm_50ohm": 9.916,
+    "h2_dBc": -70.97,
+    "h3_dBc": -43.69,
+    "pad_h2_dBc": -72.8,
+    "pad_h3_dBc": -43.68,
+    "supply_mA": 54.395
    }
   },
   "amamsat_1300": {
@@ -1808,14 +1808,14 @@
    },
    "result": {
     "vin": 1.3,
-    "out_re": -0.7198855169447008,
-    "out_im": -0.4676016723444938,
-    "pad_dBm_50ohm": 8.674,
-    "h2_dBc": -70.43,
-    "h3_dBc": -37.04,
-    "pad_h2_dBc": -71.98,
-    "pad_h3_dBc": -37.01,
-    "supply_mA": 54.708
+    "out_re": -0.8072103647271163,
+    "out_im": 0.5741195721250053,
+    "pad_dBm_50ohm": 9.918,
+    "h2_dBc": -70.99,
+    "h3_dBc": -43.68,
+    "pad_h2_dBc": -72.82,
+    "pad_h3_dBc": -43.68,
+    "supply_mA": 54.397
    }
   },
   "skew_0ps": {
@@ -1826,30 +1826,30 @@
     "lo_q_skew_ps": 0
    },
    "result": {
-    "lsb_dBm": 5.1,
-    "lo_dBm": -36.88,
-    "usb_dBm": -37.86,
-    "lsb3_dBm": -37.7,
-    "usb3_dBm": -39.05,
+    "lsb_dBm": 8.72,
+    "lo_dBm": -48.96,
+    "usb_dBm": -55.53,
+    "lsb3_dBm": -64.01,
+    "usb3_dBm": -39.68,
     "wanted": "lsb",
-    "image_rejection_dB": 42.96,
-    "lo_suppression_dBc": 41.98,
+    "image_rejection_dB": 64.25,
+    "lo_suppression_dBc": 57.68,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.939,
-     "rfdriver": 54.6667
+     "txsum": 2.0101,
+     "rfdriver": 54.0391
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.937,
-     "rfdriver.atb_pre": 2.6789,
-     "rfdriver.atb_cm": 3.2493,
-     "txsum.atb_cm": 2.8492,
+     "rfdriver.atb_bias": 0.9356,
+     "rfdriver.atb_pre": 2.6852,
+     "rfdriver.atb_cm": 3.2495,
+     "txsum.atb_cm": 2.8326,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 0.7156
+     "txmix_i.atb_tail": 0.7155
     },
-    "pad_cm_V": 3.2499,
-    "sum_cm_V": 2.8507
+    "pad_cm_V": 3.2498,
+    "sum_cm_V": 2.8339
    }
   },
   "skew_2ps": {
@@ -1860,30 +1860,30 @@
     "lo_q_skew_ps": 2
    },
    "result": {
-    "lsb_dBm": 5.1,
-    "lo_dBm": -36.58,
-    "usb_dBm": -48.94,
-    "lsb3_dBm": -36.83,
-    "usb3_dBm": -39.59,
+    "lsb_dBm": 8.72,
+    "lo_dBm": -49.07,
+    "usb_dBm": -31.29,
+    "lsb3_dBm": -40.19,
+    "usb3_dBm": -39.76,
     "wanted": "lsb",
-    "image_rejection_dB": 54.04,
-    "lo_suppression_dBc": 41.68,
+    "image_rejection_dB": 40.01,
+    "lo_suppression_dBc": 57.79,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.939,
-     "rfdriver": 54.6654
+     "txsum": 2.0101,
+     "rfdriver": 54.0392
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.937,
-     "rfdriver.atb_pre": 2.6789,
-     "rfdriver.atb_cm": 3.2493,
-     "txsum.atb_cm": 2.8492,
+     "rfdriver.atb_bias": 0.9356,
+     "rfdriver.atb_pre": 2.6852,
+     "rfdriver.atb_cm": 3.2495,
+     "txsum.atb_cm": 2.8326,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7156
     },
     "pad_cm_V": 3.2498,
-    "sum_cm_V": 2.8506
+    "sum_cm_V": 2.8339
    }
   },
   "skew_5ps": {
@@ -1894,30 +1894,30 @@
     "lo_q_skew_ps": 5
    },
    "result": {
-    "lsb_dBm": 5.1,
-    "lo_dBm": -35.97,
-    "usb_dBm": -31.56,
-    "lsb3_dBm": -32.14,
-    "usb3_dBm": -40.53,
+    "lsb_dBm": 8.72,
+    "lo_dBm": -49.24,
+    "usb_dBm": -23.45,
+    "lsb3_dBm": -31.92,
+    "usb3_dBm": -40.18,
     "wanted": "lsb",
-    "image_rejection_dB": 36.66,
-    "lo_suppression_dBc": 41.07,
+    "image_rejection_dB": 32.17,
+    "lo_suppression_dBc": 57.96,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9398,
-     "rfdriver": 54.6598
+     "txsum": 2.0107,
+     "rfdriver": 54.038
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.937,
-     "rfdriver.atb_pre": 2.679,
-     "rfdriver.atb_cm": 3.2492,
-     "txsum.atb_cm": 2.8491,
+     "rfdriver.atb_bias": 0.9356,
+     "rfdriver.atb_pre": 2.6852,
+     "rfdriver.atb_cm": 3.2495,
+     "txsum.atb_cm": 2.8325,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7156
     },
-    "pad_cm_V": 3.2497,
-    "sum_cm_V": 2.8504
+    "pad_cm_V": 3.2498,
+    "sum_cm_V": 2.8338
    }
   },
   "skew_10ps": {
@@ -1928,30 +1928,30 @@
     "lo_q_skew_ps": 10
    },
    "result": {
-    "lsb_dBm": 5.11,
-    "lo_dBm": -35.85,
-    "usb_dBm": -23.44,
-    "lsb3_dBm": -26.43,
-    "usb3_dBm": -39.94,
+    "lsb_dBm": 8.69,
+    "lo_dBm": -49.56,
+    "usb_dBm": -17.45,
+    "lsb3_dBm": -25.84,
+    "usb3_dBm": -41.82,
     "wanted": "lsb",
-    "image_rejection_dB": 28.55,
-    "lo_suppression_dBc": 40.96,
+    "image_rejection_dB": 26.14,
+    "lo_suppression_dBc": 58.25,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9391,
-     "rfdriver": 54.649
+     "txsum": 2.0098,
+     "rfdriver": 54.0356
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.937,
-     "rfdriver.atb_pre": 2.679,
-     "rfdriver.atb_cm": 3.2491,
-     "txsum.atb_cm": 2.8492,
+     "rfdriver.atb_bias": 0.9356,
+     "rfdriver.atb_pre": 2.6853,
+     "rfdriver.atb_cm": 3.2495,
+     "txsum.atb_cm": 2.8327,
      "txmix_i.atb_bias": 0.9397,
      "txmix_i.atb_tail": 0.7156
     },
-    "pad_cm_V": 3.2496,
-    "sum_cm_V": 2.8505
+    "pad_cm_V": 3.2498,
+    "sum_cm_V": 2.834
    }
   },
   "skew_20ps": {
@@ -1962,30 +1962,30 @@
     "lo_q_skew_ps": 20
    },
    "result": {
-    "lsb_dBm": 5.16,
-    "lo_dBm": -37.15,
-    "usb_dBm": -16.11,
-    "lsb3_dBm": -20.53,
-    "usb3_dBm": -38.61,
+    "lsb_dBm": 8.61,
+    "lo_dBm": -50.31,
+    "usb_dBm": -11.41,
+    "lsb3_dBm": -19.97,
+    "usb3_dBm": -56.7,
     "wanted": "lsb",
-    "image_rejection_dB": 21.27,
-    "lo_suppression_dBc": 42.31,
+    "image_rejection_dB": 20.02,
+    "lo_suppression_dBc": 58.92,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9388,
-     "rfdriver": 54.6034
+     "txsum": 2.0092,
+     "rfdriver": 54.0227
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9369,
-     "rfdriver.atb_pre": 2.6793,
-     "rfdriver.atb_cm": 3.2488,
-     "txsum.atb_cm": 2.8493,
+     "rfdriver.atb_bias": 0.9355,
+     "rfdriver.atb_pre": 2.6855,
+     "rfdriver.atb_cm": 3.2496,
+     "txsum.atb_cm": 2.8328,
      "txmix_i.atb_bias": 0.9397,
-     "txmix_i.atb_tail": 0.7157
+     "txmix_i.atb_tail": 0.7156
     },
-    "pad_cm_V": 3.2486,
-    "sum_cm_V": 2.8505
+    "pad_cm_V": 3.2498,
+    "sum_cm_V": 2.8341
    }
   },
   "drv_match_a100": {
@@ -1995,13 +1995,13 @@
    },
    "result": {
     "input_mVpk_diff": 99.992,
-    "pad_fund_mVpk_diff": 699.191,
-    "pad_dBm_50ohm": 6.89,
-    "voltage_gain": 6.9925,
-    "supply_mA": 58.3874,
-    "atb_bias_V": 0.9481,
-    "atb_pre_V": 2.6375,
-    "atb_cm_V": 3.2456
+    "pad_fund_mVpk_diff": 858.498,
+    "pad_dBm_50ohm": 8.67,
+    "voltage_gain": 8.5857,
+    "supply_mA": 58.7384,
+    "atb_bias_V": 0.9486,
+    "atb_pre_V": 2.6363,
+    "atb_cm_V": 3.2454
    }
   },
   "drv_match_a300": {
@@ -2010,14 +2010,14 @@
     "amp": 0.3
    },
    "result": {
-    "input_mVpk_diff": 299.975,
-    "pad_fund_mVpk_diff": 914.503,
-    "pad_dBm_50ohm": 9.22,
-    "voltage_gain": 3.0486,
-    "supply_mA": 59.906,
-    "atb_bias_V": 0.9506,
-    "atb_pre_V": 2.6233,
-    "atb_cm_V": 3.2396
+    "input_mVpk_diff": 299.976,
+    "pad_fund_mVpk_diff": 1135.094,
+    "pad_dBm_50ohm": 11.1,
+    "voltage_gain": 3.7839,
+    "supply_mA": 60.0927,
+    "atb_bias_V": 0.9516,
+    "atb_pre_V": 2.6206,
+    "atb_cm_V": 3.2437
    }
   },
   "drv_match_a600": {
@@ -2027,13 +2027,13 @@
    },
    "result": {
     "input_mVpk_diff": 599.952,
-    "pad_fund_mVpk_diff": 924.515,
-    "pad_dBm_50ohm": 9.32,
-    "voltage_gain": 1.541,
-    "supply_mA": 60.0918,
-    "atb_bias_V": 0.951,
-    "atb_pre_V": 2.618,
-    "atb_cm_V": 3.239
+    "pad_fund_mVpk_diff": 1150.799,
+    "pad_dBm_50ohm": 11.22,
+    "voltage_gain": 1.9182,
+    "supply_mA": 60.3183,
+    "atb_bias_V": 0.952,
+    "atb_pre_V": 2.6145,
+    "atb_cm_V": 3.2434
    }
   },
   "corner_tt_22C_3p15V": {
@@ -2045,26 +2045,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 614.694,
-    "pad_dBm_50ohm": 5.77,
-    "sum_fund_mVpk_diff": 125.228,
-    "mixi_drain_fund_mVpk_diff": 131.288,
+    "pad_fund_mVpk_diff": 511.821,
+    "pad_dBm_50ohm": 4.18,
+    "sum_fund_mVpk_diff": 115.804,
+    "mixi_drain_fund_mVpk_diff": 121.453,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0171,
-     "rfdriver": 53.1606
+     "txsum": 2.0151,
+     "rfdriver": 53.5536
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9376,
-     "rfdriver.atb_pre": 2.5251,
-     "rfdriver.atb_cm": 3.1239,
-     "txsum.atb_cm": 2.6779,
+     "rfdriver.atb_bias": 0.9369,
+     "rfdriver.atb_pre": 2.529,
+     "rfdriver.atb_cm": 3.0963,
+     "txsum.atb_cm": 2.6783,
      "txmix_i.atb_bias": 0.9422,
-     "txmix_i.atb_tail": 0.788
+     "txmix_i.atb_tail": 0.7881
     },
-    "pad_cm_V": 3.1246,
-    "sum_cm_V": 2.6792
+    "pad_cm_V": 3.097,
+    "sum_cm_V": 2.6797
    }
   },
   "mcorner_tt_22C_3p15V": {
@@ -2076,26 +2076,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 581.392,
-    "pad_dBm_50ohm": 5.29,
-    "sum_fund_mVpk_diff": 117.906,
-    "mixi_drain_fund_mVpk_diff": 125.19,
+    "pad_fund_mVpk_diff": 840.044,
+    "pad_dBm_50ohm": 8.49,
+    "sum_fund_mVpk_diff": 116.119,
+    "mixi_drain_fund_mVpk_diff": 121.787,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9487,
-     "rfdriver": 53.5097
+     "txsum": 2.0174,
+     "rfdriver": 53.3233
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9383,
-     "rfdriver.atb_pre": 2.5221,
-     "rfdriver.atb_cm": 3.0975,
-     "txsum.atb_cm": 2.694,
+     "rfdriver.atb_bias": 0.9368,
+     "rfdriver.atb_pre": 2.5292,
+     "rfdriver.atb_cm": 3.1008,
+     "txsum.atb_cm": 2.6777,
      "txmix_i.atb_bias": 0.9422,
-     "txmix_i.atb_tail": 0.7881
+     "txmix_i.atb_tail": 0.788
     },
-    "pad_cm_V": 3.0997,
-    "sum_cm_V": 2.6954
+    "pad_cm_V": 3.102,
+    "sum_cm_V": 2.6792
    }
   },
   "scorner_tt_22C_3p15V": {
@@ -2107,26 +2107,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 862.41,
-    "pad_dBm_50ohm": 8.71,
-    "sum_fund_mVpk_diff": 236.11,
-    "mixi_drain_fund_mVpk_diff": 254.433,
+    "pad_fund_mVpk_diff": 996.406,
+    "pad_dBm_50ohm": 9.97,
+    "sum_fund_mVpk_diff": 265.822,
+    "mixi_drain_fund_mVpk_diff": 278.744,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.7192,
-     "rfdriver": 54.1632
+     "txsum": 2.0246,
+     "rfdriver": 54.0846
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9389,
-     "rfdriver.atb_pre": 2.5187,
-     "rfdriver.atb_cm": 3.0981,
-     "txsum.atb_cm": 2.7482,
+     "rfdriver.atb_bias": 0.9386,
+     "rfdriver.atb_pre": 2.5206,
+     "rfdriver.atb_cm": 3.0999,
+     "txsum.atb_cm": 2.6761,
      "txmix_i.atb_bias": 0.9422,
-     "txmix_i.atb_tail": 1.0316
+     "txmix_i.atb_tail": 1.0315
     },
-    "pad_cm_V": 3.0989,
-    "sum_cm_V": 2.7493
+    "pad_cm_V": 3.101,
+    "sum_cm_V": 2.6775
    }
   },
   "corner_tt_22C_3p35V": {
@@ -2138,26 +2138,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 635.462,
-    "pad_dBm_50ohm": 6.06,
-    "sum_fund_mVpk_diff": 126.024,
-    "mixi_drain_fund_mVpk_diff": 132.103,
+    "pad_fund_mVpk_diff": 524.195,
+    "pad_dBm_50ohm": 4.39,
+    "sum_fund_mVpk_diff": 116.432,
+    "mixi_drain_fund_mVpk_diff": 122.098,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0171,
-     "rfdriver": 54.0577
+     "txsum": 2.0149,
+     "rfdriver": 54.206
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9375,
-     "rfdriver.atb_pre": 2.7227,
-     "rfdriver.atb_cm": 3.3239,
-     "txsum.atb_cm": 2.8831,
+     "rfdriver.atb_bias": 0.9371,
+     "rfdriver.atb_pre": 2.7261,
+     "rfdriver.atb_cm": 3.2972,
+     "txsum.atb_cm": 2.8835,
      "txmix_i.atb_bias": 0.9422,
      "txmix_i.atb_tail": 0.7884
     },
-    "pad_cm_V": 3.3244,
-    "sum_cm_V": 2.8844
+    "pad_cm_V": 3.298,
+    "sum_cm_V": 2.8849
    }
   },
   "mcorner_tt_22C_3p35V": {
@@ -2169,26 +2169,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 572.459,
-    "pad_dBm_50ohm": 5.15,
-    "sum_fund_mVpk_diff": 116.817,
-    "mixi_drain_fund_mVpk_diff": 124.152,
+    "pad_fund_mVpk_diff": 859.001,
+    "pad_dBm_50ohm": 8.68,
+    "sum_fund_mVpk_diff": 116.815,
+    "mixi_drain_fund_mVpk_diff": 122.502,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.945,
-     "rfdriver": 54.5968
+     "txsum": 2.0172,
+     "rfdriver": 53.9514
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9384,
-     "rfdriver.atb_pre": 2.7196,
-     "rfdriver.atb_cm": 3.2986,
-     "txsum.atb_cm": 2.8998,
+     "rfdriver.atb_bias": 0.937,
+     "rfdriver.atb_pre": 2.7263,
+     "rfdriver.atb_cm": 3.3001,
+     "txsum.atb_cm": 2.8829,
      "txmix_i.atb_bias": 0.9422,
      "txmix_i.atb_tail": 0.7884
     },
-    "pad_cm_V": 3.2972,
-    "sum_cm_V": 2.9002
+    "pad_cm_V": 3.3012,
+    "sum_cm_V": 2.8843
    }
   },
   "scorner_tt_22C_3p35V": {
@@ -2200,26 +2200,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 872.074,
-    "pad_dBm_50ohm": 8.81,
-    "sum_fund_mVpk_diff": 233.339,
-    "mixi_drain_fund_mVpk_diff": 251.783,
+    "pad_fund_mVpk_diff": 1014.012,
+    "pad_dBm_50ohm": 10.12,
+    "sum_fund_mVpk_diff": 267.692,
+    "mixi_drain_fund_mVpk_diff": 280.67,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.709,
-     "rfdriver": 54.9916
+     "txsum": 2.0243,
+     "rfdriver": 54.7022
     },
     "atb_V": {
      "rfdriver.atb_bias": 0.9388,
-     "rfdriver.atb_pre": 2.7164,
-     "rfdriver.atb_cm": 3.2967,
-     "txsum.atb_cm": 2.9549,
+     "rfdriver.atb_pre": 2.7176,
+     "rfdriver.atb_cm": 3.2992,
+     "txsum.atb_cm": 2.8813,
      "txmix_i.atb_bias": 0.9422,
-     "txmix_i.atb_tail": 1.0315
+     "txmix_i.atb_tail": 1.0313
     },
-    "pad_cm_V": 3.2974,
-    "sum_cm_V": 2.956
+    "pad_cm_V": 3.3003,
+    "sum_cm_V": 2.8827
    }
   },
   "corner_tt_32C_3p15V": {
@@ -2231,26 +2231,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 569.846,
-    "pad_dBm_50ohm": 5.12,
-    "sum_fund_mVpk_diff": 124.737,
-    "mixi_drain_fund_mVpk_diff": 130.928,
+    "pad_fund_mVpk_diff": 473.043,
+    "pad_dBm_50ohm": 3.5,
+    "sum_fund_mVpk_diff": 115.319,
+    "mixi_drain_fund_mVpk_diff": 121.09,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0024,
-     "rfdriver": 52.8813
+     "txsum": 2.0007,
+     "rfdriver": 53.2826
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.932,
-     "rfdriver.atb_pre": 2.5303,
-     "rfdriver.atb_cm": 3.1234,
-     "txsum.atb_cm": 2.6794,
+     "rfdriver.atb_bias": 0.9314,
+     "rfdriver.atb_pre": 2.534,
+     "rfdriver.atb_cm": 3.0957,
+     "txsum.atb_cm": 2.6797,
      "txmix_i.atb_bias": 0.9373,
-     "txmix_i.atb_tail": 0.7923
+     "txmix_i.atb_tail": 0.7924
     },
-    "pad_cm_V": 3.1241,
-    "sum_cm_V": 2.6807
+    "pad_cm_V": 3.0963,
+    "sum_cm_V": 2.6811
    }
   },
   "mcorner_tt_32C_3p15V": {
@@ -2262,26 +2262,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 583.159,
-    "pad_dBm_50ohm": 5.32,
-    "sum_fund_mVpk_diff": 121.198,
-    "mixi_drain_fund_mVpk_diff": 128.55,
+    "pad_fund_mVpk_diff": 775.718,
+    "pad_dBm_50ohm": 7.79,
+    "sum_fund_mVpk_diff": 115.532,
+    "mixi_drain_fund_mVpk_diff": 121.316,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9405,
-     "rfdriver": 53.1333
+     "txsum": 2.0028,
+     "rfdriver": 53.0629
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9326,
-     "rfdriver.atb_pre": 2.5281,
-     "rfdriver.atb_cm": 3.0993,
-     "txsum.atb_cm": 2.6941,
+     "rfdriver.atb_bias": 0.9313,
+     "rfdriver.atb_pre": 2.5341,
+     "rfdriver.atb_cm": 3.101,
+     "txsum.atb_cm": 2.6792,
      "txmix_i.atb_bias": 0.9373,
      "txmix_i.atb_tail": 0.7924
     },
-    "pad_cm_V": 3.1082,
-    "sum_cm_V": 2.6964
+    "pad_cm_V": 3.1022,
+    "sum_cm_V": 2.6806
    }
   },
   "scorner_tt_32C_3p15V": {
@@ -2293,26 +2293,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 839.039,
-    "pad_dBm_50ohm": 8.48,
-    "sum_fund_mVpk_diff": 242.055,
-    "mixi_drain_fund_mVpk_diff": 260.465,
+    "pad_fund_mVpk_diff": 958.252,
+    "pad_dBm_50ohm": 9.63,
+    "sum_fund_mVpk_diff": 263.786,
+    "mixi_drain_fund_mVpk_diff": 276.941,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.7309,
-     "rfdriver": 53.8691
+     "txsum": 2.01,
+     "rfdriver": 53.7966
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9333,
-     "rfdriver.atb_pre": 2.5242,
-     "rfdriver.atb_cm": 3.0986,
-     "txsum.atb_cm": 2.7438,
+     "rfdriver.atb_bias": 0.9331,
+     "rfdriver.atb_pre": 2.5262,
+     "rfdriver.atb_cm": 3.1001,
+     "txsum.atb_cm": 2.6776,
      "txmix_i.atb_bias": 0.9373,
-     "txmix_i.atb_tail": 1.0348
+     "txmix_i.atb_tail": 1.0346
     },
-    "pad_cm_V": 3.0994,
-    "sum_cm_V": 2.7449
+    "pad_cm_V": 3.1012,
+    "sum_cm_V": 2.6789
    }
   },
   "corner_tt_32C_3p35V": {
@@ -2324,26 +2324,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 589.555,
-    "pad_dBm_50ohm": 5.41,
-    "sum_fund_mVpk_diff": 125.547,
-    "mixi_drain_fund_mVpk_diff": 131.758,
+    "pad_fund_mVpk_diff": 484.98,
+    "pad_dBm_50ohm": 3.71,
+    "sum_fund_mVpk_diff": 115.964,
+    "mixi_drain_fund_mVpk_diff": 121.752,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0025,
-     "rfdriver": 53.7776
+     "txsum": 2.0004,
+     "rfdriver": 53.9376
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9319,
-     "rfdriver.atb_pre": 2.728,
-     "rfdriver.atb_cm": 3.3235,
-     "txsum.atb_cm": 2.8847,
+     "rfdriver.atb_bias": 0.9316,
+     "rfdriver.atb_pre": 2.731,
+     "rfdriver.atb_cm": 3.2966,
+     "txsum.atb_cm": 2.8851,
      "txmix_i.atb_bias": 0.9373,
      "txmix_i.atb_tail": 0.7927
     },
-    "pad_cm_V": 3.3241,
-    "sum_cm_V": 2.886
+    "pad_cm_V": 3.2973,
+    "sum_cm_V": 2.8864
    }
   },
   "mcorner_tt_32C_3p35V": {
@@ -2355,26 +2355,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 584.125,
-    "pad_dBm_50ohm": 5.33,
-    "sum_fund_mVpk_diff": 120.48,
-    "mixi_drain_fund_mVpk_diff": 127.888,
+    "pad_fund_mVpk_diff": 794.088,
+    "pad_dBm_50ohm": 8.0,
+    "sum_fund_mVpk_diff": 116.235,
+    "mixi_drain_fund_mVpk_diff": 122.039,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.938,
-     "rfdriver": 54.0697
+     "txsum": 2.0027,
+     "rfdriver": 53.6922
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9325,
-     "rfdriver.atb_pre": 2.7255,
-     "rfdriver.atb_cm": 3.2976,
-     "txsum.atb_cm": 2.8998,
+     "rfdriver.atb_bias": 0.9315,
+     "rfdriver.atb_pre": 2.7311,
+     "rfdriver.atb_cm": 3.3003,
+     "txsum.atb_cm": 2.8845,
      "txmix_i.atb_bias": 0.9373,
-     "txmix_i.atb_tail": 0.7928
+     "txmix_i.atb_tail": 0.7927
     },
-    "pad_cm_V": 3.3056,
-    "sum_cm_V": 2.902
+    "pad_cm_V": 3.3014,
+    "sum_cm_V": 2.8859
    }
   },
   "scorner_tt_32C_3p35V": {
@@ -2386,26 +2386,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 848.63,
-    "pad_dBm_50ohm": 8.57,
-    "sum_fund_mVpk_diff": 239.555,
-    "mixi_drain_fund_mVpk_diff": 258.095,
+    "pad_fund_mVpk_diff": 975.655,
+    "pad_dBm_50ohm": 9.79,
+    "sum_fund_mVpk_diff": 265.657,
+    "mixi_drain_fund_mVpk_diff": 278.867,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.7211,
-     "rfdriver": 54.7312
+     "txsum": 2.0097,
+     "rfdriver": 54.416
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.9332,
-     "rfdriver.atb_pre": 2.722,
-     "rfdriver.atb_cm": 3.2973,
-     "txsum.atb_cm": 2.9505,
+     "rfdriver.atb_bias": 0.9333,
+     "rfdriver.atb_pre": 2.7231,
+     "rfdriver.atb_cm": 3.2994,
+     "txsum.atb_cm": 2.8829,
      "txmix_i.atb_bias": 0.9373,
-     "txmix_i.atb_tail": 1.0347
+     "txmix_i.atb_tail": 1.0345
     },
-    "pad_cm_V": 3.298,
-    "sum_cm_V": 2.9516
+    "pad_cm_V": 3.3005,
+    "sum_cm_V": 2.8843
    }
   },
   "corner_ss_22C_3p15V": {
@@ -2417,26 +2417,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 366.824,
-    "pad_dBm_50ohm": 1.29,
-    "sum_fund_mVpk_diff": 114.133,
-    "mixi_drain_fund_mVpk_diff": 122.478,
+    "pad_fund_mVpk_diff": 346.409,
+    "pad_dBm_50ohm": 0.79,
+    "sum_fund_mVpk_diff": 105.244,
+    "mixi_drain_fund_mVpk_diff": 113.018,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0103,
-     "rfdriver": 40.5361
+     "txsum": 2.0153,
+     "rfdriver": 49.659
     },
     "atb_V": {
      "rfdriver.atb_bias": 1.0539,
-     "rfdriver.atb_pre": 2.432,
-     "rfdriver.atb_cm": 3.1176,
-     "txsum.atb_cm": 2.5998,
+     "rfdriver.atb_pre": 2.4309,
+     "rfdriver.atb_cm": 3.1018,
+     "txsum.atb_cm": 2.5983,
      "txmix_i.atb_bias": 1.0621,
      "txmix_i.atb_tail": 0.6793
     },
-    "pad_cm_V": 3.1174,
-    "sum_cm_V": 2.601
+    "pad_cm_V": 3.0991,
+    "sum_cm_V": 2.5996
    }
   },
   "mcorner_ss_22C_3p15V": {
@@ -2448,26 +2448,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 488.494,
-    "pad_dBm_50ohm": 3.78,
-    "sum_fund_mVpk_diff": 116.454,
-    "mixi_drain_fund_mVpk_diff": 124.798,
+    "pad_fund_mVpk_diff": 574.196,
+    "pad_dBm_50ohm": 5.18,
+    "sum_fund_mVpk_diff": 105.276,
+    "mixi_drain_fund_mVpk_diff": 113.054,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0101,
-     "rfdriver": 40.2515
+     "txsum": 2.0102,
+     "rfdriver": 50.078
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.0537,
-     "rfdriver.atb_pre": 2.4327,
-     "rfdriver.atb_cm": 3.1205,
-     "txsum.atb_cm": 2.5998,
+     "rfdriver.atb_bias": 1.0539,
+     "rfdriver.atb_pre": 2.4311,
+     "rfdriver.atb_cm": 3.1046,
+     "txsum.atb_cm": 2.5997,
      "txmix_i.atb_bias": 1.0621,
      "txmix_i.atb_tail": 0.6793
     },
-    "pad_cm_V": 3.1208,
-    "sum_cm_V": 2.6011
+    "pad_cm_V": 3.1058,
+    "sum_cm_V": 2.601
    }
   },
   "scorner_ss_22C_3p15V": {
@@ -2479,26 +2479,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 709.82,
-    "pad_dBm_50ohm": 7.02,
-    "sum_fund_mVpk_diff": 307.843,
-    "mixi_drain_fund_mVpk_diff": 331.507,
+    "pad_fund_mVpk_diff": 813.365,
+    "pad_dBm_50ohm": 8.21,
+    "sum_fund_mVpk_diff": 273.476,
+    "mixi_drain_fund_mVpk_diff": 293.59,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9515,
-     "rfdriver": 42.3215
+     "txsum": 2.0204,
+     "rfdriver": 50.9094
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.0559,
-     "rfdriver.atb_pre": 2.4222,
-     "rfdriver.atb_cm": 3.118,
-     "txsum.atb_cm": 2.6159,
+     "rfdriver.atb_bias": 1.0557,
+     "rfdriver.atb_pre": 2.4233,
+     "rfdriver.atb_cm": 3.1037,
+     "txsum.atb_cm": 2.5971,
      "txmix_i.atb_bias": 1.0622,
      "txmix_i.atb_tail": 0.911
     },
-    "pad_cm_V": 3.1194,
-    "sum_cm_V": 2.6175
+    "pad_cm_V": 3.1047,
+    "sum_cm_V": 2.5982
    }
   },
   "corner_ss_22C_3p35V": {
@@ -2510,26 +2510,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 442.521,
-    "pad_dBm_50ohm": 2.92,
-    "sum_fund_mVpk_diff": 114.808,
-    "mixi_drain_fund_mVpk_diff": 123.183,
+    "pad_fund_mVpk_diff": 359.287,
+    "pad_dBm_50ohm": 1.11,
+    "sum_fund_mVpk_diff": 105.847,
+    "mixi_drain_fund_mVpk_diff": 113.648,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0103,
-     "rfdriver": 48.9805
+     "txsum": 2.015,
+     "rfdriver": 50.9114
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.0555,
-     "rfdriver.atb_pre": 2.6253,
-     "rfdriver.atb_cm": 3.3148,
-     "txsum.atb_cm": 2.8064,
+     "rfdriver.atb_bias": 1.0541,
+     "rfdriver.atb_pre": 2.63,
+     "rfdriver.atb_cm": 3.2975,
+     "txsum.atb_cm": 2.8051,
      "txmix_i.atb_bias": 1.0621,
      "txmix_i.atb_tail": 0.6795
     },
-    "pad_cm_V": 3.3144,
-    "sum_cm_V": 2.8077
+    "pad_cm_V": 3.295,
+    "sum_cm_V": 2.8064
    }
   },
   "mcorner_ss_22C_3p35V": {
@@ -2541,26 +2541,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 562.598,
-    "pad_dBm_50ohm": 5.0,
-    "sum_fund_mVpk_diff": 119.171,
-    "mixi_drain_fund_mVpk_diff": 127.591,
+    "pad_fund_mVpk_diff": 594.674,
+    "pad_dBm_50ohm": 5.49,
+    "sum_fund_mVpk_diff": 105.89,
+    "mixi_drain_fund_mVpk_diff": 113.696,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0083,
-     "rfdriver": 48.8862
+     "txsum": 2.0103,
+     "rfdriver": 51.2744
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.0554,
-     "rfdriver.atb_pre": 2.625,
-     "rfdriver.atb_cm": 3.3075,
-     "txsum.atb_cm": 2.807,
+     "rfdriver.atb_bias": 1.0541,
+     "rfdriver.atb_pre": 2.6302,
+     "rfdriver.atb_cm": 3.303,
+     "txsum.atb_cm": 2.8064,
      "txmix_i.atb_bias": 1.0621,
      "txmix_i.atb_tail": 0.6795
     },
-    "pad_cm_V": 3.3078,
-    "sum_cm_V": 2.8082
+    "pad_cm_V": 3.3042,
+    "sum_cm_V": 2.8077
    }
   },
   "scorner_ss_22C_3p35V": {
@@ -2572,26 +2572,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 789.439,
-    "pad_dBm_50ohm": 7.95,
-    "sum_fund_mVpk_diff": 310.972,
-    "mixi_drain_fund_mVpk_diff": 336.334,
+    "pad_fund_mVpk_diff": 837.182,
+    "pad_dBm_50ohm": 8.46,
+    "sum_fund_mVpk_diff": 275.079,
+    "mixi_drain_fund_mVpk_diff": 295.259,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.8938,
-     "rfdriver": 50.2976
+     "txsum": 2.0197,
+     "rfdriver": 51.9614
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.0571,
-     "rfdriver.atb_pre": 2.6159,
-     "rfdriver.atb_cm": 3.3053,
-     "txsum.atb_cm": 2.838,
+     "rfdriver.atb_bias": 1.0558,
+     "rfdriver.atb_pre": 2.6222,
+     "rfdriver.atb_cm": 3.3022,
+     "txsum.atb_cm": 2.804,
      "txmix_i.atb_bias": 1.0621,
      "txmix_i.atb_tail": 0.9101
     },
-    "pad_cm_V": 3.3058,
-    "sum_cm_V": 2.8394
+    "pad_cm_V": 3.3033,
+    "sum_cm_V": 2.8051
    }
   },
   "corner_ss_32C_3p15V": {
@@ -2603,26 +2603,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 337.909,
-    "pad_dBm_50ohm": 0.58,
-    "sum_fund_mVpk_diff": 113.843,
-    "mixi_drain_fund_mVpk_diff": 122.4,
+    "pad_fund_mVpk_diff": 314.315,
+    "pad_dBm_50ohm": -0.05,
+    "sum_fund_mVpk_diff": 104.913,
+    "mixi_drain_fund_mVpk_diff": 112.884,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9965,
-     "rfdriver": 40.4181
+     "txsum": 2.0016,
+     "rfdriver": 49.5289
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.0487,
-     "rfdriver.atb_pre": 2.4368,
-     "rfdriver.atb_cm": 3.1184,
-     "txsum.atb_cm": 2.6013,
+     "rfdriver.atb_bias": 1.0489,
+     "rfdriver.atb_pre": 2.4353,
+     "rfdriver.atb_cm": 3.1019,
+     "txsum.atb_cm": 2.5998,
      "txmix_i.atb_bias": 1.0575,
      "txmix_i.atb_tail": 0.6832
     },
-    "pad_cm_V": 3.1183,
-    "sum_cm_V": 2.6025
+    "pad_cm_V": 3.0991,
+    "sum_cm_V": 2.6011
    }
   },
   "mcorner_ss_32C_3p15V": {
@@ -2634,25 +2634,25 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 446.645,
-    "pad_dBm_50ohm": 3.0,
-    "sum_fund_mVpk_diff": 115.404,
-    "mixi_drain_fund_mVpk_diff": 123.955,
+    "pad_fund_mVpk_diff": 520.664,
+    "pad_dBm_50ohm": 4.33,
+    "sum_fund_mVpk_diff": 104.942,
+    "mixi_drain_fund_mVpk_diff": 112.916,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9965,
-     "rfdriver": 40.1858
+     "txsum": 1.9964,
+     "rfdriver": 49.9485
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.0486,
-     "rfdriver.atb_pre": 2.4373,
-     "rfdriver.atb_cm": 3.1205,
-     "txsum.atb_cm": 2.6013,
+     "rfdriver.atb_bias": 1.0488,
+     "rfdriver.atb_pre": 2.4355,
+     "rfdriver.atb_cm": 3.1047,
+     "txsum.atb_cm": 2.6012,
      "txmix_i.atb_bias": 1.0575,
-     "txmix_i.atb_tail": 0.6832
+     "txmix_i.atb_tail": 0.6833
     },
-    "pad_cm_V": 3.1208,
+    "pad_cm_V": 3.1059,
     "sum_cm_V": 2.6025
    }
   },
@@ -2665,26 +2665,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 686.321,
-    "pad_dBm_50ohm": 6.73,
-    "sum_fund_mVpk_diff": 305.672,
-    "mixi_drain_fund_mVpk_diff": 329.324,
+    "pad_fund_mVpk_diff": 775.225,
+    "pad_dBm_50ohm": 7.79,
+    "sum_fund_mVpk_diff": 271.492,
+    "mixi_drain_fund_mVpk_diff": 292.031,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9535,
-     "rfdriver": 42.1366
+     "txsum": 2.0061,
+     "rfdriver": 50.7221
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.0507,
-     "rfdriver.atb_pre": 2.4282,
-     "rfdriver.atb_cm": 3.118,
-     "txsum.atb_cm": 2.6131,
+     "rfdriver.atb_bias": 1.0505,
+     "rfdriver.atb_pre": 2.4287,
+     "rfdriver.atb_cm": 3.1039,
+     "txsum.atb_cm": 2.5987,
      "txmix_i.atb_bias": 1.0576,
      "txmix_i.atb_tail": 0.9136
     },
-    "pad_cm_V": 3.1188,
-    "sum_cm_V": 2.6145
+    "pad_cm_V": 3.1049,
+    "sum_cm_V": 2.5998
    }
   },
   "corner_ss_32C_3p35V": {
@@ -2696,26 +2696,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 404.869,
-    "pad_dBm_50ohm": 2.15,
-    "sum_fund_mVpk_diff": 114.526,
-    "mixi_drain_fund_mVpk_diff": 123.115,
+    "pad_fund_mVpk_diff": 326.024,
+    "pad_dBm_50ohm": 0.26,
+    "sum_fund_mVpk_diff": 105.523,
+    "mixi_drain_fund_mVpk_diff": 113.521,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9966,
-     "rfdriver": 48.7498
+     "txsum": 2.0013,
+     "rfdriver": 50.768
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.0504,
-     "rfdriver.atb_pre": 2.6299,
-     "rfdriver.atb_cm": 3.3149,
-     "txsum.atb_cm": 2.8081,
+     "rfdriver.atb_bias": 1.0491,
+     "rfdriver.atb_pre": 2.6344,
+     "rfdriver.atb_cm": 3.2975,
+     "txsum.atb_cm": 2.8067,
      "txmix_i.atb_bias": 1.0575,
      "txmix_i.atb_tail": 0.6835
     },
-    "pad_cm_V": 3.3145,
-    "sum_cm_V": 2.8093
+    "pad_cm_V": 3.295,
+    "sum_cm_V": 2.808
    }
   },
   "mcorner_ss_32C_3p35V": {
@@ -2727,26 +2727,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 510.707,
-    "pad_dBm_50ohm": 4.16,
-    "sum_fund_mVpk_diff": 117.37,
-    "mixi_drain_fund_mVpk_diff": 125.956,
+    "pad_fund_mVpk_diff": 539.267,
+    "pad_dBm_50ohm": 4.64,
+    "sum_fund_mVpk_diff": 105.556,
+    "mixi_drain_fund_mVpk_diff": 113.557,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9961,
-     "rfdriver": 48.6542
+     "txsum": 1.9965,
+     "rfdriver": 51.1316
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.0503,
-     "rfdriver.atb_pre": 2.6298,
-     "rfdriver.atb_cm": 3.3077,
-     "txsum.atb_cm": 2.8082,
+     "rfdriver.atb_bias": 1.049,
+     "rfdriver.atb_pre": 2.6346,
+     "rfdriver.atb_cm": 3.3031,
+     "txsum.atb_cm": 2.8081,
      "txmix_i.atb_bias": 1.0575,
      "txmix_i.atb_tail": 0.6835
     },
-    "pad_cm_V": 3.308,
-    "sum_cm_V": 2.8094
+    "pad_cm_V": 3.3043,
+    "sum_cm_V": 2.8093
    }
   },
   "scorner_ss_32C_3p35V": {
@@ -2758,26 +2758,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 762.451,
-    "pad_dBm_50ohm": 7.64,
-    "sum_fund_mVpk_diff": 309.933,
-    "mixi_drain_fund_mVpk_diff": 335.234,
+    "pad_fund_mVpk_diff": 797.935,
+    "pad_dBm_50ohm": 8.04,
+    "sum_fund_mVpk_diff": 273.136,
+    "mixi_drain_fund_mVpk_diff": 293.745,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9007,
-     "rfdriver": 49.9933
+     "txsum": 2.0056,
+     "rfdriver": 51.765
     },
     "atb_V": {
-     "rfdriver.atb_bias": 1.052,
-     "rfdriver.atb_pre": 2.6216,
-     "rfdriver.atb_cm": 3.3058,
-     "txsum.atb_cm": 2.8341,
+     "rfdriver.atb_bias": 1.0507,
+     "rfdriver.atb_pre": 2.6275,
+     "rfdriver.atb_cm": 3.3024,
+     "txsum.atb_cm": 2.8057,
      "txmix_i.atb_bias": 1.0575,
      "txmix_i.atb_tail": 0.9128
     },
-    "pad_cm_V": 3.3064,
-    "sum_cm_V": 2.8355
+    "pad_cm_V": 3.3034,
+    "sum_cm_V": 2.8068
    }
   },
   "corner_ff_22C_3p15V": {
@@ -2789,26 +2789,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 739.849,
-    "pad_dBm_50ohm": 7.38,
-    "sum_fund_mVpk_diff": 135.499,
-    "mixi_drain_fund_mVpk_diff": 138.866,
+    "pad_fund_mVpk_diff": 641.031,
+    "pad_dBm_50ohm": 6.14,
+    "sum_fund_mVpk_diff": 125.375,
+    "mixi_drain_fund_mVpk_diff": 128.514,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0226,
-     "rfdriver": 55.702
+     "txsum": 2.0206,
+     "rfdriver": 56.4
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.8198,
-     "rfdriver.atb_pre": 2.6231,
-     "rfdriver.atb_cm": 3.1208,
-     "txsum.atb_cm": 2.7547,
+     "rfdriver.atb_bias": 0.8207,
+     "rfdriver.atb_pre": 2.6211,
+     "rfdriver.atb_cm": 3.1092,
+     "txsum.atb_cm": 2.7551,
      "txmix_i.atb_bias": 0.8229,
      "txmix_i.atb_tail": 0.8978
     },
-    "pad_cm_V": 3.1208,
-    "sum_cm_V": 2.756
+    "pad_cm_V": 3.1097,
+    "sum_cm_V": 2.7564
    }
   },
   "mcorner_ff_22C_3p15V": {
@@ -2820,26 +2820,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 532.687,
-    "pad_dBm_50ohm": 4.53,
-    "sum_fund_mVpk_diff": 99.257,
-    "mixi_drain_fund_mVpk_diff": 103.214,
+    "pad_fund_mVpk_diff": 1026.93,
+    "pad_dBm_50ohm": 10.23,
+    "sum_fund_mVpk_diff": 126.393,
+    "mixi_drain_fund_mVpk_diff": 129.552,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9043,
-     "rfdriver": 56.2188
+     "txsum": 2.0222,
+     "rfdriver": 56.2682
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.8206,
+     "rfdriver.atb_bias": 0.8205,
      "rfdriver.atb_pre": 2.6216,
-     "rfdriver.atb_cm": 3.099,
-     "txsum.atb_cm": 2.7774,
+     "rfdriver.atb_cm": 3.0975,
+     "txsum.atb_cm": 2.7549,
      "txmix_i.atb_bias": 0.8229,
-     "txmix_i.atb_tail": 0.8979
+     "txmix_i.atb_tail": 0.8978
     },
-    "pad_cm_V": 3.0972,
-    "sum_cm_V": 2.7808
+    "pad_cm_V": 3.0987,
+    "sum_cm_V": 2.7561
    }
   },
   "scorner_ff_22C_3p15V": {
@@ -2851,26 +2851,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 698.923,
-    "pad_dBm_50ohm": 6.89,
-    "sum_fund_mVpk_diff": 188.832,
-    "mixi_drain_fund_mVpk_diff": 196.621,
+    "pad_fund_mVpk_diff": 1107.726,
+    "pad_dBm_50ohm": 10.89,
+    "sum_fund_mVpk_diff": 252.561,
+    "mixi_drain_fund_mVpk_diff": 258.852,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": 0.0,
-     "txsum": 1.7623,
-     "rfdriver": 56.6695
+     "txsum": 2.0292,
+     "rfdriver": 56.8863
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.8212,
-     "rfdriver.atb_pre": 2.6185,
-     "rfdriver.atb_cm": 3.0982,
-     "txsum.atb_cm": 2.8054,
+     "rfdriver.atb_bias": 0.8218,
+     "rfdriver.atb_pre": 2.6152,
+     "rfdriver.atb_cm": 3.0969,
+     "txsum.atb_cm": 2.7536,
      "txmix_i.atb_bias": 0.8229,
-     "txmix_i.atb_tail": 1.1528
+     "txmix_i.atb_tail": 1.1526
     },
-    "pad_cm_V": 3.0929,
-    "sum_cm_V": 2.8076
+    "pad_cm_V": 3.0983,
+    "sum_cm_V": 2.7548
    }
   },
   "corner_ff_22C_3p35V": {
@@ -2882,26 +2882,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 759.134,
-    "pad_dBm_50ohm": 7.61,
-    "sum_fund_mVpk_diff": 136.323,
-    "mixi_drain_fund_mVpk_diff": 139.7,
+    "pad_fund_mVpk_diff": 655.327,
+    "pad_dBm_50ohm": 6.33,
+    "sum_fund_mVpk_diff": 125.993,
+    "mixi_drain_fund_mVpk_diff": 129.138,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0226,
-     "rfdriver": 56.351
+     "txsum": 2.0206,
+     "rfdriver": 57.1332
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.82,
-     "rfdriver.atb_pre": 2.8191,
-     "rfdriver.atb_cm": 3.3198,
-     "txsum.atb_cm": 2.9587,
+     "rfdriver.atb_bias": 0.8213,
+     "rfdriver.atb_pre": 2.8158,
+     "rfdriver.atb_cm": 3.3098,
+     "txsum.atb_cm": 2.9591,
      "txmix_i.atb_bias": 0.8229,
      "txmix_i.atb_tail": 0.8983
     },
-    "pad_cm_V": 3.3199,
-    "sum_cm_V": 2.96
+    "pad_cm_V": 3.3103,
+    "sum_cm_V": 2.9604
    }
   },
   "mcorner_ff_22C_3p35V": {
@@ -2913,26 +2913,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 504.167,
-    "pad_dBm_50ohm": 4.05,
-    "sum_fund_mVpk_diff": 97.767,
-    "mixi_drain_fund_mVpk_diff": 101.705,
+    "pad_fund_mVpk_diff": 1047.339,
+    "pad_dBm_50ohm": 10.4,
+    "sum_fund_mVpk_diff": 127.108,
+    "mixi_drain_fund_mVpk_diff": 130.276,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.9003,
-     "rfdriver": 56.8616
+     "txsum": 2.0224,
+     "rfdriver": 57.0026
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.821,
-     "rfdriver.atb_pre": 2.8171,
-     "rfdriver.atb_cm": 3.3003,
-     "txsum.atb_cm": 2.982,
+     "rfdriver.atb_bias": 0.8211,
+     "rfdriver.atb_pre": 2.8163,
+     "rfdriver.atb_cm": 3.2967,
+     "txsum.atb_cm": 2.9588,
      "txmix_i.atb_bias": 0.8229,
-     "txmix_i.atb_tail": 0.8984
+     "txmix_i.atb_tail": 0.8983
     },
-    "pad_cm_V": 3.2916,
-    "sum_cm_V": 2.982
+    "pad_cm_V": 3.298,
+    "sum_cm_V": 2.96
    }
   },
   "scorner_ff_22C_3p35V": {
@@ -2944,26 +2944,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 695.904,
-    "pad_dBm_50ohm": 6.85,
-    "sum_fund_mVpk_diff": 188.041,
-    "mixi_drain_fund_mVpk_diff": 195.819,
+    "pad_fund_mVpk_diff": 1123.554,
+    "pad_dBm_50ohm": 11.01,
+    "sum_fund_mVpk_diff": 254.351,
+    "mixi_drain_fund_mVpk_diff": 260.668,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": 0.0,
-     "txsum": 1.7585,
-     "rfdriver": 57.3515
+     "txsum": 2.0294,
+     "rfdriver": 57.5852
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.8214,
-     "rfdriver.atb_pre": 2.8142,
-     "rfdriver.atb_cm": 3.2974,
-     "txsum.atb_cm": 3.0095,
+     "rfdriver.atb_bias": 0.8223,
+     "rfdriver.atb_pre": 2.8102,
+     "rfdriver.atb_cm": 3.2962,
+     "txsum.atb_cm": 2.9576,
      "txmix_i.atb_bias": 0.8229,
-     "txmix_i.atb_tail": 1.1531
+     "txmix_i.atb_tail": 1.1529
     },
-    "pad_cm_V": 3.2923,
-    "sum_cm_V": 3.0118
+    "pad_cm_V": 3.2976,
+    "sum_cm_V": 2.9587
    }
   },
   "corner_ff_32C_3p15V": {
@@ -2975,26 +2975,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 693.847,
-    "pad_dBm_50ohm": 6.83,
-    "sum_fund_mVpk_diff": 134.689,
-    "mixi_drain_fund_mVpk_diff": 138.094,
+    "pad_fund_mVpk_diff": 602.997,
+    "pad_dBm_50ohm": 5.61,
+    "sum_fund_mVpk_diff": 124.668,
+    "mixi_drain_fund_mVpk_diff": 127.843,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0071,
-     "rfdriver": 55.3361
+     "txsum": 2.005,
+     "rfdriver": 56.0279
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.8138,
-     "rfdriver.atb_pre": 2.6285,
-     "rfdriver.atb_cm": 3.1212,
-     "txsum.atb_cm": 2.7561,
+     "rfdriver.atb_bias": 0.8148,
+     "rfdriver.atb_pre": 2.6263,
+     "rfdriver.atb_cm": 3.1089,
+     "txsum.atb_cm": 2.7565,
      "txmix_i.atb_bias": 0.8177,
      "txmix_i.atb_tail": 0.9024
     },
-    "pad_cm_V": 3.1212,
-    "sum_cm_V": 2.7574
+    "pad_cm_V": 3.1094,
+    "sum_cm_V": 2.7578
    }
   },
   "mcorner_ff_32C_3p15V": {
@@ -3006,26 +3006,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 523.272,
-    "pad_dBm_50ohm": 4.37,
-    "sum_fund_mVpk_diff": 101.233,
-    "mixi_drain_fund_mVpk_diff": 105.208,
+    "pad_fund_mVpk_diff": 966.626,
+    "pad_dBm_50ohm": 9.71,
+    "sum_fund_mVpk_diff": 125.546,
+    "mixi_drain_fund_mVpk_diff": 128.738,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.8965,
-     "rfdriver": 55.5787
+     "txsum": 2.0066,
+     "rfdriver": 55.9013
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.8146,
-     "rfdriver.atb_pre": 2.6272,
-     "rfdriver.atb_cm": 3.1028,
-     "txsum.atb_cm": 2.7775,
+     "rfdriver.atb_bias": 0.8147,
+     "rfdriver.atb_pre": 2.6267,
+     "rfdriver.atb_cm": 3.0978,
+     "txsum.atb_cm": 2.7563,
      "txmix_i.atb_bias": 0.8177,
-     "txmix_i.atb_tail": 0.9025
+     "txmix_i.atb_tail": 0.9024
     },
-    "pad_cm_V": 3.0927,
-    "sum_cm_V": 2.7773
+    "pad_cm_V": 3.099,
+    "sum_cm_V": 2.7575
    }
   },
   "scorner_ff_32C_3p15V": {
@@ -3037,26 +3037,26 @@
     "vdd": 3.15
    },
    "result": {
-    "pad_fund_mVpk_diff": 704.916,
-    "pad_dBm_50ohm": 6.96,
-    "sum_fund_mVpk_diff": 189.656,
-    "mixi_drain_fund_mVpk_diff": 197.55,
+    "pad_fund_mVpk_diff": 1071.526,
+    "pad_dBm_50ohm": 10.6,
+    "sum_fund_mVpk_diff": 250.358,
+    "mixi_drain_fund_mVpk_diff": 256.703,
     "supply_mA": {
      "txmix_i": -0.0,
-     "txmix_q": -0.0,
-     "txsum": 1.7522,
-     "rfdriver": 56.2135
+     "txmix_q": 0.0,
+     "txsum": 2.0133,
+     "rfdriver": 56.51
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.8151,
-     "rfdriver.atb_pre": 2.6244,
-     "rfdriver.atb_cm": 3.0982,
-     "txsum.atb_cm": 2.8059,
+     "rfdriver.atb_bias": 0.816,
+     "rfdriver.atb_pre": 2.6207,
+     "rfdriver.atb_cm": 3.0972,
+     "txsum.atb_cm": 2.755,
      "txmix_i.atb_bias": 0.8177,
-     "txmix_i.atb_tail": 1.1564
+     "txmix_i.atb_tail": 1.1562
     },
-    "pad_cm_V": 3.093,
-    "sum_cm_V": 2.8081
+    "pad_cm_V": 3.0986,
+    "sum_cm_V": 2.7562
    }
   },
   "corner_ff_32C_3p35V": {
@@ -3068,26 +3068,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 712.978,
-    "pad_dBm_50ohm": 7.06,
-    "sum_fund_mVpk_diff": 135.547,
-    "mixi_drain_fund_mVpk_diff": 138.962,
+    "pad_fund_mVpk_diff": 617.16,
+    "pad_dBm_50ohm": 5.81,
+    "sum_fund_mVpk_diff": 125.316,
+    "mixi_drain_fund_mVpk_diff": 128.498,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 2.0071,
-     "rfdriver": 55.976
+     "txsum": 2.0051,
+     "rfdriver": 56.748
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.814,
-     "rfdriver.atb_pre": 2.8245,
-     "rfdriver.atb_cm": 3.3203,
-     "txsum.atb_cm": 2.9601,
+     "rfdriver.atb_bias": 0.8153,
+     "rfdriver.atb_pre": 2.8212,
+     "rfdriver.atb_cm": 3.3096,
+     "txsum.atb_cm": 2.9605,
      "txmix_i.atb_bias": 0.8177,
      "txmix_i.atb_tail": 0.9029
     },
-    "pad_cm_V": 3.3203,
-    "sum_cm_V": 2.9614
+    "pad_cm_V": 3.3101,
+    "sum_cm_V": 2.9618
    }
   },
   "mcorner_ff_32C_3p35V": {
@@ -3099,26 +3099,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 520.855,
-    "pad_dBm_50ohm": 4.33,
-    "sum_fund_mVpk_diff": 100.723,
-    "mixi_drain_fund_mVpk_diff": 104.7,
+    "pad_fund_mVpk_diff": 987.0,
+    "pad_dBm_50ohm": 9.89,
+    "sum_fund_mVpk_diff": 126.291,
+    "mixi_drain_fund_mVpk_diff": 129.492,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": -0.0,
-     "txsum": 1.8947,
-     "rfdriver": 56.3325
+     "txsum": 2.0067,
+     "rfdriver": 56.623
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.8148,
-     "rfdriver.atb_pre": 2.8231,
-     "rfdriver.atb_cm": 3.3003,
-     "txsum.atb_cm": 2.9817,
+     "rfdriver.atb_bias": 0.8152,
+     "rfdriver.atb_pre": 2.8216,
+     "rfdriver.atb_cm": 3.2971,
+     "txsum.atb_cm": 2.9603,
      "txmix_i.atb_bias": 0.8177,
-     "txmix_i.atb_tail": 0.903
+     "txmix_i.atb_tail": 0.9029
     },
-    "pad_cm_V": 3.2939,
-    "sum_cm_V": 2.9829
+    "pad_cm_V": 3.2983,
+    "sum_cm_V": 2.9615
    }
   },
   "scorner_ff_32C_3p35V": {
@@ -3130,26 +3130,26 @@
     "vdd": 3.35
    },
    "result": {
-    "pad_fund_mVpk_diff": 702.312,
-    "pad_dBm_50ohm": 6.93,
-    "sum_fund_mVpk_diff": 189.015,
-    "mixi_drain_fund_mVpk_diff": 196.898,
+    "pad_fund_mVpk_diff": 1086.967,
+    "pad_dBm_50ohm": 10.72,
+    "sum_fund_mVpk_diff": 252.164,
+    "mixi_drain_fund_mVpk_diff": 258.536,
     "supply_mA": {
      "txmix_i": -0.0,
      "txmix_q": 0.0,
-     "txsum": 1.749,
-     "rfdriver": 56.8859
+     "txsum": 2.0134,
+     "rfdriver": 57.1955
     },
     "atb_V": {
-     "rfdriver.atb_bias": 0.8153,
-     "rfdriver.atb_pre": 2.8202,
-     "rfdriver.atb_cm": 3.2974,
-     "txsum.atb_cm": 3.01,
+     "rfdriver.atb_bias": 0.8164,
+     "rfdriver.atb_pre": 2.8158,
+     "rfdriver.atb_cm": 3.2966,
+     "txsum.atb_cm": 2.9591,
      "txmix_i.atb_bias": 0.8177,
-     "txmix_i.atb_tail": 1.1568
+     "txmix_i.atb_tail": 1.1566
     },
-    "pad_cm_V": 3.2923,
-    "sum_cm_V": 3.0122
+    "pad_cm_V": 3.298,
+    "sum_cm_V": 2.9602
    }
   },
   "safe_reset_3p3": {
@@ -3159,21 +3159,21 @@
    "result": {
     "txmix_i_rail_uA": -0.0394,
     "txmix_q_rail_uA": -0.0396,
-    "txsum_rail_uA": -1.7092,
-    "rfdriver_rail_uA": -8.4001,
-    "bb_dac_source_uA": -0.0145,
-    "rail_peak_abs_uA": 205.704,
+    "txsum_rail_uA": -1.687,
+    "rfdriver_rail_uA": 0.0797,
+    "bb_dac_source_uA": -0.0144,
+    "rail_peak_abs_uA": 66.975,
     "pad_p_V": 3.3,
     "sum_p_V": -0.001,
     "ibias_pin_V": 0.9471,
-    "board_feed_uA": -0.0001,
+    "board_feed_uA": -0.0468,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
      "txsum_rail": 0.0,
-     "rfdriver_rail": 0.0008,
+     "rfdriver_rail": 0.001,
      "bb_dac_source": 0.0,
-     "board_feed": 0.0008
+     "board_feed": 0.0007
     },
     "pad_n_V": 3.3
    }
@@ -3187,21 +3187,21 @@
    "result": {
     "txmix_i_rail_uA": -0.0336,
     "txmix_q_rail_uA": -0.0338,
-    "txsum_rail_uA": -1.4029,
-    "rfdriver_rail_uA": -7.1398,
-    "bb_dac_source_uA": -0.0059,
-    "rail_peak_abs_uA": 176.306,
+    "txsum_rail_uA": -1.378,
+    "rfdriver_rail_uA": 0.0952,
+    "bb_dac_source_uA": -0.0058,
+    "rail_peak_abs_uA": 59.295,
     "pad_p_V": 3.63,
     "sum_p_V": -0.0011,
     "ibias_pin_V": 0.9146,
-    "board_feed_uA": 0.0023,
+    "board_feed_uA": -0.044,
     "dc_op_uA": {
      "txmix_i_rail": 0.0001,
      "txmix_q_rail": 0.0001,
      "txsum_rail": 0.0001,
-     "rfdriver_rail": 0.0024,
+     "rfdriver_rail": 0.0029,
      "bb_dac_source": 0.0003,
-     "board_feed": 0.0033
+     "board_feed": 0.0023
     },
     "pad_n_V": 3.63
    }
@@ -3215,21 +3215,21 @@
    "result": {
     "txmix_i_rail_uA": -0.0425,
     "txmix_q_rail_uA": -0.0428,
-    "txsum_rail_uA": -1.9244,
-    "rfdriver_rail_uA": -8.7972,
-    "bb_dac_source_uA": -0.0167,
-    "rail_peak_abs_uA": 216.365,
+    "txsum_rail_uA": -1.9023,
+    "rfdriver_rail_uA": 0.0662,
+    "bb_dac_source_uA": -0.0166,
+    "rail_peak_abs_uA": 70.46,
     "pad_p_V": 3.63,
     "sum_p_V": -0.0009,
     "ibias_pin_V": 0.9621,
-    "board_feed_uA": -0.0,
+    "board_feed_uA": -0.0452,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
      "txsum_rail": 0.0,
-     "rfdriver_rail": 0.0007,
+     "rfdriver_rail": 0.0012,
      "bb_dac_source": 0.0,
-     "board_feed": 0.0009
+     "board_feed": 0.0008
     },
     "pad_n_V": 3.63
    }
@@ -3244,21 +3244,21 @@
    "result": {
     "txmix_i_rail_uA": -0.0229,
     "txmix_q_rail_uA": -0.0229,
-    "txsum_rail_uA": -1.7732,
-    "rfdriver_rail_uA": -5.4984,
-    "bb_dac_source_uA": 0.009,
-    "rail_peak_abs_uA": 159.634,
+    "txsum_rail_uA": -1.7512,
+    "rfdriver_rail_uA": 0.0913,
+    "bb_dac_source_uA": 0.0091,
+    "rail_peak_abs_uA": 57.173,
     "pad_p_V": 3.63,
     "sum_p_V": -0.0008,
     "ibias_pin_V": 0.7899,
-    "board_feed_uA": 0.0275,
+    "board_feed_uA": -0.0209,
     "dc_op_uA": {
      "txmix_i_rail": 0.0015,
      "txmix_q_rail": 0.0015,
      "txsum_rail": 0.0014,
-     "rfdriver_rail": 0.02,
+     "rfdriver_rail": 0.0256,
      "bb_dac_source": 0.0035,
-     "board_feed": 0.028
+     "board_feed": 0.017
     },
     "pad_n_V": 3.63
    }
@@ -3270,22 +3270,22 @@
    },
    "result": {
     "txmix_i_rail_uA": -0.0355,
-    "txmix_q_rail_uA": -0.0357,
-    "txsum_rail_uA": -0.4888,
-    "rfdriver_rail_uA": -11.4424,
+    "txmix_q_rail_uA": -0.0358,
+    "txsum_rail_uA": -0.5141,
+    "rfdriver_rail_uA": 0.2601,
     "bb_dac_source_uA": -0.0196,
-    "rail_peak_abs_uA": 257.343,
+    "rail_peak_abs_uA": 73.369,
     "pad_p_V": -0.0,
-    "sum_p_V": -0.0044,
+    "sum_p_V": -0.0043,
     "ibias_pin_V": 0.9471,
-    "board_feed_uA": -0.0017,
+    "board_feed_uA": -0.1544,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
-     "txsum_rail": -0.0,
-     "rfdriver_rail": 0.0,
+     "txsum_rail": 0.0,
+     "rfdriver_rail": -0.0,
      "bb_dac_source": 0.0,
-     "board_feed": -0.0
+     "board_feed": 0.0
     },
     "pad_n_V": -0.0
    }
@@ -3302,16 +3302,16 @@
     "sat": 1
    },
    "result": {
-    "txmix_i_rail_uA": -0.0325,
-    "txmix_q_rail_uA": -0.0327,
-    "txsum_rail_uA": -0.5402,
-    "rfdriver_rail_uA": -11.4467,
+    "txmix_i_rail_uA": -0.0326,
+    "txmix_q_rail_uA": -0.0328,
+    "txsum_rail_uA": -0.566,
+    "rfdriver_rail_uA": 0.2575,
     "bb_dac_source_uA": -0.0195,
-    "rail_peak_abs_uA": 257.21,
+    "rail_peak_abs_uA": 72.739,
     "pad_p_V": -0.0,
-    "sum_p_V": -0.0044,
+    "sum_p_V": -0.0043,
     "ibias_pin_V": 0.9471,
-    "board_feed_uA": -0.0017,
+    "board_feed_uA": -0.1544,
     "dc_op_uA": {
      "txmix_i_rail": -0.0,
      "txmix_q_rail": -0.0,
@@ -3332,19 +3332,19 @@
    },
    "result": {
     "txmix_i_rail_uA": -0.0355,
-    "txmix_q_rail_uA": -0.0357,
-    "txsum_rail_uA": -0.4898,
-    "rfdriver_rail_uA": -11.4604,
+    "txmix_q_rail_uA": -0.0358,
+    "txsum_rail_uA": -0.5158,
+    "rfdriver_rail_uA": 0.2214,
     "bb_dac_source_uA": -0.0196,
-    "rail_peak_abs_uA": 256.8,
+    "rail_peak_abs_uA": 73.129,
     "pad_p_V": -0.0,
-    "sum_p_V": -0.0044,
+    "sum_p_V": -0.0042,
     "ibias_pin_V": 0.9471,
-    "board_feed_uA": -0.0001,
+    "board_feed_uA": -0.0974,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
-     "txsum_rail": -0.0,
+     "txsum_rail": 0.0,
      "rfdriver_rail": 0.0,
      "bb_dac_source": 0.0,
      "board_feed": -0.0
@@ -3362,25 +3362,25 @@
     "gain": 15
    },
    "result": {
-    "txmix_i_rail_uA": 0.0138,
-    "txmix_q_rail_uA": 0.0126,
-    "txsum_rail_uA": 393.5339,
-    "rfdriver_rail_uA": -8.6614,
-    "bb_dac_source_uA": 2.0184,
-    "rail_peak_abs_uA": 664.616,
-    "pad_p_V": 3.2983,
-    "sum_p_V": 3.2092,
+    "txmix_i_rail_uA": 0.0128,
+    "txmix_q_rail_uA": 0.0117,
+    "txsum_rail_uA": 719.2982,
+    "rfdriver_rail_uA": -2.2505,
+    "bb_dac_source_uA": 2.044,
+    "rail_peak_abs_uA": 801.848,
+    "pad_p_V": 3.2987,
+    "sum_p_V": 3.1339,
     "ibias_pin_V": 0.9471,
-    "board_feed_uA": 1612.3032,
+    "board_feed_uA": 1287.466,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
-     "txsum_rail": 404.071,
-     "rfdriver_rail": 0.01,
+     "txsum_rail": 728.67,
+     "rfdriver_rail": 0.0,
      "bb_dac_source": 0.0,
-     "board_feed": 1610.93
+     "board_feed": 1286.33
     },
-    "pad_n_V": 3.2983
+    "pad_n_V": 3.2987
    }
   },
   "safe_en_no_bias": {
@@ -3395,21 +3395,21 @@
    "result": {
     "txmix_i_rail_uA": -0.0104,
     "txmix_q_rail_uA": -0.0106,
-    "txsum_rail_uA": -0.1703,
-    "rfdriver_rail_uA": -1.3497,
+    "txsum_rail_uA": -0.1887,
+    "rfdriver_rail_uA": -0.0558,
     "bb_dac_source_uA": -0.1251,
-    "rail_peak_abs_uA": 65.66,
+    "rail_peak_abs_uA": 20.991,
     "pad_p_V": 3.3,
     "sum_p_V": 3.3,
     "ibias_pin_V": -0.0,
-    "board_feed_uA": 0.0009,
+    "board_feed_uA": 0.0029,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
      "txsum_rail": 0.0002,
-     "rfdriver_rail": 0.0008,
+     "rfdriver_rail": 0.0009,
      "bb_dac_source": 0.0,
-     "board_feed": 0.0008
+     "board_feed": 0.0013
     },
     "pad_n_V": 3.3
    }
@@ -3426,23 +3426,23 @@
    "result": {
     "txmix_i_rail_uA": 0.0,
     "txmix_q_rail_uA": 0.0,
-    "txsum_rail_uA": 2014.9668,
-    "rfdriver_rail_uA": 23426.27,
+    "txsum_rail_uA": 2014.9667,
+    "rfdriver_rail_uA": 22848.0629,
     "bb_dac_source_uA": 0.0,
-    "rail_peak_abs_uA": 25441.237,
-    "pad_p_V": 3.2656,
+    "rail_peak_abs_uA": 24863.03,
+    "pad_p_V": 3.2647,
     "sum_p_V": 2.833,
     "ibias_pin_V": 0.9471,
-    "board_feed_uA": 34377.0008,
+    "board_feed_uA": 35301.0049,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
      "txsum_rail": 2014.97,
-     "rfdriver_rail": 23426.3,
+     "rfdriver_rail": 22848.1,
      "bb_dac_source": 0.0,
-     "board_feed": 34377.0
+     "board_feed": 35301.0
     },
-    "pad_n_V": 3.2656
+    "pad_n_V": 3.2647
    }
   },
   "safe_en_3p63_85C": {
@@ -3458,23 +3458,23 @@
    "result": {
     "txmix_i_rail_uA": 0.0005,
     "txmix_q_rail_uA": -0.0005,
-    "txsum_rail_uA": 1931.0057,
-    "rfdriver_rail_uA": 22787.4511,
-    "bb_dac_source_uA": 1.915,
-    "rail_peak_abs_uA": 24976.467,
-    "pad_p_V": 3.5958,
+    "txsum_rail_uA": 1930.8531,
+    "rfdriver_rail_uA": 22234.4354,
+    "bb_dac_source_uA": 1.9144,
+    "rail_peak_abs_uA": 24305.991,
+    "pad_p_V": 3.5954,
     "sum_p_V": 3.1797,
     "ibias_pin_V": 0.9146,
-    "board_feed_uA": 34229.6091,
+    "board_feed_uA": 34711.6002,
     "dc_op_uA": {
      "txmix_i_rail": 0.0002,
      "txmix_q_rail": 0.0002,
      "txsum_rail": 1939.86,
-     "rfdriver_rail": 22807.4,
+     "rfdriver_rail": 22241.2,
      "bb_dac_source": 0.0001,
-     "board_feed": 34229.2
+     "board_feed": 34710.8
     },
-    "pad_n_V": 3.5958
+    "pad_n_V": 3.5954
    }
   },
   "safe_pad_driven_rail_off": {
@@ -3484,23 +3484,23 @@
     "pad_drive": 3.3
    },
    "result": {
-    "txmix_i_rail_uA": -0.0787,
-    "txmix_q_rail_uA": -0.0786,
-    "txsum_rail_uA": -541.6932,
-    "rfdriver_rail_uA": -91048.1744,
-    "bb_dac_source_uA": -0.0436,
-    "rail_peak_abs_uA": 92090.219,
-    "pad_p_V": 0.9195,
-    "sum_p_V": 0.7807,
+    "txmix_i_rail_uA": -0.0506,
+    "txmix_q_rail_uA": -0.051,
+    "txsum_rail_uA": -1.3979,
+    "rfdriver_rail_uA": -3518.9711,
+    "bb_dac_source_uA": -0.0281,
+    "rail_peak_abs_uA": 3590.836,
+    "pad_p_V": 3.1971,
+    "sum_p_V": 0.1628,
     "ibias_pin_V": 0.9471,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
-     "txsum_rail": -541.1715,
-     "rfdriver_rail": -91016.36,
+     "txsum_rail": -0.0001,
+     "rfdriver_rail": -3519.061,
      "bb_dac_source": 0.0
     },
-    "pad_source_current_mA": 91.5576
+    "pad_source_current_mA": 3.9573
    }
   },
   "safe_pad_driven_reset": {
@@ -3511,36 +3511,11 @@
    "result": {
     "txmix_i_rail_uA": -0.0394,
     "txmix_q_rail_uA": -0.0396,
-    "txsum_rail_uA": -1.7093,
-    "rfdriver_rail_uA": -8.412,
+    "txsum_rail_uA": -1.6961,
+    "rfdriver_rail_uA": 0.0558,
     "bb_dac_source_uA": -0.0145,
-    "rail_peak_abs_uA": 205.871,
+    "rail_peak_abs_uA": 67.364,
     "pad_p_V": 3.3,
-    "sum_p_V": -0.001,
-    "ibias_pin_V": 0.9471,
-    "dc_op_uA": {
-     "txmix_i_rail": 0.0,
-     "txmix_q_rail": 0.0,
-     "txsum_rail": 0.0,
-     "rfdriver_rail": 0.0007,
-     "bb_dac_source": 0.0
-    },
-    "pad_source_current_mA": 0.0
-   }
-  },
-  "safe_peer_grounded_reset": {
-   "meta": {
-    "kind": "safety",
-    "pad_drive": 0.0
-   },
-   "result": {
-    "txmix_i_rail_uA": -0.0394,
-    "txmix_q_rail_uA": -0.0396,
-    "txsum_rail_uA": -1.7095,
-    "rfdriver_rail_uA": -8.4263,
-    "bb_dac_source_uA": -0.0145,
-    "rail_peak_abs_uA": 206.186,
-    "pad_p_V": 0.0,
     "sum_p_V": -0.001,
     "ibias_pin_V": 0.9471,
     "dc_op_uA": {
@@ -3550,7 +3525,32 @@
      "rfdriver_rail": 0.001,
      "bb_dac_source": 0.0
     },
-    "pad_source_current_mA": -0.0
+    "pad_source_current_mA": 0.0002
+   }
+  },
+  "safe_peer_grounded_reset": {
+   "meta": {
+    "kind": "safety",
+    "pad_drive": 0.0
+   },
+   "result": {
+    "txmix_i_rail_uA": -0.0396,
+    "txmix_q_rail_uA": -0.0398,
+    "txsum_rail_uA": -1.7526,
+    "rfdriver_rail_uA": -0.0499,
+    "bb_dac_source_uA": -0.0146,
+    "rail_peak_abs_uA": 69.37,
+    "pad_p_V": 0.0,
+    "sum_p_V": -0.001,
+    "ibias_pin_V": 0.9471,
+    "dc_op_uA": {
+     "txmix_i_rail": 0.0,
+     "txmix_q_rail": 0.0,
+     "txsum_rail": 0.0,
+     "rfdriver_rail": 0.0013,
+     "bb_dac_source": 0.0
+    },
+    "pad_source_current_mA": -0.0001
    }
   },
   "safe_peer_grounded_rail_off": {
@@ -3560,23 +3560,23 @@
     "pad_drive": 0.0
    },
    "result": {
-    "txmix_i_rail_uA": -0.0355,
-    "txmix_q_rail_uA": -0.0357,
-    "txsum_rail_uA": -0.4888,
-    "rfdriver_rail_uA": -11.4497,
+    "txmix_i_rail_uA": -0.0356,
+    "txmix_q_rail_uA": -0.0358,
+    "txsum_rail_uA": -0.523,
+    "rfdriver_rail_uA": 0.2342,
     "bb_dac_source_uA": -0.0196,
-    "rail_peak_abs_uA": 257.447,
+    "rail_peak_abs_uA": 73.769,
     "pad_p_V": -0.0,
-    "sum_p_V": -0.0044,
+    "sum_p_V": -0.0043,
     "ibias_pin_V": 0.9471,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
-     "txsum_rail": -0.0,
-     "rfdriver_rail": -0.0,
+     "txsum_rail": 0.0,
+     "rfdriver_rail": 0.0,
      "bb_dac_source": 0.0
     },
-    "pad_source_current_mA": 0.0
+    "pad_source_current_mA": 0.0003
    }
   },
   "safe_peer_grounded_enabled": {
@@ -3589,23 +3589,23 @@
     "gain": 15
    },
    "result": {
-    "txmix_i_rail_uA": 0.0116,
-    "txmix_q_rail_uA": 0.0105,
-    "txsum_rail_uA": 2005.0716,
-    "rfdriver_rail_uA": 27542.6864,
-    "bb_dac_source_uA": 2.0795,
-    "rail_peak_abs_uA": 29890.334,
-    "pad_p_V": 0.0223,
-    "sum_p_V": 2.8349,
+    "txmix_i_rail_uA": 0.0115,
+    "txmix_q_rail_uA": 0.0104,
+    "txsum_rail_uA": 2004.504,
+    "rfdriver_rail_uA": 26973.2814,
+    "bb_dac_source_uA": 2.0771,
+    "rail_peak_abs_uA": 29182.312,
+    "pad_p_V": 0.0241,
+    "sum_p_V": 2.835,
     "ibias_pin_V": 0.9471,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
      "txsum_rail": 2014.97,
-     "rfdriver_rail": 27560.8,
+     "rfdriver_rail": 26979.1,
      "bb_dac_source": 0.0
     },
-    "pad_source_current_mA": -0.8579
+    "pad_source_current_mA": -0.9284
    }
   },
   "safe_peer_grounded_bypass": {
@@ -3617,23 +3617,23 @@
     "bypass": 1
    },
    "result": {
-    "txmix_i_rail_uA": -0.0821,
-    "txmix_q_rail_uA": -0.0837,
-    "txsum_rail_uA": 5821.9082,
-    "rfdriver_rail_uA": -2.8939,
-    "bb_dac_source_uA": 1.9867,
-    "rail_peak_abs_uA": 6162.881,
-    "pad_p_V": 0.0993,
-    "sum_p_V": 1.925,
+    "txmix_i_rail_uA": 0.0006,
+    "txmix_q_rail_uA": -0.0006,
+    "txsum_rail_uA": 4154.5298,
+    "rfdriver_rail_uA": -2.9696,
+    "bb_dac_source_uA": 2.1246,
+    "rail_peak_abs_uA": 4265.227,
+    "pad_p_V": 0.056,
+    "sum_p_V": 2.3271,
     "ibias_pin_V": 0.9471,
     "dc_op_uA": {
      "txmix_i_rail": 0.0,
      "txmix_q_rail": 0.0,
-     "txsum_rail": 5832.1,
-     "rfdriver_rail": 0.0009,
+     "txsum_rail": 4165.55,
+     "rfdriver_rail": 0.0011,
      "bb_dac_source": 0.0
     },
-    "pad_source_current_mA": -3.8182
+    "pad_source_current_mA": -2.1532
    }
   },
   "safe_ramp_reset": {
@@ -3642,9 +3642,9 @@
     "en_level": 0.0
    },
    "result": {
-    "rail_current_peak_uA": 413.462,
-    "rail_current_at_3p63V_uA": 10.137,
-    "bb_source_peak_uA": 0.354
+    "rail_current_peak_uA": 565.32,
+    "rail_current_at_3p63V_uA": 8.028,
+    "bb_source_peak_uA": 0.353
    }
   },
   "safe_ramp_en_high": {
@@ -3653,9 +3653,9 @@
     "en_level": 3.3
    },
    "result": {
-    "rail_current_peak_uA": 23475.057,
-    "rail_current_at_3p63V_uA": 20872.299,
-    "bb_source_peak_uA": 6.052
+    "rail_current_peak_uA": 23287.412,
+    "rail_current_at_3p63V_uA": 20934.765,
+    "bb_source_peak_uA": 5.612
    }
   }
  }

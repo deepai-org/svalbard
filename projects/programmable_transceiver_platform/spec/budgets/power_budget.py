@@ -44,6 +44,43 @@ DIG_REQ_MA = {'rf': 40.0, 'wired_usb': 60.0}
 HOST_RF_RATE_FACTOR = 0.5
 T_CTRL_TOL = 2.0              # C, plate controller tolerance (requirement on board)
 
+# RF direction recipe (PWR-08/PWR-09 design fix, RF-PWR-1 in scratch/reviews/interface-changes.md).
+# Hardware already has the controls: adc EN = adc_*.config.enable AND state active (1.7 nA off,
+# wakes on the next conversion; refbuf stays on); rfdriver/txmix/txsum en = state != off (reset
+# 7.8 uA extracted); dac EN = enable AND state active. Wake of the gated rfdriver is measured
+# (scratch/rf-pwr/exp_wake.json) and must stay inside the chip TDD switch budget (RF-154-TURN,
+# <= 40 us). LNA/rxmix stay powered in TX (warm == on in hardware), so TX->RX keeps today's path.
+RF_DIRECTION_OFF = {
+    'rf_rx': ('rfdriver', 'txmix_i', 'txmix_q', 'txsum', 'dac_i', 'dac_q'),   # TX chain parked in RX
+    'rf_tx': ('adc_i', 'adc_q'),                                             # ADCs disabled in TX
+    'rf_duplex': (),                                                         # GX-3 TX+RX: all on
+}
+# Extracted block currents replace planning allocations in RF modes (rf_rx README, converters README).
+RF_EVIDENCE_MA = {
+    'lna': 11.7, 'rxmix_i': 1.9, 'rxmix_q': 1.9, 'rxfilter_i': 6.66, 'rxfilter_q': 6.66,
+    'adc_i': 5.73, 'adc_q': 5.73, 'dac_i': 1.92, 'dac_q': 1.92,
+}
+# PWR-HOST-RF: RF recipe runs D2H at div2 (debug.host_link.rate, reg 0x51, hardware present). The
+# chip's host-IO current is the D2H output drive; H2D pins are inputs.
+RF_HOSTIO_FACTOR = 0.5
+
+
+def rf_direction(case_name, mode):
+    if case_name.startswith('rf_duplex'): return 'rf_duplex'
+    return mode if mode in ('rf_rx', 'rf_tx') else None
+
+
+def apply_rf_recipe(per, direction):
+    """Return a copy of per-block currents with the RF direction recipe and evidence applied."""
+    out = dict(per)
+    for b, v in RF_EVIDENCE_MA.items():
+        if b in out: out[b] = v
+    for b in RF_DIRECTION_OFF[direction]:
+        out[b] = 0.0
+    if 'hostio' in out: out['hostio'] = round(out['hostio'] * RF_HOSTIO_FACTOR, 2)
+    return out
+
+
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()[:16]
 
 def mode_totals(aa, override_branch=None):
@@ -112,6 +149,11 @@ def main(check=False):
         if isinstance(sm, (int, float)) and (k.startswith(('drv_', 'chain_', 'match_', 'corner_', 'mcorner_', 'scorner_', 'amam'))):
             drv.append((sm, k))
     drv_max, drv_case = max(drv)
+    # coordinator 2026-11-12: the corner-sweep maximum (61.69 mA, ff/22/3.35 overdriven, scratch/rf-tx-d3/imax.json) is not in
+    # rf_tx-sim-ext.json; the accepted allocation (61.7 mA) bounds it, so the budget uses the larger of the two
+    _alloc = aa['blocks']['rfdriver']['resource_allocation']['current_budget_ma']['rf_tx']
+    if _alloc > drv_max:
+        drv_max, drv_case = _alloc, 'allocation (corner-sweep max 61.69 mA, scratch/rf-tx-d3/imax.json)'
     evidence['rfdriver'] = {
         'allocation_ma': aa['blocks']['rfdriver']['resource_allocation']['current_budget_ma']['rf_tx'],
         'budget_case_ma': round(drv_max, 2), 'worst_bench': drv_case,
@@ -123,13 +165,18 @@ def main(check=False):
     out_cases = {}
     for name, (branch, m) in cases.items():
         per = mode_totals(aa, branch)[m]
+        rdir = rf_direction(name, m)
+        if rdir:
+            per = apply_rf_recipe(per, rdir)
+            if rdir in ('rf_tx', 'rf_duplex'):      # rfdriver at its extracted code-15 current (set below)
+                per['rfdriver'] = per.get('rfdriver', 0.0) or 0.0
         alloc = sum(per.values())
         ev = dict(per)
-        if name.startswith(('rf_tx', 'rf_duplex')):
+        if rdir in ('rf_tx', 'rf_duplex'):
             ev['rfdriver'] = evidence['rfdriver']['budget_case_ma']
         if m != 'stopped':
             ev['digital'] = evidence['digital']['budget_case_ma']
-            ev['hostio'] = evidence['hostio']['budget_case_ma']
+            ev['hostio'] = evidence['hostio']['budget_case_ma'] * (RF_HOSTIO_FACTOR if rdir else 1.0)
         ev_total = sum(ev.values())
         # target: digital re-hardened to the requirement PWR-DIG (<= 60 mA), host at evidence
         tgt = dict(ev)
@@ -138,13 +185,16 @@ def main(check=False):
             tgt['digital'] = DIG_REQ_MA['rf' if rf else 'wired_usb']
             # RF payload (<= 0.96 Gb/s at 40 MS/s) fits the host link at div2
             # (1.44 Gb/s framed), so the RF mode runs the pins at half word rate.
-            if rf: tgt['hostio'] = round(evidence['hostio']['budget_case_ma'] * HOST_RF_RATE_FACTOR, 2)
+            if rf: tgt['hostio'] = round(evidence['hostio']['budget_case_ma'] * HOST_RF_RATE_FACTOR, 2)   # same as ev now
         tgt_total = sum(tgt.values())
         c = ceil[m]
-        if name.startswith(('rf_tx', 'rf_duplex')):
+        if rdir in ('rf_tx', 'rf_duplex'):
             alloc = alloc - per['rfdriver'] + evidence['rfdriver']['budget_case_ma']   # measured, not allocated
         out_cases[name] = {
             'mode': m, 'branch_override': branch, 'ceiling_ma': c,
+            'rf_direction_recipe': ({'direction': rdir, 'blocks_off': list(RF_DIRECTION_OFF[rdir]),
+                                     'evidence_currents_ma': RF_EVIDENCE_MA, 'hostio_factor': RF_HOSTIO_FACTOR}
+                                    if rdir else None),
             'allocation_ma': round(alloc, 2), 'allocation_margin_ma': round(c - alloc, 2),
             'evidence_bound_ma': round(ev_total, 2), 'evidence_margin_ma': round(c - ev_total, 2),
             'with_digital_requirement_ma': round(tgt_total, 2), 'with_digital_requirement_margin_ma': round(c - tgt_total, 2),

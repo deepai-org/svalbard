@@ -7,22 +7,21 @@
  "drc_errors": 0,
  "lvs_unique_match": true,
  "lvs_final": "Final result: Circuits match uniquely.",
+ "lvs_name_equivalent": true,
  "bbox_um": {
   "x0": 0.0,
-  "y0": -234.81999999999917,
-  "x1": 472.38,
+  "y0": -202.35999999999964,
+  "x1": 479.9800000000001,
   "y1": 1.0
  },
- "width_um": 472.38,
- "height_um": 235.82,
- "area_um2": 111396.7,
+ "width_um": 479.98,
+ "height_um": 203.36,
+ "area_um2": 97608.7,
  "area_ceiling_um2": 98100,
  "rows": [
   [
-   "BYP_p",
    "A1_P",
    "A1_N",
-   "BYP_n",
    "R1_p",
    "R1_n",
    "A2_P",
@@ -38,7 +37,9 @@
    "SF_p",
    "SF_n",
    "O_P",
-   "O_N"
+   "O_N",
+   "CAS_P",
+   "CAS_N"
   ],
   [
    "T1",
@@ -53,13 +54,21 @@
    "BCAP"
   ],
   [
+   "BYPA_p",
    "HDR",
    "RO_p0",
    "RO_n0",
    "RATBC_p",
-   "RATBC_n"
+   "RATBC_n",
+   "DUM_P",
+   "DUM_N",
+   "CDC_P",
+   "CDC_N",
+   "BYPA_n"
   ],
   [
+   "BSH_p",
+   "BYPB_p",
    "IEN_N",
    "IEN_P",
    "GPRE_NA",
@@ -85,15 +94,19 @@
    "BPD",
    "PSW",
    "PPD",
+   "ISE_N",
+   "ISE_P",
+   "IHI_N",
+   "IHI_P",
    "GS0_NA",
    "GS0_NB",
    "GS0_PA",
-   "GS0_PB"
-  ],
-  [
+   "GS0_PB",
    "IS0_N",
    "IS0_P",
-   "SON0",
+   "SON0"
+  ],
+  [
    "SOF0",
    "GS1_NA",
    "GS1_NB",
@@ -119,24 +132,33 @@
    "IS3_P",
    "SON3",
    "SOF3",
-   "RATB_B"
+   "P3C_p",
+   "P3C_n",
+   "RATB_B",
+   "RNWB",
+   "BG_P",
+   "BG_N",
+   "SFH_a",
+   "SFH_b",
+   "BYPB_n",
+   "BSH_n"
   ]
  ],
- "trunked_nets": 33,
+ "trunked_nets": 42,
  "circuit": {
-  "devices": 93,
-  "mos_instances": 80,
-  "mos_fingers": 529,
-  "resistors": 13,
-  "nets": 58
+  "devices": 114,
+  "mos_instances": 100,
+  "mos_fingers": 835,
+  "resistors": 14,
+  "nets": 68
  },
  "hashes": {
-  "rfdriver.spice": "b3131d42fbb4f82ba88b4439777ed00a13ced474d2b400e3a119232ff21bbe4b",
-  "circuits.py": "c8af6244384cfb858ad85036993c2ab02cf6d720367b4292acfe4df601e1c8af",
-  "layoutlib.py": "067f29bd000ba2e414787dfd146ba34e49c7f5c7c88bae3d1a4b606447c5c111",
-  "generate.py": "1d7aac03cecd7bce13996c43a809ebd42d8507039f337402fb45c8e185a12b24",
-  "rfdriver.gds": "527be78671e098304d9a7d98a8730bd8933da7d4d516b0320907d6e4b1166fca",
-  "rfdriver.ext.spice": "e5048dc5d4162da9d35c64771e66e8d3832910e60e5971ae2a0d6fdbf93c7696"
+  "rfdriver.spice": "3103c4685f6d9847cf14d676f4471b6019ae44c08cdb4b54ee925d2b2027e089",
+  "circuits.py": "8a9706fa1e63bb7b34d7a7628d865f68321fb76567886c77d8fb4a873178e96b",
+  "layoutlib.py": "9fd24006dde1d26c69e9294c21a774ca4c5996bef46a2e11a82e5e2ba81b43d7",
+  "generate.py": "cc95c9d584bb1e63c126d825421cbe16af35ba33dce053737359070250d1c632",
+  "rfdriver.gds": "6dccbe75ad2b97d74f3a4767f2643b387a19b4d49a8cefe5dc155a55deaaae21",
+  "rfdriver.ext.spice": "6ca789116f08afb2f8eb10a64c8664b999b03ec3a1e056bf10d821f6f34590c0"
  },
  "limitations": [
   "Extraction is capacitance-only (ext2spice cthresh 0); wire and via resistance are not extracted.",

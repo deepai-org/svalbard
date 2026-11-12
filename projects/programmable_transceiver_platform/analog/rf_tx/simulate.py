@@ -40,6 +40,79 @@ def header(view, corner='tt', temp=27):
                       '.options method=gear reltol=1e-3 abstol=1e-12 vntol=1e-6', *inc, ''])
 
 
+
+# --- stability screen (RFT-09; ported from scratch/rf-tx-w/fastend.py, review scratch/review-rfd2) -------------
+STAB_ENV = {'ss': (3.15, 32), 'tt': (3.3, 27), 'ff': (3.35, 22)}
+
+
+def _stab_dut(vdd, gain=15):
+    g = [vdd * ((gain >> k) & 1) for k in range(4)]
+    return (f'VDD vdd 0 {vdd}\nVSS VSS 0 0\nVEN en 0 {vdd}\nVM mute 0 0\nVB byp 0 0\n'
+            + ''.join(f'VG{k} g{k} 0 {g[k]}\n' for k in range(4)) + 'IB 0 ib 10u\nVSE se 0 0\n'
+            'X1 vdd VSS inp inn pad_p pad_n ib en mute byp g0 g1 g2 g3 se ab ap ac pt_rfdriver\n')
+
+
+def admittance_deck(view, corner, rs_in=0.001, out='w.txt'):
+    """Differential driver output impedance at the die pads, DC-fed through ideal 1 H chokes, inputs at the 2.82 V
+    common mode through rs_in per leg (txsum source ~262 ohm). Re(1/Z) > 0 at every frequency <=> stable into every
+    passive pad/bond/board termination (one-port positive-real test)."""
+    vdd, temp = STAB_ENV[corner]
+    return header(view, corner, temp) + _stab_dut(vdd) + f"""VIP inps 0 2.82
+VIN inns 0 2.82
+RIP inps inp {rs_in}
+RIN inns inn {rs_in}
+LZP pad_p vdd 1
+LZN pad_n vdd 1
+IT pad_n pad_p DC 0 AC 1
+.control
+ac dec 40 1e7 2e10
+let z = v(pad_p)-v(pad_n)
+wrdata {out} real(z) imag(z)
+.endc
+.end
+"""
+
+
+def kick_deck(view, corner, load, choke, rs_in=262.0, out='w.txt'):
+    """Saturating drive 0-20 ns (1 V diff), ramped off by 20.5 ns; 5 mA/100 ps current kick into the pads and
+    1 mA into the inputs at 30 ns; pad allocation 2 ohm + 1 pF, per-leg feed chokes (Q 20) to the rail.
+    load 'match': DC blocks + ideal 200:50 balun (2 dB) + 50 ohm; 'open': board side disconnected after the chokes."""
+    vdd, temp = STAB_ENV[corner]
+    w = 2 * np.pi * F_LO; rq = w * choke / 20.0
+    t = (f'BIP inp_s 0 V=2.82+0.5*sin(2*pi*{F_LO}*time)*(time<20n ? 1 : (time<20.5n ? (20.5n-time)/0.5n : 0))\n'
+         f'BIN inn_s 0 V=2.82-0.5*sin(2*pi*{F_LO}*time)*(time<20n ? 1 : (time<20.5n ? (20.5n-time)/0.5n : 0))\n'
+         f'RIP inp_s inp {rs_in}\nRIN inn_s inn {rs_in}\n'
+         'IK1 pad_n pad_p PULSE(0 5m 30n 20p 20p 100p 1)\nIK2 inn inp PULSE(0 1m 30n 20p 20p 100p 1)\n'
+         'RPP pad_p padx_p 2\nRPN pad_n padx_n 2\nCPP padx_p 0 1p\nCPN padx_n 0 1p\n'
+         f'LFP padx_p fp {choke}\nRFP fp vdd {rq}\nLFN padx_n fn {choke}\nRFN fn vdd {rq}\n')
+    if load == 'match':
+        a = 10 ** (2.0 / 20); r_ser = 50.0 * (a * a - 1) / (2 * a); r_sh = 50.0 * (a + 1) / (a - 1)
+        t += ('CBKP padx_p bp 100p\nCBKN padx_n bn 100p\nRBDC bp 0 1e6\nRBDCN bn 0 1e6\n'
+              'ETB s1 s2 bp bn 0.5\nVTBS s1 s3 0\nFTB bp bn VTBS 0.5\nRS2 s2 0 1e6\n'
+              f'RAS1 s3 s2 {r_sh:.6g}\nRAP s3 lp {r_ser / 2:.6g}\nRAN s2 ln {r_ser / 2:.6g}\nRAS2 lp ln {r_sh:.6g}\nRLOAD lp ln 50\n')
+    return header(view, corner, temp) + _stab_dut(vdd) + t + f"""
+.control
+tran 2p 50n 0 4p
+wrdata {out} v(pad_p)-v(pad_n)
+.endc
+.end
+"""
+
+
+def stability_metrics(work, name, kind):
+    """admittance: min Re(Ydiff) over 10 MHz-20 GHz. kick: peak |v| 30.3-35 ns vs 45-50 ns; decay = first/second."""
+    d = np.loadtxt(Path(work) / f'{name}.txt')
+    if kind == 'admittance':
+        f, y = d[:, 0], 1 / (d[:, 1] + 1j * d[:, 3])
+        i = int(np.argmin(y.real))
+        return dict(min_re_y_mS=round(1e3 * float(y.real[i]), 4), at_MHz=round(float(f[i]) / 1e6, 1))
+    t, v = d[:, 0], d[:, 1]
+    def pk(a, b):
+        m = (t >= a) & (t < b); return float(np.max(np.abs(v[m] - np.mean(v[m]))))
+    k1, k2 = pk(30.3e-9, 35e-9), pk(45e-9, 50e-9)
+    return dict(kick_V=round(k1, 5), late_V=round(k2, 5), decay_x=round(k1 / max(k2, 1e-12), 1))
+
+
 def lo_sources(prefix, delay, high=3.3, rs=50, f=F_LO):
     """Differential rail-to-rail square LO (assumed quadrature-buffer output), 50 ohm source."""
     t = 1 / f
@@ -58,6 +131,11 @@ BOARD = dict(
 )
 
 
+# Optional extracted pad stage (default off, so published results stay comparable): path to an
+# anchored pads-owner extraction with .subckt rf_protected_pad PAD_N PAD_P VSS ATB_ESD_RAIL.
+PAD_MODEL = None
+
+
 def pad_load(p='pad_p', n='pad_n', match=None, feed='vdd_d'):
     """rftxpad allocation (2 ohm + 1 pF per leg) and the board.
 
@@ -71,6 +149,8 @@ def pad_load(p='pad_p', n='pad_n', match=None, feed='vdd_d'):
     balun loss.
     """
     t = f'RPADP {p} padx_p 2\nRPADN {n} padx_n 2\nCPADP padx_p 0 1p\nCPADN padx_n 0 1p\n'
+    if PAD_MODEL:     # extracted pad on the bond side, on top of the 2 ohm + 1 pF allocation
+        t += f'.include {PAD_MODEL}\nXPADM padx_n padx_p 0 padatb rf_protected_pad\nRPADATB padatb 0 1e9\n'
     t += f'VFEED fdx {feed} 0\n'          # ammeter: board feed current (drawn from the same rail)
     feed = 'fdx'
     if not match:

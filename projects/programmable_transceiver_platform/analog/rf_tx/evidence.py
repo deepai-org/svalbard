@@ -90,7 +90,7 @@ def build():
         cases, safe_ok = safety_cases(ext, rail)
         gx_path = GEN / f'{block}-gds-export.json'
         gx = json.loads(gx_path.read_text()) if gx_path.exists() else {}
-        clean_ok = lay['drc_errors'] == 0 and lay['lvs_unique_match'] and bool(gx.get('pass'))
+        clean_ok = lay['drc_errors'] == 0 and lay['lvs_unique_match'] and bool(gx.get('pass'))   # non-unique LVS is not clean (coordinator)
         ev = dict(block=block,
                   source_hashes={f'{block}.spice': sha(HERE / f'{block}.spice'), **common_hashes},
                   output_hashes={f'generated/{block}.gds': sha(GEN / f'{block}.gds'),
@@ -112,7 +112,8 @@ def build():
                                'island rail at 0 V forward-biases the rfdriver PMOS drain junctions (recorded as out-of-contract case).')
         t['clean'] = dict(state='pass' if clean_ok else 'fail',
                           drc=dict(tool='magic 8.3.623 gf180mcuD deck', errors=lay['drc_errors'], report=f'generated/{block}-drc.txt'),
-                          lvs=dict(tool='netgen 1.5.316 gf180mcuD_setup.tcl', result=lay['lvs_final'], report=f'generated/{block}-lvs.txt'),
+                          lvs=dict(tool='netgen 1.5.316 gf180mcuD_setup.tcl', result=lay['lvs_final'], report=f'generated/{block}-lvs.txt',
+                                   name_equivalent=lay.get('lvs_name_equivalent')),
                           gds_export=dict(rule='spec/block-deliverables.md GDS export rule', tool=f"magic {gx.get('magic_version')} "
                                           '(analog image), cif ostyle gdsii', image_id=gx.get('image_id'),
                                           marker_shapes=gx.get('marker_shapes'),
@@ -208,7 +209,12 @@ def build():
                                              dict(port='atb_pre', node='pre-amplifier 2 output common mode', on_V=d300['atb_pre_V'], off_V=r(ext, 'drv_off')['atb_pre_V']),
                                              dict(port='atb_cm', node='RF_TX pad common mode', on_V=d300['atb_cm_V'], off_V=r(ext, 'drv_off')['atb_cm_V'])])
             byp = r(ext, 'chain_bypass')
-            t['fallback'] = dict(state='pass', routes=[dict(
+            # fallback passes only if the bypass route actually carries signal with the driver core off
+            byp_ok = (byp.get('pad_dBm_50ohm', -999) > -40.0 and r(ext, 'match_bypass_0p3').get('pad_dBm_50ohm', -999) > -40.0
+                      and byp['supply_mA']['rfdriver'] < 5.0)
+            t['fallback'] = dict(state='pass' if byp_ok else 'fail',
+                criterion='bypass=1: chain and board-matched pad power > -40 dBm at 0.3 V baseband, rfdriver supply < 5 mA',
+                routes=[dict(
                 route='rf_tx_low_power_external_pa', control='bypass=1 (debug.rf_tx_bypass): header, pre-amplifiers and all output tails off; '
                                                              'PMOS switches connect summed_rf to RF_TX',
                 evidence=dict(chain_bypass=byp, chain_bypass_large=r(ext, 'chain_bypass_large'), standalone_bypass=r(ext, 'drv_bypass'),
@@ -219,6 +225,16 @@ def build():
                 bypass_loading_fF=round(r(ext, 'cap_drv_in_off')['capacitance_fF'], 2),
                 notes='bypass_loading_fF = total rfdriver input capacitance on summed_rf with the driver off and bypass open '
                       '(includes the off bypass PMOS); %.1f fF with the driver on.' % r(ext, 'cap_drv_in_on')['capacitance_fF'])
+            # stability (RFT-09): every stab_* deck must exist and pass; a missing deck fails
+            sy = {k: v.get('result') for k, v in ext.get('results', {}).items() if k.startswith('stab_y_')}
+            sk = {k: v.get('result') for k, v in ext.get('results', {}).items() if k.startswith('stab_kick_')}
+            stab_ok = (len(sy) == 6 and len(sk) == 12 and all(v and v['min_re_y_mS'] > 0 for v in sy.values())
+                       and all(v and v['decay_x'] >= 10 for v in sk.values()))
+            t['stable'] = dict(state='pass' if stab_ok else 'fail',
+                               criterion='min Re(Ydiff) > 0 over 10 MHz-20 GHz (ss/tt/ff, input source 0 and 262 ohm per leg); '
+                                         'kick ringing decays >= 10x between 30-35 ns and 45-50 ns (ss/tt/ff, 22/100 nH Q20 feed '
+                                         'chokes, matched 2 dB balun and pad-side open)',
+                               admittance=sy, kick=sk, bench='simulate.admittance_deck / kick_deck', risk='RFT-09')
             bm = ext.get('board_match', {})
             ms, ml, ss = r(ext, 'match_sat_1p0'), r(ext, 'match_lin_0p3'), r(ext, 'match_ssb_sat')
             t['clean']['extracted_nominal'].update(

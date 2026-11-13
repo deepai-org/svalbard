@@ -1,0 +1,80 @@
+{
+ "as_is": {
+  "K1": 33,
+  "K2": 18,
+  "K3": 0,
+  "K4": 0,
+  "K5": 2,
+  "K6": 3,
+  "K7": 11
+ },
+ "overlay": {
+  "K1": 20,
+  "K2": 18,
+  "K3": 0,
+  "K4": 0,
+  "K5": 2,
+  "K6": 3,
+  "K7": 11
+ },
+ "invert_iso=isoP_0": {
+  "rule": "K1",
+  "new_fails": 1,
+  "example": [
+   {
+    "rule": "K1",
+    "net": "LO_IN",
+    "driver_islands": [
+     "pll"
+    ],
+    "receiver": "isoP_0.A",
+    "receiver_domain": "core",
+    "detail": "iso_clamp isoP_0 ISO=island_on[2]: inverted polarity: island_on/island_en are 0 when the island is off, the clamp isolates on 1"
+   }
+  ]
+ },
+ "remove_clamp=isoP_1": {
+  "rule": "K1",
+  "new_fails": 2,
+  "example": [
+   {
+    "rule": "K1",
+    "net": "LO_IP",
+    "driver_islands": [
+     "pll"
+    ],
+    "receiver": "rxmix_i.lo_p",
+    "receiver_domain": "rf",
+    "detail": "gate floats when the driving island is off (no iso_clamp)",
+    "severity": "medium"
+   }
+  ]
+ },
+ "force_on=rf": {
+  "rule": "K3",
+  "new_fails": 1,
+  "example": [
+   {
+    "rule": "K3",
+    "inst": "isw_rf",
+    "detail": "EN is VDD, expected island_en[1] (reset 0): island would not default off"
+   }
+  ]
+ },
+ "ungate_atb=atb1_sw[36]": {
+  "rule": "K7",
+  "new_fails": 1,
+  "example": [
+   {
+    "rule": "K7",
+    "leaf": "atb1_leaf37",
+    "node": "VCM_CONV",
+    "island": "conv",
+    "sel": "atb1_sw[36]",
+    "bus": "ATB1 sense",
+    "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+   }
+  ]
+ },
+ "selftest_ok": true
+}

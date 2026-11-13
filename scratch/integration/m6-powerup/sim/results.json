@@ -1,0 +1,1758 @@
+{
+ "s1_tt_r10u": {
+  "name": "s1_tt_r10u",
+  "cfg": {
+   "stage": 1,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "ramp",
+   "tr": 1e-05,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 20203,
+  "t_end": 0.08001000000000001,
+  "vdd_max": 3.3006422028394327,
+  "vdd_end": 3.299999677307661,
+  "inrush_peak_ma": 0.5454859011187712,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": 0.03989100731423102,
+  "por_release_vdd": 3.297731945547032,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [
+   [
+    0.03989100731423102,
+    1
+   ]
+  ],
+  "node_max": [
+   "v(por_n)",
+   3.3062904694576907
+  ],
+  "node_min": [
+   "v(por_n)",
+   -0.01885405413903198
+  ],
+  "nodes_checked": 3,
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "vmax": true
+  },
+  "pass": true
+ },
+ "s2_tt_r10u": {
+  "name": "s2_tt_r10u",
+  "cfg": {
+   "stage": 2,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "ramp",
+   "tr": 1e-05,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 35108,
+  "t_end": 0.08001000000000001,
+  "vdd_max": 3.300642431027658,
+  "vdd_end": 3.299999671452187,
+  "inrush_peak_ma": 0.5650391608536468,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": 0.039891084358007554,
+  "por_release_vdd": 3.298076221786732,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [
+   [
+    0.039891084358007554,
+    1
+   ]
+  ],
+  "release_checked": true,
+  "rail_max_v": {
+   "wired": 0.21910424180507335,
+   "rf": 0.17851276345340378,
+   "pll": 0.18698342716969138,
+   "conv": 0.11077544449856551,
+   "debug": 0.1378912652016677
+  },
+  "en_max_v": {
+   "wired": 0.00035757156305344555,
+   "rf": 0.0003424201863000866,
+   "pll": 0.0003446012459743394,
+   "conv": 0.0003263638129841034,
+   "debug": 0.0003324131706021434,
+   "biasena": 0.00035717830665169106
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999124977228869,
+   "rf": 0.9999009809556588,
+   "pll": 0.9999138946906936,
+   "conv": 0.9999066304984576,
+   "debug": 0.9999088669379598
+  },
+  "clamp_y_max_v": {
+   "wired": 5.90880073385869e-05,
+   "rf": 5.446911988832167e-05,
+   "pll": 5.9798837476583225e-05,
+   "conv": 5.7740592522827406e-05,
+   "debug": 5.824663677808637e-05
+  },
+  "pg_max_v": {
+   "wired": 0.3333923303492618,
+   "rf": 0.31872969273189505,
+   "pll": 0.3317254213134595,
+   "conv": 0.3039896792806336,
+   "debug": 0.3149871031385705
+  },
+  "node_max": [
+   "v(rst_n)",
+   3.34586755220418
+  ],
+  "node_min": [
+   "v(rst_n)",
+   -0.025835981020596168
+  ],
+  "nodes_checked": 31,
+  "node_max_3v3_oxide": [
+   "v(por_n)",
+   3.3028037402412433
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": true
+  },
+  "pass": true
+ },
+ "s2_tt_r1m": {
+  "name": "s2_tt_r1m",
+  "cfg": {
+   "stage": 2,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "ramp",
+   "tr": 0.001,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 34881,
+  "t_end": 0.081,
+  "vdd_max": 3.3006147536130332,
+  "vdd_end": 3.299999671452202,
+  "inrush_peak_ma": 0.5435695526848214,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": 0.040311385810861695,
+  "por_release_vdd": 3.2981138006106328,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [
+   [
+    0.040311385810861695,
+    1
+   ]
+  ],
+  "release_checked": true,
+  "rail_max_v": {
+   "wired": 0.11874193814039388,
+   "rf": 0.09318144186184871,
+   "pll": 0.09786969526851771,
+   "conv": 0.05571909355316059,
+   "debug": 0.07011006605022342
+  },
+  "en_max_v": {
+   "wired": 0.0003026578453884266,
+   "rf": 0.00030292662194921806,
+   "pll": 0.00030293313588995643,
+   "conv": 0.0002981110077173596,
+   "debug": 0.0003019703020147715,
+   "biasena": 0.0004032665643490458
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999147710103032,
+   "rf": 0.999904536466972,
+   "pll": 0.9999155782766561,
+   "conv": 0.9999092206298494,
+   "debug": 0.9999113283427564
+  },
+  "clamp_y_max_v": {
+   "wired": 5.830287027920401e-05,
+   "rf": 5.463631053798618e-05,
+   "pll": 5.8897498485283374e-05,
+   "conv": 5.7437387544214675e-05,
+   "debug": 5.7760408842139305e-05
+  },
+  "pg_max_v": {
+   "wired": 0.19634819117124114,
+   "rf": 0.18769486702781676,
+   "pll": 0.19521031999427407,
+   "conv": 0.18953929942473452,
+   "debug": 0.1910057743351031
+  },
+  "node_max": [
+   "v(rst_n)",
+   3.346150005511401
+  ],
+  "node_min": [
+   "v(rst_n)",
+   -0.02798358303317829
+  ],
+  "nodes_checked": 31,
+  "node_max_3v3_oxide": [
+   "v(por_n)",
+   3.304916404328974
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": true
+  },
+  "pass": true
+ },
+ "s2_ff85_r10u_363": {
+  "name": "s2_ff85_r10u_363",
+  "cfg": {
+   "stage": 2,
+   "corner": "ff",
+   "temp": 85.0,
+   "shape": "ramp",
+   "tr": 1e-05,
+   "vfin": 3.63,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 34113,
+  "t_end": 0.08001000000000001,
+  "vdd_max": 3.6308037749959534,
+  "vdd_end": 3.629999298527313,
+  "inrush_peak_ma": 0.7676897582883206,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": 0.03719689528403579,
+  "por_release_vdd": 3.6273460092203913,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [
+   [
+    0.03719689528403579,
+    1
+   ]
+  ],
+  "release_checked": true,
+  "rail_max_v": {
+   "wired": 0.3254401496793967,
+   "rf": 0.26387748253163096,
+   "pll": 0.2751775670197905,
+   "conv": 0.1585003630714616,
+   "debug": 0.19848237504833277
+  },
+  "en_max_v": {
+   "wired": 0.0004138004563658145,
+   "rf": 0.00041609848052312455,
+   "pll": 0.00041671317892455153,
+   "conv": 0.0004047306234945276,
+   "debug": 0.0004164610981130625,
+   "biasena": 0.00047386881603051883
+  },
+  "iso_min_ratio": {
+   "wired": 0.9998938920048149,
+   "rf": 0.9998807477175535,
+   "pll": 0.9998953598632284,
+   "conv": 0.9998866109347967,
+   "debug": 0.9998893535226927
+  },
+  "clamp_y_max_v": {
+   "wired": 7.997658421986287e-05,
+   "rf": 7.50705452148635e-05,
+   "pll": 8.076043528871946e-05,
+   "conv": 7.881750015727446e-05,
+   "debug": 7.924245281976867e-05
+  },
+  "pg_max_v": {
+   "wired": 0.17310098127633758,
+   "rf": 0.16615163044446124,
+   "pll": 0.17229257568822473,
+   "conv": 0.16617174879791333,
+   "debug": 0.16889252868640894
+  },
+  "node_max": [
+   "v(rst_n)",
+   3.690469447015193
+  ],
+  "node_min": [
+   "v(rst_n)",
+   -0.023944874583061194
+  ],
+  "nodes_checked": 31,
+  "node_max_3v3_oxide": [
+   "v(por_n)",
+   3.632683990346151
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": false
+  },
+  "pass": false
+ },
+ "s2_ff85_r1m_363": {
+  "name": "s2_ff85_r1m_363",
+  "cfg": {
+   "stage": 2,
+   "corner": "ff",
+   "temp": 85.0,
+   "shape": "ramp",
+   "tr": 0.001,
+   "vfin": 3.63,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 34044,
+  "t_end": 0.081,
+  "vdd_max": 3.630814333688132,
+  "vdd_end": 3.629999298527326,
+  "inrush_peak_ma": 0.7720505904109214,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": 0.037511914246020274,
+  "por_release_vdd": 3.627323625427859,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [
+   [
+    0.037511914246020274,
+    1
+   ]
+  ],
+  "release_checked": true,
+  "rail_max_v": {
+   "wired": 0.32247442759680667,
+   "rf": 0.288324099821483,
+   "pll": 0.2954628510868167,
+   "conv": 0.21031164167649877,
+   "debug": 0.24649380112338287
+  },
+  "en_max_v": {
+   "wired": 0.0004197566588071205,
+   "rf": 0.0004224917906272765,
+   "pll": 0.0004232670991390678,
+   "conv": 0.00041011409369896124,
+   "debug": 0.00042329499808852893,
+   "biasena": 0.00045027787935758643
+  },
+  "iso_min_ratio": {
+   "wired": 0.9998943127187342,
+   "rf": 0.9998820923581943,
+   "pll": 0.9998956032695295,
+   "conv": 0.999887117235454,
+   "debug": 0.9998898224411117
+  },
+  "clamp_y_max_v": {
+   "wired": 8.098558005076203e-05,
+   "rf": 7.57479052583808e-05,
+   "pll": 8.181191588693233e-05,
+   "conv": 7.967604152791328e-05,
+   "debug": 8.015754795408826e-05
+  },
+  "pg_max_v": {
+   "wired": 0.5068522971986955,
+   "rf": 0.038533327550994985,
+   "pll": 0.23092672488497093,
+   "conv": 0.037491101932426434,
+   "debug": 0.038285231851402944
+  },
+  "node_max": [
+   "v(rst_n)",
+   3.695599907932924
+  ],
+  "node_min": [
+   "v(rst_n)",
+   -0.024036683242992546
+  ],
+  "nodes_checked": 31,
+  "node_max_3v3_oxide": [
+   "v(por_n)",
+   3.6331818284110833
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": false
+  },
+  "pass": false
+ },
+ "nc_force_on_rf": {
+  "name": "nc_force_on_rf",
+  "cfg": {
+   "stage": 2,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "short",
+   "tr": 1e-05,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "force_on_rf",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 854,
+  "t_end": 0.0004,
+  "vdd_max": 3.300073034120735,
+  "vdd_end": 3.2999984461008527,
+  "inrush_peak_ma": 0.5091562517416749,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "rail_max_v": {
+   "wired": 0.21925417383831253,
+   "rf": 3.3000725411695155,
+   "pll": 0.1868143026219431,
+   "conv": 0.11086065435824335,
+   "debug": 0.13802994743244892
+  },
+  "en_max_v": {
+   "wired": 0.0003503472097463785,
+   "rf": 5.946853495227238e-06,
+   "pll": 0.0003388184464080532,
+   "conv": 0.00032118591847207,
+   "debug": 0.000326904497407277,
+   "biasena": 5.946853495227292e-06
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999765556904369,
+   "rf": -0.0005060189925534614,
+   "pll": 0.9999772670566943,
+   "conv": 0.9999754466165763,
+   "debug": 0.9999758524065318
+  },
+  "clamp_y_max_v": {
+   "wired": 5.109236263646117e-05,
+   "rf": 3.300073411227913,
+   "pll": 5.1107719368315896e-05,
+   "conv": 5.1103693872285484e-05,
+   "debug": 5.110526548522502e-05
+  },
+  "pg_max_v": {
+   "wired": 0.33466904547201193,
+   "rf": 3.3000729567889766,
+   "pll": 0.3336647856082585,
+   "conv": 0.31345873593502976,
+   "debug": 0.321645403971442
+  },
+  "node_max": [
+   "v(y_rf)",
+   3.300073411227913
+  ],
+  "node_min": [
+   "v(rst_n)",
+   -0.0014034336529269527
+  ],
+  "nodes_checked": 31,
+  "checks": {
+   "inrush": true,
+   "por": false,
+   "rst": false,
+   "island": false,
+   "en": true,
+   "iso": false,
+   "clamp": false,
+   "vmax": true
+  },
+  "pass": false
+ },
+ "nc_invert_iso_rf": {
+  "name": "nc_invert_iso_rf",
+  "cfg": {
+   "stage": 2,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "short",
+   "tr": 1e-05,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "invert_iso_rf",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 849,
+  "t_end": 0.0004,
+  "vdd_max": 3.3001376438654955,
+  "vdd_end": 3.299999671395129,
+  "inrush_peak_ma": 0.4353024307131139,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "rail_max_v": {
+   "wired": 0.2187600270109723,
+   "rf": 0.17871587175894532,
+   "pll": 0.187150506878308,
+   "conv": 0.11091927571916957,
+   "debug": 0.13788523527500743
+  },
+  "en_max_v": {
+   "wired": 0.0003684691264606886,
+   "rf": 0.0003508583959269058,
+   "pll": 0.0003532058927589445,
+   "conv": 0.00033397468478030035,
+   "debug": 0.00034046200186288846,
+   "biasena": 6.159395351372067e-06
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999732265750124,
+   "rf": 0.9999704849936053,
+   "pll": 0.999974045399768,
+   "conv": 0.9999720170306049,
+   "debug": 0.9999724599781155
+  },
+  "clamp_y_max_v": {
+   "wired": 5.259378963986234e-05,
+   "rf": 3.300131933754044,
+   "pll": 5.262531848371338e-05,
+   "conv": 5.2620915720981886e-05,
+   "debug": 5.2622711219704866e-05
+  },
+  "pg_max_v": {
+   "wired": 0.3353621636691897,
+   "rf": 0.3168676340771095,
+   "pll": 0.33427855932163525,
+   "conv": 0.31450421666855305,
+   "debug": 0.32248783286046284
+  },
+  "node_max": [
+   "v(vdd)",
+   3.3001376438654955
+  ],
+  "node_min": [
+   "v(rst_n)",
+   -0.003015459124556811
+  ],
+  "nodes_checked": 31,
+  "checks": {
+   "inrush": true,
+   "por": false,
+   "rst": false,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": false,
+   "vmax": true
+  },
+  "pass": false
+ },
+ "info_bypass_no_reset": {
+  "name": "info_bypass_no_reset",
+  "cfg": {
+   "stage": 2,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "short",
+   "tr": 1e-05,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 1,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 877,
+  "t_end": 0.0004,
+  "vdd_max": 3.3000261493480423,
+  "vdd_end": 3.2999935448001154,
+  "inrush_peak_ma": 1.2839451687841361,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "rail_max_v": {
+   "wired": 3.3000100880169354,
+   "rf": 3.3000098876494035,
+   "pll": 3.300009934630495,
+   "conv": 3.30001470261695,
+   "debug": 3.3000095832068417
+  },
+  "en_max_v": {
+   "wired": 3.2484180004622005,
+   "rf": 3.2475964569143865,
+   "pll": 3.247612227626563,
+   "conv": 3.2476007967478533,
+   "debug": 3.2476027401005716,
+   "biasena": 3.300025922119338
+  },
+  "iso_min_ratio": {
+   "wired": -1.1150885862146675e-07,
+   "rf": -3.775224829518932e-06,
+   "pll": -0.00022564404176425018,
+   "conv": -0.0007699914227204228,
+   "debug": -0.0007947673931213176
+  },
+  "clamp_y_max_v": {
+   "wired": 3.3117525831302963,
+   "rf": 3.30002451473195,
+   "pll": 3.3000243843798938,
+   "conv": 3.3000246974315814,
+   "debug": 3.3000246863435243
+  },
+  "pg_max_v": {
+   "wired": 3.300010067557314,
+   "rf": 3.300024214671736,
+   "pll": 3.3000256753917734,
+   "conv": 3.3000240761544233,
+   "debug": 3.300024174841609
+  },
+  "node_max": [
+   "v(y_wired)",
+   3.3117525831302963
+  ],
+  "node_min": [
+   "v(iso_debug)",
+   -0.00235031945861328
+  ],
+  "nodes_checked": 31,
+  "checks": {
+   "inrush": true,
+   "por": false,
+   "rst": true,
+   "island": false,
+   "en": false,
+   "iso": false,
+   "clamp": false,
+   "vmax": true
+  },
+  "pass": false
+ },
+ "s4_tt_r10u": {
+  "name": "s4_tt_r10u",
+  "cfg": {
+   "stage": 4,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "short",
+   "tr": 1e-05,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 1090,
+  "t_end": 0.00011,
+  "vdd_max": 3.3001477761819857,
+  "vdd_end": 3.2999885226490773,
+  "inrush_peak_ma": 0.5956505375887371,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "release_checked": false,
+  "rail_max_v": {
+   "wired": 0.2189613448937565,
+   "rf": 0.17820671205421795,
+   "pll": 0.1869260814370063,
+   "conv": 0.11065272136085397,
+   "debug": 0.13782750896667134
+  },
+  "en_max_v": {
+   "wired": 0.00036061964283574493,
+   "rf": 0.0003446771608241454,
+   "pll": 0.00034689535898664527,
+   "conv": 0.00032746445134173836,
+   "debug": 0.0003342815998858787,
+   "biasena": 6.193410999760847e-05
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999720344061748,
+   "rf": 0.9999667402093866,
+   "pll": 0.9999728946892933,
+   "conv": 0.9999707963807222,
+   "debug": 0.9999712515326775
+  },
+  "clamp_y_max_v": {
+   "wired": 5.2043682764188614e-05,
+   "rf": 5.2010362452397514e-05,
+   "pll": 5.200865783500037e-05,
+   "conv": 5.197975063274919e-05,
+   "debug": 5.198609033235095e-05
+  },
+  "pg_max_v": {
+   "wired": 0.3348550419496156,
+   "rf": 0.32052021230501104,
+   "pll": 0.3335268268084142,
+   "conv": 0.3086766969486333,
+   "debug": 0.32063918886333304
+  },
+  "node_max": [
+   "v(vdd)",
+   3.3001477761819857
+  ],
+  "node_min": [
+   "v(y_wired)",
+   -0.0012989793130508264
+  ],
+  "nodes_checked": 32,
+  "node_max_3v3_oxide": [
+   "v(vdd)",
+   3.3001477761819857
+  ],
+  "aosc_first_edge_s": null,
+  "aosc_f_mhz": null,
+  "isrc_end_ua": 93.69266806125154,
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": true
+  },
+  "pass": true
+ },
+ "s4_ff85_r10u_363": {
+  "name": "s4_ff85_r10u_363",
+  "cfg": {
+   "stage": 4,
+   "corner": "ff",
+   "temp": 85.0,
+   "shape": "short",
+   "tr": 1e-05,
+   "vfin": 3.63,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 1593,
+  "t_end": 0.00011,
+  "vdd_max": 3.630136977926459,
+  "vdd_end": 3.6299829188404162,
+  "inrush_peak_ma": 0.8953012102910409,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "release_checked": false,
+  "rail_max_v": {
+   "wired": 0.32637363138735415,
+   "rf": 0.2632867161374759,
+   "pll": 0.2751571012825748,
+   "conv": 0.15721754691271783,
+   "debug": 0.19752500194458872
+  },
+  "en_max_v": {
+   "wired": 0.0002447389241243373,
+   "rf": 0.00024084634346980624,
+   "pll": 0.0002419111225971199,
+   "conv": 0.00023737446302403653,
+   "debug": 0.0002388543484417273,
+   "biasena": 4.373590135764688e-05
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999741712189907,
+   "rf": 0.999969266971937,
+   "pll": 0.9999749611714478,
+   "conv": 0.9999730103610518,
+   "debug": 0.9999734338054118
+  },
+  "clamp_y_max_v": {
+   "wired": 4.740203914528923e-05,
+   "rf": 4.74035402935245e-05,
+   "pll": 4.740170057558608e-05,
+   "conv": 4.7402256167425574e-05,
+   "debug": 4.740213386453009e-05
+  },
+  "pg_max_v": {
+   "wired": 0.16925216988384342,
+   "rf": 0.16153375432952197,
+   "pll": 0.1678764712438545,
+   "conv": 0.1589587627232533,
+   "debug": 0.16075879975001417
+  },
+  "node_max": [
+   "v(vdd)",
+   3.630136977926459
+  ],
+  "node_min": [
+   "v(y_wired)",
+   -0.0007479270807218939
+  ],
+  "nodes_checked": 32,
+  "node_max_3v3_oxide": [
+   "v(vdd)",
+   3.630136977926459
+  ],
+  "aosc_first_edge_s": null,
+  "aosc_f_mhz": null,
+  "isrc_end_ua": 139.4380451600341,
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": false
+  },
+  "pass": false
+ },
+ "ok_por_stuck_bypass": {
+  "name": "ok_por_stuck_bypass",
+  "cfg": {
+   "stage": 2,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "ramp",
+   "tr": 1e-05,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "por_stuck",
+   "bypass": 1,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 18034,
+  "t_end": 0.025,
+  "vdd_max": 3.300116915452841,
+  "vdd_end": 3.299975374565115,
+  "inrush_peak_ma": 1.2312735735677833,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "release_checked": true,
+  "rail_max_v": {
+   "wired": 3.300002598514247,
+   "rf": 3.3000024125171574,
+   "pll": 3.3000024561419474,
+   "conv": 3.300107232362096,
+   "debug": 3.3000935721119564
+  },
+  "en_max_v": {
+   "wired": 3.2481824735407008,
+   "rf": 3.2476823542394504,
+   "pll": 3.24769797862442,
+   "conv": 3.2476871487117087,
+   "debug": 3.2476891451104737,
+   "biasena": 3.300116886072212
+  },
+  "iso_min_ratio": {
+   "wired": -7.700367180319931e-08,
+   "rf": -5.049905425661324e-06,
+   "pll": -0.0007974920617281247,
+   "conv": -0.0010106573163750502,
+   "debug": -0.00038991367305981977
+  },
+  "clamp_y_max_v": {
+   "wired": 3.3167547518828706,
+   "rf": 3.3001162954770775,
+   "pll": 3.300116169419082,
+   "conv": 3.3001164776998455,
+   "debug": 3.3001164658863673
+  },
+  "pg_max_v": {
+   "wired": 3.300002738367239,
+   "rf": 3.300115971874897,
+   "pll": 3.300117376333961,
+   "conv": 3.3001154411048663,
+   "debug": 3.300115568824569
+  },
+  "node_max": [
+   "v(y_wired)",
+   3.3167547518828706
+  ],
+  "node_min": [
+   "v(iso_conv)",
+   -0.0028262705835191285
+  ],
+  "nodes_checked": 31,
+  "node_max_3v3_oxide": [
+   "v(y_wired)",
+   3.3167547518828706
+  ],
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": false,
+   "en": false,
+   "iso": false,
+   "clamp": false,
+   "vmax": true
+  },
+  "pass": false
+ },
+ "s4_ff85_leak_363": {
+  "name": "s4_ff85_leak_363",
+  "cfg": {
+   "stage": 4,
+   "corner": "ff",
+   "temp": 85.0,
+   "shape": "short",
+   "tr": 0.0001,
+   "vfin": 3.63,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 2140,
+  "t_end": 0.002,
+  "vdd_max": 3.6300554141095556,
+  "vdd_end": 3.6299829208790095,
+  "inrush_peak_ma": 0.8742952320731772,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "release_checked": false,
+  "rail_max_v": {
+   "wired": 0.32520379609890054,
+   "rf": 0.28478583814250136,
+   "pll": 0.2935657839377628,
+   "conv": 0.19248153297156959,
+   "debug": 0.232988981550442
+  },
+  "en_max_v": {
+   "wired": 2.558909492970556e-05,
+   "rf": 2.5279581488432542e-05,
+   "pll": 2.5382067347052772e-05,
+   "conv": 2.4888378560371384e-05,
+   "debug": 2.5073428168207102e-05,
+   "biasena": 4.579587024614628e-06
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999976651090294,
+   "rf": 0.9999972215428593,
+   "pll": 0.9999977385437776,
+   "conv": 0.9999975596109093,
+   "debug": 0.9999975988945389
+  },
+  "clamp_y_max_v": {
+   "wired": 5.014665523053444e-06,
+   "rf": 5.01468654439527e-06,
+   "pll": 5.014661869354152e-06,
+   "conv": 5.014670802750412e-06,
+   "debug": 5.014668616865282e-06
+  },
+  "pg_max_v": {
+   "wired": 0.09875154269020076,
+   "rf": 0.0952809664227738,
+   "pll": 0.0984598665505728,
+   "conv": 0.0965165606869785,
+   "debug": 0.0970155426870318
+  },
+  "node_max": [
+   "v(vdd)",
+   3.6300554141095556
+  ],
+  "node_min": [
+   "v(en_biasena)",
+   -0.0006681077096365357
+  ],
+  "nodes_checked": 32,
+  "node_max_3v3_oxide": [
+   "v(vdd)",
+   3.6300554141095556
+  ],
+  "aosc_first_edge_s": null,
+  "aosc_f_mhz": null,
+  "isrc_end_ua": 139.42140214417975,
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": false
+  },
+  "pass": false
+ },
+ "s4_tt_leak_33": {
+  "name": "s4_tt_leak_33",
+  "cfg": {
+   "stage": 4,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "short",
+   "tr": 0.0001,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 2252,
+  "t_end": 0.002,
+  "vdd_max": 3.3000870832736022,
+  "vdd_end": 3.299988524491329,
+  "inrush_peak_ma": 0.48286059631116923,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "release_checked": false,
+  "rail_max_v": {
+   "wired": 0.1663455318399092,
+   "rf": 0.1358833697377184,
+   "pll": 0.14216790001221788,
+   "conv": 0.0863510489421333,
+   "debug": 0.10692882807550733
+  },
+  "en_max_v": {
+   "wired": 3.5785444902995884e-05,
+   "rf": 3.533436475926684e-05,
+   "pll": 3.548274988498598e-05,
+   "conv": 3.476500084489708e-05,
+   "debug": 3.503754515218483e-05,
+   "biasena": 6.651678781182258e-06
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999974578648086,
+   "rf": 0.9999969731882018,
+   "pll": 0.9999975379634486,
+   "conv": 0.9999973421557026,
+   "debug": 0.9999973853802486
+  },
+  "clamp_y_max_v": {
+   "wired": 5.48776582926946e-06,
+   "rf": 5.487329324598894e-06,
+   "pll": 5.487284616590311e-06,
+   "conv": 5.486913692216032e-06,
+   "debug": 5.4870045401661016e-06
+  },
+  "pg_max_v": {
+   "wired": 0.2666500907511767,
+   "rf": 0.25614458239116,
+   "pll": 0.26613912765223613,
+   "conv": 0.25289717024409747,
+   "debug": 0.257610939971695
+  },
+  "node_max": [
+   "v(vdd)",
+   3.3000870832736022
+  ],
+  "node_min": [
+   "v(rst_n)",
+   -0.0011197483870162754
+  ],
+  "nodes_checked": 32,
+  "node_max_3v3_oxide": [
+   "v(vdd)",
+   3.3000870832736022
+  ],
+  "aosc_first_edge_s": null,
+  "aosc_f_mhz": null,
+  "isrc_end_ua": 93.67762787881873,
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": true
+  },
+  "pass": true
+ },
+ "s4_ff85_leakm_363": {
+  "name": "s4_ff85_leakm_363",
+  "cfg": {
+   "stage": 4,
+   "corner": "ff",
+   "temp": 85.0,
+   "shape": "short",
+   "tr": 0.0001,
+   "vfin": 3.63,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 1972,
+  "t_end": 0.002,
+  "vdd_max": 3.6300584060630254,
+  "vdd_end": 3.6299829208910857,
+  "inrush_peak_ma": 0.897748044008992,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "release_checked": false,
+  "rail_max_v": {
+   "wired": 0.3257996636386311,
+   "rf": 0.28470070928619606,
+   "pll": 0.29360443218039367,
+   "conv": 0.19235382206677754,
+   "debug": 0.2335102980043056
+  },
+  "en_max_v": {
+   "wired": 2.5299118931103514e-05,
+   "rf": 2.499322931649872e-05,
+   "pll": 2.5094491388917977e-05,
+   "conv": 2.460971789126324e-05,
+   "debug": 2.4789762262864953e-05,
+   "biasena": 4.526567800991462e-06
+  },
+  "iso_min_ratio": {
+   "wired": 0.999997500102744,
+   "rf": 0.9999970250646123,
+   "pll": 0.9999975787466079,
+   "conv": 0.9999973870353643,
+   "debug": 0.9999974291868995
+  },
+  "clamp_y_max_v": {
+   "wired": 4.960436850643015e-06,
+   "rf": 4.960457086796761e-06,
+   "pll": 4.960433321829117e-06,
+   "conv": 4.960441917673885e-06,
+   "debug": 4.960439801592342e-06
+  },
+  "pg_max_v": {
+   "wired": 0.09875154237837275,
+   "rf": 0.09528096605762161,
+   "pll": 0.09845986619179509,
+   "conv": 0.09651656019536763,
+   "debug": 0.09701554221850049
+  },
+  "node_max": [
+   "v(vdd)",
+   3.6300584060630254
+  ],
+  "node_min": [
+   "v(en_biasena)",
+   -0.0005464393539685989
+  ],
+  "nodes_checked": 32,
+  "node_max_3v3_oxide": [
+   "v(vdd)",
+   3.6300584060630254
+  ],
+  "aosc_first_edge_s": null,
+  "aosc_f_mhz": null,
+  "isrc_end_ua": 139.42130359012594,
+  "block_current_end_ua": {
+   "aosc": 0.0019657464830242616,
+   "cb": 131.8877521884321,
+   "isw": 1.5013236923623892,
+   "por": 4.2263851986315215,
+   "ring": 1.7995550381743397
+  },
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": false
+  },
+  "pass": false
+ },
+ "s4_tt_leakm_33": {
+  "name": "s4_tt_leakm_33",
+  "cfg": {
+   "stage": 4,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "short",
+   "tr": 0.0001,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 2331,
+  "t_end": 0.002,
+  "vdd_max": 3.3001208339983497,
+  "vdd_end": 3.2999885244891902,
+  "inrush_peak_ma": 0.5049682315290447,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "release_checked": false,
+  "rail_max_v": {
+   "wired": 0.1661577018835851,
+   "rf": 0.13568806695179098,
+   "pll": 0.14198805746646245,
+   "conv": 0.0861188622094192,
+   "debug": 0.10672338181725174
+  },
+  "en_max_v": {
+   "wired": 3.602050039414747e-05,
+   "rf": 3.5565742839143336e-05,
+   "pll": 3.5715230489414196e-05,
+   "conv": 3.4992910076617914e-05,
+   "debug": 3.526662282114022e-05,
+   "biasena": 6.6967796745934564e-06
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999973807603458,
+   "rf": 0.9999968813748064,
+   "pll": 0.9999974632966491,
+   "conv": 0.9999972612258881,
+   "debug": 0.999997306086365
+  },
+  "clamp_y_max_v": {
+   "wired": 5.518329233994747e-06,
+   "rf": 5.5178540114582045e-06,
+   "pll": 5.5178157030832394e-06,
+   "conv": 5.517441570175544e-06,
+   "debug": 5.5175296111799226e-06
+  },
+  "pg_max_v": {
+   "wired": 0.26523570350112285,
+   "rf": 0.2535777169430032,
+   "pll": 0.26358919898010047,
+   "conv": 0.24713559753431696,
+   "debug": 0.25217790676799684
+  },
+  "node_max": [
+   "v(iso_rf)",
+   3.3001211318360295
+  ],
+  "node_min": [
+   "v(rst_n)",
+   -0.0011896655687111688
+  ],
+  "nodes_checked": 32,
+  "node_max_3v3_oxide": [
+   "v(iso_rf)",
+   3.3001211318360295
+  ],
+  "aosc_first_edge_s": null,
+  "aosc_f_mhz": null,
+  "isrc_end_ua": 93.67764532264289,
+  "block_current_end_ua": {
+   "aosc": 7.305606068340729e-05,
+   "cb": 90.98239388962111,
+   "isw": 0.04733515550199305,
+   "por": 2.634626151156223,
+   "ring": 0.012575712170191372
+  },
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": true
+  },
+  "pass": true
+ },
+ "ring_ff85_r1u_363_c200p": {
+  "name": "ring_ff85_r1u_363_c200p",
+  "cfg": {
+   "stage": 0,
+   "corner": "ff",
+   "temp": 85.0,
+   "shape": "short",
+   "tr": 1e-06,
+   "vfin": 3.63,
+   "cdie": "200p",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 31225,
+  "t_end": 3.5e-06,
+  "vdd_max": 6.443780652817119,
+  "vdd_end": 1.6587810071909144,
+  "inrush_peak_ma": 10319.567482742761,
+  "inrush_time_above_100ma_us": 2.898022631334665,
+  "node_max": [
+   "v(vdd)",
+   6.443780652817119
+  ],
+  "node_min": [
+   "v(vdd)",
+   -6.884903793202438e-24
+  ],
+  "nodes_checked": 2,
+  "node_max_3v3_oxide": [
+   "v(vdd)",
+   6.443780652817119
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": false,
+   "vmax": false
+  },
+  "pass": false
+ },
+ "ring_ff85_r1u_363_c1n": {
+  "name": "ring_ff85_r1u_363_c1n",
+  "cfg": {
+   "stage": 0,
+   "corner": "ff",
+   "temp": 85.0,
+   "shape": "short",
+   "tr": 1e-06,
+   "vfin": 3.63,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 25743,
+  "t_end": 3.5e-06,
+  "vdd_max": 6.055737244565774,
+  "vdd_end": 1.5730824977945521,
+  "inrush_peak_ma": 10273.709805110295,
+  "inrush_time_above_100ma_us": 2.898972162058979,
+  "node_max": [
+   "v(vdd)",
+   6.055737244565774
+  ],
+  "node_min": [
+   "v(vdd)",
+   -6.884903793202438e-24
+  ],
+  "nodes_checked": 2,
+  "node_max_3v3_oxide": [
+   "v(vdd)",
+   6.055737244565774
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": false,
+   "vmax": false
+  },
+  "pass": false
+ },
+ "ring_ff85_r10u_363_c200p": {
+  "name": "ring_ff85_r10u_363_c200p",
+  "cfg": {
+   "stage": 0,
+   "corner": "ff",
+   "temp": 85.0,
+   "shape": "short",
+   "tr": 1e-05,
+   "vfin": 3.63,
+   "cdie": "200p",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 365,
+  "t_end": 1.4e-05,
+  "vdd_max": 3.6299996257279834,
+  "vdd_end": 3.6299996257279834,
+  "inrush_peak_ma": 0.19005571703327281,
+  "inrush_time_above_100ma_us": 0.0,
+  "node_max": [
+   "v(board)",
+   3.629999690885401
+  ],
+  "node_min": [
+   "v(vdd)",
+   -6.884903793202438e-24
+  ],
+  "nodes_checked": 2,
+  "node_max_3v3_oxide": [
+   "v(board)",
+   3.629999690885401
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "vmax": true
+  },
+  "pass": true
+ },
+ "ring_tt_r1u_33_c200p": {
+  "name": "ring_tt_r1u_33_c200p",
+  "error": "FileNotFoundError(2, 'No such file or directory')",
+  "pass": false
+ },
+ "nc_por_stuck": {
+  "name": "nc_por_stuck",
+  "cfg": {
+   "stage": 2,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "ramp",
+   "tr": 1e-05,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "por_stuck",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 29610,
+  "t_end": 0.06,
+  "vdd_max": 3.300566923309861,
+  "vdd_end": 3.2999996714116726,
+  "inrush_peak_ma": 0.5004124948921823,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": null,
+  "por_release_vdd": null,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [],
+  "release_checked": true,
+  "rail_max_v": {
+   "wired": 0.2189012173364492,
+   "rf": 0.17854165070374498,
+   "pll": 0.18700435708125002,
+   "conv": 0.11074290205674568,
+   "debug": 0.13779326175941603
+  },
+  "en_max_v": {
+   "wired": 0.0003614646064577887,
+   "rf": 0.00034541872551546087,
+   "pll": 0.00034766158358691857,
+   "conv": 0.0003290672713794021,
+   "debug": 0.0003353060581237914,
+   "biasena": 3.114447640711893e-05
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999306414392745,
+   "rf": 0.9999215517866314,
+   "pll": 0.9999317424611783,
+   "conv": 0.9999260286474166,
+   "debug": 0.999927782993222
+  },
+  "clamp_y_max_v": {
+   "wired": 5.2040318249702785e-05,
+   "rf": 5.206498370363793e-05,
+   "pll": 5.2061900597582554e-05,
+   "conv": 5.2055596489569776e-05,
+   "debug": 5.20578571260219e-05
+  },
+  "pg_max_v": {
+   "wired": 0.3335046308160416,
+   "rf": 0.31776796058168433,
+   "pll": 0.33101367164857537,
+   "conv": 0.30399009831275886,
+   "debug": 0.31498599954714734
+  },
+  "node_max": [
+   "v(iso_conv)",
+   3.3005675103313976
+  ],
+  "node_min": [
+   "v(rst_n)",
+   -0.001282934387691277
+  ],
+  "nodes_checked": 31,
+  "node_max_3v3_oxide": [
+   "v(iso_conv)",
+   3.3005675103313976
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": false,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": true
+  },
+  "pass": false
+ },
+ "s2_ff85_r1s_363": {
+  "name": "s2_ff85_r1s_363",
+  "cfg": {
+   "stage": 2,
+   "corner": "ff",
+   "temp": 85.0,
+   "shape": "ramp",
+   "tr": 1.0,
+   "vfin": 3.63,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 342794,
+  "t_end": 1.25,
+  "vdd_max": 3.629999326033903,
+  "vdd_end": 3.629999298527328,
+  "inrush_peak_ma": 0.005730430063429816,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": 0.27548942500000023,
+  "por_release_vdd": 1.000026090192564,
+  "por_low_seen_at_vdd_ge_1p5": false,
+  "por_edges": [
+   [
+    0.27548942500000023,
+    1
+   ]
+  ],
+  "release_checked": true,
+  "rail_max_v": {
+   "wired": 0.1245720907858479,
+   "rf": 0.09218783341835032,
+   "pll": 0.09790809207068239,
+   "conv": 0.04991418971908727,
+   "debug": 0.06540010979878402
+  },
+  "en_max_v": {
+   "wired": 1.8569693482074053e-08,
+   "rf": 1.8538763739584504e-08,
+   "pll": 1.854905908099704e-08,
+   "conv": 1.8501949304191335e-08,
+   "debug": 1.8518405268407527e-08,
+   "biasena": 1.627200575934138e-08
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999999412341555,
+   "rf": 0.9999999411828633,
+   "pll": 0.9999999412426469,
+   "conv": 0.9999999412217994,
+   "debug": 0.999999941226512
+  },
+  "clamp_y_max_v": {
+   "wired": 1.2450018197787358e-07,
+   "rf": 1.245001823230981e-07,
+   "pll": 1.2450018185430513e-07,
+   "conv": 1.2450018206285353e-07,
+   "debug": 1.245001820227827e-07
+  },
+  "pg_max_v": {
+   "wired": 0.004974179049243306,
+   "rf": 0.0048919459100856145,
+   "pll": 0.004909133975621108,
+   "conv": 0.004748877838326498,
+   "debug": 0.004809147772718559
+  },
+  "node_max": [
+   "v(board)",
+   3.6299994548760885
+  ],
+  "node_min": [
+   "v(y_debug)",
+   -3.9330321680327157e-14
+  ],
+  "nodes_checked": 31,
+  "node_max_3v3_oxide": [
+   "v(board)",
+   3.6299994548760885
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": false,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": true
+  },
+  "pass": false
+ },
+ "s2_tt_down": {
+  "name": "s2_tt_down",
+  "cfg": {
+   "stage": 2,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "down",
+   "tr": 1e-05,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 34118,
+  "t_end": 0.076,
+  "vdd_max": 3.30061063614096,
+  "vdd_end": 2.5526214493062052e-11,
+  "inrush_peak_ma": 0.5400221367243414,
+  "inrush_time_above_100ma_us": 0.0,
+  "por_release_s": 0.03989109655648352,
+  "por_release_vdd": 3.298124398488185,
+  "por_low_seen_at_vdd_ge_1p5": true,
+  "por_edges": [
+   [
+    0.03989109655648352,
+    1
+   ],
+   [
+    0.070705,
+    0
+   ]
+  ],
+  "release_checked": true,
+  "rail_max_v": {
+   "wired": 0.21910424178676294,
+   "rf": 0.1785127634728327,
+   "pll": 0.1869834271887059,
+   "conv": 0.11077544450000487,
+   "debug": 0.13789126519490108
+  },
+  "en_max_v": {
+   "wired": 0.00035757156379589213,
+   "rf": 0.0003424201868765367,
+   "pll": 0.00034460124656045016,
+   "conv": 0.00032636381350806975,
+   "debug": 0.0003324131711613715,
+   "biasena": 0.00040246031693049334
+  },
+  "iso_min_ratio": {
+   "wired": 0.9999153741058217,
+   "rf": 0.9999040816065673,
+   "pll": 0.9999161345160302,
+   "conv": 0.9999098762246156,
+   "debug": 0.9999119634852803
+  },
+  "clamp_y_max_v": {
+   "wired": 5.831543097164851e-05,
+   "rf": 5.4604195132127613e-05,
+   "pll": 5.8916002765047593e-05,
+   "conv": 5.7429110698226974e-05,
+   "debug": 5.776022137023248e-05
+  },
+  "pg_max_v": {
+   "wired": 0.33339233034973886,
+   "rf": 0.3187296927314044,
+   "pll": 0.3317254213131819,
+   "conv": 0.3039896792786973,
+   "debug": 0.3149871031367764
+  },
+  "node_max": [
+   "v(rst_n)",
+   3.3465127860159116
+  ],
+  "node_min": [
+   "v(en_wired)",
+   -0.10966215097080345
+  ],
+  "nodes_checked": 31,
+  "node_max_3v3_oxide": [
+   "v(por_n)",
+   3.3052251474753978
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": true,
+   "por": true,
+   "rst": true,
+   "island": true,
+   "en": true,
+   "iso": true,
+   "clamp": true,
+   "vmax": true
+  },
+  "pass": true
+ },
+ "ring_tt_r1u_33_c1n": {
+  "name": "ring_tt_r1u_33_c1n",
+  "cfg": {
+   "stage": 0,
+   "corner": "tt",
+   "temp": 27,
+   "shape": "short",
+   "tr": 1e-06,
+   "vfin": 3.3,
+   "cdie": "1n",
+   "inject": "none",
+   "bypass": 0,
+   "aosc": 0,
+   "loop": "hi"
+  },
+  "points": 20680,
+  "t_end": 3.5e-06,
+  "vdd_max": 5.729648249107338,
+  "vdd_end": 2.0302953605872864,
+  "inrush_peak_ma": 8748.141800667247,
+  "inrush_time_above_100ma_us": 2.8628091552021226,
+  "node_max": [
+   "v(vdd)",
+   5.729648249107338
+  ],
+  "node_min": [
+   "v(board)",
+   1.2668553579776695e-29
+  ],
+  "nodes_checked": 2,
+  "node_max_3v3_oxide": [
+   "v(vdd)",
+   5.729648249107338
+  ],
+  "block_current_end_ua": {},
+  "checks": {
+   "inrush": false,
+   "vmax": false
+  },
+  "pass": false
+ }
+}

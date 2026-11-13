@@ -1,0 +1,2296 @@
+{
+ "fail": true,
+ "counts": {
+  "K1": 33,
+  "K2": 18,
+  "K3": 0,
+  "K4": 0,
+  "K5": 2,
+  "K6": 3,
+  "K7": 11
+ },
+ "fails": [
+  {
+   "rule": "K1",
+   "net": "LO_IN",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "rxmix_i.lo_n",
+   "receiver_domain": "rf",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "LO_IN",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "txmix_i.lo_n",
+   "receiver_domain": "rf",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "LO_IP",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "rxmix_i.lo_p",
+   "receiver_domain": "rf",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "LO_IP",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "txmix_i.lo_p",
+   "receiver_domain": "rf",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "LO_QN",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "rxmix_q.lo_n",
+   "receiver_domain": "rf",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "LO_QN",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "txmix_q.lo_n",
+   "receiver_domain": "rf",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "LO_QP",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "rxmix_q.lo_p",
+   "receiver_domain": "rf",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "LO_QP",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "txmix_q.lo_p",
+   "receiver_domain": "rf",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "WMON_IN",
+   "driver_islands": [
+    "wired"
+   ],
+   "receiver": "bb_tap_wmon.in_p",
+   "receiver_domain": "debug",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "WTX_EXT_DATA",
+   "driver_islands": [
+    "debug",
+    "wired"
+   ],
+   "receiver": "rx_wtx_ext.OUTP",
+   "receiver_domain": "debug",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "ct_wclk",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "digital.ct_wclk",
+   "receiver_domain": "core",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "high"
+  },
+  {
+   "rule": "K1",
+   "net": "fc_src[1]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "digital.fc_src[1]",
+   "receiver_domain": "core",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "high"
+  },
+  {
+   "rule": "K1",
+   "net": "fc_src[2]",
+   "driver_islands": [
+    "debug"
+   ],
+   "receiver": "digital.fc_src[2]",
+   "receiver_domain": "core",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "high"
+  },
+  {
+   "rule": "K1",
+   "net": "fc_src[3]",
+   "driver_islands": [
+    "debug"
+   ],
+   "receiver": "digital.fc_src[3]",
+   "receiver_domain": "core",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "high"
+  },
+  {
+   "rule": "K1",
+   "net": "analog_status (12 bits)",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "digital.analog_status",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 12,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "calibration_above_target (1 bit)",
+   "driver_islands": [
+    "conv"
+   ],
+   "receiver": "digital.calibration_above_target",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "ct_det_clk_in (1 bit)",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "digital.ct_det_clk_in",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "ct_pll_lock (1 bit)",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "digital.ct_pll_lock",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "ct_ref_clk (1 bit)",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "digital.ct_ref_clk",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "fault (1 bit)",
+   "driver_islands": [
+    "rf"
+   ],
+   "receiver": "digital.fault",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "host_word_clk (1 bit)",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "digital.host_word_clk",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "ref_clk (1 bit)",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "digital.ref_clk",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "rf_rx_clk (1 bit)",
+   "driver_islands": [
+    "conv"
+   ],
+   "receiver": "digital.rf_rx_clk",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "rf_rx_sample (24 bits)",
+   "driver_islands": [
+    "conv"
+   ],
+   "receiver": "digital.rf_rx_sample",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 24,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "rf_rx_valid (1 bit)",
+   "driver_islands": [
+    "conv"
+   ],
+   "receiver": "digital.rf_rx_valid",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "rf_tx_clk (1 bit)",
+   "driver_islands": [
+    "conv"
+   ],
+   "receiver": "digital.rf_tx_clk",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "rf_tx_request (1 bit)",
+   "driver_islands": [
+    "conv"
+   ],
+   "receiver": "digital.rf_tx_request",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "wire_analog_status (13 bits)",
+   "driver_islands": [
+    "wired"
+   ],
+   "receiver": "digital.wire_analog_status",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 13,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "wire_rx_clk (1 bit)",
+   "driver_islands": [
+    "wired"
+   ],
+   "receiver": "digital.wire_rx_clk",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "wire_rx_data (40 bits)",
+   "driver_islands": [
+    "wired"
+   ],
+   "receiver": "digital.wire_rx_data",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 40,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "wire_rx_valid (1 bit)",
+   "driver_islands": [
+    "wired"
+   ],
+   "receiver": "digital.wire_rx_valid",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "wire_tx_clk (1 bit)",
+   "driver_islands": [
+    "wired"
+   ],
+   "receiver": "digital.wire_tx_clk",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K1",
+   "net": "wire_tx_request (1 bit)",
+   "driver_islands": [
+    "wired"
+   ],
+   "receiver": "digital.wire_tx_request",
+   "receiver_domain": "core",
+   "severity": "high",
+   "contract_level": true,
+   "bits": 1,
+   "detail": "macro input sourced from a switched island per pt_chip.sv; not bound in the netlist and no iso_clamp exists"
+  },
+  {
+   "rule": "K2",
+   "net": "RF_TX_N",
+   "victim": "rfdriver.pad_n",
+   "well": "~int",
+   "island": "rf",
+   "via": "pdiff",
+   "source": "<pad>.RF_TX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "RF_TX_P",
+   "victim": "rfdriver.pad_p",
+   "well": "~int",
+   "island": "rf",
+   "via": "pdiff",
+   "source": "<pad>.RF_TX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WIRE_TX_N",
+   "victim": "detect.TX_N",
+   "well": "~int",
+   "island": "wired",
+   "via": "pdiff:R",
+   "source": "<pad>.WIRE_TX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WIRE_TX_P",
+   "victim": "detect.TX_P",
+   "well": "~int",
+   "island": "wired",
+   "via": "pdiff:R",
+   "source": "<pad>.WIRE_TX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WRX_N",
+   "victim": "ctle.RX_N",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WRX_N",
+   "victim": "detect.RX_N",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WRX_N",
+   "victim": "rxselect.RX_N",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WRX_N",
+   "victim": "wmon_sel.RX_N",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WRX_P",
+   "victim": "ctle.RX_P",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WRX_P",
+   "victim": "detect.RX_P",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WRX_P",
+   "victim": "rxselect.RX_P",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WRX_P",
+   "victim": "wmon_sel.RX_P",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WTX_EXT_DATA",
+   "victim": "rx_wtx_ext.OUTP",
+   "well": "RAIL_debug",
+   "island": "debug",
+   "via": "pdiff",
+   "source": "wiredtx.WTX_EXT_DATA",
+   "source_domain": "wired",
+   "detail": "wired driver can be high while debug is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WTX_EXT_DATA",
+   "victim": "wiredtx.WTX_EXT_DATA",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "rx_wtx_ext.OUTP",
+   "source_domain": "debug",
+   "detail": "debug driver can be high while wired is off"
+  },
+  {
+   "rule": "K2",
+   "net": "ct_word_clk",
+   "victim": "wiredtx.WORD_CLK",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.ct_word_clk",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "ct_word_clk",
+   "victim": "wiredtx.WORD_CLK",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "wordclk.WORD_CLK",
+   "source_domain": "pll",
+   "detail": "pll driver can be high while wired is off"
+  },
+  {
+   "rule": "K2",
+   "net": "ct_word_clk",
+   "victim": "wordclk.WORD_CLK",
+   "well": "RAIL_pll",
+   "island": "pll",
+   "via": "pdiff",
+   "source": "digital.ct_word_clk",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "ct_word_clk",
+   "victim": "wordclk.WORD_CLK",
+   "well": "RAIL_pll",
+   "island": "pll",
+   "via": "pdiff",
+   "source": "wiredtx.WORD_CLK",
+   "source_domain": "wired",
+   "detail": "wired driver can be high while pll is off"
+  },
+  {
+   "rule": "K5",
+   "net": "ct_word_clk",
+   "drivers": [
+    "wordclk.WORD_CLK",
+    "digital.ct_word_clk"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "island_on[0]",
+   "drivers": [
+    "digital.island_on[0]",
+    "wtx_fallback_control.WIRED_ON"
+   ],
+   "detail": "digital macro output shares the net with a port that has both diffusions and a gate (driver with feedback, or a transmission-gate input: check)"
+  },
+  {
+   "rule": "K6",
+   "inst": "aosc",
+   "port": "EN",
+   "detail": "always-on block control gate is unbound (floats at power-up)"
+  },
+  {
+   "rule": "K6",
+   "inst": "core_bias",
+   "port": "EN_pll_ring_tx",
+   "detail": "always-on block control gate is unbound (floats at power-up)"
+  },
+  {
+   "rule": "K6",
+   "inst": "core_bias",
+   "port": "EN_pll_ring_host",
+   "detail": "always-on block control gate is unbound (floats at power-up)"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf14",
+   "node": "ATBN_rf_ibias",
+   "island": "rf",
+   "sel": "atb0_sw[13]",
+   "bus": "ATB0 force",
+   "detail": "leaf on an island node but its select is not gated by island_on[1]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf14",
+   "node": "ATBN_rf_ibias",
+   "island": "rf",
+   "sel": "atb1_sw[13]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[1]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf22",
+   "node": "ATBN_wire_ibias",
+   "island": "wired",
+   "sel": "atb0_sw[21]",
+   "bus": "ATB0 force",
+   "detail": "leaf on an island node but its select is not gated by island_on[0]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf22",
+   "node": "ATBN_wire_ibias",
+   "island": "wired",
+   "sel": "atb1_sw[21]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[0]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf29",
+   "node": "ATBN_pll_ibias",
+   "island": "pll",
+   "sel": "atb0_sw[28]",
+   "bus": "ATB0 force",
+   "detail": "leaf on an island node but its select is not gated by island_on[2]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf29",
+   "node": "ATBN_pll_ibias",
+   "island": "pll",
+   "sel": "atb1_sw[28]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[2]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf35",
+   "node": "ATBN_conv_ibias",
+   "island": "conv",
+   "sel": "atb0_sw[34]",
+   "bus": "ATB0 force",
+   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf35",
+   "node": "ATBN_conv_ibias",
+   "island": "conv",
+   "sel": "atb1_sw[34]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf56",
+   "node": "ATBN_debug_ibias",
+   "island": "debug",
+   "sel": "atb0_sw[55]",
+   "bus": "ATB0 force",
+   "detail": "leaf on an island node but its select is not gated by island_on[5]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf56",
+   "node": "ATBN_debug_ibias",
+   "island": "debug",
+   "sel": "atb1_sw[55]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[5]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf2",
+   "node": "VREF0_CONV",
+   "island": "conv",
+   "sel": "atb1_sw[1]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  }
+ ],
+ "k1_clamped_ok": [],
+ "k2_gated_ok": 1,
+ "switches": [
+  {
+   "inst": "isw_wired",
+   "VSS": "VSS",
+   "VDD": "VDD",
+   "VISL": "RAIL_wired",
+   "EN": "island_en[0]",
+   "PG": "island_pgood[0]",
+   "ISO": "ISO_wired",
+   "iso_consumers": [
+    "wtx_fallback_control.ISO_wired"
+   ]
+  },
+  {
+   "inst": "isw_rf",
+   "VSS": "VSS",
+   "VDD": "VDD",
+   "VISL": "RAIL_rf",
+   "EN": "island_en[1]",
+   "PG": "island_pgood[1]",
+   "ISO": "ISO_rf",
+   "iso_consumers": []
+  },
+  {
+   "inst": "isw_pll",
+   "VSS": "VSS",
+   "VDD": "VDD",
+   "VISL": "RAIL_pll",
+   "EN": "island_en[2]",
+   "PG": "island_pgood[2]",
+   "ISO": "ISO_pll",
+   "iso_consumers": []
+  },
+  {
+   "inst": "isw_conv",
+   "VISL": "RAIL_conv",
+   "VSS": "VSS",
+   "VDD": "VDD",
+   "EN": "island_en[4]",
+   "PG": "island_pgood[4]",
+   "ISO": "ISO_conv",
+   "iso_consumers": []
+  },
+  {
+   "inst": "isw_debug",
+   "VSS": "VSS",
+   "VDD": "VDD",
+   "VISL": "RAIL_debug",
+   "EN": "island_en[5]",
+   "PG": "island_pgood[5]",
+   "ISO": "ISO_debug",
+   "iso_consumers": []
+  }
+ ],
+ "atb_leaves": [
+  {
+   "leaf": "atb1_leaf11",
+   "node": "RAIL_conv",
+   "node_domains": [
+    "conv"
+   ],
+   "sel": "atb1_sw[10]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ],
+   "exempt": "supply-monitor tap (policy: not gated); leaf wells on core VDD"
+  },
+  {
+   "leaf": "atb1_leaf13",
+   "node": "VSS",
+   "node_domains": [],
+   "sel": "atb1_sw[12]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf37",
+   "node": "VCM_CONV",
+   "node_domains": [
+    "conv"
+   ],
+   "sel": "atb1_sw[36]",
+   "rtl_gate_islands": [
+    4
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf38",
+   "node": "ATBN_adc_comparator_bias",
+   "node_domains": [
+    "conv"
+   ],
+   "sel": "atb1_sw[37]",
+   "rtl_gate_islands": [
+    4
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf5",
+   "node": "VDD",
+   "node_domains": [],
+   "sel": "atb1_sw[4]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf6",
+   "node": "VDD",
+   "node_domains": [],
+   "sel": "atb1_sw[5]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf1",
+   "node": "ATBN_master_ibias",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[0]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf1",
+   "node": "ATBN_master_ibias",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[0]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf14",
+   "node": "ATBN_rf_ibias",
+   "node_domains": [
+    "core",
+    "rf"
+   ],
+   "sel": "atb0_sw[13]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf14",
+   "node": "ATBN_rf_ibias",
+   "node_domains": [
+    "core",
+    "rf"
+   ],
+   "sel": "atb1_sw[13]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf22",
+   "node": "ATBN_wire_ibias",
+   "node_domains": [
+    "core",
+    "wired"
+   ],
+   "sel": "atb0_sw[21]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf22",
+   "node": "ATBN_wire_ibias",
+   "node_domains": [
+    "core",
+    "wired"
+   ],
+   "sel": "atb1_sw[21]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf29",
+   "node": "ATBN_pll_ibias",
+   "node_domains": [
+    "core",
+    "pll"
+   ],
+   "sel": "atb0_sw[28]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf29",
+   "node": "ATBN_pll_ibias",
+   "node_domains": [
+    "core",
+    "pll"
+   ],
+   "sel": "atb1_sw[28]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf35",
+   "node": "ATBN_conv_ibias",
+   "node_domains": [
+    "conv",
+    "core"
+   ],
+   "sel": "atb0_sw[34]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf35",
+   "node": "ATBN_conv_ibias",
+   "node_domains": [
+    "conv",
+    "core"
+   ],
+   "sel": "atb1_sw[34]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf36",
+   "node": "UNBOUND_atbnode_conv_vref",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[35]",
+   "rtl_gate_islands": [
+    4
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf36",
+   "node": "UNBOUND_atbnode_conv_vref",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[35]",
+   "rtl_gate_islands": [
+    4
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf43",
+   "node": "UNBOUND_atbnode_replica_nmos_lna",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[42]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf43",
+   "node": "UNBOUND_atbnode_replica_nmos_lna",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[42]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf44",
+   "node": "UNBOUND_atbnode_replica_pmos_lna",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[43]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf44",
+   "node": "UNBOUND_atbnode_replica_pmos_lna",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[43]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf45",
+   "node": "UNBOUND_atbnode_replica_nmos_mixer",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[44]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf45",
+   "node": "UNBOUND_atbnode_replica_nmos_mixer",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[44]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf46",
+   "node": "UNBOUND_atbnode_replica_pmos_mixer",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[45]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf46",
+   "node": "UNBOUND_atbnode_replica_pmos_mixer",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[45]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf47",
+   "node": "UNBOUND_atbnode_replica_nmos_sampler",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[46]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf47",
+   "node": "UNBOUND_atbnode_replica_nmos_sampler",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[46]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf48",
+   "node": "UNBOUND_atbnode_replica_pmos_sampler",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[47]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf48",
+   "node": "UNBOUND_atbnode_replica_pmos_sampler",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[47]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf49",
+   "node": "UNBOUND_atbnode_replica_nmos_driver",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[48]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf49",
+   "node": "UNBOUND_atbnode_replica_nmos_driver",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[48]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf50",
+   "node": "UNBOUND_atbnode_replica_pmos_driver",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[49]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf50",
+   "node": "UNBOUND_atbnode_replica_pmos_driver",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[49]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf51",
+   "node": "UNBOUND_atbnode_matching_resistor_a",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[50]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf51",
+   "node": "UNBOUND_atbnode_matching_resistor_a",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[50]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf52",
+   "node": "UNBOUND_atbnode_matching_resistor_b",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[51]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf52",
+   "node": "UNBOUND_atbnode_matching_resistor_b",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[51]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf53",
+   "node": "UNBOUND_atbnode_matching_mim_a",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[52]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf53",
+   "node": "UNBOUND_atbnode_matching_mim_a",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[52]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf54",
+   "node": "UNBOUND_atbnode_matching_mim_b",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[53]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf54",
+   "node": "UNBOUND_atbnode_matching_mim_b",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[53]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf55",
+   "node": "ATBN_vbg",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb0_sw[54]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf55",
+   "node": "ATBN_vbg",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[54]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb0_leaf56",
+   "node": "ATBN_debug_ibias",
+   "node_domains": [
+    "core",
+    "debug"
+   ],
+   "sel": "atb0_sw[55]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf56",
+   "node": "ATBN_debug_ibias",
+   "node_domains": [
+    "core",
+    "debug"
+   ],
+   "sel": "atb1_sw[55]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf10",
+   "node": "RAIL_wired",
+   "node_domains": [
+    "wired"
+   ],
+   "sel": "atb1_sw[9]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ],
+   "exempt": "supply-monitor tap (policy: not gated); leaf wells on core VDD"
+  },
+  {
+   "leaf": "atb1_leaf7",
+   "node": "RAIL_wired",
+   "node_domains": [
+    "wired"
+   ],
+   "sel": "atb1_sw[6]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ],
+   "exempt": "supply-monitor tap (policy: not gated); leaf wells on core VDD"
+  },
+  {
+   "leaf": "atb1_leaf12",
+   "node": "RAIL_debug",
+   "node_domains": [
+    "debug"
+   ],
+   "sel": "atb1_sw[11]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ],
+   "exempt": "supply-monitor tap (policy: not gated); leaf wells on core VDD"
+  },
+  {
+   "leaf": "atb1_leaf15",
+   "node": "VCM_RF",
+   "node_domains": [],
+   "sel": "atb1_sw[14]",
+   "rtl_gate_islands": [
+    1
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf16",
+   "node": "ATBN_lna_bias",
+   "node_domains": [
+    "rf"
+   ],
+   "sel": "atb1_sw[15]",
+   "rtl_gate_islands": [
+    1
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf17",
+   "node": "ATBN_rxmix_bias",
+   "node_domains": [
+    "rf"
+   ],
+   "sel": "atb1_sw[16]",
+   "rtl_gate_islands": [
+    1
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf18",
+   "node": "ATBN_pga_bias",
+   "node_domains": [
+    "rf"
+   ],
+   "sel": "atb1_sw[17]",
+   "rtl_gate_islands": [
+    1
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf19",
+   "node": "ATBN_bbfilter_bias",
+   "node_domains": [
+    "rf"
+   ],
+   "sel": "atb1_sw[18]",
+   "rtl_gate_islands": [
+    1
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf2",
+   "node": "VREF0_CONV",
+   "node_domains": [
+    "conv"
+   ],
+   "sel": "atb1_sw[1]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf20",
+   "node": "ATBN_txmix_bias",
+   "node_domains": [
+    "rf"
+   ],
+   "sel": "atb1_sw[19]",
+   "rtl_gate_islands": [
+    1
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf21",
+   "node": "ATBN_rfdriver_bias",
+   "node_domains": [
+    "rf"
+   ],
+   "sel": "atb1_sw[20]",
+   "rtl_gate_islands": [
+    1
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf23",
+   "node": "UNBOUND_atbnode_wire_vcm",
+   "node_domains": [],
+   "sel": "atb1_sw[22]",
+   "rtl_gate_islands": [
+    0
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf24",
+   "node": "ATBN_ctle_bias",
+   "node_domains": [
+    "wired"
+   ],
+   "sel": "atb1_sw[23]",
+   "rtl_gate_islands": [
+    0
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf25",
+   "node": "UNBOUND_atbnode_slicer_bias",
+   "node_domains": [],
+   "sel": "atb1_sw[24]",
+   "rtl_gate_islands": [
+    0
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf26",
+   "node": "ATBN_wiredtx_bias",
+   "node_domains": [
+    "wired"
+   ],
+   "sel": "atb1_sw[25]",
+   "rtl_gate_islands": [
+    0
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf27",
+   "node": "UNBOUND_atbnode_termination_vcm",
+   "node_domains": [],
+   "sel": "atb1_sw[26]",
+   "rtl_gate_islands": [
+    0
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf28",
+   "node": "ATBN_detect_ibias",
+   "node_domains": [
+    "wired"
+   ],
+   "sel": "atb1_sw[27]",
+   "rtl_gate_islands": [
+    0
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf3",
+   "node": "ATBN_master_vcm",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[2]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf30",
+   "node": "UNBOUND_atbnode_pll_vctrl",
+   "node_domains": [],
+   "sel": "atb1_sw[29]",
+   "rtl_gate_islands": [
+    2
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf31",
+   "node": "UNBOUND_atbnode_pll_cp_bias",
+   "node_domains": [],
+   "sel": "atb1_sw[30]",
+   "rtl_gate_islands": [
+    2
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf32",
+   "node": "UNBOUND_atbnode_refinput_vcm",
+   "node_domains": [],
+   "sel": "atb1_sw[31]",
+   "rtl_gate_islands": [
+    2
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf33",
+   "node": "ATBN_quadrature_bias",
+   "node_domains": [
+    "pll"
+   ],
+   "sel": "atb1_sw[32]",
+   "rtl_gate_islands": [
+    2
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf34",
+   "node": "UNBOUND_atbnode_cdr_bias",
+   "node_domains": [],
+   "sel": "atb1_sw[33]",
+   "rtl_gate_islands": [
+    2
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf39",
+   "node": "ATBN_dac_bias",
+   "node_domains": [
+    "conv"
+   ],
+   "sel": "atb1_sw[38]",
+   "rtl_gate_islands": [
+    4
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf4",
+   "node": "UNBOUND_atbnode_monitor_por_threshold",
+   "node_domains": [],
+   "sel": "atb1_sw[3]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf40",
+   "node": "ATBN_usbhs_ibias",
+   "node_domains": [
+    "wired"
+   ],
+   "sel": "atb1_sw[39]",
+   "rtl_gate_islands": [
+    0
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf41",
+   "node": "UNBOUND_atbnode_usbfs_vref",
+   "node_domains": [],
+   "sel": "atb1_sw[40]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf42",
+   "node": "ATBN_debug_buffer_bias",
+   "node_domains": [
+    "debug"
+   ],
+   "sel": "atb1_sw[41]",
+   "rtl_gate_islands": [
+    5
+   ],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf57",
+   "node": "ATBN_idac1_source_ibias",
+   "node_domains": [
+    "core"
+   ],
+   "sel": "atb1_sw[56]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ]
+  },
+  {
+   "leaf": "atb1_leaf8",
+   "node": "RAIL_rf",
+   "node_domains": [
+    "rf"
+   ],
+   "sel": "atb1_sw[7]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ],
+   "exempt": "supply-monitor tap (policy: not gated); leaf wells on core VDD"
+  },
+  {
+   "leaf": "atb1_leaf9",
+   "node": "RAIL_pll",
+   "node_domains": [
+    "pll"
+   ],
+   "sel": "atb1_sw[8]",
+   "rtl_gate_islands": [],
+   "leaf_pfet_wells": [
+    "VDD"
+   ],
+   "exempt": "supply-monitor tap (policy: not gated); leaf wells on core VDD"
+  }
+ ],
+ "pads": [
+  {
+   "pad": "RESET_N",
+   "kind": "provider in_c",
+   "rail": "VDD (common ring)",
+   "straps": "PU=0 PD=1",
+   "before_spi": "input, weak pull-down: die held in reset if the host is absent"
+  },
+  {
+   "pad": "SPI_SCLK",
+   "kind": "provider bi_24t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=0 IE=1 PU=0 PD=0",
+   "before_spi": "input, NO pull: floats if the host is unpowered"
+  },
+  {
+   "pad": "SPI_CS_N",
+   "kind": "provider bi_24t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=0 IE=1 PU=0 PD=0",
+   "before_spi": "input, NO pull: floats (CS_N floating low selects the SPI slave)"
+  },
+  {
+   "pad": "SPI_MOSI",
+   "kind": "provider bi_24t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=0 IE=1 PU=0 PD=0",
+   "before_spi": "input, NO pull: floats if the host is unpowered"
+  },
+  {
+   "pad": "SPI_MISO",
+   "kind": "provider bi_t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=miso_oe IE=0",
+   "before_spi": "hi-Z while CS_N=1 or reset (miso_oe=0)"
+  },
+  {
+   "pad": "H2D[9:0]",
+   "kind": "provider bi_24t x10",
+   "rail": "VDD (common ring)",
+   "straps": "OE=0 IE=1 PU=0 PD=0",
+   "before_spi": "inputs, NO pull: 10 floating CMOS inputs if the FPGA is unconfigured"
+  },
+  {
+   "pad": "H2D_CLK",
+   "kind": "provider bi_24t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=0 IE=1 PU=0 PD=0",
+   "before_spi": "input, NO pull: floats if the FPGA is unconfigured"
+  },
+  {
+   "pad": "D2H[9:0]",
+   "kind": "provider bi_t x10",
+   "rail": "VDD (common ring)",
+   "straps": "OE=d2h_oe",
+   "before_spi": "hi-Z (hostio.controls.d2h_enable resets 0)"
+  },
+  {
+   "pad": "D2H_CLK",
+   "kind": "provider bi_t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=d2h_oe",
+   "before_spi": "hi-Z (d2h_enable resets 0)"
+  },
+  {
+   "pad": "CLK_OBS",
+   "kind": "provider bi_24t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=clk_obs_oe IE=0",
+   "before_spi": "hi-Z (oe resets 0)"
+  },
+  {
+   "pad": "DBG_OBS0",
+   "kind": "provider bi_24t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=dbg_obs0_oe IE=0",
+   "before_spi": "hi-Z (oe resets 0)"
+  },
+  {
+   "pad": "DBG_OBS1",
+   "kind": "provider bi_24t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=dbg_obs1_oe IE=0",
+   "before_spi": "hi-Z (oe resets 0)"
+  },
+  {
+   "pad": "WCLK_OBS",
+   "kind": "provider bi_24t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=wclk_obs_oe IE=0",
+   "before_spi": "hi-Z (oe resets 0)"
+  },
+  {
+   "pad": "WDBG_OBS",
+   "kind": "provider bi_24t",
+   "rail": "VDD (common ring)",
+   "straps": "OE=wdbg_obs_oe IE=0",
+   "before_spi": "hi-Z (oe resets 0)"
+  },
+  {
+   "pad": "ATB0",
+   "kind": "atb_pad",
+   "inst": "atb0_pad",
+   "rails": [
+    "VDD"
+   ],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [],
+   "before_spi": "open: atb*_en resets 0 (T-gate off, wells on core VDD)"
+  },
+  {
+   "pad": "ATB1",
+   "kind": "atb_pad",
+   "inst": "atb1_pad",
+   "rails": [
+    "VDD"
+   ],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [],
+   "before_spi": "open: atb*_en resets 0 (T-gate off, wells on core VDD)"
+  },
+  {
+   "pad": "AUX_CLK_N",
+   "kind": "pad_refpad",
+   "inst": "pad_aux_clk",
+   "rails": [],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [
+    "lo_ext.EXT_QN",
+    "rx_aux_clk.INN"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['~int'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "AUX_CLK_P",
+   "kind": "pad_refpad",
+   "inst": "pad_aux_clk",
+   "rails": [],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [
+    "lo_ext.EXT_QP",
+    "rx_aux_clk.INP"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['~int'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "BB_I_N",
+   "kind": "pad_rf_pair",
+   "inst": "pad_bb_i",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_bb_i"
+   ],
+   "direct_core_connections": [
+    "bb_tap_i.pad_n"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_bb_i'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "BB_I_P",
+   "kind": "pad_rf_pair",
+   "inst": "pad_bb_i",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_bb_i"
+   ],
+   "direct_core_connections": [
+    "bb_tap_i.pad_p"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_bb_i'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "BB_Q_N",
+   "kind": "pad_rf_pair",
+   "inst": "pad_bb_q",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_bb_i"
+   ],
+   "direct_core_connections": [
+    "bb_tap_q.pad_n"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_bb_i'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "BB_Q_P",
+   "kind": "pad_rf_pair",
+   "inst": "pad_bb_q",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_bb_i"
+   ],
+   "direct_core_connections": [
+    "bb_tap_q.pad_p"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_bb_i'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "ESD_TEST",
+   "kind": "pad_single_leg",
+   "inst": "pad_esd_test",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_esd_test"
+   ],
+   "direct_core_connections": [],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_esd_test'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "REF_IN",
+   "kind": "pad_refpad",
+   "inst": "pad_ref",
+   "rails": [],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [
+    "lo_ext.EXT_IP"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['~int'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "REF_IN_N",
+   "kind": "pad_refpad",
+   "inst": "pad_ref",
+   "rails": [],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [
+    "lo_ext.EXT_IN"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['~int'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "RF_RX_N",
+   "kind": "pad_rf_pair",
+   "inst": "pad_rf_rx",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_rf_rx"
+   ],
+   "direct_core_connections": [
+    "lna.rf_in_n"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_rf_rx'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "RF_RX_P",
+   "kind": "pad_rf_pair",
+   "inst": "pad_rf_rx",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_rf_rx"
+   ],
+   "direct_core_connections": [
+    "lna.rf_in_p"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_rf_rx'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "RF_TX_N",
+   "kind": "pad_rf_pair",
+   "inst": "pad_rf_tx",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_rf_tx"
+   ],
+   "direct_core_connections": [
+    "rfdriver.pad_n"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_rf_tx'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "RF_TX_P",
+   "kind": "pad_rf_pair",
+   "inst": "pad_rf_tx",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_rf_tx"
+   ],
+   "direct_core_connections": [
+    "rfdriver.pad_p"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_rf_tx'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "USB_DN",
+   "kind": "pad_wirepad",
+   "inst": "pad_usb",
+   "rails": [
+    "RAIL_wired"
+   ],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [],
+   "before_spi": "p-diffusion/well on ['RAIL_wired']: an externally driven pad charges that OFF rail through the pad (back-drive)"
+  },
+  {
+   "pad": "USB_DP",
+   "kind": "pad_wirepad",
+   "inst": "pad_usb",
+   "rails": [
+    "RAIL_wired"
+   ],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [],
+   "before_spi": "p-diffusion/well on ['RAIL_wired']: an externally driven pad charges that OFF rail through the pad (back-drive)"
+  },
+  {
+   "pad": "WCLK_IN_N",
+   "kind": "pad_rf_pair",
+   "inst": "pad_wclk_in",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_wclk_in"
+   ],
+   "direct_core_connections": [
+    "rx_wclk_in.INN"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_wclk_in'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "WCLK_IN_P",
+   "kind": "pad_rf_pair",
+   "inst": "pad_wclk_in",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_wclk_in"
+   ],
+   "direct_core_connections": [
+    "rx_wclk_in.INP"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_wclk_in'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "WIRE_RX_N",
+   "kind": "pad_hspad",
+   "inst": "pad_hs_rx",
+   "rails": [],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [],
+   "before_spi": "hi-Z; p-diode to local ['~int'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "WIRE_RX_P",
+   "kind": "pad_hspad",
+   "inst": "pad_hs_rx",
+   "rails": [],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [],
+   "before_spi": "hi-Z; p-diode to local ['~int'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "WIRE_TX_N",
+   "kind": "pad_txpad",
+   "inst": "pad_wire_tx",
+   "rails": [
+    "RAIL_wired"
+   ],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [
+    "detect.TX_N"
+   ],
+   "before_spi": "p-diffusion/well on ['RAIL_wired']: an externally driven pad charges that OFF rail through the pad (back-drive)"
+  },
+  {
+   "pad": "WIRE_TX_P",
+   "kind": "pad_txpad",
+   "inst": "pad_wire_tx",
+   "rails": [
+    "RAIL_wired"
+   ],
+   "pdiff_wells": [
+    "~int"
+   ],
+   "direct_core_connections": [
+    "detect.TX_P"
+   ],
+   "before_spi": "p-diffusion/well on ['RAIL_wired']: an externally driven pad charges that OFF rail through the pad (back-drive)"
+  },
+  {
+   "pad": "WMON",
+   "kind": "pad_single_leg",
+   "inst": "pad_wmon",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_wtx_ext"
+   ],
+   "direct_core_connections": [
+    "bb_tap_wmon.pad_p"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_wtx_ext'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "WTX_EXT_N",
+   "kind": "pad_rf_pair",
+   "inst": "pad_wtx_ext",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_wtx_ext"
+   ],
+   "direct_core_connections": [
+    "rx_wtx_ext.INN"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_wtx_ext'] (not a supply rail): pad sees only clamp leakage"
+  },
+  {
+   "pad": "WTX_EXT_P",
+   "kind": "pad_rf_pair",
+   "inst": "pad_wtx_ext",
+   "rails": [],
+   "pdiff_wells": [
+    "ESD_RAIL_pad_wtx_ext"
+   ],
+   "direct_core_connections": [
+    "rx_wtx_ext.INP"
+   ],
+   "before_spi": "hi-Z; p-diode to local ['ESD_RAIL_pad_wtx_ext'] (not a supply rail): pad sees only clamp leakage"
+  }
+ ],
+ "unbound_ports_per_instance": {
+  "adc_i": 29,
+  "adc_q": 30,
+  "aosc": 2,
+  "atb0_leaf36": 1,
+  "atb1_leaf36": 1,
+  "atb0_leaf43": 1,
+  "atb1_leaf43": 1,
+  "atb0_leaf44": 1,
+  "atb1_leaf44": 1,
+  "atb0_leaf45": 1,
+  "atb1_leaf45": 1,
+  "atb0_leaf46": 1,
+  "atb1_leaf46": 1,
+  "atb0_leaf47": 1,
+  "atb1_leaf47": 1,
+  "atb0_leaf48": 1,
+  "atb1_leaf48": 1,
+  "atb0_leaf49": 1,
+  "atb1_leaf49": 1,
+  "atb0_leaf50": 1,
+  "atb1_leaf50": 1,
+  "atb0_leaf51": 1,
+  "atb1_leaf51": 1,
+  "atb0_leaf52": 1,
+  "atb1_leaf52": 1,
+  "atb0_leaf53": 1,
+  "atb1_leaf53": 1,
+  "atb0_leaf54": 1,
+  "atb1_leaf54": 1,
+  "atb1_leaf23": 1,
+  "atb1_leaf25": 1,
+  "atb1_leaf27": 1,
+  "atb1_leaf30": 1,
+  "atb1_leaf31": 1,
+  "atb1_leaf32": 1,
+  "atb1_leaf34": 1,
+  "atb1_leaf4": 1,
+  "atb1_leaf41": 1,
+  "bb_tap_i": 2,
+  "bb_tap_q": 3,
+  "bb_tap_wmon": 3,
+  "bbfilter_i": 40,
+  "bbfilter_q": 42,
+  "clk_obs": 26,
+  "clockmux": 30,
+  "core_bias": 8,
+  "ctle": 8,
+  "dac_i": 13,
+  "dac_q": 14,
+  "detect": 11,
+  "lna": 20,
+  "lo_ext": 3,
+  "pad_hs_rx": 10,
+  "pad_usb": 14,
+  "pad_wire_tx": 5,
+  "pll_cdr": 27,
+  "polyphase": 4,
+  "prescale": 6,
+  "refbuf": 2,
+  "rfdriver": 9,
+  "ring_osc": 1,
+  "rx_aux_clk": 4,
+  "rx_wclk_in": 4,
+  "rx_wtx_ext": 4,
+  "rxlevel": 2,
+  "rxmix_i": 8,
+  "rxmix_q": 9,
+  "rxselect": 1,
+  "slicer": 109,
+  "termination": 16,
+  "txmix_i": 3,
+  "txmix_q": 4,
+  "txsum": 1,
+  "vco_replica": 3,
+  "wiredtx": 68,
+  "wmon_sel": 3,
+  "wordclk": 7,
+  "wtx_fallback_control": 10
+ },
+ "reset_expr": "reset_n_pad & (por_n | por_bypass)",
+ "coverage": {
+  "instances": 147,
+  "nets": 2139,
+  "unbound_ports": 653,
+  "iso_clamp_instances": 0
+ }
+}

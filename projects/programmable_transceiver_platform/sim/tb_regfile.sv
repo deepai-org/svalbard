@@ -16,7 +16,7 @@ module tb_regfile;
  wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe;
  localparam[15:0]STATUS=16'hA5C3;localparam[31:0]OBS=32'h9E37_79B9;localparam[15:0]WSTAT=16'h6A09;
  localparam[23:0]CAPTURE=24'h5A_1234;
- pt_mgmt dut(.rst_n(rst_n),.por_n(por_n),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso),.miso_oe(miso_oe),
+ pt_mgmt dut(.rst_n(rst_n),.por_n(por_n),.por_bypass(1'b0),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso),.miso_oe(miso_oe),
   .status(STATUS),.enable(enable),.mode8(mode8),.rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),
   .memory_write(memory_write),.memory_index(memory_index),.memory_wdata(memory_wdata),
   .capture_data(CAPTURE),.capture_done(1'b0),.playback_enable(playback_enable),.capture_enable(capture_enable),

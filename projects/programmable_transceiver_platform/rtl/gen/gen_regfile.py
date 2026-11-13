@@ -502,13 +502,14 @@ def emit_sv(model):
     a(f'// Register map hash 0x{model["map_hash16"]:04X}; see spec/register-map.md.')
     a('//')
     a('// pt_regfile: SPI register file clocked only by SPI SCLK, asynchronously reset by rst_n')
-    a('// (RESET_N AND POR). Shadow registers take SPI writes; COMMIT validates and copies shadow to')
+    a('// (RESET_N AND (POR OR the por_bypass strap)). Shadow registers take SPI writes; COMMIT validates and copies shadow to')
     a('// active atomically. Pad/analog outputs are island-isolated (forced to 0) and fault-released.')
     a('// pt_mgmt: pt_spi (unchanged Mode-0 cmd8/addr8/data16 ABI) plus pt_regfile; replaces pt_control.')
     a('`default_nettype none')
     a('module pt_regfile(')
     a(' input wire rst_n,sclk,')
-    a(' input wire por_n, // POR alone (rst_n = RESET_N AND por_n); sets the sticky POR flag')
+    a(' input wire por_n, // POR alone (rst_n = RESET_N AND (por_n OR the por_bypass strap)); sets the sticky POR flag')
+    a(' input wire por_bypass, // static strap level (G3, DT-10), read back raw in RESET_STATUS b2')
     a(' input wire wr_en,input wire[7:0]wr_addr,input wire[15:0]wr_data,')
     a(' input wire[7:0]rd_addr,output reg[15:0]rd_data,')
     a(' // Read candidates for the two possible last address bits (pt_spi registers both on the 16th')
@@ -816,7 +817,7 @@ def emit_sv(model):
     a("   8'h06:rd_data={commit_count,5'b0,pending,last_ok,commit_toggle};8'h07:rd_data={15'b0,view};")
     a("   8'h08:rd_data=ABI_VERSION;8'h09:rd_data=MAP_HASH;")
     pad = 8 - nisl
-    a(f"   8'h0A:rd_data={{{pad}'b0,pg2,{pad}'b0,on2}};8'h0B:rd_data={{15'b0,f2}};8'h0C:rd_data={{err_code,err_addr}};8'h0D:rd_data={{14'b0,rst_flag,por_flag}};")
+    a(f"   8'h0A:rd_data={{{pad}'b0,pg2,{pad}'b0,on2}};8'h0B:rd_data={{15'b0,f2}};8'h0C:rd_data={{err_code,err_addr}};8'h0D:rd_data={{13'b0,por_bypass,rst_flag,por_flag}};")
     a("   8'h10:rd_data=rf_trim;8'h11:rd_data=wire_trim;8'h12:rd_data=clock_trim;")
     a("   8'h20:rd_data={11'b0,index};8'h23:rd_data={3'b0,memory_last,5'b0,memory_loop,capture_enable,playback_enable};")
     a("   8'h24:rd_data={capture_data[39:32],7'b0,c2};8'h25:rd_data=capture_data[15:0];8'h26:rd_data=capture_data[31:16];")
@@ -845,7 +846,7 @@ def emit_sv(model):
     emit_formal(model, a, by_name)
     a('endmodule')
     a('')
-    a('module pt_mgmt(input wire rst_n,por_n,sclk,cs_n,mosi,output wire miso,miso_oe,')
+    a('module pt_mgmt(input wire rst_n,por_n,por_bypass,sclk,cs_n,mosi,output wire miso,miso_oe,')
     a(' input wire[15:0]status,output wire enable,mode8,output wire[15:0]rf_trim,wire_trim,clock_trim,')
     a(' output wire memory_write,output wire[4:0]memory_index,output wire[39:0]memory_wdata,')
     a(' input wire[39:0]capture_data,input wire capture_done,output wire playback_enable,capture_enable,')
@@ -866,7 +867,7 @@ def emit_sv(model):
     a(' // SPI port) take it on the falling SCLK edge after the 32nd rising edge (STA: launch/capture on')
     a(' // the sclk fall edge, output budgets relative to it in integration/pt_digital_macro.sdc).')
     a(' wire sclk_regs=~sclk;')
-    a(' pt_regfile regs(.rst_n(rst_n),.por_n(por_n),.sclk(sclk_regs),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),')
+    a(' pt_regfile regs(.rst_n(rst_n),.por_n(por_n),.por_bypass(por_bypass),.sclk(sclk_regs),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),')
     a('  .rd_addr(rd_addr),.rd_data(rd_data),.rd_hi(rd_hi),.rd_data0(rd_data0),.rd_data1(rd_data1),')
     a('  .status(status),.enable(enable),.mode8(mode8),')
     a('  .rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),.memory_write(memory_write),')
@@ -961,9 +962,9 @@ def emit_formal(model, a, by_name):
     a(' end')
     a(' // P5 commit discipline: non-live fields never change while the payload runs, and')
     a(' // break-before-make fields never move directly between two non-zero codes.')
-    a(' // P6 reset-cause flags: POR sets both, any reset sets rst_flag.')
+    a(' // P6 reset-cause flags: POR sets por_flag; any combined reset (rst_n) sets rst_flag.')
     a(' always @*begin')
-    a('  if(!por_n)assert(por_flag&&rst_flag);')
+    a('  if(!por_n)assert(por_flag);   // rst_flag only via rst_n: the por_bypass strap (G3) can keep rst_n high')
     a('  if(!rst_n)assert(rst_flag);')
     a(' end')
     a(' reg f_past=0;always @(posedge sclk)f_past<=1;')
@@ -1090,7 +1091,7 @@ def emit_markdown(model):
         ('0x09', 'MAP_HASH', 'R', 'Low 16 bits of the SHA-256 of the generated map; must match the bench header.'),
         ('0x0A', 'ISLAND_STATUS', 'R', 'b5:0 island effective-on (switch and power-good or override), b13:8 island power-good; SCLK-synchronized. Power-good = 1 with debug.island_power = 0 is the back-drive signature. Bit 3 (usb) is reserved and reads 0.'),
         ('0x0B', 'FAULT_STATUS', 'R', 'b0 monitor fault input, SCLK-synchronized.'),
-        ('0x0D', 'RESET_STATUS', 'R/W1C', 'b0 POR occurred (set by POR, survives RESET_N), b1 reset occurred (set by POR or RESET_N). b1 with b0 clear after clearing both = a RESET_N-only reset. Flags live in the never-switched core domain; see macro-contract.md.'),
+        ('0x0D', 'RESET_STATUS', 'R/W1C', 'b0 POR occurred (set by POR, survives RESET_N), b1 reset occurred (set by RESET_N, or by POR while the POR_BYPASS strap is low). b1 with b0 clear after clearing both = a RESET_N-only reset. b2 (read-only) = live POR_BYPASS strap level (1 = the POR is out of the reset path, interface row DT-10); b0 stuck at 1 with b2 = 1 = the POR is still asserted. Flags live in the never-switched core domain; see macro-contract.md.'),
         ('0x0C', 'ERROR_INFO', 'R', 'b7:0 address of the last rejected write; b15:8 last commit result: 0 ok, 0x01-0x7F rule index+1, 0x80+i break-before-make field i, 0xC0+i split field i out of range, 0xFF non-live change while ENABLE=1.'),
         ('0x10-0x12', 'RF/WIRE/CLOCK_TRIM', 'RW', 'Legacy 16-bit trim words (wire_trim[15] selects PRBS, clock_trim[15] starts calibration); locked while ENABLE.'),
         ('0x20-0x26', 'MEMORY', 'mixed', 'MEMORY v3 (ABI 0x0003, AC-1 sharing S1): capture/playback in the shared transport banks, 40-bit quad indexed, owner-generic (IQ quads via the sample packer, wired raw/8b10b quads). 0x20 INDEX; 0x21 W stage[15:0]; 0x24 W stage[31:16], R {capture[39:32],7b0,done}; 0x22 W stores {wr_data[7:0],stage} into egress[INDEX] (ENABLE=0); 0x23 b0 playback, b1 capture, b2 loop, b12:8 last playback quad; 0x25/0x26 R capture[15:0]/[31:16] of ingress[INDEX]. Capture fills the ingress bank (28 quads) from the active lane while ENABLE=1, then stops (done); playback sends egress quads 0..last once or looped. SPI only: no host clock needed. The memory is the last host-link fallback.'),
@@ -1104,7 +1105,7 @@ def emit_markdown(model):
     a('')
     a(model['cdc_semantics'])
     a('')
-    a('Reset: `rst_n` = RESET_N AND POR. It asynchronously returns every shadow and active register to')
+    a('Reset: `rst_n` = RESET_N AND (POR OR the POR_BYPASS strap). It asynchronously returns every shadow and active register to')
     a('its declared default (the safe state): every island off, every driver tristated, every')
     a('termination and pull released, every ATB switch open, every clock select stopped. Release')
     a('reset with CS_N high and SCLK idle low; the first SCLK edge must follow reset release by the')
@@ -1258,6 +1259,7 @@ def emit_c(model):
         a(f'#define PT_CONFIG_ERROR_{name} (1u << {i})')
     a('#define PT_RESET_STATUS_POR_OCCURRED (1u << 0)')
     a('#define PT_RESET_STATUS_RESET_OCCURRED (1u << 1)')
+    a('#define PT_RESET_STATUS_POR_BYPASS (1u << 2)')
     a('#define PT_DBG_OBS_RESET_LEVEL 36u')
     for isl, bit in model['islands'].items():
         a(f'#define PT_ISLAND_{c_ident(isl)} {bit}u')

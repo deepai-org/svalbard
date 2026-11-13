@@ -70,7 +70,7 @@ RF sample clock (40/80 MHz) has harmonics at 2400/2440/2480 MHz (>= 2 MHz from e
 | 0x09 | MAP_HASH | R | Low 16 bits of the SHA-256 of the generated map; must match the bench header. |
 | 0x0A | ISLAND_STATUS | R | b5:0 island effective-on (switch and power-good or override), b13:8 island power-good; SCLK-synchronized. Power-good = 1 with debug.island_power = 0 is the back-drive signature. Bit 3 (usb) is reserved and reads 0. |
 | 0x0B | FAULT_STATUS | R | b0 monitor fault input, SCLK-synchronized. |
-| 0x0D | RESET_STATUS | R/W1C | b0 POR occurred (set by POR, survives RESET_N), b1 reset occurred (set by POR or RESET_N). b1 with b0 clear after clearing both = a RESET_N-only reset. Flags live in the never-switched core domain; see macro-contract.md. |
+| 0x0D | RESET_STATUS | R/W1C | b0 POR occurred (set by POR, survives RESET_N), b1 reset occurred (set by RESET_N, or by POR while the POR_BYPASS strap is low). b1 with b0 clear after clearing both = a RESET_N-only reset. b2 (read-only) = live POR_BYPASS strap level (1 = the POR is out of the reset path, interface row DT-10); b0 stuck at 1 with b2 = 1 = the POR is still asserted. Flags live in the never-switched core domain; see macro-contract.md. |
 | 0x0C | ERROR_INFO | R | b7:0 address of the last rejected write; b15:8 last commit result: 0 ok, 0x01-0x7F rule index+1, 0x80+i break-before-make field i, 0xC0+i split field i out of range, 0xFF non-live change while ENABLE=1. |
 | 0x10-0x12 | RF/WIRE/CLOCK_TRIM | RW | Legacy 16-bit trim words (wire_trim[15] selects PRBS, clock_trim[15] starts calibration); locked while ENABLE. |
 | 0x20-0x26 | MEMORY | mixed | MEMORY v3 (ABI 0x0003, AC-1 sharing S1): capture/playback in the shared transport banks, 40-bit quad indexed, owner-generic (IQ quads via the sample packer, wired raw/8b10b quads). 0x20 INDEX; 0x21 W stage[15:0]; 0x24 W stage[31:16], R {capture[39:32],7b0,done}; 0x22 W stores {wr_data[7:0],stage} into egress[INDEX] (ENABLE=0); 0x23 b0 playback, b1 capture, b2 loop, b12:8 last playback quad; 0x25/0x26 R capture[15:0]/[31:16] of ingress[INDEX]. Capture fills the ingress bank (28 quads) from the active lane while ENABLE=1, then stops (done); playback sends egress quads 0..last once or looped. SPI only: no host clock needed. The memory is the last host-link fallback. |
@@ -82,7 +82,7 @@ SPI writes go to shadow registers (write-time range/encoding check per register;
 
 The register file is clocked only by SPI SCLK and asynchronously reset by RESET_N AND POR. Active fields are quasi-static: they change only on a successful commit, which also toggles commit_toggle. A consuming clock domain that must see a coherent multi-bit value synchronizes commit_toggle through two flops and reloads its local copy on a toggle edge; the next commit cannot occur for at least one more 32-clock SPI transaction. Purely analog consumers see each field change once per commit; stopped-only fields are changed only while their outputs are isolated.
 
-Reset: `rst_n` = RESET_N AND POR. It asynchronously returns every shadow and active register to
+Reset: `rst_n` = RESET_N AND (POR OR the POR_BYPASS strap). It asynchronously returns every shadow and active register to
 its declared default (the safe state): every island off, every driver tristated, every
 termination and pull released, every ATB switch open, every clock select stopped. Release
 reset with CS_N high and SCLK idle low; the first SCLK edge must follow reset release by the

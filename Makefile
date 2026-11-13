@@ -369,6 +369,14 @@ transceiver-shared-egress-lifecycle:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_shared_egress_lifecycle.py
 transceiver-dense-rf-burst:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_dense_rf_service.py --burst --output-dir scratch/dense-rf-burst
+# POR override strap (integration-plan G3, interface row DT-10): POR stuck low + strap => SPI works; mutants must fail.
+.PHONY: transceiver-por-bypass
+transceiver-por-bypass:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_por_bypass.py
+# G3 closure gate (NOT in the regression): fails until pads/assembly bind a strap pad in integration/pt_chip.sv.
+.PHONY: transceiver-por-bypass-chip
+transceiver-por-bypass-chip:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_por_bypass.py --chip
 transceiver-core-bias-observation:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_core_bias_observation.py --output-dir scratch/core-bias-observation-current
 
@@ -425,7 +433,7 @@ transceiver-digital-hardening: transceiver-digital-rtl-checks transceiver-pair-w
 # frequency counter (P3-7), the AC-1 40-bit wired boundary end to end through the pad-edge host
 # link (S2/S3), the AC-1 transport CDC FIFO (any even depth, conservative counts), the IX-2 8b/10b
 # offload and the RXR-D2 fast gain command (opcode4) end to end.
-transceiver-digital-rtl-checks: transceiver-dense-transport transceiver-dense-service transceiver-dense-pair transceiver-dense-pair-link transceiver-pair-gearbox transceiver-dense-rf-service transceiver-sync-fifo-depth transceiver-shared-egress-lifecycle transceiver-dense-rf-burst
+transceiver-digital-rtl-checks: transceiver-dense-transport transceiver-dense-service transceiver-dense-pair transceiver-dense-pair-link transceiver-pair-gearbox transceiver-dense-rf-service transceiver-sync-fifo-depth transceiver-shared-egress-lifecycle transceiver-dense-rf-burst transceiver-por-bypass
 	cd projects/programmable_transceiver_platform && \
 	iverilog -g2012 -s tb_async_fifo_regout -o /tmp/pt_fifo_regout.vvp rtl/pt_fifo.sv sim/tb_async_fifo_regout.sv && \
 	vvp -n /tmp/pt_fifo_regout.vvp | grep -q FIFO_REGOUT_PASS && \

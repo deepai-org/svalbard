@@ -17,7 +17,7 @@ module pt_digital(input wire rst_n,ref_clk,
  input wire calibration_above_target,output wire[11:0]calibration_trial,
  output wire[15:0]status,
  // Generated control boundary (rtl/pt_regfile.sv, spec/register-map.md).
- input wire por_n,fault,input wire[`PT_ISLAND_W-1:0]island_pgood,
+ input wire por_n,por_bypass,fault,input wire[`PT_ISLAND_W-1:0]island_pgood,
  // Frequency-counter sources (P3-7), code 1..6 of debug.freq_count_{a,b}.source: [0] tx_ring_fbck (pt_pll
  // FBCK = VCO/16), [1] cdr_ring_fbck, [2] ring_osc, [3] vco_replica, [4] aosc, [5] lc_prescale.
  input wire[5:0]fc_src,
@@ -48,7 +48,7 @@ module pt_digital(input wire rst_n,ref_clk,
  wire pattern_locked,pattern_lost_lock;wire[15:0]pattern_errors_gray;
  wire fca_locked,fca_lost,fcb_locked,fcb_lost;wire[13:0]fca_diff,fcb_diff;wire[15:0]fca_count,fcb_count;
  pt_toggle_div hd(host_rx_clk,core_rst_n,host_rx_div);
- pt_mgmt control(.rst_n(rst_n),.por_n(por_n),.sclk(host_sclk),.cs_n(host_cs_n),.mosi(host_mosi),.miso(host_miso),.miso_oe(host_miso_oe),
+ pt_mgmt control(.rst_n(rst_n),.por_n(por_n),.por_bypass(por_bypass),.sclk(host_sclk),.cs_n(host_cs_n),.mosi(host_mosi),.miso(host_miso),.miso_oe(host_miso_oe),
   .status(status),.enable(enable),.mode8(mode8),.rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),
   .memory_write(memory_write),.memory_index(index),.memory_wdata(memory_wdata),.capture_data(capture_data),
   .capture_done(capture_done),.playback_enable(playback_enable),.capture_enable(capture_enable),

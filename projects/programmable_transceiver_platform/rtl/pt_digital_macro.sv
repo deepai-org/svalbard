@@ -7,7 +7,13 @@
 // Pad cells are NOT in this macro: they are provider gf180mcu_fd_io cells in the ring
 // (integration/pt_chip.sv pt_host_physical). This macro drives their A/OE/SL/PDRV pins and takes
 // their Y outputs. Hardening flow: verification/run_digital_hardening.sh.
-// Reset: rst_n = RESET_N (pad Y) AND por_n (on-die POR), asynchronous assert. AC-1 clocking
+// Reset: rst_n = RESET_N (pad Y) AND (por_n (on-die POR) OR por_bypass (strap)), asynchronous assert.
+// por_bypass (integration-plan G3, interface row DT-10) is a static pad level, high = ignore the POR: a
+// third-party POR that never releases would otherwise hold the die in reset with nothing to debug.
+// It is purely combinational (no flop, no clock, no SPI, no analog): the strap pad's own pull-down
+// keeps it 0 when the pad is unbonded or undriven, which is today's behaviour. With the strap high the
+// die is reset by RESET_N alone (board supervisor B1). por_flag (RESET_STATUS) still follows the raw
+// por_n, so a stuck POR is visible over SPI (por_flag cannot be cleared). AC-1 clocking
 // (transport rework 2026-11-10): host_word_clk is the host DDR clock from the clocktree, line/16
 // (156.25 MHz at 2.5 Gb/s; one ten-bit word per pin per clock EDGE) or the fixed 156.25 MHz host
 // option (IX-2). No macro logic runs at the 312.5 MHz word rate. pt_host_rate_clock selects /1 /2 /4
@@ -17,7 +23,7 @@
 `include "pt_regmap_defs.svh"
 `default_nettype none
 module pt_digital_macro(
- input  wire reset_n_pad, por_n,
+ input  wire reset_n_pad, por_n, por_bypass,
  // SPI (pad Y / pad A,OE)
  input  wire spi_sclk, spi_cs_n, spi_mosi, output wire spi_miso, spi_miso_oe,
  // host GPIO link
@@ -87,7 +93,7 @@ module pt_digital_macro(
  //   island_off[i] = !island_on[i] (ISLAND_OFF_wired = [0], _rf = [1], _debug = [5]).
  output wire[19:0] en_eff, output wire[`PT_ISLAND_W-1:0] island_off
 );
- wire rst_n = reset_n_pad & por_n;
+ wire rst_n = reset_n_pad & (por_n | por_bypass);
  wire[`PT_ISLAND_W-1:0] island_on_reg; // register-file island state (switch on AND (pgood OR override))
  // RXR-D2 fast gain (opcode4): while the transport has applied an in-band gain (rx_gain_active,
  // cleared by ENABLE=0) the LNA gain_lo and the shared bbfilter PGA gain come from it instead of the
@@ -139,7 +145,7 @@ module pt_digital_macro(
   .rf_rx_sample(rf_rx_sample), .rf_rx_valid(rf_rx_valid), .rf_tx_sample(rf_tx_sample), .rf_tx_valid(rf_tx_valid),
   .rf_mute(rf_mute), .rf_tx_request(rf_tx_request), .rf_tx_clk_out(rf_tx_clk_out), .enable(enable), .mode8(mode8), .rf_trim(rf_trim),
   .wire_trim(wire_trim), .clock_trim(clock_trim), .calibration_above_target(calibration_above_target),
-  .calibration_trial(calibration_trial), .status(status), .por_n(por_n), .fault(fault), .island_pgood(island_pgood), .fc_src(fc_src), .cdr_freq_locked(cdr_freq_locked),
+  .calibration_trial(calibration_trial), .status(status), .por_n(por_n), .por_bypass(por_bypass), .fault(fault), .island_pgood(island_pgood), .fc_src(fc_src), .cdr_freq_locked(cdr_freq_locked),
   .analog_status(analog_status), .wire_analog_status(wire_analog_status), .analog_cfg(analog_cfg_reg), .debug_cfg(debug_cfg_reg),
   .island_en(island_en), .island_on(island_on_reg), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp), .atb1_grp(atb1_grp), .atb0_en(atb0_en), .atb1_en(atb1_en), .rx_en_aux(rx_en_aux), .rx_en_wclk(rx_en_wclk),
   .rx_en_wtx_ext(rx_en_wtx_ext), .clk_obs_oe(clk_obs_oe), .wclk_obs_oe(wclk_obs_oe), .dbg_obs0(dbg_obs0),

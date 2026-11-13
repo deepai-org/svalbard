@@ -53,7 +53,7 @@ module tb_digital_wire40;
   .wire_tx_data(wire_tx_data),.wire_tx_valid(wire_tx_valid),.wire_idle(wire_idle),.wire_tx_request(wire_tx_request),
   .rf_rx_sample(24'd0),.rf_rx_valid(1'b0),.rf_tx_sample(rf_tx_sample),.rf_tx_valid(rf_tx_valid),.rf_mute(rf_mute),
   .rf_tx_request(1'b0),.enable(enable),.mode8(mode8),.rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),
-  .calibration_above_target(1'b0),.calibration_trial(calibration_trial),.status(status),.por_n(por_n),.fault(1'b0),
+  .calibration_above_target(1'b0),.calibration_trial(calibration_trial),.status(status),.por_n(por_n),.por_bypass(1'b0),.fault(1'b0),
   .island_pgood(6'd0),.fc_src(6'd0),.cdr_freq_locked(),.analog_status(12'd0),.wire_analog_status(13'd0),.analog_cfg(analog_cfg),
   .debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),.atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.rx_en_aux(rx_en_aux),
   .rx_en_wclk(rx_en_wclk),.rx_en_wtx_ext(rx_en_wtx_ext),.clk_obs_oe(clk_obs_oe),.wclk_obs_oe(wclk_obs_oe),

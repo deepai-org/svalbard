@@ -3,13 +3,14 @@
 // Register map hash 0x2C7C; see spec/register-map.md.
 //
 // pt_regfile: SPI register file clocked only by SPI SCLK, asynchronously reset by rst_n
-// (RESET_N AND POR). Shadow registers take SPI writes; COMMIT validates and copies shadow to
+// (RESET_N AND (POR OR the por_bypass strap)). Shadow registers take SPI writes; COMMIT validates and copies shadow to
 // active atomically. Pad/analog outputs are island-isolated (forced to 0) and fault-released.
 // pt_mgmt: pt_spi (unchanged Mode-0 cmd8/addr8/data16 ABI) plus pt_regfile; replaces pt_control.
 `default_nettype none
 module pt_regfile(
  input wire rst_n,sclk,
- input wire por_n, // POR alone (rst_n = RESET_N AND por_n); sets the sticky POR flag
+ input wire por_n, // POR alone (rst_n = RESET_N AND (por_n OR the por_bypass strap)); sets the sticky POR flag
+ input wire por_bypass, // static strap level (G3, DT-10), read back raw in RESET_STATUS b2
  input wire wr_en,input wire[7:0]wr_addr,input wire[15:0]wr_data,
  input wire[7:0]rd_addr,output reg[15:0]rd_data,
  // Read candidates for the two possible last address bits (pt_spi registers both on the 16th
@@ -2794,7 +2795,7 @@ module pt_regfile(
    8'h04:rd_data={15'b0,rejected};8'h05:rd_data={9'b0,cfg_err};
    8'h06:rd_data={commit_count,5'b0,pending,last_ok,commit_toggle};8'h07:rd_data={15'b0,view};
    8'h08:rd_data=ABI_VERSION;8'h09:rd_data=MAP_HASH;
-   8'h0A:rd_data={2'b0,pg2,2'b0,on2};8'h0B:rd_data={15'b0,f2};8'h0C:rd_data={err_code,err_addr};8'h0D:rd_data={14'b0,rst_flag,por_flag};
+   8'h0A:rd_data={2'b0,pg2,2'b0,on2};8'h0B:rd_data={15'b0,f2};8'h0C:rd_data={err_code,err_addr};8'h0D:rd_data={13'b0,por_bypass,rst_flag,por_flag};
    8'h10:rd_data=rf_trim;8'h11:rd_data=wire_trim;8'h12:rd_data=clock_trim;
    8'h20:rd_data={11'b0,index};8'h23:rd_data={3'b0,memory_last,5'b0,memory_loop,capture_enable,playback_enable};
    8'h24:rd_data={capture_data[39:32],7'b0,c2};8'h25:rd_data=capture_data[15:0];8'h26:rd_data=capture_data[31:16];
@@ -2985,7 +2986,7 @@ module pt_regfile(
    8'h04:rd_data0={15'b0,rejected};8'h05:rd_data0={9'b0,cfg_err};
    8'h06:rd_data0={commit_count,5'b0,pending,last_ok,commit_toggle};8'h07:rd_data0={15'b0,view};
    8'h08:rd_data0=ABI_VERSION;8'h09:rd_data0=MAP_HASH;
-   8'h0A:rd_data0={2'b0,pg2,2'b0,on2};8'h0B:rd_data0={15'b0,f2};8'h0C:rd_data0={err_code,err_addr};8'h0D:rd_data0={14'b0,rst_flag,por_flag};
+   8'h0A:rd_data0={2'b0,pg2,2'b0,on2};8'h0B:rd_data0={15'b0,f2};8'h0C:rd_data0={err_code,err_addr};8'h0D:rd_data0={13'b0,por_bypass,rst_flag,por_flag};
    8'h10:rd_data0=rf_trim;8'h11:rd_data0=wire_trim;8'h12:rd_data0=clock_trim;
    8'h20:rd_data0={11'b0,index};8'h23:rd_data0={3'b0,memory_last,5'b0,memory_loop,capture_enable,playback_enable};
    8'h24:rd_data0={capture_data[39:32],7'b0,c2};8'h25:rd_data0=capture_data[15:0];8'h26:rd_data0=capture_data[31:16];
@@ -3176,7 +3177,7 @@ module pt_regfile(
    8'h04:rd_data1={15'b0,rejected};8'h05:rd_data1={9'b0,cfg_err};
    8'h06:rd_data1={commit_count,5'b0,pending,last_ok,commit_toggle};8'h07:rd_data1={15'b0,view};
    8'h08:rd_data1=ABI_VERSION;8'h09:rd_data1=MAP_HASH;
-   8'h0A:rd_data1={2'b0,pg2,2'b0,on2};8'h0B:rd_data1={15'b0,f2};8'h0C:rd_data1={err_code,err_addr};8'h0D:rd_data1={14'b0,rst_flag,por_flag};
+   8'h0A:rd_data1={2'b0,pg2,2'b0,on2};8'h0B:rd_data1={15'b0,f2};8'h0C:rd_data1={err_code,err_addr};8'h0D:rd_data1={13'b0,por_bypass,rst_flag,por_flag};
    8'h10:rd_data1=rf_trim;8'h11:rd_data1=wire_trim;8'h12:rd_data1=clock_trim;
    8'h20:rd_data1={11'b0,index};8'h23:rd_data1={3'b0,memory_last,5'b0,memory_loop,capture_enable,playback_enable};
    8'h24:rd_data1={capture_data[39:32],7'b0,c2};8'h25:rd_data1=capture_data[15:0];8'h26:rd_data1=capture_data[31:16];
@@ -4772,9 +4773,9 @@ module pt_regfile(
  end
  // P5 commit discipline: non-live fields never change while the payload runs, and
  // break-before-make fields never move directly between two non-zero codes.
- // P6 reset-cause flags: POR sets both, any reset sets rst_flag.
+ // P6 reset-cause flags: POR sets por_flag; any combined reset (rst_n) sets rst_flag.
  always @*begin
-  if(!por_n)assert(por_flag&&rst_flag);
+  if(!por_n)assert(por_flag);   // rst_flag only via rst_n: the por_bypass strap (G3) can keep rst_n high
   if(!rst_n)assert(rst_flag);
  end
  reg f_past=0;always @(posedge sclk)f_past<=1;
@@ -5114,7 +5115,7 @@ module pt_regfile(
 `endif
 endmodule
 
-module pt_mgmt(input wire rst_n,por_n,sclk,cs_n,mosi,output wire miso,miso_oe,
+module pt_mgmt(input wire rst_n,por_n,por_bypass,sclk,cs_n,mosi,output wire miso,miso_oe,
  input wire[15:0]status,output wire enable,mode8,output wire[15:0]rf_trim,wire_trim,clock_trim,
  output wire memory_write,output wire[4:0]memory_index,output wire[39:0]memory_wdata,
  input wire[39:0]capture_data,input wire capture_done,output wire playback_enable,capture_enable,
@@ -5145,7 +5146,7 @@ module pt_mgmt(input wire rst_n,por_n,sclk,cs_n,mosi,output wire miso,miso_oe,
  // SPI port) take it on the falling SCLK edge after the 32nd rising edge (STA: launch/capture on
  // the sclk fall edge, output budgets relative to it in integration/pt_digital_macro.sdc).
  wire sclk_regs=~sclk;
- pt_regfile regs(.rst_n(rst_n),.por_n(por_n),.sclk(sclk_regs),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),
+ pt_regfile regs(.rst_n(rst_n),.por_n(por_n),.por_bypass(por_bypass),.sclk(sclk_regs),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),
   .rd_addr(rd_addr),.rd_data(rd_data),.rd_hi(rd_hi),.rd_data0(rd_data0),.rd_data1(rd_data1),
   .status(status),.enable(enable),.mode8(mode8),
   .rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),.memory_write(memory_write),

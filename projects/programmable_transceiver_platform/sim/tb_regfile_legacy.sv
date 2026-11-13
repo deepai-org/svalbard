@@ -15,7 +15,7 @@ module tb_regfile_legacy;
  wire miso_a,oe_a,en_a,m8_a,mw_a,pb_a,ce_a;wire[15:0]rt_a,wt_a,ct_a;wire[4:0]mi_a;wire[23:0]md_a;
  wire miso_b,oe_b,en_b,m8_b,mw_b,pb_b,ce_b;wire[15:0]rt_b,wt_b,ct_b;wire[4:0]mi_b;wire[39:0]md_b;
  pt_control old(rst_n,sclk,cs_n,mosi,miso_a,oe_a,status,en_a,m8_a,rt_a,wt_a,ct_a,mw_a,mi_a,md_a,capture_data,capture_done,pb_a,ce_a);
- pt_mgmt neu(.rst_n(rst_n),.por_n(rst_n),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso_b),.miso_oe(oe_b),.status(status),
+ pt_mgmt neu(.rst_n(rst_n),.por_n(rst_n),.por_bypass(1'b0),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso_b),.miso_oe(oe_b),.status(status),
   .enable(en_b),.mode8(m8_b),.rf_trim(rt_b),.wire_trim(wt_b),.clock_trim(ct_b),.memory_write(mw_b),
   .memory_index(mi_b),.memory_wdata(md_b),.capture_data({16'd0,capture_data}),.memory_loop(),.memory_last(),.capture_done(capture_done),
   .playback_enable(pb_b),.capture_enable(ce_b),.fault(1'b0),.island_pgood({`PT_ISLAND_W{1'b0}}),.obs_status(32'h0),

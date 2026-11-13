@@ -243,11 +243,18 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
     // decodes (sP / fP / dP); stage A then only XORs the registered flags into the running disparity.
     // One more WORD_CLK40 of latency, full throughput, the encoded stream is unchanged.
     reg [35:0] sP; reg [3:0] fP; reg [15:0] dP; reg sPv;
-    wire advP2A = sPv && (!sAv || advB);
+    // TC13 r4c (coordinator: register the ready signals; pC4 wtx sAv -> advB -> advP2A -> advA -> pop ->
+    // hq/ures was -3.9 ns): stage P has a second slot (sP2 ...), so ures -> P advances when P's SECOND slot
+    // is free -- a register -- and the 72-bit ures / insert / skid fanout no longer waits on the B/A
+    // readies. advB and advP2A stay short (registers -> two gates -> stage A registers only). A second
+    // slot in A as well held two extra groups after a stall and the H2D egress margin in
+    // tb_linecode_stream (peak 14 of ~15) did not absorb it; one extra group does. Same encoded stream.
+    reg [35:0] sP2; reg [3:0] fP2; reg [15:0] dP2; reg sPv2;
+    wire advP2A = sPv && (!sAv || advB);   // short: registers sAv, qv2, sPv (no wide fanout behind it)
     // u-derived flags and one-hot insert positions are registers (computed from the next u), so no
     // compare on u sits in front of the 72-bit insert fanout (AC-1 ss32 timing at 12.3 ns).
     reg uge36, ult72; reg [8:0] oh_n, oh_a;   // oh_n[i]: u == 4i; oh_a[i]: u == 4i + 36
-    wire advA = uge36 && (!sPv || advP2A);   // ures -> stage P
+    wire advA = uge36 && !sPv2;   // ures -> stage P (second P slot free)
     // en (the synchronized ENABLE & linecode) is re-registered in three kept copies, one per register
     // group (timing 2026-11-11, wtx: e3.q -> en -> ~300 flops was -4.5 ns); every group sees the same
     // one-clock-later enable, so the stream is unchanged (it starts one WORD_CLK40 later).
@@ -331,14 +338,23 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
             u <= u_next;
             {uge36, ult72, oh_n, oh_a} <= fl_sel;
         end
+    wire [15:0] dP_n = {dec_of(ures[35:27]), dec_of(ures[26:18]), dec_of(ures[17:9]), dec_of(ures[8:0])};
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin sA <= 36'd0; dA <= 16'd0; rdA <= 4'b1111; sAv <= 1'b0; rdn <= 1'b1;
-            sP <= 36'd0; fP <= 4'd0; dP <= 16'd0; sPv <= 1'b0; r1A <= 4'd0; a7A <= 4'd0; end
-        else if (!en_b) begin sAv <= 1'b0; rdn <= 1'b1; sPv <= 1'b0; end
+            sP <= 36'd0; fP <= 4'd0; dP <= 16'd0; sPv <= 1'b0; r1A <= 4'd0; a7A <= 4'd0;
+            sP2 <= 36'd0; fP2 <= 4'd0; dP2 <= 16'd0; sPv2 <= 1'b0; end
+        else if (!en_b) begin sAv <= 1'b0; rdn <= 1'b1; sPv <= 1'b0; sPv2 <= 1'b0; end
         else begin
-            if (advA) begin sP <= ures[35:0]; fP <= f;
-                dP <= {dec_of(ures[35:27]), dec_of(ures[26:18]), dec_of(ures[17:9]), dec_of(ures[8:0])}; end
-            sPv <= advA || (sPv && !advP2A);
+            // stage P: two-entry queue (head sP, second sP2); in advA, out advP2A
+            case ({advA, advP2A})
+                2'b10: if (!sPv) begin sP <= ures[35:0]; fP <= f; dP <= dP_n; sPv <= 1'b1; end
+                       else begin sP2 <= ures[35:0]; fP2 <= f; dP2 <= dP_n; sPv2 <= 1'b1; end
+                2'b01: begin sP <= sP2; fP <= fP2; dP <= dP2; sPv <= sPv2; sPv2 <= 1'b0; end
+                2'b11: if (sPv2) begin sP <= sP2; fP <= fP2; dP <= dP2; sP2 <= ures[35:0]; fP2 <= f; dP2 <= dP_n; end
+                       else begin sP <= ures[35:0]; fP <= f; dP <= dP_n; end
+                default: ;
+            endcase
+            // stage A (single slot, as before): the running disparity advances at the P -> A transfer
             if (advP2A) begin sA <= sP; rdA <= r_at; rdn <= rdn ^ (^fP); dA <= dP; r1A <= r1_n; a7A <= a7_n; end
             sAv <= advP2A || (sAv && !advB);
         end

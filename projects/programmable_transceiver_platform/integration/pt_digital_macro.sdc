@@ -27,6 +27,8 @@
 #   fc0..fc5  frequency-counter sources (pt_freq_count, P3-7): ring FBCKs (VCO/16 <= ~69 MHz), ring_osc,
 #             vco_replica, aosc (~35-56 MHz), LC prescale; all constrained at 156.25 MHz. They reach the
 #             counters through a stopped-only select mux, so they are logically exclusive with each other.
+# Experiment hook: PT_SCLK_PERIOD in the environment overrides the SCLK constraint (area/closure studies).
+if {[info exists ::env(PT_SCLK_PERIOD)]} { set SCLK_PERIOD $::env(PT_SCLK_PERIOD) }
 foreach {v d} {SCLK_PERIOD 100.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WRX_PERIOD 12.3
                RFTX_PERIOD 20.0 RFRX_PERIOD 20.0 CTW_PERIOD 6.4 CTDET_PERIOD 6.4 FC_PERIOD 6.4} {
     if {![info exists $v]} { set $v $d }
@@ -229,13 +231,17 @@ set_clock_groups -logically_exclusive {*}$fc_groups
 # changes only with ENABLE=0 (both writers idle). Two generated clocks, physically exclusive; the
 # SCLK alternative stays timed from the register file (it is NOT in the sclk false-path list).
 set mem_clks {}
+set mem_on 0
 set mem_mux [get_pins -quiet -hierarchical *memory_clock_mux.cell/Z]
 if {[llength $mem_mux]} {
     if {[llength $mem_mux] != 1} {error "Expected one egress memory clock mux"}
-    create_generated_clock -name egress_mem_hcore -master_clock hcore -source $core_root -combinational $mem_mux
+    # TC13 r4c: no generated clock for the hcore alternative: hcore propagates through the mux itself.
+    # A generated clock sourced at the internal core_root pin got a cross-corner pessimistic source
+    # latency in multi-corner analysis (resizer hold repair: ss delays on the capture side at the ff
+    # corners, false -5.1 ns hold on every memory write, 436 useless hold buffers in pC4).
     create_generated_clock -name egress_mem_sclk -master_clock sclk -source [get_ports spi_sclk] -divide_by 1 -invert -add $mem_mux
-    set_clock_groups -physically_exclusive -group egress_mem_hcore -group egress_mem_sclk
-    set mem_clks {egress_mem_hcore}
+    set_clock_groups -physically_exclusive -group hcore -group egress_mem_sclk
+    set mem_on 1
 }
 set all_clk_names [concat {sclk ref hword h2d h2d_cap h2d_pin wtx wrx rftx rfrx ctw ctref ctdet} $fc_clks $host_clks $ingress_clks $egress_clks $mem_clks]
 
@@ -339,6 +345,13 @@ create_generated_clock -name ctdet_out -master_clock ctdet -source [get_ports ct
 # MISO launches on our falling edge; host samples on the next rising edge with 10 ns budget.
 set_input_delay 10.0 -clock sclk -clock_fall [get_ports {spi_mosi spi_cs_n}]
 set_output_delay 10.0 -clock sclk [get_ports {spi_miso spi_miso_oe}]
+# Top-level SPI routes (G6, verification/digital_hardening/spi_signoff.py): the macro sits ~2.6 mm from the
+# south SPI pads. MISO / MISO_OE drive up to 1.0 pF of wire plus the pad A pin: without a load here the flow
+# left a buf_2 on them (13.4 ns, 22.7 ns slew at the slow bound). The pad Y outputs are weak (bi_24t: 4.4 ns
+# slew into 1.05 pF at ss_125C_2v97), so SCLK / MOSI / CS_N arrive with up to 4.7 ns edges.
+set_load 1.05 [get_ports {spi_miso spi_miso_oe}]
+set_input_transition -max 4.7 [get_ports {spi_sclk spi_mosi spi_cs_n}]
+set_input_transition -min 0.25 [get_ports {spi_sclk spi_mosi spi_cs_n}]
 # CS_N only gates the MISO pad enable/level combinationally; the host asserts CS_N at least half an
 # SCLK period before the first edge (SPI mode 0 tCSS), so CS_N -> MISO is not an SCLK-cycle path.
 set_false_path -from [get_ports spi_cs_n] -to [get_ports {spi_miso spi_miso_oe}]
@@ -408,7 +421,9 @@ if {$HOST_RATE_DIV == 1 && [llength $sdr_sel_q] == 1} {
         set_disable_timing -from I0 -to Z $c
         set_disable_timing -from I1 -to Z $c
         set n [get_full_name $c]
-        if {!$PT_ODDR_CHECKS} { continue }
+        # flow mode: no clock through the select either (pC4: CTS traced d2h_osel through S -> Z and put two
+        # clkbuf_16 into every lane net, with per-lane rise/fall differences); sign-off keeps the arc.
+        if {!$PT_ODDR_CHECKS} { set_disable_timing -from S -to Z $c; continue }
         if {[string match *gearbox.lc.* $n]} { continue }   ;# clock lane: constant pattern (case analysis below)
         # q_r (rising launch) must be stable before the select falls (it is shown while sel is low) and
         # must not change before the select has risen away from it; q_f the same against the opposite edges.
@@ -427,16 +442,21 @@ if {$HOST_RATE_DIV == 1 && [llength $sdr_sel_q] == 1} {
     # The ODDR net hio_s (launch flops, hr and the 11 selects) is its own generated clock: CTS balances
     # latency per clock, and as part of hddr it delayed the select subtree by 13 delay buffers (6.6 ns)
     # against the flops on the same net (pC2 glitch hold -5.4). d2h_fwd derives from it.
+    # The two ODDR clocks matter to CTS (per-clock balancing) and to the sign-off windows only. In the other
+    # LibreLane steps hddr propagates through the two buffers itself: OpenSTA's multi-corner analysis gives
+    # generated clocks with an internal source a cross-corner pessimistic source latency (resizer view
+    # -1.4 ns removal drs_gcopy -> launch flops at ff; +0.96 in single-corner ff, like egress_mem_hcore).
+    set pt_oddr_clks [expr {$PT_ODDR_CHECKS || ([info exists ::env(STEP_ID)] && $::env(STEP_ID) eq "OpenROAD.CTS")}]
     set hio_sel [get_cells -quiet -hierarchical *host.gearbox.hio_sel]
     if {[llength $hio_sel] != 1} {error "Expected the D2H ODDR select buffer host.gearbox.hio_sel"}
     set hio_sel_n [get_full_name $hio_sel]
-    create_generated_clock -name d2h_oddr -master_clock hddr -source [get_pins $hio_sel_n/I] -divide_by 1 [get_pins $hio_sel_n/Z]
+    if {$pt_oddr_clks} {create_generated_clock -name d2h_oddr -master_clock hddr -source [get_pins $hio_sel_n/I] -divide_by 1 [get_pins $hio_sel_n/Z] }
     set hio_msel [get_cells -quiet -hierarchical *host.gearbox.hio_msel]
     if {[llength $hio_msel] != 1} {error "Expected the D2H ODDR mux-select buffer host.gearbox.hio_msel"}
     set hio_msel_n [get_full_name $hio_msel]
     # selects: a second generated clock (CTS balanced the select subnet against the flops of one clock)
-    create_generated_clock -name d2h_osel -master_clock hddr -source [get_pins $hio_msel_n/I] -divide_by 1 [get_pins $hio_msel_n/Z]
-    create_generated_clock -name d2h_fwd -master_clock d2h_osel -source [get_pins $hio_msel_n/Z] -divide_by 1 -add [get_ports d2h_clk_pin]
+    if {$pt_oddr_clks} {create_generated_clock -name d2h_osel -master_clock hddr -source [get_pins $hio_msel_n/I] -divide_by 1 [get_pins $hio_msel_n/Z] }
+    if {$PT_ODDR_CHECKS} { create_generated_clock -name d2h_fwd -master_clock d2h_osel -source [get_pins $hio_msel_n/Z] -divide_by 1 -add [get_ports d2h_clk_pin] }
     # Same-edge window: the data pin edge made by an hddr edge lies within +-D2H_SKEW of the clock pin
     # edge made by that same hddr edge (rise <-> rise, fall <-> fall); clock-as-data through the select.
     set d2h_d [get_ports d2h_pin*]
@@ -463,7 +483,7 @@ set stg_sel [get_pins -quiet -hierarchical *stagger*lane.hio_m/S]
 if {[llength $stg_sel]} { set_case_analysis 0 $stg_sel }
 
 # Static/asynchronous inputs: island_pgood, fault, analog_status, wire_analog_status,
-# ct_pll_lock, reset_n_pad, por_n and the ct_cfg_* straps have no clock. Each is synchronized
+# ct_pll_lock, reset_n_pad, por_n, por_bypass (static strap) and the ct_cfg_* straps have no clock. Each is synchronized
 # before any sequential use (pg1/f1, observation muxes are raw by design, lock_s, reset
 # synchronizers in every FIFO and clocktree domain) and is left unconstrained here.
 
@@ -569,7 +589,7 @@ if {[llength $cb]} { pt_bound_xing $SCLK_PERIOD -from $cb -to [get_clocks sclk] 
 # (digital.capture_done_<cell>), so match it anywhere (AC1 run0: the bound silently missed it).
 set cd [pt_cells {*capture_done*}]
 if {[llength $cd]} { pt_bound_xing $SCLK_PERIOD -from $cd -to [get_clocks sclk] }
-if {[llength $mem_clks]} {
+if {$mem_on} {
     foreach c [concat $egress_clks hcore] { set_false_path -from [get_clocks egress_mem_sclk] -to [get_clocks $c] }
 }
 # 4b. pt_freq_count (fca, fcb): Gray-coded source count into the reference domain (bounded like FIFO
@@ -635,7 +655,7 @@ set spi_wdst [pt_cells *control.regs.*]
 if {[llength $spi_held] && [llength $spi_wdst]} {
     set_multicycle_path 4 -setup -end -from $spi_held -to $spi_wdst
     set_multicycle_path 3 -hold -end -from $spi_held -to $spi_wdst
-    if {[llength $mem_clks]} {
+    if {$mem_on} {
         set_multicycle_path 4 -setup -end -from $spi_held -to [get_clocks egress_mem_sclk]
         set_multicycle_path 3 -hold -end -from $spi_held -to [get_clocks egress_mem_sclk]
     }
@@ -678,7 +698,7 @@ foreach {a b} {rftx egress_wtx rfhalf egress_wtx wtx egress_rftx wrx ingress_rfr
 }
 # (b) Playback memory: SPI writes (egress_mem_sclk) only with play=1, transport writes (hcore) only
 #     with play=0; play is stopped-only (ENABLE=0). sclk -> * is already false (static registers).
-if {[llength $mem_clks]} {
+if {$mem_on} {
     set_false_path -from [get_clocks hcore] -to [get_clocks egress_mem_sclk]
     # SPI playback writes: the array captures on the SCLK fall after the 32nd rising edge of a 0x22
     # write (memory_write). Every SCLK-domain input of that write (index, staged play_i/play_h,
@@ -714,9 +734,37 @@ set_false_path -hold -from [get_clocks rfrx] -to [get_ports {analog_cfg* debug_c
 if {[info exists ::env(STEP_ID)] && $::env(STEP_ID) eq "OpenROAD.CTS"} {
     if {[llength $egress_clks]} { delete_clock [get_clocks egress_rftx] }
     if {[llength $ingress_clks]} { delete_clock [get_clocks ingress_rfrx] }
-    if {[llength $mem_clks]} { delete_clock [get_clocks egress_mem_sclk] }
+    if {$mem_on} { delete_clock [get_clocks egress_mem_sclk] }
     # pt_freq_count block clocks: the six source alternatives share one buffer output per instance
     foreach inst {fca fcb} { for {set i 1} {$i < 6} {incr i} {
         if {[llength [get_clocks -quiet ${inst}_blk$i]]} { delete_clock [get_clocks ${inst}_blk$i] } } }
     puts "PT_CTS_SHARED_BANKS: building one physical tree per shared bank; dual-mode STA resumes after CTS"
+}
+
+# H2D capture clock kept out of CTS (TC13 r4c): inside LibreLane's CTS step only, wrap
+# clock_tree_synthesis so the hand-built capture distribution is restored after CTS (pt_cts_h2d.tcl,
+# copied next to this SDC by the run scripts).
+if {[info exists ::env(STEP_ID)] && $::env(STEP_ID) eq "OpenROAD.CTS"} {
+    set pt_cts_h2d ""
+    foreach d [list [file dirname [info script]] [expr {[info exists ::env(DESIGN_DIR)] ? $::env(DESIGN_DIR) : "."}]] {
+        if {[file exists [file join $d pt_cts_h2d.tcl]]} { set pt_cts_h2d [file join $d pt_cts_h2d.tcl]; break }
+    }
+    if {$pt_cts_h2d eq ""} { error "pt_digital_macro.sdc: pt_cts_h2d.tcl not found next to the SDC or in DESIGN_DIR" }
+    source $pt_cts_h2d
+}
+
+# On-chip variation (pre-mortem item 5, 2026-11-13): early/late derate of the CLOCK network in every step
+# (CTS, hold/setup repair, sign-off), so hold is repaired against skew that a single-corner analysis does
+# not see. PT_OCV = 0.08: RSS of ~5 % local mismatch of a clock-buffer delay (180 nm, large devices) and
+# ~5-6 % from a supply difference of up to the 117 mV drop budget between two clock branches
+# (delay ~ 1.5 x dV/V), rounded up (linear sum ~11 %; the SPI sign-off must stay >= 0 up to 14 %).
+# Common clock path pessimism is removed (CRPR). The SPI sign-off (spi_signoff.py) additionally derates
+# the data paths and uses the foundry ff_n40C_3v60 library as the fast bound; sta_signoff.py does NOT
+# do either yet (open item). Hold slacks also contain the 0.25 ns clock uncertainty set above.
+if {![info exists PT_OCV]} { set PT_OCV 0.08 }
+if {[info exists ::env(PT_OCV)]} { set PT_OCV $::env(PT_OCV) }
+if {$PT_OCV > 0} {
+    # (multiplies the legacy envelope derate, which is 1.0 with the characterized / corner libraries)
+    set_timing_derate -early [expr {$pt_envelope_derate * (1.0 - $PT_OCV)}] -clock
+    set_timing_derate -late  [expr {$pt_envelope_derate * (1.0 + $PT_OCV)}] -clock
 }

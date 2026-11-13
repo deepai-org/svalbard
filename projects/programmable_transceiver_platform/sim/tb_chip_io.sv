@@ -65,7 +65,7 @@ module tb_chip_io;
   cs_drive=0; #100;
   if(SPI_MISO!==1'bz) $fatal(1,"MISO drives while reset is asserted");
   cs_drive=1; por=1; reset_drive=1; #100;
-  read_reg(0,16'h5356); read_reg(8,16'h0002); read_reg(8'h0a,0);
+  read_reg(0,16'h5356); read_reg(8,16'h0003); read_reg(8'h0d,16'h0003); read_reg(8'h0a,0);
   write_reg(8'h40,1); write_reg(6,1);
   if(dut.island_en!==6'b000001 || dut.island_on!==0) $fatal(1,"island must wait for power-good");
   write_reg(8'h4e,4); write_reg(6,1); #50;

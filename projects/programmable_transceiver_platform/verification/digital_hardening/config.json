@@ -63,6 +63,9 @@
     ],
     "*_ff_032C_3v35": [
       "dir::lib/gf180mcu_fd_sc_mcu7t5v0__ff_032C_3v35.lib"
+    ],
+    "*_ff_n40C_3v60": [
+      "dir::lib/gf180mcu_fd_sc_mcu7t5v0__ff_n40C_3v60.lib"
     ]
   },
   "STA_CORNERS": [
@@ -70,12 +73,14 @@
     "nom_ss_032C_3v15",
     "max_ss_022C_3v15",
     "min_ff_022C_3v35",
-    "min_ff_032C_3v35"
+    "min_ff_032C_3v35",
+    "min_ff_n40C_3v60"
   ],
   "DEFAULT_CORNER": "max_ss_032C_3v15",
   "TIMING_VIOLATION_CORNERS": [
     "*ss_032C*",
-    "*ff_0*"
+    "*ff_0*",
+    "*ff_n40C*"
   ],
   "VDD_PIN_VOLTAGE": "3.30",
   "FP_SIZING": "absolute",
@@ -87,8 +92,8 @@
   "PDN_VPITCH": 76.8,
   "DIODE_ON_PORTS": "in",
   "RUN_HEURISTIC_DIODE_INSERTION": false,
-  "PL_RESIZER_HOLD_SLACK_MARGIN": 0.1,
-  "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.05,
+  "PL_RESIZER_HOLD_SLACK_MARGIN": 0.3,
+  "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.3,
   "PL_RESIZER_SETUP_SLACK_MARGIN": 0.1,
   "GRT_RESIZER_SETUP_SLACK_MARGIN": 0.05,
   "MAX_TRANSITION_CONSTRAINT": 3.0,
@@ -121,7 +126,8 @@
   "RSZ_CORNERS": [
     "max_ss_032C_3v15",
     "min_ff_022C_3v35",
-    "min_ff_032C_3v35"
+    "min_ff_032C_3v35",
+    "min_ff_n40C_3v60"
   ],
   "IO_PIN_V_LENGTH": 2,
   "IO_PIN_H_LENGTH": 2,

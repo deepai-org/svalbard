@@ -58,7 +58,7 @@ unimplemented. The three legacy trim words still have no physical semantics.
 | `clk_obs_oe`, `wclk_obs_oe`, `dbg_obs*`/`wdbg_obs` + `_oe` | — | Observation pad drives to `pt_debug_physical` | Tristated |
 
 Macro → digital: `island_pgood[5:0]` (local rail good; must be 0 whenever the switch is
-open), `por_n` (ANDed with RESET_N into `rst_n`), `fault` (monitor fault latch),
+open), `por_n` (`rst_n` = RESET_N AND (`por_n` OR the `por_bypass` strap)), `fault` (monitor fault latch),
 `analog_status[11:0]` and `wire_analog_status[12:0]` (raw observation bits, order in
 `pt_digital.sv`). `pt_host_physical` additionally takes `host_link_mode` and
 `hostio.controls` (D2H drive enable, strength, slew).
@@ -79,6 +79,14 @@ Obligations on the macros:
   `register-map.md`) without software involvement.
 - RESET_N needs a weak on-chip pull-down (pad cell pull, tens of kΩ) so an unconnected
   or floating RESET_N holds the die in reset. The bench drives it high to release.
+- POR override strap (`por_bypass`, integration-plan G3, interface row DT-10): the macro's reset is
+  `reset_n_pad AND (por_n OR por_bypass)`, a static level with no flop, clock, SPI or analog
+  dependency. High = the POR is ignored and RESET_N alone resets the die (for a POR that never
+  releases). The strap pad needs the provider pull-DOWN enabled by a hard tie (not a register), so
+  an unbonded or undriven strap reads 0 and the POR stays in the reset path. `por_flag` still
+  follows the raw `por_n`: with a stuck POR it reads 1 and cannot be cleared. With the strap high
+  a brownout no longer resets the die by itself (the board supervisor on RESET_N must). Test:
+  `verification/check_por_bypass.py`.
 - Reset-cause flags (`RESET_STATUS` 0x0D): `por_flag` is a core-domain flop asynchronously
   set only by `por_n`, cleared only by an SPI write-1-to-clear; RESET_N does not touch it.
   `rst_flag` is asynchronously set by the combined `rst_n`. Circuit assumptions on the

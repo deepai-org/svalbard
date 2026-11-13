@@ -5,7 +5,7 @@
 // Control: pt_digital_macro (hardened) contains pt_digital, which instantiates pt_mgmt (pt_spi + generated rtl/pt_regfile.sv). Every analog,
 // island-switch, debug and fallback control reaches the macros only through analog_cfg/debug_cfg
 // (field positions in rtl/pt_regmap_defs.svh), island_en, the ATB one-hot vectors and the
-// derived receiver/observation enables. Reset is RESET_N AND the on-die POR.
+// derived receiver/observation enables. Reset is RESET_N AND (the on-die POR OR the POR_BYPASS strap).
 `include "pt_regmap_defs.svh"
 module pt_chip(
  inout wire RESET_N,SPI_SCLK,SPI_CS_N,SPI_MOSI,output wire SPI_MISO,
@@ -36,8 +36,13 @@ module pt_chip(
  wire ct_armed,ct_marker_seen,ct_launched,ct_arm_fault,ct_det_clk;wire[2:0]ct_det_div;
  wire[5:0]fc_src;wire cdr_freq_locked; // frequency counters rtl/pt_freq_count.sv (P3-7)
  // Asynchronous assert from either source; deassertion happens with SCLK idle (CS_N high).
- // The hardened macro forms the same AND internally from its reset_n_pad and por_n inputs.
- assign rst_n=pad_rst_n&por_n;
+ // The hardened macro forms the same function internally from its reset_n_pad, por_n and por_bypass inputs.
+ // por_bypass (integration-plan G3, interface row DT-10): static strap level, 1 = ignore a POR that never
+ // releases (reset by RESET_N alone). OPEN at chip level: no pad is bound yet, so it is tied 0 here (today's
+ // behaviour). Pads/assembly bind it to a strap pad whose provider pull-down keeps it 0 when unbonded;
+ // the pad Y must replace this constant, and the analog-side rst_n below must use the same function.
+ wire por_bypass=1'b0;
+ assign rst_n=pad_rst_n&(por_n|por_bypass);
  pt_host_physical host(RESET_N,SPI_SCLK,SPI_CS_N,SPI_MOSI,SPI_MISO,
  H2D,H2D_CLK,D2H,D2H_CLK,VDD_CORE,VSS_CORE,VDD_HOST_A,VSS_HOST_A,VDD_HOST_B,VSS_HOST_B,
  pad_rst_n,sclk,cs_n,mosi,miso,miso_oe,h2d_clk,h2d_pin,d2h_pin,d2h_clk_pin,d2h_oe,d2h_pdrv,d2h_sl);
@@ -56,7 +61,7 @@ module pt_chip(
  // transport directions; H2D_CLK only clocks the capture registers (rtl/pt_host_link.sv).
  // ALIGN_MARKER: SPI_SCLK while CS_N is high (analog-architecture video_alignment).
  // ct_cfg_det_en / det_div have no register-map field yet: strapped here.
- pt_digital_macro digital(.reset_n_pad(pad_rst_n),.por_n(por_n),.spi_sclk(sclk),.spi_cs_n(cs_n),.spi_mosi(mosi),
+ pt_digital_macro digital(.reset_n_pad(pad_rst_n),.por_n(por_n),.por_bypass(por_bypass),.spi_sclk(sclk),.spi_cs_n(cs_n),.spi_mosi(mosi),
  .spi_miso(miso),.spi_miso_oe(miso_oe),.host_word_clk(ht),.h2d_clk(h2d_clk),.h2d_pin(h2d_pin),
  .d2h_pin(d2h_pin),.d2h_clk_pin(d2h_clk_pin),.d2h_oe(d2h_oe),.d2h_pdrv(d2h_pdrv),.d2h_sl(d2h_sl),
  .ref_clk(ref_clk),.wire_rx_clk(wr),.wire_tx_clk(wt),.rf_rx_clk(rr),.rf_tx_clk(rt),

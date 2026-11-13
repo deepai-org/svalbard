@@ -33,7 +33,7 @@ module tb_digital_gl;
 `ifdef USE_POWER_PINS
   .VDD(vdd),.VSS(vss),
 `endif
-  .reset_n_pad(reset_n_pad),.por_n(por_n),.wire_linecode(1'b0),.spi_sclk(sclk),.spi_cs_n(cs_n),.spi_mosi(mosi),
+  .reset_n_pad(reset_n_pad),.por_n(por_n),.por_bypass(1'b0),.wire_linecode(1'b0),.spi_sclk(sclk),.spi_cs_n(cs_n),.spi_mosi(mosi),
   .spi_miso(spi_miso),.spi_miso_oe(spi_miso_oe),.host_word_clk(gclk),
 `ifdef PT_LOOPBACK
   .h2d_clk(d2h_clk_lb),.h2d_pin(d2h_pin),    // D2H pins looped to H2D pins (host-link test)

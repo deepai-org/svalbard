@@ -16,7 +16,7 @@ module tb_digital_prbs;
  reg [39:0] h2d_quad=0; wire [39:0] d2h_quad; reg [39:0] wire_rx_data=0; reg wire_rx_valid=0; wire [39:0] wire_tx_data;
  wire wire_tx_valid,wire_idle; reg wire_tx_request=0; reg [23:0] rf_rx_sample=0; reg rf_rx_valid=0; wire [23:0] rf_tx_sample;
  wire rf_tx_valid,rf_mute,rf_tx_clk_out; reg rf_tx_request=0; wire enable,mode8; wire [15:0] rf_trim,wire_trim,clock_trim; reg calibration_above_target=0;
- wire [11:0] calibration_trial; wire [15:0] status; reg por_n=0,fault=0; reg [`PT_ISLAND_W-1:0] island_pgood=0; reg [11:0] analog_status=0; reg [12:0] wire_analog_status=0; reg [5:0] fc_src=0; wire cdr_freq_locked;
+ wire [11:0] calibration_trial; wire [15:0] status; reg por_n=0,por_bypass=0,fault=0; reg [`PT_ISLAND_W-1:0] island_pgood=0; reg [11:0] analog_status=0; reg [12:0] wire_analog_status=0; reg [5:0] fc_src=0; wire cdr_freq_locked;
  wire [`PT_ANALOG_CFG_W-1:0] analog_cfg; wire [`PT_DEBUG_CFG_W-1:0] debug_cfg; wire [`PT_ISLAND_W-1:0] island_en,island_on; wire [`PT_ATB0_GRP_W-1:0] atb0_grp; wire [`PT_ATB1_GRP_W-1:0] atb1_grp; wire atb0_en,atb1_en; wire [`PT_ATB_W-1:0] atb0_sw,atb1_sw;
  wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,wclk_obs_oe,dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe,commit_toggle,host_miso,host_miso_oe;
  reg linecode=0; wire [6:0] rx_gain; wire rx_gain_active;

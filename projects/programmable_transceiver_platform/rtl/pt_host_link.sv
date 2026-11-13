@@ -295,6 +295,14 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     wire cka, ckb;
     pt_clock_buf cap_root(.I(h2d_clk), .Z(cka));
     pt_clock_buf core_root(.I(cka), .Z(ckb));
+    // TC13 r4c (coordinator option a): the capture clock is hand-built, not CTS: cap_root -> one fixed
+    // clkbuf_8 per capture row (hio_cbr: 10 rising r flops, hio_cbf: 10 falling f, hio_cbh: 10 falling fh)
+    // -> flops; two clkbuf_8 like the data path's clkbuf_8 + mux2_2. CTS's own tree on h2d_cap (3 x
+    // clkbuf_16, ~2.5 ns: hold -0.99) is undone by integration/pt_cts_h2d.tcl inside the CTS step.
+    wire ckr, ckf, ckh;
+    pt_clock_buf hio_cbr(.I(cka), .Z(ckr));
+    pt_clock_buf hio_cbf(.I(cka), .Z(ckf));
+    pt_clock_buf hio_cbh(.I(cka), .Z(ckh));
     wire [9:0] hio_pin;
     genvar gp;
     generate for (gp = 0; gp < 10; gp = gp + 1) begin : ib
@@ -332,11 +340,11 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
         else for (i = 0; i < 10; i = i + 1) if (nselg[i/2]) fh[i] <= f[i];
     // pin capture: r (rising), f (falling), fhh = fh[19:10] (falling, pair enable)
     generate for (gp = 0; gp < 10; gp = gp + 1) begin : cap
-        pt_hio_cap #(0) cr(.clk(cka), .rst_n(rst_n), .en(1'b1), .d(hio_pin[gp]), .q(r[gp]));
-        pt_hio_cap #(1) cf(.clk(cka), .rst_n(rst_n), .en(1'b1), .d(hio_pin[gp]), .q(f[gp]));
+        pt_hio_cap #(0) cr(.clk(ckr), .rst_n(rst_n), .en(1'b1), .d(hio_pin[gp]), .q(r[gp]));
+        pt_hio_cap #(1) cf(.clk(ckf), .rst_n(rst_n), .en(1'b1), .d(hio_pin[gp]), .q(f[gp]));
     end endgenerate
     generate for (gp = 0; gp < 10; gp = gp + 1) begin : fhh
-        pt_hio_cap #(1) c(.clk(cka), .rst_n(rst_n), .en(nselg[gp/2]), .d(hio_pin[gp]), .q(fh_hi[gp]));
+        pt_hio_cap #(1) c(.clk(ckh), .rst_n(rst_n), .en(nselg[gp/2]), .d(hio_pin[gp]), .q(fh_hi[gp]));
     end endgenerate
     // Write side: one-hot pointer, per-entry enables registered one clock ahead (one flop per
     // entry, preserved); Gray pointer for the reader.

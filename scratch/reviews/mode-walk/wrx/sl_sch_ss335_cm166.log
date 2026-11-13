@@ -1,0 +1,344 @@
+Using SPARSE 1.3 as Direct Linear Solver
+
+Note: No compatibility mode selected!
+
+
+Circuit: * slicer sch_ss335_cm166
+
+Doing analysis at TEMP = 32.000000 and TNOM = 27.000000
+
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                       3.35
+vt                                         0.8
+ck0                                          0
+ck1                                          0
+ck2                                          0
+ck3                                          0
+ck4                                          0
+ck5                                          0
+ck6                                          0
+ck7                                          0
+inp                                       1.66
+inn                                       1.66
+x1.enb                             1.57766e-09
+x1.ctl_qm                              2.76365
+x1.ctl_qb                                 3.35
+qck                                1.57766e-09
+x1.a0_s0b                                 3.35
+x1.a0_ena                          1.43364e-08
+x1.a0_xem                             0.910512
+x1.a0_enab                                3.35
+x1.a0_s1b                                 3.35
+x1.a0_s1n                          5.97466e-09
+x1.axn_e0                                 3.35
+x1.axp_e0                                 3.35
+x1.a0_pu1                                 3.35
+x1.a0_pu2                                 3.35
+x1.a1_s0b                                 3.35
+x1.a1_ena                          1.43364e-08
+x1.a1_xem                             0.910512
+x1.a1_enab                                3.35
+x1.a1_s1b                                 3.35
+x1.a1_s1n                          5.97466e-09
+x1.axn_e1                                 3.35
+x1.axp_e1                                 3.35
+x1.a1_pu1                                 3.35
+x1.a1_pu2                                 3.35
+x1.a2_s0b                                 3.35
+x1.a2_ena                          1.43364e-08
+x1.a2_xem                             0.910512
+x1.a2_enab                                3.35
+x1.a2_s1b                                 3.35
+x1.a2_s1n                          5.97466e-09
+x1.axn_e2                                 3.35
+x1.axp_e2                                 3.35
+x1.a2_pu1                                 3.35
+x1.a2_pu2                                 3.35
+x1.a3_s0b                                 3.35
+x1.a3_ena                          1.43364e-08
+x1.a3_xem                             0.910512
+x1.a3_enab                                3.35
+x1.a3_s1b                                 3.35
+x1.a3_s1n                          5.97466e-09
+x1.axn_e3                                 3.35
+x1.axp_e3                                 3.35
+x1.a3_pu1                                 3.35
+x1.a3_pu2                                 3.35
+x1.sd0_2oa                             1.23262
+x1.sd0_3ob                             1.23262
+x1.sd0_1pa                             2.84899
+x1.sd0_x                               3.17063
+x1.sd0_4pb                             2.84899
+x1.sd0_vsa                             3.27038
+x1.sd0_t0p                           0.0143469
+x1.sd0_t1p                           0.0194644
+x1.sd0_t0n                            0.014178
+x1.sd0_t1n                           0.0187533
+x1.sd0_t2p                           0.0318606
+x1.sd0_t2n                           0.0310434
+x1.sd0_f3a                            0.013992
+x1.sd0_f3b                           0.0137328
+x1.sd0_f0a                           0.0135645
+x1.sd0_f0b                           0.0135157
+x1.sd0_f1a                           0.0135645
+x1.sd0_f1b                           0.0142897
+x1.sd0_f2a                           0.0135645
+x1.sd0_f2b                           0.0149194
+x1.sd0_lq                             0.250282
+x1.sd0_lqb                            0.250282
+x1.sd0_lam                             2.48208
+x1.sd0_lbm                             2.48208
+x1.sd0_o1                                 3.35
+x1.sd0_lom                                3.35
+x1.sd0_o1d                                3.35
+x1.sd0_ldm                                3.35
+x1.sd0_o2                          1.57766e-09
+d0                                        3.35
+x1.se0_2oa                                3.35
+x1.se0_3ob                         1.57766e-09
+x1.se0_1pa                                3.35
+x1.se0_x                                  3.35
+x1.se0_4pb                                3.35
+x1.se0_vsa                                3.35
+x1.se0_t0p                           0.0181985
+x1.se0_t1p                           0.0240551
+x1.se0_t0n                           0.0180024
+x1.se0_t1n                           0.0232515
+x1.se0_t2p                           0.0376823
+x1.se0_t2n                           0.0368013
+x1.se0_f3a                           0.0177862
+x1.se0_f3b                           0.0173913
+x1.se0_f0a                           0.0172898
+x1.se0_f0b                            0.017235
+x1.se0_f1a                           0.0172898
+x1.se0_f1b                           0.0181322
+x1.se0_f2a                           0.0172898
+x1.se0_f2b                           0.0188624
+x1.se0_lq                          5.02329e-10
+x1.se0_lqb                                3.35
+x1.se0_lam                             3.34923
+x1.se0_lbm                                3.35
+x1.se0_o1                          7.14329e-09
+x1.se0_lom                            0.898827
+x1.se0_o1d                                3.35
+x1.se0_ldm                                3.35
+x1.se0_o2                                 3.35
+e0                                 1.57766e-09
+x1.sd1_2oa                             1.23262
+x1.sd1_3ob                             1.23262
+x1.sd1_1pa                             2.84899
+x1.sd1_x                               3.17063
+x1.sd1_4pb                             2.84899
+x1.sd1_vsa                             3.27038
+x1.sd1_t0p                           0.0143469
+x1.sd1_t1p                           0.0194644
+x1.sd1_t0n                            0.014178
+x1.sd1_t1n                           0.0187533
+x1.sd1_t2p                           0.0318606
+x1.sd1_t2n                           0.0310434
+x1.sd1_f3a                            0.013992
+x1.sd1_f3b                           0.0137328
+x1.sd1_f0a                           0.0135645
+x1.sd1_f0b                           0.0135157
+x1.sd1_f1a                           0.0135645
+x1.sd1_f1b                           0.0142897
+x1.sd1_f2a                           0.0135645
+x1.sd1_f2b                           0.0149194
+x1.sd1_lq                             0.250282
+x1.sd1_lqb                            0.250282
+x1.sd1_lam                             2.48208
+x1.sd1_lbm                             2.48208
+x1.sd1_o1                                 3.35
+x1.sd1_lom                                3.35
+x1.sd1_o1d                                3.35
+x1.sd1_ldm                                3.35
+x1.sd1_o2                          1.57766e-09
+d1                                        3.35
+x1.se1_2oa                                3.35
+x1.se1_3ob                         1.57766e-09
+x1.se1_1pa                                3.35
+x1.se1_x                                  3.35
+x1.se1_4pb                                3.35
+x1.se1_vsa                                3.35
+x1.se1_t0p                           0.0181985
+x1.se1_t1p                           0.0240551
+x1.se1_t0n                           0.0180024
+x1.se1_t1n                           0.0232515
+x1.se1_t2p                           0.0376823
+x1.se1_t2n                           0.0368013
+x1.se1_f3a                           0.0177862
+x1.se1_f3b                           0.0173913
+x1.se1_f0a                           0.0172898
+x1.se1_f0b                            0.017235
+x1.se1_f1a                           0.0172898
+x1.se1_f1b                           0.0181322
+x1.se1_f2a                           0.0172898
+x1.se1_f2b                           0.0188624
+x1.se1_lq                          5.02329e-10
+x1.se1_lqb                                3.35
+x1.se1_lam                             3.34923
+x1.se1_lbm                                3.35
+x1.se1_o1                          7.14329e-09
+x1.se1_lom                            0.898827
+x1.se1_o1d                                3.35
+x1.se1_ldm                                3.35
+x1.se1_o2                                 3.35
+e1                                 1.57766e-09
+x1.sd2_2oa                             1.23262
+x1.sd2_3ob                             1.23262
+x1.sd2_1pa                             2.84899
+x1.sd2_x                               3.17063
+x1.sd2_4pb                             2.84899
+x1.sd2_vsa                             3.27038
+x1.sd2_t0p                           0.0143469
+x1.sd2_t1p                           0.0194644
+x1.sd2_t0n                            0.014178
+x1.sd2_t1n                           0.0187533
+x1.sd2_t2p                           0.0318606
+x1.sd2_t2n                           0.0310434
+x1.sd2_f3a                            0.013992
+x1.sd2_f3b                           0.0137328
+x1.sd2_f0a                           0.0135645
+x1.sd2_f0b                           0.0135157
+x1.sd2_f1a                           0.0135645
+x1.sd2_f1b                           0.0142897
+x1.sd2_f2a                           0.0135645
+x1.sd2_f2b                           0.0149194
+x1.sd2_lq                             0.250282
+x1.sd2_lqb                            0.250282
+x1.sd2_lam                             2.48208
+x1.sd2_lbm                             2.48208
+x1.sd2_o1                                 3.35
+x1.sd2_lom                                3.35
+x1.sd2_o1d                                3.35
+x1.sd2_ldm                                3.35
+x1.sd2_o2                          1.57766e-09
+d2                                        3.35
+x1.se2_2oa                                3.35
+x1.se2_3ob                         1.57766e-09
+x1.se2_1pa                                3.35
+x1.se2_x                                  3.35
+x1.se2_4pb                                3.35
+x1.se2_vsa                                3.35
+x1.se2_t0p                           0.0181985
+x1.se2_t1p                           0.0240551
+x1.se2_t0n                           0.0180024
+x1.se2_t1n                           0.0232515
+x1.se2_t2p                           0.0376823
+x1.se2_t2n                           0.0368013
+x1.se2_f3a                           0.0177862
+x1.se2_f3b                           0.0173913
+x1.se2_f0a                           0.0172898
+x1.se2_f0b                            0.017235
+x1.se2_f1a                           0.0172898
+x1.se2_f1b                           0.0181322
+x1.se2_f2a                           0.0172898
+x1.se2_f2b                           0.0188624
+x1.se2_lq                          5.02329e-10
+x1.se2_lqb                                3.35
+x1.se2_lam                             3.34923
+x1.se2_lbm                                3.35
+x1.se2_o1                          7.14329e-09
+x1.se2_lom                            0.898827
+x1.se2_o1d                                3.35
+x1.se2_ldm                                3.35
+x1.se2_o2                                 3.35
+e2                                 1.57766e-09
+x1.sd3_2oa                             1.23262
+x1.sd3_3ob                             1.23262
+x1.sd3_1pa                             2.84899
+x1.sd3_x                               3.17063
+x1.sd3_4pb                             2.84899
+x1.sd3_vsa                             3.27038
+x1.sd3_t0p                           0.0143469
+x1.sd3_t1p                           0.0194644
+x1.sd3_t0n                            0.014178
+x1.sd3_t1n                           0.0187533
+x1.sd3_t2p                           0.0318606
+x1.sd3_t2n                           0.0310434
+x1.sd3_f3a                            0.013992
+x1.sd3_f3b                           0.0137328
+x1.sd3_f0a                           0.0135645
+x1.sd3_f0b                           0.0135157
+x1.sd3_f1a                           0.0135645
+x1.sd3_f1b                           0.0142897
+x1.sd3_f2a                           0.0135645
+x1.sd3_f2b                           0.0149194
+x1.sd3_lq                             0.250282
+x1.sd3_lqb                            0.250282
+x1.sd3_lam                             2.48208
+x1.sd3_lbm                             2.48208
+x1.sd3_o1                                 3.35
+x1.sd3_lom                                3.35
+x1.sd3_o1d                                3.35
+x1.sd3_ldm                                3.35
+x1.sd3_o2                          1.57766e-09
+d3                                        3.35
+x1.se3_2oa                                3.35
+x1.se3_3ob                         1.57766e-09
+x1.se3_1pa                                3.35
+x1.se3_x                                  3.35
+x1.se3_4pb                                3.35
+x1.se3_vsa                                3.35
+x1.se3_t0p                           0.0181985
+x1.se3_t1p                           0.0240551
+x1.se3_t0n                           0.0180024
+x1.se3_t1n                           0.0232515
+x1.se3_t2p                           0.0376823
+x1.se3_t2n                           0.0368013
+x1.se3_f3a                           0.0177862
+x1.se3_f3b                           0.0173913
+x1.se3_f0a                           0.0172898
+x1.se3_f0b                            0.017235
+x1.se3_f1a                           0.0172898
+x1.se3_f1b                           0.0181322
+x1.se3_f2a                           0.0172898
+x1.se3_f2b                           0.0188624
+x1.se3_lq                          5.02329e-10
+x1.se3_lqb                                3.35
+x1.se3_lam                             3.34923
+x1.se3_lbm                                3.35
+x1.se3_o1                          7.14329e-09
+x1.se3_lom                            0.898827
+x1.se3_o1d                                3.35
+x1.se3_ldm                                3.35
+x1.se3_o2                                 3.35
+e3                                 1.57766e-09
+vin#branch                                   0
+vip#branch                                   0
+vck7#branch                                  0
+vck6#branch                                  0
+vck5#branch                                  0
+vck4#branch                                  0
+vck3#branch                                  0
+vck2#branch                                  0
+vck1#branch                                  0
+vck0#branch                                  0
+vt#branch                          2.80761e-11
+vdd#branch                           -0.005105
+
+ Reference value :  0.00000e+00 Reference value :  9.00800e-10 Reference value :  1.41200e-09 Reference value :  1.97200e-09 Reference value :  2.48400e-09 Reference value :  2.99000e-09 Reference value :  3.44000e-09 Reference value :  3.94000e-09 Reference value :  4.39600e-09 Reference value :  4.80560e-09 Reference value :  5.25200e-09 Reference value :  5.79000e-09 Reference value :  6.31600e-09 Reference value :  6.84080e-09 Reference value :  7.26000e-09 Reference value :  7.76600e-09 Reference value :  8.23600e-09 Reference value :  8.75600e-09 Reference value :  9.26000e-09 Reference value :  9.71200e-09 Reference value :  1.01820e-08 Reference value :  1.06456e-08 Reference value :  1.12008e-08 Reference value :  1.16520e-08 Reference value :  1.21324e-08 Reference value :  1.25820e-08 Reference value :  1.30408e-08 Reference value :  1.35720e-08
+No. of Data Rows : 2310
+d0_h1               =  3.350000e+00 from=  4.200000e-09 to=  7.400800e-09
+d0_h2               =  -1.082797e-08 from=  1.060000e-08 to=  1.380000e-08
+d1_h1               =  3.350000e+00 from=  4.200000e-09 to=  7.400800e-09
+d1_h2               =  -1.077764e-08 from=  1.060000e-08 to=  1.380000e-08
+d2_h1               =  -1.133853e-08 from=  4.200000e-09 to=  7.400800e-09
+d2_h2               =  3.350000e+00 from=  1.060000e-08 to=  1.380000e-08
+d3_h1               =  -1.305643e-08 from=  4.200000e-09 to=  7.400800e-09
+d3_h2               =  3.350000e+00 from=  1.060000e-08 to=  1.380000e-08
+e0_h1               =  3.350000e+00 from=  4.200000e-09 to=  7.400800e-09
+e0_h2               =  -1.081285e-08 from=  1.060000e-08 to=  1.380000e-08
+e1_h1               =  -7.280169e-09 from=  4.200000e-09 to=  7.400800e-09
+e1_h2               =  3.350000e+00 from=  1.060000e-08 to=  1.380000e-08
+e2_h1               =  -9.230403e-09 from=  4.200000e-09 to=  7.400800e-09
+e2_h2               =  3.350000e+00 from=  1.060000e-08 to=  1.380000e-08
+e3_h1               =  3.350000e+00 from=  4.200000e-09 to=  7.400800e-09
+e3_h2               =  -3.457792e-09 from=  1.060000e-08 to=  1.380000e-08
+idd                 =  -3.404436e-03 from=  4.200000e-09 to=  1.380000e-08
+Note: Simulation executed from .control section 

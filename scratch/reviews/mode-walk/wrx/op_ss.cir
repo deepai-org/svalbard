@@ -1,0 +1,32 @@
+* ctle 0 bench
+.include /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice ss
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_ss
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice diode_ss
+.option temp=27 gmin=1e-12 reltol=1e-3
+.include /home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_rx/generated/ctle.ext.spice
+VDD vdd 0 3.35
+RIB vdd ib 260k
+VIP vip 0 DC 1.0 AC 0.5
+VIN vin 0 DC 1.0 AC -0.5
+RSP vip inp 25
+RSN vin inn 25
+XC vdd 0 ib vdd 0 0 0 0 0 0 0 inp inn outp outn pb src pt_ctle
+CLP outp 0 150f
+CLN outn 0 150f
+RX1 outp slp 1m
+RX2 outn sln 1m
+.control
+op
+print v(outp) v(slp)
+
+
+
+
+
+
+
+
+
+.endc
+.end

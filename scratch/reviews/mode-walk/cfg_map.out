@@ -1,0 +1,136 @@
+== (1) cell control pins with NO register field on the bus
+  pt_lna: lobias  -- duplex reduced-bias mode (characterize.py:167)
+  pt_rxmix_i: hib  -- 
+  pt_rxmix_q: hib  -- 
+  pt_bbfilter_i: gainc0 gainc1  -- coarse PGA state
+  pt_bbfilter_i: fc_fine0 fc_fine1 fc_fine2  -- fine cutoff
+  pt_bbfilter_i: dcf0..dcf_sign (9)  -- fine DCOC, per channel
+  pt_adc_i: ILEN  -- 
+  pt_lo_ext: CMLSEL  -- 
+  pt_polyphase: EN  -- 
+  pt_lc_qvco5: BAND0..BAND3 (4)  -- rfpll.config.vco_coarse is dropped
+  pt_lc_qvco5: CMLSEL  -- 
+  pt_lc_qvco5: PRE  -- VTUNE precharge
+  pt_lo_mmd: N0..N5 (6)  -- rfpll.config.feedback_integer is dropped; consolidation.pll.feedback_n is 2 bits
+  pt_lo_pfdcp: PRE  -- 
+  pt_lo_pfdcp: ICP0 ICP1  -- rfpll.config.charge_pump_code is dropped
+  pt_pll_ring: HOLD  -- from pt_cdr HOLD_PLL
+  pt_pll_ring: KP0 KP1 KP2  -- CDR proportional gain
+  pt_pll_ring: BAND  -- tied VDD in netlist.py:120
+  pt_pll_ring_core: HOLD  -- 
+  pt_pll_ring_core: BAND  -- tied VDD
+  pt_cdr: otr0..otrs (6)  -- OTA offset trim (schematic only; not in layout)
+  pt_slicer: trim_d1_p0..trim_d1_f3 (10)  -- 10 trim bits per sampler; field keeps 4
+  pt_slicer: trim_d2_p0..trim_d2_f3 (10)  -- 10 trim bits per sampler; field keeps 4
+  pt_slicer: trim_d3_p0..trim_d3_f3 (10)  -- 10 trim bits per sampler; field keeps 4
+  pt_slicer: trim_e2_p0..trim_e2_f3 (10)  -- 10 trim bits per sampler; field keeps 4
+  pt_slicer: trim_e3_p0..trim_e3_f3 (10)  -- 10 trim bits per sampler; field keeps 4
+  pt_slicer: vsel_e0_0..vsel_e3_1 (8)  -- edge-sampler threshold select (IX-10)
+  pt_vthdac: vth_en  -- 
+  pt_vthdac: A0..A7 (8)  -- IX-10 threshold DAC A
+  pt_vthdac: B0..B7 (8)  -- IX-10 threshold DAC B
+  pt_ctle: lf_zero0 lf_zero1 lf_zero2  -- IX-13 LF zero
+  pt_wrx_cap: PSEL0 PSEL1 PSEL2  -- phase select
+  pt_wrx_cap: SLIPP SLIPM  -- bit slip
+  pt_wiredtx: POST_POL  -- post-cursor polarity
+  pt_diff_clk_rx: SE  -- single-ended mode
+  pt_bbfilter_q: gainc0 gainc1  -- coarse PGA state
+  pt_bbfilter_q: fc_fine0 fc_fine1 fc_fine2  -- fine cutoff
+  pt_bbfilter_q: dcf0..dcf_sign (9)  -- fine DCOC, per channel
+  pt_adc_q: ILEN  -- 
+== (2) width mismatches (pins vs bus bits)
+  pt_bbfilter_i: gain0..gain5  -- 6 pins vs consolidation.bbfilter.gain 4 bus bits (of 4) 
+  pt_bbfilter_i: qt0..qt3  -- 4 pins vs consolidation.bbfilter.qtrim 2 bus bits (of 2) 
+  pt_slicer: trim_d0_p0..trim_d0_f3  -- 10 pins vs slicer.offset.data 4 bus bits (of 8) 10 trim bits per sampler; field keeps 4
+  pt_slicer: trim_e0_p0..trim_e0_f3  -- 10 pins vs slicer.offset.early 4 bus bits (of 8) 10 trim bits per sampler; field keeps 4
+  pt_slicer: trim_e1_p0..trim_e1_f3  -- 10 pins vs slicer.offset.late 4 bus bits (of 8) 10 trim bits per sampler; field keeps 4
+  pt_ctle: ctle_peak0..ctle_peak2  -- 3 pins vs ctle.config.zero_trim 2 bus bits (of 8) keeps [1:0]
+  pt_termination: hs_en..hs_term_en  -- 2 pins vs usbhs.config.term_enable 1 bus bits (of 1) 
+  pt_termination: hs_trim0..hs_trim3  -- 4 pins vs usbhs.config.term_trim 3 bus bits (of 3) 
+  pt_wrx_cap: RCS..RCS  -- 1 pins vs cdr.config.cap_rcsel 2 bus bits (of 2) 2b field, 1 pin
+  pt_clk_obs16: N0..N2  -- 3 pins vs debug.clk_obs.divider_log2 4 bus bits (of 4) 4b field vs 3 pins
+  pt_bbfilter_q: gain0..gain5  -- 6 pins vs consolidation.bbfilter.gain 4 bus bits (of 4) 
+  pt_bbfilter_q: qt0..qt3  -- 4 pins vs consolidation.bbfilter.qtrim 2 bus bits (of 2) 
+== (3) bus fields with neither an RTL reader nor a mapped cell pin: 80 fields, 397 bits
+  debug.wclk_obs.source [debug_cfg 47+3]
+  debug.wclk_obs.divider_log2 [debug_cfg 50+3]
+  debug.dbg_obs.sel0 [debug_cfg 53+6]
+  debug.dbg_obs.sel1 [debug_cfg 59+6]
+  debug.wdbg_obs.select [debug_cfg 65+5]
+  debug.replica.vco_divider_log2 [debug_cfg 72+3]
+  consolidation.pll.owner [debug_cfg 93+2]
+  consolidation.pll.phase_tap [debug_cfg 100+2]
+  consolidation.wiredtx_stage.stage [debug_cfg 102+1]
+  debug.calibration.tag [debug_cfg 247+8]
+  debug.calibration.valid [debug_cfg 255+1]
+  adc_i.config.enable [analog_cfg 0+1]
+  adc_q.config.enable [analog_cfg 5+1]
+  cdr.config.acquisition_failure [analog_cfg 10+1]
+  cdr.config.acquisition_timeout_ui [analog_cfg 11+24]
+  cdr.config.enable [analog_cfg 37+1]
+  cdr.config.holdover_bits [analog_cfg 38+16]
+  cdr.config.loop_gain_code [analog_cfg 54+8]
+  cdr.config.loss_arm [analog_cfg 62+1]
+  cdr.config.phase_trim [analog_cfg 85+5]
+  cdr.config.quiet_source [analog_cfg 90+2]
+  cdr.config.scheduled_quiet_limit_ui [analog_cfg 92+24]
+  cdr.config.periodic_tracking_enable [analog_cfg 116+1]
+  clockmux.config.rf_source [analog_cfg 119+2]
+  clockmux.config.wire_source [analog_cfg 121+2]
+  clockmux.state.state [analog_cfg 123+2]
+  clocktree.config.host_enable [analog_cfg 125+1]
+  clocktree.config.rf_host_clock_divider [analog_cfg 148+1]
+  clocktree.config.rf_host_source [analog_cfg 149+1]
+  clocktree.config.sample_divider [analog_cfg 150+2]
+  clocktree.config.sample_enable [analog_cfg 152+1]
+  clocktree.config.sync_epoch [analog_cfg 154+16]
+  clocktree.config.wire_host_divider [analog_cfg 171+6]
+  clocktree.config.wire_host_source [analog_cfg 177+1]
+  clocktree.config.wire_output_divider [analog_cfg 178+2]
+  clocktree.state.state [analog_cfg 180+2]
+  dac_i.config.enable [analog_cfg 186+1]
+  dac_q.config.enable [analog_cfg 190+1]
+  detect.config.counter_reset [analog_cfg 194+1]
+  detect.config.enable [analog_cfg 195+1]
+  detect.config.test_timeout_ticks [analog_cfg 201+24]
+  digital.guard_config.gain_settle_ticks [analog_cfg 227+16]
+  digital.guard_config.rx_to_tx_ticks [analog_cfg 243+16]
+  digital.guard_config.tx_to_rx_ticks [analog_cfg 259+16]
+  digital.guard_config.wire_trim_settle_ui [analog_cfg 275+8]
+  digital.hop_config.deadline_ticks [analog_cfg 283+11]
+  digital.hop_config.next_sample_epoch [analog_cfg 294+16]
+  digital.transport_config.direct_stream_enable [analog_cfg 311+1]
+  monitor.config.loss_timeout_ticks [analog_cfg 322+16]
+  monitor.config.qualification_ticks [analog_cfg 338+32]
+  monitor.config.require_input_clock [analog_cfg 370+1]
+  monitor.config.require_reference [analog_cfg 371+1]
+  monitor.config.require_rf_lock [analog_cfg 372+1]
+  monitor.config.require_wire_lock [analog_cfg 373+1]
+  monitor.config.required_supply_mask [analog_cfg 374+6]
+  monitor.config.supply_high_code [analog_cfg 380+8]
+  monitor.config.supply_low_code [analog_cfg 388+8]
+  monitor.reset.clear_fault [analog_cfg 396+1]
+  refbuf.enable.enable [analog_cfg 397+1]
+  termination.config.differential_100_enable [analog_cfg 437+1]
+  tmds.config.current_code [analog_cfg 440+8]
+  txmix_i.enable.enable [analog_cfg 448+1]
+  txmix_q.enable.enable [analog_cfg 451+1]
+  txpad.config.branch [analog_cfg 454+2]
+  txsum.enable.enable [analog_cfg 456+1]
+  usbdrive.select.branch [analog_cfg 459+2]
+  usbdrive.state.state [analog_cfg 461+2]
+  usbfs.config.drive_enable [analog_cfg 463+1]
+  usbfs.config.output_r_code [analog_cfg 464+6]
+  usbfs.config.pulldown_n [analog_cfg 470+1]
+  usbfs.config.pulldown_p [analog_cfg 471+1]
+  usbfs.config.pullup_n [analog_cfg 472+1]
+  usbfs.config.pullup_p [analog_cfg 473+1]
+  usbfs.config.slew [analog_cfg 474+1]
+  usbfs.config.ls_slow [analog_cfg 475+1]
+  usbfs.state.state [analog_cfg 476+2]
+  usbhs.config.current_code [analog_cfg 487+8]
+  usbhs.config.tx_enable [analog_cfg 495+1]
+  usbhs.state.state [analog_cfg 500+2]
+  wiredtx.idle.idle [analog_cfg 518+1]
+== (4) single shared field driving both I and Q instances: {'consolidation.bbfilter.qtrim': 'Q trim differs per channel after layout mismatch', 'consolidation.bbfilter.gain': 'I/Q gain trim'}
+TOTAL: 39 pin groups without a field, 12 width mismatches, 80 orphan fields

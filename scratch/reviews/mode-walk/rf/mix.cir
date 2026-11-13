@@ -1,0 +1,28 @@
+* quad
+.include /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.option temp=27 reltol=1e-4
+Vs s 0 SIN(0 0.01 2450000000.0)
+Ep sp 0 s 0 0.5
+En sn 0 s 0 -0.5
+Rsp sp rp 300
+Rsn sn rn 300
+Ccp rp rf_p 4p
+Ccn rn rf_n 4p
+Vlp lo_p 0 SIN(1.65 1.65 2400000000.0)
+Vln lo_n 0 SIN(1.65 -1.65 2400000000.0)
+
+Vxp x_p 0 1.65
+Vxn x_n 0 1.65
+M0 rf_p lo_p x_p 0 nfet_03v3 w=5u l=0.28u m=6
+M1 rf_n lo_p x_n 0 nfet_03v3 w=5u l=0.28u m=6
+M2 rf_p lo_n x_n 0 nfet_03v3 w=5u l=0.28u m=6
+M3 rf_n lo_n x_p 0 nfet_03v3 w=5u l=0.28u m=6
+
+.tran 5p 100n 20n 5p
+.control
+run
+linearize i(Vxp) i(Vxn)
+wrdata out.dat i(Vxp)-i(Vxn)
+.endc
+.end

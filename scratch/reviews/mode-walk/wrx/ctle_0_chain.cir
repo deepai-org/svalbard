@@ -1,0 +1,40 @@
+* ctle 0 chain
+.include /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice diode_typical
+.option temp=27 gmin=1e-12 reltol=1e-3
+.include /home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_rx/generated/ctle.ext.spice
+VDD vdd 0 3.3
+RIB vdd ib 260k
+VIP vip 0 DC 1.0 AC 0.5
+VIN vin 0 DC 1.0 AC -0.5
+RSP vip inp 25
+RSN vin inn 25
+XC vdd 0 ib vdd 0 0 0 0 0 0 0 inp inn outp outn pb src pt_ctle
+.include /home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_rx/generated/rxselect.ext.spice
+.include /home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_rx/generated/slicer.ext.spice
+.include /home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_rx/generated/wmon_sel.ext.spice
+XR vdd 0 vdd 0 outp outn urx_p urx_n slp sln pt_rxselect
+RU1 urx_p 0 50
+RU2 urx_n 0 50
+XS vdd 0 vdd slp sln vdd vdd vdd vdd 0 0 0 0 s_QCK s_D0 s_E0 s_D1 s_E1 s_D2 s_E2 s_D3 s_E3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 pt_slicer
+XM vdd 0 0 0 0 urx_p urx_n outp outn wm pt_wmon_sel
+CRP outp 0 30f
+CRN outn 0 30f
+CSP slp 0 30f
+CSN sln 0 30f
+.control
+op
+print v(outp) v(slp)
+ac dec 20 1e5 1e10
+let g=db(v(slp)-v(sln))
+meas ac gdc find g at=1e6
+meas ac gpk max g
+meas ac g625 find g at=625e6
+meas ac g1g25 find g at=1.25e9
+meas ac g1g62 find g at=1.62e9
+let gt=gdc-3
+meas ac bw3db when g=gt fall=last
+.endc
+.end

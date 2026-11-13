@@ -1,0 +1,17 @@
+* rxmix switch Ron vs Vgs at source = VDD/2 (body VSS)
+.include /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.option temp=27
+Vg g 0 2.5
+Vs s 0 1.65
+Vd d 0 1.66
+M1 d g s 0 nfet_03v3 w=5u l=0.28u m=6
+.control
+foreach vg 2.05 2.25 2.45 2.55 2.65 2.75 2.95 3.3
+alter Vg $vg
+op
+let ron = 0.01/(-i(Vd))
+print $vg ron
+end
+.endc
+.end

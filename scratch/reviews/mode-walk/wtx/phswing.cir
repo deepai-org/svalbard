@@ -1,0 +1,27 @@
+* phase swing check
+.include /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/design.ngspice
+.lib /home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice sf
+.temp 32
+.include /home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_tx/wiredtx.spice
+VDD VDD 0 3.35
+VS SERQ 0 3.35
+BPH PHS 0 V=2.57*(0.5+0.5*tanh(sin(6.283185307*625000000.0*time)*4))
+RPH PHS PH 150
+XQ PH SERQ VDD 0 0 0 0 G XN0 XN1 XN2 QW Q VDD 0 wtx_qph
+CG G 0 30f
+CQW QW 0 60f
+CQ Q 0 60f
+CX0 XN0 0 20f
+CX1 XN1 0 20f
+CX2 XN2 0 20f
+.tran 5p 1.92e-08 6.4e-09
+.control
+run
+meas tran thi trig v(QW) val=1.675 rise=2 targ v(QW) val=1.675 fall=2
+meas tran per trig v(QW) val=1.675 rise=2 targ v(QW) val=1.675 rise=3
+meas tran tpdr trig v(PHS) val=1.285 rise=3 targ v(QW) val=1.675 cross=5
+meas tran idd avg i(VDD) from=6.4e-09 to=1.92e-08
+meas tran qmax max v(QW) from=6.4e-09 to=1.92e-08
+meas tran qmin min v(QW) from=6.4e-09 to=1.92e-08
+.endc
+.end

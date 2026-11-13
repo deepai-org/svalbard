@@ -1,0 +1,113 @@
+* ptrim load check
+.include /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/design.ngspice
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.lib /home/ubuntu/svalbard/scratch/digital-closure/frozen-pdk/gf180mcuD/libs.tech/ngspice/sm141064.ngspice diode_typical
+.option temp=27 gmin=1e-12 reltol=1e-3
+.include /home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_rx/ptrim.spice
+.include ptrim_ext.spice
+VDD vdd 0 3.3
+VPH0 ph0 0 PULSE(0 3.3 1.000000e-09 60p 60p 7.400000e-10 1.600000e-09)
+VPL0 pl0 0 PULSE(0 2.9 1.000000e-09 150p 150p 6.500000e-10 1.600000e-09)
+CA0 a0 0 150f
+CB0 b0 0 1000f
+CC0 c0 0 1000f
+CD0 d0 0 150f
+VPH1 ph1 0 PULSE(0 3.3 1.200000e-09 60p 60p 7.400000e-10 1.600000e-09)
+VPL1 pl1 0 PULSE(0 2.9 1.200000e-09 150p 150p 6.500000e-10 1.600000e-09)
+CA1 a1 0 150f
+CB1 b1 0 500f
+CC1 c1 0 500f
+CD1 d1 0 150f
+VPH2 ph2 0 PULSE(0 3.3 1.400000e-09 60p 60p 7.400000e-10 1.600000e-09)
+VPL2 pl2 0 PULSE(0 2.9 1.400000e-09 150p 150p 6.500000e-10 1.600000e-09)
+CA2 a2 0 150f
+CB2 b2 0 500f
+CC2 c2 0 500f
+CD2 d2 0 150f
+VPH3 ph3 0 PULSE(0 3.3 1.600000e-09 60p 60p 7.400000e-10 1.600000e-09)
+VPL3 pl3 0 PULSE(0 2.9 1.600000e-09 150p 150p 6.500000e-10 1.600000e-09)
+CA3 a3 0 150f
+CB3 b3 0 500f
+CC3 c3 0 500f
+CD3 d3 0 150f
+VPH4 ph4 0 PULSE(0 3.3 1.800000e-09 60p 60p 7.400000e-10 1.600000e-09)
+VPL4 pl4 0 PULSE(0 2.9 1.800000e-09 150p 150p 6.500000e-10 1.600000e-09)
+CA4 a4 0 150f
+CB4 b4 0 500f
+CC4 c4 0 500f
+CD4 d4 0 150f
+VPH5 ph5 0 PULSE(0 3.3 2.000000e-09 60p 60p 7.400000e-10 1.600000e-09)
+VPL5 pl5 0 PULSE(0 2.9 2.000000e-09 150p 150p 6.500000e-10 1.600000e-09)
+CA5 a5 0 150f
+CB5 b5 0 500f
+CC5 c5 0 500f
+CD5 d5 0 150f
+VPH6 ph6 0 PULSE(0 3.3 2.200000e-09 60p 60p 7.400000e-10 1.600000e-09)
+VPL6 pl6 0 PULSE(0 2.9 2.200000e-09 150p 150p 6.500000e-10 1.600000e-09)
+CA6 a6 0 150f
+CB6 b6 0 500f
+CC6 c6 0 500f
+CD6 d6 0 150f
+VPH7 ph7 0 PULSE(0 3.3 2.400000e-09 60p 60p 7.400000e-10 1.600000e-09)
+VPL7 pl7 0 PULSE(0 2.9 2.400000e-09 150p 150p 6.500000e-10 1.600000e-09)
+CA7 a7 0 150f
+CB7 b7 0 500f
+CC7 c7 0 500f
+CD7 d7 0 150f
+XA vdd 0 vdd ph0 ph1 ph2 ph3 ph4 ph5 ph6 ph7 a0 a1 a2 a3 a4 a5 a6 a7 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd pt_ptrim
+XB vdd 0 vdd ph0 ph1 ph2 ph3 ph4 ph5 ph6 ph7 b0 b1 b2 b3 b4 b5 b6 b7 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd pt_ptrim
+XC vdd 0 vdd pl0 pl1 pl2 pl3 pl4 pl5 pl6 pl7 c0 c1 c2 c3 c4 c5 c6 c7 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd pt_ptrim
+XD vdd 0 vdd ph0 ph1 ph2 ph3 ph4 ph5 ph6 ph7 d0 d1 d2 d3 d4 d5 d6 d7 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd 0 0 0 0 vdd pt_ptrim_ext
+.control
+tran 4p 1.06e-08
+meas tran dly_a0 trig v(ph0) val=1.65 rise=4 targ v(a0) val=1.65 rise=4
+meas tran max_a0 max v(a0) from=5.8e-09 to=1.06e-08
+meas tran min_a0 min v(a0) from=5.8e-09 to=1.06e-08
+meas tran tr_a0 trig v(a0) val=0.66 rise=4 targ v(a0) val=2.64 rise=4
+meas tran dly_a1 trig v(ph1) val=1.65 rise=4 targ v(a1) val=1.65 rise=4
+meas tran max_a1 max v(a1) from=5.8e-09 to=1.06e-08
+meas tran min_a1 min v(a1) from=5.8e-09 to=1.06e-08
+meas tran tr_a1 trig v(a1) val=0.66 rise=4 targ v(a1) val=2.64 rise=4
+meas tran dly_a4 trig v(ph4) val=1.65 rise=4 targ v(a4) val=1.65 rise=4
+meas tran max_a4 max v(a4) from=5.8e-09 to=1.06e-08
+meas tran min_a4 min v(a4) from=5.8e-09 to=1.06e-08
+meas tran tr_a4 trig v(a4) val=0.66 rise=4 targ v(a4) val=2.64 rise=4
+meas tran dly_b0 trig v(ph0) val=1.65 rise=4 targ v(b0) val=1.65 rise=4
+meas tran max_b0 max v(b0) from=5.8e-09 to=1.06e-08
+meas tran min_b0 min v(b0) from=5.8e-09 to=1.06e-08
+meas tran tr_b0 trig v(b0) val=0.66 rise=4 targ v(b0) val=2.64 rise=4
+meas tran dly_b1 trig v(ph1) val=1.65 rise=4 targ v(b1) val=1.65 rise=4
+meas tran max_b1 max v(b1) from=5.8e-09 to=1.06e-08
+meas tran min_b1 min v(b1) from=5.8e-09 to=1.06e-08
+meas tran tr_b1 trig v(b1) val=0.66 rise=4 targ v(b1) val=2.64 rise=4
+meas tran dly_b4 trig v(ph4) val=1.65 rise=4 targ v(b4) val=1.65 rise=4
+meas tran max_b4 max v(b4) from=5.8e-09 to=1.06e-08
+meas tran min_b4 min v(b4) from=5.8e-09 to=1.06e-08
+meas tran tr_b4 trig v(b4) val=0.66 rise=4 targ v(b4) val=2.64 rise=4
+meas tran dly_c0 trig v(pl0) val=1.45 rise=4 targ v(c0) val=1.65 rise=4
+meas tran max_c0 max v(c0) from=5.8e-09 to=1.06e-08
+meas tran min_c0 min v(c0) from=5.8e-09 to=1.06e-08
+meas tran tr_c0 trig v(c0) val=0.66 rise=4 targ v(c0) val=2.64 rise=4
+meas tran dly_c1 trig v(pl1) val=1.45 rise=4 targ v(c1) val=1.65 rise=4
+meas tran max_c1 max v(c1) from=5.8e-09 to=1.06e-08
+meas tran min_c1 min v(c1) from=5.8e-09 to=1.06e-08
+meas tran tr_c1 trig v(c1) val=0.66 rise=4 targ v(c1) val=2.64 rise=4
+meas tran dly_c4 trig v(pl4) val=1.45 rise=4 targ v(c4) val=1.65 rise=4
+meas tran max_c4 max v(c4) from=5.8e-09 to=1.06e-08
+meas tran min_c4 min v(c4) from=5.8e-09 to=1.06e-08
+meas tran tr_c4 trig v(c4) val=0.66 rise=4 targ v(c4) val=2.64 rise=4
+meas tran dly_d0 trig v(ph0) val=1.65 rise=4 targ v(d0) val=1.65 rise=4
+meas tran max_d0 max v(d0) from=5.8e-09 to=1.06e-08
+meas tran min_d0 min v(d0) from=5.8e-09 to=1.06e-08
+meas tran tr_d0 trig v(d0) val=0.66 rise=4 targ v(d0) val=2.64 rise=4
+meas tran dly_d1 trig v(ph1) val=1.65 rise=4 targ v(d1) val=1.65 rise=4
+meas tran max_d1 max v(d1) from=5.8e-09 to=1.06e-08
+meas tran min_d1 min v(d1) from=5.8e-09 to=1.06e-08
+meas tran tr_d1 trig v(d1) val=0.66 rise=4 targ v(d1) val=2.64 rise=4
+meas tran dly_d4 trig v(ph4) val=1.65 rise=4 targ v(d4) val=1.65 rise=4
+meas tran max_d4 max v(d4) from=5.8e-09 to=1.06e-08
+meas tran min_d4 min v(d4) from=5.8e-09 to=1.06e-08
+meas tran tr_d4 trig v(d4) val=0.66 rise=4 targ v(d4) val=2.64 rise=4
+.endc
+.end

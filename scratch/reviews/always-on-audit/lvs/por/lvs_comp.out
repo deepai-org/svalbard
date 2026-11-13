@@ -1,0 +1,104 @@
+
+Circuit 1 cell pfet_03v3 and Circuit 2 cell pfet_03v3 are black boxes.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: pfet_03v3                                                         |Circuit 2: pfet_03v3                                                         
+-----------------------------------------------------------------------------|-----------------------------------------------------------------------------
+1                                                                            |1                                                                            
+2                                                                            |2                                                                            
+3                                                                            |3                                                                            
+4                                                                            |4                                                                            
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pfet_03v3 and pfet_03v3 are equivalent.
+
+Circuit 1 cell nfet_03v3 and Circuit 2 cell nfet_03v3 are black boxes.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_03v3                                                         |Circuit 2: nfet_03v3                                                         
+-----------------------------------------------------------------------------|-----------------------------------------------------------------------------
+1                                                                            |1                                                                            
+2                                                                            |2                                                                            
+3                                                                            |3                                                                            
+4                                                                            |4                                                                            
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_03v3 and nfet_03v3 are equivalent.
+
+Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: ppolyf_u_1k                                                       |Circuit 2: ppolyf_u_1k                                                       
+-----------------------------------------------------------------------------|-----------------------------------------------------------------------------
+1                                                                            |1                                                                            
+2                                                                            |2                                                                            
+3                                                                            |3                                                                            
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
+
+Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: cap_mim_2f0_m4m5_noshield                                         |Circuit 2: cap_mim_2f0_m4m5_noshield                                         
+-----------------------------------------------------------------------------|-----------------------------------------------------------------------------
+1                                                                            |1                                                                            
+2                                                                            |2                                                                            
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
+Flattening unmatched subcell por_amp in circuit gf180mcu_ocd_ip__por (1)(1 instance)
+Flattening unmatched subcell por_3v3_schmitt_inv in circuit gf180mcu_ocd_ip__por (1)(1 instance)
+Flattening unmatched subcell gf180mcu_as_sc_mcu7t3v3__fillcap_4 in circuit gf180mcu_ocd_ip__por (1)(2 instances)
+Flattening unmatched subcell gf180mcu_as_sc_mcu7t3v3__buff_12 in circuit gf180mcu_ocd_ip__por (1)(2 instances)
+Flattening unmatched subcell gf180mcu_as_sc_mcu7t3v3__inv_4 in circuit gf180mcu_ocd_ip__por (1)(1 instance)
+
+Removing zero-valued device vsrc from cell gf180mcu_ocd_ip__por (1) makes a better match
+Removing zero-valued device vsrc from cell gf180mcu_ocd_ip__por (1) makes a better match
+Removing zero-valued device vsrc from cell gf180mcu_ocd_ip__por (1) makes a better match
+Removing zero-valued device vsrc from cell gf180mcu_ocd_ip__por (1) makes a better match
+Removing zero-valued device vsrc from cell gf180mcu_ocd_ip__por (1) makes a better match
+Making another compare attempt.
+
+Class gf180mcu_ocd_ip__por (0):  Merged 239 parallel devices.
+Class gf180mcu_ocd_ip__por (0):  Merged 198 series devices.
+Class gf180mcu_ocd_ip__por (1):  Merged 64 parallel devices.
+Subcircuit summary:
+Circuit 1: gf180mcu_ocd_ip__por                                              |Circuit 2: gf180mcu_ocd_ip__por                                              
+-----------------------------------------------------------------------------|-----------------------------------------------------------------------------
+nfet_03v3 (141->25)                                                          |nfet_03v3 (57->25)                                                           
+pfet_03v3 (112->27)                                                          |pfet_03v3 (60->27)                                                           
+ppolyf_u_1k (200->2)                                                         |ppolyf_u_1k (2)                                                              
+cap_mim_2f0_m4m5_noshield (40->2)                                            |cap_mim_2f0_m4m5_noshield (40->2)                                            
+diode_nd2ps_03v3 (1)                                                         |diode_nd2ps_03v3 (1)                                                         
+Number of devices: 57                                                        |Number of devices: 57                                                        
+Number of nets: 31                                                           |Number of nets: 31                                                           
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Resolving symmetries by property value.
+Resolving symmetries by pin name.
+Resolving symmetries by net name.
+Netlists match with 4 symmetries.
+
+Subcircuit pins:
+Circuit 1: gf180mcu_ocd_ip__por                                              |Circuit 2: gf180mcu_ocd_ip__por                                              
+-----------------------------------------------------------------------------|-----------------------------------------------------------------------------
+por_unbuf                                                                    |por_unbuf                                                                    
+vdd3v3                                                                       |vdd3v3                                                                       
+ena                                                                          |ena                                                                          
+porb                                                                         |porb                                                                         
+por                                                                          |por                                                                          
+vss                                                                          |vss                                                                          
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes gf180mcu_ocd_ip__por and gf180mcu_ocd_ip__por are equivalent.
+
+Final result: Circuits match uniquely.
+.

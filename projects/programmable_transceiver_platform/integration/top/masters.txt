@@ -1,0 +1,94 @@
+# master <name> <netlist path relative to repo root>:<subckt>      published cell, pins read from the file
+# master <name> inline <pins...>                                    pin list stated here (no single netlist file)
+# master <name> demand <owner> <pins...>                            block does not exist yet: build demand
+# master <name> staged <path>:<subckt> <pins...>                    owner's staged pin contract; the published file still differs (counted until it matches)
+# A = projects/programmable_transceiver_platform/analog   IS = scratch/island-support-20261108-075605   IF = scratch/iso-family
+master pt_lna            A/rf_rx/generated/lna.ext.spice:pt_lna
+master pt_rxmix_i        A/rf_rx/generated/rxmix_i.ext.spice:pt_rxmix_i
+master pt_rxmix_q        A/rf_rx/generated/rxmix_q.ext.spice:pt_rxmix_q
+master pt_bbfilter_i     A/rf_rx/generated/bbfilter_i.ext.spice:pt_bbfilter_i
+master pt_bbfilter_q     A/rf_rx/generated/bbfilter_q.ext.spice:pt_bbfilter_q
+master pt_bb_tap         A/rf_rx/generated/bb_tap.ext.spice:pt_bb_tap
+master pt_txmix_i        A/rf_tx/generated/txmix_i.ext.spice:pt_txmix_i
+master pt_txmix_q        A/rf_tx/generated/txmix_q.ext.spice:pt_txmix_q
+master pt_txsum          A/rf_tx/generated/txsum.ext.spice:pt_txsum
+master pt_rfdriver       A/rf_tx/generated/rfdriver.ext.spice:pt_rfdriver
+master pt_adc_i          staged A/converters/generated/adc_i.ext.spice:pt_adc_i VDD VSS INP INN VCM VREF IBIAS CLK ACQ0 ACQ1 EN ILEN TEST0 TEST1 CODE0 CODE1 CODE2 CODE3 CODE4 CODE5 CODE6 CODE7 CODE8 CODE9 DONE OVERLOAD CODEB0 CODEB1 CODEB2 CODEB3 CODEB4 CODEB5 CODEB6 CODEB7 CODEB8 CODEB9 DONEB OVERLOADB ATB_BIAS
+master pt_adc_q          staged A/converters/generated/adc_q.ext.spice:pt_adc_q VDD VSS INP INN VCM VREF IBIAS CLK ACQ0 ACQ1 EN ILEN TEST0 TEST1 CODE0 CODE1 CODE2 CODE3 CODE4 CODE5 CODE6 CODE7 CODE8 CODE9 DONE OVERLOAD CODEB0 CODEB1 CODEB2 CODEB3 CODEB4 CODEB5 CODEB6 CODEB7 CODEB8 CODEB9 DONEB OVERLOADB ATB_BIAS
+master pt_dac_i          staged A/converters/generated/dac_i.ext.spice:pt_dac_i VDD VSS OUTP OUTN IBIAS CLK EN HOLD_ZERO CODE0 CODE1 CODE2 CODE3 CODE4 CODE5 CODE6 CODE7 CODE8 CODE9 ATB_BIAS
+master pt_dac_q          staged A/converters/generated/dac_q.ext.spice:pt_dac_q VDD VSS OUTP OUTN IBIAS CLK EN HOLD_ZERO CODE0 CODE1 CODE2 CODE3 CODE4 CODE5 CODE6 CODE7 CODE8 CODE9 ATB_BIAS
+master pt_refbuf         A/converters/generated/refbuf.ext.spice:pt_refbuf
+master pt_pll_ring       A/timing/generated/pll_ring.ext.spice:pt_pll_ring
+master pt_pll_ring_core  A/timing/generated/pll_ring_core.ext.spice:pt_pll_ring_core
+master pt_pll_vreg2      A/pll_vreg/generated/pt_pll_vreg2.ext.spice:pt_pll_vreg2
+master pt_clockmux       A/timing/generated/clockmux.ext.spice:pt_clockmux
+master pt_prescale       A/timing/generated/prescale.ext.spice:pt_prescale
+master pt_wordclk        A/timing/generated/wordclk.ext.spice:pt_wordclk
+master pt_polyphase      A/timing/generated/polyphase.ext.spice:pt_polyphase
+master pt_lo_ext         A/timing/generated/lo_ext.ext.spice:pt_lo_ext
+master pt_lc_qvco5       A/timing/lcvco/qvco5.spice:pt_lc_qvco5
+master pt_lo_mmd         A/timing/generated/lo_mmd.ext.spice:pt_lo_mmd
+master pt_lo_mmd_qdum    A/timing/generated/lo_mmd_qdum.ext.spice:pt_lo_mmd_qdum
+master pt_lo_pfdcp       A/timing/generated/lo_pfdcp.ext.spice:pt_lo_pfdcp
+master pt_lo_lf          A/timing/generated/lo_lf.ext.spice:pt_lo_lf
+master pt_lo_obs         A/timing/generated/lo_obs.ext.spice:pt_lo_obs
+master pt_obs_pre4       A/timing/generated/obs_pre4.ext.spice:pt_obs_pre4
+master pt_clk_obs16      A/timing/generated/clk_obs16.ext.spice:pt_clk_obs16
+master pt_diff_clk_rx    A/timing/generated/diff_clk_rx.ext.spice:pt_diff_clk_rx
+master pt_ring_osc       A/timing/generated/ring_osc.ext.spice:pt_ring_osc
+master pt_vco_replica    A/timing/generated/vco_replica.ext.spice:pt_vco_replica
+master pt_aosc           A/timing/generated/aosc.ext.spice:pt_aosc
+master pt_cdr            A/wired_rx/generated/cdr.ext.spice:pt_cdr
+master pt_ctle           A/wired_rx/generated/ctle.ext.spice:pt_ctle
+master pt_detect         A/wired_rx/generated/detect.ext.spice:pt_detect
+master pt_rxlevel        A/wired_rx/generated/rxlevel.ext.spice:pt_rxlevel
+master pt_rxselect       A/wired_rx/generated/rxselect.ext.spice:pt_rxselect
+master pt_slicer         A/wired_rx/generated/slicer.ext.spice:pt_slicer
+master pt_termination    A/wired_rx/generated/termination.ext.spice:pt_termination
+master pt_wmon_sel       A/wired_rx/generated/wmon_sel.ext.spice:pt_wmon_sel
+master pt_wrx_cap        A/wired_rx/generated/wrx_cap.ext.spice:pt_wrx_cap
+master pt_ptrim          A/wired_rx/generated/ptrim.ext.spice:pt_ptrim
+master pt_vthdac         A/wired_rx/generated/vthdac.ext.spice:pt_vthdac
+master pt_wiredtx        A/wired_tx/generated/wiredtx.ext.spice:pt_wiredtx
+master pt_wtx_hsbias     A/wired_tx/generated/hsbias.ext.spice:pt_wtx_hsbias
+master pt_wtx_fallback_control A/bringup_control/generated/pt_wtx_fallback_control.ext.spice:pt_wtx_fallback_control
+master tx_interlock      A/pads/generated/wired-transmit-lifecycle.spice:tx_mode_interlock_flat_physical
+master tx_steer          A/pads/generated/wired-transmit-lifecycle.spice:tx_steering_buffer_flat_physical
+master term_buffer       A/pads/generated/wired-transmit-lifecycle.spice:buffer_compensated_flat
+master por               A/core_support/por/netlist/layout/gf180mcu_ocd_ip__por.spice:gf180mcu_ocd_ip__por
+master pad_rf_pair       A/pads/generated/stress-safe-families/rf-pair/reference.spice:pad_reference
+master pad_single_leg    A/pads/generated/stress-safe-families/single-leg/reference.spice:pad_reference
+master pad_refpad        A/pads/generated/stress-safe-families/reference/physical.spice:tx_protected_pad
+master pad_wirepad       A/pads/generated/stress-safe-families/wired-receive-usb/physical.spice:tx_protected_pad
+master pad_txpad         A/pads/generated/stress-safe-families/wired-transmit/physical.spice:tx_protected_pad
+master pad_hspad         A/pads/generated/stress-safe-families/wired-receive-hs/physical.spice:hs_protected_pad
+master isw_wired         IS/pex/isw_wired/isw_wired.pex.spice:isw_wired_pex
+master isw_rf            IS/pex/isw_rf/isw_rf.pex.spice:isw_rf_pex
+master isw_pll           IS/pex/isw_pll/isw_pll.pex.spice:isw_pll_pex
+master isw_conv          IS/pex/isw_conv/isw_conv.pex.spice:isw_conv_pex
+master isw_debug         IS/pex/isw_debug/isw_debug.pex.spice:isw_debug_pex
+master atb_leaf_s        IS/pexd/atb_leaf_s/atb_leaf_s.pex.spice:atb_leaf_s_flat
+master atb_leaf_f        IS/pexd/atb_leaf_f/atb_leaf_f.pex.spice:atb_leaf_f_flat
+master atb_grp           IS/pexd/atb_grp/atb_grp.pex.spice:atb_grp_flat
+master atb_pad           IS/pexd/atb_pad/atb_pad.pex.spice:atb_pad_flat
+master iso_clamp         IS/pex/iso_clamp/iso_clamp.pex.spice:iso_clamp_pex
+# unpublished (pads owner, scratch/iso-family, iso-placement.json): same ports as iso_clamp; iso_pd = Y ISO VSS
+master iso_clamp_x4      inline A ISO Y VDD VSS
+master iso_pd            inline Y ISO VSS
+# integration/core_bias.py builder (no netlist file); pin list = build()['pins'] of 2026-11-13
+master pt_core_bias      inline VDD VSS RAIL_rf RAIL_conv RAIL_pll RAIL_wired RAIL_debug ON_rf ON_conv ON_pll ON_wired ON_debug C_core_biasgen_ena C_core_biasgen_ref_sel_vbg C_core_biasgen_ref_sel_coarse C_core_biasgen_ref_sel_fine C_core_biasgen_idac2_source_0 C_core_biasgen_idac2_source_1 C_core_biasgen_idac2_source_2 C_core_biasgen_idac2_source_3 C_core_biasgen_idac2_source_4 C_core_biasgen_idac1_source_0 C_core_biasgen_idac1_source_1 C_core_biasgen_idac1_source_2 C_core_biasgen_idac1_source_3 C_core_biasgen_idac1_source_4 C_core_biasgen_bandgap_sink1_0 C_core_biasgen_bandgap_sink1_1 C_core_biasgen_bandgap_sink1_2 C_core_biasgen_bandgap_sink2_0 C_core_biasgen_bandgap_sink2_1 C_core_biasgen_voltgen_source_0 C_core_biasgen_voltgen_source_1 C_core_biasgen_voltgen_source_2 C_core_biasgen_voltgen_source_3 C_core_biasgen_voltgen_source_4 C_core_biasgen_voltgen_sink1_0 C_core_biasgen_voltgen_sink1_1 C_core_biasgen_voltgen_sink1_2 C_core_biasgen_voltgen_sink2_0 C_core_biasgen_voltgen_sink2_1 C_core_biasgen_voltgen_sink2_2 C_core_refchain_bgap_ena C_core_refchain_bgap_trim_0 C_core_refchain_bgap_trim_1 C_core_refchain_bgap_trim_2 C_core_refchain_bgap_trim_3 C_core_refchain_bgap_trim_4 C_core_refchain_bgap_trim_5 C_core_refchain_bgap_trim_6 C_core_refchain_bgap_trim_7 C_core_refchain_bgap_trim_8 C_core_refchain_bgap_trim_9 C_core_refchain_bgap_trim_10 C_core_refchain_bgap_trim_11 C_core_refchain_bgap_trim_12 C_core_refchain_bgap_trim_13 C_core_refchain_bgap_trim_14 C_core_refchain_bgap_trim_15 C_core_refchain_dist_en_rf C_core_refchain_dist_en_conv C_core_refchain_dist_en_pll C_core_refchain_dist_en_wire C_core_refchain_dist_en_debug EN_lna BIAS_lna EN_rxmix_i BIAS_rxmix_i EN_rxmix_q BIAS_rxmix_q EN_bbfilter_i BIAS_bbfilter_i EN_bbfilter_q BIAS_bbfilter_q EN_txmix_i BIAS_txmix_i EN_txmix_q BIAS_txmix_q EN_rfdriver BIAS_rfdriver EN_adc_i BIAS_adc_i EN_adc_q BIAS_adc_q EN_dac_i BIAS_dac_i EN_dac_q BIAS_dac_q EN_refbuf BIAS_refbuf EN_pll_ring_tx BIAS_pll_ring_tx EN_pll_ring_rx BIAS_pll_ring_rx EN_pll_ring_host BIAS_pll_ring_host BIAS_lc_vco_reserved EN_ctle BIAS_ctle EN_detect BIAS_detect EN_wiredtx BIAS_wiredtx EN_bb_tap_i BIAS_bb_tap_i EN_bb_tap_q BIAS_bb_tap_q EN_bb_tap_wmon BIAS_bb_tap_wmon ROOT_REF VREF0 VCM TRK_RF TRK_WIRE TRK_PLL TRK_CONV VBG TRK_DEBUG IDAC1 VGEN_SOURCE VGEN_SINK1 VGEN_SINK2
+# chip-level wrappers: TARGET port lists for the rewritten pt_chip.sv (TOP-2). Today's black boxes in
+# integration/pt_chip.sv differ (separate VDD_CORE/VDD_HOST_* pins, retired WCLK_OBS/WDBG_OBS); not checked by check_top.py
+master pt_host_physical  inline RESET_N SPI_SCLK SPI_CS_N SPI_MOSI SPI_MISO H2D[0] H2D[1] H2D[2] H2D[3] H2D[4] H2D[5] H2D[6] H2D[7] H2D[8] H2D[9] H2D_CLK D2H[0] D2H[1] D2H[2] D2H[3] D2H[4] D2H[5] D2H[6] D2H[7] D2H[8] D2H[9] D2H_CLK VDD VSS rst_n sclk cs_n mosi miso miso_oe h2d_clk h2d_pin[0] h2d_pin[1] h2d_pin[2] h2d_pin[3] h2d_pin[4] h2d_pin[5] h2d_pin[6] h2d_pin[7] h2d_pin[8] h2d_pin[9] d2h_pin[0] d2h_pin[1] d2h_pin[2] d2h_pin[3] d2h_pin[4] d2h_pin[5] d2h_pin[6] d2h_pin[7] d2h_pin[8] d2h_pin[9] d2h_clk_pin d2h_oe d2h_pdrv[0] d2h_pdrv[1] d2h_sl
+master pt_debug_physical inline VDD VSS CLK_OBS DBG_OBS0 DBG_OBS1 clk_obs clk_obs_oe dbg_obs0 dbg_obs0_oe dbg_obs1 dbg_obs1_oe
+master atb_provider_pad  inline ASIG5V DVDD DVSS VDD VSS
+# the macro: target pin list = what pt_chip.conn binds on instance `digital`; check_top.py diffs it against rtl/pt_digital_macro.sv
+master pt_digital_macro  target
+# ---- build demands (do not exist; see decisions.md) ----
+master pt_bias_ext       demand core_support EN_qvco BIAS_qvco EN_lo_pfdcp BIAS_lo_pfdcp EN_hsbias BIAS_hsbias TRK_PLL TRK_WIRE RAIL_pll RAIL_wired VSS
+master pt_lna_ind        demand rf_rx A B
+master pt_lna_deg        demand rf_rx A B
+master pt_lo_vreg        demand timing+power VIN VOUT EN VSS
+master pt_refvcm         demand pads VCM EN VDD VSS
+master pad_strap         demand pads+digital PAD Y VDD VSS
+master pt_txpad_bias     demand pads BUF_REF BUF_BIAS EN_TERM VDD VSS

@@ -852,6 +852,67 @@ COB chain + CTLE, RL and eye), `usbq.py` (USB path), `cin.py` (CTLE input C with
 * ptrim (schematic, 834 MHz) 29.1 deg ss/fs covers the 17-21 deg ring spread; published ptrim.ext.spice does not toggle.
 * Antenna planner: finite driver diffusion rule (RG7-1). Ring table / evidence regen not done (ring not republished).
 
+### Resume 7 / RING ECO (2026-11-12; scratch `scratch/wired_rx/r8ring/`, see STATUS.md; **published `pt_pll_ring` r9v**)
+* **What changed.** The published r9d layout is kept **exactly as routed** (every generic re-layout doubled the ss phase error);
+  an ECO in Magic deletes the 139 old FT instances (112 legs, 11 inverters as 22 halves, 5 VCF resistors) and their 91 FT-only
+  nets (`select net` from each deleted instance's pcell port points; `eco/mkeco.py`). VH and VPBF are brought out on Metal3 at
+  the core's left edge (y 547.9 / 360.4 um) into a shielded left channel (VSS|VH|VSS|VPBF|VSS); EN/IBIAS drop from the core
+  bottom. The FT array is now the macro `pt_pll_ring_ft` (`analog/timing/pll_ring_ft.spice`, header current steering, r9h
+  scheme) placed **below** the core (away from the phase ports): 8 hand-placed slices (`ftmac.py`: inverter at the switch gates,
+  FX/FXB local pair in their own channel, Y = 2.2 um Metal2 link + Metal4 riser with VSS shield tracks, VH/VHD/VPBF buses two
+  rows away from the votes) + the follower/replica/KP-inverter sub-macro `pt_ft_fol` (layout_engine). `pll_ring.spice` = r9v.
+* **Interface (row RING-ECO in interface-changes.md):** KP0..2, FU0..3, FD0..3 move to the new bottom edge (Metal5,
+  y = -127.98 um); other ports unchanged. Block 198.1 x 664.6 -> 210.0 x 792.6 um (+34.9k um2). Port order unchanged.
+* **Clean (gate a):** Magic DRC 0; netgen unique match vs r9v (core flat + XFT hierarchical, 20 core antenna diodes mapped);
+  KLayout precheck main 0 / antenna 0 (`pll_ring-kldrc.json`), sak-drc 0. Macro alone also DRC 0 / LVS unique.
+* **Phase spacing (gate b, extracted, ss/32/2.69, VCTRL 1.9, 33 fF, deg vs PH0):** r9v 848.1 MHz
+  [-7.0 -9.1 -13.7 -0.8 -9.3 -14.5 -9.0] vs r9d 847.3 MHz [-6.3 -8.0 -12.2 -0.1 -8.8 -14.1 -6.6]: per-port change 0.4..2.4 deg
+  (PH7 2.4: the removed FU0 route ran beside it), spread 13.7 deg (ptrim range 29).
+* **Vote injection (gate c, tt/27/2.925, VCTRL 1.21, KP3, ring-synchronous votes, 33 fF, ppm vs idle):**
+  | netlist | alt | rnd0.5 | tog - up/2 | up (per vote) | spread |
+  |---|---|---|---|---|---|
+  | r9d published (r7ring) | +4279 | +2948 | | | |
+  | ftA generic macro + schematic core (r7ring) | -863 | -387 | -139 | 852 | 724 |
+  | hand macro + schematic core | -307 | -58 | -282 | 851 | 249 |
+  | **r9v full extracted top** | **-228** | **+32** | **-259** | **858** | **291 (<= 300)** |
+  Extracted vote coupling in the hand macro: vote->Y 0.03 fF/slice (ftA: dominant), vote->VH 1.0/0.26 fF (FX/FXB), the rest to
+  VDD/VSS shields. Bisection (macro + schematic core): all macro caps removed -80 ppm (device floor), Y wiring caps removed
+  -265: the remaining layout share is spread over many nets, not a single coupling.
+* **Range (gate e, extracted r9v, 33 fF, KP3, MHz; ring supply = corner value):**
+  | corner | LO@0.85 | LO@2.05 | HI@0.85 | HI@2.05 |
+  |---|---|---|---|---|
+  | ss/32/2.69 | stall (0.95 V: <50 MHz, 0.65 mA); **145.6 @1.05** | 753.8 | 192.6 @1.0, 383.6 @1.15 | **866.7** |
+  | ss/22/2.69 | stall | 770.6 | stall | 885.0 |
+  | ss/32/2.89 | stall | 804.3 | stall | 933.6 |
+  | tt/27/2.925 | stall; **140.4 @0.9**, 252.3 @1.0 | 1047.3 | stall (1 mA) | 1202.4 |
+  | tt/27/2.835 | stall | 1022.1 | stall | 1169.8 |
+  | ff/22/3.015 | **257.2** (optimistic **280.7**) | 1355.8 | 400.9 | 1539.2 |
+  | ff/22/2.835 | slow (<233) | 1300.7 | 397.6 | 1469.8 |
+  | ff/32/3.015 | slow (<233) | 1325.7 | 406.3 | 1507.0 |
+  | sf/27/2.835, 3.015 | stall | 996.1, 1038.4 | stall | 1155.1, 1213.5 |
+  | fs/27/2.835, 3.015 | stall | 1027.1, 1081.8 | 249.1, 250.9 | 1159.5, 1230.2 |
+  "stall" = no oscillation at 0.85 V (ring current < 1 mA); "slow" = oscillating below the 60 ns window's 233 MHz (long-window
+  value given where run). Low-band minimum: <= 360 MHz at every corner checked, including the **optimistic** bound (wiring C
+  x0.85, Rg 0, junction C x0.75; the BSIM gate-oxide C cannot be lowered, so this bound is partial) at ff/22/3.015: 280.7 MHz
+  @ 0.85 V. Stop VCTRL: ss/32 between 0.95 and 1.05 V (145.6 MHz just above), tt ~0.85-0.9 V (140.4 MHz @ 0.9). Band continuity:
+  every LO top (>= 753.8) is far above the HI bottom (<= 401 / stall) -> > 350 MHz overlap at every corner.
+  Average gain (MHz/V): LO 608 (ss/32) .. 789 (tt) .. 915 (ff/22); HI 642 (ss/32) .. 949 (ff/22).
+  ppm/vote (all four FU on, KP3, band ends): 160 (HI@2.05 tt) .. 283 (HI@0.85 ff/22); 858 at tt VCTRL 1.21 (alt.py up).
+* **Pessimistic HI top: NOT obtained.** With `pess.py` (+15 % wiring C, Rg 200 ohm/10 um, +25 % device C as CGX/CDX) the ring
+  does not oscillate at HI@2.05 (tt or ss; 2-2.9 mA, phases flat) - and the **published r9d extraction fails the same way**
+  (r7ring/d_ext.spice), so the r9d README "HI pessimistic 826 MHz" figure is not reproducible with the current pess.py. Rg alone
+  or +15 % wiring C alone: runs; CGX/CDX at 40 % (+10 % device C) with Rg and wiring: runs. Start-up/latch threshold between
+  +10 % and +25 % device C. **Partial pessimistic bound** (wiring +15 %, Rg, device C +10 %): HI@2.05 ss/32/2.69 = **727.9 MHz**
+  (r9d published, same derate: 728.5 MHz) vs 866.7 nominal -> the high-band top misses 810/834 MHz at pessimistic C/Rg on the
+  unchanged r9d core as well (pre-existing, not an ECO effect). Open: ring speed at the pessimistic bound, and the start-up failure
+  at +25 % device C.
+* **Evidence regenerated** (`generated/pll_ring-evidence.json`, `evid.py`: run_timing gating benches on the published r9v
+  extraction, tt/27/3.3): closed loop 480 / 625 / 810 MHz and host-follow N=4 125 / 156.25 MHz all frequency-locked (pass),
+  port phase error max 6.7-7.3 deg; analog LOCK flag high at 480/625, low at 810 and N=4 (demoted indicator, as before); safe
+  tt/ff85/ss0 10.0 uA (= IBIAS); clean pass (DRC 0, LVS unique, KLayout precheck 0/0). Not rerun on r9v (listed as excluded):
+  cold start, HOLD, open-loop VCTRL-end cases and the 24 run_timing corner cases (the range table above replaces them).
+* r9d backup: `scratch/wired_rx/r8ring/r9d_backup/`. Reproduce: `eco/mkeco.py` -> `ftmac.py` -> `asm.py` -> `check_top.py` -> `publish.py`.
+
 ## Known limitations and open items
 
 0. **`pt_wrx_cap`: the slicer → capture re-capture phase is not closed.**
@@ -998,7 +1059,8 @@ ss/32 °C/3.15 V, Rg 200 Ω·W/10 µm on all 760 3.3 V devices, +25 % device C (
   - **pess.py fixed:** it now also derates S/D junction C (ad/as/pd/ps ×1.25) and overlap C (+0.025 fF/µm gate–drain and
     gate–source). On the published sl6: 625 MHz 0/51, 0/59 ✓; **750 MHz 15/51, 19/59 FAIL; 810 MHz 25/50, 27/58 FAIL;
     834 MHz 28/50, 31/58 FAIL.**  The earlier "750 MHz passes pessimistic" claim (Cgs-only derate) is withdrawn.  At the
-    full pessimistic values the slicer is qualified only to ring 625 MHz (2.5 Gb/s, the WT21 core maximum).  The WRX-06
+    full pessimistic values the slicer is qualified only to ring 625 MHz (2.5 Gb/s, the WT21 core maximum).  DP HBR 2.7 and SATA G2 3.0 (to 3.24 Gb/s) are NOT dropped:
+    OPEN: architecture change in progress (r8arch, `scratch/wired_rx/r8arch/decision.md`).  The WRX-06
     742.5/750 MHz CDR points are therefore NOT covered at the pessimistic values (open; needs a faster sampler core).
     810 MHz stays in the nominal-corner gating set (it passes there); it is not claimed at the pessimistic values.
   - IX-10 LSB at ff (extracted sl6, r7 DAC end points): 3.45–3.6 mV at mid-scale (≤ 4 ✓).
@@ -1168,3 +1230,55 @@ main 0 / antenna 0.**  Not yet independently reviewed.
   Coordinator decision needed: drop the q834 gate (publish r7) or a front/PD re-pipelining round for 834 MHz.
 * **Capture flop τ** (`r7cap/tau`, schematic ss/32/3.15, keeper TSPC, 10 fF): 0.19–0.22 ns (clock-to-Q 0.53 → 0.78 ns as the
   data edge approaches the 36.5 ps boundary).  MTBF in W7-GEAR.
+* **r7j–r7m (follow-up on the coordinator's directions), not published.**  80 µA strings (tap R / 4), strings interleaved
+  by comparator pair, delayed strobe 1.5–2.1 ns, TG 3/4: 179.7k µm² clean.  Extracted gating still fails (squelch fire
+  fraction 0.48–0.50, disconnect 0.22–0.26).  The limit is LT settling (τ about 2–3 ns: string-node C through the 750 Ω
+  divider), and iavg is 3.78 mA of the 4 mA budget.  Details in `scratch/wired_rx/r7detect/STATUS.md`.
+
+
+### Resume 7 / CDR (main agent, 2026-11-12; scratch `scratch/wired_rx/r7cdr/`, `r8impl/`)
+
+* **1050 vs 632 MHz explained (small bench):** cl.py used the SCHEMATIC r9 ring; the 632 MHz point (fsweep tag `r9extp`) is the
+  EXTRACTED ring. Schematic ring, ideal VCTRL: 1055.6 MHz / 4.28 mA @ 1.236 V = cl.py (1050, 4.28 mA). Wiring C: 1.59-1.66x.
+  `r7cdr/discrepancy.json`. Schematic-ring CL runs and the 1225 MHz/V Kvco are not representative.
+* **Bench ladder (`r7cdr/cl.py`, small first):** ideal 8-phase ring + ideal votes vs `cdr_pi_model` (same gains): +600 ppm locks in
+  both (49 ns, margin 0.42 UI); +3000 ppm fails in both (beyond P range); inverted votes (broken case) 788 slips; SJ 5 MHz 0.18 UI
+  passes / 0.39 UI fails in both.  Ideal ring + extracted pt_cdr (r9 compact, `r6area/cdr_c20od`): locks, margin 0.40 UI.
+  Note: `cdr_pi_model` preloads the integral with the offset (fll_res_ppm default) - earlier model "acquisition" assumed the FLL.
+* **Extracted closed loop (published r9v ring + extracted pt_cdr, tt, 33 fF/phase, ring 585.4 MHz, start = FLL window):**
+  bench fixes first: REF kick pulses latch HOLD (else the ring PFD pumps VCTRL down), 60 ns ideal VCTRL precharge, 80 ps vote/data
+  edges and 10 fF on floating outputs (cured the timestep aborts; tolerances NOT loosened).
+  - +500 ppm, P path only (pt_cdr off): **locks, 250 ns, margin 0.41 UI**, pk phase 0.087 UI.  g1: locks, margin 0.40 UI.
+  - g3 from +1000: locks then drifts away (VCTRL falls while UP votes 52 %); g4/g6 run away (-12400 ppm at g6).
+  - **Root cause (blocking, pt_cdr r9 design bug):** standalone extracted pt_cdr, g3: UP static +4.7 nA, UP toggling at 585 MHz
+    (50 % random) **-4.8 nA**, 25 % **-6.0 nA**; AVP-AVN collapses (+1.2 V static -> -63 mV toggling).  The 0.6 uA steered halves
+    cannot re-steer within a ring cycle (source node ~5 fF x 0.3 V / 0.6 uA ~ 2.5 ns > 1.7 ns), so votes at ring rate do not
+    integrate and switch asymmetry decides the sign.  Fix = pt_cdr r10 (NOT built): ~20 uA steered halves (75 ps re-steer),
+    averaging R/C scaled (7.5 kOhm || 7.3 pF/side, same 55 ns tau, ~0.15 V/vote), +~160 uA; ports unchanged.  (risk: WRX-01)
+* **Ring vote injection fixed** (r9v, published by the ring ECO agent, row RING-ECO): extracted full top tt sync votes alt -228,
+  rnd +32, tog -259 ppm, spread 291 ppm (<= 300), 858 ppm/vote (r9d: +4279 / +2948).  Phase spacing at ss = r9d within 2.4 deg.
+* **Ring low band <= 300 MHz (WT21 update), extracted r9v BAND=0:** ss/32 110 MHz @ 1.0 V, ss/22 193 @ 1.1, sf/27 128 @ 0.95,
+  tt 200 @ 0.95, ff/22 261 @ 0.85 (295 @ 0.875), ff optimistic 243-247 @ 0.85; top HI ss/32 867, LO ss/32 754 @ 2.05 V; ff HI
+  starts 398 @ 0.85 and LO reaches 1356 @ 2.05 (bands overlap).  Pessimistic HI top: rerun needed (60 ns window too short).
+* **CDR model, two-sided gain (quarter/half):** uncalibrated KP fails (340 ppm/vote 0.73-1.06x); per-die KP calibration (row
+  CDR7-KP): quarter 430-710, half 1700-1980 ppm/vote, integral 800-1600 ppm/us; lat 7 (with SLI7-M re-time) 1.03-1.19x.  The
+  extracted runs show the model is optimistic on integral stability (g4 ~2400 ppm/us unstable extracted) - recalibrate after r10.
+* **Eighth rate (R8-ARCH) JTOL with the real masks** (design-assumptions DA-JTOL-SATA2 / DA-JTOL-HBR; masks are pk-pk, model uses
+  peak = pk-pk/2): SATA G2 (ring 375) **1.9-2.75x** at 200-400 ppm/vote, lat 4-6.  **DP HBR (ring 337.5) fails at 0.5 MHz**
+  (mask 6.95 UI pk-pk): best 0.63x (750 ppm/vote, lat 3, 3200 ppm/us); 1-100 MHz pass (>= 1.06x).  A fast integral OTA
+  (pole 420 -> 30 cycles) does not fix it (0.5 MHz 0.59-0.91x, then 1-2 MHz peaking).  0.5 MHz needs ~+-4000 ppm tracking
+  (2 pi 0.5 MHz x 3.5 UI); the BB P path gives ~(transitions/cycle ~4) x KP.  OPEN: loop architecture for HBR LF (see report).
+* **Update (later 2026-11-12):**
+  - **pt_cdr r10 built** (netlists.cdr(), cdr.spice regenerated; r9 backup `scratch/wired_rx/r8impl/cdr.r9.spice`): steered halves
+    ~10 uA (8/2 PMOS), switches 2/0.28, AVP/AVN 1.25 kOhm || 20x20x8 MOS cap, OTA mirror kept 0.5/2 (0.5/0.5 gave -0.22 vote idle
+    offset).  Scratch layout `r8impl/cdr_r10_c20/gen`: **174,363 um2 (288x409 r9 compact 117,842), DRC 0, LVS unique, KLayout 0/0.
+    NOT published to generated/ (generated/cdr.* is still the stale r-ac3 cell).**  Extracted steering (tt): g7 idle -1.16, 1 leg
+    +20.3, 2 legs +38.8, toggling 25 % +16.1, 50 % +34.7 nA; g3 idle -0.13, 1 leg +1.56, toggling 50 % +2.60 nA -> correct sign;
+    residual toggling offset ~ -0.2 vote.
+  - **Ring r9w** (common-mode-latch fix, row RING-ASYM, published): full-pessimistic start ss 641 / tt 541 MHz extracted.
+  - **First extracted closed-loop lock with the integral path** (r9w + r10 ext, tt, 580.7 MHz data, KP code 2, g5): from +1000 ppm
+    lock 97 ns, margin 0.43 UI, pk phase 0.07 UI, ring 0 ppm vs data, VCTRL steady (run ends 1.14 us on a timestep abort).
+    From -1000 ppm: acquires late (710 ns, 18 wraps), margin 0.24 UI, ring drifting to -800 ppm at 0.82 us, abort at 1.01 us:
+    NOT clean.  Per-leg votes are pinned (leg0 UP only, leg3 DN mostly) because the bench has no ptrim and the r9w port phase
+    errors (to -15 deg) place the legs on different sides of the edge -> reduced effective P gain; next: add the ptrim stand-in
+    (per-leg delay calibration) to the bench, then HBR settings (lat 2, high integral rate).

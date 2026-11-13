@@ -386,6 +386,9 @@ def instance_view(dev, g):
     return box, pins
 
 
+MACRO_GATE_DERATE = 0.4   # see Layout._antenna (macro-internal routing unseen at block level)
+
+
 def _lef_gate_area(lef):
     """{pin: ANTENNAGATEAREA um^2} from a macro LEF."""
     out, pin = {}, None
@@ -837,8 +840,12 @@ class Layout:
             elif isinstance(d, Macro):
                 # Hardened macro input pins (LEF ANTENNAGATEAREA) are gates seen from this level's
                 # routing; the macro's internal diodes are not reliably on the partial net here.
+                # The deck also counts the macro's own internal routing on the same partial net,
+                # which this level cannot see (dac_logic hold_zero: 233 um internal M3 + 151 um
+                # block M3 -> ratio 464, RC-21/K3).  Derate the gate area so the block wire alone
+                # must stay below MARGIN*LIMIT/MACRO_GATE_DERATE (diode is sized for the same).
                 ga = _lef_gate_area(d.lef).get(pin, 0.)
-                terms.append((a['x'], a['y'], a['net'], 'g' if ga > 0 else 'sd', ga))
+                terms.append((a['x'], a['y'], a['net'], 'g' if ga > 0 else 'sd', ga * MACRO_GATE_DERATE))
         req = ad.requests_from_shapes(self.shapes, terms)
         cmds, self.antenna_diodes = ad.plan(req, [s[:5] for s in self.shapes], keep, taps=taps)
         self.cmds += cmds

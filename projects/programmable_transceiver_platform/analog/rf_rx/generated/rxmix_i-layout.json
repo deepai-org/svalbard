@@ -2,191 +2,67 @@
  "drc_count": 0,
  "drc_raw": "0",
  "bbox_um": [
-  1.5,
-  -0.2,
-  265.2,
-  288.91
+  1.09,
+  0.6,
+  193.82,
+  184.5
  ],
- "area_um2": 76238.0,
+ "area_um2": 35442.0,
  "lvs": {
   "unique_match": true,
   "final_result": "Circuits match uniquely.",
   "top_level_match": true
  },
- "cells": {
-  "pt_rfrx_inv": {
-   "size_um": [
-    24.72,
-    15.46
+ "layout_generator": "lna_layout.py (compact flat, MIMs over active)",
+ "compact": {
+  "rw": 194.8,
+  "width": 195.9,
+  "height": 186.1,
+  "area_est": 36461,
+  "rows": [
+   [
+    27,
+    31,
+    23.6,
+    193.9
    ],
-   "rows": 1,
-   "nets": 4,
-   "bank_um": 12.1,
-   "row_report": [
-    [
-     2,
-     4.0,
-     5.2,
-     11.6
-    ]
+   [
+    14,
+    21,
+    23.2,
+    162.0
+   ],
+   [
+    2,
+    10,
+    23.2,
+    192.4
+   ],
+   [
+    11,
+    13,
+    23.2,
+    186.9
+   ],
+   [
+    2,
+    6,
+    23.2,
+    192.4
+   ],
+   [
+    9,
+    11,
+    15.2,
+    120.3
    ]
-  },
-  "pt_rfrx_bias": {
-   "size_um": [
-    32.72,
-    25.67
-   ],
-   "rows": 2,
-   "nets": 6,
-   "bank_um": 12.9,
-   "row_report": [
-    [
-     3,
-     4.0,
-     5.2,
-     18.8
-    ],
-    [
-     2,
-     3.2,
-     5.2,
-     12.3
-    ]
-   ]
-  },
-  "pt_rfrx_vcm": {
-   "size_um": [
-    52.82,
-    69.75
-   ],
-   "rows": 2,
-   "nets": 9,
-   "bank_um": 12.1,
-   "row_report": [
-    [
-     7,
-     4.0,
-     20.2,
-     39.7
-    ],
-    [
-     1,
-     2.5,
-     34.9,
-     35.6
-    ]
-   ]
-  },
-  "pt_rxmix_quad": {
-   "size_um": [
-    51.32,
-    21.66
-   ],
-   "rows": 1,
-   "nets": 7,
-   "bank_um": 0.0,
-   "row_report": []
-  },
-  "pt_rxmix_ofsdac": {
-   "size_um": [
-    80.92,
-    60.68
-   ],
-   "rows": 3,
-   "nets": 19,
-   "bank_um": 24.9,
-   "row_report": [
-    [
-     7,
-     7.8,
-     7.2,
-     49.7
-    ],
-    [
-     6,
-     8.5,
-     7.2,
-     55.0
-    ],
-    [
-     2,
-     4.8,
-     15.5,
-     50.0
-    ]
-   ]
-  },
-  "pt_rfrx_otan": {
-   "size_um": [
-    93.22,
-    152.69
-   ],
-   "rows": 5,
-   "nets": 13,
-   "bank_um": 27.5,
-   "row_report": [
-    [
-     1,
-     2.5,
-     51.3,
-     52.0
-    ],
-    [
-     2,
-     5.5,
-     23.2,
-     64.7
-    ],
-    [
-     1,
-     4.0,
-     23.2,
-     50.6
-    ],
-    [
-     4,
-     6.2,
-     8.2,
-     63.8
-    ],
-    [
-     4,
-     7.0,
-     8.2,
-     59.5
-    ]
-   ]
-  },
-  "pt_rxmix_i": {
-   "size_um": [
-    267.92,
-    292.51
-   ],
-   "rows": 3,
-   "nets": 27,
-   "bank_um": 44.9,
-   "row_report": [
-    [
-     14,
-     16.0,
-     25.7,
-     221.4
-    ],
-    [
-     4,
-     10.8,
-     69.8,
-     222.0
-    ],
-    [
-     2,
-     7.8,
-     152.7,
-     190.4
-    ]
-   ]
-  }
+  ],
+  "ncaps": 7,
+  "ntrunks": 33,
+  "antenna_diodes_placed": 0,
+  "antenna_diodes_failed": 0
  },
+ "cells": {},
  "klayout_drc": {
   "ran": true,
   "violations": 0,
@@ -204,14 +80,15 @@
  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
  "drc_details": "",
  "sources": {
-  "rxmix_i.spice": "sha256:bae2d49fc929ff8fef8f96759c7081d8456b7f6cc111dafdb01685f154bd35b8",
-  "netlists.py": "sha256:a32cdea2b799cbcd4373ab3c5ffe83daf7efd06fadfa34846eb3a6736c3a9a18",
-  "rfrx_flow.py": "sha256:5cba470266fb413cc419522d9a55778cddd8ce2d169e46d12ac516dda8fd9dc9"
+  "rxmix_i.spice": "sha256:e00f8f225a4a6a6242782c0ed6dff41ab2f2b9ddca9959409878445150e403cf",
+  "netlists.py": "sha256:25c4a277c7f218a44503c66db2f6815eaed9fbd8e93bd1d92c6067426cfc6126",
+  "rfrx_flow.py": "sha256:c95720b6e4fada3bcf478c3e5559efc5c938169f08421996760c8ea656bc7aaa",
+  "lna_layout.py": "sha256:559206e9f837a4184ed17f37ebd4cc2ae40f0cb35e18578b8df6861f667b1368"
  },
  "artifacts": {
-  "rxmix_i.gds": "sha256:751b165c35c00a9641f52366af1e96ad6a30d8502031c886e71bed56f5f88bfb",
-  "rxmix_i.mag": "sha256:3b06d8749956ac392f3200fa2e30939a28d331d6f36bb1d456c4bdaa2221f71b",
-  "rxmix_i.ext.spice": "sha256:0c169b8884d882b35cc19767fe1cb299459b4c2dfed0cc6754ac54cfba1d09f0",
-  "rxmix_i-lvs.txt": "sha256:2d7a661cbf42797a6ed88c0418171c9ea82e031f629e70477cdafe80016d2bdf"
+  "rxmix_i.gds": "sha256:7a40c2ca7a8411aad9b0a67b82eb7fbd610c541401fca568dffa70ac66b6d81b",
+  "rxmix_i.mag": "sha256:c62ec549869ca0147458158f0da41337c3c96d953492c7c2591d603fa5fd69ad",
+  "rxmix_i.ext.spice": "sha256:10c8619377ec0b16357b5a31eeb83447544398dbc881f41f7cbf8f64f3abd267",
+  "rxmix_i-lvs.txt": "sha256:1b64f9c73f0f30c50cc0058eb40ad6c05073250534d7e173939045cc93e76cc8"
  }
 }

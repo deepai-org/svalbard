@@ -1,10 +1,10 @@
 {
  "ext_u": {
-  "gain_i_db": 15.306376163340252,
-  "gain_q_db": 14.555090874385225,
-  "bb_pp_i_v": 0.0428942,
-  "bb_pp_q_v": 0.0340914,
-  "idd_a": 0.00655294,
+  "gain_i_db": 25.93836544243503,
+  "gain_q_db": 26.127018473355115,
+  "bb_pp_i_v": 0.119566,
+  "bb_pp_q_v": 0.122143,
+  "idd_a": 0.0169856,
   "f_lo_hz": 2400000000.0,
   "f_if_hz": 5000000.0,
   "rf_emf_amp_diff_v": 0.003,
@@ -12,34 +12,48 @@
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
  "ext_m": {
-  "gain_i_db": 26.26686493810461,
-  "gain_q_db": 26.84577022967936,
-  "bb_pp_i_v": 0.133344,
-  "bb_pp_q_v": 0.143819,
-  "idd_a": 0.00655297,
+  "gain_i_db": 29.3774078984272,
+  "gain_q_db": -47.11590574754892,
+  "bb_pp_i_v": 0.177269,
+  "bb_pp_q_v": 0.00312898,
+  "idd_a": 0.0170586,
   "f_lo_hz": 2400000000.0,
   "f_if_hz": 5000000.0,
   "rf_emf_amp_diff_v": 0.003,
   "board_match": {
-   "order": "series_at_pad",
-   "series_leg": [
-    "L",
-    5.9999075266525975e-09
+   "order": "ladder",
+   "lossy": true,
+   "lb": 1.5e-09,
+   "net": [
+    [
+     "sL",
+     3.2e-09
+    ],
+    [
+     "pT",
+     1.7296664004531968e-12
+    ],
+    [
+     "sL",
+     1.34e-09
+    ],
+    [
+     "pC",
+     3.12e-13
+    ]
    ],
-   "shunt_diff": [
-    "C",
-    3.1333196345924206e-12
-   ],
-   "q": 4.724934693784418
+   "ct": 4,
+   "rt": 0,
+   "worst_s11_db": -14.96
   },
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
  "ext_byp": {
-  "gain_i_db": 10.914592780746768,
-  "gain_q_db": 12.641982609526835,
-  "bb_pp_i_v": 0.0310495,
-  "bb_pp_q_v": 0.0290076,
-  "idd_a": 0.00381818,
+  "gain_i_db": 7.324062198524334,
+  "gain_q_db": 7.503667216775042,
+  "bb_pp_i_v": 0.0146017,
+  "bb_pp_q_v": 0.0149309,
+  "idd_a": 0.00601618,
   "f_lo_hz": 2400000000.0,
   "f_if_hz": 5000000.0,
   "rf_emf_amp_diff_v": 0.003,
@@ -47,11 +61,11 @@
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
  "ext_m_1200MHz": {
-  "gain_i_db": 36.26608436726675,
-  "gain_q_db": 36.23412427306905,
-  "bb_pp_i_v": 0.392325,
-  "bb_pp_q_v": 0.389443,
-  "idd_a": 0.00657186,
+  "gain_i_db": 42.62342613046272,
+  "gain_q_db": 42.82526488859678,
+  "bb_pp_i_v": 0.812377,
+  "bb_pp_q_v": 0.83145,
+  "idd_a": 0.0170128,
   "f_lo_hz": 1200000000.0,
   "f_if_hz": 2000000.0,
   "rf_emf_amp_diff_v": 0.003,
@@ -59,22 +73,22 @@
    "order": "series_at_pad",
    "series_leg": [
     "L",
-    2.3864819791961142e-08
+    1.099751814852359e-08
    ],
    "shunt_diff": [
     "C",
-    3.0541379662405687e-12
+    3.5512390535790295e-12
    ],
-   "q": 2.30276577546985
+   "q": 2.6775711652476115
   },
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
  "ext_m_600MHz": {
-  "gain_i_db": 36.423534523758136,
-  "gain_q_db": 36.415679709426,
-  "bb_pp_i_v": 0.401303,
-  "bb_pp_q_v": 0.398096,
-  "idd_a": 0.00658394,
+  "gain_i_db": 47.854316184415964,
+  "gain_q_db": 48.07182764335625,
+  "bb_pp_i_v": 1.48328,
+  "bb_pp_q_v": 1.52085,
+  "idd_a": 0.0170269,
   "f_lo_hz": 600000000.0,
   "f_if_hz": 2000000.0,
   "rf_emf_amp_diff_v": 0.003,
@@ -82,83 +96,178 @@
    "order": "series_at_pad",
    "series_leg": [
     "L",
-    9.388153567661017e-08
+    3.907503854450951e-08
    ],
    "shunt_diff": [
     "C",
-    1.6720921402798487e-12
+    6.535766324599176e-12
    ],
-   "q": 0.6303638860834088
+   "q": 2.46392585651284
   },
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
- "tnoise_lna_matched": {
-  "gain_i_db": 28.879500800886497,
-  "out_psd_i_v2_hz": 3.280458356036894e-14,
-  "bins": 10,
-  "nf_i_db": 14.08502827165847,
-  "psd_by_band": {
-   "2-3MHz": 8.134816337932692e-14,
-   "5-7MHz": 1.8887286400437217e-14,
-   "7-9MHz": 2.2450090810821674e-14
-  },
-  "nf_i_5to9mhz_db": 12.078812204425695,
-  "mode": "lna",
-  "board_match": {
-   "order": "series_at_pad",
-   "series_leg": [
-    "L",
-    5.9999075266525975e-09
-   ],
-   "shunt_diff": [
-    "C",
-    3.1333196345924206e-12
-   ],
-   "q": 4.724934693784418
-  },
-  "lna_nf_input_db": 3.284737,
-  "ota_en_v_rthz": 7.080991e-09,
-  "band_hz": [
-   2000000.0,
-   9000000.0
+ "det_lna_matched_extpr": {
+  "corner": [
+   "typical",
+   27,
+   3.3
   ],
-  "analysed_window_s": [
-   1e-06,
-   3e-06
-  ],
-  "trnoise_k": 1.6903560324032997e-11,
-  "channel": "I (Q mixer present, noiseless)",
-  "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
-  "board_lna_15db_1p5db_nf_db": 3.4063206672641733,
-  "board_lna_15db_1p5db_nf_5to9mhz_db": 2.7675586763167948
+  "ct": 4,
+  "view": "extpr",
+  "lna_matched": {
+   "idd_a": 0.01096808,
+   "gain_db": -7.13712,
+   "zin_re_ohm": 92.98374,
+   "zin_im_ohm": 23.17709,
+   "nf_db": 8.563038,
+   "vd_cm_v": 2.430273
+  },
+  "match": {
+   "order": "ladder",
+   "lossy": true,
+   "lb": 1.5e-09,
+   "net": [
+    [
+     "sL",
+     3.2e-09
+    ],
+    [
+     "pT",
+     1.6209828341446293e-12
+    ],
+    [
+     "sL",
+     1.34e-09
+    ],
+    [
+     "pC",
+     3.12e-13
+    ]
+   ],
+   "ct": 4,
+   "rt": 0,
+   "worst_s11_db": -17.22
+  },
+  "nf_ssb_db": 13.141555940529946,
+  "nf_dsb_db": 10.11187052074169,
+  "f_parts": {
+   "sig": 7.183,
+   "img": 7.2472,
+   "h3u": 0.0,
+   "h3l": 0.0001,
+   "h5u": 0.0,
+   "h5l": 0.0,
+   "ota1": 2.7592,
+   "ota2": 2.7541,
+   "r1": 0.0313,
+   "r2": 0.0308,
+   "h3u_lna": 0.2319,
+   "h3l_lna": 0.2319,
+   "h5u_lna": 0.072,
+   "h5l_lna": 0.072
+  },
+  "lna_harmonic": {
+   "h3": {
+    "nf_db": 71.19286,
+    "gain_db": -75.1341,
+    "folded_per_sideband": 0.2319238744298378,
+    "mixer_conversion_rel": "1/h (ideal)"
+   },
+   "h5": {
+    "nf_db": 71.37834,
+    "gain_db": -75.9608,
+    "folded_per_sideband": 0.07203208067232848,
+    "mixer_conversion_rel": "1/h (ideal)"
+   }
+  },
+  "gain_sig_db": {
+   "4.0MHz": 30.57,
+   "6.0MHz": 28.35,
+   "8.5MHz": 25.9
+  },
+  "ota_en_v_rthz": 2.410852e-09,
+  "resid_rms_v": 0.00030252738741648255
  },
- "tnoise_bypass": {
-  "gain_i_db": 14.660120580936413,
-  "out_psd_i_v2_hz": 3.683920650450937e-14,
-  "bins": 10,
-  "nf_i_db": 28.808165873784578,
-  "psd_by_band": {
-   "2-3MHz": 1.5649825209449456e-13,
-   "5-7MHz": 3.536478985855367e-15,
-   "7-9MHz": 1.0312411228170763e-14
+ "det_lna_matched_extpr_ss_32_3.15": {
+  "corner": [
+   "ss",
+   32,
+   3.15
+  ],
+  "ct": 8,
+  "view": "extpr",
+  "lna_matched": {
+   "idd_a": 0.00942912,
+   "gain_db": -8.16768,
+   "zin_re_ohm": 114.6629,
+   "zin_im_ohm": 22.50584,
+   "nf_db": 9.395142,
+   "vd_cm_v": 2.283716
   },
-  "nf_i_5to9mhz_db": 21.548912969891166,
-  "mode": "bypass",
-  "board_match": null,
-  "lna_nf_input_db": null,
-  "ota_en_v_rthz": 7.080991e-09,
-  "band_hz": [
-   2000000.0,
-   9000000.0
-  ],
-  "analysed_window_s": [
-   1e-06,
-   3e-06
-  ],
-  "trnoise_k": 1.6903560324032997e-11,
-  "channel": "I (Q mixer present, noiseless)",
-  "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
-  "board_lna_15db_1p5db_nf_db": 14.05079702650983,
-  "board_lna_15db_1p5db_nf_5to9mhz_db": 7.707300510482082
+  "match": {
+   "order": "ladder",
+   "lossy": true,
+   "lb": 1.5e-09,
+   "net": [
+    [
+     "sL",
+     3.2e-09
+    ],
+    [
+     "pT",
+     1.4039420589185727e-12
+    ],
+    [
+     "sL",
+     1.34e-09
+    ],
+    [
+     "pC",
+     3.12e-13
+    ]
+   ],
+   "ct": 8,
+   "rt": 0,
+   "worst_s11_db": -17.47
+  },
+  "nf_ssb_db": 14.167880084500542,
+  "nf_dsb_db": 11.18461251003412,
+  "f_parts": {
+   "sig": 8.6999,
+   "img": 8.5919,
+   "h3u": 0.0,
+   "h3l": 0.0,
+   "h5u": 0.0,
+   "h5l": 0.0,
+   "ota1": 4.0204,
+   "ota2": 3.9989,
+   "r1": 0.051,
+   "r2": 0.0441,
+   "h3u_lna": 0.2711,
+   "h3l_lna": 0.2711,
+   "h5u_lna": 0.0803,
+   "h5l_lna": 0.0803
+  },
+  "lna_harmonic": {
+   "h3": {
+    "nf_db": 75.47787,
+    "gain_db": -79.7725,
+    "folded_per_sideband": 0.27105815521862014,
+    "mixer_conversion_rel": "1/h (ideal)"
+   },
+   "h5": {
+    "nf_db": 72.56046,
+    "gain_db": -77.7027,
+    "folded_per_sideband": 0.08027937214091582,
+    "mixer_conversion_rel": "1/h (ideal)"
+   }
+  },
+  "gain_sig_db": {
+   "4.0MHz": 28.93,
+   "6.0MHz": 26.26,
+   "8.5MHz": 23.61
+  },
+  "ota_en_v_rthz": 2.682343e-09,
+  "resid_rms_v": 0.0002717610042002468
  }
 }

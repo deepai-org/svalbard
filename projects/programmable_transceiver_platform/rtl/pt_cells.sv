@@ -23,6 +23,10 @@ endmodule
 endmodule
 (* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__buf_8(input wire I,output wire Z);
 endmodule
+(* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__clkinv_2(input wire I,output wire ZN);
+endmodule
+(* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__clkinv_8(input wire I,output wire ZN);
+endmodule
 (* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__buf_2(input wire I,output wire Z);
 endmodule
 `endif
@@ -91,12 +95,17 @@ module pt_hio_launch(input wire clk,sel,rst_n,nrst_n,dr,df,output wire z);
  wire hio_qr,hio_qf;
  gf180mcu_fd_sc_mcu7t5v0__dffrnq_1 lr(.D(dr),.RN(rst_n),.CLK(clk),.Q(hio_qr));
  gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1 lf(.D(df),.RN(nrst_n),.CLKN(clk),.Q(hio_qf));
- (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__mux2_2 hio_x(.I0(hio_qr),.I1(hio_qf),.S(sel),.Z(z));
+ // Rise/fall balance (TC13 r4c, coordinator: equal tr/tf at ss): mux2_2 falls 0.26-0.35 ns slower than
+ // it rises; hio_i inverts so the stagger mux after it switches with the opposite polarity to hio_x and
+ // the two asymmetries cancel; the pin driver is a clkinv_8 (second inversion, balanced clock cells).
+ wire hio_xz;
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__mux2_2 hio_x(.I0(hio_qr),.I1(hio_qf),.S(sel),.Z(hio_xz));
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__clkinv_2 hio_i(.I(hio_xz),.ZN(z));
 `else
  reg qr,qf;
  always @(posedge clk or negedge rst_n) if(!rst_n) qr<=1'b0; else qr<=dr;
  always @(negedge clk or negedge nrst_n) if(!nrst_n) qf<=1'b0; else qf<=df;
- assign z=sel?qf:qr;
+ assign z=~(sel?qf:qr);   // inverted lane (hio_i); the pin driver inverts back
 `endif
 endmodule
 

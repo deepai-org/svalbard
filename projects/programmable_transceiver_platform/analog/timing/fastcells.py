@@ -91,6 +91,8 @@ def ring8():
 
 
 # --------------------------------------------------------------- ct_ring9
+ASYM_RESET = True
+
 def ring9(WN=8, WP=16, KN=1, KP=2, name='ct_ring9'):
     """ct_ring8 topology for pll_ring r9 (CDR/pll_ring owner, 2026-11-10).  ct_ring8's extracted ring nodes carry
     25-30 fF of wiring (all restore inverters after the four stages: long Metal2 tracks), so the extracted ring ran
@@ -119,8 +121,15 @@ def ring9(WN=8, WP=16, KN=1, KP=2, name='ct_ring9'):
         # restore inverters of the two driven phases, right next to the stage; clamps for them too
         for n_ in (op, on):
             restore(ph.index(n_))
-        cols += [BRK, CN(op), G('ENB', 0.5, p=False), CN('VSS'), G('ENB', 0.5, p=False), CN(on)]
-        net += [fet(f'C{k}a', op, 'ENB', 'VSS', 'VSS', 0.5), fet(f'C{k}b', on, 'ENB', 'VSS', 'VSS', 0.5)]
+        # r9w (2026-11-12, wired RX resume 7): asymmetric reset.  With every P and N clamped low the start is fully
+        # symmetric and, at +25 % device C (pess.py), the ring settles in the common-mode latch (P_k == N_k, all 8
+        # inverters as one even loop); the N1 clamp gate is tied to VSS (device kept: same layout and node C), so EN=0
+        # leaves P1 low / N1 driven high -> differential start.  The N1 clamp gate goes to P1 (the compact router has
+        # no gate-to-rail tie): off while P1 is clamped low, and in operation a 0.5 um pull-down of N1 while P1 is high,
+        # i.e. a weak extra keeper that also opposes the common-mode state.  Full-pessimistic start: see README Resume 7.
+        g_on = op if (k == 0 and ASYM_RESET) else 'ENB'
+        cols += [BRK, CN(op), G('ENB', 0.5, p=False), CN('VSS'), G(g_on, 0.5, p=False), CN(on)]
+        net += [fet(f'C{k}a', op, 'ENB', 'VSS', 'VSS', 0.5), fet(f'C{k}b', on, g_on, 'VSS', 'VSS', 0.5)]
     ports = [f'O{k}' for k in range(8)] + ['ENB']
     row = compact.Row(name, cols, rail_n='VT', tap_n='VSS', rail_p='VH', tap_p='VDD', ports=ports, wn=1, wp=2)
     row.track_order = ph + [f'A{k}' for k in range(8)] + [f'O{k}' for k in range(8)] + ['ENB']

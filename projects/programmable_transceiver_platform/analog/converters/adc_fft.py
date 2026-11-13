@@ -36,6 +36,8 @@ ap.add_argument('--amp', type=float, default=1.6)
 ap.add_argument('--refbuf', action='store_true')
 ap.add_argument('--workers', type=int, default=2)
 ap.add_argument('--tag', default=None)
+ap.add_argument('--chunk', type=int, default=64,
+                help='conversions per parallel deck; 16 keeps one extracted deck well inside the 7200 s sim timeout')
 a = ap.parse_args()
 p_, t_, v_ = a.corner.split(',')
 corner = (p_, float(t_), float(v_))
@@ -50,7 +52,7 @@ shutil.copy(net, work / 'ext.spice')
 if a.refbuf:
     shutil.copy(HERE / 'generated' / 'refbuf.ext.spice', work / 'refbuf.ext.spice')
 m = benches.adc_fft(work, 'ext.spice', f'pt_{a.block}', corner=corner, n=a.n, cycles=a.cycles, period=a.period,
-                    acq=a.acq, amp=a.amp, ilen=a.ilen, refbuf=a.refbuf, workers=a.workers)
+                    acq=a.acq, amp=a.amp, ilen=a.ilen, refbuf=a.refbuf, workers=a.workers, chunk=a.chunk)
 m['netlist_sha256'] = ck.sha256(net)
 m['bench_sha256'] = ck.sha256(HERE / 'benches.py')
 if a.refbuf:

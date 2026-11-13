@@ -46,7 +46,7 @@ pnr)
   rm -rf "$OUT/design"; mkdir -p "$OUT/design/rtl" "$OUT/home" "$OUT/tmp"
   cp "$PROJ"/rtl/*.sv "$PROJ"/rtl/*.svh "$PROJ"/rtl/*.vh "$OUT/design/rtl/"
   cp "$PROJ/integration/pt_digital_macro.sdc" "$PROJ/verification/digital_hardening/config.json" "$PROJ/verification/digital_hardening/pin_order.cfg" \
-     "$PROJ/verification/digital_hardening/hio_placement.cfg" "$OUT/design/"
+     "$PROJ/verification/digital_hardening/hio_placement.cfg" "$PROJ/integration/pt_cts_h2d.tcl" "$OUT/design/"
   # In-window characterized Liberty (libchar.py): synthesis, placement, CTS and resizer optimize setup
   # against ss_032C_3v15 (and hold against ff) directly, not a derated tt library.
   mkdir -p "$OUT/design/lib"; cp "$PROJ"/verification/digital_hardening/liberty/*.lib "$OUT/design/lib/"

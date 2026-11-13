@@ -57,7 +57,8 @@ RF_DIRECTION_OFF = {
 }
 # Extracted block currents replace planning allocations in RF modes (rf_rx README, converters README).
 RF_EVIDENCE_MA = {
-    'lna': 11.7, 'rxmix_i': 1.9, 'rxmix_q': 1.9, 'rxfilter_i': 6.66, 'rxfilter_q': 6.66,
+    'lna': 11.7, 'rxmix_i': 3.01, 'rxmix_q': 3.01,   # rxmix: fork V 2x TIA OTA (extracted tt; corners 2.80-3.09)
+    'rxfilter_i': 5.22, 'rxfilter_q': 5.22,   # FD bbfilter (FS-1/FS-2, committed ca80067; corners 4.95-5.32)
     'adc_i': 5.73, 'adc_q': 5.73, 'dac_i': 1.92, 'dac_q': 1.92,
 }
 # PWR-HOST-RF: RF recipe runs D2H at div2 (debug.host_link.rate, reg 0x51, hardware present). The

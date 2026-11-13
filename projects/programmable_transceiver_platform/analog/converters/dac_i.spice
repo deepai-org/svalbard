@@ -1489,10 +1489,13 @@ XKBP1_0 KPG KPG VDD VDD pfet_03v3 w=4u l=1u
 XKBP2_0 VCASC KPG VDD VDD pfet_03v3 w=4u l=1u
 XKBD_0 VCASC VCASC VSS VSS nfet_03v3 w=1u l=3u
 XKPD_0 VCASC ENB VSS VSS nfet_03v3 w=1u l=0.5u
+XCDAB_0 ATB_BIAS VSS cap_mim_2f0_m4m5_noshield c_width=22u c_length=22u
+XCDVC_0 VCASC VSS cap_mim_2f0_m4m5_noshield c_width=22u c_length=22u
 XRCP_0 OPI CMS VSS ppolyf_u_1k r_width=1u r_length=20u
 XRCN_0 ONI CMS VSS ppolyf_u_1k r_width=1u r_length=20u
 XRDA_0 VDD CMR VSS ppolyf_u_1k r_width=1u r_length=50u
-XRDB_0 CMR VSS VSS ppolyf_u_1k r_width=1u r_length=50u
+XRDB_0 CMR CMRF VSS ppolyf_u_1k r_width=1u r_length=50u
+XMDF_0 CMRF EN VSS VSS nfet_03v3 w=4u l=0.28u
 XOTT_0 OTS ATB_BIAS VSS VSS nfet_03v3 w=16u l=2u
 XOT1_0 OTD CMS OTS VSS nfet_03v3 w=4u l=1u
 XOT2_0 HG CMR OTS VSS nfet_03v3 w=4u l=1u

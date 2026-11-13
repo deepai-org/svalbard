@@ -3,7 +3,7 @@
 Every file is self-contained (all subcircuits it needs), uses gf180mcuD
 primitives only and is the LVS reference for the generated layout:
 
-  lna.spice        pt_lna       differential resistive-feedback LNA + bypass switch
+  lna.spice        pt_lna       pseudo-differential CS LNA, split I/Q cascodes, pre-LNA attenuator + bypass
   rxmix_i.spice    pt_rxmix_i   passive double-balanced mixer + TIA (I)
   rxmix_q.spice    pt_rxmix_q   same circuit, Q instance
   bbfilter_i.spice pt_bbfilter_i  shared RX/TX 5th-order active-RC filter with PGA biquad
@@ -50,6 +50,12 @@ class Sub:
         m, wf = self._fingers(w, fw)
         for _ in range(m):
             self.lines.append(f'X{self._id("MP")} {d} {g} {s} {b} pfet_03v3 w={wf:g}u l={l:g}u')
+
+    def nmos6(self, d, g, s, w, l=.7, b='VSS', fw=10.):
+        # 6 V (nfet_06v0) device for pad-facing switches (PD29 HBM screen: 3.3 V oxide overstressed)
+        m, wf = self._fingers(w, fw)
+        for _ in range(m):
+            self.lines.append(f'X{self._id("MH")} {d} {g} {s} {b} nfet_06v0 w={wf:g}u l={l:g}u')
 
     def nmos_m(self, d, g, s, w, m, l=.28, b='VSS'):
         for _ in range(m):
@@ -154,12 +160,13 @@ def ota_fast():
 
 
 def ota_lownoise():
-    """Mixer TIA OTA: 600 uA tail, 600/1 PMOS pair, long low-gm NMOS load (20/2), 400 uA output
-    stage, 5 pF Miller cap.  Input noise ~7 nV/rtHz at 5 MHz (was ~29 nV/rtHz)."""
+    """Mixer TIA OTA: 1.2 mA tail, 1200/1 PMOS pair, NMOS load 20/2, 400 uA output stage, 5 pF Miller cap.
+    Input noise 2.41 nV/rtHz at 5 MHz tt (3.07 with fnoicor=1); fork V doubled tail and pair (+0.55 mA per OTA).
+    A longer load (L 4/6 um, lower flicker) was rejected: out-of-band IIP3 -15.2/-19.0 dBm vs -11.2 at L 2."""
     return ota('pt_rfrx_otan', **OTAN)
 
 
-OTAN = dict(tail=120., win=600., lin=1., wl=20., ll=2., w6=13.3, w7=80., cc=48., rz=1., fw=20.)
+OTAN = dict(tail=240., win=1200., lin=1., wl=20., ll=2., w6=13.3, w7=80., cc=48., rz=1., fw=20.)   # fork V: tail/pair 2x (white en 3.54 -> 2.41 nV/rtHz tt)
 OTAF = dict(tail=16., win=30., wl=8., w6=36., w7=72., cc=12.2, rz=3., l2=.5)
 # PGA stage-1 OTA: OTAF with every device doubled and the same Miller cap (~2x GBW, +~0.45 mA per OTA)
 OTAG = dict(tail=32., win=60., wl=16., w6=72., w7=144., cc=12.2, rz=1.5, l2=.5)
@@ -196,69 +203,128 @@ def emit(path, subs):
 
 
 # ---------------------------------------------------------------- LNA
-LNA_CT_SIDE = (5.6, 7.9, 11.1)  # D-RX-1 shunt-C trim per leg (ct0..ct2): ~62.5/125/246 fF MIM sides (11.18/11.2 trip MIMTM.2)
-LNA_WCT = 80.                    # trim switch width for ct0 (x2, x4): one differential switch per bit
-LNA_WSE, LNA_WRT = 60., 10.      # SE switch (D-RX-2), 200 ohm/leg termination switch (RC-9)
+# RC-16b..e (fork A/F/J, scratch/rf-lna, scratch/rf-lna-pub): single transconductance stage with split I/Q
+# cascodes; compact hand-placed layout (lna_layout.py) <= 24.6k um^2.
+LNA_PORTS = ['rf_in_p', 'rf_in_n', 'rf_out_p', 'rf_out_n', 'rf_outq_p', 'rf_outq_n', 'ibias', 'en', 'gain_lo', 'byp',
+             'ct0', 'ct1', 'ct2', 'se', 'rt', 'island_off', 'atb_nbias', 'atb_vdcm', 'VDD', 'VSS',
+             'ct3', 'att0', 'att1', 'att2', 'att3', 'att4', 'src_p', 'src_n', 'tank_p', 'tank_n']
+# D-RX-1 shunt-C trim, 4 bits (RC-16e): LSB 25 um^2 MIM per leg (5 um = minimum MIM side), range 15 LSB
+# (the old 3-bit trim had 7 LSB of 31 um^2); board match derived at code 7 (reset); envelope corners land at 3..12.
+LNA_CT_SIDE = (9.2, 13.01, 18.4, 26.02)   # RC-16j: ct0..ct3 = LC-tank tune trim (MIM per side 85..677 um^2), reset 7; spans L -15 %..+10 %
+LNA_TANK_FIX = 0.5              # fixed tank MIM across tank_p/tank_n (side, um)
+LNA_RFEED_L, LNA_RFEED_W = 0, 12.   # RC-16j: no resistive feed (the two tank spirals carry the DC)
+LNA_CMIX = 16.0                  # tank -> mixer coupling MIM side (um), per mixer per leg
+LNA_WCT = 30.                    # bit-0 differential switch width (x2, x4, x8)
+LNA_WSE, LNA_WRT = 60., 10.      # SE switch (D-RX-2), termination switch (RC-9)
+# pre-LNA attenuator (fork P): 5-bit binary-weighted NMOS switches directly across the two stage-1 gates
+# (gates sit at the same DC bias vg), behind the input coupling MIMs: 6 bits att0..att4 + gain_lo (MSB).
+# Width of bit k = LNA_ATT_W0 * LNA_ATT_WEIGHTS[k]: first step <= 6 dB, >= 30 dB at code 63 at every corner (lna-evidence).
+LNA_ATT_W0 = 3.4
+LNA_ATT_FW = 10.
+LNA_ATT_BITS = ('att0', 'att1', 'att2', 'att3', 'att4', 'gain_lo')
+LNA_ATT_WEIGHTS = (1, 3, 7, 16, 40, 120)  # RC-16h: >= 30 dB at extpp ss, level gaps <= 6 dB at every corner (MSB = gain_lo)
+# input stage (fork P, in-band match): wider CS pair at the same current lowers the input Q
+LNA_WCS, LNA_WREP, LNA_CIN, LNA_SE_SIDE = 450., 7.7, 47.0, 11.6   # RC-16j: denser device, ~14 mA
+LNA_FW = 5.
+LNA_ATT_AT, LNA_BYP_AT, LNA_BYP_W = 'tank', 'pad', 10.   # RC-16j probes: 'tank' / 'pad' move them off the gate
+LNA_SE_DUMMY = False             # full se-path replica on rf_in_p (area); else a fixed MIM of LNA_DUM_SIDE
+LNA_DUM_SIDE = 5.5
+LNA_WCAS = 300.                  # RC-16j: single cascode per side
+LNA_CASREP = False               # cascoded bias replica (tried, fork P: no effect on the 10-13.6 mA process spread; off)
+LNA_RSEG = 10.                   # resistor fold length for the compact layout
+
+
+def _res_fold(s, a, b, l, w=1.):
+    n = 1 if l <= LNA_RSEG else -(-int(round(l * 100)) // int(LNA_RSEG * 100))
+    seg = round(l / n, 3)
+    rid = s._id('R')
+    nodes = [a] + [f'{rid.lower()}_s{k}' for k in range(1, n)] + [b]
+    for k in range(n):
+        name = rid if n == 1 else f'{rid}_{k}'
+        s.lines.append(f'X{name} {nodes[k]} {nodes[k + 1]} VSS ppolyf_u_1k r_width={w:g}u r_length={seg:g}u')
 
 
 def lna():
-    """Two-stage split-I/Q LNA (RC-8/RC-8a). Stage 1: R-feedback CS pair (4 mA, 160/0.28 per side,
-    RL ~400 ohm, RF ~3 kohm). Stage 2: two tail-coupled transconductors (4 mA each, 100/0.28 per side,
-    RL ~500 ohm), one per mixer (rf_out_* -> rxmix_i, rf_outq_* -> rxmix_q), so the I and Q quads do not
-    share an RF node. Package-tolerance network (sizing: scratch/rfconv-owner/lna/trim, NF cost <= 0.3 dB):
-    ct0..ct2 shunt-C trim, one differential switch per bit between the two legs' MIMs, MIM bottoms biased
-    to ct_b through ~40 kohm (off: junctions reverse-biased; 40k vs 200k: no NF difference); se closes RF_RX_N to VSS through a 5 pF MIM;
-    rt closes 2 x ~200 ohm across the stage-1 gates (opt-in real input, behind the 2 pF DC blocks)."""
-    s = Sub('pt_lna', ['rf_in_p', 'rf_in_n', 'rf_out_p', 'rf_out_n', 'rf_outq_p', 'rf_outq_n', 'ibias', 'en',
-                       'gain_lo', 'byp', 'ct0', 'ct1', 'ct2', 'se', 'rt', 'island_off', 'atb_nbias', 'atb_vdcm',
-                       'VDD', 'VSS'])
+    """Pseudo-differential CS input pair (LNA_WCS = 1000/0.28 per side, no tail, replica-biased from a
+    25 um diode: same current as the 400/9 version, lower density), AC-coupled from the pad through a
+    50 um MIM (~5 pF) and feeding separate I and Q cascodes (200/0.28 each, 3.6 um x 1 um ppoly loads).
+    Fork P (in-band match): the wide device, the larger coupling MIM and the removal of fixed pad-side C
+    (se cap 30 -> 12 um, MIM-attenuator removed) lower the input quality factor |X/R| from ~95 to ~35,
+    which a board ladder (B18/B25) can match across 2.40-2.4835 GHz (Bode-Fano: Q <= ~80 is required
+    even for an ideal network; see scratch/reviews/physical-limits.md RX-MATCH).
+    Pre-LNA attenuator: 6 weighted NMOS switches (1,2,4,8,16,48 x 3.4 um) across the two stage-1 gates (att0..att4, gain_lo
+    = MSB), 0..>=30 dB, steps <= 6 dB; the input match is not held while attenuating.
+    ct0..ct3: 4-bit shunt-C package/process trim at the pads.  se: RF_RX_N AC-grounded through a 12 um MIM
+    (RF_RX_P carries an identical dummy MIM + off switch for leg balance).  rt: Q-spoil, ~1.5 kohm per leg (3 kohm diff) across the
+    gates.  byp: gates straight to both mixer feeds."""
+    s = Sub('pt_lna', LNA_PORTS)
+    # bias: ibias mirror -> replica gate bias vg, cascode bias vcas (both MIM-decoupled)
     s.x('pt_rfrx_inv', 'en', 'enb', 'VDD', 'VSS')
-    s.x('pt_rfrx_inv', 'gain_lo', 'glb', 'VDD', 'VSS')
-    # bias: ibias diode, 400:1 tails (4 mA each: stage 1, stage 2 I, stage 2 Q)
     s.nmos('atb_nbias', 'atb_nbias', 'VSS', 2., .5)
     s.nmos('atb_nbias', 'enb', 'VSS', 2.)
-    s.res('ibias', 'atb_nbias', 2., 2.)           # ~1 kohm series: separates the ATB tap name from the pin
-    s.nmos_m('tail', 'atb_nbias', 'VSS', 20., 40, .5)
-    s.pmos_m('vtop', 'enb', 'VDD', 20., 10)       # load supply switch (no current when off)
-    s.res('vtop', 'vb2', 20., 1.)                 # stage-2 gate bias divider (~1.4 V)
-    s.res('vb2', 'VSS', 14., 1.)
-    for br, (op, on) in (('i', ('rf_out_p', 'rf_out_n')), ('q', ('rf_outq_p', 'rf_outq_n'))):
-        s.nmos_m(f'tail2{br}', 'atb_nbias', 'VSS', 20., 40, .5)
-        for sd, out in (('p', op), ('n', on)):
-            d, g2, d2 = f'd_{sd}', f'g2{br}_{sd}', f'd2{br}_{sd}'
-            s.cap(d, g2, 20.)                     # interstage coupling ~0.8 pF
-            s.res('vb2', g2, 20., 1.)
-            s.nmos_m(d2, g2, f'tail2{br}', 20., 5)
-            s.res('vtop', d2, 1., 2.)             # RL2 ~500 ohm
-            s.cap(out, d2, 32.)                   # output coupling ~2 pF
-            s.nmos(out, 'island_off', 'VSS', 1., 10.)   # weak clamp (~tens of uA)
-            if br == 'i':
-                s.res(d2, 'atb_vdcm', 20.)        # stage-2 drain common-mode sense for the ATB
+    _res_fold(s, 'ibias', 'atb_nbias', 2., 2.)
+    s.nmos('pb', 'atb_nbias', 'VSS', 20., .5)
+    s.pmos('pb', 'pb', 'VDD', 10., .5)
+    s.pmos('pb', 'en', 'VDD', 1.)
+    s.pmos('vgr', 'pb', 'VDD', 10., .5)
+    if LNA_CASREP:   # fork P: cascoded replica, its drain at the CS drain voltage (x): current tracks across process
+        s.nmos('vgr', 'vcas', 'xr', LNA_WREP * LNA_WCAS / LNA_WCS * 2)
+        s.nmos('xr', 'vgr', 'VSS', LNA_WREP)
+    else:
+        s.nmos('vgr', 'vgr', 'VSS', LNA_WREP)
+    s.nmos('vgr', 'enb', 'VSS', 2.)
+    _res_fold(s, 'vgr', 'vg', 10., 1.)
+    s.cap('vg', 'VSS', 10.)
+    s.pmos('vtop', 'enb', 'VDD', 4.)
+    _res_fold(s, 'vtop', 'vcas', 7., 1.)
+    _res_fold(s, 'vcas', 'VSS', 23., 1.)
+    s.cap('vcas', 'VSS', 10.)
+    # core
     for sd in 'pn':
-        g, d = f'g_{sd}', f'd_{sd}'
-        s.cap(g, f'rf_in_{sd}', 32.)              # input coupling ~2 pF (bottom plate on pad side)
-        s.nmos_m(d, g, 'tail', 20., 8)            # input device 160/0.28
-        s.res('vtop', d, 2., 5.)                  # RL1 ~400 ohm (L >= 1 um: HRES.3)
-        s.res(d, g, 3., 1.)                       # RF ~3 kohm feedback
-        s.nmos_m(g, 'byp', f'rf_out_{sd}', 20., 3)    # bypass: pad -> Cin -> g -> both mixer feeds
-        s.nmos_m(g, 'byp', f'rf_outq_{sd}', 20., 3)
-    s.pmos('g_n', 'glb', 'g_p', 100.)             # gain_lo: differential input shunt
-    # D-RX-1 shunt-C trim (per leg 0..437 fF in 62.5 fF steps)
+        g, x = (f'rf_in_{sd}' if not LNA_CIN else f'g_{sd}'), f'x_{sd}'   # LNA_CIN = 0: gate on the pad (board DC block)
+        _res_fold(s, 'vg', g, 60., 1.)
+        s.nmos(x, g, f'src_{sd}', LNA_WCS, fw=LNA_FW, b='VSS')   # RC-16i: source to its own pad (bond = Ls)
+        if LNA_CIN:
+            s.cap(g, f'rf_in_{sd}', LNA_CIN)
+        # RC-16j LNTA: ONE cascode per leg into the LC tank node tank_{sd} (spiral across tank_p/tank_n, placed at
+        # assembly as the QVCO spirals); DC feed by a ppoly resistor; both mixers AC-coupled from the tank node.
+        t = f'tank_{sd}'
+        s.nmos(t, 'vcas', x, LNA_WCAS)
+        if LNA_RFEED_L:
+            _res_fold(s, 'VDD', t, LNA_RFEED_L, LNA_RFEED_W)
+        for out in (f'rf_out_{sd}', f'rf_outq_{sd}'):
+            s.cap(t, out, LNA_CMIX)
+            s.nmos(out, 'island_off', 'VSS', 1., 10.)
+        _res_fold(s, t, 'atb_vdcm', 10.)
+        bsrc = g if LNA_BYP_AT == 'gate' else f'rf_in_{sd}'
+        s.nmos(bsrc, 'byp', f'rf_out_{sd}', LNA_BYP_W)
+        s.nmos(bsrc, 'byp', f'rf_outq_{sd}', LNA_BYP_W)
+    # pre-LNA attenuator: binary-weighted switches across the gates
+    for k, bit in enumerate(LNA_ATT_BITS):
+        a, b = (('g_p', 'g_n') if LNA_CIN else ('rf_in_p', 'rf_in_n')) if LNA_ATT_AT == 'gate' else ('tank_p', 'tank_n')
+        s.nmos(a, bit, b, LNA_ATT_W0 * LNA_ATT_WEIGHTS[k], fw=LNA_ATT_FW)
+    if not LNA_CT_SIDE:
+        for k in range(4):
+            s.x('pt_rfrx_inv', f'ct{k}', f'ct{k}_b', 'VDD', 'VSS')   # inert load on the legacy trim inputs
     for k, side in enumerate(LNA_CT_SIDE):
         s.x('pt_rfrx_inv', f'ct{k}', f'ct{k}_b', 'VDD', 'VSS')
         for sd in 'pn':
-            s.cap(f'rf_in_{sd}', f'x{k}_{sd}', side)
-            s.res(f'x{k}_{sd}', f'ct{k}_b', 40., 1.)
-        s.nmos(f'x{k}_p', f'ct{k}', f'x{k}_n', LNA_WCT * (1 << k))
-    # D-RX-2 single-ended mode: RF_RX_N AC-grounded through 5 pF
+            s.cap(f'tank_{sd}', f'x{k}c_{sd}', side)     # RC-16j: ct = tank tune trim
+            s.nmos(f'x{k}c_{sd}', 'VSS', f'ct{k}_b', 1., 1.)
+        s.nmos(f'x{k}c_p', f'ct{k}', f'x{k}c_n', LNA_WCT * (1 << k))
+    s.cap('tank_p', 'tank_n', LNA_TANK_FIX)
     s.x('pt_rfrx_inv', 'se', 'se_b', 'VDD', 'VSS')
-    s.cap('rf_in_n', 'se_x', 35.)                 # 2 x ~2.45 pF (a single 50 um plate trips MIMTM.2)
-    s.cap('rf_in_n', 'se_x', 35.)
-    s.res('se_x', 'se_b', 40., 1.)
+    s.cap('rf_in_n', 'se_x', LNA_SE_SIDE)
+    s.nmos('se_x', 'VSS', 'se_b', 1., 1.)
     s.nmos('se_x', 'se', 'VSS', LNA_WSE)
-    # RC-9 opt-in termination: ~200 ohm per leg (ppoly 2 um x 10 um) across the gates
-    s.res('g_p', 'rt_p', 2., 10.)
-    s.res('g_n', 'rt_n', 2., 10.)
+    if LNA_SE_DUMMY:
+        s.cap('rf_in_p', 'sd_x', LNA_SE_SIDE)          # leg-balance dummy of the se path (switch held off)
+        s.nmos('sd_x', 'VSS', 'VSS', 1., 1.)
+        s.nmos('sd_x', 'VSS', 'VSS', LNA_WSE)
+    else:
+        s.cap('rf_in_p', 'VSS', LNA_DUM_SIDE)    # fixed MIM balancing the se path's off-state C on rf_in_n
+    _res_fold(s, 'g_p' if LNA_CIN else 'rf_in_p', 'rt_p', 3., 2.)    # fork P (RC-16h): rt = Q-spoil, ~1.5 kohm per leg (was ~200 ohm termination)
+    _res_fold(s, 'g_n' if LNA_CIN else 'rf_in_n', 'rt_n', 3., 2.)
     s.nmos('rt_p', 'rt', 'rt_n', LNA_WRT)
     return [inv(), s]
 
@@ -303,14 +369,21 @@ def rxmix(name):
     for sd in 'pn':
         out = f'bb_{"n" if sd == "p" else "p"}'   # TIA inverts: x_p drives bb_n
         s.x('pt_rfrx_otan', 'atb_vcm', f'x_{sd}', out, 'vbpf', 'enb', 'VDD', 'VSS')
-        s.res(f'x_{sd}', out, 20.)                # Rtia ~20 kohm
-        s.cap(f'x_{sd}', out, 14.)                # Ctia ~0.4 pF (~20 MHz pole)
+        s.res(f'x_{sd}', out, 11.6)               # Rtia ~11.6 kohm (fork V: -4.7 dB cancels the gain rise of the 2x OTA)
+        s.cap(f'x_{sd}', out, 18.4)               # Ctia ~0.68 pF (same ~20 MHz pole)
         s.nmos(out, 'island_off', 'VSS', 1., 10.)   # weak clamp (~tens of uA)
     return [inv(), bias(), vcm(), ota_lownoise(), quad(), ofsdac(), s]
 
 
 # ---------------------------------------------------------------- shared RX/TX baseband filter
 def bbfilter(name):
+    """Fully differential filter/PGA with CMFB, fine DCOC DAC and fine cutoff trim (fork S): bbf_fd.py."""
+    import bbf_fd
+    return bbf_fd.bbfilter(name)
+
+
+def _bbfilter_pseudo_diff(name):
+    """Previous pseudo-differential filter (two single-ended halves); kept for reference, not emitted."""
     ports = ['rx_in_p', 'rx_in_n', 'tx_in_p', 'tx_in_n', 'inj_p', 'inj_n',
              'out_rx_p', 'out_rx_n', 'out_tx_p', 'out_tx_n', 'obs_p', 'obs_n',
              'ibias', 'en', 'dir_tx', 'inj', 'rx_direct', 'byp_s1', 'byp_s23', 'obs_sel0', 'obs_sel1',
@@ -495,6 +568,20 @@ GAIN_TABLE = _gain_table()
 
 
 # ---------------------------------------------------------------- generic observation buffer
+TAP_SW_W, TAP_OBS_M, TAP_INJ_M = 20., 5, 3   # nfet_06v0 20/0.7 fingers per leg (observe 100 um, inject 60 um)
+TAP_RG = 100.   # gate resistor length (um of ppolyf_u_1k, ~1 kohm/um): with TAP_CC the switch gates track the pad under HBM (PD29)
+TAP_CC = 8.   # gate->pad coupling MIM side (um, cap_mim_2f0 ~2 fF/um2 -> ~130 fF); 0 = none
+TAP_RG_INJ = None   # inject-switch gate resistor (None: TAP_RG). Screen ss/0 C sch: R100+C60f 5.66 V, R50+C60f 6.03 V (fail); no C: R300 5.92 V
+
+
+def _res_segs(s, a, b, l, seg=50.):
+    n = max(1, -(-int(l * 100) // int(seg * 100)))
+    rid = s._id('R')
+    nodes = [a] + [f'{rid.lower()}_s{k}' for k in range(1, n)] + [b]
+    for k in range(n):
+        s.lines.append(f'X{rid}_{k} {nodes[k]} {nodes[k + 1]} VSS ppolyf_u_1k r_width=1u r_length={l / n:g}u')
+
+
 def bb_tap():
     s = Sub('pt_bb_tap', ['in_p', 'in_n', 'pad_p', 'pad_n', 'inj_p', 'inj_n', 'ibias',
                           'obs_en', 'inj_en', 'island_off', 'atb_nbias', 'VDD', 'VSS'])
@@ -514,8 +601,21 @@ def bb_tap():
         s.nmos_m(src, 'atb_nbias', 'VSS', 20., 5, .5)  # 0.5 mA sink (50:1)
         s.nmos(src, 'obs_off', 'VSS', 2.)          # clamp follower output when off
         s.nmos(src, 'island_off', 'VSS', 1., 10.)   # weak clamp (~tens of uA)
-        s.nmos_m(src, 'obs_on', f'pad_{h}', 20., 3)  # NMOS-only series switch: no PN path from pad to VDD
-        s.nmos_m(f'pad_{h}', 'inj_on', f'inj_{h}', 20., 2)  # inject: pad -> chain node
+        # PD29: pad-facing series switches are nfet_06v0 (HBM screen put 6.1-6.8 V on the 3.3 V oxide).
+        # NMOS-only: no PN path from pad to VDD.  Gates driven through RG (bootstrap under HBM, static control).
+        for k in range(TAP_OBS_M):
+            s.nmos6(src, f'obs_g{h}', f'pad_{h}', TAP_SW_W)
+        for k in range(TAP_INJ_M):
+            s.nmos6(f'pad_{h}', f'inj_g{h}', f'inj_{h}', TAP_SW_W)   # inject: pad -> chain node
+        if TAP_RG:
+            # few long segments (each fold node costs a routed net in the bank)
+            _res_segs(s, 'obs_on', f'obs_g{h}', TAP_RG)
+            _res_segs(s, 'inj_on', f'inj_g{h}', TAP_RG if TAP_RG_INJ is None else TAP_RG_INJ)
+            if TAP_CC:   # gate -> pad coupling MIM (bottom plate on the low-impedance pad): gate tracks the pad under HBM
+                s.cap(f'obs_g{h}', f'pad_{h}', TAP_CC)
+                s.cap(f'inj_g{h}', f'pad_{h}', TAP_CC)
+        else:
+            s.lines = [l.replace(f'obs_g{h}', 'obs_on').replace(f'inj_g{h}', 'inj_on') for l in s.lines]
     return [inv(), nor2(), s]
 
 

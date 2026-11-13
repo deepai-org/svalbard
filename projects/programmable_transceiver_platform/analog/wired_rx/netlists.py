@@ -439,7 +439,7 @@ slicer_en=0: per-sampler tail headers off, outputs forced low.""")
     return c
 
 
-RA, CHAIN = 12.5, ((4, 1.464), (4, 1.738), (1, 3.204))   # detect r7j: threshold-string segments (parallel count, l um; w 2 um poly), 80 uA
+LSR, RA, CHAIN = 100, 50, (2.45, 2.45, 19.9)   # detect r7 level shift: CM sense R, V-to-I R, half-chain segment lengths (w 1 um)
 CLR, CLN, CLW = (12, 40), 7, ((20, 2), (10, 1))   # detect TX-pad secondary protection: poly R length (F, S), diode-string height, (w, m) per diode
 
 
@@ -478,45 +478,47 @@ Vthr (det_thr[1:0]): 0 / 62.5 / 125 / 670 mV nominal (extracted effective ~0 / 6
         c.nand([a, b], f'sg{i}_b'); c.inv(f'sg{i}_b', f'sg{i}')
         c.tg(tap, 'VSE', f'sg{i}', f'sg{i}_b', wn=2, wp=4)
     c.pcap('VSE', 20, 5)
-    # r7i level shift + threshold (USB squelch/disconnect over line CM -0.05..0.5 V): RX pair -> matched PMOS source
-    # followers (own wells, 800 uA source) LS_x -> 0.75 poly divider (1k/3k) LT_x (comparator CM range at ss / CM 0.5 V
-    # and no headroom limit at the low end).  Threshold: each LT_x feeds an UP and a DN resistor string carrying the
-    # code-independent current I = atb_det_vref / R_A (OTA V-to-I, 80 uA; tap R <= 2.7 kohm for ~0.3 ns settling) sourced into / sunk from its far end, so
-    # tap k sits at LT_x +/- I*R_k.  The tap selected by det_thr (TG, no DC current) drives a 2-input comparator:
-    # DIFF_POS = DN_P > UP_N, i.e. (P - N) > 2*I*R_k / 0.75 (input-referred): a poly ratio times the VDD-ratio ladder
-    # tap, independent of CM, and both comparator inputs are identical structures (kick-back symmetric).  The UP and
-    # DN currents of one leg cancel at LT_x.
+    # r7 level shift (USB squelch/disconnect over the -50..500 mV line CM): the diff comparators see the RX pair
+    # through matched PMOS source followers (own wells, 400 uA: ~0.7 V/ns into ~0.55 pF for 480 Mb/s) at LS_P/LS_N (CM ~1.1-1.6 V), and their references
+    # float on the followers' CM: VTHP/VREFN = M +/- Vthr/2, M = midpoint of 2 x 100k between LS_P and LS_N.
+    # Vthr = 2 * R_side * I, I = atb_det_vref / R_A (OTA V-to-I), i.e. a poly ratio times the VDD-ratio ladder tap
+    # (same accuracy class as the r6 ladder thresholds, now CM-independent).
     for leg in 'PN':
         c.p('VSS', f'DP_{leg}', f'LS_{leg}', b=f'LS_{leg}', w=10, l=.5, m=8)
-        c.p(f'LS_{leg}', 'dpb', V, w=10, l=1, m=16)
-        c.r(f'LS_{leg}', f'LT_{leg}', 2, 2)
-        c.r(f'LT_{leg}', 'VSS', 2, 6)
+        c.p(f'LS_{leg}', 'dpb', V, w=10, l=1, m=8)
+        c.r(f'LS_{leg}', 'VCMS', 1, LSR)
+    # CM buffer (5T OTA follower, 20 uA): VCMM = VCMS with a low impedance that absorbs the comparators'
+    # rectified kick-back (~2.6 uA measured into a 50k sense node) and the source/sink mismatch
+    c.p('bt', 'dpb', V, w=8, l=1)
+    c.p('bd', 'VCMS', 'bt', w=8, l=1); c.p('VCMM', 'VCMM', 'bt', w=8, l=1)
+    c.n('bd', 'bd', 'VSS', w=2, l=2); c.n('VCMM', 'bd', 'VSS', w=2, l=2)
+    c.n('VSS', 'VCMM', 'VSS', w=10, l=4)
     c.p('ot', 'dpb', V, w=8, l=1)
     c.p('oa1', 'atb_det_vref', 'ot', w=8, l=1)
     c.p('og', 'va', 'ot', w=8, l=1)
     c.n('oa1', 'oa1', 'VSS', w=2, l=2); c.n('og', 'oa1', 'VSS', w=2, l=2)
     c.n('og', 'enb', 'VSS', w=1)
     c.n('VSS', 'og', 'VSS', w=4, l=4)           # OTA dominant pole (NMOS gate cap)
-    c.n('im', 'og', 'va', w=10, l=.5, m=2)
-    c.r('va', 'VSS', 2, RA)
-    c.p('im', 'im', V, w=10, l=.5, m=2); c.p('im', 'enq', V, w=1)
-    c.p('inm', 'im', V, w=10, l=.5, m=2); c.n('inm', 'inm', 'VSS', w=10, l=.5, m=4); c.n('inm', 'enb', 'VSS', w=1)
+    c.n('im', 'og', 'va', w=8, l=1)
+    c.r('va', 'VSS', 1, RA)
+    c.p('im', 'im', V, w=4, l=1); c.p('im', 'enq', V, w=1)
+    c.p('VT3', 'im', V, w=4, l=1)                # chain source
+    c.p('inm', 'im', V, w=4, l=1); c.n('inm', 'inm', 'VSS', w=2, l=1); c.n('inm', 'enb', 'VSS', w=1)
+    c.n('VB3', 'inm', 'VSS', w=2, l=1)           # chain sink
+    tops, bots = ['VCMM', 'VT1', 'VT2', 'VT3'], ['VCMM', 'VB1', 'VB2', 'VB3']
+    for k, l in enumerate(CHAIN):
+        c.r(tops[k + 1], tops[k], 1, l); c.r(bots[k], bots[k + 1], 1, l)
     for i in range(4):
         a = 'det_thr0' if i & 1 else 't0b'
         b = 'det_thr1' if i & 2 else 't1b'
         c.nand([a, b], f'tg{i}_b'); c.inv(f'tg{i}_b', f'tg{i}')
-    for leg in 'PN':
-        for d in ('UP', 'DN'):
-            taps = [f'LT_{leg}'] + [f'{d}{k}_{leg}' for k in (1, 2, 3)]
-            for k, (npar, l) in enumerate(CHAIN):
-                for _ in range(npar):     # short segments as parallel w2 strips (HRES min length)
-                    c.r(taps[k], taps[k + 1], 2, l)
-            if d == 'UP':
-                c.p(taps[3], 'im', V, w=10, l=.5, m=2)
-            else:
-                c.n(taps[3], 'inm', 'VSS', w=10, l=.5, m=4)
-            for i in range(4):
-                c.tg(taps[i], f'{d}_{leg}', f'tg{i}', f'tg{i}_b', wn=2, wp=4)   # series R small vs tap R; drain C small
+        c.tg(tops[i], 'VTHP', f'tg{i}', f'tg{i}_b', wn=2, wp=4)
+        c.tg(bots[i], 'VREFN', f'tg{i}', f'tg{i}_b', wn=2, wp=4)
+    # kick-back decoupling: 0.45 pF (PMOS gate to VDD) on the two (high-impedance) reference nodes; undecoupled,
+    # their instantaneous CM sat ~180 mV below the inputs' at the clock edge (thresholds ~1.8x).  LS_P/N are driven
+    # by the 400 uA followers (~0.3 kohm) and are left undecoupled for bandwidth (extracted 0.45 pF: ~1.3 ns edges)
+    for node in ('VTHP', 'VREFN'):
+        c.pcap(node, 20, 5)
     # source select
     c.inv('det_src_tx', 'srcb')
     c.nand(['det_en', 'srcb'], 'ln_b'); c.inv('ln_b', 'ln')
@@ -544,8 +546,8 @@ Vthr (det_thr[1:0]): 0 / 62.5 / 125 / 670 mV nominal (extracted effective ~0 / 6
         n6(f'TXS_{leg}', 'tx', f'DP_{leg}')
         c.n(f'DP_{leg}', 'enb', 'VSS', w=1)
     # comparators
-    _strongarm(c, 'cdp', 'det_clk', 'DN_P', 'UP_N', 'DIFF_POS')
-    _strongarm(c, 'cdn', 'det_clk', 'DN_N', 'UP_P', 'DIFF_NEG')
+    _strongarm(c, 'cdp', 'det_clk', 'LS_P', 'LS_N', 'DIFF_POS', ref=('VTHP', 'VREFN'))
+    _strongarm(c, 'cdn', 'det_clk', 'LS_N', 'LS_P', 'DIFF_NEG', ref=('VTHP', 'VREFN'))
     _strongarm(c, 'csp', 'det_clk', 'DP_P', 'VSE', 'SE_P')
     _strongarm(c, 'csn', 'det_clk', 'DP_N', 'VSE', 'SE_N')
     # receiver-detect injection: IBIAS 10u -> nmos diode -> nmos x1 -> pmos diode -> pmos x10 per leg
@@ -604,27 +606,33 @@ def _long_stack(c, kind, d, g, s_, w, l_each, n, b=None):
         prev = nxt
 
 
+R10_L, C10_M = 2.5, 4      # pt_cdr r10 averaging R length (w 2) and MOS-cap multiplicity (20x20 each)
+
+
 def cdr():
-    """AC-3 r-pi / r9 (2026-11-10): see the Net docstring."""
+    """AC-3 r-pi integral path, r12 (2026-11-13): see the Net docstring."""
     ports = ['VDD_PLL_SW', 'VSS', 'IBIAS', 'cdr_en', 'pfd_mode', 'ref_sel', 'g0', 'g1', 'g2',
              'UP0', 'UP1', 'UP2', 'UP3', 'DN0', 'DN1', 'DN2', 'DN3', 'FUP', 'FDN',
-             'IB_PLL', 'HOLD_PLL', 'VCTRL', 'REF_IN', 'WCK_IN', 'REF_PLL', 'atb_cdr_pbias']
+             'IB_PLL', 'HOLD_PLL', 'VCTRL', 'REF_IN', 'WCK_IN', 'REF_PLL', 'atb_cdr_pbias',
+             'otr0', 'otr1', 'otr2', 'otr3', 'otr4', 'otrs']
     c = Net('pt_cdr', ports,
-            """AC-3 CDR analog cell, r-pi integral path (r9, 2026-11-10, CDR/pll_ring owner; AC3-W9).  Works with the
+            """AC-3 CDR analog cell, r-pi integral path (r12, 2026-11-13; r9 2026-11-10, AC3-W9).  Works with the
 RX instance of timing's pt_pll_ring r9 (ports N5 N10 KP0..2 FU0..3 FD0..3 after ATB_VCTRL):
   * Proportional path is NOT in this cell: the capture votes UPk/DNk drive pt_pll_ring FUk/FDk directly
     (tail-proportional fast-tune units, KP code).  This cell is the integral path only.
   * pfd_mode=0 (wired CDR): HOLD_PLL=1 from enable (ring PFD in reset, pump idle); FLL (FUP/FDN) and the
     votes drive one continuous integral node VCTRL.  pfd_mode=1 (HDMI/DVI, line PLL): HOLD_PLL=0, the
     ring PLL locks to REF_PLL and this cell's output is off.  ref_sel: REF_PLL = ref_sel ? WCK_IN : REF_IN.
-  * Integral: per vote leg two always-on 0.6 uA PMOS half currents, steered (never switched on/off) between
-    AVP and AVN (UP: half A to AVP; DN: half B to AVN); AVP/AVN = 250 kOhm || MOS C (tau ~32 ring cycles,
-    1 vote ~ 0.25 V differential).  FUP/FDN steer a x4 pair.  A PMOS-input OTA turns AVP-AVN into a
-    current into VCTRL, saturating near 1 vote.
-  * r9: OTA tail = I_U x 2^g, I_U ~ 1.5 nA (g[2:0] = cdr.config integral gain, exponential, 2x steps,
-    ~1.5..80 nA).  The r-pi draft's 4.68 uA tail slewed the ring ~700 MHz/us (1.5e6 ppm/us), ~3000x the
-    loop design point (500-800 ppm/us = I x dlnf/dVCTRL / C_vctrl, C_vctrl ~7 pF, dlnf/dV 0.24..4.2 /V).
-    Choose g per rate/corner band for ~800 ppm/us full scale (table in analog/wired_rx/README).
+  * Integral (r11, 2026-11-13): per vote leg two always-on ~10 uA PMOS half currents (8/2 copies of the 10 uA
+    diode), steered (never switched on/off, 2/0.28 switches, re-steer << 1 ring cycle) between AVP and AVN
+    (UP: half A to AVP; DN: half B to AVN); FUP/FDN steer a x2 pair (= 2 votes).  AVP/AVN = 1.25 kOhm to VSS ||
+    PMOS cap to VDD (20x20 x4, inversion, ~8 pF -> tau ~10 ns); 1 vote = 25 mV differential, CM ~75 mV.
+    PMOS-input OTA (tail I_U x 2^g-ish thermometer, g[2:0]) with a symmetric output: I1 -> NMOS sink, I2 ->
+    NMOS copy -> PMOS diode -> PMOS source, both straight onto VCTRL (compliance 0.8..2.2 V flat, extracted).
+    1 vote ~ 2.0 nA (g3) / 22 nA (g7); idle offset +0.07..+0.15 vote.  r12: offset trim otr4..0/otrs (1/8 vote LSB,
+    +-3.9 votes), calibrated per die with the frequency counter (interface CDR8-TRIM).  r9 (0.6 uA halves) integrated
+    ring-rate votes with the wrong sign; r10 lost output compliance above VCTRL ~1.3 V (sank uA).
+    Full scale = I x dlnf/dVCTRL / C_vctrl (C_vctrl ~7 pF, dlnf/dV 0.24..4.2 /V); g per rate (README).
   * IB_PLL: 10 uA bias for the PLL charge pump.  cdr_en=0: every current off, OTA output open and
     clamped, IB_PLL clamped, REF_PLL low, HOLD_PLL high.
 IBIAS: 10 uA sunk from the island bias distribution.""")
@@ -655,12 +663,15 @@ IBIAS: 10 uA sunk from the island bias distribution.""")
     c.nand(['pfdb', 'cdr_en'], 'oeb', wn=1, wp=2)       # oeb = 0: integral output active
     c.inv('oeb', 'oe', wn=1, wp=2)
     pb = 'atb_cdr_pbias'                                  # 10 uA PMOS diode W/L 8/2
+    # r10 (2026-11-12, wired RX resume 7): the r9 0.6 uA halves could not re-steer within a ring cycle (extracted g3:
+    # UP static +4.7 nA, UP toggling at 585 MHz -4.8 nA).  Halves are now ~10 uA (PMOS 8/2 = the 10 uA diode copy),
+    # steering switches 2/0.28, AVP/AVN = R10 || C10 with ~25 mV per vote (OTA linear to ~+-2 votes), tau ~10 ring cycles.
     def steer(tag, a_gate, b_gate, to_a, to_b, m=1):
         hs, s0 = f'{tag}h', f'{tag}s'
-        c.p(s0, pb, hs, w=1, l=4, m=m)                    # 0.6 uA half current (x m)
-        c.p(hs, 'enb', V, w=1, m=m)
-        c.p(to_a, a_gate, s0, w=.5, m=m)
-        c.p(to_b, b_gate, s0, w=.5, m=m)
+        c.p(s0, pb, hs, w=8, l=2, m=m)                    # ~10 uA half current (x m)
+        c.p(hs, 'enb', V, w=4, m=m)
+        c.p(to_a, a_gate, s0, w=2, m=m)
+        c.p(to_b, b_gate, s0, w=2, m=m)
     for k in range(4):
         c.inv(f'UP{k}', f'up{k}b', wn=1, wp=2)
         c.inv(f'DN{k}', f'dn{k}b', wn=1, wp=2)
@@ -670,11 +681,26 @@ IBIAS: 10 uA sunk from the island bias distribution.""")
     c.nor(['FDN', 'enb'], 'fdnb', wn=1, wp=2)
     c.inv('fupb', 'fupl', wn=1, wp=2)
     c.inv('fdnb', 'fdnl', wn=1, wp=2)
-    steer('ifu', 'fupb', 'fupl', 'AVP', 'AVN', m=4)
-    steer('ifd', 'fdnb', 'fdnl', 'AVN', 'AVP', m=4)
+    steer('ifu', 'fupb', 'fupl', 'AVP', 'AVN', m=2)
+    steer('ifd', 'fdnb', 'fdnl', 'AVN', 'AVP', m=2)
+    # r12 (2026-11-13, r11 review finding 1): input-referred offset trim.  OTA mirrors (0.5/2, weak inversion) give
+    # ~0.8 vote sigma at the pessimistic A_Vt (14 mV.um), 3 sigma ~2.4 votes > the +-2 vote range -> per-die trim.
+    # 5-bit magnitude otr4..0 (unit 2.5 uA = 1/8 vote, binary 1..16 -> 0..3.9 votes) + sign otrs (1: to AVP = UP-like).
+    # Each unit is always on and steered to AVP / AVN / VSS (dump when its bit is 0): CM moves <= +80 mV, no switching.
+    c.inv('otrs', 'otrsb', wn=1, wp=2)
+    for j, m in enumerate((1, 2, 4, 8, 16)):
+        hs, s0 = f'itr{j}h', f'itr{j}s'
+        c.p(s0, pb, hs, w=2, l=2, m=m)                  # 2.5 uA x m (8/2 -> 10 uA)
+        c.p(hs, 'enb', V, w=4, m=max(1, m // 4))
+        c.nand([f'otr{j}', 'otrs'], f'tra{j}', wn=1, wp=2)
+        c.nand([f'otr{j}', 'otrsb'], f'trb{j}', wn=1, wp=2)
+        c.p('AVP', f'tra{j}', s0, w=2, m=max(1, m // 4))
+        c.p('AVN', f'trb{j}', s0, w=2, m=max(1, m // 4))
+        c.p('VSS', f'otr{j}', s0, w=2, m=max(1, m // 4))
     for nd in ('AVP', 'AVN'):
-        c.r(nd, 'VSS', 1, 250)
-        c.ncap(nd, 10, 10)
+        c.r(nd, 'VSS', 2, R10_L)                          # ~1.25 kOhm (ppolyf_u 1 kOhm/sq, w 2)
+        c.pcap(nd, 20, 20, m=C10_M)                       # r11: PMOS cap to VDD, inversion (r10 NMOS cap at 75 mV
+                                                          # was in depletion -> tau ~1 ring cycle, per-cycle OTA compression)
     # nA unit bias: pb -> PMOS 0.5/8 -> NMOS diode 8/1 -> NMOS 0.5/40 -> PMOS diode PU 2/4
     c.p('ina', pb, 'inah', w=.5, l=8)
     c.p('inah', 'enb', V, w=1)
@@ -702,12 +728,22 @@ IBIAS: 10 uA sunk from the island bias distribution.""")
             c.nand([f't{j}', 'oe'], ge, wn=1, wp=2)
         c.p('ot', 'ipu', f'ot{j}', w=2, l=4, m=m)
         c.p(f'ot{j}', ge, V, w=1, m=1 if m < 8 else m // 8)
+    # r11 (2026-11-13, review of r10): symmetric OTA output.  r10's single-mirror output (ota2 -> NMOS switch -> VCTRL)
+    # lost compliance above VCTRL ~1.3 V (output PMOS reverse-biased, uA sunk from VCTRL; extracted DC sweep
+    # scratch/wired_rx/r9pub/fll).  Now: both input-pair currents into NMOS diodes; I1 copied by an NMOS sink and I2
+    # (via NMOS copy -> PMOS diode) by a PMOS source straight onto VCTRL: Iout = I2 - I1, range ~0.2 .. VDD-0.25 V.
+    # Off: diode/mirror gates clamped (NMOS gates low, PMOS gate high) -> both output devices off, no series switch.
     c.p('ota1', 'AVP', 'ot', w=8, l=2)
     c.p('ota2', 'AVN', 'ot', w=8, l=2)
     c.n('ota1', 'ota1', 'VSS', w=.5, l=2)
-    c.n('ota2', 'ota1', 'VSS', w=.5, l=2)
-    c.n('VCTRL', 'oe', 'ota2', w=2)                       # output switch
-    c.n('ota2', 'oeb', 'VSS', w=1)                        # clamp when off
+    c.n('ota2', 'ota2', 'VSS', w=.5, l=2)
+    c.n('VCTRL', 'ota1', 'VSS', w=.5, l=2)                # sink copy of I1
+    c.n('opd', 'ota2', 'VSS', w=.5, l=2)                  # copy of I2
+    c.p('opd', 'opd', V, w=.5, l=2)                       # PMOS diode
+    c.p('VCTRL', 'opd', V, w=.5, l=2)                     # source copy of I2
+    c.n('ota1', 'oeb', 'VSS', w=1)                        # off clamps
+    c.n('ota2', 'oeb', 'VSS', w=1)
+    c.p('opd', 'oe', V, w=1)
     return c
 
 

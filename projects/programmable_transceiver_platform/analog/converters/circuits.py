@@ -15,6 +15,18 @@ from convkit import Mos, Cap, Res, Macro, Circuit  # noqa: E402
 N, P = 'nfet_03v3', 'pfet_03v3'
 HERE = Path(__file__).resolve().parent
 
+# Area pass 4 (2026-11-13, interface-changes AP4-4): denser floorplans of the same circuits.
+# Default (CONV_AP4 unset or 0) = the PUBLISHED pre-AP4 blocks in generated/ (differential clock pins).
+# CONV_AP4=1 = the staged candidate: denser floorplan + single-ended CMOS clock (MW-3). The default
+# flips when the candidate's extracted evidence is complete, reviewed and published
+# (scratch/converters-ap4/NOTES.md). Knobs are read at build time.
+import os  # noqa: E402
+AP4 = os.environ.get('CONV_AP4', '0') not in ('0', '')
+AP4_ADC = dict(nl=int(os.environ.get('CONV_ADC_NL', '4')), finger_above=15.0,
+               track_sp=0.3, trunk_sp=0.3, row_gap=0.3, ch_margin=0.6,
+               logic_gap=float(os.environ.get('CONV_ADC_GAP', '0.6')))
+AP4_DAC = dict(track_sp=0.3, trunk_sp=0.3, row_gap=0.3, ch_margin=0.6)
+
 
 # ------------------------------------------------------------ small logic
 def inv(p, a, y, vdd='VDD', vss='VSS', wn=1.0, wp=2.0, flip=False):
@@ -134,6 +146,53 @@ def clkrx(p, inp, inn, out, act, nb='NB'):
     return d
 
 
+# MW-3 (2026-11-13): the chip's clockmux delivers ONE single-ended 3.3 V CMOS CONV_CLK (about 50 %
+# duty). The converters therefore take a CMOS clock pin `CLK`; the low-swing differential receiver
+# (clkrx) and the externally shaped acquisition pulse are gone. CONV_AP4=0 keeps the old interface.
+CMOS_CLK = AP4
+# (stages, L um) of the three delay segments of the ADC acquisition one-shot; taps after 1, 2, 3 segments
+ACQ_DLY = ((4, 1.9), (2, 1.9), (2, 1.9))
+
+
+def clkshape(p, clk, out, act, a0, a1):
+    """ADC clock input: single-ended CMOS `clk` -> acquisition pulse `out` (SAMPLE).
+    The pulse starts on the RISING clk edge and lasts one delay-line tap:
+      ACQ1:0 = 0 nominal tap (reset value), 1 short tap, 2 long tap,
+               3 no tap: out = clk high time (acquisition set by the clock duty; the sampling
+                 instant is then the falling clk edge itself, not a delay-line edge).
+    out = pulse & act. The clock high and low times must each exceed the selected tap delay.
+    The input stage is a NAND with `act` (the same enable as the output gate; in adc_il both are the
+    delayed EN_D, so there is one enable edge): with it low nothing behind the pin toggles while the shared
+    CONV_CLK keeps running for another block (an inverter input drew 100 uA at 40 MHz, extracted)."""
+    cb, c, dl = p + 'cb', p + 'c', p + 'dl'
+    d = nand2(p + 'I1', clk, act, cb, wn=4, wp=4) + inv(p + 'I2', cb, c, wn=2, wp=4)
+    prev, taps = c, []
+    for i, (st, l) in enumerate(ACQ_DLY):
+        d += delay(f'{p}D{i}', prev, f'{p}t{i}', st, l=l)
+        prev = f'{p}t{i}'
+        taps.append(prev)
+    d += inv(p + 'A0', a0, p + 'a0b') + inv(p + 'A1', a1, p + 'a1b')
+    d += nor2(p + 'S0', a0, a1, p + 's0')                 # code 0 -> nominal tap (taps[1])
+    d += nor2(p + 'S1', p + 'a0b', a1, p + 's1')          # code 1 -> short tap (taps[0])
+    d += nor2(p + 'S2', a0, p + 'a1b', p + 's2')          # code 2 -> long tap (taps[2])
+    d += nand2(p + 'M0', taps[1], p + 's0', p + 'm0') + nand2(p + 'M1', taps[0], p + 's1', p + 'm1') + \
+        nand2(p + 'M2', taps[2], p + 's2', p + 'm2')
+    d += nand3(p + 'MX', p + 'm0', p + 'm1', p + 'm2', dl)
+    d += nor2(p + 'P', cb, dl, p + 'y2', wn=2, wp=8)      # clk & ~delayed
+    d += nand2(p + 'G', p + 'y2', act, p + 'z')
+    d += inv(p + 'I3', p + 'z', out, wn=2, wp=4)
+    return d
+
+
+def clkbuf_fall(p, clk, out, act):
+    """DAC clock input: single-ended CMOS `clk`; out = ~clk & act, so the registers (rising `out`)
+    capture on the FALLING clk edge (DT-6: codes are launched on the rising edge of the same clock)."""
+    d = nand2(p + 'I1', clk, act, p + 'y2', wn=4, wp=4)      # en = 0: nothing behind the pin toggles
+    d += nand2(p + 'G', p + 'y2', act, p + 'z')
+    d += inv(p + 'I3', p + 'z', out, wn=2, wp=4)
+    return d
+
+
 def names(devs):
     return [d.name for d in devs]
 
@@ -160,7 +219,7 @@ def dac(name='pt_dac_i'):
     d = [m]
     d += inv('IE', 'EN', 'ENB')
     d += bias('B', 'EN', 'ENB', nb='ATB_BIAS')
-    d += clkrx('K', 'CLKP', 'CLKN', 'CK', 'EN', nb='ATB_BIAS')
+    d += clkbuf_fall('K', 'CLK', 'CK', 'EN') if CMOS_CLK else clkrx('K', 'CLKP', 'CLKN', 'CK', 'EN', nb='ATB_BIAS')
     sw, cs, cc = [], [], []
     cells = [(f'TH{k}', f'THB{k}', f'th[{k}]', 16) for k in range(63)]
     cells += [(f'BN{j}', f'BNB{j}', f'bn[{j}]', 1 << j) for j in (0, 1, 2, 3)]
@@ -194,8 +253,16 @@ def dac(name='pt_dac_i'):
     # (40 uA tail) drives the PMOS header gate HG; Miller cap HG-T (~1 pF) splits
     # the HG and T poles (T is high-impedance: header ro || sense R). CMS high -> HG
     # up -> header weaker -> T and the CM fall. Disabled: HG pulled to VDD.
+    if AP4:
+        # AP4: each 50 um (50k) divider resistor drawn as two 25 um halves in series (same
+        # ratio and total; four identical bodies). The 50 um bodies alone set the 53.6 um
+        # height of the bias/load row.
+        rdiv = [Res('RDA', 1, 25, 'VDD', 'CMRA', 'VSS'), Res('RDA2', 1, 25, 'CMRA', 'CMR', 'VSS'),
+                Res('RDB', 1, 25, 'CMR', 'CMRB', 'VSS'), Res('RDB2', 1, 25, 'CMRB', 'CMRF', 'VSS')]
+    else:
+        rdiv = [Res('RDA', 1, 50, 'VDD', 'CMR', 'VSS'), Res('RDB', 1, 50, 'CMR', 'CMRF', 'VSS')]
     cm = [Res('RCP', 1, 20, 'OPI', 'CMS', 'VSS'), Res('RCN', 1, 20, 'ONI', 'CMS', 'VSS'),
-          Res('RDA', 1, 50, 'VDD', 'CMR', 'VSS'), Res('RDB', 1, 50, 'CMR', 'CMRF', 'VSS'),
+          *rdiv,
           # v4: footer so the VDD/2 divider (3.3 V / 100k = 33 uA) is off at EN=0 ('safe' test).
           Mos('MDF', N, 4, 0.28, 'CMRF', 'EN', 'VSS', 'VSS'),
           Mos('OTT', N, 16, 2, 'OTS', 'ATB_BIAS', 'VSS', 'VSS'),
@@ -215,9 +282,40 @@ def dac(name='pt_dac_i'):
     misc = [x for x in d if x is not m and x not in sw and x not in cs and x not in cc and not isinstance(x, Cap)]
     caps = [x for x in d if isinstance(x, Cap)]
     rows = [names(misc), names(caps), names(cs), names(cc), names(sw), [m.name]]
-    ports = ['VDD', 'VSS', 'OUTP', 'OUTN', 'IBIAS', 'CLKP', 'CLKN', 'EN', 'HOLD_ZERO'] + \
+    ports = ['VDD', 'VSS', 'OUTP', 'OUTN', 'IBIAS'] + (['CLK'] if CMOS_CLK else ['CLKP', 'CLKN']) + ['EN', 'HOLD_ZERO'] + \
             [f'CODE{i}' for i in range(10)] + ['ATB_BIAS']
-    return Circuit(name, ports, d, rows=rows, wide_nets={'VDD': 2.0, 'VSS': 2.0, 'OPI': 1.0, 'ONI': 1.0, 'T': 1.0})
+    c = Circuit(name, ports, d, rows=rows, wide_nets={'VDD': 2.0, 'VSS': 2.0, 'OPI': 1.0, 'ONI': 1.0, 'T': 1.0})
+    if AP4:
+        # One bias/load row: the three 22 um MIM caps sit at the east end of the misc row
+        # (was a 77 um-wide row of its own under a 640 um macro).
+        # Cap order: Miller cap (HG-T, common-mode nodes) next to the output switches, the
+        # ATB_BIAS decap farthest from them.
+        c.rows = [names(misc) + ['OTC', 'CDVC', 'CDAB'], names(cs), names(cc), names(sw), [m.name]]
+        assert sorted(names(caps)) == ['CDAB', 'CDVC', 'OTC']
+        # Output-side terminals (OPI/ONI/OUTP/OUTN) face the bottom channel: the channel above the
+        # row now also carries the 600 um ATB_BIAS gate bus of the current sources (the old cap row
+        # used to separate them); without the flip the extraction gave ATB_BIAS-OPI 4.5 fF and
+        # ATB_BIAS-OUTP 3.2 fF (single-ended signal onto the bias: HD2).
+        for x in d:
+            if x.name in ('MOP', 'MON', 'RCP', 'RCN'):
+                x.flip = True
+        for k, v in AP4_DAC.items():
+            setattr(c, k, v)
+        c.trunk_order = DAC_TRUNK_ORDER
+        c.mixed_rows = True
+        c.quiet_nets = ['ATB_BIAS', 'VCASC', 'HG', 'IBIAS']
+        c.shield_nets = ['VDD', 'VSS', 'EN', 'ENB', 'LOAD_EN', 'LOAD_ENB', 'OUT_EN', 'HOLD_ZERO']
+        c.notes = ['AP4: bias/load and cap rows merged, divider resistors as 2 x 25 um, 0.3 um track/trunk '
+                   'spacing, trunk bank ordered so ATB_BIAS/HG/VCASC sit between static nets']
+    return c
+
+
+# West trunk bank, nearest the rows first. The outputs sit between the load trunks and the 2 um
+# supply trunks (a 3.3 V CMOS clock trunk two tracks from OUTN coupled 9.5 fF); the bias nodes are
+# separated from the codes and clocks by static controls; the clocks are outermost. Pre-AP4
+# alphabetical order had ATB_BIAS next to CK (14.8 fF) and CLKN (6.2 fF): the CNV-03 ripple path.
+DAC_TRUNK_ORDER = ['OPI', 'ONI', 'T', 'OUTP', 'OUTN', 'VDD', 'VSS',     # outputs inside the supply rails
+                   'ATB_BIAS', 'IBIAS', 'EN', 'HOLD_ZERO'] + [f'CODE{i}' for i in range(10)] + ['CK', 'CLK']
 
 
 # ------------------------------------------------------------ ADC
@@ -282,6 +380,16 @@ def comparator(p, inp, inn, clk, dp, dn):
     return d
 
 
+def _adc_clk():
+    if CMOS_CLK:
+        return clkshape('K', 'CLK', 'SAMPLE', 'EN', 'ACQ0', 'ACQ1')
+    return clkrx('K', 'CLKP', 'CLKN', 'SAMPLE', 'EN', nb='ATB_BIAS')
+
+
+def _adc_clk_ports():
+    return ['CLK', 'ACQ0', 'ACQ1'] if CMOS_CLK else ['CLKP', 'CLKN']
+
+
 def adc(name='pt_adc_i'):
     """10-bit differential SAR, top-plate bootstrapped sampling, monotonic
     (downward) bottom-plate switching, split CDAC (MSB 4/2/1 unit caps on the
@@ -300,7 +408,7 @@ def adc(name='pt_adc_i'):
     d = [m]
     front = inv('IE', 'EN', 'ENB')
     front += bias('B', 'EN', 'ENB', nb='ATB_BIAS')
-    front += clkrx('K', 'CLKP', 'CLKN', 'SAMPLE', 'EN', nb='ATB_BIAS')
+    front += _adc_clk()
     sw, caps = [], []
     # Sampling-phase switch controls are decoded locally from SAMPLE (clock
     # receiver), EN and TEST1:0 with PCell gates. The macro's boot_on/boot_onb/
@@ -343,7 +451,7 @@ def adc(name='pt_adc_i'):
     bcaps = [x for x in front if isinstance(x, Cap)]       # bootstrap caps join the CDAC row
     front = [x for x in front if not isinstance(x, Cap)]  # so row 0 stays MOS-only (jumpers)
     rows = [names(front), names(bcaps + caps), names(sw), [m.name]]
-    ports = ['VDD', 'VSS', 'INP', 'INN', 'VCM', 'VREF', 'IBIAS', 'CLKP', 'CLKN', 'EN', 'TEST0', 'TEST1'] + \
+    ports = ['VDD', 'VSS', 'INP', 'INN', 'VCM', 'VREF', 'IBIAS'] + _adc_clk_ports() + ['EN', 'TEST0', 'TEST1'] + \
             [f'CODE{i}' for i in range(10)] + ['DONE', 'OVERLOAD', 'ATB_BIAS']
     return Circuit(name, ports, d, rows=rows,
                    wide_nets={'VDD': 2.0, 'VSS': 2.0, 'VREF': 1.0})
@@ -497,7 +605,7 @@ def adc2(name='pt_adc_i'):
 
 
 # ------------------------------------------------------------ ADC v3: 2-way time-interleaved
-ADC_SHARED = ('VDD', 'VSS', 'INP', 'INN', 'VCM', 'VREF', 'IBIAS', 'ATB_BIAS', 'TEST0', 'TEST1')
+ADC_SHARED = ('VDD', 'VSS', 'INP', 'INN', 'VCM', 'VREF', 'IBIAS', 'ATB_BIAS', 'TEST0', 'TEST1', 'CLK', 'ACQ0', 'ACQ1')
 
 
 def _rename(dev, sfx, netmap):
@@ -533,8 +641,7 @@ def adc_il(name='pt_adc_i'):
     the single-core v2 ADC on CODE*/DONE/OVERLOAD (fallback / debug mode).
     Core A keeps the v2 port names; core B adds CODEB*, DONEB, OVERLOADB."""
     base = adc2(name)
-    shared_names = set(names(inv('IE', 'EN', 'ENB') + bias('B', 'EN', 'ENB', nb='ATB_BIAS') +
-                             clkrx('K', 'CLKP', 'CLKN', 'SAMPLE', 'EN', nb='ATB_BIAS')))
+    shared_names = set(names(inv('IE', 'EN', 'ENB') + bias('B', 'EN', 'ENB', nb='ATB_BIAS') + _adc_clk()))
     shared = [x for x in base.devices if x.name in shared_names]
     core = [x for x in base.devices if x.name not in shared_names]
     assert len(shared) == len(shared_names)
@@ -543,7 +650,7 @@ def adc_il(name='pt_adc_i'):
     # would also flip the A/B order. Gate the receiver output with EN delayed by
     # ~5-10 ns (long-channel chain): first SAMPLE after enable -> core A.
     for x in shared:
-        if x.name in ('KGNB', 'KGPB'):
+        if x.name in ('KGNB', 'KGPB') or (CMOS_CLK and x.name in ('KI1NB', 'KI1PB')):
             assert x.g == 'EN'
             x.g = 'EN_D'
     ctl = delay('EDL', 'EN', 'EN_D', 4, l=4.0)
@@ -563,6 +670,10 @@ def adc_il(name='pt_adc_i'):
     }
     devs = shared + ctl
     rows = [names(shared + ctl)]
+    if CMOS_CLK:
+        # clock shaper (one-shot delay line, tap decode) in a row of its own below the control row
+        ks = set(names(_adc_clk()))
+        rows = [[n for n in names(shared) if n in ks], [n for n in names(shared + ctl) if n not in ks]]
     for sfx, nm in maps.items():
         cd = [_rename(x, sfx, nm) for x in core]
         devs += cd
@@ -570,10 +681,64 @@ def adc_il(name='pt_adc_i'):
             rr = [x + sfx for x in r if x not in shared_names]
             if rr:
                 rows.append(rr)
-    ports = ['VDD', 'VSS', 'INP', 'INN', 'VCM', 'VREF', 'IBIAS', 'CLKP', 'CLKN', 'EN', 'ILEN', 'TEST0', 'TEST1'] + \
+    ports = ['VDD', 'VSS', 'INP', 'INN', 'VCM', 'VREF', 'IBIAS'] + _adc_clk_ports() + ['EN', 'ILEN', 'TEST0', 'TEST1'] + \
             [f'CODE{i}' for i in range(10)] + ['DONE', 'OVERLOAD'] + \
             [f'CODEB{i}' for i in range(10)] + ['DONEB', 'OVERLOADB', 'ATB_BIAS']
+    if CMOS_CLK:
+        # PH (toggle flip-flop): 0 = the next acquisition goes to core A, 1 = to core B. Exported so the
+        # digital side never has to infer the A/B order from edge counting or DONE races.
+        ports.append('PH')
     c = Circuit(name, ports, devs, rows=rows, wide_nets=base.wide_nets)
     c.notes = ['v3: 2-way time-interleaved v2 cores; ILEN=0 = single core A (v2 behaviour)']
     c.device_gap = getattr(base, 'device_gap', 1.2)
+    if AP4:
+        _ap4_adc(c)
     return c
+
+
+ADC_TRUNK_ORDER = ['VDD', 'VSS', 'VREF',
+                   # analog inputs / references between static or slow nets
+                   # VCM between INP and INN: the two inputs couple equally and oppositely into the
+                   # weak VCM source (VCM beside INP alone gave INP-VCM 72.9 fF vs INN-VCM 3.2 fF)
+                   'TEST0', 'INP', 'VCM', 'INN', 'TEST1', 'IBIAS', 'EN', 'ATB_BIAS', 'ILEN',
+                   'ACQ0', 'ACQ1', 'CLK', 'PH']
+
+
+def _ap4_adc(c):
+    """AP4 repack of adc_il: same devices and nets. (1) PMOS wider than 15 um are drawn as two
+    fingers (m=2 of half width; the 24/30 um bodies alone set two row heights); (2) logic rows
+    re-split; (3) 0.3 um track/trunk spacing and smaller row clearances; (4) trunk bank order.
+    The front, CDAC, switch and driver rows keep their device order and x positions."""
+    z = AP4_ADC
+    for d in c.devices:
+        if isinstance(d, Mos) and d.w > z['finger_above']:
+            d.w, d.m = round(d.w / 2, 3), d.m * 2
+    # Logic rows re-split by drawn width (the 2-finger devices lengthened the first logic row).
+    wdev = lambda n: (2.78 + z['logic_gap']) * c.device(n).m
+    c.gap_of = {}
+    for sfx in ('_A', '_B'):
+        idx = [i for i, r in enumerate(c.rows) if r[0].endswith(sfx) and r[0].startswith(('CR', 'K'))
+               and not isinstance(c.device(r[0]), Cap)]
+        assert idx == list(range(idx[0], idx[0] + len(idx))) and len(idx) == 5, idx
+        seq = [n for i in idx for n in c.rows[i]]
+        nl, out, cur, acc = z['nl'], [], [], 0.0
+        per = sum(map(wdev, seq)) / nl
+        for n in seq:
+            if cur and len(out) < nl - 1 and acc + wdev(n) / 2 > per * (len(out) + 1):
+                out.append(cur)
+                cur = []
+            cur.append(n)
+            acc += wdev(n)
+        out.append(cur)
+        c.rows[idx[0]:idx[-1] + 1] = out
+        c.gap_of.update({n: z['logic_gap'] for n in seq})
+    for k in ('track_sp', 'trunk_sp', 'row_gap', 'ch_margin'):
+        setattr(c, k, z[k])
+    c.trunk_order = ADC_TRUNK_ORDER
+    # Sampling / reference / bias nodes keep 1.0 um to their track and trunk neighbours.
+    core = ['TOPP', 'TOPN', 'LSBP', 'LSBN', 'SPtb', 'SPbb', 'SNtb', 'SNbb', 'SPg', 'SNg',
+            'Qcn1', 'Qcn2', 'Qct', 'Qqp', 'Qqn']
+    c.quiet_nets = ['INP', 'INN', 'VCM', 'VREF', 'ATB_BIAS', 'IBIAS'] + [n + s for n in core for s in ('_A', '_B')]
+    assert all(n in c.nets() for n in c.quiet_nets), [n for n in c.quiet_nets if n not in c.nets()]
+    c.quiet_sp = 0.6          # = the pre-AP4 spacing of every track
+    c.notes.append('AP4: 0.3 um track/trunk spacing, >15 um PMOS as 2 fingers, trunk bank ordered for isolation')

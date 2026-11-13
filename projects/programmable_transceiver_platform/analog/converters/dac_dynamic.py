@@ -53,12 +53,13 @@ def deck(net, corner, temp, vdd, top, codes, tstep=20e-12):
     tstop = T0 + (n + LAT + 2) * P
     t = B.header(net, corner, temp, vdd)
     t += 'VDD VDD 0 {vdd}\nIB VDD IBIAS 10u\nD1 IBIAS VDD dclamp\n'
-    t += B.clock_sources('CLKP', 'CLKN', P, P / 2)
+    ctext, cpins = B.dac_clock(P)
+    t += ctext
     t += 'VEN EN 0 PWL(0 0 30n 0 30.2n {vdd})\nVHZ HOLD_ZERO 0 0\n'
     for b in range(10):
         t += f'VC{b} CODE{b} 0 {bitpwl(b)}\n'
     t += 'CLP OUTP 0 100f\nCLN OUTN 0 100f\n'
-    t += 'X1 VDD 0 OUTP OUTN IBIAS CLKP CLKN EN HOLD_ZERO ' + ' '.join(f'CODE{i}' for i in range(10)) + f' ATB_BIAS {top}\n'
+    t += f'X1 VDD 0 OUTP OUTN IBIAS {cpins} EN HOLD_ZERO ' + ' '.join(f'CODE{i}' for i in range(10)) + f' ATB_BIAS {top}\n'
     t += '.save v(OUTP) v(OUTN) i(VDD)\n'          # keep only what is analysed (ff ran out of vector memory)
     t += '.control\nset wr_singlescale\nset wr_vecnames\n'
     t += f'tran {tstep:.3g} {tstop:.4e} {T0 - 20e-9:.4e} {tstep:.3g}\n'

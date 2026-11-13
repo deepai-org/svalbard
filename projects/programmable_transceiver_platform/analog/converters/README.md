@@ -6,6 +6,42 @@ transistor-level schematic (`<block>.spice`), a reproducible Magic layout
 an extracted netlist with parasitic C, and extracted ngspice runs.
 `generated/<block>-evidence.json` is the authoritative four-test record.
 
+## Status 2026-11-13: AP4 repack + single-ended clock candidate (STAGED, not published)
+
+`generated/` and the tables below still describe the published pre-AP4 blocks (differential `CLKP/CLKN`,
+externally shaped acquisition pulse). `flow.py` with no environment rebuilds exactly those.
+`CONV_AP4=1` selects the candidate; `CONV_STAGE=<dir>` builds and simulates it without touching `generated/`
+(`--layout-only`, then `--reuse-layout`).
+
+* **What the candidate is** (one new layout per block): the same converter cores in a denser floorplan
+  (interface-changes AP4-4a) with the clock interface the chip really has (MW-3a): one single-ended CMOS
+  `CLK` pin per block, gated by the block enable; an on-block acquisition one-shot in the ADC (`ACQ1:0`),
+  a `PH` output (interleave phase); falling-edge capture in the DAC. Pin contract: `INTEGRATION.md`.
+* **Outlines** (GDS): ADC 0.5777 → 0.4497 mm² (480.28 × 936.30 µm), DAC 0.1861 → 0.1341 mm²
+  (668.50 × 200.63 µm). The ADC target of ≤ 0.33 mm² is NOT met.
+* **Layout checks** (all four staged blocks): Magic DRC 0, netgen LVS unique with no property errors (also on
+  the GDS round trip), KLayout GF180 DRC 0, precheck main 0 / antenna 0 on the staged GDS sha. adc_q / dac_q
+  have the same routing as adc_i / dac_i.
+* **Not moved**: CDAC row (caps, order, x, gap), bottom-plate switch row, driver row, VREF/VDD/VSS rail
+  widths; cores A and B are translated copies. DAC: the 67 cells keep their x (tied to `dac_logic`), both
+  bias decaps of v4 are kept. **Moved**: in the ADC front row the 15 units after the comparator clock buffer
+  (comparator tail, input pair, latch, output inverters) shift +3.98 µm in both cores because that buffer's
+  24 µm PMOS is now two fingers; SAR logic is re-rowed (5 → 4 rows per core); DAC bias/load and cap rows merged.
+* **Changed in the schematic** (`CONV_AP4=1`): PMOS wider than 15 µm drawn as two fingers of half width
+  (ADC: 6 device names per core, 20/24/30 µm; total W unchanged); DAC 50 µm divider resistors as 2 × 25 µm
+  in series; clock receiver replaced by the CMOS clock logic; ports `CLKP/CLKN` → `CLK` (+ `ACQ0`, `ACQ1`,
+  `PH` on the ADC). No other device differs.
+* **Extracted coupling, old → candidate**: DAC `ATB_BIAS`–CK 14.8 → 1.3 fF, –CLKN 6.2 → gone, `HG`–CK 7.6 →
+  < 0.2 (the CNV-03 ripple path); ADC `ATB_BIAS`–CLKN 81.9 fF → gone, `INP`–`OVERLOAD` 39.3 → gone,
+  `INP`–`INN` 97.8 → < 5; `INP`/`INN`–`VCM` 73/79 fF (balanced, by trunk order); CDAC top-plate parasitics
+  44–46 → 40–44 fF per plate (A vs B now differ by 2–3 fF, 0.4 fF before: a per-core gain term, removed by the per-core gain correction), LSB plates within 3 fF. Known asymmetries left: `SAMPLE_A` 50 fF vs `SAMPLE_B`
+  97 fF (as before the repack: 53 vs 99), DAC `OUTN` 88 fF vs `OUTP` 77 fF.
+* **Evidence state**: bench proofs done (`scratch/converters-ap4/val/`); extracted old-vs-new runs are queued
+  under the 3-simulation throttle and NOT complete. Do not quote candidate ENOB/INL until
+  `scratch/converters-ap4/NOTES.md` §5 lists them. Independent review GO-with-conditions
+  (`scratch/converters-ap4/review/REVIEW.md`). Open: CNV-06 (VCM source), CNV-07 (one-shot sampling edge),
+  DAC setup/hold at the pins, bench labels that still say "6 ns acquisition" for the CMOS clock.
+
 ## Status 2026-11-10 (v3 rework in progress; tables below still describe v2 until marked)
 
 * **ADC v3** (`circuits.adc_il`): two v2 SAR cores, time-interleaved behind one
@@ -48,6 +84,7 @@ an extracted netlist with parasitic C, and extracted ngspice runs.
 | `lib/convkit.py` | PCell placement, channel router, Magic/Netgen/ngspice wrappers |
 | `flow.py` | `harden` (LibreLane macros) and `block` (layout → DRC → LVS → sims → evidence) |
 | `benches.py`, `adc_fft.py` | extracted ngspice benches; 32-point ADC FFT |
+| `INTEGRATION.md` | pin list and connection intent for chip-top (clock, references, bias, sample handshake) |
 | `summarize.py` | appends/rewrites a detailed generated `## RESULTS` section in this README from the evidence files |
 | `rtl/` | `dac_logic`, `adc_code_reg` (hardened), `adc_sar_logic` (protocol reference + RTL self-check), testbenches, LibreLane configs |
 | `generated/macros/` | hardened macros: `dac_logic`, `adc_code_reg`; `adc_sar_logic` is not in the current ADC but its LEF is still read by `circuits.adc()` |

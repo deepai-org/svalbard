@@ -30,6 +30,13 @@ ROOT = HERE.parents[3]
 SCRATCH = ROOT / 'scratch' / 'converters'
 GEN = HERE / 'generated'
 MACROS = GEN / 'macros'
+SCHDIR = HERE
+# CONV_STAGE=<dir>: build, check and simulate without touching the published files; outputs go to
+# <dir>/generated, <dir>/<block>.spice and <dir>/work. Publishing = copying those files into place.
+import os  # noqa: E402
+if os.environ.get('CONV_STAGE'):
+    _stage = Path(os.environ['CONV_STAGE']).resolve()
+    SCRATCH, GEN, SCHDIR = _stage / 'work', _stage / 'generated', _stage
 STDLIB = 'gf180mcu_fd_sc_mcu7t5v0'
 
 BLOCKS = {
@@ -208,7 +215,7 @@ def layout_block(block):
         shutil.rmtree(work)
     work.mkdir(parents=True)
     sch = schematic_text(c, block)
-    (HERE / f'{block}.spice').write_text(sch)
+    (SCHDIR / f'{block}.spice').write_text(sch)
     log(block, 'layout')
     L = ck.Layout(c, work).build()
     L.write()
@@ -234,7 +241,7 @@ def layout_block(block):
 
 
 def evidence(block, c, info, sims):
-    srcs = [HERE / f'{block}.spice', HERE / 'circuits.py', HERE / 'lib/convkit.py', HERE / 'flow.py',
+    srcs = [SCHDIR / f'{block}.spice', HERE / 'circuits.py', HERE / 'lib/convkit.py', HERE / 'flow.py',
             HERE / 'benches.py']
     for d in c.devices:
         if isinstance(d, ck.Macro):
@@ -243,7 +250,7 @@ def evidence(block, c, info, sims):
         block=block,
         top_cell=c.name,
         generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
-        source_hashes={str(p.relative_to(HERE)): ck.sha256(p) for p in srcs},
+        source_hashes={(p.name if p.parent == SCHDIR else str(p.relative_to(HERE))): ck.sha256(p) for p in srcs},
         artifact_hashes={f'generated/{block}{s}': ck.sha256(GEN / f'{block}{s}')
                          for s in ('.gds', '.mag', '.ext.spice')},
         images={'analog': ck.image_id(ck.ANALOG_IMAGE), 'digital': ck.image_id(ck.DIGITAL_IMAGE),
@@ -270,14 +277,21 @@ def evidence(block, c, info, sims):
     return rec
 
 
-def run_block(block, corners=True):
-    c, info = layout_block(block)
+def run_block(block, corners=True, reuse_layout=False):
+    if reuse_layout:
+        # Simulate the layout already built by --layout-only (Magic layouts are not bit-reproducible,
+        # so the checked GDS/extraction is kept, not rebuilt).
+        c = BLOCKS[block]()
+        info = json.loads((SCRATCH / block / 'layout' / 'layout-info.json').read_text())
+        assert ck.sha256(GEN / f'{block}.ext.spice') == ck.sha256(SCRATCH / block / 'layout' / f'{c.name}.ext.spice')
+    else:
+        c, info = layout_block(block)
     work = SCRATCH / block / 'sim'
     if work.exists():
         shutil.rmtree(work)
     work.mkdir(parents=True)
     shutil.copy(GEN / f'{block}.ext.spice', work / 'ext.spice')
-    (work / 'sch.spice').write_text(stdcell_spice().read_text() + '\n' + (HERE / f'{block}.spice').read_text())
+    (work / 'sch.spice').write_text(stdcell_spice().read_text() + '\n' + (SCHDIR / f'{block}.spice').read_text())
     sims = benches.run(block, c, work, corners=corners)
     return evidence(block, c, info, sims)
 
@@ -290,14 +304,22 @@ def main():
     b = sub.add_parser('block')
     b.add_argument('blocks', nargs='*', default=list(BLOCKS))
     b.add_argument('--corners', choices=['all', 'extremes', 'none', 'minimal'], default='all')
+    b.add_argument('--reuse-layout', action='store_true', help='sims + evidence on the layout left by --layout-only')
+    b.add_argument('--layout-only', action='store_true', help='layout, DRC, LVS, GDS export, precheck; no sims/evidence')
     a = ap.parse_args()
     SCRATCH.mkdir(parents=True, exist_ok=True)
+    GEN.mkdir(parents=True, exist_ok=True)
     if a.cmd == 'harden':
         for cell in a.cells:
             harden(cell)
     else:
         for blk in a.blocks:
-            run_block(blk, corners=a.corners)
+            if a.layout_only:
+                c, info = layout_block(blk)
+                log(blk, 'layout-only', info['bbox_um'], info['area_um2'], 'drc', info['drc_count'], info['lvs'],
+                    'gds', info['gds_export'].get('pass'), 'precheck', info['klayout_precheck'])
+            else:
+                run_block(blk, corners=a.corners, reuse_layout=a.reuse_layout)
 
 
 if __name__ == '__main__':

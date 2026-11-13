@@ -197,12 +197,46 @@ def clock_sources(name_p, name_n, period, high, delay=0.0, vdd='{vdd}'):
             f'V{name_n} {name_n} 0 PULSE(1.85 1.45 {delay:.4e} {tr} {tr} {high - tr:.4e} {period:.4e})\n')
 
 
+# MW-3: the blocks take one single-ended 3.3 V CMOS clock pin (CLK). clk='diff' keeps the pre-AP4
+# decks (low-swing differential CLKP/CLKN, acquisition = clock high time) for the old netlists.
+CMOS_CLK = __import__('circuits').CMOS_CLK
+
+
+def PHPIN(clkpins):
+    """The CMOS-clock ADC also exports PH (interleave phase) as its last port."""
+    return 'PH ' if clkpins.startswith('CLK ') else ''
+
+
+def cmos_clock(period, delay=0.0, duty=0.5, tr=0.3e-9, name='CLK', vdd='{vdd}'):
+    """Ideal single-ended CMOS clock, 0..vdd, `duty` high fraction, first rising edge at `delay`."""
+    return f'V{name} {name} 0 PULSE(0 {vdd} {delay:.4e} {tr} {tr} {duty * period - tr:.4e} {period:.4e})\n'
+
+
+def adc_clock(period, acq, delay, clk=None, acq_code=0, clksrc=None, duty=0.5):
+    """(clock source text, pin string) for the ADC decks. clksrc: text that drives node CLK itself
+    (clockmux in the loop, jittered PWL)."""
+    if (clk or ('cmos' if CMOS_CLK else 'diff')) == 'diff':
+        return clock_sources('CLKP', 'CLKN', period, acq, delay=delay), 'CLKP CLKN'
+    t = clksrc if clksrc is not None else cmos_clock(period, delay, duty)
+    t += f'VA0 ACQ0 0 {3.3 if acq_code & 1 else 0}\nVA1 ACQ1 0 {3.3 if acq_code & 2 else 0}\n'
+    return t, 'CLK ACQ0 ACQ1'
+
+
+def dac_clock(period, clk=None, clksrc=None, duty=0.5):
+    """DAC decks. The CMOS-clock DAC captures on the FALLING edge (DT-6); the clock is delayed by
+    half a period so its falling edges sit where the rising CLKP edges of the old decks were."""
+    if (clk or ('cmos' if CMOS_CLK else 'diff')) == 'diff':
+        return clock_sources('CLKP', 'CLKN', period, period / 2), 'CLKP CLKN'
+    return (clksrc if clksrc is not None else cmos_clock(period, period * (1 - duty), duty)), 'CLK'
+
+
 def pwl(points):
     return 'PWL(' + ' '.join(f'{t:.5e} {v:.5g}' for t, v in points) + ')'
 
 
 def adc_deck(net, corner, temp, vdd, *, top, inputs, period, acq, test=0, vref='VREF 0 1.0',
-             t0=40e-9, extra='', sine=None, ilen=1):
+             t0=40e-9, extra='', sine=None, ilen=1, clk=None, acq_code=0, clksrc=None, duty=0.5,
+             vcm='VCMS VCM 0 1.65'):
     """inputs: differential volts per conversion (held across each sample).
     v3 block: ILEN=ilen; with ILEN=1 conversion i goes to core A (even i) or B (odd i)."""
     n = len(inputs)
@@ -214,8 +248,9 @@ def adc_deck(net, corner, temp, vdd, *, top, inputs, period, acq, test=0, vref='
     # interleaved: the last core needs two clock periods to deliver its code
     tstop = t0 + (n + (1 if ilen else 0)) * period + (acq if ilen else 0) + 2e-9
     t = header(net, corner, temp, vdd) + '.option klu\n'
-    t += f'VDD VDD 0 {{vdd}}\nVR {vref}\nVCMS VCM 0 1.65\nIB VDD IBIAS 10u\nD1 IBIAS VDD dclamp\n'
-    t += clock_sources('CLKP', 'CLKN', period, acq, delay=t0)
+    t += f'VDD VDD 0 {{vdd}}\nVR {vref}\n{vcm}\nIB VDD IBIAS 10u\nD1 IBIAS VDD dclamp\n'
+    ctext, cpins = adc_clock(period, acq, t0, clk=clk, acq_code=acq_code, clksrc=clksrc, duty=duty)
+    t += ctext
     t += f'VEN EN 0 PWL(0 0 10n 0 10.2n {{vdd}})\n'
     if isinstance(test, list):        # per-conversion input_test (changed while the previous converts)
         for bit, nm in ((1, 'TEST0'), (2, 'TEST1')):
@@ -233,8 +268,8 @@ def adc_deck(net, corner, temp, vdd, *, top, inputs, period, acq, test=0, vref='
         t += f'VIP INP 0 {pwl(pts_p)}\nVIN INN 0 {pwl(pts_n)}\n'
     t += extra
     t += f'VIL ILEN 0 {3.3 if ilen else 0}\n'
-    t += f'X1 VDD 0 INP INN VCM VREF IBIAS CLKP CLKN EN ILEN TEST0 TEST1 ' + ' '.join(f'CODE{i}' for i in range(10)) + \
-         ' DONE OVERLOAD ' + ' '.join(f'CODEB{i}' for i in range(10)) + f' DONEB OVERLOADB ATB_BIAS {top}\n'
+    t += f'X1 VDD 0 INP INN VCM VREF IBIAS {cpins} EN ILEN TEST0 TEST1 ' + ' '.join(f'CODE{i}' for i in range(10)) + \
+         ' DONE OVERLOAD ' + ' '.join(f'CODEB{i}' for i in range(10)) + f' DONEB OVERLOADB ATB_BIAS {PHPIN(cpins)}{top}\n'
     t += '.control\nset wr_singlescale\nset wr_vecnames\noption interp\n'
     t += f'tran 20p {tstop:.4e}\n'
     # (KLU direct solver only, same tolerances: identical codes and DONE times to
@@ -242,6 +277,7 @@ def adc_deck(net, corner, temp, vdd, *, top, inputs, period, acq, test=0, vref='
     t += 'meas tran idd avg i(VDD) from=%.4e to=%.4e\n' % (t0, tstop - 2e-9)
     t += 'meas tran ioff avg i(VDD) from=1n to=9n\n'
     t += 'meas tran iref avg i(VR) from=%.4e to=%.4e\n' % (t0, tstop - 2e-9)
+    t += 'meas tran ivcm avg i(VCMS) from=%.4e to=%.4e\n' % (t0, tstop - 2e-9)
     t += 'wrdata adc.dat v(DONE) v(OVERLOAD) ' + ' '.join(f'v(CODE{i})' for i in range(10)) + \
         ' v(DONEB) v(OVERLOADB) ' + ' '.join(f'v(CODEB{i})' for i in range(10)) + '\n'
     t += '.endc\n.end\n'
@@ -301,7 +337,8 @@ def decode(datfile, t0, period, n, acq, ilen=0):
 DAC_T0 = 900e-9   # v4: + 1 pF ATB_BIAS decap (CNV-03): bias+CM loop settle ~0.9 us at ss 22-32C 3.10V (sch); v3 was 400 ns
 
 
-def dac_deck(net, corner, temp, vdd, *, top, codes, period, t0=DAC_T0, hold_zero=False):
+def dac_deck(net, corner, temp, vdd, *, top, codes, period, t0=DAC_T0, hold_zero=False, clk=None,
+             clksrc=None, duty=0.5):
     # t0: the 67 current-source gates (~1.7 pF) + 1 pF decap charge from the 10 uA bias after EN
     """codes: signed 10-bit values, each presented for two clock periods."""
     n = len(codes)
@@ -316,13 +353,14 @@ def dac_deck(net, corner, temp, vdd, *, top, codes, period, t0=DAC_T0, hold_zero
     tstop = t0 + (n + 1) * 2 * period
     t = header(net, corner, temp, vdd)
     t += 'VDD VDD 0 {vdd}\nIB VDD IBIAS 10u\nD1 IBIAS VDD dclamp\n'
-    t += clock_sources('CLKP', 'CLKN', period, period / 2)
+    ctext, cpins = dac_clock(period, clk=clk, clksrc=clksrc, duty=duty)
+    t += ctext
     t += 'VEN EN 0 PWL(0 0 30n 0 30.2n {vdd})\n'
     t += f'VHZ HOLD_ZERO 0 {3.3 if hold_zero else 0}\n'
     for b in range(10):
         t += f'VC{b} CODE{b} 0 {bitpwl(b)}\n'
     t += 'CLP OUTP 0 100f\nCLN OUTN 0 100f\n'
-    t += f'X1 VDD 0 OUTP OUTN IBIAS CLKP CLKN EN HOLD_ZERO ' + ' '.join(f'CODE{i}' for i in range(10)) + \
+    t += f'X1 VDD 0 OUTP OUTN IBIAS {cpins} EN HOLD_ZERO ' + ' '.join(f'CODE{i}' for i in range(10)) + \
          f' ATB_BIAS {top}\n'
     t += '.control\nset wr_singlescale\nset wr_vecnames\n'
     # v4: save only what is measured (all-node saves of the 4 MB extracted netlist hit
@@ -344,17 +382,22 @@ def offload_deck(net, corner, temp, vdd, *, top, kind, node, powered):
     """AC loading (and DC leakage at 1.65 V) of an output/input node while the block is off."""
     t = header(net, corner, temp, vdd)
     t += f'VDD VDD 0 {vdd if powered else 0}\nVB VB 0 3.3\nIB VB IBIAS 10u\nD1 IBIAS VB dclamp\n'
-    t += 'VEN EN 0 0\nVCLKP CLKP 0 1.65\nVCLKN CLKN 0 1.65\n'
+    if CMOS_CLK:      # clock parked low; ACQ pins are ADC-only (dangling sources are harmless on the DAC)
+        t += 'VEN EN 0 0\nVCLK CLK 0 0\nVA0 ACQ0 0 0\nVA1 ACQ1 0 0\n'
+        dpins, apins = 'CLK', 'CLK ACQ0 ACQ1'
+    else:
+        t += 'VEN EN 0 0\nVCLKP CLKP 0 1.65\nVCLKN CLKN 0 1.65\n'
+        dpins = apins = 'CLKP CLKN'
     if kind == 'dac':
         t += 'VHZ HOLD_ZERO 0 0\n' + ''.join(f'VC{b} CODE{b} 0 0\n' for b in range(10))
         t += f'VX {node} 0 DC 1.65 AC 1\nVO OUTN 0 1.65\n' if node == 'OUTP' else ''
-        t += f'X1 VDD 0 OUTP OUTN IBIAS CLKP CLKN EN HOLD_ZERO ' + ' '.join(f'CODE{i}' for i in range(10)) + \
+        t += f'X1 VDD 0 OUTP OUTN IBIAS {dpins} EN HOLD_ZERO ' + ' '.join(f'CODE{i}' for i in range(10)) + \
              f' ATB_BIAS {top}\n'
     else:
         t += 'VR VREF 0 0\nVCMS VCM 0 1.65\nVT0 TEST0 0 0\nVT1 TEST1 0 0\nVIL ILEN 0 0\n'
         t += f'VX INP 0 DC 1.65 AC 1\nVO INN 0 1.65\n'
-        t += f'X1 VDD 0 INP INN VCM VREF IBIAS CLKP CLKN EN ILEN TEST0 TEST1 ' + ' '.join(f'CODE{i}' for i in range(10)) + \
-             ' DONE OVERLOAD ' + ' '.join(f'CODEB{i}' for i in range(10)) + f' DONEB OVERLOADB ATB_BIAS {top}\n'
+        t += f'X1 VDD 0 INP INN VCM VREF IBIAS {apins} EN ILEN TEST0 TEST1 ' + ' '.join(f'CODE{i}' for i in range(10)) + \
+             ' DONE OVERLOAD ' + ' '.join(f'CODEB{i}' for i in range(10)) + f' DONEB OVERLOADB ATB_BIAS {PHPIN(apins)}{top}\n'
     t += '.control\nop\nlet ileak = -i(VX)\nprint ileak\nac lin 1 10e6 10e6\n' \
          'let cpf = imag(-i(VX))/(2*3.14159265*10e6)*1e15\nprint cpf\nlet gin = real(-i(VX))\nprint gin\n.endc\n.end\n'
     return t
@@ -698,7 +741,7 @@ XRB VDD 0 VREF0 VREFRB IBR VDD 0 RBREADY pt_refbuf
 
 
 def adc_fft(work, net, top, corner=NOMINAL, n=1024, cycles=487, period=25e-9, acq=6e-9, amp=1.6,
-            ilen=1, chunk=64, warm=2, refbuf=False, workers=None):
+            ilen=1, chunk=64, warm=2, refbuf=False, workers=None, **deck_kw):
     """Coherent N-point FFT of the extracted ADC, split into parallel chunks.
     Chunk j converts global samples j*chunk-warm .. (j+1)*chunk-1 of one
     continuous sine (SIN phase set so every chunk sits on the same global time
@@ -711,13 +754,14 @@ def adc_fft(work, net, top, corner=NOMINAL, n=1024, cycles=487, period=25e-9, ac
     fin = cycles * fs / n
     t0 = 8e-6 if refbuf else 40e-9
     decks = {}
+    extra_kw = deck_kw.pop('extra', '')
     for j in range(n // chunk):
         g0 = j * chunk - warm                      # global index of local sample 0
         ph = (360.0 * fin * (g0 * period - t0)) % 360.0
         extra = REFBUF_LOOP if refbuf else ''
         d, _ = adc_deck(net, *corner, top=top, inputs=[0.0] * (chunk + warm), period=period, acq=acq,
-                        t0=t0, ilen=ilen, extra=extra, sine=(amp, fin),
-                        vref='VREFRB VREF 0' if refbuf else 'VREF 0 1.0')
+                        t0=t0, ilen=ilen, extra=extra + extra_kw, sine=(amp, fin),
+                        vref='VREFRB VREF 0' if refbuf else 'VREF 0 1.0', **deck_kw)
         a = amp / 2
         d = d.replace(f'VIP INP 0 SIN(1.65 {a:.5g} {fin:.6g})', f'VIP INP 0 SIN(1.65 {a:.5g} {fin:.6g} 0 0 {ph:.6f})')
         d = d.replace(f'VIN INN 0 SIN(1.65 {-a:.5g} {fin:.6g})', f'VIN INN 0 SIN(1.65 {-a:.5g} {fin:.6g} 0 0 {ph:.6f})')

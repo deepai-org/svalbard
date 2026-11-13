@@ -411,7 +411,27 @@ class Layout:
         self.c = circuit
         self.work = Path(work).resolve()
         self.gap = getattr(circuit, 'device_gap', device_gap)
-        self.row_gap = row_gap
+        # AP4 density options (opt-in per circuit; defaults reproduce the pre-AP4 layouts):
+        #   track_sp    Metal3 channel-track spacing (0.6 default; Metal3 minimum is 0.28)
+        #   trunk_sp    Metal4 west-bank trunk spacing for default-width trunks
+        #   trunk_order nets listed first in the bank, nearest the rows first; choose the order so a
+        #               sensitive net's neighbours are quiet (default alphabetical order put
+        #               ATB_BIAS next to CK/CLKN and INP next to OVERLOAD)
+        #   row_gap, ch_margin  clearances between a row outline and the channel tracks
+        self.row_gap = getattr(circuit, 'row_gap', row_gap)
+        self.tsp = getattr(circuit, 'track_sp', self.SP)
+        self.ksp = getattr(circuit, 'trunk_sp', self.SP)
+        self.korder = list(getattr(circuit, 'trunk_order', None) or [])
+        self.chm = getattr(circuit, 'ch_margin', 0.9)
+        self.gap_of = getattr(circuit, 'gap_of', None) or {}     # device name -> gap after its units
+        #   quiet_nets  sensitive nets: their channel track and bank trunk keep quiet_sp (not the
+        #               tight track_sp/trunk_sp) to both neighbours
+        self.quiet = set(getattr(circuit, 'quiet_nets', None) or ())
+        self.qsp = getattr(circuit, 'quiet_sp', 1.0)
+        #   shield_nets static nets (supplies, enables): a track made only of these is moved next
+        #               to a quiet track whose neighbour would otherwise carry a signal, when the
+        #               channel's vertical constraints allow it
+        self.shields = set(getattr(circuit, 'shield_nets', None) or ())
         self.cmds = []
         self.report = {}
         self.net = None           # net of the shapes being drawn (antenna-diode planning)
@@ -480,17 +500,20 @@ class Layout:
                     box, vp = instance_view(d, self.geom[d.key()])
                     # d.x, when given, is the absolute origin of the first unit.
                     ox = fixed if (fixed is not None and i == 0) else x - box[0]
-                    if row and ox + box[0] < row[-1]['ox'] + row[-1]['box'][2] + 0.6:
+                    if row and ox + box[0] < row[-1]['ox'] + row[-1]['box'][2] + 0.6 - 1e-6:
                         raise ValueError(f'Overlapping placement at {uname}')
                     row.append(dict(name=uname, dev=d, pins=pins, view=vp, box=box, ox=ox, oy=0.0))
-                    x = ox + box[2] + self.gap
+                    x = ox + box[2] + self.gap_of.get(n, self.gap)
             lo = min(u['box'][1] for u in row)
             hi = max(u['box'][3] for u in row)
             kind = 'mos'
             if any(isinstance(u['dev'], Macro) for u in row):
                 kind = 'macro'
             elif any(isinstance(u['dev'], Cap) for u in row):
-                kind = 'cap'
+                # 'mixed' (opt-in): MOS/resistor row with a few MIM caps; Metal4 jumpers may cross
+                # it anywhere except over the caps (their x ranges are blocked in build()).
+                mixed = getattr(self.c, 'mixed_rows', False) and any(isinstance(u['dev'], Mos) for u in row)
+                kind = 'mixed' if mixed else 'cap'
             self.rows.append(dict(units=row, lo=lo, hi=hi, kind=kind,
                                   x0=min(u['ox'] + u['box'][0] for u in row),
                                   x1=max(u['ox'] + u['box'][2] for u in row)))
@@ -529,22 +552,35 @@ class Layout:
                 trunk_nets.append(n)
             elif lo != hi:
                 crossed = [self.rows[r]['kind'] for r in range(lo, hi)]
-                if all(k == 'mos' for k in crossed) and n not in wide:
+                if all(k in ('mos', 'mixed') for k in crossed) and n not in wide:
                     jumpers[n] = (lo, hi)
                 else:
                     trunk_nets.append(n)
         tx, x = {}, -2.0
-        for n in sorted(trunk_nets, key=lambda n: (n not in wide, n)):
+        rank = {n: i for i, n in enumerate(self.korder)}
+        prev_q = False
+        for n in sorted(trunk_nets, key=lambda n: (rank.get(n, len(rank)), n not in wide, n)):
             w = wide.get(n, self.W)
+            if (n in self.quiet) != prev_q or (n in self.quiet and prev_q):
+                x -= max(0.0, self.qsp - (1.0 if w > self.W else self.ksp)) if tx else 0.0
             x -= w / 2
             tx[n] = q(x)
-            x -= w / 2 + (1.0 if w > self.W else self.SP)
+            x -= w / 2 + (1.0 if w > self.W else self.ksp)
+            prev_q = n in self.quiet
+        self.trunk_x = dict(tx)
         bank_left = x - 1.0
         # M4 occupancy: (x, ch_lo, ch_hi, half_width)
         m4 = []
         for a in acc:
             if a['p']['pad'] == 'strap':
                 m4.append((a['x'], a['ch'], a['ch'], a['p']['width'] / 2))
+
+        for r, row in enumerate(self.rows):
+            if row['kind'] == 'mixed':
+                for u in row['units']:
+                    if isinstance(u['dev'], Cap):
+                        m4.append((u['ox'] + (u['box'][0] + u['box'][2]) / 2, r, r + 1,
+                                   (u['box'][2] - u['box'][0]) / 2 + 0.6))
 
         def m4_free(xc, lo, hi, half):
             return all(abs(xc - sx) >= half + sh + 0.6 or hi < slo or lo > shi for sx, slo, shi, sh in m4)
@@ -573,6 +609,7 @@ class Layout:
             return (n, ('lo' if d == 'up' else 'hi')) if n in split else (n, 'all')
 
         def solve(c, split):
+            split = sorted(split)      # deterministic order (set iteration follows the hash seed)
             lst = chans.get(c, [])
             spans = {}
             for a in lst:
@@ -639,6 +676,8 @@ class Layout:
                     return None, unplaced
                 unplaced -= set(cur)
                 tracks.append(cur)
+            if self.shields and self.quiet:
+                tracks = self._shield(tracks, below)
             return (tracks, spans, anchor, local, split), None
 
         chan_tracks = {}
@@ -661,13 +700,18 @@ class Layout:
         self.row_y = []
         for c in range(R + 1):
             tracks = chan_tracks[c][0]
-            y += 0.9
+            y += self.chm
+            prev_q = None
             for t in tracks:
+                isq = any(k[0] in self.quiet for k in t)
+                if prev_q is not None and (isq or prev_q):
+                    y += max(0.0, self.qsp - self.tsp)
+                prev_q = isq
                 w = max(wide.get(k[0], self.W) for k in t)
                 ty = q(y + w / 2)
                 for k in t:
                     track_y[(c, k)] = ty
-                y += w + self.SP
+                y += w + self.tsp
             y += 0.3
             if c < R:
                 row = self.rows[c]
@@ -821,6 +865,46 @@ class Layout:
                            area_um2=round((self.bbox[2] - self.bbox[0]) * (self.bbox[3] - self.bbox[1]), 1))
         return self
 
+    def _shield(self, tracks, below):
+        """Reorder channel tracks (bottom to top) so each quiet track has an all-shield or
+        all-quiet neighbour on both sides where an order satisfying `below` exists."""
+        def valid(order):
+            pos = {k: i for i, t in enumerate(order) for k in t}
+            return all(pos[b] < pos[k] for k in pos for b in below[k] if b != k and b in pos)
+
+        def kind(t):
+            nets = {k[0] for k in t}
+            return 'q' if nets & self.quiet else 's' if nets <= self.shields else 'x'
+        tracks = list(tracks)
+        for _ in range(4 * len(tracks)):
+            moved = False
+            for i, t in enumerate(tracks):
+                if kind(t) != 'q':
+                    continue
+                for side in (-1, +1):
+                    j = i + side
+                    if not 0 <= j < len(tracks) or kind(tracks[j]) != 'x':
+                        continue
+                    # nearest shield track that can legally sit between the quiet track and its neighbour
+                    cands = sorted((m for m, u in enumerate(tracks) if kind(u) == 's'), key=lambda m: abs(m - i))
+                    for m in cands:
+                        if (m > 0 and kind(tracks[m - 1]) == 'q') or (m + 1 < len(tracks) and kind(tracks[m + 1]) == 'q'):
+                            continue        # already shielding something
+                        order = [u for n_, u in enumerate(tracks) if n_ != m]
+                        qi = order.index(t)
+                        order.insert(qi if side < 0 else qi + 1, tracks[m])
+                        if valid(order):
+                            tracks, moved = order, True
+                            break
+                    if moved:
+                        break
+                if moved:
+                    break
+            if not moved:
+                break
+        assert valid(tracks)
+        return tracks
+
     def _antenna(self, acc):
         """Antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M4 get an N+/Psub
         diode under their own M3/M4 wire (analog/antenna_diodes.py); see lvs_reference()."""
@@ -890,7 +974,7 @@ def lvs(work, layout_spice, layout_cell, schematic_spice, schematic_cell, out='l
     r = docker(DIGITAL_IMAGE, work, cmd, timeout=3600)
     (Path(work) / (out + '.log')).write_text(r.stdout + r.stderr)
     text = (Path(work) / out).read_text() if (Path(work) / out).exists() else ''
-    unique = 'Netlists match uniquely' in (r.stdout + text)
+    unique = 'Netlists match uniquely' in (r.stdout + text) and 'property errors' not in (r.stdout + text).lower()
     final = re.findall(r'Final result:\s*(.*)', r.stdout + text)
     return dict(match_unique=unique and 'Circuits match uniquely' in (r.stdout + text),
                 final=final[-1] if final else None, stdout_tail=r.stdout[-1500:])

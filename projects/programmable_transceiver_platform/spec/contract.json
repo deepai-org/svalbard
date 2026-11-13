@@ -54,6 +54,57 @@
       "WIRE_TX_N": "bidir[21].pad",
       "WIRE_TX_P": "bidir[20].pad"
     },
+    "bond_map_current": {
+      "status": "authoritative physical bond map as of 2026-11-13 (area pass 4 doc fix). candidate_signal_sites above is the STALE pre-PD22 generator reference (it still drives analog/pads/design.py site resolution and verification/check_contract.py); it differs in WIRE_RX/WIRE_TX P/N order, the west RF_TX/REF_IN/AUX_CLK/BB_Q sites and the missing USB/debug pins. Re-baselining it is a pads + test_contract change (owner: pads/integration).",
+      "sources": [
+        "scratch/reviews/interface-changes.md PD22 (bond map, user decision)",
+        "verification/chip_assembly/inventory.py CUSTOM_PADS (v4+ west map) and MIRRORED_PADS",
+        "scratch/chip-assembly-v6/run/floorplan-v6.json"
+      ],
+      "west": {
+        "inputs[11].pad": "RF_RX_P",
+        "inputs[10].pad": "RF_RX_N",
+        "inputs[9].pad": "BB_I_P",
+        "inputs[8].pad": "BB_I_N",
+        "inputs[7].pad": "REF_IN",
+        "inputs[6].pad": "REF_IN_N",
+        "inputs[5].pad": "AUX_CLK_P",
+        "inputs[4].pad": "AUX_CLK_N",
+        "inputs[3].pad": "BB_Q_P",
+        "inputs[2].pad": "BB_Q_N",
+        "inputs[1].pad": "RF_TX_P",
+        "inputs[0].pad": "RF_TX_N",
+        "in-ring downbond pads beside RF_RX": "LNA_SRC_P / LNA_SRC_N (RC-16i)"
+      },
+      "east": {
+        "bidir[14].pad": "WIRE_RX_N (pad_hspad, mirrored)",
+        "bidir[15].pad": "WIRE_RX_P (pad_hspad, mirrored)",
+        "bidir[16].pad": "WCLK_IN_P",
+        "bidir[17].pad": "WCLK_IN_N",
+        "bidir[18].pad": "USB_DN (pad_wirepad)",
+        "bidir[19].pad": "USB_DP (pad_wirepad)",
+        "bidir[20].pad": "WIRE_TX_N (pad_txpad, mirrored)",
+        "bidir[21].pad": "WIRE_TX_P (pad_txpad, mirrored)",
+        "bidir[22].pad": "WTX_EXT_P",
+        "bidir[23].pad": "WTX_EXT_N",
+        "bidir[24].pad": "WMON",
+        "bidir[25].pad": "TLP/ESD test site (PD48b)"
+      },
+      "north": {
+        "bidir[37].pad": "CLK_OBS",
+        "bidir[38].pad": "DBG_OBS0",
+        "bidir[39].pad": "DBG_OBS1",
+        "analog[0].pad": "ATB0",
+        "analog[1].pad": "ATB1"
+      },
+      "retired": [
+        "WCLK_OBS (was bidir[18], folded into CLK_OBS, PD22)",
+        "WDBG_OBS (was bidir[19], folded into DBG_OBS0 codes 37+n, PD22)",
+        "ESD_TEST (PD35)",
+        "usb2 mode_aliases on WIRE_RX_P/N (USB is on USB_DP/USB_DN since PD22)"
+      ],
+      "host_link_and_south_sites": "unchanged: see candidate_signal_sites (D2H/H2D/SPI/RESET_N)"
+    },
     "mapping_status": "candidate_signal_assignment_fixed_provider_sites_terminal_limit_and_electrical_map_open",
     "pad_ring": "default_or_demonstrably_packaging_compatible",
     "power_domains": "logical_load_budgets_on_one_extracted_external_supply_and_return",

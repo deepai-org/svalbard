@@ -1,0 +1,1078 @@
+{
+ "image_id": "svalbard/transceiver-pad-sim:ngspice47-corrected",
+ "models": {
+  "hspad": {
+   "path": "/home/ubuntu/svalbard/scratch/area-pass-4/hspad-stacked/physical.spice",
+   "sha256": "5aec4eaee65733f9e4cb67c7e645acd8249486b6bf8d9c8023dabfcc87f7f10f"
+  }
+ },
+ "shunt_model": "drawn in the family layouts (extracted with the layout)",
+ "results": [
+  {
+   "family": "hspad",
+   "case": "pulse_P_pos",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -3.8744928e-18,
+    2.37354913
+   ],
+   "pad_n_range_v": [
+    -3.86424002e-18,
+    0.160074697
+   ],
+   "rail_max_v": 1.35074596,
+   "pad_peak_abs_v": 2.37354913,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 7.37520435e-05,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -5.4135043915977174e-05,
+   "peer_current_end_a": [
+    -1.308246244593438e-06,
+    -5.993630717047076e-08
+   ],
+   "vdd_backfeed_peak_a": 7.37520435e-05,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X330",
+      "model": "nfet_06v0",
+      "gate_v": 2.374
+     },
+     {
+      "device": "X210",
+      "model": "nfet_06v0",
+      "gate_v": 2.374
+     },
+     {
+      "device": "X414",
+      "model": "nfet_06v0",
+      "gate_v": 2.374
+     },
+     {
+      "device": "X290",
+      "model": "nfet_06v0",
+      "gate_v": 2.374
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "3037075dcae661e3f85d0a220ef43b06f3276729854f507fe4df619d9ee1b83e",
+   "waveform_sha256": "5d84660780ad4aec61a8ed067b26713e53e6588515504d581a6625b12be78447"
+  },
+  {
+   "family": "hspad",
+   "case": "pulse_P_pos",
+   "process": "ss",
+   "temp_c": 0,
+   "complete": true,
+   "pad_p_range_v": [
+    -2.3782349e-16,
+    2.62491437
+   ],
+   "pad_n_range_v": [
+    -1.53815678e-16,
+    0.188931206
+   ],
+   "rail_max_v": 1.56026555,
+   "pad_peak_abs_v": 2.62491437,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 9.23308988e-05,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -6.779033108644793e-05,
+   "peer_current_end_a": [
+    -1.5605969888730384e-06,
+    -8.419587875007133e-08
+   ],
+   "vdd_backfeed_peak_a": 9.23308988e-05,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X210",
+      "model": "nfet_06v0",
+      "gate_v": 2.625
+     },
+     {
+      "device": "X414",
+      "model": "nfet_06v0",
+      "gate_v": 2.625
+     },
+     {
+      "device": "X330",
+      "model": "nfet_06v0",
+      "gate_v": 2.625
+     },
+     {
+      "device": "X290",
+      "model": "nfet_06v0",
+      "gate_v": 2.625
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "6b5f29ed24449abe8396923655a37b6eaba9af2db6454c115d2e4feb05de7088",
+   "waveform_sha256": "a986288ebec25b1f73f340aabd78108b32ad589c74e2c22ce7eea41d8b530915"
+  },
+  {
+   "family": "hspad",
+   "case": "pulse_P_neg",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -1.15844723,
+    2.12229154e-16
+   ],
+   "pad_n_range_v": [
+    -0.0203244832,
+    2.15204787e-16
+   ],
+   "rail_max_v": -1.28866766e-13,
+   "pad_peak_abs_v": 1.15844723,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 1.29861985e-22,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": 1.4563405128216834e-09,
+   "peer_current_end_a": [
+    3.509803050328103e-07,
+    2.9730615119828814e-09
+   ],
+   "vdd_backfeed_peak_a": 1.29861985e-22,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X74",
+      "model": "nfet_06v0",
+      "gate_v": 0.96
+     },
+     {
+      "device": "X133",
+      "model": "pfet_06v0",
+      "gate_v": 0.96
+     },
+     {
+      "device": "X450",
+      "model": "nfet_06v0",
+      "gate_v": 0.853
+     },
+     {
+      "device": "X237",
+      "model": "nfet_06v0",
+      "gate_v": 0.853
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "bb873effe805ec0cad29c3a71465ce904598ea032bd7caebef97cd4fa03343f7",
+   "waveform_sha256": "1c08c83fe9a89dd3376fc26149e6cc3c08d4ce846d6028df430e838995aca0f0"
+  },
+  {
+   "family": "hspad",
+   "case": "pulse_P_neg",
+   "process": "ss",
+   "temp_c": 0,
+   "complete": true,
+   "pad_p_range_v": [
+    -1.22230865,
+    7.28903794e-26
+   ],
+   "pad_n_range_v": [
+    -0.0213647776,
+    4.72886384e-17
+   ],
+   "rail_max_v": 3.82641333e-22,
+   "pad_peak_abs_v": 1.22230865,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 7.96153347e-22,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": 5.360690259300999e-09,
+   "peer_current_end_a": [
+    4.3927788128388017e-07,
+    4.026050775677602e-09
+   ],
+   "vdd_backfeed_peak_a": 7.96153347e-22,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X74",
+      "model": "nfet_06v0",
+      "gate_v": 0.995
+     },
+     {
+      "device": "X133",
+      "model": "pfet_06v0",
+      "gate_v": 0.995
+     },
+     {
+      "device": "X330",
+      "model": "nfet_06v0",
+      "gate_v": 0.89
+     },
+     {
+      "device": "X450",
+      "model": "nfet_06v0",
+      "gate_v": 0.89
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "e059272ce585c0024a6c91f8a627660f542a10f770b2ab697935121d7eb43abb",
+   "waveform_sha256": "bc5822f4b0829ed9e905b7289bbb206af0224f6347fdc33ce5ed3005144a5522"
+  },
+  {
+   "family": "hspad",
+   "case": "pulse_N_pos",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -3.8744928e-18,
+    0.161923794
+   ],
+   "pad_n_range_v": [
+    -3.86424002e-18,
+    2.3741531
+   ],
+   "rail_max_v": 1.35108222,
+   "pad_peak_abs_v": 2.3741531,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 7.37923978e-05,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -5.415704887146933e-05,
+   "peer_current_end_a": [
+    -6.010275271126961e-08,
+    -1.3082572183024251e-06
+   ],
+   "vdd_backfeed_peak_a": 7.37923978e-05,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X234",
+      "model": "nfet_06v0",
+      "gate_v": 2.373
+     },
+     {
+      "device": "X357",
+      "model": "nfet_06v0",
+      "gate_v": 2.373
+     },
+     {
+      "device": "X292",
+      "model": "nfet_06v0",
+      "gate_v": 2.373
+     },
+     {
+      "device": "X14",
+      "model": "nfet_06v0",
+      "gate_v": 2.373
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "839d372ab1ef8c98cc7237bb0a8390e6aa5dc16b2f78889775378d1dd87eaed9",
+   "waveform_sha256": "b3eee8d9bddd6f61c5da5b753a78dea54ee3abcf629283e660c1aeb7b9005c72"
+  },
+  {
+   "family": "hspad",
+   "case": "pulse_N_pos",
+   "process": "ss",
+   "temp_c": 0,
+   "complete": true,
+   "pad_p_range_v": [
+    -2.3782349e-16,
+    0.190988766
+   ],
+   "pad_n_range_v": [
+    -1.53815678e-16,
+    2.62481032
+   ],
+   "rail_max_v": 1.56028887,
+   "pad_peak_abs_v": 2.62481032,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 9.23772525e-05,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -6.780378799129815e-05,
+   "peer_current_end_a": [
+    -8.453192462154066e-08,
+    -1.5605510383880169e-06
+   ],
+   "vdd_backfeed_peak_a": 9.23772525e-05,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X234",
+      "model": "nfet_06v0",
+      "gate_v": 2.625
+     },
+     {
+      "device": "X357",
+      "model": "nfet_06v0",
+      "gate_v": 2.625
+     },
+     {
+      "device": "X218",
+      "model": "nfet_06v0",
+      "gate_v": 2.625
+     },
+     {
+      "device": "X53",
+      "model": "nfet_06v0",
+      "gate_v": 2.625
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "5c3dd19fb63863910e1b2a33800e68d572904570f3653eb9273012ee85a3f449",
+   "waveform_sha256": "9a2486a5efb2a952ad62246b3b61bd8343453f40c346e161bc4425834d03ae5f"
+  },
+  {
+   "family": "hspad",
+   "case": "pulse_N_neg",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -0.0201666225,
+    2.12229154e-16
+   ],
+   "pad_n_range_v": [
+    -1.15813497,
+    2.15204787e-16
+   ],
+   "rail_max_v": -1.28866766e-13,
+   "pad_peak_abs_v": 1.15813497,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 1.29861985e-22,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": 3.4031244653352357e-09,
+   "peer_current_end_a": [
+    2.9774161231383736e-09,
+    3.507221573894436e-07
+   ],
+   "vdd_backfeed_peak_a": 1.29861985e-22,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X86",
+      "model": "nfet_06v0",
+      "gate_v": 0.96
+     },
+     {
+      "device": "X144",
+      "model": "pfet_06v0",
+      "gate_v": 0.96
+     },
+     {
+      "device": "X105",
+      "model": "nfet_06v0",
+      "gate_v": 0.853
+     },
+     {
+      "device": "X467",
+      "model": "nfet_06v0",
+      "gate_v": 0.853
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "5a4cd509e55956904aa32843b2f3043db7c76655201dce8b7c81d91676b63e87",
+   "waveform_sha256": "e67afe83828b817f3b66356d27512c35979f997623862a8c77a24cb7dcd305b8"
+  },
+  {
+   "family": "hspad",
+   "case": "pulse_N_neg",
+   "process": "ss",
+   "temp_c": 0,
+   "complete": true,
+   "pad_p_range_v": [
+    -0.021208426,
+    7.28903794e-26
+   ],
+   "pad_n_range_v": [
+    -1.22241605,
+    4.72886384e-17
+   ],
+   "rail_max_v": 3.82641333e-22,
+   "pad_peak_abs_v": 1.22241605,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 7.96153347e-22,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": 7.962570708330957e-09,
+   "peer_current_end_a": [
+    4.029526872924394e-09,
+    4.389762492610557e-07
+   ],
+   "vdd_backfeed_peak_a": 7.96153347e-22,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X86",
+      "model": "nfet_06v0",
+      "gate_v": 0.995
+     },
+     {
+      "device": "X144",
+      "model": "pfet_06v0",
+      "gate_v": 0.995
+     },
+     {
+      "device": "X234",
+      "model": "nfet_06v0",
+      "gate_v": 0.89
+     },
+     {
+      "device": "X467",
+      "model": "nfet_06v0",
+      "gate_v": 0.89
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "baf68c4ef9e0be51330171c1efeb094ca2e9c36accd54faa6477c6d28846e876",
+   "waveform_sha256": "62a973474cf95e04e8c7e89ee86dbf79cfcfd454e3dcc992c65b1c6552150414"
+  },
+  {
+   "family": "hspad",
+   "case": "ramp_fast",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -1.36540339e-06,
+    2.23347449e-05
+   ],
+   "pad_n_range_v": [
+    -8.45349246e-07,
+    3.25139603e-05
+   ],
+   "rail_max_v": 0.0444439019,
+   "pad_peak_abs_v": 3.25139603e-05,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 3.56007028,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": 0.08596149376167292,
+   "peer_current_end_a": [
+    2.3091316759051185e-08,
+    1.6366527942322097e-08
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X144",
+      "model": "pfet_06v0",
+      "gate_v": 3.557
+     },
+     {
+      "device": "X133",
+      "model": "pfet_06v0",
+      "gate_v": 3.557
+     },
+     {
+      "device": "X70",
+      "model": "pfet_06v0",
+      "gate_v": 0.661
+     },
+     {
+      "device": "X63",
+      "model": "pfet_06v0",
+      "gate_v": 0.661
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "3165dcf8128e440c19914b0924999d9a21f2e2aff82aab6c1b554c69c31f0073",
+   "waveform_sha256": "c5af6c3916f1cc910edcc295c20f10b4adf66f4d1abc62b85ccd45dbc60bbdaf"
+  },
+  {
+   "family": "hspad",
+   "case": "ramp_slow",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -2.57437489e-23,
+    2.02862978e-06
+   ],
+   "pad_n_range_v": [
+    -2.57437489e-23,
+    3.23391694e-06
+   ],
+   "rail_max_v": 0.261999911,
+   "pad_peak_abs_v": 3.23391694e-06,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 3.62999443,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": 5.60542686807309e-06,
+   "peer_current_end_a": [
+    -2.659354295847176e-08,
+    -2.6117732818604652e-08
+   ],
+   "vdd_backfeed_peak_a": 0.0,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X144",
+      "model": "pfet_06v0",
+      "gate_v": 3.63
+     },
+     {
+      "device": "X133",
+      "model": "pfet_06v0",
+      "gate_v": 3.63
+     },
+     {
+      "device": "X70",
+      "model": "pfet_06v0",
+      "gate_v": 0.661
+     },
+     {
+      "device": "X63",
+      "model": "pfet_06v0",
+      "gate_v": 0.661
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "ea83c16c50e419e29344f77669b67aab3003913b848b854cb793fdb040af38a2",
+   "waveform_sha256": "2d022d91da68bb2422ba1bc5f1a98621839e4c5852a2ba1b49c7298c966da75c"
+  },
+  {
+   "family": "hspad",
+   "case": "peer",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    3.62999239,
+    3.62999245
+   ],
+   "pad_n_range_v": [
+    3.62999239,
+    3.62999245
+   ],
+   "rail_max_v": 3.08916219,
+   "pad_peak_abs_v": 3.62999245,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 7.45710719e-12,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -7.436788997790261e-12,
+   "peer_current_end_a": [
+    1.5200154554806492e-07,
+    1.5200142376154806e-07
+   ],
+   "vdd_backfeed_peak_a": 7.45710719e-12,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X93",
+      "model": "nfet_06v0",
+      "gate_v": 3.63
+     },
+     {
+      "device": "X75",
+      "model": "nfet_06v0",
+      "gate_v": 3.63
+     },
+     {
+      "device": "X73",
+      "model": "nfet_06v0",
+      "gate_v": 3.63
+     },
+     {
+      "device": "X56",
+      "model": "nfet_06v0",
+      "gate_v": 3.63
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "d321b865809295d98c7b8d0fa1f2c5e353897b55f0e5cba3f6d61c98f643b8ef",
+   "waveform_sha256": "a6f06e423199e50ff3618eb38d9330aa263e60e849c2d5dcb1cd21c8f564d355"
+  },
+  {
+   "family": "hspad",
+   "case": "peer",
+   "process": "ff",
+   "temp_c": 85,
+   "complete": true,
+   "pad_p_range_v": [
+    3.62998321,
+    3.62998323
+   ],
+   "pad_n_range_v": [
+    3.62998321,
+    3.62998323
+   ],
+   "rail_max_v": 3.20818976,
+   "pad_peak_abs_v": 3.62998323,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 1.00777824e-11,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -1.0063412557428212e-11,
+   "peer_current_end_a": [
+    3.3574169581523096e-07,
+    3.3574165923720353e-07
+   ],
+   "vdd_backfeed_peak_a": 1.00777824e-11,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X75",
+      "model": "nfet_06v0",
+      "gate_v": 3.63
+     },
+     {
+      "device": "X73",
+      "model": "nfet_06v0",
+      "gate_v": 3.63
+     },
+     {
+      "device": "X56",
+      "model": "nfet_06v0",
+      "gate_v": 3.63
+     },
+     {
+      "device": "X53",
+      "model": "nfet_06v0",
+      "gate_v": 3.63
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "6de144ec02209163a639b1b963ad72ee5e59015388db5cb83a4d453a1185dd3d",
+   "waveform_sha256": "64a51f7c787f483d3749b5524a10f458ad9dd1268831d6ce10eb1e2882b68ca4"
+  },
+  {
+   "family": "hspad",
+   "case": "hbm_P_pos",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -5.74649531e-18,
+    5.0352909
+   ],
+   "pad_n_range_v": [
+    -1.62163041e-17,
+    0.27825321
+   ],
+   "rail_max_v": 4.1394176,
+   "pad_peak_abs_v": 5.0352909,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.000187011445,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -7.795107691948376e-07,
+   "peer_current_end_a": [
+    -4.965104719042465e-06,
+    -1.4135923873189007e-07
+   ],
+   "vdd_backfeed_peak_a": 0.000187011445,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X414",
+      "model": "nfet_06v0",
+      "gate_v": 5.035
+     },
+     {
+      "device": "X210",
+      "model": "nfet_06v0",
+      "gate_v": 5.035
+     },
+     {
+      "device": "X290",
+      "model": "nfet_06v0",
+      "gate_v": 5.035
+     },
+     {
+      "device": "X330",
+      "model": "nfet_06v0",
+      "gate_v": 5.035
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "5aab2407af6d520f421b6ac1337180186b2adc13ec4f9cf97ac7f914bf2e5cdc",
+   "waveform_sha256": "4ec3104f07a3758bef3fa1c323dbf6ded4a0b17f10ec4ab6de2e2b5238ee3017"
+  },
+  {
+   "family": "hspad",
+   "case": "hbm_P_pos",
+   "process": "ss",
+   "temp_c": 0,
+   "complete": true,
+   "pad_p_range_v": [
+    -8.71990191e-17,
+    5.34560889
+   ],
+   "pad_n_range_v": [
+    -8.88287085e-17,
+    0.32709348
+   ],
+   "rail_max_v": 3.8952619,
+   "pad_peak_abs_v": 5.34560889,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.000223809508,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -9.172974893497087e-07,
+   "peer_current_end_a": [
+    -4.772896054104913e-06,
+    -1.3379011541881767e-07
+   ],
+   "vdd_backfeed_peak_a": 0.000223809508,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X414",
+      "model": "nfet_06v0",
+      "gate_v": 5.346
+     },
+     {
+      "device": "X210",
+      "model": "nfet_06v0",
+      "gate_v": 5.346
+     },
+     {
+      "device": "X290",
+      "model": "nfet_06v0",
+      "gate_v": 5.346
+     },
+     {
+      "device": "X330",
+      "model": "nfet_06v0",
+      "gate_v": 5.346
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "2227cdec6bf8244305a8ed5afd7317453600dc84ea6c973c2be32b6df32f1be5",
+   "waveform_sha256": "be0a57af8aa8b65d5f6854afd2b08084b100c5f42b13e70f467ff8e1af8fd322"
+  },
+  {
+   "family": "hspad",
+   "case": "hbm_P_pos",
+   "process": "ff",
+   "temp_c": 85,
+   "complete": true,
+   "pad_p_range_v": [
+    1.33697952e-19,
+    5.41345695
+   ],
+   "pad_n_range_v": [
+    -1.25120069e-16,
+    0.242657524
+   ],
+   "rail_max_v": 4.5988321,
+   "pad_peak_abs_v": 5.41345695,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 0.000161019628,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -6.94697975459617e-07,
+   "peer_current_end_a": [
+    -5.335648056894255e-06,
+    -1.5450519530641132e-07
+   ],
+   "vdd_backfeed_peak_a": 0.000161019628,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X414",
+      "model": "nfet_06v0",
+      "gate_v": 5.413
+     },
+     {
+      "device": "X210",
+      "model": "nfet_06v0",
+      "gate_v": 5.413
+     },
+     {
+      "device": "X290",
+      "model": "nfet_06v0",
+      "gate_v": 5.413
+     },
+     {
+      "device": "X330",
+      "model": "nfet_06v0",
+      "gate_v": 5.413
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "7bb729cdea71aa7ea421f5559e437873f22e18ce5f929ba694692ba6087d045a",
+   "waveform_sha256": "714bc1e9c4a4b88cfcbfc205235fe0c379a256c8f54b16b473641657766968f3"
+  },
+  {
+   "family": "hspad",
+   "case": "hbm_N_neg",
+   "process": "typical",
+   "temp_c": 27,
+   "complete": true,
+   "pad_p_range_v": [
+    -0.0415685699,
+    1.55847339e-16
+   ],
+   "pad_n_range_v": [
+    -3.62848274,
+    1.57173967e-16
+   ],
+   "rail_max_v": -1.29461029e-13,
+   "pad_peak_abs_v": 3.62848274,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 5.86100996e-06,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -4.685008258034971e-07,
+   "peer_current_end_a": [
+    2.6316831410824317e-09,
+    9.504429679367194e-07
+   ],
+   "vdd_backfeed_peak_a": 5.86100996e-06,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X86",
+      "model": "nfet_06v0",
+      "gate_v": 0.969
+     },
+     {
+      "device": "X144",
+      "model": "pfet_06v0",
+      "gate_v": 0.969
+     },
+     {
+      "device": "X53",
+      "model": "nfet_06v0",
+      "gate_v": 0.92
+     },
+     {
+      "device": "X51",
+      "model": "nfet_06v0",
+      "gate_v": 0.92
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "0b743e458c3b1dfdf093b54bebb127a095de741a41a3290e28d55c9457e704a2",
+   "waveform_sha256": "537b2c6279472705b7322cd5c958f48a5cec95768b6fce1ce4ebf8c5538943ef"
+  },
+  {
+   "family": "hspad",
+   "case": "hbm_N_neg",
+   "process": "ss",
+   "temp_c": 0,
+   "complete": true,
+   "pad_p_range_v": [
+    -0.0455338904,
+    5.9213426e-17
+   ],
+   "pad_n_range_v": [
+    -3.9378582,
+    6.0981269e-17
+   ],
+   "rail_max_v": 2.94103197e-16,
+   "pad_peak_abs_v": 3.9378582,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 1.0351297e-05,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -8.883093710024978e-07,
+   "peer_current_end_a": [
+    2.25818217152373e-09,
+    1.0005323500516237e-06
+   ],
+   "vdd_backfeed_peak_a": 1.0351297e-05,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X86",
+      "model": "nfet_06v0",
+      "gate_v": 1.0
+     },
+     {
+      "device": "X144",
+      "model": "pfet_06v0",
+      "gate_v": 1.0
+     },
+     {
+      "device": "X53",
+      "model": "nfet_06v0",
+      "gate_v": 0.95
+     },
+     {
+      "device": "X51",
+      "model": "nfet_06v0",
+      "gate_v": 0.95
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "34cbd5400bcf6eaa6860928b279d167bc348527def06a2b606eff2e4879feea5",
+   "waveform_sha256": "f275b2307432c128d9ebffecf7a006b1187afd1f909035a2111351799aba2965"
+  },
+  {
+   "family": "hspad",
+   "case": "hbm_N_neg",
+   "process": "ff",
+   "temp_c": 85,
+   "complete": true,
+   "pad_p_range_v": [
+    -0.0367453983,
+    1.1447256e-16
+   ],
+   "pad_n_range_v": [
+    -3.28314322,
+    8.75026759e-17
+   ],
+   "rail_max_v": 2.92318091e-16,
+   "pad_peak_abs_v": 3.28314322,
+   "pad_within_6v0_screen": true,
+   "vdd_max_v": 4.03321485e-06,
+   "atb_range_v": [
+    0.0,
+    0.0
+   ],
+   "supply_current_end_a": -2.5836909442381346e-07,
+   "peer_current_end_a": [
+    2.678342933338884e-09,
+    8.539408196261449e-07
+   ],
+   "vdd_backfeed_peak_a": 4.03321485e-06,
+   "exposure": {
+    "observed_mos": 404,
+    "partially_observed_mos": 0,
+    "exceeding": 0,
+    "worst": [
+     {
+      "device": "X86",
+      "model": "nfet_06v0",
+      "gate_v": 0.897
+     },
+     {
+      "device": "X144",
+      "model": "pfet_06v0",
+      "gate_v": 0.897
+     },
+     {
+      "device": "X53",
+      "model": "nfet_06v0",
+      "gate_v": 0.853
+     },
+     {
+      "device": "X51",
+      "model": "nfet_06v0",
+      "gate_v": 0.853
+     }
+    ]
+   },
+   "op_fallback": false,
+   "deck_sha256": "13ca3f0d45db4e0cf894e05e7068f1f300b60a02c9eb3192b4dd1e2c3490a202",
+   "waveform_sha256": "59ab9e1c40cf77b55a6263a10778f1a2773f5838d2885c27286590038e1f9354"
+  }
+ ],
+ "source_sha256": {
+  "stress_safe_family_sims.py": "9d45d0e62dfc044a05c695a3ed26f1e734fe2ae9edb4ff81023e073c1c597ecd",
+  "stress_safe_clamp.py": "3a96cc1fd51fd64d83e65df66e452d01a2cb87291a9615b24cfe6589fc8c6145"
+ }
+}

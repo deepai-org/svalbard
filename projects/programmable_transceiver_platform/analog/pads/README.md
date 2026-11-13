@@ -117,6 +117,18 @@ Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`
   - **Review** (`scratch/pads-pd46/review/REVIEW.md`): GO for all three, conditions: LS needs `usbhs.bias.enable` (interlock
     requested, PD47), change LS_SLOW only with the driver off; open: host-role LS load (spot ratio 1.21/1.25), HS TX eye on the extracted pad.
 
+### PD-AP4 (area pass 4, 2026-11-13): stacked `pad_hspad` CANDIDATE (not published)
+
+`hs_pad_compose.py --stacked` uses the same shell, `pt_hs_leg` master and reference netlist, with the legs stacked beside the shell instead of above it.
+
+- **Area:** **492 × 912.91 µm (was 478 × 1111.25), −0.088 mm² of core.**
+- **Build:** `scratch/area-pass-4/hspad-stacked/`.
+- **Layout checks:** Magic DRC 0, LVS unique, device audit match, KLayout 0/0, latch-up clean.
+- **Safe/HBM 2 kV:** 0/404 MOS over the screen, pad peak 5.41 V (identical to PD21).
+- **AC (same bench):** C per leg +18 fF (1.130 → 1.148 pF tt). Die return loss at 2.4 GHz is −0.12 dB, COB return loss −0.07 dB. RX_P/RX_N C is 76.4/75.4 fF (balanced).
+- **Review:** GO with conditions (`scratch/area-pass-4/review/REVIEW.md`). Before publishing: (a) length-match the chip-level RX routes from the new side pins (x 492, 188 µm apart), or co-locate the pins; (b) rerun the PD48c 1 kV/CDM rows on the new netlist.
+- **Plan:** `scratch/reviews/area-pass-4.md`.
+
 ### PD21 (pads owner): low-C SATA/PCIe RX pad pair `pad_hspad`, network-gc-d2, HBM pad-side devices
 
 User decision: SATA/PCIe get their own low-capacitance pad pair; USB FS/HS stay on `wirepad` (moved to the

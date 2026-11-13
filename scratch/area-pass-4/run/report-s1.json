@@ -1,0 +1,214 @@
+{
+ "date": "2026-11-13",
+ "die_um": [
+  3932.0,
+  5122.0
+ ],
+ "core_um": [
+  452.0,
+  452.0,
+  3480.0,
+  4670.0
+ ],
+ "core_mm2": 12.772,
+ "pad_intrusion_mm2": 2.548,
+ "reserves_mm2": 0.131,
+ "digital_mm2": 2.814,
+ "available_for_blocks_mm2": 7.278,
+ "block_demand_mm2": 7.883,
+ "raw_margin_mm2": -0.605,
+ "placed": 146,
+ "failed": [
+  "qvco",
+  "pll_vreg2",
+  "ptrim",
+  "wiredtx",
+  "cdr",
+  "lo_lf",
+  "lo_ext",
+  "slicer",
+  "refbuf",
+  "r8arch_rsv",
+  "tx8_rsv"
+ ],
+ "failed_mm2": 2.623,
+ "free_whitespace_after_place_mm2": 0.791,
+ "decap_cells": 0,
+ "decap_nF": 0.0,
+ "congestion": {
+  "tile_um": 250.0,
+  "peak_demand_over_supply": 1.65,
+  "tiles_over_80pct": 6,
+  "hot_tiles": [
+   [
+    1327,
+    1577,
+    0.86
+   ],
+   [
+    1327,
+    1827,
+    1.08
+   ],
+   [
+    1327,
+    2077,
+    1.26
+   ],
+   [
+    1327,
+    2327,
+    1.35
+   ],
+   [
+    1327,
+    2577,
+    1.42
+   ],
+   [
+    1327,
+    2827,
+    1.65
+   ]
+  ]
+ },
+ "rule_audit": [
+  {
+   "aggressor": "digital",
+   "victim": "adc_i",
+   "min_um": 210,
+   "gap_um": 782.5,
+   "ok": true,
+   "basis": "SUB-01 floor (300 target)"
+  },
+  {
+   "aggressor": "digital",
+   "victim": "adc_q",
+   "min_um": 210,
+   "gap_um": 1752.5,
+   "ok": true,
+   "basis": "SUB-01 floor (300 target)"
+  },
+  {
+   "aggressor": "digital",
+   "victim": "core_bias",
+   "min_um": 100,
+   "gap_um": 2208.0,
+   "ok": true,
+   "basis": "SUB-02"
+  },
+  {
+   "aggressor": "digital",
+   "victim": "bbfilter_i",
+   "min_um": 100,
+   "gap_um": 124.8,
+   "ok": true,
+   "basis": "SUB-01/05"
+  },
+  {
+   "aggressor": "digital",
+   "victim": "bbfilter_q",
+   "min_um": 100,
+   "gap_um": 178.8,
+   "ok": true,
+   "basis": "SUB-01/05"
+  },
+  {
+   "aggressor": "digital",
+   "victim": "lna",
+   "min_um": 1000,
+   "gap_um": 1421.7,
+   "ok": true,
+   "basis": "SUB-03"
+  },
+  {
+   "aggressor": "wrx_cap",
+   "victim": "adc_i",
+   "min_um": 200,
+   "gap_um": 224.5,
+   "ok": true,
+   "basis": "SUB-05-like (capture is a 600-800 MHz switching block)"
+  },
+  {
+   "aggressor": "wrx_cap",
+   "victim": "adc_q",
+   "min_um": 200,
+   "gap_um": 1222.5,
+   "ok": true,
+   "basis": "as above"
+  },
+  {
+   "aggressor": "pll_cdr",
+   "victim": "adc_i",
+   "min_um": 200,
+   "gap_um": 202.0,
+   "ok": true,
+   "basis": "RA-9 analogue"
+  },
+  {
+   "aggressor": "pll_cdr",
+   "victim": "bbfilter_i",
+   "min_um": 200,
+   "gap_um": 742.0,
+   "ok": true,
+   "basis": "RA-9 analogue"
+  },
+  {
+   "aggressor": "aosc",
+   "victim": "lna",
+   "min_um": 300,
+   "gap_um": 2666.6,
+   "ok": true,
+   "basis": "SUB-04"
+  },
+  {
+   "aggressor": "aosc",
+   "victim": "por",
+   "min_um": 300,
+   "gap_um": 2742.0,
+   "ok": true,
+   "basis": "SUB-04"
+  },
+  {
+   "aggressor": "aosc",
+   "victim": "adc_q",
+   "min_um": 300,
+   "gap_um": 2142.4,
+   "ok": true,
+   "basis": "SUB-04"
+  },
+  {
+   "aggressor": "rfdriver",
+   "victim": "core_bias",
+   "min_um": 340,
+   "gap_um": 3176.0,
+   "ok": true,
+   "basis": "SUB-07/TH-01"
+  },
+  {
+   "aggressor": "rfdriver",
+   "victim": "adc_i",
+   "min_um": 839,
+   "gap_um": 1765.4,
+   "ok": true,
+   "basis": "SUB-07"
+  },
+  {
+   "aggressor": "rfdriver",
+   "victim": "lna",
+   "min_um": 1000,
+   "gap_um": 2376.9,
+   "ok": true,
+   "basis": "SUB-07"
+  }
+ ],
+ "group_mm2": {
+  "wired": 2.406,
+  "conv": 1.677,
+  "lo": 1.458,
+  "rf": 1.112,
+  "pll": 0.532,
+  "core": 0.449,
+  "debug": 0.25
+ }
+}

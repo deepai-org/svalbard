@@ -1,0 +1,253 @@
+{
+ "date": "2026-11-13",
+ "die_um": [
+  3932.0,
+  5122.0
+ ],
+ "core_um": [
+  452.0,
+  452.0,
+  3480.0,
+  4670.0
+ ],
+ "core_mm2": 12.772,
+ "pad_intrusion_mm2": 2.357,
+ "reserves_mm2": 0.131,
+ "digital_mm2": 2.45,
+ "available_for_blocks_mm2": 7.834,
+ "block_demand_mm2": 6.289,
+ "raw_margin_mm2": 1.544,
+ "placed": 149,
+ "failed": [
+  "bbfilter_q",
+  "detect",
+  "lo_mmd_qdum",
+  "isw_conv",
+  "rx_wclk_in",
+  "rx_wtx_ext",
+  "atb_grp4",
+  "atb_grp6"
+ ],
+ "failed_mm2": 0.443,
+ "free_whitespace_after_place_mm2": 0.689,
+ "decap_cells": 0,
+ "decap_nF": 0.0,
+ "congestion": {
+  "tile_um": 250.0,
+  "peak_demand_over_supply": 2.25,
+  "tiles_over_80pct": 8,
+  "hot_tiles": [
+   [
+    1327,
+    1327,
+    0.84
+   ],
+   [
+    1327,
+    1577,
+    1.08
+   ],
+   [
+    1327,
+    1827,
+    0.98
+   ],
+   [
+    1327,
+    2077,
+    1.53
+   ],
+   [
+    1327,
+    2327,
+    1.88
+   ],
+   [
+    1327,
+    2577,
+    1.96
+   ],
+   [
+    1327,
+    2827,
+    2.06
+   ],
+   [
+    1327,
+    3077,
+    2.25
+   ]
+  ]
+ },
+ "rule_audit": [
+  {
+   "aggressor": "digital",
+   "victim": "adc_i",
+   "min_um": 210,
+   "gap_um": 2354.5,
+   "ok": true,
+   "basis": "SUB-01 floor (300 target)"
+  },
+  {
+   "aggressor": "digital",
+   "victim": "adc_q",
+   "min_um": 210,
+   "gap_um": 1980.5,
+   "ok": true,
+   "basis": "SUB-01 floor (300 target)"
+  },
+  {
+   "aggressor": "digital",
+   "victim": "core_bias",
+   "min_um": 100,
+   "gap_um": 2420.3,
+   "ok": true,
+   "basis": "SUB-02"
+  },
+  {
+   "aggressor": "digital",
+   "victim": "bbfilter_i",
+   "min_um": 100,
+   "gap_um": 101.7,
+   "ok": true,
+   "basis": "SUB-01/05"
+  },
+  {
+   "aggressor": "digital",
+   "victim": "lna",
+   "min_um": 1000,
+   "gap_um": 2405.2,
+   "ok": true,
+   "basis": "SUB-03"
+  },
+  {
+   "aggressor": "digital",
+   "victim": "qvco",
+   "min_um": 300,
+   "gap_um": 528.4,
+   "ok": true,
+   "basis": "LO-03 (assumed, supply/substrate)"
+  },
+  {
+   "aggressor": "wrx_cap",
+   "victim": "adc_i",
+   "min_um": 200,
+   "gap_um": 1846.2,
+   "ok": true,
+   "basis": "SUB-05-like (capture is a 600-800 MHz switching block)"
+  },
+  {
+   "aggressor": "wrx_cap",
+   "victim": "adc_q",
+   "min_um": 200,
+   "gap_um": 1472.2,
+   "ok": true,
+   "basis": "as above"
+  },
+  {
+   "aggressor": "pll_cdr",
+   "victim": "qvco",
+   "min_um": 500,
+   "gap_um": 507.9,
+   "ok": true,
+   "basis": "LO-02/LO-03 ring-to-QVCO (assumed)"
+  },
+  {
+   "aggressor": "pll_tx",
+   "victim": "qvco",
+   "min_um": 500,
+   "gap_um": 1987.3,
+   "ok": true,
+   "basis": "as above"
+  },
+  {
+   "aggressor": "pll_cdr",
+   "victim": "adc_i",
+   "min_um": 200,
+   "gap_um": 2144.2,
+   "ok": true,
+   "basis": "RA-9 analogue"
+  },
+  {
+   "aggressor": "pll_cdr",
+   "victim": "bbfilter_i",
+   "min_um": 200,
+   "gap_um": 1216.6,
+   "ok": true,
+   "basis": "RA-9 analogue"
+  },
+  {
+   "aggressor": "aosc",
+   "victim": "lna",
+   "min_um": 300,
+   "gap_um": 3038.1,
+   "ok": true,
+   "basis": "SUB-04"
+  },
+  {
+   "aggressor": "aosc",
+   "victim": "por",
+   "min_um": 300,
+   "gap_um": 3426.6,
+   "ok": true,
+   "basis": "SUB-04"
+  },
+  {
+   "aggressor": "aosc",
+   "victim": "adc_q",
+   "min_um": 300,
+   "gap_um": 2210.3,
+   "ok": true,
+   "basis": "SUB-04"
+  },
+  {
+   "aggressor": "rfdriver",
+   "victim": "core_bias",
+   "min_um": 340,
+   "gap_um": 2189.4,
+   "ok": true,
+   "basis": "SUB-07/TH-01"
+  },
+  {
+   "aggressor": "rfdriver",
+   "victim": "adc_i",
+   "min_um": 839,
+   "gap_um": 2123.1,
+   "ok": true,
+   "basis": "SUB-07"
+  },
+  {
+   "aggressor": "rfdriver",
+   "victim": "lna",
+   "min_um": 1000,
+   "gap_um": 2172.9,
+   "ok": true,
+   "basis": "SUB-07"
+  },
+  {
+   "aggressor": "wiredtx",
+   "victim": "adc_i",
+   "min_um": 97,
+   "gap_um": 2802.6,
+   "ok": true,
+   "basis": "SUB-08/RA-10"
+  },
+  {
+   "aggressor": "qvco",
+   "victim": "lna",
+   "min_um": 250,
+   "gap_um": 1248.9,
+   "ok": true,
+   "basis": "LO self-mixing (assumed)"
+  }
+ ],
+ "group_mm2": {
+  "wired": 1.98,
+  "lo": 1.221,
+  "conv": 1.069,
+  "rf": 0.888,
+  "pll": 0.459,
+  "core": 0.449,
+  "debug": 0.223
+ }
+}

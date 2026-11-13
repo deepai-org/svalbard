@@ -1,0 +1,59 @@
+{
+ "S1 dc rail (V)": {
+  "got": 3.2574999999995424,
+  "hand": 3.2575,
+  "rel_err": 1.404180770976407e-13,
+  "ok": true
+ },
+ "S2 f(|Z|max) (MHz)": {
+  "got": 159.40428807122197,
+  "hand": 159.15494309189535,
+  "rel_err": 0.0015666807105240307,
+  "ok": true
+ },
+ "S2 |Z|max (ohm) vs closed form": {
+  "got": 1.7081339456351834,
+  "hand": 1.7081339456380897,
+  "rel_err": 1.7014718554627418e-12,
+  "ok": true
+ },
+ "S2 |Z|max (ohm) vs Q*Z0 hand (1.667)": {
+  "got": 1.7081339456351834,
+  "hand": 1.6666666666666665,
+  "rel_err": 0.024880367381110127,
+  "ok": true
+ },
+ "S2 |Z|max ngspice vs solver": {
+  "got": 1.70813408,
+  "hand": 1.7081339456351834,
+  "rel_err": 7.866175656170301e-08,
+  "ok": true
+ },
+ "S2 f0 ngspice vs solver (MHz)": {
+  "got": 159.111106,
+  "hand": 159.40428807122197,
+  "rel_err": 0.001839235787000719,
+  "ok": true
+ },
+ "S3 parallel same-net L (nH)": {
+  "got": 1.4000000000000004,
+  "hand": 1.4,
+  "rel_err": 3.1720657846433045e-16,
+  "ok": true
+ },
+ "S3 supply/return loop L (nH)": {
+  "got": 2.400000000000001,
+  "hand": 2.4,
+  "rel_err": 3.7007434154171886e-16,
+  "ok": true
+ },
+ "S4 charge-packet droop with 2 nF": {
+  "dv_V": 0.09999999999999999,
+  "passes_117mV": true
+ },
+ "S4 charge-packet droop NO DECAP 20 pF": {
+  "dv_V": 10.000000000000002,
+  "passes_117mV": false
+ },
+ "all_ok": true
+}

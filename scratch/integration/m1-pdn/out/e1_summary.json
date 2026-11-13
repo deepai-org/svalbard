@@ -1,0 +1,548 @@
+{
+ "summary": {
+  "wiredtx": {
+   "island": "wired",
+   "mA": 36,
+   "worst_case": "wired_external_clock",
+   "drop_mV": {
+    "opt": 136.80054835444412,
+    "nom": 273.78847603114576,
+    "pess": 489.94208731433497,
+    "alloc_nom": 232.0186844474401
+   },
+   "nom_breakdown": {
+    "pre_switch": 67.0030394753729,
+    "switch": 27.199800009378716,
+    "strap": 153.69480001288994,
+    "vss": 25.890836533504036
+   }
+  },
+  "rfdriver": {
+   "island": "rf",
+   "mA": 61.7,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 135.89855893321712,
+    "nom": 271.5909347780472,
+    "pess": 478.64775074883204,
+    "alloc_nom": 257.94832158954193
+   },
+   "nom_breakdown": {
+    "pre_switch": 60.33630746623375,
+    "switch": 27.694470009483663,
+    "strap": 159.1983400077921,
+    "vss": 24.36181729453761
+   }
+  },
+  "clocktree": {
+   "island": "pll",
+   "mA": 12,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 85.8787042393887,
+    "nom": 151.17460346716217,
+    "pess": 268.98934168460363,
+    "alloc_nom": 106.5589376602265
+   },
+   "nom_breakdown": {
+    "pre_switch": 59.95968226541892,
+    "switch": 29.696394009070204,
+    "strap": 38.41776001004904,
+    "vss": 23.10076718262397
+   }
+  },
+  "lna": {
+   "island": "rf",
+   "mA": 11.9,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 84.04052050515443,
+    "nom": 148.32151193441146,
+    "pess": 261.09492222024767,
+    "alloc_nom": 131.49640486790304
+   },
+   "nom_breakdown": {
+    "pre_switch": 60.33630746623375,
+    "switch": 27.694470009483663,
+    "strap": 41.81267301102265,
+    "vss": 18.47806144767138
+   }
+  },
+  "clockmux": {
+   "island": "pll",
+   "mA": 9.67,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 82.19177883375251,
+    "nom": 143.66012519830295,
+    "pess": 254.1833214733531,
+    "alloc_nom": 102.56342754490433
+   },
+   "nom_breakdown": {
+    "pre_switch": 59.95968226541892,
+    "switch": 29.696394009070204,
+    "strap": 38.539204812509276,
+    "vss": 15.46484411130476
+   }
+  },
+  "usbhs": {
+   "island": "wired",
+   "mA": 24,
+   "worst_case": "usb",
+   "drop_mV": {
+    "opt": 73.18057715084292,
+    "nom": 143.4538148360005,
+    "pess": 252.96039201693432,
+    "alloc_nom": 139.85216360054986
+   },
+   "nom_breakdown": {
+    "pre_switch": 35.50005765844632,
+    "switch": 10.281276009573403,
+    "strap": 80.50797801049158,
+    "vss": 17.164503157489072
+   }
+  },
+  "slicer": {
+   "island": "wired",
+   "mA": 16.1,
+   "worst_case": "wired_external_clock",
+   "drop_mV": {
+    "opt": 79.13407497472758,
+    "nom": 135.14915823379914,
+    "pess": 242.63267576670034,
+    "alloc_nom": 95.59699568794188
+   },
+   "nom_breakdown": {
+    "pre_switch": 67.0030394753729,
+    "switch": 27.199800009378716,
+    "strap": 22.0972500043235,
+    "vss": 18.84906874472381
+   }
+  },
+  "rxfilter_i": {
+   "island": "rf",
+   "mA": 5.22,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 74.86062474919963,
+    "nom": 126.16391444845965,
+    "pess": 221.92514932269924,
+    "alloc_nom": 108.9534853167664
+   },
+   "nom_breakdown": {
+    "pre_switch": 60.33630746623375,
+    "switch": 27.694470009483663,
+    "strap": 18.033273010919615,
+    "vss": 20.099863961822592
+   }
+  },
+  "rxfilter_q": {
+   "island": "rf",
+   "mA": 5.22,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 73.73001153190062,
+    "nom": 123.11819260694934,
+    "pess": 218.30897226936895,
+    "alloc_nom": 105.35910558252404
+   },
+   "nom_breakdown": {
+    "pre_switch": 60.33630746623375,
+    "switch": 27.694470009483663,
+    "strap": 12.145113007368202,
+    "vss": 22.942302123863623
+   }
+  },
+  "ctle": {
+   "island": "wired",
+   "mA": 5.33,
+   "worst_case": "wired_external_clock",
+   "drop_mV": {
+    "opt": 72.86751886864096,
+    "nom": 119.47504437943746,
+    "pess": 209.4605596556831,
+    "alloc_nom": 81.65491508245282
+   },
+   "nom_breakdown": {
+    "pre_switch": 67.0030394753729,
+    "switch": 27.199800009378716,
+    "strap": 13.464326207980548,
+    "vss": 11.807878686705182
+   }
+  },
+  "rxmix_q": {
+   "island": "rf",
+   "mA": 3.02,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 70.66516068068162,
+    "nom": 116.2518172951552,
+    "pess": 204.03717458368354,
+    "alloc_nom": 99.86087245660613
+   },
+   "nom_breakdown": {
+    "pre_switch": 60.33630746623375,
+    "switch": 27.694470009483663,
+    "strap": 11.066276611608306,
+    "vss": 17.154763207829458
+   }
+  },
+  "rxselect": {
+   "island": "wired",
+   "mA": 2,
+   "worst_case": "wired_external_clock",
+   "drop_mV": {
+    "opt": 70.59025011207432,
+    "nom": 114.92342255076382,
+    "pess": 206.6231190502168,
+    "alloc_nom": 74.58269779420502
+   },
+   "nom_breakdown": {
+    "pre_switch": 67.0030394753729,
+    "switch": 27.199800009378716,
+    "strap": 3.248720005148087,
+    "vss": 17.47186306086412
+   }
+  },
+  "rxmix_i": {
+   "island": "rf",
+   "mA": 3.02,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 69.44085502708886,
+    "nom": 113.2606641641103,
+    "pess": 198.50022793248502,
+    "alloc_nom": 97.20360902651093
+   },
+   "nom_breakdown": {
+    "pre_switch": 60.33630746623375,
+    "switch": 27.694470009483663,
+    "strap": 7.979051408377735,
+    "vss": 17.250835280015092
+   }
+  },
+  "detect": {
+   "island": "wired",
+   "mA": 1.66,
+   "worst_case": "wired_external_clock",
+   "drop_mV": {
+    "opt": 68.3220658892707,
+    "nom": 109.41663325672657,
+    "pess": 191.07980515460855,
+    "alloc_nom": 72.10123585612394
+   },
+   "nom_breakdown": {
+    "pre_switch": 67.0030394753729,
+    "switch": 27.199800009378716,
+    "strap": 6.632828812650704,
+    "vss": 8.580964959324058
+   }
+  },
+  "termination": {
+   "island": "wired",
+   "mA": 1.23,
+   "worst_case": "wired_external_clock",
+   "drop_mV": {
+    "opt": 67.17442135375774,
+    "nom": 109.06848727045926,
+    "pess": 192.30334531390136,
+    "alloc_nom": 70.25577007285256
+   },
+   "nom_breakdown": {
+    "pre_switch": 67.0030394753729,
+    "switch": 27.199800009378716,
+    "strap": 8.908545622915653,
+    "vss": 5.957102162791895
+   }
+  },
+  "txmix_i": {
+   "island": "rf",
+   "mA": 1.01,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 67.6424491539298,
+    "nom": 108.56129436156303,
+    "pess": 190.469899258753,
+    "alloc_nom": 90.80487504963087
+   },
+   "nom_breakdown": {
+    "pre_switch": 60.33630746623375,
+    "switch": 27.694470009483663,
+    "strap": 1.2158279038252395,
+    "vss": 19.314688982020392
+   }
+  },
+  "txmix_q": {
+   "island": "rf",
+   "mA": 1.01,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 65.91789151561844,
+    "nom": 104.68193807846492,
+    "pess": 181.70112152599583,
+    "alloc_nom": 88.41868864090773
+   },
+   "nom_breakdown": {
+    "pre_switch": 60.33630746623375,
+    "switch": 27.694470009483663,
+    "strap": 1.2812759040308208,
+    "vss": 15.369884698716916
+   }
+  },
+  "refinput": {
+   "island": "pll",
+   "mA": 3.55,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 65.25451977651775,
+    "nom": 102.69566031458011,
+    "pess": 176.26877124427233,
+    "alloc_nom": 63.710849630559174
+   },
+   "nom_breakdown": {
+    "pre_switch": 59.95968226541892,
+    "switch": 29.696394009070204,
+    "strap": 6.259963505591326,
+    "vss": 6.779620534499845
+   }
+  },
+  "cdr": {
+   "island": "pll",
+   "mA": 3.97,
+   "worst_case": "wired_external_clock",
+   "drop_mV": {
+    "opt": 47.33819972486364,
+    "nom": 78.99407581386653,
+    "pess": 136.61722457743286,
+    "alloc_nom": 68.08662068793181
+   },
+   "nom_breakdown": {
+    "pre_switch": 34.519110932755396,
+    "switch": 10.032099009237516,
+    "strap": 17.07103971378343,
+    "vss": 17.37182615809007
+   }
+  },
+  "adc_i": {
+   "island": "conv",
+   "mA": 5.73,
+   "worst_case": "rf_autonomous",
+   "drop_mV": {
+    "opt": 39.75800402386653,
+    "nom": 66.50710100887292,
+    "pess": 112.06278851995633,
+    "alloc_nom": 55.8759043362862
+   },
+   "nom_breakdown": {
+    "pre_switch": 21.94446741838485,
+    "switch": 6.258714009325317,
+    "strap": 17.778012609993343,
+    "vss": 20.525906971169242
+   }
+  },
+  "digital": {
+   "island": null,
+   "mA": 81.79,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 38.73550477783638,
+    "nom": 64.9415412222889,
+    "pess": 114.91624207405016,
+    "alloc_nom": 43.449283804359865
+   },
+   "nom_breakdown": {
+    "pre_switch": 0.0,
+    "switch": 0,
+    "strap": 0,
+    "vss": 20.89019152760894
+   }
+  },
+  "rfpll": {
+   "island": "pll",
+   "mA": 3.97,
+   "worst_case": "wired_onchip_pll",
+   "drop_mV": {
+    "opt": 38.33371422719844,
+    "nom": 59.9135818731753,
+    "pess": 99.66312287263167,
+    "alloc_nom": 91.11518262995676
+   },
+   "nom_breakdown": {
+    "pre_switch": 33.15540938345451,
+    "switch": 9.102828009245556,
+    "strap": 8.86524820718071,
+    "vss": 8.790096273294687
+   }
+  },
+  "dac_i": {
+   "island": "conv",
+   "mA": 1.92,
+   "worst_case": "rf_duplex_external_clock",
+   "drop_mV": {
+    "opt": 35.55602013792569,
+    "nom": 56.425314353805156,
+    "pess": 89.5005456953819,
+    "alloc_nom": 49.83357601507077
+   },
+   "nom_breakdown": {
+    "pre_switch": 20.909824308865677,
+    "switch": 8.104602009309847,
+    "strap": 13.967174423453077,
+    "vss": 13.443713612176365
+   }
+  },
+  "dac_q": {
+   "island": "conv",
+   "mA": 1.92,
+   "worst_case": "rf_tx_autonomous",
+   "drop_mV": {
+    "opt": 33.02540792816355,
+    "nom": 51.328455288031094,
+    "pess": 81.20218656683109,
+    "alloc_nom": 46.204379332086546
+   },
+   "nom_breakdown": {
+    "pre_switch": 21.13464873863924,
+    "switch": 2.5957800093387995,
+    "strap": 11.937465620091459,
+    "vss": 15.66056091996144
+   }
+  },
+  "refbuf": {
+   "island": "conv",
+   "mA": 1.56,
+   "worst_case": "rf_autonomous",
+   "drop_mV": {
+    "opt": 33.09688919928799,
+    "nom": 50.92944976049951,
+    "pess": 82.71896042822569,
+    "alloc_nom": 42.63271038393812
+   },
+   "nom_breakdown": {
+    "pre_switch": 21.94446741838485,
+    "switch": 6.258714009325317,
+    "strap": 6.240000012930125,
+    "vss": 16.48626831985917
+   }
+  },
+  "adc_q": {
+   "island": "conv",
+   "mA": 5.73,
+   "worst_case": "rf_autonomous",
+   "drop_mV": {
+    "opt": 32.56304504787444,
+    "nom": 49.58378560581078,
+    "pess": 77.24754620233875,
+    "alloc_nom": 44.20980838948863
+   },
+   "nom_breakdown": {
+    "pre_switch": 21.94446741838485,
+    "switch": 6.258714009325317,
+    "strap": 9.940289405601543,
+    "vss": 11.440314772498908
+   }
+  },
+  "usbfs": {
+   "island": null,
+   "mA": 8,
+   "worst_case": "usb",
+   "drop_mV": {
+    "opt": 22.705775595014632,
+    "nom": 34.48254147150598,
+    "pess": 60.86258679777412,
+    "alloc_nom": 31.154829067684187
+   },
+   "nom_breakdown": {
+    "pre_switch": 17.318038314016793,
+    "switch": 0,
+    "strap": 0,
+    "vss": 17.164503157489072
+   }
+  },
+  "bias": {
+   "island": null,
+   "mA": 1,
+   "worst_case": "wired_onchip_pll",
+   "drop_mV": {
+    "opt": 23.867693703083948,
+    "nom": 31.004077955337106,
+    "pess": 41.50836529967439,
+    "alloc_nom": 24.117827962035765
+   },
+   "nom_breakdown": {
+    "pre_switch": 23.13393866504132,
+    "switch": 0,
+    "strap": 0,
+    "vss": 7.8701392902957314
+   }
+  }
+ },
+ "island_totals": {
+  "wired|alloc": [
+   62.86,
+   "wired_onchip_pll"
+  ],
+  "rf|alloc": [
+   92.10000000000001,
+   "rf_tx_external_clock"
+  ],
+  "pll|alloc": [
+   56.24999999999999,
+   "rf_autonomous"
+  ],
+  "conv|alloc": [
+   16.86,
+   "rf_duplex_external_clock"
+  ],
+  "debug|alloc": [
+   0,
+   "rf_external_clock"
+  ],
+  "wired|evid+": [
+   109.5,
+   "wired_onchip_pll"
+  ],
+  "rf|evid+": [
+   92.10000000000001,
+   "rf_tx_external_clock"
+  ],
+  "pll|evid+": [
+   103.22,
+   "rf_autonomous"
+  ],
+  "conv|evid+": [
+   16.86,
+   "rf_duplex_external_clock"
+  ],
+  "debug|evid+": [
+   0,
+   "rf_external_clock"
+  ]
+ },
+ "coverage_req": {
+  "0.02": {
+   "worst_pre_switch_plus_vss_mV": 308.27266964242415,
+   "digital_mV": 107.98624960474656
+  },
+  "0.04": {
+   "worst_pre_switch_plus_vss_mV": 172.4718789227016,
+   "digital_mV": 85.75565620408821
+  },
+  "0.08": {
+   "worst_pre_switch_plus_vss_mV": 101.88441510794877,
+   "digital_mV": 64.9415412222889
+  },
+  "0.15": {
+   "worst_pre_switch_plus_vss_mV": 66.585616831582,
+   "digital_mV": 48.28671400623952
+  },
+  "0.25": {
+   "worst_pre_switch_plus_vss_mV": 49.039679278949635,
+   "digital_mV": 37.7377714361522
+  },
+  "0.4": {
+   "worst_pre_switch_plus_vss_mV": 38.74256745122483,
+   "digital_mV": 31.486902969638297
+  }
+ }
+}

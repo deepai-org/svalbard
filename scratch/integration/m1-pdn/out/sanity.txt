@@ -1,0 +1,11 @@
+S1 dc rail (V)                             got 3.2575  hand 3.2575  ok
+S2 f(|Z|max) (MHz)                         got 159.404  hand 159.155  ok
+S2 |Z|max (ohm) vs closed form             got 1.70813  hand 1.70813  ok
+S2 |Z|max (ohm) vs Q*Z0 hand (1.667)       got 1.70813  hand 1.66667  ok
+S2 |Z|max ngspice vs solver                got 1.70813  hand 1.70813  ok
+S2 f0 ngspice vs solver (MHz)              got 159.111  hand 159.404  ok
+S3 parallel same-net L (nH)                got 1.4  hand 1.4  ok
+S3 supply/return loop L (nH)               got 2.4  hand 2.4  ok
+S4 0.2 nC packet droop with 2 nF       : 0.1 V  -> pass
+S4 0.2 nC packet droop NO DECAP 20 pF  : 10 V  -> FAIL
+SANITY PASS

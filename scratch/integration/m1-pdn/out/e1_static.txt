@@ -1,0 +1,63 @@
+--- ring-level (board + bonds + ring), total current, max bond current; nominal set
+rf_external_clock          alloc  I  160.1 mA  ring drop  16.2..  6.3 mV  max VDD bond   28 mA (pad 18)  max GND bond   32 mA (pad 9)
+rf_external_clock          evid+  I  225.8 mA  ring drop  19.0.. 11.1 mV  max VDD bond   32 mA (pad 18)  max GND bond   35 mA (pad 9)
+rf_autonomous              alloc  I  189.1 mA  ring drop  18.1..  7.3 mV  max VDD bond   33 mA (pad 64)  max GND bond   35 mA (pad 9)
+rf_autonomous              evid+  I  301.7 mA  ring drop  25.8.. 13.7 mV  max VDD bond   53 mA (pad 64)  max GND bond   44 mA (pad 9)
+wired_onchip_pll           alloc  I  244.8 mA  ring drop  28.5..  9.4 mV  max VDD bond   55 mA (pad 18)  max GND bond   52 mA (pad 9)
+wired_onchip_pll           evid+  I  343.6 mA  ring drop  35.6.. 15.1 mV  max VDD bond   70 mA (pad 18)  max GND bond   60 mA (pad 9)
+wired_external_clock       alloc  I  248.1 mA  ring drop  28.6..  9.5 mV  max VDD bond   56 mA (pad 18)  max GND bond   52 mA (pad 9)
+wired_external_clock       evid+  I  346.8 mA  ring drop  35.7.. 15.2 mV  max VDD bond   70 mA (pad 18)  max GND bond   59 mA (pad 9)
+wired_tmds                 alloc  I  224.8 mA  ring drop  26.7..  8.6 mV  max VDD bond   51 mA (pad 18)  max GND bond   51 mA (pad 9)
+wired_tmds                 evid+  I  323.6 mA  ring drop  33.8.. 14.2 mV  max VDD bond   66 mA (pad 18)  max GND bond   59 mA (pad 9)
+usb                        alloc  I  231.2 mA  ring drop  26.9..  8.8 mV  max VDD bond   52 mA (pad 18)  max GND bond   51 mA (pad 9)
+usb                        evid+  I  283.4 mA  ring drop  29.6.. 12.4 mV  max VDD bond   57 mA (pad 18)  max GND bond   54 mA (pad 9)
+stopped                    alloc  I    4.6 mA  ring drop   0.5..  0.2 mV  max VDD bond    1 mA (pad 74)  max GND bond    1 mA (pad 9)
+stopped                    evid+  I    4.6 mA  ring drop   0.5..  0.2 mV  max VDD bond    1 mA (pad 74)  max GND bond    1 mA (pad 9)
+rf_tx_external_clock       alloc  I  202.5 mA  ring drop  16.8..  8.4 mV  max VDD bond   36 mA (pad 64)  max GND bond   38 mA (pad 57)
+rf_tx_external_clock       evid+  I  268.2 mA  ring drop  25.1.. 12.7 mV  max VDD bond   44 mA (pad 58)  max GND bond   46 mA (pad 57)
+rf_tx_autonomous           alloc  I  231.5 mA  ring drop  19.2..  9.4 mV  max VDD bond   44 mA (pad 64)  max GND bond   40 mA (pad 57)
+rf_tx_autonomous           evid+  I  344.1 mA  ring drop  29.4.. 15.8 mV  max VDD bond   65 mA (pad 64)  max GND bond   53 mA (pad 57)
+rf_duplex_external_clock   alloc  I  214.0 mA  ring drop  18.3..  8.7 mV  max VDD bond   37 mA (pad 64)  max GND bond   38 mA (pad 57)
+rf_duplex_external_clock   evid+  I  279.7 mA  ring drop  25.5.. 13.3 mV  max VDD bond   44 mA (pad 58)  max GND bond   46 mA (pad 57)
+--- worst block taps (total drop mV = VDD drop + VSS rise; budget 117): opt / nom / pess, load evid+ and alloc
+wiredtx      wired    36.0 mA   136.8 /  273.8 /  489.9  (alloc nom  232.0)  [wired_external_clock] nom: pre-sw  67.0 sw  27.2 strap  153.7 vss  25.9 FAIL
+rfdriver     rf       61.7 mA   135.9 /  271.6 /  478.6  (alloc nom  257.9)  [rf_tx_autonomous] nom: pre-sw  60.3 sw  27.7 strap  159.2 vss  24.4 FAIL
+clocktree    pll      12.0 mA    85.9 /  151.2 /  269.0  (alloc nom  106.6)  [rf_tx_autonomous] nom: pre-sw  60.0 sw  29.7 strap   38.4 vss  23.1 FAIL
+lna          rf       11.9 mA    84.0 /  148.3 /  261.1  (alloc nom  131.5)  [rf_tx_autonomous] nom: pre-sw  60.3 sw  27.7 strap   41.8 vss  18.5 FAIL
+clockmux     pll       9.7 mA    82.2 /  143.7 /  254.2  (alloc nom  102.6)  [rf_tx_autonomous] nom: pre-sw  60.0 sw  29.7 strap   38.5 vss  15.5 FAIL
+usbhs        wired    24.0 mA    73.2 /  143.5 /  253.0  (alloc nom  139.9)  [usb] nom: pre-sw  35.5 sw  10.3 strap   80.5 vss  17.2 FAIL
+slicer       wired    16.1 mA    79.1 /  135.1 /  242.6  (alloc nom   95.6)  [wired_external_clock] nom: pre-sw  67.0 sw  27.2 strap   22.1 vss  18.8 FAIL
+rxfilter_i   rf        5.2 mA    74.9 /  126.2 /  221.9  (alloc nom  109.0)  [rf_tx_autonomous] nom: pre-sw  60.3 sw  27.7 strap   18.0 vss  20.1 FAIL
+rxfilter_q   rf        5.2 mA    73.7 /  123.1 /  218.3  (alloc nom  105.4)  [rf_tx_autonomous] nom: pre-sw  60.3 sw  27.7 strap   12.1 vss  22.9 FAIL
+ctle         wired     5.3 mA    72.9 /  119.5 /  209.5  (alloc nom   81.7)  [wired_external_clock] nom: pre-sw  67.0 sw  27.2 strap   13.5 vss  11.8 FAIL
+rxmix_q      rf        3.0 mA    70.7 /  116.3 /  204.0  (alloc nom   99.9)  [rf_tx_autonomous] nom: pre-sw  60.3 sw  27.7 strap   11.1 vss  17.2 
+rxselect     wired     2.0 mA    70.6 /  114.9 /  206.6  (alloc nom   74.6)  [wired_external_clock] nom: pre-sw  67.0 sw  27.2 strap    3.2 vss  17.5 
+rxmix_i      rf        3.0 mA    69.4 /  113.3 /  198.5  (alloc nom   97.2)  [rf_tx_autonomous] nom: pre-sw  60.3 sw  27.7 strap    8.0 vss  17.3 
+detect       wired     1.7 mA    68.3 /  109.4 /  191.1  (alloc nom   72.1)  [wired_external_clock] nom: pre-sw  67.0 sw  27.2 strap    6.6 vss   8.6 
+termination  wired     1.2 mA    67.2 /  109.1 /  192.3  (alloc nom   70.3)  [wired_external_clock] nom: pre-sw  67.0 sw  27.2 strap    8.9 vss   6.0 
+txmix_i      rf        1.0 mA    67.6 /  108.6 /  190.5  (alloc nom   90.8)  [rf_tx_autonomous] nom: pre-sw  60.3 sw  27.7 strap    1.2 vss  19.3 
+txmix_q      rf        1.0 mA    65.9 /  104.7 /  181.7  (alloc nom   88.4)  [rf_tx_autonomous] nom: pre-sw  60.3 sw  27.7 strap    1.3 vss  15.4 
+refinput     pll       3.5 mA    65.3 /  102.7 /  176.3  (alloc nom   63.7)  [rf_tx_autonomous] nom: pre-sw  60.0 sw  29.7 strap    6.3 vss   6.8 
+cdr          pll       4.0 mA    47.3 /   79.0 /  136.6  (alloc nom   68.1)  [wired_external_clock] nom: pre-sw  34.5 sw  10.0 strap   17.1 vss  17.4 
+adc_i        conv      5.7 mA    39.8 /   66.5 /  112.1  (alloc nom   55.9)  [rf_autonomous] nom: pre-sw  21.9 sw   6.3 strap   17.8 vss  20.5 
+digital      None     81.8 mA    38.7 /   64.9 /  114.9  (alloc nom   43.4)  [rf_tx_autonomous] nom: pre-sw   0.0 sw   0.0 strap    0.0 vss  20.9 
+rfpll        pll       4.0 mA    38.3 /   59.9 /   99.7  (alloc nom   91.1)  [wired_onchip_pll] nom: pre-sw  33.2 sw   9.1 strap    8.9 vss   8.8 
+dac_i        conv      1.9 mA    35.6 /   56.4 /   89.5  (alloc nom   49.8)  [rf_duplex_external_clock] nom: pre-sw  20.9 sw   8.1 strap   14.0 vss  13.4 
+dac_q        conv      1.9 mA    33.0 /   51.3 /   81.2  (alloc nom   46.2)  [rf_tx_autonomous] nom: pre-sw  21.1 sw   2.6 strap   11.9 vss  15.7 
+refbuf       conv      1.6 mA    33.1 /   50.9 /   82.7  (alloc nom   42.6)  [rf_autonomous] nom: pre-sw  21.9 sw   6.3 strap    6.2 vss  16.5 
+adc_q        conv      5.7 mA    32.6 /   49.6 /   77.2  (alloc nom   44.2)  [rf_autonomous] nom: pre-sw  21.9 sw   6.3 strap    9.9 vss  11.4 
+usbfs        None      8.0 mA    22.7 /   34.5 /   60.9  (alloc nom   31.2)  [usb] nom: pre-sw  17.3 sw   0.0 strap    0.0 vss  17.2 
+bias         None      1.0 mA    23.9 /   31.0 /   41.5  (alloc nom   24.1)  [wired_onchip_pll] nom: pre-sw  23.1 sw   0.0 strap    0.0 vss   7.9 
+--- island currents (mA) vs switch design current
+wired  design 80 mA; alloc max 62.9 (wired_onchip_pll); evid+ max 109.5 (wired_onchip_pll)
+rf     design 55 mA; alloc max 92.1 (rf_tx_external_clock); evid+ max 92.1 (rf_tx_external_clock)
+pll    design 60 mA; alloc max 56.2 (rf_autonomous); evid+ max 103.2 (rf_autonomous)
+conv   design 30 mA; alloc max 16.9 (rf_duplex_external_clock); evid+ max 16.9 (rf_duplex_external_clock)
+debug  design 40 mA; alloc max 0.0 (rf_external_clock); evid+ max 0.0 (rf_external_clock)
+--- requirement sweep: worst raw-mesh drop to any island switch / the macro vs Metal5 coverage per net (nominal ring/bonds, evid+)
+  coverage 0.02 (sheet  3.00 ohm/sq): worst source->switch + VSS rise  308.3 mV, digital macro  108.0 mV
+  coverage 0.04 (sheet  1.50 ohm/sq): worst source->switch + VSS rise  172.5 mV, digital macro   85.8 mV
+  coverage 0.08 (sheet  0.75 ohm/sq): worst source->switch + VSS rise  101.9 mV, digital macro   64.9 mV
+  coverage 0.15 (sheet  0.40 ohm/sq): worst source->switch + VSS rise   66.6 mV, digital macro   48.3 mV
+  coverage 0.25 (sheet  0.24 ohm/sq): worst source->switch + VSS rise   49.0 mV, digital macro   37.7 mV
+  coverage 0.40 (sheet  0.15 ohm/sq): worst source->switch + VSS rise   38.7 mV, digital macro   31.5 mV

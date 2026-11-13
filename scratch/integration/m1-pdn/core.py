@@ -3,6 +3,7 @@ import numpy as np, json
 import model as M, loads as LD
 VICT = {'core_bias': ('core_bias', None), 'por': ('por', None), 'adc_i': ('adc_i', 'conv'), 'refbuf': ('refbuf', 'conv'),
         'qvco': ('qvco', 'pll'), 'pll_vreg2': ('pll_vreg2', 'pll'), 'lna': ('lna', 'rf'), 'slicer': ('slicer', 'wired')}
+EXTRA_TAPS = [('wrx_cap', 'wired'), ('lo_ext', 'pll'), ('polyphase', 'pll'), ('qvco', 'pll'), ('pll_vreg2', 'pll'), ('por', None)]   # PD2: was inline in full()
 PORTS = ['dig', 'd2h0', 'd2h1', 'wrx', 'wtx', 'adc', 'rfd', 'lo']
 TAU_MOS = 42.0*3.63e-12      # s: pt_decap_tile ESR x C at 100 MHz (analog/decap/generated/sim-results.json)
 FILL_DENS = 0.541e-15        # F/um2 measured library fillcap (verification/digital_hardening/decap check-summary.json)
@@ -37,7 +38,7 @@ def full(p, decap=None, x_feed=0.0, **kw):
     for b, (t, isl) in LD.MAP.items():
         taps[(t, isl)] = M.tap(n, p, t if isl else t, isl) if isl else M.tap(n, p, t, None)
         taps.setdefault(t, taps[(t, isl)])
-    for t, isl in (('wrx_cap', 'wired'), ('lo_ext', 'pll'), ('polyphase', 'pll'), ('qvco', 'pll'), ('pll_vreg2', 'pll'), ('por', None)):
+    for t, isl in EXTRA_TAPS:
         taps[t] = M.tap(n, p, t, isl); taps[(t, isl)] = taps[t]
     info['taps'] = taps
     dg = info['dig_nodes']; N = len(n.names)
@@ -93,7 +94,7 @@ def dc(n, info, case, level, vsrc=3.267, x_feed=0.0):
     for a in dg: e += [(M.vn(*a), -idig*1e-3/len(dg)), (M.gn(*a), idig*1e-3/len(dg))]
     for a in info['south']: e += [(info['hv'](a), -ihost*1e-3/len(info['south'])), (info['hg'](a), ihost*1e-3/len(info['south']))]
     for b, t, isl, ma in out:
-        xf = x_feed if b == 'rfdriver' else 0.0
+        xf = x_feed if b.startswith('rfdriver') else 0.0
         e += [(taps[(t, isl)][0], -ma*1e-3*(1-xf)), (taps[(t, isl)][1], ma*1e-3)]
     V = n.solve(0.0, n.inj(e)).real
     res = {}

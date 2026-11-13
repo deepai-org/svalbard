@@ -41,6 +41,37 @@ The envelope follows `spec/tapeout-plan.md`, section "Operating envelope":
 full-RC extracted layout, at the worst functional point (ss/32 °C/3.15 V). It
 sits inside the ~100 mV on-die grid-plus-switch allocation.
 
+## 0. PD2 update (2026-11-13): the cells are masters; islands are re-partitioned
+
+The block currents in evidence no longer match the allocations this README sized the switches from
+(`spec/power-delivery.md` sections 1 and 2, `spec/budgets/power_budget.py --reconcile`). The switches were not
+redesigned. Four of the five verified cells are used as **masters**, and the island an instance serves is set at
+assembly. "Design" is the island's worst in-envelope current with 1.25 x on every contribution that is an estimate or
+a limit; the rule is <= 20 mV and <= the master's design current at that value.
+
+| Master | Design current | Full-RC worst-corner resistance | Islands: worst / design current, drop at design |
+| --- | ---: | ---: | --- |
+| `isw_wired` | 80 mA | 0.2484 ohm | wired_cap 67.6 / 72.9 mA, 18.1 mV; lod 70.6 / 74.1 mA, 18.4 mV |
+| `isw_rf` | 55 mA | 0.3007 ohm | rf_rx 38.2 / 43.6 mA, 13.1 mV |
+| `isw_debug` | 40 mA | 0.3878 ohm | wired_rx 28.7 / 30.9 mA, 12.0 mV; wired_tx 37.5 mA, 14.5 mV; rf_tx 26.3 / 32.3 mA, 12.5 mV; pll 26.4 / 29.4 mA, 11.4 mV; debug 40 mA, 15.5 mV |
+| `isw_conv` | 30 mA | 0.4807 ohm | lo 27.5 / 28.1 mA, 13.5 mV; conv 18.7 mA, 9.0 mV |
+
+- Every island design current is at or below its master's design current, so the drop evidence below (<= 20 mV, full
+  RC, 13 functional points, at the master's design current) covers it. `isw_pll` is no longer instantiated.
+- Soft start at the new worst loads and island capacitances (3.3 V, tt / ss / ff; 5 x the capacitance at tt), on the
+  extracted masters: `pd2_softstart.py`, `pd2-softstart.json` (run with `pd2_softstart.sh`). Ring dip below the
+  settled value 0 mV, peak switch current 1.00 x the load (1.007 x on conv with 1.25 nF), rail 10-90 % in 1.1-4.8 us,
+  EN to PG <= 8.4 us. Group cases on schematic masters, one enable edge: rf_rx + rf_tx + lod + lo 156 mA and a 19 mV
+  ring step; wired_rx + wired_cap + wired_tx 132 mA and 16 mV; no overshoot. An abrupt-gate case is the negative
+  control (92 mV dip, 126 mA peak: fails). Not run: 3.15 / 3.35 V, 5 x capacitance at ss / ff, real (non-resistive) loads.
+- EM at 85 C, hand calculation from `layout.py` (DRM 14.2: Metal1-4 2.09 mA/um): `isw_wired` at 74.1 mA: Metal5
+  stripes 0.71 mA/um, Metal3 stripes alone 1.14 mA/um, edge bar 0.77 mA/um with the four required feeds.
+- The four masters' GDS, LVS netlist, C-coupled and full-RC extractions are published in `generated/isw/` (copies of
+  the evidence run `scratch/island-support-20261108-075605/`; hashes in `generated/isw/SHA256SUMS`; GDS and PEX match
+  `evidence.json:island_switch.*.physical`). This closes the provenance finding F6 of the always-on audit for the
+  switches.
+- Everything below this section describes the original five islands and is unchanged evidence for the masters.
+
 ## 1. Island power switch `isw_<island>`
 
 Ports:

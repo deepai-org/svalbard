@@ -25,6 +25,9 @@ def dc_loads(case, level):
     vectorless, hostio 116.82 mA 8 pF, rfdriver 61.7 mA), 'evid+' (evid plus currents that exist in block evidence but in
     no budget: wrx_cap 46.64 mA extracted (wrx_cap-evidence ext_q625), LO chain qvco 25 + lo_mmd 34 + lo_ext 16 +
     polyphase 2.8 mA in place of rfpll 12 + quadrature 18.83 (timing README, lo_ext/polyphase evidence))."""
+    if level.startswith('pd2'):          # PD2 reconciled currents (pd2cfg.py); same return shape
+        import pd2cfg
+        return pd2cfg.dc_loads(case, level)
     branch, m = CASES[case]
     per = pb.mode_totals(AA, branch)[m]
     rdir = pb.rf_direction(case, m)

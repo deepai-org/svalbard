@@ -89,6 +89,9 @@ def build(p, decap=None, n_vdd_bonds=None, strip_caps=True, split=None, host_spl
     (that pad's bond feeds the island directly instead of the ring)."""
     n = Net(); info = {}
     rs_grid = p['Rs_m5']/p['grid_cov']; rs_dig = p['Rs_m5']/p['dig_cov']; lsq = p['Lsq_loop_nH']*1e-9/2
+    # PD2: optional anisotropic core grid. grid_cov = Metal5 vertical straps (carry current in y); grid_cov_m4 = Metal4
+    # horizontal straps (carry current in x). Absent -> the original isotropic Metal5-equivalent sheet (M1 regression).
+    rs_grid_h = p['Rs_m34']/p['grid_cov_m4'] if p.get('grid_cov_m4') else rs_grid
     for i in range(NX):
         for j in range(NY):
             for (a, b) in (((i, j), (i+1, j)), ((i, j), (i, j+1))):
@@ -96,7 +99,7 @@ def build(p, decap=None, n_vdd_bonds=None, strip_caps=True, split=None, host_spl
                 dig = in_dig(*a) and in_dig(*b)
                 horiz = b[0] > a[0]
                 sq = (PX/PY) if horiz else (PY/PX)
-                r = (rs_dig if dig else rs_grid)*sq; l = lsq*sq
+                r = (rs_dig if dig else (rs_grid_h if horiz else rs_grid))*sq; l = lsq*sq
                 # boundary edges also carry the ring
                 edge = None
                 if not horiz and a[0] == 0: edge = 'west'
@@ -181,5 +184,8 @@ def tap(n, p, name, island=None, pos=None):
     if nm not in n.idx:
         sx, sy = centre(f'isw_{island}')
         d = abs(x-sx)+abs(y-sy)
-        n.add_rl(f'isl_{island}', nm, max(1e-3, p['Rs_m5']*d/p['isl_strap_w']), 0.4e-12*d)
+        # PD2: p['strap_R'][name] (ohm) fixes the switch->block strap at its REQUIREMENT limit instead of deriving it
+        # from the v6 distance and an assumed width (the M1 behaviour, kept when strap_R is absent).
+        r = p.get('strap_R', {}).get(name, max(1e-3, p['Rs_m5']*d/p['isl_strap_w']))
+        n.add_rl(f'isl_{island}', nm, r, 0.4e-12*d)
     return nm, gn(i, j)

@@ -249,7 +249,7 @@ def main():
         print(c, v['meets_mask'], round(v['rms_jitter_ps_10k_100M'], 3), [(x['f_hz'], round(x['total'], 1), round(x['margin_db'], 1)) for x in v['at_mask']])
 
 
-if __name__ == '__main__' and __import__('sys').argv[1:] != ['r4']:
+if __name__ == '__main__' and __import__('sys').argv[1:] not in (['r4'], ['r5']):
     main()
 
 
@@ -356,33 +356,51 @@ if __name__ == '__main__' and __import__('sys').argv[1:] == ['r4']:
 # (ppolyf res corners), C1/C3 MIM +-10 %, C2 MOS +-15 % (and its C(V) droop at the VTUNE window edges, folded into -15 %).
 # Extracted worst-corner CP (R4X), MASH 1-1-1 step 2, XO -150 x N^2, divider 0.3 ps, fracN on-time 2.2 ns, R3/C3 pole.
 ICP_CODES = (100e-6, 75e-6, 50e-6, 25e-6)
+R5_MASK_FAIL = []
+R5_PLL_LIMIT_PS = math.sqrt(1.05 ** 2 - 0.5 ** 2)    # 0.923 ps: RF-LO-JIT total minus a 0.5 ps on-chip LO-path slot (review B3)
+R5_CP_EXTRA_DB = 0.5     # r5 area-fork extracted CP noise at 100 uA ff -123.0 vs the -123.4 base
 
 
-def lo18_icp(kv):
-    """FSM code choice: the 2-bit code nearest (log ratio) to 100 uA x min(1, 60 MHz/V / Kv_measured)."""
-    ideal = 100e-6 * min(1.0, 60e6 / kv)
+def lo18_icp(kv, kv_nom=60e6):
+    """FSM code choice: the 2-bit code nearest (log ratio) to 100 uA x min(1, kv_nom / Kv_measured)."""
+    ideal = 100e-6 * min(1.0, kv_nom / kv)
     return min(ICP_CODES, key=lambda c: abs(math.log(c / ideal)))
 
 
 def r5_eval(fc, fp3_ratio, vco_l1m, f3c, kv, n, icp_tol=1.0, r_tol=1.0, c_tol=1.0, c2_tol=1.0, pm_nom=None,
-            f0=2.45e9, fpfd=FREF, ref_floor=-150.0, pfd_jit=0.3e-12, sd_step=2, mash=3, t_on_ns=2.2, kv_meas_err=1.0):
+            f0=2.45e9, fpfd=FREF, ref_floor=-150.0, pfd_jit=0.3e-12, sd_step=2, mash=3, t_on_ns=2.2, kv_meas_err=1.0, kv_nom=60e6, r3_nom=10e3):
     pm_nom = pm_nom if pm_nom is not None else 60 + math.degrees(math.atan(1 / fp3_ratio))
-    d = design(fc, pm_nom, 100e-6, 60e6, 49)
-    icp = lo18_icp(kv * kv_meas_err) * icp_tol
+    d = design(fc, pm_nom, 100e-6, kv_nom, 49)
+    icp = lo18_icp(kv * kv_meas_err, kv_nom) * icp_tol
     r, c1, c2 = d['r_ohm'] * r_tol, d['c1_f'] * c_tol, d['c2_f'] * c2_tol
     f = np.logspace(4, 8, 3000)
     s = 2j * np.pi * f
-    z = (1 + s * r * c2) / (s * (c1 + c2) * (1 + s * r * c1 * c2 / (c1 + c2)))
-    g = icp / (2 * np.pi) * 2 * np.pi * kv / n * z / s / (1 + s / (2 * np.pi * fp3_ratio * fc / (r_tol * c_tol)))
+    # exact 4th-order network (C3 loading of node CP included; the 1-pole approximation is wrong once C3 >~ C1)
+    r3x = r3_nom * r_tol
+    c3x = 1 / (2 * math.pi * r3_nom * fp3_ratio * fc) * c_tol
+    zx = 1 / (s * c1 + 1 / (r + 1 / (s * c2)) + 1 / (r3x + 1 / (s * c3x)))
+    z = zx / (1 + s * r3x * c3x)
+    g = icp / (2 * np.pi) * 2 * np.pi * kv / n * z / s
     lp, hp = abs(g / (1 + g)) ** 2, abs(1 / (1 + g)) ** 2
     i = int(np.argmin(abs(abs(g) - 1)))
     fcx, pm = float(f[i]), float(180 + math.degrees(np.angle(g[i])))
     ts = 10 * math.log10(t_on_ns / 0.98) - 10 * math.log10(icp / 100e-6)
     c = dict(vco=10 ** (vco_l1m / 10) * (1e6 / f) ** 2 * (1 + f3c / f) * hp,
              ref=10 ** (ref_floor / 10) * n ** 2 * lp,
-             cp=(10 ** ((R4_CP_10K - R4X_FLICK_IMPR + ts) / 10) * (1e4 / f) + 10 ** ((R4X_FLOOR + ts) / 10)) * lp,
+             cp=(10 ** ((R4_CP_10K - R4X_FLICK_IMPR + ts + R5_CP_EXTRA_DB) / 10) * (1e4 / f) + 10 ** ((R4X_FLOOR + ts + R5_CP_EXTRA_DB) / 10)) * lp,
              pfd_div=(2 * np.pi * f0 * pfd_jit) ** 2 / fpfd / 2 * lp,
              sd=sd_step ** 2 * (2 * np.pi) ** 2 / (12 * fpfd) * (2 * np.sin(np.pi * f / fpfd)) ** (2 * (mash - 1)) * lp / 2)
+    # loop-filter resistor thermal noise (review B1): R (in the C2 branch) and R3 (into C3) at VTUNE, high-passed like
+    # VCO noise.  Thevenin at node 1: v_R * Zc1/(Zc1+Zb), Z1 = Zc1 || Zb; VTUNE = (Thevenin) * Zc3/(Zc3+R3+Z1).
+    r3 = r3_nom * r_tol
+    c3 = 1 / (2 * math.pi * r3_nom * fp3_ratio * fc) * c_tol
+    zc1, zb, zc3 = 1 / (s * c1), r + 1 / (s * c2), 1 / (s * c3)
+    kT4 = 4 * 1.380649e-23 * 305.15
+    zcp_wo_b = 1 / (1 / zc1 + 1 / (r3 + zc3))
+    h_r = zcp_wo_b / (zcp_wo_b + zb) * zc3 / (zc3 + r3)      # R (C2 branch) noise -> VT, exact
+    h_r3 = zc3 / (zc3 + r3 + 1 / (1 / zc1 + 1 / zb))          # R3 noise -> VT, exact
+    svt = kT4 * r * abs(h_r) ** 2 + kT4 * r3 * abs(h_r3) ** 2
+    c['lf_r'] = (kv / f) ** 2 * svt / 2 * hp
     j = {k: math.sqrt(2 * np.trapezoid(v, f)) / (2 * np.pi * f0) * 1e12 for k, v in c.items()}
     j['total'] = math.sqrt(sum(x * x for x in j.values()))
     tot = sum(c.values())
@@ -392,20 +410,66 @@ def r5_eval(fc, fp3_ratio, vco_l1m, f3c, kv, n, icp_tol=1.0, r_tol=1.0, c_tol=1.
                 hp_peaking_db=peak, design=d, icp_a=icp)
 
 
-def r5_worst(fc, fp3_ratio, vco_l1m, f3c, kvs=(25e6, 38e6, 60e6, 100e6, 150e6, 200e6), ns=(44, 49, 56), pm_nom=None):
+def r5_worst(fc, fp3_ratio, vco_l1m, f3c, kvs=(25e6, 38e6, 60e6, 100e6, 150e6, 200e6), ns=(44, 49, 56), pm_nom=None, kv_nom=60e6, r3_nom=10e3):
     """Worst jitter and worst PM over the two-sided grid."""
     wj, wp = None, None
     for kv in kvs:
         for n in ns:
             for it in (0.8, 1.2):
-                for rt in (0.8, 1.2):
+                for rt in (0.75, 1.25):     # poly R pessimistic +-25 % (design-assumptions)
                     for ct in (0.9, 1.1):
                         for c2t in (0.85, 1.15):
                           for ke in (0.85, 1.15):     # FSM Kvco measurement error -> either neighbouring ICP code
-                            r = r5_eval(fc, fp3_ratio, vco_l1m, f3c, kv, n, it, rt, ct, c2t, pm_nom=pm_nom, kv_meas_err=ke)
+                            r = r5_eval(fc, fp3_ratio, vco_l1m, f3c, kv, n, it, rt, ct, c2t, pm_nom=pm_nom, kv_meas_err=ke, kv_nom=kv_nom, r3_nom=r3_nom)
                             r['case'] = dict(kv=kv, n=n, icp_tol=it, r_tol=rt, c_tol=ct, c2_tol=c2t, kv_meas_err=ke)
                             if wj is None or r['jitter_ps']['total'] > wj['jitter_ps']['total']:
                                 wj = r
                             if wp is None or r['pm_deg'] < wp['pm_deg']:
                                 wp = r
+                            if not r['mask_ok']:
+                                R5_MASK_FAIL.append(r['case'])
     return wj, wp
+
+
+R5_SEL = dict(fc=300e3, pm_nom=78.0, fp3_ratio=6.0, kv_nom=90e6, r3=10e3)
+
+
+def r5_main(vco_cases):
+    """vco_cases: {name: (L1M_white_dbc, L_flicker_at_100kHz_dbc, note)}.  Selected loop (R5_SEL): fc 300 kHz, nominal PM 78
+    at Kv 90 MHz/V, Icp 100 uA, N 49 (exact 4th-order network), R3 10 k / C3 at 6 fc.  Band-search policy (LO20): VTUNE
+    preset 2.1 V -> locked VTUNE 1.8-2.4 V, Kvco bounded 80-200 MHz/V.  Limits fixed before evaluation."""
+    p = R5_SEL
+    d = design(p['fc'], p['pm_nom'], 100e-6, p['kv_nom'], 49)
+    out = dict(limits=dict(jitter_ps=R5_PLL_LIMIT_PS, pm_deg=40.0, mask='RF-RX-LOPN',
+                           note='RF-LO-JIT 1.05 ps total minus a 0.5 ps on-chip LO-path slot -> synthesizer <= 0.923 ps'),
+               loop=dict(fc_hz=p['fc'], pm_nom_deg=p['pm_nom'], kv_nom_hz_v=p['kv_nom'], r_ohm=d['r_ohm'], c1_f=d['c1_f'],
+                         c2_f=d['c2_f'], r3_ohm=p['r3'], c3_f=1 / (2 * math.pi * p['r3'] * p['fp3_ratio'] * p['fc']),
+                         icp_codes_a=ICP_CODES, icp_rule='nearest(log) to 100 uA x min(1, 90 MHz/V / Kv_measured), Kv meas. +-15 %'),
+               grid=dict(kv_hz_v=(80e6, 100e6, 125e6, 150e6, 200e6), n=(44, 49, 56), icp_tol=(0.8, 1.2), r_tol=(0.75, 1.25),
+                         c1_c3_tol=(0.9, 1.1), c2_tol=(0.85, 1.15), kv_meas_err=(0.85, 1.15)),
+               noise_terms='vco (white+flicker), ref, cp (extracted ff +0.5 dB, scaled 1/Icp), pfd/div 0.3 ps, MASH-3 step 2, loop-filter R and R3 thermal',
+               cases={})
+    for name, (l1m, lfl100k, note) in vco_cases.items():
+        f3 = 1e5 * 10 ** ((lfl100k - (l1m + 20.0)) / 10)
+        R5_MASK_FAIL.clear()
+        wj, wp = r5_worst(p['fc'], p['fp3_ratio'], l1m, f3, kvs=out['grid']['kv_hz_v'], pm_nom=p['pm_nom'], kv_nom=p['kv_nom'], r3_nom=p['r3'])
+        mfail = len(R5_MASK_FAIL)
+        out['cases'][name] = dict(vco_l1m_white=l1m, vco_flicker_l100k=lfl100k, f3_corner_hz=f3, note=note, worst_jitter_ps=wj['jitter_ps'],
+                                  worst_jitter_case=wj['case'], worst_pm_deg=wp['pm_deg'], worst_pm_case=wp['case'], mask_fail_points=mfail,
+                                  pass_=bool(wj['jitter_ps']['total'] <= R5_PLL_LIMIT_PS and wp['pm_deg'] >= 40.0 and mfail == 0))
+    return out
+
+
+if __name__ == '__main__' and __import__('sys').argv[1:] == ['r5']:
+    r = r5_main({
+        'r6b_PF85_12mA': (-121.1, -104.4, 'QVCO r6b design value: full-pessimistic tank (ss/32/3.15, L-15 %, Q 4, MIM 5 ohm, varactor Q 8, C x0.9), '
+                          'band 11 VT 2.1, 12 mA; white -122.6 measured (worst seg) +1.5 dB margin; flicker fnoicor=1 ff incl. pair CM'),
+        'r6b_PF85_12mA_white+3dB': (-118.1, -101.4, 'sensitivity: both VCO terms 3 dB worse'),
+        'r5_8mA_unfiltered_PFULL': (-121.1, -69.2 + 0.0, 'r5 as laid out (8 mA, no tail filter), PESS Kg: shows the failure the r6 fix removes'),
+        'r4_claim_pess': (-105.7, -105.7 - 20 + 10 * math.log10(9.0e6 / 1e5), 'the retracted r4 PESS number with the unfiltered corner (must FAIL)'),
+    })
+    j = json.loads((HERE / 'loop_design.json').read_text())
+    j['r5'] = r
+    (HERE / 'loop_design.json').write_text(json.dumps(j, indent=1, default=float) + '\n')
+    print(json.dumps({k: (round(v['worst_jitter_ps']['total'], 3), round(v['worst_pm_deg'], 1), v['mask_fail_points'], v['pass_']) for k, v in r['cases'].items()}, indent=1))
+    print(json.dumps(r['loop'], default=float))

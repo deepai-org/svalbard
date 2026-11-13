@@ -72,18 +72,22 @@
   }
  },
  "loop": {
-  "fc_hz": 250000.0,
-  "pm_deg": 74.03624346792648,
-  "icp_a": 0.0001,
-  "kvco_hz_v": 60000000.0,
-  "n": 49,
-  "c1_f": 6.958572706814173e-12,
-  "c2_f": 3.4696595668096807e-10,
-  "r_ohm": 13085.445253336555,
-  "b": 50.86165573023348,
+  "fc_hz": 300000.0,
+  "pm_nom_deg": 78.0,
+  "kv_nom_hz_v": 90000000.0,
+  "r_ohm": 10377.171581277835,
+  "c1_f": 5.433308940276078e-12,
+  "c2_f": 4.864068278487121e-10,
   "r3_ohm": 10000.0,
-  "c3_f": 1.59e-11,
-  "note": "r4 filter; the R3/C3 pole is NOT in hop_sim (3rd-order model)"
+  "c3_f": 8.841941282883074e-12,
+  "icp_codes_a": [
+   0.0001,
+   7.5e-05,
+   5e-05,
+   2.5e-05
+  ],
+  "icp_rule": "nearest(log) to 100 uA x min(1, 90 MHz/V / Kv_measured), Kv meas. +-15 %",
+  "note": "r5 selected filter (exact 4th-order); published generated/lo_lf r5"
  },
  "loop_area_um2_mos_cap_5ff_um2": 14469.482343222748,
  "margins_over_kvco_n": [
@@ -1693,5 +1697,400 @@
   "r_ohm": 22112.691848056882,
   "b": 13.928203230275502
  },
- "ix5_note": "behavioural cycle model, r4 3rd-order filter, starts from VTUNE=VDD/2 after band search; not yet confirmed by the transistor-level ladder"
+ "ix5_note": "behavioural cycle model, r4 3rd-order filter, starts from VTUNE=VDD/2 after band search; not yet confirmed by the transistor-level ladder",
+ "r5": {
+  "limits": {
+   "jitter_ps": 0.9233092656309694,
+   "pm_deg": 40.0,
+   "mask": "RF-RX-LOPN",
+   "note": "RF-LO-JIT 1.05 ps total minus a 0.5 ps on-chip LO-path slot -> synthesizer <= 0.923 ps"
+  },
+  "loop": {
+   "fc_hz": 300000.0,
+   "pm_nom_deg": 78.0,
+   "kv_nom_hz_v": 90000000.0,
+   "r_ohm": 10377.171581277835,
+   "c1_f": 5.433308940276078e-12,
+   "c2_f": 4.864068278487121e-10,
+   "r3_ohm": 10000.0,
+   "c3_f": 8.841941282883074e-12,
+   "icp_codes_a": [
+    0.0001,
+    7.5e-05,
+    5e-05,
+    2.5e-05
+   ],
+   "icp_rule": "nearest(log) to 100 uA x min(1, 90 MHz/V / Kv_measured), Kv meas. +-15 %"
+  },
+  "grid": {
+   "kv_hz_v": [
+    80000000.0,
+    100000000.0,
+    125000000.0,
+    150000000.0,
+    200000000.0
+   ],
+   "n": [
+    44,
+    49,
+    56
+   ],
+   "icp_tol": [
+    0.8,
+    1.2
+   ],
+   "r_tol": [
+    0.75,
+    1.25
+   ],
+   "c1_c3_tol": [
+    0.9,
+    1.1
+   ],
+   "c2_tol": [
+    0.85,
+    1.15
+   ],
+   "kv_meas_err": [
+    0.85,
+    1.15
+   ]
+  },
+  "noise_terms": "vco (white+flicker), ref, cp (extracted ff +0.5 dB, scaled 1/Icp), pfd/div 0.3 ps, MASH-3 step 2, loop-filter R and R3 thermal",
+  "cases": {
+   "r6b_PF85_12mA": {
+    "vco_l1m_white": -121.1,
+    "vco_flicker_l100k": -104.4,
+    "f3_corner_hz": 46773.5141287197,
+    "note": "QVCO r6b design value: full-pessimistic tank (ss/32/3.15, L-15 %, Q 4, MIM 5 ohm, varactor Q 8, C x0.9), band 11 VT 2.1, 12 mA; white -122.6 measured (worst seg) +1.5 dB margin; flicker fnoicor=1 ff incl. pair CM",
+    "worst_jitter_ps": {
+     "vco": 0.22809200504539257,
+     "ref": 0.10142846023543146,
+     "cp": 0.17422506713569927,
+     "pfd_div": 0.03366467014961012,
+     "sd": 0.5689066678438008,
+     "lf_r": 0.46577966756527317,
+     "total": 0.7964966257181709
+    },
+    "worst_jitter_case": {
+     "kv": 200000000.0,
+     "n": 44,
+     "icp_tol": 1.2,
+     "r_tol": 0.75,
+     "c_tol": 0.9,
+     "c2_tol": 0.85,
+     "kv_meas_err": 0.85
+    },
+    "worst_pm_deg": 41.24272786562224,
+    "worst_pm_case": {
+     "kv": 150000000.0,
+     "n": 44,
+     "icp_tol": 1.2,
+     "r_tol": 1.25,
+     "c_tol": 1.1,
+     "c2_tol": 0.85,
+     "kv_meas_err": 0.85
+    },
+    "mask_fail_points": 0,
+    "pass_": true
+   },
+   "r6b_PF85_12mA_white+3dB": {
+    "vco_l1m_white": -118.1,
+    "vco_flicker_l100k": -101.4,
+    "f3_corner_hz": 46773.5141287197,
+    "note": "sensitivity: both VCO terms 3 dB worse",
+    "worst_jitter_ps": {
+     "vco": 0.43813104701733024,
+     "ref": 0.09754846425347766,
+     "cp": 0.1667943611020251,
+     "pfd_div": 0.025438975493374524,
+     "sd": 0.2942060373314753,
+     "lf_r": 0.6373027768250705,
+     "total": 0.8500906065588153
+    },
+    "worst_jitter_case": {
+     "kv": 200000000.0,
+     "n": 56,
+     "icp_tol": 0.8,
+     "r_tol": 0.75,
+     "c_tol": 0.9,
+     "c2_tol": 0.85,
+     "kv_meas_err": 0.85
+    },
+    "worst_pm_deg": 41.24272786562224,
+    "worst_pm_case": {
+     "kv": 150000000.0,
+     "n": 44,
+     "icp_tol": 1.2,
+     "r_tol": 1.25,
+     "c_tol": 1.1,
+     "c2_tol": 0.85,
+     "kv_meas_err": 0.85
+    },
+    "mask_fail_points": 0,
+    "pass_": true
+   },
+   "r5_8mA_unfiltered_PFULL": {
+    "vco_l1m_white": -121.1,
+    "vco_flicker_l100k": -69.2,
+    "f3_corner_hz": 154881661.89124778,
+    "note": "r5 as laid out (8 mA, no tail filter), PESS Kg: shows the failure the r6 fix removes",
+    "worst_jitter_ps": {
+     "vco": 11.40737684380668,
+     "ref": 0.0837772821484446,
+     "cp": 0.14639752295067796,
+     "pfd_div": 0.021847686109520953,
+     "sd": 0.17097948633955795,
+     "lf_r": 0.5504239060228977,
+     "total": 11.42319461038837
+    },
+    "worst_jitter_case": {
+     "kv": 150000000.0,
+     "n": 56,
+     "icp_tol": 0.8,
+     "r_tol": 0.75,
+     "c_tol": 1.1,
+     "c2_tol": 1.15,
+     "kv_meas_err": 1.15
+    },
+    "worst_pm_deg": 41.24272786562224,
+    "worst_pm_case": {
+     "kv": 150000000.0,
+     "n": 44,
+     "icp_tol": 1.2,
+     "r_tol": 1.25,
+     "c_tol": 1.1,
+     "c2_tol": 0.85,
+     "kv_meas_err": 0.85
+    },
+    "mask_fail_points": 0,
+    "pass_": false
+   },
+   "r4_claim_pess": {
+    "vco_l1m_white": -105.7,
+    "vco_flicker_l100k": -106.15757490560675,
+    "f3_corner_hz": 900.0000000000007,
+    "note": "the retracted r4 PESS number with the unfiltered corner (must FAIL)",
+    "worst_jitter_ps": {
+     "vco": 1.8554330162041972,
+     "ref": 0.08747203083867462,
+     "cp": 0.15237707070626788,
+     "pfd_div": 0.022811213542825354,
+     "sd": 0.17082886830392344,
+     "lf_r": 0.5533062361806873,
+     "total": 1.9517562476350379
+    },
+    "worst_jitter_case": {
+     "kv": 150000000.0,
+     "n": 56,
+     "icp_tol": 0.8,
+     "r_tol": 0.75,
+     "c_tol": 1.1,
+     "c2_tol": 0.85,
+     "kv_meas_err": 1.15
+    },
+    "worst_pm_deg": 41.24272786562224,
+    "worst_pm_case": {
+     "kv": 150000000.0,
+     "n": 44,
+     "icp_tol": 1.2,
+     "r_tol": 1.25,
+     "c_tol": 1.1,
+     "c2_tol": 0.85,
+     "kv_meas_err": 0.85
+    },
+    "mask_fail_points": 0,
+    "pass_": false
+   }
+  },
+  "ix5_hops_behavioural": {
+   "note": "hop_sim (3rd-order behavioural model, R3/C3 not modelled), VTUNE preset 2.1 V, target 0.3 V away (both signs, = band-search residual), Kv 80/125/200 with the LO18 code; +4x1.6 us band search",
+   "hops": [
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2402000000.0,
+     "n": 48.04,
+     "t_phase_settle_2deg_s": 3.524e-05,
+     "f_err_at_80us_hz": -0.040143489837646484,
+     "vtune_final_v": 1.800000000000868,
+     "max_err_deg_after_40us": 0.6570850123569638,
+     "vtune_ripple_pp_v_final": 1.5754975102311165e-11,
+     "static_phase_offset_ps": -7.282052575542357,
+     "kv": 80000000.0,
+     "icp": 0.0001,
+     "v_lock": 1.8
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2402000000.0,
+     "n": 48.04,
+     "t_phase_settle_2deg_s": 3.546e-05,
+     "f_err_at_80us_hz": 0.04237651824951172,
+     "vtune_final_v": 2.399999999999081,
+     "max_err_deg_after_40us": 0.6936432902717717,
+     "vtune_ripple_pp_v_final": 1.663071902413549e-11,
+     "static_phase_offset_ps": -7.282049916588626,
+     "kv": 80000000.0,
+     "icp": 0.0001,
+     "v_lock": 2.4
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2480000000.0,
+     "n": 49.6,
+     "t_phase_settle_2deg_s": 3.522e-05,
+     "f_err_at_80us_hz": -0.03766155242919922,
+     "vtune_final_v": 1.8000000000005965,
+     "max_err_deg_after_40us": 0.649389010671217,
+     "vtune_ripple_pp_v_final": 1.3837566648078337e-11,
+     "static_phase_offset_ps": -7.282052421199666,
+     "kv": 80000000.0,
+     "icp": 0.0001,
+     "v_lock": 1.8
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2480000000.0,
+     "n": 49.6,
+     "t_phase_settle_2deg_s": 3.546e-05,
+     "f_err_at_80us_hz": 0.03987312316894531,
+     "vtune_final_v": 2.399999999999369,
+     "max_err_deg_after_40us": 0.6875370941455907,
+     "vtune_ripple_pp_v_final": 1.4649845780922986e-11,
+     "static_phase_offset_ps": -7.282050076045322,
+     "kv": 80000000.0,
+     "icp": 0.0001,
+     "v_lock": 2.4
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2402000000.0,
+     "n": 48.04,
+     "t_phase_settle_2deg_s": 3.72e-05,
+     "f_err_at_80us_hz": -0.08003664016723633,
+     "vtune_final_v": 1.8000000000029213,
+     "max_err_deg_after_40us": 1.053175060537498,
+     "vtune_ripple_pp_v_final": 2.718270275536838e-11,
+     "static_phase_offset_ps": -7.145302088521097,
+     "kv": 125000000.0,
+     "icp": 7.5e-05,
+     "v_lock": 1.8
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2402000000.0,
+     "n": 48.04,
+     "t_phase_settle_2deg_s": 3.738e-05,
+     "f_err_at_80us_hz": 0.08369827270507812,
+     "vtune_final_v": 2.399999999996945,
+     "max_err_deg_after_40us": 1.1013550536929673,
+     "vtune_ripple_pp_v_final": 2.8435453991448866e-11,
+     "static_phase_offset_ps": -7.145296066715403,
+     "kv": 125000000.0,
+     "icp": 7.5e-05,
+     "v_lock": 2.4
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2480000000.0,
+     "n": 49.6,
+     "t_phase_settle_2deg_s": 3.72e-05,
+     "f_err_at_80us_hz": -0.07685279846191406,
+     "vtune_final_v": 1.8000000000024083,
+     "max_err_deg_after_40us": 1.0518236862943064,
+     "vtune_ripple_pp_v_final": 2.4636568340952182e-11,
+     "static_phase_offset_ps": -7.1453018177961765,
+     "kv": 125000000.0,
+     "icp": 7.5e-05,
+     "v_lock": 1.8
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2480000000.0,
+     "n": 49.6,
+     "t_phase_settle_2deg_s": 3.74e-05,
+     "f_err_at_80us_hz": 0.08054494857788086,
+     "vtune_final_v": 2.3999999999974717,
+     "max_err_deg_after_40us": 1.10234552115827,
+     "vtune_ripple_pp_v_final": 2.582535962858401e-11,
+     "static_phase_offset_ps": -7.14529634393557,
+     "kv": 125000000.0,
+     "icp": 7.5e-05,
+     "v_lock": 2.4
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2402000000.0,
+     "n": 48.04,
+     "t_phase_settle_2deg_s": 3.926e-05,
+     "f_err_at_80us_hz": -0.13744735717773438,
+     "vtune_final_v": 1.800000000004113,
+     "max_err_deg_after_40us": 1.6807317948980787,
+     "vtune_ripple_pp_v_final": 3.267050630029189e-11,
+     "static_phase_offset_ps": -6.871800157207439,
+     "kv": 200000000.0,
+     "icp": 5e-05,
+     "v_lock": 1.8
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2402000000.0,
+     "n": 48.04,
+     "t_phase_settle_2deg_s": 3.944e-05,
+     "f_err_at_80us_hz": 0.14362716674804688,
+     "vtune_final_v": 2.3999999999957042,
+     "max_err_deg_after_40us": 1.7563049032322722,
+     "vtune_ripple_pp_v_final": 3.414067695217682e-11,
+     "static_phase_offset_ps": -6.871789348449908,
+     "kv": 200000000.0,
+     "icp": 5e-05,
+     "v_lock": 2.4
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2480000000.0,
+     "n": 49.6,
+     "t_phase_settle_2deg_s": 3.926e-05,
+     "f_err_at_80us_hz": -0.13293790817260742,
+     "vtune_final_v": 1.8000000000034935,
+     "max_err_deg_after_40us": 1.6840870395922565,
+     "vtune_ripple_pp_v_final": 2.9896645159510624e-11,
+     "static_phase_offset_ps": -6.871799717180071,
+     "kv": 200000000.0,
+     "icp": 5e-05,
+     "v_lock": 1.8
+    },
+    {
+     "f_from_hz": null,
+     "f_to_hz": 2480000000.0,
+     "n": 49.6,
+     "t_phase_settle_2deg_s": 3.948e-05,
+     "f_err_at_80us_hz": 0.13920211791992188,
+     "vtune_final_v": 2.3999999999963393,
+     "max_err_deg_after_40us": 1.7634385447051653,
+     "vtune_ripple_pp_v_final": 3.129680514746269e-11,
+     "static_phase_offset_ps": -6.871789798666858,
+     "kv": 200000000.0,
+     "icp": 5e-05,
+     "v_lock": 2.4
+    }
+   ],
+   "worst_total_s": 4.588e-05,
+   "pass_75us": true
+  }
+ },
+ "loop_r4_superseded": {
+  "fc_hz": 250000.0,
+  "pm_deg": 74.03624346792648,
+  "icp_a": 0.0001,
+  "kvco_hz_v": 60000000.0,
+  "n": 49,
+  "c1_f": 6.958572706814173e-12,
+  "c2_f": 3.4696595668096807e-10,
+  "r_ohm": 13085.445253336555,
+  "b": 50.86165573023348,
+  "r3_ohm": 10000.0,
+  "c3_f": 1.59e-11,
+  "note": "r4 filter; the R3/C3 pole is NOT in hop_sim (3rd-order model)"
+ }
 }

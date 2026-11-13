@@ -517,7 +517,7 @@ Data `scratch/lo/r4_qvco2/design.json` (`bands_C`).
   tt, ff for N = 32/64/98/126; 19–34 mA. Q-side dummy load block added.
 * PFD/CP r2: dynamic PFD, reset overlap 0.11–0.18 ns (DN, extracted; UPB 0.26–0.52 ns); CP 100 µA,
   L = 4 µm degenerated sources, filtered bias. Extracted: mismatch ≤ 1.03 % over VTUNE 0.8–2.5 V (falls apart
-  outside it: lock window 0.8–2.5 V); in-band CP noise −123.4…−125.7 dBc/Hz @10 kHz (N = 49). Area 0.31 mm² (open).
+  outside it: lock window 0.8–2.5 V); in-band CP noise −123.4…−125.7 dBc/Hz @10 kHz (N = 49). Area 0.31 mm² (stale: 0.125 mm² in round 5).
 * Loop filter: Icp 100 µA, fc 250 kHz, R 13.09 k, C1 6.96 pF MIM, C2 351 pF n-well accumulation varactor
   (valid 0.3–3.0 V), R3 10 k / C3 15.9 pF (pole 1 MHz). Analytic: fc 125 kHz / PM 55.7° at 40 MHz/V,
   303 kHz / 42.6° at 120 MHz/V.
@@ -570,6 +570,73 @@ device still sees 6.5 V. `diff_clk_rx` r5 (see limitation 8): bootstrapped 6 V s
 covers 2.4–2.4835 GHz plus ≥ 3 % band-search margin. A still wider guarantee is not worth it: it would need a
 larger switched-cap ratio (lower Q and higher Kvco, both of which cost jitter), and sub-bands are served by the
 external LO path.
+
+## RF LO owner round 5: phase-noise method, QVCO r6b, loop r5, CP area (2026-11-12)
+
+Evidence `scratch/lo/r5_pn/` (PN/flicker/QVCO), `scratch/lo/r5_area/` (CP), `scratch/lo/r5_ladder/` (lock ladder), `lcvco/loop_design.json["r5"]`.
+
+**Round-4 PN numbers retracted.** −105.7 (PESS) and −114.6 dBc/Hz (tt) @1 MHz came from 0.6 µs runs whose bias was still
+settling (0.4–0.9 MHz frequency drift); re-analysis moves them by 8+ dB with segment length (`reanal.py`). Not noise.
+
+**Method, validated first (`validate.py`, `valring.py`).** Known-answer LC (2.4 GHz, Q 5, tanh −G): white tank noise vs
+Hajimiri +0.77 dB (limit 1 dB); 1/f FM through a linear varactor vs Kv²S_v/2f² +0.66 dB, quasi-static Kv within 0.2 %;
+ring-down Q 4.975 vs 5. Must-fail: dead oscillator, noise off, control open, R×2 all FAIL. QVCO white PN: RC-extracted r5 tank,
+ideal tail-gate source, 4kT(1+γ)G per node from the ring-down loaded Q (all tank losses) + 4kTγ·gm tail, γ = 2, ×100 scaled,
++1 dB short-window bias, band average 20–150 MHz (an upper bound: the spectrum has a white floor). Flicker: quasi-static
+df/dX (tail gate, NMOS/PMOS pair common-mode current) × .noise device PSDs at fnoicor 0/1.
+
+**Full-pessimistic tank** (`corners.py`): ss/32/3.15, spiral Q = 4 (diff), L ±15 %, MIM 5 Ω, varactor Q 8, C ×1.15/×0.9;
+operating point band 11/3, VTUNE 2.1 V, 2.40–2.42 GHz.
+
+**Findings / fix (QVCO r6b, published `generated/lcvco/pt_lc_qvco5*`, ports unchanged, LO20).**
+* r5 bias flicker: 10 µA 2×1 µm diode ×800 → 184 nV/√Hz @100 kHz on the tail gates, Kg = 195–353 MHz/V → L(100 kHz) −69 dBc/Hz,
+  1/f³ corner 9–16 MHz. Fix: tail-gate RC filter (40 × 100 kΩ ppolyf + 12 × 24² µm MOS cap, pole ~1 kHz; 1.9 nV/√Hz @100 kHz).
+* r5 at the full-pessimistic tank runs only 1.0 V diff (current-limited, 8 mA): white −118.6. r6b tail 12 mA (diode 1.44/1):
+  1.40 V, white **−122.6 measured → −121.1 design value** (+1.5 dB), Kg 95 MHz/V, Kcm 0.62 MHz/mA.
+  Flicker (all paths, fnoicor = 1, ff) **−104.4 dBc/Hz @100 kHz** (corner ~47 kHz).
+* Range/start-up at 12 mA (RC-extracted): L+15 % Q4 band-0 top 2.647 GHz; L−15 % ff band-15 bottom **2.338 GHz** (2.6 % under
+  2.40, misses the 3 % target, LO-10); weakest tanks band 15 / 0.3 V start (0.91–1.24 V diff), Q−I −86.4…−87.9°; 22–25 mA.
+* Pushing −60 MHz/V → QVCO rail ≤ 7 nV/√Hz (LO-11). EN-to-ready 1.5 ms. DRC/LVS/KLayout precheck clean; bbox +66 µm tall.
+
+**Loop r5 (`loop_design.py` r5_eval/r5_worst/r5_main; `lo_lf` re-laid out and published).** Exact 4th-order network, all
+noise terms incl. loop-filter R/R3 thermal (missing before: 0.2–0.7 ps). Two-sided grid: Kv 80–200 MHz/V (VTUNE-2.1 V band
+policy), N 44–56, Icp ±20 %, R ±25 %, C1/C3 ±10 %, C2 ±15 %, Kv-measurement error ±15 % on the code choice. Limit fixed
+before results: synthesizer ≤ 0.923 ps (RF-LO-JIT 1.05 total less a 0.5 ps LO-path slot), PM ≥ 40°, RF-RX-LOPN mask.
+Filter: design parameters fc 300 kHz / PM 78° before the R3/C3 pole (actual nominal PM ≈ 61°, worst 41.2°) at Kv 90, R 10.38 k, C1 5.45 pF, C2 489.6 pF, R3 10 k, C3 8.84 pF; ICP code nearest-log to
+100 µA·min(1, 90/Kv). Extracted lo_lf matches the network within tolerance at tt/ss/ff, VT 0.8–2.5 V (`lfcheck.json`).
+
+| VCO case | worst jitter | worst PM | result |
+| --- | ---: | ---: | --- |
+| r6b design value (−121.1 / −104.4 @100k) | **0.80 ps** | 41.2° | PASS |
+| same, both VCO terms +3 dB | 0.85 ps | 41.2° | PASS |
+| r5 as built (unfiltered bias) | 11.4 ps | — | FAIL |
+| retracted r4 PESS number | 1.95 ps | — | FAIL |
+
+IX-5 (behavioural, target 0.3 V from the preset, both signs): 45.9 µs incl. band search (limit 75).
+**Load-bearing bound:** Kvco ≤ 200 MHz/V in the 1.8–2.4 V window. At Kv 225 the worst case is 1.08 ps (FAIL), at 250 1.12 ps.
+The bound is C-only 95–150 MHz/V + 33 %; it still needs an extracted OPT (ff/22/3.35, L −15 %) Kvco at VTUNE 1.8/2.4 V (LO-13).
+Independent review (2 passes, separate agent): blocking items (filter-R noise, fnoicor=1 flicker, budget slot) closed; open
+should-fix: flicker/white at more bands and the 1.8/2.4 V window ends, PMOS-pair path at 12 mA, hop sim with R3/C3,
+Kvco upper bound, rail noise as a firm requirement.
+Supply noise (LO-11), lo_ext additive jitter and the transistor-level lock ladder are separate items.
+
+**Lock ladder (audit rungs, `scratch/lo/r5_ladder/`, limits fixed before running, one dir per run, reltol 1e-4).**
+Rung 1 ideal: step response matches the analytic loop to 0.3 %; ±30 MHz acquisition 25–29 µs; dead-VCO / wrong-N / CP-off FAIL
+as required. Rung 2 extracted LF: 22.8–45.4 µs PASS (C2 linearised at its 1.65 V PDK value; ngspice stalls on its C(V)).
+Rung 3 extracted PFD/CP + LF, VT preset 2.1 V: ff Kv200 N44 ±60 MHz 23.9/27.6 µs PASS; ss Kv80 N56 ±24 MHz 47.2/49.3 µs PASS
+(marginal); **on the published r5 filter ss Kv80 Icp100 −24 MHz: 50.6 µs, hold 2.27°, offset drift 1.27 ps → FAIL (narrow)**;
+more r5-filter cases running (`r3n.json`). Static offsets −60…−158 ps (CP mismatch/leakage). Rung 4a RC-extracted MMD
+(744 R) divides exactly at ss/tt/ff 2.4–3.0 GHz, N 44/56; 20 mV must-fail FAILs. Rung 4b closed loop with the RC MMD running
+(`r4_cl_ss32_kv80_n56_icp75_m24_mmdrc/`). Rung 5 fractional-N (behavioural): PASS except Kv200/Icp25 with the VCO 60 MHz low
+(~900 slips, 68–75 µs): **acquire integer-N, enable MASH after lock** (LO20). The ±1 LSB dither is unshaped. Laid-out C2 is
+11–12 % above design in both filters (inside the ±15 % grid).
+
+**Charge pump area (r5 area fork).** `lo_pfdcp` re-laid out (row plan only, netlist unchanged): 0.163 → **0.125 mm²**
+(259.0 × 482.4 µm), DRC/precheck/LVS clean; extracted UP/DN on-time 0.10–0.28 ns, static offset ≤ 140 ps, CP DC/noise
+unchanged. Mismatch over 0.8–2.5 V is ≤ 1.32 % (ss, 100 µA), not the 1.03 % stated in round 4. The r4 "0.31 mm²" was stale.
+`lo_ext` is 0.156 mm² (the 297k figure was pre-0486041); LO11 1.0–4.5 Vpp re-passes extracted at tt/ss/ff (on ≥ 0.945 V,
+off ≤ 0.464 V, Q−I 93.2–95.0°), PD29 HBM 0 exceedances. Bench bug found: the r4 `hcp.py`/`run_loop.tb_pfd_pulse` ICP pin order,
+so r4 extracted CP numbers were from the layout without the LO18 legs.
 
 ## Known limitations and open items
 

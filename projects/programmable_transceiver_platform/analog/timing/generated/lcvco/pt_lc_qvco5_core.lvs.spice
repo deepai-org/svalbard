@@ -884,6 +884,15 @@ X807 TSQ IN QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X0 a_28_n600# a_n36_n756# a_n116_n600# a_n254_n892# nfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
 .ends
 
+.subckt p_cap_nmos_03v3_b_w24_l24_c a_n2400_n2492# w_n2512_n2516#
+X0 a_n2400_n2492# w_n2512_n2516# cap_nmos_03v3_b c_width=24u c_length=24u
+.ends
+
+.subckt p_cap_nmos_03v3_b_w24_l24 p_cap_nmos_03v3_b_w24_l24_c_0/a_n2400_n2492# m1_n2490_n38#
+Xp_cap_nmos_03v3_b_w24_l24_c_0 p_cap_nmos_03v3_b_w24_l24_c_0/a_n2400_n2492# m1_n2490_n38#
++ p_cap_nmos_03v3_b_w24_l24_c
+.ends
+
 .subckt p_pfet_03v3_w4_l0p28 a_28_n400# a_n36_n556# w_n278_n716# a_n116_n400#
 X0 a_28_n400# a_n36_n556# a_n116_n400# w_n278_n716# pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
 .ends
@@ -932,8 +941,12 @@ X0 a_28_n200# a_n36_n356# a_n116_n200# w_n278_n516# pfet_03v3 ad=0.88p pd=4.88u 
 X0 a_n100_2000# a_n100_n2122# a_n312_n2334# ppolyf_u_1k r_width=1u r_length=20u
 .ends
 
-.subckt p_nfet_03v3_w2_l1 a_100_n200# a_n326_n492# a_n188_n200# a_n100_n360#
-X0 a_100_n200# a_n100_n360# a_n188_n200# a_n326_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+.subckt p_ppolyf_u_1k_w1_l100 a_n100_10000# a_n100_n10122# a_n312_n10334#
+X0 a_n100_10000# a_n100_n10122# a_n312_n10334# ppolyf_u_1k r_width=1u r_length=100u
+.ends
+
+.subckt p_nfet_03v3_w1p44_l1 a_n188_n144# a_n326_n436# a_n100_n304# a_100_n144#
+X0 a_100_n144# a_n100_n304# a_n188_n144# a_n326_n436# nfet_03v3 ad=0.6336p pd=3.76u as=0.6336p ps=3.76u w=1.44u l=1u
 .ends
 
 .subckt p_nfet_03v3_w2_l0p28 a_n36_n356# a_n116_n200# a_n254_n492# a_28_n200#
@@ -941,62 +954,117 @@ X0 a_28_n200# a_n36_n356# a_n116_n200# a_n254_n492# nfet_03v3 ad=0.88p pd=4.88u 
 .ends
 
 .subckt pt_lc_qvco_aux EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE
-+ VDDCI VDDCQ CMLSEL VDD VSS
-XXBD2_N VSS m1_3926_24546# m1_1672_14202# VSS p_nfet_03v3_w6_l0p28
-XXTP m1_24988_14374# m1_22498_14618# VDD ATB_VTUNE p_pfet_03v3_w4_l0p28
-XXBD2_P m1_1672_14202# VDDB m1_3926_24546# m1_6256_15618# p_pfet_03v3_w12_l0p28
-XXBP2_N VSS PRE m1_10350_10806# VSS p_nfet_03v3_w6_l0p28
-XXTS VSS m1_1070_29422# ATB_EN ATB_ITAIL p_nfet_03v3_w4_l0p28
-XXBP_C m1_8096_462# IP p_cap_mim_2f0_m4m5_noshield_w10_l10
++ VDDCI VDDCQ CMLSEL VDD VSS TAILG
+XXBD2_N VSS m1_25922_38866# m1_23668_28522# VSS p_nfet_03v3_w6_l0p28
+XXCF7 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXTP m1_46984_28694# m1_44494_28938# VDD ATB_VTUNE p_pfet_03v3_w4_l0p28
+XXBD2_P m1_23668_28522# VDDB m1_25922_38866# m1_28252_29938# p_pfet_03v3_w12_l0p28
+XXCF8 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXCF9 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXBP2_N VSS PRE m1_5182_38866# VSS p_nfet_03v3_w6_l0p28
+XXTS VSS m1_50874_31238# ATB_EN ATB_ITAIL p_nfet_03v3_w4_l0p28
+XXBP_C m1_2928_28522# IP p_cap_mim_2f0_m4m5_noshield_w10_l10
 XXHBQ VSS VSS CMLSEL VDDCQ p_nfet_03v3_w0p5_l2
-XXBP2_P m1_10350_10806# VDDB PRE VDDB p_pfet_03v3_w12_l0p28
-XXBD3_C m1_10786_14202# QN p_cap_mim_2f0_m4m5_noshield_w10_l10
-XXRT VSS m1_1070_29422# VSS IBIAS p_nfet_03v3_w25_l1
-XXBD1_C m1_19722_462# IN p_cap_mim_2f0_m4m5_noshield_w10_l10
-XXBD1_RF m1_21976_10806# m1_19722_462# VSS p_ppolyf_u_1k_w1_l50
-XXBP_H a_5758_6160# VDDB m1_12680_1878# VDDB p_pfet_03v3_w24_l0p28
-XXEI_N VSS a_5758_6160# EN VSS p_nfet_03v3_w1_l0p28
-XXBD3_H a_5758_6160# VDDB m1_15370_15618# VDDB p_pfet_03v3_w24_l0p28
-XXEI_P VDD EN VDD a_5758_6160# p_pfet_03v3_w2_l0p28
-XXBD2_Z VSS m1_3926_24546# a_5758_6160# VSS p_nfet_03v3_w1_l0p28
-XXBD1_H a_5758_6160# VDDB m1_24306_1878# VDDB p_pfet_03v3_w24_l0p28
-XXBP_N VSS m1_10350_10806# m1_8096_462# VSS p_nfet_03v3_w6_l0p28
-XXBD3_N VSS m1_13040_24546# m1_10786_14202# VSS p_nfet_03v3_w6_l0p28
-XXBP_P m1_8096_462# VDDB m1_10350_10806# m1_12680_1878# p_pfet_03v3_w12_l0p28
-XXNBC VSS IBIAS a_5758_6160# VSS p_nfet_03v3_w1_l0p28
-XXBD3_P m1_10786_14202# VDDB m1_13040_24546# m1_15370_15618# p_pfet_03v3_w12_l0p28
-XXBD1_N VSS m1_21976_10806# m1_19722_462# VSS p_nfet_03v3_w6_l0p28
-XXBD2_RF m1_3926_24546# m1_1672_14202# VSS p_ppolyf_u_1k_w1_l50
-XXBD1_P m1_19722_462# VDDB m1_21976_10806# m1_24306_1878# p_pfet_03v3_w12_l0p28
-XXRA VTUNE m1_24988_14374# VSS p_ppolyf_u_1k_w1_l20
-XXBD2_C m1_1672_14202# QP p_cap_mim_2f0_m4m5_noshield_w10_l10
-XXBP_RF m1_10350_10806# m1_8096_462# VSS p_ppolyf_u_1k_w1_l50
-XXBP_Z VSS m1_10350_10806# a_5758_6160# VSS p_nfet_03v3_w1_l0p28
-XXNB IBIAS VSS m1_3422_878# IBIAS p_nfet_03v3_w2_l1
-XXBD3_Z VSS m1_13040_24546# a_5758_6160# VSS p_nfet_03v3_w1_l0p28
-XXBD2_H a_5758_6160# VDDB m1_6256_15618# VDDB p_pfet_03v3_w24_l0p28
-XXAI_N VSS m1_22498_14618# ATB_EN VSS p_nfet_03v3_w1_l0p28
-XXBD1_Z VSS m1_21976_10806# a_5758_6160# VSS p_nfet_03v3_w1_l0p28
+XXBP2_P m1_5182_38866# VDDB PRE VDDB p_pfet_03v3_w12_l0p28
+XXBD3_C m1_32782_28522# QN p_cap_mim_2f0_m4m5_noshield_w10_l10
+XXRT VSS m1_50874_31238# VSS TAILG p_nfet_03v3_w25_l1
+XXBD1_C m1_14554_28522# IN p_cap_mim_2f0_m4m5_noshield_w10_l10
+XXBD1_RF m1_16808_38866# m1_14554_28522# VSS p_ppolyf_u_1k_w1_l50
+XXBP_H a_590_34302# VDDB m1_7512_29938# VDDB p_pfet_03v3_w24_l0p28
+XXEI_N VSS a_590_34302# EN VSS p_nfet_03v3_w1_l0p28
+XXBD3_H a_590_34302# VDDB m1_37366_29938# VDDB p_pfet_03v3_w24_l0p28
+XXEI_P VDD EN VDD a_590_34302# p_pfet_03v3_w2_l0p28
+XXBD2_Z VSS m1_25922_38866# a_590_34302# VSS p_nfet_03v3_w1_l0p28
+XXBD1_H a_590_34302# VDDB m1_19138_29938# VDDB p_pfet_03v3_w24_l0p28
+XXBP_N VSS m1_5182_38866# m1_2928_28522# VSS p_nfet_03v3_w6_l0p28
+XXBD3_N VSS m1_35036_38866# m1_32782_28522# VSS p_nfet_03v3_w6_l0p28
+XXBP_P m1_2928_28522# VDDB m1_5182_38866# m1_7512_29938# p_pfet_03v3_w12_l0p28
+XXNBC VSS IBIAS a_590_34302# VSS p_nfet_03v3_w1_l0p28
+XXBD3_P m1_32782_28522# VDDB m1_35036_38866# m1_37366_29938# p_pfet_03v3_w12_l0p28
+XXBD1_N VSS m1_16808_38866# m1_14554_28522# VSS p_nfet_03v3_w6_l0p28
+XXNBF VSS TAILG a_590_34302# VSS p_nfet_03v3_w1_l0p28
+XXBD2_RF m1_25922_38866# m1_23668_28522# VSS p_ppolyf_u_1k_w1_l50
+XXBD1_P m1_14554_28522# VDDB m1_16808_38866# m1_19138_29938# p_pfet_03v3_w12_l0p28
+XXCF10 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXCF11 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXRA VTUNE m1_46984_28694# VSS p_ppolyf_u_1k_w1_l20
+XXRF0 IBIAS m1_7472_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF1 m1_7472_634# m1_8684_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF30 m1_42620_634# m1_43832_634# VSS p_ppolyf_u_1k_w1_l100
+XXBD2_C m1_23668_28522# QP p_cap_mim_2f0_m4m5_noshield_w10_l10
+XXRF2 m1_8684_634# m1_9896_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF20 m1_30500_634# m1_31712_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF31 m1_43832_634# m1_45044_634# VSS p_ppolyf_u_1k_w1_l100
+XXBP_RF m1_5182_38866# m1_2928_28522# VSS p_ppolyf_u_1k_w1_l50
+XXBP_Z VSS m1_5182_38866# a_590_34302# VSS p_nfet_03v3_w1_l0p28
+XXRF3 m1_9896_634# m1_11108_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF10 m1_18380_634# m1_19592_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF11 m1_19592_634# m1_20804_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF21 m1_31712_634# m1_32924_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF22 m1_32924_634# m1_34136_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF32 m1_45044_634# m1_46256_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF33 m1_46256_634# m1_47468_634# VSS p_ppolyf_u_1k_w1_l100
+XXNB m1_3422_822# VSS IBIAS IBIAS p_nfet_03v3_w1p44_l1
+XXRF4 m1_11108_634# m1_12320_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF12 m1_20804_634# m1_22016_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF23 m1_34136_634# m1_35348_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF34 m1_47468_634# m1_48680_634# VSS p_ppolyf_u_1k_w1_l100
+XXBD3_Z VSS m1_35036_38866# a_590_34302# VSS p_nfet_03v3_w1_l0p28
+XXCF0 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXRF5 m1_12320_634# m1_13532_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF13 m1_22016_634# m1_23228_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF24 m1_35348_634# m1_36560_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF35 m1_48680_634# m1_49892_634# VSS p_ppolyf_u_1k_w1_l100
+XXBD2_H a_590_34302# VDDB m1_28252_29938# VDDB p_pfet_03v3_w24_l0p28
+XXCF1 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXRF6 m1_13532_634# m1_14744_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF7 m1_14744_634# m1_15956_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF14 m1_23228_634# m1_24440_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF25 m1_36560_634# m1_37772_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF36 m1_49892_634# m1_51104_634# VSS p_ppolyf_u_1k_w1_l100
+XXAI_N VSS m1_44494_28938# ATB_EN VSS p_nfet_03v3_w1_l0p28
+XXCF2 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXRF8 m1_15956_634# m1_17168_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF15 m1_24440_634# m1_25652_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF26 m1_37772_634# m1_38984_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF37 m1_51104_634# m1_52316_634# VSS p_ppolyf_u_1k_w1_l100
+XXBD1_Z VSS m1_16808_38866# a_590_34302# VSS p_nfet_03v3_w1_l0p28
+XXCF3 TAILG VSS p_cap_nmos_03v3_b_w24_l24
 XXHBI VSS VSS CMLSEL VDDCI p_nfet_03v3_w0p5_l2
-XXAI_P VDD ATB_EN VDD m1_22498_14618# p_pfet_03v3_w2_l0p28
-XXBD3_RF m1_13040_24546# m1_10786_14202# VSS p_ppolyf_u_1k_w1_l50
-XXNBS VSS m1_3422_878# EN VSS p_nfet_03v3_w4_l0p28
-XXTN ATB_EN ATB_VTUNE VSS m1_24988_14374# p_nfet_03v3_w2_l0p28
-D0 VSS a_5758_6160# diode_nd2ps_03v3 pj=2.4u area=0.36p
-D1 VSS a_5758_6160# diode_nd2ps_03v3 pj=2.4u area=0.36p
-D2 VSS a_5758_6160# diode_nd2ps_03v3 pj=2.4u area=0.36p
-D3 VSS a_5758_6160# diode_nd2ps_03v3 pj=2.4u area=0.36p
-D4 VSS ATB_EN diode_nd2ps_03v3 pj=2.4u area=0.36p
-D5 VSS a_5758_6160# diode_nd2ps_03v3 pj=2.4u area=0.36p
-D6 VSS EN diode_nd2ps_03v3 pj=2.4u area=0.36p
+XXRF9 m1_17168_634# m1_18380_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF16 m1_25652_634# m1_26864_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF27 m1_38984_634# m1_40196_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF38 m1_52316_634# m1_53528_634# VSS p_ppolyf_u_1k_w1_l100
+XXAI_P VDD ATB_EN VDD m1_44494_28938# p_pfet_03v3_w2_l0p28
+XXBD3_RF m1_35036_38866# m1_32782_28522# VSS p_ppolyf_u_1k_w1_l50
+XXCF4 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXNBS VSS m1_3422_822# EN VSS p_nfet_03v3_w4_l0p28
+XXRF17 m1_26864_634# m1_28076_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF28 m1_40196_634# m1_41408_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF39 m1_53528_634# TAILG VSS p_ppolyf_u_1k_w1_l100
+XXCF5 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXRF18 m1_28076_634# m1_29288_634# VSS p_ppolyf_u_1k_w1_l100
+XXRF29 m1_41408_634# m1_42620_634# VSS p_ppolyf_u_1k_w1_l100
+XXTN ATB_EN ATB_VTUNE VSS m1_46984_28694# p_nfet_03v3_w2_l0p28
+XXCF6 TAILG VSS p_cap_nmos_03v3_b_w24_l24
+XXRF19 m1_29288_634# m1_30500_634# VSS p_ppolyf_u_1k_w1_l100
+D0 VSS a_590_34302# diode_nd2ps_03v3 pj=2.4u area=0.36p
+D1 VSS ATB_EN diode_nd2ps_03v3 pj=2.4u area=0.36p
+D2 VSS EN diode_nd2ps_03v3 pj=2.4u area=0.36p
+D3 VSS EN diode_nd2ps_03v3 pj=2.4u area=0.36p
+D4 VSS a_590_34302# diode_nd2ps_03v3 pj=2.4u area=0.36p
+D5 VSS a_590_34302# diode_nd2ps_03v3 pj=2.4u area=0.36p
+D6 VSS a_590_34302# diode_nd2ps_03v3 pj=2.4u area=0.36p
+D7 VSS a_590_34302# diode_nd2ps_03v3 pj=2.4u area=0.36p
+D8 VSS a_590_34302# diode_nd2ps_03v3 pj=2.4u area=0.36p
 .ends
 
 .subckt pt_lc_qvco5_core EN CMLSEL VTUNE IBIAS BAND0 BAND1 BAND2 BAND3 PRE IP IN QP
 + QN VDD VDDB VSS ATB_EN ATB_VTUNE ATB_ITAIL
-Xpt_lc_qvco_rf_0 VSS VTUNE pt_lc_qvco_rf_0/TSI VDDCI VDD CMLSEL IBIAS BAND0 BAND1
-+ BAND2 BAND3 IP IN VTUNE pt_lc_qvco_rf_0/TSQ VDDCQ VDD CMLSEL IBIAS BAND0 BAND1 BAND2
+Xpt_lc_qvco_rf_0 VSS VTUNE pt_lc_qvco_rf_0/TSI VDDCI VDD CMLSEL TAILG BAND0 BAND1
++ BAND2 BAND3 IP IN VTUNE pt_lc_qvco_rf_0/TSQ VDDCQ VDD CMLSEL TAILG BAND0 BAND1 BAND2
 + BAND3 QP QN pt_lc_qvco_rf
 Xpt_lc_qvco_aux_0 EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE VDDCI
-+ VDDCQ CMLSEL VDD VSS pt_lc_qvco_aux
++ VDDCQ CMLSEL VDD VSS TAILG pt_lc_qvco_aux
 .ends
 

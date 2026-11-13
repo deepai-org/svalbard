@@ -436,6 +436,7 @@ def write_lf(r_ohm=13.09e3, c1_f=6.96e-12, c2_f=347e-12, r3_ohm=10e3, c3_f=15.9e
 # dphi0 = 0); reltol 1e-4; VCO excess phase dphi in cycles starts at 0.
 LADDER = REPO / 'scratch' / 'lo' / 'r5_ladder'
 LF_R4 = dict(r_ohm=13.09e3, c1_f=6.96e-12, c2_f=351e-12, r3_ohm=10e3, c3_f=15.9e-12)
+LF_R5 = dict(r_ohm=13.09e3, c1_f=6.97e-12, c2_f=346e-12, r3_ohm=10e3, c3_f=10.6e-12)   # main LO agent r5 (pole 1.5 MHz)
 LADDER_LIMITS = dict(               # fixed 2026-11-11 before the first ladder run; do not edit after results
     t_lock_max_s=50e-6,             # loop settling to 2 deg LO (IX-5 75 us budget incl. ~25 us band search)
     hold_window_s=20e-6,            # last 20 us = hold window, split in two 10 us halves
@@ -448,9 +449,10 @@ LADDER_LIMITS = dict(               # fixed 2026-11-11 before the first ladder r
 
 
 def icp_lo18(kv):
-    """LO18: Icp = 100 uA x min(1, 60 MHz/V / Kv), realised as 25 uA x (1 + ICP0 + 2 ICP1); nearest code."""
+    """LO18/LO19: Icp = 100 uA x min(1, 60 MHz/V / Kv), realised as 25 uA x (1 + ICP0 + 2 ICP1); code nearest
+    in log ratio (LO19).  kv = the MEASURED Kvco (pass kv x (1 +- 0.15) for the measurement-error bound)."""
     want = 100e-6 * min(1.0, 60e6 / kv) if kv > 0 else 100e-6
-    k = min(range(4), key=lambda k: abs(25e-6 * (k + 1) - want))
+    k = min(range(4), key=lambda k: abs(math.log(25e-6 * (k + 1) / want)))
     return 25e-6 * (k + 1), k
 
 
@@ -522,13 +524,52 @@ def hop4(lf, icp, kv, n, df0, fref=50e6, t_end=80e-6, m_div=None):
                 f_err_final_hz=float(kv * x[2] + x[4]))
 
 
+def mash111(frac, ncyc, bits=16, dither=True):
+    """MASH 1-1-1 output sequence y_k (integer, -3..+4) for fractional input frac in [0,1)."""
+    M = 1 << bits
+    x = int(round(frac * M))
+    a1 = a2 = a3 = 0
+    c2p = c3p = c3pp = 0
+    rng = np.random.default_rng(1)
+    out = []
+    for _ in range(ncyc):
+        a1 += x + ((2 * int(rng.integers(0, 2)) - 1) if dither else 0)   # zero-mean +-1 LSB dither (no frequency bias)
+        c1, a1 = a1 // M, a1 % M
+        a2 += a1
+        c2, a2 = a2 // M, a2 % M
+        a3 += a2
+        c3, a3 = a3 // M, a3 % M
+        out.append(c1 + c2 - c2p + c3 - 2 * c3p + c3pp)
+        c2p, c3pp, c3p = c2, c3p, c3
+    return np.array(out)
+
+
+def fracn_q(nf, fref, t_end, step=2):
+    """Divider phase quantisation q(t) (VCO cycles) for ratio nf = step x (Nint + frac) with MASH 1-1-1 on the
+    pt_lo_mmd N[5:0] word (total ratio step = 2 VCO cycles).  q_k = sum_{j<k}(M_j - nf); q changes half a
+    reference period after each REF edge (away from the PFD edges).  Returns PWL text and stats."""
+    h = nf / step
+    nint, frac = int(math.floor(h)), h - math.floor(h)
+    ncyc = int(t_end * fref) + 2
+    y = mash111(frac, ncyc)
+    m = step * (nint + y)
+    q = np.concatenate([[0.0], np.cumsum(m - nf)])[:ncyc]
+    pts = ['0 0']
+    for k in range(1, ncyc):
+        tk = 2.025e-9 + (k - 0.75) / fref   # a quarter period after REF edge k-1: FB is mid-high, no glitch
+        pts.append(f'{tk - 5e-12:.6e} {q[k - 1]:.6f}')
+        pts.append(f'{tk + 5e-12:.6e} {q[k]:.6f}')
+    return 'VQ qf 0 PWL(' + ' '.join(pts) + ')\n', dict(nint=nint, frac=frac, m_min=int(m.min()), m_max=int(m.max()),
+                                                      q_pp_cyc=float(q.max() - q.min()), m_mean=float(m.mean()))
+
+
 def md5(p):
     import hashlib
     return hashlib.md5(Path(p).read_bytes()).hexdigest()
 
 
 def tb_ladder(v, n, m_div, fref, kv, df0, vt0, icp, t_end, pfd='ideal', lf='ideal', lfv=None, en=True,
-              t_rst=150e-12, icp_bits=(1, 1), tmax=None, df_step_at=None):
+              t_rst=150e-12, icp_bits=(1, 1), tmax=None, df_step_at=None, fracn=False, div='ideal', vco_amp=0.4, vco_cm=1.52):
     """Ladder deck.  pfd 'ideal' = XSPICE tri-state PFD (d_dff + reset AND with t_rst) + ideal +-Icp sources;
     pfd 'x' = extracted pt_lo_pfdcp (lk_pfdcp.spice) with ICP code.  lf 'ideal' = ideal R/C1/C2/R3/C3 (lfv),
     'x' = extracted pt_lo_lf (lk_lf.spice).  VCO behavioural: f = n fref + kv (VT - vt0) + df0;
@@ -538,7 +579,14 @@ def tb_ladder(v, n, m_div, fref, kv, df0, vt0, icp, t_end, pfd='ideal', lf='idea
     out = [f'* lock ladder: N={n} M={m_div} Kv={kv / 1e6:g} MHz/V df0={df0 / 1e6:g} MHz Icp={icp * 1e6:g} uA pfd={pfd} lf={lf}',
            f'VDD vdd 0 {v}', f'VREF ref 0 pulse(0 {v} 2n 50p 50p {0.5 / fref - 50e-12} {1 / fref})',
            'CPH dphi 0 1', f'GPH 0 dphi cur={{ {kv} * (v(vt) - {vt0}) + {df0} }}',
-           f'BFB fb 0 v={{ {v / 2} * (1 + tanh(200 * sin({w} * ({fref * n / m_div} * (time - 2.025e-9) + v(dphi) / {m_div})))) }}']
+           f'BFB fb 0 v={{ {v / 2} * (1 + tanh(200 * sin({w} * ({fref * n / m_div} * (time - 2.025e-9) + (v(dphi) - v(qf)) / {m_div})))) }}']
+    out += ['.include fracq.spice'] if fracn else ['VQ qf 0 0']
+    if div == 'x':   # RC-extracted pt_lo_mmd driven by a behavioural tank sine (amp per leg, cm); total ratio 2 x N[5:0]
+        out = [l for l in out if not l.startswith('BFB')]
+        out += ['.include mmd_rc.spice', f'VENM enm 0 {v}'] + [f'VN{k} n{k} 0 {v * x}' for k, x in enumerate(nbits(m_div))]
+        out += [f'BLP lp 0 v={{ {vco_cm} + {vco_amp} * sin({w} * ({n * fref} * time + v(dphi))) }}',
+                f'BLN ln 0 v={{ {vco_cm} - {vco_amp} * sin({w} * ({n * fref} * time + v(dphi))) }}',
+                'XM lp ln enm n0 n1 n2 n3 n4 n5 fb vdd 0 pt_lo_mmd']
     if pfd == 'ideal':
         out += ['AAD [ref fb] [dref dfb] adcb', '.model adcb adc_bridge(in_low=1.0 in_high=2.0)',
                 'ADU one dref rst upd dmy1 dff', 'ADD one dfb rst dnd dmy2 dff', 'AON one onesrc',
@@ -564,8 +612,8 @@ def tb_ladder(v, n, m_div, fref, kv, df0, vt0, icp, t_end, pfd='ideal', lf='idea
         c2node = None
     ic = f'.ic v(dphi)=0 v(vtune)={vt0} v(vt)={vt0}' + (f' v({c2node})={vt0}' if c2node else '')
     out += [ic, '.option reltol=1e-4 interp' if False else '.option reltol=1e-4',
-            '.save v(ref) v(fb) v(vt) v(dphi)', f'.tran 10p {t_end} 0 {tmax or 10e-12}',
-            '.control', 'set filetype=binary', 'run', 'write lad.raw v(ref) v(fb) v(vt) v(dphi)', '.endc']
+            '.save v(ref) v(fb) v(vt) v(dphi) v(qf)', f'.tran 10p {t_end} 0 {tmax or 10e-12}',
+            '.control', 'set filetype=binary', 'run', 'write lad.raw v(ref) v(fb) v(vt) v(dphi) v(qf)', '.endc']
     return '\n'.join(out) + '\n'
 
 
@@ -584,9 +632,10 @@ def read_raw(path):
     return {nm: d[:, j] for j, nm in enumerate(names)}
 
 
-def analyse_ladder(path, fref, n, v, t_end, lim=LADDER_LIMITS, analytic=None):
+def analyse_ladder(path, fref, n, v, t_end, lim=LADDER_LIMITS, analytic=None, fracn=False):
     w = read_raw(path)
     t, ref, fb, vt, ph = w['time'], w['v(ref)'], w['v(fb)'], w['v(vt)'], w['v(dphi)']
+    qf = w.get('v(qf)')
 
     def edges(x):
         i = np.where((x[:-1] < v / 2) & (x[1:] >= v / 2))[0]
@@ -601,6 +650,8 @@ def analyse_ladder(path, fref, n, v, t_end, lim=LADDER_LIMITS, analytic=None):
     ok = dict(edge_counts=all(a == b and a > 0 for a, b in cnt))
     # pair each ref edge with nearest fb edge
     dt = np.array([ef[np.argmin(abs(ef - x))] - x for x in er]) if len(ef) else np.full(len(er), np.nan)
+    if fracn:   # remove the deterministic MASH divider quantisation: FB edge shift = q / f_vco
+        dt = dt - np.interp(er, t, qf) / (n * fref)
     spos = [float(np.median(dt[(er >= a) & (er < b)])) if ((er >= a) & (er < b)).any() else math.nan for a, b in halves]
     spo = float(np.nanmean(spos))
     deg = (dt - spo) * n * fref * 360
@@ -633,7 +684,7 @@ def analyse_ladder(path, fref, n, v, t_end, lim=LADDER_LIMITS, analytic=None):
 
 def run_ladder(run, rung, corner='tt', temp=27, v=3.3, n=49, m_div=None, fref=50e6, kv=60e6, df0=-30e6, vt0=1.65,
                icp=None, t_end=80e-6, pfd='ideal', lf='ideal', lfv=None, en=True, expect='pass', small_step=False,
-               tmax=None):
+               tmax=None, method='gear', c2_model='lin', c3_f=None, fracn=False, div='ideal', vco_amp=0.4, vco_cm=1.52):
     import numpy  # noqa
     wd = LADDER / run
     if wd.exists():
@@ -657,8 +708,8 @@ def run_ladder(run, rung, corner='tt', temp=27, v=3.3, n=49, m_div=None, fref=50
         # C2 (cap_nmos_03v3_b units, PDK C(V) = k (c1 + c2 tanh(c3 V + c4))) -> ONE element i = C(V) dV/dt
         # (dV/dt from a 1 F copy cap), same PDK constants and corner factor.  The 61 voltage-dependent
         # 'c=' capacitors stall ngspice (gear, reltol 1e-4) at ~61-68 us (two identical stalls, r2 first attempt).
-        lines = txt.splitlines()
-        c2 = [l for l in lines if l.startswith('XXC2_')]
+        lines = txt.splitlines() if c2_model in ('b', 'lin') else []
+        c2 = [l for l in lines if l.startswith('XXC2_')] or ['XXC2_0 x VSS VSS p_w0_l0']
         assert c2 and len({l.split()[1] for l in c2}) == 1, 'C2 units'
         node = c2[0].split()[1]
         w_um, l_um = (float(x) for x in re.search(r'_w(\d+)_l(\d+)', c2[0].split()[-1]).groups())
@@ -670,33 +721,59 @@ def run_ladder(run, rung, corner='tt', temp=27, v=3.3, n=49, m_div=None, fref=50
                 inside = True
             if inside and l.startswith('XXC2_'):
                 continue
-            if inside and l.startswith('.ends'):
+            if inside and c3_f and l.startswith('XXC3'):
+                continue
+            if inside and l.startswith('.ends') and c3_f:
+                side = math.sqrt(c3_f / 2e-15)
+                out.append(f'XC3R VT VSS cap_mim_2f0_m4m5_noshield c_width={side:.2f}u c_length={side:.2f}u')
+            if inside and l.startswith('.ends') and c2_model == 'lin':
+                out.append(f'C2LIN {node} VSS c={{ {k:.6g}*cap_nmos_03v3_b_corner*0.0039843 }}')
+            elif inside and l.startswith('.ends'):
                 out += [f'EC2C c2cp VSS {node} VSS 1', 'VC2M c2cp c2cm 0', 'CC2U c2cm VSS 1',
                         f'BC2Q {node} VSS i={{ {cv} * i(VC2M) }}']   # i = C(V) dV/dt (PDK c= form)
                 inside = False
             out.append(l)
-        (wd / 'lk_lf.spice').write_text('\n'.join(out) + '\n')
+        (wd / 'lk_lf.spice').write_text('\n'.join(out) + '\n' if c2_model in ('b', 'lin') else txt)
         inc['generated/lo_lf.ext.spice'] = md5(HERE.parent / 'generated' / 'lo_lf.ext.spice')
-        inc['c2_model'] = f'{len(c2)} x cap_nmos_03v3_b w{w_um:g} l{l_um:g} -> one B-source i = C(V) dV/dt (PDK C(V), same constants and corner factor)'
-    for f in wd.glob('lk_*.spice'):
+        inc['c3'] = f'extracted C3 MIM units replaced by one {c3_f * 1e12:.2f} pF cap_mim_2f0_m4m5_noshield' if c3_f else 'extracted'
+        inc['c2_model'] = ('PDK cap_nmos_03v3_b instances' if c2_model == 'pdk' else
+                           f'{len(c2)} x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); '
+                           'the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)') if c2_model != 'b' else f'{len(c2)} x cap_nmos_03v3_b w{w_um:g} l{l_um:g} -> one B-source i = C(V) dV/dt (PDK C(V), same constants and corner factor)'
+    if div == 'x':
+        (wd / 'mmd_rc.spice').write_text(MMD_RC.read_text().replace('.subckt pt_lo_mmd_flat', '.subckt pt_lo_mmd')
+                                         .replace('.ends pt_lo_mmd_flat', '.ends'))
+        inc['mmd_rc.spice'] = md5(wd / 'mmd_rc.spice')
+        inc['generated/lo_mmd.gds'] = md5(HERE.parent / 'generated' / 'lo_mmd.gds')
+    fstat = None
+    if fracn:   # the MASH realises frac = round(frac x 2^16) / 2^16: use the REALISED ratio as the target
+        n_req = n
+        h = n / 2
+        n = 2 * (math.floor(h) + round((h - math.floor(h)) * 65536) / 65536)
+        m_div = n if m_div == n_req else m_div
+        txt, fstat = fracn_q(n, fref, t_end)
+        fstat['n_requested'] = n_req
+        (wd / 'fracq.spice').write_text(txt)
+    for f in list(wd.glob('lk_*.spice')) + list(wd.glob('fracq.spice')):
         inc[f.name] = md5(f)
     lfv = lfv or LF_R4
-    hdr = header(corner, temp).replace('reltol=1e-3', 'reltol=1e-4') if (pfd == 'x' or lf == 'x') else ''
+    hdr = header(corner, temp).replace('reltol=1e-3', 'reltol=1e-4').replace('method=gear', f'method={method}') if (pfd == 'x' or lf == 'x' or div == 'x') else ''
     deck = '* ' + run + '\n' + hdr + tb_ladder(v, n, m_div, fref, kv, df0, vt0, icp, t_end, pfd, lf, lfv, en,
-                                                icp_bits=bits, tmax=tmax) + '.end\n'
+                                                icp_bits=bits, tmax=tmax, fracn=fracn, div=div,
+                                                vco_amp=vco_amp, vco_cm=vco_cm) + '.end\n'
     tf.ngspice(wd, 'lad', deck, timeout=11 * 3600)
     fc, pm = loop_margins(lfv, icp, kv, n) if kv > 0 else (0.0, 0.0)
     an = (lfv, icp, kv, n, df0) if small_step else None
     try:
-        r = analyse_ladder(wd / 'lad.raw', fref, n, v, t_end, analytic=an)
+        r = analyse_ladder(wd / 'lad.raw', fref, n, v, t_end, analytic=an, fracn=bool(fracn))
     except Exception as e:  # noqa
         r = dict(error=repr(e)[:300], log_tail=(wd / 'lad.log').read_text(errors='replace')[-800:])
         r['pass'] = False
     r.update(run=run, rung=rung, corner=corner, temp_c=temp, vdd=v, n=n, m_div=m_div, kv_hz_v=kv, df0_hz=df0, vt0=vt0,
-             icp_a=icp, icp_code=code, cp_enabled=en, pfd=pfd, lf=lf, lf_values=lfv, t_end_s=t_end,
+             icp_a=icp, icp_code=code, method=method, fracn=fstat, div=div, vco_amp_per_leg=vco_amp, vco_cm=vco_cm, c2_model=c2_model, c3_override_f=c3_f, cp_enabled=en, pfd=pfd, lf=lf, lf_values=lfv, t_end_s=t_end,
              analytic_fc_hz=fc, analytic_pm_deg=pm, expect=expect, limits=LADDER_LIMITS,
              includes_md5=inc, deck_md5=md5(wd / 'lad.spice'), dir=str(wd.relative_to(REPO)),
-             vco='behavioural phase integrator', divider='behavioural (exact /m_div of VCO phase)')
+             vco='behavioural phase integrator', divider='behavioural (exact /m_div of VCO phase)' if div != 'x' else
+             'RC-extracted pt_lo_mmd (flat Magic extresist), behavioural tank sine on LP/LN')
     if pfd == 'ideal' and lf == 'ideal' and not small_step:
         r['hop4_reference'] = hop4(lfv, icp if en else 0.0, kv, n, df0, fref, t_end, m_div)
     r['as_expected'] = (r['pass'] == (expect == 'pass')) and 'error' not in r   # a crash is never 'as expected'

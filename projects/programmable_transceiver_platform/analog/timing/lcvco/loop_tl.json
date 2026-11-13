@@ -1125,182 +1125,6 @@
  ],
  "ladder": [
   {
-   "n_ref_edges": 2000,
-   "n_fb_edges": 2000,
-   "dphi_max_abs_cyc": 0.708525658,
-   "vtune_final_v": 1.63333514,
-   "vtune_min_v": 1.62924419,
-   "vtune_max_v": 1.65,
-   "hold_edge_counts_ref_fb": [
-    [
-     500,
-     500
-    ],
-    [
-     500,
-     500
-    ]
-   ],
-   "spo_ps": -3.104230044232391,
-   "spo_halves_ps": [
-    -3.077189848080058,
-    -3.1312702403847243
-   ],
-   "hold_phase_err_max_deg": 0.4764875230980908,
-   "t_lock_2deg_s": 1.5682025e-05,
-   "f_err_hold_hz": -51.77492144373032,
-   "step_sim_peak_cyc": 0.708525658,
-   "step_analytic_peak_cyc": 0.7105924931483555,
-   "step_t_peak_sim_s": 1.270742e-06,
-   "step_t_peak_analytic_s": 1.278005e-06,
-   "step_err_peak_rel": 0.0029086081942663804,
-   "step_err_rms_rel": 0.008370483855664966,
-   "checks": {
-    "edge_counts": true,
-    "phase_err": true,
-    "spo_drift": true,
-    "spo_abs": true,
-    "f_err": true,
-    "vtune_window": true,
-    "t_lock": true,
-    "step_match": true
-   },
-   "pass": true,
-   "run": "r1_step_kv60_n49",
-   "rung": 1,
-   "corner": "tt",
-   "temp_c": 27,
-   "vdd": 3.3,
-   "n": 49,
-   "m_div": 49,
-   "kv_hz_v": 60000000.0,
-   "df0_hz": 1000000.0,
-   "vt0": 1.65,
-   "icp_a": 0.0001,
-   "icp_code": 3,
-   "cp_enabled": true,
-   "pfd": "ideal",
-   "lf": "ideal",
-   "lf_values": {
-    "r_ohm": 13090.0,
-    "c1_f": 6.96e-12,
-    "c2_f": 3.51e-10,
-    "r3_ohm": 10000.0,
-    "c3_f": 1.59e-11
-   },
-   "t_end_s": 4e-05,
-   "analytic_fc_hz": 213640.3309590169,
-   "analytic_pm_deg": 49.99186386449543,
-   "expect": "pass",
-   "limits": {
-    "t_lock_max_s": 5e-05,
-    "hold_window_s": 2e-05,
-    "lo_phase_err_deg": 2.0,
-    "spo_drift_ps": 1.0,
-    "spo_abs_max_ps": 1000.0,
-    "f_err_max_hz": 1000.0,
-    "vtune_window_v": [
-     0.8,
-     2.5
-    ],
-    "step_match_rel": 0.05
-   },
-   "includes_md5": {},
-   "deck_md5": "14009cbb3a48c121550ece0a25125987",
-   "dir": "scratch/lo/r5_ladder/r1_step_kv60_n49",
-   "vco": "behavioural phase integrator",
-   "divider": "behavioural (exact /m_div of VCO phase)",
-   "as_expected": true
-  },
-  {
-   "n_ref_edges": 2000,
-   "n_fb_edges": 2000,
-   "dphi_max_abs_cyc": 0.7085256592618843,
-   "vtune_final_v": 1.6416675697649958,
-   "vtune_min_v": 1.6396220943611208,
-   "vtune_max_v": 1.6500000000000004,
-   "hold_edge_counts_ref_fb": [
-    [
-     500,
-     500
-    ],
-    [
-     500,
-     500
-    ]
-   ],
-   "spo_ps": -3.1048904588807065,
-   "spo_halves_ps": [
-    -3.0775862493349773,
-    -3.1321946684264352
-   ],
-   "hold_phase_err_max_deg": 0.47611215569735427,
-   "t_lock_2deg_s": 1.5682025000000002e-05,
-   "f_err_hold_hz": -51.68186737667041,
-   "step_sim_peak_cyc": 0.7085256592618843,
-   "step_analytic_peak_cyc": 0.7105924931483555,
-   "step_t_peak_sim_s": 1.270772000000036e-06,
-   "step_t_peak_analytic_s": 1.2780050000000381e-06,
-   "step_err_peak_rel": 0.0029086064184465177,
-   "step_err_rms_rel": 0.008371623381174769,
-   "checks": {
-    "edge_counts": true,
-    "phase_err": true,
-    "spo_drift": true,
-    "spo_abs": true,
-    "f_err": true,
-    "vtune_window": true,
-    "t_lock": true,
-    "step_match": true
-   },
-   "pass": true,
-   "run": "r1_step_kv120_n49",
-   "rung": 1,
-   "corner": "tt",
-   "temp_c": 27,
-   "vdd": 3.3,
-   "n": 49,
-   "m_div": 49,
-   "kv_hz_v": 120000000.0,
-   "df0_hz": 1000000.0,
-   "vt0": 1.65,
-   "icp_a": 5e-05,
-   "icp_code": 1,
-   "cp_enabled": true,
-   "pfd": "ideal",
-   "lf": "ideal",
-   "lf_values": {
-    "r_ohm": 13090.0,
-    "c1_f": 6.96e-12,
-    "c2_f": 3.51e-10,
-    "r3_ohm": 10000.0,
-    "c3_f": 1.59e-11
-   },
-   "t_end_s": 4e-05,
-   "analytic_fc_hz": 213640.3309590169,
-   "analytic_pm_deg": 49.99186386449543,
-   "expect": "pass",
-   "limits": {
-    "t_lock_max_s": 5e-05,
-    "hold_window_s": 2e-05,
-    "lo_phase_err_deg": 2.0,
-    "spo_drift_ps": 1.0,
-    "spo_abs_max_ps": 1000.0,
-    "f_err_max_hz": 1000.0,
-    "vtune_window_v": [
-     0.8,
-     2.5
-    ],
-    "step_match_rel": 0.05
-   },
-   "includes_md5": {},
-   "deck_md5": "f7f3c4eda14868973af6dc6b1ff189c2",
-   "dir": "scratch/lo/r5_ladder/r1_step_kv120_n49",
-   "vco": "behavioural phase integrator",
-   "divider": "behavioural (exact /m_div of VCO phase)",
-   "as_expected": true
-  },
-  {
    "n_ref_edges": 4000,
    "n_fb_edges": 4000,
    "dphi_max_abs_cyc": 22.39383971540869,
@@ -1469,6 +1293,264 @@
     "t_lock_2deg_s": 2.9140000000000002e-05,
     "vt_final_dv": 0.7894736842130718,
     "f_err_final_hz": 9.673088788986206e-05
+   },
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 4000,
+   "n_fb_edges": 4000,
+   "dphi_max_abs_cyc": 21.359138962974324,
+   "vtune_final_v": 2.1500000721440946,
+   "vtune_min_v": 1.6499999999999961,
+   "vtune_max_v": 2.272322294690121,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": 6.264043168039855,
+   "spo_halves_ps": [
+    6.272455631609573,
+    6.2556307044701365
+   ],
+   "hold_phase_err_max_deg": 0.19319573595939907,
+   "t_lock_2deg_s": 2.8682025000000003e-05,
+   "f_err_hold_hz": 27.40037904212479,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r1_acq_kv60_m30",
+   "rung": 1,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 49,
+   "m_div": 49,
+   "kv_hz_v": 60000000.0,
+   "df0_hz": -30000000.0,
+   "vt0": 1.65,
+   "icp_a": 0.0001,
+   "icp_code": 3,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090.0,
+    "c1_f": 6.96e-12,
+    "c2_f": 3.51e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.59e-11
+   },
+   "t_end_s": 8e-05,
+   "analytic_fc_hz": 213640.3309590169,
+   "analytic_pm_deg": 49.99186386449543,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {},
+   "deck_md5": "62ccf754a2328dac855c51d47a8cd831",
+   "dir": "scratch/lo/r5_ladder/r1_acq_kv60_m30",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 3.274e-05,
+    "vt_final_dv": 0.5000000001273944,
+    "f_err_final_hz": 0.007643666118383408
+   },
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 4000,
+   "n_fb_edges": 4000,
+   "dphi_max_abs_cyc": 21.35259699069366,
+   "vtune_final_v": 1.149999733500967,
+   "vtune_min_v": 1.0276200299258647,
+   "vtune_max_v": 1.6500000000000004,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -3.1675352817831914,
+   "spo_halves_ps": [
+    -3.199009728448686,
+    -3.136060835117697
+   ],
+   "hold_phase_err_max_deg": 0.05561237584940934,
+   "t_lock_2deg_s": 2.8942025e-05,
+   "f_err_hold_hz": -16.01706482411015,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r1_acq_kv60_p30",
+   "rung": 1,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 49,
+   "m_div": 49,
+   "kv_hz_v": 60000000.0,
+   "df0_hz": 30000000.0,
+   "vt0": 1.65,
+   "icp_a": 0.0001,
+   "icp_code": 3,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090.0,
+    "c1_f": 6.96e-12,
+    "c2_f": 3.51e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.59e-11
+   },
+   "t_end_s": 8e-05,
+   "analytic_fc_hz": 213640.3309590169,
+   "analytic_pm_deg": 49.99186386449543,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {},
+   "deck_md5": "32c6ddc16a7679da4c6369102e41c10d",
+   "dir": "scratch/lo/r5_ladder/r1_acq_kv60_p30",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 3.274e-05,
+    "vt_final_dv": -0.5000000001273944,
+    "f_err_final_hz": -0.007643666118383408
+   },
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 4000,
+   "n_fb_edges": 3951,
+   "dphi_max_abs_cyc": 2399.999998913741,
+   "vtune_final_v": 1.6500000000968729,
+   "vtune_min_v": 1.6499999999999697,
+   "vtune_max_v": 1.6500000000968729,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     494
+    ],
+    [
+     500,
+     493
+    ]
+   ],
+   "spo_ps": -181.57403409126073,
+   "spo_halves_ps": [
+    -181.57394983181126,
+    -181.5741183507102
+   ],
+   "hold_phase_err_max_deg": 9075.077121729979,
+   "t_lock_2deg_s": null,
+   "f_err_hold_hz": -29999999.968540505,
+   "checks": {
+    "edge_counts": false,
+    "phase_err": false,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": false,
+    "vtune_window": true,
+    "t_lock": false
+   },
+   "pass": false,
+   "run": "r1_fail_cpoff",
+   "rung": 1,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 49,
+   "m_div": 49,
+   "kv_hz_v": 60000000.0,
+   "df0_hz": -30000000.0,
+   "vt0": 1.65,
+   "icp_a": 0.0001,
+   "icp_code": 3,
+   "cp_enabled": false,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090.0,
+    "c1_f": 6.96e-12,
+    "c2_f": 3.51e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.59e-11
+   },
+   "t_end_s": 8e-05,
+   "analytic_fc_hz": 213640.3309590169,
+   "analytic_pm_deg": 49.99186386449543,
+   "expect": "fail",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {},
+   "deck_md5": "eb4f2ce49344bfd99a315031365b831e",
+   "dir": "scratch/lo/r5_ladder/r1_fail_cpoff",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 8e-05,
+    "vt_final_dv": 0.0,
+    "f_err_final_hz": -30000000.0
    },
    "as_expected": true
   },
@@ -1645,12 +1727,188 @@
    "as_expected": true
   },
   {
+   "n_ref_edges": 2000,
+   "n_fb_edges": 2000,
+   "dphi_max_abs_cyc": 0.7085256592618843,
+   "vtune_final_v": 1.6416675697649958,
+   "vtune_min_v": 1.6396220943611208,
+   "vtune_max_v": 1.6500000000000004,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -3.1048904588807065,
+   "spo_halves_ps": [
+    -3.0775862493349773,
+    -3.1321946684264352
+   ],
+   "hold_phase_err_max_deg": 0.47611215569735427,
+   "t_lock_2deg_s": 1.5682025000000002e-05,
+   "f_err_hold_hz": -51.68186737667041,
+   "step_sim_peak_cyc": 0.7085256592618843,
+   "step_analytic_peak_cyc": 0.7105924931483555,
+   "step_t_peak_sim_s": 1.270772000000036e-06,
+   "step_t_peak_analytic_s": 1.2780050000000381e-06,
+   "step_err_peak_rel": 0.0029086064184465177,
+   "step_err_rms_rel": 0.008371623381174769,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true,
+    "step_match": true
+   },
+   "pass": true,
+   "run": "r1_step_kv120_n49",
+   "rung": 1,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 49,
+   "m_div": 49,
+   "kv_hz_v": 120000000.0,
+   "df0_hz": 1000000.0,
+   "vt0": 1.65,
+   "icp_a": 5e-05,
+   "icp_code": 1,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090.0,
+    "c1_f": 6.96e-12,
+    "c2_f": 3.51e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.59e-11
+   },
+   "t_end_s": 4e-05,
+   "analytic_fc_hz": 213640.3309590169,
+   "analytic_pm_deg": 49.99186386449543,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {},
+   "deck_md5": "f7f3c4eda14868973af6dc6b1ff189c2",
+   "dir": "scratch/lo/r5_ladder/r1_step_kv120_n49",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 2000,
+   "n_fb_edges": 2000,
+   "dphi_max_abs_cyc": 0.708525658,
+   "vtune_final_v": 1.63333514,
+   "vtune_min_v": 1.62924419,
+   "vtune_max_v": 1.65,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -3.104230044232391,
+   "spo_halves_ps": [
+    -3.077189848080058,
+    -3.1312702403847243
+   ],
+   "hold_phase_err_max_deg": 0.4764875230980908,
+   "t_lock_2deg_s": 1.5682025e-05,
+   "f_err_hold_hz": -51.77492144373032,
+   "step_sim_peak_cyc": 0.708525658,
+   "step_analytic_peak_cyc": 0.7105924931483555,
+   "step_t_peak_sim_s": 1.270742e-06,
+   "step_t_peak_analytic_s": 1.278005e-06,
+   "step_err_peak_rel": 0.0029086081942663804,
+   "step_err_rms_rel": 0.008370483855664966,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true,
+    "step_match": true
+   },
+   "pass": true,
+   "run": "r1_step_kv60_n49",
+   "rung": 1,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 49,
+   "m_div": 49,
+   "kv_hz_v": 60000000.0,
+   "df0_hz": 1000000.0,
+   "vt0": 1.65,
+   "icp_a": 0.0001,
+   "icp_code": 3,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090.0,
+    "c1_f": 6.96e-12,
+    "c2_f": 3.51e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.59e-11
+   },
+   "t_end_s": 4e-05,
+   "analytic_fc_hz": 213640.3309590169,
+   "analytic_pm_deg": 49.99186386449543,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {},
+   "deck_md5": "14009cbb3a48c121550ece0a25125987",
+   "dir": "scratch/lo/r5_ladder/r1_step_kv60_n49",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
    "n_ref_edges": 4000,
    "n_fb_edges": 3951,
-   "dphi_max_abs_cyc": 2399.999998913741,
-   "vtune_final_v": 1.6500000000968729,
-   "vtune_min_v": 1.6499999999999697,
-   "vtune_max_v": 1.6500000000968729,
+   "dphi_max_abs_cyc": 2400.0000273434334,
+   "vtune_final_v": 1.6499999888357035,
+   "vtune_min_v": 1.6499999888357035,
+   "vtune_max_v": 1.650000000000004,
    "hold_edge_counts_ref_fb": [
     [
      500,
@@ -1661,14 +1919,14 @@
      493
     ]
    ],
-   "spo_ps": -181.57403409126073,
+   "spo_ps": -181.5647555144796,
    "spo_halves_ps": [
-    -181.57394983181126,
-    -181.5741183507102
+    -181.56593846883527,
+    -181.5635725601239
    ],
-   "hold_phase_err_max_deg": 9075.077121729979,
+   "hold_phase_err_max_deg": 9075.078404296775,
    "t_lock_2deg_s": null,
-   "f_err_hold_hz": -29999999.968540505,
+   "f_err_hold_hz": -30000000.573757764,
    "checks": {
     "edge_counts": false,
     "phase_err": false,
@@ -1679,8 +1937,8 @@
     "t_lock": false
    },
    "pass": false,
-   "run": "r1_fail_cpoff",
-   "rung": 1,
+   "run": "r2_fail_lfx_cpoff",
+   "rung": 2,
    "corner": "tt",
    "temp_c": 27,
    "vdd": 3.3,
@@ -1691,9 +1949,12 @@
    "vt0": 1.65,
    "icp_a": 0.0001,
    "icp_code": 3,
+   "method": "gear",
+   "c2_model": "lin",
+   "c3_override_f": null,
    "cp_enabled": false,
    "pfd": "ideal",
-   "lf": "ideal",
+   "lf": "x",
    "lf_values": {
     "r_ohm": 13090.0,
     "c1_f": 6.96e-12,
@@ -1718,25 +1979,25 @@
     ],
     "step_match_rel": 0.05
    },
-   "includes_md5": {},
-   "deck_md5": "eb4f2ce49344bfd99a315031365b831e",
-   "dir": "scratch/lo/r5_ladder/r1_fail_cpoff",
+   "includes_md5": {
+    "generated/lo_lf.ext.spice": "0159c2af1678f05a9f981dc9148db92a",
+    "c3": "extracted",
+    "c2_model": "61 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "e6dc1a9c01c87c96a2b950f9b9331b09"
+   },
+   "deck_md5": "e314423f1fd17e4340e0f8a4c4f3d1fd",
+   "dir": "scratch/lo/r5_ladder/r2_fail_lfx_cpoff",
    "vco": "behavioural phase integrator",
    "divider": "behavioural (exact /m_div of VCO phase)",
-   "hop4_reference": {
-    "t_lock_2deg_s": 8e-05,
-    "vt_final_dv": 0.0,
-    "f_err_final_hz": -30000000.0
-   },
    "as_expected": true
   },
   {
    "n_ref_edges": 4000,
    "n_fb_edges": 4000,
-   "dphi_max_abs_cyc": 21.35259699069366,
-   "vtune_final_v": 1.149999733500967,
-   "vtune_min_v": 1.0276200299258647,
-   "vtune_max_v": 1.6500000000000004,
+   "dphi_max_abs_cyc": 23.134132632632266,
+   "vtune_final_v": 1.5000000601026182,
+   "vtune_min_v": 1.4694359212248143,
+   "vtune_max_v": 1.650000000000001,
    "hold_edge_counts_ref_fb": [
     [
      500,
@@ -1747,14 +2008,14 @@
      500
     ]
    ],
-   "spo_ps": -3.1675352817831914,
+   "spo_ps": -3.1639478397535536,
    "spo_halves_ps": [
-    -3.199009728448686,
-    -3.136060835117697
+    -3.137106310943834,
+    -3.190789368563273
    ],
-   "hold_phase_err_max_deg": 0.05561237584940934,
-   "t_lock_2deg_s": 2.8942025e-05,
-   "f_err_hold_hz": -16.01706482411015,
+   "hold_phase_err_max_deg": 0.04276920785302278,
+   "t_lock_2deg_s": 2.2802025e-05,
+   "f_err_hold_hz": 12.229353542878245,
    "checks": {
     "edge_counts": true,
     "phase_err": true,
@@ -1765,190 +2026,21 @@
     "t_lock": true
    },
    "pass": true,
-   "run": "r1_acq_kv60_p30",
-   "rung": 1,
-   "corner": "tt",
-   "temp_c": 27,
-   "vdd": 3.3,
-   "n": 49,
-   "m_div": 49,
-   "kv_hz_v": 60000000.0,
-   "df0_hz": 30000000.0,
-   "vt0": 1.65,
-   "icp_a": 0.0001,
-   "icp_code": 3,
-   "cp_enabled": true,
-   "pfd": "ideal",
-   "lf": "ideal",
-   "lf_values": {
-    "r_ohm": 13090.0,
-    "c1_f": 6.96e-12,
-    "c2_f": 3.51e-10,
-    "r3_ohm": 10000.0,
-    "c3_f": 1.59e-11
-   },
-   "t_end_s": 8e-05,
-   "analytic_fc_hz": 213640.3309590169,
-   "analytic_pm_deg": 49.99186386449543,
-   "expect": "pass",
-   "limits": {
-    "t_lock_max_s": 5e-05,
-    "hold_window_s": 2e-05,
-    "lo_phase_err_deg": 2.0,
-    "spo_drift_ps": 1.0,
-    "spo_abs_max_ps": 1000.0,
-    "f_err_max_hz": 1000.0,
-    "vtune_window_v": [
-     0.8,
-     2.5
-    ],
-    "step_match_rel": 0.05
-   },
-   "includes_md5": {},
-   "deck_md5": "32c6ddc16a7679da4c6369102e41c10d",
-   "dir": "scratch/lo/r5_ladder/r1_acq_kv60_p30",
-   "vco": "behavioural phase integrator",
-   "divider": "behavioural (exact /m_div of VCO phase)",
-   "hop4_reference": {
-    "t_lock_2deg_s": 3.274e-05,
-    "vt_final_dv": -0.5000000001273944,
-    "f_err_final_hz": -0.007643666118383408
-   },
-   "as_expected": true
-  },
-  {
-   "n_ref_edges": 4000,
-   "n_fb_edges": 4000,
-   "dphi_max_abs_cyc": 21.359138962974324,
-   "vtune_final_v": 2.1500000721440946,
-   "vtune_min_v": 1.6499999999999961,
-   "vtune_max_v": 2.272322294690121,
-   "hold_edge_counts_ref_fb": [
-    [
-     500,
-     500
-    ],
-    [
-     500,
-     500
-    ]
-   ],
-   "spo_ps": 6.264043168039855,
-   "spo_halves_ps": [
-    6.272455631609573,
-    6.2556307044701365
-   ],
-   "hold_phase_err_max_deg": 0.19319573595939907,
-   "t_lock_2deg_s": 2.8682025000000003e-05,
-   "f_err_hold_hz": 27.40037904212479,
-   "checks": {
-    "edge_counts": true,
-    "phase_err": true,
-    "spo_drift": true,
-    "spo_abs": true,
-    "f_err": true,
-    "vtune_window": true,
-    "t_lock": true
-   },
-   "pass": true,
-   "run": "r1_acq_kv60_m30",
-   "rung": 1,
-   "corner": "tt",
-   "temp_c": 27,
-   "vdd": 3.3,
-   "n": 49,
-   "m_div": 49,
-   "kv_hz_v": 60000000.0,
-   "df0_hz": -30000000.0,
-   "vt0": 1.65,
-   "icp_a": 0.0001,
-   "icp_code": 3,
-   "cp_enabled": true,
-   "pfd": "ideal",
-   "lf": "ideal",
-   "lf_values": {
-    "r_ohm": 13090.0,
-    "c1_f": 6.96e-12,
-    "c2_f": 3.51e-10,
-    "r3_ohm": 10000.0,
-    "c3_f": 1.59e-11
-   },
-   "t_end_s": 8e-05,
-   "analytic_fc_hz": 213640.3309590169,
-   "analytic_pm_deg": 49.99186386449543,
-   "expect": "pass",
-   "limits": {
-    "t_lock_max_s": 5e-05,
-    "hold_window_s": 2e-05,
-    "lo_phase_err_deg": 2.0,
-    "spo_drift_ps": 1.0,
-    "spo_abs_max_ps": 1000.0,
-    "f_err_max_hz": 1000.0,
-    "vtune_window_v": [
-     0.8,
-     2.5
-    ],
-    "step_match_rel": 0.05
-   },
-   "includes_md5": {},
-   "deck_md5": "62ccf754a2328dac855c51d47a8cd831",
-   "dir": "scratch/lo/r5_ladder/r1_acq_kv60_m30",
-   "vco": "behavioural phase integrator",
-   "divider": "behavioural (exact /m_div of VCO phase)",
-   "hop4_reference": {
-    "t_lock_2deg_s": 3.274e-05,
-    "vt_final_dv": 0.5000000001273944,
-    "f_err_final_hz": 0.007643666118383408
-   },
-   "as_expected": true
-  },
-  {
-   "n_ref_edges": 1250,
-   "n_fb_edges": 1250,
-   "dphi_max_abs_cyc": 21.32865380527053,
-   "vtune_final_v": 1.1496044660496085,
-   "vtune_min_v": 1.0260580821730894,
-   "vtune_max_v": 1.6500000000000101,
-   "hold_edge_counts_ref_fb": [
-    [
-     500,
-     499
-    ],
-    [
-     500,
-     500
-    ]
-   ],
-   "spo_ps": -590.4040391193337,
-   "spo_halves_ps": [
-    -1059.8631850153588,
-    -120.94489322330847
-   ],
-   "hold_phase_err_max_deg": 2223.5729529505975,
-   "t_lock_2deg_s": null,
-   "f_err_hold_hz": -376267.2158314697,
-   "checks": {
-    "edge_counts": false,
-    "phase_err": false,
-    "spo_drift": false,
-    "spo_abs": true,
-    "f_err": false,
-    "vtune_window": true,
-    "t_lock": false
-   },
-   "pass": false,
-   "run": "dbg_lfx_short",
+   "run": "r2_lfx_ff22_kv200_n44_p30",
    "rung": 2,
-   "corner": "tt",
-   "temp_c": 27,
-   "vdd": 3.3,
-   "n": 49,
-   "m_div": 49,
-   "kv_hz_v": 60000000.0,
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd": 3.35,
+   "n": 44,
+   "m_div": 44,
+   "kv_hz_v": 200000000.0,
    "df0_hz": 30000000.0,
    "vt0": 1.65,
-   "icp_a": 0.0001,
-   "icp_code": 3,
+   "icp_a": 2.5e-05,
+   "icp_code": 0,
+   "method": "gear",
+   "c2_model": "lin",
+   "c3_override_f": null,
    "cp_enabled": true,
    "pfd": "ideal",
    "lf": "x",
@@ -1959,7 +2051,185 @@
     "r3_ohm": 10000.0,
     "c3_f": 1.59e-11
    },
-   "t_end_s": 2.5e-05,
+   "t_end_s": 8e-05,
+   "analytic_fc_hz": 201167.3935387562,
+   "analytic_pm_deg": 50.994750810718614,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_lf.ext.spice": "0159c2af1678f05a9f981dc9148db92a",
+    "c3": "extracted",
+    "c2_model": "61 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "e6dc1a9c01c87c96a2b950f9b9331b09"
+   },
+   "deck_md5": "d3e6b93955cd8dd7e08d05b5e8c06632",
+   "dir": "scratch/lo/r5_ladder/r2_lfx_ff22_kv200_n44_p30",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 4000,
+   "n_fb_edges": 4000,
+   "dphi_max_abs_cyc": 30.61711033088756,
+   "vtune_final_v": 2.439471827901517,
+   "vtune_min_v": 1.6499999999936772,
+   "vtune_max_v": 2.620110907892082,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": 5.296189973125892,
+   "spo_halves_ps": [
+    5.249183439260882,
+    5.343196506990902
+   ],
+   "hold_phase_err_max_deg": 0.28830012791143667,
+   "t_lock_2deg_s": 4.5402025e-05,
+   "f_err_hold_hz": -23.07248005050149,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r2_lfx_ss32_kv38_n56_m30",
+   "rung": 2,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "n": 56,
+   "m_div": 56,
+   "kv_hz_v": 38000000.0,
+   "df0_hz": -30000000.0,
+   "vt0": 1.65,
+   "icp_a": 0.0001,
+   "icp_code": 3,
+   "method": "gear",
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 13090.0,
+    "c1_f": 6.96e-12,
+    "c2_f": 3.51e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.59e-11
+   },
+   "t_end_s": 8e-05,
+   "analytic_fc_hz": 130482.68621024747,
+   "analytic_pm_deg": 55.413950825561926,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_lf.ext.spice": "0159c2af1678f05a9f981dc9148db92a",
+    "c3": "extracted",
+    "c2_model": "61 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "e6dc1a9c01c87c96a2b950f9b9331b09"
+   },
+   "deck_md5": "8835a4f3155fde8274ac7e7221807b3f",
+   "dir": "scratch/lo/r5_ladder/r2_lfx_ss32_kv38_n56_m30",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 4000,
+   "n_fb_edges": 4000,
+   "dphi_max_abs_cyc": 21.334266476854133,
+   "vtune_final_v": 2.15000135827088,
+   "vtune_min_v": 1.6499999999936854,
+   "vtune_max_v": 2.27392219142596,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": 5.970283124419307,
+   "spo_halves_ps": [
+    6.213632225800714,
+    5.726934023037901
+   ],
+   "hold_phase_err_max_deg": 0.45285051212469213,
+   "t_lock_2deg_s": 3.4602025e-05,
+   "f_err_hold_hz": 81.19107537236734,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r2_lfx_tt_kv60_m30",
+   "rung": 2,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 49,
+   "m_div": 49,
+   "kv_hz_v": 60000000.0,
+   "df0_hz": -30000000.0,
+   "vt0": 1.65,
+   "icp_a": 0.0001,
+   "icp_code": 3,
+   "method": "gear",
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 13090.0,
+    "c1_f": 6.96e-12,
+    "c2_f": 3.51e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.59e-11
+   },
+   "t_end_s": 8e-05,
    "analytic_fc_hz": 213640.3309590169,
    "analytic_pm_deg": 49.99186386449543,
    "expect": "pass",
@@ -1978,22 +2248,23 @@
    },
    "includes_md5": {
     "generated/lo_lf.ext.spice": "0159c2af1678f05a9f981dc9148db92a",
-    "c2_model": "61 x cap_nmos_03v3_b w40 l40 -> one B-source i = C(V) dV/dt (PDK C(V), same constants and corner factor)",
-    "lk_lf.spice": "a35b65583faf3d445a89611a51c4f9ae"
+    "c3": "extracted",
+    "c2_model": "61 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "e6dc1a9c01c87c96a2b950f9b9331b09"
    },
-   "deck_md5": "dfc555bdc232e4b10c2fe1f8ebccc65b",
-   "dir": "scratch/lo/r5_ladder/dbg_lfx_short",
+   "deck_md5": "262f932b0382012dbedefe0d20928502",
+   "dir": "scratch/lo/r5_ladder/r2_lfx_tt_kv60_m30",
    "vco": "behavioural phase integrator",
    "divider": "behavioural (exact /m_div of VCO phase)",
-   "as_expected": false
+   "as_expected": true
   },
   {
    "n_ref_edges": 4000,
    "n_fb_edges": 4000,
-   "dphi_max_abs_cyc": 21.32865380527053,
-   "vtune_final_v": 1.1500100968172084,
-   "vtune_min_v": 1.0260580821730894,
-   "vtune_max_v": 1.6500000000000101,
+   "dphi_max_abs_cyc": 21.328519279399266,
+   "vtune_final_v": 1.1500001017173693,
+   "vtune_min_v": 1.026088515473153,
+   "vtune_max_v": 1.650000000000004,
    "hold_edge_counts_ref_fb": [
     [
      500,
@@ -2004,24 +2275,24 @@
      500
     ]
    ],
-   "spo_ps": 3.237400121201481,
+   "spo_ps": -3.2568744115458665,
    "spo_halves_ps": [
-    3.1191438321087617,
-    3.3556564102942
+    -3.26468494301008,
+    -3.2490638800816534
    ],
-   "hold_phase_err_max_deg": 2.0654795642393275,
-   "t_lock_2deg_s": 6.0082025e-05,
-   "f_err_hold_hz": -144.315610692198,
+   "hold_phase_err_max_deg": 0.23025837413517303,
+   "t_lock_2deg_s": 3.3442025e-05,
+   "f_err_hold_hz": 13.754176211581305,
    "checks": {
     "edge_counts": true,
-    "phase_err": false,
+    "phase_err": true,
     "spo_drift": true,
     "spo_abs": true,
     "f_err": true,
     "vtune_window": true,
-    "t_lock": false
+    "t_lock": true
    },
-   "pass": false,
+   "pass": true,
    "run": "r2_lfx_tt_kv60_p30",
    "rung": 2,
    "corner": "tt",
@@ -2034,6 +2305,9 @@
    "vt0": 1.65,
    "icp_a": 0.0001,
    "icp_code": 3,
+   "method": "gear",
+   "c2_model": "lin",
+   "c3_override_f": null,
    "cp_enabled": true,
    "pfd": "ideal",
    "lf": "x",
@@ -2063,14 +2337,1988 @@
    },
    "includes_md5": {
     "generated/lo_lf.ext.spice": "0159c2af1678f05a9f981dc9148db92a",
-    "c2_model": "61 x cap_nmos_03v3_b w40 l40 -> one B-source i = C(V) dV/dt (PDK C(V), same constants and corner factor)",
-    "lk_lf.spice": "a35b65583faf3d445a89611a51c4f9ae"
+    "c3": "extracted",
+    "c2_model": "61 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "e6dc1a9c01c87c96a2b950f9b9331b09"
    },
    "deck_md5": "a97447e36c10e203f6e510f39f2e6a3b",
    "dir": "scratch/lo/r5_ladder/r2_lfx_tt_kv60_p30",
    "vco": "behavioural phase integrator",
    "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3501,
+   "dphi_max_abs_cyc": 80.3617830248792,
+   "vtune_final_v": 1.7999992096171686,
+   "vtune_min_v": 1.7579573470923247,
+   "vtune_max_v": 2.1019215193435525,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -59.58151858578798,
+   "spo_halves_ps": [
+    -59.5819462899925,
+    -59.581090881583464
+   ],
+   "hold_phase_err_max_deg": 0.0027762513967431734,
+   "t_lock_2deg_s": 2.3882025e-05,
+   "f_err_hold_hz": 0.04154114737722404,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r3_ff22_kv200_n44_icp25_p60",
+   "rung": 3,
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd": 3.35,
+   "n": 44,
+   "m_div": 44,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": 60000000.0,
+   "vt0": 2.1,
+   "icp_a": 2.5e-05,
+   "icp_code": 0,
+   "method": "gear",
+   "c2_model": "lin",
+   "c3_override_f": 1.06e-11,
+   "cp_enabled": true,
+   "pfd": "x",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 212719.93675694216,
+   "analytic_pm_deg": 57.00116554418956,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_pfdcp.ext.spice": "0bc78d50295d2d2f2e30dc5ae5c19dda",
+    "generated/lo_lf.ext.spice": "0159c2af1678f05a9f981dc9148db92a",
+    "c3": "extracted C3 MIM units replaced by one 10.60 pF cap_mim_2f0_m4m5_noshield",
+    "c2_model": "61 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "ac38792d341576469974f91873ab1518",
+    "lk_pfdcp.spice": "3cec119060413233be05f85d0f6db3b1"
+   },
+   "deck_md5": "f5e993c1f7ab4bd063af9857c705e37e",
+   "dir": "scratch/lo/r5_ladder/r3_ff22_kv200_n44_icp25_p60",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3500,
+   "dphi_max_abs_cyc": 27.205951055114507,
+   "vtune_final_v": 2.399998655378007,
+   "vtune_min_v": 2.099997085849392,
+   "vtune_max_v": 2.4553182584414626,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -157.91743290936475,
+   "spo_halves_ps": [
+    -157.91008835613582,
+    -157.92477746259368
+   ],
+   "hold_phase_err_max_deg": 0.01608997590924529,
+   "t_lock_2deg_s": 2.7562025000000003e-05,
+   "f_err_hold_hz": 1.8084147969409876,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r3_ff22_kv200_n44_icp50_m60",
+   "rung": 3,
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd": 3.35,
+   "n": 44,
+   "m_div": 44,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": -60000000.0,
+   "vt0": 2.1,
+   "icp_a": 5e-05,
+   "icp_code": 1,
+   "method": "gear",
+   "fracn": null,
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": 1.06e-11,
+   "cp_enabled": true,
+   "pfd": "x",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 373197.99211404944,
+   "analytic_pm_deg": 46.144360512709596,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_pfdcp.ext.spice": "0bc78d50295d2d2f2e30dc5ae5c19dda",
+    "generated/lo_lf.ext.spice": "0159c2af1678f05a9f981dc9148db92a",
+    "c3": "extracted C3 MIM units replaced by one 10.60 pF cap_mim_2f0_m4m5_noshield",
+    "c2_model": "61 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "ac38792d341576469974f91873ab1518",
+    "lk_pfdcp.spice": "3cec119060413233be05f85d0f6db3b1"
+   },
+   "deck_md5": "bae860f6b58dabc43502f1d2ba1693b8",
+   "dir": "scratch/lo/r5_ladder/r3_ff22_kv200_n44_icp50_m60",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3500,
+   "dphi_max_abs_cyc": 16.77815271155172,
+   "vtune_final_v": 2.4000006621033734,
+   "vtune_min_v": 2.099998435405296,
+   "vtune_max_v": 2.460906771106059,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -146.7153708330953,
+   "spo_halves_ps": [
+    -146.39191317229304,
+    -147.03882849389757
+   ],
+   "hold_phase_err_max_deg": 1.1595697131986347,
+   "t_lock_2deg_s": 4.7222025e-05,
+   "f_err_hold_hz": 215.6508483003568,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r3_ss32_kv80_n56_icp75_m24",
+   "rung": 3,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "n": 56,
+   "m_div": 56,
+   "kv_hz_v": 80000000.0,
+   "df0_hz": -24000000.0,
+   "vt0": 2.1,
+   "icp_a": 7.5e-05,
+   "icp_code": 2,
+   "method": "gear",
+   "c2_model": "lin",
+   "c3_override_f": 1.06e-11,
+   "cp_enabled": true,
+   "pfd": "x",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 202154.14102646644,
+   "analytic_pm_deg": 57.60608150307429,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_pfdcp.ext.spice": "0bc78d50295d2d2f2e30dc5ae5c19dda",
+    "generated/lo_lf.ext.spice": "0159c2af1678f05a9f981dc9148db92a",
+    "c3": "extracted C3 MIM units replaced by one 10.60 pF cap_mim_2f0_m4m5_noshield",
+    "c2_model": "61 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "ac38792d341576469974f91873ab1518",
+    "lk_pfdcp.spice": "3cec119060413233be05f85d0f6db3b1"
+   },
+   "deck_md5": "2f35c549499b02bf6ea421bd9330dd80",
+   "dir": "scratch/lo/r5_ladder/r3_ss32_kv80_n56_icp75_m24",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3500,
+   "dphi_max_abs_cyc": 16.730854575957444,
+   "vtune_final_v": 1.7999990941897444,
+   "vtune_min_v": 1.7343317321817104,
+   "vtune_max_v": 2.1000831671969293,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -73.44866364993095,
+   "spo_halves_ps": [
+    -73.88160094766428,
+    -73.01572635219763
+   ],
+   "hold_phase_err_max_deg": 1.7035971971491888,
+   "t_lock_2deg_s": 4.9302025e-05,
+   "f_err_hold_hz": -317.98417313135457,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r3_ss32_kv80_n56_icp75_p24",
+   "rung": 3,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "n": 56,
+   "m_div": 56,
+   "kv_hz_v": 80000000.0,
+   "df0_hz": 24000000.0,
+   "vt0": 2.1,
+   "icp_a": 7.5e-05,
+   "icp_code": 2,
+   "method": "gear",
+   "fracn": null,
+   "c2_model": "lin",
+   "c3_override_f": 1.06e-11,
+   "cp_enabled": true,
+   "pfd": "x",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 202154.14102646644,
+   "analytic_pm_deg": 57.60608150307429,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_pfdcp.ext.spice": "0bc78d50295d2d2f2e30dc5ae5c19dda",
+    "generated/lo_lf.ext.spice": "0159c2af1678f05a9f981dc9148db92a",
+    "c3": "extracted C3 MIM units replaced by one 10.60 pF cap_mim_2f0_m4m5_noshield",
+    "c2_model": "61 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "ac38792d341576469974f91873ab1518",
+    "lk_pfdcp.spice": "3cec119060413233be05f85d0f6db3b1"
+   },
+   "deck_md5": "1460d9c5be0d64c249ef44e919e4600e",
+   "dir": "scratch/lo/r5_ladder/r3_ss32_kv80_n56_icp75_p24",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3500,
+   "dphi_max_abs_cyc": 14.534572187963848,
+   "vtune_final_v": 2.4000004842971325,
+   "vtune_min_v": 2.0999990016064203,
+   "vtune_max_v": 2.4399892961426346,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -133.2045230428093,
+   "spo_halves_ps": [
+    -132.56787067901965,
+    -133.84117540659895
+   ],
+   "hold_phase_err_max_deg": 2.2740579124359406,
+   "t_lock_2deg_s": 5.0622025e-05,
+   "f_err_hold_hz": 437.1389617983234,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": false,
+    "spo_drift": false,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": false
+   },
+   "pass": false,
+   "run": "r3n_ss32_kv80_n56_icp100_m24",
+   "rung": 3,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "n": 56,
+   "m_div": 56,
+   "kv_hz_v": 80000000.0,
+   "df0_hz": -24000000.0,
+   "vt0": 2.1,
+   "icp_a": 0.0001,
+   "icp_code": 3,
+   "method": "gear",
+   "fracn": null,
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "x",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 10380,
+    "c1_f": 5.45e-12,
+    "c2_f": 4.896e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 8.84e-12
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 222297.03665238305,
+   "analytic_pm_deg": 63.940813114099825,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_pfdcp.ext.spice": "0bc78d50295d2d2f2e30dc5ae5c19dda",
+    "generated/lo_lf.ext.spice": "37fc51ddbe16c240875b1cc99551cb82",
+    "c3": "extracted",
+    "c2_model": "85 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "44fc5d0005027e7646306b3ee04dddee",
+    "lk_pfdcp.spice": "3cec119060413233be05f85d0f6db3b1"
+   },
+   "deck_md5": "4fc41baa863174346ca547d158372f67",
+   "dir": "scratch/lo/r5_ladder/r3n_ss32_kv80_n56_icp100_m24",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
    "as_expected": false
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3512,
+   "dphi_max_abs_cyc": 3449.2737879793913,
+   "vtune_final_v": 2.724962391261258,
+   "vtune_min_v": 2.081351901734804,
+   "vtune_max_v": 2.837241658515598,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": 1.2563991070345668,
+   "spo_halves_ps": [
+    1.2534632842325717,
+    1.259334929836562
+   ],
+   "hold_phase_err_max_deg": 26.37369768801231,
+   "t_lock_2deg_s": null,
+   "f_err_hold_hz": 49999665.99172087,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": false,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": false,
+    "vtune_window": false,
+    "t_lock": false
+   },
+   "pass": false,
+   "run": "r5_frac_fail_wrongN",
+   "rung": 5,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 49.600006103515625,
+   "m_div": 50.6,
+   "kv_hz_v": 80000000.0,
+   "df0_hz": 0,
+   "vt0": 2.1,
+   "icp_a": 7.5e-05,
+   "icp_code": 2,
+   "method": "gear",
+   "fracn": {
+    "nint": 24,
+    "frac": 0.8000030517578125,
+    "m_min": 44,
+    "m_max": 56,
+    "q_pp_cyc": 7.219818115234375,
+    "m_mean": 49.600685518423305,
+    "n_requested": 49.6
+   },
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 224483.1664091499,
+   "analytic_pm_deg": 56.29046270368977,
+   "expect": "fail",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "fracq.spice": "c28d02d263405087a7c157712477ca0a"
+   },
+   "deck_md5": "7e4f56cad099062617749ce1242f1edd",
+   "dir": "scratch/lo/r5_ladder/r5_frac_fail_wrongN",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 3.402e-05,
+    "vt_final_dv": 0.6249961866839742,
+    "f_err_final_hz": 0.11049910634756088
+   },
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3634,
+   "dphi_max_abs_cyc": 882.7354801572344,
+   "vtune_final_v": 2.400153857567132,
+   "vtune_min_v": 2.0200400936834506,
+   "vtune_max_v": 2.439471211399842,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": 281.8740686639616,
+   "spo_halves_ps": [
+    528.217431222508,
+    35.530706105415234
+   ],
+   "hold_phase_err_max_deg": 1537.5496375705739,
+   "t_lock_2deg_s": null,
+   "f_err_hold_hz": 246402.26722436017,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": false,
+    "spo_drift": false,
+    "spo_abs": true,
+    "f_err": false,
+    "vtune_window": true,
+    "t_lock": false
+   },
+   "pass": false,
+   "run": "r5_frac_ideal_kv200_n48p04_icp25_m60",
+   "rung": 5,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 48.040008544921875,
+   "m_div": 48.040008544921875,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": -60000000.0,
+   "vt0": 2.1,
+   "icp_a": 2.5e-05,
+   "icp_code": 0,
+   "method": "gear",
+   "fracn": {
+    "nint": 24,
+    "frac": 0.0200042724609375,
+    "m_min": 42,
+    "m_max": 54,
+    "q_pp_cyc": 7.399444580078125,
+    "m_mean": 48.03998857469294,
+    "n_requested": 48.04
+   },
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 197098.06791465927,
+   "analytic_pm_deg": 57.88217853759605,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "fracq.spice": "fd2b2e554d0444208d4778b5163968d5"
+   },
+   "deck_md5": "0aef67ee6dbe3f939ad570c8b1fd06b5",
+   "dir": "scratch/lo/r5_ladder/r5_frac_ideal_kv200_n48p04_icp25_m60",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 3.434e-05,
+    "vt_final_dv": 0.30000000043926117,
+    "f_err_final_hz": 0.08785223215818405
+   },
+   "as_expected": false
+  },
+  {
+   "n_ref_edges": 5000,
+   "n_fb_edges": 5134,
+   "dphi_max_abs_cyc": 882.7354801572344,
+   "vtune_final_v": 2.3999540288726964,
+   "vtune_min_v": 2.0200400936834506,
+   "vtune_max_v": 2.439471211399842,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": 2.0593314138388794,
+   "spo_halves_ps": [
+    1.8767490692416362,
+    2.2419137584361226
+   ],
+   "hold_phase_err_max_deg": 1.1441519357078653,
+   "t_lock_2deg_s": 7.4642025e-05,
+   "f_err_hold_hz": 136.67245360647223,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": false
+   },
+   "pass": false,
+   "run": "r5_frac_ideal_kv200_n48p04_icp25_m60_t100",
+   "rung": 5,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 48.040008544921875,
+   "m_div": 48.040008544921875,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": -60000000.0,
+   "vt0": 2.1,
+   "icp_a": 2.5e-05,
+   "icp_code": 0,
+   "method": "gear",
+   "fracn": {
+    "nint": 24,
+    "frac": 0.0200042724609375,
+    "m_min": 42,
+    "m_max": 54,
+    "q_pp_cyc": 7.56488037109375,
+    "m_mean": 48.04038384646142,
+    "n_requested": 48.04
+   },
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 0.0001,
+   "analytic_fc_hz": 197098.06791465927,
+   "analytic_pm_deg": 57.88217853759605,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "fracq.spice": "6f839ae8f72d78fce4e03562901372a6"
+   },
+   "deck_md5": "14115ac679bb6d7289143ee4a7de22d5",
+   "dir": "scratch/lo/r5_ladder/r5_frac_ideal_kv200_n48p04_icp25_m60_t100",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 3.434e-05,
+    "vt_final_dv": 0.30000000000011967,
+    "f_err_final_hz": 2.3931264877319336e-05
+   },
+   "as_expected": false
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3529,
+   "dphi_max_abs_cyc": 85.0219038695472,
+   "vtune_final_v": 1.8001093722174095,
+   "vtune_min_v": 1.73360523670819,
+   "vtune_max_v": 2.1,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": 1.0409283641136642,
+   "spo_halves_ps": [
+    0.935569003155455,
+    1.1462877250718733
+   ],
+   "hold_phase_err_max_deg": 1.419434356891888,
+   "t_lock_2deg_s": 3.3942024999999996e-05,
+   "f_err_hold_hz": -37.88370368919284,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r5_frac_ideal_kv200_n48p04_icp25_p60",
+   "rung": 5,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 48.040008544921875,
+   "m_div": 48.040008544921875,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": 60000000.0,
+   "vt0": 2.1,
+   "icp_a": 2.5e-05,
+   "icp_code": 0,
+   "method": "gear",
+   "fracn": {
+    "nint": 24,
+    "frac": 0.0200042724609375,
+    "m_min": 42,
+    "m_max": 54,
+    "q_pp_cyc": 7.399444580078125,
+    "m_mean": 48.03998857469294,
+    "n_requested": 48.04
+   },
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 197098.06791465927,
+   "analytic_pm_deg": 57.88217853759605,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "fracq.spice": "fd2b2e554d0444208d4778b5163968d5"
+   },
+   "deck_md5": "5882ced613f3667ab5d3c4396d5b991a",
+   "dir": "scratch/lo/r5_ladder/r5_frac_ideal_kv200_n48p04_icp25_p60",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 3.434e-05,
+    "vt_final_dv": -0.30000000043926117,
+    "f_err_final_hz": -0.08785223215818405
+   },
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 5000,
+   "n_fb_edges": 5103,
+   "dphi_max_abs_cyc": 943.1106893916133,
+   "vtune_final_v": 2.400117379752632,
+   "vtune_min_v": 1.983014938184156,
+   "vtune_max_v": 2.434849929583737,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": 1.8538449429851693,
+   "spo_halves_ps": [
+    1.7907523567720154,
+    1.9169375291983233
+   ],
+   "hold_phase_err_max_deg": 1.085768121717112,
+   "t_lock_2deg_s": 6.832202500000001e-05,
+   "f_err_hold_hz": -52.5814442287164,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": false
+   },
+   "pass": false,
+   "run": "r5_frac_ideal_kv200_n48p52_icp25_m60_t100",
+   "rung": 5,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 48.519989013671875,
+   "m_div": 48.519989013671875,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": -60000000.0,
+   "vt0": 2.1,
+   "icp_a": 2.5e-05,
+   "icp_code": 0,
+   "method": "gear",
+   "fracn": {
+    "nint": 24,
+    "frac": 0.2599945068359375,
+    "m_min": 42,
+    "m_max": 56,
+    "q_pp_cyc": 7.699554443359375,
+    "m_mean": 48.520191923230705,
+    "n_requested": 48.52
+   },
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 0.0001,
+   "analytic_fc_hz": 195403.47071909538,
+   "analytic_pm_deg": 57.972551087630634,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "fracq.spice": "cb32106a1bc733df241570deb67cba2b"
+   },
+   "deck_md5": "933338a26e00a54723da08a079878f4f",
+   "dir": "scratch/lo/r5_ladder/r5_frac_ideal_kv200_n48p52_icp25_m60_t100",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 3.43e-05,
+    "vt_final_dv": 0.3000000000001123,
+    "f_err_final_hz": 2.2456049919128418e-05
+   },
+   "as_expected": false
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3510,
+   "dphi_max_abs_cyc": 13.341755576757725,
+   "vtune_final_v": 1.799921380930222,
+   "vtune_min_v": 1.7081567784322687,
+   "vtune_max_v": 2.1,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": 1.0095067726901397,
+   "spo_halves_ps": [
+    0.8521548674004669,
+    1.1668586779798125
+   ],
+   "hold_phase_err_max_deg": 1.2996148821072986,
+   "t_lock_2deg_s": 3.2742025e-05,
+   "f_err_hold_hz": -53.850799128676115,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r5_frac_ideal_kv80_n49p6_icp75_p24",
+   "rung": 5,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 49.600006103515625,
+   "m_div": 49.600006103515625,
+   "kv_hz_v": 80000000.0,
+   "df0_hz": 24000000.0,
+   "vt0": 2.1,
+   "icp_a": 7.5e-05,
+   "icp_code": 2,
+   "method": "gear",
+   "fracn": {
+    "nint": 24,
+    "frac": 0.8000030517578125,
+    "m_min": 44,
+    "m_max": 56,
+    "q_pp_cyc": 7.219818115234375,
+    "m_mean": 49.600685518423305,
+    "n_requested": 49.6
+   },
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 224483.1664091499,
+   "analytic_pm_deg": 56.29046270368977,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "fracq.spice": "c28d02d263405087a7c157712477ca0a"
+   },
+   "deck_md5": "ad1b7042c94afdfb2c82b6397f417710",
+   "dir": "scratch/lo/r5_ladder/r5_frac_ideal_kv80_n49p6_icp75_p24",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 3.134e-05,
+    "vt_final_dv": -0.3000000006974281,
+    "f_err_final_hz": -0.05579424649477005
+   },
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3499,
+   "dphi_max_abs_cyc": 83.85012123098747,
+   "vtune_final_v": 2.4000002941862424,
+   "vtune_min_v": 2.0999999999997847,
+   "vtune_max_v": 2.44213172382463,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": 6.3681391364030056,
+   "spo_halves_ps": [
+    6.34586719448966,
+    6.39041107831635
+   ],
+   "hold_phase_err_max_deg": 0.15199239328071712,
+   "t_lock_2deg_s": 3.1982025e-05,
+   "f_err_hold_hz": 33.32520802833477,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r5_int_ideal_kv200_n48_icp25_m60",
+   "rung": 5,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 48,
+   "m_div": 48,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": -60000000.0,
+   "vt0": 2.1,
+   "icp_a": 2.5e-05,
+   "icp_code": 0,
+   "method": "gear",
+   "fracn": null,
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 197268.333822819,
+   "analytic_pm_deg": 57.87303630538845,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {},
+   "deck_md5": "4468c0f17aa394ae204a12dd4db6366a",
+   "dir": "scratch/lo/r5_ladder/r5_int_ideal_kv200_n48_icp25_m60",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 3.434e-05,
+    "vt_final_dv": 0.30000000044064845,
+    "f_err_final_hz": 0.0881296917796135
+   },
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3501,
+   "dphi_max_abs_cyc": 83.82131013672276,
+   "vtune_final_v": 1.7999999872307346,
+   "vtune_min_v": 1.7578698944784679,
+   "vtune_max_v": 2.1,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -3.3168241695807335,
+   "spo_halves_ps": [
+    -3.3628208961770154,
+    -3.2708274429844515
+   ],
+   "hold_phase_err_max_deg": 0.17365118278869426,
+   "t_lock_2deg_s": 3.1822024999999996e-05,
+   "f_err_hold_hz": 1.8173668510919936,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r5_int_ideal_kv200_n48_icp25_p60",
+   "rung": 5,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "n": 48,
+   "m_div": 48,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": 60000000.0,
+   "vt0": 2.1,
+   "icp_a": 2.5e-05,
+   "icp_code": 0,
+   "method": "gear",
+   "fracn": null,
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "ideal",
+   "lf": "ideal",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 197268.333822819,
+   "analytic_pm_deg": 57.87303630538845,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {},
+   "deck_md5": "fd027a3b7fe10d498fed7cdef20c44a9",
+   "dir": "scratch/lo/r5_ladder/r5_int_ideal_kv200_n48_icp25_p60",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "hop4_reference": {
+    "t_lock_2deg_s": 3.434e-05,
+    "vt_final_dv": -0.30000000044064845,
+    "f_err_final_hz": -0.0881296917796135
+   },
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3500,
+   "dphi_max_abs_cyc": 29.53020761227244,
+   "vtune_final_v": 2.399998367962495,
+   "vtune_min_v": 2.099997763380215,
+   "vtune_max_v": 2.434172633017078,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -157.8801995941111,
+   "spo_halves_ps": [
+    -157.87573863580207,
+    -157.88466055242012
+   ],
+   "hold_phase_err_max_deg": 0.03676847656907973,
+   "t_lock_2deg_s": 3.0302025e-05,
+   "f_err_hold_hz": 6.283988604299085,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r3n_ff22_kv200_n44_icp50_m60",
+   "rung": 3,
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd": 3.35,
+   "n": 44,
+   "m_div": 44,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": -60000000.0,
+   "vt0": 2.1,
+   "icp_a": 5e-05,
+   "icp_code": 1,
+   "method": "gear",
+   "fracn": null,
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "x",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 10380,
+    "c1_f": 5.45e-12,
+    "c2_f": 4.896e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 8.84e-12
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 335303.5379878442,
+   "analytic_pm_deg": 58.221401339535035,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_pfdcp.ext.spice": "0bc78d50295d2d2f2e30dc5ae5c19dda",
+    "generated/lo_lf.ext.spice": "37fc51ddbe16c240875b1cc99551cb82",
+    "c3": "extracted",
+    "c2_model": "85 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "44fc5d0005027e7646306b3ee04dddee",
+    "lk_pfdcp.spice": "3cec119060413233be05f85d0f6db3b1"
+   },
+   "deck_md5": "35d2645d782b13985def5bc723d66d2f",
+   "dir": "scratch/lo/r5_ladder/r3n_ff22_kv200_n44_icp50_m60",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3500,
+   "dphi_max_abs_cyc": 14.423135977036148,
+   "vtune_final_v": 1.7999974390772775,
+   "vtune_min_v": 1.7560456081528035,
+   "vtune_max_v": 2.100160715231096,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -67.48450932388107,
+   "spo_halves_ps": [
+    -68.27884176157035,
+    -66.69017688619178
+   ],
+   "hold_phase_err_max_deg": 3.0938983869971923,
+   "t_lock_2deg_s": 5.2022025e-05,
+   "f_err_hold_hz": -590.798751428488,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": false,
+    "spo_drift": false,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": false
+   },
+   "pass": false,
+   "run": "r3n_ss32_kv80_n56_icp100_p24",
+   "rung": 3,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "n": 56,
+   "m_div": 56,
+   "kv_hz_v": 80000000.0,
+   "df0_hz": 24000000.0,
+   "vt0": 2.1,
+   "icp_a": 0.0001,
+   "icp_code": 3,
+   "method": "gear",
+   "fracn": null,
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "x",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 10380,
+    "c1_f": 5.45e-12,
+    "c2_f": 4.896e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 8.84e-12
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 222297.03665238305,
+   "analytic_pm_deg": 63.940813114099825,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_pfdcp.ext.spice": "0bc78d50295d2d2f2e30dc5ae5c19dda",
+    "generated/lo_lf.ext.spice": "37fc51ddbe16c240875b1cc99551cb82",
+    "c3": "extracted",
+    "c2_model": "85 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "44fc5d0005027e7646306b3ee04dddee",
+    "lk_pfdcp.spice": "3cec119060413233be05f85d0f6db3b1"
+   },
+   "deck_md5": "8be0c38f6aaa62f8a2e48f6313c018f7",
+   "dir": "scratch/lo/r5_ladder/r3n_ss32_kv80_n56_icp100_p24",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": false
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3500,
+   "dphi_max_abs_cyc": 29.185208067473898,
+   "vtune_final_v": 1.7999989753749994,
+   "vtune_min_v": 1.7652545031769504,
+   "vtune_max_v": 2.1000599220526723,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -46.361608186529104,
+   "spo_halves_ps": [
+    -46.36674535665091,
+    -46.356471016407305
+   ],
+   "hold_phase_err_max_deg": 0.023261010549365316,
+   "t_lock_2deg_s": 3.4322024999999996e-05,
+   "f_err_hold_hz": -4.013660255711797,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r3n_ff22_kv200_n44_icp50_p60",
+   "rung": 3,
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd": 3.35,
+   "n": 44,
+   "m_div": 44,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": 60000000.0,
+   "vt0": 2.1,
+   "icp_a": 5e-05,
+   "icp_code": 1,
+   "method": "gear",
+   "fracn": null,
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "x",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 10380,
+    "c1_f": 5.45e-12,
+    "c2_f": 4.896e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 8.84e-12
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 335303.5379878442,
+   "analytic_pm_deg": 58.221401339535035,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_pfdcp.ext.spice": "0bc78d50295d2d2f2e30dc5ae5c19dda",
+    "generated/lo_lf.ext.spice": "37fc51ddbe16c240875b1cc99551cb82",
+    "c3": "extracted",
+    "c2_model": "85 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "44fc5d0005027e7646306b3ee04dddee",
+    "lk_pfdcp.spice": "3cec119060413233be05f85d0f6db3b1"
+   },
+   "deck_md5": "3ed5c08c3530b974c918385982e6edd1",
+   "dir": "scratch/lo/r5_ladder/r3n_ff22_kv200_n44_icp50_p60",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": true
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3509,
+   "dphi_max_abs_cyc": 30.913136301377644,
+   "vtune_final_v": 1.800036219392007,
+   "vtune_min_v": 1.7343724003489454,
+   "vtune_max_v": 2.1000604652682093,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -21.674012990025393,
+   "spo_halves_ps": [
+    -22.611873527889816,
+    -20.73615245216097
+   ],
+   "hold_phase_err_max_deg": 11.990924343720977,
+   "t_lock_2deg_s": null,
+   "f_err_hold_hz": 1064.3523815857038,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": false,
+    "spo_drift": false,
+    "spo_abs": true,
+    "f_err": false,
+    "vtune_window": true,
+    "t_lock": false
+   },
+   "pass": false,
+   "run": "r5n_frac_x_ff22_kv200_n48p04_icp50_p60",
+   "rung": 5,
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd": 3.35,
+   "n": 48.040008544921875,
+   "m_div": 48.040008544921875,
+   "kv_hz_v": 200000000.0,
+   "df0_hz": 60000000.0,
+   "vt0": 2.1,
+   "icp_a": 5e-05,
+   "icp_code": 1,
+   "method": "gear",
+   "fracn": {
+    "nint": 24,
+    "frac": 0.0200042724609375,
+    "m_min": 42,
+    "m_max": 54,
+    "q_pp_cyc": 7.399444580078125,
+    "m_mean": 48.03998857469294,
+    "n_requested": 48.04
+   },
+   "div": "ideal",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": null,
+   "cp_enabled": true,
+   "pfd": "x",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 10380,
+    "c1_f": 5.45e-12,
+    "c2_f": 4.896e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 8.84e-12
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 310858.19007066684,
+   "analytic_pm_deg": 59.56124041770535,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_pfdcp.ext.spice": "0bc78d50295d2d2f2e30dc5ae5c19dda",
+    "generated/lo_lf.ext.spice": "37fc51ddbe16c240875b1cc99551cb82",
+    "c3": "extracted",
+    "c2_model": "85 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "lk_lf.spice": "44fc5d0005027e7646306b3ee04dddee",
+    "lk_pfdcp.spice": "3cec119060413233be05f85d0f6db3b1",
+    "fracq.spice": "fd2b2e554d0444208d4778b5163968d5"
+   },
+   "deck_md5": "48809bc75b48b50a33c2150ce890de06",
+   "dir": "scratch/lo/r5_ladder/r5n_frac_x_ff22_kv200_n48p04_icp50_p60",
+   "vco": "behavioural phase integrator",
+   "divider": "behavioural (exact /m_div of VCO phase)",
+   "as_expected": false
+  },
+  {
+   "n_ref_edges": 3500,
+   "n_fb_edges": 3500,
+   "dphi_max_abs_cyc": 50.72311201060566,
+   "vtune_final_v": 2.399999600026569,
+   "vtune_min_v": 2.1,
+   "vtune_max_v": 2.774527869209637,
+   "hold_edge_counts_ref_fb": [
+    [
+     500,
+     500
+    ],
+    [
+     500,
+     500
+    ]
+   ],
+   "spo_ps": -174.32423074368242,
+   "spo_halves_ps": [
+    -174.13028233003803,
+    -174.5181791573268
+   ],
+   "hold_phase_err_max_deg": 0.7794598804291077,
+   "t_lock_2deg_s": 4.4822025e-05,
+   "f_err_hold_hz": 140.3952927168825,
+   "checks": {
+    "edge_counts": true,
+    "phase_err": true,
+    "spo_drift": true,
+    "spo_abs": true,
+    "f_err": true,
+    "vtune_window": true,
+    "t_lock": true
+   },
+   "pass": true,
+   "run": "r4_cl_ss32_kv80_n56_icp75_m24_mmdrc",
+   "rung": 4,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "n": 56,
+   "m_div": 56,
+   "kv_hz_v": 80000000.0,
+   "df0_hz": -24000000.0,
+   "vt0": 2.1,
+   "icp_a": 7.5e-05,
+   "icp_code": 2,
+   "method": "gear",
+   "fracn": null,
+   "div": "x",
+   "vco_amp_per_leg": 0.4,
+   "vco_cm": 1.52,
+   "c2_model": "lin",
+   "c3_override_f": 1.06e-11,
+   "cp_enabled": true,
+   "pfd": "x",
+   "lf": "x",
+   "lf_values": {
+    "r_ohm": 13090,
+    "c1_f": 6.97e-12,
+    "c2_f": 3.46e-10,
+    "r3_ohm": 10000.0,
+    "c3_f": 1.06e-11
+   },
+   "t_end_s": 7e-05,
+   "analytic_fc_hz": 202154.14102646644,
+   "analytic_pm_deg": 57.60608150307429,
+   "expect": "pass",
+   "limits": {
+    "t_lock_max_s": 5e-05,
+    "hold_window_s": 2e-05,
+    "lo_phase_err_deg": 2.0,
+    "spo_drift_ps": 1.0,
+    "spo_abs_max_ps": 1000.0,
+    "f_err_max_hz": 1000.0,
+    "vtune_window_v": [
+     0.8,
+     2.5
+    ],
+    "step_match_rel": 0.05
+   },
+   "includes_md5": {
+    "generated/lo_pfdcp.ext.spice": "0bc78d50295d2d2f2e30dc5ae5c19dda",
+    "generated/lo_lf.ext.spice": "0159c2af1678f05a9f981dc9148db92a",
+    "c3": "extracted C3 MIM units replaced by one 10.60 pF cap_mim_2f0_m4m5_noshield",
+    "c2_model": "61 x cap_nmos_03v3_b -> linear C = PDK C(1.65 V) x corner factor (C(V) varies -2.0 %/+0.1 % over VTUNE 0.8-2.5 V); the voltage-dependent form stalls ngspice after lock (3 variants, 57-68 us)",
+    "mmd_rc.spice": "071b5766e730594383ad50eb4c46860f",
+    "generated/lo_mmd.gds": "f08f356cfcb6e37bb82df01c4f1d12a4",
+    "lk_lf.spice": "ac38792d341576469974f91873ab1518",
+    "lk_pfdcp.spice": "3cec119060413233be05f85d0f6db3b1"
+   },
+   "deck_md5": "d236ac35e71ef13d64b04856ae733c45",
+   "dir": "scratch/lo/r5_ladder/r4_cl_ss32_kv80_n56_icp75_m24_mmdrc",
+   "vco": "behavioural phase integrator",
+   "divider": "RC-extracted pt_lo_mmd (flat Magic extresist), behavioural tank sine on LP/LN",
+   "as_expected": true
   }
- ]
+ ],
+ "ladder_mmd_rc": [
+  {
+   "run": "r4_mmdrc_ff22_3.35_2.40_56_0.4_1.52",
+   "rung": 4,
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd": 3.35,
+   "f_in_hz": 2400000000.0,
+   "n_set": 56,
+   "amp_v_per_leg": 0.4,
+   "cm_v": 1.52,
+   "n_measured": 55.99992,
+   "n_single": 55.99992,
+   "fb_width_ns": 3.47712,
+   "idd_ma": 33.1004,
+   "netlist": "RC-extracted flat (Magic extresist, analog image), no add_rg",
+   "includes_md5": {
+    "mmd_rc.spice": "071b5766e730594383ad50eb4c46860f",
+    "generated/lo_mmd.gds": "f08f356cfcb6e37bb82df01c4f1d12a4"
+   },
+   "errors": [],
+   "expect": "pass",
+   "pass": true,
+   "as_expected": true
+  },
+  {
+   "run": "r4_mmdrc_ff22_3.35_2.50_44_1.2_2.19",
+   "rung": 4,
+   "corner": "ff",
+   "temp_c": 22,
+   "vdd": 3.35,
+   "f_in_hz": 2500000000.0,
+   "n_set": 44,
+   "amp_v_per_leg": 1.2,
+   "cm_v": 2.19,
+   "n_measured": 43.999916666666664,
+   "n_single": 43.99975,
+   "fb_width_ns": 3.3446100000000003,
+   "idd_ma": 33.5473,
+   "netlist": "RC-extracted flat (Magic extresist, analog image), no add_rg",
+   "includes_md5": {
+    "mmd_rc.spice": "071b5766e730594383ad50eb4c46860f",
+    "generated/lo_mmd.gds": "f08f356cfcb6e37bb82df01c4f1d12a4"
+   },
+   "errors": [],
+   "expect": "pass",
+   "pass": true,
+   "as_expected": true
+  },
+  {
+   "run": "r4_mmdrc_ss32_3.15_2.40_44_0.4_1.52",
+   "rung": 4,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "f_in_hz": 2400000000.0,
+   "n_set": 44,
+   "amp_v_per_leg": 0.4,
+   "cm_v": 1.52,
+   "n_measured": 44.000080000000004,
+   "n_single": 44.00016,
+   "fb_width_ns": 3.53335,
+   "idd_ma": 18.0452,
+   "netlist": "RC-extracted flat (Magic extresist, analog image), no add_rg",
+   "includes_md5": {
+    "mmd_rc.spice": "071b5766e730594383ad50eb4c46860f",
+    "generated/lo_mmd.gds": "f08f356cfcb6e37bb82df01c4f1d12a4"
+   },
+   "errors": [],
+   "expect": "pass",
+   "pass": true,
+   "as_expected": true
+  },
+  {
+   "run": "r4_mmdrc_ss32_3.15_2.40_56_0.4_2.19",
+   "rung": 4,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "f_in_hz": 2400000000.0,
+   "n_set": 56,
+   "amp_v_per_leg": 0.4,
+   "cm_v": 2.19,
+   "n_measured": 55.99992,
+   "n_single": 55.99968,
+   "fb_width_ns": 3.5307,
+   "idd_ma": 18.103399999999997,
+   "netlist": "RC-extracted flat (Magic extresist, analog image), no add_rg",
+   "includes_md5": {
+    "mmd_rc.spice": "071b5766e730594383ad50eb4c46860f",
+    "generated/lo_mmd.gds": "f08f356cfcb6e37bb82df01c4f1d12a4"
+   },
+   "errors": [],
+   "expect": "pass",
+   "pass": true,
+   "as_expected": true
+  },
+  {
+   "run": "r4_mmdrc_ss32_3.15_2.45_50_0.02_1.85",
+   "rung": 4,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "f_in_hz": 2450000000.0,
+   "n_set": 50,
+   "amp_v_per_leg": 0.02,
+   "cm_v": 1.85,
+   "n_measured": 37.87683666666666,
+   "n_single": 37.868669999999995,
+   "fb_width_ns": 2.77549,
+   "idd_ma": 18.4804,
+   "netlist": "RC-extracted flat (Magic extresist, analog image), no add_rg",
+   "includes_md5": {
+    "mmd_rc.spice": "071b5766e730594383ad50eb4c46860f",
+    "generated/lo_mmd.gds": "f08f356cfcb6e37bb82df01c4f1d12a4"
+   },
+   "errors": [],
+   "expect": "fail",
+   "pass": false,
+   "as_expected": true
+  },
+  {
+   "run": "r4_mmdrc_ss32_3.15_2.50_44_0.4_2.19",
+   "rung": 4,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "f_in_hz": 2500000000.0,
+   "n_set": 44,
+   "amp_v_per_leg": 0.4,
+   "cm_v": 2.19,
+   "n_measured": 44.000083333333336,
+   "n_single": 44.00025,
+   "fb_width_ns": 3.39844,
+   "idd_ma": 18.0922,
+   "netlist": "RC-extracted flat (Magic extresist, analog image), no add_rg",
+   "includes_md5": {
+    "mmd_rc.spice": "071b5766e730594383ad50eb4c46860f",
+    "generated/lo_mmd.gds": "f08f356cfcb6e37bb82df01c4f1d12a4"
+   },
+   "errors": [],
+   "expect": "pass",
+   "pass": true,
+   "as_expected": true
+  },
+  {
+   "run": "r4_mmdrc_ss32_3.15_2.50_56_0.4_1.52",
+   "rung": 4,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "f_in_hz": 2500000000.0,
+   "n_set": 56,
+   "amp_v_per_leg": 0.4,
+   "cm_v": 1.52,
+   "n_measured": 55.999916666666664,
+   "n_single": 55.99975,
+   "fb_width_ns": 3.3954199999999997,
+   "idd_ma": 18.154400000000003,
+   "netlist": "RC-extracted flat (Magic extresist, analog image), no add_rg",
+   "includes_md5": {
+    "mmd_rc.spice": "071b5766e730594383ad50eb4c46860f",
+    "generated/lo_mmd.gds": "f08f356cfcb6e37bb82df01c4f1d12a4"
+   },
+   "errors": [],
+   "expect": "pass",
+   "pass": true,
+   "as_expected": true
+  },
+  {
+   "run": "r4_mmdrc_ss32_3.15_3.00_50_0.4_1.85",
+   "rung": 4,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "f_in_hz": 3000000000.0,
+   "n_set": 50,
+   "amp_v_per_leg": 0.4,
+   "cm_v": 1.85,
+   "n_measured": 49.999900000000004,
+   "n_single": 49.9998,
+   "fb_width_ns": 2.85044,
+   "idd_ma": 18.4653,
+   "netlist": "RC-extracted flat (Magic extresist, analog image), no add_rg",
+   "includes_md5": {
+    "mmd_rc.spice": "071b5766e730594383ad50eb4c46860f",
+    "generated/lo_mmd.gds": "f08f356cfcb6e37bb82df01c4f1d12a4"
+   },
+   "errors": [],
+   "expect": "pass",
+   "pass": true,
+   "as_expected": true
+  },
+  {
+   "run": "r4_mmdrc_tt27_3.3_2.45_50_0.5_1.85",
+   "rung": 4,
+   "corner": "tt",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "f_in_hz": 2450000000.0,
+   "n_set": 50,
+   "amp_v_per_leg": 0.5,
+   "cm_v": 1.85,
+   "n_measured": 50.00000833333333,
+   "n_single": 50.00009,
+   "fb_width_ns": -16.9792,
+   "idd_ma": 25.0855,
+   "netlist": "RC-extracted flat (Magic extresist, analog image), no add_rg",
+   "includes_md5": {
+    "mmd_rc.spice": "071b5766e730594383ad50eb4c46860f",
+    "generated/lo_mmd.gds": "f08f356cfcb6e37bb82df01c4f1d12a4"
+   },
+   "errors": [],
+   "expect": "pass",
+   "pass": true,
+   "as_expected": true
+  }
+ ],
+ "ladder_note": "r5 lock ladder (audit scratch/reviews/lo-lock-sim-audit.md): one dir per run under scratch/lo/r5_ladder/<run>/, limits fixed before runs (run_loop.LADDER_LIMITS), bench audit scratch/lo/r5_ladder/BENCH_AUDIT.md"
 }

@@ -1,4 +1,17 @@
 
+Circuit 1 cell cap_nmos_03v3_b and Circuit 2 cell cap_nmos_03v3_b are black boxes.
+Warning: Equate pins:  cell cap_nmos_03v3_b is a placeholder, treated as a black box.
+Warning: Equate pins:  cell cap_nmos_03v3_b is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: cap_nmos_03v3_b                 |Circuit 2: cap_nmos_03v3_b                 
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes cap_nmos_03v3_b and cap_nmos_03v3_b are equivalent.
+
 Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
 Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
 Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
@@ -55,23 +68,12 @@ Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
-
-Circuit 1 cell cap_nmos_03v3_b and Circuit 2 cell cap_nmos_03v3_b are black boxes.
-Warning: Equate pins:  cell cap_nmos_03v3_b is a placeholder, treated as a black box.
-Warning: Equate pins:  cell cap_nmos_03v3_b is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: cap_nmos_03v3_b                 |Circuit 2: cap_nmos_03v3_b                 
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes cap_nmos_03v3_b and cap_nmos_03v3_b are equivalent.
 Flattening unmatched subcell pt_lc_qvco_rf in circuit pt_lc_qvco5_core (0)(1 instance)
 Flattening unmatched subcell mimu in circuit pt_lc_qvco5_core (0)(64 instances)
 Flattening unmatched subcell pt_lc_qvco_aux in circuit pt_lc_qvco5_core (0)(1 instance)
 Flattening unmatched subcell p_nfet_03v3_w6_l0p28 in circuit pt_lc_qvco5_core (0)(5 instances)
+Flattening unmatched subcell p_cap_nmos_03v3_b_w24_l24 in circuit pt_lc_qvco5_core (0)(12 instances)
+Flattening unmatched subcell p_cap_nmos_03v3_b_w24_l24_c in circuit pt_lc_qvco5_core (0)(12 instances)
 Flattening unmatched subcell p_pfet_03v3_w4_l0p28 in circuit pt_lc_qvco5_core (0)(1 instance)
 Flattening unmatched subcell p_pfet_03v3_w12_l0p28 in circuit pt_lc_qvco5_core (0)(5 instances)
 Flattening unmatched subcell p_nfet_03v3_w4_l0p28 in circuit pt_lc_qvco5_core (0)(2 instances)
@@ -81,25 +83,28 @@ Flattening unmatched subcell p_nfet_03v3_w0p5_l2 in circuit pt_lc_qvco5_core (0)
 Flattening unmatched subcell p_nfet_03v3_w25_l1 in circuit pt_lc_qvco5_core (0)(1 instance)
 Flattening unmatched subcell p_ppolyf_u_1k_w1_l50 in circuit pt_lc_qvco5_core (0)(4 instances)
 Flattening unmatched subcell p_pfet_03v3_w24_l0p28 in circuit pt_lc_qvco5_core (0)(4 instances)
-Flattening unmatched subcell p_nfet_03v3_w1_l0p28 in circuit pt_lc_qvco5_core (0)(7 instances)
+Flattening unmatched subcell p_nfet_03v3_w1_l0p28 in circuit pt_lc_qvco5_core (0)(8 instances)
 Flattening unmatched subcell p_pfet_03v3_w2_l0p28 in circuit pt_lc_qvco5_core (0)(2 instances)
 Flattening unmatched subcell p_ppolyf_u_1k_w1_l20 in circuit pt_lc_qvco5_core (0)(1 instance)
-Flattening unmatched subcell p_nfet_03v3_w2_l1 in circuit pt_lc_qvco5_core (0)(1 instance)
+Flattening unmatched subcell p_ppolyf_u_1k_w1_l100 in circuit pt_lc_qvco5_core (0)(40 instances)
+Flattening unmatched subcell p_nfet_03v3_w1p44_l1 in circuit pt_lc_qvco5_core (0)(1 instance)
 Flattening unmatched subcell p_nfet_03v3_w2_l0p28 in circuit pt_lc_qvco5_core (0)(1 instance)
 
-Class pt_lc_qvco5_core (0):  Merged 696 parallel devices.
-Class pt_lc_qvco5_core (1):  Merged 696 parallel devices.
+Class pt_lc_qvco5_core (0):  Merged 709 parallel devices.
+Class pt_lc_qvco5_core (0):  Merged 39 series devices.
+Class pt_lc_qvco5_core (1):  Merged 709 parallel devices.
+Class pt_lc_qvco5_core (1):  Merged 39 series devices.
 Subcircuit summary:
 Circuit 1: pt_lc_qvco5_core                |Circuit 2: pt_lc_qvco5_core                
 -------------------------------------------|-------------------------------------------
 cap_mim_2f0_m4m5_noshield (68)             |cap_mim_2f0_m4m5_noshield (68)             
-nfet_03v3 (531->125)                       |nfet_03v3 (531->125)                       
-cap_nmos_03v3_b (68->4)                    |cap_nmos_03v3_b (68->4)                    
+nfet_03v3 (532->126)                       |nfet_03v3 (532->126)                       
+cap_nmos_03v3_b (80->5)                    |cap_nmos_03v3_b (80->5)                    
 pfet_03v3 (240->18)                        |pfet_03v3 (240->18)                        
-ppolyf_u_1k (5)                            |ppolyf_u_1k (5)                            
-diode_nd2ps_03v3 (7->3)                    |diode_nd2ps_03v3 (7->3)                    
-Number of devices: 223                     |Number of devices: 223                     
-Number of nets: 104                        |Number of nets: 104                        
+ppolyf_u_1k (45->6)                        |ppolyf_u_1k (45->6)                        
+diode_nd2ps_03v3 (9->3)                    |diode_nd2ps_03v3 (9->3)                    
+Number of devices: 226                     |Number of devices: 226                     
+Number of nets: 105                        |Number of nets: 105                        
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
 Resolving symmetries by pin name.
@@ -122,8 +127,8 @@ BAND2                                      |BAND2
 BAND1                                      |BAND1                                      
 CMLSEL                                     |CMLSEL                                     
 EN                                         |EN                                         
-VDD                                        |VDD                                        
 IBIAS                                      |IBIAS                                      
+VDD                                        |VDD                                        
 BAND0                                      |BAND0                                      
 VTUNE                                      |VTUNE                                      
 ATB_EN                                     |ATB_EN                                     

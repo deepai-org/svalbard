@@ -21,6 +21,7 @@ Confidence: **H** means foundry-characterized or measured; **M** means physics p
 | Gate fringe / extra Cgs, Cgd | cf=0, cgso 0.10 fF/µm | +10–20 % Cgg | model card, FO4 vs Liberty (1.3–1.45×) | M | **+25 % device C**, plus 1.45× derate on unextracted nodes | pll_ring 810 MHz (5–13 % margin), slicer 810 MHz |
 | Wiring C | Magic C-only extraction | extraction ±10 % | tech file | M | **+15 % on extracted C**, plus wire R | most blocks: C-only extraction, no R |
 | Thermal noise at RF | BSIM tnoimod=0, no induced gate noise | +0.5–1 dB NF vs model | E19 (independent LNA project suspects the PDK noise) | L | **+1.5 dB on simulated NF** | LNA, mixer/TIA, QVCO phase noise |
+| Channel noise factor in QVCO PN (transient injection) | not modelled in transient (ngspice) | γ ≈ 0.7–1.5 short channel | analysis; injected 4kT(1+γ)G per tank node + 4kTγ·gm tail | L | **γ = 2**, plus +1.5 dB on the measured white PN (Q from ring-down with cores off) | QVCO r6b PN (`scratch/lo/r5_pn`) |
 | Flicker noise | `fnoicor=0` (typical) | between typ and the noise corner | PDK `noise_corner` | M | **`fnoicor=1`** (noia ×11 nfet; pfet_06v0 ×330) | TIA/baseband, QVCO close-in, bandgap: no bench is known to use the noise corner |
 | Mismatch A_Vt nfet_03v3 | not simulated | 7.15 mV·µm (PDK fets_mm) | PDK | M | **14 mV·µm (2×)** | slicer offset trim, ADC comparator, DAC sources, mixer offset: no MC run |
 | Mismatch A_β | not simulated | 0.70 %·µm | PDK | M | **1.4 %·µm** | DAC linearity, bias mirrors |
@@ -67,13 +68,16 @@ Confidence: **H** means foundry-characterized or measured; **M** means physics p
 | RF TX source-synchronous skew budget (digital timing, DT-6, 2026-11-11) | RFTX_SKEW 1.0 ns data-to-rf_tx_clk_out skew at the macro pins (DAC captures on the forwarded clock falling edge) | DAC flop setup/hold ~0.4 ns + route mismatch | estimate | L | **1.0 ns** = setup/hold 0.6 + route mismatch 0.4 | digital macro STA; RF/assembly to route rf_tx_clk_out matched to rf_tx_sample |
 | Substrate resistivity | 8–20 Ω·cm assumed | unpublished | none | L | **5 Ω·cm** | inductor Q, substrate coupling (MOD-02) |
 
+| DA-JTOL-SATA2: SATA Gen2 (3.0 Gb/s) RX sinusoidal-jitter tolerance mask | SJ (pk-pk) 1.5 UI @ 120 kHz (FNOM/25000) falling 20 dB/dec to 0.10 UI @ 1.8 MHz (FNOM/1667), flat 0.10 UI to > 5 MHz; plus SSC 0…−5000 ppm @ 30–33 kHz | same | SATA 3.x RX jitter-tolerance text as summarised in public T10/SATA-IO-derived notes (web search 2026-11-12: t10.org 05-079r0 et al.); spec document itself not in repo | M | mask used as is; RJ in the CDR model 2× nominal (0.027 UI rms) | wired RX CDR model only (`scratch/wired_rx/r8impl/cdr8s.py`) |
+| DA-JTOL-HBR: DP HBR (2.7 Gb/s) sink jitter-tolerance mask | SJ sweep (pk-pk): 6.951 UI @ 0.5 MHz, 1.722 @ 1, 0.904 @ 2, 0.225 @ 10, 0.182 @ 20, 0.168 @ 100 MHz; RJ 13.5 mUI rms; TP3_EQ ISI 161 mUI, TJ 471 mUI | same | GRL DP-SINK MOI Rev 2.0 (2020) calibration table (CTS values, HBR column; HBR2 column matches the Agilent CTS 1.2b MOI Table 4-4: 505/116/104/100 mUI) | M (secondary source, two MOIs agree on HBR2) | as listed; RJ 2x (0.027 UI rms) in the model | wired RX CDR model only (`scratch/wired_rx/r8impl/cdr8h.py`) |
+
 ## Blocks verified only at nominal or optimistic values
 
 | Block | Ground-truth values not yet stressed |
 |---|---|
 | LNA | Rg, RF noise, ideal board match, pad C |
 | RX mixers / TIA | Rg, flicker corner, ideal LO |
-| QVCO / LO | Q = 4, varactor Q, MIM R. It already misses 2.40 GHz at ss with L +10 %, before these are applied. |
+| QVCO / LO | r6b PN/flicker/start-up verified at Q = 4, varactor Q 8, MIM 5 Ω, L ±15 %, fnoicor=1 (2026-11-12). Open: range at L −15 % ff has 2.6 % (not 3 %) margin below 2.40 GHz (LO-10). |
 | PA / rf_tx | fT/fmax low end, Rg, board match Q and balun loss |
 | pll_ring / CDR | +25 % device C, fT 11 GHz (810 MHz at ss would fail), ideal reference |
 | Slicer | 2× A_Vt, fT low end at 810 MHz, ideal clocks, kick-back C |

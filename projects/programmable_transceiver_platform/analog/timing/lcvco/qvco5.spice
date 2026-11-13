@@ -3,96 +3,98 @@
 * lcvco/qvco_rf_layout.py schematic -- edit the generator, not this file.
 * r5 vs r3 (qvco.spice): sized against the pessimistic tank (ss/32/3.15, L+10 % low Q, +3 ohm per MIM/varactor
 * branch, +15 % parasitic C, explicit gate R) on the EXTRACTED hand-placed RF layout; NMOS pair 24x5 um, PMOS
-* 32x5 um, coupling 8x5 um per side, tail 8 mA per core (1600/1 vs 2/1 reference), no fixed MIM, band bank of
+* 32x5 um, coupling 8x5 um per side, tail 12 mA per core (r6; 1600/1 vs 1.44/1 reference, was 8 mA), no fixed MIM, band bank of
 * 15 unit cells (8.4 um MIM pair + 5x5 um switch + 2 pull-downs) per core, bit k = 2^k cells, one always-off
 * dummy cell; varactor 17 x 10/1 um fingers per side; PMOS header per core on CMLSEL (1 = core off, LO11 external
 * LO through the passive tank) with a weak bleed; ATB: VTUNE tap (20 k + TG) and a 1/64 tail replica current.
+* r6 (2026-11-12): tail gates on TAILG = IBIAS diode through 40 x 100 kohm ppolyf + 12 x 24x24 um n-well MOS cap
+* (bias-flicker filter, pole ~1 kHz; TAILG within 0.5 % in 1.0 ms at ss -> EN-to-ready 1.5 ms).  Ports unchanged.
 .subckt pt_lc_qvco5 EN CMLSEL VTUNE IBIAS BAND0 BAND1 BAND2 BAND3 PRE IP IN QP QN VDD VDDB VSS ATB_EN ATB_VTUNE ATB_ITAIL
 XCORE EN CMLSEL VTUNE IBIAS BAND0 BAND1 BAND2 BAND3 PRE IP IN QP QN VDD VDDB VSS ATB_EN ATB_VTUNE ATB_ITAIL pt_lc_qvco5_core
 XLI IP IN VSS pt_spiral
 XLQ QP QN VSS pt_spiral
 .ends
 .subckt pt_lc_qvco5_core EN CMLSEL VTUNE IBIAS BAND0 BAND1 BAND2 BAND3 PRE IP IN QP QN VDD VDDB VSS ATB_EN ATB_VTUNE ATB_ITAIL
-X1 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X2 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X3 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X4 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X5 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X6 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X7 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X8 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X9 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X10 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X11 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X12 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X13 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X14 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X15 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X16 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X17 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X18 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X19 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X20 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X21 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X22 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X23 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X24 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X25 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X26 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X27 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X28 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X29 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X30 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X31 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X32 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X33 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X34 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X35 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X36 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X37 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X38 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X39 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X40 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X41 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X42 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X43 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X44 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X45 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X46 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X47 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X48 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X49 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X50 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X51 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X52 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X53 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X54 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X55 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X56 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X57 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X58 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X59 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X60 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X61 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X62 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X63 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X64 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X65 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X66 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X67 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X68 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X69 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X70 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X71 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X72 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X73 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X74 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X75 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X76 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X77 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X78 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X79 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X80 TSI IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
+X1 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X2 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X3 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X4 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X5 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X6 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X7 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X8 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X9 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X10 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X11 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X12 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X13 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X14 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X15 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X16 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X17 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X18 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X19 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X20 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X21 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X22 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X23 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X24 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X25 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X26 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X27 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X28 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X29 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X30 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X31 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X32 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X33 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X34 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X35 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X36 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X37 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X38 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X39 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X40 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X41 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X42 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X43 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X44 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X45 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X46 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X47 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X48 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X49 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X50 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X51 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X52 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X53 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X54 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X55 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X56 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X57 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X58 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X59 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X60 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X61 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X62 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X63 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X64 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X65 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X66 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X67 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X68 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X69 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X70 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X71 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X72 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X73 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X74 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X75 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X76 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X77 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X78 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X79 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X80 TSI TAILG VSS VSS nfet_03v3 w=20.0u l=1u
 X81 IP IN TSI VSS nfet_03v3 w=5.0u l=0.28u
 X82 IN IP TSI VSS nfet_03v3 w=5.0u l=0.28u
 X83 IP IN TSI VSS nfet_03v3 w=5.0u l=0.28u
@@ -449,86 +451,86 @@ X433 XI15 BAND1 YI15 VSS nfet_03v3 w=5.0u l=0.28u
 X434 XI15 BAND1 YI15 VSS nfet_03v3 w=5.0u l=0.28u
 X435 XI15 BAND1 YI15 VSS nfet_03v3 w=5.0u l=0.28u
 X436 XI15 BAND1 YI15 VSS nfet_03v3 w=5.0u l=0.28u
-X437 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X438 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X439 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X440 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X441 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X442 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X443 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X444 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X445 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X446 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X447 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X448 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X449 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X450 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X451 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X452 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X453 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X454 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X455 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X456 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X457 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X458 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X459 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X460 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X461 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X462 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X463 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X464 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X465 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X466 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X467 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X468 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X469 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X470 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X471 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X472 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X473 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X474 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X475 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X476 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X477 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X478 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X479 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X480 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X481 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X482 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X483 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X484 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X485 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X486 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X487 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X488 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X489 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X490 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X491 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X492 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X493 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X494 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X495 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X496 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X497 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X498 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X499 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X500 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X501 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X502 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X503 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X504 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X505 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X506 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X507 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X508 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X509 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X510 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X511 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X512 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X513 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X514 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X515 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
-X516 TSQ IBIAS VSS VSS nfet_03v3 w=20.0u l=1u
+X437 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X438 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X439 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X440 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X441 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X442 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X443 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X444 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X445 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X446 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X447 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X448 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X449 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X450 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X451 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X452 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X453 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X454 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X455 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X456 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X457 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X458 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X459 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X460 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X461 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X462 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X463 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X464 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X465 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X466 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X467 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X468 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X469 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X470 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X471 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X472 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X473 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X474 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X475 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X476 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X477 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X478 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X479 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X480 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X481 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X482 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X483 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X484 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X485 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X486 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X487 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X488 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X489 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X490 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X491 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X492 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X493 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X494 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X495 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X496 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X497 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X498 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X499 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X500 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X501 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X502 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X503 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X504 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X505 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X506 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X507 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X508 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X509 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X510 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X511 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X512 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X513 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X514 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X515 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
+X516 TSQ TAILG VSS VSS nfet_03v3 w=20.0u l=1u
 X517 QP QN TSQ VSS nfet_03v3 w=5.0u l=0.28u
 X518 QN QP TSQ VSS nfet_03v3 w=5.0u l=0.28u
 X519 QP QN TSQ VSS nfet_03v3 w=5.0u l=0.28u
@@ -885,7 +887,7 @@ X869 XQ15 BAND1 YQ15 VSS nfet_03v3 w=5.0u l=0.28u
 X870 XQ15 BAND1 YQ15 VSS nfet_03v3 w=5.0u l=0.28u
 X871 XQ15 BAND1 YQ15 VSS nfet_03v3 w=5.0u l=0.28u
 X872 XQ15 BAND1 YQ15 VSS nfet_03v3 w=5.0u l=0.28u
-XAUX EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE VDDCI VDDCQ CMLSEL VDD VSS pt_lc_qvco_aux
+XAUX EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE VDDCI VDDCQ CMLSEL VDD VSS TAILG pt_lc_qvco_aux
 .ends
 * pt_lc_qvco_aux: r5 QVCO aux (bias reference, PRE prescaler tap + 3 matching dummies, CMLSEL bleeds, ATB taps)
 .subckt pt_t_inv1 A Y VDD VSS
@@ -904,11 +906,64 @@ XZ Y ENB VSS VSS nfet_03v3 w=1u l=0.28u
 XN Y A VSS VSS nfet_03v3 w=6u l=0.28u
 XP Y A VDD VDD pfet_03v3 w=12u l=0.28u
 .ends
-.subckt pt_lc_qvco_aux EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE VDDCI VDDCQ CMLSEL VDD VSS
+.subckt pt_lc_qvco_aux EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE VDDCI VDDCQ CMLSEL VDD VSS TAILG
 XEI EN ENB VDD VSS pt_t_inv1
-XNB IBIAS IBIAS NBS VSS nfet_03v3 w=2u l=1u
+XNB IBIAS IBIAS NBS VSS nfet_03v3 w=1.44u l=1u
 XNBS NBS EN VSS VSS nfet_03v3 w=4u l=0.28u
 XNBC IBIAS ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XRF0 IBIAS TF1 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF1 TF1 TF2 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF2 TF2 TF3 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF3 TF3 TF4 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF4 TF4 TF5 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF5 TF5 TF6 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF6 TF6 TF7 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF7 TF7 TF8 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF8 TF8 TF9 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF9 TF9 TF10 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF10 TF10 TF11 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF11 TF11 TF12 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF12 TF12 TF13 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF13 TF13 TF14 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF14 TF14 TF15 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF15 TF15 TF16 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF16 TF16 TF17 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF17 TF17 TF18 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF18 TF18 TF19 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF19 TF19 TF20 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF20 TF20 TF21 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF21 TF21 TF22 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF22 TF22 TF23 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF23 TF23 TF24 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF24 TF24 TF25 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF25 TF25 TF26 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF26 TF26 TF27 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF27 TF27 TF28 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF28 TF28 TF29 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF29 TF29 TF30 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF30 TF30 TF31 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF31 TF31 TF32 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF32 TF32 TF33 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF33 TF33 TF34 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF34 TF34 TF35 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF35 TF35 TF36 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF36 TF36 TF37 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF37 TF37 TF38 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF38 TF38 TF39 VSS ppolyf_u_1k r_width=1u r_length=100u
+XRF39 TF39 TAILG VSS ppolyf_u_1k r_width=1u r_length=100u
+XCF0 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF1 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF2 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF3 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF4 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF5 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF6 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF7 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF8 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF9 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF10 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XCF11 TAILG VSS cap_nmos_03v3_b c_width=24u c_length=24u
+XNBF TAILG ENB VSS VSS nfet_03v3 w=1u l=0.28u
 XBP IP PREB ENB VDDB VSS pt_lc_acinv
 XBP2 PREB PRE VDDB VSS pt_lc_inv1
 XBD1 IN DD1 ENB VDDB VSS pt_lc_acinv
@@ -920,6 +975,6 @@ XAI ATB_EN ATB_ENB VDD VSS pt_t_inv1
 XRA VTUNE VTA VSS ppolyf_u_1k r_width=1u r_length=20u
 XTN VTA ATB_EN ATB_VTUNE VSS nfet_03v3 w=2u l=0.28u
 XTP VTA ATB_ENB ATB_VTUNE VDD pfet_03v3 w=4u l=0.28u
-XRT ITR IBIAS VSS VSS nfet_03v3 w=25u l=1u
+XRT ITR TAILG VSS VSS nfet_03v3 w=25u l=1u
 XTS ITR ATB_EN ATB_ITAIL VSS nfet_03v3 w=4u l=0.28u
 .ends

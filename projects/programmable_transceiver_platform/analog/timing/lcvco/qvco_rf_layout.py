@@ -497,11 +497,13 @@ def lvs_rf(tag='t'):
 # ---------------------------------------------------------------- aux cell (layout_engine): bias, PRE taps, bleeds, ATB
 AUX = 'pt_lc_qvco_aux'
 AUX_PORTS = ('EN IBIAS PRE VDDB ATB_EN ATB_VTUNE ATB_ITAIL IP IN QP QN VTUNE VDDCI VDDCQ CMLSEL VDD VSS TAILG').split()
-# r6 (LO owner, 2026-11-12): tail-gate RC filter.  The 10 uA / 2-1 um reference diode's flicker, x800 mirrored, put the
-# QVCO 1/f^3 corner at ~9 MHz (scratch/lo/r5_pn flick.py; Kg = df/dVg = 250 MHz/V extracted PESS).  TAILG = filtered tail
-# gate: RFLT_N x 100 kohm ppolyf_u_1k from IBIAS + CFLT_N x 10x10 um n-well MOS cap (+ ~15 pF of tail gates).
+# r6 (LO owner, 2026-11-12): tail-gate RC filter.  The 10 uA / 2-1 um reference diode's flicker (fnoicor=1: 184 nV/rtHz
+# at 100 kHz on the tail gates), x800 mirrored, dominated the QVCO close-in noise: L(100 kHz) -69 dBc/Hz, 1/f^3 corner
+# 9-16 MHz (scratch/lo/r5_pn flick.py; Kg = df/dVg_tail = 195-353 MHz/V extracted).  TAILG = filtered tail gate:
+# RFLT_N x RFLT_L-um (1 um wide, 1 kohm/sq -> 100 kohm each) ppolyf_u_1k from IBIAS + CFLT_N x CFLT_S^2 um n-well MOS cap
+# (~27 pF) + ~15 pF of tail gates: pole ~1 kHz, TAILG settles to 0.5 % in 1.0 ms at ss (noise_f.py); EN-to-ready 1.5 ms.
 RFLT_N, CFLT_N = 40, 12
-RFLT_L, CFLT_S = 100, 24     # segment length (um, 1 um wide => 200 kohm) and MOS-cap tile side (um)
+RFLT_L, CFLT_S = 100, 24     # segment length (um; 1 um wide -> 100 kohm) and MOS-cap tile side (um)
 AUX_W = 620.0      # r6: wide, short aux (it sits below the spirals' free area; was 150)
 
 
@@ -527,7 +529,7 @@ XP Y A VDD VDD pfet_03v3 w=12u l=0.28u
 .ends
 .subckt {AUX} {' '.join(AUX_PORTS)}
 XEI EN ENB VDD VSS pt_t_inv1
-XNB IBIAS IBIAS NBS VSS nfet_03v3 w=2u l=1u
+XNB IBIAS IBIAS NBS VSS nfet_03v3 w=1.44u l=1u
 XNBS NBS EN VSS VSS nfet_03v3 w=4u l=0.28u
 XNBC IBIAS ENB VSS VSS nfet_03v3 w=1u l=0.28u
 {filt}XNBF TAILG ENB VSS VSS nfet_03v3 w=1u l=0.28u
@@ -786,10 +788,12 @@ def schematic():
 * lcvco/qvco_rf_layout.py schematic -- edit the generator, not this file.
 * r5 vs r3 (qvco.spice): sized against the pessimistic tank (ss/32/3.15, L+10 % low Q, +3 ohm per MIM/varactor
 * branch, +15 % parasitic C, explicit gate R) on the EXTRACTED hand-placed RF layout; NMOS pair 24x5 um, PMOS
-* 32x5 um, coupling 8x5 um per side, tail 8 mA per core (1600/1 vs 2/1 reference), no fixed MIM, band bank of
+* 32x5 um, coupling 8x5 um per side, tail 12 mA per core (r6; 1600/1 vs 1.44/1 reference, was 8 mA), no fixed MIM, band bank of
 * 15 unit cells (8.4 um MIM pair + 5x5 um switch + 2 pull-downs) per core, bit k = 2^k cells, one always-off
 * dummy cell; varactor 17 x 10/1 um fingers per side; PMOS header per core on CMLSEL (1 = core off, LO11 external
 * LO through the passive tank) with a weak bleed; ATB: VTUNE tap (20 k + TG) and a 1/64 tail replica current.
+* r6 (2026-11-12): tail gates on TAILG = IBIAS diode through {RFLT_N} x {RFLT_L} kohm ppolyf + {CFLT_N} x {CFLT_S}x{CFLT_S} um n-well MOS cap
+* (bias-flicker filter, pole ~1 kHz; TAILG within 0.5 % in 1.0 ms at ss -> EN-to-ready 1.5 ms).  Ports unchanged.
 .subckt pt_lc_qvco5 {' '.join(TOP_PORTS)}
 XCORE {' '.join(TOP_PORTS)} {TOP}
 XLI IP IN VSS pt_spiral

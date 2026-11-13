@@ -1,480 +1,484 @@
 * NGSPICE file created from buffer_compensated_flat.ext - technology: gf180mcuD
 
 .subckt buffer_compensated_flat VDD VSS REF BIAS OUT ENABLE
-X0 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X0 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
 X1 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X2 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X3 TAIL_RETURN ENABLE VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
-X4 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X5 OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
-X6 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X7 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.7u
-X8 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X9 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE LOCAL_OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X10 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X11 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X12 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X13 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X14 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X15 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X16 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X17 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X18 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X19 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X20 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X21 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X2 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE LOCAL_OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X3 VDD ENABLE_B TOP VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
+X4 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X5 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X6 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X7 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X8 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X9 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X10 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X11 BUFFER_COMPLEMENT_GATE ENABLE VSS VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
+X12 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X13 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X14 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X15 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X16 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X17 VSS ENABLE TAIL_RETURN VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
+X18 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.5u
+X19 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X20 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.5u
+X21 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
 X22 LOCAL_OUT GAIN BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.5u
-X23 BUFFER_COMPLEMENT_BLEED_6 BUFFER_COMPLEMENT_GATE VSS ppolyf_u_1k r_width=1u r_length=12.5u
-X24 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X25 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X26 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X27 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
+X23 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X24 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X25 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X26 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X27 GAIN REF TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X28 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X29 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X30 BUFFER_COMPLEMENT_BLEED_3 BUFFER_COMPLEMENT_BLEED_4 VSS ppolyf_u_1k r_width=1u r_length=12.5u
-X31 VSS ENABLE TAIL_RETURN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X32 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X33 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X34 GAIN REF TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X35 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X36 LOCAL_OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X37 VSS ENABLE BOTTOM VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
-X38 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X39 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X40 MIR OUT TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X29 LOCAL_OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X30 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X31 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
+X32 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X33 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X34 TAIL OUT MIR VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X35 TAIL BIAS TAIL_RETURN VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X36 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X37 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X38 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X39 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X40 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
 X41 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X42 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X43 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X44 BOTTOM GAIN LOCAL_OUT VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X45 TAIL OUT MIR VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X46 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X47 TAIL REF GAIN VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
-X48 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X49 ENABLE_B ENABLE VSS VSS nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
-X50 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_BLEED_6 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X42 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X43 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X44 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X45 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X46 TAIL REF GAIN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X47 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X48 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X49 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X50 LOCAL_OUT GAIN BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
 X51 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X52 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X53 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X54 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_BLEED_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
-X55 TAIL_RETURN BIAS TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X56 VDD ENABLE_B TOP VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
-X57 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X58 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X59 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X60 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X52 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X53 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X54 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X55 BUFFER_COMPLEMENT_BLEED_1 BUFFER_COMPLEMENT_BLEED_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X56 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X57 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X58 TAIL BIAS TAIL_RETURN VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X59 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X60 OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
 X61 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
 X62 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X63 LOCAL_OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X64 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X65 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X63 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X64 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X65 LOCAL_OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
 X66 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X67 TAIL_RETURN BIAS TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X68 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X69 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
-X70 OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X71 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X72 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X73 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE LOCAL_OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
-X74 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X67 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X68 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE LOCAL_OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
+X69 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X70 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X71 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X72 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X73 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X74 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X75 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X76 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X77 GAIN ENABLE REF VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
-X78 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X79 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X80 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X81 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X82 MIR OUT TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X83 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X84 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X85 LOCAL_OUT GAIN BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X86 MIR OUT TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X76 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X77 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X78 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X79 BUFFER_COMPLEMENT_GATE ENABLE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X80 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_5 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X81 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE LOCAL_OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X82 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X83 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X84 GAIN COMP VSS ppolyf_s r_width=1u r_length=1.2u
+X85 TAIL REF GAIN VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X86 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X87 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X88 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X88 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.7u
 X89 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X90 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE LOCAL_OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X91 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X92 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X93 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X94 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X95 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X96 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X90 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X91 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X92 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X93 OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X94 MIR OUT TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X95 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X96 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X97 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X98 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X99 TAIL REF GAIN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X100 VSS ENABLE TAIL_RETURN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X101 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X102 GAIN REF TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
-X103 BUFFER_COMPLEMENT_GATE ENABLE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
-X104 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X105 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X98 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X99 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X100 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X101 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X102 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
+X103 TAIL BIAS TAIL_RETURN VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X104 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X105 BUFFER_COMPLEMENT_BLEED_3 BUFFER_COMPLEMENT_BLEED_4 VSS ppolyf_u_1k r_width=1u r_length=12.5u
 X106 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X107 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X108 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X109 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X110 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X111 BOTTOM GAIN LOCAL_OUT VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X112 TAIL REF GAIN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X113 OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X114 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X115 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X116 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X117 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X118 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X119 GAIN REF TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X120 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X121 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X122 VDD MIR MIR VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
-X123 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
-X124 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X107 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X108 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X109 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X110 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_BLEED_6 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X111 MIR OUT TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X112 GAIN REF TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X113 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X114 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X115 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X116 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X117 BUFFER_COMPLEMENT_BLEED_6 BUFFER_COMPLEMENT_GATE VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X118 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X119 TAIL OUT MIR VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X120 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X121 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X122 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X123 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X124 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE LOCAL_OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
 X125 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X126 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X127 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X128 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X129 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X130 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X131 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X132 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X133 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X134 TAIL OUT MIR VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
-X135 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X136 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X137 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X138 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.5u
-X139 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X140 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X141 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X142 BUFFER_COMPLEMENT_BLEED_1 BUFFER_COMPLEMENT_BLEED_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
-X143 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X144 LOCAL_OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X145 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X146 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X147 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X148 MIR OUT TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X149 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X150 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X151 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X126 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X127 BOTTOM GAIN LOCAL_OUT VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.5u
+X128 ENABLE_B ENABLE VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X129 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.7u
+X130 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X131 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X132 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X133 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.7u
+X134 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X135 VSS ENABLE TAIL_RETURN VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
+X136 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X137 LOCAL_OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X138 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X139 MIR OUT TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X140 TAIL_RETURN BIAS TAIL VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X141 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X142 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X143 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X144 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X145 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X146 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X147 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X148 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X149 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X150 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X151 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
 X152 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X153 BUFFER_COMPLEMENT_BLEED_2 BUFFER_COMPLEMENT_BLEED_3 VSS ppolyf_u_1k r_width=1u r_length=12.5u
-X154 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X155 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X156 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X157 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X158 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X159 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X160 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X161 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.5u
-X162 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X163 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X164 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X153 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X154 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X155 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X156 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X157 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X158 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X159 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X160 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X161 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X162 VSS ENABLE BOTTOM VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
+X163 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X164 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
 X165 BOTTOM GAIN LOCAL_OUT VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X166 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X167 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE LOCAL_OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X168 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X169 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_5 VSS ppolyf_u_1k r_width=1u r_length=12.5u
-X170 TAIL REF GAIN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X171 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X172 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X173 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X166 GAIN ENABLE_B REF VSS nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+X167 OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X168 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X169 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X170 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X171 BOTTOM GAIN LOCAL_OUT VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X172 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X173 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X174 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X175 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X176 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
-X177 MIR OUT TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
-X178 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X179 BOTTOM GAIN LOCAL_OUT VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.5u
-X180 GAIN REF TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X181 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X182 ENABLE_B ENABLE VDD VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
-X183 GAIN ENABLE_B REF VSS nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
-X184 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X185 OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X186 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X187 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X175 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X176 GAIN REF TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X177 MIR OUT TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X178 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.7u
+X179 TAIL_RETURN ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
+X180 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X181 TAIL OUT MIR VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X182 TAIL REF GAIN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X183 VDD MIR MIR VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X184 GAIN REF TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X185 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X186 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X187 GAIN ENABLE REF VDD pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
 X188 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X189 TAIL OUT MIR VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X190 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X191 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.7u
-X192 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X193 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X194 TAIL_RETURN ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
-X195 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X196 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X197 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X198 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X199 BUFFER_COMPLEMENT_BLEED_0 BUFFER_COMPLEMENT_BLEED_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
-X200 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X201 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X202 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X203 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X204 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X205 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X206 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X207 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X208 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X209 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X210 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X211 VDD MIR GAIN VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
-X212 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE OUT BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X213 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X214 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X215 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X189 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X190 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X191 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X192 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
+X193 COMP OUT cap_mim_2f0_m4m5_noshield c_width=38.73u c_length=38.73u
+X194 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X195 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X196 TAIL REF GAIN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X197 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X198 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X199 TAIL_RETURN ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
+X200 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X201 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.5u
+X202 BOTTOM GAIN LOCAL_OUT VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X203 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X204 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X205 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X206 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.5u
+X207 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_BLEED_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X208 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X209 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X210 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X211 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X212 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X213 BUFFER_COMPLEMENT_BLEED_0 BUFFER_COMPLEMENT_BLEED_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X214 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X215 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
 X216 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X217 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X218 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X219 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X220 TAIL BIAS TAIL_RETURN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X221 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X222 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X223 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X217 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X218 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X219 TAIL OUT MIR VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X220 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X221 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X222 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X223 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
 X224 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X225 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X226 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X227 TAIL OUT MIR VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X228 TAIL BIAS TAIL_RETURN VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
-X229 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X230 COMP OUT cap_mim_2f0_m4m5_noshield c_width=38.73u c_length=38.73u
-X231 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X232 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X233 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X234 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X235 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X236 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X237 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X238 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X239 GAIN REF TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X240 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X241 BUFFER_COMPLEMENT_GATE ENABLE VSS VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
-X242 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X243 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X244 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X245 TAIL OUT MIR VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X246 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X247 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X225 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X226 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X227 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X228 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X229 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X230 BUFFER_COMPLEMENT_BLEED_2 BUFFER_COMPLEMENT_BLEED_3 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X231 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X232 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X233 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X234 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X235 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X236 VSS ENABLE BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X237 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X238 TAIL OUT MIR VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X239 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X240 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X241 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X242 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X243 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X244 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X245 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X246 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X247 LOCAL_OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
 X248 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X249 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X250 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X251 GAIN COMP VSS ppolyf_s r_width=1u r_length=1.2u
-X252 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X253 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X254 LOCAL_OUT GAIN BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X255 LOCAL_OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
-X256 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X257 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X258 VDD MIR GAIN VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X259 TAIL REF GAIN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X260 LOCAL_OUT GAIN BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X261 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X262 TAIL_RETURN ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X263 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X264 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X265 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X266 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X267 GAIN MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X268 TAIL BIAS TAIL_RETURN VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
-X269 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X270 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X271 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X272 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X273 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X274 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X275 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X276 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
-X277 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X278 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
-X279 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X280 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
-X281 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-C0 VDD REF 8.45602f
-C1 BUFFER_COMPLEMENT_WELL TAIL_RETURN 0.09446f
-C2 BUFFER_COMPLEMENT_BLEED_1 BUFFER_COMPLEMENT_BLEED_6 0.12616f
-C3 BIAS OUT 1.55826f
-C4 BIAS LOCAL_OUT 2.90124f
-C5 ENABLE BUFFER_COMPLEMENT_BLEED_5 0.06993f
-C6 REF BUFFER_COMPLEMENT_BLEED_6 0.09741f
-C7 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_BLEED_0 6.66466f
-C8 GAIN BIAS 0.21327f
-C9 ENABLE BOTTOM 5.61134f
-C10 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_BLEED_1 0.10918f
-C11 GAIN BUFFER_COMPLEMENT_BLEED_4 0.07738f
-C12 BUFFER_COMPLEMENT_BLEED_5 REF 0.09778f
-C13 ENABLE BUFFER_COMPLEMENT_BLEED_3 0.06601f
-C14 TAIL MIR 9.54805f
-C15 TAIL BUFFER_COMPLEMENT_BLEED_2 0.00418f
-C16 ENABLE ENABLE_B 31.8135f
-C17 ENABLE TOP 1.56869f
-C18 BUFFER_COMPLEMENT_BLEED_0 BUFFER_COMPLEMENT_GATE 0.08604f
-C19 MIR BUFFER_COMPLEMENT_BLEED_2 0.00182f
-C20 BUFFER_COMPLEMENT_WELL VDD 11.8363f
-C21 REF BOTTOM 1.68264f
-C22 ENABLE OUT 32.3393f
-C23 BUFFER_COMPLEMENT_BLEED_1 BUFFER_COMPLEMENT_BLEED_3 0.10621f
-C24 COMP OUT 5.55711f
-C25 ENABLE LOCAL_OUT 34.9513f
-C26 TAIL_RETURN BUFFER_COMPLEMENT_BLEED_0 0.27169f
-C27 BUFFER_COMPLEMENT_BLEED_1 ENABLE_B 0.07237f
-C28 REF BUFFER_COMPLEMENT_BLEED_3 0.09741f
-C29 REF ENABLE_B 3.9366f
-C30 TOP REF 1.68264f
-C31 GAIN ENABLE 9.20847f
-C32 BUFFER_COMPLEMENT_BLEED_1 OUT 0.06874f
-C33 GAIN COMP 0.99679f
-C34 REF OUT 1.81463f
-C35 VDD BUFFER_COMPLEMENT_GATE 6.05042f
-C36 REF LOCAL_OUT 3.35947f
-C37 BUFFER_COMPLEMENT_BLEED_6 BUFFER_COMPLEMENT_GATE 6.462f
-C38 TAIL BIAS 6.95217f
-C39 GAIN BUFFER_COMPLEMENT_BLEED_1 0.11268f
-C40 GAIN REF 23.9709f
-C41 TAIL BUFFER_COMPLEMENT_BLEED_4 0
-C42 BIAS MIR 0.18378f
-C43 TAIL_RETURN BUFFER_COMPLEMENT_BLEED_6 0
-C44 BIAS BUFFER_COMPLEMENT_BLEED_2 0.09527f
-C45 VDD BUFFER_COMPLEMENT_BLEED_0 0
-C46 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_2 0.10747f
-C47 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_GATE 0.26697f
-C48 BUFFER_COMPLEMENT_WELL ENABLE_B 1.18364f
-C49 BUFFER_COMPLEMENT_WELL OUT 38.4061f
-C50 BUFFER_COMPLEMENT_WELL LOCAL_OUT 30.3115f
-C51 ENABLE TAIL 0.21385f
-C52 BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_BLEED_3 0.19193f
-C53 BUFFER_COMPLEMENT_WELL GAIN 1.58281f
-C54 BUFFER_COMPLEMENT_GATE ENABLE_B 0.30356f
-C55 ENABLE MIR 0.07785f
-C56 ENABLE BUFFER_COMPLEMENT_BLEED_2 0.06993f
-C57 TAIL_RETURN ENABLE_B 0
-C58 OUT BUFFER_COMPLEMENT_GATE 3.12533f
-C59 TAIL BUFFER_COMPLEMENT_BLEED_1 0.15743f
-C60 BIAS BUFFER_COMPLEMENT_BLEED_4 0.05457f
-C61 LOCAL_OUT BUFFER_COMPLEMENT_GATE 2.79128f
-C62 TAIL REF 8.35441f
-C63 MIR BUFFER_COMPLEMENT_BLEED_1 0.03485f
-C64 TAIL_RETURN OUT 0.04875f
-C65 BUFFER_COMPLEMENT_BLEED_1 BUFFER_COMPLEMENT_BLEED_2 2.01788f
-C66 BUFFER_COMPLEMENT_BLEED_0 ENABLE_B 0.06601f
-C67 BUFFER_COMPLEMENT_BLEED_5 VDD 0.00455f
-C68 MIR REF 3.37213f
-C69 REF BUFFER_COMPLEMENT_BLEED_2 0.09741f
-C70 GAIN BUFFER_COMPLEMENT_GATE 0.29106f
-C71 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_BLEED_6 5.27096f
-C72 BUFFER_COMPLEMENT_BLEED_0 OUT 0.07449f
-C73 VDD BOTTOM 7.74086f
-C74 GAIN TAIL_RETURN 0.41264f
-C75 GAIN BUFFER_COMPLEMENT_BLEED_0 0.12981f
-C76 ENABLE BIAS 0.16649f
-C77 VDD ENABLE_B 26.4963f
-C78 TOP VDD 0.11831p
-C79 BUFFER_COMPLEMENT_BLEED_6 BUFFER_COMPLEMENT_BLEED_3 0.1251f
-C80 ENABLE BUFFER_COMPLEMENT_BLEED_4 0.06601f
-C81 BUFFER_COMPLEMENT_WELL TAIL 0.23688f
-C82 BUFFER_COMPLEMENT_BLEED_6 ENABLE_B 0.06601f
-C83 VDD OUT 8.03161f
-C84 VDD LOCAL_OUT 24.4116f
-C85 BIAS BUFFER_COMPLEMENT_BLEED_1 0.48578f
-C86 BUFFER_COMPLEMENT_WELL MIR 0.35061f
-C87 BIAS REF 0.10976f
-C88 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_1 0.10673f
-C89 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_BLEED_3 0.10912f
-C90 BUFFER_COMPLEMENT_BLEED_4 REF 0.0995f
-C91 GAIN VDD 57.6587f
-C92 BUFFER_COMPLEMENT_BLEED_5 ENABLE_B 0.06601f
-C93 GAIN BUFFER_COMPLEMENT_BLEED_6 0.07738f
-C94 BOTTOM ENABLE_B 0.77214f
-C95 TOP BOTTOM 3.50038f
-C96 MIR BUFFER_COMPLEMENT_GATE 0.01556f
-C97 BUFFER_COMPLEMENT_BLEED_2 BUFFER_COMPLEMENT_GATE 0.17852f
-C98 TAIL TAIL_RETURN 5.15272f
-C99 BUFFER_COMPLEMENT_BLEED_3 ENABLE_B 0.06601f
-C100 MIR TAIL_RETURN 0.42305f
-C101 OUT BOTTOM 7.34556f
-C102 LOCAL_OUT BOTTOM 27.3061f
-C103 GAIN BUFFER_COMPLEMENT_BLEED_5 0.07743f
-C104 TAIL BUFFER_COMPLEMENT_BLEED_0 0.88502f
-C105 ENABLE BUFFER_COMPLEMENT_BLEED_1 0.08278f
-C106 TOP ENABLE_B 8.52854f
-C107 BUFFER_COMPLEMENT_WELL BIAS 1.74854f
-C108 OUT BUFFER_COMPLEMENT_BLEED_3 0.00259f
-C109 ENABLE REF 5.29756f
-C110 MIR BUFFER_COMPLEMENT_BLEED_0 0.05243f
-C111 OUT ENABLE_B 1.0994f
-C112 TOP OUT 6.75743f
-C113 GAIN BOTTOM 4.49795f
-C114 TOP LOCAL_OUT 0.12973p
-C115 LOCAL_OUT ENABLE_B 1.05495f
-C116 GAIN BUFFER_COMPLEMENT_BLEED_3 0.07738f
-C117 BUFFER_COMPLEMENT_BLEED_1 REF 0.16359f
-C118 LOCAL_OUT OUT 0.1361p
-C119 GAIN ENABLE_B 30.1109f
-C120 GAIN TOP 26.7135f
-C121 TAIL VDD 0.00535f
-C122 BIAS BUFFER_COMPLEMENT_GATE 0.04965f
-C123 MIR VDD 77.76089f
-C124 GAIN OUT 2.40466f
-C125 VDD BUFFER_COMPLEMENT_BLEED_2 0.00491f
-C126 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_GATE 0.21537f
-C127 GAIN LOCAL_OUT 32.1258f
-C128 BIAS TAIL_RETURN 6.21352f
-C129 BUFFER_COMPLEMENT_BLEED_2 BUFFER_COMPLEMENT_BLEED_6 0.12494f
-C130 BUFFER_COMPLEMENT_WELL ENABLE 7.95034f
-C131 BIAS BUFFER_COMPLEMENT_BLEED_0 0.43124f
-C132 BUFFER_COMPLEMENT_BLEED_5 TAIL 0
-C133 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_BLEED_1 0.05436f
-C134 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_BLEED_2 0.10851f
-C135 BUFFER_COMPLEMENT_WELL REF 2.05911f
-C136 ENABLE BUFFER_COMPLEMENT_GATE 24.9456f
-C137 TAIL BUFFER_COMPLEMENT_BLEED_3 0
-C138 BIAS VDD 1.21738f
-C139 ENABLE TAIL_RETURN 5.6588f
-C140 TAIL ENABLE_B 0
-C141 MIR BUFFER_COMPLEMENT_BLEED_3 0
-C142 BUFFER_COMPLEMENT_BLEED_2 BUFFER_COMPLEMENT_BLEED_3 2.80573f
-C143 BUFFER_COMPLEMENT_BLEED_1 BUFFER_COMPLEMENT_GATE 0.13308f
-C144 MIR ENABLE_B 0.00227f
-C145 BUFFER_COMPLEMENT_BLEED_2 ENABLE_B 0.06606f
-C146 TAIL OUT 6.14249f
-C147 ENABLE BUFFER_COMPLEMENT_BLEED_0 0.14356f
-C148 REF BUFFER_COMPLEMENT_GATE 0.33884f
-C149 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_6 0.12577f
-C150 BUFFER_COMPLEMENT_BLEED_1 TAIL_RETURN 0.04951f
-C151 MIR OUT 6.80308f
-C152 BUFFER_COMPLEMENT_BLEED_2 OUT 0.03061f
-C153 TAIL_RETURN REF 0.1716f
-C154 BUFFER_COMPLEMENT_BLEED_5 BIAS 0.00123f
-C155 GAIN TAIL 9.5412f
-C156 BUFFER_COMPLEMENT_BLEED_1 BUFFER_COMPLEMENT_BLEED_0 7.45809f
-C157 REF BUFFER_COMPLEMENT_BLEED_0 0.17191f
-C158 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_BLEED_4 4.43358f
-C159 GAIN MIR 18.3627f
-C160 GAIN BUFFER_COMPLEMENT_BLEED_2 0.07738f
-C161 BIAS BOTTOM 1.45199f
-C162 ENABLE VDD 5.5392f
-C163 ENABLE BUFFER_COMPLEMENT_BLEED_6 0.06805f
-C164 BIAS BUFFER_COMPLEMENT_BLEED_3 0.0694f
-C165 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE 14.5624f
-C166 BIAS ENABLE_B 0.03964f
-C167 TOP BIAS 1.45199f
-C168 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_3 3.61362f
-C169 BUFFER_COMPLEMENT_BLEED_4 ENABLE_B 0.06601f
-C170 BIAS VSS 50.7424f
-C171 OUT VSS 87.6666f
-C172 REF VSS 23.5903f
-C173 ENABLE VSS 67.1168f
-C174 VDD VSS 0.53456p
-C175 TOP VSS 31.4811f
-C176 BOTTOM VSS 95.5279f
-C177 LOCAL_OUT VSS 81.1058f
-C178 BUFFER_COMPLEMENT_BLEED_0 VSS 14.1097f
-C179 TAIL_RETURN VSS 23.5314f
-C180 MIR VSS 4.33181f
-C181 TAIL VSS 21.9435f
-C182 BUFFER_COMPLEMENT_BLEED_6 VSS 12.0884f
-C183 BUFFER_COMPLEMENT_BLEED_5 VSS 10.5992f
-C184 BUFFER_COMPLEMENT_BLEED_4 VSS 9.08773f
-C185 BUFFER_COMPLEMENT_BLEED_3 VSS 7.62565f
-C186 BUFFER_COMPLEMENT_BLEED_2 VSS 6.43442f
-C187 BUFFER_COMPLEMENT_BLEED_1 VSS 12.5422f
-C188 ENABLE_B VSS 10.3563f
-C189 BUFFER_COMPLEMENT_GATE VSS 17.8697f
-C190 COMP VSS 18.7927f
-C191 GAIN VSS 28.1254f
-C192 BUFFER_COMPLEMENT_WELL VSS 0.12383p
+X249 TAIL REF GAIN VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X250 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X251 VDD ENABLE_B TOP VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
+X252 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X253 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X254 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X255 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X256 MIR OUT TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=1u
+X257 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X258 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X259 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X260 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X261 GAIN REF TAIL VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X262 TAIL_RETURN BIAS TAIL VSS nfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X263 MIR MIR VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X264 TAIL_RETURN ENABLE VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X265 LOCAL_OUT ENABLE OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X266 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X267 VDD MIR GAIN VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=1u
+X268 VDD MIR MIR VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X269 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+X270 LOCAL_OUT GAIN BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X271 LOCAL_OUT GAIN BOTTOM VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X272 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X273 OUT BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_WELL pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
+X274 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X275 LOCAL_OUT GAIN TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X276 TOP GAIN LOCAL_OUT VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X277 TOP ENABLE_B VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
+X278 VDD ENABLE_B TOP VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X279 ENABLE_B ENABLE VSS VSS nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+X280 BOTTOM ENABLE VSS VSS nfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X281 OUT ENABLE LOCAL_OUT VSS nfet_06v0 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.7u
+C0 REF LOCAL_OUT 4.95986f
+C1 BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_BLEED_2 0.13965f
+C2 BUFFER_COMPLEMENT_WELL OUT 63.5583f
+C3 REF BUFFER_COMPLEMENT_BLEED_2 0.0906f
+C4 BUFFER_COMPLEMENT_GATE ENABLE_B 0.24448f
+C5 BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_BLEED_1 0.08604f
+C6 REF ENABLE_B 1.22074f
+C7 REF BUFFER_COMPLEMENT_BLEED_1 0.08876f
+C8 BUFFER_COMPLEMENT_GATE ENABLE 25.503f
+C9 GAIN OUT 3.04117f
+C10 BUFFER_COMPLEMENT_GATE MIR 0.01561f
+C11 BIAS TAIL 17.6497f
+C12 REF ENABLE 2.62336f
+C13 REF MIR 3.37839f
+C14 BOTTOM OUT 8.18085f
+C15 BUFFER_COMPLEMENT_BLEED_4 TAIL_RETURN 0.09768f
+C16 BUFFER_COMPLEMENT_WELL TAIL 0
+C17 BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_BLEED_5 0.4536f
+C18 BUFFER_COMPLEMENT_BLEED_5 REF 0.09349f
+C19 BUFFER_COMPLEMENT_GATE BIAS 0.14896f
+C20 GAIN TAIL 13.8711f
+C21 TAIL_RETURN BUFFER_COMPLEMENT_BLEED_2 0.09755f
+C22 TOP REF 3.40575f
+C23 BIAS REF 0.28172f
+C24 VDD LOCAL_OUT 29.3165f
+C25 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_GATE 15.3313f
+C26 TAIL_RETURN ENABLE_B 0.10557f
+C27 VDD BUFFER_COMPLEMENT_BLEED_2 0.00491f
+C28 BUFFER_COMPLEMENT_WELL REF 2.31699f
+C29 TAIL_RETURN BUFFER_COMPLEMENT_BLEED_1 0.09754f
+C30 TAIL_RETURN ENABLE 17.2123f
+C31 BUFFER_COMPLEMENT_BLEED_3 TAIL 0
+C32 VDD ENABLE_B 31.0256f
+C33 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_0 0.12494f
+C34 TAIL_RETURN MIR 0.47111f
+C35 GAIN BUFFER_COMPLEMENT_GATE 0.30797f
+C36 GAIN REF 30.2185f
+C37 VDD ENABLE 8.13847f
+C38 VDD MIR 83.56171f
+C39 BUFFER_COMPLEMENT_BLEED_0 BUFFER_COMPLEMENT_BLEED_2 0.10747f
+C40 BOTTOM REF 1.70337f
+C41 TAIL_RETURN BUFFER_COMPLEMENT_BLEED_5 0.1662f
+C42 BUFFER_COMPLEMENT_BLEED_3 BUFFER_COMPLEMENT_GATE 0.15306f
+C43 BUFFER_COMPLEMENT_BLEED_0 ENABLE_B 0.06601f
+C44 TAIL_RETURN BIAS 16.3915f
+C45 BUFFER_COMPLEMENT_BLEED_3 REF 0.08876f
+C46 VDD BUFFER_COMPLEMENT_BLEED_5 0.10123f
+C47 BUFFER_COMPLEMENT_BLEED_0 BUFFER_COMPLEMENT_BLEED_1 3.02861f
+C48 VDD TOP 0.20838p
+C49 BUFFER_COMPLEMENT_BLEED_0 ENABLE 0.06601f
+C50 VDD BIAS 2.1466f
+C51 TAIL_RETURN BUFFER_COMPLEMENT_WELL 0.06953f
+C52 BUFFER_COMPLEMENT_BLEED_0 MIR 0
+C53 OUT TAIL 6.9963f
+C54 BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_BLEED_6 2.83652f
+C55 REF BUFFER_COMPLEMENT_BLEED_6 0.08876f
+C56 VDD BUFFER_COMPLEMENT_WELL 16.6241f
+C57 GAIN TAIL_RETURN 0.45387f
+C58 BUFFER_COMPLEMENT_BLEED_0 BUFFER_COMPLEMENT_BLEED_5 0.03887f
+C59 GAIN VDD 62.543f
+C60 BIAS BUFFER_COMPLEMENT_BLEED_0 0.39398f
+C61 OUT BUFFER_COMPLEMENT_GATE 3.02587f
+C62 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_2 0.12577f
+C63 GAIN COMP 0.92129f
+C64 OUT REF 2.68792f
+C65 TAIL_RETURN BUFFER_COMPLEMENT_BLEED_3 0.09755f
+C66 VDD BOTTOM 11.2705f
+C67 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_BLEED_0 2.21779f
+C68 BUFFER_COMPLEMENT_BLEED_4 ENABLE_B 0.06601f
+C69 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_1 0.1251f
+C70 BUFFER_COMPLEMENT_BLEED_4 ENABLE 0.06976f
+C71 LOCAL_OUT ENABLE_B 1.54086f
+C72 GAIN BUFFER_COMPLEMENT_BLEED_0 0.07738f
+C73 TAIL_RETURN BUFFER_COMPLEMENT_BLEED_6 0.15118f
+C74 BUFFER_COMPLEMENT_BLEED_2 ENABLE_B 0.06606f
+C75 BUFFER_COMPLEMENT_BLEED_1 BUFFER_COMPLEMENT_BLEED_2 3.8365f
+C76 REF TAIL 10.7274f
+C77 ENABLE LOCAL_OUT 35.6064f
+C78 VDD BUFFER_COMPLEMENT_BLEED_6 0.10234f
+C79 ENABLE BUFFER_COMPLEMENT_BLEED_2 0.06993f
+C80 BUFFER_COMPLEMENT_BLEED_1 ENABLE_B 0.06601f
+C81 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_5 6.2586f
+C82 BUFFER_COMPLEMENT_BLEED_3 BUFFER_COMPLEMENT_BLEED_0 0.10851f
+C83 ENABLE ENABLE_B 43.8886f
+C84 BUFFER_COMPLEMENT_BLEED_4 BIAS 0.05457f
+C85 MIR ENABLE_B 0.00227f
+C86 TAIL_RETURN OUT 0.17814f
+C87 BUFFER_COMPLEMENT_BLEED_1 ENABLE 0.06601f
+C88 BUFFER_COMPLEMENT_GATE REF 0.35811f
+C89 MIR ENABLE 0.11096f
+C90 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_WELL 0.12616f
+C91 VDD OUT 16.9529f
+C92 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_BLEED_2 0.03903f
+C93 TOP LOCAL_OUT 0.30117p
+C94 BIAS LOCAL_OUT 4.26896f
+C95 BIAS BUFFER_COMPLEMENT_BLEED_2 0.09527f
+C96 OUT COMP 5.59533f
+C97 BUFFER_COMPLEMENT_BLEED_5 ENABLE_B 0.17216f
+C98 BUFFER_COMPLEMENT_WELL LOCAL_OUT 60.6714f
+C99 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_BLEED_1 0.03887f
+C100 GAIN BUFFER_COMPLEMENT_BLEED_4 0.07738f
+C101 TOP ENABLE_B 8.88991f
+C102 BIAS ENABLE_B 0.11891f
+C103 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_BLEED_2 0.10673f
+C104 TAIL_RETURN TAIL 9.1824f
+C105 BUFFER_COMPLEMENT_BLEED_5 ENABLE 0.28161f
+C106 BIAS BUFFER_COMPLEMENT_BLEED_1 0.15177f
+C107 TOP ENABLE 3.17362f
+C108 BIAS ENABLE 0.41873f
+C109 BUFFER_COMPLEMENT_WELL ENABLE_B 1.25374f
+C110 GAIN LOCAL_OUT 31.3507f
+C111 OUT BUFFER_COMPLEMENT_BLEED_0 0.01502f
+C112 BIAS MIR 0.30845f
+C113 VDD TAIL 0.00547f
+C114 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_BLEED_1 0.10621f
+C115 GAIN BUFFER_COMPLEMENT_BLEED_2 0.07738f
+C116 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_3 5.49383f
+C117 BUFFER_COMPLEMENT_WELL ENABLE 4.98563f
+C118 BUFFER_COMPLEMENT_WELL MIR 0.31672f
+C119 BOTTOM LOCAL_OUT 65.9434f
+C120 GAIN ENABLE_B 35.5935f
+C121 TAIL_RETURN BUFFER_COMPLEMENT_GATE 0.09807f
+C122 GAIN BUFFER_COMPLEMENT_BLEED_1 0.07738f
+C123 TAIL_RETURN REF 2.23922f
+C124 GAIN ENABLE 8.36842f
+C125 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_BLEED_6 0
+C126 TOP BIAS 2.94363f
+C127 GAIN MIR 20.0277f
+C128 VDD BUFFER_COMPLEMENT_GATE 3.1981f
+C129 BUFFER_COMPLEMENT_BLEED_3 BUFFER_COMPLEMENT_BLEED_2 4.65645f
+C130 BOTTOM ENABLE_B 0.76569f
+C131 BUFFER_COMPLEMENT_BLEED_0 TAIL 0
+C132 VDD REF 6.64896f
+C133 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_BLEED_5 0.04498f
+C134 BOTTOM ENABLE 5.52146f
+C135 BUFFER_COMPLEMENT_BLEED_3 ENABLE_B 0.06601f
+C136 BUFFER_COMPLEMENT_WELL BIAS 1.79618f
+C137 BUFFER_COMPLEMENT_BLEED_3 BUFFER_COMPLEMENT_BLEED_1 0.10912f
+C138 BUFFER_COMPLEMENT_BLEED_3 ENABLE 0.06601f
+C139 GAIN BUFFER_COMPLEMENT_BLEED_5 0.08327f
+C140 GAIN TOP 29.4778f
+C141 BUFFER_COMPLEMENT_BLEED_6 ENABLE_B 0.16657f
+C142 GAIN BIAS 0.41664f
+C143 BUFFER_COMPLEMENT_GATE BUFFER_COMPLEMENT_BLEED_0 0.08604f
+C144 BUFFER_COMPLEMENT_BLEED_0 REF 0.08876f
+C145 ENABLE BUFFER_COMPLEMENT_BLEED_6 0.27446f
+C146 BOTTOM TOP 5.59232f
+C147 GAIN BUFFER_COMPLEMENT_WELL 1.82926f
+C148 OUT LOCAL_OUT 0.24639p
+C149 BOTTOM BIAS 1.47231f
+C150 BUFFER_COMPLEMENT_BLEED_3 BUFFER_COMPLEMENT_BLEED_5 0.0397f
+C151 BUFFER_COMPLEMENT_BLEED_3 BIAS 0.07045f
+C152 VDD TAIL_RETURN 0.16853f
+C153 OUT ENABLE_B 1.68008f
+C154 OUT BUFFER_COMPLEMENT_BLEED_1 0.0022f
+C155 BUFFER_COMPLEMENT_BLEED_5 BUFFER_COMPLEMENT_BLEED_6 1.62586f
+C156 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_BLEED_3 0.10918f
+C157 OUT ENABLE 36.3215f
+C158 OUT MIR 7.60993f
+C159 GAIN BOTTOM 4.71235f
+C160 TAIL BUFFER_COMPLEMENT_BLEED_2 0
+C161 GAIN BUFFER_COMPLEMENT_BLEED_3 0.07738f
+C162 BUFFER_COMPLEMENT_WELL BUFFER_COMPLEMENT_BLEED_6 0.00171f
+C163 BUFFER_COMPLEMENT_BLEED_4 BUFFER_COMPLEMENT_GATE 0.1765f
+C164 TAIL_RETURN BUFFER_COMPLEMENT_BLEED_0 0.09815f
+C165 TAIL ENABLE_B 0
+C166 BUFFER_COMPLEMENT_BLEED_4 REF 0.08876f
+C167 OUT TOP 15.6085f
+C168 VDD BUFFER_COMPLEMENT_BLEED_0 0
+C169 ENABLE TAIL 0.55977f
+C170 GAIN BUFFER_COMPLEMENT_BLEED_6 0.07738f
+C171 OUT BIAS 2.42468f
+C172 BUFFER_COMPLEMENT_GATE LOCAL_OUT 2.68637f
+C173 MIR TAIL 13.8862f
+C174 BIAS VSS 72.7737f
+C175 OUT VSS 0.13731p
+C176 ENABLE VSS 91.1842f
+C177 REF VSS 22.4786f
+C178 VDD VSS 0.59709p
+C179 TOP VSS 77.5549f
+C180 BOTTOM VSS 0.14288p
+C181 LOCAL_OUT VSS 0.11286p
+C182 MIR VSS 3.90869f
+C183 TAIL VSS 33.0233f
+C184 BUFFER_COMPLEMENT_BLEED_4 VSS 12.433f
+C185 BUFFER_COMPLEMENT_BLEED_3 VSS 10.9458f
+C186 BUFFER_COMPLEMENT_BLEED_2 VSS 9.45836f
+C187 BUFFER_COMPLEMENT_BLEED_1 VSS 8.04512f
+C188 BUFFER_COMPLEMENT_BLEED_0 VSS 6.85845f
+C189 TAIL_RETURN VSS 63.9876f
+C190 BUFFER_COMPLEMENT_BLEED_6 VSS 6.11171f
+C191 BUFFER_COMPLEMENT_BLEED_5 VSS 11.6471f
+C192 BUFFER_COMPLEMENT_GATE VSS 14.4036f
+C193 ENABLE_B VSS 12.563f
+C194 COMP VSS 18.8254f
+C195 GAIN VSS 23.2102f
+C196 BUFFER_COMPLEMENT_WELL VSS 0.14016p
 .ends
 

@@ -125,7 +125,7 @@ POWER_NETS = ('TOP', 'BOTTOM', 'LOCAL_OUT', 'OUT', 'BUFFER_COMPLEMENT_WELL')
 SIGNAL_UNITS = set()
 # PD42 EM: the tail path (D=TAIL / D=TAIL_RETURN arrays, 0.44 mA tt, 0.89 mA ff at 85 C with the divider bias fixture)
 # exceeds one 0.58 mA via cut per pin -> split into 2 arrays, each with its own single-cut pins (<= 0.45 mA).
-MIN_CHUNKS = {('TAIL', 'TAIL_RETURN'): 3, ('TAIL_RETURN', 'VSS'): 3, ('LOCAL_OUT', 'TOP'): 2, ('TOP', 'VDD'): 2, ('OUT', 'VDD'): 4, ('OUT', 'VSS'): 4}   # PD46 EM (85 C, strap-ladder check em_check.py): tails 3 (single-cut pins); tbuf power arrays in 2; steering OUT arrays in 4 (M4 crowding at the trunk entry, review r2)
+MIN_CHUNKS = {('TAIL', 'TAIL_RETURN'): 3, ('TAIL_RETURN', 'VSS'): 3, ('LOCAL_OUT', 'TOP'): 2, ('TOP', 'VDD'): 2, ('LOCAL_OUT', 'OUT'): 2, ('OUT', 'VDD'): 4, ('OUT', 'VSS'): 4}   # PD46 EM (85 C, strap-ladder check em_check.py): tails 3 (single-cut pins); tbuf power arrays in 2; steering OUT arrays in 4 (M4 crowding at the trunk entry, review r2); tbuf (LOCAL_OUT,OUT) in 2 (two bars on one trunk, review r3)
 # PD42: M5 trunk widths sized from the 85 C EM screen (scratch/pads-pd42/em, <= 4.5 mA/um DRM 14.2 top metal, >= 25 % margin);
 # nets not listed keep 8 um.
 TRUNK_UM = {'BOTTOM': 3., 'BUFFER_COMPLEMENT_WELL': 4., 'VSS': 4., 'VDD': 11., 'TOP': 11., 'LOCAL_OUT': 11.}

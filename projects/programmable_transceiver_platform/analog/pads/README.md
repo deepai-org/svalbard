@@ -411,20 +411,24 @@ python3 projects/programmable_transceiver_platform/analog/pads/assembly.py --tem
 converter. Do not add budget-sized ideal capacitors on top of extracted
 capacitance.
 
-### PD46 EM (2026-11-12): steering buffer at 85 °C — PUBLISHED (`generated/steering-buffer-compact/`); termination buffer still open
+### PD46 EM (2026-11-12): steering and termination buffers at 85 °C — PUBLISHED
 
 Steering build `scratch/pads-pd42/pd46g/` (backup of the previous cell `scratch/pads-pd42/backup-published/steering-buffer-compact-pre-pd46/`).
 Generator `termination_buffer_array_layout.py`: via2/via3 along the whole power strap incl. gap and trunk; `MIN_CHUNKS` steering (OUT,VDD)/(OUT,VSS) in 4;
 `steering_buffer.py` trunks STAGE_2 4 µm, VDD/VSS/OUT 6 µm. Magic DRC 0 and netgen unique on the merged GDS, KLayout 0/0, LU clean. Reviews r1–r3 (`scratch/pads-pd42/pd46/review/`): steering GO.
-- **EM screen** (`scratch/pads-pd42/em/em_check.py`, `strap_ladder.py`, `strap_post.py`): per strap bar the peak M4 share at the trunk entry
+- **EM screen** (`verification/em_check.py`, `em_strap_ladder.py`, `em_strap_post.py`): per strap bar the peak M4 share at the trunk entry
   (via4 lands on M4 only) from a 1-D M2/M3/M4 ladder, worst of nominal / M4 0.8× with M2,M3 1.2× / via R halved, current injected over the far
   half of the strap; via4 crowding; via2/3 peak per cut; via1; contacts. **Bar-imbalance rule:** 1.2× per bar, dropped only for a single bar
   (review r3: equal-height bars on one trunk still split 1.09–1.13×). Fails on the old M4-only layout (2.14–2.21).
 - **Steering worst at 85 °C (3.24 Gb/s use case, extracted R):** strap M4 0.72, via1 0.81, via4 0.46, trunk ≤ 0.47.
 - **Steering slower:** delay +45–67 ps (+10 %), edges +8–12 ps, supply current +5–6 % vs the previous cell (OUT split in 4) — WT24 / X5 TMDS bench to be re-run with this cell.
 - **Outline:** 54.6 × 159.0 µm per copy (was 92.7 × 76.4; reservation 96 × 80 → re-place).
-- **Termination buffer: NOT fixed.** `scratch/pads-pd42/pd46d/` (published cell unchanged) fails the r3 check (unit 6 OUT/LOCAL_OUT two-bar pins, M4 ≈ 1.0–1.08 at ff 85 °C);
-  the (LOCAL_OUT,OUT) split fix is blocked by the compensation layout's fixed-offset routing (work in progress).
+- **Termination buffer — PUBLISHED** (`generated/termination-buffer-candidate/compact-array/`, build `scratch/pads-pd42/pd46n/`, backup
+  `scratch/pads-pd42/backup-published/termination-buffer-compact-array-pre-pd46/`). Build: `termination_buffer_array_layout.py --output-dir <d>/core`, then
+  `termination_compensation_layout.py --output-dir <d>/comp --core-dir <d>/core --mim-dir generated/termination-buffer-compensation-mim` (38.73 µm MIM, now in the repo).
+  `MIN_CHUNKS` adds (LOCAL_OUT,OUT) in 2 (two bars on one trunk, review r3). Magic DRC 0, LVS unique and KLayout 0/0 on the merged GDS, LU clean. Review r4 GO.
+  Worst at 85 °C ff: strap M4 0.77 (extracted R 0.74), trunk 0.83 (0.82), via1 0.60, via4 0.36; VDD IR 47 mV. Readiness = previous cell (40.8 / 183.6 / 163.6 / 21.8 / 21.8 ns).
+  **Outline 156.8 × 479.6 µm** (was 167.2 × 370.3; reservation 170 × 375 → re-place).
 
 ### PD48c (2026-11-12): d2 restored on wirepad (USB) and hspad for the 250 V CDM floor (coordinator decision)
 

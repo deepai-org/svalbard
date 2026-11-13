@@ -1,0 +1,46 @@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_typical
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice diode_typical
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.temp 27
+.option method=gear reltol=1e-3
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice mimcap_typical
+.param vth=1.65
+.include pub_nofill.spice
+VDD vdd 0 3.3
+VEN en 0 pwl(0 0 2n 0 2.1n 3.3)
+IB vdd ibias 10u
+VREF ref 0 pulse(0 3.3 0 100p 100p 1.2700000000000001e-08 2.56e-08)
+VPRE pre 0 1.16
+VPC pc 0 3.3
+SPRE vctrl pre pc 0 swpre
+.model swpre sw vt=1.65 vh=0.1 ron=50 roff=1e12
+VN4 n4 0 0
+VN8 n8 0 0
+VHOLD hold 0 0
+* r9 ports: N5/N10 off, CDR fast-tune KP/FU/FD idle (TX/host use)
+VN5 n5 0 0
+VN10 n10 0 0
+VFT kp0 0 0
+X1 ref en n4 n8 hold ibias ph0 ph1 ph2 ph3 ph4 ph5 ph6 ph7 lock fbck refo vctrl n5 n10 kp0 kp0 kp0 kp0 kp0 kp0 kp0 kp0 kp0 kp0 kp0 vdd vdd 0 pt_pll_ring
+CRO refo 0 20f
+CP0 ph0 0 20f
+CP1 ph1 0 20f
+CP2 ph2 0 20f
+CP3 ph3 0 20f
+CP4 ph4 0 20f
+CP5 ph5 0 20f
+CP6 ph6 0 20f
+CP7 ph7 0 20f
+.tran 2p 200n
+.measure tran per10 trig v(ph0) val=1.65 td=150n rise=1 targ v(ph0) val=1.65 td=150n rise=11
+.measure tran t0 when v(ph0)=1.65 rise=1 td=170n
+.measure tran t1 when v(ph1)=1.65 rise=1 td=170n
+.measure tran t2 when v(ph2)=1.65 rise=1 td=170n
+.measure tran t3 when v(ph3)=1.65 rise=1 td=170n
+.measure tran t4 when v(ph4)=1.65 rise=1 td=170n
+.measure tran t5 when v(ph5)=1.65 rise=1 td=170n
+.measure tran t6 when v(ph6)=1.65 rise=1 td=170n
+.measure tran t7 when v(ph7)=1.65 rise=1 td=170n
+.measure tran vct find v(vctrl) at=190n
+.end

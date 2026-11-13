@@ -1476,3 +1476,6 @@ real extracted neighbour:
   (`r7cap/r7c_qA.log`, `r7c_qB.log`, results `r7cap/r7c/results.json`): q625 ss/tt, safe, ss RCS=1, ss 480, LDE 50/60,
   ff 480 (both RCS), pessimistic ss 625 (`pess.py`), negative control, ff/C × 0.9 hold cases, tt 480 / RCS=1, half rate
   (both RCS), full rate PSEL 0/3/5.  **Not published; needs those results and a new independent review.**
+  First results on r7c: **ss/32/3.15 q625 passes** (0/200 data, 0 edge, PD ok, strobe words ok, DW/EW change
+  0.965–1.103 ns after WSTB; r7: 1 edge error, DN 0.11–0.29, 0.975–1.672 ns); negative control (S2 stuck low) fails as
+  required (11 data errors).

@@ -4,11 +4,10 @@ Written 2026-11-13 by the RF RX owner for the chip-top integration agent (`scrat
 mode-walk rows MW-5 (LNA/rxmix binding), MW-4 (bbfilter controls) and MW-20 (LO drive). Pin order is the
 `.subckt` order of the block `.spice` files in this directory (single source: `netlists.py`).
 
-**Status of the cells.** `lna`, `rxmix_i`, `rxmix_q` in the working tree are the RC-16j/k LNTA candidate and the
-fork-P2 TIA. They are NOT published (review `scratch/review-lna3/`, risks RFR-11/RFR-12): the source pads and the
-board network are being redesigned, so `src_p/src_n` below are expected to disappear in the next round (on-chip
-degeneration). Everything else in the LNA pin list is expected to stay. `bbfilter_i/q` and `bb_tap` are the
-published cells.
+**Status of the cells.** `lna`, `rxmix_i`, `rxmix_q` in the working tree are the RC-16j/k LNTA with ON-CHIP source
+degeneration (coordinator decision 2026-11-13) and the fork V TIA. They are NOT published yet (review
+`scratch/review-lna3/`, risks RFR-11…14), but the pin lists below are the intended final ones. `bbfilter_i/q` and
+`bb_tap` are the published cells.
 
 ## 1. pt_lna
 
@@ -23,7 +22,7 @@ published cells.
 | `rf_out_p`, `rf_out_n` | `rxmix_i.rf_p`, `rxmix_i.rf_n` ONLY | one LNA output pair per mixer; each pair has its own 16 µm coupling MIM from the tank |
 | `rf_outq_p`, `rf_outq_n` | `rxmix_q.rf_p`, `rxmix_q.rf_n` ONLY | must not be left open and must not be shorted to `rf_out_*` (the assembly rule that puts both mixers on `rf_out` is wrong for this cell) |
 | `tank_p`, `tank_n` | one `lna_ind` spiral each: spiral terminal A = `VDD` (RAIL_rf), terminal B = `tank_p` (resp. `tank_n`) | two instances of `generated/lna_ind.gds` (`pt_lna_ind`, 170 µm, 3 turns, 1.35 nH, DRC-only cell, no LVS device); they also carry the LNA DC current (≈ 9.7 mA each, RX bias); abut the LNA tank pins, keep the two spirals ≥ 1 diameter apart or orthogonal, no metal fill / MIM / decap over them. Without the spirals the LNA has no DC feed and no gain |
-| `src_p`, `src_n` | CANDIDATE ONLY: two in-ring pads beside RF_RX, each bonded to board ground | not buildable at the assumed 0.5 nH on the TT01 COB (RFR-12); do not add pads for them. Planned replacement: on-chip centre-tapped degeneration inside the LNA, pins removed. Until then, for netlist completeness only: tie each through the bench model (0.5 nH) to VSS |
+| `src_p`, `src_n` | one `lna_deg` spiral each: terminal A = `src_p` (resp. `src_n`), terminal B = the LNA's VSS (AGND_RX) | NOT pads (the LNA_SRC pad sites are released, RC-16t). `pt_lna_deg`: 140 µm, 2 turns, 0.47 nH, 25.2k µm², DRC-only cell (generator `lna_spiral.G_DEG`); abut the LNA source pins, ground end straight onto the LNA ground strap; no fill / MIM / decap over them; they carry the CS DC current (≈ 9.5 mA each) |
 | `ibias` | 10 µA sourced into the pin from the RF bias bank (one branch for the LNA) | NMOS diode on the pin |
 | `en` | `lna.state != off` | |
 | `gain_lo` | attenuator MSB (code bit 5) | NOT a −6 dB step; see `att` |
@@ -31,7 +30,7 @@ published cells.
 | `byp` | `debug.rf_rx_bypass.lna` | pad → both mixer feeds through a series MIM; use with `en` = 0 |
 | `ct0..ct3` | `lna.match.ctrim[3:0]`, reset 7 | tank tune (not an input-match trim any more) |
 | `se`, `rt` | `lna.match.se`, `lna.match.rterm`, reset 0 | |
-| `lobias` | NEW register bit `lna.bias.lo` (reset 0); the mode validator forces 1 whenever the TX chain is on | 1 = reduced LNA bias (duplex) |
+| `lobias` | NEW register bit `lna.bias.lo` (reset 0); the mode validator forces 1 whenever the TX chain is on (rf_tx and duplex) | 1 = reduced LNA bias |
 | `island_off` | RF island switch `ISO` output | |
 | `atb_nbias`, `atb_vdcm` | ATB mux (code 16 = lna_bias; `atb_vdcm` needs a code) | |
 | `VDD`, `VSS` | RAIL_rf (VDD_RF_SW), AGND_RX (RC-4) | |
@@ -40,8 +39,10 @@ published cells.
 
 ```
 .subckt pt_rxmix_i rf_p rf_n lo_p lo_n bb_p bb_n ibias en ofs0 ofs1 ofs2 ofs3 ofs4 ofs_sign island_off
-+ atb_vcm atb_vbp hib VDD VSS
++ atb_vcm atb_vbp VDD VSS
 ```
+
+There is no `hib` pin (fork V TIA; the fork-P2 switched-tail option that added it is not used).
 
 | Pin | Connect to | Notes |
 | --- | --- | --- |
@@ -51,7 +52,6 @@ published cells.
 | `ibias` | 10 µA per mixer from the RF bias bank | |
 | `en` | `rxmix_x.state != off` | |
 | `ofs0..ofs4`, `ofs_sign` | `pga_x.offset.code` sign-magnitude (README §4) | |
-| `hib` | NEW (fork P2): `NOT lna.bias.lo` (same register bit as `lna.lobias`, inverted; one net to both mixers) | 1 = extra TIA OTA tail on (RX-only modes); 0 = base tail (duplex). Gate-only input, no current with the island off (to be re-shown in the regenerated safe test). Reset value of the net must be 1 (bit reset 0) |
 | `island_off` | RF island switch `ISO` output | |
 | `atb_vcm`, `atb_vbp` | ATB mux (code 17) | |
 | `VDD`, `VSS` | RAIL_rf, AGND_RX | |

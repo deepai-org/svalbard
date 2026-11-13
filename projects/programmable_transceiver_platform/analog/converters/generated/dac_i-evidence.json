@@ -1,13 +1,13 @@
 {
   "block": "dac_i",
   "top_cell": "pt_dac_i",
-  "generated_utc": "2026-11-10T01:18:09Z",
+  "generated_utc": "2026-11-12T08:31:20Z",
   "source_hashes": {
-    "dac_i.spice": "sha256:08f0db2de05d3bcff37c05d43ffc1deeee688f1ce93180ba141cd65de1ec46d2",
-    "circuits.py": "sha256:c2e34cfbbbf503ebb78b43ec0302c01632bf872b04d6fc7ea5f42116cd5b1210",
-    "lib/convkit.py": "sha256:335aaf313b48811efd7abdca25e07c0e4535a19b8c5e4e14de11ec17fed43a6e",
-    "flow.py": "sha256:2cfac4be4d486d95f11a11ab4c09217a37d163a9daa2d96bf1b4eb4976097817",
-    "benches.py": "sha256:4315c470b4fba951ebdeed473b74acc279820a9ffc018f4261b5f6565deacebc",
+    "dac_i.spice": "sha256:a262b2ace12e659f2a0b399119b3a5caeedf03c4c7b0ff95f1d6be625a24509b",
+    "circuits.py": "sha256:0c2f9dac9fd70c376c5e0c583cc5999971bec3326b8e61d8a8dfdf241fae3256",
+    "lib/convkit.py": "sha256:5dcc9797489b7d3fa01f15d57bdfd9d88df991f22c014c9c573067eb514486dc",
+    "flow.py": "sha256:875c05d8a97320ee95d78f32cbdf2b355483dd32e6ffadfd7977e5370d06ecaa",
+    "benches.py": "sha256:62a0e8b6febea00be5e396b9dd40aa83b98a2f44b8c2fee1fb5ccc7ae7c0a62e",
     "generated/macros/dac_logic.gds": "sha256:ebe8c850e83d9de65f18914e03c0d365bd4119daf08be85cc43cfbe11dfd7293",
     "generated/macros/dac_logic.lef": "sha256:a36a17b11a2e3f1cb63d4935de87e941ffc73425d288ca3ccd22d2c80895df86",
     "generated/macros/dac_logic.pnl.v": "sha256:a4e8477ed08e9959d423a14dd39303b71536baf8ed5bb79b7b1c8bfd0007a0e0",
@@ -20,9 +20,9 @@
     "rtl/tb_dac_logic.v": "sha256:0a651fb00017aa23e8f1e8917488404350f8b83be1ed1407f044dab6f1271679"
   },
   "artifact_hashes": {
-    "generated/dac_i.gds": "sha256:0895f6c2c23ee2239c05857381247f6b6a2ac8a232afc351a9cc5cabbf3ca5ba",
-    "generated/dac_i.mag": "sha256:1aee579dc527c241c54c1fce97e67a3089a1a42e9322d09abc7601143ddc5434",
-    "generated/dac_i.ext.spice": "sha256:6d6dccd0e991662c37d72ffdf8aad6485f7320b9a6701583243725d8775aa484"
+    "generated/dac_i.gds": "sha256:bc9518b3f7520ed62bc964ab31c60cb557bc595f5391293c364451e256fc14c7",
+    "generated/dac_i.mag": "sha256:f1435a5a8b02aa4dd6ee3941f22e1b34eea55bc410dbc2f32cdddb1c55237cab",
+    "generated/dac_i.ext.spice": "sha256:aa0cdb3d5a307ef3aa0b50696bb6f982b4c1de01d3db23ce4206f1f7739f93d4"
   },
   "images": {
     "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -32,12 +32,12 @@
   "pdk": "gf180mcuD ciel f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (both images)",
   "area": {
     "bbox_um": [
-      -34.0,
+      -36.0,
       0.0,
       641.0,
-      186.84
+      276.93
     ],
-    "area_um2": 126117.0,
+    "area_um2": 187481.6,
     "ceiling_um2": 225000,
     "fits": true
   },
@@ -47,20 +47,20 @@
       "cases": [
         {
           "case": "EN=0 supply current (A), tt 27C 3.3V",
-          "value": 3.22821e-09
+          "value": 7.40094e-09
         },
         {
           "case": "OUTP held at 1.65 V while disabled / island unpowered",
           "value": {
             "powered_disabled": {
-              "leak_A_at_1p65V": 4.346025e-12,
-              "cap_fF_at_10MHz": 99.50056,
-              "conductance_S": 2.9894e-09
+              "leak_A_at_1p65V": 4.345781e-12,
+              "cap_fF_at_10MHz": 99.20906,
+              "conductance_S": 2.902141e-09
             },
             "island_unpowered": {
-              "leak_A_at_1p65V": 5.597189e-12,
-              "cap_fF_at_10MHz": 98.31582,
-              "conductance_S": 7.587542e-11
+              "leak_A_at_1p65V": 5.597192e-12,
+              "cap_fF_at_10MHz": 98.15821,
+              "conductance_S": 1.718687e-10
             }
           }
         }
@@ -70,21 +70,29 @@
     "clean": {
       "extracted_nominal": {
         "fullscale_diff_V": [
-          -0.9957,
-          0.9957
+          -0.9787,
+          0.9719
         ],
-        "lsb_mV": 1.9466,
+        "lsb_mV": 1.9067,
         "code_error_lsb": {
           "-512": 0.0,
-          "-256": -9.946,
-          "0": 0.345,
-          "255": 5.96,
+          "-384": 0.333,
+          "-256": 1.714,
+          "-128": 2.141,
+          "-1": 0.99,
+          "0": 1.71,
+          "1": 1.711,
+          "127": 1.196,
+          "255": 0.654,
+          "383": 0.39,
           "511": 0.0,
-          "100": 5.454
+          "100": 1.731,
+          "-100": 1.397
         },
-        "cm_V": 1.4296
+        "cm_V": 1.7298,
+        "endpoint_spread_lsb": 0.524
       },
-      "extracted_ok": true,
+      "extracted_ok": false,
       "netlist": "generated/dac_i.ext.spice",
       "bench": "benches.dac_deck",
       "drc": {
@@ -102,10 +110,10 @@
         "magic": "8.3.678",
         "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
         "marker_shapes": {
-          "HRES 62/0": 3,
-          "RES_MK 110/5": 6
+          "HRES 62/0": 6,
+          "RES_MK 110/5": 12
         },
-        "ppolyf_u_1k_devices": 3,
+        "ppolyf_u_1k_devices": 6,
         "klayout_drc": {
           "violations": 0,
           "by_rule": {},
@@ -122,7 +130,7 @@
         "rc": "0",
         "report": "generated/dac_i-klayout-drc.lyrdb"
       },
-      "state": "pass"
+      "state": "fail"
     },
     "observable": {
       "state": "pass",
@@ -139,19 +147,19 @@
         "rf_tx_external_baseband: debug.bb_tap inject_tx_filter / inject_tx_mixer with dac_*.config.enable=0 -> OUTP/OUTN series switches open"
       ],
       "bypass_loading_fF": {
-        "powered_disabled": 99.50056,
-        "island_unpowered": 98.31582
+        "powered_disabled": 99.20906,
+        "island_unpowered": 98.15821
       },
       "evidence": {
         "powered_disabled": {
-          "leak_A_at_1p65V": 4.346025e-12,
-          "cap_fF_at_10MHz": 99.50056,
-          "conductance_S": 2.9894e-09
+          "leak_A_at_1p65V": 4.345781e-12,
+          "cap_fF_at_10MHz": 99.20906,
+          "conductance_S": 2.902141e-09
         },
         "island_unpowered": {
-          "leak_A_at_1p65V": 5.597189e-12,
-          "cap_fF_at_10MHz": 98.31582,
-          "conductance_S": 7.587542e-11
+          "leak_A_at_1p65V": 5.597192e-12,
+          "cap_fF_at_10MHz": 98.15821,
+          "conductance_S": 1.718687e-10
         }
       }
     }
@@ -161,8 +169,8 @@
       "metric": "differential full scale (V)",
       "target": "+/-1.0",
       "nominal": [
-        -0.9957,
-        0.9957
+        -0.9787,
+        0.9719
       ]
     },
     {
@@ -170,86 +178,55 @@
       "target": "8-bit-class",
       "nominal": {
         "-512": 0.0,
-        "-256": -9.946,
-        "0": 0.345,
-        "255": 5.96,
+        "-384": 0.333,
+        "-256": 1.714,
+        "-128": 2.141,
+        "-1": 0.99,
+        "0": 1.71,
+        "1": 1.711,
+        "127": 1.196,
+        "255": 0.654,
+        "383": 0.39,
         "511": 0.0,
-        "100": 5.454
+        "100": 1.731,
+        "-100": 1.397
       }
     },
     {
       "metric": "output common mode (V)",
       "target": "1.65",
-      "nominal": 1.4296
+      "nominal": 1.7298
     },
     {
       "metric": "supply current, active (mA)",
       "target": "2.0 allocation",
-      "nominal": 1.92235
+      "nominal": 2.06888
     },
     {
       "metric": "stretch: 80 MS/s (12.5 ns) update, same codes",
       "target": "non-gating 40 MHz-channel stretch",
-      "nominal": {
-        "fullscale_diff_V": [
-          -0.9921,
-          0.9901
-        ],
-        "lsb_mV": 1.9377,
-        "code_error_lsb": {
-          "-512": 0.0,
-          "0": 0.665,
-          "511": 0.0
-        },
-        "cm_V": 1.4341
-      }
+      "nominal": "not run (identical copy of dac_i)"
     },
     {
       "metric": "corner sweep (extracted)",
       "target": "narrow window, not gating",
-      "corners": {
-        "ss_32C_3.15V": {
-          "fullscale_diff_V": [
-            -1.149,
-            1.1545
-          ],
-          "lsb_mV": 2.2518,
-          "code_error_lsb": {
-            "-512": 0.0,
-            "0": -0.876,
-            "511": 0.0
-          },
-          "cm_V": 0.989
-        },
-        "ff_22C_3.35V": {
-          "fullscale_diff_V": [
-            -0.8225,
-            0.8198
-          ],
-          "lsb_mV": 1.6054,
-          "code_error_lsb": {
-            "-512": 0.0,
-            "0": 1.216,
-            "511": 0.0
-          },
-          "cm_V": 1.8253
-        }
-      }
+      "corners": {}
     },
     {
       "metric": "hold_zero with codes 511/-512 applied (V diff)",
       "target": "0",
       "nominal": [
-        0.0016399999999998638,
-        0.0016400000000000858
+        null,
+        null
       ]
     }
   ],
   "excluded_coverage": [
     "gain_trim and offset_trim register fields have no analog effect in this version",
     "hold_zero verified only at one code pair",
-    "No glitch energy, SFDR or full 1024-code INL/DNL run; static error sampled at 6 codes",
-    "Output CM tracks VDD (VDD - 1.65 V), no CM regulation",
+    "No glitch energy or full 1024-code INL/DNL run; static error sampled at 13 codes; SFDR from settled samples only",
+    "Output CM regulated to VDD/2 by the on-block CM loop (v3)",
+    "Random current-source mismatch NOT simulated (no MC): analytic mid-scale INL sigma ~1.0 LSB (PDK A_Vt) / ~2.0 LSB (pessimistic 2x A_Vt, design-assumptions), P(max|INL| > 4 LSB) ~0.1 % / ~28 %; the 4-LSB clean gate is deterministic (extracted, tt) only",
     "Rounding/saturation of the 12-bit transport word: truncation (code[11:2]) only"
   ]
 }

@@ -1,26 +1,28 @@
 {
   "block": "dac_q",
   "top_cell": "pt_dac_q",
-  "generated_utc": "2026-11-08T12:10:42Z",
+  "generated_utc": "2026-11-12T13:24:05Z",
   "source_hashes": {
-    "dac_q.spice": "sha256:7e9efa1032d9baf1b46dbbff5c15f6dc567c26f1d36854124317f812fd855aaf",
-    "circuits.py": "sha256:6bc9d4a406f770f07fb0868608439edf06c5cf9e5e6ee3772c748eaf71b24ea8",
-    "lib/convkit.py": "sha256:e75a0a2d28befc9ec4ffcae448b55dac611d6ff0a4960b203e853b6ccb7cdf95",
-    "flow.py": "sha256:e00c51c4bb85581839ebf76124765d2aded27ce6cff149f4fc0fce71ed946bdf",
-    "benches.py": "sha256:281b316df161fae431a4b8e291e2d3918255c15813c8a7a2c8ead495a13a84eb",
+    "dac_q.spice": "sha256:d31b302ee83e60bb80409973c4fe2db5996cac79ce4cb4857c7d7bd0619788da",
+    "circuits.py": "sha256:0c2f9dac9fd70c376c5e0c583cc5999971bec3326b8e61d8a8dfdf241fae3256",
+    "lib/convkit.py": "sha256:5dcc9797489b7d3fa01f15d57bdfd9d88df991f22c014c9c573067eb514486dc",
+    "flow.py": "sha256:875c05d8a97320ee95d78f32cbdf2b355483dd32e6ffadfd7977e5370d06ecaa",
+    "benches.py": "sha256:62a0e8b6febea00be5e396b9dd40aa83b98a2f44b8c2fee1fb5ccc7ae7c0a62e",
     "generated/macros/dac_logic.gds": "sha256:ebe8c850e83d9de65f18914e03c0d365bd4119daf08be85cc43cfbe11dfd7293",
     "generated/macros/dac_logic.lef": "sha256:a36a17b11a2e3f1cb63d4935de87e941ffc73425d288ca3ccd22d2c80895df86",
     "generated/macros/dac_logic.pnl.v": "sha256:a4e8477ed08e9959d423a14dd39303b71536baf8ed5bb79b7b1c8bfd0007a0e0",
+    "rtl/adc_code_reg.v": "sha256:84c184cbaf56991421de1a00b68b65da5a7e27e43cbca04eb632b1b97aef2a0b",
     "rtl/adc_sar_delay.v": "sha256:32042162b2f1f933f1d759d194b6f49c00e1b6ebc260126baa7f782d263fede1",
     "rtl/adc_sar_logic.v": "sha256:5e7c512539bcfe20a730c55856ca754ec3666df0cfcb90e6b5c00b48427d8e63",
     "rtl/dac_logic.v": "sha256:94cd12d47c9c808c1bb04b1a3182dd998ed994ef8ce7593297551b0b3356ecb3",
+    "rtl/tb_adc_code_reg.v": "sha256:afc5738d87b84adf3beb894b1ab7497dc88637636ee45586819cd5dc9da09fbc",
     "rtl/tb_adc_sar_logic.v": "sha256:a73dc0a64c15fb64779b80e11d9ce2e6ab4f359738fe4aefc2b4cf1508832339",
     "rtl/tb_dac_logic.v": "sha256:0a651fb00017aa23e8f1e8917488404350f8b83be1ed1407f044dab6f1271679"
   },
   "artifact_hashes": {
-    "generated/dac_q.gds": "sha256:fd87b45bcb9891bf8970ce349b064cad31de86637a43806b71cb01d1e7662964",
-    "generated/dac_q.mag": "sha256:7605ceab91fc1fe74fac16a3ef0c79a5b0db591a6ae1afed5331eebe0961a088",
-    "generated/dac_q.ext.spice": "sha256:21b3f29dfcf407cf9821eb056bfa99eebe475fc0c0a4353e05d985ec803521a0"
+    "generated/dac_q.gds": "sha256:4984edd74d2e4143cc98f906541d1cef74b187cc246442815336bb1575320e29",
+    "generated/dac_q.mag": "sha256:98a879940e0c29fce0b87a00099cb43f43280dbff4927d251e8ffbaaa6cb1109",
+    "generated/dac_q.ext.spice": "sha256:fb64f68f54ea68c527f8d022ae5f5d18611a39cae60480752245e6593bec68ef"
   },
   "images": {
     "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -30,12 +32,12 @@
   "pdk": "gf180mcuD ciel f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (both images)",
   "area": {
     "bbox_um": [
-      -34.0,
+      -36.0,
       0.0,
       641.0,
-      186.84
+      276.93
     ],
-    "area_um2": 126117.0,
+    "area_um2": 187481.6,
     "ceiling_um2": 225000,
     "fits": true
   },
@@ -45,20 +47,20 @@
       "cases": [
         {
           "case": "EN=0 supply current (A), tt 27C 3.3V",
-          "value": 3.22821e-09
+          "value": 7.40094e-09
         },
         {
           "case": "OUTP held at 1.65 V while disabled / island unpowered",
           "value": {
             "powered_disabled": {
-              "leak_A_at_1p65V": 5.037112e-12,
-              "cap_fF_at_10MHz": 63.10939,
-              "conductance_S": 3.577249e-10
+              "leak_A_at_1p65V": 4.345781e-12,
+              "cap_fF_at_10MHz": 99.20906,
+              "conductance_S": 2.902141e-09
             },
             "island_unpowered": {
-              "leak_A_at_1p65V": 5.58588e-12,
-              "cap_fF_at_10MHz": 62.80764,
-              "conductance_S": 1.950294e-11
+              "leak_A_at_1p65V": 5.597192e-12,
+              "cap_fF_at_10MHz": 98.15821,
+              "conductance_S": 1.718687e-10
             }
           }
         }
@@ -68,21 +70,29 @@
     "clean": {
       "extracted_nominal": {
         "fullscale_diff_V": [
-          -0.9957,
-          0.9957
+          -0.9787,
+          0.9719
         ],
-        "lsb_mV": 1.9466,
+        "lsb_mV": 1.9067,
         "code_error_lsb": {
           "-512": 0.0,
-          "-256": -9.946,
-          "0": 0.345,
-          "255": 5.96,
+          "-384": 0.333,
+          "-256": 1.714,
+          "-128": 2.141,
+          "-1": 0.99,
+          "0": 1.71,
+          "1": 1.711,
+          "127": 1.196,
+          "255": 0.654,
+          "383": 0.39,
           "511": 0.0,
-          "100": 5.454
+          "100": 1.731,
+          "-100": 1.397
         },
-        "cm_V": 1.4296
+        "cm_V": 1.7298,
+        "endpoint_spread_lsb": 0.524
       },
-      "extracted_ok": true,
+      "extracted_ok": false,
       "netlist": "generated/dac_q.ext.spice",
       "bench": "benches.dac_deck",
       "drc": {
@@ -100,10 +110,10 @@
         "magic": "8.3.678",
         "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
         "marker_shapes": {
-          "HRES 62/0": 3,
-          "RES_MK 110/5": 6
+          "HRES 62/0": 6,
+          "RES_MK 110/5": 12
         },
-        "ppolyf_u_1k_devices": 3,
+        "ppolyf_u_1k_devices": 6,
         "klayout_drc": {
           "violations": 0,
           "by_rule": {},
@@ -120,8 +130,7 @@
         "rc": "0",
         "report": "generated/dac_q-klayout-drc.lyrdb"
       },
-      "state": "pass",
-      "criterion": "basic function: +/-1 V class full scale, monotonic at sampled codes, |error| < 32 LSB (benches.dac_bench); re-evaluated from the stored run"
+      "state": "fail"
     },
     "observable": {
       "state": "pass",
@@ -138,19 +147,19 @@
         "rf_tx_external_baseband: debug.bb_tap inject_tx_filter / inject_tx_mixer with dac_*.config.enable=0 -> OUTP/OUTN series switches open"
       ],
       "bypass_loading_fF": {
-        "powered_disabled": 63.10939,
-        "island_unpowered": 62.80764
+        "powered_disabled": 99.20906,
+        "island_unpowered": 98.15821
       },
       "evidence": {
         "powered_disabled": {
-          "leak_A_at_1p65V": 5.037112e-12,
-          "cap_fF_at_10MHz": 63.10939,
-          "conductance_S": 3.577249e-10
+          "leak_A_at_1p65V": 4.345781e-12,
+          "cap_fF_at_10MHz": 99.20906,
+          "conductance_S": 2.902141e-09
         },
         "island_unpowered": {
-          "leak_A_at_1p65V": 5.58588e-12,
-          "cap_fF_at_10MHz": 62.80764,
-          "conductance_S": 1.950294e-11
+          "leak_A_at_1p65V": 5.597192e-12,
+          "cap_fF_at_10MHz": 98.15821,
+          "conductance_S": 1.718687e-10
         }
       }
     }
@@ -160,8 +169,8 @@
       "metric": "differential full scale (V)",
       "target": "+/-1.0",
       "nominal": [
-        -0.9957,
-        0.9957
+        -0.9787,
+        0.9719
       ]
     },
     {
@@ -169,22 +178,29 @@
       "target": "8-bit-class",
       "nominal": {
         "-512": 0.0,
-        "-256": -9.946,
-        "0": 0.345,
-        "255": 5.96,
+        "-384": 0.333,
+        "-256": 1.714,
+        "-128": 2.141,
+        "-1": 0.99,
+        "0": 1.71,
+        "1": 1.711,
+        "127": 1.196,
+        "255": 0.654,
+        "383": 0.39,
         "511": 0.0,
-        "100": 5.454
+        "100": 1.731,
+        "-100": 1.397
       }
     },
     {
       "metric": "output common mode (V)",
       "target": "1.65",
-      "nominal": 1.4296
+      "nominal": 1.7298
     },
     {
       "metric": "supply current, active (mA)",
       "target": "2.0 allocation",
-      "nominal": 1.92235
+      "nominal": 2.06888
     },
     {
       "metric": "stretch: 80 MS/s (12.5 ns) update, same codes",
@@ -208,8 +224,9 @@
   "excluded_coverage": [
     "gain_trim and offset_trim register fields have no analog effect in this version",
     "hold_zero verified only at one code pair",
-    "No glitch energy, SFDR or full 1024-code INL/DNL run; static error sampled at 6 codes",
-    "Output CM tracks VDD (VDD - 1.65 V), no CM regulation",
+    "No glitch energy or full 1024-code INL/DNL run; static error sampled at 13 codes; SFDR from settled samples only",
+    "Output CM regulated to VDD/2 by the on-block CM loop (v3)",
+    "Random current-source mismatch NOT simulated (no MC): analytic mid-scale INL sigma ~1.0 LSB (PDK A_Vt) / ~2.0 LSB (pessimistic 2x A_Vt, design-assumptions), P(max|INL| > 4 LSB) ~0.1 % / ~28 %; the 4-LSB clean gate is deterministic (extracted, tt) only",
     "Rounding/saturation of the 12-bit transport word: truncation (code[11:2]) only"
   ]
 }

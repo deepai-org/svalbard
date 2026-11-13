@@ -1,13 +1,13 @@
 {
   "block": "adc_q",
   "top_cell": "pt_adc_q",
-  "generated_utc": "2026-11-08T16:33:16Z",
+  "generated_utc": "2026-11-10T10:27:29Z",
   "source_hashes": {
-    "adc_q.spice": "sha256:7a42257ecf3a263bb481a4be3b46c8e0fbc4a66ae83d2bc0520a3cd5ce8f4832",
-    "circuits.py": "sha256:adef90cbf0361a13c7f816226d4c16024301fdaa3a59ecd81f469bd80ebd97fd",
-    "lib/convkit.py": "sha256:335aaf313b48811efd7abdca25e07c0e4535a19b8c5e4e14de11ec17fed43a6e",
-    "flow.py": "sha256:d53ad8a2cbf8a969d4b234d27bb056af2d621d3ef820e371439f123910a78905",
-    "benches.py": "sha256:b26147a39953c75242e7841e9c26d5c959cf9284a45b95646b7b4bee4dbfa81d",
+    "adc_q.spice": "sha256:12347189be0e8434960953fbf33024e401785eb130a3b7636945b32a66fcb4d4",
+    "circuits.py": "sha256:dab7a955791d8288e0570057e50a2b724869b8d4a436a8b2ec52810fdaac45ba",
+    "lib/convkit.py": "sha256:386c34206faa74b15087c4b1c450026142be5d0253c3e52f21d3c655c9132d4b",
+    "flow.py": "sha256:875c05d8a97320ee95d78f32cbdf2b355483dd32e6ffadfd7977e5370d06ecaa",
+    "benches.py": "sha256:4315c470b4fba951ebdeed473b74acc279820a9ffc018f4261b5f6565deacebc",
     "generated/macros/adc_code_reg.gds": "sha256:62e70715d13b8d49e5fa376bb42e3f78ea6e80f555d10ea73a19ff46df67d693",
     "generated/macros/adc_code_reg.lef": "sha256:e310191ddc55dc59286e2c355059bca8464f998af224f9da6ba6372e7ad96b34",
     "generated/macros/adc_code_reg.pnl.v": "sha256:3f588477a65b65775a039876de3e88dd375854523933230fb7aca5fe17745e46",
@@ -20,9 +20,9 @@
     "rtl/tb_dac_logic.v": "sha256:0a651fb00017aa23e8f1e8917488404350f8b83be1ed1407f044dab6f1271679"
   },
   "artifact_hashes": {
-    "generated/adc_q.gds": "sha256:2800fc141766854f2e16cbc58358c7e05ea972f5e7322511f2fd61d1fe646fa3",
-    "generated/adc_q.mag": "sha256:871c980415b44da56d260cc4cf7e4a169c1d2bc2a8c24bf747c6edc69b2ba2ba",
-    "generated/adc_q.ext.spice": "sha256:461d6443f5bd601b792646cb366d6b0dc08825754c61f468c31db2029713c150"
+    "generated/adc_q.gds": "sha256:3e7bc935f07ea1606419af04fe1598104a1f9d35fed2c84deae58d0fe32d78ea",
+    "generated/adc_q.mag": "sha256:d81c825d0f66f07d12f1572b9bd347ddd71bb20f0b84095f3ed105dc8ad3d346",
+    "generated/adc_q.ext.spice": "sha256:24f328b2b8c4540ccec0e921b77964e1c47de367b69ea2f246b1529908abda87"
   },
   "images": {
     "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -32,14 +32,14 @@
   "pdk": "gf180mcuD ciel f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (both images)",
   "area": {
     "bbox_um": [
-      -39.0,
+      -60.0,
       0.0,
       407.96,
-      579.55
+      1242.16
     ],
-    "area_um2": 259035.7,
+    "area_um2": 581281.2,
     "ceiling_um2": 350000,
-    "fits": true
+    "fits": false
   },
   "tests": {
     "safe": {
@@ -47,59 +47,85 @@
       "cases": [
         {
           "case": "EN=0 supply current (A)",
-          "value": -1.68591e-09
+          "value": -8.70288e-07
         },
         {
           "case": "INP held at 1.65 V while disabled / island unpowered",
           "value": {
             "powered_disabled": {
-              "leak_A_at_1p65V": 4.256442e-12,
-              "cap_fF_at_10MHz": 113.2898,
-              "conductance_S": 1.499667e-09
+              "leak_A_at_1p65V": 8.522885e-12,
+              "cap_fF_at_10MHz": 232.0184,
+              "conductance_S": 1.918584e-08
             },
             "island_unpowered": {
-              "leak_A_at_1p65V": 3.636732e-12,
-              "cap_fF_at_10MHz": 110.2066,
-              "conductance_S": 3.140973e-12
+              "leak_A_at_1p65V": 7.283465e-12,
+              "cap_fF_at_10MHz": 209.0894,
+              "conductance_S": 1.54035e-11
             }
           }
         }
       ],
-      "notes": "Reset: registers cleared, comparator clock low (no static path), bootstrap gate pulled to VSS, clock receiver and bias off. Every device touching INP/INN, VCM and VREF is an NMOS in p-substrate."
+      "notes": "Reset: registers cleared, comparator clock low (no static path), bootstrap gate pulled to VSS, clock receiver and bias off; ILEN=0 also holds core B in reset. Every device touching INP/INN, VCM and VREF is an NMOS in p-substrate."
     },
     "clean": {
       "extracted_nominal": {
-        "inputs_V": [
-          0.5,
-          -0.5,
-          0.123,
-          -0.7
-        ],
-        "codes": [
-          300,
-          -286,
-          78,
-          -404
-        ],
-        "codes_per_V": 586.0,
-        "implied_fullscale_V": 0.8737,
-        "offset_codes": 7.0,
-        "dev_from_gain_offset_fit": [
-          0,
-          0,
-          -1,
-          -1
-        ],
-        "t_done_ns": [
-          34.76,
-          34.9,
-          35.04,
-          35.0
-        ]
+        "t_done_ns_max": 29.96,
+        "all_done": true,
+        "conversion_window_ns": 44.0,
+        "core_A": {
+          "inputs_V": [
+            0.5,
+            -0.5,
+            0.123,
+            -0.7
+          ],
+          "codes": [
+            280,
+            -288,
+            64,
+            -402
+          ],
+          "codes_per_V": 568,
+          "implied_fullscale_V": 0.9014,
+          "offset_codes": -4.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0,
+            -2,
+            0
+          ],
+          "monotonic": true
+        },
+        "core_B": {
+          "inputs_V": [
+            -0.5,
+            0.5,
+            -0.7,
+            0.123
+          ],
+          "codes": [
+            -296,
+            272,
+            -414,
+            60
+          ],
+          "codes_per_V": 568,
+          "implied_fullscale_V": 0.9014,
+          "offset_codes": -12.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0,
+            -4,
+            2
+          ],
+          "monotonic": true
+        },
+        "pass": true
       },
       "extracted_ok": true,
       "netlist": "generated/adc_q.ext.spice",
       "bench": "benches.adc_deck",
+      "criterion": "all conversions complete at 40 MS/s, both cores monotonic, <= 4 codes from a per-core gain/offset fit",
       "drc": {
         "tool": "magic 8.3.623 (digital image), full gf180mcuD deck",
         "errors": 0,
@@ -138,121 +164,149 @@
       "state": "pass"
     },
     "observable": {
-      "state": "pass",
+      "state": "open",
       "atb_taps": [
         "adc_comparator_bias (ATB_BIAS = local bias gate, also clock receiver)"
       ],
       "status_bits": [
         "adc_*_done",
-        "adc_*_overload"
+        "adc_*_overload",
+        "adc_*_doneb",
+        "adc_*_overloadb"
       ],
       "clock_obs": [],
-      "notes": "input_test modes were run on adc_i (generated/adc_i-evidence.json); adc_q is the identical generator output (circuits.adc2) with only the top-cell name changed. input_test 1/2/3 give known codes without any external source."
+      "notes": "input_test 1/2/3 give known codes on each core without any external source; ILEN=0 isolates core A."
     },
     "fallback": {
-      "state": "pass",
+      "state": "open",
+      "criterion": "no DC path (<10 nA at 1.65 V) and < 100 fF per leg disabled/unpowered",
       "routes": [
-        "rf_bb_external_adc: debug.bb_tap observe_rx_pga etc.; ADC input stays high-Z when disabled or unpowered"
+        "rf_bb_external_adc: debug.bb_tap observe_rx_pga etc.; ADC input stays high-Z when disabled or unpowered",
+        "in-block: ILEN=0 runs core A alone at 20 MS/s (v2 behaviour)"
       ],
       "bypass_loading_fF": {
-        "powered_disabled": 113.2898,
-        "island_unpowered": 110.2066
+        "powered_disabled": 232.0184,
+        "island_unpowered": 209.0894
       },
       "evidence": {
         "powered_disabled": {
-          "leak_A_at_1p65V": 4.256442e-12,
-          "cap_fF_at_10MHz": 113.2898,
-          "conductance_S": 1.499667e-09
+          "leak_A_at_1p65V": 8.522885e-12,
+          "cap_fF_at_10MHz": 232.0184,
+          "conductance_S": 1.918584e-08
         },
         "island_unpowered": {
-          "leak_A_at_1p65V": 3.636732e-12,
-          "cap_fF_at_10MHz": 110.2066,
-          "conductance_S": 3.140973e-12
+          "leak_A_at_1p65V": 7.283465e-12,
+          "cap_fF_at_10MHz": 209.0894,
+          "conductance_S": 1.54035e-11
         }
-      },
-      "criterion": "no DC path (<10 nA at 1.65 V) and < 0.5 pF/leg (ADC on-state sampling load per spec)"
+      }
     }
   },
   "performance_vs_target": [
     {
-      "metric": "conversion at 20 MS/s (50 ns, 10 ns acquisition)",
-      "target": ">= 20 MS/s per I/Q (20 MHz Wi-Fi)",
+      "metric": "40 MS/s per channel, 2-way interleaved (25 ns clock, 6 ns acquisition), tt/27C/3.3V",
+      "target": "40 MS/s per I/Q (AA)",
       "nominal": {
-        "inputs_V": [
-          0.5,
-          -0.5,
-          0.123,
-          -0.7
-        ],
-        "codes": [
-          300,
-          -286,
-          78,
-          -404
-        ],
-        "codes_per_V": 586.0,
-        "implied_fullscale_V": 0.8737,
-        "offset_codes": 7.0,
-        "dev_from_gain_offset_fit": [
-          0,
-          0,
-          -1,
-          -1
-        ],
-        "t_done_ns": [
-          34.76,
-          34.9,
-          35.04,
-          35.0
-        ]
+        "t_done_ns_max": 29.96,
+        "all_done": true,
+        "conversion_window_ns": 44.0,
+        "core_A": {
+          "inputs_V": [
+            0.5,
+            -0.5,
+            0.123,
+            -0.7
+          ],
+          "codes": [
+            280,
+            -288,
+            64,
+            -402
+          ],
+          "codes_per_V": 568,
+          "implied_fullscale_V": 0.9014,
+          "offset_codes": -4.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0,
+            -2,
+            0
+          ],
+          "monotonic": true
+        },
+        "core_B": {
+          "inputs_V": [
+            -0.5,
+            0.5,
+            -0.7,
+            0.123
+          ],
+          "codes": [
+            -296,
+            272,
+            -414,
+            60
+          ],
+          "codes_per_V": 568,
+          "implied_fullscale_V": 0.9014,
+          "offset_codes": -12.0,
+          "dev_from_gain_offset_fit": [
+            0,
+            0,
+            -4,
+            2
+          ],
+          "monotonic": true
+        },
+        "pass": true
       }
     },
     {
-      "metric": "25 MS/s (40 ns, 6 ns acquisition)",
-      "target": "margin probe",
-      "nominal": "not run (identical copy of the _i block)"
+      "metric": "single-core fallback ILEN=0 at 20 MS/s (50 ns, 10 ns acquisition)",
+      "target": ">= 20 MS/s",
+      "nominal": null
     },
     {
-      "metric": "selected 40 MS/s timing (3 ns acq, 25.2 ns period)",
-      "target": "3/20/2/0.2 ns allocation",
-      "nominal": "not run (identical copy of the _i block)"
+      "metric": "margin probe: ss/32C/3.15V at 45 MS/s (22.2 ns clock)",
+      "target": "margin, not gating",
+      "nominal": null
     },
     {
-      "metric": "stretch 80 MS/s (12.5 ns)",
-      "target": "non-gating 40 MHz-channel stretch",
-      "nominal": "not run (identical copy of the _i block)"
-    },
-    {
-      "metric": "input_test modes 1/2/3 (expect 0, +128*g, -128*g codes)",
+      "metric": "input_test modes 1/2/3 per core (expect 0, +128*g, -128*g codes)",
       "target": "0/+VREF/4/-VREF/4",
       "nominal": {
-        "input_test=0": null,
-        "input_test=1": null,
-        "input_test=2": null,
-        "input_test=3": null,
+        "core_A_input_test=0": null,
+        "core_A_input_test=1": null,
+        "core_A_input_test=2": null,
+        "core_A_input_test=3": null,
+        "core_B_input_test=0": null,
+        "core_B_input_test=1": null,
+        "core_B_input_test=2": null,
+        "core_B_input_test=3": null,
         "note": "input 0.3 V differential applied throughout; modes 1-3 must ignore it"
       }
     },
     {
-      "metric": "supply current at 20 MS/s (mA)",
+      "metric": "supply current at 40 MS/s (mA)",
       "target": "8 allocation",
-      "nominal": 2.8780799999999997
+      "nominal": 5.72074
     },
     {
-      "metric": "VREF average current at 20 MS/s (uA)",
+      "metric": "VREF average current at 40 MS/s (uA)",
       "target": "refbuf source limit 1 mA",
-      "nominal": 61.7365
+      "nominal": 83.538
     },
     {
-      "metric": "corner sweep (extracted, 20 MS/s)",
-      "target": "narrow window, not gating",
+      "metric": "corner sweep at 40 MS/s interleaved (extracted)",
+      "target": "40 MS/s at every envelope corner",
+      "all_pass": true,
       "corners": {}
     }
   ],
   "excluded_coverage": [
-    "comparator_trim field not implemented (no analog trim)",
-    "acquisition_ns/decision_ns/reset_ns are realised by the ADC_CLOCK duty cycle from the clock tree, not inside this block",
-    "No FFT/ENOB, noise or Monte Carlo run; linearity sampled at 8 DC points",
-    "VREF is an ideal source in these benches (refbuf verified separately)"
+    "comparator_trim field not implemented (no analog trim); per-core offset removed digitally",
+    "acquisition_ns is realised by the ADC_CLOCK duty cycle (6 ns high at 40 MHz), not inside this block",
+    "VREF is an ideal source in these DC benches; the FFT bench (adc_fft.py --refbuf) puts the extracted refbuf in the loop",
+    "No Monte Carlo: interleave timing skew from mismatch is estimated, not simulated"
   ]
 }

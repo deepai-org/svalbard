@@ -1,0 +1,552 @@
+{
+ "block": "dac_i",
+ "view": "sch",
+ "update_rate_Hz": 80000000.0,
+ "n": 128,
+ "dbfs": -1.0,
+ "load": "100 fF per leg",
+ "method": "SP-03: dynamic 80 MS/s test of the radio DAC (dac_i / dac_q), separate from benches.py.\n\nWhat the existing benches do NOT test: benches.dac_deck holds every code for TWO clock periods, so\n'rate80M' (period 12.5 ns) is a 40 MS/s static-code test and 'nominal'/'sine' (period 25 ns) are 20 MS/s.\nThis bench updates the code on EVERY clock edge at 80 MHz:\n  * coherent sine: N samples, `cycles` signal cycles (coprime with N), amplitude `dbfs` below full scale,\n    two's-complement codes into CODE0..9 (the dac_logic convention used by benches.dac_deck);\n  * the differential output v(OUTP)-v(OUTN) is resampled on a uniform grid of `os` points per update period\n    over the N periods after the pipeline latency, and FFT'd (rectangular window, coherent):\n      - SFDR / SNDR / THD in the first Nyquist zone (0-40 MHz) of the CONTINUOUS waveform (includes glitches,\n        settling, ZOH droop is a known deterministic sinc and is reported, not removed);\n      - same metrics on the per-period mid-point samples (the DAC's static/linearity contribution);\n      - in-band (0-10 MHz, HE20 half-bandwidth 9.7 MHz) SNDR;\n  * glitch / settling: a major-carry step (code -1 -> 0, offset-binary 511 -> 512) and a full-scale step,\n    each held 4 periods: glitch impulse area (V*s) of v(t) - v_final over the transition period, peak\n    excursion beyond the final value, and settling time to +/-0.5 LSB.\nLoad: 100 fF per leg (same as benches.dac_deck), ideal 10 uA IBIAS, low-swing 80 MHz DAC_CLOCK.",
+ "results": {
+  "sine_tt_c13": {
+   "f_signal_MHz": 8.125,
+   "continuous_0_40MHz": {
+    "amp_V": 0.8715,
+    "sndr_db": 37.56,
+    "enob": 5.95,
+    "sfdr_dbc": 45.93,
+    "sfdr_f_MHz": 24.375,
+    "thd_db": -45.11,
+    "top_spurs_MHz_dBc": [
+     [
+      24.375,
+      -45.9
+     ],
+     [
+      5.625,
+      -54.8
+     ],
+     [
+      9.375,
+      -55.0
+     ],
+     [
+      35.625,
+      -55.2
+     ],
+     [
+      16.875,
+      -55.3
+     ]
+    ]
+   },
+   "continuous_0_10MHz": {
+    "sndr_db": 44.3,
+    "enob": 7.07
+   },
+   "midpoint_samples": {
+    "amp_V": 0.8898,
+    "sndr_db": 41.36,
+    "enob": 6.58,
+    "sfdr_dbc": 41.46,
+    "sfdr_f_MHz": 24.375,
+    "thd_db": -41.46,
+    "top_spurs_MHz_dBc": [
+     [
+      24.375,
+      -41.5
+     ],
+     [
+      0.625,
+      -69.3
+     ],
+     [
+      14.375,
+      -70.1
+     ],
+     [
+      25.625,
+      -70.3
+     ],
+     [
+      9.375,
+      -70.4
+     ]
+    ]
+   },
+   "zoh_droop_db": -0.148,
+   "cm_V": 1.6483,
+   "supply_mA": 1.971,
+   "corner": {
+    "mos": "typical",
+    "temp_c": 27,
+    "vdd_v": 3.3
+   }
+  },
+  "sine_tt_c29": {
+   "f_signal_MHz": 18.125,
+   "continuous_0_40MHz": {
+    "amp_V": 0.8063,
+    "sndr_db": 31.02,
+    "enob": 4.86,
+    "sfdr_dbc": 36.48,
+    "sfdr_f_MHz": 25.625,
+    "thd_db": -44.83,
+    "top_spurs_MHz_dBc": [
+     [
+      25.625,
+      -36.5
+     ],
+     [
+      36.25,
+      -44.8
+     ],
+     [
+      10.625,
+      -49.1
+     ],
+     [
+      3.125,
+      -49.5
+     ],
+     [
+      28.75,
+      -49.8
+     ]
+    ]
+   },
+   "continuous_0_10MHz": {
+    "sndr_db": 38.65,
+    "enob": 6.13
+   },
+   "midpoint_samples": {
+    "amp_V": 0.8841,
+    "sndr_db": 38.21,
+    "enob": 6.05,
+    "sfdr_dbc": 38.26,
+    "sfdr_f_MHz": 25.625,
+    "thd_db": -66.64,
+    "top_spurs_MHz_dBc": [
+     [
+      25.625,
+      -38.3
+     ],
+     [
+      36.25,
+      -66.6
+     ],
+     [
+      4.375,
+      -68.6
+     ],
+     [
+      29.375,
+      -69.8
+     ],
+     [
+      39.375,
+      -70.1
+     ]
+    ]
+   },
+   "zoh_droop_db": -0.746,
+   "cm_V": 1.6485,
+   "supply_mA": 2.038,
+   "corner": {
+    "mos": "typical",
+    "temp_c": 27,
+    "vdd_v": 3.3
+   }
+  },
+  "steps_tt": {
+   "fullscale_V": [
+    -1.005,
+    1.0069
+   ],
+   "major_carry_m1_to_0": {
+    "v_before": -0.00177,
+    "v_final": 0.00177,
+    "step_V": 0.00355,
+    "overshoot_V": 0.0047,
+    "net_area_Vs": -6.537241680296109e-12,
+    "settle_0p5lsb_ns": 2.27,
+    "lsb_mV": 1.967
+   },
+   "fullscale_m512_to_511": {
+    "v_before": -1.00547,
+    "v_final": 1.00682,
+    "step_V": 2.01229,
+    "overshoot_V": -0.00128,
+    "net_area_Vs": -4.49426585989254e-09,
+    "settle_0p5lsb_ns": 48.74,
+    "lsb_mV": 1.967
+   },
+   "supply_mA": 1.918,
+   "corner": {
+    "mos": "typical",
+    "temp_c": 27,
+    "vdd_v": 3.3
+   }
+  },
+  "sine_ss_c13": {
+   "f_signal_MHz": 8.125,
+   "continuous_0_40MHz": {
+    "amp_V": 1.0278,
+    "sndr_db": 35.05,
+    "enob": 5.53,
+    "sfdr_dbc": 43.7,
+    "sfdr_f_MHz": 24.375,
+    "thd_db": -42.76,
+    "top_spurs_MHz_dBc": [
+     [
+      24.375,
+      -43.7
+     ],
+     [
+      5.625,
+      -52.0
+     ],
+     [
+      16.25,
+      -52.5
+     ],
+     [
+      23.125,
+      -52.7
+     ],
+     [
+      1.25,
+      -52.8
+     ]
+    ]
+   },
+   "continuous_0_10MHz": {
+    "sndr_db": 41.45,
+    "enob": 6.59
+   },
+   "midpoint_samples": {
+    "amp_V": 1.0492,
+    "sndr_db": 37.63,
+    "enob": 5.96,
+    "sfdr_dbc": 37.73,
+    "sfdr_f_MHz": 24.375,
+    "thd_db": -37.72,
+    "top_spurs_MHz_dBc": [
+     [
+      24.375,
+      -37.7
+     ],
+     [
+      39.375,
+      -59.4
+     ],
+     [
+      6.875,
+      -66.1
+     ],
+     [
+      9.375,
+      -66.8
+     ],
+     [
+      5.625,
+      -68.2
+     ]
+    ]
+   },
+   "zoh_droop_db": -0.148,
+   "cm_V": 1.5729,
+   "supply_mA": 1.857,
+   "corner": {
+    "mos": "ss",
+    "temp_c": 32,
+    "vdd_v": 3.15
+   }
+  },
+  "sine_ss_c29": {
+   "f_signal_MHz": 18.125,
+   "continuous_0_40MHz": {
+    "amp_V": 0.9491,
+    "sndr_db": 28.52,
+    "enob": 4.45,
+    "sfdr_dbc": 34.39,
+    "sfdr_f_MHz": 25.625,
+    "thd_db": -41.24,
+    "top_spurs_MHz_dBc": [
+     [
+      25.625,
+      -34.4
+     ],
+     [
+      36.25,
+      -41.2
+     ],
+     [
+      10.625,
+      -46.8
+     ],
+     [
+      28.75,
+      -46.9
+     ],
+     [
+      3.125,
+      -47.0
+     ]
+    ]
+   },
+   "continuous_0_10MHz": {
+    "sndr_db": 35.95,
+    "enob": 5.68
+   },
+   "midpoint_samples": {
+    "amp_V": 1.0429,
+    "sndr_db": 35.78,
+    "enob": 5.65,
+    "sfdr_dbc": 36.03,
+    "sfdr_f_MHz": 25.625,
+    "thd_db": -64.81,
+    "top_spurs_MHz_dBc": [
+     [
+      25.625,
+      -36.0
+     ],
+     [
+      10.625,
+      -49.9
+     ],
+     [
+      33.125,
+      -57.3
+     ],
+     [
+      36.25,
+      -64.8
+     ],
+     [
+      3.125,
+      -65.7
+     ]
+    ]
+   },
+   "zoh_droop_db": -0.746,
+   "cm_V": 1.573,
+   "supply_mA": 1.914,
+   "corner": {
+    "mos": "ss",
+    "temp_c": 32,
+    "vdd_v": 3.15
+   }
+  },
+  "steps_ss": {
+   "fullscale_V": [
+    -1.1916,
+    1.1932
+   ],
+   "major_carry_m1_to_0": {
+    "v_before": -0.00214,
+    "v_final": 0.00214,
+    "step_V": 0.00427,
+    "overshoot_V": 0.00219,
+    "net_area_Vs": -1.6138237916672726e-11,
+    "settle_0p5lsb_ns": 3.93,
+    "lsb_mV": 2.331
+   },
+   "fullscale_m512_to_511": {
+    "v_before": -1.18904,
+    "v_final": 1.1934,
+    "step_V": 2.38244,
+    "overshoot_V": -0.00235,
+    "net_area_Vs": -7.187989203525628e-09,
+    "settle_0p5lsb_ns": 48.74,
+    "lsb_mV": 2.331
+   },
+   "supply_mA": 1.813,
+   "corner": {
+    "mos": "ss",
+    "temp_c": 32,
+    "vdd_v": 3.15
+   }
+  },
+  "sine_ff_c13": {
+   "f_signal_MHz": 8.125,
+   "continuous_0_40MHz": {
+    "amp_V": 0.7118,
+    "sndr_db": 39.59,
+    "enob": 6.28,
+    "sfdr_dbc": 48.37,
+    "sfdr_f_MHz": 24.375,
+    "thd_db": -47.45,
+    "top_spurs_MHz_dBc": [
+     [
+      24.375,
+      -48.4
+     ],
+     [
+      9.375,
+      -56.5
+     ],
+     [
+      5.625,
+      -56.7
+     ],
+     [
+      16.875,
+      -57.0
+     ],
+     [
+      35.625,
+      -57.0
+     ]
+    ]
+   },
+   "continuous_0_10MHz": {
+    "sndr_db": 46.33,
+    "enob": 7.4
+   },
+   "midpoint_samples": {
+    "amp_V": 0.727,
+    "sndr_db": 47.11,
+    "enob": 7.53,
+    "sfdr_dbc": 47.45,
+    "sfdr_f_MHz": 24.375,
+    "thd_db": -47.45,
+    "top_spurs_MHz_dBc": [
+     [
+      24.375,
+      -47.5
+     ],
+     [
+      0.625,
+      -69.2
+     ],
+     [
+      25.625,
+      -70.4
+     ],
+     [
+      9.375,
+      -70.6
+     ],
+     [
+      14.375,
+      -70.7
+     ]
+    ]
+   },
+   "zoh_droop_db": -0.148,
+   "cm_V": 1.6734,
+   "supply_mA": 2.09,
+   "corner": {
+    "mos": "ff",
+    "temp_c": 22,
+    "vdd_v": 3.35
+   }
+  },
+  "sine_ff_c29": {
+   "f_signal_MHz": 18.125,
+   "continuous_0_40MHz": {
+    "amp_V": 0.6599,
+    "sndr_db": 33.21,
+    "enob": 5.22,
+    "sfdr_dbc": 39.13,
+    "sfdr_f_MHz": 25.625,
+    "thd_db": -47.45,
+    "top_spurs_MHz_dBc": [
+     [
+      25.625,
+      -39.1
+     ],
+     [
+      36.25,
+      -47.4
+     ],
+     [
+      10.625,
+      -51.1
+     ],
+     [
+      3.125,
+      -51.3
+     ],
+     [
+      6.875,
+      -51.7
+     ]
+    ]
+   },
+   "continuous_0_10MHz": {
+    "sndr_db": 40.64,
+    "enob": 6.46
+   },
+   "midpoint_samples": {
+    "amp_V": 0.7246,
+    "sndr_db": 44.13,
+    "enob": 7.04,
+    "sfdr_dbc": 44.31,
+    "sfdr_f_MHz": 25.625,
+    "thd_db": -72.43,
+    "top_spurs_MHz_dBc": [
+     [
+      25.625,
+      -44.3
+     ],
+     [
+      10.625,
+      -69.0
+     ],
+     [
+      4.375,
+      -69.3
+     ],
+     [
+      29.375,
+      -69.7
+     ],
+     [
+      39.375,
+      -70.1
+     ]
+    ]
+   },
+   "zoh_droop_db": -0.746,
+   "cm_V": 1.6734,
+   "supply_mA": 2.169,
+   "corner": {
+    "mos": "ff",
+    "temp_c": 22,
+    "vdd_v": 3.35
+   }
+  },
+  "steps_ff": {
+   "fullscale_V": [
+    -0.8184,
+    0.819
+   ],
+   "major_carry_m1_to_0": {
+    "v_before": -0.00142,
+    "v_final": 0.00142,
+    "step_V": 0.00285,
+    "overshoot_V": 0.00613,
+    "net_area_Vs": -2.3728282112508134e-12,
+    "settle_0p5lsb_ns": 1.909,
+    "lsb_mV": 1.601
+   },
+   "fullscale_m512_to_511": {
+    "v_before": -0.81849,
+    "v_final": 0.819,
+    "step_V": 1.6375,
+    "overshoot_V": -0.0003,
+    "net_area_Vs": -2.937628285951632e-09,
+    "settle_0p5lsb_ns": 48.74,
+    "lsb_mV": 1.601
+   },
+   "supply_mA": 2.029,
+   "corner": {
+    "mos": "ff",
+    "temp_c": 22,
+    "vdd_v": 3.35
+   }
+  }
+ },
+ "note": "ff sines rerun with .save v(OUTP) v(OUTN) i(VDD) (vector memory); otherwise identical decks"
+}

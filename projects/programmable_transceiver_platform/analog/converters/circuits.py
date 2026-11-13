@@ -180,14 +180,24 @@ def dac(name='pt_dac_i'):
           Mos('KBP1', P, 4, 1, 'KPG', 'KPG', 'VDD', 'VDD'),
           Mos('KBP2', P, 4, 1, 'VCASC', 'KPG', 'VDD', 'VDD'),
           Mos('KBD', N, 1, 3, 'VCASC', 'VCASC', 'VSS', 'VSS'),
-          Mos('KPD', N, 1, 0.5, 'VCASC', 'ENB', 'VSS', 'VSS')]
+          Mos('KPD', N, 1, 0.5, 'VCASC', 'ENB', 'VSS', 'VSS'),
+          # v4 (CNV-03): 1 pF MIM decaps on the current-source gate (ATB_BIAS) and the cascode
+          # gate. Extracted v3: CK/CLKN couple 21 fF onto ATB_BIAS and 7.6 fF onto HG, giving a
+          # +/-5.5% FS 40 MHz ripple and a 4.36 LSB static bow (schematic with decaps <= 1.7 LSB).
+          # Mitigation, not isolation: the 21 fF divider only drops ~1.7 -> 2.7 pF (ripple -37 %);
+          # shielding CK/CLKN from ATB_BIAS/HG is the real fix. Cost: bias + CM loop settle
+          # ~0.9 us after EN at ss 22-32C 3.10 V (bench DAC_T0 900 ns).
+          Cap('CDAB', 22, 22, 'ATB_BIAS', 'VSS'),
+          Cap('CDVC', 22, 22, 'VCASC', 'VSS')]
     # v3 common-mode loop (v2: passive RS, CM 1.43 V tt, 0.99-1.83 V corners):
     # sense R 2 x 20k -> CMS; reference VDD/2 (2 x 50k); 5T NMOS OTA
     # (40 uA tail) drives the PMOS header gate HG; Miller cap HG-T (~1 pF) splits
     # the HG and T poles (T is high-impedance: header ro || sense R). CMS high -> HG
     # up -> header weaker -> T and the CM fall. Disabled: HG pulled to VDD.
     cm = [Res('RCP', 1, 20, 'OPI', 'CMS', 'VSS'), Res('RCN', 1, 20, 'ONI', 'CMS', 'VSS'),
-          Res('RDA', 1, 50, 'VDD', 'CMR', 'VSS'), Res('RDB', 1, 50, 'CMR', 'VSS', 'VSS'),
+          Res('RDA', 1, 50, 'VDD', 'CMR', 'VSS'), Res('RDB', 1, 50, 'CMR', 'CMRF', 'VSS'),
+          # v4: footer so the VDD/2 divider (3.3 V / 100k = 33 uA) is off at EN=0 ('safe' test).
+          Mos('MDF', N, 4, 0.28, 'CMRF', 'EN', 'VSS', 'VSS'),
           Mos('OTT', N, 16, 2, 'OTS', 'ATB_BIAS', 'VSS', 'VSS'),
           Mos('OT1', N, 4, 1, 'OTD', 'CMS', 'OTS', 'VSS'),
           Mos('OT2', N, 4, 1, 'HG', 'CMR', 'OTS', 'VSS'),

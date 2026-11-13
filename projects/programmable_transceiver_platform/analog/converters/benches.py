@@ -42,12 +42,15 @@ def meas(stdout):
 WORKERS = int(__import__('os').environ.get('CONV_WORKERS', '3'))   # host policy: <= 3 sim containers
 
 
-def run_decks(work, decks, workers=None):
+def run_decks(work, decks, workers=None, timeout=7200):
     workers = workers or WORKERS
     """decks: {name: text}. Returns {name: (measurements, returncode)}."""
     def one(item):
         name, text = item
-        r = ck.ngspice(work, name + '.spice', text)
+        try:
+            r = ck.ngspice(work, name + '.spice', text, timeout=timeout)
+        except __import__('subprocess').TimeoutExpired:
+            return name, ({}, 'timeout')
         return name, (meas(r.stdout), r.returncode)
     with cf.ThreadPoolExecutor(workers) as ex:
         return dict(ex.map(one, decks.items()))
@@ -295,8 +298,11 @@ def decode(datfile, t0, period, n, acq, ilen=0):
 
 
 # ===================================================================== DAC
-def dac_deck(net, corner, temp, vdd, *, top, codes, period, t0=400e-9, hold_zero=False):
-    # t0: the 67 current-source gates (~1.7 pF) charge from the 10 uA bias in ~0.3 us after EN
+DAC_T0 = 900e-9   # v4: + 1 pF ATB_BIAS decap (CNV-03): bias+CM loop settle ~0.9 us at ss 22-32C 3.10V (sch); v3 was 400 ns
+
+
+def dac_deck(net, corner, temp, vdd, *, top, codes, period, t0=DAC_T0, hold_zero=False):
+    # t0: the 67 current-source gates (~1.7 pF) + 1 pF decap charge from the 10 uA bias after EN
     """codes: signed 10-bit values, each presented for two clock periods."""
     n = len(codes)
 
@@ -319,6 +325,9 @@ def dac_deck(net, corner, temp, vdd, *, top, codes, period, t0=400e-9, hold_zero
     t += f'X1 VDD 0 OUTP OUTN IBIAS CLKP CLKN EN HOLD_ZERO ' + ' '.join(f'CODE{i}' for i in range(10)) + \
          f' ATB_BIAS {top}\n'
     t += '.control\nset wr_singlescale\nset wr_vecnames\n'
+    # v4: save only what is measured (all-node saves of the 4 MB extracted netlist hit
+    # ngspice's 'memory required > available' abort on the shared host)
+    t += 'save v(OUTP) v(OUTN) vdd#branch\n'
     t += f'tran 50p {tstop:.4e}\n'
     for i in range(n):
         # output of code i is registered at the 2nd rising edge after it is applied
@@ -372,6 +381,8 @@ ADC_OFF_CAP_FF = 100   # ADC input loading when disabled/unpowered (fallback)
 
 DAC_CODES = [-512, -384, -256, -128, -1, 0, 1, 127, 255, 383, 511, 100, -100]
 DAC_CORNER_CODES = [-512, -256, 0, 255, 511]
+DAC_NOMINAL_CHUNKS = [[-512, 511, -384, -256, -128], [-512, 511, -1, 0, 1], [-512, 511, 127, 255, 383],
+                      [-512, 511, 100, -100]]
 DAC_SINE_BIN = 7
 DAC_SINE = [round(480 * math.sin(2 * math.pi * DAC_SINE_BIN * k / 64)) for k in range(64)]
 
@@ -391,7 +402,10 @@ def dac_eval(m, codes, n):
 def dac_bench(c, work, corners):
     net = 'ext.spice'
     period = 25e-9
-    decks = {'nominal': dac_deck(net, *NOMINAL, top=c.name, codes=DAC_CODES, period=period)[0]}
+    # The extracted 13-code nominal deck exceeds the 7200 s sim timeout (RC-21); run it as
+    # chunks that each carry both endpoint codes (same length as the corner decks) and merge.
+    decks = {f'nominal_{k}': dac_deck(net, *NOMINAL, top=c.name, codes=ch, period=period)[0]
+             for k, ch in enumerate(DAC_NOMINAL_CHUNKS)}
     if corners != 'minimal':
         decks['rate80M'] = dac_deck(net, *NOMINAL, top=c.name, codes=DAC_CORNER_CODES, period=12.5e-9)[0]
         decks['hold_zero'] = dac_deck(net, *NOMINAL, top=c.name, codes=[511, -512], period=period, hold_zero=True)[0]
@@ -401,9 +415,32 @@ def dac_bench(c, work, corners):
     if corners != 'minimal':
         import math as _m
         decks['sine'] = dac_deck(net, *NOMINAL, top=c.name, codes=DAC_SINE, period=period)[0]
-    res = run_decks(work, decks)
-    n = res['nominal'][0]
-    ev = dac_eval(n, DAC_CODES, len(DAC_CODES))
+    decks = {k: v.replace('wrdata dac.dat', f'wrdata {k}.dat') for k, v in decks.items()}   # no shared file
+    # Extracted chunks take ~3 h each at t0 = 600 ns (a 1.2 us run timed out at 4 h): 8 h per deck.
+    res = run_decks(work, decks, timeout=8 * 3600)
+    # Each chunk is evaluated against ITS OWN -512/511 endpoints (a startup/drift difference
+    # between runs must not appear as INL), then the per-code errors are merged.
+    n, rc, chunks = {}, 0, {}
+    for k, ch in enumerate(DAC_NOMINAL_CHUNKS):
+        m, r = res.pop(f'nominal_{k}')
+        rc = rc or r
+        chunks[k] = dac_eval(m, ch, len(ch))
+        for key in ('idd', 'ioff'):
+            if m.get(key) is not None and key not in n:
+                n[key] = m[key]
+        if k == 0:
+            n.update(m)
+    res['nominal'] = (n, rc)
+    ev = None
+    if all(chunks.values()):
+        err = {}
+        for ch in chunks.values():
+            for cd, e in ch['code_error_lsb'].items():
+                err.setdefault(cd, e)
+        ev = dict(chunks[0], code_error_lsb={str(cd): err[str(cd)] for cd in DAC_CODES},
+                  cm_V=round(sum(ch['cm_V'] for ch in chunks.values()) / len(chunks), 4),
+                  endpoint_spread_lsb=round(max(abs(ch['fullscale_diff_V'][j] - chunks[0]['fullscale_diff_V'][j])
+                                                for ch in chunks.values() for j in (0, 1)) / (chunks[0]['lsb_mV'] * 1e-3), 3))
     r80 = dac_eval(res['rate80M'][0], DAC_CORNER_CODES, len(DAC_CORNER_CODES)) if 'rate80M' in res else 'not run (identical copy of dac_i)'
     hz = res['hold_zero'][0] if 'hold_zero' in res else {}
     off = offload(work, net, c.name, 'dac', 'OUTP')
@@ -415,7 +452,10 @@ def dac_bench(c, work, corners):
     def dmono(e):
         vals = [e['code_error_lsb'][str(cd)] + cd for cd in sorted(DAC_CODES)]
         return all(a < b for a, b in zip(vals, vals[1:]))
-    ok = ev is not None and 1.6 < ev['fullscale_diff_V'][1] - ev['fullscale_diff_V'][0] < 2.4 and \
+    # v4: every chunk must exit 0 and the chunks' own endpoints must agree within 0.5 LSB
+    # (limit fixed before the extracted results), so per-chunk endpoints cannot hide drift.
+    ok = ev is not None and not rc and ev['endpoint_spread_lsb'] <= 0.5 and \
+        1.6 < ev['fullscale_diff_V'][1] - ev['fullscale_diff_V'][0] < 2.4 and \
         max(abs(v) for v in ev['code_error_lsb'].values()) <= CLEAN_LSB and dmono(ev)
     perf = [dict(metric='differential full scale (V)', target='+/-1.0', nominal=ev and ev['fullscale_diff_V']),
             dict(metric='static code error at sampled codes (LSB, endpoint fit)', target='8-bit-class',
@@ -450,6 +490,9 @@ def dac_bench(c, work, corners):
     excluded = ['gain_trim and offset_trim register fields have no analog effect in this version',
                 'hold_zero verified only at one code pair', 'No glitch energy or full 1024-code INL/DNL run; '
                 f'static error sampled at {len(DAC_CODES)} codes; SFDR from settled samples only', 'Output CM regulated to VDD/2 by the on-block CM loop (v3)',
+                'Random current-source mismatch NOT simulated (no MC): analytic mid-scale INL sigma ~1.0 LSB (PDK A_Vt) / '
+                '~2.0 LSB (pessimistic 2x A_Vt, design-assumptions), P(max|INL| > 4 LSB) ~0.1 % / ~28 %; '
+                'the 4-LSB clean gate is deterministic (extracted, tt) only',
                 'Rounding/saturation of the 12-bit transport word: truncation (code[11:2]) only']
     if 'sine' in res:
         sm = res['sine'][0]

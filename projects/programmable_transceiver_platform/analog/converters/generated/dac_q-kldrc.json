@@ -1,12 +1,12 @@
 {
  "block": "dac_q",
- "gds_sha256": "70e04d21891ad09cafe5a4c1d18842650a378f5d111ea1f50718950e4def7dbf",
+ "gds_sha256": "4984edd74d2e4143cc98f906541d1cef74b187cc246442815336bb1575320e29",
  "top": "pt_dac_q",
  "klayout": "KLayout 0.30.9",
  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
  "variant": "D",
  "run_mode": "deep",
- "clean": false,
+ "clean": true,
  "gds": "dac_q.gds",
  "deck": "gf180mcu.drc (precheck decks: main=all,-antenna,-density,-cup; antenna=antenna)",
  "decks": {
@@ -16,10 +16,8 @@
    "error": null
   },
   "antenna": {
-   "total": 3,
-   "rules": {
-    "ANT.16_ii_ANT.4": 3
-   },
+   "total": 0,
+   "rules": {},
    "error": null
   }
  }

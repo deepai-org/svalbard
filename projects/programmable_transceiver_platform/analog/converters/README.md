@@ -26,6 +26,11 @@ an extracted netlist with parasitic C, and extracted ngspice runs.
   current changes 0.014 % over a 1.2–2.2 V leg) and an on-block CM loop
   regulating the output CM to VDD/2. dac_i and dac_q netlists regenerated
   from the same generator; both parse in ngspice (schematic and extracted).
+* **DAC v4 (2026-11-12, CNV-03/CNV-05)**: 1 pF MIM decaps on ATB_BIAS and VCASC (CK/CLKN couple
+  21 fF onto ATB_BIAS); footer NMOS on the VDD/2 CM divider (EN=0 current was 33 µA, now 7 nA).
+  Bench: `DAC_T0` 900 ns, per-chunk endpoints (spread gated ≤ 0.5 LSB), only measured vectors saved.
+  Extracted tt: max |INL| 2.14 LSB (13 codes), endpoint spread 0.52 LSB → `clean` fails on that gate;
+  40 MHz clock ripple still ±2.3 % FS (route isolation needed); random mismatch not simulated.
 * **Criteria restored**: `clean` is ≤ 4 codes (10-bit) = 1 LSB8 from a
   gain/offset fit for ADC and DAC (was relaxed to 32); ADC fallback loading
   limit is 100 fF/leg (was moved to 0.5 pF). With 100 fF the v3 ADC
@@ -150,7 +155,7 @@ Each block needs one 10 µA IBIAS sink.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | refbuf | 118,270 (150,000) | 0 / 0 | unique | pass | pass | pass | waived (core) |
 | adc_i, adc_q | 259,036 (350,000) | 0 / 0 | unique | pass | pass | pass | pass |
-| dac_i, dac_q | 126,117 (225,000) | 0 / 0 | unique | pass | pass | pass | pass |
+| dac_i, dac_q | 187,482 (225,000) | 0 / 0 | unique | pass | fail (endpoint spread 0.52 > 0.5 LSB; INL 2.14 ≤ 4) | pass | pass |
 
 Published GDS (Magic 8.3.678) is re-extracted and LVS-matched; HRES marker
 present on every `ppolyf_u_1k`. "clean" = basic function: ADC conversions
@@ -166,8 +171,8 @@ monotonic, |error| < 32 LSB. ADC fallback = no DC path and < 0.5 pF/leg.
 | ADC `input_test` | zero → +14; ±VREF/4 → +126 / −130 (ideal ±128) |
 | ADC supply | 2.87 mA at 20 MS/s (allocation 8 mA); 1.7 nA disabled; VREF draw 63 µA |
 | ADC input load off/unpowered | 113 / 110 fF, no DC path |
-| DAC full scale / error | ±0.996 V diff; endpoint-fit error up to ~10 LSB at 6 sampled codes |
-| DAC CM / supply | 1.43 V (target 1.65 V); 1.92 mA; corners: CM 0.99 V ss/32 C/3.15 V, 1.83 V ff/22 C/3.35 V |
+| DAC full scale / error (v4, extracted) | −0.979/+0.972 V diff tt; endpoint-fit error ≤ 2.14 LSB at 13 codes tt; 3.60 LSB ss/32 C/3.10 V, 2.35 LSB ff/22 C/3.35 V (C +15 %); ff full scale 1.566 V (< 1.6 V window) |
+| DAC CM / supply (v4, extracted) | 1.73 V tt (target 1.65 V; sch 1.655); 2.07 mA; CM 1.62 V ss, 1.77 V ff; EN=0 7.4 nA |
 | DAC stretch | 80 MS/s update with endpoints intact; `hold_zero` 1.6 mV diff |
 | refbuf | VREF 0.999 V (12 corners 0.997–0.999 V), 0.55 mA, 27 mV p-p under 1 mA × 3 ns pulses, READY 1.6 µs after enable (~1 µs later at ss) |
 

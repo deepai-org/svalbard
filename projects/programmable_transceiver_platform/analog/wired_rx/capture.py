@@ -277,7 +277,12 @@ def ctl():
     c.nand(['LW1', 'LW2', 'LW3'], 'ELW')
     c.nand(['CK', 'ELW'], 'GWB')
     c.inv('GWB', 'GW0', 2, 4)
-    c.inv('GW0', 'GWX', 4, 8)
+    prev = 'GW0'
+    for k in range(GW_DELAY):          # r7c staging knob: inverter PAIRS delaying the word load (R -> W hand-off at ss)
+        c.inv(prev, f'GWd{k}a', 2, 4)
+        c.inv(f'GWd{k}a', f'GWd{k}b', 2, 4)
+        prev = f'GWd{k}b'
+    c.inv(prev, 'GWX', 4, 8)
     # r7: GW reached only 2.25 V at pair 9 (834 MHz ext probe): 4 x 4/8 drivers into the 20-pair GW net
     for _ in range(4):
         c.inv('GWX', 'GW', 4, 8)
@@ -308,6 +313,8 @@ def ctl():
     c.buf('B2', 'BH')
     c.buf('B1', 'BF')
     c.diode('CKP0')    # r6 antenna: CKP0 ratio 414 (ANT.3 limit 400)
+    for n in ('ELQ15', 'ELQ17', 'ELQ18'):   # r7c antenna: ELQ17/ELQ18 gate-only here with ~420 um of in-cell Metal2
+        c.diode(n)                           # (ANT.3 ratio 451-454 once the GW delay widened the cell; limit 400)
     # r5: no gear outputs here any more (r4 exported ELWO and loaded CK/CKN with the gear row; wc_gear now runs
     # from GW alone, see gear())
     ports = ['EN', 'CKP0', 'ELQ15', 'ELQ17', 'ELQ18', 'PSEL0', 'PSEL1', 'PSEL2', 'SLIPP', 'SLIPM', 'B2', 'B1',
@@ -491,6 +498,12 @@ def pd():
 # window that the weak 1/2 O -> On inverters and the O bit skew do not give.  Vote clock 6 -> 10 inverters and the On
 # inverters 1/2 -> 2/4: cell-level (pdv/pdcell.py, reproduces the full-top tt pass / ss fail on the r7 cell) settle /
 # hold margins tt 0.73 / 0.42, ss 0.50 / 0.53, ff 0.90 / 0.31 ns at 625 MHz.
+# r7c (2026-11-14): pair-16 probe at ss/32/3.15, 625 MHz (scratch/wired_rx/r7cap/p16_an.py): the word load GWL rises only
+# 0.48-0.57 ns after the last slot's GCL (the GW path is ~0.3 ns faster than the GCK path, so the "half period either
+# side" above is not what the layout gives) and R settles 0.14-0.27 ns before it: pair 16 at 0.141 ns resolved its W flop
+# 0.81 ns late and gave the EW16 edge error.  The other side (next word's slot 0 after GW) has > 1 ns.  Two inverter
+# pairs move GW ~0.3 ns later.
+GW_DELAY = 2         # inverter pairs between GW0 and GWX (wc_ctl); r7/r7b: 0
 PD_DELAY = 10        # PD vote-clock delay after CKP0 (inverters, even); r5g..r7: 6
 PD_INV = (2, 4)      # O -> On inverter size in the PD XORs; r5g..r7: (1, 2)
 

@@ -32,6 +32,7 @@ CASES = [('q625', 4, dict(f=625e6, words=12)),
          ('f480p3', 1, dict(f=480e6, words=8, psel=3)),
          ('f480p5', 1, dict(f=480e6, words=8, psel=5)),
          ('q625_ss', 4, dict(f=625e6, words=12, corner='ss', temp=32, vdd=3.15)),
+         ('q480_ss', 4, dict(f=480e6, words=12, corner='ss', temp=32, vdd=3.15)),
          ('q625_lde50', 4, dict(f=625e6, words=12, lde_delay=0.5e-9)),
          ('q625_lde60', 4, dict(f=625e6, words=12, lde_delay=0.6e-9)),
          # W1 r3a (2026-11-10): RCS=1 re-captures S_j one full period after sampling.  Its hold check is

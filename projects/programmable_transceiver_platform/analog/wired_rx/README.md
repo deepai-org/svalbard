@@ -1464,3 +1464,15 @@ real extracted neighbour:
 * `run_capture.py`: the gate is now the extracted netlist at ring ≤ 625 MHz (`NON_GATING`: 810/834 MHz cases and the
   S-toggling safe case, SLI7-G / W6-SAFE); a gating case that was not run counts as failing and is listed; a negative
   control is required; `--results STORE` builds the evidence from a results store without layout or simulation.
+* **r7b result and r7c (2026-11-14).**  r7b on the full extracted top at ss/32/3.15, 625 MHz: **PD votes correct** (DN
+  activity 0), data 0/200, but the EW16 edge error and the late pair 16 (1.71 ns after WSTB) remain.  Pair-16 probe
+  (`r7cap/probe_p16.py`, `p16_an.py`): the word-load clock GWL rises only 0.48–0.57 ns after the last slot's capture clock
+  GCL (the GW path is ~0.3 ns faster than the GCK path; the "half a period either side" assumed since r2 is not what the
+  layout gives), the slot flops settle 0.14–0.27 ns before it, and pair 16 at 0.141 ns resolved its word flop 0.81 ns late.
+  The other side (next word's slot 0 after the word load) has > 1 ns.  **r7c (`capture.py`: `GW_DELAY = 2`, two inverter
+  pairs before the GW drivers, + antenna diodes on ELQ15/17/18 in `wc_ctl`)**: 1212.55 × 242.21 µm (GDS bbox
+  1210.55 × 242.71), DRC 0, LVS unique, XOR 0, KLayout precheck main 0 / antenna 0 run alone (the first r7c build without
+  the diodes had 6 ANT.3 violations on ELQ17/18).  The extracted gating set is running on r7c in two serial queues
+  (`r7cap/r7c_qA.log`, `r7c_qB.log`, results `r7cap/r7c/results.json`): q625 ss/tt, safe, ss RCS=1, ss 480, LDE 50/60,
+  ff 480 (both RCS), pessimistic ss 625 (`pess.py`), negative control, ff/C × 0.9 hold cases, tt 480 / RCS=1, half rate
+  (both RCS), full rate PSEL 0/3/5.  **Not published; needs those results and a new independent review.**

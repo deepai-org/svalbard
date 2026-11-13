@@ -27,6 +27,9 @@ COLUMNS = dict(slicer=40, detect=30, cdr=20, vthdac=16)
 # r7 (vthdac): Metal4/escapes over the devices, and every port treated as quiet (A/B codes and VT lines are static or
 # quasi-static, so no 4 um gaps between their trunks): 80.9k -> 23.9k um^2
 LAYOUT_OPTS = dict(vthdac=dict(over_dev=True, quiet=lambda p: True))
+# AP4-1 (cdr r13 repack, 2026-11-13): tracks and Metal5 trunks over the devices, rows filled to 260 um (COLUMNS['cdr']
+# is then unused): 137.2k (r11, 20 columns) -> 82.9k um^2
+LAYOUT_OPTS['cdr'] = dict(over_dev=True, trunks_over=True, row_width=260.)
 
 
 def layout_block_slicer():

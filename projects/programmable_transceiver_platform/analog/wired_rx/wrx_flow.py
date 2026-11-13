@@ -152,7 +152,7 @@ OFFS4 = (1.2, 0., -1.2, 2.0)  # D, G, S, B escape x offsets from the device cent
 OFFS3 = (-1.2, 0., 1.2)       # resistor A (top), B (bottom), body
 
 
-def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False):
+def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trunks_over=False, row_width=None):
     """Write <name>.mag/.gds, DRC counts and extraction products into `work`."""
     work.mkdir(parents=True, exist_ok=True)
     for old in work.glob('*'):
@@ -194,12 +194,18 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False):
     if columns is None:
         avg_h = sum(boxes[(d.model, d.w, d.l)][3] - boxes[(d.model, d.w, d.l)][1] for d in sub.devices) / n
         columns = max(1, min(16, round(math.sqrt(n * (avg_h + 8.) / pitch))))
-    row_of, r, c = [], 0, 0
+    row_of, r, c, wacc = [], 0, 0, 0.
     for i in range(n):
-        if c == columns or (i in sub.breaks and c > 0):
-            r, c = r + 1, 0
+        # AP4-1 (cdr repack, 2026-11-13): row_width (um) fills each row to a width instead of a device count, so
+        # rows of narrow logic devices and rows of wide devices come out equally long.  Default off (count only).
+        bi = boxes[(sub.devices[i].model, sub.devices[i].w, sub.devices[i].l)]
+        wi = max(bi[2] - bi[0], 3.6) + GAP
+        full = (c == columns) if row_width is None else (wacc + wi > row_width)
+        if (full and c > 0) or (i in sub.breaks and c > 0):
+            r, c, wacc = r + 1, 0, 0.
         row_of.append(r)
         c += 1
+        wacc += wi
     rows_list = [[d for d, rr in zip(sub.devices, row_of) if rr == k] for k in range(r + 1)]
     net_rows = {}
     for i, d in enumerate(sub.devices):
@@ -230,6 +236,11 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False):
         x += trunk_pitch + (1.0 if dyn else 0.)
         prev_dyn = dyn
     x0 = x + 3. + wmax / 2
+    if trunks_over:
+        # AP4-1 (detect/ctle repack, 2026-11-13): the Metal5 trunks run over the device rows (primitives are Metal1,
+        # escapes Metal2/3, row tracks Metal4), so the dedicated trunk column on the left (1 um per net) is not
+        # needed; trunk order and spacing rules are unchanged.  Default off.
+        x0 = 1.0 + wmax / 2
     rows = len(rows_list)
     cmds = ['crashbackups stop', 'load ' + sub.name + '_h', 'units microns', 'snap internal']
 
@@ -322,7 +333,7 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False):
                 cmds.extend([f'box values {lo_x - .2:.3f} {ry - .2:.3f} {lo_x + .2:.3f} {ry + .2:.3f}',
                              f'label {net} FreeSans 0.3 0 0 0 c metal4'])
                 continue
-            wire('metal4', trunk_x[net], ry, max(escs), ry)
+            wire('metal4', min(trunk_x[net], min(escs)), ry, max(trunk_x[net], max(escs)), ry)
             via(trunk_x[net], ry, 4, 5)
             span[net][0] = min(span[net][0], ry)
             span[net][1] = max(span[net][1], ry)

@@ -227,8 +227,11 @@ def slot(half):
         # r2b: the flop output (ELQq) only drives this pair's clock gate and a buffer, so it settles
         # well inside the half period the gate allows; the buffered ELQ feeds the chain and exports
         c.ff(ck, d, f'ELQ{i}q')
-        c.nand([cn, f'ELQ{i}q'], f'G{i}B')
-        c.inv(f'G{i}B', f'GCK{i}', 2, 4)
+        # r7: 834 MHz probe (ext tt): GCK pulses were runts (GCK12 max 1.56 V, GCK0 2.07 V) -- a ~0.6 ns pulse from a
+        # 2/4 inverter into a long route.  Stronger NAND and a 2 x 4/8 final stage.
+        c.nand([cn, f'ELQ{i}q'], f'G{i}B', 4, 4)
+        c.inv(f'G{i}B', f'GCK{i}', 4, 8)
+        c.inv(f'G{i}B', f'GCK{i}', 4, 8)
         if i != 19:                       # pair 19 has no successor (wc_ctl keeps its own copy)
             c.bufx(f'ELQ{i}q', f'ELQ{i}')
     xin = ['ELQ6', 'ELQ7', 'ELQ8', 'ELQ9']          # slot1 pairs 10..13 follow slot0 pairs 6..9
@@ -274,9 +277,10 @@ def ctl():
     c.nand(['LW1', 'LW2', 'LW3'], 'ELW')
     c.nand(['CK', 'ELW'], 'GWB')
     c.inv('GWB', 'GW0', 2, 4)
-    c.inv('GW0', 'GWX', 2, 4)
-    c.inv('GWX', 'GW', 4, 8)
-    c.inv('GWX', 'GW', 4, 8)
+    c.inv('GW0', 'GWX', 4, 8)
+    # r7: GW reached only 2.25 V at pair 9 (834 MHz ext probe): 4 x 4/8 drivers into the 20-pair GW net
+    for _ in range(4):
+        c.inv('GWX', 'GW', 4, 8)
     c.inv('GWX', 'GWT', 4, 8)           # r5: private copy for wc_gear (r5c on GW itself: 310 -> 552 fF extracted)
     c.buf('GW', 'GWL')
     # phase-select / slip shadow clock: the last slot's own capture edge (CK fall), so the lanes have a
@@ -354,20 +358,23 @@ def front():
     gclk('CKP0', 'CKF3')
     for j in range(5, 8):
         c.ff('CKF3', f'F{j}', f'Z{j}')
-    # RCS=1 alignment
+    # RCS=1 alignment.  r7 (834 MHz, ext probe: errors only on j = 4, 5, 7): every hop now >= 6/8 T.  r3 had
+    # FR4(12) -> H(16) = 4/8 T and G(20) -> Q(24) = 4/8 T for j = 5..7.  Now j = 0..3: FR(8+j) -> H on CKP0 (16)
+    # -> Q on CKP0 (24); j = 4..7: FR(8+j) -> G on CKP4 (20, 8/8..5/8) -> Q on CKP2 (26, 6/8) -> O (32, 6/8).
     gclk('CKP0', 'CKH0')
-    gclk('CKP0', 'CKH1')
-    for j in range(0, 5):
-        c.ff('CKH0' if j < 3 else 'CKH1', f'FR{j}', f'H{j}')
+    for j in range(0, 4):
+        c.ff('CKH0', f'FR{j}', f'H{j}')
     gclk('CKP4', 'CNG')
-    for j in range(5, 8):
+    for j in range(4, 8):
         c.ff('CNG', f'FR{j}', f'H{j}')
-    # both octets re-registered on CKP0 (24), then the static data mux into O (32)
+    # RCS=0 octet re-registered on CKP0 (24); RCS=1 j<4 on CKP0 (24), j>=4 on CKP2 (26); static data mux into O (32)
     for blk in range(4):
         gclk('CKP0', f'CKQ{blk}')
+        if blk >= 2:
+            gclk('CKP2', f'CKR{blk}')
         for j in (2 * blk, 2 * blk + 1):
             c.ff(f'CKQ{blk}', f'Z{j}', f'P{j}')
-            c.ff(f'CKQ{blk}', f'H{j}', f'Q{j}')
+            c.ff(f'CKQ{blk}' if blk < 2 else f'CKR{blk}', f'H{j}', f'Q{j}')
     for j in range(8):
         c.nand([f'P{j}', 'RCSB'], f'M{j}a')
         c.nand([f'Q{j}', 'RCSL'], f'M{j}b')
@@ -451,7 +458,7 @@ def pd():
     c.bufx('CKVr', 'CKV0')
     c.bufx('CKVr', 'CKV1')
     for n in [f'O{j}' for j in range(8)] + ['OP6', 'OP7']:
-        c.inv(n, n + 'n', 1, 2)
+        c.inv(n, n + 'n', *PD_INV)
 
     def xor(a, b, y):        # y = a ^ b = NAND(NAND(a, !b), NAND(!a, b))
         c.nand([a, b + 'n'], y + 'p')
@@ -479,7 +486,13 @@ def pd():
     return c.row(ports)
 
 
-PD_DELAY = 6         # r5g PD vote-clock delay after CKP0 (inverters, even)
+# r7b (2026-11-13): the full-top probes (scratch/wired_rx/r7cap/pd_{tt,ss}625) showed the vote D inputs still changing
+# at the vote clock at ss/32/3.15, 625 MHz (settle margin 0.001 ns; tt 0.21 ns): the r5g comment above assumed a settled
+# window that the weak 1/2 O -> On inverters and the O bit skew do not give.  Vote clock 6 -> 10 inverters and the On
+# inverters 1/2 -> 2/4: cell-level (pdv/pdcell.py, reproduces the full-top tt pass / ss fail on the r7 cell) settle /
+# hold margins tt 0.73 / 0.42, ss 0.50 / 0.53, ff 0.90 / 0.31 ns at 625 MHz.
+PD_DELAY = 10        # PD vote-clock delay after CKP0 (inverters, even); r5g..r7: 6
+PD_INV = (2, 4)      # O -> On inverter size in the PD XORs; r5g..r7: (1, 2)
 
 
 def split(fn, cuts, rev=()):
@@ -524,7 +537,7 @@ def split(fn, cuts, rev=()):
 # W7-GEAR): the block now ends at the 20-bit word DW/EW plus the word strobe WSTB (= wc_ctl GWT).
 CELLS = dict(wc_pair=pair, wc_cnt=cnt, wc_slot0=lambda: slot(0), wc_slot1=lambda: slot(1),
              wc_ctl=ctl, wc_lane=lane, wc_pd=pd)
-SPLIT = dict(wc_front=(front, (102,), {1}))   # r7: the 1.35 mm front row folded into 2 rows (~630 / ~715 um)
+SPLIT = dict(wc_front=(front, (106,), {1}))   # r7: the 1.35 mm front row folded into 2 rows (~630 / ~715 um)
 for _nm, (_fn, *_k) in SPLIT.items():
     for _i, _f in enumerate(split(_fn, *_k)):
         CELLS[f'{_nm}{_i}'] = _f

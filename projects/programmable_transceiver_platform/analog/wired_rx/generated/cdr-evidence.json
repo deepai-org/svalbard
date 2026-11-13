@@ -1,488 +1,569 @@
 {
  "block": "cdr",
  "subckt": "pt_cdr",
+ "revision": "r11",
+ "status": "published (wired RX resume 8, 2026-11-13); independent review: see README Resume 8 / CDR",
  "source_hashes": {
-  "cdr.spice": "sha256:137071123df2ca6db0fb1dad0bc4e35c6ca8c2db40e5c209ed116eb03def957b",
-  "generated/cdr.ext.spice": "sha256:f7a505a89b12f30e8b9aed5d0e9b6054ca71f2e17a27b60c6287a9873a0cbb12",
-  "generated/cdr.gds": "sha256:3ec2e3666eccb272eb2d2f3a6fc28c96ce303d43caa7588ba52ccad54a259787",
-  "netlists.py": "sha256:da365a0ce95f2b96eb372fed52aedd7a22452463578f042898333835a62f9119",
-  "wrx_flow.py": "sha256:adb1f3b9b6dcd3b6c6fa6379e8abea316ea1dbb450a6d4b3f3dfbf854269dfe9",
-  "sims.py": "sha256:f0c8db7e9982348b7e47a9e78fbad1b4eb5c0a53c7a62b33a9b44ff73d65e60f",
-  "run_family.py": "sha256:a14453c9264fe0659461ae9ca2dadb10d8d107df1c554835b0b503f101739052",
-  "evidence.py": "sha256:ab823a99abf7f8a3271dcd014ca074ba68d9c30a474e9defec5592d68ce8c694",
-  "run_wired_rx.sh": "sha256:e198a45b7682b442875f690a7a51c4c593b33662c9eb22d03d259a84db872948",
-  "rtl/pt_wrx_cdr_loop.sv": "sha256:3e6a6bbb5a2dbd87402902d9c1bff7aed58b30c849f8176c99c6cee7605aeae3",
-  "rtl/tb_pt_wrx_cdr_loop.sv": "sha256:cff1f51dd6dc6350ea314febb855555568f943d604e0ec3f8e5f14b85e47b29f"
+  "cdr.spice": "sha256:c16ce1153f03b48db79fec7504239a2ca86747fb8f6ee1bfd96a12bf260113f1",
+  "generated/cdr.gds": "sha256:8a3a2128e20fd7614bcd86887d3e68eb74400aef59026eb05752674b244805d2",
+  "generated/cdr.ext.spice": "sha256:0e66404eee68d1ca45a4c76226d2a4fd20aa7f4eb1a4f91cf7a48d2c7350bd32"
  },
- "images": {
-  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
-  "analog_ref": "hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
-  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
-  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
-  "digital_note": "rebuilt canary (not byte-identical to locked 9253a51f...)"
+ "note_netlists_py": "netlists.py also carries other blocks' uncommitted edits; cdr() is the source of cdr.spice (hash above)",
+ "layout": {
+  "size_um": [
+   428.04,
+   320.44
+  ],
+  "area_um2": 137161.1,
+  "devices": 379,
+  "magic_drc": 0,
+  "lvs": "Circuits match uniquely",
+  "klayout_main": 0,
+  "klayout_antenna": 0,
+  "generator": "scratch/wired_rx/r9pub/laycdr11.py 20 od"
  },
- "pdk": "ciel gf180mcu f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (analog image); canary /pdk/gf180mcuD tech fingerprint 9e0a3f80",
- "tests": {
-  "safe": {
-   "state": "pass",
-   "cases": [
-    {
-     "case": "off_0C",
-     "i_rail": 3.84713e-07,
-     "vmax_ib_pll": 0.00126182,
-     "vmax_ref_pll": 0.050411,
-     "i_rail_A": -3.84713e-07,
-     "outputs_low": true,
-     "pass": true
-    },
-    {
-     "case": "off_27C",
-     "i_rail": 3.8936e-07,
-     "vmax_ib_pll": 0.0013554,
-     "vmax_ref_pll": 0.054252,
-     "i_rail_A": -3.8936e-07,
-     "outputs_low": true,
-     "pass": true
-    },
-    {
-     "case": "off_85C",
-     "i_rail": 1.92567e-07,
-     "vmax_ib_pll": 0.00154903,
-     "vmax_ref_pll": 0.0624671,
-     "i_rail_A": -1.92567e-07,
-     "outputs_low": true,
-     "pass": true
-    },
-    {
-     "case": "stuck_on",
-     "i_rail": -0.000178862,
-     "i_peak": -0.00295753,
-     "i_rail_A": 0.000178862,
-     "pass": true
-    },
-    {
-     "case": "unpowered",
-     "v_rail": 1.03177e-14,
-     "i_ain": -3.98444e-12,
-     "i_ctl": 1.31354e-19,
-     "pass": true
-    },
-    {
-     "case": "unpowered_internal_driven",
-     "v_rail": 8.64434e-08,
-     "i_ain": -1.03564e-05,
-     "i_ctl": -1.30252e-17,
-     "pass": false,
-     "gating": false
-    }
-   ],
-   "notes": "Extracted netlist. off_*: rail 3.63 V, all controls low, clocks running, analog inputs 3.3 V, 0/27/85 C. stuck_on: all controls high at 3.63 V (no latch/short, current bounded). unpowered: rail via 1 Mohm, controls 0 (register isolation clamp), clocks running, pad-reachable inputs (detect TX_P/N) 3.63 V, internal analog nodes 0 V. unpowered_internal_driven is non-gating: internal RX/CTLE nodes forced to 3.63 V (only possible if the pad bypass were on with this island off) back-drive the rail through PMOS TG wells. Pad-level stress and brownout ramps are analog/pads scope."
+ "criteria": "set before the r11 extracted runs: VCTRL compliance |dI/I| < 15 % over 0.8..2.2 V for up1/dn1/FUP/FDN; ring-rate random votes within 0.45 vote (or 45 %) of the ideal count after removing the static offset; idle offset < 0.25 vote",
+ "dc_sweep_nA": {
+  "tt/27/3.25": {
+   "g3_none": {
+    "0.8": 0.34,
+    "0.9": 0.322,
+    "1.0": 0.304,
+    "1.1": 0.285,
+    "1.2": 0.267,
+    "1.3": 0.249,
+    "1.4": 0.231,
+    "1.5": 0.213,
+    "1.6": 0.194,
+    "1.7": 0.176,
+    "1.8": 0.158,
+    "1.9": 0.139,
+    "2.0": 0.121,
+    "2.1": 0.101,
+    "2.2": 0.081
+   },
+   "g3_up1": {
+    "0.8": 2.132,
+    "0.9": 2.118,
+    "1.0": 2.103,
+    "1.1": 2.089,
+    "1.2": 2.074,
+    "1.3": 2.06,
+    "1.4": 2.045,
+    "1.5": 2.03,
+    "1.6": 2.016,
+    "1.7": 2.001,
+    "1.8": 1.986,
+    "1.9": 1.971,
+    "2.0": 1.956,
+    "2.1": 1.94,
+    "2.2": 1.924
+   },
+   "g7_dn1": {
+    "0.8": -18.941,
+    "0.9": -19.157,
+    "1.0": -19.367,
+    "1.1": -19.575,
+    "1.2": -19.783,
+    "1.3": -19.988,
+    "1.4": -20.193,
+    "1.5": -20.398,
+    "1.6": -20.602,
+    "1.7": -20.806,
+    "1.8": -21.012,
+    "1.9": -21.221,
+    "2.0": -21.433,
+    "2.1": -21.652,
+    "2.2": -21.881
+   },
+   "g7_fdn": {
+    "0.8": -37.93,
+    "0.9": -38.166,
+    "1.0": -38.394,
+    "1.1": -38.621,
+    "1.2": -38.846,
+    "1.3": -39.069,
+    "1.4": -39.291,
+    "1.5": -39.511,
+    "1.6": -39.731,
+    "1.7": -39.951,
+    "1.8": -40.172,
+    "1.9": -40.395,
+    "2.0": -40.623,
+    "2.1": -40.857,
+    "2.2": -41.103
+   },
+   "g7_fup": {
+    "0.8": 43.891,
+    "0.9": 43.761,
+    "1.0": 43.633,
+    "1.1": 43.505,
+    "1.2": 43.376,
+    "1.3": 43.247,
+    "1.4": 43.117,
+    "1.5": 42.986,
+    "1.6": 42.853,
+    "1.7": 42.719,
+    "1.8": 42.583,
+    "1.9": 42.444,
+    "2.0": 42.301,
+    "2.1": 42.153,
+    "2.2": 41.998
+   },
+   "g7_none": {
+    "0.8": 3.114,
+    "0.9": 2.924,
+    "1.0": 2.739,
+    "1.1": 2.555,
+    "1.2": 2.371,
+    "1.3": 2.189,
+    "1.4": 2.006,
+    "1.5": 1.824,
+    "1.6": 1.641,
+    "1.7": 1.457,
+    "1.8": 1.272,
+    "1.9": 1.084,
+    "2.0": 0.892,
+    "2.1": 0.693,
+    "2.2": 0.486
+   },
+   "g7_up1": {
+    "0.8": 25.095,
+    "0.9": 24.936,
+    "1.0": 24.779,
+    "1.1": 24.623,
+    "1.2": 24.467,
+    "1.3": 24.31,
+    "1.4": 24.154,
+    "1.5": 23.997,
+    "1.6": 23.839,
+    "1.7": 23.68,
+    "1.8": 23.519,
+    "1.9": 23.355,
+    "2.0": 23.187,
+    "2.1": 23.014,
+    "2.2": 22.832
+   }
   },
-  "clean": {
-   "state": "fail",
-   "drc": {
-    "tool": "magic 8.3.623 drc(full)",
-    "errors": 0,
-    "klayout_gf180_on_exported_gds": {
-     "violations": 0,
-     "by_rule": {},
-     "rc": "0",
-     "lyrdb_files": 1
-    },
-    "gds_export": {
-     "magic": "8.3.678",
-     "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
-     "marker_shapes": {
-      "HRES 62/0": 0,
-      "RES_MK 110/5": 0
-     },
-     "hres_ok": true
-    }
+  "ss/32/3.15": {
+   "g3_none": {
+    "0.8": 0.265,
+    "0.9": 0.248,
+    "1.0": 0.231,
+    "1.1": 0.214,
+    "1.2": 0.198,
+    "1.3": 0.181,
+    "1.4": 0.165,
+    "1.5": 0.148,
+    "1.6": 0.131,
+    "1.7": 0.115,
+    "1.8": 0.098,
+    "1.9": 0.081,
+    "2.0": 0.064,
+    "2.1": 0.046,
+    "2.2": 0.028
    },
-   "lvs": {
-    "tool": "netgen 1.5.316 gf180mcuD_setup.tcl",
-    "unique_match": true,
-    "final": "Circuits match uniquely.",
-    "devices": 125
+   "g3_up1": {
+    "0.8": 2.087,
+    "0.9": 2.074,
+    "1.0": 2.061,
+    "1.1": 2.048,
+    "1.2": 2.035,
+    "1.3": 2.022,
+    "1.4": 2.009,
+    "1.5": 1.996,
+    "1.6": 1.983,
+    "1.7": 1.97,
+    "1.8": 1.957,
+    "1.9": 1.943,
+    "2.0": 1.929,
+    "2.1": 1.915,
+    "2.2": 1.901
    },
-   "extracted_nominal": {
-    "acq": {
-     "i_ibpll_uA": 9.371550000000001,
-     "i_bb_nA": 0.865059,
-     "i_vdd_uA": 47.928869999999996,
-     "pass": true
-    },
-    "hold_idle": {
-     "i_ibpll_uA": 1.76723e-05,
-     "i_bb_nA": 0.468945,
-     "i_vdd_uA": 41.85381,
-     "pass": true
-    },
-    "hold_up": {
-     "i_ibpll_uA": 1.76844e-05,
-     "i_bb_nA": 50.1343,
-     "i_vdd_uA": 41.90343,
-     "pass": true
-    },
-    "hold_dn": {
-     "i_ibpll_uA": 1.76972e-05,
-     "i_bb_nA": -51.5677,
-     "i_vdd_uA": 41.80186,
-     "pass": true
-    },
-    "hold_up_g": {
-     "i_ibpll_uA": 1.77227e-05,
-     "i_bb_nA": 99.7992,
-     "i_vdd_uA": 41.95312,
-     "pass": true
-    },
-    "hold_dn_g": {
-     "i_ibpll_uA": 1.77299e-05,
-     "i_bb_nA": -103.598,
-     "i_vdd_uA": 41.74996,
-     "pass": true
-    },
-    "acq_up": {
-     "i_ibpll_uA": 9.371550000000001,
-     "i_bb_nA": 0.8668830000000001,
-     "i_vdd_uA": 47.92893,
-     "pass": true
-    },
-    "off": {
-     "i_ibpll_uA": 4.4678499999999994e-15,
-     "i_bb_nA": -0.004399999999999999,
-     "i_vdd_uA": 0.0001540473,
-     "pass": true
-    }
+   "g7_dn1": {
+    "0.8": -20.364,
+    "0.9": -20.565,
+    "1.0": -20.759,
+    "1.1": -20.953,
+    "1.2": -21.145,
+    "1.3": -21.336,
+    "1.4": -21.526,
+    "1.5": -21.716,
+    "1.6": -21.905,
+    "1.7": -22.095,
+    "1.8": -22.286,
+    "1.9": -22.48,
+    "2.0": -22.677,
+    "2.1": -22.881,
+    "2.2": -23.094
    },
-   "corner_failures": [],
-   "non_gating_failures": [],
-   "area": {
-    "size_um": [
-     278.92,
-     185.26
+   "g7_fdn": {
+    "0.8": -39.172,
+    "0.9": -39.393,
+    "1.0": -39.605,
+    "1.1": -39.816,
+    "1.2": -40.025,
+    "1.3": -40.233,
+    "1.4": -40.438,
+    "1.5": -40.643,
+    "1.6": -40.848,
+    "1.7": -41.052,
+    "1.8": -41.257,
+    "1.9": -41.464,
+    "2.0": -41.675,
+    "2.1": -41.893,
+    "2.2": -42.121
+   },
+   "g7_fup": {
+    "0.8": 43.734,
+    "0.9": 43.622,
+    "1.0": 43.51,
+    "1.1": 43.397,
+    "1.2": 43.284,
+    "1.3": 43.17,
+    "1.4": 43.056,
+    "1.5": 42.94,
+    "1.6": 42.822,
+    "1.7": 42.703,
+    "1.8": 42.581,
+    "1.9": 42.456,
+    "2.0": 42.328,
+    "2.1": 42.194,
+    "2.2": 42.054
+   },
+   "g7_none": {
+    "0.8": 2.409,
+    "0.9": 2.235,
+    "1.0": 2.065,
+    "1.1": 1.896,
+    "1.2": 1.727,
+    "1.3": 1.559,
+    "1.4": 1.391,
+    "1.5": 1.223,
+    "1.6": 1.055,
+    "1.7": 0.886,
+    "1.8": 0.715,
+    "1.9": 0.542,
+    "2.0": 0.364,
+    "2.1": 0.181,
+    "2.2": -0.012
+   },
+   "g7_up1": {
+    "0.8": 25.108,
+    "0.9": 24.966,
+    "1.0": 24.825,
+    "1.1": 24.684,
+    "1.2": 24.544,
+    "1.3": 24.403,
+    "1.4": 24.262,
+    "1.5": 24.12,
+    "1.6": 23.977,
+    "1.7": 23.833,
+    "1.8": 23.686,
+    "1.9": 23.537,
+    "2.0": 23.384,
+    "2.1": 23.225,
+    "2.2": 23.059
+   }
+  },
+  "ff/22/3.35": {
+   "g3_none": {
+    "0.8": 0.442,
+    "0.9": 0.421,
+    "1.0": 0.401,
+    "1.1": 0.381,
+    "1.2": 0.361,
+    "1.3": 0.341,
+    "1.4": 0.321,
+    "1.5": 0.301,
+    "1.6": 0.282,
+    "1.7": 0.262,
+    "1.8": 0.241,
+    "1.9": 0.221,
+    "2.0": 0.2,
+    "2.1": 0.179,
+    "2.2": 0.157
+   },
+   "g3_up1": {
+    "0.8": 2.148,
+    "0.9": 2.131,
+    "1.0": 2.115,
+    "1.1": 2.098,
+    "1.2": 2.082,
+    "1.3": 2.065,
+    "1.4": 2.049,
+    "1.5": 2.032,
+    "1.6": 2.015,
+    "1.7": 1.999,
+    "1.8": 1.982,
+    "1.9": 1.965,
+    "2.0": 1.948,
+    "2.1": 1.93,
+    "2.2": 1.912
+   },
+   "g7_dn1": {
+    "0.8": -16.609,
+    "0.9": -16.842,
+    "1.0": -17.068,
+    "1.1": -17.293,
+    "1.2": -17.515,
+    "1.3": -17.737,
+    "1.4": -17.958,
+    "1.5": -18.178,
+    "1.6": -18.398,
+    "1.7": -18.619,
+    "1.8": -18.84,
+    "1.9": -19.065,
+    "2.0": -19.294,
+    "2.1": -19.53,
+    "2.2": -19.776
+   },
+   "g7_fdn": {
+    "0.8": -35.144,
+    "0.9": -35.397,
+    "1.0": -35.641,
+    "1.1": -35.885,
+    "1.2": -36.126,
+    "1.3": -36.365,
+    "1.4": -36.603,
+    "1.5": -36.839,
+    "1.6": -37.076,
+    "1.7": -37.312,
+    "1.8": -37.549,
+    "1.9": -37.789,
+    "2.0": -38.034,
+    "2.1": -38.286,
+    "2.2": -38.549
+   },
+   "g7_fup": {
+    "0.8": 42.999,
+    "0.9": 42.847,
+    "1.0": 42.699,
+    "1.1": 42.55,
+    "1.2": 42.402,
+    "1.3": 42.253,
+    "1.4": 42.103,
+    "1.5": 41.953,
+    "1.6": 41.802,
+    "1.7": 41.649,
+    "1.8": 41.494,
+    "1.9": 41.336,
+    "2.0": 41.174,
+    "2.1": 41.007,
+    "2.2": 40.833
+   },
+   "g7_none": {
+    "0.8": 4.059,
+    "0.9": 3.851,
+    "1.0": 3.649,
+    "1.1": 3.447,
+    "1.2": 3.247,
+    "1.3": 3.047,
+    "1.4": 2.848,
+    "1.5": 2.649,
+    "1.6": 2.45,
+    "1.7": 2.249,
+    "1.8": 2.047,
+    "1.9": 1.843,
+    "2.0": 1.634,
+    "2.1": 1.418,
+    "2.2": 1.193
+   },
+   "g7_up1": {
+    "0.8": 24.656,
+    "0.9": 24.476,
+    "1.0": 24.301,
+    "1.1": 24.125,
+    "1.2": 23.951,
+    "1.3": 23.776,
+    "1.4": 23.601,
+    "1.5": 23.426,
+    "1.6": 23.251,
+    "1.7": 23.074,
+    "1.8": 22.895,
+    "1.9": 22.713,
+    "2.0": 22.527,
+    "2.1": 22.335,
+    "2.2": 22.135
+   }
+  },
+  "ss/32/3.15 pessimistic (pess.py)": {
+   "g7_dn1": {
+    "0.8": -20.364,
+    "0.9": -20.565,
+    "1.0": -20.759,
+    "1.1": -20.953,
+    "1.2": -21.145,
+    "1.3": -21.336,
+    "1.4": -21.526,
+    "1.5": -21.716,
+    "1.6": -21.905,
+    "1.7": -22.095,
+    "1.8": -22.286,
+    "1.9": -22.48,
+    "2.0": -22.677,
+    "2.1": -22.881,
+    "2.2": -23.094
+   },
+   "g7_none": {
+    "0.8": 2.411,
+    "0.9": 2.234,
+    "1.0": 2.065,
+    "1.1": 1.896,
+    "1.2": 1.727,
+    "1.3": 1.559,
+    "1.4": 1.391,
+    "1.5": 1.223,
+    "1.6": 1.055,
+    "1.7": 0.886,
+    "1.8": 0.715,
+    "1.9": 0.542,
+    "2.0": 0.364,
+    "2.1": 0.181,
+    "2.2": -0.012
+   },
+   "g7_up1": {
+    "0.8": 25.119,
+    "0.9": 24.965,
+    "1.0": 24.825,
+    "1.1": 24.684,
+    "1.2": 24.544,
+    "1.3": 24.403,
+    "1.4": 24.262,
+    "1.5": 24.12,
+    "1.6": 23.977,
+    "1.7": 23.833,
+    "1.8": 23.686,
+    "1.9": 23.537,
+    "2.0": 23.384,
+    "2.1": 23.225,
+    "2.2": 23.059
+   }
+  }
+ },
+ "tran_ring_rate_votes_nA": {
+  "tt/27/3.25": {
+   "bias": 20.492,
+   "dn50": -36.981,
+   "tog50": 39.465,
+   "zm": -0.451
+  },
+  "ss/32/3.15": {
+   "bias": 20.587,
+   "dn50": -38.331,
+   "tog50": 39.567,
+   "zm": -1.136
+  },
+  "ff/22/3.35": {
+   "bias": 20.121,
+   "dn50": -34.155,
+   "tog50": 38.45,
+   "zm": 0.572
+  },
+  "ss/32/3.15 pessimistic (pess.py)": {
+   "tog50": 38.346,
+   "zm": -3.041
+  }
+ },
+ "checks": [
+  {
+   "corner": "tt/27/3.25",
+   "nA_per_vote": 22.1,
+   "idle_offset_vote": 0.114,
+   "compliance_max_rel_change_0p8_2p2V": 0.13,
+   "tog50_votes": 1.67,
+   "tog50_expected": 2.0,
+   "dn50_votes": -1.79,
+   "dn50_expected": -2.0,
+   "bias_votes": 0.81,
+   "bias_expected": 1.0,
+   "zm_votes": -0.13,
+   "zm_expected": 0.0,
+   "pass": true
+  },
+  {
+   "corner": "ss/32/3.15",
+   "nA_per_vote": 22.82,
+   "idle_offset_vote": 0.082,
+   "compliance_max_rel_change_0p8_2p2V": 0.112,
+   "tog50_votes": 1.65,
+   "tog50_expected": 2.0,
+   "dn50_votes": -1.76,
+   "dn50_expected": -2.0,
+   "bias_votes": 0.82,
+   "bias_expected": 1.0,
+   "zm_votes": -0.13,
+   "zm_expected": 0.0,
+   "pass": true
+  },
+  {
+   "corner": "ff/22/3.35",
+   "nA_per_vote": 20.71,
+   "idle_offset_vote": 0.165,
+   "compliance_max_rel_change_0p8_2p2V": 0.159,
+   "tog50_votes": 1.69,
+   "tog50_expected": 2.0,
+   "dn50_votes": -1.81,
+   "dn50_expected": -2.0,
+   "bias_votes": 0.81,
+   "bias_expected": 1.0,
+   "zm_votes": -0.14,
+   "zm_expected": 0.0,
+   "pass": false
+  },
+  {
+   "corner": "ss/32/3.15 pessimistic (pess.py)",
+   "nA_per_vote": 22.82,
+   "idle_offset_vote": 0.082,
+   "compliance_max_rel_change_0p8_2p2V": 0.112,
+   "tog50_votes": 1.6,
+   "tog50_expected": 2.0,
+   "zm_votes": -0.22,
+   "zm_expected": 0.0,
+   "pass": true
+  }
+ ],
+ "all_pass": false,
+ "closed_loop": {
+  "bench": "scratch/wired_rx/r7cdr/cl.py (extracted published r9w ring + extracted r11, tt/27, 580.7 MHz, 33 fF/phase, ptrim stand-in, PRBS7, RJ 0.02 UI)",
+  "hbr_settings_m1000ppm (lat 2, KP code 4, g7)": {
+   "f_ring_final_ppm": [
+    [
+     821,
+     -83
     ],
-    "area_um2": 51672.7,
-    "ceiling_um2": 300000
-   }
+    [
+     921,
+     28
+    ],
+    [
+     1021,
+     89
+    ]
+   ],
+   "phase_err_ui_after_settle": {
+    "mean": 0.058767340402670815,
+    "rms": 0.023331184564443823,
+    "pk": 0.1430564380522664
+   },
+   "data_margin_ui_min_after_settle": 0.3566322378507988,
+   "t_lock_ns": 573.6015529826884,
+   "wraps": 17
   },
-  "observable": {
-   "state": "open",
-   "atb_taps": [
-    "atb_cdr_pbias (PMOS reference gate)",
-    "VCTRL is the pt_pll_ring ATB_VCTRL node (timing tap)"
-   ],
-   "status_bits": [
-    "freq_hold, phase_sel, early/late counters (pt_wrx_cdr_loop)"
-   ],
-   "clock_obs": [
-    "QCK / RX ring FBCK -> WCLK_OBS via clk_obs (timing)"
-   ],
-   "notes": "Taps/status are exposed at block ports; atb_tap cells, register-map entries and clk_obs hookup are added at integration (not yet available)."
-  },
-  "fallback": {
-   "state": "open",
-   "routes": [
-    {
-     "route": "wire_cdr_external_clock",
-     "state": "open",
-     "notes": "WCLK_IN path: diff_clk_rx -> ring PLL reference or slicer clocks is an integration item"
-    },
-    {
-     "route": "wire_cdr_fpga_oversample",
-     "state": "open",
-     "notes": "cfg_raw=1 streams all eight samples per ring cycle (RTL simulated); D2H transport pending"
-    }
-   ],
-   "bypass_loading_fF": null
-  }
+  "hbr_settings_p1000ppm": null,
+  "quarter_lat8_kp2_g5_m1000ppm": null
  },
- "performance_vs_target": [
-  {
-   "case": "acq",
-   "metric": "i_ibpll_uA",
-   "target": "PLL charge-pump bias delivered in acquisition (10 uA)",
-   "extracted_nominal": 9.371550000000001,
-   "schematic_nominal": 9.371879999999999,
-   "corner_min": 8.30411,
-   "corner_max": 10.074900000000001,
-   "corners_reported": 12
-  },
-  {
-   "case": "hold_idle",
-   "metric": "i_ibpll_uA",
-   "target": "PLL charge pump disabled in hold (0)",
-   "extracted_nominal": 1.76723e-05,
-   "schematic_nominal": -2.02674e-06,
-   "corner_min": 1.08257e-05,
-   "corner_max": 3.03703e-05,
-   "corners_reported": 12
-  },
-  {
-   "case": "hold_up",
-   "metric": "i_bb_nA",
-   "target": "bang-bang pump up current (~50 nA)",
-   "extracted_nominal": 50.1343,
-   "schematic_nominal": 49.6015,
-   "corner_min": 44.063,
-   "corner_max": 54.0651,
-   "corners_reported": 12
-  },
-  {
-   "case": "hold_dn",
-   "metric": "i_bb_nA",
-   "target": "bang-bang pump down current (~-50 nA)",
-   "extracted_nominal": -51.5677,
-   "schematic_nominal": -52.05459999999999,
-   "corner_min": -55.9863,
-   "corner_max": -45.647099999999995,
-   "corners_reported": 12
-  },
-  {
-   "case": "hold_up_g",
-   "metric": "i_bb_nA",
-   "target": "bb_gain=1 (~100 nA)",
-   "extracted_nominal": 99.7992,
-   "schematic_nominal": 99.2072,
-   "corner_min": 87.8484,
-   "corner_max": 107.653,
-   "corners_reported": 12
-  },
-  {
-   "case": "hold_idle",
-   "metric": "i_vdd_uA",
-   "target": "cell supply current incl. hand-over flops clocked by FBCK (39 MHz)",
-   "extracted_nominal": 41.85381,
-   "schematic_nominal": 25.2225,
-   "corner_min": 38.439319999999995,
-   "corner_max": 43.826299999999996,
-   "corners_reported": 12
-  },
-  {
-   "case": "acq_625m",
-   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt)",
-   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
-   "extracted_nominal": {
-    "f_acq_end": 624604660.7845012,
-    "f_hold": 628279415.9095681,
-    "f_after_up": 629006997.7626566,
-    "f_after_dn": 628548258.1224052,
-    "vctrl_hold": 1.17680646,
-    "vctrl_after_up": 1.14640765,
-    "vctrl_after_dn": 1.14588271,
-    "f_target": 625000000.0,
-    "fb_minus_ref_ps": 25211.872690528853,
-    "acq_error_ppm": -632.5427447980703,
-    "hold_drift_ppm": 5883.329657597081,
-    "bb_up_step_ppm": 1158.0545767764238,
-    "bb_dn_step_ppm": -729.3076895537043,
-    "pass": true,
-    "gating": true
-   }
-  },
-  {
-   "case": "track_quarter",
-   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt)",
-   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
-   "extracted_nominal": {
-    "ivdd": -0.0164028,
-    "ring_hz_end_fit": 650058006.0873625,
-    "ring_hz_check_start_fit": 630452168.6122994,
-    "line_rate_bps": 2493518457.7327433,
-    "bits_per_cycle": 4,
-    "ring_hz_acq": 615000000.0,
-    "ring_hz_end": 647500000.0,
-    "ring_target_hz": 623379614.4331858,
-    "vctrl_at_hold": 1.1536813,
-    "vctrl_end": 1.16317202,
-    "bits_checked": 3588,
-    "bit_errors": 560,
-    "first_err_ns": 2020.7360257890605,
-    "up_fraction": 0.16786162871918237,
-    "dn_fraction": 0.41139583470370267,
-    "pass": false,
-    "free_running_ring_hz": 623068080.3929894,
-    "fll_residual_ppm": 500,
-    "gating": true
-   }
-  },
-  {
-   "case": "track_half",
-   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt)",
-   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
-   "extracted_nominal": {
-    "ivdd": -0.0162632,
-    "ring_hz_end_fit": 634905813.9991999,
-    "ring_hz_check_start_fit": 628619519.9442446,
-    "line_rate_bps": 1246761557.4100559,
-    "bits_per_cycle": 2,
-    "ring_hz_acq": 615000000.0,
-    "ring_hz_end": 632500000.0,
-    "ring_target_hz": 623380778.7050279,
-    "vctrl_at_hold": 1.15368108,
-    "vctrl_end": 1.14811064,
-    "bits_checked": 1768,
-    "bit_errors": 104,
-    "first_err_ns": 2057.7280783563333,
-    "up_fraction": 0.008502844232864001,
-    "dn_fraction": 0.07889296808811071,
-    "pass": false,
-    "free_running_ring_hz": 623069244.0829865,
-    "fll_residual_ppm": 500,
-    "gating": true
-   }
-  },
-  {
-   "case": "dual_quarter_2g5_no_fll",
-   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt) [non-gating]",
-   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
-   "extracted_nominal": {
-    "ivdd": -0.0167463,
-    "ring_hz_end_fit": 669349988.4461918,
-    "ring_hz_check_start_fit": 645485358.8336197,
-    "line_rate_bps": 2500000000.0,
-    "bits_per_cycle": 4,
-    "ring_hz_acq": 620000000.0,
-    "ring_hz_end": 667500000.0000007,
-    "ring_target_hz": 625000000.0,
-    "vctrl_at_hold": 1.17706464,
-    "vctrl_end": 1.21534283,
-    "bits_checked": 4216,
-    "bit_errors": 929,
-    "first_err_ns": 2802.771827546821,
-    "up_fraction": 0.09318589465460449,
-    "dn_fraction": 0.34547931762978945,
-    "pass": false,
-    "gating": false
-   }
-  },
-  {
-   "case": "dual_half_1g25_no_fll",
-   "metric": "extracted CDR run (pll_ring.ext + cdr.ext [+ slicer.ext], tt) [non-gating]",
-   "target": "acq: lock within 3000 ppm, BB steps of the right sign; track/dual: 0 errors after settle",
-   "extracted_nominal": {
-    "ivdd": -0.0164248,
-    "ring_hz_end_fit": 642995580.9191852,
-    "ring_hz_check_start_fit": 635664494.1695093,
-    "line_rate_bps": 1250000000.0,
-    "bits_per_cycle": 2,
-    "ring_hz_acq": 620000000.0,
-    "ring_hz_end": 640000000.0000007,
-    "ring_target_hz": 625000000.0,
-    "vctrl_at_hold": 1.1789331,
-    "vctrl_end": 1.1555532,
-    "bits_checked": 2046,
-    "bit_errors": 193,
-    "first_err_ns": 2802.034726586906,
-    "up_fraction": 0.007958560027508332,
-    "dn_fraction": 0.07125129638564907,
-    "pass": false,
-    "gating": false
-   }
-  }
+ "bench_audit": {
+  "models": "sm141064 typical/ss/ff + matching res_*, diode_typical, .temp per corner",
+  "supplies": "3.25/3.15/3.35",
+  "extracted_netlist": "generated/cdr.ext.spice (sha above)",
+  "timestep": "20 ps max, 80 ps vote edges, 1.709 ns vote period",
+  "can_fail": "r10 extracted fails the compliance criterion (uA sunk above 1.3 V); r9 fails the toggling sign"
+ },
+ "known_limits": [
+  "ring-rate vote activity shifts the output by about -0.13..-0.3 vote (zm -0.13 tt, -0.21 pessimistic ss): static phase offset ~0.01 UI in the loop",
+  "random-vote gain ~0.82-0.85 of static (bias case); absorbed by the per-die integral-rate (g) calibration",
+  "mismatch (A_Vt 14 mV.um) not simulated: input-referred ~0.2-0.3 vote sigma by hand (OTA mirrors 0.5/2); effect = static phase offset, and FLL drift (needs the FLL integral term, interface CDR8-FLL)"
  ],
- "corner_set": "tt/ss/ff x 22/32 C x 3.15/3.35 V (spec/tapeout-plan.md operating envelope), extracted netlist",
- "excluded_coverage": [
-  "Phase interpolator removed (lead decision): dual-loop CDR on a second pt_pll_ring instance (timing family, instantiated unchanged at integration) for half/quarter rate; full rate uses 8x oversampling with digital blind phase picking (no analog tracking)",
-  "The bang-bang pump is a separate weak pump on the PLL loop-filter node (ATB_VCTRL), not the PLL's own pump: freq_hold gates its REF (at an FBCK falling edge) and clamps its pump bias IB_PLL; the pt_pll_ring HOLD input (timing r6) is tied low and not used yet",
-  "Extracted closed loop uses an analog-behavioural phase detector (sample/holds + smooth logic, ~4 ns decision filter) as a stand-in for the RTL, which decides every 20-bit word; long windows, ppm, SSC and the frequency-counter hand-over (FLL) are behavioural (RTL + analog loop model)",
-  "The FLL hand-over step (cfg_fll_en) needs >100 us of ring time and is not simulated extracted",
-  "Cold acquisition is not simulated: VCTRL is pre-charged near the 625 MHz lock value before the frequency loop runs",
-  "Each extracted result records the sha256 of the pll_ring.ext.spice it used",
-  "Ring port phase error of pt_pll_ring (timing evidence) is included in the extracted runs as-is",
-  "Ring-rate capture is the fast-cell block pt_wrx_cap (capture.py), which is not part of this evidence flow"
- ],
- "rtl_check": {
-  "bpc4_ui400ps_0ppm_ssc0": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1493 max_freq_err_ppm=1023.2 psel=0",
-   "PASS"
-  ],
-  "bpc4_ui400ps_300ppm_ssc0": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1493 max_freq_err_ppm=1024.6 psel=0",
-   "PASS"
-  ],
-  "bpc4_ui400ps_-300ppm_ssc0": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1499 max_freq_err_ppm=1000.3 psel=0",
-   "PASS"
-  ],
-  "bpc4_ui400ps_0ppm_ssc-5000": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=139560 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1477 max_freq_err_ppm=1065.9 psel=0",
-   "PASS"
-  ],
-  "bpc2_ui800ps_0ppm_ssc0": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1491 max_freq_err_ppm=1191.3 psel=0",
-   "PASS"
-  ],
-  "bpc2_ui800ps_300ppm_ssc0": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1498 max_freq_err_ppm=1195.7 psel=0",
-   "PASS"
-  ],
-  "bpc2_ui800ps_-300ppm_ssc0": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1504 max_freq_err_ppm=1205.3 psel=0",
-   "PASS"
-  ],
-  "bpc2_ui800ps_0ppm_ssc-5000": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=59800 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1464 max_freq_err_ppm=1224.2 psel=0",
-   "PASS"
-  ],
-  "bpc1_ui2083.3ps_0ppm_ssc0": [
-   "RESULT bpc=1 ui_ps=2083.3 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=19920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=0 vctrl=1.1500 max_freq_err_ppm=0.0 psel=2",
-   "PASS"
-  ],
-  "bpc1_ui2083.3ps_500ppm_ssc0": [
-   "RESULT bpc=1 ui_ps=2083.3 ppm=500.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=19906 errors=0 first_err_ui=-1 slips_p=27 slips_m=47 hold=0 vctrl=1.1500 max_freq_err_ppm=0.0 psel=1",
-   "PASS"
-  ],
-  "bpc1_ui2083.3ps_-500ppm_ssc0": [
-   "RESULT bpc=1 ui_ps=2083.3 ppm=-500.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=0 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=19892 errors=0 first_err_ui=-1 slips_p=56 slips_m=36 hold=0 vctrl=1.1500 max_freq_err_ppm=0.0 psel=0",
-   "PASS"
-  ],
-  "bpc4_ui400ps_0ppm_ssc0_holdstep2000ppm": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1510 max_freq_err_ppm=1017.6 psel=0",
-   "PASS"
-  ],
-  "bpc4_ui400ps_0ppm_ssc0_holdstep-2000ppm": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1496 max_freq_err_ppm=1001.6 psel=0",
-   "PASS"
-  ],
-  "bpc4_ui400ps_0ppm_ssc0_holdstep4000ppm": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=4000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=30100 errors=656 first_err_ui=30047 slips_p=0 slips_m=0 hold=1 vctrl=1.1567 max_freq_err_ppm=7939.6 psel=0",
-   "FAIL"
-  ],
-  "bpc2_ui800ps_0ppm_ssc0_holdstep2000ppm": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1510 max_freq_err_ppm=1189.0 psel=0",
-   "PASS"
-  ],
-  "bpc2_ui800ps_0ppm_ssc0_holdstep-2000ppm": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-2000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1508 max_freq_err_ppm=1195.4 psel=0",
-   "PASS"
-  ],
-  "bpc2_ui800ps_0ppm_ssc0_holdstep4000ppm": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=4000 ileak_nA=0.0 fll_en=0 fll_done_ui=-1 fll_err_words=0 bits_checked=29920 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1503 max_freq_err_ppm=1203.0 psel=0",
-   "PASS"
-  ],
-  "bpc4_ui400ps_0ppm_ssc0_holdstep35000ppm_leak1nA_fll_k6": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=102732 fll_err_words=0 bits_checked=187200 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1502 max_freq_err_ppm=1025.2 psel=0",
-   "PASS"
-  ],
-  "bpc4_ui400ps_300ppm_ssc0_holdstep-20000ppm_leak-1nA_fll_k6": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-20000 ileak_nA=-1.0 fll_en=1 fll_done_ui=102742 fll_err_words=-1 bits_checked=187240 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1510 max_freq_err_ppm=1027.6 psel=0",
-   "PASS"
-  ],
-  "bpc2_ui800ps_0ppm_ssc0_holdstep35000ppm_leak1nA_fll_k7": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=0.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=143647 fll_err_words=0 bits_checked=66280 errors=0 first_err_ui=-1 slips_p=0 slips_m=0 hold=1 vctrl=1.1504 max_freq_err_ppm=1206.6 psel=0",
-   "PASS"
-  ],
-  "bpc2_ui800ps_-300ppm_ssc0_holdstep-20000ppm_leak-1nA_fll_k7": [
-   "RESULT bpc=2 ui_ps=800.0 ppm=-300.0 ssc_ppm=0.0 kvco=6.4e+08 hold_step_ppm=-20000 ileak_nA=-1.0 fll_en=1 fll_done_ui=61736 fll_err_words=1 bits_checked=149460 errors=4625 first_err_ui=71822 slips_p=0 slips_m=0 hold=1 vctrl=1.1603 max_freq_err_ppm=11538.0 psel=0",
-   "FAIL"
-  ],
-  "bpc4_ui400ps_0ppm_ssc-5000_holdstep35000ppm_leak1nA_fll_k6": [
-   "RESULT bpc=4 ui_ps=400.0 ppm=0.0 ssc_ppm=-5000.0 kvco=6.4e+08 hold_step_ppm=35000 ileak_nA=1.0 fll_en=1 fll_done_ui=102732 fll_err_words=0 bits_checked=289460 errors=10593 first_err_ui=112762 slips_p=0 slips_m=0 hold=1 vctrl=1.1615 max_freq_err_ppm=16599.6 psel=0",
-   "FAIL"
-  ],
-  "yosys_generic_synth": {
-   "returncode": 0
-  }
- }
+ "superseded": "r10 (scratch/wired_rx/r9pub/cdr.r10.spice; output compliance bug), r-ac3 (scratch/wired_rx/r9pub/cdr_rac3_backup/)"
 }

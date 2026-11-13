@@ -50,8 +50,14 @@ CASES = [('q625', 4, dict(f=625e6, words=12)),
          ('q480_ff', 4, dict(f=480e6, words=12, corner='ff', temp=22, vdd=3.35)),
          ('q480_ff_r1', 4, dict(f=480e6, words=12, corner='ff', temp=22, vdd=3.35, rcs=1, d_lat=0.47e-9)),
          # safe state: EN=0, clocks/samples/LDE toggling; < 10 uA and every output < 0.3 V
-         ('safe_q625', 4, dict(f=625e6, words=4, en_off=True))]
+         ('safe_q625', 4, dict(f=625e6, words=4, en_off=True)),
+         # r6/r7 system safe state (W6-SAFE / W7-SAFE): EN=0 implies slicer_en=0, so S is static low
+         ('safes_q625', 4, dict(f=625e6, words=4, en_off=True, s_static=True))]
 MIN_BITS = {4: 150, 2: 120, 1: 60}
+# r7 publish (2026-11-13, AP4-1 / SLI7-G): the gate is the EXTRACTED netlist at ring <= 625 MHz.  Ring 810/834 MHz is not
+# a production mode (SLI7-G), so those cases are run and reported but do not gate; `safe_q625` (EN=0 with S toggling) is
+# the unsupported stress state (W6-SAFE), the gating safe case is `safes_q625`.  Schematic runs are informational.
+NON_GATING = {'q810', 'q810_r1', 'q810_ss_r1', 'q834_r1', 'q834_ss_r1', 'safe_q625'}
 
 
 ASSESS_ONLY = False
@@ -78,10 +84,12 @@ def main():
     ap.add_argument('--only', nargs='*')
     ap.add_argument('--jobs', type=int, default=2)
     ap.add_argument('--assess-only', action='store_true', help='re-judge the stored runs (implies --no-layout)')
+    ap.add_argument('--results', help='build the evidence from this results store (runs made on the staged build of the '
+                                      'published layout); no layout, no simulation')
     a = ap.parse_args()
     global ASSESS_ONLY
     ASSESS_ONLY = a.assess_only
-    if a.assess_only:
+    if a.assess_only or a.results:
         a.no_layout = True
     gen = HERE / 'generated'
     if not a.no_layout:
@@ -94,6 +102,8 @@ def main():
     store = capture.SCRATCH / 'results.json'
     res = json.loads(store.read_text()) if (store.exists() and a.only) else {}
     jobs = [(t, b, k, e) for t, b, k in CASES for e in (False, True) if not a.only or t in a.only]
+    if a.results:
+        res, jobs = json.loads(Path(a.results).read_text()), []
     with ThreadPoolExecutor(a.jobs) as ex:
         for name, r in ex.map(lambda j: one(*j), jobs):
             res[name] = r
@@ -102,12 +112,20 @@ def main():
     lvs_ok = bool(lvs.get('unique_match')) if isinstance(lvs, dict) else False
     gx = top.get('gds_export') or {}
     cell_ok = all(c.get('drc_errors') == 0 and (c.get('lvs') or {}).get('unique_match') for c in cells.values())
-    sims_ok = all(res.get(('ext_' if e else 'sch_') + t, {}).get('pass') for t, _, k in CASES for e in (False, True)
-                  if not k.get('en_off'))
-    safe_ok = all(res.get(('ext_' if e else 'sch_') + t, {}).get('pass') for t, _, k in CASES for e in (False, True)
-                  if k.get('en_off'))
+    # r7: the gate is the extracted netlist over the gating cases (see NON_GATING); a gating case that was not run
+    # counts as a failure of the gate and is listed in `gating_not_run`
+    gate = ['ext_' + t for t, _, k in CASES if t not in NON_GATING and not k.get('en_off')]
+    gate_safe = ['ext_' + t for t, _, k in CASES if t not in NON_GATING and k.get('en_off')]
+    not_run = [n for n in gate + gate_safe if n not in res]
+    failing = [n for n in gate + gate_safe if n in res and not res[n].get('pass')]
+    sims_ok = all(res.get(n, {}).get('pass') for n in gate)
+    safe_ok = all(res.get(n, {}).get('pass') for n in gate_safe)
+    control = {k: {kk: v.get(kk) for kk in ('bits', 'bit_errors', 'edge_errors', 'pd_ok', 'pass', 'expected')}
+               for k, v in res.items() if k.startswith('neg_')}
+    control_ok = bool(control) and all(not v['pass'] for v in control.values())
     hashes = {p: f.sha256(HERE / p) for p in ['capture.py', 'wrx_compact.py', 'run_capture.py',
-                                               'generated/wrx_cap.ext.spice', 'generated/wrx_cap.lvs.spice']
+                                               'generated/wrx_cap.ext.spice', 'generated/wrx_cap.lvs.spice',
+                                               'generated/wrx_cap.gds']
               if (HERE / p).exists()}
     ev = dict(block='wrx_cap', subckt='pt_wrx_cap', source_hashes=hashes,
               scope='Capture front end only (ideal ring phases and ideal sampler outputs). Slicer, ring PLL and CDR '
@@ -119,13 +137,18 @@ def main():
                             benches={k: {kk: v.get(kk) for kk in ('netlist', 'i_uA', 'outputs_max_v', 'pass', 'error')}
                                      for k, v in sorted(res.items()) if 'safe' in k}),
                   clean=dict(state='pass' if (cell_ok and top.get('drc_errors') == 0 and lvs_ok and gx.get('pass')
-                                              and sims_ok) else 'fail',
+                                              and sims_ok and control_ok) else 'fail',
+                             gate='extracted netlist, ring <= 625 MHz (SLI7-G); non-gating: ' + ', '.join(sorted(NON_GATING)),
+                             gating_cases=gate + gate_safe, gating_not_run=not_run, gating_failing=failing,
+                             negative_control=dict(ok=control_ok, runs=control,
+                                                   criterion='a broken input (sampler output stuck) must be reported as failing'),
                              cells={n: dict(drc_errors=c.get('drc_errors'), lvs=(c.get('lvs') or {}).get('unique_match'),
                                             area_um2=c.get('area_um2')) for n, c in cells.items()},
                              top=dict(drc_errors=top.get('drc_errors'), lvs_unique=lvs_ok, gds_export=gx,
                                       devices=top.get('devices')),
                              benches={k: {kk: v.get(kk) for kk in ('netlist', 'bpc', 'f', 'psel', 'corner', 'temp', 'vdd', 'lde_delay',
-                                                                   'words', 'bits', 'bit_errors', 'edge_bits', 'edge_errors', 'ber_95_upper', 'i_mA', 'i_uA',
+                                                                   'words', 'bits', 'bit_errors', 'edge_bits', 'edge_errors', 'pd_ok', 'vote_activity', 'gear_ok',
+                                                                   'word_timing', 'ber_95_upper', 'i_mA', 'i_uA',
                                                                    'outputs_max_v', 'pass', 'error')}
                                       for k, v in sorted(res.items())})))
     (gen / 'wrx_cap-evidence.json').write_text(json.dumps(ev, indent=1, default=str) + '\n')

@@ -1,0 +1,473 @@
+{
+ "reviewed": "2026-11-09",
+ "branch": "transceiver-risk-accepted-tapeout",
+ "question": "Will the design meet its performance requirements if finished as architected?",
+ "answer": "No on primary on-chip routes; wired fails above ~1.07-1.25 Gb/s, RF meets only with board LO/LNA/PA fallbacks; IO pads adequate but digital core and stress-safe clamp limit the system.",
+ "requirements": [
+  {
+   "area": "digital",
+   "requirement": "host word clock",
+   "required": "156.25 MHz (312.5 Mword/s)",
+   "evidence": "65.3 MHz tt, 30.5 ss_125C",
+   "sim_type": "extracted STA, stale (18/26 sources)",
+   "verdict": "fails",
+   "source": "evidence/digital-hardening-evidence.json"
+  },
+  {
+   "area": "digital",
+   "requirement": "wired 20-bit clock",
+   "required": "125 MHz",
+   "evidence": "53.5/63.8 MHz tt (=1.07-1.28 Gb/s)",
+   "sim_type": "extracted STA, stale",
+   "verdict": "fails",
+   "source": "evidence/digital-hardening-evidence.json"
+  },
+  {
+   "area": "digital",
+   "requirement": "H2D clock",
+   "required": "78.12 MHz",
+   "evidence": "72.3 MHz tt",
+   "sim_type": "extracted STA, stale",
+   "verdict": "fails",
+   "source": "evidence/digital-hardening-evidence.json"
+  },
+  {
+   "area": "digital",
+   "requirement": "RF sample clocks",
+   "required": "50 MHz",
+   "evidence": "rftx 40.9 MHz tt",
+   "sim_type": "extracted STA, stale",
+   "verdict": "marginal",
+   "source": "evidence/digital-hardening-evidence.json"
+  },
+  {
+   "area": "digital",
+   "requirement": "SPI",
+   "required": "<=1 MHz start, 10 MHz bench",
+   "evidence": "18.6 MHz tt",
+   "sim_type": "extracted STA",
+   "verdict": "meets",
+   "source": "evidence/digital-hardening-evidence.json"
+  },
+  {
+   "area": "digital",
+   "requirement": "payload throughput",
+   "required": "2.88 Gb/s",
+   "evidence": "~1.20 Gb/s at achieved clock",
+   "sim_type": "analytic",
+   "verdict": "fails",
+   "source": "spec/streaming-transport-v2.md"
+  },
+  {
+   "area": "digital",
+   "requirement": "response latency",
+   "required": "400 ns gate (342 ns model)",
+   "evidence": "scales ~2.4x at achieved clock",
+   "sim_type": "behavioral",
+   "verdict": "unverified",
+   "source": "spec/streaming-transport-v2.md"
+  },
+  {
+   "area": "digital",
+   "requirement": "area",
+   "required": "2.5 mm2 digital+memory",
+   "evidence": "3.24 mm2",
+   "sim_type": "extracted",
+   "verdict": "fails",
+   "source": "evidence/digital-hardening-evidence.json"
+  },
+  {
+   "area": "digital",
+   "requirement": "current",
+   "required": "19.5-36.5 mA",
+   "evidence": "none",
+   "sim_type": "-",
+   "verdict": "unverified",
+   "source": "spec/analog-architecture.json"
+  },
+  {
+   "area": "rf_rx",
+   "requirement": "chain NF",
+   "required": "6 dB",
+   "evidence": "12.1 dB (2.8 with B5)",
+   "sim_type": "extracted tt, ideal match",
+   "verdict": "fails (meets with B5)",
+   "source": "analog/rf_rx/generated/lna-evidence.json"
+  },
+  {
+   "area": "rf_rx",
+   "requirement": "IIP3/P1dB/blockers",
+   "required": "IIP3 0 dBm",
+   "evidence": "not simulated",
+   "sim_type": "-",
+   "verdict": "unverified",
+   "source": "analog/rf_rx/generated/lna-evidence.json"
+  },
+  {
+   "area": "rf_rx",
+   "requirement": "PGA range",
+   "required": "-6..42 dB",
+   "evidence": "-0.06..23 dB",
+   "sim_type": "extracted tt",
+   "verdict": "fails",
+   "source": "analog/rf_rx/generated/bbfilter_i-evidence.json"
+  },
+  {
+   "area": "rf_rx",
+   "requirement": "filter ripple / widest / narrowest",
+   "required": "<=1 dB / >=10 MHz / 100 kHz",
+   "evidence": "1.7 tt 3.7 ff / 15.2 MHz / 776 kHz",
+   "sim_type": "extracted 12 env",
+   "verdict": "fails (ripple, narrowest)",
+   "source": "analog/rf_rx/generated/bbfilter_i-evidence.json"
+  },
+  {
+   "area": "rf_rx",
+   "requirement": "ADC rate",
+   "required": "40 MS/s (>=20 for Wi-Fi)",
+   "evidence": "20 tt/ff, 16 ss; 20 fails ss",
+   "sim_type": "extracted 12 env",
+   "verdict": "fails 40 / marginal 20",
+   "source": "analog/converters/generated/adc_i-evidence.json"
+  },
+  {
+   "area": "rf_rx",
+   "requirement": "ADC ENOB",
+   "required": "8",
+   "evidence": "8.04 (32-pt FFT, tt, fin 1.875 MHz)",
+   "sim_type": "extracted tt",
+   "verdict": "marginal (weak evidence)",
+   "source": "analog/converters/generated/adc_i-evidence.json"
+  },
+  {
+   "area": "rf_rx",
+   "requirement": "Wi-Fi MCS0/MCS7 sensitivity",
+   "required": "-82/-64 dBm (std)",
+   "evidence": "~-79.7/-57.7 on chip; -90.6/-68.6 with B5",
+   "sim_type": "analytic cascade",
+   "verdict": "fails on chip, meets with B5",
+   "source": "this review s3.1"
+  },
+  {
+   "area": "rf_rx",
+   "requirement": "Wi-Fi ACR",
+   "required": "+16 dB MCS0 (std)",
+   "evidence": "20 MS/s aliases adjacent channel, 3-20 dB filter rejection",
+   "sim_type": "analytic",
+   "verdict": "fails (architectural)",
+   "source": "this review s3.2"
+  },
+  {
+   "area": "rf_rx",
+   "requirement": "BLE/BT/15.4 sensitivity",
+   "required": "-70/-70/-85 dBm (std)",
+   "evidence": "10-18 dB margin without B5",
+   "sim_type": "analytic",
+   "verdict": "meets",
+   "source": "this review s3.1"
+  },
+  {
+   "area": "rf_tx",
+   "requirement": "output power",
+   "required": "0 dBm mean",
+   "evidence": "linear -5.6 tt (-4.2..-9.9 env); saturated -0.13 tt (-0.4..-3.1 env), balun loss excluded",
+   "sim_type": "extracted 12 env",
+   "verdict": "fails linear / marginal saturated",
+   "source": "analog/rf_tx/generated/rfdriver-evidence.json"
+  },
+  {
+   "area": "rf_tx",
+   "requirement": "driver gain",
+   "required": "5.36 V/V",
+   "evidence": "1.68 V/V",
+   "sim_type": "extracted tt",
+   "verdict": "fails",
+   "source": "analog/rf_tx/generated/rfdriver-evidence.json"
+  },
+  {
+   "area": "rf_tx",
+   "requirement": "EVM/ACLR/mask/harmonics",
+   "required": "802.11/BT/15.4 (std)",
+   "evidence": "none",
+   "sim_type": "-",
+   "verdict": "unverified",
+   "source": ""
+  },
+  {
+   "area": "rf_tx",
+   "requirement": "DAC",
+   "required": "+/-1 V, CM 1.65 V, 40 MS/s",
+   "evidence": "+/-0.996 V, ~10 LSB, CM 1.43 V",
+   "sim_type": "extracted, stale generators",
+   "verdict": "marginal",
+   "source": "analog/converters/generated/dac_i-evidence.json"
+  },
+  {
+   "area": "lo",
+   "requirement": "autonomous LO",
+   "required": "2.4-2.5 GHz",
+   "evidence": "VCO bench no frequency; polyphase fails",
+   "sim_type": "schematic/extracted",
+   "verdict": "fails -> rf_lo_external_ref",
+   "source": "spec/tapeout-readiness.json"
+  },
+  {
+   "area": "lo",
+   "requirement": "external LO drive",
+   "required": "~2 Vpp/leg at pad (B3)",
+   "evidence": "passes only 4 Vpp open-circuit with ideal 1 pF pad; not co-simulated with stress-safe refpad (ff peaks >2.65 V compressed)",
+   "sim_type": "extracted 12 env",
+   "verdict": "marginal / conflict",
+   "source": "analog/timing/generated/lo_ext-evidence.json; analog/pads/README.md"
+  },
+  {
+   "area": "lo",
+   "requirement": "LO jitter / IQ skew",
+   "required": "<=0.3-0.5 ps per on-chip slot",
+   "evidence": "none",
+   "sim_type": "-",
+   "verdict": "unverified",
+   "source": "spec/clock-feasibility-envelope.md"
+  },
+  {
+   "area": "wired",
+   "requirement": "TX rate",
+   "required": "0.48-2.5 Gb/s",
+   "evidence": "0.96 11/12 env; 1.25 tt/ff; >=1.5 fail",
+   "sim_type": "extracted",
+   "verdict": "fails >=1.5",
+   "source": "analog/wired_tx/generated/wiredtx-evidence.json"
+  },
+  {
+   "area": "wired",
+   "requirement": "TX swing",
+   "required": "PCIe 800-1200 mVppd (std)",
+   "evidence": "578 mVppd tt; ss/3.15 0.50/0.81 V",
+   "sim_type": "extracted",
+   "verdict": "fails PCIe, marginal SATA/1000BASE-X",
+   "source": "analog/wired_tx/README.md"
+  },
+  {
+   "area": "wired",
+   "requirement": "TX jitter",
+   "required": "~0.25 UI TJ (std)",
+   "evidence": "305 ps pp DJ at 1.25 Gb/s (0.38 UI) pre-driver",
+   "sim_type": "extracted 60 bits",
+   "verdict": "fails/marginal",
+   "source": "analog/wired_tx/generated/wiredtx-evidence.json"
+  },
+  {
+   "area": "wired",
+   "requirement": "slicer rate",
+   "required": "2.5 Gb/s",
+   "evidence": "2.5 tt, 2.0 ss, 1.5 ss/22/3.15",
+   "sim_type": "extracted, stale netlist",
+   "verdict": "fails at ss",
+   "source": "analog/wired_rx/generated/slicer-evidence.json"
+  },
+  {
+   "area": "wired",
+   "requirement": "slicer offset",
+   "required": "<20 mV trimmed",
+   "evidence": "-27 mV (-31..-21)",
+   "sim_type": "extracted 12 env, stale",
+   "verdict": "fails",
+   "source": "analog/wired_rx/generated/slicer-evidence.json"
+  },
+  {
+   "area": "wired",
+   "requirement": "CDR tracking",
+   "required": "lock and track 0.48-2.5 Gb/s",
+   "evidence": "fails extracted; hand-over drift 5883 ppm",
+   "sim_type": "extracted",
+   "verdict": "fails",
+   "source": "analog/wired_rx/generated/cdr-evidence.json"
+  },
+  {
+   "area": "wired",
+   "requirement": "BER/JTOL/SSC",
+   "required": "1e-12, standard masks (std)",
+   "evidence": "none",
+   "sim_type": "-",
+   "verdict": "spec-missing",
+   "source": ""
+  },
+  {
+   "area": "wired",
+   "requirement": "CTLE peaking",
+   "required": "~6 dB",
+   "evidence": "7.3 tt, 1.6-8.1 corners",
+   "sim_type": "extracted 12 env",
+   "verdict": "marginal",
+   "source": "analog/wired_rx/generated/ctle-evidence.json"
+  },
+  {
+   "area": "wired",
+   "requirement": "TMDS",
+   "required": "0.7425/1.485 Gb/s",
+   "evidence": "1.25 eye 955 mV/663 ps; 1.485 not simulated; ff clamp leakage not included",
+   "sim_type": "extracted tt",
+   "verdict": "meets 720p / unverified 1080p",
+   "source": "analog/wired_tx/README.md"
+  },
+  {
+   "area": "wired",
+   "requirement": "USB HS",
+   "required": "480 Mb/s, 360-440 mV, squelch, disconnect",
+   "evidence": "amplitude ok with per-board cal; squelch 125.5; disconnect 536-546; usbhs tests open",
+   "sim_type": "extracted 13 env",
+   "verdict": "marginal",
+   "source": "spec/tapeout-readiness.json"
+  },
+  {
+   "area": "wired",
+   "requirement": "USB LS edges",
+   "required": "75-300 ns",
+   "evidence": "33-67 ns",
+   "sim_type": "extracted",
+   "verdict": "fails -> B8",
+   "source": "analog/pads/README.md"
+  },
+  {
+   "area": "io",
+   "requirement": "wired pad capacitance",
+   "required": "<=2.7 pF",
+   "evidence": "RX 2.35, TX 2.706/2.713",
+   "sim_type": "extracted",
+   "verdict": "fails TX (marginal)",
+   "source": "analog/pads/README.md"
+  },
+  {
+   "area": "io",
+   "requirement": "wired return loss at Nyquist",
+   "required": "~10 dB class (std)",
+   "evidence": "11.8-13 @625 MHz, 6.6-7.6 @1.25 GHz",
+   "sim_type": "analytic",
+   "verdict": "meets 1.25G / fails 2.5G",
+   "source": "this review s3.5"
+  },
+  {
+   "area": "io",
+   "requirement": "host pad DDR",
+   "required": "156.25 MHz DDR",
+   "evidence": "bi_24t 222.8 tt / 177.9 ss_125C",
+   "sim_type": "Liberty screen",
+   "verdict": "marginal (board/FPGA/SSO open)",
+   "source": "evidence/digital-hardening-evidence.json"
+  },
+  {
+   "area": "io",
+   "requirement": "ESD",
+   "required": "2 kV HBM / 500 V CDM",
+   "evidence": "pulse 5.895 V vs 6.0 V screen; 0.105 V margin; HBM/CDM not established",
+   "sim_type": "extracted stress",
+   "verdict": "marginal / spec-missing",
+   "source": "analog/pads/README.md"
+  },
+  {
+   "area": "power",
+   "requirement": "supply current",
+   "required": "240 RF / 292 wired; PDN computed at 250 mA",
+   "evidence": "224-261 mA allocations (two files disagree); digital/hostio unmeasured",
+   "sim_type": "allocation",
+   "verdict": "marginal/unverified",
+   "source": "spec/tapeout-readiness.json; spec/power-partition.md"
+  },
+  {
+   "area": "timing",
+   "requirement": "ring PLL range",
+   "required": "480-810 MHz",
+   "evidence": "locks 480/625/810; HOLD fails",
+   "sim_type": "extracted, pll_ring.spice stale",
+   "verdict": "meets (jitter unverified)",
+   "source": "analog/timing/generated/pll_ring-evidence.json"
+  },
+  {
+   "area": "timing",
+   "requirement": "aosc",
+   "required": "40-60 MHz",
+   "evidence": "ss 35.4-37.1 MHz flagged pass",
+   "sim_type": "extracted 12 env",
+   "verdict": "fails at ss",
+   "source": "analog/timing/generated/aosc-evidence.json"
+  }
+ ],
+ "interfaces": {
+  "pcie_gen1": "fails (no fallback)",
+  "ethernet_1000basex": "fails on chip; fallback unverified",
+  "sgmii": "fails on chip; fallback unverified",
+  "sata_gen1": "fails",
+  "displayport_rbr": "fails",
+  "dvi_single_link": "TX meets 720p; RX unverified",
+  "hdmi_tmds": "720p TX meets; 1080p fails/unverified",
+  "hd_sdi": "fails",
+  "usb2": "marginal; LS via B8",
+  "wifi_he20": "fails on chip; plausible via BB_I/Q external ADC, B5 LNA, external PA, external LO",
+  "bluetooth_le": "likely meets (unverified)",
+  "bluetooth_br_edr": "unverified (EDR needs linear TX)",
+  "ieee802154_24": "marginal (TX >= -3 dBm)",
+  "lora_24": "marginal/unverified",
+  "custom_gfsk_sdr": "likely meets",
+  "lower_frequency_rf_stretch": "non-gating",
+  "external_frequency_conversion_stretch": "non-gating"
+ },
+ "stale_evidence": {
+  "evidence/digital-hardening-evidence.json": "18/26 sources stale",
+  "analog/wired_rx/generated/slicer-evidence.json": "netlist, extracted netlist, GDS stale",
+  "analog/timing/generated/pll_ring-evidence.json": "pll_ring.spice stale",
+  "analog/converters/generated/dac_i-evidence.json": "generators and ADC RTL stale",
+  "analog/converters/generated/dac_q-evidence.json": "generators stale"
+ },
+ "architectural_limits": [
+  {
+   "requirement": "PCIe Gen1 2.5 GT/s",
+   "reason": "CDR fallbacks cannot exceed D2H 2.88 Gb/s for oversampling; WTX_EXT <=1.6 Gb/s; pad RL ~7 dB at 1.25 GHz",
+   "fallback": "none named; needs a board retimer/PHY route"
+  },
+  {
+   "requirement": "SATA/DP/SDI/HDMI-sink RX 1.485-1.62 Gb/s",
+   "reason": "external-clock CDR fallback needs a data-aligned clock (board CDR)",
+   "fallback": "partial; board CDR into WCLK_IN not named in board-requirements"
+  },
+  {
+   "requirement": "Wi-Fi ACR on on-chip ADC",
+   "reason": "20 MS/s with 15 MHz filter aliases adjacent channel",
+   "fallback": "rf_bb_external_adc"
+  },
+  {
+   "requirement": "Wi-Fi MCS7 sensitivity on chip",
+   "reason": "NF 12.1 dB + 2.4 dB ADC penalty (PGA <=23 dB)",
+   "fallback": "B5 board LNA"
+  },
+  {
+   "requirement": "0 dBm OFDM TX",
+   "reason": "driver gain 3.2x short, no PAPR headroom",
+   "fallback": "rf_tx_low_power_external_pa"
+  },
+  {
+   "requirement": "autonomous RF LO",
+   "reason": "no inductor model; VCO bench produces no frequency",
+   "fallback": "rf_lo_external_ref (subject to the stress-safe clamp conflict)"
+  },
+  {
+   "requirement": "USB LS",
+   "reason": "no slew control",
+   "fallback": "B8 board PHY"
+  }
+ ],
+ "prioritized_gaps": [
+  "Digital timing re-closure on current RTL (2.4x short on host word clock; wired capped at 1.07 Gb/s); re-harden, envelope STA, area, power",
+  "Co-simulate lo_ext with the protected refpad/AUX_CLK at ff (clamp compresses peaks >2.65 V vs 2 Vpp B3 drive)",
+  "Wired RX recovery >=1.25 Gb/s: close the CDR or name a board CDR/retimer route; define BER/JTOL/SSC",
+  "Wired TX 4:1 compact-cell port, swing for PCIe, serializer DJ, TX pad cap 2.71 pF, combined WTX_EXT route sim",
+  "RF linearity/EVM/mask/LO jitter evidence",
+  "RX gain plan: PGA 23 vs 42 dB and filter ripple",
+  "ADC: coherent FFT at corners, ss 20 MS/s failure, restore clean criteria",
+  "Power: reconcile current totals, PDN drop at 261 mA plus measured digital, thermal",
+  "Host IO: FPGA selection, board SI, SSO, D2H[0] cell",
+  "Re-run stale evidence (slicer, pll_ring, DAC); fix aosc pass flag",
+  "TMDS 1.485 Gb/s with ff clamp leakage; USB HS eye/chirp/turnaround",
+  "Fill spec-missing numbers (IRR, LO leakage, mute, PLL jitter, BER/JTOL, ESD, clamp leakage)"
+ ],
+ "report": "scratch/reviews/performance-review.md"
+}

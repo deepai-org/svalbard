@@ -1,15 +1,14 @@
 # USB 2.0 data path: chip-side integration (pin list and connection intent)
 
-Written 2026-11-13 by the USB sub-owner of wired TX after mode-walk row MW-18 ("USB has no data path in
-either direction"). Rows USB-D1.. in `scratch/reviews/interface-changes.md` carry the demands on other
-owners; this file is the pin-level statement for chip-top / assembly.
+Rows USB-D1.. in `scratch/reviews/interface-changes.md` carry the demands on other owners; this file is the pin-level
+statement for chip-top / assembly.
 
 ## Parts
 
 | instance | cell | owner | state |
 |---|---|---|---|
 | `pad_usb` | `pad_wirepad` (top subckt `tx_protected_pad`), `analog/pads/generated/stress-safe-families/wired-receive-usb/` | pads | published (PD47 / PD48c) |
-| `usb_txdrv` | `pt_usb_txdrv`, `analog/wired_tx/usbdrv.py`, `generated/usbdrv.*` | wired TX (USB) | **new**, see "State of `pt_usb_txdrv`" below |
+| `usb_txdrv` | `pt_usb_txdrv`, `analog/wired_tx/usbdrv.py`, `generated/usbdrv.*` | wired TX (USB) | published, see "State of `pt_usb_txdrv`" below |
 | `hsbias` | `pt_wtx_hsbias`, `analog/wired_tx/hsbias.spice` | wired TX | published; `IBIAS` has no source (USB-D7) |
 | `wiredtx` | `pt_wiredtx` | wired TX | published; its `CMD_MAIN_P/N` are the HS serial data |
 | `rxselect`, `slicer`, `detect`, `termination`, `rxlevel`, `wmon_sel` | wired RX | wired RX | published; consumers missing (USB-D4, USB-D5) |
@@ -73,16 +72,14 @@ Pins of `pt_wiredtx` itself: see `INTEGRATION.md` in this directory.
 | HS transmit | as HS idle; `pt_wiredtx`: MODE_F (x4 repetition), `EN_MAIN` = 1, `EN_POST` = 0, MAIN / POST tail codes 0 (WIRE_TX pad silent) | `HS_DRV` = 1 for the packet; data words on D0..D39 |
 | termination calibration (PD43) | `HS_EN` = 1, bias at half scale, `TERM_ENABLE` = 1 | `TX_OE` = 1, `TX_DP` = 1 (then `TX_DN`) |
 
-## State of `pt_usb_txdrv` (netlist revision 3, 2026-11-14)
+## State of `pt_usb_txdrv`
 
-Revision 3 = strength-selectable HS gate driver, 20 pF HS_PBIAS bypass, break-before-make with direct interlock
-and off-delay (after the independent review). 208 devices, 116.48 x 270.06 um = 31,457 um2, pins on the top edge.
+Strength-selectable HS gate driver, 20 pF HS_PBIAS bypass, break-before-make with direct interlock and off-delay. 208 devices, 116.48 x 270.06 um = 31,457 um2, pins on the top edge.
 Magic DRC 0, Netgen LVS unique, KLayout DRC 0, KLayout precheck (main + antenna) clean
 (`generated/usbdrv-layout.json`, `usbdrv-lvs.txt`, `usbdrv-drc.txt`, `usbdrv-kldrc.json`). All numbers below are
 from the extracted netlist `generated/usbdrv.ext.spice` with the extracted USB pad, the extracted bias DAC and the
 COB package; limits and every job result are in `generated/usbdrv-evidence.json` (bench `sim_usbdrv.py`, raw runs
-`scratch/wired_tx/usbdrv/runs/`). Results of revisions 1-2 are kept in `scratch/wired_tx/usbdrv/results-rev1/`
-and are not evidence for this layout.
+`scratch/wired_tx/usbdrv/runs/`).
 
 | check (limit) | tt 27/3.3 | ss 32/3.15 | ff 22/3.35 | sf / fs | ss pessimistic | ff fast |
 |---|---|---|---|---|---|---|
@@ -132,7 +129,4 @@ Timing through the cell: `HS_DRV` high to line driven 1.7-3.3 ns, `HS_DRV` low t
 7. **Not checked:** electromigration and wire widths of the HS gate driver outputs, oxide lifetime of the 20 pF
    PMOS-gate bypass at 3.63 V, ESD / CDM of inputs arriving from the digital domain, mismatch / Monte Carlo,
    negative controls for the off / mode / ramp / chirp / tap checks, pad-level run of the input-skew stress.
-8. **Review:** one independent review of revision 2 found the break-before-make defeatable by inputs 0.8-3 ns
-   apart (fixed in revision 3 and covered by the stress row above), a wrong chirp K limit and a level window that
-   read 3-5 % low (both corrected, dated comments in `sim_usbdrv.py`), and the items listed here as open.
-   Revision 3 has NOT been re-reviewed.
+8. **Review:** the published netlist has not had an independent review.

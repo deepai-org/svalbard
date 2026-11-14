@@ -1,234 +1,48 @@
 # Wired-TX family (`analog/wired_tx`)
 
-Serializer, pre-driver gating and tail-bias DACs (`pt_wiredtx`), the `tmds`
-configuration, the `wtx_ext_rx` receiver instance and the USB HS bias DAC
-(`pt_wtx_hsbias`).  Ring phases come from timing's shared `pt_pll_ring`.
-Nothing here is qualified; numbers are extracted (Magic C) unless noted, and
-`generated/*-evidence.json` is the record of truth.
+Serializer, pre-driver gating and tail-bias DACs (`pt_wiredtx`), the USB pre-driver (`pt_usb_txdrv`), the USB HS
+bias DAC (`pt_wtx_hsbias`) and the fallback receiver instance (`wtx_ext_rx`). Ring phases come from the shared
+`pt_pll_ring_core` (owner: wired RX / timing); the pad, steering buffers, interlock and termination are `analog/pads`.
+Pin-level connection intent: `INTEGRATION.md` (wired TX) and `USB-INTEGRATION.md` (USB). Nothing here is qualified.
+Numbers are from extracted netlists (Magic C) unless marked; `generated/*-evidence.json` is the record.
+Working notes and the resume point for a successor: `scratch/wired_tx/STATUS.md`.
 
-| Block | Layout | DRC (Magic / KLayout) | LVS | Extracted function | Four-test (safe / clean / observable / fallback) |
-| --- | --- | --- | --- | --- | --- |
-| `wiredtx` (`pt_wiredtx`) | 546.9 × 609.9 µm = 0.334 mm² (cap 0.30 incl. attached_tx_buffer: **over**, WT18), 1067 devices incl. core macro `wtx_serq4c` 532 × 298 µm | 0 / 0 | unique | core macro: 60/60 envelope runs 0 errors (2.5 Gb/s q, 1.62 h = 3.24 core rep2, 0.48 f = 1.92 core rep4); block: 1.25 Gb/s h tt 0/221 errors, eye 744 ps; block envelope in progress | pass / pass / pass / pass (risk: INT-02) |
-| `tmds` | configuration of `wiredtx` + pad TMDS branch | (wiredtx) | (wiredtx) | 1.25 Gb/s into 50 Ω pull-ups: eye 955 mV / 663 ps, 1.16 Vpp diff | pass / pass / pass / pass |
-| `wtx_ext_rx` | instance of timing's `pt_diff_clk_rx` (`wtx_ext_rx.spice`) | timing | timing | ideal DX: 1 Gb/s, 0 errors, eye 388 mV / 965 ps at the pad; through the extracted receiver: 5/43 errors at 0.5 Gb/s (start-up), no output at 2 Gb/s | pass / pass / pass / n/a |
-| `usb_hs_bias` (`pt_wtx_hsbias`) | 125.8 × 76.0 µm = 9,552 µm², 53 devices | 0 / 0 | unique | 0–0.58 V full scale (tt), monotonic at all corners, settles to 1 LSB in 0.47 µs | pass / pass / open / n/a |
+## Blocks
 
-**Status 2026-11-13 (session 11): real-neighbour benches; pin list in `INTEGRATION.md`.**
-* **Real ring phases (MW-31, row WT29; single points, CMD pins, nominal extraction, about 100 bits each).**
-  Extracted `pt_pll_ring_core` (open loop, regulated supply) -> route -> extracted `pt_wiredtx`, 2.5 Gb/s,
-  ss/32/3.15 (ring 2.69 V): **11 errors / 101 bits, eye 77 ps: FAIL** (ring 2.57 V: 11 errors / 100, eye 55 ps). Ideal-source controls in the same harness:
-  full rail 0 errors (eye 240 ps); swing 2.69 V only 0 errors (306 ps); swing + measured rise spacing 0 errors
-  (323 ps); **swing + duty 0.575: 11 errors (121 ps)**. The cause is the ring's phase duty cycle (0.57-0.58 at ss,
-  625 MHz); the core closes its windows on a falling phase edge. tt/27/3.3 (ring 2.925 V, duty 0.52): 0 errors,
-  eye 226 ps. ss, 1.62 Gb/s (ring 405 MHz, duty 0.53): 0 errors, eye 364 ps of 617. No fix in the published
-  block; fix = windows closed on the next phase's rising edge (core change) and / or a 50 +/- 2 % phase buffer
-  (timing). Not run: other ring supplies, ff / sf / fs, pessimistic values. Record
-  `generated/wiredtx-realring.json`; benches `sim_ringsrc.py`, `sim_realring.py`.
-* **2.7-3.24 Gb/s (MW-24, row WT31): not closed.** Real chain serq8 (extracted, nominal) -> CMD -> extracted
-  pre-driver `tr7` -> pad -> package, ss, 3.24 Gb/s: 14 errors. serq8 alone at the pessimistic values: 45 errors
-  (the NAND-OR tree, not the windows or hops). A candidate pre-driver that forms the line bit as the XOR of two
-  half-rate streams in its output network passes the declared far-end limit (0 errors, 0.20 V, 0.45 UI) at ss
-  pessimistic with IDEAL streams (0.346 V / 213 ps; schematic cell, extracted pad and package), within -30 ... +60
-  ps of stream skew; no stream source meets that yet. Nothing of this is in `pt_wiredtx`.
-  `serq8_macro.py`, `sim_core8.py` and `generated/fast/wtx_*8*` are work in progress, not published.
-* **Enable / clock / reset contract (MW-15, WT25), TX ring controls (MW-16, WT26), pad TMDS tie-off and fallback
-  fixture (MW-17, WT27 / WT28), idle (MW-35, WT30):** rows written; `integration/wtx_fallback.py` builds again.
-* `generated/wiredtx-evidence.json` regenerated: it now describes the published netlist (sha256 efcd36f1...; three
-  runs: 2.5 Gb/s ss and ff with ideal phases, TMDS 1.485 at tt). `tmds` / `wtx_ext_rx` evidence files are still
-  those of the 2026-11-10 netlist.
-* USB TX pre-driver `pt_usb_txdrv`: `usbdrv.py`, `USB-INTEGRATION.md`.
+| Block | Published outline | DRC (Magic / KLayout) | LVS | Verified function (evidence) |
+| --- | --- | --- | --- | --- |
+| `pt_wiredtx` (quarter-rate CMOS core `wtx_serq4c`, CMD gating, MAIN / POST tail DACs) | 546.9 x 454.2 um = 0.248 mm2 | 0 / 0 | unique | ideal phases: 2.5 Gb/s 0 errors at ss/32/3.15 and ff/22/3.35 at the CMD pins (`generated/wiredtx-evidence.json`). Real ring phases: 0 errors at tt, **11 errors / 101 bits at ss/32/3.15** (`generated/wiredtx-realring.json`) |
+| `tmds` | configuration of `pt_wiredtx` (TMDS levels through the MAIN branch) | (wiredtx) | (wiredtx) | 1.485 Gb/s tt: eye 1050 mV / 604 ps, 0 errors (`generated/wiredtx-evidence.json`) |
+| `pt_usb_txdrv` | 116.48 x 270.06 um = 31,457 um2 | 0 / 0, precheck clean | unique | table in `USB-INTEGRATION.md` (`generated/usbdrv-evidence.json`) |
+| `pt_wtx_hsbias` | 125.8 x 76.0 um = 9,552 um2 | 0 / 0 | unique | 0-0.58 V full scale at tt, monotonic at all corners, 1 LSB settling 0.47 us (`generated/usb_hs_bias-evidence.json`) |
+| `wtx_ext_rx` | instance of timing's `pt_diff_clk_rx` (`wtx_ext_rx.spice`) | timing | timing | through the extracted receiver: 5 / 43 errors at 0.5 Gb/s, no output at 2 Gb/s (`generated/wtx_ext_rx-evidence.json`; risk TIM-08) |
 
-**Status 2026-11-12 (session 8).**  Block published 546.9 × 454.2 µm = 0.248 mm² (444 devices, Magic DRC 0,
-LVS unique, KLayout 0).  WT19 (repetition in digital), WT20 (D-bus launch), WT21 (rate plan: core ≤ 2.5 Gb/s, ring
-360–625 MHz), WT22 (X5: TMDS on MAIN), WT23 (3.24 Gb/s plan), WT24 (pad steering-buffer blocker).
-* Core macro (extracted): 46/46 pass incl. pessimistic (Rg 200 Ω/10 µm, +25 % device C, +15 % wire C) 2.5 Gb/s at all 20
-  corners (worst 171 ps of 400, ss/32/3.15) and optimistic (−15 % C) hold cases; postcursor one LINE bit late in ×1/×2/×4.
-* Block (extracted, nominal values): 2.5 Gb/s ss/32/3.15 0 errors (CMD 237/252 ps), ff 288/290 ps, 1.25 ×2 ss, 1.44 ×1 ff,
-  0.48 ×4 ff pass; TMDS 1.485 via MAIN (X5) 1.05 V / 604 ps at tt.  Pessimistic block 2.5 ss: 1 error (open).
-* Pad level: 2.5 Gb/s serial / package benches FAIL at tt because the pads' steering buffer drops < 400-ps pulses (WT24).
+Not published (work in progress, must not be instanced): eighth-rate core `wtx_serq8` (`serq8_macro.py`,
+`sim_core8.py`, `generated/fast/`), CML pre-driver `wt24_tr7` (`scratch/pads-wt24/`).
 
-**Status 2026-11-11 (session 7, path A = CMOS quarter-rate core + WT12 repetition).**
-
-* **Core macro `wtx_serq4c` extracted, 20 in-window corners × {2.5 Gb/s quarter, 3.24 Gb/s core rep2
-  (1.62 Gb/s line), 1.92 Gb/s core rep4 (0.48 Gb/s line)}: 60/60 pass, 0 errors.**  Worst eyes: 2.5 Gb/s
-  227 ps of 400 (ss/32/3.15); 3.24 rep2 427 ps of 617 (ss/32/3.15); 1.92 rep4 2065 ps of 2083.
-  (scratch/wired_tx/s7/env, netlist sha256 87b28e23.)
-* Two real core bugs fixed (both were failing the session-6 envelope):
-  1. merged-NAND TSPC (timing's `_tspc_nand_cols`) charge-shared its clock-PMOS node onto X during
-     CK high: at ff and the 480 MHz ring the shift flops flipped half a period early (43/140 errors).
-     `serq4_macro._tspc_nand_cols` is now charge-sharing safe (a clock PMOS next to X per input).
-  2. stream load flag: NOR -> INV4 -> INV4 left the loaded bit < 0.3 T to settle at ss/32/3.15 and
-     the 3.24 Gb/s core rate; the LD flop now has an INV output that drives LD directly.
-* Block benches: the /5 word counter has no reset, so `WORD_CLK40`'s phase differed between the
-  phase pass and the data pass (by one register period); data was launched on the wrong side of the
-  load and every extracted block run failed.  The benches now re-align on the measured `WORD_CLK40`
-  edge and launch the 40-bit word 1.0 ns after it (the digital's clock-to-Q; interface WT16). (risk: WTX-02)
-* Layout published: Magic DRC 0, LVS unique, KLayout 0.  pt_wiredtx has no poly resistors.
-* Open: block-level envelope (priority corners running), postcursor in rep modes (DP is one *core*
-  UI, i.e. ½ / ¼ user UI late in half / full rate), area (WT18), X5, CML stretch (does not fit the cap). (risk: WTX-06)
-
-**Status 2026-11-10 (this pass).**  The serializer was rebuilt around a
-compact TSPC core (`wtx_serq4`) that serves quarter, half and full rate; the
-old generic serializer remains as the rate-code-11 fallback.
-
-* **Schematic:** 0 errors at 3.24 Gb/s quarter rate (ring 810 MHz, the top of
-  the plan) at tt/ss/ff/sf/fs, 1.62 Gb/s half and 0.81 Gb/s full rate at
-  ss/22 °C/3.15 V; generic fallback 1.25 Gb/s tt.  Core windows 307–316 ps
-  against a 309 ps UI at ss/tt/ff.
-* **Layout:** 2081 devices, Magic DRC 0, KLayout 0, LVS unique,
-  **0.337 mm² (allocation 0.30, over; interface WT3)**.
-* **Extracted: fails.**  2.5 Gb/s quarter rate at tt/22/3.15: 37/141 errors,
-  310 ps pp jitter.  The generic row placer scatters the core, so routing
-  skews the core phases (extracted rise spacing 373–432 ps at tt and
-  114–748 ps at ss against a 400 ps UI), and adjacent windows overlap.  **Next
-  step: hand-place `wtx_serq4` as one compact macro with matched phase
-  routing** (as done for the slicer's `ws_sa`), then rerun
-  `./run_wired_tx.sh sims` (the job list already holds the 20-point envelope
-  sets: quarter 2.5 and 3.24, half 1.62, full 0.81).
-* **The ss/22 °C/3.15 V abort (previous record) is a bench problem, not the
-  DUT.**  It reproduces deterministically with ngspice 43 and the pads' patched
-  ngspice 47, always at the end of a PULSE/PWL source corner, on a source branch
-  current (`vttmds#branch`, later `vtpost`, `vd19`, `vtmdsc7`).  The DUT has no
-  floating node (a topology scan of the extracted netlist found none).  With
-  abstol relaxed (diagnosis only) the same deck runs, so only current
-  unknowns fail to converge.  At the tiny step forced after a corner they are
-  dominated by C/h terms of pF gate/wire capacitance.  Fix: breakpoint-free
-  tanh-edge stimuli and realistic driver resistance (150 Ω phases, 1 kΩ
-  logic); no tolerance changed.  The originally aborting case (old extracted
-  netlist, ss/22/3.15, 0.96 Gb/s) then passes, 0/61 errors.  An earlier
-  partial fix (dropping the ideal-source tail measurement) is kept: tail
-  currents are measured by the DC benches.
-
-## Reproduce
+## Architecture of `pt_wiredtx`
 
 ```
-./run_wired_tx.sh                 # all stages
-./run_wired_tx.sh layout          # netlist (cells.py) + layout + DRC/LVS + GDS/KLayout
-./run_wired_tx.sh sims [job...]   # extracted simulations (all, or named jobs); WTX_JOBS=n parallel (default 3)
-./run_wired_tx.sh evidence        # generated/*-evidence.json and the table below
+ ring phases WTX_PH0/90/180/270 --> four core phases C0..C3, 1 UI apart
+ D0..D39 (D0 first) --> 40 -> 20 word mux --> core wtx_serq4c: 4 x 5-bit parallel-load TSPC shift registers on C2,
+                        per-stream retiming hops --> F0..F3 --> 4:1 window muxes (window k = C(k) & C(k-1)):
+                        main Y / YB, postcursor DP / DPB (main delayed one line bit)
+ DX (pt_diff_clk_rx on WTX_EXT_P/N) --> one-hot select core / EXT (break-before-make)
+        --> CMD_MAIN_P/N = data & EN_MAIN, CMD_POST_P/N = post & EN_POST --> pads' gate drivers --> pad switches
+ IBIAS (10 uA) --> two 8-bit PMOS DACs --> MAIN_BIAS / POST_BIAS (pad tail gates, ratio 16, LSB about 83 uA)
 ```
 
-Magic layout/DRC/extraction and Netgen LVS run in
-`svalbard/librelane-gf180-canary:2026.08`; GDS export (Magic 8.3.678),
-KLayout DRC and ngspice 43 in `hpretl/iic-osic-tools@sha256:8964…`; the
-pad-integration decks use the pads family's patched ngspice-47
-(`scratch/pad-ngspice47`, recorded in `analog/pads/generated/simulator-build.json`).
-All containers `--network none`; raw output in `scratch/wired_tx/`.
+* Rates: quarter rate, 4 bits per ring cycle; lower line rates by bit repetition x2 / x4 in the digital
+  (`MODE_H`, `MODE_F` only place the postcursor one line bit late). `WORD_CLK40` = core rate / 40.
+* Each mux window closes on the falling edge of the previous phase, so the core is sensitive to the ring's phase
+  duty cycle (0.57-0.58 at ss, 625 MHz): the cause of the ss failure with the real ring.
+* Polarity: logical 1 = `CMD_MAIN_N` high = `V(PAD_P) > V(PAD_N)`. `POST_POL` 0 = de-emphasis, 1 = same sign (MLT-3).
+* Tail DACs: MAIN code 109 = 9.05 mA (reset), 255 = 21 mA.
+* `pt_wtx_hsbias`: 10 uA reference, eight binary PMOS sources into an NMOS triode load; `EN` = 0 pulls `HS_PBIAS`
+  to VDD, no static current; about 2.3 mV per code at tt, +/- 20 % over PVT.
+* All inputs are MOS gates on the wired rail (no current from a live core-domain driver into an unpowered island).
 
-| File | Role |
-| --- | --- |
-| `cells.py` | Single source of the transistor-level cells; writes `wiredtx.spice` and `hsbias.spice` |
-| `layoutgen.py` | Serpentine-row gencell placement, fixed-direction metal (m2 jogs, m3 risers, m4 tracks, m5 trunks); can place compact cells as macros |
-| `tools.py` | Docker wrappers (Magic, Netgen, KLayout, ngspice) |
-| `sim_wiredtx.py`, `sim_integration.py`, `sim_static.py`, `sim_hsbias.py` | Serializer, pad-integration, static/safety and HS-bias benches |
-| `run_all.py`, `evidence.py`, `run_wired_tx.sh` | Orchestration and evidence |
-| `wtx_fast.py` | Builds `wtx_mux4`/`wtx_cinv8` and imports timing's `ct_tspcd`/`ct_div5`/`ct_mux4` into `generated/fast` |
-| `cells_fastpath_wip.py` | Earlier unconverged fast-path attempt (superseded by `wtx_serq4` in `cells.py`; not used) |
-| `generated/mag/`, `generated/mag_hsbias/` | Magic hierarchy (top + primitive cells) for `pt_wiredtx` and `pt_wtx_hsbias` |
-
-## Architecture
-
-```
- ring phases WTX_PH0/90/180/270 --+--> phase select (quarter: ring phases; half: ring/2 from 4 TSPC
-                                  |    flops; full: ring/4 twisted ring) -> four core phases C0..C3, 1 UI apart
-                                  |
- D0..D19 (D0 first) ----------> compact core wtx_serq4 (timing's ct_tspcd / ct_div5, wtx_mux4, wtx_cinv8):
-                                   4 x 5-bit parallel-load TSPC shift registers, all on C2 (LD from ct_div5,
-                                   same clock domain) -> per-stream retiming hops of +3 / +4 UI only
-                                   -> F0..F3 -> 4:1 window muxes (window k = C(k) & C(k-1)):
-                                   main Y/YB = F(k), postcursor DP/DPB = F(k-1)       WORD_CLK = bit/20
-                                  |
- rate field 11 (fallback) ----> generic static-CMOS serializer (wtx_serq/wtx_phbuf, half rate)
-                                  |
-  DX (pt_diff_clk_rx on WTX_EXT_P/N) -> three-way one-hot select (core / generic / EXT, break-before-make
-        for EXT) -> CMD_MAIN_P/N = data & EN_MAIN, CMD_TMDS_P/N = data & EN_TMDS, CMD_POST_P/N = post & EN_POST
-                                                      |
-                  pads: tx_steering_buffer (x6) -> tx_protected_pad selector gates / tails
-  IBIAS (10 uA) -> mirror -> three 8-bit PMOS DACs -> MAIN_BIAS / POST_BIAS / TMDS_BIAS (pad tail gates)
-```
-
-* **Rate field (`MODE_H`, `MODE_F`):** 00 quarter (4 bits per ring cycle), 10
-  half (2), 01 full (1) run the compact core; **11 runs the earlier generic
-  serializer in half rate, kept as the fallback route**.  Ring 480–810 MHz
-  covers 1.92–3.24 / 0.96–1.62 / 0.48–0.81 Gb/s.  Change only while stopped
-  (`SER_EN = 0`).
-* **Compact core timing.**  Every flop is a TSPC `ct_tspcd` on a gated core
-  phase; there is no derived register clock.  The registers and the load
-  signal share one phase (C2), so loading needs no crossing.  Each stream then
-  reaches the phase that centres it on its mux window through hops of +3 UI
-  or +4 UI only (stream 0: C2→C2→C2, 1: C2→C1→C0→C3, 2: C2→C1→C0→C0, 3:
-  C2→C1→C1→C1), so every crossing has hop − tcq ≥ 1.7 UI at 3.24 Gb/s
-  (tcq ≈ 0.4 ns ≈ 1.3 UI).  All streams reach the line three register
-  periods after the load, in order.  The four core phases have separate,
-  identically loaded drivers for the windows (two NAND inputs each), the
-  hops, the register bank (two drivers of ten flops) and the divider; the
-  window gates are skewed (NAND 8/8, inverter 8/20) so a window is 1 UI wide
-  (schematic, 3.24 Gb/s: 307 ss / 314 tt / 316 ff ps against a 309 ps UI).
-  LD/LDB are buffered: LD changes 1.2–2.1 UI after a register edge and
-  1.9–2.8 UI before the next.
-* **Half/full rate** use the same core with four phases derived from the
-  ring: half = a (toggle on PH0), c = a@PH180, b = a@PH0, d = c@PH180;
-  full = a 4-flop twisted ring on PH0.  Every derived phase is a flop output,
-  so all four carry the same clock-to-Q.
-* **Design history in this pass (each found by simulation, all fixed):** LD
-  handed to another phase domain with 0.2 ns margin (stream errors at 3.24
-  Gb/s); ct_div5 racing to ÷4 at ff on a slow shared clock edge; windows
-  355–383 ps wide (AND-OR mux ORed neighbours at ss); LD from a minimum NOR
-  2–2.8 UI late; uneven phase loads (PH0/PH180 carried extra gates, window 2
-  narrowed to 241 ps); a net-name collision (`QRA`/`QRB`) shorting the reset
-  chain.
-* **Postcursor:** a second 4:1 mux gives the main stream delayed by one UI
-  (bit-exact), wired for de-emphasis.
-* **Polarity:** logical 1 steers the MAIN/TMDS tail to the N leg, so
-  V(PAD_P) > V(PAD_N).
-* **Tail-bias DACs** (`wtx_idac2` MAIN/POST, `wtx_idac1` TMDS): 10 µA →
-  mirrors → 8 binary PMOS sources (5 µA LSB) into an NMOS diode 1/16 of the
-  pad tail; tail LSB ≈ 83 µA.  MAIN 109 → 9.05 mA, TMDS 102/125 → 8.43/10.32
-  mA, 255 → 21.05 mA.
-* **`pt_wtx_hsbias`** (USB HS `HS_PBIAS`, gate of 28 pfet 20/1): 10 µA
-  reference, eight binary PMOS sources (~1.25 µA unit) into an NMOS triode
-  load (gate = EN) to VSS.  `EN=0` turns the sources off and pulls
-  `HS_PBIAS` to VDD; no static current.  Ports `IBIAS EN C0..C7 HS_PBIAS VDD
-  VSS`; HS_PBIAS ≈ code × 2.3 mV at tt, ±20 % over PVT (per-board
-  calibration).
-
-## Ports (`pt_wiredtx`)
-
-The exact, current pin list with the connection intent of every pin (and of the ring, pad, pre-driver, interlock
-and fallback receiver around the block) is in `INTEGRATION.md`; it replaces the table that used to be here.
-
-All control and data inputs see MOS gates only, so a core-domain driver that
-is high while the island is off draws no current (simulated).
-
-**Word-load timing (`integration/pt_wired_tx.sdc`):** the word source
-launches on `WORD_CLK` rising; the shift registers load three register
-periods later, i.e. `WORD_CLK` falling + `T_word/5` − ~0.4 ns buffer delay;
-setup ≈ 0.5 ns, hold ≈ 0.3 ns about that edge.  Constraining setup to
-`WORD_CLK` falling is conservative by `T_word/5` and correct for hold.
-Latency word launch → line ≈ 23 bits (generic serializer).  The compact
-core uses the same divider sequence (`ct_div5`, `WORD_CLK` = state C, load
-three register periods after `WORD_CLK` rises), so the same SDC relation
-holds; its setup/hold numbers about that edge have not been re-measured.
-
-**`wtx_ext_rx` requirement:** the AC-coupled source sends ≥ 128 balanced bits
-(e.g. 1010) before payload (receiver baseline settling).
-
-## Ownership
-
-| Item | Owner |
-| --- | --- |
-| Serializer, final mux, pre-driver gating, ext-data select, tail-bias DACs, HS bias DAC | this family |
-| Steering buffers, pad tails/selectors, cascodes, terminations, detect, interlock, protection, USB HS/FS/LS drivers | `analog/pads` |
-| Ring PLL, phases, clockmux, word divider `pt_wordclk`, `pt_diff_clk_rx` | `analog/timing` |
-| Pattern generator/checker (`rtl/pt_pattern.sv`), mode decode, SER_EN gating | `rtl` |
-
-## Results
-
-All runs are in `generated/wiredtx-evidence.json` (`performance_vs_target`)
-and `generated/wiredtx-sims.json`.  Rows marked `(rev1)` were simulated on an
-earlier netlist (before the reset-flop pull-up fix that removed ~2 mA reset
-current) and were not repeated.  The table between the markers is
-regenerated by `evidence.py`.
+## Results (`pt_wiredtx`, regenerated by `evidence.py`)
 
 <!-- RESULTS:BEGIN (generated by evidence.py) -->
 | Run | Rate | Bits/ring cycle | Corner | Result | Detail |
@@ -238,23 +52,50 @@ regenerated by `evidence.py`.
 | int_tmds_q1g485 | 1.485 Gb/s | 4 | tt 27 C 3.3 V | pass | eye 1050.2 mV / 603.7 ps, 1372.0 mVpp diff, 0 errors / 219 bits |
 <!-- RESULTS:END -->
 
-## Known limitations and open items
+## Reproduce
 
-1. **Extracted compact core fails** (layout skew, see Status).  Hand-placed
-   core macro is the open item; until then no extracted rate above the
-   generic fallback is qualified. (risk: WTX-06)
-2. **40-bit boundary (S3) not implemented** (interface WT5); PCIe swing needs
-   `current_code` 200–240 (WT4, integration runs queued in the job list);
-   TMDS 1.485 Gb/s (`int_tmds_h1g485`) and ff-clamp TMDS not yet run on the
-   new netlist.  Pad C / T-coil and clamp leakage are pads items (WT7). (risk: WTX-02)
-3. `pt_wordclk` (timing) is to replace the internal ÷5 (`wtx_div5`); half
-   and full rate then need a stride mux at the shift registers. (risk: WTX-02)
-4. `wtx_ext_rx` fails from the first bit at 0.5 Gb/s (baseline wander) and
-   at 2 Gb/s. (risk: TIM-08)
-5. USB HS through `pt_wiredtx` full-rate data into 45 Ω per leg is not
-   simulated; `pt_wtx_hsbias` LSB reaches 3.5 mV at ss (target 2.4 mV). (risk: USB-02)
-6. `MODE_H`/`MODE_F`, the HS bias code/enable and `SER_EN` composition need
-   register fields / glue.
-7. Integration runs use an ideal termination common mode; the pads
-   termination buffer, package and board are not included.  Ring phase
-   error, jitter and duty-cycle error are not modelled (ideal phases). (risk: WTX-06)
+```
+./run_wired_tx.sh                 # all stages
+./run_wired_tx.sh layout          # netlist (cells.py) + layout + DRC / LVS + GDS / KLayout
+./run_wired_tx.sh sims [job...]   # extracted simulations; WTX_JOBS=n parallel (default 3)
+./run_wired_tx.sh evidence        # generated/*-evidence.json and the results table
+python3 usbdrv.py                 # pt_usb_txdrv netlist + layout; sim_usbdrv.py = its bench
+python3 sim_realring.py block '{"corner":"ss","temp":32,"vdd":3.15,"vring":2.69,"band":1,"vctrl":1.6,"tag":"x"}'
+```
+
+Magic layout / DRC / extraction and Netgen LVS run in `svalbard/librelane-gf180-canary:2026.08`; GDS export, KLayout
+DRC and ngspice 43 in the pinned `hpretl/iic-osic-tools` image; decks that contain a pad use the pads family's patched
+ngspice 47 (`scratch/pad-ngspice47`). Containers run with `--network none`; raw output goes to `scratch/wired_tx/`.
+
+| File | Role |
+| --- | --- |
+| `cells.py` | transistor-level cells; writes `wiredtx.spice`, `hsbias.spice` |
+| `serq4c_macro.py`, `serq4_macro.py` | hand-placed core macro of the published block |
+| `layoutgen.py` | row placement and routing of the block around the macro |
+| `usbdrv.py`, `sim_usbdrv.py` | USB pre-driver generator and bench |
+| `sim_wiredtx.py`, `sim_core.py`, `sim_integration.py`, `sim_static.py`, `sim_hsbias.py` | serializer, core, pad-integration, static / safety and HS-bias benches |
+| `sim_ringsrc.py`, `sim_realring.py` | real phase source (extracted ring on its regulated supply) and benches with it |
+| `run_all.py`, `evidence.py`, `run_wired_tx.sh`, `tools.py` | orchestration, evidence, docker wrappers |
+| `serq8_macro.py`, `sim_core8.py`, `cml_ser.py`, `sim_cml.py`, `wtx_fast.py`, `cells_fastpath_wip.py` | unpublished fast-path work |
+
+## Ownership
+
+| Item | Owner |
+| --- | --- |
+| Serializer, final mux, pre-driver gating, ext-data select, tail-bias DACs, HS bias DAC, USB pre-driver | this family |
+| Pad tails / switches, cascodes, terminations, detect, interlock, protection, steering buffers | `analog/pads` |
+| Ring PLL and its phases, `pt_diff_clk_rx` | `analog/timing` (wired RX owner) |
+| Pattern generator / checker, mode decode, `SER_EN`, bit repetition, USB logic | `rtl` |
+
+## Open items
+
+1. 2.5 Gb/s fails at ss with the real ring (duty cycle of the phases); no fix in the published block (row WT29).
+2. 2.7-3.24 Gb/s has no closed path: `wtx_serq8` fails at the pessimistic values and is over its area booking, the
+   CML pre-driver is not published (row WT31; risk WTX-06).
+3. At the pad the published steering buffers pass about 1.5 Gb/s only (row WT24).
+4. Area: `pt_wiredtx` 0.248 mm2; fast-path reserve `tx8_rsv` 0.20-0.22 mm2 (row AP4-2).
+5. No electrical-idle input (SATA OOB, PCIe idle; row WT30).
+6. `wtx_ext_rx` fails from 0.5 Gb/s (TIM-08); fallback input relocation proposal OCP-2 undecided.
+7. Block-level `safe` / `observable` / `fallback` tests in `generated/wiredtx-evidence.json` are open; `tmds` and
+   `wtx_ext_rx` evidence files describe an older netlist.
+8. USB: see the open list in `USB-INTEGRATION.md`.

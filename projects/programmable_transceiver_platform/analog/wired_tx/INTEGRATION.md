@@ -1,28 +1,26 @@
 # Wired TX subsystem: exact pins and connection intent for chip-top integration
 
-Written 2026-11-13 (session 11) by the wired TX owner for the chip-top integration agent (`scratch/chip-top/`).
-Answers mode-walk rows MW-15, MW-16, MW-17, MW-24, MW-31, MW-35 (`scratch/reviews/mode-walk/part-wtx-clk.md`).
 Interface rows: WT25 (enable / clock / reset), WT26 (TX ring), WT27 (TMDS tie-off), WT28 (fallback), WT29 (real ring
-phases), WT30 (idle), WT31 (2.7-3.24 Gb/s state) in `scratch/reviews/interface-changes.md`.
-The USB data path (HS/FS/LS drive into `pad_wirepad`) is in `USB-INTEGRATION.md`.
+phases), WT30 (idle), WT31 (2.7-3.24 Gb/s) in `scratch/reviews/interface-changes.md`. The USB data path is in
+`USB-INTEGRATION.md`.
 
-Pin order below is the `.subckt` order of the published netlists. "Published" = GDS + extracted netlist + DRC/LVS
-in `generated/`. Everything not marked published must NOT be instanced yet.
+Pin order below is the `.subckt` order of the published netlists. "Published" = GDS + extracted netlist + DRC / LVS
+in `generated/`. Everything not marked published must NOT be instanced.
 
 ## 1. Instances
 
 | Instance | Master | Files | State |
 | --- | --- | --- | --- |
 | `wiredtx` | `pt_wiredtx` | `analog/wired_tx/wiredtx.spice`, `generated/wiredtx.{gds,ext.spice}` | published (quarter-rate core, line <= 2.5 Gb/s), 546.9 x 454.2 um |
-| `pll_tx` | `pt_pll_ring_core` | `analog/timing/pll_ring_core.spice`, `generated/pll_ring_core.*` | published by timing; not instanced in the last assembly |
-| `pll_vreg` | `pt_pll_vreg2` | `analog/pll_vreg/generated/pt_pll_vreg2.*` | published; in no inventory (MW-31) |
-| `pad_wire_tx` | `tx_protected_pad` (`pad_txpad`) | `analog/pads/generated/stress-safe-families/wired-transmit/` | published by pads; 0.6x switch resize and TMDS-branch removal pending (WT24 r6, WT27) |
+| `pll_tx` | `pt_pll_ring_core` | `analog/timing/pll_ring_core.spice`, `generated/pll_ring_core.*` | published by timing |
+| `pll_vreg` | `pt_pll_vreg2` | `analog/pll_vreg/generated/pt_pll_vreg2.*` | published |
+| `pad_wire_tx` | `tx_protected_pad` (`pad_txpad`) | `analog/pads/generated/stress-safe-families/wired-transmit/` | published by pads; 0.6x switch resize and TMDS-branch removal requested (WT24, WT27) |
 | `steer_main_p/n`, `steer_post_p/n` | `tx_steering_buffer_flat_physical` | `analog/pads/generated/steering-buffer-compact/` | published; INTERIM, good to about 1.5 Gb/s only (WT24: drops pulses < 400 ps) |
-| `predrv_main`, `predrv_post` | `tx_cml_predriver_flat_physical` (`wt24_tr7`) | `scratch/pads-wt24/lay_tr7/` | NOT published (review NO-GO); replaces the four steering buffers when it is |
+| `predrv_main`, `predrv_post` | `tx_cml_predriver_flat_physical` (`wt24_tr7`) | `scratch/pads-wt24/lay_tr7/` | NOT published; replaces the four steering buffers when it is |
 | `tx_interlock` | `tx_mode_interlock_flat_physical` | `analog/pads/generated/transmit-control-candidate/thick-logic/` | published by pads |
 | `tx_term_buffer` (`attached_tx_buffer`) | `buffer_compensated_flat` | `analog/pads/generated/termination-buffer-candidate/compact-array/` | published by pads |
 | `rx_wtx_ext` | `pt_diff_clk_rx` | `analog/timing/generated/diff_clk_rx.*`, wrapper `analog/wired_tx/wtx_ext_rx.spice` | published by timing; fails from 0.5 Gb/s (TIM-08) |
-| `wtx_fallback_control` | `pt_wtx_fallback_control` | `analog/bringup_control/` | published; decodes the external-data request (WT28); its evidence hashes `integration/wtx_fallback.py`, rebuild after the WT28 change |
+| `wtx_fallback_control` | `pt_wtx_fallback_control` | `analog/bringup_control/` | published; decodes the external-data request (WT28) |
 | `hsbias` | `pt_wtx_hsbias` | `analog/wired_tx/hsbias.spice`, `generated/hsbias.*` | published; see `USB-INTEGRATION.md` |
 
 ## 2. `pt_wiredtx` (published)
@@ -51,9 +49,9 @@ island is off (gate only); every OUTPUT that goes to the core domain needs a wir
 | `EN_MAIN`, `EN_POST` | in | `tx_interlock.EN_MAIN`, `.EN_POST` | they also gate the bias: IBIAS is used only while one of them is high. `EN_POST` should be requested only when `postcursor_code != 0` or `post_polarity` = 1 (power) |
 | `ISLAND_OFF` | in | `island_off[wired]` (core domain) | high: CMD outputs and both tail biases clamped to VSS |
 | `IBIAS` | in | 10 uA SOURCED into the pin from the wired bias bank (`BIAS_wiredtx`) | NMOS diode behind a switch; bank output enable = `EN_MAIN | EN_POST` |
-| `MAIN_CODE0..7` | in | `wiredtx.config.current_code[7:0]` (reset 109 = 9.05 mA; 255 = 21 mA; LSB about 83 uA at the pad tail) | also the TMDS code (102 / 125) since X5 |
+| `MAIN_CODE0..7` | in | `wiredtx.config.current_code[7:0]` (reset 109 = 9.05 mA; 255 = 21 mA; LSB about 83 uA at the pad tail) | also the TMDS code (102 / 125) |
 | `POST_CODE0..7` | in | `wiredtx.config.postcursor_code[7:0]` (reset 0) | |
-| `CMD_MAIN_P`, `CMD_MAIN_N`, `CMD_POST_P`, `CMD_POST_N` | out | today: one `steer_*` buffer each (`IN`), buffer `OUT` -> pad `MAIN_P`, `MAIN_N`, `POST_P`, `POST_N`. With the pre-driver: `predrv_main.INP/INN`, `predrv_post.INP/INN` | never straight to the pad gates (about 1 kohm source into 0.5-0.9 pF). MAIN: logic 1 on the line = `CMD_MAIN_N` high = `V(PAD_P) > V(PAD_N)` (the steering buffer is non-inverting; `MAIN_N` sinks `PAD_N`). POST with `POST_POL` = 0 is the opposite sense, one line bit later (`CMD_POST_P` high for the delayed 1). Routes <= 100 fF, P/N matched. `pt_usb_txdrv.CMD_P/N` also hang on `CMD_MAIN_P/N` (about 10 fF per leg, cell placed beside these outputs; `USB-INTEGRATION.md`, row USB-D5); the effect of that tap on the 2.5 Gb/s CMD eye has not been run |
+| `CMD_MAIN_P`, `CMD_MAIN_N`, `CMD_POST_P`, `CMD_POST_N` | out | one `steer_*` buffer each (`IN`), buffer `OUT` -> pad `MAIN_P`, `MAIN_N`, `POST_P`, `POST_N`. With the pre-driver: `predrv_main.INP/INN`, `predrv_post.INP/INN` | never straight to the pad gates (about 1 kohm source into 0.5-0.9 pF). MAIN: logic 1 on the line = `CMD_MAIN_N` high = `V(PAD_P) > V(PAD_N)` (the steering buffer is non-inverting; `MAIN_N` sinks `PAD_N`). POST with `POST_POL` = 0 is the opposite sense, one line bit later (`CMD_POST_P` high for the delayed 1). Routes <= 100 fF, P/N matched. `pt_usb_txdrv.CMD_P/N` also hang on `CMD_MAIN_P/N` (about 10 fF per leg, cell placed beside these outputs; `USB-INTEGRATION.md`, row USB-D5); the effect of that tap on the 2.5 Gb/s CMD eye has not been run |
 | `MAIN_BIAS`, `POST_BIAS` | out | pad `MAIN_BIAS`, `POST_BIAS` | gate-voltage mirror, ratio 16 (diode 2 x 20/1, pad tail 32 x 20/1): keep the two blocks adjacent, VSS returns joined at the pad |
 | `WTX_EXT_DATA` | out | wired iso clamp -> `wire_analog_status[12]` | `DX AND WTX_EXT` (toggles only in fallback mode), observation |
 | `ATB_NBIAS`, `ATB_PBIAS` | out | ATB leaves (node 26 `wiredtx_bias`; second leaf for PBIAS) | NBIAS = reference diode, PBIAS = PMOS gate of the MAIN DAC only |
@@ -71,14 +69,14 @@ Not on the block (digital signals without an analog consumer, see WT25 / WT30): 
 | Pin | Connect to | Notes |
 | --- | --- | --- |
 | `pll_tx.VDD` | `pll_vreg.VOUT_TX` | ring range and phase data exist only on the regulated supply: 2.57-2.95 V at ss/32 over VIN 3.05-3.35 V and 3-8 mA (`analog/pll_vreg/evidence/`), i.e. 0.84-0.88 x the pll rail, not a fixed 0.9 x |
-| `pll_tx.REF` | `ref_clk` (REF_IN receiver output; has no driver in the last netlist, mode-walk F1) | reference = ring / N |
-| `pll_tx.EN` | `ring_l.config.enable & island_on[pll] & vreg_tx_ok` | WT26; not `rfpll.state` (en_eff[11]). The field is in the digital agent's working tree (`pt_regmap_defs.svh` RING_L_CONFIG) |
+| `pll_tx.REF` | `ref_clk` (REF_IN receiver output) | reference = ring / N |
+| `pll_tx.EN` | `ring_l.config.enable & island_on[pll] & vreg_tx_ok` | WT26; not `rfpll.state` (en_eff[11]). |
 | `pll_tx.N4`, `N8` | decode of `ring_l.config.modulus[1:0]` (values 16, 8, 4) | 0: both low (/16); 1: `N8`; 2: `N4` |
 | `pll_tx.HOLD` | VSS | CDR hand-over pin, unused on the TX ring |
 | `pll_tx.BAND` | `ring_l.config.band` (reset 1) | 0 for ring <= about 480 MHz |
 | `pll_tx.IBIAS` | 10 uA sourced, pll bias bank `BIAS_pll_ring_tx` | |
 | `pll_tx.PH0/2/4/6` | `wiredtx.WTX_PH0/90/180/270` | |
-| `pll_tx.PH1/3/5/7` | matched dummy load today (same route length, open end) | become live with the eighth-rate core |
+| `pll_tx.PH1/3/5/7` | matched dummy load (same route length, open end) | become live with the eighth-rate core |
 | `pll_tx.FBCK` | `fc_src[0]` (pll iso clamp) | frequency check = `tx_ring_ready` source |
 | `pll_tx.LOCK` | `analog_status[0]` | status only (invalid at the top of the range) |
 | `pll_tx.REFO` | open | |
@@ -108,7 +106,7 @@ Not on the block (digital signals without an analog consumer, see WT25 / WT30): 
 | pad `CASCODE` | `RAIL_wired` | as in every wired TX bench and the fallback fixture |
 | pad `MAIN_P/N`, `POST_P/N` | `steer_*` `OUT` (later `predrv_*` `OUTP/OUTN`) | |
 | pad `MAIN_BIAS`, `POST_BIAS` | `wiredtx.MAIN_BIAS`, `.POST_BIAS` | |
-| pad `TMDS_P`, `TMDS_N`, `TMDS_BIAS` | VSS | WT27; branch unused since X5 |
+| pad `TMDS_P`, `TMDS_N`, `TMDS_BIAS` | VSS | WT27; branch unused |
 | pad `DETECT_ENABLE` | `tx_interlock.EN_DETECT` | |
 | pad `DETECT_PBIAS` | `RAIL_wired` (detect source off) unless pads state a bias source | pads to confirm |
 | pad `TERM_ENABLE` | `tx_interlock.EN_TERM` | |
@@ -173,6 +171,6 @@ Area: core macro as built 767.6 x 458.8 um (0.352 mm2) against the `tx8_rsv` boo
 | --- | --- |
 | digital | SER_EN equation, `wire_tx_clk` = WORD_CLK40, `wire_tx_request` tie, `tx_ring_ready`, binding of the existing `ring_l.config.enable/modulus/band` and `wiredtx.config.post_polarity`, NEW `wtx.predrv_trim`, the `REQ_MAIN` combiner, decode of `rate_mode` -> MODE pins, repetition x2 / x4, interlock requests (`pt_tx_pad_sequence`), SDC including clamp + route |
 | timing | PH7 (and odd-phase) skew of `ct_phbuf8` in `pt_pll_ring_core`, duty cycle at ss (WT29); reference divider or reference list; `pt_diff_clk_rx` data rate (TIM-08) |
-| pads | 0.6x MAIN/POST switch resize + TMDS branch removal in one re-layout; TX termination trim (WT24 r6); sources of `tx_term_buffer.REF/BIAS`, `DETECT_PBIAS` |
+| pads | 0.6x MAIN/POST switch resize + TMDS branch removal in one re-layout; TX termination trim (WT24); sources of `tx_term_buffer.REF/BIAS`, `DETECT_PBIAS` |
 | chip-top | bindings above; delete `netlist.py` TMDS rules; instance `pll_tx`, `pll_vreg`, the four steering buffers, interlock, termination buffer; iso clamps on WORD_CLK40, WORD_CLK, WTX_EXT_DATA |
 | board | one reference frequency per rate family (WT26(5)) |

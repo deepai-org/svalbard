@@ -48,7 +48,7 @@ FPGA bank on these nets runs at VCCO 3.3 V.
 | Family | Bank / standard | Drive and slew (H2D outputs) | Pulls | Input delay | Notes |
 |---|---|---|---|---|---|
 | Artix-7 / Spartan-7 | HR bank, `LVCMOS33` | 8–12 mA, `FAST` (HL-B4 SSO check) | `PULLTYPE` none, no keeper (HL-B7) | IDELAYE2: 32 taps × 78 ps at 200 MHz IDELAYCTRL = 2.5 ns | HR banks have **no ODELAY**. H2D is centred by MMCM phase (1/56 VCO step ≈ 14 ps at 1.25 GHz VCO), and per-bit H2D skew relies on the board ±2.5 mm match |
-| ECP5 | `LVCMOS33` | 8 mA, `SLEWRATE=FAST` | `PULLMODE=NONE` | DELAYF/DELAYG: 128 taps ≈ 25 ps ≈ 3.2 ns *(verify TN1265)* | Input ≤ 200 MHz, **output ≤ 150 MHz** (board-requirements screen), so H2D must run at div2 (HL-RATE-DIR). X2 gearing (IDDRX2F/ECLK) only on left/right banks *(verify)* |
+| ECP5 | `LVCMOS33` | 8 mA, `SLEWRATE=FAST` | `PULLMODE=NONE` | DELAYF/DELAYG: 128 taps ≈ 25 ps ≈ 3.2 ns *(verify TN1265)* | Input ≤ 200 MHz, **output ≤ 150 MHz** *(verify)*, so H2D must run at div2 (HL-RATE-DIR). X2 gearing (IDDRX2F/ECLK) only on left/right banks *(verify)* |
 | Cyclone V | `3.3-V LVCMOS` | 8 mA, fast slew | weak pull-up and bus-hold off | Input delay chain, runtime-settable via the IO_CONFIG/ALTIOBUF dynamic delay *(verify step and range)*, plus PLL dynamic phase shift (VCO/8 ≈ 100 ps) | Dedicated CLK pins are input-only, so `H2D_CLK` goes on a regular bidirectional pin (HL-B1). Check the 3.3 V I/O overshoot and DC-current guidance and the DDIO f_max at 3.3 V *(verify)* |
 
 All three families tolerate 3.3 V on these banks and meet the chip's input thresholds with LVCMOS33. No
@@ -85,7 +85,7 @@ H2D (FPGA launches, chip captures): the chip pad limit is 191.6 MHz at ss_125C. 
 The only family-specific term is FPGA output skew. Artix/Spartan use OSERDES + an MMCM 90° forwarded clock.
 Cyclone V uses DDIO_OUT. ECP5 runs at div2. None changes the §3.2 numbers.
 
-**Training cost today.** The prefix is 8 words, sent once per link start. So the FPGA can only sweep delays by
+**Training cost.** The prefix is 8 words, sent once per link start. So the FPGA can only sweep delays by
 restarting the link for each tap step (stop → SPI release/train → read lock). All lanes sweep in parallel:
 32 taps (Artix) to 128 taps (ECP5) restarts, ≈ 1 ms each over SPI, so **≈ 0.03–0.13 s per training**. That
 is workable. Hold-padding (HB-5) also means an idle link has few edges, so continuous eye monitoring during

@@ -123,13 +123,15 @@ Work dir `scratch/pads-core/` (`NOTES.md`); user-facing copies in `scratch/revie
 
 - **POR_BYPASS strap pad** = provider `gf180mcu_fd_io__in_c` with `PD` hard-tied high, `PU` low (as `rst_n_pad`). Unbonded pad
   5–16 µV; own leakage 0.034–0.105 nA (ff/85 °C/3.63 V); ≥ 2.55 µA needed to reach 0.4 V, ≥ 6.9 µA to flip `Y`
-  (threshold 0.99–1.27 V): 24,000× margin; supply ramps never glitch `Y`; negative control (pull-down off) floats high.
+  (threshold 0.99–1.27 V): 24,000× the model leakage, 2.5× a 1 µA external leak; `Y` never moves on supply ramps of ≥ 10 µs even
+  with only 0.2 pF on the pad (28–77 ns glitch at 1 µs); negative control (pull-down off) floats high.
   `scratch/pads-core/strap/STRAP.md`. Only the freed east sites `bidir[16]` / `bidir[17]` give a bench jumper. (risk: PWR-02)
 - **Supply-pad clamps and supply edges (INT6-0).** The provider `dvdd` / `dvss` / `cor` RC clamps (360 kΩ × MOS cap, τ 1.14–2.09 µs)
-  fire on a full-swing ramp of ≤ 1 µs (≤ 2 µs at ss, slow RC or a 3.5 V target) at about 1 A per cell, and never at ≥ 3 µs;
-  100 ns steps of up to 1.5 V on a settled rail do not fire. Board rule: supply 10–90 % ≥ 10 µs (≥ 3.3× margin), no hot-plug.
-  Ring of 22 cells at 1 µs, stiff source: 18.6–23.8 A, 35–77 µJ, die rail ≤ 3.88 V in this bench (5.7–6.4 V in the M6 bench with
-  its softer source). Survivability of a fired event is NOT shown. `scratch/pads-core/clamp/CLAMP.md`.
+  fire on a full-swing ramp of ≤ 1 µs everywhere and, at the worst corner found in review (sf/85 °C, slow RC), up to 3.0–3.5 µs
+  (about 1 A per cell); 4 µs is clean. Fastest clean slew 0.91 V/µs, slowest firing 1.04 V/µs; 100 ns steps of up to 1.5 V on a
+  settled rail do not fire. **Board rule: die-supply dV/dt ≤ 0.3 V/µs at any point of any rise (0 → 3.63 V in ≥ 12 µs), no hot-plug**
+  (row PC-16). Ring of 22 cells at 1 µs with an ideal stiff source: 18.6–23.8 A, 35–77 µJ. Survivability of a fired event and
+  the hot-plug waveform are NOT shown. `scratch/reviews/pads-core/CLAMP.md`.
 - **Host-input pulls**: `bi_24t` `PD` / `PU` pins give the same 105–157 kΩ pull; without a pull the input floats to 2.7 V. Row PC-9.
 - **Bond geometry and ring rails**: re-audited on the current map, same result as 2026-10-18 (2.991 mm, 38.7° / 44.0°, no crossing);
   ring rails uncut through every custom family. `scratch/reviews/pads-core/BOND-AUDIT.md`, `RAIL-CONTINUITY.md`. Free sites and

@@ -1,107 +1,126 @@
 # Timing and clocking family (`analog/timing/`)
 
-Transistor-level timing blocks built to the
-[block deliverable convention](../../spec/block-deliverables.md): one `.spice`
-per block (gf180mcuD `nfet_03v3`, `pfet_03v3`, `ppolyf_u_1k`), a reproducible
-Magic layout, Magic + KLayout DRC, Netgen LVS, extracted (parasitic-C) ngspice
-simulation, 12-point corners and a `generated/<block>-evidence.json` four-test
-record.  The JSON is authoritative; numbers below are copied from it.
+Transistor-level clock, PLL and RF-LO blocks (gf180mcuD), built to the
+[block deliverable convention](../../spec/block-deliverables.md): one `.spice` per block, a reproducible Magic
+layout, Magic and KLayout DRC, Netgen LVS, extracted ngspice simulation and, for the blocks of the standard flow,
+a `generated/<block>-evidence.json` record. The generated files are authoritative; numbers here are copied from
+the file named next to them.
+
+Performance window: junction 22-32 C, die supply 3.15-3.35 V, all process corners; slow dies may be trimmed up to
+a 3.50 V setpoint by the board. Safety window: 0-3.63 V, 0-85 C.
+
+Chip-top pin list, nets, supplies, controls and placement rules of the RF LO: [`LO-INTEGRATION.md`](LO-INTEGRATION.md).
+Chip connectivity: `integration/top/pt_chip.conn`; control decode: `integration/top/ctl_ports.txt`.
 
 ## Reproduce
 
 ```
-analog/timing/run_timing.sh                  # all blocks
+analog/timing/run_timing.sh                    # the ten standard-flow blocks
 analog/timing/run_timing.sh pll_ring,clockmux  # a subset
+python3 analog/timing/lo_rows.py <block>       # one LO block with its published row plan
 ```
 
-`run_timing.sh` builds the compact fast cells (`fastcells.py`), then runs
-`run_timing.py` (layout, DRC, LVS, nominal/safe/corner simulation) and
-`evidence.py` (evidence JSON and the results table below).  Layout/DRC/LVS run
-in `svalbard/librelane-gf180-canary:2026.08` (Magic 8.3.623, Netgen 1.5.316);
-simulation and GDS export run in `hpretl/iic-osic-tools@sha256:89641950…`
-(ngspice 43, Magic 8.3.678).  Every container runs `--network none`.  Raw
-decks and logs go to `<repo>/scratch/timing/`.
+`run_timing.sh` builds the compact fast cells (`fastcells.py`), runs `run_timing.py` (layout, DRC, LVS,
+nominal / safe / corner simulation; a layout is copied into `generated/` only when it passes) and `evidence.py`
+(evidence JSON and the table between the `results` markers below). Layout, DRC and LVS run in
+`svalbard/librelane-gf180-canary:2026.08` (Magic 8.3.623, Netgen 1.5.316); simulation and GDS export in
+`hpretl/iic-osic-tools@sha256:89641950...` (ngspice 43, Magic 8.3.678). Containers run `--network none`. Decks
+and logs go to `<repo>/scratch/timing/`.
 
 | File | Role |
 | --- | --- |
 | `<block>.spice` | Block netlist, top subcircuit `pt_<block>`; single source for layout, LVS and simulation |
-| `timing_cells.spice` | Shared cells (inverters, gates, C2MOS latches, /2, /5, selectors) |
-| `pll.spice` | Loop-piece library for `pll_ring` (PFD `pt_pfd`); not a block |
-| `fastcells.py`, `compact.py` | Compact hand-placed fast cells (`generated/fast/ct_*`), with their own netlists, pins and speed benches (`generated/fast/speed.json`) |
-| `layout_engine.py`, `netlist.py` | Row/channel layout generator for blocks (places fast cells as macros); SPICE reader |
-| `timing_flow.py` | Docker wrappers for Magic, Netgen, KLayout, ngspice |
-| `run_timing.py`, `evidence.py` | Testbenches and per-block plan; evidence assembly |
-| `lcvco/` | Autonomous RF LO: quadrature LC VCO r2 and spiral model (schematic level; section below) |
-
-Layout method: blocks use one Magic PCell per device with its own guard ring,
-private Metal2/3 escapes, private Metal4 tracks and Metal5 trunks, so routing
-is short-free by construction (area- and capacitance-inefficient).  Fast cells
-(`ct_*`) are painted directly: shared-diffusion N/P strips, one Metal2 track
-per net; each is DRC/KLayout clean and LVS unique on its own.  Build, DRC and
-extract+GDS run in separate Magic sessions to work around Magic 8.3.623
-`ppolyf_u_1k` extraction quirks.
+| `timing_cells.spice`, `pll.spice` | Shared cells; PFD library of `pll_ring` |
+| `fastcells.py`, `compact.py` | Hand-placed fast cells `generated/fast/ct_*` with their own DRC / LVS and speed benches (`generated/fast/speed.json`) |
+| `layout_engine.py`, `netlist.py` | Row / channel layout generator (one PCell per device, private tracks, fast cells as macros); SPICE reader |
+| `lo_rows.py` | Row plans of the LO cells. `PUBLISHED` selects the plan the standard flow uses (`r4` for every block) |
+| `timing_flow.py`, `run_timing.py`, `evidence.py` | Tool wrappers, testbenches, evidence assembly |
+| `lo_ext_pad.py` | External-LO bench through pad and package models |
+| `lcvco/` | QVCO netlist generator and layout (`qvco5.spice`, `qvco_layout.py`, `qvco_rf_layout.py`), spiral model (`spiral.py`), loop design (`loop_design.py`, `loop_design.json`), loop benches (`run_loop.py`) |
 
 ## Conventions
 
-`VDD` is the switched PLL island rail (3.3 V), except `aosc` and `clk_obs`
-(always-on core rail).  Every enable/select is active-high and **0 is the
-reset/safe state** (block off, clock stopped).  One-hot selects carry at most
-one 1; all-zero means stopped.  Clock switching is glitch-safe only through
-the stopped state (write all-zero, wait >= 1 us, write the new one-hot).
+Every enable and select is active high and **0 is the reset / safe state** (block off, clock stopped). One-hot
+selects carry at most one 1; all-zero means stopped. A clock select is changed only through the stopped state
+(write 0, wait >= 1 us, write the new code).
 
 ## Blocks
 
-| Block | Ports | Function |
-| --- | --- | --- |
-| `pt_pll_ring` | `REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL VDD VSS` | The single PLL design (line PLL, host_follow PLL, CDR loop).  PFD → 10/20 µA charge pump → R 20 kΩ / C1 8.8 pF / C2 0.9 pF → `ct_ring8` 4-stage pseudo-differential ring (PH0..PH7 at 45°, VCO rate) with mirrored PMOS header and NMOS tail on VCTRL → TSPC feedback.  N = 16 (`N4=N8=0`), 8 (`N8`), 4 (`N4`; built as REF/2 into the PFD with /8 feedback).  `REFO`/`FBCK` feed the standard-cell lock counter; analog `LOCK` is informative only.  `HOLD` (r6): registered on the falling PFD reference edge, keeps the PFD in reset so the filter floats and the VCO runs on the held VCTRL; an external pump on `ATB_VCTRL` (wired_rx CDR) still acts.  Netlist version tag on line 2 of `pll_ring.spice`. |
-| `pt_vco_replica` | `EN VCTRL OUT ATB_VTAIL VDD VSS` | Same ring cells as `pll_ring`, VCTRL forced from the ATB (clamped while `EN=0`), `OUT` = VCO/16 to CLK_OBS.  Coverage vehicle. |
-| `pt_prescale` | `CK_IN EN D2 D4 D8 D16 CK_OUT` | TSPC front end for `rtl/pt_clocktree_slow.sv`; one-hot ratio.  Converter/host clocks after host_follow; detector clock on the ring clock. |
-| `pt_wordclk` | `CK EN D10 D20 WORD_CLK LDE LD LDB VDD VSS` | Shared TX/RX word divider: /5 (quarter rate), /10 (`D10`), /20 (`D20`) from the ring clock.  `LDE` high one CK period before the word boundary; consumers re-register `LDE` locally (CK→LD ≈ 1.15 ns at tt is close to a period at 810 MHz). |
-| `pt_clockmux` | sources `PLLW REF AUX WCK H2D WSI CONV_INT HOST_INT HF`; one-hot `PS_{REF,AUX,H2D}`, `WS_{PLL,REF,AUX,WCK}`, `SS_{INT,REF,WCK}`, `CS_{INT,REF,AUX,HF}`, `HS_{INT,HF}`; outputs `PREF WIRE WSMP CONV_CLK HOST_CLK` | Five `ct_mux4` domains, single-ended CMOS, ≤ 1 GHz.  No RF LO domain (the RF LO is `lo_ext`). `HF` is the host_follow clock (H2D → `pll_ring` N=4 → `prescale`). |
-| `pt_lo_ext` | `EXT_IP EXT_IN EXT_QP EXT_QN LOI_IP LOI_IN LOI_QP LOI_QN EXT INT LO_IP LO_IN LO_QP LO_QN ATB_VB VDD VSS` | RF LO into the mixer gates.  External mode (`EXT`, RF qualification baseline): board I on REF_IN, Q on AUX_CLK, AC-coupled; per leg NMOS switch → transmission gate → series MOS cap → mixer node biased to VB ≈ 0.70·VDD (2.20–2.35 V; was 0.773·VDD until 2026-11-10).  No active device in the path; the board must not DC-drive the pads while `EXT=1`.  Internal mode (`INT`): `ct_lodrv` drivers from `LOI_*`. |
-| `pt_diff_clk_rx` | `INP INN EN SE OUTP OUTN PRESENT ATB_DET VDD VSS` | One receiver design for refinput (REF_IN), aux_clk_rx (AUX_CLK), wired WCLK_IN and WTX_EXT.  Self-biased `ct_rxin` legs (40 kΩ feedback), `ct_rxout` output stage; `SE=1` for single-ended sources; `PRESENT` = both phases toggling.  Use `OUTN` for data (lower edge spread). |
-| `pt_clk_obs` | `IN0..IN7 S0 S1 S2 N0 N1 N2 EN OUT VDD VSS` | 8:1 input mux, /2^N (N = 0..7), tristate pad driver (P 80 µm / N 40 µm).  Used for CLK_OBS and WCLK_OBS. |
-| `pt_ring_osc` | `EN OUT VDD VSS` | NAND-enabled 21-stage ring, process monitor. |
-| `pt_aosc` | `EN CLK ATB_X VDD VSS` | r3: two-capacitor RC relaxation oscillator with an SR latch (each half period = R·C·ln2 to an inverter trip point at ~VDD/2, latch delay), no bias input (core rail). r1 was a Schmitt RC oscillator. |
+Outline = bounding box of the published GDS (`generated/<block>.gds`). Island names are those of
+`spec/power-delivery.md` (ten islands) as bound in `pt_chip.conn`.
+
+| Block (version) | Ports | Function | Outline um, mm2 | Rail in `pt_chip.conn` |
+| --- | --- | --- | --- | --- |
+| `pt_pll_ring` (r9v) | `REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL N5 N10 KP0..KP2 FU0..FU3 FD0..FD3 BAND VDD VSS` | CDR ring PLL, also the host_follow PLL. See "`pt_pll_ring`" below | 210.0 x 793.5, 0.167 | `pll_cdr`: `VREG_CDR` (pll island through `pt_pll_vreg2`) |
+| `pt_pll_ring_core` (r9d) | `REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL BAND VDD VSS` | Line (TX) ring PLL: `pt_pll_ring` without the fast-tune array and the N5 / N10 path | 196.0 x 438.9, 0.086 | `pll_tx`: `VREG_TX` |
+| `pt_vco_replica` | `EN VCTRL OUT ATB_VTAIL VDD VSS` | `ct_ring8` ring with VCTRL forced from outside, `OUT` = VCO/16. Characterization structure | 195.5 x 107.1, 0.021 | debug |
+| `pt_prescale` | `CK_IN EN D2 D4 D8 D16 CK_OUT VDD VSS` | TSPC divider, one-hot ratio | 198.1 x 63.6, 0.013 | pll, three instances |
+| `pt_wordclk` | `CK EN D10 D20 WORD_CLK LDE LD LDB VDD VSS` | Word divider /5, /10 (`D10`), /20 (`D20`); `LDE` is high one CK period before the word boundary | 200.2 x 124.0, 0.025 | `wordclk_rx`: wired_cap |
+| `pt_clockmux` | sources `PLLW REF AUX WCK H2D WSI CONV_INT HOST_INT HF`; selects `PS_{REF,AUX,H2D} WS_{PLL,REF,AUX,WCK} SS_{INT,REF,WCK} CS_{INT,REF,AUX,HF} HS_{INT,HF}`; outputs `PREF WIRE WSMP CONV_CLK HOST_CLK`; `VDD VSS` | Five `ct_mux4` domains, single-ended CMOS | 179.8 x 84.3, 0.015 | pll |
+| `pt_diff_clk_rx` | `INP INN EN SE OUTP OUTN PRESENT ATB_DET VDD VSS` | Differential clock / data receiver with a clock-present detector. `SE` has no effect in the netlist | 198.0 x 112.8, 0.022 | `rx_ref_in`: core; `rx_aux_clk`, `rx_wtx_ext`: debug |
+| `pt_clk_obs16` | `IN0..IN14 IN15A IN15B IN15C S0..S3 N0..N2 EN OUT VDD VSS` | 16:1 mux, /2^N (N = 0..7), tristate pad driver for CLK_OBS; `IN0` = off; inputs <= 500 MHz | 195.7 x 470.3, 0.092 | debug |
+| `pt_clk_obs` | `IN0..IN7 S0 S1 S2 N0 N1 N2 EN OUT VDD VSS` | 8-input version; not instantiated at chip top | 195.7 x 370.4, 0.073 | - |
+| `pt_obs_pre4` | `CK EN OUT VDD VSS` | /4 in front of `clk_obs16` for sources above 500 MHz | 127.8 x 28.7, 0.0037 | debug, six instances |
+| `pt_ring_osc` | `EN OUT VDD VSS` | NAND-enabled 21-stage ring, process monitor | 195.7 x 48.7, 0.0095 | debug |
+| `pt_aosc` (r3) | `EN CLK ATB_X VDD VSS` | Two-capacitor RC relaxation oscillator, no bias input | 199.6 x 64.5, 0.013 | core (always on) |
+| `pt_lo_ext` | `EXT_IP EXT_IN EXT_QP EXT_QN LOI_IP LOI_IN LOI_QP LOI_QN EXT INT CMLSEL LO_IP LO_IN LO_QP LO_QN ATB_VB VDD VSS` | LO driver onto the mixer gates: one CML driver per phase pair with two inputs (QVCO tank, AC-coupled pad) and a passive pad path | 322.1 x 482.4, 0.155 | lod |
+| `pt_lc_qvco5` | `EN CMLSEL VTUNE IBIAS BAND0..BAND3 PRE IP IN QP QN VDD VDDB VSS ATB_EN ATB_VTUNE ATB_ITAIL` | Quadrature LC VCO at the RF carrier, 4-bit band bank, two 300 um spirals | 898.0 x 652.9, 0.586 (includes the 25 um fill keep-out halo) | lo (`VDD_LO`) |
+| `pt_lo_mmd` | `LP LN EN N0..N5 FB VDD VSS` | Feedback divider, VCO/FB = 2 x N | 377.8 x 955.8, 0.361 | lod |
+| `pt_lo_mmd_qdum` | `LP LN EN QDP QDN VDD VSS` | Q-tank dummy of the divider input | 216.7 x 157.2, 0.034 | lod |
+| `pt_lo_pfdcp` | `REF FB EN PRE IBIAS VTUNE VDD VSS ICP0 ICP1` | PFD and charge pump, Icp = 25 uA x (1 + ICP0 + 2 x ICP1) | 257.0 x 482.9, 0.124 | lo |
+| `pt_lo_lf` | `CP VT VSS` | Passive loop filter | 402.8 x 482.0, 0.194 | lo |
+| `pt_lo_obs` | `LP LN EN OBS VDD VSS` | LO/8 for CLK_OBS, on the tank | 200.3 x 87.0, 0.017 | lod, two instances (Q copy `EN` = VSS) |
+
+`pll_ring_ft.spice` (`pt_pll_ring_ft`, fast-tune array) is a sub-cell of `pt_pll_ring`.
 
 ### Integration interface
 
-* ATB taps: `pll_ring.ATB_VCTRL`, `pll_ring.IBIAS` (override),
-  `vco_replica.VCTRL` (force), `vco_replica.ATB_VTAIL`, `diff_clk_rx.ATB_DET`,
-  `aosc.ATB_X`, `lo_ext.ATB_VB`.
-* Status: `refinput.PRESENT` → `ref_present`; PLL lock from the standard-cell
-  REFO-vs-FBCK counter.
-* Bias: each `pll_ring.IBIAS` sinks 10 µA (one bias output per instance);
-  nothing else needs bias.
-* Instances: line `pll_ring`, host_follow `pll_ring` (N=4 from `H2D_CLK`),
-  `prescale`, `clockmux`, `wordclk` (shared TX/RX), `lo_ext`, refinput and
-  aux `diff_clk_rx`, two `clk_obs`, `ring_osc`, `vco_replica`, `aosc`.
-* `pt_wordclk` replaces the TX `/5`; `WORD_CLK` is the TX launch clock and
-  the RX word clock.  RX capture stays in wired_rx.
+* ATB taps: `pll_tx.ATB_VCTRL`, `pll_cdr.ATB_VCTRL` (net `CDR_VCTRL`, shared with `pt_cdr`), `lo_ext.ATB_VB`
+  (net `ATBN_quadrature_bias`), `vco_replica.VCTRL` (force). Present on the cells and not bound to a test-bus
+  leaf: `vco_replica.ATB_VTAIL`, `diff_clk_rx.ATB_DET`, `aosc.ATB_X` (must stay unloaded), `qvco.ATB_VTUNE`,
+  `qvco.ATB_ITAIL`.
+* Status: `rx_ref_in.PRESENT` -> `s_ref_present`; ring lock is judged by the frequency counter in the digital
+  macro on `FBCK`. The analog `LOCK` pin is informative only (wrong in three of the five evidence cases).
+* Bias: each ring `IBIAS` sinks 10 uA (`BIAS_pll_ring_tx`, `BIAS_pll_ring_rx`); `qvco.IBIAS` and
+  `lo_pfdcp.IBIAS` take 10 uA each.
+* Clock nets: `ref_clk` = `rx_ref_in.OUTN`; `AUX_CK` = `rx_aux_clk.OUTP`, clamped onto the pll island as
+  `AUX_CK_P`. **The forwarded wire clock (WCLK_IN) arrives on the AUX_CLK pad pair:** `clockmux.AUX`,
+  `clockmux.WCK` and `cdr.WCK_IN` all take `AUX_CK_P`; there is no separate WCLK_IN pad, receiver or
+  `obs_pre4` instance. This use needs the debug island on.
+* Ring references: both rings take `clockmux.PREF` (`pll_cdr` through `pt_cdr`).
+* Prescalers: `prescale` (line ring -> `HOST_INT`), `prescale_conv` (line ring -> `CONV_INT`), `prescale_hf`
+  (CDR ring -> `HF`, the host_follow clock).
 
 ### Register-map glue (combinational, all outputs reset to 0)
 
-| Field | Analog ports |
-| --- | --- |
-| `debug.clk_select.wire_line` {0, 1 pll, 2 ref, 3 aux, 4 wclk} | `WS_PLL/WS_REF/WS_AUX/WS_WCK = (c==1/2/3/4)` |
-| `debug.clk_select.wire_sample` {0, 1 int, 2 ref, 4 wclk} | `SS_INT/SS_REF/SS_WCK = (c==1/2/4)` |
-| `debug.clk_select.conv_sample` {0, 1 int, 2 ref, 3 aux, 5 host_follow} | `CS_INT/CS_REF/CS_AUX/CS_HF = (c==1/2/3/5)` |
-| `debug.clk_select.host_clk` {0, 1 int, 5 host_follow} | `HS_INT/HS_HF = (c==1/5)` |
-| ring-PLL reference (field needed; proposal {0 stopped, 1 ref, 2 aux, 3 h2d}) | `PS_REF/PS_AUX/PS_H2D` |
-| ring-PLL modulus per instance (field needed; proposal {16, 8, 4}) | `N8 = (n==8)`, `N4 = (n==4)` |
-| `cfg_bits_per_cycle` {4, 2, 1} | `wordclk.D10 = (b==2)`, `D20 = (b==1)` |
-| RF LO mode (field needed; proposal {off, ext, internal}) | `lo_ext.EXT` / `lo_ext.INT` |
-| `debug.clk_obs.source` (14) + `divider_log2` | two `clk_obs` instances sharing the pad (A: sources 1..7, B: 8..14); `N = min(divider_log2, 7)` |
-| `debug.wclk_obs.source` (5) + `divider_log2` (0..7) | `EN = (source != off)`, `S = source-1`, `N = divider_log2` |
-| `debug.replica.ringosc_enable`, `vco_enable` | `ring_osc.EN`, `vco_replica.EN` |
-| refinput / aux enable and SE (fields needed) | `diff_clk_rx.EN`, `SE` per instance |
+The decode is standard cells inside the digital macro; `integration/top/ctl_ports.txt` is the binding list.
+
+| Field | Macro port | Analog pins |
+| --- | --- | --- |
+| `debug.clk_select.wire_line` {0, 1 pll, 2 ref, 3 aux, 4 wclk} | `c_clockmux_ws[3:0]` | `WS_PLL / WS_REF / WS_AUX / WS_WCK = (c == 1 / 2 / 3 / 4)` |
+| `debug.clk_select.wire_sample` {0, 1 int, 2 ref, 4 wclk} | `c_clockmux_ss[2:0]` | `SS_INT / SS_REF / SS_WCK = (c == 1 / 2 / 4)` |
+| `debug.clk_select.conv_sample` {0, 1 int, 2 ref, 3 aux, 5 host_follow} | `c_clockmux_cs[3:0]` | `CS_INT / CS_REF / CS_AUX / CS_HF = (c == 1 / 2 / 3 / 5)` |
+| `debug.clk_select.host_clk` {0, 1 int, 5 host_follow} | `c_clockmux_hs[1:0]` | `HS_INT / HS_HF = (c == 1 / 5)` |
+| `clockmux.config.ring_ref` {0 stopped, ref, aux, h2d} | `c_clockmux_ps[2:0]` | `PS_REF / PS_AUX / PS_H2D` |
+| `clockmux.config.host_prescale`, `conv_prescale`, `hf_prescale` | `c_prescale*_en`, `c_prescale*_d[3:0]` | `EN`, one-hot `D2 D4 D8 D16` of each prescaler |
+| `ring_l.config.enable`, `modulus` {16, 8, 4}, `band` | `c_pll_tx_en`, `_n4`, `_n8`, `_band` | `pll_tx` `EN N4 N8 BAND` (band resets to 1) |
+| `cdr.state` or `ring_c.config.line_pll`; `ring_c.config.modulus` {16, 8, 4, 10, 5}, `kp`, `band` | `c_pll_cdr_en`, `_n4`, `_n8`, `_n5`, `_n10`, `_kp[2:0]`, `_band` | `pll_cdr` `EN N4 N8 N5 N10 KP0..KP2 BAND` |
+| word divider | `c_wordclk_en`, `c_wordclk_d10`, `c_wordclk_d20` | `wordclk_rx` `EN D10 D20` |
+| `rfpll.config.lo_mode` and the other `rfpll` fields | `c_lo_*`, `c_qvco_*` | see `LO-INTEGRATION.md` section 4 |
+| `refinput.state` and `lo_mode` | `c_rx_ref_en` | `rx_ref_in.EN` (0 in LO modes 1 and 3) |
+| `debug.clk_obs.source`, `divider_log2` | `c_clk_obs_en`, `c_clk_obs_s[3:0]`, `c_clk_obs_n[2:0]`, `c_obs_pre4_en[5:0]`, `c_lo_obs_en` | `clk_obs16` `EN S N`; the `obs_pre4` of the selected source; `lo_obs.EN` when source = rf_lo |
+| `debug.replica.ringosc_enable`, `vco_enable` | `c_ring_osc_en`, `c_vco_replica_en` | `ring_osc.EN`, `vco_replica.EN` |
+| `core.aosc.enable` | `c_aosc_en` | `aosc.EN` |
+
+`clk_obs16` sources: 1 rf_lo (`lo_obs`), 2 wire_line, 3 wire_sample, 4 conv_sample, 5 ref_in, 6 aux_clk, 8 pll_vco,
+9 pll_feedback, 10 ring_osc, 11 vco_replica, 12 aosc, 13 host word clock, 14 cdr_recovered, 15 characterization
+rings; input 7 is tied to VSS (the forwarded wire clock is observed as source 6).
 
 ## Results
 
-Extracted (Magic C-only parasitics), tt 27 °C 3.3 V unless noted.  Corners:
-tt/ss/ff × 22/32 °C × 3.15/3.35 V.  Safe = reset-default controls with clock
-and pad inputs toggling at tt/27 °C/3.3 V, ff/85 °C/3.63 V and ss/0 °C/3.63 V.
-The table between the markers is regenerated by `evidence.py`.
+Extracted (Magic C-only parasitics), tt 27 C 3.3 V unless noted. Corners: tt / ss / ff x 22 / 32 C x 3.15 / 3.35 V.
+Safe = reset-default controls with clock and pad inputs toggling at tt/27 C/3.3 V, ff/85 C/3.63 V and
+ss/0 C/3.63 V. The table between the markers is written by `evidence.py`.
 
 <!-- results:start -->
 | Block | Devices | Area µm² (ceiling) | DRC | LVS | Extracted nominal (gating) | Safe (reset-default) | clean |
@@ -113,628 +132,154 @@ The table between the markers is regenerated by `evidence.py`.
 | `clockmux` | 5 | 15,238 (80000) | 0 | unique | nom: pass, nom_mode_rf: pass, nom_mode_wired: pass | pass (max avg 0.201 µA) | pass |
 | `vco_replica` | 31 | 21,056 (reserve) | 0 | unique | nom_vc1.5: pass, nom_vc2.1: pass, nom_vc3.3: pass | pass (max avg 0.0399 µA) | pass |
 | `lo_ext` | 100 | 38,692 (reserve) | 0 | unique | nom_ext_sin_2vpp_pad: pass, nom_int: pass | pass (max avg 0.0664 µA) | pass |
-| `pll_ring` | 236 | 75,772 (reserve) | 0 | unique | closed_480m: pass, closed_625m: pass, closed_810m: pass, closed_hf125m_n4: pass, closed_hf156m_n4: pass | pass (max avg 10.1 µA) | pass |
+| `pll_ring` | 408 | 166,446 (reserve) | 0 | unique | closed_480m: pass, closed_625m: pass, closed_810m: pass, closed_hf125m_n4: pass, closed_hf156m_n4: pass | fail (max avg 162 µA) | pass |
 | `prescale` | 46 | 12,627 (reserve) | 0 | unique | nom_2g5_d16: pass, nom_240m_d2: pass | pass (max avg 0.0405 µA) | pass |
 | `wordclk` | 53 | 24,969 (reserve) | 0 | unique | nom_480m_d5: pass, nom_480m_d10: pass, nom_480m_d20: pass, nom_810m_d5: pass, nom_810m_d10: pass, nom_810m_d20: pass | pass (max avg 0.0568 µA) | pass |
 <!-- results:end -->
 
-Four-test states: every block is **safe pass** (`pll_ring` 10.0–10.1 µA is
-the 10 µA IBIAS test source); **clean pass** for all
-blocks; **observable** pass for `pll_ring` and `diff_clk_rx`, open elsewhere
-(register map); **fallback** open (waived for `aosc`).  All blocks: Magic DRC 0,
-KLayout GF180 DRC 0, LVS unique.
+The `lo_ext` row describes a superseded cell (its evidence file predates the published layout; Open items).
 
-| Block | Key extracted numbers |
-| --- | --- |
-| `pll_ring` (r6a netlist) | Locks at 479.998 / 624.996 / 809.995 MHz (N=16) and 499.95 / 624.96 MHz (host_follow); worst port phase error 9.0 / 10.7 / 10.8°, 9.4–10.4° host_follow (r5 was 4.6–5.5°); 5.0–7.9 mA.  HOLD: +1545 ppm step, 110 ppm/10 µs drift (fail, non-gating).  Open-loop corners at VCTRL 3.3 V: ss 850–916, tt 1041–1115, ff 1255–1334 MHz.  Phase margin estimate 23° (480 MHz) to 40° (62.5–78 MHz PFD rate). |
-| `vco_replica` | 258 MHz (VCTRL 0.9 V) to 1093 MHz (3.3 V), 2.35–9.28 mA, K_VCO ≈ 1.2 GHz/V in band.  Every corner covers 480–810 MHz within VCTRL 0.8–3.3 V (ss ≥ 852 MHz at 3.3 V; ss/tt do not oscillate at 0.8 V, which is the 8 failing corner cases, informative). |
-| `wordclk` | /5, /10, /20 at 480 and 810 MHz pass; 48/48 corners (810/625 MHz × /5, /20); 1.2–2.3 mA. |
-| `clockmux` | WIRE 810 MHz PLL → stop (≤ 7 mV) → 1 GHz REF → stop → 400 MHz WCK; RF passive-LO mode 0.32 mA, wired mode 1.35 mA; 12/12 corners. |
-| `lo_ext` | Block bench (ideal 1 pF pad, 100 pF coupling), 4 Vpp open-circuit sine, steady-state levels (see the external-LO section): 12/12 corners pass, RX switch Vgs on 0.94–1.16 V, off 0.09–0.28 V, Q−I 86.0–87.6°.  2 and 1 Vpp and the square wave fail.  Internal mode: 0.13–2.84 V, Q−I 86.3°, 16.0 mA for four lines.  The real-pad + package qualification is `lo_ext_pad.py` (section below). |
-| `prescale` | 2.5 GHz /16 = 156.25 MHz, 1.5 GHz /16, 240 MHz /2; 2.0 mA at 2.5 GHz. |
-| `diff_clk_rx` | Clock: 100 MHz–1 GHz pass (500 mVpp diff, 600 mVpp SE); 200 mVpp, 2.5 and 3.3 GHz fail.  Data (PRBS7, 10 pF AC coupling): 0 errors 0.5–1.6 Gb/s at 300–800 mVpp in steady state or after a 128-bit preamble; 2 Gb/s fails; start-up from the first bit fails (baseline wander, τ ≈ 40 ns). |
-| `clk_obs` | 500 MHz in, /8 → 62.5 MHz into 10 pF; 12/12 corners; 1 GHz input fails. |
-| `ring_osc` | 211 MHz; corners 165–255 MHz. |
-| `aosc` (r3) | 47.7 MHz tt/27/3.3 V, 0.38 mA; 13/13 envelope points inside 40–60 MHz: tt 47.6–48.1, ss 42.9–43.4, ff 53.8–54.3 MHz (≥ 7 % margin at both ends); duty ≈ 48 %; EN = 0: < 2 nA. The verdict now requires the 40–60 MHz window (r1 passed on f > 10 MHz). r1 extracted ss was 35.4–37.1 MHz; r2 (schematic-sized, R 11 µm) was 38.2–38.7 MHz extracted at ss, so r3 shortens R to 9.4 µm. |
+Every published GDS in `generated/` (the 18 blocks of the table in "Blocks" except the QVCO) has Magic DRC 0
+(`<block>-drc.txt`), LVS unique (`<block>-lvs.txt`) and a clean KLayout precheck, main 0 / antenna 0
+(`<block>-kldrc.json`). The QVCO records are in `generated/lcvco/` (below).
 
-Fast cells (`generated/fast/speed.json`, tt): `ct_ring8` 1.12 GHz extracted
-(1.78 GHz schematic), `ct_tspc2` divides at 3.5 GHz (fails 4 GHz), `ct_lodrv`
-2.45 GHz rail-to-rail (tt, ideal input only; not at ss: see the LC VCO section), `ct_rxin` full swing at 2.45 GHz / 600 mVpp.
-
-**Evidence currency:** `run_timing.py` changed after every evidence file
-(testbench additions and removal of retired blocks); rerun before relying on
-hashes.  `pll_ring-evidence.json` now records the r6a netlist and layout
-(2026-11-09 `run_timing.sh pll_ring`; 224 devices, 80,541 µm², DRC 0 /
-KLayout 0 / LVS unique).  r6 as laid out failed **safe**: with `EN=0` the
-HOLD flop clock (`!REFP`) sat high and `ct_tspcd`'s reset NMOS fought its
-pull-up, 509 µA static (schematic and extracted); r6a clocks the flop with
-`NOR(REFP, ENB)` and safe is back to the 10 µA IBIAS (tt/ff 85 °C/ss 0 °C).
-`run_timing.py` overwrote the HOLD bench verdict with `locked`, so HOLD
-cases could never fail; fixed, and the two stored HOLD results were
-re-judged with the corrected criterion (`pass_recomputed_note`). (risk: MOD-05)
-
-**`pll_ring` r7 (2026-11-09, this pass): charge-pump current steering.**
-Diagnosis from a schematic HOLD bench (`scratch/timing/pll_ring/dbg_hold`):
-
-* r6a's pump switches let the PMOS source node `PS` float to VDD (and `NS`
-  to VSS) between pulses.  At switch-on `PS` dumped its charge into VCTRL:
-  +35 mV during the 0.64 ns UP/DN overlap, about 48 µA effective against a
-  20 µA pump.
-* The loop cancelled that with about 1 ns of DN-only every reference cycle.
-  The result was 38 mV p-p VCTRL ripple and 6.5 % PFD activity.  The analog
-  `LOCK` detector's break-even is about 6.7 % (3 µA charge against 15×
-  discharge), which is why LOCK dropped at 625/810 MHz.  The ripple also
-  produces part of the HOLD step.
-* The 2.0 µs HOLD instant also falls inside the loop's own settling tail: VZ
-  moved 1.3 mV between 1.5 and 1.9 µs, against about 2 ppm/µV of Kvco near
-  625 MHz.
-
-r7 steers each source into `VDUM` while its switch is off.  A unity-gain
-PMOS-input OTA (10 µA tail from the pump's PB mirror) holds `VDUM` at VCTRL,
-with a 2×10/10 µm MOS cap; `VDUM` is clamped low when EN = 0.
-
-Schematic A/B, same bench (`dbg_base` / `dbg_r7`):
-
-| | r6a | r7 |
+| Block | Verified numbers | Evidence |
 | --- | --- | --- |
-| VCTRL ripple (p-p) | 38 mV | 3.6 mV |
-| DN activity | 6.5 % | 3.15 % |
-| UP activity | 2.6 % | 2.6 % |
-| HOLD step | +850 ppm | +273 ppm |
-| Drift over 0.9 µs held | 0 | 0 |
+| `pll_ring` | See the next section | `generated/pll_ring-evidence.json` |
+| `vco_replica` | 258 MHz (VCTRL 0.9 V) to 1093 MHz (3.3 V), 2.35-9.28 mA. At VCTRL 3.3 V: ss 852-918, tt 1043-1117, ff 1257-1336 MHz. 12 of 48 corner cases do not oscillate (ss at 0.9 V; tt and ss at 0.8 V) | `generated/vco_replica-evidence.json` |
+| `wordclk` | /5, /10, /20 at 480 and 810 MHz; 48 of 48 corner cases; 1.2-2.4 mA; CK to LD 1.15 ns | `generated/wordclk-evidence.json` |
+| `clockmux` | WIRE: 810 MHz, stop (<= 11 mV), 1 GHz, stop, 400 MHz; 12 of 12 corners; 0.32 mA (RF mode) to 1.55 mA | `generated/clockmux-evidence.json` |
+| `prescale` | 2.5 GHz /16, 1.5 GHz /16, 240 MHz /2 at tt; 2.0 mA at 2.5 GHz. No corner runs | `generated/prescale-evidence.json` |
+| `diff_clk_rx` | Clock, differential: 10 MHz to 1 GHz at 200 mVpp to 1.2 Vpp; single-ended 1 GHz at 600 mVpp; 2.5 and 3.3 GHz fail. Data (PRBS): 0 errors at 0.5-2 Gb/s, 300-800 mVpp, also when starting from electrical idle; a source parked at a data level before the first bit fails. 12 of 12 corners; 2.6-5.1 mA enabled | `generated/diff_clk_rx-evidence.json` |
+| `clk_obs` | 500 MHz in, /8 into 10 pF: 12 of 12 corners, 4.6-5.1 mA; 1 GHz input fails | `generated/clk_obs-evidence.json` |
+| `ring_osc` | 211 MHz at tt; 165-255 MHz over corners; 0.42 mA | `generated/ring_osc-evidence.json` |
+| `aosc` | 47.7 MHz, 0.38 mA; 12 of 12 corners inside 40-60 MHz (ss 42.9-43.4, tt 47.6-48.1, ff 53.8-54.3 MHz); off current < 1 nA | `generated/aosc-evidence.json` |
 
-The OTA offset is +8 mV.  r7 layout: 236 devices, 75,772 µm², Magic DRC 0,
-KLayout 0, LVS unique (`generated/pll_ring.{mag,gds,ext.spice,lvs.spice}`
-are r7).
+Fast cells (`generated/fast/speed.json`, tt): `ct_ring8` 1.12 GHz extracted (1.78 GHz schematic); `ct_tspc2`
+divides at 3.5 GHz.
 
-**r7 extracted result (2026-11-10, `pll_ring-evidence.json`, ext sha256 0a8024aa…):** closed loop locks
-at 479.998 / 624.998 / 809.997 MHz and 499.97 / 624.98 MHz host_follow; worst port phase error
-4.5 / 4.9 / 5.7° and 4.9 / 5.3° (r6a: 9.0–10.8°), so the steering also removed most of the phase
-skew; VCTRL ripple 7.8–15 mV p-p.  Still above the AC-3 3° target: per-phase trim not built.  The
-analog `LOCK` flag is wrong at 810 MHz and host_follow (informative only).  **HOLD got much worse
-extracted: +19 636 ppm step at 2.0 µs and +20 490 ppm at 4.0 µs** (VCTRL +10.8 / +9.2 mV at the HOLD
-edge; schematic r7 was +273 ppm), held drift 112 / 447 ppm/10 µs, HOLD-from-0 drift 67 ppm/10 µs.  The
-step is therefore not the settling tail; it is a charge event at the HOLD edge that the schematic does
-not show (suspect: the steering switches dumping VDUM/PS charge into VCTRL when both pump halves are
-forced off, through extracted coupling).  Not debugged yet.  Consequence: the wired CDR no longer
-uses a HOLD hand-over at all (AC-3, wired_rx README: HOLD=1 from enable, FLL and PD on the same pump);
-host_follow still relies on HOLD and is affected. (risk: TIM-04)
+## `pt_pll_ring`
 
-**`pll_ring` r7 + K1 antenna diodes (2026-11-10, wired_rx owner):** regenerated from the K1-patched
-`layout_engine` (9 antenna diodes on HOLD, REF, UP, DN and PFD internals): 236 devices, 75,772 µm², Magic DRC
-0, Netgen unique, KLayout main 0 / antenna 0; flat GDS, so `gds_uniquify` renames nothing.  New extraction
-sha256 0c6c0fa2…; the nominal subset (closed 480/625/810 MHz, HOLD-from-0 drift) is being rerun on it
-(`scratch/wired_rx/regen/pll_ring_sims2.log`); the open-loop corner and HOLD-step records in
-`pll_ring-evidence.json` are still from the pre-diode r7 extraction.  AC-3 follow-ups owned here:
-N = 5/10 dividers for HDMI/DVI (not built), a vote-driven proportional input for the CDR (wired_rx README,
-"AC-3 pump"), the PDN-04 LDO supply.
+The single ring-PLL design. `pll_cdr` is the full cell (r9v); `pll_tx` is `pt_pll_ring_core` (r9d, same loop
+without fast tune and N5 / N10). Both run on a `pt_pll_vreg2` output (`../pll_vreg/README.md`).
 
-## External LO through the real pads (`lo_ext_pad.py`, 2026-11-10)
+* Loop: PFD, charge pump with current steering, passive filter, `ct_ring9` 4-stage pseudo-differential ring
+  (`PH0..PH7` at 45 degree steps at the VCO rate), TSPC feedback divider.
+* Modulus: 16 (default), 8 (`N8`), 4 (`N4`: REF/2 into the PFD with /8 feedback), 10 (`N10`), 5 (`N5`: REF/2
+  with /10 feedback). `N5` / `N10` have priority over `N4` / `N8`.
+* `BAND`: 1 = high band (reset value at chip top), 0 = half tail current.
+* `HOLD`: holds the PFD in reset so the filter floats; a pump on `ATB_VCTRL` still acts. `pt_cdr` drives
+  `HOLD` and the shared `VCTRL` node of `pll_cdr`; `pll_tx.HOLD` is tied to VSS.
+* `KP0..KP2`, `FU0..FU3`, `FD0..FD3`: proportional (fast-tune) path of the CDR, a header-side current-steered
+  array (`pt_pll_ring_ft`); `FU` / `FD` are the capture votes, `KP` the gain (0 = off).
+* `REFO`, `FBCK`: reference and feedback for the lock counter. `LOCK`: informative only.
 
-The first-die RF LO (`rf_lo_external_ref`, board B3): I on `REF_IN`, Q on
-`AUX_CLK`, through the drawn pads actually bonded there and the B21 package
-model. Evidence: `generated/lo_ext-pad-evidence.json` (verdict pass).
+Extracted, closed loop, tt/27 C/3.3 V on an ideal supply (`generated/pll_ring-evidence.json`, hashes match the
+published GDS and extraction):
 
-* Pads: `REF_IN` = `refpad` (`tx_protected_pad`, receiver VCM bias to
-  bias.vcm = VDD/2); `AUX_CLK` = the `rf_protected_pad` debug pair; both with
-  their disabled extracted `diff_clk_rx`. The morning run modelled `REF_IN`
-  with the rf pad.
-* Package and board: 50 Ω source, 10 pF C0G per leg (B19), 1.5 nH + 0.2 Ω bond
-  wire per leg (1.0/2.0 nH tolerance runs), 0.1 pF pad-to-pad.
-* Criterion: RX switch Vgs on ≥ 0.9 V and off ≤ 0.5 V for I and Q, with the
-  switch source at the mixer VCM = VDD/2 (`rxmix_i.spice`; the old benches
-  used a fixed 1.65 V); Q−I from differential zero crossings.
-* **Steady state, not the 12 ns snapshot.** The LO node's only DC path is its
-  20 kΩ to VB, so in steady state avg(LO) = VB exactly. The benches read
-  8–12 ns, which is inside the 20–200 ns bias time constants. A 200 ns run of
-  the previous design showed VB still 0.24 V low at 12 ns, recovering
-  slowly. The evidence therefore projects each window's waveform about
-  VB(t = 0). A 300 ns run of the current design at ss/32/3.15/3 Vpp converges
-  to that projection: on 0.66 → 0.92 V by 300 ns, projected 0.949 V. Allow
-  ≥ 1 µs after enabling the LO before receiving. (risk: PKG-05)
-* **Design change:** VB 0.773·VDD → 0.716·VDD (`lo_ext.spice` divider 12.5k /
-  31.5k), which centres Vgs (0.63–0.70 V) between the limits. With the old VB
-  the steady state failed the off level at ss/3 Vpp (projected 0.53 V).
-
-| Drive per leg (open-circuit, 50 Ω) | Envelope points | Worst on / off (V) | Q−I | Pad peak |
+| Case | VCO | Worst port phase error | Current | Analog `LOCK` |
 | --- | --- | --- | --- | --- |
-| 2.0 Vpp (sweep, tt/ff/ss) | ss fails (on 0.83 V) | — | — | 1.62 V |
-| **3.0 Vpp** | **13/13** | 0.949 (ss/32/3.15) / 0.30 | 90.8–91.2° | 1.81 V |
-| **4.0 Vpp** | **13/13** | 1.06 / 0.18 | 90.6–90.9° | 1.99 V |
-| 3.0 Vpp, bond wire 1.0 / 2.0 nH, ss/32/3.15 | 2/2 | 0.935 / 0.30 | 90.9–91.2° | 1.76 V |
-| 5.0 Vpp (sweep) | pass, but pad troughs −0.65…−0.75 V (ESD diode) | — | — | 2.12 V |
+| N = 16, 30 MHz reference | 480.02 MHz | 5.4 deg | 5.3 mA | correct |
+| N = 16, 39.0625 MHz | 624.99 MHz | 5.9 deg | 6.9 mA | correct |
+| N = 16, 50.625 MHz | 810.00 MHz | 7.6 deg | 8.5 mA | wrong |
+| N = 4, 125 MHz (host_follow) | 500.2 MHz | 5.0 deg | 5.7 mA | wrong |
+| N = 4, 156.25 MHz (host_follow) | 624.9 MHz | 5.7 deg | 6.9 mA | wrong |
 
-Board window (B3): 3.0–4.0 Vpp open-circuit, +7.5 to +10 dBm available per
-leg, target 3.5 Vpp. The pads README `Reference` limit (≤ 0.55 V peak) is for
-`REF_IN` used as a clock into `diff_clk_rx`; the LO route keeps the pad peaks
-≤ 2.0 V, below the clamp's 2.1 V (ff) 10 µA onset. Open: the pad DC is still
-rising at 300 ns (VCM through the 10 pF coupling, about a 1 µs time
-constant), so the steady-state pad peak is not simulated directly. The
-block-level `tb_lo_ext` (`run_timing.py`) uses the same VCM reference and
-steady-state projection: 12/12 corners pass at 4 Vpp with its ideal 1 pF pad. (risk: LO-05)
+VCTRL ripple is 136-142 mV peak to peak in these runs. **Safe test: fail.** With every control at 0 and the
+inputs toggling the cell draws 87-162 uA average (114 uA at tt), against the 1 uA criterion.
 
-## Autonomous RF LO: quadrature LC VCO (`lcvco/`, r2, 2026-11-10)
+Frequency range over corners and regulated supply, vote gain and CDR closed-loop behaviour are wired RX results:
+`../wired_rx/README.md`. `pt_pll_ring_core` has DRC / LVS / precheck records only.
 
-Schematic `pt_lc_qvco` (`lcvco/qvco.spice`): two complementary cross-coupled
-LC cores coupled in parallel (P-QVCO), 4-bit switched-MIM bank, NMOS-in-n-well
-accumulation varactors on VTUNE, AC-coupled self-biased buffers to
-`pt_lo_ext` internal mode. Benches: `lcvco/run_lcvco.py`; results
-`lcvco/results.json` (r1 in `scratch/timing/lcvco/results.r1.json`); evidence
-`generated/lcvco-evidence.json`.
+## RF LO
 
-**Tank inductor model (documented, not EM-verified).** `lcvco/spiral.py`
-derives a 3-turn square spiral (300 µm outer, 25 µm Metal5‖Metal4‖Metal3 turns,
-Metal2‖Metal1 underpass) from the PDK stack (Magic tech sheet resistances and
-heights): Mohan modified-Wheeler L, skin and crowding R, Yue–Wong single-pi
-substrate network. FastHenry on the drawn polyline gives 2.65 nH and 3.2 Ω at
-2.45 GHz; the model nominal uses L = 2.65 nH (FastHenry) with the larger
-closed-form Rs = 4.33 Ω. The layout exists (`generated/lcvco/pt_spiral_ind.gds`,
-Magic DRC 0). Variants in `lcvco/spiral.spice` (`spiral.json` lists the
-closed-form L before the FastHenry scaling):
+Two LO sources drive the mixer gates through `pt_lo_ext`; the mode table is in `LO-INTEGRATION.md` section 4.1.
 
-| Variant | L (nH) | Rs (Ω) | Substrate | Q_eff at 2.45 GHz |
-| --- | ---: | ---: | --- | ---: |
-| `pt_spiral` | 2.65 | 4.33 | nominal | 8.5 |
-| `pt_spiral_lhi` / `_llo` | 2.91 / 2.38 (±10 %) | 4.33 | nominal | 9.2 / 7.8 |
-| `pt_spiral_lowq` | 2.65 | 6.50 (×1.5) | worst (Gsub ×3, Csub /3) | 5.0 |
-| `pt_spiral_lhi_lowq` / `_llo_lowq` | 2.91 / 2.38 | 6.50 | worst | 5.2 / 4.6 |
-
-**r1 failure and the fix.** r1 (4 mA per core, NMOS pair 40 µm, PMOS pair
-80 µm per side) did not start at ss/32 °C/3.15 V with `pt_spiral_lhi_lowq`
-(band 0 at VTUNE 0.3 and band 15), nor at ff with `_llo_lowq` in band 15.
-A small-signal tank-impedance bench at the static point
-(`scratch/timing/lcvco/zac.py`) showed a net +2.7 mS loss at the worst point,
-and more tail current alone (8 mA per core) still left +1.9 mS: the pair was
-gm/W-limited, not current-limited. r2: NMOS pair 80 µm and PMOS pair 120 µm per
-side, tail 6 mA per core (`ntail` 120), fixed MIM 0.70 → 0.55 pF to return the
-added device capacitance. Explicit gate resistance is in every run: 16 Ω per
-2 µm double-contacted finger (`rgf`), twice the 8.3 Ω poly/contact estimate
-(the mandate's 60–150 Ω per single-finger 10 µm device scales to 7.5–12 Ω per
-2 µm double-contacted finger). r2 also gates the eight self-biased buffer
-input inverters with EN: with EN = 0 they sat at their trip point and drew
-16 mA.
-
-**r2 results** (schematic QVCO, explicit gate R, spiral variants as above;
-envelope 22–32 °C, 3.15–3.35 V):
-
-| Check | Result |
+| Source | State |
 | --- | --- |
-| Start-up, worst code (band 15, VTUNE 0.3), low-Q +10 % L, all 12 envelope points | 12/12 oscillate, tank 1.17–1.37 V diff peak, quadrature 89.0–89.5°, LOI rail to rail (r1: no start at ss) |
-| Band coverage at the extremes (band 0 / VTUNE 3.0 ≥ 2.5 GHz, band 15 / VTUNE 0.3 ≤ 2.4 GHz) | tt/nominal 2.160–2.815 GHz; ss/32/3.15 lhi_lowq 1.964–2.636; ss lhi 1.977–2.615; ff/22/3.35 llo 2.381–3.059; ff llo_lowq 2.377–3.088 GHz: 5/5 cover 2.4–2.5 GHz (tightest margin: at ff, band 15 reaches down to 2.377–2.381 GHz, only 1 % under 2.4 GHz) |
-| Band continuity, tt (16 codes × VTUNE 0.3/3.0) | every band overlaps the next (each 160–200 MHz wide, steps 25–40 MHz) |
-| Negative checks | EN = 0: no oscillation, buffers < 1 nA, core = the 10 µA IBIAS source; coupling removed: Q−I 148° (fails quadrature as expected) |
-| Current | cores 13.4–14.1 mA (both), buffers 6.3–14.9 mA (r1: about 9.3 + 10 mA) |
-| Phase noise (Leeson estimate, not simulated) | −124.5 dBc/Hz at 1 MHz nominal Q, −117.7 low Q; 0.05–0.12 ps rms outside a 1 MHz loop (budget 0.52 ps) |
-| **Chain: QVCO → extracted `pt_lo_ext` internal mode → mixer gates** | **fails** at tt (LO 1.12–3.21 V, Q−I −75°) and ss/32/3.15 (LO stuck high); passes at ff. |
+| External I/Q LO on the REF_IN / AUX_CLK pad pairs through the CML driver (`lo_mode` 3) | The RF baseline for a die whose synthesizer does not work. Usable source 1.0-4.5 Vpp per leg at tt / ss / ff on the level criterion (`scratch/lo/r4_lo11/results.json`); that criterion does not guarantee mixer gain (below) |
+| External, passive path (`lo_mode` 1) | Backup; fails ss at 4.5 Vpp |
+| On-chip synthesizer: `pt_lc_qvco5`, `pt_lo_mmd`, `pt_lo_pfdcp`, `pt_lo_lf` (`lo_mode` 2) | Every cell is published. Integer-N under register control (f_LO = 2 N f_ref, band search by software); no fractional-N modulator and no band-search state machine exist in RTL. Not qualified as a loop (Open items) |
 
-**Open: the internal LO driver (`ct_lodrv` in `pt_lo_ext`) is too slow at
-2.45 GHz.** With ideal 50 %-duty 40 ps-edge inputs, the extracted `pt_lo_ext`
-internal mode reaches only 0.17–2.11 V at ss/32/3.15 (on-drive 0.53 V against
-0.9 V). With 44 % duty, the QVCO buffers' duty, it stays low at ss. The
-schematic cell works at ss (0–3.05 V), so the deficit is the
-break-before-make skew of the last pre-drivers plus the compact layout's
-parasitics. Simply widening the NOR/NG pull-ups breaks the break-before-make
-(output stuck low). Needed: rebalance the PG/NG pre-driver skew for 2.45 GHz at
-ss, re-layout `ct_lodrv` and `pt_lo_ext`, and set the QVCO buffer duty to 50 %
-(differential-to-single-ended stage). This was never covered before: the
-block's internal-mode case ran at tt only with ideal inputs. External mode is
-unaffected (the driver is tristated). Also open: the frequency loop (PRE →
-prescaler → PFD/CP against the `REF_IN` crystal of B23) and a QVCO layout. (risk: LO-07)
+There is no polyphase network: the external I/Q LO is the only fallback.
 
-**External tank option (MANDATE "off-chip passives"): evaluated, not used.**
-The tank needs 2.4–2.9 nH differential. Two bond wires alone are 3.0 ± 1.0 nH
-(B21: 1.5 ± 0.5 nH each), so they would be the whole tank and no external
-inductor fits in series. The ±33 % L tolerance moves the frequency ±15 %, more
-than the bank's tuning range. The only spare pair (`AUX_CLK`) carries the
-stress-safe clamp (10 µA onset 2.1 V at ff), and the tank nodes swing about
-1.6 ± 1.2 V. No pin requested (`interface-changes.md` LO4). (risk: LO-04)
+**Drive at the mixers** (extracted `pt_lo_ext`, internal mode, into extracted `rxmix_i` / `rxmix_q`, IF 5 MHz;
+conversion gain relative to an ideal 0 / VDD square LO; `scratch/lo-ap4/mw20/`):
 
-## RF LO r-cml2: CML driver, LO observation, B3 on the COB chain (2026-11-10, round 2)
-
-Scratch: `scratch/timing/{lo_ext,lo_obs,obs_pre4,clk_obs16,lo_ext_pad*,loobs}`. The interface changes are LO5–LO9, CO1 and CO2 in `interface-changes.md`.
-
-* **`pt_lo_ext` r-cml2.** `ct_lodrv` is replaced by one CML driver `pt_lo_cml` per pair. Its compact switching core is `ct_locml` (`fastcells.py`; 60×21.6 µm, DRC 0, LVS unique). The driver is DC-coupled onto the mixer LO nodes, and a CM loop sets avg(LO) = VB. VB is on in INT mode too and is now 0.739·VDD (was 0.716). The QVCO tank nodes drive `LOI_*` directly (QVCO r3, no LOI buffers).
-  * The benches add explicit gate R: 12.5 Ω per pair side (`run_timing.rg_wrap_locml`).
-  * `XRC` is 18u/1u: the study's 10u/0.55u violated HRES.3.
-  * The layout uses planned rows (`scratch/timing/lay_loext_rows.py`): LO rows on top, I/Q mirrored. This halved the LO wiring C (169 → 60–81 fF) and restored Q−I. 162 devices, 109.6k µm², Magic 0 / KLayout 0 / LVS unique.
-* **Internal mode, extracted tt, 100 ns steady state:** on 1.05–1.11 V, off 0.21–0.28 V, Q−I 91–93.5°, duty 43–47 %, 11.8 mA. The 12-corner run, the QVCO→lo_ext chain and the band extremes with the new tank load are in the queue (`scratch/timing/queue.status`). The pass/fail rows above are not regenerated yet.
-* **External mode, `lo_ext_pad.py --refpad/--rfpad` (compact pads) and the COB chain (`CHAIN`, `channel.json`), ss/32/3.15:**
-
-| Drive (Vpp open circuit) | P1 2 mm: worst on / off (V) | P3 30 mm: worst on / off (V) | Q−I | Pad peak, ff |
-| --- | --- | --- | --- | --- |
-| 3.0 | 0.907 / 0.473 | 0.916 / 0.478 | 93.8–95.1° | 1.75–1.79 V |
-| 4.0 | 0.981 / 0.387 | 0.994 / 0.394 | | 1.89–1.95 V |
-| 5.0 | 1.051 / 0.307 | 1.066 / 0.317 | | 2.03–2.10 V (clamp onset) |
-
-  * Proposed B3 window: 3.5–4.5 Vpp.
-  * With VB 0.716 the CML layout lost the ss/3 Vpp margin: on 0.842–0.878 V, Q−I up to 101.5° before the row plan.
-  * The compact refpad costs ≤ 13 mV, so it can be released.
-* **`pt_lo_obs` (LO/8 for CLK_OBS)** sits on the I tank pair, with a disabled copy on Q. 49 devices, 17.5k µm², clean. Extracted tt passes at 2.4/2.45/2.5 GHz with 0.3–1.1 V amplitude.
-  * The first sizing (750 Ω loads, 6 µm hold pair) did not regenerate.
-  * The first extracted CML→CMOS stage (0.6 mA) did not reach logic levels; it now runs at 1.8 mA.
-  * Inside `lo_ext` the prescaler loaded the LO and failed extracted, so it is now a separate block.
-* **`pt_obs_pre4`** (TSPC /4 at the fast CMOS sources) and **`pt_clk_obs16` r2** (code 15 = OR of the three CH1 outputs): both clean; corners are queued.
-* **Open:** D-LO-1/2/4 (termination, amplitude detector, I/Q trim; see LO9; the polyphase fallback was closed by deletion, CP4-2, 2026-11-14); QVCO layout and the frequency loop (LO3); the 13-point envelope at P3.
-
-## `pt_pll_ring` r9: ring resize, tail-proportional fast-tune (CDR/pll_ring owner, 2026-11-10)
-
-Scratch: `scratch/wired_rx/r4pi/r9/` (`STATUS.md`, benches `fsweep.py`, `ring9.py`, `gen_r9.py`). Backups of the
-files changed here: `r9/backup/`. **Promoted:** `pll_ring.spice` (r9; r8 ports), `fastcells.py` `ct_ring9`,
-`generated/fast/ct_ring9.*`, `generated/pll_ring.*` (r9 layout). The LO instance and `run_timing.tb_pll_ring`
-still use r7 positional ports and must be updated (see interface-changes AC3-W11). (risk: INT-23)
-
-* **Why the extracted ring was slow:** ct_ring8 cell wiring, 25-30 fF per ring node. ss/32 C/2.835 V, VCTRL = VDD:
-  schematic 1307 MHz, ring cell extracted 763, full r7 extracted 759. **ct_ring9** (each stage followed by its own
-  restore inverters, ring devices 8/16, keepers 1/2): 945 MHz (cell extracted, 2.835 V); full r9 extracted
-  891 MHz at 2.71 V (the pt_pll_vreg output at VIN 3.15 V, ss/32 C, ~6 mA). Magic DRC 0, LVS unique.
-* **Range, one band, regulated supply:** 393-834 MHz needs VCTRL 0.87 V (ff/22/3.015 V) .. 2.02-2.03 V
-  (ss/32/2.71 V). Full r9 extracted: ss/32/2.71 V 833 MHz at 2.02 V, 891 at VDD (7 % top margin); ff/22/3.015 V 396 MHz at 0.87 V; tt KP=3 930 ppm/vote at 629 MHz. No coarse band.
-* **Fast-tune (P) units:** tail/header copies (NMOS W 0.44 L 20 on VT, gate VCTRL through 100 k; PMOS W 0.44
-  L 1.75 on VH, gate VPB through 20 k), rail-end switches as r8. KP=3 ppm/vote (schematic, ring cell extracted):
-  tt 919 / 932 / 913 at 393 / 630 / 834 MHz; ss 999 / 514; ff 917 / 861. The r8 conductance stacks on this ring
-  gave 15-380 ppm/vote (ppm ~ 1/I_ring).
-* **Layout (r9):** 202.9 x 921.2 µm, 665 devices, Magic DRC 0, LVS unique, KLayout main 0, **antenna 12
-  (ANT.16, M5 trunks of NX/N16B/REFG/S16B/PFD/LOCK/FD2/XHD22_x nets where the diode planner placed no diode):
-  not clean, open.** (risk: INT-05)
-* Phase error (ring cell extracted, ss 834-945 MHz): up to 7.5 deg (ct_ring8: up to 8.1 deg). Not trimmed here. (risk: WRX-15)
-
-## RF LO owner round 3: queue review, frequency loop, D-LO-1/2 (2026-11-11)
-
-**Queue review (`scratch/timing/queue.status`, all six done).** `lo_ext` full r-cml2, `obs_pre4`,
-`lo_obs` and `clk_obs16` completed. Findings on the `lcvco` runs:
-- r3 extremes (CML-direct tank, no buffers): the tank moved down about 2 % from r2. Results:
-  tt 2.116–2.722 GHz; ss/32/3.15 lhi_lowq 1.927–2.550; ff/22/3.35 llo_lowq 2.322–2.975.
-  **All-corner guaranteed 2.33–2.53 GHz** (r2 claimed 2.38–2.615); all-corner span 1.93–2.98 GHz.
-- Every ff point was flagged `cml_drive_ok = false`. The cause was the tank common mode of 2.14–2.19 V
-  against a 2.1 V criterion edge. New chains at ff with band 0 (`r4_chain_ff22_*`, extracted
-  `pt_lo_ext`) show the drive is fine there: on 1.19–1.21 V, off ≤ 0.24 V, 2.80 / 3.00 GHz.
-  The CM window is now 1.3–2.2 V and all 20 extremes pass.
-- The chain bench clamped its pass to 2.4–2.5 GHz. That is the GX-6 clamp, so it now passes on the
-  tank range (1.9–3.1 GHz) and reports `in_ism_band` separately.
-- The `codes` and `startup` results were r2 (with the removed buffers). They moved to
-  `r2_superseded` and were rerun with the r3 loads:
-  - start-up 12/12 envelope points with low-Q +10 % L, band 15 / 0.3 V: 1.93–2.10 GHz, tank 1.13–1.35 V diff peak, Q−I 88.7–89.5°
-  - tt codes: every band overlaps the next, 2.117–2.722 GHz
-  - `generated/lcvco-evidence.json` regenerated: verdict pass, schematic QVCO only
-- **I/Q error through the extracted `pt_lo_ext` is systematic, 2.5–3.7°.** The tank alone is
-  89.2–89.5°. On the 5 chain points, Q−I is −92.5 to −93.7° at the LO pins, against RF-LO-JIT
-  I/Q skew ≤ 1.16 ps (1.0°). This fails without D-LO-2 trim, and it matches the 93.5° seen in
-  external mode, so the skew is in the `pt_lo_ext` layout. (risk: TIM-07)
-
-**D-LO-2 I/Q phase trim (`lcvco/run_lotrim.py`, transistor level, extracted `pt_lo_ext` + schematic QVCO).**
-Proposed cell `pt_lo_iqtrim`: a binary bank of NMOS-in-n-well accumulation varactors
-(`cap_nmos_03v3_b`) on each `LO_*` mixer-gate node. The well is driven by the trim bit:
-0 → accumulation, high C; 1 → low C. There is no series switch. The LO node is common to the
-internal and external modes, so one trim covers both. The LSB is 4 µm² (≈ 12 fF swing). Code +k
-loads I, −k loads Q.
-
-| Point | code 0 | +4 | −4 | +15 | −15 | on / off at ±15 |
-| --- | ---: | ---: | ---: | ---: | ---: | --- |
-| tt/27/3.3, band 6 | −93.3° | −96.5° | **−90.0°** | −104.6° | −82.0° | 1.11 / 0.33 V |
-| ss/32/3.15 lhi_lowq, band 0 | −93.7° | | | −105.5° | −81.9° | 1.02 / 0.38 V |
-| ff/22/3.35 llo, band 15 | −92.5° | | | −102.5° | −82.5° | 1.14 / 0.30 V |
-
-The slope is 0.67–0.82° per LSB, and 4 bits give ±10–12°. **Proposal: 5 bits with the same LSB
-(±20–24°, ≤ 0.82°/step), which meets ±15° in ≤ 1° steps.** Code −4 nulls the tt chain error
-(−90.0°). The amplitude cost at full code is ≤ 55 mV of on-level; the worst case, ss, gives
-1.02 V against 0.9 V. Not done: the ±1 dB I/Q amplitude trim, a layout, and the 5-bit run.
-
-**D-LO-1 termination (`scratch/lo/dlo1.py`, extracted `pt_lo_ext` + drawn pads + COB chain at P3 = 30 mm).**
-The test used a per-leg 50 Ω shunt (NMOS switch + R to a decoupled VDD/2 node) on the existing
-passive (transmission-gate) external path: (risk: LO-05)
-
-| Source (Vpp open circuit) | ss/32/3.15 on / off (V) | ff/22/3.35 on / off (V) | Pad peak / trough |
-| ---: | --- | --- | --- |
-| 4 | 0.77 / 0.58 ✗ | 0.87 / 0.50 ✗ | 3.00 / 0.59 V (ss) |
-| 6 | 0.84 / 0.47 ✗ | 0.96 / 0.36 ✓ | 3.10 / 0.09 |
-| 8 | 1.00 / 0.33 ✓ | 1.13 / 0.15 ✓ | 3.18 / −0.40 |
-| 10 | 1.09 / 0.23 ✓ | 1.27 / 0.05 ✓ | 3.25 / −0.70 (diode) |
-
-With 50 Ω, the passive path needs +18 to +20 dBm per leg. The pad then swings past the 2.1 V
-clamp onset and into the ESD diode, and the usable range is < 2 dB. **A shunt termination on the
-passive path cannot deliver the ≥ 10 dB amplitude tolerance.** Counter-proposal (interface LO11):
-route the external LO through the existing `pt_lo_cml` limiter, i.e. pads → AC-couple → `LOI_*`.
-Its output level is set by the tail and load, not by the input. Keep the termination as an
-optional match (100/200 Ω) for return loss only. This still needs a bench: the CML input
-sensitivity floor and the pad clamp give the range.
-
-**Frequency loop (LO3, GX-6, IX-5): behavioural design `lcvco/loop_design.py` → `lcvco/loop_design.json`.**
-No transistor-level loop exists yet. The VCO curves are the r3 extremes.
-- Architecture: 50 MHz XO on `REF_IN`. B23 already lists 50.625 MHz; any reference works
-  fractionally. Then a PFD at 50 MHz and an extended 2/3 MMD N = 32–127 in custom TSPC. The first
-  cell must toggle at ≤ 3.1 GHz; it is not yet checked at ss. A MASH 1-1-1 ΣΔ (16-bit) and the
-  band-search FSM run in standard cells at 50 MHz. The 4-step binary band search counts PRE/16
-  for 1.28 µs per step, about 6.4 µs total. Last comes the type-II CP loop: Icp 100 µA,
-  R 22.1 kΩ, C2 67 pF, C1 5.2 pF (≈ 14.5k µm² as MOS cap), fc 400 kHz, PM 60°.
-- **GX-6:** the divider covers 1.75 GHz to the MMD input limit, more than the 1.93–2.98 GHz tank
-  at every corner. Over Kvco 39–79 MHz/V and N 38–60, fc stays 0.23–0.63 MHz and PM 56–60°.
-  There is no 2.4–2.5 GHz clamp anywhere.
-- **IX-5:** the bench is cycle-accurate: exact edge times, 5 % UP/DN mismatch, 150 ps reset,
-  2 nA leakage, CP headroom roll-off. After band search, a 78 MHz hop (2402 ↔ 2480 MHz) on
-  tt / 40 / 75 MHz/V curves settles to LO phase within 2° of its final trajectory in 7.5–11.9 µs.
-  With band search that totals **18.3 µs, against T_FCS − 5 µs = 75 µs (pass, behavioural)**.
-  The frequency error at 80 µs is 0 Hz to model precision. Reference spurs are not assessed by
-  this model.
-- **Phase noise vs RF-RX-LOPN (budget, not simulated):**
-
-  | Offset | Mask (dBc/Hz) | Total | Margin |
-  | --- | ---: | ---: | ---: |
-  | 1 MHz | −95 | −104.5 | 9.5 dB |
-  | 3 MHz | −107 | −114.5 | 7.5 dB |
-  | 20 MHz | −115 | −120.2 | 5.2 dB |
-  | 40 MHz | −120 | −140.1 | 20 dB |
-  | 100 MHz | −130 | −157.7 | 27.7 dB |
-
-  The low-Q VCO Leeson number is −117.7 dBc/Hz at 1 MHz. The other inputs are an XO floor of
-  −150 dBc/Hz, an assumed PFD/CP/divider floor of −208 dBc/Hz/Hz, and MASH-1-1-1 quantization.
-  At 25 MHz the PFD failed 3 MHz by 5.9 dB (ΣΔ), which is why the loop uses 50 MHz.
-  **Integrated 10 kHz–100 MHz: 1.35 ps rms, against RF-LO-JIT ≤ 1.05 ps: FAIL.** The PFD floor
-  (in band) and ΣΔ (20 MHz) dominate. Open: a 4th-order filter pole, or a lower ΣΔ order with
-  dither, plus a transistor-level PN sim of the QVCO. (risk: LO-04)
-
-## `pt_pll_ring` r9d / `pt_pll_ring_core` (wired_rx RINGAREA, 2026-11-11)
-
-Compact CDR fast-tune array, new line-ring master without FT/N5/N10 (pll_tx), WT21 `BAND` port before `VDD`
-(tail 8×10/1 high band, half in low band), pll_host deleted (X1).  Areas, extracted range and the vote-rate
-injection finding: `analog/wired_rx/README.md` "Resume 6 / RINGAREA"; interface-changes AC3-W13/W14/W14a.
-`generated/pll_ring-evidence.json` predates r9 (not regenerated).
-
-## RF LO owner round 4: jitter closure, QVCO r5 layout, loop blocks, LO11, PD29 (2026-11-11)
-
-Interface rows LO14–LO16; scratch `scratch/lo/r4_*`. Unless stated, "extracted" = Magic C or RC extraction of the promoted layout.
-
-**Round 3 superseded.** The r3 "2.33–2.53 GHz guaranteed" range was a schematic number. The first QVCO layout
-(RC-extracted) gave an ss band-0 top of 2.346 GHz and no start at band ≥ 12, as the model-uncertainty audit said.
-
-**Layout capability.** `layout_engine.py` places GF180 `cap_mim_2p0fF` and `nvaractor_3p3` from the Magic PDK
-generators (single-finger varactor tiles: the PDK multi-finger generator is broken), with `net_width`, MIM-plate
-keep-outs and symmetric trunk groups. Test cell DRC/KLayout 0, LVS unique; existing users byte-identical.
-
-**QVCO r5 (`lcvco/qvco5.spice`, `generated/lcvco/pt_lc_qvco5*`, hand-placed RF tank).** 8 mA/core, 15-cell MIM bank,
-rotated spiral (equal 60–67 µm feeds), `CMLSEL` PMOS header, ATB taps `ATB_VTUNE` (20 kΩ + TG) and `ATB_ITAIL`
-(1/64 replica). Precheck main/antenna 0. RC-extracted:
-
-| Case | band 15 @ 0.3 V | band 0 @ 3.0 V |
-| --- | ---: | ---: |
-| PESS: ss/32/3.15, L +10 %, +3 Ω/branch, C ×1.15 | 1.890 GHz | 2.713 GHz |
-| OPT: ff/22/3.35, L −10 % | 2.280 GHz | 3.097 GHz |
-| tt / ss / ff | 2.077 / 2.008 / 2.155 | 2.881 / 2.856 / 2.914 |
-
-2.40–2.4835 GHz is covered with ≥ 3 % margin both sides at every case (RF-QVCO-RANGE → 2.30–2.70 GHz guaranteed).
-All 17 band-end points start (≥ 1.10 V diff), Q−I −86.4…−88.4° (inside the trim), 17–18 mA. PN (tt, injected
-tank noise, transient zero-crossing method; no flicker upconversion): −114.6 dBc/Hz @1 MHz, −135.8 @20 MHz.
-16-code sweep (C-only) at tt, PESS and OPT: every band oscillates (OPT 1.61–1.99 V diff), steps 28–52 MHz, bands
-104–204 MHz wide, adjacent overlap ≥ 60 MHz (≥ 75 MHz at OPT), no gaps. Kvco 25–40 MHz/V below VTUNE 1.65 V and
-95–150 MHz/V above it. PESS PN (b8, 2.16 GHz, RC): −105.7 dBc/Hz @1 MHz, −128.6 @20 MHz (see jitter below).
-Data `scratch/lo/r4_qvco2/design.json` (`bands_C`).
-
-**Frequency loop (`lo_mmd`, `lo_mmd_qdum`, `lo_pfdcp`, `lo_lf`, `lcvco/run_loop.py`, `loop_tl.json`).**
-* MMD: a 2/3 cell cannot toggle at 3 GHz in GF180 (zero margin schematic, fails extracted at ss), so the chain is
-  CML /2 → 2 CML + 3 CMOS 2/3 cells, ratio 2·N (32–126 even). Extracted 16/16 pass at ss/32/3.15 (2.98, 3.1 GHz),
-  tt, ff for N = 32/64/98/126; 19–34 mA. Q-side dummy load block added.
-* PFD/CP r2: dynamic PFD, reset overlap 0.11–0.18 ns (DN, extracted; UPB 0.26–0.52 ns); CP 100 µA,
-  L = 4 µm degenerated sources, filtered bias. Extracted: mismatch ≤ 1.03 % over VTUNE 0.8–2.5 V (falls apart
-  outside it: lock window 0.8–2.5 V); in-band CP noise −123.4…−125.7 dBc/Hz @10 kHz (N = 49). Area 0.31 mm² (stale: 0.125 mm² in round 5).
-* Loop filter: Icp 100 µA, fc 250 kHz, R 13.09 k, C1 6.96 pF MIM, C2 351 pF n-well accumulation varactor
-  (valid 0.3–3.0 V), R3 10 k / C3 15.9 pF (pole 1 MHz). Analytic: fc 125 kHz / PM 55.7° at 40 MHz/V,
-  303 kHz / 42.6° at 120 MHz/V.
-* Lock: **no valid closed-loop result yet.** An earlier "≤ 29 µs" figure is retracted: the audit
-  (`scratch/reviews/lo-lock-sim-audit.md`) found that bench started already locked (zero frequency error, preset VTUNE and
-  phase), used a lock check that could not fail, stale PFD/CP, C-only parasitics, N = 62 out of band, integer-N only and 2×
-  the intended loop gain. The audit's validation ladder (ideal loop vs analytic and must-fail cases, then one extracted block
-  at a time, RC-extracted MMD, fractional-N) is in progress.
-
-**Integrated jitter (`loop_design.py r4` → `loop_design.json["r4"]`): OPEN, depends on the VCO flicker corner.**
-The r3 budget used one −208 dBc/Hz FOM; the measured r1 CP (−84 dBc/Hz in-band @10 kHz, flicker) gave ≈ 1.4 ps.
-Audit rebuild (`["r4"]["audit_rebuild"]`): extracted worst-corner CP (ff, −123.4 dBc/Hz @10 kHz), LO18 Icp scaling,
-N 44–56, Kvco 38–200 MHz/V, MASH 1-1-1 with the 2-cycle step, XO −150 dBc/Hz × N², 0.3 ps divider jitter (assumed),
-2.2 ns fractional-N on-time (assumed), 4th-order pole. Worst case vs RF-LO-JIT ≤ 1.05 ps:
-
-| VCO L(1 MHz) | no flicker upconversion | 1/f³ corner 300 kHz | 1 MHz |
-| --- | ---: | ---: | ---: |
-| −112 (bound) | 0.86 ps (fc 250 kHz) | 1.10 ps (best fc ≈ 400 kHz) | 1.63 ps |
-| −114.6 (r5 tt, no flicker) | 0.65 ps | 1.13 ps (fc 250 kHz) | 1.81 ps (fc 250 kHz) |
-
-With the r5 RC-extracted **PESS** point (−105.7 dBc/Hz @1 MHz, b8 at 2.16 GHz, no flicker) the worst case is **1.65 ps** (best fc ≈ 400 kHz, Kvco 25–150 MHz/V).
-
-**The PESS QVCO point fails RF-LO-JIT even without flicker** (−105.7 dBc/Hz @1 MHz, −128.6 @20 MHz; low-Q tank,
-L +10 %, +3 Ω/branch). Closing it needs a better pessimistic-corner tank Q / swing (or a narrower loop with a
-lower CP/ΣΔ floor). With fc ≈ 400 kHz and the tt VCO, a 1/f³ corner ≤ 100 kHz gives 0.89 ps. Kvco (r5, C-only
-16-code sweep) is 25–40 MHz/V below VTUNE 1.65 V and 95–150 MHz/V above it: the loop must cover 25–150 MHz/V (LO18
-Icp scaling) or the band search must keep VTUNE in the low-Kvco half. The QVCO flicker corner is not yet simulated (the
-injected-noise PN method has no flicker), so the jitter requirement is **not** closed. Mask (RF-RX-LOPN) passes in
-every case. Options rejected by numbers: integer-N (2–5 MHz compare raises the in-band floor 10–14 dB), MASH-4
-(≤ 0.03 ps), 100 MHz compare (needs the shared `REF_IN` XO changed). IX-5 (behavioural, r4 3rd-order filter): 41 µs
-including band search, limit 75 µs; not yet confirmed at transistor level. Reference spurs (4th pole, analytic):
-mismatch 3 % × 0.2 ns −127 dBc, 100 nA leakage −117 dBc, 5 % bleed −83 dBc.
-
-**I/Q (`pt_lo_ext`).** The ~3° skew came from the LOI wiring load (I ≈ 7.5 fF/node heavier) converted by the QVCO,
-not the driver (0.3–0.8°). Chain Q−I on the promoted r4h: −90.29 / −90.13 / −89.94° (tt/ss/ff). 5-bit + sign
-phase trim (`run_lotrim.py`): ±19°, 0.55–0.75°/LSB, monotonic, best code 0 on r4h (residual ≤ 0.30°, simulated).
-±1 dB amplitude trim fails in the LO (CML Rc trim ±0.4–0.55 dB; CM loop pins the tail) → baseband (LO14).
-
-**LO11 (`pt_lo_ext` r4h, promoted).** Dual-input CML driver: EXT pair on the AC-coupled pad node, tail steered by
-the new `CMLSEL` port. Extracted, COB chain at 30 mm: usable source **1.0–4.5 Vpp (≥ 13 dB)** at ss/tt/ff
-(on ≥ 0.922 V, off ≤ 0.484 V, Q−I 92.5–94.4°); 20–40 mm / ±0.6 mm bond move the level ±0.6 dB, Q−I ±1°.
-The passive external path is backup only (ss 4.5 Vpp fails by 3 mV). Terminate to VPAD or AC-couple (a 50 Ω
-shunt to VDD/2 drives the pad to 3.0 V). 297k µm².
-
-**PD29 HBM.** `lo_ext` pad switches: 6 V nfet with a bootstrapped gate (100 kΩ + 200 fF to pad); a plain 6 V
-device still sees 6.5 V. `diff_clk_rx` r5 (see limitation 8): bootstrapped 6 V series nfet. Screen:
-`ref_lo_ext`, `aux_clk`, `wclk_wtx_ext` 0 exceedances.
-
-**RF-QVCO-RANGE decision.** 2.30–2.70 GHz is guaranteed at every corner including the pessimistic losses, and
-covers 2.4–2.4835 GHz plus ≥ 3 % band-search margin. A still wider guarantee is not worth it: it would need a
-larger switched-cap ratio (lower Q and higher Kvco, both of which cost jitter), and sub-bands are served by the
-external LO path.
-
-## RF LO owner round 5: phase-noise method, QVCO r6b, loop r5, CP area (2026-11-12)
-
-Evidence `scratch/lo/r5_pn/` (PN/flicker/QVCO), `scratch/lo/r5_area/` (CP), `scratch/lo/r5_ladder/` (lock ladder), `lcvco/loop_design.json["r5"]`.
-
-**Round-4 PN numbers retracted.** −105.7 (PESS) and −114.6 dBc/Hz (tt) @1 MHz came from 0.6 µs runs whose bias was still
-settling (0.4–0.9 MHz frequency drift); re-analysis moves them by 8+ dB with segment length (`reanal.py`). Not noise.
-
-**Method, validated first (`validate.py`, `valring.py`).** Known-answer LC (2.4 GHz, Q 5, tanh −G): white tank noise vs
-Hajimiri +0.77 dB (limit 1 dB); 1/f FM through a linear varactor vs Kv²S_v/2f² +0.66 dB, quasi-static Kv within 0.2 %;
-ring-down Q 4.975 vs 5. Must-fail: dead oscillator, noise off, control open, R×2 all FAIL. QVCO white PN: RC-extracted r5 tank,
-ideal tail-gate source, 4kT(1+γ)G per node from the ring-down loaded Q (all tank losses) + 4kTγ·gm tail, γ = 2, ×100 scaled,
-+1 dB short-window bias, band average 20–150 MHz (an upper bound: the spectrum has a white floor). Flicker: quasi-static
-df/dX (tail gate, NMOS/PMOS pair common-mode current) × .noise device PSDs at fnoicor 0/1.
-
-**Full-pessimistic tank** (`corners.py`): ss/32/3.15, spiral Q = 4 (diff), L ±15 %, MIM 5 Ω, varactor Q 8, C ×1.15/×0.9;
-operating point band 11/3, VTUNE 2.1 V, 2.40–2.42 GHz.
-
-**Findings / fix (QVCO r6b, published `generated/lcvco/pt_lc_qvco5*`, ports unchanged, LO20).**
-* r5 bias flicker: 10 µA 2×1 µm diode ×800 → 184 nV/√Hz @100 kHz on the tail gates, Kg = 195–353 MHz/V → L(100 kHz) −69 dBc/Hz,
-  1/f³ corner 9–16 MHz. Fix: tail-gate RC filter (40 × 100 kΩ ppolyf + 12 × 24² µm MOS cap, pole ~1 kHz; 1.9 nV/√Hz @100 kHz).
-* r5 at the full-pessimistic tank runs only 1.0 V diff (current-limited, 8 mA): white −118.6. r6b tail 12 mA (diode 1.44/1):
-  1.40 V, white **−122.6 measured → −121.1 design value** (+1.5 dB), Kg 95 MHz/V, Kcm 0.62 MHz/mA.
-  Flicker (all paths, fnoicor = 1, ff) **−104.4 dBc/Hz @100 kHz** (corner ~47 kHz).
-* Range/start-up at 12 mA (RC-extracted): L+15 % Q4 band-0 top 2.647 GHz; L−15 % ff band-15 bottom **2.338 GHz** (2.6 % under
-  2.40, misses the 3 % target, LO-10); weakest tanks band 15 / 0.3 V start (0.91–1.24 V diff), Q−I −86.4…−87.9°; 22–25 mA.
-* Pushing −60 MHz/V → QVCO rail ≤ 7 nV/√Hz (LO-11). EN-to-ready 1.5 ms. DRC/LVS/KLayout precheck clean; bbox +66 µm tall.
-
-**Loop r5 (`loop_design.py` r5_eval/r5_worst/r5_main; `lo_lf` re-laid out and published).** Exact 4th-order network, all
-noise terms incl. loop-filter R/R3 thermal (missing before: 0.2–0.7 ps). Two-sided grid: Kv 80–200 MHz/V (VTUNE-2.1 V band
-policy), N 44–56, Icp ±20 %, R ±25 %, C1/C3 ±10 %, C2 ±15 %, Kv-measurement error ±15 % on the code choice. Limit fixed
-before results: synthesizer ≤ 0.923 ps (RF-LO-JIT 1.05 total less a 0.5 ps LO-path slot), PM ≥ 40°, RF-RX-LOPN mask.
-Filter: design parameters fc 300 kHz / PM 78° before the R3/C3 pole (actual nominal PM ≈ 61°, worst 41.2°) at Kv 90, R 10.38 k, C1 5.45 pF, C2 489.6 pF, R3 10 k, C3 8.84 pF; ICP code nearest-log to
-100 µA·min(1, 90/Kv). Extracted lo_lf matches the network within tolerance at tt/ss/ff, VT 0.8–2.5 V (`lfcheck.json`).
-
-| VCO case | worst jitter | worst PM | result |
-| --- | ---: | ---: | --- |
-| r6b design value (−121.1 / −104.4 @100k) | **0.80 ps** | 41.2° | PASS |
-| same, both VCO terms +3 dB | 0.85 ps | 41.2° | PASS |
-| r5 as built (unfiltered bias) | 11.4 ps | — | FAIL |
-| retracted r4 PESS number | 1.95 ps | — | FAIL |
-
-IX-5 (behavioural, target 0.3 V from the preset, both signs): 45.9 µs incl. band search (limit 75).
-**Load-bearing bound:** Kvco ≤ 200 MHz/V in the 1.8–2.4 V window. At Kv 225 the worst case is 1.08 ps (FAIL), at 250 1.12 ps.
-The bound is C-only 95–150 MHz/V + 33 %; it still needs an extracted OPT (ff/22/3.35, L −15 %) Kvco at VTUNE 1.8/2.4 V (LO-13).
-Independent review (2 passes, separate agent): blocking items (filter-R noise, fnoicor=1 flicker, budget slot) closed; open
-should-fix: flicker/white at more bands and the 1.8/2.4 V window ends, PMOS-pair path at 12 mA, hop sim with R3/C3,
-Kvco upper bound, rail noise as a firm requirement.
-Supply noise (LO-11), lo_ext additive jitter and the transistor-level lock ladder are separate items.
-
-**Lock ladder (audit rungs, `scratch/lo/r5_ladder/`, limits fixed before running, one dir per run, reltol 1e-4).**
-Rung 1 ideal: step response matches the analytic loop to 0.3 %; ±30 MHz acquisition 25–29 µs; dead-VCO / wrong-N / CP-off FAIL
-as required. Rung 2 extracted LF: 22.8–45.4 µs PASS (C2 linearised at its 1.65 V PDK value; ngspice stalls on its C(V)).
-Rung 3 extracted PFD/CP + LF, VT preset 2.1 V: ff Kv200 N44 ±60 MHz 23.9/27.6 µs PASS; ss Kv80 N56 ±24 MHz 47.2/49.3 µs PASS
-(marginal); **on the published r5 filter ss Kv80 Icp100 −24 MHz: 50.6 µs, hold 2.27°, offset drift 1.27 ps → FAIL (narrow)**;
-more r5-filter cases running (`r3n.json`). Static offsets −60…−158 ps (CP mismatch/leakage). Rung 4a RC-extracted MMD
-(744 R) divides exactly at ss/tt/ff 2.4–3.0 GHz, N 44/56; 20 mV must-fail FAILs. Rung 4b closed loop with the RC MMD running
-(`r4_cl_ss32_kv80_n56_icp75_m24_mmdrc/`). Rung 5 fractional-N (behavioural): PASS except Kv200/Icp25 with the VCO 60 MHz low
-(~900 slips, 68–75 µs): **acquire integer-N, enable MASH after lock** (LO20). The ±1 LSB dither is unshaped. Laid-out C2 is
-11–12 % above design in both filters (inside the ±15 % grid).
-
-**Charge pump area (r5 area fork).** `lo_pfdcp` re-laid out (row plan only, netlist unchanged): 0.163 → **0.125 mm²**
-(259.0 × 482.4 µm), DRC/precheck/LVS clean; extracted UP/DN on-time 0.10–0.28 ns, static offset ≤ 140 ps, CP DC/noise
-unchanged. Mismatch over 0.8–2.5 V is ≤ 1.32 % (ss, 100 µA), not the 1.03 % stated in round 4. The r4 "0.31 mm²" was stale.
-`lo_ext` is 0.156 mm² (the 297k figure was pre-0486041); LO11 1.0–4.5 Vpp re-passes extracted at tt/ss/ff (on ≥ 0.945 V,
-off ≤ 0.464 V, Q−I 93.2–95.0°), PD29 HBM 0 exceedances. Bench bug found: the r4 `hcp.py`/`run_loop.tb_pfd_pulse` ICP pin order,
-so r4 extracted CP numbers were from the layout without the LO18 legs.
-
-## RF LO owner round 6: repack staging, mode-walk and supply-model answers (2026-11-13)
-
-Work dir `scratch/lo-ap4/` (`NOTES.md`, independent review `review/REVIEW.md`). Interface rows LO21–LO28, MW-1a, MW-2a,
-MW-7a, MW-20a, CM-1, INT1-8a, AP4-5a, AP4-5b. **Nothing in `generated/` changed in this round.**
-Chip-top pin list and connection intent for the whole LO subsystem: **`LO-INTEGRATION.md`** in this directory.
-
-**Layout method (`lo_rows.py`, `layout_engine.generate(over_cell=<set of rows>)`).** Row plans for the LO cells:
-`'r4'` reproduces each published outline exactly and is what the standard flow uses (`lo_rows.PUBLISHED`); `'ap4'` balances
-rows by device height and runs the Metal4 tracks over the devices in rows without MIM capacitors. `python3 lo_rows.py
-<block> [plan] [--publish]` builds one block. `timing_flow.build_layout` no longer copies macro `.mag` files into
-`generated/fast/` before the publish gate.
-
-**Staged repacks (same netlists; DRC 0, LVS unique, KLayout precheck clean; not published, see AP4-5a).**
-
-| Cell | Published µm, mm² | Staged µm, mm² | State |
-| --- | --- | --- | --- |
-| `pt_lo_mmd` | 379.8 × 955.3, 0.361 | 379.9 × 383.3, 0.146 | RC-extracted, ss/32/3.15, 0.4 V per leg: divides to 3.4 GHz (published: 3.6 GHz); minimum tank amplitude at 2.5 GHz ≤ 0.15 V per leg on both; FB rise 127 → 172 ps; 20 of 33 bench cases run on each layout (`scratch/lo-ap4/mmd_compare.md`), the nine rung-4a cases agree; review NO-GO until complete |
-| `pt_lo_mmd_qdum` | 218.7 × 156.7, 0.034 | 100.0 × 194.7, 0.019 | no bench |
-| `pt_lo_obs` | 202.3 × 86.5, 0.0175 | 98.4 × 93.1, 0.0092 | no bench; the published cell fails 4 of 24 corners (ss / 3.15 V: no output), LO27 |
-| `pt_clk_obs16` | 197.7 × 469.8, 0.092 | 128.6 × 414.0, 0.053 | no bench |
-| `pt_lo_ext` | 324.1 × 481.9, 0.156 | 345.1 × 387.2, 0.134 (MW-20 candidate) | joint bench only, below |
-
-**Tank wiring load (LO26).** The published `pt_lo_mmd` has its AC-coupling caps at the bottom of a 955 µm cell and the LP/LN
-ports at the top: 200.7 / 125.9 fF of wiring on the I tank (flat RC extraction) against 22.1 / 30.5 fF in the Q-side dummy,
-and the QVCO benches contain neither load. The staged cells have the caps in the top row and LP/LN on one trunk pair:
-22.8 / 18.6 fF (flat RC) on I, 6.3 / 2.8 fF (C-only) on Q. **The QVCO has not been simulated with these loads, published or
-staged.**
-
-**MW-20: RX conversion on the real LO (`scratch/lo-ap4/mw20/joint.py`, reviewed: `review/REVIEW-mw20.md`).** Extracted
-`pt_lo_ext` (internal mode) into extracted `rxmix_i` / `rxmix_q` (rf_rx tree of 2026-11-13 22:58), IF 5 MHz, window
-300–700 ns, gain relative to the 0/VDD square LO of the rf_rx benches in the same deck:
-
-| LO source | tt/27/3.3 | ff/22/3.35 | ss/32/3.15 | ss, `ATB_VB` forced to 2.45 V |
+| Tank amplitude per side | tt/27/3.3 | ff/22/3.35 | ss/32/3.15 | ss, `ATB_VB` forced to 2.45 V |
 | --- | ---: | ---: | ---: | ---: |
-| published `pt_lo_ext`, tank 0.58 V per side | **−3.3 dB** | −1.9 dB | **−9.8 dB** | −3.4 dB |
-| published, tank 0.40 V | — | — | **−11.6 dB** | — |
-| candidate (`XRC` 72 µm, compact rows), tank 0.58 V | −1.5 dB | −1.0 dB | −3.8 dB | −1.6 dB |
-| candidate, tank 0.40 V | — | — | −5.0 dB | — |
+| 0.58 V | -3.3 dB | -1.9 dB | -9.8 dB | -3.4 dB |
+| 0.40 V | - | - | -11.6 dB | - |
 
-Published LO at the mixer gates: 0.72 / 0.81 / 0.62 Vpp per side (tt / ff / ss), centre 0.715–0.72 × VDD. Two levers of
-equal size at ss: swing (the published layout's parasitics take 0.87 Vpp schematic down to 0.62 Vpp, ≈ 0.45 pF per LO
-node) and the LO centre, which is a fixed fraction of VDD while the switch threshold moves with the corner. The pass
-criterion used so far for `pt_lo_ext` ("on ≥ 0.9 V, off ≤ 0.5 V") is **not sufficient** and is withdrawn as a mixer-drive
-criterion; conversion gain in the joint bench replaces it. An earlier set of runs at IF 20 MHz understated the loss by
-2–3 dB (TIA roll-off) and is not to be quoted. Candidate: 15.5 mA instead of 11.1 mA at tt, swing 1.01 Vpp, Q−I 88.8°;
-it is not qualified (joint bench and one block-bench point only). Not run: external modes with the mixers, TX mixer,
-sf/fs, temperature, mismatch.
+LO at the mixer gates: 0.72 / 0.81 / 0.62 Vpp per side (tt / ff / ss), 11.1 mA at tt. Forcing `ATB_VB` per die
+is the available mitigation. The external modes have not been run with the mixers.
 
-**Supply (INT1-6, LO21–LO23).** Limit: each supply-borne tone ≤ −60 dBc and ≤ 0.2 ps rms in total (33 µV pk at 1 MHz,
-2.6 mV at 78 MHz, a few µV at 30 kHz–1 MHz); the earlier "−80 dBc" was inconsistent and underived. The ring regulator
-`pt_pll_vreg` at the QVCO load gives 17–19 dB at 1 MHz and 17–21 dB at 78 MHz (three cells: 21–26 dB), nothing below
-100 kHz: not sufficient. A QVCO regulator does not exist; it needs the QVCO re-verified at ≈ 2.55–2.75 V first.
+**QVCO** (`generated/lcvco/`): Magic DRC 0, KLayout precheck main 0 / antenna 0 (`lcvco5-kldrc.json`); top-level
+LVS on the GDS read back from disk, unique, with the spirals as documented shorts (`pt_lc_qvco5-lvs.txt`,
+`pt_lc_qvco5_core-lvs-readback.txt`). Fill keep-out markers cover both spirals plus 25 um, the feeds, the tank
+core and the tank channel; stock fill leaves no dummy within 25 um of spiral metal
+(`pt_lc_qvco5-fillcheck.json`). 12 mA tail per core with an RC-filtered tail gate: wait 1.5 ms from `EN` to use.
 
-**Lock time (LO24, LO25).** t_lock ≈ 6–7 × R·C2 of the loop filter: 40.5 µs nominal, 21–60 µs over R ±25 % / C2 ±15 %
-(64.5 µs at Kv 200), so the slow filter corner misses the 50 µs limit by up to 15 µs, not by 0.6 µs. The published
-`pt_lo_pfdcp` presets VTUNE to VDD/2, not to the 2.1 V the ladder and LO20 assume.
+With its real loads (extracted `pt_lo_ext`, `pt_lo_mmd`, `pt_lo_mmd_qdum`, both `pt_lo_obs`, top wiring, 0-40 fF
+of route; `scratch/lo-ap4/q7/env.log`):
 
-**QVCO corners (AP4-5b).** Keep-out rule (derived; the PDK has none): 25 µm from the outer-turn metal. FastHenry: a
-100 × 290 µm cell there changes L by −0.001 % and Q by −0.012 %. Slot A (111 × 302.9 µm, next to the tank ports) holds
-the staged dummy and `lo_obs`.
+| Case | Result | Limit |
+| --- | --- | --- |
+| tt, band 8, VTUNE 1.65 V | 2.255 GHz, Q-I -98.7 deg, 2.11 / 2.31 V differential peak (I / Q), 24.7 mA | Q-I 90 +- 10 deg |
+| Top of range: ss/32/3.15, L +15 %, Q 4, C x1.15, band 0, VTUNE 3.0 V | 2.488 GHz, **fail** | >= 2.558 GHz |
+| Bottom of range: ff/22/3.35, L -15 %, C x0.9, band 15, VTUNE 0.3 V | 2.275 GHz, pass | <= 2.330 GHz |
+| Start-up, weakest tanks, band 15, VTUNE 0.3 V | 0.62-1.13 V differential peak, pass | >= 0.5 V |
 
-## Known limitations and open items
+The quadrature error and the I/Q amplitude imbalance come from unequal wiring on the I and Q tanks (the
+published `pt_lo_mmd` puts 201 / 126 fF on the I tank, the dummy 22 / 31 fF on the Q tank).
 
-1. **`pll_ring` HOLD fails extracted (r7: +19 636 ppm step, limit 200; see above).**  r7 schematic gave +273 ppm.  Under
-   AC-3 (`spec/interface-architecture-changes.md`) the CDR uses a continuous
-   integral path with no HOLD hand-over; HOLD stays for host_follow.  r6a record: at
-   625 MHz the hand-over step is +1545 ppm (limit 200) and the held drift
-   110 ppm/10 µs (limit 100); with HOLD from t=0 the drift is 267 ppm/10 µs.
-   Cold start locks at 480 and 810 MHz.  r6a port phase error is 9.0–10.8°
-   (r5: 4.6–5.5°) and the analog `LOCK` flag is wrong at 625/810 MHz and
-   host_follow (informative only).  Closed-loop lock is nominal-only;
-   jitter/phase noise and reference spurs are not covered. (risk: TIM-04, TIM-05)
-2. 2026-11-14: `pt_polyphase` was deleted by user decision CP4-2; the external I/Q LO (`pt_lo_ext` modes 1/3) is the fallback. (risk: TIM-06)
-3. **Autonomous RF LO (`lcvco/`, r5; section "round 4"):** QVCO r5 is laid out and
-   RC-extracted (2.28–2.71 GHz guaranteed incl. the pessimistic case); the
-   frequency-loop blocks exist at transistor level but the closed-loop lock
-   sim and the CP noise fix are still open, so it is not yet a qualified LO.
-   The first-die RF LO baseline is the external route through the CML
-   driver (`CMLSEL`, 1.0–4.5 Vpp). (risk: LO-04)
-4. `lo_ext` (r4h): ext-CML window 1.0–4.5 Vpp per leg; the passive external
-   path is backup only (fails ss/4.5 Vpp by 3 mV). (risk: LO-07)
-5. `clk_obs` has 8 inputs and /2^0..7, smaller than `debug.clk_obs`
-   (two instances needed; `divider_log2` 8..15 unsupported). (risk: TIM-09)
-6. `vco_replica` has no `vco_coarse` DAC or divider select (VCTRL from ATB,
-   fixed /16).
-7. ~~`aosc` is below 40 MHz at ss.~~ Fixed in r3 (above); `scratch/aosc/` keeps the r1/r2 evidence.
-8. `diff_clk_rx` (r5, 2026-11-11): data mode qualified extracted at 0.5–2 Gb/s,
-   300–800 mVpp, AC-coupled 10 pF, with ±18–20 mV hysteresis. It starts from
-   electrical idle without a preamble. Run length is limited to ≤ 20 UI at
-   2 Gb/s and ≥ 50 UI at 0.5 Gb/s, set by edge timing after a long run rather
-   than threshold. A source parked at a data level before the first bit is not
-   supported. Current is 2.6–5.1 mA when enabled. Through `wtx_ext_rx`, 2 Gb/s
-   is limited by the wired_tx driver path, not the receiver. PD29 HBM screen
-   `wclk_wtx_ext`: 0/105 over (bootstrapped 6 V series nfet). (risk: TIM-08)
-9. Not covered: mismatch/Monte Carlo, IR drop and RC clock skew (C-only
-   extraction), substrate coupling, ESD (pads family), integration with
-   `atb_tap` and the island switch. (risk: MOD-02)
-10. **Round 6 open items (2026-11-13):** `pt_lo_ext` under-drives the RX mixers (−3.3 dB at tt, −9.8…−11.6 dB at ss; MW-20a: die-1
-    mitigation is the `ATB_VB` trim, the fix is a staged candidate plus a threshold-tracking VB); QVCO never simulated
-    with the MMD / dummy / lo_obs tank loads (LO26); no QVCO regulator (LO22); lock time at the slow filter corner
-    (LO24) and the preset voltage (LO25); `pt_lo_obs` fails at ss / 3.15 V (LO27); electromigration never checked on
-    the engine-routed CML current paths (LO28); the VLI node of `pt_lo_ext` floats when `CMLSEL = 0`; all `'ap4'`
-    repacks are staged only (AP4-5a). (risk: LO-04, LO-10, LO-11; no register rows yet for LO26–LO28)
+**Loop** (`lcvco/loop_design.json["r5"]`, behavioural with extracted block data): filter R 10.38 k, C1 5.43 pF,
+C2 486 pF, R3 10 k, C3 8.84 pF; design point fc 300 kHz at Kvco 90 MHz/V. Worst synthesizer jitter 0.80 ps rms
+against 0.923 ps (RF-LO-JIT 1.05 ps less a 0.5 ps LO-path share), worst phase margin 41 deg, over Kvco
+80-200 MHz/V, N 44-56 and the component tolerances. The result holds only for Kvco <= 200 MHz/V with VTUNE
+preset at 2.1 V (risk LO-13).
+
+**Lock time** (`scratch/lo-ap4/lock/lock_rc.json`): about 6-7 x R x C2. 40.5 us nominal, 21-60 us over R +-25 % and
+C2 +-15 %, up to 65 us at Kvco 200 MHz/V, against a 50 us limit: the slow filter corner misses.
+
+**Supply limit of the QVCO rail:** each supply-borne tone <= -60 dBc and <= 0.2 ps rms in total; noise
+<= 7 nV/rtHz from 100 kHz to 1 MHz (pushing -60 MHz/V, risk LO-11).
+
+**Placement:** the QVCO runs at the RF carrier, so its position is constrained; the rules are in
+`LO-INTEGRATION.md` section 7.
+
+## Open items
+
+Risks: `spec/risk-register.md` LO-02, LO-03, LO-10, LO-11, LO-12, LO-13, SP-02, PKG-04, PKG-05, BW-02, XT-01,
+DBG-02, MT-03. LO-01 is listed there as closed but applies again (the QVCO runs at the carrier).
+
+1. Evidence currency. `run_timing.py`, `timing_flow.py` and `layout_engine.py` changed after every evidence
+   file. `lo_ext-evidence.json`, `lo_ext-pad-evidence.json` and `lcvco-evidence.json` describe superseded cells
+   (netlist and GDS hashes differ) and are not quoted here. The GDS hash differs from the evidence record for
+   `aosc`, `clockmux`, `prescale`, `vco_replica`, `wordclk` (GDS re-exported; `.mag` and extraction unchanged)
+   and `ring_osc` (layout rebuilt after the evidence). `generated/polyphase.ext.spice` is a leftover of the
+   deleted block.
+2. No evidence JSON exists for `pll_ring_core`, `clk_obs16`, `obs_pre4`, `lo_mmd`, `lo_mmd_qdum`, `lo_pfdcp`,
+   `lo_lf`, `lo_obs` or the QVCO; their bench results are in `scratch/` only.
+3. `pll_ring`: safe test fails (87-162 uA at reset); no corner, cold-start or HOLD runs on r9v; phase error
+   5-7.6 deg; analog `LOCK` wrong. Jitter, reference spurs (SP-02) and ring-to-ring coupling are not covered.
+4. `pt_lo_ext` under-drives the RX mixers (-3.3 dB tt, -9.8 dB ss). A revised cell is staged in
+   `scratch/lo-ap4/loext3/`, not published. The internal node VLI floats when `CMLSEL` = 0. External modes are
+   not benched with the mixers, nor on the `pad_refpad` AUX_CLK pad and the fixed COB bond map.
+5. QVCO with real loads: top of the range fails and Q-I is 9 deg off with the published `pt_lo_mmd` pair.
+   Repacked `pt_lo_mmd`, `pt_lo_mmd_qdum`, `pt_lo_obs`, `pt_clk_obs16` and `pt_lo_ext` (row plan `ap4`) are
+   staged in `scratch/lo-ap4/`, not published; the staged `pt_lo_mmd` awaits its bench and review.
+6. No QVCO regulator is published. `lo_vreg.spice` (`pt_lo_vreg`) is in-flight work: staged at 0.44 mm2, not
+   reviewed, and the tank-connected cells are verified only at a 1.7 V tank common mode. `pt_chip.conn`
+   instances it as a build demand.
+7. Loop: lock time at the slow filter corner; `pt_lo_pfdcp` presets VTUNE to VDD/2, not to the 2.1 V the jitter
+   and lock analyses assume; no transistor-level closed-loop lock result; Kvco bound not extracted (LO-13).
+8. `pt_lo_obs` does not divide at ss / 3.15 V (4 of 24 corner cases).
+9. Electromigration has not been checked on the engine-routed CML current paths of the LO cells.
+10. AUX_CLK receiver as the forwarded-wire-clock path (25-810 MHz, 3.1 mm route): bench in progress in
+    `scratch/lo-ap4/auxrx/`; unbuffered, the published `pt_diff_clk_rx` does not drive that route at 810 MHz.
+11. `HOST_CLK` can only come from a locked ring; a direct H2D / REF host clock is proposed (interface row CM-1),
+    not built.
+12. Uncommitted edits to `layout_engine.py` and `lo_rows.py` belong to items 4 and 5.
+13. Not covered anywhere in this family: mismatch, sf / fs corners, results at a 3.50 V trimmed supply,
+    substrate coupling, resistance-aware extraction (the QVCO tank excepted).

@@ -161,7 +161,7 @@ def control_sequence():
     spi.write(6, 1)
     spi.time += 20e-6
     spi.read(0x0a, 0x0101)
-    spi.write(0x4e, 4)
+    spi.write(0x4d, 4)
     spi.write(6, 1)
     observed_at = spi.time+1e-6
     spi.time += 5e-6

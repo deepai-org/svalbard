@@ -25,6 +25,10 @@ endmodule
 endmodule
 (* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__buf_2(input wire I,output wire Z);
 endmodule
+(* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__and2_1(input wire A1,A2,output wire Z);
+endmodule
+(* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__dffsnq_1(input wire D,SETN,CLK,output wire Q);
+endmodule
 `endif
 
 // Generated-clock source flop (divider / Johnson output that becomes a clock): a kept x4 flop.

@@ -5371,34 +5371,6 @@
   "control_fields": {
     "adc_i.config": {
       "fields": {
-        "acquisition_ns": {
-          "bits": 8,
-          "default": 5,
-          "maximum": 255,
-          "minimum": 5,
-          "unit": "ns"
-        },
-        "comparator_trim": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "decision_ns": {
-          "bits": 8,
-          "default": 18,
-          "maximum": 255,
-          "minimum": 18,
-          "unit": "ns"
-        },
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
         "input_test": {
           "bits": 2,
           "default": 0,
@@ -5406,13 +5378,6 @@
           "meaning": "0=normal PGA input;1=zero differential at VCM;2=+VREF/4 differential;3=-VREF/4 differential. Stopped-only internal sampling/CDAC test selection; no external pad, precision source or runtime loopback.",
           "minimum": 0,
           "unit": "code"
-        },
-        "reset_ns": {
-          "bits": 8,
-          "default": 2,
-          "maximum": 255,
-          "minimum": 2,
-          "unit": "ns"
         }
       },
       "update": "stopped"
@@ -5433,34 +5398,6 @@
     },
     "adc_q.config": {
       "fields": {
-        "acquisition_ns": {
-          "bits": 8,
-          "default": 5,
-          "maximum": 255,
-          "minimum": 5,
-          "unit": "ns"
-        },
-        "comparator_trim": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "decision_ns": {
-          "bits": 8,
-          "default": 18,
-          "maximum": 255,
-          "minimum": 18,
-          "unit": "ns"
-        },
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
         "input_test": {
           "bits": 2,
           "default": 0,
@@ -5468,13 +5405,6 @@
           "meaning": "0=normal PGA input;1=zero differential at VCM;2=+VREF/4 differential;3=-VREF/4 differential. Stopped-only internal sampling/CDAC test selection; no external pad, precision source or runtime loopback.",
           "minimum": 0,
           "unit": "code"
-        },
-        "reset_ns": {
-          "bits": 8,
-          "default": 2,
-          "maximum": 255,
-          "minimum": 2,
-          "unit": "ns"
         }
       },
       "update": "stopped"
@@ -5493,28 +5423,8 @@
       },
       "update": "stopped_or_scheduled_direction"
     },
-    "bias.trim": {
-      "fields": {
-        "code": {
-          "bits": 6,
-          "default": 32,
-          "maximum": 63,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "stopped"
-    },
     "cdr.config": {
       "fields": {
-        "acquisition_failure": {
-          "bits": 1,
-          "default": "fault",
-          "values": [
-            "report_drop",
-            "fault"
-          ]
-        },
         "acquisition_timeout_ui": {
           "address_slots": 2,
           "bits": 10,
@@ -5529,108 +5439,12 @@
           "value_maximum": 16777215,
           "value_minimum": 1
         },
-        "cap_rcsel": {
-          "bits": 2,
-          "default": 1,
-          "maximum": 2,
-          "minimum": 0,
-          "unit": "code",
-          "description": "pt_wrx_cap re-capture select, bound as RCS = cap_rcsel[1] (W1-r3/AC3-W4, wired_rx r3a): code 1 (reset) = slicer output re-captured T/2 after sampling (r2f behaviour); code 2 = re-captured one full ring period after sampling (needed by the r2 slicer at 810 MHz and 625 MHz ss). Code 0 aliases 1. Calibrated from raw words (0 PRBS/comma errors, EW consistent with DW)."
-        },
-        "burst_acquire_rows": {
-          "bits": 5,
-          "default": 8,
-          "maximum": 16,
-          "minimum": 4,
-          "unit": "code"
-        },
-        "burst_enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "burst_min_edges": {
-          "bits": 4,
-          "default": 4,
-          "maximum": 8,
-          "minimum": 1,
-          "unit": "code"
-        },
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "holdover_bits": {
-          "bits": 16,
-          "default": 64,
-          "maximum": 65535,
-          "minimum": 1,
-          "unit": "bits"
-        },
-        "loop_gain_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "loss_arm": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
         "nominal_rate_khz": {
           "bits": 22,
           "default": 1250000,
           "maximum": 2500000,
           "minimum": 480000,
           "unit": "kHz"
-        },
-        "phase_trim": {
-          "bits": 5,
-          "default": 0,
-          "maximum": 31,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "quiet_source": {
-          "bits": 2,
-          "default": "none",
-          "values": [
-            "none",
-            "electrical_quiet",
-            "squelch",
-            "scheduled"
-          ]
-        },
-        "scheduled_quiet_limit_ui": {
-          "address_slots": 2,
-          "bits": 10,
-          "decode": "mant_exp",
-          "decoded_bits": 24,
-          "default": 1,
-          "description": "R3 re-encoding (frees FF; scratch/reviews/interface-changes.md): 10-bit code e[9:5]:m[4:0]. The macro exports the decoded 24-bit value on analog_cfg: m for e = 0 (1..31 exact), (32 + m) << (e - 1) for 1 <= e <= 19 (relative step <= 1/32), 16777215 for e >= 20. Same 1..16777215 range as the former 24-bit field; host software converts with pt_regmap.mant_exp_code(). Reset code 1 = 1 UI (unchanged).",
-          "mantissa_bits": 5,
-          "maximum": 1023,
-          "minimum": 1,
-          "unit": "code",
-          "value_maximum": 16777215,
-          "value_minimum": 1
-        },
-        "periodic_tracking_enable": {
-          "bits": 1,
-          "default": 0,
-          "unit": "code",
-          "description": "Enable periodic clock prediction while stopped; reserve framed observation/coefficient service during acquisition; invalidate on mismatch or epoch reset.",
-          "minimum": 0,
-          "maximum": 1
         }
       },
       "update": "stopped_except_live_receive_gate_and_bounded_quiet_actions; loss arming automatic after qualification"
@@ -5650,185 +5464,78 @@
       "update": "stopped_or_scheduled_direction"
     },
     "clockmux.config": {
+      "update": "stopped",
+      "description": "Clock selects that are not in debug.clk_select (MW-2a, analog/timing/README.md register-map glue). One-hot decode in the macro; 0 = stopped; switch through stopped.",
       "fields": {
-        "rf_source": {
+        "ring_ref": {
           "bits": 2,
-          "default": "off",
+          "default": "stopped",
           "values": [
-            "off",
-            "external",
-            "rf_pll"
-          ]
+            "stopped",
+            "ref",
+            "aux",
+            "h2d"
+          ],
+          "description": "ring-PLL reference clockmux PS_REF/PS_AUX/PS_H2D (PREF feeds both rings). h2d = host_follow reference."
         },
-        "wire_source": {
-          "bits": 2,
-          "default": "off",
+        "host_prescale": {
+          "bits": 3,
+          "default": "stopped",
           "values": [
-            "off",
-            "external",
-            "wire_pll"
-          ]
-        }
-      },
-      "update": "stopped"
-    },
-    "clockmux.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
-    "clocktree.config": {
-      "fields": {
-        "host_enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "launch_bit_delay": {
-          "bits": 4,
-          "default": 0,
-          "maximum": 9,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "launch_reference_count": {
-          "bits": 16,
-          "default": 16,
-          "maximum": 65535,
-          "minimum": 4,
-          "unit": "code"
-        },
-        "launch_word_delay": {
-          "bits": 2,
-          "default": 0,
-          "maximum": 3,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "rf_host_clock_divider": {
-          "bits": 1,
-          "default": 32,
-          "values": [
-            32,
-            16
-          ]
-        },
-        "rf_host_source": {
-          "bits": 1,
-          "default": "carrier_divided",
-          "values": [
-            "carrier_divided",
-            "host_follow_div2"
-          ]
-        },
-        "sample_divider": {
-          "bits": 2,
-          "default": 64,
-          "values": [
-            64,
-            128,
-            256,
-            512
-          ]
-        },
-        "sample_enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "sync_arm": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "sync_epoch": {
-          "bits": 16,
-          "default": 0,
-          "maximum": 65535,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "tx_enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "wire_host_divider": {
-          "bits": 6,
-          "default": 16,
-          "maximum": 32,
-          "minimum": 4,
-          "unit": "integer"
-        },
-        "wire_host_source": {
-          "bits": 1,
-          "default": "line_divided",
-          "values": [
-            "line_divided",
-            "host_follow"
-          ]
-        },
-        "wire_output_divider": {
-          "bits": 2,
-          "default": 1,
-          "values": [
-            1,
+            "stopped",
             2,
-            4
-          ]
-        }
-      },
-      "update": "stopped; sync_arm one-shot while all payload outputs muted, source already locked and prefill valid"
-    },
-    "clocktree.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
+            4,
+            8,
+            16
+          ],
+          "description": "pt_prescale (line ring -> HOST_INT and the macro ct_wclk): EN + one-hot D2/D4/D8/D16."
+        },
+        "conv_prescale": {
+          "bits": 3,
+          "default": "stopped",
           "values": [
-            "off",
-            "warm",
-            "active"
-          ]
+            "stopped",
+            2,
+            4,
+            8,
+            16
+          ],
+          "description": "prescale_conv (line ring -> CONV_INT)."
+        },
+        "hf_prescale": {
+          "bits": 3,
+          "default": "stopped",
+          "values": [
+            "stopped",
+            2,
+            4,
+            8,
+            16
+          ],
+          "description": "prescale_hf (CDR ring -> HF, host_follow)."
         }
-      },
-      "update": "stopped_or_scheduled_direction"
+      }
     },
     "ctle.config": {
+      "update": "stopped",
       "fields": {
-        "pole_trim": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
+        "peak": {
+          "bits": 3,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 7,
+          "unit": "code",
+          "description": "ctle_peak2..0."
         },
-        "zero_trim": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
+        "lf_zero": {
+          "bits": 3,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 7,
+          "unit": "code",
+          "description": "lf_zero2..0 (IX-13 low-frequency zero)."
         }
-      },
-      "update": "stopped"
+      }
     },
     "ctle.state": {
       "fields": {
@@ -5846,31 +5553,10 @@
     },
     "dac_i.config": {
       "fields": {
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "gain_trim": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
         "hold_zero": {
           "bits": 1,
           "default": 1,
           "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "offset_trim": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
           "minimum": 0,
           "unit": "code"
         }
@@ -5893,31 +5579,10 @@
     },
     "dac_q.config": {
       "fields": {
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "gain_trim": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
         "hold_zero": {
           "bits": 1,
           "default": 1,
           "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "offset_trim": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
           "minimum": 0,
           "unit": "code"
         }
@@ -5940,40 +5605,21 @@
     },
     "detect.config": {
       "fields": {
-        "counter_reset": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "current_code": {
-          "bits": 6,
-          "default": 32,
-          "maximum": 63,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
         "high_threshold_code": {
-          "bits": 8,
-          "default": 48,
-          "maximum": 255,
+          "bits": 2,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 3,
+          "unit": "code",
+          "description": "det_thr1..0"
         },
         "low_threshold_code": {
-          "bits": 8,
-          "default": 8,
-          "maximum": 255,
+          "bits": 2,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 3,
+          "unit": "code",
+          "description": "det_se1..0"
         },
         "test_current_enable": {
           "bits": 1,
@@ -5981,20 +5627,6 @@
           "maximum": 1,
           "minimum": 0,
           "unit": "code"
-        },
-        "test_timeout_ticks": {
-          "address_slots": 2,
-          "bits": 10,
-          "decode": "mant_exp",
-          "decoded_bits": 24,
-          "default": 445,
-          "description": "R3 re-encoding (frees FF; scratch/reviews/interface-changes.md): 10-bit code e[9:5]:m[4:0]. The macro exports the decoded 24-bit value on analog_cfg: m for e = 0 (1..31 exact), (32 + m) << (e - 1) for 1 <= e <= 19 (relative step <= 1/32), 16777215 for e >= 20. Same 1..16777215 range as the former 24-bit field; host software converts with pt_regmap.mant_exp_code(). Reset code 445 = 249856 ticks (was 250000; 0.5..1 ms window unchanged).",
-          "mantissa_bits": 5,
-          "maximum": 1023,
-          "minimum": 1,
-          "unit": "code",
-          "value_maximum": 16777215,
-          "value_minimum": 1
         }
       },
       "update": "scheduled_test_only_stopped_thresholds"
@@ -6097,7 +5729,8 @@
           "default": 0,
           "maximum": 1,
           "minimum": 0,
-          "unit": "boolean"
+          "unit": "boolean",
+          "description": "USB direct stream: the wired transport quads carry line symbols to / from rtl/pt_usb.sv instead of the serializer / capture."
         },
         "tx_interp": {
           "bits": 1,
@@ -6107,6 +5740,14 @@
             "halfband"
           ],
           "description": "SP-03/RA-14 TX DAC update: bypass = DAC at the 40 MS/s sample rate (ZOH, rf_tx_clk = 40 MHz); halfband = on-chip 2x halfband interpolator (rtl/pt_interp2x.sv), DAC at 80 MS/s with rf_tx_clk = 80 MHz, core RF TX side on rf_tx_clk/2."
+        },
+        "linecode": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "IX-2 8b/10b wired line-code offload (stopped-only)."
         }
       },
       "update": "stopped_only; requires trained100MHz SDR host_follow, warmed480MHz line clock, both FIFO epochs reset and initial credits acknowledged"
@@ -6145,23 +5786,6 @@
       },
       "update": "stopped"
     },
-    "lna.gain": {
-      "fields": {
-        "gain_db": {
-          "bits": 2,
-          "default": 0,
-          "values": [
-            -6,
-            0,
-            10,
-            20
-          ],
-          "description": "Code 0 asserts lna gain_lo, which since RC-16g is the pre-LNA attenuator MSB (about 27-34 dB at ss..ff, analog/rf_rx/generated/lna-evidence.json), not a -6 dB step; small steps use lna.match.att (the opcode4 fast-gain -6 dB index maps to att 2 with gain_db 1).",
-          "range_text": "0 = attenuator MSB (gain_lo) on, about -30\u2026-40 dB (RC-16h; the -6 dB AGC step uses `lna.match.att`=2), 1 = 0 dB"
-        }
-      },
-      "update": "scheduled_with_settling"
-    },
     "lna.state": {
       "fields": {
         "state": {
@@ -6177,79 +5801,71 @@
       "update": "stopped_or_scheduled_direction"
     },
     "monitor.config": {
+      "update": "stopped",
+      "description": "Supply / clock monitor rtl/pt_monitor.sv (D-FAULT): fault = any armed requirement that is pending, tripped (sticky cause) or unobservable (monitor clock lost). Reset: nothing armed, fault = 0; writing every requirement to 0 releases fault with no clock at all (no-brick rule). Time base: the always-on oscillator (core.aosc.enable must be 1), 16.7-25 ns per tick. The window comparators for supply_high / supply_low do not exist (build demand pt_supply_window): supply monitoring is island power-good only.",
       "fields": {
-        "loss_timeout_ticks": {
-          "bits": 16,
-          "default": 6,
-          "maximum": 65535,
-          "minimum": 1,
-          "unit": "code"
-        },
-        "qualification_ticks": {
-          "bits": 11,
-          "decode": "mant_exp",
-          "decoded_bits": 32,
-          "mantissa_bits": 6,
-          "default": 331,
-          "minimum": 1,
-          "maximum": 2047,
+        "require_reference": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
           "unit": "code",
-          "value_minimum": 1,
-          "value_maximum": 4294967295,
-          "description": "FF reclaim (same encoding as R3): 11-bit code e[10:6]:m[5:0]; the macro exports the decoded 32-bit value: m for e = 0, (2^6 + m) << (e - 1) up to 2^32 - 1 (saturating). Same 1..4294967295 range as the former 32-bit field, relative step <= 1/2^6 above 2^6. Reset code 331 = 1200 (ticks; unchanged).",
-          "address_slots": 2
+          "live": true,
+          "description": "reference clock (ref_clk) must be toggling"
         },
         "require_input_clock": {
           "bits": 1,
           "default": 0,
-          "maximum": 1,
           "minimum": 0,
-          "unit": "code"
-        },
-        "require_reference": {
-          "bits": 1,
-          "default": 0,
           "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
+          "unit": "code",
+          "live": true,
+          "description": "host-forwarded clock H2D_CLK must be toggling (the FPGA must keep it free-running)"
         },
         "require_rf_lock": {
           "bits": 1,
           "default": 0,
-          "maximum": 1,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 1,
+          "unit": "code",
+          "live": true,
+          "description": "frequency counter a must be in lock (debug.freq_count_a: e.g. source lc_prescale for the LO)"
         },
         "require_wire_lock": {
           "bits": 1,
           "default": 0,
-          "maximum": 1,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 1,
+          "unit": "code",
+          "live": true,
+          "description": "frequency counter b must be in lock (debug.freq_count_b: e.g. a ring FBCK)"
         },
         "required_supply_mask": {
           "bits": 6,
-          "default": 52,
+          "default": 0,
+          "minimum": 0,
           "maximum": 63,
-          "minimum": 0,
-          "unit": "code"
+          "unit": "code",
+          "live": true,
+          "description": "bit k = island k power-good required (0 wired, 1 rf, 2 pll, 4 conv, 5 debug; bit 3 has no switch and is ignored). Reset 0: islands are off at reset."
         },
-        "supply_high_code": {
-          "bits": 8,
-          "default": 180,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
+        "loss_timeout_ticks": {
+          "bits": 12,
+          "default": 16,
+          "minimum": 8,
+          "maximum": 4095,
+          "unit": "code",
+          "description": "monitor-clock ticks without an edge (clocks) or with a bad level (locks, supplies) before a qualified requirement trips. Minimum 8."
         },
-        "supply_low_code": {
-          "bits": 8,
-          "default": 125,
-          "maximum": 255,
+        "qualification_ticks": {
+          "bits": 16,
+          "default": 19,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 65535,
+          "unit": "code",
+          "description": "a pending requirement must be good for this many units of 64 ticks before it counts (reset 19 = at least 20 us)."
         }
-      },
-      "update": "stopped"
+      }
     },
     "monitor.reset": {
       "fields": {
@@ -6262,174 +5878,6 @@
         }
       },
       "update": "management_acknowledged_stopped"
-    },
-    "pga_i.gain": {
-      "fields": {
-        "gain_db": {
-          "bits": 5,
-          "default": 0,
-          "values": [
-            -6,
-            -3,
-            0,
-            3,
-            6,
-            9,
-            12,
-            15,
-            18,
-            21,
-            24,
-            27,
-            30,
-            33,
-            36,
-            39,
-            42
-          ]
-        }
-      },
-      "update": "scheduled_with_settling"
-    },
-    "pga_i.offset": {
-      "fields": {
-        "code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "scheduled_with_settling"
-    },
-    "pga_i.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
-    "pga_q.gain": {
-      "fields": {
-        "gain_db": {
-          "bits": 5,
-          "default": 0,
-          "values": [
-            -6,
-            -3,
-            0,
-            3,
-            6,
-            9,
-            12,
-            15,
-            18,
-            21,
-            24,
-            27,
-            30,
-            33,
-            36,
-            39,
-            42
-          ]
-        }
-      },
-      "update": "scheduled_with_settling"
-    },
-    "pga_q.offset": {
-      "fields": {
-        "code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "scheduled_with_settling"
-    },
-    "pga_q.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
-    "quadrature.config": {
-      "fields": {
-        "generation": {
-          "bits": 1,
-          "default": "polyphase",
-          "values": [
-            "polyphase",
-            "divide_by_two"
-          ]
-        },
-        "invert_q": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "rc_trim_i": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "rc_trim_q": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "stopped"
-    },
-    "quadrature.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
-    "refbuf.enable": {
-      "fields": {
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "scheduled"
     },
     "refbuf.state": {
       "fields": {
@@ -6445,27 +5893,6 @@
       },
       "update": "stopped_or_scheduled_direction"
     },
-    "refinput.select": {
-      "fields": {
-        "branch": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "low_frequency",
-            "high_frequency"
-          ]
-        },
-        "reference_divider": {
-          "bits": 9,
-          "default": 1,
-          "maximum": 256,
-          "minimum": 1,
-          "unit": "integer"
-        }
-      },
-      "update": "stopped"
-    },
     "refinput.state": {
       "fields": {
         "state": {
@@ -6478,16 +5905,18 @@
           ]
         }
       },
-      "update": "stopped_or_scheduled_direction"
+      "update": "stopped_or_scheduled_direction",
+      "description": "REF_IN receiver rx_ref_in (always-on rail): c_rx_ref_en = (state == active) and lo_mode is not external."
     },
     "rfdriver.gain": {
       "fields": {
         "code": {
-          "bits": 8,
-          "default": 206,
-          "maximum": 255,
+          "bits": 4,
+          "default": 12,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 15,
+          "unit": "code",
+          "description": "rfdriver ports g3..g0 (was the top nibble of an 8-bit code, default 192 -> 12)."
         },
         "single_ended": {
           "bits": 1,
@@ -6527,175 +5956,63 @@
       "update": "stopped_or_scheduled_direction"
     },
     "rfpll.config": {
+      "update": "stopped",
+      "description": "RF LO (MW-1a, MW-7a, analog/timing/LO-INTEGRATION.md section 4). Integer-N under register control: f_LO = 2 N f_ref; band search by software with freq_count source lc_prescale (lo_mmd.FB). Island: the LO cells are on the lo / lod islands of the rf enable group (island_on[1]).",
       "fields": {
-        "charge_pump_code": {
-          "bits": 6,
-          "default": 32,
-          "maximum": 63,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "feedback_fraction": {
-          "bits": 24,
-          "default": 0,
-          "maximum": 16777215,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "feedback_integer": {
-          "bits": 12,
-          "default": 100,
-          "maximum": 4095,
-          "minimum": 1,
-          "unit": "code"
-        },
-        "reference_divider": {
-          "bits": 8,
-          "default": 1,
-          "maximum": 255,
-          "minimum": 1,
-          "unit": "code"
+        "lo_mode": {
+          "bits": 2,
+          "default": "off",
+          "values": [
+            "off",
+            "external_passive",
+            "internal",
+            "external_cml"
+          ],
+          "description": "pt_lo_ext EXT/INT/CMLSEL: off 000 (LO nodes clamped), external_passive 100, internal 010 (on-chip QVCO), external_cml 111 (external LO through the CML driver, die-1 baseline). In both external modes REF_IN / AUX_CLK carry the LO: the macro forces their clock receivers off. Break-before-make; change only with the mixers disabled, wait >= 20 us."
         },
         "vco_coarse": {
-          "bits": 6,
-          "default": 32,
-          "maximum": 63,
+          "bits": 4,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 15,
+          "unit": "code",
+          "description": "pt_lc_qvco5 BAND[3:0], 15 = lowest frequency."
+        },
+        "lo_n": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 63,
+          "unit": "code",
+          "description": "pt_lo_mmd N[5:0], valid 16..63 (VCO/FB = 2 N); 0 at reset (divider off anyway)."
+        },
+        "lo_icp": {
+          "bits": 2,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "description": "pt_lo_pfdcp ICP[1:0]: Icp = 25 uA x (1 + ICP0 + 2 ICP1); 0 = lowest loop gain."
+        },
+        "lo_preset": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "pt_lo_pfdcp PRE: 1 = PFD held in reset, VTUNE at the preset voltage (band search)."
+        },
+        "atb_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "pt_lc_qvco5 ATB_EN (VTUNE / tail taps onto the analog test bus)."
         }
-      },
-      "update": "stopped"
+      }
     },
     "rfpll.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
-    "rxfilter_i.coefficients": {
-      "fields": {
-        "cutoff_code": {
-          "bits": 8,
-          "default": 255,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "finite_zeros": {
-          "bits": 1,
-          "default": 1,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "q1_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "q2_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "zero1_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "zero2_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "stopped"
-    },
-    "rxfilter_i.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
-    "rxfilter_q.coefficients": {
-      "fields": {
-        "cutoff_code": {
-          "bits": 8,
-          "default": 255,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "finite_zeros": {
-          "bits": 1,
-          "default": 1,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "q1_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "q2_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "zero1_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "zero2_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "stopped"
-    },
-    "rxfilter_q.state": {
       "fields": {
         "state": {
           "bits": 2,
@@ -6779,30 +6096,82 @@
       "update": "stopped_or_scheduled_direction"
     },
     "slicer.offset": {
+      "update": "live_trim",
+      "description": "Per-sampler offset trims (MW-32): 10 bits per sampler {f3,f2,f1,f0,n2,n1,n0,p2,p1,p0}. Direct live trims.",
       "fields": {
-        "data": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
+        "trim_d0": {
+          "bits": 10,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 1023,
+          "unit": "code",
+          "live": true,
+          "direct": true
         },
-        "early": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
+        "trim_d1": {
+          "bits": 10,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 1023,
+          "unit": "code",
+          "live": true,
+          "direct": true
         },
-        "late": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
+        "trim_d2": {
+          "bits": 10,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 1023,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "trim_d3": {
+          "bits": 10,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1023,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "trim_e0": {
+          "bits": 10,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1023,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "trim_e1": {
+          "bits": 10,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1023,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "trim_e2": {
+          "bits": 10,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1023,
+          "unit": "code",
+          "live": true,
+          "direct": true
+        },
+        "trim_e3": {
+          "bits": 10,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1023,
+          "unit": "code",
+          "live": true,
+          "direct": true
         }
-      },
-      "update": "stopped"
+      }
     },
     "slicer.state": {
       "fields": {
@@ -6827,15 +6196,6 @@
           "minimum": 0,
           "unit": "code"
         },
-        "n_load": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "45_to_ground",
-            "50_to_vcm"
-          ]
-        },
         "p_load": {
           "bits": 2,
           "default": "off",
@@ -6845,152 +6205,32 @@
             "50_to_vcm"
           ]
         },
-        "trim_n": {
-          "bits": 6,
-          "default": 32,
-          "maximum": 63,
+        "hs_enable": {
+          "bits": 1,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 1,
+          "unit": "code",
+          "description": "HS pair bias on (pt_termination hs_en; without it the CTLE input sits at 0 V, MW-9)."
         },
-        "trim_p": {
-          "bits": 6,
-          "default": 32,
-          "maximum": 63,
+        "hs_term_enable": {
+          "bits": 1,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 1,
+          "unit": "code",
+          "description": "HS pair termination on (hs_term_en)."
+        },
+        "hs_trim": {
+          "bits": 4,
+          "default": 5,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "description": "HS pair termination trim hs_trim3..0, reset 5 (PD27)."
         }
       },
       "update": "scheduled_load_enables_stopped_trim"
-    },
-    "tmds.config": {
-      "fields": {
-        "current_code": {
-          "bits": 8,
-          "default": 102,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "stopped"
-    },
-    "tmds.idle": {
-      "fields": {
-        "idle": {
-          "bits": 1,
-          "default": 1,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "scheduled"
-    },
-    "tmds.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
-    "txfilter_i.coefficients": {
-      "fields": {
-        "cutoff_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "gain_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "q_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "stopped"
-    },
-    "txfilter_i.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
-    "txfilter_q.coefficients": {
-      "fields": {
-        "cutoff_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "gain_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "q_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "stopped"
-    },
-    "txfilter_q.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
-    "txmix_i.enable": {
-      "fields": {
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "scheduled"
     },
     "txmix_i.state": {
       "fields": {
@@ -7005,18 +6245,6 @@
         }
       },
       "update": "stopped_or_scheduled_direction"
-    },
-    "txmix_q.enable": {
-      "fields": {
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "scheduled"
     },
     "txmix_q.state": {
       "fields": {
@@ -7043,21 +6271,17 @@
             "tmds",
             "detect"
           ]
+        },
+        "term_request": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "TX pad termination request (interlock REQ_TERM)."
         }
       },
       "update": "stopped"
-    },
-    "txsum.enable": {
-      "fields": {
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "scheduled"
     },
     "txsum.state": {
       "fields": {
@@ -7110,13 +6334,6 @@
           "minimum": 0,
           "unit": "code"
         },
-        "output_r_code": {
-          "bits": 6,
-          "default": 32,
-          "maximum": 63,
-          "minimum": 0,
-          "unit": "code"
-        },
         "pulldown_n": {
           "bits": 1,
           "default": 0,
@@ -7164,20 +6381,6 @@
       },
       "update": "scheduled_enables_pulls_stopped_trim"
     },
-    "usbfs.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
     "usbhs.bias": {
       "description": "Dedicated pt_wtx_hsbias DAC for the USB HS output gate bias. EN=0 clamps HS_PBIAS to VDD.",
       "fields": {
@@ -7209,27 +6412,6 @@
           "minimum": 0,
           "unit": "code"
         },
-        "disconnect_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "rx_enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "squelch_code": {
-          "bits": 8,
-          "default": 128,
-          "maximum": 255,
-          "minimum": 0,
-          "unit": "code"
-        },
         "tx_enable": {
           "bits": 1,
           "default": 0,
@@ -7253,23 +6435,17 @@
           "maximum": 1,
           "unit": "code",
           "meaning": "PD41: TERM_ENABLE of pad_wirepad v9 (USB HS pad termination). Gates TERM_TRIM (term_trim AND term_enable); with term_enable or tx_enable set, usbfs.config.ls_slow must be 0 (rule usb_ls_slow_vs_termination)."
+        },
+        "drive_strength": {
+          "bits": 2,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "description": "pt_usb_txdrv HS drive strength, reset 1 (USB-INTEGRATION.md)."
         }
       },
       "update": "scheduled_enables_stopped_trim"
-    },
-    "usbhs.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
     },
     "wiredtx.config": {
       "fields": {
@@ -7287,12 +6463,13 @@
           "minimum": 0,
           "unit": "code"
         },
-        "source_termination_enable": {
+        "post_polarity": {
           "bits": 1,
-          "default": 1,
-          "maximum": 1,
+          "default": 0,
           "minimum": 0,
-          "unit": "code"
+          "maximum": 1,
+          "unit": "code",
+          "description": "POST_POL post-cursor polarity (IX-9)."
         }
       },
       "update": "stopped_or_atomic_training_boundary_current_and_postcursor_only"
@@ -7323,80 +6500,11 @@
       },
       "update": "stopped_or_scheduled_direction"
     },
-    "wirepll.config": {
-      "fields": {
-        "charge_pump_code": {
-          "bits": 6,
-          "default": 32,
-          "maximum": 63,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "enable": {
-          "bits": 1,
-          "default": 0,
-          "maximum": 1,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "feedback_fraction": {
-          "bits": 24,
-          "default": 0,
-          "maximum": 16777215,
-          "minimum": 0,
-          "unit": "code"
-        },
-        "feedback_integer": {
-          "bits": 12,
-          "default": 100,
-          "maximum": 4095,
-          "minimum": 1,
-          "unit": "code"
-        },
-        "reference_divider": {
-          "bits": 8,
-          "default": 1,
-          "maximum": 255,
-          "minimum": 1,
-          "unit": "code"
-        },
-        "vco_coarse": {
-          "bits": 6,
-          "default": 32,
-          "maximum": 63,
-          "minimum": 0,
-          "unit": "code"
-        }
-      },
-      "update": "stopped"
-    },
-    "wirepll.state": {
-      "fields": {
-        "state": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "warm",
-            "active"
-          ]
-        }
-      },
-      "update": "stopped_or_scheduled_direction"
-    },
     "cdr.ac3": {
       "base": "0xE5",
       "update": "stopped",
       "description": "AC-3 CDR loop controls (interface-changes AC3-W1..W3): pump-leg bang-bang loop with the RTL FLL on the same legs.",
       "fields": {
-        "integral_enable": {
-          "bits": 1,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1,
-          "unit": "code",
-          "description": "Continuous integral (frequency) path enable after FLL hand-over."
-        },
         "loop_bw": {
           "bits": 3,
           "default": 2,
@@ -7412,6 +6520,14 @@
           "maximum": 1,
           "unit": "code",
           "description": "AC3-W3: 1 = forwarded TMDS clock (WCK, <= 150 MHz) is the RX FLL count reference (HDMI/DVI); 0 = REF."
+        },
+        "otr": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 63,
+          "unit": "code",
+          "description": "pt_cdr r13 OTA offset trim: otr[4:0] + sign (bit 5), 1/8 vote LSB, per-die calibration."
         }
       }
     },
@@ -7497,7 +6613,7 @@
     "lna.match": {
       "base": "0xE6",
       "update": "stopped",
-      "description": "LNA input match and pre-LNA attenuator (RC-9/RC-10, RC-16e/RC-16g, package D-RX-1/2): shunt C trim ct0..ct3, opt-in 200 ohm/leg termination, single-ended RX (RF_RX_N AC-grounded), attenuator att0..att4 (gain_lo is the attenuator MSB, driven by lna.gain).",
+      "description": "LNA tank tune, input options and attenuator (RC-16e/g/j/p): ctrim ct0..ct3, rterm, se, attenuator code {gain_lo, att[4:0]}.",
       "fields": {
         "ctrim": {
           "bits": 4,
@@ -7532,6 +6648,14 @@
           "maximum": 31,
           "unit": "code",
           "description": "lna ports att0..att4 (RC-16g): pre-LNA attenuator code bits 0-4 (weighted NMOS switches 1,2,4,8,16); bit 5 of the attenuator is gain_lo (lna.gain / AGC table). Levels are not uniform in binary order: use the level table in lna-evidence.json."
+        },
+        "gain_lo": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "lna port gain_lo = attenuator code bit 5 (RC-16j/p: current-steering attenuator, code = {gain_lo, att[4:0]}). Reset 0."
         }
       }
     },
@@ -7555,6 +6679,674 @@
           "maximum": 1,
           "unit": "code",
           "description": "CDR (RX) ring regulator BYP (1 = bypassed)."
+        }
+      }
+    },
+    "lna.bias": {
+      "update": "stopped",
+      "description": "RC-16k LNA programmable bias.",
+      "fields": {
+        "lo": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "lna port lobias: 1 = reduced LNA bias (11.7 mA) for rf_tx / duplex. Commit rule lna_reduced_bias_with_tx: required whenever the RF driver is active with the LNA not off (power ceiling 240 mA). The published rxmix `hib` pin is driven with NOT lo (RC-16l)."
+        }
+      }
+    },
+    "lna.agc": {
+      "update": "stopped",
+      "description": "RXR-D2 fast gain (transport opcode 4) LNA table: attenuator code {gain_lo, att[4:0]} applied for LNA index 0..3 while an in-band gain is active (replaces the hard-wired DT-8 map, RC-16p: the level table of the current-steering attenuator is not final, so the table is programmable). PGA index 0..16 uses the bbfilter dB index directly.",
+      "fields": {
+        "code0": {
+          "bits": 6,
+          "default": 2,
+          "minimum": 0,
+          "maximum": 63,
+          "unit": "code",
+          "description": "attenuator code for opcode-4 LNA index 0 (reset 2 = the old -6 dB step)"
+        },
+        "code1": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 63,
+          "unit": "code",
+          "description": "attenuator code for opcode-4 LNA index 1"
+        },
+        "code2": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 63,
+          "unit": "code",
+          "description": "attenuator code for opcode-4 LNA index 2"
+        },
+        "code3": {
+          "bits": 6,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 63,
+          "unit": "code",
+          "description": "attenuator code for opcode-4 LNA index 3"
+        }
+      }
+    },
+    "bbfilter_i.trim": {
+      "update": "live_trim",
+      "description": "bbfilter_i per-channel trims (MW-4, FS-2, analog/rf_rx/chip-top-pins.md section 3). Live.",
+      "fields": {
+        "cut": {
+          "bits": 7,
+          "default": 8,
+          "minimum": 0,
+          "maximum": 127,
+          "unit": "code",
+          "live": true,
+          "description": "cap code m = {bw[3:0], fc_fine[2:0]} (larger = lower cutoff), reset 8. Commit rule bbfilter_low_cap_needs_q: m <= 1 requires qt >= 6."
+        },
+        "gain": {
+          "bits": 5,
+          "default": 2,
+          "minimum": 0,
+          "maximum": 16,
+          "unit": "code",
+          "live": true,
+          "description": "PGA dB index 0..16 = -6..+42 dB in 3 dB steps; the macro LUT (rtl/pt_ctl_decode.sv, netlists.GAIN_TABLE) drives k = gain[5:0] and gainc[1:0]. Reset 2 = 0 dB (k = 4). The opcode-4 fast gain overrides it while active."
+        },
+        "qt": {
+          "bits": 4,
+          "default": 6,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "live": true,
+          "description": "Q trim qt3..qt0, reset 6."
+        },
+        "dcf": {
+          "bits": 9,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 511,
+          "unit": "code",
+          "live": true,
+          "direct": true,
+          "description": "fine DC-offset DAC, sign-magnitude: bit 8 = dcf_sign, bits 7:0 = dcf7..dcf0 (about 0.4 mV/LSB). Direct live trim."
+        }
+      }
+    },
+    "bbfilter_q.trim": {
+      "update": "live_trim",
+      "description": "bbfilter_q per-channel trims (MW-4, FS-2, analog/rf_rx/chip-top-pins.md section 3). Live.",
+      "fields": {
+        "cut": {
+          "bits": 7,
+          "default": 8,
+          "minimum": 0,
+          "maximum": 127,
+          "unit": "code",
+          "live": true,
+          "description": "cap code m = {bw[3:0], fc_fine[2:0]} (larger = lower cutoff), reset 8. Commit rule bbfilter_low_cap_needs_q: m <= 1 requires qt >= 6."
+        },
+        "gain": {
+          "bits": 5,
+          "default": 2,
+          "minimum": 0,
+          "maximum": 16,
+          "unit": "code",
+          "live": true,
+          "description": "PGA dB index 0..16 = -6..+42 dB in 3 dB steps; the macro LUT (rtl/pt_ctl_decode.sv, netlists.GAIN_TABLE) drives k = gain[5:0] and gainc[1:0]. Reset 2 = 0 dB (k = 4). The opcode-4 fast gain overrides it while active."
+        },
+        "qt": {
+          "bits": 4,
+          "default": 6,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "live": true,
+          "description": "Q trim qt3..qt0, reset 6."
+        },
+        "dcf": {
+          "bits": 9,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 511,
+          "unit": "code",
+          "live": true,
+          "direct": true,
+          "description": "fine DC-offset DAC, sign-magnitude: bit 8 = dcf_sign, bits 7:0 = dcf7..dcf0 (about 0.4 mV/LSB). Direct live trim."
+        }
+      }
+    },
+    "adc.config": {
+      "update": "stopped",
+      "description": "Both ADCs (staged AP4 contract, analog/converters/INTEGRATION.md).",
+      "fields": {
+        "interleave": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "ILEN of adc_i and adc_q: 1 = two interleaved cores (40 MS/s at 40 MHz), 0 = core A only. The macro takes core A on even and core B on odd CONV_CLK edges counted from the start."
+        },
+        "acquisition": {
+          "bits": 2,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "description": "ACQ1:0 of both ADCs: 0 nominal window, 1 short, 2 long, 3 = CLK high time."
+        }
+      }
+    },
+    "ring_l.config": {
+      "update": "stopped",
+      "description": "Line / TX ring PLL pt_pll_ring_core instance pll_tx (MW-16, WT26, D-PLLEN).",
+      "fields": {
+        "enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "ring enable. c_pll_tx_en = enable & island_on[pll] & vreg_tx_ok."
+        },
+        "modulus": {
+          "bits": 2,
+          "default": 16,
+          "values": [
+            16,
+            8,
+            4
+          ],
+          "description": "feedback modulus: N8 = (8), N4 = (4), neither = 16."
+        },
+        "band": {
+          "bits": 1,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "BAND (AC3-W13), reset 1 = high band."
+        },
+        "lock_time": {
+          "bits": 8,
+          "default": 255,
+          "minimum": 0,
+          "maximum": 255,
+          "unit": "code",
+          "description": "tx_ring_ready timer: (code + 1) x 64 REF cycles after the ring enable (reset 255 = 328 us at 50 MHz)."
+        },
+        "ready_select": {
+          "bits": 2,
+          "default": "timer",
+          "values": [
+            "timer",
+            "timer_or_counter",
+            "counter",
+            "override"
+          ],
+          "description": "what releases the serializer (WT25: not the LOCK pin): the timer, frequency counter a in lock, or override (ready while enabled)."
+        }
+      }
+    },
+    "ring_c.config": {
+      "update": "stopped",
+      "description": "CDR ring PLL pt_pll_ring instance pll_cdr and pt_cdr mode (MW-10, D-HF).",
+      "fields": {
+        "line_pll": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "pt_cdr pfd_mode: 0 = wired CDR (ring enabled by cdr.state = active), 1 = line PLL / host_follow: the ring and pt_cdr are enabled by this bit alone (cdr.state may stay off, so the RF/wired payload exclusion rule does not block host_follow in RF modes)."
+        },
+        "modulus": {
+          "bits": 3,
+          "default": 16,
+          "values": [
+            16,
+            8,
+            4,
+            10,
+            5
+          ],
+          "description": "feedback modulus one-hot N4/N8/N5/N10 (16 = none)."
+        },
+        "band": {
+          "bits": 1,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "BAND, reset 1 = high band."
+        },
+        "kp": {
+          "bits": 3,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "code",
+          "description": "pt_pll_ring KP[2:0] CDR proportional gain; 0 = proportional path off."
+        }
+      }
+    },
+    "slicer.threshold": {
+      "update": "live_trim",
+      "description": "IX-10 edge-sampler threshold DAC pt_vthdac and per-sampler threshold select (100BASE-TX raw path). vth_a / vth_b can also be loaded in band by the IX-11 fast threshold command.",
+      "fields": {
+        "vth_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "pt_vthdac vth_en"
+        },
+        "vth_a": {
+          "bits": 8,
+          "default": 128,
+          "minimum": 0,
+          "maximum": 255,
+          "unit": "code",
+          "live": true,
+          "direct": true,
+          "description": "threshold DAC A"
+        },
+        "vth_b": {
+          "bits": 8,
+          "default": 128,
+          "minimum": 0,
+          "maximum": 255,
+          "unit": "code",
+          "live": true,
+          "direct": true,
+          "description": "threshold DAC B"
+        },
+        "vsel_e0": {
+          "bits": 2,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "description": "slicer vsel_e0_1:0"
+        },
+        "vsel_e1": {
+          "bits": 2,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "description": "slicer vsel_e1_1:0"
+        },
+        "vsel_e2": {
+          "bits": 2,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "description": "slicer vsel_e2_1:0"
+        },
+        "vsel_e3": {
+          "bits": 2,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "description": "slicer vsel_e3_1:0"
+        }
+      }
+    },
+    "slicer.capture": {
+      "update": "stopped",
+      "description": "pt_wrx_cap static controls.",
+      "fields": {
+        "rcsel": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "RCS"
+        },
+        "rate_mode": {
+          "bits": 2,
+          "default": "quarter",
+          "values": [
+            "quarter",
+            "half",
+            "full"
+          ],
+          "description": "RX bits per ring cycle 4 / 2 / 1: capture B2 = half, B1 = full; pt_wordclk D10 = half, D20 = full."
+        },
+        "raw_lane": {
+          "bits": 2,
+          "default": "data",
+          "values": [
+            "data",
+            "edge",
+            "both_half"
+          ],
+          "description": "IX-12 ingress lane: data quad DX, edge quad {EW, EW}, or {EW, DX[19:0]} of the first half word."
+        }
+      }
+    },
+    "usb.config": {
+      "update": "stopped",
+      "description": "USB pad direct-stream logic rtl/pt_usb.sv (protocol in the FPGA). TX symbols {dn, dp} from the transport quads, RX = pt_detect comparators oversampled; FS/LS fully on chip, HS data through pt_wiredtx + the pt_usb_txdrv pre-driver (build demand).",
+      "fields": {
+        "hs_symbol": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "HS branch: 1 = the symbol stream drives the HS gates statically (chirp), 0 = packet mode"
+        },
+        "force_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "live": true,
+          "description": "drive force_symbol instead of the stream (termination calibration, chirp over SPI)"
+        },
+        "force_symbol": {
+          "bits": 2,
+          "default": 3,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "live": true,
+          "description": "{dn, dp}: 01 D+ high, 10 D- high, 00 SE0, 11 released"
+        },
+        "tx_divider": {
+          "bits": 8,
+          "default": 3,
+          "minimum": 0,
+          "maximum": 255,
+          "unit": "code",
+          "description": "tx clock cycles per symbol - 1 (48 MHz: FS 3, LS 31)"
+        },
+        "bbm": {
+          "bits": 2,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "description": "extra break-before-make cycles (gap = 1 + bbm tx clocks)"
+        },
+        "rx_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "live": true,
+          "description": "line receive / oversampling on"
+        },
+        "rx_differential": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "1 = J/K from the differential comparators while a line is high, 0 = single-ended only"
+        },
+        "rx_echo": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "1 = keep recording while this chip drives"
+        },
+        "rx_divider": {
+          "bits": 8,
+          "default": 3,
+          "minimum": 3,
+          "maximum": 255,
+          "unit": "code",
+          "description": "rx clock cycles per bit - 1"
+        },
+        "rx_quiet": {
+          "bits": 5,
+          "default": 8,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "description": "unchanged bits that end a receive burst"
+        },
+        "debounce_se": {
+          "bits": 8,
+          "default": 9,
+          "minimum": 0,
+          "maximum": 255,
+          "unit": "code",
+          "description": "line-state debounce, samples - 1"
+        },
+        "debounce_diff": {
+          "bits": 4,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "description": "envelope debounce, samples - 1"
+        }
+      }
+    },
+    "wrx.loop": {
+      "update": "stopped",
+      "description": "Wired RX CDR control plane rtl/pt_wrx_ctl.sv (MW-10, D-CDRCTL): frequency loop on pt_cdr FUP/FDN from frequency counter b (source cdr_ring_fbck), full-rate phase picker (capture PSEL / slip tags), word qualification = wire_rx_valid. The block runs while the CDR and the slicer are active. Every automatic function has a register-forced manual mode.",
+      "fields": {
+        "restart": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "live": true,
+          "description": "any change restarts the frequency loop and the word qualification"
+        },
+        "freq_source": {
+          "bits": 2,
+          "default": "fll_done",
+          "values": [
+            "fll_done",
+            "ring_lock",
+            "counter_lock",
+            "forced"
+          ],
+          "description": "what declares the ring frequency good (hand-over to the phase loop)"
+        },
+        "fll_auto": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "automatic frequency loop (reset 0: manual; the FUP / FDN polarity and gain are not analog-verified yet)"
+        },
+        "fll_invert": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "swap FUP / FDN of the automatic loop"
+        },
+        "fll_shift": {
+          "bits": 3,
+          "default": 3,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "code",
+          "description": "pulse length = counts << shift reference cycles"
+        },
+        "fll_tolerance": {
+          "bits": 8,
+          "default": 3,
+          "minimum": 0,
+          "maximum": 255,
+          "unit": "code",
+          "description": "counts per window: inside twice in a row = done"
+        },
+        "fll_loss": {
+          "bits": 12,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 4095,
+          "unit": "code",
+          "description": "counts: re-acquire above this error; 0 = never"
+        },
+        "fll_manual_trigger": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "live": true,
+          "description": "any change: one manual pulse"
+        },
+        "fll_manual_up": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "live": true,
+          "description": "1 = FUP, 0 = FDN"
+        },
+        "fll_manual_length": {
+          "bits": 8,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 255,
+          "unit": "code",
+          "live": true,
+          "description": "manual pulse length (<< fll_shift reference cycles)"
+        }
+      }
+    },
+    "wrx.picker": {
+      "update": "stopped",
+      "description": "pt_wrx_ctl phase picker and word qualification.",
+      "fields": {
+        "auto": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "automatic full-rate phase picker (0 = PSEL from manual_psel)"
+        },
+        "invert": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "swap early / late"
+        },
+        "threshold": {
+          "bits": 6,
+          "default": 24,
+          "minimum": 0,
+          "maximum": 63,
+          "unit": "code",
+          "description": "early/late accumulator threshold for one PSEL step"
+        },
+        "hold": {
+          "bits": 4,
+          "default": 4,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "description": "words to wait after a step"
+        },
+        "manual_psel": {
+          "bits": 3,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "code",
+          "live": true,
+          "description": "capture PSEL[2:0] in manual mode"
+        },
+        "manual_slip_plus": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "live": true,
+          "description": "any change: one SLIPP tag"
+        },
+        "manual_slip_minus": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "live": true,
+          "description": "any change: one SLIPM tag"
+        },
+        "edge_half": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "the edge word belongs to DX[19:0] (0) or DX[39:20] (1)"
+        },
+        "violation_threshold": {
+          "bits": 5,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 31,
+          "unit": "code",
+          "description": "a word is bad when its edge violations exceed this"
+        },
+        "idle_words": {
+          "bits": 4,
+          "default": 2,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "description": "all-equal words in a row that mean idle; 0 = off"
+        },
+        "lock_exp": {
+          "bits": 4,
+          "default": 10,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "description": "2^n consecutive good words to assert wire_rx_valid"
+        },
+        "loss_exp": {
+          "bits": 2,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 3,
+          "unit": "code",
+          "description": "2^n consecutive bad words to drop it"
+        },
+        "valid_mode": {
+          "bits": 2,
+          "default": "qualified",
+          "values": [
+            "qualified",
+            "frequency_only",
+            "forced_1",
+            "forced_0"
+          ],
+          "live": true,
+          "description": "wire_rx_valid source"
         }
       }
     }

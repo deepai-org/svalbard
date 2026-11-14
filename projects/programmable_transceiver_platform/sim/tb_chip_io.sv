@@ -8,23 +8,21 @@ module tb_chip_io;
  wire RESET_N=reset_drive;
  wire SPI_SCLK=sclk_drive, SPI_CS_N=cs_drive, SPI_MOSI=mosi_drive;
  wire SPI_MISO; wire[9:0] D2H; wire D2H_CLK;
- wire DBG_OBS0,DBG_OBS1,CLK_OBS,WCLK_OBS,WDBG_OBS;
+ wire DBG_OBS0,DBG_OBS1,CLK_OBS; reg strap_drive=0; wire POR_BYPASS=strap_drive;
  supply1 vdd; supply0 vss; wire[9:0] h2d=0; wire h2d_clk=0;
- reg por=0; reg[5:0] pg=0;
+ reg por=0; reg pg_w=0;   // wired group power-good (all three wired switches)
+ // pt_chip is generated from integration/top/pt_chip.conn; the analog top is a black box here, so its outputs that
+ // this bench needs (POR, island power-good) are forced; every other analog output floats and is clamped or unused.
  pt_chip dut(.RESET_N(RESET_N),.SPI_SCLK(SPI_SCLK),.SPI_CS_N(SPI_CS_N),.SPI_MOSI(SPI_MOSI),
   .SPI_MISO(SPI_MISO),.H2D(h2d),.H2D_CLK(h2d_clk),.D2H(D2H),.D2H_CLK(D2H_CLK),
-  .REF_IN(1'b0),.REF_IN_N(1'b0),.AUX_CLK_P(1'b0),.AUX_CLK_N(1'b0),
-  .WCLK_IN_P(1'b0),.WCLK_IN_N(1'b0),.WTX_EXT_P(1'b0),.WTX_EXT_N(1'b0),
-  .DBG_OBS0(DBG_OBS0),.DBG_OBS1(DBG_OBS1),.CLK_OBS(CLK_OBS),.WCLK_OBS(WCLK_OBS),.WDBG_OBS(WDBG_OBS),
-  .VDD_CORE(vdd),.VSS_CORE(vss),.VDD_HOST_A(vdd),.VSS_HOST_A(vss),.VDD_HOST_B(vdd),.VSS_HOST_B(vss),
-  .VDD_WIRE_A(vdd),.VSS_WIRE_A(vss),.VDD_WIRE_B(vdd),.VSS_WIRE_B(vss),
-  .VDD_RF(vdd),.VSS_RF(vss),.VDD_PLL(vdd),.VSS_PLL(vss));
+  .DBG_OBS0(DBG_OBS0),.DBG_OBS1(DBG_OBS1),.CLK_OBS(CLK_OBS),.POR_BYPASS(POR_BYPASS),.VDD(vdd),.VSS(vss));
  initial begin
   force dut.por_n=por;
-  force dut.island_pgood=pg;
-  force dut.fault=1'b0;
-  force dut.analog_status=12'b0;
-  force dut.wire_analog_status=13'b0;
+  force dut.s_pg_wired_rx=pg_w; force dut.s_pg_wired_cap=pg_w; force dut.s_pg_wired_tx=pg_w;
+  force dut.s_pg_rf_rx=1'b0; force dut.s_pg_rf_tx=1'b0; force dut.s_pg_lod=1'b0; force dut.s_pg_lo=1'b0;
+  force dut.s_pg_pll=1'b0; force dut.s_pg_conv=1'b0; force dut.s_pg_debug=1'b0;
+  force dut.ref_clk=1'b0; force dut.host_word_clk=1'b0; force dut.rf_rx_clk=1'b0; force dut.wired_on_ext=1'b0;
+  force dut.fc_src=5'b0; force dut.s_ref_present=1'b0; force dut.clk_obs=1'b0;
  end
  task spi(input[7:0] command,address,input[15:0] value,output[15:0] result);
   reg[31:0] tx; integer i;
@@ -53,10 +51,10 @@ module tb_chip_io;
  task released;
   begin
    #20;
-   if({D2H_CLK,D2H}!==11'bz || {WDBG_OBS,WCLK_OBS,DBG_OBS1,DBG_OBS0,CLK_OBS}!==5'bz)
+   if({D2H_CLK,D2H}!==11'bz || {DBG_OBS1,DBG_OBS0,CLK_OBS}!==3'bz)
     $fatal(1,"host/debug pads driven during reset/defaults");
-   if(dut.island_en!==0 || dut.atb0_sw!==0 || dut.atb1_sw!==0)
-    $fatal(1,"island or ATB not reset off");
+   if(dut.m_island_en!==0 || dut.m_atb0_sw!==0 || dut.m_atb1_sw!==0)
+    begin $display("island_en %b atb0 %h atb1 %h seen %b rst %b key %b",dut.m_island_en,dut.m_atb0_sw,dut.m_atb1_sw,dut.digital.reset_seen,dut.digital.rst_n,dut.digital.rseen.key); $fatal(1,"island or ATB not reset off"); end
   end
  endtask
  initial begin
@@ -67,16 +65,16 @@ module tb_chip_io;
   cs_drive=1; por=1; reset_drive=1; #100;
   read_reg(0,16'h5356); read_reg(8,16'h0003); read_reg(8'h0d,16'h0003); read_reg(8'h0a,0);
   write_reg(8'h40,1); write_reg(6,1);
-  if(dut.island_en!==6'b000001 || dut.island_on!==0) $fatal(1,"island must wait for power-good");
-  write_reg(8'h4e,4); write_reg(6,1); #50;
+  if(dut.m_island_en!==6'b000001 || dut.m_island_on!==0) $fatal(1,"island must wait for power-good");
+  write_reg(8'h4d,4); write_reg(6,1); #50;
   if(DBG_OBS0!==0) $fatal(1,"wired PG observation low");
   // Boundary stimulus stands in for the missing physical island in THIS test.
-  pg=1; #50;
+  pg_w=1; #50;
   read_reg(8'h0a,16'h0101);
   if(DBG_OBS0!==1) $fatal(1,"wired PG did not reach the debug pad");
-  pg=0; #50;
+  pg_w=0; #50;
   read_reg(8'h0a,0);
-  if(DBG_OBS0!==0 || dut.island_on!==0) $fatal(1,"PG loss not observed/isolated");
+  if(DBG_OBS0!==0 || dut.m_island_on!==0) $fatal(1,"PG loss not observed/isolated");
   // Assert reset in an active SPI transaction, without further SCLK edges.
   cs_drive=0; #100; reset_drive=0; #100;
   if(SPI_MISO!==1'bz) $fatal(1,"MISO reset release needs clocks");
@@ -90,6 +88,12 @@ module tb_chip_io;
   cs_drive=0; #100; por=0; #100;
   if(SPI_MISO!==1'bz) $fatal(1,"POR did not release MISO");
   released();
+  // POR_BYPASS strap pad (DT-10): with the POR still asserted, the strap alone puts the die back under RESET_N.
+  cs_drive=1; #100; strap_drive=1; #100;
+  read_reg(0,16'h5356); read_reg(8'h0d,16'h0017);   // POR flag, reset flag, strap level, por_masked
+  if(dut.pad_por_bypass.strap.PD!==1 || dut.pad_por_bypass.strap.PU!==0) $fatal(1,"POR_BYPASS pull-down binding");
+  strap_drive=0; #100; cs_drive=0; #100;
+  if(SPI_MISO!==1'bz) $fatal(1,"strap low did not put the POR back in the reset path");
   $display("CHIP_IO_PASS"); $finish;
  end
  initial begin #1000000; $fatal(1,"chip IO timeout"); end

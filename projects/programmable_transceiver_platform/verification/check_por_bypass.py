@@ -16,22 +16,24 @@ import tempfile
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[1]
-GOOD = ' wire rst_n = reset_n_pad & (por_n | por_bypass);\n'
+# The reset expression lives in rtl/pt_por_path.sv since the second (pad-free) rescue path was added; the strap
+# mutants are applied there, the two others in rtl/pt_digital_macro.sv.
+GOOD = ' assign rst_n=reset_n_pad&(por_n|por_bypass|armed);\n'
 MUTANTS = {
-    'no_bypass': ' wire rst_n = reset_n_pad & por_n;\n',
-    'ignore_por': ' wire rst_n = reset_n_pad;\n',
-    'bypass_reset': ' wire rst_n = (reset_n_pad & por_n) | por_bypass;\n',
-    'inverted': ' wire rst_n = reset_n_pad & (por_n | ~por_bypass);\n',
+    'no_bypass': ' assign rst_n=reset_n_pad&(por_n|armed);\n',
+    'ignore_por': ' assign rst_n=reset_n_pad;\n',
+    'bypass_reset': ' assign rst_n=(reset_n_pad&(por_n|armed))|por_bypass;\n',
+    'inverted': ' assign rst_n=reset_n_pad&(por_n|~por_bypass|armed);\n',
 }
 
 
-# mutants on other lines: (name, original text, replacement)
+# mutants in pt_digital_macro.sv: (name, original text, replacement)
 OTHER = [
     # the bypass reaches SPI/regfile but not the host-link reset domain
     ('split_host', 'pt_host_rate_clock host_rate(.clk(host_word_clk), .rst_n(rst_n),',
      'pt_host_rate_clock host_rate(.clk(host_word_clk), .rst_n(reset_n_pad & por_n),'),
     # strap readback missing
-    ('no_readback', '.por_n(por_n), .por_bypass(por_bypass), .fault(fault)', ".por_n(por_n), .por_bypass(1'b0), .fault(fault)"),
+    ('no_readback', '.por_path({por_masked, ovr_armed, por_bypass})', ".por_path({por_masked, ovr_armed, 1'b0})"),
 ]
 
 
@@ -45,20 +47,21 @@ def run(rtl_dir, work):
 
 
 def main():
-    source = (PROJECT/'rtl/pt_digital_macro.sv').read_text()
-    assert source.count(GOOD) == 1, 'rst_n expression of pt_digital_macro changed: update this check'
+    files = {'pt_por_path.sv': (PROJECT/'rtl/pt_por_path.sv').read_text(), 'pt_digital_macro.sv': (PROJECT/'rtl/pt_digital_macro.sv').read_text()}
+    assert files['pt_por_path.sv'].count(GOOD) == 1, 'rst_n expression of pt_por_path changed: update this check'
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         ok, out = run(PROJECT/'rtl', tmp)
         if not ok:
             print(out)
             sys.exit('POR_BYPASS_CHECK_FAIL: RTL bench failed')
-        cases = [(n, GOOD, l) for n, l in MUTANTS.items()]+OTHER
-        for name, old, line in cases:
+        cases = [(n, 'pt_por_path.sv', GOOD, l) for n, l in MUTANTS.items()]+[(n, 'pt_digital_macro.sv', o, l) for n, o, l in OTHER]
+        for name, fname, old, line in cases:
+            source = files[fname]
             assert source.count(old) == 1, f'mutant {name}: source text changed'
-            rtl = tmp/name
+            rtl = tmp/f'rtl_{name}'
             shutil.copytree(PROJECT/'rtl', rtl, ignore=shutil.ignore_patterns('gen', '__pycache__'))
-            (rtl/'pt_digital_macro.sv').write_text(source.replace(old, line))
+            (rtl/fname).write_text(source.replace(old, line))
             ok, out = run(rtl, tmp)
             fails = len(re.findall(r'^FAIL ', out, re.M))
             if ok or fails == 0:

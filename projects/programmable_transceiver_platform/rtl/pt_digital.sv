@@ -17,38 +17,48 @@ module pt_digital(input wire rst_n,ref_clk,
  input wire calibration_above_target,output wire[11:0]calibration_trial,
  output wire[15:0]status,
  // Generated control boundary (rtl/pt_regfile.sv, spec/register-map.md).
- input wire por_n,por_bypass,fault,input wire[`PT_ISLAND_W-1:0]island_pgood,
+ input wire por_n,input wire[2:0]por_path,input wire fault,input wire[`PT_ISLAND_W-1:0]island_pgood,
  // Frequency-counter sources (P3-7), code 1..6 of debug.freq_count_{a,b}.source: [0] tx_ring_fbck (pt_pll
  // FBCK = VCO/16), [1] cdr_ring_fbck, [2] ring_osc, [3] vco_replica, [4] aosc, [5] lc_prescale.
  input wire[5:0]fc_src,
  output wire cdr_freq_locked, // freq_count_b lock (reference domain): CDR frequency-to-phase handover
- input wire[11:0]analog_status,input wire[12:0]wire_analog_status,
+ output wire fca_locked_ref,  // freq_count_a lock (reference domain): TX ring ready / monitor rf lock
+ output wire[13:0]fcb_diff_ref,output wire fcb_upd_ref, // freq_count_b signed result (pt_wrx_ctl frequency loop)
+ input wire[11:0]analog_status,input wire[12:0]wire_analog_status,input wire[2:0]obs_extra, // {reset_seen, wclk_present, aux_present}
  output wire[`PT_ANALOG_CFG_W-1:0]analog_cfg,output wire[`PT_DEBUG_CFG_W-1:0]debug_cfg,
  output wire[`PT_ISLAND_W-1:0]island_en,
  // island_on = switch enabled AND (pgood OR pgood_override): drives every iso_clamp at the core/island
  // boundary (1 = connected, 0 = isolated; reset 0).
  output wire[`PT_ISLAND_W-1:0]island_on,output wire[`PT_ATB_W-1:0]atb0_sw,atb1_sw,
  output wire[`PT_ATB0_GRP_W-1:0]atb0_grp,output wire[`PT_ATB1_GRP_W-1:0]atb1_grp,output wire atb0_en,atb1_en,
- output wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,wclk_obs_oe,
- output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe,commit_toggle,
+ output wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,
+ output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,commit_toggle,
  // IX-2 8b/10b wired line-code offload (stopped-only level) and the RXR-D2 fast gain (opcode4) state:
  // rf_rx_clk-domain levels; rx_gain = {LNA index[6:5], PGA index[4:0]} as the opcode4 argument.
- input wire linecode,output wire[6:0]rx_gain,output wire rx_gain_active);
+ input wire linecode,output wire[6:0]rx_gain,output wire rx_gain_active,
+ // IX-11 fast thresholds (host clock registers) and the read-only status of the macro's control blocks
+ // (spec/debug-controls.json status_registers: status.monitor, status.wired, status.usb).
+ output wire[1:0]vth_fast,output wire[7:0]vth_a,vth_b,
+ input wire[9:0]mon_cause,mon_qualified,input wire mon_cause_clk,mon_ready,mon_dead,mon_ref_alive,mon_in_alive,mon_fault,
+ input wire[2:0]wtx_state,wrx_state,input wire wtx_seq_fault,wtx_ring_ready,input wire[7:0]wrx_flags,wrx_fll_win,wrx_pick_acc,wrx_slip_cnt,
+ input wire[13:0]wrx_fll_err,input wire[4:0]wrx_viol,input wire[1:0]usb_line,input wire[6:0]usb_flags,input wire[4:0]usb_stream);
  wire memory_write,capture_done,playback_enable,capture_enable,memory_loop;wire[4:0]index,memory_last;
  wire[39:0]memory_wdata,capture_data;
  wire config_error,cal_busy,cal_done,host_rx_div;
  // Observation vectors; order is spec/debug-controls.json obs_status / wire_status. Raw, unsynchronized.
- // analog_status: 0 pll_lock,1 ref_present,2 bias_ready,3 refbuf_ready,4 por_n,5 cdr_qualified,6 cdr_loss,
- // 7 adc_i_done,8 adc_q_done,9 adc_i_overload,10 adc_q_overload,11 aosc_div.
- wire[31:0]obs_status={analog_status[11],host_rx_div,enable,capture_enable,playback_enable,capture_done,cal_done,cal_busy,
-  wire_idle,wire_tx_request,wire_rx_valid,rf_mute,rf_tx_request,rf_rx_valid,analog_status[10:5],analog_status[4],fault,
+ // analog_status (composed in pt_digital_macro from the s_* inputs): 0 pll_tx_lock,1 ref_present,2 bandgap_ok,
+ // 3 refbuf_ready,4 por_n,5 cdr_freq_ok,6 cdr_fll_lost,7 adc_i_done,8 adc_q_done,9 adc_i_overload,10 adc_q_overload,11 aosc_div.
+ // wire_analog_status: 0 cdr_freq_ok,1 cdr_fll_lost,2 wrx_sig_ok,3 wrx_idle,4 usb_j,5 usb_k,6 usb_se0,7 usb_diff,8 usb_squelch,
+ // 9 detect_diff,10 usb_disconnect,11 pll_cdr_lock,12 wtx_ext_data. cal_busy / cal_done slots carry aux / wclk present.
+ wire[31:0]obs_status={analog_status[11],host_rx_div,enable,capture_enable,playback_enable,capture_done,obs_extra[1:0],
+  wire_idle,wire_tx_request,wire_rx_valid,rf_mute,obs_extra[2],rf_rx_valid,analog_status[10:5],analog_status[4],fault,
   analog_status[3:0],island_pgood};
  wire[15:0]wire_status={wire_analog_status[12],wire_idle,wire_tx_request,wire_rx_valid,wire_analog_status[11:0]};
  // Pattern checker status (wire_rx_clk domain; pt_mgmt synchronizes each bit to SCLK).
  wire pattern_locked,pattern_lost_lock;wire[15:0]pattern_errors_gray;
  wire fca_locked,fca_lost,fcb_locked,fcb_lost;wire[13:0]fca_diff,fcb_diff;wire[15:0]fca_count,fcb_count;
  pt_toggle_div hd(host_rx_clk,core_rst_n,host_rx_div);
- pt_mgmt control(.rst_n(rst_n),.por_n(por_n),.por_bypass(por_bypass),.sclk(host_sclk),.cs_n(host_cs_n),.mosi(host_mosi),.miso(host_miso),.miso_oe(host_miso_oe),
+ pt_mgmt control(.rst_n(rst_n),.por_n(por_n),.por_path(por_path),.sclk(host_sclk),.cs_n(host_cs_n),.mosi(host_mosi),.miso(host_miso),.miso_oe(host_miso_oe),
   .status(status),.enable(enable),.mode8(mode8),.rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),
   .memory_write(memory_write),.memory_index(index),.memory_wdata(memory_wdata),.capture_data(capture_data),
   .capture_done(capture_done),.playback_enable(playback_enable),.capture_enable(capture_enable),
@@ -56,27 +66,31 @@ module pt_digital(input wire rst_n,ref_clk,
   .fault(fault),.island_pgood(island_pgood),.obs_status(obs_status),.wire_status(wire_status),
   .analog_cfg(analog_cfg),.debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),
   .atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.atb0_grp(atb0_grp),.atb1_grp(atb1_grp),.atb0_en(atb0_en),.atb1_en(atb1_en),.rx_en_aux(rx_en_aux),.rx_en_wclk(rx_en_wclk),.rx_en_wtx_ext(rx_en_wtx_ext),
-  .clk_obs_oe(clk_obs_oe),.wclk_obs_oe(wclk_obs_oe),.dbg_obs0(dbg_obs0),.dbg_obs0_oe(dbg_obs0_oe),
-  .dbg_obs1(dbg_obs1),.dbg_obs1_oe(dbg_obs1_oe),.wdbg_obs(wdbg_obs),.wdbg_obs_oe(wdbg_obs_oe),
+  .clk_obs_oe(clk_obs_oe),.dbg_obs0(dbg_obs0),.dbg_obs0_oe(dbg_obs0_oe),
+  .dbg_obs1(dbg_obs1),.dbg_obs1_oe(dbg_obs1_oe),
   .commit_toggle(commit_toggle),.config_error(config_error),
   .pattern_locked(pattern_locked),.pattern_lost_lock(pattern_lost_lock),.pattern_errors_gray(pattern_errors_gray),
   .fca_locked(fca_locked),.fca_lost(fca_lost),.fca_diff(fca_diff),.fca_count(fca_count),
-  .fcb_locked(fcb_locked),.fcb_lost(fcb_lost),.fcb_diff(fcb_diff),.fcb_count(fcb_count));
+  .fcb_locked(fcb_locked),.fcb_lost(fcb_lost),.fcb_diff(fcb_diff),.fcb_count(fcb_count),
+  .mon_cause(mon_cause),.mon_cause_clk(mon_cause_clk),.mon_ready(mon_ready),.mon_dead(mon_dead),.mon_ref_alive(mon_ref_alive),
+  .mon_in_alive(mon_in_alive),.mon_fault(mon_fault),.mon_qualified(mon_qualified),.wtx_state(wtx_state),.wtx_seq_fault(wtx_seq_fault),
+  .wtx_ring_ready(wtx_ring_ready),.wrx_state(wrx_state),.wrx_flags(wrx_flags),.wrx_fll_err(wrx_fll_err),.wrx_viol(wrx_viol),
+  .wrx_fll_win(wrx_fll_win),.wrx_pick_acc(wrx_pick_acc),.wrx_slip_cnt(wrx_slip_cnt),.usb_line(usb_line),.usb_flags(usb_flags),.usb_stream(usb_stream));
  // Frequency counters (rtl/pt_freq_count.sv, consolidation P3-7). status.pll_lock is reserved (reads 0).
  pt_freq_count fca(.rst_n(rst_n),.cfg_source(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__SOURCE_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__SOURCE_W]),
   .cfg_window(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__WINDOW_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__WINDOW_W]),
   .cfg_tol(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__TOLERANCE_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__TOLERANCE_W]),
   .cfg_count(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__COUNT_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__COUNT_W]),
   .cfg_target(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__TARGET_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__TARGET_W]),
-  .src(fc_src),.ref_clk(ref_clk),.sclk(host_sclk),.locked_ref(),.locked(fca_locked),.lost_lock(fca_lost),.diff(fca_diff),.count(fca_count),
-  .commit_toggle(commit_toggle));
+  .src(fc_src),.ref_clk(ref_clk),.sclk(host_sclk),.locked_ref(fca_locked_ref),.locked(fca_locked),.lost_lock(fca_lost),.diff(fca_diff),.count(fca_count),
+  .commit_toggle(commit_toggle),.diff_ref(),.upd_ref());
  pt_freq_count fcb(.rst_n(rst_n),.cfg_source(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_B__SOURCE_LSB+:`PT_D_DEBUG_FREQ_COUNT_B__SOURCE_W]),
   .cfg_window(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_B__WINDOW_LSB+:`PT_D_DEBUG_FREQ_COUNT_B__WINDOW_W]),
   .cfg_tol(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_B__TOLERANCE_LSB+:`PT_D_DEBUG_FREQ_COUNT_B__TOLERANCE_W]),
   .cfg_count(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_B__COUNT_LSB+:`PT_D_DEBUG_FREQ_COUNT_B__COUNT_W]),
   .cfg_target(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_B__TARGET_LSB+:`PT_D_DEBUG_FREQ_COUNT_B__TARGET_W]),
   .src(fc_src),.ref_clk(ref_clk),.sclk(host_sclk),.locked_ref(cdr_freq_locked),.locked(fcb_locked),.lost_lock(fcb_lost),.diff(fcb_diff),.count(fcb_count),
-  .commit_toggle(commit_toggle));
+  .commit_toggle(commit_toggle),.diff_ref(fcb_diff_ref),.upd_ref(fcb_upd_ref));
  wire[39:0]stream_wire,prbs_word;wire stream_wire_valid,stream_wire_idle;
  wire[23:0]stream_rf;wire stream_rf_valid,stream_rf_mute;wire[15:0]core_status;
  // debug.pattern fields (spec/register-map.md 0x58-0x59). tx_mode 0 (payload) keeps the legacy
@@ -126,7 +140,7 @@ module pt_digital(input wire rst_n,ref_clk,
  analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__PAYLOAD_IQ_LSB],linecode,rx_gain,rx_gain_active,
  // MEMORY v3 (sharing S1): capture/playback in the transport banks; pt_memory is deleted.
  capture_enable,playback_enable,memory_loop,memory_last,host_sclk,memory_write,index,memory_wdata,capture_data,capture_done,
- prbs_select,prbs_word,tx_enabled&&prbs_ready,!tx_enabled,wire_req_int);
+ prbs_select,prbs_word,tx_enabled&&prbs_ready,!tx_enabled,wire_req_int,vth_fast,vth_a,vth_b);
  pt_sync_bit e(wire_tx_clk,rst_n,enable,tx_enabled);
  // Shared wired pattern generator/checker (rtl/pt_pattern.sv, consolidation P2-6): 40-bit cores directly
  // on the 40-bit quad clocks (AC-1 S3: no gearbox, no clock gate). CDC: the quasi-static

@@ -15,14 +15,14 @@ module tb_regfile_legacy;
  wire miso_a,oe_a,en_a,m8_a,mw_a,pb_a,ce_a;wire[15:0]rt_a,wt_a,ct_a;wire[4:0]mi_a;wire[23:0]md_a;
  wire miso_b,oe_b,en_b,m8_b,mw_b,pb_b,ce_b;wire[15:0]rt_b,wt_b,ct_b;wire[4:0]mi_b;wire[39:0]md_b;
  pt_control old(rst_n,sclk,cs_n,mosi,miso_a,oe_a,status,en_a,m8_a,rt_a,wt_a,ct_a,mw_a,mi_a,md_a,capture_data,capture_done,pb_a,ce_a);
- pt_mgmt neu(.rst_n(rst_n),.por_n(rst_n),.por_bypass(1'b0),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso_b),.miso_oe(oe_b),.status(status),
+ pt_mgmt neu(.rst_n(rst_n),.por_n(rst_n),.por_path(3'b0),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso_b),.miso_oe(oe_b),.status(status),
   .enable(en_b),.mode8(m8_b),.rf_trim(rt_b),.wire_trim(wt_b),.clock_trim(ct_b),.memory_write(mw_b),
   .memory_index(mi_b),.memory_wdata(md_b),.capture_data({16'd0,capture_data}),.memory_loop(),.memory_last(),.capture_done(capture_done),
   .playback_enable(pb_b),.capture_enable(ce_b),.fault(1'b0),.island_pgood({`PT_ISLAND_W{1'b0}}),.obs_status(32'h0),
   .wire_status(16'h0),.analog_cfg(),.debug_cfg(),.island_en(),.island_on(),.atb0_sw(),.atb1_sw(),.rx_en_aux(),
-  .rx_en_wclk(),.rx_en_wtx_ext(),.clk_obs_oe(),.wclk_obs_oe(),.dbg_obs0(),.dbg_obs0_oe(),.dbg_obs1(),.dbg_obs1_oe(),
-  .wdbg_obs(),.wdbg_obs_oe(),.commit_toggle(),.config_error(),
-  .pattern_locked(1'b0),.pattern_lost_lock(1'b0),.pattern_errors_gray(16'h0),.fca_locked(1'b0),.fca_lost(1'b0),.fca_diff(14'd0),.fca_count(16'd0),.fcb_locked(1'b0),.fcb_lost(1'b0),.fcb_diff(14'd0),.fcb_count(16'd0));
+  .rx_en_wclk(),.rx_en_wtx_ext(),.clk_obs_oe(),.dbg_obs0(),.dbg_obs0_oe(),.dbg_obs1(),.dbg_obs1_oe(),
+  .commit_toggle(),.config_error(),
+  .pattern_locked(1'b0),.pattern_lost_lock(1'b0),.pattern_errors_gray(16'h0),.fca_locked(1'b0),.fca_lost(1'b0),.fca_diff(14'd0),.fca_count(16'd0),.fcb_locked(1'b0),.fcb_lost(1'b0),.fcb_diff(14'd0),.fcb_count(16'd0),.mon_cause(10'd0),.mon_cause_clk(1'd0),.mon_ready(1'd0),.mon_dead(1'd0),.mon_ref_alive(1'd0),.mon_in_alive(1'd0),.mon_fault(1'd0),.mon_qualified(10'd0),.wtx_state(3'd0),.wtx_seq_fault(1'd0),.wtx_ring_ready(1'd0),.wrx_state(3'd0),.wrx_flags(8'd0),.wrx_fll_err(14'd0),.wrx_viol(5'd0),.wrx_fll_win(8'd0),.wrx_pick_acc(8'd0),.wrx_slip_cnt(8'd0),.usb_line(2'd0),.usb_flags(7'd0),.usb_stream(5'd0));
  integer i,n,errors=0,writes=0,reads=0,mw_seen=0,seed=7;reg[7:0]addr,cmd;reg[15:0]data;reg[31:0]frame;reg check_miso;
  reg[7:0]addrs[0:22];
  // Register outputs are compared at every rising SCLK edge. The memory write is compared as an event:

@@ -40,7 +40,12 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // Wired output stage handshake (timing 2026-11-11): pat_valid / pat_idle are the pattern source's
  // valid / idle; wire_req_int = the stage's load (!wire_tx_valid || wire_tx_request) is the request
  // the sources see (the pattern generator steps on wire_req_int && its valid).
- input wire pat_valid,pat_idle,output wire wire_req_int);
+ input wire pat_valid,pat_idle,output wire wire_req_int,
+ // IX-11 fast in-band threshold (wired ownership): opcode 5 loads VTH_A, opcode 6 loads VTH_B (8-bit argument =
+ // the pt_vthdac code). vth_fast[0] / [1] rise with the first accepted A / B command and override the register fields
+ // slicer.threshold.vth_a / vth_b at the DAC pins until ENABLE = 0. host_clk registers; the DAC pins are
+ // quasi-static analog inputs (settling ~100 ns), so no CDC is needed. Command -> pin: one host clock.
+ output reg[1:0]vth_fast,output reg[7:0]vth_a,vth_b);
  wire eh,ewr,ewt,err,ert;
  pt_enable_release e0(host_clk,rst_n,enable,eh);
  pt_sync_bit e2(wire_rx_clk,rst_n,enable,ewr);pt_sync_bit e3(wire_tx_clk,rst_n,enable,ewt);
@@ -272,9 +277,9 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  assign gain_commit=command_valid&&opcode==4'd4&&payload_iq&&!gain_pending;
  always @(posedge host_clk or negedge rst_n)begin
   if(!rst_n)begin idle_command<=0;mute_command<=0;command_fault<=0;
-   gain_toggle<=0;gain_pending<=0;gain_rejected<=0;gain_arg<=0;mark_ack<=0;end
+   gain_toggle<=0;gain_pending<=0;gain_rejected<=0;gain_arg<=0;mark_ack<=0;vth_fast<=0;vth_a<=8'd128;vth_b<=8'd128;end
   else if(!eh)begin idle_command<=0;mute_command<=0;command_fault<=0;
-   gain_pending<=0;gain_rejected<=0;mark_ack<=mark_sync;end
+   gain_pending<=0;gain_rejected<=0;mark_ack<=mark_sync;vth_fast<=0;vth_a<=8'd128;vth_b<=8'd128;end
   else begin
    if(command_valid)case(opcode)
     0:begin end
@@ -283,6 +288,8 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
     4:if(!payload_iq)command_fault<=1;
       else if(gain_pending)gain_rejected<=1;
       else begin gain_arg<=argument[6:0];gain_toggle<=!gain_toggle;gain_pending<=1;end
+    5:if(payload_iq)command_fault<=1;else begin vth_a<=argument;vth_fast[0]<=1;end
+    6:if(payload_iq)command_fault<=1;else begin vth_b<=argument;vth_fast[1]<=1;end
     default:command_fault<=1;
    endcase
    if(gain_echo)begin gain_pending<=0;mark_ack<=mark_sync;end

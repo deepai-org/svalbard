@@ -16,10 +16,15 @@ module tb_digital_prbs;
  reg [39:0] h2d_quad=0; wire [39:0] d2h_quad; reg [39:0] wire_rx_data=0; reg wire_rx_valid=0; wire [39:0] wire_tx_data;
  wire wire_tx_valid,wire_idle; reg wire_tx_request=0; reg [23:0] rf_rx_sample=0; reg rf_rx_valid=0; wire [23:0] rf_tx_sample;
  wire rf_tx_valid,rf_mute,rf_tx_clk_out; reg rf_tx_request=0; wire enable,mode8; wire [15:0] rf_trim,wire_trim,clock_trim; reg calibration_above_target=0;
- wire [11:0] calibration_trial; wire [15:0] status; reg por_n=0,por_bypass=0,fault=0; reg [`PT_ISLAND_W-1:0] island_pgood=0; reg [11:0] analog_status=0; reg [12:0] wire_analog_status=0; reg [5:0] fc_src=0; wire cdr_freq_locked;
+ wire [11:0] calibration_trial; wire [15:0] status; reg por_n=0,fault=0; reg [2:0] por_path=0; reg [`PT_ISLAND_W-1:0] island_pgood=0; reg [11:0] analog_status=0; reg [12:0] wire_analog_status=0; reg [5:0] fc_src=0; wire cdr_freq_locked;
  wire [`PT_ANALOG_CFG_W-1:0] analog_cfg; wire [`PT_DEBUG_CFG_W-1:0] debug_cfg; wire [`PT_ISLAND_W-1:0] island_en,island_on; wire [`PT_ATB0_GRP_W-1:0] atb0_grp; wire [`PT_ATB1_GRP_W-1:0] atb1_grp; wire atb0_en,atb1_en; wire [`PT_ATB_W-1:0] atb0_sw,atb1_sw;
- wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,wclk_obs_oe,dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe,commit_toggle,host_miso,host_miso_oe;
+ wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,commit_toggle,host_miso,host_miso_oe;
  reg linecode=0; wire [6:0] rx_gain; wire rx_gain_active;
+ // ports added by the mode-walk rework (status of the macro's control blocks, IX-11, counter results): unused here
+ wire fca_locked_ref,fcb_upd_ref; wire [13:0] fcb_diff_ref; wire [1:0] vth_fast; wire [7:0] vth_a,vth_b; reg [2:0] obs_extra=0;
+ reg [9:0] mon_cause=0,mon_qualified=0; reg mon_cause_clk=0,mon_ready=0,mon_dead=0,mon_ref_alive=0,mon_in_alive=0,mon_fault=0;
+ reg [2:0] wtx_state=0,wrx_state=0; reg wtx_seq_fault=0,wtx_ring_ready=0; reg [7:0] wrx_flags=0,wrx_fll_win=0,wrx_pick_acc=0,wrx_slip_cnt=0;
+ reg [13:0] wrx_fll_err=0; reg [4:0] wrx_viol=0; reg [1:0] usb_line=0; reg [6:0] usb_flags=0; reg [4:0] usb_stream=0;
  pt_digital dut(.*);
  always #4 begin wire_tx_clk=~wire_tx_clk; wire_rx_clk=~wire_rx_clk; end
  always #10 host_sclk=~host_sclk;

@@ -131,7 +131,7 @@
       "rf"
     ],
     "rfpll": [
-      "pll"
+      "rf"
     ],
     "wirepll": [
       "pll"
@@ -145,9 +145,7 @@
     "clocktree": [
       "pll"
     ],
-    "refinput": [
-      "pll"
-    ],
+    "refinput": [],
     "cdr": [
       "pll"
     ],
@@ -196,7 +194,9 @@
     "usbhs": [
       "wired"
     ],
-    "usbfs": [],
+    "usbfs": [
+      "wired"
+    ],
     "usbdrive": [
       "wired"
     ],
@@ -206,7 +206,26 @@
     "hostio": [],
     "pllvreg": [
       "pll"
-    ]
+    ],
+    "bbfilter_i": [
+      "rf"
+    ],
+    "bbfilter_q": [
+      "rf"
+    ],
+    "adc": [
+      "conv"
+    ],
+    "ring_l": [
+      "pll"
+    ],
+    "ring_c": [
+      "pll"
+    ],
+    "usb": [
+      "wired"
+    ],
+    "wrx": []
   },
   "gating_rule": "A control output whose island list is non-empty is driven to all-zero (isolation value) unless every listed island has its switch enabled and reports power-good (or has pgood_override set). Zero is the off/disconnected/disabled encoding of every state, enable, branch and select field. Register contents keep their programmed values; only the outputs are clamped, so re-enabling an island restores the committed configuration. Island status (0x0A): power-good is a ratiometric rail-up flag, so power-good = 1 with debug.island_power = 0 is the back-drive signature (the island rail is being powered through a control, pad or bias path; analog/island_support README I4).",
   "clock_sources": [
@@ -241,10 +260,12 @@
     },
     {
       "code": 4,
-      "name": "monitor_por_threshold",
+      "name": "reserved_4",
       "island": null,
       "kind": "monitor",
-      "force": "sense_only"
+      "force": "sense_only",
+      "hardware": false,
+      "note": "RESERVED (always-on audit F11): was monitor_por_threshold. No hardware; never bind to the POR vcap / por_unbuf nodes. The code number is kept so later codes do not move; the register file rejects it on both buses."
     },
     {
       "code": 5,
@@ -451,7 +472,7 @@
     {
       "code": 33,
       "name": "quadrature_bias",
-      "island": "pll",
+      "island": "rf",
       "kind": "bias",
       "force": "sense_only",
       "note": "Physical leaf on the quadrature LO mixer-gate bias (pt_lo_ext ATB_VB, VB ~ 2.55 V; analog/timing/README.md ATB taps). This is the bias the I/Q LO legs are AC-coupled onto."
@@ -634,7 +655,7 @@
     {
       "code": 58,
       "name": "vco_replica_vctrl",
-      "island": "pll",
+      "island": "debug",
       "kind": "control_voltage",
       "force": "allowed",
       "note": "MOD-00 item 1 (model-uncertainty audit): vco_replica VCTRL sense/force, with CLK_OBS vco_replica gives the ring tuning curve f(VCTRL)."
@@ -648,26 +669,26 @@
     "island_pgood_usb",
     "island_pgood_conv",
     "island_pgood_debug",
-    "pll_lock",
+    "pll_tx_lock",
     "ref_present",
-    "bias_ready",
+    "bandgap_ok",
     "refbuf_ready",
     "monitor_fault",
     "por_n",
-    "cdr_qualified",
-    "cdr_loss",
+    "cdr_freq_ok",
+    "cdr_fll_lost",
     "adc_i_done",
     "adc_q_done",
     "adc_i_overload",
     "adc_q_overload",
     "rf_rx_valid",
-    "rf_tx_request",
+    "reset_seen",
     "rf_mute",
     "wire_rx_valid",
     "wire_tx_request",
     "wire_idle",
-    "calibration_busy",
-    "calibration_done",
+    "aux_present",
+    "wtx_ext_present",
     "capture_done",
     "playback_enable",
     "capture_enable",
@@ -676,18 +697,18 @@
     "aosc_div"
   ],
   "wire_status": [
-    "cdr_qualified",
-    "cdr_loss",
-    "cdr_rx_state0",
-    "cdr_rx_state1",
-    "slicer_data",
-    "slicer_early",
-    "slicer_late",
-    "electrical_quiet",
+    "cdr_freq_ok",
+    "cdr_fll_lost",
+    "wrx_sig_ok",
+    "wrx_idle",
+    "usb_j",
+    "usb_k",
+    "usb_se0",
+    "usb_diff",
     "usb_squelch",
-    "detect_event",
-    "detect_timeout",
-    "pll_lock",
+    "detect_diff",
+    "usb_disconnect",
+    "pll_cdr_lock",
     "wire_rx_valid",
     "wire_tx_request",
     "wire_idle",
@@ -809,22 +830,6 @@
         "wire_cdr_external_clock"
       ],
       "fields": {
-        "rf_lo": {
-          "bits": 3,
-          "default": "stopped",
-          "values": [
-            "stopped",
-            "internal_pll",
-            "ref_in",
-            "aux_clk",
-            "wclk_in",
-            "host_follow"
-          ],
-          "forbidden": [
-            "host_follow",
-            "wclk_in"
-          ]
-        },
         "wire_line": {
           "bits": 3,
           "default": "stopped",
@@ -1099,53 +1104,6 @@
       "islands": [],
       "live": false,
       "fields": {
-        "master": {
-          "bits": 1,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1,
-          "unit": "code"
-        },
-        "rf": {
-          "bits": 1,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1,
-          "unit": "code",
-          "islands": [
-            "rf"
-          ]
-        },
-        "wired": {
-          "bits": 1,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1,
-          "unit": "code",
-          "islands": [
-            "wired"
-          ]
-        },
-        "pll": {
-          "bits": 1,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1,
-          "unit": "code",
-          "islands": [
-            "pll"
-          ]
-        },
-        "conv": {
-          "bits": 1,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1,
-          "unit": "code",
-          "islands": [
-            "conv"
-          ]
-        },
         "refbuf": {
           "bits": 1,
           "default": 0,
@@ -1155,21 +1113,11 @@
           "islands": [
             "conv"
           ]
-        },
-        "debug": {
-          "bits": 1,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1,
-          "unit": "code",
-          "islands": [
-            "debug"
-          ]
         }
       }
     },
     "debug.clk_obs": {
-      "description": "CLK_OBS source and power-of-two divider (analog-side prescaler). off = pad tristated. pt_clk_obs has 8 inputs and N<=7: sources without a cell input are rejected (analog/timing/README.md register-map gap). Codes 15-17 (char_ro33, char_ro50, char_cmldiv; MOD-00 item 1) select the analog/characterization speed cells; the selected cell runs only while selected (select = enable, no extra enable bits).",
+      "description": "CLK_OBS source and power-of-two divider (pt_clk_obs16 on the debug island). off = pad tristated and the node pulled down (c_clk_obs_off). Fast sources (wire_line, wire_sample, ref_in, aux_clk, wclk_in, pll_vco, cdr_recovered) go through their own /4 prescaler pt_obs_pre4, enabled one-hot with the source (PD22: WCLK_OBS is folded into CLK_OBS). Codes 15-17 select input 15 (characterization cells, not placed on die 1: reads low).",
       "update": "stopped",
       "islands": [
         "debug"
@@ -1198,44 +1146,6 @@
             "char_ro33",
             "char_ro50",
             "char_cmldiv"
-          ],
-          "forbidden": [
-            "wire_line",
-            "wire_sample",
-            "ref_in",
-            "aux_clk",
-            "wclk_in",
-            "host_tx_clk",
-            "cdr_recovered"
-          ]
-        },
-        "divider_log2": {
-          "bits": 4,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 7,
-          "unit": "log2"
-        }
-      }
-    },
-    "debug.wclk_obs": {
-      "description": "WCLK_OBS recovered/divided wired clock source and divider. off = pad tristated.",
-      "update": "stopped",
-      "islands": [
-        "wired",
-        "debug"
-      ],
-      "live": true,
-      "fields": {
-        "source": {
-          "bits": 3,
-          "default": "off",
-          "values": [
-            "off",
-            "cdr_recovered",
-            "wire_line",
-            "wire_sample",
-            "wclk_in"
           ]
         },
         "divider_log2": {
@@ -1248,7 +1158,7 @@
       }
     },
     "debug.dbg_obs": {
-      "description": "DBG_OBS0/1 digital status mux: 0 = tristate, 1 = constant 0, 2 = constant 1, 3 = commit toggle, 4+n = obs_status[n], 36 = live combined reset level rst_n (RESET_N AND POR; 1 = released). Any reset also returns the select to 0, so during reset the pad is tristated and reads the board level.",
+      "description": "DBG_OBS0/1 digital status mux: 0 = tristate, 1 = constant 0, 2 = constant 1, 3 = commit toggle, 4+n = obs_status[n], 36 = live combined reset level rst_n, 37+n = wire_status[n] (PD22: WDBG_OBS is folded into DBG_OBS). Any reset returns the select to 0.",
       "update": "stopped",
       "islands": [],
       "live": true,
@@ -1257,29 +1167,14 @@
           "bits": 6,
           "default": 0,
           "minimum": 0,
-          "maximum": 36,
+          "maximum": 52,
           "unit": "code"
         },
         "sel1": {
           "bits": 6,
           "default": 0,
           "minimum": 0,
-          "maximum": 36,
-          "unit": "code"
-        }
-      }
-    },
-    "debug.wdbg_obs": {
-      "description": "WDBG_OBS wired status mux: 0 = tristate, 1 = constant 0, 2 = constant 1, 3+n = wire_status[n].",
-      "update": "stopped",
-      "islands": [],
-      "live": true,
-      "fields": {
-        "select": {
-          "bits": 5,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 18,
+          "maximum": 52,
           "unit": "code"
         }
       }
@@ -1306,19 +1201,29 @@
           "maximum": 1,
           "unit": "code"
         },
-        "vco_coarse": {
-          "bits": 6,
-          "default": 32,
-          "minimum": 0,
-          "maximum": 63,
-          "unit": "code"
-        },
-        "vco_divider_log2": {
-          "bits": 3,
+        "ro33_enable": {
+          "bits": 1,
           "default": 0,
           "minimum": 0,
-          "maximum": 7,
-          "unit": "log2"
+          "maximum": 1,
+          "unit": "code",
+          "description": "characterization speed cell enable (CLK_OBS code 15 ORs the three outputs: enable one at a time)"
+        },
+        "ro50_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "characterization speed cell enable (CLK_OBS code 15 ORs the three outputs: enable one at a time)"
+        },
+        "cmldiv_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "characterization speed cell enable (CLK_OBS code 15 ORs the three outputs: enable one at a time)"
         }
       }
     },
@@ -1350,7 +1255,7 @@
       }
     },
     "consolidation.bbfilter": {
-      "description": "Shared I/Q baseband filter bank (consolidation items 1-2, pass-2 P2-2): replaces the rxfilter_*, txfilter_* and pga_* field sets, which now read zero. direction drives bbfilter en/dir_tx; bw, gain and finite_zeros are the block's only programmable settings (analog/rf_rx/README.md section 4); rx_direct is filter-less RX for TX-through-filter loopback; tx_dac_direct drives txmix sel_dac (analog/rf_tx/README.md).",
+      "description": "Shared I/Q baseband filter mode (both channels): direction drives bbfilter en / dir_tx (c_bbfilter_x_en = direction != isolated, c_bbfilter_dir_tx = direction == tx or bb_tap inject_tx_mixer); rx_direct is filter-less RX; tx_dac_direct drives txmix sel_dac. Per-channel cutoff, gain, Q and DC-offset trims are bbfilter_i.trim / bbfilter_q.trim.",
       "update": "stopped",
       "islands": [
         "rf"
@@ -1380,128 +1285,6 @@
           "maximum": 1,
           "unit": "code",
           "meaning": "filter-less RX (rx_in -> out_rx) for TX-through-filter loopback; default 0. Hardware decode: core->out_rx = en & !dir_tx & !rx_direct, rx_in->out_rx = en & rx_direct (analog/rf_rx/README.md). Commit rule rx_direct_needs_tx_direction keeps the ADC input single-sourced."
-        },
-        "bw": {
-          "bits": 4,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 15,
-          "unit": "code",
-          "meaning": "bw[3:0] (bw3 added): 0 = widest; each bit adds 1/2/4/8 units of integrator C (analog/rf_rx/README.md); one setting for I and Q"
-        },
-        "gain": {
-          "bits": 4,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 15,
-          "unit": "code",
-          "meaning": "first-stage gain, linear (code+1), 0..24 dB; was pga_x.gain"
-        },
-        "finite_zeros": {
-          "bits": 1,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1,
-          "unit": "code",
-          "meaning": "reserved: the finite-zero hardware was removed (analog/rf_rx/README.md); reset 0, reads 0"
-        },
-        "qtrim": {
-          "bits": 2,
-          "default": 1,
-          "minimum": 0,
-          "maximum": 3,
-          "unit": "code",
-          "live": true,
-          "direct": true,
-          "meaning": "RC-6 bbfilter_i/q Q-trim ports qt1:qt0 (shared by I and Q): 4Rq/2Rq damping across Rq of the Q=1 biquad. Reset 1 (tt/ss); ff parts 2/3. Direct live trim."
-        }
-      }
-    },
-    "consolidation.pll": {
-      "description": "Shared PLL/VCO bank (consolidation item 3, P2-2): replaces rfpll.config and wirepll.config (read zero). owner drives pll EN (off = 0); output_divider drives W1..W10; feedback_n drives the one-hot NS16..NS128 (integer-N, power of two, no fractional accumulator, no reference divider, fixed charge pump: analog/timing/README.md); phase_tap drives PH1..PH8. rfpll.state is the state of the shared PLL; wirepll.state reads zero. lock_window/lock_tolerance/lock_count configure the standard-cell counter lock check rtl/pt_pll_lock.sv (FBCK = VCO/16 counted against REF over the window; expected FBCK/REF = N/16 from feedback_n); it runs while owner != off and its result is status.pll_lock.",
-      "update": "stopped",
-      "islands": [
-        "pll"
-      ],
-      "live": false,
-      "fields": {
-        "owner": {
-          "bits": 2,
-          "default": "off",
-          "values": [
-            "off",
-            "rf",
-            "wired"
-          ]
-        },
-        "output_divider": {
-          "bits": 3,
-          "default": 1,
-          "values": [
-            1,
-            2,
-            4,
-            5,
-            8,
-            10
-          ]
-        },
-        "feedback_n": {
-          "bits": 2,
-          "default": 16,
-          "values": [
-            16,
-            32,
-            64,
-            128
-          ]
-        },
-        "phase_tap": {
-          "bits": 2,
-          "default": 1,
-          "values": [
-            1,
-            2,
-            4,
-            8
-          ]
-        },
-        "lock_window": {
-          "bits": 2,
-          "default": 1024,
-          "values": [
-            256,
-            1024,
-            2048,
-            4096
-          ],
-          "meaning": "pt_pll_lock window in reference cycles DEPRECATED: superseded by debug.freq_count_a (P3-7); becomes reserved once pt_digital moves to the frequency counters."
-        },
-        "lock_tolerance": {
-          "bits": 3,
-          "default": 2,
-          "values": [
-            0,
-            1,
-            2,
-            4,
-            8,
-            16,
-            32,
-            64
-          ],
-          "meaning": "pt_pll_lock: max |feedback count - window*N/16| per window DEPRECATED: superseded by debug.freq_count_a (P3-7); becomes reserved once pt_digital moves to the frequency counters."
-        },
-        "lock_count": {
-          "bits": 2,
-          "default": 4,
-          "values": [
-            1,
-            2,
-            4,
-            8
-          ],
-          "meaning": "pt_pll_lock: consecutive in-tolerance windows to declare lock DEPRECATED: superseded by debug.freq_count_a (P3-7); becomes reserved once pt_digital moves to the frequency counters."
         }
       }
     },
@@ -1520,16 +1303,6 @@
             "serial",
             "tmds"
           ]
-        },
-        "bits_per_cycle": {
-          "bits": 2,
-          "default": 1,
-          "values": [
-            1,
-            2,
-            4
-          ],
-          "meaning": "serializer and deserializer bits per ring cycle (consolidation-pass.md 'Selectable bits per ring cycle'); sets the gearbox ratio ring cycles per 20-bit double word = 20/b and the pt_clocktree_slow word-divider modulus"
         },
         "rate_mode": {
           "bits": 2,
@@ -1557,27 +1330,6 @@
           "minimum": 0,
           "maximum": 1,
           "unit": "code"
-        }
-      }
-    },
-    "consolidation.quadrature": {
-      "description": "Retired in pass 3 (P3-1): mode is reserved and reads 0; the group keeps its address 0x56.",
-      "update": "stopped",
-      "islands": [
-        "pll"
-      ],
-      "live": false,
-      "fields": {
-        "mode": {
-          "bits": 3,
-          "default": "off",
-          "values": [
-            "off",
-            "pll_1x",
-            "div2",
-            "div4",
-            "external_iq"
-          ]
         }
       }
     },
@@ -1798,7 +1550,7 @@
       }
     },
     "core.refchain": {
-      "description": "Bandgap (README bgap.*) and bias-distribution root trunk-leg enables (README dist.en_<island> = EN_<ISLAND>). Trunk enables are not island-gated: the documented idac2 trim runs dist_en_debug=1 with the debug island unpowered.",
+      "description": "Bandgap (README bgap.*) and bias-distribution root trunk-leg enables (README dist.en_<island> = EN_<ISLAND>). Trunk enables are not island-gated: the documented idac2 trim runs dist_en_debug=1 with the debug island unpowered. Bandgap-before-consumers interlock (always-on audit F5, in RTL: rtl/pt_ctl_decode.sv pt_bgap_interlock): the macro holds c_biasgen_ref_sel_vbg and every c_bias_dist_en_* at 0 until bgap_ena has been 1 for 128 SCLK cycles (>= 12.8 us at <= 10 MHz, 25.6 us at 5 MHz); bgap_ena = 0 clears it. The fields themselves read back as written.",
       "update": "stopped",
       "islands": [],
       "live": false,
@@ -1988,7 +1740,7 @@
       }
     },
     "core.aosc": {
-      "description": "SUB-04/RA-1: always-on oscillator pt_aosc EN (consumers: fc_src[4] and debug observation). Live; reset on. While an RF payload runs (ENABLE=1 with digital.transport_config.payload_iq = 1 (I/Q owner)) the register file forces the output to 0 regardless of this field, so the aosc cannot spur the RF receive chain.",
+      "description": "Always-on oscillator pt_aosc EN = macro port c_aosc_en (consumers: fc_src[4], the supply/clock monitor time base and debug observation). Live; RESET 0 (always-on audit F2: nothing needs the oscillator before SPI is up and the analog safe-state evidence is at EN = 0). Software can pulse the field 1 -> 0 -> 1 to leave the stuck state F3. While an RF payload runs (ENABLE=1 with payload_iq = 1) the register file forces the output to 0.",
       "update": "live",
       "islands": [],
       "live": true,
@@ -1996,7 +1748,7 @@
       "fields": {
         "enable": {
           "bits": 1,
-          "default": 1,
+          "default": 0,
           "minimum": 0,
           "maximum": 1,
           "unit": "code",
@@ -2075,16 +1827,6 @@
       ],
       "then_all": [
         [
-          "dac_i.config.enable",
-          "eq",
-          0
-        ],
-        [
-          "dac_q.config.enable",
-          "eq",
-          0
-        ],
-        [
           "dac_i.state.state",
           "eq",
           "off"
@@ -2108,16 +1850,6 @@
         ]
       ],
       "then_all": [
-        [
-          "dac_i.config.enable",
-          "eq",
-          0
-        ],
-        [
-          "dac_q.config.enable",
-          "eq",
-          0
-        ],
         [
           "dac_i.state.state",
           "eq",
@@ -2224,11 +1956,6 @@
       ],
       "then_all": [
         [
-          "clocktree.config.tx_enable",
-          "eq",
-          0
-        ],
-        [
           "detect.config.test_current_enable",
           "eq",
           0
@@ -2293,11 +2020,6 @@
       "then_all": [
         [
           "txpad.config.branch",
-          "eq",
-          "off"
-        ],
-        [
-          "wiredtx.state.state",
           "eq",
           "off"
         ],
@@ -2471,12 +2193,7 @@
           "active"
         ],
         [
-          "usbhs.state.state",
-          "ne",
-          "active"
-        ],
-        [
-          "usbfs.state.state",
+          "usbdrive.state.state",
           "ne",
           "active"
         ]
@@ -2505,6 +2222,11 @@
           "consolidation.wiredtx_stage.stage",
           "eq",
           "serial"
+        ],
+        [
+          "usbdrive.select.branch",
+          "eq",
+          "off"
         ]
       ]
     },
@@ -2681,25 +2403,6 @@
           "debug.rf_bb_bypass.rxfilter",
           "eq",
           1
-        ]
-      ]
-    },
-    {
-      "id": "pll_state_needs_owner",
-      "class": "legality",
-      "node": "shared pll",
-      "if_any": [
-        [
-          "rfpll.state.state",
-          "ne",
-          "off"
-        ]
-      ],
-      "then_all": [
-        [
-          "consolidation.pll.owner",
-          "ne",
-          "off"
         ]
       ]
     },
@@ -2958,10 +2661,239 @@
           0
         ]
       ]
+    },
+    {
+      "id": "lna_reduced_bias_with_tx",
+      "class": "legality",
+      "if_any": [
+        [
+          "rfdriver.state.state",
+          "eq",
+          "active"
+        ]
+      ],
+      "if_all": [
+        [
+          "lna.state.state",
+          "ne",
+          "off"
+        ]
+      ],
+      "then_all": [
+        [
+          "lna.bias.lo",
+          "eq",
+          1
+        ]
+      ],
+      "reason": "RC-16k/q: reduced LNA bias whenever the TX chain is on (240 mA ceiling)."
+    },
+    {
+      "id": "bbfilter_i_low_cap_needs_q",
+      "class": "legality",
+      "if_any": [
+        [
+          "bbfilter_i.trim.cut",
+          "in",
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "then_all": [
+        [
+          "bbfilter_i.trim.qt",
+          "nin",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        ]
+      ],
+      "reason": "FS-2 stability validator: cap code <= 1 requires q_trim >= 6."
+    },
+    {
+      "id": "bbfilter_q_low_cap_needs_q",
+      "class": "legality",
+      "if_any": [
+        [
+          "bbfilter_q.trim.cut",
+          "in",
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "then_all": [
+        [
+          "bbfilter_q.trim.qt",
+          "nin",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        ]
+      ],
+      "reason": "FS-2 stability validator."
+    },
+    {
+      "id": "lo_internal_needs_valid_n",
+      "class": "legality",
+      "if_any": [
+        [
+          "rfpll.state.state",
+          "eq",
+          "active"
+        ]
+      ],
+      "if_all": [
+        [
+          "rfpll.config.lo_mode",
+          "eq",
+          "internal"
+        ]
+      ],
+      "then_all": [
+        [
+          "rfpll.config.lo_n",
+          "nin",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        ]
+      ],
+      "reason": "pt_lo_mmd: N < 16 is not a valid ratio."
+    },
+    {
+      "id": "lo_pads_vs_forwarded_clock",
+      "class": "pad",
+      "if_any": [
+        [
+          "rfpll.config.lo_mode",
+          "in",
+          [
+            "external_passive",
+            "external_cml"
+          ]
+        ]
+      ],
+      "then_all": [
+        [
+          "debug.clk_select.wire_line",
+          "nin",
+          [
+            "aux_clk",
+            "wclk_in"
+          ]
+        ],
+        [
+          "debug.clk_select.wire_sample",
+          "nin",
+          [
+            "aux_clk",
+            "wclk_in"
+          ]
+        ],
+        [
+          "debug.clk_select.conv_sample",
+          "nin",
+          [
+            "aux_clk",
+            "wclk_in"
+          ]
+        ],
+        [
+          "debug.clk_select.host_clk",
+          "nin",
+          [
+            "aux_clk",
+            "wclk_in"
+          ]
+        ],
+        [
+          "debug.clk_obs.source",
+          "nin",
+          [
+            "aux_clk",
+            "wclk_in"
+          ]
+        ]
+      ],
+      "reason": "CP4-3: the forwarded wire clock WCLK_IN shares the AUX_CLK pad pair, which carries the Q leg of an external LO. An external LO mode excludes every use of that pair as a clock input (rf_wired_payload_exclusive does not cover all-fallback RF receive)."
+    },
+    {
+      "id": "forwarded_clock_needs_debug_island",
+      "class": "legality",
+      "if_any": [
+        [
+          "debug.clk_select.wire_line",
+          "in",
+          [
+            "aux_clk",
+            "wclk_in"
+          ]
+        ],
+        [
+          "debug.clk_select.wire_sample",
+          "in",
+          [
+            "aux_clk",
+            "wclk_in"
+          ]
+        ],
+        [
+          "debug.clk_select.conv_sample",
+          "in",
+          [
+            "aux_clk",
+            "wclk_in"
+          ]
+        ],
+        [
+          "debug.clk_select.host_clk",
+          "in",
+          [
+            "aux_clk",
+            "wclk_in"
+          ]
+        ]
+      ],
+      "then_all": [
+        [
+          "debug.island_power.debug",
+          "eq",
+          1
+        ]
+      ],
+      "reason": "CP4-3 / TOP-25: the AUX_CLK receiver (forwarded wire clock, auxiliary clock) is on the debug island."
     }
   ],
   "break_before_make": [
-    "debug.clk_select.rf_lo",
     "debug.clk_select.wire_line",
     "debug.clk_select.wire_sample",
     "debug.clk_select.conv_sample",
@@ -2970,16 +2902,16 @@
     "debug.atb.atb0",
     "debug.atb.atb1",
     "debug.clk_obs.source",
-    "debug.wclk_obs.source",
     "txpad.config.branch",
     "usbdrive.select.branch",
-    "clockmux.config.rf_source",
-    "clockmux.config.wire_source",
-    "refinput.select.branch",
     "termination.config.p_load",
     "consolidation.bbfilter.direction",
-    "consolidation.pll.owner",
-    "debug.clk_select.host_clk"
+    "debug.clk_select.host_clk",
+    "rfpll.config.lo_mode",
+    "clockmux.config.ring_ref",
+    "clockmux.config.host_prescale",
+    "clockmux.config.conv_prescale",
+    "clockmux.config.hf_prescale"
   ],
   "break_before_make_rule": "A commit may not change one of these fields directly from one non-zero code to a different non-zero code; it must commit the zero (stopped/off/open) code first. Two SPI transactions separate the commits, far exceeding the 4 ns switch dead time in control_semantics.switch_dead_time_s.",
   "fault_forced": {
@@ -2996,501 +2928,21 @@
       "txpad.config.branch": "off",
       "dac_i.config.hold_zero": 1,
       "dac_q.config.hold_zero": 1,
-      "txmix_i.enable.enable": 0,
-      "txmix_q.enable.enable": 0,
-      "txsum.enable.enable": 0,
       "debug.bb_tap.mode": "off",
       "debug.wtx_ext.enable": 0,
       "debug.rf_tx_bypass.rfdriver": 0,
-      "usbhs.bias.enable": 0
+      "usbhs.bias.enable": 0,
+      "txmix_i.state.state": "off",
+      "txmix_q.state.state": "off",
+      "txsum.state.state": "off"
     }
   },
   "commit_semantics": "SPI writes go to shadow registers (write-time range/encoding check per register; fields wider than 16 bits are range-checked at commit). Writing COMMIT (0x06 bit 0) validates the complete shadow (split-field ranges, every rule above, break-before-make against the active set, and - while the legacy payload ENABLE is 1 - that only live fields differ) and copies shadow to active in one SCLK edge, or rejects the commit, keeps the prior active configuration and latches CONFIG_ERROR (control_semantics.illegal). Bit 1 reverts shadow to active.",
   "cdc_semantics": "The register file is clocked only by SPI SCLK and asynchronously reset by RESET_N AND POR. Active fields are quasi-static: they change only on a successful commit, which also toggles commit_toggle. A consuming clock domain that must see a coherent multi-bit value synchronizes commit_toggle through two flops and reloads its local copy on a toggle edge; the next commit cannot occur for at least one more 32-clock SPI transaction. Purely analog consumers see each field change once per commit; stopped-only fields are changed only while their outputs are isolated.",
   "hardware_trim": {
     "description": "Pass-2 P2-2 register-map trim. keep=null: the field keeps its address bits but has no storage; it reads zero, writes to it are ignored and it is absent from the output buses. keep=[hi,lo]: only those bits are stored and exported; the other bits read zero. Addresses and the SPI ABI are unchanged.",
-    "forbidden": {
-      "lna.gain.gain_db": {
-        "values": [
-          10,
-          20
-        ],
-        "source": "analog/rf_rx/README.md",
-        "reason": "only two gain levels (gain_lo) exist"
-      }
-    },
+    "forbidden": {},
     "fields": {
-      "adc_i.config.comparator_trim": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "not implemented in the SAR block"
-      },
-      "adc_i.config.acquisition_ns": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "not implemented in the SAR block"
-      },
-      "adc_i.config.decision_ns": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "not implemented in the SAR block"
-      },
-      "adc_i.config.reset_ns": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "not implemented in the SAR block"
-      },
-      "dac_i.config.gain_trim": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "no analog effect in this version"
-      },
-      "dac_i.config.offset_trim": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "no analog effect in this version"
-      },
-      "rxfilter_i.coefficients.cutoff_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_i.coefficients.finite_zeros": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_i.coefficients.q1_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_i.coefficients.q2_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_i.coefficients.zero1_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_i.coefficients.zero2_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_i.state.state": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "txfilter_i.state.state": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "pga_i.gain.gain_db": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "pga_i.offset.code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "pga_i.state.state": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "txfilter_i.coefficients.cutoff_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "txfilter_i.coefficients.gain_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "txfilter_i.coefficients.q_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "adc_q.config.comparator_trim": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "not implemented in the SAR block"
-      },
-      "adc_q.config.acquisition_ns": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "not implemented in the SAR block"
-      },
-      "adc_q.config.decision_ns": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "not implemented in the SAR block"
-      },
-      "adc_q.config.reset_ns": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "not implemented in the SAR block"
-      },
-      "dac_q.config.gain_trim": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "no analog effect in this version"
-      },
-      "dac_q.config.offset_trim": {
-        "keep": null,
-        "source": "analog/converters/README.md",
-        "reason": "no analog effect in this version"
-      },
-      "rxfilter_q.coefficients.cutoff_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_q.coefficients.finite_zeros": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_q.coefficients.q1_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_q.coefficients.q2_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_q.coefficients.zero1_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_q.coefficients.zero2_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "rxfilter_q.state.state": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "txfilter_q.state.state": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "pga_q.gain.gain_db": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "pga_q.offset.code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "pga_q.state.state": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "txfilter_q.coefficients.cutoff_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "txfilter_q.coefficients.gain_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "txfilter_q.coefficients.q_code": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "collapsed into consolidation.bbfilter (one shared bw/gain/finite_zeros set, enable from direction)"
-      },
-      "termination.config.n_load": {
-        "keep": null,
-        "source": "analog/wired_rx/README.md",
-        "reason": "pad bank has one common load mode and no trim legs; p_load is the common mode (term_mode)"
-      },
-      "termination.config.trim_p": {
-        "keep": null,
-        "source": "analog/wired_rx/README.md",
-        "reason": "pad bank has one common load mode and no trim legs; p_load is the common mode (term_mode)"
-      },
-      "termination.config.trim_n": {
-        "keep": null,
-        "source": "analog/wired_rx/README.md",
-        "reason": "pad bank has one common load mode and no trim legs; p_load is the common mode (term_mode)"
-      },
-      "ctle.config.pole_trim": {
-        "keep": null,
-        "source": "analog/wired_rx/README.md",
-        "reason": "8-bit pole/zero trims collapse to one 2-bit degeneration code"
-      },
-      "ctle.config.zero_trim": {
-        "keep": [
-          1,
-          0
-        ],
-        "source": "analog/wired_rx/README.md",
-        "reason": "ctle_peak[1:0]"
-      },
-      "slicer.offset.data": {
-        "keep": [
-          3,
-          0
-        ],
-        "source": "analog/wired_rx/README.md",
-        "reason": "4-bit sampler trims, low nibble"
-      },
-      "slicer.offset.early": {
-        "keep": [
-          3,
-          0
-        ],
-        "source": "analog/wired_rx/README.md",
-        "reason": "4-bit sampler trims, low nibble"
-      },
-      "slicer.offset.late": {
-        "keep": [
-          3,
-          0
-        ],
-        "source": "analog/wired_rx/README.md",
-        "reason": "4-bit sampler trims, low nibble"
-      },
-      "detect.config.high_threshold_code": {
-        "keep": [
-          1,
-          0
-        ],
-        "source": "analog/wired_rx/README.md",
-        "reason": "det_thr 2-bit code"
-      },
-      "detect.config.low_threshold_code": {
-        "keep": [
-          1,
-          0
-        ],
-        "source": "analog/wired_rx/README.md",
-        "reason": "det_se 2-bit code"
-      },
-      "detect.config.current_code": {
-        "keep": null,
-        "source": "analog/wired_rx/README.md",
-        "reason": "6-bit test-current trim not implemented"
-      },
-      "cdr.config.burst_enable": {
-        "keep": null,
-        "source": "analog/wired_rx/README.md",
-        "reason": "burst samplers not implemented"
-      },
-      "cdr.config.burst_acquire_rows": {
-        "keep": null,
-        "source": "analog/wired_rx/README.md",
-        "reason": "burst samplers not implemented"
-      },
-      "cdr.config.burst_min_edges": {
-        "keep": null,
-        "source": "analog/wired_rx/README.md",
-        "reason": "burst samplers not implemented"
-      },
-      "rfpll.config.charge_pump_code": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "rfpll.config.enable": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "rfpll.config.feedback_fraction": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "rfpll.config.feedback_integer": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "rfpll.config.reference_divider": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "rfpll.config.vco_coarse": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "wirepll.config.charge_pump_code": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "wirepll.config.enable": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "wirepll.config.feedback_fraction": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "wirepll.config.feedback_integer": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "wirepll.config.reference_divider": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "wirepll.config.vco_coarse": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "wirepll.state.state": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "unified into consolidation.pll (owner/feedback_n/output_divider/phase_tap); integer-N power-of-two, fixed charge pump, no coarse band; rfpll.state is the shared PLL state"
-      },
-      "quadrature.config.generation": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "bias-free CMOS divider/interpolator; replaced by consolidation.quadrature.mode"
-      },
-      "quadrature.config.invert_q": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "bias-free CMOS divider/interpolator; replaced by consolidation.quadrature.mode"
-      },
-      "quadrature.config.rc_trim_i": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "bias-free CMOS divider/interpolator; replaced by consolidation.quadrature.mode"
-      },
-      "quadrature.config.rc_trim_q": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "bias-free CMOS divider/interpolator; replaced by consolidation.quadrature.mode"
-      },
-      "refinput.select.reference_divider": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "the 1..256 reference divider is not in pt_diff_clk_rx"
-      },
-      "debug.replica.vco_coarse": {
-        "keep": null,
-        "source": "analog/timing/README.md",
-        "reason": "vco_replica has no coarse DAC; VCTRL is forced from the ATB"
-      },
-      "tmds.state.state": {
-        "keep": null,
-        "source": "analog/wired_tx/wiredtx.spice",
-        "reason": "TMDS is a configuration of the wiredtx stage (EN_TMDS from wiredtx.state with consolidation.wiredtx_stage=tmds); tmds.config.current_code drives TMDS_CODE"
-      },
-      "tmds.idle.idle": {
-        "keep": null,
-        "source": "analog/wired_tx/wiredtx.spice",
-        "reason": "TMDS is a configuration of the wiredtx stage (EN_TMDS from wiredtx.state with consolidation.wiredtx_stage=tmds); tmds.config.current_code drives TMDS_CODE"
-      },
-      "wiredtx.config.source_termination_enable": {
-        "keep": null,
-        "source": "analog/wired_tx/wiredtx.spice",
-        "reason": "pt_wiredtx has no source-termination control port"
-      },
-      "usbhs.config.squelch_code": {
-        "keep": null,
-        "source": "spec/consolidation-pass.md (items 5, P2-2)",
-        "reason": "USB HS receive uses slicer; squelch/disconnect use detect thresholds"
-      },
-      "usbhs.config.disconnect_code": {
-        "keep": null,
-        "source": "spec/consolidation-pass.md (items 5, P2-2)",
-        "reason": "USB HS receive uses slicer; squelch/disconnect use detect thresholds"
-      },
-      "usbhs.config.rx_enable": {
-        "keep": null,
-        "source": "spec/consolidation-pass.md (items 5, P2-2)",
-        "reason": "USB HS receive uses slicer; squelch/disconnect use detect thresholds"
-      },
-      "rfdriver.gain.code": {
-        "keep": [
-          7,
-          4
-        ],
-        "source": "analog/rf_tx/README.md",
-        "reason": "g3..g0 = code[7:4]"
-      },
-      "consolidation.bbfilter.finite_zeros": {
-        "keep": null,
-        "source": "analog/rf_rx/README.md",
-        "reason": "finite-zero option removed from the filter; reserved, reads 0"
-      },
-      "bias.trim.code": {
-        "keep": null,
-        "source": "analog/core_support/README.md",
-        "reason": "retired: core.biasgen.idac2 is the bias trim; reserved, reads 0"
-      },
-      "debug.bias_override.master": {
-        "keep": null,
-        "source": "analog/core_support/README.md 'Register requirements'",
-        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
-      },
-      "debug.bias_override.rf": {
-        "keep": null,
-        "source": "analog/core_support/README.md 'Register requirements'",
-        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
-      },
-      "debug.bias_override.wired": {
-        "keep": null,
-        "source": "analog/core_support/README.md 'Register requirements'",
-        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
-      },
-      "debug.bias_override.pll": {
-        "keep": null,
-        "source": "analog/core_support/README.md 'Register requirements'",
-        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
-      },
-      "debug.bias_override.conv": {
-        "keep": null,
-        "source": "analog/core_support/README.md 'Register requirements'",
-        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
-      },
-      "debug.bias_override.debug": {
-        "keep": null,
-        "source": "analog/core_support/README.md 'Register requirements'",
-        "reason": "superseded: the trunk-leg enable (core.refchain.dist_en_*) / biasgen idac2/ena are the disconnect; reserved, reads 0"
-      },
-      "consolidation.quadrature.mode": {
-        "keep": null,
-        "source": "spec/consolidation-pass.md P3-1",
-        "reason": "quadrature retired (RF baseline is the passive external I/Q LO lo_ext; lower band moves to ring PH0/PH2 into lo_ext internal mode); reserved, reads 0"
-      },
-      "quadrature.state.state": {
-        "keep": null,
-        "source": "spec/consolidation-pass.md P3-1",
-        "reason": "quadrature retired (RF baseline is the passive external I/Q LO lo_ext; lower band moves to ring PH0/PH2 into lo_ext internal mode); reserved, reads 0"
-      },
       "debug.island_power.usb": {
         "keep": null,
         "source": "analog/island_support/README.md I1",
@@ -3501,20 +2953,45 @@
         "source": "analog/island_support/README.md I1",
         "reason": "no USB island switch; reserved"
       },
-      "consolidation.pll.lock_window": {
+      "usbhs.config.current_code": {
         "keep": null,
-        "source": "spec/consolidation-pass.md P3-7",
-        "reason": "superseded by debug.freq_count_a; reserved, reads 0"
+        "source": "analog/wired_tx/README.md",
+        "reason": "HS driver current is set by usbhs.bias.code (pt_wtx_hsbias); kept in the spec for the system model, reads 0"
       },
-      "consolidation.pll.lock_tolerance": {
+      "digital.guard_config.gain_settle_ticks": {
         "keep": null,
-        "source": "spec/consolidation-pass.md P3-7",
-        "reason": "superseded by debug.freq_count_a; reserved, reads 0"
+        "source": "spec/fpga-offload-audit",
+        "reason": "FPGA-side scheduling parameter: no on-chip consumer; kept in the spec for the system model, reads 0"
       },
-      "consolidation.pll.lock_count": {
+      "digital.guard_config.rx_to_tx_ticks": {
         "keep": null,
-        "source": "spec/consolidation-pass.md P3-7",
-        "reason": "superseded by debug.freq_count_a; reserved, reads 0"
+        "source": "spec/fpga-offload-audit",
+        "reason": "FPGA-side scheduling parameter: no on-chip consumer; kept in the spec for the system model, reads 0"
+      },
+      "digital.guard_config.tx_to_rx_ticks": {
+        "keep": null,
+        "source": "spec/fpga-offload-audit",
+        "reason": "FPGA-side scheduling parameter: no on-chip consumer; kept in the spec for the system model, reads 0"
+      },
+      "digital.guard_config.wire_trim_settle_ui": {
+        "keep": null,
+        "source": "spec/fpga-offload-audit",
+        "reason": "FPGA-side scheduling parameter: no on-chip consumer; kept in the spec for the system model, reads 0"
+      },
+      "digital.hop_config.deadline_ticks": {
+        "keep": null,
+        "source": "spec/fpga-offload-audit",
+        "reason": "FPGA-side scheduling parameter: no on-chip consumer; kept in the spec for the system model, reads 0"
+      },
+      "digital.hop_config.next_sample_epoch": {
+        "keep": null,
+        "source": "spec/fpga-offload-audit",
+        "reason": "FPGA-side scheduling parameter: no on-chip consumer; kept in the spec for the system model, reads 0"
+      },
+      "cdr.config.acquisition_timeout_ui": {
+        "keep": null,
+        "source": "spec/fpga-offload-audit",
+        "reason": "host-side acquisition timeout: no on-chip consumer; kept in the spec for the system model, reads 0"
       }
     }
   },
@@ -3604,6 +3081,126 @@
             "sync": false
           }
         }
+      },
+      "status.monitor": {
+        "description": "Supply / clock monitor rtl/pt_monitor.sv. Independent bits, not a coherent snapshot.",
+        "fields": {
+          "cause": {
+            "bits": 10,
+            "port": "mon_cause",
+            "meaning": "sticky trip cause: 0 reference, 1 input clock, 2 rf lock, 3 wire lock, 4+k supply k"
+          },
+          "cause_mon_clk": {
+            "bits": 1,
+            "port": "mon_cause_clk",
+            "meaning": "sticky: the monitor clock (aosc) stopped while armed"
+          },
+          "ready": {
+            "bits": 1,
+            "port": "mon_ready",
+            "meaning": "armed, everything qualified, no fault"
+          },
+          "mon_dead": {
+            "bits": 1,
+            "port": "mon_dead",
+            "meaning": "live: no monitor clock"
+          },
+          "ref_alive": {
+            "bits": 1,
+            "port": "mon_ref_alive",
+            "meaning": "live"
+          },
+          "in_alive": {
+            "bits": 1,
+            "port": "mon_in_alive",
+            "meaning": "live"
+          },
+          "fault": {
+            "bits": 1,
+            "port": "mon_fault",
+            "meaning": "live fault level (monitor OR the external fault pin)"
+          },
+          "qualified": {
+            "bits": 10,
+            "port": "mon_qualified",
+            "meaning": "live: requirement qualified"
+          }
+        }
+      },
+      "status.wired": {
+        "description": "Wired TX launch (pt_wtx_ctl) and RX control plane (pt_wrx_ctl) state. Raw multi-bit values are diagnostics (may tear by one update).",
+        "fields": {
+          "tx_state": {
+            "bits": 3,
+            "port": "wtx_state",
+            "meaning": "0 off, 1 flush, 2 pad, 3 run, 4 drain, 5 pad-off"
+          },
+          "tx_seq_fault": {
+            "bits": 1,
+            "port": "wtx_seq_fault",
+            "meaning": "pad sequencer fault"
+          },
+          "tx_ring_ready": {
+            "bits": 1,
+            "port": "wtx_ring_ready",
+            "meaning": "TX ring declared ready"
+          },
+          "rx_state": {
+            "bits": 3,
+            "port": "wrx_state",
+            "meaning": "0 off 1 manual 2 wait 3 pulse 4 settle 5 fll done 6 freq ok 7 locked"
+          },
+          "rx_flags": {
+            "bits": 8,
+            "port": "wrx_flags",
+            "meaning": "{slm_seen, slp_seen, idle, sig_ok, wclk_alive, freq_ok, fll_lost, fll_done}"
+          },
+          "rx_fll_error": {
+            "bits": 14,
+            "port": "wrx_fll_err",
+            "meaning": "last accepted counter error, two's complement"
+          },
+          "rx_violations": {
+            "bits": 5,
+            "port": "wrx_viol",
+            "meaning": "edge violations in the last word"
+          },
+          "rx_fll_windows": {
+            "bits": 8,
+            "port": "wrx_fll_win",
+            "meaning": "accepted windows, saturating"
+          },
+          "rx_pick_acc": {
+            "bits": 8,
+            "port": "wrx_pick_acc",
+            "meaning": "picker accumulator"
+          },
+          "rx_slips": {
+            "bits": 8,
+            "port": "wrx_slip_cnt",
+            "meaning": "slip tags sent, wraps"
+          }
+        }
+      },
+      "status.usb": {
+        "description": "USB line state and direct-stream status (rtl/pt_usb.sv).",
+        "fields": {
+          "line": {
+            "bits": 2,
+            "port": "usb_line",
+            "meaning": "debounced {SE_N, SE_P}"
+          },
+          "flags": {
+            "bits": 7,
+            "port": "usb_flags",
+            "meaning": "{disconnect, squelch, diff, se1, se0, k, j}"
+          },
+          "stream": {
+            "bits": 5,
+            "port": "usb_stream",
+            "meaning": "{tx_armed, tx_blocked, tx_underrun, tx_busy, rx_active}"
+          }
+        }
       }
     }
   },
@@ -3649,7 +3246,6 @@
           1,
           2,
           3,
-          4,
           5,
           6,
           7,

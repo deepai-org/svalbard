@@ -13,7 +13,7 @@ every read and every output snapshot is compared with the model.
 """
 import argparse
 import importlib.util
-import json
+import json, re
 import random
 import shutil
 import subprocess
@@ -150,19 +150,17 @@ class Model:
     def snapshot(self, in_reset=False, mid=False):
         o = M.outputs(self.active, self.pgood, self.fault, self.enable)
         v = o['fields']
-        cs = F['debug.clk_select.rf_lo']['values']
+        cs = F['debug.clk_select.wire_line']['values']
         obs_src = F['debug.clk_obs.source']['values']
-        wsrc = F['debug.wclk_obs.source']['values']
         clk = [n for n in v if n.startswith('debug.clk_select.')]
         dbg_on = (o['island_on'] >> M.ISLANDS['debug']) & 1
         aux = dbg_on and (any(v[n] == cs.index('aux_clk') for n in clk) or v['debug.clk_obs.source'] == obs_src.index('aux_clk'))
-        wclk = dbg_on and (any(v[n] == cs.index('wclk_in') for n in clk) or v['debug.clk_obs.source'] == obs_src.index('wclk_in')
-                or v['debug.wclk_obs.source'] == wsrc.index('wclk_in'))
-        dsrc = [0, 0, 1, self.toggle] + [(OBS >> i) & 1 for i in range(32)] + [int(not in_reset)]
-        wsrc_bits = [0, 0, 1] + [(WSTAT >> i) & 1 for i in range(16)]
-        s0, s1, ws = v['debug.dbg_obs.sel0'], v['debug.dbg_obs.sel1'], v['debug.wdbg_obs.select']
-        bits5 = f"{int(aux)}{int(wclk)}{int(bool(dbg_on and v['debug.wtx_ext.enable']))}{int(v['debug.clk_obs.source'] != 0)}{int(v['debug.wclk_obs.source'] != 0)}"
-        bits6 = f"{dsrc[s0]}{int(s0 != 0)}{dsrc[s1]}{int(s1 != 0)}{wsrc_bits[ws]}{int(ws != 0)}"
+        wclk = dbg_on and (any(v[n] == cs.index('wclk_in') for n in clk) or v['debug.clk_obs.source'] == obs_src.index('wclk_in'))
+        # PD22: wire_status is observed on DBG_OBS (codes 37+n); the WDBG_OBS / WCLK_OBS pads are retired.
+        dsrc = [0, 0, 1, self.toggle] + [(OBS >> i) & 1 for i in range(32)] + [int(not in_reset)] + [(WSTAT >> i) & 1 for i in range(16)]
+        s0, s1 = v['debug.dbg_obs.sel0'], v['debug.dbg_obs.sel1']
+        bits5 = f"{int(aux)}{int(wclk)}{int(bool(dbg_on and v['debug.wtx_ext.enable']))}{int(v['debug.clk_obs.source'] != 0)}"
+        bits6 = f"{dsrc[s0]}{int(s0 != 0)}{dsrc[s1]}{int(s1 != 0)}"
         bits2 = f"{self.toggle}{int(self.cfg_err != 0)}"
         return (o['analog_cfg'], o['debug_cfg'], o['island_en'], o['island_on'], o['atb0_sw'], o['atb1_sw'],
                 bits5, bits6, bits2, self.enable, self.mode8, (self.pb << 1) | self.ce, int(mid and not in_reset), 0,
@@ -374,16 +372,16 @@ def build(seed, n_random):
             s.snap()
     # D. Island isolation, power-good, override and fault forcing on a rich legal configuration.
     rich = {'lna.state.state': 1, 'rxmix_i.state.state': 2, 'rfdriver.state.state': 1, 'rfdriver.mute.mute': 0,
-            'ctle.state.state': 1, 'cdr.state.state': 1, 'adc_i.state.state': 1, 'adc_i.config.enable': 1,
-            'usbhs.state.state': 1, 'wiredtx.state.state': 2, 'wiredtx.idle.idle': 0, 'txpad.config.branch': 1,
+            'ctle.state.state': 1, 'cdr.state.state': 1, 'adc_i.state.state': 1, 'adc.config.interleave': 1,
+            'usbdrive.state.state': 1, 'wiredtx.state.state': 2, 'wiredtx.idle.idle': 0, 'txpad.config.branch': 1,
             'debug.replica.ringosc_enable': 1, 'debug.clk_obs.source': F['debug.clk_obs.source']['values'].index('ring_osc'),
             'debug.clk_obs.divider_log2': 5, 'debug.wmon_select.select': 4, 'debug.atb.atb1': 14, 'debug.atb.atb0': 43,
-            'debug.clk_select.rf_lo': 3, 'debug.clk_select.wire_sample': 4, 'debug.wclk_obs.source': 1,
-            'debug.dbg_obs.sel0': 5, 'debug.dbg_obs.sel1': 3, 'debug.wdbg_obs.select': 7, 'bias.trim.code': 17,
-            'debug.bb_tap.mode': 1, 'consolidation.pll.owner': 1, 'consolidation.pll.feedback_n': 2, 'rfpll.state.state': 1,
-            'consolidation.bbfilter.direction': 1, 'consolidation.bbfilter.bw': 5, 'consolidation.bbfilter.gain': 9,
-            'slicer.offset.data': 0xAB, 'rfdriver.gain.code': 0xD7, 'adc_i.config.decision_ns': 77,
-            'monitor.config.qualification_ticks': 0x5A3,  # mant_exp code (decoded 32-bit value on analog_cfg)
+            'debug.clk_select.wire_line': 2, 'debug.clk_select.wire_sample': 2, 'rfpll.config.lo_mode': 2, 'rfpll.config.lo_n': 24,
+            'debug.dbg_obs.sel0': 5, 'debug.dbg_obs.sel1': 44, 'rfpll.config.vco_coarse': 9,
+            'debug.bb_tap.mode': 1, 'ring_l.config.enable': 1, 'ring_c.config.modulus': 2, 'rfpll.state.state': 1,
+            'consolidation.bbfilter.direction': 1, 'bbfilter_i.trim.cut': 5, 'bbfilter_q.trim.gain': 9,
+            'slicer.offset.trim_d0': 0x2AB, 'rfdriver.gain.code': 0xD, 'slicer.threshold.vth_a': 77,
+            'monitor.config.qualification_ticks': 0x5A3, 'cdr.config.nominal_rate_khz': 2500000,
             'usbhs.bias.code': 0x7F, 'usbhs.bias.enable': 1}
     s.reset()
     s.set_fields(rich)
@@ -441,7 +439,7 @@ def build(seed, n_random):
     assert s.commit() == 0
     s.set_fields({'debug.atb.atb1': 15})
     assert s.commit() == 0
-    s.set_fields({'debug.clk_select.rf_lo': 2})
+    s.set_fields({'debug.clk_select.wire_line': 1})
     assert s.commit() != 0
     s.write(0x06, M.REVERT_CMD)
     s.snap()
@@ -661,9 +659,13 @@ def main():
     readiness = json.loads((P / 'spec/tapeout-readiness.json').read_text())
     chip = (P / 'integration/pt_chip.sv').read_text()
     header = chip[chip.index('module pt_chip('):chip.index(');', chip.index('module pt_chip('))]
-    missing = [d['name'] for d in readiness['debug_sites'] if d['name'] not in header.replace(',', ' ').split()]
+    # Sites retired since tapeout-readiness.json debug_sites was written (the list there is stale: coordinator/spec owner):
+    # WCLK_OBS, WDBG_OBS (PD22, now USB_DP/DN), ESD_TEST (PD35, now TLP_TEST), WCLK_IN_P/N (CP4-3, on the AUX_CLK pair).
+    retired = {'WCLK_OBS', 'WDBG_OBS', 'ESD_TEST', 'WCLK_IN_P', 'WCLK_IN_N'}
+    header = re.sub(r'\[\d+:0\]', ' ', header)
+    missing = [d['name'] for d in readiness['debug_sites'] if d['name'] not in retired and d['name'] not in header.replace(',', ' ').split()]
     rtl = sorted(str(x) for x in (P / 'rtl').glob('*.sv'))
-    elab = subprocess.run(['iverilog', '-g2012', '-I', str(P / 'rtl'), '-s', 'pt_chip', '-o', str(out / 'chip.vvp'),
+    elab = subprocess.run(['iverilog', '-g2012', '-I', str(P / 'rtl'), '-I', str(P / 'integration/top/generated'), '-s', 'pt_chip', '-o', str(out / 'chip.vvp'),
                            str(P / 'integration/pt_chip.sv')] + rtl, capture_output=True, text=True)
     report['chip_integration'] = dict(debug_sites=len(readiness['debug_sites']), missing_debug_ports=missing,
                                       elaborates=elab.returncode == 0, elaboration_errors=elab.stderr[-1000:])

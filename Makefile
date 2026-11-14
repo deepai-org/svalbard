@@ -373,7 +373,21 @@ transceiver-dense-rf-burst:
 .PHONY: transceiver-por-bypass
 transceiver-por-bypass:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_por_bypass.py
-# G3 closure gate (NOT in the regression): fails until pads/assembly bind a strap pad in integration/pt_chip.sv.
+# Mode-walk rework (digital r6): control blocks of the macro, each with its own bench and mutants (about 25 min, serial).
+.PHONY: transceiver-ctl-blocks transceiver-top-modes
+transceiver-ctl-blocks:
+	cd projects/programmable_transceiver_platform && OMP_NUM_THREADS=1 $(PYTHON) verification/check_monitor.py && \
+	$(PYTHON) verification/check_usb.py && $(PYTHON) verification/check_wtx_ctl.py && $(PYTHON) verification/check_wrx_ctl.py && \
+	$(PYTHON) verification/check_por_path.py && $(PYTHON) verification/check_spi_csn_race.py
+# Chip-level control plane per mode family: generated pt_chip.sv is current, register map vs cell pins (0 mismatches),
+# the real macro against the stub analog top of integration/top/pt_chip.conn (133 checks, decode mutants must fail),
+# CP4-1 clamp coverage, island-off zero masks.
+transceiver-top-modes:
+	$(PYTHON) projects/programmable_transceiver_platform/integration/gen_pt_chip.py --check
+	$(PYTHON) scratch/reviews/mode-walk/cfg_map.py --selftest
+	$(PYTHON) scratch/reviews/mode-walk/cfg_map.py | grep -q "^TOTAL: 0 pin groups without a field, 0 width mismatches, 0 orphan fields"
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_top_modes.py
+# G3 closure gate: the strap pad is bound in the generated integration/pt_chip.sv since 2026-11-14 (passes).
 .PHONY: transceiver-por-bypass-chip
 transceiver-por-bypass-chip:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_por_bypass.py --chip
@@ -433,7 +447,7 @@ transceiver-digital-hardening: transceiver-digital-rtl-checks transceiver-pair-w
 # frequency counter (P3-7), the AC-1 40-bit wired boundary end to end through the pad-edge host
 # link (S2/S3), the AC-1 transport CDC FIFO (any even depth, conservative counts), the IX-2 8b/10b
 # offload and the RXR-D2 fast gain command (opcode4) end to end.
-transceiver-digital-rtl-checks: transceiver-dense-transport transceiver-dense-service transceiver-dense-pair transceiver-dense-pair-link transceiver-pair-gearbox transceiver-dense-rf-service transceiver-sync-fifo-depth transceiver-shared-egress-lifecycle transceiver-dense-rf-burst transceiver-por-bypass
+transceiver-digital-rtl-checks: transceiver-top-modes transceiver-dense-transport transceiver-dense-service transceiver-dense-pair transceiver-dense-pair-link transceiver-pair-gearbox transceiver-dense-rf-service transceiver-sync-fifo-depth transceiver-shared-egress-lifecycle transceiver-dense-rf-burst transceiver-por-bypass
 	cd projects/programmable_transceiver_platform && \
 	iverilog -g2012 -s tb_async_fifo_regout -o /tmp/pt_fifo_regout.vvp rtl/pt_fifo.sv sim/tb_async_fifo_regout.sv && \
 	vvp -n /tmp/pt_fifo_regout.vvp | grep -q FIFO_REGOUT_PASS && \

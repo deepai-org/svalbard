@@ -16,16 +16,20 @@ module tb_por_bypass;
  always #3.2 hclk=~hclk;   // host word clock runs throughout: the host / core reset domains are checked too
  wire spi_miso,spi_miso_oe,d2h_oe,enable;wire[15:0]rf_trim;
  wire[`PT_ISLAND_W-1:0]island_en,island_on;
- pt_digital_macro dut(.reset_n_pad(reset_n_pad),.por_n(por_n),.por_bypass(por_bypass),.wire_linecode(1'b0),
+ pt_digital_macro dut(.reset_n_pad(reset_n_pad),.por_n(por_n),.por_bypass(por_bypass),
   .spi_sclk(sclk),.spi_cs_n(cs_n),.spi_mosi(mosi),.spi_miso(spi_miso),.spi_miso_oe(spi_miso_oe),
   .host_word_clk(hclk),.h2d_clk(1'b0),.h2d_pin(10'h0),.d2h_oe(d2h_oe),
   .ref_clk(1'b0),.wire_rx_clk(1'b0),.wire_tx_clk(1'b0),.rf_rx_clk(1'b0),.rf_tx_clk(1'b0),
-  .wire_rx_data(40'h0),.wire_rx_valid(1'b0),.wire_tx_request(1'b0),.rf_rx_sample(24'h0),.rf_rx_valid(1'b0),
-  .rf_tx_request(1'b0),.enable(enable),.rf_trim(rf_trim),.calibration_above_target(1'b0),
-  .fault(1'b0),.island_pgood(6'h0),.analog_status(12'h0),.wire_analog_status(13'h0),
-  .island_en(island_en),.island_on(island_on),.wired_on_ext(1'b0),
-  .ct_wclk(1'b0),.ct_ref_clk(1'b0),.ct_det_clk_in(1'b0),.ct_pll_lock(1'b0),.ct_marker(1'b0),
-  .ct_cfg_det_en(1'b0),.ct_cfg_det_div(3'd0),.fc_src(6'h0));
+  .wire_rx_data(40'h0),.wire_rx_edge(20'h0),.rf_rx_sample(24'h0),.rf_rx_sample_b(24'h0),.rf_rx_ph_i(1'b0),.rf_rx_ph_q(1'b0),
+  .fault(1'b0),.s_pg_wired_rx(1'b0),.s_pg_wired_cap(1'b0),.s_pg_wired_tx(1'b0),.s_pg_rf_rx(1'b0),.s_pg_rf_tx(1'b0),.s_pg_lod(1'b0),
+  .s_pg_lo(1'b0),.s_pg_pll(1'b0),.s_pg_conv(1'b0),.s_pg_debug(1'b0),
+  .island_en(island_en),.island_on(island_on),.wired_on_ext(1'b0),.ct_wclk(1'b0),.fc_src(6'h0),
+  .s_pll_tx_lock(1'b0),.s_pll_cdr_lock(1'b0),.s_ref_present(1'b0),.s_refbuf_ready(1'b0),.s_adc_i_ovl(1'b0),.s_adc_i_b_ovl(1'b0),
+  .s_adc_q_ovl(1'b0),.s_adc_q_b_ovl(1'b0),.s_adc_i_done(1'b0),.s_adc_i_b_done(1'b0),.s_adc_q_done(1'b0),.s_adc_q_b_done(1'b0),
+  .s_detect_diff_pos(1'b0),.s_detect_diff_neg(1'b0),.s_detect_se_p(1'b0),.s_detect_se_n(1'b0),.s_wrx_slp(1'b0),.s_wrx_slm(1'b0),
+  .s_wtx_ext_data(1'b0),.s_aux_present(1'b0),.s_wtx_ext_present(1'b0));
+ // enable / rf_trim are internal since the mode-walk rework (no analog consumer): observed hierarchically
+ assign enable=dut.enable; assign rf_trim=dut.rf_trim;
  integer i,errors=0,checks=0;reg[31:0]frame;reg[15:0]rd;reg oe_seen;
  // Mode-0 SPI; oe_seen = MISO driven at any sampled bit of the response
  task spi(input[7:0]cmd,input[7:0]addr,input[15:0]data,output[15:0]q);
@@ -71,11 +75,11 @@ module tb_por_bypass;
   expect_read(8'h10,16'h0000,"B rf_trim reset value");
   spi(8'h80,8'h10,16'hA5C3,rd);expect_read(8'h10,16'hA5C3,"B rf_trim readback");
   checks=checks+1;if(rf_trim!==16'hA5C3)begin errors=errors+1;$display("FAIL B rf_trim output %h",rf_trim);end
-  expect_read(8'h0D,16'h0007,"B RESET_STATUS both flags + strap bit");
-  spi(8'h80,8'h0D,16'h0007,rd);expect_read(8'h0D,16'h0005,"B por_flag stuck (POR low), rst_flag cleared, strap bit read-only");
+  expect_read(8'h0D,16'h0017,"B flags + strap + por_masked");
+  spi(8'h80,8'h0D,16'h0007,rd);expect_read(8'h0D,16'h0015,"B por_flag stuck (POR low), rst_flag cleared, strap bit read-only");
   pulse_reset;
   expect_read(8'h10,16'h0000,"B RESET_N resets with strap high");
-  expect_read(8'h0D,16'h0007,"B rst_flag set again");
+  expect_read(8'h0D,16'h0017,"B rst_flag set again");
   reset_n_pad=0;#100;expect_dead("B RESET_N low blocks SPI");reset_n_pad=1;#200;
   // strap removed with POR still low: back in reset (level, no latch)
   spi(8'h80,8'h10,16'h1234,rd);por_bypass=0;#100;expect_dead("B strap removed");

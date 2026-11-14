@@ -421,7 +421,7 @@ def validate(model, dbg, readiness):
         raise SpecError('expected 19 debug sites')
     if len(dbg['obs_status']) != 32 or len(dbg['wire_status']) != 16:
         raise SpecError('obs_status must list 32 and wire_status 16 signals')
-    if by_name['debug.dbg_obs.sel0']['maximum'] != 4 + 32 or by_name['debug.wdbg_obs.select']['maximum'] != 2 + 16:
+    if by_name['debug.dbg_obs.sel0']['maximum'] != 4 + 32 + 16 or by_name['debug.dbg_obs.sel1']['maximum'] != 4 + 32 + 16:
         raise SpecError('observation mux maxima do not match the status vectors')
 
 
@@ -509,7 +509,7 @@ def emit_sv(model):
     a('module pt_regfile(')
     a(' input wire rst_n,sclk,')
     a(' input wire por_n, // POR alone (rst_n = RESET_N AND (por_n OR the por_bypass strap)); sets the sticky POR flag')
-    a(' input wire por_bypass, // static strap level (G3, DT-10), read back raw in RESET_STATUS b2')
+    a(' input wire[2:0]por_path, // rtl/pt_por_path.sv levels read back raw in RESET_STATUS b4:b2: {por_masked, ovr_armed (second rescue path latched), por_bypass strap (G3, DT-10)}')
     a(' input wire wr_en,input wire[7:0]wr_addr,input wire[15:0]wr_data,')
     a(' input wire[7:0]rd_addr,output reg[15:0]rd_data,')
     a(' // Read candidates for the two possible last address bits (pt_spi registers both on the 16th')
@@ -525,8 +525,8 @@ def emit_sv(model):
     a(f' output wire[{aw - 1}:0]analog_cfg,output wire[{dw - 1}:0]debug_cfg,')
     a(f' output wire[{nisl - 1}:0]island_en,island_on,output wire[{natb - 1}:0]atb0_sw,atb1_sw,')
     a(f' output wire[{len(model["atb_groups"]["atb0"]) - 1}:0]atb0_grp,output wire[{len(model["atb_groups"]["atb1"]) - 1}:0]atb1_grp,output wire atb0_en,atb1_en,')
-    a(' output wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,wclk_obs_oe,')
-    a(' output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe,')
+    a(' output wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,')
+    a(' output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,')
     a(' output reg commit_toggle,output wire config_error' +
       ''.join(f',\n input wire[{sf["bits"] - 1}:0]{sf["port"]}' for sf in model['status_fields']) + ');')
     a(f' localparam[15:0]ID=16\'h5356,ABI_VERSION=16\'h{0x0003:04X},MAP_HASH=16\'h{model["map_hash16"]:04X};')
@@ -643,28 +643,24 @@ def emit_sv(model):
             a(f' assign atb{bus}_grp[{gi}]=' + '|'.join(f'atb{bus}_sw[{c - 1}]' for c in grp['codes']) + f'; // {grp["name"]}')
         a(f' assign atb{bus}_en=|atb{bus}_sw;')
     # Receiver enables and observation pads.
-    cs = by_name['debug.clk_select.rf_lo']['values']
+    cs = by_name['debug.clk_select.wire_line']['values']
     aux, wclk = cs.index('aux_clk'), cs.index('wclk_in')
     clk_sel = [f for f in fields if f['group'] == 'debug.clk_select']
     obs_src = by_name['debug.clk_obs.source']['values']
-    wobs_src = by_name['debug.wclk_obs.source']['values']
     a(' assign rx_en_aux=island_on[%d]&&(' % islands['debug'] + '||'.join([f'o_{f["sv"]}==3\'d{aux}' for f in clk_sel] +
-                                        [f'o_debug_clk_obs__source==4\'d{obs_src.index("aux_clk")}']) + ');')
+                                        [f'o_debug_clk_obs__source==5\'d{obs_src.index("aux_clk")}']) + ');')
     a(' assign rx_en_wclk=island_on[%d]&&(' % islands['debug'] + '||'.join([f'o_{f["sv"]}==3\'d{wclk}' for f in clk_sel] +
-                                         [f'o_debug_clk_obs__source==4\'d{obs_src.index("wclk_in")}',
-                                          f'o_debug_wclk_obs__source==3\'d{wobs_src.index("wclk_in")}']) + ');')
+                                         [f'o_debug_clk_obs__source==5\'d{obs_src.index("wclk_in")}']) + ');')
     if 'wired' not in by_name['debug.wtx_ext.enable']['islands']:
         raise SpecError('LU-02/RA-3: debug.wtx_ext.enable must be gated by the wired island')
     a(' // LU-02 / RA-3: o_debug_wtx_ext__enable is island-gated by island_on[wired], so WTX_EXT_DATA never')
     a(' // reaches the wired TX p-diff while the wired island is off.')
     a(' assign rx_en_wtx_ext=island_on[%d]&&o_debug_wtx_ext__enable[0]; // debug-pad receivers sit on the debug island' % islands['debug'])
-    a(" assign clk_obs_oe=o_debug_clk_obs__source!=4'd0;")
-    a(" assign wclk_obs_oe=o_debug_wclk_obs__source!=3'd0;")
-    a(" wire[36:0]dbg_src={rst_n,obs_status,commit_toggle,1'b1,1'b0,1'b0};")
-    a(" wire[18:0]wdbg_src={wire_status,1'b1,1'b0,1'b0};")
+    a(" assign clk_obs_oe=o_debug_clk_obs__source!=5'd0;")
+    a(" // PD22: WDBG_OBS / WCLK_OBS pads are retired; wire_status is observed on DBG_OBS0/1 (codes 37+n).")
+    a(" wire[63:0]dbg_src={11'd0,wire_status,rst_n,obs_status,commit_toggle,1'b1,1'b0,1'b0};")
     a(" assign dbg_obs0=dbg_src[o_debug_dbg_obs__sel0];assign dbg_obs0_oe=o_debug_dbg_obs__sel0!=6'd0;")
     a(" assign dbg_obs1=dbg_src[o_debug_dbg_obs__sel1];assign dbg_obs1_oe=o_debug_dbg_obs__sel1!=6'd0;")
-    a(" assign wdbg_obs=wdbg_src[o_debug_wdbg_obs__select];assign wdbg_obs_oe=o_debug_wdbg_obs__select!=5'd0;")
     # Commit validation.
     a(' // Sticky reset-cause flags (0x0D, write 1 to clear). Their only asynchronous control is the')
     a(' // reset source itself: por_flag is set by POR alone and survives RESET_N; rst_flag is set by')
@@ -817,7 +813,7 @@ def emit_sv(model):
     a("   8'h06:rd_data={commit_count,5'b0,pending,last_ok,commit_toggle};8'h07:rd_data={15'b0,view};")
     a("   8'h08:rd_data=ABI_VERSION;8'h09:rd_data=MAP_HASH;")
     pad = 8 - nisl
-    a(f"   8'h0A:rd_data={{{pad}'b0,pg2,{pad}'b0,on2}};8'h0B:rd_data={{15'b0,f2}};8'h0C:rd_data={{err_code,err_addr}};8'h0D:rd_data={{13'b0,por_bypass,rst_flag,por_flag}};")
+    a(f"   8'h0A:rd_data={{{pad}'b0,pg2,{pad}'b0,on2}};8'h0B:rd_data={{15'b0,f2}};8'h0C:rd_data={{err_code,err_addr}};8'h0D:rd_data={{11'b0,por_path,rst_flag,por_flag}};")
     a("   8'h10:rd_data=rf_trim;8'h11:rd_data=wire_trim;8'h12:rd_data=clock_trim;")
     a("   8'h20:rd_data={11'b0,index};8'h23:rd_data={3'b0,memory_last,5'b0,memory_loop,capture_enable,playback_enable};")
     a("   8'h24:rd_data={capture_data[39:32],7'b0,c2};8'h25:rd_data=capture_data[15:0];8'h26:rd_data=capture_data[31:16];")
@@ -846,7 +842,7 @@ def emit_sv(model):
     emit_formal(model, a, by_name)
     a('endmodule')
     a('')
-    a('module pt_mgmt(input wire rst_n,por_n,por_bypass,sclk,cs_n,mosi,output wire miso,miso_oe,')
+    a('module pt_mgmt(input wire rst_n,por_n,input wire[2:0]por_path,input wire sclk,cs_n,mosi,output wire miso,miso_oe,')
     a(' input wire[15:0]status,output wire enable,mode8,output wire[15:0]rf_trim,wire_trim,clock_trim,')
     a(' output wire memory_write,output wire[4:0]memory_index,output wire[39:0]memory_wdata,')
     a(' input wire[39:0]capture_data,input wire capture_done,output wire playback_enable,capture_enable,')
@@ -855,8 +851,8 @@ def emit_sv(model):
     a(f' output wire[{aw - 1}:0]analog_cfg,output wire[{dw - 1}:0]debug_cfg,')
     a(f' output wire[{nisl - 1}:0]island_en,island_on,output wire[{natb - 1}:0]atb0_sw,atb1_sw,')
     a(f' output wire[{len(model["atb_groups"]["atb0"]) - 1}:0]atb0_grp,output wire[{len(model["atb_groups"]["atb1"]) - 1}:0]atb1_grp,output wire atb0_en,atb1_en,')
-    a(' output wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,wclk_obs_oe,')
-    a(' output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,wdbg_obs,wdbg_obs_oe,')
+    a(' output wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,')
+    a(' output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,')
     a(' output wire commit_toggle,config_error' +
       ''.join(f',\n input wire[{sf["bits"] - 1}:0]{sf["port"]}' for sf in model['status_fields']) + ');')
     a(' wire wr_en;wire[7:0]wr_addr,rd_addr;wire[15:0]wr_data,rd_data,rd_data0,rd_data1;wire[6:0]rd_hi;')
@@ -867,7 +863,7 @@ def emit_sv(model):
     a(' // SPI port) take it on the falling SCLK edge after the 32nd rising edge (STA: launch/capture on')
     a(' // the sclk fall edge, output budgets relative to it in integration/pt_digital_macro.sdc).')
     a(' wire sclk_regs=~sclk;')
-    a(' pt_regfile regs(.rst_n(rst_n),.por_n(por_n),.por_bypass(por_bypass),.sclk(sclk_regs),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),')
+    a(' pt_regfile regs(.rst_n(rst_n),.por_n(por_n),.por_path(por_path),.sclk(sclk_regs),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),')
     a('  .rd_addr(rd_addr),.rd_data(rd_data),.rd_hi(rd_hi),.rd_data0(rd_data0),.rd_data1(rd_data1),')
     a('  .status(status),.enable(enable),.mode8(mode8),')
     a('  .rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),.memory_write(memory_write),')
@@ -878,9 +874,9 @@ def emit_sv(model):
     a('  .analog_cfg(analog_cfg),.debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),')
     a('  .atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.atb0_grp(atb0_grp),.atb1_grp(atb1_grp),.atb0_en(atb0_en),.atb1_en(atb1_en),')
     a('  .rx_en_aux(rx_en_aux),.rx_en_wclk(rx_en_wclk),')
-    a('  .rx_en_wtx_ext(rx_en_wtx_ext),.clk_obs_oe(clk_obs_oe),.wclk_obs_oe(wclk_obs_oe),')
+    a('  .rx_en_wtx_ext(rx_en_wtx_ext),.clk_obs_oe(clk_obs_oe),')
     a('  .dbg_obs0(dbg_obs0),.dbg_obs0_oe(dbg_obs0_oe),.dbg_obs1(dbg_obs1),.dbg_obs1_oe(dbg_obs1_oe),')
-    a('  .wdbg_obs(wdbg_obs),.wdbg_obs_oe(wdbg_obs_oe),.commit_toggle(commit_toggle),.config_error(config_error)' +
+    a('  .commit_toggle(commit_toggle),.config_error(config_error)' +
       ''.join(f',.{sf["port"]}({sf["port"]})' for sf in model['status_fields']) + ');')
     a('endmodule')
     a('`default_nettype wire')
@@ -898,7 +894,7 @@ def emit_formal(model, a, by_name):
     for f in fields:
         a(f'   assert(a_{f["sv"]}=={sv_const(f["bits"], f["default"])}&&s_{f["sv"]}=={sv_const(f["bits"], f["default"])});')
     a('   assert(island_en==0&&island_on==0&&atb0_sw==0&&atb1_sw==0&&atb0_grp==0&&atb1_grp==0&&!atb0_en&&!atb1_en);')
-    a('   assert(!clk_obs_oe&&!wclk_obs_oe&&!dbg_obs0_oe&&!dbg_obs1_oe&&!wdbg_obs_oe);')
+    a('   assert(!clk_obs_oe&&!dbg_obs0_oe&&!dbg_obs1_oe);')
     a('   assert(!rx_en_aux&&!rx_en_wclk&&!rx_en_wtx_ext&&!enable&&!playback_enable&&!capture_enable);')
     for bus in ('analog', 'debug'):
         image = 0
@@ -1158,10 +1154,9 @@ def emit_markdown(model):
     a('')
     a('DBG_OBS0/1 (`debug.dbg_obs.sel0/1`): 0 tristate, 1 constant 0, 2 constant 1, 3 commit toggle, ' +
       ', '.join(f'{4 + i} {s}' for i, s in enumerate(model['obs_status'])) +
-      f', {4 + len(model["obs_status"])} combined reset level rst_n (1 = released).')
-    a('')
-    a('WDBG_OBS (`debug.wdbg_obs.select`): 0 tristate, 1 constant 0, 2 constant 1, ' +
-      ', '.join(f'{3 + i} {s}' for i, s in enumerate(model['wire_status'])) + '.')
+      f', {4 + len(model["obs_status"])} combined reset level rst_n (1 = released), ' +
+      ', '.join(f'{5 + len(model["obs_status"]) + i} {s}' for i, s in enumerate(model['wire_status'])) +
+      ' (wired status, PD22: the WDBG_OBS pad is retired).')
     a('')
     if model['status_fields']:
         a('## Read-only status registers')
@@ -1333,6 +1328,16 @@ def emit_defs(model):
                     for f in model['fields'] if f['bus']))
 
 
+def emit_field_wires(model):
+    """One named wire per bus field: include inside a module that has analog_cfg and debug_cfg in scope."""
+    return ('// GENERATED by rtl/gen/gen_regfile.py; do not edit. Field wires f_<group>__<field> sliced from the\n'
+            '// island-gated, fault-forced register-file buses analog_cfg / debug_cfg (both must be in scope).\n'
+            '/* verilator lint_off UNUSEDSIGNAL */\n' +
+            ''.join(f'wire[{f["bus_bits"] - 1}:0]f_{f["sv"]}={f["bus"]}_cfg[{f["bus_lsb"] + f["bus_bits"] - 1}:{f["bus_lsb"]}];'
+                    f' // {f["name"]}, reset {f["default"]}\n' for f in model['fields'] if f['bus']) +
+            '/* verilator lint_on UNUSEDSIGNAL */\n')
+
+
 def emit_json(model):
     out = dict(model)
     out['fields'] = [{k: v for k, v in f.items()} for f in model['fields']]
@@ -1345,6 +1350,7 @@ def outputs(model):
         P / 'spec/register-map.md': emit_markdown(model),
         P / 'rtl/pt_regfile.sv': emit_sv(model),
         P / 'rtl/pt_regmap_defs.svh': emit_defs(model),
+        P / 'rtl/pt_regmap_fields.svh': emit_field_wires(model),
         P / 'rtl/gen/pt_regmap.h': emit_c(model),
         P / 'rtl/gen/pt_regmap.py': emit_py(model),
     }

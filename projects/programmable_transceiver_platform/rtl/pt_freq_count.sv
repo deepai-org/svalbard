@@ -43,7 +43,11 @@ module pt_freq_count #(parameter integer CW = 18)(
     output reg         lost_lock,   // SCLK domain
     output reg  [13:0] diff,        // SCLK domain, two's complement, saturated
     output reg  [15:0] count,       // SCLK domain, saturating
-    input  wire        commit_toggle // register-file commit toggle (SCLK domain level)
+    input  wire        commit_toggle, // register-file commit toggle (SCLK domain level)
+    // Reference-domain signed result for the CDR frequency loop (pt_wrx_ctl): diff_ref = last evaluated
+    // count - target (two's complement, saturated); upd_ref = one reference cycle after each update.
+    output wire [13:0] diff_ref,
+    output reg         upd_ref
 );
     localparam integer HW = CW - 3;           // block-count width
     localparam integer FC_EVAL_DELAY = 6;     // reference cycles from snapshot to result load
@@ -173,6 +177,8 @@ module pt_freq_count #(parameter integer CW = 18)(
     pt_count_metrics #(.CW(CW)) metrics(delta, target, tol, in_tol, d_sat);
     wire [15:0] c_sat = |delta[CW-1:16] ? 16'hffff : delta[15:0];
     assign locked_ref = r_locked;
+    assign diff_ref = r_diff;
+    always @(posedge ref_clk or negedge rst_n) if (!rst_n) upd_ref <= 1'b0; else upd_ref <= ev_go && evp;
     always @(posedge ref_clk or negedge rst_n)
         if (!rst_n) begin
             wl <= 13'h1388; tick <= 1'b0; snap_h <= 0; snap_l <= 0; fb_prev <= 0; ev_cnt <= 0; ev_go <= 1'b0;

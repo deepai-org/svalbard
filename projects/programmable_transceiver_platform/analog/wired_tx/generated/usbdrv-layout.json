@@ -1,0 +1,40 @@
+{
+  "published": true,
+  "gate": {
+    "magic_drc": true,
+    "lvs": true,
+    "klayout": true
+  },
+  "layout": {
+    "cell": "pt_usb_txdrv",
+    "devices": 208,
+    "rows": 12,
+    "W_um": 116.48,
+    "H_um": 270.06,
+    "area_um2": 31456.6,
+    "trunks": 45,
+    "row_width_um": 110.0,
+    "drc_count": 0,
+    "antenna_diodes": []
+  },
+  "lvs": {
+    "unique_match": true,
+    "summary": "Final result: Circuits match uniquely.",
+    "tool": "Netgen (digital image)",
+    "report": "lvs.out"
+  },
+  "klayout": {
+    "ran": true,
+    "violations": 0,
+    "by_rule": {},
+    "report": "/home/ubuntu/svalbard/scratch/wired_tx/usbdrv/layout/klayout/out/pt_usb_txdrv.klayout.drc/pt_usb_txdrv.lyrdb",
+    "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+  },
+  "gds_export": "analog image Magic 8.3.678, cif ostyle gdsii",
+  "magic_drc_lvs_extract_image": "svalbard/librelane-gf180-canary:2026.08",
+  "klayout_precheck": {
+    "clean": true,
+    "main": 0,
+    "antenna": 0
+  }
+}

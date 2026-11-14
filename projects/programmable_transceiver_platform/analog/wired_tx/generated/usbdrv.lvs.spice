@@ -1,0 +1,262 @@
+* NGSPICE file created from pt_usb_txdrv.ext - technology: gf180mcuD
+
+.subckt pt_usb_txdrv__p11 a_1000_n1600# a_n1088_n1600# a_n1000_n1760# w_n1250_n1916#
+X0 a_1000_n1600# a_n1000_n1760# a_n1088_n1600# w_n1250_n1916# pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=10u
+.ends
+
+.subckt pt_usb_txdrv__p3 a_n36_n956# a_n116_n800# a_n254_n1092# a_28_n800#
+X0 a_28_n800# a_n36_n956# a_n116_n800# a_n254_n1092# nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+.ends
+
+.subckt pt_usb_txdrv__p8 a_28_n600# a_n36_n756# w_n278_n916# a_n116_n600#
+X0 a_28_n600# a_n36_n756# a_n116_n600# w_n278_n916# pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+.ends
+
+.subckt pt_usb_txdrv__p0 a_n254_n392# a_28_n100# a_n36_n256# a_n116_n100#
+X0 a_28_n100# a_n36_n256# a_n116_n100# a_n254_n392# nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+.ends
+
+.subckt pt_usb_txdrv__p6 w_n278_n516# a_n36_n356# a_n116_n200# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# w_n278_n516# pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt pt_usb_txdrv__p7 a_28_n400# a_n36_n556# w_n278_n716# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# w_n278_n716# pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt pt_usb_txdrv__p4 a_n288_n100# a_n200_n260# a_200_n100# w_n450_n416#
+X0 a_200_n100# a_n200_n260# a_n288_n100# w_n450_n416# pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=2u
+.ends
+
+.subckt pt_usb_txdrv__p2 a_n254_n692# a_28_n400# a_n36_n556# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# a_n254_n692# nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt pt_usb_txdrv__p1 a_n36_n356# a_n116_n200# a_n254_n492# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# a_n254_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt pt_usb_txdrv__p9 a_n36_n956# a_n116_n800# a_28_n800# w_n278_n1116#
+X0 a_28_n800# a_n36_n956# a_n116_n800# w_n278_n1116# pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+.ends
+
+.subckt pt_usb_txdrv__p10 w_n278_n1916# a_28_n1600# a_n36_n1756# a_n116_n1600#
+X0 a_28_n1600# a_n36_n1756# a_n116_n1600# w_n278_n1916# pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+.ends
+
+.subckt pt_usb_txdrv__p5 a_300_n100# w_n550_n416# a_n388_n100# a_n300_n260#
+X0 a_300_n100# a_n300_n260# a_n388_n100# w_n550_n416# pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=3u
+.ends
+
+.subckt pt_usb_txdrv CMD_P CMD_N HS_EN HS_DRV FS_EN TX_DP TX_DN TX_OE ISLAND_OFF HS_STR0
++ HS_STR1 HS_PBIAS HS_P HS_N FS_HIGH_P FS_HIGH_N FS_LOW_P FS_LOW_N VDD VSS
+XCB17 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XCB28 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XHFN_MNE STR1 VSS VSS HFN__XN pt_usb_txdrv__p3
+XNHN_MPA NHN__X1 RHB_N VDD VDD pt_usb_txdrv__p8
+XID_MN VSS DRVB HS_DRV VSS pt_usb_txdrv__p0
+XCB18 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XCB29 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XBL1N_MP VDD GL_N VDD GLB_N pt_usb_txdrv__p6
+XCB0 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XNHN_MPB NHN__X2 GL_N VDD NHN__X1 pt_usb_txdrv__p8
+XCB19 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XHON_MPA HO_N HA_N VDD VDD pt_usb_txdrv__p7
+XCB1 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XFLN_MPA VDD DB_N VDD RLB_N pt_usb_txdrv__p6
+XNHN_MNA VSS GH_N RHB_N VSS pt_usb_txdrv__p0
+XID_MP VDD HS_DRV VDD DRVB pt_usb_txdrv__p6
+XNHN_MPC GH_N LD_N VDD NHN__X2 pt_usb_txdrv__p8
+XHBN_MPA VDD TX_DN VDD HB_N pt_usb_txdrv__p6
+XSB_MPA SB__X HS_EN VDD VDD pt_usb_txdrv__p7
+XFLN_MPB VDD GF VDD RLB_N pt_usb_txdrv__p6
+XHON_MPB HO_N HB_N VDD VDD pt_usb_txdrv__p7
+XCB2 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XNHN_MNB VSS GH_N GL_N VSS pt_usb_txdrv__p0
+XHBN_MPB VDD GS VDD HB_N pt_usb_txdrv__p6
+XSB_MPB NHS ISLAND_OFF VDD SB__X pt_usb_txdrv__p7
+XDHP_MC VDD DHP__X VDD VDD pt_usb_txdrv__p4
+XHON_MNA VSS HO_N HA_N HON__X pt_usb_txdrv__p2
+XFLN_MNA DB_N FLN__X VSS RLB_N pt_usb_txdrv__p1
+XCB3 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XNHN_MNC VSS GH_N LD_N VSS pt_usb_txdrv__p0
+XHBN_MNA TX_DN HBN__X VSS HB_N pt_usb_txdrv__p1
+XSB_MNA VSS NHS HS_EN VSS pt_usb_txdrv__p0
+XDHP_MPO VDD DHP__X VDD HD_P pt_usb_txdrv__p6
+XHON_MNB VSS HON__X HB_N VSS pt_usb_txdrv__p2
+XHEN_MPA HI_N HEN__XP HS_N VDD pt_usb_txdrv__p9
+XCB4 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XFLN_MNB GF VSS VSS FLN__X pt_usb_txdrv__p1
+XHBN_MNB GS VSS VSS HBN__X pt_usb_txdrv__p1
+XSB_MNB VSS NHS ISLAND_OFF VSS pt_usb_txdrv__p0
+XGD_MPA GD__X HS_ONB VDD VDD pt_usb_txdrv__p7
+XNLP_MPA NLP__X1 RLB_P VDD VDD pt_usb_txdrv__p8
+XCB5 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XNLP_MPB NLP__X2 GH_P VDD NLP__X1 pt_usb_txdrv__p8
+XDLP_MN FS_LOW_P VSS VSS DLP__X pt_usb_txdrv__p1
+XHIN_MN VSS HI_N HO_N VSS pt_usb_txdrv__p2
+XGD_MPB GDN DRVB VDD GD__X pt_usb_txdrv__p7
+XDHP_MNO VSS HD_P DHP__X VSS pt_usb_txdrv__p0
+XHEN_MNA VSS HS_N HI_N HEN__XN pt_usb_txdrv__p2
+XDLN_MC VDD DLN__X VDD VDD pt_usb_txdrv__p4
+XCB6 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XBH1N_MN VSS GHB_N GH_N VSS pt_usb_txdrv__p0
+XGD_MNA VSS GDN HS_ONB VSS pt_usb_txdrv__p0
+XNLP_MNA VSS GL_P RLB_P VSS pt_usb_txdrv__p0
+XNLP_MPC GL_P HD_P VDD NLP__X2 pt_usb_txdrv__p8
+XHFP_MPA VDD HS_P HI_P HFP__XP pt_usb_txdrv__p10
+XSH_MPA VDD HS_EN VDD HS_ONB pt_usb_txdrv__p6
+XCB7 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XDLP_MP DLP__X VDD VDD FS_LOW_P pt_usb_txdrv__p5
+XHIN_MP HO_N VDD HI_N VDD pt_usb_txdrv__p9
+XGD_MNB VSS GDN DRVB VSS pt_usb_txdrv__p0
+XNLP_MNB VSS GL_P GH_P VSS pt_usb_txdrv__p0
+XHEN_MPE STRB0 VDD HEN__XP VDD pt_usb_txdrv__p9
+XCB8 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XSH_MPB VDD NFS VDD HS_ONB pt_usb_txdrv__p6
+XBH1N_MP VDD GH_N VDD GHB_N pt_usb_txdrv__p6
+XNLP_MNC VSS GL_P HD_P VSS pt_usb_txdrv__p0
+XHFP_MNA HI_P HFP__XN VSS HS_P pt_usb_txdrv__p3
+XSH_MNA HS_EN SH__X VSS HS_ONB pt_usb_txdrv__p1
+XCB9 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XFHN_MPA VDD TX_DN VDD RHB_N pt_usb_txdrv__p6
+XHEN_MNE VSS HEN__XN STR0 VSS pt_usb_txdrv__p2
+XSH_MNB NFS VSS VSS SH__X pt_usb_txdrv__p1
+XFHN_MPB VDD GF VDD RHB_N pt_usb_txdrv__p6
+XHFP_MPE VDD HFP__XP STRB1 VDD pt_usb_txdrv__p10
+XGDI_MN VSS GDB GDN VSS pt_usb_txdrv__p0
+XFHN_MNA TX_DN FHN__X VSS RHB_N pt_usb_txdrv__p1
+XBL2P_MN VSS FS_LOW_P GLB_P VSS pt_usb_txdrv__p2
+XCL_FS_HIGH_N ISLAND_OFF VSS VSS FS_HIGH_N pt_usb_txdrv__p1
+XFHN_MNB GF VSS VSS FHN__X pt_usb_txdrv__p1
+XHAN_MPA VDD CMD_N VDD HA_N pt_usb_txdrv__p6
+XGDO_MN GDB VSS VSS GD pt_usb_txdrv__p1
+XSA_MPA SA__X FS_EN VDD VDD pt_usb_txdrv__p7
+XHFP_MNE STR1 VSS VSS HFP__XN pt_usb_txdrv__p3
+XGDI_MP VDD GDN VDD GDB pt_usb_txdrv__p6
+XNHP_MPA NHP__X1 RHB_P VDD VDD pt_usb_txdrv__p8
+XSA_MPB NFS ISLAND_OFF VDD SA__X pt_usb_txdrv__p7
+XBL2P_MP GLB_P VDD FS_LOW_P VDD pt_usb_txdrv__p9
+XHAN_MPB VDD GD VDD HA_N pt_usb_txdrv__p6
+XHDP_MN VSS HS_P HI_P VSS pt_usb_txdrv__p2
+XDHP_MN FS_HIGH_P VSS VSS DHP__X pt_usb_txdrv__p1
+XCL_FS_HIGH_P ISLAND_OFF VSS VSS FS_HIGH_P pt_usb_txdrv__p1
+XNHP_MPB NHP__X2 GL_P VDD NHP__X1 pt_usb_txdrv__p8
+XDHN_MC VDD DHN__X VDD VDD pt_usb_txdrv__p4
+XHAN_MNA CMD_N HAN__X VSS HA_N pt_usb_txdrv__p1
+XGDO_MP GD GDB VDD VDD pt_usb_txdrv__p7
+XSA_MNA VSS NFS FS_EN VSS pt_usb_txdrv__p0
+XFLP_MPA VDD DB_P VDD RLB_P pt_usb_txdrv__p6
+XHOP_MPA HO_P HA_P VDD VDD pt_usb_txdrv__p7
+XNHP_MNA VSS GH_P RHB_P VSS pt_usb_txdrv__p0
+XNHP_MPC GH_P LD_P VDD NHP__X2 pt_usb_txdrv__p8
+XHBP_MPA VDD TX_DP VDD HB_P pt_usb_txdrv__p6
+XHAN_MNB GD VSS VSS HAN__X pt_usb_txdrv__p1
+XHDP_MP HI_P VDD HS_P VDD pt_usb_txdrv__p9
+XS1I_MN VSS STRB1 HS_STR1 VSS pt_usb_txdrv__p0
+XSA_MNB VSS NFS ISLAND_OFF VSS pt_usb_txdrv__p0
+XHOP_MPB HO_P HB_P VDD VDD pt_usb_txdrv__p7
+XFLP_MPB VDD GF VDD RLB_P pt_usb_txdrv__p6
+XNHP_MNB VSS GH_P GL_P VSS pt_usb_txdrv__p0
+XDHP_MP DHP__X VDD VDD FS_HIGH_P pt_usb_txdrv__p5
+XHBP_MPB VDD GS VDD HB_P pt_usb_txdrv__p6
+XFIP_MN VSS DB_P TX_DP VSS pt_usb_txdrv__p0
+XFLP_MNA DB_P FLP__X VSS RLB_P pt_usb_txdrv__p1
+XHOP_MNA VSS HO_P HA_P HOP__X pt_usb_txdrv__p2
+XS1O_MN VSS STR1 STRB1 VSS pt_usb_txdrv__p0
+XDLN_MN FS_LOW_N VSS VSS DLN__X pt_usb_txdrv__p1
+XNHP_MNC VSS GH_P LD_P VSS pt_usb_txdrv__p0
+XHBP_MNA TX_DP HBP__X VSS HB_P pt_usb_txdrv__p1
+XS1I_MP VDD HS_STR1 VDD STRB1 pt_usb_txdrv__p6
+XDLN_MPO VDD DLN__X VDD LD_N pt_usb_txdrv__p6
+XHOP_MNB VSS HOP__X HB_P VSS pt_usb_txdrv__p2
+XFLP_MNB GF VSS VSS FLP__X pt_usb_txdrv__p1
+XHEP_MPA HI_P HEP__XP HS_P VDD pt_usb_txdrv__p9
+XHBP_MNB GS VSS VSS HBP__X pt_usb_txdrv__p1
+XGF_MPA GF__X FS_ONB VDD VDD pt_usb_txdrv__p7
+XFIP_MP VDD TX_DP VDD DB_P pt_usb_txdrv__p6
+XS1O_MP VDD STRB1 VDD STR1 pt_usb_txdrv__p6
+XGS_MPA GS__X HS_ONB VDD VDD pt_usb_txdrv__p7
+XDLN_MP DLN__X VDD VDD FS_LOW_N pt_usb_txdrv__p5
+XGF_MPB GF OEB VDD GF__X pt_usb_txdrv__p7
+XDLN_MNO VSS LD_N DLN__X VSS pt_usb_txdrv__p0
+XGS_MPB GS OEB VDD GS__X pt_usb_txdrv__p7
+XCL_FS_LOW_N ISLAND_OFF VSS VSS FS_LOW_N pt_usb_txdrv__p1
+XBH2P_MN VSS FS_HIGH_P GHB_P VSS pt_usb_txdrv__p2
+XHEP_MNA VSS HS_P HI_P HEP__XN pt_usb_txdrv__p2
+XGF_MNA VSS GF FS_ONB VSS pt_usb_txdrv__p0
+XGS_MNA VSS GS HS_ONB VSS pt_usb_txdrv__p0
+XGF_MNB VSS GF OEB VSS pt_usb_txdrv__p0
+XCL_FS_LOW_P ISLAND_OFF VSS VSS FS_LOW_P pt_usb_txdrv__p1
+XBH2P_MP GHB_P VDD FS_HIGH_P VDD pt_usb_txdrv__p9
+XHEP_MPE STRB0 VDD HEP__XP VDD pt_usb_txdrv__p9
+XGS_MNB VSS GS OEB VSS pt_usb_txdrv__p0
+XBL1P_MN VSS GLB_P GL_P VSS pt_usb_txdrv__p0
+XBL2N_MN VSS FS_LOW_N GLB_N VSS pt_usb_txdrv__p2
+XFHP_MPA VDD TX_DP VDD RHB_P pt_usb_txdrv__p6
+XHEP_MNE VSS HEP__XN STR0 VSS pt_usb_txdrv__p2
+XFHP_MPB VDD GF VDD RHB_P pt_usb_txdrv__p6
+XBL1P_MP VDD GL_P VDD GLB_P pt_usb_txdrv__p6
+XBL2N_MP GLB_N VDD FS_LOW_N VDD pt_usb_txdrv__p9
+XHDN_MN VSS HS_N HI_N VSS pt_usb_txdrv__p2
+XDHN_MN FS_HIGH_N VSS VSS DHN__X pt_usb_txdrv__p1
+XFHP_MNA TX_DP FHP__X VSS RHB_P pt_usb_txdrv__p1
+XIO_MN VSS OEB TX_OE VSS pt_usb_txdrv__p0
+XDHN_MPO VDD DHN__X VDD HD_N pt_usb_txdrv__p6
+XFHP_MNB GF VSS VSS FHP__X pt_usb_txdrv__p1
+XHAP_MPA VDD CMD_P VDD HA_P pt_usb_txdrv__p6
+XS0I_MN VSS STRB0 HS_STR0 VSS pt_usb_txdrv__p0
+XCB20 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XNLN_MPA NLN__X1 RLB_N VDD VDD pt_usb_txdrv__p8
+XHDN_MP HI_N VDD HS_N VDD pt_usb_txdrv__p9
+XHAP_MPB VDD GD VDD HA_P pt_usb_txdrv__p6
+XDHN_MP DHN__X VDD VDD FS_HIGH_N pt_usb_txdrv__p5
+XIO_MP VDD TX_OE VDD OEB pt_usb_txdrv__p6
+XCB10 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XCB21 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XNLN_MPB NLN__X2 GH_N VDD NLN__X1 pt_usb_txdrv__p8
+XS0O_MN VSS STR0 STRB0 VSS pt_usb_txdrv__p0
+XDHN_MNO VSS HD_N DHN__X VSS pt_usb_txdrv__p0
+XFIN_MN VSS DB_N TX_DN VSS pt_usb_txdrv__p0
+XCL_HS_N ISLAND_OFF VSS VSS HS_N pt_usb_txdrv__p1
+XHAP_MNA CMD_P HAP__X VSS HA_P pt_usb_txdrv__p1
+XS0I_MP VDD HS_STR0 VDD STRB0 pt_usb_txdrv__p6
+XCB11 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XCB22 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XNLN_MNA VSS GL_N RLB_N VSS pt_usb_txdrv__p0
+XNLN_MPC GL_N HD_N VDD NLN__X2 pt_usb_txdrv__p8
+XHFN_MPA VDD HS_N HI_N HFN__XP pt_usb_txdrv__p10
+XHAP_MNB GD VSS VSS HAP__X pt_usb_txdrv__p1
+XSF_MPA VDD FS_EN VDD FS_ONB pt_usb_txdrv__p6
+XCB12 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XCB23 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XNLN_MNB VSS GL_N GH_N VSS pt_usb_txdrv__p0
+XS0O_MP VDD STRB0 VDD STR0 pt_usb_txdrv__p6
+XFIN_MP VDD TX_DN VDD DB_N pt_usb_txdrv__p6
+XHIP_MN VSS HI_P HO_P VSS pt_usb_txdrv__p2
+XSF_MPB VDD NHS VDD FS_ONB pt_usb_txdrv__p6
+XCL_HS_P ISLAND_OFF VSS VSS HS_P pt_usb_txdrv__p1
+XCB13 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XCB24 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XDLP_MC VDD DLP__X VDD VDD pt_usb_txdrv__p4
+XBH1P_MN VSS GHB_P GH_P VSS pt_usb_txdrv__p0
+XNLN_MNC VSS GL_N HD_N VSS pt_usb_txdrv__p0
+XHFN_MNA HI_N HFN__XN VSS HS_N pt_usb_txdrv__p3
+XSF_MNA FS_EN SF__X VSS FS_ONB pt_usb_txdrv__p1
+XDLP_MPO VDD DLP__X VDD LD_P pt_usb_txdrv__p6
+XBH2N_MN VSS FS_HIGH_N GHB_N VSS pt_usb_txdrv__p2
+XCB14 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XCB25 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XHIP_MP HO_P VDD HI_P VDD pt_usb_txdrv__p9
+XSF_MNB NHS VSS VSS SF__X pt_usb_txdrv__p1
+XCB15 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XCB26 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XBH1P_MP VDD GH_P VDD GHB_P pt_usb_txdrv__p6
+XHFN_MPE VDD HFN__XP STRB1 VDD pt_usb_txdrv__p10
+XDLP_MNO VSS LD_P DLP__X VSS pt_usb_txdrv__p0
+XBH2N_MP GHB_N VDD FS_HIGH_N VDD pt_usb_txdrv__p9
+XCB16 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XCB27 VDD VDD HS_PBIAS VDD pt_usb_txdrv__p11
+XBL1N_MN VSS GLB_N GL_N VSS pt_usb_txdrv__p0
+.ends
+

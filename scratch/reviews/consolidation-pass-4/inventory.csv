@@ -1,0 +1,347 @@
+inst,master,conn_group,demand,cls,area_um2,area_src,mA_nom,mA_worst,modes,pd2_island,pins,ctl_pins,tied_or_nc
+host,pt_host_physical,chip,False,provider pad,0,provider pad ring,0,0,all,ring,61,0,0
+debug_pads,pt_debug_physical,chip,False,provider pad,0,provider pad ring,0,0,all,ring,11,0,0
+pad_por_bypass,pad_strap,chip,False,provider pad,0,provider pad site,0,0,all,ring,4,0,0
+digital,pt_digital_macro,chip,False,digital,2814000,report-v6 digital_mm2,72.1,81.8,all,core,407,0,54
+por,por,core,False,bias/ref/monitor,9469,v5 abstract bbox,0.01,0.01,all,core,6,0,1
+aosc,pt_aosc,core,False,oscillator,12864,area-pass-4 util.json outline,0.38,0.48,all,core,5,1,0
+core_bias,pt_core_bias,core,False,bias/ref/monitor,301799,v5 abstract bbox,0.4,0.52,all,core,122,74,0
+bias_ext,pt_bias_ext,core,True,bias/ref/monitor,9000,est: 3 bank outputs (bank3 = 4210-8964 um2),0.03,0.05,RXa W U,core,11,3,0
+isw_wired,isw_wired,core,False,island switch,64081,v5 abstract bbox,0,0,all,core,6,0,0
+isw_rf,isw_rf,core,False,island switch,49817,v5 abstract bbox,0,0,all,core,6,0,1
+isw_pll,isw_pll,core,False,island switch,53259,v5 abstract bbox,0,0,all,core,6,0,1
+isw_conv,isw_conv,core,False,island switch,31781,v5 abstract bbox,0,0,all,core,6,0,1
+isw_debug,isw_debug,core,False,island switch,36922,v5 abstract bbox,0,0,all,core,6,0,1
+pad_rf_rx,pad_rf_pair,rf,False,pad,146008,core intrusion 310 x (913-442),0,0,RX DX,rf_rx,5,0,0
+pad_rf_tx,pad_rf_pair,rf,False,pad,146008,core intrusion 310 x (913-442),0,0,TX DX,rf_tx,5,0,0
+pad_bb_i,pad_rf_pair,debug,False,pad (debug),146008,core intrusion 310 x (913-442),0,0,dbg/fallback RX,debug,5,0,0
+pad_bb_q,pad_rf_pair,debug,False,pad (debug),146008,core intrusion 310 x (913-442),0,0,dbg/fallback RX,debug,5,0,0
+pad_wclk_in,pad_rf_pair,debug,False,pad (fallback),146008,core intrusion 310 x (913-442),0,0,T(fwd clk) W-fallback,debug,5,0,0
+pad_wtx_ext,pad_rf_pair,debug,False,pad (fallback),146008,core intrusion 310 x (913-442),0,0,W-fallback,debug,5,0,0
+pad_wmon,pad_single_leg,debug,False,pad (debug),142307,core intrusion 302 x (913-442),0,0,dbg W U,debug,4,0,0
+pad_tlp,pad_single_leg,core,False,test structure,142307,core intrusion 302 x (913-442),0,0,char,core,4,0,0
+pad_ref,pad_refpad,pll,False,pad,188939,core intrusion 401 x (913-442),0,0,all (REF or LO_I),pll,5,0,0
+pad_aux_clk,pad_refpad,pll,False,pad,188939,core intrusion 401 x (913-442),0,0,RXe/TXe (LO_Q) / aux,pll,5,0,0
+refvcm,pt_refvcm,pll,True,bias/ref/monitor,3000,est,0.05,0.1,RX TX,pll,4,1,0
+pad_hs_rx,pad_hspad,wired,False,pad,319902,core intrusion 478 x (1111-442),0,0,W E,wired_rx,13,0,0
+pad_usb,pad_wirepad,wired,False,pad,517406,core intrusion 521 x (1435-442),18.2,20.0,U,wired_tx,27,14,0
+pad_wire_tx,pad_txpad,wired,False,pad,377623,core intrusion 481 x (1227-442),0,0,W T E,wired_tx,19,0,2
+lna,pt_lna,rf,False,RF,24763,area-pass-4 util.json outline,18.9,21.4,RX DX,rf_rx,31,15,0
+lna_ind_p,pt_lna_ind,rf,True,RF passive,48400,RF RX note: 220 um tank coil (est),0,0,RX DX,rf_rx,2,0,0
+lna_ind_n,pt_lna_ind,rf,True,RF passive,48400,RF RX note: 220 um tank coil (est),0,0,RX DX,rf_rx,2,0,0
+lna_deg_p,pt_lna_deg,rf,True,RF passive,14400,est: 0.47 nH spiral,0,0,RX DX,rf_rx,2,0,0
+lna_deg_n,pt_lna_deg,rf,True,RF passive,14400,est: 0.47 nH spiral,0,0,RX DX,rf_rx,2,0,0
+rxmix_i,pt_rxmix_i,rf,False,RF,35442,area-pass-4 util.json outline,3.01,3.09,RX DX,rf_rx,20,8,0
+rxmix_q,pt_rxmix_q,rf,False,RF,35442,area-pass-4 util.json outline,3.01,3.09,RX DX,rf_rx,20,8,0
+bbfilter_i,pt_bbfilter_i,rf,False,baseband,341901,area-pass-4 util.json outline,5.22,5.32,RX DX (+TX recon TDD),rf_rx,54,36,0
+bbfilter_q,pt_bbfilter_q,rf,False,baseband,341901,area-pass-4 util.json outline,5.22,5.32,RX DX (+TX recon TDD),rf_rx,54,36,0
+bb_tap_i,pt_bb_tap,debug,False,debug tap,19511,area-pass-4 util.json outline,1.0,1.5,dbg/fallback RX,debug,13,2,0
+bb_tap_q,pt_bb_tap,debug,False,debug tap,19511,area-pass-4 util.json outline,1.0,1.5,dbg/fallback RX,debug,13,2,0
+bb_tap_wmon,pt_bb_tap,debug,False,debug tap,19511,area-pass-4 util.json outline,1.0,1.5,dbg W U,debug,13,1,1
+iso_wmon,iso_pd,debug,False,isolation,95,iso-placement.json size_um,0,0,all,core,3,0,0
+adc_i,pt_adc_i,conv,False,converter,577710,area-pass-4 util.json outline,5.73,6.3,RX DX,conv,39,6,0
+adc_q,pt_adc_q,conv,False,converter,577785,area-pass-4 util.json outline,5.73,6.3,RX DX,conv,39,6,0
+iso_conv_clk,iso_clamp_x4,conv,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_i_0,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_i_1,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_i_2,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_i_3,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_i_4,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_i_5,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_i_6,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_i_7,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_i_8,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_i_9,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_q_0,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_q_1,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_q_2,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_q_3,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_q_4,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_q_5,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_q_6,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_q_7,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_q_8,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_q_9,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_i_0,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_i_1,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_i_2,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_i_3,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_i_4,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_i_5,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_i_6,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_i_7,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_i_8,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_i_9,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_q_0,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_q_1,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_q_2,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_q_3,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_q_4,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_q_5,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_q_6,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_q_7,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_q_8,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adcb_q_9,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_done_i,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_done_i_b,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_done_q,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_done_q_b,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_ovl_i,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_ovl_i_b,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_ovl_q,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_adc_ovl_q_b,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+dac_i,pt_dac_i,conv,False,converter,186115,area-pass-4 util.json outline,2.07,2.28,TX DX,conv,19,2,0
+dac_q,pt_dac_q,conv,False,converter,186115,area-pass-4 util.json outline,2.07,2.28,TX DX,conv,19,2,0
+refbuf,pt_refbuf,conv,False,bias/ref/monitor,117089,area-pass-4 util.json outline,1.56,1.56,RX TX DX,conv,8,2,0
+iso_refbuf_ready,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_rf_rx_clk,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_rf_tx_clk,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+txmix_i,pt_txmix_i,rf,False,RF,21424,area-pass-4 util.json outline,1.0,1.0,TX DX,rf_tx,16,3,0
+txmix_q,pt_txmix_q,rf,False,RF,21424,area-pass-4 util.json outline,1.0,1.0,TX DX,rf_tx,16,3,0
+txsum,pt_txsum,rf,False,RF,3988,area-pass-4 util.json outline,2.01,2.03,TX DX,rf_tx,10,1,0
+rfdriver,pt_rfdriver,rf,False,RF,96812,area-pass-4 util.json outline,58.4,61.7,TX DX,rf_tx,18,8,0
+lo_ext,pt_lo_ext,pll,False,LO,155350,area-pass-4 util.json outline,11.3,13.74,RX TX DX,lod,18,3,0
+iso_lo_ip,iso_pd,rf,False,isolation,95,iso-placement.json size_um,0,0,all,core,3,0,0
+iso_lo_in,iso_pd,rf,False,isolation,95,iso-placement.json size_um,0,0,all,core,3,0,0
+iso_lo_qp,iso_pd,rf,False,isolation,95,iso-placement.json size_um,0,0,all,core,3,0,0
+iso_lo_qn,iso_pd,rf,False,isolation,95,iso-placement.json size_um,0,0,all,core,3,0,0
+lo_vreg,pt_lo_vreg,pll,True,regulator,81500,"est: half of pll_vreg2 (one regulator, 25 mA)",0.5,1.0,RXa TXa DXa,lo,4,1,0
+qvco,pt_lc_qvco5,pll,False,oscillator,532476,area-pass-4 util.json outline,26.5,29.0,RXa TXa DXa,lo,19,7,1
+lo_mmd,pt_lo_mmd,pll,False,divider,361116,area-pass-4 util.json outline,26.3,34.8,RXa TXa DXa,lod,12,7,0
+lo_mmd_qdum,pt_lo_mmd_qdum,pll,False,divider (dummy),34062,area-pass-4 util.json outline,8.0,10.0,RXa TXa DXa,lod,7,1,2
+lo_pfdcp,pt_lo_pfdcp,pll,False,PLL,124110,area-pass-4 util.json outline,1.0,1.5,RXa TXa DXa,lo,10,4,0
+lo_lf,pt_lo_lf,pll,False,PLL,194122,area-pass-4 util.json outline,0,0,RXa TXa DXa,lo,3,0,0
+lo_obs,pt_lo_obs,pll,False,debug tap,17428,area-pass-4 util.json outline,0.5,1.0,dbg RXa,lod,6,1,0
+lo_obs_q,pt_lo_obs,pll,False,debug tap,17428,area-pass-4 util.json outline,0.5,1.0,dbg RXa,lod,6,0,2
+iso_lo_fb,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+polyphase,pt_polyphase,pll,False,test structure,39028,area-pass-4 util.json outline,2.8,2.8,"none (tied off, D-POLY)",pll,10,0,5
+rx_ref_in,pt_diff_clk_rx,core,False,clock rx,22341,area-pass-4 util.json outline,3.49,4.63,W U T E RXa,core,10,1,2
+clockmux,pt_clockmux,pll,False,clock,15161,area-pass-4 util.json outline,1.35,1.55,all,pll,32,16,0
+iso_host_clk,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+prescale,pt_prescale,pll,False,divider,12600,area-pass-4 util.json outline,1.99,2.4,"all (per instance, see D-CLK)",pll,9,5,0
+prescale_conv,pt_prescale,pll,False,divider,12600,area-pass-4 util.json outline,1.99,2.4,"all (per instance, see D-CLK)",pll,9,5,0
+prescale_hf,pt_prescale,pll,False,divider,12600,area-pass-4 util.json outline,1.99,2.4,"all (per instance, see D-CLK)",pll,9,5,0
+iso_ct_wclk,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+wordclk,pt_wordclk,pll,False,divider,24822,area-pass-4 util.json outline,2.3,2.42,W U E,pll,10,3,3
+iso_wrx_lde,iso_clamp,wired,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+pll_vreg2,pt_pll_vreg2,pll,False,regulator,173424,area-pass-4 util.json outline,0.6,1.0,W U T E (+host_follow),pll,8,2,0
+pll_tx,pt_pll_ring_core,pll,False,oscillator,86020,area-pass-4 util.json outline,6.94,10.2,W U T E,pll,21,4,5
+iso_pll_tx_lock,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_pll_tx_fbck,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+pll_cdr,pt_pll_ring,pll,False,oscillator,166657,area-pass-4 util.json outline,6.94,10.2,W U E (+host_follow RF),pll,34,9,1
+iso_pll_cdr_lock,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_pll_cdr_fbck,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+cdr,pt_cdr,pll,False,PLL,82880,r13 published (SESSION-STATE),0.4,1.0,W U E,pll,26,8,0
+iso_cdr_up_0,iso_clamp,pll,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_cdr_up_1,iso_clamp,pll,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_cdr_up_2,iso_clamp,pll,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_cdr_up_3,iso_clamp,pll,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_cdr_dn_0,iso_clamp,pll,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_cdr_dn_1,iso_clamp,pll,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_cdr_dn_2,iso_clamp,pll,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_cdr_dn_3,iso_clamp,pll,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+rx_aux_clk,pt_diff_clk_rx,debug,False,clock rx,22341,area-pass-4 util.json outline,3.49,4.63,dbg / aux ref,debug,10,0,2
+rx_wclk_in,pt_diff_clk_rx,debug,False,clock rx,22341,area-pass-4 util.json outline,3.49,4.63,T W-fallback,debug,10,0,2
+rx_wtx_ext,pt_diff_clk_rx,debug,False,clock rx,22341,area-pass-4 util.json outline,3.49,4.63,W-fallback,debug,10,0,2
+iso_aux_ck,iso_clamp_x4,pll,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wck_ext,iso_clamp_x4,pll,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wtx_dx,iso_clamp,wired,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_aux_present,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wclk_present,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wtx_ext_present,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+ring_osc,pt_ring_osc,debug,False,oscillator (monitor),9522,area-pass-4 util.json outline,1.0,2.0,dbg / supply trim readout,debug,4,1,0
+vco_replica,pt_vco_replica,debug,False,oscillator (monitor),20941,area-pass-4 util.json outline,6.0,11.8,dbg,debug,6,1,0
+iso_ring_osc,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_vco_replica,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+obs_pre4_wire,pt_obs_pre4,debug,False,divider,3667,area-pass-4 util.json outline,1.0,1.5,dbg,debug,5,1,0
+obs_pre4_wsmp,pt_obs_pre4,debug,False,divider,3667,area-pass-4 util.json outline,1.0,1.5,dbg,debug,5,1,0
+obs_pre4_ref,pt_obs_pre4,debug,False,divider,3667,area-pass-4 util.json outline,1.0,1.5,dbg,debug,5,1,0
+obs_pre4_aux,pt_obs_pre4,debug,False,divider,3667,area-pass-4 util.json outline,1.0,1.5,dbg,debug,5,1,0
+obs_pre4_wclk,pt_obs_pre4,debug,False,divider,3667,area-pass-4 util.json outline,1.0,1.5,dbg,debug,5,1,0
+obs_pre4_pll,pt_obs_pre4,debug,False,divider,3667,area-pass-4 util.json outline,1.0,1.5,dbg,debug,5,1,0
+obs_pre4_cdr,pt_obs_pre4,debug,False,divider,3667,area-pass-4 util.json outline,1.0,1.5,dbg,debug,5,1,0
+iso_lo_obs,iso_clamp_x4,debug,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+clk_obs,pt_clk_obs16,debug,False,debug mux,92036,area-pass-4 util.json outline,4.96,4.96,dbg,debug,29,8,4
+pd_clk_obs,iso_pd,core,False,isolation,95,iso-placement.json size_um,0,0,dbg,core,3,1,0
+iso_clk_obs,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+termination,pt_termination,wired,False,termination,48249,area-pass-4 util.json outline,1.25,1.56,W U E,wired_rx,21,9,0
+rxlevel,pt_rxlevel,wired,False,bias/ref/monitor,13180,area-pass-4 util.json outline,0.03,0.04,W U E,wired_rx,6,2,0
+ctle,pt_ctle,wired,False,baseband,133483,area-pass-4 util.json outline,11.2,12.2,W E,wired_rx,17,8,0
+rxselect,pt_rxselect,wired,False,mux,8841,area-pass-4 util.json outline,2.0,2.0,W U E,wired_rx,10,2,0
+wmon_sel,pt_wmon_sel,wired,False,debug mux,9835,area-pass-4 util.json outline,0,0,dbg W U,wired_rx,10,3,0
+detect,pt_detect,wired,False,detector,173480,area-pass-4 util.json outline,2.31,2.38,W U,wired_rx,20,7,0
+iso_detect_diff_pos,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_detect_diff_neg,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_detect_se_p,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_detect_se_n,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+vthdac,pt_vthdac,wired,False,small DAC,23891,area-pass-4 util.json outline,0.53,0.7,E (W optional),wired_rx,23,17,0
+ptrim,pt_ptrim,wired,False,clock trim,289747,area-pass-4 util.json outline,18.0,21.0,W U E,wired_cap,59,40,0
+slicer,pt_slicer,wired,False,sampler,109899,area-pass-4 util.json outline,7.25,9.8,W U E,wired_rx,114,89,1
+wrx_cap,pt_wrx_cap,wired,False,deserializer,956461,area-pass-4 util.json outline,44.78,46.64,W U E,wired_cap,119,9,20
+iso_wrx_dx_0,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_1,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_2,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_3,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_4,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_5,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_6,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_7,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_8,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_9,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_10,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_11,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_12,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_13,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_14,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_15,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_16,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_17,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_18,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_19,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_20,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_21,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_22,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_23,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_24,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_25,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_26,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_27,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_28,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_29,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_30,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_31,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_32,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_33,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_34,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_35,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_36,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_37,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_38,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_dx_39,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_0,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_1,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_2,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_3,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_4,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_5,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_6,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_7,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_8,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_9,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_10,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_11,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_12,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_13,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_14,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_15,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_16,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_17,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_18,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_ew_19,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_clk,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_slp,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wrx_slm,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+wiredtx,pt_wiredtx,wired,False,serializer,246188,area-pass-4 util.json outline,35.3,37.46,W T E,wired_tx,83,21,1
+iso_wire_tx_clk,iso_clamp_x4,core,False,isolation,1025,iso-placement.json size_um,0,0,all,core,5,0,0
+iso_wtx_ext_data,iso_clamp,core,False,isolation,906,iso-placement.json size_um,0,0,all,core,5,0,0
+steer_0,tx_steer,wired,False,pad driver,8677,area-pass-4 util.json outline,0,0,"W T E (4,5 unused)",wired_tx,4,0,0
+steer_1,tx_steer,wired,False,pad driver,8677,area-pass-4 util.json outline,0,0,"W T E (4,5 unused)",wired_tx,4,0,0
+steer_2,tx_steer,wired,False,pad driver,8677,area-pass-4 util.json outline,0,0,"W T E (4,5 unused)",wired_tx,4,0,0
+steer_3,tx_steer,wired,False,pad driver,8677,area-pass-4 util.json outline,0,0,"W T E (4,5 unused)",wired_tx,4,0,0
+steer_4,tx_steer,wired,False,pad driver,8677,area-pass-4 util.json outline,0,0,"W T E (4,5 unused)",wired_tx,4,0,2
+steer_5,tx_steer,wired,False,pad driver,8677,area-pass-4 util.json outline,0,0,"W T E (4,5 unused)",wired_tx,4,0,2
+attached_tx_interlock,tx_interlock,wired,False,control,48100,v5 abstract bbox,0,0,W T E U,wired_tx,17,4,4
+term_buffer,term_buffer,wired,False,termination,75196,area-pass-4 util.json outline,1.0,1.5,W T E,wired_tx,6,0,0
+txpad_bias,pt_txpad_bias,wired,True,bias/ref/monitor,3000,est,0.1,0.2,W T E,wired_tx,5,0,0
+hsbias,pt_wtx_hsbias,wired,False,bias/ref/monitor,9137,area-pass-4 util.json outline,0.3,0.5,U,wired_tx,13,9,0
+wtx_fallback_control,pt_wtx_fallback_control,wired,False,control,5861,area-pass-4 util.json outline,0,0,W-fallback,wired_tx,15,7,1
+atb0_leaf1,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf14,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf22,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf29,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf35,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf36,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf55,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf56,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf58,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_grp0,atb_grp,core,False,ATB,6145,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf43,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf44,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf45,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf46,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf47,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf48,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf49,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf50,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf51,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf52,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf53,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_leaf54,atb_leaf_f,core,False,ATB,1086,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_grp1,atb_grp,core,False,ATB,6145,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_pad,atb_pad,core,False,ATB,6626,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb0_io,atb_provider_pad,chip,False,provider pad,0,provider pad ring,0,0,all,ring,5,0,0
+atb1_leaf1,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf2,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf3,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf4,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf5,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf6,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf7,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf8,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf9,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf11,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf12,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf13,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_grp0,atb_grp,core,False,ATB,6145,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf14,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf15,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf16,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf17,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf18,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf19,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf20,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf21,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf33,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf43,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf44,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_grp1,atb_grp,core,False,ATB,6145,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf10,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf22,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf23,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf24,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf25,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf26,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf27,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf28,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf40,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf41,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf58,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_grp2,atb_grp,core,False,ATB,6145,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf29,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf30,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf31,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf32,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf34,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf35,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf36,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf37,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf38,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf39,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf47,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf48,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_grp3,atb_grp,core,False,ATB,6145,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf42,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf45,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf46,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf49,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf50,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf51,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf52,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf53,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf54,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf55,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf56,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_leaf57,atb_leaf_s,core,False,ATB,827,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_grp4,atb_grp,core,False,ATB,6145,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_pad,atb_pad,core,False,ATB,6626,v5 abstract bbox,0,0,dbg,core,5,0,0
+atb1_io,atb_provider_pad,chip,False,provider pad,0,provider pad ring,0,0,all,ring,5,0,0

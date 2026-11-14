@@ -1,0 +1,514 @@
+{
+ "purpose": "pt_wiredtx with the real phase source (extracted pt_pll_ring_core, open loop, regulated supply); MW-31 / WT29",
+ "scope": "single-point observations: nominal extraction (no pessimistic values), CMD pins (not the line), about 100 bits per run",
+ "dut": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4",
+ "ring": "sha256:d66b34f994b1e81b531530a0a98df3d94c325c2e1df5bf91817b2aa63209ebf3",
+ "benches": {
+  "sim_ringsrc": "sha256:aaa5820ea6bc9687e82843e129dd712676da9b533999520dd5e46dfa76a8fbfe",
+  "sim_realring": "sha256:2b5d01c54400bcb25896ab364c341198300dcf41ee5cac928cab80abc2c62b3b",
+  "run_from": "scratch/wired_tx/s11/ringsrc.py, realring.py (same code, scratch paths)"
+ },
+ "raw": "scratch/wired_tx/s11/blk, scratch/wired_tx/s11/tune",
+ "note": "Errors and eyes are decoded on a fixed grid at the calibration frequency. The open-loop ring is still settling during the run (ss 624.9 -> 626.9 MHz, tt 624.5 -> 628.0 MHz first to last 10 cycles), which inflates the jitter of the real-ring runs only (tt eye 226 ps on the fixed grid, 254 ps on the measured mean rate; ss 77 -> 84 ps). The ideal controls do not drift.",
+ "ring_only": {
+  "ss_32_2.69V_band1_625MHz": {
+   "osc": true,
+   "f_mhz": 625.52,
+   "jit_ps": 5.94,
+   "phase_deg": [
+    0.0,
+    38.0,
+    82.09,
+    124.02,
+    173.49,
+    216.27,
+    261.35,
+    303.2
+   ],
+   "duty": [
+    0.5764,
+    0.5778,
+    0.5728,
+    0.5794,
+    0.5713,
+    0.5743,
+    0.5697,
+    0.5745
+   ],
+   "vhi": [
+    2.746,
+    2.744,
+    2.737,
+    2.747,
+    2.735,
+    2.738,
+    2.731,
+    2.707
+   ],
+   "vlo": [
+    -0.054,
+    -0.058,
+    -0.055,
+    -0.055,
+    -0.052,
+    -0.05,
+    -0.049,
+    -0.013
+   ],
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "slot_err_ps": [
+    -31.1,
+    -4.0,
+    -13.6,
+    19.9,
+    -9.9,
+    0.4,
+    -14.0,
+    52.4
+   ],
+   "i_ma": 5.0,
+   "vctrl": 1.3669
+  },
+  "tt_27_2.925V_band1_626MHz": {
+   "osc": true,
+   "f_mhz": 625.64,
+   "jit_ps": 3.19,
+   "phase_deg": [
+    0.0,
+    40.79,
+    85.77,
+    127.55,
+    176.37,
+    219.06,
+    264.78,
+    304.17
+   ],
+   "duty": [
+    0.5192,
+    0.5248,
+    0.5158,
+    0.5215,
+    0.5141,
+    0.5211,
+    0.513,
+    0.5229
+   ],
+   "vhi": [
+    2.996,
+    2.999,
+    2.992,
+    3.0,
+    2.989,
+    2.993,
+    2.983,
+    2.947
+   ],
+   "vlo": [
+    -0.069,
+    -0.072,
+    -0.071,
+    -0.07,
+    -0.068,
+    -0.064,
+    -0.066,
+    -0.017
+   ],
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "slot_err_ps": [
+    -18.7,
+    -0.1,
+    -14.3,
+    17.0,
+    -10.3,
+    3.2,
+    -24.9,
+    48.1
+   ],
+   "i_ma": 5.5,
+   "vctrl": 1.1448
+  },
+  "ss_32_2.69V_band0_405MHz": {
+   "osc": true,
+   "f_mhz": 405.04,
+   "jit_ps": 5.05,
+   "phase_deg": [
+    0.0,
+    42.2,
+    87.29,
+    128.86,
+    177.18,
+    220.45,
+    266.25,
+    305.14
+   ],
+   "duty": [
+    0.529,
+    0.536,
+    0.5259,
+    0.533,
+    0.5247,
+    0.5322,
+    0.5232,
+    0.5346
+   ],
+   "vhi": [
+    2.769,
+    2.765,
+    2.76,
+    2.765,
+    2.758,
+    2.759,
+    2.753,
+    2.711
+   ],
+   "vlo": [
+    -0.065,
+    -0.067,
+    -0.066,
+    -0.064,
+    -0.062,
+    -0.06,
+    -0.061,
+    -0.014
+   ],
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "slot_err_ps": [
+    -19.2,
+    0.6,
+    -23.5,
+    22.8,
+    -11.9,
+    5.5,
+    -41.9,
+    67.6
+   ],
+   "i_ma": 3.27,
+   "vctrl": 1.3411
+  }
+ },
+ "runs": {
+  "ss_real": {
+   "ok": false,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "bit_rate_bps": 2502080000.0,
+   "real_ring": true,
+   "vring": 2.69,
+   "vctrl": 1.3669,
+   "band": 1,
+   "ring_f_hz": 625520000.0,
+   "route": [
+    30.0,
+    6e-14
+   ],
+   "CMD_MAIN_N": {
+    "bits_compared": 101,
+    "errors": 11,
+    "latency_bits": 16,
+    "jitter_pp_s": 3.224245414863933e-10,
+    "eye_width_est_s": 7.72429351730261e-11,
+    "vertical_margin_v": 0.4967237164783014
+   },
+   "CMD_MAIN_P": {
+    "bits_compared": 100,
+    "errors": 7,
+    "latency_bits": 17,
+    "jitter_pp_s": 3.248845983421202e-10,
+    "eye_width_est_s": 7.478287831729919e-11,
+    "vertical_margin_v": 0.317548144410996
+   },
+   "CMD_POST_P": {
+    "mismatches_vs_main_delayed_0ui": 32,
+    "mismatches_vs_main_delayed_1ui": 5,
+    "mismatches_vs_main_delayed_2ui": 32,
+    "bits_compared": 100
+   },
+   "supply_current_avg_a": 0.03224926436806559,
+   "dut_sha256": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4"
+  },
+  "ss_ideal_fullrail_control": {
+   "ok": true,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "bit_rate_bps": 2504796000.0,
+   "real_ring": false,
+   "vring": 2.69,
+   "vctrl": 1.3669,
+   "band": 1,
+   "ring_f_hz": 626199000.0,
+   "route": [
+    30.0,
+    6e-14
+   ],
+   "CMD_MAIN_N": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 17,
+    "jitter_pp_s": 1.5933810590254938e-10,
+    "eye_width_est_s": 2.3989600338219877e-10,
+    "vertical_margin_v": 1.427758014351563
+   },
+   "CMD_MAIN_P": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 17,
+    "jitter_pp_s": 1.48243037261036e-10,
+    "eye_width_est_s": 2.5099107202371214e-10,
+    "vertical_margin_v": 1.436473698665643
+   },
+   "CMD_POST_P": {
+    "mismatches_vs_main_delayed_0ui": 55,
+    "mismatches_vs_main_delayed_1ui": 0,
+    "mismatches_vs_main_delayed_2ui": 54,
+    "bits_compared": 99
+   },
+   "supply_current_avg_a": 0.03266555472239844,
+   "dut_sha256": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4"
+  },
+  "ss_ideal_swing2v69_control": {
+   "ok": true,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "bit_rate_bps": 2504796000.0,
+   "real_ring": false,
+   "ideal_cfg": {
+    "swing": 2.69
+   },
+   "vring": 2.925,
+   "vctrl": 1.5,
+   "band": 1,
+   "ring_f_hz": 626199000.0,
+   "route": [
+    30.0,
+    6e-14
+   ],
+   "CMD_MAIN_N": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 17,
+    "jitter_pp_s": 9.305171488641305e-11,
+    "eye_width_est_s": 3.061823943983351e-10,
+    "vertical_margin_v": 1.4033841522862716
+   },
+   "CMD_MAIN_P": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 17,
+    "jitter_pp_s": 1.0023717418952392e-10,
+    "eye_width_est_s": 2.989969350952242e-10,
+    "vertical_margin_v": 1.409599150574913
+   },
+   "CMD_POST_P": {
+    "mismatches_vs_main_delayed_0ui": 55,
+    "mismatches_vs_main_delayed_1ui": 0,
+    "mismatches_vs_main_delayed_2ui": 54,
+    "bits_compared": 99
+   },
+   "supply_current_avg_a": 0.03264877425848637,
+   "dut_sha256": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4"
+  },
+  "ss_ideal_swing2v69_duty0p575_control": {
+   "ok": false,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "bit_rate_bps": 2504796000.0,
+   "real_ring": false,
+   "ideal_cfg": {
+    "swing": 2.69,
+    "duty": 0.575
+   },
+   "vring": 2.925,
+   "vctrl": 1.5,
+   "band": 1,
+   "ring_f_hz": 626199000.0,
+   "route": [
+    30.0,
+    6e-14
+   ],
+   "CMD_MAIN_N": {
+    "bits_compared": 101,
+    "errors": 11,
+    "latency_bits": 16,
+    "jitter_pp_s": 2.7854520483649387e-10,
+    "eye_width_est_s": 1.2068890444825425e-10,
+    "vertical_margin_v": 0.9453906544107191
+   },
+   "CMD_MAIN_P": {
+    "bits_compared": 101,
+    "errors": 7,
+    "latency_bits": 16,
+    "jitter_pp_s": 2.50713769230466e-10,
+    "eye_width_est_s": 1.485203400542821e-10,
+    "vertical_margin_v": 1.3433879595990104
+   },
+   "CMD_POST_P": {
+    "mismatches_vs_main_delayed_0ui": 32,
+    "mismatches_vs_main_delayed_1ui": 5,
+    "mismatches_vs_main_delayed_2ui": 32,
+    "bits_compared": 100
+   },
+   "supply_current_avg_a": 0.03179193359340567,
+   "dut_sha256": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4"
+  },
+  "ss_ideal_swing2v69_spacing_control": {
+   "ok": true,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "bit_rate_bps": 2504796000.0,
+   "real_ring": false,
+   "ideal_cfg": {
+    "swing": 2.69,
+    "offsets": [
+     0,
+     -3.5e-11,
+     -2.9e-11,
+     -3.8e-11
+    ]
+   },
+   "vring": 2.925,
+   "vctrl": 1.5,
+   "band": 1,
+   "ring_f_hz": 626199000.0,
+   "route": [
+    30.0,
+    6e-14
+   ],
+   "CMD_MAIN_N": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 17,
+    "jitter_pp_s": 7.650390594440722e-11,
+    "eye_width_est_s": 3.227302033403409e-10,
+    "vertical_margin_v": 1.436946507286546
+   },
+   "CMD_MAIN_P": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 17,
+    "jitter_pp_s": 8.583052665651987e-11,
+    "eye_width_est_s": 3.1340358262822825e-10,
+    "vertical_margin_v": 1.4310897130377151
+   },
+   "CMD_POST_P": {
+    "mismatches_vs_main_delayed_0ui": 55,
+    "mismatches_vs_main_delayed_1ui": 0,
+    "mismatches_vs_main_delayed_2ui": 54,
+    "bits_compared": 99
+   },
+   "supply_current_avg_a": 0.03264826173483584,
+   "dut_sha256": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4"
+  },
+  "tt_real": {
+   "ok": true,
+   "corner": "typical",
+   "temp_c": 27,
+   "vdd": 3.3,
+   "bit_rate_bps": 2505200000.0,
+   "real_ring": true,
+   "vring": 2.925,
+   "vctrl": 1.1448,
+   "band": 1,
+   "ring_f_hz": 626300000.0,
+   "route": [
+    30.0,
+    6e-14
+   ],
+   "CMD_MAIN_N": {
+    "bits_compared": 101,
+    "errors": 0,
+    "latency_bits": 16,
+    "jitter_pp_s": 1.729587028788109e-10,
+    "eye_width_est_s": 2.2621102408909587e-10,
+    "vertical_margin_v": 1.5924572531012684
+   },
+   "CMD_MAIN_P": {
+    "bits_compared": 101,
+    "errors": 0,
+    "latency_bits": 16,
+    "jitter_pp_s": 1.439341209058531e-10,
+    "eye_width_est_s": 2.552356060620537e-10,
+    "vertical_margin_v": 1.6126958147371604
+   },
+   "CMD_POST_P": {
+    "mismatches_vs_main_delayed_0ui": 55,
+    "mismatches_vs_main_delayed_1ui": 0,
+    "mismatches_vs_main_delayed_2ui": 54,
+    "bits_compared": 100
+   },
+   "supply_current_avg_a": 0.035457525302560536,
+   "dut_sha256": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4"
+  },
+  "ss_real_1g62": {
+   "ok": true,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "bit_rate_bps": 1622000000.0,
+   "real_ring": true,
+   "vring": 2.69,
+   "vctrl": 1.3411,
+   "band": 0,
+   "ring_f_hz": 405500000.0,
+   "route": [
+    30.0,
+    6e-14
+   ],
+   "CMD_MAIN_N": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 16,
+    "jitter_pp_s": 2.5289496268764103e-10,
+    "eye_width_est_s": 3.6362784865637874e-10,
+    "vertical_margin_v": 1.4940341705281113
+   },
+   "CMD_MAIN_P": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 16,
+    "jitter_pp_s": 2.2184213284792855e-10,
+    "eye_width_est_s": 3.946806784960912e-10,
+    "vertical_margin_v": 1.4896499794990055
+   },
+   "CMD_POST_P": {
+    "mismatches_vs_main_delayed_0ui": 54,
+    "mismatches_vs_main_delayed_1ui": 0,
+    "mismatches_vs_main_delayed_2ui": 53,
+    "bits_compared": 99
+   },
+   "supply_current_avg_a": 0.021710668858138892,
+   "dut_sha256": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4"
+  }
+ }
+}

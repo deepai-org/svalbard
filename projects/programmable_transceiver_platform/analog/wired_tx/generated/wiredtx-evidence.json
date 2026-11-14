@@ -1,15 +1,15 @@
 {
   "block": "wiredtx",
   "source_hashes": {
-    "cells.py": "sha256:485ef3893422211a517d937fdd81340717e45d33bb2cb782d0a0780cd3dc23e6",
-    "layoutgen.py": "sha256:f1192f07cf0a89660dbf1ae36adeb790bc68a4428366a01f01ee680aa6ee811e",
-    "tools.py": "sha256:6c03d6ed8403408952c360e12bfe0ae28c6f13cac5266406d4aa9cfc8b3e8c5e",
-    "sim_wiredtx.py": "sha256:d96a2d865717f61ab2fde52aec59fceb2742dd7f03e8e2eae1038311e7c30425",
-    "sim_integration.py": "sha256:af9710dadf47c5535e3500e9c79cdd04fe2cfcb5c432959482abed35f9c50f33",
-    "sim_static.py": "sha256:5b9f14d9de52f7e653bd366f8714feb225e3fe76a27248db8c7c2ea82c0fcc08",
-    "run_all.py": "sha256:6d84084bd1fe05295330a28a2c7681ea6db953f49d614e9dcbac96b76ff933c1",
-    "evidence.py": "sha256:ed526fc76aab89910f91756a92764ca90304c41526050d6f236fcaeb1a703907",
-    "wiredtx.spice": "sha256:ba6fe0e6d71984aeb798ed551e8de707158794e89c149c27bd5f641106643681",
+    "cells.py": "sha256:11b216f42e0eeaf6a0ad2208e78f1f6d9b66ea87a582679cd0d2c3d293e36b1a",
+    "layoutgen.py": "sha256:c201564ab6e0bbf938d8bb7b27b841686805812390afe2c4b68b02535379f449",
+    "tools.py": "sha256:7403090bac5c7c8793059077fe479662a7fc641d39591917e99347ce038c7c22",
+    "sim_wiredtx.py": "sha256:dd7c78e0af2f22414da010506033731189cad7ab9a1c0859b439a69899df7334",
+    "sim_integration.py": "sha256:36482e99f14d6fa340da624b49191d5916e75812e1da8c66bdb497be414799e5",
+    "sim_static.py": "sha256:4b6f49a1ad7f492f7b7e05a1881d50ea2a83a81564885e093ec792267ad5ffcb",
+    "run_all.py": "sha256:ce0005a8829d774195403e663019d94d8e053718577dbfb684d53f8cbb395507",
+    "evidence.py": "sha256:4452512cf1cfed2a13fe6c2d9fe59ca30859ed5aecde9b15b800986b6dfbf52b",
+    "wiredtx.spice": "sha256:cd832de3211c321bd5591b002d0d34c809a637f31381f39e269bb5e99ab0ec05",
     "wtx_ext_rx.spice": "sha256:6e67dc4953fe95012799345a5cf242ce498c25969b9bb47af563ba778d5a1a9e"
   },
   "images": {
@@ -24,33 +24,12 @@
   },
   "pdk": "gf180mcuD (open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7; identical model/tech/netgen files in both images)",
   "netlist_hashes": {
-    "extracted": "sha256:a8b5f07f6e0e9cf68b34a73e6ac79e06d698759875bc03c65099015ad934de64",
-    "schematic": "sha256:ba6fe0e6d71984aeb798ed551e8de707158794e89c149c27bd5f641106643681",
-    "lvs_layout": "sha256:8b2a3910c77273d0b26ca4b2108762e9a67f71f9d6ec4ba1377f1479566bf57e",
-    "gds": "sha256:13abd98ecdf785bf917486014156e8cfaf26b4af2182cb0fda6fd16a4c40dcf5"
+    "extracted": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4",
+    "schematic": "sha256:cd832de3211c321bd5591b002d0d34c809a637f31381f39e269bb5e99ab0ec05",
+    "lvs_layout": "sha256:d8459592505f194cadea13ab5d9e1c07467e09d6e15a66c4a5c814a3111c9fa0",
+    "gds": "sha256:3d635301dcb22f1df9dc8f16a901f63f138690ae0469839406085ae6e02d6737"
   },
-  "stale_results_excluded": [
-    {
-      "run": "sweep_4_2.5",
-      "dut_sha256": "sha256:8ce13a06e95fc441e0afa4bf6c6049cc4aeacf3ce8ce00b56eee73ab4dbbc8db",
-      "kind": "extracted"
-    },
-    {
-      "run": "sweep_2_1.62",
-      "dut_sha256": "sha256:8ce13a06e95fc441e0afa4bf6c6049cc4aeacf3ce8ce00b56eee73ab4dbbc8db",
-      "kind": "extracted"
-    },
-    {
-      "run": "sweep_1_0.81",
-      "dut_sha256": "sha256:8ce13a06e95fc441e0afa4bf6c6049cc4aeacf3ce8ce00b56eee73ab4dbbc8db",
-      "kind": "extracted"
-    },
-    {
-      "run": "nominal_0g96",
-      "dut_sha256": "sha256:8ce13a06e95fc441e0afa4bf6c6049cc4aeacf3ce8ce00b56eee73ab4dbbc8db",
-      "kind": "extracted"
-    }
-  ],
+  "stale_results_excluded": [],
   "tests": {
     "safe": {
       "state": "open",
@@ -81,7 +60,7 @@
         "report": "analog/wired_tx/generated/wiredtx-lvs.txt"
       },
       "extracted_nominal": {
-        "point": "tt, 27 C, 3.3 V, 0.96 Gb/s, 2 bits per ring cycle (ring 480 MHz), PRBS7 20-bit double words, extracted C (Magic)"
+        "point": "tt, 27 C, 3.3 V, 1.25 Gb/s half rate (MODE 10 = WT12 rep2, ring 625 MHz, core 2.5 Gb/s), PRBS7, extracted C (Magic)"
       },
       "corner_sets": {
         "quarter 2.5 Gb/s": {
@@ -89,7 +68,6 @@
           "all_pass": false,
           "missing": [
             "cornerq2.5_ff_22_3.15",
-            "cornerq2.5_ff_22_3.35",
             "cornerq2.5_ff_32_3.15",
             "cornerq2.5_ff_32_3.35",
             "cornerq2.5_fs_22_3.15",
@@ -102,7 +80,6 @@
             "cornerq2.5_sf_32_3.35",
             "cornerq2.5_ss_22_3.15",
             "cornerq2.5_ss_22_3.35",
-            "cornerq2.5_ss_32_3.15",
             "cornerq2.5_ss_32_3.35",
             "cornerq2.5_typical_22_3.15",
             "cornerq2.5_typical_22_3.35",
@@ -110,34 +87,6 @@
             "cornerq2.5_typical_32_3.35"
           ],
           "gating": true,
-          "failing": []
-        },
-        "quarter 3.24 Gb/s": {
-          "points": 20,
-          "all_pass": false,
-          "missing": [
-            "cornerq3.24_ff_22_3.15",
-            "cornerq3.24_ff_22_3.35",
-            "cornerq3.24_ff_32_3.15",
-            "cornerq3.24_ff_32_3.35",
-            "cornerq3.24_fs_22_3.15",
-            "cornerq3.24_fs_22_3.35",
-            "cornerq3.24_fs_32_3.15",
-            "cornerq3.24_fs_32_3.35",
-            "cornerq3.24_sf_22_3.15",
-            "cornerq3.24_sf_22_3.35",
-            "cornerq3.24_sf_32_3.15",
-            "cornerq3.24_sf_32_3.35",
-            "cornerq3.24_ss_22_3.15",
-            "cornerq3.24_ss_22_3.35",
-            "cornerq3.24_ss_32_3.15",
-            "cornerq3.24_ss_32_3.35",
-            "cornerq3.24_typical_22_3.15",
-            "cornerq3.24_typical_22_3.35",
-            "cornerq3.24_typical_32_3.15",
-            "cornerq3.24_typical_32_3.35"
-          ],
-          "gating": false,
           "failing": []
         },
         "half 1.62 Gb/s": {
@@ -168,25 +117,39 @@
           "gating": true,
           "failing": []
         },
-        "full 0.81 Gb/s": {
-          "points": 6,
+        "full 0.48 Gb/s": {
+          "points": 20,
           "all_pass": false,
           "missing": [
-            "cornerf0.81_fs_22_3.15",
-            "cornerf0.81_fs_32_3.15",
-            "cornerf0.81_sf_22_3.15",
-            "cornerf0.81_sf_32_3.15",
-            "cornerf0.81_ss_22_3.15",
-            "cornerf0.81_ss_32_3.15"
+            "cornerf0.48_ff_22_3.15",
+            "cornerf0.48_ff_22_3.35",
+            "cornerf0.48_ff_32_3.15",
+            "cornerf0.48_ff_32_3.35",
+            "cornerf0.48_fs_22_3.15",
+            "cornerf0.48_fs_22_3.35",
+            "cornerf0.48_fs_32_3.15",
+            "cornerf0.48_fs_32_3.35",
+            "cornerf0.48_sf_22_3.15",
+            "cornerf0.48_sf_22_3.35",
+            "cornerf0.48_sf_32_3.15",
+            "cornerf0.48_sf_32_3.35",
+            "cornerf0.48_ss_22_3.15",
+            "cornerf0.48_ss_22_3.35",
+            "cornerf0.48_ss_32_3.15",
+            "cornerf0.48_ss_32_3.35",
+            "cornerf0.48_typical_22_3.15",
+            "cornerf0.48_typical_22_3.35",
+            "cornerf0.48_typical_32_3.15",
+            "cornerf0.48_typical_32_3.35"
           ],
-          "gating": false,
+          "gating": true,
           "failing": []
         }
       },
-      "envelope": "tt/ss/ff/sf/fs x 22/32 C x 3.15/3.35 V (20 points); slow subset for full rate",
-      "area_um2": 336867.0,
+      "envelope": "tt/ss/ff/sf/fs x 22/32 C x 3.15/3.35 V (20 points) for every gating set",
+      "area_um2": 248366.5,
       "area_allocation_um2": 300000,
-      "devices": 2081
+      "devices": 444
     },
     "observable": {
       "state": "open",
@@ -208,11 +171,11 @@
       "state": "open",
       "routes": [
         "wire_tx_external_data (debug.wtx_ext): WTX_EXT_P/N -> pt_diff_clk_rx (timing) -> DX -> break-before-make select in pt_wtx_predrv -> MAIN/TMDS steering commands",
-        "generic serializer (rate field MODE_H=MODE_F=1): the earlier static-CMOS 20:1 serializer in half rate, independent of the compact core except the pre-driver"
+        "reduced-rate modes of the same core (MODE 10 / 01 = WT12 2x / 4x repetition): every line rate down to 0.48 Gb/s with the core at <= 3.24 Gb/s internally",
+        "session 6: the generic static-CMOS serializer (MODE 11) was removed (interface WT13); MODE 11 now runs half rate on the core"
       ],
-      "generic_serializer": {},
       "bypass_loading_fF": {
-        "DX_routing": 41.35,
+        "DX_routing": 65.95,
         "DX_gates": "INV1 (1/2 um) + NAND (4/4 um) gates, ~15 fF estimate"
       },
       "evidence": {
@@ -227,7 +190,76 @@
       }
     }
   },
-  "performance_vs_target": [],
+  "performance_vs_target": [
+    {
+      "metric": "pad eye (pt_wiredtx extracted + pads steering buffers + extracted pad)",
+      "run": "int_tmds_q1g485",
+      "mode": "tmds",
+      "bit_rate_bps": 1485000000.0,
+      "bits_per_ring_cycle": 4,
+      "network": {
+        "topology": "split_pullup_50ohm_to_independent_3v3"
+      },
+      "lossy_channel": false,
+      "receiver": null,
+      "eye_height_mv": 1050.2,
+      "eye_width_ps": 603.7,
+      "amplitude_pp_mv": 1372.0,
+      "bits": 219,
+      "errors": 0,
+      "pad_levels_v": {
+        "p_min": 2.67617719,
+        "p_max": 3.30404051,
+        "n_min": 2.4985249,
+        "n_max": 3.30560978
+      },
+      "vdd_current_ma": 29.9,
+      "pass_": true,
+      "reason": null
+    },
+    {
+      "metric": "quarter 2.5 Gb/s (compact core) across the envelope",
+      "run": "cornerq2.5_ss_32_3.15",
+      "bit_rate_bps": 2500000000.0,
+      "bits_per_ring_cycle": 4,
+      "ring_hz": 625000000.0,
+      "corner": "ss",
+      "temp_c": 32,
+      "vdd": 3.15,
+      "bits_compared": 140,
+      "errors": 0,
+      "cmd_jitter_pp_ps": 162.7,
+      "cmd_eye_width_ps": 237.3,
+      "postcursor_mismatches_vs_main_delayed_1ui": 0,
+      "word_clk_period_ns": 8.0,
+      "supply_current_avg_ma": 33.21,
+      "tail_current_ma": {},
+      "tj_1e12_ui": 0.477,
+      "pass_": true,
+      "reason": null
+    },
+    {
+      "metric": "quarter 2.5 Gb/s (compact core) across the envelope",
+      "run": "cornerq2.5_ff_22_3.35",
+      "bit_rate_bps": 2500000000.0,
+      "bits_per_ring_cycle": 4,
+      "ring_hz": 625000000.0,
+      "corner": "ff",
+      "temp_c": 22,
+      "vdd": 3.35,
+      "bits_compared": 141,
+      "errors": 0,
+      "cmd_jitter_pp_ps": 112.5,
+      "cmd_eye_width_ps": 287.5,
+      "postcursor_mismatches_vs_main_delayed_1ui": 0,
+      "word_clk_period_ns": 8.0,
+      "supply_current_avg_ma": 37.46,
+      "tail_current_ma": {},
+      "tj_1e12_ui": 0.352,
+      "pass_": true,
+      "reason": null
+    }
+  ],
   "excluded_coverage": [
     "Pad-integration runs use the pads family extracted netlists read-only and their recorded patched ngspice-47; termination common mode is an ideal 1.65 V source (pads termination buffer not included); bond 1 ohm / 1 nH per leg; no package model beyond that.",
     "Extraction is capacitance only (no distributed resistance).",

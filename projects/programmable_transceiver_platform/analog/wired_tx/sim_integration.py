@@ -24,7 +24,7 @@ import tools
 
 PADS = tools.PROJECT / 'analog/pads/generated'
 STEER = PADS / 'steering-buffer/physical.spice'
-PAD = PADS / 'wired-transmit-extracted-c.spice'
+PAD = PADS / 'stress-safe-families/wired-transmit/physical.spice'   # WT24 note: the old extracted-c netlist was stale
 BRANCH_CMDS = ['CMD_MAIN_P', 'CMD_MAIN_N', 'CMD_POST_P', 'CMD_POST_N', 'CMD_TMDS_P', 'CMD_TMDS_N']
 
 
@@ -185,7 +185,8 @@ def deck(dut, subckt, *, mode, rate, words, word_t0, tstop, vdd=3.3, corner='typ
     else:
         L += ['VTERMEN TERM_EN_SRC 0 0', 'RTERMEN TERM_EN_SRC TERM_ENABLE 100', 'RTVCM TERM_VCM 0 1meg']
     L.append('XPAD PAD_P PAD_N VDD VSS CASCODE MAIN_P MAIN_N MAIN_BIAS POST_P POST_N POST_BIAS TMDS_P TMDS_N '
-             'TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM tx_protected_pad')
+             'TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM ATB_ESD_RAIL tx_protected_pad')
+    L.append('RATBESD ATB_ESD_RAIL 0 1meg')
     if not pkg:
         for leg in ('P', 'N'):
             L += [f'RB{leg} BOARD_{leg} BOND_{leg} 1', f'LB{leg} BOND_{leg} PAD_{leg} 1n']

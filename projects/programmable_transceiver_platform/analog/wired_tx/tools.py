@@ -158,6 +158,6 @@ def ngspice_host(work, deck, timeout=7200):
     env = dict(os.environ, OMP_NUM_THREADS='1')
     log = Path(work) / f'{deck}.log'
     with open(log, 'w') as f:
-        subprocess.run(['taskset', '-c', '0-2', str(PAD_NGSPICE), '-b', deck], cwd=work, stdout=f, stderr=subprocess.STDOUT,
+        subprocess.run([str(PAD_NGSPICE), '-b', deck], cwd=work, stdout=f, stderr=subprocess.STDOUT,
                        timeout=timeout, env=env)
     return None, log.read_text(errors='replace')

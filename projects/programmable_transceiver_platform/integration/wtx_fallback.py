@@ -90,7 +90,12 @@ def extension(read, support, pdk, library, scenario):
     clamp('Xpresent_to_core', 'PRESENT_DEBUG', 'PRESENT_CORE', 'debug')
     clamp('Xcore_to_tx', 'DX_CORE', 'DX_WIRED', 'wired')
     clamp('Xtx_status_to_core', 'EXT_DATA', 'EXT_DATA_OBS', 'wired')
-    # TMDS branch decode: branch == 2, external route selected. The extracted
+    # Branch decode: txpad.config.branch == 2 with the external route selected.
+    # Since X5 (interface WT22) pt_wiredtx has no TMDS branch: external data
+    # reaches the pad only through CMD_MAIN (EN_MAIN, MAIN code), so the
+    # request of the published control cell (its pin is still named
+    # TMDS_REQUEST) goes to the interlock's REQ_MAIN.  The pad's unused TMDS
+    # branch is tied off (gates and tail bias at VSS).  The extracted
     # interlock supplies actual enables, gated by island ISO and power-good.
     # The clock-present detector is diagnostic: valid serial data may contain
     # a run of identical bits, so activity must not gate its output driver.
@@ -105,7 +110,7 @@ def extension(read, support, pdk, library, scenario):
              'Xdrive_request EXT_REQUEST RUN_TMDS TMDS_REQUEST RAIL_wired VSS bringup_and',
              'Xwire_on ISO_wired WIRED_ON VDD VSS bringup_inv']
     add('Xmode_interlock', interlock_cell, interlock,
-        VDD='RAIL_wired', VSS='VSS', REQ_MAIN='VSS', REQ_POST='VSS', REQ_TMDS='TMDS_REQUEST',
+        VDD='RAIL_wired', VSS='VSS', REQ_MAIN='TMDS_REQUEST', REQ_POST='VSS', REQ_TMDS='VSS',
         REQ_DETECT='VSS', REQ_TERM='VSS', RESET='ISO_wired', QUALIFIED='WIRED_ON',
         SUPPLY_OK='PG_wired', CONFLICT='CONFLICT', VALID='VALID', EN_MAIN='EN_MAIN',
         EN_POST='EN_POST', EN_TMDS='EN_TMDS', EN_DETECT='EN_DETECT', EN_TERM='EN_TERM')
@@ -125,29 +130,29 @@ def extension(read, support, pdk, library, scenario):
         root_connections['TRK_'+island] = 'TRK_'+island
     body.append(instance('Xdisabled_bias_root', root_cell, root, root_connections))
     add('Xbias_bank', bank_cell, bank, VDD='RAIL_wired', VSS='VSS', TRK='TRK_WIRE',
-        EN0='VSS', EN1='VSS', EN2='EN_TMDS', OUT0='BIAS_UNUSED0', OUT1='BIAS_UNUSED1', OUT2='IBIAS_BANK')
+        EN0='VSS', EN1='VSS', EN2='EN_MAIN', OUT0='BIAS_UNUSED0', OUT1='BIAS_UNUSED1', OUT2='IBIAS_BANK')
     body += ['Vbias_measure IBIAS_BANK IBIAS 0']
     tx_ports = ports(tx, tx_cell)
     tx_connections = {p: p for p in tx_ports}
     tx_connections.update(VDD='RAIL_wired', VSS='VSS', WTX_PH0='VSS', WTX_PH90='VSS',
                           WTX_PH180='RAIL_wired', WTX_PH270='RAIL_wired', MODE_H='VSS', MODE_F='VSS',
                           SER_EN='VSS', WTX_EXT='L_EXT_ENABLE', DX='DX_WIRED', ISLAND_OFF='ISO_wired')
-    for k in range(20):
+    tx_connections.update(POST_POL='VSS')
+    for k in range(40):
         tx_connections[f'D{k}'] = 'VSS'
     for k in range(8):
-        tx_connections[f'MAIN_CODE{k}'] = 'VSS'
+        tx_connections[f'MAIN_CODE{k}'] = f'L_CODE{k}'
         tx_connections[f'POST_CODE{k}'] = 'VSS'
-        tx_connections[f'TMDS_CODE{k}'] = f'L_CODE{k}'
     tx_connections['WTX_EXT_DATA'] = 'EXT_DATA'
     body.append(instance('Xwiredtx', tx_cell, tx, tx_connections))
-    for branch in ('MAIN', 'POST', 'TMDS'):
+    for branch in ('MAIN', 'POST'):
         for leg in ('P', 'N'):
             add(f'Xsteer_{branch}_{leg}', steering_cell, steering,
                 VDD='RAIL_wired', VSS='VSS', IN=f'CMD_{branch}_{leg}', OUT=f'{branch}_{leg}')
     add('Xoutput_pad', pad_cell, pad,
         PAD_P='WIRE_TX_P', PAD_N='WIRE_TX_N', VDD='RAIL_wired', VSS='VSS', CASCODE='RAIL_wired',
         MAIN_P='MAIN_P', MAIN_N='MAIN_N', MAIN_BIAS='MAIN_BIAS', POST_P='POST_P', POST_N='POST_N', POST_BIAS='POST_BIAS',
-        TMDS_P='TMDS_P', TMDS_N='TMDS_N', TMDS_BIAS='TMDS_BIAS', DETECT_ENABLE='EN_DETECT',
+        TMDS_P='VSS', TMDS_N='VSS', TMDS_BIAS='VSS', DETECT_ENABLE='EN_DETECT',
         DETECT_PBIAS='RAIL_wired', TERM_ENABLE='EN_TERM', TERM_VCM='VSS', ATB_ESD_RAIL='OUTPUT_ESD_MON')
     body += ['Resd_output_monitor OUTPUT_ESD_MON VSS 10meg']
     outputs = ['rx_en_wtx_ext', 'wdbg_obs', 'wdbg_obs_oe', 'atb0_en', 'force_wire', 'force_group']
@@ -169,8 +174,8 @@ def extension(read, support, pdk, library, scenario):
                 inputs={'wire_analog_status[12]': 'EXT_DATA_OBS'},
                 chip_body=['Xwired_debug_pad VDD VSS A_wdbg_obs A_wdbg_obs_oe WDBG_OBS pt_debug_physical'],
                 probes=['v(WIRE_TX_P)', 'v(WIRE_TX_N)', 'v(WDBG_OBS)', 'v(ATB0)',
-                        'v(Xchip.Xanalog.TMDS_BIAS)', 'v(Xchip.Xanalog.IBIAS)',
-                        'v(Xchip.Xanalog.EN_TMDS)', 'v(Xchip.Xanalog.DX)',
+                        'v(Xchip.Xanalog.MAIN_BIAS)', 'v(Xchip.Xanalog.IBIAS)',
+                        'v(Xchip.Xanalog.EN_MAIN)', 'v(Xchip.Xanalog.DX)',
                         'v(Xchip.Xanalog.PRESENT_CORE)', 'v(Xchip.Xanalog.TRK_WIRE)',
                         'v(BOARD_P)', 'v(BOARD_N)', 'i(v.Xchip.Xanalog.Vbias_measure)'],
                 bench_body=board(scenario))

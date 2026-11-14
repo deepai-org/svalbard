@@ -1,0 +1,53 @@
+* NGSPICE file created from wtx_ofin8.ext - technology: gf180mcuD
+
+.subckt wtx_ofin8 YH0 YH1 DH0 DH1 Y YB DP DPB VDD VSS
+X0 YB yOE VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X1 VSS yOC Y VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X2 Y yOC VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X3 yO YH0 VDD VDD pfet_03v3 ad=1.8p pd=6.6u as=3.06p ps=7.02u w=6u l=0.28u
+X4 DP dOC VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X5 yO YH0 a_236_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X6 yO YH1 VDD VDD pfet_03v3 ad=3.06p pd=7.02u as=2.91p ps=12.97u w=6u l=0.28u
+X7 VDD DH0 dO VDD pfet_03v3 ad=4.17p pd=13.39u as=1.8p ps=6.6u w=6u l=0.28u
+X8 DPB dOE VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X9 yOE yOC VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X10 VDD yOE YB VDD pfet_03v3 ad=3.755p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X11 dOE dOC VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X12 VDD YH1 yO VDD pfet_03v3 ad=3.06p pd=7.02u as=1.8p ps=6.6u w=6u l=0.28u
+X13 Y yOC VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X14 dOE dOC VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X15 a_756_230# YH0 yO VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X16 VSS YH1 a_756_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X17 VDD DH1 dO VDD pfet_03v3 ad=3.06p pd=7.02u as=1.8p ps=6.6u w=6u l=0.28u
+X18 VSS dOC DP VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X19 VDD yOC Y VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X20 VDD DH0 dO VDD pfet_03v3 ad=3.06p pd=7.02u as=3.06p ps=7.02u w=6u l=0.28u
+X21 a_4236_230# DH0 dO VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X22 dO DH0 VDD VDD pfet_03v3 ad=1.8p pd=6.6u as=3.06p ps=7.02u w=6u l=0.28u
+X23 dOC dO VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X24 VDD dOC DP VDD pfet_03v3 ad=4.08p pd=9.02u as=2.4p ps=8.6u w=8u l=0.28u
+X25 a_1192_230# YH1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X26 VDD dOE DPB VDD pfet_03v3 ad=5.56p pd=17.39u as=2.4p ps=8.6u w=8u l=0.28u
+X27 DP dOC VDD VDD pfet_03v3 ad=2.4p pd=8.6u as=5.56p ps=17.39u w=8u l=0.28u
+X28 YB yOE VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X29 VDD YH0 yO VDD pfet_03v3 ad=3.06p pd=7.02u as=3.06p ps=7.02u w=6u l=0.28u
+X30 a_3716_230# DH1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X31 VSS DH1 a_4236_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X32 yO YH1 VDD VDD pfet_03v3 ad=1.8p pd=6.6u as=3.06p ps=7.02u w=6u l=0.28u
+X33 yO YH0 a_1192_230# VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X34 yOC yO VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X35 dO DH0 a_4672_230# VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X36 dOC dO VSS VSS nfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X37 dO DH0 a_3716_230# VSS nfet_03v3 ad=2.04p pd=5.02u as=2.04p ps=5.02u w=4u l=0.28u
+X38 a_4672_230# DH1 VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.04p ps=5.02u w=4u l=0.28u
+X39 VDD YH0 yO VDD pfet_03v3 ad=4.17p pd=13.39u as=1.8p ps=6.6u w=6u l=0.28u
+X40 dO DH1 VDD VDD pfet_03v3 ad=1.8p pd=6.6u as=3.06p ps=7.02u w=6u l=0.28u
+X41 VSS yOE YB VSS nfet_03v3 ad=2.04p pd=5.02u as=1.2p ps=4.6u w=4u l=0.28u
+X42 VSS dOE DPB VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X43 yOE yOC VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=4.08p ps=9.02u w=8u l=0.28u
+X44 DPB dOE VSS VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X45 dO DH1 VDD VDD pfet_03v3 ad=3.06p pd=7.02u as=3.755p ps=9.02u w=6u l=0.28u
+X46 yOC yO VDD VDD pfet_03v3 ad=3.88p pd=16.97u as=5.56p ps=17.39u w=8u l=0.28u
+X47 a_236_230# YH1 VSS VSS nfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+.ends
+

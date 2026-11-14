@@ -39,7 +39,7 @@ def projections():
     register_map = json.loads((power.PROJECT/'spec/register-map.json').read_text())
     fields = {f['name']: f for f in register_map['fields']}
     result = {}
-    for alias, name in [('tx_branch', 'txpad.config.branch'), ('tmds_code', 'tmds.config.current_code'),
+    for alias, name in [('tx_branch', 'txpad.config.branch'), ('tmds_code', 'wiredtx.config.current_code'),
                         ('wtx_ext', 'debug.wtx_ext.enable'), ('tx_state', 'wiredtx.state.state'),
                         ('tx_idle', 'wiredtx.idle.idle'), ('tx_stage', 'consolidation.wiredtx_stage.stage')]:
         f = fields[name]
@@ -94,7 +94,7 @@ def sequence(island_pex, local=False):
     spi.time += 20e-6
     spi.read(0x0a, 0x2121)
     peer_start = spi.time
-    regs.write(**{'debug.atb.atb0': 22, 'tmds.config.current_code': 125,
+    regs.write(**{'debug.atb.atb0': 22, 'wiredtx.config.current_code': 125,
                   'txpad.config.branch': 2, 'debug.wtx_ext.enable': 1,
                   'wiredtx.state.state': 2, 'wiredtx.idle.idle': 0,
                   'consolidation.wiredtx_stage.stage': 1,
@@ -147,7 +147,7 @@ def build_local(out, pdk, experiment):
         connections[f'CODE{k}'] = 'VDD' if (125 >> k) & 1 else '0'
     probes = ['v(VDD)', 'v(BOARD_P,BOARD_N)', 'v(WIRE_TX_P,WIRE_TX_N)', 'v(PG_wired)',
               'v(PG_debug)', 'v(RAIL_wired)', 'v(RAIL_debug)', 'v(Xroute.DX)',
-              'v(Xroute.DX_WIRED)', 'v(Xroute.EN_TMDS)', 'v(Xroute.TMDS_BIAS)',
+              'v(Xroute.DX_WIRED)', 'v(Xroute.EN_MAIN)', 'v(Xroute.MAIN_BIAS)',
               'v(Xroute.PRESENT_CORE)', 'i(v.Xroute.Vbias_measure)', 'v(ATB0)',
               'v(Xroute.TRK_WIRE)', 'v(EXT_DATA_OBS)']
     saved = []

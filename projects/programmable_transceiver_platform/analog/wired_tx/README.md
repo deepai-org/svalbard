@@ -13,6 +13,31 @@ Nothing here is qualified; numbers are extracted (Magic C) unless noted, and
 | `wtx_ext_rx` | instance of timing's `pt_diff_clk_rx` (`wtx_ext_rx.spice`) | timing | timing | ideal DX: 1 Gb/s, 0 errors, eye 388 mV / 965 ps at the pad; through the extracted receiver: 5/43 errors at 0.5 Gb/s (start-up), no output at 2 Gb/s | pass / pass / pass / n/a |
 | `usb_hs_bias` (`pt_wtx_hsbias`) | 125.8 × 76.0 µm = 9,552 µm², 53 devices | 0 / 0 | unique | 0–0.58 V full scale (tt), monotonic at all corners, settles to 1 LSB in 0.47 µs | pass / pass / open / n/a |
 
+**Status 2026-11-13 (session 11): real-neighbour benches; pin list in `INTEGRATION.md`.**
+* **Real ring phases (MW-31, row WT29; single points, CMD pins, nominal extraction, about 100 bits each).**
+  Extracted `pt_pll_ring_core` (open loop, regulated supply) -> route -> extracted `pt_wiredtx`, 2.5 Gb/s,
+  ss/32/3.15 (ring 2.69 V): **11 errors / 101 bits, eye 77 ps: FAIL.** Ideal-source controls in the same harness:
+  full rail 0 errors (eye 240 ps); swing 2.69 V only 0 errors (306 ps); swing + measured rise spacing 0 errors
+  (323 ps); **swing + duty 0.575: 11 errors (121 ps)**. The cause is the ring's phase duty cycle (0.57-0.58 at ss,
+  625 MHz); the core closes its windows on a falling phase edge. tt/27/3.3 (ring 2.925 V, duty 0.52): 0 errors,
+  eye 226 ps. ss, 1.62 Gb/s (ring 405 MHz, duty 0.53): 0 errors, eye 364 ps of 617. No fix in the published
+  block; fix = windows closed on the next phase's rising edge (core change) and / or a 50 +/- 2 % phase buffer
+  (timing). Not run: other ring supplies, ff / sf / fs, pessimistic values. Record
+  `generated/wiredtx-realring.json`; benches `sim_ringsrc.py`, `sim_realring.py`.
+* **2.7-3.24 Gb/s (MW-24, row WT31): not closed.** Real chain serq8 (extracted, nominal) -> CMD -> extracted
+  pre-driver `tr7` -> pad -> package, ss, 3.24 Gb/s: 14 errors. serq8 alone at the pessimistic values: 45 errors
+  (the NAND-OR tree, not the windows or hops). A candidate pre-driver that forms the line bit as the XOR of two
+  half-rate streams in its output network passes the declared far-end limit (0 errors, 0.20 V, 0.45 UI) at ss
+  pessimistic with IDEAL streams (0.346 V / 213 ps; schematic cell, extracted pad and package), within -30 ... +60
+  ps of stream skew; no stream source meets that yet. Nothing of this is in `pt_wiredtx`.
+  `serq8_macro.py`, `sim_core8.py` and `generated/fast/wtx_*8*` are work in progress, not published.
+* **Enable / clock / reset contract (MW-15, WT25), TX ring controls (MW-16, WT26), pad TMDS tie-off and fallback
+  fixture (MW-17, WT27 / WT28), idle (MW-35, WT30):** rows written; `integration/wtx_fallback.py` builds again.
+* `generated/wiredtx-evidence.json` regenerated: it now describes the published netlist (sha256 efcd36f1...; three
+  runs: 2.5 Gb/s ss and ff with ideal phases, TMDS 1.485 at tt). `tmds` / `wtx_ext_rx` evidence files are still
+  those of the 2026-11-10 netlist.
+* USB TX pre-driver `pt_usb_txdrv`: `usbdrv.py`, `USB-INTEGRATION.md`.
+
 **Status 2026-11-12 (session 8).**  Block published 546.9 × 454.2 µm = 0.248 mm² (444 devices, Magic DRC 0,
 LVS unique, KLayout 0).  WT19 (repetition in digital), WT20 (D-bus launch), WT21 (rate plan: core ≤ 2.5 Gb/s, ring
 360–625 MHz), WT22 (X5: TMDS on MAIN), WT23 (3.24 Gb/s plan), WT24 (pad steering-buffer blocker).
@@ -169,24 +194,8 @@ All containers `--network none`; raw output in `scratch/wired_tx/`.
 
 ## Ports (`pt_wiredtx`)
 
-| Port | Dir | Meaning / source |
-| --- | --- | --- |
-| `VDD`, `VSS` | supply | `VDD_WIRED_SW` (3.3 V switched island), ground |
-| `WTX_PH0/90/180/270` | in | ring phases via the clockmux (stopped = PH0=PH90=0, PH180=PH270=1); equal gate load on all four, route length-matched (interface WT2) |
-| `MODE_H`, `MODE_F` | in | rate field: 00 quarter, 10 half, 01 full (compact core), **11 = generic serializer, half rate (fallback)**; change only while stopped |
-| `D0..D19` | in | 20-bit double word from `rtl/pt_pattern.sv`; D0 first on the line |
-| `WORD_CLK` | out | bit rate / 20 (40 % duty) for the word source and `WCLK_OBS` (from the active serializer: core divider or generic divider) |
-| `SER_EN` | in | `wiredtx.state.state == active` and not `debug.wtx_ext`; releases the counters from reset |
-| `WTX_EXT` | in | `debug.wtx_ext.enable` |
-| `DX` | in | `pt_wtx_ext_rx` DX (receiver `OUTN`, legs swapped) |
-| `EN_MAIN`, `EN_POST`, `EN_TMDS` | in | branch enables from the pads `interlock` cell |
-| `MAIN_CODE[7:0]`, `POST_CODE[7:0]`, `TMDS_CODE[7:0]` | in | `wiredtx.config.current_code` (109), `wiredtx.config.postcursor_code` (0), `tmds.config.current_code` (102) |
-| `IBIAS` | in | 10 µA from the wired-island bias distributor, switched in while any EN_* is high |
-| `ISLAND_OFF` | in | core-domain high while the island is off: clamps every CMD output and tail bias to VSS |
-| `CMD_MAIN_P/N`, `CMD_POST_P/N`, `CMD_TMDS_P/N` | out | to the pads `tx_steering_buffer` inputs |
-| `MAIN_BIAS`, `POST_BIAS`, `TMDS_BIAS` | out | pad tail gates |
-| `WTX_EXT_DATA` | out | buffered DX → status bit `wtx_ext_data` |
-| `ATB_NBIAS`, `ATB_PBIAS` | out | ATB taps (reference diode, MAIN DAC PMOS gate) → `atb_tap` (node 26 `wiredtx_bias`) |
+The exact, current pin list with the connection intent of every pin (and of the ring, pad, pre-driver, interlock
+and fallback receiver around the block) is in `INTEGRATION.md`; it replaces the table that used to be here.
 
 All control and data inputs see MOS gates only, so a core-domain driver that
 is high while the island is off draws no current (simulated).
@@ -224,6 +233,9 @@ regenerated by `evidence.py`.
 <!-- RESULTS:BEGIN (generated by evidence.py) -->
 | Run | Rate | Bits/ring cycle | Corner | Result | Detail |
 | --- | --- | --- | --- | --- | --- |
+| cornerq2.5_ss_32_3.15 | 2.5 Gb/s | 4 | ss 32 C 3.15 V | pass | 0 errors / 140 bits, CMD jitter 162.7 ps pp, post mism. 0 |
+| cornerq2.5_ff_22_3.35 | 2.5 Gb/s | 4 | ff 22 C 3.35 V | pass | 0 errors / 141 bits, CMD jitter 112.5 ps pp, post mism. 0 |
+| int_tmds_q1g485 | 1.485 Gb/s | 4 | tt 27 C 3.3 V | pass | eye 1050.2 mV / 603.7 ps, 1372.0 mVpp diff, 0 errors / 219 bits |
 <!-- RESULTS:END -->
 
 ## Known limitations and open items

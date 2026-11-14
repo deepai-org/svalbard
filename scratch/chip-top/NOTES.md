@@ -125,3 +125,44 @@ Not re-reviewed after these edits. Known blind spots of the regression are secti
 place connectivity intent should be edited. It is NOT yet proven right: direction markers and pin meanings are one
 author's reading plus one review pass; the open D- rows (D-HF and D-EXTCLK in particular) mean two clocking modes do
 not close even as bound; supplies are a single VDD/VSS. `pt_chip.sv` and `netlist.py` have not been switched over.
+
+## 6. Follow-up 2026-11-14 (islands, CP4-1, audit on the conn, user decisions)
+
+Commits: 6f2cd39 (CP4-2/CP4-3, record fixes, republished cells, usb_txdrv, ADC PH, char structures), 0006a99 + e28afa2
+(CP4-1 macro clamps), 4790054 (ten islands, supply/ground pads, AGND_RX), 6880248 (M6 audit on the conn), df6ea53
+(P/N, I/Q, bit order, direction checks; real macro ports in the sim), bb5c2b5 (demand-area.md), e7192a8 (TOP-19..24).
+
+State of `integration/top/run.sh` with the digital working tree of 2026-11-14 (macro ports landed, uncommitted there):
+
+| Check | Count |
+|---|---|
+| syntax, unbound, dangling, undriven, multidrive, missing, crossing, alwayson, supply, iso, pn, order, ctl | 0 each |
+| cfg (control ports vs register map), macro (port diff vs rtl) | 0, 0 (were 143 / 276; against committed RTL 8e5e71c they are still non-zero) |
+| demand instances | 12 (bias_ext, lo_vreg, refvcm, txpad_bias, lna_ind x2, lna_deg x2, pad_agnd_rx x2, agnd_tie, pad_por_bypass) |
+| staged masters | 4 (adc_i/q, dac_i/q on the converters' staged contract) |
+| boundary sim | PASS on the macro's real c_* / s_* ports; two negative controls detected |
+| M6 isolation audit on the conn | K1 20, K2 55, K3 0, K4 0, K5 40, K6 0, K7 15; self-test (5 injections) passes |
+
+Audit breakdown and owners: TOP-21 in interface-changes.md. In the audit view the ten islands are their five enable
+groups, the 130 macro-internal clamps are virtual clamp instances and c_* ports are taken as gated with their island:
+all three are requirements on the macro, not proofs.
+
+Other agents edit files in `integration/top/` too (digital: `ctl_ports.txt` field names, `sim/tb_top_boundary.sv`,
+valid/request pins in `pt_chip.conn`). Read-modify-write quickly and check `git diff` before committing.
+
+Area list for the die-fit study: `scratch/chip-top/demand-area.md` (0.63 mm2 of conn instances in no floorplan, plus
+the switch and decap items listed under it).
+
+## 7. Second independent review (2026-11-14, fresh reviewer, artefacts only)
+
+Verdict: NOT yet authoritative. Pin-level bindings were checked against every owner file and found correct
+(converters, wired RX, LO, RF RX, power islands and switch masters, USB / wired TX, characterization, macro clamps).
+What is wrong is the off-state / enable contract with the macro:
+1. LO synthesizer enables gated by the pll island in the RTL; their consumers are on the rf group (ctl row fixed, new check).
+2. `wire_tx_data` and `rf_tx_sample` are not gated by island and land on diffusion (D-DATAOFF).
+3. `VDD_LO` is off in the die-1 baseline LO mode while the tank is biased (netlist reading only; D-LOVREG).
+4. ATB code 33 gated by the wrong island (with the other 14 K7 items).
+Acted on in my files: control-gating check, ground-pin check, I/Q check on control and bias nets, audit uses the
+gating a control row states, waiver text, 9 stale decision rows purged, section C rewritten, new D-CLKSRC, D-DATAOFF,
+D-TRIMISL, demand-area corrected (0.970 mm2 with the RF-FET probe frames). Items 1-4 are other owners' (TOP-25).
+Not re-reviewed after these last edits. The reviewer did not run the run.sh negative controls (I did: both detected).

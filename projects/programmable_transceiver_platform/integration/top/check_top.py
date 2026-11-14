@@ -274,6 +274,10 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
         for p in ('VDD', 'VDD_WIRE_SW', 'VDD_PLL_SW', 'vdd3v3', 'DVDD'):
             if p in i['pins'] and not rail_ok(i['group'], i['pins'][p][1]) and i['master'] != 'pt_wtx_fallback_control':
                 R['supply'].append(f'{name}.{p} = {i["pins"][p][1]} but the instance is declared on island {i["group"]}')
+        for p in ('VSS', 'vss', 'DVSS', 'GND'):        # grounds: VSS everywhere; AGND_RX only where power-delivery 5.2 puts it
+            if p in i['pins'] and i['pins'][p][1] not in ('VSS', '-'):
+                if not (i['pins'][p][1] == 'AGND_RX' and name in ('lna', 'pad_rf_rx')):
+                    R['supply'].append(f'{name}.{p} = {i["pins"][p][1]}: ground pin not on VSS (AGND_RX is allowed on lna and pad_rf_rx only)')
         if i['master'].startswith('iso_clamp'):     # ISO = island_off[bit of the island that drives A]; supply = receiver island
             a, iso, y = i['pins']['A'][1], i['pins']['ISO'][1], i['pins']['Y'][1]
             d = [u for u in nets.get(a, []) if u[2] == '>']
@@ -316,6 +320,9 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
                 mm = re.match(r'(?:BB|ADC|DAC|TX|RFA_|LO_|BIAS_\w+_)([IQiq])(?:[_PN\[]|$)', n)
                 if mm and mm.group(1).lower() != m.group(1) and not n.startswith('BIAS_'):
                     R['pn'].append(f'{name}.{p} is on {n}: I/Q crossed')
+                mm = re.fullmatch(r'(?:c_|BIAS_)\w*?_([iq])(?:_\w+)?(?:\[\d+\])?', n)      # control / bias nets named for the other channel
+                if mm and mm.group(1) != m.group(1) and re.search(r'_[iq](_|$|\[)', n):
+                    R['pn'].append(f'{name}.{p} is on {n}: I/Q crossed (control or bias net of the other channel)')
         grp = collections.defaultdict(list)                     # pin buses: ct0..ct3, CODE0..9, T3_0..4, D0..39
         for p, (k, n) in pins.items():
             mp = re.fullmatch(r'(.*?)(\d+)', p); b, idx = bus(n)
@@ -375,6 +382,14 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
         if w > 1 and idxs != set(range(w)): R['ctl'].append(f'{base}: bits {sorted(set(range(w))-idxs)} have no consumer')
     for base in ctl:
         if base not in cbits: R['ctl'].append(f'{base}: in ctl_ports.txt, no consumer pin in pt_chip.conn')
+    cons = collections.defaultdict(set)
+    for n, users in nets.items():
+        b0 = bus(n)[0]
+        if b0.startswith('c_'): cons[b0] |= {GROUP_BIT[inst[u[0]]['group']] for u in users if inst[u[0]]['group'] in GROUP_BIT}
+    for base, c in ctl.items():         # an island_on[k] named in the encoding must be the enable group of a consumer
+        named = {int(x) for x in re.findall(r'island_on\[(\d)', c['enc'])}
+        if named and cons.get(base) and not named & cons[base] and '[2 or 5]' not in c['enc']:
+            R['ctl'].append(f'{base}: encoding gates with island_on{sorted(named)} but its consumers are on enable group(s) {sorted(cons[base])}')
     # --- second derivation: register map -> ports
     fields = {f['name']: f for f in regmap['fields']}
     for base, c in ctl.items():
@@ -510,6 +525,9 @@ def selftest():
         ('pn', dict(conn=conn.replace('PAD_P~RF_TX_P PAD_N~RF_TX_N', 'PAD_P~RF_TX_N PAD_N~RF_TX_P', 1)), 'RF_TX_P'),
         ('pn', dict(conn=conn.replace('lo_p~LO_\\U1P lo_n~LO_\\U1N bb_p', 'lo_p~LO_QP lo_n~LO_QN bb_p', 1)), 'rxmix_i'),
         ('order', dict(conn=conn.replace('ct{0:3}=c_lna_ct[\\1]', 'ct{0,2,1,3}=c_lna_ct[{0:3}]', 1)), 'lna'),
+        ('supply', dict(conn=conn.replace('IBIAS~BIAS_ctle ctle_en', 'IBIAS~BIAS_ctle ctle_en', 1).replace('inst ctle pt_ctle wired_rx\n  VDD_WIRE_SW~RAIL_wired_rx VSS~VSS', 'inst ctle pt_ctle wired_rx\n  VDD_WIRE_SW~RAIL_wired_rx VSS~AGND_RX', 1)), 'ctle.VSS'),
+        ('pn', dict(conn=conn.replace('EN=c_adc_\\1_en ILEN', 'EN=c_adc_q_en ILEN', 1)), 'adc_i.EN'),
+        ('ctl', dict(ct=re.sub(r'^(c_lna_en \| 1 \| 0 \| )[^|]*', r'\1(state == active) & island_on[2] ', ct, 1, re.M)), 'c_lna_en'),
         ('ctl', dict(ct=re.sub(r'^c_lna_att\s*\|\s*5', 'c_lna_att | 4', ct, 1, re.M)), 'c_lna_att'),
         ('ctl', dict(ct=re.sub(r'^c_rfdriver_mute\s*\|.*\n', '', ct, 1, re.M)), 'c_rfdriver_mute'),
         ('cfg', dict(reg=dict(reg, fields=[dict(f, bus_bits=3) if f['name'] == 'lna.match.ctrim' else f for f in reg['fields']])), 'c_lna_ct'),

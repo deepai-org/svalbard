@@ -450,7 +450,7 @@ inst wrx_cap pt_wrx_cap wired_cap
 # ring phases PH0/2/4/6 go straight to the serializer (analog/wired_tx/INTEGRATION.md section 2, WT25/WT26/WT29:
 # benched from the extracted ring at the regulated swing). No clamp: the macro must hold c_pll_tx_en = 0 while the
 # pll island is off (ring EN clamps its phase outputs).  PH1/3/5/7: matched dummy routes (D-PHLOAD)
-waive wiredtx.WTX_PH\d+ gate-only inputs; rule on c_pll_tx_en (ctl_ports.txt) instead of a clamp, per the wired TX owner (WT25)
+waive wiredtx.WTX_PH\d+ first gate in pt_wiredtx is NAND(PH, serializer enable) (analog/wired_tx/wiredtx.spice:89-96); the macro must hold c_wiredtx_ser_en = 0 while the pll island is off (no clamp, per the wired TX owner, WT25). A floating phase input is then harmless; not benched
 inst wiredtx pt_wiredtx wired_tx
   WTX_PH0=TXPH[0] WTX_PH90=TXPH[2] WTX_PH180=TXPH[4] WTX_PH270=TXPH[6] MODE_H=c_wiredtx_mode_h MODE_F=c_wiredtx_mode_f
   D{0:39}=wire_tx_data[\1] WORD_CLK>- WORD_CLK40>WTX_WCLK40 SER_EN=c_wiredtx_ser_en WTX_EXT=c_wiredtx_ext DX=WTX_DX

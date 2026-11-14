@@ -17,7 +17,7 @@ under "(instances not in the v6 floorplan)".
 | pad_agnd_rx | pad_downbond | 2 | rf_rx | not built | 0 | 0.0000 | in-ring pad site, no core area |
 | agnd_tie | pt_agnd_tie | 1 | core | not built |  | ? | no estimate (pad-ring ESD structure, PD2-12) |
 | refvcm | pt_refvcm | 1 | pll | not built | 3,000 | 0.0030 | est |
-| lna_ind | pt_lna_ind | 2 | rf_rx | not built | 35,700 | 0.0714 | RC-16m: 170 um, 3 turns (48,400 if the 220 um coil is adopted) |
+| lna_ind | pt_lna_ind | 2 | rf_rx | not built | 35,700 | 0.0714 | RC-16m: 170 um, 3 turns, no keep-out; inventory.csv uses 48,400 (220 um coil, RF RX note) |
 | lna_deg | pt_lna_deg | 2 | rf_rx | not built | 25,200 | 0.0504 | RC-16t: 140 um, 2 turns |
 | iso_wmon | iso_pd | 1 | debug | exists | 95 | 0.0001 | iso-placement.json size_um |
 | iso_conv_clk | iso_clamp_x4 | 1 | conv | exists | 1,025 | 0.0010 | iso-placement.json size_um |
@@ -47,12 +47,13 @@ under "(instances not in the v6 floorplan)".
 | char_ro33 | pt_char_ro33 | 1 | debug | exists | 10,118 | 0.0101 | char_ro33-physical.json |
 | char_ro50 | pt_char_ro50 | 1 | debug | exists | 9,724 | 0.0097 | char_ro50-physical.json |
 | char_cmldiv | pt_char_cmldiv | 1 | debug | exists | 28,613 | 0.0286 | char_cmldiv-physical.json |
-| char_rffet | pt_char_rffet | 1 | core | exists |  | ? | char_rffet-physical.json (probe frame) |
-| char_rffet_open | pt_char_rffet_open | 1 | core | exists |  | ? | same frame as char_rffet (assumed) |
-| char_rffet_short | pt_char_rffet_short | 1 | core | exists |  | ? | same frame as char_rffet (assumed) |
+| char_rffet | pt_char_rffet | 1 | core | exists | 111,800 | 0.1118 | analog/characterization/README.md: 430 x 260 um probe frame |
+| char_rffet_open | pt_char_rffet_open | 1 | core | exists | 111,800 | 0.1118 | analog/characterization/README.md: 430 x 260 um probe frame |
+| char_rffet_short | pt_char_rffet_short | 1 | core | exists | 111,800 | 0.1118 | analog/characterization/README.md: 430 x 260 um probe frame |
 | atb0_leaf58 | atb_leaf_f | 1 | core | exists | 1,086 | 0.0011 | v5 abstract bbox |
+| atb1_leaf58 | atb_leaf_s | 1 | core | exists | 827 | 0.0008 | v5 abstract bbox 30.58 x 27.04 (v6 has 57 slow leaves, the conn 58) |
 
-Sum of the rows with a number: **0.634 mm2**.
+Sum of the rows with a number: **0.970 mm2** (0.634 + three RF-FET probe frames 0.335 + one leaf).
 
 Not in the table, same study:
 - Island switches: the floorplan has 5 (`isw_wired`, `isw_rf`, `isw_pll`, `isw_conv`, `isw_debug`); the conn has 10 on the same
@@ -64,3 +65,9 @@ Not in the table, same study:
 - Outline changes of placed blocks (not instance-count changes): staged converters (adc 0.450, dac 0.134 mm2), `pt_cdr` r13
   0.083 mm2, capture r7c 1212 x 242 um, LNA core 42.9k um2, `wtx_serq8` if adopted (0.352 mm2 vs the 450 x 445 booking),
   `tx_cml_predriver` x2 if adopted, QVCO regulator (estimate only; LO22 says a two-stage design).
+- v6 placement FAILURES (blocks the v6 floorplan lists but could not place; `check_top.py` counts them as known to the
+  floorplan, so they are not in the table): qvco, wrx_cap, ptrim, wiredtx, cdr, lo_lf, lo_ext, slicer, refbuf, isw_debug, isw_conv, vthdac, r8arch_rsv, tx8_rsv. Their areas are in
+  `scratch/chip-assembly-v6/run/report-v6.json`.
+- `pad_por_bypass`: one pad site (no core area). `isw_pll`: the conn uses the `isw_debug` master (power-delivery section 2:
+  0.0370 mm2) where v6 placed the `isw_pll` master.
+- Spiral keep-outs (no fill / MIM / decap over `lna_ind`, `lna_deg`, QVCO spirals) are not counted anywhere.

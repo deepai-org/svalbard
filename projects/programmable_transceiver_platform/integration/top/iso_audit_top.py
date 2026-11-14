@@ -133,6 +133,8 @@ def build(work):
         if base.startswith('c_'):
             direction[base] = 'output'
             isl = sorted({GROUP[inst[u[0]]['group']] for u in us if inst[u[0]]['group'] in GROUP})
+            named = {ct.GROUP_NAME[int(k)] for k in re.findall(r'island_on\[(\d)', ctl[base]['enc']) if int(k) in ct.GROUP_NAME}
+            if named: isl = sorted(named)       # the row states its own gating: use it, so a wrong group shows as K2
             cbit[n] = dict(field=base, islands=isl, reset=(ctl[base]['reset'] >> (idx or 0)) & 1)
     return dict(direction=direction, cbit=cbit, empty=empty, note=note, mc=mc, inst=inst, masters=masters)
 

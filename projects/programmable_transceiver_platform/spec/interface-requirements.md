@@ -269,7 +269,7 @@ whole radio and are listed so the on-chip spurious budget has a target.
 | RF-RX-IRR | RX IQ image rejection ≥ 25 dB uncorrected, ≥ 35 dB after FPGA cal | derived (MCS7 SNR ~25 dB) | Same | Sim |
 | RF-RX-IIP3 | IIP3 ≥ −10 dBm at max gain (−0 dBm at min gain per AA lna) to meet BLE/Wi-Fi blocking | derived from RF-BLE-BLOCK, RF-WIFI-ACR | Same | PSS/HB |
 | RF-TX-MUTE | Mute isolation ≥ 40 dB (TDD spurious into own RX / regulatory off-state) | derived | Same | Sim |
-| RF-LO-JIT | LO integrated jitter ≤ 1.05 ps rms total, ≤ 0.3–0.5 ps per on-chip slot; I/Q skew ≤ 1° (1.16 ps) | clock-feasibility-envelope.md | Same | Sim + bench |
+| RF-LO-JIT | LO integrated jitter ≤ 1.05 ps rms total, ≤ 0.3–0.5 ps per on-chip slot; I/Q skew ≤ 1° (1.16 ps) | derived | Same | Sim + bench |
 
 ### 2.1 BLE Coded, Channel Sounding, 802.15.4 profiles: reuse map
 
@@ -378,7 +378,7 @@ by the host-family numbers once chosen).
 | HL-D2H-DCD | Forwarded-clock duty-cycle distortion (±2.5 % of 6.4 ns) | 160 | A |
 | HL-D2H-JIT | Clock-to-data uncorrelated jitter (PJ+RJ pp) | 100 | A |
 | HL-D2H-SSO | SSO pushout, 11 outputs switching | 200 | A, unverified |
-| HL-D2H-ISI | ISI at 6 pF, bi_24t fast slew (tr 0.94 ns tt / 1.72 ns ss at 10 pF) | 150 | E (fpga-host-screen.md transitions), A for ISI share |
+| HL-D2H-ISI | ISI at 6 pF, bi_24t fast slew (tr 0.94 ns tt / 1.72 ns ss at 10 pF) | 150 | A (pad transition screen no longer in the repository) |
 | HL-D2H-BOARD | Board length mismatch (±2 mm ≈ ±12 ps, + crosstalk) | 50 | A |
 | HL-FPGA-WIN | FPGA input setup+hold after IDELAY training | 1000 | A (hostio_pad_screen fpga_rx_window_ns 1.0; 7-series HR LVCMOS class 0.6–1.0 ns) |
 | **HL-D2H-MARGIN** | UI − Σ | **1140 (36 % UI)** | requirement: ≥ 0.15 UI (480 ps) |

@@ -61,7 +61,9 @@
         "verification/chip_assembly/inventory.py CUSTOM_PADS (v4+ west map) and MIRRORED_PADS",
         "scratch/chip-assembly-v6/run/floorplan-v6.json",
         "scratch/reviews/pads-core/bond-map-options.md (options S1, P2 held, L1)",
-        "scratch/reviews/interface-changes.md PC-1..PC-18, CP4-3, RC-16t, PD2-12"
+        "scratch/reviews/interface-changes.md PC-1..PC-18, CP4-3, RC-16t, PD2-12",
+        "scratch/reviews/pads-core/wafer-space-consequences.md (scratch/pads-core/ws/REPORT.md)",
+        "scratch/reviews/wafer-space-answers.md"
       ],
       "west": {
         "inputs[11].pad": "RF_RX_P",
@@ -76,14 +78,13 @@
         "inputs[2].pad": "REF_IN_N",
         "inputs[1].pad": "RF_TX_P (pad_rftxpad)",
         "inputs[0].pad": "RF_TX_N",
-        "extra pad openings beside RF_RX (no board finger)": "AGND_RX x2 (LNA ground, PD2-12): second wire on GND finger 71 or bare GND copper; if the assembler allows one landing only, one pad. Cells not built yet.",
-        "note": "option L1 (2026-11-14): REF_IN pair and BB_Q pair swapped sites to move the external LO 2110 um from RF_RX (bond-wire LO leak +11.2 / +2.4 / -12.7 dB margin at 4 Vpp; drive to be about 1 Vpp: +12 dB). Open condition: LO owner confirms the I/Q error from the now adjacent REF_IN / AUX_CLK pairs (about 0.7 / 1.5 / 3.6 deg per leg) is within trim."
+        "note": "option L1 (2026-11-14): REF_IN pair and BB_Q pair swapped sites to move the external LO 2110 um from RF_RX (bond-wire LO leak +11.2 / +2.4 / -12.7 dB margin at 4 Vpp; drive to be about 1 Vpp: +12 dB). Open condition: LO owner confirms the I/Q error from the now adjacent REF_IN / AUX_CLK pairs (about 0.7 / 1.5 / 3.6 deg per leg) is within trim. No AGND_RX pad: the COB bonds only the 74 template pads with one fixed wire layout (no extra wires, down-bonds or double bonds; scratch/reviews/wafer-space-answers.md); the LNA ground is die VSS (rejection per PD2-15). Runner-up, only if rf_rx shows >= 10 dB net: ground site vss_pads[1] (bond 71, 211 um from RF_RX_P) on its own on-die net."
       },
       "east": {
         "bidir[14].pad": "WIRE_RX_N (pad_hspad, mirrored)",
         "bidir[15].pad": "WIRE_RX_P (pad_hspad, mirrored)",
         "bidir[16].pad": "POR_BYPASS (provider in_c, PD tied high: strap; bench jumper to 3.3 V on contact 58, default open)",
-        "bidir[17].pad": "spare, HELD (candidate P2: receives one south-edge signal so that signal's south site becomes a supply bond; decided after scratch/reviews/offchip-passives.md)",
+        "bidir[17].pad": "spare (provider bi_24t, bonded, contact 57). Option P2 (a south signal moves here, its south site becomes a supply bond) is dropped on the 2026-11-14 numbers: a supply bond on a signal finger has no COB capacitor (8.1-8.7 nH to the first capacitor against 4.0-4.6 nH on a supply finger) and the DC gain is about 4 mV per 100 mA on the D2H row; reopened only if the power-delivery rerun with 0.21-0.28 ohm bond wires shows a bond or cell above about 80 % of its limit, or if the off-chip passives pass wants the site.",
         "bidir[18].pad": "USB_DN (pad_wirepad)",
         "bidir[19].pad": "USB_DP (pad_wirepad)",
         "bidir[20].pad": "WIRE_TX_N (pad_txpad, mirrored)",
@@ -106,7 +107,8 @@
         "ESD_TEST (PD35)",
         "usb2 mode_aliases on WIRE_RX_P/N (USB is on USB_DP/USB_DN since PD22)",
         "WCLK_IN_P / WCLK_IN_N (were bidir[16] / bidir[17]; forwarded wire clock on the AUX_CLK pair, CP4-3)",
-        "LNA_SRC_P / LNA_SRC_N (RC-16t: on-chip degeneration; the openings are AGND_RX)"
+        "LNA_SRC_P / LNA_SRC_N (RC-16t: on-chip degeneration; the openings are AGND_RX)",
+        "AGND_RX extra openings beside RF_RX (not bondable: fixed 74-wire COB layout)"
       ],
       "host_link_and_south_sites": "unchanged: see candidate_signal_sites (D2H/H2D/SPI/RESET_N)"
     },

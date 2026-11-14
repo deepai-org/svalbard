@@ -153,6 +153,9 @@
 //    legal use), and to the RN pins of the 17 flops (the dead-man clear: recovery/removal against
 //    SCLK is covered by the >= 1 us rule of the procedure; on a healthy die the key holds 0).
 `default_nettype none
+// Re-review 2026-11-14 (scratch/reviews/por-path-review, condition C2): the module is kept as a hierarchy so that
+// synthesis cannot remap the reset equation across the macro (a mux form selected by por_n would glitch on a POR edge).
+(* keep_hierarchy *)
 module pt_por_path(
  input  wire reset_n_pad, // RESET_N pad Y (in_c, pull-down)
  input  wire por_n,       // on-die POR, 0 = asserted

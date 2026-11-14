@@ -842,8 +842,7 @@
             "host_follow"
           ],
           "islands": [
-            "pll",
-            "wired"
+            "pll"
           ],
           "forbidden": [
             "host_follow"
@@ -865,8 +864,7 @@
             "host_follow"
           ],
           "islands": [
-            "pll",
-            "wired"
+            "pll"
           ]
         },
         "conv_sample": {
@@ -1550,7 +1548,7 @@
       }
     },
     "core.refchain": {
-      "description": "Bandgap (README bgap.*) and bias-distribution root trunk-leg enables (README dist.en_<island> = EN_<ISLAND>). Trunk enables are not island-gated: the documented idac2 trim runs dist_en_debug=1 with the debug island unpowered. Bandgap-before-consumers interlock (always-on audit F5, in RTL: rtl/pt_ctl_decode.sv pt_bgap_interlock): the macro holds c_biasgen_ref_sel_vbg and every c_bias_dist_en_* at 0 until bgap_ena has been 1 for 128 SCLK cycles (>= 12.8 us at <= 10 MHz, 25.6 us at 5 MHz); bgap_ena = 0 clears it. The fields themselves read back as written.",
+      "description": "Bandgap (README bgap.*) and bias-distribution root trunk-leg enables (README dist.en_<island> = EN_<ISLAND>). Trunk enables are not island-gated: the documented idac2 trim runs dist_en_debug=1 with the debug island unpowered. Bandgap-before-consumers interlock (always-on audit F5, in RTL: rtl/pt_ctl_decode.sv pt_bgap_interlock): the macro holds c_biasgen_ref_sel_vbg and every c_bias_dist_en_* at 0 until bgap_ena has been 1 for 256 SCLK cycles (>= 10 us for SCLK <= 25 MHz; 51 us at the 5 MHz limit: the consumers switch on in the eighth SPI transaction after the commit); bgap_ena = 0 clears it. The fields themselves read back as written.",
       "update": "stopped",
       "islands": [],
       "live": false,
@@ -2842,6 +2840,16 @@
             "aux_clk",
             "wclk_in"
           ]
+        ],
+        [
+          "clockmux.config.ring_ref",
+          "ne",
+          "aux"
+        ],
+        [
+          "cdr.ac3.fll_ref_wck",
+          "eq",
+          0
         ]
       ],
       "reason": "CP4-3: the forwarded wire clock WCLK_IN shares the AUX_CLK pad pair, which carries the Q leg of an external LO. An external LO mode excludes every use of that pair as a clock input (rf_wired_payload_exclusive does not cover all-fallback RF receive)."
@@ -2881,6 +2889,16 @@
             "aux_clk",
             "wclk_in"
           ]
+        ],
+        [
+          "clockmux.config.ring_ref",
+          "eq",
+          "aux"
+        ],
+        [
+          "cdr.ac3.fll_ref_wck",
+          "eq",
+          1
         ]
       ],
       "then_all": [

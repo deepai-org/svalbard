@@ -120,3 +120,14 @@ D['rules'].append({'id': 'forwarded_clock_needs_debug_island', 'class': 'legalit
 for r in D['rules']:
     if r['id'] == 'wiredtx_serial_needs_serial_branch':   # with a USB branch selected the serializer runs for the USB path and the TX pad stays off
         r['if_all'].append(['usbdrive.select.branch', 'eq', 'off'])
+# ---------------------------------------------------------------- independent review of 3cff484 (scratch/reviews/dg6-review), 2026-11-14
+A['cdr.ac3']['fields']['loop_bw']['maximum'] = 7        # finding 2: pt_cdr g[2:0], design point g = 7 (wired_rx README); was limited to 0..3
+A['cdr.ac3']['fields']['loop_bw']['description'] = 'pt_cdr g[2:0]: pump unit-leg current / loop bandwidth code 0..7 (analog/wired_rx/README.md; reset 2).'
+for k in range(8): A['cdr.phase_trim']['fields'][f'p{k}']['islands'] = ['pll', 'wired']   # finding 3: pt_ptrim is on the wired_cap island
+for f in ('wire_line', 'wire_sample'): C['debug.clk_select']['fields'][f]['islands'] = ['pll']   # finding 10: the only consumer is pt_clockmux (pll)
+A['detect.config']['fields']['low_threshold_code']['description'] = 'pt_detect det_thr1..0 (analog/wired_rx/PINS.md section 4); code 3 = disconnect level for the USB logic'
+A['detect.config']['fields']['high_threshold_code']['description'] = 'pt_detect det_se1..0'
+for r in D['rules']:                                    # finding 9: the two other users of the AUX_CLK receiver
+    if r['id'] == 'lo_pads_vs_forwarded_clock': r['then_all'] += [['clockmux.config.ring_ref', 'ne', 'aux'], ['cdr.ac3.fll_ref_wck', 'eq', 0]]
+    if r['id'] == 'forwarded_clock_needs_debug_island': r['if_any'] += [['clockmux.config.ring_ref', 'eq', 'aux'], ['cdr.ac3.fll_ref_wck', 'eq', 1]]
+C['core.refchain']['description'] = C['core.refchain']['description'].replace('128 SCLK cycles (>= 12.8 us at <= 10 MHz, 25.6 us at 5 MHz)', '256 SCLK cycles (>= 10 us for SCLK <= 25 MHz; 51 us at the 5 MHz limit: the consumers switch on in the eighth SPI transaction after the commit)')

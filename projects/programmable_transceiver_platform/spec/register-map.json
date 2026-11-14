@@ -1169,8 +1169,7 @@
    "gate_and": null,
    "group": "debug.clk_select",
    "islands": [
-    "pll",
-    "wired"
+    "pll"
    ],
    "kind": "debug",
    "live": false,
@@ -1229,8 +1228,7 @@
    "gate_and": null,
    "group": "debug.clk_select",
    "islands": [
-    "pll",
-    "wired"
+    "pll"
    ],
    "kind": "debug",
    "live": false,
@@ -5891,7 +5889,7 @@
    "live": false,
    "mantissa_bits": null,
    "maximum": 3,
-   "meaning": "det_thr1..0",
+   "meaning": "pt_detect det_se1..0",
    "minimum": 0,
    "name": "detect.config.high_threshold_code",
    "range_text": null,
@@ -5938,7 +5936,7 @@
    "live": false,
    "mantissa_bits": null,
    "maximum": 3,
-   "meaning": "det_se1..0",
+   "meaning": "pt_detect det_thr1..0 (analog/wired_rx/PINS.md section 4); code 3 = disconnect level for the USB logic",
    "minimum": 0,
    "name": "detect.config.low_threshold_code",
    "range_text": null,
@@ -10028,8 +10026,8 @@
    "kind": "analog",
    "live": false,
    "mantissa_bits": null,
-   "maximum": 3,
-   "meaning": "Pump unit-leg current 8/16/32/64 nA (codes 0..3) -> BB loop bandwidth about 0.5/1/2/4 MHz at 0.05 UI rms (AC3-W2, replaces bb_gain). Reset 2 = 32 nA (2.5 Gb/s default). Codes 4..7 reserved.",
+   "maximum": 7,
+   "meaning": "pt_cdr g[2:0]: pump unit-leg current / loop bandwidth code 0..7 (analog/wired_rx/README.md; reset 2).",
    "minimum": 0,
    "name": "cdr.ac3.loop_bw",
    "range_text": null,
@@ -10164,7 +10162,8 @@
    "gate_and": null,
    "group": "cdr.phase_trim",
    "islands": [
-    "pll"
+    "pll",
+    "wired"
    ],
    "kind": "analog",
    "live": true,
@@ -10211,7 +10210,8 @@
    "gate_and": null,
    "group": "cdr.phase_trim",
    "islands": [
-    "pll"
+    "pll",
+    "wired"
    ],
    "kind": "analog",
    "live": true,
@@ -10258,7 +10258,8 @@
    "gate_and": null,
    "group": "cdr.phase_trim",
    "islands": [
-    "pll"
+    "pll",
+    "wired"
    ],
    "kind": "analog",
    "live": true,
@@ -10305,7 +10306,8 @@
    "gate_and": null,
    "group": "cdr.phase_trim",
    "islands": [
-    "pll"
+    "pll",
+    "wired"
    ],
    "kind": "analog",
    "live": true,
@@ -10352,7 +10354,8 @@
    "gate_and": null,
    "group": "cdr.phase_trim",
    "islands": [
-    "pll"
+    "pll",
+    "wired"
    ],
    "kind": "analog",
    "live": true,
@@ -10399,7 +10402,8 @@
    "gate_and": null,
    "group": "cdr.phase_trim",
    "islands": [
-    "pll"
+    "pll",
+    "wired"
    ],
    "kind": "analog",
    "live": true,
@@ -10446,7 +10450,8 @@
    "gate_and": null,
    "group": "cdr.phase_trim",
    "islands": [
-    "pll"
+    "pll",
+    "wired"
    ],
    "kind": "analog",
    "live": true,
@@ -10493,7 +10498,8 @@
    "gate_and": null,
    "group": "cdr.phase_trim",
    "islands": [
-    "pll"
+    "pll",
+    "wired"
    ],
    "kind": "analog",
    "live": true,
@@ -14480,7 +14486,7 @@
    "update": "stopped"
   },
   {
-   "description": "Bandgap (README bgap.*) and bias-distribution root trunk-leg enables (README dist.en_<island> = EN_<ISLAND>). Trunk enables are not island-gated: the documented idac2 trim runs dist_en_debug=1 with the debug island unpowered. Bandgap-before-consumers interlock (always-on audit F5, in RTL: rtl/pt_ctl_decode.sv pt_bgap_interlock): the macro holds c_biasgen_ref_sel_vbg and every c_bias_dist_en_* at 0 until bgap_ena has been 1 for 128 SCLK cycles (>= 12.8 us at <= 10 MHz, 25.6 us at 5 MHz); bgap_ena = 0 clears it. The fields themselves read back as written.",
+   "description": "Bandgap (README bgap.*) and bias-distribution root trunk-leg enables (README dist.en_<island> = EN_<ISLAND>). Trunk enables are not island-gated: the documented idac2 trim runs dist_en_debug=1 with the debug island unpowered. Bandgap-before-consumers interlock (always-on audit F5, in RTL: rtl/pt_ctl_decode.sv pt_bgap_interlock): the macro holds c_biasgen_ref_sel_vbg and every c_bias_dist_en_* at 0 until bgap_ena has been 1 for 256 SCLK cycles (>= 10 us for SCLK <= 25 MHz; 51 us at the 5 MHz limit: the consumers switch on in the eighth SPI transaction after the commit); bgap_ena = 0 clears it. The fields themselves read back as written.",
    "fallback_routes": [],
    "fields": [
     "core.refchain.bgap_ena",
@@ -15570,7 +15576,7 @@
  },
  "last_analog": 183,
  "last_debug": 89,
- "map_hash16": 34996,
+ "map_hash16": 34861,
  "obs_status": [
   "island_pgood_wired",
   "island_pgood_rf",
@@ -19736,6 +19742,20 @@
       6,
       7
      ]
+    ],
+    [
+     "clockmux.config.ring_ref",
+     "ne",
+     [
+      2
+     ]
+    ],
+    [
+     "cdr.ac3.fll_ref_wck",
+     "eq",
+     [
+      0
+     ]
     ]
    ]
   },
@@ -19774,6 +19794,20 @@
      [
       3,
       4
+     ]
+    ],
+    [
+     "clockmux.config.ring_ref",
+     "eq",
+     [
+      2
+     ]
+    ],
+    [
+     "cdr.ac3.fll_ref_wck",
+     "eq",
+     [
+      1
      ]
     ]
    ],

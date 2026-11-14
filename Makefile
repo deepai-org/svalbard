@@ -387,6 +387,7 @@ transceiver-top-modes:
 	$(PYTHON) scratch/reviews/mode-walk/cfg_map.py --selftest
 	$(PYTHON) scratch/reviews/mode-walk/cfg_map.py | grep -q "^TOTAL: 0 pin groups without a field, 0 width mismatches, 0 orphan fields"
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_top_modes.py
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_decode_table.py
 # G3 closure gate: the strap pad is bound in the generated integration/pt_chip.sv since 2026-11-14 (passes).
 .PHONY: transceiver-por-bypass-chip
 transceiver-por-bypass-chip:

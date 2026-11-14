@@ -5611,7 +5611,7 @@
           "minimum": 0,
           "maximum": 3,
           "unit": "code",
-          "description": "det_thr1..0"
+          "description": "pt_detect det_se1..0"
         },
         "low_threshold_code": {
           "bits": 2,
@@ -5619,7 +5619,7 @@
           "minimum": 0,
           "maximum": 3,
           "unit": "code",
-          "description": "det_se1..0"
+          "description": "pt_detect det_thr1..0 (analog/wired_rx/PINS.md section 4); code 3 = disconnect level for the USB logic"
         },
         "test_current_enable": {
           "bits": 1,
@@ -6509,9 +6509,9 @@
           "bits": 3,
           "default": 2,
           "minimum": 0,
-          "maximum": 3,
+          "maximum": 7,
           "unit": "code",
-          "description": "Pump unit-leg current 8/16/32/64 nA (codes 0..3) -> BB loop bandwidth about 0.5/1/2/4 MHz at 0.05 UI rms (AC3-W2, replaces bb_gain). Reset 2 = 32 nA (2.5 Gb/s default). Codes 4..7 reserved."
+          "description": "pt_cdr g[2:0]: pump unit-leg current / loop bandwidth code 0..7 (analog/wired_rx/README.md; reset 2)."
         },
         "fll_ref_wck": {
           "bits": 1,
@@ -6543,7 +6543,11 @@
           "maximum": 31,
           "unit": "code",
           "live": true,
-          "direct": true
+          "direct": true,
+          "islands": [
+            "pll",
+            "wired"
+          ]
         },
         "p1": {
           "bits": 5,
@@ -6552,7 +6556,11 @@
           "maximum": 31,
           "unit": "code",
           "live": true,
-          "direct": true
+          "direct": true,
+          "islands": [
+            "pll",
+            "wired"
+          ]
         },
         "p2": {
           "bits": 5,
@@ -6561,7 +6569,11 @@
           "maximum": 31,
           "unit": "code",
           "live": true,
-          "direct": true
+          "direct": true,
+          "islands": [
+            "pll",
+            "wired"
+          ]
         },
         "p3": {
           "bits": 5,
@@ -6570,7 +6582,11 @@
           "maximum": 31,
           "unit": "code",
           "live": true,
-          "direct": true
+          "direct": true,
+          "islands": [
+            "pll",
+            "wired"
+          ]
         },
         "p4": {
           "bits": 5,
@@ -6579,7 +6595,11 @@
           "maximum": 31,
           "unit": "code",
           "live": true,
-          "direct": true
+          "direct": true,
+          "islands": [
+            "pll",
+            "wired"
+          ]
         },
         "p5": {
           "bits": 5,
@@ -6588,7 +6608,11 @@
           "maximum": 31,
           "unit": "code",
           "live": true,
-          "direct": true
+          "direct": true,
+          "islands": [
+            "pll",
+            "wired"
+          ]
         },
         "p6": {
           "bits": 5,
@@ -6597,7 +6621,11 @@
           "maximum": 31,
           "unit": "code",
           "live": true,
-          "direct": true
+          "direct": true,
+          "islands": [
+            "pll",
+            "wired"
+          ]
         },
         "p7": {
           "bits": 5,
@@ -6606,7 +6634,11 @@
           "maximum": 31,
           "unit": "code",
           "live": true,
-          "direct": true
+          "direct": true,
+          "islands": [
+            "pll",
+            "wired"
+          ]
         }
       }
     },

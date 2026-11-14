@@ -35,7 +35,8 @@ endmodule
 
 // CP4-1 island isolation inside the macro: every input that comes from a switched island is ANDed with that
 // island's island_on on the FIRST gate after the pin (integration/top/generated/macro_clamps.txt). A kept
-// and2 cell: the flow must not buffer or hold-fix between the pin and this gate (config dont_touch iso_*).
+// and2 cell. OPEN for the hardening flow (review finding 1): the 130 pin nets must be excluded from input-port
+// buffering and hold repair, and the routed netlist checked (only load of each pin = its iso_and).
 module pt_iso_and #(parameter W = 1)(input wire[W-1:0] a, input wire on, output wire[W-1:0] y);
  genvar i;
  generate for (i = 0; i < W; i = i + 1) begin : g
@@ -51,15 +52,19 @@ endmodule
 // quad DX on WCLK40 and a 20-bit edge word EW per 20-bit word, i.e. two edge words per WCLK40 period with no
 // strobe of their own: the first is registered on the falling WCLK40 edge, the second on the rising edge
 // together with DX (the wired RX owner must confirm this alignment: row DIG-EW).
-//   lane 0: data quad (mission mode)            {DX[39:0]}
+//   lane 0: data quad (mission mode)            {DX[39:0]}   (one WCLK40 register stage in all lanes)
 //   lane 1: edge quad                           {EW second word, EW first word}
 //   lane 2: first half word of both lanes       {EW first word, DX[19:0]}   (half the line time, both lanes)
 // Continuous export of BOTH full lanes needs 80 bits per WCLK40 period, which the 40-bit ingress cannot
 // carry: not implemented (see NOTES r6, what remains).
-module pt_wrx_lane(input wire clk, rst_n, input wire[1:0] lane, input wire[39:0] dx, input wire[19:0] ew,
- output wire[39:0] quad);
+module pt_wrx_lane(input wire clk, rst_n, input wire[1:0] lane, input wire valid_in, input wire[39:0] dx, input wire[19:0] ew,
+ output reg[39:0] quad, output reg valid);
+ // The selected quad and its valid are registered on the rising edge (one word of latency in every lane), so the
+ // falling-edge edge-word register is a plain half-cycle flop-to-flop path and the ingress sees registers only.
  reg[19:0] ew_f;
  always @(negedge clk or negedge rst_n) if (!rst_n) ew_f <= 20'd0; else ew_f <= ew;
- assign quad = (lane == 2'd1) ? {ew, ew_f} : (lane == 2'd2) ? {ew_f, dx[19:0]} : dx;
+ always @(posedge clk or negedge rst_n)
+  if (!rst_n) begin quad <= 40'd0; valid <= 1'b0; end
+  else begin quad <= (lane == 2'd1) ? {ew, ew_f} : (lane == 2'd2) ? {ew_f, dx[19:0]} : dx; valid <= valid_in; end
 endmodule
 `default_nettype wire

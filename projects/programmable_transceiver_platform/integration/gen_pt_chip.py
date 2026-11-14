@@ -60,6 +60,18 @@ def main():
             net = pins[key][1]; sel = f'm_{port}[{i}]' if w > 1 else f'm_{port}'
             if d == 'input': a(f' assign {sel} = {expr(net)};')
             elif net != '-': a(f' assign {net} = {sel};')
+    # analog-top input bits that the conn leaves without a macro driver (unconnected macro outputs, tied-off data bits)
+    # are tied low so that nothing floats in simulation (review 2026-11-14, finding 13)
+    driven = collections.defaultdict(set)
+    for port, (d, w) in rtl.items():
+        if d != 'input' and not port.startswith('c_'):
+            for i in range(w):
+                net = pins[port if w == 1 and port in pins else f'{port}[{i}]'][1]
+                if net != '-': b, k = bus(net); driven[b].add(k)
+    for d, w, n in atop:
+        if d == 'input' and not n.startswith('c_') and n in driven and w > 1:
+            for i in range(w):
+                if i not in driven[n]: a(f" assign {n}[{i}] = 1'b0;   // no macro driver in the conn")
     a(' pt_digital_macro digital(' + ',\n  '.join(', '.join(conns[i:i + 6]) for i in range(0, len(conns), 6)) + ');')
     h = inst['host']['pins']
     a(' // Host pads: provider cells only (integration/pt_provider_io.sv); the logical supply groups are one VDD / VSS here.')

@@ -204,7 +204,9 @@ if {[llength $egress_mux]} {
 }
 set fc_clks {}
 for {set i 0} {$i < 6} {incr i} {
-    create_clock -name fc$i -period $FC_PERIOD [get_ports "fc_src\[$i\]"]
+    # fc_src[4] is the always-on oscillator (40-60 MHz, analog/timing/README.md): it also clocks the supply / clock
+    # monitor (rtl/pt_monitor.sv), so it gets its own period, 16.0 ns = 62.5 MHz (the fastest oscillator + 4 %).
+    create_clock -name fc$i -period [expr {$i == 4 ? 16.0 : $FC_PERIOD}] [get_ports "fc_src\[$i\]"]
     lappend fc_clks fc$i
 }
 # pt_freq_count block clocks (2026-11-10 timing rework): the Johnson counter MSB, through the kept
@@ -775,4 +777,20 @@ if {$PT_OCV > 0} {
     # (multiplies the legacy envelope derate, which is 1.0 with the characterized / corner libraries)
     set_timing_derate -early [expr {$pt_envelope_derate * (1.0 - $PT_OCV)}] -clock
     set_timing_derate -late  [expr {$pt_envelope_derate * (1.0 + $PT_OCV)}] -clock
+}
+
+# ---------------------------------------------------------------------------------------
+# r6: reset path rtl/pt_por_path.sv (kept hierarchy, instance por_path). The override key flops are clocked by SCLK and
+# the `ovr` flop by the RESET_N pad; both reach every flop's reset pin through por_path/rst_n. Reset assertion and
+# release are asynchronous to every domain by design (as reset_n_pad / por_n always were): everything through the
+# module's reset output is a false path. NOT a blanket "-from sclk -to */RN": the SPI bit counter's CS_N
+# recovery / removal checks stay timed. The key shift register's own flop-to-flop paths stay timed (hold).
+set pt_por_rst [get_pins -quiet por_path/rst_n]
+if {[llength $pt_por_rst] != 1} {
+    puts "pt_digital_macro.sdc: ERROR: por_path/rst_n not found (pt_por_path must keep its hierarchy)"
+    if {![info exists ::env(PT_SDC_LENIENT)]} { error "por_path/rst_n not found" }
+} else {
+    set_false_path -through $pt_por_rst
+    set_false_path -through [get_pins por_path/ovr_armed]
+    set_false_path -through [get_pins por_path/por_masked]
 }

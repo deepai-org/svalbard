@@ -36,9 +36,20 @@ module pt_vreg_seq(
             else if (tick) waiting <= 1'b0;
             else if (waiting) lfsr <= {lfsr[11:0], lfsr[12] ^ lfsr[3] ^ lfsr[2] ^ lfsr[0]};
         end
-    // A ring that is (still) bypassed is never held; a ring that leaves bypass is held from the
-    // synchronizer output onward (edge, registered trigger, then the timer).
-    assign tx_ok = !(waiting || trig_q || (txb_d && !txb_s)) || txb_s;
-    assign rx_ok = !(waiting || trig_q || (rxb_d && !rxb_s)) || rxb_s;
+    // Review 2026-11-14 (finding 6): the ok levels were an OR of flops that swap on one edge (a 50 ns enable runt when
+    // the island came on with a regulated ring pre-enabled) and were 1 after reset with no reference clock. Now one
+    // flop per ring, reset 0, set only by a completed wait with the island on and the ring out of bypass, cleared by
+    // any new trigger; a bypassed ring is passed by the raw (static) bypass level, so reference-less bring-up in
+    // bypass still works and a regulated ring stays off without REF_CLK.
+    reg rdy_tx, rdy_rx;
+    wire hold = trigger || trig_q || !on_s;
+    always @(posedge ref_clk or negedge rst_n)
+        if (!rst_n) begin rdy_tx <= 1'b0; rdy_rx <= 1'b0; end
+        else begin
+            rdy_tx <= !hold && !txb_s && !txb_d && (rdy_tx || tick);
+            rdy_rx <= !hold && !rxb_s && !rxb_d && (rdy_rx || tick);
+        end
+    assign tx_ok = tx_bypass | rdy_tx;
+    assign rx_ok = rx_bypass | rdy_rx;
 endmodule
 `default_nettype wire

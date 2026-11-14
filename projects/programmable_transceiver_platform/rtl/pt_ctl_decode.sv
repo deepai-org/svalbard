@@ -16,7 +16,7 @@ module pt_ctl_decode(
  input  wire[`PT_ANALOG_CFG_W-1:0] analog_cfg, input wire[`PT_DEBUG_CFG_W-1:0] debug_cfg,
  input  wire[`PT_ISLAND_W-1:0] island_on,   // register-file island state (switch on AND (pgood OR override))
  input  wire vreg_rx_ok,                    // pt_vreg_seq: CDR ring regulator settled
- input  wire bg_ok,                         // pt_bgap_interlock: bandgap enabled for >= 128 SCLK cycles
+ input  wire bg_ok,                         // pt_bgap_interlock: bandgap enabled for >= 256 SCLK cycles
  input  wire reset_seen,                    // pt_reset_seen: a real reset has happened since power-up (INT6)
  input  wire[6:0] rx_gain, input wire rx_gain_active, // opcode-4 fast gain {LNA index[1:0], PGA index[4:0]}
  input  wire rf_mute,                       // transport mute (pt_rf_out_reg)
@@ -201,6 +201,7 @@ module pt_ctl_decode(
  assign c_rfdriver_se = f_rfdriver_gain__single_ended;
 
  // ---------------- LO (lo / lod islands = rf enable group since PD2-2; MW-1a: lo_mode 0 off, 1 passive external, 2 on-chip, 3 external through CML)
+ wire[1:0] ring_ref = f_clockmux_config__ring_ref;                  // 0 stopped, 1 ref, 2 aux, 3 h2d
  wire[1:0] lo_mode = f_rfpll_config__lo_mode;
  wire lo_external = (lo_mode == 2'd1) | (lo_mode == 2'd3);
  assign c_lo_ext = lo_external;
@@ -220,13 +221,14 @@ module pt_ctl_decode(
  assign c_lo_obs_en = (obs_src == 5'd1) & on_rf;
  // REF_IN / AUX_CLK carry the 2.4 GHz LO in both external modes: their clock receivers are forced off.
  assign c_rx_ref_en = (f_refinput_state__state == ACTIVE) & ~lo_external;
- assign rx_en_aux = (rx_en_aux_reg | rx_en_wclk_reg) & ~lo_external;
+ // AUX_CLK receiver (debug island): the register-file requests (clock selects, CLK_OBS source), plus the two other
+ // users of the pair: ring reference = aux and the forwarded-clock FLL reference (review finding 9).
+ assign rx_en_aux = (rx_en_aux_reg | rx_en_wclk_reg | (((ring_ref == 2'd2) | f_cdr_ac3__fll_ref_wck) & on_debug)) & ~lo_external;
  // the refpad VCM source is bound on the pll island: its enable reads 0 while that island is off (TOP-25; the REF_IN
  // receiver itself is on the always-on rail, so its VCM needs the pll island on or the source must move: D-REFVCM).
  assign c_refvcm_en = (c_lo_ext | c_rx_ref_en | rx_en_aux) & on_pll;
 
  // ---------------- clocks (pll island). One-hot, 0 = stopped.
- wire[1:0] ring_ref = f_clockmux_config__ring_ref;                  // 0 stopped, 1 ref, 2 aux, 3 h2d
  assign c_clockmux_ps = {ring_ref == 2'd3, ring_ref == 2'd2, ring_ref == 2'd1};
  wire[2:0] ws = f_debug_clk_select__wire_line, ss = f_debug_clk_select__wire_sample;
  wire[2:0] cs = f_debug_clk_select__conv_sample, hs = f_debug_clk_select__host_clk;
@@ -270,10 +272,9 @@ module pt_ctl_decode(
  assign c_clk_obs_off = ~obs_on;                    // pull-down on the tri-state node while the cell is not driving
  assign c_clk_obs_s = (obs_src >= 5'd15) ? 4'd15 : obs_src[3:0];
  assign c_clk_obs_n = f_debug_clk_obs__divider_log2;
- // /4 prescalers of the fast sources: {cdr_recovered 14, pll_vco 8, aux_clk 6 (= wclk_in 7 since CP4-3: same pad
- // pair), ref_in 5, wire_sample 3, wire_line 2}; the four on pll-island clocks stay off while the pll island is
+ // /4 prescalers of the fast sources: {cdr_recovered 14, pll_vco 8, aux_clk 6 (wclk_in 7 is dead since CP4-3: clk_obs.IN7 is tied low; use 6), ref_in 5, wire_sample 3, wire_line 2}; the four on pll-island clocks stay off while the pll island is
  // off (their input is NAND(CK, EN)).
- assign c_obs_pre4_en = {(obs_src == 5'd14) & on_pll, (obs_src == 5'd8) & on_pll, (obs_src == 5'd6) | (obs_src == 5'd7),
+ assign c_obs_pre4_en = {(obs_src == 5'd14) & on_pll, (obs_src == 5'd8) & on_pll, obs_src == 5'd6,
                          obs_src == 5'd5, (obs_src == 5'd3) & on_pll, (obs_src == 5'd2) & on_pll};
  assign c_char_en = {f_debug_replica__cmldiv_enable, f_debug_replica__ro50_enable, f_debug_replica__ro33_enable};
 
@@ -294,8 +295,8 @@ module pt_ctl_decode(
  assign c_rxselect_en = (f_rxselect_state__state == ACTIVE) & on_wired;
  assign c_rxselect_direct = f_rxselect_select__branch;
  assign c_detect_en = (f_detect_state__state == ACTIVE) & on_wired;
- assign c_detect_thr = f_detect_config__high_threshold_code;
- assign c_detect_se = f_detect_config__low_threshold_code;
+ assign c_detect_thr = f_detect_config__low_threshold_code;    // analog/wired_rx/PINS.md section 4
+ assign c_detect_se = f_detect_config__high_threshold_code;
  assign c_detect_src_tx = f_consolidation_detect__src_tx;
  assign c_detect_inject = f_detect_config__test_current_enable;
  assign c_vthdac_en = f_slicer_threshold__vth_enable;
@@ -334,17 +335,18 @@ module pt_ctl_decode(
 endmodule
 
 // Bandgap-before-consumers interlock (always-on audit F5; coordinator: an interlock in RTL, not a documented
-// order). ok rises 128 SCLK cycles after bgap_ena is seen high and falls with it. SCLK is the only clock that
+// order). ok rises 256 SCLK cycles after bgap_ena is seen high and falls with it. SCLK is the only clock that
 // is guaranteed in SPI-only bring-up; it runs only inside transactions, so the consumers switch on during the
-// fourth SPI transaction after the commit that enabled the bandgap (>= 12.8 us at SCLK <= 10 MHz, 25.6 us at
-// 5 MHz, 128 us at 1 MHz). Clocked on the SCLK fall like the register file.
+// eighth SPI transaction after the commit that enabled the bandgap (audit F5: VBG settled 10 us after ena;
+// 256 cycles >= 10 us for any SCLK <= 25 MHz, 51 us at the 5 MHz limit, 256 us at 1 MHz). If SPI goes idle the
+// consumers simply stay off until the next transactions. Clocked on the SCLK fall like the register file.
 module pt_bgap_interlock(input wire rst_n, sclk, bgap_ena, output reg ok);
- reg[6:0] cnt;
+ reg[7:0] cnt;
  always @(negedge sclk or negedge rst_n)
-  if (!rst_n) begin cnt <= 7'd0; ok <= 1'b0; end
-  else if (!bgap_ena) begin cnt <= 7'd0; ok <= 1'b0; end
-  else if (cnt == 7'd127) ok <= 1'b1;
-  else cnt <= cnt + 7'd1;
+  if (!rst_n) begin cnt <= 8'd0; ok <= 1'b0; end
+  else if (!bgap_ena) begin cnt <= 8'd0; ok <= 1'b0; end
+  else if (cnt == 8'd255) ok <= 1'b1;
+  else cnt <= cnt + 8'd1;
 endmodule
 
 // Reset-seen key (INT6-*, coordinator 2026-11-13). With the POR bypassed by the strap and RESET_N high through

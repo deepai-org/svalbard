@@ -6,7 +6,7 @@
 #define PT_SPI_CMD_READ 0x00u
 #define PT_ID_VALUE 0x5356u
 #define PT_ABI_VERSION 0x0003u
-#define PT_MAP_HASH 0x88B4u
+#define PT_MAP_HASH 0x882Du
 #define PT_COMMIT_CMD 0x0001u
 #define PT_REVERT_CMD 0x0002u
 #define PT_REG_ID 0x00u
@@ -1697,7 +1697,7 @@
 #define PT_CDR_AC3_LOOP_BW_DEFAULT 2u
 #define PT_CDR_AC3_LOOP_BW_IMPL_MASK 0x7u  /* implemented bits; 0 = no hardware, reads 0 */
 #define PT_CDR_AC3_LOOP_BW_MIN 0u
-#define PT_CDR_AC3_LOOP_BW_MAX 3u
+#define PT_CDR_AC3_LOOP_BW_MAX 7u
 #define PT_CDR_AC3_FLL_REF_WCK_ADDR 0xE5u
 #define PT_CDR_AC3_FLL_REF_WCK_SHIFT 3u
 #define PT_CDR_AC3_FLL_REF_WCK_WIDTH 1u

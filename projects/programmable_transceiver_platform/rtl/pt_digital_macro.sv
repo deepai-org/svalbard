@@ -302,7 +302,7 @@ module pt_digital_macro(
  assign island_off = ~island_on;
 
  // ---------------- CP4-1: island-sourced inputs, AND with island_on on the first gate (generated/macro_clamps.txt;
- // verification/check_macro_clamps.py compares this list with it). conv = 4, debug = 5, pll = 2, wired = 0.
+ // verification/check_top_modes.py compares this list with it; the hardening flow must not buffer these pins). conv = 4, debug = 5, pll = 2, wired = 0.
  wire[23:0] rf_rx_a, rf_rx_b; wire rf_ph_i, rf_ph_q;
  assign rf_rx_a[1:0] = rf_rx_sample[1:0], rf_rx_a[13:12] = rf_rx_sample[13:12];     // tied low at chip level
  assign rf_rx_b[1:0] = rf_rx_sample_b[1:0], rf_rx_b[13:12] = rf_rx_sample_b[13:12];
@@ -334,7 +334,12 @@ module pt_digital_macro(
  pt_iso_and #(20) iso_wire_rx_edge(.a(wire_rx_edge), .on(island_on[0]), .y(wrx_ew));
 
  // ---------------- register file, transport, pattern, counters (pt_digital)
- wire[`PT_ANALOG_CFG_W-1:0] analog_cfg; wire[`PT_DEBUG_CFG_W-1:0] debug_cfg;
+ // INT6 / review finding 5: until a real reset has been seen every register-file output is forced to 0 here (fields,
+ // ATB switches, receiver enables, observation enables), not only the island enables: a random power-up state can
+ // set the island power and power-good override bits inside the register file.
+ wire[`PT_ANALOG_CFG_W-1:0] analog_cfg_raw, analog_cfg; wire[`PT_DEBUG_CFG_W-1:0] debug_cfg_raw, debug_cfg;
+ assign analog_cfg = analog_cfg_raw & {`PT_ANALOG_CFG_W{reset_seen}};
+ assign debug_cfg = debug_cfg_raw & {`PT_DEBUG_CFG_W{reset_seen}};
 `include "pt_regmap_fields.svh"
  wire[6:0] rx_gain; wire rx_gain_active;
  wire[39:0] h2d_quad, d2h_quad;
@@ -352,6 +357,13 @@ module pt_digital_macro(
  wire fault_eff, mon_fault, bg_ok, cdr_freq_locked, fca_locked_ref, fcb_upd_ref; wire[13:0] fcb_diff_ref;
  wire[1:0] vth_fast; wire[7:0] vth_a, vth_b;
  wire rx_en_aux_reg, rx_en_wclk_reg, aosc_div;
+ wire[`PT_ATB_W-1:0] atb0_sw_r, atb1_sw_r; wire[`PT_ATB0_GRP_W-1:0] atb0_grp_r; wire[`PT_ATB1_GRP_W-1:0] atb1_grp_r;
+ wire atb0_en_r, atb1_en_r, rx_en_aux_r, rx_en_wclk_r, rx_en_wtx_ext_r, clk_obs_oe_r, dbg_obs0_oe_r, dbg_obs1_oe_r;
+ assign atb0_sw = atb0_sw_r & {`PT_ATB_W{reset_seen}}, atb1_sw = atb1_sw_r & {`PT_ATB_W{reset_seen}};
+ assign atb0_grp = atb0_grp_r & {`PT_ATB0_GRP_W{reset_seen}}, atb1_grp = atb1_grp_r & {`PT_ATB1_GRP_W{reset_seen}};
+ assign atb0_en = atb0_en_r & reset_seen, atb1_en = atb1_en_r & reset_seen, rx_en_wtx_ext = rx_en_wtx_ext_r & reset_seen;
+ assign rx_en_aux_reg = rx_en_aux_r & reset_seen, rx_en_wclk_reg = rx_en_wclk_r & reset_seen, clk_obs_oe = clk_obs_oe_r & reset_seen;
+ assign dbg_obs0_oe = dbg_obs0_oe_r & reset_seen, dbg_obs1_oe = dbg_obs1_oe_r & reset_seen;
  // status of the control blocks
  wire[9:0] mon_cause, mon_qualified; wire mon_cause_clk, mon_ready, mon_dead, mon_ref_alive, mon_in_alive;
  wire[2:0] wtx_state, wrx_state; wire wtx_seq_fault, tx_ring_ready;
@@ -379,11 +391,11 @@ module pt_digital_macro(
   .status(status), .por_n(por_n), .por_path({por_masked, ovr_armed, por_bypass}), .fault(fault_eff), .island_pgood(island_pgood),
   .fc_src(fc), .cdr_freq_locked(cdr_freq_locked), .fca_locked_ref(fca_locked_ref), .fcb_diff_ref(fcb_diff_ref), .fcb_upd_ref(fcb_upd_ref),
   .analog_status(analog_status), .wire_analog_status(wire_analog_status), .obs_extra({reset_seen, wtx_ext_present, aux_present}),
-  .analog_cfg(analog_cfg), .debug_cfg(debug_cfg),
-  .island_en(island_en_reg), .island_on(island_on_reg), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp), .atb1_grp(atb1_grp),
-  .atb0_en(atb0_en), .atb1_en(atb1_en), .rx_en_aux(rx_en_aux_reg), .rx_en_wclk(rx_en_wclk_reg),
-  .rx_en_wtx_ext(rx_en_wtx_ext), .clk_obs_oe(clk_obs_oe), .dbg_obs0(dbg_obs0),
-  .dbg_obs0_oe(dbg_obs0_oe), .dbg_obs1(dbg_obs1), .dbg_obs1_oe(dbg_obs1_oe), .commit_toggle(commit_toggle),
+  .analog_cfg(analog_cfg_raw), .debug_cfg(debug_cfg_raw),
+  .island_en(island_en_reg), .island_on(island_on_reg), .atb0_sw(atb0_sw_r), .atb1_sw(atb1_sw_r), .atb0_grp(atb0_grp_r), .atb1_grp(atb1_grp_r),
+  .atb0_en(atb0_en_r), .atb1_en(atb1_en_r), .rx_en_aux(rx_en_aux_r), .rx_en_wclk(rx_en_wclk_r),
+  .rx_en_wtx_ext(rx_en_wtx_ext_r), .clk_obs_oe(clk_obs_oe_r), .dbg_obs0(dbg_obs0),
+  .dbg_obs0_oe(dbg_obs0_oe_r), .dbg_obs1(dbg_obs1), .dbg_obs1_oe(dbg_obs1_oe_r), .commit_toggle(commit_toggle),
   .linecode(f_digital_transport_config__linecode), .rx_gain(rx_gain), .rx_gain_active(rx_gain_active),
   .vth_fast(vth_fast), .vth_a(vth_a), .vth_b(vth_b),
   .mon_cause(mon_cause), .mon_qualified(mon_qualified), .mon_cause_clk(mon_cause_clk), .mon_ready(mon_ready), .mon_dead(mon_dead),
@@ -633,6 +645,11 @@ module pt_digital_macro(
 
  // ---------------- wired RX control plane (rtl/pt_wrx_ctl.sv): FLL pulses, phase picker, wire_rx_valid
  wire wrx_en = (f_cdr_state__state == 2'd2) & ion[2] & (f_slicer_state__state == 2'd2) & ion[0];
+ // Review finding 4: these are registers of clocks that can stop (REF_CLK, WCLK40); each output is also ANDed with the
+ // island of its consumer, so a stopped clock cannot leave a 1 on a pin of an unpowered island.
+ wire wrx_fup, wrx_fdn, wrx_slipp, wrx_slipm; wire[2:0] wrx_psel;
+ assign c_cdr_fup = wrx_fup & ion[2], c_cdr_fdn = wrx_fdn & ion[2];
+ assign c_wrx_cap_psel = wrx_psel & {3{ion[0]}}, c_wrx_cap_slipp = wrx_slipp & ion[0], c_wrx_cap_slipm = wrx_slipm & ion[0];
  pt_wrx_ctl wrx(.ref_clk(ref_clk), .wire_rx_clk(wire_rx_clk_c), .rst_n(rst_n), .cfg_en(wrx_en), .cfg_restart(f_wrx_loop__restart),
   .cfg_freq_src(f_wrx_loop__freq_source), .cfg_fll_auto(f_wrx_loop__fll_auto), .cfg_fll_inv(f_wrx_loop__fll_invert),
   .cfg_fll_shift(f_wrx_loop__fll_shift), .cfg_fll_tol(f_wrx_loop__fll_tolerance), .cfg_fll_loss(f_wrx_loop__fll_loss),
@@ -643,19 +660,32 @@ module pt_digital_macro(
   .cfg_idle_words(f_wrx_picker__idle_words), .cfg_lock_exp(f_wrx_picker__lock_exp), .cfg_loss_exp(f_wrx_picker__loss_exp),
   .cfg_valid_mode(f_wrx_picker__valid_mode), .fc_upd(fcb_upd_ref), .fc_diff(fcb_diff_ref), .fc_locked(cdr_freq_locked),
   .s_pll_cdr_lock(pll_cdr_lock), .s_wrx_slp(wrx_slp), .s_wrx_slm(wrx_slm), .wire_rx_data(wrx_dx), .wire_rx_edge(wrx_ew),
-  .c_cdr_fup(c_cdr_fup), .c_cdr_fdn(c_cdr_fdn), .c_wrx_cap_psel(c_wrx_cap_psel), .c_wrx_cap_slipp(c_wrx_cap_slipp),
-  .c_wrx_cap_slipm(c_wrx_cap_slipm), .wire_rx_valid(wire_rx_valid_q), .st_state(wrx_state), .st_fll_done(wrx_fll_done),
+  .c_cdr_fup(wrx_fup), .c_cdr_fdn(wrx_fdn), .c_wrx_cap_psel(wrx_psel), .c_wrx_cap_slipp(wrx_slipp),
+  .c_wrx_cap_slipm(wrx_slipm), .wire_rx_valid(wire_rx_valid_q), .st_state(wrx_state), .st_fll_done(wrx_fll_done),
   .st_fll_lost(wrx_fll_lost), .st_freq_ok(wrx_freq_ok), .st_wclk_alive(wrx_wclk_alive), .st_fll_err(wrx_fll_err), .st_fll_win(wrx_fll_win),
   .st_sig_ok(wrx_sig_ok), .st_idle(wrx_idle), .st_viol(wrx_viol), .st_pick_acc(wrx_pick_acc), .st_slip_cnt(wrx_slip_cnt),
   .st_slp_seen(wrx_slp_seen), .st_slm_seen(wrx_slm_seen));
- wire[39:0] wrx_quad;
- pt_wrx_lane lane(.clk(wire_rx_clk_c), .rst_n(rst_n), .lane(f_slicer_capture__raw_lane), .dx(wrx_dx), .ew(wrx_ew), .quad(wrx_quad));
+ wire[39:0] wrx_quad; wire wrx_quad_valid;
+ pt_wrx_lane lane(.clk(wire_rx_clk_c), .rst_n(rst_n), .lane(f_slicer_capture__raw_lane), .valid_in(wire_rx_valid_q), .dx(wrx_dx), .ew(wrx_ew),
+  .quad(wrx_quad), .valid(wrx_quad_valid));
 
  // ---------------- USB direct stream (rtl/pt_usb.sv; MW-18, D-USB). With digital.transport_config.direct_stream_enable
  // the wired transport quads carry line symbols: egress -> pt_usb (FS/LS, chirp), pt_usb -> ingress. HS packets go
  // through pt_wiredtx and the pt_usb_txdrv pre-driver; pt_usb then only makes the enables and the envelope.
  wire usb_direct = f_digital_transport_config__direct_stream_enable;
  wire[39:0] usb_rx_quad; wire usb_rx_valid, usb_tx_ready;
+ // The USB driver flops run on the TX word clock, which stops with the ring (review finding 4): every level to the
+ // pre-driver is also ANDed with the static register request, the wired island and the pll island (ring), so a
+ // stopped clock cannot leave the line driven after the request is withdrawn or an island is switched off.
+ wire usb_req = (f_usbdrive_state__state == 2'd2) & (f_usbdrive_select__branch != 2'd0) & ion[2] & island_on[0];
+ wire usb_hs_en, usb_hs_drv, usb_fs_en, usb_tx_dp, usb_tx_dn, usb_tx_oe;
+ // HS / FS enables of the pre-driver: the static decode of ctl_ports.txt (USB-INTEGRATION.md), so attach, idle and
+ // receive do not need the TX word clock; both fields are fault-forced to 0 and gated by the wired island in the
+ // register file, and the branch enum makes them exclusive. pt_usb's sequenced copies are status only.
+ assign c_usb_hs_en = (f_usbdrive_select__branch == 2'd1) & f_usbhs_config__tx_enable;
+ assign c_usb_fs_en = (f_usbdrive_select__branch == 2'd2) & f_usbfs_config__drive_enable;
+ assign c_usb_hs_drv = usb_hs_drv & usb_req;
+ assign c_usb_tx_dp = usb_tx_dp & usb_req, c_usb_tx_dn = usb_tx_dn & usb_req, c_usb_tx_oe = usb_tx_oe & usb_req;
  pt_usb usb(.rst_n(rst_n), .island_on(island_on[0]), .fault(fault_eff), .tx_clk(wire_tx_clk_c),
   .cfg_branch(f_usbdrive_select__branch), .cfg_active(f_usbdrive_state__state == 2'd2), .cfg_hs_tx_en(f_usbhs_config__tx_enable),
   .cfg_fs_drive_en(f_usbfs_config__drive_enable), .cfg_hs_sym(f_usb_config__hs_symbol), .cfg_force_en(f_usb_config__force_enable),
@@ -663,16 +693,16 @@ module pt_digital_macro(
   .cfg_tx_div(f_usb_config__tx_divider), .cfg_bbm(f_usb_config__bbm), .tx_data(wire_tx_quad), .tx_valid(wire_tx_valid & usb_direct),
   .tx_ready(usb_tx_ready), .hs_tx_active(wire_tx_valid & ~wire_idle & ~usb_direct),
   .c_usb_hs_p(), .c_usb_hs_n(), .c_usb_fs_high_p(), .c_usb_fs_high_n(), .c_usb_fs_low_p(), .c_usb_fs_low_n(), // direct pad gates: replaced by pt_usb_txdrv
-  .usb_hs_en(c_usb_hs_en), .usb_hs_drv(c_usb_hs_drv), .usb_fs_en(c_usb_fs_en), .usb_tx_dp(c_usb_tx_dp), .usb_tx_dn(c_usb_tx_dn), .usb_tx_oe(c_usb_tx_oe),
+  .usb_hs_en(usb_hs_en), .usb_hs_drv(usb_hs_drv), .usb_fs_en(usb_fs_en), .usb_tx_dp(usb_tx_dp), .usb_tx_dn(usb_tx_dn), .usb_tx_oe(usb_tx_oe),
   .st_tx_busy(usb_tx_busy), .st_tx_underrun(usb_tx_underrun), .st_tx_blocked(usb_tx_blocked), .st_tx_armed(usb_tx_armed),
   .rx_clk(wire_rx_clk_c), .s_detect_diff_pos(det_diff_pos), .s_detect_diff_neg(det_diff_neg), .s_detect_se_p(det_se_p), .s_detect_se_n(det_se_n),
   .cfg_rx_en(f_usb_config__rx_enable), .cfg_rx_diff(f_usb_config__rx_differential), .cfg_rx_echo(f_usb_config__rx_echo),
-  .cfg_ls(f_usbfs_config__slew), .cfg_thr_disc(f_detect_config__high_threshold_code == 2'd3), .cfg_rx_div(f_usb_config__rx_divider),
+  .cfg_ls(f_usbfs_config__slew), .cfg_thr_disc(f_detect_config__low_threshold_code == 2'd3), .cfg_rx_div(f_usb_config__rx_divider),
   .cfg_rx_quiet(f_usb_config__rx_quiet), .cfg_deb_se(f_usb_config__debounce_se), .cfg_deb_diff(f_usb_config__debounce_diff),
   .rx_data(usb_rx_quad), .rx_valid(usb_rx_valid), .st_rx_active(usb_rx_active), .st_line(usb_line), .st_j(usb_j), .st_k(usb_k),
   .st_se0(usb_se0), .st_se1(usb_se1), .st_diff(usb_diff), .st_squelch(usb_squelch), .st_disconnect(usb_disconnect));
  assign core_rx_quad = usb_direct ? usb_rx_quad : wrx_quad;
- assign core_rx_valid = usb_direct ? usb_rx_valid : wire_rx_valid_q;
+ assign core_rx_valid = usb_direct ? usb_rx_valid : wrx_quad_valid;
  assign core_tx_request = usb_direct ? usb_tx_ready : wire_tx_request_q;
  // D-DATAOFF (TOP-25): the serializer data inputs are transmission gates and the DAC code inputs reach p-diffusion:
  // both buses read 0 while their island is off (the DAC's forwarded clock is a gate input and is not gated).
@@ -681,6 +711,8 @@ module pt_digital_macro(
  // ---------------- RF RX sample register (rtl/pt_boundary.sv pt_adc_merge) and the detector clock
  pt_adc_merge adc_merge(.clk(rf_rx_clk), .rst_n(rst_n), .adc_en(c_adc_i_en | c_adc_q_en), .ilen(c_adc_ilen),
   .ph_i(rf_ph_i), .ph_q(rf_ph_q), .sample_a(rf_rx_a), .sample_b(rf_rx_b), .sample(rf_rx_merged), .valid(rf_rx_valid));
- pt_det_clk det(.clk(ct_wclk_c), .rst_n(rst_n), .en(c_detect_en), .cfg_rate_khz(f_cdr_config__nominal_rate_khz), .det_clk(ct_det_clk));
+ wire det_clk_q;
+ pt_det_clk det(.clk(ct_wclk_c), .rst_n(rst_n), .en(c_detect_en), .cfg_rate_khz(f_cdr_config__nominal_rate_khz), .det_clk(det_clk_q));
+ assign ct_det_clk = det_clk_q & island_on[0];   // pt_detect is on the wired_rx island
 endmodule
 `default_nettype wire

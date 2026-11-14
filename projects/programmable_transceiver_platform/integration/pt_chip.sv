@@ -795,6 +795,51 @@ module pt_chip(
  assign m_s_aux_present = AUX_PRESENT;
  wire m_s_wtx_ext_present;
  assign m_s_wtx_ext_present = WTX_EXT_PRESENT;
+ assign atb0_sw[1] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[2] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[3] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[4] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[5] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[6] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[7] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[8] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[9] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[10] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[11] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[12] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[14] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[15] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[16] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[17] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[18] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[19] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[20] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[22] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[23] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[24] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[25] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[26] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[27] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[29] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[30] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[31] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[32] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[33] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[36] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[37] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[38] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[39] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[40] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[41] = 1'b0;   // no macro driver in the conn
+ assign atb0_sw[56] = 1'b0;   // no macro driver in the conn
+ assign island_en[3] = 1'b0;   // no macro driver in the conn
+ assign island_off[3] = 1'b0;   // no macro driver in the conn
+ assign island_off[4] = 1'b0;   // no macro driver in the conn
+ assign island_on[3] = 1'b0;   // no macro driver in the conn
+ assign rf_tx_sample[0] = 1'b0;   // no macro driver in the conn
+ assign rf_tx_sample[1] = 1'b0;   // no macro driver in the conn
+ assign rf_tx_sample[12] = 1'b0;   // no macro driver in the conn
+ assign rf_tx_sample[13] = 1'b0;   // no macro driver in the conn
  pt_digital_macro digital(.reset_n_pad(m_reset_n_pad), .por_n(m_por_n), .por_bypass(m_por_bypass), .spi_sclk(m_spi_sclk), .spi_cs_n(m_spi_cs_n), .spi_mosi(m_spi_mosi),
   .spi_miso(m_spi_miso), .spi_miso_oe(m_spi_miso_oe), .host_word_clk(m_host_word_clk), .h2d_clk(m_h2d_clk), .h2d_pin(m_h2d_pin), .d2h_pin(m_d2h_pin),
   .d2h_clk_pin(m_d2h_clk_pin), .d2h_oe(m_d2h_oe), .d2h_pdrv(m_d2h_pdrv), .d2h_sl(m_d2h_sl), .ref_clk(m_ref_clk), .wire_rx_clk(m_wire_rx_clk),

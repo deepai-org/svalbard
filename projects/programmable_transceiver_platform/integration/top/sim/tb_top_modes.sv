@@ -125,8 +125,8 @@ module tb_top_modes;
   chk(analog.p_core_bias__C_core_refchain_bgap_ena === 1'b1 && analog.p_core_bias__C_core_biasgen_ena === 1'b1, "bandgap / biasgen enable did not reach core_bias");
   chk(analog.p_core_bias__C_core_refchain_dist_en_rf === 1'b0 && analog.p_core_bias__C_core_biasgen_ref_sel_vbg === 1'b0,
       "interlock: bandgap consumers on in the same commit as the bandgap (negative control)");
-  dummy_clocks(5);
-  chk(analog.p_core_bias__C_core_refchain_dist_en_rf === 1'b1 && analog.p_core_bias__C_core_biasgen_ref_sel_vbg === 1'b1, "interlock did not release after 128 SCLK cycles");
+  dummy_clocks(9);
+  chk(analog.p_core_bias__C_core_refchain_dist_en_rf === 1'b1 && analog.p_core_bias__C_core_biasgen_ref_sel_vbg === 1'b1, "interlock did not release after 256 SCLK cycles");
   setf(`F_CORE_AOSC__ENABLE, 1); commit(1, "aosc on");
   chk(analog.p_aosc__EN === 1'b1, "aosc EN did not follow core.aosc.enable");
 
@@ -140,7 +140,8 @@ module tb_top_modes;
   setf(`F_DEBUG_CLK_SELECT__CONV_SAMPLE, 0);
   // clocks: H2D_CLK -> ring reference, line ring x16 /4 -> CONV_INT and HOST_INT (host_follow on the TX ring, D-HF)
   setf(`F_CLOCKMUX_CONFIG__RING_REF, 3); setf(`F_CLOCKMUX_CONFIG__CONV_PRESCALE, 2); setf(`F_CLOCKMUX_CONFIG__HOST_PRESCALE, 2);
-  setf(`F_DEBUG_CLK_SELECT__CONV_SAMPLE, 1); setf(`F_DEBUG_CLK_SELECT__HOST_CLK, 1); commit(1, "host_follow clock selects");
+  setf(`F_DEBUG_CLK_SELECT__WIRE_LINE, 1); setf(`F_DEBUG_CLK_SELECT__CONV_SAMPLE, 1); setf(`F_DEBUG_CLK_SELECT__HOST_CLK, 1); commit(1, "host_follow clock selects");
+  chk(mux_ws === 4'b0001, "clockmux WS_PLL: the line ring must feed the prescalers (WIRE_CK) in the RF baseline too");
   chk(mux_ps === 3'b100 && mux_cs === 4'b0001 && mux_hs === 2'b01, "clockmux one-hot selects wrong (PS_H2D / CS_INT / HS_INT)");
   chk(presc_conv === 5'b10010 && presc_host === 5'b10010 && analog.p_prescale_hf__EN === 1'b0, "prescaler EN / one-hot ratio wrong");
   // receive chain
@@ -208,7 +209,7 @@ module tb_top_modes;
   setf(`F_LNA_STATE__STATE, 0);
   setf(`F_CTLE_STATE__STATE, 2); setf(`F_SLICER_STATE__STATE, 2); setf(`F_TERMINATION_CONFIG__HS_ENABLE, 1); setf(`F_TERMINATION_CONFIG__HS_TERM_ENABLE, 1);
   setf(`F_CTLE_CONFIG__PEAK, 5); setf(`F_RING_C_CONFIG__MODULUS, 3); setf(`F_RING_C_CONFIG__KP, 6); setf(`F_SLICER_CAPTURE__RATE_MODE, 1);
-  setf(`F_SLICER_OFFSET__TRIM_E2, 10'h2A5); setf(`F_CLOCKMUX_CONFIG__RING_REF, 0); commit(1, "ring reference stopped (break before make)");
+  setf(`F_SLICER_OFFSET__TRIM_E2, 10'h2A5); setf(`F_CDR_PHASE_TRIM__P3, 5'h1B); setf(`F_CDR_AC3__LOOP_BW, 7); setf(`F_CLOCKMUX_CONFIG__RING_REF, 0); commit(1, "ring reference stopped (break before make)");
   setf(`F_CLOCKMUX_CONFIG__RING_REF, 1); commit(1, "wired receive chain");
   chk(analog.p_ctle__ctle_en && analog.p_slicer__slicer_en && analog.p_wrx_cap__EN && analog.p_cdr__cdr_en && analog.p_pll_cdr__EN && analog.p_termination__hs_en &&
       analog.p_termination__hs_term_en && analog.p_wordclk_rx__EN && wire_rx_ptrim_en, "wired receive: an enable is missing (ctle, slicer, capture, cdr, ring, HS bias, word clock, ptrim)");
@@ -216,6 +217,8 @@ module tb_top_modes;
   chk({analog.p_pll_cdr__N10, analog.p_pll_cdr__N5, analog.p_pll_cdr__N8, analog.p_pll_cdr__N4} === 4'b1000 && {analog.p_pll_cdr__KP2, analog.p_pll_cdr__KP1, analog.p_pll_cdr__KP0} === 3'd6 &&
       analog.p_pll_cdr__BAND === 1'b1 && analog.p_cdr__pfd_mode === 1'b0, "CDR ring modulus one-hot / KP / band / pfd_mode");
   chk({analog.p_wrx_cap__B2, analog.p_wrx_cap__B1} === 2'b10, "capture rate pins (half rate = B2)");
+  chk({analog.p_ptrim__T3_4, analog.p_ptrim__T3_3, analog.p_ptrim__T3_2, analog.p_ptrim__T3_1, analog.p_ptrim__T3_0} === 5'h1B &&
+      {analog.p_cdr__g2, analog.p_cdr__g1, analog.p_cdr__g0} === 3'd7, "phase trim T3 / CDR loop gain g = 7 (design point) at the pins");
   chk(analog.p_cdr__FUP === 1'b0 && analog.p_cdr__FDN === 1'b0 && psel === 3'd0, "CDR control plane moved at its reset configuration (manual, no trigger)");
   setf(`F_WRX_PICKER__MANUAL_PSEL, 5); commit(1, "manual psel");
   chk(psel === 3'd0, "PSEL moved without a word clock (wire_rx_clk domain register)");

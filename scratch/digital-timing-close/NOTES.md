@@ -533,3 +533,132 @@ Order for the next agent: (1) area (1.40 mm2 before repair on a die where 1.24 d
 coordinator what goes or whether the macro grows; candidates: direct (no-shadow) fields for the 80 slicer trim bits and
 other static trims save one flop per bit, pt_wrx_ctl 446 FF); (2) flow config for the clamps + dont_touch lists + GLS
 bench on the new ports; (3) pipelining list above, then the old list; (4) hardening with the pC6 hold flow.
+
+## Takeover 2026-11-14 07:07 (agent 7, r7): flow readiness, first P&R of the r6 RTL, monitor time base
+WARNING FOR THE SUCCESSOR: the account hit its usage limit at ~07:30 UTC (resets Nov 17 21:00 UTC) while two
+sub-agents were running. Everything below marked UNVERIFIED was edited but not regression-tested. NOTHING of r7 is
+committed (last commit 9211b44). Before committing: run the serial regression (allchecks6.sh) and fix fallout.
+
+Coordinator rulings received (r7 brief): monitor gets a second, host/reference-derived time base (no aosc in RF
+payload); 13 ATB trunk leaves stay ungated in RTL (row to pads/core-support, audit waives only with evidence);
+host-follow on the TX ring = die-1 baseline pending timing / wired RX confirmation; board rules go into
+spec/board-requirements.md (done: B49 RESET_N host-drivable + low through power-up with the strap, B50 SPI idle
+levels / FPGA pulls (1 k resistors), B51 rescue procedure); area: no function deleted, cheap reductions only.
+
+Done (in the working tree, uncommitted):
+ - rtl/pt_cells.sv pt_async_gate (kept AND2, instance *.ag): monitor.fault_gate (the monitor's fault level) and
+   wtx.w_rst_gate (word-domain reset of pt_wtx_ctl). SDC: set_false_path -through those two Z pins, justification in
+   the SDC comment (every consumer synchronizes or uses an async clear with a re-timed release). Replaces the
+   name-based "*monitor.fault_m*" false path and removes the ref -> wtx -7.3 ns recovery path. Post-synthesis check
+   (syn_r7a): no ref -> wtx path left; wtx -> egress_wtx +0.13.
+ - rtl/pt_tx_pad_sequence.sv: the two magnitude compares are registered flags (`last` == left <= 1, `tmo_ge`);
+   random old-vs-new co-simulation, 4 parameter sets x 2M cycles, 0 mismatches, invariants hold
+   (r7/padseq_eq/tb_eq.sv + old.sv). NOT yet through check_wtx_ctl.py / synthesis (ref was -2.48 on left[]).
+ - Flow: verification/digital_hardening/config.json: RSZ_DONT_TOUCH_LIST += the 130 clamp pin nets of
+   integration/top/generated/macro_clamps.txt (same mechanism that keeps buffers off h2d_pin[*]: buffer_ports and
+   hold repair skip dont_touch nets; LibreLane unsets dont_touch outside resizer steps, CTS skips 1-sink nets);
+   RSZ_DONT_TOUCH_RX = iso_and cells, rseen key flops, por_path key flops, *.ag gates; DIE_AREA 1716 x 1865 (see
+   macro-area.md). New checker verification/digital_hardening/clamp_check.py <netlist> (--selftest): every clamp pin
+   reaches exactly one .iso_and A1 and nothing else (antenna diodes allowed); passes on the synthesis netlist; MUST be
+   run on the final routed netlist (pnl/nl) of every hardening run.
+ - SDC: por_path key flops are found in hierarchical OpenSTA too (LibreLane STA steps died on "expected 16 por_path
+   key flops": the r6 SDC had only ever been read by flattening OpenROAD).
+ - sta_signoff.py: foundry ff_n40C_3v60 corner, ss_032C_3v50 corner (skipped until the library exists), clock list
+   updated (ctref/ctdet gone; h2d_pin, hsdr, mon_host, rfhalf, egress_mem_sclk), missing clocks no longer fall back
+   to the global worst path, new `slack_ocv_all` view (+-8 % on ALL delays, PT_STA_OCV_ALL), PT_STA_CORNERS filter.
+   Not run yet (needs a routed macro).
+ - libchar.py: corner ss_032C_3v50 (ss, 32 C, 3.50 V) added. Run started 07:09 in scratch/digital-libchar
+   (`libchar.py run --cells used --corners ss_032C_3v50 --jobs 1 --cache cache`, log run-3v50.log), ~200 s per cell,
+   115 cells; PAUSED with SIGSTOP at 07:20 after 1 cell to keep the 3-job limit (pids 4092541 4092623: `kill -CONT`
+   them, or just restart the command: finished cells are cached). Then `libchar.py build --cache cache --out <dir>
+   --corners ss_032C_3v50` and copy the .lib into verification/digital_hardening/liberty/.
+ - macro-area.md v1 (first estimate for the die-fit study: book 3.2 mm2, range 3.0 - 3.45).
+ - Disk: deleted part_g0/4/8, pC4, pC5, pC7, run13 (20 GB). pC6 and run14 kept (reference for hold flow / SPI sign-off).
+UNVERIFIED (sub-agent "monitor second time base" died mid-work; its edits are in the tree):
+ - New field monitor.config.timebase (0 = aosc, 1 = transport core clock / 2) in spec/analog-architecture.json,
+   regenerated regfile / regmap / register-map.*; pt_digital_macro.sv: mon_div (pt_clock_dff toggle on core_clk) and
+   mon_mux (pt_clock_mux, static select) feed the monitor's mon_clk; SDC: generated clock mon_host (hcore / 2),
+   logically exclusive with fc4; pt_monitor.sv header text; check_monitor.py / check_top_modes.py /
+   integration/top/sim/tb_top_modes.sv partly extended (it stopped at "now the bench section": the timebase = 1 bench
+   section and the two mutants are probably missing or incomplete). No regression target was run by it. Rationale
+   for core clock / 2 (not H2D_CLK, not REF): in RF payload with an external LO the REF pads carry the LO, so the
+   only clocks that surely run are host-derived; the ring-derived core clock keeps running when H2D_CLK disappears
+   (ring free-runs), so requirement 1 (H2D_CLK present) is detected; loss of the time base itself is only seen
+   while ref_clk runs (ref-domain watchdog) -> analog present detector requested from pads/core-support (row not
+   written yet).
+ - Independent reviewer of commit 9211b44's pipelining (scratch/reviews/dg6-pipe-review/: tb_fll.sv, tb_pick.sv,
+   no REPORT.md yet) was still running; if there is no REPORT.md, the review is NOT done: restart it.
+Running at the time of writing:
+ - P&R r7a (go_r7.sh r7a pnr -> scratch/digital-timing-close/r7a, tag R7A, 4 CPUs, started 07:26): full LibreLane
+   flow of the tree as it was at 07:26 (includes the unverified monitor time base, the pad_seq change and the async
+   gates), 1716 x 1865, pC6 hold flow (8 % clock OCV, foundry ff corner, margins 0.3 / 0.3). Purpose: first real
+   area / congestion / post-CTS / post-route numbers of the r6 RTL, clamp check on a routed netlist, sign-off
+   tooling shake-down. Status file r7a.status; when it ends: `./go_r7.sh r7a export sta gls` (gls.sh and
+   sim/tb_digital_gl.sv are STILL on the old ports: rewrite first), clamp_check.py on final/nl, update macro-area.md.
+Facts measured this round:
+ - Cell delays at ss_032C_3v15 (post-synthesis path report): clk->Q 1.6 - 2.1 ns, simple gates 0.6 - 1.6 ns, flop
+   setup ~1 ns: a 10 ns cycle holds about 7 gate levels, 12.8 ns about 9. Post-synthesis slacks near 0 therefore
+   become -2 .. -4 ns routed (pC6). Closing every domain at ss / 3.15 V needs roughly a third less logic depth
+   everywhere, or the 3.5 V trim point (not characterized yet), or the reduced rates (wired 2.5 Gb/s = 16 ns against
+   the 12.3 ns constraint; host rate / 2, / 4).
+ - Area by block (syn_r6t, hier_area.py): regfile 0.227 mm2 (1648 FF: 830 stored bits, 663 of them shadowed, 167
+   already direct), ingress 0.199, egress 0.185, top-level glue 0.096, lc_tx 0.071, lc_rx 0.061, wrx 0.054, h2d
+   0.046, fca + fcb 0.082, spi 0.038, usb 0.035. Shadow-less static trims can save at most ~0.03 - 0.05 mm2 of
+   cells (2 - 3 %): candidates usb.config, wrx.loop, wrx.picker, monitor.config (timing fields), lna.agc,
+   cdr.config, rfpll.config, ring_l.config, freq_count_a/b (needs "direct but locked while ENABLE" in the
+   generator: today direct implies live); core.biasgen stays shadowed (rules 27 / 29). NOT implemented.
+ - REF frequency: timers assume 50 MHz (REF_PS), the board XO is 25 MHz, the SDC constrains 100 MHz, the HDMI
+   forwarded reference (74.25 / 148.5 MHz) is unqualified: the ref-domain control logic will not run at 148.5 MHz.
+Not started: clock launch staggering (PD2-6), decap fill cells, per-mode power, 3.5 V STA, ring-monitor readout
+codes, IX-12 80-bit capture proposal, USB HS repetition / 10-bit codec, DG6-7 questions, USB EN_MAIN rule, H2D
+centring, D2H inversion, the rows for pads/core-support (window comparator `pt_supply_window`, H2D/core clock
+present detector, ATB leaf switches safe with the island off), shadow-less trims.
+
+### r7 progress 08:00 UTC (the session continued after the sub-agent's limit error)
+ - Review of 9211b44 is DONE: scratch/reviews/dg6-pipe-review/REPORT.md (GO-with-conditions). F1 (stale FLL
+   evaluation after a restart) fixed: pt_wrx_ctl ev_ok includes frun. F2 fixed: SDC false-paths only bit 0 of
+   wrx.al_sy / lk_sy / fk_sy (count-checked). Open from it: directed macro test of pt_core tx_data / tx_valid alignment
+   (USB direct stream, first valid cycle), host doc note for F3 (engine-off drops the held quad).
+ - Monitor time base: the sub-agent's bench section (9b) and 4 mutants were in fact written; control-block checks,
+   regfile and regfile formal PASS on the tree (r7/ctl-blocks.log, r7/chk_a.log); top-modes running. A second
+   independent reviewer (r7 diff: async gates, time base, pad_seq, F1, SDC) was launched at 07:52: report expected as
+   its final reply -> save to scratch/reviews/dg7-review/REPORT.md.
+ - GLS rewritten for the r6 boundary: verification/digital_hardening/gls_ports.py (port glue from the macro header:
+   55 inputs, 245 outputs), sim/tb_digital_gl.sv (logs every output as name=hex), gls.sh (RTL list from config.json),
+   gls_check.py (lockstep on all outputs; model on SPI reads + island / ATB / obs outputs; reset safety = no X and
+   a zero list of 60 enables / drivers / buses; ISLAND_STATUS b11 masked: reserved island has no switch). Tried on
+   the SYNTHESIS netlist of r7a (r7/glstest): regfile stream 3952 records RTL == GL, model 0 mismatches, reset safety
+   0 violations, observability ok; loopback RTL locks in modes 0/1/2 (GL loopback not run on the synthesis netlist).
+ - Flow lessons: (1) dont_touch INSTANCES break repair_design (RSZ-3006 on rst_n because a dont_touch cell loads it):
+   only the clamp pin NETS are dont_touch now; clamp_check.py accepts a resized / pin-swapped AND2. (2) SDC must work
+   in hierarchical OpenSTA too (por_path keys). (3) the flow reaches CTS in ~15 min at 4 CPUs.
+ - r7a so far (1716 x 1865, core 3.116 mm2): synthesis 1.428 mm2; after GPL + repair 2.061 (66.1 %, incl. 0.093 of
+   taps); after CTS 2.194 (70.4 %). Post-CTS, before timing repair, ss_032C_3v15 with 8 % clock OCV: wrx -5.5 (PSEL
+   output, an I/O budget: now 2-cycle in the SDC), hddr -4.3 (gearbox prefix -> hr), hcore -4.0 (frame_tx take ->
+   safe), ref -3.7 (wtx lt_cnt), sclk -3.5 (reset-seen fan-out -> dbg_obs: now a false path), egress_wtx -3.4, wtx
+   -2.9 (lc_tx), fc0-5 -2.0 (fca.fjc prescaler: the clock-source flop was resized to dffrnq_1 and its Q net got a
+   gain buffer: 4.5 ns clk->Q), h2d_cap -1.6, fc4 -1.0 (monitor qcnt), hsdr -0.7, h2d -0.7.
+   SDC edits made AFTER r7a started (not in r7a): reset-seen false path, picker outputs 2-cycle, wrx sync bit 0.
+
+### r7 progress 08:15 UTC
+ - r7a was KILLED at step 33: the post-CTS hold repair was adding buffers for an 11.5 ns "hold violation" on
+   sclk -> rf_tx_sample vs rftx_fwd (island_on / reset_seen gating terms of the D-DATAOFF ANDs are SPI statics).
+   SDC now: false path sclk -> rftx_fwd / ctdet_out / d2h_fwd / rfhalf; false path from the 8 reset-seen key flops
+   (static after reset; their fan-out tree to ~800 gates made sclk -> dbg_obs -3.5 ns); picker outputs two-cycle.
+ - r7b = same flow with those SDC fixes and the F1 fix, started 08:02 (go_r7.sh r7b pnr; tag R7B; 1716 x 1865).
+   NOT in r7b: pt_wtx_ctl lt_eq (registered lock-time compare; check_wtx_ctl passes with it; pre-edit copy
+   r7/pt_wtx_ctl_pre_lteq.sv).
+ - Regression on the r7 tree (r7/chk_a.log, chk_b.log): regfile, regfile formal, top modes (incl. the time-base
+   section 9b and its mutants), chip-io, por-bypass-chip, observation coverage, contract, readiness, pattern, the
+   four formal targets, clocktree-slow: all rc=0. Still running at the time of writing: ctl-blocks (second pass,
+   with F1 and lt_eq) and digital-rtl-checks (24 min).
+ - Rows written: DG7-1..10 (interface-changes.md "Digital r7"). DG6-7 is answered by WRX10-DG67 and adopted (DG7-8).
+   Decisions asked: ATB leaves (coordinator ruling vs PC-10), IX-12 (no 80-bit ingress), USB codec (spec follows quads).
+ - Supply trim: libchar has 3 cells at ss_032C_3v50 so far (dffnrnq_1: median delay ratio 0.911 vs 3.15 V, p10
+   0.88): 3.5 V buys about 9-12 % delay, i.e. 1.2-1.5 ns on a 12.8 ns path. Not enough alone for paths at -3 ns.
+ - Ring monitor for the trim: frequency counter source 3 = ring_osc (analog/timing README: 211 MHz typical, corners
+   165-255 MHz). CONCERN: the counter's first stage (digital.fca/fcb fjc prescaler flop) is constrained at 6.4 ns
+   (156 MHz) and was -2.0 ns post-CTS in r7a (clock-source flop resized to x1, 4.5 ns clk->Q): a 165-255 MHz ring
+   cannot be counted unless that stage closes at <= 3.9 ns at ff and <= 6.0 ns at ss, or the ring output is divided
+   in the analog block. To check on the routed macro (sta_signoff fmax of fc0..fc5) and to raise with timing.
+ - How to look at a LibreLane STA step: r7/grp.sh <run>/<NN-openroad-sta...> (worst setup / hold per path group).

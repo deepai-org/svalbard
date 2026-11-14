@@ -1291,7 +1291,7 @@ State of each block after this resume (details below; pin list and connection in
 |---|---|---|---|
 | `pt_wrx_cap` | 1452 × 659 µm, 0.956 mm² (r6) | unchanged in `generated/` (r6) | r7 compact 1199 × 242 = 0.290 mm² clean but review NO-GO (ss/625 PD votes); r7b fix built, extracted verification running; outline given to assembly (AP4-1-CAP) |
 | `pt_ptrim` | 449 × 645, 0.290 | unchanged (published cell is not functional) | compact layout of the present circuit staged at 126 × 205 = 0.026 mm², NOT published: MW-14 needs a circuit fix first, one layout for both |
-| `pt_cdr` | 428 × 320, 0.137 (r11, unreviewed) | unchanged in `generated/` | r13 staged at 259 × 320 = 0.083 mm², DC checks pass, 14 ring-rate transients + review pending |
+| `pt_cdr` | 428 × 320, 0.137 (r11, unreviewed) | **259.2 × 319.8 µm, 0.0829 mm² (r13, published 2026-11-14)** | reviewed GO-with-conditions; closed loop on r13 still to run |
 | `pt_detect` | 251 × 690, 0.173 | unchanged | layout-only repack fails extracted thresholds; needs the r7i threshold redesign |
 | `pt_ctle` | 225 × 594, 0.133 | unchanged | repack staged at 194 × 354 = 0.069 mm², review NO-GO (antenna) and on hold for the MW-13 output-stage fix |
 | CDR `pt_pll_ring` | 210 × 794, 0.167 | unchanged | no floorplan-only saving (core alone 0.132 mm²) |
@@ -1479,3 +1479,32 @@ real extracted neighbour:
   First results on r7c: **ss/32/3.15 q625 passes** (0/200 data, 0 edge, PD ok, strobe words ok, DW/EW change
   0.965–1.103 ns after WSTB; r7: 1 edge error, DN 0.11–0.29, 0.975–1.672 ns); negative control (S2 stuck low) fails as
   required (11 data errors).
+
+### Resume 9 / CDR r13 published (2026-11-14; review `scratch/reviews/ap4-cdr-review/review.md`, GO-with-conditions)
+
+* `generated/cdr.*` = r13: 259.22 × 319.76 µm (GDS box (0.78, 2.38)–(260.04, 322.14)), 488 devices + 14 antenna diodes,
+  Magic DRC 0, LVS unique (re-extracted from the GDS by the reviewer; the r12 netlist fails on exactly the six mirror
+  devices), KLayout precheck main 0 / antenna 0 re-run on a byte copy in an isolated directory (sha 2f03773b…).  32 pins
+  on Metal5 at the top edge, x from 38 to 89 µm; the six trim pins `otr0..4`, `otrs` interleave the fast pins
+  (`otr3`/`otr4` flank VCTRL).  Previous files: `scratch/wired_rx/r9cdr/backup_generated_1114_0040/`.
+* **Extracted evidence (`generated/cdr-evidence.json`, criteria unchanged from r11):** compliance over 0.8–2.2 V tt 0.083 /
+  ss 0.073 / ff 0.099 / pessimistic ss 0.073 (limit 0.15; r11 ff 0.159 failed), reviewer's sf/fs DC 0.081–0.085; idle
+  offset 0.05–0.11 vote; ring-rate votes (expected 2 / −2 / 1 / 0): tt 1.64 / −1.79 / 0.78 / −0.12, ss 1.62 / −1.76 /
+  0.79 / −0.11, ff 1.65 / −1.82 / 0.77 / −0.12, pessimistic ss 1.55 / −1.85 / 0.69 / −0.20.  The tolerance as coded is
+  0.45 × max(1, |expected|) vote (0.9 vote for the ±2 cases): pessimistic tog50 is 1.5492 unrounded and would miss a literal
+  "within 0.45 vote" by 0.0008.  Random-vote gain is 0.03–0.05 vote lower than r11.
+* **Costs of r13 found by the review (not in the author's report):**
+  - **integral path 2.6–3.5× slower than r11**: single-vote step at g7 reaches 63 % in ~200 ns (r11 78 ns), effective lag
+    179 vs 51 ns; g3 lag 1609 vs 293 ns.  The 1/4 mirrors and the adjacent `ota1`/`ota2` Metal5 trunks (17.8 fF between
+    them) triple the mirror-node C.  The behavioural model gives ~20 % less integral-rate headroom; **the closed loop has
+    only ever been run on r11**.  If speed is needed back: separate the `ota1`/`ota2` trunks first.
+  - supply current 144.7 → 216.6 µA (the 31 trim units are always on);
+  - the trim compresses the vote gain (93 % at code 8, 76 % at 16, 37 % at 31, with UP/DN asymmetry): codes above ~12 should
+    flag the die; range ±2.67–3.05 votes, LSB 0.13 vote (the `cdr.spice` header still says "r12, 1/8 vote, ±3.9 votes":
+    stale comment, left so that the source hash equals the published evidence; fix at the next netlist change).
+* **pt_cdr leakage into VCTRL:** idle (EN = 1, no votes, g7) +1.64 nA tt / +2.20 nA ff (sourcing; r11 +2.55 / +3.45),
+  < 1 pA disabled.  So the −8..−9 nA idle drift in the closed-loop runs is not pt_cdr (opposite sign, and it does not
+  scale with g): it is on the ring / bench side, still to be located.
+* **Open before the CDR is called done:** closed loop with the ring on the r13 extraction (HBR ±1000 ppm at g7 and one
+  lower g), mismatch Monte Carlo with trim, EN/safe sweep, register bits for `otr*` (tie to VSS until then, never floating);
+  `atb_cdr_pbias` couples 50.9 fF to FUP and 21.5 fF to DN3 (pre-existing): keep its ATB route short and shielded.

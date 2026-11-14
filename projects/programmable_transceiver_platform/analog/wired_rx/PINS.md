@@ -13,7 +13,7 @@ Revision state of the cells (read this first):
 | Cell | Pin list used here | State |
 |---|---|---|
 | `pt_wrx_cap` | r7, `W/capture.py:572-575` (`TOP_PORTS`) | r7 pin list is final (row AP4-1-CAP), but the r7 GDS is NOT published: review NO-GO on ss/625 PD votes, r7b fix in extracted verification (README Resume 9 / CAPTURE). `W/generated/wrx_cap.lvs.spice:4707` and `wrx_cap.ext.spice:50259` were still r6 (with `DX0..39`, `WCLK40`) when this was written, and so is `scratch/chip-top/pins.txt:77-78`. Use r7 (W7-GEAR, `IC:1043`). |
-| `pt_cdr` | both, see the cell table | `W/cdr.spice:22` = r13 (r12 + output mirror; 32 pins, adds `otr0..4 otrs`, rows AP4-1-CDR / CDR8-TRIM; staged, not published); published layout `W/generated/cdr.lvs.spice:3-4` = 26 pins (no `otr*`). **OPEN** (MW-36 `IC:1266`): bind the 26 published pins today; the six trim pins come with the r13 publish. |
+| `pt_cdr` | both, see the cell table | `W/cdr.spice:22` = r13 (r12 + output mirror; 32 pins, adds `otr0..4 otrs`, rows AP4-1-CDR / CDR8-TRIM; staged, not published); published layout `W/generated/cdr.lvs.spice:3-4` = 26 pins (no `otr*`). MW-36 closed by the r13 publish: bind all 32 pins. |
 | `pt_ptrim` | `W/ptrim.spice:7` | Published layout is the generic-row one, "not usable as laid out" (`W/README.md:389-390`); compact layout staged (`W/ptrim_compact.py`), on hold for the MW-14 output-stage redesign (README Resume 9 / PTRIM). Pin names unchanged; pins move to the east edge of each channel row (AP4-1-PTRIM). |
 | `pt_pll_ring` (instance `pll_cdr`) | `analog/timing/pll_ring.spice:37` r9v/r9w | Published (`IC:1047`, `IC:1156`). |
 | all others | their `.subckt` line | Same as `scratch/chip-top/pins.txt:61-82`. |
@@ -242,7 +242,7 @@ Self-biased; no IBIAS pin (`W/vthdac.spice:2-3`). Not in `inventory.py` / `NL` (
 Published layout, 26 pins (`W/generated/cdr.lvs.spice:3-4`):
 `VDD_PLL_SW VSS IBIAS cdr_en pfd_mode ref_sel g0 g1 g2 UP0 UP1 UP2 UP3 DN0 DN1 DN2 DN3 FUP FDN IB_PLL HOLD_PLL VCTRL REF_IN WCK_IN REF_PLL atb_cdr_pbias`
 
-Current schematic r12, 32 pins (`W/cdr.spice:22`): the same 26 followed by `otr0 otr1 otr2 otr3 otr4 otrs`. **Difference OPEN** (MW-36).
+Published layout since 2026-11-14 = r13, 32 pins (`W/cdr.spice:22`, `W/generated/cdr.lvs.spice`): the earlier 26 followed by `otr0 otr1 otr2 otr3 otr4 otrs` (rows AP4-1-CDR, CDR8-TRIM). Bind all 32.
 
 | Pin | Dir | Type | Domain / level | Connects to | Source |
 |---|---|---|---|---|---|
@@ -263,8 +263,8 @@ Current schematic r12, 32 pins (`W/cdr.spice:22`): the same 26 followed by `otr0
 | WCK_IN | in | clock | 3.3 V CMOS | `WCK_EXT` <- `rx_wclk_in.OUTP` (`pt_diff_clk_rx`) | `IC:430`, `NL:91` |
 | REF_PLL | out | clock | 3.3 V CMOS on `RAIL_pll` (= ref_sel ? WCK_IN : REF_IN; low when off) | `CDR_REF_PLL` -> `pll_cdr.REF` (today `pll_cdr.REF` = `ref_clk`, `NL:113`) | `W/cdr.spice:8`, `IC:968` |
 | atb_cdr_pbias | out | ATB | | `ATBN_cdr_bias` | `NL:46` |
-| otr0..otr4 (r12 only) | in | static config | 3.3 V CMOS | `c_cdr_otr[0..4]` (offset trim magnitude, 1/8 vote LSB). NO FIELD, not in the layout | `W/cdr.spice:15-16`, `MWX:65` |
-| otrs (r12 only) | in | static config | 3.3 V CMOS | `c_cdr_otrs` (trim sign). NO FIELD, not in the layout | same |
+| otr0..otr4 | in | static config | 3.3 V CMOS | `c_cdr_otr[0..4]` (offset trim magnitude, LSB 0.13 vote, range ±2.7–3.05 votes; 0 = untrimmed). NO FIELD: tie to VSS until one exists, never floating, static while tracking (`otr3`/`otr4` flank VCTRL) | `W/cdr.spice:15-16`, `MWX:65` |
+| otrs | in | static config | 3.3 V CMOS | `c_cdr_otrs` (trim sign, 1 = UP-like). NO FIELD: tie to VSS until one exists | same |
 
 Stale in `NL:122`: `cdr.FBCK_IN`, `cdr.freq_hold` (pins removed by AC3-W3, `IC:430`). `W/cdr.spice:16` cites an interface row "CDR8-TRIM"; no such row exists in `interface-changes.md`.
 

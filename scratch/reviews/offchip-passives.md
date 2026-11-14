@@ -97,7 +97,7 @@ U = used, d = debug / observation only, f = fallback only, - = idle (pad cell po
 | RF_RX P/N | U | - | U | U | - | - | - | - |
 | RF_TX P/N | - | U | U | U/- | - | - | - | - |
 | REF_IN P/N | U (reference) | U | U | U (LO I) | U (reference) | U | U | - |
-| AUX_CLK P/N | **-** | **-** | **-** | U (LO Q) | U for HDMI RX / CDR fallback (forwarded clock, CP4-3), else - | - | - | - |
+| AUX_CLK P/N | - unless selected as converter / PLL-reference clock source (review) | as RX | as RX | U (LO Q) | U for HDMI RX / CDR fallback (forwarded clock, CP4-3), else - | - | - | - |
 | BB_I, BB_Q (4) | d / f (external ADC) | d (DAC injection) | d | f | - | - | - | - |
 | WIRE_RX P/N | **-** | **-** | **-** | - | U | U | - | - |
 | WIRE_TX P/N | **-** | **-** | **-** | - | U | U | - (silent) | - |
@@ -419,10 +419,10 @@ value of case B is risk (LNA match, regulator rejection), not area.
 | proposed ID | carrier | requirement |
 |---|---|---|
 | B49 (OCP-1) | RF | `LO_X` to `LO_AGND`: 470 pF C0G +-5 % 0402 (50 V), within 10 mm of the connector, both traces routed as a pair away from switching nets, guard trace at `LO_AGND` potential around the `LO_X` pad and trace, no test point, board leakage <= 5 nA at 3 V (cleaned, no flux under the part). Nothing else on either net. A second footprint (DNP) for a parallel part allows loop-bandwidth changes. |
-| B50 (OCP-3 step 1) | RF, on-chip LO population | `LO_CEXT` (AUX_CLK_N contact) to `LO_AGND` (AUX_CLK_P contact): 10 uF X5R/X7R (>= 4.7 uF effective at 2.7 V bias), ESR <= 20 mohm, 0402/0603, within 3 mm of the connector; no connection of `LO_AGND` to carrier ground. The external-LO coupling capacitors (B3, 10 pF) are NOT fitted on this population, and vice versa. |
-| B51 (OCP-3 step 2) | RF, on-chip LO population | G1, G2 each 100 nF C0G or X7R +-10 % to `LO_AGND`, guard as B49. |
+| withdrawn: B50 (OCP-3 broken in review) | RF, on-chip LO population | `LO_CEXT` (AUX_CLK_N contact) to `LO_AGND` (AUX_CLK_P contact): 10 uF X5R/X7R (>= 4.7 uF effective at 2.7 V bias), ESR <= 20 mohm, 0402/0603, within 3 mm of the connector; no connection of `LO_AGND` to carrier ground. The external-LO coupling capacitors (B3, 10 pF) are NOT fitted on this population, and vice versa. |
+| withdrawn: B51 (OCP-3 broken in review) | RF, on-chip LO population | G1, G2 each 100 nF C0G or X7R +-10 % to `LO_AGND`, guard as B49. |
 | B52 (OCP-2) | wired | the B12 fallback data source and its two AC capacitors connect to the USB_DP/USB_DN contacts (was WTX_EXT_P/N); the USB connector, its TVS (B46) and series parts are not fitted on wired carriers. Universal boards: a 0 ohm jumper pair selects USB connector or fallback source. |
-| B53 (carrier rule) | all | pads that carry an internal node on one carrier (`bidir[17]`, `[22]`, `[23]`, AUX_CLK pair) are left unconnected, without test points or stubs longer than 5 mm, on carriers that do not use them. |
+| B53 (carrier rule) | all | pads that carry an internal node on one carrier (`bidir[22]`, `[23]`) are left unconnected, without test points or stubs longer than 5 mm, on carriers that do not use them. |
 | B10 change | all | `WTX_EXT` test point removed from the debug-site list. |
 
 ## 9. Independent review (`offchip-passives/review.md`)

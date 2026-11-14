@@ -1,0 +1,554 @@
+* LVS reference for combined_flat (analog/pads/lvs_reference.py): physical.spice without the model-only
+* DWELL_ARRAY n-well diode. Simulations keep using physical.spice.
+.subckt combined_flat PAD_P PAD_N VSS VCM ESD_RAIL ATB_ESD_RAIL
+X0 a_17005_132385# a_29878_132665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X1 VSS a_20789_117064# a_18245_90628# VSS nfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X2 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X3 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X4 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X5 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X6 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X7 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X8 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X9 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X10 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X11 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X12 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X13 a_18245_90628# a_20789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X14 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X15 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X16 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X17 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X18 a_19813_117064# a_17005_131545# VSS VSS nfet_06v0 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=0.7u
+X19 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X20 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D0 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X21 a_17005_133505# a_29878_133785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X22 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X23 ESD_RAIL a_17852_148519# cap_mim_2f0_m4m5_noshield c_width=90u c_length=90u
+X24 a_18245_90628# a_20789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X25 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X26 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X27 VSS a_19813_117064# a_20789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X28 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X29 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X30 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X31 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X32 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X33 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X34 VSS a_19813_117064# a_20789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X35 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X36 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D1 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+D2 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X37 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X38 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X39 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X40 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X41 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X42 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X43 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X44 a_17005_133505# a_29878_133225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X45 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X46 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X47 BIAS_N_5 BIAS_N_6 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X48 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X49 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X50 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X51 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X52 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X53 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X54 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X55 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X56 ESD_RAIL a_29878_134345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X57 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X58 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X59 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X60 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X61 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+D3 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X62 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X63 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X64 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X65 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X66 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X67 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X68 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X69 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X70 ESD_RAIL a_17852_148519# cap_mim_2f0_m4m5_noshield c_width=90u c_length=90u
+X71 a_17005_131545# VSS cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
+X72 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X73 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X74 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X75 a_20789_117064# a_19813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X76 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X77 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X78 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X79 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X80 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X81 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X82 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D4 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X83 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X84 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X85 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D5 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X86 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X87 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X88 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X89 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X90 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X91 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X92 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X93 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X94 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X95 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X96 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X97 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X98 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X99 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X100 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X101 a_17005_132385# a_29878_132105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X102 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X103 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X104 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X105 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X106 a_19813_117064# a_17005_131545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X107 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X108 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X109 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X110 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X111 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X112 BIAS_N_2 BIAS_N_3 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X113 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X114 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X115 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X116 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X117 a_20789_117064# a_19813_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X118 ESD_RAIL a_17005_131545# a_19813_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X119 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X120 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X121 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X122 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X123 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X124 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X125 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X126 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X127 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X128 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X129 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X130 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X131 BIAS_P_3 BIAS_P_4 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X132 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X133 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X134 a_17005_131825# a_29878_132105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X135 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X136 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X137 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X138 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X139 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X140 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X141 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X142 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X143 ESD_RAIL a_19813_117064# a_20789_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X144 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D6 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X145 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X146 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X147 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X148 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X149 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D7 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X150 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X151 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X152 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X153 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X154 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X155 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X156 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X157 a_17005_132945# a_29878_133225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X158 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X159 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X160 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X161 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X162 a_20789_117064# a_19813_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X163 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X164 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X165 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X166 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X167 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X168 a_18245_90628# VSS VSS ppolyf_u_1k_6p0 r_width=1u r_length=99.24u
+X169 BIAS_P_2 BIAS_P_3 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X170 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X171 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X172 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X173 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X174 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X175 a_17005_134065# a_29878_134345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+D8 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X176 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X177 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X178 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X179 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X180 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X181 ESD_RAIL VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
+X182 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X183 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X184 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X185 BIAS_N_4 BIAS_N_5 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X186 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X187 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X188 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X189 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X190 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X191 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X192 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X193 VSS a_19813_117064# a_20789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X194 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X195 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X196 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X197 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X198 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X199 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X200 VSS a_20789_117064# a_18245_90628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X201 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X202 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X203 VSS a_20789_117064# a_18245_90628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D9 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X204 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X205 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X206 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X207 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X208 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X209 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X210 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X211 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X212 a_20789_117064# a_19813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X213 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X214 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X215 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X216 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X217 BIAS_P_6 VCM VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X218 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X219 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X220 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X221 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X222 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X223 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X224 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X225 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D10 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X226 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X227 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D11 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X228 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X229 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X230 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X231 a_17852_148519# VSS VSS ppolyf_u_1k_6p0 r_width=1u r_length=6u
+X232 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D12 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X233 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X234 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X235 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X236 BIAS_P_0 BIAS_P_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X237 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X238 a_17005_131825# a_29878_131545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X239 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X240 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X241 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X242 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X243 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X244 BIAS_P_5 BIAS_P_6 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X245 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X246 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X247 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X248 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X249 a_20789_117064# a_19813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X250 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X251 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X252 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X253 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X254 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X255 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X256 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X257 a_17005_132945# a_29878_132665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X258 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X259 VSS ESD_RAIL VSS ppolyf_u_1k_6p0 r_width=1u r_length=9.98874m
+X260 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X261 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X262 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X263 ESD_RAIL ATB_ESD_RAIL VSS ppolyf_u_1k_6p0 r_width=1u r_length=0.47474m
+X264 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X265 BIAS_N_1 BIAS_N_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X266 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X267 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X268 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X269 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X270 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X271 PAD_P BIAS_P_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X272 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X273 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X274 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X275 BIAS_N_3 BIAS_N_4 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X276 BIAS_P_1 BIAS_P_2 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X277 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X278 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X279 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X280 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X281 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D13 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X282 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X283 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X284 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+D14 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X285 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X286 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X287 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X288 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X289 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X290 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X291 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+D15 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X292 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X293 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X294 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X295 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X296 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X297 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X298 a_17005_134065# a_29878_133785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X299 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X300 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X301 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X302 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X303 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X304 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X305 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X306 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X307 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D16 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X308 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X309 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X310 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X311 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X312 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X313 ESD_RAIL a_17005_131545# a_19813_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X314 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X315 a_19813_117064# a_17005_131545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X316 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X317 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X318 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X319 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X320 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X321 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X322 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X323 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X324 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X325 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X326 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X327 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D17 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X328 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X329 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X330 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X331 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X332 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X333 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X334 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X335 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X336 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X337 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X338 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X339 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X340 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X341 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X342 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X343 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X344 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X345 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X346 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X347 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X348 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X349 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X350 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X351 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X352 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X353 a_18245_90628# a_20789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X354 ESD_RAIL a_20789_117064# a_18245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X355 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X356 BIAS_N_6 VCM VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X357 BIAS_P_4 BIAS_P_5 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X358 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X359 BIAS_N_0 BIAS_N_1 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X360 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X361 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X362 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X363 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X364 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X365 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X366 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X367 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X368 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X369 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X370 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X371 a_17005_131545# a_29878_131545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X372 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D18 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X373 ESD_RAIL a_18245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D19 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X374 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X375 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X376 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X377 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X378 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X379 PAD_N BIAS_N_0 VSS ppolyf_u_1k r_width=1u r_length=12.5u
+X380 VSS a_17852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X381 a_18245_90628# a_20789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X382 VSS a_18245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X383 ESD_RAIL a_17852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+C0 BIAS_N_2 BIAS_N_3 3.78393f
+C1 a_19813_117064# a_17005_131545# 2.44008f
+C2 ESD_RAIL a_17005_131545# 97.1325f
+C3 BIAS_N_0 BIAS_N_1 0.85489f
+C4 BIAS_P_6 PAD_P 0.5037f
+C5 m2_18279_124800# a_17005_131825# 0
+C6 VCM BIAS_N_1 0.05163f
+C7 BIAS_N_2 PAD_N 0.41491f
+C8 a_29878_134345# ESD_RAIL 0.5677f
+C9 BIAS_P_1 BIAS_P_4 0.034f
+C10 a_18245_90628# a_19813_117064# 0.00994f
+C11 a_18245_90628# ESD_RAIL 0.24349p
+C12 BIAS_P_6 BIAS_P_4 0.00228f
+C13 a_19813_117064# a_20789_117064# 3.03168f
+C14 ESD_RAIL a_20789_117064# 16.8853f
+C15 PAD_P BIAS_N_1 0.23321f
+C16 a_17005_132945# a_17005_133505# 0.0346f
+C17 a_18245_90628# a_17005_131545# 0.01301f
+C18 BIAS_P_5 VCM 0.07484f
+C19 m2_18279_124800# a_17005_132385# 0
+C20 m2_18279_124800# a_17005_132945# 0
+C21 a_20789_117064# a_17005_131545# 0.02926f
+C22 ESD_RAIL a_29878_133785# 0.53942f
+C23 BIAS_P_4 BIAS_N_1 0.00103f
+C24 BIAS_P_5 PAD_P 0.24067f
+C25 a_18245_90628# a_20789_117064# 11.6307f
+C26 PAD_N ATB_ESD_RAIL 0.02943f
+C27 BIAS_N_3 BIAS_N_5 0.11974f
+C28 BIAS_N_4 BIAS_N_5 2.15441f
+C29 BIAS_P_5 BIAS_P_4 0.47572f
+C30 a_29878_134345# a_29878_133785# 0.0346f
+C31 PAD_N BIAS_P_0 0.65412f
+C32 PAD_N BIAS_N_5 0.41491f
+C33 ESD_RAIL a_17005_133505# 0.53842f
+C34 BIAS_P_2 PAD_N 0.26224f
+C35 BIAS_N_0 BIAS_N_3 0.09904f
+C36 BIAS_N_0 BIAS_N_4 0.00103f
+C37 m2_18279_124800# ESD_RAIL 5.47988f
+C38 VCM BIAS_N_3 0.04195f
+C39 VCM BIAS_N_4 0.05163f
+C40 a_29878_133225# a_29878_132665# 0.0346f
+C41 BIAS_P_5 BIAS_P_1 0
+C42 BIAS_N_0 PAD_N 0.46444f
+C43 m2_18279_124800# a_17005_131545# 0.05457f
+C44 BIAS_P_6 BIAS_P_5 1.46515f
+C45 VCM PAD_N 0.25024f
+C46 BIAS_N_3 PAD_P 0.23379f
+C47 BIAS_N_2 BIAS_N_0 0.11843f
+C48 BIAS_N_4 PAD_P 0.23321f
+C49 BIAS_N_2 VCM 0.0755f
+C50 BIAS_P_3 PAD_N 0.50239f
+C51 PAD_N PAD_P 73.46249f
+C52 a_29878_133225# ESD_RAIL 0.53916f
+C53 BIAS_N_2 PAD_P 0.39538f
+C54 BIAS_N_6 BIAS_N_3 0.13175f
+C55 BIAS_N_6 BIAS_N_4 0.0653f
+C56 BIAS_P_4 PAD_N 1.00207f
+C57 ESD_RAIL PAD_N 23.0912f
+C58 BIAS_N_6 PAD_N 0.2563f
+C59 a_17005_131825# a_17005_132385# 0.0346f
+C60 a_29878_132105# a_29878_131545# 0.0346f
+C61 BIAS_N_0 BIAS_P_0 0.20954f
+C62 a_17005_134065# ESD_RAIL 0.57348f
+C63 BIAS_P_1 PAD_N 0.70669f
+C64 a_17005_132945# a_17005_132385# 0.0346f
+C65 BIAS_P_6 PAD_N 0.93458f
+C66 m2_18279_124800# a_17005_133505# 0
+C67 VCM BIAS_N_5 0.0755f
+C68 a_29878_133225# a_29878_133785# 0.0346f
+C69 a_29878_132105# a_29878_132665# 0.0346f
+C70 BIAS_N_3 BIAS_N_1 0.0653f
+C71 PAD_P BIAS_P_0 1.11529f
+C72 PAD_P BIAS_N_5 0.39538f
+C73 BIAS_P_2 BIAS_P_3 1.71751f
+C74 a_17005_131825# ESD_RAIL 0.53823f
+C75 BIAS_P_2 PAD_P 0.23889f
+C76 PAD_N BIAS_N_1 0.1947f
+C77 BIAS_N_2 BIAS_N_1 2.38477f
+C78 a_17005_131825# a_17005_131545# 0.03725f
+C79 ESD_RAIL a_29878_132105# 0.53942f
+C80 BIAS_P_2 BIAS_P_4 0.06278f
+C81 a_17852_148519# ESD_RAIL 0.33756p
+C82 BIAS_N_6 BIAS_N_5 3.55176f
+C83 ESD_RAIL a_29878_131545# 0.56772f
+C84 BIAS_P_5 PAD_N 0.36873f
+C85 VCM PAD_P 47.7261f
+C86 ESD_RAIL a_17005_132385# 0.53823f
+C87 ESD_RAIL a_17005_132945# 0.53823f
+C88 BIAS_P_1 BIAS_P_0 3.39678f
+C89 BIAS_P_4 BIAS_N_0 0.0253f
+C90 BIAS_P_3 PAD_P 0.40676f
+C91 a_17005_131545# a_17005_132385# 0
+C92 a_17005_132945# a_17005_131545# 0
+C93 BIAS_P_2 BIAS_P_1 0.27824f
+C94 ESD_RAIL a_29878_132665# 0.53916f
+C95 VCM BIAS_N_6 0.17957f
+C96 BIAS_P_3 BIAS_P_4 3.16384f
+C97 a_17005_134065# a_17005_133505# 0.0346f
+C98 BIAS_P_4 PAD_P 0.23948f
+C99 ESD_RAIL PAD_P 24.1165f
+C100 BIAS_P_1 BIAS_N_0 0.32139f
+C101 BIAS_N_6 PAD_P 0.23379f
+C102 BIAS_N_3 BIAS_N_4 0.6241f
+C103 m2_18279_124800# a_17005_134065# 0
+C104 a_19813_117064# ESD_RAIL 5.25092f
+C105 BIAS_P_6 VCM 1.99081f
+C106 BIAS_N_3 PAD_N 0.2554f
+C107 PAD_N BIAS_N_4 0.1947f
+C108 BIAS_P_3 BIAS_P_1 0.00832f
+C109 BIAS_P_1 PAD_P 0.30166f
+C110 ATB_ESD_RAIL VSS 0.86326f
+C111 PAD_P VSS 0.28034p
+C112 PAD_N VSS 0.29367p
+C113 VCM VSS 55.7105f
+C114 ESD_RAIL VSS 2928.645664f
+C115 m2_18279_124800# VSS 7.46506f $ **FLOATING
+C116 a_18245_90628# VSS 0.24972p
+C117 a_20789_117064# VSS 8.91806f
+C118 a_19813_117064# VSS 5.17875f
+C119 BIAS_P_0 VSS 4.67095f
+C120 BIAS_P_3 VSS 4.33542f
+C121 BIAS_P_2 VSS 4.03008f
+C122 BIAS_P_1 VSS 6.04814f
+C123 BIAS_P_6 VSS 4.5349f
+C124 BIAS_P_5 VSS 4.04847f
+C125 BIAS_P_4 VSS 6.30889f
+C126 BIAS_N_2 VSS 4.52731f
+C127 BIAS_N_1 VSS 4.29251f
+C128 BIAS_N_0 VSS 7.62753f
+C129 BIAS_N_5 VSS 4.46932f
+C130 BIAS_N_4 VSS 4.23742f
+C131 BIAS_N_3 VSS 6.90398f
+C132 BIAS_N_6 VSS 6.72764f
+C133 a_17005_131545# VSS 98.15211f
+C134 a_29878_131545# VSS 0.07835f
+C135 a_17005_131825# VSS 0.07377f
+C136 a_29878_132105# VSS 0.07394f
+C137 a_17005_132385# VSS 0.07377f
+C138 a_29878_132665# VSS 0.07394f
+C139 a_17005_132945# VSS 0.07377f
+C140 a_29878_133225# VSS 0.07394f
+C141 a_17005_133505# VSS 0.07377f
+C142 a_29878_133785# VSS 0.07394f
+C143 a_17005_134065# VSS 0.07377f
+C144 a_29878_134345# VSS 0.07838f
+C145 a_17852_148519# VSS 0.41778p
+.ends

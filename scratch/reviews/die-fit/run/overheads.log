@@ -1,0 +1,304 @@
+NETS {
+"control_bits": 531,
+"status_bits": 11,
+"macro_direct_to_analog": 304,
+"macro_to_pads": 38,
+"analog_multi_instance": 269,
+"analog_classes": {
+"other analog / local": 129,
+"bias currents (BIAS_*)": 25,
+"ATB tree (ATB*)": 35,
+"LO / RF differential (LO_*, RFA_*, LNA_*)": 32,
+"ring phases (CDRPH/CKP/SLS/TXPH)": 29,
+"CDR votes (CDR_UP/DN, WRX_UP/DN)": 19
+},
+"supply_nets": [
+"AGND_RX",
+"ESD_RAIL_bb",
+"ESD_RAIL_rf_rx",
+"ESD_RAIL_rf_tx",
+"ESD_RAIL_wtx_ext",
+"RAIL_conv",
+"RAIL_debug",
+"RAIL_lo",
+"RAIL_lod",
+"RAIL_pll",
+"RAIL_rf_rx",
+"RAIL_rf_tx",
+"RAIL_wired_cap",
+"RAIL_wired_rx",
+"RAIL_wired_tx",
+"VDD",
+"VDD_LO",
+"VSS"
+]
+}
+ROUTING b {
+"control_wire_mm": 510.7,
+"fast_digital_wire_mm": 336.6,
+"d2h_wire_mm": 34.4,
+"analog_wire_mm": {
+"bias": 31.6,
+"atb": 88.7,
+"other": 314.8,
+"lo_rf": 50.8,
+"ring": 7.4
+},
+"analog_net_count": {
+"bias": 20,
+"atb": 28,
+"other": 110,
+"lo_rf": 23,
+"ring": 4
+},
+"fwd_clk_mm": 6.2,
+"endpoints_on_unplaced_blocks": 250,
+"unplaced_with_nets": {
+"slicer": 89,
+"wrx_cap": 72,
+"vthdac": 17,
+"lna": 16,
+"dac_q": 13,
+"pll_cdr": 11,
+"rfdriver": 8,
+"ctle": 8
+},
+"track_area_mm2": {
+"min_pitch": 0.846,
+"control_min_fast_double": 1.405,
+"all_double": 1.691
+},
+"channel_area_mm2": 0.815,
+"channel_track_capacity_mm2": 0.636,
+"corridor_and_lo_legs_mm2": 0.172,
+"channel_need_mm2": {
+"min_pitch": 1.084,
+"control_min_fast_double": 1.802,
+"all_double": 2.168
+},
+"ten_pct_allowance_mm2": 0.855,
+"strap_m5_area_mm2": 5.181
+}
+ROUTING c {
+"control_wire_mm": 490.7,
+"fast_digital_wire_mm": 437.9,
+"d2h_wire_mm": 34.4,
+"analog_wire_mm": {
+"bias": 40.3,
+"atb": 94.8,
+"other": 294.0,
+"lo_rf": 68.0,
+"ring": 13.7
+},
+"analog_net_count": {
+"bias": 20,
+"atb": 31,
+"other": 124,
+"lo_rf": 28,
+"ring": 7
+},
+"fwd_clk_mm": 6.2,
+"endpoints_on_unplaced_blocks": 179,
+"unplaced_with_nets": {
+"slicer": 89,
+"ptrim": 41,
+"dac_q": 13,
+"detect": 12,
+"pll_cdr": 11,
+"rfdriver": 8,
+"refbuf": 3,
+"lo_obs": 1
+},
+"track_area_mm2": {
+"min_pitch": 0.927,
+"control_min_fast_double": 1.58,
+"all_double": 1.855
+},
+"channel_area_mm2": 0.874,
+"channel_track_capacity_mm2": 0.682,
+"corridor_and_lo_legs_mm2": 0.172,
+"channel_need_mm2": {
+"min_pitch": 1.189,
+"control_min_fast_double": 2.025,
+"all_double": 2.378
+},
+"ten_pct_allowance_mm2": 0.855,
+"strap_m5_area_mm2": 6.465
+}
+ROUTING b-flow {
+"control_wire_mm": 693.5,
+"fast_digital_wire_mm": 351.6,
+"d2h_wire_mm": 34.4,
+"analog_wire_mm": {
+"bias": 6.3,
+"atb": 80.2,
+"other": 220.4,
+"lo_rf": 24.7,
+"ring": 31.5
+},
+"analog_net_count": {
+"bias": 4,
+"atb": 29,
+"other": 132,
+"lo_rf": 14,
+"ring": 29
+},
+"fwd_clk_mm": 6.2,
+"endpoints_on_unplaced_blocks": 230,
+"unplaced_with_nets": {
+"core_bias": 79,
+"bbfilter_i": 37,
+"bbfilter_q": 37,
+"adc_i": 31,
+"adc_q": 31,
+"dac_q": 13,
+"pll_vreg2": 2
+},
+"track_area_mm2": {
+"min_pitch": 0.881,
+"control_min_fast_double": 1.374,
+"all_double": 1.762
+},
+"channel_area_mm2": 0.932,
+"channel_track_capacity_mm2": 0.727,
+"corridor_and_lo_legs_mm2": 0.172,
+"channel_need_mm2": {
+"min_pitch": 1.13,
+"control_min_fast_double": 1.762,
+"all_double": 2.26
+},
+"ten_pct_allowance_mm2": 0.855,
+"strap_m5_area_mm2": 3.679
+}
+ROUTING c-flow {
+"control_wire_mm": 737.8,
+"fast_digital_wire_mm": 363.8,
+"d2h_wire_mm": 34.4,
+"analog_wire_mm": {
+"bias": 12.1,
+"atb": 82.7,
+"other": 250.2,
+"lo_rf": 23.8,
+"ring": 32.5
+},
+"analog_net_count": {
+"bias": 4,
+"atb": 29,
+"other": 135,
+"lo_rf": 14,
+"ring": 29
+},
+"fwd_clk_mm": 6.2,
+"endpoints_on_unplaced_blocks": 218,
+"unplaced_with_nets": {
+"core_bias": 79,
+"bbfilter_i": 37,
+"bbfilter_q": 37,
+"adc_i": 31,
+"adc_q": 31,
+"refbuf": 3
+},
+"track_area_mm2": {
+"min_pitch": 0.934,
+"control_min_fast_double": 1.456,
+"all_double": 1.869
+},
+"channel_area_mm2": 0.94,
+"channel_track_capacity_mm2": 0.733,
+"corridor_and_lo_legs_mm2": 0.172,
+"channel_need_mm2": {
+"min_pitch": 1.198,
+"control_min_fast_double": 1.866,
+"all_double": 2.396
+},
+"ten_pct_allowance_mm2": 0.855,
+"strap_m5_area_mm2": 3.554
+}
+ROUTING c-l6 {
+"control_wire_mm": 464.0,
+"fast_digital_wire_mm": 366.6,
+"d2h_wire_mm": 32.1,
+"analog_wire_mm": {
+"bias": 52.6,
+"atb": 94.0,
+"other": 346.4,
+"lo_rf": 52.6,
+"ring": 101.8
+},
+"analog_net_count": {
+"bias": 23,
+"atb": 29,
+"other": 132,
+"lo_rf": 23,
+"ring": 29
+},
+"fwd_clk_mm": 6.2,
+"endpoints_on_unplaced_blocks": 38,
+"unplaced_with_nets": {
+"lna": 16,
+"detect": 12,
+"vco_replica": 2,
+"lo_mmd_qdum": 1,
+"lo_obs": 1,
+"atb1_grp3": 1,
+"atb1_grp4": 1,
+"atb1_grp2": 1
+},
+"track_area_mm2": {
+"min_pitch": 1.029,
+"control_min_fast_double": 1.798,
+"all_double": 2.058
+},
+"channel_area_mm2": 1.033,
+"channel_track_capacity_mm2": 0.806,
+"corridor_and_lo_legs_mm2": 0.164,
+"channel_need_mm2": {
+"min_pitch": 1.319,
+"control_min_fast_double": 2.305,
+"all_double": 2.639
+},
+"ten_pct_allowance_mm2": 0.855,
+"strap_m5_area_mm2": 4.444
+}
+M45 {
+"A": {
+"outline": 10.395,
+"free": 3.114,
+"free_nospiral": 2.835,
+"free_usable": 2.249,
+"grid_displaced": 1.054,
+"nodata": 2.581,
+"plate_capacity_nF_all_usable": 4.27,
+"after_grid_30pct_mm2": 0.0,
+"plate_capacity_nF_after_grid": 2.99,
+"fraction_of_free_for_2nF": 0.47,
+"fraction_of_free_for_3nF": 0.7
+},
+"B": {
+"outline": 7.977,
+"free": 2.162,
+"free_nospiral": 1.883,
+"free_usable": 1.357,
+"grid_displaced": 0.977,
+"nodata": 2.314,
+"plate_capacity_nF_all_usable": 2.58,
+"after_grid_30pct_mm2": 0.0,
+"plate_capacity_nF_after_grid": 1.8,
+"fraction_of_free_for_2nF": 0.77,
+"fraction_of_free_for_3nF": 1.16
+},
+"C": {
+"outline": 7.222,
+"free": 1.617,
+"free_nospiral": 1.338,
+"free_usable": 1.044,
+"grid_displaced": 0.987,
+"nodata": 2.187,
+"plate_capacity_nF_all_usable": 1.98,
+"after_grid_30pct_mm2": 0.0,
+"plate_capacity_nF_after_grid": 1.39,
+"fraction_of_free_for_2nF": 1.01,
+"fraction_of_free_for_3nF": 1.51
+}
+}
+B: largest free M4/M5 areas: [('qvco', 279), ('adc_i', 208), ('adc_q', 208), ('bbfilter_i', 182), ('bbfilter_q', 182), ('pll_vreg2', 146), ('lo_lf', 133), ('dac_i', 92), ('dac_q', 92), ('wrx_cap', 81), ('r8arch_capture_b', 81), ('wiredtx', 65), ('detect', 46), ('refbuf', 41)]

@@ -1,0 +1,1320 @@
+[
+ {
+  "tag": "b",
+  "scen": "B",
+  "opts": "baseline",
+  "core": 12.772,
+  "blocks": 236,
+  "demand": 8.273,
+  "placed": 211,
+  "placed_mm2": 6.132,
+  "unplaced": 25,
+  "unplaced_mm2": 2.141,
+  "halo": 0.815,
+  "free": 0.347,
+  "use80": 0.0,
+  "use200": 0.0,
+  "scrap": 0.347,
+  "relaxed": [
+   "wiredtx",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 12,
+  "best_by_strategy": {
+   "0": 2.1409,
+   "1": 2.3118,
+   "2": 2.722
+  },
+  "strap": 5.181,
+  "biggest_unplaced": [
+   [
+    "wrx_cap",
+    0.294
+   ],
+   [
+    "r8arch_capture_b",
+    0.294
+   ],
+   [
+    "pll_vreg2",
+    0.173
+   ],
+   [
+    "pll_cdr",
+    0.167
+   ],
+   [
+    "lo_mmd",
+    0.145
+   ],
+   [
+    "dac_q",
+    0.134
+   ],
+   [
+    "char_rffet_open",
+    0.112
+   ],
+   [
+    "char_rffet_short",
+    0.112
+   ]
+  ]
+ },
+ {
+  "tag": "c",
+  "scen": "C",
+  "opts": "baseline",
+  "core": 12.772,
+  "blocks": 234,
+  "demand": 7.518,
+  "placed": 214,
+  "placed_mm2": 6.171,
+  "unplaced": 20,
+  "unplaced_mm2": 1.347,
+  "halo": 0.874,
+  "free": 0.363,
+  "use80": 0.0,
+  "use200": 0.0,
+  "scrap": 0.363,
+  "relaxed": [
+   "wiredtx"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 12,
+  "best_by_strategy": {
+   "0": 1.3471,
+   "1": 1.536,
+   "2": 1.9466
+  },
+  "strap": 6.465,
+  "biggest_unplaced": [
+   [
+    "dac_q",
+    0.13
+   ],
+   [
+    "pll_cdr",
+    0.127
+   ],
+   [
+    "refbuf",
+    0.117
+   ],
+   [
+    "char_rffet",
+    0.112
+   ],
+   [
+    "char_rffet_open",
+    0.112
+   ],
+   [
+    "char_rffet_short",
+    0.112
+   ],
+   [
+    "slicer",
+    0.11
+   ],
+   [
+    "r8arch_slicer_b",
+    0.11
+   ]
+  ]
+ },
+ {
+  "tag": "cr",
+  "scen": "CR",
+  "opts": "baseline",
+  "core": 12.772,
+  "blocks": 234,
+  "demand": 7.681,
+  "placed": 214,
+  "placed_mm2": 6.071,
+  "unplaced": 20,
+  "unplaced_mm2": 1.61,
+  "halo": 0.86,
+  "free": 0.43,
+  "use80": 0.024,
+  "use200": 0.0,
+  "scrap": 0.406,
+  "relaxed": [
+   "wrx_cap",
+   "wiredtx",
+   "lna",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 1.6103,
+   "1": 1.9891,
+   "2": 2.0118
+  },
+  "strap": 5.193,
+  "biggest_unplaced": [
+   [
+    "tx8_rsv",
+    0.222
+   ],
+   [
+    "pll_cdr",
+    0.167
+   ],
+   [
+    "dac_q",
+    0.13
+   ],
+   [
+    "lo_pfdcp",
+    0.124
+   ],
+   [
+    "char_rffet",
+    0.112
+   ],
+   [
+    "char_rffet_open",
+    0.112
+   ],
+   [
+    "char_rffet_short",
+    0.112
+   ],
+   [
+    "slicer",
+    0.11
+   ]
+  ]
+ },
+ {
+  "tag": "b-flow",
+  "scen": "B",
+  "opts": "flow-first order only",
+  "core": 12.772,
+  "blocks": 236,
+  "demand": 8.273,
+  "placed": 225,
+  "placed_mm2": 5.551,
+  "unplaced": 11,
+  "unplaced_mm2": 2.722,
+  "halo": 0.932,
+  "free": 0.81,
+  "use80": 0.244,
+  "use200": 0.0,
+  "scrap": 0.566,
+  "relaxed": [
+   "rfdriver",
+   "wrx_cap",
+   "wiredtx"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": null,
+   "1": null,
+   "2": 2.722
+  },
+  "strap": 3.679,
+  "biggest_unplaced": [
+   [
+    "adc_i",
+    0.45
+   ],
+   [
+    "adc_q",
+    0.45
+   ],
+   [
+    "bbfilter_i",
+    0.342
+   ],
+   [
+    "bbfilter_q",
+    0.342
+   ],
+   [
+    "core_bias",
+    0.302
+   ],
+   [
+    "lo_lf",
+    0.194
+   ],
+   [
+    "pll_vreg2",
+    0.173
+   ],
+   [
+    "dac_q",
+    0.134
+   ]
+  ]
+ },
+ {
+  "tag": "c-flow",
+  "scen": "C",
+  "opts": "flow-first order only",
+  "core": 12.772,
+  "blocks": 234,
+  "demand": 7.518,
+  "placed": 224,
+  "placed_mm2": 5.572,
+  "unplaced": 10,
+  "unplaced_mm2": 1.947,
+  "halo": 0.94,
+  "free": 0.895,
+  "use80": 0.304,
+  "use200": 0.0,
+  "scrap": 0.592,
+  "relaxed": [
+   "rfdriver",
+   "wrx_cap",
+   "wiredtx"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": null,
+   "1": null,
+   "2": 1.9466
+  },
+  "strap": 3.554,
+  "biggest_unplaced": [
+   [
+    "adc_i",
+    0.33
+   ],
+   [
+    "adc_q",
+    0.33
+   ],
+   [
+    "bbfilter_i",
+    0.23
+   ],
+   [
+    "bbfilter_q",
+    0.23
+   ],
+   [
+    "lo_lf",
+    0.194
+   ],
+   [
+    "core_bias",
+    0.18
+   ],
+   [
+    "refbuf",
+    0.117
+   ],
+   [
+    "char_rffet",
+    0.112
+   ]
+  ]
+ },
+ {
+  "tag": "b-h5",
+  "scen": "B",
+  "opts": "halo 5",
+  "core": 12.772,
+  "blocks": 236,
+  "demand": 8.273,
+  "placed": 213,
+  "placed_mm2": 6.551,
+  "unplaced": 23,
+  "unplaced_mm2": 1.722,
+  "halo": 0.453,
+  "free": 0.354,
+  "use80": 0.0,
+  "use200": 0.0,
+  "scrap": 0.354,
+  "relaxed": [
+   "wiredtx",
+   "lo_mmd",
+   "lna",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 1.7219,
+   "1": 2.193,
+   "2": 2.4855
+  },
+  "strap": 6.48,
+  "biggest_unplaced": [
+   [
+    "wrx_cap",
+    0.294
+   ],
+   [
+    "r8arch_capture_b",
+    0.294
+   ],
+   [
+    "lo_lf",
+    0.194
+   ],
+   [
+    "pll_vreg2",
+    0.173
+   ],
+   [
+    "pll_cdr",
+    0.167
+   ],
+   [
+    "char_rffet_short",
+    0.112
+   ],
+   [
+    "r8arch_slicer_b",
+    0.11
+   ],
+   [
+    "rfdriver",
+    0.097
+   ]
+  ]
+ },
+ {
+  "tag": "c-h5",
+  "scen": "C",
+  "opts": "halo 5",
+  "core": 12.772,
+  "blocks": 234,
+  "demand": 7.518,
+  "placed": 220,
+  "placed_mm2": 6.475,
+  "unplaced": 14,
+  "unplaced_mm2": 1.043,
+  "halo": 0.487,
+  "free": 0.51,
+  "use80": 0.0,
+  "use200": 0.0,
+  "scrap": 0.51,
+  "relaxed": [
+   "wrx_cap",
+   "lo_mmd",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 1.0434,
+   "1": 1.465,
+   "2": 1.7077
+  },
+  "strap": 6.341,
+  "biggest_unplaced": [
+   [
+    "pll_cdr",
+    0.127
+   ],
+   [
+    "lo_ext",
+    0.12
+   ],
+   [
+    "char_rffet_open",
+    0.112
+   ],
+   [
+    "char_rffet_short",
+    0.112
+   ],
+   [
+    "slicer",
+    0.11
+   ],
+   [
+    "r8arch_slicer_b",
+    0.11
+   ],
+   [
+    "rfdriver",
+    0.097
+   ],
+   [
+    "pll_tx",
+    0.065
+   ]
+  ]
+ },
+ {
+  "tag": "c-l1",
+  "scen": "C",
+  "opts": "debug pads on provider cells",
+  "core": 12.772,
+  "blocks": 234,
+  "demand": 7.518,
+  "placed": 209,
+  "placed_mm2": 6.506,
+  "unplaced": 25,
+  "unplaced_mm2": 1.012,
+  "halo": 0.907,
+  "free": 0.399,
+  "use80": 0.0,
+  "use200": 0.0,
+  "scrap": 0.399,
+  "relaxed": [
+   "wiredtx",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 1.0113,
+   "1": 1.2729,
+   "2": 1.7636
+  },
+  "strap": 4.132,
+  "biggest_unplaced": [
+   [
+    "pll_cdr",
+    0.127
+   ],
+   [
+    "refbuf",
+    0.117
+   ],
+   [
+    "char_rffet_open",
+    0.112
+   ],
+   [
+    "char_rffet_short",
+    0.112
+   ],
+   [
+    "slicer",
+    0.11
+   ],
+   [
+    "r8arch_slicer_b",
+    0.11
+   ],
+   [
+    "rfdriver",
+    0.097
+   ],
+   [
+    "lna_ind_p",
+    0.057
+   ]
+  ]
+ },
+ {
+  "tag": "c-l2",
+  "scen": "C",
+  "opts": "debug pads on provider cells, no bank",
+  "core": 12.772,
+  "blocks": 208,
+  "demand": 7.128,
+  "placed": 186,
+  "placed_mm2": 6.452,
+  "unplaced": 22,
+  "unplaced_mm2": 0.676,
+  "halo": 0.95,
+  "free": 0.433,
+  "use80": 0.0,
+  "use200": 0.0,
+  "scrap": 0.433,
+  "relaxed": [
+   "wiredtx",
+   "rfdriver",
+   "lna",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "1716 x 1640",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.676,
+   "1": 0.9611,
+   "2": 1.5377
+  },
+  "strap": 7.772,
+  "biggest_unplaced": [
+   [
+    "refbuf",
+    0.117
+   ],
+   [
+    "slicer",
+    0.11
+   ],
+   [
+    "r8arch_slicer_b",
+    0.11
+   ],
+   [
+    "detect",
+    0.09
+   ],
+   [
+    "lna_ind_p",
+    0.057
+   ],
+   [
+    "lna_ind_n",
+    0.057
+   ],
+   [
+    "rx_wtx_ext",
+    0.022
+   ],
+   [
+    "vco_replica",
+    0.021
+   ]
+  ]
+ },
+ {
+  "tag": "c-l3",
+  "scen": "C",
+  "opts": "debug pads on provider cells, no bank, ring +36",
+  "core": 13.299,
+  "blocks": 208,
+  "demand": 7.128,
+  "placed": 199,
+  "placed_mm2": 6.812,
+  "unplaced": 9,
+  "unplaced_mm2": 0.316,
+  "halo": 1.001,
+  "free": 0.403,
+  "use80": 0.0,
+  "use200": 0.0,
+  "scrap": 0.403,
+  "relaxed": [
+   "wiredtx",
+   "rfdriver",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.3164,
+   "1": 0.7252,
+   "2": 1.0554
+  },
+  "strap": 7.361,
+  "biggest_unplaced": [
+   [
+    "pll_cdr",
+    0.127
+   ],
+   [
+    "lna_ind_p",
+    0.057
+   ],
+   [
+    "lna_ind_n",
+    0.057
+   ],
+   [
+    "lna_deg_p",
+    0.025
+   ],
+   [
+    "lna_deg_n",
+    0.025
+   ],
+   [
+    "atb1_grp1",
+    0.006
+   ],
+   [
+    "atb1_grp2",
+    0.006
+   ],
+   [
+    "atb1_grp3",
+    0.006
+   ]
+  ]
+ },
+ {
+  "tag": "c-l4",
+  "scen": "C",
+  "opts": "halo 6, debug pads on provider cells, no bank, ring +36",
+  "core": 13.299,
+  "blocks": 208,
+  "demand": 7.128,
+  "placed": 205,
+  "placed_mm2": 6.904,
+  "unplaced": 3,
+  "unplaced_mm2": 0.224,
+  "halo": 0.66,
+  "free": 0.706,
+  "use80": 0.161,
+  "use200": 0.0,
+  "scrap": 0.545,
+  "relaxed": [
+   "wiredtx",
+   "rfdriver",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.2243,
+   "1": 0.7625,
+   "2": 1.1254
+  },
+  "strap": 6.549,
+  "biggest_unplaced": [
+   [
+    "r8arch_slicer_b",
+    0.11
+   ],
+   [
+    "lna_ind_p",
+    0.057
+   ],
+   [
+    "lna_ind_n",
+    0.057
+   ]
+  ]
+ },
+ {
+  "tag": "c-l5",
+  "scen": "C",
+  "opts": "halo 6, debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out",
+  "core": 13.299,
+  "blocks": 206,
+  "demand": 6.905,
+  "placed": 204,
+  "placed_mm2": 6.837,
+  "unplaced": 2,
+  "unplaced_mm2": 0.068,
+  "halo": 0.68,
+  "free": 0.769,
+  "use80": 0.136,
+  "use200": 0.0,
+  "scrap": 0.633,
+  "relaxed": [
+   "wiredtx",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "1716 x 1640",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.0681,
+   "1": 0.5389,
+   "2": 0.9018
+  },
+  "strap": 5.753,
+  "biggest_unplaced": [
+   [
+    "lna",
+    0.043
+   ],
+   [
+    "lna_deg_n",
+    0.025
+   ]
+  ]
+ },
+ {
+  "tag": "c-l5-flow",
+  "scen": "C",
+  "opts": "halo 6, debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out, flow-first order only",
+  "core": 13.299,
+  "blocks": 206,
+  "demand": 6.905,
+  "placed": 202,
+  "placed_mm2": 6.003,
+  "unplaced": 4,
+  "unplaced_mm2": 0.902,
+  "halo": 0.657,
+  "free": 1.612,
+  "use80": 1.108,
+  "use200": 0.263,
+  "scrap": 0.504,
+  "relaxed": [
+   "wrx_cap",
+   "wiredtx"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": null,
+   "1": null,
+   "2": 0.9018
+  },
+  "strap": 3.404,
+  "biggest_unplaced": [
+   [
+    "adc_q",
+    0.33
+   ],
+   [
+    "bbfilter_i",
+    0.23
+   ],
+   [
+    "bbfilter_q",
+    0.23
+   ],
+   [
+    "char_rffet",
+    0.112
+   ]
+  ]
+ },
+ {
+  "tag": "cr-l5",
+  "scen": "CR",
+  "opts": "halo 6, debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out",
+  "core": 13.299,
+  "blocks": 206,
+  "demand": 7.068,
+  "placed": 202,
+  "placed_mm2": 6.878,
+  "unplaced": 4,
+  "unplaced_mm2": 0.19,
+  "halo": 0.659,
+  "free": 0.749,
+  "use80": 0.169,
+  "use200": 0.0,
+  "scrap": 0.58,
+  "relaxed": [
+   "wiredtx",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "1716 x 1640",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.1901,
+   "1": 0.7253,
+   "2": 1.1435
+  },
+  "strap": 4.616,
+  "biggest_unplaced": [
+   [
+    "rfdriver",
+    0.097
+   ],
+   [
+    "lna",
+    0.043
+   ],
+   [
+    "lna_deg_p",
+    0.025
+   ],
+   [
+    "lna_deg_n",
+    0.025
+   ]
+  ]
+ },
+ {
+  "tag": "b-l5",
+  "scen": "B",
+  "opts": "halo 6, debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out",
+  "core": 13.299,
+  "blocks": 208,
+  "demand": 7.66,
+  "placed": 191,
+  "placed_mm2": 7.171,
+  "unplaced": 17,
+  "unplaced_mm2": 0.488,
+  "halo": 0.595,
+  "free": 0.451,
+  "use80": 0.0,
+  "use200": 0.0,
+  "scrap": 0.451,
+  "relaxed": [
+   "wrx_cap",
+   "wiredtx",
+   "lo_mmd",
+   "lna",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "1716 x 1640",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.4882,
+   "1": 0.9681,
+   "2": 1.695
+  },
+  "strap": 8.529,
+  "biggest_unplaced": [
+   [
+    "char_rffet",
+    0.112
+   ],
+   [
+    "rfdriver",
+    0.097
+   ],
+   [
+    "cdr",
+    0.083
+   ],
+   [
+    "lna_ind_p",
+    0.036
+   ],
+   [
+    "lna_ind_n",
+    0.036
+   ],
+   [
+    "lna_deg_p",
+    0.025
+   ],
+   [
+    "lna_deg_n",
+    0.025
+   ],
+   [
+    "ptrim_output_stage",
+    0.015
+   ]
+  ]
+ },
+ {
+  "tag": "c-l6",
+  "scen": "C",
+  "opts": "debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out, qdum + lo_obs in the QVCO slot",
+  "core": 13.299,
+  "blocks": 204,
+  "demand": 6.877,
+  "placed": 195,
+  "placed_mm2": 6.686,
+  "unplaced": 9,
+  "unplaced_mm2": 0.191,
+  "halo": 1.033,
+  "free": 0.514,
+  "use80": 0.0,
+  "use200": 0.0,
+  "scrap": 0.514,
+  "relaxed": [
+   "wiredtx",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "1716 x 1640",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.1907,
+   "1": 0.5823,
+   "2": 0.8318
+  },
+  "strap": 4.444,
+  "biggest_unplaced": [
+   [
+    "detect",
+    0.09
+   ],
+   [
+    "lna",
+    0.043
+   ],
+   [
+    "vco_replica",
+    0.021
+   ],
+   [
+    "atb0_grp1",
+    0.006
+   ],
+   [
+    "atb1_grp0",
+    0.006
+   ],
+   [
+    "atb1_grp1",
+    0.006
+   ],
+   [
+    "atb1_grp2",
+    0.006
+   ],
+   [
+    "atb1_grp3",
+    0.006
+   ]
+  ]
+ },
+ {
+  "tag": "cr-l6",
+  "scen": "CR",
+  "opts": "debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out, qdum + lo_obs in the QVCO slot",
+  "core": 13.299,
+  "blocks": 204,
+  "demand": 7.04,
+  "placed": 195,
+  "placed_mm2": 6.779,
+  "unplaced": 9,
+  "unplaced_mm2": 0.261,
+  "halo": 1.005,
+  "free": 0.431,
+  "use80": 0.014,
+  "use200": 0.0,
+  "scrap": 0.417,
+  "relaxed": [
+   "wiredtx",
+   "rfdriver",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.2612,
+   "1": 0.7123,
+   "2": 1.0741
+  },
+  "strap": 8.327,
+  "biggest_unplaced": [
+   [
+    "r8arch_slicer_b",
+    0.11
+   ],
+   [
+    "lna_ind_p",
+    0.057
+   ],
+   [
+    "lna_ind_n",
+    0.057
+   ],
+   [
+    "atb0_grp1",
+    0.006
+   ],
+   [
+    "atb1_grp0",
+    0.006
+   ],
+   [
+    "atb1_grp1",
+    0.006
+   ],
+   [
+    "atb1_grp2",
+    0.006
+   ],
+   [
+    "atb1_grp3",
+    0.006
+   ]
+  ]
+ },
+ {
+  "tag": "b-l6",
+  "scen": "B",
+  "opts": "debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out, qdum + lo_obs in the QVCO slot",
+  "core": 13.299,
+  "blocks": 206,
+  "demand": 7.632,
+  "placed": 178,
+  "placed_mm2": 6.821,
+  "unplaced": 28,
+  "unplaced_mm2": 0.81,
+  "halo": 0.925,
+  "free": 0.422,
+  "use80": 0.0,
+  "use200": 0.0,
+  "scrap": 0.422,
+  "relaxed": [
+   "wrx_cap",
+   "wiredtx",
+   "lo_mmd",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "1716 x 1640",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.8102,
+   "1": 1.1378,
+   "2": 1.7003
+  },
+  "strap": 10.195,
+  "biggest_unplaced": [
+   [
+    "r8arch_capture_b",
+    0.294
+   ],
+   [
+    "r8arch_slicer_b",
+    0.11
+   ],
+   [
+    "rfdriver",
+    0.097
+   ],
+   [
+    "pll_tx",
+    0.086
+   ],
+   [
+    "lna_deg_p",
+    0.025
+   ],
+   [
+    "lna_deg_n",
+    0.025
+   ],
+   [
+    "vco_replica",
+    0.021
+   ],
+   [
+    "txpad_bias",
+    0.013
+   ]
+  ]
+ },
+ {
+  "tag": "b-g500",
+  "scen": "B",
+  "opts": "die +500 um tall",
+  "core": 14.286,
+  "blocks": 236,
+  "demand": 8.273,
+  "placed": 222,
+  "placed_mm2": 7.06,
+  "unplaced": 14,
+  "unplaced_mm2": 1.214,
+  "halo": 0.956,
+  "free": 0.769,
+  "use80": 0.161,
+  "use200": 0.0,
+  "scrap": 0.608,
+  "relaxed": [
+   "wrx_cap",
+   "wiredtx",
+   "lna",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "1716 x 1640",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 1.2138,
+   "1": 1.5123,
+   "2": 1.8068
+  },
+  "strap": 7.857,
+  "biggest_unplaced": [
+   [
+    "pll_vreg2",
+    0.173
+   ],
+   [
+    "lo_mmd",
+    0.145
+   ],
+   [
+    "lo_ext",
+    0.133
+   ],
+   [
+    "refbuf",
+    0.117
+   ],
+   [
+    "char_rffet_short",
+    0.112
+   ],
+   [
+    "slicer",
+    0.11
+   ],
+   [
+    "r8arch_slicer_b",
+    0.11
+   ],
+   [
+    "rfdriver",
+    0.097
+   ]
+  ]
+ },
+ {
+  "tag": "b-g700",
+  "scen": "B",
+  "opts": "die +700 um tall",
+  "core": 14.892,
+  "blocks": 236,
+  "demand": 8.273,
+  "placed": 226,
+  "placed_mm2": 7.656,
+  "unplaced": 10,
+  "unplaced_mm2": 0.617,
+  "halo": 1.048,
+  "free": 0.67,
+  "use80": 0.061,
+  "use200": 0.0,
+  "scrap": 0.61,
+  "relaxed": [
+   "wrx_cap",
+   "wiredtx",
+   "rfdriver",
+   "lna",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "1716 x 1640",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.6175,
+   "1": 1.3248,
+   "2": 1.3531
+  },
+  "strap": 8.332,
+  "biggest_unplaced": [
+   [
+    "lo_mmd",
+    0.145
+   ],
+   [
+    "slicer",
+    0.11
+   ],
+   [
+    "r8arch_slicer_b",
+    0.11
+   ],
+   [
+    "pll_tx",
+    0.086
+   ],
+   [
+    "term_buffer",
+    0.075
+   ],
+   [
+    "lna_deg_n",
+    0.025
+   ],
+   [
+    "rx_aux_clk",
+    0.022
+   ],
+   [
+    "rx_wtx_ext",
+    0.022
+   ]
+  ]
+ },
+ {
+  "tag": "b-g900",
+  "scen": "B",
+  "opts": "die +900 um tall",
+  "core": 15.497,
+  "blocks": 236,
+  "demand": 8.273,
+  "placed": 230,
+  "placed_mm2": 8.044,
+  "unplaced": 6,
+  "unplaced_mm2": 0.229,
+  "halo": 1.088,
+  "free": 0.833,
+  "use80": 0.267,
+  "use200": 0.0,
+  "scrap": 0.566,
+  "relaxed": [
+   "wrx_cap",
+   "wiredtx",
+   "lo_mmd",
+   "rfdriver",
+   "lna",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "1716 x 1640",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.2289,
+   "1": 0.7207,
+   "2": 1.1335
+  },
+  "strap": 9.274,
+  "biggest_unplaced": [
+   [
+    "r8arch_slicer_b",
+    0.11
+   ],
+   [
+    "lna_deg_p",
+    0.025
+   ],
+   [
+    "lna_deg_n",
+    0.025
+   ],
+   [
+    "vthdac",
+    0.024
+   ],
+   [
+    "rx_aux_clk",
+    0.022
+   ],
+   [
+    "rx_wtx_ext",
+    0.022
+   ]
+  ]
+ },
+ {
+  "tag": "b-g1100",
+  "scen": "B",
+  "opts": "die +1100 um tall",
+  "core": 16.103,
+  "blocks": 236,
+  "demand": 8.273,
+  "placed": 236,
+  "placed_mm2": 8.273,
+  "unplaced": 0,
+  "unplaced_mm2": 0.0,
+  "halo": 1.158,
+  "free": 1.105,
+  "use80": 0.412,
+  "use200": 0.231,
+  "scrap": 0.693,
+  "relaxed": [
+   "wrx_cap",
+   "wiredtx",
+   "lo_mmd",
+   "ptrim"
+  ],
+  "rule_fails": 0,
+  "macro": "2024 x 1390",
+  "trials": 6,
+  "best_by_strategy": {
+   "0": 0.0,
+   "1": 0.2236,
+   "2": 0.7916
+  },
+  "strap": 6.387,
+  "biggest_unplaced": []
+ }
+]

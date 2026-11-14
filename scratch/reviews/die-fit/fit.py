@@ -174,6 +174,8 @@ def run(mw, mx0, rng=None, strat=0):
             tg = [(big[li % len(big)], 1.0)]; li += 1; aw = 0.02
         elif n.startswith('char') or n in ('por', 'aosc', 'ring_osc', 'vco_replica') or n.startswith('obs_pre4'):
             aw = 0.02                           # no flow partner: take any hole (pure compaction)
+        if b['mA'] > 0 and f'isw_{g}' in blocks and not n.startswith('isw_'):
+            tg.append((f'isw_{g}', 0.05*b['mA']))    # supply flow: every island block is pulled to its switch in proportion to its current (G5/G6 strap)
         if b['mA'] > 20.0 and f'isw_{g}' in blocks:
             mg.append((f'isw_{g}', 500.0))      # power-delivery.md G6: blocks above 20 mA within ~500 um of their switch
         p.place(n, b['w'], b['h'], halo=b['halo'], rot=b['rot'], targets=tg, anchor=(anchor[0], anchor[1], aw),
@@ -190,6 +192,8 @@ for (mw, mx0, tr) in [(a, b, t) for (a, b) in MACROS for t in range(TRIES)]:
                        unplaced_mm2=round(ua/1e6, 4), relaxed=len(p.relaxed), free_mm2=round(p.free_area()/1e6, 4)))
     flow = sum(w_*(max(p.rects[t_][0]-p.rects[n_][2], p.rects[n_][0]-p.rects[t_][2], 0)+max(p.rects[t_][1]-p.rects[n_][3], p.rects[n_][1]-p.rects[t_][3], 0))
                for n_ in p.placed for t_, w_ in T.get(n_, []) if t_ in p.rects)
+    flow += sum(0.05*blocks[n_]['mA']*(max(p.rects[sw_][0]-p.rects[n_][2], p.rects[n_][0]-p.rects[sw_][2], 0)+max(p.rects[sw_][1]-p.rects[n_][3], p.rects[n_][1]-p.rects[sw_][3], 0))
+                for n_ in p.placed for sw_ in ['isw_'+blocks[n_]['grp']] if sw_ in p.rects and n_ != sw_)
     trials[-1]['flow_cost_mm'] = round(flow/1e3, 1)
     key = (round(ua/4e4), len(p.relaxed), round(flow/2e4), ua)
     if best is None or key < best[0]:

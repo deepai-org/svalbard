@@ -1,0 +1,245 @@
+{'strategy': 0, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 188, 'unplaced': 16, 'unplaced_mm2': 0.3605, 'relaxed': 2, 'free_mm2': 0.5656, 'flow_cost_mm': 239.9} 7s
+{'strategy': 1, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 199, 'unplaced': 5, 'unplaced_mm2': 0.7123, 'relaxed': 2, 'free_mm2': 0.8951, 'flow_cost_mm': 132.5} 15s
+{'strategy': 2, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 200, 'unplaced': 4, 'unplaced_mm2': 1.0741, 'relaxed': 2, 'free_mm2': 1.2638, 'flow_cost_mm': 104.1} 23s
+{'strategy': 0, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 195, 'unplaced': 9, 'unplaced_mm2': 0.2612, 'relaxed': 3, 'free_mm2': 0.431, 'flow_cost_mm': 278.9} 30s
+{'strategy': 1, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 198, 'unplaced': 6, 'unplaced_mm2': 0.8987, 'relaxed': 2, 'free_mm2': 1.087, 'flow_cost_mm': 101.9} 38s
+{'strategy': 2, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 197, 'unplaced': 7, 'unplaced_mm2': 1.1724, 'relaxed': 2, 'free_mm2': 1.3816, 'flow_cost_mm': 85.5} 46s
+{
+"scenario": "CR",
+"ring_um": 36.0,
+"grow_um": 0.0,
+"nopad": [
+"pad_bb_i",
+"pad_bb_q",
+"pad_wmon"
+],
+"tries": 3,
+"halo_um": 10.0,
+"bank": false,
+"corridor": true,
+"dropped": [
+"char_rffet_open",
+"char_rffet_short",
+"lo_mmd_qdum",
+"lo_obs"
+],
+"macro": {
+"w": 2024.0,
+"h": 1390.4,
+"x0": 954.0
+},
+"core_mm2": 13.299,
+"blocks": 204,
+"block_demand_mm2": 7.04,
+"placed": 195,
+"placed_mm2": 6.779,
+"unplaced": [
+[
+"r8arch_slicer_b",
+"no free position of this size (geometry)",
+109899
+],
+[
+"lna_ind_p",
+"no free position of this size (geometry)",
+57202
+],
+[
+"lna_ind_n",
+"no free position of this size (geometry)",
+57202
+],
+[
+"atb0_grp1",
+"no free position of this size (geometry)",
+6145
+],
+[
+"atb1_grp0",
+"no free position of this size (geometry)",
+6145
+],
+[
+"atb1_grp1",
+"no free position of this size (geometry)",
+6145
+],
+[
+"atb1_grp2",
+"no free position of this size (geometry)",
+6145
+],
+[
+"atb1_grp3",
+"no free position of this size (geometry)",
+6145
+],
+[
+"atb1_grp4",
+"no free position of this size (geometry)",
+6145
+]
+],
+"unplaced_mm2": 0.261,
+"relaxed": [
+[
+"wiredtx",
+"max distance to switch/partner"
+],
+[
+"rfdriver",
+"max distance to switch/partner"
+],
+[
+"ptrim",
+"max distance to switch/partner"
+]
+],
+"halo_area_mm2": 1.005,
+"free_after_mm2": 0.431,
+"free_usable_80um_mm2": 0.014,
+"free_usable_200um_mm2": 0.0,
+"scrap_lt80um_mm2": 0.417,
+"rule_fails": [],
+"switches": [
+{
+"switch": "isw_wired_cap",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3262,
+426,
+3505,
+690
+],
+"edge_gaps": {
+"W": 2846,
+"E": 11,
+"S": 10,
+"N": 4016
+}
+},
+{
+"switch": "isw_lod",
+"pad_edge": "W",
+"pad_coord": 556.5,
+"rect": [
+426,
+426,
+690,
+669
+],
+"edge_gaps": {
+"W": 10,
+"E": 2826,
+"S": 10,
+"N": 4037
+}
+},
+{
+"switch": "isw_rf_rx",
+"pad_edge": "W",
+"pad_coord": 978.5,
+"rect": [
+426,
+690,
+658,
+905
+],
+"edge_gaps": {
+"W": 10,
+"E": 2858,
+"S": 274,
+"N": 3801
+}
+},
+{
+"switch": "isw_wired_rx",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3058,
+426,
+3242,
+627
+],
+"edge_gaps": {
+"W": 2642,
+"E": 274,
+"S": 10,
+"N": 4079
+}
+},
+{
+"switch": "isw_rf_tx",
+"pad_edge": "W",
+"pad_coord": 3932.5,
+"rect": [
+426,
+4122,
+627,
+4306
+],
+"edge_gaps": {
+"W": 10,
+"E": 2889,
+"S": 3706,
+"N": 400
+}
+},
+{
+"switch": "isw_wired_tx",
+"pad_edge": "E",
+"pad_coord": 2244.5,
+"rect": [
+3322,
+1574,
+3506,
+1775
+],
+"edge_gaps": {
+"W": 2906,
+"E": 10,
+"S": 1158,
+"N": 2931
+}
+},
+{
+"switch": "isw_pll",
+"pad_edge": "E",
+"pad_coord": 4143.5,
+"rect": [
+3202,
+4494,
+3386,
+4695
+],
+"edge_gaps": {
+"W": 2786,
+"E": 130,
+"S": 4078,
+"N": 11
+}
+},
+{
+"switch": "isw_lo",
+"pad_edge": "W",
+"pad_coord": 2666.5,
+"rect": [
+426,
+2622,
+610,
+2795
+],
+"edge_gaps": {
+"W": 10,
+"E": 2906,
+"S": 2206,
+"N": 1911
+}
+}
+],
+"strap_m5_area_mm2": 8.327,
+"macro_signal_wire_mm": 1094.3
+}
+wrote /home/ubuntu/svalbard/scratch/reviews/die-fit/run/fit-cr-l6.png 46s

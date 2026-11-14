@@ -1,0 +1,194 @@
+{'strategy': 0, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 236, 'unplaced': 0, 'unplaced_mm2': 0.0, 'relaxed': 5, 'free_mm2': 1.1236, 'flow_cost_mm': 243.8} 12s
+{'strategy': 1, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 234, 'unplaced': 2, 'unplaced_mm2': 0.2236, 'relaxed': 4, 'free_mm2': 1.3756, 'flow_cost_mm': 171.4} 24s
+{'strategy': 2, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 234, 'unplaced': 2, 'unplaced_mm2': 0.7916, 'relaxed': 2, 'free_mm2': 1.9717, 'flow_cost_mm': 106.4} 37s
+{'strategy': 0, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 236, 'unplaced': 0, 'unplaced_mm2': 0.0, 'relaxed': 4, 'free_mm2': 1.1054, 'flow_cost_mm': 197.2} 50s
+{'strategy': 1, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 233, 'unplaced': 3, 'unplaced_mm2': 0.3354, 'relaxed': 4, 'free_mm2': 1.4834, 'flow_cost_mm': 169.1} 62s
+{'strategy': 2, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 233, 'unplaced': 3, 'unplaced_mm2': 1.1335, 'relaxed': 2, 'free_mm2': 2.3208, 'flow_cost_mm': 89.7} 75s
+{
+"scenario": "B",
+"ring_um": 0.0,
+"grow_um": 1100.0,
+"nopad": [],
+"tries": 3,
+"halo_um": 10.0,
+"bank": true,
+"corridor": true,
+"dropped": [],
+"macro": {
+"w": 2024.0,
+"h": 1390.4,
+"x0": 954.0
+},
+"core_mm2": 16.103,
+"blocks": 236,
+"block_demand_mm2": 8.273,
+"placed": 236,
+"placed_mm2": 8.273,
+"unplaced": [],
+"unplaced_mm2": 0.0,
+"relaxed": [
+[
+"wrx_cap",
+"max distance to switch/partner"
+],
+[
+"wiredtx",
+"max distance to switch/partner"
+],
+[
+"lo_mmd",
+"max distance to switch/partner"
+],
+[
+"ptrim",
+"max distance to switch/partner"
+]
+],
+"halo_area_mm2": 1.158,
+"free_after_mm2": 1.105,
+"free_usable_80um_mm2": 0.412,
+"free_usable_200um_mm2": 0.231,
+"scrap_lt80um_mm2": 0.693,
+"rule_fails": [],
+"switches": [
+{
+"switch": "isw_wired_cap",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3206,
+462,
+3470,
+705
+],
+"edge_gaps": {
+"W": 2754,
+"E": 10,
+"S": 10,
+"N": 5065
+}
+},
+{
+"switch": "isw_lod",
+"pad_edge": "W",
+"pad_coord": 556.5,
+"rect": [
+462,
+462,
+726,
+705
+],
+"edge_gaps": {
+"W": 10,
+"E": 2754,
+"S": 10,
+"N": 5065
+}
+},
+{
+"switch": "isw_rf_rx",
+"pad_edge": "W",
+"pad_coord": 978.5,
+"rect": [
+462,
+726,
+694,
+941
+],
+"edge_gaps": {
+"W": 10,
+"E": 2786,
+"S": 274,
+"N": 4829
+}
+},
+{
+"switch": "isw_wired_rx",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3002,
+462,
+3186,
+663
+],
+"edge_gaps": {
+"W": 2550,
+"E": 294,
+"S": 10,
+"N": 5107
+}
+},
+{
+"switch": "isw_rf_tx",
+"pad_edge": "W",
+"pad_coord": 3932.5,
+"rect": [
+462,
+4122,
+663,
+4306
+],
+"edge_gaps": {
+"W": 10,
+"E": 2817,
+"S": 3670,
+"N": 1464
+}
+},
+{
+"switch": "isw_wired_tx",
+"pad_edge": "E",
+"pad_coord": 2244.5,
+"rect": [
+3286,
+1574,
+3470,
+1775
+],
+"edge_gaps": {
+"W": 2834,
+"E": 10,
+"S": 1122,
+"N": 3995
+}
+},
+{
+"switch": "isw_pll",
+"pad_edge": "E",
+"pad_coord": 4143.5,
+"rect": [
+3286,
+4010,
+3470,
+4211
+],
+"edge_gaps": {
+"W": 2834,
+"E": 10,
+"S": 3558,
+"N": 1559
+}
+},
+{
+"switch": "isw_lo",
+"pad_edge": "W",
+"pad_coord": 2666.5,
+"rect": [
+462,
+2622,
+646,
+2795
+],
+"edge_gaps": {
+"W": 10,
+"E": 2834,
+"S": 2170,
+"N": 2975
+}
+}
+],
+"strap_m5_area_mm2": 6.387,
+"macro_signal_wire_mm": 1488.7
+}
+wrote /home/ubuntu/svalbard/scratch/reviews/die-fit/run/fit-b-g1100.png 76s

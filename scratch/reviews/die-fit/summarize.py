@@ -2,7 +2,7 @@
 """Die-fit: collect run/fit-*.json into one table (markdown on stdout, summary.json)."""
 import json, glob, os
 HERE = os.path.dirname(os.path.abspath(__file__)); rows = []
-ORDER = ['b', 'c', 'cr', 'b-flow', 'c-flow', 'b-h5', 'c-h5', 'c-l1', 'c-l2', 'c-l3', 'c-l4', 'c-l5', 'c-l5-flow', 'cr-l5', 'b-l5', 'b-g500', 'b-g700', 'b-g900', 'b-g1100']
+ORDER = ['b', 'c', 'cr', 'b-flow', 'c-flow', 'b-h5', 'c-h5', 'c-l1', 'c-l2', 'c-l3', 'c-l4', 'c-l5', 'c-l5-flow', 'cr-l5', 'b-l5', 'c-l6', 'cr-l6', 'b-l6', 'b-g500', 'b-g700', 'b-g900', 'b-g1100']
 for t in ORDER:
     f = f'{HERE}/run/fit-{t}.json'
     if not os.path.exists(f): continue
@@ -13,7 +13,7 @@ for t in ORDER:
     if r['nopad']: opts.append('debug pads on provider cells')
     if not r['bank']: opts.append('no bank')
     if r['ring_um']: opts.append(f"ring +{r['ring_um']:.0f}")
-    if r['dropped']: opts.append('OPEN/SHORT frames out')
+    if r['dropped']: opts.append('OPEN/SHORT frames out' + (', qdum + lo_obs in the QVCO slot' if 'lo_obs' in r['dropped'] else ''))
     if r['grow_um']: opts.append(f"die +{r['grow_um']:.0f} um tall")
     if all(x['strategy'] == 2 for x in tr): opts.append('flow-first order only')
     rows.append(dict(tag=t, scen=r['scenario'], opts=', '.join(opts) or 'baseline', core=r['core_mm2'], blocks=r['blocks'], demand=r['block_demand_mm2'],

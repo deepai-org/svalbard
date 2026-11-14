@@ -1,0 +1,301 @@
+{'strategy': 0, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 217, 'unplaced': 19, 'unplaced_mm2': 1.8283, 'relaxed': 3, 'free_mm2': 0.4562, 'flow_cost_mm': 236.5} 9s
+{'strategy': 1, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 222, 'unplaced': 14, 'unplaced_mm2': 2.193, 'relaxed': 3, 'free_mm2': 0.7837, 'flow_cost_mm': 173.5} 17s
+{'strategy': 2, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 224, 'unplaced': 12, 'unplaced_mm2': 2.8462, 'relaxed': 1, 'free_mm2': 1.4341, 'flow_cost_mm': 92.3} 27s
+{'strategy': 0, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 213, 'unplaced': 23, 'unplaced_mm2': 1.7219, 'relaxed': 4, 'free_mm2': 0.3537, 'flow_cost_mm': 214.1} 36s
+{'strategy': 1, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 222, 'unplaced': 14, 'unplaced_mm2': 2.2732, 'relaxed': 4, 'free_mm2': 0.8512, 'flow_cost_mm': 115.8} 44s
+{'strategy': 2, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 225, 'unplaced': 11, 'unplaced_mm2': 2.4855, 'relaxed': 2, 'free_mm2': 1.0431, 'flow_cost_mm': 82.3} 54s
+{
+"scenario": "B",
+"ring_um": 0.0,
+"grow_um": 0.0,
+"nopad": [],
+"tries": 3,
+"halo_um": 5.0,
+"bank": true,
+"corridor": true,
+"dropped": [],
+"macro": {
+"w": 2024.0,
+"h": 1390.4,
+"x0": 954.0
+},
+"core_mm2": 12.772,
+"blocks": 236,
+"block_demand_mm2": 8.273,
+"placed": 213,
+"placed_mm2": 6.551,
+"unplaced": [
+[
+"wrx_cap",
+"no free position of this size (geometry)",
+293813
+],
+[
+"r8arch_capture_b",
+"no free position of this size (geometry)",
+293813
+],
+[
+"lo_lf",
+"no free position of this size (geometry)",
+194122
+],
+[
+"pll_vreg2",
+"no free position of this size (geometry)",
+173424
+],
+[
+"pll_cdr",
+"keep-away rules leave no position",
+166657
+],
+[
+"char_rffet_short",
+"no free position of this size (geometry)",
+111800
+],
+[
+"r8arch_slicer_b",
+"no free position of this size (geometry)",
+109899
+],
+[
+"rfdriver",
+"no free position of this size (geometry)",
+96812
+],
+[
+"pll_tx",
+"no free position of this size (geometry)",
+86020
+],
+[
+"lna_ind_p",
+"no free position of this size (geometry)",
+35698
+],
+[
+"lna_ind_n",
+"no free position of this size (geometry)",
+35698
+],
+[
+"lna_deg_p",
+"no free position of this size (geometry)",
+25202
+],
+[
+"lna_deg_n",
+"no free position of this size (geometry)",
+25202
+],
+[
+"bb_tap_wmon",
+"no free position of this size (geometry)",
+19511
+],
+[
+"txpad_bias",
+"no free position of this size (geometry)",
+12524
+],
+[
+"atb1_grp2",
+"no free position of this size (geometry)",
+6145
+],
+[
+"atb1_grp3",
+"no free position of this size (geometry)",
+6145
+],
+[
+"atb1_grp4",
+"no free position of this size (geometry)",
+6145
+],
+[
+"wtx_fallback_control",
+"no free position of this size (geometry)",
+5861
+],
+[
+"ctle_follower",
+"no free position of this size (geometry)",
+5000
+],
+[
+"supply_clock_monitor",
+"no free position of this size (geometry)",
+5000
+],
+[
+"bias_ext",
+"no free position of this size (geometry)",
+4436
+],
+[
+"fwd_clk_repeaters",
+"no free position of this size (geometry)",
+3000
+]
+],
+"unplaced_mm2": 1.722,
+"relaxed": [
+[
+"wiredtx",
+"max distance to switch/partner"
+],
+[
+"lo_mmd",
+"max distance to switch/partner"
+],
+[
+"lna",
+"max distance to switch/partner"
+],
+[
+"ptrim",
+"max distance to switch/partner"
+]
+],
+"halo_area_mm2": 0.453,
+"free_after_mm2": 0.354,
+"free_usable_80um_mm2": 0.0,
+"free_usable_200um_mm2": 0.0,
+"scrap_lt80um_mm2": 0.354,
+"rule_fails": [],
+"switches": [
+{
+"switch": "isw_wired_cap",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+2853,
+457,
+3117,
+700
+],
+"edge_gaps": {
+"W": 2401,
+"E": 363,
+"S": 5,
+"N": 3970
+}
+},
+{
+"switch": "isw_lod",
+"pad_edge": "W",
+"pad_coord": 556.5,
+"rect": [
+457,
+457,
+721,
+700
+],
+"edge_gaps": {
+"W": 5,
+"E": 2759,
+"S": 5,
+"N": 3970
+}
+},
+{
+"switch": "isw_rf_rx",
+"pad_edge": "W",
+"pad_coord": 978.5,
+"rect": [
+457,
+1141,
+689,
+1356
+],
+"edge_gaps": {
+"W": 5,
+"E": 2791,
+"S": 689,
+"N": 3314
+}
+},
+{
+"switch": "isw_wired_rx",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3273,
+545,
+3474,
+729
+],
+"edge_gaps": {
+"W": 2821,
+"E": 6,
+"S": 93,
+"N": 3941
+}
+},
+{
+"switch": "isw_rf_tx",
+"pad_edge": "W",
+"pad_coord": 3932.5,
+"rect": [
+457,
+4109,
+641,
+4310
+],
+"edge_gaps": {
+"W": 5,
+"E": 2839,
+"S": 3657,
+"N": 360
+}
+},
+{
+"switch": "isw_wired_tx",
+"pad_edge": "E",
+"pad_coord": 2244.5,
+"rect": [
+3273,
+1597,
+3474,
+1781
+],
+"edge_gaps": {
+"W": 2821,
+"E": 6,
+"S": 1145,
+"N": 2889
+}
+},
+{
+"switch": "isw_pll",
+"pad_edge": "E",
+"pad_coord": 4143.5,
+"rect": [
+3273,
+4481,
+3474,
+4665
+],
+"edge_gaps": {
+"W": 2821,
+"E": 6,
+"S": 4029,
+"N": 5
+}
+},
+{
+"switch": "isw_lo",
+"pad_edge": "W",
+"pad_coord": 2666.5,
+"rect": [
+457,
+2617,
+641,
+2790
+],
+"edge_gaps": {
+
+wrote /home/ubuntu/svalbard/scratch/reviews/die-fit/run/fit-b-h5.png 54s

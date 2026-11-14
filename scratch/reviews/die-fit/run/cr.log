@@ -1,0 +1,295 @@
+{'strategy': 0, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 219, 'unplaced': 15, 'unplaced_mm2': 1.6821, 'relaxed': 3, 'free_mm2': 0.4877, 'flow_cost_mm': 181.8} 9s
+{'strategy': 1, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 219, 'unplaced': 15, 'unplaced_mm2': 2.2119, 'relaxed': 4, 'free_mm2': 1.0307, 'flow_cost_mm': 142.3} 17s
+{'strategy': 2, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 221, 'unplaced': 13, 'unplaced_mm2': 2.4764, 'relaxed': 2, 'free_mm2': 1.2861, 'flow_cost_mm': 84.9} 26s
+{'strategy': 0, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 214, 'unplaced': 20, 'unplaced_mm2': 1.6103, 'relaxed': 4, 'free_mm2': 0.4303, 'flow_cost_mm': 190.9} 35s
+{'strategy': 1, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 217, 'unplaced': 17, 'unplaced_mm2': 1.9891, 'relaxed': 4, 'free_mm2': 0.7834, 'flow_cost_mm': 132.4} 44s
+{'strategy': 2, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 224, 'unplaced': 10, 'unplaced_mm2': 2.0118, 'relaxed': 3, 'free_mm2': 0.746, 'flow_cost_mm': 126.1} 53s
+{
+"scenario": "CR",
+"ring_um": 0.0,
+"grow_um": 0.0,
+"nopad": [],
+"tries": 3,
+"halo_um": 10.0,
+"bank": true,
+"corridor": true,
+"dropped": [],
+"macro": {
+"w": 2024.0,
+"h": 1390.4,
+"x0": 954.0
+},
+"core_mm2": 12.772,
+"blocks": 234,
+"block_demand_mm2": 7.681,
+"placed": 214,
+"placed_mm2": 6.071,
+"unplaced": [
+[
+"tx8_rsv",
+"no free position of this size (geometry)",
+221850
+],
+[
+"pll_cdr",
+"keep-away rules leave no position",
+166657
+],
+[
+"dac_q",
+"no free position of this size (geometry)",
+129998
+],
+[
+"lo_pfdcp",
+"no free position of this size (geometry)",
+124110
+],
+[
+"char_rffet",
+"no free position of this size (geometry)",
+111800
+],
+[
+"char_rffet_open",
+"no free position of this size (geometry)",
+111800
+],
+[
+"char_rffet_short",
+"no free position of this size (geometry)",
+111800
+],
+[
+"slicer",
+"no free position of this size (geometry)",
+109899
+],
+[
+"r8arch_slicer_b",
+"no free position of this size (geometry)",
+109899
+],
+[
+"rfdriver",
+"no free position of this size (geometry)",
+96812
+],
+[
+"lna_ind_n",
+"no free position of this size (geometry)",
+57202
+],
+[
+"attached_tx_interlock",
+"no free position of this size (geometry)",
+48100
+],
+[
+"term_buffer",
+"no free position of this size (geometry)",
+45000
+],
+[
+"usb_txdrv",
+"no free position of this size (geometry)",
+31457
+],
+[
+"char_atb",
+"no free position of this size (geometry)",
+28239
+],
+[
+"lna_deg_p",
+"no free position of this size (geometry)",
+25202
+],
+[
+"lna_deg_n",
+"no free position of this size (geometry)",
+25202
+],
+[
+"vthdac",
+"no free position of this size (geometry)",
+23891
+],
+[
+"rx_wtx_ext",
+"no free position of this size (geometry)",
+22341
+],
+[
+"lo_obs_q",
+"no free position of this size (geometry)",
+9022
+]
+],
+"unplaced_mm2": 1.61,
+"relaxed": [
+[
+"wrx_cap",
+"max distance to switch/partner"
+],
+[
+"wiredtx",
+"max distance to switch/partner"
+],
+[
+"lna",
+"max distance to switch/partner"
+],
+[
+"ptrim",
+"max distance to switch/partner"
+]
+],
+"halo_area_mm2": 0.86,
+"free_after_mm2": 0.43,
+"free_usable_80um_mm2": 0.024,
+"free_usable_200um_mm2": 0.0,
+"scrap_lt80um_mm2": 0.406,
+"rule_fails": [],
+"switches": [
+{
+"switch": "isw_wired_cap",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3206,
+462,
+3470,
+705
+],
+"edge_gaps": {
+"W": 2754,
+"E": 10,
+"S": 10,
+"N": 3965
+}
+},
+{
+"switch": "isw_lod",
+"pad_edge": "W",
+"pad_coord": 556.5,
+"rect": [
+462,
+462,
+726,
+705
+],
+"edge_gaps": {
+"W": 10,
+"E": 2754,
+"S": 10,
+"N": 3965
+}
+},
+{
+"switch": "isw_rf_rx",
+"pad_edge": "W",
+"pad_coord": 978.5,
+"rect": [
+462,
+726,
+694,
+941
+],
+"edge_gaps": {
+"W": 10,
+"E": 2786,
+"S": 274,
+"N": 3729
+}
+},
+{
+"switch": "isw_wired_rx",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3002,
+462,
+3186,
+663
+],
+"edge_gaps": {
+"W": 2550,
+"E": 294,
+"S": 10,
+"N": 4007
+}
+},
+{
+"switch": "isw_rf_tx",
+"pad_edge": "W",
+"pad_coord": 3932.5,
+"rect": [
+462,
+4122,
+663,
+4306
+],
+"edge_gaps": {
+"W": 10,
+"E": 2817,
+"S": 3670,
+"N": 364
+}
+},
+{
+"switch": "isw_wired_tx",
+"pad_edge": "E",
+"pad_coord": 2244.5,
+"rect": [
+3286,
+1574,
+3470,
+1775
+],
+"edge_gaps": {
+"W": 2834,
+"E": 10,
+"S": 1122,
+"N": 2895
+}
+},
+{
+"switch": "isw_pll",
+"pad_edge": "E",
+"pad_coord": 4143.5,
+"rect": [
+3286,
+4458,
+3470,
+4659
+],
+"edge_gaps": {
+"W": 2834,
+"E": 10,
+"S": 4006,
+"N": 11
+}
+},
+{
+"switch": "isw_lo",
+"pad_edge": "W",
+"pad_coord": 2666.5,
+"rect": [
+462,
+2622,
+646,
+2795
+],
+"edge_gaps": {
+"W": 10,
+"E": 2834,
+"S": 2170,
+"N": 1875
+}
+}
+],
+"strap_m5_area_mm2": 5.193,
+"macro_signal_wire_mm": 1002.2
+}
+wrote /home/ubuntu/svalbard/scratch/reviews/die-fit/run/fit-cr.png 53s

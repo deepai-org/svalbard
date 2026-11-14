@@ -1,0 +1,9 @@
+PASS T1 four 50x50 in 100x100 (exact fit) | placed 4 of 4 | free/gap 0.0 | {'b0': (0.0, 0.0, 50.0, 50.0), 'b1': (50.0, 0.0, 100.0, 50.0), 'b2': (0.0, 50.0, 50.0, 100.0), 'b3': (50.0, 50.0, 100.0, 100.0)} 
+PASS T2 three 80x40 in 120x80 (third must rotate) | placed 3 of 3 | free/gap 0.0 | {'b0': (0.0, 0.0, 40.0, 80.0), 'b1': (40.0, 0.0, 120.0, 40.0), 'b2': (40.0, 40.0, 120.0, 80.0)} 
+PASS T3 L-shaped space after a fixed 60x60 obstacle | placed 2 of 2 | free/gap 0.0 | {'long': (0.0, 60.0, 100.0, 100.0), 'short': (60.0, 0.0, 100.0, 60.0)} 
+PASS T4 five 50x50 in 100x100 (over-full by area: must leave one out) | placed 4 of 5 | free/gap 0.0 | {'b0': (0.0, 0.0, 50.0, 50.0), 'b1': (50.0, 0.0, 100.0, 50.0), 'b2': (0.0, 50.0, 50.0, 100.0), 'b3': (50.0, 50.0, 100.0, 100.0)} ['b4']
+PASS T5 two 60x60 in 100x100 (area fits, geometry does not) | placed 1 of 2 | free/gap 6400.0 | {'a': (0.0, 0.0, 60.0, 60.0)} ['b']
+PASS T6a keep-away 55 in a 100-long strip (max possible 60: feasible) | placed 2 of 2 | free/gap 60.0 |  
+PASS T6b keep-away 55 in an 80-long strip (max possible 40: must fail) | placed 1 of 2 | free/gap None |  [('vic', 'keep-away rules leave no position')]
+PASS T7 max-gap impossible -> placed with a recorded relaxation | placed 2 of 2 | free/gap None |  [('load', 'max distance to switch/partner')]
+ALL PASS

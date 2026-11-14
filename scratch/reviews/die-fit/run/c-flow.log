@@ -1,0 +1,241 @@
+{'strategy': 2, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 222, 'unplaced': 12, 'unplaced_mm2': 2.2, 'relaxed': 2, 'free_mm2': 1.2041, 'flow_cost_mm': 101.9} 9s
+{'strategy': 2, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 222, 'unplaced': 12, 'unplaced_mm2': 2.2, 'relaxed': 2, 'free_mm2': 1.2041, 'flow_cost_mm': 101.9} 18s
+{'strategy': 2, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 222, 'unplaced': 12, 'unplaced_mm2': 2.2, 'relaxed': 2, 'free_mm2': 1.2041, 'flow_cost_mm': 101.9} 27s
+{'strategy': 2, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 224, 'unplaced': 10, 'unplaced_mm2': 1.9466, 'relaxed': 3, 'free_mm2': 0.8955, 'flow_cost_mm': 120.8} 36s
+{'strategy': 2, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 224, 'unplaced': 10, 'unplaced_mm2': 1.9466, 'relaxed': 3, 'free_mm2': 0.8955, 'flow_cost_mm': 120.8} 45s
+{'strategy': 2, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 224, 'unplaced': 10, 'unplaced_mm2': 1.9466, 'relaxed': 3, 'free_mm2': 0.8955, 'flow_cost_mm': 120.8} 55s
+{
+"scenario": "C",
+"ring_um": 0.0,
+"grow_um": 0.0,
+"nopad": [],
+"tries": 3,
+"halo_um": 10.0,
+"bank": true,
+"corridor": true,
+"dropped": [],
+"macro": {
+"w": 2024.0,
+"h": 1390.4,
+"x0": 954.0
+},
+"core_mm2": 12.772,
+"blocks": 234,
+"block_demand_mm2": 7.518,
+"placed": 224,
+"placed_mm2": 5.572,
+"unplaced": [
+[
+"adc_i",
+"no free position of this size (geometry)",
+330000
+],
+[
+"adc_q",
+"no free position of this size (geometry)",
+330000
+],
+[
+"bbfilter_i",
+"no free position of this size (geometry)",
+230000
+],
+[
+"bbfilter_q",
+"no free position of this size (geometry)",
+230000
+],
+[
+"lo_lf",
+"no free position of this size (geometry)",
+194122
+],
+[
+"core_bias",
+"keep-away rules leave no position",
+180004
+],
+[
+"refbuf",
+"no free position of this size (geometry)",
+117089
+],
+[
+"char_rffet",
+"no free position of this size (geometry)",
+111800
+],
+[
+"char_rffet_open",
+"no free position of this size (geometry)",
+111800
+],
+[
+"char_rffet_short",
+"no free position of this size (geometry)",
+111800
+]
+],
+"unplaced_mm2": 1.947,
+"relaxed": [
+[
+"rfdriver",
+"max distance to switch/partner"
+],
+[
+"wrx_cap",
+"max distance to switch/partner"
+],
+[
+"wiredtx",
+"max distance to switch/partner"
+]
+],
+"halo_area_mm2": 0.94,
+"free_after_mm2": 0.895,
+"free_usable_80um_mm2": 0.304,
+"free_usable_200um_mm2": 0.0,
+"scrap_lt80um_mm2": 0.592,
+"rule_fails": [],
+"switches": [
+{
+"switch": "isw_wired_cap",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3206,
+462,
+3470,
+705
+],
+"edge_gaps": {
+"W": 2754,
+"E": 10,
+"S": 10,
+"N": 3965
+}
+},
+{
+"switch": "isw_lod",
+"pad_edge": "W",
+"pad_coord": 556.5,
+"rect": [
+462,
+462,
+726,
+705
+],
+"edge_gaps": {
+"W": 10,
+"E": 2754,
+"S": 10,
+"N": 3965
+}
+},
+{
+"switch": "isw_rf_rx",
+"pad_edge": "W",
+"pad_coord": 978.5,
+"rect": [
+462,
+726,
+694,
+941
+],
+"edge_gaps": {
+"W": 10,
+"E": 2786,
+"S": 274,
+"N": 3729
+}
+},
+{
+"switch": "isw_wired_rx",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3002,
+462,
+3186,
+663
+],
+"edge_gaps": {
+"W": 2550,
+"E": 294,
+"S": 10,
+"N": 4007
+}
+},
+{
+"switch": "isw_rf_tx",
+"pad_edge": "W",
+"pad_coord": 3932.5,
+"rect": [
+462,
+4122,
+663,
+4306
+],
+"edge_gaps": {
+"W": 10,
+"E": 2817,
+"S": 3670,
+"N": 364
+}
+},
+{
+"switch": "isw_wired_tx",
+"pad_edge": "E",
+"pad_coord": 2244.5,
+"rect": [
+3286,
+1574,
+3470,
+1775
+],
+"edge_gaps": {
+"W": 2834,
+"E": 10,
+"S": 1122,
+"N": 2895
+}
+},
+{
+"switch": "isw_pll",
+"pad_edge": "E",
+"pad_coord": 4143.5,
+"rect": [
+3286,
+3690,
+3470,
+3891
+],
+"edge_gaps": {
+"W": 2834,
+"E": 10,
+"S": 3238,
+"N": 779
+}
+},
+{
+"switch": "isw_lo",
+"pad_edge": "W",
+"pad_coord": 2666.5,
+"rect": [
+462,
+2622,
+646,
+2795
+],
+"edge_gaps": {
+"W": 10,
+"E": 2834,
+"S": 2170,
+"N": 1875
+}
+}
+],
+"strap_m5_area_mm2": 3.554,
+"macro_signal_wire_mm": 1113.4
+}
+wrote /home/ubuntu/svalbard/scratch/reviews/die-fit/run/fit-c-flow.png 55s

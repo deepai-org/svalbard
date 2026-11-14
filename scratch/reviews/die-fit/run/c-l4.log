@@ -1,0 +1,210 @@
+{'strategy': 0, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 205, 'unplaced': 3, 'unplaced_mm2': 0.2646, 'relaxed': 2, 'free_mm2': 0.7232, 'flow_cost_mm': 145.3} 8s
+{'strategy': 1, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 202, 'unplaced': 6, 'unplaced_mm2': 0.7625, 'relaxed': 2, 'free_mm2': 1.2562, 'flow_cost_mm': 137.4} 16s
+{'strategy': 2, 'macro_w': 1716.0, 'macro_h': 1640.0, 'macro_x0': 1262.0, 'placed': 201, 'unplaced': 7, 'unplaced_mm2': 1.2425, 'relaxed': 2, 'free_mm2': 1.755, 'flow_cost_mm': 109.9} 24s
+{'strategy': 0, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 205, 'unplaced': 3, 'unplaced_mm2': 0.2243, 'relaxed': 3, 'free_mm2': 0.706, 'flow_cost_mm': 190.4} 32s
+{'strategy': 1, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 202, 'unplaced': 6, 'unplaced_mm2': 0.7754, 'relaxed': 2, 'free_mm2': 1.2544, 'flow_cost_mm': 89.2} 40s
+{'strategy': 2, 'macro_w': 2024.0, 'macro_h': 1390.4, 'macro_x0': 954.0, 'placed': 202, 'unplaced': 6, 'unplaced_mm2': 1.1254, 'relaxed': 2, 'free_mm2': 1.612, 'flow_cost_mm': 90.3} 49s
+{
+"scenario": "C",
+"ring_um": 36.0,
+"grow_um": 0.0,
+"nopad": [
+"pad_bb_i",
+"pad_bb_q",
+"pad_wmon"
+],
+"tries": 3,
+"halo_um": 6.0,
+"bank": false,
+"corridor": true,
+"dropped": [],
+"macro": {
+"w": 2024.0,
+"h": 1390.4,
+"x0": 954.0
+},
+"core_mm2": 13.299,
+"blocks": 208,
+"block_demand_mm2": 7.128,
+"placed": 205,
+"placed_mm2": 6.904,
+"unplaced": [
+[
+"r8arch_slicer_b",
+"no free position of this size (geometry)",
+109899
+],
+[
+"lna_ind_p",
+"no free position of this size (geometry)",
+57202
+],
+[
+"lna_ind_n",
+"no free position of this size (geometry)",
+57202
+]
+],
+"unplaced_mm2": 0.224,
+"relaxed": [
+[
+"wiredtx",
+"max distance to switch/partner"
+],
+[
+"rfdriver",
+"max distance to switch/partner"
+],
+[
+"ptrim",
+"max distance to switch/partner"
+]
+],
+"halo_area_mm2": 0.66,
+"free_after_mm2": 0.706,
+"free_usable_80um_mm2": 0.161,
+"free_usable_200um_mm2": 0.0,
+"scrap_lt80um_mm2": 0.545,
+"rule_fails": [],
+"switches": [
+{
+"switch": "isw_wired_cap",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3266,
+422,
+3509,
+686
+],
+"edge_gaps": {
+"W": 2850,
+"E": 7,
+"S": 6,
+"N": 4020
+}
+},
+{
+"switch": "isw_lod",
+"pad_edge": "W",
+"pad_coord": 556.5,
+"rect": [
+422,
+422,
+686,
+665
+],
+"edge_gaps": {
+"W": 6,
+"E": 2830,
+"S": 6,
+"N": 4041
+}
+},
+{
+"switch": "isw_rf_rx",
+"pad_edge": "W",
+"pad_coord": 978.5,
+"rect": [
+422,
+678,
+654,
+893
+],
+"edge_gaps": {
+"W": 6,
+"E": 2862,
+"S": 262,
+"N": 3813
+}
+},
+{
+"switch": "isw_wired_rx",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3070,
+422,
+3254,
+623
+],
+"edge_gaps": {
+"W": 2654,
+"E": 262,
+"S": 6,
+"N": 4083
+}
+},
+{
+"switch": "isw_rf_tx",
+"pad_edge": "W",
+"pad_coord": 3932.5,
+"rect": [
+422,
+4126,
+623,
+4310
+],
+"edge_gaps": {
+"W": 6,
+"E": 2893,
+"S": 3710,
+"N": 396
+}
+},
+{
+"switch": "isw_wired_tx",
+"pad_edge": "E",
+"pad_coord": 2244.5,
+"rect": [
+3326,
+1578,
+3510,
+1779
+],
+"edge_gaps": {
+"W": 2910,
+"E": 6,
+"S": 1162,
+"N": 2927
+}
+},
+{
+"switch": "isw_pll",
+"pad_edge": "E",
+"pad_coord": 4143.5,
+"rect": [
+3326,
+3446,
+3510,
+3647
+],
+"edge_gaps": {
+"W": 2910,
+"E": 6,
+"S": 3030,
+"N": 1059
+}
+},
+{
+"switch": "isw_lo",
+"pad_edge": "W",
+"pad_coord": 2666.5,
+"rect": [
+422,
+2618,
+606,
+2791
+],
+"edge_gaps": {
+"W": 6,
+"E": 2910,
+"S": 2202,
+"N": 1915
+}
+}
+],
+"strap_m5_area_mm2": 6.549,
+"macro_signal_wire_mm": 1092.0
+}
+wrote /home/ubuntu/svalbard/scratch/reviews/die-fit/run/fit-c-l4.png 49s

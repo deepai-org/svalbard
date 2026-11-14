@@ -22,3 +22,8 @@ L1=NOPAD=pad_bb_i,pad_bb_q,pad_wmon
 ./runset.sh b-g700 SCEN=B GROW=700 $M $T
 ./runset.sh b-g900 SCEN=B GROW=900 $M $T
 ./runset.sh b-g1100 SCEN=B GROW=1100 $M $T
+
+D6=DROP=char_rffet_open,char_rffet_short,lo_mmd_qdum,lo_obs
+./runset.sh c-l6  SCEN=C $L1 BANK=0 RING=36 $D6 $M $T
+./runset.sh cr-l6 SCEN=CR $L1 BANK=0 RING=36 $D6 $M $T
+./runset.sh b-l6  SCEN=B $L1 BANK=0 RING=36 $D6 $M $T

@@ -187,3 +187,10 @@ FINISHED THIS ROUND (reports):
 - Digital round 1 (8e5e71c): see earlier entry.
 
 NOT STARTED: die-fit study with honest areas; fill keep-out markers + fill flow owner; v7 floorplan (supply grid, 10 islands, decap bank, side-edge hspad pins); evidence audit; bring-up software/board; char structures in floorplan; brownout/ss ramps of M6.
+
+## USER DECISIONS 2026-11-14
+- APPROVED: wired RX CTLE source-follower fix (MW-13-FIX; +6.3 mA, slicer requalified at ~0.4 V CM). Dispatch to wired RX on restart.
+- APPROVED: ADC default 39.0625 MS/s in RF modes (128/125 resampler in the host FPGA; 40 MS/s stays selectable). Dispatch to converters/digital/spec.
+- APPROVED: second POR rescue path (rtl/pt_por_path.sv) in addition to the strap pad; needs independent review, instantiation, status bits, board-requirements entry (rescue procedure, RESET_N supervisor).
+- OPEN: south supply bond (pad 13 = D2H_D[9]); user sees compromises. Coordinator recommendation: keep the map.
+- OPEN CONFLICT: the two pad sites freed by the LNA source pads are claimed by both the POR strap (1 site) and the LNA ground split (2 sites, PD2).

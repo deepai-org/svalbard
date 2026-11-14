@@ -1,0 +1,853 @@
+[
+ {
+  "aggressor": "digital@78MHz (planned decap)",
+  "victim": "adc_i",
+  "what": "0.25 LSB at the ADC (aliases to 1.875 MHz when the converter clock is not host-derived)",
+  "local_bounce_mV": [
+   0.0017,
+   0.1942,
+   3.4371,
+   22.7085
+  ],
+  "error_mV": [
+   2e-05,
+   0.00614,
+   0.34371,
+   2.27085
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   87.3,
+   36.1,
+   1.1,
+   -15.3
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "digital@78MHz (planned decap)",
+  "victim": "adc_q",
+  "what": "0.25 LSB at the ADC (aliases to 1.875 MHz when the converter clock is not host-derived)",
+  "local_bounce_mV": [
+   0.0,
+   0.0018,
+   0.1535,
+   3.8565
+  ],
+  "error_mV": [
+   0.0,
+   6e-05,
+   0.01535,
+   0.38565
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   165.6,
+   76.6,
+   28.1,
+   0.1
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "digital@78MHz (planned decap)",
+  "victim": "core_bias",
+  "what": "<= 1 mV ripple on VBG",
+  "local_bounce_mV": [
+   0.0,
+   0.0001,
+   0.021,
+   1.5177
+  ],
+  "error_mV": [
+   0.0,
+   1e-05,
+   0.0021,
+   0.15177
+  ],
+  "allowed_mV": 1.0,
+  "margin_dB": [
+   208.0,
+   103.6,
+   53.6,
+   16.4
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "digital@78MHz (planned decap)",
+  "victim": "dac_i",
+  "what": "TX spur at +-78 MHz <= -40 dBr of 0.35 V FS (tx_dac_direct: no filter)",
+  "local_bounce_mV": [
+   7.871,
+   26.1909,
+   77.8376,
+   90.4043
+  ],
+  "error_mV": [
+   0.07871,
+   0.82823,
+   7.78376,
+   9.04043
+  ],
+  "allowed_mV": 3.4999999999999996,
+  "margin_dB": [
+   33.0,
+   12.5,
+   -6.9,
+   -8.2
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "digital@78MHz (planned decap)",
+  "victim": "dac_q",
+  "what": "same",
+  "local_bounce_mV": [
+   0.8337,
+   4.2969,
+   29.9357,
+   45.3095
+  ],
+  "error_mV": [
+   0.00834,
+   0.13588,
+   2.99357,
+   4.53095
+  ],
+  "allowed_mV": 3.4999999999999996,
+  "margin_dB": [
+   52.5,
+   28.2,
+   1.4,
+   -2.2
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "digital@78MHz (v6 as placed, 0 nF)",
+  "victim": "adc_i",
+  "what": "0.25 LSB at the ADC (aliases to 1.875 MHz when the converter clock is not host-derived)",
+  "local_bounce_mV": [
+   0.0031,
+   0.5016,
+   17.0217,
+   112.4614
+  ],
+  "error_mV": [
+   3e-05,
+   0.01586,
+   1.70217,
+   11.24614
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   82.0,
+   27.8,
+   -12.8,
+   -29.2
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "digital@78MHz (v6 as placed, 0 nF)",
+  "victim": "adc_q",
+  "what": "0.25 LSB at the ADC (aliases to 1.875 MHz when the converter clock is not host-derived)",
+  "local_bounce_mV": [
+   0.0,
+   0.0047,
+   0.7603,
+   19.0987
+  ],
+  "error_mV": [
+   0.0,
+   0.00015,
+   0.07603,
+   1.90987
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   160.3,
+   68.3,
+   14.2,
+   -13.8
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "digital@78MHz (v6 as placed, 0 nF)",
+  "victim": "core_bias",
+  "what": "<= 1 mV ripple on VBG",
+  "local_bounce_mV": [
+   0.0,
+   0.0003,
+   0.1038,
+   7.5163
+  ],
+  "error_mV": [
+   0.0,
+   2e-05,
+   0.01038,
+   0.75163
+  ],
+  "allowed_mV": 1.0,
+  "margin_dB": [
+   202.6,
+   95.4,
+   39.7,
+   2.5
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "digital@78MHz (v6 as placed, 0 nF)",
+  "victim": "dac_i",
+  "what": "TX spur at +-78 MHz <= -40 dBr of 0.35 V FS (tx_dac_direct: no filter)",
+  "local_bounce_mV": [
+   14.5614,
+   67.66,
+   385.4813,
+   447.7168
+  ],
+  "error_mV": [
+   0.14561,
+   2.1396,
+   38.54813,
+   44.77168
+  ],
+  "allowed_mV": 3.4999999999999996,
+  "margin_dB": [
+   27.6,
+   4.3,
+   -20.8,
+   -22.1
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "digital@78MHz (v6 as placed, 0 nF)",
+  "victim": "dac_q",
+  "what": "same",
+  "local_bounce_mV": [
+   1.5424,
+   11.1002,
+   148.2529,
+   224.3899
+  ],
+  "error_mV": [
+   0.01542,
+   0.35102,
+   14.82529,
+   22.43899
+  ],
+  "allowed_mV": 3.4999999999999996,
+  "margin_dB": [
+   47.1,
+   20.0,
+   -12.5,
+   -16.1
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "digital in-band <10MHz (2/5/15 % of the 78 MHz bounce)",
+  "victim": "bbfilter_i",
+  "what": "0.25 LSB at the ADC at PGA 42 dB",
+  "local_bounce_mV": [
+   0.0365,
+   0.4336,
+   7.3134,
+   11.591
+  ],
+  "error_mV": [
+   0.04593,
+   0.97078,
+   29.11521,
+   46.1445
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   18.6,
+   -7.9,
+   -37.5,
+   -41.5
+  ],
+  "verdict": "FAIL"
+ },
+ {
+  "aggressor": "digital in-band <10MHz (2/5/15 % of the 78 MHz bounce)",
+  "victim": "bbfilter_i",
+  "what": "0.25 LSB at the ADC at PGA 24 dB",
+  "local_bounce_mV": [
+   0.0365,
+   0.4336,
+   7.3134,
+   11.591
+  ],
+  "error_mV": [
+   0.00578,
+   0.12221,
+   3.66539,
+   5.80925
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   36.6,
+   10.1,
+   -19.5,
+   -23.5
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "digital in-band <10MHz (2/5/15 % of the 78 MHz bounce)",
+  "victim": "bbfilter_q",
+  "what": "0.25 LSB at the ADC at PGA 42 dB",
+  "local_bounce_mV": [
+   0.02,
+   0.2898,
+   5.7428,
+   9.9798
+  ],
+  "error_mV": [
+   0.02524,
+   0.64882,
+   22.8623,
+   39.73013
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   23.8,
+   -4.4,
+   -35.4,
+   -40.2
+  ],
+  "verdict": "FAIL"
+ },
+ {
+  "aggressor": "digital in-band <10MHz (2/5/15 % of the 78 MHz bounce)",
+  "victim": "bbfilter_q",
+  "what": "0.25 LSB at the ADC at PGA 24 dB",
+  "local_bounce_mV": [
+   0.02,
+   0.2898,
+   5.7428,
+   9.9798
+  ],
+  "error_mV": [
+   0.00318,
+   0.08168,
+   2.87819,
+   5.00173
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   41.8,
+   13.6,
+   -17.4,
+   -22.2
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "digital@2421.875MHz (M1 die-VSS line, pk)",
+  "victim": "lna",
+  "what": "<= -100 dBm in-band spur (pad divider 8 dB + CMRR 30/27/25)",
+  "local_bounce_mV": [
+   0.0,
+   0.0004,
+   0.0593,
+   0.8281
+  ],
+  "error_mV": [
+   0.0,
+   1e-05,
+   0.00133,
+   0.01854
+  ],
+  "allowed_mV": 0.00316736,
+  "margin_dB": [
+   131.9,
+   53.5,
+   7.6,
+   -15.3
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "digital@2421.875MHz (M1 die-VSS line, pk)",
+  "victim": "pad_rf_rx",
+  "what": "same, at the RF_RX pad cell",
+  "local_bounce_mV": [
+   0.0,
+   0.0002,
+   0.0392,
+   0.5663
+  ],
+  "error_mV": [
+   0.0,
+   0.0,
+   0.00088,
+   0.01268
+  ],
+  "allowed_mV": 0.00316736,
+  "margin_dB": [
+   141.1,
+   58.6,
+   11.2,
+   -12.0
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "pll_cdr ring (host-follow, RF mode)",
+  "victim": "adc_i",
+  "what": "0.25 LSB (625 MHz aliases; 16th harmonic of fs when host-derived -> DC)",
+  "local_bounce_mV": [
+   0.0191,
+   0.1361,
+   3.3576,
+   6.6993
+  ],
+  "error_mV": [
+   0.00019,
+   0.0043,
+   0.33576,
+   0.66993
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   66.2,
+   39.1,
+   1.3,
+   -4.7
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "pll_cdr ring (host-follow, RF mode)",
+  "victim": "adc_q",
+  "what": "0.25 LSB (625 MHz aliases; 16th harmonic of fs when host-derived -> DC)",
+  "local_bounce_mV": [
+   0.1014,
+   0.4064,
+   6.8554,
+   11.5088
+  ],
+  "error_mV": [
+   0.00101,
+   0.01285,
+   0.68554,
+   1.15088
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   51.7,
+   29.6,
+   -4.9,
+   -9.4
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "wired front end (wired mode)",
+  "victim": "adc_q",
+  "what": "0.25 LSB, only if the ADC runs in a wired mode",
+  "local_bounce_mV": [
+   1.7989,
+   6.7939,
+   56.8853,
+   83.1764
+  ],
+  "error_mV": [
+   0.01799,
+   0.21484,
+   5.68853,
+   8.31764
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   26.7,
+   5.2,
+   -23.3,
+   -26.6
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "wired front end (wired mode)",
+  "victim": "core_bias",
+  "what": "<= 1 mV on VBG",
+  "local_bounce_mV": [
+   0.0724,
+   0.6488,
+   13.4896,
+   30.903
+  ],
+  "error_mV": [
+   0.00229,
+   0.03649,
+   1.34896,
+   3.0903
+  ],
+  "allowed_mV": 1.0,
+  "margin_dB": [
+   52.8,
+   28.8,
+   -2.6,
+   -9.8
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "lo_mmd @f_LO",
+  "victim": "lna",
+  "what": "LO at RF_RX <= -57 dBm (0.447 mV pk)",
+  "local_bounce_mV": [
+   0.1824,
+   0.6745,
+   9.2476,
+   13.8366
+  ],
+  "error_mV": [
+   0.0023,
+   0.01199,
+   0.20703,
+   0.30976
+  ],
+  "allowed_mV": 0.447,
+  "margin_dB": [
+   45.8,
+   31.4,
+   6.7,
+   3.2
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "lo_mmd @f_LO",
+  "victim": "core_bias",
+  "what": "<= 1 mV on VBG (2.4 GHz: far above the bandgap bandwidth)",
+  "local_bounce_mV": [
+   0.7431,
+   1.9905,
+   13.8366,
+   16.2566
+  ],
+  "error_mV": [
+   0.0235,
+   0.11194,
+   1.38366,
+   1.62566
+  ],
+  "allowed_mV": 1.0,
+  "margin_dB": [
+   32.6,
+   19.0,
+   -2.8,
+   -4.2
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "rfdriver ground @f0/2f0",
+  "victim": "lna",
+  "what": "TX->RX isolation >= 30 dB (GX-9): <= 30 mV pk at the LNA input at +9.5 dBm",
+  "local_bounce_mV": [
+   0.0,
+   0.0,
+   0.0019,
+   0.0148
+  ],
+  "error_mV": [
+   0.0,
+   0.0,
+   4e-05,
+   0.00033
+  ],
+  "allowed_mV": 30.0,
+  "margin_dB": [
+   287.5,
+   178.2,
+   117.1,
+   99.1
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "pad_rf_tx capacitive @f0 (effective monopole)",
+  "victim": "lna",
+  "what": "same",
+  "local_bounce_mV": [
+   0.0,
+   0.0,
+   0.0012,
+   0.0088
+  ],
+  "error_mV": [
+   0.0,
+   0.0,
+   3e-05,
+   0.0002
+  ],
+  "allowed_mV": 30.0,
+  "margin_dB": [
+   301.5,
+   180.4,
+   120.7,
+   103.7
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "rfdriver ground @f0/2f0",
+  "victim": "adc_i",
+  "what": "0.25 LSB",
+  "local_bounce_mV": [
+   0.0,
+   0.0,
+   0.006,
+   0.0469
+  ],
+  "error_mV": [
+   0.0,
+   0.0,
+   0.0006,
+   0.00469
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   218.8,
+   118.9,
+   56.3,
+   38.4
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "rfdriver ground @f0/2f0",
+  "victim": "core_bias",
+  "what": "<= 1 mV on VBG",
+  "local_bounce_mV": [
+   0.0,
+   0.0,
+   0.0001,
+   0.0046
+  ],
+  "error_mV": [
+   0.0,
+   0.0,
+   1e-05,
+   0.00046
+  ],
+  "allowed_mV": 1.0,
+  "margin_dB": [
+   276.0,
+   173.2,
+   98.6,
+   66.8
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "rfdriver ground @f0/2f0",
+  "victim": "dac_i",
+  "what": "<= -40 dBr",
+  "local_bounce_mV": [
+   0.0291,
+   0.2411,
+   6.0399,
+   7.871
+  ],
+  "error_mV": [
+   0.00029,
+   0.00762,
+   0.60399,
+   0.7871
+  ],
+  "allowed_mV": 3.4999999999999996,
+  "margin_dB": [
+   81.6,
+   53.2,
+   15.3,
+   13.0
+  ],
+  "verdict": "PASS"
+ },
+ {
+  "aggressor": "d2h_east_corridor(x2750-2800,y476-3030) (unshielded lanes, C to substrate 0.9-2.4 pF, 3.3 V, 0.3-1 ns)",
+  "victim": "adc_i",
+  "what": "0.25 LSB (floating-probe transimpedance; rho 5/10/30 ohm cm)",
+  "local_bounce_mV": [
+   0.186,
+   5.863,
+   234.759
+  ],
+  "error_mV": [
+   0.0019,
+   0.1854,
+   23.4759
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   46.4,
+   6.5,
+   -35.6
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "d2h_east_corridor(x2750-2800,y476-3030) (unshielded lanes, C to substrate 0.9-2.4 pF, 3.3 V, 0.3-1 ns)",
+  "victim": "adc_q",
+  "what": "0.25 LSB (floating-probe transimpedance; rho 5/10/30 ohm cm)",
+  "local_bounce_mV": [
+   3.124,
+   29.934,
+   506.618
+  ],
+  "error_mV": [
+   0.0312,
+   0.9466,
+   50.6618
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   21.9,
+   -7.7,
+   -42.3
+  ],
+  "verdict": "FAIL"
+ },
+ {
+  "aggressor": "d2h_east_corridor(x2750-2800,y476-3030) (unshielded lanes, C to substrate 0.9-2.4 pF, 3.3 V, 0.3-1 ns)",
+  "victim": "bbfilter_i",
+  "what": "0.25 LSB (floating-probe transimpedance; rho 5/10/30 ohm cm)",
+  "local_bounce_mV": [
+   0.618,
+   8.806,
+   258.508
+  ],
+  "error_mV": [
+   0.0062,
+   0.2785,
+   25.8508
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   36.0,
+   2.9,
+   -36.4
+  ],
+  "verdict": "PASS nominal, FAIL pessimistic"
+ },
+ {
+  "aggressor": "d2h_east_corridor(x2750-2800,y476-3030) (unshielded lanes, C to substrate 0.9-2.4 pF, 3.3 V, 0.3-1 ns)",
+  "victim": "pll_cdr",
+  "what": "0.25 LSB (floating-probe transimpedance; rho 5/10/30 ohm cm)",
+  "local_bounce_mV": [
+   7.149,
+   55.278,
+   720.862
+  ],
+  "error_mV": [
+   0.0715,
+   1.748,
+   72.0862
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   14.7,
+   -13.0,
+   -45.3
+  ],
+  "verdict": "FAIL"
+ },
+ {
+  "aggressor": "d2h_over_adc(x2000-2050,y476-3030) (unshielded lanes, C to substrate 0.9-2.4 pF, 3.3 V, 0.3-1 ns)",
+  "victim": "adc_i",
+  "what": "0.25 LSB (floating-probe transimpedance; rho 5/10/30 ohm cm)",
+  "local_bounce_mV": [
+   7.604,
+   67.427,
+   1005.793
+  ],
+  "error_mV": [
+   0.076,
+   2.1322,
+   100.5793
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   14.2,
+   -14.8,
+   -48.2
+  ],
+  "verdict": "FAIL"
+ },
+ {
+  "aggressor": "d2h_over_adc(x2000-2050,y476-3030) (unshielded lanes, C to substrate 0.9-2.4 pF, 3.3 V, 0.3-1 ns)",
+  "victim": "adc_q",
+  "what": "0.25 LSB (floating-probe transimpedance; rho 5/10/30 ohm cm)",
+  "local_bounce_mV": [
+   7.47,
+   60.635,
+   827.199
+  ],
+  "error_mV": [
+   0.0747,
+   1.9175,
+   82.7199
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   14.4,
+   -13.8,
+   -46.5
+  ],
+  "verdict": "FAIL"
+ },
+ {
+  "aggressor": "d2h_over_adc(x2000-2050,y476-3030) (unshielded lanes, C to substrate 0.9-2.4 pF, 3.3 V, 0.3-1 ns)",
+  "victim": "bbfilter_i",
+  "what": "0.25 LSB (floating-probe transimpedance; rho 5/10/30 ohm cm)",
+  "local_bounce_mV": [
+   8.668,
+   80.999,
+   969.636
+  ],
+  "error_mV": [
+   0.0867,
+   2.5614,
+   96.9636
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   13.1,
+   -16.3,
+   -47.9
+  ],
+  "verdict": "FAIL"
+ },
+ {
+  "aggressor": "d2h_over_adc(x2000-2050,y476-3030) (unshielded lanes, C to substrate 0.9-2.4 pF, 3.3 V, 0.3-1 ns)",
+  "victim": "pll_cdr",
+  "what": "0.25 LSB (floating-probe transimpedance; rho 5/10/30 ohm cm)",
+  "local_bounce_mV": [
+   1.137,
+   17.96,
+   574.713
+  ],
+  "error_mV": [
+   0.0114,
+   0.5679,
+   57.4713
+  ],
+  "allowed_mV": 0.39,
+  "margin_dB": [
+   30.7,
+   -3.3,
+   -43.4
+  ],
+  "verdict": "FAIL"
+ }
+]

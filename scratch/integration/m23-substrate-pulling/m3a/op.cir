@@ -1,0 +1,15 @@
+* vreg2 op
+.include /w/hdr.inc
+.include /w/pt_pll_vreg2.ext.spice
+VIN VIN 0 3.25
+VB BYP 0 0
+I1 VT 0 7m
+I2 VC 0 7m
+XD VIN VT VC 0 BYP BYP AO AG pt_pll_vreg2
+RAO AO 0 1g
+RAG AG 0 1g
+.control
+op
+print v(VT) v(VC) v(xd.VG) v(AG)
+.endc
+.end

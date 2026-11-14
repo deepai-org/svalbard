@@ -1,0 +1,54 @@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice ss
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_ss
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice diode_ss
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.temp 32
+.option method=gear reltol=1e-4
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice mimcap_ss
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice moscap_ss
+.include spiral_pt_spiral_l85_q4.spice
+.include rf_sub.spice
+VDD vdd 0 3.15
+VDDB vddb 0 3.15
+VCS cmlsel 0 0
+VT vt 0 2.1
+IB vdd ibias 10u
+XNB ibias ibias 0 0 nfet_03v3 w=1.44u l=1u
+VENB enb 0 0
+VB0 b0 0 3.15
+VB1 b1 0 3.15
+VB2 b2 0 0
+VB3 b3 0 3.15
+XRF 0 sub vt tsi vddci vdd cmlsel ibias b0 b1 b2 b3 ip in vt tsq vddcq vdd cmlsel ibias b0 b1 b2 b3 qp qn pt_lc_qvco_rf
+RFip ip lip 0.5
+CFip lip 0 13.5f
+CLip ip 0 230.0f
+RFin in lin 0.5
+CFin lin 0 13.5f
+CLin in 0 230.0f
+RFqp qp lqp 0.5
+CFqp lqp 0 13.5f
+CLqp qp 0 230.0f
+RFqn qn lqn 0.5
+CFqn lqn 0 13.5f
+CLqn qn 0 230.0f
+XLI lip lin sub pt_spiral
+XLQ lqp lqn sub pt_spiral
+XBP ip preb enb vddb 0 pt_lc_acinv
+XBP2 preb pre vddb 0 pt_lc_inv1
+XBD1 in dd1 enb vddb 0 pt_lc_acinv
+XBD2 qp dd2 enb vddb 0 pt_lc_acinv
+XBD3 qn dd3 enb vddb 0 pt_lc_acinv
+CLP pre 0 30f
+EDI di 0 ip in 1
+EDQ dq 0 qp qn 1
+IK ip in pulse(0 200u 0.2n 50p 50p 0.3n 1)
+VSUB sub 0 0
+.save v(di) v(tsi)
+.control
+tran 1p 1.1e-07 0 1p
+linearize v(di) v(tsi)
+wrdata q_base.txt v(di) v(tsi)
+quit
+.endc
+.end

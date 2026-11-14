@@ -1,0 +1,3919 @@
+{
+ "band": [
+  2400.0,
+  2483.5
+ ],
+ "guard": 10.0,
+ "rf_rows": [
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "n": 60,
+   "f_MHz": 2400.0,
+   "in_band": true,
+   "I_uA": 703.619,
+   "dBm_best": -103.1,
+   "dBm_worst": -84.1,
+   "margin_to_m100_worst_dB": -15.9,
+   "note": "A5 charge"
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "n": 30,
+   "f_MHz": 2400.0,
+   "in_band": true,
+   "I_uA": 1407.239,
+   "dBm_best": -97.0,
+   "dBm_worst": -78.1,
+   "margin_to_m100_worst_dB": -21.9,
+   "note": "A5 charge"
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "n": 120,
+   "f_MHz": 2400.0,
+   "in_band": true,
+   "I_uA": 175.905,
+   "dBm_best": -115.1,
+   "dBm_worst": -96.1,
+   "margin_to_m100_worst_dB": -3.9,
+   "note": "A5 charge"
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "n": 48,
+   "f_MHz": 2400.0,
+   "in_band": true,
+   "I_uA": 97.725,
+   "dBm_best": -120.2,
+   "dBm_worst": -101.2,
+   "margin_to_m100_worst_dB": 1.2,
+   "note": "PFD/CP + ref buffer"
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "n": 5,
+   "f_MHz": 2400.0,
+   "in_band": true,
+   "I_uA": 12000.0,
+   "dBm_best": -78.4,
+   "dBm_worst": -59.4,
+   "margin_to_m100_worst_dB": -40.6,
+   "note": "6 mA"
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "n": 121,
+   "f_MHz": 2420.0,
+   "in_band": true,
+   "I_uA": 173.009,
+   "dBm_best": -115.2,
+   "dBm_worst": -96.3,
+   "margin_to_m100_worst_dB": -3.7,
+   "note": "A5 charge"
+  },
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "n": 31,
+   "f_MHz": 2421.875,
+   "in_band": true,
+   "I_uA": 3936.168,
+   "dBm_best": -88.1,
+   "dBm_worst": -69.1,
+   "margin_to_m100_worst_dB": -30.9,
+   "note": "A5 charge"
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "n": 31,
+   "f_MHz": 2421.875,
+   "in_band": true,
+   "I_uA": 23.195,
+   "dBm_best": -132.7,
+   "dBm_worst": -113.7,
+   "margin_to_m100_worst_dB": 13.7,
+   "note": "A5 charge"
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "n": 31,
+   "f_MHz": 2421.875,
+   "in_band": true,
+   "I_uA": 69.586,
+   "dBm_best": -123.1,
+   "dBm_worst": -104.2,
+   "margin_to_m100_worst_dB": 4.2,
+   "note": "PDN-01 says slow slew in RF modes; this is the mis-set case"
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "n": 62,
+   "f_MHz": 2421.875,
+   "in_band": true,
+   "I_uA": 674.772,
+   "dBm_best": -103.4,
+   "dBm_worst": -84.4,
+   "margin_to_m100_worst_dB": -15.6,
+   "note": "A5 charge"
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "n": 31,
+   "f_MHz": 2421.875,
+   "in_band": true,
+   "I_uA": 1349.543,
+   "dBm_best": -97.4,
+   "dBm_worst": -78.4,
+   "margin_to_m100_worst_dB": -21.6,
+   "note": "A5 charge"
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "n": 3,
+   "f_MHz": 2430.0,
+   "in_band": true,
+   "I_uA": 15714.0,
+   "dBm_best": -76.1,
+   "dBm_worst": -57.1,
+   "margin_to_m100_worst_dB": -42.9,
+   "note": "BYP mode"
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "n": 3,
+   "f_MHz": 2430.0,
+   "in_band": true,
+   "I_uA": 48600.0,
+   "dBm_best": -66.3,
+   "dBm_worst": -47.3,
+   "margin_to_m100_worst_dB": -52.7,
+   "note": ""
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "n": 51,
+   "f_MHz": 2432.7,
+   "in_band": true,
+   "I_uA": 72.592,
+   "dBm_best": -122.8,
+   "dBm_worst": -103.8,
+   "margin_to_m100_worst_dB": 3.8,
+   "note": "A5 charge"
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "n": 39,
+   "f_MHz": 2437.5,
+   "in_band": true,
+   "I_uA": 3108.693,
+   "dBm_best": -90.1,
+   "dBm_worst": -71.2,
+   "margin_to_m100_worst_dB": -28.8,
+   "note": "A5 charge"
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "n": 61,
+   "f_MHz": 2440.0,
+   "in_band": true,
+   "I_uA": 680.739,
+   "dBm_best": -103.3,
+   "dBm_worst": -84.4,
+   "margin_to_m100_worst_dB": -15.6,
+   "note": "A5 charge"
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "n": 122,
+   "f_MHz": 2440.0,
+   "in_band": true,
+   "I_uA": 170.185,
+   "dBm_best": -115.4,
+   "dBm_worst": -96.4,
+   "margin_to_m100_worst_dB": -3.6,
+   "note": "A5 charge"
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "n": 49,
+   "f_MHz": 2450.0,
+   "in_band": true,
+   "I_uA": 93.777,
+   "dBm_best": -120.6,
+   "dBm_worst": -101.6,
+   "margin_to_m100_worst_dB": 1.6,
+   "note": "PFD/CP + ref buffer"
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "n": 123,
+   "f_MHz": 2460.0,
+   "in_band": true,
+   "I_uA": 167.429,
+   "dBm_best": -115.5,
+   "dBm_worst": -96.5,
+   "margin_to_m100_worst_dB": -3.5,
+   "note": "A5 charge"
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "n": 63,
+   "f_MHz": 2460.9375,
+   "in_band": true,
+   "I_uA": 653.52,
+   "dBm_best": -103.7,
+   "dBm_worst": -84.7,
+   "margin_to_m100_worst_dB": -15.3,
+   "note": "A5 charge"
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "n": 62,
+   "f_MHz": 2480.0,
+   "in_band": true,
+   "I_uA": 658.957,
+   "dBm_best": -103.6,
+   "dBm_worst": -84.6,
+   "margin_to_m100_worst_dB": -15.4,
+   "note": "A5 charge"
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "n": 31,
+   "f_MHz": 2480.0,
+   "in_band": true,
+   "I_uA": 1317.913,
+   "dBm_best": -97.6,
+   "dBm_worst": -78.6,
+   "margin_to_m100_worst_dB": -21.4,
+   "note": "A5 charge"
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "n": 124,
+   "f_MHz": 2480.0,
+   "in_band": true,
+   "I_uA": 164.739,
+   "dBm_best": -115.7,
+   "dBm_worst": -96.7,
+   "margin_to_m100_worst_dB": -3.3,
+   "note": "A5 charge"
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "n": 52,
+   "f_MHz": 2480.4,
+   "in_band": true,
+   "I_uA": 69.827,
+   "dBm_best": -123.1,
+   "dBm_worst": -104.1,
+   "margin_to_m100_worst_dB": 4.1,
+   "note": "A5 charge"
+  }
+ ],
+ "carrier_derived_d2h": [
+  {
+   "f_lo": 2402.0,
+   "d2h_clock_MHz": 75.0625,
+   "harmonic": 32,
+   "lands_on": "LO exactly (DC after the mixer; data-dependent amplitude -> noise around DC)",
+   "dBm_slow_slew": [
+    -132.9,
+    -113.9
+   ],
+   "dBm_fast_slew": [
+    -123.4,
+    -104.4
+   ]
+  },
+  {
+   "f_lo": 2441.0,
+   "d2h_clock_MHz": 76.2812,
+   "harmonic": 32,
+   "lands_on": "LO exactly (DC after the mixer; data-dependent amplitude -> noise around DC)",
+   "dBm_slow_slew": [
+    -133.0,
+    -114.1
+   ],
+   "dBm_fast_slew": [
+    -123.5,
+    -104.5
+   ]
+  },
+  {
+   "f_lo": 2480.0,
+   "d2h_clock_MHz": 77.5,
+   "harmonic": 32,
+   "lands_on": "LO exactly (DC after the mixer; data-dependent amplitude -> noise around DC)",
+   "dBm_slow_slew": [
+    -133.2,
+    -114.2
+   ],
+   "dBm_fast_slew": [
+    -123.6,
+    -104.7
+   ]
+  }
+ ],
+ "baseband_alias_rows": [
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 78.125,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 234.375,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 390.625,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 78.125,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 234.375,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "macro core 78.125 (host 156.25/2)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 390.625,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 2,
+   "f_MHz": 125.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 187.5,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 312.5,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 7,
+   "f_MHz": 437.5,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 500.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 12,
+   "f_MHz": 750.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 5,
+   "f_MHz": 312.5,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 10,
+   "f_MHz": 625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 437.5,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 562.5,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 687.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "macro core 62.5 (host 125/2, GX-5)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 562.5,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "H2D clock pad 156.25",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "H2D clock pad 156.25",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "H2D clock pad 156.25",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 1250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "H2D clock pad 156.25",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 1406.25,
+   "alias_MHz": 6.25
+  },
+  {
+   "source": "H2D clock pad 156.25",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 1562.5,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "H2D clock pad 156.25",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 1718.75,
+   "alias_MHz": 1.25
+  },
+  {
+   "source": "H2D clock pad 156.25",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 1875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "H2D clock pad 156.25",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "H2D clock pad 156.25",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 1,
+   "f_MHz": 125.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 500.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 6,
+   "f_MHz": 750.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 9,
+   "f_MHz": 1125.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 1250.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 1375.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 5,
+   "f_MHz": 625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 10,
+   "f_MHz": 1250.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 1000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 1125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 1250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "H2D clock pad 125",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 1125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 1250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 1562.5,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 1875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 3125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 3437.5,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 3750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 3125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 3437.5,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "H2D data 312.5 Mword/s",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 3750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 78.125,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 234.375,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 390.625,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 78.125,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 234.375,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), slow slew",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 390.625,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 78.125,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 234.375,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 390.625,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 78.125,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 234.375,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "D2H 78.125 DDR (host-follow), FAST slew",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 390.625,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 1250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 1875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 3125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 3750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 5000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 6250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 6875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 3125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 3750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 6250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "host_follow ring 625 (pll_cdr N=4)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 6875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 1,
+   "f_MHz": 500.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 2000.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 2500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 6,
+   "f_MHz": 3000.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 9,
+   "f_MHz": 4500.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 5000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 5500.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 5,
+   "f_MHz": 2500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 10,
+   "f_MHz": 5000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 1000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 2000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 3000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 4000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 5000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 6000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 2000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 4000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "host_follow ring 500 (125 MHz host)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 6000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 39.0625,
+   "alias_MHz": 0.9375
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 78.125,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 117.1875,
+   "alias_MHz": 2.8125
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 195.3125,
+   "alias_MHz": 4.6875
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 234.375,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 273.4375,
+   "alias_MHz": 6.5625
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 351.5625,
+   "alias_MHz": 8.4375
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 390.625,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 78.125,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 234.375,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "conv clock 39.0625 (ring/16)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 390.625,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 78.125,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 234.375,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 390.625,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 78.125,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 156.25,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 234.375,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 312.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "conv clock 78.125 (ring/8, 80 MS/s class)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 390.625,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 1,
+   "f_MHz": 40.0,
+   "alias_MHz": 0.9375
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 2,
+   "f_MHz": 80.0,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 120.0,
+   "alias_MHz": 2.8125
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 160.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 200.0,
+   "alias_MHz": 4.6875
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 6,
+   "f_MHz": 240.0,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 7,
+   "f_MHz": 280.0,
+   "alias_MHz": 6.5625
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 320.0,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 9,
+   "f_MHz": 360.0,
+   "alias_MHz": 8.4375
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 400.0,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 2,
+   "f_MHz": 80.0,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 4,
+   "f_MHz": 160.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 6,
+   "f_MHz": 240.0,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 8,
+   "f_MHz": 320.0,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "conv clock 40 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 10,
+   "f_MHz": 400.0,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 1,
+   "f_MHz": 80.0,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 2,
+   "f_MHz": 160.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 240.0,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 320.0,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 400.0,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 1,
+   "f_MHz": 80.0,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 2,
+   "f_MHz": 160.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 3,
+   "f_MHz": 240.0,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 4,
+   "f_MHz": 320.0,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 5,
+   "f_MHz": 400.0,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 80.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 160.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 240.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 320.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 400.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 480.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 560.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 640.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 720.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 800.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 880.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv clock 80 (int/ref/aux)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 960.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 2,
+   "f_MHz": 40.0,
+   "alias_MHz": 0.9375
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 80.0,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 6,
+   "f_MHz": 120.0,
+   "alias_MHz": 2.8125
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 160.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 200.0,
+   "alias_MHz": 4.6875
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 12,
+   "f_MHz": 240.0,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 4,
+   "f_MHz": 80.0,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 8,
+   "f_MHz": 160.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "conv per-core 20",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 12,
+   "f_MHz": 240.0,
+   "alias_MHz": 5.625
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 150.0,
+   "alias_MHz": 6.25
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 200.0,
+   "alias_MHz": 4.6875
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 7,
+   "f_MHz": 350.0,
+   "alias_MHz": 1.5625
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 400.0,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 500.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 550.0,
+   "alias_MHz": 3.125
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 3,
+   "f_MHz": 150.0,
+   "alias_MHz": 6.25
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 8,
+   "f_MHz": 400.0,
+   "alias_MHz": 9.375
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "78.125 (host-follow/8)",
+   "n": 11,
+   "f_MHz": 550.0,
+   "alias_MHz": 3.125
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 50.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 150.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 200.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 350.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 400.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 450.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 550.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 600.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 150.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 400.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "LO reference 50 (REF_IN, lo_pfdcp)",
+   "mode": "RF",
+   "fs": "80 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 550.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 1,
+   "f_MHz": 47.7,
+   "alias_MHz": 8.6375
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 190.8,
+   "alias_MHz": 4.5125
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 238.5,
+   "alias_MHz": 4.125
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 381.6,
+   "alias_MHz": 9.025
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 9,
+   "f_MHz": 429.3,
+   "alias_MHz": 0.3875
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 477.0,
+   "alias_MHz": 8.25
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "78.125 (host-follow/8)",
+   "n": 5,
+   "f_MHz": 238.5,
+   "alias_MHz": 4.125
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "78.125 (host-follow/8)",
+   "n": 8,
+   "f_MHz": 381.6,
+   "alias_MHz": 9.025
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "78.125 (host-follow/8)",
+   "n": 10,
+   "f_MHz": 477.0,
+   "alias_MHz": 8.25
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 47.7,
+   "alias_MHz": 7.7
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 190.8,
+   "alias_MHz": 9.2
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 238.5,
+   "alias_MHz": 1.5
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "40 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 286.2,
+   "alias_MHz": 6.2
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 477.0,
+   "alias_MHz": 3.0
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 524.7,
+   "alias_MHz": 4.7
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 238.5,
+   "alias_MHz": 1.5
+  },
+  {
+   "source": "aosc 47.7 (40..60)",
+   "mode": "RF(off by rule SUB-04)",
+   "fs": "80 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 477.0,
+   "alias_MHz": 3.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 1440.0,
+   "alias_MHz": 5.3125
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 1920.0,
+   "alias_MHz": 5.9375
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 7,
+   "f_MHz": 3360.0,
+   "alias_MHz": 0.625
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 4800.0,
+   "alias_MHz": 4.6875
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 5280.0,
+   "alias_MHz": 6.5625
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 7,
+   "f_MHz": 3360.0,
+   "alias_MHz": 0.625
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 480.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 960.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 1440.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 1920.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 2400.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 2880.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 3360.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 3840.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 4320.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 4800.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 5280.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 5760.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 480.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 960.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 1440.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 1920.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 2400.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 2880.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 3360.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 3840.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 4320.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 4800.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 5280.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 480 (USB HS / 1.92G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 5760.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 1,
+   "f_MHz": 625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 2,
+   "f_MHz": 1250.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 1875.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 2500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 3125.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 6,
+   "f_MHz": 3750.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 7,
+   "f_MHz": 4375.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 5000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 9,
+   "f_MHz": 5625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 6250.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 6875.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 12,
+   "f_MHz": 7500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 1,
+   "f_MHz": 625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 2,
+   "f_MHz": 1250.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 3,
+   "f_MHz": 1875.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 4,
+   "f_MHz": 2500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 5,
+   "f_MHz": 3125.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 6,
+   "f_MHz": 3750.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 7,
+   "f_MHz": 4375.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 8,
+   "f_MHz": 5000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 9,
+   "f_MHz": 5625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 10,
+   "f_MHz": 6250.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 11,
+   "f_MHz": 6875.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 12,
+   "f_MHz": 7500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 1250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 1875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 3125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 3750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 5000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 6250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 6875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 3125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 3750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 6250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 625 (2.5G, 1.25G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 6875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 1,
+   "f_MHz": 750.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 3000.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 3750.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 6,
+   "f_MHz": 4500.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 9,
+   "f_MHz": 6750.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 7500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 8250.0,
+   "alias_MHz": 7.8125
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 5,
+   "f_MHz": 3750.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 10,
+   "f_MHz": 7500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 2250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 3000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 3750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 5250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 6000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 6750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 8250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 9000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 2250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 3750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 6000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 750 (1.5G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 8250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 2430.0,
+   "alias_MHz": 8.125
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 3240.0,
+   "alias_MHz": 2.1875
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 7,
+   "f_MHz": 5670.0,
+   "alias_MHz": 5.9375
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 6480.0,
+   "alias_MHz": 4.375
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 8910.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 12,
+   "f_MHz": 9720.0,
+   "alias_MHz": 6.5625
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 3,
+   "f_MHz": 2430.0,
+   "alias_MHz": 8.125
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 8,
+   "f_MHz": 6480.0,
+   "alias_MHz": 4.375
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 11,
+   "f_MHz": 8910.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 810.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 2430.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 3240.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 4050.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 5670.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 6480.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 7290.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 8910.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 9720.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 810.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 5670.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 6480.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "ring 810 (1.62G / 3.24G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 7290.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 1,
+   "f_MHz": 742.5,
+   "alias_MHz": 0.3125
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 2,
+   "f_MHz": 1485.0,
+   "alias_MHz": 0.625
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 2227.5,
+   "alias_MHz": 0.9375
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 2970.0,
+   "alias_MHz": 1.25
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 3712.5,
+   "alias_MHz": 1.5625
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 6,
+   "f_MHz": 4455.0,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 7,
+   "f_MHz": 5197.5,
+   "alias_MHz": 2.1875
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 5940.0,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 9,
+   "f_MHz": 6682.5,
+   "alias_MHz": 2.8125
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 7425.0,
+   "alias_MHz": 3.125
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 8167.5,
+   "alias_MHz": 3.4375
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 12,
+   "f_MHz": 8910.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 2,
+   "f_MHz": 1485.0,
+   "alias_MHz": 0.625
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 4,
+   "f_MHz": 2970.0,
+   "alias_MHz": 1.25
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 6,
+   "f_MHz": 4455.0,
+   "alias_MHz": 1.875
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 8,
+   "f_MHz": 5940.0,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 10,
+   "f_MHz": 7425.0,
+   "alias_MHz": 3.125
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 12,
+   "f_MHz": 8910.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 1485.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 2970.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 3712.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 5197.5,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 6682.5,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 8167.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 8910.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 2970.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 5197.5,
+   "alias_MHz": 2.5
+  },
+  {
+   "source": "ring 742.5 (1.485G SDI)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 8167.5,
+   "alias_MHz": 7.5
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 1,
+   "f_MHz": 741.7582,
+   "alias_MHz": 0.4293
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 2,
+   "f_MHz": 1483.5165,
+   "alias_MHz": 0.8585
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 2225.2747,
+   "alias_MHz": 1.2878
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 2967.033,
+   "alias_MHz": 1.717
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 3708.7912,
+   "alias_MHz": 2.1463
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 6,
+   "f_MHz": 4450.5495,
+   "alias_MHz": 2.5755
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 7,
+   "f_MHz": 5192.3077,
+   "alias_MHz": 3.0048
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 5934.0659,
+   "alias_MHz": 3.4341
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 9,
+   "f_MHz": 6675.8242,
+   "alias_MHz": 3.8633
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 7417.5824,
+   "alias_MHz": 4.2926
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 8159.3407,
+   "alias_MHz": 4.7218
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 12,
+   "f_MHz": 8901.0989,
+   "alias_MHz": 5.1511
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 2,
+   "f_MHz": 1483.5165,
+   "alias_MHz": 0.8585
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 4,
+   "f_MHz": 2967.033,
+   "alias_MHz": 1.717
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 6,
+   "f_MHz": 4450.5495,
+   "alias_MHz": 2.5755
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 8,
+   "f_MHz": 5934.0659,
+   "alias_MHz": 3.4341
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 10,
+   "f_MHz": 7417.5824,
+   "alias_MHz": 4.2926
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 12,
+   "f_MHz": 8901.0989,
+   "alias_MHz": 5.1511
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 1483.5165,
+   "alias_MHz": 3.5165
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 2967.033,
+   "alias_MHz": 7.033
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 5192.3077,
+   "alias_MHz": 7.6923
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 6675.8242,
+   "alias_MHz": 4.1758
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 8159.3407,
+   "alias_MHz": 0.6593
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 2967.033,
+   "alias_MHz": 7.033
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 5192.3077,
+   "alias_MHz": 7.6923
+  },
+  {
+   "source": "ring 741.758 (1.485/1.001G)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 8159.3407,
+   "alias_MHz": 0.6593
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 1,
+   "f_MHz": 625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 2,
+   "f_MHz": 1250.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 1875.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 2500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 5,
+   "f_MHz": 3125.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 6,
+   "f_MHz": 3750.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 7,
+   "f_MHz": 4375.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 5000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 9,
+   "f_MHz": 5625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 10,
+   "f_MHz": 6250.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 6875.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 12,
+   "f_MHz": 7500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 1,
+   "f_MHz": 625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 2,
+   "f_MHz": 1250.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 3,
+   "f_MHz": 1875.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 4,
+   "f_MHz": 2500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 5,
+   "f_MHz": 3125.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 6,
+   "f_MHz": 3750.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 7,
+   "f_MHz": 4375.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 8,
+   "f_MHz": 5000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 9,
+   "f_MHz": 5625.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 10,
+   "f_MHz": 6250.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 11,
+   "f_MHz": 6875.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 12,
+   "f_MHz": 7500.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 2,
+   "f_MHz": 1250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 1875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 3125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 3750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 5000.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 6250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 6875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 3125.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 6,
+   "f_MHz": 3750.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 10,
+   "f_MHz": 6250.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 625 (capture)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 6875.0,
+   "alias_MHz": 5.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 3,
+   "f_MHz": 2430.0,
+   "alias_MHz": 8.125
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 4,
+   "f_MHz": 3240.0,
+   "alias_MHz": 2.1875
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 7,
+   "f_MHz": 5670.0,
+   "alias_MHz": 5.9375
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 8,
+   "f_MHz": 6480.0,
+   "alias_MHz": 4.375
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 11,
+   "f_MHz": 8910.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "39.0625 (host-follow/16)",
+   "n": 12,
+   "f_MHz": 9720.0,
+   "alias_MHz": 6.5625
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 3,
+   "f_MHz": 2430.0,
+   "alias_MHz": 8.125
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 8,
+   "f_MHz": 6480.0,
+   "alias_MHz": 4.375
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "78.125 (host-follow/8)",
+   "n": 11,
+   "f_MHz": 8910.0,
+   "alias_MHz": 3.75
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 810.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 3,
+   "f_MHz": 2430.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 4,
+   "f_MHz": 3240.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 5,
+   "f_MHz": 4050.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 5670.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 6480.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 7290.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 11,
+   "f_MHz": 8910.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "40 (int/ref/aux)",
+   "n": 12,
+   "f_MHz": 9720.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 1,
+   "f_MHz": 810.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 7,
+   "f_MHz": 5670.0,
+   "alias_MHz": 10.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 8,
+   "f_MHz": 6480.0,
+   "alias_MHz": 0.0
+  },
+  {
+   "source": "wrx_cap 810 (capture)",
+   "mode": "wired",
+   "fs": "80 (int/ref/aux)",
+   "n": 9,
+   "f_MHz": 7290.0,
+   "alias_MHz": 10.0
+  }
+ ]
+}

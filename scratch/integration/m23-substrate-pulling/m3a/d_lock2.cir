@@ -1,0 +1,41 @@
+* M3a d_lock2 direct
+.include /w/hdr.inc
+.include /w/pll_ring.ext.spice
+.include /w/pll_ring_x.inc
+VSA VT 0 2.9027
+VSB VC 0 2.9027
+RC xa0a xa0b 300.0
+VENa ena 0 pwl(0 0 2n 0 2.1n 3.3)
+IBa VT iba 10u
+VCTa vca 0 1.5
+XRa 0 ena 0 0 0 iba pa0 pa1 pa2 pa3 pa4 pa5 pa6 pa7 locka fbcka refoa vca 0 0 0 0 0 0 0 0 0 0 0 0 0 VT VT 0 xa0a pt_pll_ring_x
+CPa0 pa0 0 20f
+CPa1 pa1 0 20f
+CPa2 pa2 0 20f
+CPa3 pa3 0 20f
+CPa4 pa4 0 20f
+CPa5 pa5 0 20f
+CPa6 pa6 0 20f
+CPa7 pa7 0 20f
+CROa refoa 0 20f
+VENb enb 0 pwl(0 0 2n 0 2.1n 3.3)
+IBb VC ibb 10u
+VCTb vcb 0 1.516
+XRb 0 enb 0 0 0 ibb pb0 pb1 pb2 pb3 pb4 pb5 pb6 pb7 lockb fbckb refob vcb 0 0 0 0 0 0 0 0 0 0 0 0 0 VC VC 0 xa0b pt_pll_ring_x
+CPb0 pb0 0 20f
+CPb1 pb1 0 20f
+CPb2 pb2 0 20f
+CPb3 pb3 0 20f
+CPb4 pb4 0 20f
+CPb5 pb5 0 20f
+CPb6 pb6 0 20f
+CPb7 pb7 0 20f
+CROb refob 0 20f
+.option method=gear reltol=1e-3
+.tran 2p 100n
+.control
+set wr_singlescale
+run
+wrdata /w/d_lock2.txt v(pa0) v(pb0) v(VT) v(VC)
+.endc
+.end

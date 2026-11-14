@@ -17,6 +17,8 @@ OPEN DEFECT (inherited from `pt_hs_leg`, also in the PD21 cell; REVIEW2 finding 
 bench sees the TERM_VCM metal between the two legs' termination common points: about 34-44 ohm here (1 um Metal4 trunk 25.4 ohm,
 two single Via3 9 ohm, Metal3 rails 7-10 ohm; 44-54 ohm in the PD21 cell). What-if with that resistance added: differential
 termination tt code 5 is 142 ohm (model 100.8), about 100 ohm only at code 15 (tt) / 12 (ff), 116-123 ohm at ss code 15;
-die return loss at 2.4 GHz 6.0-7.1 dB at the best code (model 7.85-8.37). Every termination / return-loss number in the
+die return loss at 2.4 GHz 6.0-7.1 dB at the best code (model 7.85-8.37). Typical metal values; at the PDK high-resistance
+corner (104 mohm/sq, 15 ohm per via) it is 60-70 ohm and tt cannot reach 100 ohm either (117.9 ohm at code 15; second review
+`scratch/pads-core/hspad/REVIEW2-addendum.md`). Every termination / return-loss number in the
 `ap4-hspad-*` and `pd21-*` files is therefore "model without metal resistance". Fix (leg master: Metal5-strapped trunk,
 multi-cut Via3) and R-aware rerun are open.

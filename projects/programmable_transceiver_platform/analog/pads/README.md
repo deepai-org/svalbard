@@ -171,7 +171,9 @@ first review closed). Published in `wired-receive-hs/` (GDS sha 5b7c598e…, mod
   common points is about 34–44 Ω (1 µm Metal4 trunk 25.4 Ω, two single Via3 9 Ω, Metal3 rails 7–10 Ω; 44–54 Ω in PD21) and is
   not in the capacitance-only extraction. What-if with it added (reviewer's estimate): differential termination 142 Ω at tt
   code 5 (model 100.8), ≈ 100 Ω only at code 15 (tt) / 12 (ff), **116–123 Ω at ss code 15 (cannot reach 100)**; die RL at
-  2.4 GHz 6.0–7.1 dB at the best code. Signal current ±2.7–5.5 mA through each single Via3. Fix in the leg master
+  2.4 GHz 6.0–7.1 dB at the best code. Those are typical metal values; with the PDK's high-resistance corner (104 mΩ/sq,
+  15 Ω per via) trunk plus Via3 alone is 59 Ω (60–70 Ω in all) and even tt cannot be trimmed to 100 Ω (117.9 Ω at code 15,
+  131 Ω at ss; `scratch/pads-core/hspad/REVIEW2-addendum.md`). Signal current ±2.7–5.5 mA through each single Via3. Fix in the leg master
   (Metal5-strapped trunk, multi-cut Via3) with an R-aware rerun is required before tapeout. (risk: WRX-04; row PC-14)
 
 ### PD21 (pads owner): low-C SATA/PCIe RX pad pair `pad_hspad`, network-gc-d2, HBM pad-side devices

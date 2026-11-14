@@ -5802,7 +5802,7 @@
     },
     "monitor.config": {
       "update": "stopped",
-      "description": "Supply / clock monitor rtl/pt_monitor.sv (D-FAULT): fault = any armed requirement that is pending, tripped (sticky cause) or unobservable (monitor clock lost). Reset: nothing armed, fault = 0; writing every requirement to 0 releases fault with no clock at all (no-brick rule). Time base (field timebase): 0 = the always-on oscillator (core.aosc.enable must be 1), 16.7-25 ns per tick; 1 = the transport core clock / 2 = 39.06 MHz at the full host rate (25.6 ns per tick), slower by 2x / 4x at the reduced host rates (51.2 / 102.4 ns per tick), for the RF payload modes, where the register file holds the oscillator off. Every tick-counted time (loss_timeout_ticks, qualification_ticks) scales with the selected tick. With time base 1 a stopped core clock is only detected while ref_clk runs (status.monitor monitor-clock bits); the reference watchdog needs 4 reference periods > 1 tick and 255 reference periods > 32 ticks. The window comparators for supply_high / supply_low do not exist (build demand pt_supply_window): supply monitoring is island power-good only.",
+      "description": "Supply / clock monitor rtl/pt_monitor.sv (D-FAULT): fault = any armed requirement that is pending, tripped (sticky cause) or unobservable (monitor clock lost). Reset: nothing armed, fault = 0; writing every requirement to 0 releases fault with no clock at all (no-brick rule). Time base: the always-on oscillator (core.aosc.enable must be 1), 16.7-25 ns per tick. The window comparators for supply_high / supply_low do not exist (build demand pt_supply_window): supply monitoring is island power-good only.",
       "fields": {
         "require_reference": {
           "bits": 1,
@@ -5856,14 +5856,6 @@
           "maximum": 4095,
           "unit": "code",
           "description": "monitor-clock ticks without an edge (clocks) or with a bad level (locks, supplies) before a qualified requirement trips. Minimum 8."
-        },
-        "timebase": {
-          "bits": 1,
-          "default": 0,
-          "minimum": 0,
-          "maximum": 1,
-          "unit": "code",
-          "description": "monitor time base: 0 = always-on oscillator, 1 = host transport core clock / 2 (one static clock mux, rtl/pt_digital_macro.sv mon_mux). Change it only in a commit that also leaves every requirement bit 0 (and whose previous requirement bits were 0), with the new time base running; then pulse monitor.reset.clear_fault; arm in a later commit."
         },
         "qualification_ticks": {
           "bits": 16,

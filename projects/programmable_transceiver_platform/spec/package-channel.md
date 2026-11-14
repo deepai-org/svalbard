@@ -1,129 +1,176 @@
-# Package channel: wafer.space TT01 70-pin mezzanine COB
+# Package channel: wafer.space 70-pin mezzanine chip-on-board
 
-Status: analytic model, 2026-11-10. This is not an EM solve, and the connector values are estimates. Data: [package-channel.json](package-channel.json).
-Scripts: `scratch/cob/` (`kparse.py`, `channel_model.py`, `placement.py`, `lo_sweep.py`, `lo_term.py`, `pdn_thermal.py`).
-Risks: PKG-01..08 in [`risk-register.md`](risk-register.md). Demands: `scratch/reviews/interface-changes.md`, section "Package channel (TT01 COB)".
+Analytic lumped / transmission-line model; not an EM solve. No S-parameters are published for
+the board or the connector, so the connector values are estimates. All numbers are in
+[package-channel.json](package-channel.json) (per pin: site, bond pad, board net, connector
+contact, bond wire, traces, S-parameters, crosstalk). Generator: `scratch/pads-core/spec/`.
+Board obligations that follow from it are in [board-requirements.md](board-requirements.md)
+(BP-1..8); risks are PKG-* in [risk-register.md](risk-register.md).
 
-**Policy (user, 2026-11-10):** the package mostly changes *performance*, not feasibility. Off-chip passives stay useful.
-So every external part is evaluated over a range of placements, and the chip must tolerate wherever the user puts them.
-This adds a qualification axis, **passive placement tolerance** (§6).
+The package mostly changes performance, not feasibility. Every external part is therefore
+qualified over a range of placements (section 6), and the chip must tolerate wherever the
+carrier puts it.
 
 ## 1. Sources
 
 | Item | Source |
 |---|---|
-| COB board (KiCad 10, 4 layers) | [run-1/1x1-cob/1x1-mezzanine.kicad_pcb @ 4f05ed1](https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/4f05ed1ea1994d8101a265d5d4f995bcea86d5a1/run-1/1x1-cob/1x1-mezzanine.kicad_pcb), sha256 `b0de95da…`, identical at HEAD `5cb4668` |
-| Pad map, connector choice | [run-1/README.md](https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/main/run-1/README.md) |
-| Wire-bond rules (< 3 mm, ≤ 45°, ≥ 1 mm) | [run-1/wirebonding/README.md](https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/main/run-1/wirebonding/README.md) |
-| Example carrier boards | [run-1/motherboards](https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/tree/main/run-1/motherboards) |
-| Connector | HCTL HC-PBB40C-70DP-0.4V-02, [LCSC C19089236](https://www.lcsc.com/product-detail/C19089236.html), mate [C19089262](https://www.lcsc.com/product-detail/C19089262.html). 0.4 mm pitch, 2 × 35 contacts, 0.3 A/contact, 1.5–4 mm stack. **No S-parameters or crosstalk data are published.** |
+| COB board (KiCad, 4 layers) | [run-1/1x1-cob/1x1-mezzanine.kicad_pcb @ 4f05ed1](https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/blob/4f05ed1ea1994d8101a265d5d4f995bcea86d5a1/run-1/1x1-cob/1x1-mezzanine.kicad_pcb), sha256 `b0de95da…` |
+| Pad map, wire-bond rules, example carriers | [run-1](https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs/tree/main/run-1) (`README.md`, `wirebonding/README.md`, `motherboards/`) |
+| Connector | HCTL HC-PBB40C-70DP-0.4V-02 ([LCSC C19089236](https://www.lcsc.com/product-detail/C19089236.html), mate C19089262): 0.4 mm pitch, 2 × 35 contacts, 0.3 A per contact, 1.5–4 mm stack |
+| Assembly facts (wire, die thickness, fixed bond layout, glob-top) | `scratch/reviews/wafer-space-answers.md` |
+| Audited bond lengths | `scratch/reviews/pads-core/BOND-AUDIT.md`, `wire-table.md` |
 
-No published S-parameters exist for the COB or the connector.
+## 2. The board
 
-## 2. What the board actually is (extracted)
+- **Assembly.** One fixed 74-wire bond layout: no custom bonds, down-bonds, double bonds or
+  extra wires, and extra pad openings on the die cannot be bonded. Wire is 0.8 mil (20.3 µm)
+  aluminium, wedge bonded. The die is about 250 µm thick, attached on the ground paddle and
+  covered with epoxy glob-top. A customer-modified board may not be accepted, so the
+  unmodified board must work.
+- **Size and stackup.** 14 × 16 mm, 0.747 mm thick: F.Cu / 0.196 mm FR4 (εr 4.5, tan δ 0.02) /
+  In1 / 0.23 mm core / In2 / 0.196 mm / B.Cu. In1 and In2 are solid ground. The F.Cu pour is
+  excluded inside the finger ring.
+- **Die paddle.** 4.0 × 5.2 mm, ground, 6 × 0.3 mm vias. The 3.932 × 5.122 mm die fills it.
+- **Bond fingers.** 1.0 × 0.25 mm at 0.4 mm pitch; north/south rows at ±4.7 mm, east/west rows
+  at ±4.3 mm from the centre.
+- **Traces.** All 56 signal traces are 0.1 mm wide, Z0 86.6 Ω, εeff 3.14 (5.9 ps/mm): front
+  copper, one via, back copper, 2.9–7.4 mm in total.
+- **Connector.** On the back side directly under the die. Ground on contacts 10, 18, 25, 45,
+  53, 61 and four shell tabs. Supplies, one contact each: VDD_IO_3 → 9, VDD_CORE_1 → 11,
+  PWR_AUX_1 → 19, VDD_IO_2 → 24, VDD_IO_1 → 44, VDD_CORE_0 → 46, PWR_AUX_0 → 54, VDD_IO_0 → 62.
+- **Passives.** Eight 0201 footprints (C101–C108, 1 µF), one from each supply net to ground.
+  **No footprint exists on any signal net.** The nearest signal passive is on the carrier:
+  bond, 3–7 mm of trace, via and connector away (≥ 6.5 nH per leg on RF_RX).
+- **74 pads, 70 contacts.** Each of the 56 signal sites and 8 supply sites has its own contact.
+  The 10 ground bonds land on the one ground plane. No signal lacks a connector path.
+- **Thermal.** The connector blocks the back side, so the bottom path is 35–45 °C/W. A
+  top-side cold finger through 0.3 mm of 3 W/m·K gel gives about 5 °C/W plus 1–2 °C/W of
+  spreading.
 
-- **Size and stackup.** The board is 14 × 16 mm and 0.747 mm thick: F.Cu / 0.196 mm FR4 (εr 4.5, tan δ 0.02) / In1 / 0.23 mm core / In2 / 0.196 mm / B.Cu.
-  In1 and In2 are solid GND. The F.Cu pour is excluded inside the finger ring.
-- **Die paddle.** Pad 75 is 4.0 × 5.2 mm, tied to GND through 6 × 0.3 mm vias. The die (3.93 × 5.12 mm) fills it.
-- **Bond fingers.** Each finger is 1.0 × 0.25 mm at 0.4 mm pitch. The N/S rows sit at ±4.7 mm and the E/W rows at ±4.3 mm.
-  Wire length (planar × 1.1 + 0.15 mm loop) is **2.2–3.2 mm**, with a maximum angle of 41°. The table in the JSON gives every pin.
-- **Traces.** All 56 signal traces are **0.1 mm wide, Z0 = 86.6 Ω, εeff 3.14 (5.9 ps/mm)**. Each runs F.Cu 0.9–3.5 mm, then 1 via (0.45/0.3 mm), then B.Cu 0.7–4.7 mm, for 2.9–7.4 mm in total.
-  Minimum centre spacing is 0.20–0.40 mm (≈ 1–2 h).
-- **Connector.** It sits on **B.Cu directly under the die**: pins 1–35 on one row, 36–70 on the other.
-  GND is on contacts 10, 18, 25, 45, 53, 61 plus 4 shell tabs. Supplies (one contact each, 0.2 mm traces): VDD_IO_3 → 9, VDD_CORE_1 → 11, PWR_AUX_1 → 19, VDD_IO_2 → 24, VDD_IO_1 → 44, VDD_CORE_0 → 46, PWR_AUX_0 → 54, VDD_IO_0 → 62.
-- **Passive strips.** These are 8 × **0201** footprints (C101–C108, "1 µF") on the back-side edge strips, one from each supply net to GND.
-  **No footprint exists on any signal net.** A signal passive on the COB would only be a hand-reworked shunt part onto a 0.1 mm trace. Series parts would mean cutting a fixed trace, which is not allowed.
-- **74 pads vs 70 contacts.** Each of the 56 signal sites and 8 supply sites has its own contact. The 10 die GND bonds land on one GND plane, which reaches 6 GND contacts and 4 tabs.
-  **No functional signal loses its connector path.** The "4 unconnected" are GND bonds without a dedicated contact.
+## 3. Bond map and channel per pin
 
-## 3. Channel per pin class (die pad → carrier 50 Ω)
+West edge: `RF_RX_P/N` (bonds 70/69, contacts 12/13), `BB_I_P/N` (68/67, 14/15), `BB_Q_P/N`
+(66/65, 16/17), `AUX_CLK_P/N` (62/61, 20/21), `REF_IN`/`REF_IN_N` (60/59, 22/23), `RF_TX_P/N`
+(56/55, 26/27). East edge: `WIRE_RX_N/P` (20/21, 60/59), `POR_BYPASS` (22, 58), spare
+`bidir[17]` (23, 57), `USB_DN/DP` (24/25, 56/55), `WIRE_TX_N/P` (28/29, 52/51), `WTX_EXT_P/N`
+(30/31, 50/49), `WMON` (32, 48), `TLP_TEST` (33, 47). South: D2H, SPI, `RESET_N`. North: H2D,
+`CLK_OBS`, `DBG_OBS0/1`, `ATB0/1`. The LNA has no pad of its own for ground: it uses die VSS.
 
-Model chain: pad C → bond (0.83 nH/mm over In1, R_skin) → finger 0.08 pF → F microstrip → via (0.27–0.49 nH, 0.1 pF) → B microstrip → land 0.06 pF → connector (0.6 nH + distance-to-GND term, 0.85–1.22 nH; 0.25 pF) → 10 mm carrier line.
+Model chain: pad C → bond wire → finger 0.08 pF → front microstrip → via (0.26–0.49 nH,
+0.1 pF) → back microstrip → land 0.06 pF → connector (0.85–1.22 nH, 0.25 pF) → carrier line.
 
-| Class (pins) | Bond mm | COB trace mm | IL interconnect 156 M / 1.25 G / 2.45 G (dB) | RL with die load at f_use | Neighbour XT at f_use (SE) |
+**Bond wires** (all 74, `bond_wire` per pin; loop height, landing point and a die placement
+shift of ±0.1 mm and ±1° varied):
+
+| Quantity | Range over all bonds |
+|---|---|
+| 3-D length | 1.86–3.12 mm |
+| Inductance, nominal (0.874 nH/mm, 0.40 mm above the ground plane) | 1.99–2.66 nH |
+| Inductance, min / max of any bond | 1.40 / 3.54 nH |
+| Resistance, aluminium | 211–290 mΩ |
+| Largest wire angle | 44° |
+| DC current for a 100 K rise, 3.0 mm aluminium wire | 0.233 A |
+
+The S-parameter and crosstalk entries use the generator's plan length (2.21–3.16 mm) at
+0.83 nH/mm.
+
+| Class (bond pads) | Plan bond mm | Trace mm | Interconnect loss at 156 M / 1.25 G / 2.45 G (dB) | Return loss with the die load | Worst neighbour crosstalk |
 |---|---|---|---|---|---|
-| RF_RX (70/69) | 2.69/2.60 | 4.97/6.01 | 0.12 / 0.74 / 1.64 | 8.3 dB @2.45 G (0.5 pF ∥ 50 Ω, before match) | P/N −12 dB (pair) |
-| RF_TX (60/59) | 2.60/2.69 | 3.12/3.06 | 0.11 / 0.61 / 1.40 | 8.5 dB @2.45 G (1 pF ∥ 50 Ω) | **→AUX_CLK_N −17.5 dB** |
-| LO I = REF_IN (66/65) | 2.44/2.42 | 3.18/5.66 | 0.11 / 0.59 / 1.35 | 8.8 dB | →BB_I_N −18.9 dB |
-| LO Q = AUX_CLK (62/61) | 2.47/2.53 | 5.22/5.46 | 0.12 / 0.72 / 1.58 | 7.3 dB | (RF_TX above) |
-| WIRE_RX (21/20) | 2.79/2.90 | 5.20/5.34 | 0.12 / 0.77 / 1.71 | **10.0 dB @1.25 G** (2.35 pF, 50 Ω) | →WCLK_IN −23.5 dB @1.25 G |
-| WIRE_TX (29/28) | 2.44/2.42 | 5.16/3.14 | 0.12 / 0.70 / 1.53 | 13.0 dB @1.25 G (1.8 pF) | →WTX_EXT −24.7 dB @1.25 G |
-| WCLK_IN / WTX_EXT | 2.5–2.7 | 3.0–5.2 | 0.11 / 0.6–0.8 / 1.4–1.7 | 14.5–18 dB @1.25 G | — |
-| Host D2H/H2D | 2.21–2.79 | 2.9–7.4 | 0.11–0.14 / 0.5–0.94 / — | unterminated CMOS | −42 dB @156 M |
+| RF_RX (70/69) | 2.69 / 2.60 | 4.97 / 6.01 | 0.12 / 0.74 / 1.64 | 8.3 dB at 2.45 G (0.5 pF ∥ 50 Ω, before the match) | P to N −12 dB |
+| RF_TX (56/55) | 3.02 / 3.16 | 5.68 / 5.39 | 0.13 / 0.80 / 1.78 | 6.7 dB at 2.45 G (1 pF ∥ 50 Ω) | → ATB1 −13.3 dB |
+| LO I = REF_IN (60/59) | 2.60 / 2.69 | 3.12 / 3.06 | 0.11 / 0.61 / 1.40 | 8.5 dB at 2.45 G | → AUX_CLK_N −17.5 dB |
+| LO Q = AUX_CLK (62/61) | 2.47 / 2.53 | 5.22 / 5.46 | 0.12 / 0.72 / 1.58 | 7.3 dB at 2.45 G | → REF_IN −17.6 dB |
+| WIRE_RX (21/20) | 2.79 / 2.90 | 5.20 / 5.34 | 0.12 / 0.77 / 1.71 | 10.0 dB at 1.25 G for a 2.35 pF pad and 50 Ω | → POR_BYPASS −23.5 dB at 1.25 G |
+| WIRE_TX (29/28) | 2.44 / 2.42 | 5.16 / 3.14 | 0.12 / 0.70 / 1.53 | 13.0 dB at 1.25 G (1.8 pF) | → WTX_EXT_P −24.7 dB at 1.25 G |
+| WTX_EXT (30/31) | 2.47 / 2.53 | 3.04 / 5.12 | 0.11 / 0.60–0.74 / 1.40–1.61 | 15–18 dB at 1.25 G | → WMON −21.4 dB |
+| Host D2H / H2D | 2.21–2.79 | 2.88–6.91 | 0.11–0.14 / — / — | unterminated CMOS | −24 dB at 1.25 G to the next lane |
 
-**Step and pulse response.** Source is 50 Ω on the carrier; the die end is pad C ∥ on-die termination.
+The WIRE_RX entries in the JSON were computed with a 2.35 pF pad. The published `pad_hspad`
+extracts at 1.11–1.16 pF per leg without metal resistance (`analog/pads/README.md`); the
+table below gives return loss against pad capacitance.
 
-| Path | Rise 10–90 | Overshoot | ISI (Σ\|cursors\|/main) | Eye (1 − ISI) |
+| WIRE_RX return loss at 1.25 GHz (dB) | R 40 Ω | 45 | 50 | 55 | 60 |
+|---|---|---|---|---|---|
+| Pad 2.35 pF | 9.0 | 9.6 | 10.0 | 10.3 | 10.3 |
+| Pad 1.6 pF | 10.7 | 12.1 | 13.5 | 14.8 | 16.0 |
+| Pad 1.0 pF | 11.1 | 12.9 | 14.8 | 17.1 | 20.0 |
+
+**Step and pulse response** (50 Ω source on the carrier; die end is pad C ∥ on-die termination):
+
+| Path | Rise 10–90 % | Overshoot | ISI (Σ\|cursors\|/main) | Eye (1 − ISI) |
 |---|---|---|---|---|
-| WIRE_RX @2.5 Gb/s, 2.35 pF | 205 ps | 7.6 % | 0.088 | 0.95 |
-| WIRE_RX @2.5 Gb/s, 1.6 pF (S7 target) | 185 ps | 8.2 % | 0.114 | 0.95 |
-| WIRE_RX, old 1.5 nH-only model | 115 ps | 1.8 % | 0.032 | 0.975 |
-| WIRE_TX @2.5 Gb/s | 190 ps | 7.4 % | 0.115 | 0.94 |
-| D2H_CLK / H2D_CLK @312.5 Mb/s (4 pF, no termination) | 395 ps | 10 % | 0.21 | 0.88 |
+| WIRE_RX at 2.5 Gb/s, 2.35 pF | 205 ps | 7.6 % | 0.088 | 0.95 |
+| WIRE_RX at 2.5 Gb/s, 1.6 pF | 185 ps | 8.2 % | 0.114 | 0.95 |
+| WIRE_TX at 2.5 Gb/s | 190 ps | 7.4 % | 0.115 | 0.94 |
+| WTX_EXT at 2.5 Gb/s | 160 ps | 12.7 % | 0.131 | 0.98 |
+| D2H_CLK / H2D_CLK at 312.5 Mb/s (no termination) | 395 ps | 10 % | 0.21 | 0.88 |
 
-The package alone costs ≈ 1 dB at the 1.25 GHz Nyquist plus a +7 % first post-cursor ringing at 2.5 Gb/s. It does not close the eye.
-**Wired return loss is the binding package spec, not the eye.**
+The package costs about 1 dB at 1.25 GHz and a 7 % post-cursor at 2.5 Gb/s. It does not close
+the eye; wired return loss is the binding package quantity. The pulse response has not been
+computed at 2.7–3.24 Gb/s on this bond map.
 
-**Skew** (5.9 ps/mm). Intra-pair: REF_IN 14.7 ps, WCLK_IN 12.4, WTX_EXT 12.3, WIRE_TX 11.9, BB_I 10.2, RF_RX 6.1, AUX 1.4, WIRE_RX 0.8, RF_TX 0.4.
-Host groups: D2H spread 22.5 ps, H2D 27.0 ps; both clocks are on the shortest traces.
+**Skew** (5.9 ps/mm, P minus N): WIRE_TX +11.9 ps, WTX_EXT −12.3, BB_Q −14.7, BB_I −10.2,
+RF_RX −6.1, RF_TX +1.7, AUX_CLK −1.4, WIRE_RX −0.8, REF_IN +0.4. Host groups: D2H spread
+22.5 ps, H2D 23.8 ps; both clocks are on the shortest traces.
+
+**Host simultaneous switching** (11 outputs): 486 mV ground bounce at 0.76 ns edges, 308 mV
+at 1.0 ns, 189 mV at 1.4 ns; a two-group launch stagger halves it.
 
 ## 4. Passive placement sweep
 
-Places evaluated: **strip** (COB edge, shunt-only rework), **conn+2 mm**, and carrier **10 / 30 / 50 mm** of 50 Ω line.
-Each match is a 2-element L-match (Q_L 40, Q_C 200), designed at 2.44 GHz.
+Places: **strip** (COB edge; only as a hand-reworked shunt part, not available on an
+unmodified board), **connector + 2 mm**, and **10 / 30 / 50 mm** of 50 Ω carrier line. Each
+match is a two-element L-match designed at 2.44 GHz.
 
-| Part | strip | conn+2 mm | car 10 mm | car 30 mm | car 50 mm | Notes |
+| Part | strip | conn + 2 mm | 10 mm | 30 mm | 50 mm | Notes |
 |---|---|---|---|---|---|---|
-| RF_RX match (B18/B25): loss, dB (NF penalty) | 0.23 | 0.37 | 0.61 | 1.44 | 2.20 | RL ≥ 26.9 dB in band; ≥ 28.7 dB for ±0.3 mm bond, at every placement (die model 0.5 pF ∥ 200 Ω) |
-| RF_RX unmatched (50 Ω straight in): loss, dB | 0.58 | 0.49 | 0.78 | 1.51 | 2.23 | A user with no match loses only 0.1–0.4 dB more than a matched one *for this die model* |
-| RF_TX match/balun (B17): loss, dB (Pout penalty) | 0.22 | 0.26 | 0.72 | 1.50 | 2.30 | RL ≥ 25 dB in band, ≥ 23.7 dB for ±0.3 mm bond (die 1 pF ∥ 100 Ω per leg) |
-| Ext. LO hybrid (B19): I/Q phase error at pads | — | −6 to −10° | same | same | same | Set by **COB asymmetry**, not distance; amplitude falls 0.5 dB from 2 to 50 mm |
-| Ext. LO level (B3): pad / open-circuit, unterminated, pad C 4 pF | — | 0.48 | — | 0.43 | ≈0.40 | Old 1.5 nH model: 0.67. Pad C 0.7–2 pF gives 2.35–0.93 (resonant) |
-| Wired AC-coupling caps (B22/B23) | n/a (series) | ✓ | ✓ | ✓ | ✓ | Series C carries no stub; carrier line IL @1.25 G 0.05/0.25/0.74/1.23 dB for 2/10/30/50 mm |
-| Wired termination (on die) | — | — | — | — | — | RL @1.25 G: 2.35 pF → 9.0–10.3 dB (R 40–60 Ω); 1.6 pF → 10.7–16.0 dB; 1.0 pF → 11.1–20.0 dB |
-| Reference XO (B23-3) | — | ✓ | ✓ | ✓ | ✓ | 25 MHz LVCMOS: COB adds < 0.15 dB; source-terminate at the XO |
-| Decap (8 × 0201 strip vs carrier) | f_res 159 MHz, Z_pk 12.5 Ω | 126 MHz, 20 Ω | 119 MHz, 22.5 Ω | 107 MHz, 27.5 Ω | — | 1 nF on die, undamped. With 4 nF: 80/63/59 MHz, 3.1–6.9 Ω |
+| RF_RX match: loss, dB (noise-figure penalty) | 0.23 | 0.37 | 0.61 | 1.44 | 2.20 | Return loss ≥ 26.9 dB in band for a 0.5 pF ∥ 200 Ω die model. The real LNA input is not this model: B18 is not met |
+| RF_RX unmatched (50 Ω straight in): loss, dB | 0.58 | 0.49 | 0.78 | 1.51 | 2.23 | |
+| RF_TX match and balun: loss, dB (output-power penalty) | 0.22 | 0.44 | 0.87 | 1.71 | 2.63 | Return loss ≥ 22.8 dB in band (1 pF ∥ 100 Ω per leg) |
+| Wired AC-coupling capacitors: carrier line loss at 1.25 GHz, dB | — | 0.05 | 0.25 | 0.74 | 1.23 | Series parts carry no stub |
+| Supply decoupling: resonance / undamped peak with 1 nF on the die | 159 MHz, 12.5 Ω | 126 MHz, 20 Ω | 119 MHz, 22.5 Ω | 107 MHz, 27.5 Ω | — | With 4 nF on the die: 80 / 63 / 59 / 54 MHz, 3.1–6.9 Ω. The on-die plan is in [power-delivery.md](power-delivery.md) |
 
-**Reading.** Every off-chip part still works at every placement. The cost is a smooth 0.2→2.3 dB from the strip to 50 mm for RF matching and balun parts.
-Two things do not improve with closer passives:
-- LO I/Q phase: set by the fixed COB lengths.
-- PDN resonance: set by the bond and connector L.
+**External LO at the pads** (differential gain from the source's open-circuit voltage, 2.45 GHz,
+30 mm of carrier line; connector + 2 mm is about 1 dB higher):
 
-Both need on-chip tolerance features (§5).
+| Pad load | Unterminated | 200 Ω | 100 Ω | 50 Ω |
+|---|---|---|---|---|
+| 0.7 pF | 2.42 | 1.64 | 1.22 | 0.81 |
+| 1.0 pF | 2.01 | 1.49 | 1.16 | 0.79 |
+| 1.5 pF | 1.36 | 1.16 | 0.98 | 0.73 |
+| 2.0 pF | 0.98 | 0.90 | 0.81 | 0.65 |
+| Spread over pad C | 7.8 dB | 5.2 dB | 3.6 dB | 2.0 dB |
 
-## 5. Plan re-evaluation (board items)
+The fixed traces give an I/Q phase error of −11° to −19° at the pads (pad C 2.0 to 0.7 pF,
+unterminated; −11° with 50 Ω), set by the board and not by the carrier distance.
 
-| Item | Verdict | Change |
-|---|---|---|
-| B17 RF_TX balun/match | still valid → **carrier** (≤ 10 mm preferred) | Pout −0.26…−2.3 dB vs placement. DC feed through the balun centre tap is unchanged. Per-pin model in sims. |
-| B18/B25 RF_RX match/balun | still valid → **carrier**, π footprints kept | NF +0.37…+2.2 dB vs placement. Bond tolerance is not dominant with a ≈ 100–200 Ω input. |
-| B3/B31 external LO level | valid, **window moves** | ≈ +2.5 dB source level if the pad load is ≈ 4 pF. B31 becomes mandatory. Owner rerun with this chain (PKG-05). |
-| B19 LO hybrid | valid → carrier, **plus length compensation** | The COB alone gives 6–10° of I/Q error. The carrier must compensate (BP-2) and the chip must trim (D-LO-2). |
-| B22/B23 AC coupling, termination | valid → carrier, any distance | RL 10.0 dB at 1.25 GHz is a 0 dB margin against PCIe RX ≥ 10 dB. The fix is on chip (pad C, R trim). |
-| B23(4) "no series peaking L" | valid | Package L is already 3.3–4 nH per leg. |
-| B13/B14/B15 board CDR, SerDes, mux | valid → carrier | They see the same COB channel. |
-| HL-B1..B6 host link | valid, with notes | COB is 87 Ω for 3–7 mm (≈ 35 ps ≪ 760 ps edge) and needs no change. The COB adds 22–27 ps group spread, which the FPGA deskew (HL-B5) covers. HL-B4 bounce needs slew control (PKG-08). |
-| B6/B6a bus switch | valid → carrier | Unchanged. |
-| B23(3) crystal oscillator on REF_IN | valid → carrier, any distance | A passive crystal is not possible (no XO amplifier pins); keep the XO module. |
-| Decap | strip **and** carrier | Populate all 8 strip caps; on-die damped decap is required (PKG-06). |
-| B27 grounded die attach | valid, already met | The paddle is GND with 6 vias; the attach must be conductive epoxy. |
-| B28 opaque cover | valid | Use the top-side cold finger. |
-| B2a/B29 plate under die | **must change** | The connector occupies the back side. Use a top-side cold finger (≈ 6–8 °C/W) or a per-mode set point with dwell (PKG-07). |
-| B30 bond 1.5 ± 0.2 mm | **cannot be met as written** | Fixed ring: 2.2–3.2 mm. Becomes "record the actual lengths" (PKG-01). |
-| B32 AGND_RX return | valid, **reinterpreted** | If adopted on a spare site, it gets its own trace and contact (≈ 6 nH). It is an LF Kelvin return to the carrier GND at the RF connector, not an RF ground. |
-| 70 vs 74 | no loss | No functional signal loses a connector path. |
+Every off-chip part works at every placement, at a cost that grows smoothly from 0.2 to
+2.6 dB between the strip and 50 mm. Two things do not improve with closer passives: the LO
+I/Q phase (fixed trace lengths) and the supply resonance (bond and connector inductance).
+
+## 5. What the chip must provide because of the package
+
+- Programmable termination, matching and trim on every RF, LO and multi-Gb/s pin; wide-range
+  equalisation; on-chip fallbacks where no passive can sit close.
+- An LO input tolerant of the amplitude spread above and of the fixed I/Q phase error, with
+  on-chip I/Q trim; the carrier compensates the trace lengths (BP-2).
+- No bond in any degeneration or ground-return path that needs less than about 2 nH.
+- On-die damped decoupling: the eight strip capacitors act below about 30 MHz.
+- Supply bonds within their rating: the worst supply bond carries 87.5 mA in the
+  power-delivery model (11.5 K rise on a 3 mm aluminium wire).
 
 ## 6. Qualification axis: passive placement tolerance
 
-Every RF, LO, wired and PDN claim is qualified at the placement points P0 (strip, if the part can be shunt-reworked), P1 (connector + 2 mm), P2 (+10 mm), P3 (+30 mm) and P4 (+50 mm).
-Also qualified: no part at all, where an on-chip fallback exists.
-At P1–P4 the bond spread is ±0.3 mm and the pad C spread is ±20 %.
+Every RF, LO, wired and supply claim is qualified at P1 (connector + 2 mm), P2 (+10 mm),
+P3 (+30 mm) and P4 (+50 mm), and with no part at all where an on-chip fallback exists. At
+each point the bond length varies by ±0.3 mm and the pad capacitance by ±20 %.
 
-| Axis criterion | Requirement |
+| Criterion | Requirement |
 |---|---|
-| RX NF | spec + placement loss (§4), ≤ +1.5 dB at P3, with the on-chip trim re-centred |
-| TX Pout | spec − placement loss, ≤ −1.5 dB at P3 |
-| LO on-level at mixers | in window at P1–P4 using only on-chip termination/trim and the B31 level; I/Q ≤ 3° after on-chip trim |
-| Wired RX RL | ≥ 10 dB to 1.25 GHz with on-die R trim at P1–P4; ≥ 8 dB at 2.5 GHz |
-| Wired eye | BER-1e-12 eye with CTLE/de-emphasis at P1–P4 plus the standard's reference channel |
-| PDN | Z_die ≤ 2 Ω from 30 to 400 MHz with strip caps populated, and ≤ 3 Ω with none |
+| RX noise figure | Spec plus the placement loss of section 4; ≤ +1.5 dB at P3 with the on-chip trim re-centred |
+| TX output power | Spec minus the placement loss; ≤ −1.5 dB at P3 |
+| LO level at the mixers | In window at P1–P4 using only on-chip termination and trim and the board level setting (B31); I/Q ≤ 3° after on-chip trim |
+| Wired RX return loss | ≥ 10 dB to 1.25 GHz with on-die resistance trim at P1–P4; ≥ 8 dB at 2.5 GHz |
+| Wired eye | BER 1e-12 eye with CTLE and de-emphasis at P1–P4 plus the standard's reference channel |
+| Supply impedance | ≤ 2 Ω from 30 to 400 MHz at the die with the strip capacitors populated, ≤ 3 Ω with none |

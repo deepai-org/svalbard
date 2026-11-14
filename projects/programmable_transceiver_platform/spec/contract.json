@@ -55,32 +55,35 @@
       "WIRE_TX_P": "bidir[20].pad"
     },
     "bond_map_current": {
-      "status": "authoritative physical bond map as of 2026-11-13 (area pass 4 doc fix). candidate_signal_sites above is the STALE pre-PD22 generator reference (it still drives analog/pads/design.py site resolution and verification/check_contract.py); it differs in WIRE_RX/WIRE_TX P/N order, the west RF_TX/REF_IN/AUX_CLK/BB_Q sites and the missing USB/debug pins. Re-baselining it is a pads + test_contract change (owner: pads/integration).",
+      "status": "authoritative physical bond map as of 2026-11-14 (coordinator decisions on the pads option table, scratch/reviews/pads-core/bond-map-options.md; rows PC-1..PC-18). candidate_signal_sites above is still the STALE pre-PD22 generator reference (it drives analog/pads/design.py site resolution and verification/check_contract.py); re-baselining it is a pads + test_contract change.",
       "sources": [
         "scratch/reviews/interface-changes.md PD22 (bond map, user decision)",
         "verification/chip_assembly/inventory.py CUSTOM_PADS (v4+ west map) and MIRRORED_PADS",
-        "scratch/chip-assembly-v6/run/floorplan-v6.json"
+        "scratch/chip-assembly-v6/run/floorplan-v6.json",
+        "scratch/reviews/pads-core/bond-map-options.md (options S1, P2 held, L1)",
+        "scratch/reviews/interface-changes.md PC-1..PC-18, CP4-3, RC-16t, PD2-12"
       ],
       "west": {
         "inputs[11].pad": "RF_RX_P",
         "inputs[10].pad": "RF_RX_N",
         "inputs[9].pad": "BB_I_P",
         "inputs[8].pad": "BB_I_N",
-        "inputs[7].pad": "REF_IN",
-        "inputs[6].pad": "REF_IN_N",
-        "inputs[5].pad": "AUX_CLK_P",
+        "inputs[7].pad": "BB_Q_P",
+        "inputs[6].pad": "BB_Q_N",
+        "inputs[5].pad": "AUX_CLK_P (refpad; external-LO Q leg, aux clock and, since CP4-3, the forwarded wire clock)",
         "inputs[4].pad": "AUX_CLK_N",
-        "inputs[3].pad": "BB_Q_P",
-        "inputs[2].pad": "BB_Q_N",
-        "inputs[1].pad": "RF_TX_P",
+        "inputs[3].pad": "REF_IN (refpad; reference and external-LO I leg)",
+        "inputs[2].pad": "REF_IN_N",
+        "inputs[1].pad": "RF_TX_P (pad_rftxpad)",
         "inputs[0].pad": "RF_TX_N",
-        "in-ring downbond pads beside RF_RX": "LNA_SRC_P / LNA_SRC_N (RC-16i)"
+        "extra pad openings beside RF_RX (no board finger)": "AGND_RX x2 (LNA ground, PD2-12): second wire on GND finger 71 or bare GND copper; if the assembler allows one landing only, one pad. Cells not built yet.",
+        "note": "option L1 (2026-11-14): REF_IN pair and BB_Q pair swapped sites to move the external LO 2110 um from RF_RX (bond-wire LO leak +11.2 / +2.4 / -12.7 dB margin at 4 Vpp; drive to be about 1 Vpp: +12 dB). Open condition: LO owner confirms the I/Q error from the now adjacent REF_IN / AUX_CLK pairs (about 0.7 / 1.5 / 3.6 deg per leg) is within trim."
       },
       "east": {
         "bidir[14].pad": "WIRE_RX_N (pad_hspad, mirrored)",
         "bidir[15].pad": "WIRE_RX_P (pad_hspad, mirrored)",
-        "bidir[16].pad": "WCLK_IN_P",
-        "bidir[17].pad": "WCLK_IN_N",
+        "bidir[16].pad": "POR_BYPASS (provider in_c, PD tied high: strap; bench jumper to 3.3 V on contact 58, default open)",
+        "bidir[17].pad": "spare, HELD (candidate P2: receives one south-edge signal so that signal's south site becomes a supply bond; decided after scratch/reviews/offchip-passives.md)",
         "bidir[18].pad": "USB_DN (pad_wirepad)",
         "bidir[19].pad": "USB_DP (pad_wirepad)",
         "bidir[20].pad": "WIRE_TX_N (pad_txpad, mirrored)",
@@ -88,7 +91,7 @@
         "bidir[22].pad": "WTX_EXT_P",
         "bidir[23].pad": "WTX_EXT_N",
         "bidir[24].pad": "WMON",
-        "bidir[25].pad": "TLP/ESD test site (PD48b)"
+        "bidir[25].pad": "TLP/ESD test site (pad_tlp_flat, PD48b; fixed cell PC-15)"
       },
       "north": {
         "bidir[37].pad": "CLK_OBS",
@@ -101,7 +104,9 @@
         "WCLK_OBS (was bidir[18], folded into CLK_OBS, PD22)",
         "WDBG_OBS (was bidir[19], folded into DBG_OBS0 codes 37+n, PD22)",
         "ESD_TEST (PD35)",
-        "usb2 mode_aliases on WIRE_RX_P/N (USB is on USB_DP/USB_DN since PD22)"
+        "usb2 mode_aliases on WIRE_RX_P/N (USB is on USB_DP/USB_DN since PD22)",
+        "WCLK_IN_P / WCLK_IN_N (were bidir[16] / bidir[17]; forwarded wire clock on the AUX_CLK pair, CP4-3)",
+        "LNA_SRC_P / LNA_SRC_N (RC-16t: on-chip degeneration; the openings are AGND_RX)"
       ],
       "host_link_and_south_sites": "unchanged: see candidate_signal_sites (D2H/H2D/SPI/RESET_N)"
     },
@@ -822,7 +827,7 @@
         "evidence": "candidate SPI recovery addresses 0x30-0x36 and behavioral mailbox; absent from pt_control RTL",
         "fault_notification_requirement": {
           "host_rule": "Invalidate partial protocol/alignment state and any not-yet-committed payload before rearm; budget detection, CDC, polling/serialization and host service latency.",
-          "implementation_gap": "pt_core accepts wire_rx_valid but no CDR qualification-loss input. SPI address 0x03 reads existing status; its host-frame rx_fault is not wired CDR loss. RecoveryMailbox addresses 0x30\u20130x36 are requests/replies, not asynchronous fault notification.",
+          "implementation_gap": "pt_core accepts wire_rx_valid but no CDR qualification-loss input. SPI address 0x03 reads existing status; its host-frame rx_fault is not wired CDR loss. RecoveryMailbox addresses 0x30–0x36 are requests/replies, not asynchronous fault notification.",
           "latency_bound_s": null,
           "publication": "Latch in a domain that survives loss of the recovered clock; retain until explicit acknowledged stop/flush. Expose through existing management transport, without allocating a new pin or protocol profile.",
           "source": "Loss of wired RX qualification after acquisition; initial acquisition remains distinct.",
@@ -1890,7 +1895,7 @@
           "le_2m": -70
         },
         "source": "https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/low-energy-controller/radio-physical-layer-specification.html",
-        "standard": "Bluetooth Core 6.2, Vol 6 Part A, sections 4.1\u20134.2",
+        "standard": "Bluetooth Core 6.2, Vol 6 Part A, sections 4.1–4.2",
         "status": "partial_requirement_extraction_not_compliance_proof"
       },
       "bandwidth_note": "Model allocation envelope, not regulatory occupied bandwidth or an implemented filter.",

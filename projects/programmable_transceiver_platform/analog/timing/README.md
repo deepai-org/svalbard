@@ -638,6 +638,67 @@ unchanged. Mismatch over 0.8–2.5 V is ≤ 1.32 % (ss, 100 µA), not the 1.03 %
 off ≤ 0.464 V, Q−I 93.2–95.0°), PD29 HBM 0 exceedances. Bench bug found: the r4 `hcp.py`/`run_loop.tb_pfd_pulse` ICP pin order,
 so r4 extracted CP numbers were from the layout without the LO18 legs.
 
+## RF LO owner round 6: repack staging, mode-walk and supply-model answers (2026-11-13)
+
+Work dir `scratch/lo-ap4/` (`NOTES.md`, independent review `review/REVIEW.md`). Interface rows LO21–LO28, MW-1a, MW-2a,
+MW-7a, MW-20a, CM-1, INT1-8a, AP4-5a, AP4-5b. **Nothing in `generated/` changed in this round.**
+Chip-top pin list and connection intent for the whole LO subsystem: **`LO-INTEGRATION.md`** in this directory.
+
+**Layout method (`lo_rows.py`, `layout_engine.generate(over_cell=<set of rows>)`).** Row plans for the LO cells:
+`'r4'` reproduces each published outline exactly and is what the standard flow uses (`lo_rows.PUBLISHED`); `'ap4'` balances
+rows by device height and runs the Metal4 tracks over the devices in rows without MIM capacitors. `python3 lo_rows.py
+<block> [plan] [--publish]` builds one block. `timing_flow.build_layout` no longer copies macro `.mag` files into
+`generated/fast/` before the publish gate.
+
+**Staged repacks (same netlists; DRC 0, LVS unique, KLayout precheck clean; not published, see AP4-5a).**
+
+| Cell | Published µm, mm² | Staged µm, mm² | State |
+| --- | --- | --- | --- |
+| `pt_lo_mmd` | 379.8 × 955.3, 0.361 | 379.9 × 383.3, 0.146 | RC-extracted, ss/32/3.15, 0.4 V per leg: divides to 3.4 GHz (published: 3.6 GHz); minimum tank amplitude at 2.5 GHz ≤ 0.15 V per leg on both; FB rise 127 → 172 ps; 20 of 33 bench cases run on each layout (`scratch/lo-ap4/mmd_compare.md`), the nine rung-4a cases agree; review NO-GO until complete |
+| `pt_lo_mmd_qdum` | 218.7 × 156.7, 0.034 | 100.0 × 194.7, 0.019 | no bench |
+| `pt_lo_obs` | 202.3 × 86.5, 0.0175 | 98.4 × 93.1, 0.0092 | no bench; the published cell fails 4 of 24 corners (ss / 3.15 V: no output), LO27 |
+| `pt_clk_obs16` | 197.7 × 469.8, 0.092 | 128.6 × 414.0, 0.053 | no bench |
+| `pt_lo_ext` | 324.1 × 481.9, 0.156 | 345.1 × 387.2, 0.134 (MW-20 candidate) | joint bench only, below |
+
+**Tank wiring load (LO26).** The published `pt_lo_mmd` has its AC-coupling caps at the bottom of a 955 µm cell and the LP/LN
+ports at the top: 200.7 / 125.9 fF of wiring on the I tank (flat RC extraction) against 22.1 / 30.5 fF in the Q-side dummy,
+and the QVCO benches contain neither load. The staged cells have the caps in the top row and LP/LN on one trunk pair:
+22.8 / 18.6 fF (flat RC) on I, 6.3 / 2.8 fF (C-only) on Q. **The QVCO has not been simulated with these loads, published or
+staged.**
+
+**MW-20: RX conversion on the real LO (`scratch/lo-ap4/mw20/joint.py`, reviewed: `review/REVIEW-mw20.md`).** Extracted
+`pt_lo_ext` (internal mode) into extracted `rxmix_i` / `rxmix_q` (rf_rx tree of 2026-11-13 22:58), IF 5 MHz, window
+300–700 ns, gain relative to the 0/VDD square LO of the rf_rx benches in the same deck:
+
+| LO source | tt/27/3.3 | ff/22/3.35 | ss/32/3.15 | ss, `ATB_VB` forced to 2.45 V |
+| --- | ---: | ---: | ---: | ---: |
+| published `pt_lo_ext`, tank 0.58 V per side | **−3.3 dB** | −1.9 dB | **−9.8 dB** | −3.4 dB |
+| published, tank 0.40 V | — | — | **−11.6 dB** | — |
+| candidate (`XRC` 72 µm, compact rows), tank 0.58 V | −1.5 dB | −1.0 dB | −3.8 dB | −1.6 dB |
+| candidate, tank 0.40 V | — | — | −5.0 dB | — |
+
+Published LO at the mixer gates: 0.72 / 0.81 / 0.62 Vpp per side (tt / ff / ss), centre 0.715–0.72 × VDD. Two levers of
+equal size at ss: swing (the published layout's parasitics take 0.87 Vpp schematic down to 0.62 Vpp, ≈ 0.45 pF per LO
+node) and the LO centre, which is a fixed fraction of VDD while the switch threshold moves with the corner. The pass
+criterion used so far for `pt_lo_ext` ("on ≥ 0.9 V, off ≤ 0.5 V") is **not sufficient** and is withdrawn as a mixer-drive
+criterion; conversion gain in the joint bench replaces it. An earlier set of runs at IF 20 MHz understated the loss by
+2–3 dB (TIA roll-off) and is not to be quoted. Candidate: 15.5 mA instead of 11.1 mA at tt, swing 1.01 Vpp, Q−I 88.8°;
+it is not qualified (joint bench and one block-bench point only). Not run: external modes with the mixers, TX mixer,
+sf/fs, temperature, mismatch.
+
+**Supply (INT1-6, LO21–LO23).** Limit: each supply-borne tone ≤ −60 dBc and ≤ 0.2 ps rms in total (33 µV pk at 1 MHz,
+2.6 mV at 78 MHz, a few µV at 30 kHz–1 MHz); the earlier "−80 dBc" was inconsistent and underived. The ring regulator
+`pt_pll_vreg` at the QVCO load gives 17–19 dB at 1 MHz and 17–21 dB at 78 MHz (three cells: 21–26 dB), nothing below
+100 kHz: not sufficient. A QVCO regulator does not exist; it needs the QVCO re-verified at ≈ 2.55–2.75 V first.
+
+**Lock time (LO24, LO25).** t_lock ≈ 6–7 × R·C2 of the loop filter: 40.5 µs nominal, 21–60 µs over R ±25 % / C2 ±15 %
+(64.5 µs at Kv 200), so the slow filter corner misses the 50 µs limit by up to 15 µs, not by 0.6 µs. The published
+`pt_lo_pfdcp` presets VTUNE to VDD/2, not to the 2.1 V the ladder and LO20 assume.
+
+**QVCO corners (AP4-5b).** Keep-out rule (derived; the PDK has none): 25 µm from the outer-turn metal. FastHenry: a
+100 × 290 µm cell there changes L by −0.001 % and Q by −0.012 %. Slot A (111 × 302.9 µm, next to the tank ports) holds
+the staged dummy and `lo_obs`.
+
 ## Known limitations and open items
 
 1. **`pll_ring` HOLD fails extracted (r7: +19 636 ppm step, limit 200; see above).**  r7 schematic gave +273 ppm.  Under
@@ -676,3 +737,9 @@ so r4 extracted CP numbers were from the layout without the LO18 legs.
 9. Not covered: mismatch/Monte Carlo, IR drop and RC clock skew (C-only
    extraction), substrate coupling, ESD (pads family), integration with
    `atb_tap` and the island switch. (risk: MOD-02)
+10. **Round 6 open items (2026-11-13):** `pt_lo_ext` under-drives the RX mixers (−3.3 dB at tt, −9.8…−11.6 dB at ss; MW-20a: die-1
+    mitigation is the `ATB_VB` trim, the fix is a staged candidate plus a threshold-tracking VB); QVCO never simulated
+    with the MMD / dummy / lo_obs tank loads (LO26); no QVCO regulator (LO22); lock time at the slow filter corner
+    (LO24) and the preset voltage (LO25); `pt_lo_obs` fails at ss / 3.15 V (LO27); electromigration never checked on
+    the engine-routed CML current paths (LO28); the VLI node of `pt_lo_ext` floats when `CMLSEL = 0`; all `'ap4'`
+    repacks are staged only (AP4-5a). (risk: LO-04, LO-10, LO-11; no register rows yet for LO26–LO28)

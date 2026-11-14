@@ -107,7 +107,7 @@ def publish_stage(block):
     print(f'{block}: published {stage} -> {GENERATED}', flush=True)
 
 
-def build_layout(block, rows=None, max_row_width=160.0, extra_trunk_nets=(), publish='clean'):
+def build_layout(block, rows=None, max_row_width=160.0, extra_trunk_nets=(), publish='clean', **gen_kw):
     """publish: 'clean' (default) copies into generated/ only if layout_clean(); 'never' leaves it staged
     (caller runs benches on the stage, then publish_stage()); 'force' = the old unconditional behaviour."""
     src = HERE / f'{block}.spice'
@@ -119,13 +119,11 @@ def build_layout(block, rows=None, max_row_width=160.0, extra_trunk_nets=(), pub
     work.mkdir(parents=True)
     rows_resolved = rows(devices) if callable(rows) else rows
     rep = le.generate(work, top, ports, devices, rows=rows_resolved, max_row_width=max_row_width,
-                      extra_trunk_nets=extra_trunk_nets)
+                      extra_trunk_nets=extra_trunk_nets, **gen_kw)   # gen_kw: over_cell, trunk_groups, net_space...
     macros = sorted({d.model for d in devices if d.model in netlist.MACROS})
     defs = ''.join((GENERATED / 'fast' / f'{m}.spice').read_text() for m in macros)
     (work / 'schematic.spice').write_text(defs + with_antenna_diodes(netlist.flat_spice(ports, devices, top), rep))
     lvs = le.netgen_lvs(work, f'{top}.lvs.spice', top, 'schematic.spice', top)
-    for m in macros:  # macro .mag files are needed to reopen the hierarchical layout
-        shutil.copy(work / f'{m}.mag', GENERATED / 'fast' / f'{m}.mag') if (work / f'{m}.mag').exists() else None
     gds_export_analog(work, top)
     kl = klayout_drc(work, top)
     (work / 'klayout.json').write_text(json.dumps(kl, indent=1))

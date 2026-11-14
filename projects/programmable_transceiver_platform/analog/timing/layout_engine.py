@@ -287,7 +287,8 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
     Width <= 3.0 um (neighbour columns blocked: two wide trunks sit >= 3.6 um apart).
     `over_cell` (optional, default False = unchanged behaviour): a row's Metal4 tracks start over the row's
     own devices instead of above them (for macros that use only Metal1/2), so the channel is only what the
-    track count exceeds the row height by."""
+    track count exceeds the row height by.  May also be a set of row indices (only those rows; rows holding
+    MIM capacitors, whose plates are Metal4/5, must stay out of the set)."""
     net_space = net_space or {}
     net_width = net_width or {}
     if any(w > 3.0 for w in net_width.values()):
@@ -385,7 +386,8 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
         row_top = max(heights)
         row_right = x_cursor
         # channel tracks
-        y = (y_row + 0.9) if over_cell else (row_top + 0.9)
+        oc = over_cell if isinstance(over_cell, bool) else (ri in over_cell)   # per-row set of row indices (AP4-5)
+        y = (y_row + 0.9) if oc else (row_top + 0.9)
         nets = row_nets[ri]
         order = [n for n in power_nets if n in nets] + [n for n in nets if n not in power_nets]
         prev_extra = 0.0
@@ -397,7 +399,7 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
             tracks[(ri, n)] = snap(y)
             y += w / 2 + TRACK_SPACE + ex
             prev_extra = ex
-        channel_top = max(y + 0.5, row_top + 1.0) if over_cell else y + 0.5
+        channel_top = max(y + 0.5, row_top + 1.0) if oc else y + 0.5
         row_extents.append(dict(row=ri, y_bottom=y_row, row_top=row_top, channel_top=channel_top, right=row_right,
                                 devices=len(row), tracks=len(order)))
         # device instances and pin escapes

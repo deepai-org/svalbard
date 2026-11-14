@@ -15,6 +15,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import lo_rows
 import timing_flow as tf
 
 VDD = 3.3
@@ -1119,7 +1120,10 @@ def main():
         baseline = published_baseline(b, rec)
         staged = None
         if not a.skip_layout:
-            lay = tf.build_layout(b, max_row_width=WIDTH.get(b, 200), publish='force' if a.publish == 'force' else 'never')
+            # blocks with a row plan in lo_rows.py (lo_ext, clk_obs16, lo_obs) are rebuilt with the plan they are
+            # PUBLISHED with (lo_rows.PUBLISHED, else 'r4'); a staged 'ap4' plan is never picked up from here
+            kw = lo_rows.plan(b) if (b, 'r4') in lo_rows.PLANS else dict(max_row_width=WIDTH.get(b, 200))
+            lay = tf.build_layout(b, publish='force' if a.publish == 'force' else 'never', **kw)
             if a.publish != 'force':
                 staged = lay['stage']
                 tf.STAGED[b] = staged

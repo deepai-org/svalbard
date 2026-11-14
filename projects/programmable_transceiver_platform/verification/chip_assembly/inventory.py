@@ -161,7 +161,7 @@ CUSTOM_PADS = [
 MIRRORED_PADS = {'pad_wire_rx': ('bidir[15].pad', 'bidir[14].pad'), 'pad_wire_tx': ('bidir[21].pad', 'bidir[20].pad')}
 
 # Q-path mixers are mirrored copies of the I-path cells so the LO feed from the polyphase
-# is symmetric about the I/Q centre line (path-to-tapeout 2.4 "symmetric shielded LO").
+# is symmetric about the I/Q centre line (symmetric shielded LO routing).
 MIRROR_X = set()   # superseded by ORIENT (floorplan v2)
 
 # Floorplan v2: explicit placement of the RF chain and the I/Q pairs (lower-left of the

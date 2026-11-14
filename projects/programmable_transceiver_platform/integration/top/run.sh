@@ -30,6 +30,10 @@ PT_TOP_CONN="$W/mut.conn" PT_TOP_OUT="$W/gen" python3 check_top.py --write --no-
 cp generated/tb_regs.svh "$W/gen/"
 iverilog -g2012 -I $RTL -I "$W/gen" -o "$W/mut" -s tb_top_boundary sim/tb_top_boundary.sv "$W/gen/pt_analog_top_stub.sv" $(ls $RTL/*.sv) && vvp "$W/mut" > "$W/mut.log"
 if grep -q TOP_BOUNDARY_FAIL "$W/mut.log"; then echo "boundary sim negative control (swapped pins in the conn): detected"; else echo "boundary sim negative control (conn): NOT detected"; rc=1; fi
+# M6 isolation-state audit (rules K1..K8 of scratch/integration/m6-powerup/audit/iso_audit.py) on the conn, with its self-test
+OMP_NUM_THREADS=1 python3 iso_audit_top.py --selftest > "$W/iso.log" 2>&1; iso=$?
+grep -E "^ISO AUDIT|^  \[K|selftest|macro-internal|RTL facts" "$W/iso.log"
+[ $iso = 0 ] || rc=1
 rm -rf "$W"
 echo "chip-top regression: $([ $rc = 0 ] && echo PASS || echo FAIL)"
 exit $rc

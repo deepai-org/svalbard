@@ -1,0 +1,1360 @@
+{
+ "counts": {
+  "K1": 20,
+  "K2": 55,
+  "K3": 0,
+  "K4": 0,
+  "K5": 40,
+  "K6": 0,
+  "K7": 15
+ },
+ "groups": {
+  "K1 island-to-island / island-to-core gate with no clamp": 20,
+  "K2 pad back-drive into an off island": 11,
+  "K2 core / digital source onto p-diffusion of an off island": 44,
+  "K5 contention": 40,
+  "K7 ATB leaf not gated by its island": 15
+ },
+ "fails": [
+  {
+   "rule": "K1",
+   "net": "BBI_OBS_N",
+   "driver_islands": [
+    "rf"
+   ],
+   "receiver": "bb_tap_i.in_n",
+   "receiver_domain": "debug",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "BBI_OBS_P",
+   "driver_islands": [
+    "rf"
+   ],
+   "receiver": "bb_tap_i.in_p",
+   "receiver_domain": "debug",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "BBQ_OBS_N",
+   "driver_islands": [
+    "rf"
+   ],
+   "receiver": "bb_tap_q.in_n",
+   "receiver_domain": "debug",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "BBQ_OBS_P",
+   "driver_islands": [
+    "rf"
+   ],
+   "receiver": "bb_tap_q.in_p",
+   "receiver_domain": "debug",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "CDRPH[0]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "ptrim.PH0",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "CDRPH[1]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "obs_pre4_cdr.CK",
+   "receiver_domain": "debug",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "CDRPH[1]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "ptrim.PH1",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "CDRPH[2]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "ptrim.PH2",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "CDRPH[3]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "ptrim.PH3",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "CDRPH[4]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "ptrim.PH4",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "CDRPH[5]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "ptrim.PH5",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "CDRPH[6]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "ptrim.PH6",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "CDRPH[7]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "ptrim.PH7",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "TXPH[0]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "wiredtx.WTX_PH0",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "TXPH[1]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "obs_pre4_pll.CK",
+   "receiver_domain": "debug",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "TXPH[2]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "wiredtx.WTX_PH90",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "TXPH[4]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "wiredtx.WTX_PH180",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "TXPH[6]",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "wiredtx.WTX_PH270",
+   "receiver_domain": "wired",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "WIRE_CK",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "obs_pre4_wire.CK",
+   "receiver_domain": "debug",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K1",
+   "net": "WSMP_CK",
+   "driver_islands": [
+    "pll"
+   ],
+   "receiver": "obs_pre4_wsmp.CK",
+   "receiver_domain": "debug",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "medium"
+  },
+  {
+   "rule": "K2",
+   "net": "RF_TX_N",
+   "victim": "rfdriver.pad_n",
+   "well": "~int",
+   "island": "rf",
+   "via": "pdiff",
+   "source": "<pad>.RF_TX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "RF_TX_P",
+   "victim": "rfdriver.pad_p",
+   "well": "~int",
+   "island": "rf",
+   "via": "pdiff",
+   "source": "<pad>.RF_TX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "TX_TERM_VCM",
+   "victim": "term_buffer.OUT",
+   "well": "~int",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_wire_tx.TERM_VCM",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "URX_N",
+   "victim": "rxselect.RX_N",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "URX_N",
+   "victim": "wmon_sel.RX_N",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "URX_N",
+   "victim": "detect.RX_N",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "URX_P",
+   "victim": "rxselect.RX_P",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "URX_P",
+   "victim": "wmon_sel.RX_P",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "URX_P",
+   "victim": "detect.RX_P",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "pad_usb.RX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WIRE_TX_N",
+   "victim": "detect.TX_N",
+   "well": "~int",
+   "island": "wired",
+   "via": "pdiff:R",
+   "source": "<pad>.WIRE_TX_N",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "WIRE_TX_P",
+   "victim": "detect.TX_P",
+   "well": "~int",
+   "island": "wired",
+   "via": "pdiff:R",
+   "source": "<pad>.WIRE_TX_P",
+   "source_domain": "pad",
+   "detail": "pad can be driven externally while the island is off"
+  },
+  {
+   "rule": "K2",
+   "net": "rf_tx_sample[14]",
+   "victim": "dac_q.CODE0",
+   "well": "RAIL_conv",
+   "island": "conv",
+   "via": "pdiff",
+   "source": "digital.rf_tx_sample[14]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "rf_tx_sample[15]",
+   "victim": "dac_q.CODE1",
+   "well": "RAIL_conv",
+   "island": "conv",
+   "via": "pdiff",
+   "source": "digital.rf_tx_sample[15]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "rf_tx_sample[2]",
+   "victim": "dac_i.CODE0",
+   "well": "RAIL_conv",
+   "island": "conv",
+   "via": "pdiff",
+   "source": "digital.rf_tx_sample[2]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "rf_tx_sample[3]",
+   "victim": "dac_i.CODE1",
+   "well": "RAIL_conv",
+   "island": "conv",
+   "via": "pdiff",
+   "source": "digital.rf_tx_sample[3]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[0]",
+   "victim": "wiredtx.D0",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[0]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[10]",
+   "victim": "wiredtx.D10",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[10]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[11]",
+   "victim": "wiredtx.D11",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[11]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[12]",
+   "victim": "wiredtx.D12",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[12]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[13]",
+   "victim": "wiredtx.D13",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[13]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[14]",
+   "victim": "wiredtx.D14",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[14]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[15]",
+   "victim": "wiredtx.D15",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[15]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[16]",
+   "victim": "wiredtx.D16",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[16]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[17]",
+   "victim": "wiredtx.D17",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[17]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[18]",
+   "victim": "wiredtx.D18",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[18]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[19]",
+   "victim": "wiredtx.D19",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[19]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[1]",
+   "victim": "wiredtx.D1",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[1]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[20]",
+   "victim": "wiredtx.D20",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[20]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[21]",
+   "victim": "wiredtx.D21",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[21]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[22]",
+   "victim": "wiredtx.D22",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[22]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[23]",
+   "victim": "wiredtx.D23",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[23]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[24]",
+   "victim": "wiredtx.D24",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[24]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[25]",
+   "victim": "wiredtx.D25",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[25]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[26]",
+   "victim": "wiredtx.D26",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[26]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[27]",
+   "victim": "wiredtx.D27",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[27]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[28]",
+   "victim": "wiredtx.D28",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[28]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[29]",
+   "victim": "wiredtx.D29",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[29]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[2]",
+   "victim": "wiredtx.D2",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[2]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[30]",
+   "victim": "wiredtx.D30",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[30]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[31]",
+   "victim": "wiredtx.D31",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[31]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[32]",
+   "victim": "wiredtx.D32",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[32]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[33]",
+   "victim": "wiredtx.D33",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[33]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[34]",
+   "victim": "wiredtx.D34",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[34]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[35]",
+   "victim": "wiredtx.D35",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[35]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[36]",
+   "victim": "wiredtx.D36",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[36]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[37]",
+   "victim": "wiredtx.D37",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[37]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[38]",
+   "victim": "wiredtx.D38",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[38]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[39]",
+   "victim": "wiredtx.D39",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[39]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[3]",
+   "victim": "wiredtx.D3",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[3]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[4]",
+   "victim": "wiredtx.D4",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[4]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[5]",
+   "victim": "wiredtx.D5",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[5]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[6]",
+   "victim": "wiredtx.D6",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[6]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[7]",
+   "victim": "wiredtx.D7",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[7]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[8]",
+   "victim": "wiredtx.D8",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[8]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K2",
+   "net": "wire_tx_data[9]",
+   "victim": "wiredtx.D9",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff",
+   "source": "digital.wire_tx_data[9]",
+   "source_domain": "core",
+   "detail": "no reset/off-state rule"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[0]",
+   "drivers": [
+    "wiredtx.D0",
+    "digital.wire_tx_data[0]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[10]",
+   "drivers": [
+    "wiredtx.D10",
+    "digital.wire_tx_data[10]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[11]",
+   "drivers": [
+    "wiredtx.D11",
+    "digital.wire_tx_data[11]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[12]",
+   "drivers": [
+    "wiredtx.D12",
+    "digital.wire_tx_data[12]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[13]",
+   "drivers": [
+    "wiredtx.D13",
+    "digital.wire_tx_data[13]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[14]",
+   "drivers": [
+    "wiredtx.D14",
+    "digital.wire_tx_data[14]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[15]",
+   "drivers": [
+    "wiredtx.D15",
+    "digital.wire_tx_data[15]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[16]",
+   "drivers": [
+    "wiredtx.D16",
+    "digital.wire_tx_data[16]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[17]",
+   "drivers": [
+    "wiredtx.D17",
+    "digital.wire_tx_data[17]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[18]",
+   "drivers": [
+    "wiredtx.D18",
+    "digital.wire_tx_data[18]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[19]",
+   "drivers": [
+    "wiredtx.D19",
+    "digital.wire_tx_data[19]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[1]",
+   "drivers": [
+    "wiredtx.D1",
+    "digital.wire_tx_data[1]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[20]",
+   "drivers": [
+    "wiredtx.D20",
+    "digital.wire_tx_data[20]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[21]",
+   "drivers": [
+    "wiredtx.D21",
+    "digital.wire_tx_data[21]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[22]",
+   "drivers": [
+    "wiredtx.D22",
+    "digital.wire_tx_data[22]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[23]",
+   "drivers": [
+    "wiredtx.D23",
+    "digital.wire_tx_data[23]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[24]",
+   "drivers": [
+    "wiredtx.D24",
+    "digital.wire_tx_data[24]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[25]",
+   "drivers": [
+    "wiredtx.D25",
+    "digital.wire_tx_data[25]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[26]",
+   "drivers": [
+    "wiredtx.D26",
+    "digital.wire_tx_data[26]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[27]",
+   "drivers": [
+    "wiredtx.D27",
+    "digital.wire_tx_data[27]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[28]",
+   "drivers": [
+    "wiredtx.D28",
+    "digital.wire_tx_data[28]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[29]",
+   "drivers": [
+    "wiredtx.D29",
+    "digital.wire_tx_data[29]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[2]",
+   "drivers": [
+    "wiredtx.D2",
+    "digital.wire_tx_data[2]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[30]",
+   "drivers": [
+    "wiredtx.D30",
+    "digital.wire_tx_data[30]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[31]",
+   "drivers": [
+    "wiredtx.D31",
+    "digital.wire_tx_data[31]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[32]",
+   "drivers": [
+    "wiredtx.D32",
+    "digital.wire_tx_data[32]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[33]",
+   "drivers": [
+    "wiredtx.D33",
+    "digital.wire_tx_data[33]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[34]",
+   "drivers": [
+    "wiredtx.D34",
+    "digital.wire_tx_data[34]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[35]",
+   "drivers": [
+    "wiredtx.D35",
+    "digital.wire_tx_data[35]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[36]",
+   "drivers": [
+    "wiredtx.D36",
+    "digital.wire_tx_data[36]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[37]",
+   "drivers": [
+    "wiredtx.D37",
+    "digital.wire_tx_data[37]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[38]",
+   "drivers": [
+    "wiredtx.D38",
+    "digital.wire_tx_data[38]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[39]",
+   "drivers": [
+    "wiredtx.D39",
+    "digital.wire_tx_data[39]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[3]",
+   "drivers": [
+    "wiredtx.D3",
+    "digital.wire_tx_data[3]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[4]",
+   "drivers": [
+    "wiredtx.D4",
+    "digital.wire_tx_data[4]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[5]",
+   "drivers": [
+    "wiredtx.D5",
+    "digital.wire_tx_data[5]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[6]",
+   "drivers": [
+    "wiredtx.D6",
+    "digital.wire_tx_data[6]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[7]",
+   "drivers": [
+    "wiredtx.D7",
+    "digital.wire_tx_data[7]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[8]",
+   "drivers": [
+    "wiredtx.D8",
+    "digital.wire_tx_data[8]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K5",
+   "net": "wire_tx_data[9]",
+   "drivers": [
+    "wiredtx.D9",
+    "digital.wire_tx_data[9]"
+   ],
+   "detail": "more than one push-pull output on the net"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf2",
+   "node": "VREF0_MASTER",
+   "island": "conv",
+   "sel": "atb1_sw[1]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf3",
+   "node": "VCM_MASTER",
+   "island": "conv",
+   "sel": "atb1_sw[2]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf14",
+   "node": "ATBN_rf_ibias",
+   "island": "rf",
+   "sel": "atb0_sw[13]",
+   "bus": "ATB0 force",
+   "detail": "leaf on an island node but its select is not gated by island_on[1]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf14",
+   "node": "ATBN_rf_ibias",
+   "island": "rf",
+   "sel": "atb1_sw[13]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[1]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf22",
+   "detail": "select WTX_FORCE_SELECTED has no decode in pt_regfile.sv"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf22",
+   "node": "ATBN_wire_ibias",
+   "island": "wired",
+   "sel": "atb1_sw[21]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[0]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf29",
+   "node": "ATBN_pll_ibias",
+   "island": "pll",
+   "sel": "atb0_sw[28]",
+   "bus": "ATB0 force",
+   "detail": "leaf on an island node but its select is not gated by island_on[2]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf29",
+   "node": "ATBN_pll_ibias",
+   "island": "pll",
+   "sel": "atb1_sw[28]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[2]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf35",
+   "node": "ATBN_conv_ibias",
+   "island": "conv",
+   "sel": "atb0_sw[34]",
+   "bus": "ATB0 force",
+   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf35",
+   "node": "ATBN_conv_ibias",
+   "island": "conv",
+   "sel": "atb1_sw[34]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf56",
+   "node": "ATBN_debug_ibias",
+   "island": "debug",
+   "sel": "atb0_sw[55]",
+   "bus": "ATB0 force",
+   "detail": "leaf on an island node but its select is not gated by island_on[5]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf56",
+   "node": "ATBN_debug_ibias",
+   "island": "debug",
+   "sel": "atb1_sw[55]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[5]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf33",
+   "node": "ATBN_quadrature_bias",
+   "island": "rf",
+   "sel": "atb1_sw[32]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[1]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb0_leaf58",
+   "node": "VCO_REPLICA_VCTRL",
+   "island": "debug",
+   "sel": "atb0_sw[57]",
+   "bus": "ATB0 force",
+   "detail": "leaf on an island node but its select is not gated by island_on[5]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  },
+  {
+   "rule": "K7",
+   "leaf": "atb1_leaf58",
+   "node": "VCO_REPLICA_VCTRL",
+   "island": "debug",
+   "sel": "atb1_sw[57]",
+   "bus": "ATB1 sense",
+   "detail": "leaf on an island node but its select is not gated by island_on[5]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+  }
+ ],
+ "macro_internal_clamps": 130,
+ "k1_clamped_ok": 145,
+ "coverage": {
+  "instances": 371,
+  "nets": 1489,
+  "unbound_ports": 0,
+  "iso_clamp_instances": 146
+ },
+ "empty_boxes": [
+  "atb_provider_pad",
+  "pad_downbond",
+  "pad_strap",
+  "prov_supply",
+  "pt_agnd_tie",
+  "pt_bias_ext",
+  "pt_debug_physical",
+  "pt_digital_macro",
+  "pt_host_physical",
+  "pt_lna_deg",
+  "pt_lna_ind",
+  "pt_lo_vreg",
+  "pt_refvcm",
+  "pt_txpad_bias"
+ ]
+}

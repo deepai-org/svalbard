@@ -1,0 +1,20 @@
+id,item,block,mm2_low,mm2_high,mA,pad_class,pads,board_parts,case,universal_board,confidence,status
+OCP-1,LO loop filter C2 off-chip,pt_lo_lf,0.14,0.15,0,mode-idle,2 provider analog pads idle in RF modes (LO_X + LO_AGND Kelvin),470 pF C0G 5% 0402,A,yes,M,proposed
+OCP-2,WTX_EXT fallback input on the USB pad pair; pad_wtx_ext deleted,pad_rf_pair (wtx_ext),0.151,0.151,0,none (frees 2),USB_DP/USB_DN reused on wired carriers,2 x 100 nF AC caps (existing B12),A,jumper pair,M,proposed
+OCP-3,QVCO regulator hold caps + megohm resistors off-chip (= die-fit lever 11),pt_lo_vreg,0.10,0.15,0,mode-idle,AUX_CLK pair via switches (LO_CEXT + LO_AGND) + 2 provider analog pads (G1 G2),10 uF + 2 x 100 nF,A (5 dB worse at 78 MHz) / B,no (population),L,proposed
+OCP-4,USB FS/LS single-ended receivers on FPGA pins,pt_detect,0,0.01,0,none,FPGA pins,2 x 1 kohm 1%,A,USB carrier,L,minor
+OCP-5,ADC VCM external capacitor,vcm_buffer,0,0.003,0,existing,ATB0,100 nF,A,yes,L,minor
+OCP-6,precision bias resistor REXT,pt_core_bias / pt_bias_ext,0,0,0,existing,pt_bias_ext taps,12.1 k 0.1%,A,yes,M,no area (accuracy only)
+B-1,TX termination as Thevenin pairs on the COB,term_buffer + pt_txpad_bias,0.06,0.09,0,none,WIRE_TX pads,4 x 100 ohm 1% 0201 + 100 nF,B only,no,L,case B
+B-2,RX TERM_VCM by COB resistors (AC-coupled protocols),pt_termination,0.01,0.02,0,none,WIRE_RX pads,2 x 49.9 ohm 1% 0201,B only,no,L,case B
+R-1,USB pull-ups / pull-downs external,pad_wirepad,0,0.002,0,none,FPGA GPIO,1.5 k + 2 x 15 k 1%,A,-,H,rejected (no area)
+R-2,USB 45 ohm terminations external,pad_wirepad,0,0,0,-,-,-,-,-,H,rejected (switch is the FS driver)
+R-3,USB LS slew capacitors external,pad_wirepad,0,0.003,0,-,-,-,-,-,H,rejected
+R-4,wired RX/TX termination on the carrier,pads,0,0,0,-,-,-,A,-,H,rejected (+8-9 dB resonance at 1.6 GHz)
+R-5,decap bank / grid MIM on the board,decap,0,0,0,-,-,-,A and B,-,H,rejected (bond inductance)
+R-6,LNA tank / degeneration / QVCO tank / T-coil off-chip,rf,0,0,0,-,-,-,A and B,-,H,rejected (bond >= 1.8 nH)
+R-7,refbuf reservoir external,pt_refbuf,0,0,0,-,-,-,-,-,H,rejected
+R-8,pll_vreg2 gate capacitor external,pt_pll_vreg2,0.03,0.04,0,mode-idle,west provider pad + Kelvin,100 nF,A,-,L,rejected (megohm node; 0.03)
+R-9,bbfilter capacitors external,pt_bbfilter,0,0,0,8 pins,-,-,-,-,H,rejected
+R-10,USB on the WIRE_TX/WIRE_RX pad,pad_wirepad,0.31,0.35,0,-,-,-,-,-,H,rejected (2.3 pF kills 2.5-3.24 Gb/s)
+R-11,AUX_CLK function on the BB_Q pair,pad_refpad,0,0.044,0,-,-,-,-,-,M,rejected (after lever 1)

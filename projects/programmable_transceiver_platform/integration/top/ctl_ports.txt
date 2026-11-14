@@ -8,7 +8,7 @@
 # All ports are static (change only while the consumer is stopped) unless the note says "dynamic".
 # "en" encoding everywhere below: (state == active) & island_on[k] of the consumer's island (D-EN: READMEs say state != off).
 # ---- always-on
-c_aosc_en | 1 | 1 | direct | core.aosc.enable | always-on oscillator; floating costs up to 1.79 mA (always-on audit)
+c_aosc_en | 1 | 0 | direct | core.aosc.enable | always-on oscillator; reset 0 since DT-11 (must be bound: floating costs up to 1.79 mA)
 c_biasgen_ena | 1 | 0 | direct | core.biasgen.ena |
 c_biasgen_ref_sel_vbg | 1 | 0 | direct | core.biasgen.ref_sel_vbg |
 c_biasgen_ref_sel_coarse | 1 | 0 | direct | core.biasgen.ref_sel_coarse |
@@ -40,7 +40,6 @@ c_rxmix_i_en | 1 | 0 | en (island 1) | rxmix_i.state.state | today en_eff[8]
 c_rxmix_q_en | 1 | 0 | en (island 1) | rxmix_q.state.state | today en_eff[9]
 c_rxmix_i_ofs | 6 | 0 | direct | rxmix.offset.i_code | bit 5 = ofs_sign
 c_rxmix_q_ofs | 6 | 0 | direct | rxmix.offset.q_code | bit 5 = ofs_sign
-c_rxmix_hib | 1 | 1 | direct | - | new field (1 = RX, 0 = duplex; = NOT lna.bias.lo per rf_rx netlists.py:164)
 c_bbfilter_i_en | 1 | 0 | (direction != isolated) & island_on[1] | consolidation.bbfilter.direction | no en_eff bit today (MW-4)
 c_bbfilter_q_en | 1 | 0 | (direction != isolated) & island_on[1] | consolidation.bbfilter.direction |
 c_bbfilter_dir_tx | 1 | 0 | direction == tx, or bb_tap.mode == inject_tx_mixer | consolidation.bbfilter.direction+debug.bb_tap.mode |
@@ -117,7 +116,7 @@ c_prescale_conv_en | 1 | 0 | divider code != stopped | - | new field (CONV_INT p
 c_prescale_conv_d | 4 | 0 | one-hot {/2, /4, /8, /16} | - |
 c_prescale_hf_en | 1 | 0 | divider code != stopped | - | new field (host_follow prescaler on the CDR ring)
 c_prescale_hf_d | 4 | 0 | one-hot {/2, /4, /8, /16} | - |
-c_wordclk_en | 1 | 0 | wrx capture en & island_on[2] | slicer.state.state | RX word divider (D-WORDCLK)
+c_wordclk_en | 1 | 0 | c_wrx_cap_en | slicer.state.state | RX word divider wordclk_rx on the wired island (D-WORDCLK)
 c_wordclk_d10 | 1 | 0 | RX bits per ring cycle == 2 | - | new field (RX rate mode; the TX field bits_per_cycle is a different ring)
 c_wordclk_d20 | 1 | 0 | RX bits per ring cycle == 1 | - |
 c_pllvreg_byp_tx | 1 | 1 | direct | pllvreg.config.tx_bypass |
@@ -136,16 +135,18 @@ c_pll_cdr_band | 1 | 1 | direct | - | new field ring_c.band, reset 1
 c_cdr_en | 1 | 0 | (cdr.state == active) & island_on[2] | cdr.state.state | today en_eff[12]; also the cdr bias enable
 c_cdr_pfd_mode | 1 | 0 | direct | - | new field (0 = wired CDR, 1 = line PLL / host_follow); cdr.ac3.integral_enable is not this
 c_cdr_ref_sel | 1 | 0 | direct | cdr.ac3.fll_ref_wck |
-c_cdr_g | 3 | 2 | direct | cdr.ac3.loop_bw |
+c_cdr_g | 3 | 2 | direct | cdr.ac3.loop_bw | reset value open (2 vs 3, PINS.md)
+c_cdr_otr | 6 | 0 | direct | - | new field: OTA offset trim otr[4:0] + sign (bit 5), 1/8 vote LSB, per-die calibration (pt_cdr r13)
 c_cdr_fup | 1 | 0 | FLL up pulse | - | dynamic; RTL FLL does not exist in the macro (MW-10)
 c_cdr_fdn | 1 | 0 | FLL down pulse | - | dynamic; as above
+c_char_en | 3 | 0 | direct | - | new fields debug.replica.ro33_enable / ro50_enable / cmldiv_enable (bit 0/1/2); enable one at a time (clk_obs code 15 ORs the three outputs)
 c_ring_osc_en | 1 | 0 | direct | debug.replica.ringosc_enable |
 c_vco_replica_en | 1 | 0 | direct | debug.replica.vco_enable |
 c_clk_obs_en | 1 | 0 | clk_obs.source != off | debug.clk_obs.source |
 c_clk_obs_off | 1 | 1 | !(clk_obs.source != off & island_on[5]) | debug.clk_obs.source | pull-down on the tri-state CLK_OBS node while the cell is not driving
 c_clk_obs_s | 4 | 0 | source code 1..15 = S; codes 16/17 must not alias (they select IN15B/C by their own enables) | debug.clk_obs.source | 5-bit field vs 4 select pins (MW-29)
 c_clk_obs_n | 3 | 0 | min(divider_log2, 7) | debug.clk_obs.divider_log2 |
-c_obs_pre4_en | 7 | 0 | one-hot: bit k = (clk_obs.source == {2 wire_line, 3 wire_sample, 5 ref_in, 6 aux_clk, 7 wclk_in, 8 pll_vco, 14 cdr_recovered}) & island_on[2 or 5] of the source | debug.clk_obs.source | sources 2,3,5,6,7,14 are on the regfile's forbidden list today (MW-29)
+c_obs_pre4_en | 6 | 0 | one-hot: bit k = (clk_obs.source == {2 wire_line, 3 wire_sample, 5 ref_in, 6 aux_clk, 8 pll_vco, 14 cdr_recovered}) & island_on[2 or 5] of the source | debug.clk_obs.source | source 7 (wclk_in) is the AUX_CLK pair since CP4-3; sources 2,3,5,6,14 are on the regfile's forbidden list today (MW-29)
 # ---- wired receive
 c_term_en | 1 | 0 | p_load != off or differential_100_enable | termination.config.p_load+termination.config.differential_100_enable | USB pair
 c_term_mode | 2 | 0 | 00 off, 01 shunt to 1.2 V (50_to_vcm), 10 100 ohm differential, 11 shunt to VSS (45_to_ground) | termination.config.p_load+termination.config.differential_100_enable | raw bits would select the wrong network (MW walk D8)
@@ -163,8 +164,8 @@ c_rxselect_direct | 1 | 0 | direct | rxselect.select.branch |
 c_wmon_en | 1 | 0 | wmon_select != off | debug.wmon_select.select |
 c_wmon_sel | 2 | 0 | select - 1 | debug.wmon_select.select |
 c_detect_en | 1 | 0 | en (island 0) | detect.state.state | today en_eff[6]
-c_detect_thr | 2 | 0 | direct | detect.config.high_threshold_code |
-c_detect_se | 2 | 0 | direct | detect.config.low_threshold_code |
+c_detect_thr | 2 | 0 | direct | detect.config.low_threshold_code | per analog/wired_rx/PINS.md section 4
+c_detect_se | 2 | 0 | direct | detect.config.high_threshold_code | per analog/wired_rx/PINS.md section 4
 c_detect_src_tx | 1 | 0 | direct | consolidation.detect.src_tx |
 c_detect_inject | 1 | 0 | direct | detect.config.test_current_enable |
 c_vthdac_en | 1 | 0 | direct | - | new field cdr.vth_en (IX-10)
@@ -218,12 +219,13 @@ c_wtxfb_state | 2 | 0 | direct | wiredtx.state.state |
 c_wtxfb_idle | 1 | 1 | direct | wiredtx.idle.idle |
 c_wtxfb_stage_tmds | 1 | 0 | direct | consolidation.wiredtx_stage.stage |
 # ---- USB pad (data path: D-USB)
-c_usb_hs_p | 1 | 0 | HS driver gate, data | - | dynamic; no USB logic exists (MW-18)
-c_usb_hs_n | 1 | 0 | HS driver gate, data | - | dynamic
-c_usb_fs_high_p | 1 | 0 | FS/LS driver gate | - | dynamic
-c_usb_fs_high_n | 1 | 0 | FS/LS driver gate | - | dynamic
-c_usb_fs_low_p | 1 | 0 | FS/LS driver gate | - | dynamic
-c_usb_fs_low_n | 1 | 0 | FS/LS driver gate | - | dynamic
+c_usb_hs_en | 1 | 0 | (usbdrive.select.branch == hs) & usbhs.config.tx_enable | usbdrive.select.branch+usbhs.config.tx_enable | USB-INTEGRATION.md; never with c_usb_fs_en
+c_usb_fs_en | 1 | 0 | (usbdrive.select.branch == fsls) & usbfs.config.drive_enable | usbdrive.select.branch+usbfs.config.drive_enable |
+c_usb_hs_drv | 1 | 0 | 1 while an HS packet is driven | - | dynamic (word-granular); USB logic does not exist in the macro (USB-D1)
+c_usb_tx_dp | 1 | 0 | FS/LS line level D+, chirp J | - | dynamic
+c_usb_tx_dn | 1 | 0 | FS/LS line level D-, chirp K | - | dynamic
+c_usb_tx_oe | 1 | 0 | output enable for TX_DP/TX_DN | - | dynamic
+c_usb_hs_str | 2 | 1 | direct | - | new field usbhs.config.drive_strength[1:0], reset 1
 c_usb_pullup_p | 1 | 0 | direct | usbfs.config.pullup_p |
 c_usb_pullup_n | 1 | 0 | direct | usbfs.config.pullup_n |
 c_usb_pulldown_p | 1 | 0 | direct | usbfs.config.pulldown_p |

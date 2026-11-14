@@ -33,8 +33,8 @@ SUPPLY = re.compile(r'^(VDD|VSS|RAIL_\w+|VREG_\w+|VDD_LO)$')
 ALWAYS_ON = ('core', 'chip')
 FP6 = ROOT+'/scratch/chip-assembly-v6/run/floorplan-v6.json'
 # floorplan name -> instance name where they differ; floorplan entries that are not blocks
-FP_ALIAS = {'clk_obs16': 'clk_obs', 'obs_pre4': 'obs_pre4_wire', 'atb0_pad': 'atb0_pad', 'atb1_pad': 'atb1_pad'}
-FP_SKIP = re.compile(r'^(leaf_[fs]\d+|atb_grp\d+|.*_rsv|digital)$')
+FP_ALIAS = {'clk_obs16': 'clk_obs', 'obs_pre4': 'obs_pre4_wire', 'wordclk': 'wordclk_rx', 'atb0_pad': 'atb0_pad', 'atb1_pad': 'atb1_pad'}
+FP_SKIP = re.compile(r'^(leaf_[fs]\d+|atb_grp\d+|.*_rsv|digital|polyphase|rx_wclk_in)$')     # deleted by user decisions CP4-2 / CP4-3 (2026-11-14)
 
 
 def expand_items(body):
@@ -410,12 +410,12 @@ def selftest():
         ('undriven', dict(conn=conn.replace('LOCK>PLL_TX_LOCK', 'LOCK>-', 1)), 'PLL_TX_LOCK'),
         ('multidrive', dict(conn=conn.replace('OUTP>AUX_CK OUTN>-', 'OUTP>AUX_CK OUTN>AUX_CK', 1)), 'AUX_CK'),
         ('missing', dict(conn=re.sub(r'inst vthdac .*\n(  .*\n)+', '', conn, 1)), 'vthdac'),
-        ('crossing', dict(conn=conn.replace('LDE=WRX_LDE ', 'LDE=WRX_LDE_PLL ', 1)), 'wrx_cap.LDE'),
+        ('crossing', dict(conn=conn.replace(' DX=WTX_DX\n', ' DX=WTX_DX_DBG\n', 1)), 'wiredtx.DX'),
         ('alwayson', dict(conn=conn.replace('s_refbuf_ready=s_refbuf_ready', 's_refbuf_ready=REFBUF_READY', 1)), 'digital.s_refbuf_ready'),
         ('alwayson', dict(conn=conn.replace('EN=c_aosc_en CLK', 'EN=AOSC_EN_FLOAT CLK', 1)), 'aosc.EN'),
         ('supply', dict(conn=conn.replace('inst lna pt_lna rf', 'inst lna pt_lna conv', 1)), 'lna.VDD'),
         ('iso', dict(conn=conn.replace('A=PLL_TX_LOCK ISO=island_off[2]', 'A=PLL_TX_LOCK ISO=island_off[0]', 1)), 'iso_pll_tx_lock'),
-        ('iso', dict(conn=conn.replace('inst iso_wrx_lde iso_clamp wired', 'inst iso_wrx_lde iso_clamp pll', 1).replace('Y>WRX_LDE VDD~RAIL_wired', 'Y>WRX_LDE VDD~RAIL_pll', 1)), 'iso_wrx_lde'),
+        ('iso', dict(conn=conn.replace('inst iso_wtx_dx iso_clamp wired', 'inst iso_wtx_dx iso_clamp pll', 1).replace('Y>WTX_DX VDD~RAIL_wired', 'Y>WTX_DX VDD~RAIL_pll', 1)), 'iso_wtx_dx'),
         ('staged', dict(mt=mt.replace('master pt_lo_lf          A/timing/generated/lo_lf.ext.spice:pt_lo_lf', 'master pt_lo_lf          staged A/timing/generated/lo_lf.ext.spice:pt_lo_lf CP VT VSS X', 1)), 'lo_lf'),
         ('ctl', dict(ct=re.sub(r'^c_lna_att\s*\|\s*5', 'c_lna_att | 4', ct, 1, re.M)), 'c_lna_att'),
         ('ctl', dict(ct=re.sub(r'^c_rfdriver_mute\s*\|.*\n', '', ct, 1, re.M)), 'c_rfdriver_mute'),

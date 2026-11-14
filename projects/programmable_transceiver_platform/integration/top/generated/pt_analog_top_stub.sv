@@ -20,8 +20,6 @@ module pt_analog_top_stub(
  inout wire USB_DP,
  inout wire VDD,
  inout wire VSS,
- inout wire WCLK_IN_N,
- inout wire WCLK_IN_P,
  inout wire WIRE_RX_N,
  inout wire WIRE_RX_P,
  inout wire WIRE_TX_N,
@@ -87,8 +85,10 @@ module pt_analog_top_stub(
  input wire c_cdr_fdn,
  input wire c_cdr_fup,
  input wire [2:0] c_cdr_g,
+ input wire [5:0] c_cdr_otr,
  input wire c_cdr_pfd_mode,
  input wire c_cdr_ref_sel,
+ input wire [2:0] c_char_en,
  input wire c_clk_obs_en,
  input wire [2:0] c_clk_obs_n,
  input wire c_clk_obs_off,
@@ -131,7 +131,7 @@ module pt_analog_top_stub(
  input wire c_lo_pfdcp_en,
  input wire c_lo_pre,
  input wire c_lo_vreg_en,
- input wire [6:0] c_obs_pre4_en,
+ input wire [5:0] c_obs_pre4_en,
  input wire c_pll_cdr_band,
  input wire c_pll_cdr_en,
  input wire [2:0] c_pll_cdr_kp,
@@ -174,7 +174,6 @@ module pt_analog_top_stub(
  input wire c_rx_ref_en,
  input wire c_rxlevel_en,
  input wire c_rxlevel_half,
- input wire c_rxmix_hib,
  input wire c_rxmix_i_en,
  input wire [5:0] c_rxmix_i_ofs,
  input wire c_rxmix_q_en,
@@ -208,18 +207,19 @@ module pt_analog_top_stub(
  input wire c_txpad_req_post,
  input wire c_txpad_req_term,
  input wire c_txsum_en,
- input wire c_usb_fs_high_n,
- input wire c_usb_fs_high_p,
- input wire c_usb_fs_low_n,
- input wire c_usb_fs_low_p,
- input wire c_usb_hs_n,
- input wire c_usb_hs_p,
+ input wire c_usb_fs_en,
+ input wire c_usb_hs_drv,
+ input wire c_usb_hs_en,
+ input wire [1:0] c_usb_hs_str,
  input wire c_usb_ls_slow,
  input wire c_usb_pulldown_n,
  input wire c_usb_pulldown_p,
  input wire c_usb_pullup_n,
  input wire c_usb_pullup_p,
  input wire [2:0] c_usb_term_trim,
+ input wire c_usb_tx_dn,
+ input wire c_usb_tx_dp,
+ input wire c_usb_tx_oe,
  input wire c_vco_replica_en,
  input wire [7:0] c_vthdac_a,
  input wire [7:0] c_vthdac_b,
@@ -262,13 +262,14 @@ module pt_analog_top_stub(
  output wire por_n,
  output wire ref_clk,
  output wire rf_rx_clk,
+ output wire rf_rx_ph_i,
+ output wire rf_rx_ph_q,
  output wire [23:0] rf_rx_sample,
  output wire [23:0] rf_rx_sample_b,
  output wire rf_tx_clk,
  input wire rf_tx_clk_out,
  input wire [23:0] rf_tx_sample,
  input wire rx_en_aux,
- input wire rx_en_wclk,
  input wire rx_en_wtx_ext,
  output wire s_adc_i_b_done,
  output wire s_adc_i_b_ovl,
@@ -287,7 +288,6 @@ module pt_analog_top_stub(
  output wire s_pll_tx_lock,
  output wire s_ref_present,
  output wire s_refbuf_ready,
- output wire s_wclk_present,
  output wire s_wrx_slm,
  output wire s_wrx_slp,
  output wire s_wtx_ext_data,
@@ -370,9 +370,7 @@ module pt_analog_top_stub(
  wire ESD_RAIL_rf_rx;
  wire ESD_RAIL_rf_tx;
  wire ESD_RAIL_bb;
- wire ESD_RAIL_wclk_in;
  wire ESD_RAIL_wtx_ext;
- wire ESD_RAIL_tlp;
  wire REF_VCM;
  wire HS_TERM_VCM;
  wire HS_TERM_ENABLE;
@@ -388,6 +386,12 @@ module pt_analog_top_stub(
  wire URX_P;
  wire URX_N;
  wire HS_PBIAS;
+ wire USB_HS_P;
+ wire USB_HS_N;
+ wire USB_FS_HIGH_P;
+ wire USB_FS_HIGH_N;
+ wire USB_FS_LOW_P;
+ wire USB_FS_LOW_N;
  wire TX_MAIN_P;
  wire TX_MAIN_N;
  wire TX_MAIN_BIAS;
@@ -449,12 +453,14 @@ module pt_analog_top_stub(
  wire ADCI_DONEB;
  wire ADCI_OVLB;
  wire ATBN_adc_bias;
+ wire ADCI_PH;
  wire [9:0] ADCQ_CODE;
  wire ADCQ_DONE;
  wire ADCQ_OVL;
  wire [9:0] ADCQ_CODEB;
  wire ADCQ_DONEB;
  wire ADCQ_OVLB;
+ wire ADCQ_PH;
  wire CONV_CLK;
  wire ATBN_dac_bias;
  wire REFBUF_READY;
@@ -477,7 +483,6 @@ module pt_analog_top_stub(
  wire LO_OBS;
  wire [6:0] TXPH;
  wire AUX_CK_P;
- wire WCK_EXT_P;
  wire [7:0] CDRPH;
  wire PRE_CONV_CK;
  wire PRE_CK;
@@ -486,8 +491,6 @@ module pt_analog_top_stub(
  wire WIRE_CK;
  wire WSMP_CK;
  wire HOST_CLK;
- wire WRX_LDE_PLL;
- wire WRX_LDE;
  wire PLL_TX_LOCK;
  wire PLL_TX_FBCK;
  wire ATBN_pll_vctrl;
@@ -503,8 +506,6 @@ module pt_analog_top_stub(
  wire [3:0] WRX_DN;
  wire AUX_CK;
  wire AUX_PRESENT;
- wire WCK_EXT;
- wire WCLK_PRESENT;
  wire WTX_DX_DBG;
  wire WTX_EXT_PRESENT;
  wire WTX_DX;
@@ -515,10 +516,12 @@ module pt_analog_top_stub(
  wire OBS4_wsmp;
  wire OBS4_ref;
  wire OBS4_aux;
- wire OBS4_wclk;
  wire OBS4_pll;
  wire OBS4_cdr;
  wire LO_OBS_D;
+ wire CHAR_RO33_CK;
+ wire CHAR_RO50_CK;
+ wire CHAR_CMLDIV_CK;
  wire CLK_OBS_DBG;
  wire CTLE_P;
  wire CTLE_N;
@@ -530,11 +533,12 @@ module pt_analog_top_stub(
  wire DET_SE_P;
  wire DET_SE_N;
  wire ATBN_detect_vref;
+ wire [7:0] CKP;
+ wire WRX_LDE;
  wire VTAP;
  wire VTAN;
  wire VTBP;
  wire VTBN;
- wire [7:0] CKP;
  wire [7:0] SLS;
  wire [19:0] WRX_EW;
  wire WRX_SLP;
@@ -553,6 +557,18 @@ module pt_analog_top_stub(
  wire TX_BUF_REF;
  wire TX_BUF_BIAS;
  wire WTX_FORCE_SELECTED;
+ wire CHAR_RN_LNA;
+ wire CHAR_RP_LNA;
+ wire CHAR_RN_MIX;
+ wire CHAR_RP_MIX;
+ wire CHAR_RN_SMP;
+ wire CHAR_RP_SMP;
+ wire CHAR_RN_DRV;
+ wire CHAR_RP_DRV;
+ wire CHAR_RES_A;
+ wire CHAR_RES_B;
+ wire CHAR_MIM_A;
+ wire CHAR_MIM_B;
  wire ATB0_LOCAL0;
  wire ATB0_GLOBAL;
  wire ATB0_LOCAL1;
@@ -670,12 +686,12 @@ module pt_analog_top_stub(
  wire p_pad_usb__DIFF_ENABLE = DIFF_ENABLE;
  wire p_pad_usb__DIV_ENABLE = DIV_ENABLE;
  wire p_pad_usb__BYPASS_ENABLE = BYPASS_ENABLE;
- wire p_pad_usb__HS_P = c_usb_hs_p;
- wire p_pad_usb__HS_N = c_usb_hs_n;
- wire p_pad_usb__FS_HIGH_P = c_usb_fs_high_p;
- wire p_pad_usb__FS_HIGH_N = c_usb_fs_high_n;
- wire p_pad_usb__FS_LOW_P = c_usb_fs_low_p;
- wire p_pad_usb__FS_LOW_N = c_usb_fs_low_n;
+ wire p_pad_usb__HS_P = USB_HS_P;
+ wire p_pad_usb__HS_N = USB_HS_N;
+ wire p_pad_usb__FS_HIGH_P = USB_FS_HIGH_P;
+ wire p_pad_usb__FS_HIGH_N = USB_FS_HIGH_N;
+ wire p_pad_usb__FS_LOW_P = USB_FS_LOW_P;
+ wire p_pad_usb__FS_LOW_N = USB_FS_LOW_N;
  wire p_pad_usb__PULLUP_P = c_usb_pullup_p;
  wire p_pad_usb__PULLUP_N = c_usb_pullup_n;
  wire p_pad_usb__PULLDOWN_P = c_usb_pulldown_p;
@@ -715,7 +731,6 @@ module pt_analog_top_stub(
  wire p_rxmix_i__ofs3 = c_rxmix_i_ofs[3];
  wire p_rxmix_i__ofs4 = c_rxmix_i_ofs[4];
  wire p_rxmix_i__ofs_sign = c_rxmix_i_ofs[5];
- wire p_rxmix_i__hib = c_rxmix_hib;
  wire p_rxmix_i__island_off = island_off[1];
  wire p_rxmix_q__en = c_rxmix_q_en;
  wire p_rxmix_q__ofs0 = c_rxmix_q_ofs[0];
@@ -724,7 +739,6 @@ module pt_analog_top_stub(
  wire p_rxmix_q__ofs3 = c_rxmix_q_ofs[3];
  wire p_rxmix_q__ofs4 = c_rxmix_q_ofs[4];
  wire p_rxmix_q__ofs_sign = c_rxmix_q_ofs[5];
- wire p_rxmix_q__hib = c_rxmix_hib;
  wire p_rxmix_q__island_off = island_off[1];
  wire p_bbfilter_i__en = c_bbfilter_i_en;
  wire p_bbfilter_i__dir_tx = c_bbfilter_dir_tx;
@@ -841,6 +855,7 @@ module pt_analog_top_stub(
  assign ADCI_CODEB[9] = 1'b0;
  assign ADCI_DONEB = 1'b0;
  assign ADCI_OVLB = 1'b0;
+ assign ADCI_PH = 1'b0;
  wire p_adc_q__CLK = CONV_CLK_C;
  wire p_adc_q__ACQ0 = c_adc_acq[0];
  wire p_adc_q__ACQ1 = c_adc_acq[1];
@@ -872,6 +887,7 @@ module pt_analog_top_stub(
  assign ADCQ_CODEB[9] = 1'b0;
  assign ADCQ_DONEB = 1'b0;
  assign ADCQ_OVLB = 1'b0;
+ assign ADCQ_PH = 1'b0;
  wire p_iso_conv_clk__A = CONV_CLK;
  wire p_iso_conv_clk__ISO = island_off[2];
  assign CONV_CLK_C = CONV_CLK & ~island_off[2];
@@ -995,6 +1011,12 @@ module pt_analog_top_stub(
  wire p_iso_adcb_q_9__A = ADCQ_CODEB[9];
  wire p_iso_adcb_q_9__ISO = island_off[4];
  assign rf_rx_sample_b[23] = ADCQ_CODEB[9] & ~island_off[4];
+ wire p_iso_adc_ph_i__A = ADCI_PH;
+ wire p_iso_adc_ph_i__ISO = island_off[4];
+ assign rf_rx_ph_i = ADCI_PH & ~island_off[4];
+ wire p_iso_adc_ph_q__A = ADCQ_PH;
+ wire p_iso_adc_ph_q__ISO = island_off[4];
+ assign rf_rx_ph_q = ADCQ_PH & ~island_off[4];
  wire p_iso_adc_done_i__A = ADCI_DONE;
  wire p_iso_adc_done_i__ISO = island_off[4];
  assign s_adc_i_done = ADCI_DONE & ~island_off[4];
@@ -1108,7 +1130,6 @@ module pt_analog_top_stub(
  wire p_iso_lo_fb__A = LO_FB;
  wire p_iso_lo_fb__ISO = island_off[2];
  assign fc_src[5] = LO_FB & ~island_off[2];
- wire p_polyphase__EN = VSS;
  wire p_rx_ref_in__EN = c_rx_ref_en;
  wire p_rx_ref_in__SE = VSS;
  assign ref_clk = 1'b0;
@@ -1116,7 +1137,7 @@ module pt_analog_top_stub(
  wire p_clockmux__PLLW = TXPH[0];
  wire p_clockmux__REF = ref_clk;
  wire p_clockmux__AUX = AUX_CK_P;
- wire p_clockmux__WCK = WCK_EXT_P;
+ wire p_clockmux__WCK = AUX_CK_P;
  wire p_clockmux__H2D = h2d_clk;
  wire p_clockmux__WSI = CDRPH[0];
  wire p_clockmux__CONV_INT = PRE_CONV_CK;
@@ -1170,14 +1191,6 @@ module pt_analog_top_stub(
  wire p_iso_ct_wclk__A = PRE_CK;
  wire p_iso_ct_wclk__ISO = island_off[2];
  assign ct_wclk = PRE_CK & ~island_off[2];
- wire p_wordclk__CK = CDRPH[0];
- wire p_wordclk__EN = c_wordclk_en;
- wire p_wordclk__D10 = c_wordclk_d10;
- wire p_wordclk__D20 = c_wordclk_d20;
- assign WRX_LDE_PLL = 1'b0;
- wire p_iso_wrx_lde__A = WRX_LDE_PLL;
- wire p_iso_wrx_lde__ISO = island_off[2];
- assign WRX_LDE = WRX_LDE_PLL & ~island_off[2];
  wire p_pll_vreg2__BYP_TX = c_pllvreg_byp_tx;
  wire p_pll_vreg2__BYP_CDR = c_pllvreg_byp_cdr;
  wire p_pll_tx__REF = PREF;
@@ -1252,8 +1265,14 @@ module pt_analog_top_stub(
  wire p_cdr__FDN = c_cdr_fdn;
  assign CDR_HOLD = 1'b0;
  wire p_cdr__REF_IN = PREF;
- wire p_cdr__WCK_IN = WCK_EXT_P;
+ wire p_cdr__WCK_IN = AUX_CK_P;
  assign CDR_REF = 1'b0;
+ wire p_cdr__otr0 = c_cdr_otr[0];
+ wire p_cdr__otr1 = c_cdr_otr[1];
+ wire p_cdr__otr2 = c_cdr_otr[2];
+ wire p_cdr__otr3 = c_cdr_otr[3];
+ wire p_cdr__otr4 = c_cdr_otr[4];
+ wire p_cdr__otrs = c_cdr_otr[5];
  wire p_iso_cdr_up_0__A = WRX_UP[0];
  wire p_iso_cdr_up_0__ISO = island_off[0];
  assign CDR_UP[0] = WRX_UP[0] & ~island_off[0];
@@ -1282,10 +1301,6 @@ module pt_analog_top_stub(
  wire p_rx_aux_clk__SE = VSS;
  assign AUX_CK = 1'b0;
  assign AUX_PRESENT = 1'b0;
- wire p_rx_wclk_in__EN = rx_en_wclk;
- wire p_rx_wclk_in__SE = VSS;
- assign WCK_EXT = 1'b0;
- assign WCLK_PRESENT = 1'b0;
  wire p_rx_wtx_ext__EN = rx_en_wtx_ext;
  wire p_rx_wtx_ext__SE = VSS;
  assign WTX_DX_DBG = 1'b0;
@@ -1293,18 +1308,12 @@ module pt_analog_top_stub(
  wire p_iso_aux_ck__A = AUX_CK;
  wire p_iso_aux_ck__ISO = island_off[5];
  assign AUX_CK_P = AUX_CK & ~island_off[5];
- wire p_iso_wck_ext__A = WCK_EXT;
- wire p_iso_wck_ext__ISO = island_off[5];
- assign WCK_EXT_P = WCK_EXT & ~island_off[5];
  wire p_iso_wtx_dx__A = WTX_DX_DBG;
  wire p_iso_wtx_dx__ISO = island_off[5];
  assign WTX_DX = WTX_DX_DBG & ~island_off[5];
  wire p_iso_aux_present__A = AUX_PRESENT;
  wire p_iso_aux_present__ISO = island_off[5];
  assign s_aux_present = AUX_PRESENT & ~island_off[5];
- wire p_iso_wclk_present__A = WCLK_PRESENT;
- wire p_iso_wclk_present__ISO = island_off[5];
- assign s_wclk_present = WCLK_PRESENT & ~island_off[5];
  wire p_iso_wtx_ext_present__A = WTX_EXT_PRESENT;
  wire p_iso_wtx_ext_present__ISO = island_off[5];
  assign s_wtx_ext_present = WTX_EXT_PRESENT & ~island_off[5];
@@ -1330,14 +1339,11 @@ module pt_analog_top_stub(
  wire p_obs_pre4_aux__CK = AUX_CK;
  wire p_obs_pre4_aux__EN = c_obs_pre4_en[3];
  assign OBS4_aux = 1'b0;
- wire p_obs_pre4_wclk__CK = WCK_EXT;
- wire p_obs_pre4_wclk__EN = c_obs_pre4_en[4];
- assign OBS4_wclk = 1'b0;
  wire p_obs_pre4_pll__CK = TXPH[1];
- wire p_obs_pre4_pll__EN = c_obs_pre4_en[5];
+ wire p_obs_pre4_pll__EN = c_obs_pre4_en[4];
  assign OBS4_pll = 1'b0;
  wire p_obs_pre4_cdr__CK = CDRPH[1];
- wire p_obs_pre4_cdr__EN = c_obs_pre4_en[6];
+ wire p_obs_pre4_cdr__EN = c_obs_pre4_en[5];
  assign OBS4_cdr = 1'b0;
  wire p_iso_lo_obs__A = LO_OBS;
  wire p_iso_lo_obs__ISO = island_off[2];
@@ -1349,7 +1355,7 @@ module pt_analog_top_stub(
  wire p_clk_obs__IN4 = rf_rx_clk;
  wire p_clk_obs__IN5 = OBS4_ref;
  wire p_clk_obs__IN6 = OBS4_aux;
- wire p_clk_obs__IN7 = OBS4_wclk;
+ wire p_clk_obs__IN7 = VSS;
  wire p_clk_obs__IN8 = OBS4_pll;
  wire p_clk_obs__IN9 = fc_src[0];
  wire p_clk_obs__IN10 = RING_OSC_CK;
@@ -1357,9 +1363,9 @@ module pt_analog_top_stub(
  wire p_clk_obs__IN12 = fc_src[4];
  wire p_clk_obs__IN13 = host_word_clk;
  wire p_clk_obs__IN14 = OBS4_cdr;
- wire p_clk_obs__IN15A = VSS;
- wire p_clk_obs__IN15B = VSS;
- wire p_clk_obs__IN15C = VSS;
+ wire p_clk_obs__IN15A = CHAR_RO33_CK;
+ wire p_clk_obs__IN15B = CHAR_RO50_CK;
+ wire p_clk_obs__IN15C = CHAR_CMLDIV_CK;
  wire p_clk_obs__S0 = c_clk_obs_s[0];
  wire p_clk_obs__S1 = c_clk_obs_s[1];
  wire p_clk_obs__S2 = c_clk_obs_s[2];
@@ -1430,6 +1436,11 @@ module pt_analog_top_stub(
  wire p_iso_detect_se_n__A = DET_SE_N;
  wire p_iso_detect_se_n__ISO = island_off[0];
  assign s_detect_se_n = DET_SE_N & ~island_off[0];
+ wire p_wordclk_rx__CK = CKP[0];
+ wire p_wordclk_rx__EN = c_wordclk_en;
+ wire p_wordclk_rx__D10 = c_wordclk_d10;
+ wire p_wordclk_rx__D20 = c_wordclk_d20;
+ assign WRX_LDE = 1'b0;
  wire p_vthdac__vth_en = c_vthdac_en;
  wire p_vthdac__A0 = c_vthdac_a[0];
  wire p_vthdac__A1 = c_vthdac_a[1];
@@ -2000,6 +2011,23 @@ module pt_analog_top_stub(
  assign TX_EN_TERM = 1'b0;
  wire p_term_buffer__ENABLE = TX_EN_TERM;
  wire p_txpad_bias__EN_TERM = TX_EN_TERM;
+ wire p_usb_txdrv__CMD_P = CMD_MAIN_P;
+ wire p_usb_txdrv__CMD_N = CMD_MAIN_N;
+ wire p_usb_txdrv__HS_EN = c_usb_hs_en;
+ wire p_usb_txdrv__HS_DRV = c_usb_hs_drv;
+ wire p_usb_txdrv__FS_EN = c_usb_fs_en;
+ wire p_usb_txdrv__TX_DP = c_usb_tx_dp;
+ wire p_usb_txdrv__TX_DN = c_usb_tx_dn;
+ wire p_usb_txdrv__TX_OE = c_usb_tx_oe;
+ wire p_usb_txdrv__ISLAND_OFF = island_off[0];
+ wire p_usb_txdrv__HS_STR0 = c_usb_hs_str[0];
+ wire p_usb_txdrv__HS_STR1 = c_usb_hs_str[1];
+ assign USB_HS_P = 1'b0;
+ assign USB_HS_N = 1'b0;
+ assign USB_FS_HIGH_P = 1'b0;
+ assign USB_FS_HIGH_N = 1'b0;
+ assign USB_FS_LOW_P = 1'b0;
+ assign USB_FS_LOW_N = 1'b0;
  wire p_hsbias__EN = c_hsbias_en;
  wire p_hsbias__C0 = c_hsbias_c[0];
  wire p_hsbias__C1 = c_hsbias_c[1];
@@ -2020,6 +2048,12 @@ module pt_analog_top_stub(
  wire p_wtx_fallback_control__FORCE_LEAF = atb0_sw[21];
  assign wired_on_ext = 1'b0;
  assign WTX_FORCE_SELECTED = 1'b0;
+ wire p_char_ro33__EN = c_char_en[0];
+ assign CHAR_RO33_CK = 1'b0;
+ wire p_char_ro50__EN = c_char_en[1];
+ assign CHAR_RO50_CK = 1'b0;
+ wire p_char_cmldiv__EN = c_char_en[2];
+ assign CHAR_CMLDIV_CK = 1'b0;
  wire p_atb0_leaf1__SEL = atb0_sw[0];
  wire p_atb0_leaf14__SEL = atb0_sw[13];
  wire p_atb0_leaf22__SEL = WTX_FORCE_SELECTED;

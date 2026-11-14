@@ -13,8 +13,8 @@ master pt_txmix_i        A/rf_tx/generated/txmix_i.ext.spice:pt_txmix_i
 master pt_txmix_q        A/rf_tx/generated/txmix_q.ext.spice:pt_txmix_q
 master pt_txsum          A/rf_tx/generated/txsum.ext.spice:pt_txsum
 master pt_rfdriver       A/rf_tx/generated/rfdriver.ext.spice:pt_rfdriver
-master pt_adc_i          staged A/converters/generated/adc_i.ext.spice:pt_adc_i VDD VSS INP INN VCM VREF IBIAS CLK ACQ0 ACQ1 EN ILEN TEST0 TEST1 CODE0 CODE1 CODE2 CODE3 CODE4 CODE5 CODE6 CODE7 CODE8 CODE9 DONE OVERLOAD CODEB0 CODEB1 CODEB2 CODEB3 CODEB4 CODEB5 CODEB6 CODEB7 CODEB8 CODEB9 DONEB OVERLOADB ATB_BIAS
-master pt_adc_q          staged A/converters/generated/adc_q.ext.spice:pt_adc_q VDD VSS INP INN VCM VREF IBIAS CLK ACQ0 ACQ1 EN ILEN TEST0 TEST1 CODE0 CODE1 CODE2 CODE3 CODE4 CODE5 CODE6 CODE7 CODE8 CODE9 DONE OVERLOAD CODEB0 CODEB1 CODEB2 CODEB3 CODEB4 CODEB5 CODEB6 CODEB7 CODEB8 CODEB9 DONEB OVERLOADB ATB_BIAS
+master pt_adc_i          staged A/converters/generated/adc_i.ext.spice:pt_adc_i VDD VSS INP INN VCM VREF IBIAS CLK ACQ0 ACQ1 EN ILEN TEST0 TEST1 CODE0 CODE1 CODE2 CODE3 CODE4 CODE5 CODE6 CODE7 CODE8 CODE9 DONE OVERLOAD CODEB0 CODEB1 CODEB2 CODEB3 CODEB4 CODEB5 CODEB6 CODEB7 CODEB8 CODEB9 DONEB OVERLOADB ATB_BIAS PH
+master pt_adc_q          staged A/converters/generated/adc_q.ext.spice:pt_adc_q VDD VSS INP INN VCM VREF IBIAS CLK ACQ0 ACQ1 EN ILEN TEST0 TEST1 CODE0 CODE1 CODE2 CODE3 CODE4 CODE5 CODE6 CODE7 CODE8 CODE9 DONE OVERLOAD CODEB0 CODEB1 CODEB2 CODEB3 CODEB4 CODEB5 CODEB6 CODEB7 CODEB8 CODEB9 DONEB OVERLOADB ATB_BIAS PH
 master pt_dac_i          staged A/converters/generated/dac_i.ext.spice:pt_dac_i VDD VSS OUTP OUTN IBIAS CLK EN HOLD_ZERO CODE0 CODE1 CODE2 CODE3 CODE4 CODE5 CODE6 CODE7 CODE8 CODE9 ATB_BIAS
 master pt_dac_q          staged A/converters/generated/dac_q.ext.spice:pt_dac_q VDD VSS OUTP OUTN IBIAS CLK EN HOLD_ZERO CODE0 CODE1 CODE2 CODE3 CODE4 CODE5 CODE6 CODE7 CODE8 CODE9 ATB_BIAS
 master pt_refbuf         A/converters/generated/refbuf.ext.spice:pt_refbuf
@@ -24,7 +24,6 @@ master pt_pll_vreg2      A/pll_vreg/generated/pt_pll_vreg2.ext.spice:pt_pll_vreg
 master pt_clockmux       A/timing/generated/clockmux.ext.spice:pt_clockmux
 master pt_prescale       A/timing/generated/prescale.ext.spice:pt_prescale
 master pt_wordclk        A/timing/generated/wordclk.ext.spice:pt_wordclk
-master pt_polyphase      A/timing/generated/polyphase.ext.spice:pt_polyphase
 master pt_lo_ext         A/timing/generated/lo_ext.ext.spice:pt_lo_ext
 master pt_lc_qvco5       A/timing/lcvco/qvco5.spice:pt_lc_qvco5
 master pt_lo_mmd         A/timing/generated/lo_mmd.ext.spice:pt_lo_mmd
@@ -50,12 +49,22 @@ master pt_wrx_cap        A/wired_rx/generated/wrx_cap.ext.spice:pt_wrx_cap
 master pt_ptrim          A/wired_rx/generated/ptrim.ext.spice:pt_ptrim
 master pt_vthdac         A/wired_rx/generated/vthdac.ext.spice:pt_vthdac
 master pt_wiredtx        A/wired_tx/generated/wiredtx.ext.spice:pt_wiredtx
+master pt_usb_txdrv       A/wired_tx/generated/usbdrv.ext.spice:pt_usb_txdrv
+master pt_char_atb        A/characterization/generated/char_atb.ext.spice:pt_char_atb
+master pt_char_ro33       A/characterization/generated/char_ro33.ext.spice:pt_char_ro33
+master pt_char_ro50       A/characterization/generated/char_ro50.ext.spice:pt_char_ro50
+master pt_char_cmldiv     A/characterization/generated/char_cmldiv.ext.spice:pt_char_cmldiv
+master pt_char_rffet      A/characterization/generated/char_rffet.ext.spice:pt_char_rffet
+master pt_char_rffet_open A/characterization/generated/char_rffet_open.ext.spice:pt_char_rffet_open
+master pt_char_rffet_short A/characterization/generated/char_rffet_short.ext.spice:pt_char_rffet_short
 master pt_wtx_hsbias     A/wired_tx/generated/hsbias.ext.spice:pt_wtx_hsbias
 master pt_wtx_fallback_control A/bringup_control/generated/pt_wtx_fallback_control.ext.spice:pt_wtx_fallback_control
 master tx_interlock      A/pads/generated/wired-transmit-lifecycle.spice:tx_mode_interlock_flat_physical
 master tx_steer          A/pads/generated/wired-transmit-lifecycle.spice:tx_steering_buffer_flat_physical
 master term_buffer       A/pads/generated/wired-transmit-lifecycle.spice:buffer_compensated_flat
 master por               A/core_support/por/netlist/layout/gf180mcu_ocd_ip__por.spice:gf180mcu_ocd_ip__por
+master pad_rftxpad        A/pads/generated/stress-safe-families/rf-tx/reference.spice:pad_reference
+master pad_tlp            A/pads/generated/tlp-site/pad_tlp_flat.spice:pad_tlp_flat
 master pad_rf_pair       A/pads/generated/stress-safe-families/rf-pair/reference.spice:pad_reference
 master pad_single_leg    A/pads/generated/stress-safe-families/single-leg/reference.spice:pad_reference
 master pad_refpad        A/pads/generated/stress-safe-families/reference/physical.spice:tx_protected_pad

@@ -5,7 +5,10 @@ Analysis and proposals only. No design file was changed. Paper pass: scripts, no
 Inputs that no earlier pass had: `integration/top/pt_chip.conn` (346 instances, every pin bound), `decisions.md`
 (D- rows), `spec/power-delivery.md` (measured currents, 10 islands), the mode walk, and the regfile rule
 `rf_wired_payload_exclusive` (`rtl/pt_regfile.sv:1082`): no RF payload block (ADC, DAC, LNA, rfdriver) can be active
-while `wiredtx`, `cdr` or `usbdrive` is active. That rule is the proof of mutual exclusion used below.
+while `wiredtx`, `cdr` or `usbdrive` is active. **Correction after review: this rule covers only those six RF and
+three wired state fields. It does not cover `lo_mode`, rxmix, bbfilter, the CDR ring, the capture, WMON or the debug
+island, so an all-fallback RF receive (external LNA, external ADC on BB_I/Q, external LO) is legal next to wired
+receive. Pin sharing by mode (CP4-3, CP4-5) therefore needs its own new regfile rule; the rule alone is not the proof.**
 
 Work dir `scratch/reviews/consolidation-pass-4/`: `inventory.py` (parses the conn file with the chip-top parser),
 `inventory.csv` (one row per instance: class, area, current, modes, island, pins, control pins, tied pins),
@@ -203,3 +206,58 @@ Totals before review: free 0.22 mm2 (0.16 of it avoided demand), 2 mA; user deci
 - `pt_usb_txdrv` (USB-D7) is not in `pt_chip.conn`.
 - `qvco.PRE` buffer runs unloaded in every autonomous mode.
 - The inventory sum with honest pieces is 13.74 mm2 against 12.77 mm2 of core before repacks: the die-fit study should start from `inventory.csv`, not from the v6 block list.
+
+## 7. Independent review result and final ranked list
+
+One reviewer (separate agent, read-only, no simulation) tried to break ten proposals; full text in
+`consolidation-pass-4/review.md`. CP4-10 was not reviewed.
+
+### 7.1 Verdicts
+
+| ID | Verdict | What changed |
+|---|---|---|
+| CP4-1 | Survives with conditions | 129 clamps can move, not 132: `rf_rx_clk`, `host_word_clk` and `fc_src[0]` also feed `clk_obs` outside the macro (128 if CP4-4 uses `fc_src[1]`). 15 clamps stay outside, not 14. The standard cell is electrically better: the custom clamp has an ungated inverter on A that does draw crowbar current when A floats. Condition: the net from the macro pin to the AND2 must be excluded from port buffering and hold fixing, not only the cell from restructuring. |
+| CP4-2 | Survives (delete) | No mode, spec row or fallback reaches it. The "keep the learning" alternative in section 3a does not work (`obs_pre4` is specified to 1 GHz, the outputs are 2.4 GHz). Still needs the user's yes. |
+| CP4-3 | Survives with heavy conditions | No specified mode needs both pins at once, but: the two pads are different families (`pad_wclk_in` is `pad_rf_pair`, `pad_aux_clk` is bound as `pad_refpad`, D-PADS open); WCLK_IN is benched at 480 / 625 / 810 MHz for the CDR fallback, not only 25-340 MHz, and the receiver was never benched below 100 MHz; the forwarded clock route grows from about 0.35 mm to about 3.1 mm; the current saving is 0 mA (the surviving receiver is on instead); a new pad-exclusion rule is needed. |
+| CP4-4 | Survives with conditions | FBCK runs in every enabled ring state (HOLD and CDR mode included) but is VCO/8, /16 or /10, not /4. Collides with CP4-1 on `fc_src[0/1]`: those two clamps stay outside the macro. |
+| CP4-5 | Survives, weak | The straight route crosses the digital macro (3 mm or more with the detour); the follower output is about 220 ohm (71 MHz into 10 pF), so WMON bandwidth is set by the BB_Q board load. Prefer AP4-7; use CP4-5 only if a provider site is needed. |
+| CP4-6 | Survives, mostly done | 186 trim bits are already `live` in the uncommitted digital working tree. About 65 flops remain: 0.008 mm2, not 0.03. Two of the 42 rules (27, 29) read biasgen codes: those stay shadowed. |
+| CP4-7 | Survives with conditions | A shared chain cannot be reset for a CONV ratio change without stopping the host clock and `ct_wclk`: each tap needs its own glitch-free stop. |
+| CP4-8 | Survives | LDE today is a one-ring-period pulse through a clamp with 2.08 ns worst delay: a local counter is strictly better. Net saving a little under 0.025 mm2. |
+| CP4-9 | Option A broken, option B survives | `qvco.PRE` is single-ended CMOS; `lo_obs` is a differential CML divider that already fails 4 of 24 corners. Only "gate the PRE buffer off" remains (a QVCO edit, 3 mA, no area). |
+| CP4-11 | Survives with conditions | `aosc`, the monitor time base, is forced off during RF payload, and H2D_CLK has no present detector: if H2D_CLK stops, the RF driver keeps transmitting. The macro-only monitor needs a time base that runs in RF modes and a stated answer for a dead macro clock. |
+
+Section 5 spot checks: the `lo_mmd_qdum` rejection stands, with a zero-area addition (CP4-12): give the dummy its own
+enable bit so silicon can measure quadrature with the 8 mA on and off. The "WMON onto WTX_EXT or WCLK_IN" rejection
+stands, though "all three in use together" was asserted, not shown.
+
+Other errors the reviewer found in sections 1-6 (left in place above, corrected here): "none of the 16 rules reads
+a trim" (42 rules, two read biasgen codes); `decisions.md:58` cites the rule at line 1179, it is at 1082.
+
+### 7.2 Final ranked list
+
+| Rank | ID | Item | mm2 | mA | Bucket | State after review |
+|---:|---|---|---:|---:|---|---|
+| 1 | CP4-1 | 128-129 island -> macro clamps as standard cells in the macro | 0.117 avoided | 0 | free | survives, conditions |
+| 2 | CP4-3 | WCLK_IN function on the AUX_CLK pair | 0.174 | 0 | user decision | survives, heavy conditions; frees 2 pad sites |
+| 3 | CP4-2 | delete `polyphase` | 0.039 | 0 | free (user yes) | survives |
+| 4 | CP4-5 | WMON on a BB_Q leg | 0.142, or 0 after AP4-7 | 0 | user decision | weak |
+| 5 | CP4-8 | word counter into `pt_wrx_cap` | 0.02 | 1 | redesign | survives |
+| 6 | CP4-11 | `fault` made in the macro, no analog monitor | 0.02 avoided (estimate) | 0 | free | survives, conditions |
+| 7 | CP4-7 | one prescaler chain, two taps | 0.013 avoided | 2 | redesign | survives, conditions |
+| 8 | CP4-6 | remaining calibration fields `live` | 0.008 | 0 | free | mostly done already |
+| 9 | CP4-4 | two `obs_pre4` replaced by ring FBCK | 0.007 avoided | 2 when observing | free | survives, conditions |
+| 10 | CP4-10 | `txpad_bias` as a tap of the termination divider | 0.003 avoided | 0.1 | free | not reviewed |
+| 11 | CP4-9B | gate the unloaded `qvco.PRE` buffer | 0 | 3 | redesign | survives |
+| 12 | CP4-12 | separate enable for `lo_mmd_qdum` | 0 | 0 (8 switchable) | redesign | reviewer's addition |
+
+Totals: **free 0.19 mm2** (0.15 of it is demand that is in the conn file but in no floorplan), about 2 mA;
+**user decision 0.17-0.32 mm2**, 0 mA, 2-3 pad sites; **needs redesign 0.03 mm2**, about 6 mA.
+
+### 7.3 What this means
+
+Merging does not close the gap. Against a shortfall of 1.4-3.0 mm2 the whole pass is worth 0.2 mm2 free and at most
+0.5 mm2 with both pin-sharing decisions. The blocks are already single instances of their function; the area is in
+outlines at 10-30 % utilisation (area pass 4), in the pads, and in demand that no floorplan has counted yet
+(isolation, 5 more island switches, the LO regulator, LNA spirals, USB pre-driver, characterization cells). The most
+useful single output is `inventory.csv`: 13.74 mm2 of honest demand against 12.77 mm2 of core before repacks.

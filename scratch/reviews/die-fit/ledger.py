@@ -21,7 +21,7 @@ M = {
  'pt_digital_macro': (2814000, None, None, 'H', 'digital NOTES TC7/TC8: 1716 x 1640', 'must not shrink (AP4-8 2.45 not reachable); absorbs decode glue, 129 iso AND2, LO/CDR/USB control, decap row cells: cells 1.764 mm2 = 67.4 %'),
  'por': (9469, None, None, 'H', AB, ''), 'pt_aosc': (12864, None, None, 'H', U, ''),
  'pt_core_bias': (301799, None, 180000, 'M', AB+'; target area-pass-4 s1 (lever 13, not started)', 'v5 abstract outline, util 0.24'),
- 'pt_bias_ext': (9000, None, None, 'L', 'CP4 inventory.py est (3 bank outputs)', 'NEVER BUILT (D-BIAS); in no floorplan'),
+ 'pt_bias_ext': (4436, None, None, 'M', 'two pt_bias_tap2 cells of 2,218 (scratch/pads-core/bias/pub, review R10)', 'staged, not published (D-BIAS); in no floorplan'),
  # ten islands (conn commit 4790054, power-delivery.md s2): 5 x isw_debug + 2 x isw_wired + 2 x isw_conv + isw_rf = 0.426;
  # the v6/AP4 floorplans hold five switches (0.236): +0.190 is in no floorplan
  'isw_wired': (64081, None, None, 'H', AB, 'PD2 ten islands: v6/AP4 floorplans hold 5 switches = 0.236 of the 0.426'), 'isw_rf': (49817, None, None, 'H', AB, ''),
@@ -40,14 +40,14 @@ M = {
  'pad_strap': (0, None, None, 'M', 'provider site (freed site)', 'no core area; site conflict POR strap / LNA ground / spare'),
  'pt_host_physical': (0, None, None, 'H', 'provider ring', ''), 'pt_debug_physical': (0, None, None, 'H', 'provider ring', ''),
  'atb_provider_pad': (0, None, None, 'H', 'provider ring', ''),
- 'pt_refvcm': (3000, None, None, 'L', 'CP4 inventory est', 'NEVER BUILT (D-REFVCM); in no floorplan'),
+ 'pt_refvcm': (7443, None, None, 'M', 'scratch/pads-core/bias/pub layout (review R10)', 'staged, not published (D-REFVCM); in no floorplan'),
  # ---- RF RX -----------------------------------------------------------------------------------------------------
- 'pt_lna': (24763, 42921, None, 'M', U+' (obsolete NO-GO cell); staged analog/rf_rx/generated/lna-layout.json (uncommitted, design not closed)', 'tail source + gate R still to add'),
+ 'pt_lna': (78352, 42921, None, 'M', 'published = git HEAD generated/lna-layout.json (review R3); staged = working-tree generated/ (uncommitted, design not closed)', 'tail source + gate R still to add (lna_additions row)'),
  'pt_lna_ind': (50000, 35700, 57200, 'L', 'pub = v6 lc_load_rsv 0.10/2; staged 170 um coil (rf-lna-p NOTES l.164); target 4 t d220 57.2k (l.189, +2.3 dB pess)', 'spiral: keep-out 25 um, no MIM/grid/fill over it'),
  'pt_lna_deg': (25200, None, None, 'M', 'rf-lna-p NOTES l.159-160 (G_DEG 140 um 2 t)', 'bench model + generator only; IN NO FLOORPLAN; spiral keep-out'),
- 'pt_rxmix_i': (35442, None, None, 'H', U, 'TIA back to small option'), 'pt_rxmix_q': (35442, None, None, 'H', U, ''),
+ 'pt_rxmix_i': (76238, 35442, None, 'M', 'published = git HEAD (review R3); staged = working tree (TIA back to the small option)', ''), 'pt_rxmix_q': (76238, 35442, None, 'M', 'as rxmix_i', ''),
  'pt_bbfilter_i': (341901, None, 230000, 'H', U+'; target AP4-3 (not started)', ''), 'pt_bbfilter_q': (341901, None, 230000, 'H', U, ''),
- 'pt_bb_tap': (19511, None, None, 'H', U, ''),
+ 'pt_bb_tap': (9978, 19511, None, 'M', 'published = git HEAD 9,978; staged = working tree 19,511 (review R3)', ''),
  # ---- converters ------------------------------------------------------------------------------------------------
  'pt_adc_i': (577710, 449686, 330000, 'M', U+'; staged '+MS+' 480.28 x 936.30 (not published, stage4 not re-reviewed); target AP4-4', 'target missed by 0.12 each'),
  'pt_adc_q': (577785, 449686, 330000, 'M', 'as adc_i', ''),
@@ -58,7 +58,7 @@ M = {
  'pt_rfdriver': (96812, None, None, 'H', U, ''),
  # ---- LO ----------------------------------------------------------------------------------------------------------
  'pt_lo_ext': (155350, 133006, 120000, 'M', U+'; staged lo-ap4 cand/run2 343.1 x 387.66 (not qualified)', ''),
- 'pt_lo_vreg': (120000, None, None, 'L', 'estimate: 30 mA, >=50-59 dB, <=7 nV/rtHz (PD2-11); pll_vreg2 = 173k for 2 x 10 mA at 23-27 dB; range 80k-250k', 'NEVER BUILT; CP4 inventory booked 81.5k; in no floorplan'),
+ 'pt_lo_vreg': (300000, None, None, 'L', 'review R1: scratch/lo-ap4/vreg2/reg.py schematic has ~0.24 mm2 of bare devices (pass devices, 62 MOS-cap units, 90 resistors); 0.25-0.38 at pll_vreg2 utilisation; first estimate here was 0.12', 'NEVER BUILT; still fails 59 dB at 78.125 MHz without an external capacitor (which would need a pad site); in no floorplan'),
  'pt_lc_qvco5': (532476, None, None, 'H', U+' 848 x 627.9', 'two empty corner slots 111 x 303 (lo-ap4 NOTES)'),
  'pt_lo_mmd': (361116, 145031, None, 'M', U+'; staged lo-ap4 377.92 x 383.76 (review NO-GO: -0.2 GHz)', ''),
  'pt_lo_mmd_qdum': (34062, 19124, None, 'M', U+'; staged 97.98 x 195.18', 'fits QVCO slot A'),
@@ -80,12 +80,12 @@ M = {
  'pt_wordclk': (24822, None, None, 'H', U, ''), 'pt_vthdac': (23891, None, None, 'H', U, ''),
  'pt_ptrim': (289747, 25938, None, 'L', U+' (published cell not functional); staged ptrim_compact.py 126.4 x 205.2 of the SAME non-functional circuit', 'output stage booked separately'),
  'pt_slicer': (109899, None, None, 'H', U, ''),
- 'pt_wrx_cap': (956461, 293813, 290000, 'M', U+' (r6); staged r7c 1210.55 x 242.71 (NOT publishable: ext_q625_lde60 fails)', ''),
+ 'pt_wrx_cap': (956461, 293813, None, 'M', U+' (r6); staged r7c 1210.55 x 242.71 (NOT publishable: ext_q625_lde60 fails)', ''),
  # ---- wired TX / USB ------------------------------------------------------------------------------------------------
  'pt_wiredtx': (246188, None, None, 'H', U+' (quarter-rate core)', 'eighth-rate growth booked separately (tx8)'),
- 'tx_steer': (8677, None, None, 'H', U, 'instances 4,5 unused (X5)'), 'tx_interlock': (48100, None, None, 'H', AB, ''),
+ 'tx_steer': (8677, None, None, 'H', U, 'review R6: steer_0..3 are replaced by the CML pre-drivers booked in tx8_rsv -> not counted; steer_4/5 unused (X5), dropped in C'), 'tx_interlock': (48100, None, None, 'H', AB, ''),
  'term_buffer': (75196, None, 45000, 'H', U+'; target AP4-6', ''),
- 'pt_txpad_bias': (3000, None, None, 'L', 'CP4 est', 'NEVER BUILT (D-TXTERM); CP4-10 would make it a divider tap'),
+ 'pt_txpad_bias': (12524, None, None, 'M', 'scratch/pads-core/bias/pub layout (review R10)', 'staged, not published (D-TXTERM); in no floorplan'),
  'pt_usb_txdrv': (31457, None, None, 'M', 'USB-INTEGRATION.md l.79: 116.48 x 270.06 (rev 3 not re-reviewed)', 'IN NO FLOORPLAN'),
  'pt_wtx_hsbias': (9137, None, None, 'H', U, ''), 'pt_wtx_fallback_control': (5861, None, None, 'H', U, ''),
  # ---- characterization (D-CHAR: published, IN NO FLOORPLAN) -------------------------------------------------------
@@ -102,7 +102,7 @@ M = {
 # booked items that are not instances of pt_chip.conn: name -> (pub, staged, target, conf, source, note)
 BOOKED = {
  'r8arch_slicer_b': (109899, None, None, 'M', 'second slicer bank = pt_slicer outline (AP4 s1 lever 3)', 'R8-ARCH; not in pt_chip.conn'),
- 'r8arch_capture_b': (956461, 293813, 290000, 'M', 'second capture = the capture master of the scenario', 'R8-ARCH; v6 booked it at 0.29 on a master that is still not publishable; literal published master is r6'),
+ 'r8arch_capture_b': (956461, 293813, None, 'M', 'second capture = the capture master of the scenario', 'R8-ARCH; v6 booked it at 0.29 on a master that is still not publishable; literal published master is r6'),
  'r8arch_blend_pd8': (35000, None, None, 'L', 'AP4 s1 lever 3 estimate', 'R8-ARCH'),
  'r8arch_ctle_follower_b': (5000, None, None, 'L', 'wired_rx README Resume 9: one follower per slicer bank, 0.003-0.005', 'R8-ARCH; in no floorplan'),
  'ctle_follower': (5000, None, None, 'L', 'wired_rx README Resume 9 (MW-13-FIX approved): 0.003-0.005 mm2', 'NEVER BUILT; in no floorplan'),
@@ -110,12 +110,15 @@ BOOKED = {
  'tx8_rsv': (200250, 222000, None, 'L', 'pub = AP4-2 booking 450 x 445; staged = serq8 as built 0.352 (INTEGRATION.md s7) - serq4c 0.158 + 2 CML pre-drivers 0.028', 'eighth-rate / CML not demonstrated (ss 3.24 Gb/s fails): reserve; booking was exceeded'),
  'wtx_tcoil_rsv': (68400, None, None, 'M', 'v5 floorplan rsv_tcoil_wire_tx 570 x 120', 'spiral keep-out'),
  'd2h_gearbox_rsv': (31495, None, None, 'M', 'v5 floorplan rsv_d2h_gearbox 1312.3 x 24', 'W7-GEAR; edge strip'),
- 'h2d_gearbox_rsv': (93100, 31360, None, 'M', 'v5 490 x 190; X6 right-size 490 x 64', 'W7-GEAR'),
  'decap_macro_edge_bank': (390000, None, None, 'M', 'spec/power-delivery.md s4.2: 1.5 nF, within 250 um of the macro W/S/E edges', 'PD2-9; IN NO FLOORPLAN'),
- 'supply_clock_monitor': (20000, None, 0, 'L', 'CP4-11 estimate; target 0 if fault is derived in the macro', 'D-FAULT: no hardware exists'),
+ 'supply_clock_monitor': (5000, None, None, 'L', 'review R11: pt_monitor exists as RTL in the macro; outside remain a time base for RF modes and an H2D_CLK present detector', 'D-FAULT'),
+ 'lna_additions': (10000, None, None, 'L', 'review R12 allowance: LNA tail source, gate R, common-mode damping; D-EXTCLK selector; D-CDRCTL FLL driver', 'counted by nobody'),
  'vcm_buffer': (3000, None, None, 'L', 'estimate (CNV-06: VCM source is a bare 40k divider)', 'counted by nobody'),
  'fwd_clk_repeaters': (3000, None, None, 'L', 'estimate: repeaters/shield for the 3.1 mm AUX_CLK -> wired forwarded clock (CP4-3)', 'counted by nobody'),
 }
+# Cr = "C realistic": like C, but where the owner has declared the assigned target unreachable or nothing backs it,
+# the best backed value is used (review R2, R7 and flags): ADC 0.35 floor, detect and CDR ring unchanged, WMON pad as drawn
+CR = {'pt_adc_i': 350000, 'pt_adc_q': 350000, 'pt_detect': 173480, 'pt_pll_ring': 166657, 'pad_single_leg': 147144}
 def cols(t):
     pub, st, tg = t[0], t[1], t[2]
     st = pub if st is None else st; tg = st if tg is None else tg
@@ -126,11 +129,12 @@ rows = []; moved = 0
 for name, d in inst.items():
     m = d['master']; assert m in M, m
     pub, st, tg = cols(M[m]); note = M[m][5]
-    if name in ('steer_4', 'steer_5'): note = 'unused today (X5 would delete)'
-    rows.append(dict(item=name, master=m, group=d['group'], kind='conn', pub_um2=pub, staged_um2=st, target_um2=tg, conf=M[m][3], source=M[m][4], note=note))
+    if name in ('steer_0', 'steer_1', 'steer_2', 'steer_3'): pub = st = tg = 0; note = 'review R6: replaced by the CML pre-drivers booked in tx8_rsv (double count removed)'
+    if name in ('steer_4', 'steer_5'): tg = 0; note = 'unused today (X5 deletes them: target 0)'
+    rows.append(dict(item=name, master=m, group=d['group'], kind='conn', pub_um2=pub, staged_um2=st, target_um2=tg, target_backed_um2=CR.get(m, tg), conf=M[m][3], source=M[m][4], note=note))
 for name, t in BOOKED.items():
     pub, st, tg = cols(t)
-    rows.append(dict(item=name, master='(booked)', group='-', kind='booked', pub_um2=pub, staged_um2=st, target_um2=tg, conf=t[3], source=t[4], note=t[5]))
+    rows.append(dict(item=name, master='(booked)', group='-', kind='booked', pub_um2=pub, staged_um2=st, target_um2=tg, target_backed_um2=tg, conf=t[3], source=t[4], note=t[5]))
 with open(f'{HERE}/ledger.csv', 'w', newline='') as f:
     w = csv.DictWriter(f, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)
 
@@ -141,12 +145,12 @@ def cat(r):
     if r['kind'] == 'booked': return '5 booked, not in pt_chip.conn'
     if 'NEVER BUILT' in M[m][5] or 'IN NO FLOORPLAN' in M[m][5]: return '4 in conn, in no floorplan / never built'
     return '3 analog blocks placed by v6/AP4'
-tot = collections.OrderedDict(); T = [0, 0, 0]
+tot = collections.OrderedDict(); T = [0, 0, 0, 0]
 for r in rows:
-    c = tot.setdefault(cat(r), [0, 0, 0, 0])
-    for i, k in enumerate(('pub_um2', 'staged_um2', 'target_um2')):
+    c = tot.setdefault(cat(r), [0, 0, 0, 0, 0])
+    for i, k in enumerate(('pub_um2', 'staged_um2', 'target_um2', 'target_backed_um2')):
         c[i] += r[k]; T[i] += r[k]
-    c[3] += 1
+    c[4] += 1
 bym = collections.OrderedDict()
 for r in rows:
     k = r['master'] if r['kind'] == 'conn' else r['item']
@@ -156,13 +160,13 @@ for r in rows:
 mm = lambda x: f'{x/1e6:.4f}'
 out = ['# Die-fit demand ledger (generated by ledger.py; per-instance rows in ledger.csv)', '',
        f'{len(inst)} instances of pt_chip.conn (commit {CONN_REV}) + {len(BOOKED)} booked items. Areas are core mm2 (pads: true occupied core intrusion).',
-       'A = published only, B = everything staged publishes as measured, C = all targets met. Confidence: H measured on a published GDS/LEF, M measured on a staged or v5 layout, L estimate.', '',
-       '| category | items | A published | B staged | C target |', '|---|---:|---:|---:|---:|']
+       'Ledger v2 (after the independent review, review.md). A = published only, B = everything staged publishes as measured, C = all targets met, Cr = C with unbacked targets replaced. Confidence: H measured on a published GDS/LEF, M measured on a staged or v5 layout, L estimate.', '',
+       '| category | items | A published | B staged | C target | Cr target, backed only |', '|---|---:|---:|---:|---:|---:|']
 for k in sorted(tot):
-    c = tot[k]; out.append(f'| {k} | {c[3]} | {c[0]/1e6:.3f} | {c[1]/1e6:.3f} | {c[2]/1e6:.3f} |')
-out += [f'| **total demand** | {len(rows)} | **{T[0]/1e6:.3f}** | **{T[1]/1e6:.3f}** | **{T[2]/1e6:.3f}** |',
-        f'| core 3028 x 4218 | | {CORE_MM2:.3f} | {CORE_MM2:.3f} | {CORE_MM2:.3f} |',
-        f'| **raw margin (no routing, halo, decap-over-block, grid)** | | **{CORE_MM2-T[0]/1e6:+.3f}** | **{CORE_MM2-T[1]/1e6:+.3f}** | **{CORE_MM2-T[2]/1e6:+.3f}** |', '',
+    c = tot[k]; out.append(f'| {k} | {c[4]} | {c[0]/1e6:.3f} | {c[1]/1e6:.3f} | {c[2]/1e6:.3f} | {c[3]/1e6:.3f} |')
+out += [f'| **total demand** | {len(rows)} | **{T[0]/1e6:.3f}** | **{T[1]/1e6:.3f}** | **{T[2]/1e6:.3f}** | **{T[3]/1e6:.3f}** |',
+        f'| core 3028 x 4218 | | {CORE_MM2:.3f} | {CORE_MM2:.3f} | {CORE_MM2:.3f} | {CORE_MM2:.3f} |',
+        f'| **raw margin (no routing, halo, decap-over-block, grid)** | | **{CORE_MM2-T[0]/1e6:+.3f}** | **{CORE_MM2-T[1]/1e6:+.3f}** | **{CORE_MM2-T[2]/1e6:+.3f}** | **{CORE_MM2-T[3]/1e6:+.3f}** |', '',
         '## By master / booked item', '', '| item | n | A mm2 | B mm2 | C mm2 | conf | source | flags |', '|---|---:|---:|---:|---:|---|---|---|']
 for k, e in sorted(bym.items(), key=lambda kv: -kv[1]['a'][0]):
     out.append(f"| {k}{' (booked)' if e['kind']=='booked' else ''} | {e['n']} | {mm(e['a'][0])} | {mm(e['a'][1])} | {mm(e['a'][2])} | {e['conf']} | {e['src']} | {e['note']} |")

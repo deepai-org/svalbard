@@ -23,7 +23,7 @@ NOPAD = set(filter(None, os.environ.get('NOPAD', '').split(',')))   # lever expe
 TRIES = int(os.environ.get('TRIES', '1')); SEED = int(os.environ.get('SEED', '1'))
 RING = float(os.environ.get('RING', '0'))          # AP4-10b: core ring narrowed, core edge moves out by RING um on every side
 DIE = (0.0, 0.0, 3932.0, 5122.0+GROW); CORE = (452.0-RING, 452.0-RING, 3480.0+RING, 4670.0+GROW+RING); MACRO_A = 1716.0*1640.0
-L = json.load(open(f'{HERE}/ledger.json')); KEY = 'staged_um2' if SCEN == 'B' else 'target_um2'
+L = json.load(open(f'{HERE}/ledger.json')); KEY = {'B': 'staged_um2', 'C': 'target_um2', 'CR': 'target_backed_um2'}[SCEN.upper()]; SCEN = SCEN.upper()
 bb = {k.split(':')[1]: (v[2]-v[0], v[3]-v[1]) for k, v in json.load(open(f'{R}/scratch/chip-assembly-v6/bbox.json')).items()}
 ab5 = {k: (v['bbox'][2]-v['bbox'][0], v['bbox'][3]-v['bbox'][1]) for k, v in json.load(open(f'{R}/scratch/chip-assembly-v5/run2/abstracts.json')).items()}
 stg = {k: (v['w'], v['h']) for k, v in json.load(open(f'{HERE}/m45free_staged.json')).items() if 'w' in v}
@@ -46,7 +46,7 @@ SHAPE = {'tx_steer': bb['tx_steering_buffer_flat'], 'term_buffer': bb['buffer_co
 for k in ('isw_wired', 'isw_rf', 'isw_conv', 'isw_debug', 'atb_grp', 'atb_pad', 'atb_leaf_s', 'atb_leaf_f'):
     SHAPE[k] = ab5[k]
 def shape(master, area):
-    w, h = SHAPE.get(master) or stg.get(master) or bb.get(master) or ab5.get(master.replace('pt_', ''))
+    w, h = SHAPE.get(master) or stg.get(master) or bb.get(master) or ab5.get(master.replace('pt_', '')) or (1, 1)   # unknown: square
     k = math.sqrt(area/(w*h)); k = 1.0 if abs(k-1) < 0.012 else k
     return round(w*k, 2), round(h*k, 2)
 
@@ -125,7 +125,7 @@ def pads():
     col_u = 522.6 if SCEN == 'B' else 300.0; col_t = 311.82 if SCEN == 'B' else 160.0
     P['pad_usb'] = [(2991.1, 1787.78, 3906.0, 2309.0), (2991.1-col_u, 1787.78, 2991.1, 1977.5)]
     P['pad_wire_tx'] = [(2991.1, 2431.0, 3906.0, 2912.22), (2991.1-col_t, 2770.8, 2991.1, 2912.22)]
-    P['pad_wmon'] = [(2993.09, 3472.945, 3906.0, 3775.1 if SCEN == 'B' else 3678.0)]
+    P['pad_wmon'] = [(2993.09, 3472.945, 3906.0, 3678.0 if SCEN == 'C' else 3775.1)]
     for n in NOPAD: P.pop(n)
     return P
 
@@ -145,7 +145,7 @@ def run(mw, mx0, rng=None, strat=0):
     order = []
     isw = [n for n in blocks if n.startswith('isw_')]
     order += sorted(isw, key=lambda n: -blocks[n]['w']*blocks[n]['h'])
-    order += ['h2d_gearbox_rsv'] + [n for n in blocks if n.startswith('decap_bank')]
+    order += [n for n in blocks if n == 'h2d_gearbox_rsv'] + [n for n in blocks if n.startswith('decap_bank')]
     # ordering strategies (the search tries all three, then jittered repeats):
     #   0 = area-descending only; 1 = giants (>= 0.19 mm2) first, then the flow list, then by area; 2 = flow list first, then by area.
     # flow list (TIER1) = blocks pinned to a pad, a spiral or a chain head, in signal-flow order
@@ -291,7 +291,7 @@ x0 = int(DIE[2]*Sx)+14; y = 56
 def line(t, f=F, col='#000'):
     global y
     d.text((x0, y), t, fill=col, font=f); y += 16 if f is F else 20
-d.text((10, 12), f'Die-fit scenario {SCEN}: {"staged candidates publish as measured" if SCEN=="B" else "all repack targets met"}  (tag {TAG}, halo {HALO:.0f} um)', fill='#000', font=FT)
+d.text((10, 12), f'Die-fit scenario {SCEN}: {dict(B="staged candidates publish as measured", C="all repack targets met", CR="targets met where backed")[SCEN]}  (tag {TAG}, halo {HALO:.0f} um)', fill='#000', font=FT)
 line(f'core {CORE[2]-CORE[0]:.0f} x {CORE[3]-CORE[1]:.0f} = {core_a/1e6:.3f} mm2', FB)
 line(f'blocks to place: {len(blocks)}  ({blk_a/1e6:.3f} mm2)')
 line(f'placed: {len(p.placed)}  ({plc_a/1e6:.3f} mm2)', FB, '#006000')

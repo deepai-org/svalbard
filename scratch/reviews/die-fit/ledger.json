@@ -8,6 +8,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -20,6 +21,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -32,6 +34,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "M",
 "source": "provider site (freed site)",
 "note": "no core area; site conflict POR strap / LNA ground / spare"
@@ -44,6 +47,7 @@
 "pub_um2": 2814000,
 "staged_um2": 2814000,
 "target_um2": 2814000,
+"target_backed_um2": 2814000,
 "conf": "H",
 "source": "digital NOTES TC7/TC8: 1716 x 1640",
 "note": "must not shrink (AP4-8 2.45 not reachable); absorbs decode glue, 129 iso AND2, LO/CDR/USB control, decap row cells: cells 1.764 mm2 = 67.4 %"
@@ -56,6 +60,7 @@
 "pub_um2": 9469,
 "staged_um2": 9469,
 "target_um2": 9469,
+"target_backed_um2": 9469,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -68,6 +73,7 @@
 "pub_um2": 12864,
 "staged_um2": 12864,
 "target_um2": 12864,
+"target_backed_um2": 12864,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -80,6 +86,7 @@
 "pub_um2": 301799,
 "staged_um2": 301799,
 "target_um2": 180000,
+"target_backed_um2": 180000,
 "conf": "M",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json; target area-pass-4 s1 (lever 13, not started)",
 "note": "v5 abstract outline, util 0.24"
@@ -89,12 +96,13 @@
 "master": "pt_bias_ext",
 "group": "core",
 "kind": "conn",
-"pub_um2": 9000,
-"staged_um2": 9000,
-"target_um2": 9000,
-"conf": "L",
-"source": "CP4 inventory.py est (3 bank outputs)",
-"note": "NEVER BUILT (D-BIAS); in no floorplan"
+"pub_um2": 4436,
+"staged_um2": 4436,
+"target_um2": 4436,
+"target_backed_um2": 4436,
+"conf": "M",
+"source": "two pt_bias_tap2 cells of 2,218 (scratch/pads-core/bias/pub, review R10)",
+"note": "staged, not published (D-BIAS); in no floorplan"
 },
 {
 "item": "isw_wired_rx",
@@ -104,6 +112,7 @@
 "pub_um2": 36922,
 "staged_um2": 36922,
 "target_um2": 36922,
+"target_backed_um2": 36922,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": "PD2 ten islands"
@@ -116,6 +125,7 @@
 "pub_um2": 36922,
 "staged_um2": 36922,
 "target_um2": 36922,
+"target_backed_um2": 36922,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": "PD2 ten islands"
@@ -128,6 +138,7 @@
 "pub_um2": 36922,
 "staged_um2": 36922,
 "target_um2": 36922,
+"target_backed_um2": 36922,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": "PD2 ten islands"
@@ -140,6 +151,7 @@
 "pub_um2": 36922,
 "staged_um2": 36922,
 "target_um2": 36922,
+"target_backed_um2": 36922,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": "PD2 ten islands"
@@ -152,6 +164,7 @@
 "pub_um2": 64081,
 "staged_um2": 64081,
 "target_um2": 64081,
+"target_backed_um2": 64081,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": "PD2 ten islands: v6/AP4 floorplans hold 5 switches = 0.236 of the 0.426"
@@ -164,6 +177,7 @@
 "pub_um2": 64081,
 "staged_um2": 64081,
 "target_um2": 64081,
+"target_backed_um2": 64081,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": "PD2 ten islands: v6/AP4 floorplans hold 5 switches = 0.236 of the 0.426"
@@ -176,6 +190,7 @@
 "pub_um2": 49817,
 "staged_um2": 49817,
 "target_um2": 49817,
+"target_backed_um2": 49817,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -188,6 +203,7 @@
 "pub_um2": 31781,
 "staged_um2": 31781,
 "target_um2": 31781,
+"target_backed_um2": 31781,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": "PD2 ten islands"
@@ -200,6 +216,7 @@
 "pub_um2": 31781,
 "staged_um2": 31781,
 "target_um2": 31781,
+"target_backed_um2": 31781,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": "PD2 ten islands"
@@ -212,6 +229,7 @@
 "pub_um2": 36922,
 "staged_um2": 36922,
 "target_um2": 36922,
+"target_backed_um2": 36922,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": "PD2 ten islands"
@@ -224,6 +242,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -236,6 +255,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -248,6 +268,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -260,6 +281,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -272,6 +294,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -284,6 +307,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -296,6 +320,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -308,6 +333,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -320,6 +346,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -332,6 +359,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -344,6 +372,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -356,6 +385,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -368,6 +398,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -380,6 +411,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -392,6 +424,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -404,6 +437,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -416,6 +450,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -428,6 +463,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -440,6 +476,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "M",
 "source": "in-ring down-bond site (AGND_RX)",
 "note": "no core area; site conflict with POR strap"
@@ -452,6 +489,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "M",
 "source": "in-ring down-bond site (AGND_RX)",
 "note": "no core area; site conflict with POR strap"
@@ -464,6 +502,7 @@
 "pub_um2": 2000,
 "staged_um2": 2000,
 "target_um2": 2000,
+"target_backed_um2": 2000,
 "conf": "L",
 "source": "estimate (single-point AGND_RX to VSS tie through an ESD structure, PD2-12)",
 "note": "NEVER BUILT; in no floorplan"
@@ -476,6 +515,7 @@
 "pub_um2": 150969,
 "staged_um2": 150969,
 "target_um2": 150969,
+"target_backed_um2": 150969,
 "conf": "H",
 "source": "v5 floorplan rect clipped to core: 310.06 x 486.91",
 "note": ""
@@ -488,6 +528,7 @@
 "pub_um2": 150969,
 "staged_um2": 150969,
 "target_um2": 150969,
+"target_backed_um2": 150969,
 "conf": "H",
 "source": "same footprint as pad_rf_pair",
 "note": ""
@@ -500,6 +541,7 @@
 "pub_um2": 150969,
 "staged_um2": 150969,
 "target_um2": 150969,
+"target_backed_um2": 150969,
 "conf": "H",
 "source": "v5 floorplan rect clipped to core: 310.06 x 486.91",
 "note": ""
@@ -512,6 +554,7 @@
 "pub_um2": 150969,
 "staged_um2": 150969,
 "target_um2": 150969,
+"target_backed_um2": 150969,
 "conf": "H",
 "source": "v5 floorplan rect clipped to core: 310.06 x 486.91",
 "note": ""
@@ -524,6 +567,7 @@
 "pub_um2": 150969,
 "staged_um2": 150969,
 "target_um2": 150969,
+"target_backed_um2": 150969,
 "conf": "H",
 "source": "v5 floorplan rect clipped to core: 310.06 x 486.91",
 "note": ""
@@ -536,6 +580,7 @@
 "pub_um2": 147144,
 "staged_um2": 147144,
 "target_um2": 99843,
+"target_backed_um2": 147144,
 "conf": "M",
 "source": "scratch/area-pass-4/util.json (302.2 x 912.9 drawn); target = undrawn 205 um B cell",
 "note": "UNDER-BOOKED in v6/AP4 floorplans: they place WMON at 205 um (pad_single_leg_b, never drawn), the published cell is 302 um: +0.047"
@@ -548,6 +593,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "in-ring site 68 x 124 at bidir[25] (PD48b)",
 "note": "no core area"
@@ -560,6 +606,7 @@
 "pub_um2": 195358,
 "staged_um2": 195358,
 "target_um2": 195358,
+"target_backed_um2": 195358,
 "conf": "H",
 "source": "v5 floorplan rect clipped: 401.22 x 486.91",
 "note": ""
@@ -572,6 +619,7 @@
 "pub_um2": 195358,
 "staged_um2": 195358,
 "target_um2": 195358,
+"target_backed_um2": 195358,
 "conf": "H",
 "source": "v5 floorplan rect clipped: 401.22 x 486.91",
 "note": ""
@@ -581,12 +629,13 @@
 "master": "pt_refvcm",
 "group": "pll",
 "kind": "conn",
-"pub_um2": 3000,
-"staged_um2": 3000,
-"target_um2": 3000,
-"conf": "L",
-"source": "CP4 inventory est",
-"note": "NEVER BUILT (D-REFVCM); in no floorplan"
+"pub_um2": 7443,
+"staged_um2": 7443,
+"target_um2": 7443,
+"target_backed_um2": 7443,
+"conf": "M",
+"source": "scratch/pads-core/bias/pub layout (review R10)",
+"note": "staged, not published (D-REFVCM); in no floorplan"
 },
 {
 "item": "pad_hs_rx",
@@ -596,6 +645,7 @@
 "pub_um2": 327587,
 "staged_um2": 239587,
 "target_um2": 239587,
+"target_backed_um2": 239587,
 "conf": "M",
 "source": "published 478.06 x 685.25 in core; staged scratch/pads-core/hspad/b2 492.06 x 486.91 (review pending)",
 "note": ""
@@ -608,6 +658,7 @@
 "pub_um2": 352916,
 "staged_um2": 352916,
 "target_um2": 311134,
+"target_backed_um2": 311134,
 "conf": "H",
 "source": "padnotch.json: shell 521.22 x 488.9 + attachment column 187.7 x 522.6; target AP4-6 column 300 um",
 "note": "OVER-BOOKED in v6/AP4: bbox 527,214 booked, 174,298 of it is an empty notch (v5 knew it)"
@@ -620,6 +671,7 @@
 "pub_um2": 278736,
 "staged_um2": 278736,
 "target_um2": 257572,
+"target_backed_um2": 257572,
 "conf": "H",
 "source": "padnotch.json: shell 481.22 x 488.9 + column 139.4 x 311.8; target AP4-6 column 160 um",
 "note": "OVER-BOOKED in v6/AP4: bbox 385,322 booked, 106,586 is an empty notch"
@@ -629,12 +681,13 @@
 "master": "pt_lna",
 "group": "rf_rx",
 "kind": "conn",
-"pub_um2": 24763,
+"pub_um2": 78352,
 "staged_um2": 42921,
 "target_um2": 42921,
+"target_backed_um2": 42921,
 "conf": "M",
-"source": "scratch/area-pass-4/util.json (obsolete NO-GO cell); staged analog/rf_rx/generated/lna-layout.json (uncommitted, design not closed)",
-"note": "tail source + gate R still to add"
+"source": "published = git HEAD generated/lna-layout.json (review R3); staged = working-tree generated/ (uncommitted, design not closed)",
+"note": "tail source + gate R still to add (lna_additions row)"
 },
 {
 "item": "lna_ind_p",
@@ -644,6 +697,7 @@
 "pub_um2": 50000,
 "staged_um2": 35700,
 "target_um2": 57200,
+"target_backed_um2": 57200,
 "conf": "L",
 "source": "pub = v6 lc_load_rsv 0.10/2; staged 170 um coil (rf-lna-p NOTES l.164); target 4 t d220 57.2k (l.189, +2.3 dB pess)",
 "note": "spiral: keep-out 25 um, no MIM/grid/fill over it"
@@ -656,6 +710,7 @@
 "pub_um2": 50000,
 "staged_um2": 35700,
 "target_um2": 57200,
+"target_backed_um2": 57200,
 "conf": "L",
 "source": "pub = v6 lc_load_rsv 0.10/2; staged 170 um coil (rf-lna-p NOTES l.164); target 4 t d220 57.2k (l.189, +2.3 dB pess)",
 "note": "spiral: keep-out 25 um, no MIM/grid/fill over it"
@@ -668,6 +723,7 @@
 "pub_um2": 25200,
 "staged_um2": 25200,
 "target_um2": 25200,
+"target_backed_um2": 25200,
 "conf": "M",
 "source": "rf-lna-p NOTES l.159-160 (G_DEG 140 um 2 t)",
 "note": "bench model + generator only; IN NO FLOORPLAN; spiral keep-out"
@@ -680,6 +736,7 @@
 "pub_um2": 25200,
 "staged_um2": 25200,
 "target_um2": 25200,
+"target_backed_um2": 25200,
 "conf": "M",
 "source": "rf-lna-p NOTES l.159-160 (G_DEG 140 um 2 t)",
 "note": "bench model + generator only; IN NO FLOORPLAN; spiral keep-out"
@@ -689,23 +746,25 @@
 "master": "pt_rxmix_i",
 "group": "rf_rx",
 "kind": "conn",
-"pub_um2": 35442,
+"pub_um2": 76238,
 "staged_um2": 35442,
 "target_um2": 35442,
-"conf": "H",
-"source": "scratch/area-pass-4/util.json",
-"note": "TIA back to small option"
+"target_backed_um2": 35442,
+"conf": "M",
+"source": "published = git HEAD (review R3); staged = working tree (TIA back to the small option)",
+"note": ""
 },
 {
 "item": "rxmix_q",
 "master": "pt_rxmix_q",
 "group": "rf_rx",
 "kind": "conn",
-"pub_um2": 35442,
+"pub_um2": 76238,
 "staged_um2": 35442,
 "target_um2": 35442,
-"conf": "H",
-"source": "scratch/area-pass-4/util.json",
+"target_backed_um2": 35442,
+"conf": "M",
+"source": "as rxmix_i",
 "note": ""
 },
 {
@@ -716,6 +775,7 @@
 "pub_um2": 341901,
 "staged_um2": 341901,
 "target_um2": 230000,
+"target_backed_um2": 230000,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json; target AP4-3 (not started)",
 "note": ""
@@ -728,6 +788,7 @@
 "pub_um2": 341901,
 "staged_um2": 341901,
 "target_um2": 230000,
+"target_backed_um2": 230000,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -737,11 +798,12 @@
 "master": "pt_bb_tap",
 "group": "debug",
 "kind": "conn",
-"pub_um2": 19511,
+"pub_um2": 9978,
 "staged_um2": 19511,
 "target_um2": 19511,
-"conf": "H",
-"source": "scratch/area-pass-4/util.json",
+"target_backed_um2": 19511,
+"conf": "M",
+"source": "published = git HEAD 9,978; staged = working tree 19,511 (review R3)",
 "note": ""
 },
 {
@@ -749,11 +811,12 @@
 "master": "pt_bb_tap",
 "group": "debug",
 "kind": "conn",
-"pub_um2": 19511,
+"pub_um2": 9978,
 "staged_um2": 19511,
 "target_um2": 19511,
-"conf": "H",
-"source": "scratch/area-pass-4/util.json",
+"target_backed_um2": 19511,
+"conf": "M",
+"source": "published = git HEAD 9,978; staged = working tree 19,511 (review R3)",
 "note": ""
 },
 {
@@ -761,11 +824,12 @@
 "master": "pt_bb_tap",
 "group": "debug",
 "kind": "conn",
-"pub_um2": 19511,
+"pub_um2": 9978,
 "staged_um2": 19511,
 "target_um2": 19511,
-"conf": "H",
-"source": "scratch/area-pass-4/util.json",
+"target_backed_um2": 19511,
+"conf": "M",
+"source": "published = git HEAD 9,978; staged = working tree 19,511 (review R3)",
 "note": ""
 },
 {
@@ -776,6 +840,7 @@
 "pub_um2": 95,
 "staged_um2": 95,
 "target_um2": 95,
+"target_backed_um2": 95,
 "conf": "H",
 "source": "iso-placement.json",
 "note": "IN NO FLOORPLAN"
@@ -788,6 +853,7 @@
 "pub_um2": 577710,
 "staged_um2": 449686,
 "target_um2": 330000,
+"target_backed_um2": 350000,
 "conf": "M",
 "source": "scratch/area-pass-4/util.json; staged scratch/reviews/die-fit/m45free_staged.json (staged GDS bbox) 480.28 x 936.30 (not published, stage4 not re-reviewed); target AP4-4",
 "note": "target missed by 0.12 each"
@@ -800,6 +866,7 @@
 "pub_um2": 577785,
 "staged_um2": 449686,
 "target_um2": 330000,
+"target_backed_um2": 350000,
 "conf": "M",
 "source": "as adc_i",
 "note": ""
@@ -812,6 +879,7 @@
 "pub_um2": 1025,
 "staged_um2": 1025,
 "target_um2": 1025,
+"target_backed_um2": 1025,
 "conf": "H",
 "source": "iso-placement.json",
 "note": "IN NO FLOORPLAN"
@@ -824,6 +892,7 @@
 "pub_um2": 186115,
 "staged_um2": 134121,
 "target_um2": 130000,
+"target_backed_um2": 130000,
 "conf": "M",
 "source": "scratch/area-pass-4/util.json; staged 668.5 x 200.63",
 "note": ""
@@ -836,6 +905,7 @@
 "pub_um2": 186115,
 "staged_um2": 134121,
 "target_um2": 130000,
+"target_backed_um2": 130000,
 "conf": "M",
 "source": "as dac_i",
 "note": ""
@@ -848,6 +918,7 @@
 "pub_um2": 117089,
 "staged_um2": 117089,
 "target_um2": 117089,
+"target_backed_um2": 117089,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -860,6 +931,7 @@
 "pub_um2": 1025,
 "staged_um2": 1025,
 "target_um2": 1025,
+"target_backed_um2": 1025,
 "conf": "H",
 "source": "iso-placement.json",
 "note": "IN NO FLOORPLAN"
@@ -872,6 +944,7 @@
 "pub_um2": 21424,
 "staged_um2": 21424,
 "target_um2": 21424,
+"target_backed_um2": 21424,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -884,6 +957,7 @@
 "pub_um2": 21424,
 "staged_um2": 21424,
 "target_um2": 21424,
+"target_backed_um2": 21424,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -896,6 +970,7 @@
 "pub_um2": 3988,
 "staged_um2": 3988,
 "target_um2": 3988,
+"target_backed_um2": 3988,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -908,6 +983,7 @@
 "pub_um2": 96812,
 "staged_um2": 96812,
 "target_um2": 96812,
+"target_backed_um2": 96812,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -920,6 +996,7 @@
 "pub_um2": 155350,
 "staged_um2": 133006,
 "target_um2": 120000,
+"target_backed_um2": 120000,
 "conf": "M",
 "source": "scratch/area-pass-4/util.json; staged lo-ap4 cand/run2 343.1 x 387.66 (not qualified)",
 "note": ""
@@ -929,12 +1006,13 @@
 "master": "pt_lo_vreg",
 "group": "lo",
 "kind": "conn",
-"pub_um2": 120000,
-"staged_um2": 120000,
-"target_um2": 120000,
+"pub_um2": 300000,
+"staged_um2": 300000,
+"target_um2": 300000,
+"target_backed_um2": 300000,
 "conf": "L",
-"source": "estimate: 30 mA, >=50-59 dB, <=7 nV/rtHz (PD2-11); pll_vreg2 = 173k for 2 x 10 mA at 23-27 dB; range 80k-250k",
-"note": "NEVER BUILT; CP4 inventory booked 81.5k; in no floorplan"
+"source": "review R1: scratch/lo-ap4/vreg2/reg.py schematic has ~0.24 mm2 of bare devices (pass devices, 62 MOS-cap units, 90 resistors); 0.25-0.38 at pll_vreg2 utilisation; first estimate here was 0.12",
+"note": "NEVER BUILT; still fails 59 dB at 78.125 MHz without an external capacitor (which would need a pad site); in no floorplan"
 },
 {
 "item": "qvco",
@@ -944,6 +1022,7 @@
 "pub_um2": 532476,
 "staged_um2": 532476,
 "target_um2": 532476,
+"target_backed_um2": 532476,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json 848 x 627.9",
 "note": "two empty corner slots 111 x 303 (lo-ap4 NOTES)"
@@ -956,6 +1035,7 @@
 "pub_um2": 361116,
 "staged_um2": 145031,
 "target_um2": 145031,
+"target_backed_um2": 145031,
 "conf": "M",
 "source": "scratch/area-pass-4/util.json; staged lo-ap4 377.92 x 383.76 (review NO-GO: -0.2 GHz)",
 "note": ""
@@ -968,6 +1048,7 @@
 "pub_um2": 34062,
 "staged_um2": 19124,
 "target_um2": 19124,
+"target_backed_um2": 19124,
 "conf": "M",
 "source": "scratch/area-pass-4/util.json; staged 97.98 x 195.18",
 "note": "fits QVCO slot A"
@@ -980,6 +1061,7 @@
 "pub_um2": 124110,
 "staged_um2": 124110,
 "target_um2": 124110,
+"target_backed_um2": 124110,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -992,6 +1074,7 @@
 "pub_um2": 194122,
 "staged_um2": 194122,
 "target_um2": 194122,
+"target_backed_um2": 194122,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1004,6 +1087,7 @@
 "pub_um2": 17428,
 "staged_um2": 9022,
 "target_um2": 9022,
+"target_backed_um2": 9022,
 "conf": "M",
 "source": "scratch/area-pass-4/util.json; staged 96.4 x 93.59",
 "note": "fits QVCO slot A/B"
@@ -1016,6 +1100,7 @@
 "pub_um2": 17428,
 "staged_um2": 9022,
 "target_um2": 9022,
+"target_backed_um2": 9022,
 "conf": "M",
 "source": "scratch/area-pass-4/util.json; staged 96.4 x 93.59",
 "note": "fits QVCO slot A/B"
@@ -1028,6 +1113,7 @@
 "pub_um2": 22341,
 "staged_um2": 22341,
 "target_um2": 22341,
+"target_backed_um2": 22341,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1040,6 +1126,7 @@
 "pub_um2": 15161,
 "staged_um2": 15161,
 "target_um2": 15161,
+"target_backed_um2": 15161,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1052,6 +1139,7 @@
 "pub_um2": 1025,
 "staged_um2": 1025,
 "target_um2": 1025,
+"target_backed_um2": 1025,
 "conf": "H",
 "source": "iso-placement.json",
 "note": "IN NO FLOORPLAN"
@@ -1064,6 +1152,7 @@
 "pub_um2": 12600,
 "staged_um2": 12600,
 "target_um2": 12600,
+"target_backed_um2": 12600,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1076,6 +1165,7 @@
 "pub_um2": 12600,
 "staged_um2": 12600,
 "target_um2": 12600,
+"target_backed_um2": 12600,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1088,6 +1178,7 @@
 "pub_um2": 12600,
 "staged_um2": 12600,
 "target_um2": 12600,
+"target_backed_um2": 12600,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1100,6 +1191,7 @@
 "pub_um2": 173424,
 "staged_um2": 173424,
 "target_um2": 173424,
+"target_backed_um2": 173424,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1112,6 +1204,7 @@
 "pub_um2": 86020,
 "staged_um2": 86020,
 "target_um2": 65000,
+"target_backed_um2": 65000,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json; target AP4-5c (wired RX, not started)",
 "note": ""
@@ -1124,6 +1217,7 @@
 "pub_um2": 1025,
 "staged_um2": 1025,
 "target_um2": 1025,
+"target_backed_um2": 1025,
 "conf": "H",
 "source": "iso-placement.json",
 "note": "IN NO FLOORPLAN"
@@ -1136,6 +1230,7 @@
 "pub_um2": 166657,
 "staged_um2": 166657,
 "target_um2": 127000,
+"target_backed_um2": 166657,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json; target: owner says 0.115 unreachable, 0.127 with a core ECO (wired_rx README Resume 9)",
 "note": ""
@@ -1148,6 +1243,7 @@
 "pub_um2": 82901,
 "staged_um2": 82901,
 "target_um2": 82901,
+"target_backed_um2": 82901,
 "conf": "H",
 "source": "r13 published 259.26 x 319.76 (measured)",
 "note": ""
@@ -1160,6 +1256,7 @@
 "pub_um2": 906,
 "staged_um2": 906,
 "target_um2": 906,
+"target_backed_um2": 906,
 "conf": "H",
 "source": "iso-placement.json size_um",
 "note": "IN NO FLOORPLAN; CP4-1 already applied in the conn: 130 clamps are AND2 in the macro, 16 + 2 pull-downs stay outside"
@@ -1172,6 +1269,7 @@
 "pub_um2": 906,
 "staged_um2": 906,
 "target_um2": 906,
+"target_backed_um2": 906,
 "conf": "H",
 "source": "iso-placement.json size_um",
 "note": "IN NO FLOORPLAN; CP4-1 already applied in the conn: 130 clamps are AND2 in the macro, 16 + 2 pull-downs stay outside"
@@ -1184,6 +1282,7 @@
 "pub_um2": 906,
 "staged_um2": 906,
 "target_um2": 906,
+"target_backed_um2": 906,
 "conf": "H",
 "source": "iso-placement.json size_um",
 "note": "IN NO FLOORPLAN; CP4-1 already applied in the conn: 130 clamps are AND2 in the macro, 16 + 2 pull-downs stay outside"
@@ -1196,6 +1295,7 @@
 "pub_um2": 906,
 "staged_um2": 906,
 "target_um2": 906,
+"target_backed_um2": 906,
 "conf": "H",
 "source": "iso-placement.json size_um",
 "note": "IN NO FLOORPLAN; CP4-1 already applied in the conn: 130 clamps are AND2 in the macro, 16 + 2 pull-downs stay outside"
@@ -1208,6 +1308,7 @@
 "pub_um2": 906,
 "staged_um2": 906,
 "target_um2": 906,
+"target_backed_um2": 906,
 "conf": "H",
 "source": "iso-placement.json size_um",
 "note": "IN NO FLOORPLAN; CP4-1 already applied in the conn: 130 clamps are AND2 in the macro, 16 + 2 pull-downs stay outside"
@@ -1220,6 +1321,7 @@
 "pub_um2": 906,
 "staged_um2": 906,
 "target_um2": 906,
+"target_backed_um2": 906,
 "conf": "H",
 "source": "iso-placement.json size_um",
 "note": "IN NO FLOORPLAN; CP4-1 already applied in the conn: 130 clamps are AND2 in the macro, 16 + 2 pull-downs stay outside"
@@ -1232,6 +1334,7 @@
 "pub_um2": 906,
 "staged_um2": 906,
 "target_um2": 906,
+"target_backed_um2": 906,
 "conf": "H",
 "source": "iso-placement.json size_um",
 "note": "IN NO FLOORPLAN; CP4-1 already applied in the conn: 130 clamps are AND2 in the macro, 16 + 2 pull-downs stay outside"
@@ -1244,6 +1347,7 @@
 "pub_um2": 906,
 "staged_um2": 906,
 "target_um2": 906,
+"target_backed_um2": 906,
 "conf": "H",
 "source": "iso-placement.json size_um",
 "note": "IN NO FLOORPLAN; CP4-1 already applied in the conn: 130 clamps are AND2 in the macro, 16 + 2 pull-downs stay outside"
@@ -1256,6 +1360,7 @@
 "pub_um2": 22341,
 "staged_um2": 22341,
 "target_um2": 22341,
+"target_backed_um2": 22341,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1268,6 +1373,7 @@
 "pub_um2": 22341,
 "staged_um2": 22341,
 "target_um2": 22341,
+"target_backed_um2": 22341,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1280,6 +1386,7 @@
 "pub_um2": 1025,
 "staged_um2": 1025,
 "target_um2": 1025,
+"target_backed_um2": 1025,
 "conf": "H",
 "source": "iso-placement.json",
 "note": "IN NO FLOORPLAN"
@@ -1292,6 +1399,7 @@
 "pub_um2": 906,
 "staged_um2": 906,
 "target_um2": 906,
+"target_backed_um2": 906,
 "conf": "H",
 "source": "iso-placement.json size_um",
 "note": "IN NO FLOORPLAN; CP4-1 already applied in the conn: 130 clamps are AND2 in the macro, 16 + 2 pull-downs stay outside"
@@ -1304,6 +1412,7 @@
 "pub_um2": 9522,
 "staged_um2": 9522,
 "target_um2": 9522,
+"target_backed_um2": 9522,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1316,6 +1425,7 @@
 "pub_um2": 20941,
 "staged_um2": 20941,
 "target_um2": 20941,
+"target_backed_um2": 20941,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1328,6 +1438,7 @@
 "pub_um2": 3667,
 "staged_um2": 3667,
 "target_um2": 3667,
+"target_backed_um2": 3667,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1340,6 +1451,7 @@
 "pub_um2": 3667,
 "staged_um2": 3667,
 "target_um2": 3667,
+"target_backed_um2": 3667,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1352,6 +1464,7 @@
 "pub_um2": 3667,
 "staged_um2": 3667,
 "target_um2": 3667,
+"target_backed_um2": 3667,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1364,6 +1477,7 @@
 "pub_um2": 3667,
 "staged_um2": 3667,
 "target_um2": 3667,
+"target_backed_um2": 3667,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1376,6 +1490,7 @@
 "pub_um2": 3667,
 "staged_um2": 3667,
 "target_um2": 3667,
+"target_backed_um2": 3667,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1388,6 +1503,7 @@
 "pub_um2": 3667,
 "staged_um2": 3667,
 "target_um2": 3667,
+"target_backed_um2": 3667,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1400,6 +1516,7 @@
 "pub_um2": 1025,
 "staged_um2": 1025,
 "target_um2": 1025,
+"target_backed_um2": 1025,
 "conf": "H",
 "source": "iso-placement.json",
 "note": "IN NO FLOORPLAN"
@@ -1412,6 +1529,7 @@
 "pub_um2": 92036,
 "staged_um2": 52854,
 "target_um2": 52854,
+"target_backed_um2": 52854,
 "conf": "M",
 "source": "scratch/area-pass-4/util.json; staged lo-ap4 127.5 x 414.54",
 "note": ""
@@ -1424,6 +1542,7 @@
 "pub_um2": 95,
 "staged_um2": 95,
 "target_um2": 95,
+"target_backed_um2": 95,
 "conf": "H",
 "source": "iso-placement.json",
 "note": "IN NO FLOORPLAN"
@@ -1436,6 +1555,7 @@
 "pub_um2": 1025,
 "staged_um2": 1025,
 "target_um2": 1025,
+"target_backed_um2": 1025,
 "conf": "H",
 "source": "iso-placement.json",
 "note": "IN NO FLOORPLAN"
@@ -1448,6 +1568,7 @@
 "pub_um2": 48249,
 "staged_um2": 48249,
 "target_um2": 48249,
+"target_backed_um2": 48249,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1460,6 +1581,7 @@
 "pub_um2": 13180,
 "staged_um2": 13180,
 "target_um2": 13180,
+"target_backed_um2": 13180,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1472,6 +1594,7 @@
 "pub_um2": 133483,
 "staged_um2": 68676,
 "target_um2": 68676,
+"target_backed_um2": 68676,
 "conf": "L",
 "source": "scratch/area-pass-4/util.json; staged 194 x 354 (review NO-GO, superseded by the follower redesign r4)",
 "note": "follower booked separately"
@@ -1484,6 +1607,7 @@
 "pub_um2": 8841,
 "staged_um2": 8841,
 "target_um2": 8841,
+"target_backed_um2": 8841,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1496,6 +1620,7 @@
 "pub_um2": 9835,
 "staged_um2": 9835,
 "target_um2": 9835,
+"target_backed_um2": 9835,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1508,6 +1633,7 @@
 "pub_um2": 173480,
 "staged_um2": 173480,
 "target_um2": 90000,
+"target_backed_um2": 173480,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json; target AP4-1 (layout-only repack FAILED, needs r7i redesign)",
 "note": ""
@@ -1520,6 +1646,7 @@
 "pub_um2": 24822,
 "staged_um2": 24822,
 "target_um2": 24822,
+"target_backed_um2": 24822,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1532,6 +1659,7 @@
 "pub_um2": 23891,
 "staged_um2": 23891,
 "target_um2": 23891,
+"target_backed_um2": 23891,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1544,6 +1672,7 @@
 "pub_um2": 289747,
 "staged_um2": 25938,
 "target_um2": 25938,
+"target_backed_um2": 25938,
 "conf": "L",
 "source": "scratch/area-pass-4/util.json (published cell not functional); staged ptrim_compact.py 126.4 x 205.2 of the SAME non-functional circuit",
 "note": "output stage booked separately"
@@ -1556,6 +1685,7 @@
 "pub_um2": 109899,
 "staged_um2": 109899,
 "target_um2": 109899,
+"target_backed_um2": 109899,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1567,7 +1697,8 @@
 "kind": "conn",
 "pub_um2": 956461,
 "staged_um2": 293813,
-"target_um2": 290000,
+"target_um2": 293813,
+"target_backed_um2": 293813,
 "conf": "M",
 "source": "scratch/area-pass-4/util.json (r6); staged r7c 1210.55 x 242.71 (NOT publishable: ext_q625_lde60 fails)",
 "note": ""
@@ -1580,6 +1711,7 @@
 "pub_um2": 246188,
 "staged_um2": 246188,
 "target_um2": 246188,
+"target_backed_um2": 246188,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json (quarter-rate core)",
 "note": "eighth-rate growth booked separately (tx8)"
@@ -1589,48 +1721,52 @@
 "master": "tx_steer",
 "group": "wired_tx",
 "kind": "conn",
-"pub_um2": 8677,
-"staged_um2": 8677,
-"target_um2": 8677,
+"pub_um2": 0,
+"staged_um2": 0,
+"target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
-"note": "instances 4,5 unused (X5)"
+"note": "review R6: replaced by the CML pre-drivers booked in tx8_rsv (double count removed)"
 },
 {
 "item": "steer_1",
 "master": "tx_steer",
 "group": "wired_tx",
 "kind": "conn",
-"pub_um2": 8677,
-"staged_um2": 8677,
-"target_um2": 8677,
+"pub_um2": 0,
+"staged_um2": 0,
+"target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
-"note": "instances 4,5 unused (X5)"
+"note": "review R6: replaced by the CML pre-drivers booked in tx8_rsv (double count removed)"
 },
 {
 "item": "steer_2",
 "master": "tx_steer",
 "group": "wired_tx",
 "kind": "conn",
-"pub_um2": 8677,
-"staged_um2": 8677,
-"target_um2": 8677,
+"pub_um2": 0,
+"staged_um2": 0,
+"target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
-"note": "instances 4,5 unused (X5)"
+"note": "review R6: replaced by the CML pre-drivers booked in tx8_rsv (double count removed)"
 },
 {
 "item": "steer_3",
 "master": "tx_steer",
 "group": "wired_tx",
 "kind": "conn",
-"pub_um2": 8677,
-"staged_um2": 8677,
-"target_um2": 8677,
+"pub_um2": 0,
+"staged_um2": 0,
+"target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
-"note": "instances 4,5 unused (X5)"
+"note": "review R6: replaced by the CML pre-drivers booked in tx8_rsv (double count removed)"
 },
 {
 "item": "steer_4",
@@ -1639,10 +1775,11 @@
 "kind": "conn",
 "pub_um2": 8677,
 "staged_um2": 8677,
-"target_um2": 8677,
+"target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
-"note": "unused today (X5 would delete)"
+"note": "unused today (X5 deletes them: target 0)"
 },
 {
 "item": "steer_5",
@@ -1651,10 +1788,11 @@
 "kind": "conn",
 "pub_um2": 8677,
 "staged_um2": 8677,
-"target_um2": 8677,
+"target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
-"note": "unused today (X5 would delete)"
+"note": "unused today (X5 deletes them: target 0)"
 },
 {
 "item": "attached_tx_interlock",
@@ -1664,6 +1802,7 @@
 "pub_um2": 48100,
 "staged_um2": 48100,
 "target_um2": 48100,
+"target_backed_um2": 48100,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1676,6 +1815,7 @@
 "pub_um2": 75196,
 "staged_um2": 75196,
 "target_um2": 45000,
+"target_backed_um2": 45000,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json; target AP4-6",
 "note": ""
@@ -1685,12 +1825,13 @@
 "master": "pt_txpad_bias",
 "group": "wired_tx",
 "kind": "conn",
-"pub_um2": 3000,
-"staged_um2": 3000,
-"target_um2": 3000,
-"conf": "L",
-"source": "CP4 est",
-"note": "NEVER BUILT (D-TXTERM); CP4-10 would make it a divider tap"
+"pub_um2": 12524,
+"staged_um2": 12524,
+"target_um2": 12524,
+"target_backed_um2": 12524,
+"conf": "M",
+"source": "scratch/pads-core/bias/pub layout (review R10)",
+"note": "staged, not published (D-TXTERM); in no floorplan"
 },
 {
 "item": "usb_txdrv",
@@ -1700,6 +1841,7 @@
 "pub_um2": 31457,
 "staged_um2": 31457,
 "target_um2": 31457,
+"target_backed_um2": 31457,
 "conf": "M",
 "source": "USB-INTEGRATION.md l.79: 116.48 x 270.06 (rev 3 not re-reviewed)",
 "note": "IN NO FLOORPLAN"
@@ -1712,6 +1854,7 @@
 "pub_um2": 9137,
 "staged_um2": 9137,
 "target_um2": 9137,
+"target_backed_um2": 9137,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1724,6 +1867,7 @@
 "pub_um2": 5861,
 "staged_um2": 5861,
 "target_um2": 5861,
+"target_backed_um2": 5861,
 "conf": "H",
 "source": "scratch/area-pass-4/util.json",
 "note": ""
@@ -1736,6 +1880,7 @@
 "pub_um2": 28239,
 "staged_um2": 28239,
 "target_um2": 28239,
+"target_backed_um2": 28239,
 "conf": "H",
 "source": "characterization/generated/char_atb.lef 192.1 x 147.0",
 "note": "IN NO FLOORPLAN"
@@ -1748,6 +1893,7 @@
 "pub_um2": 9698,
 "staged_um2": 9698,
 "target_um2": 9698,
+"target_backed_um2": 9698,
 "conf": "H",
 "source": "char_ro33.lef 69.64 x 139.26",
 "note": "IN NO FLOORPLAN; may duplicate ring_osc (CP4-R4)"
@@ -1760,6 +1906,7 @@
 "pub_um2": 9320,
 "staged_um2": 9320,
 "target_um2": 9320,
+"target_backed_um2": 9320,
 "conf": "H",
 "source": "char_ro50.lef",
 "note": "IN NO FLOORPLAN"
@@ -1772,6 +1919,7 @@
 "pub_um2": 27841,
 "staged_um2": 27841,
 "target_um2": 27841,
+"target_backed_um2": 27841,
 "conf": "H",
 "source": "char_cmldiv.lef 104.76 x 265.76",
 "note": "IN NO FLOORPLAN"
@@ -1784,6 +1932,7 @@
 "pub_um2": 111800,
 "staged_um2": 111800,
 "target_um2": 111800,
+"target_backed_um2": 111800,
 "conf": "H",
 "source": "char_rffet.lef 430 x 260 GSG probe frame",
 "note": "IN NO FLOORPLAN; needs GLASS openings + probe access"
@@ -1796,6 +1945,7 @@
 "pub_um2": 111800,
 "staged_um2": 111800,
 "target_um2": 111800,
+"target_backed_um2": 111800,
 "conf": "H",
 "source": "as rffet",
 "note": "IN NO FLOORPLAN"
@@ -1808,6 +1958,7 @@
 "pub_um2": 111800,
 "staged_um2": 111800,
 "target_um2": 111800,
+"target_backed_um2": 111800,
 "conf": "H",
 "source": "as rffet",
 "note": "IN NO FLOORPLAN"
@@ -1820,6 +1971,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1832,6 +1984,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1844,6 +1997,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1856,6 +2010,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1868,6 +2023,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1880,6 +2036,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1892,6 +2049,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1904,6 +2062,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1916,6 +2075,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1928,6 +2088,7 @@
 "pub_um2": 6145,
 "staged_um2": 6145,
 "target_um2": 6145,
+"target_backed_um2": 6145,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1940,6 +2101,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1952,6 +2114,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1964,6 +2127,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1976,6 +2140,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -1988,6 +2153,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2000,6 +2166,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2012,6 +2179,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2024,6 +2192,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2036,6 +2205,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2048,6 +2218,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2060,6 +2231,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2072,6 +2244,7 @@
 "pub_um2": 1086,
 "staged_um2": 1086,
 "target_um2": 1086,
+"target_backed_um2": 1086,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2084,6 +2257,7 @@
 "pub_um2": 6145,
 "staged_um2": 6145,
 "target_um2": 6145,
+"target_backed_um2": 6145,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2096,6 +2270,7 @@
 "pub_um2": 6626,
 "staged_um2": 6626,
 "target_um2": 6626,
+"target_backed_um2": 6626,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2108,6 +2283,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -2120,6 +2296,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2132,6 +2309,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2144,6 +2322,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2156,6 +2335,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2168,6 +2348,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2180,6 +2361,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2192,6 +2374,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2204,6 +2387,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2216,6 +2400,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2228,6 +2413,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2240,6 +2426,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2252,6 +2439,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2264,6 +2452,7 @@
 "pub_um2": 6145,
 "staged_um2": 6145,
 "target_um2": 6145,
+"target_backed_um2": 6145,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2276,6 +2465,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2288,6 +2478,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2300,6 +2491,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2312,6 +2504,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2324,6 +2517,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2336,6 +2530,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2348,6 +2543,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2360,6 +2556,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2372,6 +2569,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2384,6 +2582,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2396,6 +2595,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2408,6 +2608,7 @@
 "pub_um2": 6145,
 "staged_um2": 6145,
 "target_um2": 6145,
+"target_backed_um2": 6145,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2420,6 +2621,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2432,6 +2634,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2444,6 +2647,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2456,6 +2660,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2468,6 +2673,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2480,6 +2686,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2492,6 +2699,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2504,6 +2712,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2516,6 +2725,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2528,6 +2738,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2540,6 +2751,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2552,6 +2764,7 @@
 "pub_um2": 6145,
 "staged_um2": 6145,
 "target_um2": 6145,
+"target_backed_um2": 6145,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2564,6 +2777,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2576,6 +2790,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2588,6 +2803,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2600,6 +2816,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2612,6 +2829,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2624,6 +2842,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2636,6 +2855,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2648,6 +2868,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2660,6 +2881,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2672,6 +2894,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2684,6 +2907,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2696,6 +2920,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2708,6 +2933,7 @@
 "pub_um2": 6145,
 "staged_um2": 6145,
 "target_um2": 6145,
+"target_backed_um2": 6145,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2720,6 +2946,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2732,6 +2959,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2744,6 +2972,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2756,6 +2985,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2768,6 +2998,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2780,6 +3011,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2792,6 +3024,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2804,6 +3037,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2816,6 +3050,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2828,6 +3063,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2840,6 +3076,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2852,6 +3089,7 @@
 "pub_um2": 827,
 "staged_um2": 827,
 "target_um2": 827,
+"target_backed_um2": 827,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2864,6 +3102,7 @@
 "pub_um2": 6145,
 "staged_um2": 6145,
 "target_um2": 6145,
+"target_backed_um2": 6145,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2876,6 +3115,7 @@
 "pub_um2": 6626,
 "staged_um2": 6626,
 "target_um2": 6626,
+"target_backed_um2": 6626,
 "conf": "H",
 "source": "scratch/chip-assembly-v5/run2/abstracts.json",
 "note": ""
@@ -2888,6 +3128,7 @@
 "pub_um2": 0,
 "staged_um2": 0,
 "target_um2": 0,
+"target_backed_um2": 0,
 "conf": "H",
 "source": "provider ring",
 "note": ""
@@ -2900,6 +3141,7 @@
 "pub_um2": 109899,
 "staged_um2": 109899,
 "target_um2": 109899,
+"target_backed_um2": 109899,
 "conf": "M",
 "source": "second slicer bank = pt_slicer outline (AP4 s1 lever 3)",
 "note": "R8-ARCH; not in pt_chip.conn"
@@ -2911,7 +3153,8 @@
 "kind": "booked",
 "pub_um2": 956461,
 "staged_um2": 293813,
-"target_um2": 290000,
+"target_um2": 293813,
+"target_backed_um2": 293813,
 "conf": "M",
 "source": "second capture = the capture master of the scenario",
 "note": "R8-ARCH; v6 booked it at 0.29 on a master that is still not publishable; literal published master is r6"
@@ -2924,6 +3167,7 @@
 "pub_um2": 35000,
 "staged_um2": 35000,
 "target_um2": 35000,
+"target_backed_um2": 35000,
 "conf": "L",
 "source": "AP4 s1 lever 3 estimate",
 "note": "R8-ARCH"
@@ -2936,6 +3180,7 @@
 "pub_um2": 5000,
 "staged_um2": 5000,
 "target_um2": 5000,
+"target_backed_um2": 5000,
 "conf": "L",
 "source": "wired_rx README Resume 9: one follower per slicer bank, 0.003-0.005",
 "note": "R8-ARCH; in no floorplan"
@@ -2948,6 +3193,7 @@
 "pub_um2": 5000,
 "staged_um2": 5000,
 "target_um2": 5000,
+"target_backed_um2": 5000,
 "conf": "L",
 "source": "wired_rx README Resume 9 (MW-13-FIX approved): 0.003-0.005 mm2",
 "note": "NEVER BUILT; in no floorplan"
@@ -2960,6 +3206,7 @@
 "pub_um2": 15000,
 "staged_um2": 15000,
 "target_um2": 15000,
+"target_backed_um2": 15000,
 "conf": "L",
 "source": "estimate: 8 ch x (mid 4/8->12/24, out 8/16->32/64) + CKP0 buffer or doubled channel 0 on the 26k compact cell",
 "note": "NEVER BUILT (MW-14-FIX); in no floorplan"
@@ -2972,6 +3219,7 @@
 "pub_um2": 200250,
 "staged_um2": 222000,
 "target_um2": 222000,
+"target_backed_um2": 222000,
 "conf": "L",
 "source": "pub = AP4-2 booking 450 x 445; staged = serq8 as built 0.352 (INTEGRATION.md s7) - serq4c 0.158 + 2 CML pre-drivers 0.028",
 "note": "eighth-rate / CML not demonstrated (ss 3.24 Gb/s fails): reserve; booking was exceeded"
@@ -2984,6 +3232,7 @@
 "pub_um2": 68400,
 "staged_um2": 68400,
 "target_um2": 68400,
+"target_backed_um2": 68400,
 "conf": "M",
 "source": "v5 floorplan rsv_tcoil_wire_tx 570 x 120",
 "note": "spiral keep-out"
@@ -2996,21 +3245,10 @@
 "pub_um2": 31495,
 "staged_um2": 31495,
 "target_um2": 31495,
+"target_backed_um2": 31495,
 "conf": "M",
 "source": "v5 floorplan rsv_d2h_gearbox 1312.3 x 24",
 "note": "W7-GEAR; edge strip"
-},
-{
-"item": "h2d_gearbox_rsv",
-"master": "(booked)",
-"group": "-",
-"kind": "booked",
-"pub_um2": 93100,
-"staged_um2": 31360,
-"target_um2": 31360,
-"conf": "M",
-"source": "v5 490 x 190; X6 right-size 490 x 64",
-"note": "W7-GEAR"
 },
 {
 "item": "decap_macro_edge_bank",
@@ -3020,6 +3258,7 @@
 "pub_um2": 390000,
 "staged_um2": 390000,
 "target_um2": 390000,
+"target_backed_um2": 390000,
 "conf": "M",
 "source": "spec/power-delivery.md s4.2: 1.5 nF, within 250 um of the macro W/S/E edges",
 "note": "PD2-9; IN NO FLOORPLAN"
@@ -3029,12 +3268,26 @@
 "master": "(booked)",
 "group": "-",
 "kind": "booked",
-"pub_um2": 20000,
-"staged_um2": 20000,
-"target_um2": 0,
+"pub_um2": 5000,
+"staged_um2": 5000,
+"target_um2": 5000,
+"target_backed_um2": 5000,
 "conf": "L",
-"source": "CP4-11 estimate; target 0 if fault is derived in the macro",
-"note": "D-FAULT: no hardware exists"
+"source": "review R11: pt_monitor exists as RTL in the macro; outside remain a time base for RF modes and an H2D_CLK present detector",
+"note": "D-FAULT"
+},
+{
+"item": "lna_additions",
+"master": "(booked)",
+"group": "-",
+"kind": "booked",
+"pub_um2": 10000,
+"staged_um2": 10000,
+"target_um2": 10000,
+"target_backed_um2": 10000,
+"conf": "L",
+"source": "review R12 allowance: LNA tail source, gate R, common-mode damping; D-EXTCLK selector; D-CDRCTL FLL driver",
+"note": "counted by nobody"
 },
 {
 "item": "vcm_buffer",
@@ -3044,6 +3297,7 @@
 "pub_um2": 3000,
 "staged_um2": 3000,
 "target_um2": 3000,
+"target_backed_um2": 3000,
 "conf": "L",
 "source": "estimate (CNV-06: VCM source is a bare 40k divider)",
 "note": "counted by nobody"
@@ -3056,45 +3310,52 @@
 "pub_um2": 3000,
 "staged_um2": 3000,
 "target_um2": 3000,
+"target_backed_um2": 3000,
 "conf": "L",
 "source": "estimate: repeaters/shield for the 3.1 mm AUX_CLK -> wired forwarded clock (CP4-3)",
 "note": "counted by nobody"
 }
 ],
 "totals_um2": [
-15688200,
-13226384,
-12350937
+15851377,
+13344719,
+12479544,
+12689982
 ],
 "by_cat": {
 "3 analog blocks placed by v6/AP4": [
-8041777,
-6370599,
-5629212,
-196
+8138054,
+6360294,
+5605366,
+5768503,
+199
 ],
 "1 digital macro": [
+2814000,
 2814000,
 2814000,
 2814000,
 1
 ],
 "4 in conn, in no floorplan / never built": [
-644874,
-644874,
-644874,
-33
+809874,
+809874,
+809874,
+809874,
+30
 ],
 "2 custom pads (true core intrusion)": [
 2251944,
 2163944,
 2053697,
+2100998,
 11
 ],
 "5 booked, not in pt_chip.conn": [
-1935605,
-1232967,
-1209154,
+1837505,
+1196607,
+1196607,
+1196607,
 14
 ]
 },

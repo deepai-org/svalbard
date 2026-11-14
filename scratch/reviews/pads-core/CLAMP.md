@@ -18,10 +18,16 @@ Stage A, ONE cell, ideal ramp 0 -> V, no inductance: peak clamp current.
 | sf/85/3.63 | 0.84 A | **0.84 A** | 0.22 mA | 58 uA | 3 uA | 0.3 uA |
 (`dvss` identical to `dvdd`; `cor` 1.8-2.4 A fired, same thresholds.)
 
-- The clamp is either fully on (about 1 A per cell into a stiff source) or off (displacement current only). It fires for a full-swing
-  ramp of 2 us or faster in the slow-RC / slow-MOS / 3.5 V cases and 1 us or faster otherwise; it never fires at 3 us or slower.
-  In slew terms: fires at >= 1.75 V/us, does not at <= 1.2 V/us.
-- **Board rule "10-90 % >= 10 us" (0.36 V/us at 3.63 V) has >= 3.3x margin in ramp time on the worst simulated case.**
+- The clamp is either fully on (about 1 A per cell into a stiff source) or off (displacement current only). In this sweep
+  (ramp times 1, 2, 3, 5 ... us) it fires for a full-swing ramp of 2 us or faster in the slow-RC / slow-MOS / 3.5 V cases and
+  1 us or faster otherwise, and not at 3 us.
+- **Correction from the independent review (`review-cs/REVIEW.md` finding 6, finer sweep, RERAN there):** the worst corner is
+  not in the table above. At sf/85 C with res_ss + moscap_ss one cell fires fully at 3.0 us (0.84 A) and partly at 3.5 us
+  (0.64 A); 4.0 us is clean. ff with the slow RC fires up to 2.8 us. In slew terms the fastest clean case is 0.91 V/us and
+  the slowest firing case 1.04 V/us.
+- **Board rule, written as a slew limit: dV/dt <= 0.3 V/us at any point of any rise of the die supply (power-up and recovery
+  from a dip), i.e. 0 -> 3.63 V in >= 12 us; no hot-plug.** That is about 3x below the slowest firing slew. A plain
+  "ramp >= 10 us" (0.36 V/us) has 2.5-2.9x margin as a full ramp, not the 3.3x first stated here.
 - Stage S, 100 ns step on a settled rail ending at V (brownout recovery): steps of 0.2-1.5 V give <= 0.3 mA at every corner:
   the clamp does not fire (the first inverter needs the timer node about half a rail behind). So the rule concerns power-up
   from near 0 V, not ripple or dips of up to 1.5 V.
@@ -35,4 +41,7 @@ Stage A, ONE cell, ideal ramp 0 -> V, no inductance: peak clamp current.
 - NOT shown: that a fired event is survivable. Hot-plug decks (contact closing in 50 ns onto a stiff carrier rail, with and without
   the 8 COB capacitors) did not converge (ngspice "timestep too small" at the edge), so there is no hot-plug waveform from this bench.
   Rule stays: no hot-plug of the mezzanine onto a live rail; regulator soft start >= 10 us (>= 100 us recommended).
-- Per-chip supply trim: at a 3.5 V setpoint the 2 us ramp already fires at tt; the 10 us rule still has 5x margin (3 us does not fire).
+- Per-chip supply trim: at a 3.5 V setpoint the 2 us ramp already fires at tt (it does not at 3.3 V); the slew rule is unchanged.
+- Not run (reviewer's list): steps above 1.5 V, ramps starting from 1.0 V (a 1.5 -> 3.63 V ramp in 1 us does not fire), exponential
+  rises, the ring with M6's source network, every hot-plug case. The <= 3.88 V die-rail peak is for an ideal stiff source and must not
+  be quoted as chip behaviour.

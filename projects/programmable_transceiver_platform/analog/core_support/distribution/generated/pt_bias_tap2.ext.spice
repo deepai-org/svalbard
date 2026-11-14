@@ -1,0 +1,62 @@
+* NGSPICE file created from pt_bias_tap2.ext - technology: gf180mcuD
+
+.subckt pt_bias_tap2 VDD VSS TRK EN0 EN1 OUT0 OUT1
+X0 enb0 EN0 VDD VDD pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X1 enb1 EN1 VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X2 enb1 EN1 VDD VDD pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X3 pm0 TRK VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=4u
+X4 enb0 EN0 VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X5 VDD TRK pm0 VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=4u
+X6 pm1 TRK VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=4u
+X7 VDD TRK pm1 VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=4u
+X8 OUT1 enb1 pm1 VDD pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.5u
+X9 OUT0 enb0 pm0 VDD pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.5u
+C0 OUT0 VDD 1.3609f
+C1 enb0 pm0 0.47437f
+C2 TRK enb1 0.09707f
+C3 EN1 TRK 0.19973f
+C4 EN1 enb1 1.49934f
+C5 enb0 OUT1 0.1495f
+C6 pm0 TRK 2.10555f
+C7 pm1 VDD 2.20309f
+C8 VDD EN0 0.97576f
+C9 EN1 pm0 0.12035f
+C10 OUT0 EN0 0.03875f
+C11 OUT1 TRK 5.40984f
+C12 OUT1 enb1 0.97986f
+C13 EN1 OUT1 0.72278f
+C14 enb0 VDD 3.37678f
+C15 OUT1 pm0 0.09108f
+C16 enb0 OUT0 0.89855f
+C17 VDD TRK 15.0324f
+C18 VDD enb1 4.23956f
+C19 OUT0 TRK 0.11865f
+C20 OUT0 enb1 0
+C21 EN1 VDD 1.39368f
+C22 enb0 EN0 1.35542f
+C23 OUT0 EN1 5.88286f
+C24 VDD pm0 2.18048f
+C25 pm1 TRK 2.05713f
+C26 OUT0 pm0 0.73977f
+C27 pm1 enb1 0.49107f
+C28 EN0 TRK 2.7265f
+C29 OUT1 VDD 1.98082f
+C30 OUT0 OUT1 5.94069f
+C31 EN1 EN0 4.02828f
+C32 enb0 TRK 0.13902f
+C33 enb0 enb1 0.00971f
+C34 pm1 OUT1 0.78522f
+C35 enb0 EN1 0.1713f
+C36 OUT1 EN0 0.06066f
+C37 OUT1 VSS 2.03144f
+C38 EN1 VSS 3.43698f
+C39 OUT0 VSS 0.62877f
+C40 TRK VSS 5.74878f
+C41 EN0 VSS 2.58088f
+C42 VDD VSS 52.0935f
+C43 pm1 VSS 1.34904f
+C44 enb1 VSS 4.31639f
+C45 pm0 VSS 1.38209f
+C46 enb0 VSS 6.52303f
+.ends
+

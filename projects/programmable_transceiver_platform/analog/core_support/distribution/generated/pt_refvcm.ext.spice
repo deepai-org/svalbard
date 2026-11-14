@@ -1,0 +1,40 @@
+* NGSPICE file created from pt_refvcm.ext - technology: gf180mcuD
+
+.subckt pt_refvcm VDD VSS EN VCM
+X0 VSS VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=72.16p ps=0.33592m w=20u l=10u
+X1 VDD enb top VDD pfet_03v3 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.5u
+X2 VCM b1 VSS ppolyf_u_1k r_width=1u r_length=40u
+X3 VSS VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=10u
+X4 enb EN VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X5 enb EN VDD VDD pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X6 b1 VSS VSS ppolyf_u_1k r_width=1u r_length=40u
+X7 VSS VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=10u
+X8 VSS VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=10u
+X9 top t1 VSS ppolyf_u_1k r_width=1u r_length=40u
+X10 top enb VDD VDD pfet_03v3 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.5u
+X11 t1 VCM VSS ppolyf_u_1k r_width=1u r_length=40u
+C0 VDD EN 2.18378f
+C1 VDD top 2.17556f
+C2 top t1 0.9514f
+C3 enb VCM 0.15455f
+C4 enb VDD 4.9935f
+C5 enb t1 0.05608f
+C6 VDD VCM 2.11575f
+C7 VCM t1 0.55669f
+C8 EN top 0.01062f
+C9 VDD t1 0.13665f
+C10 VCM b1 0.60076f
+C11 enb EN 3.81877f
+C12 EN VCM 10.2339f
+C13 enb top 3.16286f
+C14 b1 t1 0.04133f
+C15 VCM top 0.13439f
+C16 VCM VSS 56.0516f
+C17 EN VSS 13.2356f
+C18 VDD VSS 27.4454f
+C19 b1 VSS 6.07411f
+C20 t1 VSS 4.86774f
+C21 top VSS 4.74878f
+C22 enb VSS 5.09854f
+.ends
+

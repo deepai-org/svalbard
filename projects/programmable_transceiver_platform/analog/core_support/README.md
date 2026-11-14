@@ -427,16 +427,18 @@ non-volatile storage is assumed.
 1. **Bandgap.** Sense `VBG` on ATB1 with a high-impedance meter. Step
    `bgap.trim` and keep the count closest to 1.200 V. The tt step size is
    4–19 mV; 1.212 V at count 8.
-2. **Distribution reference.**
-   - Keep the debug island unpowered.
-   - Set `dist.en_debug=1` and connect `TRK_DEBUG` to the ATB force pad with a
-     bench SMU held at 2.0 V (the island diode voltage). The SMU current
-     equals the root leg current, 1:1 with `idac2`.
-   - Read `I_meas` at `idac2` code 10.
+2. **Distribution reference** (corrected 2026-11-14, interface row PC-10: the
+   earlier procedure held `TRK_DEBUG` at 2.0 V with the debug island
+   unpowered, which forward-biases the bank's PMOS diode into the dead rail).
+   - Set `bias.idac1_source = 10` (the spare source: same 1 µA unit DAC as
+     `idac2`) and measure its current on ATB sense code 57 into an SMU held
+     at about 1 V. Call it `I_meas`.
    - Set `idac2 = round(100 µA / I_meas)` (the code that gives the nearest
      10 µA). Coarse steps are 1 µA, about ±5 % after trim; codes 8–13 cover
-     the simulated 7.6–12.1 µA spread.
-   - Re-read to confirm, then restore `dist.en_debug` for normal use.
+     the simulated 7.6–12.1 µA spread. Set `idac1_source` back to 0.
+   - Cross-check, with the bank's rail ON and all its outputs disabled:
+     `dist.en_<island>=0`, sink 10 µA from `TRK_<island>` through the force
+     leaf and read one enabled output, or read the `TRK` voltage (≈ 2.0 V).
 
 **ATB node list.** Leaves are `analog/island_support` cells: force leaf
 `atb_tap_f` to ATB0, sense leaf `atb_tap_s` to ATB1, both in the "core bias/ref"
@@ -520,3 +522,52 @@ Requirements and behaviour:
 | `distribution/generate_dist.py` | Distribution layout, DRC and LVS |
 | `distribution/sim_dist.py` | Distribution simulations |
 | `flow/summarize.py` | Writes the evidence file |
+
+## 2026-11-14 additions (pads + core-support owner)
+
+Work and evidence: `scratch/pads-core/` (`NOTES.md`, `corners/`, `bias/EVIDENCE.md`); interface rows PC-5…PC-10.
+
+**Always-on audit follow-up (`scratch/reviews/always-on-audit.md`).**
+
+- **F4, bandgap standby current.** The imported bandgap core runs whenever VDD is present; `bgap.ena` only
+  tri-states its output buffer. Reset-state `pt_core_bias` current is therefore **91 µA at tt/27 °C/3.3 V
+  (bandgap 71 µA, VCM divider ≈ 20 µA, biasgen 1.2 nA), 131.9 µA at ff/85 °C/3.63 V**, not the nA figure the
+  biasgen row alone suggests. Kept as is (vendored, silicon-proven cell; a supply header would change PSRR and
+  start-up); the budget owner books it (PC-8). A faulty bandgap is bypassed with the ATB0 force of `VBG`
+  (output high-Z at `ena` = 0), not switched off.
+- **F5, `VBG` overshoot at enable. Not fixed in hardware.** `VBG` goes to the rail for about 4 µs when
+  `bgap.ena` rises (peak 3.18 V tt, 3.02–3.29 V at the corners below, 3.41 V at ss/3.5 V, 3.53 V at ff/85 °C/3.63 V).
+  Enabling the biasgen 200 µs before the bandgap does not change it (3.18 V, `corners/F5_bgen_first_tt.log`):
+  it is the output buffer's own start. Every node that sees it is a 3.3 V gate or the passive `pt_bias_vref`
+  divider and stays ≤ VDD, so there is no overstress; the functional risk is 2.6× output current for a few µs
+  if `ref_sel_vbg` and a trunk are already on. Required order (unchanged): `bgap.ena` first, wait ≥ 100 µs, then
+  `ref_sel_vbg`. A hardware interlock or an RC between `VBG` and the biasgen input is not built.
+- **F7 / pre-mortem 12 (MOD-19), corners that were missing. Extracted netlists.**
+  - POR (`layout_pex`, 1 ms ramp), MOS × resistor × MIM corners: release 29.7 / 36.1 / 45.7 / 55.5 ms at tt with
+    (res, MIM) = (ff, ff) / (ff, ss) / (ss, ff) / (ss, ss); 25.1–46.3 ms at ss/0 °C/3.15 V; 38.8–73.3 ms at
+    ff/85 °C/3.63 V; 51.0 ms at ss/32 °C/3.5 V. One clean release in every run; range **25–73 ms** (was quoted
+    31–55 ms with MOS corners only). The two ff/85 °C runs end on the known solver abort just after the release edge.
+  - Bias chain (bandgap + biasgen + root + banks + vref, README bring-up order): outputs 9.35 µA (sf) and
+    9.56 µA (fs) at 27 °C/3.3 V, `VBG` 1.211 / 1.213 V; with crossed resistor corners 7.94 µA (tt, res_ss),
+    11.81 µA (tt, res_ff), 7.98 µA (ff MOS, res_ss), 11.35 µA (ss MOS, res_ff), 7.88 µA (ss, res_ss, 3.5 V);
+    `VBG` 1.2057–1.2209 V. The output current follows the poly resistor, not the MOS corner; `idac2` codes
+    8–13 still cover it. All start; no stuck state.
+  - Not done: brownout and power-cycle POR cases on the extracted netlist; Monte Carlo; R extraction of the
+    biasgen and bandgap (Magic R+C still segfaults).
+
+**New cells, published in `distribution/generated/` (generator `distribution/circuits_ext.py`, `generate_ext.py`;
+`circuits_dist.py` is untouched so the published bank evidence hashes stay valid).** Evidence
+`scratch/reviews/pads-core/CORE-SUPPORT-CELLS.md`; independent review `scratch/pads-core/review-cs/REVIEW.md`; rows PC-5, PC-6, PC-16.
+All three: Magic DRC 0, LVS unique on the generator netlist and on the GDS read back from disk (negative controls fail),
+precheck decks main 0 / antenna 0 (sha-matched records, registered in `verification/kl_block_drc_blocks.json`), HRES complete.
+Extraction is capacitance-only, as for the banks. No LEF abstracts yet.
+
+| Cell | Pins | Size (µm) | What it does | Extracted result |
+| --- | --- | --- | --- | --- |
+| `pt_bias_tap2` | `VDD VSS TRK EN0 EN1 OUT0 OUT1` | 93.7 × 23.7 | two more switched 10 µA outputs on an existing trunk (no diode) | 10.05–10.20 µA, tap/bank 1.0000 on the same rail; **3.4 % per 10 mV of rail offset: must share the bank's rail** |
+| `pt_refvcm` | `VDD VSS EN VCM` | 137.9 × 54.0 | refpad common mode, VDD/2, gated | VCM/VDD 0.4984–0.4992, 15–29 µA, off: 0 V and ≤ 2.3 nA; 40 kΩ source: AC-coupled or complementary pad drive only |
+| `pt_txpad_bias` | `VDD VSS EN BUF_REF BUF_BIAS EN_DET IBIAS_DET DETECT_PBIAS` | 167.3 × 61.1 | TX termination buffer REF (VDD/2) and BIAS (3/11 VDD) dividers, gated; TX-pad detect PMOS bias (×5 mirror from a 10 µA input) | REF/VDD 0.4967–0.4984, BIAS/VDD 0.2714–0.2721, ≈ 195 µA on; detect source **49.5–50.8 µA per pad leg** (100 µA needs a wider pad device) |
+
+**Bank rails with ten islands.** A bank or tap must sit on the same rail as its trunk diode (3.4 % per 10 mV of
+offset; a trunk whose diode rail is off turns every mirror on it fully on). Proposal PC-5: all bank rails on the
+always-on core VDD, outputs gated by their consumer's enable.

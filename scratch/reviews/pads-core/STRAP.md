@@ -30,6 +30,14 @@ Bench: `gen.py` (decks), `run.sh`, `collect.py` -> `results.json`. Reproduce: `.
 - Negative control (pull-down disabled, PD = 0): the floating pad sits at 2.6-2.7 V with `Y` = 1 at tt and ss, and
   0.75 nA flips it at ff/85. So the bench does show a floating strap when there is one.
 
+## Corrections from the independent review (`../review-cs/REVIEW.md` finding 5)
+- The 24,000x margin is against the MODEL's leakage only. Against a 1 uA external-leak allowance the margin to 0.4 V is 2.5x
+  (2.55 uA) and to the `Y` flip 6.9x.
+- The supply-ramp result depends on the pad capacitance. With 2 pF `Y` stays low even for a 0.1 us ramp; with 0.2 pF on the pad
+  `Y` goes above VDD/2 during a 1 us ramp at ss/0, ss/85 and fs/85 (reviewer's runs). Ramps at the board-rule speeds with 0.2 pF:
+  see the `ramp02_*` rows of `results.json` / the table appended below.
+- A neighbour pad edge couples 0.11-0.36 V onto the strap pad (threshold >= 0.99 V).
+
 ## ESD tier
 Provider cell, unchanged, same as RESET_N and the host-link pads (2 kV HBM tier per MANDATE; the foundry cell's own
 primary/secondary protection). `Y` is the cell's core-side buffer output: no core gate sits on the pad net, so the
@@ -40,3 +48,32 @@ the project relies on the provider qualification for all provider pads).
 - The floating-strap case in the M6 chip power-up transient (M6 owner; DT-10 asks for it).
 - `kl_assemble` / `kl_checks` tie check for the new pad (assembly; today only `rst_n_pad` is checked).
 - If the strap goes on a non-provider site (extra pad opening), this evidence does not apply: see the option table.
+
+## Supply ramps with 0.2 pF on the floating pad (pessimistic-low pad capacitance)
+
+| Corner, ramp 0 -> VDD | Peak pad (V) | `Y` above VDD/2 for |
+|---|---|---|
+| ff_85_3.63_100u | 0.173 | never |
+| ff_85_3.63_10u | 0.245 | never |
+| ff_85_3.63_1u | 0.371 | never |
+| ff_85_3.63_3u | 0.278 | never |
+| fs_85_3.63_100u | 0.247 | never |
+| fs_85_3.63_10u | 0.329 | never |
+| fs_85_3.63_1u | 0.453 | 77 ns |
+| fs_85_3.63_3u | 0.368 | 74 ns |
+| ss_0_3.15_100u | 0.384 | never |
+| ss_0_3.15_10u | 0.429 | never |
+| ss_0_3.15_1u | 0.498 | 32 ns |
+| ss_0_3.15_3u | 0.456 | never |
+| ss_85_3.15_100u | 0.312 | never |
+| ss_85_3.15_10u | 0.372 | never |
+| ss_85_3.15_1u | 0.483 | 31 ns |
+| ss_85_3.15_3u | 0.406 | never |
+| typical_27_3.3_100u | 0.302 | never |
+| typical_27_3.3_10u | 0.353 | never |
+| typical_27_3.3_1u | 0.431 | 28 ns |
+| typical_27_3.3_3u | 0.378 | never |
+
+At 10 us and 100 us (the board slew rule allows nothing faster than about 12 us) `Y` never moves in any corner. At 1 us it
+glitches high for 28-77 ns early in the ramp at tt, ss and fs; at 3 us only fs/85 does (74 ns). With RESET_N low during the ramp the
+glitch has no effect (`rst_n = reset_n_pad & (por_n | por_bypass)`).

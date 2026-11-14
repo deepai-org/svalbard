@@ -1,0 +1,146 @@
+* NGSPICE file created from pt_txpad_bias.ext - technology: gf180mcuD
+
+.subckt pt_txpad_bias VDD VSS EN BUF_REF BUF_BIAS EN_DET IBIAS_DET DETECT_PBIAS
+X0 nd nd VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=4u
+X1 bt4 bt5 VSS ppolyf_u_1k r_width=2u r_length=20u
+X2 enb EN VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X3 bt5 bt6 VSS ppolyf_u_1k r_width=2u r_length=20u
+X4 VSS nd nd VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=4u
+X5 DETECT_PBIAS nd VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=4u
+X6 VSS nd DETECT_PBIAS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=4u
+X7 DETECT_PBIAS DETECT_PBIAS VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=2u
+X8 btop bt0 VSS ppolyf_u_1k r_width=2u r_length=20u
+X9 bt6 BUF_BIAS VSS ppolyf_u_1k r_width=2u r_length=20u
+X10 VSS nd DETECT_PBIAS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=4u
+X11 bt0 bt1 VSS ppolyf_u_1k r_width=2u r_length=20u
+X12 BUF_BIAS bb0 VSS ppolyf_u_1k r_width=2u r_length=20u
+X13 endb EN_DET VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X14 DETECT_PBIAS nd VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=4u
+X15 btop enb VDD VDD pfet_03v3 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.5u
+X16 bt1 bt2 VSS ppolyf_u_1k r_width=2u r_length=20u
+X17 DETECT_PBIAS nd VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=4u
+X18 rtop BUF_REF VSS ppolyf_u_1k r_width=2u r_length=20u
+X19 rtop enb VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X20 bt2 bt3 VSS ppolyf_u_1k r_width=2u r_length=20u
+X21 endb EN_DET VDD VDD pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X22 IBIAS_DET EN_DET nd VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.5u
+X23 VSS nd DETECT_PBIAS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=4u
+X24 rtop enb VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.5u
+X25 BUF_REF VSS VSS ppolyf_u_1k r_width=2u r_length=20u
+X26 DETECT_PBIAS nd VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=4u
+X27 DETECT_PBIAS EN_DET VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X28 VDD enb rtop VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.5u
+X29 VDD enb btop VDD pfet_03v3 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.5u
+X30 nd endb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X31 bb0 bb1 VSS ppolyf_u_1k r_width=2u r_length=20u
+X32 VSS nd DETECT_PBIAS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=4u
+X33 enb EN VDD VDD pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X34 VSS nd DETECT_PBIAS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=4u
+X35 bt3 bt4 VSS ppolyf_u_1k r_width=2u r_length=20u
+X36 DETECT_PBIAS nd VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=4u
+X37 VDD enb rtop VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.5u
+X38 bb1 VSS VSS ppolyf_u_1k r_width=2u r_length=20u
+C0 bt5 BUF_BIAS 0.16542f
+C1 EN_DET IBIAS_DET 13.2834f
+C2 nd btop 0.02036f
+C3 IBIAS_DET nd 0.45502f
+C4 DETECT_PBIAS btop 0.00287f
+C5 IBIAS_DET DETECT_PBIAS 10.6039f
+C6 enb BUF_REF 0.15121f
+C7 VDD enb 7.1951f
+C8 bt0 BUF_BIAS 0.14258f
+C9 bt3 bt1 0.09697f
+C10 endb rtop 0.00504f
+C11 EN_DET nd 0.59788f
+C12 EN_DET DETECT_PBIAS 11.4257f
+C13 nd DETECT_PBIAS 8.43495f
+C14 bb0 bt6 0.04166f
+C15 bt4 bt2 0.11541f
+C16 btop bt0 0.26983f
+C17 endb IBIAS_DET 0.09385f
+C18 nd bt5 0.00192f
+C19 BUF_REF BUF_BIAS 8.78353f
+C20 VDD BUF_BIAS 0.70113f
+C21 EN BUF_REF 6.86802f
+C22 rtop BUF_REF 0.15784f
+C23 bt4 bt5 0.67371f
+C24 VDD EN 3.04764f
+C25 VDD rtop 6.3274f
+C26 bt6 BUF_BIAS 0.19799f
+C27 EN_DET endb 1.51253f
+C28 bt2 bt0 0.07853f
+C29 endb nd 2.08318f
+C30 endb DETECT_PBIAS 0.16816f
+C31 btop BUF_REF 0.00795f
+C32 IBIAS_DET BUF_REF 0.02611f
+C33 bt1 BUF_BIAS 0.14258f
+C34 bt3 BUF_BIAS 0.14258f
+C35 VDD btop 1.96589f
+C36 VDD IBIAS_DET 1.90715f
+C37 enb BUF_BIAS 0.22018f
+C38 enb EN 2.58192f
+C39 enb rtop 5.12852f
+C40 bt1 btop 0.09697f
+C41 EN_DET BUF_REF 0.09545f
+C42 bb0 BUF_BIAS 0.13551f
+C43 DETECT_PBIAS BUF_REF 0.03915f
+C44 VDD EN_DET 7.10539f
+C45 enb btop 2.96468f
+C46 enb IBIAS_DET 0.0043f
+C47 VDD nd 0.63464f
+C48 VDD DETECT_PBIAS 3.59882f
+C49 bb0 bb1 0.59889f
+C50 bt6 nd 0.01233f
+C51 bt6 DETECT_PBIAS 0
+C52 bt4 bt6 0.15228f
+C53 bt1 bt2 0.63973f
+C54 bt3 bt2 0.65126f
+C55 EN_DET enb 0.02113f
+C56 EN BUF_BIAS 0.09046f
+C57 enb nd 0.04922f
+C58 rtop BUF_BIAS 0.11576f
+C59 enb DETECT_PBIAS 0.02291f
+C60 bb1 BUF_BIAS 0.02322f
+C61 bt3 bt4 0.66255f
+C62 bt6 bt5 0.68479f
+C63 rtop EN 0.01104f
+C64 bt3 bt5 0.13385f
+C65 VDD bt0 0.16151f
+C66 VDD endb 2.22418f
+C67 btop BUF_BIAS 0.12416f
+C68 IBIAS_DET BUF_BIAS 0.03627f
+C69 IBIAS_DET EN 0.02634f
+C70 bt1 bt0 0.62596f
+C71 enb bt0 0.07452f
+C72 endb enb 0.0112f
+C73 EN_DET BUF_BIAS 5.2088f
+C74 VDD BUF_REF 1.65228f
+C75 bt2 BUF_BIAS 0.14258f
+C76 DETECT_PBIAS BUF_BIAS 0.04932f
+C77 EN_DET EN 0.07409f
+C78 DETECT_PBIAS EN 0.05296f
+C79 rtop nd 0.00188f
+C80 bt4 BUF_BIAS 0.14258f
+C81 DETECT_PBIAS VSS 11.5803f
+C82 IBIAS_DET VSS 1.55544f
+C83 EN_DET VSS 7.10305f
+C84 BUF_BIAS VSS 11.0452f
+C85 BUF_REF VSS 4.34082f
+C86 EN VSS 8.51004f
+C87 VDD VSS 74.46461f
+C88 nd VSS 44.0686f
+C89 endb VSS 5.90738f
+C90 bb1 VSS 5.54651f
+C91 bb0 VSS 5.8909f
+C92 bt6 VSS 5.88458f
+C93 bt5 VSS 5.50832f
+C94 bt4 VSS 5.31317f
+C95 bt3 VSS 5.26368f
+C96 bt2 VSS 5.21882f
+C97 bt1 VSS 5.14702f
+C98 bt0 VSS 5.06112f
+C99 btop VSS 4.82811f
+C100 rtop VSS 5.202f
+C101 enb VSS 8.48745f
+.ends
+

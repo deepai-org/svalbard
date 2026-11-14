@@ -157,3 +157,8 @@ The board sets each die's supply individually (trimmer + regulator or similar), 
 
 ## Per-application carriers (user 2026-11-14)
 Per-application carrier boards are fully acceptable: a carrier may populate only the passives its application needs, and a pad may carry different functions on different carriers. A single universal board is NOT required. Constraints that remain: modes that must coexist on one carrier, bring-up/debug/fallback access on every carrier, and the die itself stays one design.
+
+## Direction after the die-fit study (user 2026-11-14)
+- The 2.7-3.24 Gb/s wired paths (DP HBR 2.7, SATA Gen2 3.0, XAUI/2500BASE-X 3.125) stay in scope: make them work. Not physically impossible per current evidence; a die-area problem does not count as impossible.
+- Area is minimised over time across the WHOLE project: every owner treats area as a standing objective. Every change reports its area delta against the die-fit ledger (scratch/reviews/die-fit/); new circuitry must be built compact from the start (shared guard rings, abutted rows, MIM over devices, no generator-default channels); each owner keeps a short list of its next area levers with sizes. The coordinator keeps the ledger total and reruns the packer as outlines change.
+- Pin/pad assignment is the coordinator's call on technical merit. Per-application carriers are acceptable. Packaging is the wafer.space COB with its one fixed 74-wire bond layout (no custom bonds).

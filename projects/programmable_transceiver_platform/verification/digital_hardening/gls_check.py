@@ -8,9 +8,8 @@
    model value is a bench constant of tb_regfile (legacy STATUS 0x03, capture data 0x25/0x26,
    checker status registers) and the raw observation-mux values (those are covered by 1).
 3. Reset safety: in every snapshot taken while reset is asserted (initial RESET_N+POR, RESET_N
-   alone, POR alone, RESET_N in the middle of a write) every output to analog / pads is at its
-   safe value and no output is X/Z, except the two data buses whose valid is 0
-   (wire_tx_data, rf_tx_sample: FIFO storage has no reset; reported).
+   alone, POR alone, RESET_N in the middle of a write) no macro output is X/Z and every analog enable,
+   pad driver enable and data bus of the SAFE0 list is 0 (the data buses are ANDed with their island).
 4. Observability: directed SPI reads of ID/ABI/map hash, reset-cause flags (POR vs RESET_N),
    island power-good and fault status.
 """
@@ -19,13 +18,20 @@ import hashlib
 import json
 from pathlib import Path
 
-EXTRA = ['rf_trim', 'wire_trim', 'clock_trim', 'calibration_trial', 'wire_tx_valid', 'wire_idle', 'rf_tx_valid',
-         'rf_mute', 'wire_tx_data', 'rf_tx_sample', 'd2h_oe', 'd2h_clk_pin', 'd2h_sl', 'd2h_pdrv_pin', 'ct_bits',
-         'ct_det_div', 'island_on', 'atb_grp_en']
-SAFE = {'rf_trim': '0000', 'wire_trim': '0000', 'clock_trim': '0000', 'calibration_trial': '000',
-        'wire_tx_valid': '0', 'wire_idle': '1', 'rf_tx_valid': '0', 'rf_mute': '1', 'd2h_oe': '0',
-        'd2h_clk_pin': '0', 'ct_bits': '0000000000', 'island_on': '00', 'atb_grp_en': '000'}
-DATA_QUALIFIED = ('wire_tx_data', 'rf_tx_sample')
+# r7: a snapshot is one "name=hex" token per macro output (sim/tb_digital_gl.sv + gls_ports.py), so the records follow
+# the macro boundary. analog_cfg / debug_cfg are no longer macro ports: the register-file contents are checked through
+# the SPI reads (model) and through every decoded c_* output (lockstep against the RTL macro).
+# Outputs that must be 0 in every snapshot taken while a reset is asserted (analog enables, pad drivers, data buses).
+SAFE0 = ['island_en', 'island_on', 'atb0_sw', 'atb1_sw', 'atb0_en', 'atb1_en', 'd2h_oe', 'd2h_clk_pin', 'clk_obs_oe',
+         'dbg_obs0_oe', 'dbg_obs1_oe', 'rx_en_aux', 'rx_en_wclk', 'rx_en_wtx_ext', 'wire_rx_ptrim_en',
+         'c_txpad_req_main', 'c_txpad_req_post', 'c_txpad_req_detect', 'c_txpad_req_term', 'c_wiredtx_ser_en',
+         'c_wiredtx_bias_en', 'c_usb_tx_oe', 'c_usb_hs_drv', 'c_usb_hs_en', 'c_usb_fs_en', 'c_rfdriver_en',
+         'c_pll_tx_en', 'c_pll_cdr_en', 'c_cdr_en', 'c_qvco_en', 'c_lo_mmd_en', 'c_lo_pfdcp_en', 'c_lna_en',
+         'c_rxmix_i_en', 'c_rxmix_q_en', 'c_txmix_i_en', 'c_txmix_q_en', 'c_txsum_en', 'c_adc_i_en', 'c_adc_q_en',
+         'c_dac_i_en', 'c_dac_q_en', 'c_slicer_en', 'c_wrx_cap_en', 'c_ctle_en', 'c_detect_en', 'c_term_en',
+         'c_aosc_en', 'c_bias_dist_en_rf', 'c_bias_dist_en_conv', 'c_bias_dist_en_pll', 'c_bias_dist_en_wire',
+         'c_bias_dist_en_debug', 'c_biasgen_ref_sel_vbg', 'c_cdr_fup', 'c_cdr_fdn', 'wire_tx_data', 'rf_tx_sample',
+         'd2h_pin', 'spi_miso']
 
 
 def parse(path):
@@ -35,13 +41,16 @@ def parse(path):
         if not t:
             continue
         if t[0] == 'S':
-            bar = t.index('|')
-            recs.append(('S', t[1], t[2:bar], dict(zip(EXTRA, t[bar + 1:]))))
+            recs.append(('S', t[1], dict(x.split('=', 1) for x in t[2:])))
         elif t[0] == 'R':
             recs.append(('R', int(t[1], 16), t[2]))
         elif t[0] == 'E':
             recs.append(('E', int(t[1])))
     return recs
+
+
+def isx(v):
+    return any(ch in 'xXzZ' for ch in v)
 
 
 def main():
@@ -94,23 +103,25 @@ def main():
                 skipped += 1
                 continue
             n_reads += 1
-            if any(ch in 'xXzZ' for ch in got[2]) or int(got[2], 16) != e[2]:
-                mm.append(f'read 0x{e[1]:02X}: got {got[2]} expected 0x{e[2]:04X}')
+            # ISLAND_STATUS (0x0A) b11 = power-good of the reserved island 3: no switch, tied 0 at the macro boundary
+            want_rd = e[2] & ~0x0800 if e[1] == 0x0A else e[2]
+            if any(ch in 'xXzZ' for ch in got[2]) or int(got[2], 16) != want_rd:
+                mm.append(f'read 0x{e[1]:02X}: got {got[2]} expected 0x{want_rd:04X}')
         else:
             if got[0] != 'S' or got[1] != e[1]:
                 mm.append(f'record order at snapshot {e[1]}: {got[:2]}')
                 continue
             n_snaps += 1
-            f, m = got[2], e[2]
-            if any(ch in 'xXzZ' for tok in f for ch in tok):
-                mm.append(f'snapshot {e[1]}: X/Z in regfile fields')
+            o, m = got[2], e[2]
+            # model tuple (check_regfile.Model.snapshot): 2 island_en, 3 island_on, 4 atb0_sw, 5 atb1_sw, 7 dbg_obs
+            # {obs0, oe0, obs1, oe1}, 14 atb0_grp, 15 atb1_grp. island bit 3 has no switch at macro level.
+            keys = ('island_en', 'island_on', 'atb0_sw', 'atb1_sw', 'atb0_grp', 'atb1_grp', 'dbg_obs0_oe', 'dbg_obs1_oe')
+            if any(isx(o[k]) for k in keys):
+                mm.append(f'snapshot {e[1]}: X/Z in regfile-driven outputs')
                 continue
-            g = dict(island_on=int(got[3]['island_on'], 16), analog_cfg=int(f[0], 16), debug_cfg=int(f[1], 16), island_en=int(f[2], 16), atb0=int(f[3], 16),
-                     atb1=int(f[4], 16), rx_oe=f[5], obs_oe=f[6][1] + f[6][3] + f[6][5], toggle=f[7],
-                     enable=int(f[8], 16), mode8=int(f[9], 16), miso_oe=int(f[10]), miso=int(f[11]))
-            w = dict(island_on=m[3], analog_cfg=m[0], debug_cfg=m[1], island_en=m[2], atb0=m[4], atb1=m[5], rx_oe=m[6],
-                     obs_oe=m[7][1] + m[7][3] + m[7][5], toggle=m[8][0], enable=m[9], mode8=m[10], miso_oe=m[12],
-                     miso=m[13])
+            g = {k: int(o[k], 16) for k in keys}
+            w = dict(island_en=m[2], island_on=m[3] & ~8, atb0_sw=m[4], atb1_sw=m[5], atb0_grp=m[14], atb1_grp=m[15],
+                     dbg_obs0_oe=int(m[7][1]), dbg_obs1_oe=int(m[7][3]))
             diff = [k for k in g if g[k] != w[k]]
             if diff:
                 mm.append(f'snapshot {e[1]} #{n_snaps}: differs in {diff}')
@@ -125,35 +136,24 @@ def main():
         if r[0] != 'S' or r[1] not in reset_tags:
             continue
         rs += 1
-        f, x = r[2], r[3]
-        if f[0] != format(exp['reset_snapshot'][0], 'x').zfill(len(f[0])) and int(f[0], 16) != exp['reset_snapshot'][0]:
-            viol.append(f'{r[1]}: analog_cfg not at reset default')
-        if int(f[1], 16) != exp['reset_snapshot'][1]:
-            viol.append(f'{r[1]}: debug_cfg not at reset default')
-        for k, idx in (('island_en', 2), ('atb0', 3), ('atb1', 4)):
-            if int(f[idx], 16) != 0:
-                viol.append(f'{r[1]}: {k} != 0')
-        if f[5] != '00000' or f[6] != '000000' or int(f[8], 16) or int(f[9], 16) or f[11] != '0':
-            viol.append(f'{r[1]}: enables/observation/miso not safe {f[5:12]}')
-        if r[1] != 'MID' and f[10] != '0':
+        o = r[2]
+        for k in SAFE0:
+            if k == 'spi_miso' and r[1] == 'MID':
+                continue
+            if k not in o:
+                viol.append(f'{r[1]}: output {k} missing from the record')
+            elif isx(o[k]) or int(o[k], 16) != 0:
+                viol.append(f'{r[1]}: {k}={o[k]} (safe 0)')
+        if r[1] != 'MID' and o.get('spi_miso_oe') != '0':
             viol.append(f'{r[1]}: miso_oe with CS_N high')
-        for k, v in SAFE.items():
-            if x[k] != v:
-                viol.append(f'{r[1]}: {k}={x[k]} (safe {v})')
-        if x['d2h_pdrv_pin'][1:] != '00':  # d2h_pin[9:0] (low 10 bits of the 12-bit field)
-            viol.append(f'{r[1]}: d2h_pin {x["d2h_pdrv_pin"]}')
-        for k in x:
-            if k in DATA_QUALIFIED:
-                if any(ch in 'xXzZ' for ch in x[k]):
-                    xdata.add(k)
-            elif any(ch in 'xXzZ' for ch in x[k]):
+        if o.get('island_off') is None or isx(o['island_off']) or int(o['island_off'], 16) != 0x3f:
+            viol.append(f'{r[1]}: island_off={o.get("island_off")} (safe 3f)')
+        for k, v in o.items():
+            if isx(v):
                 viol.append(f'{r[1]}: {k} X/Z')
-        if any(ch in 'xXzZ' for tok in f for ch in tok):
-            viol.append(f'{r[1]}: X/Z in regfile outputs')
-    res['reset_safety'] = dict(reset_snapshots=rs, violations=len(viol), first=viol[:10],
-                               x_on_data_with_valid_low=sorted(xdata), safe_values=SAFE,
-                               regfile_fields='analog_cfg/debug_cfg at reset defaults; island_en, ATB, receiver and '
-                                              'observation enables, ENABLE, MODE8 0; MISO 0 and MISO_OE 0 with CS_N high')
+    res['reset_safety'] = dict(reset_snapshots=rs, violations=len(viol), first=viol[:10], outputs_checked_zero=SAFE0,
+                               rule='no X/Z on any macro output; the listed enables, pad drivers and data buses 0; '
+                                    'island_off all 1; MISO_OE 0 with CS_N high')
     # 4. observability (directed tail): values in the GL log
     reads = [r for r in gl if r[0] == 'R']
     tail = reads[-11:]
@@ -171,7 +171,7 @@ def main():
     obs['FREQ_COUNT_A count'] = cnt[0][2] if cnt else None
     obs['FREQ_COUNT_A lock (source=off)'] = lockr[1][2] if len(lockr) > 1 else None
     want = {'ID': exp['id'], 'ABI': exp['abi'], 'MAP_HASH': exp['map_hash'], 'RESET_STATUS after POR': 3,
-            'RESET_STATUS after W1C': 0, 'RESET_STATUS after RESET_N': 2, 'ISLAND_STATUS pgood=0x2A': 0x2A00,
+            'RESET_STATUS after W1C': 0, 'RESET_STATUS after RESET_N': 2, 'ISLAND_STATUS pgood=0x2A': 0x2200,  # bit 3 (reserved island) has no switch
             'FAULT_STATUS fault=1': 1, 'ISLAND_STATUS pgood=0': 0, 'FAULT_STATUS fault=0': 0,
             'FREQ_COUNT_A lock (source=REF, target 256)': 1 << exp['pll_lock_lsb']['locked'],
             'FREQ_COUNT_A count': 256, 'FREQ_COUNT_A lock (source=off)': 0}

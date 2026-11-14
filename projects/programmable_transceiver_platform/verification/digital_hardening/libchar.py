@@ -58,6 +58,7 @@ CORNERS = {
     'ss_032C_3v15': ('ss', 32, 3.15),
     'ff_022C_3v35': ('ff', 22, 3.35),
     'ff_032C_3v35': ('ff', 32, 3.35),
+    'ss_032C_3v50': ('ss', 32, 3.50),    # per-chip supply trim point for slow dies (MANDATE 2026-11-14)
     'ss_125C_3v00': ('ss', 125, 3.00),   # PDK publishes it: anchor of the ss corners, and plain-ratio validation
     'ss_n40C_3v00': ('ss', -40, 3.00),   # PDK publishes it: validation of the anchored ss derivation
 }

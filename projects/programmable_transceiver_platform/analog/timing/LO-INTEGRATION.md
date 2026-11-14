@@ -39,8 +39,7 @@ pt_lo_ext       EXT_IP EXT_IN EXT_QP EXT_QN LOI_IP LOI_IN LOI_QP LOI_QN EXT INT 
 pt_lo_obs       LP LN EN OBS VDD VSS
 ```
 
-`pt_polyphase` must **not** be connected to `lo_ext.LOI_*` (it fails extracted and its limiters would short the QVCO
-tank). Remove the instance or leave its outputs open; `LOI_*` belongs to the QVCO tank.
+`pt_polyphase` is deleted (CP4-2, 2026-11-14); `LOI_*` belongs to the QVCO tank only.
 
 ## 2. Nets (connection intent)
 

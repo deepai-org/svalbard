@@ -26,7 +26,7 @@ CHAIN_LABEL = {'rf_rx': 'RF RX: pad-LNA-mixers-BB filter-ADC-digital', 'rf_tx': 
 DIE = (3932.0, 5122.0)
 SHORT = {'bbfilter_i': 'BB filter I', 'bbfilter_q': 'BB filter Q', 'rxmix_i': 'RX mix I', 'rxmix_q': 'RX mix Q',
          'txmix_i': 'TX mix I', 'txmix_q': 'TX mix Q', 'adc_i': 'ADC I', 'adc_q': 'ADC Q', 'dac_i': 'DAC I',
-         'dac_q': 'DAC Q', 'lna': 'LNA', 'lo_ext': 'LO hub', 'polyphase': 'Polyphase', 'txsum': 'TX sum',
+         'dac_q': 'DAC Q', 'lna': 'LNA', 'lo_ext': 'LO hub', 'txsum': 'TX sum',
          'rfdriver': 'RF driver (PA)', 'refbuf': 'Ref buf', 'core_bias': 'Core bias', 'wiredtx': 'Wired TX',
          'ctle': 'CTLE', 'slicer': 'Slicer', 'cdr': 'CDR', 'pll_cdr': 'PLL cdr', 'pll_tx': 'PLL tx', 'pll_host': 'PLL host (RF)',
          'termination': 'Term', 'rxselect': 'Sel', 'rxlevel': 'Lvl', 'detect': 'Detect', 'attached_tx_buffer': 'TX steering buf'}

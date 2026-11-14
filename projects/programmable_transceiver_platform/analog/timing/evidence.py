@@ -22,16 +22,16 @@ import timing_flow as tf
 
 # Gating = the block's basic function at a moderate nominal frequency; the
 # GHz-rate cases are performance data (performance_vs_target), not gates.
-GATING = dict(prescale=['nom_2g5_d16', 'nom_240m_d2'], pll_ring=['closed_480m', 'closed_625m', 'closed_810m', 'closed_hf125m_n4', 'closed_hf156m_n4'], lo_ext=['nom_ext_sin_2vpp_pad', 'nom_int'], polyphase=['nom_2g45_1vpp'],
+GATING = dict(prescale=['nom_2g5_d16', 'nom_240m_d2'], pll_ring=['closed_480m', 'closed_625m', 'closed_810m', 'closed_hf125m_n4', 'closed_hf156m_n4'], lo_ext=['nom_ext_sin_2vpp_pad', 'nom_int'],
               diff_clk_rx=['nom_diff_100m_500mv', 'nom_se_1g_600mv', 'data_0g5_500mv', 'data_1g_500mv', 'data_1g6_300mv',
                            'data_1g6_500mv', 'data_1g6_800mv', 'data_pre128_0g5_300mv'],
               clk_obs=['nom'],
               clockmux=['nom', 'nom_mode_rf', 'nom_mode_wired'],
               wordclk=['nom_480m_d5', 'nom_480m_d10', 'nom_480m_d20', 'nom_810m_d5', 'nom_810m_d10', 'nom_810m_d20'],
               vco_replica=['nom_vc1.5', 'nom_vc2.1', 'nom_vc3.3'])
-AREA_CEILING = dict(wordclk=None, prescale=None, pll_ring=None, lo_ext=None, polyphase=None, diff_clk_rx=180000, aosc=20000, clockmux=80000,
+AREA_CEILING = dict(wordclk=None, prescale=None, pll_ring=None, lo_ext=None, diff_clk_rx=180000, aosc=20000, clockmux=80000,
                     clk_obs=None, ring_osc=None, vco_replica=None)
-CEILING_SOURCE = dict(lo_ext='booked against the quadrature 150k ceiling (spec/consolidation-pass.md P3-1)', polyphase='booked against the quadrature 150k ceiling (spec/consolidation-pass.md P3-1)',
+CEILING_SOURCE = dict(lo_ext='booked against the quadrature 150k ceiling (spec/consolidation-pass.md P3-1)',
                       diff_clk_rx='analog-architecture.json blocks.refinput (per instance)',
                       clk_obs='debug structure; 0.41 mm2 shared reserve',
                       ring_osc='characterization structure; 0.41 mm2 shared reserve',
@@ -41,7 +41,6 @@ OBS = dict(
     wordclk=dict(atb_taps=[], status_bits=[], clock_obs=['WORD_CLK -> WCLK_OBS input']),
     pll_ring=dict(atb_taps=['ATB_VCTRL'], status_bits=['LOCK'], clock_obs=['FBCK', 'PH0..PH7']),
     lo_ext=dict(atb_taps=['ATB_VB (mixer LO bias, sense/force)'], status_bits=[], clock_obs=['none (2.45 GHz analog node; observe via the mixers)']),
-    polyphase=dict(atb_taps=['ATB_N0 (network node)'], status_bits=[], clock_obs=['LOI_* via lo_ext']),
     diff_clk_rx=dict(atb_taps=['ATB_DET (clock-present detector node A)'], status_bits=['PRESENT'],
                      clock_obs=['OUTP (to clockmux and a CLK_OBS input)']),
     clk_obs=dict(atb_taps=[], status_bits=[], clock_obs=['is the observation path itself (OUT -> CLK_OBS pad)']),
@@ -54,7 +53,6 @@ FALLBACK = dict(
     wordclk=dict(routes=['external line clock: CK may be the WCLK_IN path from clockmux WIRE'], notes='Shared TX/RX word divider (P3-6).'),
     pll_ring=dict(routes=['wire_clk_external_ref', 'wire_clk_wclk_in'], notes='Wired PLL with the compact 8-phase ring.'),
     lo_ext=dict(routes=['rf_lo_external_ref (revised): passive external I/Q LO on REF_IN/AUX_CLK onto the mixer gates'], notes='This block is the RF qualification baseline route itself.'),
-    polyphase=dict(routes=['lo_ext external mode bypasses it'], notes=''),
     diff_clk_rx=dict(routes=['rf_lo_aux_clk: AUX_CLK_P/N into a second, independent pt_diff_clk_rx instance (aux_clk_rx) and clockmux RS_AUX/WS_AUX/PS_AUX'],
                      notes='One design, separate instances: refinput (REF_IN), aux_clk_rx (AUX_CLK), wired WCLK_IN and WTX_EXT receivers.'),
     clockmux=dict(routes=['clk_stop_and_external: every domain defaults to stopped and can take REF_IN or AUX_CLK (wired also WCLK_IN) with the PLL off',
@@ -192,7 +190,7 @@ def assemble(block):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--blocks', default='diff_clk_rx,clk_obs,ring_osc,aosc,clockmux,vco_replica,lo_ext,polyphase,pll_ring,prescale,wordclk')
+    ap.add_argument('--blocks', default='diff_clk_rx,clk_obs,ring_osc,aosc,clockmux,vco_replica,lo_ext,pll_ring,prescale,wordclk')
     a = ap.parse_args()
     for b in a.blocks.split(','):
         p = assemble(b)
@@ -201,7 +199,7 @@ def main():
     text = readme.read_text()
     start, end = '<!-- results:start -->', '<!-- results:end -->'
     if start in text and end in text:
-        table = summary_table('diff_clk_rx,clk_obs,ring_osc,aosc,clockmux,vco_replica,lo_ext,polyphase,pll_ring,prescale,wordclk'.split(','))
+        table = summary_table('diff_clk_rx,clk_obs,ring_osc,aosc,clockmux,vco_replica,lo_ext,pll_ring,prescale,wordclk'.split(','))
         text = text[:text.index(start) + len(start)] + '\n' + table + '\n' + text[text.index(end):]
         readme.write_text(text)
 

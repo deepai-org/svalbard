@@ -5,7 +5,7 @@
 # Usage: analog/timing/run_timing.sh [block,block,...]
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
-BLOCKS="${1:-wordclk,lo_ext,polyphase,pll_ring,prescale,diff_clk_rx,clk_obs,ring_osc,aosc,clockmux,vco_replica}"
+BLOCKS="${1:-wordclk,lo_ext,pll_ring,prescale,diff_clk_rx,clk_obs,ring_osc,aosc,clockmux,vco_replica}"
 docker image inspect svalbard/librelane-gf180-canary:2026.08 >/dev/null
 docker image inspect docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3 >/dev/null
 cd "$HERE"

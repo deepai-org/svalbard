@@ -495,51 +495,6 @@ VINT int 0 {inn}
     return body, analyse
 
 
-def tb_polyphase(inc, v=VDD, f=2.45e9, amp=0.5):
-    T = 12e-9
-    body = f""".param vth={v / 2}
-.include {inc}
-{sup(v)}VEN en 0 {v}
-VSP sp 0 sin(0 {amp} {f})
-VSN sn 0 sin(0 {-amp} {f})
-RSP sp bp 50
-RSN sn bn 50
-CBP bp inp 10p
-CBN bn inn 10p
-X1 inp inn en loiip loiqp loiin loiqn n0 vdd 0 pt_polyphase
-CL1 loiip 0 40f
-CL2 loiqp 0 40f
-CL3 loiin 0 40f
-CL4 loiqn 0 40f
-.tran 1p {T}
-{period_meas('loiip', T - 4e-9, 4)}.measure tran tiq trig v(loiip) val={{vth}} td={T - 4e-9} rise=1 targ v(loiqp) val={{vth}} td={T - 4e-9} rise=1
-.measure tran tqi trig v(loiqp) val={{vth}} td={T - 4e-9} rise=1 targ v(loiip) val={{vth}} td={T - 4e-9} rise=1
-.measure tran tin trig v(loiip) val={{vth}} td={T - 4e-9} rise=1 targ v(loiin) val={{vth}} td={T - 4e-9} rise=1
-.measure tran tqn trig v(loiqp) val={{vth}} td={T - 4e-9} rise=1 targ v(loiqn) val={{vth}} td={T - 4e-9} rise=1
-.measure tran thi trig v(loiip) val={{vth}} td={T - 4e-9} rise=1 targ v(loiip) val={{vth}} td={T - 4e-9} fall=1
-.measure tran n0pp pp v(n0) from={T - 4e-9} to={T}
-.measure tran inpp pp v(inp) from={T - 4e-9} to={T}
-.measure tran ion avg i(VDD) from={T - 4e-9} to={T}
-"""
-
-    def analyse(m):
-        fo = freq(m)
-        d = None
-        for k, sg in (('tiq', 1), ('tqi', -1)):
-            if k in m and m[k] > 0 and (d is None or m[k] < abs(d)):
-                d = sg * m[k]
-        ph = ((d * f * 360 + 180) % 360 - 180) if d is not None else None
-        r = dict(input=f'differential sine {f / 1e9:g} GHz, {2 * amp:g} V peak-to-peak per leg open-circuit behind 50 ohm',
-                 f_hz=fo, q_minus_i_deg=ph, iq_phase_error_deg=(abs(ph) - 90 if ph is not None else None),
-                 ip_to_in_deg=((m['tin'] * f * 360) % 360 if 'tin' in m else None),
-                 qp_to_qn_deg=((m['tqn'] * f * 360) % 360 if 'tqn' in m else None),
-                 duty_i=(m['thi'] * f if m.get('thi', -1) > 0 else None),
-                 network_node_pp_v=m.get('n0pp'), input_pp_v=m.get('inpp'), i_on_ma=-m.get('ion', math.nan) * 1e3)
-        r['pass'] = bool(fo and abs(fo / f - 1) < 0.01 and ph is not None and abs(abs(ph) - 90) < 10)
-        return r
-    return body, analyse
-
-
 def hold_block(hold_at, T, n, fref, v):
     """HOLD benches: VCO frequency averaged over 4 reference periods (4N VCO
     cycles) just before HOLD, 200 ns after it (C2/C1 charge sharing settled)
@@ -832,7 +787,7 @@ CL obs 0 2p
         return r
     return body, analyse
 
-TB = dict(wordclk=tb_wordclk, prescale=tb_prescale, pll_ring=tb_pll_ring, polyphase=tb_polyphase, lo_ext=tb_lo_ext, diff_clk_rx=tb_diff_clk_rx, clk_obs=tb_clk_obs, clk_obs16=tb_clk_obs16, ring_osc=tb_ring_osc, aosc=tb_aosc,
+TB = dict(wordclk=tb_wordclk, prescale=tb_prescale, pll_ring=tb_pll_ring, lo_ext=tb_lo_ext, diff_clk_rx=tb_diff_clk_rx, clk_obs=tb_clk_obs, clk_obs16=tb_clk_obs16, ring_osc=tb_ring_osc, aosc=tb_aosc,
           clockmux=tb_clockmux, vco_replica=tb_vco_replica, obs_pre4=tb_obs_pre4, lo_obs=tb_lo_obs)
 WIDTH = dict()
 
@@ -881,11 +836,10 @@ OUTPUTS = dict(
     prescale=['CK_OUT'],
     wordclk=['WORD_CLK', 'LDE', 'LD', 'LDB'],
     pll_ring=['PH0', 'PH1', 'PH2', 'PH3', 'PH4', 'PH5', 'PH6', 'PH7', 'LOCK', 'FBCK', 'REFO', 'ATB_VCTRL'],
-    polyphase=['LOI_IP', 'LOI_QP', 'LOI_IN', 'LOI_QN', 'ATB_N0'],
     lo_ext=['LO_IP', 'LO_IN', 'LO_QP', 'LO_QN', 'ATB_VB'])
 # inputs that are clocks/pads in the safe test are driven (toggling) to show
 # that a running source cannot wake a disabled block.
-SAFE_TOGGLE = dict(lo_obs=['LP'], obs_pre4=['CK'], wordclk=['CK'], prescale=['CK_IN'], pll_ring=['REF'], polyphase=['INP'], lo_ext=['EXT_IP', 'EXT_QP', 'LOI_IP'], diff_clk_rx=['INP'], clk_obs=['IN0'], clk_obs16=['IN0', 'IN8', 'IN15A'], clockmux=['PLLW', 'REF', 'AUX', 'H2D', 'HF'])
+SAFE_TOGGLE = dict(lo_obs=['LP'], obs_pre4=['CK'], wordclk=['CK'], prescale=['CK_IN'], pll_ring=['REF'], lo_ext=['EXT_IP', 'EXT_QP', 'LOI_IP'], diff_clk_rx=['INP'], clk_obs=['IN0'], clk_obs16=['IN0', 'IN8', 'IN15A'], clockmux=['PLLW', 'REF', 'AUX', 'H2D', 'HF'])
 
 
 def tb_safe(block, inc, v=3.63, island_off=False):
@@ -1014,8 +968,6 @@ NOMINAL = dict(
               # drift bench: HOLD from t=0, VCTRL pre-charged for 0.8 us then floating
               ('holddrift_625m', dict(mode='closed', fref=625e6 / 16, vc0=1.16, T=2.6e-6, tpre=0.8e-6, hold_at=0))] +
              [(f'open_vc{vc}', dict(mode='open', vctrl=vc)) for vc in (0.8, 3.3)],
-    polyphase=[('nom_2g45_1vpp', dict(f=2.45e9, amp=0.5)), ('nom_2g4_1vpp', dict(f=2.4e9, amp=0.5)),
-               ('nom_2g5_1vpp', dict(f=2.5e9, amp=0.5)), ('nom_2g45_0v4pp', dict(f=2.45e9, amp=0.2))],
     lo_ext=[('nom_ext_sin_2vpp_pad', dict(mode='ext', vpp=4.0)), ('nom_ext_sin_2vpp', dict(mode='ext', vpp=2.0)), ('nom_ext_sin_1vpp', dict(mode='ext', vpp=1.0)),
             ('nom_ext_sq_2vpp', dict(mode='ext', vpp=2.0, kind='sq')), ('nom_int', dict(mode='int')),
             ('nom_int_sq', dict(mode='int', kind='sq')), ('nom_int_2g4', dict(mode='int', f=2.4e9)), ('nom_int_2g5', dict(mode='int', f=2.5e9))])
@@ -1026,7 +978,7 @@ CORNER_CASES = dict(
     diff_clk_rx=[('c', dict(f=1e8, amp=0.125))], clk_obs=[('c', dict(f=0.5e9))], ring_osc=[('c', {})], aosc=[('c', {})],
     clk_obs16=[('c', dict(f=0.5e9, sel=14)), ('c_sel15', dict(f=0.5e9, sel=15))],
     clockmux=[('c', dict(mode='switch'))],
-    vco_replica=[('c_vc3.3', dict(vctrl=3.3)), ('c_vc0.9', dict(vctrl=0.9)), ('c_vc0.8', dict(vctrl=0.8)), ('c_vc1.2', dict(vctrl=1.2))], lo_ext=[('c', dict(mode='ext', vpp=4.0)), ('c_int', dict(mode='int', f=2.5e9))], pll_ring=[('c_vc3.3', dict(mode='open', vctrl=3.3)), ('c_vc0.8', dict(mode='open', vctrl=0.8))], prescale=[('c', dict(f=2.5e9, sel='D16'))], polyphase=[('c', dict(f=2.45e9, amp=0.5))])
+    vco_replica=[('c_vc3.3', dict(vctrl=3.3)), ('c_vc0.9', dict(vctrl=0.9)), ('c_vc0.8', dict(vctrl=0.8)), ('c_vc1.2', dict(vctrl=1.2))], lo_ext=[('c', dict(mode='ext', vpp=4.0)), ('c_int', dict(mode='int', f=2.5e9))], pll_ring=[('c_vc3.3', dict(mode='open', vctrl=3.3)), ('c_vc0.8', dict(mode='open', vctrl=0.8))], prescale=[('c', dict(f=2.5e9, sel='D16'))])
 
 
 def run_sims(block, cases, extracted=True, corners=False):

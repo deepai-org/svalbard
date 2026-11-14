@@ -28,7 +28,7 @@ the tapeout-plan tests, not ESD/HBM/CDM ratings.
 | `refpad` (differential reference) | Protection/bias network; receiver is behavioral | `reference/` | 897 | 179,237 / 185,000 |
 | `rfpad` = `rftxpad` (one physical pair) | Protection network, steering diodes, isolated clamp rail, MIMs, bleed; LNA and RF driver are behavioral | `rf-pair/` | — | 175,909 / 180,000 |
 | Single-leg cell (WMON; `ESD_TEST` dropped, PD35) | Native bond on `PAD_P`, `PADN` tied to VSS | `single-leg/` | — | 158,302 |
-| `hspad` (SATA/PCIe RX, PD21) | Protection shell on `network-gc-d2` + two `pt_hs_leg` (segmented 4-bit termination, 4.9 pF AC-coupling MIM, RX bias/clamps, rail precharge); CTLE is the wired RX block | `wired-receive-hs/` | 508 | 531,000 bbox (478 × 1111 µm) |
+| `hspad` (SATA/PCIe RX, PD21) | Protection shell on `network-gc-d2` + two `pt_hs_leg` (segmented 4-bit termination, 4.9 pF AC-coupling MIM, RX bias/clamps, rail precharge); CTLE is the wired RX block | `wired-receive-hs/` | 508 | 449,202 bbox (492 × 913 µm, stacked, PC 2026-11-14) |
 
 All five layouts are DRC 0, netgen LVS match and pass the independent device
 audit (`extract_audit.py`).
@@ -117,17 +117,62 @@ Working dir `scratch/pads-pd28/` (`hbm_core/`, `tx/DECISION.md`, `vreg/`, `usb/`
   - **Review** (`scratch/pads-pd46/review/REVIEW.md`): GO for all three, conditions: LS needs `usbhs.bias.enable` (interlock
     requested, PD47), change LS_SLOW only with the driver off; open: host-role LS load (spot ratio 1.21/1.25), HS TX eye on the extracted pad.
 
-### PD-AP4 (area pass 4, 2026-11-13): stacked `pad_hspad` CANDIDATE (not published)
+### PC (pads + core-support owner, 2026-11-14): strap pad, supply-clamp ramp rule, bond re-audit, TLP fix, LVS references
 
-`hs_pad_compose.py --stacked` uses the same shell, `pt_hs_leg` master and reference netlist, with the legs stacked beside the shell instead of above it.
+Work dir `scratch/pads-core/` (`NOTES.md`); user-facing copies in `scratch/reviews/pads-core/`; rows PC-1…PC-14.
+
+- **POR_BYPASS strap pad** = provider `gf180mcu_fd_io__in_c` with `PD` hard-tied high, `PU` low (as `rst_n_pad`). Unbonded pad
+  5–16 µV; own leakage 0.034–0.105 nA (ff/85 °C/3.63 V); ≥ 2.55 µA needed to reach 0.4 V, ≥ 6.9 µA to flip `Y`
+  (threshold 0.99–1.27 V): 24,000× margin; supply ramps never glitch `Y`; negative control (pull-down off) floats high.
+  `scratch/pads-core/strap/STRAP.md`. Only the freed east sites `bidir[16]` / `bidir[17]` give a bench jumper. (risk: PWR-02)
+- **Supply-pad clamps and supply edges (INT6-0).** The provider `dvdd` / `dvss` / `cor` RC clamps (360 kΩ × MOS cap, τ 1.14–2.09 µs)
+  fire on a full-swing ramp of ≤ 1 µs (≤ 2 µs at ss, slow RC or a 3.5 V target) at about 1 A per cell, and never at ≥ 3 µs;
+  100 ns steps of up to 1.5 V on a settled rail do not fire. Board rule: supply 10–90 % ≥ 10 µs (≥ 3.3× margin), no hot-plug.
+  Ring of 22 cells at 1 µs, stiff source: 18.6–23.8 A, 35–77 µJ, die rail ≤ 3.88 V in this bench (5.7–6.4 V in the M6 bench with
+  its softer source). Survivability of a fired event is NOT shown. `scratch/pads-core/clamp/CLAMP.md`.
+- **Host-input pulls**: `bi_24t` `PD` / `PU` pins give the same 105–157 kΩ pull; without a pull the input floats to 2.7 V. Row PC-9.
+- **Bond geometry and ring rails**: re-audited on the current map, same result as 2026-10-18 (2.991 mm, 38.7° / 44.0°, no crossing);
+  ring rails uncut through every custom family. `scratch/reviews/pads-core/BOND-AUDIT.md`, `RAIL-CONTINUITY.md`. Free sites and
+  the bond-map proposal: `scratch/reviews/pads-core/bond-map-options.md` (user decision pending; `contract.json` not yet changed).
+- **AUX_CLK is a `refpad` site** (same family as REF_IN; row PC-7); the rf-pair listing for AUX_CLK below is superseded.
+  `VCM` of both refpads comes from `pt_refvcm` (core_support). RF_TX binds `pad_rftxpad`, the TLP site `pad_tlp_flat` (PC-4).
+- **TLP site fix (`tlp_site.py`)**: the pad riser was Metal3 across the provider ring's DVSS/DVDD bands (short). It is now a 6 µm
+  Metal2 riser in the gap between the two diode groups, with the VSS bars joined by a Metal1 bridge below the diode rows.
+  Rebuilt in `scratch/pads-core/tlp/`: Magic DRC 0, read-back LVS unique (8/8 devices), precheck main 0 / antenna 0, no
+  Metal3–5 in the rail band. Riser resistance ≈ 0.8 Ω (was ≈ 0.5 Ω): subtract it in the TLP curve. Not independently
+  reviewed; `generated/tlp-site/` still holds the old cell.
+- **LVS references** (`lvs_reference.py` → `<family>/lvs-reference.spice`): `physical.spice` of refpad / hspad / wirepad / txpad
+  carries one model-only `DWELL_ARRAY` n-well diode; the reference drops it and lists `ESD_RAIL`. Read-back LVS matches
+  uniquely on all four (404 / 508 / 739 / 595 devices); the simulation netlist as reference fails, as it must. Regenerate after
+  any republish of a family.
+- **Supply trim**: USB HS level at ss reaches 400 mV from 3.33 V up (355 mV max at 3.15 V); ff must stay ≤ about 3.4 V. Row PC-13.
+
+### PD-AP4 (area pass 4) + PC (2026-11-14): stacked `pad_hspad` PUBLISHED
+
+`hs_pad_compose.py --stacked`: same shell, `pt_hs_leg` master and reference netlist as PD21, legs stacked beside the shell,
+the N leg mirrored so both legs face one 42 µm channel. Build `scratch/pads-core/hspad/b2`; reviews
+`scratch/area-pass-4/review/REVIEW.md` and `scratch/pads-core/hspad/REVIEW2.md` (GO with conditions; conditions 1–3 of the
+first review closed). Published in `wired-receive-hs/` (GDS sha 5b7c598e…, model 320c43d9…); status file `wired-receive-hs/SUPERSEDED.md`.
 
 - **Area:** **492 × 912.91 µm (was 478 × 1111.25), −0.088 mm² of core.**
-- **Build:** `scratch/area-pass-4/hspad-stacked/`.
-- **Layout checks:** Magic DRC 0, LVS unique, device audit match, KLayout 0/0, latch-up clean.
-- **Safe/HBM 2 kV:** 0/404 MOS over the screen, pad peak 5.41 V (identical to PD21).
-- **AC (same bench):** C per leg +18 fF (1.130 → 1.148 pF tt). Die return loss at 2.4 GHz is −0.12 dB, COB return loss −0.07 dB. RX_P/RX_N C is 76.4/75.4 fF (balanced).
-- **Review:** GO with conditions (`scratch/area-pass-4/review/REVIEW.md`). Before publishing: (a) length-match the chip-level RX routes from the new side pins (x 492, 188 µm apart), or co-locate the pins; (b) rerun the PD48c 1 kV/CDM rows on the new netlist.
-- **Plan:** `scratch/reviews/area-pass-4.md`.
+- **Pins:** RX_P (491.5, 612.75) and RX_N (491.5, 618.75), Metal5, adjacent on the side edge (x 492), 6 µm apart, mirror-identical
+  in-cell routes; extracted RX C 71.30 / 71.16 fF (0.14 fF apart). All other core pins on the same edge at y 598.75–630.25
+  (TERM_TRIM0..3, VSS, VDD, TERM_ENABLE, TERM_VCM, VBIAS). With the mirrored east placement they land on the cell's south
+  edge at chip y ≈ 735 (RX_P x 3293.25, RX_N x 3287.25): the floorplan needs a routing channel there (v6 has `detect` abutting).
+- **Layout checks:** Magic DRC 0; LVS unique on the GDS read back from disk (508/508 devices), RX_P/RX_N swap control fails;
+  device audit match; KLayout precheck main 0 / antenna 0 (sha-matched record, block registered in `kl_block_drc_blocks.json`);
+  latch-up audit 0 µm² uncovered; pad openings and ring-band Metal2–4 identical to PD21.
+- **Safe/ESD (extracted, unchanged benches):** safe/HBM 2 kV 0/404 MOS over the screen, pad peak 5.04–5.41 V; 1 kV 4.36–4.67 V;
+  CDM-speed surrogate 4.80 / 6.98 / 9.03 V at 1 / 2 / 3 A (identical to PD21; 250 V CDM still not verified).
+- **AC, model without metal resistance:** C per leg 1.134 / 1.134 / 1.156 pF (tt code 6 / ss32 code 9 / ff22 code 2), +18 fF over
+  PD21; die RL at 2.4 GHz 7.85–8.37 dB at those codes; pad P/N C difference 15.3 fF (PD21 13.3); RX/PAD loss −0.30 to −0.36 dB.
+  Termination per leg (tt code 5) 52.0 / 50.8 / 50.1 Ω at 3.3 / 3.5 / 3.63 V (supply trim: under one trim step).
+- **OPEN DEFECT, inherited from `pt_hs_leg` (also in the PD21 cell):** the TERM_VCM metal between the two legs' termination
+  common points is about 34–44 Ω (1 µm Metal4 trunk 25.4 Ω, two single Via3 9 Ω, Metal3 rails 7–10 Ω; 44–54 Ω in PD21) and is
+  not in the capacitance-only extraction. What-if with it added (reviewer's estimate): differential termination 142 Ω at tt
+  code 5 (model 100.8), ≈ 100 Ω only at code 15 (tt) / 12 (ff), **116–123 Ω at ss code 15 (cannot reach 100)**; die RL at
+  2.4 GHz 6.0–7.1 dB at the best code. Signal current ±2.7–5.5 mA through each single Via3. Fix in the leg master
+  (Metal5-strapped trunk, multi-cut Via3) with an R-aware rerun is required before tapeout. (risk: WRX-04; row PC-14)
 
 ### PD21 (pads owner): low-C SATA/PCIe RX pad pair `pad_hspad`, network-gc-d2, HBM pad-side devices
 

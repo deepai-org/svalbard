@@ -10,14 +10,19 @@
           (M3 y 428 -> M5 return vertical at x 138).
     python3 hs_pad_compose.py <work> <shell dir> <leg dir> <network dir> [--stacked]
 
-  --stacked (area pass 4, 2026-11-13): same shell, same leg master, legs stacked BESIDE the shell instead of above it,
-          so the cell keeps the 912.91 um shell depth (bbox 492 x 912.91 instead of 478 x 1111.25, -0.088 mm2 of core):
-          P leg (unmirrored) at x 340, y 440; N leg (unmirrored) at x 340, y 628. PAD_P: M5 at y 414-418 from the shell
-          PAD_P trunk (M5 x 282-294, starts y 410) under the start of the PAD_N trunk (y 426: no P/N crossing), then up
-          the P leg PAD trunk; PAD_N: M5 strap from the shell PAD_N trunk (x 298-310) to the N leg PAD trunk at y 681.47.
-          Shared nets: M4 trunk extensions into the channel above each leg, M5 straps to one M4 riser per net
-          (x 432 + 3 i, over the M4-free right part of the leg); RX_P / RX_N leave on identical 0.6 um M5 straps
-          to side pins at x 492 (one per leg channel). RAILPRE / VSS down from the bottom-leg bank exactly as before.
+  --stacked (area pass 4, 2026-11-13; RX pins co-located for review condition 2): same shell, same leg master, legs
+          stacked BESIDE the shell instead of above it, so the cell keeps the 912.91 um shell depth (bbox 492 x 912.91
+          instead of 478 x 1111.25, -0.088 mm2 of core). P leg (unmirrored) at x 340, y 440; N leg MIRRORED in y (M0) above
+          it, so both legs' trunk ends (leg "top") face one 42 um channel between them and everything in the channel
+          is mirror-symmetric about its midline.
+          PAD_P: M5 at y 414-418 from the shell PAD_P trunk (M5 x 282-294, starts y 410) under the start of the PAD_N
+          trunk (y 426: no P/N crossing), then up the P leg PAD trunk; PAD_N: M5 strap from the shell PAD_N trunk
+          (x 298-310) to the N leg PAD trunk, plus an unconnected-end M5 balance stub that mirrors the PAD_P run over
+          the bank (pad P/N C balance).
+          Shared nets: the M4 trunks of the two legs are joined straight across the channel; every port net also gets
+          a 1 um M5 strap to the side edge (x 492), 5 levels below and 4 above the RX pair.
+          RX_P / RX_N: mirror-identical routes (M4 trunk extension 18 um, 0.6 um M5 strap) to ADJACENT side pins at
+          x 492, 6 um apart, in the middle of the channel. RAILPRE / VSS down from the P-leg bank exactly as before.
 """
 import json, re, shutil, subprocess, sys, hashlib
 from pathlib import Path
@@ -99,9 +104,20 @@ def assemble(work):
 
 def assemble_stacked(work, cfg):
     import klayout.db as k
-    tx = cfg['trunk_x']; ltop = cfg['leg_top']
-    X, YBOT, YTOP = 340., 440., 628.
-    ltop_x = 152.            # leg bbox right edge (local x); the cell's side edge is X + 152 = 492
+    tx = cfg['trunk_x']; ltop = cfg['leg_top']; lright = cfg['leg_right']   # leg bbox top / right edge (leg-local)
+    X, Y_PLEG = 340., 440.             # P leg origin (unmirrored); the cell's side edge is X + lright = 492
+    EDGE, PITCH, RXSEP = 4., 2.5, 6.   # channel: leg edge / RX pair clearance, shared-strap pitch, RX_P-RX_N pin pitch
+    LOW = ['TERM_TRIM0', 'TERM_TRIM1', 'TERM_TRIM2', 'TERM_TRIM3', 'VSS']   # straps between the P leg and RX_P
+    HIGH = ['VDD', 'TERM_ENABLE', 'TERM_VCM', 'VBIAS', 'RAILPRE']           # straps between RX_N and the N leg
+    if sorted(LOW + HIGH) != sorted(SHARED): raise ValueError('channel plan does not cover the shared nets')
+    p_top = Y_PLEG + ltop                                   # P leg trunk ends
+    level = {net: p_top + EDGE + PITCH * i for i, net in enumerate(LOW)}
+    y_rxp = p_top + EDGE + PITCH * (len(LOW) - 1) + EDGE
+    y_rxn = y_rxp + RXSEP
+    level.update({net: y_rxn + EDGE + PITCH * i for i, net in enumerate(HIGH)})
+    n_top = y_rxn + EDGE + PITCH * (len(HIGH) - 1) + EDGE   # N leg trunk ends (the mirrored leg's local top edge)
+    Y_NLEG = n_top + ltop                                   # N leg origin; mirrored in y: global y = Y_NLEG - local y
+    if abs((p_top + n_top) - (y_rxp + y_rxn)) > 1e-6: raise ValueError('channel is not symmetric about the RX pair')
     l = k.Layout(); l.read(str(work / 'shell.gds'))
     shell = l.cell('rf_protected_pad_pair')
     l.read(str(work / 'leg.gds')); leg = l.cell('pt_hs_leg')
@@ -111,8 +127,8 @@ def assemble_stacked(work, cfg):
                 if s.is_text(): s.delete()
     root = l.create_cell('pad_hspad')
     root.insert(k.DCellInstArray(shell.cell_index(), k.DTrans(0., 0.)))
-    root.insert(k.DCellInstArray(leg.cell_index(), k.DTrans(X, YBOT)))   # bottom leg = P
-    root.insert(k.DCellInstArray(leg.cell_index(), k.DTrans(X, YTOP)))   # top leg = N
+    root.insert(k.DCellInstArray(leg.cell_index(), k.DTrans(X, Y_PLEG)))                  # lower leg = P
+    root.insert(k.DCellInstArray(leg.cell_index(), k.DTrans(k.DTrans.M0, X, Y_NLEG)))     # upper leg = N (mirrored in y)
     M = {1: 34, 2: 36, 3: 42, 4: 46, 5: 81}; V = {1: 35, 2: 38, 3: 40, 4: 41}
     def box(layer, x1, y1, x2, y2): root.shapes(l.layer(layer, 0)).insert(k.DBox(min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2)))
     def wire(m, a, b, w):
@@ -127,38 +143,35 @@ def assemble_stacked(work, cfg):
                     box(V[m], cx - .13, cy - .13, cx + .13, cy + .13)
     T = lambda name, m, x, y: root.shapes(l.layer(M[m], 10)).insert(k.DText(name, k.DTrans(x, y)))
     tr = lambda net: X + tx[net]
-    xpad = tr('PAD')
-    # bottom leg = P: PAD_P M5 trunk (x 282-294, from y 410) -> M5 at y 416, BELOW the PAD_N trunk start (y 426), so the
-    # pair never crosses -> up the P leg PAD trunk (M5 over the bank, as the side-by-side build) to the via stack
-    ypp = YBOT + cfg['pad_trunk_lo'] + 1.5
-    box(M[5], 282., 414., xpad + 2., 418.); box(M[5], xpad - 2., 414., xpad + 2., ypp); stack(xpad, ypp, 4, 5, 3)
-    # top leg = N: shell PAD_N M5 trunk (x 298-310) sideways into the N leg PAD trunk
-    ypn = YTOP + cfg['pad_trunk_lo'] + 1.5
-    box(M[5], 298., ypn - 2., xpad + 2., ypn + 2.); stack(xpad, ypn, 4, 5, 3)
-    # shared nets: channel above each leg, one M4 riser per net
-    ch1 = YBOT + ltop + 4.; ch2 = YTOP + ltop + 4.
-    riser = lambda i: X + 92. + 3. * i
-    for i, net in enumerate(SHARED):
-        w = 2. if net == 'VSS' else .5
-        y1 = ch1 + 2.5 * i; y2 = ch2 + 2.5 * i; xr = riser(i)
-        wire(4, (tr(net), YBOT + ltop - 1.), (tr(net), y1), w); stack(tr(net), y1, 4, 5)
-        wire(5, (tr(net), y1), (xr, y1), 1.); stack(xr, y1, 4, 5)
-        wire(4, (xr, y1), (xr, y2), w)
-        wire(4, (tr(net), YTOP + ltop - 1.), (tr(net), y2), w); stack(tr(net), y2, 4, 5)
-        wire(5, (tr(net), y2), (xr, y2), 1.); stack(xr, y2, 4, 5)
-        if net != 'RAILPRE': T(net, 5, (tr(net) + xr) / 2, y2)
-    # RX_P / RX_N: identical routes per leg (P/N balance at the CTLE input): RX trunk -> level 10 of the leg's own
-    # channel -> 0.6 um M5 strap to the cell's side edge (x 492) = side pins
-    for leg_y, ch, net in ((YBOT, ch1, 'RX_P'), (YTOP, ch2, 'RX_N')):
-        y = ch + 2.5 * len(SHARED)
-        if net == 'RX_P' and y + .5 > YTOP - 3.: raise ValueError('channel 1 overflows into the top leg')
-        wire(4, (tr('RX'), leg_y + ltop - 1.), (tr('RX'), y), 1.); stack(tr('RX'), y, 4, 5)
-        box(M[5], tr('RX'), y - .3, X + ltop_x, y + .3); T(net, 5, X + ltop_x - .5, y)
-    # RAILPRE / VSS: from the bottom-leg bank down to the shell exactly as the side-by-side build
-    xr = tr('RAILPRE'); ylo = YBOT + cfg['railpre_lo'] + 1.
+    xpad = tr('PAD'); xedge = X + lright
+    # P leg: shell PAD_P M5 trunk (x 282-294, from y 410) -> M5 at y 416, BELOW the PAD_N trunk start (y 426), so the
+    # pair never crosses -> up over the P leg bank to the via stack on the P leg PAD trunk
+    y_padp = Y_PLEG + cfg['pad_trunk_lo'] + 1.5
+    box(M[5], 282., 414., xpad + 2., 418.); box(M[5], xpad - 2., 414., xpad + 2., y_padp); stack(xpad, y_padp, 4, 5, 3)
+    # N leg: shell PAD_N M5 trunk (x 298-310) sideways into the N leg PAD trunk; the stub beyond the via stack mirrors
+    # the PAD_P run over the bank (same length, same leg metal underneath) and ends open: P/N pad C balance only
+    y_padn = Y_NLEG - (cfg['pad_trunk_lo'] + 1.5)
+    box(M[5], 298., y_padn - 2., xpad + 2., y_padn + 2.); stack(xpad, y_padn, 4, 5, 3)
+    box(M[5], xpad - 2., y_padn, xpad + 2., y_padn + (y_padp - 414.))
+    # shared nets: the two legs' M4 trunks joined straight across the channel; port nets get an M5 strap to the side edge
+    # (crossing at the leg trunk's own width for the current-carrying nets: TERM_VCM carries the differential
+    # termination current between the legs, ~44 squares of M4 here)
+    for net in SHARED:
+        w = {'VSS': 2., 'TERM_VCM': 1.}.get(net, .5)
+        wire(4, (tr(net), p_top - 1.), (tr(net), n_top + 1.), w)
+        if net != 'RAILPRE':     # internal node: no strap, no label
+            stack(tr(net), level[net], 4, 5)
+            box(M[5], tr(net), level[net] - .5, xedge, level[net] + .5); T(net, 5, xedge - .5, level[net])
+    # RX_P / RX_N: mirror-identical routes (P/N balance at the CTLE input): RX trunk -> 18 um M4 extension into the
+    # channel -> 0.6 um M5 strap to the cell's side edge = adjacent side pins, RXSEP apart
+    for y_leg, y, net in ((p_top - 1., y_rxp, 'RX_P'), (n_top + 1., y_rxn, 'RX_N')):
+        wire(4, (tr('RX'), y_leg), (tr('RX'), y), 1.); stack(tr('RX'), y, 4, 5)
+        box(M[5], tr('RX'), y - .3, xedge, y + .3); T(net, 5, xedge - .5, y)
+    # RAILPRE / VSS: from the P-leg bank down to the shell exactly as the side-by-side build
+    xr = tr('RAILPRE'); ylo = Y_PLEG + cfg['railpre_lo'] + 1.
     wire(4, (xr, ylo), (xr, 436.5), .5); stack(xr, 436.5, 3, 4)
     wire(3, (xr, 436.5), (91.58, 436.5), .5); wire(3, (91.58, 436.25), (91.58, 438.4), .5)
-    xv = tr('VSS'); yv = YBOT + cfg['vss_lo'] + 1.
+    xv = tr('VSS'); yv = Y_PLEG + cfg['vss_lo'] + 1.
     wire(4, (xv, yv), (xv, 428.), 2.); stack(xv, 428., 3, 4, 2)
     wire(3, (xv, 428.), (138., 428.), 1.); stack(138., 428., 3, 5, 2)
     T('PAD_P', 5, 288., 905.); T('PAD_N', 5, 304., 905.)
@@ -191,7 +204,7 @@ def generate(work, shell, leg, network, stacked=False):
     lab = info['labels']
     tx = {n: v[0][0] for n, v in lab.items() if not n.startswith('TU')}
     lo = lambda n: min(p[1] for p in lab[n] if p[2] == 0)
-    cfg = dict(trunk_x=tx, leg_top=info['bbox'][3], pad_trunk_lo=lo('PAD'), railpre_lo=lo('RAILPRE'), vss_lo=lo('VSS'), stacked=stacked)
+    cfg = dict(trunk_x=tx, leg_top=info['bbox'][3], leg_right=info['bbox'][2], pad_trunk_lo=lo('PAD'), railpre_lo=lo('RAILPRE'), vss_lo=lo('VSS'), stacked=stacked)
     (work / 'config.json').write_text(json.dumps(cfg, indent=1))
     subprocess.run(['docker', 'run', '--rm', '--network', 'none', '--entrypoint', 'python3', '--mount', f'type=bind,src={work},dst=/work', IMAGE,
                     '/work/hs_pad_compose.py', '--inside', '/work'], check=True)

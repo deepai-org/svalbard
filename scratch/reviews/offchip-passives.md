@@ -7,8 +7,9 @@ carrier? Rule: only passives, the FPGA and a fallback LNA may be off-chip; no ca
 Analysis and proposal only. No design file changed, no circuit simulation (hand calculations; one read-only KLayout
 layer measurement, one job, one thread). Work dir `scratch/reviews/offchip-passives/`.
 
-STATUS: complete, independent review applied (section 9). `wafer-space-answers.md` did not exist when this was
-finalised: case A / case B are both given (section 7).
+STATUS: complete. The independent review (section 9) broke one of the three main items and reduced another; sections
+1, 6 and 10 carry the corrected numbers, and each item in section 4 has a REVIEW line. `wafer-space-answers.md` was read:
+case A (unmodified COB) is the baseline, case B (modified COB) is an upside that wafer.space has not agreed to (section 7).
 
 Inputs that arrived during the pass and are treated as baseline:
 1. Per-mode idle pins: "one spare pad" is the wrong budget; a passive needed only in a mode that leaves pads idle can
@@ -20,16 +21,20 @@ Inputs that arrived during the pass and are treated as baseline:
 
 ## 1. Bottom line
 
-**Off-chip passives close 0.15-0.45 mm2 of the 1.3-2.3 mm2, not more.** The passives on this die are small. Measured
-on the layouts, all MIM, MOS-capacitor, poly-resistor and inductor marker area outside the pads and the QVCO tank is
-0.33 mm2 in total, and most of it either must stay at the circuit (reference reservoir, filter capacitors inside an
-active filter, RF tanks) or is drawn above devices and frees nothing. Three things are real:
+**Off-chip passives close 0.12-0.15 mm2 of the 1.3-2.3 mm2. A pad-family deletion that per-application carriers make
+possible adds 0.10-0.15. Together 0.22-0.30 mm2 (case A, after review). The same review found the QVCO regulator
+under-booked by 0.14 mm2 in the die-fit ledger, which takes half of that back.**
 
-| | mm2 | condition |
-|---|---:|---|
-| LO loop-filter capacitor C2 (490 pF MOS capacitor) to the carrier | 0.15 | two pads idle in RF modes; Kelvin return |
-| WTX_EXT fallback input moved onto the USB pad pair (pad family deleted; not a passive, a consequence of per-application carriers) | 0.15 | USB and wired are different carriers |
-| QVCO regulator hold capacitors and megohm resistors to the carrier (this IS die-fit lever 11, not additional to it) | 0.10-0.15 | three pads; regulator never built |
+The passives on this die are small. Measured on the layouts, all MIM, MOS-capacitor, poly-resistor and inductor marker
+area outside the pads and the QVCO tank is 0.33 mm2, and most of it either must stay at the circuit (reference
+reservoir, capacitors inside an active filter, RF tanks) or is drawn above devices and frees nothing.
+
+| item | mm2 | pads | state after review |
+|---|---:|---|---|
+| OCP-1: LO loop-filter capacitor C2 (490 pF MOS capacitor) to the carrier | 0.12-0.15 | two adjacent provider analog pads, idle in RF modes: only `bidir[22]`/`[23]`, so it depends on OCP-2 | survives with conditions |
+| OCP-2: WTX_EXT fallback input on the USB pad pair, `pad_wtx_ext` deleted (not a passive: a consequence of per-application carriers) | 0.10-0.15 | none; frees two bonded sites | broken as written, repaired; loses one fallback combination (user decision) |
+| OCP-3: QVCO regulator hold capacitors to the carrier (die-fit lever 11) | 0 | - | broken: no idle pad on the west edge, megohm / sub-uA nodes, and the staged regulator is 0.44 mm2 not 0.30 |
+| case B only (modified COB, not agreed by wafer.space): TX / RX termination sources as COB resistors | 0.06-0.11 | none | survives with conditions, low confidence |
 
 **USB is not in this category.** The USB passives (pull-ups, pull-downs, 45 ohm terminations, LS Miller capacitors)
 measure about 0.005 mm2 on the die. USB costs about 0.58 mm2, but that is the ESD shell of its pad (0.255), its
@@ -37,12 +42,12 @@ drivers (0.098), `pt_usb_txdrv` (0.031), the bias DAC and its share of `pt_detec
 terminations and pulls cannot leave the pad without a switch that is itself the FS low-side driver (section 5.1).
 
 **Decap, terminations, RF inductors: nothing.** The board cannot replace any of the 5.4 nF decap plan (the plan exists
-because of the bond inductance, section 5.4). External termination breaks the 2.5-3.24 Gb/s rates in case A (section
-5.2). Every RF inductor is smaller than one bond wire (section 5.5).
+because of the bond inductance, and the COB already carries eight 1 uF capacitors; section 5.4). External termination
+breaks the 2.5-3.24 Gb/s rates in case A (section 5.2). Every RF inductor is smaller than one bond wire (section 5.5).
 
-What the pass does deliver besides area: a pad plan for the LO passives that the design of record already needs but
-never budgeted (`LO_CEXT` and its Kelvin ground: the regulator fails its rejection lines without the external
-capacitor), two freed pad sites, and a per-mode pin table that shows 10-14 signal pads idle in every mode.
+Other results: a per-mode pin table (10-18 signal pads are idle in every mode, section 3); the finding that `LO_CEXT`
+and its Kelvin ground, which the QVCO regulator of record needs, have no usable pad on the west edge (section 4,
+OCP-3); two pad-free alternatives the reviewer added (section 9).
 
 ## 2. Passive-device inventory (measured)
 
@@ -174,6 +179,11 @@ new. Owner in brackets.
 - Universal board: yes for (a) and (b): the pads have no other function.
 - Capability check: RX, TX, duplex use the on-chip LO exactly as today (same R, C1, C3, same C2 value). External-LO
   fallback unchanged. Wired and USB carriers: pads unconnected, LO island off.
+- REVIEW: survives with conditions. The -40 dB of the Kelvin return holds only if `LO_X` and `LO_AGND` are an adjacent
+  provider pad pair routed together: options (a) (ATB1 adds up to 6.2 kohm in series with C2: R 10.4 k -> 16.6 k) and a
+  west/east split (about -70 dBc at the pessimistic envelope) are withdrawn. Only (b) `bidir[22]`/`[23]` remains, so
+  OCP-1 depends on OCP-2. `LO_AGND` here is NOT the AUX_CLK pad of OCP-3. Provider `asig_5p0` leakage and HBM at a
+  `bidir` site are not in the repo: to be shown. Bookable 0.12-0.15.
 - Verification: loop phase margin and noise with 470 pF +-5 % and 3-8 pF extra at X (existing `loop_design.py` grid);
   ground-difference spur with the m1 PDN model (new: inject the m1 ground-bond voltage between `LO_AGND`-referred and
   carrier-referred capacitor return); HBM on the X pad with the loop filter and charge pump attached; leakage at
@@ -199,6 +209,14 @@ new. Owner in brackets.
 - Capability check: WTX_EXT fallback 0.5-1.6 Gb/s kept (wired carrier); USB LS/FS/HS kept (USB carrier); WMON
   unchanged. Lost: WTX_EXT fallback and USB at the same time on one carrier (no mode uses both; USB HS has no WTX_EXT
   path today).
+- REVIEW: broken as written, repairable; bookable 0.10-0.15. (1) `rx_wtx_ext` is a DC-coupled self-biased inverter
+  input (`ct_rxin`, 40 kohm bias): the 45 ohm pad termination must stay OFF, the input runs unterminated behind the AC
+  capacitors (termination, if wanted, on the carrier). (2) "USB HS has no WTX_EXT path" is wrong: the only extracted
+  USB HS transmit evidence drives `pt_wiredtx` through its external-data path (USB-INTEGRATION.md l.126-130). USB HS
+  transmit from external serial data is therefore lost: user decision. (3) `rx_wtx_ext` is on the debug island, the USB
+  receive node on the wired islands: crossing to be defined. (4) `pad_wmon` uses `ESD_RAIL_wtx_ext` (`pt_chip.conn`
+  l.203-206): without die-fit lever 1 (WMON on a provider cell) the saving is 0.104, not 0.151. (5) The WTX_EXT receiver
+  already fails from 0.5 Gb/s (TIM-08): the fallback rests on a block that does not work yet, with or without this.
 - Not a double count: die-fit lists the WTX_EXT group only as a user decision to drop a fallback (5.1 item 4);
   AP4-7 (lever 1) moves BB_I, BB_Q, WMON, not WTX_EXT.
 - Verification: `wtx_ext_rx` bench on the extracted wirepad + COB channel at 0.5 / 1.0 / 1.6 Gb/s, 300-800 mVpp;
@@ -206,6 +224,15 @@ new. Owner in brackets.
 
 ### OCP-3. QVCO regulator: hold capacitors and megohm resistors to the carrier (0.10-0.15 mm2, confidence L) [LO, user]
 
+- REVIEW: BROKEN, bookable 0. (1) AUX_CLK is not idle in RF modes: it is a selectable converter-sample, ring-PLL
+  reference and wire-clock source (`analog/timing/README.md` l.86-90). (2) A <= 1 ohm switch adds about 3 pF to one leg
+  of the external-LO Q pair: past resonance at 2.45 GHz, the fallback LO breaks on the die. (3) In BYP mode the custom
+  pad's shunt draws 5-28 mA from VOUT. (4) G2 is driven by a 0.14-0.29 uA OTA: 100 nF means about 1 s start-up and
+  10 nA of leakage shifts VOUT by about 55 mV. (5) A 3 mm gate route removes the 35 dB per stage unless it is a few ohms.
+  (6) The regulator is not "never built": `pt_lo_vreg` is staged at 407 x 1082 um = 0.44 mm2 (`scratch/lo-ap4/vreg2/NOTES.md`
+  l.141, l.194), against 0.30 in the die-fit ledger; with the hold capacitors out it would be about 0.33, no gain
+  against the ledger. What stands: `LO_CEXT` and its Kelvin ground need a pad at the west edge and none is idle there.
+  The text below is kept as the record of what was proposed.
 - This is die-fit lever 11 with a pad plan; do not add it to lever 11.
 - Today (`scratch/lo-ap4/vreg2/NOTES.md`, never built, ledger 0.30 mm2 L): two native followers; gate hold
   capacitors CG1 102 pF and CG2 153 pF behind 2.6 Mohm, output 51 pF; cost split hold/output capacitors 0.112,
@@ -241,8 +268,8 @@ new. Owner in brackets.
 | ID | item | mm2 | pads | why small / condition |
 |---|---|---:|---|---|
 | OCP-4 | FS/LS single-ended USB receivers as FPGA inputs through 2 x 1 kohm (0402, 1 %) | <= 0.01 (part of `pt_detect`) | none (FPGA pins) | 1 k + 8 pF = 8 ns against an 83 ns FS bit; 1 k in parallel with 45 ohm changes the HS impedance by 4 %. USB carrier only. Size inside `pt_detect` not separable from the layout; owner to say. |
-| OCP-5 | ADC VCM: external 100 nF instead of the booked VCM buffer | 0.003 | ATB0 (refbuf OVR path exists) | only low-frequency; kick charge still needs the on-die path. |
-| OCP-6 | Precision bias resistor REXT (12.1 k 0.1 %) on an ATB/bias-override pad | 0 | existing `pt_bias_ext` taps | no area: the biasgen is vendored and trimmed by `idac2` code. Gain is accuracy (+-20 % -> +-1 %), a risk reduction for die 1, not area. |
+| OCP-5 (REVIEW: broken, the capacitor sits behind 6.2 kohm of ATB switches and occupies ATB0 in receive) | ADC VCM: external 100 nF instead of the booked VCM buffer | 0 | ATB0 (refbuf OVR path exists) | only low-frequency; kick charge still needs the on-die path. |
+| OCP-6 (REVIEW: broken as described, `pt_bias_ext` is a bank of bias outputs, not a resistor tap; a REXT needs its own pad) | Precision bias resistor REXT (12.1 k 0.1 %) on an ATB/bias-override pad | 0 | existing `pt_bias_ext` taps | no area: the biasgen is vendored and trimmed by `idac2` code. Gain is accuracy (+-20 % -> +-1 %), a risk reduction for die 1, not area. |
 
 ## 5. Looked at and rejected (with the number that decides)
 
@@ -320,38 +347,35 @@ Case B does not change this: the bonds (2.2-3.2 mm, 1.8-3.2 nH each) stay.
 | WMON on a BB or USB leg | 0.10-0.147 | already CP4-5 / AP4-7: not counted again. |
 | characterization probe frames (0.335) | - | probe pads, not passives; die-fit lever 4. |
 
-## 6. Totals and what it closes
+## 6. Totals and what it closes (after review)
 
 | class | items | mm2 | pads |
 |---|---|---:|---|
-| no pad needed | OCP-2 (frees two sites) | 0.151 | -2 |
-| mode-idle pads | OCP-1 | 0.14-0.15 | 2 provider analog pads idle in RF modes (`LO_X`, `LO_AGND`) |
-| mode-idle pads, not additional to die-fit lever 11 | OCP-3 | 0.10-0.15 | AUX_CLK pair by switch (`LO_CEXT`, shared `LO_AGND`), 2 provider analog pads (G1, G2) |
-| genuinely new pad | none | 0 | |
-| **new in this pass** | OCP-1 + OCP-2 | **0.29-0.30** | net 0 (two freed, two used) |
-| with lever 11 realised through OCP-3 | | **0.39-0.45** | spare `bidir[17]` + one of ATB1 / WMON site for G1, G2 |
+| no pad needed | OCP-2 | 0.10-0.15 (0.151 only with die-fit lever 1, else 0.104) | frees `bidir[22]`, `[23]` |
+| mode-idle pads | OCP-1 | 0.12-0.15 | `bidir[22]` = `LO_X`, `bidir[23]` = `LO_AGND`, rebuilt as provider analog cells; idle in every non-RF mode |
+| genuinely needs a new pad, none available | `LO_CEXT` + Kelvin ground of the QVCO regulator (west edge) | 0 | open, die-fit 5.1 item 6 stands |
+| **total, case A** | OCP-1 + OCP-2 | **0.22-0.30** | net 0 |
+| case B upside | B-1, B-2 | +0.06-0.11 | none |
 
-East provider analog sites available in RF modes after OCP-2: `bidir[22]`, `bidir[23]`, held spare `bidir[17]` (3).
-Needed: `LO_X`, G1, G2 on provider cells; `LO_AGND` and `LO_CEXT` on the AUX_CLK pair. It fits without ATB1.
-If the spare is given to the supply bond (PC-18 option P2), G1 or G2 needs ATB1 or OCP-3 stops at step (1).
+The held spare `bidir[17]` is not used by this pass: it stays available for the supply-bond option P2 (PC-18).
 
-Against the shortfall (packer, before routing / decap risk):
+Correction to the die-fit ledger found by the review: `pt_lo_vreg` 0.30 -> 0.44 mm2 (staged layout): +0.14 on every
+scenario.
 
-| scenario | shortfall | after die-fit levers 1-5 (`c-l6` stack) | + OCP-1 + OCP-2 (0.29) | + OCP-3 (lever 11) |
+| scenario | shortfall (packer) | after die-fit levers 1-5 (`c-l6` stack) | with the regulator at 0.44 | + OCP-1 + OCP-2 |
 |---|---:|---:|---:|---:|
-| C (all targets met) | 1.35-1.5 | 0.19 (0.83 flow-first) | about -0.10 (fits; 0.54 short flow-first) | -0.20 to -0.25 |
-| Cr (backed targets) | 1.61-1.75 | 0.26 | about -0.03 | -0.13 to -0.18 |
-| B (staged as measured) | 2.14-2.3 | 0.81 | 0.52 | 0.37-0.42 |
+| C (all targets met) | 1.35-1.5 | 0.19 (0.83 flow-first) | 0.33 | 0.03-0.11 short |
+| Cr (backed targets) | 1.61-1.75 | 0.26 | 0.40 | 0.10-0.18 short |
+| B (staged as measured) | 2.14-2.3 | 0.81 | 0.95 | 0.65-0.73 short |
 
-Alone: 0.3 mm2 (0.45 with OCP-3) of 1.3-2.3 = 13-23 % (20-35 %). Combined with levers 1-5 it turns scenario C and
-Cr from 0.2-0.3 short to about zero or slightly positive in the densest packing; it does not rescue B, the flow-first
-packings, or the unbooked risks (routing 0-1.0, decap tiles 0.15-0.47, island-local decap 0-0.29). These are area
-sums: the packer was not re-run with the smaller `pt_lo_lf` and without `pad_wtx_ext` (the pad is an edge obstacle,
-so its removal should place fully; `pt_lo_lf` is a mid-size block).
+Alone: 0.22-0.30 of 1.3-2.3 mm2 = 10-23 %. Combined with levers 1-5 it brings C and Cr to within 0.03-0.18 mm2 of
+zero in the densest packing; it does not close B, the flow-first packings or the unbooked risks (routing 0-1.0, decap
+tiles 0.15-0.47, island-local decap 0-0.29). These are area sums: the packer was not re-run. "Fits" is not shown by
+them (run `c-l6` already has 0.51 mm2 free in slivers, and its LNA is unplaced for a keep-away rule, not for area).
 
-No double counting: OCP-1 touches `pt_lo_lf` (in no die-fit lever, no AP4 target, not in CP4); OCP-2 removes
-`pad_wtx_ext` (die-fit lists it only as a decision to drop the fallback; AP4-7 / CP4-5 concern BB and WMON);
-OCP-3 = lever 11.
+No double counting (reviewer recomputed): OCP-1 touches `pt_lo_lf` (in no die-fit lever, AP4 target or CP4 item);
+OCP-2 removes `pad_wtx_ext` (die-fit lists it only as a decision to drop the fallback; AP4-7 / CP4-5 concern BB and
+WMON, and OCP-2 reaches its full 0.151 only together with lever 1).
 
 ## 7. Case A and case B
 
@@ -369,6 +393,24 @@ Case B (0201/0402 passives allowed on the COB within 1-2 mm of the fingers: bond
 | LNA input match on the COB (RFR-13 / B18 / B25) | the match becomes buildable; chain NF better by 0.25-0.65 dB | 0 (risk, not area) | M |
 | LNA / QVCO inductors, decap, USB, refbuf | unchanged: limited by the bond wire itself | 0 | H |
 
+REVIEW on case B: B-1 survives with conditions, bookable 0.058 (C) / 0.088 (B); the TX pad is 1.8-2.7 pF, not 1.5 pF,
+so the resonance with 3 nH is at 1.77-2.2 GHz and the peaking at 1.62 GHz is larger than +4 dB: an eye simulation at
+3.24 Gb/s decides. B-2 <= 0.02. The `LO_CEXT` row is moot (no pad).
+
+What a modified COB would need (the list to send to wafer.space; fingers, outline, connector and the existing
+passives area unchanged, all parts top side 0201, within 2 mm of the finger; wafer.space has said it is not certain
+that any custom COB will be accepted for this run):
+
+| finger nets | parts | for |
+|---|---|---|
+| WIRE_TX_P, WIRE_TX_N (bonds 28, 29) | per leg 100 ohm 1 % to the 3.3 V supply net and 100 ohm 1 % to GND; one 100 nF across the supply at the parts | B-1 |
+| WIRE_RX_P, WIRE_RX_N (bonds 21, 20) | per leg 49.9 ohm 1 % to GND (DNP on TMDS carriers is not possible on the COB: a second COB variant) | B-2 |
+| RF_RX_P, RF_RX_N | one 2.4-2.8 pF C0G across the pair about 3 mm from the fingers, plus one trimmer footprint (0.36-1.44 pF) | LNA match (RFR-13), no area |
+
+Note that COB parts are not per-application: every die on that COB variant carries them, so B-1 / B-2 also fix the
+COB to wired use or require the on-die paths to remain as an option (which removes the saving). This alone makes
+case B a weak area lever.
+
 Case B total: **+0.07-0.11 mm2** at low confidence on top of case A, i.e. 0.36-0.41 (0.46-0.56 with OCP-3). The
 value of case B is risk (LNA match, regulator rejection), not area.
 
@@ -383,28 +425,55 @@ value of case B is risk (LNA match, regulator rejection), not area.
 | B53 (carrier rule) | all | pads that carry an internal node on one carrier (`bidir[17]`, `[22]`, `[23]`, AUX_CLK pair) are left unconnected, without test points or stubs longer than 5 mm, on carriers that do not use them. |
 | B10 change | all | `WTX_EXT` test point removed from the debug-site list. |
 
-## 9. Independent review
+## 9. Independent review (`offchip-passives/review.md`)
 
-See `offchip-passives/review.md`. Summary of what survived is appended below after the review.
+One reviewer (separate agent, read-only, hand calculations and greps, no simulation) was asked to break every item
+without being told which were thought weak.
+
+| item | claimed mm2 | verdict | bookable mm2 |
+|---|---:|---|---:|
+| OCP-1 loop-filter C2 off-chip | 0.14-0.15 | survives with conditions (adjacent provider pair only; depends on OCP-2) | 0.12-0.15 |
+| OCP-2 WTX_EXT on the USB pad | 0.151 | broken as written, repairable (unterminated input; loses USB HS from external data; island crossing; WMON ESD rail) | 0.10-0.15 |
+| OCP-3 QVCO regulator passives | 0.10-0.15 | broken | 0 |
+| OCP-4 USB FS/LS receivers on FPGA pins | <= 0.01 | survives, unquantified | 0 |
+| OCP-5 ADC VCM capacitor on ATB0 | 0.003 | broken | 0 |
+| OCP-6 REXT | 0 | broken as described | 0 |
+| B-1 TX Thevenin on the COB | 0.06-0.09 | survives with conditions | 0.058 (C) / 0.088 (B) |
+| B-2 RX TERM_VCM on the COB | 0.01-0.02 | survives with conditions | <= 0.02 |
+| rejections: decap, case-A terminations, USB passives, `pll_vreg2` gate capacitor, USB on the HS pads, AUX on BB_Q, RF inductors | 0 | all survive | |
+
+Arithmetic (areas from the ledger and `passive_area.csv`, spur and resonance hand calculations, totals) reproduced.
+
+Missed by the pass, added by the reviewer (not verified further here):
+- **`pt_lo_vreg` is staged at 0.44 mm2**, the ledger books 0.30: +0.14 on every die-fit scenario.
+- **MIM stacked over the C2 MOS capacitor** (2 fF/um2 over 3.6 fF/um2): 0.04-0.05 mm2 with no pad and no board part, if
+  DRC allows MIM over the n-well capacitor. It is the pad-free alternative to OCP-1 (not additive to it).
+- **A freed site as an extra supply or ground bond** lowers the loop inductance; the reviewer's hand estimate is worth
+  about 0.1 mm2 of decap bank. It competes with OCP-1 for `bidir[22]`/`[23]`; the power-delivery owner would have to
+  run it in the m1 model.
+- Section 11 claimed the `OCP-` rows before they were appended (now appended).
 
 ## 10. Decisions that need the user
 
-1. Accept two (OCP-1) or four (with OCP-3) pads that carry LO-internal nodes on the RF carrier, i.e. an RF carrier
-   without those capacitors has no on-chip LO.
-2. Use of the held spare `bidir[17]` (PC-18): supply-bond option P2, or an LO node (needed for OCP-3 step 2 without
-   touching ATB1).
-3. OCP-2: WTX_EXT fallback and USB can no longer be on one carrier without a jumper.
-4. QVCO regulator: which basis holds (-80 dBc or the 30 uV / -61 dBc reading). With -61 dBc the Kelvin return of
-   OCP-1 has 15-30 dB of margin and OCP-3 may reduce to a single follower stage (LO owner).
-5. Case B: ask wafer.space whether the customer may add 0201 footprints on the COB within 2 mm of the fingers on four
-   nets (WIRE_TX P/N, RF_RX P/N) and one pair (`LO_CEXT`/`LO_AGND`); worth 0.07-0.11 mm2 and the LNA match.
+1. OCP-2: move the WTX_EXT fallback input onto the USB pads and delete its pad (0.10-0.15 mm2, two sites freed).
+   Cost: USB HS transmit from external serial data (the only USB HS transmit path with extracted evidence today) is
+   lost, and WTX_EXT fallback + USB cannot share a carrier without a jumper.
+2. OCP-1: accept that the RF carrier must carry the 470 pF loop-filter capacitor on two pads (no on-chip LO without
+   it), 0.12-0.15 mm2; or take the pad-free MIM-over-MOS variant (0.04-0.05, DRC to be checked); or use the two
+   freed sites for supply bonds instead (reviewer's estimate about 0.1 mm2 of bank, unmodelled). Only one of the three.
+3. QVCO regulator: it is 0.44 mm2 as staged, needs an external capacitor to pass, and no west pad is idle for it.
+   Either a signal gives up a west pad, or the spur limit is the -61 dBc reading (LO owner), or the regulator is
+   redesigned. This pass could not solve it with passives.
+4. Case B: whether to ask wafer.space for the modified COB of section 7. It is worth at most 0.06-0.11 mm2, fixes the
+   COB to one application, and its real value is the LNA input match.
+5. The held spare `bidir[17]` is untouched by this pass and free for PC-18 option P2.
 
 ## 11. Files
 
 - `offchip-passives/passive_area.py`, `passive_area.csv`: layer-marker passive area per layout (76 cells).
 - `offchip-passives/candidates.csv`: one row per candidate (survivors and rejections).
 - `offchip-passives/review.md`: independent review.
-- Rows `OCP-1` .. `OCP-6` in `interface-changes.md`.
+- Rows `OCP-1`, `OCP-2`, `OCP-3`, `OCP-7` in `interface-changes.md`.
 
 Not done: no simulation of any proposal; the packer was not re-run; `pt_detect` and `core_bias` were not dissected
 (no per-function layout split available); the ground-path impedance used in OCP-1 (20 mohm) is a hand estimate from

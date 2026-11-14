@@ -1,10 +1,10 @@
 id,item,block,mm2_low,mm2_high,mA,pad_class,pads,board_parts,case,universal_board,confidence,status
-OCP-1,LO loop filter C2 off-chip,pt_lo_lf,0.14,0.15,0,mode-idle,2 provider analog pads idle in RF modes (LO_X + LO_AGND Kelvin),470 pF C0G 5% 0402,A,yes,M,proposed
-OCP-2,WTX_EXT fallback input on the USB pad pair; pad_wtx_ext deleted,pad_rf_pair (wtx_ext),0.151,0.151,0,none (frees 2),USB_DP/USB_DN reused on wired carriers,2 x 100 nF AC caps (existing B12),A,jumper pair,M,proposed
-OCP-3,QVCO regulator hold caps + megohm resistors off-chip (= die-fit lever 11),pt_lo_vreg,0.10,0.15,0,mode-idle,AUX_CLK pair via switches (LO_CEXT + LO_AGND) + 2 provider analog pads (G1 G2),10 uF + 2 x 100 nF,A (5 dB worse at 78 MHz) / B,no (population),L,proposed
+OCP-1,LO loop filter C2 off-chip,pt_lo_lf,0.12,0.15,0,mode-idle,2 provider analog pads idle in RF modes (LO_X + LO_AGND Kelvin; bidir[22]/[23] only),470 pF C0G 5% 0402,A,yes,M,survives with conditions
+OCP-2,WTX_EXT fallback input on the USB pad pair; pad_wtx_ext deleted,pad_rf_pair (wtx_ext),0.104,0.151,0,none (frees 2),USB_DP/USB_DN reused on wired carriers,2 x 100 nF AC caps (existing B12),A,jumper pair,M,repaired after review (loses USB HS from external data)
+OCP-3,QVCO regulator hold caps + megohm resistors off-chip (= die-fit lever 11),pt_lo_vreg,0.10,0.15,0,mode-idle,AUX_CLK pair via switches (LO_CEXT + LO_AGND) + 2 provider analog pads (G1 G2),10 uF + 2 x 100 nF,A (5 dB worse at 78 MHz) / B,no (population),L,BROKEN in review (bookable 0)
 OCP-4,USB FS/LS single-ended receivers on FPGA pins,pt_detect,0,0.01,0,none,FPGA pins,2 x 1 kohm 1%,A,USB carrier,L,minor
-OCP-5,ADC VCM external capacitor,vcm_buffer,0,0.003,0,existing,ATB0,100 nF,A,yes,L,minor
-OCP-6,precision bias resistor REXT,pt_core_bias / pt_bias_ext,0,0,0,existing,pt_bias_ext taps,12.1 k 0.1%,A,yes,M,no area (accuracy only)
+OCP-5,ADC VCM external capacitor,vcm_buffer,0,0.003,0,existing,ATB0,100 nF,A,yes,L,broken in review
+OCP-6,precision bias resistor REXT,pt_core_bias / pt_bias_ext,0,0,0,existing,pt_bias_ext taps,12.1 k 0.1%,A,yes,M,broken as described in review
 B-1,TX termination as Thevenin pairs on the COB,term_buffer + pt_txpad_bias,0.06,0.09,0,none,WIRE_TX pads,4 x 100 ohm 1% 0201 + 100 nF,B only,no,L,case B
 B-2,RX TERM_VCM by COB resistors (AC-coupled protocols),pt_termination,0.01,0.02,0,none,WIRE_RX pads,2 x 49.9 ohm 1% 0201,B only,no,L,case B
 R-1,USB pull-ups / pull-downs external,pad_wirepad,0,0.002,0,none,FPGA GPIO,1.5 k + 2 x 15 k 1%,A,-,H,rejected (no area)

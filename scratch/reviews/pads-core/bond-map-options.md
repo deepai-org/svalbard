@@ -32,7 +32,7 @@ only use an east site, the LNA ground can only use the west sites. One east site
 
 | Option | E1 (`bidir[16]`, contact 58) | E2 (`bidir[17]`, contact 57) | W-A | W-B | What it costs / what is open |
 |---|---|---|---|---|---|
-| S1 | POR_BYPASS strap | spare (see 3b) | AGND_RX | AGND_RX | W-B has no rule-compliant landing on the run-1 board; W-A opening is 16.5 um from the RF_RX_P opening at the placeholder position (pitch to be confirmed); both pads need a custom cell (the TLP-site pattern shorts DVDD to DVSS over the ring: not reusable as is) |
+| S1 | POR_BYPASS strap | spare (see 3b) | AGND_RX | AGND_RX | W-B has no rule-compliant landing on the run-1 board; W-A opening is 16.5 um from the RF_RX_P opening at the placeholder position (pitch to be confirmed); both pads need a custom cell (a custom cell on the fixed TLP-site pattern: bond pad + Metal2 escape, no Metal3-5 in the rail band) |
 | S2 | spare | POR_BYPASS strap | AGND_RX | AGND_RX | as S1; E2 is 180 um closer to the macro south edge (1.68 vs 1.86 mm route) |
 | S3 | POR_BYPASS strap | spare | AGND_RX (finger 71 double bond) | not built | one LNA ground bond only; buildable on either board if double bonds are accepted |
 | S4 | POR_BYPASS strap | spare | not built | not built | no LNA ground split (die VSS only); needs 44 / 62 / 76 dB of rejection that is not in evidence (PD2-15); no assembly questions |
@@ -78,6 +78,6 @@ the keyed RESET_N rescue path alone.
   breaks one of the two limits. 3-D wire length is over 3 mm for corner bonds at any plausible die thickness.
 - The ring rails are continuous at full width through every custom pad family (measured), on Metal3-5.
 - All VDD_IO / VDD_CORE / PWR_AUX pads are one net on the die, all ground pads another.
-- `pad_tlp_flat` as generated shorts pad, DVSS and DVDD if placed over the ring rail cell; it has never been assembled.
-  It must be fixed before the TLP site (`bidir[25]`) is used.
+- `pad_tlp_flat` used to short pad, DVSS and DVDD when placed over the ring rail cell; fixed and republished 2026-11-14
+  (`analog/pads/generated/tlp-site/`, Metal2 riser). A pad for the west extra openings must follow the fixed pattern.
 - With the strap set, RESET_N must be held low until the supply is valid (INT6-3): the strap removes the POR.

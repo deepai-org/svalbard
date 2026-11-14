@@ -1,164 +1,145 @@
-# Performance mandate (user, 2026-11-09)
+# Mandate: standing rules for the transceiver chip
 
-Every performance gap in performance-review.md is to be FIXED on the primary on-chip route.
-Fallbacks are backups, not the plan.
+Consolidated 2026-11-14 from the dated entries (9–14 Nov). The chronological original is
+`archive/MANDATE-2026-11-14-pre-consolidation.md`. Rules are the user's unless marked (coordinator).
+Current work status is in `SESSION-STATE.md`, not here.
 
-Accept a miss only if it is a physical impossibility in GF180MCU. To claim that, you must provide a
-quantitative proof, for example device fT/fmax versus the required bandwidth, minimum pad/ESD capacitance
-versus return loss, or the thermal/current-density limit. Write it in physical-limits.md in this
-directory. "Hard", "risky" or "out of time" do not qualify.
+## 1. Scope and priorities
 
-Architectural fixes are in scope:
-- wider or faster host link using spare pads
-- extra pipelining
-- different circuit topologies
-- inductive peaking
-- T-coils
-- CML instead of CMOS
-- interleaving
+- **Full scope, no cuts.** Every capability, mode and rate stays, including the 2.7–3.24 Gb/s wired paths
+  (DisplayPort HBR 2.7, SATA Gen2 3.0, XAUI/2500BASE-X 3.125). Something missing on chip was forgotten, not
+  descoped: build it.
+- **Off-chip is allowed only for:** passives (any number), the FPGA, and a fallback LNA in addition to the
+  built-in LNA.
+- **A miss is accepted only if physically impossible in GF180MCU**, shown by a quantitative proof in
+  `physical-limits.md` (device fT/fmax vs bandwidth, pad/ESD capacitance vs return loss, thermal or
+  current-density limit). "Hard", "risky", "out of time" and "not enough die area" do not qualify.
+- **No dead chip comes first.** Die 1 must power up safely, talk to the FPGA and be observable even if every
+  ambitious block fails. Shared infrastructure (supplies, bias, reference, pads, digital, host link, debug) gets
+  the most conservative design, isolation and bypasses.
+- **On-chip implementations are the design.** Fallbacks (external LO, external LNA, forwarded clocks, bypasses)
+  exist to recover a partially working die and to yield data; keep their hooks and observation paths, but they
+  are not the plan.
+- **Spend risk only where something ambitious happens and no low-risk alternative exists.** Elsewhere use the
+  conventional, proven, simplest option even at some cost in area or power. Use the silicon-proven
+  gf180mcu_fd_sc (5 V-device) standard cells; custom fast cells only where a path cannot close otherwise, kept
+  small, contained, observable and with a fallback. When proposing anything novel, state the low-risk
+  alternative and why it is insufficient.
+- **Architectural fixes are in scope:** wider host link, pipelining, different topologies, inductive peaking,
+  T-coils, CML, interleaving.
+- **Area is minimised over time across the whole project.** The die is fixed at 3.932 × 5.122 mm (the only
+  slot size offered) and the design is over it (`die-fit.md`). Every owner treats area as a standing objective:
+  report the area delta of every change against the die-fit ledger, build new circuitry compact from the start
+  (shared guard rings, abutted rows, MIM over devices, no generator-default channels), and keep a short list of
+  its next area levers. The coordinator keeps the ledger and reruns the packer.
+- **Schedule is the user's concern** (mid-December 2026 shuttle). Do not raise it or trade scope for it.
+- **Scope and AI-driven design are intentional.** Counter blind spots with many varied checks and
+  cross-references against public data. The user is the gauge of tapeout readiness.
 
-Record any change that crosses an ownership boundary in interface-changes.md.
+## 2. Operating conditions
 
-## Operating envelope (applies to every performance check)
-Functional and performance checks use only the narrow window from spec/tapeout-plan.md "Operating envelope":
-- junction temperature 27 °C ±5 °C (22–32 °C)
-- die supply 3.15–3.35 V
+- **Performance window:** junction 22–32 °C, die supply 3.15–3.35 V, all process corners (ss/ff/sf/fs). Do not
+  require performance at 0, 85 or 125 °C or at wide supply.
+- **Per-chip supply trim:** the board sets each die's supply (trimmer + regulator), chosen at bring-up from the
+  die's measured speed (ring monitors need readout codes). Slow dies may run up to a 3.50 V setpoint, with
+  setpoint + tolerance + ripple + overshoot ≤ 3.63 V; typical dies stay at 3.3 V; fast dies may be trimmed
+  down. Every block reports slow-corner results both untrimmed and trimmed and its minimum (and, at ff,
+  maximum) passing supply; one trim value must satisfy all blocks in a mode. It does not excuse
+  passive-limited specs, area, ff hold timing, reliability at 3.5 V, ESD/clamp behaviour or the IR budget.
+- **Safety window stays wide:** 0–3.63 V supply ramps, 0–85 °C, no damage, latch-up or lock-up.
+  Electromigration and IR sign-off at 85 °C (coordinator).
+- **ESD transient limit:** for ~150 ns ESD events use the transient oxide limit derived from PDK data
+  (pessimistic value), not the 3.63 V DC limit.
 
-Process corners (ss/ff/sf/fs) still apply, but only at those temperatures and voltages. Do NOT require performance at 0 °C, 85 °C or 125 °C, or at wide supply.
-Only SAFETY checks stay wide: 0–3.63 V supply ramps, 0–85 °C, and no damage, latch-up or lock-up.
-Use the narrow window when sizing for performance, for example bias, gain margin, timing corners, and the libraries used in STA.
+## 3. Ground truth and models
 
-## Device-speed guidance (scratch/reviews/gf180-device-speed-evidence.md)
-- nfet_03v3 fT is about 16 GHz at ss/32 °C (12–20); about 11–13 GHz usable in a laid-out circuit. pfet is about 5.5 GHz. 5 V/6 V devices are about 6–9 GHz.
-- Models omit gate resistance (rgatemod=0). Add an explicit Rg (about 60–150 Ω per 10 µm device) in RF and high-speed sims.
-- Derate pre-layout timing by 1.45×, or sign off post-extraction only.
-- Use quarter-rate samplers (810 MHz is feasible but needs extracted sign-off; a 1.25 GHz half-rate sampler is marginal, so avoid it).
-- The final 2:1 serializer stage is CML. CML tails at 50–80 µA/µm; keep pfets out of paths faster than about 2 GHz.
-- High-speed pin ESD at about 1 pF where possible; use shunt peaking where bandwidth is tight.
-- LNA: two stages for ≥20 dB. PDK noise models are suspect. PA realistic at +5–8 dBm (3.3 V) or about +10 dBm (6 V cascode).
+- **Two risk buckets.** (1) Ground-truth data is guessed or wrong: every number we rely on goes in
+  `spec/design-assumptions.md` with value, source, confidence and pessimistic design value. (2) We designed
+  badly: extracted results at every in-window corner, checks that can fail, no limits relaxed after seeing a
+  result, independent review before "done".
+- **Bound uncertain values in both directions.** "Pessimistic" means worst for the specific check. Designs must
+  work across the whole range and be optimised for the most likely value.
+- **Device-speed guidance** (`gf180-device-speed-evidence.md`): nfet_03v3 fT ≈ 16 GHz at ss/32 °C (11–13 GHz
+  usable in layout); pfet ≈ 5.5 GHz; 5/6 V devices 6–9 GHz. Models omit gate resistance: add explicit Rg
+  (60–150 Ω per 10 µm device) in RF and high-speed sims. Derate pre-layout timing 1.45× or sign off extracted.
+  Quarter-rate samplers; keep pfets out of paths above ~2 GHz. PDK noise models are suspect.
+- **Process facts** (`wafer-space-answers.md`): 5 metals, 1.1 µm top metal, MIM option B (2 fF/µm² nominal,
+  1.92 measured on Run 1), 1 kΩ/sq high-res poly, native-Vt and 6 V devices allowed. Unconfirmed: deep n-well,
+  SAB/`_dss` devices, the ESD implant layer 24/0. Run 1 lot data was close to typical.
 
-## Off-chip passives allowed (user, 2026-11-10)
-Any number of off-chip passives is allowed wherever it makes the chip's job easier or lowers risk. That includes:
-- crystals / crystal oscillators, e.g. a clean PLL/CDR/LO reference or an aosc trim reference
-- inductors and LC tanks: external VCO tank, LNA/PA matching, peaking
-- baluns and transformers; matching networks
-- AC-coupling capacitors, termination resistors, filters
-- bias/reference resistors and precision references, e.g. for an external bias override
-- decoupling and bulk capacitance
+## 4. Verification discipline
 
-Constraints:
-- every off-chip part costs pins: pads are limited and the 19 spare sites are booked for debug
-- bond-wire and package parasitics (~1 nH/mm, pad C) must be modelled at RF and multi-Gb/s
-- prefer passives that relax on-chip specs or remove risky circuits
-Each use goes into spec/board-requirements.md with part class, value and tolerance, and the pin and parasitic model must be included in the sims that rely on it.
+- **Prove the bench small first.** Reproduce a known analytic answer and fail a deliberately broken case, then
+  swap in one real block at a time. Full extracted runs only after each step agrees.
+- **Bench against real neighbours.** Real source and real load (extracted neighbour + route + pad + package),
+  not ideal ones. The mode walk found 10 dB gaps between ideal benches and reality.
+- **LVS on the GDS read back from disk**, with device parameters compared and a failing negative control.
+  Resistance-aware extraction wherever metal resistance is in a signal path (pads, terminations).
+- **Evidence must match what ships:** sha-matched records per published GDS; one work directory per precheck.
+- **Fill is ours to run** (precheck 1.7.4, PDK 792ef67, density and DCF.1a are gating). Top-level fill with
+  block-owned keep-out markers, and fill-aware re-extraction of sensitive blocks (inductors first).
+- **Independent review before "done":** a different agent, given artefacts, not the conclusion.
+- **Limits do not follow measurements.** A missed limit is reported as a miss or raised as a budget request.
+- **Chip-level verification is a first-class workstream:** one connectivity source of truth
+  (`integration/top/pt_chip.conn` and its `run.sh`), isolation/off-state audit, power-delivery model,
+  substrate and pulling checks, power-up and reset.
 
-## Top-level performance gate (user, 2026-11-10)
-Top-level layout must be designed for performance, not just connectivity. Apply these floorplan rules BEFORE routing:
-1. Fast nets short, direct and length-matched: pad→CTLE/slicer, serializer→driver, LO→mixers, PLL phases→samplers.
-2. Symmetry: mirrored I/Q (mixers, filters, ADC/DAC), matched LO and differential routes, matched PLL phase loading.
-3. Isolation: digital macro and PA/VCO aggressors away from the LNA, VCO tanks, bandgap/bias and ADC inputs. Use guard rings, deep-well isolation where available, separate analog/digital supply and ground returns, and shielded LO routes.
-4. Supply/ground: an extracted grid within the 117 mV supply-drop budget, with the decap pool placed near the noisy and switching loads.
-5. Each block next to its pads (RF on its pad edge, wired RX/TX at their pads, digital host link at the gearbox regions).
-6. Digital macro pins face their consumers. D2H/H2D go through the pad-edge gearboxes.
-Gate before signoff:
-- extract critical top-level nets (LO, wired data/clocks, ADC inputs, ref/bias) and resimulate each chain with that routing
-- simulate substrate/supply coupling (digital, PA, ring VCOs → LNA, VCO, ADC, bandgap)
-- extract the PDN IR drop and decap response
+## 5. Top level and physical design
 
-## Mitigation tricks are demand-driven (user, 2026-11-10)
-Every layout/isolation trick is on the table: guard rings, substrate taps, deep n-well/triple well, shielded and coplanar routes, patterned ground shields under inductors, separate supply/ground domains and pads, spacing, differential signalling, decap placement, dummy/matching structures, slew control.
+- **Floorplan for performance, before routing:** fast nets short, direct and matched; I/Q symmetry; aggressors
+  (digital macro, PA, rings) away from LNA, VCO tank, bandgap/bias, ADC inputs; each block next to its pads;
+  macro pins facing their consumers; an extracted supply grid inside the 117 mV drop budget with decap at the
+  switching loads.
+- **Gate before sign-off:** extract critical top-level nets and resimulate each chain; substrate and supply
+  coupling; PDN drop and decap response.
+- **Mitigations are demand-driven.** Guard rings, deep n-well, shields, separate domains, decap and the like go
+  only where an analysis shows a quantified need, citing the risk-register row and the analysis.
+- **Shared digital datapath:** one transport/framing path, one set of FIFOs and gearboxes, pattern
+  generator/checker, capture/playback, counters, fast-command path and calibration sequencer serving whichever
+  mode is active. Mode-specific logic only where the function truly differs.
+- **Decode glue lives in the digital macro and the register map follows the analog cells** (coordinator).
+  Isolation clamps for island-to-macro signals are standard cells inside the macro.
 
-Use each one only where an analysis shows a need: a quantified aggressor→victim coupling, margin, or risk. Not "for fun". Each mitigation cites the risk-register entry and the analysis that demanded it.
+## 6. Packaging, pads and board
 
-The risk register (projects/programmable_transceiver_platform/spec/risk-register.md) aims to enumerate as many possibilities and risks as can be thought of, each analyzed (quantified where possible).
+- **Package:** the wafer.space chip-on-board only (bare dice are available but not wanted). 14 × 16 mm board,
+  74 fingers, ground paddle, one 70-pin mezzanine connector; die ~250 µm thick, 0.8 mil aluminium wire
+  (gold under trial), epoxy glob-top. One fixed 74-wire bond layout: no custom bonds, down-bonds, double bonds
+  or extra wires. A customer-modified COB may not be accepted this run, so the unmodified board must work.
+  The COB carries eight 1 µF capacitors on the supply nets and nothing on signal pins; the nearest signal
+  passive is on the carrier, 5–6 mm of trace plus the connector away (≥ 6.5 nH per leg).
+- **Design to tolerate passives at varying distance:** programmable termination, matching and trim; wide-range
+  equalisation; LO input tolerant of amplitude and phase spread; on-chip fallbacks where no passive is close.
+  The package mostly changes performance; it rarely makes things impossible. Qualify every RF, multi-Gb/s, LO
+  and clock path through the whole channel.
+- **Off-chip passives** go into `spec/board-requirements.md` with part class, value and tolerance, and their
+  pin and parasitic model goes into the sims that rely on them. Board trimmers (set once at build) are preferred
+  over on-chip trims that cost noise figure.
+- **Per-application carriers are fully acceptable.** A carrier may populate only its application's passives and
+  a pad may carry different functions on different carriers. Every carrier still needs bring-up, debug and
+  fallback access. A passive needed only in one mode may use pads idle in that mode.
+- **Pin and pad assignment is the coordinator's call on technical merit**; escalate only if a capability or
+  requirement would be lost.
+- **ESD tiering** (`esd-tiering.md`): 2 kV HBM on supplies, host link, debug/ATB, RF_RX, the HS RX pair and
+  USB; 1 kV on RF_TX, WIRE_TX and optionally clocks; CDM ≥ 250 V chip-wide; nothing below 500 V. Keep main
+  diodes and local secondary clamps. Board TVS on antenna and USB connectors is mandatory. A small TLP site
+  stays.
+- **Board rules found so far:** supply slew ≤ 0.3 V/µs and no hot-plug (supply-pad clamps fire on fast edges);
+  bring-up starts every die at 3.3 V; RESET_N host-drivable and low through power-up when the POR strap is set.
 
-## Packaging / board interface (user, 2026-11-10)
-The die is wire-bonded onto the wafer.space "70-pin mezzanine COB" board (GF180MCU Run 1, version TT01):
-- a 16 × 14 mm PCB
-- a 74-pin pad ring on the die, bonded to a fixed finger ring around a die-attach paddle (with vias)
-- fixed traces fanning out to ONE 70-pin board-to-board mezzanine connector
-- only two small strips "allocated for passives" (top/bottom edges)
-Image: scratch/reviews/wafer-space-cob.png.
+## 7. Bookkeeping
 
-Consequences:
-- bond wires and finger-to-connector traces (several mm) plus the mezzanine connector are FIXED and in series with every pin
-- only 70 of 74 pads can reach the connector
-- off-chip passives either fit in the small passive strips (fixed trace positions) or sit on the user's carrier board beyond the connector
-- every RF / multi-Gb/s / LO / clock path must be qualified through this whole channel
-Clarification (user): the package mostly changes performance; it rarely makes things impossible. Do NOT write off off-chip passives. Design the chip to TOLERATE passives at varying distances from the die (in the COB passive strip, or on a carrier board a few cm away):
-- programmable on-chip termination, matching and trim to absorb unknown trace and connector parasitics
-- wide-range CTLE/de-emphasis
-- LO input tolerant of amplitude and phase spread
-- on-chip fallbacks (on-chip AC coupling, balun or termination options) when the user has no passive close by
-Qualify across a range of passive distances rather than one assumed placement.
+- **One risk register:** `spec/risk-register.md`. READMEs and reviews cite IDs and keep no lists of their own.
+- **Cross-ownership changes** are rows in `interface-changes.md`; other owners' files get rows, not edits.
+- **Consolidate early and often:** interface rows, risks, inventory, published views.
+- **Keep it simple:** plain markdown, small scripts, no schema machinery for bookkeeping.
 
-## Concentrate risk where it counts (user, 2026-11-10)
-Use the silicon-proven gf180mcu_fd_sc (5 V-device) standard cells wherever possible. The online 3.3 V library is NOT silicon-proven, so don't adopt it wholesale. Close digital timing with architecture first (AC-1, pipelining, retiming).
+## 8. Rules for agents on the shared machine (coordinator)
 
-Use non-proven or custom fast cells only where a specific path truly cannot close otherwise. Keep that usage small, contained and observable, and give it a fallback (e.g. the reduced-rate mode). In general, don't spend novelty or risk on anything that isn't the point of the chip.
-Refinement (user): spend risk only where something ambitious is happening AND there is no low-risk alternative. Everywhere else, choose the conventional, proven or simplest option, even if it costs some area, power or elegance. When proposing anything novel, state the low-risk alternative and why it's insufficient.
-
-## Shared digital datapath (user, 2026-11-10)
-The digital capabilities should be highly shared between wired and radio. That means one transport and framing path, one set of FIFOs/gearboxes, pattern generator/checker, capture/playback memories, frequency counters, threshold/gain fast-command path, timestamping/latency and calibration sequencer, each serving whichever mode is active. Mode-specific logic is allowed only where the function truly differs, e.g. the 8b/10b codec vs the IQ interpolator. This reduces flip-flops and area and keeps both modes tested by the same logic.
-
-## One risk register (coordinator, 2026-11-11)
-All new risks go into projects/programmable_transceiver_platform/spec/risk-register.md, as a row in its table (ID, risk, block, status, mitigation/owner, evidence pointer), and nowhere else. Status changes are made in place there. READMEs, reviews and interface-changes.md may cite a risk ID but must not keep their own risk lists. scratch/reviews/risk-register.md/.json are superseded pointers.
-
-## Two risk buckets (user 2026-11-11)
-1. **Ground-truth data is guessed or wrong** (models, passives, package, board, specs). Make the data as accurate as possible, using the best evidence available. Design against deliberately pessimistic ranges so the design is conservative wherever that's possible. Every ground-truth number we rely on goes in `projects/programmable_transceiver_platform/spec/design-assumptions.md`, with its value, source, confidence and the pessimistic design value. Blocks must pass at the pessimistic value.
-2. **We designed badly.** Check everything carefully before calling it done: extracted results at every in-window corner and at the pessimistic data values, checks that can actually fail, no limits relaxed after seeing the result, and an independent review (a different agent) before a block is marked done.
-
-## Electromigration sign-off temperature (coordinator 2026-11-11)
-EM and IR sign-off is done at 85 °C junction, the top of the wide safety window. Performance still targets 22–32 °C.
-
-## Uncertain values are bounded in both directions (user 2026-11-11)
-Any PDK or ground-truth value that isn't known exactly gets a pessimistic LOW and a pessimistic HIGH bound. Blocks must pass at whichever end hurts them, and check both ends where it isn't obvious. Examples:
-- more capacitance slows a path, but less can break hold, oscillator range or stability;
-- higher fT helps speed but can cause ringing or overshoot and races.
-"Pessimistic" means worst for the specific check, not a fixed direction.
-
-## Prove the bench small before running it big (user 2026-11-11)
-Before any long or large simulation, validate the bench and method on a small, simple circuit whose answer is known analytically. Examples:
-- an ideal-VCO + ideal-divider PLL with a textbook lock time and phase margin;
-- an RC/LC tank with a known frequency and Q;
-- a single inverter-chain delay;
-- a resistor's noise;
-- a simple amplifier with a hand-calculated NF.
-The bench must reproduce the known answer, and must FAIL a deliberately broken case (dead oscillator, wrong ratio, missing load). Then build up in steps: swap in one real or extracted block at a time, with a short run each time. Run the full extracted case only after every step agrees.
-
-## RF input matching (user 2026-11-12)
-Board trimmer capacitors (tuned once at build) and/or on-chip trims are acceptable for absorbing board-part and bond tolerances. Prefer board trimmers over on-chip trims that cost NF.
-
-## ESD tiering (user-approved 2026-11-12; see scratch/reviews/esd-tiering.md)
-- 2 kV HBM: supplies, host-link LVCMOS, debug/ATB, RF_RX. 1 kV HBM: RF_TX, WIRE_TX, and clocks/REF/AUX optionally. HS RX pair and USB stay at 2 kV with the diode row restored, for CDM (PD48c, coordinator 2026-11-12). CDM ≥250 V chip-wide. Nothing below 500 V HBM.
-- Remove only the extra diode rows; keep the main diodes and the local secondary clamps.
-- Board TVS on the antenna and USB connectors is mandatory, along with ESD handling rules in the board/bring-up docs.
-- Replace the 3.63 V DC limit for ~150 ns ESD events with a transient oxide limit derived from PDK data (document the derivation, and use the pessimistic value).
-- Restore a small TLP/ESD test site (area-tight; keep it minimal).
-
-## Fallbacks recover partial success (user 2026-11-13)
-On-chip implementations are the design. Off-chip fallbacks (e.g. an external board LNA in a do-not-populate footprint) exist only to recover a partially working die on the bench. The chip must keep the hooks for them (bypass paths, observation pins), but they are not the plan.
-
-## User direction 2026-11-13 (big-picture risks)
-- Scope and AI-driven design are intentional. Counter AI blind spots with many varied checks and cross-references against public data.
-- Models: every uncertain value has a range. Designs must work across the WHOLE range and be optimized for best performance at the most-likely value (not just pass at the corners).
-- No dead chip: the top priority is that die 1 powers up safely, talks to the FPGA, and is observable/debuggable even if ambitious blocks fail. Shared infrastructure (supplies, bias, reference, pads, digital, host link, debug) gets the most conservative design, isolation and bypasses.
-- Consolidate early and often: frequent consistency passes over interface rows, risks, the inventory and the published views.
-- Tapeout readiness: the user is the gauge. Keep checking.
-- Integration: chip-level verification is a first-class workstream (see the integration plan).
-
-## Per-chip supply trim (user 2026-11-14)
-The board sets each die's supply individually (trimmer + regulator or similar), chosen at bring-up from the die's measured speed (on-chip ring monitors; they need readout codes, pre-mortem item 11).
-- Performance checks at the slow process corner (ss, and ss-pessimistic) may use a raised supply. Working rule until the power-delivery owner refines it: setpoint up to 3.50 V at the die for slow dies, so that setpoint + regulator tolerance + ripple + overshoot stays <= 3.63 V (state the stack-up; safety checks still cover 3.63 V). Typical dies stay at 3.3 V; fast dies may be trimmed down (state the floor each block needs).
-- Temperature window unchanged: 22-32 C.
-- Every block reports its slow-corner results at BOTH 3.15-3.35 V (untrimmed) and the trimmed supply, and states the minimum supply at which it passes at ss and ss-pessimistic. One chip-wide trim value must satisfy all blocks in a mode at once: the coordinator keeps the table.
-- It does not excuse: passives-limited specs (inductor Q), area, hold timing at ff, reliability at the raised supply (HCI/TDDB on slow dies at 3.5 V: check), ESD/clamp behaviour, and the island-switch/IR budget (drops are larger in absolute terms at higher current).
-- Board obligations: adjustable regulator with fine steps (<= 20 mV), ramp >= 10 us (supply-clamp finding INT6), no overshoot above 3.63 V, a bring-up procedure that starts every die at 3.3 V.
-
-## Per-application carriers (user 2026-11-14)
-Per-application carrier boards are fully acceptable: a carrier may populate only the passives its application needs, and a pad may carry different functions on different carriers. A single universal board is NOT required. Constraints that remain: modes that must coexist on one carrier, bring-up/debug/fallback access on every carrier, and the die itself stays one design.
-
-## Direction after the die-fit study (user 2026-11-14)
-- The 2.7-3.24 Gb/s wired paths (DP HBR 2.7, SATA Gen2 3.0, XAUI/2500BASE-X 3.125) stay in scope: make them work. Not physically impossible per current evidence; a die-area problem does not count as impossible.
-- Area is minimised over time across the WHOLE project: every owner treats area as a standing objective. Every change reports its area delta against the die-fit ledger (scratch/reviews/die-fit/); new circuitry must be built compact from the start (shared guard rings, abutted rows, MIM over devices, no generator-default channels); each owner keeps a short list of its next area levers with sizes. The coordinator keeps the ledger total and reruns the packer as outlines change.
-- Pin/pad assignment is the coordinator's call on technical merit. Per-application carriers are acceptable. Packaging is the wafer.space COB with its one fixed 74-wire bond layout (no custom bonds).
+- At most 3 simulations or heavy jobs at once per owner including its sub-agents; `OMP_NUM_THREADS=1`; tool
+  threads ≤ 4. No speculative sweeps. No `pgrep -f` wait loops that match themselves.
+- The disk is nearly full: keep outputs small and delete intermediates.
+- Commit small reviewed steps with explicit paths (`git add -f` under `scratch/`), never `git add -A`; do not
+  push; the coordinator pushes. No GDS uploads until a block is really finished.
+- Keep a notes/status file current so a successor can resume; write long reports incrementally.
+- State plainly what was rerun versus only read, and what failed.

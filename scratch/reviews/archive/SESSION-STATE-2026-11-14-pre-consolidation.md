@@ -1,0 +1,214 @@
+# Session state at rate-limit stop (2026-11-09 ~23:40 UTC)
+
+The weekly API limit was hit; it resets at 21:00 UTC. Agents died mid-task. The files are uncommitted and may be half-edited.
+
+| Area | State at stop | Resume from |
+|---|---|---|
+| Digital (rtl/, digital_hardening) | DPL-0033 fixed (PAD_LIBS={} plus strategy); v3/v4 hardening runs in docker; AC-1 gearbox, line/8, power ≤60 mA, AC-3 CDR controls, W1 bits and FF freeing all requested | check `docker ps` and scratch/dh-x-*; read interface-changes.md |
+| Wired RX (analog/wired_rx, timing/pll_ring) | capture r2f and pll_ring r7 extracted flows running; W1 re-capture and AC-3 CDR not started | scratch/wired_rx/cap/run_r2f.log, scratch/timing/pll_ring_r7_run2.log |
+| Wired TX/slicer | in progress: ss abort, quarter rate, CML driver, pad C | analog/wired_tx README |
+| Assembly (integration/) | floorplan legal with an 8-bank 1.02 nF decap pool; stages 4–7 were running | its scratch run |
+| RF chain | died while writing the DAC cascode change (possibly half-edited) | RF/converter dirs; MANDATE.md |
+| Characterization/RF LO | died on the always-on oscillator (aosc); the protected-pad LO sim was the priority | analog/characterization |
+| Speed test structures (a sub-agent) | died; not built | gf180-device-speed-evidence.md |
+| Done | bias routing/LVS, vref/vcm, ATB leaves, observation mapping, spec/power/traceability, reviews | |
+
+Read MANDATE.md, interface-changes.md, physical-limits.md, performance-review.md and consolidation-pass-2.md.
+
+## Update 2026-11-10 ~02:30 UTC: weekly limit hit again (resets 21:00 UTC)
+- Assembly round 2: died before the floorplan revision. Next: geometry fixes, then the floorplan revision per MANDATE "Top-level performance gate" plus signal-flow chains (pads may move), then rationale and image, then route, then the perf gate. A reusable PIL floorplan renderer was in progress.
+- Wired RX (AC-3/W1): died while writing docs; ss fallback cases may still be running. Check scratch/wired_rx and the r2f/r7 evidence.
+- Digital: routed (first full route of current RTL); signoff STA (scratch/dh-x-sta) and Magic DRC were running. Full regression passes on current RTL.
+- RF: sim queue scratch/converters/rfconv/queue (adc corners, rf_rx, dac_q/adc_q, 1024-pt FFTs) runs unattended; review its results.
+- Char/LO agent: status unknown; check its last outputs (lo_ext-pad evidence is done; aosc r2 extracted; LC VCO start-up; speed structures).
+- Image of the first assembly pushed: docs/images/chip-assembly-2026-11-10.png (branch pushed to origin).
+
+## Update 2026-11-10 ~03:30 UTC: assembly round 3 (integration owner)
+- Floorplan v3 is legal and assembled. Geometry checks all pass: the isw_debug short is fixed (the cause was orphaned packaging metal in the top cell), and pad overlaps are 0. See scratch/chip-assembly-dev/NOTES-round3.md, floorplan-rationale.md and floorplan-v3-labeled.png.
+- Requests I6–I11 are in interface-changes.md: macro pin plan, decap, pad boundary pins/refpad depth/T-coil, core_bias split, DRC attribution, D2H reserve.
+- Antenna and full KLayout DRC were running on the v3 GDS (scratch/chip-assembly-dev/antenna, drc-v3). Routing and the performance gate have not started.
+
+## Update ~05:00 UTC 2026-11-10: weekly limit hit again (resets 21:00 UTC)
+Died: wired RX resume (was updating the timing README with r7; sims may be running), floorplan v4 (not started), risk analyses A1–A8 (not started).
+Restart order after the reset:
+1. floorplan v4 (risk-register driven: macro↔ADC/bias distance, LO bundle, aosc, decap)
+2. risk analyses A1–A8 (A6 audits first)
+3. wired RX AC-3/W1
+Possibly still alive: digital (signoff + RF-mode items), block DRC cleanup, area recovery r2, LO path, RF queue.
+Done this round: risk-register.md/.json (68 risks, 18 demanded), the v3 image pushed, the LO external route qualified, aosc fixed, speed structures built, pads compacted (0.344 mm², unpublished).
+
+## Update 2026-11-10 ~06:30 UTC: risk analyses A1–A8 + TXC done (risk owner)
+Register regenerated (69 risks: 29 demanded, 22 maybe, 18 not needed). Scripts/results in physical-limits/analyses/ (RESULTS.md). Demands are RA-1..RA-21 in interface-changes.md, and board obligations B25–B32 are in spec/board-requirements.md.
+Still open: extracted adc_i and core_bias substrate transients (A1, 2 sims); the two-ring co-sim (A3/LO-02); the slicer balancing confirmation sim (A8); the top-level antenna check and XT-05 audit on the v4 route.
+
+## Update ~06:10 UTC 2026-11-10: wired RX resume 3 (wired_rx owner)
+State and pointers: analog/wired_rx/README.md "Resume 3"; interface-changes.md AC3-W3..W8, MT01-W1, PDN04-W1.
+Running: pll_ring nominal subset on the K1 extraction (`scratch/wired_rx/regen/pll_ring_sims2.log`), capture r4 benches
+(`cap_r4_benches.log`), then `scratch/wired_rx/regen/queue.sh` (slicer r3 ext nominal → cdr ext unit → fallback r4).
+Blocking: the AC-3 nA pump mis-delivers +0.2–0.35 µA at ring-rate votes (README "AC-3 pump"); extracted AC-3 loop not run.
+
+## ~09:30 UTC 2026-11-10: open items needing a (re)started agent
+- Digital AC-1 core agent died (weekly limit) while rewriting the transport SDC. Restart first. Also include IX-2: fixed 312.5 MHz host clock option plus optional on-chip 8b/10b decode/encode so 3.0/3.125 Gb/s fit the host link.
+- LO owner (no live agent): IX-5, LO phase settling within 2° inside T_FCS−5 µs for Channel Sounding; I/Q trim D-LO-2; termination D-LO-1; VCO layout; frequency-locking loop; review the queue results in scratch/timing/queue.status.
+
+## ~11:30 UTC 2026-11-10: weekly limit hit again
+- Digital AC-1 (resume) died during the linecode RX/TX restructure (one-hot insert positions, TX two-stage encoder). Restart first; check its half-done edits and `make transceiver-pattern`. Also: opcode4 fast gain; new CDR `g` meaning (AC3-W12).
+- CDR loop: ring r9 is merged (393–834 MHz extracted on the regulated supply, ~920 ppm/vote). Open: 12 ANT.16 antenna violations on pll_ring; pt_cdr corners/layout; closed-loop extracted CDR (latency spec ≤8 still model-only); r7-port users break (LO ring instance, run_timing tb_pll_ring, pll_vreg bench).
+- Pending user decision: wired pad capacitance (a) separate low-C SATA/PCIe pads via folded debug pins (recommended), (b) on-chip T-coil, (c) accept ~5 dB return loss. Also tell pads to use 6 V devices for pad-side switches (HBM 2 kV), and shrink or limit pll_vreg (0.285 mm² each).
+- Possibly still running: wired TX CML cluster, wired RX front end/capture, RF robustness items.
+- RF (agent finished): the promoted split LNA gives 11.87 dB NF EXTRACTED (4.45 was schematic only). Coordinator decision: keep it and fund a layout-aware LNA/stage-2 redesign plus hierarchical relayout (RC-16); don't revert. TX 6 V cascode accepted (−3.7 dB Psat) for reliability (RC-18/19). Open:
+  - RXR max-input attenuation must go BEFORE LNA stage 1
+  - fine DCOC needs ≥8 bits
+  - PGA 42 dB bandwidth regression (RC-17)
+  - dac antenna ×3
+  - rf_tx evidence rerun
+  - power budget missing an rf_tx case (rfdriver ~59 mA, not 28.9)
+  - LNA 78k µm² vs 24.6k, rfdriver 133k vs 98k
+- USER DECISIONS (2026-11-10):
+  - (1) Pad C: SEPARATE low-C SATA/PCIe pad pairs, freeing pins by folding debug observation pins into the CLK_OBS mux; bond-map change.
+  - (2) Wired TX: BOTH. A retimed CMOS core as the guaranteed path ≤2.5 Gb/s, plus one CML retry (half-rate CML clock straight from the ring + a CML pre-driver) for 2.7–3.24 Gb/s.
+- Coordinator: pads to use 6 V pad-side switches (HBM 2 kV); shrink or limit pll_vreg.
+- Wired RX (finished): capture r5h fixed (q625 0/200 extracted). Open:
+  - safe-state 238 µA vs 10 µA (failing since r3a)
+  - slicer fine step 2.0–2.4 mV on 3 edge samplers (needs a 4th bit)
+  - CTLE r2 +60 fF/leg
+  - return loss above 1.25 GHz is limited by bond+connector inductance (2–6 dB), so ≥8 dB at 2.5 GHz needs a T-coil or a package/board change even with low-C pads
+  - antenna violations: capture 22, slicer 32
+  - queue scratch/wired_rx/myqueue_master2.sh is running
+- 100BASE-TX approved via generalizations IX-9..IX-13 (10BASE-T rejected: TX can't reach 2.2 V). IX-9 was sent to wired TX. Still to dispatch on restart:
+  - IX-10 (two signed 7-bit threshold DACs on the edge samplers) and IX-13 (CTLE low-frequency zero) → wired RX front end
+  - IX-11 (fast threshold-update command) and IX-12 (raw dual-lane capture) → digital
+- Pads (PD21–PD27, finished):
+  - pad_hspad, the low-C HS RX pair (1.11–1.14 pF, 40–60 Ω trim, on-die AC coupling, 2 kV clean), is PUBLISHED on bond 20/21; USB moves to bond 24/25; WCLK_OBS and WDBG_OBS folded, DBG_OBS1 kept.
+  - Board-side return loss above 1.25 GHz is package-limited (5.7–6.5 dB); optional carrier ladder B40.
+  - Coordinator accepts PD25: regulate only pll_tx and pll_cdr, plus the 0.241 mm² shrink after extracted reruns.
+  - Open:
+    - USB pad 6 V conversion regresses HS term (56–68 Ω) and FS edges; redo with the USB/wired RX owner
+    - TX pad still has 8 overstressed termination switches; the SST driver proposal needs a wired TX decision
+    - wired RX needs a CTLE input mux or a separate USB receiver (USB moved off the shared pad)
+    - core-side gates on pad nets (e.g. the LNA gate on RF_RX) were never HBM-screened; add that screen
+    - assembly needs the new bond map
+- Radio generalizations GX-1..GX-9 (accepted by coordinator; dispatch on restart). Owners:
+  - RF: GX-1 wide filter code, GX-8 antenna-switch analysis, GX-9 TX+RX isolation sim
+  - digital: GX-2 host-fed 80 MS/s DAC mode, GX-3 config validator allowing TX+RX, GX-4 hop-boundary profile switch, GX-5 62.5 MHz core clock for GNSS, GX-7 cross-die sample sync
+  - LO: GX-6, don't clamp the VCO frequency loop to 2.4–2.5 GHz
+- FPGA offload audit done (fpga-offload-audit.md); recommendations sent to the AC-1 agent. Spec owner to-do on next spec pass:
+  - cap streamable wired rate at ~3.15 Gb/s (3.24 needs 101% even with 8b/10b) or add idle deletion
+  - reword IX-8 as chip marks + FPGA counters
+  - note the full-rate exception to the RF div2 power rule
+  - write the FPGA reference-design gateware spec (10 items; never a safety layer)
+  - board must route DBG_OBS0/1 to FPGA pins
+
+## ~06:00 UTC 2026-11-11: digital AC-1 transport (resume 2) — stopped after its 2 hardening runs
+- Notes: scratch/transport-ac1/NOTES.md (R2-*); interface rows T13–T24 at the end of interface-changes.md.
+- Done: lane boundary; S1 (pt_memory deleted, MEMORY v3 SPI-only); HB-1 stagger; pt_calibrator removed; timing restructures. All RTL checks and formal PASS.
+- AC1_R4 hardened at 1716×1455: DRC/LVS/antenna clean; GLS RTL==GL. Timing NOT closed (ss32: egress_wtx −15.6, hcore −14.4, wrx −12.0).
+- Queue: timing (enable fanout, registered pops, playback empty), S3, S2 (needs IX-10 fields), S5/FPGA-5, HB-2/4/5/6, FPGA-1..4, HL-SCALE (b), limp mode, GX-3/4/5/7.
+
+## 2026-11-11 ~22:00 UTC: weekly limit hit (resets Nov 17 21:00 UTC). Restart list
+Branch: main. Shared agent rules: scratchpad preamble (copy in this file's MANDATE). New rules: two-sided pessimistic bounds, prove benches small first, bench audit before long runs, independent review before "done", ≤2 waiting shells.
+- LO: follow scratch/reviews/lo-lock-sim-audit.md ladder; retract "≤29 µs"; rebuild jitter budget; CP 0.31→≤0.15 mm², lo_ext 297k→~150k µm²; CMLSEL bit to digital; run_timing.py must not write into generated/ on failure. Committed through 5f41ee4.
+- RF: LNA input-stage redesign for in-band match + ≥30 dB attenuator + evidence cleanup, then re-review; TIA noise (≤4.1 dB DSB); rxmix compact; bbfilter rework (fork U had 5 review NO-GO items); DAC accuracy 4.36 vs 4 LSB; rfdriver power-budget current 60.01 mA; LoRa gap report. Nothing of the new LNA committed (scratch/rf-lna*, scratch/review-lna).
+- Pads: EM at 85 °C (M1 columns), real USB LS slew control 50–450 pF, termination calibration method, review nits. Committed through ef2b69d; check scratch/pads-pd42/.
+- Wired RX (round 7 agent may still run): vote-switching ring shift first; wrx_cap without gearbox; pt_detect secondary clamp; DAC settling/area; slicer r6 regression; ring ≤360 MHz at ss; closed-loop CDR via the small-first ladder.
+- Wired TX: designed slot overlap; WT20 reruns; X5; TMDS; USB-02/03; wtx_ext_rx driver path; two-sided bench.
+- Digital (closure r3 agent may still run): TC8+, ≥10% margin at 1716×1640; TERM_TRIM AND, LS_SLOW interlock, ready timeout; then the HL-SCALE/limp/FPGA-1..5/HB/GX queue.
+- Next: assembly v6 once areas land; adversarial evidence audit of every block's key claims.
+- LO update (committed): honest jitter is 0.65 ps at tt but 1.65 ps FAIL at the pessimistic QVCO (−105.7 dBc/Hz at 1 MHz). Fix tank Q/swing at the pessimistic corner, measure the flicker corner (add a tail filter if >100 kHz). Sweep optimistic bands 5–15. LO17/LO18 go to digital.
+- Pads update (docs committed; sim work in scratch/pads-pd42/usb/): the USB termination calibration method passes; the LS slew topology works in sim but needs layout, DRC/LVS, HBM and review. USB pad C with the RX bypass load is 2.8–3.6 pF against 2.7 → re-derive a USB-only budget from the USB HS eye/return-loss requirement and fix it if the budget fails. Area 352k vs 340k. Wired RX needs ATB leaves on USB_RX_P/N.
+- DAC (scratch/rf-dac-t/): the bench is validated. The 4.36 LSB bow is real and comes from CK/CLKN coupling onto ATB_BIAS (21 fF) and HG (7.6 fF), giving a ±5.5% FS 40 MHz ripple. Fix: 1 pF decaps on ATB_BIAS and VCASC (schematic ≤1.7 LSB) or route isolation; bench t0 600 ns, per-chunk endpoints; extracted confirmation pending. Also investigate EN=0 supply current reading −32 µA (safe=fail).
+- LNA input-stage redesign agent hit its 200-turn limit mid-rerun (new views, stability screen, self-tests, harmonic term). Its work is in scratch/rf-lna*/ and uncommitted. Resume from there after the reset; don't trust anything until it is re-reviewed.
+- Digital (TC12 committed; routing in scratch/digital-timing-close/run12/): placement-stage slack is −0.85..+0.46 ns, short of the ≥10% margin. Coordinator decision for D2H: build a small hand-placed D2H output block with FIXED placement and identical launch-flop, mux and buffer cells on the clock and data paths, and no synthesis port buffers. The h2d input hold window needs the same treatment. Next: more closure rounds; reclaim fanout-buffer area (0.25 mm²; tighten the 80% buffer allowance); review open items (select-change assertion, lifecycle bench with varying data). Assembly: bind TERM_ENABLE (analog_cfg 573 bits).
+- Pads PD47 (2026-11-12, uncommitted): wirepad Miller LS slew laid out + published (LS 94.7–201 ns 50–450 pF extracted, HBM 0/615, KLayout clean), USB pad-C budget = USB 2.0 die 5.0 pF/line (cell 3.37 pF → pass), area 316k/340k (pass), reviewed GO with conditions (digital ls_slow ⇒ bias.enable interlock, host LS load). EM fork (tbuf/steer) running. Next: ESD tiering (1 kV) per coordinator.
+
+## 2026-11-12 ~02:00 UTC: weekly limit hit again (resets Nov 17 21:00 UTC)
+Committed: wired RX r7 (24b945c), digital r4 (d0395fb). New since the last list:
+- USER DECISIONS: board trimmers for the LNA match; ESD tiering (MANDATE) plus a transient oxide limit plus a TLP test site; full scope means DP HBR 2.7 and SATA G2 are NOT dropped.
+- TOP WIRED RISK: at the pessimistic gate the slicer is ≤625 MHz and the TX core ≤2.5 Gb/s, so 2.7–3.24 Gb/s is uncovered on RX and TX. A "2.7–3.24 Gb/s architecture study" agent died at the limit; restart it (eighth-rate/more phases, interleaved slicers, faster final 2:1, compact CML), or produce a physical-impossibility proof for the user.
+- LNA: fix the review-lna2 items (band-edge bench bug, ff S11, attenuator at extpp/ss, pessimistic NF, stability), plus board trimmer spec; then re-review. Work in progress in rf_rx (uncommitted).
+- Digital: the D2H forwarded clock built like a data lane (same flop, edge, mux, placement); wired RX en_r fanout −2.5 ns; AGC override test; SLI7-R (slicer_en interlock), SLI7-M (E0..E3 re-time), W7-GEAR (capture gearbox into digital).
+- Wired RX: extracted closed-loop CDR on r9v; detect r7j; independent reviews (ring r9v, capture, detect, CDR); capture q834; phase spacing/ptrim.
+- Pads: USB LS slew layout, pad-C budget, EM at 85 °C, ESD tiering re-tune (PD48 review died), TLP site, oxide limit.
+- LO r5, DAC, RF baseband/TIA/rfdriver, wired TX: check each agent's scratch notes; they may have died too.
+
+## 2026-11-12 ~04:00 UTC: rate limits are biting; keep ≤3–4 agents at a time
+Waiting to restart: v6 assembly (scratch/chip-assembly-v5 as the base, full brief in conversation), the adversarial evidence audit (output scratch/reviews/evidence-audit.md), digital closure (NOTES.md r4c: D2H rise/fall sizing, H2D custom CTS, R8-ARCH+W7-GEAR capture front-end, lc_tx ready chain, egress hold), LO r5.
+In progress: wired RX (CDR ±1000 ppm pulls in then drifts with a ~13 nA leak on VCTRL, diagnosing; ring ≤300 MHz met at ss/sf/ff-opt), wired TX (eighth-rate dual-mode core), WT24 (CML pre-driver: 309 ps bits pass in schematic, swing 0.36–0.38 vs 0.40 V; going with a 0.6× switch at 11 mA), pads EM.
+Committed since: PD48c 9103707, digital 895bfd0, wired TX 172c923.
+
+## 2026-11-13: v6 committed (87c2b1e). The die is FIXED (user). Area is short by 1.42 mm² (3.0 with routing and decap); area pass 4 is running.
+Queue for the next digital agent (no digital agent is running): POR override strap/bond-option pad (rst_n = reset_n_pad & por_n has no override; POR may never release); SPI-only timing sign-off over the 2.6 mm top-level routes; also everything in NOTES.md r4c.
+Integration plan: scratch/reviews/integration-plan.md. First three checks: power-up/isolation (including POR), a top-level supply model, and a substrate + ring/QVCO pulling co-sim.
+
+## 2026-11-13 ~20:50 UTC: session resumed; 7 agents restarted
+Running: digital (POR override first, SPI-only STA, closure r4c, AP4-8), always-on audit (bias/isw/POR/aosc -> scratch/reviews/always-on-audit.md), integration M6 power-up/isolation (-> scratch/reviews/integration-m6.md), wired RX (publish wrx_cap r7, AP4-1 repacks, then CDR/eighth-rate), converters AP4-4 (scratch/converters-ap4/), LO AP4-5 (scratch/lo-ap4/), RF LNA/TIA finish (scratch/rf-lna-p/NOTES.md; pessimistic NF 7.66 dB open).
+Not restarted yet: wired TX (s10, eighth-rate + driver review fixes), pads (AP4-6/7, stacked hspad publish conditions), bbfilter repack AP4-3 (after the LNA agent leaves rf_rx), assembly re-pack AP4-9/10 (after >=60% of tier-B outlines land), evidence audit, bring-up software, integration checks M1-M3.
+~21:00 UTC: user wants big-picture checks. Added 4 read-only agents: end-to-end mode interface walk (scratch/reviews/mode-walk.md, MW- rows), outside-view pre-mortem (scratch/reviews/pre-mortem.md), PDN model M1/M4 (scratch/reviews/integration-m1.md, INT1-), substrate + pulling M2/M3 (scratch/reviews/integration-m23.md, INT23-). 11 agents total. Evidence audit still not restarted (pre-mortem includes an all-block evidence-staleness script).
+~22:30 UTC: pre-mortem done (scratch/reviews/pre-mortem.md, b65be06) and mode walk done (scratch/reviews/mode-walk.md, MW-0..36, 65a6c2e). KEY FINDING: no analog top exists; chip netlist 653/2892 ports unbound, 14 blocks uninstanced, register map behind the cells, no decode glue -> no payload mode can run. Decisions: decode glue lives in the digital macro; register map follows the cells. New agents: chip-top integration owner (scratch/chip-top/NOTES.md, TOP- rows), signoff-gap (GDS read-back LVS, fill, live precheck -> scratch/reviews/signoff-gap.md). MW rows forwarded to digital, wired RX (MW-13 CTLE real load -8 dB, MW-14 ptrim), LO (MW-20 mixer with real LO -4.6..-16 dB, MW-7), converters (MW-3 clock, MW-6 VREF), RF RX. User: mid-Dec shuttle, schedule is the user's concern; no GDS uploads until a block is really finished.
+Not yet assigned: wired TX rows MW-15..17/24, USB data path MW-18, 100BASE-TX digital MW-25, pads (por_bypass pad, HS pad bias register), debug paths MW-28/29.
+
+## 2026-11-13/14: wired RX resume 9 (committed 5e2b33f; README "Resume 9", analog/wired_rx/PINS.md, rows AP4-1-*, MW-13-FIX, MW-14-FIX, W7-GEAR-T, risks WRX-20..23, VER-KL1)
+- NOTHING published this resume. wrx_cap r7 compact (1199 x 242): clean, but independent review NO-GO: extracted ss/32/3.15 at ring 625 MHz gives wrong PD votes (vote clock inside the XOR settling), EW16 edge error, pair 16 late; r6 has the same PD cell. Fix r7b (in capture.py) built clean, same outline; extracted runs queued (scratch/wired_rx/r7cap/STATUS.md). Outline handed to assembly (AP4-1-CAP).
+- MW-13 reproduced at corners: chain gain at 1.25 GHz -8.0 tt / -9.6 ss / -11.4 dB ss-pess; 26 mV eye at 2.5 Gb/s. Proposed CTLE r4: isolated-well NMOS follower driving SL, rxselect CTLE branch removed, slicer requalified at 0.4 V CM (scratch/wired_rx/r9chain/STATUS.md). NOT implemented; needs coordinator OK. Residual: ss-pess 3.24 Gb/s on the slicer's 60 mV edge.
+- MW-14 reproduced: ptrim cannot drive CKP0 965 fF / CKP1..7 371-482 fF. Redesign tried in scratch (output 32/64): rail-to-rail, range 103-117 ps, but CKP0 lags 45-81 ps (capture CKP0 wiring 590 fF). Compact ptrim layout exists (0.026 mm2, ptrim_compact.py); publish only with the redesign.
+- pt_cdr r13 (r12 trim + mirror fix) staged at 259 x 320 = 0.083 mm2, DC pass at tt/ss/ff/pess; 14 transients running one at a time (scratch/wired_rx/r9cdr/queue.sh, run1.done), then mkev.py, re-run precheck ALONE, review, publish_cdr.sh. generated/cdr.* is still the unreviewed r11 (ff compliance fail).
+- detect: layout-only repack fails thresholds (parasitic-tuned); needs r7i redesign. ctle repack: review NO-GO (antenna; precheck race, VER-KL1) and superseded by the follower redesign. CDR ring: no floorplan-only saving (core alone 0.132 mm2).
+- Closed-loop CDR: idle VCTRL drift is ~8-9 nA on the ring/bench side (independent of g), not located. Ring start: 1 us EN ramp at pess ss does not start (WRX-23), not diagnosed. Eighth-rate RX path: not touched.
+- Box was at load 110-250 the whole time; team sim cap 3.
+
+## 2026-11-14 ~00:15 UTC: state after the first big-picture reports
+User rulings: only passives, the FPGA and a fallback LNA are off-chip (anything else missing was forgotten: build it); mid-Dec shuttle, schedule is the user's concern; no GDS uploads until a block is finished.
+Reports in: pre-mortem.md, mode-walk.md (MW-0..36), always-on-audit.md, integration-m1.md (INT1-), chip top (integration/top/pt_chip.conn + run.sh + decisions.md, TOP- rows, 4ca4fc7; scratch/chip-top/NOTES.md dispatch table), digital round 1 (8e5e71c: por_bypass macro side done, WNS -5.4 ns post-CTS, SPI <=5 MHz), LNA NO-GO (scratch/review-lna3/REPORT.md; on-chip degeneration adopted, source pads removed).
+LOAD RULE: 13 agents at 6-8 sims each hit load 247. Every agent: <=3 sims incl. sub-agents, OMP_NUM_THREADS=1.
+Running: digital round 2 (register/decode rework first, then pipelining), wired RX, wired TX/USB, converters, LO, RF RX (LNA redesign), power-delivery owner (spec/power-delivery.md, PD2-), pads+core-support owner (scratch/pads-core/NOTES.md), M6 power-up (integration-m6.md), M2/M3 substrate+pulling (integration-m23.md), signoff-gap (signoff-gap.md).
+Not started: die-fit study with honest area for newly found pieces (offered to user), chip-top re-review after its post-review fixes, bbfilter repack AP4-3, floorplan re-pack/v7 with supply grid, evidence audit, bring-up software + board, characterization structures into the floorplan.
+- UPDATE (later): capture candidate is now r7c (PD fix + word load delayed + antenna diodes; 1212.55 x 242.21, GDS bbox 1210.55 x 242.71, row AP4-1-CAP2; committed 73f1fe6). Extracted full top ss/32/3.15 q625 PASSES on r7c (0 data / 0 edge / PD ok); negative control fails as required. Two serial queues still running the other 19 cases (scratch/wired_rx/r7cap/STATUS.md says how to judge, review and publish). cdr r13 queue: tt, pess-ss(2 of 4) and ss transients done so far, all inside the criteria (pess tog50 exactly on the limit).
+- UPDATE 2026-11-14 ~00:45 UTC: pt_cdr r13 PUBLISHED (750d686; 259 x 320 = 0.083 mm2; review GO-with-conditions scratch/reviews/ap4-cdr-review/review.md; row AP4-1-CDR-PUB). Review found r13's integral path 2.6-3.5x slower than r11 -> closed loop on r13 running unattended (scratch/wired_rx/r7cdr/cl13.py, tags r13_hbr_m1000 then r13_q_p1000, q5.done; post-process with scratch/wired_rx/r9cdr/cla.py). pt_cdr idle leakage into VCTRL is +1.6..2.2 nA (sourcing), so the -8..-9 nA drift is ring/bench side.
+- Still running unattended: capture r7c gating queues (scratch/wired_rx/r7cap/r7c_qA.log, r7c_qB.log -> r7c/results.json). Next agent: judge per scratch/wired_rx/r7cap/STATUS.md, independent review, publish_r7.sh r7c, then CTLE r4 follower + ptrim redesign (both need the coordinator's OK on MW-13-FIX / MW-14-FIX).
+
+## 2026-11-14: weekly limit hit again (resets Nov 17 21:00 UTC). All agents stopped. Restart list
+Rules for every restarted agent: <=3 sims incl. sub-agents, OMP_NUM_THREADS=1; only passives, FPGA and a fallback LNA are off-chip; no GDS uploads; decode glue in the digital macro, register map follows the cells; the working tree does not compile mid-rework (digital round 2 died mid-edit in rtl/gen, register-map, check_regfile.py).
+
+DIED MID-WORK (resume first; work saved in their notes):
+- Digital round 2 (register/decode rework per TOP-1..4, TOP-10..18): died while updating the regfile checker and benches for removed pads/fields. Tree is mid-edit: `make transceiver-regfile` fails with KeyError 'debug.clk_select.rf_lo'. Notes: scratch/digital-timing-close/NOTES.md. Sub-agents: wired RX control-plane RTL and wired TX launch-control RTL died; "SPI fix and POR second path" FINISHED but uncommitted and uninstantiated: rtl/pt_spi.sv (wr_en as one flop; CS_N race fixed, 242 corrupted writes before), integration/pt_provider_io.sv (SCHMITT/PULL params), rtl/pt_por_path.sv (keyed RESET_N-edge override; residual H5/H8), checkers verification/check_spi_csn_race.py, check_por_path.py; demand in scratch/digital-timing-close/por-strap-pad-demand.md. Needs: review, instantiate, RESET_STATUS bits, SDC, commit. Open: accept the rescue-mode host rule (MOSI high whenever CS_N high) + H5 residual, or drop the second path.
+- Chip top (integration/top/): died during re-review + rerun of the M6 isolation audit on pt_chip.conn. run.sh still exits non-zero (cfg/macro port work is digital's).
+- Pads + core-support owner (scratch/pads-core/NOTES.md): died early. Sub-agent FINISHED the stacked pad_hspad conditions 1-3: staged scratch/pads-core/hspad/b2 (RX pins adjacent, 0.14 fF imbalance; STATUS.md has the publish steps); needs independent review (check TERM_VCM M4 crossing ~4 ohm) then publish. "Bond audit and ring rails" sub-agent died. Everything else on its list not started: strap pad, missing bias outputs, refpad CM, term-buffer ref, supply monitor, VBG overshoot, supply-clamp 1 us edge (INT6), pulls on host inputs, ATB leaf gating, back-drive, wafer.space questions.
+- Substrate + pulling M2/M3 (scratch/integration/m23-substrate-pulling/): died; no report. Still the main unknown (PA pulling the QVCO).
+
+FINISHED THIS ROUND (reports):
+- Sign-off gap (scratch/reviews/signoff-gap.md, SG-1..7, 6732307): read-back LVS matches on all 74 blocks. BLOCKERS: live precheck has new rule DCF.1a (1296 items on the top; needs dummy COMP or NDMY/IND_MK markers); no block has fill keep-out markers; stock fill lands in the QVCO spirals (tank C 1464 -> 2678-2884 fF, est. f0 -3..-10% vs 2.6-3% margin). Strategy: top-level fill + block-owned keep-out markers + fill-aware re-extraction (Magic ignores dummy metal). Ring with fill: -1% freq. adc_i has 7 antenna violations and no KLayout record (adc_q clean). QVCO top cell has no netlist/ports. Antenna crash = KLayout 0.30.7 with workers=4. Live precheck binaries need an amd64 box.
+- Power delivery (spec/power-delivery.md, PD2-1..21, 30a1849): 10 islands on existing switch cells (+0.191 mm2); M4/M5 grid >=15%; decap 5.4 nF (0.39 mm2 bank + MIM over blocks + ring-band MOS); closes only if digital cuts its 78.125 MHz current component to ~10% (balanced/staggered launch). QVCO regulator needed (>=50 dB; pll_vreg variant gives 23-27). Ceilings restated 360/260/340 mA. USER DECISIONS: south supply bond on D2H_D[9] pad 13; area 0.58 mm2; macro ripple limit 150 mV; ADC default 39.0625 MS/s (128/125 resampler in host); ceilings.
+- M6 power-up (integration-m6.md, INT6-0..8, afdcc72): 1 us supply edge fires supply-pad clamps (10 A, rail 6.4 V): needs confirmation + board ramp rule; por_bypass=1 with RESET_N high = no reset at all.
+- RF RX (189c933; scratch/rf-lna-p/NOTES.md, v8/): LNA still NOT closed. TIA back to small option (rxmix 35,442 um2). On-chip degeneration in bench models only. Common-mode input resistance negative (-55..-60 ohm; tail source gets to -1..-2.7): open. 220 um tank coil recovers 2.3 dB at pessimistic (+43k um2). Real channel match, fallback-LNA runs not done. 33 rf_rx files uncommitted (design not closed).
+- Converters (3c4c5b9; scratch/converters-ap4/NOTES.md, queue.status): staged candidate adc 0.450 (target 0.33 missed), dac 0.134; single CMOS CLK pin + PH output; not published; stage4 not re-reviewed; sims queued (may have finished unattended). EN=0 window 1.30 uA vs 1 uA needs a coordinator call. VCM source is a bare 40k divider (CNV-06).
+- LO (a3c514b; scratch/lo-ap4/NOTES.md): repacks staged, none published (lo_mmd max freq regressed 3.6 -> 3.4 GHz, review NO-GO). MW-20: published lo_ext loses 3.3/9.8 dB (tt/ss) into the mixers; candidate 1.5/3.8 dB. Lock time 40.5 us nominal, 60-65 us slow filter corner. No QVCO regulator exists. QVCO never simulated with real tank loads (LO26). LO25/27/28 open.
+- Wired RX (5e2b33f..13175e1; README "Resume 9", PINS.md): pt_cdr r13 PUBLISHED (0.083 mm2). wrx_cap r7 failed review (ss vote errors); r7c fixed build passing so far, 16 gating cases in scratch/wired_rx/r7cap/r7c/results.json (STATUS.md says how to judge/publish). CTLE real load CONFIRMED: chain as published does not receive at >=2.5 Gb/s. Proposed fix MW-13-FIX (source follower, +6.3 mA, slicer requal at 0.4 V CM) and MW-14-FIX (CKP0 buffer or doubled ptrim channel): USER/COORDINATOR DECISION pending.
+- Wired TX + USB (2ddeb59..cf3d477; analog/wired_tx INTEGRATION.md): 2.5 Gb/s fails at ss on real ring duty; pt_usb_txdrv built (rev 3 not re-reviewed; HS level 351 mV at ss vs 360, chirp 0.68 vs 0.7).
+- Digital round 1 (8e5e71c): see earlier entry.
+
+NOT STARTED: die-fit study with honest areas; fill keep-out markers + fill flow owner; v7 floorplan (supply grid, 10 islands, decap bank, side-edge hspad pins); evidence audit; bring-up software/board; char structures in floorplan; brownout/ss ramps of M6.
+
+## USER DECISIONS 2026-11-14
+- APPROVED: wired RX CTLE source-follower fix (MW-13-FIX; +6.3 mA, slicer requalified at ~0.4 V CM). Dispatch to wired RX on restart.
+- APPROVED: ADC default 39.0625 MS/s in RF modes (128/125 resampler in the host FPGA; 40 MS/s stays selectable). Dispatch to converters/digital/spec.
+- APPROVED: second POR rescue path (rtl/pt_por_path.sv) in addition to the strap pad; needs independent review, instantiation, status bits, board-requirements entry (rescue procedure, RESET_N supervisor).
+- OPEN: south supply bond (pad 13 = D2H_D[9]); user sees compromises. Coordinator recommendation: keep the map.
+- OPEN CONFLICT: the two pad sites freed by the LNA source pads are claimed by both the POR strap (1 site) and the LNA ground split (2 sites, PD2).
+- APPROVED (user 2026-11-14): per-chip supply trim (MANDATE "Per-chip supply trim"). On restart every owner reruns its failing slow-corner cases at the trimmed supply and reports the minimum passing supply: wired RX chain (CTLE/slicer/capture, 2.5-3.24 Gb/s), wired TX on the real ring, lo_ext drive into mixers (MW-20), lo_mmd max frequency, LO lock, LNA gain/NF, USB HS level/chirp, digital setup (WNS -5.4 ns at ss_032C_3v15: rerun STA at a 3.5 V library point or scaled), ADC/DAC. Power delivery: board regulator spec + stack-up to 3.63 V; reliability at 3.5 V; ring-monitor readout for choosing the trim.
+- Consolidation pass 4 done (scratch/reviews/consolidation-pass-4.md section 7 is authoritative; CP4-1..12, CP4-R1..R4; fd84029, aa6043e): merging is worth ~0.19 mm2 free, <=0.5 mm2 with pin-sharing decisions. Honest demand 13.74 mm2 vs 12.77 mm2 core before repacks/routing/decap. USER DECISIONS pending: CP4-2 delete polyphase; CP4-3 forwarded wire clock on the AUX_CLK pair (frees 2 pad sites); CP4-5 only if AP4-7 fails. Dispatch free items on restart: CP4-1 (iso clamps as AND2 in the macro), CP4-11 (fault derived in macro), CP4-4/6/10; record fixes CP4-R1..R4 to chip-top. Agents CAN currently launch (this one ran to completion on 2026-11-14).
+- USER DECISIONS 2026-11-14 (later): CP4-2 APPROVED: delete pt_polyphase (fails extracted, tied off, redundant with external I/Q LO). CP4-3 APPROVED: forwarded wire clock (WCLK_IN) moves onto the AUX_CLK pad pair; delete pad_wclk_in, rx_wclk_in, obs_pre4_wclk; conditions: receiver benched 25-810 MHz, 3.1 mm on-die route checked for jitter/coupling, one pad family, new pad-exclusion rule in the regfile checks (RF external-LO vs wired forwarded clock). The two freed pad sites + the two freed LNA source sites: POR strap (1), LNA ground (2), 1 spare (candidate: south supply bond instead of taking D2H_D[9]; pads to produce the option table).
+- Capture r7c NOT publishable yet: ext_q625_lde60 fails (18/200, LDE edge on the capture clock edge; suspect the LDE synchroniser in wc_cnt). scratch/wired_rx/r7cap/STATUS.md.
+- Restarted 2026-11-14: digital round 2 (resumed), pads+core-support (resumed), chip-top (resumed), substrate/pulling (resumed), wired RX (fresh), LO (fresh), die-fit study (fresh).
+- M2/M3 substrate + pulling DONE (scratch/reviews/integration-m23.md, INT23-1..13, c2556e8). QVCO runs AT the RF carrier (LO-01 closed on a rule the design breaks): PA bond -> tank magnetic pulling passes pessimistic only with spirals >= 1.7 mm from the west edge and >= 1.0 mm along it from RF pads. External-LO bond leakage into RF_RX fails regardless of floorplan (REF_IN 0.89 mm from RF_RX). In-band spur lines listed; macro->bbfilter/DAC and D2H-over-converters need distance/shield; QVCO >= 800 um from macro in a tie sea; grounded backside worth 20-45 dB. Forwarded to die-fit, LO, pads.
+- Chip-top follow-up done (5b19766, TOP-19..25): bindings reviewed correct; isolation audit on the conn in run.sh; open items forwarded.
+- Digital r6 DONE (3cff484..9211b44; DG6-1..16): register/decode rework complete, cfg and macro-port diffs 0, regression green, pt_chip.sv generated from the conn, POR strap bound, second POR path (16-bit key, re-reviewed GO-with-conditions), SPI one-flop write, 130 in-macro clamps, new control logic (wired TX launch, CDR loop, USB FS/LS, monitor, LO integer-N). Stub mode sim: 135 checks, 10 mode sections pass. NOT done: hardening (macro cannot be hardened yet), routed timing, GLS, power analysis. Post-synth cell area 1.404 mm2 (+13%); post-synth setup ref -2.39 ns. Digital round 3 started (flow readiness, harden, clock staggering, power, supply-trim timing). Coordinator rulings recorded in its brief (monitor second time base, ATB trunk leaves via analog fix, host-follow on TX ring, board rules).
+- DIE-FIT STUDY DONE (scratch/reviews/die-fit.md, die-fit/; 72a463b): does NOT fit in any scenario. Core 12.772 mm2. B (staged publishes): -2.15 arithmetic / -2.3 packer; C (all targets): -1.29 / -1.5; Cr (backed targets): -1.58 / -1.75; signal-flow order costs 0.6 more. Not in margins: routing 1.1-2.3 mm2 vs 0.8-1.0 from halos; decap over blocks down to 1.1-1.4 nF; island straps. Macro aspect has no effect; digital macro growth (+13% cells) not in the ledger. Levers 1-5 (debug pads on provider cells 0.40, no decap bank 0.39, core ring narrowing 0.38, probe frames 0.15-0.22, QVCO corner 0.03) leave C 0.19 short (0.83 in flow order). B fits on 3.932 x 6.222 mm (24.5 mm2, +21%) densest; ~26 mm2 flow-honouring. USER DECISION REQUIRED: fixed die vs full scope.
+- Pads + core-support DONE (1f29495..909d9a0; scratch/reviews/pads-core/*.md, scratch/pads-core/NOTES.md; rows PC-1..17): strap pad proven (provider in_c, hard pull-down); clamp rule dV/dt <= 0.3 V/us, no hot-plug; stacked pad_hspad PUBLISHED; pt_bias_tap2, pt_refvcm, pt_txpad_bias published; TLP site fixed (old cell shorted PAD/DVSS/DVDD); pad LVS references fixed; bond audit unchanged (9 um margin). FOUND: pad_hspad termination defect (34-44 ohm TERM_VCM metal unextracted; diff term ~142 ohm vs 100): leg fix + R-aware rerun needed. bias taps on wrong rails (PC-5). USER DECISIONS: bond-map options (scratch/reviews/pads-core/bond-map-options.md): strap on an east site; LNA ground on the two west openings (needs wafer.space answer); spare east site P0-P4; external-LO pair L0-L5. wafer.space questions: scratch/reviews/pads-core/wafer-space-questions.md (11). Not done: AGND_RX pad cells, LEFs, AP4-6/7, termination tables at 3.5 V, contract.json update.
+- Off-chip passives pass started (scratch/reviews/offchip-passives.md, OCP- rows) incl. per-mode idle-pin sharing (user idea). Open user question: universal board vs per-application carriers.
+- Coordinator routing error fixed: LO findings had gone to the wired RX agent and die-fit inputs to the LO agent; resent correctly.
+- USER (2026-11-14): pin/pad assignment is not a user decision; coordinator decides on technical merit. Per-application carriers fully acceptable (MANDATE).
+- COORDINATOR BOND-MAP DECISIONS: POR strap on east bidir[16]; AGND_RX on the two west openings beside RF_RX (pending wafer.space landing answer; if only one landing is legal use one and say what the LNA loses); spare east site: option P2 (move the technically least-sensitive south signal east, its south site becomes a supply bond: worst bond 87.5 -> 63.5 mA) unless the off-chip passives pass claims the site for something worth more; external-LO: option L1 (swap REF_IN with BB_Q) + external LO drive at the low end (~1 Vpp), subject to LO owner confirming I/Q error within trim. Pads to update contract.json and package-channel.json.
+- USER (2026-11-14): packaging is wafer.space COB only (bare die available but not wanted). Per-application carriers = boards the COB plugs into. Research agent answering wafer.space questions from public sources -> scratch/reviews/wafer-space-answers.md.
+- wafer.space answers from public sources (scratch/reviews/wafer-space-answers.md, 4c3227a): clean GDS 16 Dec 2026; Run 3 1x1 slots sold out 22 Sep 2026 (confirm ours is bought); no larger die offered (multiple slots = separate dies); ONE fixed 74-wire bond layout, no custom bonds/down-bonds/double bonds; custom COB board may not be accepted this run; COB has eight 1 uF 0201 on supply nets; wire 0.8 mil Al; die ~250 um; glob-top; conductive attach intended, paddle GND; Run 1 PCM data public ("close to typical"); every COB tested through pad ESD diodes; ESD implant layer 24/0 may not be in the mask set (CHECK custom ESD cells); DNWELL/SAB unconfirmed; precheck 1.7.4 PDK 792ef67, user must run fill. 14-item email list at the end of the file. Consequences sent to pads (AGND_RX on west openings impossible; redo bond audit) and off-chip passives.
+- Off-chip passives pass DONE (scratch/reviews/offchip-passives.md, OCP- rows; e778d5b..6ec2b88): closes only 0.22-0.30 mm2 in case A (unmodified COB): OCP-1 LO loop-filter C2 off-chip on bidir[22]/[23] (0.12-0.15, needs OCP-2 to free the sites, Kelvin return), OCP-2 WTX_EXT fallback onto the USB pad pair, pad_wtx_ext deleted (0.10-0.15; loses USB HS TX from external serial data: USER DECISION). USB passives are only ~0.005 mm2 (USB's 0.58 is ESD shell/drivers/detect). pt_lo_vreg is laid out at 0.44 mm2 (ledger had 0.30) and needs an external cap with no west pad: LO owner already found the -80 dBc limit underived (-60 dBc per tone): requalify the regulator need against -60. After die-fit levers 1-5 + OCP-1/2: C 0.03-0.11 short, Cr 0.10-0.18, B 0.65-0.73, before routing/decap risk. Case B (modified COB) worth +0.06-0.11 and the LNA match; wafer.space has not agreed.
+- USER DIRECTION 2026-11-14 (MANDATE "Direction after the die-fit study"): keep 2.7-3.24 Gb/s and get it working; minimise area over time across the whole project. The user stopped all agents before this; restarted: wired RX, wired TX (fresh), digital r3, pads, LO. Waiting: RF RX (LNA), converters, power delivery, die-fit ledger keeper.

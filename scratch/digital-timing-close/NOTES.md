@@ -662,3 +662,37 @@ present detector, ATB leaf switches safe with the island off), shadow-less trims
    cannot be counted unless that stage closes at <= 3.9 ns at ff and <= 6.0 ns at ss, or the ring output is divided
    in the analog block. To check on the routed macro (sta_signoff fmax of fc0..fc5) and to raise with timing.
  - How to look at a LibreLane STA step: r7/grp.sh <run>/<NN-openroad-sta...> (worst setup / hold per path group).
+
+### r7 progress 08:50 UTC
+ - Commits: 27ea81b (flow / sign-off tooling), 7259e28 (board rules, rows, review reports, notes). RTL / SDC / spec /
+   bench changes of r7 are still UNCOMMITTED, waiting for r7/chk_c.log (regfile, regfile formal, top modes, chip-io,
+   ... , ctl-blocks on the tree after the second review's fixes). chk_b.log: pattern, 4 formal, clocktree-slow,
+   ctl-blocks rc=0; digital-rtl-checks was still running at the time of writing.
+ - Second independent review (r7 diff): scratch/reviews/dg7-review/REPORT.md, GO-with-conditions. Applied: monitor
+   requirement flops (sa, q) cleared asynchronously by their own requirement bit = a re-arm always re-qualifies
+   (bench T7 changed, mutant rearm_keeps_qualified), rule texts, SDC den_s bit 0, picker-output comment (the
+   two-cycle budget = 22.1 ns for all five bits = the full-rate word rule of WRX10-DG67). Open: F6 (asynchronous
+   assert of the word-domain request while the word clock still runs: host rule DG7-12 (1)), F7.
+ - r7b (1716 x 1865) after post-CTS repair, ss_032C_3v15, 8 % clock OCV, placement RC: cells 2.225 mm2 = 71.4 %;
+   setup hddr -3.98 (hcore -> D2H hr register: 10.4 ns of clock skew between the hcore tree, 15.8 ns insertion, and
+   the hand-built ODDR clock, 5.4 ns), egress_wtx -3.45, wtx -2.48, hcore -2.46, ref -2.12, wrx -1.85, h2d_cap -1.31,
+   h2d -0.67, sclk -0.54 (10 MHz constraint), fc0-5 -0.35, hsdr -0.19, ctw -0.17; hold ingress_rfrx -1.76, h2d_cap
+   -1.08. Reports kept in r7/r7b_keep/. Global routing: 50 extra congestion iterations, then "NDR disabled" and a
+   second batch: KILLED at 08:45 (71 % does not route in reasonable time; and see next line).
+ - BUG found in my outline change: verification/digital_hardening/hio_placement.cfg places the H2D capture block at
+   absolute y = 1591-1619 (top rows of a 1640 um macro). With a taller outline the H2D pins move up and the block
+   stayed behind (r7a / r7b H2D numbers are therefore pessimistic). Rule: outline height = 1640 + n x 7.84 um and
+   every hio row with y > 1000 shifts by the same amount (even number of rows: orientations unchanged).
+ - r7c (started 08:45:50): outline 1716 x 2126.08 (n = 62, 3.648 mm2), H2D block shifted +486.08,
+   CTS_DELAY_BUFFER_DERATE_PCT = 0 (r7b had 52 CTS delay buffers: 36 on fc4, 8 rftx, 5 fc0, 3 hcore, inserted to
+   balance "macro" sinks = clock mux cells against registers; they added 1.7 ns to every hcore flop), current RTL
+   (lt_eq, monitor async clear, F1). Expected utilisation after CTS + repair about 62 %.
+ - libchar 3.50 V resumed 08:28 (16 of 115 cells at 08:45; dffrnq_1 FAILED because of the SIGSTOP pause: rerun
+   `libchar.py run ...` once more at the end, finished cells are cached).
+ - Decap: pt_decap50 cells are NOT in the flow yet. Their Liberty has pg pins VDD / VSS / VNW / VPW, their SPICE
+   subckt has SUB VDD VSS: LVS pin mapping must be sorted out before DECAP_CELLS = pt_decap50_* is switched on
+   (EXTRA_LEFS / EXTRA_GDS_FILES / EXTRA_LIBS / EXTRA_SPICE_MODELS). PDK fillcap is used meanwhile.
+ - Ideas measured but not done: clock buffers cost 0.136 mm2 (clkbuf_16 leaves; smaller leaf buffers / larger sink
+   clusters), gain buffers 0.27 mm2, resizing 0.13 mm2. D2H: reduce the hcore insertion delay or delay the ODDR clock
+   so the hcore -> hr hand-over sees less than ~6 ns of skew (cdiv flop is resized to x2 by the flow and has 3.25 ns
+   clk->Q; core_root + CTS levels 6.8 ns).

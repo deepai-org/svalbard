@@ -16,6 +16,11 @@ MUTANTS = {   # file, old, new
     'island_gate_lut': ('pt_ctl_decode.sv', 'wire[7:0] pga_i = pga_lut(rx_gain_active ? agc_pga : f_bbfilter_i_trim__gain) & {8{on_rf}};', 'wire[7:0] pga_i = pga_lut(rx_gain_active ? agc_pga : f_bbfilter_i_trim__gain);'),
     'fault_not_to_wtx': ('pt_digital_macro.sv', '.vreg_tx_ok(vreg_tx_ok), .fault(fault_eff), .fc_tx_in_tol', ".vreg_tx_ok(vreg_tx_ok), .fault(1'b0), .fc_tx_in_tol"),
     'monitor_unbound': ('pt_digital_macro.sv', 'assign fault_eff = fault | mon_fault;', 'assign fault_eff = fault;'),
+    # monitor time base (monitor.config.timebase, section 9b of the bench)
+    'mon_timebase_select_stuck0': ('pt_digital_macro.sv', '.I1(mon_host_clk), .S(f_monitor_config__timebase), .Z(mon_clk));', ".I1(mon_host_clk), .S(1'b0), .Z(mon_clk));"),
+    'mon_clk_tied_to_aosc': ('pt_digital_macro.sv', 'pt_monitor monitor(.rst_n(rst_n), .mon_clk(mon_clk),', 'pt_monitor monitor(.rst_n(rst_n), .mon_clk(fc[4]),'),
+    'mon_timebase_not_divided': ('pt_digital_macro.sv', 'pt_clock_mux mon_mux(.I0(fc[4]), .I1(mon_host_clk),', 'pt_clock_mux mon_mux(.I0(fc[4]), .I1(core_clk),'),
+    'mon_timebase_select_inverted': ('pt_digital_macro.sv', 'pt_clock_mux mon_mux(.I0(fc[4]), .I1(mon_host_clk),', 'pt_clock_mux mon_mux(.I0(mon_host_clk), .I1(fc[4]),'),
 }
 
 

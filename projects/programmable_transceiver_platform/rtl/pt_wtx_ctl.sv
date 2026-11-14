@@ -130,15 +130,17 @@ module pt_wtx_ctl #(
     // ------------------------------------------------------------------ tx_ring_ready
     // (lock_time + 1) * 64 REF cycles after the synchronized ring enable. Split 6 + 8 bits (no long carry chain).
     reg [5:0] lt_pre; reg lt_tick, lt_done, fq_arm, ring_rdy;
+    reg lt_eq;   // lt_cnt == cfg_ring_lock_time, registered (r7 timing): lt_cnt moves only at a tick, 64 cycles before the next use
     reg [7:0] lt_cnt;
     wire fq_ok = fq_arm & fq_s;   // the flag must have been seen low since the ring was enabled (no stale flag)
     always @(posedge ref_clk or negedge rst_n)
-        if (!rst_n) begin lt_pre <= 6'd0; lt_tick <= 1'b0; lt_cnt <= 8'd0; lt_done <= 1'b0; fq_arm <= 1'b0; ring_rdy <= 1'b0; end
-        else if (!ron_s) begin lt_pre <= 6'd0; lt_tick <= 1'b0; lt_cnt <= 8'd0; lt_done <= 1'b0; fq_arm <= 1'b0; ring_rdy <= 1'b0; end
+        if (!rst_n) begin lt_pre <= 6'd0; lt_tick <= 1'b0; lt_cnt <= 8'd0; lt_done <= 1'b0; fq_arm <= 1'b0; ring_rdy <= 1'b0; lt_eq <= 1'b0; end
+        else if (!ron_s) begin lt_pre <= 6'd0; lt_tick <= 1'b0; lt_cnt <= 8'd0; lt_done <= 1'b0; fq_arm <= 1'b0; ring_rdy <= 1'b0; lt_eq <= 1'b0; end
         else begin
             lt_pre <= lt_pre + 6'd1; lt_tick <= lt_pre == 6'd62;
+            lt_eq <= lt_cnt == cfg_ring_lock_time;
             if (lt_tick && !lt_done) begin
-                if (lt_cnt == cfg_ring_lock_time) lt_done <= 1'b1; else lt_cnt <= lt_cnt + 8'd1;
+                if (lt_eq) lt_done <= 1'b1; else lt_cnt <= lt_cnt + 8'd1;
             end
             if (!fq_s) fq_arm <= 1'b1;
             case (cfg_ring_ready_sel)
@@ -225,7 +227,8 @@ module pt_wtx_ctl #(
 
     // ------------------------------------------------------------------ wire_tx_clk domain
     // Cleared asynchronously while SER_EN is low (the clock is stopped then); released by two WORD_CLK40 edges.
-    wire w_rst_n = rst_n & c_wiredtx_ser_en;
+    wire w_rst_n;   // kept gate: the SDC cuts timing through w_rst_gate.ag/Z (release re-timed by w_rel / s_de)
+    pt_async_gate w_rst_gate(.a(rst_n), .b(c_wiredtx_ser_en), .y(w_rst_n));
     reg [1:0] w_rel;
     reg [3:0] w_cnt;      // word clocks since release (or since the data enable fell) with no payload, saturating at 8
     reg w_req, w_up;

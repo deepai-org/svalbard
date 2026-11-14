@@ -236,7 +236,9 @@ module pt_wrx_ctl (
     // decisions (cycle 6; nothing can change the state before they are used in cycle 7: a manual
     // request that is pending or arriving cancels them). d_man: the pending manual request is
     // served in the next cycle (never in the pulse state: a running pulse ends first).
-    wire ev_ok = evd[4] && !man_pend && !me_q;
+    // frun: a restart (kick) or a disable cancels an evaluation in flight (independent review of 9211b44, F1: without it
+    // a strobe 5 reference cycles before a restart executed its stale decision on the restarted loop).
+    wire ev_ok = evd[4] && frun && !man_pend && !me_q;
     always @(posedge ref_clk or negedge rst_n)
         if (!rst_n) begin
             d_tw <= 1'b0; d_lw <= 1'b0; d_acc <= 1'b0; d_lost <= 1'b0; d_good <= 1'b0; d_done <= 1'b0;

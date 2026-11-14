@@ -9,6 +9,7 @@ import os, re, shutil, subprocess, sys, tempfile
 P = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RTL = os.path.join(P, "rtl", "pt_monitor.sv")
 SYNC = os.path.join(P, "rtl", "pt_fifo.sv")          # pt_sync_bit
+CELLS = os.path.join(P, "rtl", "pt_cells.sv")       # pt_async_gate (behavioural branch)
 TB = os.path.join(P, "sim", "tb_pt_monitor.sv")
 ENV = dict(os.environ, OMP_NUM_THREADS="1")
 
@@ -25,14 +26,16 @@ MUTANTS = [
     ("no_qualification", "assign q_done = q_run & pre_tick & (qcnt >= cfg_qualification_ticks);",
      "assign q_done = q_run;"),
     ("pgood_ignored", "(PGOOD_IMPL[i] ? island_pgood[i] : 1'b1)", "1'b1"),
-    ("fault_not_gated_by_arm", "assign fault = arm_any & (fault_m | mon_lost);",
-     "assign fault = (fault_m | mon_lost);"),
+    # r7: without the asynchronous clear a requirement re-armed under a dead clock comes back "qualified"
+    ("rearm_keeps_qualified", "wire rq_rst_n = rst_n & req[i];", "wire rq_rst_n = rst_n;"),
+    ("fault_not_gated_by_arm", "pt_async_gate fault_gate(.a(arm_any), .b(fault_m | mon_lost), .y(fault));",
+     "pt_async_gate fault_gate(.a(1'b1), .b(fault_m | mon_lost), .y(fault));"),
 ]
 
 
 def sim(rtl, work):
     out = os.path.join(work, "tb.vvp")
-    c = subprocess.run(["iverilog", "-g2012", "-Wall", "-s", "tb_pt_monitor", "-o", out, rtl, SYNC, TB],
+    c = subprocess.run(["iverilog", "-g2012", "-Wall", "-s", "tb_pt_monitor", "-o", out, rtl, SYNC, CELLS, TB],
                        capture_output=True, text=True, env=ENV)
     if c.returncode != 0:
         return None, c.stdout + c.stderr
@@ -73,7 +76,7 @@ def main():
                 bad += 1
             else:
                 y = subprocess.run(["yosys", "-q", "-p",
-                                    f"read_verilog -sv {RTL} {SYNC}; hierarchy -top pt_monitor; proc; opt_clean; "
+                                    f"read_verilog -sv {RTL} {SYNC} {CELLS}; hierarchy -top pt_monitor; proc; opt_clean; "
                                     "check -assert; select -assert-none t:$dlatch t:$dlatchsr; flatten; simplemap; tee -o "
                                     + os.path.join(work, "stat.txt") + " stat"],
                                capture_output=True, text=True, env=ENV)

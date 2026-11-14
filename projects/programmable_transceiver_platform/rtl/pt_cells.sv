@@ -45,6 +45,18 @@ module pt_clock_dff(input wire clk,rst_n,d,output wire q);
 `endif
 endmodule
 
+// Asynchronous-level gate (r7): one kept AND2 whose output is an asynchronous level by contract (the monitor's
+// fault, the wired-TX word-domain reset). The SDC cuts timing THROUGH its output pin (instance name *.ag), so the
+// exception does not depend on synthesized flop names; every consumer synchronizes the level or uses it as an
+// asynchronous clear whose release is re-timed (justification per use in integration/pt_digital_macro.sdc).
+module pt_async_gate(input wire a,b,output wire y);
+`ifdef SYNTHESIS
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__and2_1 ag(.A1(a),.A2(b),.Z(y));
+`else
+ assign y=a&b;
+`endif
+endmodule
+
 // Clock root buffer at a divider output: keeps the divider's own feedback
 // ahead of the generated clock's tree (otherwise CTS can route the divider
 // feedback through the whole tree it drives).

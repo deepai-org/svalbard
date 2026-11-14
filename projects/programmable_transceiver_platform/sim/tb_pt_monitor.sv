@@ -171,7 +171,11 @@ module tb_pt_monitor;
         mon_en = 1; ticks(100);
         chk(mon_dead === 1'b0 && fault === 1'b1, "T7 sticky after the clock returns");
         do_clear;
-        chk(fault === 1'b0 && cause_mon === 1'b0 && ready === 1'b1, "T7 clear");
+        // r7: the requirement was written 0 and 1 again while the monitor clock was dead: its qualified flag was
+        // cleared without a clock, so it is pending (fault, no cause) until it has re-qualified on the running clock.
+        chk(cause_mon === 1'b0 && cause === 10'd0 && fault === 1'b1 && ready === 1'b0 && qualified[0] === 1'b0, "T7 clear: pending, not qualified, after the dead-clock re-arm");
+        ticks(TQ + 20);
+        chk(fault === 1'b0 && cause_mon === 1'b0 && ready === 1'b1 && qualified[0] === 1'b1, "T7 re-qualified after the dead-clock re-arm");
         disarm;
 
         // ---- T8 reset clears everything

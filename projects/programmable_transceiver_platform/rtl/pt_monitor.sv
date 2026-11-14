@@ -31,9 +31,36 @@
 //     ref_clk both absent nothing can be detected: fault keeps its last value (arm_any still
 //     releases it).
 // Configuration rule: cfg_loss_timeout_ticks and cfg_qualification_ticks are used unsynchronized;
-// they may change only in a commit whose previous requirement bits were all 0.
+// they may change only in a commit whose previous requirement bits were all 0. The time-base select
+// of mon_clk (monitor.config.timebase, a plain clock mux in rtl/pt_digital_macro.sv) is stricter:
+// the commit that changes it must ALSO leave every requirement bit 0; the new time base must be
+// running; then pulse clear_fault; then arm in a later commit. (A requirement written 0 loses its
+// arm / qualified state without a clock, so re-arming always re-qualifies.) Requirement bits should
+// be changed through all-0 while a fault is asserted: arm_any is a combinational OR and a 1 -> 1
+// swap of bits can glitch fault low for a gate delay (review F5).
 // Clock limits: watched-clock edge spacing (2^(DIVW-1) cycles) must exceed one mon_clk period and
-// stay below the loss timeout; ref_clk >= 4 MHz for the mon_clk watchdog.
+// stay below the loss timeout; ref_clk >= 4 MHz for the mon_clk watchdog (with the oscillator), and
+// 255 ref_clk periods must exceed 32 mon_clk periods (the heartbeat pre[5]) for any time base.
+//
+// Time base (mon_clk is selected outside this module; nothing here depends on which one it is):
+//   0  always-on oscillator, 40..60 MHz. Not available while an RF payload runs (the register
+//      file holds the oscillator off: spur risk).
+//   1  transport core clock / 2: 39.06 MHz at the full host rate (25.6 ns per tick), 51.2 / 102.4 ns
+//      per tick at the reduced host rates. Every tick-counted time scales with it.
+//      * Requirement 1 (H2D_CLK present) is then watched from a ring-derived clock: in host-follow
+//        the ring free-runs when H2D_CLK disappears, so mon_clk keeps running and the loss is
+//        detected.
+//      * Loss of the time base itself is only detected while ref_clk runs (the ref_clk-domain
+//        watchdog below). With an external LO on the REF pads there is no ref_clk: a stopped core
+//        clock is then undetectable in RTL (every mon_clk-domain flop, fault_m included, keeps its
+//        value). An analog clock-present detector is requested from pads / core-support for that
+//        case; it has no port here yet.
+//      * Limits with this time base: in_clk (H2D_CLK, DDR = 4 in_clk cycles per tick): in_div
+//        toggles every 2 ticks at every host rate (frequency-locked, any phase: fine). With the
+//        SDR forwarded clock (8 in_clk cycles per tick) it toggles every tick exactly, which is the
+//        edge of the first limit above: raise IN_DIVW to 5 before arming requirement 1 in that mode.
+//        ref_clk: 4 ref periods > 1 tick needs ref_clk < 156 / 78 / 39 MHz at host rate /1 /2 /4;
+//        the watchdog needs ref_clk < 311 / 155 / 77 MHz (255 ref periods > 32 ticks).
 `default_nettype none
 module pt_monitor #(
     parameter integer LW = 12,                 // loss-timeout width
@@ -44,7 +71,7 @@ module pt_monitor #(
     parameter integer IN_DIVW  = 4             // in_clk watchdog divider: edge every 8 cycles
 )(
     input  wire          rst_n,
-    input  wire          mon_clk,       // always-on oscillator (40..60 MHz)
+    input  wire          mon_clk,       // time base: always-on oscillator (40..60 MHz) or core clock / 2
     input  wire          ref_clk,       // watched; also clocks the mon_clk watchdog
     input  wire          in_clk,        // watched
     input  wire          rf_lock,       // asynchronous levels
@@ -144,14 +171,20 @@ module pt_monitor #(
         end
         for (i = 0; i < 10; i = i + 1) begin : rq
             if (IMPL[i]) begin : on
-                pt_sync_bit sa(.clk(mon_clk), .rst_n(rst_n), .d(req[i]), .q(arm_s[i]));
+                // r7 (independent review of the time base, F1): a requirement bit written 0 clears its synchronized
+                // arm level and its qualified flag ASYNCHRONOUSLY, so a requirement that was disarmed while the monitor
+                // clock was stopped (RF payload on time base 0, or before a time-base change) can never come back
+                // "already qualified": after re-arming it is pending (fault) until it has qualified on the running
+                // clock. Release (req 0 -> 1) is re-timed by the synchronizer sa; q has D = 0 while arm_s is 0.
+                wire rq_rst_n = rst_n & req[i];
+                pt_sync_bit sa(.clk(mon_clk), .rst_n(rq_rst_n), .d(req[i]), .q(arm_s[i]));
                 reg q, c;
+                always @(posedge mon_clk or negedge rq_rst_n)
+                    if (!rq_rst_n) q <= 1'b0;
+                    else q <= arm_s[i] & ((q & ~trip[i]) | (~q & q_done_q & q_run));
                 always @(posedge mon_clk or negedge rst_n)
-                    if (!rst_n) begin q <= 1'b0; c <= 1'b0; end
-                    else begin
-                        q <= arm_s[i] & ((q & ~trip[i]) | (~q & q_done_q & q_run));
-                        c <= (c & ~clr) | trip[i];
-                    end
+                    if (!rst_n) c <= 1'b0;
+                    else c <= (c & ~clr) | trip[i];
                 assign qual[i] = q;
                 assign cause[i] = c;
             end else begin : off
@@ -223,7 +256,8 @@ module pt_monitor #(
     assign mon_dead = mon_dead_q;
     assign cause_mon_clk = mon_lost;
 
-    assign fault = arm_any & (fault_m | mon_lost);
+    // kept gate: the SDC cuts timing through fault_gate.ag/Z (asynchronous level, see pt_cells.sv pt_async_gate)
+    pt_async_gate fault_gate(.a(arm_any), .b(fault_m | mon_lost), .y(fault));
     assign ready = arm_any & ready_m & ~mon_lost;
 endmodule
 `default_nettype wire

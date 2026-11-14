@@ -18,6 +18,15 @@ module tb_top_modes;
  always #10 ref_clk = ~ref_clk;                       // 50 MHz reference (rx_ref_in output in the real chip)
  reg wtx_clk = 0; always #10.4 wtx_clk = analog.p_wiredtx__SER_EN ? ~wtx_clk : 1'b0;   // WORD_CLK40 runs only with SER_EN
  reg aosc = 0; always #10.5 aosc = analog.p_aosc__EN ? ~aosc : 1'b0;                    // always-on oscillator
+ // section 9b only: host word clock (156.25 MHz -> core_clk 78.125 MHz) and a free-running H2D_CLK; edge counters
+ reg hw_en = 0, hword = 0, h2d_en = 0; always #3.2 hword = hw_en ? ~hword : 1'b0;
+ always #3.2 h2d_clk = h2d_en ? ~h2d_clk : 1'b0;
+ integer n_mon = 0, n_core = 0, n_aosc = 0;
+ always @(posedge dut.monitor.mon_clk) n_mon = n_mon + 1;
+ always @(posedge dut.core_clk) n_core = n_core + 1;
+ always @(posedge aosc) n_aosc = n_aosc + 1;
+ task count_clocks; begin n_mon = 0; n_core = 0; n_aosc = 0; #4096; end endtask
+ task clear_mon_fault; begin setf(`F_MONITOR_RESET__CLEAR_FAULT, 1); commit(1, "monitor clear_fault 1"); setf(`F_MONITOR_RESET__CLEAR_FAULT, 0); commit(1, "monitor clear_fault 0"); #500; end endtask
  pt_digital_macro dut(.reset_n_pad(rst_pad), .por_n(por_n), .por_bypass(1'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),
   .spi_miso(miso), .spi_miso_oe(miso_oe), .island_en(island_en), .island_on(island_on), .island_off(island_off),
   .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_rf_rx(s_pg_rf_rx),
@@ -25,7 +34,7 @@ module tb_top_modes;
   .wired_on_ext(wired_on_ext), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp),
   .atb1_grp(atb1_grp), .atb0_en(atb0_en), .atb1_en(atb1_en), .wire_rx_ptrim_en(wire_rx_ptrim_en), .fault(fault_pin),
   .rx_en_aux(rx_en_aux), .rx_en_wtx_ext(rx_en_wtx_ext),
-  .host_word_clk(1'b0), .h2d_clk(h2d_clk), .h2d_pin(10'b0), .ref_clk(ref_clk), .wire_rx_clk(1'b0), .wire_tx_clk(wtx_clk),
+  .host_word_clk(hword), .h2d_clk(h2d_clk), .h2d_pin(10'b0), .ref_clk(ref_clk), .wire_rx_clk(1'b0), .wire_tx_clk(wtx_clk),
   .rf_rx_clk(1'b0), .rf_tx_clk(1'b0), .ct_wclk(1'b0), .fc_src({1'b0, aosc, 4'b0}), .wire_rx_data(40'b0), .wire_rx_edge(20'b0),
   .rf_rx_sample(24'b0), .rf_rx_sample_b(24'b0), .rf_rx_ph_i(1'b0), .rf_rx_ph_q(1'b0),
   .s_pll_tx_lock(1'b0), .s_pll_cdr_lock(1'b0), .s_ref_present(1'b1), .s_refbuf_ready(1'b0), .s_adc_i_ovl(1'b0), .s_adc_i_b_ovl(1'b0),
@@ -295,6 +304,62 @@ module tb_top_modes;
   spi(8'h00, 8'h00, 16'h0, r); chk(r === 16'h5356, "SPI does not answer while fault is set");
   setf(`F_MONITOR_CONFIG__REQUIRE_INPUT_CLOCK, 0); commit(1, "monitor disarmed"); #1000;
   chk(dut.fault_eff === 1'b0 && analog.p_rfdriver__en === 1'b1, "disarming the monitor did not release fault (no-brick rule)");
+
+  // ================= 9b. monitor time base (monitor.config.timebase): 0 = always-on oscillator, 1 = core clock / 2 =================
+  // The core clock runs from here on (host word clock on), H2D_CLK free-runs. Reset qualification 20 x 64 ticks, loss timeout 16 ticks.
+  hw_en = 1; h2d_en = 1; #2000;
+  // --- time base 0, oscillator running: behaviour unchanged (qualify, lose H2D_CLK -> fault with cause 1, clear)
+  count_clocks;
+  chk(n_core > 300 && n_aosc > 150 && n_mon >= n_aosc - 1 && n_mon <= n_aosc + 1, "time base 0: the monitor clock is not the always-on oscillator");
+  setf(`F_MONITOR_CONFIG__REQUIRE_INPUT_CLOCK, 1); commit(1, "tb0: require H2D_CLK (running)"); #45000;
+  chk(dut.fault_eff === 1'b0 && dut.mon_qualified === 10'h002 && dut.mon_ready === 1'b1, "time base 0: running H2D_CLK did not qualify");
+  h2d_en = 0; #2000;
+  chk(dut.fault_eff === 1'b1 && dut.mon_cause === 10'h002, "time base 0: H2D_CLK loss did not raise fault with cause bit 1");
+  h2d_en = 1; setf(`F_MONITOR_CONFIG__REQUIRE_INPUT_CLOCK, 0); commit(1, "tb0: disarm"); clear_mon_fault;
+  chk(dut.fault_eff === 1'b0 && dut.mon_cause === 10'd0, "time base 0: disarm + clear_fault did not clear");
+  // --- time base 0 with the oscillator stopped (what an RF payload does to it): the monitor is blind, the reference-domain
+  //     watchdog reports the dead monitor clock (this is why RF payload modes need time base 1)
+  setf(`F_CORE_AOSC__ENABLE, 0); commit(1, "aosc off"); #100;
+  count_clocks; chk(n_aosc == 0 && n_mon == 0 && n_core > 300, "time base 0, oscillator off: the monitor clock still runs");
+  setf(`F_MONITOR_CONFIG__REQUIRE_INPUT_CLOCK, 1); commit(1, "tb0, aosc off: require H2D_CLK"); #12000;
+  chk(dut.fault_eff === 1'b1 && dut.mon_dead === 1'b1 && dut.mon_cause_clk === 1'b1 && dut.mon_qualified === 10'd0, "time base 0, oscillator off: dead monitor clock not reported");
+  setf(`F_MONITOR_CONFIG__REQUIRE_INPUT_CLOCK, 0); commit(1, "tb0, aosc off: disarm"); #200;
+  chk(dut.fault_eff === 1'b0, "disarming with a dead monitor clock did not release fault (no-brick rule)");
+  // --- time base 1 (selected with nothing armed, then clear_fault): the monitor clock is core_clk / 2 with the oscillator off
+  setf(`F_MONITOR_CONFIG__TIMEBASE, 1); commit(1, "monitor time base 1"); #12000; clear_mon_fault;
+  count_clocks;
+  chk(n_aosc == 0 && n_core > 300 && 2 * n_mon >= n_core - 2 && 2 * n_mon <= n_core + 2, "time base 1: the monitor clock is not core_clk / 2");
+  chk(dut.mon_dead === 1'b0 && dut.mon_cause_clk === 1'b0 && dut.fault_eff === 1'b0, "time base 1: monitor clock not alive / stale cause after clear_fault");
+  // requirement 1 (H2D_CLK): pending -> fault, qualifies, loss -> fault + cause bit 1, sticky until clear_fault
+  setf(`F_MONITOR_CONFIG__REQUIRE_INPUT_CLOCK, 1); commit(1, "tb1: require H2D_CLK"); #3000;
+  chk(dut.fault_eff === 1'b1 && dut.mon_cause === 10'd0 && dut.mon_qualified === 10'd0, "time base 1: a pending requirement must hold fault without a cause");
+  #45000;
+  chk(dut.fault_eff === 1'b0 && dut.mon_qualified === 10'h002 && dut.mon_ready === 1'b1 && analog.p_rfdriver__en === 1'b1, "time base 1: running H2D_CLK did not qualify");
+  h2d_en = 0; #2000;
+  chk(dut.fault_eff === 1'b1 && dut.mon_cause === 10'h002 && dut.mon_in_alive === 1'b0, "time base 1: H2D_CLK loss did not raise fault with cause bit 1");
+  chk(analog.p_rfdriver__en === 1'b0 && analog.p_rfdriver__mute === 1'b1, "time base 1: fault did not release the RF driver");
+  h2d_en = 1; #45000;
+  chk(dut.fault_eff === 1'b1 && dut.mon_cause === 10'h002 && dut.mon_qualified === 10'h002, "time base 1: the cause bit must stay (and hold fault) after H2D_CLK returned");
+  clear_mon_fault;
+  chk(dut.fault_eff === 1'b0 && dut.mon_cause === 10'd0 && dut.mon_ready === 1'b1, "time base 1: clear_fault did not release the fault");
+  // a supply requirement (rf island power-good = requirement 5): qualify, drop one switch of the group -> fault + cause bit 5
+  setf(`F_MONITOR_CONFIG__REQUIRED_SUPPLY_MASK, 6'b000010); commit(1, "tb1: require rf supply"); #45000;
+  chk(dut.fault_eff === 1'b0 && dut.mon_qualified === 10'h022, "time base 1: rf power-good did not qualify");
+  force analog.s_pg_lod = 1'b0; #2000;
+  chk(dut.fault_eff === 1'b1 && dut.mon_cause === 10'h020, "time base 1: power-good loss did not raise fault with cause bit 5");
+  release analog.s_pg_lod; #1;
+  // the time base itself stops (host word clock off): only the reference-domain watchdog sees it
+  hw_en = 0; #12000;
+  chk(dut.mon_dead === 1'b1 && dut.mon_cause_clk === 1'b1 && dut.fault_eff === 1'b1, "time base 1: stopped core clock not reported by the reference-domain watchdog");
+  hw_en = 1; #2000;
+  // back to the configuration of the following sections: nothing armed, time base 0, oscillator on, host clocks off
+  setf(`F_MONITOR_CONFIG__REQUIRE_INPUT_CLOCK, 0); setf(`F_MONITOR_CONFIG__REQUIRED_SUPPLY_MASK, 0); commit(1, "tb1: disarm"); #1000;
+  chk(dut.fault_eff === 1'b0 && analog.p_rfdriver__en === 1'b1, "time base 1: disarming did not release fault (no-brick rule)");
+  setf(`F_MONITOR_CONFIG__TIMEBASE, 0); setf(`F_CORE_AOSC__ENABLE, 1); commit(1, "monitor time base 0, aosc on"); #12000; clear_mon_fault;
+  count_clocks;
+  chk(n_aosc > 150 && n_mon >= n_aosc - 1 && n_mon <= n_aosc + 1, "back to time base 0: the monitor clock is not the always-on oscillator");
+  chk(dut.fault_eff === 1'b0 && dut.mon_cause === 10'd0 && dut.mon_cause_clk === 1'b0 && dut.mon_dead === 1'b0, "back to time base 0: monitor not clean");
+  hw_en = 0; h2d_en = 0; #100;
 
   // conv and debug groups off with a non-trivial configuration behind them; ten switches seen as five groups (PD2-2)
   setf(`F_DAC_I_STATE__STATE, 2); setf(`F_REFBUF_STATE__STATE, 2); setf(`F_DEBUG_REPLICA__RINGOSC_ENABLE, 1); setf(`F_DEBUG_CLK_OBS__SOURCE, 10); commit(1, "conv / debug blocks on");

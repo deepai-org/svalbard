@@ -20,7 +20,7 @@ def run(rtl_text, tmp):
     f = tmp/'pt_wtx_ctl.sv'; f.write_text(rtl_text)
     vvp = tmp/'tb.vvp'
     c = subprocess.run(['iverilog', '-g2012', '-I', str(P/'rtl'), '-s', 'tb_pt_wtx_ctl', '-o', str(vvp), str(P/'sim/tb_pt_wtx_ctl.sv'), str(f),
-                        str(P/'rtl/pt_fifo.sv'), str(P/'rtl/pt_tx_pad_sequence.sv'), str(P/'rtl/pt_vreg_seq.sv')], capture_output=True, text=True)
+                        str(P/'rtl/pt_fifo.sv'), str(P/'rtl/pt_tx_pad_sequence.sv'), str(P/'rtl/pt_vreg_seq.sv'), str(P/'rtl/pt_cells.sv')], capture_output=True, text=True)
     if c.returncode: sys.exit('WTX_CTL_CHECK_FAIL: compile\n' + c.stderr)
     out = subprocess.run(['vvp', '-n', str(vvp)], capture_output=True, text=True, timeout=900).stdout
     return bool(re.search(r'^TB PASS$', out, re.M)), out

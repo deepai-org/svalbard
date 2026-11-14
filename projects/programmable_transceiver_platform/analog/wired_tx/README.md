@@ -17,8 +17,44 @@ Working notes and the resume point for a successor: `scratch/wired_tx/STATUS.md`
 | `pt_wtx_hsbias` | 125.8 x 76.0 um = 9,552 um2 | 0 / 0 | unique | 0-0.58 V full scale at tt, monotonic at all corners, 1 LSB settling 0.47 us (`generated/usb_hs_bias-evidence.json`) |
 | `wtx_ext_rx` | instance of timing's `pt_diff_clk_rx` (`wtx_ext_rx.spice`) | timing | timing | through the extracted receiver: 5 / 43 errors at 0.5 Gb/s, no output at 2 Gb/s (`generated/wtx_ext_rx-evidence.json`; risk TIM-08) |
 
-Not published (work in progress, must not be instanced): eighth-rate core `wtx_serq8` (`serq8_macro.py`,
-`sim_core8.py`, `generated/fast/`), CML pre-driver `wt24_tr7` (`scratch/pads-wt24/`).
+Not published (must not be instanced): the new fast path `wtx_ser8d` + `wtx_mux8` (below), the earlier eighth-rate
+core `wtx_serq8` (`serq8_macro.py`) and the CML pre-driver `wt24_tr7` (`scratch/pads-wt24/`).
+
+## Measured with the real ring and the real pad (`scratch/wired_tx/s12/TRUTH.md`)
+
+Source: extracted `pt_pll_ring_core` on the regulator's output voltage (ss 3.15 V -> 2.69 V, ss 3.50 V -> 3.02 V).
+Load: extracted published TX pad, COB bond 2.82 nH / 0.23 ohm, connector, 50 mm line, 100 nF, 50 ohm.
+Limit: far end 0 errors over >= 200 bits, eye >= 0.200 V and >= 0.45 UI. Bench `scratch/wired_tx/s12/chain.py`.
+
+| Path | Rate | tt 3.3 V | ss 3.15 V | ss 3.50 V | ff 3.35 V | ss pessimistic 3.15 / 3.50 V |
+| --- | --- | --- | --- | --- | --- | --- |
+| published `pt_wiredtx` + `tr7` | 2.5 Gb/s | pass (0.73 V, 0.72 UI) | **fail** (44 errors; 23 at the CMD pins) | **fail** (26 errors; CMD pins clean) | pass (0.73 V, 0.78 UI) | not run |
+| `wtx_serq8` + CMD stage + `tr7` | 3.125 Gb/s | **fail** (2 errors) | **fail** (20 errors) | **fail** (12 errors) | not run | not run |
+| `wtx_serq8` + CMD stage + `tr7` | 2.7 Gb/s | not run | **fail** (13 errors) | not run | not run | not run |
+| `wtx_ser8d` + `wtx_mux8` (both extracted) | 3.125 Gb/s | pass (0.49 V, 0.72 UI; schematic mux, `wtx_serq8` streams) | pass (0.25 V, 0.59 UI) | not run | not run | **fail** (23 errors) / **fail** (0 errors, 0.148 V, 0.48 UI) |
+| `wtx_ser8d` + `wtx_mux8` (both extracted) | 3.24 Gb/s | not run | pass (0.21 V, 0.56 UI) | not run | not run | not run |
+
+Negative control: one ring phase grounded gives 31 errors / 120 bits on the published block.
+`wtx_mux8` alone (extracted, ideal phases and streams, same load, 160 bits, screening only): 3.125 Gb/s passes at
+tt, ss, ff, sf, fs, ss 3.50 V and ss pessimistic at 3.15 V (0.22 V) and 3.50 V (0.26 V); 3.24 Gb/s ss pessimistic
+0.18 V at 3.15 V (fail), 0.23 V at 3.50 V; a stuck stream gives 9 errors (`scratch/wired_tx/s12/mux/corners_x2.log`).
+
+## New fast path (not published)
+
+| Cell | Outline | DRC (Magic / KLayout) | LVS | Files |
+| --- | --- | --- | --- | --- |
+| `wtx_ser8d`: 40-bit word into 8 streams F0..F7 (registers, /5 divider and hops of `wtx_serq8`, no output tree) | 744.1 x 315.1 um = 0.234 mm2 | 0 / 0 | unique | `ser8d_macro.py`, `generated/fast/wtx_ser8d.*` |
+| `wtx_mux8`: 8-phase one-hot muxing pre-driver, drives the pad's MAIN / POST switch gates | 291.0 x 148.3 um = 0.043 mm2 | 0 / 0 | unique | `mux8.py` (circuit in its docstring), `mux8_layout.py`, `mux8_layout2.py`, `scratch/wired_tx/s12/layout/out2/` |
+
+* Bit windows run from the rising edge of phase k to the rising edge of phase k + 1, so the ring's duty cycle does
+  not enter; no one-bit pulse passes through a CMOS gate. Slice k takes stream (k + 5) mod 8.
+* A 3-bit delay trim per phase corrects the ring's phase spacing (errors up to -44 / +70 ps at ss); the codes used
+  are hand-derived and the range has no margin.
+* Supply current of `wtx_mux8`: 22-28 mA with MAIN only (ss ... ff), about 44-52 mA with POST enabled, 6 mA disabled.
+* It would replace the output tree, the CMD stage, the four steering buffers and `tr7`, and can serve every line
+  rate (lower rates by oversampling in the digital), which would retire the quarter-rate core.
+* Independent review (`scratch/wired_tx/s12/review/REVIEW.md`): layouts verified from the GDS on disk; `wtx_mux8`
+  not ready to publish, `wtx_ser8d` publishable with conditions.
 
 ## Architecture of `pt_wiredtx`
 
@@ -76,6 +112,7 @@ ngspice 47 (`scratch/pad-ngspice47`). Containers run with `--network none`; raw 
 | `sim_wiredtx.py`, `sim_core.py`, `sim_integration.py`, `sim_static.py`, `sim_hsbias.py` | serializer, core, pad-integration, static / safety and HS-bias benches |
 | `sim_ringsrc.py`, `sim_realring.py` | real phase source (extracted ring on its regulated supply) and benches with it |
 | `run_all.py`, `evidence.py`, `run_wired_tx.sh`, `tools.py` | orchestration, evidence, docker wrappers |
+| `mux8.py`, `mux8_layout.py`, `mux8_layout2.py`, `ser8d_macro.py` | new fast path: schematic, layout and data macro generators |
 | `serq8_macro.py`, `sim_core8.py`, `cml_ser.py`, `sim_cml.py`, `wtx_fast.py`, `cells_fastpath_wip.py` | unpublished fast-path work |
 
 ## Ownership
@@ -89,13 +126,15 @@ ngspice 47 (`scratch/pad-ngspice47`). Containers run with `--network none`; raw 
 
 ## Open items
 
-1. 2.5 Gb/s fails at ss with the real ring (duty cycle of the phases); no fix in the published block (row WT29).
-2. 2.7-3.24 Gb/s has no closed path: `wtx_serq8` fails at the pessimistic values and is over its area booking, the
-   CML pre-driver is not published (row WT31; risk WTX-06).
-3. At the pad the published steering buffers pass about 1.5 Gb/s only (row WT24).
-4. Area: `pt_wiredtx` 0.248 mm2; fast-path reserve `tx8_rsv` 0.20-0.22 mm2 (row AP4-2).
-5. No electrical-idle input (SATA OOB, PCIe idle; row WT30).
-6. `wtx_ext_rx` fails from 0.5 Gb/s (TIM-08); fallback input relocation proposal OCP-2 undecided.
-7. Block-level `safe` / `observable` / `fallback` tests in `generated/wiredtx-evidence.json` are open; `tmds` and
+1. 2.5 Gb/s fails at ss with the real ring in the published block (duty cycle; at 3.50 V the block's CMD outputs
+   are clean and the pre-driver + pad fail). No fix in the published block (row WT29, WT32).
+2. New path: fails at the pessimistic values in the real chain (23 errors at 3.15 V, eye 0.148 V at 3.50 V); cause
+   of the errors not yet found. Review conditions open: trim range and calibration, POST bank evidence, stopped-clock
+   interlock, supply impedance, mismatch, 3.24 Gb/s at the pessimistic values (rows WT32-WT35).
+3. No block top for the new path (tail DACs, idle, fallback slice, CMOS tap for the USB pre-driver).
+4. Area: new path 0.278 mm2 against the 0.22 mm2 reserve; net of the parts it retires (quarter-rate core macro
+   0.158, four steering buffers 0.035) +0.085 mm2.
+5. `wtx_ext_rx` fails from 0.5 Gb/s (TIM-08); fallback input relocation OCP-2 undecided.
+6. Block-level `safe` / `observable` / `fallback` tests in `generated/wiredtx-evidence.json` are open; `tmds` and
    `wtx_ext_rx` evidence files describe an older netlist.
-8. USB: see the open list in `USB-INTEGRATION.md`.
+7. USB: see the open list in `USB-INTEGRATION.md`.

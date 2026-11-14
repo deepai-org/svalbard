@@ -154,16 +154,17 @@ benches `sim_ringsrc.py` / `sim_realring.py`, row WT29):
 Not yet run: other ring supplies (2.57 V, 2.9 V, bypass), ff / sf / fs, pessimistic values, a line-level result
 through the pad-gate drivers. The 3.24 Gb/s chain results are in WT31.
 
-## 7. Planned pin delta (eighth-rate core, NOT published; do not bind yet)
+## 7. Planned pin delta (new fast path, NOT published; do not bind yet)
 
-`pt_wiredtx` with `wtx_serq8` (2.4-3.24 Gb/s at x1, ring 300-405 MHz):
-* `WTX_PH0/90/180/270` -> eight pins `WTX_PH0, 45, 90, 135, 180, 225, 270, 315` = `pll_tx.PH0..PH7` (all matched);
-* mode pins `MODE_H`, `MODE_F` keep their names; repetition factors become 1 / 2 / 4 / 8 (a third pin or a
-  re-coded pair; decided at publication);
-* the 40-bit word is loaded at once (no 40 -> 20 mux): D-bus timing becomes one window, WT20 will be restated;
-* `WORD_CLK40` = ring / 5 (<= 81 MHz);
-* new pins `IDLE` (section 5) and, with the pre-driver, nothing else on this block.
-Area: core macro as built 767.6 x 458.8 um (0.352 mm2) against the `tx8_rsv` booking 450 x 445 um (AP4-2): over.
+`wtx_ser8d` + `wtx_mux8` (README "New fast path") would change the block as follows:
+* eight phase pins = `pll_tx.PH0..PH7`, all matched (the mux and the stream registers both hang on them);
+* outputs `MAIN_P/N`, `POST_P/N` go straight to the pad's switch gates: the four steering buffers and the
+  pre-drivers disappear; the block must sit at the pad (output wiring is part of the 1 pF output node);
+* the 40-bit word is loaded at once, `WORD_CLK40` = ring / 5 (<= 81 MHz); lower line rates by oversampling in the
+  digital (no `MODE_H` / `MODE_F`); the postcursor is one core bit late;
+* new static inputs: 24 phase-trim bits, idle (data gating), `EN_MAIN` / `EN_POST` only while the ring runs
+  (a stopped ring with the bank enabled puts the whole bank current through one slice).
+Area as built: `wtx_ser8d` 744.1 x 315.1 um, `wtx_mux8` 291.0 x 148.3 um.
 
 ## 8. Demands on other owners (summary; details in the rows)
 

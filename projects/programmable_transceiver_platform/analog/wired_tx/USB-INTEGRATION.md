@@ -109,6 +109,10 @@ Timing through the cell: `HS_DRV` high to line driven 1.7-3.3 ns, `HS_DRV` low t
 
 ### What fails or is open (plain list)
 
+0. **HS at ss with per-chip supply trim** (`scratch/wired_tx/s12/usb/usbtrim.json`, same bench, ss 32 C): 394 mV at
+   3.33 V (bias code 3 of 255: at the end of the range), 3.40 V (code 34) and 3.50 V (code 78); template margins
+   89 / 48-70 mV; edges 550-622 ps with strength code 2 (pass), 448-517 ps with code 3 (fail). Minimum passing supply
+   at ss: 3.33 V; the ss strength rule must be code 2.
 1. **HS amplitude at ss (pad / bias limit, not this cell):** 350-356 mV in a packet, 355 mV DC with the bias DAC at
    its maximum; chirp J 0.68 V. Demand on pads (USB-D3) and on the DAC span (USB-D5).
 2. **HS edge at ss with the declared strength code 3:** 482-490 ps minimum (limit 500 ps). Code 2 gives 601-643 ps

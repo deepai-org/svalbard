@@ -16,3 +16,6 @@ L1=NOPAD=pad_bb_i,pad_bb_q,pad_wmon
 ./runset.sh b-g500 SCEN=B GROW=500 $M $T
 ./runset.sh b-g700 SCEN=B GROW=700 $M $T
 ./runset.sh b-g900 SCEN=B GROW=900 $M $T
+./runset.sh b-flow SCEN=B STRAT=2 $M $T
+./runset.sh c-flow SCEN=C STRAT=2 $M $T
+./runset.sh c-l4-flow SCEN=C $L1 BANK=0 RING=36 HALO=6 STRAT=2 $M $T

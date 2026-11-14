@@ -183,9 +183,10 @@ def run(mw, mx0, rng=None, strat=0):
 t0 = time.time(); best = None; trials = []
 rng0 = np.random.default_rng(SEED)
 for (mw, mx0, tr) in [(a, b, t) for (a, b) in MACROS for t in range(TRIES)]:
-    p, fixed, dig = run(mw, mx0, None if tr < 3 else rng0, tr % 3)
+    st = int(os.environ['STRAT']) if 'STRAT' in os.environ else tr % 3   # STRAT forces one ordering strategy
+    p, fixed, dig = run(mw, mx0, None if tr < 3 else rng0, st)
     pa = sum(blocks[n]['w']*blocks[n]['h'] for n in p.placed); ua = sum(blocks[n]['w']*blocks[n]['h'] for n, _ in p.unplaced)
-    trials.append(dict(strategy=tr % 3, macro_w=mw, macro_h=round(MACRO_A/mw, 1), macro_x0=mx0, placed=len(p.placed), unplaced=len(p.unplaced),
+    trials.append(dict(strategy=st, macro_w=mw, macro_h=round(MACRO_A/mw, 1), macro_x0=mx0, placed=len(p.placed), unplaced=len(p.unplaced),
                        unplaced_mm2=round(ua/1e6, 4), relaxed=len(p.relaxed), free_mm2=round(p.free_area()/1e6, 4)))
     flow = sum(w_*(max(p.rects[t_][0]-p.rects[n_][2], p.rects[n_][0]-p.rects[t_][2], 0)+max(p.rects[t_][1]-p.rects[n_][3], p.rects[n_][1]-p.rects[t_][3], 0))
                for n_ in p.placed for t_, w_ in T.get(n_, []) if t_ in p.rects)

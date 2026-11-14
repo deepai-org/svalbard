@@ -136,11 +136,16 @@ Work dir `scratch/pads-core/` (`NOTES.md`); user-facing copies in `scratch/revie
   the bond-map proposal: `scratch/reviews/pads-core/bond-map-options.md` (user decision pending; `contract.json` not yet changed).
 - **AUX_CLK is a `refpad` site** (same family as REF_IN; row PC-7); the rf-pair listing for AUX_CLK below is superseded.
   `VCM` of both refpads comes from `pt_refvcm` (core_support). RF_TX binds `pad_rftxpad`, the TLP site `pad_tlp_flat` (PC-4).
-- **TLP site fix (`tlp_site.py`)**: the pad riser was Metal3 across the provider ring's DVSS/DVDD bands (short). It is now a 6 µm
-  Metal2 riser in the gap between the two diode groups, with the VSS bars joined by a Metal1 bridge below the diode rows.
-  Rebuilt in `scratch/pads-core/tlp/`: Magic DRC 0, read-back LVS unique (8/8 devices), precheck main 0 / antenna 0, no
-  Metal3–5 in the rail band. Riser resistance ≈ 0.8 Ω (was ≈ 0.5 Ω): subtract it in the TLP curve. Not independently
-  reviewed; `generated/tlp-site/` still holds the old cell.
+- **TLP site fix (`tlp_site.py`), PUBLISHED in `generated/tlp-site/`** (GDS sha 7c718d9a…): the pad riser was Metal3 across the
+  provider ring's DVSS/DVDD bands (PAD = DVSS = DVDD when placed over the rail cell). It is now Metal2 only (the ring has no
+  Metal2): 50 µm wide below the diode rows, 13 µm in the gap between the two VSS bars, ≈ 0.2 Ω (old Metal3 riser ≈ 0.4 Ω).
+  The left VSS bar (nd anodes: the PAD→VSS current) carries the VSS port; the right bar (pw substrate rings, taps only) joins
+  it through a Metal1 bridge below the diode rows. Magic DRC 0, read-back LVS unique 8/8 with a failing negative control,
+  precheck main 0 / antenna 0 (registered as `pad_tlp`), no Metal3–5 or Via2–4 in the rail band. Independent review
+  `scratch/pads-core/tlp/REVIEW.md` (GO with conditions, on the first 6 µm-riser build): its two conditions (port on the
+  current-carrying half, wider riser) are implemented as it recommended; that delta was re-verified by the checks above
+  but not re-reviewed. Assembly: strap the left VSS bar (and preferably both) to ring DVSS; the VDD bar leaves on Metal2
+  at x 69–75 (its strap resistance enters the "VDD grounded" measurements).
 - **LVS references** (`lvs_reference.py` → `<family>/lvs-reference.spice`): `physical.spice` of refpad / hspad / wirepad / txpad
   carries one model-only `DWELL_ARRAY` n-well diode; the reference drops it and lists `ESD_RAIL`. Read-back LVS matches
   uniquely on all four (404 / 508 / 739 / 595 devices); the simulation netlist as reference fails, as it must. Regenerate after

@@ -33,12 +33,18 @@ def generate(W):
             for dy in range(6, 12): via1(x + .99, Y - dy)                    # VDD: K of pw (n-well ring)
             for dy in range(1, 6): via1(x + 1.87, Y - dy)                    # VSS: substrate ring
     r('metal2', 8, Y + .5, 69, Y + 11.5)                                     # PAD bar
-    r('metal2', 9, Y - 5.5, 69, Y - .5); r('metal2', 9, Y - 11.5, 30, Y - .5)  # VSS bar (L)
-    r('metal2', 46, Y - 11.5, 69, Y - 6.)                                    # VDD bar
-    r('metal3', 27, 55, 37, Y + 11.5)                                        # bond (its own M3 at y <= 62) -> PAD bar
-    r('via2', 27.5, Y + 1., 36.5, Y + 11.)
+    r('metal2', 9, Y - 20, 30, Y - .5); r('metal2', 45, Y - 5.5, 69, Y - .5)  # VSS: left bar = nd anodes (carries the PAD->VSS current, has the port);
+    r('metal2', 45, Y - 20, 45.7, Y - .5); r('metal2', 45, Y - 20, 47.5, Y - 15)  # right bar = pw substrate rings only (taps), joined by the bridge
+    r('metal1', 27.9, Y - 19.4, 47.3, Y - 15.6)                              # VSS bridge under the riser (Metal1, below the diode rows)
+    for xx in (28.5, 29.2, 46.2, 46.9):
+        for dy in (16, 17, 18, 19): via1(xx, Y - dy)
+    r('metal2', 46.2, Y - 11.5, 69, Y - 6.)                                    # VDD bar
+    # bond -> PAD bar on Metal2 only (PC-2, 2026-11-14): the provider ring rails are Metal3-5 (DVSS depth 70-117, DVDD from 118)
+    # and carry no Metal2, so the riser must not use Metal3 there (the earlier Metal3 riser shorted PAD, DVSS and DVDD).
+    r('metal2', 31.5, Y - 21.5, 44.5, Y + 1.)                                # riser, 13 um wide in the gap between the VSS bars ...
+    r('metal2', 12, 55, 62, Y - 21.)                                         # ... and 50 um wide below them (the ring has no Metal2)
     c += [f'box values 50 {Y+8} 50.4 {Y+8.4}', 'label PAD FreeSans 0.3 0 0 0 c metal2', 'port make 1',
-          f'box values 60 {Y-3} 60.4 {Y-2.6}', 'label VSS FreeSans 0.3 0 0 0 c metal2', 'port make 2',
+          f'box values 20 {Y-3} 20.4 {Y-2.6}', 'label VSS FreeSans 0.3 0 0 0 c metal2', 'port make 2',
           f'box values 60 {Y-9} 60.4 {Y-8.6}', 'label VDD FreeSans 0.3 0 0 0 c metal2', 'port make 3',
           'select top cell', 'flatten pad_tlp_flat', 'load pad_tlp_flat', 'select top cell', 'drc check', 'drc catchup',
           'puts "TLP_DRC [drc list count total]"', 'puts [drc listall why]',

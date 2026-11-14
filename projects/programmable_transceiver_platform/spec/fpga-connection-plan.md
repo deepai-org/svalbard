@@ -112,7 +112,7 @@ The carrier design rules are HL-B1..B8: 50 Ω, ±2.5 mm match, 22–33 Ω series
 ## 5. Rough fit of the offloaded functions
 
 Units are from the audit §6 list. LUT is 6-input equivalent, BRAM in Kb, DSP is 18×18. RF and wired are
-exclusive on the chip. Their FPGA logic can therefore be one bitstream or two
+exclusive on the chip (register-file rule `rf_wired_payload_exclusive`, `register-map.md`). Their FPGA logic can therefore be one bitstream or two
 "personality" builds that share a common core.
 
 | Unit (audit §6 item) | LUT | FF | BRAM Kb | DSP |

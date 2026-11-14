@@ -98,6 +98,9 @@ the RX CDR (on-chip half/quarter-rate CDR is the primary route).
 | WR-TMDS-SSC | none | — | — |
 | WR-TMDS-RX-VSWING | Sink: differential input 150–1200 mV | Same | Swept amplitude |
 
+One die carries one TMDS data lane: an HDMI/DVI link needs three dies, one per data lane, with the pixel
+clock fanned out on the board to each die's `AUX_CLK` pair (B16) and cross-die lane alignment in the FPGA.
+
 ### 1.6 HD-SDI, 1.485 Gb/s (SMPTE ST 292-1)
 
 | ID | Value | First-die adaptation | Verification |
@@ -404,6 +407,7 @@ by the host-family numbers once chosen).
 | HL-TRAIN | FPGA-side per-bit deskew (IDELAY or equivalent) with ≥ 50 ps resolution; chip provides a training pattern |
 | HL-LATENCY | Control/response latency ≤ 400 ns at achieved clocks (USB HS turnaround) |
 | HL-DIR | **Reversible host banks. Not in the RTL or the register map.** `hostio.lane_dir` (stopped-only, reset BAL) selects BAL (south out / north in), **RX2** (both banks out; the H2D_CLK pin becomes a second forwarded D2H clock; 5.76 Gb/s D2H; control on SPI) or optional TX2 (both banks in; 5.76 Gb/s H2D; XOFF on a `dbg_obs` select). Direction changes per whole bank, clock included, never per lane. Before driving a reversed bank the chip runs a release check (PD then PU probe, all lanes undriven) and otherwise sets sticky `dir_contention` and keeps OE=0. All OEs are 0 at reset/power-up. Each bank must meet HL-SSO on its own return set. |
+| HL-RTL | Facts of the current RTL the requirements above are judged against: the macro receives a 156.25 MHz DDR host clock; the wired ingress bank holds 28 quads (`pt_core` `WIRE_IN_DEPTH`); header opcodes 0, 1, 2 and 4 are legal (`pt_quad_link.sv`); there is no direct-byte mode, recovery mailbox, opcode 3/7/8 metadata or 256-word frame, and the in-band threshold opcodes 5/6 are rejected by the header check (risk HL-04). |
 | HL-FRAME | Dense frame length L ∈ {64 (default), 256} (stopped-only). **L = 256 is not in the RTL.** L=256 carries 251 payload words (0.980 vs 0.922) with an unchanged 5-word header; the 12-bit count is `{iq,wc}` under exclusive ownership. **L=256 is only legal in modes without fast commands** (three-frame budget = 2.46 µs at full rate); the validator rejects it with RF AGC, wired threshold updates and USB. |
 | HL-MARGIN | Exclusive streaming modes keep ≥ 4 % capacity margin: status/marker frames ≤ 1 per 64 (1.6 %), ±100 ppm × 2, and ≈ 2 % for rate adaptation/drain. Unadvertised payload slots repeat the previous word (hold-padding), so D2H switching scales with payload. |
 | HL-RATE-DIR | D2H and H2D rate dividers are independent (**not in the RTL: one `debug.host_link.rate` field**) (H2D is captured through the CDC FIFO on the FPGA clock). This enables HT40 TX (H2D full / D2H div4) and ECP5 hosts (D2H full ≤ 200 MHz input, H2D ≤ 150 MHz output). |

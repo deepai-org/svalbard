@@ -1,464 +1,156 @@
-# Digital/analog integration contract
+# Digital macro boundary
 
-`pt_analog_physical` owns both external clock legs and exports the conditioned
-`ref_clk` event interface to digital control. `pt_host_physical` owns neither
-clock leg. The black boxes do not implement a differential receiver or prove
-common-mode range, phase quality, or protection. GHz input must bypass ordinary
-host GPIO circuitry.
+The boundary of `rtl/pt_digital_macro.sv`, the one standard-cell macro of the chip, as committed. Every analog
+control pin group is driven by one named, decoded macro port; `analog_cfg`, `debug_cfg` and the enable vector are
+internal to the macro. The connection of each port is in `integration/top/pt_chip.conn`; widths, reset values and
+encodings of the control ports are in `integration/top/ctl_ports.txt`; register fields are in
+`spec/register-map.md`. The pad cells are not in the macro: they are provider `gf180mcu_fd_io` cells in the ring
+(`integration/pt_provider_io.sv`), and the macro drives their `A` / `OE` / `SL` / `PDRV` pins and takes their `Y`
+outputs.
 
-Current clock interface: `REF_IN` (positive) and `REF_IN_N` (negative) form one
-differential reference/LO port, selected while stopped. Both legs require analog
-conditioning/protection; source frequency and protocol ownership are unchanged.
-See the [normative architecture](../spec/block-diagram.md) for the selected 44 mA timing allocation
-and 0.0025 ps/mV aggregate supply-delay requirement. Physical conditioning and distribution remain unqualified.
+## Contents
 
-The normative design is `spec/analog-architecture.json` with `spec/contract.json`.
-The existing RTL and `pt_chip.sv` are incomplete implementation scaffolding,
-not the selected complete chip. Component checks establish only
-their stated local behavior; no resulting netlist is ready for fabrication.
+SPI and the generated register file, the control decode (`pt_ctl_decode`) and the control blocks for wired
+transmit, wired receive and USB (`pt_wtx_ctl`, `pt_wrx_ctl`, `pt_usb`), the framed host transport with its two
+storage banks (`spec/streaming-transport-v2.md`), capture and playback memory, the pattern generator and checker,
+the optional 8b/10b line code, two frequency counters, the ADC core merge, the supply/clock monitor, the regulated
+ring-supply sequencer, the reset path and the clocked half of the host link.
 
-## Current generic control-surface audit
+## Ports
 
-`spec/contract.json:generic_control_surface` owns the external capability-to-service
-mapping; `robustness-envelope.json:control_surface_coverage` reports the gaps.
-Protocol names appear only in the external requirements, never in a chip opcode.
-The inspected physical skeleton and control RTL do **not** implement the entire
-intended control surface.
+### Reset, SPI, host link
 
-| Generic service | Existing boundary | Required extension / qualification |
+| Port | Dir | Meaning |
 |---|---|---|
-| Atomic numeric configuration | SPI enable/mode and RF/wired/clock 16-bit trims; behavioral numeric validators | Defined fields and atomic apply/ack for compatible settings; trim storage alone has no physical semantics |
-| Clock readiness/loss | Clock outputs from analog macro; behavioral qualification and recovery | Source/CDR status, missing-clock event, bounded observation and recovery |
-| Wired electrical controls | `wire_trim`, `wire_idle`; separate electrical models | Swing, postcursor, termination, DC mode and receiver-detection control/status |
-| USB local pad state | Bidirectional `WIRE_RX`; behavioral HS/FS/LS pad model | Timed drive/termination/pull changes, squelch and disconnect observations |
-| Timed actions | Mathematical event services; small current stream command set | Generic scheduled state/burst/gap actions with epoch, capacity, late policy and apply latency |
-| RF direction and tuning | RF trim/mute, numeric settings and transition budget | Independent same-channel direction/gain/filter changes, settling and useful overload status |
-| Continuous stream | FIFO/gearbox/transport/pacing candidates | One selected physical bridge with latency, occupancy and safe underrun behavior |
-| Recovery | Candidate SPI mailbox 0x30–0x36 (addresses reserved in `pt_mgmt`), behavioral mailbox | Mailbox registers and live RF/wired/host reset/epoch integration |
-| Board coordination | External FPGA GPIO ownership | RF switch/PA, USB VBUS, display sidebands and SDI frontend timing included in budgets |
+| `reset_n_pad` | in | `RESET_N` pad |
+| `por_n` | in | Power-on reset, low = reset |
+| `por_bypass` | in | Level of the `POR_BYPASS` strap pad (pad pull-down); high = ignore the POR |
+| `spi_sclk`, `spi_cs_n`, `spi_mosi` | in | SPI mode 0, command8 / address8 / data16 |
+| `spi_miso`, `spi_miso_oe` | out | SPI data out and its pad enable |
+| `host_word_clk` | in | Host DDR clock from the clock tree (156.25 MHz at 312.5 Mword/s), clamped outside the macro |
+| `h2d_clk`, `h2d_pin[9:0]` | in | Forwarded H2D clock and data |
+| `d2h_pin[9:0]`, `d2h_clk_pin`, `d2h_oe` | out | D2H data, forwarded clock and pad enable |
+| `d2h_pdrv[1:0]`, `d2h_sl` | out | Drive strength and slew of the D2H pads |
 
-The control path is now `pt_mgmt` (`rtl/pt_regfile.sv`): the unchanged `pt_spi`
-Mode-0 cmd8/addr8/data16 engine plus a register file generated by
-`rtl/gen/gen_regfile.py` from `analog-architecture.json:control_fields` and
-`debug-controls.json`. `sim/reference/pt_control.sv` provides the SPI ABI
-reference; `pt_mgmt` keeps its addresses 0x00–0x04, 0x10–0x12 and 0x20–0x26
-bit-for-bit (lockstep equivalence bench `sim/tb_regfile_legacy.sv`). The map is
-`spec/register-map.md`. The recovery mailbox addresses 0x30–0x3F stay reserved and
-unimplemented. The three legacy trim words still have no physical semantics.
+Reset (`rtl/pt_por_path.sv`): `rst_n` = `RESET_N` AND (`por_n` OR `por_bypass` OR the keyed second path). The second
+path needs no pad: a 16-bit key shifted in over `SPI_MOSI` / `SPI_SCLK` with `RESET_N` and `SPI_CS_N` low, then a
+`RESET_N` rising edge with `SPI_SCLK` high; the idle SPI state clears it. `RESET_STATUS` shows the raw POR, the
+strap and the armed second path. Until one reset has been seen after power-up, every island enable, ATB switch,
+receiver enable and observation enable is forced to 0.
 
-### Generated control boundary
+### Clocks
 
-| Signal (pt_digital → macro) | Width | Meaning | Reset |
-|---|---|---|---|
-| `analog_cfg` | 509 | Every `control_fields` field that drives a real port (pass-2 trim: dropped fields read 0 and are absent; sliced fields carry only their implemented bits), packed per `rtl/pt_regmap_defs.svh` (`PT_A_*_LSB/_W`) | Islands off, so all island-gated fields 0; core fields (bias, monitor, digital, hostio) at declared defaults |
-| `debug_cfg` | 107 | Debug, fallback and consolidation fields (`PT_D_*`): clock selects, BB tap, bypasses, WTX_EXT, WMON, bias override, CLK/WCLK_OBS source/divider, replicas, host link mode, shared bbfilter (direction, bw, gain, finite zeros, rx_direct, tx_dac_direct), shared PLL (owner, feedback N, output divider, phase tap), quadrature mode, wired TX stage, txmix saturated mode, detect TX source | All 0 |
-| `island_en[5:0]` | 6 | Local power-switch gate drives: wired, rf, pll, usb, conv, debug. Core and host have no switch | 0 |
-| `atb0_sw`, `atb1_sw` | 54 each | One-hot ATB switch drives (bit k−1 = node code k); at most one per bus | 0 |
-| `rx_en_aux`, `rx_en_wclk`, `rx_en_wtx_ext` | 1 each | Enable the AUX_CLK, WCLK_IN and WTX_EXT receivers | 0 |
-| `clk_obs_oe`, `wclk_obs_oe`, `dbg_obs*`/`wdbg_obs` + `_oe` | — | Observation pad drives to `pt_debug_physical` | Tristated |
+| Port | Dir | Source |
+|---|---|---|
+| `ref_clk` | in | `REF_IN` receiver on the always-on rail |
+| `wire_rx_clk` | in | Capture word clock `WCLK40` (line rate / 40) |
+| `wire_tx_clk` | in | Serializer word clock `WORD_CLK40` |
+| `rf_rx_clk`, `rf_tx_clk` | in | Converter clock `CONV_CLK`; `rf_rx_clk` through an outside clamp shared with `CLK_OBS` |
+| `ct_wclk` | in | Prescaled line clock |
+| `fc_src[5:0]` | in | Frequency-counter sources: 0 TX ring feedback, 1 CDR ring feedback, 2 ring oscillator, 3 VCO replica, 4 always-on oscillator, 5 LO divider feedback |
+| `ct_det_clk` | out | Clock of the signal detector, gated by the wired group |
+| `rf_tx_clk_out` | out | Forwarded DAC capture clock, source-synchronous with `rf_tx_sample` |
 
-Macro → digital: `island_pgood[5:0]` (local rail good; must be 0 whenever the switch is
-open), `por_n` (`rst_n` = RESET_N AND (`por_n` OR the `por_bypass` strap)), `fault` (monitor fault latch),
-`analog_status[11:0]` and `wire_analog_status[12:0]` (raw observation bits, order in
-`pt_digital.sv`). `pt_host_physical` additionally takes `host_link_mode` and
-`hostio.controls` (D2H drive enable, strength, slew).
+Clock definitions and I/O constraints: `integration/pt_digital_macro.sdc`.
 
-Obligations on the macros:
+### Data
 
-- A gated field is driven 0 while its island is off or not power-good, so code 0 of
-  every state/enable/branch/select field must be the off, released or disconnected
-  state, and an unpowered island must tolerate 0 on its control inputs.
-- The register file guarantees mutual exclusion only on its outputs (rules in
-  `register-map.md`, formally proven). The macros must make each exclusive path
-  physically break-before-make within one field change and must not create a
-  driver from any combination of 0 codes.
-- Fields change only on a COMMIT, as quasi-static levels on SCLK edges. A macro or
-  digital domain that needs a coherent multi-bit value reloads it after
-  synchronizing `commit_toggle`.
-- `fault` high forces the listed driver controls to their released values (see
-  `register-map.md`) without software involvement.
-- RESET_N needs a weak on-chip pull-down (pad cell pull, tens of kΩ) so an unconnected
-  or floating RESET_N holds the die in reset. The bench drives it high to release.
-- POR override strap (`por_bypass`, integration-plan G3, interface row DT-10): the macro's reset is
-  `reset_n_pad AND (por_n OR por_bypass)`, a static level with no flop, clock, SPI or analog
-  dependency. High = the POR is ignored and RESET_N alone resets the die (for a POR that never
-  releases). The strap pad needs the provider pull-DOWN enabled by a hard tie (not a register), so
-  an unbonded or undriven strap reads 0 and the POR stays in the reset path. `por_flag` still
-  follows the raw `por_n`: with a stuck POR it reads 1 and cannot be cleared. With the strap high
-  a brownout no longer resets the die by itself (the board supervisor on RESET_N must). Test:
-  `verification/check_por_bypass.py`.
-- Reset-cause flags (`RESET_STATUS` 0x0D): `por_flag` is a core-domain flop asynchronously
-  set only by `por_n`, cleared only by an SPI write-1-to-clear; RESET_N does not touch it.
-  `rst_flag` is asynchronously set by the combined `rst_n`. Circuit assumptions on the
-  analog side: both flops sit in the never-switched CORE_VDD domain; the Edwards POR
-  holds `por_n` low from the start of every CORE_VDD ramp until the rail is valid, with a
-  low pulse longer than the flop's minimum set pulse, so the flag powers up set on any
-  ramp shape; `por_n` is glitch-filtered so it is low only for real power-on or brownout
-  events. The combined reset level is also selectable on DBG_OBS0/1 (code 36), but any
-  reset returns the select to 0, so the pad tristates during reset.
-The fast framed reference currently permits no-op, wired idle and RF mute;
-that is not a complete scheduled electrical-state service.
+| Port | Dir | Meaning |
+|---|---|---|
+| `wire_rx_data[39:0]` | in | Received quad per `wire_rx_clk` edge; the earliest ten bits on the line in [9:0] |
+| `wire_rx_edge[19:0]` | in | Edge-sample word of the capture |
+| `wire_tx_data[39:0]` | out | Transmit quad per `wire_tx_clk` edge; forced to 0 while the wired group is off |
+| `rf_rx_sample[23:0]`, `rf_rx_sample_b[23:0]` | in | ADC codes of core A and core B, I in [11:0], Q in [23:12] |
+| `rf_rx_ph_i`, `rf_rx_ph_q` | in | ADC interleave phase outputs (core select) |
+| `rf_tx_sample[23:0]` | out | DAC codes; forced to 0 while the converter group is off |
 
-No worst-case serialized-command-to-pad latency is yet qualified for these
-services. A behavioral callback timestamp, an SPI write edge and a pad effect
-are different events. For deadline-critical operation, prearmed generic actions
-need explicit lead time and local timing; asynchronous host decisions cannot be
-assumed instantaneous. Keep bounded local event/CDC storage, not packet buffers.
+No analog block produces a valid or a request: the macro makes the wired and RF handshakes itself.
 
-The joined packet model now holds a bounded DAC prefill
-until a timestamped stream-consumption start, while converter clocks keep
-running. An RF-mute bit alone does not provide that behavior: draining samples
-while muted would empty the buffer before launch. Treat sample consumption,
-output unmute and late/underflow cancellation as explicit generic apply events;
-a finite mathematical queue now exercises them, but the present physical
-control boundary has not demonstrated them.
+### Supply islands, isolation, fault
 
-All original targets plus HD-SDI, custom GFSK/SDR and the two existing RF stretch
-goals are mapped. USB and PCIe remain lifecycle anchors; this prioritization does
-not drop SATA OOB, TMDS multi-chip alignment or any other target. Continue the
-mathematical interface work before new RTL/schematic implementation.
+Ten supply islands are switched in five enable groups. `island_en`, `island_on` and `island_off` are six bits
+wide: bit 0 wired (`wired_rx`, `wired_cap`, `wired_tx`), bit 1 rf (`rf_rx`, `rf_tx`, `lod`, `lo`), bit 2 pll,
+bit 3 unused, bit 4 conv, bit 5 debug.
 
-## Physical interface
+| Port | Dir | Meaning |
+|---|---|---|
+| `island_en[5:0]` | out | Switch enables |
+| `island_on[5:0]`, `island_off[5:0]` | out | Group is on and good (or overridden) and its complement; `island_off` drives the isolation cells outside the macro |
+| `s_pg_wired_rx`, `s_pg_wired_cap`, `s_pg_wired_tx`, `s_pg_rf_rx`, `s_pg_rf_tx`, `s_pg_lod`, `s_pg_lo`, `s_pg_pll`, `s_pg_conv`, `s_pg_debug` | in | Power-good of each switch; a group is good when all of its switches are |
+| `wired_on_ext` | in | Request from the bring-up fallback control, ORed into `island_on[0]` |
+| `fault` | in | External fault level, ORed with the internal monitor's fault |
 
-The normative startup/fault/recovery sequence is
-`analog-architecture.json:system_lifecycle`. Management must survive loss of
-REF_IN and both payload clocks while DVDD is valid. `RecoveryMailbox` now advances
-on `management_edge()`, not a reference edge; COMMIT=0 abandons only uncommitted
-shadow fields. These semantics remain requirements for the control RTL.
+Isolation of island-to-macro signals is inside the macro: 130 input bits from switched islands are ANDed with
+`island_on` of their group on the first gate after the pin (`pt_iso_and`; list in
+`integration/top/generated/macro_clamps.txt`). The hardening flow must not buffer those pins.
 
-The selected bond map has 74 provider sites: 37 functional signals, 18 fixed
-supply/return sites and 19 spare signals. The older logical RTL power-port count
-is not the assembly pin count. `pt_host_physical` owns the GPIO pad cells (the DDR/SDR capture and launch logic is `pt_host_link` in the hardened digital macro);
-`pt_analog_physical` owns RF/wired pads and the analog/clock hierarchy. Domain
-names are logical load groups, not independent external rails. Provider fixed
-power/ground connections take precedence; qualify local isolation behind them.
+The fault comes from the macro's supply/clock monitor (`rtl/pt_monitor.sv`): reference and input clock activity,
+the two lock indications from the frequency counters, and the island power-goods, on the always-on oscillator as
+time base in the committed RTL. A fault forces the transmit paths off.
 
-**Host link (hardened, `pt_digital_macro`).** The clocked half of hostio is `rtl/pt_host_link.sv` inside the hardened digital macro; `pt_host_physical` is provider pad cells only. One core host word clock (`host_word_clk`, the clocktree host clock: line-divided or host_follow) clocks both transport directions with one 10-bit word per edge. DDR mode (`debug.host_link.mode` 0): H2D is captured on both edges of the forwarded H2D_CLK (word 0 on the rising edge), paired and moved into the word-clock domain through a Gray-pointer FIFO; D2H data launch on the word-clock rising edge and D2H_CLK is a toggle on its falling edge (word clock / 2, centre aligned). SDR modes (1, 2): one word per H2D_CLK rising edge; D2H_CLK is the inverted, glitch-free gated word clock. The H2D path is not reset by ENABLE (the stream receiver must be armed before the peer's training prefix); D2H outputs are 0 and the pads tristated while `hostio.controls.d2h_enable` = 0. The achievable rates are in `evidence/digital-hardening-evidence.json`; the 312.5 Mword/s (156.25 MHz DDR) top profile is not met by the standard-cell transport (see that evidence for the per-corner fmax and the reduced-rate proposal).
+### Analog status
 
-**Wired boundary (consolidation P3-6).** The wired TX and RX data cross the analog/digital boundary as **20-bit double words**: `wire_tx_data[19:0]` / `wire_rx_data[19:0]`, word 0 (the earlier 10-bit word on the line, bit 0 first) in bits [9:0], one double word per `wire_tx_clk` / `wire_rx_clk` edge, at most 125 MHz (2.5 Gb/s). `wire_tx_request`, `wire_tx_valid` and `wire_rx_valid` are per double word. There is no 10↔20 gearbox in the digital macro. The ratio between the ring clock and the double-word clock depends on `consolidation.wiredtx_stage.bits_per_cycle` (1, 2 or 4 bits per ring cycle: 20, 10 or 5 ring cycles per double word) and lives in the analog word divider owned by the timing block; `pt_clocktree_slow` takes the same field (modulus 10 for 1 bit per cycle, 5 otherwise). RF samples are `{Q[11:0], I[11:0]}` in signed two's complement, with 8-bit mode transporting the most significant eight bits of each channel. Clock synthesis, actual CDR, PLL lock gating, converter latency and playout clock tracking remain physical macro requirements. The host must provide source-matched playout rates; finite FIFOs cannot tolerate permanent independent producer/consumer drift.
+Raw asynchronous levels, synchronised inside the macro.
 
-### Wired word width and pattern generator/checker (P2-6, P3-6)
-
-The line word stays **10 bits, bit 0 on the line first** (TMDS and 8b/10b symbols, the clocktree launch delay of 0–3 words plus 0–9 bits). Two of them form the 20-bit double word at the boundary. Inside `pt_core`, paired transport engines process twenty-bit pairs at half the host word rate. Wired ingress holds 64 pairs. A shared 32-entry, 24-bit egress FIFO serves the stopped-selected wired or RF owner. Wired transmission starts after sixteen pairs are buffered. The I/Q queues hold twelve TX pairs and seven RX pairs; RF ingress holds eight samples.
-
-One generator/checker serves both directions: `rtl/pt_pattern.sv`. `pt_pattern_gen` and `pt_pattern_check` run at W = 20 directly on the double-word clocks, without clock gates or multicycle paths.
-
-- TX: the generator's word is a register (plus the `prbs_select` mux in `pt_digital`); it loads on the first clock after reset (`wire_tx_valid` follows one clock later) and advances on every clock where the consumer takes it (`wire_tx_request`). Error injection flips bit 0 of the next generated double word.
-- RX: every valid double word goes to the checker; a clear acts on the next clock.
-
-**Timing.** `wire_tx_data` is a register output (FIFO read register or generator word) plus one mux. The serializer is assumed to load it on the falling double-word clock edge with 0.5 ns setup / 0.3 ns hold (`integration/pt_wired_tx.sdc`, inlined in `integration/pt_digital_macro.sdc`); the wired_tx owner must confirm the capture edge. The routed per-corner results are in `evidence/digital-hardening-evidence.json`.
-
-### Frequency counters (consolidation P3-7)
-
-`rtl/pt_freq_count.sv`, two instances in `pt_digital` (`debug.freq_count_a` / `_b`, status `status.freq_count_a` / `_b`; `status.pll_lock` is reserved). Analog → digital: `fc_src[5:0]` clocks, selected by `source` code 1..6: [0] TX ring FBCK (`pt_pll` FBCK = VCO/16), [1] CDR ring FBCK, [2] ring_osc, [3] vco_replica, [4] aosc, [5] LC prescale output; each must stay at or below 156.25 MHz at the macro pin. The counter counts the selected source against `ref_clk` over 256–4096 reference cycles, reports the raw count and count − target, and declares lock after `count` consecutive windows within `tolerance` (lost lock sticky until `source` = off). Digital → analog: `cdr_freq_locked` (instance b lock, reference-clock domain level) is the CDR frequency-to-phase handover. The source select is a plain clock mux: change it only while stopped.
-
-**Register fields** (`debug.pattern`; status in the fixed status block, `status.pattern.*`).
-
-- `tx_mode` = 0 keeps the legacy behaviour: `wire_trim[15]` selects PRBS31. A non-zero
-  `tx_mode` selects the generator with that mode.
-- The checker runs while ENABLE and (`check_enable` or `wire_trim[15]`).
-- `check_mode` = 0 follows the effective TX mode. Non-PRBS modes leave the checker
-  unlocked.
-- **CDC:**
-  - The quasi-static fields (`tx_mode`, `tx_invert`, `user_word`, `check_mode`,
-    `check_invert`, plus the derived effective modes) cross into `wire_tx_clk` /
-    `wire_rx_clk` through per-bit 2-flop synchronizers (`pt_sync_vec`). This is valid
-    because they change only by commit while ENABLE=0, when the generator is held in reset
-    and the checker is disabled and cleared.
-  - `inject` and `check_clear` are live levels: synchronized, edge-detected, and acting
-    once per 0→1 transition.
-
-**Status ports to `pt_mgmt`** (read-only registers):
-
-- `pattern_locked` (level)
-- `pattern_lost_lock` (sticky)
-- `pattern_errors_gray`: a 16-bit Gray-coded saturating count. One bit changes per update
-  and it never wraps; `pt_mgmt` synchronizes it with two SCLK flops and converts it to
-  binary.
-
-The count steps by one per double-word clock from a pending accumulator, so it lags during
-bursts. A sustained rate above one error per double-word clock drives it to saturation.
-
-## Configuration and physical-macro boundary
-
-Candidate mathematical command payload (`resource_configuration.py`):
-
-| Bits | Meaning |
+| Port | Meaning |
 |---|---|
-| 1:0 | Resource owner: 0 none, 1 wired, 2 RF; 3 reserved |
-| 4:2 | Line-rate target: 0 legacy/default, 1 480 Mb/s, 2 1.25 Gb/s, 3 1.5 Gb/s, 4 1.62 Gb/s, 5 2.5 Gb/s, 6 742.5 Mb/s, 7 1.485 Gb/s |
-| 5 | Host frame length: 0 64 words, 1 8 words |
-| 6 / 7 | Independent wired TX / RX enables |
-| 8 | Pad path: 0 serial, 1 bidirectional |
-| 31:9 | Reserved, must be zero |
+| `s_pll_tx_lock`, `s_pll_cdr_lock` | Ring PLL lock outputs |
+| `s_ref_present`, `s_aux_present`, `s_wtx_ext_present` | Clock receiver activity |
+| `s_refbuf_ready` | Converter reference buffer ready |
+| `s_adc_{i,q}_ovl`, `s_adc_{i,q}_b_ovl`, `s_adc_{i,q}_done`, `s_adc_{i,q}_b_done` | ADC overload and conversion-done flags of both cores |
+| `s_detect_diff_pos`, `s_detect_diff_neg`, `s_detect_se_p`, `s_detect_se_n` | Signal detector comparators (also the USB FS/LS receive data) |
+| `s_wrx_slp`, `s_wrx_slm` | Capture `SLP` / `SLM` outputs |
+| `s_wtx_ext_data` | Data from the external transmit fallback receiver |
 
-This mathematical payload is not yet a registered RTL command. Non-wired
-ownership rejects non-default wired rate/framing/path fields; reserved encodings
-and invalid types reject. Exhaustive codec tests accept 136 of 512 words.
-`ResourceConfigurationCommands` dispatches through the existing serialized queue;
-stopped-state, pad isolation and resource constraints are checked at application.
-No protocol IDs are encoded.
+### Test bus and observation
 
-In isolated canonical copies, a 1.62 Gb/s RX-only write applies at 6.45 us and
-replies at 12.85 us. Reserved/stale writes preserve resources, active writes
-reject, and eight causal RX words return after normal acquisition. Reference and
-RF-disabled optimized implementations report matching functional outcomes.
-Source-checked reports are `evidence/resource-command-reference.json` and
-`evidence/resource-command-optimized.json`. Synthetic framing and ideal host-word
-observation do not establish peer interoperability or electrical capture.
-Main-model integration is installed after the reference control test passed;
-fresh regression is running.
-
-The isolated raw-event return candidate adds `record_return_configure` to the
-same management queue: payload 0 disables the alternate return interpretation,
-1 enables it, and all other bits reject. Selection is stopped-only; enabling
-requires short-frame wired ownership with RX enabled. It selects a generic
-transport format, not a USB or other protocol mode. Six recording-callback queue
-checks pass apply timing, enable/disable, reserved payload, changed permissions
-and stale epochs. The corrected coupled serialized-selection-to-pad-return experiment passes
-normal acquisition, ordered delivery and lifecycle guards; its source-checked
-report is `evidence/record-return-serialized.json`. RTL address allocation and
-main-model requalification remain open. The ordinary host-input interpretation remains unchanged.
-
-
-The physical ABI must support the configuration combinations exercised by the
-external recipes in `spec/contract.json`. There is no protocol-ID or profile
-selector. Expose resource ownership, separate serial rate and host-clock controls,
-local output-enable/termination states, timestamped events and bounded ready/fault
-handshakes. The current `mode8` and trim ports do not encode that ABI; adding
-USB pin direction alone does not implement USB or the other new modes.
-
-`WIRE_RX_P/N` is now `inout` at both the chip and analog black-box boundaries,
-aliasing USB D+/D−. Serial modes use it as input; USB mode connects the local
-HS/FS/LS branch, disables serial termination/detection, and leaves WIRE_TX high
-impedance. Reset and unpowered behavior must release both branches safely.
-Mode selection requires stopped operation and break-before-make controls.
-Serial TX/RX remain independently timed for full-duplex links.
-
-The analog macro owes USB single-ended line observation, squelch/disconnect,
-HS termination/current drive and FS/LS drive/pulls. A bounded local sequence
-engine emits timed states and reports events to FPGA; it does not own protocol
-CRC, USB transactions, SATA link logic, DP training policy or RF modems.
-The host macro reuses its existing queues, header codec and staging banks with
-a configurable eight-word frame counter and slot mask for response-critical traffic. No constant-zero tied control may be presented as
-working support. Reject unsupported control combinations until their required controls
-and data paths are implemented.
-
-### Independent shared-pad electrical controls
-
-#### Disabled branches remain electrical loads
-
-Use branch-local isolation rather than one switch in series with every fast
-signal. Keep the serial path short; isolate USB drivers, pulls and termination
-at their branch roots, and bypass/isolate the TMDS input divider in serial/USB
-modes. A disabled enable does not remove drain capacitance or protection clamps.
-
-| Pad owner | Enabled path | Required inactive state |
+| Port | Dir | Meaning |
 |---|---|---|
-| Serial RX | Serial termination, divider bypass, CTLE/CDR | USB loads off; TMDS divider disconnected |
-| TMDS RX | External pullups, level divider, CTLE/CDR | Serial shunts and USB loads off |
-| USB | Independent HS/FS/LS drive, sensing and passive state | TMDS divider isolated; serial termination off; unused TX pair released |
-| Serial TX | Main/postcursor driver or detection injection | TMDS off; detection source disconnected outside detection |
-| TMDS TX | Current-steering branch | Serial drive and detection injection off |
-| Reset/unpowered | Released active drive | Specified leakage/voltage tolerance without software or powered isolation gates |
+| `atb0_sw[57:0]`, `atb1_sw[57:0]` | out | One-hot leaf switches of the two analog test buses (bit k−1 = node code k) |
+| `atb0_grp[1:0]`, `atb1_grp[4:0]`, `atb0_en`, `atb1_en` | out | Trunk group switches and pad switches |
+| `rx_en_aux`, `rx_en_wtx_ext` | out | Enables of the `AUX_CLK` and `WTX_EXT` receivers |
+| `rx_en_wclk` | out | Constant 0: the forwarded wire clock uses the `AUX_CLK` pair |
+| `clk_obs_oe`, `dbg_obs0`, `dbg_obs0_oe`, `dbg_obs1`, `dbg_obs1_oe` | out | Observation pad data and enables |
+| `wire_rx_ptrim_en` | out | Interlock that lets ring phases reach the slicer |
 
-Budget pad/protection capacitance plus every inactive branch's residual
-admittance, including mutual terms, voltage dependence and powered-off clamps.
-Include switch resistance and charge injection during transitions. The model's
-aggregate `off_cap_f` is an assumption, not extracted proof of this inventory.
-`SharedWiredPad(off_branches_f=...)` now accepts named P/N branch capacitances
-instead of that aggregate, preserving mismatch in its electrical and energy
-equations. Explicit branches replace the aggregate without double-counting.
-Optional `rail_clamp` and `ground_clamp` parameters add finite threshold/resistance
-currents to the coupled electrical equations, including rail backfeed and
-dissipation while branches are isolated. They are supplied hypotheses, not PDK
-extractions. The affine standalone solver rejects these nonlinear configurations.
-Omitting clamps means protection is unmodeled, not proven power-off tolerant.
-Board coupling and TMDS pullups are application-specific population choices.
+### Decoded control ports
 
-Reject any implementation whose inactive branches violate voltage tolerance
-or active-path loading. Resize/isolate the offending branch and recheck its
-own settling and resistance; never rescue a case by removing its parasitics.
-Protection and isolation must satisfy powered, reset and unpowered states.
+216 output ports `c_*`, 531 bits, one per analog control pin group, with the net name used in `pt_chip.conn`.
 
-This is the normative required macro boundary, not a claim that current RTL
-ports or `SharedWiredPad.configure()` implement it. Preserve one generic pad
-state vector; the FPGA supplies protocol sequences. A speed/role convenience
-function may construct vectors in a testbench, but must not hide unavailable
-hardware actions.
-
-| Resource | Independent configuration / action | Required observation |
+| Group | Ports | Bits |
 |---|---|---|
-| Weak bias on each leg | Enable/disable pull-up and pull-down independently; select supported resistance and pull-up source | Applied state, pad level; source and voltage limits declared |
-| Termination | Enable each supported termination path independently of driver enable and weak pulls; trim resistance and bias while stopped | Applied state and settling qualification |
-| Active drive | High impedance, voltage drive or current steering; output enable, polarity/level and numeric strength | Applied state, electrical fault where detectable; no inferred protocol state |
-| Receive sensing | Differential receiver, both single-ended comparators, squelch and detection thresholds independently enabled | Timestamped raw/qualified levels with explicit threshold, filtering and latency |
-| Capture/playback | Start/stop sample or bit delivery independently of passive pad state | Epoch, alignment, overflow/underrun and stopped status |
+| Always-on (oscillator, bias generator, bandgap, bias distribution) | 19 | 53 |
+| RF receive | 36 | 100 |
+| Converters | 12 | 15 |
+| RF transmit | 10 | 13 |
+| LO | 14 | 23 |
+| Clocks | 43 | 84 |
+| Wired receive | 51 | 186 |
+| Wired transmit | 18 | 41 |
+| USB pad | 13 | 16 |
 
-Only physically realizable combinations are accepted. Examples needing explicit
-validation include weak pull plus a peer-driven reset state, current drive
-with the selected passive load during negotiation, and passive termination
-changes while the remote transmitter remains active. Required ranges and
-current-source compliance remain circuit-feasibility gates; exposing a field
-does not prove its range. The peer's state is a bench stimulus or observation,
-never a command the chip can enforce.
+Rules:
 
-Distinguish two kinds of transition:
+- The register map follows the cells: a port is either the bits of one register field unchanged ("direct") or a
+  decode the macro implements. The reset value is the cell's safe state.
+- An enable is `(state == active) AND island_on` of the consumer's group. "Warm" keeps the configuration and
+  leaves the cell off.
+- Every port into a switched island reads 0 while that group is off.
+- Ports are static (they change only while the consumer is stopped) except `c_cdr_fup`, `c_cdr_fdn`,
+  `c_vthdac_a`, `c_wrx_cap_psel`, `c_wrx_cap_slipp`, `c_wrx_cap_slipm`, `c_usb_hs_drv`, `c_usb_tx_dp`,
+  `c_usb_tx_dn` and `c_usb_tx_oe`.
+- A ring whose regulator is out of bypass is held off for at least 50 µs after the pll island powers up or the
+  regulator leaves bypass (`rtl/pt_vreg_seq.sv`).
 
-1. **Topology or trim change:** stop local active drive and capture/publication
-   as required, apply break-before-make, wait the declared settling interval,
-   then qualify and acknowledge the applied vector. Switching serial/DC branch
-   ownership belongs here. A peer can still be electrically active; the selected
-   pad topology must tolerate that state or the operation must reject it.
-2. **Prevalidated live electrical action:** apply only its allowed mask of
-   output enable, level, weak-pull or termination bits at a scheduled boundary.
-   Preserve unrelated receive sensing and clock state. Local output release
-   must not imply removal of every pull or termination. Do not require a remote
-   driver to release merely because the local FPGA changes a passive state.
+## Checks
 
-Each accepted action needs an epoch, apply timestamp or bounded immediate
-latency, and applied-state acknowledgement distinct from command receipt.
-Unsupported combinations and missed deadlines leave the prior valid state or
-enter an explicitly specified released-drive fault state; never silently apply
-a partial new vector. Fault policy specifies which passive loads remain so
-that 'safe' is not an ambiguous blanket disconnection. Device-off leakage and
-externally driven voltage tolerance must hold independently of software.
+| Check | What it covers |
+|---|---|
+| `integration/top/run.sh` | Port list against the conn and `ctl_ports.txt`, boundary simulation of the real macro against the generated stub with two negative controls, isolation audit |
+| `make transceiver-top-modes` | Generated `pt_chip.sv` is current, register map against cell pins, per-mode chip simulation, clamp list, decode table |
+| `make transceiver-ctl-blocks` | Monitor, USB, wired control blocks, POR path, SPI chip-select race |
+| `make transceiver-regfile` | Generator outputs are current, register file behaviour |
+| `make transceiver-digital-hardening` | Synthesis, place and route, timing |
 
-**Architecture decision:** extend the generic electrical-state boundary rather
-than add a USB negotiation engine or protocol profile. No extra package pins
-or packet buffers are allocated by this decision. The event storage, command
-fields, state interlocks, comparator delays, switch charge injection and
-settling cost still require implementation and joint lifecycle verification.
-The existing probe sequence that jumps from FS to HS remains partial evidence.
-
-The mathematical pad now exposes `set_local_passives()` with independent
-per-leg pull-up, pull-down and termination resistance (or disconnected state).
-It changes only the local passive network, preserving the remote drive/load and
-existing capacitor voltage. This is an instantaneous equation-level apply, not
-a serialized command implementation. Its resistor/supply energy accounting and
-legacy-state equivalence are checked in `verification/test_shared_pad_controls.py`.
-`set_local_drive()` now independently selects released, voltage or current drive
-with numeric strength and physical leg/levels. A bounded local current source
-can operate against a remote voltage drive; competing voltage drives are
-rejected. `sense()` exposes ideal single-ended high/low, differential polarity
-and squelch at supplied numeric thresholds. These functions preserve the peer's
-configuration and do not infer protocol states.
-
-A tested intermediate sequence removes a local pull, applies 18 mA to N while
-the peer continues driving SE0, then releases local current. The observed
-voltage matches the explicit parallel resistance and instantaneous power
-balance. This proves representability of an electrical intermediate state,
-not valid USB chirp amplitude or timing. Seven focused tests plus both legacy
-role probes pass. Scheduled apply, sensing delays/hysteresis, physical range
-qualification, switch charge injection and complete negotiation remain open.
-The affine step refuses active-current operation outside its compliance region;
-the nonlinear electrical primitive is required there.
-
-
-DisplayPort AUX/HPD and USB VBUS switch/sense connect externally to FPGA GPIOs.
-Their clocks, levels and response latency belong in peer tests, even though
-they consume no transceiver terminals. The chip does not drive 5 V VBUS.
-RF control includes channel contexts, timed gain/bandwidth settings and local
-RX/TX direction changes while the oscillator remains warm. Carrier retuning,
-ADC sample rate, sample format and transport profile are independent controls.
-
-## Circuit obligations
-
-| Block | Candidate starting point | Work still required |
-|---|---|---|
-| USB local branch / shared-pad isolation | Architecture requirement; no transistor implementation | HS/FS/LS electrical states, finite driver/termination and off-state capacitance; retain 2.5 Gb/s serial RX margin |
-| Timed state/event service | Architecture requirement; no fast-path ABI implemented | SATA OOB, USB line transitions, RF bursts, FPGA response deadlines and reset-safe ownership |
-| Wired RX termination/slicer | `ip/blocks/analog/wireline_serdes/lane/rx_2p5.pex.spice`, termination and capture experiments | Select and integrate variant, CDR acquisition/tracking, sensitivity/jitter and extracted signoff |
-| Wired TX | Existing wireline serializer/driver research | Full 10:1 serializer, output swing/termination, electrical idle and rate switching |
-| RF LNA | `ip/blocks/analog/wifi_80211b/rf_lna/lna_cs_core.spice` | Differential integration, bias, matching, noise/linearity and RF pad parasitics |
-| I/Q mixer | `ip/blocks/analog/wifi_80211b/rf_switch_mixer/mixer.spice` | Quadrature LO, differential paths, DC offsets, TX upconversion and isolation |
-| Shared programmable baseband | Architecture's local sample/weight/sum resources | Transistor circuits, switches, programmable filters/gain, settling and calibration observability |
-| Converters | Selected inventory parameters and `verification/converter_dynamics.py` | Transistor realization, achievable ENOB and sample rate; transported width is not native precision |
-| Reference/LO/clocks | Trim and calibration interfaces implemented digitally | PLL/VCO, divider/phase network, clock mux/reset sequencing, lock monitoring |
-| Host pads/DDR | Existing native-pad experiments | Real DDR gearbox, input/output phase adjustment, host timing, simultaneous switching and rail closure |
-
-The listed circuit files are reuse candidates, not validated components of this chip. These candidates do not establish a complete RF chain, RF-to-host simulation or analog hierarchical netlist. Ideal models do not establish GHz operation, Wi-Fi performance, protocol compliance or achievable ENOB.
-
-## Digital contents and costs
-
-Use `check_contract.resource_ledger` and the selected bridge/storage inventory
-for current allocations.
-Independent FIFO and codec mappings are component evidence; parent/child
-instances must not be double counted. Complete digital area, switching power,
-CDC and physical timing remain implementation obligations.
-
-## Verification and limitations
-
-`make transceiver-math-fast` checks current behavioral interfaces and inventory
-bindings. Current electrical/lifecycle commands are in the
-[model guide](../system_model/architecture_fast/README.md). Retained RTL FIFO
-and codec controls are separate from whole-chip conformance. No obsolete
-`transceiver-baseline` result qualifies the selected control ABI or macro boundary.
-
-Finish mathematical closure before schematic/layout implementation. A callback
-timestamp does not prove command-to-pad latency; a structural netlist check
-does not prove the physical clock tree, analog startup, CDC or package behavior.
-
-## USB reuse order
-
-Extend the wired island before adding specialized hardware:
-
-| USB function | First implementation choice | Unresolved requirement |
-| --- | --- | --- |
-| 480 Mb/s timing | Existing wired synthesizer/divider services; evaluate 2.4 GHz divided by five | Jitter and divider phase; no additional PLL selected |
-| HS receive | Existing slicer, multiphase sampler and CDR/phase-selection circuitry | Keep frequency reference warm; acquire each burst during SYNC, not a microsecond PLL restart |
-| HS transmit | Reconfigure segmented wired current-source cells into the local bidirectional pad branch | USB current, termination, slew, disconnect behavior and disabled loading |
-| Squelch/line detection | Existing envelope/threshold detector designs with mode-specific thresholds | Fast burst detection plus slow FS/LS single-ended observations |
-| FS/LS drive and pulls | Existing GF180 switch/resistor/output-device primitive families | Additional local single-ended circuits are needed; they cannot be inferred from a differential slicer |
-| FPGA transport | Selected 100 MHz SDR direct byte/control stream with finite CDC/credit queues | Complete loaded electrical lifecycle, RTL and physical I/O timing |
-| Chirp/reset/idle sequencing | Existing generic timed-pattern/line-state controls | Actual peer state machine and acceptance timing still need modeling |
-| Calibration/bias | Existing shared reference, trim and sequencer | Mode-specific current/termination trim and settling |
-
-Physical current-source/slicer sharing is a proposed topology, not proof that
-remote TX cells can reach RX pads without unacceptable parasitics. Prefer a short
-local branch over a die-wide mux. No additional radio chain, PLL, protocol CPU,
-CRC engine, GPIO interface or package pin is selected by this USB work.
-
-USB-IF EL_18 requires HS detection, timing acquisition and SYNC recognition within
-12 bit times (25 ns). Treat warm sampling/phase acquisition as a separate major
-gate: a passing response-budget calculation does not prove it.
-
-## Generic multi-instance video PHY requirements
-
-Expose numeric electrical mode and embedded/forwarded timing settings without
-a protocol ID. Forwarded TMDS timing requires the line rate to be ten times
-the word-reference rate, including supported fractional video clocks. Each
-chip carries one opaque lane; the external FPGA owns TMDS encoding, multi-lane
-coordination and protocol state. Use `resource_configuration.py`,
-`video_alignment.py` and the selected wired benches for current behavior.
-
-Cross-chip reset/phase alignment, continuous queue service, electrical pad
-limits and reference-path qualification remain separate requirements. Frozen
-clock or recording-callback controls cannot prove acquired operation through
-a coupled command, clock and pad path. See the
-[physical/pin plan](../../../docs/roadmap/programmable-transceiver-pin-plan.md#hdmidvi-through-multiple-instances).
-
-### Generic tuning extension target
-
-Expose reference ratio/divider, filter-bank selection, converter clock divisor
-and PGA trim independently of protocol names. The behavioral numeric configuration
-is not yet an RTL/register ABI. Keep the existing legacy resource-word encoding
-stable until a versioned mapping is defined. Reuse existing blocks and retain the
-provider-compatible 74-site, single-slot allocation; added switches/dividers and calibration need
-an area/power estimate before accepting the cost. HD-SDI requires external coax
-analog circuitry. RF and wired payload remain mutually exclusive per die.
-
-
-## Selected converter width boundary
-
-The provisional first-chip choice is native 10-bit ADC/DAC conversion targeting
-8 ENOB, with existing 12-bit signed I/Q transport words. Do not treat transport
-width as physical precision or instantiate separate converters for each word
-format. For the 12-bit format, sign-convert the native ADC result and left-align
-it by two bits; the low two bits are zero before any external processing. DAC
-input rounds to the nearest native 10-bit code and saturates at its rails rather
-than wrapping. Existing narrower transport settings are quantized representations
-of the same converter, not extra ADC/DAC instances. Selected converter benches must obtain native precision and timing from the
-architecture inventory; explicit alternative quantizers remain local controls.
-Neither transported width nor a mathematical conversion proves effective
-resolution or physical implementation.
+Open items at this boundary are in `integration/top/decisions.md` (D-FAULT, D-CAP, D-ATB, D-100B, D-TRIMISL).
+The working tree may hold RTL edits that are not committed; this file describes the committed macro.

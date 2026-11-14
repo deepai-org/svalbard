@@ -46,7 +46,8 @@ Requirements with their IDs are in [`spec/interface-requirements.md`](spec/inter
   external quadrature LO on the `REF_IN` / `AUX_CLK` pad pairs is the fallback.
 - **Wired:** programmable termination, CTLE, slicer, capture and CDR on receive; serializer and pad driver on
   transmit, with TMDS as a configuration of the same output stage. USB shares the wired receive path and has its own
-  pad pair and line driver. Two ring PLLs (transmit, and CDR / host-follow).
+  pad pair and line driver. Two ring PLLs (transmit, and CDR / host-follow). A forwarded wire clock enters on the
+  `AUX_CLK` pad pair, which it shares with the external LO Q leg.
 - **Digital:** one standard-cell macro (`rtl/pt_digital_macro.sv`) with SPI, the generated register file, the
   control decode for every analog pin, the framed host transport, capture/playback memory, pattern
   generator/checker, frequency counters, USB FS/LS line logic and the supply/clock monitor.

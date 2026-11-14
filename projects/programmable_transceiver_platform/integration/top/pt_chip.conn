@@ -413,7 +413,7 @@ inst termination pt_termination wired_rx
   HS_TERM_ENABLE>HS_TERM_ENABLE HS_TERM_TRIM{0:3}>HS_TERM_TRIM[\1] HS_TERM_VCM~HS_TERM_VCM HS_VBIAS~HS_VBIAS
 inst rxlevel pt_rxlevel wired_rx
   VDD_WIRE_SW~RAIL_wired_rx VSS~VSS rxlevel_en=c_rxlevel_en rxlevel_half=c_rxlevel_half DIV_ENABLE>DIV_ENABLE BYPASS_ENABLE>BYPASS_ENABLE
-# HS pair -> CTLE only (MW-8); USB pair -> rxselect direct, detect, wmon (analog/wired_rx/README.md:788-794)
+# HS pair -> CTLE only (MW-8); USB pair -> rxselect direct, detect, wmon (analog/wired_rx/README.md "Architecture")
 inst ctle pt_ctle wired_rx
   VDD_WIRE_SW~RAIL_wired_rx VSS~VSS IBIAS~BIAS_ctle ctle_en=c_ctle_en wire_ctle_bypass=c_ctle_bypass ctle_peak{0:2}=c_ctle_peak[\1]
   lf_zero{0:2}=c_ctle_lf_zero[\1] RX_P~HSRX_P RX_N~HSRX_N CTLE_P~CTLE_P CTLE_N~CTLE_N atb_ctle_pbias~ATBN_ctle_bias atb_ctle_src~-

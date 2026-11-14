@@ -24,7 +24,11 @@ module tb_top_boundary;
  wire [5:0] island_en, island_on, island_off, island_pgood;
  wire [57:0] atb0_sw, atb1_sw; wire [1:0] atb0_grp; wire [4:0] atb1_grp; wire atb0_en, atb1_en;
  wire por_n, wired_on_ext, wire_rx_ptrim_en;
- assign island_pgood[3] = 1'b0;                 // reserved usb island: tied 0 at chip level (pt_chip.conn)
+ // Per-switch power-good from the ten island switches; today's macro takes island_pgood[5:0] (one bit per enable
+ // group), so the group AND that the macro will do itself (PD2-2) is written here until it has the s_pg_* inputs.
+ wire s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx, s_pg_rf_rx, s_pg_rf_tx, s_pg_lod, s_pg_lo, s_pg_pll, s_pg_conv, s_pg_debug;
+ assign island_pgood = {s_pg_debug, s_pg_conv, 1'b0, s_pg_pll, s_pg_rf_rx & s_pg_rf_tx & s_pg_lod & s_pg_lo,
+                        s_pg_wired_rx & s_pg_wired_cap & s_pg_wired_tx};
  wire [`PT_ANALOG_CFG_W-1:0] analog_cfg; wire [`PT_DEBUG_CFG_W-1:0] debug_cfg; wire [19:0] en_eff;
 `ifdef PT_MACRO_HAS_CTL
  pt_digital_macro dut(.reset_n_pad(rst_pad), .por_n(por_n), .por_bypass(1'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),
@@ -56,7 +60,9 @@ module tb_top_boundary;
  assign c_pllvreg_byp_tx = analog_cfg[`PT_A_PLLVREG_CONFIG__TX_BYPASS_LSB];
 `endif
  pt_analog_top_stub analog(.VDD(VDD), .VSS(VSS), .island_en(island_en), .island_on(island_on), .island_off(island_off),
-  .island_pgood(island_pgood), .wired_on_ext(wired_on_ext), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp),
+  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_rf_rx(s_pg_rf_rx),
+  .s_pg_rf_tx(s_pg_rf_tx), .s_pg_lod(s_pg_lod), .s_pg_lo(s_pg_lo), .s_pg_pll(s_pg_pll), .s_pg_conv(s_pg_conv), .s_pg_debug(s_pg_debug),
+  .wired_on_ext(wired_on_ext), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp),
   .atb1_grp(atb1_grp), .atb0_en(atb0_en), .atb1_en(atb1_en), .wire_rx_ptrim_en(wire_rx_ptrim_en), .por_n(por_n), `PT_CTL_CONNECT);
 
  integer errors = 0;

@@ -293,7 +293,6 @@ module pt_analog_top_stub(
  input wire [5:0] island_en,
  input wire [5:0] island_off,
  input wire [5:0] island_on,
- output wire [5:0] island_pgood,
  output wire por_n,
  output wire ref_clk,
  output wire rf_rx_clk,
@@ -301,6 +300,16 @@ module pt_analog_top_stub(
  input wire [23:0] rf_tx_sample,
  input wire rx_en_aux,
  input wire rx_en_wtx_ext,
+ output wire s_pg_conv,
+ output wire s_pg_debug,
+ output wire s_pg_lo,
+ output wire s_pg_lod,
+ output wire s_pg_pll,
+ output wire s_pg_rf_rx,
+ output wire s_pg_rf_tx,
+ output wire s_pg_wired_cap,
+ output wire s_pg_wired_rx,
+ output wire s_pg_wired_tx,
  output wire s_ref_present,
  input wire wire_rx_ptrim_en,
  input wire [39:0] wire_tx_data,
@@ -372,7 +381,7 @@ module pt_analog_top_stub(
  wire BIAS_qvco;
  wire BIAS_lo_pfdcp;
  wire BIAS_hsbias;
- wire ISO_wired;
+ wire ISO_wired_tx;
  wire ESD_RAIL_rf_rx;
  wire ESD_RAIL_rf_tx;
  wire ESD_RAIL_bb;
@@ -548,7 +557,7 @@ module pt_analog_top_stub(
  wire ATB1_LOCAL2;
  wire ATB1_LOCAL3;
  wire ATB1_LOCAL4;
- wire RAIL_wired = VDD, RAIL_rf = VDD, RAIL_pll = VDD, RAIL_conv = VDD, RAIL_debug = VDD, VREG_TX = VDD, VREG_CDR = VDD, VDD_LO = VDD;
+ wire AGND_RX = VSS, RAIL_conv = VDD, RAIL_debug = VDD, RAIL_lo = VDD, RAIL_lod = VDD, RAIL_pll = VDD, RAIL_rf_rx = VDD, RAIL_rf_tx = VDD, RAIL_wired_cap = VDD, RAIL_wired_rx = VDD, RAIL_wired_tx = VDD, VDD_LO = VDD, VREG_CDR = VDD, VREG_TX = VDD;
  wire p_por__ena = VDD;
  assign por_n = 1'b1;
  wire p_aosc__EN = c_aosc_en;
@@ -635,17 +644,27 @@ module pt_analog_top_stub(
  wire p_bias_ext__EN_qvco = c_qvco_en;
  wire p_bias_ext__EN_lo_pfdcp = c_lo_pfdcp_en;
  wire p_bias_ext__EN_hsbias = c_hsbias_en;
- wire p_isw_wired__EN = island_en[0];
- assign ISO_wired = ~island_en[0];
- assign island_pgood[0] = island_en[0];
- wire p_isw_rf__EN = island_en[1];
- assign island_pgood[1] = island_en[1];
- wire p_isw_pll__EN = island_en[2];
- assign island_pgood[2] = island_en[2];
- wire p_isw_conv__EN = island_en[4];
- assign island_pgood[4] = island_en[4];
+ wire p_isw_wired_rx__EN = island_en[0];
+ assign s_pg_wired_rx = island_en[0];
+ wire p_isw_rf_tx__EN = island_en[1];
+ assign s_pg_rf_tx = island_en[1];
  wire p_isw_debug__EN = island_en[5];
- assign island_pgood[5] = island_en[5];
+ assign s_pg_debug = island_en[5];
+ wire p_isw_wired_tx__EN = island_en[0];
+ assign ISO_wired_tx = ~island_en[0];
+ assign s_pg_wired_tx = island_en[0];
+ wire p_isw_wired_cap__EN = island_en[0];
+ assign s_pg_wired_cap = island_en[0];
+ wire p_isw_lod__EN = island_en[1];
+ assign s_pg_lod = island_en[1];
+ wire p_isw_rf_rx__EN = island_en[1];
+ assign s_pg_rf_rx = island_en[1];
+ wire p_isw_conv__EN = island_en[4];
+ assign s_pg_conv = island_en[4];
+ wire p_isw_lo__EN = island_en[1];
+ assign s_pg_lo = island_en[1];
+ wire p_isw_pll__EN = island_en[2];
+ assign s_pg_pll = island_en[2];
  wire p_refvcm__EN = c_refvcm_en;
  wire p_pad_hs_rx__TERM_ENABLE = HS_TERM_ENABLE;
  wire p_pad_hs_rx__TERM_TRIM0 = HS_TERM_TRIM[0];
@@ -911,10 +930,6 @@ module pt_analog_top_stub(
  wire p_lo_ext__EXT = c_lo_ext;
  wire p_lo_ext__INT = c_lo_int;
  wire p_lo_ext__CMLSEL = c_lo_cmlsel;
- wire p_iso_lo_ip__ISO = island_off[2];
- wire p_iso_lo_in__ISO = island_off[2];
- wire p_iso_lo_qp__ISO = island_off[2];
- wire p_iso_lo_qn__ISO = island_off[2];
  wire p_lo_vreg__EN = c_lo_vreg_en;
  wire p_qvco__EN = c_qvco_en;
  wire p_qvco__CMLSEL = c_lo_cmlsel;
@@ -1133,8 +1148,8 @@ module pt_analog_top_stub(
  wire p_obs_pre4_cdr__EN = c_obs_pre4_en[5];
  assign OBS4_cdr = 1'b0;
  wire p_iso_lo_obs__A = LO_OBS;
- wire p_iso_lo_obs__ISO = island_off[2];
- assign LO_OBS_D = LO_OBS & ~island_off[2];
+ wire p_iso_lo_obs__ISO = island_off[1];
+ assign LO_OBS_D = LO_OBS & ~island_off[1];
  wire p_clk_obs__IN0 = VSS;
  wire p_clk_obs__IN1 = LO_OBS_D;
  wire p_clk_obs__IN2 = OBS4_wire;
@@ -1584,7 +1599,7 @@ module pt_analog_top_stub(
  wire p_attached_tx_interlock__REQ_TERM = c_txpad_req_term;
  wire p_attached_tx_interlock__RESET = island_off[0];
  wire p_attached_tx_interlock__QUALIFIED = island_on[0];
- wire p_attached_tx_interlock__SUPPLY_OK = island_pgood[0];
+ wire p_attached_tx_interlock__SUPPLY_OK = s_pg_wired_tx;
  assign TX_EN_MAIN = 1'b0;
  assign TX_EN_POST = 1'b0;
  assign TX_EN_DETECT = 1'b0;
@@ -1624,7 +1639,7 @@ module pt_analog_top_stub(
  wire p_wtx_fallback_control__L_IDLE = c_wtxfb_idle;
  wire p_wtx_fallback_control__L_STAGE_TMDS = c_wtxfb_stage_tmds;
  wire p_wtx_fallback_control__L_EXT_ENABLE = c_wiredtx_ext;
- wire p_wtx_fallback_control__ISO_wired = ISO_wired;
+ wire p_wtx_fallback_control__ISO_wired = ISO_wired_tx;
  wire p_wtx_fallback_control__FORCE_LEAF = atb0_sw[21];
  assign wired_on_ext = 1'b0;
  assign WTX_FORCE_SELECTED = 1'b0;

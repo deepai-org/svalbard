@@ -29,11 +29,14 @@ import re, sys, os, json, itertools, collections, subprocess
 HERE = os.path.dirname(os.path.abspath(__file__))
 P = os.path.dirname(os.path.dirname(HERE)); ROOT = os.path.dirname(os.path.dirname(P))
 PREFIX = {'A/': P+'/analog/', 'IS/': ROOT+'/scratch/island-support-20261108-075605/', 'IF/': ROOT+'/scratch/iso-family/'}
-SUPPLY = re.compile(r'^(VDD|VSS|RAIL_\w+|VREG_\w+|VDD_LO)$')
+SUPPLY = re.compile(r'^(VDD|VSS|AGND_RX|RAIL_\w+|VREG_\w+|VDD_LO)$')
+# supply island -> enable group bit (island_en / island_on / island_off index); spec/power-delivery.md section 2
+GROUP_BIT = {'wired_rx': 0, 'wired_cap': 0, 'wired_tx': 0, 'rf_rx': 1, 'rf_tx': 1, 'lod': 1, 'lo': 1, 'pll': 2, 'conv': 4, 'debug': 5}
+GROUP_NAME = {0: 'wired', 1: 'rf', 2: 'pll', 4: 'conv', 5: 'debug'}
 ALWAYS_ON = ('core', 'chip')
 FP6 = ROOT+'/scratch/chip-assembly-v6/run/floorplan-v6.json'
 # floorplan name -> instance name where they differ; floorplan entries that are not blocks
-FP_ALIAS = {'clk_obs16': 'clk_obs', 'obs_pre4': 'obs_pre4_wire', 'wordclk': 'wordclk_rx', 'atb0_pad': 'atb0_pad', 'atb1_pad': 'atb1_pad'}
+FP_ALIAS = {'clk_obs16': 'clk_obs', 'obs_pre4': 'obs_pre4_wire', 'wordclk': 'wordclk_rx', 'isw_wired': 'isw_wired_cap', 'isw_rf': 'isw_rf_rx', 'atb0_pad': 'atb0_pad', 'atb1_pad': 'atb1_pad'}
 FP_SKIP = re.compile(r'^(leaf_[fs]\d+|atb_grp\d+|.*_rsv|digital|polyphase|rx_wclk_in)$')     # deleted by user decisions CP4-2 / CP4-3 (2026-11-14)
 
 
@@ -242,12 +245,12 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
             dname, dpin, _ = drv[0]; dg = inst[dname]['group']
             for lname, lpin, _ in ld:
                 lg = inst[lname]['group']
-                if dg in ALWAYS_ON or dg == lg: continue
+                if dg in ALWAYS_ON or dg == lg or GROUP_BIT.get(dg, -1) == GROUP_BIT.get(lg, -2): continue      # same enable group
                 if inst[lname]['master'].startswith('iso_') and lpin == 'A': continue
                 if any(re.fullmatch(w[0], f'{lname}.{lpin}') for w in waive if w[0] != MC): continue
                 if lname == 'digital':      # CP4-1: clamped inside the macro, if a macroclamp line of the DRIVING island names the pin
                     hit = [w for w in waive if w[0] == MC and re.fullmatch(w[2], lpin)]
-                    if hit and hit[0][1] == dg: mc_used[lpin] = dg; continue
+                    if hit and hit[0][1] == GROUP_NAME[GROUP_BIT[dg]]: mc_used[lpin] = hit[0][1]; continue
                     if hit: R['iso'].append(f'digital.{lpin}: macroclamp says island {hit[0][1]} but the driver {dname}.{dpin} is on {dg}'); continue
                 (R['alwayson'] if lg in ALWAYS_ON else R['crossing']).append(f'{n}: {dname}.{dpin} ({dg}) -> {lname}.{lpin} ({lg}) without an iso cell')
     for name, i in inst.items():        # every input of an always-on instance must have a defined source
@@ -255,9 +258,11 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
             for p, (k, n) in i['pins'].items():
                 if k == '=' and not SUPPLY.match(n) and not bus(n)[0].startswith('c_') and not any(u[2] == '>' for u in nets[n]):
                     R['alwayson'].append(f'{name}.{p}: always-on input on net {n} has no driver')
-    BIT = {'wired': 0, 'rf': 1, 'pll': 2, 'conv': 4, 'debug': 5}
+    BIT = GROUP_BIT
     def rail_ok(g, n):
-        return n == 'VDD' if g in ALWAYS_ON else (n == 'RAIL_'+g or (g == 'pll' and n in ('VREG_TX', 'VREG_CDR', 'VDD_LO')))
+        return n == 'VDD' if g in ALWAYS_ON else (n == 'RAIL_'+g or (g == 'pll' and n in ('VREG_TX', 'VREG_CDR')) or (g == 'lo' and n == 'VDD_LO'))
+    for name, i in inst.items():
+        if i['group'] not in ALWAYS_ON and i['group'] not in GROUP_BIT: R['supply'].append(f'{name}: unknown island {i["group"]}')
     for name, i in inst.items():        # supply pin net must match the instance's declared island
         for p in ('VDD', 'VDD_WIRE_SW', 'VDD_PLL_SW', 'vdd3v3', 'DVDD'):
             if p in i['pins'] and not rail_ok(i['group'], i['pins'][p][1]) and i['master'] != 'pt_wtx_fallback_control':
@@ -274,16 +279,16 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
             lg = {inst[u[0]]['group'] for u in nets.get(y, []) if u[2] == '=' }
             lg = {('core' if g in ALWAYS_ON else g) for g in lg}
             mine = 'core' if i['group'] in ALWAYS_ON else i['group']
-            if y != '-' and mine != 'core' and lg and lg != {mine}:     # a core-rail clamp output may go anywhere
+            if y != '-' and mine != 'core' and lg and {GROUP_BIT.get(g, g) for g in lg} != {GROUP_BIT[mine]}:     # a core-rail clamp output may go anywhere
                 R['iso'].append(f'{name}: clamp is on {mine} but its output loads are on {sorted(lg)}')
-            if mine == dg:
-                R['iso'].append(f'{name}: clamp sits on the island that drives it ({dg}); it must be in the receiver domain')
+            if mine == dg or GROUP_BIT.get(mine, -1) == GROUP_BIT.get(dg, -2):
+                R['iso'].append(f'{name}: clamp sits in the enable group that drives it ({dg}); it must be in the receiver domain')
         if i['master'] == 'iso_pd' and not re.fullmatch(r'island_off\[\d\]|c_\w+', i['pins']['ISO'][1]):
             R['iso'].append(f'{name}: iso_pd ISO = {i["pins"]["ISO"][1]}')
     ana = []
     for n, users in nets.items():       # analog nets that span two switched islands with no iso_pd on them (information, D-ANA)
         if SUPPLY.match(n) or n in ports: continue
-        gs = {inst[u[0]]['group'] for u in users if u[2] == '~' and not inst[u[0]]['master'].startswith(('atb_', 'iso_pd', 'pad_'))} - set(ALWAYS_ON)
+        gs = {GROUP_NAME[GROUP_BIT[inst[u[0]]['group']]] for u in users if u[2] == '~' and inst[u[0]]['group'] in GROUP_BIT and not inst[u[0]]['master'].startswith(('atb_', 'iso_pd', 'pad_'))}
         if len(gs) > 1 and not any(inst[u[0]]['master'] == 'iso_pd' for u in users): ana.append(f'{n} ({"/".join(sorted(gs))})')
     info['analog nets across two islands without iso_pd'] = sorted(ana)
     info['intentional no-connects'] = sum(1 for i in inst.values() for k, n in i['pins'].values() if n == '-')
@@ -388,7 +393,7 @@ def write_outputs(inst, masters, nets, ports):
         if base not in b and not SUPPLY.match(base): internal.setdefault(base, set()).add(idx)
     for base, idxs in internal.items():
         S.append(f' wire{"" if idxs == {None} else " ["+str(max(idxs))+":0]"} {base};')
-    S.append(' wire RAIL_wired = VDD, RAIL_rf = VDD, RAIL_pll = VDD, RAIL_conv = VDD, RAIL_debug = VDD, VREG_TX = VDD, VREG_CDR = VDD, VDD_LO = VDD;')
+    S.append(' wire ' + ', '.join(f'{n} = {"VSS" if n == "AGND_RX" else "VDD"}' for n in sorted(nets) if SUPPLY.match(n) and n not in ('VDD', 'VSS')) + ';')
     for name in order:
         i = inst[name]; pin = i['pins']
         for p, (k, n) in pin.items():
@@ -433,9 +438,9 @@ def selftest():
         ('missing', dict(conn=re.sub(r'inst vthdac .*\n(  .*\n)+', '', conn, 1)), 'vthdac'),
         ('crossing', dict(conn=conn.replace(' DX=WTX_DX\n', ' DX=WTX_DX_DBG\n', 1)), 'wiredtx.DX'),
         ('alwayson', dict(conn=conn.replace('EN=c_aosc_en CLK', 'EN=AOSC_EN_FLOAT CLK', 1)), 'aosc.EN'),
-        ('supply', dict(conn=conn.replace('inst lna pt_lna rf', 'inst lna pt_lna conv', 1)), 'lna.VDD'),
+        ('supply', dict(conn=conn.replace('inst lna pt_lna rf_rx', 'inst lna pt_lna conv', 1)), 'lna.VDD'),
         ('iso', dict(conn=conn.replace('A=HOST_CLK ISO=island_off[2]', 'A=HOST_CLK ISO=island_off[0]', 1)), 'iso_host_clk'),
-        ('iso', dict(conn=conn.replace('inst iso_wtx_dx iso_clamp wired', 'inst iso_wtx_dx iso_clamp pll', 1).replace('Y>WTX_DX VDD~RAIL_wired', 'Y>WTX_DX VDD~RAIL_pll', 1)), 'iso_wtx_dx'),
+        ('iso', dict(conn=conn.replace('inst iso_wtx_dx iso_clamp wired_tx', 'inst iso_wtx_dx iso_clamp pll', 1).replace('Y>WTX_DX VDD~RAIL_wired_tx', 'Y>WTX_DX VDD~RAIL_pll', 1)), 'iso_wtx_dx'),
         ('staged', dict(mt=mt.replace('master pt_lo_lf          A/timing/generated/lo_lf.ext.spice:pt_lo_lf', 'master pt_lo_lf          staged A/timing/generated/lo_lf.ext.spice:pt_lo_lf CP VT VSS X', 1)), 'lo_lf'),
         ('alwayson', dict(conn=conn.replace('macroclamp debug fc_src', 'macroclamp debug fc_srcX', 1)), 'digital.fc_src[2]'),
         ('iso', dict(conn=conn.replace('macroclamp pll rf_tx_clk|', 'macroclamp conv rf_tx_clk|macroclamp_none|', 1)), 'digital.rf_tx_clk'),
@@ -444,7 +449,7 @@ def selftest():
         ('cfg', dict(reg=dict(reg, fields=[dict(f, bus_bits=3) if f['name'] == 'lna.match.ctrim' else f for f in reg['fields']])), 'c_lna_ct'),
         ('cfg', dict(reg=dict(reg, fields=[dict(f, default=0) if f['name'] == 'lna.match.ctrim' else f for f in reg['fields']])), 'c_lna_ct'),
         ('macro', dict(rtl={k: v for k, v in rtl.items() if k != 'por_bypass'}), 'por_bypass'),
-        ('demand', dict(conn=conn.replace('inst lo_lf pt_lo_lf pll', 'inst lo_lf pt_lo_lf pll demand', 1)), 'lo_lf'),
+        ('demand', dict(conn=conn.replace('inst lo_lf pt_lo_lf lo', 'inst lo_lf pt_lo_lf lo demand', 1)), 'lo_lf'),
     ]
     ok = True
     for kind, kw, needle in cases:
@@ -467,7 +472,7 @@ if __name__ == '__main__':
     mcl = info.pop('_macroclamp')
     for k, v in info.items(): print(f'({k}) {v}')
     if '--write' in sys.argv:
-        BITS = {'wired': 0, 'rf': 1, 'pll': 2, 'conv': 4, 'debug': 5}
+        BITS = {v: k for k, v in GROUP_NAME.items()}
         os.makedirs(os.environ.get('PT_TOP_OUT', HERE+'/generated'), exist_ok=True)
         open(os.environ.get('PT_TOP_OUT', HERE+'/generated')+'/macro_clamps.txt', 'w').write(
             '# GENERATED by check_top.py --write (CP4-1): macro inputs to AND with island_on[bit] on the first gate after the pin\n# pin island island_on_bit\n'

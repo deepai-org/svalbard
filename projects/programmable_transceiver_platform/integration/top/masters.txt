@@ -101,3 +101,7 @@ master pt_lo_vreg        demand timing+power VIN VOUT EN VSS
 master pt_refvcm         demand pads VCM EN VDD VSS
 master pad_strap         demand pads+digital PAD Y VDD VSS
 master pt_txpad_bias     demand pads BUF_REF BUF_BIAS EN_TERM VDD VSS
+master pad_downbond      demand pads PAD
+master pt_agnd_tie       demand pads A B
+# provider supply / ground pad cells (dvdd, dvss, vdd, vss of the retained ring): one bond each
+master prov_supply       inline PAD

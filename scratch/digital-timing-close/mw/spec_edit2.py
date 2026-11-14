@@ -131,3 +131,32 @@ for r in D['rules']:                                    # finding 9: the two oth
     if r['id'] == 'lo_pads_vs_forwarded_clock': r['then_all'] += [['clockmux.config.ring_ref', 'ne', 'aux'], ['cdr.ac3.fll_ref_wck', 'eq', 0]]
     if r['id'] == 'forwarded_clock_needs_debug_island': r['if_any'] += [['clockmux.config.ring_ref', 'eq', 'aux'], ['cdr.ac3.fll_ref_wck', 'eq', 1]]
 C['core.refchain']['description'] = C['core.refchain']['description'].replace('128 SCLK cycles (>= 12.8 us at <= 10 MHz, 25.6 us at 5 MHz)', '256 SCLK cycles (>= 10 us for SCLK <= 25 MHz; 51 us at the 5 MHz limit: the consumers switch on in the eighth SPI transaction after the commit)')
+# ---------------------------------------------------------------- block_observation ledger: retired pads and renamed status bits
+_OBS = {'pll_lock': 'pll_tx_lock', 'bias_ready': 'bandgap_ok', 'cdr_qualified': 'cdr_freq_ok', 'cdr_loss': 'cdr_fll_lost'}
+_WIRE = {'pll_lock': 'pll_cdr_lock', 'cdr_qualified': 'cdr_freq_ok', 'cdr_loss': 'cdr_fll_lost', 'cdr_rx_state0': 'wrx_sig_ok', 'cdr_rx_state1': 'wrx_idle',
+         'slicer_data': 'wrx_sig_ok', 'slicer_early': 'wrx_sig_ok', 'slicer_late': 'wrx_sig_ok', 'electrical_quiet': 'wrx_idle',
+         'detect_event': 'detect_diff', 'detect_timeout': 'detect_diff'}
+def _walk(x):
+    if isinstance(x, dict):
+        if x.get('path') == 'wdbg_obs':      # PD22: WDBG_OBS retired, wire_status is observed on DBG_OBS (codes 37+n)
+            x['path'] = 'dbg_obs'; x['select'] = _WIRE.get(x['select'], x['select'])
+            if x['select'] in ('wrx_sig_ok', 'wrx_idle', 'detect_diff'):
+                x['note'] = (x.get('note', '') + ' r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.').strip()
+        elif x.get('path') == 'dbg_obs': x['select'] = _OBS.get(x['select'], x['select'])
+        elif x.get('path') == 'wclk_obs': x['path'] = 'clk_obs'      # PD22: WCLK_OBS folded into CLK_OBS
+        if isinstance(x.get('expected'), str): x['expected'] = x['expected'].replace('WDBG_OBS', 'DBG_OBS').replace('WCLK_OBS', 'CLK_OBS')
+        for v in x.values(): _walk(v)
+    elif isinstance(x, list):
+        for v in x: _walk(v)
+_walk(D['block_observation'])
+def _walk2(x):
+    if isinstance(x, dict):
+        m = x.get('mode')
+        if isinstance(m, dict) and 'consolidation.pll.owner' in m:      # the shared-PLL owner field is gone: per-ring / LO fields
+            m.pop('consolidation.pll.owner')   # (the ledger's mode check only knows debug controls; the ring / LO enables are analog fields)
+        for k, v in list(x.items()):
+            if isinstance(v, list): x[k] = [e for e in v if not (isinstance(e, dict) and e.get('select') == 'monitor_por_threshold')]   # ATB code 4 is reserved (audit F11)
+        for v in x.values(): _walk2(v)
+    elif isinstance(x, list):
+        for v in x: _walk2(v)
+_walk2(D['block_observation'])

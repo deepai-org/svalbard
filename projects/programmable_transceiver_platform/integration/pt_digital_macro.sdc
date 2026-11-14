@@ -520,7 +520,7 @@ set sync_first [concat \
     [pt_cells {*.meta*}] \
     [pt_cells {*regs.s1*}] [pt_cells {*regs.c1*}] [pt_cells {*regs.pg1*}] [pt_cells {*regs.on1*}] \
     [pt_cells {*regs.f1*}] [pt_cells {*regs.st1_*}] \
-    [pt_cells {*det.den_s*}]]
+    [pt_cells {*det.den_s*}] [pt_cells {*wrx.al_sy*}] [pt_cells {*wrx.lk_sy*}] [pt_cells {*wrx.fk_sy*}]]
 if {[llength $sync_first]} { set_false_path -to $sync_first }
 # 1b. Reset synchronizers (pt_async_fifo wr_reset/rd_reset, pt_enable_release release_state,
 #     pt_pair_word_boundary reset_release, pt_host_link hrs/wrs). Their asynchronous reset is
@@ -785,12 +785,29 @@ if {$PT_OCV > 0} {
 # release are asynchronous to every domain by design (as reset_n_pad / por_n always were): everything through the
 # module's reset output is a false path. NOT a blanket "-from sclk -to */RN": the SPI bit counter's CS_N
 # recovery / removal checks stay timed. The key shift register's own flop-to-flop paths stay timed (hold).
-set pt_por_rst [get_pins -quiet por_path/rst_n]
-if {[llength $pt_por_rst] != 1} {
-    puts "pt_digital_macro.sdc: ERROR: por_path/rst_n not found (pt_por_path must keep its hierarchy)"
-    if {![info exists ::env(PT_SDC_LENIENT)]} { error "por_path/rst_n not found" }
+# (OpenROAD flattens the kept hierarchy when it links, so the module's output pin does not exist there: the 16 key
+# flops are found by name and their paths into asynchronous reset / set pins are cut.)
+set pt_por_keys [get_cells -quiet -filter {ref_name =~ *dffrnq*} {por_path*key*}]
+if {[llength $pt_por_keys] != 16} {
+    puts "pt_digital_macro.sdc: ERROR: expected 16 por_path key flops, found [llength $pt_por_keys]"
+    if {![info exists ::env(PT_SDC_LENIENT)]} { error "por_path key flops not found" }
 } else {
-    set_false_path -through $pt_por_rst
-    set_false_path -through [get_pins por_path/ovr_armed]
-    set_false_path -through [get_pins por_path/por_masked]
+    set_false_path -from $pt_por_keys -through [get_pins -quiet -hierarchical {*/RN}]
+    set pt_setn [get_pins -quiet -hierarchical {*/SETN}]
+    if {[llength $pt_setn]} { set_false_path -from $pt_por_keys -through $pt_setn }
 }
+
+# r6 control blocks (rtl/pt_monitor.sv, pt_wrx_ctl.sv), measured on syn_r6t:
+#  - the monitor's fault level is asynchronous by contract (it forces pad requests and clears driver flops in every
+#    domain; its consumers synchronize or use it as an asynchronous clear);
+#  - pt_wrx_ctl resets its word domain from the reference-domain flop wrun (asynchronous assert, synchronized release);
+#  - wrx.mag is stable three reference cycles before out_loss_q uses it (13-bit compare, pinned by a mutant's text).
+foreach pat {{*monitor.fault_m*} {*wrx.wrun*}} {
+    set c [pt_cells $pat]
+    if {[llength $c]} { set_false_path -from $c } else { puts "pt_digital_macro.sdc: WARNING: no cell matches $pat" }
+}
+set pt_mag [pt_cells {*wrx.mag*}]; set pt_loss [pt_cells {*wrx.out_loss_q*}]
+if {[llength $pt_mag] && [llength $pt_loss]} {
+    set_multicycle_path 3 -setup -from $pt_mag -to $pt_loss
+    set_multicycle_path 2 -hold -from $pt_mag -to $pt_loss
+} else { puts "pt_digital_macro.sdc: WARNING: wrx.mag / out_loss_q not found" }

@@ -49,7 +49,6 @@ def validate_mapping(controls, ledger, arch, read):
                 errors.append(f'{bus} group {group["name"]} has {len(group["codes"])} leaves (>12)')
     clk = controls['controls']['debug.clk_obs']['fields']['source']
     values = {'clk_obs': set(clk['values'])-set(clk.get('forbidden', [])),
-              'wclk_obs': set(controls['controls']['debug.wclk_obs']['fields']['source']['values']),
               'wmon': set(controls['controls']['debug.wmon_select']['fields']['select']['values']),
               'bb_tap': {v for v in controls['controls']['debug.bb_tap']['fields']['mode']['values'] if v.startswith('observe')},
               'freq_count': set(controls['controls']['debug.freq_count_a']['fields']['source']['values'])}
@@ -84,10 +83,10 @@ def validate_mapping(controls, ledger, arch, read):
                         allowed = block_islands | set(e.get('islands') or [])
                         if node['island'] and node['island'] not in allowed:
                             problems.append(f'node island {node["island"]} not among the entry/block islands')
-                elif e['path'] == 'dbg_obs' and e['select'] not in controls['obs_status'] + ['commit_toggle']:
-                    problems.append('not an obs_status name')
-                elif e['path'] == 'wdbg_obs' and e['select'] not in controls['wire_status']:
-                    problems.append('not a wire_status name')
+                elif e['path'] == 'dbg_obs' and e['select'] not in controls['obs_status'] + controls['wire_status'] + ['commit_toggle']:
+                    problems.append('not an obs_status / wire_status name')   # PD22: wire_status is on DBG_OBS (codes 37+n)
+                elif e['path'] in ('wdbg_obs', 'wclk_obs'):
+                    problems.append('retired pad (PD22): use dbg_obs / clk_obs')
                 elif e['path'] in values and e['select'] not in values[e['path']]:
                     problems.append('selection not legal for this path (forbidden, absent or not an observe mode)')
                 for field, value in (e.get('mode') or {}).items():

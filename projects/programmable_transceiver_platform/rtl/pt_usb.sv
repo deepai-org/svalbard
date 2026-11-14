@@ -38,7 +38,8 @@ module pt_usb_sync(input wire clk, rst_n, d, output reg q);
         if (!rst_n) begin meta <= 1'b0; q <= 1'b0; end else begin meta <= d; q <= meta; end
 endmodule
 
-// Level debounce: q follows d after d has been equal for n + 1 consecutive samples.
+// Level debounce: q follows d after d has been equal for n + 1 consecutive samples. The counter
+// runs on (saturating) so that the compare with n only ends in q, not in the counter enable.
 module pt_usb_debounce #(parameter integer W = 1, parameter integer CW = 8)(
     input  wire          clk, rst_n,
     input  wire [CW-1:0] n,
@@ -48,10 +49,13 @@ module pt_usb_debounce #(parameter integer W = 1, parameter integer CW = 8)(
     reg [W-1:0]  cand;
     reg [CW-1:0] cnt;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cand <= {W{1'b0}}; cnt <= {CW{1'b0}}; q <= {W{1'b0}}; end
-        else if (d != cand) begin cand <= d; cnt <= {CW{1'b0}}; end
+        if (!rst_n) begin cand <= {W{1'b0}}; q <= {W{1'b0}}; end
+        else if (d != cand) cand <= d;
         else if (cnt == n) q <= cand;
-        else cnt <= cnt + 1'b1;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) cnt <= {CW{1'b0}};
+        else if (d != cand) cnt <= {CW{1'b0}};
+        else if (!(&cnt)) cnt <= cnt + 1'b1;
 endmodule
 
 module pt_usb(
@@ -73,7 +77,7 @@ module pt_usb(
     input  wire [1:0]  cfg_bbm,          // extra break-before-make cycles (static)
     input  wire [39:0] tx_data,          // 20 symbols, first in [1:0]
     input  wire        tx_valid,
-    output wire        tx_ready,         // quad taken on tx_valid && tx_ready
+    output wire        tx_ready,         // quad taken on tx_valid && tx_ready; a register (one-quad holding stage)
     input  wire        hs_tx_active,     // tx_clk domain: an HS packet is in the serializer (wire_tx_valid && !wire_idle)
     output wire        c_usb_hs_p, c_usb_hs_n,
     output wire        c_usb_fs_high_p, c_usb_fs_high_n, c_usb_fs_low_p, c_usb_fs_low_n,
@@ -140,36 +144,54 @@ module pt_usb(
     wire fs_clear = !fs_any && age_fs >= cfg_bbm;
     wire hs_clear = !hs_any && age_hs >= cfg_bbm;
 
-    // symbol engine
-    reg [39:0] sh;
+    // symbol engine. Timing (wire_tx_clk, slow cells): tx_ready is a flop and a quad is taken into the
+    // holding register hq (hv = full); the engine loads from hq, so nothing combinational hangs on
+    // tx_ready / tx_valid / tx_data. The symbol-time compare and the symbol count are registered
+    // flags (last_q: ph == cfg_tx_div in this cycle, nnz: nsym != 0), and the engine runs from eng,
+    // one cycle behind eng_on (the driver flops keep their own direct gating by sel_fs / sel_hs).
+    // A quad must be offered one cycle before the previous one ends (it is taken up to a whole quad
+    // early); a quad taken in the cycle the engine is switched off is dropped with the engine state.
+    reg [39:0] sh, hq;
     reg [4:0]  nsym;
     reg [7:0]  ph;
     reg [1:0]  cur;
-    reg        busy;
+    reg        busy, eng, hv, rdy_q, last_q, nnz;
     wire eng_on = (fs_en_q && sel_fs) || (hs_en_q && sel_hs && hs_sym_s);
-    wire step   = !busy || ph == cfg_tx_div;
-    assign tx_ready = eng_on && step && nsym == 5'd0;
+    wire [7:0] div_m1 = cfg_tx_div - 8'd1;        // static
+    wire       div_z  = cfg_tx_div == 8'd0;
+    wire step = !busy || last_q;
+    wire take = tx_valid && rdy_q;
+    wire pop  = step && !nnz && hv;               // the engine loads the held quad (eng = 1)
+    assign tx_ready = rdy_q;
 
     always @(posedge tx_clk or negedge t_rst_n)
         if (!t_rst_n) begin
-            sh <= 40'd0; nsym <= 5'd0; ph <= 8'd0; cur <= 2'b11; busy <= 1'b0;
+            sh <= 40'd0; hq <= 40'd0; nsym <= 5'd0; ph <= 8'd0; cur <= 2'b11; busy <= 1'b0;
+            eng <= 1'b0; hv <= 1'b0; rdy_q <= 1'b0; last_q <= 1'b0; nnz <= 1'b0;
             armed <= 1'b0; blocked <= 1'b0; underrun <= 1'b0;
         end else begin
             if (!req_fs && !req_hs) begin if (t_cfg_ok) armed <= 1'b1; blocked <= 1'b0; underrun <= 1'b0; end
             else if (!armed || (req_fs && term_on_s) || (req_hs && ls_slow_s)) blocked <= 1'b1;
-            if (!eng_on) begin
-                nsym <= 5'd0; ph <= 8'd0; cur <= 2'b11; busy <= 1'b0;
-            end else if (step) begin
-                ph <= 8'd0;
-                if (nsym != 5'd0) begin
-                    cur <= sh[1:0]; sh <= {2'b11, sh[39:2]}; nsym <= nsym - 5'd1;
-                end else if (tx_valid) begin
-                    cur <= tx_data[1:0]; sh <= {2'b11, tx_data[39:2]}; nsym <= 5'd19; busy <= 1'b1;
-                end else begin
-                    if (busy && cur != 2'b11) underrun <= 1'b1;   // ran dry while driving
-                    cur <= 2'b11; busy <= 1'b0;
-                end
-            end else ph <= ph + 8'd1;
+            eng <= eng_on;
+            if (take) hq <= tx_data;
+            if (!eng) begin
+                nsym <= 5'd0; nnz <= 1'b0; ph <= 8'd0; last_q <= div_z; cur <= 2'b11; busy <= 1'b0;
+                hv <= 1'b0; rdy_q <= 1'b0;
+            end else begin
+                rdy_q <= pop || !(hv || take);    // = holding register empty in the next cycle
+                if (take) hv <= 1'b1; else if (pop) hv <= 1'b0;
+                if (step) begin
+                    ph <= 8'd0; last_q <= div_z;
+                    if (nnz) begin
+                        cur <= sh[1:0]; sh <= {2'b11, sh[39:2]}; nsym <= nsym - 5'd1; nnz <= nsym != 5'd1;
+                    end else if (hv) begin
+                        cur <= hq[1:0]; sh <= {2'b11, hq[39:2]}; nsym <= 5'd19; nnz <= 1'b1; busy <= 1'b1;
+                    end else begin
+                        if (busy && cur != 2'b11) underrun <= 1'b1;   // ran dry while driving
+                        cur <= 2'b11; busy <= 1'b0;
+                    end
+                end else begin ph <= ph + 8'd1; last_q <= ph == div_m1; end
+            end
         end
 
     wire [1:0] sym = force_s ? cfg_force_sym : cur;
@@ -256,45 +278,68 @@ module pt_usb(
     // oversampled symbol recovery: the bit phase restarts at a change of the line and the symbol is
     // taken half a bit later. A second change within (div + 1) / 4 samples of a restart (the other
     // leg of a J/K crossover, seen as a short SE0 / SE1) does not restart the phase again.
+    // Timing (rx_clk = wire_rx_clk, slow cells): the selected sample is registered once more before
+    // the change detect (raw_a) and the symbol strobe is registered (stb_q, with the sample and the
+    // receive enable delayed alike: raw_d, ron_q), so rx_data / rx_valid are two rx_clk later than
+    // without these stages and nothing else changes. The other
+    // compares are registered flags computed one cycle ahead against static values: wrap
+    // (rph == cfg_rx_div, from weq = the plain compare and wz = rph was just cleared), hold_nz
+    // (hold != 0), f19 (fill == 19), sq_q (since + 1 >= cfg_rx_quiet).
+    // sq_q follows since one cycle later: fine while two symbol strobes are never in consecutive
+    // cycles (cfg_rx_div >= 1).
     wire [1:0] raw = (cfg_rx_diff && (sp || sn) && (dpos != dneg)) ? {dneg, dpos} : {sn, sp};
     wire rx_on = rx_en_s && isl_s && (!drv_s || cfg_rx_echo);
     wire [7:0] half = {1'b0, cfg_rx_div[7:1]} + {7'd0, cfg_rx_div[0]};   // (div + 1) / 2
-    reg [1:0]  raw_q, last;
+    wire [7:0] rdiv_m1 = cfg_rx_div - 8'd1;       // static
+    wire       rdiv_z  = cfg_rx_div == 8'd0;
+    wire [7:0] hold0   = {1'b0, half[7:1]};
+    wire       quiet_z = cfg_rx_quiet == 5'd0;
+    reg [1:0]  raw_a, raw_q, raw_d, last;
     reg [7:0]  rph, hold;
-    reg        primed, active;
+    reg        primed, active, stb_q, weq, wz, hold_nz, f19, sq_q, ron_a, ron_q;
     reg [4:0]  since, fill;
     reg [39:0] rsh;
     wire stb     = rph == half;
-    wire changed = raw_q != last;
-    wire [4:0] since_n = changed ? 5'd0 : (since == 5'd31 ? 5'd31 : since + 5'd1);
+    wire wrap    = wz ? rdiv_z : weq;             // rph == cfg_rx_div
+    wire restart = raw_a != raw_q && !hold_nz;
+    wire changed = raw_d != last;
+    wire [4:0] since_i = since == 5'd31 ? 5'd31 : since + 5'd1;
+    wire [4:0] since_n = changed ? 5'd0 : since_i;
     assign st_rx_active = active;
 
     always @(posedge rx_clk or negedge r_rst_n)
         if (!r_rst_n) begin
-            raw_q <= 2'b00; last <= 2'b00; rph <= 8'd0; hold <= 8'd0; primed <= 1'b0; active <= 1'b0;
+            raw_a <= 2'b00; raw_q <= 2'b00; raw_d <= 2'b00; last <= 2'b00; rph <= 8'd0; hold <= 8'd0; primed <= 1'b0; active <= 1'b0;
+            stb_q <= 1'b0; weq <= 1'b0; wz <= 1'b0; hold_nz <= 1'b0; f19 <= 1'b0; sq_q <= 1'b0; ron_a <= 1'b0; ron_q <= 1'b0;
             since <= 5'd0; fill <= 5'd0; rsh <= 40'd0; rx_data <= 40'd0; rx_valid <= 1'b0;
         end else begin
             rx_valid <= 1'b0;
-            raw_q <= raw;
-            if (raw != raw_q && hold == 8'd0) begin rph <= 8'd0; hold <= {1'b0, half[7:1]}; end
-            else begin
-                rph <= rph == cfg_rx_div ? 8'd0 : rph + 8'd1;
-                if (hold != 8'd0) hold <= hold - 8'd1;
-            end
-            if (!rx_on) begin
-                primed <= 1'b0; active <= 1'b0; since <= 5'd0; fill <= 5'd0;
-            end else if (stb) begin
-                last <= raw_q;
+            raw_a <= raw;
+            raw_q <= raw_a;
+            raw_d <= raw_q;
+            stb_q <= stb;
+            ron_a <= rx_on;
+            ron_q <= ron_a;
+            sq_q  <= since_i >= cfg_rx_quiet;
+            weq <= rph == rdiv_m1;
+            wz  <= restart || wrap;
+            if (restart || wrap) rph <= 8'd0; else rph <= rph + 8'd1;
+            if (restart) begin hold <= hold0; hold_nz <= hold0 != 8'd0; end
+            else if (hold_nz) begin hold <= hold - 8'd1; hold_nz <= hold != 8'd1; end
+            if (!ron_q) begin
+                primed <= 1'b0; active <= 1'b0; since <= 5'd0; fill <= 5'd0; f19 <= 1'b0;
+            end else if (stb_q) begin
+                last <= raw_d;
                 if (!primed) begin primed <= 1'b1; since <= 5'd31; end
                 else begin
                     since <= since_n;
                     if (active || changed) begin
                         active <= 1'b1;
-                        rsh <= {raw_q, rsh[39:2]};
-                        if (fill == 5'd19) begin
-                            fill <= 5'd0; rx_data <= {raw_q, rsh[39:2]}; rx_valid <= 1'b1;
-                            if (since_n >= cfg_rx_quiet) active <= 1'b0;   // bursts end on a quad boundary
-                        end else fill <= fill + 5'd1;
+                        rsh <= {raw_d, rsh[39:2]};
+                        if (f19) begin
+                            fill <= 5'd0; f19 <= 1'b0; rx_data <= {raw_d, rsh[39:2]}; rx_valid <= 1'b1;
+                            if (changed ? quiet_z : sq_q) active <= 1'b0;   // bursts end on a quad boundary
+                        end else begin fill <= fill + 5'd1; f19 <= fill == 5'd18; end
                     end
                 end
             end

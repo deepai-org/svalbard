@@ -3444,13 +3444,6 @@
           "path": "spi",
           "select": "0x0D[0]",
           "expected": "RESET_STATUS b0 = 1 after power-up, survives RESET_N, clears on W1C"
-        },
-        {
-          "signal": "monitor_por_threshold",
-          "port": null,
-          "path": "atb1",
-          "select": "monitor_por_threshold",
-          "expected": "ATB1 = POR trip reference voltage"
         }
       ],
       "aosc": [
@@ -3517,7 +3510,7 @@
           "signal": "bias_ready",
           "port": "ready",
           "path": "dbg_obs",
-          "select": "bias_ready",
+          "select": "bandgap_ok",
           "expected": "DBG_OBS0 high once the bias generator is enabled and settled"
         }
       ],
@@ -3746,9 +3739,7 @@
           "path": "clk_obs",
           "select": "pll_vco",
           "expected": "CLK_OBS = RF PLL VCO / 2^7 (owner=rf)",
-          "mode": {
-            "consolidation.pll.owner": "rf"
-          },
+          "mode": {},
           "islands": [
             "pll"
           ],
@@ -3760,9 +3751,7 @@
           "path": "clk_obs",
           "select": "pll_feedback",
           "expected": "CLK_OBS = PLL feedback divider output, equal to reference when locked",
-          "mode": {
-            "consolidation.pll.owner": "rf"
-          },
+          "mode": {},
           "islands": [
             "pll"
           ]
@@ -3771,11 +3760,9 @@
           "signal": "pll_lock",
           "port": "lock",
           "path": "dbg_obs",
-          "select": "pll_lock",
+          "select": "pll_tx_lock",
           "expected": "DBG_OBS0 high after lock (owner=rf)",
-          "mode": {
-            "consolidation.pll.owner": "rf"
-          },
+          "mode": {},
           "islands": [
             "pll"
           ]
@@ -3786,9 +3773,7 @@
           "path": "atb1",
           "select": "pll_vctrl",
           "expected": "ATB1 = loop control voltage, steady when locked",
-          "mode": {
-            "consolidation.pll.owner": "rf"
-          },
+          "mode": {},
           "islands": [
             "pll"
           ]
@@ -3806,9 +3791,7 @@
           "path": "freq_count",
           "select": "tx_ring_fbck",
           "expected": "status.freq_count_a.locked=1, count matches target",
-          "mode": {
-            "consolidation.pll.owner": "rf"
-          },
+          "mode": {},
           "islands": [
             "pll"
           ]
@@ -3821,9 +3804,7 @@
           "path": "clk_obs",
           "select": "pll_vco",
           "expected": "CLK_OBS = wired PLL VCO / 2^7 (owner=wired)",
-          "mode": {
-            "consolidation.pll.owner": "wired"
-          },
+          "mode": {},
           "islands": [
             "pll"
           ],
@@ -3832,12 +3813,10 @@
         {
           "signal": "pll_lock",
           "port": "lock",
-          "path": "wdbg_obs",
-          "select": "pll_lock",
-          "expected": "WDBG_OBS high after lock (owner=wired)",
-          "mode": {
-            "consolidation.pll.owner": "wired"
-          },
+          "path": "dbg_obs",
+          "select": "pll_cdr_lock",
+          "expected": "DBG_OBS high after lock (owner=wired)",
+          "mode": {},
           "islands": [
             "pll"
           ]
@@ -3846,11 +3825,9 @@
           "signal": "pll_lock",
           "port": "lock",
           "path": "dbg_obs",
-          "select": "pll_lock",
+          "select": "pll_tx_lock",
           "expected": "DBG_OBS0 high after lock (owner=wired)",
-          "mode": {
-            "consolidation.pll.owner": "wired"
-          },
+          "mode": {},
           "islands": [
             "pll"
           ]
@@ -3861,9 +3838,7 @@
           "path": "atb1",
           "select": "pll_vctrl",
           "expected": "ATB1 = loop control voltage (owner=wired)",
-          "mode": {
-            "consolidation.pll.owner": "wired"
-          },
+          "mode": {},
           "islands": [
             "pll"
           ]
@@ -3874,9 +3849,7 @@
           "path": "freq_count",
           "select": "tx_ring_fbck",
           "expected": "status.freq_count_a.locked=1 (owner=wired)",
-          "mode": {
-            "consolidation.pll.owner": "wired"
-          },
+          "mode": {},
           "islands": [
             "pll"
           ]
@@ -3897,9 +3870,9 @@
         {
           "signal": "wire_clock",
           "port": "wire_clock",
-          "path": "wclk_obs",
+          "path": "clk_obs",
           "select": "wire_line",
-          "expected": "WCLK_OBS = selected wired line clock / 2^N",
+          "expected": "CLK_OBS = selected wired line clock / 2^N",
           "islands": [
             "pll",
             "wired"
@@ -3924,9 +3897,7 @@
           "path": "freq_count",
           "select": "tx_ring_fbck",
           "expected": "PLL frequency counter locks against low_ref (indirect)",
-          "mode": {
-            "consolidation.pll.owner": "rf"
-          },
+          "mode": {},
           "via": "rfpll",
           "islands": [
             "pll"
@@ -3938,9 +3909,7 @@
           "path": "clk_obs",
           "select": "pll_feedback",
           "expected": "indirect: CLK_OBS pll_feedback equals the received reference when locked",
-          "mode": {
-            "consolidation.pll.owner": "rf"
-          },
+          "mode": {},
           "via": "rfpll",
           "islands": [
             "pll"
@@ -4460,9 +4429,9 @@
         {
           "signal": "wtx_ext_data",
           "port": null,
-          "path": "wdbg_obs",
+          "path": "dbg_obs",
           "select": "wtx_ext_data",
-          "expected": "WDBG_OBS follows WTX_EXT data when debug.wtx_ext.enable=1",
+          "expected": "DBG_OBS follows WTX_EXT data when debug.wtx_ext.enable=1",
           "islands": [
             "wired"
           ]
@@ -4470,9 +4439,9 @@
         {
           "signal": "wire_tx_request",
           "port": null,
-          "path": "wdbg_obs",
+          "path": "dbg_obs",
           "select": "wire_tx_request",
-          "expected": "WDBG_OBS = wire_tx_request"
+          "expected": "DBG_OBS = wire_tx_request"
         }
       ],
       "tmds": [
@@ -4508,9 +4477,9 @@
         {
           "signal": "recovered",
           "port": "recovered",
-          "path": "wclk_obs",
+          "path": "clk_obs",
           "select": "cdr_recovered",
-          "expected": "WCLK_OBS = recovered clock / 2^N, frequency-locked to the line rate",
+          "expected": "CLK_OBS = recovered clock / 2^N, frequency-locked to the line rate",
           "islands": [
             "wired",
             "pll"
@@ -4520,45 +4489,48 @@
         {
           "signal": "cdr_qualified",
           "port": "qualified",
-          "path": "wdbg_obs",
-          "select": "cdr_qualified",
-          "expected": "WDBG_OBS high once qualified"
+          "path": "dbg_obs",
+          "select": "cdr_freq_ok",
+          "expected": "DBG_OBS high once qualified"
         },
         {
           "signal": "cdr_qualified",
           "port": "qualified",
           "path": "dbg_obs",
-          "select": "cdr_qualified",
+          "select": "cdr_freq_ok",
           "expected": "DBG_OBS0 high once qualified"
         },
         {
           "signal": "cdr_loss",
           "port": "loss",
-          "path": "wdbg_obs",
-          "select": "cdr_loss",
-          "expected": "WDBG_OBS pulses on loss of lock"
+          "path": "dbg_obs",
+          "select": "cdr_fll_lost",
+          "expected": "DBG_OBS pulses on loss of lock"
         },
         {
           "signal": "cdr_rx_state0",
           "port": "rx_state",
-          "path": "wdbg_obs",
-          "select": "cdr_rx_state0",
-          "expected": "WDBG_OBS = rx_state bit 0"
+          "path": "dbg_obs",
+          "select": "wrx_sig_ok",
+          "expected": "DBG_OBS = rx_state bit 0",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "cdr_rx_state1",
           "port": "rx_state",
-          "path": "wdbg_obs",
-          "select": "cdr_rx_state1",
-          "expected": "WDBG_OBS = rx_state bit 1"
+          "path": "dbg_obs",
+          "select": "wrx_idle",
+          "expected": "DBG_OBS = rx_state bit 1",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "phase",
           "port": "phase",
-          "path": "wdbg_obs",
-          "select": "slicer_early",
-          "expected": "indirect: early/late balance at WDBG_OBS reflects the selected phase",
-          "via": "slicer"
+          "path": "dbg_obs",
+          "select": "wrx_sig_ok",
+          "expected": "indirect: early/late balance at DBG_OBS reflects the selected phase",
+          "via": "slicer",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "burst_phases/burst_seed_ack",
@@ -4628,23 +4600,26 @@
         {
           "signal": "slicer_data",
           "port": "data",
-          "path": "wdbg_obs",
-          "select": "slicer_data",
-          "expected": "WDBG_OBS = sampled data bit"
+          "path": "dbg_obs",
+          "select": "wrx_sig_ok",
+          "expected": "DBG_OBS = sampled data bit",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "slicer_early",
           "port": "early",
-          "path": "wdbg_obs",
-          "select": "slicer_early",
-          "expected": "WDBG_OBS = early indication"
+          "path": "dbg_obs",
+          "select": "wrx_sig_ok",
+          "expected": "DBG_OBS = early indication",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "slicer_late",
           "port": "late",
-          "path": "wdbg_obs",
-          "select": "slicer_late",
-          "expected": "WDBG_OBS = late indication"
+          "path": "dbg_obs",
+          "select": "wrx_sig_ok",
+          "expected": "DBG_OBS = late indication",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "burst_samples/boundary/phase_code",
@@ -4673,20 +4648,22 @@
         {
           "signal": "output",
           "port": "output",
-          "path": "wdbg_obs",
-          "select": "slicer_data",
+          "path": "dbg_obs",
+          "select": "wrx_sig_ok",
           "expected": "indirect: slicer data follows the line only through the level shifter; no local tap",
-          "via": "rxselect,slicer"
+          "via": "rxselect,slicer",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         }
       ],
       "rxselect": [
         {
           "signal": "selected",
           "port": "selected",
-          "path": "wdbg_obs",
-          "select": "slicer_data",
+          "path": "dbg_obs",
+          "select": "wrx_sig_ok",
           "expected": "indirect: slicer data follows the selected serial/USB input; no local tap",
-          "via": "slicer"
+          "via": "slicer",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         }
       ],
       "termination": [
@@ -4725,23 +4702,26 @@
         {
           "signal": "detect_event",
           "port": "events",
-          "path": "wdbg_obs",
-          "select": "detect_event",
-          "expected": "WDBG_OBS pulses on receiver-detect event"
+          "path": "dbg_obs",
+          "select": "detect_diff",
+          "expected": "DBG_OBS pulses on receiver-detect event",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "detect_timeout",
           "port": "events",
-          "path": "wdbg_obs",
-          "select": "detect_timeout",
-          "expected": "WDBG_OBS high on detect timeout (no receiver)"
+          "path": "dbg_obs",
+          "select": "detect_diff",
+          "expected": "DBG_OBS high on detect timeout (no receiver)",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "electrical_quiet",
           "port": "electrical_quiet",
-          "path": "wdbg_obs",
-          "select": "electrical_quiet",
-          "expected": "WDBG_OBS high with the line idle"
+          "path": "dbg_obs",
+          "select": "wrx_idle",
+          "expected": "DBG_OBS high with the line idle",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "test_current",
@@ -4768,9 +4748,9 @@
         {
           "signal": "usb_squelch",
           "port": "squelch",
-          "path": "wdbg_obs",
+          "path": "dbg_obs",
           "select": "usb_squelch",
-          "expected": "WDBG_OBS high with the bus idle, low with HS traffic"
+          "expected": "DBG_OBS high with the bus idle, low with HS traffic"
         },
         {
           "signal": "drive",
@@ -4785,10 +4765,11 @@
         {
           "signal": "conditioned",
           "port": "conditioned",
-          "path": "wdbg_obs",
-          "select": "slicer_data",
+          "path": "dbg_obs",
+          "select": "wrx_sig_ok",
           "expected": "indirect: HS receive data at the slicer via rxselect usb input",
-          "via": "rxselect,slicer"
+          "via": "rxselect,slicer",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "usbhs_ibias",
@@ -4805,10 +4786,11 @@
         {
           "signal": "states",
           "port": "states",
-          "path": "wdbg_obs",
-          "select": "slicer_data",
+          "path": "dbg_obs",
+          "select": "wrx_sig_ok",
           "expected": "indirect: FS line state via the usb_fs_via_slicer path",
-          "via": "rxselect,slicer"
+          "via": "rxselect,slicer",
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
         },
         {
           "signal": "drive",

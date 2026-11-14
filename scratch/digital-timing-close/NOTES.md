@@ -504,3 +504,32 @@ with OCV hold in all domains, GLS, per-mode power.
    wrx st_freq_ok <-> word-domain synchronizers (first stages not named *.meta*: add to the synchronizer list),
    lane.ew_f (falling-edge edge-word register) -> ingress din -1.0 (half-cycle path: move the lane mux behind a register).
  - So the "pipelining" list of the brief now starts with the NEW blocks (ref, fc4, wrx, wtx), then the old list.
+
+## r6 end of round (2026-11-14 ~06:45): reviews handled, new blocks pipelined, numbers
+Commits: 3cff484 (rework), ff74593 (hardening inputs), f2af5bc (review fixes), + the last one of this round (timing of
+the new blocks, observation ledger, SDC exceptions).
+Reviews (all independent agents, artefacts only): rework GO-with-conditions (scratch/reviews/dg6-review/; its decode
+table is now verification/check_decode_table.py: 3656 vectors, 0 mismatches); pt_por_path first review NO-GO items
+P1/P2 -> 16-bit key -> re-review GO-with-conditions (scratch/reviews/por-path-review/REPORT.md, r2/). Rows DG6-14..16.
+Timing sub-agent on pt_wrx_ctl / pt_monitor / pt_usb (ports unchanged; latencies: FLL pulse 9 ref cycles after the
+counter update, picker reacts 5 words later with hold + 3, usb tx_ready is a flop with a one-quad holding register,
+usb rx 2 clocks later): pt_wrx_ctl 247 -> 446 FF, pt_usb 255 -> 312, pt_monitor 146 -> 149; module checkers pass.
+POST-SYNTHESIS timing of the final RTL (syn_r6t netlist, STA syn_r6s; ss_032C_3v15, ideal clocks, updated SDC; the r3
+calibration says mid-PnR is 0-3 ns worse; run-to-run noise 1-2 ns), worst setup per capture clock:
+  ref -2.39 (pt_wtx_ctl lt_cnt / pt_tx_pad_sequence request -> left: next to pipeline), wrx -0.60 (prbs_check; lc_rx
+  hit -> cand -0.77 in the other run), hcore -0.13, wtx -0.08 (lc_tx sA -> lc_q), h2d +0.25, ctw +0.39, hddr +0.66,
+  d2h_oddr +0.72, hword +0.77, h2d_pin +1.10, egress_wtx +1.35, fc0-3/5 +2.0, ingress_wrx +2.48, fc4 (aosc, 16 ns)
+  +2.62, h2d_cap +2.75, rftx +6.3, rfrx +8.8, sclk +15.3.
+  Cross-domain still negative: monitor cause flop (ref) -> wire_tx_request_q clear -7.3 (asynchronous fault path:
+  needs a name-safe false path; the flop is named after the regfile port), usb.rdy_q -> core egress roh2 -1.34 (the
+  old egress take chain behind the direct-stream select), D2H window -2.1 / h2d capture -1.0 / hddr -> oddr -0.8 (the
+  known host-link items; unplaced numbers).
+Cell area after synthesis 1.404 mm2 (r5 1.241: +13 %); sequential 0.708 mm2.
+NOT done in this round (work item 3 of the brief): no P&R, no routed sign-off, no OCV hold on a routed macro, no GLS,
+no per-mode power, no H2D centring / D2H inversion work, no balanced / staggered clock launch (PD2 requirement), no
+3.5 V setup point (no characterized library at 3.5 V exists: libchar.py run needed), sta_signoff.py not extended,
+gls.sh / tb_digital_gl.sv still on the old ports, CP4-1 clamp pins not excluded from input-port buffering in the flow.
+Order for the next agent: (1) area (1.40 mm2 before repair on a die where 1.24 did not route: decide with the
+coordinator what goes or whether the macro grows; candidates: direct (no-shadow) fields for the 80 slicer trim bits and
+other static trims save one flop per bit, pt_wrx_ctl 446 FF); (2) flow config for the clamps + dont_touch lists + GLS
+bench on the new ports; (3) pipelining list above, then the old list; (4) hardening with the pC6 hold flow.

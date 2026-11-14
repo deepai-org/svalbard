@@ -92,31 +92,40 @@ module pt_monitor #(
 
     reg ref_t_d, in_t_d, clr_d;
     reg [5:0] pre;                    // free-running /64: qualification unit, heartbeat to ref_clk
+    reg pre_tick;                     // pre == 63, registered (decoded one tick ahead)
     always @(posedge mon_clk or negedge rst_n)
-        if (!rst_n) begin ref_t_d <= 1'b0; in_t_d <= 1'b0; clr_d <= 1'b0; pre <= 6'd0; end
-        else begin ref_t_d <= ref_t; in_t_d <= in_t; clr_d <= clr_s; pre <= pre + 6'd1; end
+        if (!rst_n) begin ref_t_d <= 1'b0; in_t_d <= 1'b0; clr_d <= 1'b0; pre <= 6'd0; pre_tick <= 1'b0; end
+        else begin
+            ref_t_d <= ref_t; in_t_d <= in_t; clr_d <= clr_s; pre <= pre + 6'd1; pre_tick <= pre == 6'd62;
+        end
     wire clr = clr_s & ~clr_d;
-    wire pre_tick = &pre;
 
-    // clock-presence watchdogs
+    // clock-presence watchdogs. Timing (16 ns mon_clk, slow cells): the timers are free-running
+    // saturating counters, so the timeout compare ends in the alive flop only and never enables
+    // the increment (the flags fall in the same cycle as before).
     reg [LW-1:0] rcnt, icnt;
     reg ref_alive_q, in_alive_q;
+    always @(posedge mon_clk or negedge rst_n)
+        if (!rst_n) begin rcnt <= {LW{1'b0}}; icnt <= {LW{1'b0}}; end
+        else begin
+            if (ref_t ^ ref_t_d) rcnt <= {LW{1'b0}}; else if (!(&rcnt)) rcnt <= rcnt + 1'b1;
+            if (in_t ^ in_t_d)   icnt <= {LW{1'b0}}; else if (!(&icnt)) icnt <= icnt + 1'b1;
+        end
     always @(posedge mon_clk or negedge rst_n) // ref watchdog timer
-        if (!rst_n) begin rcnt <= {LW{1'b0}}; ref_alive_q <= 1'b0; end
-        else if (ref_t ^ ref_t_d) begin rcnt <= {LW{1'b0}}; ref_alive_q <= 1'b1; end
+        if (!rst_n) ref_alive_q <= 1'b0;
+        else if (ref_t ^ ref_t_d) ref_alive_q <= 1'b1;
         else if (rcnt >= cfg_loss_timeout_ticks) ref_alive_q <= 1'b0;
-        else rcnt <= rcnt + 1'b1;
     always @(posedge mon_clk or negedge rst_n) // in watchdog timer
-        if (!rst_n) begin icnt <= {LW{1'b0}}; in_alive_q <= 1'b0; end
-        else if (in_t ^ in_t_d) begin icnt <= {LW{1'b0}}; in_alive_q <= 1'b1; end
+        if (!rst_n) in_alive_q <= 1'b0;
+        else if (in_t ^ in_t_d) in_alive_q <= 1'b1;
         else if (icnt >= cfg_loss_timeout_ticks) in_alive_q <= 1'b0;
-        else icnt <= icnt + 1'b1;
     assign ref_alive = ref_alive_q;
     assign in_alive  = in_alive_q;
 
     // requirement state
     wire [9:0] arm_s, g, qual, trip;
-    wire       q_done, lvl_exp;
+    wire       q_done, q_run, lvl_exp;
+    reg        q_done_q;              // q_done, one tick later (still gated by q_run where it is used)
     assign g[0] = ref_alive_q;
     assign g[1] = in_alive_q;
     assign g[2] = rf_s;
@@ -140,7 +149,7 @@ module pt_monitor #(
                 always @(posedge mon_clk or negedge rst_n)
                     if (!rst_n) begin q <= 1'b0; c <= 1'b0; end
                     else begin
-                        q <= arm_s[i] & ((q & ~trip[i]) | (~q & q_done));
+                        q <= arm_s[i] & ((q & ~trip[i]) | (~q & q_done_q & q_run));
                         c <= (c & ~clr) | trip[i];
                     end
                 assign qual[i] = q;
@@ -156,22 +165,35 @@ module pt_monitor #(
 
     // shared qualification timer
     wire [9:0] unq = arm_s & ~qual;
-    wire q_run = (|unq) & (&(g | ~unq));
+    // Timing: the QW-bit compare ends in the flop q_done_q and nothing else; the requirement flops
+    // and the timer restart use q_done_q (qualification completes one tick later; an interruption
+    // in that tick still cancels it through q_run). qcnt only changes at a pre_tick and q_done is
+    // only non-zero at the next one, 64 ticks later.
+    assign q_run = (|unq) & (&(g | ~unq));
     reg [QW-1:0] qcnt;
     assign q_done = q_run & pre_tick & (qcnt >= cfg_qualification_ticks);
     always @(posedge mon_clk or negedge rst_n)
-        if (!rst_n) qcnt <= {QW{1'b0}};
-        else if (!q_run || q_done) qcnt <= {QW{1'b0}};
-        else if (pre_tick) qcnt <= qcnt + 1'b1;
+        if (!rst_n) begin qcnt <= {QW{1'b0}}; q_done_q <= 1'b0; end
+        else begin
+            q_done_q <= q_done;
+            if (!q_run || q_done_q) qcnt <= {QW{1'b0}};
+            else if (pre_tick) qcnt <= qcnt + 1'b1;
+        end
 
     // shared loss timer of the level requirements
     wire lvl_bad = |(qual[9:2] & ~g[9:2]);
+    // Timing: the expiry is a flop (lx_q = "the timer value of the coming tick is >= the timeout",
+    // compared one tick ahead against the static timeout - 1), so lvl_exp is in the same tick as
+    // before and the compare does not run into the trip / cause / restart logic.
     reg [LW-1:0] lcnt;
-    assign lvl_exp = lvl_bad & (lcnt >= cfg_loss_timeout_ticks);
+    reg          lx_q;
+    wire          loss_z  = cfg_loss_timeout_ticks == {LW{1'b0}};
+    wire [LW-1:0] loss_m1 = cfg_loss_timeout_ticks - 1'b1;          // static
+    assign lvl_exp = lvl_bad & lx_q;
     always @(posedge mon_clk or negedge rst_n)
-        if (!rst_n) lcnt <= {LW{1'b0}};
-        else if (!lvl_bad || lvl_exp) lcnt <= {LW{1'b0}};
-        else lcnt <= lcnt + 1'b1;
+        if (!rst_n) begin lcnt <= {LW{1'b0}}; lx_q <= 1'b0; end
+        else if (!lvl_bad || lvl_exp) begin lcnt <= {LW{1'b0}}; lx_q <= loss_z; end
+        else begin lcnt <= lcnt + 1'b1; lx_q <= loss_z | (lcnt >= loss_m1); end
 
     reg fault_m, ready_m;
     always @(posedge mon_clk or negedge rst_n)

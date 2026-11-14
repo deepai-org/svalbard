@@ -100,12 +100,12 @@ and are not evidence for this layout.
 | FS gate overlap, V (< 0.5); pad VDD charge vs ideal (<= 1.10) | 0.19; 0.986 | 0.17; 0.982 | 0.21; 0.988 | 0.21; 0.987 / 0.18; 0.984 | 0.12; 0.975 | 0.26; 0.986 |
 | input-skew / runt stress on the cell: overlap V (< 0.5), extra edges (0) | 0.005; 0 | 0.005; 0 | 0.007; 0 | 0.005; 0 | 0.004; 0 | 0.014; 0 |
 | disabled: outputs V, cell IDD, pad leakage (0.05 V, 1 uA, 10 uA) | 0; 1.0 nA; 0.28 uA | 0; 1.0 nA; 0.26 uA | 0; 1.3 nA; 0.31 uA | 0; 1.0-1.2 nA; 0.28 uA | - | - |
-| enable changes / ISLAND_OFF: quiet outputs V (<= 0.3) | 0.001 | 0.001 | 0.002 | see evidence | see evidence | - |
+| enable changes / ISLAND_OFF: quiet outputs V (<= 0.3) | 0.001 | 0.001 | 0.002 | 0.001 (sf, fs) | 0.001 | - |
 | supply ramp 0-3.63 V, ISLAND_OFF high: outputs V (<= 0.3) | 0.0005 (27 C) | 0.0003 (0 C) | 0.0004 (85 C, 10 us); 0.004 (1 us) | - | - | - |
-| CMD tap, fF (<= 25 incl. 15 fF route) | 10.1 (CMD_P), 9.3 (CMD_N) + 15 = **25.1 FAIL by 0.1** | see evidence | - | - | - | - |
+| CMD tap, fF (<= 25 incl. 15 fF route) | 10.1 (CMD_P), 9.3 (CMD_N) + 15 = **25.1 FAIL by 0.1** | 10.2 / 9.5 + 15 = **25.2 FAIL** | - | - | - | - |
 
 HS strength codes per process (`STRENGTH` in the bench, fixed before the runs): tt/sf/fs 1, ss 3, ff 0. LS results:
-see `generated/usbdrv-evidence.json` (`ls_ext_*`, with the ideal-driver references `ref_ls_*`).
+edges 98-235 ns (limit 75-300) at tt 50 pF, ff 50 pF and ss 450 pF; crossover at 50 pF **2.02 V tt / 2.10 V ff FAIL** (limit 2.0 V; ideal-driver references `ref_ls_*` give 2.00 / 2.08 V, so pad-set); ss 450 pF 1.51-1.66 V.
 
 Timing through the cell: `HS_DRV` high to line driven 1.7-3.3 ns, `HS_DRV` low to line idle 2.6-3.5 ns, data
 `CMD` to line 1.3-2.0 ns (all corners, including the pessimistic set).
@@ -124,9 +124,11 @@ Timing through the cell: `HS_DRV` high to line driven 1.7-3.3 ns, `HS_DRV` low t
 5. **FS rise/fall matching** is the pad's known residual USB-01 (identical with an ideal driver, delta <= 0.023).
    LS crossover at 50 pF is likewise set by the pad (ideal driver: 2.00 V tt, 2.08 V ff against 2.0 V).
 6. **Not simulated:** the clocked serializer (x4 mode) into this cell; the bench source is the real CMD_MAIN output
-   stage (`wtx_nand2p1` + `wtx_nand2c`, schematic) with complementary inputs, plus the extracted `pt_wiredtx`
-   external-data path (see evidence `hs_ext_*_wtxext`; that path has 0.5-1 ns of P/N overlap at ss and is not a
-   USB source). Long packets: see `hs_ext_tt_long` in the evidence if present, else open.
+   stage (`wtx_nand2p1` + `wtx_nand2c`, schematic) with complementary inputs. The extracted `pt_wiredtx` was run
+   through its external-data path only (`hs_ext_*_wtxext`): template 1 passes at tt, ff and ss (inner / outer
+   margin 88 / 63, 25 / 52, 46 / 100 mV; 0 bit errors), with a wider edge spread (574-1006 ps) because that path
+   has P/N skew on CMD_MAIN (one extra inverter in one leg). A 166-bit packet at tt (`hs_ext_tt_long`) gives the
+   same level and margins as the 38-bit one (390 mV, 88 / 58 mV), so the bias node is settled.
 7. **Not checked:** electromigration and wire widths of the HS gate driver outputs, oxide lifetime of the 20 pF
    PMOS-gate bypass at 3.63 V, ESD / CDM of inputs arriving from the digital domain, mismatch / Monte Carlo,
    negative controls for the off / mode / ramp / chirp / tap checks, pad-level run of the input-skew stress.

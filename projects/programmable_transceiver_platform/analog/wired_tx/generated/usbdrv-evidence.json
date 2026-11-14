@@ -162,6 +162,11 @@
       "failed": [],
       "error": null
     },
+    "bbm_ext_fs": {
+      "ok": true,
+      "failed": [],
+      "error": null
+    },
     "bbm_ext_sf": {
       "ok": true,
       "failed": [],
@@ -268,6 +273,11 @@
       "failed": [],
       "error": null
     },
+    "hs_ext_ff_wtxext": {
+      "ok": true,
+      "failed": [],
+      "error": null
+    },
     "hs_ext_fs": {
       "ok": true,
       "failed": [],
@@ -315,6 +325,13 @@
       ],
       "error": null
     },
+    "hs_ext_ss_wtxext": {
+      "ok": false,
+      "failed": [
+        "level"
+      ],
+      "error": null
+    },
     "hs_ext_tt": {
       "ok": true,
       "failed": [],
@@ -325,12 +342,56 @@
       "failed": [],
       "error": null
     },
+    "hs_ext_tt_long": {
+      "ok": true,
+      "failed": [],
+      "error": null
+    },
+    "hs_ext_tt_wtxext": {
+      "ok": true,
+      "failed": [],
+      "error": null
+    },
+    "ls_ext_ff_50p": {
+      "ok": false,
+      "failed": [
+        "vcrs"
+      ],
+      "error": null
+    },
+    "ls_ext_ss_450p": {
+      "ok": true,
+      "failed": [],
+      "error": null
+    },
+    "ls_ext_tt_50p": {
+      "ok": false,
+      "failed": [
+        "vcrs"
+      ],
+      "error": null
+    },
     "mode_ext_ff": {
       "ok": true,
       "failed": [],
       "error": null
     },
+    "mode_ext_fs": {
+      "ok": true,
+      "failed": [],
+      "error": null
+    },
+    "mode_ext_sf": {
+      "ok": true,
+      "failed": [],
+      "error": null
+    },
     "mode_ext_ss": {
+      "ok": true,
+      "failed": [],
+      "error": null
+    },
+    "mode_ext_ss_pess": {
       "ok": true,
       "failed": [],
       "error": null
@@ -486,6 +547,13 @@
       "failed": [],
       "error": null
     },
+    "tap_ss": {
+      "ok": false,
+      "failed": [
+        "tap"
+      ],
+      "error": null
+    },
     "tap_tt": {
       "ok": false,
       "failed": [
@@ -502,29 +570,17 @@
     }
   },
   "declared_jobs_without_result": [
-    "bbm_ext_fs",
     "bbm_sch_ff",
     "bbm_sch_fs",
     "bbm_sch_sf",
     "bbm_sch_ss",
     "bbm_sch_tt",
-    "hs_ext_ff_wtxext",
-    "hs_ext_ss_wtxext",
     "hs_ext_tt_idealsrc",
-    "hs_ext_tt_long",
-    "hs_ext_tt_wtxext",
     "hs_sch_tt_idealsrc",
     "ls_ext_ff_450p",
-    "ls_ext_ff_50p",
-    "ls_ext_ss_450p",
     "ls_ext_ss_50p",
     "ls_ext_tt_450p",
-    "ls_ext_tt_50p",
-    "mode_ext_fs",
-    "mode_ext_sf",
-    "mode_ext_ss_pess",
-    "ref_ls_ss_450p",
-    "tap_ss"
+    "ref_ls_ss_450p"
   ],
   "results": {
     "bbm_ext_ff": {
@@ -646,7 +702,7 @@
       "extra_edges": 0,
       "gap_ns": {
         "min": 2.945,
-        "max": 8.945
+        "max": 2.958
       },
       "cases": {
         "oe_leads_0.2": {
@@ -744,8 +800,118 @@
         "gap_positive": true
       },
       "ok": true,
-      "run_s": 106.8,
+      "run_s": 106.1,
       "job": "bbm_ext_ff_fast"
+    },
+    "bbm_ext_fs": {
+      "test": "bbm",
+      "env": "fs",
+      "drv": "ext",
+      "var": null,
+      "overlap_max_v": 0.042,
+      "extra_edges": 0,
+      "gap_ns": {
+        "min": 3.911,
+        "max": 3.97
+      },
+      "cases": {
+        "oe_leads_0.2": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "oe_leads_0.4": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "oe_leads_0.8": {
+          "overlap_v": 0.042,
+          "extra_edges": 0
+        },
+        "oe_leads_1.5": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "oe_leads_3.0": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "oe_leads_4.5": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "dp_falls_after_oe_0.4": {
+          "overlap_v": 0.002,
+          "extra_edges": 0
+        },
+        "dp_falls_after_oe_1.5": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "dp_falls_after_oe_3.0": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "runt_high_0.5": {
+          "overlap_v": 0.002,
+          "extra_edges": 0
+        },
+        "runt_high_1.0": {
+          "overlap_v": 0.003,
+          "extra_edges": 0
+        },
+        "runt_high_2.0": {
+          "overlap_v": 0.002,
+          "extra_edges": 0
+        },
+        "runt_high_3.4": {
+          "overlap_v": 0.002,
+          "extra_edges": 0
+        },
+        "runt_high_4.0": {
+          "overlap_v": 0.002,
+          "extra_edges": 0
+        },
+        "runt_high_6.0": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "runt_low_0.5": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "runt_low_1.0": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "runt_low_2.0": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "runt_low_3.4": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "runt_low_4.0": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "runt_low_6.0": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        },
+        "toggle_3ns": {
+          "overlap_v": 0.004,
+          "extra_edges": 0
+        }
+      },
+      "checks": {
+        "no_overlap": true,
+        "no_extra_edges": true,
+        "gap_positive": true
+      },
+      "ok": true,
+      "run_s": 107.3,
+      "job": "bbm_ext_fs"
     },
     "bbm_ext_sf": {
       "test": "bbm",
@@ -1074,7 +1240,7 @@
         "gap_positive": true
       },
       "ok": true,
-      "run_s": 117.0,
+      "run_s": 118.4,
       "job": "bbm_ext_ss_pess"
     },
     "bbm_ext_tt": {
@@ -1807,6 +1973,65 @@
       "ok": true,
       "job": "hs_ext_ff_fast"
     },
+    "hs_ext_ff_wtxext": {
+      "test": "hs",
+      "env": "ff",
+      "drv": "ext",
+      "src": "wiredtx",
+      "var": null,
+      "carrier_mm": 10.0,
+      "route": [
+        60.0,
+        1.5e-13
+      ],
+      "bias_code": 255,
+      "strength": 0,
+      "cal": {
+        "code": 255,
+        "v_min": 0.402623,
+        "v_max": 0.565483,
+        "reachable": false
+      },
+      "level_mv": 391.1,
+      "template1": {
+        "clock_offset_ps": -0.9,
+        "crossing_jitter_pp_ps": 241.8,
+        "inner_margin_mv": 24.9,
+        "inner_violations": 0,
+        "outer_margin_mv": 51.9,
+        "outer_violations": 0,
+        "eye_height_min_mv": 383.1,
+        "peak_mv": 473.1,
+        "bit_errors": 0,
+        "bits_checked": 38,
+        "ok": true
+      },
+      "edge_10_90_ps": {
+        "min": 716.5,
+        "max": 1005.7,
+        "n": 5
+      },
+      "idle_max_mv": 0.17,
+      "gate_swing_v": 3.39,
+      "pbias_v": {
+        "min": 0.465,
+        "max": 0.515
+      },
+      "c_pbias_f": 0.0,
+      "i_vdd_drv_avg_ma": 0.908,
+      "run_s": 324.8,
+      "hs_drv_on_to_line_ns": 1.95,
+      "hs_drv_off_to_idle_ns": 2.93,
+      "data_delay_ns": 1.92,
+      "checks": {
+        "level": true,
+        "template1": true,
+        "idle": true,
+        "rise_fall": true
+      },
+      "ok": true,
+      "job": "hs_ext_ff_wtxext"
+    },
     "hs_ext_fs": {
       "test": "hs",
       "env": "fs",
@@ -2220,6 +2445,65 @@
       "ok": false,
       "job": "hs_ext_ss_str2"
     },
+    "hs_ext_ss_wtxext": {
+      "test": "hs",
+      "env": "ss",
+      "drv": "ext",
+      "src": "wiredtx",
+      "var": null,
+      "carrier_mm": 10.0,
+      "route": [
+        60.0,
+        1.5e-13
+      ],
+      "bias_code": 0,
+      "strength": 3,
+      "cal": {
+        "code": 0,
+        "v_min": 0.182131,
+        "v_max": 0.355331,
+        "reachable": false
+      },
+      "level_mv": 348.0,
+      "template1": {
+        "clock_offset_ps": 20.7,
+        "crossing_jitter_pp_ps": 34.4,
+        "inner_margin_mv": 45.9,
+        "inner_violations": 0,
+        "outer_margin_mv": 99.7,
+        "outer_violations": 0,
+        "eye_height_min_mv": 345.9,
+        "peak_mv": 425.3,
+        "bit_errors": 0,
+        "bits_checked": 38,
+        "ok": true
+      },
+      "edge_10_90_ps": {
+        "min": 573.5,
+        "max": 838.8,
+        "n": 5
+      },
+      "idle_max_mv": 0.24,
+      "gate_swing_v": 3.188,
+      "pbias_v": {
+        "min": -0.04,
+        "max": 0.024
+      },
+      "c_pbias_f": 0.0,
+      "i_vdd_drv_avg_ma": 0.923,
+      "run_s": 327.3,
+      "hs_drv_on_to_line_ns": 2.46,
+      "hs_drv_off_to_idle_ns": 2.69,
+      "data_delay_ns": 2.04,
+      "checks": {
+        "level": false,
+        "template1": true,
+        "idle": true,
+        "rise_fall": true
+      },
+      "ok": false,
+      "job": "hs_ext_ss_wtxext"
+    },
     "hs_ext_tt": {
       "test": "hs",
       "env": "tt",
@@ -2338,6 +2622,259 @@
       "ok": true,
       "job": "hs_ext_tt_far"
     },
+    "hs_ext_tt_long": {
+      "test": "hs",
+      "env": "tt",
+      "drv": "ext",
+      "src": "cmdstage",
+      "var": null,
+      "carrier_mm": 10.0,
+      "route": [
+        60.0,
+        1.5e-13
+      ],
+      "bias_code": 100,
+      "strength": 1,
+      "cal": {
+        "code": 100,
+        "v_min": 0.294255,
+        "v_max": 0.459795,
+        "reachable": true
+      },
+      "level_mv": 389.9,
+      "template1": {
+        "clock_offset_ps": 47.4,
+        "crossing_jitter_pp_ps": 79.9,
+        "inner_margin_mv": 87.5,
+        "inner_violations": 0,
+        "outer_margin_mv": 57.6,
+        "outer_violations": 0,
+        "eye_height_min_mv": 387.5,
+        "peak_mv": 467.4,
+        "bit_errors": 0,
+        "bits_checked": 166,
+        "ok": true
+      },
+      "edge_10_90_ps": {
+        "min": 620.3,
+        "max": 646.3,
+        "n": 37
+      },
+      "idle_max_mv": 0.2,
+      "gate_swing_v": 3.331,
+      "pbias_v": {
+        "min": 0.166,
+        "max": 0.214
+      },
+      "c_pbias_f": 0.0,
+      "i_vdd_drv_avg_ma": 1.087,
+      "run_s": 405.5,
+      "hs_drv_on_to_line_ns": 2.14,
+      "hs_drv_off_to_idle_ns": 2.69,
+      "data_delay_ns": 1.5,
+      "checks": {
+        "level": true,
+        "template1": true,
+        "idle": true,
+        "rise_fall": true
+      },
+      "ok": true,
+      "job": "hs_ext_tt_long"
+    },
+    "hs_ext_tt_wtxext": {
+      "test": "hs",
+      "env": "tt",
+      "drv": "ext",
+      "src": "wiredtx",
+      "var": null,
+      "carrier_mm": 10.0,
+      "route": [
+        60.0,
+        1.5e-13
+      ],
+      "bias_code": 100,
+      "strength": 1,
+      "cal": {
+        "code": 100,
+        "v_min": 0.294255,
+        "v_max": 0.459795,
+        "reachable": true
+      },
+      "level_mv": 389.3,
+      "template1": {
+        "clock_offset_ps": 10.1,
+        "crossing_jitter_pp_ps": 74.1,
+        "inner_margin_mv": 87.6,
+        "inner_violations": 0,
+        "outer_margin_mv": 62.7,
+        "outer_violations": 0,
+        "eye_height_min_mv": 387.6,
+        "peak_mv": 462.3,
+        "bit_errors": 0,
+        "bits_checked": 38,
+        "ok": true
+      },
+      "edge_10_90_ps": {
+        "min": 681.0,
+        "max": 750.4,
+        "n": 5
+      },
+      "idle_max_mv": 0.19,
+      "gate_swing_v": 3.341,
+      "pbias_v": {
+        "min": 0.162,
+        "max": 0.214
+      },
+      "c_pbias_f": 0.0,
+      "i_vdd_drv_avg_ma": 0.937,
+      "run_s": 307.0,
+      "hs_drv_on_to_line_ns": 2.14,
+      "hs_drv_off_to_idle_ns": 2.69,
+      "data_delay_ns": 1.94,
+      "checks": {
+        "level": true,
+        "template1": true,
+        "idle": true,
+        "rise_fall": true
+      },
+      "ok": true,
+      "job": "hs_ext_tt_wtxext"
+    },
+    "ls_ext_ff_50p": {
+      "test": "ls",
+      "env": "ff",
+      "drv": "ext",
+      "var": null,
+      "cload": "50p",
+      "ideal": null,
+      "bias_code": 255,
+      "voh_v": 3.338,
+      "vol_v": 0.124,
+      "edges": {
+        "k_to_j": {
+          "rise_ns": 123.47,
+          "fall_ns": 102.94,
+          "match": 1.199,
+          "vcrs_v": 2.097
+        },
+        "j_to_k": {
+          "rise_ns": 98.39,
+          "fall_ns": 117.93,
+          "match": 0.834,
+          "vcrs_v": 1.673
+        }
+      },
+      "se0_v": 0.124,
+      "overlap_max_v": 0.214,
+      "bbm_gap_ns": {
+        "min": 3.282,
+        "max": 3.449
+      },
+      "q_pad_vdd_pc": 2601.01,
+      "i_drv_static_ua": 0.002,
+      "checks": {
+        "edges": true,
+        "vcrs": false,
+        "match": true,
+        "levels": true,
+        "no_overlap": true,
+        "bbm_gap": true
+      },
+      "ok": false,
+      "spec_ok": false,
+      "run_s": 291.4,
+      "job": "ls_ext_ff_50p"
+    },
+    "ls_ext_ss_450p": {
+      "test": "ls",
+      "env": "ss",
+      "drv": "ext",
+      "var": null,
+      "cload": "450p",
+      "ideal": null,
+      "bias_code": 0,
+      "voh_v": 3.128,
+      "vol_v": 0.116,
+      "edges": {
+        "k_to_j": {
+          "rise_ns": 234.72,
+          "fall_ns": 197.96,
+          "match": 1.186,
+          "vcrs_v": 1.655
+        },
+        "j_to_k": {
+          "rise_ns": 207.97,
+          "fall_ns": 215.45,
+          "match": 0.965,
+          "vcrs_v": 1.511
+        }
+      },
+      "se0_v": 0.12,
+      "overlap_max_v": 0.179,
+      "bbm_gap_ns": {
+        "min": 5.096,
+        "max": 5.315
+      },
+      "q_pad_vdd_pc": 3894.65,
+      "i_drv_static_ua": 0.002,
+      "checks": {
+        "edges": true,
+        "vcrs": true,
+        "match": true,
+        "levels": true,
+        "no_overlap": true,
+        "bbm_gap": true
+      },
+      "ok": true,
+      "spec_ok": true,
+      "run_s": 305.6,
+      "job": "ls_ext_ss_450p"
+    },
+    "ls_ext_tt_50p": {
+      "test": "ls",
+      "env": "tt",
+      "drv": "ext",
+      "var": null,
+      "cload": "50p",
+      "ideal": null,
+      "bias_code": 100,
+      "voh_v": 3.284,
+      "vol_v": 0.12,
+      "edges": {
+        "k_to_j": {
+          "rise_ns": 138.68,
+          "fall_ns": 112.58,
+          "match": 1.232,
+          "vcrs_v": 2.021
+        },
+        "j_to_k": {
+          "rise_ns": 106.47,
+          "fall_ns": 127.21,
+          "match": 0.837,
+          "vcrs_v": 1.641
+        }
+      },
+      "se0_v": 0.12,
+      "overlap_max_v": 0.201,
+      "bbm_gap_ns": {
+        "min": 3.965,
+        "max": 4.152
+      },
+      "q_pad_vdd_pc": 2064.84,
+      "i_drv_static_ua": 0.001,
+      "checks": {
+        "edges": true,
+        "vcrs": false,
+        "match": true,
+        "levels": true,
+        "no_overlap": true,
+        "bbm_gap": true
+      },
+      "ok": false,
+      "spec_ok": false,
+      "run_s": 298.3,
+      "job": "ls_ext_tt_50p"
+    },
     "mode_ext_ff": {
       "test": "mode",
       "env": "ff",
@@ -2374,6 +2911,78 @@
       "run_s": 103.6,
       "job": "mode_ext_ff"
     },
+    "mode_ext_fs": {
+      "test": "mode",
+      "env": "fs",
+      "drv": "ext",
+      "var": null,
+      "quiet_max_v": {
+        "HS_P": 0.001,
+        "HS_N": 0.0007,
+        "FS_HIGH_P": 0.0002,
+        "FS_HIGH_N": 0.0004,
+        "FS_LOW_P": 0.0002,
+        "FS_LOW_N": 0.0003
+      },
+      "fs_max_v": {
+        "FS_HIGH_P": 0.0056,
+        "FS_HIGH_N": 0.006,
+        "FS_LOW_P": 0.0066,
+        "FS_LOW_N": 0.0049
+      },
+      "after_island_off_v": {
+        "HS_P": 0.0,
+        "HS_N": 0.0
+      },
+      "hs_gate_in_packet_v": 3.248,
+      "dplus_pp_while_idle_v": 0.0,
+      "checks": {
+        "quiet_outputs": true,
+        "fs_outputs_never": true,
+        "island_off_stops": true,
+        "packet_seen": true,
+        "line_undisturbed": true
+      },
+      "ok": true,
+      "run_s": 105.3,
+      "job": "mode_ext_fs"
+    },
+    "mode_ext_sf": {
+      "test": "mode",
+      "env": "sf",
+      "drv": "ext",
+      "var": null,
+      "quiet_max_v": {
+        "HS_P": 0.0011,
+        "HS_N": 0.0008,
+        "FS_HIGH_P": 0.0003,
+        "FS_HIGH_N": 0.0005,
+        "FS_LOW_P": 0.0003,
+        "FS_LOW_N": 0.0004
+      },
+      "fs_max_v": {
+        "FS_HIGH_P": 0.0065,
+        "FS_HIGH_N": 0.0068,
+        "FS_LOW_P": 0.0079,
+        "FS_LOW_N": 0.0053
+      },
+      "after_island_off_v": {
+        "HS_P": 0.0,
+        "HS_N": 0.0001
+      },
+      "hs_gate_in_packet_v": 3.292,
+      "dplus_pp_while_idle_v": 0.0,
+      "checks": {
+        "quiet_outputs": true,
+        "fs_outputs_never": true,
+        "island_off_stops": true,
+        "packet_seen": true,
+        "line_undisturbed": true
+      },
+      "ok": true,
+      "run_s": 103.0,
+      "job": "mode_ext_sf"
+    },
     "mode_ext_ss": {
       "test": "mode",
       "env": "ss",
@@ -2409,6 +3018,42 @@
       "ok": true,
       "run_s": 106.8,
       "job": "mode_ext_ss"
+    },
+    "mode_ext_ss_pess": {
+      "test": "mode",
+      "env": "ss",
+      "drv": "ext",
+      "var": "pess",
+      "quiet_max_v": {
+        "HS_P": 0.0005,
+        "HS_N": 0.0006,
+        "FS_HIGH_P": 0.0002,
+        "FS_HIGH_N": 0.0004,
+        "FS_LOW_P": 0.0002,
+        "FS_LOW_N": 0.0003
+      },
+      "fs_max_v": {
+        "FS_HIGH_P": 0.0064,
+        "FS_HIGH_N": 0.0072,
+        "FS_LOW_P": 0.007,
+        "FS_LOW_N": 0.0063
+      },
+      "after_island_off_v": {
+        "HS_P": 0.0,
+        "HS_N": 0.0009
+      },
+      "hs_gate_in_packet_v": 3.128,
+      "dplus_pp_while_idle_v": 0.0,
+      "checks": {
+        "quiet_outputs": true,
+        "fs_outputs_never": true,
+        "island_off_stops": true,
+        "packet_seen": true,
+        "line_undisturbed": true
+      },
+      "ok": true,
+      "run_s": 117.3,
+      "job": "mode_ext_ss_pess"
     },
     "mode_ext_tt": {
       "test": "mode",
@@ -3728,6 +4373,22 @@
       "spec_ok": true,
       "run_s": 259.8,
       "job": "ref_ls_tt_50p"
+    },
+    "tap_ss": {
+      "test": "tap",
+      "env": "ss",
+      "cin_ff": {
+        "cmd_p_hs_en_0": 10.21,
+        "cmd_p_hs_en_1": 10.21,
+        "cmd_n_hs_en_0": 9.46,
+        "cmd_n_hs_en_1": 9.46
+      },
+      "with_route_ff": 25.21,
+      "checks": {
+        "tap": false
+      },
+      "ok": false,
+      "job": "tap_ss"
     },
     "tap_tt": {
       "test": "tap",

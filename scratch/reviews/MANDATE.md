@@ -154,3 +154,6 @@ The board sets each die's supply individually (trimmer + regulator or similar), 
 - Every block reports its slow-corner results at BOTH 3.15-3.35 V (untrimmed) and the trimmed supply, and states the minimum supply at which it passes at ss and ss-pessimistic. One chip-wide trim value must satisfy all blocks in a mode at once: the coordinator keeps the table.
 - It does not excuse: passives-limited specs (inductor Q), area, hold timing at ff, reliability at the raised supply (HCI/TDDB on slow dies at 3.5 V: check), ESD/clamp behaviour, and the island-switch/IR budget (drops are larger in absolute terms at higher current).
 - Board obligations: adjustable regulator with fine steps (<= 20 mV), ramp >= 10 us (supply-clamp finding INT6), no overshoot above 3.63 V, a bring-up procedure that starts every die at 3.3 V.
+
+## Per-application carriers (user 2026-11-14)
+Per-application carrier boards are fully acceptable: a carrier may populate only the passives its application needs, and a pad may carry different functions on different carriers. A single universal board is NOT required. Constraints that remain: modes that must coexist on one carrier, bring-up/debug/fallback access on every carrier, and the die itself stays one design.

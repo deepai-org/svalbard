@@ -31,10 +31,12 @@ Limit: far end 0 errors over >= 200 bits, eye >= 0.200 V and >= 0.45 UI. Bench `
 | published `pt_wiredtx` + `tr7` | 2.5 Gb/s | pass (0.73 V, 0.72 UI) | **fail** (44 errors; 23 at the CMD pins) | **fail** (26 errors; CMD pins clean) | pass (0.73 V, 0.78 UI) | not run |
 | `wtx_serq8` + CMD stage + `tr7` | 3.125 Gb/s | **fail** (2 errors) | **fail** (20 errors) | **fail** (12 errors) | not run | not run |
 | `wtx_serq8` + CMD stage + `tr7` | 2.7 Gb/s | not run | **fail** (13 errors) | not run | not run | not run |
-| `wtx_ser8d` + `wtx_mux8` (both extracted) | 3.125 Gb/s | pass (0.49 V, 0.72 UI; schematic mux, `wtx_serq8` streams) | pass (0.25 V, 0.59 UI) | not run | not run | **fail** (23 errors) / **fail** (0 errors, 0.148 V, 0.48 UI) |
-| `wtx_ser8d` + `wtx_mux8` (both extracted) | 3.24 Gb/s | not run | pass (0.21 V, 0.56 UI) | not run | not run | not run |
+| `wtx_ser8d` + `wtx_mux8` (both extracted) | 2.7 Gb/s | not run | not run | not run | not run | pass at 3.15 V (0.25 V, 0.61 UI) |
+| `wtx_ser8d` + `wtx_mux8` (both extracted) | 3.125 Gb/s | pass (0.43 V, 0.77 UI) | pass (0.25 V, 0.59 UI) | not run | pass (0.42 V, 0.78 UI) | **fail** (23 errors) / **fail** (0 errors, 0.148 V, 0.48 UI) |
+| `wtx_ser8d` + `wtx_mux8` (both extracted) | 3.24 Gb/s | pass (0.39 V, 0.73 UI) | pass (0.21 V, 0.56 UI) | pass (0.28 V, 0.63 UI) | not run | not run |
 
-Negative control: one ring phase grounded gives 31 errors / 120 bits on the published block.
+Negative controls: one ring phase grounded gives 31 errors / 120 bits on the published block and 24 errors / 120 bits
+on the new path.
 `wtx_mux8` alone (extracted, ideal phases and streams, same load, 160 bits, screening only): 3.125 Gb/s passes at
 tt, ss, ff, sf, fs, ss 3.50 V and ss pessimistic at 3.15 V (0.22 V) and 3.50 V (0.26 V); 3.24 Gb/s ss pessimistic
 0.18 V at 3.15 V (fail), 0.23 V at 3.50 V; a stuck stream gives 9 errors (`scratch/wired_tx/s12/mux/corners_x2.log`).
@@ -128,7 +130,8 @@ ngspice 47 (`scratch/pad-ngspice47`). Containers run with `--network none`; raw 
 
 1. 2.5 Gb/s fails at ss with the real ring in the published block (duty cycle; at 3.50 V the block's CMD outputs
    are clean and the pre-driver + pad fail). No fix in the published block (row WT29, WT32).
-2. New path: fails at the pessimistic values in the real chain (23 errors at 3.15 V, eye 0.148 V at 3.50 V); cause
+2. New path: 3.125 Gb/s fails at the pessimistic values in the real chain (23 errors at 3.15 V, eye 0.148 V at
+   3.50 V; 2.7 Gb/s passes at 3.15 V); cause
    of the errors not yet found. Review conditions open: trim range and calibration, POST bank evidence, stopped-clock
    interlock, supply impedance, mismatch, 3.24 Gb/s at the pessimistic values (rows WT32-WT35).
 3. No block top for the new path (tail DACs, idle, fallback slice, CMOS tap for the USB pre-driver).

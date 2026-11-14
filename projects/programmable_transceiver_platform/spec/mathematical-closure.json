@@ -120,17 +120,17 @@
     ],
     "acceptance_dimensions": {
       "electrical": {
-        "owner": "spec/feasibility-gates.md",
+        "owner": "spec/interface-requirements.md",
         "status": "partial",
         "missing": "Per-interface voltage/common-mode/termination/load masks and transition obligations on selected pad composition."
       },
       "timing": {
-        "owner": "spec/clock-rate-ownership.md",
+        "owner": "spec/interface-requirements.md",
         "status": "partial",
         "missing": "Offset-dependent jitter and acquisition/recovery/turnaround limits connected to each interface."
       },
       "signal_quality": {
-        "owner": "spec/feasibility-gates.md",
+        "owner": "spec/interface-requirements.md",
         "status": "partial",
         "missing": "Independent protocol-valid BER/PER or appropriate analytic acceptance; TX mask and blocker criteria."
       },
@@ -174,7 +174,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "AC serial pair; receiver impedance detection and electrical idle",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -184,7 +184,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid electrical waveform, BER/eye acceptance and confidence"
           },
           "power": {
@@ -239,7 +239,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Serial module electrical interface; board module load",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -249,7 +249,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid electrical waveform, BER/eye acceptance and confidence"
           },
           "power": {
@@ -295,7 +295,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Serial PHY electrical interface",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -305,7 +305,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid electrical waveform, BER/eye acceptance and confidence"
           },
           "power": {
@@ -352,7 +352,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "AC serial pair with OOB drive and envelope observation",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -362,7 +362,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid electrical waveform, BER/eye acceptance and confidence"
           },
           "power": {
@@ -409,7 +409,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Serial swing/pre-emphasis; external AUX",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -419,7 +419,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid electrical waveform, BER/eye acceptance and confidence"
           },
           "power": {
@@ -466,7 +466,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "DC TMDS current sink/termination; external clock distribution",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -476,7 +476,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid electrical waveform, BER/eye acceptance and confidence"
           },
           "power": {
@@ -523,7 +523,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "DC TMDS current sink/termination; external clock distribution",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -533,7 +533,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid electrical waveform, BER/eye acceptance and confidence"
           },
           "power": {
@@ -580,7 +580,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Serial pair to external cable driver/equalizer",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -594,7 +594,7 @@
             ]
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid electrical waveform, BER/eye acceptance and confidence"
           },
           "power": {
@@ -650,7 +650,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Shared WIRE_RX HS/FS/LS driver, sensing and switchable termination",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -660,7 +660,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid electrical waveform, BER/eye acceptance and confidence"
           },
           "power": {
@@ -719,7 +719,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Wideband 2.4 GHz I/Q path and external preselection",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -729,7 +729,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid PER at stated sensitivity/blockers, TX spectrum/EVM and confidence"
           },
           "power": {
@@ -788,7 +788,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Narrow selectable I/Q bandwidth and gain",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -798,7 +798,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Corresponding PER procedure and confidence, maximum-supported-payload declaration, reference interferer waveforms, all PHY-specific blocker/image/mask conditions and joined execution.",
             "numerical_reference": "spec/contract.json:protocol_profiles.bluetooth_le.acceptance_reference"
           },
@@ -952,7 +952,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Narrow I/Q chain preserving phase for EDR",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -962,7 +962,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid PER at stated sensitivity/blockers, TX spectrum/EVM and confidence"
           },
           "power": {
@@ -1021,7 +1021,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Narrow I/Q O-QPSK/DSSS path",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -1031,7 +1031,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid PER at stated sensitivity/blockers, TX spectrum/EVM and confidence"
           },
           "power": {
@@ -1091,7 +1091,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Narrow chirp I/Q path; direct-LO architecture selected through 2.500 GHz, physical tuning unqualified",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -1101,7 +1101,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid PER at stated sensitivity/blockers, TX spectrum/EVM and confidence"
           },
           "power": {
@@ -1149,7 +1149,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Numeric I/Q bandwidth/gain within selected RF envelope",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -1159,7 +1159,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid PER at stated sensitivity/blockers, TX spectrum/EVM and confidence"
           },
           "power": {
@@ -1207,7 +1207,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "Direct RF tuning/matching below selected band unqualified",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -1217,7 +1217,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid PER at stated sensitivity/blockers, TX spectrum/EVM and confidence"
           },
           "power": {
@@ -1265,7 +1265,7 @@
         "requirements": {
           "electrical": {
             "selected_path": "External mixer/LO/filter translates into qualified chip band",
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Qualified voltage/common-mode/termination/load masks and reference plane"
           },
           "timing": {
@@ -1275,7 +1275,7 @@
             "missing": "Matched acquisition/recovery and jitter/phase-noise acceptance"
           },
           "signal_quality": {
-            "owner": "spec/feasibility-gates.md",
+            "owner": "spec/interface-requirements.md",
             "missing": "Protocol-valid PER at stated sensitivity/blockers, TX spectrum/EVM and confidence"
           },
           "power": {
@@ -1340,7 +1340,7 @@
     "rf_chain_first_version": {
       "status": "complete_with_scoped_conditional_regions",
       "whole_chip_milestone_complete": false,
-      "owner": "spec/risk-priorities.md#rf-chain-operating-region-first-version-result",
+      "owner": "spec/performance-requirements.md",
       "evidence": "evidence/selected-revision-check.json:rf_chain_first_version",
       "audit": "verification/check_contract.py:rf_chain_evidence_audit",
       "decision": "Keep analog block set; external host gain reserves headroom, retain50ps comparator requirement and adjustable external matching.",

@@ -4,9 +4,22 @@ Risk bucket 1 is **wrong ground-truth data**. Bad design is bucket 2, tracked in
 
 - **Pessimistic** is the value to design or sign off against. It is deliberately conservative: worse than the low end of the best-estimate range where the evidence is weak.
 - **Verified only at** names the blocks whose evidence uses the value-used (nominal or optimistic) figure rather than the pessimistic one. Those blocks are open items.
-- Details are in `scratch/reviews/model-uncertainty-audit.md` and `scratch/reviews/gf180-device-speed-evidence.md`. The package figures come from `package-channel.md`.
+- Every uncertain value is bounded in both directions: a block is checked at the low and the high bound, whichever is worse for that check. Where a row lists one pessimistic value, mirror the best estimate by the same margin for the opposite bound.
+- Details are in `scratch/reviews/model-uncertainty-audit.md` and `scratch/reviews/gf180-device-speed-evidence.md`. Process and assembly facts come from `scratch/reviews/wafer-space-answers.md`; package figures from `package-channel.md`.
 
 Confidence: **H** means foundry-characterized or measured; **M** means physics plus an analogous silicon result; **L** means estimate or assumption only.
+
+## Process (wafer.space gf180mcuD)
+
+| Item | Fact | Confidence |
+|---|---|---|
+| Metal stack | 5 metals, 1.1 µm top metal | H |
+| MIM | Option B (Metal4–Metal5), 2.0 fF/µm² nominal, e-test limits 1.7–2.3, 1.92 measured on Run 1 | H |
+| High-resistance poly | 1 kΩ/sq | H |
+| Native-Vt and 6 V devices | Allowed | H |
+| Deep n-well, SAB / `_dss` devices | In the PDK and the precheck deck; no explicit wafer.space statement | L (open) |
+| ESD implant layer 24/0 | Reported as not part of the wafer.space stack (open precheck change); today's precheck does not reject it | L (open) |
+| Lot position | Run 1 e-test data read close to typical | M |
 
 ## Devices (gf180mcuD)
 
@@ -21,7 +34,7 @@ Confidence: **H** means foundry-characterized or measured; **M** means physics p
 | Gate fringe / extra Cgs, Cgd | cf=0, cgso 0.10 fF/µm | +10–20 % Cgg | model card, FO4 vs Liberty (1.3–1.45×) | M | **+25 % device C**, plus 1.45× derate on unextracted nodes | pll_ring 810 MHz (5–13 % margin), slicer 810 MHz |
 | Wiring C | Magic C-only extraction | extraction ±10 % | tech file | M | **+15 % on extracted C**, plus wire R | most blocks: C-only extraction, no R |
 | Thermal noise at RF | BSIM tnoimod=0, no induced gate noise | +0.5–1 dB NF vs model | E19 (independent LNA project suspects the PDK noise) | L | **+1.5 dB on simulated NF** | LNA, mixer/TIA, QVCO phase noise |
-| Channel noise factor in QVCO PN (transient injection) | not modelled in transient (ngspice) | γ ≈ 0.7–1.5 short channel | analysis; injected 4kT(1+γ)G per tank node + 4kTγ·gm tail | L | **γ = 2**, plus +1.5 dB on the measured white PN (Q from ring-down with cores off) | QVCO r6b PN (`scratch/lo/r5_pn`) |
+| Channel noise factor in QVCO PN (transient injection) | not modelled in transient (ngspice) | γ ≈ 0.7–1.5 short channel | analysis; injected 4kT(1+γ)G per tank node + 4kTγ·gm tail | L | **γ = 2**, plus +1.5 dB on the measured white PN (Q from ring-down with cores off) | QVCO phase noise (`scratch/lo/r5_pn`) |
 | Flicker noise | `fnoicor=0` (typical) | between typ and the noise corner | PDK `noise_corner` | M | **`fnoicor=1`** (noia ×11 nfet; pfet_06v0 ×330) | TIA/baseband, QVCO close-in, bandgap: no bench is known to use the noise corner |
 | Mismatch A_Vt nfet_03v3 | not simulated | 7.15 mV·µm (PDK fets_mm) | PDK | M | **14 mV·µm (2×)** | slicer offset trim, ADC comparator, DAC sources, mixer offset: no MC run |
 | Mismatch A_β | not simulated | 0.70 %·µm | PDK | M | **1.4 %·µm** | DAC linearity, bias mirrors |
@@ -37,41 +50,45 @@ Confidence: **H** means foundry-characterized or measured; **M** means physics p
 | Spiral Q at 2.45 GHz | 8.5–10.3 | 5–9 | own model; substrate resistivity unpublished (8–20 Ω·cm assumed) | L | **Q = 4** | QVCO start-up (low-Q case 4.6–5.2; high bands already fail) |
 | MOS varactor C(V) | PDK tanh C(V) | ±10 % | PDK | M | ±15 % | QVCO tuning range |
 | MOS varactor Q | infinite in the model; we add 2 Ω per side | Q 10–30 at 2.4 GHz | **no PDK data** | L | **Q = 8** | QVCO |
-| MIM C density | 1.5/2.0 fF/µm² ± PDK corner | = PDK | PDK | H | PDK corner | — |
-| MIM (cap_mim_2f0) voltage | not modelled | max operating 6 V; BVox(10 µA) ≥ 10 V min, 24 V typ | GF180MCU PDK elec. specs 6.2 (gf180mcu-pdk.readthedocs.io elec_specs_6_4) | M | **6 V transient and DC (no credit for BVox)** | wirepad LS Miller MIM (PD47): ≤ 5.14 V in 2 kV HBM, 3.63 V unpowered peer |
-| Gate oxide transient limit (~150 ns ESD, ≤ 1000 events) | DC 3.63 V / 6.0 V (DRM 14.1, 10-yr TDDB) | TDDB E-model from tox (PDK models 7.9–8.0 nm / 15.6 nm) | derived, `scratch/pads-pd48/oxide-transient-limit.md` | L–M | **3.3 V oxide 5.0 V, 6 V oxide 8.0 V** (tox −3σ−corner, γ 4 dec/(MV/cm), hard-BD 10 MV/cm × 0.8, −15 %) | `hbm_core_screen.py` (PD48); DC checks keep 3.63/6.0 V |
+| MIM C density (`cap_mim_2f0_m4m5_noshield`) | 2.0 fF/µm² ± PDK corner | 1.92 fF/µm² (Run 1 e-test) | PDK; wafer.space e-test limits 1.7–2.3 | H | **1.7 and 2.3 fF/µm²** | — |
+| MIM (cap_mim_2f0) voltage | not modelled | max operating 6 V; BVox(10 µA) ≥ 10 V min, 24 V typ | GF180MCU PDK elec. specs 6.2 (gf180mcu-pdk.readthedocs.io elec_specs_6_4) | M | **6 V transient and DC (no credit for BVox)** | wirepad LS Miller MIM: ≤ 5.14 V in 2 kV HBM, 3.63 V unpowered peer |
+| Gate oxide transient limit (~150 ns ESD, ≤ 1000 events) | DC 3.63 V / 6.0 V (DRM 14.1, 10-yr TDDB) | TDDB E-model from tox (PDK models 7.9–8.0 nm / 15.6 nm) | derived, `scratch/pads-pd48/oxide-transient-limit.md` | L–M | **3.3 V oxide 5.0 V, 6 V oxide 8.0 V** (tox −3σ−corner, γ 4 dec/(MV/cm), hard-BD 10 MV/cm × 0.8, −15 %) | `analog/pads/hbm_core_screen.py`; DC checks keep 3.63/6.0 V |
 | MIM series R / bottom-plate parasitic | 0 (none in the model) | 1–3 Ω; bottom plate 5–10 % of C | typical | L | **5 Ω; 15 %** | QVCO band bank, refbuf 100 pF, LNA coupling |
-| Pad + ESD C, wired RX | 2.35 pF (extracted metal + clamp) | 2.0–2.6 pF | extraction | M | **2.8 pF** | CTLE return loss (already fails at 2.35 pF) |
+| Pad + ESD C, wired RX (`pad_hspad`) | 1.11–1.16 pF per leg (extracted without metal resistance) | ±20 % | extraction, `analog/pads/README.md` | M | **±20 %** (the package qualification axis); resistance-aware extraction open | CTLE and return loss |
 | Pad + ESD C, wired TX | 1.8 pF | 1.6–2.2 | extraction | M | **2.3 pF** | wired TX eye (core only, at 1.8 pF) |
 | Pad C, RF_RX / RF_TX | 0.5 / 1.0 pF | ±20 % | extraction | M | **+30 %** | LNA match, PA match |
-| Pad C, LO / REF | per pad cell | ±20 % | extraction | M | +30 % (moves the COB resonance; PKG-05) | external LO amplitude |
+| Pad C, LO / REF | per pad cell | ±20 % | extraction | M | +30 % (moves the package resonance; PKG-05) | external LO amplitude |
 | ESD junction C voltage dependence | none modelled | ±20 % over swing | none | L | ±30 % | wired TX/RX linearity |
 
 ## Package, board, reference, environment
 
 | Item | Value used | Best estimate | Source | Conf. | Pessimistic | Verified only at value-used / nominal |
 |---|---|---|---|---|---|---|
-| Bond wire L | 0.83 nH/mm × 2.2–3.2 mm | same ±20 % (loop height) | analytic, `package-channel.md` | M | **1.0 nH/mm, +0.5 mm length** | LO pad resonance (BW-02), wired RX/TX at 2.5 Gb/s |
+| Bond wire (0.8 mil aluminium, die about 250 µm thick, fixed 74-wire layout) | 0.83 nH/mm × 2.2–3.2 mm plan length in the channel S-parameters | per bond 2.0–2.7 nH nominal, 1.4–3.5 nH over loop height and die placement shift; 211–290 mΩ | analytic, `package-channel.json` `bond_wire` | M | **per-bond min and max; 1.0 nH/mm, +0.5 mm where a single value is needed** | LO pad resonance (BW-02), wired RX/TX at 2.5 Gb/s |
 | Bond-to-bond mutual L / C | 0.1 pF mutual C; mutual L missing | k 0.1–0.3 | analytic | L | **k = 0.3** | RF_TX → AUX_CLK coupling (BW-01) |
 | COB trace (FR4 εr 4.5, tan δ 0.02) | analytic microstrip | ±10 % | KiCad stackup | M | εr 4.8, tan δ 0.025 | — |
 | Via, land, finger parasitics | 0.27–0.49 nH, 0.06–0.1 pF | ±30 % | analytic | L | +50 % | wired 2.5 Gb/s eye |
 | Connector (HC-PBB40C) | 0.85–1.22 nH, 0.25 pF | **no S-parameters published** | estimate | L | **2 nH, 0.5 pF** | everything above 1 GHz (MOD-11) |
 | Carrier trace and board match parts | ideal / Q 30 match L, 1 dB balun | Q 20–40; balun 1–1.5 dB | datasheets (typical) | M | **Q 20, balun 2 dB, ±5 % parts** | PA output, LNA ideal-match NF (4.35 dB is with an **ideal** match) |
-| RF_RX match inductor (B18): 0402 high-Q wire-wound, **Coilcraft 0402HP** (2N2/2N4/3N6; Murata LQW15AN as second source) | Q 60–80 at 2.44 GHz (typ, interpolated: 0402HP datasheet typ Q 83/86/94 at 1.7 GHz for 2.4/2.2/3.6 nH, 60–65 at 250 MHz) | datasheets give only a **minimum Q at 250 MHz** (LQW15AN2N2: Q min 25 @ 250 MHz); no min at 2.4 GHz; pad/solder loss on FR4 adds 10–25 % | Coilcraft 0402HP and Murata LQW15AN datasheets (fork P2, 2026-11-13; distributor copies, not re-read in full) | M | **Q = 40 at 2.44 GHz** (= B18 floor; typ 1.7 GHz Q × 0.67 typ→min lot ratio seen at 250 MHz × 0.75 mounting), likely 60, optimistic 80; ±5 % L | LNA board-network loss and chain NF (rf_rx `lna_match.Q_L`) |
-| LNA source ground return on the TT01 COB (any bonded source degeneration) | 0.5 nH was assumed by the RC-16j benches (`tb.LNA_LS`) | not deliverable: paddle 34–39 µm exposed (no downbond), 74 fingers / 74 pads, ground wires 2.0–2.9 mm; one wire 2.2–2.8 nH, doubled or with P–N mutual ≈ 1.1–2.0 nH, + via 0.27 nH | `package-channel.json` board geometry; pre-mortem item 4; RF RX owner 2026-11-13 | M | **1.1–2.3 nH per leg, two-sided** (best case needs wafer.space to accept double bonds on an occupied ground finger) | LNA gain/NF and stability margin (RFR-12): do not put a bond in the degeneration path |
-| RF_RX path from pad to the first possible board part | benches used 3.0 nH (bond + via + short trace) | bond 2.16–2.69 nH + 4.97/6.01 mm of 86.6 Ω trace (0.51 nH/mm, 0.068 pF/mm) + via 0.27–0.36 nH + connector 0.85–1.22 nH / 0.25 pF: ≥ 6.5 nH and ≈ 0.9 pF per leg; no signal footprints on the COB | `package-channel.md` §2, §4 | M (connector L) | **connector 2 nH / 0.5 pF, trace Q 40, bond Q 50; parts at connector + 2 mm and at 10 mm** | RF_RX match loss, S11 tolerance, chain NF (RFR-13) |
+| RF_RX match inductor (B18): 0402 high-Q wire-wound, **Coilcraft 0402HP** (2N2/2N4/3N6; Murata LQW15AN as second source) | Q 60–80 at 2.44 GHz (typ, interpolated: 0402HP datasheet typ Q 83/86/94 at 1.7 GHz for 2.4/2.2/3.6 nH, 60–65 at 250 MHz) | datasheets give only a **minimum Q at 250 MHz** (LQW15AN2N2: Q min 25 @ 250 MHz); no min at 2.4 GHz; pad/solder loss on FR4 adds 10–25 % | Coilcraft 0402HP and Murata LQW15AN datasheets (distributor copies, not re-read in full) | M | **Q = 40 at 2.44 GHz** (= B18 floor; typ 1.7 GHz Q × 0.67 typ→min lot ratio seen at 250 MHz × 0.75 mounting), likely 60, optimistic 80; ±5 % L | LNA board-network loss and chain NF (rf_rx `lna_match.Q_L`) |
+| Ground return through a bond (LNA source, any degeneration path) | not used: degeneration is on chip and the LNA uses die VSS | one ground wire 2.0–2.7 nH nominal plus via 0.27 nH; no down-bonds, double bonds or extra pads are possible | `package-channel.json` `bond_wire`; `scratch/reviews/wafer-space-answers.md` | M | **1.4–3.5 nH per wire** | LNA gain, noise figure and stability (RFR-12): no bond in the degeneration path |
+| RF_RX path from pad to the first possible board part | per-pin chain of `package-channel.json` | bond 2.3 nH + 4.97/6.01 mm of 86.6 Ω trace (0.51 nH/mm, 0.068 pF/mm) + via 0.27–0.36 nH + connector 0.85–1.22 nH / 0.25 pF: ≥ 6.5 nH and ≈ 0.9 pF per leg; no signal footprints on the board | `package-channel.md` §2, §3 | M (connector L) | **connector 2 nH / 0.5 pF, trace Q 40, bond Q 50; parts at connector + 2 mm and at 10 mm** | RF_RX match loss, S11 tolerance, chain NF (RFR-13) |
 | Reference clock / crystal | ideal source in benches | board TCXO; spec B35 sets the LO PN mask | `board-requirements.md` | M | ±50 ppm, a spur at −60 dBc, jitter at spec limit | PLL/CDR benches use ideal clocks; slicer bench is open-loop with ideal clocks |
 | External LO quality | ideal 0/3.3 V 50 % LO in mixer benches | B35 mask | board spec | M | B35 mask limit, 2 ° I/Q, 5 ps skew | RX mixers (ideal LO), PA (skew swept only) |
-| Supply (performance) | 3.15–3.35 V | as specified | MANDATE | H | 3.15 V plus IR drop 50 mV plus ripple | blocks without PDN in their bench |
+| Supply (performance) | 3.15–3.35 V at the die; per-chip trim up to a 3.50 V setpoint on slow dies | as specified | MANDATE | H | 3.15 V at the die tap after the 117 mV drop budget, plus the ripple of `power-delivery.md` section 7; setpoint + tolerance + ripple + overshoot ≤ 3.63 V | blocks without the supply network in their bench; reliability at 3.5 V |
 | Supply (safety) | 0–3.63 V | — | MANDATE | H | 3.63 V | — |
-| USB HS reference current (`usbhs` bias, I_leg/14 into HS_PBIAS) absolute accuracy | ideal 17.78 mA/14 (benches) | ±3 % after the bias trim | none: bias-DAC trim accuracy not characterized | L | **±5 % (trimmed)**; untrimmed poly-referenced bias (±25 %) would defeat the termination calibration | PD43 USB term calibration evaluated at ±5 % (`scratch/pads-pd42/usb/pd43-term-cal.json`) |
+| USB HS reference current (`usbhs` bias, I_leg/14 into HS_PBIAS) absolute accuracy | ideal 17.78 mA/14 (benches) | ±3 % after the bias trim | none: bias-DAC trim accuracy not characterized | L | **±5 % (trimmed)**; untrimmed poly-referenced bias (±25 %) would defeat the termination calibration | USB termination calibration evaluated at ±5 % (`scratch/pads-pd42/usb/pd43-term-cal.json`) |
 | DC read of an on-chip node via ATB leaf → ATB pad → board ADC | ideal | gain ±0.5 %, offset ±5 mV | board ADC class; ATB switch carries no DC current when sensing | L | **gain ±1 %; residual offset ±2 mV after subtracting the drive-off reading** | PD43 USB term calibration |
-| Junction temperature (performance) | 22–32 °C | depends on board cooling | MANDATE; top-side cold finger 6–8 °C/W | M | **37 °C** (cooling set point error) | all performance checks stop at 32 °C |
+| Junction temperature (performance) | 22–32 °C | depends on board cooling | MANDATE; top-side cold finger 5–8 °C/W | M | **37 °C** (cooling set point error) | all performance checks stop at 32 °C |
 | Junction temperature (safety) | 0–85 °C | — | MANDATE | H | 85 °C | — |
-| RF TX source-synchronous skew budget (digital timing, DT-6, 2026-11-11) | RFTX_SKEW 1.0 ns data-to-rf_tx_clk_out skew at the macro pins (DAC captures on the forwarded clock falling edge) | DAC flop setup/hold ~0.4 ns + route mismatch | estimate | L | **1.0 ns** = setup/hold 0.6 + route mismatch 0.4 | digital macro STA; RF/assembly to route rf_tx_clk_out matched to rf_tx_sample |
+| RF TX source-synchronous skew budget (digital timing, DT-6) | RFTX_SKEW 1.0 ns data-to-rf_tx_clk_out skew at the macro pins (DAC captures on the forwarded clock falling edge) | DAC flop setup/hold ~0.4 ns + route mismatch | estimate | L | **1.0 ns** = setup/hold 0.6 + route mismatch 0.4 | digital macro STA; RF/assembly to route rf_tx_clk_out matched to rf_tx_sample |
 | Substrate resistivity | 8–20 Ω·cm assumed | unpublished | none | L | **5 Ω·cm** | inductor Q, substrate coupling (MOD-02) |
 
-| DA-JTOL-SATA2: SATA Gen2 (3.0 Gb/s) RX sinusoidal-jitter tolerance mask | SJ (pk-pk) 1.5 UI @ 120 kHz (FNOM/25000) falling 20 dB/dec to 0.10 UI @ 1.8 MHz (FNOM/1667), flat 0.10 UI to > 5 MHz; plus SSC 0…−5000 ppm @ 30–33 kHz | same | SATA 3.x RX jitter-tolerance text as summarised in public T10/SATA-IO-derived notes (web search 2026-11-12: t10.org 05-079r0 et al.); spec document itself not in repo | M | mask used as is; RJ in the CDR model 2× nominal (0.027 UI rms) | wired RX CDR model only (`scratch/wired_rx/r8impl/cdr8s.py`) |
+## Standard masks used in models
+
+| Item | Value used | Best estimate | Source | Conf. | Pessimistic | Verified only at |
+|---|---|---|---|---|---|---|
+| DA-JTOL-SATA2: SATA Gen2 (3.0 Gb/s) RX sinusoidal-jitter tolerance mask | SJ (pk-pk) 1.5 UI @ 120 kHz (FNOM/25000) falling 20 dB/dec to 0.10 UI @ 1.8 MHz (FNOM/1667), flat 0.10 UI to > 5 MHz; plus SSC 0…−5000 ppm @ 30–33 kHz | same | SATA 3.x RX jitter-tolerance text as summarised in public T10/SATA-IO-derived notes (t10.org 05-079r0 et al.); the specification itself is not in the repository | M | mask used as is; RJ in the CDR model 2× nominal (0.027 UI rms) | wired RX CDR model only (`scratch/wired_rx/r8impl/cdr8s.py`) |
 | DA-JTOL-HBR: DP HBR (2.7 Gb/s) sink jitter-tolerance mask | SJ sweep (pk-pk): 6.951 UI @ 0.5 MHz, 1.722 @ 1, 0.904 @ 2, 0.225 @ 10, 0.182 @ 20, 0.168 @ 100 MHz; RJ 13.5 mUI rms; TP3_EQ ISI 161 mUI, TJ 471 mUI | same | GRL DP-SINK MOI Rev 2.0 (2020) calibration table (CTS values, HBR column; HBR2 column matches the Agilent CTS 1.2b MOI Table 4-4: 505/116/104/100 mUI) | M (secondary source, two MOIs agree on HBR2) | as listed; RJ 2x (0.027 UI rms) in the model | wired RX CDR model only (`scratch/wired_rx/r8impl/cdr8h.py`) |
 
 ## Blocks verified only at nominal or optimistic values
@@ -80,15 +97,12 @@ Confidence: **H** means foundry-characterized or measured; **M** means physics p
 |---|---|
 | LNA | Rg, RF noise, ideal board match, pad C |
 | RX mixers / TIA | Rg, flicker corner, ideal LO |
-| QVCO / LO | r6b PN/flicker/start-up verified at Q = 4, varactor Q 8, MIM 5 Ω, L ±15 %, fnoicor=1 (2026-11-12). Open: range at L −15 % ff has 2.6 % (not 3 %) margin below 2.40 GHz (LO-10). |
+| QVCO / LO | Phase noise, flicker and start-up are verified at Q = 4, varactor Q 8, MIM 5 Ω, L ±15 %, `fnoicor=1`. Open: range at L −15 % ff has 2.6 % (not 3 %) margin below 2.40 GHz (LO-10); real tank loads and fill under the spirals are not included. |
 | PA / rf_tx | fT/fmax low end, Rg, board match Q and balun loss |
 | pll_ring / CDR | +25 % device C, fT 11 GHz (810 MHz at ss would fail), ideal reference |
 | Slicer | 2× A_Vt, fT low end at 810 MHz, ideal clocks, kick-back C |
-| CTLE | pad C 2.8 pF, connector without S-parameters |
+| CTLE | pad C spread, connector without S-parameters, real source and load |
 | Wired TX | pad C 2.3 pF, connector 2 nH; block-level corner sweep not yet run |
 | ADC / DAC | mismatch (no MC), flicker |
-| pll_vreg | Rg-free amplifier, +25 % C (3 dB PSRR margin). Covered by bypass. |
+| pll_vreg | Rg-free amplifier, +25 % C (3 dB PSRR margin). |
 | Bias / bandgap | flicker corner. Trim covers the DC errors. |
-
-## Two-sided bounds (2026-11-11)
-For every row that isn't known exactly, the pessimistic value applies in BOTH directions: blocks are checked at the low and the high bound, whichever is worse for each check. Rows that list only one pessimistic value still need the opposite bound; until a row lists it, use the best estimate mirrored by the same margin.

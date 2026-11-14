@@ -1,18 +1,23 @@
-# Transceiver mathematical models
+# Behavioural models
 
-Start with the [active model guide](architecture_fast/README.md) for commands,
-coverage and limitations, and the [project README](../README.md) for what the
-platform aims to enable. Current priorities live in the
-[risk list](../spec/risk-priorities.md); formal gates live in the
-[closure inventory](../spec/mathematical-closure.json).
+Python models of the transceiver architecture. They read `spec/contract.json` and `spec/analog-architecture.json`
+and exercise transport, resource ownership, clocking and signal-quality behaviour with numerical circuit
+abstractions. They are not evidence for the transistor design: block results come from the extracted layouts in
+`analog/<family>/generated/`, and chip connectivity from `integration/top/pt_chip.conn`.
 
-`architecture_fast/behavioral.py` is the active whole-chip architecture loop.
-Current electrical integration uses `verification/baseline_envelope.py` and
-`verification/selected_lifecycle.py` with the architecture inventory. Neither
-has established full mathematical or physical closure. Shared implementation
-layers live in `architecture_fast` and `connected`. Their presence alone does
-not establish system closure.
+| Path | Content |
+| --- | --- |
+| `architecture_fast/` | Whole-chip behavioural model: `behavioral.py` (event-driven transport, queues, ownership, epochs), `design_definition.py` (immutable design snapshot loaded from the two spec files), `acceptance.py` (fast acceptance set) |
+| `connected/` | Reusable numerical primitives and scoped experiments (PLL, charge pump, SAR, reference, driver and supply models with their `*_screen.py` runners) |
+| `*.py` in this directory | Stand-alone converter, reference and SAR screens |
 
-Protocol names identify external fixtures; chip settings select generic
-resources and compatible operating values. Reusable numerical primitives and
-explicitly scoped experiments support the selected model.
+Run from the repository root:
+
+```sh
+make transceiver-behavioral   # architecture_fast/behavioral.py; takes minutes
+make transceiver-math-fast    # architecture_fast/acceptance.py
+```
+
+Open: the inventory consistency check that shares these inputs
+(`docs/diagrams/generate_normative_diagram.py --check`) fails on the current `analog-architecture.json`, so the
+model's agreement with the current block inventory is not established.

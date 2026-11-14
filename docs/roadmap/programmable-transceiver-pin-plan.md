@@ -1,6 +1,6 @@
 # Programmable analog/PHY companion: one slot, packaging-compatible connections
 
-**Current operating decision:** RF and wired payload operation are mutually exclusive on the same chip. Both capabilities remain required; additional physical resource sharing is encouraged. See the [exclusive-engine policy](../../projects/programmable_transceiver_platform/spec/exclusive-engine-policy.md), which supersedes simultaneous-operation requirements below. Model/RTL enforcement and resource rebudgeting remain implementation work.
+**Current operating decision:** RF and wired payload operation are mutually exclusive on the same chip. Both capabilities remain required; additional physical resource sharing is encouraged. See the [project README](../../projects/programmable_transceiver_platform/README.md#scope-and-boundary-conditions), which supersedes simultaneous-operation requirements below. Model/RTL enforcement and resource rebudgeting remain implementation work.
 
 Implementation progress and the executable budget are tracked in the [project](../../projects/programmable_transceiver_platform/README.md). Run `make transceiver-contract` to check the current planning invariants; this does not verify physical feasibility or tapeout readiness.
 
@@ -241,7 +241,7 @@ Logical IDs are allocation labels, not package numbering. Final ordering follows
 There is no dedicated interrupt, crystal pair, general GPIO bank, external-memory interface, or wide analog monitor bus. Poll status over SPI or receive events in the fast link. The host FPGA directly drives board PA enable, RF switch, and other connector sidebands; deterministic scheduled TX and timestamped status support that coordination. An MCU can drive those board controls too. External PA, baluns/matching, RF filtering, reference oscillator, and antenna remain board components.
 
 `REF_IN`/`REF_IN_N` form one differential clock input. PCIe common-reference electrical compatibility still needs bias, swing and termination qualification; single-ended board sources require external conversion/buffering with its noise charged. Do not route an arbitrary fabric-generated FPGA clock into the RF PLL and assume adequate phase noise. External LO injection is an alternate local RF input mode that requires separate pad/loading qualification, not permission to put GHz signals through an ordinary digital buffer. Autonomous synthesis and externally supplied timing are both intended operating paths; neither is physically qualified. No claim of simultaneous reference and external LO use on this one differential port.
-The [direct-LO rate candidate](../../projects/programmable_transceiver_platform/spec/clock-feasibility-envelope.md#converter-clock-ownership-under-direct-external-lo)
+The direct-LO rate candidate
 uses uniform LO division for ADC/DAC and proposes LO/16 for D2H_CLK, retaining
 H2D_CLK from the FPGA. The selected differential frontend adds one signal site versus the historical single-ended model. Variable-rate conversion may require
 explicit FPGA resampling; the model now accounts for its latency and estimated
@@ -266,7 +266,7 @@ Fourteen is not a calculated minimum. The [pass-6 power partition](../../project
 
 ## Generic resources
 
-Physical-interface evidence is tracked in the [GPIO pad screen](../../projects/programmable_transceiver_platform/spec/fpga-host-screen.md#native-gf180-gpio-evidence). The installed output tables do not qualify 312.5 Mbit/s operation, and one plausible capacitive-load case exceeds the documented single supply-cell DC limit before internal losses. The provisional host supply/ground allocation must remain open until clock/data and simultaneous-switching analysis closes it.
+Physical-interface evidence is tracked in the GPIO pad screen. The installed output tables do not qualify 312.5 Mbit/s operation, and one plausible capacitive-load case exceeds the documented single supply-cell DC limit before internal losses. The provisional host supply/ground allocation must remain open until clock/data and simultaneous-switching analysis closes it.
 
 - **RF/analog island:** tunable transconductors, programmable RC networks, quadrature commutating mixers, gain stages, sample/hold resources, I/Q ADCs and DACs, and segmented current outputs. Target one 2.4 GHz chain with approximately 20 MHz channel bandwidth. Start the converter budget around 20–40 MS/s per I/Q component and 8–12-bit transport formats; nominal resolution is not ENOB or an EVM guarantee. Freeze real analog performance from evidence. Same-frequency full-duplex radio is not promised.
 - **Wired island:** programmable differential termination and common mode, continuous-time equalization, limiting/slicing, multiphase sampling, CDR/phase interpolation, serializer/deserializer, segmented TX swing/pre-emphasis, electrical-idle control/detection, receiver detection, and local loopbacks. Targets include 1.25 GBd and 2.5 GT/s NRZ. Rate, channel loss, and swing ranges are bounded, not universal.
@@ -364,7 +364,7 @@ Protocol flexibility and differential timing reallocate 0.95 mm² from the prior
 
 Before fabrication, resolve the terminal-count conflict and publish the packaging-compatible bond map, actual placed area, rail/current/thermal budget, extracted die/package/board timing and RF models, host training/transport specification, and mode/resource conflict table. Demonstrate raw serial and RF transport with external FPGA logic in hardware-in-the-loop, then prove the exact PCIe and Ethernet adapters against peers. Exercise transport corruption, clock loss, flow-control failure, receiver errors, and every reset state. Carry all pre-silicon uncertainty into O1–O4 claims; one-slot fit, maximum GPIO rate, RF performance, and standards interoperability remain separate gates.
 
-Host evidence: the [first FPGA screen](../../projects/programmable_transceiver_platform/spec/fpga-host-screen.md) rejects ECP5 as a documented full-rate LVCMOS host for the current top profile. Lower profiles remain candidates; full-rate host selection and electrical closure remain required.
+Host evidence: the first FPGA screen rejects ECP5 as a documented full-rate LVCMOS host for the current top profile. Lower profiles remain candidates; full-rate host selection and electrical closure remain required.
 
 
 ## Protocol profiles

@@ -122,7 +122,7 @@ overflow; RF egress overflow; receive fault; locked; command fault; wired starve
 ## Not implemented
 
 Registers 0x30–0x3F are reserved for a recovery mailbox and reject writes. There is no direct byte-stream mode,
-no fault-status frame, no sample-time (timed launch, sample snapshot) or sample-epoch metadata, and no independent
+no 256-word frame (requirement HL-FRAME), no fault-status frame, no sample-time (timed launch, sample snapshot) or sample-epoch metadata, and no independent
 watchdog for a stopped host clock in the transport itself.
 
 ## Checks

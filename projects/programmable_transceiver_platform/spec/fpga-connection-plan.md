@@ -1,32 +1,31 @@
 # FPGA connection plan (typical companion FPGAs)
 
-Status: spec screen, 2026-11-11. This is not a gateware spec. It answers one question: will a typical
-FPGA board (Artix-7/Spartan-7, ECP5, Cyclone V) run the host link and absorb the offloaded functions, and
-what does that imply for the chip? Values marked *(verify)* are from memory of vendor datasheets and must be
-checked before a board is committed.
+A screen, not a gateware spec: will a typical FPGA board (Artix-7/Spartan-7, ECP5, Cyclone V) run the host
+link and absorb the offloaded functions, and what does that ask of the chip? Values marked *(verify)* are from
+memory of vendor datasheets and must be checked before a board is committed. FPGA resource figures are
+estimates. Requirements are in `interface-requirements.md` §3 (HL-*) and `board-requirements.md` (B6, B10,
+B49–B51, HL-B1..B8); the pin coding is in `rtl/pt_host_link.sv` and `rtl/pt_quad_link.sv`.
 
-Inputs:
-- `interface-requirements.md` §3 (HL-*, WR-HL-LINECODE)
-- `board-requirements.md` (B6, B10, HL-B1..B8)
-- `scratch/reviews/host-link-bandwidth.md` (eye numbers, RX2, L=256, stagger)
-- `scratch/reviews/fpga-offload-audit.md` §3/§6 (function list)
-- `rtl/pt_host_link.sv` and `rtl/pt_quad_link.sv` (pin coding, training prefix)
+The current RTL has fixed bank directions (D2H south, H2D north), L = 64 frames and one rate field for both
+directions. Reversible banks (HL-DIR, "RX2"/"TX2" below), L = 256 frames and independent rate dividers
+(HL-RATE-DIR) are requirements that are not built; the rows that depend on them say so.
 
 ## 1. Chip-to-FPGA signals
 
 The die sits on the 70-pin mezzanine COB board. A carrier board takes the mezzanine connector and fans the
 signals below out to the FPGA board connector. Nothing else on the mezzanine goes to the FPGA.
 
-| Group | Chip signals | Dir. BAL / RX2 / TX2 (FPGA view) | FPGA pin requirement |
+| Group | Chip signals | Direction, FPGA view: current / RX2 / TX2 | FPGA pin requirement |
 |---|---|---|---|
-| South bank (D2H) | `D2H_CLK`, `D2H_D[9:0]` (11) | in / in / out | Data in one bank with the clock on a clock-capable pin. Bidirectional only if TX2 is ever used |
-| North bank (H2D) | `H2D_CLK`, `H2D_D[9:0]` (11) | out / **in** / in | One bank. The clock pin must be clock-capable **and** bidirectional (HL-B1) |
-| Management | `HOST_SCLK`, `HOST_CS_N`, `HOST_MOSI`, `HOST_MISO`, `RESET_N` (5) | out ×3, in, out (open-drain via B1) | Any 3.3 V IO |
+| South bank (D2H) | `D2H_CLK`, `D2H[9:0]` (11) | in / in / out | Data in one bank with the clock on a clock-capable pin. Bidirectional only if TX2 is ever used |
+| North bank (H2D) | `H2D_CLK`, `H2D[9:0]` (11) | out / **in** / in | One bank. The clock pin must be clock-capable, and bidirectional if HL-DIR is to be usable later (HL-B1) |
+| Management | `SPI_SCLK`, `SPI_CS_N`, `SPI_MOSI`, `SPI_MISO`, `RESET_N` (5) | out ×3, in, out (open-drain, wire-ANDed with the supervisor, B49) | Any 3.3 V IO, drivable as plain GPIOs for the POR rescue sequence (B51); SPI ≤ 5 MHz; idle levels and resistors per B50 |
 | Observation | `DBG_OBS0`, `DBG_OBS1`, `CLK_OBS` (3) | in | DBG_OBS: any input (2-FF synchronized). CLK_OBS: a clock-capable input (frequency counting) |
 | **Total** | **30** | | All at VCCO = 3.3 V, in ≤ 3 banks (two host groups plus management/observation) |
 
 The FPGA side also needs a few GPIOs that have no chip pin: the PTA (3), the antenna switch B41 (≤ 3), and the
 B6 bus-switch enable and power-good (2). The pin budget is therefore **30 chip + ≈ 8 board ≈ 38 IO**.
+The `POR_BYPASS` strap is a board jumper, not an FPGA pin.
 
 Pin coding facts the FPGA must know:
 - **Plain words on the pins.** The chip's internal XOR prefix exists only for glitch-free DDR launch: each pin is
@@ -39,9 +38,7 @@ Pin coding facts the FPGA must know:
 - **Word alignment is per lane.** With the D2H stagger on, the odd lanes launch 0.4–0.8 ns later than the
   even lanes (T16). After per-bit centring, a lane may sit one bit away from its neighbours. The FPGA therefore
   needs per-lane bitslip, not per-bank bitslip.
-- **Frames.** Frame length is L = 64 words (59 payload) or 256 words (251 payload; HL-FRAME). In RX2 the two
-  banks run a lockstep twin: one header per bank with a bank-ID bit, south = even quads, north = odd quads
-  (HB-6).
+- **Frames.** Frame length is L = 64 words (59 payload). L = 256 (251 payload; HL-FRAME) is not built.
 
 ## 2. IO standard and voltage compatibility
 
@@ -59,10 +56,9 @@ level translator is needed.
 
 Two things in series with the D2H lines need checking:
 - The B6 bus switch (powered-off isolation). Its ≈ 5 Ω and 5–7 pF count against HL-B3's 10 pF.
-- **In RX2 the north bank also drives the FPGA.** B6 must therefore cover all 22 host lines plus MISO, not
-  12. B6 is updated for this.
+- With HL-DIR the north bank would also drive the FPGA, and B6 would have to cover all 22 host lines.
 
-## 3. Can each family run the link? (156.25 MHz DDR, 20 D2H lanes in RX2, stagger on)
+## 3. Can each family run the link? (156.25 MHz DDR, stagger on)
 
 Eye required at the FPGA pin = FPGA window + residual skew + 0.45 ns (DCD 0.10, jitter 0.10, SSO 0.20,
 board 0.05) + 0.15 UI (0.48 ns). Available eye: `bi_t` fast slew at ss/32 °C/3.15 V through the COB and a 6 pF
@@ -149,13 +145,13 @@ Not in this estimate: the board-side data sink. RX2 at 3.24 Gb/s raw fills 1.2 M
 captures need the board's DDR3 or a ≥ 5 Gb/s uplink. This is a board/application choice and does not affect
 the chip.
 
-## 6. Chip-side implications (flagged; recorded in interface-changes.md FPGA-1..FPGA-5)
+## 6. Chip-side implications (rows FPGA-1..FPGA-5 in `scratch/reviews/interface-changes.md`; none is in the RTL)
 
 | ID | Finding | Chip-side change | Cost |
 |---|---|---|---|
 | FPGA-1 | Per-bit training only has the 8-word prefix once per link start, so it must restart the link for every tap step (§3), and hold-padding starves the link of edges during payload | **Recommended:** a stopped-only `train_hold` control that repeats T0/T1 on every enabled D2H group (both banks in RX2) until RUN. It allows one-pass training and periodic retraining without SPI restarts | ≈ 2–4 FF and one mux select in `pt_quad_link_tx`; low risk |
 | FPGA-2 | In RX2 `H2D_CLK` is an output, so `host_follow` cannot clock the chip | Validator: reject `lane_dir=RX2` (and TX2 on the south side) with `host_clk=host_follow` or `wire_host_source=host_follow`. In RX2 the host clock must be `internal_pll`/line-divided | validator rule only |
-| FPGA-3 | ECP5 needs H2D at div2 with D2H at full rate | HB-4 (`d2h_rate`) is a **requirement** for ECP5 support, not an option. Without it ECP5 hosts are div2 in both directions | ≈ 10 FF (already HB-4) |
+| FPGA-3 | ECP5 needs H2D at div2 with D2H at full rate | Independent rate dividers (HL-RATE-DIR) are a requirement for ECP5 support. Without them ECP5 hosts are div2 in both directions | ≈ 10 FF |
 | FPGA-4 | After the RX2 release check, nothing on chip detects an FPGA that starts driving a reversed bank later (≈ 30–40 mA per pin, continuous). The gateware becomes a de facto safety layer, which contradicts audit item 10 | Open: either accept it (it is a protocol violation and HL-B7 requires an FPGA handshake) or add a cheap sticky check. Coordinator decision | — |
 | FPGA-5 | Cyclone V full rate depends on a per-bit dynamic input delay *(verify)* | None on chip. If the delay is unavailable, Cyclone V runs div2. Optionally FPGA-1 (training hold) also helps a static per-board calibration | — |
 

@@ -1,10 +1,10 @@
 {
  "ext_u": {
-  "gain_i_db": 15.306376163340252,
-  "gain_q_db": 14.555090874385225,
-  "bb_pp_i_v": 0.0428942,
-  "bb_pp_q_v": 0.0340914,
-  "idd_a": 0.00655294,
+  "gain_i_db": 25.707421220231875,
+  "gain_q_db": 25.77377114680103,
+  "bb_pp_i_v": 0.11657,
+  "bb_pp_q_v": 0.117415,
+  "idd_a": 0.0249479,
   "f_lo_hz": 2400000000.0,
   "f_if_hz": 5000000.0,
   "rf_emf_amp_diff_v": 0.003,
@@ -12,34 +12,48 @@
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
  "ext_m": {
-  "gain_i_db": 26.26686493810461,
-  "gain_q_db": 26.84577022967936,
-  "bb_pp_i_v": 0.133344,
-  "bb_pp_q_v": 0.143819,
-  "idd_a": 0.00655297,
+  "gain_i_db": 25.99523351801254,
+  "gain_q_db": -51.371446565061014,
+  "bb_pp_i_v": 0.120396,
+  "bb_pp_q_v": 0.00340039,
+  "idd_a": 0.0250215,
   "f_lo_hz": 2400000000.0,
   "f_if_hz": 5000000.0,
   "rf_emf_amp_diff_v": 0.003,
   "board_match": {
-   "order": "series_at_pad",
-   "series_leg": [
-    "L",
-    5.9999075266525975e-09
+   "order": "ladder",
+   "lossy": true,
+   "lb": 1.5e-09,
+   "net": [
+    [
+     "sL",
+     3.7e-09
+    ],
+    [
+     "pC",
+     1.3e-12
+    ],
+    [
+     "sL",
+     1.65e-09
+    ],
+    [
+     "pT",
+     9.097463478814842e-13
+    ]
    ],
-   "shunt_diff": [
-    "C",
-    3.1333196345924206e-12
-   ],
-   "q": 4.724934693784418
+   "ct": 6,
+   "rt": 0,
+   "worst_s11_db": -19.9
   },
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
  "ext_byp": {
-  "gain_i_db": 10.914592780746768,
-  "gain_q_db": 12.641982609526835,
-  "bb_pp_i_v": 0.0310495,
-  "bb_pp_q_v": 0.0290076,
-  "idd_a": 0.00381818,
+  "gain_i_db": 5.786606329960897,
+  "gain_q_db": 5.870486979899489,
+  "bb_pp_i_v": 0.0123566,
+  "bb_pp_q_v": 0.0127424,
+  "idd_a": 0.00603023,
   "f_lo_hz": 2400000000.0,
   "f_if_hz": 5000000.0,
   "rf_emf_amp_diff_v": 0.003,
@@ -47,11 +61,11 @@
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
  "ext_m_1200MHz": {
-  "gain_i_db": 36.26608436726675,
-  "gain_q_db": 36.23412427306905,
-  "bb_pp_i_v": 0.392325,
-  "bb_pp_q_v": 0.389443,
-  "idd_a": 0.00657186,
+  "gain_i_db": 28.02616639352346,
+  "gain_q_db": 28.073739159163775,
+  "bb_pp_i_v": 0.151853,
+  "bb_pp_q_v": 0.152684,
+  "idd_a": 0.0249747,
   "f_lo_hz": 1200000000.0,
   "f_if_hz": 2000000.0,
   "rf_emf_amp_diff_v": 0.003,
@@ -59,22 +73,22 @@
    "order": "series_at_pad",
    "series_leg": [
     "L",
-    2.3864819791961142e-08
+    1.5948498516899723e-08
    ],
    "shunt_diff": [
     "C",
-    3.0541379662405687e-12
+    2.4120566182088106e-12
    ],
-   "q": 2.30276577546985
+   "q": 1.8186478444337852
   },
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
  "ext_m_600MHz": {
-  "gain_i_db": 36.423534523758136,
-  "gain_q_db": 36.415679709426,
-  "bb_pp_i_v": 0.401303,
-  "bb_pp_q_v": 0.398096,
-  "idd_a": 0.00658394,
+  "gain_i_db": 23.019030511943967,
+  "gain_q_db": 23.107312072004955,
+  "bb_pp_i_v": 0.0856562,
+  "bb_pp_q_v": 0.0865237,
+  "idd_a": 0.0249887,
   "f_lo_hz": 600000000.0,
   "f_if_hz": 2000000.0,
   "rf_emf_amp_diff_v": 0.003,
@@ -82,83 +96,346 @@
    "order": "series_at_pad",
    "series_leg": [
     "L",
-    9.388153567661017e-08
+    5.6923118256787505e-08
    ],
    "shunt_diff": [
     "C",
-    1.6720921402798487e-12
+    4.5250185889452574e-12
    ],
-   "q": 0.6303638860834088
+   "q": 1.7058918187665204
   },
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
- "tnoise_lna_matched": {
-  "gain_i_db": 28.879500800886497,
-  "out_psd_i_v2_hz": 3.280458356036894e-14,
-  "bins": 10,
-  "nf_i_db": 14.08502827165847,
-  "psd_by_band": {
-   "2-3MHz": 8.134816337932692e-14,
-   "5-7MHz": 1.8887286400437217e-14,
-   "7-9MHz": 2.2450090810821674e-14
-  },
-  "nf_i_5to9mhz_db": 12.078812204425695,
-  "mode": "lna",
-  "board_match": {
-   "order": "series_at_pad",
-   "series_leg": [
-    "L",
-    5.9999075266525975e-09
-   ],
-   "shunt_diff": [
-    "C",
-    3.1333196345924206e-12
-   ],
-   "q": 4.724934693784418
-  },
-  "lna_nf_input_db": 3.284737,
-  "ota_en_v_rthz": 7.080991e-09,
-  "band_hz": [
-   2000000.0,
-   9000000.0
+ "det_lna_matched_extpr": {
+  "corner": [
+   "typical",
+   27,
+   3.3
   ],
-  "analysed_window_s": [
-   1e-06,
-   3e-06
-  ],
-  "trnoise_k": 1.6903560324032997e-11,
-  "channel": "I (Q mixer present, noiseless)",
-  "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
-  "board_lna_15db_1p5db_nf_db": 3.4063206672641733,
-  "board_lna_15db_1p5db_nf_5to9mhz_db": 2.7675586763167948
+  "ct": 6,
+  "view": "extpr",
+  "lna_matched": {
+   "idd_a": 0.01892998,
+   "gain_db": -2.77495,
+   "zin_re_ohm": 103.8097,
+   "zin_im_ohm": 20.74816,
+   "nf_db": 5.215536,
+   "vd_cm_v": 3.264588
+  },
+  "match": {
+   "order": "ladder",
+   "lossy": true,
+   "lb": 1.5e-09,
+   "net": [
+    [
+     "sL",
+     3.7e-09
+    ],
+    [
+     "pC",
+     1.3e-12
+    ],
+    [
+     "sL",
+     1.65e-09
+    ],
+    [
+     "pT",
+     8.297169750815801e-13
+    ]
+   ],
+   "ct": 6,
+   "rt": 0,
+   "worst_s11_db": -19.01
+  },
+  "nf_ssb_db": 12.677170498595899,
+  "nf_dsb_db": 9.866606976927494,
+  "f_parts": {
+   "sig": 2.1843,
+   "img": 1.9879,
+   "h3u": 0.0,
+   "h3l": 0.0,
+   "h5u": 0.0,
+   "h5l": 0.0,
+   "ota1": 7.2148,
+   "ota2": 7.0622,
+   "r1": 0.031,
+   "r2": 0.0282,
+   "h3u_lna": 0.0058,
+   "h3l_lna": 0.0058,
+   "h5u_lna": 0.0016,
+   "h5l_lna": 0.0016
+  },
+  "lna_harmonic": {
+   "h3": {
+    "nf_db": 70.17237,
+    "gain_db": -85.7703,
+    "folded_per_sideband": 0.0058004200999838195,
+    "mixer_conversion_rel": "1/h (ideal)"
+   },
+   "h5": {
+    "nf_db": 89.11412,
+    "gain_db": -105.866,
+    "folded_per_sideband": 0.0016009102704526025,
+    "mixer_conversion_rel": "1/h (ideal)"
+   }
+  },
+  "gain_sig_db": {
+   "4.0MHz": 27.8,
+   "6.0MHz": 24.98,
+   "8.5MHz": 22.29
+  },
+  "ota_en_v_rthz": 2.410852e-09,
+  "resid_rms_v": 0.0002947203776715559,
+  "lobias": false
  },
- "tnoise_bypass": {
-  "gain_i_db": 14.660120580936413,
-  "out_psd_i_v2_hz": 3.683920650450937e-14,
-  "bins": 10,
-  "nf_i_db": 28.808165873784578,
-  "psd_by_band": {
-   "2-3MHz": 1.5649825209449456e-13,
-   "5-7MHz": 3.536478985855367e-15,
-   "7-9MHz": 1.0312411228170763e-14
+ "det_lna_matched_extpr_ss_32_3.15": {
+  "corner": [
+   "ss",
+   32,
+   3.15
+  ],
+  "ct": 6,
+  "view": "extpr",
+  "lna_matched": {
+   "idd_a": 0.01712603,
+   "gain_db": -4.0979,
+   "zin_re_ohm": 100.5567,
+   "zin_im_ohm": 17.00571,
+   "nf_db": 6.024379,
+   "vd_cm_v": 3.11797
   },
-  "nf_i_5to9mhz_db": 21.548912969891166,
-  "mode": "bypass",
-  "board_match": null,
-  "lna_nf_input_db": null,
-  "ota_en_v_rthz": 7.080991e-09,
-  "band_hz": [
-   2000000.0,
-   9000000.0
+  "match": {
+   "order": "ladder",
+   "lossy": true,
+   "lb": 1.5e-09,
+   "net": [
+    [
+     "sL",
+     3.7e-09
+    ],
+    [
+     "pC",
+     1.3e-12
+    ],
+    [
+     "sL",
+     1.65e-09
+    ],
+    [
+     "pT",
+     7.516003072662548e-13
+    ]
+   ],
+   "ct": 6,
+   "rt": 0,
+   "worst_s11_db": -20.58
+  },
+  "nf_ssb_db": 14.295044875295845,
+  "nf_dsb_db": 11.53305950357458,
+  "f_parts": {
+   "sig": 2.4551,
+   "img": 2.1823,
+   "h3u": 0.0,
+   "h3l": 0.0,
+   "h5u": 0.0,
+   "h5l": 0.0,
+   "ota1": 11.1718,
+   "ota2": 10.9475,
+   "r1": 0.0541,
+   "r2": 0.054,
+   "h3u_lna": 0.0079,
+   "h3l_lna": 0.0079,
+   "h5u_lna": 0.002,
+   "h5l_lna": 0.002
+  },
+  "lna_harmonic": {
+   "h3": {
+    "nf_db": 68.04975,
+    "gain_db": -83.6127,
+    "folded_per_sideband": 0.007929620854130104,
+    "mixer_conversion_rel": "1/h (ideal)"
+   },
+   "h5": {
+    "nf_db": 91.4574,
+    "gain_db": -108.508,
+    "folded_per_sideband": 0.00202670244309405,
+    "mixer_conversion_rel": "1/h (ideal)"
+   }
+  },
+  "gain_sig_db": {
+   "4.0MHz": 25.34,
+   "6.0MHz": 22.36,
+   "8.5MHz": 19.6
+  },
+  "ota_en_v_rthz": 2.682343e-09,
+  "resid_rms_v": 0.0002721414734620117,
+  "lobias": false
+ },
+ "det_lna_matched_extpp_ss_32_3.15": {
+  "corner": [
+   "ss",
+   32,
+   3.15
   ],
-  "analysed_window_s": [
-   1e-06,
-   3e-06
+  "ct": 8,
+  "view": "extpp",
+  "lna_matched": {
+   "idd_a": 0.01712559,
+   "gain_db": -8.02565,
+   "zin_re_ohm": 109.2235,
+   "zin_im_ohm": 15.72077,
+   "nf_db": 8.431951,
+   "vd_cm_v": 3.113952
+  },
+  "match": {
+   "order": "ladder",
+   "lossy": true,
+   "lb": 1.5e-09,
+   "net": [
+    [
+     "sL",
+     3.7e-09
+    ],
+    [
+     "pC",
+     1.3e-12
+    ],
+    [
+     "sL",
+     1.65e-09
+    ],
+    [
+     "pT",
+     4.148725286959285e-13
+    ]
+   ],
+   "ct": 8,
+   "rt": 0,
+   "worst_s11_db": -20.15
+  },
+  "nf_ssb_db": 16.723550991300566,
+  "nf_dsb_db": 13.936814519013152,
+  "f_parts": {
+   "sig": 3.0092,
+   "img": 2.7072,
+   "h3u": 0.0,
+   "h3l": 0.0,
+   "h5u": 0.0,
+   "h5l": 0.0,
+   "ota1": 20.7325,
+   "ota2": 20.3339,
+   "r1": 0.0997,
+   "r2": 0.0993,
+   "h3u_lna": 0.0186,
+   "h3l_lna": 0.0186,
+   "h5u_lna": 0.0044,
+   "h5l_lna": 0.0044
+  },
+  "lna_harmonic": {
+   "h3": {
+    "nf_db": 57.84818,
+    "gain_db": -73.6399,
+    "folded_per_sideband": 0.018584452778364336,
+    "mixer_conversion_rel": "1/h (ideal)"
+   },
+   "h5": {
+    "nf_db": 103.3054,
+    "gain_db": -120.89,
+    "folded_per_sideband": 0.0044275654651661535,
+    "mixer_conversion_rel": "1/h (ideal)"
+   }
+  },
+  "gain_sig_db": {
+   "4.0MHz": 22.68,
+   "6.0MHz": 19.69,
+   "8.5MHz": 16.91
+  },
+  "ota_en_v_rthz": 2.682343e-09,
+  "resid_rms_v": 0.00027224093348614535,
+  "lobias": false
+ },
+ "det_lna_matched_extpr_duplex_lobias": {
+  "corner": [
+   "typical",
+   27,
+   3.3
   ],
-  "trnoise_k": 1.6903560324032997e-11,
-  "channel": "I (Q mixer present, noiseless)",
-  "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
-  "board_lna_15db_1p5db_nf_db": 14.05079702650983,
-  "board_lna_15db_1p5db_nf_5to9mhz_db": 7.707300510482082
+  "ct": 6,
+  "view": "extpr",
+  "lna_matched": {
+   "idd_a": 0.01168151,
+   "gain_db": -3.9106,
+   "zin_re_ohm": 106.6995,
+   "zin_im_ohm": 22.04978,
+   "nf_db": 5.779496,
+   "vd_cm_v": 3.278379
+  },
+  "match": {
+   "order": "ladder",
+   "lossy": true,
+   "lb": 1.5e-09,
+   "net": [
+    [
+     "sL",
+     3.7e-09
+    ],
+    [
+     "pC",
+     1.3e-12
+    ],
+    [
+     "sL",
+     1.65e-09
+    ],
+    [
+     "pT",
+     8.012729542588996e-13
+    ]
+   ],
+   "ct": 6,
+   "rt": 0,
+   "worst_s11_db": -18.46
+  },
+  "nf_ssb_db": 13.565555766530002,
+  "nf_dsb_db": 10.76720138499627,
+  "f_parts": {
+   "sig": 2.3057,
+   "img": 2.0861,
+   "h3u": 0.0,
+   "h3l": 0.0,
+   "h5u": 0.0,
+   "h5l": 0.0,
+   "ota1": 9.2056,
+   "ota2": 9.0361,
+   "r1": 0.0374,
+   "r2": 0.0401,
+   "h3u_lna": 0.0066,
+   "h3l_lna": 0.0066,
+   "h5u_lna": 0.0017,
+   "h5l_lna": 0.0017
+  },
+  "lna_harmonic": {
+   "h3": {
+    "nf_db": 69.865,
+    "gain_db": -86.0272,
+    "folded_per_sideband": 0.006616029694226939,
+    "mixer_conversion_rel": "1/h (ideal)"
+   },
+   "h5": {
+    "nf_db": 89.34303,
+    "gain_db": -106.94,
+    "folded_per_sideband": 0.0017116816340899562,
+    "mixer_conversion_rel": "1/h (ideal)"
+   }
+  },
+  "gain_sig_db": {
+   "4.0MHz": 26.74,
+   "6.0MHz": 23.91,
+   "8.5MHz": 21.24
+  },
+  "ota_en_v_rthz": 2.410852e-09,
+  "resid_rms_v": 0.00029476865563764714,
+  "lobias": true
  }
 }

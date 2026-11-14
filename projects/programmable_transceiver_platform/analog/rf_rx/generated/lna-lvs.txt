@@ -29,26 +29,18 @@ Circuit 1: pfet_03v3                       |Circuit 2: pfet_03v3
 Cell pin lists are equivalent.
 Device classes pfet_03v3 and pfet_03v3 are equivalent.
 
-Subcircuit summary:
-Circuit 1: pt_rfrx_inv                     |Circuit 2: pt_rfrx_inv                     
--------------------------------------------|-------------------------------------------
-nfet_03v3 (1)                              |nfet_03v3 (1)                              
-pfet_03v3 (1)                              |pfet_03v3 (1)                              
-Number of devices: 2                       |Number of devices: 2                       
-Number of nets: 4                          |Number of nets: 4                          
----------------------------------------------------------------------------------------
-Netlists match uniquely.
+Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
 
 Subcircuit pins:
-Circuit 1: pt_rfrx_inv                     |Circuit 2: pt_rfrx_inv                     
+Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield       
 -------------------------------------------|-------------------------------------------
-y                                          |y                                          
-a                                          |a                                          
-VSS                                        |VSS                                        
-VDD                                        |VDD                                        
+1                                          |1                                          
+2                                          |2                                          
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes pt_rfrx_inv and pt_rfrx_inv are equivalent.
+Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
 
 Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
 Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
@@ -63,62 +55,60 @@ Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
+Flattening unmatched subcell pt_rfrx_inv in circuit pt_lna (1)(12 instances)
 
-Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
-Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
-Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield       
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
-
-Class pt_lna (0):  Merged 839 parallel devices.
-Class pt_lna (0):  Merged 7 series devices.
-Class pt_lna (1):  Merged 839 parallel devices.
-Class pt_lna (1):  Merged 7 series devices.
+Class pt_lna (0):  Merged 681 parallel devices.
+Class pt_lna (0):  Merged 12 series devices.
+Class pt_lna (1):  Merged 681 parallel devices.
+Class pt_lna (1):  Merged 12 series devices.
 Subcircuit summary:
 Circuit 1: pt_lna                          |Circuit 2: pt_lna                          
 -------------------------------------------|-------------------------------------------
-pt_rfrx_inv (6)                            |pt_rfrx_inv (6)                            
-nfet_03v3 (804->24)                        |nfet_03v3 (804->24)                        
-ppolyf_u_1k (33->26)                       |ppolyf_u_1k (33->26)                       
-pfet_03v3 (60->2)                          |pfet_03v3 (60->2)                          
-diode_nd2ps_03v3 (9)                       |diode_nd2ps_03v3 (9)                       
-cap_mim_2f0_m4m5_noshield (18->17)         |cap_mim_2f0_m4m5_noshield (18->17)         
-Number of devices: 84                      |Number of devices: 84                      
-Number of nets: 52                         |Number of nets: 52                         
+nfet_03v3 (773->94)                        |nfet_03v3 (773->94)                        
+cap_mim_2f0_m4m5_noshield (20)             |cap_mim_2f0_m4m5_noshield (20)             
+ppolyf_u_1k (24->12)                       |ppolyf_u_1k (24->12)                       
+pfet_03v3 (18->16)                         |pfet_03v3 (18->16)                         
+Number of devices: 142                     |Number of devices: 142                     
+Number of nets: 80                         |Number of nets: 80                         
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
+Resolving symmetries by pin name.
 Netlists match uniquely.
 
 Subcircuit pins:
 Circuit 1: pt_lna                          |Circuit 2: pt_lna                          
 -------------------------------------------|-------------------------------------------
-ibias                                      |ibias                                      
 atb_nbias                                  |atb_nbias                                  
+en                                         |en                                         
+rf_in_p                                    |rf_in_p                                    
 rf_in_n                                    |rf_in_n                                    
-rf_out_p                                   |rf_out_p                                   
-rf_out_n                                   |rf_out_n                                   
 rf_outq_p                                  |rf_outq_p                                  
+rf_out_p                                   |rf_out_p                                   
 rf_outq_n                                  |rf_outq_n                                  
+rf_out_n                                   |rf_out_n                                   
 ct0                                        |ct0                                        
 ct1                                        |ct1                                        
 ct2                                        |ct2                                        
+ct3                                        |ct3                                        
 se                                         |se                                         
-VSS                                        |VSS                                        
-VDD                                        |VDD                                        
 island_off                                 |island_off                                 
-rf_in_p                                    |rf_in_p                                    
 byp                                        |byp                                        
-en                                         |en                                         
+att0                                       |att0                                       
+att1                                       |att1                                       
+att2                                       |att2                                       
+att3                                       |att3                                       
+att4                                       |att4                                       
 gain_lo                                    |gain_lo                                    
-atb_vdcm                                   |atb_vdcm                                   
+VDD                                        |VDD                                        
+VSS                                        |VSS                                        
+ibias                                      |ibias                                      
+lobias                                     |lobias                                     
+src_p                                      |src_p                                      
+src_n                                      |src_n                                      
 rt                                         |rt                                         
+atb_vdcm                                   |atb_vdcm                                   
+tank_p                                     |tank_p                                     
+tank_n                                     |tank_n                                     
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes pt_lna and pt_lna are equivalent.

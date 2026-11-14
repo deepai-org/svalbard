@@ -75,6 +75,39 @@ def corner_table(fn, keys):
 
 
 # ---------------------------------------------------------------- LNA (+ chain)
+def lna_chain_rows(chain):
+    """LNA evidence rows that come from generated/rf_rx_chain.json (also used by --refresh-chain-rows)."""
+    det = {k: v for k, v in chain.items() if k.startswith('det_lna_matched_') and isinstance(v, dict)}
+    def drow(k, v):
+        return dict(key=k, view=v.get('view'), corner=v.get('corner'), lobias=v.get('lobias'), ct=v.get('ct'),
+                    nf_dsb_db=v.get('nf_dsb_db'), nf_ssb_db=v.get('nf_ssb_db'), gain_sig_db=v.get('gain_sig_db'),
+                    f_parts=v.get('f_parts'), ota_en_v_rthz=v.get('ota_en_v_rthz'), error=v.get('error'),
+                    trimmer_pf=[round(x * 1e12, 3) for t_, x in (v.get('match') or {}).get('net', []) if t_ == 'pT'])
+    drows = [drow(k, v) for k, v in det.items()]
+    rx = [r for r in drows if not r['lobias']]
+    ok = lambda rs: bool(rs) and all(r['nf_dsb_db'] is not None and r['nf_dsb_db'] <= 4.1 for r in rs)
+    dn, ds = det.get('det_lna_matched_extpr', {}), det.get('det_lna_matched_extpr_ss_32_3.15', {})
+    return [{'metric': 'chain NF, deterministic multitone (tb.chain_det), DSB (zero-IF) / SSB (I channel) (dB), with the B18 board network '
+                        '(lna_match.BOARD_TRIM, lossy parts at the pessimistic Q: L 40, C0G 100, trimmer 50, bond 50), trimmer tuned for S11 '
+                        'at that corner, tank code tb.LNA_TANK_CT; process x 32 C / 3.15 V at the three model ends (extpr nominal; extpp '
+                        'pessimistic NF end: Rg 200, +25 % device C, pad C +30 %, tank spiral Q 4 / L -15 %; extlo: Rg 60, pad C -20 %, '
+                        'spiral L +10 %), tt nominal, duplex bias (information); LNA noise at 3 fLO / 5 fLO measured (lna_harmonic)',
+              'target': 'on-chip <= 4.1 DSB (RF-RX-NFSYS 8 dB system - 3.91 dB board budget) at every RX row incl. the pessimistic end '
+                        '(the board-network loss is inside these numbers AND in the 3.91 dB budget: conservative)',
+              'extracted_nominal': [dn.get('nf_dsb_db'), dn.get('nf_ssb_db')],
+              'extracted_ss_32c_3v15': [ds.get('nf_dsb_db'), ds.get('nf_ssb_db')],
+              'rows': drows,
+              'pass_nominal_model_extpr': ok([r for r in rx if r['view'] == 'extpr']),
+              'pass_pessimistic_extpp': ok([r for r in rx if r['view'] == 'extpp']),
+              'pass_low_end_extlo': ok([r for r in rx if r['view'] == 'extlo']),
+              'pass': ok(rx) and {'extpr', 'extpp', 'extlo'} <= {r['view'] for r in rx},
+              'pessimistic_note': 'the +1.5 dB PDK noise-model derate (design-assumptions.md) is NOT applied to these numbers',
+              'detail': det},
+             {'metric': 'RF pad -> I/Q baseband conversion gain with LNA, no board match (dB)',
+              'extracted_nominal': chain.get('ext_u')},
+             {'metric': 'RF pad -> I/Q baseband conversion gain with LNA and the B18 board network (dB)', 'extracted_nominal': chain.get('ext_m')}]
+
+
 def do_lna(quick, chain):
     w = WORK / 'lna'
     lay = layout('lna')
@@ -107,7 +140,7 @@ def do_lna(quick, chain):
     BT = LM.BOARD_TRIM
     def trim_view(view):
         cns = [NOM] if quick else CORNERS
-        zz = {rt: dict(zip(cns, par([(lambda c=c, rt=rt: LM.zsweep(w / f'zs_{view}', view, c, rt=rt)) for c in cns])))
+        zz = {rt: dict(zip(cns, par([(lambda c=c, rt=rt: LM.zsweep(w / f'zs_{view}', view, c, rt=rt, codes=(7,))) for c in cns])))
               for rt in (False, True)}
         procs = [p_ for p_ in PROCS if any(c[0] == p_ for c in cns)]
         chips = {p_: ((zz[False], zz[True]), [c for c in cns if c[0] == p_]) for p_ in procs}
@@ -119,7 +152,8 @@ def do_lna(quick, chain):
             nom = [r for r in table[p_] if r[0] == (0., 0., 0.)][0]
             worst = max(table[p_], key=lambda r: r[1])
             for lab, (d, _, st) in (('nominal parts and bond', nom), ('worst tolerance draw', worst)):
-                m = dict(order='ladder', lossy=True, lb=LM.BOND, lb_actual=LM.BOND + d[0], net=[list(x) for x in st['net']], ct=st['ct'], rt=st['rt'])
+                m = dict(order='ladder', lossy=True, lb=LM.BOND, lb_actual=LM.BOND + d[0], net=[list(x) for x in st['net']],
+                         ct=tb.lna_tank_ct(view, (p_,)), rt=st['rt'])
                 if lab.startswith('nominal'):
                     nets[p_] = m
                 jobs += [(lab, d, m, c) for c in chips[p_][1]]
@@ -145,10 +179,37 @@ def do_lna(quick, chain):
     band_pp, nets_pp, tol_pp = trim_view('extpp')     # NF/gain-worst end: Rg 200, +25 % device C, pad C +30 %
     band_lo, nets_lo, tol_lo = trim_view('extlo')     # match-worst end: Rg 60, no extra C, pad C -20 %
     # stability (review lna2 item 4): bond + supply L, K/mu two-port, Re(Zin) with the real extracted mixers, states
-    ST_CASES = [('extlo', ('ff', 22, 3.35)), ('extlo', NOM), ('extpp', ('ss', 32, 3.15))]
-    ST_STATES = [dict(ct=0), dict(ct=15), dict(ct=7, rt=True), dict(ct=7, att=63), dict(ct=7, mode='bypass')]
-    stab = par([(lambda v=v, c=c, st=st: dict(view=v, corner=c, state=st, **LM.stability(w / 'stab', v, c, **st)))
-                for v, c in (ST_CASES[:1] if quick else ST_CASES) for st in ST_STATES])
+    # Stability matrix (coordinator order 2026-11-13).  Source network = on-chip degeneration spirals (no bond in the loop).
+    # (A) 12 corners x three model ends x degeneration model (the view's own variant and 'lowr' = least damping);
+    # (B) states (ct 0/15, rt, attenuator 31/63, bypass, duplex bias) at the worst corners, both degeneration models;
+    # (C) supply/ground bond 0.25 / 1 / 2 nH x island decap 0 / 100 pF / 500 pF, RF bond 3.0 -+0.35 nH, at two model ends.
+    # Every row: differential mu, K, min Re(Zin) AND common-mode min Re(Zcm), real mixers, 0.1-30 GHz, margins LM.STAB_MARGIN_OHM.
+    ST_WORST = [('extpr', ('ff', 32, 3.35)), ('extlo', ('ff', 32, 3.35)), ('extpr', NOM), ('extpp', ('ss', 32, 3.15))]
+    ST_STATES = [dict(ct=0), dict(ct=15), dict(ct=7, rt=True), dict(ct=7, att=63), dict(ct=7, att=31), dict(ct=7, mode='bypass'),
+                 dict(ct=7, lob=True)]
+    DEGS = (None, 'lowr')
+    B0, S0 = LM.BOND, LM.L_BOND_SUP
+    if quick:
+        st_jobs = [('extpr', ('ff', 32, 3.35), st, None, B0, S0, 0.) for st in ST_STATES[:6]]
+    else:
+        st_jobs = ([(v, c, dict(ct=7), dg, B0, S0, 0.) for v in ('extlo', 'extpr', 'extpp') for c in CORNERS for dg in DEGS] +
+                   [(v, c, st, dg, B0, S0, 0.) for v, c in ST_WORST for st in ST_STATES for dg in DEGS] +
+                   [(v, c, dict(ct=7), 'lowr', b_, s_, cd) for v, c in (ST_WORST[0], ST_WORST[3])
+                    for b_, s_, cd in ((B0 - LM.BOND_TOL, S0, 0.), (B0 + LM.BOND_TOL, S0, 0.), (B0, 0.25e-9, 0.), (B0, 2.0e-9, 0.),
+                                       (B0, 0.25e-9, 100e-12), (B0, S0, 100e-12), (B0, 2.0e-9, 100e-12), (B0, S0, 500e-12))])
+    def st_job(v, c, st, dg, b_, s_, cd):
+        st = dict(st); lob = st.pop('lob', False)
+        tb.set_lobias(lob)
+        try:
+            r = LM.stability(w / 'stab', v, c, bond=b_, lsup=s_, deg=dg, cdec=cd, **st)
+        except Exception as e:      # a failed run is a failed row, never a silent pass
+            r = dict(error=repr(e))
+        finally:
+            tb.set_lobias(False)
+        return dict(view=v, corner=c, state=dict(st, lobias=lob), degeneration_model=dg or tb.LNA_DEG_VIEW.get(v, 'nom'),
+                    rf_bond_nh=round(b_ * 1e9, 3), supply_bond_nh=round(s_ * 1e9, 3), island_decap_pf=round(cd * 1e12, 1),
+                    ok=LM.stability_ok(r), **r)
+    stab = par([(lambda j=j: st_job(*j)) for j in st_jobs])
     import bench_selftest
     selftest = bench_selftest.run(w / 'selftest')
     ATT_CASES = [('extpr', NOM)] if quick else [('extpr', NOM), ('extpp', ('ss', 32, 3.15)), ('extpp', ('ss', 22, 3.15)),
@@ -164,6 +225,9 @@ def do_lna(quick, chain):
     byp_coff = tb.off_capacitance(w, 'lna_bypass', '\n'.join(
         f'XM{i} a off b VSS nfet_03v3 w=5u l=0.28u' for i in range(12)).replace('XM', 'MXM').replace('VSS', '0'), 2.4e9)
     nominal_ok = act.get('gain_db') is not None and act['idd_a'] > 1e-3
+    tb.set_lobias(True)
+    act_lo = tb.lna_ac(w / 'lobias', 'ext', NOM, 'active')
+    tb.set_lobias(False)
     rec = base_record('lna', lay)
     d, l = drc_lvs(lay)
     perf = [
@@ -185,7 +249,10 @@ def do_lna(quick, chain):
          'target': '<= 1 dB at -10 dBm (BLE) with the attenuator; <= 1 dB at -20 dBm (Wi-Fi/15.4)',
          'extracted_nominal': cmp_rows,
          'pass': all((r.get('compression_db') is not None and r['compression_db'] <= 1.0) for r, (p_, a_) in zip(cmp_rows, cmp_cases) if a_ == 63)},
-        {'metric': 'supply current active (mA)', 'target': '<= 11.7 (power budget LNA allocation)',
+        {'metric': 'supply current active, duplex reduced bias (lobias = 1) (mA)', 'target': '<= 11.8 (LNA duplex allocation 11.7 mA; limit fixed 2026-11-13 by the coordinator, not moved to follow measurements)',
+         'extracted_nominal': act_lo['idd_a'] * 1e3 if act_lo.get('idd_a') else None,
+         'pass': bool(act_lo.get('idd_a')) and act_lo['idd_a'] * 1e3 <= 11.8},
+        {'metric': 'supply current active, RX bias (lobias = 0) (mA)', 'target': '<= 19.0 (LNA RX allocation 18.9 mA; limit fixed 2026-11-13 by the coordinator, not moved to follow measurements)',
          'extracted_nominal': act['idd_a'] * 1e3 if act.get('idd_a') else None},
         {'metric': f'package-tolerance network at reset (ct={tb.LNA_CT_RESET}, se=0, rt=0) vs other codes: matched NF / gain (dB), Zin (ohm), match Q',
          'target': 'trim/SE/RT network costs <= 0.5 dB NF (item 2); rt is opt-in',
@@ -199,50 +266,48 @@ def do_lna(quick, chain):
                    'trimmer ESL/terminal C), trimmers + ct (4..10) + rt set once per board, held over the four T/V points; '
                    'ngspice lna_band on a 0.5 MHz grid: S11 worst over 2.395-2.4885 GHz (band + 5 MHz guard), NF/gain over 2.400-2.4835 GHz. '
                    'View extpr = extracted + pad_rf_pair + Rg 150 ohm/10 um. Cases: nominal parts/bond and the worst tolerance draw',
-         'target': 'S11 <= -10 dB (band + guard) at every envelope corner and tolerance case; ct in 4..10; NF <= 6.0 dB',
+         'target': 'S11 <= -10 dB (band + guard) at every envelope corner and tolerance case; LNA NF (incl. the lossy board network) <= 6.0 dB',
          'board_trim': BT, 'networks': nets_pr, 'rows': band_pr, 'tolerance_table_numpy': tol_pr,
-         'pass': all(r.get('s11_worst_db', 0) <= -10 and r['nf_db'][1] <= 6.0 and 4 <= r['ct'] <= 10 for r in band_pr)
+         'nf_pass': all('nf_db' in r and r['nf_db'][1] <= 6.0 for r in band_pr),
+         's11_pass': all(r.get('s11_worst_db', 0) <= -10 for r in band_pr) and all(t['s11_worst_db'] <= -10 for v in tol_pr.values() for t in v),
+         'pass': all(r.get('s11_worst_db', 0) <= -10 and 'nf_db' in r and r['nf_db'][1] <= 6.0 for r in band_pr)
                  and all(t['s11_worst_db'] <= -10 for v in tol_pr.values() for t in v)},
         {'metric': 'same at the HIGH end of the uncertain values (NF / gain worst): Rg 200 ohm/10 um, +25 % device C (low fT), '
                    'RF pad C +30 %; NF limit applied to the derated NF (simulated + 1.5 dB model derate, spec/design-assumptions.md)',
-         'target': 'S11 <= -10 dB (band + guard); derated NF <= 6.0 dB at every envelope corner',
+         'target': 'S11 <= -10 dB (band + guard); derated LNA NF (incl. the lossy board network, + 1.5 dB) <= 6.0 dB at every envelope corner',
          'networks': nets_pp, 'rows': [dict(r, nf_db_derated=[round(x + 1.5, 2) for x in r['nf_db']]) if 'nf_db' in r else r for r in band_pp],
          'tolerance_table_numpy': tol_pp,
          's11_pass': all(r.get('s11_worst_db', 0) <= -10 for r in band_pp) and all(t['s11_worst_db'] <= -10 for v in tol_pp.values() for t in v),
-         'nf_pass': all(r['nf_db'][1] + 1.5 <= 6.0 for r in band_pp if 'nf_db' in r),
-         'pass': all(r.get('s11_worst_db', 0) <= -10 and r['nf_db'][1] + 1.5 <= 6.0 for r in band_pp)
+         'nf_pass': all('nf_db' in r and r['nf_db'][1] + 1.5 <= 6.0 for r in band_pp),
+         'pass': all(r.get('s11_worst_db', 0) <= -10 and 'nf_db' in r and r['nf_db'][1] + 1.5 <= 6.0 for r in band_pp)
                  and all(t['s11_worst_db'] <= -10 for v in tol_pp.values() for t in v)},
         {'metric': 'same at the LOW end of the uncertain values (match / detuning / stability worst): Rg 60 ohm/10 um, no extra device C, '
                    'RF pad C -20 %',
-         'target': 'S11 <= -10 dB (band + guard) at every envelope corner and tolerance case; ct within 4..10',
+         'target': 'S11 <= -10 dB (band + guard) at every envelope corner and tolerance case; LNA NF <= 6.0 dB',
          'networks': nets_lo, 'rows': band_lo, 'tolerance_table_numpy': tol_lo,
-         'pass': all(r.get('s11_worst_db', 0) <= -10 and 4 <= r['ct'] <= 10 for r in band_lo)
+         'pass': all(r.get('s11_worst_db', 0) <= -10 and 'nf_db' in r and r['nf_db'][1] <= 6.0 for r in band_lo)
                  and all(t['s11_worst_db'] <= -10 for v in tol_lo.values() for t in v)},
-        {'metric': 'stability: LNA two-port with 1.5 nH RF bonds and 1 nH VDD/VSS bonds (no off-chip decap credited); Edwards-Sinsky mu '
-                   'and Rollett K from Z-parameters, 0.1-12 GHz; and min Re(Zin) at the pads with the REAL extracted rxmix_i/q attached '
-                   '(LO static, both polarities). States: ct 0 / 15, rt on, full attenuation (63), bypass',
-         'target': 'mu > 1 at every frequency (unconditional), or, if not, Re(Zin) > 0 with the real source/load terminations',
+        {'metric': 'stability: LNA two-port (on-chip source degeneration, RF bonds 3.0 nH +-0.35, VDD/VSS bonds 0.25 / 1 / 2 nH, island decap '
+                   '0 / 100 / 500 pF), 0.1-30 GHz: Edwards-Sinsky mu and Rollett K from Z-parameters; min Re(Zin) differential and min '
+                   'Re(Zcm) common-mode at the bond ends with the REAL extracted rxmix_i/q attached (LO static, both polarities). All 12 '
+                   'envelope corners x three model ends x degeneration model (view variant and lowest-loss); states ct 0 / 15, rt, '
+                   'attenuator 31 / 63, bypass, duplex bias at the worst corners',
+         'target': f"every row: mu > 1, K > 1, min Re(Zin) >= {LM.STAB_MARGIN_OHM['diff']} ohm, min Re(Zcm) >= {LM.STAB_MARGIN_OHM['cm']} ohm "
+                   '(margins fixed before the redesigned stage was simulated)',
+         'rows': len(stab),
+         'summary': {'min_mu': min((r.get('min_mu') or -9) for r in stab), 'min_k': min((r.get('min_k') or -9) for r in stab),
+                     'min_re_zin_real_mixer_ohm': min((r.get('min_re_zin_real_mixer_ohm') or -9) for r in stab),
+                     'min_re_zcm_real_mixer_ohm': min((r.get('min_re_zcm_real_mixer_ohm') or -9) for r in stab),
+                     'failing_rows': sum(not r['ok'] for r in stab)},
          'extracted': stab,
-         'unconditional': all((r.get('min_mu') or 0) > 1 for r in stab),
-         'pass': all((r.get('min_re_zin_real_mixer_ohm') or -1) > 0 for r in stab)},
+         'pass': all(r['ok'] for r in stab)},
         {'metric': 'bench self-tests (bench_selftest.py): hand-calculable and deliberately broken cases of the LNA NF, S11-ladder and '
                    'harmonic-noise benches',
          'target': 'every ok case passes; every broken case fails its check', 'extracted': selftest, 'pass': bool(selftest.get('all_ok'))},
         {'metric': 'IIP3 (dBm)', 'target': 0.0, 'extracted_nominal': None, 'note': 'not simulated'},
     ]
     if chain:
-        dn, ds = chain.get('det_lna_matched_extpr', {}), chain.get('det_lna_matched_extpr_ss_32_3.15', {})
-        perf += [{'metric': 'chain NF, deterministic multitone (tb.chain_det), extpr view, per-board ladder: DSB (zero-IF) / SSB (I channel) (dB); '
-                            'LNA noise at 3 fLO / 5 fLO measured (lna_harmonic), not assumed',
-                  'target': 'on-chip <= 4.1 DSB (RF-RX-NFSYS 8 dB system - 3.91 dB board budget)',
-                  'extracted_nominal': [dn.get('nf_dsb_db'), dn.get('nf_ssb_db')],
-                  'extracted_ss_32c_3v15': [ds.get('nf_dsb_db'), ds.get('nf_ssb_db')],
-                  'pass': all(x is not None and x <= 4.1 for x in (dn.get('nf_dsb_db'), ds.get('nf_dsb_db'))),
-                  'pessimistic_note': 'the +1.5 dB model derate on the LNA is not applied here (see the RFR-01 row)',
-                  'detail': {'tt': dn, 'ss_32_3.15': ds}},
-                 {'metric': 'RF pad -> I/Q baseband conversion gain with LNA, no board match (dB)',
-                  'extracted_nominal': chain.get('ext_u')},
-                 {'metric': 'same with ideal lossless board L-match (dB)', 'extracted_nominal': chain.get('ext_m')}]
+        perf += lna_chain_rows(chain)
     if not quick:
         perf.append({'metric': 'corner sweep (ext, active)', 'rows': corner_table(
             lambda c: tb.lna_ac(w, 'ext', c, 'active'), ['gain_db', 'nf_db', 'idd_a', 'zin_re_ohm', 'zin_im_ohm'])})
@@ -280,12 +345,12 @@ def do_lna(quick, chain):
             if r['metric'].startswith('NF with ideal lossless board L-match'):
                 r['pass'] = r.get('extracted_nominal') is not None and r['extracted_nominal'] <= 6.0
             elif r['metric'].startswith('supply current active'):
-                r['pass'] = r.get('extracted_nominal') is not None and r['extracted_nominal'] <= 11.7
+                r['pass'] = r.get('extracted_nominal') is not None and r['extracted_nominal'] <= 19.0
             else:
                 r['pass'] = 'info'
     rec['performance_vs_target'] = perf
     rec['excluded_coverage'] = ['IIP3 not simulated (compression at the maximum input only)',
-                                'board network: ideal lossless ladder parts (Q 20 part loss and balun loss are in the board budget, B18)',
+                                'board network: lna_match.BOARD_TRIM with lossy parts at the pessimistic Q (L 40, C0G 100, trimmer 50, bond 50); balun, T/R switch and trace loss are in the 3.91 dB board budget (B18)',
                                 'MIM bottom-plate parasitic beyond extraction (pessimistic 15 %) not added',
                                 'pad: 0.5 pF/leg allowance; extpr adds the pad_rf_pair delta (+42/+53 fF) and Rg 150 ohm/10 um; extpp Rg 200 + pad +30 %',
                                 'induced gate noise (tnoimod=1) not simulated: PDK card does not converge at the operating point; estimate +0.5-1 dB '
@@ -305,6 +370,7 @@ def do_rxmix(block, quick, chain):
         lambda: tb.rxmix_dc(w, 'ext', block, 0, 1, 85, 3.63), lambda: tb.rxmix_dc(w, 'ext', block, 0, 1, 0, 3.63),
         lambda: tb.rxmix_dc(w, 'ext', block, 3.3, 0, 27, 0.0, vbb=1.65)])
     on_dc = tb.rxmix_dc(w, 'ext', block, 3.3, 1)
+    dup = tb.rxmix_tran(w, 'ext', NOM, block, hib=False)     # duplex state (hib = 0): base TIA OTA tail only
     cal = [] if quick else corner_table(lambda c: tb.rxmix_calibrate(w, 'ext', c, block), ['raw_offset_v', 'lsb_v', 'code', 'residual_v'])
     cal_nom = tb.rxmix_calibrate(w, 'ext', NOM, block)
     g = nom.get('conversion_gain_db')
@@ -313,17 +379,40 @@ def do_rxmix(block, quick, chain):
     idd_ma = nom['idd_a'] * 1e3 if nom.get('idd_a') else None
     perf = [{'metric': 'conversion gain, 300 ohm/leg source, 2.4 GHz LO, 5 MHz IF (dB)', 'target': '> 0 (arch, voltage)',
              'extracted_nominal': g, 'schematic_nominal': sch.get('conversion_gain_db'), 'pass': g is not None and g > 0},
-            {'metric': 'supply current (mA)', 'target': '<= 3.1 (fork V: 2x TIA OTA; power_budget.py rxmix entry)',
-             'extracted_nominal': idd_ma, 'pass': idd_ma is not None and idd_ma <= 3.1},
+            {'metric': 'supply current, RX state (hib = 1: extra TIA OTA tail on) (mA)',
+             'target': '<= 6.2 (power_budget.py RF_EVIDENCE_MA rxmix 6.11)',
+             'extracted_nominal': idd_ma, 'pass': idd_ma is not None and idd_ma <= 6.2},
+            {'metric': 'supply current / conversion gain, duplex state (hib = 0: base tail 1.2 mA each) (mA, dB)',
+             'target': '<= 3.1 mA (power_budget.py RXMIX_DUPLEX_MA); gain within 1 dB of the RX state',
+             'extracted_nominal': [dup['idd_a'] * 1e3 if dup.get('idd_a') else None, dup.get('conversion_gain_db')],
+             'pass': bool(dup.get('idd_a')) and dup['idd_a'] * 1e3 <= 3.1 and g is not None
+                     and dup.get('conversion_gain_db') is not None and abs(dup['conversion_gain_db'] - g) <= 1.0},
             {'metric': 'baseband output CM (V)', 'target': '1.65 +- 0.1', 'extracted_nominal': nom.get('vcm_v'),
              'pass': nom.get('vcm_v') is not None and abs(nom['vcm_v'] - 1.65) <= 0.1},
             {'metric': 'TIA output offset raw / after FPGA calibration with the offset DAC (V); DAC LSB (V)',
              'target': '|residual| < 10 mV referred to the filter input', 'extracted_nominal':
                  [cal_nom.get('raw_offset_v'), cal_nom.get('residual_v'), cal_nom.get('lsb_v')], 'detail': cal_nom,
              'pass': cal_nom.get('residual_v') is not None and abs(cal_nom['residual_v']) < 0.01}]
-    ab = GEN / 'rxmix-ab.json'   # fork V: chain A/B rows (I/Q, IRR, out-of-band IIP3, DSB NF), scratch/rf-tia-v
-    if ab.exists():
-        perf += json.loads(ab.read_text())['rows']
+    # chain rows measured on the CURRENT netlists (the fork V rxmix-ab.json rows described an older LNA/TIA and are dropped)
+    if chain and isinstance(chain.get('ext_m'), dict):
+        cm = chain['ext_m']
+        perf.append({'metric': 'chain I/Q gain mismatch (dB) / phase error (deg) / image rejection (dB), uncorrected: extracted LNA + rxmix_i + '
+                               'rxmix_q with the B18 board network, tt 27 C 3.3 V, tone at LO + 5 MHz (tb.chain_tran)',
+                     'target': 'RF-RX-IRR >= 25 dB uncorrected',
+                     'extracted_nominal': [cm.get('iq_gain_mismatch_db'), cm.get('iq_phase_error_deg'), cm.get('irr_db')],
+                     'pass': cm.get('irr_db') is not None and cm['irr_db'] >= 25.})
+    lin = GEN / 'rf_rx_linearity.json'
+    if lin.exists():
+        lj = json.loads(lin.read_text())
+        if lj.get('netlist_sha256') == {b_: flow.sha256(GEN / f'{b_}.ext.spice') for b_ in ('lna', 'rxmix_i', 'rxmix_q')}:
+            ip = [r for r in lj['results'] if r.get('mode') == 'iip3']
+            perf.append({'metric': 'chain out-of-band IIP3 (dBm), two tones at LO+20/+37 MHz, IM3 at 3 MHz, extracted LNA + mixers, tt '
+                                   '(linearity.py; generated/rf_rx_linearity.json)',
+                         'target': 'RF-RX-IIP3 >= -10 dBm', 'extracted_nominal': [[r['p_dbm'], r['iip3_dbm']] for r in ip],
+                         'pass': bool(ip) and all(r['iip3_dbm'] >= -10. for r in ip if r['p_dbm'] <= -40.), 'detail': lj['results']})
+        else:
+            perf.append({'metric': 'chain out-of-band IIP3', 'target': 'RF-RX-IIP3 >= -10 dBm', 'extracted_nominal': None, 'pass': False,
+                         'note': 'generated/rf_rx_linearity.json was not measured on the current extracted netlists (stale)'})
     if cal:
         perf.append({'metric': 'offset calibration across the envelope (ext; calibrated at each point)', 'rows': cal})
     if chain:
@@ -357,9 +446,8 @@ def do_rxmix(block, quick, chain):
     }
     rec['performance_vs_target'] = perf
     rec['excluded_coverage'] = ['LO assumed ideal 0/VDD 50% square (quadrature block output not co-simulated)',
-                                'I/Q, IRR, out-of-band IIP3 and chain DSB NF: tt (and ss NF) only, from rxmix-ab.json; '
-                                'IIP2, LO leakage not simulated', 'no Monte Carlo',
-                                'chain NF OTA term recombined with fnoicor=1 en at the corner; h3/h5 folding not measured (0 by construction)']
+                                'IRR and out-of-band IIP3: tt only; chain NF: see the lna evidence chain row; IIP2, LO leakage not simulated',
+                                'no Monte Carlo (IRR excludes device mismatch)']
     return rec
 
 
@@ -634,6 +722,38 @@ def do_tap(quick):
     return rec
 
 
+# Chain NF points (fork P2 resume, 2026-11-13): board network lna_match.BOARD_TRIM with lossy parts at the pessimistic Q,
+# trimmer tuned for S11 at that corner (as the build procedure B25 does), tank code tb.LNA_TANK_CT (tuned on the chain noise).
+# Process x worst T/V (32 C, 3.15 V: lowest gm) at the three model ends, tt nominal and the duplex bias.
+PESS_TV = (32, 3.15)
+DET_POINTS = {
+    'det_lna_matched_extpr': ('extpr', NOM, False),
+    'det_lna_matched_extpr_ss_32_3.15': ('extpr', ('ss',) + PESS_TV, False),
+    'det_lna_matched_extpr_ff_32_3.15': ('extpr', ('ff',) + PESS_TV, False),
+    'det_lna_matched_extpp_typical_32_3.15': ('extpp', ('typical',) + PESS_TV, False),
+    'det_lna_matched_extpp_ss_32_3.15': ('extpp', ('ss',) + PESS_TV, False),
+    'det_lna_matched_extpp_ff_32_3.15': ('extpp', ('ff',) + PESS_TV, False),
+    'det_lna_matched_extlo_typical_32_3.15': ('extlo', ('typical',) + PESS_TV, False),
+    'det_lna_matched_extlo_ss_32_3.15': ('extlo', ('ss',) + PESS_TV, False),
+    'det_lna_matched_extlo_ff_32_3.15': ('extlo', ('ff',) + PESS_TV, False),
+    'det_lna_matched_extpr_duplex_lobias': ('extpr', NOM, True),
+}
+
+
+def det_point(view, c, ct, lob=False):
+    """One deterministic chain-NF point in its own work directory (the transient is reused when the deck is identical)."""
+    import lna_match as LM
+    w = WORK / 'chain' / f'det_{view}_{c[0]}_{c[1]}_{c[2]}_ct{ct}{"_lo" if lob else ""}'
+    tb.set_lobias(lob)
+    try:
+        m = LM.board_trim_nominal(w, view, c)
+        m['ct'] = ct
+        r = tb.chain_det(w, view, c, ct=ct, match=m, rt=bool(m['rt']))
+    finally:
+        tb.set_lobias(False)
+    return dict(r, lobias=lob)
+
+
 def run_chain(quick, resume=False):
     w = WORK / 'chain'
     old = json.loads((GEN / 'rf_rx_chain.json').read_text()) if resume and (GEN / 'rf_rx_chain.json').exists() else {}
@@ -660,17 +780,13 @@ def run_chain(quick, resume=False):
         return job
     # fork P: the statistical transient-noise chain NF (+-1.5 dB, produced physically impossible values) is
     # superseded by tb.chain_det and no longer run; tn_job is kept for manual use.
-    # deterministic chain NF (tb.chain_det): extracted LNA + pad_rf_pair + Rg 150 ohm/10 um, board match at reset ct
-    # fork P: board network = the per-board ladder fitted at that corner (lna_match.per_board), ct inside 4..10
-    def det_job(c, sub):
-        def job():
-            import lna_match as LM
-            m = LM.board_trim_nominal(w / sub, 'extpr', c)      # RC-16h board trimmer network, tuned for this corner
-            return tb.chain_det(w / sub, 'extpr', c, ct=m['ct'], match=m, rt=bool(m['rt']))
-        return job
-    jobs['det_lna_matched_extpr'] = det_job(NOM, 'det')
-    if not quick:
-        jobs['det_lna_matched_extpr_ss_32_3.15'] = det_job(('ss', 32, 3.15), 'det_ss')
+    # deterministic chain NF (tb.chain_det): extracted LNA (+ pad_rf_pair, Rg) with the RC-16j/k board network
+    # (lna_match.BOARD_TRIM, lossy parts, trimmer tuned at that corner) and the tank code tb.LNA_TANK_CT.
+    # extpp = pessimistic end (Rg 200, +25 % device C, pad C +30 %, tank spiral Q 4 / L -15 %); lo = duplex bias.
+    for key, (view, c, lob) in DET_POINTS.items():
+        if quick and key != 'det_lna_matched_extpr':
+            continue
+        jobs[key] = (lambda view=view, c=c, lob=lob: det_point(view, c, tb.lna_tank_ct(view, c), lob))
     keep = {k: v for k, v in old.items() if k in jobs and isinstance(v, dict) and 'error' not in v}
     todo = [k for k in jobs if k not in keep]
     res = dict(keep, **dict(zip(todo, par([jobs[k] for k in todo]))))
@@ -685,8 +801,25 @@ def main():
     ap.add_argument('--quick', action='store_true')
     ap.add_argument('--jobs', type=int, default=3)
     ap.add_argument('--resume-chain', action='store_true', help='reuse error-free chain results from generated/rf_rx_chain.json')
+    ap.add_argument('--refresh-chain-rows', action='store_true',
+                    help='rewrite only the chain-derived rows of generated/lna-evidence.json from generated/rf_rx_chain.json (no simulation)')
     ap.add_argument('--blocks', nargs='*', default=['chain', 'lna', 'rxmix_i', 'rxmix_q', 'bbfilter_i', 'bbfilter_q', 'bb_tap'])
     a = ap.parse_args()
+    if a.refresh_chain_rows:
+        chain = json.loads((GEN / 'rf_rx_chain.json').read_text())
+        p = GEN / 'lna-evidence.json'
+        rec = json.loads(p.read_text())
+        new = lna_chain_rows(chain)
+        heads = ('chain NF', 'RF pad -> I/Q baseband conversion gain')
+        keep = [r for r in rec['performance_vs_target'] if not r['metric'].startswith(heads)]
+        at = next((i for i, r in enumerate(rec['performance_vs_target']) if r['metric'].startswith(heads)), len(keep))
+        for r in new:
+            r.setdefault('pass', 'info')
+        rec['performance_vs_target'] = keep[:at] + new + keep[at:]
+        rec['tests']['fallback']['routes'][0]['chain_conversion_gain_db'] = chain.get('ext_byp')
+        p.write_text(json.dumps(rec, indent=1, default=str) + '\n')
+        print('lna chain rows refreshed:', [(r['metric'][:40], r.get('pass')) for r in new])
+        return
     POOL = ThreadPoolExecutor(a.jobs)
     chain = None
     if 'chain' in a.blocks:

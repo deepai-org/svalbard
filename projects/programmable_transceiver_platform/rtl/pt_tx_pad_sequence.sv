@@ -29,6 +29,14 @@ module pt_tx_pad_sequence #(
     reg [4:0] pending;
     localparam integer TW = READY_TIMEOUT_CYCLES < 2 ? 1 : $clog2(READY_TIMEOUT_CYCLES+1);
     reg [TW-1:0] tmo;   // cycles since buffer release while waiting for qualified traffic readiness
+    // Timing (r7, ref domain at 10 ns, slow cells): the two magnitude compares are registered flags that are
+    // updated together with their counters, so no compare sits in front of the state / counter muxes.
+    //   last   == (left <= 1)                        always
+    //   tmo_ge == (tmo >= READY_TIMEOUT_CYCLES - 1)  always
+    // (random old-vs-new co-simulation with both invariants checked every cycle, four parameter sets, 2M cycles
+    // each: scratch/digital-timing-close/r7/padseq_eq/tb_eq.sv.)
+    reg last, tmo_ge;
+    localparam [TW-1:0] TMO_M2 = READY_TIMEOUT_CYCLES > 1 ? READY_TIMEOUT_CYCLES - 2 : 0;
     wire reset_ok = rst_n && supply_ok;
     wire conflict = ((request[2] || request[3]) &&
                      (request[0] || request[1] || request[4])) ||
@@ -46,7 +54,7 @@ module pt_tx_pad_sequence #(
     end
     always @(posedge clk or negedge reset_ok) begin
         if (!reset_ok) begin
-            state <= IDLE; left <= 0; pending <= 0; tmo <= 0;
+            state <= IDLE; left <= 0; pending <= 0; tmo <= 0; last <= 1'b1; tmo_ge <= READY_TIMEOUT_CYCLES <= 1;
             active_request <= 0; qualified <= 0; traffic_ready <= 0;
             buffer_request <= 0; fault <= 0;
         end else begin
@@ -57,35 +65,35 @@ module pt_tx_pad_sequence #(
                         pending <= conflict ? 5'b0 : request;
                         fault <= conflict;
                         qualified <= 0; traffic_ready <= 0;
-                        left <= PRE_CYCLES;
+                        left <= PRE_CYCLES; last <= PRE_CYCLES <= 1;
                         state <= PRE;
                     end else if (qualified && !analog_ready) begin
                         qualified <= 0; traffic_ready <= 0; fault <= 1;
-                        pending <= 0; left <= PRE_CYCLES; state <= PRE;
+                        pending <= 0; left <= PRE_CYCLES; last <= PRE_CYCLES <= 1; state <= PRE;
                     end
                 end
                 PRE: begin
-                    if (left > 1) left <= left - 1'b1;
+                    if (!last) begin left <= left - 1'b1; last <= left == 2; end
                     else begin
                         active_request <= pending;
                         // Old termination has been disabled before buffer release.
                         // New buffer precharges independently of QUALIFIED.
                         buffer_request <= pending[4];
-                        left <= POST_CYCLES; state <= POST; tmo <= 0;
+                        left <= POST_CYCLES; last <= POST_CYCLES <= 1; state <= POST; tmo <= 0; tmo_ge <= READY_TIMEOUT_CYCLES <= 1;
                     end
                 end
                 POST: begin
-                    if (left > 1) left <= left - 1'b1;
+                    if (!last) begin left <= left - 1'b1; last <= left == 2; end
                     else if (active_request == 0 || fault) state <= IDLE;
-                    else if (analog_ready) begin qualified <= 1; left <= LOAD_CYCLES; state <= SETTLE; end
+                    else if (analog_ready) begin qualified <= 1; left <= LOAD_CYCLES; last <= LOAD_CYCLES <= 1; state <= SETTLE; end
                     else state <= WAIT_READY;
                 end
-                WAIT_READY: if (analog_ready) begin qualified <= 1; left <= LOAD_CYCLES; state <= SETTLE; end
+                WAIT_READY: if (analog_ready) begin qualified <= 1; left <= LOAD_CYCLES; last <= LOAD_CYCLES <= 1; state <= SETTLE; end
                 SETTLE: begin
                     // Keep the load applied while the buffer settles. A fresh
                     // contiguous run of good samples is required under load.
-                    if (!analog_ready) left <= LOAD_CYCLES;
-                    else if (left > 1) left <= left - 1'b1;
+                    if (!analog_ready) begin left <= LOAD_CYCLES; last <= LOAD_CYCLES <= 1; end
+                    else if (!last) begin left <= left - 1'b1; last <= left == 2; end
                     else begin traffic_ready <= 1; state <= IDLE; end
                 end
                 default: ;
@@ -93,10 +101,10 @@ module pt_tx_pad_sequence #(
             // PD40 ready timeout: from buffer release (POST) until traffic_ready; a slow or never-ready
             // (or chattering) buffer faults instead of passing traffic.
             if (READY_TIMEOUT_CYCLES > 0 && (state == POST || state == WAIT_READY || state == SETTLE)) begin
-                if (tmo >= READY_TIMEOUT_CYCLES - 1 && !(state == SETTLE && analog_ready && left <= 1)) begin
+                if (tmo_ge && !(state == SETTLE && analog_ready && last)) begin
                     state <= IDLE; qualified <= 0; traffic_ready <= 0; active_request <= 0;
-                    buffer_request <= 0; fault <= 1; tmo <= 0;
-                end else tmo <= tmo + 1'b1;
+                    buffer_request <= 0; fault <= 1; tmo <= 0; tmo_ge <= READY_TIMEOUT_CYCLES <= 1;
+                end else begin tmo <= tmo + 1'b1; tmo_ge <= tmo >= TMO_M2; end
             end
             case (state)
                 IDLE, PRE, POST, WAIT_READY, SETTLE: ;

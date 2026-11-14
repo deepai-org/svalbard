@@ -227,6 +227,24 @@ for {set i 0} {$i < 6} {incr i} {
     lappend fc_groups -group $grp
 }
 set_clock_groups -logically_exclusive {*}$fc_groups
+# ---------------- Monitor time base (monitor.config.timebase, rtl/pt_digital_macro.sv mon_div / mon_mux) ----------------
+# The supply / clock monitor's clock is one kept mux: I0 = fc_src[4] (clock fc4, always-on oscillator), I1 = the
+# transport core clock divided by 2 by the kept toggle flop mon_div (pt_clock_dff): generated clock mon_host =
+# hcore / 2 (25.6 ns at the full host rate), defined at the flop's Q and sourced at the hcore root pin. No clock is
+# defined at the mux output: fc4 and mon_host both propagate through mon_mux (cell -> drv) to the monitor flops.
+# Logically exclusive: ONE static mux select (the register field is update = stopped and may change only while no
+# monitor requirement is armed; fault is then 0 by the SPI-static arm_any), so no monitor flop is ever clocked by
+# both. mon_host has no data path to or from the hcore flops: the monitor's inputs are synchronizer first stages
+# (*.meta*), SPI-static levels (sclk false path through all_clk_names) and its outputs end in synchronizer first
+# stages (regs.st1_*, monitor.r_hb.meta) or pass the asynchronous gate monitor.fault_gate.ag.
+set mon_clks {}
+set mon_div_q [get_pins -quiet -hierarchical *mon_div.cell/Q]
+set mon_mux_z [get_pins -quiet -hierarchical *mon_mux.cell/Z]
+if {[llength $mon_div_q] != 1} {error "Expected one monitor time-base divider flop (mon_div.cell/Q)"}
+if {[llength $mon_mux_z] != 1} {error "Expected one monitor time-base clock mux (mon_mux.cell/Z)"}
+create_generated_clock -name mon_host -master_clock hcore -source $core_root -divide_by 2 $mon_div_q
+set_clock_groups -logically_exclusive -group fc4 -group mon_host
+set mon_clks {mon_host}
 # MEMORY v3 (AC-1 sharing S1): the egress bank array is also the SPI playback memory. Its write
 # clock is one stopped-only mux (core.egress.spi_port.memory_clock_mux): hcore while streaming,
 # inverted SCLK (writes on the SCLK fall, like the register file) while playback is selected, which
@@ -245,7 +263,7 @@ if {[llength $mem_mux]} {
     set_clock_groups -physically_exclusive -group hcore -group egress_mem_sclk
     set mem_on 1
 }
-set all_clk_names [concat {sclk ref hword h2d h2d_cap h2d_pin wtx wrx rftx rfrx ctw} $fc_clks $host_clks $ingress_clks $egress_clks $mem_clks]
+set all_clk_names [concat {sclk ref hword h2d h2d_cap h2d_pin wtx wrx rftx rfrx ctw} $fc_clks $host_clks $ingress_clks $egress_clks $mem_clks $mon_clks]
 
 set_clock_uncertainty 0.25 [all_clocks]
 
@@ -520,7 +538,21 @@ set sync_first [concat \
     [pt_cells {*.meta*}] \
     [pt_cells {*regs.s1*}] [pt_cells {*regs.c1*}] [pt_cells {*regs.pg1*}] [pt_cells {*regs.on1*}] \
     [pt_cells {*regs.f1*}] [pt_cells {*regs.st1_*}] \
-    [pt_cells {*det.den_s*}] [pt_cells {*wrx.al_sy*}] [pt_cells {*wrx.lk_sy*}] [pt_cells {*wrx.fk_sy*}]]
+    [pt_cells {*det.den_s\[0\]*}]]   ;# bit 0 only: den_s is a two-stage chain (r7 review F4)
+# pt_wrx_ctl synchronizer chains al_sy / lk_sy (word -> ref) and fk_sy (ref -> word): ONLY bit 0 is a first stage
+# (independent review of 9211b44, F2: the former patterns *wrx.al_sy* ... also cut the stage-to-stage paths, which
+# then got no hold fixing; a hold failure on al_sy[1] -> al_sy[2] keeps the word domain in reset).
+set wrx_first {}
+foreach n {al_sy lk_sy fk_sy} {
+    set c {}
+    foreach x [pt_cells "*wrx.${n}*"] { if {[string match "*wrx.${n}\\\[0\\\]*" [get_full_name $x]]} { lappend c $x } }
+    if {[llength $c] != 1} {
+        puts "pt_digital_macro.sdc: ERROR: expected one first-stage flop wrx.${n}\[0\], found [llength $c]"
+        if {![info exists ::env(PT_SDC_LENIENT)]} { error "wrx synchronizer first stage not found" }
+    }
+    set wrx_first [concat $wrx_first $c]
+}
+set sync_first [concat $sync_first $wrx_first]
 if {[llength $sync_first]} { set_false_path -to $sync_first }
 # 1b. Reset synchronizers (pt_async_fifo wr_reset/rd_reset, pt_enable_release release_state,
 #     pt_pair_word_boundary reset_release, pt_host_link hrs/wrs). Their asynchronous reset is
@@ -648,6 +680,12 @@ foreach c [lrange $all_clk_names 1 end] {
 foreach c [lrange $all_clk_names 1 end] {
     set_false_path -from [get_clocks sclk] -to [get_clocks $c]
 }
+# r7: the same for the output-pin clocks. rf_tx_sample = launch flops AND island_on[4] (D-DATAOFF), ct_det_clk = divider
+# AND island_on[0]: the island levels are SPI-domain statics that change only by a commit with the payload stopped.
+# (r7a: post-CTS hold repair was adding buffers for an 11.5 ns "hold violation" sclk -> rf_tx_sample vs rftx_fwd.)
+foreach c {rftx_fwd ctdet_out d2h_fwd rfhalf} {
+    if {[llength [get_clocks -quiet $c]]} { set_false_path -from [get_clocks sclk] -to [get_clocks $c] }
+}
 
 # OpenROAD CTS cannot build two trees for clocks on the same physical mux
 # output. Build that shared tree once, using its faster (8 ns wired) mode.
@@ -748,6 +786,9 @@ if {[info exists ::env(STEP_ID)] && $::env(STEP_ID) eq "OpenROAD.CTS"} {
     # pt_freq_count block clocks: the six source alternatives share one buffer output per instance
     foreach inst {fca fcb} { for {set i 1} {$i < 6} {incr i} {
         if {[llength [get_clocks -quiet ${inst}_blk$i]]} { delete_clock [get_clocks ${inst}_blk$i] } } }
+    # monitor time base: fc4 and mon_host share the mon_mux output. The one physical tree behind the mux is built
+    # for fc4 (16 ns, the faster alternative); mon_div's clock pin stays an ordinary hcore sink.
+    if {[llength [get_clocks -quiet mon_host]]} { delete_clock [get_clocks mon_host] }
     puts "PT_CTS_SHARED_BANKS: building one physical tree per shared bank; dual-mode STA resumes after CTS"
 }
 
@@ -788,6 +829,12 @@ if {$PT_OCV > 0} {
 # (OpenROAD flattens the kept hierarchy when it links, so the module's output pin does not exist there: the 16 key
 # flops are found by name and their paths into asynchronous reset / set pins are cut.)
 set pt_por_keys [get_cells -quiet -filter {ref_name =~ *dffrnq*} {por_path*key*}]
+if {[llength $pt_por_keys] == 0} {
+    # standalone OpenSTA (LibreLane STA steps, sta_signoff.py) keeps the hierarchy: cells are por_path/key[n]_...
+    foreach c [get_cells -quiet -hierarchical -filter {ref_name =~ *dffrnq*} {key*}] {
+        if {[string match por_path* [get_full_name $c]]} { lappend pt_por_keys $c }
+    }
+}
 if {[llength $pt_por_keys] != 16} {
     puts "pt_digital_macro.sdc: ERROR: expected 16 por_path key flops, found [llength $pt_por_keys]"
     if {![info exists ::env(PT_SDC_LENIENT)]} { error "por_path key flops not found" }
@@ -797,14 +844,54 @@ if {[llength $pt_por_keys] != 16} {
     if {[llength $pt_setn]} { set_false_path -from $pt_por_keys -through $pt_setn }
 }
 
-# r6 control blocks (rtl/pt_monitor.sv, pt_wrx_ctl.sv), measured on syn_r6t:
-#  - the monitor's fault level is asynchronous by contract (it forces pad requests and clears driver flops in every
-#    domain; its consumers synchronize or use it as an asynchronous clear);
+# r6 / r7 control blocks (rtl/pt_monitor.sv, pt_wtx_ctl.sv, pt_wrx_ctl.sv). Asynchronous levels are cut THROUGH a kept
+# gate (rtl/pt_cells.sv pt_async_gate, instance *.ag), not by flop name:
+#  - monitor.fault_gate: the monitor's fault level (aosc-domain fault_m, ref-domain mon_lost, SPI-static arm_any).
+#    Asynchronous by contract, exactly like the `fault` pin it is ORed with (unconstrained input). Consumers:
+#    pt_wtx_ctl (v_in[3] through pt_sync_bit + 3-sample filter; asynchronous clear of the s_ok reset synchronizer and of
+#    ser_q/de_q, whose D is 0 for >= 2 REF cycles after release because the launch state machine was forced to S_OFF
+#    through the synchronized abort; gate_w = purely combinational pad-request forcing), pt_usb (kill_n = asynchronous
+#    clear of the 5-flop release chain trs, which re-times the release for every USB driver flop), pt_regfile (f1/f2
+#    synchronizer, combinational forcing of SPI-static fields). No consumer samples the level with an untimed flop.
+#  - wtx.w_rst_gate: reset of the WORD_CLK40 flops of pt_wtx_ctl = rst_n AND SER_EN (ref-domain ser_q). The word clock
+#    is stopped while SER_EN is low. Release is re-timed in the word domain: w_rel is a two-flop release chain, s_de a
+#    pt_sync_bit whose D (de_q) is 0 at release (de_q rises >= 8 word clocks after ser_q), and w_cnt / w_req / w_up
+#    have D = their reset value until w_rel[1] is 1. So recovery / removal of these flops cannot change state.
 #  - pt_wrx_ctl resets its word domain from the reference-domain flop wrun (asynchronous assert, synchronized release);
 #  - wrx.mag is stable three reference cycles before out_loss_q uses it (13-bit compare, pinned by a mutant's text).
-foreach pat {{*monitor.fault_m*} {*wrx.wrun*}} {
+set pt_ag [get_pins -quiet {monitor.fault_gate.ag/Z wtx.w_rst_gate.ag/Z}]
+if {[llength $pt_ag] != 2} {
+    puts "pt_digital_macro.sdc: ERROR: expected 2 asynchronous-level gates, found [llength $pt_ag]"
+    if {![info exists ::env(PT_SDC_LENIENT)]} { error "pt_async_gate cells not found" }
+}
+foreach pin $pt_ag { set_false_path -through $pin }
+foreach pat {{*wrx.wrun*}} {
     set c [pt_cells $pat]
     if {[llength $c]} { set_false_path -from $c } else { puts "pt_digital_macro.sdc: WARNING: no cell matches $pat" }
+}
+# Reset-seen key (rtl/pt_ctl_decode.sv pt_reset_seen): eight flops with D = Q that only the asynchronous reset
+# writes; their clock pin (SCLK) never changes them. `seen` gates every register-file output and analog enable
+# (about 800 loads): static after reset, so it is not a timing start point (r7a post-CTS: sclk -> dbg_obs1 -3.5 ns
+# through the `seen` fan-out tree). (This also drops the flops' own D = Q loop check, which cannot change state.)
+set pt_rseen [pt_cells {rseen.k*key_ff}]
+if {[llength $pt_rseen] != 8} {
+    puts "pt_digital_macro.sdc: ERROR: expected 8 reset-seen key flops, found [llength $pt_rseen]"
+    if {![info exists ::env(PT_SDC_LENIENT)]} { error "reset-seen key flops not found" }
+} else {
+    set_false_path -from $pt_rseen
+}
+# Wired RX picker outputs PSEL / SLIPP / SLIPM (pt_wrx_ctl, word-clock domain). They are used only in the full-rate
+# capture mode, where a word is 20 ring periods = 25-42 ns (WRX10-DG67 (2)); pt_wrx_cap samples all five bits on the
+# last slot of the word and asks for them to be settled 2 ring periods before the next strobe, i.e. <= 22.5 ns after
+# the launching edge. The wrx clock is constrained at 12.3 ns (quarter rate, 3.24 Gb/s), so that budget is a two-cycle
+# path with the 0.2 T output delay: 2 x 12.3 - 2.46 = 22.1 ns at the pin, clock insertion included, for ALL five bits
+# (PSEL and the one-word SLIPP / SLIPM commands are launched on the same edge and land in the same word: r7 review
+# F2). A one-period budget at 12.3 ns failed by 5.5 ns on insertion delay alone (r7a) and is not a real requirement.
+# With the r7 capture (WSTB strobe) this becomes a plain single-cycle constraint on the strobe clock.
+set pt_wrx_ctl_out [get_ports -quiet {c_wrx_cap_psel* c_wrx_cap_slipp c_wrx_cap_slipm}]
+if {[llength $pt_wrx_ctl_out]} {
+    set_multicycle_path 2 -setup -to $pt_wrx_ctl_out
+    set_multicycle_path 1 -hold -to $pt_wrx_ctl_out
 }
 set pt_mag [pt_cells {*wrx.mag*}]; set pt_loss [pt_cells {*wrx.out_loss_q*}]
 if {[llength $pt_mag] && [llength $pt_loss]} {

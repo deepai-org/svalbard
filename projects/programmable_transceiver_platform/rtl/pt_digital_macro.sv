@@ -414,9 +414,23 @@ module pt_digital_macro(
  assign d2h_pdrv = f_hostio_controls__drive;
  assign d2h_sl = f_hostio_controls__slew;
 
- // ---------------- supply / clock monitor -> fault (D-FAULT, CP4-11). Time base = always-on oscillator.
+ // ---------------- supply / clock monitor -> fault (D-FAULT, CP4-11).
+ // Time base (monitor.config.timebase): 0 = always-on oscillator fc[4]; 1 = transport core clock / 2 (39.06 MHz at
+ // the full host rate), for the RF payload modes, where the oscillator must not run (spur risk; the register file
+ // forces core.aosc.enable off). mon_div is a kept toggle flop on core_clk (SDC: generated clock mon_host at its Q).
+ // mon_mux is a PLAIN clock mux, no glitch-free switch-over: its select is static while the monitor is in use. Rule
+ // (rtl/pt_monitor.sv header): the commit that changes the time base leaves every requirement bit 0, the new time
+ // base is running, software pulses monitor.reset.clear_fault, and arms in a later commit. fault is 0 by arm_any
+ // whatever a runt clock pulse does to the monitor flops; a requirement written 0 has its arm / qualified flops
+ // cleared asynchronously, so one armed afterwards is pending until it qualifies on the new clock (independent
+ // review of r7, F1: with clocked clears a requirement disarmed under a dead clock came back "qualified" for up to
+ // one loss timeout). The SDC makes fc4 and mon_host logically exclusive behind this mux.
+ // The aosc_div status divider (aosc_dv above) stays on fc[4].
+ wire mon_host_clk, mon_clk;
+ pt_clock_dff mon_div(.clk(core_clk), .rst_n(rst_n), .d(~mon_host_clk), .q(mon_host_clk));
+ pt_clock_mux mon_mux(.I0(fc[4]), .I1(mon_host_clk), .S(f_monitor_config__timebase), .Z(mon_clk));
  // rf lock = frequency counter a in lock, wire lock = frequency counter b in lock (sources by register).
- pt_monitor monitor(.rst_n(rst_n), .mon_clk(fc[4]), .ref_clk(ref_clk), .in_clk(h2d_clk), .rf_lock(fca_locked_ref),
+ pt_monitor monitor(.rst_n(rst_n), .mon_clk(mon_clk), .ref_clk(ref_clk), .in_clk(h2d_clk), .rf_lock(fca_locked_ref),
   .wire_lock(cdr_freq_locked), .island_pgood(island_pgood), .supply_win_ok(6'd0),
   .cfg_require_reference(f_monitor_config__require_reference), .cfg_require_input_clock(f_monitor_config__require_input_clock),
   .cfg_require_rf_lock(f_monitor_config__require_rf_lock), .cfg_require_wire_lock(f_monitor_config__require_wire_lock),

@@ -55,6 +55,8 @@ class Device:
     nodes: tuple
     w: float
     l: float
+    nf: int = 1          # fingers of ONE PCell (isolated-well devices only; everything else is single-finger)
+    iso: bool = False    # NMOS in its own DNWELL island (body net != VSS), r10 CTLE r4
 
 
 @dataclass
@@ -106,6 +108,10 @@ def parse_spice(path, top=None):
                 w, l = _um(params['r_width']), _um(params['r_length'])
             else:
                 raise ValueError(f'unsupported device model {model} in {path}')
+            if model.startswith('nfet') and len(nodes) == 4 and nodes[3] != 'VSS':
+                # isolated p-well NMOS (r10): one m-finger PCell in its own DNWELL island
+                current.devices.append(Device(tok[0][1:], model, nodes, w, l, nf=mult, iso=True))
+                continue
             for i in range(mult):
                 name = tok[0][1:] + (f'_m{i}' if mult > 1 else '')
                 current.devices.append(Device(name, model, nodes, w, l))
@@ -147,22 +153,115 @@ def _terminals(path):
     return [ctr(drain), ctr(gate), ctr(source), bpt], bbox
 
 
+# ---- isolated p-well (DNWELL) multi-finger NMOS, r10 (CTLE r4 follower).  Ring recipe = analog/rf_tx/layoutlib.py
+# (RFT-01, KLayout-clean there): N+ tap ring (DNWELL contact, on the rail) 1.0 um outside the PCell's p-well, DNWELL
+# 2.7 um beyond the p-well, P+ substrate guard ring 2.6 um outside the DNWELL.  Fingers: source/drain columns get a
+# Metal1+Metal2 stripe over the full finger (via1 array), sources and drains are collected on two Metal3 buses over
+# the fingers (via2 arrays) that reach out to the left (source) / right (drain) where ISO_ESC Metal3 escapes per bus
+# go down to the row tracks: every escape and every via array stays below the 85 C EM limits at ~3.5 mA.
+ISO_GAP, ISO_RING, ISO_DNW, ISO_PG_SPACE, ISO_PG, ISO_HALO = 1.0, 1.0, 2.7, 2.6, 0.8, 0.4
+ISO_ESC = 8
+
+
+def _iso_prim(cell, path, nf, w):
+    """Magic commands that turn the saved nf-finger nfet PCell into the island, and its pin table:
+    [(dx, dy, role, escape_x, start_level)], role in d/s/g/b/nw/pg; bbox."""
+    r = _rects(path)
+    g5 = lambda v: round(round(v / .005) * .005, 3)
+    pw = r['pwell']
+    x0, y0, x1, y1 = (min(a[0] for a in pw), min(a[1] for a in pw), max(a[2] for a in pw), max(a[3] for a in pw))
+    cmds = [f'load {cell}', 'units microns', 'snap internal']
+    box = lambda a: 'box values ' + ' '.join(f'{g5(v):.3f}' for v in a)
+
+    def ring(a, b):
+        return [(x0 - b, y0 - b, x1 + b, y0 - a), (x0 - b, y1 + a, x1 + b, y1 + b),
+                (x0 - b, y0 - b, x0 - a, y1 + b), (x1 + a, y0 - b, x1 + b, y1 + b)]
+    e = 0.08
+    pg_a = ISO_DNW + ISO_PG_SPACE
+    for a, b, diff, cont in ((ISO_GAP, ISO_GAP + ISO_RING, 'nsubdiff', 'nsubdiffcont'), (pg_a, pg_a + ISO_PG, 'psubdiff', 'psubdiffcont')):
+        for rc in ring(a, b):
+            cmds += [box(rc), f'paint {diff}', 'paint metal1']
+            if diff == 'nsubdiff':
+                # explicit N-well 0.14 um around the tap ring: Magic writes NWELL exactly under an N-tap, which its
+                # own DRC flags (DF.4a 0.12) when that GDS is read back; with the drawn N-well both views are clean
+                cmds += [box((rc[0] - .14, rc[1] - .14, rc[2] + .14, rc[3] + .14)), 'paint nwell']
+        for rc in ring(a, b):
+            cmds += [box((rc[0] + e, rc[1] + e, rc[2] - e, rc[3] - e)), f'paint {cont}']
+    cmds += [box((x0 - ISO_DNW, y0 - ISO_DNW, x1 + ISO_DNW, y1 + ISO_DNW)), 'paint dnwell']
+    cols = sorted(r['ndiffc'], key=lambda a: a[0])
+    ylo, yhi = cols[0][1], cols[0][3]
+    xs = [(a[0] + a[2]) / 2 for a in cols]
+    src, drn = xs[0::2], xs[1::2]
+    for xc in xs:
+        cmds += [box((xc - .19, ylo, xc + .19, yhi)), 'paint metal1', 'paint metal2',
+                 box((xc - .13, ylo + .06, xc + .13, yhi - .06)), 'paint via1']
+    bh = min(3.0, (yhi - ylo) / 2 - 1.0)
+    ys = (-0.6 - bh, -0.6)          # source bus y range (below the finger centre)
+    yd = (0.6, 0.6 + bh)
+    xe = max(x1 + 0.9, xs[-1] + 1.2)                       # first escape beyond the p-well edge
+    esc_d = [g5(xe + .9 * k) for k in range(ISO_ESC)]
+    esc_s = [g5(-xe - .9 * k) for k in range(ISO_ESC)]
+    for (ya, yb), cx_, lo, hi in ((yd, drn, drn[0] - .19, esc_d[-1] + .2), (ys, src, esc_s[-1] - .2, src[-1] + .19)):
+        cmds += [box((lo, ya, hi, yb)), 'paint metal3']
+        for xc in cx_:
+            cmds += [box((xc - .2, ya, xc + .2, yb)), 'paint metal2', box((xc - .14, ya + .07, xc + .14, yb - .07)), 'paint via2']
+    pc = sorted(r['polycontact'], key=lambda a: a[0])
+    gy0, gy1 = pc[0][1], pc[0][3]
+    cmds += [box((pc[0][0] - .055, gy0, pc[-1][2] + .055, gy1)), 'paint metal1']
+    gx = (pc[len(pc) // 2][0] + pc[len(pc) // 2][2]) / 2
+    yb_ring = y0 + .3                                      # the PCell p-ring bottom Metal1 bar (body)
+    pins = [(x, (yd[0] + yd[1]) / 2, 'd', x, 3) for x in esc_d] + [(x, (ys[0] + ys[1]) / 2, 's', x, 3) for x in esc_s]
+    pins += [(gx, (gy0 + gy1) / 2, 'g', g5(gx - .4), 1), (g5(gx - 1.6), yb_ring, 'b', g5(gx - 1.6), 1),
+             (g5(gx + .8), y0 - ISO_GAP - ISO_RING / 2, 'nw', g5(gx + .8), 1),
+             (g5(gx + 2.0), y0 - pg_a - ISO_PG / 2, 'pg', g5(gx + 2.0), 1)]
+    cmds += ['units internal', 'save', 'load prim_workspace']
+    out = pg_a + ISO_PG + ISO_HALO
+    bbox = (min(x0 - out, esc_s[-1] - .5), y0 - out, max(x1 + out, esc_d[-1] + .5), y1 + out)
+    well = dict(area_um2=round((x1 - x0) * (y1 - y0), 3), perim_um=round(2 * (x1 - x0 + y1 - y0), 3))
+    return cmds, pins, bbox, well
+
+
 GAP = 2.0                     # um between neighbouring PCell bounding boxes
 OFFS4 = (1.2, 0., -1.2, 2.0)  # D, G, S, B escape x offsets from the device centre
 OFFS3 = (-1.2, 0., 1.2)       # resistor A (top), B (bottom), body
 
 
-def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trunks_over=False, row_width=None):
-    """Write <name>.mag/.gds, DRC counts and extraction products into `work`."""
+def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trunks_over=False, row_width=None,
+                    matched=None, spaced=(), currents=None, iso_rail='VDD_WIRE_SW', ant_retry=0, trunk_match=(), track_before=None):
+    """Write <name>.mag/.gds, DRC counts and extraction products into `work`.
+
+    r10 options (CTLE r4; all default off, other blocks unchanged):
+      matched(d) -> bool : a row holding such a device gets NO foreign metal: its Metal4 tracks sit in a band below
+                           the devices (even with over_dev) and the row starts to the right of the Metal5 trunk bank
+                           (with trunks_over), so only a matched device's own escapes are above it (AP4 review 2).
+      spaced             : nets that get an empty track slot / trunk slot on both sides (AP4 review 3).
+      currents(d)        : {node index: mA}, + = the net feeds the device terminal.  Row tracks, trunks and their
+                           via4 junctions are widened to the 85 C EM limits (Metal1-4 2.09 mA/um, Metal5 4.5 mA/um,
+                           0.58 mA/cut) with a 1.3x margin; a single terminal above 0.58 mA/1.3 raises.
+      track_before       : {net: other}: in every row, net's track is placed directly before other's (default order is
+                           alphabetical), e.g. to put a shared bias line between the two halves of a pair.
+      trunk_match        : pairs of nets whose Metal5 trunks are drawn over the same y span (the shorter one gets a
+                           dummy extension), so a differential pair split over two rows sees equal trunk capacitance.
+      ant_retry          : antenna-diode requests without a legal site get their own row track extended past the
+                           right end of the rows and are planned again, up to ant_retry times; what is still
+                           unplaced is returned as 'antenna_unplaced' (callers must fail on it)."""
+    K = lambda d: (d.model, d.w, d.l) + ((d.nf, 'iso') if d.iso else ())
+    EM_K = 1.3
     work.mkdir(parents=True, exist_ok=True)
     for old in work.glob('*'):
         if old.is_file():
             old.unlink()
-    kinds = sorted({(d.model, d.w, d.l) for d in sub.devices})
+    kinds = sorted({K(d) for d in sub.devices})
     keys = {k: f'{sub.name}__prim_{i}' for i, k in enumerate(kinds)}   # block-unique (chip GDS merge)
     cmds = ['crashbackups stop', 'load prim_workspace']
-    for (model, w, l), name in keys.items():
-        if model.startswith('ppoly'):
+    for kk, name in keys.items():
+        model, w, l = kk[:3]
+        if len(kk) > 3:
+            cmds += ['units internal',
+                     f'set cell [magic::gencell_makecell gf180mcu::{model} w {w} l {l} nf {kk[3]} guard 1 topc 0 botc 1 '
+                     'full_metal 1 gate_to_polycont 0.6 gate_extension 0.8 diff_gate_space 0.3]',
+                     'load $cell', f'save {name}', 'load prim_workspace']
+        elif model.startswith('ppoly'):
             cmds += ['units internal',
                      f'set cell [magic::gencell_makecell gf180mcu::{model} w {w} l {l} guard 1 full_metal 1]',
                      'load $cell', f'save {name}', 'load prim_workspace']
@@ -174,9 +273,40 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trun
     cmds += ['quit -noprompt']
     (work / 'primitives.tcl').write_text('\n'.join(cmds) + '\n')
     res = magic(work, 'primitives.tcl')
-    pins, boxes = {}, {}
+    pins, boxes, iso_pins, iso_well = {}, {}, {}, {}
+    iso_cmds = ['crashbackups stop', 'load prim_workspace']
     for k, name in keys.items():
-        pins[k], boxes[k] = _terminals(work / (name + '.mag'))
+        if len(k) > 3:
+            c_, iso_pins[k], boxes[k], iso_well[name] = _iso_prim(name, work / (name + '.mag'), k[3], k[1])
+            iso_cmds += c_
+        else:
+            pins[k], boxes[k] = _terminals(work / (name + '.mag'))
+    if iso_pins:
+        (work / 'iso.tcl').write_text('\n'.join(iso_cmds + ['quit -noprompt']) + '\n')
+        magic(work, 'iso.tcl')
+
+    def dev_pins(d):
+        """[(dx, dy, net, escape dx, kind, gate area, start metal level, mA into the device)] in PCell coordinates."""
+        cur_ = (currents(d) if currents else None) or {}
+        if d.iso:
+            role = dict(d=(d.nodes[0], 'sd', 0), s=(d.nodes[2], 'sd', 2), g=(d.nodes[1], 'g', 1), b=(d.nodes[3], 'x', 3),
+                        nw=(iso_rail, 'x', None), pg=('VSS', 'x', None))
+            out = []
+            for dx, dy, ro, ex, lvl in iso_pins[K(d)]:
+                net, kind, idx = role[ro]
+                ma = cur_.get(idx, 0.) / ISO_ESC if ro in 'ds' else 0.
+                out.append((dx, dy, net, ex, kind, d.nf * d.w * d.l if ro == 'g' else 0., lvl, ma))
+            return out
+        mos = d.model.startswith(('nfet', 'pfet'))
+        offs = OFFS3 if len(d.nodes) == 3 else OFFS4
+        return [(dx, dy, net, offs[t], ('g' if t == 1 else 'sd' if t in (0, 2) else 'x') if mos else 'x',
+                 d.w * d.l if mos and t == 1 else 0., 1, cur_.get(t, 0.))
+                for t, ((dx, dy), net) in enumerate(zip(pins[K(d)], d.nodes))]
+    DP = [dev_pins(d) for d in sub.devices]
+    for d, pl in zip(sub.devices, DP):
+        for q in pl:
+            if abs(q[7]) * EM_K > 0.58:
+                raise ValueError(f'{d.name}: {q[7]:.2f} mA through one terminal (single-cut escape); split the device')
 
     # Grid placement: uniform column pitch; each device row carries its own
     # routing band with one Metal4 track per net used in that row.
@@ -192,13 +322,13 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trun
     trunk_pitch = 1.0
     quiet_fn = quiet or (lambda p: p.startswith(('VDD', 'VSS', 'SEL', 'WT')) or p[0].islower())
     if columns is None:
-        avg_h = sum(boxes[(d.model, d.w, d.l)][3] - boxes[(d.model, d.w, d.l)][1] for d in sub.devices) / n
+        avg_h = sum(boxes[K(d)][3] - boxes[K(d)][1] for d in sub.devices) / n
         columns = max(1, min(16, round(math.sqrt(n * (avg_h + 8.) / pitch))))
     row_of, r, c, wacc = [], 0, 0, 0.
     for i in range(n):
         # AP4-1 (cdr repack, 2026-11-13): row_width (um) fills each row to a width instead of a device count, so
         # rows of narrow logic devices and rows of wide devices come out equally long.  Default off (count only).
-        bi = boxes[(sub.devices[i].model, sub.devices[i].w, sub.devices[i].l)]
+        bi = boxes[K(sub.devices[i])]
         wi = max(bi[2] - bi[0], 3.6) + GAP
         full = (c == columns) if row_width is None else (wacc + wi > row_width)
         if (full and c > 0) or (i in sub.breaks and c > 0):
@@ -207,10 +337,37 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trun
         c += 1
         wacc += wi
     rows_list = [[d for d, rr in zip(sub.devices, row_of) if rr == k] for k in range(r + 1)]
+    rows_pins = [[pl for pl, rr in zip(DP, row_of) if rr == k] for k in range(r + 1)]
     net_rows = {}
     for i, d in enumerate(sub.devices):
-        for nt in d.nodes:
-            net_rows.setdefault(nt, set()).add(row_of[i])
+        for q in DP[i]:
+            net_rows.setdefault(q[2], set()).add(row_of[i])
+    # EM (r10): current each net exchanges with each row -> track widths; trunk width from the row exchanges
+    row_in, row_out = {}, {}
+    for i, pl in enumerate(DP):
+        for q in pl:
+            if q[7] > 0:
+                row_in[(q[2], row_of[i])] = row_in.get((q[2], row_of[i]), 0.) + q[7]
+            elif q[7] < 0:
+                row_out[(q[2], row_of[i])] = row_out.get((q[2], row_of[i]), 0.) - q[7]
+    cuts = lambda w_: max(1, int((w_ - .12 + .26 + 1e-9) / .52))
+    up = lambda v, lo: max(lo, math.ceil(v * 10 - 1e-9) / 10)
+
+    def track_ma(nt, r_):
+        return EM_K * max(row_in.get((nt, r_), 0.), row_out.get((nt, r_), 0.))
+
+    def track_w(nt, r_):
+        return up(track_ma(nt, r_) / 2.09, .4)
+
+    def trunk_w(nt):
+        ex = [row_in.get((nt, r_), 0.) - row_out.get((nt, r_), 0.) for r_ in range(r + 1)]
+        i_ = EM_K * max(sum(abs(v) for v in ex) / 2, abs(sum(ex)))
+        w_ = up(i_ / 4.5, .44)
+        for r_ in range(r + 1):           # the via4 junction with each row track must hold that row's exchange
+            need = math.ceil(EM_K * abs(ex[r_]) / .58 - 1e-9)
+            while need > cuts(track_w(nt, r_)) * cuts(w_):
+                w_ = round(w_ + .1, 2)
+        return w_
     # nets confined to one device row are routed on that row's Metal4 track only
     local = {nt for nt, rs in net_rows.items() if len(rs) == 1 and nt not in sub.ports}
     internal = [nt for nt in nets if nt not in sub.ports and nt not in local]
@@ -223,18 +380,25 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trun
         if qp:
             order.append(qp.pop(0))
     trunk_x, x = {}, 1.0
+    twid = {nt: trunk_w(nt) for nt in nets} if currents else {}
+
+    def take(nt, x_):
+        """trunk centre for net nt starting at slot x_; returns (centre, next free slot)."""
+        extra = max(0, math.ceil((twid.get(nt, .44) - .44) / trunk_pitch - 1e-9))
+        sp_ = trunk_pitch if nt in spaced else 0.
+        return x_ + sp_ + extra * trunk_pitch / 2, x_ + 2 * sp_ + (1 + extra) * trunk_pitch
     for nt in internal:
-        trunk_x[nt] = x
-        x += trunk_pitch
+        trunk_x[nt], x = take(nt, x)
     x += 2.0
     prev_dyn = False
     for p in order:
         dyn = not quiet_fn(p)
         if dyn and prev_dyn:
             x += 4.0
-        trunk_x[p] = x
-        x += trunk_pitch + (1.0 if dyn else 0.)
+        trunk_x[p], x = take(p, x)
+        x += (1.0 if dyn else 0.)
         prev_dyn = dyn
+    trunk_end = x
     x0 = x + 3. + wmax / 2
     if trunks_over:
         # AP4-1 (detect/ctle repack, 2026-11-13): the Metal5 trunks run over the device rows (primitives are Metal1,
@@ -268,21 +432,32 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trun
     keepouts, taps, terminals = [], [], []
     ybase = 2.
     track_pitch = .9
+    row_geo = []          # per row: (track_y, band y range) for the antenna retry (r10)
     for r in range(rows):
         row = rows_list[r]
-        row_nets = sorted({nt for d in row for nt in d.nodes}, key=nets.index)
+        clear = bool(matched) and any(matched(d) for d in row)
+        od = over_dev and not clear
+        row_nets = sorted({q[2] for pl in rows_pins[r] for q in pl},
+                          key=lambda nt: nets.index((track_before or {}).get(nt, nt)) - (.5 if nt in (track_before or {}) else 0))
         # StrongARM integrating/output nets (named *_1pa,*_2oa,*_3ob,*_4pb) get empty
         # guard tracks on both sides so no switching neighbour couples to one side only
-        track_y, slot = {}, 0
+        track_y, track_wd, slot = {}, {}, 0
         for nt in row_nets:
             if nt.endswith('_1pa'):
                 slot += 3
-            track_y[nt] = ybase + .6 + slot * track_pitch
-            slot += 1
+            if nt in spaced:
+                slot += 1
+            tw_ = track_w(nt, r) if currents else .4
+            extra = max(0, math.ceil((tw_ - .4) / track_pitch - 1e-9))
+            track_y[nt] = ybase + .6 + (slot + extra / 2) * track_pitch
+            track_wd[nt] = tw_
+            slot += 1 + extra
+            if nt in spaced:
+                slot += 1
             if nt.endswith('_4pb'):
                 slot += 3
         band_top = ybase + .6 + slot * track_pitch + 1.6
-        if over_dev:
+        if od:
             # r6 AREA (cdr): the primitives use Metal1 only, so the row's Metal4 tracks (and the Metal2/3
             # escapes) run over the devices; the row is max(device height, band) tall instead of their sum
             band_h, band_top = band_top - ybase, ybase + 1.0
@@ -290,14 +465,16 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trun
         # compact placement: each device gets max(bbox,3.6um)+GAP of width, escapes stay
         # inside +/-2um of the device centre
         cxs, xcur = [], x0 - wmax / 2
+        if clear and trunks_over:
+            xcur = trunk_end + 3.0           # matched row: right of every Metal5 trunk
         for d in row:
-            b = boxes[(d.model, d.w, d.l)]
+            b = boxes[K(d)]
             wslot = max(b[2] - b[0], 3.6) + GAP
             cxs.append(xcur + wslot / 2 - (b[0] + b[2]) / 2)
             xcur += wslot
         row_w = xcur
         for c, d in enumerate(row):
-            k = (d.model, d.w, d.l)
+            k = K(d)
             b = boxes[k]
             row_hmax = max(row_hmax, b[3] - b[1])
             cx = cxs[c]
@@ -307,41 +484,54 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trun
             keepouts.append((cx + b[0], cy + b[1], cx + b[2], cy + b[3]))
             if not d.model.startswith('pfet'):     # NMOS / resistor guard ring = P-substrate tap
                 taps.append(keepouts[-1])
-            offs = OFFS3 if len(d.nodes) == 3 else OFFS4
-            for t, ((dx, dy), net) in enumerate(zip(pins[k], d.nodes)):
+            for dx, dy, net, eo, kind, ga, lvl, _ma in rows_pins[r][c]:
                 x, y = cx + dx, cy + dy
                 cur[0] = net
-                mos = d.model.startswith(('nfet', 'pfet'))
-                terminals.append((x, y, net, ('g' if t == 1 else 'sd' if t in (0, 2) else 'x') if mos else 'x',
-                                  d.w * d.l if mos and t == 1 else 0.))
-                esc = cx + offs[t]
+                terminals.append((x, y, net, kind, ga))
+                esc = cx + eo
                 ry = track_y[net]
-                via(x, y, 1, 2)
-                wire('metal2', x, y, esc, y)
-                via(esc, y, 2, 3)
+                if lvl == 1:
+                    via(x, y, 1, 2)
+                    wire('metal2', x, y, esc, y)
+                    via(esc, y, 2, 3)
+                else:                              # pin already on a Metal3 bus of the primitive
+                    rect('metal3', esc - .2, y - .2, esc + .2, y + .2)
                 wire('metal3', esc, y, esc, ry)
                 via(esc, ry, 3, 4)
         for net, ry in track_y.items():
             cur[0] = net
-            escs = [cxs[c] + o for c, d in enumerate(row)
-                    for o, nt in zip(OFFS3 if len(d.nodes) == 3 else OFFS4, d.nodes) if nt == net]
+            escs = [cxs[c] + q[3] for c in range(len(row)) for q in rows_pins[r][c] if q[2] == net]
+            tw_ = track_wd[net]
             if net in local:
                 lo_x, hi_x = min(escs), max(escs)
                 if hi_x - lo_x < 1.5:
                     hi_x = lo_x + 1.5
-                wire('metal4', lo_x, ry, hi_x, ry)
+                wire('metal4', lo_x, ry, hi_x, ry, width=tw_)
                 cmds.extend([f'box values {lo_x - .2:.3f} {ry - .2:.3f} {lo_x + .2:.3f} {ry + .2:.3f}',
                              f'label {net} FreeSans 0.3 0 0 0 c metal4'])
                 continue
-            wire('metal4', min(trunk_x[net], min(escs)), ry, max(trunk_x[net], max(escs)), ry)
-            via(trunk_x[net], ry, 4, 5)
+            wire('metal4', min(trunk_x[net], min(escs)), ry, max(trunk_x[net], max(escs)), ry, width=tw_)
+            kw_ = twid.get(net, .44)
+            if tw_ > .4 or kw_ > .44:           # EM junction: via4 array over the track x trunk overlap
+                hx, hy = max(kw_, .44) / 2, max(tw_, .4) / 2
+                rect('metal4', trunk_x[net] - hx, ry - hy, trunk_x[net] + hx, ry + hy)
+                rect('metal5', trunk_x[net] - hx, ry - hy, trunk_x[net] + hx, ry + hy)
+                rect('via4', trunk_x[net] - hx + .06, ry - hy + .06, trunk_x[net] + hx - .06, ry + hy - .06)
+            else:
+                via(trunk_x[net], ry, 4, 5)
             span[net][0] = min(span[net][0], ry)
             span[net][1] = max(span[net][1], ry)
-        ybase = band_top + (max(row_hmax, band_h - 1.0) if over_dev else row_hmax) + 1.5
+        row_geo.append(dict(row=r, y0=round(ybase, 2), tracks=len(track_y), slots=slot, clear=clear, dev_h=round(row_hmax, 2), w=round(row_w, 1), first=row[0].name))
+        ybase = band_top + (max(row_hmax, band_h - 1.0) if od else row_hmax) + 1.5
         max_row_w = max(locals().get('max_row_w', 0.), row_w)
     height = ybase + 1.
     width = max_row_w
     top = height
+    for a_, b_ in trunk_match:
+        if a_ in span and b_ in span and a_ not in local and b_ not in local:
+            lo_, hi_ = min(span[a_][0], span[b_][0]), max(span[a_][1], span[b_][1])
+            span[a_][0] = span[b_][0] = lo_
+            span[a_][1] = span[b_][1] = hi_
     for net in nets:
         if net in local:
             continue
@@ -352,12 +542,36 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trun
             lo = top - 2.
         hi = max(hi, lo + 1.5)
         cur[0] = net
-        wire('metal5', trunk_x[net], lo, trunk_x[net], hi, width=.44)
+        wire('metal5', trunk_x[net], lo, trunk_x[net], hi, width=twid.get(net, .44))
     cur[0] = None
+    # r10 self-check of matched=: Metal4 / Metal5 of a net that is not the device's own, drawn over a matched device
+    foreign = []
+    if matched:
+        for d, pl_, ko in zip(sub.devices, DP, keepouts):
+            if matched(d):
+                own = {q[2] for q in pl_}
+                foreign += [(d.name, s_[0], s_[5]) for s_ in shapes if s_[0] in ('metal4', 'metal5') and s_[5] not in own
+                            and s_[1] < ko[2] and s_[3] > ko[0] and s_[2] < ko[3] and s_[4] > ko[1]]
     # antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M5 get an N+/Psub diode
     # under their own M3-M5 wire; returned as 'antenna_diodes' for the LVS reference (lvs_reference).
     req = ad.requests_from_shapes(shapes, terminals)
     dcmds, diodes = ad.plan(req, [s[:5] for s in shapes], keepouts, taps=taps)
+    for attempt in range(ant_retry):
+        # r10 (AP4 review 1): a request without a legal site (devices under the tracks) gets its own Metal4 row
+        # track extended past the right end of the rows, where a diode fits; requests are then planned again
+        bad = [rq for rq, dd in zip(req, diodes) if not dd.get('placed')]
+        if not bad:
+            break
+        for n_, rq in enumerate(bad):
+            seg = next((sg for sg in rq['segs'] if sg[0] == 'metal4'), None)
+            if seg is None:
+                continue
+            cur[0] = rq['net']
+            n_ext = locals().get('n_ext', 0) + 1
+            wire('metal4', max(seg[1], seg[3]), seg[2], width + 3.2 * n_ext, seg[2])
+        cur[0] = None
+        req = ad.requests_from_shapes(shapes, terminals)
+        dcmds, diodes = ad.plan(req, [s[:5] for s in shapes], keepouts, taps=taps)
     cmds.extend(dcmds)
     for idx, port in enumerate(sub.ports, 1):
         x = trunk_x[port]
@@ -393,7 +607,17 @@ def generate_layout(sub, work, *, columns=None, quiet=None, over_dev=False, trun
         drc = None
     bb = [float(v) for v in (work / 'bbox.txt').read_text().split()]
     size = [round(bb[2] - bb[0], 2), round(bb[3] - bb[1], 2)]
+    if iso_well:
+        (work / 'iso-wells.json').write_text(json.dumps(iso_well, indent=1) + '\n')
+    if currents:
+        (work / 'em-widths.json').write_text(json.dumps(dict(
+            limits='85 C: Metal1-4 2.09 mA/um, Metal5 4.5 mA/um, 0.58 mA/cut; design currents x1.3',
+            trunks={nt: dict(width_um=w_) for nt, w_ in sorted(twid.items()) if w_ > .44},
+            tracks={f'{nt}@row{r_}': dict(ma_x1p3=round(track_ma(nt, r_), 3), width_um=track_w(nt, r_))
+                    for nt in nets for r_ in range(rows) if track_ma(nt, r_) > 0}), indent=1) + '\n')
     return dict(drc_count=drc, drc_raw=drc_text, columns=columns, rows=rows, pitch_um=pitch, antenna_diodes=diodes,
+                antenna_unplaced=[d_['net'] for d_ in diodes if not d_.get('placed')], iso_wells=iso_well, row_report=row_geo,
+                matched_foreign_metal=sorted(set(foreign)),
                 bbox_um=bb, size_um=size, area_um2=round(size[0] * size[1], 1),
                 planned_size_um=[round(width, 2), round(height, 2)], placements=len(placements),
                 magic_log_tail=res.stdout[-1500:] + res.stderr[-1500:])

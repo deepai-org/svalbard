@@ -189,9 +189,24 @@ def cnt():
     # phase relation to CK (second register resolves), so two gate delays here cost nothing.
     c.inv('ENB', 'ENC', 1, 2)
     c.nand(['LDE', 'ENC'], 'LDGB')
-    c.inv('LDGB', 'LDG', 1, 2)
+    # r7d (resume 10): r6..r7c registered a one-period LDE pulse twice and used the registered level as INJ.  A pulse
+    # exactly one period wide is seen high by TWO consecutive CK edges whenever its edges fall within the flop aperture
+    # of a CK edge (extracted cell bench scratch/wired_rx/r10cap/cntcell.py: a 120 ps (r6) / 160 ps (r7c) wide band of
+    # LDE phases at tt), INJ is then two periods long, slot 0 is seeded twice and every word is doubled (r7c full top,
+    # LDE 0.6 ns after CKP0: WSTB twice per word, 18 + 18 errors).  Deterministic, not metastability.  Now: (a) the
+    # gated LDE is stretched by four inverter delays (LDG = LDE | LDE delayed), so it is always seen by at least one
+    # edge, and (b) INJ is the registered RISING EDGE of the first register (INJ1 & !INJ1 one cycle earlier), one period
+    # long for any LDE width from ~0.8 period up to (word - 2) periods.  Same LDE -> INJ latency as before.
+    c.inv('LDGB', 'LDS1', 1, 2)
+    c.inv('LDS1', 'LDS2', 1, 2)
+    c.inv('LDS2', 'LDS3', 1, 2)
+    c.inv('LDS3', 'LDGD', 1, 2)
+    c.nand(['LDGB', 'LDGD'], 'LDG')
     c.ff('CKM', 'LDG', 'INJ1')
-    c.ff('CKM', 'INJ1', 'INJQ')
+    c.ff('CKM', 'INJ1', 'INJ2')
+    c.inv('INJ1', 'INJ1B', 1, 2)
+    c.nor2('INJ1B', 'INJ2', 'INJD')
+    c.ff('CKM', 'INJD', 'INJQ')
     c.buf('INJQ', 'INJ')
     ports = ['CK', 'ENB', 'LDE', 'INJ']
     return c.row(ports)
@@ -252,15 +267,26 @@ def ctl():
     c.inv('ENB0', 'ENX', 2, 4)
     c.inv('ENX', 'ENB', 4, 8)
     c.inv('ENX', 'ENB', 4, 8)
-    c.nand(['CKP0', 'EN'], 'CKG')
-    c.inv('CKG', 'CKA', 2, 4)
-    c.inv('CKA', 'CKAB', 4, 8)
-    c.inv('CKAB', 'CK', 4, 8)
-    c.inv('CKAB', 'CK', 4, 8)
-    c.nor2('CKA', 'ENB', 'CKNA')
-    c.inv('CKNA', 'CKNB', 4, 8)
-    c.inv('CKNB', 'CKN', 4, 8)
-    c.inv('CKNB', 'CKN', 4, 8)
+    # r7e (resume 10): CK / CKN carry ~465 / ~470 fF each (extracted: 415 / 430 fF of wiring over ctl, cnt and both slot
+    # rows) and were driven by 2 x 4/8 (fan-out ~10).  At the pessimistic values, ss/32/3.15, 625 MHz the full top was dead:
+    # CK 0.39..2.85 V, CKN high for 0.42 ns of 1.6 ns and never above 2.58 V, no GCK pulse, no WSTB (probe
+    # scratch/wired_rx/r10cap/probe/pess_ss315).  Now 6 x 4/8 final drivers with 2 x 4/8 pre-drivers (fan-out <= 4 per
+    # stage), and one 2/4 inverter pair after the gate so that the CKP0 -> CK delay stays within ~60 ps of r7c at tt/ss/ff
+    # (r10cap/ckgen.py: tt 400 ps, ss 508 (was 570), ff 330 (was 380)); every path tuned against CK keeps its timing.
+    # (the pair sits AFTER the EN gate: nothing but the NAND's ground-side device sees CKP0 in the safe state)
+    c.nand(['CKP0', 'EN'], 'CKG', 4, 4)
+    c.inv('CKG', 'CKGa', 2, 4)
+    c.inv('CKGa', 'CKGb', 2, 4)
+    c.inv('CKGb', 'CKA', 4, 8)
+    for _ in range(2):
+        c.inv('CKA', 'CKAB', 4, 8)
+    for _ in range(6):
+        c.inv('CKAB', 'CK', 4, 8)
+    c.nor2('CKA', 'ENB', 'CKNA', 4, 8)
+    for _ in range(2):
+        c.inv('CKNA', 'CKNB', 4, 8)
+    for _ in range(6):
+        c.inv('CKNB', 'CKN', 4, 8)
     # word load gate: ELQ19 (pair 19 = last slot in every mode) through a latch transparent while CK
     # is low gates CK, so the word flops load at the CK rise after the last slot capture (half a
     # period either side).  r2b: static mux latch with a consensus term (r1: a CK-fall flop, which

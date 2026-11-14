@@ -271,7 +271,7 @@ class Layout:
 
 def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=DIGITAL_IMAGE,
              extra_trunk_nets=(), power_nets=POWER_NETS, trunk_groups=(), net_space=None, net_width=None,
-             over_cell=False):
+             over_cell=False, em=None):
     """Place and route `devices`; returns a report dict.  `rows` is an optional
     list of lists of device names; otherwise devices are packed in netlist order.
     `trunk_groups` (optional, default none = unchanged behaviour): lists of signal trunk nets placed in
@@ -288,7 +288,22 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
     `over_cell` (optional, default False = unchanged behaviour): a row's Metal4 tracks start over the row's
     own devices instead of above them (for macros that use only Metal1/2), so the channel is only what the
     track count exceeds the row height by.  May also be a set of row indices (only those rows; rows holding
-    MIM capacitors, whose plates are Metal4/5, must stay out of the set)."""
+    MIM capacitors, whose plates are Metal4/5, must stay out of the set).
+    `em` (optional, default None = unchanged behaviour; LO28, 2026-11-14): electromigration options, a dict with
+      'pin_cuts'   {(device, terminal): n}: the pin leaves on n escape columns (n single-cut M2-M3-M4 stacks, 0.58 mA
+                   each at 85 C), an n-cut Via1 array on the device pad and a wide Metal2 jog;
+      'pin_taps'   {device: [(terminal, x, y, low_metal), ...]}: extra landings on a macro's own metal (macro
+                   coordinates; low_metal 1 or 2), each a via stack to Metal3 and a Metal3 riser to the net's track;
+      'track_first' [nets]: these nets take the first signal tracks of every row they appear in (lowest y);
+      'strap_cuts' True: Via4 arrays (3 x as many as the track width holds) where a power track meets its straps;
+      'power_width' {row: um}: width of the VDD / VSS tracks of the listed rows (default 1.0);
+      'strap_pitch' um: pitch of the Metal5 power strap pairs (default 40);
+      'trunk_row'  {net: row}: the net's trunk is placed at the median of its pin columns in that row (default: all rows);
+      'trunk_at'   {net: [devices]}: the net's trunk is placed at the mean x of the named devices' centres;
+      'dense_cross' True: 0.56 um instead of 0.8 um via pitch where a wide (`net_width`) track meets its trunk.
+    A 'pin_cuts' value may be (columns, Via1 cuts) when the pad needs more cuts than the pin needs columns.
+    With `em` given (even {}) the report gets a
+    'routes' record (pins, tracks, trunks, straps) for the EM screen (scratch/lo-ap4/loext3/em/em_screen.py)."""
     net_space = net_space or {}
     net_width = net_width or {}
     if any(w > 3.0 for w in net_width.values()):
@@ -300,13 +315,24 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
     keys = sorted({d.key for d in devices})
     prims = build_primitives(work, keys, image)
     by_name = {d.name: d for d in devices}
+    em_cuts = {k: (v if isinstance(v, int) else v[0]) for k, v in (em or {}).get('pin_cuts', {}).items()}     # escape columns
+    em_via1 = {k: (v if isinstance(v, int) else v[1]) for k, v in (em or {}).get('pin_cuts', {}).items()}     # Via1 cuts on the pad
+    em_trow = (em or {}).get('trunk_row', {})
+    em_tat = (em or {}).get('trunk_at', {})
+    xpitch = 0.56 if (em or {}).get('dense_cross') else 0.8      # via-array pitch where a wide track meets its wide trunk
+    em_taps = (em or {}).get('pin_taps', {})
+    em_first = (em or {}).get('track_first', ())
+    em_pins = []      # route records for the EM screen (only filled when em is given)
+    pwr_w = lambda ri: (em or {}).get('power_width', {}).get(ri, TRACK_PWR_W)
 
     # --- slot geometry
     def slot(dev):
         p = prims[dev.key]
         x0, _, x1, _ = p.bbox
-        left = x0 - COL_INNER - PITCH_COL * (len(p.left) - 1) - SLOT_GAP / 2
-        right = x1 + COL_INNER + PITCH_COL * (len(p.right) - 1) + SLOT_GAP / 2
+        nl = sum(em_cuts.get((dev.name, t), 1) for t in p.left)
+        nr = sum(em_cuts.get((dev.name, t), 1) for t in p.right)
+        left = x0 - COL_INNER - PITCH_COL * (nl - 1) - SLOT_GAP / 2
+        right = x1 + COL_INNER + PITCH_COL * (nr - 1) + SLOT_GAP / 2
         return left, right
 
     if rows is None:
@@ -390,9 +416,12 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
         y = (y_row + 0.9) if oc else (row_top + 0.9)
         nets = row_nets[ri]
         order = [n for n in power_nets if n in nets] + [n for n in nets if n not in power_nets]
+        if em_first:
+            first = [n for n in em_first if n in nets and n not in power_nets]
+            order = [n for n in order if n in power_nets] + first + [n for n in order if n not in power_nets and n not in first]
         prev_extra = 0.0
         for n in order:
-            w = TRACK_PWR_W if n in power_nets else net_width.get(n, TRACK_SIG_W)
+            w = pwr_w(ri) if n in power_nets else net_width.get(n, TRACK_SIG_W)
             ex = net_space.get(n, 0.0)
             y += max(0.0, ex - prev_extra) if prev_extra else ex
             y += w / 2
@@ -410,7 +439,10 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
             L.cmds += [f'getcell {p.name} child 0 0 parent {cx} {cy}', f'identify X{n}']
             terms = dict(zip(pin_order(d.model), d.nodes))
             for side, names in (('L', p.left), ('R', p.right)):
-                for k, t in enumerate(names):
+                k = -1
+                for t in names:
+                    nc = em_cuts.get((n, t), 1)
+                    k += 1
                     px, py = p.pins[t]
                     px, py = cx + px, cy + py
                     if side == 'L':
@@ -418,6 +450,11 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
                     else:
                         col = cx + p.bbox[2] + COL_INNER + PITCH_COL * k
                     col = snap(col)
+                    cols = [col]
+                    for _ in range(nc - 1):     # em pin_cuts: further escape columns, outwards
+                        k += 1
+                        cols.append(snap(cx + p.bbox[0] - COL_INNER - PITCH_COL * k if side == 'L'
+                                         else cx + p.bbox[2] + COL_INNER + PITCH_COL * k))
                     L.net = terms[t]
                     if d.model in pin_info:
                         pr, ga = pin_info[d.model].get(t, (True, 0.))
@@ -432,10 +469,38 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
                     else:
                         kind, ga = 'x', 0.
                     terminals.append((px, py, terms[t], kind, ga))
-                    L.via(px, py, 1, 2)
-                    L.hwire('metal2', px, col, py, 0.4)
-                    L.via(col, py, 2, 3)
-                    pin_routes.append((ri, terms[t], col, py))
+                    if nc == 1:
+                        L.via(px, py, 1, 2)
+                        L.hwire('metal2', px, col, py, 0.4)
+                        L.via(col, py, 2, 3)
+                        pin_routes.append((ri, terms[t], col, py))
+                    else:
+                        # n-cut Via1 array on the device pad (along the S/D strip for transistors, along the head for
+                        # resistors), Metal2 jog >= 0.3 um per cut, one single-cut riser per escape column
+                        ax = 'y' if d.model.startswith(('nfet', 'pfet')) and t in ('d', 's') else 'x'
+                        nv = em_via1.get((n, t), nc)
+                        a = 0.13 + 0.26 * (nv - 1)
+                        room = (d.w if ax == 'y' or d.model.startswith('ppolyf') else 0.0) / 2 - 0.05
+                        if a + 0.07 > room:
+                            raise ValueError(f'em pin_cuts: {nv} cuts do not fit on {n}.{t} (pad half-length {room:.2f} um)')
+                        dx, dy = (0.0, a) if ax == 'y' else (a, 0.0)
+                        L.rect('metal1', px - dx - 0.19, py - dy - 0.19, px + dx + 0.19, py + dy + 0.19)
+                        L.rect('metal2', px - dx - 0.2, py - dy - 0.2, px + dx + 0.2, py + dy + 0.2)
+                        L.rect('via1', px - dx - 0.13, py - dy - 0.13, px + dx + 0.13, py + dy + 0.13)
+                        w2 = max(0.4, 0.3 * nc)      # jog ends flush with the pad of the outer column (slot spacing assumes 0.4 um pads)
+                        L.rect('metal2', min(px, cols[-1]) - 0.2, py - w2 / 2, max(px, cols[-1]) + 0.2, py + w2 / 2)
+                        for c in cols:
+                            L.via(c, py, 2, 3)
+                            pin_routes.append((ri, terms[t], c, py))
+                    if em is not None:
+                        em_pins.append(dict(row=ri, device=n, terminal=t, net=terms[t], xy=[px, py], cols=cols, cuts=em_via1.get((n, t), nc),
+                                            kind='pin', m2_w=max(0.4, 0.3 * nc)))
+            for t, tx, ty_, low in em_taps.get(n, ()):      # em pin_taps: extra landings on the macro's own metal
+                px, py = snap(cx + tx), snap(cy + ty_)
+                L.net = terms[t]
+                L.via(px, py, low, 3)
+                pin_routes.append((ri, terms[t], px, py))
+                em_pins.append(dict(row=ri, device=n, terminal=t, net=terms[t], xy=[px, py], cols=[px], cuts=1, kind='tap', m2_w=0.4))
         y_row = channel_top + 1.0
     top = y_row
     width = max(e['right'] for e in row_extents) + 1.0
@@ -454,7 +519,7 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
         for k, n in enumerate(power_nets):
             if n in count and m5_ok(x + 3.0 * k, STRAP_W / 2 + 0.5):
                 straps.append((n, snap(x + 3.0 * k)))
-        x += STRAP_PITCH
+        x += (em or {}).get('strap_pitch', STRAP_PITCH)
     for n in power_nets:   # MIM keepout removed every strap of a net: add one beside the array
         if n in count and not any(sn == n for sn, _ in straps):
             straps.append((n, snap(width + 1.5 + 3.0 * power_nets.index(n))))
@@ -505,7 +570,11 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
         if n in net_width:          # wide trunk: its end caps reach net_width/2 past the span
             lo, hi = lo - net_width[n], hi + net_width[n]
         xs = sorted(pins_x[n])
+        if n in em_trow:        # em trunk_row: the trunk sits at the median of the net's pin columns in that row
+            xs = sorted(col for ri_, net_, col, _ in pin_routes if net_ == n and ri_ == em_trow[n]) or xs
         pref = xs[len(xs) // 2]
+        if n in em_tat:         # em trunk_at: the trunk sits at the mean x of the named devices' centres
+            pref = sum(placements[d_][0] + (prims[by_name[d_].key].bbox[0] + prims[by_name[d_].key].bbox[2]) / 2 for d_ in em_tat[n]) / len(em_tat[n])
         best = None
         free = lambda c: all(hi + 1.2 < a or lo - 1.2 > b for a, b in occupied[c])
         for ci, c in sorted(enumerate(columns), key=lambda ic: abs(ic[1] - pref)):
@@ -539,16 +608,21 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
         ty = tracks[(ri, net)]
         L.net = net
         if net in power_nets:
-            L.hwire('metal4', origin_x, width - 1.0, ty, TRACK_PWR_W)
+            L.hwire('metal4', origin_x, width - 1.0, ty, pwr_w(ri))
             for n, sx in straps:
-                if n == net:
+                if n == net and (em or {}).get('strap_cuts'):   # Via4 array: 3 across the strap, as many as the track holds
+                    ky = max(1, int((pwr_w(ri) - 0.44) / 0.56 + 1e-9) + 1)
+                    for ix in (-0.56, 0.0, 0.56):
+                        for iy in range(ky):
+                            L.via(snap(sx + ix), snap(ty + (iy - (ky - 1) / 2) * 0.56), 4, 5)
+                elif n == net:
                     L.via(sx, ty, 4, 5)
             continue
         if net in trunk_x:
             lo, hi = min(lo, trunk_x[net]), max(hi, trunk_x[net])
             if net in net_width:   # via4 array over the wide crossing
                 span_ = net_width[net] - 0.44           # via-array pads (0.44 um) stay inside the wire
-                k = max(1, int(span_ / 0.8) + 1)
+                k = max(1, int(span_ / xpitch) + 1)
                 off = [(i - (k - 1) / 2) * (span_ / (k - 1) if k > 1 else 0) for i in range(k)]
                 for dx in off:
                     for dy in off:
@@ -616,6 +690,23 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
                   area_um2=round(width * top, 1), rows=row_extents, trunk_nets=trunk_nets,
                   straps=[[n, sx] for n, sx in straps], trunk_x=trunk_x,
                   devices=len(devices), drc_count_raw=drc_text, antenna_diodes=diodes, magic_returncode=[r0.returncode, rd.returncode, r.returncode])
+    if em is not None:      # route records for the EM screen: every pin escape, track, trunk and strap as drawn
+        def _xcuts(net):
+            if net not in net_width:
+                return 1
+            return max(1, int((net_width[net] - 0.44) / xpitch) + 1) ** 2
+        report['routes'] = dict(
+            pins=em_pins,
+            tracks=[dict(row=ri, net=net, y=tracks[(ri, net)], lo=(origin_x if net in power_nets else min(lo, trunk_x.get(net, lo))),
+                         hi=(width - 1.0 if net in power_nets else max(hi, trunk_x.get(net, hi))),
+                         width=(pwr_w(ri) if net in power_nets else net_width.get(net, TRACK_SIG_W)),
+                         strap_cuts=((3 * (max(1, int((pwr_w(ri) - 0.44) / 0.56 + 1e-9) + 1)) if em.get('strap_cuts') else 1)
+                                     if net in power_nets else None))
+                    for (ri, net), (lo, hi) in span.items()],
+            trunks=[dict(net=n, x=xx, lo=want[n][0], hi=want[n][1], width=net_width.get(n, TRUNK_SIG_W), cuts_per_crossing=_xcuts(n))
+                    for n, xx in trunk_x.items()],
+            straps=[dict(net=n, x=sx, width=STRAP_W) for n, sx in straps],
+            limits_note='single-cut stacks unless cuts stated; Metal3 risers 0.4 um; see em_screen.py')
     (work / 'layout-report.json').write_text(json.dumps(report, indent=1) + '\n')
     return report
 

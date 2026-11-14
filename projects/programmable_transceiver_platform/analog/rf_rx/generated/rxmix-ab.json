@@ -1,0 +1,43 @@
+{
+ "source": "scratch/rf-tia-v (fork V), evalab.py / run2x.py / extmix.py; analysis validated in bench_validation.json",
+ "rows": [
+  {
+   "metric": "chain I/Q gain mismatch / phase error / IRR, extracted LNA (extpr, published 2026-11-11 20:26) + extracted rxmix, tt 27 C 3.3 V, -60 dBm at LO+3 MHz",
+   "target": "RF-RX-IRR >= 25 dB uncorrected",
+   "extracted_nominal": {
+    "gain_mismatch_db": -0.455,
+    "phase_error_deg": 2.8,
+    "irr_db": 28.9
+   },
+   "published_tia_same_lna": {
+    "gain_mismatch_db": -1.083,
+    "phase_error_deg": 2.03,
+    "irr_db": 23.8
+   },
+   "pass": true,
+   "note": "I and Q mixers are identical cells; the mismatch comes from the LNA I/Q outputs (schematic mixers give 0.45 dB / 3.09 deg with the same LNA). Phase error alone is 0.77 deg worse than the published TIA; IRR (the spec metric) is 5.1 dB better."
+  },
+  {
+   "metric": "out-of-band IIP3, two tones at LO+20/+37 MHz, -40 dBm each, IM3 at 3 MHz, extracted, tt",
+   "target": "RF-RX-IIP3 >= -10 dBm",
+   "extracted_nominal": -10.03,
+   "published_tia_same_lna": -19.67,
+   "pass": false,
+   "note": "0.03 dB short of -10 dBm (marginal). At -30 dBm the published TIA compresses 4.3 dB (blocker desense); the new TIA 0 dB. IM3 slope is not 3:1 between -40 and -30 dBm, so the -40 dBm point is quoted."
+  },
+  {
+   "metric": "chain DSB NF (deterministic bench, fnoicor=1 OTA en at the corner, mixer Rg 150 ohm/10 um, extracted LNA extpr + extracted rxmix)",
+   "target": "<= 4.1 dB DSB on-chip",
+   "extracted_nominal": {
+    "tt27_3.3": 3.56,
+    "ss32_3.15": 4.89
+   },
+   "published_tia_same_lna": {
+    "tt27_3.3": 4.41,
+    "ss32_3.15": 6.04
+   },
+   "pass": false,
+   "note": "tt passes; ss fails: LNA alone (published, ct3) is 3.49 dB NF / 0.61 dB gain at ss32, floor (signal+image) 3.49 dB DSB. h3/h5 folding not measured (0 by construction in this bench). Published-TIA values recombined with the published OTA fnoicor=1 en at the corner (3.54/4.55 tt, 3.95/5.03 ss nV/rtHz)."
+  }
+ ]
+}

@@ -40,9 +40,10 @@ Blin lin 0 V={vdd/2}-{vdd/2}*tanh(8*sin(2*pi*2.4e9*time))
 Blqp lqp 0 V={vdd/2}-{vdd/2}*tanh(8*cos(2*pi*2.4e9*time))
 Blqn lqn 0 V={vdd/2}+{vdd/2}*tanh(8*cos(2*pi*2.4e9*time))
 {tb._lna_trim(vdd)}
-XL rf_in_p rf_in_n rfo_p rfo_n rfq_p rfq_n ib1 en gain_lo byp ct0 ct1 ct2 se rt island_off nb vdcm VDD 0 pt_lna
-XI rfo_p rfo_n lip lin bip bin ib2 enm ofs0i ofs1i ofs2i ofs3i ofs4i ofs_signi island_off avi abi VDD 0 pt_rxmix_i
-XQ rfq_p rfq_n lqp lqn bqp bqn ib3 enm ofs0q ofs1q ofs2q ofs3q ofs4q ofs_signq island_off avq abq VDD 0 pt_rxmix_q
+XL rf_in_p rf_in_n rfo_p rfo_n rfq_p rfq_n ib1 en gain_lo byp ct0 ct1 ct2 se rt island_off nb vdcm VDD 0 ct3 att0 att1 att2 att3 att4 srcp_b srcn_b tkp_b tkn_b lobias pt_lna
+{tb.src_net(view)}
+XI rfo_p rfo_n lip lin bip bin ib2 enm ofs0i ofs1i ofs2i ofs3i ofs4i ofs_signi island_off avi abi{tb.HIBP} VDD 0 pt_rxmix_i
+XQ rfq_p rfq_n lqp lqn bqp bqn ib3 enm ofs0q ofs1q ofs2q ofs3q ofs4q ofs_signq island_off avq abq{tb.HIBP} VDD 0 pt_rxmix_q
 Cbi1 bip 0 1p
 Cbi2 bin 0 1p
 Cbq1 bqp 0 1p

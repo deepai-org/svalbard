@@ -2,95 +2,85 @@
  "drc_count": 0,
  "drc_raw": "0",
  "bbox_um": [
-  1.5,
-  -0.2,
-  310.8,
-  253.12
+  1.1,
+  0.6,
+  220.87,
+  195.9
  ],
- "area_um2": 78352.0,
+ "area_um2": 42921.0,
  "lvs": {
   "unique_match": true,
   "final_result": "Circuits match uniquely.",
   "top_level_match": true
  },
- "cells": {
-  "pt_rfrx_inv": {
-   "size_um": [
-    24.72,
-    15.46
+ "layout_generator": "lna_layout.py (compact flat, MIMs over active)",
+ "compact": {
+  "rw": 190.0,
+  "width": 222.7,
+  "height": 197.5,
+  "area_est": 43977,
+  "rows": [
+   [
+    25,
+    28,
+    13.6,
+    150.0
    ],
-   "rows": 1,
-   "nets": 4,
-   "bank_um": 12.1,
-   "row_report": [
-    [
-     2,
-     4.0,
-     5.2,
-     11.6
-    ]
-   ]
-  },
-  "pt_lna": {
-   "size_um": [
-    312.92,
-    254.92
+   [
+    3,
+    8,
+    8.2,
+    186.4
    ],
-   "rows": 8,
-   "nets": 59,
-   "bank_um": 64.3,
-   "row_report": [
-    [
-     6,
-     10.0,
-     35.3,
-     216.0
-    ],
-    [
-     19,
-     15.3,
-     38.3,
-     247.6
-    ],
-    [
-     17,
-     16.0,
-     23.6,
-     241.5
-    ],
-    [
-     2,
-     5.5,
-     8.2,
-     205.2
-    ],
-    [
-     3,
-     5.5,
-     8.2,
-     210.1
-    ],
-    [
-     4,
-     7.8,
-     8.2,
-     240.7
-    ],
-    [
-     12,
-     16.0,
-     11.2,
-     201.2
-    ],
-    [
-     20,
-     19.0,
-     8.2,
-     244.4
-    ]
+   [
+    14,
+    24,
+    8.2,
+    186.8
+   ],
+   [
+    10,
+    15,
+    13.6,
+    156.4
+   ],
+   [
+    12,
+    26,
+    8.2,
+    180.6
+   ],
+   [
+    21,
+    24,
+    13.6,
+    188.7
+   ],
+   [
+    30,
+    29,
+    8.2,
+    189.2
+   ],
+   [
+    11,
+    14,
+    8.2,
+    152.0
+   ],
+   [
+    8,
+    13,
+    8.2,
+    172.7
    ]
-  }
+  ],
+  "ncaps": 20,
+  "ntrunks": 62,
+  "antenna_diodes_placed": 0,
+  "antenna_diodes_failed": 0
  },
+ "cells": {},
  "klayout_drc": {
   "ran": true,
   "violations": 0,
@@ -108,14 +98,15 @@
  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
  "drc_details": "",
  "sources": {
-  "lna.spice": "sha256:a3e861377aa34b874ef4698165831210013e7b981b513ee1d01080e557a26346",
-  "netlists.py": "sha256:a32cdea2b799cbcd4373ab3c5ffe83daf7efd06fadfa34846eb3a6736c3a9a18",
-  "rfrx_flow.py": "sha256:5cba470266fb413cc419522d9a55778cddd8ce2d169e46d12ac516dda8fd9dc9"
+  "lna.spice": "sha256:47d2112d9ba392d7d30831e0498a9089a318b7a8bfec22355fc8e4866483fb70",
+  "netlists.py": "sha256:969cae8ba1190bfdf64494c7b643f7b86fce6f32f48d1ddb12d7dfe225d57591",
+  "rfrx_flow.py": "sha256:c95720b6e4fada3bcf478c3e5559efc5c938169f08421996760c8ea656bc7aaa",
+  "lna_layout.py": "sha256:c38df64a5e08e31d46b05f04f2398d11e379e9d94d5c95a212192a787b50cc6a"
  },
  "artifacts": {
-  "lna.gds": "sha256:40e828947209df7c6f7f3aab24b7fe617f98b2e36c7bb87f830309972ca44e99",
-  "lna.mag": "sha256:e77dd5c574ef5d66130f4379629d73a220d3b531cd56f6b410712114785ec164",
-  "lna.ext.spice": "sha256:35bc7031dea86d7e6d3bfa345825073d687d31ffc1bea499c23362687a03553d",
-  "lna-lvs.txt": "sha256:cdd94ceb86166b3e4af7ebc455471e28712abf987dd2ce56e01a0b161b124715"
+  "lna.gds": "sha256:b4a7b3a23f9353836b5ed08d1d567d926d88788750ab5f3d38d2a7d6ad5d9cd4",
+  "lna.mag": "sha256:353f7a9aa171318c7427e8dc94b137859972a9facf9da64fc1a5e2fb69891ed5",
+  "lna.ext.spice": "sha256:c345fba6a49496e970f383b89c669087b56ad358abb353cf5f834ca3d88cd989",
+  "lna-lvs.txt": "sha256:035d5cec50166c53d79eb68aebf2d0fc2ebcb6fe6e59a90db67be7f155a19667"
  }
 }

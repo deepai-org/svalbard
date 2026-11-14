@@ -23,6 +23,17 @@
           a 1 um M5 strap to the side edge (x 492), 5 levels below and 4 above the RX pair.
           RX_P / RX_N: mirror-identical routes (M4 trunk extension 18 um, 0.6 um M5 strap) to ADJACENT side pins at
           x 492, 6 um apart, in the middle of the channel. RAILPRE / VSS down from the P-leg bank exactly as before.
+
+  R-fixed leg (PC-14, 2026-11-14): when the leg's layout-info.json carries `r_fix` (hs_leg_layout.py default build), the
+          stacked composer also
+          - joins the two legs' TERM_VCM straps (30 um Metal4+Metal5 at the leg tops) with a 23 um Metal4 trunk across the
+            channel and taps the TERM_VCM pin strap from the channel MIDLINE (Metal4 bridge + finger + via4 array), the old
+            single via4 on the 1 um trunk is dropped;
+          - leaves the PAD feed's via4 array to the leg (landing pad there) instead of its own 3 x 3 stack;
+          - adds via4 arrays where the shell joins its Metal4 PAD trunks to the Metal5 trunks with ONE cut each
+            ((288, 416) for PAD_P, (304, 432) for PAD_N): the whole termination current runs through those cuts;
+          - keeps the channel and every pin where they were when the leg height changes (P leg anchored at its top).
+          A legacy leg (no `r_fix`) gives the published geometry.
 """
 import json, re, shutil, subprocess, sys, hashlib
 from pathlib import Path
@@ -105,7 +116,8 @@ def assemble(work):
 def assemble_stacked(work, cfg):
     import klayout.db as k
     tx = cfg['trunk_x']; ltop = cfg['leg_top']; lright = cfg['leg_right']   # leg bbox top / right edge (leg-local)
-    X, Y_PLEG = 340., 440.             # P leg origin (unmirrored); the cell's side edge is X + lright = 492
+    fix = cfg.get('r_fix')
+    X, Y_PLEG = 340., 594.75 - ltop    # P leg origin (unmirrored), anchored at its top (440 for the 154.75 um PD21 leg); side edge X + lright = 492
     EDGE, PITCH, RXSEP = 4., 2.5, 6.   # channel: leg edge / RX pair clearance, shared-strap pitch, RX_P-RX_N pin pitch
     LOW = ['TERM_TRIM0', 'TERM_TRIM1', 'TERM_TRIM2', 'TERM_TRIM3', 'VSS']   # straps between the P leg and RX_P
     HIGH = ['VDD', 'TERM_ENABLE', 'TERM_VCM', 'VBIAS', 'RAILPRE']           # straps between RX_N and the N leg
@@ -147,11 +159,13 @@ def assemble_stacked(work, cfg):
     # P leg: shell PAD_P M5 trunk (x 282-294, from y 410) -> M5 at y 416, BELOW the PAD_N trunk start (y 426), so the
     # pair never crosses -> up over the P leg bank to the via stack on the P leg PAD trunk
     y_padp = Y_PLEG + cfg['pad_trunk_lo'] + 1.5
-    box(M[5], 282., 414., xpad + 2., 418.); box(M[5], xpad - 2., 414., xpad + 2., y_padp); stack(xpad, y_padp, 4, 5, 3)
+    box(M[5], 282., 414., xpad + 2., 418.); box(M[5], xpad - 2., 414., xpad + 2., y_padp)
+    if not fix: stack(xpad, y_padp, 4, 5, 3)      # R-fixed leg: the leg has its own landing pad + via4 array there
     # N leg: shell PAD_N M5 trunk (x 298-310) sideways into the N leg PAD trunk; the stub beyond the via stack mirrors
     # the PAD_P run over the bank (same length, same leg metal underneath) and ends open: P/N pad C balance only
     y_padn = Y_NLEG - (cfg['pad_trunk_lo'] + 1.5)
-    box(M[5], 298., y_padn - 2., xpad + 2., y_padn + 2.); stack(xpad, y_padn, 4, 5, 3)
+    box(M[5], 298., y_padn - 2., xpad + 2., y_padn + 2.)
+    if not fix: stack(xpad, y_padn, 4, 5, 3)
     box(M[5], xpad - 2., y_padn, xpad + 2., y_padn + (y_padp - 414.))
     # shared nets: the two legs' M4 trunks joined straight across the channel; port nets get an M5 strap to the side edge
     # (crossing at the leg trunk's own width for the current-carrying nets: TERM_VCM carries the differential
@@ -160,7 +174,7 @@ def assemble_stacked(work, cfg):
         w = {'VSS': 2., 'TERM_VCM': 1.}.get(net, .5)
         wire(4, (tr(net), p_top - 1.), (tr(net), n_top + 1.), w)
         if net != 'RAILPRE':     # internal node: no strap, no label
-            stack(tr(net), level[net], 4, 5)
+            if not (fix and net == 'TERM_VCM'): stack(tr(net), level[net], 4, 5)
             box(M[5], tr(net), level[net] - .5, xedge, level[net] + .5); T(net, 5, xedge - .5, level[net])
     # RX_P / RX_N: mirror-identical routes (P/N balance at the CTLE input): RX trunk -> 18 um M4 extension into the
     # channel -> 0.6 um M5 strap to the cell's side edge = adjacent side pins, RXSEP apart
@@ -174,6 +188,26 @@ def assemble_stacked(work, cfg):
     xv = tr('VSS'); yv = Y_PLEG + cfg['vss_lo'] + 1.
     wire(4, (xv, yv), (xv, 428.), 2.); stack(xv, 428., 3, 4, 2)
     wire(3, (xv, 428.), (138., 428.), 1.); stack(138., 428., 3, 5, 2)
+    if fix:
+        def varray(v, x1, y1, x2, y2, skip=None, pitch=.7):       # via cuts on a 0.7 um grid inside the box, >= 0.2 um from its edges
+                                                                  # (V4.2b: cuts of arrays larger than 3 x 3 need 0.36 um spacing)
+            nx = int((x2 - x1 - .4 - .26) / pitch) + 1; ny = int((y2 - y1 - .4 - .26) / pitch) + 1
+            x0 = (x1 + x2) / 2 - (nx - 1) * pitch / 2; y0 = (y1 + y2) / 2 - (ny - 1) * pitch / 2
+            for i in range(nx):
+                for j in range(ny):
+                    cx, cy = x0 + i * pitch, y0 + j * pitch
+                    if skip and abs(cx - skip[0]) < 1e-6 and abs(cy - skip[1]) < 1e-6: continue
+                    box(V[v], cx - .13, cy - .13, cx + .13, cy + .13)
+        # TERM_VCM: wide Metal4 trunk between the leg straps (the channel's Metal5 belongs to the pin straps), pin tap on the midline
+        s1, s2 = X + fix['vcm_strap'][0], X + fix['vcm_strap'][1]; mid = (p_top + n_top) / 2; lv = level['TERM_VCM']
+        xf = s2 - 4.5                                   # finger: 4.5 um wide, 2.5 um right of the trunk
+        box(M[4], s1, p_top - 1., xf - 2.5, n_top + 1.)
+        box(M[4], xf - 2.5, mid - 1.5, xf, mid + 1.5)   # bridge at the midline: the only connection of the finger
+        box(M[4], xf, mid - 1.5, s2, lv + .8)
+        box(M[5], xf, lv - .8, s2, lv + .8); varray(4, xf, lv - .8, s2, lv + .8)
+        # shell PAD exits: Metal4 trunk under the Metal5 trunk, one cut each in the shell -> arrays around that cut
+        for cx, cy in ((288., 416.), (304., 432.)):
+            varray(4, cx - 6., cy - 6., cx + 6., cy + 6., skip=(cx, cy))
     T('PAD_P', 5, 288., 905.); T('PAD_N', 5, 304., 905.)
     T('ESD_RAIL', 3, 130., 444.)
     import marker_merge
@@ -205,6 +239,10 @@ def generate(work, shell, leg, network, stacked=False):
     tx = {n: v[0][0] for n, v in lab.items() if not n.startswith('TU')}
     lo = lambda n: min(p[1] for p in lab[n] if p[2] == 0)
     cfg = dict(trunk_x=tx, leg_top=info['bbox'][3], leg_right=info['bbox'][2], pad_trunk_lo=lo('PAD'), railpre_lo=lo('RAILPRE'), vss_lo=lo('VSS'), stacked=stacked)
+    linfo = json.loads((leg / 'layout-info.json').read_text()) if (leg / 'layout-info.json').exists() else {}
+    if linfo.get('r_fix'):
+        if not stacked: raise ValueError('the R-fixed leg is only composed in the stacked build')
+        cfg['r_fix'] = linfo['r_fix']
     (work / 'config.json').write_text(json.dumps(cfg, indent=1))
     subprocess.run(['docker', 'run', '--rm', '--network', 'none', '--entrypoint', 'python3', '--mount', f'type=bind,src={work},dst=/work', IMAGE,
                     '/work/hs_pad_compose.py', '--inside', '/work'], check=True)

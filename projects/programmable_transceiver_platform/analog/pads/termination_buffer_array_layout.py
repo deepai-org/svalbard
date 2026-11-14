@@ -131,7 +131,7 @@ MIN_CHUNKS = {('TAIL', 'TAIL_RETURN'): 3, ('TAIL_RETURN', 'VSS'): 3, ('LOCAL_OUT
 TRUNK_UM = {'BOTTOM': 3., 'BUFFER_COMPLEMENT_WELL': 4., 'VSS': 4., 'VDD': 11., 'TOP': 11., 'LOCAL_OUT': 11.}
 
 
-def generate(work, circuit=None, cell_name='buffer_core', power_nets=POWER_NETS, wide_nets=(), trunk_um=None):
+def generate(work, circuit=None, cell_name='buffer_core', power_nets=POWER_NETS, wide_nets=(), trunk_um=None, signal_gap_um=1.):
     trunk_um = {**TRUNK_UM, **(trunk_um or {})}
     work.mkdir(parents=True, exist_ok=False)
     if circuit is None:
@@ -180,7 +180,7 @@ def generate(work, circuit=None, cell_name='buffer_core', power_nets=POWER_NETS,
     tracks, widths, edge = {}, {}, 2.78
     for net in order:
         width = trunk_um.get(net, 8.) if net in big else .44
-        tracks[net] = edge + width / 2; widths[net] = width; edge += width + 1.
+        tracks[net] = edge + width / 2; widths[net] = width; edge += width + (1. if net in big else signal_gap_um)   # WT24: wider signal-trunk gap cuts trunk-to-trunk coupling
     x0 = edge + 2.                                                       # devices right of the trunk bank
     width_w = max(boxes[u[0]][2] - boxes[u[0]][0] for u in units)
     row_w = max(width_w, 80.)

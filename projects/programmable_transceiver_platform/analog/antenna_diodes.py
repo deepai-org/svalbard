@@ -25,6 +25,10 @@ import math
 THICK = {'metal1': .54, 'metal2': .54, 'metal3': .54, 'metal4': .54, 'metal5': .9}
 LIMIT = 400.0          # ANT.16_i ratio limit (thin gate, diode multiplier 2)
 MARGIN = 0.5           # design target: estimated ratio below MARGIN*LIMIT needs no diode
+SD_MARGIN = MARGIN     # nets protected only by a driver's (finite) diffusion, kind 'sdA': the deck counts that
+                       # diffusion as a diode, ratio = metal / (gate + 2*diff); require < SD_MARGIN*LIMIT.  Same
+                       # margin as gate-only nets: the perimeter estimate reads ~0.54x the deck (pt_pll_ring r9 NX:
+                       # estimate 230 vs deck 426), so 0.8 would miss real violations.
 DIFF_KEEP = 1.2        # diode diffusion to any PCell bbox (implants, wells, guard rings)
 METAL_SPACE = 0.32     # stack metal to any foreign metal of the same layer
 DIODE_SPACE = 1.0      # diode diffusion to another antenna diode (implants 0.16 each side + NP.2 0.4)
@@ -47,6 +51,7 @@ def need_area(perimeter_by_layer, gate_area):
     return 0. if need <= 0 else max(0.36, round(need * 1.5 + .05, 2))
 
 
+DEBUG = None           # list -> requests_from_shapes appends (net, level, perimeter, gate, sd area, diodes)
 TAP_GAP = 0.8          # diode COMP edge to its own substrate-tap COMP edge
 
 
@@ -154,7 +159,9 @@ def requests_from_shapes(net_shapes, terminals, landing_min=3):
 
     net_shapes: [(layer, x1, y1, x2, y2, net)] for metal1..5 / via1..4 drawn by the generator.
     terminals:  [(x, y, net, kind, gate_area_um2)] device pin landings (on metal1), kind 'g' for a
-                thin-oxide gate, 'sd' for diffusion (protects the net), 'x' ignored.
+                thin-oxide gate, 'sd' for diffusion (protects the net), 'x' ignored, 'sdA' for diffusion
+                counted with its real area (5th field = diffusion area um^2), as the deck does: the component
+                then needs a diode when metal/(gate + 2*(diff + planned diodes)) >= SD_MARGIN*LIMIT.
     For each metal level N the deck sees the partial net built from metal<=N and via<N only (a row's
     Metal4 track before the Metal5 trunk exists), so the ratio is evaluated per such component.
     A component above MARGIN*LIMIT without diffusion gets a diode landing on its own metal N."""
@@ -200,11 +207,13 @@ def requests_from_shapes(net_shapes, terminals, landing_min=3):
                             seen.add(j)
                             stack.append(j)
                 m1 = [shapes[i][1:5] for i in comp if not lvl[i][1]]   # pin landings (any metal of the component)
-                ga, prot = 0., False
+                ga, prot, sda = 0., False, 0.
                 for x, y, kind, a in tl:
                     if any(_inside((x, y), r) for r in m1):
                         if kind == 'sd':
                             prot = True
+                        elif kind == 'sdA':
+                            sda += a
                         elif kind == 'g':
                             ga += a
                 if prot or ga <= 0:
@@ -212,7 +221,12 @@ def requests_from_shapes(net_shapes, terminals, landing_min=3):
                 dio = sum(diode_at.get(i, 0.) for i in comp)
                 per = sum(2 * ((shapes[i][3] - shapes[i][1]) + (shapes[i][4] - shapes[i][2]))
                           for i in comp if lvl[i] == (N, False))
-                if per * THICK[f'metal{N}'] / (ga + 2 * dio) < MARGIN * LIMIT:
+                if DEBUG is not None:
+                    DEBUG.append((net, N, round(per, 1), round(ga, 3), round(sda, 3), round(dio, 3)))
+                if sda > 0:
+                    if per * THICK[f'metal{N}'] / (ga + 2 * (dio + sda)) < SD_MARGIN * LIMIT:
+                        continue
+                elif per * THICK[f'metal{N}'] / (ga + 2 * dio) < MARGIN * LIMIT:
                     continue
                 need = need_area({f'metal{N}': per}, ga) - dio
                 need = max(0.36, round(need, 2))
@@ -253,6 +267,34 @@ def _subckts(text):
         elif cur:
             subs[cur]['lines'].append(t)
     return subs
+
+
+def macro_pin_diff(spice_path, name, _subs=None):
+    """{pin: source/drain diffusion area um^2} on each macro pin (fet w x 0.44 um per terminal x m; unknown
+    children count 0, i.e. no protection credited).  Used with terminal kind 'sdA'."""
+    from pathlib import Path
+    subs = _subs or _subckts(Path(spice_path).read_text())
+    if name not in subs:
+        return {}
+    s = subs[name]
+    info = {p: 0. for p in s['ports']}
+    for t in s['lines']:
+        if t[0][0] not in 'XxMm':
+            continue
+        params = dict(p.split('=', 1) for p in t if '=' in p)
+        toks = [p for p in t[1:] if '=' not in p]
+        model, nodes = toks[-1], toks[:-1]
+        if 'fet' in model and len(nodes) >= 4:
+            a = _val_um(params.get('w', '1u')) * 0.44 * float(params.get('m', 1))
+            for n in (nodes[0], nodes[2]):
+                if n in info:
+                    info[n] += a
+        elif model in subs:
+            child = macro_pin_diff(None, model, subs)
+            for n, cp in zip(nodes, subs[model]['ports']):
+                if n in info:
+                    info[n] += child.get(cp, 0.)
+    return info
 
 
 def macro_pin_info(spice_path, name, _subs=None):

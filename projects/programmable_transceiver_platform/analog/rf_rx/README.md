@@ -7,6 +7,16 @@ generated layout, Magic DRC, KLayout DRC cross-check, Netgen LVS, an extracted
 netlist with parasitic C and extracted ngspice simulations. All numbers come
 from `generated/*.json`; nothing here is silicon or Monte Carlo evidence.
 
+> **Status 2026-11-13 (RF RX owner): the `lna` / `rxmix_i` / `rxmix_q` sources in this directory are an UNPUBLISHED candidate**
+> (RC-16j/k LNTA with bonded source degeneration, fork-P2 TIA with the new `hib` pin). Layout records match the current
+> netlists (lna core 42,921 µm² + two spirals, rxmix 71,461 µm² each, DRC 0, LVS unique), but `generated/lna-evidence.json`,
+> `rxmix_*-evidence.json`, `rf_rx_chain.json`, `rf_rx_linearity.json` and section 5 below were produced from OLDER netlists and
+> are stale. The candidate is not committable: the 0.5 nH source return cannot be bonded on the COB (risk RFR-12; on-chip
+> degeneration proposed), the B18 board network is not buildable on the COB (RFR-13), the pessimistic model end gives
+> 7.4 dB chain NF against 4.1 dB (RFR-11), and the mixers have only been simulated with an ideal square LO (MW-20).
+> Numbers and scripts: `scratch/rf-lna-p/NOTES.md` (v7, v8); review: `scratch/review-lna3/REPORT.md`; integration pins:
+> `chip-top-pins.md`. `bbfilter_i/q` and `bb_tap` are the published cells and are unaffected.
+
 ## 1. Files and how to run
 
 | File | Content |
@@ -43,26 +53,19 @@ VSS (NMOS W/L = 1/10, ~30 µA against an active driver).
 
 ## 3. Circuits
 
-**lna (`pt_lna`)** — single transconductance stage with split I/Q cascodes (RC-16b/e fork A/F/J; input stage
-and attenuator redesigned by fork P, RC-16g, 2026-11-11, `scratch/rf-lna-p`). Pseudo-differential CS input
-pair (900/0.28 per side, no tail, gate bias from a 22.5 µm replica through 60 kΩ: same 11.7 mA as the old
-400/9 pair at a lower density), each drain feeding two cascodes (150/0.28) with 3.6 µm × 1 µm ppoly loads,
-one per mixer (`rf_out_*` → rxmix_i, `rf_outq_*` → rxmix_q). ~4.4 pF MIM input coupling (47 µm, pad on the
-bottom plate), ~1 pF output coupling. **Input Q** (|X/R| at the pads) is 27–45 extracted (was ~120): the wide
-device and the removal of fixed pad-side C let the B18/B25 board ladder with two build-time trimmers (`lna_match.BOARD_TRIM`) hold
-S11 ≤ −10 dB over 2.40–2.4835 GHz at every envelope corner; Bode–Fano requires Q ≤ 70 for any network
-(`scratch/reviews/physical-limits.md` RX-MATCH). Bond/board tolerance is trimmed per board (cannot be
-absorbed on chip). **Pre-LNA attenuator** (RXR max input): six weighted NMOS switches directly
-across the two stage-1 gates (3.4 µm × 1/3/7/16/40/120; bits `att0..att4`, `gain_lo` = MSB), ≥ 30 dB with ≤ 6 dB level
-gaps (see the evidence level table); the input match is not held while attenuating.
-**ct0..ct3** 4-bit shunt-C trim (LSB 25 µm² MIM per leg, differential NMOS switch per bit 30…240 µm),
-reset 7; held within 4…10 by the per-board network. `se` = RF_RX_N to VSS through an 11.6 µm MIM + 60 µm
-NMOS; a 5.5 µm MIM on RF_RX_P balances the legs. `rt` = Q-spoil, 2 × ~1.5 kΩ across the gates (RC-16h; off unless the B25 tuning needs it). Bypass: `byp` closes
-20 µm NMOS from each gate to both mixer feeds. Layout: `lna_layout.py` (compact flat, MIMs over the
-devices), 23,980 µm² (budget 24.6k). Benches: view `extpr` = extracted + pad_rf_pair delta + Rg 150 Ω/10 µm;
-`extpp` = pessimistic (Rg 200 Ω/10 µm, pad C +30 %); `tb.lna_band` (S11/NF/gain over the band),
-`lna_match.att_sweep`, `tb.lna_compression`; deterministic chain NF `tb.chain_det` (DSB/SSB) with the LNA
-noise at 3·fLO / 5·fLO measured.
+**lna (`pt_lna`)** — LC-tuned LNTA (RC-16j/k, coordinator decisions 2026-11-13, `scratch/rf-lna-p/v3..v6`).
+Pseudo-differential CS pair (450/0.28 per side), **inductively degenerated**: each source on its own pad (`src_p`/`src_n`),
+downbonded to board ground (≈ 1.0 nH = Ls). Gate bias from a replica through 60 kΩ; **programmable bias** `lobias`
+(0: RX 18.9 mA, 1: duplex 11.7 mA; the validator sets it whenever TX is on). ~4.4 pF MIM input coupling. One cascode
+(300/0.28) per leg into the tank node `tank_p`/`tank_n`; the tank inductors are **two single-ended spirals** of the QVCO
+family (`lna_spiral.py`: 170 µm, 3 turns, 1.35 nH, Q 5.4 nominal; DRC-only cells placed at assembly; benches insert the
+model; pessimistic Q 4 / L −15 %). **Tank tune** on `ct0..ct3` (4-bit MIM bank, per process; tuned on the chain noise,
+`tb.LNA_TANK_CT`). Both passive mixers AC-coupled (16 µm MIM) from the tank node (current-mode into the TIAs).
+**Attenuator** across the tank (att0..att4 + gain_lo MSB); **bypass** `byp` switches at the pad to both mixer feeds
+(fallback for an external LNA; costs nothing in normal mode). `se` single-ended mode as before; `rt` Q-spoil across the gates.
+Pad input Q ≈ 5.6; board: fixed BOM + one trimmer (B18). Layout core `lna_layout.py` 26,906 µm² (+ 2 × 35.7k µm² spirals).
+Benches: `extpr` (+pad_rf_pair, Rg 150), `extpp` (pessimistic: Rg 200, +25 % device C, pad +30 %, spiral Q 4 / L −15 %),
+`extlo` (Rg 60, pad −20 %, spiral L +10 %); `tb.lna_band` (S11, gain, LNA own NF), `tb.chain_det` (chain NF, real mixers/TIAs).
 
 **rxmix_i / rxmix_q** — double-balanced passive NMOS quad (30/0.28 per switch)
 in a hand-placed symmetric cell (`pt_rxmix_quad`, `rfrx_flow.layout_quad`) with

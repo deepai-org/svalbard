@@ -27,15 +27,19 @@ class Net:
         self.count[prefix] = self.count.get(prefix, 0) + 1
         return f'{prefix}{self.count[prefix]}'
 
-    def n(self, d, g, s, w=1., l=.28, m=1, name=None):
-        self.lines.append(f'X{name or self._id("MN")} {d} {g} {s} VSS nfet_03v3 w={w:g}u l={l:g}u'
+    def n(self, d, g, s, w=1., l=.28, m=1, name=None, b='VSS'):
+        # b != VSS: NMOS in an isolated p-well (DNWELL tied to the block rail); wrx_flow lays such a device out as
+        # ONE m-finger PCell inside its own DNWELL island (parse_spice iso handling)
+        self.lines.append(f'X{name or self._id("MN")} {d} {g} {s} {b} nfet_03v3 w={w:g}u l={l:g}u'
                           + (f' m={m}' if m > 1 else ''))
 
     def p(self, d, g, s, b=None, w=2., l=.28, m=1, name=None):
         self.lines.append(f'X{name or self._id("MP")} {d} {g} {s} {b or self.vdd} pfet_03v3 w={w:g}u l={l:g}u'
                           + (f' m={m}' if m > 1 else ''))
 
-    def r(self, a, b, w, l, name=None, seg=6.5):
+    def r(self, a, b, w, l, name=None, seg=6.5, m=1):
+        for _ in range(m - 1):          # m parallel strips (each its own terminals: escape current / m)
+            self.r(a, b, w, l, seg=seg)
         k = max(1, -(-l // seg))
         k = int(k)
         prev = a
@@ -189,19 +193,19 @@ Outputs have 100k poly bleeds to VSS so the pad switches stay off when unpowered
 
 
 def rxselect():
+    """r2 (CTLE r4, MW-13-FIX, 2026-11-14): the CTLE branch is removed.  pt_ctle's follower drives SL_P/N directly and
+    is off (high impedance) in direct mode; this block keeps only the direct (USB) gate and the off-state clamp."""
     c = Net('pt_rxselect', ['VDD_WIRE_SW', 'VSS', 'rxselect_en', 'rxselect_direct',
-                            'CTLE_P', 'CTLE_N', 'RX_P', 'RX_N', 'SL_P', 'SL_N'],
-            """2:1 differential transmission-gate mux feeding the slicer bank (SL_P/N).
-direct=0: CTLE output (equalized serial). direct=1: RX_P/N straight from rxlevel (USB HS
-0-0.4 V lines, or any route that must avoid the CTLE block entirely).
-rxselect_en=0: both gates open and SL_P/N clamped to VSS.""")
+                            'RX_P', 'RX_N', 'SL_P', 'SL_N'],
+            """Direct (USB) transmission gate onto the slicer bank input SL_P/N.  r2: no CTLE branch.
+rxselect_en=1, direct=1: RX_P/N (USB HS 0-0.4 V lines from rxlevel) -> SL_P/N; pt_ctle must be off (ctle_en=0,
+wire_ctle_bypass=0) so that its follower output does not load SL.
+rxselect_en=1, direct=0: gate open, no clamp: SL_P/N belong to pt_ctle (follower or its bypass gate).
+rxselect_en=0: gate open and SL_P/N clamped to VSS (pt_ctle must be off).""")
     c.vdd = 'VDD_WIRE_SW'
-    c.inv('rxselect_direct', 'db')
-    c.nand(['rxselect_en', 'db'], 'sa_b'); c.inv('sa_b', 'sa', wn=2, wp=4)
     c.nand(['rxselect_en', 'rxselect_direct'], 'sb_b'); c.inv('sb_b', 'sb', wn=2, wp=4)
     c.inv('rxselect_en', 'enb')
     for leg in 'PN':
-        c.tg(f'CTLE_{leg}', f'SL_{leg}', 'sa', 'sa_b', wn=10, wp=20)
         c.tg(f'RX_{leg}', f'SL_{leg}', 'sb', 'sb_b', wn=10, wp=20)
         c.n(f'SL_{leg}', 'enb', 'VSS', w=2)
     return c
@@ -236,12 +240,17 @@ def ctle():
     c = Net('pt_ctle', ['VDD_WIRE_SW', 'VSS', 'IBIAS', 'ctle_en', 'wire_ctle_bypass', 'ctle_peak0', 'ctle_peak1',
                         'ctle_peak2', 'lf_zero0', 'lf_zero1', 'lf_zero2', 'RX_P', 'RX_N', 'CTLE_P', 'CTLE_N',
                         'atb_ctle_pbias', 'atb_ctle_src'],
-            """Source-degenerated PMOS-input CTLE r2 (input CM 0.2-1.6 V, output CM ~1.0 V into slicer).
+            """Source-degenerated PMOS-input CTLE r4 (input CM 0.8-1.4 V) with an output source-follower pair.
 2 x 2.5 mA PMOS tails; degeneration Rs (between the sources) = 0.4/0.56/0.78/1.08/1.51/2.1/2.93/4.1 kohm for
 ctle_peak[2:0] = 0..7 (0 = flat, 7 = most, >= 12 dB) with the tail drain capacitance to VDD; 480 ohm loads
-to VSS through enable switches.  IBIAS: 10 uA sunk from the island bias distribution.
-wire_ctle_bypass=1: amplifier forced off, load switches open, transmission gates connect RX->CTLE.
-Neither enable nor bypass: loads/clamps hold CTLE_P/N at VSS; no bias current.
+to VSS through enable switches (internal nodes cp/cn, CM ~1.4-1.5 V).  IBIAS: 10 uA sunk from the island bias
+distribution (also the reference of the follower sinks: no other bias input).
+r4 (MW-13-FIX, 2026-11-14): CTLE_P/N are the outputs of NMOS source followers (60/0.28 per side, isolated p-well,
+body = source, 2 x ~3 mA NMOS sinks) and connect DIRECTLY to the slicer bank input SL_P/N (CM ~0.4 V); pt_rxselect
+has no CTLE branch any more.  ctle_en=0 (direct/USB mode): followers and sinks off, CTLE_P/N high impedance
+(only junction/overlap capacitance on SL), nothing clamps them (pt_rxselect clamps SL when it is disabled).
+wire_ctle_bypass=1: amplifier and followers off, transmission gates connect RX_P/N -> CTLE_P/N (= SL).
+Neither enable nor bypass: cp/cn clamped to VSS, CTLE_P/N high impedance; no bias current.
 r3 (IX-13): lf_zero[2:0] (binary, reset 0 = r2 response) switches a low-frequency zero bank onto both source
 nodes: per side, groups of 1/2/4 NMOS gate capacitors (80 x 6.2 um, channel at VSS, ~2.1 pF each) through PMOS
 switches 8/16/32 um (68 ohm per side with all on = 136 ohm floating equivalent) (gate = !(lf_zero[k] & ena)); an off group's gates are pulled to VSS.  Per-side shunt C is the
@@ -253,16 +262,17 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
     # trunks run from their lowest row to the top-edge pins, so RX_P/N (pad C budget) and CTLE_P/N do not grow
     for k in range(3):
         c.nand([f'lf_zero{k}', 'ena'], f'lzn{k}', wn=2, wp=4)
+        for u in range(2 ** k):         # r4: switch fingers of the two sides alternate (symmetric sp / src wiring)
+            for side, tagz in (('sp', 'a'), ('atb_ctle_src', 'b')):
+                c.p(f'lz{k}{tagz}', f'lzn{k}', side, b='VDD_WIRE_SW', w=CTLE_LFZ_SW)
         for side, tagz in (('sp', 'a'), ('atb_ctle_src', 'b')):
             g = f'lz{k}{tagz}'
-            c.p(g, f'lzn{k}', side, b='VDD_WIRE_SW', w=CTLE_LFZ_SW, m=2 ** k)
             c.n(g, f'lzn{k}', 'VSS', w=1)
             for _ in range(CTLE_LFZ_UNITS * 2 ** k):
                 c.ncap(g, CTLE_LFZ_CAP[0], CTLE_LFZ_CAP[1])
     # control
     c.inv('wire_ctle_bypass', 'bypb')
     c.nand(['ctle_en', 'bypb'], 'ena_b'); c.inv('ena_b', 'ena', wn=2, wp=4)
-    c.nor(['ena', 'wire_ctle_bypass'], 'clamp')
     c.inv('wire_ctle_bypass', 'byp_bb', wn=2, wp=4)    # byp_bb = !bypass  (TG pmos gate)
     c.inv('byp_bb', 'byp_q', wn=2, wp=4)               # buffered bypass (TG nmos gate)
     # thermometer decode: leg k on  <=>  code <= k  (code 0: all seven legs on, code 7: base only)
@@ -287,8 +297,9 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
     # tails (ratio 100 to the diode -> 2.5 mA per side).  r2: L 0.5 -> 1 um and W/L x2: the tail output
     # resistance shunts Rs/2 in the differential half circuit and the r1 tail (0.43 V Vsd at ss/3.15 V, Vsg of
     # the input pair 1.65 V) was near triode, which is why r1 peaked only 1.6 dB at ss (8.1 dB at ff)
-    c.p('sp', 'atb_ctle_pbias', V, w=tw, l=tl, m=tm)
-    c.p('atb_ctle_src', 'atb_ctle_pbias', V, w=tw, l=tl, m=tm)
+    for _ in range(tm // 2):            # r4: the two tails alternate in finger pairs (symmetric sp / src wiring)
+        c.p('sp', 'atb_ctle_pbias', V, w=tw, l=tl, m=2)
+        c.p('atb_ctle_src', 'atb_ctle_pbias', V, w=tw, l=tl, m=2)
     # degeneration ladder: base 7.2 k (always) || legs (poly kohm, switch W um); switch Ron ~3.8 kohm*um / W
     c.r('sp', 'atb_ctle_src', 1, CTLE_RBASE)
     for k, (rk, wsw) in enumerate(CTLE_LEGS):
@@ -297,14 +308,34 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
     for side in ('sp', 'atb_ctle_src'):
         if CTLE_CS_M:
             c.ncap(side, 20, 4, m=CTLE_CS_M)
-    # loads through enable switches
-    for out in ('CTLE_P', 'CTLE_N'):
-        c.r(out, f'{out}_rl', 5, 2.4)
-        c.n(f'{out}_rl', 'ena', 'VSS', w=20)
-        c.n(out, 'clamp', 'VSS', w=2)
+    # loads through enable switches.  r4: the core outputs are internal (cp/cn) and are clamped whenever the
+    # amplifier is off (bypass included), which also turns the followers off
+    for out in ('cp', 'cn'):
+        # r4: load poly and its switch are split into CTLE_RL_M parallel strips / fingers so that no single
+        # terminal escape carries more than ~0.5 mA (85 C EM, single-cut vias)
+        c.r(out, f'{out}_rl', CTLE_RL_W, CTLE_RL_L, m=CTLE_RL_M)
+        c.n(out, 'ena_b', 'VSS', w=2)
+    for _ in range(CTLE_RL_M):          # switch fingers of the two sides alternate
+        for out in ('cp', 'cn'):
+            c.n(f'{out}_rl', 'ena', 'VSS', w=CTLE_RL_SW / CTLE_RL_M)
     # input pair, body tied to source (r3: emitted last with the bypass gates = top rows, next to the pins)
-    c.p('CTLE_N', 'RX_P', 'sp', b='sp', w=16, m=CTLE_PAIR_M)
-    c.p('CTLE_P', 'RX_N', 'atb_ctle_src', b='atb_ctle_src', w=16, m=CTLE_PAIR_M)
+    c.p('cn', 'RX_P', 'sp', b='sp', w=16, m=CTLE_PAIR_M)
+    c.p('cp', 'RX_N', 'atb_ctle_src', b='atb_ctle_src', w=16, m=CTLE_PAIR_M)
+    # r4 (MW-13-FIX): NMOS source followers in isolated p-wells (body = source, DNWELL on the rail) drive the slicer
+    # bank (CTLE_P/N = SL_P/N).  Sinks: NMOS mirror; its reference comes from the block's own bias chain (a PMOS
+    # mirror leg off atb_ctle_pbias), so no new reference output is needed from the bias block.  ena=0: reference
+    # leg gets no current (pbias at VDD), fbias is pulled to VSS, cp/cn are clamped: both followers and sinks are off.
+    fw, fm = CTLE_SF
+    kw, kl, km, kd = CTLE_SK
+    c.p('fbias', 'atb_ctle_pbias', V, w=tw, l=tl, m=CTLE_SF_REF_M)
+    c.n('fbias', 'fbias', 'VSS', w=kw, l=kl, m=kd)
+    c.n('fbias', 'ena_b', 'VSS', w=1)
+    for leg, g in (('P', 'cp'), ('N', 'cn')):
+        for _ in range(CTLE_SF_N):      # one isolated-well island per follower unit
+            c.n(V, g, f'CTLE_{leg}', w=fw, m=fm, b=f'CTLE_{leg}')
+    for _ in range(km * CTLE_SF_N // 2):   # sink fingers of the two sides alternate in pairs
+        for leg in 'PN':
+            c.n(f'CTLE_{leg}', 'fbias', 'VSS', w=kw, l=kl, m=2)
     # bypass transmission gates
     c.tg('RX_P', 'CTLE_P', 'byp_q', 'byp_bb', wn=20, wp=20)
     c.tg('RX_N', 'CTLE_N', 'byp_q', 'byp_bb', wn=20, wp=20)
@@ -316,17 +347,28 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
         t = line.split()
         nodes = [x for x in t[1:] if '=' not in x]
         lz = any(n.startswith('lz') for n in nodes)
-        if any(n in ('RX_P', 'RX_N') for n in nodes) and 'byp_q' not in nodes and 'byp_bb' not in nodes:
-            return 5
         if 'byp_q' in nodes[1:2] or 'byp_bb' in nodes[1:2]:
             return 8 if any(n in ('RX_P', 'RX_N') for n in nodes) else 0
-        if any(n.endswith('_rl') or n == 'clamp' for n in nodes):
-            return 7
+        if 'fbias' in nodes:                                # r4 follower sinks and their reference
+            return 7 if nodes[0].startswith('CTLE_') else 0
+        # r4: one row per half circuit (translation-symmetric): input-pair fingers, load strips, clamp, follower of
+        # the cn half (RX_P in, CTLE_N out) = 5.0x, of the cp half = 5.5x.  cp / cn are local to their row.
+        for half, base in (('cn', 5.0), ('cp', 5.5)):
+            if half in nodes:
+                if nodes[1] in ('RX_P', 'RX_N'):
+                    return base
+                if 'ppolyf' in line:
+                    return base + .01
+                if nodes[1] == 'ena_b':
+                    return base + .02
+                return base + .03                          # follower (gate = half)
+        if any(n.endswith('_rl') for n in nodes):
+            return 6.5                                     # load switches
         if 'atb_ctle_pbias' == nodes[1] and nodes[0] in ('sp', 'atb_ctle_src'):
             return 4
         if any(n.startswith('rl') or n.startswith('sp_atb_ctle_src') for n in nodes) or (
                 'ppolyf' in line and 'sp' in nodes and 'atb_ctle_src' in nodes):
-            return 6
+            return 4.5                                     # Rs ladder: below the half-circuit rows
         if lz and t[0].startswith('XMC'):
             return 2
         if lz and ('sp' in nodes or 'atb_ctle_src' in nodes):
@@ -335,6 +377,16 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
             return 1
         return 0
     c.lines = sorted(c.lines, key=lambda l: rank(l) if l.startswith('X') else 0)
+    # r4: the capacitor row and the two half-circuit rows start and end a layout row; the half-circuit rows are
+    # kept free of foreign metal (wrx_flow matched=)
+    grp = lambda rk: 'cap' if rk == 2 else 'A' if 5 <= rk < 5.5 else 'B' if 5.5 <= rk < 6 else None
+    out, prev = [], None
+    for l in c.lines:
+        rk = rank(l) if l.startswith('X') else 0
+        if prev is not None and grp(rk) != grp(prev):
+            out.append('* ROWBREAK')
+        out.append(l); prev = rk
+    c.lines = out
     return c
 
 
@@ -347,6 +399,11 @@ CTLE_LEGS = ((1.25, 24), (1.74, 16), (2.43, 12), (3.35, 8), (4.74, 6), (6.46, 4)
 CTLE_TAIL = (20, 1.0, 40, 8)      # tail finger W, L, fingers per side; bias diode W (same L): W/L ratio 100
 CTLE_PAIR_M = 6                   # input pair fingers of 16 um per side (r1: 3): HF gain for 12 dB at gdc > -12 dB
 CTLE_LFZ_UNITS, CTLE_LFZ_CAP, CTLE_LFZ_SW = 1, (80, 6.2), 8   # r3 IX-13 bank: units of group 0, cap W/L, switch W per unit
+CTLE_RL_W, CTLE_RL_L, CTLE_RL_M, CTLE_RL_SW = 1, 2.88, 6, 21  # load: 6 strips of 1 x 2.88 um (480 ohm), switch W total
+CTLE_SF = (10, 6)                 # r4 follower: finger W (um), fingers per side (60/0.28), isolated p-well
+CTLE_SK = (6, 0.5, 10, 1)         # r4 follower sink: finger W, L, fingers per side (60/0.5), fingers of the mirror diode (x10)
+CTLE_SF_N = 1                     # follower units (islands) and sink groups per side; 2 = the R8-ARCH two-bank reserve (r10 what-if)
+CTLE_SF_REF_M = 5                 # r4 sink reference: tail-type PMOS fingers (20/1 each = 62.5 uA at 25 uA in the 8/1 diode)
 CTLE_CS_M = 0                     # source caps (20x4 NMOS) per side: r2 relies on the tail drain capacitance
 
 
@@ -439,38 +496,43 @@ slicer_en=0: per-sampler tail headers off, outputs forced low.""")
     return c
 
 
-LSR, RA, CHAIN = 100, 50, (2.45, 2.45, 19.9)   # detect r7 level shift: CM sense R, V-to-I R, half-chain segment lengths (w 1 um)
 CLR, CLN, CLW = (12, 40), 7, ((20, 2), (10, 1))   # detect TX-pad secondary protection: poly R length (F, S), diode-string height, (w, m) per diode
+# r10 threshold set (ratios of one poly unit RU = w 2 um x l 5 um; Vthr = VR * Rdeg / RA, VR = 1.25 V ladder tap at 3.3 V)
+DET10 = dict(RU=5.0, RA_UNITS=5, SQ=(4.6,), DISC=(5.0, 5.0, 5.0, 3.7, 3.7), SD_PAR=4,
+             RL_SQ=3.0, RL_DISC=3.0, RL_SD=4.0, COLS=27)
 
 
-def detect():
+def detect(P=DET10):
     c = Net('pt_detect', ['VDD_WIRE_SW', 'VSS', 'IBIAS', 'det_en', 'det_clk', 'RX_P', 'RX_N', 'TX_P', 'TX_N',
                           'det_thr0', 'det_thr1', 'det_se0', 'det_se1', 'det_src_tx', 'det_inject',
-                          'DIFF_POS', 'DIFF_NEG', 'SE_P', 'SE_N', 'atb_det_vref'],
-            """Clocked line sensor (samples on det_clk high).  Four PMOS-input StrongARM comparators:
-DIFF_POS = (P-N) > Vthr, DIFF_NEG = (N-P) > Vthr  (squelch / disconnect / OOB idle envelope),
-SE_P = P > Vse, SE_N = N > Vse (USB FS/LS single-ended receivers; SE0 = both low, in RTL).
-P/N = RX_P/N (wire RX pair after the pad's rxlevel bypass/divider switches, so no PMOS
-junction faces the bond pads), or TX_P/N when det_src_tx=1 (receiver detection on the TX pads;
-NMOS-only pass and NMOS-switched injection so an unpowered island cannot be back-fed from TX pads).
-Vthr (det_thr[1:0]): 0 / 62.5 / 125 / 670 mV nominal (extracted effective ~0 / 66 / 125 / ~555 mV).  Vse (det_se[1:0]): 0.8 / 1.125 / 1.4 / 2.0 V.
-100 kohm-scale ladder 33 kohm total (100 uA).  det_inject=1 sources ~100 uA into each TX pad
-(receiver-detect test current).  det_en=0: ladder, bias, comparators and injection off.""")
+                          'DIFF_POS', 'DIFF_NEG', 'SE_P', 'SE_N', 'atb_det_vref',
+                          'DISC_POS', 'DISC_NEG', 'FS_DIFF', 'HS_P', 'HS_N', 'det_hs_en', 'SD_POS', 'SD_NEG',
+                          'atb_rx_p', 'atb_rx_n'],
+            """Clocked line sensor, r10.  Outputs change after the det_clk rising edge and hold until the next one (SR latches).
+P/N = RX_P/N (USB pair after the pad's rxlevel switches) or TX_P/N when det_src_tx=1 (receiver detection).
+DIFF_POS/NEG = (P-N) / (N-P) > 125 mV (USB HS squelch), DISC_POS/NEG = > 575 mV (USB HS disconnect): static,
+separate comparators, no code switch.  Each is a PMOS differential pair with a degeneration resistor between its
+two (own-well) sources and unequal tail currents 3:1: it balances at Vin = Rdeg * (I1-I2)/2, with
+I = VR / RA (VR = 1.25 V tap of the VDD-ratio ladder, NMOS-input OTA V-to-I), i.e. Vthr = VR * Rdeg / RA, a ratio
+of identical poly units; the resistor-loaded pair drives a 2-input StrongARM, which sees no threshold.
+det_thr[1:0] = threshold trim (reference mirror width): 00 x1.00 | 01 x1.05 (3.15 V) | 10 x0.94 (3.50 V) | 11 x0.99.
+SE_P/SE_N = P/N > Vse (det_se[1:0]: 0.8 / 1.125 / 1.4 / 2.0 V): USB FS/LS single-ended receivers.
+FS_DIFF = P > N, NMOS-input comparator directly on the lines: USB FS/LS differential receiver (CM 0.8-2.5 V).
+SD_POS/SD_NEG = (HS_P-HS_N) / (HS_N-HS_P) > ~31 mV: HS-pair signal detect (det_hs_en=1); HS_P/N = the CTLE input pair
+(CM 1.0 V behind the pad MIM) through tap resistors that sit at the CTLE input, not in this cell.  atb_rx_p/n: 50 kohm ATB leaves on RX_P/N (termination calibration).
+det_inject=1 sources ~100 uA into each TX pad.  det_en=0: everything off.""")
     V = 'VDD_WIRE_SW'
     c.vdd = V
     c.en, c.enb = 'det_en', 'enb'
     c.inv('det_en', 'enb'); c.inv('enb', 'enq', wn=2, wp=4)
-    # ladder (100 uA): taps B=0.5, B1=0.5625, B2=0.625, S0=0.8, B3=1.125, S1=1.4, S2=2.0
+    c.lines.append('* FILL')
+    # ladder (100 uA at 3.3 V): S2 2.0, S1 1.4, VR 1.25 (atb_det_vref), B3 1.125, S0 0.8
     c.p('lad_top', 'enb', V, w=20)
-    # B3 raised by ~45 mV (S1-B3 2.75k -> 2.3k, B3-S0 3.25k -> 3.7k) so the extracted USB disconnect
-    # threshold (det_thr=3) lands inside 525-625 mV (was 506-516 mV)
-    segs = [('lad_top', 'S2', 2, 26), ('S2', 'S1', 2, 12), ('S1', 'B3', 2, 4.6), ('B3', 'S0', 2, 7.4),
-            ('S0', 'B2', 2, 3.5), ('B2', 'B1', 2, 1.25), ('B1', 'atb_det_vref', 2, 1.25),
-            ('atb_det_vref', 'lad_bot', 2, 10)]
+    segs = [('lad_top', 'S2', 2, 26), ('S2', 'S1', 2, 12), ('S1', 'atb_det_vref', 2, 3), ('atb_det_vref', 'B3', 2, 2.5),
+            ('B3', 'S0', 2, 6.5), ('S0', 'lad_bot', 2, 16)]
     for a, b, w, l in segs:
         c.r(a, b, w, l)
     c.n('lad_bot', 'enq', 'VSS', w=20)
-    # threshold decode
     c.inv('det_thr0', 't0b'); c.inv('det_thr1', 't1b'); c.inv('det_se0', 'e0b'); c.inv('det_se1', 'e1b')
     for i, tap in enumerate(['S0', 'B3', 'S1', 'S2']):
         a = 'det_se0' if i & 1 else 'e0b'
@@ -478,63 +540,51 @@ Vthr (det_thr[1:0]): 0 / 62.5 / 125 / 670 mV nominal (extracted effective ~0 / 6
         c.nand([a, b], f'sg{i}_b'); c.inv(f'sg{i}_b', f'sg{i}')
         c.tg(tap, 'VSE', f'sg{i}', f'sg{i}_b', wn=2, wp=4)
     c.pcap('VSE', 20, 5)
-    # r7 level shift (USB squelch/disconnect over the -50..500 mV line CM): the diff comparators see the RX pair
-    # through matched PMOS source followers (own wells, 400 uA: ~0.7 V/ns into ~0.55 pF for 480 Mb/s) at LS_P/LS_N (CM ~1.1-1.6 V), and their references
-    # float on the followers' CM: VTHP/VREFN = M +/- Vthr/2, M = midpoint of 2 x 100k between LS_P and LS_N.
-    # Vthr = 2 * R_side * I, I = atb_det_vref / R_A (OTA V-to-I), i.e. a poly ratio times the VDD-ratio ladder tap
-    # (same accuracy class as the r6 ladder thresholds, now CM-independent).
-    for leg in 'PN':
-        c.p('VSS', f'DP_{leg}', f'LS_{leg}', b=f'LS_{leg}', w=10, l=.5, m=8)
-        c.p(f'LS_{leg}', 'dpb', V, w=10, l=1, m=8)
-        c.r(f'LS_{leg}', 'VCMS', 1, LSR)
-    # CM buffer (5T OTA follower, 20 uA): VCMM = VCMS with a low impedance that absorbs the comparators'
-    # rectified kick-back (~2.6 uA measured into a 50k sense node) and the source/sink mismatch
-    c.p('bt', 'dpb', V, w=8, l=1)
-    c.p('bd', 'VCMS', 'bt', w=8, l=1); c.p('VCMM', 'VCMM', 'bt', w=8, l=1)
-    c.n('bd', 'bd', 'VSS', w=2, l=2); c.n('VCMM', 'bd', 'VSS', w=2, l=2)
-    c.n('VSS', 'VCMM', 'VSS', w=10, l=4)
-    c.p('ot', 'dpb', V, w=8, l=1)
-    c.p('oa1', 'atb_det_vref', 'ot', w=8, l=1)
-    c.p('og', 'va', 'ot', w=8, l=1)
-    c.n('oa1', 'oa1', 'VSS', w=2, l=2); c.n('og', 'oa1', 'VSS', w=2, l=2)
+    # bias: IBIAS 10 uA -> dnb (NMOS diode) ; dpb (PMOS diode, 40 uA) feeds the injection mirrors
+    c.nand(['det_en', 'det_inject'], 'inj_b'); c.inv('inj_b', 'inj')
+    c.n('dnb', 'enq', 'IBIAS', w=4)
+    c.n('dnb', 'dnb', 'VSS', w=2, l=1)
+    c.n('dnb', 'enb', 'VSS', w=1)
+    c.n('dpb', 'dnb', 'VSS', w=8, l=1)
+    c.p('dpb', 'dpb', V, w=8, l=1)
+    c.p('dpb', 'enq', V, w=2)
+    # V-to-I: NMOS-input OTA (inputs 1.25 V, output og ~2.3 V drives the NMOS pass device), I = VR / RA = 100 uA
+    # into the PMOS reference diode `im` (2 x 19 um + trim devices: 40 um at code 00; 100 uA so `im` settles in < 100 ns); every tail below is a 20/2 device (50 uA) on `im`.
+    c.n('ot', 'dnb', 'VSS', w=8, l=1)
+    c.n('oa1', 'atb_det_vref', 'ot', w=8, l=1)
+    c.n('og', 'va', 'ot', w=8, l=1)
+    c.p('oa1', 'oa1', V, w=4, l=2); c.p('og', 'oa1', V, w=4, l=2)
     c.n('og', 'enb', 'VSS', w=1)
     c.n('VSS', 'og', 'VSS', w=4, l=4)           # OTA dominant pole (NMOS gate cap)
-    c.n('im', 'og', 'va', w=8, l=1)
-    c.r('va', 'VSS', 1, RA)
-    c.p('im', 'im', V, w=4, l=1); c.p('im', 'enq', V, w=1)
-    c.p('VT3', 'im', V, w=4, l=1)                # chain source
-    c.p('inm', 'im', V, w=4, l=1); c.n('inm', 'inm', 'VSS', w=2, l=1); c.n('inm', 'enb', 'VSS', w=1)
-    c.n('VB3', 'inm', 'VSS', w=2, l=1)           # chain sink
-    tops, bots = ['VCMM', 'VT1', 'VT2', 'VT3'], ['VCMM', 'VB1', 'VB2', 'VB3']
-    for k, l in enumerate(CHAIN):
-        c.r(tops[k + 1], tops[k], 1, l); c.r(bots[k], bots[k + 1], 1, l)
-    for i in range(4):
-        a = 'det_thr0' if i & 1 else 't0b'
-        b = 'det_thr1' if i & 2 else 't1b'
-        c.nand([a, b], f'tg{i}_b'); c.inv(f'tg{i}_b', f'tg{i}')
-        c.tg(tops[i], 'VTHP', f'tg{i}', f'tg{i}_b', wn=2, wp=4)
-        c.tg(bots[i], 'VREFN', f'tg{i}', f'tg{i}_b', wn=2, wp=4)
-    # kick-back decoupling: 0.45 pF (PMOS gate to VDD) on the two (high-impedance) reference nodes; undecoupled,
-    # their instantaneous CM sat ~180 mV below the inputs' at the clock edge (thresholds ~1.8x).  LS_P/N are driven
-    # by the 400 uA followers (~0.3 kohm) and are left undecoupled for bandwidth (extracted 0.45 pF: ~1.3 ns edges)
-    for node in ('VTHP', 'VREFN'):
-        c.pcap(node, 20, 5)
+    c.n('im', 'og', 'va', w=20, l=.5)
+    c.r('va', 'VSS', 2, P['RU'] * P['RA_UNITS'], seg=P['RU'])
+    c.p('im', 'im', V, w=19, l=2, m=2); c.p('im', 'enq', V, w=1)
+    c.p('im_a', 'im', V, w=2, l=2); c.p('im', 'det_thr0', 'im_a', w=2)      # on when det_thr0 = 0
+    c.p('im_b', 'im', V, w=2.4, l=2); c.p('im', 't1b', 'im_b', w=2)         # on when det_thr1 = 1
+    # HS-pair signal-detect group enable: its tails hang on im_h (= im when det_en & det_hs_en, else VDD)
+    c.nand(['det_en', 'det_hs_en'], 'hs_b'); c.inv('hs_b', 'hs_on')
+    c.tg('im', 'im_h', 'hs_on', 'hs_b', wn=2, wp=4)
+    c.p('im_h', 'hs_on', V, w=1)
+    # shared comparator clocks (ckn low = evaluate)
+    c.lines.append('* ENDFILL')
+    c.nand(['det_clk', 'det_en'], 'enc_k', wn=10, wp=20)
+    c.inv('enc_k', 'enc_kd', wn=2, wp=4)
+    c.nand(['det_clk', 'hs_on'], 'enc_kh', wn=2, wp=4)
+    c.lines.append('* FILL')
     # source select
     c.inv('det_src_tx', 'srcb')
     c.nand(['det_en', 'srcb'], 'ln_b'); c.inv('ln_b', 'ln')
     c.nand(['det_en', 'det_src_tx'], 'tx_b'); c.inv('tx_b', 'tx')
-    # r7 (PD29 HBM core-gate screen, local secondary protection): TX_x -> series poly R -> TXF_x (injection) /
-    # TXS_x (zero-current sense).  Each node is clamped by a string of CLN p+/nwell junction diodes to VSS (each a
-    # pfet_06v0 with S=D=anode, G=B=cathode, own nwell: stackable; > 3.63 V unpowered pad at < 0.1 uA, ~5 V at mA HBM
-    # current) and by an off 6 V NMOS (drain-psub junction: negative clamp).  Every device on TXF/TXS is 6 V.
+
     def n6(d, g, s_, w=4., l=.7, m=1):
         c.lines.append(f'X{c._id("HV")} {d} {g} {s_} VSS nfet_06v0 w={w:g}u l={l:g}u' + (f' m={m}' if m > 1 else ''))
 
     def pd6(a, k, w, m):
         c.lines.append(f'X{c._id("HD")} {a} {k} {a} {k} pfet_06v0 w={w:g}u l=0.7u' + (f' m={m}' if m > 1 else ''))
     for leg in 'PN':
-        # r7: 3x TG (DP edge was TG-RC limited, ~1 ns, behind the level-shift follower gates)
+        c.lines.append('* ENDFILL')
         c.tg(f'RX_{leg}', f'DP_{leg}', 'ln', 'ln_b', wn=6, wp=12)
+        c.lines.append('* FILL')
         for br, rl, n, (w, m) in (('F', CLR[0], CLN, CLW[0]), ('S', CLR[1], CLN, CLW[1])):
             c.r(f'TX_{leg}', f'TX{br}_{leg}', 2, rl)
             prev = f'TX{br}_{leg}'
@@ -545,23 +595,121 @@ Vthr (det_thr[1:0]): 0 / 62.5 / 125 / 670 mV nominal (extracted effective ~0 / 6
             n6(f'TX{br}_{leg}', 'VSS', 'VSS', w=w, m=m)
         n6(f'TXS_{leg}', 'tx', f'DP_{leg}')
         c.n(f'DP_{leg}', 'enb', 'VSS', w=1)
-    # comparators
-    _strongarm(c, 'cdp', 'det_clk', 'LS_P', 'LS_N', 'DIFF_POS', ref=('VTHP', 'VREFN'))
-    _strongarm(c, 'cdn', 'det_clk', 'LS_N', 'LS_P', 'DIFF_NEG', ref=('VTHP', 'VREFN'))
-    _strongarm(c, 'csp', 'det_clk', 'DP_P', 'VSE', 'SE_P')
-    _strongarm(c, 'csn', 'det_clk', 'DP_N', 'VSE', 'SE_N')
-    # receiver-detect injection: IBIAS 10u -> nmos diode -> nmos x1 -> pmos diode -> pmos x10 per leg
-    c.nand(['det_en', 'det_inject'], 'inj_b'); c.inv('inj_b', 'inj')
-    c.n('dnb', 'enq', 'IBIAS', w=4)
-    c.n('dnb', 'dnb', 'VSS', w=2, l=1)
-    c.n('dnb', 'enb', 'VSS', w=1)
-    c.n('dpb', 'dnb', 'VSS', w=8, l=1)     # r7: 40 uA reference leg (dpb settles in ~10 ns; copies = 5 uA per um of w)
-    c.p('dpb', 'dpb', V, w=8, l=1)
-    c.p('dpb', 'enq', V, w=2)
-    for leg in 'PN':
-        c.p(f'inj_{leg}', 'dpb', V, w=24, l=1)
-        n6(f'TXF_{leg}', 'inj', f'inj_{leg}', w=40)
+        c.r(f'RX_{leg}', f'atb_rx_{leg.lower()}', 1, 50, seg=10)
+
+    for leg in 'PN':                                  # receiver-detect injection
+        c.p(f'inj_{leg}', 'dpb', V, w=12, l=1, m=2)
+        n6(f'TXF_{leg}', 'inj', f'inj_{leg}', w=20, m=2)
+
+    c.lines.append('* ENDFILL')
+
+    def latch(tag, inp, inn, out, ckn):
+        """PMOS-input StrongARM + NOR SR latch, out = 1 when v(inp) > v(inn) (same topology and node names as _strongarm).
+        r10: (1) weak tail (6/0.5; 2/0.5 did not reach the SR latch threshold within 2 ns once extracted) so the input pair runs at ~0.4 V overdrive whatever the input common
+        mode, (2) 4/1 PMOS gate capacitors (20 fF to VDD) on pa, pb, oa, ob.  The latch offset from wiring imbalance is
+        ~ (dC/C) x overdrive: both factors are cut ~3x against the plain cell (mechanism found on r7f)."""
+        c.rowbreak()
+        x, pa, pb, oa, ob = (f'{tag}_{s_}' for s_ in ('x', '1pa', '4pb', '2oa', '3ob'))
+        c.p(x, ckn, V, w=6, l=.5)
+        c.p(pa, inp, x, w=12); c.p(pb, inn, x, w=12)
+        c.p(oa, ob, pa, w=8); c.p(ob, oa, pb, w=8)
+        c.n(oa, ob, 'VSS', w=4); c.n(ob, oa, 'VSS', w=4)
+        for node in (pa, pb, oa, ob):
+            c.n(node, ckn, 'VSS', w=1)
+        for node in (pa, pb, oa, ob):
+            c.pcap(node, 4, 1)
+        q, qb = f'{tag}_q', f'{tag}_qb'
+        c.nor([oa, qb], q); c.nor([ob, q], qb)
+        c.nor([qb, c.enb], out, wn=2, wp=4)
+        c.rowbreak()
+
+    def offset_cmp(tag, inp, inn, out, rdeg, rl, im, ckn, m=1, par=1, k=1, rlw=1):
+        """out = 1 when v(inp) - v(inn) > Rdeg * 50 uA.  Degenerated PMOS pair (own wells), tails 150 : 50 uA (3 : 1
+        devices of 20/2 on `im`), resistor loads (fast: settles within 1 ns), then the desensitised latch."""
+        sp, sn, yn, yp = f'{tag}_sp', f'{tag}_sn', f'{tag}_5yn', f'{tag}_6yp'
+        c.lines.append('* PREAMP')
+        c.p(sp, im, V, w=20, l=2, m=3 * k)
+        c.p(sn, im, V, w=20, l=2, m=k)
+        c.p(yn, inp, sp, b=sp, w=20, l=.5, m=m)
+        c.p(yp, inn, sn, b=sn, w=20, l=.5, m=m)
+        if par > 1:
+            for _ in range(par):
+                c.r(sp, sn, 2, P['RU'])
+        else:
+            # k parallel strings (k = tail-current multiple): Rdeg / k with the same unit segments, so the degeneration
+            # zero Rdeg x Csource stays above the output pole (k = 1 overshot at 11 kohm: 525 mV fired, extracted)
+            for j in range(k):
+                prev = sp
+                for i, l in enumerate(rdeg):
+                    nxt = sn if i == len(rdeg) - 1 else f'{tag}_d{j}{i}'
+                    c.r(prev, nxt, 2, l)
+                    prev = nxt
+        c.r(yn, 'VSS', rlw, rl, seg=rl); c.r(yp, 'VSS', rlw, rl, seg=rl)
+        c.lines.append('* ENDPREAMP')
+        latch(tag, yp, yn, out, ckn)
+
+    offset_cmp('csq', 'DP_P', 'DP_N', 'DIFF_POS', P['SQ'], P['RL_SQ'], 'im', 'enc_k', m=2)
+    offset_cmp('cnq', 'DP_N', 'DP_P', 'DIFF_NEG', P['SQ'], P['RL_SQ'], 'im', 'enc_k', m=2)
+    offset_cmp('cdc', 'DP_P', 'DP_N', 'DISC_POS', P['DISC'], P['RL_DISC'], 'im', 'enc_k', m=2, k=2, rlw=2)
+    offset_cmp('cnc', 'DP_N', 'DP_P', 'DISC_NEG', P['DISC'], P['RL_DISC'], 'im', 'enc_k', m=2, k=2, rlw=2)
+    offset_cmp('chp', 'HS_P', 'HS_N', 'SD_POS', None, P['RL_SD'], 'im_h', 'enc_kh', par=P['SD_PAR'])
+    offset_cmp('chn', 'HS_N', 'HS_P', 'SD_NEG', None, P['RL_SD'], 'im_h', 'enc_kh', par=P['SD_PAR'])
+    # single-ended receivers (unchanged comparators, shared clock)
+    _strongarm(c, 'csp', 'det_clk', 'DP_P', 'VSE', 'SE_P', ckn_ext='enc_k')
+    _strongarm(c, 'csn', 'det_clk', 'DP_N', 'VSE', 'SE_N', ckn_ext='enc_k')
+    # FS/LS differential receiver: NMOS-input StrongARM on the lines (evaluates while ckd is high)
+    c.rowbreak()
+    x, pa, pb, oa, ob = (f'cfs_{s}' for s in ('x', '1pa', '4pb', '2oa', '3ob'))
+    c.n(x, 'enc_kd', 'VSS', w=1, l=1)
+    c.n(pa, 'DP_P', x, w=6); c.n(pb, 'DP_N', x, w=6)
+    c.n(oa, ob, pa, w=4); c.n(ob, oa, pb, w=4)
+    c.p(oa, ob, V, w=4); c.p(ob, oa, V, w=4)
+    for node in (pa, pb, oa, ob):
+        c.p(node, 'enc_kd', V, w=1)
+    c.nand(['cfs_2oa', 'cfs_qb'], 'cfs_q'); c.nand(['cfs_3ob', 'cfs_q'], 'cfs_qb')
+    c.nor(['cfs_qb', 'enb'], 'FS_DIFF', wn=2, wp=4)
+    _det_pack(c, P.get('COLS', 23))
     return c
+
+
+def _det_ndev(line):
+    import re
+    if not line.startswith('X'):
+        return 0
+    m = re.search(r'\bm=(\d+)', line)
+    return int(m.group(1)) if m else 1
+
+
+def _det_pack(c, cols):
+    """Layout order only (no electrical change): each '* PREAMP' ... '* ENDPREAMP' group starts a row and is filled
+    up to `cols` devices with devices taken from the '* FILL' ... '* ENDFILL' pool (static decode/bias devices)."""
+    L = c.lines
+    pool, out, groups, i = [], [], [], 0
+    while i < len(L):
+        if L[i] == '* FILL':
+            j = L.index('* ENDFILL', i)
+            pool += L[i + 1:j]
+            i = j + 1
+        elif L[i] == '* PREAMP':
+            j = L.index('* ENDPREAMP', i)
+            out.append(('g', L[i + 1:j]))
+            i = j + 1
+        else:
+            out.append(('l', L[i]))
+            i += 1
+    res = []
+    for kind, v in out:
+        if kind == 'l':
+            res.append(v)
+            continue
+        n = sum(_det_ndev(x) for x in v)
+        res.append('* ROWBREAK')
+        res += v
+        while pool and n + _det_ndev(pool[0]) <= cols:
+            n += _det_ndev(pool[0])
+            res.append(pool.pop(0))
+    # whatever is left of the pool goes in front (ordinary rows)
+    c.lines = pool + res
 
 
 def _aoi22(c, a, b, cc, d, y, vdd, vss, wn=2., wp=4.):

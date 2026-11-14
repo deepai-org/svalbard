@@ -103,7 +103,7 @@ Per-block state against the four tests is in
 `make transceiver-tapeout-readiness` for counts. Open issues and priorities are
 in the [current issue register](spec/risk-priorities.md#open-issue-register).
 Board obligations are in [`spec/board-requirements.md`](spec/board-requirements.md),
-and the recommended next steps are in [`spec/path-to-tapeout.md`](spec/path-to-tapeout.md).
+and the submission gates and their current gaps are in [`spec/tapeout-plan.md`](spec/tapeout-plan.md#before-submission).
 
 | Freeze stage | State |
 | --- | --- |
@@ -149,8 +149,7 @@ current-source physical signoff remain open. The published
 [digital hardening evidence](evidence/digital-hardening-evidence.json) records
 its own source snapshot and must not be transferred to changed RTL.
 
-The [tapeout roadmap](spec/path-to-tapeout.md) lists the remaining work and
-verification commands. Constraints are in
+The [tapeout plan](spec/tapeout-plan.md#before-submission) lists the remaining gates. Constraints are in
 [integration/pt_digital_macro.sdc](integration/pt_digital_macro.sdc).
 
 ```sh
@@ -174,9 +173,8 @@ make transceiver-digital-hardening
 | [Analog workflow](spec/analog-design-workflow.md) | Six-family primitive library, schematic and extraction workflow |
 | [Macro contract](integration/macro-contract.md) | Digital/analog boundary and RTL obligations |
 | [Consolidation audit](docs/consolidation.md) | Design and documentation ownership |
-| [Tapeout plan](spec/tapeout-plan.md) | Four tapeout tests, must-work core, fallbacks, debug pads, freeze order |
+| [Tapeout plan](spec/tapeout-plan.md) | Operating envelope, four tapeout tests, must-work core, fallbacks, debug pads, submission gates and current gap |
 | [Tapeout readiness](spec/tapeout-readiness.json) | Per-block test states and evidence |
-| [Path to tapeout](spec/path-to-tapeout.md) | Recommended next steps to submission |
 | [Shared-resource decisions](spec/consolidation-pass.md) | Merged blocks and clocking architecture |
 | [Register map](spec/register-map.md) | Generated SPI register map |
 | [Board requirements](spec/board-requirements.md) | Board and FPGA obligations |

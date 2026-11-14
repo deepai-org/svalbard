@@ -22,7 +22,7 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 # IDAC1 bench plan, from the specification rather than the producer's setup
-# (spec/path-to-tapeout.md section 3: ATB sense of the spare biasgen IDAC1 into
+# (ATB sense of the spare biasgen IDAC1 into
 # a 1 V SMU with SPI-commanded off/4/8/off steps; register-map.json:
 # core.biasgen.idac1_source is a "spare 1 uA-unit source").
 IDAC1_PLAN = dict(atb_node='idac1_source_ibias', bus_field='debug.atb.atb1',

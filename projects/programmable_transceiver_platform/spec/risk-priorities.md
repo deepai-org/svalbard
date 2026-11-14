@@ -51,7 +51,7 @@ Risks and open issues, in priority (score) order, live only in [`risk-register.m
 
 ## Closure priorities
 
-The step-by-step route to submission is in [`path-to-tapeout.md`](path-to-tapeout.md).
+The submission gates and their current gaps are in [`tapeout-plan.md`](tapeout-plan.md#before-submission).
 
 1. **Close the wired CDR and the external-clock fallback** on extracted
    netlists.

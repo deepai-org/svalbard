@@ -31,5 +31,114 @@
    "A_len_um": 67.3,
    "B_len_um": 58.895
   }
+ },
+ "fill_markers": {
+  "spiral_um": [
+   [
+    153.0,
+    53.800000000000004,
+    529.0,
+    403.8
+   ],
+   [
+    -369.0,
+    53.800000000000004,
+    7.0,
+    403.8
+   ]
+  ],
+  "core_um": [
+   0.6,
+   -26.1,
+   159.4,
+   232.8
+  ],
+  "channel_um": [
+   -229.1,
+   -26.1,
+   390.1,
+   -2.0
+  ],
+  "stub_um": [
+   [
+    -101.5,
+    11.3,
+    -11.5,
+    71.3
+   ],
+   [
+    171.5,
+    11.3,
+    261.5,
+    71.3
+   ]
+  ],
+  "aux_tank_columns_um": [
+   [
+    -212.0,
+    -249.12,
+    -200.0,
+    -26.1
+   ],
+   [
+    -172.4,
+    -249.12,
+    -160.4,
+    -26.1
+   ],
+   [
+    -125.60000000000001,
+    -249.12,
+    -113.60000000000001,
+    -26.1
+   ],
+   [
+    -80.0,
+    -249.12,
+    -68.0,
+    -26.1
+   ]
+  ],
+  "bbox_um": [
+   -369.0,
+   -249.12,
+   529.0,
+   403.8
+  ],
+  "bbox_before_um": [
+   -344.0,
+   -249.12,
+   504.0,
+   378.8
+  ],
+  "area_mm2": 0.33147272000000005,
+  "layers": [
+   "IND_MK 151/5",
+   "PMNDMY 152/5"
+  ],
+  "halo_um": 25.0,
+  "clipped_to_cell_bbox": false
+ },
+ "readback_lvs": {
+  "unique_match": true,
+  "summary": "Final result: Circuits match uniquely.\n.",
+  "log": "lvs.txt",
+  "port_shorts_found_by_magic": [
+   [
+    "IN",
+    "IP"
+   ],
+   [
+    "QN",
+    "QP"
+   ]
+  ],
+  "core_ref": "/home/ubuntu/svalbard/scratch/lo/r4_qvco2/top7/ref.spice",
+  "core_lvs": {
+   "unique_match": true,
+   "summary": "Final result: Circuits match uniquely.\n.",
+   "log": "lvs_core.txt"
+  },
+  "note": "reference = the core LVS netlist (top<n>/ref.spice: qvco5.spice core + antenna diodes), not qvco5.spice itself"
  }
 }

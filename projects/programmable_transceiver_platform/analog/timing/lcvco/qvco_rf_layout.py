@@ -729,6 +729,7 @@ def top_ref(axw):
 
 # ---------------------------------------------------------------- assembly: core top + two spirals (DRC; LVS is the core)
 ASM = 'pt_lc_qvco5'
+AUXTAG_PUBLISHED = 'f5'        # aux build of the published r6b top (top7); top() does not record it
 SPIRAL_GAP = 8.0
 
 
@@ -763,17 +764,166 @@ def asm(coretag='2', tag=''):
         L.rect('metal5', xa - 5.0, ya - 5.0, p1, ya + 5.0)
         L.rect('metal5', xb - 4.0, nj[0], min(d['bus'][N]), nj[1])
         feeds[core] = dict(A=[ox + sx * xa, ya], B=[ox + sx * xb, yb], A_len_um=p1 - xa, B_len_um=min(d['bus'][N]) - xb)
+    # r7 (SG-5): top-level port labels = the core's port labels, same place and port index
+    L.ox, L.sx = 0.0, 1
+    for net, layer, x, y, port in core_ports(cw / f'{TOP}.mag'):
+        L.label(net, layer, x, y, port)
     (work / 'layout.tcl').write_text(R.magic_script(ASM, L.cmds))
     le.docker_magic(work, 'layout.tcl')
     (work / 'drc.tcl').write_text(R.drc_script(ASM))
     le.docker_magic(work, 'drc.tcl')
     tf.gds_export_analog(work, ASM)
+    axw = WORK / ('aux' + json.loads((cw / 'result.json').read_text()).get('auxtag', AUXTAG_PUBLISHED))
+    ax = json.loads((axw / 'result.json').read_text())
+    aux_x = round(80.0 - ax['size_um'][0] / 2, 1) if ax['size_um'][0] > 200 else 6.0     # as top()
+    marks = fill_markers(work, tankx=[ax['trunk_x'][n] + aux_x for n in ('IP', 'IN', 'QP', 'QN') if n in ax['trunk_x']],
+                         stubs=[feeds[c]['A'] for c in feeds])          # r7 (SG-3): IND_MK / NDMY / PMNDMY written into the exported GDS
     kl = tf.klayout_drc(work, ASM)
     drc = (work / 'drc-count.txt').read_text()
-    out = dict(magic_drc=drc[:400], klayout=kl, feeds=feeds)
+    out = dict(magic_drc=drc[:400], klayout=kl, feeds=feeds, fill_markers=marks)
     (work / 'result.json').write_text(json.dumps(out, indent=1, default=str))
     print(json.dumps(out, indent=1, default=str)[:2000])
     return out
+
+
+def core_ports(mag):
+    """(net, layer, x um, y um, port index) of every port label of the core top .mag (magscale 1 10: 200 units/um)."""
+    import re
+    out = []
+    lines = Path(mag).read_text().splitlines()
+    for i, ln in enumerate(lines):
+        m = re.match(r'flabel (\S+) (-?\d+) (-?\d+) (-?\d+) (-?\d+) .* (\S+)$', ln)
+        if m and i + 1 < len(lines) and lines[i + 1].startswith('port '):
+            layer = {'via2': 'metal2', 'via4': 'metal4'}.get(m.group(1), m.group(1))
+            x = (int(m.group(2)) + int(m.group(4))) / 400.0
+            y = (int(m.group(3)) + int(m.group(5))) / 400.0
+            out.append((m.group(6), layer, x, y, int(lines[i + 1].split()[1])))
+    return out
+
+
+KEEPOUT_UM = 25.0     # AP4-5b rule: one turn width from the outer-turn metal
+SPIRAL_STUB_UM = 20.0  # pt_spiral_ind bbox extends this far past the outer turn on the feed side (feed stub only)
+MARK_SCRIPT = """import klayout.db as db, json
+ly = db.Layout(); ly.read('/work/%(gds)s'); top = ly.cell('%(cell)s'); dbu = ly.dbu
+bb = top.bbox(); reg = db.Region(); rec = {}
+for inst in top.each_inst():
+    if inst.cell.name == 'pt_spiral_ind':
+        b = inst.bbox()
+        b = db.Box(b.left, b.bottom + int(%(stub)s / dbu), b.right, b.top)     # outer-turn metal (the bbox reaches lower only at the feed stub)
+        b = b.enlarged(int(%(halo)s / dbu), int(%(halo)s / dbu))     # NOT clipped: the halo beyond the old outline is part of the cell (review asm8 gap 1)
+        b = db.Box(b.left, max(b.bottom, bb.bottom), b.right, b.top)
+        reg.insert(b); rec.setdefault('spiral_um', []).append([b.left * dbu, b.bottom * dbu, b.right * dbu, b.top * dbu])
+def find(cell, tr, name):
+    for inst in cell.each_inst():
+        t = tr * inst.trans
+        if inst.cell.name == name:
+            return inst.cell.bbox().transformed(t)
+        r = find(inst.cell, t, name)
+        if r is not None:
+            return r
+rf = find(top, db.Trans(), 'pt_lc_qvco_rf')
+aux = find(top, db.Trans(), 'pt_lc_qvco_aux')
+# tank core: the RF cell and the tank-track channel between it and the aux block (not the aux block itself)
+b = db.Box(rf.left, aux.top, rf.right, rf.top) & bb
+reg.insert(b); rec['core_um'] = [b.left * dbu, b.bottom * dbu, b.right * dbu, b.top * dbu]
+b = db.Box(min(rf.left, aux.left), aux.top, max(rf.right, aux.right), rf.bottom) & bb      # tank-track channel, full width
+reg.insert(b); rec['channel_um'] = [b.left * dbu, b.bottom * dbu, b.right * dbu, b.top * dbu]
+for x, y in %(stubs)s:                   # feed stubs of the outer turn (below the outer-turn edge): +-45 um, 25 um below the stub end
+    b = db.Box(int((x - 45.0) / dbu), int((y - %(stub)s - %(halo)s - 15.0) / dbu), int((x + 45.0) / dbu), int(y / dbu))
+    reg.insert(b); rec.setdefault('stub_um', []).append([b.left * dbu, b.bottom * dbu, b.right * dbu, b.top * dbu])
+for x in %(tankx)s:                      # tank-net trunks inside the aux block (PRE taps): +-6 um columns (review asm8 gap 2)
+    x = round(x, 1)
+    b = db.Box(int(round((x - 6.0) / dbu / 10)) * 10, aux.bottom, int(round((x + 6.0) / dbu / 10)) * 10, aux.top)
+    reg.insert(b); rec.setdefault('aux_tank_columns_um', []).append([b.left * dbu, b.bottom * dbu, b.right * dbu, b.top * dbu])
+reg.merge()
+for l in ((151, 5), (152, 5)):          # IND_MK (no dummy COMP/Poly2; exempts DCF.1a), PMNDMY (no dummy metal).  No NDMY: DE.3 limits it to 15000 um2
+    top.shapes(ly.layer(*l)).insert(reg)
+nb = top.bbox(); rec['bbox_um'] = [nb.left * dbu, nb.bottom * dbu, nb.right * dbu, nb.top * dbu]; rec['bbox_before_um'] = [bb.left * dbu, bb.bottom * dbu, bb.right * dbu, bb.top * dbu]
+ly.write('/work/%(gds)s')
+rec.update(area_mm2=reg.area() * dbu * dbu / 1e6, layers=['IND_MK 151/5', 'PMNDMY 152/5'], halo_um=%(halo)s, clipped_to_cell_bbox=False)
+open('/work/markers.json', 'w').write(json.dumps(rec, indent=1))
+"""
+
+
+def fill_markers(work, cell=ASM, tankx=(), stubs=()):
+    """Fill keep-out markers over both spirals (+ KEEPOUT_UM, clipped to the cell outline) and the tank core
+    (RF cell + tank-track channel).  The aux block and the two empty corners stay fillable."""
+    import subprocess
+    import timing_flow as tf
+    work = Path(work)
+    (work / 'mark.py').write_text(MARK_SCRIPT % dict(gds=f'{cell}.a.gds', cell=cell, halo=KEEPOUT_UM, stub=SPIRAL_STUB_UM, tankx=list(tankx), stubs=[list(p) for p in stubs]))
+    cmd = ['docker', 'run', '--rm', '--network', 'none', '--cpus', '1', '--memory', '8g', '--user', '%d:%d' % (__import__('os').getuid(), __import__('os').getgid()),
+           '-e', 'HOME=/tmp', '--entrypoint', '/bin/bash', '-v', f'{work}:/work', '-w', '/work', tf.ANALOG_IMAGE,
+           '-c', 'export PATH=$PATH:/foss/tools/klayout LD_LIBRARY_PATH=/foss/tools/klayout; klayout -b -r /work/mark.py > mark.log 2>&1']
+    subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+    return json.loads((work / 'markers.json').read_text())
+
+
+def lvs_ref(coreref, main=('IN', 'QN')):
+    """LVS reference of the pt_lc_qvco5 top: the core plus the two spirals as DOCUMENTED SHORTS (a drawn inductor
+    is metal: it joins its two terminals).  The simulation netlist is qvco5.spice (spiral = pt_spiral model).
+    In the layout IP-IN (QP-QN) is one net carrying two port labels; Magic keeps one name on the net (`main`) and
+    ties the other label to it with a 0 V source, which asm_lvs rewrites as a 1 mohm resistor.  The reference is
+    written the same way: the core sees the `main` name on both tank pins, the other port hangs on the resistor."""
+    core = Path(coreref).read_text()
+    alias = {'IP': main[0], 'IN': main[0], 'QP': main[1], 'QN': main[1]}
+    other = [({'IP', 'IN'} - {main[0]}).pop(), ({'QP', 'QN'} - {main[1]}).pop()]
+    return (core + f"""
+* LVS view of the top (spirals = metal shorts IP-IN and QP-QN; simulation view: qvco5.spice with pt_spiral)
+.subckt {ASM} {' '.join(TOP_PORTS)}
+XCORE {' '.join(alias.get(p, p) for p in TOP_PORTS)} {TOP}
+RLI {other[0]} {main[0]} 1m
+RLQ {other[1]} {main[1]} 1m
+.ends
+""")
+
+
+def asm_lvs(tag=''):
+    """Read-back LVS of the assembled top: GDS read from disk into an empty Magic session, extracted with shorted
+    ports kept apart by 0 V sources (ext2spice short voltage), netgen against lvs_ref()."""
+    work = WORK / ('asm' + tag)
+    res = json.loads((work / 'result.json').read_text())
+    rb = work / 'readback'
+    if rb.exists():
+        shutil.rmtree(rb)
+    rb.mkdir()
+    shutil.copy(work / f'{ASM}.a.gds', rb / f'{ASM}.gds')
+    (rb / 'rb.tcl').write_text('\n'.join([
+        'crashbackups stop', 'gds flatglob *$$*', 'gds noduplicates true', f'gds read {ASM}.gds', f'load {ASM}',
+        # flat extraction: the IP-IN / QP-QN shorts through the spirals become shorts between top-level port labels,
+        # which `ext2spice short voltage` writes as 0 V sources (a hierarchical extraction silently drops IN and QN)
+        f'flatten {ASM}_rb', f'load {ASM}_rb',
+        'select top cell', 'extract do aliases', 'extract all', 'ext2spice lvs', 'ext2spice short voltage', f'ext2spice -o {ASM}.rb.spice', 'quit -noprompt']) + '\n')
+    le.docker_magic(rb, 'rb.tcl')
+    cw = None
+    for t in WORK.glob('top*'):
+        if (t / 'ref.spice').exists() and (work / f'{TOP}.mag').read_text() == (t / f'{TOP}.mag').read_text():
+            cw = t
+    import re
+    t = (rb / f'{ASM}.rb.spice').read_text()
+    shorts = re.findall(r'^V\d+ (\S+) (\S+) 0\.0$', t, re.M)
+    t = re.sub(r'^V(\d+) (\S+) (\S+) 0\.0$', r'RSH\1 \2 \3 1m', t, flags=re.M)
+    (rb / f'{ASM}.rbr.spice').write_text(t)         # Magic's own file is root-owned
+    cnt = lambda n: len(re.findall(rf'(?<=\s){n}(?=\s)', t))
+    main = (max(('IP', 'IN'), key=cnt), max(('QP', 'QN'), key=cnt))
+    (rb / 'ref.spice').write_text(lvs_ref(cw / 'ref.spice', main))
+    lvs = le.netgen_lvs(rb, f'{ASM}.rbr.spice', ASM + '_rb', 'ref.spice', ASM)
+    lvs['port_shorts_found_by_magic'] = sorted(sorted(x) for x in shorts)
+    lvs['unique_match'] = bool(lvs['unique_match'] and lvs['port_shorts_found_by_magic'] == [['IN', 'IP'], ['QN', 'QP']])
+    # second check, same GDS: hierarchical extraction, the core cell against its reference with FOUR separate tank pins
+    # (the top check above cannot see a P/N swap: it asserts IP = IN and QP = QN)
+    (rb / 'rbh.tcl').write_text('\n'.join([
+        'crashbackups stop', 'gds flatglob *$$*', 'gds noduplicates true', f'gds read {ASM}.gds', f'load {ASM}', 'select top cell',
+        'extract all', 'ext2spice lvs', f'ext2spice -o {ASM}.rbh.spice', 'quit -noprompt']) + '\n')
+    le.docker_magic(rb, 'rbh.tcl')
+    (rb / 'coreref.spice').write_text((cw / 'ref.spice').read_text())
+    core = le.netgen_lvs(rb, f'{ASM}.rbh.spice', TOP, 'coreref.spice', TOP, out='lvs_core.txt')
+    res['readback_lvs'] = dict(lvs, core_ref=str(cw / 'ref.spice'), core_lvs=core,
+                               note='reference = the core LVS netlist (top<n>/ref.spice: qvco5.spice core + antenna diodes), not qvco5.spice itself')
+    res['readback_lvs']['unique_match'] = bool(lvs['unique_match'] and core['unique_match'])
+    (work / 'result.json').write_text(json.dumps(res, indent=1, default=str))
+    print(json.dumps(res['readback_lvs'], indent=1)[:1500])
+    return res
 
 
 def schematic():
@@ -815,6 +965,8 @@ if __name__ == '__main__':
         schematic()
     elif sys.argv[1] == 'asm':
         asm(*sys.argv[2:])
+    elif sys.argv[1] == 'asmlvs':
+        asm_lvs(*sys.argv[2:])
     elif sys.argv[1] == 'top':
         top(*sys.argv[2:])
     elif sys.argv[1] == 'aux':

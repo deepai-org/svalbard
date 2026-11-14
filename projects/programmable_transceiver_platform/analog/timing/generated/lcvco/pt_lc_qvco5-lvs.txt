@@ -1,0 +1,122 @@
+
+Circuit 1 cell nfet_03v3 and Circuit 2 cell nfet_03v3 are black boxes.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_03v3                       |Circuit 2: nfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_03v3 and nfet_03v3 are equivalent.
+
+Circuit 1 cell pfet_03v3 and Circuit 2 cell pfet_03v3 are black boxes.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: pfet_03v3                       |Circuit 2: pfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pfet_03v3 and pfet_03v3 are equivalent.
+
+Circuit 1 cell cap_nmos_03v3_b and Circuit 2 cell cap_nmos_03v3_b are black boxes.
+Warning: Equate pins:  cell cap_nmos_03v3_b is a placeholder, treated as a black box.
+Warning: Equate pins:  cell cap_nmos_03v3_b is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: cap_nmos_03v3_b                 |Circuit 2: cap_nmos_03v3_b                 
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes cap_nmos_03v3_b and cap_nmos_03v3_b are equivalent.
+
+Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
+
+Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k                     
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
+Flattening unmatched subcell pt_lc_qvco5_core in circuit pt_lc_qvco5 (1)(1 instance)
+
+Class pt_lc_qvco5_rb (0):  Merged 717 parallel devices.
+Class pt_lc_qvco5_rb (0):  Merged 39 series devices.
+Class pt_lc_qvco5 (1):  Merged 717 parallel devices.
+Class pt_lc_qvco5 (1):  Merged 39 series devices.
+Subcircuit summary:
+Circuit 1: pt_lc_qvco5_rb                  |Circuit 2: pt_lc_qvco5                     
+-------------------------------------------|-------------------------------------------
+nfet_03v3 (532->122)                       |nfet_03v3 (532->122)                       
+cap_nmos_03v3_b (80->3)                    |cap_nmos_03v3_b (80->3)                    
+pfet_03v3 (240->16)                        |pfet_03v3 (240->16)                        
+diode_nd2ps_03v3 (9->3)                    |diode_nd2ps_03v3 (9->3)                    
+cap_mim_2f0_m4m5_noshield (68)             |cap_mim_2f0_m4m5_noshield (68)             
+r (2)                                      |r (2)                                      
+ppolyf_u_1k (45->6)                        |ppolyf_u_1k (45->6)                        
+Number of devices: 220                     |Number of devices: 220                     
+Number of nets: 105                        |Number of nets: 105                        
+---------------------------------------------------------------------------------------
+Resolving symmetries by property value.
+Resolving symmetries by pin name.
+Resolving symmetries by net name.
+Netlists match with 45 symmetries.
+
+Subcircuit pins:
+Circuit 1: pt_lc_qvco5_rb                  |Circuit 2: pt_lc_qvco5                     
+-------------------------------------------|-------------------------------------------
+ATB_EN                                     |ATB_EN                                     
+ATB_ITAIL                                  |ATB_ITAIL                                  
+IP                                         |IP                                         
+QP                                         |QP                                         
+VDDB                                       |VDDB                                       
+PRE                                        |PRE                                        
+ATB_VTUNE                                  |ATB_VTUNE                                  
+VDD                                        |VDD                                        
+BAND2                                      |BAND2                                      
+BAND1                                      |BAND1                                      
+BAND0                                      |BAND0                                      
+EN                                         |EN                                         
+CMLSEL                                     |CMLSEL                                     
+IBIAS                                      |IBIAS                                      
+BAND3                                      |BAND3                                      
+VSS                                        |VSS                                        
+VTUNE                                      |VTUNE                                      
+QN                                         |QN                                         
+IN                                         |IN                                         
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pt_lc_qvco5_rb and pt_lc_qvco5 are equivalent.
+
+Final result: Circuits match uniquely.
+.

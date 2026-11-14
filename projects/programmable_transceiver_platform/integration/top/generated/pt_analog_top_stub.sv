@@ -1,23 +1,51 @@
 // pt_analog_top_stub: GENERATED from pt_chip.conn by check_top.py --write (stub for sim/tb_top_boundary.sv). Do not edit.
 `default_nettype wire
 module pt_analog_top_stub(
+ output wire [9:0] ADCI_CODE,
+ output wire [9:0] ADCI_CODEB,
+ output wire ADCI_DONE,
+ output wire ADCI_DONEB,
+ output wire ADCI_OVL,
+ output wire ADCI_OVLB,
+ output wire ADCI_PH,
+ output wire [9:0] ADCQ_CODE,
+ output wire [9:0] ADCQ_CODEB,
+ output wire ADCQ_DONE,
+ output wire ADCQ_DONEB,
+ output wire ADCQ_OVL,
+ output wire ADCQ_OVLB,
+ output wire ADCQ_PH,
  inout wire ATB0,
  inout wire ATB1,
  inout wire AUX_CLK_N,
  inout wire AUX_CLK_P,
+ output wire AUX_PRESENT,
  inout wire BB_I_N,
  inout wire BB_I_P,
  inout wire BB_Q_N,
  inout wire BB_Q_P,
+ output wire CONV_CLK,
+ output wire DET_DIFF_NEG,
+ output wire DET_DIFF_POS,
+ output wire DET_SE_N,
+ output wire DET_SE_P,
+ output wire LO_FB,
+ output wire PLL_CDR_FBCK,
+ output wire PLL_CDR_LOCK,
+ output wire PLL_TX_LOCK,
+ output wire PRE_CK,
+ output wire REFBUF_READY,
  inout wire REF_IN,
  inout wire REF_IN_N,
  inout wire RF_RX_N,
  inout wire RF_RX_P,
  inout wire RF_TX_N,
  inout wire RF_TX_P,
+ output wire RING_OSC_CK,
  inout wire TLP_TEST,
  inout wire USB_DN,
  inout wire USB_DP,
+ output wire VCO_REPLICA_CK,
  inout wire VDD,
  inout wire VSS,
  inout wire WIRE_RX_N,
@@ -25,8 +53,16 @@ module pt_analog_top_stub(
  inout wire WIRE_TX_N,
  inout wire WIRE_TX_P,
  inout wire WMON,
+ output wire [39:0] WRX_DX,
+ output wire [19:0] WRX_EW,
+ output wire WRX_SLM,
+ output wire WRX_SLP,
+ output wire WRX_WCLK40,
+ output wire WTX_EXT_DATA,
  inout wire WTX_EXT_N,
  inout wire WTX_EXT_P,
+ output wire WTX_EXT_PRESENT,
+ output wire WTX_WCLK40,
  input wire atb0_en,
  input wire [1:0] atb0_grp,
  input wire [57:0] atb0_sw,
@@ -251,8 +287,7 @@ module pt_analog_top_stub(
  input wire [1:0] c_wtxfb_state,
  output wire clk_obs,
  input wire ct_det_clk,
- output wire ct_wclk,
- output wire [5:0] fc_src,
+ output wire [4:0] fc_src,
  input wire h2d_clk,
  output wire host_word_clk,
  input wire [5:0] island_en,
@@ -262,41 +297,12 @@ module pt_analog_top_stub(
  output wire por_n,
  output wire ref_clk,
  output wire rf_rx_clk,
- output wire rf_rx_ph_i,
- output wire rf_rx_ph_q,
- output wire [23:0] rf_rx_sample,
- output wire [23:0] rf_rx_sample_b,
- output wire rf_tx_clk,
  input wire rf_tx_clk_out,
  input wire [23:0] rf_tx_sample,
  input wire rx_en_aux,
  input wire rx_en_wtx_ext,
- output wire s_adc_i_b_done,
- output wire s_adc_i_b_ovl,
- output wire s_adc_i_done,
- output wire s_adc_i_ovl,
- output wire s_adc_q_b_done,
- output wire s_adc_q_b_ovl,
- output wire s_adc_q_done,
- output wire s_adc_q_ovl,
- output wire s_aux_present,
- output wire s_detect_diff_neg,
- output wire s_detect_diff_pos,
- output wire s_detect_se_n,
- output wire s_detect_se_p,
- output wire s_pll_cdr_lock,
- output wire s_pll_tx_lock,
  output wire s_ref_present,
- output wire s_refbuf_ready,
- output wire s_wrx_slm,
- output wire s_wrx_slp,
- output wire s_wtx_ext_data,
- output wire s_wtx_ext_present,
- output wire wire_rx_clk,
- output wire [39:0] wire_rx_data,
- output wire [19:0] wire_rx_edge,
  input wire wire_rx_ptrim_en,
- output wire wire_tx_clk,
  input wire [39:0] wire_tx_data,
  output wire wired_on_ext
 );
@@ -446,24 +452,8 @@ module pt_analog_top_stub(
  wire WMON_IN;
  wire VREF_CONV;
  wire CONV_CLK_C;
- wire [9:0] ADCI_CODE;
- wire ADCI_DONE;
- wire ADCI_OVL;
- wire [9:0] ADCI_CODEB;
- wire ADCI_DONEB;
- wire ADCI_OVLB;
  wire ATBN_adc_bias;
- wire ADCI_PH;
- wire [9:0] ADCQ_CODE;
- wire ADCQ_DONE;
- wire ADCQ_OVL;
- wire [9:0] ADCQ_CODEB;
- wire ADCQ_DONEB;
- wire ADCQ_OVLB;
- wire ADCQ_PH;
- wire CONV_CLK;
  wire ATBN_dac_bias;
- wire REFBUF_READY;
  wire TXI_P;
  wire TXI_N;
  wire ATBN_txmix_bias;
@@ -478,26 +468,21 @@ module pt_analog_top_stub(
  wire LOI_QN;
  wire ATBN_quadrature_bias;
  wire LO_VTUNE;
- wire LO_FB;
  wire LO_CP;
  wire LO_OBS;
  wire [6:0] TXPH;
  wire AUX_CK_P;
  wire [7:0] CDRPH;
  wire PRE_CONV_CK;
- wire PRE_CK;
  wire PRE_HF_CK;
  wire PREF;
  wire WIRE_CK;
  wire WSMP_CK;
  wire HOST_CLK;
- wire PLL_TX_LOCK;
  wire PLL_TX_FBCK;
  wire ATBN_pll_vctrl;
  wire CDR_REF;
  wire CDR_HOLD;
- wire PLL_CDR_LOCK;
- wire PLL_CDR_FBCK;
  wire CDR_VCTRL;
  wire [3:0] CDR_UP;
  wire [3:0] CDR_DN;
@@ -505,13 +490,9 @@ module pt_analog_top_stub(
  wire [3:0] WRX_UP;
  wire [3:0] WRX_DN;
  wire AUX_CK;
- wire AUX_PRESENT;
  wire WTX_DX_DBG;
- wire WTX_EXT_PRESENT;
  wire WTX_DX;
- wire RING_OSC_CK;
  wire VCO_REPLICA_VCTRL;
- wire VCO_REPLICA_CK;
  wire OBS4_wire;
  wire OBS4_wsmp;
  wire OBS4_ref;
@@ -528,10 +509,6 @@ module pt_analog_top_stub(
  wire ATBN_ctle_bias;
  wire SL_P;
  wire SL_N;
- wire DET_DIFF_POS;
- wire DET_DIFF_NEG;
- wire DET_SE_P;
- wire DET_SE_N;
  wire ATBN_detect_vref;
  wire [7:0] CKP;
  wire WRX_LDE;
@@ -540,19 +517,12 @@ module pt_analog_top_stub(
  wire VTBP;
  wire VTBN;
  wire [7:0] SLS;
- wire [19:0] WRX_EW;
- wire WRX_SLP;
- wire WRX_SLM;
- wire [39:0] WRX_DX;
- wire WRX_WCLK40;
- wire WTX_WCLK40;
  wire TX_EN_MAIN;
  wire TX_EN_POST;
  wire CMD_MAIN_P;
  wire CMD_MAIN_N;
  wire CMD_POST_P;
  wire CMD_POST_N;
- wire WTX_EXT_DATA;
  wire ATBN_wiredtx_bias;
  wire TX_BUF_REF;
  wire TX_BUF_BIAS;
@@ -891,156 +861,6 @@ module pt_analog_top_stub(
  wire p_iso_conv_clk__A = CONV_CLK;
  wire p_iso_conv_clk__ISO = island_off[2];
  assign CONV_CLK_C = CONV_CLK & ~island_off[2];
- wire p_iso_adc_i_0__A = ADCI_CODE[0];
- wire p_iso_adc_i_0__ISO = island_off[4];
- assign rf_rx_sample[2] = ADCI_CODE[0] & ~island_off[4];
- wire p_iso_adc_i_1__A = ADCI_CODE[1];
- wire p_iso_adc_i_1__ISO = island_off[4];
- assign rf_rx_sample[3] = ADCI_CODE[1] & ~island_off[4];
- wire p_iso_adc_i_2__A = ADCI_CODE[2];
- wire p_iso_adc_i_2__ISO = island_off[4];
- assign rf_rx_sample[4] = ADCI_CODE[2] & ~island_off[4];
- wire p_iso_adc_i_3__A = ADCI_CODE[3];
- wire p_iso_adc_i_3__ISO = island_off[4];
- assign rf_rx_sample[5] = ADCI_CODE[3] & ~island_off[4];
- wire p_iso_adc_i_4__A = ADCI_CODE[4];
- wire p_iso_adc_i_4__ISO = island_off[4];
- assign rf_rx_sample[6] = ADCI_CODE[4] & ~island_off[4];
- wire p_iso_adc_i_5__A = ADCI_CODE[5];
- wire p_iso_adc_i_5__ISO = island_off[4];
- assign rf_rx_sample[7] = ADCI_CODE[5] & ~island_off[4];
- wire p_iso_adc_i_6__A = ADCI_CODE[6];
- wire p_iso_adc_i_6__ISO = island_off[4];
- assign rf_rx_sample[8] = ADCI_CODE[6] & ~island_off[4];
- wire p_iso_adc_i_7__A = ADCI_CODE[7];
- wire p_iso_adc_i_7__ISO = island_off[4];
- assign rf_rx_sample[9] = ADCI_CODE[7] & ~island_off[4];
- wire p_iso_adc_i_8__A = ADCI_CODE[8];
- wire p_iso_adc_i_8__ISO = island_off[4];
- assign rf_rx_sample[10] = ADCI_CODE[8] & ~island_off[4];
- wire p_iso_adc_i_9__A = ADCI_CODE[9];
- wire p_iso_adc_i_9__ISO = island_off[4];
- assign rf_rx_sample[11] = ADCI_CODE[9] & ~island_off[4];
- wire p_iso_adc_q_0__A = ADCQ_CODE[0];
- wire p_iso_adc_q_0__ISO = island_off[4];
- assign rf_rx_sample[14] = ADCQ_CODE[0] & ~island_off[4];
- wire p_iso_adc_q_1__A = ADCQ_CODE[1];
- wire p_iso_adc_q_1__ISO = island_off[4];
- assign rf_rx_sample[15] = ADCQ_CODE[1] & ~island_off[4];
- wire p_iso_adc_q_2__A = ADCQ_CODE[2];
- wire p_iso_adc_q_2__ISO = island_off[4];
- assign rf_rx_sample[16] = ADCQ_CODE[2] & ~island_off[4];
- wire p_iso_adc_q_3__A = ADCQ_CODE[3];
- wire p_iso_adc_q_3__ISO = island_off[4];
- assign rf_rx_sample[17] = ADCQ_CODE[3] & ~island_off[4];
- wire p_iso_adc_q_4__A = ADCQ_CODE[4];
- wire p_iso_adc_q_4__ISO = island_off[4];
- assign rf_rx_sample[18] = ADCQ_CODE[4] & ~island_off[4];
- wire p_iso_adc_q_5__A = ADCQ_CODE[5];
- wire p_iso_adc_q_5__ISO = island_off[4];
- assign rf_rx_sample[19] = ADCQ_CODE[5] & ~island_off[4];
- wire p_iso_adc_q_6__A = ADCQ_CODE[6];
- wire p_iso_adc_q_6__ISO = island_off[4];
- assign rf_rx_sample[20] = ADCQ_CODE[6] & ~island_off[4];
- wire p_iso_adc_q_7__A = ADCQ_CODE[7];
- wire p_iso_adc_q_7__ISO = island_off[4];
- assign rf_rx_sample[21] = ADCQ_CODE[7] & ~island_off[4];
- wire p_iso_adc_q_8__A = ADCQ_CODE[8];
- wire p_iso_adc_q_8__ISO = island_off[4];
- assign rf_rx_sample[22] = ADCQ_CODE[8] & ~island_off[4];
- wire p_iso_adc_q_9__A = ADCQ_CODE[9];
- wire p_iso_adc_q_9__ISO = island_off[4];
- assign rf_rx_sample[23] = ADCQ_CODE[9] & ~island_off[4];
- wire p_iso_adcb_i_0__A = ADCI_CODEB[0];
- wire p_iso_adcb_i_0__ISO = island_off[4];
- assign rf_rx_sample_b[2] = ADCI_CODEB[0] & ~island_off[4];
- wire p_iso_adcb_i_1__A = ADCI_CODEB[1];
- wire p_iso_adcb_i_1__ISO = island_off[4];
- assign rf_rx_sample_b[3] = ADCI_CODEB[1] & ~island_off[4];
- wire p_iso_adcb_i_2__A = ADCI_CODEB[2];
- wire p_iso_adcb_i_2__ISO = island_off[4];
- assign rf_rx_sample_b[4] = ADCI_CODEB[2] & ~island_off[4];
- wire p_iso_adcb_i_3__A = ADCI_CODEB[3];
- wire p_iso_adcb_i_3__ISO = island_off[4];
- assign rf_rx_sample_b[5] = ADCI_CODEB[3] & ~island_off[4];
- wire p_iso_adcb_i_4__A = ADCI_CODEB[4];
- wire p_iso_adcb_i_4__ISO = island_off[4];
- assign rf_rx_sample_b[6] = ADCI_CODEB[4] & ~island_off[4];
- wire p_iso_adcb_i_5__A = ADCI_CODEB[5];
- wire p_iso_adcb_i_5__ISO = island_off[4];
- assign rf_rx_sample_b[7] = ADCI_CODEB[5] & ~island_off[4];
- wire p_iso_adcb_i_6__A = ADCI_CODEB[6];
- wire p_iso_adcb_i_6__ISO = island_off[4];
- assign rf_rx_sample_b[8] = ADCI_CODEB[6] & ~island_off[4];
- wire p_iso_adcb_i_7__A = ADCI_CODEB[7];
- wire p_iso_adcb_i_7__ISO = island_off[4];
- assign rf_rx_sample_b[9] = ADCI_CODEB[7] & ~island_off[4];
- wire p_iso_adcb_i_8__A = ADCI_CODEB[8];
- wire p_iso_adcb_i_8__ISO = island_off[4];
- assign rf_rx_sample_b[10] = ADCI_CODEB[8] & ~island_off[4];
- wire p_iso_adcb_i_9__A = ADCI_CODEB[9];
- wire p_iso_adcb_i_9__ISO = island_off[4];
- assign rf_rx_sample_b[11] = ADCI_CODEB[9] & ~island_off[4];
- wire p_iso_adcb_q_0__A = ADCQ_CODEB[0];
- wire p_iso_adcb_q_0__ISO = island_off[4];
- assign rf_rx_sample_b[14] = ADCQ_CODEB[0] & ~island_off[4];
- wire p_iso_adcb_q_1__A = ADCQ_CODEB[1];
- wire p_iso_adcb_q_1__ISO = island_off[4];
- assign rf_rx_sample_b[15] = ADCQ_CODEB[1] & ~island_off[4];
- wire p_iso_adcb_q_2__A = ADCQ_CODEB[2];
- wire p_iso_adcb_q_2__ISO = island_off[4];
- assign rf_rx_sample_b[16] = ADCQ_CODEB[2] & ~island_off[4];
- wire p_iso_adcb_q_3__A = ADCQ_CODEB[3];
- wire p_iso_adcb_q_3__ISO = island_off[4];
- assign rf_rx_sample_b[17] = ADCQ_CODEB[3] & ~island_off[4];
- wire p_iso_adcb_q_4__A = ADCQ_CODEB[4];
- wire p_iso_adcb_q_4__ISO = island_off[4];
- assign rf_rx_sample_b[18] = ADCQ_CODEB[4] & ~island_off[4];
- wire p_iso_adcb_q_5__A = ADCQ_CODEB[5];
- wire p_iso_adcb_q_5__ISO = island_off[4];
- assign rf_rx_sample_b[19] = ADCQ_CODEB[5] & ~island_off[4];
- wire p_iso_adcb_q_6__A = ADCQ_CODEB[6];
- wire p_iso_adcb_q_6__ISO = island_off[4];
- assign rf_rx_sample_b[20] = ADCQ_CODEB[6] & ~island_off[4];
- wire p_iso_adcb_q_7__A = ADCQ_CODEB[7];
- wire p_iso_adcb_q_7__ISO = island_off[4];
- assign rf_rx_sample_b[21] = ADCQ_CODEB[7] & ~island_off[4];
- wire p_iso_adcb_q_8__A = ADCQ_CODEB[8];
- wire p_iso_adcb_q_8__ISO = island_off[4];
- assign rf_rx_sample_b[22] = ADCQ_CODEB[8] & ~island_off[4];
- wire p_iso_adcb_q_9__A = ADCQ_CODEB[9];
- wire p_iso_adcb_q_9__ISO = island_off[4];
- assign rf_rx_sample_b[23] = ADCQ_CODEB[9] & ~island_off[4];
- wire p_iso_adc_ph_i__A = ADCI_PH;
- wire p_iso_adc_ph_i__ISO = island_off[4];
- assign rf_rx_ph_i = ADCI_PH & ~island_off[4];
- wire p_iso_adc_ph_q__A = ADCQ_PH;
- wire p_iso_adc_ph_q__ISO = island_off[4];
- assign rf_rx_ph_q = ADCQ_PH & ~island_off[4];
- wire p_iso_adc_done_i__A = ADCI_DONE;
- wire p_iso_adc_done_i__ISO = island_off[4];
- assign s_adc_i_done = ADCI_DONE & ~island_off[4];
- wire p_iso_adc_done_i_b__A = ADCI_DONEB;
- wire p_iso_adc_done_i_b__ISO = island_off[4];
- assign s_adc_i_b_done = ADCI_DONEB & ~island_off[4];
- wire p_iso_adc_done_q__A = ADCQ_DONE;
- wire p_iso_adc_done_q__ISO = island_off[4];
- assign s_adc_q_done = ADCQ_DONE & ~island_off[4];
- wire p_iso_adc_done_q_b__A = ADCQ_DONEB;
- wire p_iso_adc_done_q_b__ISO = island_off[4];
- assign s_adc_q_b_done = ADCQ_DONEB & ~island_off[4];
- wire p_iso_adc_ovl_i__A = ADCI_OVL;
- wire p_iso_adc_ovl_i__ISO = island_off[4];
- assign s_adc_i_ovl = ADCI_OVL & ~island_off[4];
- wire p_iso_adc_ovl_i_b__A = ADCI_OVLB;
- wire p_iso_adc_ovl_i_b__ISO = island_off[4];
- assign s_adc_i_b_ovl = ADCI_OVLB & ~island_off[4];
- wire p_iso_adc_ovl_q__A = ADCQ_OVL;
- wire p_iso_adc_ovl_q__ISO = island_off[4];
- assign s_adc_q_ovl = ADCQ_OVL & ~island_off[4];
- wire p_iso_adc_ovl_q_b__A = ADCQ_OVLB;
- wire p_iso_adc_ovl_q_b__ISO = island_off[4];
- assign s_adc_q_b_ovl = ADCQ_OVLB & ~island_off[4];
  wire p_dac_i__CLK = rf_tx_clk_out;
  wire p_dac_i__EN = c_dac_i_en;
  wire p_dac_i__HOLD_ZERO = c_dac_i_hold_zero;
@@ -1070,15 +890,9 @@ module pt_analog_top_stub(
  wire p_refbuf__EN = c_refbuf_en;
  wire p_refbuf__OVR = c_refbuf_ovr;
  assign REFBUF_READY = 1'b0;
- wire p_iso_refbuf_ready__A = REFBUF_READY;
- wire p_iso_refbuf_ready__ISO = island_off[4];
- assign s_refbuf_ready = REFBUF_READY & ~island_off[4];
  wire p_iso_rf_rx_clk__A = CONV_CLK;
  wire p_iso_rf_rx_clk__ISO = island_off[2];
  assign rf_rx_clk = CONV_CLK & ~island_off[2];
- wire p_iso_rf_tx_clk__A = CONV_CLK;
- wire p_iso_rf_tx_clk__ISO = island_off[2];
- assign rf_tx_clk = CONV_CLK & ~island_off[2];
  wire p_txmix_i__en = c_txmix_i_en;
  wire p_txmix_i__sel_dac = c_txmix_sel_dac;
  wire p_txmix_i__sat = c_txmix_sat;
@@ -1127,9 +941,6 @@ module pt_analog_top_stub(
  wire p_lo_obs__EN = c_lo_obs_en;
  assign LO_OBS = 1'b0;
  wire p_lo_obs_q__EN = VSS;
- wire p_iso_lo_fb__A = LO_FB;
- wire p_iso_lo_fb__ISO = island_off[2];
- assign fc_src[5] = LO_FB & ~island_off[2];
  wire p_rx_ref_in__EN = c_rx_ref_en;
  wire p_rx_ref_in__SE = VSS;
  assign ref_clk = 1'b0;
@@ -1188,9 +999,6 @@ module pt_analog_top_stub(
  wire p_prescale_hf__D8 = c_prescale_hf_d[2];
  wire p_prescale_hf__D16 = c_prescale_hf_d[3];
  assign PRE_HF_CK = 1'b0;
- wire p_iso_ct_wclk__A = PRE_CK;
- wire p_iso_ct_wclk__ISO = island_off[2];
- assign ct_wclk = PRE_CK & ~island_off[2];
  wire p_pll_vreg2__BYP_TX = c_pllvreg_byp_tx;
  wire p_pll_vreg2__BYP_CDR = c_pllvreg_byp_cdr;
  wire p_pll_tx__REF = PREF;
@@ -1206,9 +1014,6 @@ module pt_analog_top_stub(
  assign PLL_TX_LOCK = 1'b0;
  assign PLL_TX_FBCK = 1'b0;
  wire p_pll_tx__BAND = c_pll_tx_band;
- wire p_iso_pll_tx_lock__A = PLL_TX_LOCK;
- wire p_iso_pll_tx_lock__ISO = island_off[2];
- assign s_pll_tx_lock = PLL_TX_LOCK & ~island_off[2];
  wire p_iso_pll_tx_fbck__A = PLL_TX_FBCK;
  wire p_iso_pll_tx_fbck__ISO = island_off[2];
  assign fc_src[0] = PLL_TX_FBCK & ~island_off[2];
@@ -1241,12 +1046,6 @@ module pt_analog_top_stub(
  wire p_pll_cdr__FD2 = CDR_DN[2];
  wire p_pll_cdr__FD3 = CDR_DN[3];
  wire p_pll_cdr__BAND = c_pll_cdr_band;
- wire p_iso_pll_cdr_lock__A = PLL_CDR_LOCK;
- wire p_iso_pll_cdr_lock__ISO = island_off[2];
- assign s_pll_cdr_lock = PLL_CDR_LOCK & ~island_off[2];
- wire p_iso_pll_cdr_fbck__A = PLL_CDR_FBCK;
- wire p_iso_pll_cdr_fbck__ISO = island_off[2];
- assign fc_src[1] = PLL_CDR_FBCK & ~island_off[2];
  wire p_cdr__cdr_en = c_cdr_en;
  wire p_cdr__pfd_mode = c_cdr_pfd_mode;
  wire p_cdr__ref_sel = c_cdr_ref_sel;
@@ -1311,22 +1110,10 @@ module pt_analog_top_stub(
  wire p_iso_wtx_dx__A = WTX_DX_DBG;
  wire p_iso_wtx_dx__ISO = island_off[5];
  assign WTX_DX = WTX_DX_DBG & ~island_off[5];
- wire p_iso_aux_present__A = AUX_PRESENT;
- wire p_iso_aux_present__ISO = island_off[5];
- assign s_aux_present = AUX_PRESENT & ~island_off[5];
- wire p_iso_wtx_ext_present__A = WTX_EXT_PRESENT;
- wire p_iso_wtx_ext_present__ISO = island_off[5];
- assign s_wtx_ext_present = WTX_EXT_PRESENT & ~island_off[5];
  wire p_ring_osc__EN = c_ring_osc_en;
  assign RING_OSC_CK = 1'b0;
  wire p_vco_replica__EN = c_vco_replica_en;
  assign VCO_REPLICA_CK = 1'b0;
- wire p_iso_ring_osc__A = RING_OSC_CK;
- wire p_iso_ring_osc__ISO = island_off[5];
- assign fc_src[2] = RING_OSC_CK & ~island_off[5];
- wire p_iso_vco_replica__A = VCO_REPLICA_CK;
- wire p_iso_vco_replica__ISO = island_off[5];
- assign fc_src[3] = VCO_REPLICA_CK & ~island_off[5];
  wire p_obs_pre4_wire__CK = WIRE_CK;
  wire p_obs_pre4_wire__EN = c_obs_pre4_en[0];
  assign OBS4_wire = 1'b0;
@@ -1424,18 +1211,6 @@ module pt_analog_top_stub(
  assign DET_DIFF_NEG = 1'b0;
  assign DET_SE_P = 1'b0;
  assign DET_SE_N = 1'b0;
- wire p_iso_detect_diff_pos__A = DET_DIFF_POS;
- wire p_iso_detect_diff_pos__ISO = island_off[0];
- assign s_detect_diff_pos = DET_DIFF_POS & ~island_off[0];
- wire p_iso_detect_diff_neg__A = DET_DIFF_NEG;
- wire p_iso_detect_diff_neg__ISO = island_off[0];
- assign s_detect_diff_neg = DET_DIFF_NEG & ~island_off[0];
- wire p_iso_detect_se_p__A = DET_SE_P;
- wire p_iso_detect_se_p__ISO = island_off[0];
- assign s_detect_se_p = DET_SE_P & ~island_off[0];
- wire p_iso_detect_se_n__A = DET_SE_N;
- wire p_iso_detect_se_n__ISO = island_off[0];
- assign s_detect_se_n = DET_SE_N & ~island_off[0];
  wire p_wordclk_rx__CK = CKP[0];
  wire p_wordclk_rx__EN = c_wordclk_en;
  wire p_wordclk_rx__D10 = c_wordclk_d10;
@@ -1717,195 +1492,6 @@ module pt_analog_top_stub(
  assign WRX_DX[38] = 1'b0;
  assign WRX_DX[39] = 1'b0;
  assign WRX_WCLK40 = 1'b0;
- wire p_iso_wrx_dx_0__A = WRX_DX[0];
- wire p_iso_wrx_dx_0__ISO = island_off[0];
- assign wire_rx_data[0] = WRX_DX[0] & ~island_off[0];
- wire p_iso_wrx_dx_1__A = WRX_DX[1];
- wire p_iso_wrx_dx_1__ISO = island_off[0];
- assign wire_rx_data[1] = WRX_DX[1] & ~island_off[0];
- wire p_iso_wrx_dx_2__A = WRX_DX[2];
- wire p_iso_wrx_dx_2__ISO = island_off[0];
- assign wire_rx_data[2] = WRX_DX[2] & ~island_off[0];
- wire p_iso_wrx_dx_3__A = WRX_DX[3];
- wire p_iso_wrx_dx_3__ISO = island_off[0];
- assign wire_rx_data[3] = WRX_DX[3] & ~island_off[0];
- wire p_iso_wrx_dx_4__A = WRX_DX[4];
- wire p_iso_wrx_dx_4__ISO = island_off[0];
- assign wire_rx_data[4] = WRX_DX[4] & ~island_off[0];
- wire p_iso_wrx_dx_5__A = WRX_DX[5];
- wire p_iso_wrx_dx_5__ISO = island_off[0];
- assign wire_rx_data[5] = WRX_DX[5] & ~island_off[0];
- wire p_iso_wrx_dx_6__A = WRX_DX[6];
- wire p_iso_wrx_dx_6__ISO = island_off[0];
- assign wire_rx_data[6] = WRX_DX[6] & ~island_off[0];
- wire p_iso_wrx_dx_7__A = WRX_DX[7];
- wire p_iso_wrx_dx_7__ISO = island_off[0];
- assign wire_rx_data[7] = WRX_DX[7] & ~island_off[0];
- wire p_iso_wrx_dx_8__A = WRX_DX[8];
- wire p_iso_wrx_dx_8__ISO = island_off[0];
- assign wire_rx_data[8] = WRX_DX[8] & ~island_off[0];
- wire p_iso_wrx_dx_9__A = WRX_DX[9];
- wire p_iso_wrx_dx_9__ISO = island_off[0];
- assign wire_rx_data[9] = WRX_DX[9] & ~island_off[0];
- wire p_iso_wrx_dx_10__A = WRX_DX[10];
- wire p_iso_wrx_dx_10__ISO = island_off[0];
- assign wire_rx_data[10] = WRX_DX[10] & ~island_off[0];
- wire p_iso_wrx_dx_11__A = WRX_DX[11];
- wire p_iso_wrx_dx_11__ISO = island_off[0];
- assign wire_rx_data[11] = WRX_DX[11] & ~island_off[0];
- wire p_iso_wrx_dx_12__A = WRX_DX[12];
- wire p_iso_wrx_dx_12__ISO = island_off[0];
- assign wire_rx_data[12] = WRX_DX[12] & ~island_off[0];
- wire p_iso_wrx_dx_13__A = WRX_DX[13];
- wire p_iso_wrx_dx_13__ISO = island_off[0];
- assign wire_rx_data[13] = WRX_DX[13] & ~island_off[0];
- wire p_iso_wrx_dx_14__A = WRX_DX[14];
- wire p_iso_wrx_dx_14__ISO = island_off[0];
- assign wire_rx_data[14] = WRX_DX[14] & ~island_off[0];
- wire p_iso_wrx_dx_15__A = WRX_DX[15];
- wire p_iso_wrx_dx_15__ISO = island_off[0];
- assign wire_rx_data[15] = WRX_DX[15] & ~island_off[0];
- wire p_iso_wrx_dx_16__A = WRX_DX[16];
- wire p_iso_wrx_dx_16__ISO = island_off[0];
- assign wire_rx_data[16] = WRX_DX[16] & ~island_off[0];
- wire p_iso_wrx_dx_17__A = WRX_DX[17];
- wire p_iso_wrx_dx_17__ISO = island_off[0];
- assign wire_rx_data[17] = WRX_DX[17] & ~island_off[0];
- wire p_iso_wrx_dx_18__A = WRX_DX[18];
- wire p_iso_wrx_dx_18__ISO = island_off[0];
- assign wire_rx_data[18] = WRX_DX[18] & ~island_off[0];
- wire p_iso_wrx_dx_19__A = WRX_DX[19];
- wire p_iso_wrx_dx_19__ISO = island_off[0];
- assign wire_rx_data[19] = WRX_DX[19] & ~island_off[0];
- wire p_iso_wrx_dx_20__A = WRX_DX[20];
- wire p_iso_wrx_dx_20__ISO = island_off[0];
- assign wire_rx_data[20] = WRX_DX[20] & ~island_off[0];
- wire p_iso_wrx_dx_21__A = WRX_DX[21];
- wire p_iso_wrx_dx_21__ISO = island_off[0];
- assign wire_rx_data[21] = WRX_DX[21] & ~island_off[0];
- wire p_iso_wrx_dx_22__A = WRX_DX[22];
- wire p_iso_wrx_dx_22__ISO = island_off[0];
- assign wire_rx_data[22] = WRX_DX[22] & ~island_off[0];
- wire p_iso_wrx_dx_23__A = WRX_DX[23];
- wire p_iso_wrx_dx_23__ISO = island_off[0];
- assign wire_rx_data[23] = WRX_DX[23] & ~island_off[0];
- wire p_iso_wrx_dx_24__A = WRX_DX[24];
- wire p_iso_wrx_dx_24__ISO = island_off[0];
- assign wire_rx_data[24] = WRX_DX[24] & ~island_off[0];
- wire p_iso_wrx_dx_25__A = WRX_DX[25];
- wire p_iso_wrx_dx_25__ISO = island_off[0];
- assign wire_rx_data[25] = WRX_DX[25] & ~island_off[0];
- wire p_iso_wrx_dx_26__A = WRX_DX[26];
- wire p_iso_wrx_dx_26__ISO = island_off[0];
- assign wire_rx_data[26] = WRX_DX[26] & ~island_off[0];
- wire p_iso_wrx_dx_27__A = WRX_DX[27];
- wire p_iso_wrx_dx_27__ISO = island_off[0];
- assign wire_rx_data[27] = WRX_DX[27] & ~island_off[0];
- wire p_iso_wrx_dx_28__A = WRX_DX[28];
- wire p_iso_wrx_dx_28__ISO = island_off[0];
- assign wire_rx_data[28] = WRX_DX[28] & ~island_off[0];
- wire p_iso_wrx_dx_29__A = WRX_DX[29];
- wire p_iso_wrx_dx_29__ISO = island_off[0];
- assign wire_rx_data[29] = WRX_DX[29] & ~island_off[0];
- wire p_iso_wrx_dx_30__A = WRX_DX[30];
- wire p_iso_wrx_dx_30__ISO = island_off[0];
- assign wire_rx_data[30] = WRX_DX[30] & ~island_off[0];
- wire p_iso_wrx_dx_31__A = WRX_DX[31];
- wire p_iso_wrx_dx_31__ISO = island_off[0];
- assign wire_rx_data[31] = WRX_DX[31] & ~island_off[0];
- wire p_iso_wrx_dx_32__A = WRX_DX[32];
- wire p_iso_wrx_dx_32__ISO = island_off[0];
- assign wire_rx_data[32] = WRX_DX[32] & ~island_off[0];
- wire p_iso_wrx_dx_33__A = WRX_DX[33];
- wire p_iso_wrx_dx_33__ISO = island_off[0];
- assign wire_rx_data[33] = WRX_DX[33] & ~island_off[0];
- wire p_iso_wrx_dx_34__A = WRX_DX[34];
- wire p_iso_wrx_dx_34__ISO = island_off[0];
- assign wire_rx_data[34] = WRX_DX[34] & ~island_off[0];
- wire p_iso_wrx_dx_35__A = WRX_DX[35];
- wire p_iso_wrx_dx_35__ISO = island_off[0];
- assign wire_rx_data[35] = WRX_DX[35] & ~island_off[0];
- wire p_iso_wrx_dx_36__A = WRX_DX[36];
- wire p_iso_wrx_dx_36__ISO = island_off[0];
- assign wire_rx_data[36] = WRX_DX[36] & ~island_off[0];
- wire p_iso_wrx_dx_37__A = WRX_DX[37];
- wire p_iso_wrx_dx_37__ISO = island_off[0];
- assign wire_rx_data[37] = WRX_DX[37] & ~island_off[0];
- wire p_iso_wrx_dx_38__A = WRX_DX[38];
- wire p_iso_wrx_dx_38__ISO = island_off[0];
- assign wire_rx_data[38] = WRX_DX[38] & ~island_off[0];
- wire p_iso_wrx_dx_39__A = WRX_DX[39];
- wire p_iso_wrx_dx_39__ISO = island_off[0];
- assign wire_rx_data[39] = WRX_DX[39] & ~island_off[0];
- wire p_iso_wrx_ew_0__A = WRX_EW[0];
- wire p_iso_wrx_ew_0__ISO = island_off[0];
- assign wire_rx_edge[0] = WRX_EW[0] & ~island_off[0];
- wire p_iso_wrx_ew_1__A = WRX_EW[1];
- wire p_iso_wrx_ew_1__ISO = island_off[0];
- assign wire_rx_edge[1] = WRX_EW[1] & ~island_off[0];
- wire p_iso_wrx_ew_2__A = WRX_EW[2];
- wire p_iso_wrx_ew_2__ISO = island_off[0];
- assign wire_rx_edge[2] = WRX_EW[2] & ~island_off[0];
- wire p_iso_wrx_ew_3__A = WRX_EW[3];
- wire p_iso_wrx_ew_3__ISO = island_off[0];
- assign wire_rx_edge[3] = WRX_EW[3] & ~island_off[0];
- wire p_iso_wrx_ew_4__A = WRX_EW[4];
- wire p_iso_wrx_ew_4__ISO = island_off[0];
- assign wire_rx_edge[4] = WRX_EW[4] & ~island_off[0];
- wire p_iso_wrx_ew_5__A = WRX_EW[5];
- wire p_iso_wrx_ew_5__ISO = island_off[0];
- assign wire_rx_edge[5] = WRX_EW[5] & ~island_off[0];
- wire p_iso_wrx_ew_6__A = WRX_EW[6];
- wire p_iso_wrx_ew_6__ISO = island_off[0];
- assign wire_rx_edge[6] = WRX_EW[6] & ~island_off[0];
- wire p_iso_wrx_ew_7__A = WRX_EW[7];
- wire p_iso_wrx_ew_7__ISO = island_off[0];
- assign wire_rx_edge[7] = WRX_EW[7] & ~island_off[0];
- wire p_iso_wrx_ew_8__A = WRX_EW[8];
- wire p_iso_wrx_ew_8__ISO = island_off[0];
- assign wire_rx_edge[8] = WRX_EW[8] & ~island_off[0];
- wire p_iso_wrx_ew_9__A = WRX_EW[9];
- wire p_iso_wrx_ew_9__ISO = island_off[0];
- assign wire_rx_edge[9] = WRX_EW[9] & ~island_off[0];
- wire p_iso_wrx_ew_10__A = WRX_EW[10];
- wire p_iso_wrx_ew_10__ISO = island_off[0];
- assign wire_rx_edge[10] = WRX_EW[10] & ~island_off[0];
- wire p_iso_wrx_ew_11__A = WRX_EW[11];
- wire p_iso_wrx_ew_11__ISO = island_off[0];
- assign wire_rx_edge[11] = WRX_EW[11] & ~island_off[0];
- wire p_iso_wrx_ew_12__A = WRX_EW[12];
- wire p_iso_wrx_ew_12__ISO = island_off[0];
- assign wire_rx_edge[12] = WRX_EW[12] & ~island_off[0];
- wire p_iso_wrx_ew_13__A = WRX_EW[13];
- wire p_iso_wrx_ew_13__ISO = island_off[0];
- assign wire_rx_edge[13] = WRX_EW[13] & ~island_off[0];
- wire p_iso_wrx_ew_14__A = WRX_EW[14];
- wire p_iso_wrx_ew_14__ISO = island_off[0];
- assign wire_rx_edge[14] = WRX_EW[14] & ~island_off[0];
- wire p_iso_wrx_ew_15__A = WRX_EW[15];
- wire p_iso_wrx_ew_15__ISO = island_off[0];
- assign wire_rx_edge[15] = WRX_EW[15] & ~island_off[0];
- wire p_iso_wrx_ew_16__A = WRX_EW[16];
- wire p_iso_wrx_ew_16__ISO = island_off[0];
- assign wire_rx_edge[16] = WRX_EW[16] & ~island_off[0];
- wire p_iso_wrx_ew_17__A = WRX_EW[17];
- wire p_iso_wrx_ew_17__ISO = island_off[0];
- assign wire_rx_edge[17] = WRX_EW[17] & ~island_off[0];
- wire p_iso_wrx_ew_18__A = WRX_EW[18];
- wire p_iso_wrx_ew_18__ISO = island_off[0];
- assign wire_rx_edge[18] = WRX_EW[18] & ~island_off[0];
- wire p_iso_wrx_ew_19__A = WRX_EW[19];
- wire p_iso_wrx_ew_19__ISO = island_off[0];
- assign wire_rx_edge[19] = WRX_EW[19] & ~island_off[0];
- wire p_iso_wrx_clk__A = WRX_WCLK40;
- wire p_iso_wrx_clk__ISO = island_off[0];
- assign wire_rx_clk = WRX_WCLK40 & ~island_off[0];
- wire p_iso_wrx_slp__A = WRX_SLP;
- wire p_iso_wrx_slp__ISO = island_off[0];
- assign s_wrx_slp = WRX_SLP & ~island_off[0];
- wire p_iso_wrx_slm__A = WRX_SLM;
- wire p_iso_wrx_slm__ISO = island_off[0];
- assign s_wrx_slm = WRX_SLM & ~island_off[0];
  wire p_wiredtx__WTX_PH0 = TXPH[0];
  wire p_wiredtx__WTX_PH90 = TXPH[2];
  wire p_wiredtx__WTX_PH180 = TXPH[4];
@@ -1981,12 +1567,6 @@ module pt_analog_top_stub(
  assign CMD_POST_P = 1'b0;
  assign CMD_POST_N = 1'b0;
  assign WTX_EXT_DATA = 1'b0;
- wire p_iso_wire_tx_clk__A = WTX_WCLK40;
- wire p_iso_wire_tx_clk__ISO = island_off[0];
- assign wire_tx_clk = WTX_WCLK40 & ~island_off[0];
- wire p_iso_wtx_ext_data__A = WTX_EXT_DATA;
- wire p_iso_wtx_ext_data__ISO = island_off[0];
- assign s_wtx_ext_data = WTX_EXT_DATA & ~island_off[0];
  wire p_steer_0__IN = CMD_MAIN_P;
  assign TX_MAIN_P = 1'b0;
  wire p_steer_1__IN = CMD_MAIN_N;

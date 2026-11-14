@@ -75,24 +75,26 @@ inst digital pt_digital_macro chip
   spi_sclk=spi_sclk spi_cs_n=spi_cs_n spi_mosi=spi_mosi spi_miso>spi_miso spi_miso_oe>spi_miso_oe
   host_word_clk=host_word_clk h2d_clk=h2d_clk h2d_pin[{0:9}]=h2d_pin[\1]
   d2h_pin[{0:9}]>d2h_pin[\1] d2h_clk_pin>d2h_clk_pin d2h_oe>d2h_oe d2h_pdrv[{0:1}]>d2h_pdrv[\1] d2h_sl>d2h_sl
-  # clocks from the analog top (all through iso clamps on the core rail)
-  ref_clk=ref_clk wire_rx_clk=wire_rx_clk wire_tx_clk=wire_tx_clk rf_rx_clk=rf_rx_clk rf_tx_clk=rf_tx_clk
-  ct_wclk=ct_wclk ct_det_clk>ct_det_clk
-  fc_src[{0:5}]=fc_src[\1]
+  # CP4-1: every macro input that comes from a switched island is clamped INSIDE the macro (AND2 standard cell with
+  # island_on[k], first gate after the pin, excluded from port buffering / hold fixing); see the macroclamp lines below.
+  # Three clock nets keep an outside clamp because clk_obs also uses them: rf_rx_clk, host_word_clk, fc_src[0].
+  ref_clk=ref_clk wire_rx_clk=WRX_WCLK40 wire_tx_clk=WTX_WCLK40 rf_rx_clk=rf_rx_clk rf_tx_clk=CONV_CLK
+  ct_wclk=PRE_CK ct_det_clk>ct_det_clk
+  fc_src[0]=fc_src[0] fc_src[1]=PLL_CDR_FBCK fc_src[2]=RING_OSC_CK fc_src[3]=VCO_REPLICA_CK fc_src[4]=fc_src[4] fc_src[5]=LO_FB
   # wired datapath.  wire_rx_valid / wire_tx_request have no analog producer: tied (D-VALID)
-  wire_rx_data[{0:39}]=wire_rx_data[\1] wire_rx_edge[{0:19}]=wire_rx_edge[\1] wire_rx_valid=VDD
+  wire_rx_data[{0:39}]=WRX_DX[\1] wire_rx_edge[{0:19}]=WRX_EW[\1] wire_rx_valid=VDD
   wire_tx_data[{0:39}]>wire_tx_data[\1] wire_tx_request=VDD
   # RF datapath: 10-bit two's complement, MSB-justified in 12-bit I [11:0] / Q [23:12] fields; low 2 bits tied
-  rf_rx_sample[{0:1}]=VSS rf_rx_sample[{2:11}]=rf_rx_sample[\1] rf_rx_sample[{12:13}]=VSS rf_rx_sample[{14:23}]=rf_rx_sample[\1]
-  rf_rx_sample_b[{0:1}]=VSS rf_rx_sample_b[{2:11}]=rf_rx_sample_b[\1] rf_rx_sample_b[{12:13}]=VSS rf_rx_sample_b[{14:23}]=rf_rx_sample_b[\1]
-  rf_rx_ph_i=rf_rx_ph_i rf_rx_ph_q=rf_rx_ph_q      # ADC interleave phase: 0 = this edge registers core A, 1 = core B
+  rf_rx_sample[{0:1}]=VSS rf_rx_sample[{2:11}]=ADCI_CODE[{0:9}] rf_rx_sample[{12:13}]=VSS rf_rx_sample[{14:23}]=ADCQ_CODE[{0:9}]
+  rf_rx_sample_b[{0:1}]=VSS rf_rx_sample_b[{2:11}]=ADCI_CODEB[{0:9}] rf_rx_sample_b[{12:13}]=VSS rf_rx_sample_b[{14:23}]=ADCQ_CODEB[{0:9}]
+  rf_rx_ph_i=ADCI_PH rf_rx_ph_q=ADCQ_PH      # ADC interleave phase: 0 = this edge registers core A, 1 = core B
   rf_rx_valid=VDD      # no analog producer: the macro must make it (D-CONV, D-VALID)
   rf_tx_sample[{0:1}]>- rf_tx_sample[{2:11}]>rf_tx_sample[\1] rf_tx_sample[{12:13}]>- rf_tx_sample[{14:23}]>rf_tx_sample[\1]
   rf_tx_clk_out>rf_tx_clk_out rf_tx_request=VDD
   # islands, ATB, debug pads (unchanged ports)
   island_en[{0,1,2,4,5}]>island_en[\1] island_en[3]>-
   island_on[{0,1,2,4,5}]>island_on[\1] island_on[3]>-
-  island_off[{0,1,2,4,5}]>island_off[\1] island_off[3]>-
+  island_off[{0,1,2,5}]>island_off[\1] island_off[{3,4}]>-
   island_pgood[{0,1,2,4,5}]=island_pgood[\1] island_pgood[3]=VSS
   wired_on_ext=wired_on_ext
   atb0_sw[{0,13,21,28,34,35,42,43,44,45,46,47,48,49,50,51,52,53,54,55,57}]>atb0_sw[\1] atb0_sw[{1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,22,23,24,25,26,27,29,30,31,32,33,36,37,38,39,40,41,56}]>-
@@ -102,13 +104,20 @@ inst digital pt_digital_macro chip
   clk_obs_oe>clk_obs_oe dbg_obs0>dbg_obs0 dbg_obs0_oe>dbg_obs0_oe dbg_obs1>dbg_obs1 dbg_obs1_oe>dbg_obs1_oe
   wire_rx_ptrim_en>wire_rx_ptrim_en
   # status into the macro (replaces analog_status[11:0] / wire_analog_status[12:0], D-STATUS)
-  s_pll_tx_lock=s_pll_tx_lock s_pll_cdr_lock=s_pll_cdr_lock s_ref_present=s_ref_present s_refbuf_ready=s_refbuf_ready
-  s_adc_{i,i_b,q,q_b}_ovl=s_adc_\1_ovl s_adc_{i,i_b,q,q_b}_done=s_adc_\1_done
-  s_detect_diff_pos=s_detect_diff_pos s_detect_diff_neg=s_detect_diff_neg s_detect_se_p=s_detect_se_p s_detect_se_n=s_detect_se_n
-  s_wrx_slp=s_wrx_slp s_wrx_slm=s_wrx_slm s_wtx_ext_data=s_wtx_ext_data
-  s_aux_present=s_aux_present s_wtx_ext_present=s_wtx_ext_present
+  s_pll_tx_lock=PLL_TX_LOCK s_pll_cdr_lock=PLL_CDR_LOCK s_ref_present=s_ref_present s_refbuf_ready=REFBUF_READY
+  s_adc_i_ovl=ADCI_OVL s_adc_i_b_ovl=ADCI_OVLB s_adc_q_ovl=ADCQ_OVL s_adc_q_b_ovl=ADCQ_OVLB
+  s_adc_i_done=ADCI_DONE s_adc_i_b_done=ADCI_DONEB s_adc_q_done=ADCQ_DONE s_adc_q_b_done=ADCQ_DONEB
+  s_detect_diff_pos=DET_DIFF_POS s_detect_diff_neg=DET_DIFF_NEG s_detect_se_p=DET_SE_P s_detect_se_n=DET_SE_N
+  s_wrx_slp=WRX_SLP s_wrx_slm=WRX_SLM s_wtx_ext_data=WTX_EXT_DATA
+  s_aux_present=AUX_PRESENT s_wtx_ext_present=WTX_EXT_PRESENT
   fault=VSS      # no monitor block exists (D-FAULT); floating high would force every TX path off
   # every c_* net is a macro output port of the same name (ctl_ports.txt); they are not repeated here
+
+# macroclamp <island> <macro pin regex>: inputs the macro must AND with island_on[bit(island)] before any other gate
+macroclamp conv rf_rx_sample(_b)?\[([2-9]|1[01]|1[4-9]|2[0-3])\]|rf_rx_ph_[iq]|s_adc_\w+|s_refbuf_ready
+macroclamp pll rf_tx_clk|ct_wclk|fc_src\[[15]\]|s_pll_(tx|cdr)_lock
+macroclamp debug fc_src\[[23]\]|s_(aux|wtx_ext)_present
+macroclamp wired wire_rx_data\[\d+\]|wire_rx_edge\[\d+\]|wire_rx_clk|wire_tx_clk|s_detect_\w+|s_wrx_sl[pm]|s_wtx_ext_data
 
 # ================= always-on core rail =================
 inst por por core
@@ -237,35 +246,17 @@ inst adc_{i,q} pt_adc_\1 conv
 # the clamp is inside the <= 20 ps rms clock budget only if the converters owner accepts it: D-CONV)
 inst iso_conv_clk iso_clamp_x4 conv
   A=CONV_CLK ISO=island_off[2] Y>CONV_CLK_C VDD~RAIL_conv VSS~VSS
-inst iso_adc_i_{0:9} iso_clamp core
-  A=ADCI_CODE[\1] ISO=island_off[4] Y>rf_rx_sample[{2:11}] VDD~VDD VSS~VSS
-inst iso_adc_q_{0:9} iso_clamp core
-  A=ADCQ_CODE[\1] ISO=island_off[4] Y>rf_rx_sample[{14:23}] VDD~VDD VSS~VSS
-inst iso_adcb_i_{0:9} iso_clamp core
-  A=ADCI_CODEB[\1] ISO=island_off[4] Y>rf_rx_sample_b[{2:11}] VDD~VDD VSS~VSS
-inst iso_adcb_q_{0:9} iso_clamp core
-  A=ADCQ_CODEB[\1] ISO=island_off[4] Y>rf_rx_sample_b[{14:23}] VDD~VDD VSS~VSS
-inst iso_adc_ph_{i,q} iso_clamp core
-  A=ADC{I,Q}_PH ISO=island_off[4] Y>rf_rx_ph_\1 VDD~VDD VSS~VSS
 # DONE / DONEB are level flags, not clocks and not the sample valid (INTEGRATION.md section 2): status only.
 # The macro makes rf_rx_valid; the A/B select is the ADC's PH output (D-CONV).
-inst iso_adc_done_{i,i_b,q,q_b} iso_clamp core
-  A={ADCI_DONE,ADCI_DONEB,ADCQ_DONE,ADCQ_DONEB} ISO=island_off[4] Y>s_adc_\1_done VDD~VDD VSS~VSS
-inst iso_adc_ovl_{i,i_b,q,q_b} iso_clamp core
-  A={ADCI_OVL,ADCI_OVLB,ADCQ_OVL,ADCQ_OVLB} ISO=island_off[4] Y>s_adc_\1_ovl VDD~VDD VSS~VSS
 # DAC: CLK = the macro's forwarded rf_tx_clk_out (DT-6; the DAC captures on the falling edge), code from rf_tx_sample
 inst dac_{i,q} pt_dac_\1 conv
   VDD~RAIL_conv VSS~VSS OUTP~DAC\U1_P OUTN~DAC\U1_N IBIAS~BIAS_dac_\1 CLK=rf_tx_clk_out
   EN=c_dac_\1_en HOLD_ZERO=c_dac_\1_hold_zero CODE{0:9}=rf_tx_sample[{2:11,14:23}] ATB_BIAS~{ATBN_dac_bias,-}
 inst refbuf pt_refbuf conv
   VDD~RAIL_conv VSS~VSS VREF0~VREF0_MASTER VREF~VREF_CONV IBIAS~BIAS_refbuf EN=c_refbuf_en OVR=c_refbuf_ovr READY>REFBUF_READY
-inst iso_refbuf_ready iso_clamp core
-  A=REFBUF_READY ISO=island_off[4] Y>s_refbuf_ready VDD~VDD VSS~VSS
-# rf_rx_clk = rf_tx_clk = CONV_CLK (INTEGRATION.md section 2), clamped on the core rail by the pll island's state
+# rf_rx_clk = rf_tx_clk = CONV_CLK (INTEGRATION.md section 2); rf_rx_clk keeps an outside clamp (clk_obs IN4 uses it)
 inst iso_rf_rx_clk iso_clamp_x4 core
   A=CONV_CLK ISO=island_off[2] Y>rf_rx_clk VDD~VDD VSS~VSS
-inst iso_rf_tx_clk iso_clamp_x4 core
-  A=CONV_CLK ISO=island_off[2] Y>rf_tx_clk VDD~VDD VSS~VSS
 
 # ================= RF transmit (rf island) =================
 inst txmix_{i,q} pt_txmix_\1 rf
@@ -305,8 +296,6 @@ inst lo_obs pt_lo_obs pll
   LP~LOI_IP LN~LOI_IN EN=c_lo_obs_en OBS>LO_OBS VDD~RAIL_pll VSS~VSS
 inst lo_obs_q pt_lo_obs pll
   LP~LOI_QP LN~LOI_QN EN=VSS OBS>- VDD~RAIL_pll VSS~VSS      # matched Q-tank load (lo_obs.spice header); not in the v6 floorplan
-inst iso_lo_fb iso_clamp_x4 core
-  A=LO_FB ISO=island_off[2] Y>fc_src[5] VDD~VDD VSS~VSS      # LO frequency check = FB (VCO/2N) on the counter, D-LO
 
 # ================= clocks (pll island) =================
 # REF_IN receiver on the always-on core rail, OUTN -> ref_clk (LO-INTEGRATION.md section 5, MW-2a); not in the v6 floorplan
@@ -330,26 +319,18 @@ inst prescale_conv pt_prescale pll
   CK_IN=WIRE_CK EN=c_prescale_conv_en D2=c_prescale_conv_d[0] D4=c_prescale_conv_d[1] D8=c_prescale_conv_d[2] D16=c_prescale_conv_d[3] CK_OUT>PRE_CONV_CK VDD~RAIL_pll VSS~VSS
 inst prescale_hf pt_prescale pll
   CK_IN=CDRPH[0] EN=c_prescale_hf_en D2=c_prescale_hf_d[0] D4=c_prescale_hf_d[1] D8=c_prescale_hf_d[2] D16=c_prescale_hf_d[3] CK_OUT>PRE_HF_CK VDD~RAIL_pll VSS~VSS
-inst iso_ct_wclk iso_clamp_x4 core
-  A=PRE_CK ISO=island_off[2] Y>ct_wclk VDD~VDD VSS~VSS
 # regulated ring supplies (MW-31): one pt_pll_vreg2 for both rings
 inst pll_vreg2 pt_pll_vreg2 pll
   VIN~RAIL_pll VOUT_TX~VREG_TX VOUT_CDR~VREG_CDR VSS~VSS BYP_TX=c_pllvreg_byp_tx BYP_CDR=c_pllvreg_byp_cdr ATB_OUT~- ATB_G~-
 inst pll_tx pt_pll_ring_core pll
   REF=PREF EN=c_pll_tx_en N4=c_pll_tx_n4 N8=c_pll_tx_n8 HOLD=VSS IBIAS~BIAS_pll_ring_tx PH{0,1,2,4,6}>TXPH[\1] PH{3,5,7}>-
   LOCK>PLL_TX_LOCK FBCK>PLL_TX_FBCK REFO>- ATB_VCTRL~ATBN_pll_vctrl BAND=c_pll_tx_band VDD~VREG_TX VSS~VSS
-inst iso_pll_tx_lock iso_clamp core
-  A=PLL_TX_LOCK ISO=island_off[2] Y>s_pll_tx_lock VDD~VDD VSS~VSS
 inst iso_pll_tx_fbck iso_clamp_x4 core
   A=PLL_TX_FBCK ISO=island_off[2] Y>fc_src[0] VDD~VDD VSS~VSS
 inst pll_cdr pt_pll_ring pll
   REF=CDR_REF EN=c_pll_cdr_en N4=c_pll_cdr_n4 N8=c_pll_cdr_n8 N5=c_pll_cdr_n5 N10=c_pll_cdr_n10 HOLD=CDR_HOLD
   IBIAS~BIAS_pll_ring_rx PH{0:7}>CDRPH[\1] LOCK>PLL_CDR_LOCK FBCK>PLL_CDR_FBCK REFO>- ATB_VCTRL~CDR_VCTRL
   KP{0:2}=c_pll_cdr_kp[\1] FU{0:3}=CDR_UP[\1] FD{0:3}=CDR_DN[\1] BAND=c_pll_cdr_band VDD~VREG_CDR VSS~VSS
-inst iso_pll_cdr_lock iso_clamp core
-  A=PLL_CDR_LOCK ISO=island_off[2] Y>s_pll_cdr_lock VDD~VDD VSS~VSS
-inst iso_pll_cdr_fbck iso_clamp_x4 core
-  A=PLL_CDR_FBCK ISO=island_off[2] Y>fc_src[1] VDD~VDD VSS~VSS
 # pt_cdr r13 (published 2026-11-14, with the OTA offset trim otr[4:0], otrs).  IB_PLL is left open: the ring takes BIAS_pll_ring_rx (D-BIAS)
 inst cdr pt_cdr pll
   VDD_PLL_SW~RAIL_pll VSS~VSS IBIAS~BIAS_cdr cdr_en=c_cdr_en pfd_mode=c_cdr_pfd_mode ref_sel=c_cdr_ref_sel g{0:2}=c_cdr_g[\1]
@@ -373,16 +354,10 @@ inst iso_aux_ck iso_clamp_x4 pll
   A=AUX_CK ISO=island_off[5] Y>AUX_CK_P VDD~RAIL_pll VSS~VSS
 inst iso_wtx_dx iso_clamp wired
   A=WTX_DX_DBG ISO=island_off[5] Y>WTX_DX VDD~RAIL_wired VSS~VSS
-inst iso_{aux,wtx_ext}_present iso_clamp core
-  A={AUX,WTX_EXT}_PRESENT ISO=island_off[5] Y>s_\1_present VDD~VDD VSS~VSS
 inst ring_osc pt_ring_osc debug
   EN=c_ring_osc_en OUT>RING_OSC_CK VDD~RAIL_debug VSS~VSS
 inst vco_replica pt_vco_replica debug
   EN=c_vco_replica_en VCTRL~VCO_REPLICA_VCTRL OUT>VCO_REPLICA_CK ATB_VTAIL~- VDD~RAIL_debug VSS~VSS
-inst iso_ring_osc iso_clamp_x4 core
-  A=RING_OSC_CK ISO=island_off[5] Y>fc_src[2] VDD~VDD VSS~VSS      # 165-255 MHz vs the 156.25 MHz fc_src limit: D-FC
-inst iso_vco_replica iso_clamp_x4 core
-  A=VCO_REPLICA_CK ISO=island_off[5] Y>fc_src[3] VDD~VDD VSS~VSS
 # /4 prescalers in front of CLK_OBS for the fast sources (clk_obs16.spice header): one is in the floorplan, seven are needed (D-OBS)
 inst obs_pre4_{wire,wsmp,ref,aux,pll,cdr} pt_obs_pre4 debug
   CK={WIRE_CK,WSMP_CK,ref_clk,AUX_CK,TXPH[1],CDRPH[1]} EN=c_obs_pre4_en[{0:5}] OUT>OBS4_\1 VDD~RAIL_debug VSS~VSS
@@ -421,8 +396,6 @@ inst detect pt_detect wired
   VDD_WIRE_SW~RAIL_wired VSS~VSS IBIAS~BIAS_detect det_en=c_detect_en det_clk=ct_det_clk RX_P~URX_P RX_N~URX_N TX_P~WIRE_TX_P TX_N~WIRE_TX_N
   det_thr{0:1}=c_detect_thr[\1] det_se{0:1}=c_detect_se[\1] det_src_tx=c_detect_src_tx det_inject=c_detect_inject
   DIFF_POS>DET_DIFF_POS DIFF_NEG>DET_DIFF_NEG SE_P>DET_SE_P SE_N>DET_SE_N atb_det_vref~ATBN_detect_vref
-inst iso_detect_{diff_pos,diff_neg,se_p,se_n} iso_clamp core
-  A=DET_\U1 ISO=island_off[0] Y>s_detect_\1 VDD~VDD VSS~VSS
 # RX word divider (MW-11, analog/wired_rx/PINS.md: `wordclk_rx` on CKP[0], same island as the capture). The single
 # pt_wordclk of the floorplan is used here; the wired TX has its own dividers. D-WORDCLK
 inst wordclk_rx pt_wordclk wired
@@ -442,14 +415,6 @@ inst wrx_cap pt_wrx_cap wired
   PSEL{0:2}=c_wrx_cap_psel[\1] SLIPP=c_wrx_cap_slipp SLIPM=c_wrx_cap_slipm
   DW{0:19}>- EW{0:19}>WRX_EW[\1] SLP>WRX_SLP SLM>WRX_SLM UP{0:3}>WRX_UP[\1] DN{0:3}>WRX_DN[\1]
   DX{0:39}>WRX_DX[\1] WCLK40>WRX_WCLK40 VDD~RAIL_wired VSS~VSS
-inst iso_wrx_dx_{0:39} iso_clamp core
-  A=WRX_DX[\1] ISO=island_off[0] Y>wire_rx_data[\1] VDD~VDD VSS~VSS
-inst iso_wrx_ew_{0:19} iso_clamp core
-  A=WRX_EW[\1] ISO=island_off[0] Y>wire_rx_edge[\1] VDD~VDD VSS~VSS
-inst iso_wrx_clk iso_clamp_x4 core
-  A=WRX_WCLK40 ISO=island_off[0] Y>wire_rx_clk VDD~VDD VSS~VSS
-inst iso_wrx_{slp,slm} iso_clamp core
-  A=WRX_\U1 ISO=island_off[0] Y>s_wrx_\1 VDD~VDD VSS~VSS
 
 # ================= wired transmit (wired island) =================
 # ring phases PH0/2/4/6 go straight to the serializer (analog/wired_tx/INTEGRATION.md section 2, WT25/WT26/WT29:
@@ -463,10 +428,6 @@ inst wiredtx pt_wiredtx wired
   MAIN_CODE{0:7}=c_wiredtx_main_code[\1] POST_CODE{0:7}=c_wiredtx_post_code[\1]
   CMD_MAIN_P>CMD_MAIN_P CMD_MAIN_N>CMD_MAIN_N CMD_POST_P>CMD_POST_P CMD_POST_N>CMD_POST_N
   MAIN_BIAS~TX_MAIN_BIAS POST_BIAS~TX_POST_BIAS WTX_EXT_DATA>WTX_EXT_DATA ATB_NBIAS~ATBN_wiredtx_bias ATB_PBIAS~- VDD~RAIL_wired VSS~VSS
-inst iso_wire_tx_clk iso_clamp_x4 core
-  A=WTX_WCLK40 ISO=island_off[0] Y>wire_tx_clk VDD~VDD VSS~VSS
-inst iso_wtx_ext_data iso_clamp core
-  A=WTX_EXT_DATA ISO=island_off[0] Y>s_wtx_ext_data VDD~VDD VSS~VSS
 # pad attachment cells (pads owner; floorplan steer_0..5, attached_tx_interlock, term_buffer)
 inst steer_{0:3} tx_steer wired
   VDD~RAIL_wired VSS~VSS IN=CMD_{MAIN_P,MAIN_N,POST_P,POST_N} OUT>TX_{MAIN_P,MAIN_N,POST_P,POST_N}

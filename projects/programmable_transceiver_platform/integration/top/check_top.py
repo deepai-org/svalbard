@@ -37,6 +37,9 @@ FP_ALIAS = {'clk_obs16': 'clk_obs', 'obs_pre4': 'obs_pre4_wire', 'wordclk': 'wor
 FP_SKIP = re.compile(r'^(leaf_[fs]\d+|atb_grp\d+|.*_rsv|digital|polyphase|rx_wclk_in)$')     # deleted by user decisions CP4-2 / CP4-3 (2026-11-14)
 
 
+MC = '<macroclamp>'
+
+
 def expand_items(body):
     out = []
     for it in body.split(','):
@@ -77,6 +80,9 @@ def parse(text):
                 cur = []
             elif t[0] == 'waive':
                 waive.append((t[1], ' '.join(t[2:])))
+                cur = []
+            elif t[0] == 'macroclamp':
+                waive.append((MC, t[1], t[2]))
                 cur = []
             elif t[0] == 'inst':
                 g = groups(t[1]); combos = list(itertools.product(*g)); cur = []
@@ -167,6 +173,11 @@ def rtl_macro_ports(text):
     return out
 
 
+def c_key(p):
+    m = re.fullmatch(r'(\w+)\[(\d+)\]', p)
+    return (m.group(1), int(m.group(2))) if m else (p, -1)
+
+
 def bus(net):
     m = re.fullmatch(r'(\w+)\[(\d+)\]', net)
     return (m.group(1), int(m.group(2))) if m else (net, None)
@@ -211,6 +222,7 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
             if n != '-': nets[n].append((name, p, k))
     ctl = load_ctl(ctl_txt)
     cbits = collections.defaultdict(set)
+    mc_used = {}
     for n, users in nets.items():
         base, idx = bus(n)
         if base.startswith('c_'):
@@ -232,7 +244,11 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
                 lg = inst[lname]['group']
                 if dg in ALWAYS_ON or dg == lg: continue
                 if inst[lname]['master'].startswith('iso_') and lpin == 'A': continue
-                if any(re.fullmatch(rx, f'{lname}.{lpin}') for rx, _ in waive): continue
+                if any(re.fullmatch(w[0], f'{lname}.{lpin}') for w in waive if w[0] != MC): continue
+                if lname == 'digital':      # CP4-1: clamped inside the macro, if a macroclamp line of the DRIVING island names the pin
+                    hit = [w for w in waive if w[0] == MC and re.fullmatch(w[2], lpin)]
+                    if hit and hit[0][1] == dg: mc_used[lpin] = dg; continue
+                    if hit: R['iso'].append(f'digital.{lpin}: macroclamp says island {hit[0][1]} but the driver {dname}.{dpin} is on {dg}'); continue
                 (R['alwayson'] if lg in ALWAYS_ON else R['crossing']).append(f'{n}: {dname}.{dpin} ({dg}) -> {lname}.{lpin} ({lg}) without an iso cell')
     for name, i in inst.items():        # every input of an always-on instance must have a defined source
         if i['group'] in ALWAYS_ON:
@@ -271,7 +287,12 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
         if len(gs) > 1 and not any(inst[u[0]]['master'] == 'iso_pd' for u in users): ana.append(f'{n} ({"/".join(sorted(gs))})')
     info['analog nets across two islands without iso_pd'] = sorted(ana)
     info['intentional no-connects'] = sum(1 for i in inst.values() for k, n in i['pins'].values() if n == '-')
-    info['waived crossings'] = [f'{rx}: {t}' for rx, t in waive]
+    info['waived crossings'] = [f'{w[0]}: {w[1]}' for w in waive if w[0] != MC]
+    info['macro-internal clamps (CP4-1)'] = dict(collections.Counter(mc_used.values()))
+    for p in inst['digital']['pins']:       # a macroclamp line that names a pin not driven from that island is stale
+        hit = [w for w in waive if w[0] == MC and re.fullmatch(w[2], p)]
+        if hit and p not in mc_used: R['iso'].append(f'digital.{p}: macroclamp line ({hit[0][1]}) but the pin is not driven from a switched island')
+    info['_macroclamp'] = mc_used
     # --- missing instances
     want = [w for w in list(fp6['placed'])+list(fp6['failures']) if not FP_SKIP.match(w)]
     for w in want:
@@ -411,12 +432,13 @@ def selftest():
         ('multidrive', dict(conn=conn.replace('OUTP>AUX_CK OUTN>-', 'OUTP>AUX_CK OUTN>AUX_CK', 1)), 'AUX_CK'),
         ('missing', dict(conn=re.sub(r'inst vthdac .*\n(  .*\n)+', '', conn, 1)), 'vthdac'),
         ('crossing', dict(conn=conn.replace(' DX=WTX_DX\n', ' DX=WTX_DX_DBG\n', 1)), 'wiredtx.DX'),
-        ('alwayson', dict(conn=conn.replace('s_refbuf_ready=s_refbuf_ready', 's_refbuf_ready=REFBUF_READY', 1)), 'digital.s_refbuf_ready'),
         ('alwayson', dict(conn=conn.replace('EN=c_aosc_en CLK', 'EN=AOSC_EN_FLOAT CLK', 1)), 'aosc.EN'),
         ('supply', dict(conn=conn.replace('inst lna pt_lna rf', 'inst lna pt_lna conv', 1)), 'lna.VDD'),
-        ('iso', dict(conn=conn.replace('A=PLL_TX_LOCK ISO=island_off[2]', 'A=PLL_TX_LOCK ISO=island_off[0]', 1)), 'iso_pll_tx_lock'),
+        ('iso', dict(conn=conn.replace('A=HOST_CLK ISO=island_off[2]', 'A=HOST_CLK ISO=island_off[0]', 1)), 'iso_host_clk'),
         ('iso', dict(conn=conn.replace('inst iso_wtx_dx iso_clamp wired', 'inst iso_wtx_dx iso_clamp pll', 1).replace('Y>WTX_DX VDD~RAIL_wired', 'Y>WTX_DX VDD~RAIL_pll', 1)), 'iso_wtx_dx'),
         ('staged', dict(mt=mt.replace('master pt_lo_lf          A/timing/generated/lo_lf.ext.spice:pt_lo_lf', 'master pt_lo_lf          staged A/timing/generated/lo_lf.ext.spice:pt_lo_lf CP VT VSS X', 1)), 'lo_lf'),
+        ('alwayson', dict(conn=conn.replace('macroclamp debug fc_src', 'macroclamp debug fc_srcX', 1)), 'digital.fc_src[2]'),
+        ('iso', dict(conn=conn.replace('macroclamp pll rf_tx_clk|', 'macroclamp conv rf_tx_clk|macroclamp_none|', 1)), 'digital.rf_tx_clk'),
         ('ctl', dict(ct=re.sub(r'^c_lna_att\s*\|\s*5', 'c_lna_att | 4', ct, 1, re.M)), 'c_lna_att'),
         ('ctl', dict(ct=re.sub(r'^c_rfdriver_mute\s*\|.*\n', '', ct, 1, re.M)), 'c_rfdriver_mute'),
         ('cfg', dict(reg=dict(reg, fields=[dict(f, bus_bits=3) if f['name'] == 'lna.match.ctrim' else f for f in reg['fields']])), 'c_lna_ct'),
@@ -442,7 +464,13 @@ if __name__ == '__main__':
         print(f'[{k}] {len(v)}')
         for x in (v if verbose else v[:6]): print('    '+x)
         if not verbose and len(v) > 6: print(f'    ... {len(v)-6} more (-v)')
+    mcl = info.pop('_macroclamp')
     for k, v in info.items(): print(f'({k}) {v}')
+    if '--write' in sys.argv:
+        BITS = {'wired': 0, 'rf': 1, 'pll': 2, 'conv': 4, 'debug': 5}
+        open(os.environ.get('PT_TOP_OUT', HERE+'/generated')+'/macro_clamps.txt', 'w').write(
+            '# GENERATED by check_top.py --write (CP4-1): macro inputs to AND with island_on[bit] on the first gate after the pin\n# pin island island_on_bit\n'
+            + ''.join(f'{p} {g} {BITS[g]}\n' for p, g in sorted(mcl.items(), key=lambda x: (x[1], c_key(x[0])))))
     if '--write' in sys.argv: print('(analog top ports written)', write_outputs(inst, masters, nets, ports))
     mw = ROOT+'/scratch/reviews/mode-walk'; bad = 0
     if '--no-modewalk' not in sys.argv and os.path.isdir(mw):

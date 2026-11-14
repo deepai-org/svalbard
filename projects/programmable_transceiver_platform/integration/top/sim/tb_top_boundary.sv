@@ -21,43 +21,28 @@ module tb_top_boundary;
  supply1 VDD; supply0 VSS;
 `include "tb_ctl.svh"
 `include "tb_regs.svh"
- wire [5:0] island_en, island_on, island_off, island_pgood;
+ wire [5:0] island_en, island_on, island_off;
  wire [57:0] atb0_sw, atb1_sw; wire [1:0] atb0_grp; wire [4:0] atb1_grp; wire atb0_en, atb1_en;
  wire por_n, wired_on_ext, wire_rx_ptrim_en;
- // Per-switch power-good from the ten island switches; today's macro takes island_pgood[5:0] (one bit per enable
- // group), so the group AND that the macro will do itself (PD2-2) is written here until it has the s_pg_* inputs.
+ // Per-switch power-good from the ten island switches (the macro ANDs each enable group, PD2-2).
  wire s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx, s_pg_rf_rx, s_pg_rf_tx, s_pg_lod, s_pg_lo, s_pg_pll, s_pg_conv, s_pg_debug;
- assign island_pgood = {s_pg_debug, s_pg_conv, 1'b0, s_pg_pll, s_pg_rf_rx & s_pg_rf_tx & s_pg_lod & s_pg_lo,
-                        s_pg_wired_rx & s_pg_wired_cap & s_pg_wired_tx};
- wire [`PT_ANALOG_CFG_W-1:0] analog_cfg; wire [`PT_DEBUG_CFG_W-1:0] debug_cfg; wire [19:0] en_eff;
-`ifdef PT_MACRO_HAS_CTL
+ // The real macro (TOP-1 done 2026-11-14): every c_* port connects by name. Inputs this bench does not exercise are 0.
  pt_digital_macro dut(.reset_n_pad(rst_pad), .por_n(por_n), .por_bypass(1'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),
   .spi_miso(miso), .spi_miso_oe(miso_oe), .island_en(island_en), .island_on(island_on), .island_off(island_off),
-  .island_pgood(island_pgood), .wired_on_ext(wired_on_ext), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp),
-  .atb1_grp(atb1_grp), .atb0_en(atb0_en), .atb1_en(atb1_en), .wire_rx_ptrim_en(wire_rx_ptrim_en), .fault(1'b0), `PT_CTL_CONNECT);
-`else
- pt_digital_macro dut(.reset_n_pad(rst_pad), .por_n(por_n), .por_bypass(1'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),
-  .spi_miso(miso), .spi_miso_oe(miso_oe), .island_en(island_en), .island_on(island_on), .island_off(island_off),
-  .island_pgood(island_pgood), .wired_on_ext(wired_on_ext), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp),
+  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_rf_rx(s_pg_rf_rx),
+  .s_pg_rf_tx(s_pg_rf_tx), .s_pg_lod(s_pg_lod), .s_pg_lo(s_pg_lo), .s_pg_pll(s_pg_pll), .s_pg_conv(s_pg_conv), .s_pg_debug(s_pg_debug),
+  .wired_on_ext(wired_on_ext), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp),
   .atb1_grp(atb1_grp), .atb0_en(atb0_en), .atb1_en(atb1_en), .wire_rx_ptrim_en(wire_rx_ptrim_en), .fault(1'b0),
-  .analog_cfg(analog_cfg), .debug_cfg(debug_cfg), .en_eff(en_eff),
   .host_word_clk(1'b0), .h2d_clk(1'b0), .h2d_pin(10'b0), .ref_clk(1'b0), .wire_rx_clk(1'b0), .wire_tx_clk(1'b0),
-  .rf_rx_clk(1'b0), .rf_tx_clk(1'b0), .wire_rx_data(40'b0), .wire_rx_valid(1'b0), .wire_tx_request(1'b0),
-  .rf_rx_sample(24'b0), .rf_rx_valid(1'b0), .rf_tx_request(1'b0), .calibration_above_target(1'b0), .fc_src(6'b0),
-  .analog_status(12'b0), .wire_analog_status(13'b0), .wire_linecode(1'b0), .ct_wclk(1'b0), .ct_ref_clk(1'b0),
-  .ct_det_clk_in(1'b0), .ct_pll_lock(1'b0), .ct_marker(1'b0), .ct_cfg_det_en(1'b0), .ct_cfg_det_div(3'b0));
- // ---- INTERIM map (delete with PT_MACRO_HAS_CTL). One line per checked port; all others 0. ----
- `ifdef NEG_MISBIND
-  `define CT_LSB (`PT_A_LNA_MATCH__CTRIM_LSB+1)
- `else
-  `define CT_LSB `PT_A_LNA_MATCH__CTRIM_LSB
- `endif
- `PT_CTL_WEAK0                                    // weak 0 on every port, overridden by the lines below
- assign c_lna_en = en_eff[17];
- assign c_lna_ct = analog_cfg[`CT_LSB +: 4];
- assign c_lna_att = analog_cfg[`PT_A_LNA_MATCH__ATT_LSB +: 5];
- assign c_aosc_en = debug_cfg[`PT_D_CORE_AOSC__ENABLE_LSB];
- assign c_pllvreg_byp_tx = analog_cfg[`PT_A_PLLVREG_CONFIG__TX_BYPASS_LSB];
+  .rf_rx_clk(1'b0), .rf_tx_clk(1'b0), .ct_wclk(1'b0), .fc_src(6'b0), .wire_rx_data(40'b0), .wire_rx_edge(20'b0),
+  .rf_rx_sample(24'b0), .rf_rx_sample_b(24'b0), .rf_rx_ph_i(1'b0), .rf_rx_ph_q(1'b0),
+  .s_pll_tx_lock(1'b0), .s_pll_cdr_lock(1'b0), .s_ref_present(1'b0), .s_refbuf_ready(1'b0), .s_adc_i_ovl(1'b0), .s_adc_i_b_ovl(1'b0),
+  .s_adc_q_ovl(1'b0), .s_adc_q_b_ovl(1'b0), .s_adc_i_done(1'b0), .s_adc_i_b_done(1'b0), .s_adc_q_done(1'b0), .s_adc_q_b_done(1'b0),
+  .s_detect_diff_pos(1'b0), .s_detect_diff_neg(1'b0), .s_detect_se_p(1'b0), .s_detect_se_n(1'b0), .s_wrx_slp(1'b0), .s_wrx_slm(1'b0),
+  .s_wtx_ext_data(1'b0), .s_aux_present(1'b0), .s_wtx_ext_present(1'b0), `PT_CTL_CONNECT);
+`ifdef NEG_MISBIND
+ // negative control: rotate the LNA trim bus between the macro and the analog top; the bench must FAIL
+ initial force c_lna_ct = {dut.c_lna_ct[2:0], dut.c_lna_ct[3]};
 `endif
  pt_analog_top_stub analog(.VDD(VDD), .VSS(VSS), .island_en(island_en), .island_on(island_on), .island_off(island_off),
   .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_rf_rx(s_pg_rf_rx),
@@ -86,7 +71,7 @@ module tb_top_boundary;
   // 1. reset values at the analog pins. Island fields are forced 0 while their island is off (regfile gating rule).
   if (lna_ct !== 4'h0) fail("lna ct pins not 0 with the rf island off");
   if (analog.p_lna__en !== 1'b0) fail("lna en not 0 after reset");
-  if (analog.p_aosc__EN !== 1'b1) fail("aosc EN not 1 after reset (always-on oscillator)");
+  if (analog.p_aosc__EN !== 1'b0) fail("aosc EN not 0 after reset (DT-11: reset off)");
   if (analog.p_pll_vreg2__BYP_TX !== 1'b0) fail("pll_vreg2 BYP_TX not 0 with the pll island off");
   if (atb1_sw !== 0 || analog.p_atb1_pad__SEL !== 1'b0) fail("ATB1 not open after reset");
   if (analog.p_lna__island_off !== 1'b1) fail("lna island_off not 1 with the rf island off");
@@ -121,12 +106,12 @@ module tb_top_boundary;
   if (analog.p_atb1_leaf5__SEL !== 1'b1 || ones(atb1_sw) != 1) fail("ATB1 one-hot: leaf 5 not the only closed leaf");
   if (analog.p_atb1_grp0__SEL !== 1'b1 || analog.p_atb1_pad__SEL !== 1'b1) fail("ATB1 group / pad switch not closed");
   if (atb0_sw !== 0) fail("ATB0 moved");
-  // 8. always-on live field: core.aosc.enable = 0 reaches the oscillator pin
-  wr(`PT_REG_AOSC_ADDR, 16'h0000); commit;
-  if (analog.p_aosc__EN !== 1'b0) fail("aosc EN did not follow core.aosc.enable");
+  // 8. always-on live field: core.aosc.enable = 1 reaches the oscillator pin
+  wr(`PT_REG_AOSC_ADDR, 16'h0001); commit;
+  if (analog.p_aosc__EN !== 1'b1) fail("aosc EN did not follow core.aosc.enable");
   // 9. reset returns every checked pin to its safe value
   rst_pad = 0; #100;
-  if (analog.p_lna__en !== 1'b0 || analog.p_aosc__EN !== 1'b1 || atb1_sw !== 0 || island_en !== 0) fail("reset did not restore safe values");
+  if (analog.p_lna__en !== 1'b0 || analog.p_aosc__EN !== 1'b0 || atb1_sw !== 0 || island_en !== 0) fail("reset did not restore safe values");
   if (errors == 0) $display("TOP_BOUNDARY_PASS"); else $display("TOP_BOUNDARY_FAIL %0d", errors);
   $finish;
  end

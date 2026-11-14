@@ -13,6 +13,9 @@ Checks (each has a count; all must be 0 for PASS):
   missing      v6 floorplan block without an instance (and instances the floorplan lacks, reported separately)
   crossing     digital signal leaving a switched island without an iso cell or a waiver
   alwayson     input of an always-on (core/chip) instance driven from a switched island, or not driven
+  pn           P/N or I/Q crossed between a block's pin names and its net names, or a *_P chip pin bonded to an N pad leg
+               (`swap <inst>.<pin-regex> <reason>` declares an intended swap)
+  order        a pin bus (ct0..3, CODE0..9) bound to a net bus out of order
   ctl          c_* net vs ctl_ports.txt (unknown port, width, gaps), table rows nobody uses
   cfg          ctl_ports.txt vs spec/register-map.json: second, independent derivation of the cfg binding
                (field missing / dropped from the bus, width or reset different, decode not in the macro)
@@ -41,6 +44,7 @@ FP_SKIP = re.compile(r'^(leaf_[fs]\d+|atb_grp\d+|.*_rsv|digital|polyphase|rx_wcl
 
 
 MC = '<macroclamp>'
+SW = '<swap>'
 
 
 def expand_items(body):
@@ -83,6 +87,9 @@ def parse(text):
                 cur = []
             elif t[0] == 'waive':
                 waive.append((t[1], ' '.join(t[2:])))
+                cur = []
+            elif t[0] == 'swap':
+                waive.append((SW, t[1], ' '.join(t[2:])))
                 cur = []
             elif t[0] == 'macroclamp':
                 waive.append((MC, t[1], t[2]))
@@ -196,7 +203,7 @@ def load_ctl(text):
 
 
 def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
-    R = collections.OrderedDict((k, []) for k in ('syntax unbound dangling undriven multidrive missing crossing alwayson supply iso ctl cfg macro demand staged'.split()))
+    R = collections.OrderedDict((k, []) for k in ('syntax unbound dangling undriven multidrive missing crossing alwayson supply iso pn order ctl cfg macro demand staged'.split()))
     info = collections.OrderedDict()
     inst, ports, waive, err = parse(conn)
     R['syntax'] += err
@@ -247,7 +254,7 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
                 lg = inst[lname]['group']
                 if dg in ALWAYS_ON or dg == lg or GROUP_BIT.get(dg, -1) == GROUP_BIT.get(lg, -2): continue      # same enable group
                 if inst[lname]['master'].startswith('iso_') and lpin == 'A': continue
-                if any(re.fullmatch(w[0], f'{lname}.{lpin}') for w in waive if w[0] != MC): continue
+                if any(re.fullmatch(w[0], f'{lname}.{lpin}') for w in waive if w[0] not in (MC, SW)): continue
                 if lname == 'digital':      # CP4-1: clamped inside the macro, if a macroclamp line of the DRIVING island names the pin
                     hit = [w for w in waive if w[0] == MC and re.fullmatch(w[2], lpin)]
                     if hit and hit[0][1] == GROUP_NAME[GROUP_BIT[dg]]: mc_used[lpin] = hit[0][1]; continue
@@ -285,6 +292,60 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
                 R['iso'].append(f'{name}: clamp sits in the enable group that drives it ({dg}); it must be in the receiver domain')
         if i['master'] == 'iso_pd' and not re.fullmatch(r'island_off\[\d\]|c_\w+', i['pins']['ISO'][1]):
             R['iso'].append(f'{name}: iso_pd ISO = {i["pins"]["ISO"][1]}')
+    # --- polarity and bit order, derived from the names on both sides (decisions.md section C)
+    def partner(name):          # 'rf_out_p' <-> 'rf_out_n', 'INP' <-> 'INN', 'LOI_IP' <-> 'LOI_IN', 'USB_DP' <-> 'USB_DN'
+        m = re.fullmatch(r'(.*?)([PpNn])((?:\[\d+\])?)', name)
+        if not m: return None, None
+        c = m.group(2); o = {'P': 'N', 'N': 'P', 'p': 'n', 'n': 'p'}[c]
+        return m.group(1)+o+m.group(3), c.upper()
+    swaps = [w[1] for w in waive if w[0] == SW]
+    for name, i in inst.items():
+        pins = i['pins']
+        for p, (k, n) in pins.items():
+            q, pol = partner(p)
+            if pol != 'P' or q not in pins or n == '-' or SUPPLY.match(n): continue
+            n2 = pins[q][1]; nq, npol = partner(n)
+            if nq is None or n2 not in (nq, n): continue          # the two nets are not a named P/N pair: nothing to derive
+            if n2 == n: R['pn'].append(f'{name}: {p} and {q} are both on {n}'); continue
+            sw = any(re.fullmatch(rx, f'{name}.{p}') for rx in swaps)
+            if (npol == 'N') != sw:
+                R['pn'].append(f'{name}: {p} -> {n} and {q} -> {n2}: P/N ' + ('declared swapped but bound straight' if sw else 'swapped (no `swap` line)'))
+        m = re.fullmatch(r'.*_([iq])(_\d+)?', name)             # I/Q: an instance named *_i must not sit on a Q-named net
+        if m and not i['master'].startswith(('iso_', 'atb_')):
+            for p, (k, n) in pins.items():
+                mm = re.match(r'(?:BB|ADC|DAC|TX|RFA_|LO_|BIAS_\w+_)([IQiq])(?:[_PN\[]|$)', n)
+                if mm and mm.group(1).lower() != m.group(1) and not n.startswith('BIAS_'):
+                    R['pn'].append(f'{name}.{p} is on {n}: I/Q crossed')
+        grp = collections.defaultdict(list)                     # pin buses: ct0..ct3, CODE0..9, T3_0..4, D0..39
+        for p, (k, n) in pins.items():
+            mp = re.fullmatch(r'(.*?)(\d+)', p); b, idx = bus(n)
+            if mp and idx is not None: grp[(mp.group(1), b)].append((int(mp.group(2)), idx))
+        for (stem, b), v in grp.items():
+            if len(v) < 2: continue
+            v.sort(); d = [(v[j+1][1]-v[j][1], v[j+1][0]-v[j][0]) for j in range(len(v)-1)]
+            even = len({dp for _, dp in d}) == 1         # D2/D4/D8/D16-style names: only the order can be checked
+            if any(dn <= 0 or (even and dn != d[0][0]) for dn, dp in d):
+                R['order'].append(f'{name}: pins {stem}{v[0][0]}..{v[-1][0]} -> {b}{[x[1] for x in v]}: not in rising order with a constant step')
+    for port in sorted(ports):                                  # bond pads: a *_P chip pin must land on a pad cell's P leg
+        for u in nets.get(port, []):
+            if inst[u[0]]['master'].startswith('pad_') and re.fullmatch(r'PAD_[PN]', u[1]):
+                q, pol = partner(port)
+                if pol and u[1][-1] != pol and q in ports: R['pn'].append(f'{port} is bonded to {u[0]}.{u[1]}')
+    try:        # bond map (spec/contract.json bond_map_current) vs the chip ports of the conn: names only, information
+        bm = json.load(open(P+'/spec/contract.json'))
+        def find(o):
+            if isinstance(o, dict):
+                if 'bond_map_current' in o: return o['bond_map_current']
+                for v in o.values():
+                    r = find(v)
+                    if r: return r
+        bm = find(bm) or {}
+        names = {re.split(r'[ (]', v)[0] for side in ('west', 'east', 'north') for v in bm.get(side, {}).values()}
+        names = {x for x in names if re.fullmatch(r'[A-Z][A-Z0-9_]*', x)}
+        host = {p for p in ports if re.match(r'(RESET_N|SPI_|H2D|D2H|VDD$|VSS$)', p)}
+        info['bond map vs conn ports'] = dict(in_map_not_in_conn=sorted(names-ports), in_conn_not_in_map=sorted(ports-names-host))
+    except Exception as e:
+        info['bond map vs conn ports'] = f'not checked ({e})'
     ana = []
     for n, users in nets.items():       # analog nets that span two switched islands with no iso_pd on them (information, D-ANA)
         if SUPPLY.match(n) or n in ports: continue
@@ -292,7 +353,8 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
         if len(gs) > 1 and not any(inst[u[0]]['master'] == 'iso_pd' for u in users): ana.append(f'{n} ({"/".join(sorted(gs))})')
     info['analog nets across two islands without iso_pd'] = sorted(ana)
     info['intentional no-connects'] = sum(1 for i in inst.values() for k, n in i['pins'].values() if n == '-')
-    info['waived crossings'] = [f'{w[0]}: {w[1]}' for w in waive if w[0] != MC]
+    info['waived crossings'] = [f'{w[0]}: {w[1]}' for w in waive if w[0] not in (MC, SW)]
+    info['declared P/N swaps'] = [f'{w[1]}: {w[2]}' for w in waive if w[0] == SW]
     info['macro-internal clamps (CP4-1)'] = dict(collections.Counter(mc_used.values()))
     for p in inst['digital']['pins']:       # a macroclamp line that names a pin not driven from that island is stale
         hit = [w for w in waive if w[0] == MC and re.fullmatch(w[2], p)]
@@ -444,6 +506,10 @@ def selftest():
         ('staged', dict(mt=mt.replace('master pt_lo_lf          A/timing/generated/lo_lf.ext.spice:pt_lo_lf', 'master pt_lo_lf          staged A/timing/generated/lo_lf.ext.spice:pt_lo_lf CP VT VSS X', 1)), 'lo_lf'),
         ('alwayson', dict(conn=conn.replace('macroclamp debug fc_src', 'macroclamp debug fc_srcX', 1)), 'digital.fc_src[2]'),
         ('iso', dict(conn=conn.replace('macroclamp pll rf_tx_clk|', 'macroclamp conv rf_tx_clk|macroclamp_none|', 1)), 'digital.rf_tx_clk'),
+        ('pn', dict(conn=conn.replace('rf_in_p~RF_RX_P rf_in_n~RF_RX_N', 'rf_in_p~RF_RX_N rf_in_n~RF_RX_P', 1)), 'lna'),
+        ('pn', dict(conn=conn.replace('PAD_P~RF_TX_P PAD_N~RF_TX_N', 'PAD_P~RF_TX_N PAD_N~RF_TX_P', 1)), 'RF_TX_P'),
+        ('pn', dict(conn=conn.replace('lo_p~LO_\\U1P lo_n~LO_\\U1N bb_p', 'lo_p~LO_QP lo_n~LO_QN bb_p', 1)), 'rxmix_i'),
+        ('order', dict(conn=conn.replace('ct{0:3}=c_lna_ct[\\1]', 'ct{0,2,1,3}=c_lna_ct[{0:3}]', 1)), 'lna'),
         ('ctl', dict(ct=re.sub(r'^c_lna_att\s*\|\s*5', 'c_lna_att | 4', ct, 1, re.M)), 'c_lna_att'),
         ('ctl', dict(ct=re.sub(r'^c_rfdriver_mute\s*\|.*\n', '', ct, 1, re.M)), 'c_rfdriver_mute'),
         ('cfg', dict(reg=dict(reg, fields=[dict(f, bus_bits=3) if f['name'] == 'lna.match.ctrim' else f for f in reg['fields']])), 'c_lna_ct'),

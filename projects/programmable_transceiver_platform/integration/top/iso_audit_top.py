@@ -215,13 +215,31 @@ def main():
     print(f'  clamped crossings that pass K1: {len(r["k1_clamped_ok"])} (of which macro-internal, required of digital: {len(facts["mc"])})')
     print(f'  coverage: {r["coverage"]}; empty boxes (no device terminals): {sorted(facts["empty"])}')
     for n in facts['note']: print('  note:', n)
+    # Direction markers of the conn against the device terminals of each pin (decisions.md section C):
+    #  D1 (error): a pin marked `>` (driver) that is nothing but MOS gates; D2 (listed): a pin marked `=` (input) with
+    #  no gate at all, only diffusion (a transmission-gate input, or a wrong marker).
+    def dircheck(flip=None):
+        d1, d2 = [], []
+        for n, us in x.users.items():
+            for iname, port, terms in us:
+                i = facts['inst'].get(iname)
+                if not i or iname == 'digital' or not terms or port not in i['pins']: continue
+                kind = i['pins'][port][0]; ks = {k.split(':')[0] for k, _ in terms}
+                if f'{iname}.{port}' == flip: kind = '>'
+                if kind == '>' and ks <= {'gate', 'cap', 'pbulk', 'nwell'} and 'gate' in ks: d1.append(f'{iname}.{port}')
+                if kind == '=' and 'gate' not in ks and ks & {'pdiff', 'ndiff'}: d2.append(f'{iname}.{port}')
+        return d1, d2
+    d1, d2 = dircheck()
+    print(f'  [D1 conn says output, pin is gate-only] {len(d1)} {sorted(d1)[:12]}')
+    d2g = collections.Counter(re.sub(r'\d+$', '', q) for q in d2)
+    print(f'  [D2 conn says input, pin has diffusion and no gate (listed, not failed)] {len(d2)} {dict(d2g)}')
     pads = [p for p in r['pads'] if 'NO pull' in str(p.get('before_spi', ''))]
     print(f'  K8 (table, not a rule): provider input pads with no pull: {len(pads)} rows = SPI_SCLK, SPI_CS_N, SPI_MOSI, H2D[9:0], H2D_CLK (14 pads; straps in integration/pt_provider_io.sv, INT6-5)')
-    summary = dict(counts=r['counts'], groups={k: len(v) for k, v in groups.items()}, fails=r['fails'], macro_internal_clamps=len(facts['mc']),
+    summary = dict(direction_errors=sorted(d1), direction_listed=sorted(d2), counts=r['counts'], groups={k: len(v) for k, v in groups.items()}, fails=r['fails'], macro_internal_clamps=len(facts['mc']),
                    k1_clamped_ok=len(r['k1_clamped_ok']), coverage=r['coverage'], empty_boxes=sorted(facts['empty']))
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     json.dump(summary, open(a.out, 'w'), indent=1, default=str)
-    rc = 1 if r['fail'] else 0
+    rc = 1 if (r['fail'] or d1) else 0
     if a.selftest:
         ok = True
         clamp = next(n for n, i in facts['inst'].items() if i['master'].startswith('iso_clamp'))
@@ -240,6 +258,8 @@ def main():
         run(lambda y: y.inject(f'remove_clamp={clamp}'), 'K1', 'clamp removed')
         run(lambda y: y.inject('force_on=rf_rx'), 'K3', 'switch forced on')
         run(lambda y: y.inject(f'ungate_atb={leaf}'), 'K7', 'ATB island gate removed')
+        hit = 'lna.en' in dircheck('lna.en')[0]
+        print(f'  selftest direction marker: lna.en marked as a driver -> D1 {"DETECTED" if hit else "MISSED"}'); ok = ok and hit
         print('ISO AUDIT SELFTEST', 'PASS' if ok else 'FAIL')
         rc = rc or (0 if ok else 3)
         if not ok: rc = 3

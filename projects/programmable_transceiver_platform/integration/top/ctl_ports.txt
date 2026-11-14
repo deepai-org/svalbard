@@ -29,13 +29,13 @@ c_bias_dist_en_wire | 1 | 0 | direct | core.refchain.dist_en_wire |
 c_bias_dist_en_debug | 1 | 0 | direct | core.refchain.dist_en_debug |
 # ---- RF receive
 c_lna_en | 1 | 0 | en (island 1) | lna.state.state | today en_eff[17]
-c_lna_gain_lo | 1 | 0 | attenuator code bit 5 (code = {gain_lo, att[4:0]}), plus the opcode-4 fast-gain override | - | lna.gain.gain_db (-6/0/10/20 dB) no longer describes the cell (RC-16p); the DT-8 opcode-4 map must be re-derived
+c_lna_gain_lo | 1 | 0 | lna.match.gain_lo, or bit 5 of lna.agc.code<k> while the opcode-4 fast gain is active (k = LNA index) | lna.match.gain_lo+lna.agc.code0 | lna.gain.gain_db (-6/0/10/20 dB) no longer describes the cell (RC-16p); the DT-8 opcode-4 map must be re-derived
 c_lna_byp | 1 | 0 | direct | debug.rf_rx_bypass.lna |
 c_lna_ct | 4 | 7 | direct | lna.match.ctrim |
 c_lna_se | 1 | 0 | direct | lna.match.se |
 c_lna_rt | 1 | 0 | direct | lna.match.rterm |
-c_lna_att | 5 | 0 | direct | lna.match.att | plus the opcode-4 override already in the macro
-c_lna_lobias | 1 | 0 | direct | - | new field lna.bias.lo (RC-16k duplex reduced bias); validator forces 1 when TX is on
+c_lna_att | 5 | 0 | lna.match.att, or bits 4:0 of lna.agc.code<k> while the opcode-4 fast gain is active | lna.match.att+lna.agc.code0 | plus the opcode-4 override already in the macro
+c_lna_lobias | 1 | 0 | direct | lna.bias.lo | (was: new field lna.bias.lo (RC-16k duplex reduced bias); validator forces 1 when TX is on)
 c_rxmix_i_en | 1 | 0 | en (island 1) | rxmix_i.state.state | today en_eff[8]
 c_rxmix_q_en | 1 | 0 | en (island 1) | rxmix_q.state.state | today en_eff[9]
 c_rxmix_i_ofs | 6 | 0 | direct | rxmix.offset.i_code | bit 5 = ofs_sign
@@ -48,16 +48,16 @@ c_bbfilter_obs_sel | 2 | 0 | observe_rx_mixer 01, observe_rx_pga 10, observe_rx_
 c_bbfilter_rx_direct | 1 | 0 | direct | consolidation.bbfilter.rx_direct |
 c_bbfilter_byp_s1 | 1 | 0 | direct | debug.rf_bb_bypass.pga | inject_tx_mixer also sets it (rf_rx README)
 c_bbfilter_byp_s23 | 1 | 0 | direct | debug.rf_bb_bypass.rxfilter | inject_tx_mixer also sets it
-c_bbfilter_i_cut | 7 | 8 | direct | - | new per-channel field: cap code {bw[3:0], fc_fine[2:0]}, reset 8 (today consolidation.bbfilter.bw 4 b reset 0, shared)
-c_bbfilter_q_cut | 7 | 8 | direct | - | as _i_
-c_bbfilter_i_gain | 6 | 4 | 17-entry LUT k[5:0] from the gain field; all-zero = muted, 0 dB = gain2 | - | new per-channel field + LUT (IC:153-160); today 4 b linear, reset 0 = muted
-c_bbfilter_q_gain | 6 | 4 | as _i_ | - |
-c_bbfilter_i_gainc | 2 | 0 | coarse PGA state from the same LUT | - | new
-c_bbfilter_q_gainc | 2 | 0 | as _i_ | - |
-c_bbfilter_i_qt | 4 | 6 | direct | - | new per-channel field, reset 6 (cell rule: cap code <= 1 needs qt >= 6); today consolidation.bbfilter.qtrim 2 b reset 1
-c_bbfilter_q_qt | 4 | 6 | direct | - |
-c_bbfilter_i_dcf | 9 | 0 | direct | - | new field: fine DCOC, sign-magnitude, bit 8 = dcf_sign
-c_bbfilter_q_dcf | 9 | 0 | direct | - |
+c_bbfilter_i_cut | 7 | 8 | direct | bbfilter_i.trim.cut | (was: new per-channel field: cap code {bw[3:0], fc_fine[2:0]}, reset 8 (today consolidation.bbfilter.bw 4 b reset 0, shared))
+c_bbfilter_q_cut | 7 | 8 | direct | bbfilter_q.trim.cut | as _i_
+c_bbfilter_i_gain | 6 | 4 | k[5:0] of the 17-entry LUT of the dB index (0..16 = -6..+42 dB; opcode-4 PGA index while active); 0 while the rf island is off | bbfilter_i.trim.gain | (was: new per-channel field + LUT (IC:153-160); today 4 b linear, reset 0 = muted)
+c_bbfilter_q_gain | 6 | 4 | as _i_ | bbfilter_q.trim.gain |
+c_bbfilter_i_gainc | 2 | 0 | {gainc1, gainc0} of the same LUT | bbfilter_i.trim.gain | new
+c_bbfilter_q_gainc | 2 | 0 | as _i_ | bbfilter_q.trim.gain |
+c_bbfilter_i_qt | 4 | 6 | direct | bbfilter_i.trim.qt | (was: new per-channel field, reset 6 (cell rule: cap code <= 1 needs qt >= 6); today consolidation.bbfilter.qtrim 2 b reset 1)
+c_bbfilter_q_qt | 4 | 6 | direct | bbfilter_q.trim.qt |
+c_bbfilter_i_dcf | 9 | 0 | direct | bbfilter_i.trim.dcf | (was: new field: fine DCOC, sign-magnitude, bit 8 = dcf_sign)
+c_bbfilter_q_dcf | 9 | 0 | direct | bbfilter_q.trim.dcf |
 c_bb_tap_obs_en | 1 | 0 | bb_tap.mode is an observe_* mode | debug.bb_tap.mode |
 c_bb_tap_inj_en | 1 | 0 | bb_tap.mode is an inject_* mode | debug.bb_tap.mode |
 c_bb_tap_i_bias_en | 1 | 0 | (bb_tap.mode != off) & island_on[5] | debug.bb_tap.mode | core_bias EN_bb_tap_i
@@ -69,14 +69,14 @@ c_adc_i_en | 1 | 0 | en (island 4) | adc_i.state.state | today en_eff[0]
 c_adc_q_en | 1 | 0 | en (island 4) | adc_q.state.state | today en_eff[1]
 c_adc_i_test | 2 | 0 | direct | adc_i.config.input_test |
 c_adc_q_test | 2 | 0 | direct | adc_q.config.input_test |
-c_adc_ilen | 1 | 0 | direct | - | new field adc.config.interleave (IC:182); 0 = single core A
+c_adc_ilen | 1 | 0 | direct | adc.config.interleave | (was: new field adc.config.interleave (IC:182); 0 = single core A)
 c_dac_i_en | 1 | 0 | en (island 4) | dac_i.state.state | today en_eff[3]
 c_dac_q_en | 1 | 0 | en (island 4) | dac_q.state.state | today en_eff[4]
 c_dac_i_hold_zero | 1 | 1 | direct | dac_i.config.hold_zero |
 c_dac_q_hold_zero | 1 | 1 | direct | dac_q.config.hold_zero |
 c_refbuf_en | 1 | 0 | en (island 4) | refbuf.state.state | today en_eff[5]
 c_refbuf_ovr | 1 | 0 | direct | debug.bias_override.refbuf |
-c_adc_acq | 2 | 0 | direct | - | new field adc.config.acquisition_ns[1:0], one value for I and Q: 0 nominal window, 1 short, 2 long, 3 = CLK high time (converters INTEGRATION.md 1.1)
+c_adc_acq | 2 | 0 | direct | adc.config.acquisition | (was: new field adc.config.acquisition_ns[1:0], one value for I and Q: 0 nominal window, 1 short, 2 long, 3 = CLK high time (converters INTEGRATION.md 1.1))
 # ---- RF transmit
 c_txmix_i_en | 1 | 0 | en (island 1) | txmix_i.state.state | today en_eff[15]
 c_txmix_q_en | 1 | 0 | en (island 1) | txmix_q.state.state | today en_eff[16]
@@ -84,81 +84,81 @@ c_txmix_sel_dac | 1 | 0 | direct | consolidation.bbfilter.tx_dac_direct |
 c_txmix_sat | 1 | 0 | direct | consolidation.txmix.sat_mode |
 c_txsum_en | 1 | 0 | en (island 1) | txsum.state.state | today en_eff[19]
 c_rfdriver_en | 1 | 0 | en (island 1) | rfdriver.state.state | today en_eff[7]
-c_rfdriver_mute | 1 | 1 | rfdriver.mute.mute OR rf_mute (pt_core) OR fault | rfdriver.mute.mute | one mute gate, in the macro (MW-21)
+c_rfdriver_mute | 1 | 1 | (rfdriver.mute.mute (fault-forced to 1) OR the transport mute) & island_on[1] | rfdriver.mute.mute | one mute gate, in the macro (MW-21)
 c_rfdriver_bypass | 1 | 0 | direct | debug.rf_tx_bypass.rfdriver |
-c_rfdriver_g | 4 | 12 | code[7:4] of the 8-bit field (bus keeps 4 bits) | rfdriver.gain.code | field default 192 -> 12
+c_rfdriver_g | 4 | 12 | direct | rfdriver.gain.code | field default 192 -> 12
 c_rfdriver_se | 1 | 0 | direct | rfdriver.gain.single_ended |
 # ---- LO
-c_lo_ext | 1 | 0 | lo_mode == 1 or 3 | - | new field rfpll.config.lo_mode[1:0] {0 off, 1 passive ext, 2 on-chip, 3 ext through CML = die-1 baseline} (MW-1a, LO-INTEGRATION.md 4.1)
-c_lo_int | 1 | 0 | lo_mode == 2 or 3 | - | as above
-c_lo_cmlsel | 1 | 0 | lo_mode == 3 | - | as above; one net to lo_ext.CMLSEL and qvco.CMLSEL
-c_qvco_en | 1 | 0 | (rfpll.state == active) & (lo_mode == 2) & island_on[2] | rfpll.state.state | also the bias enable; EN-to-ready 1.5 ms; rfpll.state is today used for en_eff[11]: D-PLLEN
-c_qvco_band | 4 | 0 | direct | - | new field rfpll.config.vco_coarse[3:0] (was dropped); 15 = lowest frequency; software band search (LO-INTEGRATION.md 4.2)
-c_qvco_atb_en | 1 | 0 | direct | - | new debug field
-c_lo_pre | 1 | 0 | direct | - | new field rfpll.config.lo_preset: lo_pfdcp.PRE (1 = PFD in reset, VTUNE at the preset). NOT qvco.PRE (an output)
-c_lo_mmd_en | 1 | 0 | same as c_qvco_en | rfpll.state.state | lo_mmd and its Q dummy
-c_lo_mmd_n | 6 | 0 | direct (later the sigma-delta output) | - | new field rfpll.config.lo_n[5:0], valid 16..63; f_LO = 2 N f_ref
-c_lo_pfdcp_en | 1 | 0 | same as c_qvco_en | rfpll.state.state |
-c_lo_icp | 2 | 0 | direct | - | new field rfpll.config.lo_icp[1:0] (LO18): Icp = 25 uA x (1 + ICP0 + 2 ICP1)
-c_lo_vreg_en | 1 | 0 | c_qvco_en OR c_lo_pfdcp_en | rfpll.state.state | for the demanded quiet-rail regulator (LO22)
+c_lo_ext | 1 | 0 | lo_mode == 1 or 3 | rfpll.config.lo_mode | (was: new field rfpll.config.lo_mode[1:0] {0 off, 1 passive ext, 2 on-chip, 3 ext through CML = die-1 baseline} (MW-1a, LO-INTEGRATION.md 4.1))
+c_lo_int | 1 | 0 | lo_mode == 2 or 3 | rfpll.config.lo_mode | as above
+c_lo_cmlsel | 1 | 0 | lo_mode == 3 | rfpll.config.lo_mode | as above; one net to lo_ext.CMLSEL and qvco.CMLSEL
+c_qvco_en | 1 | 0 | (rfpll.state == active) & (lo_mode == 2) & island_on[2] | rfpll.state.state+rfpll.config.lo_mode | also the bias enable; EN-to-ready 1.5 ms; rfpll.state is today used for en_eff[11]: D-PLLEN
+c_qvco_band | 4 | 0 | direct | rfpll.config.vco_coarse | (was: new field rfpll.config.vco_coarse[3:0] (was dropped); 15 = lowest frequency; software band search (LO-INTEGRATION.md 4.2))
+c_qvco_atb_en | 1 | 0 | direct | rfpll.config.atb_enable | (was: new debug field)
+c_lo_pre | 1 | 0 | direct | rfpll.config.lo_preset | (was: new field rfpll.config.lo_preset: lo_pfdcp.PRE (1 = PFD in reset, VTUNE at the preset). NOT qvco.PRE (an output))
+c_lo_mmd_en | 1 | 0 | same as c_qvco_en | rfpll.state.state+rfpll.config.lo_mode | lo_mmd and its Q dummy
+c_lo_mmd_n | 6 | 0 | direct | rfpll.config.lo_n | (was: new field rfpll.config.lo_n[5:0], valid 16..63; f_LO = 2 N f_ref)
+c_lo_pfdcp_en | 1 | 0 | same as c_qvco_en | rfpll.state.state+rfpll.config.lo_mode |
+c_lo_icp | 2 | 0 | direct | rfpll.config.lo_icp | (was: new field rfpll.config.lo_icp[1:0] (LO18): Icp = 25 uA x (1 + ICP0 + 2 ICP1))
+c_lo_vreg_en | 1 | 0 | c_qvco_en OR c_lo_pfdcp_en | rfpll.state.state+rfpll.config.lo_mode | for the demanded quiet-rail regulator (LO22)
 c_lo_obs_en | 1 | 0 | clk_obs.source == rf_lo (1) | debug.clk_obs.source |
-c_refvcm_en | 1 | 0 | c_lo_ext OR c_rx_ref_en OR rx_en_aux | - | for the demanded refpad VCM source
+c_refvcm_en | 1 | 0 | c_lo_ext OR c_rx_ref_en OR rx_en_aux | rfpll.config.lo_mode+refinput.state.state | for the demanded refpad VCM source
 # ---- clocks
-c_rx_ref_en | 1 | 0 | (refinput.state == active) & lo_mode not in {1, 3} | refinput.state.state | REF_IN carries the 2.4 GHz LO in modes 1 and 3
-c_clockmux_ps | 3 | 0 | one-hot {ref, aux, h2d}; 0 = stopped | - | new field "ring-PLL reference" {0 stopped, 1 ref, 2 aux, 3 h2d} (timing README); refinput.select.branch means something else
+c_rx_ref_en | 1 | 0 | (refinput.state == active) & lo_mode not in {1, 3} | refinput.state.state+rfpll.config.lo_mode | REF_IN carries the 2.4 GHz LO in modes 1 and 3
+c_clockmux_ps | 3 | 0 | one-hot {ref, aux, h2d}; 0 = stopped | clockmux.config.ring_ref | (was: new field "ring-PLL reference" {0 stopped, 1 ref, 2 aux, 3 h2d} (timing README); refinput.select.branch means something else)
 c_clockmux_ws | 4 | 0 | one-hot {pll, ref, aux, wck} = (code == 1/2/3/4) | debug.clk_select.wire_line |
 c_clockmux_ss | 3 | 0 | one-hot {int, ref, wck} = (code == 1/2/4) | debug.clk_select.wire_sample |
 c_clockmux_cs | 4 | 0 | one-hot {int, ref, aux, hf} = (code == 1/2/3/5) | debug.clk_select.conv_sample |
 c_clockmux_hs | 2 | 0 | one-hot {int, hf} = (code == 1/5) | debug.clk_select.host_clk |
-c_prescale_en | 1 | 0 | divider code != stopped | - | new field (HOST_INT / ct_wclk prescaler: stopped, /2, /4, /8, /16); consolidation.pll.output_divider has values 1,2,4,5,8,10
-c_prescale_d | 4 | 0 | one-hot {/2, /4, /8, /16} | - | as above
-c_prescale_conv_en | 1 | 0 | divider code != stopped | - | new field (CONV_INT prescaler)
-c_prescale_conv_d | 4 | 0 | one-hot {/2, /4, /8, /16} | - |
-c_prescale_hf_en | 1 | 0 | divider code != stopped | - | new field (host_follow prescaler on the CDR ring)
-c_prescale_hf_d | 4 | 0 | one-hot {/2, /4, /8, /16} | - |
+c_prescale_en | 1 | 0 | divider code != stopped | clockmux.config.host_prescale | (was: new field (HOST_INT / ct_wclk prescaler: stopped, /2, /4, /8, /16); consolidation.pll.output_divider has values 1,2,4,5,8,10)
+c_prescale_d | 4 | 0 | one-hot {/2, /4, /8, /16} | clockmux.config.host_prescale | as above
+c_prescale_conv_en | 1 | 0 | divider code != stopped | clockmux.config.conv_prescale | (was: new field (CONV_INT prescaler))
+c_prescale_conv_d | 4 | 0 | one-hot {/2, /4, /8, /16} | clockmux.config.conv_prescale |
+c_prescale_hf_en | 1 | 0 | divider code != stopped | clockmux.config.hf_prescale | (was: new field (host_follow prescaler on the CDR ring))
+c_prescale_hf_d | 4 | 0 | one-hot {/2, /4, /8, /16} | clockmux.config.hf_prescale |
 c_wordclk_en | 1 | 0 | c_wrx_cap_en | slicer.state.state | RX word divider wordclk_rx on the wired island (D-WORDCLK)
-c_wordclk_d10 | 1 | 0 | RX bits per ring cycle == 2 | - | new field (RX rate mode; the TX field bits_per_cycle is a different ring)
-c_wordclk_d20 | 1 | 0 | RX bits per ring cycle == 1 | - |
+c_wordclk_d10 | 1 | 0 | slicer.capture.rate_mode == half | slicer.capture.rate_mode | (was: new field (RX rate mode; the TX field bits_per_cycle is a different ring))
+c_wordclk_d20 | 1 | 0 | slicer.capture.rate_mode == full | slicer.capture.rate_mode |
 c_pllvreg_byp_tx | 1 | 1 | direct | pllvreg.config.tx_bypass |
 c_pllvreg_byp_cdr | 1 | 1 | direct | pllvreg.config.rx_bypass |
-c_pll_tx_en | 1 | 0 | ring_l.enable & island_on[2] & vreg_tx_ok | - | new field ring_l.enable (WT26; not rfpll.state): D-PLLEN. MUST be 0 while the pll island is off: the ring phases reach the wired serializer without a clamp
-c_pll_tx_n4 | 1 | 0 | TX ring modulus == 4 | - | new per-ring modulus field {16, 8, 4} (consolidation.pll.feedback_n has values 16..128, one field for two rings)
-c_pll_tx_n8 | 1 | 0 | TX ring modulus == 8 | - |
-c_pll_tx_band | 1 | 1 | direct | - | new field ring_l.band (AC3-W13), reset 1 = high band (today tied VDD)
-c_pll_cdr_en | 1 | 0 | (cdr.state == active) & island_on[2] & vreg_rx_ok | cdr.state.state | today en_eff[10]
-c_pll_cdr_n4 | 1 | 0 | CDR ring modulus == 4 | - | new per-ring modulus field {16, 8, 4, 10, 5}
-c_pll_cdr_n8 | 1 | 0 | CDR ring modulus == 8 | - |
-c_pll_cdr_n5 | 1 | 0 | CDR ring modulus == 5 | - |
-c_pll_cdr_n10 | 1 | 0 | CDR ring modulus == 10 | - |
-c_pll_cdr_kp | 3 | 0 | direct | - | new field cdr.config.kp[2:0] (IC:452); 0 = proportional path off
-c_pll_cdr_band | 1 | 1 | direct | - | new field ring_c.band, reset 1
-c_cdr_en | 1 | 0 | (cdr.state == active) & island_on[2] | cdr.state.state | today en_eff[12]; also the cdr bias enable
-c_cdr_pfd_mode | 1 | 0 | direct | - | new field (0 = wired CDR, 1 = line PLL / host_follow); cdr.ac3.integral_enable is not this
+c_pll_tx_en | 1 | 0 | ring_l.enable & island_on[2] & vreg_tx_ok | ring_l.config.enable | (was: new field ring_l.enable (WT26; not rfpll.state): D-PLLEN. MUST be 0 while the pll island is off: the ring phases reach the wired serializer without a clamp)
+c_pll_tx_n4 | 1 | 0 | TX ring modulus == 4 | ring_l.config.modulus | (was: new per-ring modulus field {16, 8, 4} (consolidation.pll.feedback_n has values 16..128, one field for two rings))
+c_pll_tx_n8 | 1 | 0 | TX ring modulus == 8 | ring_l.config.modulus |
+c_pll_tx_band | 1 | 1 | direct | ring_l.config.band | (was: new field ring_l.band (AC3-W13), reset 1 = high band (today tied VDD))
+c_pll_cdr_en | 1 | 0 | ((cdr.state == active) OR ring_c.config.line_pll) & island_on[2] & vreg_rx_ok (D-HF: host_follow enables the ring without cdr.state) | cdr.state.state+ring_c.config.line_pll | today en_eff[10]
+c_pll_cdr_n4 | 1 | 0 | CDR ring modulus == 4 | ring_c.config.modulus | (was: new per-ring modulus field {16, 8, 4, 10, 5})
+c_pll_cdr_n8 | 1 | 0 | CDR ring modulus == 8 | ring_c.config.modulus |
+c_pll_cdr_n5 | 1 | 0 | CDR ring modulus == 5 | ring_c.config.modulus |
+c_pll_cdr_n10 | 1 | 0 | CDR ring modulus == 10 | ring_c.config.modulus |
+c_pll_cdr_kp | 3 | 0 | direct | ring_c.config.kp | (was: new field cdr.config.kp[2:0] (IC:452); 0 = proportional path off)
+c_pll_cdr_band | 1 | 1 | direct | ring_c.config.band | (was: new field ring_c.band, reset 1)
+c_cdr_en | 1 | 0 | ((cdr.state == active) OR ring_c.config.line_pll) & island_on[2] | cdr.state.state+ring_c.config.line_pll | today en_eff[12]; also the cdr bias enable
+c_cdr_pfd_mode | 1 | 0 | direct | ring_c.config.line_pll | (was: new field (0 = wired CDR, 1 = line PLL / host_follow); cdr.ac3.integral_enable is not this)
 c_cdr_ref_sel | 1 | 0 | direct | cdr.ac3.fll_ref_wck |
 c_cdr_g | 3 | 2 | direct | cdr.ac3.loop_bw | reset value open (2 vs 3, PINS.md)
-c_cdr_otr | 6 | 0 | direct | - | new field: OTA offset trim otr[4:0] + sign (bit 5), 1/8 vote LSB, per-die calibration (pt_cdr r13)
-c_cdr_fup | 1 | 0 | FLL up pulse | - | dynamic; RTL FLL does not exist in the macro (MW-10)
-c_cdr_fdn | 1 | 0 | FLL down pulse | - | dynamic; as above
-c_char_en | 3 | 0 | direct | - | new fields debug.replica.ro33_enable / ro50_enable / cmldiv_enable (bit 0/1/2); enable one at a time (clk_obs code 15 ORs the three outputs)
+c_cdr_otr | 6 | 0 | direct | cdr.ac3.otr | (was: new field: OTA offset trim otr[4:0] + sign (bit 5), 1/8 vote LSB, per-die calibration (pt_cdr r13))
+c_cdr_fup | 1 | 0 | rtl/pt_wrx_ctl.sv frequency loop: FUP pulse (automatic from frequency counter b, or manual by register) | wrx.loop.fll_auto+wrx.loop.fll_manual_trigger | dynamic; RTL FLL does not exist in the macro (MW-10)
+c_cdr_fdn | 1 | 0 | rtl/pt_wrx_ctl.sv frequency loop: FDN pulse | wrx.loop.fll_auto+wrx.loop.fll_manual_trigger | dynamic; as above
+c_char_en | 3 | 0 | {cmldiv_enable, ro50_enable, ro33_enable} | debug.replica.ro33_enable+debug.replica.ro50_enable+debug.replica.cmldiv_enable | (was: new fields debug.replica.ro33_enable / ro50_enable / cmldiv_enable (bit 0/1/2); enable one at a time (clk_obs code 15 ORs the three outputs))
 c_ring_osc_en | 1 | 0 | direct | debug.replica.ringosc_enable |
 c_vco_replica_en | 1 | 0 | direct | debug.replica.vco_enable |
 c_clk_obs_en | 1 | 0 | clk_obs.source != off | debug.clk_obs.source |
 c_clk_obs_off | 1 | 1 | !(clk_obs.source != off & island_on[5]) | debug.clk_obs.source | pull-down on the tri-state CLK_OBS node while the cell is not driving
 c_clk_obs_s | 4 | 0 | source code 1..15 = S; codes 16/17 must not alias (they select IN15B/C by their own enables) | debug.clk_obs.source | 5-bit field vs 4 select pins (MW-29)
-c_clk_obs_n | 3 | 0 | min(divider_log2, 7) | debug.clk_obs.divider_log2 |
+c_clk_obs_n | 3 | 0 | direct | debug.clk_obs.divider_log2 |
 c_obs_pre4_en | 6 | 0 | one-hot: bit k = (clk_obs.source == {2 wire_line, 3 wire_sample, 5 ref_in, 6 aux_clk, 8 pll_vco, 14 cdr_recovered}) & island_on[2 or 5] of the source | debug.clk_obs.source | source 7 (wclk_in) is the AUX_CLK pair since CP4-3; sources 2,3,5,6,14 are on the regfile's forbidden list today (MW-29)
 # ---- wired receive
 c_term_en | 1 | 0 | p_load != off or differential_100_enable | termination.config.p_load+termination.config.differential_100_enable | USB pair
 c_term_mode | 2 | 0 | 00 off, 01 shunt to 1.2 V (50_to_vcm), 10 100 ohm differential, 11 shunt to VSS (45_to_ground) | termination.config.p_load+termination.config.differential_100_enable | raw bits would select the wrong network (MW walk D8)
-c_term_hs_en | 1 | 0 | direct | - | new field (HS pair bias on: without it the CTLE input sits at 0 V, MW-9)
-c_term_hs_term_en | 1 | 0 | direct | - | new field
-c_term_hs_trim | 4 | 5 | direct | - | new field termination.config.trim[3:0], reset 5 (PD27)
+c_term_hs_en | 1 | 0 | direct | termination.config.hs_enable | (was: new field (HS pair bias on: without it the CTLE input sits at 0 V, MW-9))
+c_term_hs_term_en | 1 | 0 | direct | termination.config.hs_term_enable | (was: new field)
+c_term_hs_trim | 4 | 5 | direct | termination.config.hs_trim | (was: new field termination.config.trim[3:0], reset 5 (PD27))
 c_rxlevel_en | 1 | 0 | path != off | rxlevel.config.path |
 c_rxlevel_half | 1 | 0 | path == half | rxlevel.config.path |
 c_ctle_en | 1 | 0 | en (island 0) | ctle.state.state | today en_eff[14]
 c_ctle_bypass | 1 | 0 | direct | debug.wire_bypass.ctle |
-c_ctle_peak | 3 | 0 | direct | ctle.config.zero_trim | field keeps 2 bus bits: widen to 3
-c_ctle_lf_zero | 3 | 0 | direct | - | new field ctle.config.lf_zero[2:0] (IX-13)
+c_ctle_peak | 3 | 0 | direct | ctle.config.peak | field keeps 2 bus bits: widen to 3
+c_ctle_lf_zero | 3 | 0 | direct | ctle.config.lf_zero | (was: new field ctle.config.lf_zero[2:0] (IX-13))
 c_rxselect_en | 1 | 0 | en (island 0) | rxselect.state.state | today en_eff[18]
 c_rxselect_direct | 1 | 0 | direct | rxselect.select.branch |
 c_wmon_en | 1 | 0 | wmon_select != off | debug.wmon_select.select |
@@ -168,22 +168,22 @@ c_detect_thr | 2 | 0 | direct | detect.config.low_threshold_code | per analog/wi
 c_detect_se | 2 | 0 | direct | detect.config.high_threshold_code | per analog/wired_rx/PINS.md section 4
 c_detect_src_tx | 1 | 0 | direct | consolidation.detect.src_tx |
 c_detect_inject | 1 | 0 | direct | detect.config.test_current_enable |
-c_vthdac_en | 1 | 0 | direct | - | new field cdr.vth_en (IX-10)
-c_vthdac_a | 8 | 128 | direct, or the IX-11 fast threshold opcode | - | new field cdr.vth_a[7:0]; dynamic if IX-11
-c_vthdac_b | 8 | 128 | direct, or the IX-11 fast threshold opcode | - | new field cdr.vth_b[7:0]
+c_vthdac_en | 1 | 0 | direct | slicer.threshold.vth_enable | (was: new field cdr.vth_en (IX-10))
+c_vthdac_a | 8 | 128 | slicer.threshold.vth_a, or the IX-11 in-band value (transport opcode 5) until ENABLE = 0 | slicer.threshold.vth_a | (was: new field cdr.vth_a[7:0]; dynamic if IX-11)
+c_vthdac_b | 8 | 128 | slicer.threshold.vth_b, or the IX-11 in-band value (transport opcode 6) until ENABLE = 0 | slicer.threshold.vth_b | (was: new field cdr.vth_b[7:0])
 c_slicer_en | 1 | 0 | en (island 0) | slicer.state.state | today en_eff[13]
-c_slicer_trim_d0 | 10 | 0 | direct: {f3,f2,f1,f0,n2,n1,n0,p2,p1,p0} | - | new per-sampler field (today slicer.offset.data 4 bits for all four)
-c_slicer_trim_d1 | 10 | 0 | direct | - |
-c_slicer_trim_d2 | 10 | 0 | direct | - |
-c_slicer_trim_d3 | 10 | 0 | direct | - |
-c_slicer_trim_e0 | 10 | 0 | direct | - | today slicer.offset.early 4 bits
-c_slicer_trim_e1 | 10 | 0 | direct | - | today slicer.offset.late 4 bits
-c_slicer_trim_e2 | 10 | 0 | direct | - |
-c_slicer_trim_e3 | 10 | 0 | direct | - |
-c_slicer_vsel_e0 | 2 | 0 | direct | - | new field cdr.vth_sel_e0 (IX-10)
-c_slicer_vsel_e1 | 2 | 0 | direct | - |
-c_slicer_vsel_e2 | 2 | 0 | direct | - |
-c_slicer_vsel_e3 | 2 | 0 | direct | - |
+c_slicer_trim_d0 | 10 | 0 | direct | slicer.offset.trim_d0 | (was: new per-sampler field (today slicer.offset.data 4 bits for all four))
+c_slicer_trim_d1 | 10 | 0 | direct | slicer.offset.trim_d1 |
+c_slicer_trim_d2 | 10 | 0 | direct | slicer.offset.trim_d2 |
+c_slicer_trim_d3 | 10 | 0 | direct | slicer.offset.trim_d3 |
+c_slicer_trim_e0 | 10 | 0 | direct | slicer.offset.trim_e0 | today slicer.offset.early 4 bits
+c_slicer_trim_e1 | 10 | 0 | direct | slicer.offset.trim_e1 | today slicer.offset.late 4 bits
+c_slicer_trim_e2 | 10 | 0 | direct | slicer.offset.trim_e2 |
+c_slicer_trim_e3 | 10 | 0 | direct | slicer.offset.trim_e3 |
+c_slicer_vsel_e0 | 2 | 0 | direct | slicer.threshold.vsel_e0 | (was: new field cdr.vth_sel_e0 (IX-10))
+c_slicer_vsel_e1 | 2 | 0 | direct | slicer.threshold.vsel_e1 |
+c_slicer_vsel_e2 | 2 | 0 | direct | slicer.threshold.vsel_e2 |
+c_slicer_vsel_e3 | 2 | 0 | direct | slicer.threshold.vsel_e3 |
 c_ptrim_t0 | 5 | 0 | direct | cdr.phase_trim.p0 |
 c_ptrim_t1 | 5 | 0 | direct | cdr.phase_trim.p1 |
 c_ptrim_t2 | 5 | 0 | direct | cdr.phase_trim.p2 |
@@ -193,25 +193,25 @@ c_ptrim_t5 | 5 | 0 | direct | cdr.phase_trim.p5 |
 c_ptrim_t6 | 5 | 0 | direct | cdr.phase_trim.p6 |
 c_ptrim_t7 | 5 | 0 | direct | cdr.phase_trim.p7 |
 c_wrx_cap_en | 1 | 0 | (slicer.state == active) & island_on[0] | slicer.state.state |
-c_wrx_cap_rcs | 1 | 0 | bit 1 of the 2-bit field | cdr.config.cap_rcsel | field reset 1 -> RCS 0
-c_wrx_cap_b2 | 1 | 0 | RX rate mode == half | - | new RX rate-mode field {quarter, half, full}
-c_wrx_cap_b1 | 1 | 0 | RX rate mode == full | - |
-c_wrx_cap_psel | 3 | 0 | phase picker output | - | dynamic; RTL phase picker not in the macro (MW-10)
-c_wrx_cap_slipp | 1 | 0 | bit slip + | - | dynamic; as above
-c_wrx_cap_slipm | 1 | 0 | bit slip - | - | dynamic; as above
+c_wrx_cap_rcs | 1 | 0 | direct | slicer.capture.rcsel | field reset 1 -> RCS 0
+c_wrx_cap_b2 | 1 | 0 | slicer.capture.rate_mode == half | slicer.capture.rate_mode | new RX rate-mode field {quarter, half, full}
+c_wrx_cap_b1 | 1 | 0 | slicer.capture.rate_mode == full | slicer.capture.rate_mode |
+c_wrx_cap_psel | 3 | 0 | rtl/pt_wrx_ctl.sv phase picker (automatic, or wrx.picker.manual_psel) | wrx.picker.auto+wrx.picker.manual_psel | dynamic; RTL phase picker not in the macro (MW-10)
+c_wrx_cap_slipp | 1 | 0 | pt_wrx_ctl slip tag + (automatic with the PSEL 3 -> 4 step, or one per change of manual_slip_plus) | wrx.picker.auto+wrx.picker.manual_slip_plus | dynamic; as above
+c_wrx_cap_slipm | 1 | 0 | pt_wrx_ctl slip tag - | wrx.picker.auto+wrx.picker.manual_slip_minus | dynamic; as above
 # ---- wired transmit
 c_wiredtx_mode_h | 1 | 0 | rate_mode 0 -> HF 00 (x1), 1 -> 10 (x2), 2 -> 01 (x4) | consolidation.wiredtx_stage.rate_mode | code 11 (generic serializer fallback, wired_tx README) is not reachable from this field: add a value if it is wanted
 c_wiredtx_mode_f | 1 | 0 | as above | consolidation.wiredtx_stage.rate_mode |
 c_wiredtx_ser_en | 1 | 0 | (wiredtx.state == active) & island_on[0] & tx_ring_ready & !debug.wtx_ext | wiredtx.state.state+debug.wtx_ext.enable | WT25; tx_ring_ready = ring enabled for its lock time or the FBCK counter in tolerance (not the LOCK pin); replaces ct_ser_run (MW-15)
 c_wiredtx_ext | 1 | 0 | direct | debug.wtx_ext.enable |
-c_wiredtx_post_pol | 1 | 0 | direct | - | new field wiredtx.config.post_polarity (IX-9)
+c_wiredtx_post_pol | 1 | 0 | direct | wiredtx.config.post_polarity | (was: new field wiredtx.config.post_polarity (IX-9))
 c_wiredtx_main_code | 8 | 109 | direct | wiredtx.config.current_code |
 c_wiredtx_post_code | 8 | 0 | direct | wiredtx.config.postcursor_code |
 c_wiredtx_bias_en | 1 | 0 | any c_txpad_req_* & island_on[0] | txpad.config.branch | core_bias EN_wiredtx
 c_txpad_req_main | 1 | 0 | (wiredtx.state == active) & (branch != off) & !idle, OR the fallback request (branch == 2 & debug.wtx_ext & state active & !idle) | txpad.config.branch+wiredtx.state.state+wiredtx.idle.idle+debug.wtx_ext.enable | interlock REQ_MAIN (wired TX INTEGRATION.md section 4, WT28); dropping the request is a power-down, not a protocol idle (WT30)
 c_txpad_req_post | 1 | 0 | req_main & (postcursor_code != 0 or post_polarity) | txpad.config.branch+wiredtx.config.postcursor_code |
 c_txpad_req_detect | 1 | 0 | branch == detect | txpad.config.branch |
-c_txpad_req_term | 1 | 0 | TX termination request | - | new field (no TX termination enable exists)
+c_txpad_req_term | 1 | 0 | txpad.config.term_request through the pad sequencer (rtl/pt_wtx_ctl.sv) | txpad.config.term_request | (was: new field (no TX termination enable exists))
 c_hsbias_en | 1 | 0 | direct | usbhs.bias.enable |
 c_hsbias_c | 8 | 0 | direct | usbhs.bias.code |
 c_wtxfb_branch | 2 | 0 | direct | txpad.config.branch | fallback control raw latch inputs
@@ -221,11 +221,11 @@ c_wtxfb_stage_tmds | 1 | 0 | direct | consolidation.wiredtx_stage.stage |
 # ---- USB pad (data path: D-USB)
 c_usb_hs_en | 1 | 0 | (usbdrive.select.branch == hs) & usbhs.config.tx_enable | usbdrive.select.branch+usbhs.config.tx_enable | USB-INTEGRATION.md; never with c_usb_fs_en
 c_usb_fs_en | 1 | 0 | (usbdrive.select.branch == fsls) & usbfs.config.drive_enable | usbdrive.select.branch+usbfs.config.drive_enable |
-c_usb_hs_drv | 1 | 0 | 1 while an HS packet is driven | - | dynamic (word-granular); USB logic does not exist in the macro (USB-D1)
-c_usb_tx_dp | 1 | 0 | FS/LS line level D+, chirp J | - | dynamic
-c_usb_tx_dn | 1 | 0 | FS/LS line level D-, chirp K | - | dynamic
-c_usb_tx_oe | 1 | 0 | output enable for TX_DP/TX_DN | - | dynamic
-c_usb_hs_str | 2 | 1 | direct | - | new field usbhs.config.drive_strength[1:0], reset 1
+c_usb_hs_drv | 1 | 0 | rtl/pt_usb.sv: 1 while an HS packet is in the serializer (word-granular) | usbdrive.select.branch+usbhs.config.tx_enable | dynamic (word-granular); USB logic does not exist in the macro (USB-D1)
+c_usb_tx_dp | 1 | 0 | rtl/pt_usb.sv: FS/LS line level D+ / chirp from the direct-stream symbols or usb.config.force_symbol | usb.config.force_symbol+digital.transport_config.direct_stream_enable | dynamic
+c_usb_tx_dn | 1 | 0 | rtl/pt_usb.sv: FS/LS line level D- | usb.config.force_symbol+digital.transport_config.direct_stream_enable | dynamic
+c_usb_tx_oe | 1 | 0 | rtl/pt_usb.sv: output enable for TX_DP / TX_DN | usb.config.force_enable+digital.transport_config.direct_stream_enable | dynamic
+c_usb_hs_str | 2 | 1 | direct | usbhs.config.drive_strength | (was: new field usbhs.config.drive_strength[1:0], reset 1)
 c_usb_pullup_p | 1 | 0 | direct | usbfs.config.pullup_p |
 c_usb_pullup_n | 1 | 0 | direct | usbfs.config.pullup_n |
 c_usb_pulldown_p | 1 | 0 | direct | usbfs.config.pulldown_p |

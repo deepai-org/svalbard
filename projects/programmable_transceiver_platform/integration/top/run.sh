@@ -7,17 +7,10 @@ rc=0
 python3 check_top.py --selftest || rc=1
 python3 check_top.py --write "$@" || rc=1
 W=${TMPDIR:-/tmp}/pt_top_boundary.$$; mkdir -p "$W"
-# RTL for the boundary sim: the working tree if it compiles, else the last committed rtl/ + register map (the digital
-# owner's rework can leave the tree uncompilable for hours; the sim then says which RTL it used)
-RTL=$P/rtl; MAP=$P/spec/register-map.json; RTLSRC="working tree"
-python3 sim/gen_defs.py $MAP > generated/tb_regs.svh 2>/dev/null
-if ! iverilog -g2012 -I $RTL -I generated -o "$W/pos" -s tb_top_boundary sim/tb_top_boundary.sv generated/pt_analog_top_stub.sv $(ls $RTL/*.sv) 2> "$W/cc.log"; then
-  mkdir -p "$W/head"; (cd $P && git archive HEAD rtl spec/register-map.json) | tar -x -C "$W/head"
-  RTL="$W/head/rtl"; MAP="$W/head/spec/register-map.json"; RTLSRC="git HEAD (working-tree rtl/ does not compile: $(grep -c error "$W/cc.log") errors)"
-  python3 sim/gen_defs.py $MAP > generated/tb_regs.svh || rc=1
-  iverilog -g2012 -I $RTL -I generated -o "$W/pos" -s tb_top_boundary sim/tb_top_boundary.sv generated/pt_analog_top_stub.sv $(ls $RTL/*.sv) || rc=1
-fi
-echo "boundary sim RTL: $RTLSRC"
+# Boundary sim on the working-tree RTL: the macro presents every c_* / s_* port by name (TOP-1 done by digital 2026-11-14).
+RTL=$P/rtl
+python3 sim/gen_defs.py > generated/tb_regs.svh || rc=1
+iverilog -g2012 -I $RTL -I generated -o "$W/pos" -s tb_top_boundary sim/tb_top_boundary.sv generated/pt_analog_top_stub.sv $(ls $RTL/*.sv) 2> "$W/cc.log" || { echo "boundary sim: rtl/ does not compile ($(grep -c error "$W/cc.log") errors)"; rc=1; }
 SRC="sim/tb_top_boundary.sv generated/pt_analog_top_stub.sv $(ls $RTL/*.sv)"
 vvp "$W/pos" | tee "$W/pos.log" | tail -3
 grep -q TOP_BOUNDARY_PASS "$W/pos.log" || { echo "boundary sim: FAIL"; rc=1; }

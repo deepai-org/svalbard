@@ -10,6 +10,8 @@
 #   instance name and the pin; braces on the right side advance in step with the left side)
 # port <net>                        bond pad / package pin
 # waive <inst>.<pin-regex> <text>   island crossing without an iso cell, with the reason
+# swap <inst>.<pin-regex> <text>    intended P/N swap (check_top.py derives P/N, I/Q and bit order from the names)
+# macroclamp <group> <pin-regex>    macro input the digital macro clamps itself (CP4-1)
 # Nets: c_* = control from pt_digital_macro (one macro port per name, widths/resets in ctl_ports.txt);
 #       s_* = status into the macro.  Everything not on instance `digital`, `host`, `debug_pads`, `atb*_io`,
 #       `pad_por_bypass` is inside pt_analog_top.
@@ -82,16 +84,16 @@ inst digital pt_digital_macro chip
   ref_clk=ref_clk wire_rx_clk=WRX_WCLK40 wire_tx_clk=WTX_WCLK40 rf_rx_clk=rf_rx_clk rf_tx_clk=CONV_CLK
   ct_wclk=PRE_CK ct_det_clk>ct_det_clk
   fc_src[0]=fc_src[0] fc_src[1]=PLL_CDR_FBCK fc_src[2]=RING_OSC_CK fc_src[3]=VCO_REPLICA_CK fc_src[4]=fc_src[4] fc_src[5]=LO_FB
-  # wired datapath.  wire_rx_valid / wire_tx_request have no analog producer: tied (D-VALID)
-  wire_rx_data[{0:39}]=WRX_DX[\1] wire_rx_edge[{0:19}]=WRX_EW[\1] wire_rx_valid=VDD
-  wire_tx_data[{0:39}]>wire_tx_data[\1] wire_tx_request=VDD
+  # wired datapath.  wire_rx_valid / wire_tx_request are made inside the macro (pt_wrx_ctl / pt_wtx_ctl; D-VALID, TOP-3): no pins
+  wire_rx_data[{0:39}]=WRX_DX[\1] wire_rx_edge[{0:19}]=WRX_EW[\1]
+  wire_tx_data[{0:39}]>wire_tx_data[\1]
   # RF datapath: 10-bit two's complement, MSB-justified in 12-bit I [11:0] / Q [23:12] fields; low 2 bits tied
   rf_rx_sample[{0:1}]=VSS rf_rx_sample[{2:11}]=ADCI_CODE[{0:9}] rf_rx_sample[{12:13}]=VSS rf_rx_sample[{14:23}]=ADCQ_CODE[{0:9}]
   rf_rx_sample_b[{0:1}]=VSS rf_rx_sample_b[{2:11}]=ADCI_CODEB[{0:9}] rf_rx_sample_b[{12:13}]=VSS rf_rx_sample_b[{14:23}]=ADCQ_CODEB[{0:9}]
   rf_rx_ph_i=ADCI_PH rf_rx_ph_q=ADCQ_PH      # ADC interleave phase: 0 = this edge registers core A, 1 = core B
-  rf_rx_valid=VDD      # no analog producer: the macro must make it (D-CONV, D-VALID)
+  # rf_rx_valid is made inside the macro (pt_adc_merge: EN and 4 edges); the DAC takes one code per clock (no request pin)
   rf_tx_sample[{0:1}]>- rf_tx_sample[{2:11}]>rf_tx_sample[\1] rf_tx_sample[{12:13}]>- rf_tx_sample[{14:23}]>rf_tx_sample[\1]
-  rf_tx_clk_out>rf_tx_clk_out rf_tx_request=VDD
+  rf_tx_clk_out>rf_tx_clk_out
   # islands, ATB, debug pads (unchanged ports)
   island_en[{0,1,2,4,5}]>island_en[\1] island_en[3]>-
   island_on[{0,1,2,4,5}]>island_on[\1] island_on[3]>-
@@ -375,6 +377,7 @@ inst iso_cdr_dn_{0:3} iso_clamp pll
 # rx_wclk_in, obs_pre4_wclk and two clamps are deleted; clockmux.WCK and cdr.WCK_IN take AUX_CK_P. Conditions: D-AUXWCK
 inst rx_aux_clk pt_diff_clk_rx debug
   INP~AUX_CLK_P INN~AUX_CLK_N EN=rx_en_aux SE=VSS OUTP>AUX_CK OUTN>- PRESENT>AUX_PRESENT ATB_DET~- VDD~RAIL_debug VSS~VSS
+swap rx_wtx_ext.INP legs swapped on purpose so that OUTN carries the data (analog/wired_tx/wtx_ext_rx.spice, WT28)
 inst rx_wtx_ext pt_diff_clk_rx debug
   INP~WTX_EXT_N INN~WTX_EXT_P EN=rx_en_wtx_ext SE=VSS OUTP>- OUTN>WTX_DX_DBG PRESENT>WTX_EXT_PRESENT ATB_DET~- VDD~RAIL_debug VSS~VSS
 inst iso_aux_ck iso_clamp_x4 pll

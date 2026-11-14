@@ -13,6 +13,7 @@ print(f"`define PT_REG_LNA_STATE_ADDR 8'd{addr('lna.state.state')}")
 assert lsb('lna.state.state') == 0
 print(f"`define PT_REG_PATTERN_ADDR 8'd{addr('debug.pattern.user_word')}")
 print(f"`define PT_REG_AOSC_ADDR 8'd{addr('core.aosc.enable')}")
+print(f"`define PT_REG_AOSC_RESET 1'b{f['core.aosc.enable']['default'] or 0}")
 assert lsb('core.aosc.enable') == 0
 a = f['debug.atb.atb1']; assert a['chunks'][0]['addr'] == 0x4A
 print(f"`define PT_REG_ATB1_CODE5 16'd{5 << a['chunks'][0]['reg_lsb']}")

@@ -211,6 +211,73 @@
    ],
    "i_ma": 3.27,
    "vctrl": 1.3411
+  },
+  "ss_32_2.57V_band1_627MHz": {
+   "osc": true,
+   "f_mhz": 627.34,
+   "jit_ps": 2.06,
+   "phase_deg": [
+    0.0,
+    37.1,
+    80.97,
+    122.76,
+    172.72,
+    215.27,
+    260.12,
+    302.23
+   ],
+   "duty": [
+    0.5866,
+    0.5878,
+    0.5837,
+    0.5913,
+    0.5816,
+    0.5848,
+    0.5812,
+    0.5861
+   ],
+   "vhi": [
+    2.626,
+    2.619,
+    2.612,
+    2.623,
+    2.611,
+    2.613,
+    2.607,
+    2.585
+   ],
+   "vlo": [
+    -0.052,
+    -0.056,
+    -0.051,
+    -0.054,
+    -0.047,
+    -0.048,
+    -0.047,
+    -0.01
+   ],
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "slot_err_ps": [
+    -35.0,
+    -5.0,
+    -14.2,
+    22.0,
+    -10.8,
+    -0.7,
+    -12.8,
+    56.5
+   ],
+   "i_ma": 4.79,
+   "vctrl": 1.3841
   }
  },
  "runs": {
@@ -509,6 +576,132 @@
    },
    "supply_current_avg_a": 0.021710668858138892,
    "dut_sha256": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4"
+  },
+  "ss_real_ring2v57": {
+   "ok": false,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "bit_rate_bps": 2511869359.9999995,
+   "real_ring": true,
+   "ideal_cfg": null,
+   "vring": 2.57,
+   "vctrl": 1.3841,
+   "band": 1,
+   "ring_f_hz": 627967339.9999999,
+   "route": [
+    30.0,
+    6e-14
+   ],
+   "CMD_MAIN_N": {
+    "bits_compared": 100,
+    "errors": 11,
+    "latency_bits": 17,
+    "jitter_pp_s": 3.426642914591578e-10,
+    "eye_width_est_s": 5.544558476465991e-11,
+    "vertical_margin_v": 0.17736313478298604
+   },
+   "CMD_MAIN_P": {
+    "bits_compared": 100,
+    "errors": 5,
+    "latency_bits": 17,
+    "jitter_pp_s": 3.576677429862783e-10,
+    "eye_width_est_s": 4.0442133237539416e-11,
+    "vertical_margin_v": 0.2448945045113715
+   },
+   "CMD_POST_P": {
+    "mismatches_vs_main_delayed_0ui": 32,
+    "mismatches_vs_main_delayed_1ui": 5,
+    "mismatches_vs_main_delayed_2ui": 32,
+    "bits_compared": 99
+   },
+   "supply_current_avg_a": 0.0324283624703683,
+   "dut_sha256": "sha256:efcd36f12d8290f4f7f017dcc3b2a964c0b3d9829805d1fd148176bff7304be4"
+  }
+ },
+ "schematic_window_experiment": {
+  "note": "WT29b: schematic block (no parasitics) + extracted real ring, ss/32/3.15, ring 2.69 V; not evidence for the laid-out core",
+  "rising_edge_windows": {
+   "ok": true,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "bit_rate_bps": 2502080000.0,
+   "real_ring": true,
+   "ideal_cfg": null,
+   "vring": 2.69,
+   "vctrl": 1.3669,
+   "band": 1,
+   "ring_f_hz": 625520000.0,
+   "route": [
+    30.0,
+    6e-14
+   ],
+   "CMD_MAIN_N": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 15,
+    "jitter_pp_s": 1.492337156683084e-10,
+    "eye_width_est_s": 2.50433760991111e-10,
+    "vertical_margin_v": 1.4959548041162494
+   },
+   "CMD_MAIN_P": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 15,
+    "jitter_pp_s": 1.4457752923126848e-10,
+    "eye_width_est_s": 2.550899474281509e-10,
+    "vertical_margin_v": 1.497920752276042
+   },
+   "CMD_POST_P": {
+    "mismatches_vs_main_delayed_0ui": 53,
+    "mismatches_vs_main_delayed_1ui": 0,
+    "mismatches_vs_main_delayed_2ui": 52,
+    "bits_compared": 99
+   },
+   "supply_current_avg_a": 0.018645737380903277,
+   "dut_sha256": "sha256:ddeb283032d0df9fa68d86e857dab573a37b0356b515d1abc9aee3b3fa3f58f2"
+  },
+  "published_windows": {
+   "ok": true,
+   "corner": "ss",
+   "temp_c": 32,
+   "vdd": 3.15,
+   "bit_rate_bps": 2502080000.0,
+   "real_ring": true,
+   "ideal_cfg": null,
+   "vring": 2.69,
+   "vctrl": 1.3669,
+   "band": 1,
+   "ring_f_hz": 625520000.0,
+   "route": [
+    30.0,
+    6e-14
+   ],
+   "CMD_MAIN_N": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 15,
+    "jitter_pp_s": 1.9011743678498277e-10,
+    "eye_width_est_s": 2.095500398744366e-10,
+    "vertical_margin_v": 1.4993939748113974
+   },
+   "CMD_MAIN_P": {
+    "bits_compared": 100,
+    "errors": 0,
+    "latency_bits": 15,
+    "jitter_pp_s": 1.9106603325619766e-10,
+    "eye_width_est_s": 2.0860144340322172e-10,
+    "vertical_margin_v": 1.4991106740664915
+   },
+   "CMD_POST_P": {
+    "mismatches_vs_main_delayed_0ui": 53,
+    "mismatches_vs_main_delayed_1ui": 0,
+    "mismatches_vs_main_delayed_2ui": 52,
+    "bits_compared": 99
+   },
+   "supply_current_avg_a": 0.0185176356556587,
+   "dut_sha256": "sha256:cd832de3211c321bd5591b002d0d34c809a637f31381f39e269bb5e99ab0ec05"
   }
  }
 }

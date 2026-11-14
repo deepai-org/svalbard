@@ -16,7 +16,7 @@ Nothing here is qualified; numbers are extracted (Magic C) unless noted, and
 **Status 2026-11-13 (session 11): real-neighbour benches; pin list in `INTEGRATION.md`.**
 * **Real ring phases (MW-31, row WT29; single points, CMD pins, nominal extraction, about 100 bits each).**
   Extracted `pt_pll_ring_core` (open loop, regulated supply) -> route -> extracted `pt_wiredtx`, 2.5 Gb/s,
-  ss/32/3.15 (ring 2.69 V): **11 errors / 101 bits, eye 77 ps: FAIL.** Ideal-source controls in the same harness:
+  ss/32/3.15 (ring 2.69 V): **11 errors / 101 bits, eye 77 ps: FAIL** (ring 2.57 V: 11 errors / 100, eye 55 ps). Ideal-source controls in the same harness:
   full rail 0 errors (eye 240 ps); swing 2.69 V only 0 errors (306 ps); swing + measured rise spacing 0 errors
   (323 ps); **swing + duty 0.575: 11 errors (121 ps)**. The cause is the ring's phase duty cycle (0.57-0.58 at ss,
   625 MHz); the core closes its windows on a falling phase edge. tt/27/3.3 (ring 2.925 V, duty 0.52): 0 errors,

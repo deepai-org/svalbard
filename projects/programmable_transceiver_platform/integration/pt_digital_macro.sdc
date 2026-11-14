@@ -115,8 +115,8 @@ if {[llength $interp_mux]} {
 }
 create_clock -name rfrx  -period $RFRX_PERIOD  [get_ports rf_rx_clk]
 create_clock -name ctw   -period $CTW_PERIOD   [get_ports ct_wclk]
-create_clock -name ctref -period $CTREF_PERIOD [get_ports ct_ref_clk]
-create_clock -name ctdet -period $CTDET_PERIOD [get_ports ct_det_clk_in]
+# r6 (mode-walk rework): pt_clocktree_slow left the macro; ct_ref_clk / ct_det_clk_in no longer exist. The detector
+# divider (pt_det_clk) runs on ct_wclk (clock ctw).
 # Reduced-rate fallback (debug.host_link.rate, rtl/pt_host_link.sv pt_host_rate_clock). The host
 # link and the whole transport core run from hddr = hword / HOST_RATE_DIV, selected by two kept
 # mux2 cells. Each setting is a separate STA mode: HOST_RATE_DIV 1 (reset, full rate), 2 or 4.
@@ -182,7 +182,7 @@ if {[llength $ingress_mux]} {
     set ingress_clks {ingress_wrx ingress_rfrx}
     set_clock_groups -logically_exclusive -group ingress_wrx -group ingress_rfrx
     set_false_path -from [get_clocks rfrx] -to [get_clocks ingress_wrx]
-    set_false_path -from [get_ports {wire_rx_data* wire_rx_valid}] -to [get_clocks ingress_rfrx]
+    set_false_path -from [get_ports {wire_rx_data* wire_rx_edge*}] -to [get_clocks ingress_rfrx]
 }
 # The egress bank is shared by stopped-only exclusive owners. Define clocks
 # after its physical mux so only these local alternatives are exclusive;
@@ -243,7 +243,7 @@ if {[llength $mem_mux]} {
     set_clock_groups -physically_exclusive -group hcore -group egress_mem_sclk
     set mem_on 1
 }
-set all_clk_names [concat {sclk ref hword h2d h2d_cap h2d_pin wtx wrx rftx rfrx ctw ctref ctdet} $fc_clks $host_clks $ingress_clks $egress_clks $mem_clks]
+set all_clk_names [concat {sclk ref hword h2d h2d_cap h2d_pin wtx wrx rftx rfrx ctw} $fc_clks $host_clks $ingress_clks $egress_clks $mem_clks]
 
 set_clock_uncertainty 0.25 [all_clocks]
 
@@ -295,8 +295,9 @@ proc pt_io {clk period ins outs} {
     if {[llength $ins]}  { set_input_delay  [expr {0.2 * $period}] -clock $clk [get_ports $ins] }
     if {[llength $outs]} { set_output_delay [expr {0.2 * $period}] -clock $clk [get_ports $outs] }
 }
-pt_io wrx  $WRX_PERIOD  {wire_rx_data* wire_rx_valid} {}
-pt_io wtx  $WTX_PERIOD  {wire_tx_request} {wire_tx_valid wire_idle}
+# r6: wire_rx_valid / wire_tx_request are made in the macro (pt_wrx_ctl / pt_wtx_ctl). The capture's phase picker
+# pins change between words (wire_rx_clk registers).
+pt_io wrx  $WRX_PERIOD  {wire_rx_data* wire_rx_edge*} {c_wrx_cap_psel* c_wrx_cap_slipp c_wrx_cap_slipm}
 # wire_tx_data (pt_wiredtx D0..D39, AC-1 S3): the serializer loads D0..D19 at the WORD_CLK
 # falling edge after WORD_CLK40 rises (0.4 x T20 = 0.2 x T40 after it, conservative by T20/5) and
 # D20..D39 one 20-bit word later (0.7 x T40), setup 0.5 ns / hold 0.3 ns (integration/pt_wired_tx.sdc).
@@ -310,8 +311,7 @@ set_output_delay -clock wtx -max [expr {0.5 - 0.2 * $WTX_PERIOD}] [get_ports $wt
 set_output_delay -clock wtx -min [expr {-(0.2 * $WTX_PERIOD + 0.3)}] [get_ports $wtx_lo]
 set_output_delay -clock wtx -max [expr {0.3 * $WTX_PERIOD + 0.5}] [get_ports $wtx_hi]
 set_output_delay -clock wtx -min [expr {0.3 * $WTX_PERIOD - 0.3}] [get_ports $wtx_hi]
-pt_io rfrx $RFRX_PERIOD {rf_rx_sample* rf_rx_valid} {}
-pt_io rftx $RFTX_PERIOD {rf_tx_request} {}
+pt_io rfrx $RFRX_PERIOD {rf_rx_sample* rf_rx_ph_i rf_rx_ph_q} {}
 # RF TX outputs (coordinator decision 2026-11-11; interface row RF/assembly): the DAC captures on the
 # OPPOSITE rf_tx_clk edge of the same clock the macro uses, and the budget is defined at the macro's
 # rf_tx_clk pin. The outputs leave from rising-edge flops (pt_digital rf_o_*) and must be valid
@@ -329,17 +329,15 @@ pt_io rftx $RFTX_PERIOD {rf_tx_request} {}
 # RFTX_SKEW = DAC capture setup/hold 0.6 ns + macro->DAC route mismatch 0.4 ns (design-assumptions.md).
 if {![info exists RFTX_SKEW]} { set RFTX_SKEW 1.0 }
 create_generated_clock -name rftx_fwd -master_clock rftx -source [get_ports rf_tx_clk] -divide_by 1 -add [get_ports rf_tx_clk_out]
-set_output_delay -max $RFTX_SKEW -clock rftx_fwd -clock_fall [get_ports {rf_tx_sample* rf_tx_valid rf_mute}]
-set_output_delay -min [expr {-$RFTX_SKEW}] -clock rftx_fwd -clock_fall [get_ports {rf_tx_sample* rf_tx_valid rf_mute}]
-pt_io ref  $REF_PERIOD  {calibration_above_target} {calibration_trial* cdr_freq_locked}
-pt_io ctref $CTREF_PERIOD {ct_marker} {ct_armed ct_marker_seen ct_launched ct_arm_fault}
-pt_io ctw  $CTW_PERIOD  {} {ct_word_clk ct_word_load ct_ser_run ct_bit_phase ct_qualified}
-pt_io ctdet $CTDET_PERIOD {} {ct_det_div*}
+set_output_delay -max $RFTX_SKEW -clock rftx_fwd -clock_fall [get_ports {rf_tx_sample*}]
+set_output_delay -min [expr {-$RFTX_SKEW}] -clock rftx_fwd -clock_fall [get_ports {rf_tx_sample*}]
+# r6: reference-domain outputs to the analog top: CDR frequency-loop pulses (level pulses of >= 1 reference cycle).
+pt_io ref  $REF_PERIOD  {} {c_cdr_fup c_cdr_fdn}
 # ct_det_clk is the detector's divided CLOCK (det_clk = gated clk / a / a&b of pt_ct_detect_div), not
 # data: no register captures it against ctdet, so it is a generated clock at the port (its duty /
 # pulse width come from the divider registers) instead of a data output delay (AC1_R4: -4.2 ns on
 # a 0.2 x period budget that has no receiver).
-create_generated_clock -name ctdet_out -master_clock ctdet -source [get_ports ct_det_clk_in] -divide_by 1 -add [get_ports ct_det_clk]
+create_generated_clock -name ctdet_out -master_clock ctw -source [get_ports ct_wclk] -divide_by 1 -add [get_ports ct_det_clk]
 
 # SPI (Mode 0). Host launches MOSI/CS_N on the falling edge; allow 10 ns host + board + pad.
 # MISO launches on our falling edge; host samples on the next rising edge with 10 ns budget.
@@ -371,12 +369,23 @@ if {[llength $cs_data_ends]} {
 # SCLK: they must settle within one SCLK period of the committing edge (output budget 20 %).
 # The register file commits on the SCLK falling edge (rtl/pt_spi.sv, pt_mgmt sclk_regs), so the
 # budget is referenced to that edge: launch at the fall, settle 0.8 period later.
-set_output_delay [expr {0.2 * $SCLK_PERIOD}] -clock sclk -clock_fall [get_ports {analog_cfg* debug_cfg* island_en* atb0_sw* atb1_sw* rx_en_* clk_obs_oe wclk_obs_oe
-    dbg_obs0* dbg_obs1* wdbg_obs* commit_toggle enable mode8 rf_trim* wire_trim* clock_trim* d2h_oe d2h_pdrv* d2h_sl
-    en_eff* island_off*}]
+# r6: analog_cfg / debug_cfg / en_eff are internal; the decoded control ports c_* (rtl/pt_ctl_decode.sv and the control
+# blocks) are quasi-static levels launched by the register file on the SCLK fall (same budget as before). The ports
+# with a second, asynchronous source (fast gain on the LNA / PGA pins, transport mute, in-band thresholds, the
+# ref_clk-sequenced wired TX enables, USB pre-driver levels on wire_tx_clk) are constrained from SCLK only:
+# their other launch clocks are false paths to these ports (static-level contract of integration/top/ctl_ports.txt).
+set pt_ctl_ports [get_ports {c_* island_en* island_on* island_off* atb0_* atb1_* rx_en_* clk_obs_oe wire_rx_ptrim_en
+    dbg_obs0* dbg_obs1* d2h_oe d2h_pdrv* d2h_sl}]
+set pt_ctl_static {}
+foreach p $pt_ctl_ports {
+    if {![regexp {^(c_wrx_cap_psel|c_wrx_cap_slip|c_cdr_fup|c_cdr_fdn)} [get_full_name $p]]} { lappend pt_ctl_static $p }
+}
+set_output_delay [expr {0.2 * $SCLK_PERIOD}] -clock sclk -clock_fall $pt_ctl_static
+foreach c {ref wtx wrx rftx rfrx hcore ctw} {
+    if {[llength [get_clocks -quiet $c]]} { set_false_path -from [get_clocks $c] -to $pt_ctl_static }
+}
 # en_eff[10]/[11] also carry the REF-domain regulator hold (rtl/pt_vreg_seq.sv): an asynchronous level
 # into the analog enables (a >= 50 us hold window), not an SCLK-cycle path.
-set_false_path -from [get_clocks ref] -to [get_ports en_eff*]
 # PD8: WIRED_ON from the analog bring-up controller, an asynchronous level ORed into island_on[0].
 set_false_path -from [get_ports wired_on_ext]
 
@@ -509,8 +518,7 @@ set sync_first [concat \
     [pt_cells {*.meta*}] \
     [pt_cells {*regs.s1*}] [pt_cells {*regs.c1*}] [pt_cells {*regs.pg1*}] [pt_cells {*regs.on1*}] \
     [pt_cells {*regs.f1*}] [pt_cells {*regs.st1_*}] \
-    [pt_cells {*clocktree.ref_s*}] [pt_cells {*clocktree.pend_s*}] [pt_cells {*clocktree.lock_s*}] \
-    [pt_cells {*clocktree.arm_s*}] [pt_cells {*clocktree.qual_s*}] [pt_cells {*clocktree.den_s*}]]
+    [pt_cells {*det.den_s*}]]
 if {[llength $sync_first]} { set_false_path -to $sync_first }
 # 1b. Reset synchronizers (pt_async_fifo wr_reset/rd_reset, pt_enable_release release_state,
 #     pt_pair_word_boundary reset_release, pt_host_link hrs/wrs). Their asynchronous reset is
@@ -626,7 +634,7 @@ foreach inst {fca fcb} {
 # 4c. DBG_OBS0/1 and WDBG_OBS are raw, unsynchronized observation muxes of status from every
 #     domain (spec/register-map.md, debug-controls obs_status). Only the SCLK-launched select is timed.
 foreach c [lrange $all_clk_names 1 end] {
-    set_false_path -from [get_clocks $c] -to [get_ports {dbg_obs0 dbg_obs1 wdbg_obs}]
+    set_false_path -from [get_clocks $c] -to [get_ports {dbg_obs0 dbg_obs1}]
 }
 # 4d. Pattern cores: since P3-6 the 20-bit generator/checker run directly on the 20-bit double-word
 #     clocks (no clock gate): single-cycle paths, no multicycle exception.
@@ -728,8 +736,8 @@ pt_bound_xing $RFRX_PERIOD -from [get_clocks hcore] -to [get_clocks rfrx]
 #     the static analog_cfg/debug_cfg outputs. Analog controls with no capturing clock: the gain
 #     command discards the next GAIN_SETTLE (20) samples, so one RF sample period from the rfrx
 #     register to the pin is the budget (the sclk output delay is not a requirement for these).
-set_max_delay [expr {$RFRX_PERIOD + 0.2 * $SCLK_PERIOD}] -from [get_clocks rfrx] -to [get_ports {analog_cfg* debug_cfg*}]
-set_false_path -hold -from [get_clocks rfrx] -to [get_ports {analog_cfg* debug_cfg*}]
+# r6: the fast-gain override now ends at the LNA attenuator / PGA pins (false path from rfrx above: static-level contract;
+# the gain change is followed by GAIN_SETTLE discarded samples in the transport).
 
 if {[info exists ::env(STEP_ID)] && $::env(STEP_ID) eq "OpenROAD.CTS"} {
     if {[llength $egress_clks]} { delete_clock [get_clocks egress_rftx] }

@@ -94,7 +94,8 @@ def main():
     a('endmodule')
     a('`endif')
     a('`ifndef PT_EXTERNAL_ANALOG')
-    a('`include "pt_analog_top.sv"')
+    a('// copy of integration/top/generated/pt_analog_top.sv (kept here so that pt_chip.sv elaborates without an include path)')
+    L.extend(l for l in top.rstrip('\n').split('\n') if not l.startswith('//'))
     a('`endif')
     text = '\n'.join(L) + '\n'
     out = HERE + '/pt_chip.sv'

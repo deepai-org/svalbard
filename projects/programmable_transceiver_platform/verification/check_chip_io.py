@@ -51,7 +51,7 @@ def main():
     sources = [PROJECT/'sim/tb_chip_io.sv', PROJECT/'integration/pt_chip.sv',
                PROJECT/'integration/pt_provider_io.sv', *sorted((PROJECT/'rtl').glob('*.sv'))]
     compile_command = ['iverilog', '-g2012', '-Dfunctional', '-DPT_EXTERNAL_IO',
-                       '-I', str(PROJECT/'rtl'), '-I', str(PROJECT/'integration/top/generated'), '-s', 'tb_chip_io', '-o', str(out/'chip.vvp'),
+                       '-I', str(PROJECT/'rtl'), '-s', 'tb_chip_io', '-o', str(out/'chip.vvp'),
                        *map(str, sources), str(model)]
     compile_result = subprocess.run(compile_command, cwd=out, text=True,
                                     capture_output=True, timeout=120)

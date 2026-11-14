@@ -480,3 +480,27 @@ Next: (1) full regression log, fix fallout; (2) independent review of the rework
 the new boundary, then pipelining on this RTL (wrx lc_rx, wtx lc_tx, hcore, rftx, ref, hddr, h2d), balanced / staggered
 clock launch (PD2: 78.125 MHz component to ~10 %), setup at ss 3.15 V and 3.5 V (per-chip supply trim), routed sign-off
 with OCV hold in all domains, GLS, per-mode power.
+
+### r6 follow-up: hardening inputs for the new boundary + first timing numbers on the reworked RTL (syn_r6)
+ - integration/pt_digital_macro.sdc updated at port level (ctref / ctdet clocks gone, detector divider on ctw, c_* ports
+   as quasi-static SCLK-launched outputs with false paths from the other domains, wrx picker pins on wrx, FUP/FDN on
+   ref). verification/digital_hardening/config.json: new RTL files, clock ports. pin_order.cfg: every one of the 300
+   ports matched, sides are PROVISIONAL (consumer-facing order needs the v7 floorplan). NOT done: dont_touch entries for
+   the 130 iso_and cells / key flops / por_path, hio lists unchanged, sta_signoff.py, gls.sh + sim/tb_digital_gl.sv
+   (still instantiate the old ports), macro-contract.md.
+ - syn_r6 = ./syn.sh syn_r6 (LibreLane synthesis + OpenROAD pre-placement STA, ideal clocks, ss_032C_3v15; 2 min).
+   Cell area after synthesis 1.375 mm2 (r5 syn20: 1.241; +0.134 mm2 = +10.8 %; sequential 0.608 -> 0.687 mm2): the new
+   fields (shadow + active flops) and ~700 FF of control blocks. The 66 % utilisation that did not route is now ~73 %
+   before repair: AREA IS THE FIRST PROBLEM of the next round (die fixed, decap trade open).
+ - Worst setup per capture clock, post-synthesis (optimistic by 0-3 ns vs mid-PnR per the r3 calibration):
+   ref -15.3 (fcb result -> pt_wrx_ctl pulse counter: the counter's 5-cycle evaluation exception does not cover the new
+   diff_ref consumers; register fc_diff in pt_wrx_ctl on fc_upd and extend the exception), fc4 -10.4 (pt_monitor counters
+   are constrained at the 6.4 ns frequency-counter period on the aosc pin; real aosc period >= 16.7 ns: give fc4 its own
+   period, then about 0), wrx -9.6 (pt_wrx_ctl picker el_sum -> step / slip count: needs a pipeline stage), wtx -6.0
+   (pt_usb tx phase -> tx_ready -> core lc_q / egress pop: register the direct-stream request), hcore -0.28, h2d +0.25,
+   ctw +0.47, hddr +0.66, hword +0.77, egress_wtx +1.45, ingress_wrx +2.5, rftx +6.9, rfrx +9.7, sclk +16.4.
+   Cross-domain paths that need exceptions or structure: monitor fault_m (aosc) -> pad requests / async clears of the
+   wtx, usb flops (fault is an asynchronous level: false path + recovery waiver), vreg_seq -> wire_tx_request_q clear,
+   wrx st_freq_ok <-> word-domain synchronizers (first stages not named *.meta*: add to the synchronizer list),
+   lane.ew_f (falling-edge edge-word register) -> ingress din -1.0 (half-cycle path: move the lane mux behind a register).
+ - So the "pipelining" list of the brief now starts with the NEW blocks (ref, fc4, wrx, wtx), then the old list.

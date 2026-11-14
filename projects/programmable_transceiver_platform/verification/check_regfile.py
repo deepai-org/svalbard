@@ -665,7 +665,7 @@ def main():
     header = re.sub(r'\[\d+:0\]', ' ', header)
     missing = [d['name'] for d in readiness['debug_sites'] if d['name'] not in retired and d['name'] not in header.replace(',', ' ').split()]
     rtl = sorted(str(x) for x in (P / 'rtl').glob('*.sv'))
-    elab = subprocess.run(['iverilog', '-g2012', '-I', str(P / 'rtl'), '-I', str(P / 'integration/top/generated'), '-s', 'pt_chip', '-o', str(out / 'chip.vvp'),
+    elab = subprocess.run(['iverilog', '-g2012', '-I', str(P / 'rtl'), '-s', 'pt_chip', '-o', str(out / 'chip.vvp'),
                            str(P / 'integration/pt_chip.sv')] + rtl, capture_output=True, text=True)
     report['chip_integration'] = dict(debug_sites=len(readiness['debug_sites']), missing_debug_ports=missing,
                                       elaborates=elab.returncode == 0, elaboration_errors=elab.stderr[-1000:])

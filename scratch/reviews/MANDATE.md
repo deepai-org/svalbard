@@ -146,3 +146,11 @@ On-chip implementations are the design. Off-chip fallbacks (e.g. an external boa
 - Consolidate early and often: frequent consistency passes over interface rows, risks, the inventory and the published views.
 - Tapeout readiness: the user is the gauge. Keep checking.
 - Integration: chip-level verification is a first-class workstream (see the integration plan).
+
+## Per-chip supply trim (user 2026-11-14)
+The board sets each die's supply individually (trimmer + regulator or similar), chosen at bring-up from the die's measured speed (on-chip ring monitors; they need readout codes, pre-mortem item 11).
+- Performance checks at the slow process corner (ss, and ss-pessimistic) may use a raised supply. Working rule until the power-delivery owner refines it: setpoint up to 3.50 V at the die for slow dies, so that setpoint + regulator tolerance + ripple + overshoot stays <= 3.63 V (state the stack-up; safety checks still cover 3.63 V). Typical dies stay at 3.3 V; fast dies may be trimmed down (state the floor each block needs).
+- Temperature window unchanged: 22-32 C.
+- Every block reports its slow-corner results at BOTH 3.15-3.35 V (untrimmed) and the trimmed supply, and states the minimum supply at which it passes at ss and ss-pessimistic. One chip-wide trim value must satisfy all blocks in a mode at once: the coordinator keeps the table.
+- It does not excuse: passives-limited specs (inductor Q), area, hold timing at ff, reliability at the raised supply (HCI/TDDB on slow dies at 3.5 V: check), ESD/clamp behaviour, and the island-switch/IR budget (drops are larger in absolute terms at higher current).
+- Board obligations: adjustable regulator with fine steps (<= 20 mV), ramp >= 10 us (supply-clamp finding INT6), no overshoot above 3.63 V, a bring-up procedure that starts every die at 3.3 V.

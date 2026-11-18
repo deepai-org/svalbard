@@ -58,11 +58,11 @@ def import_cell(key, path, cell_name):
     return tgt
 
 def placeholder(master, w, h, pins):
-    key = 'ph_'+master+f'_{int(round(w))}x{int(round(h))}'
+    key = master          # the cell IS the black box of that master: same name as in the reference netlist
     if key in imported: return imported[key]
     c = ly.create_cell(key)
     c.shapes(L_BND).insert(db.Box(0, 0, um(w), um(h)))
-    c.shapes(L_BND).insert(db.Text(master, db.Trans(db.Vector(um(1), um(1)))))
+    c.shapes(L_BND).insert(db.Text('PLACEHOLDER '+master, db.Trans(db.Vector(um(1), um(1)))))
     # pins: 2 x 2 um Metal4 squares on a 6 um pitch, rings 3 um inside the outline, as many rings as needed
     slots, inset = [], 3.0
     while len(slots) < len(pins) and inset*2+2 < min(w, h):
@@ -176,7 +176,8 @@ for bl in plan['blocks']:
         placed = True; break
     if not placed:
         c = placeholder(bl['master'], W, H, bl['pins'])
-        tr = db.Trans(db.Vector(um(rect[0]), um(rect[1])))
+        b = c.bbox()         # one placeholder cell per master: later instances with the rectangle turned are rotated
+        tr = db.Trans(db.Vector(um(rect[0]), um(rect[1]))) if abs(b.width()/1000-W) < 0.01 else db.Trans(db.Trans.R90, db.Vector(um(rect[0])+b.top, um(rect[1])))
         top.insert(db.CellInstArray(c.cell_index(), tr)); record(bl['name'], bl['master'], c, tr, 'placeholder', None, 'placeholder', bl['in_conn'])
 for c in [c for c in ly.top_cells() if c.name != TOP]:
     ly.prune_cell(c.cell_index(), -1)

@@ -156,3 +156,9 @@ Agent IDs by role (verify before any SendMessage):
 | Housekeeping / evidence audit | afc52a09b47511c00 | non-owned files, scratch/reviews/evidence-audit.md |
 
 Limits given: 3 sims (RF RX, wired RX, pads, wired TX, digital sims), 2 heavy jobs (signoff, area, audit, digital hardening), OMP_NUM_THREADS=1. Not started, awaiting user decisions: LO ring phase fix, 0.6x MAIN pad switch, OCP-2, HT40 ruling.
+
+### Housekeeping and evidence audit (2026-11-18)
+
+- Evidence audit done: `evidence-audit.md` (table per block), scripts and results in `scratch/evidence-audit/`. Published status not supported for 31 of 83 blocks; 85 of 87 GDS pass precheck DRC and antenna today (`pt_adc_i` antenna, superseded `attached_tx_buffer`); every GDS with a flat netlist matches the netlist the chip top binds. Rows to owners: EA-1..11 in `interface-changes.md`.
+- Needs an owner or a ruling: pad ESD evidence against the owner's resistance extraction (PAD-11 understated); `pt_pll_ring_core` layout older than the committed ring cell (TIM-12); QVCO without evidence or top LVS; `rf_rx/netlists.py` uncommitted (HEAD cannot regenerate the published bbfilter); `make transceiver-chip-assembly` stops on the deleted polyphase.
+- Housekeeping: references to deleted docs fixed in spec JSON and unowned scripts; the remaining ones are in owned directories (EA-2, EA-3, EA-8, EA-9). `spec/analog-architecture.json` has a block → conn-instance cross-reference checked by `spec/check_architecture_conn.py`; its nets, ports, area and current books are still the model-era ones (INT-10).

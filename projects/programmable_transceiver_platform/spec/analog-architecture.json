@@ -1982,7 +1982,7 @@
         "block": "rxfilter_i",
         "design": "bbfilter_i (programmable-gain first biquad)",
         "charged": false,
-        "reference": "spec/consolidation-pass.md item 2 / P2-1"
+        "reference": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) item 2 / P2-1"
       },
       "outputs": [
         "adc_in"
@@ -2093,7 +2093,7 @@
         "block": "rxfilter_q",
         "design": "bbfilter_q (programmable-gain first biquad)",
         "charged": false,
-        "reference": "spec/consolidation-pass.md item 2 / P2-1"
+        "reference": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) item 2 / P2-1"
       },
       "outputs": [
         "adc_in"
@@ -2336,10 +2336,10 @@
       "kind": "phase_generator",
       "merged_into": {
         "block": "quadrature",
-        "design": "lo_ext (external passive I/Q LO; internal mode) + polyphase (autonomous LO only)",
+        "design": "qvco (pt_lc_qvco5: quadrature straight from the coupled LC oscillators) + lo_ext (LO distribution to the mixers; external passive I/Q LO input)",
         "retired_design": "pt_quadrature (divider quadrature generator)",
         "charged": true,
-        "reference": "spec/consolidation-pass.md P3-1; lo_ext/polyphase evidence books their area against the quadrature ceiling"
+        "reference": "integration/top/pt_chip.conn (qvco, lo_ext); lo_ext evidence books its area against the quadrature ceiling"
       },
       "outputs": [
         "lo_i",
@@ -2366,7 +2366,7 @@
         "gain_error_db": 0.5,
         "phase_error_deg": 2.0,
         "resistance_ohm": 652,
-        "topology": "Selected two-section tunable RC polyphase for direct2.4..2.5GHz, or dual-edge divide-by-two quadrature for240..1250MHz carrier from480..2500MHz input; stopped source selection",
+        "topology": "Model topology: two-section tunable RC polyphase for direct2.4..2.5GHz (built instead as quadrature from the LC QVCO, see chip_implementation), or dual-edge divide-by-two quadrature for240..1250MHz carrier from480..2500MHz input; stopped source selection",
         "trim_fraction": 0.25
       },
       "ports": {
@@ -3652,7 +3652,7 @@
         "block": "wiredtx",
         "design": "wiredtx TMDS configuration (termination off, 6..16 mA)",
         "charged": false,
-        "reference": "spec/consolidation-pass.md item 4 / P2-1"
+        "reference": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) item 4 / P2-1"
       },
       "outputs": [
         "tmds_out"
@@ -3738,7 +3738,7 @@
         "block": "rxfilter_i",
         "design": "bbfilter_i",
         "charged": false,
-        "reference": "spec/consolidation-pass.md item 1 / P2-1"
+        "reference": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) item 1 / P2-1"
       },
       "outputs": [
         "bb"
@@ -3829,7 +3829,7 @@
         "block": "rxfilter_q",
         "design": "bbfilter_q",
         "charged": false,
-        "reference": "spec/consolidation-pass.md item 1 / P2-1"
+        "reference": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) item 1 / P2-1"
       },
       "outputs": [
         "bb"
@@ -4236,7 +4236,7 @@
         "also": "wiredtx",
         "charged": true,
         "status": "measurement pending",
-        "reference": "spec/consolidation-pass.md P2-4: reservations released only after the drive is measured"
+        "reference": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-4: reservations released only after the drive is measured"
       },
       "outputs": [
         "drive_usb"
@@ -4312,7 +4312,7 @@
         "also": "wiredtx",
         "charged": true,
         "status": "measurement pending",
-        "reference": "spec/consolidation-pass.md P2-4: reservations released only after the drive is measured"
+        "reference": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-4: reservations released only after the drive is measured"
       },
       "outputs": [
         "drive",
@@ -4400,7 +4400,7 @@
         "also": "wiredtx",
         "charged": true,
         "status": "measurement pending",
-        "reference": "spec/consolidation-pass.md P2-4: reservations released only after the drive is measured"
+        "reference": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-4: reservations released only after the drive is measured"
       },
       "outputs": [
         "drive",
@@ -4653,7 +4653,7 @@
         "block": "rfpll",
         "design": "pll (shared loop; ring VCO core for wired)",
         "charged": false,
-        "reference": "spec/consolidation-pass.md item 3 (revised) / P2-1"
+        "reference": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) item 3 (revised) / P2-1"
       },
       "outputs": [
         "clock",
@@ -4777,11 +4777,12 @@
     "capabilities": {
       "bluetooth_br_edr": {
         "control_endpoints": [
-          "quadrature.config",
-          "clocktree.config",
-          "lna.gain",
-          "rxfilter_i.coefficients",
-          "rxfilter_q.coefficients",
+          "rfpll.config",
+          "clockmux.config",
+          "lna.match",
+          "lna.agc",
+          "bbfilter_i.trim",
+          "bbfilter_q.trim",
           "rfdriver.mute"
         ],
         "external": [
@@ -4804,16 +4805,17 @@
           "rfpll",
           "monitor"
         ],
-        "selection": "Direct2.4..2.5GHz polyphase; separate RX/TX with clocks retained during direction changes.",
+        "selection": "Direct2.4..2.5GHz quadrature LO from the LC QVCO, or external I/Q through lo_ext; separate RX/TX with clocks retained during direction changes.",
         "status": "functional_selection_only_not_protocol_or_performance_qualification"
       },
       "bluetooth_le": {
         "control_endpoints": [
-          "quadrature.config",
-          "clocktree.config",
-          "lna.gain",
-          "rxfilter_i.coefficients",
-          "rxfilter_q.coefficients",
+          "rfpll.config",
+          "clockmux.config",
+          "lna.match",
+          "lna.agc",
+          "bbfilter_i.trim",
+          "bbfilter_q.trim",
           "rfdriver.mute"
         ],
         "external": [
@@ -4836,16 +4838,17 @@
           "rfpll",
           "monitor"
         ],
-        "selection": "Direct2.4..2.5GHz polyphase; separate RX/TX with clocks retained during direction changes.",
+        "selection": "Direct2.4..2.5GHz quadrature LO from the LC QVCO, or external I/Q through lo_ext; separate RX/TX with clocks retained during direction changes.",
         "status": "functional_selection_only_not_protocol_or_performance_qualification"
       },
       "custom_gfsk_sdr": {
         "control_endpoints": [
-          "quadrature.config",
-          "clocktree.config",
-          "lna.gain",
-          "rxfilter_i.coefficients",
-          "rxfilter_q.coefficients",
+          "rfpll.config",
+          "clockmux.config",
+          "lna.match",
+          "lna.agc",
+          "bbfilter_i.trim",
+          "bbfilter_q.trim",
           "rfdriver.mute"
         ],
         "external": [
@@ -4868,7 +4871,7 @@
           "rfpll",
           "monitor"
         ],
-        "selection": "Direct2.4..2.5GHz polyphase; separate RX/TX with clocks retained during direction changes.",
+        "selection": "Direct2.4..2.5GHz quadrature LO from the LC QVCO, or external I/Q through lo_ext; separate RX/TX with clocks retained during direction changes.",
         "status": "functional_selection_only_not_protocol_or_performance_qualification"
       },
       "displayport_rbr": {
@@ -4905,8 +4908,6 @@
           "termination.config",
           "rxlevel.config",
           "cdr.config",
-          "tmds.config",
-          "tmds.idle",
           "txpad.config"
         ],
         "external": [
@@ -4957,11 +4958,12 @@
       },
       "external_frequency_conversion_stretch": {
         "control_endpoints": [
-          "quadrature.config",
-          "clocktree.config",
-          "lna.gain",
-          "rxfilter_i.coefficients",
-          "rxfilter_q.coefficients",
+          "rfpll.config",
+          "clockmux.config",
+          "lna.match",
+          "lna.agc",
+          "bbfilter_i.trim",
+          "bbfilter_q.trim",
           "rfdriver.mute"
         ],
         "external": [
@@ -5022,8 +5024,6 @@
           "termination.config",
           "rxlevel.config",
           "cdr.config",
-          "tmds.config",
-          "tmds.idle",
           "txpad.config"
         ],
         "external": [
@@ -5048,11 +5048,12 @@
       },
       "ieee802154_24": {
         "control_endpoints": [
-          "quadrature.config",
-          "clocktree.config",
-          "lna.gain",
-          "rxfilter_i.coefficients",
-          "rxfilter_q.coefficients",
+          "rfpll.config",
+          "clockmux.config",
+          "lna.match",
+          "lna.agc",
+          "bbfilter_i.trim",
+          "bbfilter_q.trim",
           "rfdriver.mute"
         ],
         "external": [
@@ -5075,16 +5076,17 @@
           "rfpll",
           "monitor"
         ],
-        "selection": "Direct2.4..2.5GHz polyphase; separate RX/TX with clocks retained during direction changes.",
+        "selection": "Direct2.4..2.5GHz quadrature LO from the LC QVCO, or external I/Q through lo_ext; separate RX/TX with clocks retained during direction changes.",
         "status": "functional_selection_only_not_protocol_or_performance_qualification"
       },
       "lora_24": {
         "control_endpoints": [
-          "quadrature.config",
-          "clocktree.config",
-          "lna.gain",
-          "rxfilter_i.coefficients",
-          "rxfilter_q.coefficients",
+          "rfpll.config",
+          "clockmux.config",
+          "lna.match",
+          "lna.agc",
+          "bbfilter_i.trim",
+          "bbfilter_q.trim",
           "rfdriver.mute"
         ],
         "external": [
@@ -5107,16 +5109,17 @@
           "rfpll",
           "monitor"
         ],
-        "selection": "Direct2.4..2.5GHz polyphase; separate RX/TX with clocks retained during direction changes.",
+        "selection": "Direct2.4..2.5GHz quadrature LO from the LC QVCO, or external I/Q through lo_ext; separate RX/TX with clocks retained during direction changes.",
         "status": "functional_selection_only_not_protocol_or_performance_qualification"
       },
       "lower_frequency_rf_stretch": {
         "control_endpoints": [
-          "quadrature.config",
-          "clocktree.config",
-          "lna.gain",
-          "rxfilter_i.coefficients",
-          "rxfilter_q.coefficients",
+          "rfpll.config",
+          "clockmux.config",
+          "lna.match",
+          "lna.agc",
+          "bbfilter_i.trim",
+          "bbfilter_q.trim",
           "rfdriver.mute"
         ],
         "external": [
@@ -5251,11 +5254,12 @@
       },
       "wifi_he20": {
         "control_endpoints": [
-          "quadrature.config",
-          "clocktree.config",
-          "lna.gain",
-          "rxfilter_i.coefficients",
-          "rxfilter_q.coefficients",
+          "rfpll.config",
+          "clockmux.config",
+          "lna.match",
+          "lna.agc",
+          "bbfilter_i.trim",
+          "bbfilter_q.trim",
           "rfdriver.mute"
         ],
         "external": [
@@ -5278,7 +5282,7 @@
           "rfpll",
           "monitor"
         ],
-        "selection": "Direct2.4..2.5GHz polyphase; separate RX/TX with clocks retained during direction changes.",
+        "selection": "Direct2.4..2.5GHz quadrature LO from the LC QVCO, or external I/Q through lo_ext; separate RX/TX with clocks retained during direction changes.",
         "status": "functional_selection_only_not_protocol_or_performance_qualification"
       }
     },
@@ -7449,7 +7453,7 @@
     "rf_frequency_guard": "Polyphase requires carrier=input2.4..2.5GHz. Divide-by-two requires input480..2500MHz and carrier=input/2. Sample and RF host clocks divide actual carrier, not raw REF_IN. No native1250..2400MHz claim. Below240MHz or other bands use external frequency conversion.",
     "rx_level_guard": "Require half for DC high-common-mode TMDS sink plus external pullups and internal shunts off; bypass for serial CTLE. USB selects its dedicated preamplifier and leaves this path off.",
     "scheduled": "Only explicitly live fields may change at a timestamp. Fault overrides every scheduled action. Analog settling guard expires before data becomes valid; clocks remain running during same-channel RF direction change.",
-    "scheduler_clock": "Active scheduled actions use H2D_CLK/4 as in clock-rate-ownership.md (25.6ns ticks in H0). Management oscillator only supervises recovery; detector clock independently captures4ns intervals. Do not reinterpret one domain ticks as another.",
+    "scheduler_clock": "Active scheduled actions use H2D_CLK/4 as in spec/block-diagram.md section 4 (25.6ns ticks in H0). Management oscillator only supervises recovery; detector clock independently captures4ns intervals. Do not reinterpret one domain ticks as another.",
     "scheduler_clock_divider": 4,
     "state_ownership": "Per-block state requests are checked against operating_modes.block_states; warm/active may be reduced to off. source_dependent and branch_dependent require their stated selector. Safety output constraints always dominate requested enable.",
     "switch_dead_time_s": 4e-09,
@@ -10855,7 +10859,7 @@
     },
     "behavioral_scenario": {
       "entry": "verification/wifi_client_exchange.py",
-      "independent_reference": "verification/external_wifi_reference.py: pinned external GR-WiFi v1.0 legacy waveforms, all eight L-SIG rates and 6Mb/s DATA/ACK CRC through shared RF/queues, including warm DATA-to-ACK. Does not qualify HE. Current evidence limits and remaining gates are consolidated in spec/feasibility-gates.md.",
+      "independent_reference": "verification/external_wifi_reference.py: pinned external GR-WiFi v1.0 legacy waveforms, all eight L-SIG rates and 6Mb/s DATA/ACK CRC through shared RF/queues, including warm DATA-to-ACK. Does not qualify HE. Current evidence limits and remaining gates are in spec/performance-requirements.md and spec/tapeout-plan.md.",
       "observed": "The selected-exchange runner records each CRC, queue high-water, clipping count, correction delay and response gap against its own source snapshot. Current evidence is selected-revision-check.json:selected_wifi_exchanges; historical counts are not normative acceptance.",
       "receiver": "Known DATA training chooses FFT-window advance0..12samples by consistency of its two training observations; no DATA truth is used for choice. This compensates interpolation/filter delay without silently changing guard interval.",
       "remaining": [
@@ -10919,7 +10923,7 @@
       "pa": "Qualify average OFDM output, EVM and spectral regrowth at all requested powers using actual calibrated waveform amplitude. Do not treat the initial10dB backoff allocation as sufficient: the current no-padding diagnostic passes the assigned chip-plus-PA nonlinearity screen at12dB input backoff from modeled input P1dB and fails at9dB. That memoryless model does not determine real PA backoff, absolute watts, AM/PM, memory or recovery. PA distortion is included in the combined TX budget, not added afterward.",
       "rx_insertion_loss_db_max": 3.5,
       "rx_insertion_loss_db_nominal": 2.0,
-      "selection": "Matching/balun, band preselection, antenna switch and optional linear PA selected together. Loss before LNA adds directly to cascaded noise figure;2dB remains nominal fixture loss and3.5dB is the board acceptance allocation including matching/PCB margin. Candidate filter/switch data and isolation limits are documented in feasibility-gates.md; no assembled board is qualified.",
+      "selection": "Matching/balun, band preselection, antenna switch and optional linear PA selected together. Loss before LNA adds directly to cascaded noise figure;2dB remains nominal fixture loss and3.5dB is the board acceptance allocation including matching/PCB margin. Candidate filter/switch data and isolation limits are in spec/board-requirements.md; no assembled board is qualified.",
       "selectivity_policy": "For a fixed broad-band passive board covering the declared RF band, grant no selective rejection to blockers or DAC images inside its wanted-signal passband without a measured transfer curve. Absolute attenuation there cannot exceed the declared wanted insertion-loss ceiling while preserving that full-band board claim. A switched/tuned narrow-band board is allowed but requires its own channel coverage, settling, loss and tolerance evidence. Historical18dB selective rejection at12MHz offset is a hypothetical assistance case, not this baseline. On-chip RX selectivity/headroom and TX reconstruction remain responsible for near-channel performance.",
       "switch_settle_s_max": 5e-07,
       "turnaround_sequence": "At the last valid TX sample, mute the existing RF driver and disable any external PA. Use FPGA-controlled break-before-make antenna switching; retain LO/sample clocks and required bias. Keep RX acceptance invalid until both board switching and characterized receiver overload/charge recovery have settled. Verify residual carrier/PA leakage at the RX input, not only switch control timing. Additional external RX isolation or PA output gating is permitted within the 3.5dB RX-loss allocation; no added on-chip pins or buffer memory. Longer guards are allowed only if the selected packet exchange deadline still fits. The 500ns switch allocation is not a universal total RX-recovery deadline. Budget TX tail, switching, analog recovery, RX pipeline and timing uncertainty against the earliest peer RF arrival measured from actual antenna TX end; do not borrow peer preamble time or count unproven overlap.",
@@ -11126,7 +11130,7 @@
   "area_reallocation_log": [
     {
       "date": "2026-11-08",
-      "reason": "Stress-safe pad shunt (analog/pads/generated/stress-safe-families) does not fit pad reservations; area moved from blocks removed by spec/consolidation-pass.md (txfilter -> shared bbfilter, wirepll -> shared pll, tmds -> wiredtx configuration). Group totals unchanged.",
+      "reason": "Stress-safe pad shunt (analog/pads/generated/stress-safe-families) does not fit pad reservations; area moved from blocks removed by the consolidation passes (txfilter -> shared bbfilter, wirepll -> shared pll, tmds -> wiredtx configuration). Group totals unchanged.",
       "moves_um2": [
         {
           "from": "txfilter_i",
@@ -11157,7 +11161,7 @@
     },
     {
       "date": "2026-11-08",
-      "reason": "CDR interpolator speed rework (static mux tree / CML) for 2.5 Gb/s; area from wirepll, merged into the shared pll by spec/consolidation-pass.md. Group totals unchanged.",
+      "reason": "CDR interpolator speed rework (static mux tree / CML) for 2.5 Gb/s; area from wirepll, merged into the shared pll by the consolidation passes. Group totals unchanged.",
       "moves_um2": [
         {
           "from": "wirepll",
@@ -11168,14 +11172,14 @@
     },
     {
       "date": "2026-11-08",
-      "reason": "P2-1 rebaseline (spec/consolidation-pass.md): merged blocks released; ceilings set to 1.25x measured layout area where evidence tests.clean.state is pass and 1.5x otherwise. Group budgets unchanged; slack allocated in freed_area_allocation_um2.",
+      "reason": "P2-1 rebaseline (consolidation pass 2): merged blocks released; ceilings set to 1.25x measured layout area where evidence tests.clean.state is pass and 1.5x otherwise. Group budgets unchanged; slack allocated in freed_area_allocation_um2.",
       "changes": [
         {
           "block": "txfilter_i",
           "field": "resource_allocation.area_ceiling_um2",
           "old": 330000.0,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_i; area carried by the surviving block"
         },
         {
@@ -11183,7 +11187,7 @@
           "field": "resource_allocation.area_ceiling_um2",
           "old": 430000.0,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_q; area carried by the surviving block"
         },
         {
@@ -11191,7 +11195,7 @@
           "field": "resource_allocation.area_ceiling_um2",
           "old": 100000,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_i; area carried by the surviving block"
         },
         {
@@ -11199,7 +11203,7 @@
           "field": "resource_allocation.area_ceiling_um2",
           "old": 100000,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_q; area carried by the surviving block"
         },
         {
@@ -11207,7 +11211,7 @@
           "field": "resource_allocation.area_ceiling_um2",
           "old": 195000,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rfpll; area carried by the surviving block"
         },
         {
@@ -11215,7 +11219,7 @@
           "field": "resource_allocation.area_ceiling_um2",
           "old": 120000,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into wiredtx; area carried by the surviving block"
         },
         {
@@ -11455,7 +11459,7 @@
           "field": "freed_area_allocation_um2.allocations.debug",
           "old": null,
           "new": 670000,
-          "source": "spec/consolidation-pass.md",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation)",
           "reason": "new debug allocation from freed area"
         },
         {
@@ -11463,14 +11467,14 @@
           "field": "freed_area_allocation_um2.allocations.reserve",
           "old": 410000,
           "new": 2229700,
-          "source": "spec/consolidation-pass.md",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation)",
           "reason": "remaining slack after debug (previous unused reserve was the 0.41 mm2 reserve-group slack)"
         }
       ]
     },
     {
       "date": "2026-11-08",
-      "reason": "P3 booking (spec/consolidation-pass.md third pass: P3-1, P3-2, P3-13). Group budgets unchanged.",
+      "reason": "P3 booking (consolidation pass 3: P3-1, P3-2, P3-13). Group budgets unchanged.",
       "changes": [
         {
           "block": "adc_q",
@@ -11493,7 +11497,7 @@
           "field": "resource_allocation.area_ceiling_um2",
           "old": 84000,
           "new": 107100,
-          "source": "analog/timing/generated/lo_ext-evidence.json; analog/timing/generated/polyphase-evidence.json",
+          "source": "analog/timing/generated/lo_ext-evidence.json; pt_polyphase evidence (block and record deleted, CP4-2)",
           "reason": "P3-1/P3-13: lo_ext 38405.3 um2 x 1.25 + polyphase 39329.3 um2 x 1.5; pt_quadrature retired; lo_ext/polyphase moved out of the debug subset"
         },
         {
@@ -11541,7 +11545,7 @@
           "field": "freed_area_allocation_um2.debug_measured_subset.cells.polyphase",
           "old": 53005.9,
           "new": null,
-          "source": "analog/timing/generated/polyphase-evidence.json",
+          "source": "pt_polyphase evidence (block and record deleted, CP4-2)",
           "reason": "P3-13: functional cell moved to its functional block (quadrature / refinput)"
         },
         {
@@ -11609,7 +11613,7 @@
   ],
   "freed_area_allocation_um2": {
     "date": "2026-11-08",
-    "basis": "Group budgets (area_budget_um2) are unchanged. Slack = group budget minus the sum of rebaselined block ceilings. Per spec/consolidation-pass.md the slack goes first to debug cells (measured about 0.67 mm2), then reserve (pad shunts incl. debug-site protection, decoupling, then margin). This is an accounting allocation, not a placement.",
+    "basis": "Group budgets (area_budget_um2) are unchanged. Slack = group budget minus the sum of rebaselined block ceilings. By the consolidation passes the slack goes first to debug cells (measured about 0.67 mm2), then reserve (pad shunts incl. debug-site protection, decoupling, then margin). This is an accounting allocation, not a placement.",
     "slack_by_group_before": {
       "converters": 0,
       "digital": 0,
@@ -11631,7 +11635,7 @@
       "debug": 670000,
       "reserve": 2807900
     },
-    "debug_reference": "spec/consolidation-pass.md (debug cells about 0.67 mm2 against the 0.41 mm2 reserve); spec/tapeout-readiness.json reserve_area_mm2 (owner must book the debug allocation there)",
+    "debug_reference": "consolidation pass 3 (debug cells about 0.67 mm2 against the 0.41 mm2 reserve); spec/tapeout-readiness.json reserve_area_mm2 (owner must book the debug allocation there)",
     "debug_measured_subset": {
       "cells": {
         "clk_obs (CLK_OBS, WCLK_OBS)": {
@@ -11685,7 +11689,7 @@
           "field": "resource_allocation.current_budget_ma.usb",
           "old": 0,
           "new": 12,
-          "source": "spec/consolidation-pass.md item 3",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) item 3",
           "reason": "shared pll (rfpll+wirepll) now carries the wired/USB PLL load formerly charged to wirepll (12 mA)"
         },
         {
@@ -11693,7 +11697,7 @@
           "field": "resource_allocation.current_budget_ma.wired",
           "old": 0,
           "new": 12,
-          "source": "spec/consolidation-pass.md item 3",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) item 3",
           "reason": "shared pll (rfpll+wirepll) now carries the wired/USB PLL load formerly charged to wirepll (12 mA)"
         },
         {
@@ -11701,7 +11705,7 @@
           "field": "resource_allocation.current_budget_ma.rf_rx",
           "old": 4.0,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_i (bbfilter_i); no separate charge"
         },
         {
@@ -11709,7 +11713,7 @@
           "field": "resource_allocation.current_budget_ma.rf_tx",
           "old": 4.0,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_i (bbfilter_i); no separate charge"
         },
         {
@@ -11717,7 +11721,7 @@
           "field": "resource_allocation.current_budget_ma.usb",
           "old": 0.1,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_i (bbfilter_i); no separate charge"
         },
         {
@@ -11725,7 +11729,7 @@
           "field": "resource_allocation.current_budget_ma.wired",
           "old": 0.1,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_i (bbfilter_i); no separate charge"
         },
         {
@@ -11733,7 +11737,7 @@
           "field": "resource_allocation.current_budget_ma.rf_rx",
           "old": 4.0,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_q (bbfilter_q); no separate charge"
         },
         {
@@ -11741,7 +11745,7 @@
           "field": "resource_allocation.current_budget_ma.rf_tx",
           "old": 4.0,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_q (bbfilter_q); no separate charge"
         },
         {
@@ -11749,7 +11753,7 @@
           "field": "resource_allocation.current_budget_ma.usb",
           "old": 0.1,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_q (bbfilter_q); no separate charge"
         },
         {
@@ -11757,7 +11761,7 @@
           "field": "resource_allocation.current_budget_ma.wired",
           "old": 0.1,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_q (bbfilter_q); no separate charge"
         },
         {
@@ -11765,7 +11769,7 @@
           "field": "resource_allocation.current_budget_ma.rf_rx",
           "old": 0.5,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_i (bbfilter_i (programmable-gain first biquad)); no separate charge"
         },
         {
@@ -11773,7 +11777,7 @@
           "field": "resource_allocation.current_budget_ma.rf_tx",
           "old": 0.5,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_i (bbfilter_i (programmable-gain first biquad)); no separate charge"
         },
         {
@@ -11781,7 +11785,7 @@
           "field": "resource_allocation.current_budget_ma.usb",
           "old": 0.1,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_i (bbfilter_i (programmable-gain first biquad)); no separate charge"
         },
         {
@@ -11789,7 +11793,7 @@
           "field": "resource_allocation.current_budget_ma.wired",
           "old": 0.1,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_i (bbfilter_i (programmable-gain first biquad)); no separate charge"
         },
         {
@@ -11797,7 +11801,7 @@
           "field": "resource_allocation.current_budget_ma.rf_rx",
           "old": 0.5,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_q (bbfilter_q (programmable-gain first biquad)); no separate charge"
         },
         {
@@ -11805,7 +11809,7 @@
           "field": "resource_allocation.current_budget_ma.rf_tx",
           "old": 0.5,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_q (bbfilter_q (programmable-gain first biquad)); no separate charge"
         },
         {
@@ -11813,7 +11817,7 @@
           "field": "resource_allocation.current_budget_ma.usb",
           "old": 0.1,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_q (bbfilter_q (programmable-gain first biquad)); no separate charge"
         },
         {
@@ -11821,7 +11825,7 @@
           "field": "resource_allocation.current_budget_ma.wired",
           "old": 0.1,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rxfilter_q (bbfilter_q (programmable-gain first biquad)); no separate charge"
         },
         {
@@ -11829,7 +11833,7 @@
           "field": "resource_allocation.current_budget_ma.usb",
           "old": 12,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rfpll (pll (shared loop; ring VCO core for wired)); no separate charge"
         },
         {
@@ -11837,7 +11841,7 @@
           "field": "resource_allocation.current_budget_ma.wired",
           "old": 12,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into rfpll (pll (shared loop; ring VCO core for wired)); no separate charge"
         },
         {
@@ -11845,7 +11849,7 @@
           "field": "resource_allocation.current_budget_ma.rf_rx",
           "old": 0.1,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into wiredtx (wiredtx TMDS configuration (termination off, 6..16 mA)); no separate charge"
         },
         {
@@ -11853,7 +11857,7 @@
           "field": "resource_allocation.current_budget_ma.rf_tx",
           "old": 0.1,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into wiredtx (wiredtx TMDS configuration (termination off, 6..16 mA)); no separate charge"
         },
         {
@@ -11861,7 +11865,7 @@
           "field": "resource_allocation.current_budget_ma.usb",
           "old": 0.2,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into wiredtx (wiredtx TMDS configuration (termination off, 6..16 mA)); no separate charge"
         },
         {
@@ -11869,7 +11873,7 @@
           "field": "resource_allocation.current_budget_ma.wired",
           "old": 0.2,
           "new": 0,
-          "source": "spec/consolidation-pass.md P2-1",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1",
           "reason": "merged into wiredtx (wiredtx TMDS configuration (termination off, 6..16 mA)); no separate charge"
         },
         {
@@ -12210,7 +12214,7 @@
             "refinput": 7.25,
             "rfpll": 0.1
           },
-          "source": "spec/consolidation-pass.md P2-1; analog/timing/generated/diff_clk_rx-evidence.json",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1; analog/timing/generated/diff_clk_rx-evidence.json",
           "reason": "external quadrature LO uses two diff_clk_rx instances (REF_IN I, AUX_CLK Q); AUX_CLK instance current charged to refinput"
         },
         {
@@ -12223,7 +12227,7 @@
             "refinput": 10.87,
             "rfpll": 0.1
           },
-          "source": "spec/consolidation-pass.md P2-1; analog/timing/generated/diff_clk_rx-evidence.json",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1; analog/timing/generated/diff_clk_rx-evidence.json",
           "reason": "wirepll merged into the shared pll carried by rfpll; WCLK_IN and WTX_EXT receiver instances charged to refinput (conservative: all three enabled)"
         },
         {
@@ -12238,7 +12242,7 @@
             "rxlevel": 0.04,
             "wiredtx": 16
           },
-          "source": "spec/consolidation-pass.md P2-1; analog/timing/generated/diff_clk_rx-evidence.json",
+          "source": "consolidation pass (merge map: spec/tapeout-readiness.json consolidation) P2-1; analog/timing/generated/diff_clk_rx-evidence.json",
           "reason": "tmds is a configuration of wiredtx: the 16 mA TMDS sink current is charged to wiredtx; rxlevel follows its measured base value"
         },
         {
@@ -12385,7 +12389,7 @@
     },
     {
       "date": "2026-11-08",
-      "reason": "P3 booking (spec/consolidation-pass.md third pass: P3-1, P3-2, P3-3, P3-13).",
+      "reason": "P3 booking (consolidation pass 3: P3-1, P3-2, P3-3, P3-13).",
       "changes": [
         {
           "block": "refbuf",
@@ -12440,7 +12444,7 @@
           "field": "resource_allocation.current_budget_ma.rf_rx",
           "old": 8.84,
           "new": 18.83,
-          "source": "analog/timing/generated/lo_ext-evidence.json; analog/timing/generated/polyphase-evidence.json",
+          "source": "analog/timing/generated/lo_ext-evidence.json; pt_polyphase evidence (block and record deleted, CP4-2)",
           "reason": "P3-1: pt_quadrature (8.84 mA) retired; autonomous LO path = lo_ext internal mode 16.0274 mA + polyphase 2.79753 mA (the pass-3 correction notes both were omitted from the 244.55 mA figure)"
         },
         {
@@ -12448,7 +12452,7 @@
           "field": "resource_allocation.current_budget_ma.rf_tx",
           "old": 8.84,
           "new": 18.83,
-          "source": "analog/timing/generated/lo_ext-evidence.json; analog/timing/generated/polyphase-evidence.json",
+          "source": "analog/timing/generated/lo_ext-evidence.json; pt_polyphase evidence (block and record deleted, CP4-2)",
           "reason": "P3-1: pt_quadrature (8.84 mA) retired; autonomous LO path = lo_ext internal mode 16.0274 mA + polyphase 2.79753 mA (the pass-3 correction notes both were omitted from the 244.55 mA figure)"
         },
         {
@@ -12633,5 +12637,241 @@
         "analog/wired_rx/generated/cdr-evidence.json": "sha256:19ed0b26b6677d16ca45f3547bb5de3f29112d4a1247f89f552a2ef4ba9602a4"
       }
     }
-  ]
+  ],
+  "chip_implementation": {
+    "source": "integration/top/pt_chip.conn (connectivity source of truth); reading aid spec/block-diagram.md",
+    "check": "python3 spec/check_architecture_conn.py",
+    "scope": "Cross-reference only. blocks, nets and functional_paths of this file are the functional inventory the system model reads; pin-level connectivity, pin names and net contracts of the built cells are in the conn and the published netlists, not here. control_fields follows the built cells (rtl/gen/gen_regfile.py).",
+    "blocks": {
+      "adc_i": [
+        "adc_i"
+      ],
+      "adc_q": [
+        "adc_q"
+      ],
+      "dac_i": [
+        "dac_i"
+      ],
+      "dac_q": [
+        "dac_q"
+      ],
+      "refbuf": [
+        "refbuf"
+      ],
+      "aosc": [
+        "aosc"
+      ],
+      "bias": [
+        "core_bias",
+        "bias_ext"
+      ],
+      "board": [],
+      "cdr": [
+        "cdr",
+        "pll_cdr",
+        "ptrim"
+      ],
+      "clockmux": [
+        "clockmux"
+      ],
+      "clocktree": [
+        "prescale",
+        "prescale_conv",
+        "prescale_hf",
+        "wordclk_rx"
+      ],
+      "ctle": [
+        "ctle"
+      ],
+      "detect": [
+        "detect"
+      ],
+      "digital": [
+        "digital"
+      ],
+      "hostio": [
+        "host"
+      ],
+      "lna": [
+        "lna",
+        "lna_ind_*",
+        "lna_deg_*"
+      ],
+      "monitor": [],
+      "pga_i": [],
+      "pga_q": [],
+      "power": [
+        "isw_*",
+        "pad_dvdd_*",
+        "pad_vdd_*",
+        "pad_dvss_*",
+        "pad_vss_*",
+        "pad_agnd_rx_*",
+        "agnd_tie",
+        "por"
+      ],
+      "quadrature": [
+        "lo_ext"
+      ],
+      "refinput": [
+        "rx_ref_in"
+      ],
+      "refpad": [
+        "pad_ref",
+        "refvcm"
+      ],
+      "rfdriver": [
+        "rfdriver"
+      ],
+      "rfpad": [
+        "pad_rf_rx"
+      ],
+      "rfpll": [
+        "qvco",
+        "lo_vreg",
+        "lo_pfdcp",
+        "lo_lf",
+        "lo_mmd",
+        "lo_mmd_qdum"
+      ],
+      "rftxpad": [
+        "pad_rf_tx"
+      ],
+      "rxfilter_i": [
+        "bbfilter_i"
+      ],
+      "rxfilter_q": [
+        "bbfilter_q"
+      ],
+      "rxlevel": [
+        "rxlevel"
+      ],
+      "rxmix_i": [
+        "rxmix_i"
+      ],
+      "rxmix_q": [
+        "rxmix_q"
+      ],
+      "rxselect": [
+        "rxselect"
+      ],
+      "slicer": [
+        "slicer",
+        "vthdac",
+        "wrx_cap"
+      ],
+      "termination": [
+        "termination"
+      ],
+      "tmds": [],
+      "txfilter_i": [],
+      "txfilter_q": [],
+      "txmix_i": [
+        "txmix_i"
+      ],
+      "txmix_q": [
+        "txmix_q"
+      ],
+      "txpad": [
+        "pad_wire_tx",
+        "steer_*",
+        "attached_tx_interlock",
+        "term_buffer",
+        "txpad_bias"
+      ],
+      "txsum": [
+        "txsum"
+      ],
+      "usbdrive": [
+        "usb_txdrv",
+        "hsbias"
+      ],
+      "usbfs": [],
+      "usbhs": [],
+      "wiredtx": [
+        "wiredtx",
+        "wtx_fallback_control"
+      ],
+      "wirepad": [
+        "pad_hs_rx",
+        "pad_usb"
+      ],
+      "wirepll": [
+        "pll_tx",
+        "pll_vreg2"
+      ]
+    },
+    "no_instance": {
+      "board": "off-chip",
+      "monitor": "inside the digital macro (fault monitor derived in the macro)",
+      "pga_i": "merged into bbfilter_i",
+      "pga_q": "merged into bbfilter_q",
+      "txfilter_i": "merged into bbfilter_i (shared RX/TX filter)",
+      "txfilter_q": "merged into bbfilter_q (shared RX/TX filter)",
+      "tmds": "a configuration of wiredtx and pad_wire_tx",
+      "usbfs": "logic in the digital macro (rtl/pt_usb.sv); drive through usb_txdrv and pad_usb, receive through detect",
+      "usbhs": "transmit through wiredtx, usb_txdrv and pad_usb; receive through rxselect, slicer and detect"
+    },
+    "infrastructure": {
+      "debug_and_observation": [
+        "debug_pads",
+        "pad_bb_*",
+        "pad_wtx_ext",
+        "pad_wmon",
+        "bb_tap_*",
+        "wmon_sel",
+        "rx_aux_clk",
+        "rx_wtx_ext",
+        "pad_aux_clk",
+        "ring_osc",
+        "vco_replica",
+        "obs_pre4_*",
+        "clk_obs",
+        "lo_obs",
+        "lo_obs_q",
+        "pd_clk_obs",
+        "pad_por_bypass",
+        "pad_tlp"
+      ],
+      "atb_tree": [
+        "atb0_*",
+        "atb1_*"
+      ],
+      "isolation_clamps": [
+        "iso_*"
+      ],
+      "characterization": [
+        "char_*"
+      ]
+    },
+    "control_field_cells": {
+      "adc": [
+        "adc_i",
+        "adc_q"
+      ],
+      "bbfilter_i": [
+        "bbfilter_i"
+      ],
+      "bbfilter_q": [
+        "bbfilter_q"
+      ],
+      "pllvreg": [
+        "pll_vreg2"
+      ],
+      "ring_c": [
+        "pll_cdr"
+      ],
+      "ring_l": [
+        "pll_tx"
+      ],
+      "usb": [
+        "usb_txdrv",
+        "pad_usb"
+      ],
+      "wrx": [
+        "wrx_cap",
+        "cdr"
+      ]
+    }
+  }
 }

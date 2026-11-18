@@ -52,7 +52,7 @@ PDK_NOTE = ('layout/LVS: canary image /pdk/gf180mcuD; simulation: analog image c
             'f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7')
 DOCKER_LIMITS = ['--network', 'none', '--cpus', '3', '--memory', '6g', '--env', 'OMP_NUM_THREADS=1']
 
-MOS = ('nfet_03v3', 'pfet_03v3')
+MOS = ('nfet_03v3', 'pfet_03v3', 'nfet_06v0')   # nfet_06v0: pad-facing bb_tap switches (PD29)
 RES = ('ppolyf_u_1k', 'ppolyf_u')
 CAP = ('cap_mim_2f0_m4m5_noshield',)
 POWER = ('VDD', 'VSS')
@@ -199,7 +199,7 @@ def _bounds(rects):
 def prim_key(d):
     def f(v):
         return ('%g' % v).replace('.', 'p')
-    short = {'nfet_03v3': 'n', 'pfet_03v3': 'p', 'ppolyf_u_1k': 'rh', 'ppolyf_u': 'rl',
+    short = {'nfet_03v3': 'n', 'pfet_03v3': 'p', 'nfet_06v0': 'n6', 'ppolyf_u_1k': 'rh', 'ppolyf_u': 'rl',
              'cap_mim_2f0_m4m5_noshield': 'c'}[d.model]
     return f'rfrx_{short}_w{f(d.w)}_l{f(d.l)}' + (f'_nf{d.nf}' if d.nf > 1 else '')
 
@@ -261,12 +261,12 @@ def primitive_geometry(path, d):
     m1 = r['metal1']
     bar = min((a for a in m1 if (a[2] - a[0]) > .6 * (bbox[2] - bbox[0])), key=lambda a: a[1])
     yb = (bar[1] + bar[3]) / 2
-    m1all = m1 + r.get('psubdiffcont', []) + r.get('nsubdiffcont', [])
+    m1all = m1 + r.get('psubdiffcont', []) + r.get('nsubdiffcont', []) + r.get('mvpsubdiffcont', []) + r.get('mvnsubdiffcont', [])
     vbars = [a for a in m1all if (a[3] - a[1]) > .4 * (bbox[3] - bbox[1])]
     inner_left = max(a[2] for a in vbars if a[0] < 0)
     inner_right = min(a[0] for a in vbars if a[0] > 0)
     if d.kind == 'mos' and d.nf > 1:
-        diff = next(k for k in ('ndiffc', 'pdiffc') if k in r)
+        diff = next(k for k in ('ndiffc', 'pdiffc', 'mvndiffc', 'mvpdiffc') if k in r)
         strips = sorted(r[diff], key=lambda a: a[0])
         if len(strips) != d.nf + 1:
             raise ValueError(f'unexpected strip count in {path}')
@@ -298,7 +298,7 @@ def primitive_geometry(path, d):
         fp = (eL - .3, bbox[1], eR + .3, bbox[3])
         return dict(pins=pins, esc=esc, level=level, bbox=bbox, fp=fp, extra=extra, kind='mos')
     if d.kind == 'mos':
-        diff = next(k for k in ('ndiffc', 'pdiffc') if k in r)
+        diff = next(k for k in ('ndiffc', 'pdiffc', 'mvndiffc', 'mvpdiffc') if k in r)
         src = min(r[diff], key=lambda a: a[0])
         drn = max(r[diff], key=lambda a: a[2])
         gate = min(r['polycontact'], key=lambda a: a[1])
@@ -513,15 +513,18 @@ def layout_subckt(sub, work, geoms, macros, *, row_width=None, top=False):
                     width=bank_right + wmax + 1., height=height, rows=len(rows))
 
     widest = max(g['fp'][2] - g['fp'][0] + GAP for _, g in items)
-    best = None
+    best = loose = None
     for order in orderings:
         for k in range(80):
             rw = widest * (1.06 ** k) if row_width is None else row_width
             L = shelves(rw, order)
+            if loose is None or L['width'] * L['height'] < loose[0]:
+                loose = (L['width'] * L['height'], rw, order)
             if row_width is None and max(L['width'] / L['height'], L['height'] / L['width']) > 2.5:
                 continue
             if best is None or L['width'] * L['height'] < best[0]:
                 best = (L['width'] * L['height'], rw, order)
+    best = best or loose   # no shape within 2.5:1 (e.g. a few very tall devices): smallest area
     L = shelves(best[1], best[2])
     trunk, span = L['trunk'], L['span']
     p = Painter()
@@ -850,7 +853,17 @@ def generate(block):
     work = SCRATCH / 'layout' / block
     if work.exists():
         shutil.rmtree(work)
-    res = build_block(HERE / f'{block}.spice', top, work)
+    if block.startswith('bbfilter'):   # fork S: compact integrator / DAC / control macros (bbf_layout.py)
+        import bbf_layout
+        bbf_layout.register()
+    if block == 'lna':   # RC-16e: compact flat layout (MIMs over active), lna_layout.py
+        import lna_layout
+        res = lna_layout.build_compact(HERE / f'{block}.spice', top, work, lna_layout.LNA_ROW_WIDTH)
+    elif block.startswith('rxmix'):   # fork V: same compact flat generator (76.2k -> 35.4k um^2 per mixer)
+        import lna_layout
+        res = lna_layout.build_compact(HERE / f'{block}.spice', top, work)
+    else:
+        res = build_block(HERE / f'{block}.spice', top, work)
     # self-contained flat view for inspection: cell `<block>` in generated/<block>.mag
     (work / 'flat.tcl').write_text('\n'.join([
         'crashbackups stop', f'load {top}', 'select top cell', f'flatten -nolabels {block}',
@@ -869,7 +882,8 @@ def generate(block):
     res.update(block=block, top_cell=top, digital_image=DIGITAL_IMAGE, digital_tag=DIGITAL_TAG,
                drc_details=drc_details.strip(),
                sources={p.name: sha256(p) for p in (HERE / f'{block}.spice', HERE / 'netlists.py',
-                                                      Path(__file__))},
+                                                      Path(__file__)) + ((HERE / 'lna_layout.py',) if block == 'lna' or block.startswith('rxmix') else ())
+                       + ((HERE / 'bbf_fd.py', HERE / 'bbf_layout.py') if block.startswith('bbfilter') else ())},
                artifacts={p: sha256(GENERATED / p) for p in
                           (f'{block}.gds', f'{block}.mag', f'{block}.ext.spice', f'{block}-lvs.txt')})
     (GENERATED / f'{block}-layout.json').write_text(json.dumps(res, indent=1) + '\n')

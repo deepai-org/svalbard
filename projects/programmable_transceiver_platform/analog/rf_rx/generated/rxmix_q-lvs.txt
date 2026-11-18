@@ -55,204 +55,54 @@ Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
+Flattening unmatched subcell pt_rfrx_inv in circuit pt_rxmix_q (1)(1 instance)
+Flattening unmatched subcell pt_rfrx_bias in circuit pt_rxmix_q (1)(1 instance)
+Flattening unmatched subcell pt_rfrx_vcm in circuit pt_rxmix_q (1)(1 instance)
+Flattening unmatched subcell pt_rxmix_quad in circuit pt_rxmix_q (1)(1 instance)
+Flattening unmatched subcell pt_rxmix_ofsdac in circuit pt_rxmix_q (1)(1 instance)
+Flattening unmatched subcell pt_rfrx_inv in circuit pt_rxmix_q (1)(1 instance)
+Flattening unmatched subcell pt_rfrx_otan in circuit pt_rxmix_q (1)(2 instances)
 
+Class pt_rxmix_q (0):  Merged 456 parallel devices.
+Class pt_rxmix_q (0):  Merged 8 series devices.
+Class pt_rxmix_q (1):  Merged 456 parallel devices.
+Class pt_rxmix_q (1):  Merged 8 series devices.
 Subcircuit summary:
-Circuit 1: pt_rfrx_inv                     |Circuit 2: pt_rfrx_inv                     
+Circuit 1: pt_rxmix_q                      |Circuit 2: pt_rxmix_q                      
 -------------------------------------------|-------------------------------------------
-nfet_03v3 (1)                              |nfet_03v3 (1)                              
-pfet_03v3 (1)                              |pfet_03v3 (1)                              
-Number of devices: 2                       |Number of devices: 2                       
-Number of nets: 4                          |Number of nets: 4                          
----------------------------------------------------------------------------------------
-Netlists match uniquely.
-
-Subcircuit pins:
-Circuit 1: pt_rfrx_inv                     |Circuit 2: pt_rfrx_inv                     
--------------------------------------------|-------------------------------------------
-y                                          |y                                          
-a                                          |a                                          
-VSS                                        |VSS                                        
-VDD                                        |VDD                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes pt_rfrx_inv and pt_rfrx_inv are equivalent.
-
-Subcircuit summary:
-Circuit 1: pt_rfrx_bias                    |Circuit 2: pt_rfrx_bias                    
--------------------------------------------|-------------------------------------------
-pfet_03v3 (2)                              |pfet_03v3 (2)                              
-nfet_03v3 (3)                              |nfet_03v3 (3)                              
-Number of devices: 5                       |Number of devices: 5                       
-Number of nets: 6                          |Number of nets: 6                          
----------------------------------------------------------------------------------------
-Netlists match uniquely.
-
-Subcircuit pins:
-Circuit 1: pt_rfrx_bias                    |Circuit 2: pt_rfrx_bias                    
--------------------------------------------|-------------------------------------------
-VSS                                        |VSS                                        
-enb                                        |enb                                        
-en                                         |en                                         
-ibias                                      |ibias                                      
-vbp                                        |vbp                                        
-VDD                                        |VDD                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes pt_rfrx_bias and pt_rfrx_bias are equivalent.
-
-Class pt_rfrx_vcm (0):  Merged 4 series devices.
-Class pt_rfrx_vcm (1):  Merged 4 series devices.
-Subcircuit summary:
-Circuit 1: pt_rfrx_vcm                     |Circuit 2: pt_rfrx_vcm                     
--------------------------------------------|-------------------------------------------
-ppolyf_u_1k (6->2)                         |ppolyf_u_1k (6->2)                         
-pfet_03v3 (1)                              |pfet_03v3 (1)                              
-cap_mim_2f0_m4m5_noshield (1)              |cap_mim_2f0_m4m5_noshield (1)              
-Number of devices: 4                       |Number of devices: 4                       
-Number of nets: 5                          |Number of nets: 5                          
----------------------------------------------------------------------------------------
-Netlists match uniquely.
-
-Subcircuit pins:
-Circuit 1: pt_rfrx_vcm                     |Circuit 2: pt_rfrx_vcm                     
--------------------------------------------|-------------------------------------------
-enb                                        |enb                                        
-VDD                                        |VDD                                        
-VSS                                        |VSS                                        
-vcm                                        |vcm                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes pt_rfrx_vcm and pt_rfrx_vcm are equivalent.
-
-Class pt_rxmix_quad (0):  Merged 20 parallel devices.
-Class pt_rxmix_quad (1):  Merged 20 parallel devices.
-Subcircuit summary:
-Circuit 1: pt_rxmix_quad                   |Circuit 2: pt_rxmix_quad                   
--------------------------------------------|-------------------------------------------
-nfet_03v3 (24->4)                          |nfet_03v3 (24->4)                          
-Number of devices: 4                       |Number of devices: 4                       
-Number of nets: 7                          |Number of nets: 7                          
+pfet_03v3 (430->18)                        |pfet_03v3 (430->18)                        
+nfet_03v3 (76->32)                         |nfet_03v3 (76->32)                         
+cap_mim_2f0_m4m5_noshield (7)              |cap_mim_2f0_m4m5_noshield (7)              
+ppolyf_u_1k (15->7)                        |ppolyf_u_1k (15->7)                        
+Number of devices: 64                      |Number of devices: 64                      
+Number of nets: 44                         |Number of nets: 44                         
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
 Resolving symmetries by pin name.
 Netlists match uniquely.
 
 Subcircuit pins:
-Circuit 1: pt_rxmix_quad                   |Circuit 2: pt_rxmix_quad                   
--------------------------------------------|-------------------------------------------
-VSS                                        |VSS                                        
-x_n                                        |x_n                                        
-rf_p                                       |rf_p                                       
-rf_n                                       |rf_n                                       
-x_p                                        |x_p                                        
-lo_p                                       |lo_p                                       
-lo_n                                       |lo_n                                       
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes pt_rxmix_quad and pt_rxmix_quad are equivalent.
-
-Class pt_rxmix_ofsdac (0):  Merged 8 parallel devices.
-Class pt_rxmix_ofsdac (1):  Merged 8 parallel devices.
-Subcircuit summary:
-Circuit 1: pt_rxmix_ofsdac                 |Circuit 2: pt_rxmix_ofsdac                 
--------------------------------------------|-------------------------------------------
-pt_rfrx_inv (1)                            |pt_rfrx_inv (1)                            
-nfet_03v3 (21->13)                         |nfet_03v3 (21->13)                         
-pfet_03v3 (1)                              |pfet_03v3 (1)                              
-Number of devices: 15                      |Number of devices: 15                      
-Number of nets: 19                         |Number of nets: 19                         
----------------------------------------------------------------------------------------
-Resolving symmetries by property value.
-Netlists match uniquely.
-
-Subcircuit pins:
-Circuit 1: pt_rxmix_ofsdac                 |Circuit 2: pt_rxmix_ofsdac                 
--------------------------------------------|-------------------------------------------
-vbp                                        |vbp                                        
-ofs0                                       |ofs0                                       
-ofs1                                       |ofs1                                       
-ofs2                                       |ofs2                                       
-ofs3                                       |ofs3                                       
-ofs4                                       |ofs4                                       
-x_p                                        |x_p                                        
-x_n                                        |x_n                                        
-VSS                                        |VSS                                        
-VDD                                        |VDD                                        
-ofs_sign                                   |ofs_sign                                   
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes pt_rxmix_ofsdac and pt_rxmix_ofsdac are equivalent.
-
-Class pt_rfrx_otan (0):  Merged 124 parallel devices.
-Class pt_rfrx_otan (1):  Merged 124 parallel devices.
-Subcircuit summary:
-Circuit 1: pt_rfrx_otan                    |Circuit 2: pt_rfrx_otan                    
--------------------------------------------|-------------------------------------------
-pfet_03v3 (122->6)                         |pfet_03v3 (122->6)                         
-nfet_03v3 (12->4)                          |nfet_03v3 (12->4)                          
-cap_mim_2f0_m4m5_noshield (1)              |cap_mim_2f0_m4m5_noshield (1)              
-ppolyf_u_1k (1)                            |ppolyf_u_1k (1)                            
-Number of devices: 12                      |Number of devices: 12                      
-Number of nets: 13                         |Number of nets: 13                         
----------------------------------------------------------------------------------------
-Netlists match uniquely.
-
-Subcircuit pins:
-Circuit 1: pt_rfrx_otan                    |Circuit 2: pt_rfrx_otan                    
--------------------------------------------|-------------------------------------------
-VSS                                        |VSS                                        
-inn                                        |inn                                        
-inp                                        |inp                                        
-VDD                                        |VDD                                        
-pd                                         |pd                                         
-out                                        |out                                        
-vbp                                        |vbp                                        
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes pt_rfrx_otan and pt_rfrx_otan are equivalent.
-
-Class pt_rxmix_q (0):  Merged 4 series devices.
-Class pt_rxmix_q (1):  Merged 4 series devices.
-Subcircuit summary:
 Circuit 1: pt_rxmix_q                      |Circuit 2: pt_rxmix_q                      
 -------------------------------------------|-------------------------------------------
-pt_rfrx_inv (1)                            |pt_rfrx_inv (1)                            
-pt_rfrx_bias (1)                           |pt_rfrx_bias (1)                           
-pt_rfrx_vcm (1)                            |pt_rfrx_vcm (1)                            
-pt_rxmix_quad (1)                          |pt_rxmix_quad (1)                          
-pt_rxmix_ofsdac (1)                        |pt_rxmix_ofsdac (1)                        
-pt_rfrx_otan (2)                           |pt_rfrx_otan (2)                           
-diode_nd2ps_03v3 (6)                       |diode_nd2ps_03v3 (6)                       
-cap_mim_2f0_m4m5_noshield (4)              |cap_mim_2f0_m4m5_noshield (4)              
-nfet_03v3 (2)                              |nfet_03v3 (2)                              
-ppolyf_u_1k (7->3)                         |ppolyf_u_1k (7->3)                         
-Number of devices: 22                      |Number of devices: 22                      
-Number of nets: 23                         |Number of nets: 23                         
----------------------------------------------------------------------------------------
-Netlists match uniquely.
-
-Subcircuit pins:
-Circuit 1: pt_rxmix_q                      |Circuit 2: pt_rxmix_q                      
--------------------------------------------|-------------------------------------------
+atb_vbp                                    |atb_vbp                                    
+atb_vcm                                    |atb_vcm                                    
 bb_p                                       |bb_p                                       
 bb_n                                       |bb_n                                       
-atb_vcm                                    |atb_vcm                                    
-ibias                                      |ibias                                      
+VSS                                        |VSS                                        
 rf_p                                       |rf_p                                       
 rf_n                                       |rf_n                                       
 lo_p                                       |lo_p                                       
 lo_n                                       |lo_n                                       
-ofs_sign                                   |ofs_sign                                   
-VSS                                        |VSS                                        
-VDD                                        |VDD                                        
-en                                         |en                                         
-atb_vbp                                    |atb_vbp                                    
+island_off                                 |island_off                                 
 ofs0                                       |ofs0                                       
 ofs1                                       |ofs1                                       
 ofs2                                       |ofs2                                       
 ofs3                                       |ofs3                                       
 ofs4                                       |ofs4                                       
-island_off                                 |island_off                                 
+VDD                                        |VDD                                        
+ibias                                      |ibias                                      
+en                                         |en                                         
+ofs_sign                                   |ofs_sign                                   
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes pt_rxmix_q and pt_rxmix_q are equivalent.

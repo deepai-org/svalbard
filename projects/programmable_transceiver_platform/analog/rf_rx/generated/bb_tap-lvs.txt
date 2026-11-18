@@ -72,6 +72,21 @@ a                                          |a
 Cell pin lists are equivalent.
 Device classes pt_rfrx_nor2 and pt_rfrx_nor2 are equivalent.
 
+Circuit 1 cell nfet_06v0 and Circuit 2 cell nfet_06v0 are black boxes.
+Warning: Equate pins:  cell nfet_06v0 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_06v0 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_06v0                       |Circuit 2: nfet_06v0                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_06v0 and nfet_06v0 are equivalent.
+
 Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
 Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
 Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
@@ -86,37 +101,53 @@ Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k
 Cell pin lists are equivalent.
 Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
 
-Class pt_bb_tap (0):  Merged 118 parallel devices.
-Class pt_bb_tap (1):  Merged 118 parallel devices.
+Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
+
+Class pt_bb_tap (0):  Merged 110 parallel devices.
+Class pt_bb_tap (0):  Merged 4 series devices.
+Class pt_bb_tap (1):  Merged 110 parallel devices.
+Class pt_bb_tap (1):  Merged 4 series devices.
 Subcircuit summary:
 Circuit 1: pt_bb_tap                       |Circuit 2: pt_bb_tap                       
 -------------------------------------------|-------------------------------------------
 pt_rfrx_inv (4)                            |pt_rfrx_inv (4)                            
 pt_rfrx_nor2 (1)                           |pt_rfrx_nor2 (1)                           
-nfet_03v3 (118->14)                        |nfet_03v3 (118->14)                        
+nfet_03v3 (78->10)                         |nfet_03v3 (78->10)                         
 pfet_03v3 (16->2)                          |pfet_03v3 (16->2)                          
-ppolyf_u_1k (1)                            |ppolyf_u_1k (1)                            
-Number of devices: 22                      |Number of devices: 22                      
-Number of nets: 22                         |Number of nets: 22                         
+nfet_06v0 (32->4)                          |nfet_06v0 (32->4)                          
+ppolyf_u_1k (9->5)                         |ppolyf_u_1k (9->5)                         
+cap_mim_2f0_m4m5_noshield (4)              |cap_mim_2f0_m4m5_noshield (4)              
+diode_nd2ps_03v3 (1)                       |diode_nd2ps_03v3 (1)                       
+Number of devices: 31                      |Number of devices: 31                      
+Number of nets: 26                         |Number of nets: 26                         
 ---------------------------------------------------------------------------------------
-Resolving symmetries by property value.
-Resolving symmetries by pin name.
 Netlists match uniquely.
 
 Subcircuit pins:
 Circuit 1: pt_bb_tap                       |Circuit 2: pt_bb_tap                       
 -------------------------------------------|-------------------------------------------
 atb_nbias                                  |atb_nbias                                  
+pad_n                                      |pad_n                                      
+pad_p                                      |pad_p                                      
 VSS                                        |VSS                                        
 VDD                                        |VDD                                        
 inj_en                                     |inj_en                                     
 island_off                                 |island_off                                 
-pad_p                                      |pad_p                                      
-pad_n                                      |pad_n                                      
+in_n                                       |in_n                                       
 obs_en                                     |obs_en                                     
 ibias                                      |ibias                                      
 in_p                                       |in_p                                       
-in_n                                       |in_n                                       
 inj_p                                      |inj_p                                      
 inj_n                                      |inj_n                                      
 ---------------------------------------------------------------------------------------

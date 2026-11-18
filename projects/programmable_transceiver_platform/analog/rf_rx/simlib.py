@@ -22,7 +22,13 @@ def ngspice_netlist(text):
 def prepare(work, netlist_path, name):
     work.mkdir(parents=True, exist_ok=True)
     dst = work / name
-    dst.write_text(ngspice_netlist(Path(netlist_path).read_text()))
+    text = ngspice_netlist(Path(netlist_path).read_text())
+    if not (dst.exists() and dst.read_text() == text):
+        # write-then-rename: parallel benches sharing this file never read a half-written netlist
+        import os, threading
+        tmp = work / f'.{name}.{os.getpid()}.{threading.get_ident()}.tmp'
+        tmp.write_text(text)
+        os.replace(tmp, dst)
     return dst.name
 
 

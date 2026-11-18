@@ -59,7 +59,7 @@ def results_markdown():
     for b, r in ev.items():
         out.append(f'**{b}**')
         out.append('')
-        out.append('| Metric | Target | Extracted | Schematic |')
+        out.append('| Metric | Target | Extracted | Pass |')
         out.append('| --- | --- | --- | --- |')
         for p in r['performance_vs_target']:
             if 'rows' in p:
@@ -72,15 +72,20 @@ def results_markdown():
                 v = ', '.join(_f(x) for x in v)
             else:
                 v = _f(v)
-            out.append(f"| {p['metric']} | {p.get('target', '')} | {v} | {_f(p.get('schematic_nominal'))} |")
+            if v == 'n/a' and isinstance(p.get('extracted'), (list, dict)):
+                v = 'see generated/' + b + '-evidence.json'
+            out.append(f"| {p['metric']} | {p.get('target', '')} | {v} | {p.get('pass', '')} |")
         for p in r['performance_vs_target']:
             if 'rows' not in p:
                 continue
-            keys = [k for k in p['rows'][0] if k not in ('corner',)]
-            out += ['', f"{p['metric']}: min / max over {len(p['rows'])} corners (tt/ss/ff x 22/32 C x 3.15/3.35 V)", '',
+            keys = []
+            for row in p['rows']:
+                keys += [k for k in row if k not in ('corner', 'rows') and k not in keys]
+            out += ['', f"{p['metric']}: min / max over {len(p['rows'])} rows (corners x cases). Pass: {p.get('pass', '')}", '',
                     '| Quantity | min | max |', '| --- | --- | --- |']
+            flat = lambda x: x if isinstance(x, list) else [x]
             for k in keys:
-                vals = [row.get(k) for row in p['rows'] if isinstance(row.get(k), (int, float))]
+                vals = [y for row in p['rows'] for y in flat(row.get(k)) if isinstance(y, (int, float)) and not isinstance(y, bool)]
                 if vals:
                     out.append(f'| {k} | {_f(min(vals))} | {_f(max(vals))} |')
             errs = [row for row in p['rows'] if 'error' in row]
@@ -95,6 +100,8 @@ def results_markdown():
         for k, v in c.items():
             if isinstance(v, dict) and 'gain_i_db' in v:
                 out.append(f"| {k} | {_f(v.get('f_lo_hz'))} | {_f(v.get('gain_i_db'))} | {_f(v.get('gain_q_db'))} | {_f(v.get('idd_a'), 1e3)} |")
+            elif isinstance(v, dict) and 'nf_dsb_db' in v:
+                out.append(f"| {k}: chain NF DSB {_f(v.get('nf_dsb_db'))} / SSB {_f(v.get('nf_ssb_db'))} dB (corner {v.get('corner')}) | 2.4e9 | | | |")
             elif isinstance(v, dict) and 'lna_nf_matched_db' in v:
                 out.append(f"| NF estimate (board match): LNA {_f(v.get('lna_nf_matched_db'))} dB, chain "
                            f"{_f(v.get('nf_chain_db'))} dB | 2.4e9 | | | |")

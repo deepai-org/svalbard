@@ -34,7 +34,7 @@ for sd in ('south', 'east', 'north', 'west'):
 # bond map 2026-11-14: contract bond_map_current + coordinator decisions (WCLK_IN and LNA_SRC deleted; POR_BYPASS strap on
 # bidir[16]; bidir[17] spare, held; option L1 = REF_IN/REF_IN_N swap sites with BB_Q_P/BB_Q_N; TLP site on bidir[25])
 SIG = {
-    'RF_RX_P': 'inputs[11].pad', 'RF_RX_N': 'inputs[10].pad', 'BB_I_P': 'inputs[9].pad', 'BB_I_N': 'inputs[8].pad',
+    'RF_RX_P': 'inputs[9].pad', 'RF_RX_N': 'inputs[8].pad', 'BB_I_P': 'inputs[11].pad', 'BB_I_N': 'inputs[10].pad',   # PC-26 (2026-11-18)
     'BB_Q_P': 'inputs[7].pad', 'BB_Q_N': 'inputs[6].pad', 'AUX_CLK_P': 'inputs[5].pad', 'AUX_CLK_N': 'inputs[4].pad',
     'REF_IN': 'inputs[3].pad', 'REF_IN_N': 'inputs[2].pad', 'RF_TX_P': 'inputs[1].pad', 'RF_TX_N': 'inputs[0].pad',
     'WIRE_RX_P': 'bidir[15].pad', 'WIRE_RX_N': 'bidir[14].pad', 'POR_BYPASS': 'bidir[16].pad', 'SPARE_E17': 'bidir[17].pad',

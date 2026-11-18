@@ -135,8 +135,8 @@ PAD_NOTCH_UM = {'wirepad': (192.5, 914.9, 524.0, 1512.72), 'txpad': (144.2, 914.
 # east r90 at (3906, y_site); local x runs along the edge, local y into the core.
 CUSTOM_PADS = [
     # name, family, edge, origin site, sites covered, (P, N) chip ports, replaces packaging cell
-    ('pad_rf_rx', 'rf_pair', 'west', 'inputs[11].pad', ['inputs[11].pad', 'inputs[10].pad'], ('RF_RX_P', 'RF_RX_N'), 'custom_rf_receive'),
-    ('pad_bb_i', 'rf_pair', 'west', 'inputs[9].pad', ['inputs[9].pad', 'inputs[8].pad'], ('BB_I_P', 'BB_I_N'), None),
+    ('pad_rf_rx', 'rf_pair', 'west', 'inputs[9].pad', ['inputs[9].pad', 'inputs[8].pad'], ('RF_RX_P', 'RF_RX_N'), 'custom_rf_receive'),
+    ('pad_bb_i', 'rf_pair', 'west', 'inputs[11].pad', ['inputs[11].pad', 'inputs[10].pad'], ('BB_I_P', 'BB_I_N'), None),
     ('pad_bb_q', 'rf_pair', 'west', 'inputs[7].pad', ['inputs[7].pad', 'inputs[6].pad'], ('BB_Q_P', 'BB_Q_N'), None),
     ('pad_rf_tx', 'rf_pair', 'west', 'inputs[5].pad', ['inputs[5].pad', 'inputs[4].pad'], ('RF_TX_P', 'RF_TX_N'), 'custom_rf_transmit'),
     ('pad_aux_clk', 'rf_pair', 'west', 'inputs[3].pad', ['inputs[3].pad', 'inputs[2].pad'], ('AUX_CLK_P', 'AUX_CLK_N'), None),
@@ -403,8 +403,8 @@ if FLOORPLAN == 'v4':
     # exactly as RF_TX/AUX were adjacent in v3 (BW-01 'maybe', unchanged); BB_Q moves to P1. AUX uses the refpad master
     # like REF: identical pad cells, dC = 0 by construction (IQ-03).
     CUSTOM_PADS = [
-        ('pad_rf_rx', 'rf_pair', 'west', 'inputs[11].pad', ['inputs[11].pad', 'inputs[10].pad'], ('RF_RX_P', 'RF_RX_N'), 'custom_rf_receive'),
-        ('pad_bb_i', 'rf_pair', 'west', 'inputs[9].pad', ['inputs[9].pad', 'inputs[8].pad'], ('BB_I_P', 'BB_I_N'), None),
+        ('pad_rf_rx', 'rf_pair', 'west', 'inputs[9].pad', ['inputs[9].pad', 'inputs[8].pad'], ('RF_RX_P', 'RF_RX_N'), 'custom_rf_receive'),
+        ('pad_bb_i', 'rf_pair', 'west', 'inputs[11].pad', ['inputs[11].pad', 'inputs[10].pad'], ('BB_I_P', 'BB_I_N'), None),
         ('pad_ref', 'refpad', 'west', 'inputs[7].pad', ['inputs[7].pad', 'inputs[6].pad'], ('REF_IN', 'REF_IN_N'), 'custom_reference_clock'),
         ('pad_aux_clk', 'refpad', 'west', 'inputs[5].pad', ['inputs[5].pad', 'inputs[4].pad'], ('AUX_CLK_P', 'AUX_CLK_N'), None),
         # Package analysis (spec/package-channel.md): RF_TX away from AUX_CLK, next to a ground contact -> P1; BB_Q -> P3.

@@ -1,4 +1,7 @@
-# Bond-map option table (pads owner, 2026-11-14): PROPOSAL for the user, nothing decided
+# Bond-map option table (pads owner, 2026-11-14)
+
+Decided since: strap on `bidir[16]`, `bidir[17]` spare, option L1, no AGND_RX pads (PC-18, PC-21); RF_RX on bonds 68/67 and
+BB_I on 70/69 (PC-26 / PC-29, 2026-11-18). The table below is the option record; the map in force is `spec/contract.json`.
 
 `spec/contract.json` `assembly_policy.bond_map_current` is NOT edited until the user chooses. Facts and methods:
 `scratch/pads-core/bond/SITES.md`, `scratch/pads-core/bond/BOND-AUDIT.md`, `scratch/pads-core/rails/RAIL-CONTINUITY.md`, `scratch/pads-core/strap/STRAP.md`, `scratch/pads-core/bond/LO-PAD-OPTIONS.md`.

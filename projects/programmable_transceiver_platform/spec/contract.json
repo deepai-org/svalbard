@@ -55,7 +55,7 @@
       "WIRE_TX_P": "bidir[20].pad"
     },
     "bond_map_current": {
-      "status": "authoritative physical bond map as of 2026-11-14 (coordinator decisions on the pads option table, scratch/reviews/pads-core/bond-map-options.md; rows PC-1..PC-18). candidate_signal_sites above is still the STALE pre-PD22 generator reference (it drives analog/pads/design.py site resolution and verification/check_contract.py); re-baselining it is a pads + test_contract change.",
+      "status": "authoritative physical bond map as of 2026-11-18 (coordinator decisions on the pads option table, scratch/reviews/pads-core/bond-map-options.md; rows PC-1..PC-18). candidate_signal_sites above is still the STALE pre-PD22 generator reference (it drives analog/pads/design.py site resolution and verification/check_contract.py); re-baselining it is a pads + test_contract change.",
       "sources": [
         "scratch/reviews/interface-changes.md PD22 (bond map, user decision)",
         "verification/chip_assembly/inventory.py CUSTOM_PADS (v4+ west map) and MIRRORED_PADS",
@@ -66,10 +66,10 @@
         "scratch/reviews/wafer-space-answers.md"
       ],
       "west": {
-        "inputs[11].pad": "RF_RX_P",
-        "inputs[10].pad": "RF_RX_N",
-        "inputs[9].pad": "BB_I_P",
-        "inputs[8].pad": "BB_I_N",
+        "inputs[11].pad": "BB_I_P",
+        "inputs[10].pad": "BB_I_N",
+        "inputs[9].pad": "RF_RX_P",
+        "inputs[8].pad": "RF_RX_N",
         "inputs[7].pad": "BB_Q_P",
         "inputs[6].pad": "BB_Q_N",
         "inputs[5].pad": "AUX_CLK_P (refpad; external-LO Q leg, aux clock and, since CP4-3, the forwarded wire clock)",
@@ -78,7 +78,7 @@
         "inputs[2].pad": "REF_IN_N",
         "inputs[1].pad": "RF_TX_P (pad_rftxpad)",
         "inputs[0].pad": "RF_TX_N",
-        "note": "option L1 (2026-11-14): REF_IN pair and BB_Q pair swapped sites to move the external LO 2110 um from RF_RX (bond-wire LO leak +11.2 / +2.4 / -12.7 dB margin at 4 Vpp; drive to be about 1 Vpp: +12 dB). Open condition: LO owner confirms the I/Q error from the now adjacent REF_IN / AUX_CLK pairs (about 0.7 / 1.5 / 3.6 deg per leg) is within trim. No AGND_RX pad: the COB bonds only the 74 template pads with one fixed wire layout (no extra wires, down-bonds or double bonds; scratch/reviews/wafer-space-answers.md); the LNA ground is die VSS (rejection per PD2-15). Runner-up, only if rf_rx shows >= 10 dB net: ground site vss_pads[1] (bond 71, 211 um from RF_RX_P) on its own on-die net."
+        "note": "option L1 (2026-11-14): REF_IN pair and BB_Q pair swapped sites to move the external LO 2110 um from RF_RX (bond-wire LO leak +11.2 / +2.4 / -12.7 dB margin at 4 Vpp; drive to be about 1 Vpp: +12 dB). Open condition: LO owner confirms the I/Q error from the now adjacent REF_IN / AUX_CLK pairs (about 0.7 / 1.5 / 3.6 deg per leg) is within trim. No AGND_RX pad: the COB bonds only the 74 template pads with one fixed wire layout (no extra wires, down-bonds or double bonds; scratch/reviews/wafer-space-answers.md); the LNA ground is die VSS (rejection per PD2-15). PC-26 (2026-11-18): RF_RX pair on inputs[9]/[8] (bonds 68/67) and BB_I pair on inputs[11]/[10] (bonds 70/69): ground-bond current couples 10 dB less into the RX pair (scratch/reviews/pads-core/LNA-GROUND.md); external-LO pad leak to the RX pair +8.9 / +7.8 dB (AUX_CLK / REF_IN)."
       },
       "east": {
         "bidir[14].pad": "WIRE_RX_N (pad_hspad, mirrored)",
@@ -829,7 +829,7 @@
         "evidence": "candidate SPI recovery addresses 0x30-0x36 and behavioral mailbox; absent from pt_control RTL",
         "fault_notification_requirement": {
           "host_rule": "Invalidate partial protocol/alignment state and any not-yet-committed payload before rearm; budget detection, CDC, polling/serialization and host service latency.",
-          "implementation_gap": "pt_core accepts wire_rx_valid but no CDR qualification-loss input. SPI address 0x03 reads existing status; its host-frame rx_fault is not wired CDR loss. RecoveryMailbox addresses 0x30–0x36 are requests/replies, not asynchronous fault notification.",
+          "implementation_gap": "pt_core accepts wire_rx_valid but no CDR qualification-loss input. SPI address 0x03 reads existing status; its host-frame rx_fault is not wired CDR loss. RecoveryMailbox addresses 0x30\u20130x36 are requests/replies, not asynchronous fault notification.",
           "latency_bound_s": null,
           "publication": "Latch in a domain that survives loss of the recovered clock; retain until explicit acknowledged stop/flush. Expose through existing management transport, without allocating a new pin or protocol profile.",
           "source": "Loss of wired RX qualification after acquisition; initial acquisition remains distinct.",
@@ -1897,7 +1897,7 @@
           "le_2m": -70
         },
         "source": "https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/low-energy-controller/radio-physical-layer-specification.html",
-        "standard": "Bluetooth Core 6.2, Vol 6 Part A, sections 4.1–4.2",
+        "standard": "Bluetooth Core 6.2, Vol 6 Part A, sections 4.1\u20134.2",
         "status": "partial_requirement_extraction_not_compliance_proof"
       },
       "bandwidth_note": "Model allocation envelope, not regulatory occupied bandwidth or an implemented filter.",

@@ -15,8 +15,9 @@ Bindings are from `integration/top/pt_chip.conn`, sites from `spec/contract.json
 
 | Instance | Master | Pins | Site | HBM tier |
 |---|---|---|---|---|
-| `pad_rf_rx` | `pad_rf_pair` | RF_RX_P/N | west `inputs[11]`/`[10]` | 2 kV |
-| `pad_bb_i`, `pad_bb_q` | `pad_rf_pair` | BB_I_P/N, BB_Q_P/N | west `inputs[9..6]` | 2 kV |
+| `pad_rf_rx` | `pad_rf_pair` | RF_RX_P/N | west `inputs[9]`/`[8]` (bonds 68/67) | 2 kV |
+| `pad_bb_i` | `pad_rf_pair` | BB_I_P/N | west `inputs[11]`/`[10]` (bonds 70/69) | 2 kV |
+| `pad_bb_q` | `pad_rf_pair` | BB_Q_P/N | west `inputs[7]`/`[6]` | 2 kV |
 | `pad_aux_clk` | `pad_refpad` | AUX_CLK_P/N (external-LO Q leg, auxiliary clock, forwarded wire clock) | west `inputs[5]`/`[4]` | 2 kV simulated (1 kV allowed) |
 | `pad_ref` | `pad_refpad` | REF_IN, REF_IN_N (reference, external-LO I leg) | west `inputs[3]`/`[2]` | 2 kV simulated (1 kV allowed) |
 | `pad_rf_tx` | `pad_rftxpad` | RF_TX_P/N | west `inputs[1]`/`[0]` | 1 kV |
@@ -262,9 +263,9 @@ budget-sized ideal capacitors on top of extracted capacitance.
    bonds 18/37/55/74. The landing rule is not chosen.
 7. **Bond tester.** A positive-current continuity test would read open on the custom pads that steer into the
    isolated rail; the tester polarity is not known.
-8. **LNA ground and RF input.** The LNA ground is die VSS on the standard fingers; no AGND_RX pad exists
-   (`integration/top/pt_chip.conn` still instantiates `pad_agnd_rx_{0:1}`). Bond model and proposal (RF_RX to bonds
-   67/68, BB_I to 69/70): `scratch/reviews/pads-core/LNA-GROUND.md`. `agnd_pad.py` is unreviewed and unpublished.
+8. **LNA ground and RF input.** The LNA ground is die VSS on the standard fingers; there is no AGND_RX pad and no
+   ground-pad generator. RF_RX sits on bonds 68/67 and BB_I on 70/69 (PC-26 decided, PC-29): bond model and numbers
+   in `scratch/reviews/pads-core/LNA-GROUND.md`. The sign-off skeleton floorplan still has to be regenerated for it.
 9. **Consumer-gate HBM screen is stale.** `pd48-esd-tiering.json` `core_screen` was run on consumer netlists
    of its date, including an unpublished LNA and the deleted forwarded-clock receiver; rerun after the
    consumers settle. (ESD-02, ESD-06)

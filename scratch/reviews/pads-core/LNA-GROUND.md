@@ -1,6 +1,8 @@
 # LNA ground and RF input on the standard 74-wire bond layout (pads owner, 2026-11-18)
 
-PROPOSAL for the coordinator and the RF RX owner. `spec/contract.json` is not edited. Analytic filament model, not EM,
+Current state. Option B below is DECIDED (coordinator, 2026-11-18, rows PC-26 / PC-29) and is in `spec/contract.json`,
+`spec/package-channel.json` and the assembly inventory: RF_RX_P/N on bonds 68/67 (`inputs[9]`/`[8]`), BB_I_P/N on 70/69
+(`inputs[11]`/`[10]`). Sections 1-3 give numbers for the old sites ("today", option A) next to the decided ones. Analytic filament model, not EM,
 not measured. Tools and raw numbers: `scratch/pads-core/lnagnd/` (`bondl.py`, `mapopt.py`, `lnabench.py`,
 `bondl.txt`, `mapopt.json`, `lnabench.json`). SPICE model for the LNA benches: `lna-bond-model.spice` (this folder).
 
@@ -40,7 +42,7 @@ Limits declared before the runs are in the `lnabench.py` docstring. Known answer
 solve of the same matrix): -17.37 dB vs -17.37 dB (A), -38.83 vs -38.83 (B). Negative control (no coupling to the RX
 wires, pads open): -240 dB.
 
-| Quantity | Ideal ground | Today (RX on 69/70), min / nom / max | Proposed (RX on 67/68), min / nom / max | Limit |
+| Quantity | Ideal ground | Today (RX on 69/70), min / nom / max | Decided (RX on 67/68), min / nom / max | Limit |
 |---|---|---|---|---|
 | Differential gain at 2.42 GHz (dB) | 14.13 | 14.10 / 14.10 / 14.10 | 14.10 / 14.10 / 14.10 | change <= 0.5 dB: pass |
 | Noise figure, spot (dB; PDK noise model, relative use only) | 1.565 | 1.590 / 1.590 / 1.591 | 1.590 / 1.590 / 1.590 | change <= 0.2 dB: pass |
@@ -71,7 +73,7 @@ mutual from the external-LO pad pairs.
 | **B: RX 67/68, BB_I 69/70**, BB_Q 65/66 | -30.9 / -25.8 / -19.9 | -25.3 / -20.1 / -14.3 | GND 71: 0.027 | 6.1 / 2.2 | 18 |
 | C: RX 65/66, BB_Q 67/68, BB_I 69/70 | -28.0 / -24.0 / -19.4 | -17.2 / -14.4 / -11.7 | PWR_AUX_1 64: 0.116 | 22 / 6.3 | 10 |
 
-**Proposed: option B.** RF_RX moves two sites north to 67/68, BB_I takes 69/70. Gain: 10 dB less ground-bounce pickup
+**Decided: option B.** RF_RX moves two sites north to 67/68, BB_I takes 69/70. Gain: 10 dB less ground-bounce pickup
 at nominal (5.5-12.6 dB over the bounds; 19 dB in the bench where all bonds see the same bounce), both RX wires get
 identical signal neighbours, and the pair is 422 um further from the south-west corner where the host-link output
 wires land. Costs:
@@ -84,8 +86,7 @@ wires land. Costs:
 
 ## 5. What does not exist
 
-- No AGND_RX pad, no source pads, no ground split in the pad ring. `analog/pads/agnd_pad.py` (one-pad runner-up for
-  site 71) is unreviewed and unpublished. Taking bond 71 off die VSS would remove the largest coupling term of option A
+- No AGND_RX pad, no source pads, no ground split in the pad ring; the ground-pad generator is deleted. Taking bond 71 off die VSS would remove the largest coupling term of option A
   (0.124 of 0.158) but costs the ground bond nearest the LNA and one clamp cell; option B gets the same benefit
   without either.
 - Not modelled: on-die VSS ring impedance, the real currents in each bond (the conversion figures are per volt of

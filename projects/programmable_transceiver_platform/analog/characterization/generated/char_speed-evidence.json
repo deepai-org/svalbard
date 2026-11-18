@@ -1,10 +1,10 @@
 {
  "block": "device-speed calibration structures",
- "generated_utc": "2026-11-10T03:54:31Z",
+ "generated_utc": "2026-11-18T04:57:16Z",
  "source_hashes": {
   "speed.py": "sha256:142a77079c7f0a90555ec50b35120993308b63591aae9e669475fbe4ca015081",
-  "rffet.py": "sha256:c1137bd05e2f5c0759d790e6e2fd6d75e3a73a723494d057d1289b34999b287a",
-  "convkit.py": "sha256:335aaf313b48811efd7abdca25e07c0e4535a19b8c5e4e14de11ec17fed43a6e"
+  "rffet.py": "sha256:7b37ecac5d92a646f1c06dcb7550579d7cf7fa83af863e471bb7fce1d7341ed1",
+  "convkit.py": "sha256:dab9181566bae0c1a6cd3555ebb7bdb8719f29789f6d10474e44e8464dea0aa0"
  },
  "criteria": {
   "functional": "extracted netlist + explicit gate R, 5 corners (tt/27/3.3, ss/32/3.15, ff/22/3.35, ss/22/3.35, ff/32/3.15): OUT toggles rail to rail (>90 %/<10 % VDD), f_out <= 500 MHz (clk_obs limit), EN=0 supply current < 1 uA",
@@ -744,9 +744,14 @@
       "published_gds_lvs_unique": true,
       "pass": true
      },
-     "gds_subcells_uniquified": "subcells prefixed with the top-cell name (speed.uniquify)",
+     "gds_subcells_uniquified": {
+      "top": "pt_char_rffet",
+      "renamed": {
+       "rf_dev": "pt_char_rffet__rf_dev"
+      }
+     },
      "published_gds_after_rename": {
-      "gds_sha256": "sha256:9a735ea32a3b95cf28fa037b8fd49a58eb2546e23a7670ae142d715488a4b7d9",
+      "gds_sha256": "sha256:9e42f545502fdb4967b552fc2c7603334ec29705ed7fa8b6a56f961533609c7c",
       "lvs": "Circuits match uniquely.",
       "lvs_unique": true
      }
@@ -778,7 +783,10 @@
       "published_gds_lvs_unique": false,
       "pass": false
      },
-     "gds_subcells_uniquified": "subcells prefixed with the top-cell name (speed.uniquify)"
+     "gds_subcells_uniquified": {
+      "top": "pt_char_rffet_open",
+      "renamed": {}
+     }
     },
     "pt_char_rffet_short": {
      "kind": "short",
@@ -805,7 +813,10 @@
       "published_gds_lvs_unique": false,
       "pass": false
      },
-     "gds_subcells_uniquified": "subcells prefixed with the top-cell name (speed.uniquify)"
+     "gds_subcells_uniquified": {
+      "top": "pt_char_rffet_short",
+      "renamed": {}
+     }
     }
    },
    "verdict": "pass",

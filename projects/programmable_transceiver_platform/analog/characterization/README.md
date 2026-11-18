@@ -91,14 +91,31 @@ guidance (`scratch/reviews/gf180-device-speed-evidence.md`).
 | `pt_char_ro33` | 3.3 V CMOS gate delay | NAND enable + 10 inverters, nfet_03v3 4/0.28, pfet_03v3 8/0.28 | ring tap → TSPC /4 → buffer → `OUT` |
 | `pt_char_ro50` | 5 V device speed on the 3.3 V rail (standard-cell device class) | same ring, nfet_05v0 4/0.6, pfet_05v0 8/0.5 | same /4 |
 | `pt_char_cmldiv` | NMOS fT in a CML latch | two CML latches in a /2 loop with CK = CKB = VDD (self-oscillation), nfet_03v3 10/0.28 pairs, 1.8 kΩ poly loads, 0.6 mA tails; two clocked CML /2, CML→CMOS, TSPC /2 | `OUT` = f(S0) / 8 |
-| `pt_char_rffet` (+ `_open`, `_short`) | fT, fmax, Rg of the RF device | one nfet_03v3 w 2 nf 5 (W = 10 µm), gate contacted both ends, 2-port GSG frame: 60 × 60 µm Metal5 pads, 50 × 50 µm GLASS openings, 100 µm pitch | on-wafer S-parameters; de-embed OPEN then SHORT |
+| `pt_char_rffet` (+ `_open`, `_short`) | fT, fmax, Rg of the RF device | one nfet_03v3 w 2 nf 5 (W = 10 µm), gate contacted both ends, 2-port GSG frame: 60 × 60 µm Metal5 pads, 50 × 50 µm GLASS openings, 100 µm pitch, port pad centres 200 µm apart, ground rails between the ports | on-wafer S-parameters; de-embed OPEN then SHORT |
 
 - `EN = 0`: rings stopped, CML tails off, TSPC dividers held static (clock low, outputs reset).
 - The CML cell biases itself from a 36 kΩ poly resistor into a diode NFET; `BIAS` is the mirror gate.
 - The extracted benches add an explicit gate resistance Rg = Rsh·W/(3L), Rsh 7.3 Ω/sq, to every MOS gate
   (`speed.with_gate_r`). The run without Rg is kept as a comparison.
 - Probe frames: the GLASS openings sit inside the core. Assembly keeps fill and other metal out of the
-  430 × 260 µm frames, and the frames need probe access on the bare die.
+  260 × 260 µm frames, and the frames need probe access on the bare die. The three frames may be placed
+  in one column at 200 µm pitch with the ground pads and ground strip of neighbours coinciding
+  (260 × 660 µm in total). `python3 rffet.py stack` checks the column built from the Magic cells: DRC 0,
+  5 devices, G and D of the DUT and of the OPEN on four separate nets, one ground net; `stack 100` is its
+  negative control. The independent review repeated the check on the published GDS (KLayout DRC 0 as well).
+  Shared ground pads are then probed up to twice. The LEF outlines stay 260 × 260 µm and overlap by 60 µm in
+  a stacked placement.
+- Frame parasitics, Magic extraction of the OPEN (`generated/char_rffet_open.ext.spice`): G 38.2 fF and
+  D 37.6 fF to substrate, 4.8 fF from each to the frame ground. OPEN/SHORT de-embedding removes them; the
+  probe-to-probe coupling at the 200 µm port spacing is part of the OPEN measurement. Not simulated: the
+  frames have no electromagnetic model.
+- Accepted with the 260 µm frame (review `scratch/reviews/die-fit/rffet-review.md`): the port pad centres are
+  200 µm apart (pad edges 140 µm; the 430 µm frame had 300 / 240 µm). That is near the practical minimum for
+  facing 100 µm-pitch GSG probes; tip-to-tip coupling raises the S12 floor, which matters for fmax and Cgd
+  more than for fT and Rg. To be confirmed against the probes and calibration substrate actually used.
+- Open, unchanged by the resize: the OPEN and SHORT frames have no substrate tap (the DUT's guard ring ties
+  its frame ground to the substrate), so the OPEN does not reproduce the DUT pad admittance exactly. A p+
+  tap ring in all three frames would remove the difference.
 - Every published GDS here (including `char_atb.gds`) has its subcells prefixed with the top-cell name and is
   re-checked by round-trip LVS (`published_gds_after_rename` in each `*-physical.json`).
 
@@ -107,9 +124,9 @@ guidance (`scratch/reviews/gf180-device-speed-evidence.md`).
 | `pt_char_ro33` | 54 | 69.6 × 139.3 | 0 | 0 | unique | unique | match |
 | `pt_char_ro50` | 54 | 70.4 × 132.4 | 0 | 0 | unique | unique | match |
 | `pt_char_cmldiv` | 85 | 104.8 × 265.8 | 0 | 0 | unique | unique | match |
-| `pt_char_rffet` | 1 (nf 5) | 430 × 260 | 0 | 0 | unique | unique | G, D, GND |
-| `pt_char_rffet_open` | 0 | 430 × 260 | 0 | 0 | ports G, D, GND separate | not checked (no devices) | G, D, GND |
-| `pt_char_rffet_short` | 0 | 430 × 260 | 0 | 0 | G and D merged into GND | not checked (no devices) | GND |
+| `pt_char_rffet` | 1 (nf 5) | 260 × 260 | 0 | 0 | unique | unique | G, D, GND |
+| `pt_char_rffet_open` | 0 | 260 × 260 | 0 | 0 | ports G, D, GND separate | not checked (no devices) | G, D, GND |
+| `pt_char_rffet_short` | 0 | 260 × 260 | 0 | 0 | G and D merged into GND | not checked (no devices) | GND |
 
 Extracted predictions with gate R (`generated/char_speed-evidence.json`):
 
@@ -130,7 +147,7 @@ python3 speed.py sch                 # schematic tt (divider consistency check)
 python3 speed.py ext                 # extracted + gate R, 5 corners (primary prediction)
 python3 speed.py ext_norg            # extracted, no gate R, tt (comparison)
 python3 speed.py evidence            # generated/char_speed-evidence.json
-python3 rffet.py layout && python3 rffet.py export
+python3 rffet.py layout && python3 rffet.py export   # + `python3 rffet.py stack` (shared-ground column check)
 ```
 
 ## Open items

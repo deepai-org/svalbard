@@ -17,17 +17,27 @@ Drains rise on Metal3 to a drain bus above the device, sources fall to a source
 bus below it, and the guard ring (body) joins the source bus.
 
 Frame (all cells identical outside the DUT window): six 60 x 60 um Metal5 pads
-with 50 x 50 um passivation openings (GLASS), 100 um pitch.
-    gate port  (x = -150 um): G (y = +100), S = gate (y = 0), G (y = -100)
-    drain port (x = +150 um): G, S = drain, G
-Grounds: 28 um Metal5 strips (under the 30 um slotting limit) join the top and bottom G pads (y = +-100) and two
-Metal5 side rails (x = +-205 um) join the strips.  The source/body reaches the
+with 50 x 50 um passivation openings (GLASS), 100 um pitch.  Outline 260 x 260 um.
+    gate port  (x = -100 um): G (y = +100), S = gate (y = 0), G (y = -100)
+    drain port (x = +100 um): G, S = drain, G
+Port pad centres are 200 um apart (pad edges 140 um).  Grounds: 28 um Metal5
+strips (under the 30 um slotting limit) join the top and bottom G pads
+(y = +-100) and two 20 um Metal5 rails INSIDE the pad columns (x = +-40 um,
+20 um from the signal pads) join the strips; they cross over the Metal4 gate
+and drain leads and sit between the two ports.  The source/body reaches the
 bottom strip on Metal3 -> Metal5.  Gate and drain leads are Metal4 (4 um).
+The ground pads, their GLASS openings and the ground strip are the same at
+y = +100 and y = -100, so frames may be stacked at 200 um pitch in y with the
+ground pads and strip of two neighbours coinciding (three frames:
+260 x 660 um).  Other shapes in the overlap band (rail ends, the upper
+frame's source via stack) are all ground.  `stack` checks the column.
     pt_char_rffet        DUT
     pt_char_rffet_open   leads end at the DUT window, no device
     pt_char_rffet_short  gate and drain leads shorted to the source bus
 
     python3 rffet.py layout     # three cells: DRC, extraction, LVS (DUT), GDS + KLayout DRC, LEF
+    python3 rffet.py stack      # scratch check of the shared-ground column DUT / OPEN / SHORT at 200 um pitch
+                                # (`stack 100` is its negative control and must report pass = false)
 """
 import json
 import re
@@ -47,8 +57,10 @@ CELLS = ['pt_char_rffet', 'pt_char_rffet_open', 'pt_char_rffet_short']
 PAD = 60.0
 GLASS = 50.0
 PITCH = 100.0
-XP = 150.0          # pad column centres at +-XP
-XR = 205.0          # ground side rails
+XP = 100.0          # pad column centres at +-XP
+XR = 40.0           # ground rails (inside the pad columns), centre; 20 um wide
+XE = XP + PAD / 2   # frame half width = outer pad edge
+STACK_PITCH = 2 * PITCH   # frames stacked in y share their ground pads at this pitch
 VP = 0.8            # via array pitch
 
 
@@ -88,7 +100,7 @@ def frame(t, kind):
             t.box('glass', x - GLASS / 2, y - GLASS / 2, x + GLASS / 2, y + GLASS / 2)
     # ground strips and side rails (Metal5)
     for sy in (-1, 1):
-        t.box('metal5', -XR - 10, sy * PITCH - 14, XR + 10, sy * PITCH + 14)     # <= 30 um: no slotting (MSLOT5.1)
+        t.box('metal5', -XE, sy * PITCH - 14, XE, sy * PITCH + 14)     # <= 30 um: no slotting (MSLOT5.1)
     for sx in (-1, 1):
         t.box('metal5', sx * XR - 10, -PITCH - 14, sx * XR + 10, PITCH + 14)
     # gate lead: Metal4 from the gate pad to x = -8; drain lead Metal4 from x = +8 to the drain pad
@@ -258,8 +270,55 @@ def export():
     (WORK / 'result.json').write_text(json.dumps(out, indent=1, default=str))
 
 
+def stack(pitch=STACK_PITCH):
+    """Shared-ground column: DUT, OPEN and SHORT at STACK_PITCH in y, neighbours overlapping on their ground
+    pads and strip.  Scratch check only (nothing is published): Magic DRC of the flattened column, 5 devices,
+    G and D of the DUT and of the OPEN on four separate nets, one common ground.
+    Negative control: `python3 rffet.py stack 100` (ground strip of a neighbour on the signal pads) must fail."""
+    c = ['crashbackups stop', 'load rffet_stack', 'units microns']
+    for i, cell in enumerate(CELLS):
+        c += [f'getcell {cell} child 0 0 parent 0 {i * pitch}', 'select clear']
+    c += ['select top cell', 'flatten rffet_stack_flat', 'load rffet_stack_flat', 'select top cell', 'save',
+          'drc on', 'drc check', 'drc catchup',
+          'set f [open stack-drc-count.txt w]', 'puts $f [drc list count total]', 'close $f',
+          'set f [open stack-drc-details.txt w]', 'puts $f [drc listall why]', 'close $f',
+          'extract all', 'ext2spice lvs', 'ext2spice -o stack.lvs.spice',
+          'set f [open stack-bbox.txt w]', 'puts $f [box values]', 'close $f', 'gds write rffet_stack_flat.gds']
+    (WORK / 'stack.tcl').write_text('\n'.join(c) + '\nquit -noprompt\n')
+    r = ck.docker(ck.DIGITAL_IMAGE, WORK, f'magic -dnull -noconsole -rcfile {ck.PDK}/libs.tech/magic/gf180mcuD.magicrc /work/stack.tcl')
+    (WORK / 'stack.log').write_text(r.stdout + r.stderr)
+    txt = (WORK / 'stack.lvs.spice').read_text()
+    # nets of the flattened column from the Magic .ext: one group of names per electrical node
+    grp = {}
+    def find(n):
+        while grp.setdefault(n, n) != n:
+            n = grp[n]
+        return n
+    for line in (WORK / 'rffet_stack_flat.ext').read_text().splitlines():
+        f = line.split()
+        if f[:1] == ['node']:
+            find(f[1].strip('"'))
+        elif f[:1] == ['equiv']:
+            grp[find(f[2].strip('"'))] = find(f[1].strip('"'))
+    sig = [f'{c}_0.{p}' for c in CELLS[:2] for p in ('G', 'D')]            # DUT and OPEN gate / drain
+    gnd = [f'{c}_0.GND' for c in CELLS]
+    missing = [n for n in sig + gnd if n not in grp]
+    roots = {n: find(n) for n in sig + gnd if n in grp}
+    separate = not missing and len({roots[n] for n in sig}) == 4 and not ({roots[n] for n in sig} & {roots[n] for n in gnd})
+    one_ground = not missing and len({roots[n] for n in gnd}) == 1
+    devices = len([l for l in txt.splitlines() if l[:1] in ('X', 'M')])
+    res = dict(magic_drc=(WORK / 'stack-drc-count.txt').read_text().strip(), bbox=(WORK / 'stack-bbox.txt').read_text().strip(),
+               devices=devices, labels_missing=missing, signal_nets_separate=separate, one_ground_net=one_ground,
+               source='Magic cells of the last `layout` run (not the published GDS)')
+    res['pass'] = bool(res['magic_drc'] == '0' and devices == 5 and separate and one_ground)
+    (WORK / 'stack.json').write_text(json.dumps(res, indent=1))
+    print(json.dumps(res, indent=1))
+
+
 if __name__ == '__main__':
-    if sys.argv[1] == 'layout':
+    if sys.argv[1] == 'stack':
+        stack(float(sys.argv[2]) if len(sys.argv) > 2 else STACK_PITCH)
+    elif sys.argv[1] == 'layout':
         layout()
     elif sys.argv[1] == 'export':
         export()

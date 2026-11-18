@@ -22,9 +22,14 @@
    "published_gds_lvs_unique": true,
    "pass": true
   },
-  "gds_subcells_uniquified": "subcells prefixed with the top-cell name (speed.uniquify)",
+  "gds_subcells_uniquified": {
+   "top": "pt_char_rffet",
+   "renamed": {
+    "rf_dev": "pt_char_rffet__rf_dev"
+   }
+  },
   "published_gds_after_rename": {
-   "gds_sha256": "sha256:9a735ea32a3b95cf28fa037b8fd49a58eb2546e23a7670ae142d715488a4b7d9",
+   "gds_sha256": "sha256:9e42f545502fdb4967b552fc2c7603334ec29705ed7fa8b6a56f961533609c7c",
    "lvs": "Circuits match uniquely.",
    "lvs_unique": true
   }
@@ -56,7 +61,10 @@
    "published_gds_lvs_unique": false,
    "pass": false
   },
-  "gds_subcells_uniquified": "subcells prefixed with the top-cell name (speed.uniquify)"
+  "gds_subcells_uniquified": {
+   "top": "pt_char_rffet_open",
+   "renamed": {}
+  }
  },
  "pt_char_rffet_short": {
   "kind": "short",
@@ -83,6 +91,9 @@
    "published_gds_lvs_unique": false,
    "pass": false
   },
-  "gds_subcells_uniquified": "subcells prefixed with the top-cell name (speed.uniquify)"
+  "gds_subcells_uniquified": {
+   "top": "pt_char_rffet_short",
+   "renamed": {}
+  }
  }
 }

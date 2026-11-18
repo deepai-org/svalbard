@@ -102,9 +102,12 @@ taken at the old gain, then sends a gain-status frame: opcode 4, argument = {gap
 bits 5:0 (complex sample pairs invalid or discarded), I/Q count = new-gain payload words in that frame. The FPGA
 drops any partial pair and advances its sample index by the gap.
 
-Open: `pt_core` decodes opcodes 5 and 6, but the header legality check in the frame receiver
-(`pt_quad_link.sv`, `legal_n`) admits only opcodes 0, 1, 2 and 4, so a header with opcode 5 or 6 faults the link
-in the committed RTL. Not confirmed by simulation.
+Fast thresholds: opcodes 5 and 6 are legal in wired ownership only, with any 8-bit code, on frames with or without
+payload; in I/Q ownership and for every reserved opcode (3, 7 to 15) the link faults. The loaded code replaces the
+register field at the threshold DAC until ENABLE drops. Bench: `sim/tb_fast_vth.sv` (`verification/check_fast_vth.py`,
+part of `make transceiver-digital-rtl-checks`). Not yet verified: the override at the DAC pins in a macro-level bench,
+and the IX-11 latency and update-rate limits (measured in review at the register: 138 ns / 4.9 MHz at the full host
+rate, 282 ns / 2.4 MHz at the reduced rate, DAC settling not included).
 
 ## USB
 

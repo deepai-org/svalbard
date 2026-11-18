@@ -173,7 +173,8 @@ module pt_quad_rx(input wire clk,rst_n,payload_iq,input wire[39:0]in_quad,
  wire[5:0]inact_n=payload_iq?fields_n[5:0]:fields_n[11:6];
  wire[3:0]op_n=fields_n[21:18];wire[7:0]arg_n=fields_n[29:22];
  wire legal_n=(op_n==0&&arg_n==0)||((op_n==1||op_n==2)&&arg_n<=1)||
-              (op_n==4&&payload_iq&&adv_n==0&&!arg_n[7]&&arg_n[4:0]<=5'd16);
+              (op_n==4&&payload_iq&&adv_n==0&&!arg_n[7]&&arg_n[4:0]<=5'd16)||
+              ((op_n==5||op_n==6)&&!payload_iq);   // IX-11 fast thresholds: wired ownership, any 8-bit code
  // TC9 (hcore, aligned_r -> syndrome -> hpre -1.1 ns mid-PnR): the syndrome bits and the four other
  // check flags are registered separately with q; hpre is their AND (same value, checks(q)).
  reg[6:0]hsyn;reg htag,hadv,hina,hleg;

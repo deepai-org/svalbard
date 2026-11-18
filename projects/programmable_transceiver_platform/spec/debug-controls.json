@@ -1286,7 +1286,7 @@
       }
     },
     "consolidation.wiredtx_stage": {
-      "description": "consolidation-pass.md item 4: TMDS is a configuration of the wired TX output stage. stage selects serial (CML with source termination) or tmds (current sink, termination off). tmds.* fields remain the TMDS-configuration controls. bits_per_cycle selects 1, 2 or 4 bits per ring cycle for both the serializer and the deserializer. rate_mode (shared by serializer and deserializer) selects 4/half/full bits per ring cycle.",
+      "description": "Consolidation item 4: TMDS is a configuration of the wired TX output stage. stage selects serial (CML with source termination) or tmds (current sink, termination off). tmds.* fields remain the TMDS-configuration controls. bits_per_cycle selects 1, 2 or 4 bits per ring cycle for both the serializer and the deserializer. rate_mode (shared by serializer and deserializer) selects 4/half/full bits per ring cycle.",
       "update": "stopped",
       "islands": [
         "wired"
@@ -1309,7 +1309,7 @@
             "half",
             "full"
           ],
-          "meaning": "bits per ring cycle for the wired serializer and deserializer (spec/consolidation-pass.md 'Selectable bits per ring cycle'): quarter = 4 (MODE_H=MODE_F=0), half = MODE_H, full = MODE_F; code 3 is a reserved encoding and is rejected. Also sets the pt_digital gearbox ratio (debug_cfg PT_D_CONSOLIDATION_WIREDTX_STAGE__RATE_MODE)."
+          "meaning": "bits per ring cycle for the wired serializer and deserializer (consolidation item 'Selectable bits per ring cycle'): quarter = 4 (MODE_H=MODE_F=0), half = MODE_H, full = MODE_F; code 3 is a reserved encoding and is rejected. Also sets the pt_digital gearbox ratio (debug_cfg PT_D_CONSOLIDATION_WIREDTX_STAGE__RATE_MODE)."
         }
       }
     },
@@ -1607,7 +1607,7 @@
       }
     },
     "debug.freq_count_a": {
-      "description": "Generalized frequency counter instance a (PLL/TX ring; spec/consolidation-pass.md P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xE8 (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full.",
+      "description": "Generalized frequency counter instance a (PLL/TX ring; consolidation item P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xE8 (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full.",
       "update": "stopped",
       "islands": [],
       "live": false,
@@ -1672,7 +1672,7 @@
       }
     },
     "debug.freq_count_b": {
-      "description": "Generalized frequency counter instance b (CDR ring; spec/consolidation-pass.md P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xEA (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full.",
+      "description": "Generalized frequency counter instance b (CDR ring; consolidation item P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xEA (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full.",
       "update": "stopped",
       "islands": [],
       "live": false,

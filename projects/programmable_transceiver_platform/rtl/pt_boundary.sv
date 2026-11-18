@@ -37,11 +37,18 @@ endmodule
 // island's island_on on the FIRST gate after the pin (integration/top/generated/macro_clamps.txt). A kept
 // and2 cell. OPEN for the hardening flow (review finding 1): the 130 pin nets must be excluded from input-port
 // buffering and hold repair, and the routed netlist checked (only load of each pin = its iso_and).
-module pt_iso_and #(parameter W = 1)(input wire[W-1:0] a, input wire on, output wire[W-1:0] y);
+module pt_iso_and #(parameter W = 1, CLK = 0)(input wire[W-1:0] a, input wire on, output wire[W-1:0] y);
  genvar i;
  generate for (i = 0; i < W; i = i + 1) begin : g
 `ifdef SYNTHESIS
-  (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__and2_1 iso_and(.A1(a[i]), .A2(on), .Z(y[i]));
+  // CLK = 1: clock clamp. The cell drives the root of a clock net, which the resizer steps do not repair
+  // (r7c post-CTS at ss_032C_3v15: an and2_1 on 0.09 pF gave a 3.05 ns edge and 2.4 ns of delay on wire_tx_clk),
+  // so it is a drive-4 cell from the start. A1 pin load 8.8 fF instead of 2.8 fF (interface row DG8-3).
+  if (CLK) begin : c
+   (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__and2_4 iso_and(.A1(a[i]), .A2(on), .Z(y[i]));
+  end else begin : d
+   (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__and2_1 iso_and(.A1(a[i]), .A2(on), .Z(y[i]));
+  end
 `else
   assign y[i] = a[i] & on;
 `endif

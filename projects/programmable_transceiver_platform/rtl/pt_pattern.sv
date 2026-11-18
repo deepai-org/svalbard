@@ -1,5 +1,5 @@
 // Shared wired-link test pattern generator and seed-locking PRBS checker
-// (spec/consolidation-pass.md P2-6). One design for TX and RX; it replaces the
+// (consolidation item P2-6). One design for TX and RX; it replaces the
 // former analog/wired_tx/rtl/pt_wtx_pattern and the PRBS31-only pt_prbs.
 //
 // The line word is 10 bits, bit 0 first (integration/macro-contract.md "Wired word

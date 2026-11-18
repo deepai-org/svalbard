@@ -28,11 +28,7 @@ def screen(source, out, top, period=3.2, boundary_delay=None):
     shutil.copy2(source/'integration/pt_digital_macro.sdc', out/'chip.sdc')
     config = json.loads((source/'verification/digital_hardening/config.json').read_text())
     names = [Path(p.removeprefix('dir::')).name for p in config['VERILOG_FILES']]
-    if top.startswith('pt_dense_pair'):
-        names.append('pt_dense_pair.sv')
-    paired_boundary = top.startswith('pt_dense_pair_word_')
-    if paired_boundary:
-        names.extend(['pt_dense_pair_link.sv', 'pt_dense_pair_word.sv'])
+    paired_boundary = False
     names = list(dict.fromkeys(names))
     verilog = ' '.join('/out/rtl/'+name for name in names)
     (out/'abc.constr').write_text('set_driving_cell gf180mcu_fd_sc_mcu7t5v0__buf_2\nset_load 0.02\n')
@@ -135,9 +131,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-dir', type=Path, default=PROJECT)
     parser.add_argument('--output-dir', type=Path, required=True)
-    parser.add_argument('--top', choices=['pt_digital_macro',
-                                        'pt_dense_pair_tx', 'pt_dense_pair_rx',
-                                        'pt_dense_pair_word_tx', 'pt_dense_pair_word_rx'], default='pt_digital_macro')
+    parser.add_argument('--top', choices=['pt_digital_macro'], default='pt_digital_macro')
     parser.add_argument('--period', type=float, default=3.2)
     parser.add_argument('--boundary-delay', type=float)
     args = parser.parse_args()

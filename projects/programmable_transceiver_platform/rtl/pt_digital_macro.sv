@@ -316,19 +316,19 @@ module pt_digital_macro(
   .on(island_on[4]), .y({refbuf_ready, adc_q_b_done, adc_q_done, adc_i_b_done, adc_i_done, adc_q_b_ovl, adc_q_ovl, adc_i_b_ovl, adc_i_ovl}));
  wire[5:0] fc; wire aux_present, wtx_ext_present;
  assign fc[0] = fc_src[0], fc[4] = fc_src[4];        // tx ring FBCK (outside clamp, shared with CLK_OBS), aosc (core rail)
- pt_iso_and #(2) iso_fc_src_debug(.a(fc_src[3:2]), .on(island_on[5]), .y(fc[3:2]));
+ pt_iso_and #(2, 1) iso_fc_src_debug(.a(fc_src[3:2]), .on(island_on[5]), .y(fc[3:2]));
  pt_iso_and #(2) iso_s_debug(.a({s_wtx_ext_present, s_aux_present}), .on(island_on[5]), .y({wtx_ext_present, aux_present}));
  wire ct_wclk_c, rf_tx_clk_c, pll_cdr_lock, pll_tx_lock;
- pt_iso_and #(1) iso_ct_wclk(.a(ct_wclk), .on(island_on[2]), .y(ct_wclk_c));
- pt_iso_and #(1) iso_fc_src_1(.a(fc_src[1]), .on(island_on[2]), .y(fc[1]));
- pt_iso_and #(1) iso_fc_src_5(.a(fc_src[5]), .on(island_on[1]), .y(fc[5]));   // lo_mmd.FB: lo island = rf enable group
- pt_iso_and #(1) iso_rf_tx_clk(.a(rf_tx_clk), .on(island_on[2]), .y(rf_tx_clk_c));
+ pt_iso_and #(1, 1) iso_ct_wclk(.a(ct_wclk), .on(island_on[2]), .y(ct_wclk_c));
+ pt_iso_and #(1, 1) iso_fc_src_1(.a(fc_src[1]), .on(island_on[2]), .y(fc[1]));
+ pt_iso_and #(1, 1) iso_fc_src_5(.a(fc_src[5]), .on(island_on[1]), .y(fc[5]));   // lo_mmd.FB: lo island = rf enable group
+ pt_iso_and #(1, 1) iso_rf_tx_clk(.a(rf_tx_clk), .on(island_on[2]), .y(rf_tx_clk_c));
  pt_iso_and #(2) iso_s_pll(.a({s_pll_tx_lock, s_pll_cdr_lock}), .on(island_on[2]), .y({pll_tx_lock, pll_cdr_lock}));
  wire det_diff_pos, det_diff_neg, det_se_p, det_se_n, wrx_slp, wrx_slm, wtx_ext_data, wire_rx_clk_c, wire_tx_clk_c;
  pt_iso_and #(7) iso_s_wired(.a({s_wtx_ext_data, s_wrx_slm, s_wrx_slp, s_detect_se_n, s_detect_se_p, s_detect_diff_neg, s_detect_diff_pos}),
   .on(island_on[0]), .y({wtx_ext_data, wrx_slm, wrx_slp, det_se_n, det_se_p, det_diff_neg, det_diff_pos}));
- pt_iso_and #(1) iso_wire_rx_clk(.a(wire_rx_clk), .on(island_on[0]), .y(wire_rx_clk_c));
- pt_iso_and #(1) iso_wire_tx_clk(.a(wire_tx_clk), .on(island_on[0]), .y(wire_tx_clk_c));
+ pt_iso_and #(1, 1) iso_wire_rx_clk(.a(wire_rx_clk), .on(island_on[0]), .y(wire_rx_clk_c));
+ pt_iso_and #(1, 1) iso_wire_tx_clk(.a(wire_tx_clk), .on(island_on[0]), .y(wire_tx_clk_c));
  wire[39:0] wrx_dx; wire[19:0] wrx_ew;
  pt_iso_and #(40) iso_wire_rx_data(.a(wire_rx_data), .on(island_on[0]), .y(wrx_dx));
  pt_iso_and #(20) iso_wire_rx_edge(.a(wire_rx_edge), .on(island_on[0]), .y(wrx_ew));

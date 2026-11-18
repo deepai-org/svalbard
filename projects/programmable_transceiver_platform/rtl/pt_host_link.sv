@@ -1,5 +1,5 @@
 // Host GPIO link logic (hostio, digital half), AC-1 pad-edge architecture
-// (spec/interface-architecture-changes.md AC-1). The provider gf180mcu_fd_io
+// (AC-1, spec/interface-requirements.md HL rows). The provider gf180mcu_fd_io
 // pad cells (integration/pt_chip.sv pt_host_physical) own ESD, level, drive,
 // slew and the PAD->Y receiver; everything clocked lives here, inside
 // pt_digital_macro, in two small pad-edge regions.
@@ -35,7 +35,7 @@
 // c_r toggles on every hddr rising edge and c_f copies it on the falling
 // edge, so the pin is an hddr-rate clock whose edges are produced exactly like
 // the data edges (EDGE-ALIGNED, like a DDR DQS; the FPGA centres it by its
-// input delay / phase training, spec/fpga-host-screen.md "phase training").
+// input delay / phase training, spec/fpga-connection-plan.md).
 // SDR (modes 1, 2): the inverted word clock (2 x hddr), gated glitch-free;
 // it exists only at the reduced rates (div2 / div4), because the full-rate
 // word clock would be 312.5 MHz, above the pad's f_max.

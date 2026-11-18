@@ -1,4 +1,4 @@
-// Clock-tree slow functions in standard cells (spec/consolidation-pass.md P2-10;
+// Clock-tree slow functions in standard cells (consolidation item P2-10;
 // gap 6 of analog/timing/README.md):
 //   * serializer word divider: /10 of the bit clock, or /5 of the half-rate clock
 //     (cfg_half_rate=1; the analog final DDR 2:1 mux supplies the last /2 and the

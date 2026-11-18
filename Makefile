@@ -471,6 +471,7 @@ transceiver-digital-rtl-checks: transceiver-top-modes transceiver-dense-transpor
 	$(PYTHON) verification/check_interp2x.py | grep -q INTERP2X_PASS && \
 	$(PYTHON) verification/check_linecode.py | grep -q LINECODE_PASS && \
 	$(PYTHON) verification/check_fast_gain.py | grep -q FAST_GAIN_PASS && \
+	$(PYTHON) verification/check_fast_vth.py | grep -q FAST_VTH_PASS && \
 	iverilog -g2012 -I rtl -s tb_agc_override -o /tmp/pt_agc_override.vvp rtl/*.sv sim/tb_agc_override.sv && \
 	vvp -n /tmp/pt_agc_override.vvp | grep -q AGC_OVERRIDE_PASS
 
@@ -490,9 +491,6 @@ transceiver-stream-codec:
 transceiver-rtl-primitives:
 	bash projects/programmable_transceiver_platform/verification/run_rtl_primitives.sh
 
-.PHONY: transceiver-gray-prefix-proof
-transceiver-gray-prefix-proof:
-	bash projects/programmable_transceiver_platform/verification/run_gray_prefix.sh
 
 .PHONY: transceiver-block-receiver
 transceiver-block-receiver:

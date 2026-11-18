@@ -60,7 +60,7 @@ def gen(work):
     # CP4-1: every pin of generated/macro_clamps.txt goes through a pt_iso_and instance gated by island_on[bit] in the macro
     macro = (P/'rtl/pt_digital_macro.sv').read_text()
     clamp = {}; rtlp = ct.rtl_macro_ports(macro)
-    for expr, on in re.findall(r'pt_iso_and #\(\d+\) \w+\(\.a\((.*?)\),\s*\.on\(island_on\[(\d)\]\)', macro, re.S):
+    for expr, on in re.findall(r'pt_iso_and #\(\d+(?:,\s*\d+)?\) \w+\(\.a\((.*?)\),\s*\.on\(island_on\[(\d)\]\)', macro, re.S):
         for name, hi, lo in re.findall(r'([A-Za-z_]\w*)(?:\[(\d+)(?::(\d+))?\])?', expr):
             if name not in rtlp: sys.exit(f'TOP_MODES_CHECK_FAIL: pt_iso_and input {name} is not a macro port (a clamp must be the first gate after the pin)')
             w = rtlp[name][1]

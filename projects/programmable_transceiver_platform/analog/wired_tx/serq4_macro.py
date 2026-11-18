@@ -610,8 +610,10 @@ def _rects(magfile, layer):
     return out
 
 
-def build_le(name, ports_list, inst_spice, children_text, rows, macros, max_row_width=400.0, workname=None, net_space=None):
-    """Generic hand-floorplanned macro (le.generate) with the M3-M5 parent pin stacks of build_top."""
+def build_le(name, ports_list, inst_spice, children_text, rows, macros, max_row_width=400.0, workname=None, net_space=None,
+             **gen_kw):
+    """Generic hand-floorplanned macro (le.generate) with the M3-M5 parent pin stacks of build_top.
+    gen_kw (optional, default none = unchanged behaviour): further le.generate options (over_cell, em, ...)."""
     import netlist as tn
     le.FAST = FAST
     for n in macros:
@@ -624,7 +626,7 @@ def build_le(name, ports_list, inst_spice, children_text, rows, macros, max_row_
     ports, devices = tn.load(work / 'top.spice', name)
     if net_space:
         net_space = {n: v for n, v in (net_space(devices) if callable(net_space) else net_space).items()}
-    rep = le.generate(work, name, ports, devices, rows=rows, max_row_width=max_row_width, net_space=net_space)
+    rep = le.generate(work, name, ports, devices, rows=rows, max_row_width=max_row_width, net_space=net_space, **gen_kw)
     W, H = rep['size_um']
     # pins for the parent (layoutgen): an M3-M5 via stack on each port trunk / power strap just
     # under the top edge; the parent's M3 riser starts there.  Above the last routing channel the

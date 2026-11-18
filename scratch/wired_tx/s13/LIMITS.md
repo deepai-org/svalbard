@@ -54,3 +54,14 @@ Negative control: one ring phase grounded (kill) must fail; one stream stuck mus
 * Ring version: every row carries `ring=layout-11Nov` (extracted `pt_pll_ring_core` as laid out) or
   `ring=committed-estimate` (same extraction with XC0b's gate moved to P1 as committed in e7b4d14).
 * Publishing: extraction with resistance (R+C) and the corners tt, ss, ff, sf, fs.
+
+## Added 2026-11-18 06:45 UTC (pad with metal resistance, coordinator request), before any run
+* Pad models: `pad=C` capacitance-only published extraction (all earlier rows), `pad=RC-typ` / `pad=RC-high` the pads
+  owner's models `scratch/pads-core/txr/models/tx_rt.spice` / `tx_rh.spice` (PAD and TERM nets with metal resistance,
+  typical / high metal; SUM, TAIL and VSS nets not modelled). Every row is labelled with its pad model.
+* Same limit for all pad models: far end 0 errors / >= 200 bits, eye >= 0.200 V, >= 0.45 UI. Mux-level rows (extracted
+  revision-2 mux, ideal phases, 240 bits) are screening for the eye LOSS; the real-chain rows decide pass / fail.
+* Requirement sweep for the reworked pad (ss pessimistic, 3.125 Gb/s, mux level): lumped series resistance bond pad to
+  driver, ideal termination value, added pad capacitance, switch scale. The requirement given to the pads owner is
+  the value at which the eye still meets 0.200 V with the same margin the capacitance-only pad has to its
+  neighbouring sweep point, not the last passing point.

@@ -17,12 +17,13 @@ import m9
 from chain import S
 
 NCYC = 6            # ring cycles per pattern (the first two are discarded)
+LEAD = 10           # ring cycles of all-zero pattern first (the real ring is still settling: measured, slot 0 read 38 ps short without it)
 LSB_GUESS = dict(ss=13.0, ssp=14.4, ssT=12.0, sspT=13.0, tt=10.5, ff=8.3, sf=11.0, fs=11.0)
 
 
 def measure(tag, c, ring, codes, **kw):
     pats = [[1 if i == j else 0 for i in range(8)] for j in range(8)] + [[1] * 8, [0] * 8]
-    fpat = [(NCYC, p) for p in pats]
+    fpat = [(LEAD, [0] * 8)] + [(NCYC, p) for p in pats]
     f_guess = kw.pop('f', 390.6e6)
     r = m9.run(tag, c=c, rate=8 * f_guess, fpat=fpat, ring=ring, codes=codes, probes=[f'PH{k}' for k in range(1, 8)], **kw)
     o, w = r; t = w['time']
@@ -32,7 +33,7 @@ def measure(tag, c, ring, codes, **kw):
     ui = 1 / (8 * f_guess)
     d = w['MAIN_N'] - w['MAIN_P']; D = []
     for j in range(10):
-        ts = 1e-9 + j * NCYC * 8 * ui                      # segment start in bench time (bench assumes f_guess)
+        ts = 1e-9 + (LEAD + j * NCYC) * 8 * ui                      # segment start in bench time (bench assumes f_guess)
         cyc = e0[(e0 > ts + 2.2 * 8 * ui) & (e0 < ts + NCYC * 8 * ui - 0.2 * 8 * ui)]
         m = (t >= cyc[0]) & (t <= cyc[-1])
         D.append(float(np.trapezoid(d[m], t[m]) / (cyc[-1] - cyc[0])))

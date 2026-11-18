@@ -22,6 +22,36 @@ at 320 ps. Streams 1-4 are captured at phases 5, 6, 7, 0 and have 0.24-1.3 ns.
 Fix: new hop plan in `ser8d_macro.py` (first capture at phase 6 or 7, final hop 6 slots before the slice window),
 see "Hop plan" below. Not yet laid out.
 
+## State at 2026-11-18 07:05 UTC
+- `wtx_ser8d` rebuilt with the final hop plan (`ser8d_macro.HOPS`, docstring = timing data): 744.12 x 197.68 um
+  (0.147 mm2, was 0.234), DRC 0 / KLayout 0 / LVS unique from the disk GDS with 4 failing negative controls for the
+  first hop table (`s13/ser8d/REPORT.md`); after the hop-table change only the generator's own DRC / LVS was run:
+  RERUN `s13/ser8d/verify.py v`, `rc.py`, `ctab.py` before using its numbers.
+- First real-chain run of the fix (`s13/chain13.py`, tag `c1_3125_ssp`: ss pessimistic 3.15 V, 3.125 Gb/s,
+  ring=layout-11Nov pessimistic, pad=C, extracted new `wtx_ser8d`, SCHEMATIC revision-3 mux + aux, trim codes all 0):
+  far end 0 errors / 360 bits (was 23 / 200), eye 0.122 V / 0.34 UI = still FAIL on the eye (untrimmed phases).
+- `wtx_mux8` revision 3 laid out (`wtx_mux8_layout.py`, `s13/mux3/REPORT.md`): 324.6 x 163.4 um (0.0531 mm2, +23 %),
+  DRC 0 / 0, LVS unique from disk, 4 negative controls fail, EM table passes at 26 mA per bank. `wtx8_aux` laid out
+  (69.8 x 157 um). Sub-agent is now reworking the tap placement, adding bus resistance to the R+C netlist and building
+  the block top `pt_wiredtx8` (`s13/top/`).
+- Extracted revision-3 mux, ideal phases, ss pessimistic 3.125 Gb/s, pad=C, codes all equal: 0 errors, 0.194 V (fail by
+  6 mV; extracted revision 2: 0.219). Both layouts have a systematic slice skew (crossing of slot 3 about -20 ps, slot 4
+  +16 ps with ideal phases); the trim calibration removes it: run `q_x2.sh` (calibrated codes) before judging.
+- Trim calibration from DC averages (`s13/cal.py`, method in its docstring): proven on known offsets (ideal phases:
+  finds 46.6 ps of slot error, leaves +-6.7 ps). With the real ring the first pattern must not be measured during ring
+  start-up (LEAD in cal.py; the first real-ring results were wrong for slot 0 and are deleted).
+- Pad with metal resistance (`s13/padr/padr.py`, pads' models `scratch/pads-core/txr/models`): first row, mux level ss
+  3.125 Gb/s: eye 0.367 V (pad=C) -> 0.203 V (pad=RC-typ). Matrix A (pad models) and B (requirement sweep) running.
+- Fallback: with the ring running 1.6 Gb/s passes (ss pess. 0.50 V, ff 0.69 V, schematic); with the ring stopped the
+  all-slices-parallel path passes 0.5 Gb/s and FAILS 1.6 Gb/s (16 errors: the eightfold pull-down takes the gates to
+  0.13 V and the pad switches cross low).
+- Idle: neither flavour met the 100 mV common-mode limit in the mux bench with the ideal 1.9 V tail bias (both gates
+  high -0.20 V, both legs on +0.34 V); to be measured with the block's own DAC (`q_c.sh` rows c2 / c4, not yet run).
+- Interlock (schematic): bank current 42.9 mA -> 0.0 mA 203 ns after the ring stops in state 11110000; detector alone at
+  ff 0 C 3.63 V 240 MHz and ss 85 C 2.97 V 420 MHz runs, any stuck phase gives RUN = 0 (`s13/ilk/`).
+- Queues (one simulation each): `s13/padr/q.sh`, `s13/q_x.sh` -> `q_x2.sh` -> `q_cal.sh` -> `q_tune.sh`; not yet
+  started: `q_c.sh` (idle and USB tap in the real chain).
+
 ## Schematic work of session 13 (not laid out)
 - `analog/wired_tx/wtx_mux8.py`: revision-3 schematic of the mux (docstring = the circuit): stopped-ring interlock
   (run detector), 4-bit trim (ss pessimistic 14.4 ps / code, 215 ps range; ff 8.3 ps, 162 ps), EXT fallback through all

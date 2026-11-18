@@ -30,7 +30,7 @@ CORN = dict(tt=dict(corner='typical', temp=27, vdd=3.3, swing=2.95, pess=False),
 def run(tag, c='ssp', rate=3.125e9, nbits=160, offs=None, duty=0.5, res=None, pad=True, mbias=1.9, post_bias=0.0, bond='pess',
         par=None, ext=None, codes=None, enm=1, enp=None, pol=0, en_main=1, en_post=None, extm=0, ovp=0, ovn=0, dx_rate=None,
         stop_at=None, static=None, mid=None, kill=None, fpat=None, stuck=None, S_=1.0, probes=(), tstop=None, interlock=True,
-        vdd_ramp=None, keep=False, ic_run=True, ring=None, cload=0.45e-12, dskew=0.0, tstep=5e-12, **_):
+        vdd_ramp=None, keep=False, ic_run=True, ring=None, mc_seed=None, cload=0.45e-12, dskew=0.0, tstep=5e-12, **_):
     """static: 8 chars '0' / '1' / 'm' (mid level) = phase levels after stop_at (or from t = 0 when stop_at == 0).
     fpat: list of (n_ring_cycles, 8-bit stream pattern as LINE bits b0..b7) segments instead of PRBS.
     idle: enm = 0 (ovp = ovn = 0: both gates high; ovp = ovn = 1: both legs conduct)."""
@@ -43,7 +43,7 @@ def run(tag, c='ssp', rate=3.125e9, nbits=160, offs=None, duty=0.5, res=None, pa
     if pess:
         txt = B4.pess_all(txt)
     (work / 'mux.spice').write_text(txt)
-    L = ['* mux9 bench', CH.pad_header(corner, temp, res), '.include mux.spice',
+    L = ['* mux9 bench', CH.pad_header(corner, temp, res)] + ([f'.param sw_stat_mismatch=1', f'.option seed={int(mc_seed)}'] if mc_seed is not None else []) + ['.include mux.spice',
          f'VDD VDD 0 {vdd}' if not vdd_ramp else f'VDD VDD 0 PWL(0 0 {vdd_ramp} {vdd})', 'VSS VSS 0 0']
     tr = 60e-12; kk = 2.197 / tr; cdu = math.sin(math.pi * (duty - 0.5)); t00 = 1e-9
     if ring:
@@ -120,7 +120,7 @@ def run(tag, c='ssp', rate=3.125e9, nbits=160, offs=None, duty=0.5, res=None, pa
         pr += ['PAD_P', 'PAD_N', 'FAR_P', 'FAR_N']
     else:
         L += [f'CLP MAIN_P 0 {cload}', f'CLN MAIN_N 0 {cload}', f'CLPQ POST_P 0 {cload}', f'CLNQ POST_N 0 {cload}']
-    if ic_run and interlock and not ext:      # skip the detector's start-up (about 60 ns at ss pessimistic)
+    if ic_run and interlock:      # skip the detector's start-up (about 60 ns at ss pessimistic)
         L += ['.ic ' + ' '.join(f'v(xmux.DN{j})={vdd} v(xmux.DA{j})={vdd}' for j in range(4))]
     vecs = ' '.join(f'v({x})' for x in pr) + ' i(VDD)'
     L += ['.options reltol=1e-3 method=gear rshunt=1e10', f'.tran {tstep} {tstop:.6e} 0 {tstep}', '.control', f'save {vecs}',
@@ -131,7 +131,7 @@ def run(tag, c='ssp', rate=3.125e9, nbits=160, offs=None, duty=0.5, res=None, pa
         return dict(tag=tag, ok=False, reason=log[-600:])
     w = tools.read_wrdata(work / 'wave.txt', list(pr) + ['I']); t = w['time']
     out = dict(tag=tag, c=c, rate=rate, vdd=vdd, pess=pess, codes=codes, enm=enm, pol=pol, post_bias=post_bias, extm=extm, ovp=ovp, ovn=ovn,
-               stop_at=stop_at, static=static, kill=kill, S=S_, ext=ext, interlock=interlock, ring=ring,
+               stop_at=stop_at, static=static, kill=kill, S=S_, ext=ext, interlock=interlock, ring=ring, mc_seed=mc_seed,
                gate_hi=round(float(np.percentile(w['MAIN_P'], 98)), 3), gate_lo=round(float(np.percentile(w['MAIN_P'], 2)), 3),
                i_ma=round(float(-np.mean(w['I'][t > 2e-9]) * 1e3), 2), run_end=round(float(w['RUN'][-1]), 2),
                i_end_ma=round(float(-np.mean(w['I'][t > t[-1] - 2e-9]) * 1e3), 3), i_max_ma=round(float(-w['I'].min() * 1e3), 2))

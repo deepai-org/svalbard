@@ -154,17 +154,44 @@ benches `sim_ringsrc.py` / `sim_realring.py`, row WT29):
 Not yet run: other ring supplies (2.57 V, 2.9 V, bypass), ff / sf / fs, pessimistic values, a line-level result
 through the pad-gate drivers. The 3.24 Gb/s chain results are in WT31.
 
-## 7. Planned pin delta (new fast path, NOT published; do not bind yet)
+## 7. `pt_wiredtx8` (new block top, NOT published; do not bind yet)
 
-`wtx_ser8d` + `wtx_mux8` (README "New fast path") would change the block as follows:
-* eight phase pins = `pll_tx.PH0..PH7`, all matched (the mux and the stream registers both hang on them);
-* outputs `MAIN_P/N`, `POST_P/N` go straight to the pad's switch gates: the four steering buffers and the
-  pre-drivers disappear; the block must sit at the pad (output wiring is part of the 1 pF output node);
-* the 40-bit word is loaded at once, `WORD_CLK40` = ring / 5 (<= 81 MHz); lower line rates by oversampling in the
-  digital (no `MODE_H` / `MODE_F`); the postcursor is one core bit late;
-* new static inputs: 24 phase-trim bits, idle (data gating), `EN_MAIN` / `EN_POST` only while the ring runs
-  (a stopped ring with the bank enabled puts the whole bank current through one slice).
-Area as built: `wtx_ser8d` 744.1 x 315.1 um, `wtx_mux8` 291.0 x 148.3 um.
+Schematic `wtx8_top.py` (`generated/fast/pt_wiredtx8.spice`) = `wtx_ser8d` + `wtx_mux8` + `wtx8_aux`. It replaces
+`pt_wiredtx`, the four steering buffers and the pre-drivers when it publishes; the block must sit at the pad (its
+`MAIN_P/N`, `POST_P/N` wiring is part of the 1 pF output node).
+
+```
+.subckt pt_wiredtx8 PH0 .. PH7 D0 .. D39 WORD_CLK40 SER_EN IDLE IDLE_MODE WTX_EXT DX POST_POL EN_MAIN EN_POST ISLAND_OFF
++ TAP_EN IBIAS MAIN_CODE0 .. MAIN_CODE7 POST_CODE0 .. POST_CODE7 TR0_0 .. TR7_3 MAIN_P MAIN_N POST_P POST_N MAIN_BIAS
++ POST_BIAS TAP_P TAP_N TX_RUN WTX_EXT_DATA ATB_NBIAS ATB_PBIAS ATB_AVGP ATB_AVGN VDD VSS
+```
+
+| Pin | Dir | Connect to | Notes |
+| --- | --- | --- | --- |
+| `PH0..PH7` | in | `pll_tx.PH0..PH7` directly | eight matched routes (the mux and the stream registers both hang on them); swing = ring supply |
+| `D0..D39` | in | `digital.wire_tx_data[39:0]`, D0 first on the line | the whole 40-bit word is loaded at once; launch about a quarter word period after the `WORD_CLK40` rise (benches: 0.25 T) |
+| `WORD_CLK40` | out | wired iso clamp -> `digital.wire_tx_clk` | ring / 5 (60-81 MHz), duty 2/5 |
+| `SER_EN` | in | as `pt_wiredtx` (section 2) | |
+| `IDLE`, `IDLE_MODE` | in | `digital.wire_idle`; NEW static field `wtx.idle_mode` | data gating, asynchronous. `IDLE_MODE` 0: both pad gates of each pair at the supply; 1: both legs of the conducting slice on (gates at mid level). Differential 0 in both |
+| `WTX_EXT`, `DX` | in | `debug.wtx_ext.enable`, fallback data (section 4) | `DX` = 1 gives `V(PAD_P) > V(PAD_N)`. With the ring running the slices work as usual on `DX`; with the ring stopped all eight MAIN slices conduct in parallel (ring-independent, low rate). POST is off in this mode |
+| `POST_POL` | in | `wiredtx.config.post_polarity` | 0 de-emphasis, 1 same sign (three-level) |
+| `EN_MAIN`, `EN_POST` | in | `tx_interlock.EN_MAIN`, `.EN_POST` | the block gates both with its own ring-run detector: a stopped or partly stopped ring switches the banks off within about 0.2 us; no `tx_ring_ready` term is needed for safety |
+| `ISLAND_OFF` | in | `island_off[wired]` | banks off, outputs and tail biases at VSS |
+| `TAP_EN` | in | USB HS transmit request | enables the CMOS tap; `EN_MAIN` must be on (the tap reads `MAIN_P/N`), MAIN / POST codes 0 |
+| `IBIAS` | in | 10 uA sourced, bank output enable = `EN_MAIN | EN_POST | TAP_EN` | |
+| `MAIN_CODE0..7`, `POST_CODE0..7` | in | `wiredtx.config.current_code`, `.postcursor_code` | tail DACs as in `pt_wiredtx` |
+| `TR k_b` (k 0..7, b 0..3) | in | NEW field `wtx.phase_trim[31:0]` (4 bits per phase, reset 0) | static; delay of phase k, about 13 ps per code at ss, 8 ps at ff. Set by the slot-width calibration (README) |
+| `MAIN_P/N`, `POST_P/N` | out | pad `MAIN_P/N`, `POST_P/N` by name, shortest possible | logic 1 = `MAIN_N` high = `V(PAD_P) > V(PAD_N)` |
+| `MAIN_BIAS`, `POST_BIAS` | out | pad `MAIN_BIAS`, `POST_BIAS` | as `pt_wiredtx` |
+| `TAP_P`, `TAP_N` | out | `pt_usb_txdrv.CMD_P`, `CMD_N` | CMOS levels; `TAP_P` follows `MAIN_P` (low for logic 1), both low when `TAP_EN` = 0 |
+| `TX_RUN` | out | wired iso clamp -> status bit | 1 = all eight conduction windows are toggling (ring-run detector) |
+| `WTX_EXT_DATA` | out | wired iso clamp -> `wire_analog_status[12]` | `DX AND WTX_EXT` |
+| `ATB_NBIAS`, `ATB_PBIAS` | out | ATB leaves | bias diode, MAIN DAC PMOS gate |
+| `ATB_AVGP`, `ATB_AVGN` | out | two ATB sense leaves (high impedance, 100 kohm in series inside the block) | DC average of `MAIN_P` / `MAIN_N` for the phase-trim calibration |
+
+Lower line rates: the digital repeats every line bit n times in the 40-bit word (n in 1, 2, 4, 5, 8, 10, 20, 40 so that
+a word holds whole line bits), core rate = 8 x ring = n x line rate, ring 300-405 MHz. No `MODE_H` / `MODE_F`.
+The postcursor is one CORE bit late.
 
 ## 8. Demands on other owners (summary; details in the rows)
 

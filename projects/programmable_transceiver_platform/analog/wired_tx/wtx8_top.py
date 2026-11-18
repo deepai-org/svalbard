@@ -28,7 +28,7 @@ from wtx_mux8 import fet, inv, nand2, nor2
 HERE = Path(__file__).resolve().parent
 FAST = HERE / 'generated' / 'fast'
 NAME = 'pt_wiredtx8'
-FROT = 4            # slice k of the mux takes stream (k + FROT) mod 8 (see ser8d_macro.py)
+FROT = 2            # slice k of the mux takes stream (k + FROT) mod 8 (see ser8d_macro.py)
 PH = [f'PH{k}' for k in range(8)]
 SER_PH = [f'PH{a}' for a in (0, 45, 90, 135, 180, 225, 270, 315)]
 TRIM = [f'TR{k}_{b}' for k in range(8) for b in range(mux8.NTR)]

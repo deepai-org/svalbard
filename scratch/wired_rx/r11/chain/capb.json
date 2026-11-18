@@ -1,0 +1,161 @@
+{
+ "tt_2.5G_r1_short": {
+  "error": "FileNotFoundError('/home/ubuntu/svalbard/scratch/wired_rx/r11/chain/run/cb_tt_2.5G_r1_short.txt not found.')",
+  "log_tail": "ence value :  1.18590e-08\n Reference value :  1.18754e-08\n Reference value :  1.18886e-08\n Reference value :  1.19100e-08\n Reference value :  1.19390e-08\n Reference value :  1.19580e-08\n Reference value :  1.19860e-08\nNo. of Data Rows : 3870\niavg                =  -7.695354e-02 from=  1.160000e-08 to=  1.200000e-08\nNote: Simulation executed from .control section \nUsing KLU as Direct Linear Solver\n",
+  "key": "tt_2.5G_r1_short",
+  "corner": "tt",
+  "rate_gbps": 2.5,
+  "mode": "quarter",
+  "ring_MHz": 625.0,
+  "rcs": 1,
+  "psel": 0,
+  "trim_codes": [
+   5,
+   0,
+   7,
+   11,
+   3,
+   12,
+   21,
+   18
+  ],
+  "vd": 0.12,
+  "neg": null,
+  "seconds": 103,
+  "netlists": {
+   "slicer": "a48623b1d0dcb2a3b0e08f0682f6119581134fa49edd57f4a149bec7dad99f1c",
+   "wrx_cap": "831d86f55ce4b8f33ad9a8e1c5a8b3703bbce08e52672ec6ab77ef8d9a6a3219",
+   "ptrim": "9a6921b16346f083da86c65bf9cc90b9d9f09221d821e7ba1b246e2527ae458f",
+   "ring_tag": "tt625"
+  },
+  "pass": false
+ },
+ "ss315_2.5G_r1": {
+  "words": 10,
+  "bits": 200,
+  "offset": 40,
+  "dw_err_bitpos": [],
+  "vote_activity": {
+   "UP0": 0.5316953614330236,
+   "UP1": 0.4758994220702593,
+   "UP2": 0.4874580168840207,
+   "UP3": 0.5389270477170263,
+   "DN0": 0.0,
+   "DN1": 0.0,
+   "DN2": 0.0,
+   "DN3": 0.0
+  },
+  "pd_ok": true,
+  "strobe_words": 10,
+  "strobe_word_errors": 0,
+  "word_timing": {
+   "dw_after_wstb_rise_ns": [
+    0.96,
+    1.096
+   ],
+   "wstb_high_ns": 0.928,
+   "word_period_ns": 8.0
+  },
+  "gear_ok": true,
+  "ew_err_bitpos": [],
+  "bit_errors": 0,
+  "edge_bits": 200,
+  "edge_errors": 0,
+  "i_mA": 72.2719,
+  "pass_": true,
+  "key": "ss315_2.5G_r1",
+  "corner": "ss315",
+  "rate_gbps": 2.5,
+  "mode": "quarter",
+  "ring_MHz": 625.0,
+  "rcs": 1,
+  "psel": 0,
+  "trim_codes": [
+   2,
+   3,
+   8,
+   10,
+   0,
+   8,
+   15,
+   6
+  ],
+  "vd": 0.12,
+  "neg": null,
+  "seconds": 1038,
+  "netlists": {
+   "slicer": "a48623b1d0dcb2a3b0e08f0682f6119581134fa49edd57f4a149bec7dad99f1c",
+   "wrx_cap": "831d86f55ce4b8f33ad9a8e1c5a8b3703bbce08e52672ec6ab77ef8d9a6a3219",
+   "ptrim": "f35d8a841f10427e58c44a6e261485bfbb37a3b0749bf3c6ba481f619f8db30e",
+   "ring_tag": "ss315625"
+  },
+  "pass": true
+ },
+ "ss315_2.5G_r1_negs2": {
+  "words": 10,
+  "bits": 200,
+  "offset": 40,
+  "dw_err_bitpos": [
+   1,
+   5,
+   9,
+   13,
+   17
+  ],
+  "vote_activity": {
+   "UP0": 0.5319071681442706,
+   "UP1": 0.5327241368876516,
+   "UP2": 0.4876093073920542,
+   "UP3": 0.5391388544282731,
+   "DN0": 0.47205664316620777,
+   "DN1": 0.0,
+   "DN2": 0.0,
+   "DN3": 0.0
+  },
+  "pd_ok": false,
+  "strobe_words": 10,
+  "strobe_word_errors": 9,
+  "word_timing": {
+   "dw_after_wstb_rise_ns": [
+    0.96,
+    1.092
+   ],
+   "wstb_high_ns": 0.928,
+   "word_period_ns": 8.0
+  },
+  "gear_ok": false,
+  "ew_err_bitpos": [],
+  "bit_errors": 21,
+  "edge_bits": 200,
+  "edge_errors": 0,
+  "i_mA": 74.14370000000001,
+  "pass_": false,
+  "key": "ss315_2.5G_r1_negs2",
+  "corner": "ss315",
+  "rate_gbps": 2.5,
+  "mode": "quarter",
+  "ring_MHz": 625.0,
+  "rcs": 1,
+  "psel": 0,
+  "trim_codes": [
+   2,
+   3,
+   8,
+   10,
+   0,
+   8,
+   15,
+   6
+  ],
+  "vd": 0.12,
+  "neg": "s2",
+  "seconds": 1034,
+  "netlists": {
+   "slicer": "a48623b1d0dcb2a3b0e08f0682f6119581134fa49edd57f4a149bec7dad99f1c",
+   "wrx_cap": "831d86f55ce4b8f33ad9a8e1c5a8b3703bbce08e52672ec6ab77ef8d9a6a3219",
+   "ptrim": "f35d8a841f10427e58c44a6e261485bfbb37a3b0749bf3c6ba481f619f8db30e",
+   "ring_tag": "ss315625"
+  },
+  "pass": false
+ }
+}

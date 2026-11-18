@@ -263,7 +263,7 @@ committed (`netlists.py`, `ctle.spice`, `rxselect.spice`, `detect.spice`, `ptrim
 |---|---|---|---|---|
 | `pt_ctle` r4 (source-follower output drives `SL` directly) | `r10ctle/stage/gen` | 203.4 × 423.6 | DRC 0, LVS unique without property errors (author and reviewer), precheck 0 / 0 | Review NO-GO: gain and `SL` common mode depend on bias current × load resistance (−1.3 to −6.7 dB at 1.25 GHz with a slow resistor and an absolute 10 µA bias); with metal resistance extracted the chain loses 0.3–1.1 dB; isolated wells need deep n-well (INT-30) |
 | `pt_rxselect` r2 (equaliser branch removed) | `r10ctle/stage/gen` | 47.6 × 84.1 | as above | Port change: only together with `pt_ctle` r4; pass path 41–54 Ω per leg with resistance extracted |
-| `pt_ptrim` r10 (channel 0 doubled, trim split over two nodes) | `r10ptrim/final/gen` | see `r10ptrim/STATUS.md` | DRC 0, LVS unique incl. read-back, precheck 0 / 0 | No resistance-aware extraction, matrix incomplete, no independent review |
+| `pt_ptrim` r10 (channel 0 doubled, trim split over two nodes) | `r10ptrim/final/gen` | 200.1 × 235.2 | DRC 0, LVS unique incl. read-back, precheck 0 / 0 | Passes every case run with a 50 % source, but with the real ring at 810 MHz and pessimistic slow values code 31 no longer reaches the low level (0.15–1.06 V, duty 0.69–0.86); matrix incomplete; no independent review |
 | `pt_detect` r10 (ratio-set thresholds, HS signal detect) | `r10detect/stage/q27/gen` | 167.1 × 541.1 | DRC 0, LVS unique incl. read-back, three negative controls, precheck 0 / 0 | Supply and ground are single 0.44 µm trunks (median 50 Ω to the device sources); fails at the pessimistic slow corner at 3.15 and 3.50 V; USB HS with the real pad and the HS signal detect on the real chain not run |
 | `pt_wrx_cap` r7e (compact; `LDE` edge detect, stronger clock drivers) | `r10cap/r7e/gen` | 1241.2 × 242.2 | DRC 0, flat LVS 4856 = 4856 devices without property errors, width control caught, precheck 0 / 0 | Fails a gating case of its own flow (full rate); review GO with conditions |
 
@@ -278,7 +278,7 @@ own cells. Eye at `SL` in mVppd / width in UI at 60 mVppd, wrong decisions on th
 | 1.25 Gb/s (half, 625 MHz) | not run | 109 / 0.80, 0 of 108: pass | not run | not run | not run | not run |
 | 2.5 Gb/s (quarter, 625 MHz) | 109 / 0.63, 0 of 112: pass | 108 / 0.53, 0 of 112: pass; capture r7e behind the real sampler bank and clocks: 0 errors in 200 bits | not run | not run | 94 / 0.43, 0 of 112: pass (the capture alone fails at this bound) | not run |
 | 2.7 Gb/s (quarter, 675 MHz) | not run | not run | not run | not run | not run | not run |
-| 3.24 Gb/s (quarter, 810 MHz) | 103 / 0.45, 0 of 112: pass | 88 / 0.35, 36 of 110 wrong: **fail** (0 of 112 with ideal 50 % clocks: the ring's 0.60–0.63 duty) | 90 / 0.40, 1 of 112 wrong: **fail**, not rescued by the supply trim | not run | not run | not run |
+| 3.24 Gb/s (quarter, 810 MHz) | 103 / 0.45, 0 of 112: pass | 88 / 0.35, 36 of 110 wrong: **fail** (0 of 112 with ideal 50 % clocks: the ring's 0.60–0.63 duty) | 90 / 0.40, 1 of 112 wrong: **fail**, not rescued by the supply trim | not run | 58 / 0.00, 42 of 108 wrong: **fail** (eye below limit; `pt_ptrim` r10 loses its low level at high trim codes here) | not run |
 
 Not run at all: sf / fs, the 6 dB-channel stimulus, uncalibrated trim codes, the high-metal pad, our own cells
 with resistance extracted (linear estimate: −5 to −17 % of eye), bench B beyond the one cell and its control.

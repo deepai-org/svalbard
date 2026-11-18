@@ -188,3 +188,11 @@ User chose option A: primary ESD diodes inside the pad site tied straight to the
 - `pt_wiredtx8` exists as a first layout pass (DRC 0, LVS unique from disk, 0.351 mm2 bounding box); the schematic is ahead of it (phase buffers) and the second pass stopped half way when the layout sub-agent hit its usage limit.
 - With the pads owner's R-aware transmit pad the eye roughly halves (ss 3.125 Gb/s mux level 0.367 -> 0.203 V typical metal, errors at high metal).
 - Simulation queues were left running detached (pad matrix, trim calibration with the real ring, ring tuning); the rate x corner table on final netlists, supply / Monte Carlo rows and the independent review are not done.
+
+### Wired RX resume 11 closed (2026-11-18)
+
+- Nothing new published. Resume point `scratch/wired_rx/r11/STATUS.md` (end section); rows WR11-1..8; reviews `scratch/wired_rx/r11/review/ctle/REVIEW.md` (equaliser r4 NO-GO, selector r2 GO with conditions) and `review/capture/REVIEW.md` (capture r7e GO with conditions; bench critique).
+- Staged, sources committed: `pt_ctle` r4 + `pt_rxselect` r2 (bias sensitivity, wiring resistance, deep n-well), `pt_ptrim` r10 l8 (passes everything run, matrix incomplete, unreviewed), `pt_detect` r10 q27 (50 ohm supply trunks, fails pessimistic slow corner), `pt_wrx_cap` r7e (full-rate race, pessimistic 625 MHz fail).
+- Real neighbours on the republished pad, settled ring, 120 mVppd: 1.25 and 2.5 Gb/s pass at ss/3.15 V (2.5 also at tt and ss-pessimistic for the eye); 3.24 Gb/s passes at tt and FAILS at ss/3.15 V (36 of 110 decisions wrong) and at ss/3.50 V (1 of 112): cause is the RX ring's 0.60-0.63 duty at 810 MHz (0 errors with ideal clocks on the same eye). 0.48 and 2.7 Gb/s, ff, sf/fs not run.
+- Found on the way: the ring needs more than 60 ns to settle (a first 30 ns calibration was wrong and withdrawn); LVS wrappers accepted property errors (wired RX one fixed, `layout_engine.netgen_lvs` open); thin supply trunks in the generic wired RX layouts.
+- Decisions wanted: ring duty / spacing fix versus sampler requalification at 0.63 duty; equaliser bias scheme; capture r7e now as known-limited or after its revision; 0.48 Gb/s through quarter mode with digital phase picking; deep n-well for the equaliser followers.

@@ -130,7 +130,7 @@ The shuttle's own flow runs here natively: gf180mcu-precheck 1.7.4, KLayout 0.30
 3.1.0.dev3, PDK 792ef67, from the flake's pinned nix closure inside docker (`precheck/NOTES.md`: build, the 17 steps
 and which are gating). `precheck/pdk-diff.md`: 792ef67 against the project's f6eeac7.
 
-Run on the filled skeleton (`--slot 1x1 --cob --id DEADBEEF --workers 1 --threads 4`, 3 h 13 min, exit 1):
+Run on the filled skeleton (`--slot 1x1 --cob --id DEADBEEF --workers 1 --threads 4`, about 2 h 55 min, exit 1):
 
 | Step | Result | Time |
 |---|---|---|

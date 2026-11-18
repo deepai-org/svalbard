@@ -15,10 +15,7 @@ Xisw_rf_rx VDD RAIL_rf_rx VSS island_en[1] NC_isw_rf_rx_ISO s_pg_rf_rx isw_rf_pe
 Xisw_conv VDD RAIL_conv VSS island_en[4] NC_isw_conv_ISO s_pg_conv isw_conv_pex
 Xisw_lo VDD RAIL_lo VSS island_en[1] NC_isw_lo_ISO s_pg_lo isw_conv_pex
 Xisw_pll VDD RAIL_pll VSS island_en[2] NC_isw_pll_ISO s_pg_pll isw_debug_pex
-Xpad_agnd_rx_0 AGND_RX pad_downbond   * DEMAND
-Xpad_agnd_rx_1 AGND_RX pad_downbond   * DEMAND
-Xagnd_tie AGND_RX VSS pt_agnd_tie   * DEMAND
-Xpad_rf_rx RF_RX_N RF_RX_P AGND_RX ESD_RAIL_rf_rx NC_pad_rf_rx_ATB_ESD_RAIL pad_reference
+Xpad_rf_rx RF_RX_N RF_RX_P VSS ESD_RAIL_rf_rx NC_pad_rf_rx_ATB_ESD_RAIL pad_reference
 Xpad_rf_tx RF_TX_N RF_TX_P VSS ESD_RAIL_rf_tx NC_pad_rf_tx_ATB_ESD_RAIL pad_reference
 Xpad_bb_i BB_I_N BB_I_P VSS ESD_RAIL_bb NC_pad_bb_i_ATB_ESD_RAIL pad_reference
 Xpad_bb_q BB_Q_N BB_Q_P VSS ESD_RAIL_bb NC_pad_bb_q_ATB_ESD_RAIL pad_reference
@@ -31,11 +28,11 @@ Xrefvcm REF_VCM c_refvcm_en RAIL_pll VSS pt_refvcm   * DEMAND
 Xpad_hs_rx VSS RAIL_wired_rx HS_TERM_VCM HS_TERM_ENABLE HS_TERM_TRIM[0] HS_TERM_TRIM[1] HS_TERM_TRIM[2] HS_TERM_TRIM[3] HS_VBIAS HSRX_P HSRX_N WIRE_RX_P WIRE_RX_N hs_protected_pad
 Xpad_usb USB_DP USB_DN RAIL_wired_tx VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE URX_P URX_N HS_PBIAS USB_HS_P USB_HS_N USB_FS_HIGH_P USB_FS_HIGH_N USB_FS_LOW_P USB_FS_LOW_N c_usb_pullup_p c_usb_pullup_n c_usb_pulldown_p c_usb_pulldown_n c_usb_term_trim[0] c_usb_term_trim[1] c_usb_term_trim[2] c_usb_ls_slow NC_pad_usb_ATB_ESD_RAIL tx_protected_pad
 Xpad_wire_tx WIRE_TX_P WIRE_TX_N RAIL_wired_tx VSS RAIL_wired_tx TX_MAIN_P TX_MAIN_N TX_MAIN_BIAS TX_POST_P TX_POST_N TX_POST_BIAS VSS VSS VSS TX_EN_DETECT RAIL_wired_tx TX_EN_TERM TX_TERM_VCM NC_pad_wire_tx_ATB_ESD_RAIL tx_protected_pad
-Xlna RF_RX_P RF_RX_N RFA_I_P RFA_I_N RFA_Q_P RFA_Q_N BIAS_lna c_lna_en c_lna_gain_lo c_lna_byp c_lna_ct[0] c_lna_ct[1] c_lna_ct[2] c_lna_se c_lna_rt island_off[1] ATBN_lna_bias ATBN_rf_vcm RAIL_rf_rx AGND_RX c_lna_ct[3] c_lna_att[0] c_lna_att[1] c_lna_att[2] c_lna_att[3] c_lna_att[4] LNA_SRC_P LNA_SRC_N LNA_TANK_P LNA_TANK_N c_lna_lobias pt_lna
-Xlna_ind_p RAIL_rf_rx LNA_TANK_P pt_lna_ind   * DEMAND
-Xlna_ind_n RAIL_rf_rx LNA_TANK_N pt_lna_ind   * DEMAND
-Xlna_deg_p LNA_SRC_P AGND_RX pt_lna_deg   * DEMAND
-Xlna_deg_n LNA_SRC_N AGND_RX pt_lna_deg   * DEMAND
+Xlna RF_RX_P RF_RX_N RFA_I_P RFA_I_N RFA_Q_P RFA_Q_N BIAS_lna c_lna_en c_lna_gain_lo c_lna_byp c_lna_ct[0] c_lna_ct[1] c_lna_ct[2] c_lna_se c_lna_rt island_off[1] ATBN_lna_bias ATBN_rf_vcm RAIL_rf_rx VSS c_lna_ct[3] c_lna_att[0] c_lna_att[1] c_lna_att[2] c_lna_att[3] c_lna_att[4] LNA_SRC_P LNA_SRC_N LNA_TANK_P LNA_TANK_N c_lna_lobias LNA_TAIL LNA_VTK pt_lna
+Xlna_ind_p LNA_VTK LNA_TANK_P pt_lna_ind   * DEMAND
+Xlna_ind_n LNA_VTK LNA_TANK_N pt_lna_ind   * DEMAND
+Xlna_deg_p LNA_SRC_P LNA_TAIL pt_lna_deg   * DEMAND
+Xlna_deg_n LNA_SRC_N LNA_TAIL pt_lna_deg   * DEMAND
 Xrxmix_i RFA_I_P RFA_I_N LO_IP LO_IN BBI_RX_P BBI_RX_N BIAS_rxmix_i c_rxmix_i_en c_rxmix_i_ofs[0] c_rxmix_i_ofs[1] c_rxmix_i_ofs[2] c_rxmix_i_ofs[3] c_rxmix_i_ofs[4] c_rxmix_i_ofs[5] island_off[1] NC_rxmix_i_atb_vcm ATBN_rxmix_bias RAIL_rf_rx VSS pt_rxmix_i
 Xrxmix_q RFA_Q_P RFA_Q_N LO_QP LO_QN BBQ_RX_P BBQ_RX_N BIAS_rxmix_q c_rxmix_q_en c_rxmix_q_ofs[0] c_rxmix_q_ofs[1] c_rxmix_q_ofs[2] c_rxmix_q_ofs[3] c_rxmix_q_ofs[4] c_rxmix_q_ofs[5] island_off[1] NC_rxmix_q_atb_vcm NC_rxmix_q_atb_vbp RAIL_rf_rx VSS pt_rxmix_q
 Xbbfilter_i BBI_RX_P BBI_RX_N DACI_P DACI_N BBI_INJ_P BBI_INJ_N ADCI_P ADCI_N BBI_TX_P BBI_TX_N BBI_OBS_P BBI_OBS_N BIAS_bbfilter_i c_bbfilter_i_en c_bbfilter_dir_tx c_bbfilter_inj c_bbfilter_rx_direct c_bbfilter_byp_s1 c_bbfilter_byp_s23 c_bbfilter_obs_sel[0] c_bbfilter_obs_sel[1] c_bbfilter_i_cut[3] c_bbfilter_i_cut[4] c_bbfilter_i_cut[5] c_bbfilter_i_cut[6] c_bbfilter_i_gain[0] c_bbfilter_i_gain[1] c_bbfilter_i_gain[2] c_bbfilter_i_gain[3] c_bbfilter_i_gain[4] c_bbfilter_i_gain[5] c_bbfilter_i_gainc[0] c_bbfilter_i_gainc[1] c_bbfilter_i_qt[0] c_bbfilter_i_qt[1] island_off[1] ATBN_pga_bias ATBN_bbfilter_bias RAIL_rf_rx VSS c_bbfilter_i_qt[2] c_bbfilter_i_qt[3] c_bbfilter_i_cut[0] c_bbfilter_i_cut[1] c_bbfilter_i_cut[2] c_bbfilter_i_dcf[0] c_bbfilter_i_dcf[1] c_bbfilter_i_dcf[2] c_bbfilter_i_dcf[3] c_bbfilter_i_dcf[4] c_bbfilter_i_dcf[5] c_bbfilter_i_dcf[6] c_bbfilter_i_dcf[7] c_bbfilter_i_dcf[8] pt_bbfilter_i

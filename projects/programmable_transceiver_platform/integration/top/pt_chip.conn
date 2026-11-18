@@ -179,7 +179,7 @@ inst isw_pll isw_debug core
   VDD~VDD VISL~RAIL_pll VSS~VSS EN=island_en[2] ISO>- PG>s_pg_pll
 
 # Supply and ground pads (provider ring; DVDD = VDD and DVSS = VSS are one net each, tied in every cell: power-delivery
-# section 6). 8 supply and 10 ground bonds. AGND_RX: LNA ground on two down-bond sites, one tie to VSS (PD2-12).
+# section 6). 8 supply and 10 ground bonds. The LNA ground is die VSS: the fixed bond layout has no down-bonds (PC-21, RQ-1).
 inst pad_dvdd_{0:5} prov_supply chip
   PAD~VDD
 inst pad_vdd_{0:1} prov_supply chip
@@ -188,14 +188,10 @@ inst pad_dvss_{0:7} prov_supply chip
   PAD~VSS
 inst pad_vss_{0:1} prov_supply chip
   PAD~VSS
-inst pad_agnd_rx_{0:1} pad_downbond rf_rx demand
-  PAD~AGND_RX
-inst agnd_tie pt_agnd_tie core demand
-  A~AGND_RX B~VSS      # the one AGND_RX to VSS connection, through the pad-ring ESD structure (PD2-12)
 
 # ================= pads (custom families) =================
 inst pad_rf_rx pad_rf_pair rf_rx
-  PAD_P~RF_RX_P PAD_N~RF_RX_N VSS~AGND_RX ESD_RAIL~ESD_RAIL_rf_rx ATB_ESD_RAIL~-
+  PAD_P~RF_RX_P PAD_N~RF_RX_N VSS~VSS ESD_RAIL~ESD_RAIL_rf_rx ATB_ESD_RAIL~-
 inst pad_rf_tx pad_rftxpad rf_tx
   PAD_P~RF_TX_P PAD_N~RF_TX_N VSS~VSS ESD_RAIL~ESD_RAIL_rf_tx ATB_ESD_RAIL~-
 inst pad_bb_{i,q} pad_rf_pair debug
@@ -233,12 +229,13 @@ inst lna pt_lna rf_rx
   ibias~BIAS_lna en=c_lna_en gain_lo=c_lna_gain_lo byp=c_lna_byp ct{0:3}=c_lna_ct[\1] se=c_lna_se rt=c_lna_rt
   att{0:4}=c_lna_att[\1] lobias=c_lna_lobias island_off=island_off[1]
   atb_nbias~ATBN_lna_bias atb_vdcm~ATBN_rf_vcm src_p~LNA_SRC_P src_n~LNA_SRC_N tank_p~LNA_TANK_P tank_n~LNA_TANK_N
-  VDD~RAIL_rf_rx VSS~AGND_RX
-# LNA spirals (analog/rf_rx/chip-top-pins.md, RC-16t): DRC-only cells in the rf_rx working tree, not published, no netlist: D-LNA
+  tail~LNA_TAIL vtk~LNA_VTK VDD~RAIL_rf_rx VSS~VSS
+# LNA spirals (analog/rf_rx/chip-top-pins.md, RQ-1): unpublished candidates. LNA_VTK and LNA_TAIL connect to nothing else
+# (no decap, ESD or other block); each carries the full 18-19 mA: short wide top metal.
 inst lna_ind_{p,n} pt_lna_ind rf_rx demand
-  A~RAIL_rf_rx B~LNA_TANK_\U1          # tank load, 1.35 nH, carries the LNA DC current
+  A~LNA_VTK B~LNA_TANK_\U1            # tank load, 2.01 nH, from the LNA's tank centre tap
 inst lna_deg_{p,n} pt_lna_deg rf_rx demand
-  A~LNA_SRC_\U1 B~AGND_RX               # on-chip source degeneration 0.47 nH; the LNA_SRC pad sites are released
+  A~LNA_SRC_\U1 B~LNA_TAIL              # on-chip source degeneration 0.47 nH, to the LNA's tail node
 inst rxmix_{i,q} pt_rxmix_\1 rf_rx
   rf_p~RFA_\U1_P rf_n~RFA_\U1_N lo_p~LO_\U1P lo_n~LO_\U1N bb_p~BB\U1_RX_P bb_n~BB\U1_RX_N ibias~BIAS_rxmix_\1
   en=c_rxmix_\1_en ofs{0:4}=c_rxmix_\1_ofs[\2] ofs_sign=c_rxmix_\1_ofs[5] island_off=island_off[1]

@@ -426,6 +426,8 @@ module pt_analog_top_stub(
  wire LNA_SRC_N;
  wire LNA_TANK_P;
  wire LNA_TANK_N;
+ wire LNA_TAIL;
+ wire LNA_VTK;
  wire LO_IP;
  wire LO_IN;
  wire BBI_RX_P;
@@ -557,7 +559,7 @@ module pt_analog_top_stub(
  wire ATB1_LOCAL2;
  wire ATB1_LOCAL3;
  wire ATB1_LOCAL4;
- wire AGND_RX = VSS, RAIL_conv = VDD, RAIL_debug = VDD, RAIL_lo = VDD, RAIL_lod = VDD, RAIL_pll = VDD, RAIL_rf_rx = VDD, RAIL_rf_tx = VDD, RAIL_wired_cap = VDD, RAIL_wired_rx = VDD, RAIL_wired_tx = VDD, VDD_LO = VDD, VREG_CDR = VDD, VREG_TX = VDD;
+ wire RAIL_conv = VDD, RAIL_debug = VDD, RAIL_lo = VDD, RAIL_lod = VDD, RAIL_pll = VDD, RAIL_rf_rx = VDD, RAIL_rf_tx = VDD, RAIL_wired_cap = VDD, RAIL_wired_rx = VDD, RAIL_wired_tx = VDD, VDD_LO = VDD, VREG_CDR = VDD, VREG_TX = VDD;
  wire p_por__ena = VDD;
  assign por_n = 1'b1;
  wire p_aosc__EN = c_aosc_en;

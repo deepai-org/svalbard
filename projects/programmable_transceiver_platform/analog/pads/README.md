@@ -240,13 +240,16 @@ budget-sized ideal capacitors on top of extracted capacitance.
    extracted there are 23–32 Ω (typical) between each bond pad and its primary diodes and 56–85 Ω around the
    discharge loop, confirmed by hand calculation, Magic `extresist` and a separate solver on all seven families. No
    family meets its HBM tier; every HBM / CDM number in section 4 except the `pad_hspad` rows is capacitance-only and
-   is not evidence. `pad_hspad` is improved (5–6 Ω pad side) but still misses 2 kV. Proposed fix: primary diodes at the
-   bond pad tied to the ring rails; needs a decision on back-feed with the supply off. (PAD-11)
+   is not evidence. `pad_hspad` is improved (5–6 Ω pad side) but still misses 2 kV. Decided fix (PC-27): primary diodes at the
+   bond pad tied to the ring rails, all families; back-feed is accepted and sequenced by the board. In work, no
+   family rebuilt yet. (PAD-11)
 2. **`pad_txpad` and `pad_wirepad` signal paths.** `pad_txpad` termination is 287 Ω differential at tt with metal
    resistance (92 Ω without), 16–19 Ω sit between the bond pad and the output cascodes, and the termination is
    untrimmed (152 / 58 Ω at ss / ff even without metal): `scratch/pads-core/txr/STATUS.md`. `pad_wirepad` has about
    81 Ω of metal in series with its 45 Ω HS termination (survey only). Neither is fixed. Resistance-aware extraction
    is mandatory for all pad evidence from now on (`rextract/`).
+   Known defect of the published `pad_hspad` (PC-28): 40 unconnected Metal3/Metal4 overlay pieces in the diode array
+   (dead metal, 41 `**FLOATING` nodes in the models: simulate with `rshunt`); removed in the pad-site-diode rebuild.
 3. **CDM.** 250 V is a target only; die capacitance and CDM current are estimates.
 4. **Supply-clamp events.** Survivability of a fired clamp and the hot-plug waveform are not shown. The slew
    rule is in MANDATE section 6 and interface-changes row PC-16; it is not yet a row of

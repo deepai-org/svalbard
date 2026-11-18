@@ -101,3 +101,9 @@ Scratch: `scratch/rf-lna-q/` (scripts e1..eN, logs, `w/` work dirs). Predecessor
    four spirals; start-up transient; HBM check of the gate or a secondary clamp.
 4. Chain NF: TIA size decision (x3: about -1.5 dB, +36k um2 per mixer), fallback external LNA through `byp`.
 5. Bring characterize.py / summarize.py in line with lna_close.py (they still carry the pre-COB board network).
+
+## Package model from the pads owner (PC-26; lna_close.py pkg, close/pkg.json, interface row RQ-5)
+- LM.stability(pkg='A_nom' ...) uses scratch/reviews/pads-core/lna-bond-model.spice instead of the lumped bonds.  24 rows, ff:
+  K >= 7.1, Re_diff >= 1.50, Re_cm >= 2.98 ohm 5 MHz-1 GHz (no negative resonance: 0.25 ohm per wire damps it), 0.55-0.59 at 30 GHz.
+- Bounce -> differential input (lna_close.bounce): A -17.9 dB nominal, B -40.3 dB (with die decap; -29 without).  rf_rx asks for B.
+- Pad C tolerance (close/pad_c_tolerance.json): +0.1 pF/leg = +0.15 dB NF, -0.27 dB gain; S11 fails above ~+0.4 pF.

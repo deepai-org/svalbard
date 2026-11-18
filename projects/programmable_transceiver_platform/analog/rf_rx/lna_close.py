@@ -76,7 +76,20 @@ def stab():
     jobs += [('extpr', FF, 'S3 undamped island decap, no die decap', 'lowr', k) for k in (dict(cdec=100e-12), dict(cdec=500e-12), dict(cdec=100e-12, lsup=2e-9), dict(cdec=500e-12, lsup=0.25e-9))]
     rows = par([(lambda j=j: _stab(j[0], j[1], j[2], deg=j[3], **j[4])) for j in jobs])
     rows.append(_stab('extpr', FF, 'B duplex bias', deg='lowr', lob=True))
+    rows += _duplex_pdn()
     save('stab', rows)
+
+
+def _duplex_pdn():
+    """Review 4: duplex bias and the attenuator at its end with the real supply network."""
+    pdn = (dict(cdie=5.4e-9, rdie=0.03, rsw=0.2, lsup=0.5e-9), dict(cdie=3e-9, rdie=0.03, rsw=0.2, lsup=1e-9), dict(cdie=3e-9, rdie=0.03, rsw=0.2, lsup=2e-9))
+    return ([_stab('extpr', FF, 'B duplex bias, real PDN', deg='lowr', lob=True, **k) for k in pdn] +
+            [_stab('extpr', FF, 'B attenuator 63, real PDN', deg='lowr', att=63, **pdn[1])])
+
+
+def stab_extra():
+    rows = [r for r in json.loads((OUT / 'stab.json').read_text()) if 'real PDN' not in r['group'] or r['group'].startswith('S2')]
+    save('stab', rows + _duplex_pdn())
 
 
 def stab_lf():
@@ -119,6 +132,78 @@ def band():
     jobs = [('extpr', (p, t, v), 2.) for p in PROCS for t, v in ((32, 3.15), (22, 3.35))]
     jobs += [('extpr', NOM, 2.), ('extpr', NOM, 10.), ('extpp', SS, 2.), ('extpp', SS, 10.), ('extpp', ('typical', 32, 3.15), 2.), ('extlo', ('ff', 22, 3.35), 2.)]
     save('band', par([(lambda j=j: one(*j)) for j in jobs]))
+
+
+PKG_MODELS = ('A_min', 'A_nom', 'A_max', 'B_min', 'B_nom', 'B_max')     # pads owner's coupled bond model: site option x inductance bound
+
+
+def bounce(model, corner=NOM, f=2.421875e9, decap=True, view='extpr'):
+    """Die-VSS bounce -> LNA output through the package (ground / supply bond current couples magnetically into the RX wires),
+    referred to the differential source EMF: two AC runs (EMF, then a current injected into die VSS).  50 ohm per leg at the
+    board ends of the RX wires, pad 0.5 pF per leg, controls and bias referenced to die VSS, 50 ohm mixer model."""
+    c, t_, vdd = corner; w = OUT / 'pkg'; w.mkdir(parents=True, exist_ok=True)
+    nl = tb.netlist(w, 'lna', view)
+    (w / 'lna-bond-model.spice').write_text(LM.PKG_MODEL.read_text())
+    ctl = '\n'.join(f'V{n} {n} vss {vdd if n == "en" else 0}' for n in ('en', 'gain_lo', 'byp', 'island_off', 'se', 'rt', 'lobias', 'ct1', 'ct2', 'att0', 'att1', 'att2', 'att3', 'att4'))
+    body = f""".include {nl}
+.include lna-bond-model.spice
+Xpkg bp bn rf_in_p rf_in_n vss vdq rfrx_bond_{model}
+VDDX VDD vdq {vdd}
+{'Cdie VDD vdm 5.4n' + chr(10) + 'Rdie vdm vss 0.1' if decap else ''}
+Vibs vib vss 3.3
+Ib vib ibias 10u
+{ctl}
+Vct0 ct0 vss {vdd}
+Vct3 ct3 vss {vdd}
+Vs s 0 DC 0 AC 1
+Ep e_p 0 s 0 0.5
+En e_n 0 s 0 -0.5
+Rsp e_p bp 50
+Rsn e_n bn 50
+Cpp rf_in_p vss 0.5p
+Cpn rf_in_n vss 0.5p
+Rmp rf_out_p vm 50
+Rmn rf_out_n vm 50
+Rmqp rf_outq_p vm 50
+Rmqn rf_outq_n vm 50
+Vm vm vss 1.65
+Ibn 0 vss DC 0 AC 0
+X1 rf_in_p rf_in_n rf_out_p rf_out_n rf_outq_p rf_outq_n ibias en gain_lo byp ct0 ct1 ct2 se rt island_off nb vdcm VDD vss ct3 att0 att1 att2 att3 att4 srcp_b srcn_b tkp_b tkn_b lobias scm_b vtk_b pt_lna
+{tb.src_net(view, gnd='vss')}
+.control
+op
+ac lin 1 {f} {f}
+let gs=abs(v(rf_out_p)-v(rf_out_n))
+print gs
+alter Vs acmag=0
+alter Ibn acmag=1
+ac lin 1 {f} {f}
+let gb=abs(v(rf_out_p)-v(rf_out_n))
+let vb=abs(v(vss))
+print gb vb
+.endc
+"""
+    log, m = tb.run(w, f'bounce_{model}_{tb._tag(corner)}_{int(decap)}.cir', body, corner)
+    import math
+    r = m['gb'] / m['vb'] / m['gs']
+    return dict(model=model, corner=corner, die_decap=decap, f_hz=f, gain_emf_to_out=m['gs'], out_per_volt_of_vss_bounce=m['gb'] / m['vb'],
+                bounce_to_input_referred_db=20 * math.log10(r))
+
+
+def pkg():
+    """Coordinator request 2026-11-18: the LNA with the pads owner's coupled package model, both site options, three bounds."""
+    def st(model, kw, lf):
+        k = dict(kw, **(dict(f1=5e6, f2=1e9, ppd=400) if lf else {}))
+        try:
+            r = LM.stability(OUT / 'pkg', 'extpr', FF, deg='lowr', pkg=model, **k)
+        except Exception as e:
+            r = dict(error=repr(e))
+        return dict(model=model, case=kw, sweep='5 MHz-1 GHz, 400/decade' if lf else '0.1-30 GHz, 40/decade', **r)
+    jobs = [(m, kw, lf) for m in PKG_MODELS for kw, lf in ((dict(), False), (dict(cdie=3e-9, rdie=0.03, rsw=0.2), True), (dict(cdie=3e-9, rdie=0.03, rsw=0.2), False),
+                                                           (dict(cdie=5.4e-9, rdie=0.1, rsw=0.3), True))]
+    rows = par([(lambda j=j: st(*j)) for j in jobs])
+    bn = [bounce(m, c, decap=d) for m in PKG_MODELS for c, d in ((NOM, True), (NOM, False))]
+    save('pkg', dict(stability=rows, bounce=bn))
 
 
 CHAIN_POINTS = [('extpr', NOM, 'ext_best_1v16'), ('extpr', SS, 'cml_1v05'), ('extpp', SS, 'floor_0v90')]   # LO as delivered: tb.LO_REAL (MW-20)
@@ -216,6 +301,18 @@ def write():
         ok = lambda r: r.get('nf_dsb_db') is not None and r['nf_dsb_db'] <= LIM['chain_nf_dsb_db']
         tests['chain_nf'] = dict(target=f"on-chip chain NF <= {LIM['chain_nf_dsb_db']} dB DSB on the real channel, at tt, ss and the pessimistic end, with the LO as delivered",
                                  rows=ch, **{'pass': bool(ch) and all(ok(r) for r in ch)})
+    pk, pc = ld('pkg'), ld('pad_c_tolerance')
+    if pk:
+        srows = [r for r in pk['stability'] if 'error' not in r]
+        okd = all(r['min_mu'] > 1 and r['min_k'] > 1 and r['min_re_zin_real_mixer_ohm'] >= LIM['re_diff_ohm'] for r in srows)
+        okc = all(r['min_re_zcm_real_mixer_ohm'] >= LIM['re_cm_ohm'] for r in srows)
+        tests['package_model'] = dict(
+            target='pads owner coupled bond model (lna-bond-model.spice), site options A / B x min / nom / max, ff 32 C 3.35 V: same stability limits; bounce figures are information',
+            min_k=min(r['min_k'] for r in srows), min_re_diff_ohm=min(r['min_re_zin_real_mixer_ohm'] for r in srows),
+            min_re_cm_ohm_0p1_30ghz=min(r['min_re_zcm_real_mixer_ohm'] for r in srows if r['sweep'].startswith('0.1')),
+            min_re_cm_ohm_5mhz_1ghz=min(r['min_re_zcm_real_mixer_ohm'] for r in srows if r['sweep'].startswith('5 MHz')),
+            pass_differential=okd, pass_common_mode=okc, errors=len(pk['stability']) - len(srows), stability_rows=pk['stability'],
+            die_vss_bounce_to_differential_input_db=pk['bounce'], pad_capacitance_tolerance=pc, **{'pass': bool(okd and okc and len(srows) == len(pk['stability']))})
     if ng:
         tests['negative_controls'] = dict(ng, **{'pass': bool(ng['cm_bench_fails_as_required'] and (ng['bench_selftest'] or {}).get('all_ok'))})
     rec['tests'] = tests
@@ -227,4 +324,4 @@ def write():
 
 
 if __name__ == '__main__':
-    {'currents': currents, 'stab': stab, 'stab_lf': stab_lf, 'band': band, 'chain': chain, 'neg': neg, 'write': write}[sys.argv[1]]()
+    {'currents': currents, 'stab': stab, 'stab_extra': stab_extra, 'stab_lf': stab_lf, 'band': band, 'chain': chain, 'pkg': pkg, 'neg': neg, 'write': write}[sys.argv[1]]()

@@ -278,18 +278,14 @@ def _res_fold(s, a, b, l, w=1.):
 
 
 def lna():
-    """Pseudo-differential CS input pair (LNA_WCS = 1000/0.28 per side, no tail, replica-biased from a
-    25 um diode: same current as the 400/9 version, lower density), AC-coupled from the pad through a
-    50 um MIM (~5 pF) and feeding separate I and Q cascodes (200/0.28 each, 3.6 um x 1 um ppoly loads).
-    Fork P (in-band match): the wide device, the larger coupling MIM and the removal of fixed pad-side C
-    (se cap 30 -> 12 um, MIM-attenuator removed) lower the input quality factor |X/R| from ~95 to ~35,
-    which a board ladder (B18/B25) can match across 2.40-2.4835 GHz (Bode-Fano: Q <= ~80 is required
-    even for an ideal network; see scratch/reviews/physical-limits.md RX-MATCH).
-    Pre-LNA attenuator: 6 weighted NMOS switches (1,2,4,8,16,48 x 3.4 um) across the two stage-1 gates (att0..att4, gain_lo
-    = MSB), 0..>=30 dB, steps <= 6 dB; the input match is not held while attenuating.
-    ct0..ct3: 4-bit shunt-C package/process trim at the pads.  se: RF_RX_N AC-grounded through a 12 um MIM
-    (RF_RX_P carries an identical dummy MIM + off switch for leg balance).  rt: Q-spoil, ~1.5 kohm per leg (3 kohm diff) across the
-    gates.  byp: gates straight to both mixer feeds."""
+    """LC-tuned transconductance stage, true differential (README section 4, lna).
+    CS pair LNA_WCS / 0.28 per side, series gate resistors, AC-coupled from the pads; sources -> pins src_p / src_n (on-chip
+    degeneration spirals, placed at assembly) -> pin `tail` = cascoded NMOS tail current source mirrored from ibias; a ppoly
+    damper lies across each spiral.  One cascode per leg (64 units, current-steering attenuator att0..att4 + gain_lo: units go
+    to the tank or are dumped on vtk).  Tank spirals between the centre tap pin `vtk` and tank_p / tank_n; vtk is fed from VDD by
+    an always-on PMOS and returned to VSS by an NMOS gate capacitor.  ct0..ct3: tank tune.  Mixer feeds through LNA_CMIX MIMs.
+    Common-mode loss network on the pads (two MIMs to one node, one resistor to VSS).  se: RF_RX_N AC-grounded through a MIM;
+    rt: Q-spoil across the gates; byp: pads to both mixer feeds through series MIMs."""
     s = Sub('pt_lna', LNA_PORTS)
     # bias: ibias mirror -> replica gate bias vg, cascode bias vcas (both MIM-decoupled)
     s.x('pt_rfrx_inv', 'en', 'enb', 'VDD', 'VSS')
@@ -338,8 +334,8 @@ def lna():
         g, x = (f'rf_in_{sd}' if not LNA_CIN else f'g_{sd}'), f'x_{sd}'   # LNA_CIN = 0: gate on the pad (board DC block)
         _res_fold(s, 'vg', g, 60., 1.)
         gi = f'gi_{sd}'
-        _res_fold(s, g, gi, LNA_RGS_L, LNA_RGS_W)   # RC-16j stability: ~15 ohm series gate R (capacitive-source negative R above ~8 GHz)
-        s.nmos(x, gi, f'src_{sd}', LNA_WCS, fw=LNA_FW, b='VSS')   # RC-16i: source to its own pad (bond = Ls)
+        _res_fold(s, g, gi, LNA_RGS_L, LNA_RGS_W)   # series gate resistor
+        s.nmos(x, gi, f'src_{sd}', LNA_WCS, fw=LNA_FW, b='VSS')   # source -> degeneration spiral -> tail
         if LNA_CIN:
             s.cap(g, f'rf_in_{sd}', LNA_CIN)
         # RC-16j LNTA: ONE cascode per leg into the LC tank node tank_{sd} (spiral across tank_p/tank_n, placed at

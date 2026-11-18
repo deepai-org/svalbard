@@ -335,11 +335,12 @@ def trim_cost(chips, f, net, lb, ratio, draws, ngrid=3):
 
 
 # ---------------------------------------------------------------- stability (review lna2 item 4)
+PKG_MODEL = Path(__file__).resolve().parents[4] / 'scratch' / 'reviews' / 'pads-core' / 'lna-bond-model.spice'
 L_BOND_SUP = 1.0e-9     # VDD / VSS bond + package per pin (pessimistic: no island decap credited off chip)
 
 
 def stability(work, view, corner, ct=7, att=0, mode='active', rt=False, f1=0.1e9, f2=30e9, ppd=40, ls=None, bond=None, lsup=None,
-              csrc=0., deg=None, cdec=0., rdec=0., rsw=0., cdie=0., rdie=0.):
+              csrc=0., deg=None, cdec=0., rdec=0., rsw=0., cdie=0., rdie=0., pkg=None):
     """LNA two-port with RF bond wires (`bond`, default BOND = 3.0 nH/leg), source downbonds `ls` (default tb.LNA_LS)
     and VDD/VSS bond L (`lsup`, default 1 nH each).
     (1) Rollett K / Edwards-Sinsky mu from Z-parameters (port 1 = rf_in diff, port 2 = rf_out (I) diff; the
@@ -362,24 +363,25 @@ def stability(work, view, corner, ct=7, att=0, mode='active', rt=False, f1=0.1e9
                     [f'Vgl gain_lo 0 {vdd if att & 32 else 0}'] + att_bits +
                     [f'Vct{k} ct{k} 0 {vdd if (ct >> k) & 1 else 0}' for k in range(4)] +
                     ['Vse se 0 0', f'Vrt rt 0 {vdd if rt else 0}', f'Vlob lobias 0 {vdd if tb.lobias() else 0}', f'Vhib hib 0 {0 if tb.lobias() else vdd}'])
+    # pkg = 'A_nom' etc.: the pads owner's coupled bond model (scratch/reviews/pads-core/lna-bond-model.spice: RX pair, ground bonds
+    # 63 / 71 / 73, supply bonds 64 / 72 / 74 with every mutual, 0.25 ohm per wire) replaces the lumped bond / supply inductors
+    if pkg:
+        (Path(work) / 'lna-bond-model.spice').write_text(PKG_MODEL.read_text()) if Path(work).mkdir(parents=True, exist_ok=True) is None else None
+    supply = (f'.include lna-bond-model.spice\nXpkg pp pn rf_in_p rf_in_n vss vdq rfrx_bond_{pkg}\nVDDX vdie vdq {vdd}\nRsw vdie VDD {rsw if rsw else 1e-6}\n'
+              if pkg else f'VDDX vddx 0 {vdd}\nLvdd vddx vdie {lsup}\nRsw vdie VDD {rsw if rsw else 1e-6}\nLvss vss 0 {lsup}\n')
     common = f""".include {nl}
-VDDX vddx 0 {vdd}
-Lvdd vddx vdie {lsup}
-Rsw vdie VDD {rsw if rsw else 1e-6}
-Lvss vss 0 {lsup}
-{(f'Cdec VDD vdn {cdec}' + chr(10) + f'Rdec vdn vss {rdec if rdec else 1e-3}') if cdec else ''}
+{supply}{(f'Cdec VDD vdn {cdec}' + chr(10) + f'Rdec vdn vss {rdec if rdec else 1e-3}') if cdec else ''}
 {(f'Cdie vdie vdm {cdie}' + chr(10) + f'Rdie vdm vss {rdie if rdie else 1e-3}') if cdie else ''}
 Vibs vib 0 3.3
 Ib vib ibias 10u
 {ctl}
-Lbp rf_in_p pp {bond}
-Lbn rf_in_n pn {bond}
+{'' if pkg else f'Lbp rf_in_p pp {bond}' + chr(10) + f'Lbn rf_in_n pn {bond}'}
 Cpp rf_in_p vss 0.5p
 Cpn rf_in_n vss 0.5p
 Vm vm vss 1.65
 """
     xl = 'X1 rf_in_p rf_in_n rf_out_p rf_out_n rf_outq_p rf_outq_n ibias en gain_lo byp ct0 ct1 ct2 se rt island_off nb vdcm VDD vss ct3 att0 att1 att2 att3 att4 srcp_b srcn_b tkp_b tkn_b lobias scm_b vtk_b pt_lna\n' + (tb.src_bond(ls=ls, csrc=csrc, gnd='vss') if ls else tb.src_net(view, gnd='vss', variant=deg))
-    tag = f'stab_{view}_{tb._tag(corner)}_ct{ct}_a{att}_{mode}{"_rt" if rt else ""}{f"_ls{ls * 1e12:.0f}" if ls else ""}_b{bond * 1e12:.0f}_s{lsup * 1e12:.0f}{"_lo" if tb.lobias() else ""}{f"_cs{csrc * 1e15:.0f}" if csrc else ""}{f"_{deg}" if deg else ""}{f"_cd{cdec * 1e12:.0f}" if cdec else ""}{f"_rd{rdec * 1e3:.0f}" if rdec else ""}{f"_sw{rsw * 1e3:.0f}" if rsw else ""}{f"_di{cdie * 1e12:.0f}_{rdie * 1e3:.0f}" if cdie else ""}'
+    tag = f'stab_{view}_{tb._tag(corner)}_ct{ct}_a{att}_{mode}{"_rt" if rt else ""}{f"_ls{ls * 1e12:.0f}" if ls else ""}_b{bond * 1e12:.0f}_s{lsup * 1e12:.0f}{"_lo" if tb.lobias() else ""}{f"_cs{csrc * 1e15:.0f}" if csrc else ""}{f"_{deg}" if deg else ""}{f"_cd{cdec * 1e12:.0f}" if cdec else ""}{f"_rd{rdec * 1e3:.0f}" if rdec else ""}{f"_pk{pkg}" if pkg else ""}{f"_sw{rsw * 1e3:.0f}" if rsw else ""}{f"_di{cdie * 1e12:.0f}_{rdie * 1e3:.0f}" if cdie else ""}'
     body = common + f"""Rqp rf_outq_p vm 50
 Rqn rf_outq_n vm 50
 Rbp pp vss 1e9

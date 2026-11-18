@@ -835,8 +835,8 @@ def _ladder_net(m):
                 nxt = f'bl{i}_{sd}'
                 if i == 0 and t == 'sL':
                     lx = max(v - lb, 1e-13)
-                    s += f'Lbw{sd} {cur[sd]} bq{sd}a {lba}\nRbw{sd} bq{sd}a bq{sd} {w * lba / LM.Q_BOND if lossy else 1e-6:.4g}\n'
-                    s += f'Lbx{i}{sd} bq{sd} bx{i}{sd} {lx}\nRbx{i}{sd} bx{i}{sd} {nxt} {w * lx / LM.Q_L if lossy else 1e-6:.4g}\n'
+                    s += f'Lbw{sd} {cur[sd]} bwq{sd}a {lba}\nRbw{sd} bwq{sd}a bwq{sd} {w * lba / LM.Q_BOND if lossy else 1e-6:.4g}\n'
+                    s += f'Lbx{i}{sd} bwq{sd} bx{i}{sd} {lx}\nRbx{i}{sd} bx{i}{sd} {nxt} {w * lx / LM.Q_L if lossy else 1e-6:.4g}\n'
                 elif t == 'sL':
                     s += f'Lbx{i}{sd} {cur[sd]} bx{i}{sd} {v}\nRbx{i}{sd} bx{i}{sd} {nxt} {w * v / (qe or LM.Q_L) if lossy else 1e-6:.4g}\n'
                 else:

@@ -51,3 +51,6 @@ def read_table(path):
 
 
 CORNERS = [(c, t, v) for c in ('typical', 'ss', 'ff') for t in (22, 32) for v in (3.15, 3.35)]
+# sf / fs added (flow.sim_header supports them: MOS skew with typical R / MIM).  CORNERS stays the 12-point tt/ss/ff list the
+# published bbfilter evidence was swept on; CORNERS_5P is the 20-point list (the same as lna_close.CORNERS).
+CORNERS_5P = [(c, t, v) for c in ('typical', 'ss', 'ff', 'sf', 'fs') for t in (22, 32) for v in (3.15, 3.35)]

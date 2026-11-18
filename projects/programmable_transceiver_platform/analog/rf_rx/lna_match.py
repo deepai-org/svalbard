@@ -548,7 +548,7 @@ def channel_eval(net, F, z, rs=100.):
 
 
 CH_TOPOS = (('pL', 'sC'), ('sC', 'pC'), ('sL', 'pC'))
-S11_FIT_DB = 11.2     # the fit aims at -11.2 dB on its series R-C pad model: ngspice on the extracted LNA reads about 0.6 dB worse
+S11_FIT_DB = 11.8     # the fit aims at -11.8 dB on its series R-C pad model: ngspice on the extracted LNA reads 0.6-1.2 dB worse
 
 
 def channel_fit(zpad, d_mm=2.0, q='pess', topos=CH_TOPOS, seeds=5, **kw):

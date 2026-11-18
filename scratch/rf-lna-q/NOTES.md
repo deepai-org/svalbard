@@ -110,3 +110,27 @@ Scratch: `scratch/rf-lna-q/` (scripts e1..eN, logs, `w/` work dirs). Predecessor
 - Chain NF on L6, real channel (connector + 2 mm), LO as delivered (tb.LO_REAL), small TIA: tt +-0.37 V 6.15 dB DSB (gain 31.2 dB);
   extpr ss 32 C 3.15 V +-0.26 V 8.11 dB (26.0 dB); extpp ss +-0.11 V 14.7 dB (13.8 dB).  Target 4.1 dB: MISS everywhere.
   Warning for reruns: pass the LO as tb.LO_REAL[name]; a bare string silently runs the ideal square LO.
+
+## Round 2 (coordinator decisions 2026-11-18: site B, tail / vtk bound, RQ-3 / 3a accepted, 30 GHz rows stay as misses)
+Final layout of this round (L8): 64,712 um2, DRC 0 / KLayout 0 / LVS unique, read-back unique (1016 devices). Evidence:
+scratch/rf_rx/close/*.json -> generated/lna-evidence.json. Earlier stage outputs: scratch/rf_rx/close_L6, close_L7a, close_L7b.
+- Item 1 (stability): the 45-100 MHz path was the gate-bias node vg (f1.py: only an AC ground on vg removes it; vcas, tail bias, pb
+  do not). Filter 60 kohm + 4 pF NMOS cap on vg. CM network 0.27 pF / 95 ohm (150 ohm left 0.95 ohm at att 63). With the pads
+  owner's coupled model, site B, 38 rows: K >= 3.0, diff >= 1.33, CM >= 1.10 ohm 5 MHz-8 GHz. Lossless lumped rails still fail at
+  47 / 67 / 97 MHz (-4.3 / 0.0 / -13.8 ohm). Start-up transients pass (no ringing; tau 1.6 us monotone; first 4 us version in
+  scratch/rf_rx/close_startup_4us.json failed its raw window on the settling drift only).
+- Item 2 (degeneration): f2.py full / half / none over corners; none: +2.0-2.4 dB gain, same NF on the channel, stable, S11 -8.9..-9.9
+  dB (f3.py: more gate R restores S11 but costs 0.2-0.6 dB NF) -> halved (100 um, 0.31 nH, 14.0k um2). IIP3 -11.0 dBm (tt, ideal match).
+- Item 3 (chain): BENCH BUG found by helper A: tb._ladder_net bond nodes bqp / bqn = Q mixer outputs in chain decks; fixed (bwq*);
+  all earlier chain NF numbers withdrawn. Corrected, L8: tt 6.02, ss 7.97, pess 14.9 dB DSB. TIA x2 ~ -0.8 dB (+16.7k um2 per mixer),
+  x3 ~ -1.1 dB (+36.0k): estimates from f_parts. physical-limits.md RX-CHLOSS written.
+- Item 4 (helper B, scratch/rf-rx-r2b/): bypass path: 18 dB loss pads -> mixers, system NF ~20 dB with a 15 dB external LNA: FAIL;
+  external LNA in front of the active LNA is the path that meets 8 dB (3.9-6.2 dB estimate). LO leak site B: -55.2 dBm nominal into
+  the matched port (limit -57), offset 17 / 58 / 135 mV vs DAC +-144 mV.
+- Item 5: off-MOS clamps (4 um PMOS to VDD, NMOS to VSS) at g_p / g_n / bpc_p / bpc_n: HBM screen 1.0 V (was 5.3-6.4 V); vtk cap on
+  nfet_06v0 (9 x 12 x 20 x 2 um). Cost: pad resistance 6.9 -> 6.1 ohm, loss 2.9 -> 3.2 dB, S11 ff -9.94 dB.
+- Item 6: R+C: scratch/rf-lna-q/rc (Magic extresist, analog image): 1372 R, ports / devices match, DC point wrong (4.95 mA) - find
+  the split net before using it (g1.py). Monte Carlo not started. Helper A: characterize.py / summarize.py / run_rf_rx.sh reworked,
+  rxmix / bb_tap / chain / summary regenerated. Review 5 brief: scratch/review-lna5/BRIEF.md.
+- NEXT: (1) R+C netlist debug; (2) Monte Carlo; (3) S11 ff and IIP3 misses: less pad-side C (pads ESD option A may give it back) or
+  accept; (4) bypass path resize decision; (5) lumped-rail LF rows: more vg filtering does not remove the 0.9 nF + island case.

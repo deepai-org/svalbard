@@ -2,15 +2,27 @@
  "block": "bb_tap",
  "top_cell": "pt_bb_tap",
  "source_hashes": {
-  "bb_tap.spice": "sha256:a1a18148740ad299dd4e9fb3dda85dd4bf58594c9e7c61e9762ef82e39d47119",
-  "netlists.py": "sha256:fb4f51b6eede1d916e5a24128fdbfc250408585f135fdfdde4622b62084fbd93",
-  "rfrx_flow.py": "sha256:6fa4ba2ff246182b7c47dd4d2a9c95652d70c09a833ab3674ecb170dd0ee15a1"
+  "bb_tap.spice": "sha256:f3e39c8c2761d3b449dcc69c3862d1d62e0e3d216ed7bf0ab6e246fefb4d8070",
+  "netlists.py": "sha256:73fa43aac34a4941aa3c7b379d926505f97b93d1ee05836b70df59465deaf3d6",
+  "rfrx_flow.py": "sha256:13abb069c5ed047e5d1cea2e75c71be2faafe42375a07eeeb727be550f58e098"
  },
  "artifact_hashes": {
-  "bb_tap.gds": "sha256:fcca4ea990884e5954ae0170461bef684a0cc7b1d4d710718d3bb6e926093d21",
-  "bb_tap.mag": "sha256:7d311814658ecff6654646953055e6f765e59cb89917bacb80bc323a8469384d",
-  "bb_tap.ext.spice": "sha256:7c0ac37566230b65158b58a003059d4c681755db2f21e78992692324984a1cd8",
-  "bb_tap-lvs.txt": "sha256:a260a1a197d4639da7001d6d0703e508556ac73fd50cfe90836c48fbb786af69"
+  "bb_tap.gds": "sha256:af52de1aacce400497f797aa763396cce50c82dcec15da3423af5911d5892554",
+  "bb_tap.mag": "sha256:d7f138ed0babea9a888b0e22a635ef5340cbad4813f00ee0add5a77d91e249ca",
+  "bb_tap.ext.spice": "sha256:a001bfd8376162d1e193b73759978b43cce836b0943fb10725b1b77260f5c04c",
+  "bb_tap-lvs.txt": "sha256:67f9a2db7f998c8ef397af1f1b184a5f9928a83ec5224f4b3ee135d9cc9171a5"
+ },
+ "simulated_netlist_sha256": {
+  "bb_tap.ext.spice": "sha256:a001bfd8376162d1e193b73759978b43cce836b0943fb10725b1b77260f5c04c",
+  "bb_tap.spice": "sha256:f3e39c8c2761d3b449dcc69c3862d1d62e0e3d216ed7bf0ab6e246fefb4d8070"
+ },
+ "layout_record_vs_disk": {
+  "cell_files_differ": [],
+  "generator_scripts_changed_since_layout": [
+   "netlists.py",
+   "rfrx_flow.py"
+  ],
+  "matches_disk": true
  },
  "images": {
   "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -19,14 +31,15 @@
   "digital_tag": "svalbard/librelane-gf180-canary:2026.08"
  },
  "pdk": "gf180mcuD; layout/LVS: canary image /pdk/gf180mcuD; simulation: analog image ciel gf180mcu f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+ "extraction": "capacitance only (Magic ext2spice); wire and via resistance NOT extracted",
  "area": {
   "bbox_um": [
    1.5,
    -0.2,
-   100.32,
-   100.77
+   100.58,
+   196.72
   ],
-  "area_um2": 9978.0
+  "area_um2": 19511.0
  },
  "tests": {
   "safe": {
@@ -34,31 +47,31 @@
    "cases": [
     {
      "case": "tap off, island on, pad_p forced 3.63 V",
-     "pad_current_a": 1.859099e-10,
+     "pad_current_a": 6.088814e-11,
      "rail_current_a": 8.18978e-11
     },
     {
      "case": "island off, inj_en=3.63 V (core domain), pad_p 3.63 V, 27 C",
-     "pad_current_a": 1.859047e-10,
-     "rail_current_a": 1.776932e-17
+     "pad_current_a": 6.089198e-11,
+     "rail_current_a": 1.619022e-16
     },
     {
      "case": "same 85 C",
-     "pad_current_a": 4.419749e-09,
-     "rail_current_a": 2.559831e-14
+     "pad_current_a": 2.371632e-10,
+     "rail_current_a": 1.255969e-15
     },
     {
      "case": "same 0 C",
-     "pad_current_a": 8.492091e-11,
-     "rail_current_a": 4.676252e-19
+     "pad_current_a": 5.830317e-11,
+     "rail_current_a": 2.129785e-16
     },
     {
      "case": "tap off, island on, pad_p forced 0 V",
-     "pad_current_a": 3.708151e-18,
+     "pad_current_a": 7.38086e-19,
      "rail_current_a": 8.18978e-11
     }
    ],
-   "notes": "Only NMOS drains touch the pads (no PMOS junction to the island rail); inject gate is re-driven from the island rail so it is 0 V whenever the island is off."
+   "notes": "Only NMOS drains touch the pads (no PMOS junction to the island rail); inject gate is re-driven from the island rail so it is 0 V whenever the island is off. PD29: pad-facing switches are nfet_06v0 whose gates sit behind ~100 kohm poly with a ~128 fF gate-to-pad MIM, so the gates track the pad under HBM; core-gate HBM screen: pads/hbm_core_screen.py bb_tap wmon_bb_tap."
   },
   "clean": {
    "state": "pass",
@@ -83,18 +96,18 @@
    "extracted_nominal": {
     "condition": "tt 27 C 3.3 V, extracted with parasitic C",
     "observe": {
-     "idd_a": 0.001013528,
-     "lf_gain_db": -1.37171,
-     "f3db_hz": 76536300.0,
-     "gain_20mhz_db": -1.65731,
-     "pad_cm_v": 0.818411,
-     "tran_gain_20mhz_db": -1.660451631775934,
+     "idd_a": 0.001013526,
+     "lf_gain_db": -1.3743,
+     "f3db_hz": 71264300.0,
+     "gain_20mhz_db": -1.71725,
+     "pad_cm_v": 0.8183067,
+     "tran_gain_20mhz_db": -1.7200692917002283,
      "load": "10 pF || 100 kohm per pad"
     },
     "inject": {
-     "idd_a": 7.658088e-11,
-     "pad_to_node_gain_db": -0.0356564,
-     "gain_20mhz_db": -0.0356641
+     "idd_a": 7.658128e-11,
+     "pad_to_node_gain_db": -0.0962408,
+     "gain_20mhz_db": -0.0990783
     }
    }
   },
@@ -126,44 +139,63 @@
      "control": "inj_en=1"
     }
    ],
-   "bypass_loading_fF": 89.64233,
+   "bypass_loading_fF": 92.95431,
    "bypass_loading_note": "disabled capacitance added to one BB pad by both off NMOS switches (schematic devices, 20 MHz)"
   }
  },
+ "excluded_coverage": [
+  "pad protection network not co-simulated (pad modelled as ideal node + 10 pF)",
+  "extraction is capacitance-only (no wire / via resistance)",
+  "linearity/THD, noise not quantified",
+  "no Monte Carlo"
+ ],
  "performance_vs_target": [
   {
    "metric": "observe gain in -> pad, 10 pF || 100 k load (dB)",
    "target": "~0 (buffer)",
-   "extracted_nominal": -1.37171,
-   "schematic_nominal": -1.37171
+   "extracted_nominal": -1.3743,
+   "schematic_nominal": -1.3743,
+   "pass": "info"
   },
   {
    "metric": "observe -3 dB bandwidth into 10 pF (Hz)",
    "target": ">= 20e6",
-   "extracted_nominal": 76536300.0
+   "extracted_nominal": 71264300.0,
+   "pass": true
   },
   {
    "metric": "gain at 20 MHz (dB), AC / transient 0.4 Vpp diff",
    "extracted_nominal": [
-    -1.65731,
-    -1.660451631775934
-   ]
+    -1.71725,
+    -1.7200692917002283
+   ],
+   "pass": "info"
   },
   {
    "metric": "pad common mode in observe (V)",
-   "extracted_nominal": 0.818411,
-   "note": "NMOS follower level shift; external ADC must accept ~0.8 V CM"
+   "extracted_nominal": 0.8183067,
+   "note": "NMOS follower level shift; external ADC must accept ~0.8 V CM",
+   "pass": "info"
   },
   {
    "metric": "inject pad -> chain node gain (dB)",
-   "extracted_nominal": -0.0356564
+   "extracted_nominal": -0.0962408,
+   "pass": "info"
   },
   {
    "metric": "supply current observing (mA)",
-   "extracted_nominal": 1.013528
+   "extracted_nominal": 1.0135260000000001,
+   "pass": "info"
   },
   {
-   "metric": "corner sweep (ext observe)",
+   "metric": "corner sweep (ext observe): low-frequency gain, -3 dB bandwidth into 10 pF, gain at 20 MHz, pad CM, supply current",
+   "target": "every corner: -3 dB bandwidth >= 20 MHz; gain > -6 dB (the basic-function threshold of the clean test)",
+   "corners": "corner set 'full': 20 points, MOS ['ff', 'fs', 'sf', 'ss', 'typical'] x T/V [(22, 3.15), (22, 3.35), (32, 3.15), (32, 3.35)]",
+   "pass": true,
+   "failing_rows_by_check": {
+    "f3db_ge_20mhz": 0,
+    "lf_gain_gt_m6_db": 0
+   },
    "rows": [
     {
      "corner": {
@@ -171,11 +203,12 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "lf_gain_db": -1.38222,
-     "f3db_hz": 76905400.0,
-     "gain_20mhz_db": -1.66517,
-     "pad_cm_v": 0.8101909,
-     "idd_a": 0.001013821
+     "lf_gain_db": -1.38526,
+     "f3db_hz": 70964600.0,
+     "gain_20mhz_db": -1.73058,
+     "pad_cm_v": 0.8100719,
+     "idd_a": 0.001013819,
+     "pass": true
     },
     {
      "corner": {
@@ -183,11 +216,12 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "lf_gain_db": -1.36595,
-     "f3db_hz": 77686500.0,
-     "gain_20mhz_db": -1.64341,
-     "pad_cm_v": 0.8169224,
-     "idd_a": 0.001015496
+     "lf_gain_db": -1.36833,
+     "f3db_hz": 72609000.0,
+     "gain_20mhz_db": -1.69948,
+     "pad_cm_v": 0.8168264,
+     "idd_a": 0.001015494,
+     "pass": true
     },
     {
      "corner": {
@@ -195,11 +229,12 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "lf_gain_db": -1.38576,
-     "f3db_hz": 74986400.0,
-     "gain_20mhz_db": -1.68289,
-     "pad_cm_v": 0.8165147,
-     "idd_a": 0.001010943
+     "lf_gain_db": -1.38895,
+     "f3db_hz": 69074400.0,
+     "gain_20mhz_db": -1.75229,
+     "pad_cm_v": 0.8163887,
+     "idd_a": 0.001010941,
+     "pass": true
     },
     {
      "corner": {
@@ -207,11 +242,12 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "lf_gain_db": -1.36944,
-     "f3db_hz": 75772400.0,
-     "gain_20mhz_db": -1.66064,
-     "pad_cm_v": 0.823258,
-     "idd_a": 0.001012562
+     "lf_gain_db": -1.37194,
+     "f3db_hz": 70698800.0,
+     "gain_20mhz_db": -1.72019,
+     "pad_cm_v": 0.8231559,
+     "idd_a": 0.00101256,
+     "pass": true
     },
     {
      "corner": {
@@ -219,11 +255,12 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "lf_gain_db": -1.47811,
-     "f3db_hz": 72663600.0,
-     "gain_20mhz_db": -1.79384,
-     "pad_cm_v": 0.7035553,
-     "idd_a": 0.0009988072
+     "lf_gain_db": -1.48174,
+     "f3db_hz": 65816700.0,
+     "gain_20mhz_db": -1.87695,
+     "pad_cm_v": 0.703415,
+     "idd_a": 0.0009988044,
+     "pass": true
     },
     {
      "corner": {
@@ -231,11 +268,12 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "lf_gain_db": -1.46312,
-     "f3db_hz": 73441600.0,
-     "gain_20mhz_db": -1.77243,
-     "pad_cm_v": 0.7094824,
-     "idd_a": 0.001000768
+     "lf_gain_db": -1.466,
+     "f3db_hz": 67493900.0,
+     "gain_20mhz_db": -1.84337,
+     "pad_cm_v": 0.7093665,
+     "idd_a": 0.001000766,
+     "pass": true
     },
     {
      "corner": {
@@ -243,11 +281,12 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "lf_gain_db": -1.48123,
-     "f3db_hz": 70835600.0,
-     "gain_20mhz_db": -1.81286,
-     "pad_cm_v": 0.7096456,
-     "idd_a": 0.000996281
+     "lf_gain_db": -1.48504,
+     "f3db_hz": 64026300.0,
+     "gain_20mhz_db": -1.90129,
+     "pad_cm_v": 0.709497,
+     "idd_a": 0.000996278,
+     "pass": true
     },
     {
      "corner": {
@@ -255,11 +294,12 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "lf_gain_db": -1.46619,
-     "f3db_hz": 71616800.0,
-     "gain_20mhz_db": -1.79089,
-     "pad_cm_v": 0.7155845,
-     "idd_a": 0.0009981757
+     "lf_gain_db": -1.46922,
+     "f3db_hz": 65680000.0,
+     "gain_20mhz_db": -1.86645,
+     "pad_cm_v": 0.7154612,
+     "idd_a": 0.0009981733,
+     "pass": true
     },
     {
      "corner": {
@@ -267,11 +307,12 @@
       "temp_c": 22,
       "vdd_v": 3.15
      },
-     "lf_gain_db": -1.30217,
-     "f3db_hz": 81322100.0,
-     "gain_20mhz_db": -1.55608,
-     "pad_cm_v": 0.9189591,
-     "idd_a": 0.001030148
+     "lf_gain_db": -1.30489,
+     "f3db_hz": 75811800.0,
+     "gain_20mhz_db": -1.61272,
+     "pad_cm_v": 0.9188517,
+     "idd_a": 0.001030146,
+     "pass": true
     },
     {
      "corner": {
@@ -279,11 +320,12 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "lf_gain_db": -1.28439,
-     "f3db_hz": 82101400.0,
-     "gain_20mhz_db": -1.53363,
-     "pad_cm_v": 0.9266303,
-     "idd_a": 0.001031615
+     "lf_gain_db": -1.2865,
+     "f3db_hz": 77439900.0,
+     "gain_20mhz_db": -1.58269,
+     "pad_cm_v": 0.9265453,
+     "idd_a": 0.001031613,
+     "pass": true
     },
     {
      "corner": {
@@ -291,11 +333,12 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "lf_gain_db": -1.30615,
-     "f3db_hz": 79316900.0,
-     "gain_20mhz_db": -1.57267,
-     "pad_cm_v": 0.925498,
-     "idd_a": 0.001026892
+     "lf_gain_db": -1.30899,
+     "f3db_hz": 73829300.0,
+     "gain_20mhz_db": -1.63258,
+     "pad_cm_v": 0.9253844,
+     "idd_a": 0.00102689,
+     "pass": true
     },
     {
      "corner": {
@@ -303,18 +346,226 @@
       "temp_c": 32,
       "vdd_v": 3.35
      },
-     "lf_gain_db": -1.28832,
-     "f3db_hz": 80102300.0,
-     "gain_20mhz_db": -1.54979,
-     "pad_cm_v": 0.9331833,
-     "idd_a": 0.001028311
+     "lf_gain_db": -1.29053,
+     "f3db_hz": 75439100.0,
+     "gain_20mhz_db": -1.60172,
+     "pad_cm_v": 0.9330928,
+     "idd_a": 0.001028309,
+     "pass": true
+    },
+    {
+     "corner": {
+      "mos": "sf",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "lf_gain_db": -1.43914,
+     "f3db_hz": 67620100.0,
+     "gain_20mhz_db": -1.81706,
+     "pad_cm_v": 0.7328672,
+     "idd_a": 0.001001999,
+     "pass": true
+    },
+    {
+     "corner": {
+      "mos": "sf",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "lf_gain_db": -1.42339,
+     "f3db_hz": 69294200.0,
+     "gain_20mhz_db": -1.78478,
+     "pad_cm_v": 0.7389575,
+     "idd_a": 0.001003909,
+     "pass": true
+    },
+    {
+     "corner": {
+      "mos": "sf",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "lf_gain_db": -1.44251,
+     "f3db_hz": 65791500.0,
+     "gain_20mhz_db": -1.84041,
+     "pad_cm_v": 0.7390566,
+     "idd_a": 0.0009993791,
+     "pass": true
+    },
+    {
+     "corner": {
+      "mos": "sf",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "lf_gain_db": -1.42668,
+     "f3db_hz": 67443800.0,
+     "gain_20mhz_db": -1.80696,
+     "pad_cm_v": 0.7451613,
+     "idd_a": 0.001001224,
+     "pass": true
+    },
+    {
+     "corner": {
+      "mos": "fs",
+      "temp_c": 22,
+      "vdd_v": 3.15
+     },
+     "lf_gain_db": -1.33977,
+     "f3db_hz": 73931800.0,
+     "gain_20mhz_db": -1.65955,
+     "pad_cm_v": 0.8881361,
+     "idd_a": 0.001026351,
+     "pass": true
+    },
+    {
+     "corner": {
+      "mos": "fs",
+      "temp_c": 22,
+      "vdd_v": 3.35
+     },
+     "lf_gain_db": -1.32149,
+     "f3db_hz": 75566800.0,
+     "gain_20mhz_db": -1.62876,
+     "pad_cm_v": 0.8956396,
+     "idd_a": 0.001027847,
+     "pass": true
+    },
+    {
+     "corner": {
+      "mos": "fs",
+      "temp_c": 32,
+      "vdd_v": 3.15
+     },
+     "lf_gain_db": -1.34379,
+     "f3db_hz": 71988400.0,
+     "gain_20mhz_db": -1.68009,
+     "pad_cm_v": 0.8945661,
+     "idd_a": 0.001023204,
+     "pass": true
+    },
+    {
+     "corner": {
+      "mos": "fs",
+      "temp_c": 32,
+      "vdd_v": 3.35
+     },
+     "lf_gain_db": -1.32544,
+     "f3db_hz": 73601800.0,
+     "gain_20mhz_db": -1.6484,
+     "pad_cm_v": 0.9020863,
+     "idd_a": 0.001024651,
+     "pass": true
     }
    ]
   }
  ],
- "excluded_coverage": [
-  "pad protection network not co-simulated (pad modelled as ideal node + 10 pF)",
-  "linearity/THD, noise not quantified",
-  "no Monte Carlo"
- ]
+ "performance_state": "pass",
+ "failing_rows": [],
+ "rows_not_available": [],
+ "corner_set": {
+  "name": "full",
+  "corners": [
+   {
+    "mos": "typical",
+    "temp_c": 22,
+    "vdd_v": 3.15
+   },
+   {
+    "mos": "typical",
+    "temp_c": 22,
+    "vdd_v": 3.35
+   },
+   {
+    "mos": "typical",
+    "temp_c": 32,
+    "vdd_v": 3.15
+   },
+   {
+    "mos": "typical",
+    "temp_c": 32,
+    "vdd_v": 3.35
+   },
+   {
+    "mos": "ss",
+    "temp_c": 22,
+    "vdd_v": 3.15
+   },
+   {
+    "mos": "ss",
+    "temp_c": 22,
+    "vdd_v": 3.35
+   },
+   {
+    "mos": "ss",
+    "temp_c": 32,
+    "vdd_v": 3.15
+   },
+   {
+    "mos": "ss",
+    "temp_c": 32,
+    "vdd_v": 3.35
+   },
+   {
+    "mos": "ff",
+    "temp_c": 22,
+    "vdd_v": 3.15
+   },
+   {
+    "mos": "ff",
+    "temp_c": 22,
+    "vdd_v": 3.35
+   },
+   {
+    "mos": "ff",
+    "temp_c": 32,
+    "vdd_v": 3.15
+   },
+   {
+    "mos": "ff",
+    "temp_c": 32,
+    "vdd_v": 3.35
+   },
+   {
+    "mos": "sf",
+    "temp_c": 22,
+    "vdd_v": 3.15
+   },
+   {
+    "mos": "sf",
+    "temp_c": 22,
+    "vdd_v": 3.35
+   },
+   {
+    "mos": "sf",
+    "temp_c": 32,
+    "vdd_v": 3.15
+   },
+   {
+    "mos": "sf",
+    "temp_c": 32,
+    "vdd_v": 3.35
+   },
+   {
+    "mos": "fs",
+    "temp_c": 22,
+    "vdd_v": 3.15
+   },
+   {
+    "mos": "fs",
+    "temp_c": 22,
+    "vdd_v": 3.35
+   },
+   {
+    "mos": "fs",
+    "temp_c": 32,
+    "vdd_v": 3.15
+   },
+   {
+    "mos": "fs",
+    "temp_c": 32,
+    "vdd_v": 3.35
+   }
+  ]
+ }
 }

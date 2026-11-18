@@ -1,164 +1,189 @@
 {
- "ext_u": {
-  "gain_i_db": 15.306376163340252,
-  "gain_q_db": 14.555090874385225,
-  "bb_pp_i_v": 0.0428942,
-  "bb_pp_q_v": 0.0340914,
-  "idd_a": 0.00655294,
-  "f_lo_hz": 2400000000.0,
-  "f_if_hz": 5000000.0,
-  "rf_emf_amp_diff_v": 0.003,
-  "board_match": null,
-  "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
+ "netlist_sha256": {
+  "lna.ext.spice": "sha256:22d1b05319ba05961b1fc8d09144fe0a8604483fd61087defebf57550ae1a7bd",
+  "rxmix_i.ext.spice": "sha256:da4df8f82e86b1046fccce7954cc15cac21942f4556b8f2ec4ad3725657cc2d7",
+  "rxmix_q.ext.spice": "sha256:3a32deb8a1f82200bba07cc9d28dacf5005ac8eb3bc63abb5d00ccc5e1c6a3c7"
+ },
+ "conditions": {
+  "view": "extpr",
+  "corner": "tt 27 C 3.3 V",
+  "lo": "ideal 0/VDD square, 50 % duty, 20 ps edges (tb.chain_tran has no real-LO option)",
+  "source": "100 ohm differential EMF; ext_m: real COB channel ladder + per-chip carrier parts (lna_match.channel_fit, lossy, pessimistic part Q); ext_u / ext_byp: source directly on the pads",
+  "points_run": [
+   "ext_m",
+   "ext_u",
+   "ext_byp"
+  ],
+  "quick": false
+ },
+ "channel_match": {
+  "tank_ct": 9,
+  "pad_zin_ohm": [
+   6.106292,
+   -72.8393
+  ],
+  "carrier_parts": [
+   [
+    "pL",
+    6.980529661193908e-08
+   ],
+   [
+    "sC",
+    3.9978399990547697e-13
+   ]
+  ],
+  "carrier_distance_mm": 2.0,
+  "fit_s11_worst_db": -11.200004391074408,
+  "fit_in_band_loss_db": 3.421909004967824
  },
  "ext_m": {
-  "gain_i_db": 26.26686493810461,
-  "gain_q_db": 26.84577022967936,
-  "bb_pp_i_v": 0.133344,
-  "bb_pp_q_v": 0.143819,
-  "idd_a": 0.00655297,
+  "gain_i_db": 31.075302220646485,
+  "gain_q_db": 30.905481687833706,
+  "iq_gain_mismatch_db": -0.16982053281278356,
+  "iq_phase_error_deg": -0.09200644445473927,
+  "irr_db": 40.168158215952126,
+  "bb_pp_i_v": 0.215935,
+  "bb_pp_q_v": 0.211439,
+  "idd_a": 0.02436,
   "f_lo_hz": 2400000000.0,
   "f_if_hz": 5000000.0,
   "rf_emf_amp_diff_v": 0.003,
   "board_match": {
-   "order": "series_at_pad",
-   "series_leg": [
-    "L",
-    5.9999075266525975e-09
+   "order": "ladder",
+   "lossy": true,
+   "lb": 2.45e-09,
+   "lb_actual": 2.45e-09,
+   "net": [
+    [
+     "sL",
+     2.45e-09,
+     50.0
+    ],
+    [
+     "pC",
+     4e-14,
+     50.0
+    ],
+    [
+     "sL",
+     9.368333333333333e-10,
+     40.0
+    ],
+    [
+     "pC",
+     6.2425e-14,
+     50.0
+    ],
+    [
+     "sL",
+     9.368333333333333e-10,
+     40.0
+    ],
+    [
+     "pC",
+     6.2425e-14,
+     50.0
+    ],
+    [
+     "sL",
+     9.368333333333333e-10,
+     40.0
+    ],
+    [
+     "pC",
+     6.2425e-14,
+     50.0
+    ],
+    [
+     "sL",
+     3e-10,
+     40.0
+    ],
+    [
+     "pC",
+     8e-14,
+     50.0
+    ],
+    [
+     "sL",
+     1e-09,
+     40.0
+    ],
+    [
+     "pC",
+     1.25e-13,
+     50.0
+    ],
+    [
+     "sL",
+     6.6e-10,
+     60.0
+    ],
+    [
+     "pC",
+     1.34e-13,
+     50.0
+    ],
+    [
+     "pL",
+     6.980529661193908e-08,
+     40.0
+    ],
+    [
+     "sC",
+     3.9978399990547697e-13,
+     100.0
+    ]
    ],
-   "shunt_diff": [
-    "C",
-    3.1333196345924206e-12
+   "d_mm": 2.0,
+   "parts": [
+    [
+     "pL",
+     6.980529661193908e-08
+    ],
+    [
+     "sC",
+     3.9978399990547697e-13
+    ]
    ],
-   "q": 4.724934693784418
+   "part_q": "pess",
+   "ct": 9
   },
+  "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg",
+  "bench_fix": "ladder nodes bqp/bqn (tb._ladder_net) renamed: they collided with the Q baseband output nodes of tb.chain_tran"
+ },
+ "ext_u": {
+  "gain_i_db": 25.948130338608287,
+  "gain_q_db": 25.78103157754469,
+  "iq_gain_mismatch_db": -0.167098761063596,
+  "iq_phase_error_deg": -0.2481697075921261,
+  "irr_db": 40.122923914409526,
+  "bb_pp_i_v": 0.119947,
+  "bb_pp_q_v": 0.117444,
+  "idd_a": 0.0243595,
+  "f_lo_hz": 2400000000.0,
+  "f_if_hz": 5000000.0,
+  "rf_emf_amp_diff_v": 0.003,
+  "board_match": null,
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
  "ext_byp": {
-  "gain_i_db": 10.914592780746768,
-  "gain_q_db": 12.641982609526835,
-  "bb_pp_i_v": 0.0310495,
-  "bb_pp_q_v": 0.0290076,
-  "idd_a": 0.00381818,
+  "gain_i_db": 0.3639524882272927,
+  "gain_q_db": 0.6283491709600892,
+  "iq_gain_mismatch_db": 0.26439668273279426,
+  "iq_phase_error_deg": -2.1300230008382215,
+  "irr_db": 32.38672781149691,
+  "bb_pp_i_v": 0.00701986,
+  "bb_pp_q_v": 0.00746869,
+  "idd_a": 0.00606106,
   "f_lo_hz": 2400000000.0,
   "f_if_hz": 5000000.0,
   "rf_emf_amp_diff_v": 0.003,
   "board_match": null,
   "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
  },
- "ext_m_1200MHz": {
-  "gain_i_db": 36.26608436726675,
-  "gain_q_db": 36.23412427306905,
-  "bb_pp_i_v": 0.392325,
-  "bb_pp_q_v": 0.389443,
-  "idd_a": 0.00657186,
-  "f_lo_hz": 1200000000.0,
-  "f_if_hz": 2000000.0,
-  "rf_emf_amp_diff_v": 0.003,
-  "board_match": {
-   "order": "series_at_pad",
-   "series_leg": [
-    "L",
-    2.3864819791961142e-08
-   ],
-   "shunt_diff": [
-    "C",
-    3.0541379662405687e-12
-   ],
-   "q": 2.30276577546985
-  },
-  "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
- },
- "ext_m_600MHz": {
-  "gain_i_db": 36.423534523758136,
-  "gain_q_db": 36.415679709426,
-  "bb_pp_i_v": 0.401303,
-  "bb_pp_q_v": 0.398096,
-  "idd_a": 0.00658394,
-  "f_lo_hz": 600000000.0,
-  "f_if_hz": 2000000.0,
-  "rf_emf_amp_diff_v": 0.003,
-  "board_match": {
-   "order": "series_at_pad",
-   "series_leg": [
-    "L",
-    9.388153567661017e-08
-   ],
-   "shunt_diff": [
-    "C",
-    1.6720921402798487e-12
-   ],
-   "q": 0.6303638860834088
-  },
-  "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
- },
- "tnoise_lna_matched": {
-  "gain_i_db": 28.879500800886497,
-  "out_psd_i_v2_hz": 3.280458356036894e-14,
-  "bins": 10,
-  "nf_i_db": 14.08502827165847,
-  "psd_by_band": {
-   "2-3MHz": 8.134816337932692e-14,
-   "5-7MHz": 1.8887286400437217e-14,
-   "7-9MHz": 2.2450090810821674e-14
-  },
-  "nf_i_5to9mhz_db": 12.078812204425695,
-  "mode": "lna",
-  "board_match": {
-   "order": "series_at_pad",
-   "series_leg": [
-    "L",
-    5.9999075266525975e-09
-   ],
-   "shunt_diff": [
-    "C",
-    3.1333196345924206e-12
-   ],
-   "q": 4.724934693784418
-  },
-  "lna_nf_input_db": 3.284737,
-  "ota_en_v_rthz": 7.080991e-09,
-  "band_hz": [
-   2000000.0,
-   9000000.0
-  ],
-  "analysed_window_s": [
-   1e-06,
-   3e-06
-  ],
-  "trnoise_k": 1.6903560324032997e-11,
-  "channel": "I (Q mixer present, noiseless)",
-  "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
-  "board_lna_15db_1p5db_nf_db": 3.4063206672641733,
-  "board_lna_15db_1p5db_nf_5to9mhz_db": 2.7675586763167948
- },
- "tnoise_bypass": {
-  "gain_i_db": 14.660120580936413,
-  "out_psd_i_v2_hz": 3.683920650450937e-14,
-  "bins": 10,
-  "nf_i_db": 28.808165873784578,
-  "psd_by_band": {
-   "2-3MHz": 1.5649825209449456e-13,
-   "5-7MHz": 3.536478985855367e-15,
-   "7-9MHz": 1.0312411228170763e-14
-  },
-  "nf_i_5to9mhz_db": 21.548912969891166,
-  "mode": "bypass",
-  "board_match": null,
-  "lna_nf_input_db": null,
-  "ota_en_v_rthz": 7.080991e-09,
-  "band_hz": [
-   2000000.0,
-   9000000.0
-  ],
-  "analysed_window_s": [
-   1e-06,
-   3e-06
-  ],
-  "trnoise_k": 1.6903560324032997e-11,
-  "channel": "I (Q mixer present, noiseless)",
-  "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
-  "board_lna_15db_1p5db_nf_db": 14.05079702650983,
-  "board_lna_15db_1p5db_nf_5to9mhz_db": 7.707300510482082
+ "chain_nf": {
+  "state": "not available",
+  "reason": "lna-evidence.json has no chain_nf rows; scratch/rf_rx/close/chain.json does not exist or is unreadable"
  }
 }

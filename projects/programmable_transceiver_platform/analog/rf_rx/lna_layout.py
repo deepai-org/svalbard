@@ -392,7 +392,7 @@ def build(devs, geoms, ports, rw):
     return L
 
 
-LNA_ROW_WIDTH = 238.   # LNA core (tank and degeneration spirals are separate cells)
+LNA_ROW_WIDTH = 250.   # LNA core (tank and degeneration spirals are separate cells)
 
 
 def build_compact(spice, top, work, row_width=None, dry=False):

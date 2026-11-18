@@ -1,42 +1,77 @@
 {
  "lna": {
-  "area_um2": 23980.0,
+  "area_um2": 64712.0,
   "area_allocation_um2": 220000,
   "drc_errors": 0,
   "klayout_drc_violations": 0,
   "lvs": "Circuits match uniquely.",
+  "evidence_matches_files_on_disk": false,
+  "stale_against": [
+   "lna.spice",
+   "lna.gds",
+   "lna.ext.spice"
+  ],
+  "evidence_format": "lna_close.py",
+  "evidence_area_um2": 61532.0,
   "states": {
-   "safe": "pass",
-   "clean": "pass",
-   "observable": "pass",
-   "fallback": "pass"
-  }
+   "supply_current": "pass",
+   "stability": "fail",
+   "stability_5mhz_to_1ghz_real_pdn": "fail",
+   "band_on_real_channel": "fail",
+   "stability_site_b_package_model": "fail",
+   "package_model": "fail",
+   "negative_controls": "pass"
+  },
+  "all_pass": false,
+  "see": "README.md section 5a"
  },
  "rxmix_i": {
-  "area_um2": 76238.0,
+  "area_um2": 35442.0,
   "area_allocation_um2": 100000,
   "drc_errors": 0,
   "klayout_drc_violations": 0,
   "lvs": "Circuits match uniquely.",
+  "evidence_matches_files_on_disk": true,
+  "evidence_format": "characterize.py",
+  "evidence_area_um2": 35442.0,
   "states": {
    "safe": "pass",
    "clean": "pass",
    "observable": "pass",
    "fallback": "pass"
-  }
+  },
+  "performance_state": "open",
+  "failing_rows": [],
+  "rows_not_available": [
+   "chain NF, DSB (dB): deterministic multitone bench (tb.chain_det via lna_close.chain_point), extracted LNA + bo",
+   "chain out-of-band IIP3 (dBm), two tones at LO+20/+37 MHz, IM3 at 3 MHz, extracted LNA + mixers, tt (linearity."
+  ],
+  "corner_set": "reduced",
+  "all_pass": false
  },
  "rxmix_q": {
-  "area_um2": 76238.0,
+  "area_um2": 35442.0,
   "area_allocation_um2": 100000,
   "drc_errors": 0,
   "klayout_drc_violations": 0,
   "lvs": "Circuits match uniquely.",
+  "evidence_matches_files_on_disk": true,
+  "evidence_format": "characterize.py",
+  "evidence_area_um2": 35442.0,
   "states": {
    "safe": "pass",
    "clean": "pass",
    "observable": "pass",
    "fallback": "pass"
-  }
+  },
+  "performance_state": "open",
+  "failing_rows": [],
+  "rows_not_available": [
+   "chain NF, DSB (dB): deterministic multitone bench (tb.chain_det via lna_close.chain_point), extracted LNA + bo",
+   "chain out-of-band IIP3 (dBm), two tones at LO+20/+37 MHz, IM3 at 3 MHz, extracted LNA + mixers, tt (linearity."
+  ],
+  "corner_set": "reduced",
+  "all_pass": false
  },
  "bbfilter_i": {
   "area_um2": 341901.0,
@@ -44,12 +79,20 @@
   "drc_errors": 0,
   "klayout_drc_violations": 0,
   "lvs": "Circuits match uniquely.",
+  "evidence_matches_files_on_disk": true,
+  "evidence_format": "characterize.py",
+  "evidence_area_um2": 341901.0,
   "states": {
    "safe": "pass",
    "clean": "pass",
    "observable": "pass",
    "fallback": "pass"
-  }
+  },
+  "performance_state": "pass",
+  "failing_rows": [],
+  "rows_not_available": [],
+  "corner_set": null,
+  "all_pass": true
  },
  "bbfilter_q": {
   "area_um2": 341901.0,
@@ -57,12 +100,20 @@
   "drc_errors": 0,
   "klayout_drc_violations": 0,
   "lvs": "Circuits match uniquely.",
+  "evidence_matches_files_on_disk": true,
+  "evidence_format": "characterize.py",
+  "evidence_area_um2": 341901.0,
   "states": {
    "safe": "pass",
    "clean": "pass",
    "observable": "pass",
    "fallback": "pass"
-  }
+  },
+  "performance_state": "pass",
+  "failing_rows": [],
+  "rows_not_available": [],
+  "corner_set": null,
+  "all_pass": true
  },
  "bb_tap": {
   "area_um2": 19511.0,
@@ -70,11 +121,46 @@
   "drc_errors": 0,
   "klayout_drc_violations": 0,
   "lvs": "Circuits match uniquely.",
+  "evidence_matches_files_on_disk": true,
+  "evidence_format": "characterize.py",
+  "evidence_area_um2": 19511.0,
   "states": {
    "safe": "pass",
    "clean": "pass",
    "observable": "pass",
    "fallback": "pass"
+  },
+  "performance_state": "pass",
+  "failing_rows": [],
+  "rows_not_available": [],
+  "corner_set": "full",
+  "all_pass": true
+ },
+ "chain": {
+  "evidence_matches_files_on_disk": true,
+  "ext_m": {
+   "gain_i_db": 31.075302220646485,
+   "gain_q_db": 30.905481687833706,
+   "irr_db": 40.168158215952126,
+   "idd_a": 0.02436
+  },
+  "ext_u": {
+   "gain_i_db": 25.948130338608287,
+   "gain_q_db": 25.78103157754469,
+   "irr_db": 40.122923914409526,
+   "idd_a": 0.0243595
+  },
+  "ext_byp": {
+   "gain_i_db": 0.3639524882272927,
+   "gain_q_db": 0.6283491709600892,
+   "irr_db": 32.38672781149691,
+   "idd_a": 0.00606106
+  },
+  "chain_nf": {
+   "state": "not available",
+   "reason": "lna-evidence.json has no chain_nf rows; scratch/rf_rx/close/chain.json does not exist or is unreadable",
+   "target_dsb_db": null,
+   "nf_dsb_db": []
   }
  }
 }

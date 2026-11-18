@@ -254,7 +254,11 @@ LNA_RGM = 7.0                    # level resistor (um of 1 um ppoly, ~7 kohm x 1
 # does not fit over the core); the attenuator dump branch also ends on vtk.
 LNA_WFD = 400.
 LNA_RCAS = (4.0, 26.0)           # cascode gate divider VDD -> vcas -> VSS (um of 1 um ppoly)
-LNA_CCT_FW, LNA_CCT_NF, LNA_CCT_L, LNA_CCT_N = 20.0, 12, 3.0, 6   # 6 units x 12 fingers x 20 um x 3 um ~ 19 pF
+LNA_CCT_FW, LNA_CCT_NF, LNA_CCT_L, LNA_CCT_N = 20.0, 12, 2.0, 9   # 9 units x 12 fingers x 20 um x 2 um of nfet_06v0 gate ~ 19 pF: the node sits at
+                                 # the full rail whenever the island is on; the 6 V oxide (15 nm) has margin at 3.63 V that the 3.3 V oxide has not
+LNA_WESD = 4.                    # secondary ESD clamps behind the pad MIMs (gates g_p / g_n, bypass nodes bpc_p / bpc_n): one off PMOS (drain
+                                 # junction to the n-well = diode to VDD) and one off NMOS (junction diode to VSS) per node; 2 kV HBM on the pad
+                                 # left 5.3-5.8 V gate-to-bulk on the CS devices and 5.9-6.4 V on the bypass switches without them (limit 5.0 V)
 # Common-mode-only input loss: one MIM from each RF pad to the node ncm, one resistor from ncm to VSS (differential: ncm is
 # a virtual ground, the MIMs are plain pad capacitance; common mode: series R-C loss that outweighs the tail-capacitance term)
 LNA_CCM, LNA_RCM_W = 11.6, 10.5  # 0.27 pF per leg (pad-side capacitance costs input resistance = channel loss; 0.1 pF left 0.33 ohm of
@@ -319,7 +323,7 @@ def lna():
     s.pmos('vtk', 'VSS', 'VDD', LNA_WFD)
     for k in range(LNA_CCT_N):     # finger width alternates by 0.02 um so that the layout keeps the units as separate devices (rows can wrap)
         fw = LNA_CCT_FW - 0.02 * (k % 2)
-        s.nmos('VSS', 'vtk', 'VSS', LNA_CCT_NF * fw, LNA_CCT_L, fw=fw)
+        s.nmos6('VSS', 'vtk', 'VSS', LNA_CCT_NF * fw, LNA_CCT_L, fw=fw)
     # common-mode-only input loss
     s.cap('rf_in_p', 'ncm', LNA_CCM)
     s.cap('rf_in_n', 'ncm', LNA_CCM)
@@ -342,6 +346,8 @@ def lna():
         s.nmos(x, gi, f'src_{sd}', LNA_WCS, fw=LNA_FW, b='VSS')   # source -> degeneration spiral -> tail
         if LNA_CIN:
             s.cap(g, f'rf_in_{sd}', LNA_CIN)
+        s.pmos(g, 'VDD', 'VDD', LNA_WESD)       # secondary ESD clamp at the gate node
+        s.nmos(g, 'VSS', 'VSS', LNA_WESD)
         # RC-16j LNTA: ONE cascode per leg into the LC tank node tank_{sd} (spiral across tank_p/tank_n, placed at
         # assembly as the QVCO spirals); DC feed by a ppoly resistor; both mixers AC-coupled from the tank node.
         t = f'tank_{sd}'
@@ -366,6 +372,8 @@ def lna():
         if LNA_BYP_AT == 'pad':     # RC-16j: series MIM pad -> bypass switch (no DC path from RF_RX; safe test)
             s.cap(f'bpc_{sd}', f'rf_in_{sd}', LNA_BYP_C)
             bsrc = f'bpc_{sd}'
+            s.pmos(bsrc, 'VDD', 'VDD', LNA_WESD)    # secondary ESD clamp at the bypass node
+            s.nmos(bsrc, 'VSS', 'VSS', LNA_WESD)
         s.nmos(bsrc, 'byp', f'rf_out_{sd}', LNA_BYP_W)
         s.nmos(bsrc, 'byp', f'rf_outq_{sd}', LNA_BYP_W)
     _res_fold(s, 'rf_out_p', 'rf_out_n', LNA_ROUT_L)

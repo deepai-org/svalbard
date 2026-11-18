@@ -548,6 +548,7 @@ def channel_eval(net, F, z, rs=100.):
 
 
 CH_TOPOS = (('pL', 'sC'), ('sC', 'pC'), ('sL', 'pC'))
+S11_FIT_DB = 11.2     # the fit aims at -11.2 dB on its series R-C pad model: ngspice on the extracted LNA reads about 0.6 dB worse
 
 
 def channel_fit(zpad, d_mm=2.0, q='pess', topos=CH_TOPOS, seeds=5, **kw):
@@ -564,7 +565,7 @@ def channel_fit(zpad, d_mm=2.0, q='pess', topos=CH_TOPOS, seeds=5, **kw):
             return s11.max(), loss[band].max()
         for s in range(seeds):
             x0 = np.log([start[t_] for t_ in topo]) + np.random.RandomState(s).normal(0, 0.7, len(topo)) * (s > 0)
-            r = minimize(lambda x: ev(x)[1] + 3 * max(0, ev(x)[0] + 10.5), x0, method='Nelder-Mead', options=dict(maxiter=600, xatol=1e-3, fatol=1e-4))
+            r = minimize(lambda x: ev(x)[1] + 3 * max(0, ev(x)[0] + S11_FIT_DB), x0, method='Nelder-Mead', options=dict(maxiter=600, xatol=1e-3, fatol=1e-4))
             s11, loss = ev(r.x)
             if best is None or loss + 5 * max(0, s11 + 10) < best[0]:
                 best = (loss + 5 * max(0, s11 + 10), topo, np.exp(r.x), s11, loss)

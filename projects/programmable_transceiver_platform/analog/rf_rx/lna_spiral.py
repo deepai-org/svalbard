@@ -32,10 +32,10 @@ def model(variant='nom'):
 NAMES = {'nom': 'pt_lna_ind', 'pess': 'pt_lna_ind_pess', 'lhi': 'pt_lna_ind_lhi'}
 
 # Source-degeneration inductor (coordinator decision 2026-11-13, risk RFR-12): ON CHIP, one spiral per CS source to the LNA's own
-# VSS, so no bond wire or pad is in the degeneration path.  Same generator/model family: 140 um, 2 turns, 20 um -> 0.52 nH,
-# Rs 1.9 ohm (Q 4.2), 25.2k um^2 each (scratch/rf-lna-p/v8/spscan.py).  Variants: pess = L -15 %, Rs +30 %, worst substrate
+# VSS, so no bond wire or pad is in the degeneration path.  Same generator/model family: 100 um, 2 turns, 15 um -> 0.31 nH,
+# Rs 1.7 ohm, 14.0k um^2 each (scan: scratch/rf-lna-q/f2.py).  Variants: pess = L -15 %, Rs +30 %, worst substrate
 # (gain/NF worst); lhi = L +10 %; lowr = Rs -30 %, best substrate (least damping: stability worst).
-G_DEG = dict(SP.G, dout_um=140.0, turns=2, width_um=20.0, under_w_um=12.0, f_hz=2.44e9)
+G_DEG = dict(SP.G, dout_um=100.0, turns=2, width_um=15.0, under_w_um=12.0, f_hz=2.44e9)   # round 2: halved (0.31 nH, 14.0k um^2): +0.6 dB gain, same NF on the channel, S11 holds
 DEG_NAMES = {'nom': 'pt_lna_deg', 'pess': 'pt_lna_deg_pess', 'lhi': 'pt_lna_deg_lhi', 'lowr': 'pt_lna_deg_lowr'}
 
 

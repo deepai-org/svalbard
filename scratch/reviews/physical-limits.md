@@ -222,3 +222,34 @@ Class-A bound with the board DC feed at 3.3 V: per-leg swing ~0.9-1.2 V and ~18 
   without the passive voltage gain the 50 Ω/leg mixer input dominates (needs ~5× the transconductance,
   ≳ 50 mA, to recover); bond-wire/inductive source degeneration of the present device raises R by only
   3–6 Ω (ωT_eff·Ls with the large fixed C) while costing 1.3–3.8 dB NF. Not pursued.
+
+## RF_RX package loss floor on the unmodified COB (RX-CHLOSS, RF RX owner, 2026-11-18): 2.4–2.7 dB before the LNA
+
+- **Claim.** With the fixed 74-wire COB (no signal footprint on the COB, nearest part on the carrier) the loss between the
+  100 Ω source and the LNA gate is bounded below by the series loss of the bond and COB trace against the pad resistance of
+  the stage: **L ≥ 10·log10(1 + R_ch / R_pad)** plus the loss of the carrier parts. It is a limit of the package and pad, not
+  of the LNA transistor.
+- **R_ch.** Per leg from `spec/package-channel.md`: bond 2.45 nH (Q 50), 5.5 mm of 86.6 Ω trace (0.511 nH/mm, Q 40), via
+  0.30 nH, connector 1.0 nH: 6.56 nH per leg, ωL = 100.6 Ω at 2.44 GHz, series loss 2.25 Ω per leg = **4.5 Ω differential**
+  (the trace and connector shunt capacitance add the rest). Independent review 4 arrived at 4.7 Ω.
+- **R_pad.** The gate branch of the stage is about 18 Ω per leg (12 Ω poly gate resistor, device gate resistance,
+  degeneration); the pad-side capacitance (0.55 pF pad + ESD, 0.27 pF common-mode network, wiring) divides it by about four:
+  **7–9 Ω differential** over corners (8.4 − j78.6 Ω at tt, extracted). Raising it means more gate or source resistance (noise)
+  or less pad capacitance (the pad is 0.39–0.55 pF per leg and carries the 2 kV HBM diodes).
+- **Evidence** (`analog/rf_rx/lna_match.channel_fit`, numpy ABCD of the channel, lossy carrier parts at Q 40 / 100, per-chip fit;
+  checked in ngspice with `tb.lna_band` on the extracted LNA: fit 2.66 dB, ngspice 2.46 dB at tt; bench self-tests T3 / T3b):
+
+  | R_pad (Ω differential) | 4.9 | 6.4 | 8.4 (as built) | 10 | 12.7 | 20 | 30 |
+  |---|---|---|---|---|---|---|---|
+  | loss, parts at connector + 2 mm (dB) | — | 3.3 | 2.5 | 2.2 | 1.9 | 1.3 | 0.9 |
+  | loss, parts at 10 mm (dB) | — | 5.0 | 3.8 | 3.5 | 2.9 | 2.0 | 1.4 |
+
+  Over the five process corners and both supply ends the extracted LNA loses **2.4–2.7 dB** at connector + 2 mm
+  (`generated/lna-evidence.json`, band rows: ideal-lossless-match gain minus gain on the channel).
+- **Consequence.** LNA noise figure including the channel is 3.3–4.4 dB (own NF 2.0–2.8 dB), so the on-chip chain target of
+  4.1 dB DSB (RF-RX-NFSYS 8 dB − 3.91 dB board budget) is not reachable with any mixer / TIA behind this pad on this board.
+  What would move the bound: a shunt part on the COB trace (needs a modified COB, not available), pad capacitance
+  (each 0.1 pF per leg is 0.15 dB), or the allowed off-chip LNA in front (its output drives the channel at high level, so the
+  channel loss no longer adds to the noise figure).
+- **Not a limit:** the 2.3 dB that the small TIA adds at tt, and the mixer conversion loss with the LO as delivered
+  (`analog/rf_rx/README.md` 5a) are design choices (area, LO drive).

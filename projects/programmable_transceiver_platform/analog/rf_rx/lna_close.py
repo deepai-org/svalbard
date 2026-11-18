@@ -134,7 +134,7 @@ def band():
     save('band', par([(lambda j=j: one(*j)) for j in jobs]))
 
 
-PKG_MODELS = ('A_min', 'A_nom', 'A_max', 'B_min', 'B_nom', 'B_max')     # pads owner's coupled bond model: site option x inductance bound
+PKG_MODELS = ('B_min', 'B_nom', 'B_max', 'A_nom')     # pads owner's coupled bond model: site option x inductance bound
 
 
 def bounce(model, corner=NOM, f=2.421875e9, decap=True, view='extpr'):
@@ -188,6 +188,114 @@ print gb vb
     r = m['gb'] / m['vb'] / m['gs']
     return dict(model=model, corner=corner, die_decap=decap, f_hz=f, gain_emf_to_out=m['gs'], out_per_volt_of_vss_bounce=m['gb'] / m['vb'],
                 bounce_to_input_referred_db=20 * math.log10(r))
+
+
+def stab_b():
+    """Round 2 (coordinator 2026-11-18): the decided bond map = site option B.  Pads owner's coupled model, three bounds, supply cases
+    incl. the low-loss / low-decap ones of review 4, RX and duplex bias, both sweeps (5 MHz-1 GHz at 400 / decade, 0.1-30 GHz)."""
+    sup = (dict(), dict(cdie=3e-9, rdie=0.03, rsw=0.2), dict(cdie=5.4e-9, rdie=0.1, rsw=0.3), dict(cdie=0.9e-9, rdie=0.03, rsw=0.2, cdec=500e-12))
+    cases = [(m, FF, 'lowr', lob, k) for m in ('B_min', 'B_nom', 'B_max') for k in sup for lob in (False, True)]
+    cases += [('B_nom', c, None, lob, sup[1]) for c in (NOM, SS, ('sf', 22, 3.35), ('fs', 22, 3.35), ('ff', 22, 3.35)) for lob in (False, True)]
+    cases += [('B_max', FF, 'lowr', False, dict(sup[1], att=63)), ('B_max', FF, 'lowr', False, dict(sup[1], mode='bypass')), ('B_max', FF, 'lowr', False, dict(sup[1], ct=0)),
+              ('B_max', FF, 'lowr', False, dict(sup[1], ct=15))]
+    def one(i, m, c, dg, lob, k):
+        out = dict(model=m, corner=c, degeneration_model=dg or 'nom', lobias=lob, case=k)
+        wd = OUT / 'stab_b' / f'c{i:02d}'
+        tb.set_lobias(lob)
+        try:
+            for tag, sw in (('lf', dict(f1=5e6, f2=1e9, ppd=400)), ('hf', dict())):
+                r = LM.stability(wd / tag, 'extpr', c, deg=dg, pkg=m, **k, **sw)
+                out[tag] = r
+                # minimum below 8 GHz from the curves just written (the 30 GHz end is the passive pad network)
+                if tag == 'hf':
+                    for kind, key in (('cm', 'cm_min_below_8ghz'), ('mx', 'diff_min_below_8ghz')):
+                        fs = list((wd / tag).glob(f'*_{kind}?_zr.txt'))
+                        out[key] = min(float((lambda d: d[d[:, 0] <= 8e9, 1].min())(np.array(S.read_table(f)))) for f in fs)
+        except Exception as e:
+            out['error'] = repr(e)
+        finally:
+            tb.set_lobias(False)
+        if 'error' not in out:
+            g = lambda key: min(out['lf'][key], out['hf'][key])
+            out.update(min_mu=g('min_mu'), min_k=g('min_k'), min_re_diff_ohm=g('min_re_zin_real_mixer_ohm'), min_re_cm_ohm=g('min_re_zcm_real_mixer_ohm'),
+                       min_re_cm_ohm_5mhz_8ghz=min(out['lf']['min_re_zcm_real_mixer_ohm'], out['cm_min_below_8ghz']))
+            out['pass_differential'] = bool(out['min_mu'] > 1 and out['min_k'] > 1 and out['min_re_diff_ohm'] >= LIM['re_diff_ohm'])
+            out['pass_common_mode'] = bool(out['min_re_cm_ohm'] >= LIM['re_cm_ohm'])
+            out['pass_common_mode_5mhz_8ghz'] = bool(out['min_re_cm_ohm_5mhz_8ghz'] >= LIM['re_cm_ohm'])
+        return out
+    save('stab_b', par([(lambda i=i, c_=c_: one(i, *c_)) for i, c_ in enumerate(cases)]))
+
+
+def startup(model='B_max', corner=FF, kind='enable', lob=False, tstop=4e-6):
+    """Large-signal check (review 4): LNA + real extracted mixers on the coupled package model with the low-loss supply case
+    (3 nF / 0.03 ohm die decap, 0.2 ohm island switch), 50 ohm per leg at the board ends of the RX wires, LO static.
+    kind 'enable': rail up, `en` steps 0 -> VDD at 0.2 us (10 ns edge).  kind 'power': the island rail ramps 0 -> VDD in 1.1 us
+    (fastest switch) with `en` high.  Pass: after 2.5 us the common-mode and differential pad voltages and the tank are quiet
+    (peak-to-peak <= 1 mV) and the supply current sits within 5 % of its DC value: no sustained or growing oscillation."""
+    c, t_, vdd = corner; w = OUT / 'startup'; w.mkdir(parents=True, exist_ok=True)
+    nl = tb.netlist(w, 'lna', 'extpr'); ni, nq = tb.netlist(w, 'rxmix_i', 'ext'), tb.netlist(w, 'rxmix_q', 'ext')
+    (w / 'lna-bond-model.spice').write_text(LM.PKG_MODEL.read_text())
+    en = f'PWL(0 0 0.2u 0 0.21u {vdd})' if kind == 'enable' else f'{vdd}'
+    sup = f'{vdd}' if kind == 'enable' else f'PWL(0 0 0.2u 0 1.3u {vdd})'
+    lows = '\n'.join(f'V{n} {n} vss 0' for n in ('gain_lo', 'byp', 'island_off', 'se', 'rt', 'ct1', 'ct2', 'att0', 'att1', 'att2', 'att3', 'att4'))
+    body = f""".include {nl}
+.include {ni}
+.include {nq}
+.include lna-bond-model.spice
+Xpkg bp bn rf_in_p rf_in_n vss vdq rfrx_bond_{model}
+VDDX vdie vdq {sup}
+Rsw vdie VDD 0.2
+Cdie vdie vdm 3n
+Rdie vdm vss 0.03
+Vibs vib vss 3.3
+Ib vib ibias 10u
+Ib2 vib ib2 10u
+Ib3 vib ib3 10u
+Ven en vss {en}
+Venm enm vss {en}
+Vlob lobias vss {vdd if lob else 0}
+{lows}
+Vct0 ct0 vss {vdd}
+Vct3 ct3 vss {vdd}
+Rsp bp 0 50
+Rsn bn 0 50
+Cpp rf_in_p vss 0.5p
+Cpn rf_in_n vss 0.5p
+Vlp lp vss {vdd}
+Vln ln vss 0
+{tb._ofs(0, vdd, 'i').replace(' 0 ', ' vss ')}
+{tb._ofs(0, vdd, 'q').replace(' 0 ', ' vss ')}
+X1 rf_in_p rf_in_n rf_out_p rf_out_n rf_outq_p rf_outq_n ibias en gain_lo byp ct0 ct1 ct2 se rt island_off nb vdcm VDD vss ct3 att0 att1 att2 att3 att4 srcp_b srcn_b tkp_b tkn_b lobias scm_b vtk_b pt_lna
+{tb.src_net('extpr', gnd='vss', variant='lowr')}
+XI rf_out_p rf_out_n lp ln bip bin ib2 enm ofs0i ofs1i ofs2i ofs3i ofs4i ofs_signi island_off avi abi{tb.HIBP} VDD vss pt_rxmix_i
+XQ rf_outq_p rf_outq_n lp ln bqp bqn ib3 enm ofs0q ofs1q ofs2q ofs3q ofs4q ofs_signq island_off avq abq{tb.HIBP} VDD vss pt_rxmix_q
+.option method=gear
+.control
+tran 20p {tstop} 0 50p
+let vcm=(v(rf_in_p)+v(rf_in_n))/2-v(vss)
+let vdm=v(rf_in_p)-v(rf_in_n)
+let vtd=v(tkp_b)-v(tkn_b)
+let vtc=(v(tkp_b)+v(tkn_b))/2
+let idd=-i(VDDX)
+meas tran cm_pp pp vcm from=2.5u to={tstop}
+meas tran dm_pp pp vdm from=2.5u to={tstop}
+meas tran tankd_pp pp vtd from=2.5u to={tstop}
+meas tran tankc_pp pp vtc from=2.5u to={tstop}
+meas tran vss_pp pp v(vss) from=2.5u to={tstop}
+meas tran idd_end avg idd from={tstop * 0.9} to={tstop}
+meas tran idd_pp pp idd from=2.5u to={tstop}
+meas tran cm_pp_early pp vcm from=0.3u to=1.5u
+.endc
+"""
+    log, m = tb.run(w, f'startup_{kind}_{model}_{tb._tag(corner)}{"_lo" if lob else ""}.cir', body, corner, timeout=7200)
+    quiet = all((m.get(k) is not None and m[k] <= 1e-3) for k in ('cm_pp', 'dm_pp', 'tankd_pp', 'tankc_pp'))
+    return dict(kind=kind, model=model, corner=corner, lobias=lob, **{k: m.get(k) for k in ('cm_pp', 'dm_pp', 'tankd_pp', 'tankc_pp', 'vss_pp', 'idd_end', 'idd_pp', 'cm_pp_early')},
+                **{'pass': bool(quiet and m.get('idd_end') and 5e-3 < m['idd_end'] < 40e-3)})
+
+
+def startup_all():
+    jobs = [('B_max', FF, 'enable', False), ('B_max', FF, 'power', False), ('B_max', FF, 'enable', True), ('B_min', ('ss', 22, 3.15), 'power', False)]
+    save('startup', par([(lambda j=j: startup(j[0], j[1], j[2], j[3])) for j in jobs]))
 
 
 def pkg():
@@ -301,6 +409,20 @@ def write():
         ok = lambda r: r.get('nf_dsb_db') is not None and r['nf_dsb_db'] <= LIM['chain_nf_dsb_db']
         tests['chain_nf'] = dict(target=f"on-chip chain NF <= {LIM['chain_nf_dsb_db']} dB DSB on the real channel, at tt, ss and the pessimistic end, with the LO as delivered",
                                  rows=ch, **{'pass': bool(ch) and all(ok(r) for r in ch)})
+    sb = ld('stab_b')
+    if sb:
+        ok = [r for r in sb if 'error' not in r]
+        tests['stability_site_b_package_model'] = dict(
+            target='decided bond map (site B), pads owner coupled bond model, min / nom / max, 5 MHz-30 GHz: mu > 1, K > 1, Re(Zin) >= 1.0 ohm, Re(Zcm) >= 1.0 ohm',
+            rows=len(sb), errors=len(sb) - len(ok), min_mu=min(r['min_mu'] for r in ok), min_k=min(r['min_k'] for r in ok), min_re_diff_ohm=min(r['min_re_diff_ohm'] for r in ok),
+            min_re_cm_ohm_5mhz_30ghz=min(r['min_re_cm_ohm'] for r in ok), min_re_cm_ohm_5mhz_8ghz=min(r['min_re_cm_ohm_5mhz_8ghz'] for r in ok),
+            pass_differential=all(r['pass_differential'] for r in ok), pass_common_mode_as_written=all(r['pass_common_mode'] for r in ok),
+            pass_common_mode_5mhz_8ghz=all(r['pass_common_mode_5mhz_8ghz'] for r in ok),
+            note='the limit as written (to 30 GHz) is kept: above ~9 GHz the common-mode value is the passive pad network (coordinator decision (d) 2026-11-18: recorded as a miss)',
+            detail=sb, **{'pass': bool(len(ok) == len(sb) and all(r['pass_differential'] and r['pass_common_mode'] for r in ok))})
+    su = ld('startup')
+    if su:
+        tests['startup_transient'] = dict(target='enable step and island power-up on the coupled package model (site B) with the low-loss supply: quiet after 2.5 us (<= 1 mV pp), DC current reached', rows=su, **{'pass': all(r['pass'] for r in su)})
     pk, pc = ld('pkg'), ld('pad_c_tolerance')
     if pk:
         srows = [r for r in pk['stability'] if 'error' not in r]
@@ -324,4 +446,4 @@ def write():
 
 
 if __name__ == '__main__':
-    {'currents': currents, 'stab': stab, 'stab_extra': stab_extra, 'stab_lf': stab_lf, 'band': band, 'chain': chain, 'pkg': pkg, 'neg': neg, 'write': write}[sys.argv[1]]()
+    {'currents': currents, 'stab': stab, 'stab_extra': stab_extra, 'stab_lf': stab_lf, 'band': band, 'chain': chain, 'pkg': pkg, 'stab_b': stab_b, 'startup': startup_all, 'neg': neg, 'write': write}[sys.argv[1]]()

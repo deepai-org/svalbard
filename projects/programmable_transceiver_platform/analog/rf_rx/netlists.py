@@ -247,6 +247,7 @@ LNA_WT, LNA_LT, LNA_WT_REF = 505., 0.5, 3.0     # tail bottom device and its ref
 LNA_WTC, LNA_WTC_REF = 252.5, 1.5               # tail cascode (L 0.28) and its reference
 LNA_WTCB, LNA_LTCB = 2.0, 1.0                   # cascode-gate bias diode
 LNA_WT_REF_LO = 2.8              # extra reference width switched in by lobias (duplex: ~11.7 mA)
+LNA_VG_R, LNA_VG_CW = 60., 300.   # gate-bias filter resistor (um of 1 um ppoly) and NMOS capacitor width (L 3 um)
 LNA_RGM = 7.0                    # level resistor (um of 1 um ppoly, ~7 kohm x 100 uA) under the gate-bias replica: tail node ~0.7 V
 # Local return of the load current (RFR-14): the tank centre tap `vtk` is fed from VDD through an always-on PMOS (LNA_WFD,
 # ~12 ohm) and returned to the LNA VSS through an NMOS gate capacitor (LNA_CCT_W x LNA_CCT_L um, ~20 pF; a MIM of that size
@@ -256,8 +257,8 @@ LNA_RCAS = (4.0, 26.0)           # cascode gate divider VDD -> vcas -> VSS (um o
 LNA_CCT_FW, LNA_CCT_NF, LNA_CCT_L, LNA_CCT_N = 20.0, 12, 3.0, 6   # 6 units x 12 fingers x 20 um x 3 um ~ 19 pF
 # Common-mode-only input loss: one MIM from each RF pad to the node ncm, one resistor from ncm to VSS (differential: ncm is
 # a virtual ground, the MIMs are plain pad capacitance; common mode: series R-C loss that outweighs the tail-capacitance term)
-LNA_CCM, LNA_RCM_W = 10.0, 5.5   # 0.2 pF per leg (pad-side capacitance costs input resistance = channel loss; 0.1 pF left 0.33 ohm of
-                                 # common-mode margin with the real die decap); ppoly 1 um / 5.5 um ~ 180 ohm
+LNA_CCM, LNA_RCM_W = 11.6, 10.5  # 0.27 pF per leg (pad-side capacitance costs input resistance = channel loss; 0.1 pF left 0.33 ohm of
+                                 # common-mode margin with the real die decap, 0.2 pF left 0.74-0.92 ohm in duplex bias); ppoly 1 um / 10.5 um ~ 95 ohm (150 ohm left 0.95 ohm at attenuator code 63, 4-5 GHz)
 LNA_FW = 5.
 LNA_ATT_AT, LNA_BYP_AT, LNA_BYP_W = 'steer', 'pad', 10.
 LNA_BYP_C = 20.0                 # bypass series MIM side (um), ~0.8 pF   # RC-16j probes: 'tank' / 'pad' move them off the gate
@@ -323,8 +324,11 @@ def lna():
     s.cap('rf_in_p', 'ncm', LNA_CCM)
     s.cap('rf_in_n', 'ncm', LNA_CCM)
     _res_fold(s, 'ncm', 'VSS', 1.0, LNA_RCM_W)
-    _res_fold(s, 'vgr', 'vg', 10., 1.)
+    # gate-bias filter: supply ripple on the replica must not reach the gates (it carried the 45-100 MHz supply anti-resonance
+    # into the common mode: RQ-3a); ~60 kohm x ~4 pF (NMOS gate capacitor + MIM) = 0.7 MHz
+    _res_fold(s, 'vgr', 'vg', LNA_VG_R, 1.)
     s.cap('vg', 'VSS', 10.)
+    s.nmos('VSS', 'vg', 'VSS', LNA_VG_CW, 3.0, fw=10.)
     s.pmos('vtop', 'enb', 'VDD', 4.)
     _res_fold(s, 'vtop', 'vcas', LNA_RCAS[0], 1.)
     _res_fold(s, 'vcas', 'VSS', LNA_RCAS[1], 1.)

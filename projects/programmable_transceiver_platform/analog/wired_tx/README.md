@@ -52,8 +52,8 @@ ring cell differs, row WT38) and pad=C (capacitance-only pad extraction) unless 
   is not met without trim (`scratch/wired_tx/s13/resultsC/c1_3125_ssp.json`).
 * **Extracted revision-3 mux alone** (ideal phases, ss pessimistic, 3.125 Gb/s, pad=C, 216 bits): 0 errors, 0.194 V with
   equal trim codes (limit 0.200: fail by 6 mV; revision 2 0.219 V). The layout has a systematic 15 ps skew on one
-  slice edge, which the calibration below removes (codes [1,0,0,0,0,0,0,0], residual +-3.5 ps); the eye with those
-  codes was queued and is not in hand.
+  slice edge, which the calibration below removes (codes [1,0,0,0,0,0,0,0], residual +-3.5 ps): with those codes
+  0 errors, 0.211 V / 0.64 UI (passes the screening limit; `scratch/wired_tx/s13/q_x.log`, `x3_cal_ssp`).
 * **Pad with metal resistance** (pads' models `scratch/pads-core/txr/models`, mux level, extracted revision-2 mux, ideal
   phases; `scratch/wired_tx/s13/padr/padr.log`), eye in V, pad=C / pad=RC-typ / pad=RC-high: ss 2.7 Gb/s 0.482 / 0.264 / -;
   ss 3.125 0.367 / 0.203 / 4 errors; ss 3.24 0.331 / 0.186 / 10 errors; tt 3.125 0.483 / 0.210 / 0.082.

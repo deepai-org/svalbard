@@ -63,7 +63,8 @@ see "Hop plan" below. Not yet laid out.
   the block top `pt_wiredtx8` (`s13/top/`).
 - Extracted revision-3 mux, ideal phases, ss pessimistic 3.125 Gb/s, pad=C, codes all equal: 0 errors, 0.194 V (fail by
   6 mV; extracted revision 2: 0.219). Both layouts have a systematic slice skew (crossing of slot 3 about -20 ps, slot 4
-  +16 ps with ideal phases); the trim calibration removes it: run `q_x2.sh` (calibrated codes) before judging.
+  +16 ps with ideal phases); the trim calibration removes it: codes [1,0,0,0,0,0,0,0] give 0 errors, 0.211 V / 0.64 UI
+  (`s13/q_x.log` line `x3_cal_ssp`, mux-level screening, pad=C).
 - Trim calibration from DC averages (`s13/cal.py`, method in its docstring): proven on known offsets (ideal phases:
   finds 46.6 ps of slot error, leaves +-6.7 ps). With the real ring the first pattern must not be measured during ring
   start-up (LEAD in cal.py; the first real-ring results were wrong for slot 0 and are deleted).

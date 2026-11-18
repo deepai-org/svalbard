@@ -170,3 +170,7 @@ Limits given: 3 sims (RF RX, wired RX, pads, wired TX, digital sims), 2 heavy jo
 - Largest levers: digital macro 0.83, debug pads on provider cells 0.43, core ring 0.26-0.53, decap bank 0.39, ADC pair 0.39, baseband filter pair 0.29, WTX_EXT pad 0.15 (OCP-2), QVCO regulator 0.14, core bias 0.14.
 - Done: RF probe frames 430 x 260 -> 260 x 260 um (-0.133 mm2, commit be37cc6, reviewed GO-with-conditions). Accepted risk to confirm: 200 um port spacing for facing GSG probes.
 - Found: the INT23 QVCO rule and the `lo` switch at pad 64 cannot both hold (QVCO 1.0 mm from its switch in every packing); area levers remove grid-MIM area one for one (2.0 / 1.4 / 0.8 nF as built / targets / lower bounds); channels are 0.7-1.0 mm2 short at realistic pitch unless static control crosses blocks; pad-ring corners hold nothing.
+
+### Decision 2026-11-18: pad ESD architecture (PC-23)
+
+User chose option A: primary ESD diodes inside the pad site tied straight to the ring rails, in all custom pad families. Back-feed into an unpowered chip is accepted; the board controls sequencing (rule to be written by the pads owner). Reason: metal resistance of 23-32 ohm pad-to-diode (56-85 ohm full loop) left every custom pad unprotected at 2 kV; the isolated-rail alternative cost 0.3-0.9 pF per pad. All pad evidence must use R+C extraction with the return side in the model.

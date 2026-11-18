@@ -16,7 +16,7 @@
           "rf_profile_waveforms"
         ],
         "acceptance": "Every intended capability has electrical, timing, signal-quality, power, area and FPGA-service requirements with numerical criteria or an explicitly unresolved value.",
-        "owners": "spec/contract.json; spec/feasibility-gates.md",
+        "owners": "spec/contract.json; spec/tapeout-plan.md",
         "current_gap": "All 17 interfaces map six requirement dimensions. Derived FPGA rate envelopes now distinguish bulk capacity from conditional queue bounds and unsupported direct RF tuning. Exact electrical/quality/deadline acceptance, actual FPGA implementation and physical fit remain incomplete."
       },
       {
@@ -29,7 +29,7 @@
           "programmable_resources"
         ],
         "acceptance": "One selected composition exercises startup, operation, legal mode changes, faults and recovery with finite transport and persistent analog state.",
-        "owners": "spec/block-diagram.md; system_model/architecture_fast/README.md",
+        "owners": "spec/block-diagram.md; system_model/README.md",
         "current_gap": "One retained RF/wired/USB trajectory uses inventory local/HOST loads, package state, SAR switch loading and cycle guard. Paired asynchronous decisions run under explicit50ps regeneration/100ps launch/200mV threshold assumptions with20ns publication and3ns acquisition. Model-derived reference/supply observations gate startup and expire after200ns; independent100ns observations cover idle periods. Stopped zero, +/-VREF/4 and normal selections deliver110 complete pairs each with assigned diagnostic reference charge. Reported reference loss and USB analog faults advance the FPGA-owned condition generation; pre-fault diagnostic records are rejected after RF recovery. USB interruption, pad release, stale-session rejection, fresh qualification and reply recovery execute. Complete chip cold startup, physical sensing, diagnostic source impedance, measured calibration requalification/correction deployment, serialized fault-service latency, traffic-dependent current feedback and USB clock acquisition remain incomplete. The pad is isolated through preceding abstract wired stages; this is not a complete shared electrical-lane or protocol lifecycle proof."
       },
       {
@@ -41,7 +41,7 @@
           "converters_reference"
         ],
         "acceptance": "Bound shared power, package and timing uncertainties together, including adverse combinations and interior resonances; distinguish assigned ranges from justified bounds.",
-        "owners": "spec/feasibility-gates.md; spec/risk-priorities.md",
+        "owners": "spec/tapeout-plan.md; spec/risk-register.md",
         "current_gap": "RF RX/TX230mA, wired268.45mA and USB252.2mA use one inventory/package catalog with retained local/HOST transitions and matching DC rails. Traffic-dependent converter/DAC/core switching feedback and physical capture delay remain incomplete. The selected CDR has scoped acquired-state and nominal-local-clock cold successes under the shared supply/channel model; source-loss recovery and the full coupled uncertainty envelope remain open. Current CDR evidence is recorded in selected-revision-check.json with its original source fingerprints; these sampled successes are not physical bounds. Combined converter loading/noise/reference-drive and asynchronous timing have a conditional success region with little margin, not continuous uncertainty or rare-event coverage. Shared-pad charge injection and finite power cycles retain external drive; modeled rail clamps backfeed83..84mA, while the ground-primary topology omits that path. Physical junction/stress limits, automatic brownout isolation, floating-supply response and clamp-current package coupling remain open. The first RF-chain matrix now demonstrates sampled wideband and narrowband regions with coupled noise, blockers, delivered phase, finite gain settling, clipping, asynchronous conversion/reference feedback and loaded TX distortion on the selected234mA/package inventory. This is diagnostic BPSK/LE1M evidence only. Continuous uncertainty coverage, valid HE training/higher modulation, emissions, signal-dependent RF current closure and physical realization remain open."
       },
       {
@@ -66,7 +66,7 @@
           "wired_modes"
         ],
         "acceptance": "Critical analog blocks have quantitative interface/performance envelopes, budget ownership and credible alternatives with explicit costs and unresolved implementation assumptions.",
-        "owners": "spec/block-diagram.md; spec/analog-design-workflow.md",
+        "owners": "spec/block-diagram.md; spec/block-deliverables.md",
         "current_gap": "Keep asynchronous SAR with3ns acquisition,20ns conversion and2ns reset plus0.2ns guard, preserving DAC settling intervals. The refreshed512-sample tone screen has positive precision and timing margins at assigned50/100/150ps regeneration; the100ps cases retain2.09..2.28ns conversion margin. The stressed150ps result has only1.2ps timing margin and does not qualify that corner; stressed precision remains thin (minimum0.016bits). These finite-tone results do not establish continuous uncertainty coverage or rare-decision probability. Diagnostic source charge now affects retained reference/recharge; continuous source impedance/bias, mismatch, kickback and rare decisions remain open. Keep board-adjustable RF matching and existing gain, with the0dBm robustness gate open despite one compensated waveform reaching approximately0.043dBm. Keep USB8-bit0.8..1.2 current trim with actual-rail/load calibration; the assigned rail/termination screen motivates provisional absolute supply sensitivity<=0.2/V, while+0.5/V cannot cover the illustrative0.36..0.44V settled-level gate. Dynamic PSRR and switching extrema remain open. The selected shared CDR now passes the50ppm tracking target in two acquired-state430k-bit SSC/gap trajectories (37.06 and42.17ppm). A separate independent nominal-local-clock cold trajectory qualifies at bit344686 and reaches34.70ppm with zero scored errors, no qualification losses and80bits peak observation queue within1024bits. These scoped results supersede the older25ps/0.025ps-per-mV candidate failure summary; current selected controls come from analog-architecture.json. Full source-loss/changed-SSC recovery, initial-offset and jitter-envelope coverage, physical sampler/actuator performance and resource qualification remain open."
       },
       {
@@ -76,7 +76,7 @@
           "coverage_and_reproducibility"
         ],
         "acceptance": "One entry point identifies the selected model, current evidence, failed gates and reproducible commands; historical candidate evidence is visibly scoped and not duplicated as current qualification.",
-        "owners": "spec/mathematical-closure.json; spec/risk-priorities.md",
+        "owners": "spec/mathematical-closure.json; spec/risk-register.md",
         "current_gap": "One normative architecture remains, with candidate comparisons in existing models and evidence. All17 intended capabilities remain in scope. This record summarizes current gaps instead of chronological runs. Reports retain separate source manifests; some predate shared-model changes. Neither passing component tests nor their count establishes a current complete whole-chip baseline."
       }
     ],
@@ -1351,9 +1351,8 @@
   "scope": "Full intended programmable PHY companion; mathematical closure precedes transistor schematic closure and layout.",
   "basis": [
     "spec/block-diagram.md",
-    "spec/clock-rate-ownership.md",
     "spec/contract.json",
-    "spec/feasibility-gates.md",
+    "spec/tapeout-plan.md",
     "spec/streaming-transport-v2.md"
   ],
   "requirements": [
@@ -1367,9 +1366,7 @@
     {
       "id": "sustained_rate_ownership",
       "status": "partial",
-      "remaining": "Verify finite FPGA service, independent rate/phase drift, queue bounds, continuous operation and explicit stop/recovery semantics.",
-      "prior_evidence": "connected-matched-rate-lifecycle.json",
-      "prior_evidence_scope": "Historical partial fixture; requalification against selected architecture required."
+      "remaining": "Verify finite FPGA service, independent rate/phase drift, queue bounds, continuous operation and explicit stop/recovery semantics."
     },
     {
       "id": "clock_services",
@@ -1615,8 +1612,8 @@
   },
   "current_owners": {
     "architecture": "spec/block-diagram.md",
-    "acceptance": "spec/feasibility-gates.md",
-    "risks_and_uncertainty": "spec/risk-priorities.md",
+    "acceptance": "spec/tapeout-plan.md",
+    "risks_and_uncertainty": "spec/risk-register.md",
     "configuration": "spec/contract.json"
   },
   "evidence_policy": "Results qualify their recorded model/assumptions only. Current analytical diagnostics are not a selected full-chip implementation. Superseded candidate journals are recoverable from Git history.",

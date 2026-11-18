@@ -5,7 +5,6 @@
     "spec/tapeout-plan.md",
     "spec/tapeout-readiness.json:fallback_routes,debug_sites,characterization_structures",
     "spec/analog-architecture.json:control_fields,control_semantics,blocks",
-    "spec/consolidation-pass.md",
     "integration/macro-contract.md"
   ],
   "spi_abi": {
@@ -3344,7 +3343,7 @@
   },
   "atb_switch_dead_time_s": 2e-08,
   "block_observation": {
-    "policy": "Per-block observation assignment (spec/path-to-tapeout.md section 3). Each entry names one signal, the block port it observes (null = status/bias node with no architecture port), the path and its selection, the shared-cell mode (register field -> value) that makes it block-specific, the islands that must be on in addition to the path control's own islands, and the expected bench-visible result. via = observed through the named downstream blocks (indirect). Paths: atb1 (code by node name), dbg_obs (DBG_OBS0 sel = 4+obs_status index), wdbg_obs (sel = 3+wire_status index), clk_obs/wclk_obs/wmon/bb_tap/freq_count (source value), spi (address[bits]), host_data (D2H payload), pad (instrument at a functional pad). A mapping is not a verified path: verification/observation_coverage.py checks it against the catalogs and reports what has assembled evidence. Retired blocks are omitted.",
+    "policy": "Per-block observation assignment (spec/tapeout-plan.md, debug and test pads). Each entry names one signal, the block port it observes (null = status/bias node with no architecture port), the path and its selection, the shared-cell mode (register field -> value) that makes it block-specific, the islands that must be on in addition to the path control's own islands, and the expected bench-visible result. via = observed through the named downstream blocks (indirect). Paths: atb1 (code by node name), dbg_obs (DBG_OBS0 sel = 4+obs_status index), wdbg_obs (sel = 3+wire_status index), clk_obs/wclk_obs/wmon/bb_tap/freq_count (source value), spi (address[bits]), host_data (D2H payload), pad (instrument at a functional pad). A mapping is not a verified path: verification/observation_coverage.py checks it against the catalogs and reports what has assembled evidence. Retired blocks are omitted.",
     "blocks": {
       "power": [
         {

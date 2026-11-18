@@ -365,7 +365,7 @@ def contract_sites():
     return c['assembly_policy']['provider_site_inventory']['ordered_sites_by_side'], c['assembly_policy']['candidate_signal_sites']
 
 
-# Interface-architecture reservations (spec/interface-architecture-changes.md, S1-S10):
+# Interface-architecture reservations (S1-S10; host link in spec/streaming-transport-v2.md):
 # pad-edge host DDR/gearbox regions (156.25 MHz), T-coil / low-C pad room at the wired
 # pads. Sizes are placeholders until the owners publish layouts.
 RESERVES = [

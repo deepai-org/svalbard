@@ -62,7 +62,7 @@ def main(*,design=None):
             'runner_sha256':hashlib.sha256(Path('/src/verification/run_gpio_transient.py').read_bytes()).hexdigest(),
             'contract_sha256':design.provenance()['documents']['spec/contract.json'],
             'contract_sha256_format':'canonical-json-sha256-v1',
-            'host_threshold_source':'AMD DS181 v1.27.1 Tables 8 and 19; see spec/host-driver-selection.md#artix-load-baseline',
+            'host_threshold_source':'AMD DS181 v1.27.1 Tables 8 and 19; see spec/fpga-connection-plan.md',
             'limitations':['10 pF is a selected lumped-load stress, not a characterized package/PCB.',
                            'Assumed aperture and clock reference are not receiver setup/hold closure.',
                            'Ideal supplies; no SSO, jitter, mismatch, process spread or H2D.',

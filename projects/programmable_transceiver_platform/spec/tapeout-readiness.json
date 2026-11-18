@@ -2051,7 +2051,7 @@
     "wrx_cap above 480 MHz",
     "host link capacity (divider 8 rule)"
    ],
-   "status": "unverified; primary route is on-chip CDR closure (spec/interface-architecture-changes.md AC-3)"
+   "status": "unverified; primary route is on-chip CDR closure (WRX-01 in spec/risk-register.md)"
   },
   "wire_tx_board_serializer": {
    "replaces": [
@@ -2405,12 +2405,11 @@
   "passive_matching": "analog/characterization",
   "dbg_obs": "rtl (status mux) + provider digital pad cells",
   "lo_ext": "analog/timing",
-  "polyphase": "analog/timing",
   "prescale": "analog/timing",
   "wordclk": "analog/timing"
  },
  "consolidation": {
-  "source": "spec/consolidation-pass.md",
+  "source": "integration/top/pt_chip.conn; reading aid spec/block-diagram.md",
   "merged_into": {
    "rxfilter_i": "bbfilter_i",
    "txfilter_i": "bbfilter_i",
@@ -2496,7 +2495,7 @@
    "class": "lower-frequency RF via LO ÷2/÷4",
    "gating": false,
    "cost_allowed": "none",
-   "source": "spec/exclusive-engine-policy.md#rf-band-stretch-goals",
+   "source": "spec/interface-requirements.md (non-gating stretch rows)",
    "checks": {
     "rx_gain_at_1p2ghz_600mhz": "pass",
     "tx_gain_at_1p2ghz_600mhz": "pass",

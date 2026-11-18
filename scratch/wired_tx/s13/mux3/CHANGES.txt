@@ -1,0 +1,7 @@
+2026-11-18 05:45 UTC  wtx_mux8.py (schematic) changed after a fallback simulation:
+ 1. the run detector's two small inverters per phase now hang on the PHASE INPUT PH k (DA: PH k -> XE k, DB: XE k -> XD k),
+    not on X k.  Place them at the PH k pin of each slice (same tiny load on every phase).
+ 2. new internal net EXTF = NOR(EXTB, RUN), EXTFB = INV(EXTF) (gates GXF, GXFI).  The slice's first gate I0 is now
+    NAND(PH k, EXTFB) (was EXTB); TGM / TGMB and EXTM derive from EXTF (gates GTG, GXM).  So the global track that ran
+    through all eight slices as EXTB is now EXTFB; nothing else in the slice changes.
+Re-read wtx_mux8.netlist() before building; the generator is the reference.

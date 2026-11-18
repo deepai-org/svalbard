@@ -27,6 +27,8 @@ FAST = tools.GENERATED / 'fast'
 TUNE = HERE.parent / 's12' / 'tune.json'
 RINGFILE = dict(layout=R.RING, committed=HERE / 'ringver' / 'ring_committed.ext.spice')
 RINGLABEL = dict(layout='layout-11Nov', committed='committed-estimate')
+PADFILE = dict(C=B.PAD, RT=Path('/home/ubuntu/svalbard/scratch/pads-core/txr/models/tx_rt.spice'), RH=Path('/home/ubuntu/svalbard/scratch/pads-core/txr/models/tx_rh.spice'))
+PADLABEL = dict(C='pad=C', RT='pad=RC-typ', RH='pad=RC-high')
 
 
 def ring_text(ver, pess):
@@ -47,10 +49,13 @@ def tune(corner, temp, vring, band, f, pess):
 
 
 def deck(work, *, corner, temp, vdd, res, pess, ring, words, word_t0, tstop, rate, full, codes, main_code, post_code, en_post, pol,
-         idle, idle_mode, ext, dx_bits, dx_rate, tap, mux_ext, aux_ext, ser_ext, bond, kill, S_, probes, launch, supply, par):
+         idle, idle_mode, ext, dx_bits, dx_rate, tap, mux_ext, aux_ext, ser_ext, bond, kill, S_, probes, launch, supply, par, top_ext, pad_model):
     tw = 40 / rate
-    L = ['* pt_wiredtx8 real chain', CH.pad_header(corner, temp, res), '.include ring.spice', '.include ser.spice', '.include mux.spice',
-         '.include aux.spice', '.include top.spice']
+    L = ['* pt_wiredtx8 real chain', CH.pad_header(corner, temp, res), '.include ring.spice'] + (
+        ['.include ser.spice', '.include mux.spice', '.include aux.spice', '.include top.spice'] if not (top_ext and full) else ['.include topx.spice'])
+    if top_ext and full:       # one extracted netlist of the whole block (children inside)
+        ttxt = B.clean(Path(top_ext).read_text()).replace('/', '__')
+        (work / 'topx.spice').write_text(B4.pess_all(ttxt) if pess else ttxt)
     (work / 'ring.spice').write_text(ring_text(ring['ver'], ring['pess']))
     S.PESSIMISTIC = pess
     (work / 'ser.spice').write_text(cml_ser.add_gate_r(S.dut_text(Path(ser_ext))).replace('/', '__').replace('.', '__') if False else
@@ -99,7 +104,7 @@ def deck(work, *, corner, temp, vdd, res, pess, ring, words, word_t0, tstop, rat
           'CAVN ATB_AVGN VSS 2p', 'RATN ATB_NBIAS ATBNX 1meg', 'CATN ATBNX VSS 1p', 'RATP ATB_PBIAS ATBPX 1meg', 'CATP ATBPX VSS 1p', 'CXD WTX_EXT_DATA VSS 20f']
     if full:
         L.append('XTOP ' + ' '.join(wtx8_top.PORTS) + ' pt_wiredtx8')
-        padt = B.clean(B.PAD.read_text())
+        padt = B.clean(PADFILE[pad_model].read_text())
         if S_ != 1.0:
             padt = C.scale_pad(padt, S_)
         if pess:
@@ -133,7 +138,7 @@ def deck(work, *, corner, temp, vdd, res, pess, ring, words, word_t0, tstop, rat
 def run(tag, rate=3.125e9, corner='ss', temp=32, vdd=3.15, vring=2.69, pess=False, ring_pess=None, ring_ver='layout', res=None, n_over=1,
         nwords=None, codes=None, main_code=160, post_code=0, en_post=0, pol=0, idle=0, idle_mode=0, ext=0, dx_rate=None, tap=0,
         mux_ext=None, aux_ext=None, ser_ext=None, bond='pess', kill=None, S_=1.0, probes=(), launch=0.25, supply=None, par=None,
-        band=None, vctrl=None, stuck=None, keep=False, **_):
+        band=None, vctrl=None, stuck=None, keep=False, top_ext=None, pad_model='C', **_):
     ring_pess = pess if ring_pess is None else ring_pess
     res = res or {'ss': 'ss', 'ff': 'ff'}.get(corner, 'typical')
     f = rate / 8
@@ -157,9 +162,9 @@ def run(tag, rate=3.125e9, corner='ss', temp=32, vdd=3.15, vring=2.69, pess=Fals
     words = [[ub[nline * k + i // n_over] for i in range(40)] for k in range(nw)]
     common = dict(corner=corner, temp=temp, vdd=vdd, res=res, pess=pess, ring=ring, rate=rate, codes=codes, main_code=main_code, post_code=post_code,
                   en_post=en_post, pol=pol, idle=idle, idle_mode=idle_mode, ext=ext, dx_bits=None, dx_rate=dx_rate, tap=tap, mux_ext=mux_ext,
-                  aux_ext=aux_ext, ser_ext=ser_ext, bond=bond, kill=kill, S_=S_, probes=probes, launch=launch, supply=supply, par=par)
+                  aux_ext=aux_ext, ser_ext=ser_ext, bond=bond, kill=kill, S_=S_, probes=probes, launch=launch, supply=supply, par=par, top_ext=top_ext, pad_model=pad_model)
     out = dict(tag=tag, target_rate=rate, n_over=n_over, corner=corner, temp=temp, vdd=vdd, vring=vring, vctrl=vctrl, band=band, pess=pess,
-               ring_pess=ring_pess, ring='ring=' + RINGLABEL[ring_ver], res=res, codes=codes, main_code=main_code, post_code=post_code, en_post=en_post,
+               ring_pess=ring_pess, ring='ring=' + RINGLABEL[ring_ver], padm=PADLABEL[pad_model], top_ext=top_ext, res=res, codes=codes, main_code=main_code, post_code=post_code, en_post=en_post,
                pol=pol, mux_ext=mux_ext, aux_ext=aux_ext, ser_ext=ser_ext, kill=kill, S=S_, supply=supply, frot=wtx8_top.FROT,
                limits=dict(eye_h_v=CH.EYE_H, eye_w_ui=CH.EYE_W_UI, min_bits=CH.MIN_BITS))
     # pass 1: when does the word clock rise?
@@ -210,7 +215,7 @@ def _save(out):
 def summ(o):
     def s(x):
         return f"{x.get('errors')}e/{x.get('bits')} H{x.get('eye_h_v')} W{x.get('eye_w_ui')}UI dj{x.get('dj_pp_ps')}" if x and 'errors' in x else str(x)[:80]
-    return (f"{o['tag']}: {'PASS' if o.get('ok') else 'FAIL'} | {o.get('ring')} | gate {s(o.get('gate'))} | far {s(o.get('far'))} | "
+    return (f"{o['tag']}: {'PASS' if o.get('ok') else 'FAIL'} | {o.get('ring')} {o.get('padm')} | gate {s(o.get('gate'))} | far {s(o.get('far'))} | "
             f"I {o.get('i_avg_ma')} mA run@{o.get('t_run_ns')} ns bias {o.get('main_bias_v')} | {o.get('reason') or ''}")
 
 

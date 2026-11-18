@@ -481,60 +481,83 @@ X123 fcn2 fcn1 VDD VDD pfet_03v3 ad=1.02p pd=3.02u as=1.39p ps=5.39u w=2u l=0.28
 + D19 D20 D21 D22 D23 D24 D25 D26 D27 D28 D29 D30 D31 D32 D33 D34 D35 D36 D37 D38
 + D39 PH0 PH45 PH90 PH135 PH180 PH225 PH270 PH315 SERQ F0 F1 F2 F3 F4 F5 F6 F7 WCKQ
 + VDD VSS
-XXH0_0 XP4/Q XL0/BO F0 XL7/ENB VDD VSS wtx_tspcbx
-XXH7_0 XP4/Q XL7/BO XH7_1/D XL7/ENB VDD VSS wtx_tspcb
+XXH0_0 XP6/Q XL0/BO F0 XL7/ENB VDD VSS wtx_tspcbx
+XXH7_0 XP7/Q XL7/BO XH7_1/D XL7/ENB VDD VSS wtx_tspcb
 XXCTL SERQ XL7/ENB XDV/CO WCKQ VDD VSS wtx_q4ctlc
-XXH7_1 XP3/Q XH7_1/D F7 XL7/ENB VDD VSS wtx_tspcbx
+XXH7_1 XP5/Q XH7_1/D F7 XL7/ENB VDD VSS wtx_tspcbx
 XXP0 PH0 SERQ VDD VSS VSS VSS VSS XP0/G XP0/XN0 XP0/XN1 XP0/XN2 XP0/QW XP0/Q VDD VSS
 + wtx_qph
 XXP1 PH45 SERQ VDD VSS VSS VSS VSS XP1/G XP1/XN0 XP1/XN1 XP1/XN2 XP1/QW XP1/Q VDD
 + VSS wtx_qph
-XXH5_0 XP4/Q XL5/BO XH5_1/D XL7/ENB VDD VSS wtx_tspcb
+XXH5_0 XP7/Q XL5/BO XH5_1/D XL7/ENB VDD VSS wtx_tspcb
 XXP3 PH135 SERQ VDD VSS VSS VSS VSS XP3/G XP3/XN0 XP3/XN1 XP3/XN2 XP3/QW XP3/Q VDD
 + VSS wtx_qph
 XXP2 PH90 SERQ VDD VSS VSS VSS VSS XP2/G XP2/XN0 XP2/XN1 XP2/XN2 XP2/QW XP2/Q VDD
 + VSS wtx_qph
-XXH5_1 XP1/Q XH5_1/D F5 XL7/ENB VDD VSS wtx_tspcbx
 XXP4 PH180 SERQ VDD VSS VSS VSS VSS XP4/G XP4/XN0 XP4/XN1 XP4/XN2 XP4/QW XP4/Q VDD
 + VSS wtx_qph
+XXH5_1 XP3/Q XH5_1/D F5 XL7/ENB VDD VSS wtx_tspcbx
 XXCK XP0/XN0 XP0/XN1 XP0/XN2 XL3/CK XL7/CK XDV/CK VDD VSS wtx_q4ck
 XXL0 D0 D8 D16 D24 D32 VSS XL7/LDA XL3/CK XL7/ENB XL0/BO VDD VSS wtx_sreg5
 XXP5 PH225 SERQ VDD VSS VSS VSS VSS XP5/G XP5/XN0 XP5/XN1 XP5/XN2 XP5/QW XP5/Q VDD
 + VSS wtx_qph
 XXL1 D1 D9 D17 D25 D33 VSS XL7/LDA XL3/CK XL7/ENB XL1/BO VDD VSS wtx_sreg5
-XXH3_0 XP7/Q XL3/BO F3 XL7/ENB VDD VSS wtx_tspcbx
+XXH3_0 XP0/Q XL3/BO F3 XL7/ENB VDD VSS wtx_tspcbx
 XXP6 PH270 SERQ VDD VSS VSS VSS VSS XP6/G XP6/XN0 XP6/XN1 XP6/XN2 XP6/QW XP6/Q VDD
 + VSS wtx_qph
 XXL2 D2 D10 D18 D26 D34 VSS XL7/LDA XL3/CK XL7/ENB XL2/BO VDD VSS wtx_sreg5
-XXL3 D3 D11 D19 D27 D35 VSS XL7/LDA XL3/CK XL7/ENB XL3/BO VDD VSS wtx_sreg5
 XXP7 PH315 SERQ VDD VSS VSS VSS VSS XP7/G XP7/XN0 XP7/XN1 XP7/XN2 XP7/QW XP7/Q VDD
 + VSS wtx_qph
+XXL3 D3 D11 D19 D27 D35 VSS XL7/LDA XL3/CK XL7/ENB XL3/BO VDD VSS wtx_sreg5
 XXL4 D4 D12 D20 D28 D36 VSS XL7/LDA XL7/CK XL7/ENB XL4/BO VDD VSS wtx_sreg5
+XXH1_0 XP7/Q XL1/BO F1 XL7/ENB VDD VSS wtx_tspcbx
 XXL5 D5 D13 D21 D29 D37 VSS XL7/LDA XL7/CK XL7/ENB XL5/BO VDD VSS wtx_sreg5
-XXH1_0 XP5/Q XL1/BO F1 XL7/ENB VDD VSS wtx_tspcbx
 XXL6 D6 D14 D22 D30 D38 VSS XL7/LDA XL7/CK XL7/ENB XL6/BO VDD VSS wtx_sreg5
 XXL7 D7 D15 D23 D31 D39 VSS XL7/LDA XL7/CK XL7/ENB XL7/BO VDD VSS wtx_sreg5
 XXDV XDV/CK XL7/ENB XDV/CO XL7/LDA VDD VSS wtx_div5r
-XXH6_0 XP4/Q XL6/BO XH6_1/D XL7/ENB VDD VSS wtx_tspcb
-XXH6_1 XP2/Q XH6_1/D F6 XL7/ENB VDD VSS wtx_tspcbx
-XXH4_0 XP0/Q XL4/BO F4 XL7/ENB VDD VSS wtx_tspcbx
-XXH2_0 XP6/Q XL2/BO F2 XL7/ENB VDD VSS wtx_tspcbx
-D0 VSS D11 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D1 VSS D16 diode_nd2ps_03v3 pj=3.92u area=0.9604p
-D2 VSS D26 diode_nd2ps_03v3 pj=4.12u area=1.0609p
-D3 VSS D2 diode_nd2ps_03v3 pj=3.76u area=0.8836p
-D4 VSS D25 diode_nd2ps_03v3 pj=4.2u area=1.1025p
-D5 VSS D8 diode_nd2ps_03v3 pj=4.32u area=1.1664p
-D6 VSS D10 diode_nd2ps_03v3 pj=4.16u area=1.0816p
-D7 VSS D24 diode_nd2ps_03v3 pj=4.32u area=1.1664p
-D8 VSS D18 diode_nd2ps_03v3 pj=3.72u area=0.8649p
-D9 VSS D34 diode_nd2ps_03v3 pj=3.72u area=0.8649p
-D10 VSS D32 diode_nd2ps_03v3 pj=3.88u area=0.9409p
-D11 VSS D33 diode_nd2ps_03v3 pj=3.8u area=0.9025p
-D12 VSS D27 diode_nd2ps_03v3 pj=2.4u area=0.36p
-D13 VSS D9 diode_nd2ps_03v3 pj=4.24u area=1.1236p
-D14 VSS D0 diode_nd2ps_03v3 pj=3.92u area=0.9604p
-D15 VSS D1 diode_nd2ps_03v3 pj=3.84u area=0.9216p
-D16 VSS D17 diode_nd2ps_03v3 pj=3.8u area=0.9025p
+XXH6_0 XP6/Q XL6/BO XH6_1/D XL7/ENB VDD VSS wtx_tspcb
+XXH6_1 XP4/Q XH6_1/D F6 XL7/ENB VDD VSS wtx_tspcbx
+XXH4_0 XP6/Q XL4/BO XH4_1/D XL7/ENB VDD VSS wtx_tspcb
+XXH4_1 XP2/Q XH4_1/D F4 XL7/ENB VDD VSS wtx_tspcbx
+XXH2_0 XP0/Q XL2/BO F2 XL7/ENB VDD VSS wtx_tspcbx
+D0 VSS D27 diode_nd2ps_03v3 pj=3.16u area=0.6241p
+D1 VSS D16 diode_nd2ps_03v3 pj=2.84u area=0.5041p
+D2 VSS D34 diode_nd2ps_03v3 pj=2.6u area=0.4225p
+D3 VSS D28 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D4 VSS D13 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D5 VSS D11 diode_nd2ps_03v3 pj=3.16u area=0.6241p
+D6 VSS D17 diode_nd2ps_03v3 pj=2.72u area=0.4624p
+D7 VSS D33 diode_nd2ps_03v3 pj=2.72u area=0.4624p
+D8 VSS D37 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D9 VSS D36 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D10 VSS D6 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D11 VSS D10 diode_nd2ps_03v3 pj=3.24u area=0.6561p
+D12 VSS D26 diode_nd2ps_03v3 pj=3.24u area=0.6561p
+D13 VSS D18 diode_nd2ps_03v3 pj=2.64u area=0.4356p
+D14 VSS D19 diode_nd2ps_03v3 pj=2.56u area=0.4096p
+D15 VSS D14 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D16 VSS D4 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D17 VSS D32 diode_nd2ps_03v3 pj=2.8u area=0.49p
+D18 VSS D9 diode_nd2ps_03v3 pj=3.32u area=0.6889p
+D19 VSS SERQ diode_nd2ps_03v3 pj=2.4u area=0.36p
+D20 VSS D31 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D21 VSS D0 diode_nd2ps_03v3 pj=2.88u area=0.5184p
+D22 VSS D30 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D23 VSS D1 diode_nd2ps_03v3 pj=2.76u area=0.4761p
+D24 VSS D38 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D25 VSS D7 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D26 VSS D15 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D27 VSS D8 diode_nd2ps_03v3 pj=3.4u area=0.7225p
+D28 VSS D3 diode_nd2ps_03v3 pj=2.6u area=0.4225p
+D29 VSS D25 diode_nd2ps_03v3 pj=3.28u area=0.6724p
+D30 VSS D20 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D31 VSS D2 diode_nd2ps_03v3 pj=2.68u area=0.4489p
+D32 VSS D29 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D33 VSS D5 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D34 VSS D12 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D35 VSS D35 diode_nd2ps_03v3 pj=2.52u area=0.3969p
+D36 VSS D24 diode_nd2ps_03v3 pj=3.4u area=0.7225p
+D37 VSS D21 diode_nd2ps_03v3 pj=2.4u area=0.36p
+D38 VSS D22 diode_nd2ps_03v3 pj=2.4u area=0.36p
 .ends
 

@@ -32,6 +32,38 @@ LAYOUT_OPTS = dict(vthdac=dict(over_dev=True, quiet=lambda p: True))
 LAYOUT_OPTS['cdr'] = dict(over_dev=True, trunks_over=True, row_width=260.)
 
 
+# r10 (CTLE r4, 2026-11-14): the AP4-1 repack (22 columns, tracks and trunks over the devices) and the output-follower
+# fix as ONE layout, with the AP4 review findings addressed: rows holding the matched input pair or the isolated-well
+# followers carry no foreign metal (matched=), sp / atb_ctle_src / cp / cn get empty neighbour slots (spaced=), DC
+# current paths are sized for the 85 C EM limits (currents=), antenna diodes that find no site get one (ant_retry=).
+def _ctle_matched(d):
+    return d.iso or (d.model.startswith('pfet') and d.nodes[1] in ('RX_P', 'RX_N'))
+
+
+def _ctle_currents(d):
+    """mA, + = the net feeds the terminal (nominal tt values; wrx_flow applies 1.3x)."""
+    n = d.nodes
+    if d.model.startswith('pfet') and n[1] == 'atb_ctle_pbias' and n[0] != 'atb_ctle_pbias':
+        return {0: -0.0625, 2: 0.0625}                 # tail / follower-reference fingers
+    if d.model.startswith('pfet') and n[1] in ('RX_P', 'RX_N'):
+        return {0: -2.5 / 6, 2: 2.5 / 6}               # input pair finger
+    if d.model.startswith('ppolyf') and n[0] in ('cp', 'cn'):
+        return {0: 2.5 / netlists.CTLE_RL_M, 1: -2.5 / netlists.CTLE_RL_M}     # load strip
+    if d.model.startswith('nfet') and n[0] in ('cp_rl', 'cn_rl'):
+        return {0: 2.5 / netlists.CTLE_RL_M, 2: -2.5 / netlists.CTLE_RL_M}     # load switch finger
+    if d.iso:
+        return {0: 3.0, 2: -3.0}                       # follower (spread over wrx_flow.ISO_ESC escapes per terminal)
+    if d.model.startswith('nfet') and n[1] == 'fbias':
+        return {0: 0.31, 2: -0.31}                     # follower sink finger / mirror diode
+    return {}
+
+
+LAYOUT_OPTS['ctle'] = dict(over_dev=True, trunks_over=True, row_width=204., matched=_ctle_matched, currents=_ctle_currents,
+                           spaced=('sp', 'atb_ctle_src', 'atb_ctle_pbias', 'cp', 'cn', 'CTLE_P', 'CTLE_N'), ant_retry=3,
+                           track_before={'sp': 'atb_ctle_pbias'},
+                           trunk_match=(('RX_P', 'RX_N'), ('sp', 'atb_ctle_src'), ('CTLE_P', 'CTLE_N'), ('cp_rl', 'cn_rl')))
+
+
 def layout_block_slicer():
     """pt_slicer r2: compact cells + macro assembly (slicer_compact.py), same report keys as layout_block."""
     import slicer_compact as sc
@@ -57,6 +89,8 @@ def layout_block(block):
     sub = f.parse_spice(f.HERE / f'{block}.spice')
     work = f.SCRATCH / 'layout' / block
     lay = f.generate_layout(sub, work, columns=COLUMNS.get(block), **LAYOUT_OPTS.get(block, {}))
+    if lay.get('antenna_unplaced'):      # AP4 review: an unplaced antenna diode used to pass silently
+        raise RuntimeError(f'{block}: antenna diode(s) without a legal site: {lay["antenna_unplaced"]}')
     ref = f.lvs_reference(f.HERE / f'{block}.spice', sub.name, lay.get('antenna_diodes'), work / 'lvs_reference.spice')
     lv = f.lvs(work, f'{sub.name}.lvs.spice', sub.name, ref, sub.name)
     f.GENERATED.mkdir(exist_ok=True)

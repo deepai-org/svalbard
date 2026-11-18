@@ -2,8 +2,8 @@
  "image_id": "svalbard/transceiver-pad-sim:ngspice47-corrected",
  "models": {
   "hspad": {
-   "path": "/home/ubuntu/svalbard/scratch/pads-pd21/hspad3/physical.spice",
-   "sha256": "1f1c589da9af8b0c3e5d2fc2575fd689969225c3393541bd0af263a93df3e805"
+   "path": "/home/ubuntu/svalbard/scratch/pads-core/hsfix/build/f6/physical.spice",
+   "sha256": "8348278714317ecdfb19e844ef90b58f49f637b00e6f9b223f2620a4a1f2cee0"
   }
  },
  "shunt_model": "drawn in the family layouts (extracted with the layout)",
@@ -15,57 +15,57 @@
    "temp_c": 27,
    "complete": true,
    "pad_p_range_v": [
-    -2.2482851e-18,
-    2.37392427
+    -3.77213558e-18,
+    2.37413995
    ],
    "pad_n_range_v": [
-    -1.2599529e-16,
-    0.160546558
+    -3.72774834e-18,
+    0.166941232
    ],
-   "rail_max_v": 1.35101455,
-   "pad_peak_abs_v": 2.37392427,
+   "rail_max_v": 1.35092845,
+   "pad_peak_abs_v": 2.37413995,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 7.38805398e-05,
+   "vdd_max_v": 7.37860317e-05,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -5.423976375406563e-05,
+   "supply_current_end_a": -5.417245710627675e-05,
    "peer_current_end_a": [
-    -1.3081251519828817e-06,
-    -5.960589412467903e-08
+    -1.310440926219686e-06,
+    -6.21813128810271e-08
    ],
-   "vdd_backfeed_peak_a": 7.38805398e-05,
+   "vdd_backfeed_peak_a": 7.37860317e-05,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X327",
+      "device": "X169",
       "model": "nfet_06v0",
       "gate_v": 2.374
      },
      {
-      "device": "X469",
+      "device": "X424",
       "model": "nfet_06v0",
-      "gate_v": 2.374
+      "gate_v": 2.373
      },
      {
-      "device": "X212",
+      "device": "X84",
       "model": "nfet_06v0",
-      "gate_v": 2.374
+      "gate_v": 2.373
      },
      {
-      "device": "X259",
+      "device": "X325",
       "model": "nfet_06v0",
-      "gate_v": 2.374
+      "gate_v": 2.373
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "1ecd25d73ea03f20ea56290e456f651ee5ca5e49063807c7be0af92aead4a133",
-   "waveform_sha256": "006b9770117adc1394ded0950568b70d66c133fce7138a39db55d58faf484342"
+   "deck_sha256": "75b247ff3f16392f3a8829099979e9faaef125a0b722f9416d86f310146d847d",
+   "waveform_sha256": "25d069455392f33e43885752c8256e5c6113469719457e5dea6ba78fa4fefd91"
   },
   {
    "family": "hspad",
@@ -74,57 +74,57 @@
    "temp_c": 0,
    "complete": true,
    "pad_p_range_v": [
-    -9.64273082e-17,
-    2.62492584
+    -2.5832374e-16,
+    2.62536648
    ],
    "pad_n_range_v": [
-    -1.33481747e-16,
-    0.189598988
+    -2.60612775e-16,
+    0.195894714
    ],
-   "rail_max_v": 1.56026569,
-   "pad_peak_abs_v": 2.62492584,
+   "rail_max_v": 1.56050223,
+   "pad_peak_abs_v": 2.62536648,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 9.24643805e-05,
+   "vdd_max_v": 9.23648497e-05,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -6.789673346918688e-05,
+   "supply_current_end_a": -6.78190754813124e-05,
    "peer_current_end_a": [
-    -1.5603414505991442e-06,
-    -8.391555990998573e-08
+    -1.562800061526391e-06,
+    -8.682724575492154e-08
    ],
-   "vdd_backfeed_peak_a": 9.24643805e-05,
+   "vdd_backfeed_peak_a": 9.23648497e-05,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X469",
+      "device": "X169",
       "model": "nfet_06v0",
-      "gate_v": 2.625
+      "gate_v": 2.624
      },
      {
-      "device": "X259",
+      "device": "X424",
       "model": "nfet_06v0",
-      "gate_v": 2.625
+      "gate_v": 2.624
      },
      {
-      "device": "X327",
+      "device": "X84",
       "model": "nfet_06v0",
-      "gate_v": 2.625
+      "gate_v": 2.624
      },
      {
-      "device": "X212",
+      "device": "X325",
       "model": "nfet_06v0",
-      "gate_v": 2.625
+      "gate_v": 2.624
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "1a2a66ceee9387d941b57bc6db8ee6516e71f98268e5e84cd3141fd58a1dfdb1",
-   "waveform_sha256": "716d3ae660d553db55b1842ebef2a8e311073b0156346ea392b6b144e6c9eb28"
+   "deck_sha256": "ebf14238df03a7281db9526ea5d7a74ab9fd1f08ad018316c8304b58b5783fa1",
+   "waveform_sha256": "bd42219e9dfd5564c8c06fb3e0ddabdb695aec23dcc8e30f22fa075e4729a838"
   },
   {
    "family": "hspad",
@@ -133,57 +133,57 @@
    "temp_c": 27,
    "complete": true,
    "pad_p_range_v": [
-    -1.15808295,
-    2.19227542e-16
+    -1.1429493,
+    4.79400799e-16
    ],
    "pad_n_range_v": [
-    -0.0198850641,
-    1.81940754e-16
+    -0.0250401314,
+    2.10404194e-16
    ],
-   "rail_max_v": -1.43491971e-13,
-   "pad_peak_abs_v": 1.15808295,
+   "rail_max_v": -1.28978657e-13,
+   "pad_peak_abs_v": 1.1429493,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 1.09729924e-21,
+   "vdd_max_v": 3.90206257e-22,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": 1.4830714467446505e-09,
+   "supply_current_end_a": 2.301046108844508e-09,
    "peer_current_end_a": [
-    3.509853186733238e-07,
-    2.985303449686162e-09
+    3.50508884342368e-07,
+    3.6991133286733237e-09
    ],
-   "vdd_backfeed_peak_a": 1.09729924e-21,
+   "vdd_backfeed_peak_a": 3.90206257e-22,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X204",
+      "device": "X196",
       "model": "nfet_06v0",
-      "gate_v": 0.961
+      "gate_v": 0.955
      },
      {
-      "device": "X198",
+      "device": "X230",
       "model": "pfet_06v0",
-      "gate_v": 0.961
+      "gate_v": 0.955
      },
      {
-      "device": "X48",
+      "device": "X169",
       "model": "nfet_06v0",
-      "gate_v": 0.853
+      "gate_v": 0.868
      },
      {
-      "device": "X34",
+      "device": "X424",
       "model": "nfet_06v0",
-      "gate_v": 0.853
+      "gate_v": 0.868
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "47583926ccc379b97e25c36fafd3092ee9a459d323d63fda6dc1012441b6ce10",
-   "waveform_sha256": "c0cd6dbe24309f33e1807f8eefec573174b2d53e915f15c637d63a14ef693375"
+   "deck_sha256": "6f276e105870b8102846aeb26cff2c080ed9bdac287582ff41ba8e786b7a303e",
+   "waveform_sha256": "aa2f6d8d4f0fef737ffc32e0a2e4de86d31f660789cebc8ccd404defb49e63d6"
   },
   {
    "family": "hspad",
@@ -192,57 +192,57 @@
    "temp_c": 0,
    "complete": true,
    "pad_p_range_v": [
-    -1.22234112,
-    2.02279064e-16
+    -1.2058243,
+    8.66116307e-18
    ],
    "pad_n_range_v": [
-    -0.0209344106,
-    2.08385523e-16
+    -0.025985009,
+    9.82385555e-18
    ],
-   "rail_max_v": 1.53772217e-22,
-   "pad_peak_abs_v": 1.22234112,
+   "rail_max_v": -3.41787109e-22,
+   "pad_peak_abs_v": 1.2058243,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 2.37171352e-21,
+   "vdd_max_v": 7.65937501e-23,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": 5.01950948128388e-09,
+   "supply_current_end_a": 6.025133899771755e-09,
    "peer_current_end_a": [
-    4.3915304356062764e-07,
-    4.025530762396576e-09
+    4.3913666528530666e-07,
+    5.035050818245363e-09
    ],
-   "vdd_backfeed_peak_a": 2.37171352e-21,
+   "vdd_backfeed_peak_a": 7.65937501e-23,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X204",
+      "device": "X196",
       "model": "nfet_06v0",
-      "gate_v": 0.995
+      "gate_v": 0.989
      },
      {
-      "device": "X198",
+      "device": "X230",
       "model": "pfet_06v0",
-      "gate_v": 0.995
+      "gate_v": 0.989
      },
      {
-      "device": "X327",
+      "device": "X169",
       "model": "nfet_06v0",
-      "gate_v": 0.89
+      "gate_v": 0.904
      },
      {
-      "device": "X34",
+      "device": "X424",
       "model": "nfet_06v0",
-      "gate_v": 0.89
+      "gate_v": 0.904
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "bb940ba7fb349142aaa35bdc849361a638d812f406bbda839b1e78313c741dac",
-   "waveform_sha256": "1a438d71216dac013a2904c745c4ecddd79697fdcb1ac150aacb9bab3572e73c"
+   "deck_sha256": "2339f4ec04c5796b084d6d1869a77b5ccd316335359ac8c5b5bddb81a21e9292",
+   "waveform_sha256": "818a22d5ca9c8a7030e782d5cb524a45fec6381af2bd016764ab52af1f9091dd"
   },
   {
    "family": "hspad",
@@ -251,57 +251,57 @@
    "temp_c": 27,
    "complete": true,
    "pad_p_range_v": [
-    -2.2482851e-18,
-    0.162488615
+    -3.77213558e-18,
+    0.169193347
    ],
    "pad_n_range_v": [
-    -1.2599529e-16,
-    2.37387873
+    -3.72774834e-18,
+    2.37405219
    ],
-   "rail_max_v": 1.35099682,
-   "pad_peak_abs_v": 2.37387873,
+   "rail_max_v": 1.3508884,
+   "pad_peak_abs_v": 2.37405219,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 7.38979043e-05,
+   "vdd_max_v": 7.38394927e-05,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -5.424451911483595e-05,
+   "supply_current_end_a": -5.416126300342368e-05,
    "peer_current_end_a": [
-    -5.967166522810271e-08,
-    -1.3082004367189731e-06
+    -6.236241170527817e-08,
+    -1.3104705493152637e-06
    ],
-   "vdd_backfeed_peak_a": 7.38979043e-05,
+   "vdd_backfeed_peak_a": 7.38394927e-05,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X86",
+      "device": "X285",
       "model": "nfet_06v0",
-      "gate_v": 2.373
+      "gate_v": 2.374
      },
      {
-      "device": "X430",
+      "device": "X107",
       "model": "nfet_06v0",
-      "gate_v": 2.373
+      "gate_v": 2.374
      },
      {
-      "device": "X216",
+      "device": "X37",
       "model": "nfet_06v0",
-      "gate_v": 2.373
+      "gate_v": 2.374
      },
      {
-      "device": "X148",
+      "device": "X15",
       "model": "nfet_06v0",
-      "gate_v": 2.373
+      "gate_v": 2.374
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "9f5184bd02e574a35f4bbf2e482bce805b72a0875e3b893e6744d608a4905292",
-   "waveform_sha256": "ccf4fca5e2bf6b7dc5254f321d9833ce8515438d0d1e01da1dfaccb6df857ebd"
+   "deck_sha256": "68f04acd88eab3e9d7741b3dd6397ad4f724951853b72d3787324fdc26163fca",
+   "waveform_sha256": "a4a2cf9e3d78a91439e7570020a80739f7260941181eb78c78d62136853c093a"
   },
   {
    "family": "hspad",
@@ -310,57 +310,57 @@
    "temp_c": 0,
    "complete": true,
    "pad_p_range_v": [
-    -9.64273082e-17,
-    0.191778079
+    -2.5832374e-16,
+    0.198389167
    ],
    "pad_n_range_v": [
-    -1.33481747e-16,
-    2.62485164
+    -2.60612775e-16,
+    2.62537216
    ],
-   "rail_max_v": 1.56027488,
-   "pad_peak_abs_v": 2.62485164,
+   "rail_max_v": 1.5604741,
+   "pad_peak_abs_v": 2.62537216,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 9.24839413e-05,
+   "vdd_max_v": 9.24222877e-05,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -6.790603374536376e-05,
+   "supply_current_end_a": -6.78111592874465e-05,
    "peer_current_end_a": [
-    -8.416996004593438e-08,
-    -1.5604463769329528e-06
+    -8.722377214693296e-08,
+    -1.5628576406134094e-06
    ],
-   "vdd_backfeed_peak_a": 9.24839413e-05,
+   "vdd_backfeed_peak_a": 9.24222877e-05,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X430",
+      "device": "X285",
       "model": "nfet_06v0",
       "gate_v": 2.625
      },
      {
-      "device": "X148",
+      "device": "X107",
       "model": "nfet_06v0",
       "gate_v": 2.625
      },
      {
-      "device": "X86",
+      "device": "X37",
       "model": "nfet_06v0",
       "gate_v": 2.625
      },
      {
-      "device": "X216",
+      "device": "X15",
       "model": "nfet_06v0",
       "gate_v": 2.625
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "af1e8550ab6fbb727ee4c463a468a78dd6835bf60ff55dcd40d58b1ad67f3bb2",
-   "waveform_sha256": "d0fe81dfca0225b0abc389c819a7628a5cf23f410deca72571075b273a31ea3d"
+   "deck_sha256": "9fc84720439b3bf46599b27e625d0e0d44998b1197a1da5552af34eb963ead58",
+   "waveform_sha256": "9701375118601283527caa4d6935246fd5ed06953976731d18a96d5cd7984959"
   },
   {
    "family": "hspad",
@@ -369,57 +369,57 @@
    "temp_c": 27,
    "complete": true,
    "pad_p_range_v": [
-    -0.0197621251,
-    2.19227542e-16
+    -0.0248181853,
+    4.79400799e-16
    ],
    "pad_n_range_v": [
-    -1.15799953,
-    1.81940754e-16
+    -1.14307451,
+    2.10404194e-16
    ],
-   "rail_max_v": -1.43491971e-13,
-   "pad_peak_abs_v": 1.15799953,
+   "rail_max_v": -1.28978657e-13,
+   "pad_peak_abs_v": 1.14307451,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 1.09729924e-21,
+   "vdd_max_v": 3.90206257e-22,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": 2.249825437874465e-09,
+   "supply_current_end_a": 3.647817441426533e-09,
    "peer_current_end_a": [
-    2.9792873278744654e-09,
-    3.508147923694722e-07
+    3.6855369116119833e-09,
+    3.502638822154066e-07
    ],
-   "vdd_backfeed_peak_a": 1.09729924e-21,
+   "vdd_backfeed_peak_a": 3.90206257e-22,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X113",
+      "device": "X390",
       "model": "nfet_06v0",
-      "gate_v": 0.961
+      "gate_v": 0.955
      },
      {
-      "device": "X442",
+      "device": "X445",
       "model": "pfet_06v0",
-      "gate_v": 0.961
+      "gate_v": 0.955
      },
      {
-      "device": "X428",
+      "device": "X285",
       "model": "nfet_06v0",
-      "gate_v": 0.853
+      "gate_v": 0.868
      },
      {
-      "device": "X234",
+      "device": "X107",
       "model": "nfet_06v0",
-      "gate_v": 0.853
+      "gate_v": 0.868
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "6b434c9613065032b061b0a18868810b5c9974213b95e6532ef074478057443b",
-   "waveform_sha256": "686f0b0ae0a29be48cf5b3d51cb9d259dfd034a0bb3352b2bbba1e2bd2716f3e"
+   "deck_sha256": "54fac7fd35f4902f6307a8bb29f3adb97931f6d05ef68633e51e446cd2a560ab",
+   "waveform_sha256": "d3433fac3d51082a138dc7c49ce6ec25f969cacad2c6e3933b50ed1e37628a53"
   },
   {
    "family": "hspad",
@@ -428,57 +428,57 @@
    "temp_c": 0,
    "complete": true,
    "pad_p_range_v": [
-    -0.0207734537,
-    2.02279064e-16
+    -0.0257491078,
+    8.66116307e-18
    ],
    "pad_n_range_v": [
-    -1.22152724,
-    2.08385523e-16
+    -1.20590162,
+    9.82385555e-18
    ],
-   "rail_max_v": 1.53772217e-22,
-   "pad_peak_abs_v": 1.22152724,
+   "rail_max_v": -3.41787109e-22,
+   "pad_peak_abs_v": 1.20590162,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 2.37171352e-21,
+   "vdd_max_v": 7.65937501e-23,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": 6.183635120941513e-09,
+   "supply_current_end_a": 1.0575617009885877e-08,
    "peer_current_end_a": [
-    4.015099457774608e-09,
-    4.389272142853067e-07
+    5.014680145463623e-09,
+    4.388498236747503e-07
    ],
-   "vdd_backfeed_peak_a": 2.37171352e-21,
+   "vdd_backfeed_peak_a": 7.65937501e-23,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X113",
+      "device": "X390",
       "model": "nfet_06v0",
-      "gate_v": 0.995
+      "gate_v": 0.989
      },
      {
-      "device": "X442",
+      "device": "X445",
       "model": "pfet_06v0",
-      "gate_v": 0.995
+      "gate_v": 0.989
      },
      {
-      "device": "X428",
+      "device": "X285",
       "model": "nfet_06v0",
-      "gate_v": 0.89
+      "gate_v": 0.904
      },
      {
-      "device": "X234",
+      "device": "X107",
       "model": "nfet_06v0",
-      "gate_v": 0.89
+      "gate_v": 0.904
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "6c9211791fa5e97da8821c4e369036bdcee2b43fe682bc4144a410bab76fa92f",
-   "waveform_sha256": "f33630a57b5ffd61a5926af82a939a2a0f50a9e4a4afe45348a983e6b99ecd52"
+   "deck_sha256": "d50c7c0f1fe463fc5b269c19f5183ab5650f1cabb0ecb85200c4310cd3149363",
+   "waveform_sha256": "60a8e60e39018036f5915012bb4322e005852d1c4fbc95583c9cf2e5c314e82e"
   },
   {
    "family": "hspad",
@@ -487,25 +487,25 @@
    "temp_c": 27,
    "complete": true,
    "pad_p_range_v": [
-    -2.86689022e-23,
-    1.15648895e-05
+    -2.57419052e-23,
+    1.1702234e-05
    ],
    "pad_n_range_v": [
-    -2.86689022e-23,
-    2.14975102e-05
+    -5.09295854e-07,
+    2.66816536e-05
    ],
-   "rail_max_v": 0.0444614339,
-   "pad_peak_abs_v": 2.14975102e-05,
+   "rail_max_v": 0.0441775317,
+   "pad_peak_abs_v": 2.66816536e-05,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 3.56007047,
+   "vdd_max_v": 3.56007049,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": 0.08596127420149813,
+   "supply_current_end_a": 0.08596124841635457,
    "peer_current_end_a": [
-    -6.098165749575531e-09,
-    -1.2205480676404493e-08
+    -7.803681066853934e-09,
+    9.525879424481898e-09
    ],
    "vdd_backfeed_peak_a": 0.0,
    "exposure": {
@@ -514,30 +514,30 @@
     "exceeding": 0,
     "worst": [
      {
-      "device": "X442",
+      "device": "X230",
       "model": "pfet_06v0",
       "gate_v": 3.559
      },
      {
-      "device": "X198",
+      "device": "X445",
       "model": "pfet_06v0",
-      "gate_v": 3.559
+      "gate_v": 3.558
      },
      {
-      "device": "X93",
+      "device": "X373",
       "model": "pfet_06v0",
       "gate_v": 0.661
      },
      {
-      "device": "X62",
+      "device": "X179",
       "model": "pfet_06v0",
       "gate_v": 0.661
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "2343d5e81e63d626dff42acfda418b1adf0a5403a38c1e61ae3c7fd65a3bfe61",
-   "waveform_sha256": "986d9f1402f12694c5e3347c9de8f3b4f4a228565fc10cfc478aed6eb1fd022b"
+   "deck_sha256": "050d9eff706114d32fa68894c464c13da56ad49ce1a4f0e7ba0003077b055d06",
+   "waveform_sha256": "f064cb3dc3184b69687c40edd88b175c9e90b2e7cf196babc3f87d9476d19c3e"
   },
   {
    "family": "hspad",
@@ -546,25 +546,25 @@
    "temp_c": 27,
    "complete": true,
    "pad_p_range_v": [
-    -2.86689022e-23,
-    1.72404479e-06
+    -2.57419052e-23,
+    1.80596133e-06
    ],
    "pad_n_range_v": [
-    -2.86689022e-23,
-    3.07989705e-06
+    -2.57419052e-23,
+    2.94497713e-06
    ],
-   "rail_max_v": 0.262024685,
-   "pad_peak_abs_v": 3.07989705e-06,
+   "rail_max_v": 0.260614433,
+   "pad_peak_abs_v": 2.94497713e-06,
    "pad_within_6v0_screen": true,
    "vdd_max_v": 3.62999443,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": 5.605350988637874e-06,
+   "supply_current_end_a": 5.607836950033223e-06,
    "peer_current_end_a": [
-    -2.6602925424252498e-08,
-    -2.6127831721262458e-08
+    -2.724584242292358e-08,
+    -2.6651352412292355e-08
    ],
    "vdd_backfeed_peak_a": 0.0,
    "exposure": {
@@ -573,30 +573,30 @@
     "exceeding": 0,
     "worst": [
      {
-      "device": "X442",
+      "device": "X230",
       "model": "pfet_06v0",
       "gate_v": 3.63
      },
      {
-      "device": "X198",
+      "device": "X445",
       "model": "pfet_06v0",
       "gate_v": 3.63
      },
      {
-      "device": "X93",
+      "device": "X373",
       "model": "pfet_06v0",
       "gate_v": 0.661
      },
      {
-      "device": "X62",
+      "device": "X179",
       "model": "pfet_06v0",
       "gate_v": 0.661
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "93044db7a165fa3776f21ce2b0a26b783f167b72a8007f5b974c524b33958fde",
-   "waveform_sha256": "04fb2074d59df052b0c7d5b0280dd39f73665af6fe3f6578c12d3311998e57b7"
+   "deck_sha256": "2b14e29b4a89de5ef425fecaeab9392eff66b1437351df368ee8089e8e374b53",
+   "waveform_sha256": "88f7f368dd48ec5d6b6d8633758959658cc3442e22b619c88b06569557d78bb5"
   },
   {
    "family": "hspad",
@@ -612,50 +612,50 @@
     3.62999239,
     3.62999245
    ],
-   "rail_max_v": 3.08915826,
+   "rail_max_v": 3.08916207,
    "pad_peak_abs_v": 3.62999245,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 7.46268237e-12,
+   "vdd_max_v": 7.46783109e-12,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -7.436892612846441e-12,
+   "supply_current_end_a": -7.42287926980025e-12,
    "peer_current_end_a": [
-    1.5202414943445693e-07,
-    1.520240050886392e-07
+    1.5200201354182274e-07,
+    1.5200197468164794e-07
    ],
-   "vdd_backfeed_peak_a": 7.46268237e-12,
+   "vdd_backfeed_peak_a": 7.46783109e-12,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X86",
+      "device": "X84",
       "model": "nfet_06v0",
       "gate_v": 3.63
      },
      {
-      "device": "X81",
+      "device": "X75",
       "model": "nfet_06v0",
       "gate_v": 3.63
      },
      {
-      "device": "X78",
+      "device": "X66",
       "model": "nfet_06v0",
       "gate_v": 3.63
      },
      {
-      "device": "X74",
+      "device": "X59",
       "model": "nfet_06v0",
       "gate_v": 3.63
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "c3d296e61494d7d1967c8e76bb3dbc60b11e4db2bd44b6d98dce2742e433e661",
-   "waveform_sha256": "bda7669f9a4ed96f8175e5da095cbac7d03001d642386a735ad72fa9eb703d9a"
+   "deck_sha256": "c4046f86493fb0e933f36d9940be41031abf7798f00df12bc60796d2e2358416",
+   "waveform_sha256": "fd36e02228c5f15c95716e4d3952a95452b8d2fcfda69da6d38e2e2f850bd97a"
   },
   {
    "family": "hspad",
@@ -671,50 +671,50 @@
     3.62998321,
     3.62998323
    ],
-   "rail_max_v": 3.20818825,
+   "rail_max_v": 3.20818973,
    "pad_peak_abs_v": 3.62998323,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 1.00844917e-11,
+   "vdd_max_v": 1.00796424e-11,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -1.0067627673533084e-11,
+   "supply_current_end_a": -1.0057343649937579e-11,
    "peer_current_end_a": [
-    3.3575744991635454e-07,
-    3.357574059962547e-07
+    3.357418955493133e-07,
+    3.357418865792759e-07
    ],
-   "vdd_backfeed_peak_a": 1.00844917e-11,
+   "vdd_backfeed_peak_a": 1.00796424e-11,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X86",
+      "device": "X84",
       "model": "nfet_06v0",
       "gate_v": 3.63
      },
      {
-      "device": "X81",
+      "device": "X75",
       "model": "nfet_06v0",
       "gate_v": 3.63
      },
      {
-      "device": "X74",
+      "device": "X66",
       "model": "nfet_06v0",
       "gate_v": 3.63
      },
      {
-      "device": "X71",
+      "device": "X59",
       "model": "nfet_06v0",
       "gate_v": 3.63
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "575e50b176b8daa18a0eeb041db1dd004681653ca4b99e1b950c110993dcf991",
-   "waveform_sha256": "73e5c9869e87c265368397cc1f5009283e07b64ddab5a33b7a2e497ca5c3efc7"
+   "deck_sha256": "ba2f983a6b0ffd33cb1d0385122053551a39cc1440a9b22e4d800a6dc2f4e8bf",
+   "waveform_sha256": "dc0f363e614234251de4d2bfc1127eb75338376eaaf2a9198693c829265a43fb"
   },
   {
    "family": "hspad",
@@ -723,57 +723,57 @@
    "temp_c": 27,
    "complete": true,
    "pad_p_range_v": [
-    -3.3724341e-18,
-    5.03529156
+    -5.19430677e-17,
+    5.03474911
    ],
    "pad_n_range_v": [
-    -6.0028502e-17,
-    0.279431556
+    -5.16106766e-17,
+    0.288954655
    ],
-   "rail_max_v": 4.13941821,
-   "pad_peak_abs_v": 5.03529156,
+   "rail_max_v": 4.13887624,
+   "pad_peak_abs_v": 5.03474911,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 0.000187117648,
+   "vdd_max_v": 0.000187088226,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -7.781301338326395e-07,
+   "supply_current_end_a": -7.768583153089092e-07,
    "peer_current_end_a": [
-    -4.96511039785179e-06,
-    -1.410622754537885e-07
+    -4.964581013713572e-06,
+    -1.4761875439716904e-07
    ],
-   "vdd_backfeed_peak_a": 0.000187117648,
+   "vdd_backfeed_peak_a": 0.000187088226,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X259",
+      "device": "X169",
       "model": "nfet_06v0",
       "gate_v": 5.035
      },
      {
-      "device": "X469",
+      "device": "X424",
       "model": "nfet_06v0",
       "gate_v": 5.035
      },
      {
-      "device": "X212",
+      "device": "X325",
       "model": "nfet_06v0",
       "gate_v": 5.035
      },
      {
-      "device": "X358",
+      "device": "X20",
       "model": "nfet_06v0",
       "gate_v": 5.035
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "8464a6e9f0ae8093f7848f31d6611caf7ef57e1429ad9d7ebfb30241661d7fd3",
-   "waveform_sha256": "31ddd45c6d4ad1b7e50474470960ef0a43a77a3ed5c57d68c67765b53a15600e"
+   "deck_sha256": "8c20edc44ae9e1d4337ecf9832880d40d1bf2f846cc46929e6d978b68d7532c2",
+   "waveform_sha256": "0b36493f6d20727386543c70dc7742cbd1e0174bc32affb26179c0c91717aee0"
   },
   {
    "family": "hspad",
@@ -782,57 +782,57 @@
    "temp_c": 0,
    "complete": true,
    "pad_p_range_v": [
-    -8.32238563e-17,
-    5.34560389
+    -8.28939131e-17,
+    5.34552188
    ],
    "pad_n_range_v": [
-    -9.0325217e-17,
-    0.328620894
+    -8.35140609e-17,
+    0.338186503
    ],
-   "rail_max_v": 3.89526288,
-   "pad_peak_abs_v": 5.34560389,
+   "rail_max_v": 3.89480807,
+   "pad_peak_abs_v": 5.34552188,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 0.000223922698,
+   "vdd_max_v": 0.000223895076,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -9.153160679891757e-07,
+   "supply_current_end_a": -9.130740461157369e-07,
    "peer_current_end_a": [
-    -4.772968585578684e-06,
-    -1.333642706178185e-07
+    -4.772536309084097e-06,
+    -1.3930676008159865e-07
    ],
-   "vdd_backfeed_peak_a": 0.000223922698,
+   "vdd_backfeed_peak_a": 0.000223895076,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X469",
+      "device": "X460",
       "model": "nfet_06v0",
       "gate_v": 5.346
      },
      {
-      "device": "X259",
+      "device": "X204",
       "model": "nfet_06v0",
       "gate_v": 5.346
      },
      {
-      "device": "X327",
+      "device": "X286",
       "model": "nfet_06v0",
       "gate_v": 5.346
      },
      {
-      "device": "X212",
+      "device": "X84",
       "model": "nfet_06v0",
       "gate_v": 5.346
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "e0ddb19466d1c34e2df1aeaa54b110dc6229e346c187d8397bbe51516dd80f54",
-   "waveform_sha256": "caeebec8c972b1a5d2707bcd1d3f950d70872d00ee6e26c41d9b60571a1ec400"
+   "deck_sha256": "8b6773c64b0037e989a82855b9d7b89bc0bd5b2dc2b5ff21d4319cbccd0770d7",
+   "waveform_sha256": "9d6fc4b0733df04e246ca53d8bf8e0cf1403985f3bab66f25f47535c933da296"
   },
   {
    "family": "hspad",
@@ -841,57 +841,57 @@
    "temp_c": 85,
    "complete": true,
    "pad_p_range_v": [
-    -3.51844866e-17,
-    5.41345862
+    -3.30295092e-17,
+    5.41272978
    ],
    "pad_n_range_v": [
-    -1.98457037e-17,
-    0.243578944
+    -2.80863735e-17,
+    0.253153098
    ],
-   "rail_max_v": 4.59883373,
-   "pad_peak_abs_v": 5.41345862,
+   "rail_max_v": 4.59810545,
+   "pad_peak_abs_v": 5.41272978,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 0.0001611103,
+   "vdd_max_v": 0.000161089374,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -6.931207762697753e-07,
+   "supply_current_end_a": -6.923096234887594e-07,
    "peer_current_end_a": [
-    -5.335632978459616e-06,
-    -1.5435510206244796e-07
+    -5.33487863094921e-06,
+    -1.6182014056702745e-07
    ],
-   "vdd_backfeed_peak_a": 0.0001611103,
+   "vdd_backfeed_peak_a": 0.000161089374,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X259",
+      "device": "X169",
       "model": "nfet_06v0",
       "gate_v": 5.413
      },
      {
-      "device": "X469",
+      "device": "X424",
       "model": "nfet_06v0",
       "gate_v": 5.413
      },
      {
-      "device": "X212",
+      "device": "X325",
       "model": "nfet_06v0",
       "gate_v": 5.413
      },
      {
-      "device": "X327",
+      "device": "X20",
       "model": "nfet_06v0",
       "gate_v": 5.413
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "89cd9dbc3a310e628d254dfbe1e04641a686c0848a9433fd1880a78de1301ee5",
-   "waveform_sha256": "653c7555e138855cbc8db8b760cc58730bbb0100c45ef4292843b37c52254734"
+   "deck_sha256": "05bd2880f7ef19314387b3ca6dbcc98bbfd8aad65a736bfcf720fcd66754dfa7",
+   "waveform_sha256": "837be6110095eae58bffb2677a581c2cb643e9e0eb8c7f9cf4da83e2a0dac6a9"
   },
   {
    "family": "hspad",
@@ -900,57 +900,57 @@
    "temp_c": 27,
    "complete": true,
    "pad_p_range_v": [
-    -0.0412591198,
-    1.79449865e-16
+    -0.0492280686,
+    1.57005365e-16
    ],
    "pad_n_range_v": [
-    -3.62849881,
-    1.42764989e-16
+    -3.48045544,
+    1.56470067e-16
    ],
-   "rail_max_v": -1.434695e-13,
-   "pad_peak_abs_v": 3.62849881,
+   "rail_max_v": -1.29607941e-13,
+   "pad_peak_abs_v": 3.48045544,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 5.92024862e-06,
+   "vdd_max_v": 4.20371053e-06,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -4.70340834540383e-07,
+   "supply_current_end_a": -3.4741548579600334e-07,
    "peer_current_end_a": [
-    2.6284098351207326e-09,
-    9.504413944920899e-07
+    3.4478927819650297e-09,
+    9.430741776802666e-07
    ],
-   "vdd_backfeed_peak_a": 5.92024862e-06,
+   "vdd_backfeed_peak_a": 4.20371053e-06,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X113",
+      "device": "X390",
       "model": "nfet_06v0",
-      "gate_v": 0.969
+      "gate_v": 0.965
      },
      {
-      "device": "X442",
+      "device": "X445",
       "model": "pfet_06v0",
-      "gate_v": 0.969
+      "gate_v": 0.965
      },
      {
-      "device": "X86",
+      "device": "X200",
       "model": "nfet_06v0",
-      "gate_v": 0.92
+      "gate_v": 0.934
      },
      {
-      "device": "X81",
+      "device": "X375",
       "model": "nfet_06v0",
-      "gate_v": 0.92
+      "gate_v": 0.934
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "d8b3f7057ddaad41338cb606b7dc0cf07509da0b3a980a8996a18762ff52d6b5",
-   "waveform_sha256": "cf7b6b78e896f4d5285ea1ddcb7f8f722f7b47e2ba32e81cb8f7d5a763f053e1"
+   "deck_sha256": "1680b47a68f8841faa49fc4c91ccbcc7f23914c6ec2afa97845f83b01e9a5eed",
+   "waveform_sha256": "25f9e5852037db6258160019b602066c92f3fe5241f8199f9428df3bfe7b8418"
   },
   {
    "family": "hspad",
@@ -959,57 +959,57 @@
    "temp_c": 0,
    "complete": true,
    "pad_p_range_v": [
-    -0.0451987528,
-    1.76357538e-17
+    -0.0538518178,
+    3.36081492e-17
    ],
    "pad_n_range_v": [
-    -3.93784135,
-    4.06223808e-17
+    -3.7794508,
+    2.96221036e-17
    ],
-   "rail_max_v": 2.36842976e-17,
-   "pad_peak_abs_v": 3.93784135,
+   "rail_max_v": 2.25294629e-17,
+   "pad_peak_abs_v": 3.7794508,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 1.04241518e-05,
+   "vdd_max_v": 8.03380516e-06,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -8.904149926977519e-07,
+   "supply_current_end_a": -7.178834054371358e-07,
    "peer_current_end_a": [
-    2.248425619092423e-09,
-    1.0005350438809326e-06
+    3.0069715100915903e-09,
+    9.928359641548711e-07
    ],
-   "vdd_backfeed_peak_a": 1.04241518e-05,
+   "vdd_backfeed_peak_a": 8.03380516e-06,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X113",
+      "device": "X390",
       "model": "nfet_06v0",
-      "gate_v": 1.001
+      "gate_v": 0.996
      },
      {
-      "device": "X442",
+      "device": "X445",
       "model": "pfet_06v0",
-      "gate_v": 1.001
+      "gate_v": 0.996
      },
      {
-      "device": "X86",
+      "device": "X200",
       "model": "nfet_06v0",
-      "gate_v": 0.95
+      "gate_v": 0.963
      },
      {
-      "device": "X81",
+      "device": "X375",
       "model": "nfet_06v0",
-      "gate_v": 0.95
+      "gate_v": 0.963
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "f0290f4f37d3ea16f14dad537ee6be3ccd62c0f5ed3e7656ff931ff4a9bf5247",
-   "waveform_sha256": "f8148806be0480ed9b7b42bc3525127f82ddbe6a15ab79c4b12f0e54a001a55e"
+   "deck_sha256": "e5ca9bb6b92092cae7b019b2482e4d16b18c8ba0a56dfc7024dc50c7c6238a23",
+   "waveform_sha256": "246ad49d46c46e2864f5772710f391c51f30e77f0a6217bbcb69f96902076875"
   },
   {
    "family": "hspad",
@@ -1018,61 +1018,61 @@
    "temp_c": 85,
    "complete": true,
    "pad_p_range_v": [
-    -0.0364784972,
-    3.8392755e-17
+    -0.0435116357,
+    2.06973375e-17
    ],
    "pad_n_range_v": [
-    -3.28311538,
-    5.95633389e-17
+    -3.14289024,
+    8.60276627e-17
    ],
-   "rail_max_v": -1.03957072e-16,
-   "pad_peak_abs_v": 3.28311538,
+   "rail_max_v": -9.29226008e-17,
+   "pad_peak_abs_v": 3.14289024,
    "pad_within_6v0_screen": true,
-   "vdd_max_v": 4.07265498e-06,
+   "vdd_max_v": 2.91912533e-06,
    "atb_range_v": [
     0.0,
     0.0
    ],
-   "supply_current_end_a": -2.592749917152373e-07,
+   "supply_current_end_a": -1.8608656531973355e-07,
    "peer_current_end_a": [
-    2.6799082278184847e-09,
-    8.539480401715237e-07
+    3.4544497935470442e-09,
+    8.464024754396336e-07
    ],
-   "vdd_backfeed_peak_a": 4.07265498e-06,
+   "vdd_backfeed_peak_a": 2.91912533e-06,
    "exposure": {
     "observed_mos": 404,
     "partially_observed_mos": 0,
     "exceeding": 0,
     "worst": [
      {
-      "device": "X113",
+      "device": "X390",
       "model": "nfet_06v0",
-      "gate_v": 0.897
+      "gate_v": 0.894
      },
      {
-      "device": "X442",
+      "device": "X445",
       "model": "pfet_06v0",
-      "gate_v": 0.897
+      "gate_v": 0.894
      },
      {
-      "device": "X86",
+      "device": "X75",
       "model": "nfet_06v0",
-      "gate_v": 0.853
+      "gate_v": 0.869
      },
      {
-      "device": "X81",
+      "device": "X48",
       "model": "nfet_06v0",
-      "gate_v": 0.853
+      "gate_v": 0.869
      }
     ]
    },
    "op_fallback": false,
-   "deck_sha256": "2a484b9ef43fd126d98fc3706d0cba59580dc6e3f85612229ee75ba9a6566825",
-   "waveform_sha256": "4987f98098b60922898d12fa36fa97b8f351c3c5aaa3ba39513065185ff27e5f"
+   "deck_sha256": "69bc8a3dff6caf705aaec580db02dd5591bfb1b190b7b057b339e4d75086c1b1",
+   "waveform_sha256": "e13a518fd21229d7139af2afa38dc6387bf4e7b7c8ac1dc26acd1204193dd46e"
   }
  ],
  "source_sha256": {
-  "stress_safe_family_sims.py": "0de9aa4c3849e8a15d6c9dd6cd962297468affac9a2d9e41a02492e9e3f0ac67",
+  "stress_safe_family_sims.py": "9d45d0e62dfc044a05c695a3ed26f1e734fe2ae9edb4ff81023e073c1c597ecd",
   "stress_safe_clamp.py": "3a96cc1fd51fd64d83e65df66e452d01a2cb87291a9615b24cfe6589fc8c6145"
  }
 }

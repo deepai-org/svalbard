@@ -63,11 +63,11 @@ Evidence files that belong to the published netlists:
 
 | Cell | Files |
 |---|---|
-| `pad_hspad` (GDS sha 5b7c598e…, model 320c43d9…) | `geometry.json`, `layout-screen.json`, `independent-device-audit.json`, `lu.json`, `pad_hspad-kldrc.json`, `pad-lvs.txt`, `ap4-hspad-*.json` |
+| `pad_hspad` (GDS sha 8c8e2533…; hashes in `pc22-hspad-sha256.txt`) | `geometry.json`, `layout-screen.json`, `independent-device-audit.json`, `lu.json`, `pad_hspad-kldrc.json`, `pad-lvs.txt`, `pc22-hspad-*.json`, models `physical-r-{low,typ,high}.spice` |
 | `pad_wirepad` (GDS sha 4e4b9d92…) | `placement-layout.json`, `layout-screen.json`, `model-audit.json`, `lu.json`, `pad_wirepad-kldrc.json`, `combined-lvs.txt`, `pd47-usb-ls-miller.json`; 1 kV HBM and CDM surrogate in `../pd48-esd-tiering.json` key `pd48c` |
 | `pad_txpad`, `pad_refpad`, `pad_rf_pair` | folder layout/audit/kldrc files; safe/HBM runs in `../pd13-family-sims.json` (model sha matches); 1 kV runs for txpad and rftxpad in `../pd48-esd-tiering.json` key `family` |
 
-Files in `wired-receive-hs/` named `pd21-*` and in `wired-receive-usb/` named `pd28-*` were produced on other
+Files in `wired-receive-usb/` named `pd28-*` were produced on other
 netlists and are not evidence for the published cells; no flow reads them.
 
 ## 3. Protection foundation
@@ -87,21 +87,38 @@ Shared by every family (`circuits.py:foundation_devices`, `protection_network_ss
 Gate screens: DC 3.63 V (3.3 V devices) / 6.0 V (6 V devices); for ~150 ns events the transient limits 5.0 V /
 8.0 V from `spec/design-assumptions.md`. HBM-like source: 2 kV = 1.33 A, 1 kV = 0.67 A.
 
-### `pad_hspad` (`ap4-hspad-*.json`; model without metal resistance, see Open items 1)
+### `pad_hspad` (`pc22-hspad-*.json`; resistance-aware models `physical-r-{low,typ,high}.spice`)
 
-| Quantity | Value |
-|---|---|
-| Safe / HBM 2 kV, 18 runs | 0 of 404 MOS over the screen; pad peak ≤ 5.41 V |
-| HBM 1 kV | 0 of 404; pad peak ≤ 4.67 V |
-| CDM-speed surrogate, 1 ns | pad 4.80 / 6.98 / 9.03 V at 1 / 2 / 3 A (over the 8.0 V limit at 3 A) |
-| C per leg at the trimmed codes (tt 6 / ss32 9 / ff22 2) | 1.134–1.156 pF; P/N difference 15.3 fF |
-| Die return loss 1.2–2.4 GHz at those codes | 7.85–8.37 dB minimum |
-| Differential termination at those codes, 100 MHz | 94.2–105.4 Ω |
-| RX path (pad to RX) | high-pass corner 0.67–1.07 MHz; loss 0.30–0.41 dB at 10 MHz |
-| Pins | RX_P and RX_N on Metal5, adjacent on the side edge (x = 492), 6 µm apart; all other core pins on the same edge |
+`physical.spice` is the capacitance-only extraction and is NOT valid for termination, receive loss or ESD on this
+cell: simulate with `physical-r-typ.spice` and bound with `-low` / `-high`. Corners: tt / ss / ff / sf / fs,
+22 and 32 °C, 3.15 and 3.35 V, ss also at 3.50 V (23 corners).
 
-`TERM_VCM` is 0.3–0.5 V. The receiver common mode comes from `VBIAS` through the 4.9 pF coupling MIM
-(2 × 35 × 35 µm per leg), not from the termination.
+| Quantity | Typical metal | High-resistance metal | Limit |
+|---|---|---|---|
+| Code giving 100 Ω differential | 3.2 (ff) … 8.0 (ss); tt 5.3 | 4.4 … 9.4; tt 6.5 | code 2 … 13 |
+| Termination at the best code, all corners | 98.1–103.1 Ω | 97.0–102.5 Ω | 95–105 Ω |
+| Per-leg P − N at that code | 0.04 Ω | 0.01 Ω | ≤ 1.0 Ω |
+| One code for all in-window corners | code 6: 82.0–113.1 Ω | code 7: 84.9–114.0 Ω | 80–120 Ω |
+| Low-resistance metal (review run) | ff 22 °C 3.35 V lands on code 2: no margin left | | |
+| Bond pad → termination heads, per leg | 6.8 Ω | 8.9 Ω | |
+| `TERM_VCM` between the legs | 1.1 Ω | 1.8 Ω | |
+| Receive path loss, bond pad to `RX_P/N` | 1.5–1.7 dB | 1.9–2.3 dB | (1.2–1.3 dB low metal) |
+| Die return loss at 2.4 GHz, best code | 8.40–8.64 dB | 8.89–9.06 dB | |
+| Die return loss minimum, 0.1–1.25 GHz | 13.4–13.7 dB | 13.9–14.1 dB | |
+| Return loss through the chip-on-board channel, 1.25–2.5 GHz | 6.14–6.20 dB | 6.25–6.38 dB | package-limited; bond modelled as 2.32 nH (about 0.55 dB lower at 2.8 nH) |
+| Pad capacitance per leg (capacitance-only extraction) | 1.27–1.31 pF | | 1.15 pF budget: MISS (published before: 1.13–1.15) |
+| HBM 2 kV, pad-side resistance in the model | bond pad 11.6–12.2 V; MOS exposure 5.6–6.8 V (25 devices over 6.0 V on the PAD_N positive zap) | exposure 6.1–7.6 V | 6.0 V screen / 8.0 V transient |
+| HBM 2 kV with the return resistance added (3.6 / 5.7 Ω) | 10–15 V | | **2 kV tier NOT met** |
+| HBM 1 kV, pad-side resistance in the model | bond pad 6.8–7.3 V, 0 MOS over the screen | | holds at typical metal only with the return added |
+| CDM-speed surrogate, 1 ns | 10.0 / 17.3 / 24.6 V at 1 / 2 / 3 A | | 8.0 V: MISS |
+| Supply ramp 0 → 3.35 V in 10 ns / 1 µs | 66–71 µA / 5–7.5 µA peak, as before | | no clamp in the cell fires on supply edges |
+
+Not in any model: about 0.12 pF per pad between the Metal2 escape and the ring rails above it (with it the die return
+loss at 2.4 GHz is about 7.6 dB), VSS / rail / gate-line resistance, mismatch. Reset code for the trim: 6.
+`TERM_VCM` is 0.3–0.5 V (checked at both ends). The receiver common mode comes from `VBIAS` through the 4.9 pF
+coupling MIM, not from the termination. Pins and outline are unchanged: RX_P and RX_N on Metal5, adjacent on the
+side edge (x = 492), 6 µm apart. Termination units: 10 base (2 × 2.6 µm poly + 20/0.7 switch) and 15 trim
+(2 × 1.0 µm + 12/0.7) per leg. Independent review: `scratch/pads-core/review-f6/REVIEW.md` (GO with conditions).
 
 ### `pad_wirepad` (USB; `pd47-usb-ls-miller.json`)
 
@@ -195,7 +212,8 @@ Measurement plan:
 ```sh
 # family layouts (compact flow); <macro> = generated/stress-safe-families/network-gc or network-gc-d2
 python3 stress_safe_compact_layout.py {reference_clock|wired_transmit|wired_receive_usb} <work> <macro> [usbfix6v2lsm 14]
-python3 hs_leg_layout.py <work dir>                            # pt_hs_leg master
+python3 hs_leg_layout.py <work dir>                            # pt_hs_leg master (--legacy: the first published leg)
+python3 rextract/netres.py --gds <gds> --top <cell> --spec <spec.json> --out <json>   # metal / via resistance; then rextract/make_rmodel.py
 python3 hs_pad_compose.py <work> <shell dir> <leg dir> <network dir> --stacked
 python3 tlp_site.py --output-dir <dir>
 python3 steering_buffer.py --compact --output-dir <dir>
@@ -218,17 +236,17 @@ budget-sized ideal capacitors on top of extracted capacitance.
 
 ## 8. Open items
 
-1. **`pad_hspad` termination resistance.** The extraction is capacitance-only, so no bench sees the `TERM_VCM`
-   metal between the two legs' termination common points (1 µm Metal4 trunk, single Via3 cuts). Estimated
-   34–44 Ω typical, 60–70 Ω at the high-resistance corner: differential termination about 142 Ω at tt code 5
-   instead of 100 Ω, and 100 Ω is out of trim range at ss. Every termination and return-loss number in
-   section 4 is therefore without metal resistance. A leg fix (uncommitted edits in `hs_leg_layout.py`,
-   `hs_pad_compose.py`; `scratch/pads-core/hsfix/STATUS.md`) and a resistance-aware rerun are in flight, not
-   reviewed, not published. (WRX-04)
-2. **Pad-to-diode metal resistance in the shared shell.** The same in-flight tool reports 16–17 Ω typical
-   between the bond pad and the termination heads, most of it in the shell (single Via4). Unconfirmed; if
-   confirmed it affects the HBM evidence of every family. Resistance-aware extraction is needed for all pad
-   families.
+1. **ESD paths of every custom pad family (`scratch/reviews/pads-core/ESD-METAL.md`).** With metal and via resistance
+   extracted there are 23–32 Ω (typical) between each bond pad and its primary diodes and 56–85 Ω around the
+   discharge loop, confirmed by hand calculation, Magic `extresist` and a separate solver on all seven families. No
+   family meets its HBM tier; every HBM / CDM number in section 4 except the `pad_hspad` rows is capacitance-only and
+   is not evidence. `pad_hspad` is improved (5–6 Ω pad side) but still misses 2 kV. Proposed fix: primary diodes at the
+   bond pad tied to the ring rails; needs a decision on back-feed with the supply off. (PAD-11)
+2. **`pad_txpad` and `pad_wirepad` signal paths.** `pad_txpad` termination is 287 Ω differential at tt with metal
+   resistance (92 Ω without), 16–19 Ω sit between the bond pad and the output cascodes, and the termination is
+   untrimmed (152 / 58 Ω at ss / ff even without metal): `scratch/pads-core/txr/STATUS.md`. `pad_wirepad` has about
+   81 Ω of metal in series with its 45 Ω HS termination (survey only). Neither is fixed. Resistance-aware extraction
+   is mandatory for all pad evidence from now on (`rextract/`).
 3. **CDM.** 250 V is a target only; die capacitance and CDM current are estimates.
 4. **Supply-clamp events.** Survivability of a fired clamp and the hot-plug waveform are not shown. The slew
    rule is in MANDATE section 6 and interface-changes row PC-16; it is not yet a row of
@@ -241,9 +259,9 @@ budget-sized ideal capacitors on top of extracted capacitance.
    bonds 18/37/55/74. The landing rule is not chosen.
 7. **Bond tester.** A positive-current continuity test would read open on the custom pads that steer into the
    isolated rail; the tester polarity is not known.
-8. **LNA ground.** No AGND_RX pad exists. `integration/top/pt_chip.conn` still instantiates
-   `pad_agnd_rx_{0:1}` (`pad_downbond`). The runner-up (ground site 71 on its own net, untracked
-   `agnd_pad.py`) is unreviewed and unpublished.
+8. **LNA ground and RF input.** The LNA ground is die VSS on the standard fingers; no AGND_RX pad exists
+   (`integration/top/pt_chip.conn` still instantiates `pad_agnd_rx_{0:1}`). Bond model and proposal (RF_RX to bonds
+   67/68, BB_I to 69/70): `scratch/reviews/pads-core/LNA-GROUND.md`. `agnd_pad.py` is unreviewed and unpublished.
 9. **Consumer-gate HBM screen is stale.** `pd48-esd-tiering.json` `core_screen` was run on consumer netlists
    of its date, including an unpublished LNA and the deleted forwarded-clock receiver; rerun after the
    consumers settle. (ESD-02, ESD-06)

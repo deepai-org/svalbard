@@ -1,0 +1,33 @@
+{
+ "name": "pos",
+ "gds": "/home/ubuntu/svalbard/scratch/pads-core/hsfix/build/f6/pad_hspad.gds",
+ "top": "pad_hspad",
+ "ref": "/home/ubuntu/svalbard/scratch/pads-core/hsfix2/checks/lvs-reference-f6.spice",
+ "refcell": "pad_hspad_flat",
+ "image": "svalbard/librelane-gf180-canary:2026.08",
+ "magic_rc": 0,
+ "magic_s": 104.9,
+ "devices_ref": 508,
+ "devices_rb": 508,
+ "census_match": true,
+ "census_exact_match": true,
+ "census_diff": {},
+ "census_diff_n": 0,
+ "models": {
+  "cap_mim_2f0_m4m5_noshield": 8,
+  "diode_nd2ps_06v0": 12,
+  "diode_pd2nw_06v0": 16,
+  "nfet_06v0": 369,
+  "pfet_06v0": 35,
+  "ppolyf_u": 62,
+  "ppolyf_u_1k": 2,
+  "ppolyf_u_1k_6p0": 4
+ },
+ "netgen_rc": 0,
+ "netgen_s": 0.3,
+ "netgen_final": "Final result: Circuits match uniquely.\n.",
+ "netgen_unique": true,
+ "netgen_property_error": false,
+ "netgen_prop_lines": 0,
+ "status": "match"
+}

@@ -1,0 +1,3143 @@
+.subckt hs_protected_pad VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0 TERM_TRIM1 TERM_TRIM2 TERM_TRIM3 VBIAS RX_P RX_N PAD_P PAD_N
+XPHYSICAL ESD_RAIL VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0 TERM_TRIM1 TERM_TRIM2 TERM_TRIM3 VBIAS RX_P RX_N PAD_P PAD_N pad_hspad_flat
+.ends hs_protected_pad
+* NGSPICE file created from pad_hspad_flat.ext - technology: gf180mcuD
+
+.subckt pad_hspad_flat ESD_RAIL VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0 TERM_TRIM1 TERM_TRIM2 TERM_TRIM3 VBIAS RX_P RX_N PAD_P PAD_N
+X0 a_74812_152046# TERM_ENABLE TERM_VCM__N6 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X1 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X2 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X3 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X4 a_1005_133505# a_13878_133225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X5 a_72676_152046# TERM_ENABLE TERM_VCM__N4 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X6 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X7 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X8 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X9 RX_N__dev VBIAS VSS ppolyf_u_1k r_width=1u r_length=40u
+X10 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X11 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X12 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D0 PAD_P__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X13 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X14 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X15 a_80152_152846# TERM_TRIM1 TERM_VCM__N11 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X16 PAD_P__h16 a_85492_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X17 PAD_P__h18 a_87628_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X18 a_75880_90254# TERM_ENABLE TERM_VCM__P7 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X19 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X20 a_82288_91054# TERM_TRIM2 TERM_VCM__P13 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X21 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X22 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X23 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X24 RX_P__mim PAD_P__mim cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
+X25 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X26 a_91900_152846_r# PAD_N__h22 VSS ppolyf_u r_width=2u r_length=1u
+X27 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X28 ESD_RAIL a_13878_134345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X29 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X30 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X31 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X32 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D1 VSS PAD_P__dio diode_nd2ps_06v0 pj=51.8u area=22.5p
+X33 a_83356_152846_r# PAD_N__h14 VSS ppolyf_u r_width=2u r_length=1u
+X34 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X35 a_73744_152046_r# PAD_N__h5 VSS ppolyf_u r_width=2u r_length=2.6u
+X36 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X37 a_79084_152846# TERM_TRIM0 TERM_VCM__N10 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X38 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X39 a_71608_152046# TERM_ENABLE TERM_VCM__N3 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X40 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X41 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X42 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X43 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X44 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X45 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X46 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X47 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X48 a_81220_152846# TERM_TRIM1 TERM_VCM__N12 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X49 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X50 a_75880_152046_r# PAD_N__h7 VSS ppolyf_u r_width=2u r_length=2.6u
+X51 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X52 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X53 a_92968_91054# TERM_TRIM3 TERM_VCM__P23 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X54 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D2 PAD_N__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X55 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X56 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X57 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X58 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X59 a_89764_91054# TERM_TRIM3 TERM_VCM__P20 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X60 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X61 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X62 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X63 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X64 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X65 ESD_RAIL a_1005_131545# a_3813_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D3 VSS PAD_P__dio diode_nd2ps_06v0 pj=51.8u area=22.5p
+D4 PAD_N__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X66 a_84424_91054# TERM_TRIM2 TERM_VCM__P15 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X67 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X68 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X69 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X70 PAD_P__h17 a_86560_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X71 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X72 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X73 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X74 PAD_P__h3 a_71608_90254_r# VSS ppolyf_u r_width=2u r_length=2.6u
+X75 a_89764_152846# TERM_TRIM3 TERM_VCM__N20 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X76 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X77 PAD_P__h24 a_94036_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+D5 PAD_N__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X78 PAD_P__h9 a_78016_90254_r# VSS ppolyf_u r_width=2u r_length=2.6u
+X79 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X80 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X81 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X82 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X83 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X84 a_79084_91054# TERM_TRIM0 TERM_VCM__P10 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X85 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X86 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X87 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X88 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X89 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X90 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X91 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X92 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X93 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X94 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D6 PAD_N__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X95 a_88696_152846_r# PAD_N__h19 VSS ppolyf_u r_width=2u r_length=1u
+X96 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X97 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X98 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X99 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X100 a_78016_152046_r# PAD_N__h9 VSS ppolyf_u r_width=2u r_length=2.6u
+X101 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X102 a_80152_152846_r# PAD_N__h11 VSS ppolyf_u r_width=2u r_length=1u
+X103 a_1005_132385# a_13878_132105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X104 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X105 ESD_RAIL w_71178_112088# VSS ppolyf_u_1k_6p0 r_width=1u r_length=0.47474m
+X106 a_69448_149284_r# PAD_N__h1 VSS ppolyf_u r_width=2u r_length=2.6u
+X107 a_88696_152846# TERM_TRIM3 TERM_VCM__N19 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X108 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X109 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X110 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X111 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X112 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X113 PAD_P__h22 a_91900_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X114 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X115 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X116 a_2245_90628# a_4789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X117 PAD_P__h15 a_84424_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X118 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X119 PAD_P__h0 a_68216_96914_r# VSS ppolyf_u r_width=2u r_length=2.6u
+X120 ESD_RAIL a_1005_131545# a_3813_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X121 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X122 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X123 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X124 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X125 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X126 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X127 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X128 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X129 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X130 a_83356_91054# TERM_TRIM2 TERM_VCM__P14 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X131 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X132 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X133 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X134 a_81220_152846_r# PAD_N__h12 VSS ppolyf_u r_width=2u r_length=1u
+X135 a_1005_131545# VSS cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
+X136 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X137 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X138 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X139 a_87628_152846# TERM_TRIM3 TERM_VCM__N18 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X140 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X141 a_1005_131825# a_13878_132105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+D7 PAD_P__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X142 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X143 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X144 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X145 PAD_P__h13 a_82288_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X146 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X147 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X148 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X149 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X150 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X151 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X152 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X153 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X154 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X155 PAD_P__h20 a_89764_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X156 VSS a_4789_117064# a_2245_90628# VSS nfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X157 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X158 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+D8 VSS PAD_N__dio diode_nd2ps_06v0 pj=51.8u area=22.5p
+X159 a_1005_132945# a_13878_133225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X160 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X161 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X162 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X163 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X164 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X165 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X166 a_2245_90628# a_4789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X167 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X168 a_3813_117064# a_1005_131545# VSS VSS nfet_06v0 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=0.7u
+X169 a_85492_91054# TERM_TRIM2 TERM_VCM__P16 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X170 a_92968_152846# TERM_TRIM3 TERM_VCM__N23 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X171 PAD_P__h2 a_70540_90254_r# VSS ppolyf_u r_width=2u r_length=2.6u
+X172 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X173 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D9 PAD_P__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X174 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X175 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X176 a_74812_152046_r# PAD_N__h6 VSS ppolyf_u r_width=2u r_length=2.6u
+X177 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X178 a_2245_90628# a_4789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X179 VDD w_71178_112088# w_71178_112088# w_71178_112088# pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X180 VSS a_3813_117064# a_4789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X181 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X182 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X183 PAD_P__h8 a_76948_90254_r# VSS ppolyf_u r_width=2u r_length=2.6u
+X184 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X185 a_70540_152046# TERM_ENABLE TERM_VCM__N2 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X186 a_1005_134065# a_13878_134345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X187 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X188 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X189 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X190 a_78016_90254# TERM_ENABLE TERM_VCM__P9 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X191 VSS a_3813_117064# a_4789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D10 PAD_P__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X192 PAD_P__h11 a_80152_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X193 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X194 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X195 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X196 RX_P__dev VSS VSS VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
+X197 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X198 a_70540_90254# TERM_ENABLE TERM_VCM__P2 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X199 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X200 a_94036_152846# TERM_TRIM3 TERM_VCM__N24 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X201 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X202 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D11 VSS PAD_N__dio diode_nd2ps_06v0 pj=51.8u area=22.5p
+X203 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X204 a_90832_91054# TERM_TRIM3 TERM_VCM__P21 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X205 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X206 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X207 a_90832_152846_r# PAD_N__h21 VSS ppolyf_u r_width=2u r_length=1u
+X208 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X209 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X210 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X211 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X212 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X213 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D12 PAD_P__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X214 a_92968_152846_r# PAD_N__h23 VSS ppolyf_u r_width=2u r_length=1u
+X215 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X216 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X217 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X218 a_84424_152846_r# PAD_N__h15 VSS ppolyf_u r_width=2u r_length=1u
+X219 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X220 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X221 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X222 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X223 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X224 RX_P__mim PAD_P__mim cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
+X225 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X226 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X227 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X228 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X229 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X230 RX_P__dev VDD VDD VDD pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X231 a_76948_90254# TERM_ENABLE TERM_VCM__P8 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+D13 PAD_N__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X232 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X233 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D14 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X234 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X235 PAD_P__h4 a_72676_90254_r# VSS ppolyf_u r_width=2u r_length=2.6u
+X236 a_4789_117064# a_3813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X237 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X238 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X239 a_71608_90254# TERM_ENABLE TERM_VCM__P3 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+D15 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X240 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X241 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X242 a_68216_96914# TERM_ENABLE TERM_VCM__P0 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+D16 PAD_N__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X243 ESD_RAIL a_1852_148519# cap_mim_2f0_m4m5_noshield c_width=90u c_length=90u
+X244 a_1005_131825# a_13878_131545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X245 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X246 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X247 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X248 ESD_RAIL VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
+X249 a_70540_152046_r# PAD_N__h2 VSS ppolyf_u r_width=2u r_length=2.6u
+X250 a_76948_152046# TERM_ENABLE TERM_VCM__N8 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X251 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X252 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X253 a_86560_91054# TERM_TRIM3 TERM_VCM__P17 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+D17 VSS PAD_P__dio diode_nd2ps_06v0 pj=51.8u area=22.5p
+X254 a_86560_152846# TERM_TRIM3 TERM_VCM__N17 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X255 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X256 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X257 a_81220_91054# TERM_TRIM1 TERM_VCM__P12 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X258 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X259 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X260 VBIAS RX_P__dev VSS ppolyf_u_1k r_width=1u r_length=40u
+X261 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X262 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X263 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X264 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X265 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X266 a_1005_132945# a_13878_132665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X267 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X268 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X269 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D18 PAD_N__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X270 a_89764_152846_r# PAD_N__h20 VSS ppolyf_u r_width=2u r_length=1u
+X271 a_78016_152046# TERM_ENABLE TERM_VCM__N9 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X272 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X273 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X274 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X275 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X276 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X277 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X278 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X279 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X280 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X281 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X282 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X283 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X284 a_3813_117064# a_1005_131545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X285 a_85492_152846# TERM_TRIM2 TERM_VCM__N16 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X286 a_91900_91054# TERM_TRIM3 TERM_VCM__P22 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X287 a_83356_152846# TERM_TRIM2 TERM_VCM__N14 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X288 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+D19 PAD_N__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X289 VSS ESD_RAIL VSS ppolyf_u_1k_6p0 r_width=1u r_length=9.98874m
+X290 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X291 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X292 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X293 a_4789_117064# a_3813_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X294 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X295 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X296 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X297 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X298 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X299 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X300 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X301 a_82288_152846_r# PAD_N__h13 VSS ppolyf_u r_width=2u r_length=1u
+X302 a_72676_152046_r# PAD_N__h4 VSS ppolyf_u r_width=2u r_length=2.6u
+X303 RX_N__mim PAD_N__mim cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
+X304 PAD_P__h21 a_90832_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X305 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X306 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X307 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X308 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X309 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X310 a_1005_134065# a_13878_133785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X311 a_84424_152846# TERM_TRIM2 TERM_VCM__N15 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X312 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X313 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X314 a_87628_91054# TERM_TRIM3 TERM_VCM__P18 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X315 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X316 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X317 a_82288_152846# TERM_TRIM2 TERM_VCM__N13 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X318 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X319 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X320 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X321 PAD_P__h23 a_92968_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X322 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X323 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X324 ESD_RAIL a_1852_148519# cap_mim_2f0_m4m5_noshield c_width=90u c_length=90u
+D20 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X325 a_80152_91054# TERM_TRIM1 TERM_VCM__P11 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X326 PAD_P__h1 a_69448_96914_r# VSS ppolyf_u r_width=2u r_length=2.6u
+X327 ESD_RAIL a_3813_117064# a_4789_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X328 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X329 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X330 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X331 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X332 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X333 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X334 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X335 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X336 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X337 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X338 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X339 a_3813_117064# a_1005_131545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X340 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X341 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X342 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X343 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X344 a_72676_90254# TERM_ENABLE TERM_VCM__P4 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X345 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X346 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X347 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X348 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X349 a_91900_152846# TERM_TRIM3 TERM_VCM__N22 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X350 a_4789_117064# a_3813_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X351 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X352 a_85492_152846_r# PAD_N__h16 VSS ppolyf_u r_width=2u r_length=1u
+X353 a_69448_96914# TERM_ENABLE TERM_VCM__P1 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X354 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X355 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X356 PAD_P__h14 a_83356_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X357 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X358 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X359 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X360 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X361 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X362 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D21 PAD_P__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X363 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X364 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X365 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X366 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X367 PAD_P__h6 a_74812_90254_r# VSS ppolyf_u r_width=2u r_length=2.6u
+X368 a_1852_148519# VSS VSS ppolyf_u_1k_6p0 r_width=1u r_length=6u
+X369 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X370 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D22 PAD_P__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X371 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X372 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X373 VDD w_71178_112088# w_71178_112088# w_71178_112088# pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X374 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X375 a_90832_152846# TERM_TRIM3 TERM_VCM__N21 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X376 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D23 VSS PAD_P__dio diode_nd2ps_06v0 pj=51.8u area=22.5p
+X377 a_79084_152846_r# PAD_N__h10 VSS ppolyf_u r_width=2u r_length=1u
+X378 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X379 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X380 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X381 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X382 a_68216_149284_r# PAD_N__h0 VSS ppolyf_u r_width=2u r_length=2.6u
+X383 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X384 a_74812_90254# TERM_ENABLE TERM_VCM__P6 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X385 VSS a_3813_117064# a_4789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X386 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X387 PAD_P__h12 a_81220_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X388 a_69448_149284# TERM_ENABLE TERM_VCM__N1 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X389 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X390 RX_N__dev VSS VSS VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
+X391 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X392 a_71608_152046_r# PAD_N__h3 VSS ppolyf_u r_width=2u r_length=2.6u
+X393 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X394 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X395 VSS a_4789_117064# a_2245_90628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X396 PAD_P__h19 a_88696_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X397 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X398 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X399 VSS a_4789_117064# a_2245_90628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X400 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X401 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X402 a_94036_152846_r# PAD_N__h24 VSS ppolyf_u r_width=2u r_length=1u
+X403 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X404 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X405 a_1005_131545# a_13878_131545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X406 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X407 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X408 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X409 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X410 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X411 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X412 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X413 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X414 a_4789_117064# a_3813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X415 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X416 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D24 PAD_P__dio ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X417 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X418 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X419 a_68216_149284# TERM_ENABLE TERM_VCM__N0 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X420 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X421 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X422 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X423 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X424 a_88696_91054# TERM_TRIM3 TERM_VCM__P19 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X425 a_1005_132385# a_13878_132665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X426 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X427 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X428 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D25 VSS PAD_N__dio diode_nd2ps_06v0 pj=51.8u area=22.5p
+X429 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X430 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X431 a_87628_152846_r# PAD_N__h18 VSS ppolyf_u r_width=2u r_length=1u
+X432 PAD_P__h10 a_79084_91054_r# VSS ppolyf_u r_width=2u r_length=1u
+X433 a_86560_152846_r# PAD_N__h17 VSS ppolyf_u r_width=2u r_length=1u
+X434 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X435 a_76948_152046_r# PAD_N__h8 VSS ppolyf_u r_width=2u r_length=2.6u
+X436 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X437 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X438 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X439 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X440 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X441 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X442 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X443 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X444 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X445 RX_N__dev VDD VDD VDD pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X446 a_1005_133505# a_13878_133785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X447 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X448 a_73744_90254# TERM_ENABLE TERM_VCM__P5 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X449 a_75880_152046# TERM_ENABLE TERM_VCM__N7 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X450 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X451 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X452 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X453 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X454 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X455 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X456 a_73744_152046# TERM_ENABLE TERM_VCM__N5 VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X457 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X458 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X459 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X460 a_94036_91054# TERM_TRIM3 TERM_VCM__P24 VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X461 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X462 a_2245_90628# VSS VSS ppolyf_u_1k_6p0 r_width=1u r_length=99.24u
+X463 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X464 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X465 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X466 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D26 VSS PAD_N__dio diode_nd2ps_06v0 pj=51.8u area=22.5p
+X467 a_4789_117064# a_3813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X468 PAD_P__h5 a_73744_90254_r# VSS ppolyf_u r_width=2u r_length=2.6u
+X469 RX_N__mim PAD_N__mim cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
+D27 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X470 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X471 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X472 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X473 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X474 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X475 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X476 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X477 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X478 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X479 PAD_P__h7 a_75880_90254_r# VSS ppolyf_u r_width=2u r_length=2.6u
+C0 TERM_VCM a_91900_91054# 3.28801f
+C1 TERM_VCM a_94036_152846# 2.32568f
+C2 ESD_RAIL m3_31296_125300# 0.4985f
+C3 TERM_VCM a_72676_152046# 2.42132f
+C4 a_1005_131825# ESD_RAIL 0.53823f
+C5 a_80152_152846# TERM_TRIM1 0.28932f
+C6 a_1005_131545# a_1005_132945# 0
+C7 PAD_N a_73744_152046# 0.04756f
+C8 a_82288_152846# a_79084_152846# 0
+C9 TERM_VCM a_70540_152046# 2.26906f
+C10 TERM_VCM a_88696_91054# 2.2489f
+C11 w_71178_112088# TERM_TRIM0 0.17102f
+C12 TERM_TRIM3 w_71178_112088# 0.24351f
+C13 a_1005_132385# ESD_RAIL 0.53823f
+C14 TERM_VCM a_70540_90254# 2.26906f
+C15 m4_29696_133300# m3_29696_133300# 0.15111f
+C16 PAD_N m3_31296_117300# 0.03396f
+C17 m4_32896_117300# m3_32896_117300# 0.15111f
+C18 m4_31296_117300# m3_31296_117300# 0.15111f
+C19 a_92968_91054# PAD_P 0.10003f
+C20 TERM_ENABLE a_73744_90254# 0.42524f
+C21 PAD_N VBIAS 0.15966f
+C22 a_86560_152846# a_88696_152846# 0.2726f
+C23 a_86560_152846# a_83356_152846# 0.01123f
+C24 PAD_N a_79084_152846# 0.10321f
+C25 a_92968_152846# TERM_TRIM3 0.28932f
+C26 a_1005_132385# a_1005_132945# 0.0346f
+C27 TERM_ENABLE a_71608_90254# 0.4243f
+C28 TERM_ENABLE a_71608_152046# 0.4243f
+C29 a_82288_91054# a_81220_91054# 0.10531f
+C30 a_69448_149284# a_70540_152046# 0.13311f
+C31 a_86560_152846# a_84424_152846# 0.17288f
+C32 a_94036_91054# TERM_TRIM3 0.27606f
+C33 a_81220_152846# a_78016_152046# 0
+C34 a_75880_90254# TERM_ENABLE 0.4244f
+C35 TERM_ENABLE a_78016_152046# 0.41103f
+C36 TERM_VCM a_89764_152846# 2.00734f
+C37 a_83356_91054# PAD_P 0.10313f
+C38 a_82288_152846# a_83356_152846# 0.64368f
+C39 a_91900_152846# a_88696_152846# 0.0331f
+C40 a_84424_152846# a_82288_152846# 0.08318f
+C41 a_90832_91054# a_89764_91054# 0.19968f
+C42 PAD_N PAD_P 36.4223f
+C43 TERM_VCM a_85492_152846# 2.14296f
+C44 TERM_ENABLE a_68216_149284# 0.4243f
+C45 a_80152_152846# a_78016_152046# 0.01596f
+C46 PAD_N a_88696_152846# 0.10313f
+C47 TERM_TRIM2 a_81220_91054# 0.01326f
+C48 a_90832_152846# TERM_TRIM3 0.28932f
+C49 PAD_N a_83356_152846# 0.10313f
+C50 a_90832_152846# a_87628_152846# 0.31618f
+C51 m3_34460_89900# PAD_P 0.04061f
+C52 PAD_N a_84424_152846# 0.10313f
+C53 a_92968_91054# a_91900_91054# 1.09827f
+C54 TERM_VCM a_75880_152046# 2.29198f
+C55 m4_34496_125300# PAD_P 0.01598f
+C56 a_74812_90254# TERM_ENABLE 0.42606f
+C57 PAD_N m4_29696_117300# 0.01425f
+C58 m2_2279_124800# a_1005_134065# 0
+C59 a_75880_90254# a_73744_90254# 0
+C60 m4_29696_133300# PAD_N 0.01425f
+C61 w_71178_112088# ESD_RAIL 0.08713f
+C62 TERM_TRIM2 TERM_TRIM0 0.07657f
+C63 TERM_TRIM2 TERM_TRIM3 49.1703f
+C64 m3_34460_105900# PAD_N 0.04492f
+C65 a_92968_91054# a_88696_91054# 0.00866f
+C66 PAD_N m3_32896_117300# 0.03396f
+C67 m3_29660_89900# PAD_P 0.03097f
+C68 a_82288_91054# a_85492_91054# 0.00939f
+C69 TERM_TRIM1 a_81220_91054# 0.27606f
+C70 m3_32860_89900# ESD_RAIL 0
+C71 PAD_P VBIAS 0.15544f
+C72 m3_34496_133300# ESD_RAIL 0.4985f
+C73 RX_P w_71178_112088# 2.17742f
+C74 VDD w_71178_112088# 5.53293f
+C75 a_78016_90254# PAD_P 0.04756f
+C76 m3_29696_101300# ESD_RAIL 0.44823f
+C77 a_91900_152846# a_94036_152846# 0.13174f
+C78 TERM_VCM w_71178_112088# 0.37908f
+C79 m4_31296_101300# ESD_RAIL 0.5351f
+C80 TERM_ENABLE TERM_TRIM0 30.6415f
+C81 TERM_ENABLE TERM_TRIM3 0.08127f
+C82 ESD_RAIL m4_34496_133300# 0.5351f
+C83 PAD_N a_94036_152846# 0.09836f
+C84 a_72676_90254# TERM_ENABLE 0.4243f
+C85 m3_29696_125300# m4_29696_125300# 0.15111f
+C86 a_90832_91054# a_86560_91054# 0
+C87 PAD_N a_72676_152046# 0.04756f
+C88 a_74812_90254# a_73744_90254# 0.24052f
+C89 TERM_VCM a_92968_152846# 2.42969f
+C90 TERM_TRIM1 TERM_TRIM0 44.3258f
+C91 TERM_TRIM3 TERM_TRIM1 0.08733f
+C92 a_86560_152846# a_89764_152846# 0.02726f
+C93 PAD_N a_70540_152046# 0.04756f
+C94 m3_32896_101300# ESD_RAIL 0.4985f
+C95 RX_N w_71178_112088# 2.17714f
+C96 a_94036_91054# TERM_VCM 2.32568f
+C97 a_86560_152846# a_85492_152846# 0.77991f
+C98 TERM_TRIM2 a_85492_91054# 0.27606f
+C99 a_87628_91054# PAD_P 0.10313f
+C100 a_84424_91054# a_86560_91054# 0.17288f
+C101 a_75880_90254# a_74812_90254# 0.15815f
+C102 a_90832_91054# TERM_TRIM3 0.28932f
+C103 TERM_VCM a_76948_152046# 2.67432f
+C104 m4_29696_101300# m3_29696_101300# 0.15111f
+C105 a_89764_91054# a_86560_91054# 0.02726f
+C106 TERM_VCM a_82288_91054# 2.40617f
+C107 m3_31296_133300# ESD_RAIL 0.4985f
+C108 a_72676_152046# a_73744_152046# 0.14941f
+C109 a_84424_152846# a_83356_152846# 0.26519f
+C110 a_91900_152846# a_89764_152846# 0.16933f
+C111 a_82288_152846# a_85492_152846# 0.00939f
+C112 a_84424_91054# TERM_TRIM3 0
+C113 a_72676_90254# a_73744_90254# 0.14941f
+C114 m3_31260_89900# PAD_P 0.04061f
+C115 TERM_VCM a_90832_152846# 2.01476f
+C116 TERM_VCM a_74812_152046# 2.2233f
+C117 a_13878_131545# a_13878_132105# 0.0346f
+C118 a_82288_91054# a_79084_91054# 0
+C119 PAD_N a_89764_152846# 0.10313f
+C120 a_13878_134345# ESD_RAIL 0.5677f
+C121 m4_31296_101300# m3_31296_101300# 0.15111f
+C122 a_89764_91054# TERM_TRIM3 0.28932f
+C123 a_72676_90254# a_71608_90254# 0.14045f
+C124 a_68216_96914# PAD_P 0.12057f
+C125 m3_32860_105900# PAD_N 0.04492f
+C126 ESD_RAIL m3_32896_133300# 0.4985f
+C127 a_3813_117064# a_2245_90628# 0.00994f
+C128 a_82288_91054# a_80152_91054# 0.03597f
+C129 PAD_N a_85492_152846# 0.10313f
+C130 m4_31296_125300# ESD_RAIL 0.5351f
+C131 RX_P TERM_TRIM2 0.14387f
+C132 VDD TERM_TRIM2 0.28557f
+C133 TERM_TRIM0 a_78016_152046# 0.00894f
+C134 a_3813_117064# a_1005_131545# 2.44008f
+C135 a_13878_132105# a_13878_132665# 0.0346f
+C136 TERM_VCM TERM_TRIM2 5.12464f
+C137 a_69448_96914# PAD_P 0.04756f
+C138 a_87628_91054# a_91900_91054# 0.00449f
+C139 a_13878_133785# a_13878_134345# 0.0346f
+C140 PAD_N a_75880_152046# 0.04756f
+C141 PAD_P a_91900_91054# 0.10003f
+C142 m3_29696_117300# ESD_RAIL 0.44823f
+C143 m4_32896_133300# ESD_RAIL 0.5351f
+C144 m3_32896_125300# m4_32896_125300# 0.15111f
+C145 RX_P TERM_ENABLE 0
+C146 VDD TERM_ENABLE 12.9618f
+C147 a_87628_91054# a_88696_91054# 0.85754f
+C148 TERM_VCM a_81220_152846# 1.99423f
+C149 m4_31296_133300# m3_31296_133300# 0.15111f
+C150 a_1005_134065# ESD_RAIL 0.57348f
+C151 a_84424_91054# a_85492_91054# 0.72556f
+C152 a_94036_91054# a_92968_91054# 1.15263f
+C153 PAD_P a_88696_91054# 0.10313f
+C154 TERM_VCM TERM_ENABLE 25.0657f
+C155 a_70540_90254# PAD_P 0.04756f
+C156 RX_P TERM_TRIM1 0.14387f
+C157 VDD TERM_TRIM1 0.28454f
+C158 a_89764_91054# a_85492_91054# 0.00355f
+C159 ESD_RAIL m4_32896_101300# 0.5351f
+C160 a_74812_90254# a_72676_90254# 0
+C161 TERM_VCM TERM_TRIM1 3.78482f
+C162 m3_31296_125300# PAD_P 0.03396f
+C163 m3_32896_125300# ESD_RAIL 0.4985f
+C164 a_75880_152046# a_73744_152046# 0
+C165 a_68216_96914# a_69448_96914# 0.13125f
+C166 TERM_ENABLE a_79084_91054# 0.00349f
+C167 PAD_N w_71178_112088# 7.24362f
+C168 TERM_ENABLE a_76948_90254# 0.42442f
+C169 TERM_ENABLE a_69448_149284# 0.4243f
+C170 TERM_TRIM3 a_86560_91054# 0.28932f
+C171 RX_N TERM_ENABLE 0.14434f
+C172 a_80152_152846# TERM_VCM 2.24523f
+C173 a_91900_152846# a_92968_152846# 1.09827f
+C174 TERM_TRIM1 a_79084_91054# 0.01327f
+C175 TERM_VCM a_90832_91054# 2.01476f
+C176 a_86560_152846# a_90832_152846# 0
+C177 a_92968_152846# PAD_N 0.10003f
+C178 m4_34496_101300# m3_34496_101300# 0.15111f
+C179 m4_34496_101300# ESD_RAIL 0.5351f
+C180 m3_34496_133300# PAD_N 0.03396f
+C181 TERM_TRIM1 a_80152_91054# 0.28932f
+C182 m4_29696_125300# ESD_RAIL 0.48045f
+C183 a_88696_152846# a_89764_152846# 0.94068f
+C184 TERM_TRIM3 TERM_TRIM0 0.07988f
+C185 a_87628_152846# TERM_TRIM3 0.28935f
+C186 TERM_VCM a_73744_90254# 2.49447f
+C187 a_82288_91054# a_83356_91054# 0.64368f
+C188 PAD_N m4_34496_133300# 0.02435f
+C189 TERM_VCM a_84424_91054# 3.02567f
+C190 PAD_N a_76948_152046# 0.04756f
+C191 a_88696_152846# a_85492_152846# 0.01848f
+C192 a_85492_152846# a_83356_152846# 0.1405f
+C193 a_69448_96914# a_70540_90254# 0.13311f
+C194 TERM_VCM a_71608_90254# 2.35823f
+C195 m3_29696_125300# ESD_RAIL 0.44823f
+C196 TERM_VCM a_71608_152046# 2.35823f
+C197 a_91900_91054# a_88696_91054# 0.0331f
+C198 a_4789_117064# ESD_RAIL 16.8853f
+C199 TERM_VCM a_89764_91054# 2.00734f
+C200 m2_2279_124800# ESD_RAIL 5.47988f
+C201 a_84424_152846# a_85492_152846# 0.72556f
+C202 w_71178_112088# VBIAS 1.98187f
+C203 TERM_VCM a_75880_90254# 2.29198f
+C204 a_91900_152846# a_90832_152846# 0.09974f
+C205 a_1005_133505# a_1005_134065# 0.0346f
+C206 a_13878_131545# ESD_RAIL 0.56772f
+C207 TERM_VCM a_78016_152046# 2.25881f
+C208 a_85492_91054# a_86560_91054# 0.77991f
+C209 a_90832_152846# PAD_N 0.1091f
+C210 m2_2279_124800# a_1005_132945# 0
+C211 PAD_N a_74812_152046# 0.04756f
+C212 a_13878_132105# ESD_RAIL 0.53942f
+C213 TERM_TRIM2 a_82288_152846# 0.28932f
+C214 a_2245_90628# a_1005_131545# 0.01301f
+C215 ESD_RAIL m3_34496_125300# 0.4985f
+C216 a_83356_91054# TERM_TRIM2 0.28932f
+C217 PAD_N m3_31296_133300# 0.03396f
+C218 a_75880_90254# a_76948_90254# 0.24993f
+C219 a_13878_132665# ESD_RAIL 0.53916f
+C220 TERM_VCM a_68216_149284# 2.07251f
+C221 PAD_N TERM_TRIM2 0.25684f
+C222 TERM_TRIM3 a_85492_91054# 0.01326f
+C223 a_89764_152846# a_94036_152846# 0.0102f
+C224 w_71178_112088# PAD_P 0.75903f
+C225 a_79084_152846# a_76948_152046# 0.01248f
+C226 a_1005_131545# a_1005_131825# 0.03725f
+C227 a_82288_152846# a_81220_152846# 0.10531f
+C228 a_73744_152046# a_74812_152046# 0.24052f
+C229 TERM_VCM a_74812_90254# 2.2233f
+C230 PAD_N m3_32896_133300# 0.03396f
+C231 a_90832_91054# a_92968_91054# 0
+C232 a_1005_131545# a_1005_132385# 0
+C233 a_69448_149284# a_68216_149284# 0.13125f
+C234 m3_32860_89900# PAD_P 0.04061f
+C235 PAD_N a_81220_152846# 0.10746f
+C236 a_92968_152846# a_88696_152846# 0.00866f
+C237 a_1005_131825# a_1005_132385# 0.0346f
+C238 PAD_N TERM_ENABLE 0.33094f
+C239 TERM_VCM a_86560_91054# 2.01082f
+C240 TERM_VCM a_81220_91054# 1.99423f
+C241 m3_29696_101300# PAD_P 0.02453f
+C242 a_94036_91054# PAD_P 0.09836f
+C243 m4_31296_101300# PAD_P 0.01598f
+C244 a_80152_152846# a_82288_152846# 0.03597f
+C245 m2_2279_124800# a_1005_133505# 0
+C246 PAD_N m3_29696_117300# 0.02453f
+C247 PAD_N TERM_TRIM1 0.25684f
+C248 a_92968_91054# a_89764_91054# 0.12994f
+C249 RX_P TERM_TRIM0 0.16216f
+C250 RX_P TERM_TRIM3 0.14387f
+C251 TERM_TRIM2 VBIAS 0.17974f
+C252 VDD TERM_TRIM0 0.28403f
+C253 a_82288_91054# PAD_P 0.10313f
+C254 a_81220_91054# a_79084_91054# 0.13387f
+C255 VDD TERM_TRIM3 4.05215f
+C256 PAD_N m4_32896_133300# 0.01598f
+C257 a_80152_152846# PAD_N 0.10321f
+C258 TERM_VCM TERM_TRIM0 4.39961f
+C259 TERM_VCM TERM_TRIM3 7.81019f
+C260 TERM_VCM a_87628_152846# 3.22474f
+C261 m3_32896_101300# PAD_P 0.03396f
+C262 TERM_VCM a_72676_90254# 2.42132f
+C263 a_81220_91054# a_80152_91054# 0.25062f
+C264 TERM_ENABLE a_73744_152046# 0.42524f
+C265 a_89764_152846# a_85492_152846# 0.00355f
+C266 a_90832_152846# a_88696_152846# 0.13655f
+C267 a_84424_91054# a_83356_91054# 0.26519f
+C268 a_79084_91054# TERM_TRIM0 0.27606f
+C269 TERM_ENABLE VBIAS 0.34917f
+C270 ESD_RAIL m4_34496_117300# 0.5351f
+C271 a_81220_152846# a_79084_152846# 0.13387f
+C272 TERM_ENABLE a_78016_90254# 0.41103f
+C273 TERM_ENABLE a_79084_152846# 0.00349f
+C274 a_92968_152846# a_94036_152846# 1.15263f
+C275 m4_32896_125300# ESD_RAIL 0.5351f
+C276 TERM_TRIM2 PAD_P 0.07529f
+C277 TERM_TRIM1 VBIAS 0.17732f
+C278 PAD_N a_71608_152046# 0.04756f
+C279 a_94036_91054# a_91900_91054# 0.13174f
+C280 TERM_TRIM1 a_79084_152846# 0.01327f
+C281 TERM_TRIM2 a_83356_152846# 0.28932f
+C282 PAD_N a_78016_152046# 0.04756f
+C283 ESD_RAIL m3_34496_101300# 0.4985f
+C284 TERM_TRIM2 a_84424_152846# 0.28933f
+C285 a_80152_152846# a_79084_152846# 0.46856f
+C286 TERM_VCM a_85492_91054# 2.14296f
+C287 m4_31296_125300# PAD_P 0.01598f
+C288 TERM_ENABLE PAD_P 0.09923f
+C289 a_1005_132945# ESD_RAIL 0.53823f
+C290 a_81220_152846# a_83356_152846# 0
+C291 PAD_N a_68216_149284# 0.12057f
+C292 a_90832_152846# a_94036_152846# 0.00419f
+C293 TERM_TRIM1 PAD_P 0.07651f
+C294 a_13878_133785# ESD_RAIL 0.53942f
+C295 a_72676_152046# a_74812_152046# 0
+C296 a_86560_152846# TERM_TRIM3 0.28932f
+C297 a_92968_91054# TERM_TRIM3 0.28932f
+C298 a_86560_152846# a_87628_152846# 0.18097f
+C299 a_92968_152846# a_89764_152846# 0.12994f
+C300 a_90832_91054# a_87628_91054# 0.31618f
+C301 m4_29696_101300# ESD_RAIL 0.48045f
+C302 ESD_RAIL a_1852_148519# 0.3438p
+C303 a_83356_91054# a_81220_91054# 0
+C304 a_83356_91054# a_86560_91054# 0.01123f
+C305 VDD RX_P 2.31443f
+C306 m3_29696_117300# m4_29696_117300# 0.15111f
+C307 a_90832_91054# PAD_P 0.1091f
+C308 a_80152_152846# a_83356_152846# 0.00715f
+C309 a_75880_90254# a_78016_90254# 0.01025f
+C310 a_68216_96914# TERM_ENABLE 0.4243f
+C311 PAD_P m4_32896_101300# 0.01598f
+C312 a_79084_152846# a_78016_152046# 0.27297f
+C313 TERM_VCM RX_P 6.30872f
+C314 TERM_VCM VDD 3.62756f
+C315 m3_32896_125300# PAD_P 0.03396f
+C316 m4_34496_125300# m3_34496_125300# 0.15111f
+C317 a_73744_90254# PAD_P 0.04756f
+C318 a_3813_117064# a_4789_117064# 3.03168f
+C319 m3_31296_101300# ESD_RAIL 0.4985f
+C320 a_84424_91054# a_87628_91054# 0.01397f
+C321 a_84424_91054# PAD_P 0.10313f
+C322 m4_31296_133300# ESD_RAIL 0.5351f
+C323 TERM_ENABLE a_69448_96914# 0.4243f
+C324 a_71608_90254# PAD_P 0.04756f
+C325 a_89764_91054# a_87628_91054# 0.12483f
+C326 m4_32896_117300# ESD_RAIL 0.5351f
+C327 a_91900_152846# TERM_TRIM3 0.2894f
+C328 a_1005_133505# ESD_RAIL 0.53842f
+C329 RX_P RX_N 3.37337f
+C330 a_91900_152846# a_87628_152846# 0.00449f
+C331 VDD RX_N 8.13768f
+C332 a_89764_91054# PAD_P 0.10313f
+C333 TERM_VCM a_79084_91054# 2.71834f
+C334 TERM_VCM a_76948_90254# 2.67432f
+C335 TERM_VCM a_69448_149284# 2.21943f
+C336 m4_34496_101300# PAD_P 0.01598f
+C337 PAD_N TERM_TRIM0 0.25684f
+C338 PAD_N TERM_TRIM3 0.40303f
+C339 a_90832_152846# a_89764_152846# 0.19968f
+C340 TERM_VCM RX_N 6.84313f
+C341 a_87628_152846# PAD_N 0.10313f
+C342 TERM_ENABLE a_72676_152046# 0.4243f
+C343 m3_29696_133300# ESD_RAIL 0.44823f
+C344 m4_29696_125300# PAD_P 0.01425f
+C345 a_75880_90254# PAD_P 0.04756f
+C346 TERM_VCM a_80152_91054# 2.24523f
+C347 a_75880_152046# a_76948_152046# 0.24993f
+C348 a_1005_132945# a_1005_133505# 0.0346f
+C349 TERM_ENABLE a_70540_152046# 0.4243f
+C350 m3_29660_105900# ESD_RAIL -0
+C351 m3_34496_117300# m4_34496_117300# 0.15111f
+C352 TERM_ENABLE a_70540_90254# 0.4243f
+C353 a_79084_91054# a_76948_90254# 0.01248f
+C354 m4_31296_125300# m3_31296_125300# 0.15111f
+C355 m3_29696_125300# PAD_P 0.02453f
+C356 a_80152_91054# a_79084_91054# 0.46856f
+C357 a_90832_91054# a_91900_91054# 0.09974f
+C358 a_78016_90254# a_81220_91054# 0
+C359 a_75880_152046# a_74812_152046# 0.15815f
+C360 TERM_TRIM2 a_85492_152846# 0.27606f
+C361 a_13878_133225# a_13878_132665# 0.0346f
+C362 m3_34496_117300# ESD_RAIL 0.4985f
+C363 a_83356_91054# a_85492_91054# 0.1405f
+C364 a_90832_91054# a_88696_91054# 0.13655f
+C365 a_74812_90254# PAD_P 0.04756f
+C366 VBIAS TERM_TRIM0 0.17628f
+C367 TERM_TRIM3 VBIAS 4.00884f
+C368 PAD_P m3_34496_125300# 0.03396f
+C369 PAD_N m4_34496_117300# 0.02435f
+C370 a_79084_152846# TERM_TRIM0 0.27606f
+C371 a_78016_90254# TERM_TRIM0 0.00894f
+C372 a_89764_91054# a_91900_91054# 0.16933f
+C373 a_87628_91054# a_86560_91054# 0.18097f
+C374 a_72676_152046# a_71608_152046# 0.14045f
+C375 TERM_VCM a_86560_152846# 2.01082f
+C376 m3_34496_133300# m4_34496_133300# 0.15111f
+C377 TERM_VCM a_92968_91054# 2.42969f
+C378 a_81220_91054# PAD_P 0.10746f
+C379 PAD_P a_86560_91054# 0.10313f
+C380 a_70540_152046# a_71608_152046# 0.13588f
+C381 a_71608_90254# a_70540_90254# 0.13588f
+C382 a_89764_91054# a_88696_91054# 0.94068f
+C383 PAD_N ESD_RAIL 50.7909f
+C384 m4_31296_117300# ESD_RAIL 0.5351f
+C385 TERM_ENABLE a_75880_152046# 0.4244f
+C386 a_92968_152846# a_90832_152846# 0
+C387 TERM_TRIM3 a_87628_91054# 0.28935f
+C388 PAD_P TERM_TRIM0 0.08989f
+C389 TERM_TRIM3 PAD_P 0.13496f
+C390 ESD_RAIL m3_34460_89900# 0
+C391 TERM_VCM a_82288_152846# 2.40617f
+C392 a_72676_90254# PAD_P 0.04756f
+C393 TERM_TRIM2 w_71178_112088# 0.14534f
+C394 TERM_TRIM3 a_88696_152846# 0.28932f
+C395 a_87628_152846# a_88696_152846# 0.85754f
+C396 TERM_VCM a_83356_91054# 2.01072f
+C397 m4_34496_125300# ESD_RAIL 0.5351f
+C398 VDD PAD_N 0.39442f
+C399 TERM_VCM a_91900_152846# 3.28801f
+C400 a_4789_117064# a_2245_90628# 11.6307f
+C401 TERM_TRIM3 a_84424_152846# 0
+C402 a_87628_152846# a_84424_152846# 0.01397f
+C403 TERM_VCM PAD_N 4.46952f
+C404 a_4789_117064# a_1005_131545# 0.02926f
+C405 m2_2279_124800# a_1005_131545# 0.05457f
+C406 m3_31296_117300# ESD_RAIL 0.4985f
+C407 TERM_ENABLE w_71178_112088# 16.5641f
+C408 PAD_N a_1852_148519# 0.106f
+C409 m3_29660_89900# ESD_RAIL 0
+C410 a_83356_91054# a_80152_91054# 0.00715f
+C411 m2_2279_124800# a_1005_131825# 0
+C412 a_3813_117064# ESD_RAIL 5.25092f
+C413 PAD_N a_69448_149284# 0.04756f
+C414 PAD_N RX_N 16.0706f
+C415 TERM_TRIM1 w_71178_112088# 0.1509f
+C416 a_82288_91054# TERM_TRIM2 0.28932f
+C417 m2_2279_124800# a_1005_132385# 0
+C418 a_85492_91054# a_87628_91054# 0.21991f
+C419 TERM_VCM a_73744_152046# 2.49447f
+C420 a_85492_91054# PAD_P 0.10313f
+C421 a_88696_91054# a_86560_91054# 0.2726f
+C422 m4_31296_133300# PAD_N 0.01598f
+C423 m4_32896_125300# PAD_P 0.01598f
+C424 RX_P VBIAS 0.079f
+C425 TERM_TRIM3 a_91900_91054# 0.2894f
+C426 VDD VBIAS 6.80037f
+C427 PAD_N m4_32896_117300# 0.01598f
+C428 a_13878_133225# ESD_RAIL 0.53916f
+C429 TERM_TRIM3 a_94036_152846# 0.27606f
+C430 a_75880_152046# a_78016_152046# 0.01025f
+C431 TERM_VCM VBIAS 15.9004f
+C432 TERM_ENABLE a_76948_152046# 0.42442f
+C433 TERM_VCM a_78016_90254# 2.25881f
+C434 TERM_VCM a_79084_152846# 2.71834f
+C435 PAD_N m3_29696_133300# 0.02453f
+C436 PAD_P m3_34496_101300# 0.03396f
+C437 ESD_RAIL PAD_P 56.6713f
+C438 TERM_TRIM3 a_88696_91054# 0.28932f
+C439 PAD_N m3_29660_105900# 0.03097f
+C440 a_94036_91054# a_90832_91054# 0.00419f
+C441 RX_N VBIAS 0.24116f
+C442 a_78016_90254# a_79084_91054# 0.27297f
+C443 a_13878_133785# a_13878_133225# 0.0346f
+C444 TERM_ENABLE a_74812_152046# 0.42606f
+C445 a_78016_90254# a_76948_90254# 0.43572f
+C446 ESD_RAIL m4_29696_117300# 0.48045f
+C447 a_78016_90254# a_80152_91054# 0.01596f
+C448 RX_P PAD_P 16.0706f
+C449 VDD PAD_P 0.39442f
+C450 a_86560_152846# PAD_N 0.10313f
+C451 TERM_VCM a_87628_91054# 3.22474f
+C452 m3_31260_89900# ESD_RAIL 0
+C453 TERM_VCM PAD_P 4.08609f
+C454 m4_29696_133300# ESD_RAIL 0.48045f
+C455 TERM_TRIM2 a_81220_152846# 0.01326f
+C456 m3_34496_117300# PAD_N 0.03396f
+C457 TERM_VCM a_88696_152846# 2.2489f
+C458 TERM_TRIM2 TERM_ENABLE 0.07746f
+C459 TERM_VCM a_83356_152846# 2.01072f
+C460 TERM_TRIM3 a_89764_152846# 0.28932f
+C461 a_94036_91054# a_89764_91054# 0.0102f
+C462 ESD_RAIL m3_32896_117300# 0.4985f
+C463 a_87628_152846# a_89764_152846# 0.12483f
+C464 m3_32896_101300# m4_32896_101300# 0.15111f
+C465 m4_29696_101300# PAD_P 0.01425f
+C466 PAD_P a_1852_148519# 0.25621f
+C467 TERM_VCM a_84424_152846# 3.02567f
+C468 TERM_TRIM2 TERM_TRIM1 46.0549f
+C469 a_79084_91054# PAD_P 0.10321f
+C470 a_82288_91054# a_84424_91054# 0.08318f
+C471 PAD_P a_76948_90254# 0.04756f
+C472 TERM_TRIM3 a_85492_152846# 0.01326f
+C473 a_87628_152846# a_85492_152846# 0.21991f
+C474 PAD_N a_82288_152846# 0.10313f
+C475 a_85492_91054# a_88696_91054# 0.01848f
+C476 a_80152_91054# PAD_P 0.10321f
+C477 m3_31296_101300# PAD_P 0.03396f
+C478 a_78016_152046# a_76948_152046# 0.43572f
+C479 a_91900_152846# PAD_N 0.10003f
+C480 TERM_VCM a_68216_96914# 2.07251f
+C481 m4_32896_133300# m3_32896_133300# 0.15111f
+C482 m4_31296_117300# PAD_N 0.01598f
+C483 a_81220_152846# TERM_TRIM1 0.27606f
+C484 TERM_ENABLE TERM_TRIM1 0.09198f
+C485 a_2245_90628# ESD_RAIL 0.24349p
+C486 PAD_N m3_31260_105900# 0.04492f
+C487 a_80152_152846# a_81220_152846# 0.25062f
+C488 a_84424_91054# TERM_TRIM2 0.28933f
+C489 TERM_VCM a_69448_96914# 2.21943f
+C490 a_1005_131545# ESD_RAIL 97.1325f
+C491 RX_P VSS 43.3929f
+C492 VBIAS VSS 8.6617f
+C493 RX_N VSS 37.5203f
+C494 PAD_P VSS 0.42273p
+C495 PAD_N VSS 0.40526p
+C496 TERM_TRIM3 VSS 62.7203f
+C497 TERM_TRIM2 VSS 20.8792f
+C498 TERM_TRIM1 VSS 13.0932f
+C499 TERM_TRIM0 VSS 13.0174f
+C500 TERM_VCM VSS 0.2863p
+C501 TERM_ENABLE VSS 40.1365f
+C502 VDD VSS 31.8661f
+C503 ESD_RAIL VSS 3263.27133f
+C504 m4_34496_101300# VSS 0.06434f $ **FLOATING
+C505 m4_32896_101300# VSS 0.06434f $ **FLOATING
+C506 m4_31296_101300# VSS 0.06434f $ **FLOATING
+C507 m4_29696_101300# VSS 0.12191f $ **FLOATING
+C508 m4_34496_117300# VSS 0.05645f $ **FLOATING
+C509 m4_32896_117300# VSS 0.06434f $ **FLOATING
+C510 m4_31296_117300# VSS 0.06434f $ **FLOATING
+C511 m4_29696_117300# VSS 0.12191f $ **FLOATING
+C512 m4_34496_125300# VSS 0.06434f $ **FLOATING
+C513 m4_32896_125300# VSS 0.06434f $ **FLOATING
+C514 m4_31296_125300# VSS 0.06434f $ **FLOATING
+C515 m4_29696_125300# VSS 0.12191f $ **FLOATING
+C516 m4_34496_133300# VSS 0.05645f $ **FLOATING
+C517 m4_32896_133300# VSS 0.06434f $ **FLOATING
+C518 m4_31296_133300# VSS 0.06434f $ **FLOATING
+C519 m4_29696_133300# VSS 0.12191f $ **FLOATING
+C520 m3_34460_89900# VSS 1.1519f $ **FLOATING
+C521 m3_32860_89900# VSS 1.1519f $ **FLOATING
+C522 m3_31260_89900# VSS 1.1519f $ **FLOATING
+C523 m3_29660_89900# VSS 1.16765f $ **FLOATING
+C524 m3_34496_101300# VSS 0.07041f $ **FLOATING
+C525 m3_32896_101300# VSS 0.07041f $ **FLOATING
+C526 m3_31296_101300# VSS 0.07041f $ **FLOATING
+C527 m3_29696_101300# VSS 0.13352f $ **FLOATING
+C528 m3_34460_105900# VSS 1.14905f $ **FLOATING
+C529 m3_32860_105900# VSS 1.14905f $ **FLOATING
+C530 m3_31260_105900# VSS 1.14905f $ **FLOATING
+C531 m3_29660_105900# VSS 1.16802f $ **FLOATING
+C532 m3_34496_117300# VSS 0.07041f $ **FLOATING
+C533 m3_32896_117300# VSS 0.07041f $ **FLOATING
+C534 m3_31296_117300# VSS 0.07041f $ **FLOATING
+C535 m3_29696_117300# VSS 0.13352f $ **FLOATING
+C536 m3_34496_125300# VSS 0.07041f $ **FLOATING
+C537 m3_32896_125300# VSS 0.07041f $ **FLOATING
+C538 m3_31296_125300# VSS 0.07041f $ **FLOATING
+C539 m3_29696_125300# VSS 0.13352f $ **FLOATING
+C540 m3_34496_133300# VSS 0.07041f $ **FLOATING
+C541 m3_32896_133300# VSS 0.07041f $ **FLOATING
+C542 m3_31296_133300# VSS 0.07041f $ **FLOATING
+C543 m3_29696_133300# VSS 0.13352f $ **FLOATING
+C544 m2_2279_124800# VSS 7.46506f $ **FLOATING
+C545 a_94036_91054# VSS 5.2243f
+C546 a_92968_91054# VSS 3.93112f
+C547 a_91900_91054# VSS 3.90351f
+C548 a_90832_91054# VSS 5.23471f
+C549 a_89764_91054# VSS 4.68749f
+C550 a_88696_91054# VSS 3.6362f
+C551 a_87628_91054# VSS 3.41078f
+C552 a_86560_91054# VSS 4.50343f
+C553 a_85492_91054# VSS 3.69571f
+C554 a_84424_91054# VSS 3.5367f
+C555 a_83356_91054# VSS 4.36699f
+C556 a_82288_91054# VSS 3.77529f
+C557 a_81220_91054# VSS 4.50674f
+C558 a_80152_91054# VSS 3.8859f
+C559 a_79084_91054# VSS 3.5515f
+C560 a_78016_90254# VSS 4.46223f
+C561 a_76948_90254# VSS 4.23258f
+C562 a_75880_90254# VSS 4.38204f
+C563 a_74812_90254# VSS 4.52145f
+C564 a_73744_90254# VSS 4.22946f
+C565 a_72676_90254# VSS 4.2378f
+C566 a_71608_90254# VSS 4.2058f
+C567 a_70540_90254# VSS 4.09517f
+C568 a_69448_96914# VSS 4.10477f
+C569 a_68216_96914# VSS 4.20114f
+C570 a_2245_90628# VSS 0.24972p
+C571 a_4789_117064# VSS 8.91806f
+C572 a_3813_117064# VSS 5.17875f
+C573 a_1005_131545# VSS 98.15211f
+C574 a_13878_131545# VSS 0.07835f
+C575 a_1005_131825# VSS 0.07377f
+C576 a_13878_132105# VSS 0.07394f
+C577 a_1005_132385# VSS 0.07377f
+C578 a_13878_132665# VSS 0.07394f
+C579 a_1005_132945# VSS 0.07377f
+C580 a_13878_133225# VSS 0.07394f
+C581 a_1005_133505# VSS 0.07377f
+C582 a_13878_133785# VSS 0.07394f
+C583 a_1005_134065# VSS 0.07377f
+C584 a_13878_134345# VSS 0.07838f
+C585 a_94036_152846# VSS 5.2243f
+C586 a_92968_152846# VSS 3.93112f
+C587 a_91900_152846# VSS 3.90351f
+C588 a_90832_152846# VSS 5.23471f
+C589 a_89764_152846# VSS 4.68749f
+C590 a_88696_152846# VSS 3.6362f
+C591 a_87628_152846# VSS 3.41078f
+C592 a_86560_152846# VSS 4.50343f
+C593 a_85492_152846# VSS 3.69571f
+C594 a_84424_152846# VSS 3.5367f
+C595 a_83356_152846# VSS 4.36699f
+C596 a_82288_152846# VSS 3.77529f
+C597 a_81220_152846# VSS 4.50674f
+C598 a_80152_152846# VSS 3.8859f
+C599 a_79084_152846# VSS 3.5515f
+C600 a_78016_152046# VSS 4.46223f
+C601 a_76948_152046# VSS 4.23258f
+C602 a_75880_152046# VSS 4.38204f
+C603 a_74812_152046# VSS 4.52145f
+C604 a_73744_152046# VSS 4.22946f
+C605 a_72676_152046# VSS 4.2378f
+C606 a_71608_152046# VSS 4.2058f
+C607 a_70540_152046# VSS 4.09517f
+C608 a_69448_149284# VSS 4.10477f
+C609 a_68216_149284# VSS 4.20114f
+C610 a_1852_148519# VSS 0.41778p
+C611 w_71178_112088# VSS 50.1311f
+DWELL_ARRAY VSS ESD_RAIL diode_nw2ps_06v0 area=1138.9056p pj=941.44u
+* netres.py resistances (typ metal): 2013 resistors, res/f6.json res/f6_tu.json
+RNR0 TERM_VCM TERM_VCM__P0 138.834
+RNR1 TERM_VCM TERM_VCM__P1 137.073
+RNR2 TERM_VCM TERM_VCM__P2 134.125
+RNR3 TERM_VCM TERM_VCM__P3 129.845
+RNR4 TERM_VCM TERM_VCM__P4 124.672
+RNR5 TERM_VCM TERM_VCM__P5 118.461
+RNR6 TERM_VCM TERM_VCM__P6 111.872
+RNR7 TERM_VCM TERM_VCM__P7 104.92
+RNR8 TERM_VCM TERM_VCM__P8 97.5252
+RNR9 TERM_VCM TERM_VCM__P9 90.3923
+RNR10 TERM_VCM TERM_VCM__P10 85.1463
+RNR11 TERM_VCM TERM_VCM__P11 78.1215
+RNR12 TERM_VCM TERM_VCM__P12 71.6352
+RNR13 TERM_VCM TERM_VCM__P13 65.4914
+RNR14 TERM_VCM TERM_VCM__P14 59.5385
+RNR15 TERM_VCM TERM_VCM__P15 54.2203
+RNR16 TERM_VCM TERM_VCM__P16 49.1301
+RNR17 TERM_VCM TERM_VCM__P17 44.622
+RNR18 TERM_VCM TERM_VCM__P18 40.4827
+RNR19 TERM_VCM TERM_VCM__P19 36.5609
+RNR20 TERM_VCM TERM_VCM__P20 33.1272
+RNR21 TERM_VCM TERM_VCM__P21 29.9984
+RNR22 TERM_VCM TERM_VCM__P22 27.081
+RNR23 TERM_VCM TERM_VCM__P23 24.5995
+RNR24 TERM_VCM TERM_VCM__P24 22.5257
+RNR25 TERM_VCM TERM_VCM__N0 138.828
+RNR26 TERM_VCM TERM_VCM__N1 137.067
+RNR27 TERM_VCM TERM_VCM__N2 134.119
+RNR28 TERM_VCM TERM_VCM__N3 129.839
+RNR29 TERM_VCM TERM_VCM__N4 124.667
+RNR30 TERM_VCM TERM_VCM__N5 118.456
+RNR31 TERM_VCM TERM_VCM__N6 111.868
+RNR32 TERM_VCM TERM_VCM__N7 104.916
+RNR33 TERM_VCM TERM_VCM__N8 97.5218
+RNR34 TERM_VCM TERM_VCM__N9 90.3893
+RNR35 TERM_VCM TERM_VCM__N10 85.1222
+RNR36 TERM_VCM TERM_VCM__N11 78.0994
+RNR37 TERM_VCM TERM_VCM__N12 71.6148
+RNR38 TERM_VCM TERM_VCM__N13 65.4726
+RNR39 TERM_VCM TERM_VCM__N14 59.521
+RNR40 TERM_VCM TERM_VCM__N15 54.2041
+RNR41 TERM_VCM TERM_VCM__N16 49.1149
+RNR42 TERM_VCM TERM_VCM__N17 44.6079
+RNR43 TERM_VCM TERM_VCM__N18 40.4695
+RNR44 TERM_VCM TERM_VCM__N19 36.5487
+RNR45 TERM_VCM TERM_VCM__N20 33.1157
+RNR46 TERM_VCM TERM_VCM__N21 29.9878
+RNR47 TERM_VCM TERM_VCM__N22 27.0711
+RNR48 TERM_VCM TERM_VCM__N23 24.5902
+RNR49 TERM_VCM TERM_VCM__N24 22.5169
+RNR50 TERM_VCM__P0 TERM_VCM__P1 23.5641
+RNR51 TERM_VCM__P0 TERM_VCM__P2 26.4521
+RNR52 TERM_VCM__P0 TERM_VCM__P3 29.521
+RNR53 TERM_VCM__P0 TERM_VCM__P4 32.7206
+RNR54 TERM_VCM__P0 TERM_VCM__P5 36.3559
+RNR55 TERM_VCM__P0 TERM_VCM__P6 40.2155
+RNR56 TERM_VCM__P0 TERM_VCM__P7 44.4497
+RNR57 TERM_VCM__P0 TERM_VCM__P8 49.2763
+RNR58 TERM_VCM__P0 TERM_VCM__P9 54.3686
+RNR59 TERM_VCM__P0 TERM_VCM__P10 61.1369
+RNR60 TERM_VCM__P0 TERM_VCM__P11 67.6549
+RNR61 TERM_VCM__P0 TERM_VCM__P12 74.4637
+RNR62 TERM_VCM__P0 TERM_VCM__P13 81.7957
+RNR63 TERM_VCM__P0 TERM_VCM__P14 90.0072
+RNR64 TERM_VCM__P0 TERM_VCM__P15 98.4941
+RNR65 TERM_VCM__P0 TERM_VCM__P16 107.869
+RNR66 TERM_VCM__P0 TERM_VCM__P17 117.389
+RNR67 TERM_VCM__P0 TERM_VCM__P18 127.289
+RNR68 TERM_VCM__P0 TERM_VCM__P19 137.842
+RNR69 TERM_VCM__P0 TERM_VCM__P20 148.116
+RNR70 TERM_VCM__P0 TERM_VCM__P21 158.224
+RNR71 TERM_VCM__P0 TERM_VCM__P22 168.278
+RNR72 TERM_VCM__P0 TERM_VCM__P23 177.157
+RNR73 TERM_VCM__P0 TERM_VCM__P24 184.565
+RNR74 TERM_VCM__P0 TERM_VCM__N0 1709.46
+RNR75 TERM_VCM__P0 TERM_VCM__N1 2036.44
+RNR76 TERM_VCM__P0 TERM_VCM__N2 2244.88
+RNR77 TERM_VCM__P0 TERM_VCM__N3 2392.44
+RNR78 TERM_VCM__P0 TERM_VCM__N4 2499.03
+RNR79 TERM_VCM__P0 TERM_VCM__N5 2577.64
+RNR80 TERM_VCM__P0 TERM_VCM__N6 2625.22
+RNR81 TERM_VCM__P0 TERM_VCM__N7 2644.02
+RNR82 TERM_VCM__P0 TERM_VCM__N8 2633.14
+RNR83 TERM_VCM__P0 TERM_VCM__N9 2594.14
+RNR84 TERM_VCM__P0 TERM_VCM__N10 2581.47
+RNR85 TERM_VCM__P0 TERM_VCM__N11 2492.94
+RNR86 TERM_VCM__P0 TERM_VCM__N12 2387.52
+RNR87 TERM_VCM__P0 TERM_VCM__N13 2267.1
+RNR88 TERM_VCM__P0 TERM_VCM__N14 2132.1
+RNR89 TERM_VCM__P0 TERM_VCM__N15 1996.55
+RNR90 TERM_VCM__P0 TERM_VCM__N16 1853.99
+RNR91 TERM_VCM__P0 TERM_VCM__N17 1717.64
+RNR92 TERM_VCM__P0 TERM_VCM__N18 1584.49
+RNR93 TERM_VCM__P0 TERM_VCM__N19 1451.74
+RNR94 TERM_VCM__P0 TERM_VCM__N20 1330.58
+RNR95 TERM_VCM__P0 TERM_VCM__N21 1216.42
+RNR96 TERM_VCM__P0 TERM_VCM__N22 1107.01
+RNR97 TERM_VCM__P0 TERM_VCM__N23 1011.88
+RNR98 TERM_VCM__P0 TERM_VCM__N24 931.012
+RNR99 TERM_VCM__P1 TERM_VCM__P2 25.877
+RNR100 TERM_VCM__P1 TERM_VCM__P3 29.0311
+RNR101 TERM_VCM__P1 TERM_VCM__P4 32.227
+RNR102 TERM_VCM__P1 TERM_VCM__P5 35.825
+RNR103 TERM_VCM__P1 TERM_VCM__P6 39.6355
+RNR104 TERM_VCM__P1 TERM_VCM__P7 43.8116
+RNR105 TERM_VCM__P1 TERM_VCM__P8 48.5704
+RNR106 TERM_VCM__P1 TERM_VCM__P9 53.5906
+RNR107 TERM_VCM__P1 TERM_VCM__P10 60.2629
+RNR108 TERM_VCM__P1 TERM_VCM__P11 66.6881
+RNR109 TERM_VCM__P1 TERM_VCM__P12 73.4
+RNR110 TERM_VCM__P1 TERM_VCM__P13 80.628
+RNR111 TERM_VCM__P1 TERM_VCM__P14 88.7231
+RNR112 TERM_VCM__P1 TERM_VCM__P15 97.0901
+RNR113 TERM_VCM__P1 TERM_VCM__P16 106.333
+RNR114 TERM_VCM__P1 TERM_VCM__P17 115.719
+RNR115 TERM_VCM__P1 TERM_VCM__P18 125.481
+RNR116 TERM_VCM__P1 TERM_VCM__P19 135.887
+RNR117 TERM_VCM__P1 TERM_VCM__P20 146.02
+RNR118 TERM_VCM__P1 TERM_VCM__P21 155.99
+RNR119 TERM_VCM__P1 TERM_VCM__P22 165.907
+RNR120 TERM_VCM__P1 TERM_VCM__P23 174.668
+RNR121 TERM_VCM__P1 TERM_VCM__P24 181.98
+RNR122 TERM_VCM__P1 TERM_VCM__N0 2036.43
+RNR123 TERM_VCM__P1 TERM_VCM__N1 2384.5
+RNR124 TERM_VCM__P1 TERM_VCM__N2 2595.78
+RNR125 TERM_VCM__P1 TERM_VCM__N3 2735.78
+RNR126 TERM_VCM__P1 TERM_VCM__N4 2827.62
+RNR127 TERM_VCM__P1 TERM_VCM__N5 2884.48
+RNR128 TERM_VCM__P1 TERM_VCM__N6 2905.89
+RNR129 TERM_VCM__P1 TERM_VCM__N7 2894.83
+RNR130 TERM_VCM__P1 TERM_VCM__N8 2850.7
+RNR131 TERM_VCM__P1 TERM_VCM__N9 2779.16
+RNR132 TERM_VCM__P1 TERM_VCM__N10 2738.21
+RNR133 TERM_VCM__P1 TERM_VCM__N11 2618.91
+RNR134 TERM_VCM__P1 TERM_VCM__N12 2486.92
+RNR135 TERM_VCM__P1 TERM_VCM__N13 2343.44
+RNR136 TERM_VCM__P1 TERM_VCM__N14 2188.4
+RNR137 TERM_VCM__P1 TERM_VCM__N15 2037.12
+RNR138 TERM_VCM__P1 TERM_VCM__N16 1881.6
+RNR139 TERM_VCM__P1 TERM_VCM__N17 1735.57
+RNR140 TERM_VCM__P1 TERM_VCM__N18 1595.05
+RNR141 TERM_VCM__P1 TERM_VCM__N19 1456.63
+RNR142 TERM_VCM__P1 TERM_VCM__N20 1331.55
+RNR143 TERM_VCM__P1 TERM_VCM__N21 1214.63
+RNR144 TERM_VCM__P1 TERM_VCM__N22 1103.3
+RNR145 TERM_VCM__P1 TERM_VCM__N23 1007.01
+RNR146 TERM_VCM__P1 TERM_VCM__N24 925.488
+RNR147 TERM_VCM__P2 TERM_VCM__P3 28.0995
+RNR148 TERM_VCM__P2 TERM_VCM__P4 31.4066
+RNR149 TERM_VCM__P2 TERM_VCM__P5 34.9841
+RNR150 TERM_VCM__P2 TERM_VCM__P6 38.7321
+RNR151 TERM_VCM__P2 TERM_VCM__P7 42.8237
+RNR152 TERM_VCM__P2 TERM_VCM__P8 47.4798
+RNR153 TERM_VCM__P2 TERM_VCM__P9 52.3895
+RNR154 TERM_VCM__P2 TERM_VCM__P10 58.9145
+RNR155 TERM_VCM__P2 TERM_VCM__P11 65.1959
+RNR156 TERM_VCM__P2 TERM_VCM__P12 71.7579
+RNR157 TERM_VCM__P2 TERM_VCM__P13 78.8244
+RNR158 TERM_VCM__P2 TERM_VCM__P14 86.7389
+RNR159 TERM_VCM__P2 TERM_VCM__P15 94.9194
+RNR160 TERM_VCM__P2 TERM_VCM__P16 103.957
+RNR161 TERM_VCM__P2 TERM_VCM__P17 113.134
+RNR162 TERM_VCM__P2 TERM_VCM__P18 122.679
+RNR163 TERM_VCM__P2 TERM_VCM__P19 132.855
+RNR164 TERM_VCM__P2 TERM_VCM__P20 142.763
+RNR165 TERM_VCM__P2 TERM_VCM__P21 152.513
+RNR166 TERM_VCM__P2 TERM_VCM__P22 162.213
+RNR167 TERM_VCM__P2 TERM_VCM__P23 170.782
+RNR168 TERM_VCM__P2 TERM_VCM__P24 177.935
+RNR169 TERM_VCM__P2 TERM_VCM__N0 2244.87
+RNR170 TERM_VCM__P2 TERM_VCM__N1 2595.78
+RNR171 TERM_VCM__P2 TERM_VCM__N2 2800.71
+RNR172 TERM_VCM__P2 TERM_VCM__N3 2928.97
+RNR173 TERM_VCM__P2 TERM_VCM__N4 3005.53
+RNR174 TERM_VCM__P2 TERM_VCM__N5 3043.28
+RNR175 TERM_VCM__P2 TERM_VCM__N6 3043.94
+RNR176 TERM_VCM__P2 TERM_VCM__N7 3010.95
+RNR177 TERM_VCM__P2 TERM_VCM__N8 2943.96
+RNR178 TERM_VCM__P2 TERM_VCM__N9 2851.34
+RNR179 TERM_VCM__P2 TERM_VCM__N10 2792.22
+RNR180 TERM_VCM__P2 TERM_VCM__N11 2655.05
+RNR181 TERM_VCM__P2 TERM_VCM__N12 2508.48
+RNR182 TERM_VCM__P2 TERM_VCM__N13 2353.13
+RNR183 TERM_VCM__P2 TERM_VCM__N14 2188.45
+RNR184 TERM_VCM__P2 TERM_VCM__N15 2030.22
+RNR185 TERM_VCM__P2 TERM_VCM__N16 1869.53
+RNR186 TERM_VCM__P2 TERM_VCM__N17 1720.15
+RNR187 TERM_VCM__P2 TERM_VCM__N18 1577.55
+RNR188 TERM_VCM__P2 TERM_VCM__N19 1438.02
+RNR189 TERM_VCM__P2 TERM_VCM__N20 1312.6
+RNR190 TERM_VCM__P2 TERM_VCM__N21 1195.88
+RNR191 TERM_VCM__P2 TERM_VCM__N22 1085.14
+RNR192 TERM_VCM__P2 TERM_VCM__N23 989.636
+RNR193 TERM_VCM__P2 TERM_VCM__N24 908.958
+RNR194 TERM_VCM__P3 TERM_VCM__P4 30.0494
+RNR195 TERM_VCM__P3 TERM_VCM__P5 33.728
+RNR196 TERM_VCM__P3 TERM_VCM__P6 37.4271
+RNR197 TERM_VCM__P3 TERM_VCM__P7 41.4117
+RNR198 TERM_VCM__P3 TERM_VCM__P8 45.9267
+RNR199 TERM_VCM__P3 TERM_VCM__P9 50.6813
+RNR200 TERM_VCM__P3 TERM_VCM__P10 56.9982
+RNR201 TERM_VCM__P3 TERM_VCM__P11 63.0754
+RNR202 TERM_VCM__P3 TERM_VCM__P12 69.424
+RNR203 TERM_VCM__P3 TERM_VCM__P13 76.2609
+RNR204 TERM_VCM__P3 TERM_VCM__P14 83.9182
+RNR205 TERM_VCM__P3 TERM_VCM__P15 91.833
+RNR206 TERM_VCM__P3 TERM_VCM__P16 100.577
+RNR207 TERM_VCM__P3 TERM_VCM__P17 109.457
+RNR208 TERM_VCM__P3 TERM_VCM__P18 118.692
+RNR209 TERM_VCM__P3 TERM_VCM__P19 128.539
+RNR210 TERM_VCM__P3 TERM_VCM__P20 138.126
+RNR211 TERM_VCM__P3 TERM_VCM__P21 147.562
+RNR212 TERM_VCM__P3 TERM_VCM__P22 156.949
+RNR213 TERM_VCM__P3 TERM_VCM__P23 165.243
+RNR214 TERM_VCM__P3 TERM_VCM__P24 172.166
+RNR215 TERM_VCM__P3 TERM_VCM__N0 2392.42
+RNR216 TERM_VCM__P3 TERM_VCM__N1 2735.77
+RNR217 TERM_VCM__P3 TERM_VCM__N2 2928.97
+RNR218 TERM_VCM__P3 TERM_VCM__N3 3042.86
+RNR219 TERM_VCM__P3 TERM_VCM__N4 3103.43
+RNR220 TERM_VCM__P3 TERM_VCM__N5 3123.03
+RNR221 TERM_VCM__P3 TERM_VCM__N6 3105.34
+RNR222 TERM_VCM__P3 TERM_VCM__N7 3054.08
+RNR223 TERM_VCM__P3 TERM_VCM__N8 2969.11
+RNR224 TERM_VCM__P3 TERM_VCM__N9 2860.83
+RNR225 TERM_VCM__P3 TERM_VCM__N10 2788.16
+RNR226 TERM_VCM__P3 TERM_VCM__N11 2639.25
+RNR227 TERM_VCM__P3 TERM_VCM__N12 2483.89
+RNR228 TERM_VCM__P3 TERM_VCM__N13 2322.09
+RNR229 TERM_VCM__P3 TERM_VCM__N14 2152.92
+RNR230 TERM_VCM__P3 TERM_VCM__N15 1992.14
+RNR231 TERM_VCM__P3 TERM_VCM__N16 1830.31
+RNR232 TERM_VCM__P3 TERM_VCM__N17 1680.96
+RNR233 TERM_VCM__P3 TERM_VCM__N18 1539.21
+RNR234 TERM_VCM__P3 TERM_VCM__N19 1401.18
+RNR235 TERM_VCM__P3 TERM_VCM__N20 1277.6
+RNR236 TERM_VCM__P3 TERM_VCM__N21 1162.95
+RNR237 TERM_VCM__P3 TERM_VCM__N22 1054.46
+RNR238 TERM_VCM__P3 TERM_VCM__N23 961.086
+RNR239 TERM_VCM__P3 TERM_VCM__N24 882.337
+RNR240 TERM_VCM__P4 TERM_VCM__P5 31.9922
+RNR241 TERM_VCM__P4 TERM_VCM__P6 35.7859
+RNR242 TERM_VCM__P4 TERM_VCM__P7 39.6902
+RNR243 TERM_VCM__P4 TERM_VCM__P8 44.0527
+RNR244 TERM_VCM__P4 TERM_VCM__P9 48.6277
+RNR245 TERM_VCM__P4 TERM_VCM__P10 54.6992
+RNR246 TERM_VCM__P4 TERM_VCM__P11 60.5319
+RNR247 TERM_VCM__P4 TERM_VCM__P12 66.6247
+RNR248 TERM_VCM__P4 TERM_VCM__P13 73.1858
+RNR249 TERM_VCM__P4 TERM_VCM__P14 80.5345
+RNR250 TERM_VCM__P4 TERM_VCM__P15 88.1305
+RNR251 TERM_VCM__P4 TERM_VCM__P16 96.5224
+RNR252 TERM_VCM__P4 TERM_VCM__P17 105.044
+RNR253 TERM_VCM__P4 TERM_VCM__P18 113.908
+RNR254 TERM_VCM__P4 TERM_VCM__P19 123.359
+RNR255 TERM_VCM__P4 TERM_VCM__P20 132.561
+RNR256 TERM_VCM__P4 TERM_VCM__P21 141.619
+RNR257 TERM_VCM__P4 TERM_VCM__P22 150.629
+RNR258 TERM_VCM__P4 TERM_VCM__P23 158.591
+RNR259 TERM_VCM__P4 TERM_VCM__P24 165.237
+RNR260 TERM_VCM__P4 TERM_VCM__N0 2499
+RNR261 TERM_VCM__P4 TERM_VCM__N1 2827.61
+RNR262 TERM_VCM__P4 TERM_VCM__N2 3005.52
+RNR263 TERM_VCM__P4 TERM_VCM__N3 3103.42
+RNR264 TERM_VCM__P4 TERM_VCM__N4 3147.73
+RNR265 TERM_VCM__P4 TERM_VCM__N5 3150.09
+RNR266 TERM_VCM__P4 TERM_VCM__N6 3115.89
+RNR267 TERM_VCM__P4 TERM_VCM__N7 3049.04
+RNR268 TERM_VCM__P4 TERM_VCM__N8 2949.54
+RNR269 TERM_VCM__P4 TERM_VCM__N9 2829.35
+RNR270 TERM_VCM__P4 TERM_VCM__N10 2746.29
+RNR271 TERM_VCM__P4 TERM_VCM__N11 2589.73
+RNR272 TERM_VCM__P4 TERM_VCM__N12 2429.37
+RNR273 TERM_VCM__P4 TERM_VCM__N13 2264.66
+RNR274 TERM_VCM__P4 TERM_VCM__N14 2094.3
+RNR275 TERM_VCM__P4 TERM_VCM__N15 1933.82
+RNR276 TERM_VCM__P4 TERM_VCM__N16 1773.43
+RNR277 TERM_VCM__P4 TERM_VCM__N17 1626.27
+RNR278 TERM_VCM__P4 TERM_VCM__N18 1487.25
+RNR279 TERM_VCM__P4 TERM_VCM__N19 1352.4
+RNR280 TERM_VCM__P4 TERM_VCM__N20 1232.05
+RNR281 TERM_VCM__P4 TERM_VCM__N21 1120.68
+RNR282 TERM_VCM__P4 TERM_VCM__N22 1015.51
+RNR283 TERM_VCM__P4 TERM_VCM__N23 925.141
+RNR284 TERM_VCM__P4 TERM_VCM__N24 849.027
+RNR285 TERM_VCM__P5 TERM_VCM__P6 33.5754
+RNR286 TERM_VCM__P5 TERM_VCM__P7 37.5514
+RNR287 TERM_VCM__P5 TERM_VCM__P8 41.7834
+RNR288 TERM_VCM__P5 TERM_VCM__P9 46.1611
+RNR289 TERM_VCM__P5 TERM_VCM__P10 51.947
+RNR290 TERM_VCM__P5 TERM_VCM__P11 57.4892
+RNR291 TERM_VCM__P5 TERM_VCM__P12 63.2767
+RNR292 TERM_VCM__P5 TERM_VCM__P13 69.5084
+RNR293 TERM_VCM__P5 TERM_VCM__P14 76.4879
+RNR294 TERM_VCM__P5 TERM_VCM__P15 83.7023
+RNR295 TERM_VCM__P5 TERM_VCM__P16 91.6729
+RNR296 TERM_VCM__P5 TERM_VCM__P17 99.7672
+RNR297 TERM_VCM__P5 TERM_VCM__P18 108.186
+RNR298 TERM_VCM__P5 TERM_VCM__P19 117.163
+RNR299 TERM_VCM__P5 TERM_VCM__P20 125.904
+RNR300 TERM_VCM__P5 TERM_VCM__P21 134.508
+RNR301 TERM_VCM__P5 TERM_VCM__P22 143.067
+RNR302 TERM_VCM__P5 TERM_VCM__P23 150.631
+RNR303 TERM_VCM__P5 TERM_VCM__P24 156.946
+RNR304 TERM_VCM__P5 TERM_VCM__N0 2577.61
+RNR305 TERM_VCM__P5 TERM_VCM__N1 2884.45
+RNR306 TERM_VCM__P5 TERM_VCM__N2 3043.26
+RNR307 TERM_VCM__P5 TERM_VCM__N3 3123.02
+RNR308 TERM_VCM__P5 TERM_VCM__N4 3150.08
+RNR309 TERM_VCM__P5 TERM_VCM__N5 3135.14
+RNR310 TERM_VCM__P5 TERM_VCM__N6 3085.22
+RNR311 TERM_VCM__P5 TERM_VCM__N7 3004.28
+RNR312 TERM_VCM__P5 TERM_VCM__N8 2892.4
+RNR313 TERM_VCM__P5 TERM_VCM__N9 2762.78
+RNR314 TERM_VCM__P5 TERM_VCM__N10 2671.39
+RNR315 TERM_VCM__P5 TERM_VCM__N11 2510.11
+RNR316 TERM_VCM__P5 TERM_VCM__N12 2347.55
+RNR317 TERM_VCM__P5 TERM_VCM__N13 2182.61
+RNR318 TERM_VCM__P5 TERM_VCM__N14 2013.68
+RNR319 TERM_VCM__P5 TERM_VCM__N15 1855.78
+RNR320 TERM_VCM__P5 TERM_VCM__N16 1698.98
+RNR321 TERM_VCM__P5 TERM_VCM__N17 1555.86
+RNR322 TERM_VCM__P5 TERM_VCM__N18 1421.23
+RNR323 TERM_VCM__P5 TERM_VCM__N19 1291.08
+RNR324 TERM_VCM__P5 TERM_VCM__N20 1175.26
+RNR325 TERM_VCM__P5 TERM_VCM__N21 1068.32
+RNR326 TERM_VCM__P5 TERM_VCM__N22 967.53
+RNR327 TERM_VCM__P5 TERM_VCM__N23 881.055
+RNR328 TERM_VCM__P5 TERM_VCM__N24 808.304
+RNR329 TERM_VCM__P6 TERM_VCM__P7 34.999
+RNR330 TERM_VCM__P6 TERM_VCM__P8 39.2871
+RNR331 TERM_VCM__P6 TERM_VCM__P9 43.5166
+RNR332 TERM_VCM__P6 TERM_VCM__P10 49.0258
+RNR333 TERM_VCM__P6 TERM_VCM__P11 54.2671
+RNR334 TERM_VCM__P6 TERM_VCM__P12 59.7339
+RNR335 TERM_VCM__P6 TERM_VCM__P13 65.6177
+RNR336 TERM_VCM__P6 TERM_VCM__P14 72.2065
+RNR337 TERM_VCM__P6 TERM_VCM__P15 79.0172
+RNR338 TERM_VCM__P6 TERM_VCM__P16 86.5418
+RNR339 TERM_VCM__P6 TERM_VCM__P17 94.1833
+RNR340 TERM_VCM__P6 TERM_VCM__P18 102.132
+RNR341 TERM_VCM__P6 TERM_VCM__P19 110.607
+RNR342 TERM_VCM__P6 TERM_VCM__P20 118.859
+RNR343 TERM_VCM__P6 TERM_VCM__P21 126.982
+RNR344 TERM_VCM__P6 TERM_VCM__P22 135.064
+RNR345 TERM_VCM__P6 TERM_VCM__P23 142.206
+RNR346 TERM_VCM__P6 TERM_VCM__P24 148.169
+RNR347 TERM_VCM__P6 TERM_VCM__N0 2625.18
+RNR348 TERM_VCM__P6 TERM_VCM__N1 2905.86
+RNR349 TERM_VCM__P6 TERM_VCM__N2 3043.92
+RNR350 TERM_VCM__P6 TERM_VCM__N3 3105.32
+RNR351 TERM_VCM__P6 TERM_VCM__N4 3115.88
+RNR352 TERM_VCM__P6 TERM_VCM__N5 3085.22
+RNR353 TERM_VCM__P6 TERM_VCM__N6 3021.73
+RNR354 TERM_VCM__P6 TERM_VCM__N7 2929.3
+RNR355 TERM_VCM__P6 TERM_VCM__N8 2808.03
+RNR356 TERM_VCM__P6 TERM_VCM__N9 2671.99
+RNR357 TERM_VCM__P6 TERM_VCM__N10 2574.76
+RNR358 TERM_VCM__P6 TERM_VCM__N11 2411.68
+RNR359 TERM_VCM__P6 TERM_VCM__N12 2249.48
+RNR360 TERM_VCM__P6 TERM_VCM__N13 2086.61
+RNR361 TERM_VCM__P6 TERM_VCM__N14 1921.16
+RNR362 TERM_VCM__P6 TERM_VCM__N15 1767.54
+RNR363 TERM_VCM__P6 TERM_VCM__N16 1615.82
+RNR364 TERM_VCM__P6 TERM_VCM__N17 1477.96
+RNR365 TERM_VCM__P6 TERM_VCM__N18 1348.73
+RNR366 TERM_VCM__P6 TERM_VCM__N19 1224.18
+RNR367 TERM_VCM__P6 TERM_VCM__N20 1113.61
+RNR368 TERM_VCM__P6 TERM_VCM__N21 1011.72
+RNR369 TERM_VCM__P6 TERM_VCM__N22 915.831
+RNR370 TERM_VCM__P6 TERM_VCM__N23 833.671
+RNR371 TERM_VCM__P6 TERM_VCM__N24 764.618
+RNR372 TERM_VCM__P7 TERM_VCM__P8 36.3539
+RNR373 TERM_VCM__P7 TERM_VCM__P9 40.6298
+RNR374 TERM_VCM__P7 TERM_VCM__P10 45.9181
+RNR375 TERM_VCM__P7 TERM_VCM__P11 50.8625
+RNR376 TERM_VCM__P7 TERM_VCM__P12 55.999
+RNR377 TERM_VCM__P7 TERM_VCM__P13 61.5187
+RNR378 TERM_VCM__P7 TERM_VCM__P14 67.6968
+RNR379 TERM_VCM__P7 TERM_VCM__P15 74.0823
+RNR380 TERM_VCM__P7 TERM_VCM__P16 81.137
+RNR381 TERM_VCM__P7 TERM_VCM__P17 88.3015
+RNR382 TERM_VCM__P7 TERM_VCM__P18 95.7536
+RNR383 TERM_VCM__P7 TERM_VCM__P19 103.7
+RNR384 TERM_VCM__P7 TERM_VCM__P20 111.438
+RNR385 TERM_VCM__P7 TERM_VCM__P21 119.055
+RNR386 TERM_VCM__P7 TERM_VCM__P22 126.633
+RNR387 TERM_VCM__P7 TERM_VCM__P23 133.33
+RNR388 TERM_VCM__P7 TERM_VCM__P24 138.922
+RNR389 TERM_VCM__P7 TERM_VCM__N0 2643.98
+RNR390 TERM_VCM__P7 TERM_VCM__N1 2894.79
+RNR391 TERM_VCM__P7 TERM_VCM__N2 3010.91
+RNR392 TERM_VCM__P7 TERM_VCM__N3 3054.05
+RNR393 TERM_VCM__P7 TERM_VCM__N4 3049.02
+RNR394 TERM_VCM__P7 TERM_VCM__N5 3004.26
+RNR395 TERM_VCM__P7 TERM_VCM__N6 2929.29
+RNR396 TERM_VCM__P7 TERM_VCM__N7 2827.79
+RNR397 TERM_VCM__P7 TERM_VCM__N8 2699.87
+RNR398 TERM_VCM__P7 TERM_VCM__N9 2560.05
+RNR399 TERM_VCM__P7 TERM_VCM__N10 2459.17
+RNR400 TERM_VCM__P7 TERM_VCM__N11 2296.8
+RNR401 TERM_VCM__P7 TERM_VCM__N12 2137.16
+RNR402 TERM_VCM__P7 TERM_VCM__N13 1978.3
+RNR403 TERM_VCM__P7 TERM_VCM__N14 1818.09
+RNR404 TERM_VCM__P7 TERM_VCM__N15 1670.21
+RNR405 TERM_VCM__P7 TERM_VCM__N16 1524.86
+RNR406 TERM_VCM__P7 TERM_VCM__N17 1393.29
+RNR407 TERM_VCM__P7 TERM_VCM__N18 1270.35
+RNR408 TERM_VCM__P7 TERM_VCM__N19 1152.18
+RNR409 TERM_VCM__P7 TERM_VCM__N20 1047.48
+RNR410 TERM_VCM__P7 TERM_VCM__N21 951.167
+RNR411 TERM_VCM__P7 TERM_VCM__N22 860.661
+RNR412 TERM_VCM__P7 TERM_VCM__N23 783.198
+RNR413 TERM_VCM__P7 TERM_VCM__N24 718.148
+RNR414 TERM_VCM__P8 TERM_VCM__P9 37.2497
+RNR415 TERM_VCM__P8 TERM_VCM__P10 42.5279
+RNR416 TERM_VCM__P8 TERM_VCM__P11 47.2137
+RNR417 TERM_VCM__P8 TERM_VCM__P12 52.0207
+RNR418 TERM_VCM__P8 TERM_VCM__P13 57.1615
+RNR419 TERM_VCM__P8 TERM_VCM__P14 62.9057
+RNR420 TERM_VCM__P8 TERM_VCM__P15 68.8405
+RNR421 TERM_VCM__P8 TERM_VCM__P16 75.3962
+RNR422 TERM_VCM__P8 TERM_VCM__P17 82.054
+RNR423 TERM_VCM__P8 TERM_VCM__P18 88.9791
+RNR424 TERM_VCM__P8 TERM_VCM__P19 96.3634
+RNR425 TERM_VCM__P8 TERM_VCM__P20 103.555
+RNR426 TERM_VCM__P8 TERM_VCM__P21 110.633
+RNR427 TERM_VCM__P8 TERM_VCM__P22 117.676
+RNR428 TERM_VCM__P8 TERM_VCM__P23 123.9
+RNR429 TERM_VCM__P8 TERM_VCM__P24 129.098
+RNR430 TERM_VCM__P8 TERM_VCM__N0 2633.08
+RNR431 TERM_VCM__P8 TERM_VCM__N1 2850.65
+RNR432 TERM_VCM__P8 TERM_VCM__N2 2943.92
+RNR433 TERM_VCM__P8 TERM_VCM__N3 2969.07
+RNR434 TERM_VCM__P8 TERM_VCM__N4 2949.51
+RNR435 TERM_VCM__P8 TERM_VCM__N5 2892.37
+RNR436 TERM_VCM__P8 TERM_VCM__N6 2808.02
+RNR437 TERM_VCM__P8 TERM_VCM__N7 2699.86
+RNR438 TERM_VCM__P8 TERM_VCM__N8 2567.91
+RNR439 TERM_VCM__P8 TERM_VCM__N9 2426.87
+RNR440 TERM_VCM__P8 TERM_VCM__N10 2324.4
+RNR441 TERM_VCM__P8 TERM_VCM__N11 2165.12
+RNR442 TERM_VCM__P8 TERM_VCM__N12 2010.15
+RNR443 TERM_VCM__P8 TERM_VCM__N13 1857.16
+RNR444 TERM_VCM__P8 TERM_VCM__N14 1703.88
+RNR445 TERM_VCM__P8 TERM_VCM__N15 1563.14
+RNR446 TERM_VCM__P8 TERM_VCM__N16 1425.4
+RNR447 TERM_VCM__P8 TERM_VCM__N17 1301.17
+RNR448 TERM_VCM__P8 TERM_VCM__N18 1185.41
+RNR449 TERM_VCM__P8 TERM_VCM__N19 1074.4
+RNR450 TERM_VCM__P8 TERM_VCM__N20 976.242
+RNR451 TERM_VCM__P8 TERM_VCM__N21 886.085
+RNR452 TERM_VCM__P8 TERM_VCM__N22 801.469
+RNR453 TERM_VCM__P8 TERM_VCM__N23 729.121
+RNR454 TERM_VCM__P8 TERM_VCM__N24 668.413
+RNR455 TERM_VCM__P9 TERM_VCM__P10 39.0005
+RNR456 TERM_VCM__P9 TERM_VCM__P11 43.6015
+RNR457 TERM_VCM__P9 TERM_VCM__P12 48.1537
+RNR458 TERM_VCM__P9 TERM_VCM__P13 52.9522
+RNR459 TERM_VCM__P9 TERM_VCM__P14 58.2861
+RNR460 TERM_VCM__P9 TERM_VCM__P15 63.7893
+RNR461 TERM_VCM__P9 TERM_VCM__P16 69.8648
+RNR462 TERM_VCM__P9 TERM_VCM__P17 76.0344
+RNR463 TERM_VCM__P9 TERM_VCM__P18 82.4516
+RNR464 TERM_VCM__P9 TERM_VCM__P19 89.2944
+RNR465 TERM_VCM__P9 TERM_VCM__P20 95.9583
+RNR466 TERM_VCM__P9 TERM_VCM__P21 102.518
+RNR467 TERM_VCM__P9 TERM_VCM__P22 109.045
+RNR468 TERM_VCM__P9 TERM_VCM__P23 114.813
+RNR469 TERM_VCM__P9 TERM_VCM__P24 119.63
+RNR470 TERM_VCM__P9 TERM_VCM__N0 2594.07
+RNR471 TERM_VCM__P9 TERM_VCM__N1 2779.1
+RNR472 TERM_VCM__P9 TERM_VCM__N2 2851.29
+RNR473 TERM_VCM__P9 TERM_VCM__N3 2860.78
+RNR474 TERM_VCM__P9 TERM_VCM__N4 2829.31
+RNR475 TERM_VCM__P9 TERM_VCM__N5 2762.75
+RNR476 TERM_VCM__P9 TERM_VCM__N6 2671.96
+RNR477 TERM_VCM__P9 TERM_VCM__N7 2560.04
+RNR478 TERM_VCM__P9 TERM_VCM__N8 2426.87
+RNR479 TERM_VCM__P9 TERM_VCM__N9 2287.04
+RNR480 TERM_VCM__P9 TERM_VCM__N10 2184.96
+RNR481 TERM_VCM__P9 TERM_VCM__N11 2030.59
+RNR482 TERM_VCM__P9 TERM_VCM__N12 1881.67
+RNR483 TERM_VCM__P9 TERM_VCM__N13 1735.64
+RNR484 TERM_VCM__P9 TERM_VCM__N14 1590.12
+RNR485 TERM_VCM__P9 TERM_VCM__N15 1457.1
+RNR486 TERM_VCM__P9 TERM_VCM__N16 1327.37
+RNR487 TERM_VCM__P9 TERM_VCM__N17 1210.71
+RNR488 TERM_VCM__P9 TERM_VCM__N18 1102.27
+RNR489 TERM_VCM__P9 TERM_VCM__N19 998.476
+RNR490 TERM_VCM__P9 TERM_VCM__N20 906.842
+RNR491 TERM_VCM__P9 TERM_VCM__N21 822.788
+RNR492 TERM_VCM__P9 TERM_VCM__N22 743.983
+RNR493 TERM_VCM__P9 TERM_VCM__N23 676.659
+RNR494 TERM_VCM__P9 TERM_VCM__N24 620.205
+RNR495 TERM_VCM__P10 TERM_VCM__P11 39.9074
+RNR496 TERM_VCM__P10 TERM_VCM__P12 44.8511
+RNR497 TERM_VCM__P10 TERM_VCM__P13 49.652
+RNR498 TERM_VCM__P10 TERM_VCM__P14 54.7997
+RNR499 TERM_VCM__P10 TERM_VCM__P15 60.0327
+RNR500 TERM_VCM__P10 TERM_VCM__P16 65.7779
+RNR501 TERM_VCM__P10 TERM_VCM__P17 71.5979
+RNR502 TERM_VCM__P10 TERM_VCM__P18 77.6461
+RNR503 TERM_VCM__P10 TERM_VCM__P19 84.093
+RNR504 TERM_VCM__P10 TERM_VCM__P20 90.3702
+RNR505 TERM_VCM__P10 TERM_VCM__P21 96.5488
+RNR506 TERM_VCM__P10 TERM_VCM__P22 102.697
+RNR507 TERM_VCM__P10 TERM_VCM__P23 108.13
+RNR508 TERM_VCM__P10 TERM_VCM__P24 112.667
+RNR509 TERM_VCM__P10 TERM_VCM__N0 2582.05
+RNR510 TERM_VCM__P10 TERM_VCM__N1 2738.84
+RNR511 TERM_VCM__P10 TERM_VCM__N2 2792.87
+RNR512 TERM_VCM__P10 TERM_VCM__N3 2788.81
+RNR513 TERM_VCM__P10 TERM_VCM__N4 2746.94
+RNR514 TERM_VCM__P10 TERM_VCM__N5 2672.02
+RNR515 TERM_VCM__P10 TERM_VCM__N6 2575.38
+RNR516 TERM_VCM__P10 TERM_VCM__N7 2459.77
+RNR517 TERM_VCM__P10 TERM_VCM__N8 2324.97
+RNR518 TERM_VCM__P10 TERM_VCM__N9 2185.5
+RNR519 TERM_VCM__P10 TERM_VCM__N10 2083.35
+RNR520 TERM_VCM__P10 TERM_VCM__N11 1932.3
+RNR521 TERM_VCM__P10 TERM_VCM__N12 1787.63
+RNR522 TERM_VCM__P10 TERM_VCM__N13 1646.59
+RNR523 TERM_VCM__P10 TERM_VCM__N14 1506.67
+RNR524 TERM_VCM__P10 TERM_VCM__N15 1379.26
+RNR525 TERM_VCM__P10 TERM_VCM__N16 1255.38
+RNR526 TERM_VCM__P10 TERM_VCM__N17 1144.26
+RNR527 TERM_VCM__P10 TERM_VCM__N18 1041.17
+RNR528 TERM_VCM__P10 TERM_VCM__N19 942.67
+RNR529 TERM_VCM__P10 TERM_VCM__N20 855.826
+RNR530 TERM_VCM__P10 TERM_VCM__N21 776.253
+RNR531 TERM_VCM__P10 TERM_VCM__N22 701.716
+RNR532 TERM_VCM__P10 TERM_VCM__N23 638.085
+RNR533 TERM_VCM__P10 TERM_VCM__N24 584.756
+RNR534 TERM_VCM__P11 TERM_VCM__P12 40.2419
+RNR535 TERM_VCM__P11 TERM_VCM__P13 45.173
+RNR536 TERM_VCM__P11 TERM_VCM__P14 50.1181
+RNR537 TERM_VCM__P11 TERM_VCM__P15 55.0067
+RNR538 TERM_VCM__P11 TERM_VCM__P16 60.3141
+RNR539 TERM_VCM__P11 TERM_VCM__P17 65.6678
+RNR540 TERM_VCM__P11 TERM_VCM__P18 71.2223
+RNR541 TERM_VCM__P11 TERM_VCM__P19 77.1392
+RNR542 TERM_VCM__P11 TERM_VCM__P20 82.8989
+RNR543 TERM_VCM__P11 TERM_VCM__P21 88.5676
+RNR544 TERM_VCM__P11 TERM_VCM__P22 94.2078
+RNR545 TERM_VCM__P11 TERM_VCM__P23 99.1926
+RNR546 TERM_VCM__P11 TERM_VCM__P24 103.355
+RNR547 TERM_VCM__P11 TERM_VCM__N0 2493.49
+RNR548 TERM_VCM__P11 TERM_VCM__N1 2619.51
+RNR549 TERM_VCM__P11 TERM_VCM__N2 2655.65
+RNR550 TERM_VCM__P11 TERM_VCM__N3 2639.86
+RNR551 TERM_VCM__P11 TERM_VCM__N4 2590.34
+RNR552 TERM_VCM__P11 TERM_VCM__N5 2510.71
+RNR553 TERM_VCM__P11 TERM_VCM__N6 2412.25
+RNR554 TERM_VCM__P11 TERM_VCM__N7 2297.35
+RNR555 TERM_VCM__P11 TERM_VCM__N8 2165.65
+RNR556 TERM_VCM__P11 TERM_VCM__N9 2031.09
+RNR557 TERM_VCM__P11 TERM_VCM__N10 1932.3
+RNR558 TERM_VCM__P11 TERM_VCM__N11 1788.99
+RNR559 TERM_VCM__P11 TERM_VCM__N12 1652.6
+RNR560 TERM_VCM__P11 TERM_VCM__N13 1520.3
+RNR561 TERM_VCM__P11 TERM_VCM__N14 1389.59
+RNR562 TERM_VCM__P11 TERM_VCM__N15 1270.95
+RNR563 TERM_VCM__P11 TERM_VCM__N16 1155.91
+RNR564 TERM_VCM__P11 TERM_VCM__N17 1052.95
+RNR565 TERM_VCM__P11 TERM_VCM__N18 957.607
+RNR566 TERM_VCM__P11 TERM_VCM__N19 866.635
+RNR567 TERM_VCM__P11 TERM_VCM__N20 786.526
+RNR568 TERM_VCM__P11 TERM_VCM__N21 713.197
+RNR569 TERM_VCM__P11 TERM_VCM__N22 644.561
+RNR570 TERM_VCM__P11 TERM_VCM__N23 586.005
+RNR571 TERM_VCM__P11 TERM_VCM__N24 536.954
+RNR572 TERM_VCM__P12 TERM_VCM__P13 40.5155
+RNR573 TERM_VCM__P12 TERM_VCM__P14 45.5856
+RNR574 TERM_VCM__P12 TERM_VCM__P15 50.283
+RNR575 TERM_VCM__P12 TERM_VCM__P16 55.2384
+RNR576 TERM_VCM__P12 TERM_VCM__P17 60.1819
+RNR577 TERM_VCM__P12 TERM_VCM__P18 65.2888
+RNR578 TERM_VCM__P12 TERM_VCM__P19 70.72
+RNR579 TERM_VCM__P12 TERM_VCM__P20 76.0033
+RNR580 TERM_VCM__P12 TERM_VCM__P21 81.2018
+RNR581 TERM_VCM__P12 TERM_VCM__P22 86.3738
+RNR582 TERM_VCM__P12 TERM_VCM__P23 90.9446
+RNR583 TERM_VCM__P12 TERM_VCM__P24 94.7617
+RNR584 TERM_VCM__P12 TERM_VCM__N0 2388.05
+RNR585 TERM_VCM__P12 TERM_VCM__N1 2487.48
+RNR586 TERM_VCM__P12 TERM_VCM__N2 2509.06
+RNR587 TERM_VCM__P12 TERM_VCM__N3 2484.47
+RNR588 TERM_VCM__P12 TERM_VCM__N4 2429.94
+RNR589 TERM_VCM__P12 TERM_VCM__N5 2348.11
+RNR590 TERM_VCM__P12 TERM_VCM__N6 2250.02
+RNR591 TERM_VCM__P12 TERM_VCM__N7 2137.68
+RNR592 TERM_VCM__P12 TERM_VCM__N8 2010.64
+RNR593 TERM_VCM__P12 TERM_VCM__N9 1882.14
+RNR594 TERM_VCM__P12 TERM_VCM__N10 1787.64
+RNR595 TERM_VCM__P12 TERM_VCM__N11 1652.61
+RNR596 TERM_VCM__P12 TERM_VCM__N12 1524.77
+RNR597 TERM_VCM__P12 TERM_VCM__N13 1401.25
+RNR598 TERM_VCM__P12 TERM_VCM__N14 1279.62
+RNR599 TERM_VCM__P12 TERM_VCM__N15 1169.52
+RNR600 TERM_VCM__P12 TERM_VCM__N16 1063.01
+RNR601 TERM_VCM__P12 TERM_VCM__N17 967.84
+RNR602 TERM_VCM__P12 TERM_VCM__N18 879.839
+RNR603 TERM_VCM__P12 TERM_VCM__N19 795.975
+RNR604 TERM_VCM__P12 TERM_VCM__N20 722.197
+RNR605 TERM_VCM__P12 TERM_VCM__N21 654.715
+RNR606 TERM_VCM__P12 TERM_VCM__N22 591.594
+RNR607 TERM_VCM__P12 TERM_VCM__N23 537.77
+RNR608 TERM_VCM__P12 TERM_VCM__N24 492.7
+RNR609 TERM_VCM__P13 TERM_VCM__P14 40.7883
+RNR610 TERM_VCM__P13 TERM_VCM__P15 45.6027
+RNR611 TERM_VCM__P13 TERM_VCM__P16 50.3503
+RNR612 TERM_VCM__P13 TERM_VCM__P17 54.955
+RNR613 TERM_VCM__P13 TERM_VCM__P18 59.6578
+RNR614 TERM_VCM__P13 TERM_VCM__P19 64.6372
+RNR615 TERM_VCM__P13 TERM_VCM__P20 69.4725
+RNR616 TERM_VCM__P13 TERM_VCM__P21 74.2272
+RNR617 TERM_VCM__P13 TERM_VCM__P22 78.9564
+RNR618 TERM_VCM__P13 TERM_VCM__P23 83.1354
+RNR619 TERM_VCM__P13 TERM_VCM__P24 86.6253
+RNR620 TERM_VCM__P13 TERM_VCM__N0 2267.61
+RNR621 TERM_VCM__P13 TERM_VCM__N1 2343.98
+RNR622 TERM_VCM__P13 TERM_VCM__N2 2353.68
+RNR623 TERM_VCM__P13 TERM_VCM__N3 2322.64
+RNR624 TERM_VCM__P13 TERM_VCM__N4 2265.2
+RNR625 TERM_VCM__P13 TERM_VCM__N5 2183.14
+RNR626 TERM_VCM__P13 TERM_VCM__N6 2087.12
+RNR627 TERM_VCM__P13 TERM_VCM__N7 1978.79
+RNR628 TERM_VCM__P13 TERM_VCM__N8 1857.63
+RNR629 TERM_VCM__P13 TERM_VCM__N9 1736.08
+RNR630 TERM_VCM__P13 TERM_VCM__N10 1646.6
+RNR631 TERM_VCM__P13 TERM_VCM__N11 1520.31
+RNR632 TERM_VCM__P13 TERM_VCM__N12 1401.25
+RNR633 TERM_VCM__P13 TERM_VCM__N13 1286.62
+RNR634 TERM_VCM__P13 TERM_VCM__N14 1174.05
+RNR635 TERM_VCM__P13 TERM_VCM__N15 1072.38
+RNR636 TERM_VCM__P13 TERM_VCM__N16 974.201
+RNR637 TERM_VCM__P13 TERM_VCM__N17 886.613
+RNR638 TERM_VCM__P13 TERM_VCM__N18 805.718
+RNR639 TERM_VCM__P13 TERM_VCM__N19 728.703
+RNR640 TERM_VCM__P13 TERM_VCM__N20 661.006
+RNR641 TERM_VCM__P13 TERM_VCM__N21 599.127
+RNR642 TERM_VCM__P13 TERM_VCM__N22 541.278
+RNR643 TERM_VCM__P13 TERM_VCM__N23 491.97
+RNR644 TERM_VCM__P13 TERM_VCM__N24 450.696
+RNR645 TERM_VCM__P14 TERM_VCM__P15 40.5442
+RNR646 TERM_VCM__P14 TERM_VCM__P16 45.4025
+RNR647 TERM_VCM__P14 TERM_VCM__P17 49.8063
+RNR648 TERM_VCM__P14 TERM_VCM__P18 54.1687
+RNR649 TERM_VCM__P14 TERM_VCM__P19 58.7316
+RNR650 TERM_VCM__P14 TERM_VCM__P20 63.1412
+RNR651 TERM_VCM__P14 TERM_VCM__P21 67.4692
+RNR652 TERM_VCM__P14 TERM_VCM__P22 71.7709
+RNR653 TERM_VCM__P14 TERM_VCM__P23 75.5709
+RNR654 TERM_VCM__P14 TERM_VCM__P24 78.7441
+RNR655 TERM_VCM__P14 TERM_VCM__N0 2132.59
+RNR656 TERM_VCM__P14 TERM_VCM__N1 2188.91
+RNR657 TERM_VCM__P14 TERM_VCM__N2 2188.98
+RNR658 TERM_VCM__P14 TERM_VCM__N3 2153.44
+RNR659 TERM_VCM__P14 TERM_VCM__N4 2094.81
+RNR660 TERM_VCM__P14 TERM_VCM__N5 2014.18
+RNR661 TERM_VCM__P14 TERM_VCM__N6 1921.64
+RNR662 TERM_VCM__P14 TERM_VCM__N7 1818.55
+RNR663 TERM_VCM__P14 TERM_VCM__N8 1704.31
+RNR664 TERM_VCM__P14 TERM_VCM__N9 1590.53
+RNR665 TERM_VCM__P14 TERM_VCM__N10 1506.69
+RNR666 TERM_VCM__P14 TERM_VCM__N11 1389.6
+RNR667 TERM_VCM__P14 TERM_VCM__N12 1279.63
+RNR668 TERM_VCM__P14 TERM_VCM__N13 1174.06
+RNR669 TERM_VCM__P14 TERM_VCM__N14 1070.63
+RNR670 TERM_VCM__P14 TERM_VCM__N15 977.4
+RNR671 TERM_VCM__P14 TERM_VCM__N16 887.51
+RNR672 TERM_VCM__P14 TERM_VCM__N17 807.423
+RNR673 TERM_VCM__P14 TERM_VCM__N18 733.533
+RNR674 TERM_VCM__P14 TERM_VCM__N19 663.249
+RNR675 TERM_VCM__P14 TERM_VCM__N20 601.511
+RNR676 TERM_VCM__P14 TERM_VCM__N21 545.111
+RNR677 TERM_VCM__P14 TERM_VCM__N22 492.409
+RNR678 TERM_VCM__P14 TERM_VCM__N23 447.505
+RNR679 TERM_VCM__P14 TERM_VCM__N24 409.928
+RNR680 TERM_VCM__P15 TERM_VCM__P16 40.4704
+RNR681 TERM_VCM__P15 TERM_VCM__P17 45.0013
+RNR682 TERM_VCM__P15 TERM_VCM__P18 49.1841
+RNR683 TERM_VCM__P15 TERM_VCM__P19 53.4257
+RNR684 TERM_VCM__P15 TERM_VCM__P20 57.4741
+RNR685 TERM_VCM__P15 TERM_VCM__P21 61.4286
+RNR686 TERM_VCM__P15 TERM_VCM__P22 65.3514
+RNR687 TERM_VCM__P15 TERM_VCM__P23 68.8141
+RNR688 TERM_VCM__P15 TERM_VCM__P24 71.7049
+RNR689 TERM_VCM__P15 TERM_VCM__N0 1997.02
+RNR690 TERM_VCM__P15 TERM_VCM__N1 2037.61
+RNR691 TERM_VCM__P15 TERM_VCM__N2 2030.71
+RNR692 TERM_VCM__P15 TERM_VCM__N3 1992.63
+RNR693 TERM_VCM__P15 TERM_VCM__N4 1934.3
+RNR694 TERM_VCM__P15 TERM_VCM__N5 1856.25
+RNR695 TERM_VCM__P15 TERM_VCM__N6 1767.99
+RNR696 TERM_VCM__P15 TERM_VCM__N7 1670.65
+RNR697 TERM_VCM__P15 TERM_VCM__N8 1563.55
+RNR698 TERM_VCM__P15 TERM_VCM__N9 1457.48
+RNR699 TERM_VCM__P15 TERM_VCM__N10 1379.28
+RNR700 TERM_VCM__P15 TERM_VCM__N11 1270.97
+RNR701 TERM_VCM__P15 TERM_VCM__N12 1169.54
+RNR702 TERM_VCM__P15 TERM_VCM__N13 1072.39
+RNR703 TERM_VCM__P15 TERM_VCM__N14 977.406
+RNR704 TERM_VCM__P15 TERM_VCM__N15 891.914
+RNR705 TERM_VCM__P15 TERM_VCM__N16 809.59
+RNR706 TERM_VCM__P15 TERM_VCM__N17 736.321
+RNR707 TERM_VCM__P15 TERM_VCM__N18 668.778
+RNR708 TERM_VCM__P15 TERM_VCM__N19 604.574
+RNR709 TERM_VCM__P15 TERM_VCM__N20 548.21
+RNR710 TERM_VCM__P15 TERM_VCM__N21 496.742
+RNR711 TERM_VCM__P15 TERM_VCM__N22 448.666
+RNR712 TERM_VCM__P15 TERM_VCM__N23 407.716
+RNR713 TERM_VCM__P15 TERM_VCM__N24 373.455
+RNR714 TERM_VCM__P16 TERM_VCM__P17 39.8936
+RNR715 TERM_VCM__P16 TERM_VCM__P18 44.2057
+RNR716 TERM_VCM__P16 TERM_VCM__P19 48.2671
+RNR717 TERM_VCM__P16 TERM_VCM__P20 52.0189
+RNR718 TERM_VCM__P16 TERM_VCM__P21 55.6354
+RNR719 TERM_VCM__P16 TERM_VCM__P22 59.2036
+RNR720 TERM_VCM__P16 TERM_VCM__P23 62.3464
+RNR721 TERM_VCM__P16 TERM_VCM__P24 64.9683
+RNR722 TERM_VCM__P16 TERM_VCM__N0 1854.44
+RNR723 TERM_VCM__P16 TERM_VCM__N1 1882.07
+RNR724 TERM_VCM__P16 TERM_VCM__N2 1870
+RNR725 TERM_VCM__P16 TERM_VCM__N3 1830.78
+RNR726 TERM_VCM__P16 TERM_VCM__N4 1773.89
+RNR727 TERM_VCM__P16 TERM_VCM__N5 1699.42
+RNR728 TERM_VCM__P16 TERM_VCM__N6 1616.25
+RNR729 TERM_VCM__P16 TERM_VCM__N7 1525.27
+RNR730 TERM_VCM__P16 TERM_VCM__N8 1425.79
+RNR731 TERM_VCM__P16 TERM_VCM__N9 1327.74
+RNR732 TERM_VCM__P16 TERM_VCM__N10 1255.41
+RNR733 TERM_VCM__P16 TERM_VCM__N11 1155.94
+RNR734 TERM_VCM__P16 TERM_VCM__N12 1063.03
+RNR735 TERM_VCM__P16 TERM_VCM__N13 974.22
+RNR736 TERM_VCM__P16 TERM_VCM__N14 887.522
+RNR737 TERM_VCM__P16 TERM_VCM__N15 809.597
+RNR738 TERM_VCM__P16 TERM_VCM__N16 734.641
+RNR739 TERM_VCM__P16 TERM_VCM__N17 667.988
+RNR740 TERM_VCM__P16 TERM_VCM__N18 606.588
+RNR741 TERM_VCM__P16 TERM_VCM__N19 548.259
+RNR742 TERM_VCM__P16 TERM_VCM__N20 497.076
+RNR743 TERM_VCM__P16 TERM_VCM__N21 450.357
+RNR744 TERM_VCM__P16 TERM_VCM__N22 406.731
+RNR745 TERM_VCM__P16 TERM_VCM__N23 369.582
+RNR746 TERM_VCM__P16 TERM_VCM__N24 338.506
+RNR747 TERM_VCM__P17 TERM_VCM__P18 39.3082
+RNR748 TERM_VCM__P17 TERM_VCM__P19 43.5075
+RNR749 TERM_VCM__P17 TERM_VCM__P20 47.1135
+RNR750 TERM_VCM__P17 TERM_VCM__P21 50.4768
+RNR751 TERM_VCM__P17 TERM_VCM__P22 53.749
+RNR752 TERM_VCM__P17 TERM_VCM__P23 56.6152
+RNR753 TERM_VCM__P17 TERM_VCM__P24 59.0015
+RNR754 TERM_VCM__P17 TERM_VCM__N0 1718.08
+RNR755 TERM_VCM__P17 TERM_VCM__N1 1736.02
+RNR756 TERM_VCM__P17 TERM_VCM__N2 1720.6
+RNR757 TERM_VCM__P17 TERM_VCM__N3 1681.4
+RNR758 TERM_VCM__P17 TERM_VCM__N4 1626.7
+RNR759 TERM_VCM__P17 TERM_VCM__N5 1556.28
+RNR760 TERM_VCM__P17 TERM_VCM__N6 1478.36
+RNR761 TERM_VCM__P17 TERM_VCM__N7 1393.67
+RNR762 TERM_VCM__P17 TERM_VCM__N8 1301.53
+RNR763 TERM_VCM__P17 TERM_VCM__N9 1211.05
+RNR764 TERM_VCM__P17 TERM_VCM__N10 1144.3
+RNR765 TERM_VCM__P17 TERM_VCM__N11 1052.99
+RNR766 TERM_VCM__P17 TERM_VCM__N12 967.87
+RNR767 TERM_VCM__P17 TERM_VCM__N13 886.637
+RNR768 TERM_VCM__P17 TERM_VCM__N14 807.441
+RNR769 TERM_VCM__P17 TERM_VCM__N15 736.333
+RNR770 TERM_VCM__P17 TERM_VCM__N16 667.993
+RNR771 TERM_VCM__P17 TERM_VCM__N17 607.267
+RNR772 TERM_VCM__P17 TERM_VCM__N18 551.358
+RNR773 TERM_VCM__P17 TERM_VCM__N19 498.27
+RNR774 TERM_VCM__P17 TERM_VCM__N20 451.704
+RNR775 TERM_VCM__P17 TERM_VCM__N21 409.214
+RNR776 TERM_VCM__P17 TERM_VCM__N22 369.545
+RNR777 TERM_VCM__P17 TERM_VCM__N23 335.772
+RNR778 TERM_VCM__P17 TERM_VCM__N24 307.526
+RNR779 TERM_VCM__P18 TERM_VCM__P19 38.6742
+RNR780 TERM_VCM__P18 TERM_VCM__P20 42.4263
+RNR781 TERM_VCM__P18 TERM_VCM__P21 45.6702
+RNR782 TERM_VCM__P18 TERM_VCM__P22 48.7145
+RNR783 TERM_VCM__P18 TERM_VCM__P23 51.343
+RNR784 TERM_VCM__P18 TERM_VCM__P24 53.5187
+RNR785 TERM_VCM__P18 TERM_VCM__N0 1584.91
+RNR786 TERM_VCM__P18 TERM_VCM__N1 1595.48
+RNR787 TERM_VCM__P18 TERM_VCM__N2 1577.98
+RNR788 TERM_VCM__P18 TERM_VCM__N3 1539.63
+RNR789 TERM_VCM__P18 TERM_VCM__N4 1487.66
+RNR790 TERM_VCM__P18 TERM_VCM__N5 1421.62
+RNR791 TERM_VCM__P18 TERM_VCM__N6 1349.11
+RNR792 TERM_VCM__P18 TERM_VCM__N7 1270.71
+RNR793 TERM_VCM__P18 TERM_VCM__N8 1185.75
+RNR794 TERM_VCM__P18 TERM_VCM__N9 1102.59
+RNR795 TERM_VCM__P18 TERM_VCM__N10 1041.21
+RNR796 TERM_VCM__P18 TERM_VCM__N11 957.647
+RNR797 TERM_VCM__P18 TERM_VCM__N12 879.874
+RNR798 TERM_VCM__P18 TERM_VCM__N13 805.747
+RNR799 TERM_VCM__P18 TERM_VCM__N14 733.556
+RNR800 TERM_VCM__P18 TERM_VCM__N15 668.794
+RNR801 TERM_VCM__P18 TERM_VCM__N16 606.598
+RNR802 TERM_VCM__P18 TERM_VCM__N17 551.363
+RNR803 TERM_VCM__P18 TERM_VCM__N18 500.534
+RNR804 TERM_VCM__P18 TERM_VCM__N19 452.287
+RNR805 TERM_VCM__P18 TERM_VCM__N20 409.982
+RNR806 TERM_VCM__P18 TERM_VCM__N21 371.388
+RNR807 TERM_VCM__P18 TERM_VCM__N22 335.365
+RNR808 TERM_VCM__P18 TERM_VCM__N23 304.701
+RNR809 TERM_VCM__P18 TERM_VCM__N24 279.059
+RNR810 TERM_VCM__P19 TERM_VCM__P20 37.5351
+RNR811 TERM_VCM__P19 TERM_VCM__P21 40.9388
+RNR812 TERM_VCM__P19 TERM_VCM__P22 43.8773
+RNR813 TERM_VCM__P19 TERM_VCM__P23 46.3216
+RNR814 TERM_VCM__P19 TERM_VCM__P24 48.3125
+RNR815 TERM_VCM__P19 TERM_VCM__N0 1452.14
+RNR816 TERM_VCM__P19 TERM_VCM__N1 1457.04
+RNR817 TERM_VCM__P19 TERM_VCM__N2 1438.42
+RNR818 TERM_VCM__P19 TERM_VCM__N3 1401.58
+RNR819 TERM_VCM__P19 TERM_VCM__N4 1352.79
+RNR820 TERM_VCM__P19 TERM_VCM__N5 1291.46
+RNR821 TERM_VCM__P19 TERM_VCM__N6 1224.54
+RNR822 TERM_VCM__P19 TERM_VCM__N7 1152.51
+RNR823 TERM_VCM__P19 TERM_VCM__N8 1074.72
+RNR824 TERM_VCM__P19 TERM_VCM__N9 998.775
+RNR825 TERM_VCM__P19 TERM_VCM__N10 942.718
+RNR826 TERM_VCM__P19 TERM_VCM__N11 866.679
+RNR827 TERM_VCM__P19 TERM_VCM__N12 796.014
+RNR828 TERM_VCM__P19 TERM_VCM__N13 728.737
+RNR829 TERM_VCM__P19 TERM_VCM__N14 663.276
+RNR830 TERM_VCM__P19 TERM_VCM__N15 604.595
+RNR831 TERM_VCM__P19 TERM_VCM__N16 548.273
+RNR832 TERM_VCM__P19 TERM_VCM__N17 498.28
+RNR833 TERM_VCM__P19 TERM_VCM__N18 452.292
+RNR834 TERM_VCM__P19 TERM_VCM__N19 408.655
+RNR835 TERM_VCM__P19 TERM_VCM__N20 370.402
+RNR836 TERM_VCM__P19 TERM_VCM__N21 335.513
+RNR837 TERM_VCM__P19 TERM_VCM__N22 302.954
+RNR838 TERM_VCM__P19 TERM_VCM__N23 275.243
+RNR839 TERM_VCM__P19 TERM_VCM__N24 252.071
+RNR840 TERM_VCM__P20 TERM_VCM__P21 36.3712
+RNR841 TERM_VCM__P20 TERM_VCM__P22 39.4777
+RNR842 TERM_VCM__P20 TERM_VCM__P23 41.8591
+RNR843 TERM_VCM__P20 TERM_VCM__P24 43.7195
+RNR844 TERM_VCM__P20 TERM_VCM__N0 1330.96
+RNR845 TERM_VCM__P20 TERM_VCM__N1 1331.94
+RNR846 TERM_VCM__P20 TERM_VCM__N2 1312.99
+RNR847 TERM_VCM__P20 TERM_VCM__N3 1277.98
+RNR848 TERM_VCM__P20 TERM_VCM__N4 1232.41
+RNR849 TERM_VCM__P20 TERM_VCM__N5 1175.61
+RNR850 TERM_VCM__P20 TERM_VCM__N6 1113.94
+RNR851 TERM_VCM__P20 TERM_VCM__N7 1047.8
+RNR852 TERM_VCM__P20 TERM_VCM__N8 976.541
+RNR853 TERM_VCM__P20 TERM_VCM__N9 907.122
+RNR854 TERM_VCM__P20 TERM_VCM__N10 855.877
+RNR855 TERM_VCM__P20 TERM_VCM__N11 786.574
+RNR856 TERM_VCM__P20 TERM_VCM__N12 722.24
+RNR857 TERM_VCM__P20 TERM_VCM__N13 661.043
+RNR858 TERM_VCM__P20 TERM_VCM__N14 601.541
+RNR859 TERM_VCM__P20 TERM_VCM__N15 548.234
+RNR860 TERM_VCM__P20 TERM_VCM__N16 497.094
+RNR861 TERM_VCM__P20 TERM_VCM__N17 451.717
+RNR862 TERM_VCM__P20 TERM_VCM__N18 409.99
+RNR863 TERM_VCM__P20 TERM_VCM__N19 370.406
+RNR864 TERM_VCM__P20 TERM_VCM__N20 335.713
+RNR865 TERM_VCM__P20 TERM_VCM__N21 304.076
+RNR866 TERM_VCM__P20 TERM_VCM__N22 274.556
+RNR867 TERM_VCM__P20 TERM_VCM__N23 249.434
+RNR868 TERM_VCM__P20 TERM_VCM__N24 228.43
+RNR869 TERM_VCM__P21 TERM_VCM__P22 35.0764
+RNR870 TERM_VCM__P21 TERM_VCM__P23 37.6312
+RNR871 TERM_VCM__P21 TERM_VCM__P24 39.4466
+RNR872 TERM_VCM__P21 TERM_VCM__N0 1216.78
+RNR873 TERM_VCM__P21 TERM_VCM__N1 1214.99
+RNR874 TERM_VCM__P21 TERM_VCM__N2 1196.24
+RNR875 TERM_VCM__P21 TERM_VCM__N3 1163.31
+RNR876 TERM_VCM__P21 TERM_VCM__N4 1121.02
+RNR877 TERM_VCM__P21 TERM_VCM__N5 1068.65
+RNR878 TERM_VCM__P21 TERM_VCM__N6 1012.03
+RNR879 TERM_VCM__P21 TERM_VCM__N7 951.466
+RNR880 TERM_VCM__P21 TERM_VCM__N8 886.366
+RNR881 TERM_VCM__P21 TERM_VCM__N9 823.051
+RNR882 TERM_VCM__P21 TERM_VCM__N10 776.308
+RNR883 TERM_VCM__P21 TERM_VCM__N11 713.248
+RNR884 TERM_VCM__P21 TERM_VCM__N12 654.761
+RNR885 TERM_VCM__P21 TERM_VCM__N13 599.167
+RNR886 TERM_VCM__P21 TERM_VCM__N14 545.144
+RNR887 TERM_VCM__P21 TERM_VCM__N15 496.769
+RNR888 TERM_VCM__P21 TERM_VCM__N16 450.378
+RNR889 TERM_VCM__P21 TERM_VCM__N17 409.229
+RNR890 TERM_VCM__P21 TERM_VCM__N18 371.399
+RNR891 TERM_VCM__P21 TERM_VCM__N19 335.52
+RNR892 TERM_VCM__P21 TERM_VCM__N20 304.079
+RNR893 TERM_VCM__P21 TERM_VCM__N21 275.412
+RNR894 TERM_VCM__P21 TERM_VCM__N22 248.667
+RNR895 TERM_VCM__P21 TERM_VCM__N23 225.907
+RNR896 TERM_VCM__P21 TERM_VCM__N24 206.88
+RNR897 TERM_VCM__P22 TERM_VCM__P23 33.2846
+RNR898 TERM_VCM__P22 TERM_VCM__P24 35.2392
+RNR899 TERM_VCM__P22 TERM_VCM__N0 1107.35
+RNR900 TERM_VCM__P22 TERM_VCM__N1 1103.64
+RNR901 TERM_VCM__P22 TERM_VCM__N2 1085.49
+RNR902 TERM_VCM__P22 TERM_VCM__N3 1054.8
+RNR903 TERM_VCM__P22 TERM_VCM__N4 1015.83
+RNR904 TERM_VCM__P22 TERM_VCM__N5 967.841
+RNR905 TERM_VCM__P22 TERM_VCM__N6 916.127
+RNR906 TERM_VCM__P22 TERM_VCM__N7 860.942
+RNR907 TERM_VCM__P22 TERM_VCM__N8 801.733
+RNR908 TERM_VCM__P22 TERM_VCM__N9 744.229
+RNR909 TERM_VCM__P22 TERM_VCM__N10 701.774
+RNR910 TERM_VCM__P22 TERM_VCM__N11 644.615
+RNR911 TERM_VCM__P22 TERM_VCM__N12 591.642
+RNR912 TERM_VCM__P22 TERM_VCM__N13 541.319
+RNR913 TERM_VCM__P22 TERM_VCM__N14 492.444
+RNR914 TERM_VCM__P22 TERM_VCM__N15 448.695
+RNR915 TERM_VCM__P22 TERM_VCM__N16 406.755
+RNR916 TERM_VCM__P22 TERM_VCM__N17 369.564
+RNR917 TERM_VCM__P22 TERM_VCM__N18 335.379
+RNR918 TERM_VCM__P22 TERM_VCM__N19 302.964
+RNR919 TERM_VCM__P22 TERM_VCM__N20 274.562
+RNR920 TERM_VCM__P22 TERM_VCM__N21 248.669
+RNR921 TERM_VCM__P22 TERM_VCM__N22 224.514
+RNR922 TERM_VCM__P22 TERM_VCM__N23 203.961
+RNR923 TERM_VCM__P22 TERM_VCM__N24 186.779
+RNR924 TERM_VCM__P23 TERM_VCM__P24 31.072
+RNR925 TERM_VCM__P23 TERM_VCM__N0 1012.2
+RNR926 TERM_VCM__P23 TERM_VCM__N1 1007.33
+RNR927 TERM_VCM__P23 TERM_VCM__N2 989.959
+RNR928 TERM_VCM__P23 TERM_VCM__N3 961.401
+RNR929 TERM_VCM__P23 TERM_VCM__N4 925.447
+RNR930 TERM_VCM__P23 TERM_VCM__N5 881.349
+RNR931 TERM_VCM__P23 TERM_VCM__N6 833.951
+RNR932 TERM_VCM__P23 TERM_VCM__N7 783.463
+RNR933 TERM_VCM__P23 TERM_VCM__N8 729.369
+RNR934 TERM_VCM__P23 TERM_VCM__N9 676.891
+RNR935 TERM_VCM__P23 TERM_VCM__N10 638.145
+RNR936 TERM_VCM__P23 TERM_VCM__N11 586.061
+RNR937 TERM_VCM__P23 TERM_VCM__N12 537.82
+RNR938 TERM_VCM__P23 TERM_VCM__N13 492.014
+RNR939 TERM_VCM__P23 TERM_VCM__N14 447.542
+RNR940 TERM_VCM__P23 TERM_VCM__N15 407.747
+RNR941 TERM_VCM__P23 TERM_VCM__N16 369.607
+RNR942 TERM_VCM__P23 TERM_VCM__N17 335.793
+RNR943 TERM_VCM__P23 TERM_VCM__N18 304.717
+RNR944 TERM_VCM__P23 TERM_VCM__N19 275.254
+RNR945 TERM_VCM__P23 TERM_VCM__N20 249.442
+RNR946 TERM_VCM__P23 TERM_VCM__N21 225.913
+RNR947 TERM_VCM__P23 TERM_VCM__N22 203.963
+RNR948 TERM_VCM__P23 TERM_VCM__N23 185.288
+RNR949 TERM_VCM__P23 TERM_VCM__N24 169.677
+RNR950 TERM_VCM__P24 TERM_VCM__N0 931.324
+RNR951 TERM_VCM__P24 TERM_VCM__N1 925.8
+RNR952 TERM_VCM__P24 TERM_VCM__N2 909.267
+RNR953 TERM_VCM__P24 TERM_VCM__N3 882.638
+RNR954 TERM_VCM__P24 TERM_VCM__N4 849.32
+RNR955 TERM_VCM__P24 TERM_VCM__N5 808.584
+RNR956 TERM_VCM__P24 TERM_VCM__N6 764.885
+RNR957 TERM_VCM__P24 TERM_VCM__N7 718.401
+RNR958 TERM_VCM__P24 TERM_VCM__N8 668.65
+RNR959 TERM_VCM__P24 TERM_VCM__N9 620.426
+RNR960 TERM_VCM__P24 TERM_VCM__N10 584.819
+RNR961 TERM_VCM__P24 TERM_VCM__N11 537.012
+RNR962 TERM_VCM__P24 TERM_VCM__N12 492.752
+RNR963 TERM_VCM__P24 TERM_VCM__N13 450.742
+RNR964 TERM_VCM__P24 TERM_VCM__N14 409.967
+RNR965 TERM_VCM__P24 TERM_VCM__N15 373.489
+RNR966 TERM_VCM__P24 TERM_VCM__N16 338.534
+RNR967 TERM_VCM__P24 TERM_VCM__N17 307.549
+RNR968 TERM_VCM__P24 TERM_VCM__N18 279.077
+RNR969 TERM_VCM__P24 TERM_VCM__N19 252.085
+RNR970 TERM_VCM__P24 TERM_VCM__N20 228.44
+RNR971 TERM_VCM__P24 TERM_VCM__N21 206.888
+RNR972 TERM_VCM__P24 TERM_VCM__N22 186.784
+RNR973 TERM_VCM__P24 TERM_VCM__N23 169.679
+RNR974 TERM_VCM__P24 TERM_VCM__N24 155.382
+RNR975 TERM_VCM__N0 TERM_VCM__N1 23.5657
+RNR976 TERM_VCM__N0 TERM_VCM__N2 26.454
+RNR977 TERM_VCM__N0 TERM_VCM__N3 29.5231
+RNR978 TERM_VCM__N0 TERM_VCM__N4 32.7231
+RNR979 TERM_VCM__N0 TERM_VCM__N5 36.3588
+RNR980 TERM_VCM__N0 TERM_VCM__N6 40.2188
+RNR981 TERM_VCM__N0 TERM_VCM__N7 44.4536
+RNR982 TERM_VCM__N0 TERM_VCM__N8 49.281
+RNR983 TERM_VCM__N0 TERM_VCM__N9 54.3744
+RNR984 TERM_VCM__N0 TERM_VCM__N10 61.1286
+RNR985 TERM_VCM__N0 TERM_VCM__N11 67.6467
+RNR986 TERM_VCM__N0 TERM_VCM__N12 74.4556
+RNR987 TERM_VCM__N0 TERM_VCM__N13 81.7878
+RNR988 TERM_VCM__N0 TERM_VCM__N14 89.9996
+RNR989 TERM_VCM__N0 TERM_VCM__N15 98.4871
+RNR990 TERM_VCM__N0 TERM_VCM__N16 107.863
+RNR991 TERM_VCM__N0 TERM_VCM__N17 117.383
+RNR992 TERM_VCM__N0 TERM_VCM__N18 127.284
+RNR993 TERM_VCM__N0 TERM_VCM__N19 137.839
+RNR994 TERM_VCM__N0 TERM_VCM__N20 148.114
+RNR995 TERM_VCM__N0 TERM_VCM__N21 158.224
+RNR996 TERM_VCM__N0 TERM_VCM__N22 168.279
+RNR997 TERM_VCM__N0 TERM_VCM__N23 177.159
+RNR998 TERM_VCM__N0 TERM_VCM__N24 184.569
+RNR999 TERM_VCM__N1 TERM_VCM__N2 25.8788
+RNR1000 TERM_VCM__N1 TERM_VCM__N3 29.0332
+RNR1001 TERM_VCM__N1 TERM_VCM__N4 32.2294
+RNR1002 TERM_VCM__N1 TERM_VCM__N5 35.8278
+RNR1003 TERM_VCM__N1 TERM_VCM__N6 39.6387
+RNR1004 TERM_VCM__N1 TERM_VCM__N7 43.8154
+RNR1005 TERM_VCM__N1 TERM_VCM__N8 48.5751
+RNR1006 TERM_VCM__N1 TERM_VCM__N9 53.5962
+RNR1007 TERM_VCM__N1 TERM_VCM__N10 60.2548
+RNR1008 TERM_VCM__N1 TERM_VCM__N11 66.68
+RNR1009 TERM_VCM__N1 TERM_VCM__N12 73.392
+RNR1010 TERM_VCM__N1 TERM_VCM__N13 80.6202
+RNR1011 TERM_VCM__N1 TERM_VCM__N14 88.7157
+RNR1012 TERM_VCM__N1 TERM_VCM__N15 97.0832
+RNR1013 TERM_VCM__N1 TERM_VCM__N16 106.327
+RNR1014 TERM_VCM__N1 TERM_VCM__N17 115.714
+RNR1015 TERM_VCM__N1 TERM_VCM__N18 125.476
+RNR1016 TERM_VCM__N1 TERM_VCM__N19 135.884
+RNR1017 TERM_VCM__N1 TERM_VCM__N20 146.018
+RNR1018 TERM_VCM__N1 TERM_VCM__N21 155.99
+RNR1019 TERM_VCM__N1 TERM_VCM__N22 165.908
+RNR1020 TERM_VCM__N1 TERM_VCM__N23 174.671
+RNR1021 TERM_VCM__N1 TERM_VCM__N24 181.983
+RNR1022 TERM_VCM__N2 TERM_VCM__N3 28.1015
+RNR1023 TERM_VCM__N2 TERM_VCM__N4 31.4089
+RNR1024 TERM_VCM__N2 TERM_VCM__N5 34.9868
+RNR1025 TERM_VCM__N2 TERM_VCM__N6 38.7353
+RNR1026 TERM_VCM__N2 TERM_VCM__N7 42.8275
+RNR1027 TERM_VCM__N2 TERM_VCM__N8 47.4844
+RNR1028 TERM_VCM__N2 TERM_VCM__N9 52.395
+RNR1029 TERM_VCM__N2 TERM_VCM__N10 58.9066
+RNR1030 TERM_VCM__N2 TERM_VCM__N11 65.1881
+RNR1031 TERM_VCM__N2 TERM_VCM__N12 71.7501
+RNR1032 TERM_VCM__N2 TERM_VCM__N13 78.8168
+RNR1033 TERM_VCM__N2 TERM_VCM__N14 86.7317
+RNR1034 TERM_VCM__N2 TERM_VCM__N15 94.9126
+RNR1035 TERM_VCM__N2 TERM_VCM__N16 103.951
+RNR1036 TERM_VCM__N2 TERM_VCM__N17 113.129
+RNR1037 TERM_VCM__N2 TERM_VCM__N18 122.674
+RNR1038 TERM_VCM__N2 TERM_VCM__N19 132.852
+RNR1039 TERM_VCM__N2 TERM_VCM__N20 142.761
+RNR1040 TERM_VCM__N2 TERM_VCM__N21 152.513
+RNR1041 TERM_VCM__N2 TERM_VCM__N22 162.214
+RNR1042 TERM_VCM__N2 TERM_VCM__N23 170.785
+RNR1043 TERM_VCM__N2 TERM_VCM__N24 177.939
+RNR1044 TERM_VCM__N3 TERM_VCM__N4 30.0516
+RNR1045 TERM_VCM__N3 TERM_VCM__N5 33.7306
+RNR1046 TERM_VCM__N3 TERM_VCM__N6 37.4302
+RNR1047 TERM_VCM__N3 TERM_VCM__N7 41.4154
+RNR1048 TERM_VCM__N3 TERM_VCM__N8 45.9312
+RNR1049 TERM_VCM__N3 TERM_VCM__N9 50.6867
+RNR1050 TERM_VCM__N3 TERM_VCM__N10 56.9906
+RNR1051 TERM_VCM__N3 TERM_VCM__N11 63.0679
+RNR1052 TERM_VCM__N3 TERM_VCM__N12 69.4166
+RNR1053 TERM_VCM__N3 TERM_VCM__N13 76.2536
+RNR1054 TERM_VCM__N3 TERM_VCM__N14 83.9113
+RNR1055 TERM_VCM__N3 TERM_VCM__N15 91.8266
+RNR1056 TERM_VCM__N3 TERM_VCM__N16 100.571
+RNR1057 TERM_VCM__N3 TERM_VCM__N17 109.452
+RNR1058 TERM_VCM__N3 TERM_VCM__N18 118.688
+RNR1059 TERM_VCM__N3 TERM_VCM__N19 128.536
+RNR1060 TERM_VCM__N3 TERM_VCM__N20 138.125
+RNR1061 TERM_VCM__N3 TERM_VCM__N21 147.562
+RNR1062 TERM_VCM__N3 TERM_VCM__N22 156.95
+RNR1063 TERM_VCM__N3 TERM_VCM__N23 165.245
+RNR1064 TERM_VCM__N3 TERM_VCM__N24 172.17
+RNR1065 TERM_VCM__N4 TERM_VCM__N5 31.9947
+RNR1066 TERM_VCM__N4 TERM_VCM__N6 35.789
+RNR1067 TERM_VCM__N4 TERM_VCM__N7 39.6938
+RNR1068 TERM_VCM__N4 TERM_VCM__N8 44.0571
+RNR1069 TERM_VCM__N4 TERM_VCM__N9 48.6329
+RNR1070 TERM_VCM__N4 TERM_VCM__N10 54.692
+RNR1071 TERM_VCM__N4 TERM_VCM__N11 60.5247
+RNR1072 TERM_VCM__N4 TERM_VCM__N12 66.6176
+RNR1073 TERM_VCM__N4 TERM_VCM__N13 73.179
+RNR1074 TERM_VCM__N4 TERM_VCM__N14 80.528
+RNR1075 TERM_VCM__N4 TERM_VCM__N15 88.1244
+RNR1076 TERM_VCM__N4 TERM_VCM__N16 96.517
+RNR1077 TERM_VCM__N4 TERM_VCM__N17 105.04
+RNR1078 TERM_VCM__N4 TERM_VCM__N18 113.905
+RNR1079 TERM_VCM__N4 TERM_VCM__N19 123.356
+RNR1080 TERM_VCM__N4 TERM_VCM__N20 132.56
+RNR1081 TERM_VCM__N4 TERM_VCM__N21 141.619
+RNR1082 TERM_VCM__N4 TERM_VCM__N22 150.631
+RNR1083 TERM_VCM__N4 TERM_VCM__N23 158.593
+RNR1084 TERM_VCM__N4 TERM_VCM__N24 165.241
+RNR1085 TERM_VCM__N5 TERM_VCM__N6 33.5783
+RNR1086 TERM_VCM__N5 TERM_VCM__N7 37.5548
+RNR1087 TERM_VCM__N5 TERM_VCM__N8 41.7876
+RNR1088 TERM_VCM__N5 TERM_VCM__N9 46.1661
+RNR1089 TERM_VCM__N5 TERM_VCM__N10 51.9402
+RNR1090 TERM_VCM__N5 TERM_VCM__N11 57.4825
+RNR1091 TERM_VCM__N5 TERM_VCM__N12 63.2701
+RNR1092 TERM_VCM__N5 TERM_VCM__N13 69.502
+RNR1093 TERM_VCM__N5 TERM_VCM__N14 76.4818
+RNR1094 TERM_VCM__N5 TERM_VCM__N15 83.6967
+RNR1095 TERM_VCM__N5 TERM_VCM__N16 91.6679
+RNR1096 TERM_VCM__N5 TERM_VCM__N17 99.763
+RNR1097 TERM_VCM__N5 TERM_VCM__N18 108.183
+RNR1098 TERM_VCM__N5 TERM_VCM__N19 117.161
+RNR1099 TERM_VCM__N5 TERM_VCM__N20 125.903
+RNR1100 TERM_VCM__N5 TERM_VCM__N21 134.508
+RNR1101 TERM_VCM__N5 TERM_VCM__N22 143.069
+RNR1102 TERM_VCM__N5 TERM_VCM__N23 150.634
+RNR1103 TERM_VCM__N5 TERM_VCM__N24 156.949
+RNR1104 TERM_VCM__N6 TERM_VCM__N7 35.0022
+RNR1105 TERM_VCM__N6 TERM_VCM__N8 39.2911
+RNR1106 TERM_VCM__N6 TERM_VCM__N9 43.5214
+RNR1107 TERM_VCM__N6 TERM_VCM__N10 49.0195
+RNR1108 TERM_VCM__N6 TERM_VCM__N11 54.2608
+RNR1109 TERM_VCM__N6 TERM_VCM__N12 59.7278
+RNR1110 TERM_VCM__N6 TERM_VCM__N13 65.6117
+RNR1111 TERM_VCM__N6 TERM_VCM__N14 72.2009
+RNR1112 TERM_VCM__N6 TERM_VCM__N15 79.0121
+RNR1113 TERM_VCM__N6 TERM_VCM__N16 86.5372
+RNR1114 TERM_VCM__N6 TERM_VCM__N17 94.1795
+RNR1115 TERM_VCM__N6 TERM_VCM__N18 102.129
+RNR1116 TERM_VCM__N6 TERM_VCM__N19 110.605
+RNR1117 TERM_VCM__N6 TERM_VCM__N20 118.859
+RNR1118 TERM_VCM__N6 TERM_VCM__N21 126.983
+RNR1119 TERM_VCM__N6 TERM_VCM__N22 135.066
+RNR1120 TERM_VCM__N6 TERM_VCM__N23 142.209
+RNR1121 TERM_VCM__N6 TERM_VCM__N24 148.173
+RNR1122 TERM_VCM__N7 TERM_VCM__N8 36.3576
+RNR1123 TERM_VCM__N7 TERM_VCM__N9 40.6344
+RNR1124 TERM_VCM__N7 TERM_VCM__N10 45.9123
+RNR1125 TERM_VCM__N7 TERM_VCM__N11 50.8568
+RNR1126 TERM_VCM__N7 TERM_VCM__N12 55.9934
+RNR1127 TERM_VCM__N7 TERM_VCM__N13 61.5133
+RNR1128 TERM_VCM__N7 TERM_VCM__N14 67.6916
+RNR1129 TERM_VCM__N7 TERM_VCM__N15 74.0776
+RNR1130 TERM_VCM__N7 TERM_VCM__N16 81.1329
+RNR1131 TERM_VCM__N7 TERM_VCM__N17 88.2981
+RNR1132 TERM_VCM__N7 TERM_VCM__N18 95.7511
+RNR1133 TERM_VCM__N7 TERM_VCM__N19 103.698
+RNR1134 TERM_VCM__N7 TERM_VCM__N20 111.438
+RNR1135 TERM_VCM__N7 TERM_VCM__N21 119.055
+RNR1136 TERM_VCM__N7 TERM_VCM__N22 126.635
+RNR1137 TERM_VCM__N7 TERM_VCM__N23 133.333
+RNR1138 TERM_VCM__N7 TERM_VCM__N24 138.926
+RNR1139 TERM_VCM__N8 TERM_VCM__N9 37.2539
+RNR1140 TERM_VCM__N8 TERM_VCM__N10 42.5227
+RNR1141 TERM_VCM__N8 TERM_VCM__N11 47.2085
+RNR1142 TERM_VCM__N8 TERM_VCM__N12 52.0156
+RNR1143 TERM_VCM__N8 TERM_VCM__N13 57.1565
+RNR1144 TERM_VCM__N8 TERM_VCM__N14 62.9011
+RNR1145 TERM_VCM__N8 TERM_VCM__N15 68.8363
+RNR1146 TERM_VCM__N8 TERM_VCM__N16 75.3925
+RNR1147 TERM_VCM__N8 TERM_VCM__N17 82.051
+RNR1148 TERM_VCM__N8 TERM_VCM__N18 88.9769
+RNR1149 TERM_VCM__N8 TERM_VCM__N19 96.3621
+RNR1150 TERM_VCM__N8 TERM_VCM__N20 103.554
+RNR1151 TERM_VCM__N8 TERM_VCM__N21 110.634
+RNR1152 TERM_VCM__N8 TERM_VCM__N22 117.678
+RNR1153 TERM_VCM__N8 TERM_VCM__N23 123.903
+RNR1154 TERM_VCM__N8 TERM_VCM__N24 129.101
+RNR1155 TERM_VCM__N9 TERM_VCM__N10 38.9959
+RNR1156 TERM_VCM__N9 TERM_VCM__N11 43.5968
+RNR1157 TERM_VCM__N9 TERM_VCM__N12 48.1491
+RNR1158 TERM_VCM__N9 TERM_VCM__N13 52.9477
+RNR1159 TERM_VCM__N9 TERM_VCM__N14 58.2819
+RNR1160 TERM_VCM__N9 TERM_VCM__N15 63.7855
+RNR1161 TERM_VCM__N9 TERM_VCM__N16 69.8615
+RNR1162 TERM_VCM__N9 TERM_VCM__N17 76.0318
+RNR1163 TERM_VCM__N9 TERM_VCM__N18 82.4497
+RNR1164 TERM_VCM__N9 TERM_VCM__N19 89.2934
+RNR1165 TERM_VCM__N9 TERM_VCM__N20 95.9583
+RNR1166 TERM_VCM__N9 TERM_VCM__N21 102.519
+RNR1167 TERM_VCM__N9 TERM_VCM__N22 109.047
+RNR1168 TERM_VCM__N9 TERM_VCM__N23 114.816
+RNR1169 TERM_VCM__N9 TERM_VCM__N24 119.634
+RNR1170 TERM_VCM__N10 TERM_VCM__N11 39.893
+RNR1171 TERM_VCM__N10 TERM_VCM__N12 44.8355
+RNR1172 TERM_VCM__N10 TERM_VCM__N13 49.6353
+RNR1173 TERM_VCM__N10 TERM_VCM__N14 54.782
+RNR1174 TERM_VCM__N10 TERM_VCM__N15 60.0141
+RNR1175 TERM_VCM__N10 TERM_VCM__N16 65.7584
+RNR1176 TERM_VCM__N10 TERM_VCM__N17 71.5776
+RNR1177 TERM_VCM__N10 TERM_VCM__N18 77.625
+RNR1178 TERM_VCM__N10 TERM_VCM__N19 84.0711
+RNR1179 TERM_VCM__N10 TERM_VCM__N20 90.3477
+RNR1180 TERM_VCM__N10 TERM_VCM__N21 96.5256
+RNR1181 TERM_VCM__N10 TERM_VCM__N22 102.673
+RNR1182 TERM_VCM__N10 TERM_VCM__N23 108.106
+RNR1183 TERM_VCM__N10 TERM_VCM__N24 112.642
+RNR1184 TERM_VCM__N11 TERM_VCM__N12 40.2279
+RNR1185 TERM_VCM__N11 TERM_VCM__N13 45.1579
+RNR1186 TERM_VCM__N11 TERM_VCM__N14 50.102
+RNR1187 TERM_VCM__N11 TERM_VCM__N15 54.9897
+RNR1188 TERM_VCM__N11 TERM_VCM__N16 60.2963
+RNR1189 TERM_VCM__N11 TERM_VCM__N17 65.6492
+RNR1190 TERM_VCM__N11 TERM_VCM__N18 71.2029
+RNR1191 TERM_VCM__N11 TERM_VCM__N19 77.1192
+RNR1192 TERM_VCM__N11 TERM_VCM__N20 82.8783
+RNR1193 TERM_VCM__N11 TERM_VCM__N21 88.5464
+RNR1194 TERM_VCM__N11 TERM_VCM__N22 94.1861
+RNR1195 TERM_VCM__N11 TERM_VCM__N23 99.1705
+RNR1196 TERM_VCM__N11 TERM_VCM__N24 103.333
+RNR1197 TERM_VCM__N12 TERM_VCM__N13 40.5018
+RNR1198 TERM_VCM__N12 TERM_VCM__N14 45.5708
+RNR1199 TERM_VCM__N12 TERM_VCM__N15 50.2673
+RNR1200 TERM_VCM__N12 TERM_VCM__N16 55.2219
+RNR1201 TERM_VCM__N12 TERM_VCM__N17 60.1647
+RNR1202 TERM_VCM__N12 TERM_VCM__N18 65.2709
+RNR1203 TERM_VCM__N12 TERM_VCM__N19 70.7014
+RNR1204 TERM_VCM__N12 TERM_VCM__N20 75.9842
+RNR1205 TERM_VCM__N12 TERM_VCM__N21 81.1822
+RNR1206 TERM_VCM__N12 TERM_VCM__N22 86.3538
+RNR1207 TERM_VCM__N12 TERM_VCM__N23 90.9242
+RNR1208 TERM_VCM__N12 TERM_VCM__N24 94.7409
+RNR1209 TERM_VCM__N13 TERM_VCM__N14 40.7749
+RNR1210 TERM_VCM__N13 TERM_VCM__N15 45.5883
+RNR1211 TERM_VCM__N13 TERM_VCM__N16 50.3351
+RNR1212 TERM_VCM__N13 TERM_VCM__N17 54.9391
+RNR1213 TERM_VCM__N13 TERM_VCM__N18 59.6412
+RNR1214 TERM_VCM__N13 TERM_VCM__N19 64.62
+RNR1215 TERM_VCM__N13 TERM_VCM__N20 69.4548
+RNR1216 TERM_VCM__N13 TERM_VCM__N21 74.209
+RNR1217 TERM_VCM__N13 TERM_VCM__N22 78.9377
+RNR1218 TERM_VCM__N13 TERM_VCM__N23 83.1164
+RNR1219 TERM_VCM__N13 TERM_VCM__N24 86.6059
+RNR1220 TERM_VCM__N14 TERM_VCM__N15 40.5311
+RNR1221 TERM_VCM__N14 TERM_VCM__N16 45.3884
+RNR1222 TERM_VCM__N14 TERM_VCM__N17 49.7915
+RNR1223 TERM_VCM__N14 TERM_VCM__N18 54.1533
+RNR1224 TERM_VCM__N14 TERM_VCM__N19 58.7156
+RNR1225 TERM_VCM__N14 TERM_VCM__N20 63.1247
+RNR1226 TERM_VCM__N14 TERM_VCM__N21 67.4522
+RNR1227 TERM_VCM__N14 TERM_VCM__N22 71.7535
+RNR1228 TERM_VCM__N14 TERM_VCM__N23 75.5532
+RNR1229 TERM_VCM__N14 TERM_VCM__N24 78.726
+RNR1230 TERM_VCM__N15 TERM_VCM__N16 40.4576
+RNR1231 TERM_VCM__N15 TERM_VCM__N17 44.9876
+RNR1232 TERM_VCM__N15 TERM_VCM__N18 49.1698
+RNR1233 TERM_VCM__N15 TERM_VCM__N19 53.4108
+RNR1234 TERM_VCM__N15 TERM_VCM__N20 57.4588
+RNR1235 TERM_VCM__N15 TERM_VCM__N21 61.4128
+RNR1236 TERM_VCM__N15 TERM_VCM__N22 65.3352
+RNR1237 TERM_VCM__N15 TERM_VCM__N23 68.7975
+RNR1238 TERM_VCM__N15 TERM_VCM__N24 71.688
+RNR1239 TERM_VCM__N16 TERM_VCM__N17 39.8812
+RNR1240 TERM_VCM__N16 TERM_VCM__N18 44.1925
+RNR1241 TERM_VCM__N16 TERM_VCM__N19 48.2532
+RNR1242 TERM_VCM__N16 TERM_VCM__N20 52.0045
+RNR1243 TERM_VCM__N16 TERM_VCM__N21 55.6206
+RNR1244 TERM_VCM__N16 TERM_VCM__N22 59.1884
+RNR1245 TERM_VCM__N16 TERM_VCM__N23 62.3309
+RNR1246 TERM_VCM__N16 TERM_VCM__N24 64.9525
+RNR1247 TERM_VCM__N17 TERM_VCM__N18 39.296
+RNR1248 TERM_VCM__N17 TERM_VCM__N19 43.4946
+RNR1249 TERM_VCM__N17 TERM_VCM__N20 47.1001
+RNR1250 TERM_VCM__N17 TERM_VCM__N21 50.4629
+RNR1251 TERM_VCM__N17 TERM_VCM__N22 53.7347
+RNR1252 TERM_VCM__N17 TERM_VCM__N23 56.6007
+RNR1253 TERM_VCM__N17 TERM_VCM__N24 58.9866
+RNR1254 TERM_VCM__N18 TERM_VCM__N19 38.6624
+RNR1255 TERM_VCM__N18 TERM_VCM__N20 42.4138
+RNR1256 TERM_VCM__N18 TERM_VCM__N21 45.6572
+RNR1257 TERM_VCM__N18 TERM_VCM__N22 48.7012
+RNR1258 TERM_VCM__N18 TERM_VCM__N23 51.3294
+RNR1259 TERM_VCM__N18 TERM_VCM__N24 53.5047
+RNR1260 TERM_VCM__N19 TERM_VCM__N20 37.5236
+RNR1261 TERM_VCM__N19 TERM_VCM__N21 40.9267
+RNR1262 TERM_VCM__N19 TERM_VCM__N22 43.8648
+RNR1263 TERM_VCM__N19 TERM_VCM__N23 46.3088
+RNR1264 TERM_VCM__N19 TERM_VCM__N24 48.2994
+RNR1265 TERM_VCM__N20 TERM_VCM__N21 36.3601
+RNR1266 TERM_VCM__N20 TERM_VCM__N22 39.4661
+RNR1267 TERM_VCM__N20 TERM_VCM__N23 41.8471
+RNR1268 TERM_VCM__N20 TERM_VCM__N24 43.7073
+RNR1269 TERM_VCM__N21 TERM_VCM__N22 35.0657
+RNR1270 TERM_VCM__N21 TERM_VCM__N23 37.6201
+RNR1271 TERM_VCM__N21 TERM_VCM__N24 39.4351
+RNR1272 TERM_VCM__N22 TERM_VCM__N23 33.2744
+RNR1273 TERM_VCM__N22 TERM_VCM__N24 35.2286
+RNR1274 TERM_VCM__N23 TERM_VCM__N24 31.0624
+RNR1275 PAD_P PAD_P__feed 9.75524
+RNR1276 PAD_P PAD_P__dio 99.4136
+RNR1277 PAD_P PAD_P__dio 88.6418
+RNR1278 PAD_P PAD_P__dio 73.1234
+RNR1279 PAD_P PAD_P__dio 56.9644
+RNR1280 PAD_P PAD_P__dio 185.602
+RNR1281 PAD_P PAD_P__dio 150.464
+RNR1282 PAD_P PAD_P__dio 116.535
+RNR1283 PAD_P PAD_P__dio 83.7972
+RNR1284 PAD_P PAD_P__dio 414.846
+RNR1285 PAD_P PAD_P__dio 336.306
+RNR1286 PAD_P PAD_P__dio 260.449
+RNR1287 PAD_P PAD_P__dio 187.139
+RNR1288 PAD_P__feed PAD_P__mim 1.42273
+RNR1289 PAD_P__feed PAD_P__h10 1.21813e+07
+RNR1290 PAD_P__feed PAD_P__h11 3.70324e+07
+RNR1291 PAD_P__feed PAD_P__h12 9.69581e+07
+RNR1292 PAD_P__feed PAD_P__h0 103.076
+RNR1293 PAD_P__feed PAD_P__h1 292.329
+RNR1294 PAD_P__feed PAD_P__h2 973.475
+RNR1295 PAD_P__feed PAD_P__h3 3043.19
+RNR1296 PAD_P__feed PAD_P__h4 10640.1
+RNR1297 PAD_P__feed PAD_P__h5 33593.5
+RNR1298 PAD_P__feed PAD_P__h6 100488
+RNR1299 PAD_P__feed PAD_P__h7 342166
+RNR1300 PAD_P__feed PAD_P__h8 1.06753e+06
+RNR1301 PAD_P__feed PAD_P__h9 3.7102e+06
+RNR1302 PAD_P__feed PAD_P__dio 10.147
+RNR1303 PAD_P__feed PAD_P__dio 9.04728
+RNR1304 PAD_P__feed PAD_P__dio 7.46225
+RNR1305 PAD_P__feed PAD_P__dio 5.80952
+RNR1306 PAD_P__feed PAD_P__dio 15.851
+RNR1307 PAD_P__feed PAD_P__dio 12.8497
+RNR1308 PAD_P__feed PAD_P__dio 9.94864
+RNR1309 PAD_P__feed PAD_P__dio 7.12972
+RNR1310 PAD_P__feed PAD_P__dio 42.3791
+RNR1311 PAD_P__feed PAD_P__dio 34.3557
+RNR1312 PAD_P__feed PAD_P__dio 26.6056
+RNR1313 PAD_P__feed PAD_P__dio 19.1108
+RNR1314 PAD_P__mim PAD_P__h10 5.02655
+RNR1315 PAD_P__mim PAD_P__h11 5.14497
+RNR1316 PAD_P__mim PAD_P__h12 5.45853
+RNR1317 PAD_P__mim PAD_P__h13 6.25668
+RNR1318 PAD_P__mim PAD_P__h14 7.24527
+RNR1319 PAD_P__mim PAD_P__h15 8.46525
+RNR1320 PAD_P__mim PAD_P__h16 9.76221
+RNR1321 PAD_P__mim PAD_P__h17 11.1395
+RNR1322 PAD_P__mim PAD_P__h18 12.776
+RNR1323 PAD_P__mim PAD_P__h19 14.308
+RNR1324 PAD_P__mim PAD_P__h20 15.8677
+RNR1325 PAD_P__mim PAD_P__h21 17.8172
+RNR1326 PAD_P__mim PAD_P__h22 20.54
+RNR1327 PAD_P__mim PAD_P__h23 22.9763
+RNR1328 PAD_P__mim PAD_P__h24 24.2711
+RNR1329 PAD_P__mim PAD_P__h0 5.03087
+RNR1330 PAD_P__mim PAD_P__h1 4.87821
+RNR1331 PAD_P__mim PAD_P__h2 4.82239
+RNR1332 PAD_P__mim PAD_P__h3 4.80802
+RNR1333 PAD_P__mim PAD_P__h4 4.80146
+RNR1334 PAD_P__mim PAD_P__h5 4.80859
+RNR1335 PAD_P__mim PAD_P__h6 4.80907
+RNR1336 PAD_P__mim PAD_P__h7 4.80546
+RNR1337 PAD_P__mim PAD_P__h8 4.80379
+RNR1338 PAD_P__mim PAD_P__h9 4.57458
+RNR1339 PAD_P__h10 PAD_P__h11 707.904
+RNR1340 PAD_P__h10 PAD_P__h12 1892.31
+RNR1341 PAD_P__h10 PAD_P__h13 3063.76
+RNR1342 PAD_P__h10 PAD_P__h14 3765.74
+RNR1343 PAD_P__h10 PAD_P__h15 4442.29
+RNR1344 PAD_P__h10 PAD_P__h16 5129.92
+RNR1345 PAD_P__h10 PAD_P__h17 5854.93
+RNR1346 PAD_P__h10 PAD_P__h18 6715.31
+RNR1347 PAD_P__h10 PAD_P__h19 7520.57
+RNR1348 PAD_P__h10 PAD_P__h20 8340.38
+RNR1349 PAD_P__h10 PAD_P__h21 9365.06
+RNR1350 PAD_P__h10 PAD_P__h22 10796.2
+RNR1351 PAD_P__h10 PAD_P__h23 12076.8
+RNR1352 PAD_P__h10 PAD_P__h24 12757.4
+RNR1353 PAD_P__h10 PAD_P__h0 2.35267e+07
+RNR1354 PAD_P__h10 PAD_P__h1 9.28286e+06
+RNR1355 PAD_P__h10 PAD_P__h2 2.78262e+06
+RNR1356 PAD_P__h10 PAD_P__h3 874664
+RNR1357 PAD_P__h10 PAD_P__h4 254046
+RNR1358 PAD_P__h10 PAD_P__h5 78702
+RNR1359 PAD_P__h10 PAD_P__h6 26070.3
+RNR1360 PAD_P__h10 PAD_P__h7 7771.26
+RNR1361 PAD_P__h10 PAD_P__h8 2507.38
+RNR1362 PAD_P__h10 PAD_P__h9 831.47
+RNR1363 PAD_P__h11 PAD_P__h12 578.065
+RNR1364 PAD_P__h11 PAD_P__h13 956.893
+RNR1365 PAD_P__h11 PAD_P__h14 1181.69
+RNR1366 PAD_P__h11 PAD_P__h15 1395.09
+RNR1367 PAD_P__h11 PAD_P__h16 1611.23
+RNR1368 PAD_P__h11 PAD_P__h17 1838.97
+RNR1369 PAD_P__h11 PAD_P__h18 2109.22
+RNR1370 PAD_P__h11 PAD_P__h19 2362.14
+RNR1371 PAD_P__h11 PAD_P__h20 2619.64
+RNR1372 PAD_P__h11 PAD_P__h21 2941.48
+RNR1373 PAD_P__h11 PAD_P__h22 3390.99
+RNR1374 PAD_P__h11 PAD_P__h23 3793.21
+RNR1375 PAD_P__h11 PAD_P__h24 4006.97
+RNR1376 PAD_P__h11 PAD_P__h0 7.15237e+07
+RNR1377 PAD_P__h11 PAD_P__h1 2.82208e+07
+RNR1378 PAD_P__h11 PAD_P__h2 8.45945e+06
+RNR1379 PAD_P__h11 PAD_P__h3 2.65908e+06
+RNR1380 PAD_P__h11 PAD_P__h4 772342
+RNR1381 PAD_P__h11 PAD_P__h5 239281
+RNR1382 PAD_P__h11 PAD_P__h6 79280.6
+RNR1383 PAD_P__h11 PAD_P__h7 23657
+RNR1384 PAD_P__h11 PAD_P__h8 7656.3
+RNR1385 PAD_P__h11 PAD_P__h9 2564.78
+RNR1386 PAD_P__h12 PAD_P__h13 324.408
+RNR1387 PAD_P__h12 PAD_P__h14 407.715
+RNR1388 PAD_P__h12 PAD_P__h15 482.778
+RNR1389 PAD_P__h12 PAD_P__h16 557.811
+RNR1390 PAD_P__h12 PAD_P__h17 636.698
+RNR1391 PAD_P__h12 PAD_P__h18 730.271
+RNR1392 PAD_P__h12 PAD_P__h19 817.843
+RNR1393 PAD_P__h12 PAD_P__h20 906.995
+RNR1394 PAD_P__h12 PAD_P__h21 1018.43
+RNR1395 PAD_P__h12 PAD_P__h22 1174.06
+RNR1396 PAD_P__h12 PAD_P__h23 1313.32
+RNR1397 PAD_P__h12 PAD_P__h24 1387.33
+RNR1398 PAD_P__h12 PAD_P__h1 7.38877e+07
+RNR1399 PAD_P__h12 PAD_P__h2 2.21485e+07
+RNR1400 PAD_P__h12 PAD_P__h3 6.962e+06
+RNR1401 PAD_P__h12 PAD_P__h4 2.02216e+06
+RNR1402 PAD_P__h12 PAD_P__h5 626502
+RNR1403 PAD_P__h12 PAD_P__h6 207593
+RNR1404 PAD_P__h12 PAD_P__h7 61966.4
+RNR1405 PAD_P__h12 PAD_P__h8 20075.5
+RNR1406 PAD_P__h12 PAD_P__h9 6748.3
+RNR1407 PAD_P__h13 PAD_P__h14 164.49
+RNR1408 PAD_P__h13 PAD_P__h15 198.663
+RNR1409 PAD_P__h13 PAD_P__h16 230.201
+RNR1410 PAD_P__h13 PAD_P__h17 262.874
+RNR1411 PAD_P__h13 PAD_P__h18 301.531
+RNR1412 PAD_P__h13 PAD_P__h19 337.692
+RNR1413 PAD_P__h13 PAD_P__h20 374.504
+RNR1414 PAD_P__h13 PAD_P__h21 420.516
+RNR1415 PAD_P__h13 PAD_P__h22 484.778
+RNR1416 PAD_P__h13 PAD_P__h23 542.28
+RNR1417 PAD_P__h13 PAD_P__h24 572.839
+RNR1418 PAD_P__h13 PAD_P__h2 3.55759e+07
+RNR1419 PAD_P__h13 PAD_P__h3 1.11827e+07
+RNR1420 PAD_P__h13 PAD_P__h4 3.24809e+06
+RNR1421 PAD_P__h13 PAD_P__h5 1.00632e+06
+RNR1422 PAD_P__h13 PAD_P__h6 333459
+RNR1423 PAD_P__h13 PAD_P__h7 99550
+RNR1424 PAD_P__h13 PAD_P__h8 32264.1
+RNR1425 PAD_P__h13 PAD_P__h9 10859.7
+RNR1426 PAD_P__h14 PAD_P__h15 117.831
+RNR1427 PAD_P__h14 PAD_P__h16 138.51
+RNR1428 PAD_P__h14 PAD_P__h17 158.521
+RNR1429 PAD_P__h14 PAD_P__h18 181.902
+RNR1430 PAD_P__h14 PAD_P__h19 203.727
+RNR1431 PAD_P__h14 PAD_P__h20 225.937
+RNR1432 PAD_P__h14 PAD_P__h21 253.695
+RNR1433 PAD_P__h14 PAD_P__h22 292.465
+RNR1434 PAD_P__h14 PAD_P__h23 327.155
+RNR1435 PAD_P__h14 PAD_P__h24 345.591
+RNR1436 PAD_P__h14 PAD_P__h2 4.36547e+07
+RNR1437 PAD_P__h14 PAD_P__h3 1.37221e+07
+RNR1438 PAD_P__h14 PAD_P__h4 3.98569e+06
+RNR1439 PAD_P__h14 PAD_P__h5 1.23485e+06
+RNR1440 PAD_P__h14 PAD_P__h6 409186
+RNR1441 PAD_P__h14 PAD_P__h7 122161
+RNR1442 PAD_P__h14 PAD_P__h8 39595.5
+RNR1443 PAD_P__h14 PAD_P__h9 13330.9
+RNR1444 PAD_P__h15 PAD_P__h16 93.7282
+RNR1445 PAD_P__h15 PAD_P__h17 108.78
+RNR1446 PAD_P__h15 PAD_P__h18 125.126
+RNR1447 PAD_P__h15 PAD_P__h19 140.182
+RNR1448 PAD_P__h15 PAD_P__h20 155.472
+RNR1449 PAD_P__h15 PAD_P__h21 174.575
+RNR1450 PAD_P__h15 PAD_P__h22 201.253
+RNR1451 PAD_P__h15 PAD_P__h23 225.125
+RNR1452 PAD_P__h15 PAD_P__h24 237.811
+RNR1453 PAD_P__h15 PAD_P__h2 5.14835e+07
+RNR1454 PAD_P__h15 PAD_P__h3 1.6183e+07
+RNR1455 PAD_P__h15 PAD_P__h4 4.70046e+06
+RNR1456 PAD_P__h15 PAD_P__h5 1.4563e+06
+RNR1457 PAD_P__h15 PAD_P__h6 482568
+RNR1458 PAD_P__h15 PAD_P__h7 144069
+RNR1459 PAD_P__h15 PAD_P__h8 46697.2
+RNR1460 PAD_P__h15 PAD_P__h9 15722.6
+RNR1461 PAD_P__h16 PAD_P__h17 81.0541
+RNR1462 PAD_P__h16 PAD_P__h18 94.4431
+RNR1463 PAD_P__h16 PAD_P__h19 105.982
+RNR1464 PAD_P__h16 PAD_P__h20 117.574
+RNR1465 PAD_P__h16 PAD_P__h21 132.025
+RNR1466 PAD_P__h16 PAD_P__h22 152.201
+RNR1467 PAD_P__h16 PAD_P__h23 170.254
+RNR1468 PAD_P__h16 PAD_P__h24 179.848
+RNR1469 PAD_P__h16 PAD_P__h2 5.94504e+07
+RNR1470 PAD_P__h16 PAD_P__h3 1.86872e+07
+RNR1471 PAD_P__h16 PAD_P__h4 5.42783e+06
+RNR1472 PAD_P__h16 PAD_P__h5 1.68166e+06
+RNR1473 PAD_P__h16 PAD_P__h6 557243
+RNR1474 PAD_P__h16 PAD_P__h7 166364
+RNR1475 PAD_P__h16 PAD_P__h8 53923.6
+RNR1476 PAD_P__h16 PAD_P__h9 18155.8
+RNR1477 PAD_P__h17 PAD_P__h18 73.9411
+RNR1478 PAD_P__h17 PAD_P__h19 83.7428
+RNR1479 PAD_P__h17 PAD_P__h20 93.0415
+RNR1480 PAD_P__h17 PAD_P__h21 104.5
+RNR1481 PAD_P__h17 PAD_P__h22 120.47
+RNR1482 PAD_P__h17 PAD_P__h23 134.759
+RNR1483 PAD_P__h17 PAD_P__h24 142.353
+RNR1484 PAD_P__h17 PAD_P__h2 6.7852e+07
+RNR1485 PAD_P__h17 PAD_P__h3 2.13281e+07
+RNR1486 PAD_P__h17 PAD_P__h4 6.19491e+06
+RNR1487 PAD_P__h17 PAD_P__h5 1.91931e+06
+RNR1488 PAD_P__h17 PAD_P__h6 635994
+RNR1489 PAD_P__h17 PAD_P__h7 189874
+RNR1490 PAD_P__h17 PAD_P__h8 61544.3
+RNR1491 PAD_P__h17 PAD_P__h9 20721.7
+RNR1492 PAD_P__h18 PAD_P__h19 65.6163
+RNR1493 PAD_P__h18 PAD_P__h20 73.6816
+RNR1494 PAD_P__h18 PAD_P__h21 82.8829
+RNR1495 PAD_P__h18 PAD_P__h22 95.55
+RNR1496 PAD_P__h18 PAD_P__h23 106.884
+RNR1497 PAD_P__h18 PAD_P__h24 112.907
+RNR1498 PAD_P__h18 PAD_P__h2 7.78228e+07
+RNR1499 PAD_P__h18 PAD_P__h3 2.44623e+07
+RNR1500 PAD_P__h18 PAD_P__h4 7.10524e+06
+RNR1501 PAD_P__h18 PAD_P__h5 2.20136e+06
+RNR1502 PAD_P__h18 PAD_P__h6 729453
+RNR1503 PAD_P__h18 PAD_P__h7 217776
+RNR1504 PAD_P__h18 PAD_P__h8 70588.1
+RNR1505 PAD_P__h18 PAD_P__h9 23766.7
+RNR1506 PAD_P__h19 PAD_P__h20 60.1756
+RNR1507 PAD_P__h19 PAD_P__h21 68.2665
+RNR1508 PAD_P__h19 PAD_P__h22 78.7041
+RNR1509 PAD_P__h19 PAD_P__h23 88.0395
+RNR1510 PAD_P__h19 PAD_P__h24 93.0008
+RNR1511 PAD_P__h19 PAD_P__h2 8.71549e+07
+RNR1512 PAD_P__h19 PAD_P__h3 2.73957e+07
+RNR1513 PAD_P__h19 PAD_P__h4 7.95726e+06
+RNR1514 PAD_P__h19 PAD_P__h5 2.46533e+06
+RNR1515 PAD_P__h19 PAD_P__h6 816925
+RNR1516 PAD_P__h19 PAD_P__h7 243891
+RNR1517 PAD_P__h19 PAD_P__h8 79052.7
+RNR1518 PAD_P__h19 PAD_P__h9 26616.7
+RNR1519 PAD_P__h20 PAD_P__h21 56.0468
+RNR1520 PAD_P__h20 PAD_P__h22 64.6375
+RNR1521 PAD_P__h20 PAD_P__h23 72.3045
+RNR1522 PAD_P__h20 PAD_P__h24 76.379
+RNR1523 PAD_P__h20 PAD_P__h2 9.66555e+07
+RNR1524 PAD_P__h20 PAD_P__h3 3.0382e+07
+RNR1525 PAD_P__h20 PAD_P__h4 8.82467e+06
+RNR1526 PAD_P__h20 PAD_P__h5 2.73407e+06
+RNR1527 PAD_P__h20 PAD_P__h6 905976
+RNR1528 PAD_P__h20 PAD_P__h7 270477
+RNR1529 PAD_P__h20 PAD_P__h8 87670.1
+RNR1530 PAD_P__h20 PAD_P__h9 29518.1
+RNR1531 PAD_P__h21 PAD_P__h22 50.0587
+RNR1532 PAD_P__h21 PAD_P__h23 55.9964
+RNR1533 PAD_P__h21 PAD_P__h24 59.152
+RNR1534 PAD_P__h21 PAD_P__h3 3.41147e+07
+RNR1535 PAD_P__h21 PAD_P__h4 9.90886e+06
+RNR1536 PAD_P__h21 PAD_P__h5 3.06998e+06
+RNR1537 PAD_P__h21 PAD_P__h6 1.01728e+06
+RNR1538 PAD_P__h21 PAD_P__h7 303707
+RNR1539 PAD_P__h21 PAD_P__h8 98441.1
+RNR1540 PAD_P__h21 PAD_P__h9 33144.7
+RNR1541 PAD_P__h22 PAD_P__h23 40.7231
+RNR1542 PAD_P__h22 PAD_P__h24 43.018
+RNR1543 PAD_P__h22 PAD_P__h3 3.93281e+07
+RNR1544 PAD_P__h22 PAD_P__h4 1.14231e+07
+RNR1545 PAD_P__h22 PAD_P__h5 3.53912e+06
+RNR1546 PAD_P__h22 PAD_P__h6 1.17274e+06
+RNR1547 PAD_P__h22 PAD_P__h7 350119
+RNR1548 PAD_P__h22 PAD_P__h8 113485
+RNR1549 PAD_P__h22 PAD_P__h9 38209.8
+RNR1550 PAD_P__h23 PAD_P__h24 31.6782
+RNR1551 PAD_P__h23 PAD_P__h3 4.39929e+07
+RNR1552 PAD_P__h23 PAD_P__h4 1.27781e+07
+RNR1553 PAD_P__h23 PAD_P__h5 3.95892e+06
+RNR1554 PAD_P__h23 PAD_P__h6 1.31185e+06
+RNR1555 PAD_P__h23 PAD_P__h7 391649
+RNR1556 PAD_P__h23 PAD_P__h8 126946
+RNR1557 PAD_P__h23 PAD_P__h9 42742.1
+RNR1558 PAD_P__h24 PAD_P__h3 4.64721e+07
+RNR1559 PAD_P__h24 PAD_P__h4 1.34981e+07
+RNR1560 PAD_P__h24 PAD_P__h5 4.18201e+06
+RNR1561 PAD_P__h24 PAD_P__h6 1.38577e+06
+RNR1562 PAD_P__h24 PAD_P__h7 413719
+RNR1563 PAD_P__h24 PAD_P__h8 134099
+RNR1564 PAD_P__h24 PAD_P__h9 45150.7
+RNR1565 PAD_P__h0 PAD_P__h1 534.923
+RNR1566 PAD_P__h0 PAD_P__h2 1854.5
+RNR1567 PAD_P__h0 PAD_P__h3 5855.29
+RNR1568 PAD_P__h0 PAD_P__h4 20530.5
+RNR1569 PAD_P__h0 PAD_P__h5 64864.3
+RNR1570 PAD_P__h0 PAD_P__h6 194067
+RNR1571 PAD_P__h0 PAD_P__h7 660842
+RNR1572 PAD_P__h0 PAD_P__h8 2.06181e+06
+RNR1573 PAD_P__h0 PAD_P__h9 7.1658e+06
+RNR1574 PAD_P__h1 PAD_P__h2 718.762
+RNR1575 PAD_P__h1 PAD_P__h3 2298.79
+RNR1576 PAD_P__h1 PAD_P__h4 8090.46
+RNR1577 PAD_P__h1 PAD_P__h5 25584.1
+RNR1578 PAD_P__h1 PAD_P__h6 76565
+RNR1579 PAD_P__h1 PAD_P__h7 260740
+RNR1580 PAD_P__h1 PAD_P__h8 813515
+RNR1581 PAD_P__h1 PAD_P__h9 2.82738e+06
+RNR1582 PAD_P__h2 PAD_P__h3 676.487
+RNR1583 PAD_P__h2 PAD_P__h4 2413.86
+RNR1584 PAD_P__h2 PAD_P__h5 7658.81
+RNR1585 PAD_P__h2 PAD_P__h6 22942.8
+RNR1586 PAD_P__h2 PAD_P__h7 78152.8
+RNR1587 PAD_P__h2 PAD_P__h8 243853
+RNR1588 PAD_P__h2 PAD_P__h9 847528
+RNR1589 PAD_P__h3 PAD_P__h4 746.522
+RNR1590 PAD_P__h3 PAD_P__h5 2396.18
+RNR1591 PAD_P__h3 PAD_P__h6 7202.55
+RNR1592 PAD_P__h3 PAD_P__h7 24558.8
+RNR1593 PAD_P__h3 PAD_P__h8 76644.8
+RNR1594 PAD_P__h3 PAD_P__h9 266400
+RNR1595 PAD_P__h4 PAD_P__h5 682.888
+RNR1596 PAD_P__h4 PAD_P__h6 2081.21
+RNR1597 PAD_P__h4 PAD_P__h7 7124.72
+RNR1598 PAD_P__h4 PAD_P__h8 22254.6
+RNR1599 PAD_P__h4 PAD_P__h9 77371.1
+RNR1600 PAD_P__h5 PAD_P__h6 632.758
+RNR1601 PAD_P__h5 PAD_P__h7 2197.68
+RNR1602 PAD_P__h5 PAD_P__h8 6886.5
+RNR1603 PAD_P__h5 PAD_P__h9 23963.5
+RNR1604 PAD_P__h6 PAD_P__h7 716.173
+RNR1605 PAD_P__h6 PAD_P__h8 2271.3
+RNR1606 PAD_P__h6 PAD_P__h9 7930.95
+RNR1607 PAD_P__h7 PAD_P__h8 663.959
+RNR1608 PAD_P__h7 PAD_P__h9 2354.61
+RNR1609 PAD_P__h8 PAD_P__h9 750.72
+RNR1610 RX_P RX_P__mim 118.956
+RNR1611 RX_P RX_P__dev 89.9772
+RNR1612 RX_P RX_P__dev 141.157
+RNR1613 RX_P RX_P__dev 152.12
+RNR1614 RX_P__mim RX_P__dev 44.4653
+RNR1615 RX_P__mim RX_P__dev 59.1365
+RNR1616 RX_P__mim RX_P__dev 53.9393
+RNR1617 PAD_N PAD_N__feed 11.2018
+RNR1618 PAD_N PAD_N__dio 123.797
+RNR1619 PAD_N PAD_N__dio 100.621
+RNR1620 PAD_N PAD_N__dio 79.306
+RNR1621 PAD_N PAD_N__dio 65.8424
+RNR1622 PAD_N PAD_N__dio 185.5
+RNR1623 PAD_N PAD_N__dio 150.777
+RNR1624 PAD_N PAD_N__dio 118.868
+RNR1625 PAD_N PAD_N__dio 98.9737
+RNR1626 PAD_N PAD_N__dio 293.571
+RNR1627 PAD_N PAD_N__dio 238.621
+RNR1628 PAD_N PAD_N__dio 188.138
+RNR1629 PAD_N PAD_N__dio 156.804
+RNR1630 PAD_N__feed PAD_N__mim 0.50858
+RNR1631 PAD_N__feed PAD_N__h0 36.832
+RNR1632 PAD_N__feed PAD_N__h1 104.51
+RNR1633 PAD_N__feed PAD_N__h2 348.087
+RNR1634 PAD_N__feed PAD_N__h3 1088.35
+RNR1635 PAD_N__feed PAD_N__h4 3805.76
+RNR1636 PAD_N__feed PAD_N__h5 12017.6
+RNR1637 PAD_N__feed PAD_N__h6 35953.6
+RNR1638 PAD_N__feed PAD_N__h7 122433
+RNR1639 PAD_N__feed PAD_N__h8 382032
+RNR1640 PAD_N__feed PAD_N__h9 1.32797e+06
+RNR1641 PAD_N__feed PAD_N__h10 4.36052e+06
+RNR1642 PAD_N__feed PAD_N__h11 1.32584e+07
+RNR1643 PAD_N__feed PAD_N__h12 3.4716e+07
+RNR1644 PAD_N__feed PAD_N__h13 5.57657e+07
+RNR1645 PAD_N__feed PAD_N__h14 6.84276e+07
+RNR1646 PAD_N__feed PAD_N__h15 8.06982e+07
+RNR1647 PAD_N__feed PAD_N__h16 9.31857e+07
+RNR1648 PAD_N__feed PAD_N__dio 30.723
+RNR1649 PAD_N__feed PAD_N__dio 24.9716
+RNR1650 PAD_N__feed PAD_N__dio 19.6816
+RNR1651 PAD_N__feed PAD_N__dio 16.3403
+RNR1652 PAD_N__feed PAD_N__dio 46.0361
+RNR1653 PAD_N__feed PAD_N__dio 37.4189
+RNR1654 PAD_N__feed PAD_N__dio 29.4999
+RNR1655 PAD_N__feed PAD_N__dio 24.5626
+RNR1656 PAD_N__feed PAD_N__dio 72.8565
+RNR1657 PAD_N__feed PAD_N__dio 59.2194
+RNR1658 PAD_N__feed PAD_N__dio 46.6909
+RNR1659 PAD_N__feed PAD_N__dio 38.9147
+RNR1660 PAD_N__mim PAD_N__h0 5.50441
+RNR1661 PAD_N__mim PAD_N__h1 5.02603
+RNR1662 PAD_N__mim PAD_N__h2 4.86495
+RNR1663 PAD_N__mim PAD_N__h3 4.82157
+RNR1664 PAD_N__mim PAD_N__h4 4.80543
+RNR1665 PAD_N__mim PAD_N__h5 4.80995
+RNR1666 PAD_N__mim PAD_N__h6 4.80961
+RNR1667 PAD_N__mim PAD_N__h7 4.80572
+RNR1668 PAD_N__mim PAD_N__h8 4.80397
+RNR1669 PAD_N__mim PAD_N__h9 4.57471
+RNR1670 PAD_N__mim PAD_N__h10 5.02668
+RNR1671 PAD_N__mim PAD_N__h11 5.14509
+RNR1672 PAD_N__mim PAD_N__h12 5.45869
+RNR1673 PAD_N__mim PAD_N__h13 6.25677
+RNR1674 PAD_N__mim PAD_N__h14 7.24538
+RNR1675 PAD_N__mim PAD_N__h15 8.46534
+RNR1676 PAD_N__mim PAD_N__h16 9.7623
+RNR1677 PAD_N__mim PAD_N__h17 11.1396
+RNR1678 PAD_N__mim PAD_N__h18 12.7761
+RNR1679 PAD_N__mim PAD_N__h19 14.308
+RNR1680 PAD_N__mim PAD_N__h20 15.8676
+RNR1681 PAD_N__mim PAD_N__h21 17.8168
+RNR1682 PAD_N__mim PAD_N__h22 20.5398
+RNR1683 PAD_N__mim PAD_N__h23 22.9759
+RNR1684 PAD_N__mim PAD_N__h24 24.2712
+RNR1685 PAD_N__h0 PAD_N__h1 560.04
+RNR1686 PAD_N__h0 PAD_N__h2 1945.49
+RNR1687 PAD_N__h0 PAD_N__h3 6146.54
+RNR1688 PAD_N__h0 PAD_N__h4 21557.4
+RNR1689 PAD_N__h0 PAD_N__h5 68121.3
+RNR1690 PAD_N__h0 PAD_N__h6 203844
+RNR1691 PAD_N__h0 PAD_N__h7 694195
+RNR1692 PAD_N__h0 PAD_N__h8 2.16615e+06
+RNR1693 PAD_N__h0 PAD_N__h9 7.52971e+06
+RNR1694 PAD_N__h0 PAD_N__h10 2.47245e+07
+RNR1695 PAD_N__h0 PAD_N__h11 7.51762e+07
+RNR1696 PAD_N__h1 PAD_N__h2 723.613
+RNR1697 PAD_N__h1 PAD_N__h3 2314.94
+RNR1698 PAD_N__h1 PAD_N__h4 8148.63
+RNR1699 PAD_N__h1 PAD_N__h5 25772.1
+RNR1700 PAD_N__h1 PAD_N__h6 77139.3
+RNR1701 PAD_N__h1 PAD_N__h7 262718
+RNR1702 PAD_N__h1 PAD_N__h8 819791
+RNR1703 PAD_N__h1 PAD_N__h9 2.84968e+06
+RNR1704 PAD_N__h1 PAD_N__h10 9.35721e+06
+RNR1705 PAD_N__h1 PAD_N__h11 2.84511e+07
+RNR1706 PAD_N__h1 PAD_N__h12 7.44968e+07
+RNR1707 PAD_N__h2 PAD_N__h3 677.144
+RNR1708 PAD_N__h2 PAD_N__h4 2416.46
+RNR1709 PAD_N__h2 PAD_N__h5 7668.18
+RNR1710 PAD_N__h2 PAD_N__h6 22974.2
+RNR1711 PAD_N__h2 PAD_N__h7 78266.5
+RNR1712 PAD_N__h2 PAD_N__h8 244239
+RNR1713 PAD_N__h2 PAD_N__h9 849013
+RNR1714 PAD_N__h2 PAD_N__h10 2.78783e+06
+RNR1715 PAD_N__h2 PAD_N__h11 8.47656e+06
+RNR1716 PAD_N__h2 PAD_N__h12 2.21952e+07
+RNR1717 PAD_N__h2 PAD_N__h13 3.5653e+07
+RNR1718 PAD_N__h2 PAD_N__h14 4.37482e+07
+RNR1719 PAD_N__h2 PAD_N__h15 5.15933e+07
+RNR1720 PAD_N__h2 PAD_N__h16 5.9577e+07
+RNR1721 PAD_N__h2 PAD_N__h17 6.79962e+07
+RNR1722 PAD_N__h2 PAD_N__h18 7.7988e+07
+RNR1723 PAD_N__h2 PAD_N__h19 8.73395e+07
+RNR1724 PAD_N__h2 PAD_N__h20 9.68599e+07
+RNR1725 PAD_N__h3 PAD_N__h4 746.843
+RNR1726 PAD_N__h3 PAD_N__h5 2397.49
+RNR1727 PAD_N__h3 PAD_N__h6 7207.49
+RNR1728 PAD_N__h3 PAD_N__h7 24577.7
+RNR1729 PAD_N__h3 PAD_N__h8 76713.5
+RNR1730 PAD_N__h3 PAD_N__h9 266685
+RNR1731 PAD_N__h3 PAD_N__h10 875703
+RNR1732 PAD_N__h3 PAD_N__h11 2.66263e+06
+RNR1733 PAD_N__h3 PAD_N__h12 6.97189e+06
+RNR1734 PAD_N__h3 PAD_N__h13 1.11992e+07
+RNR1735 PAD_N__h3 PAD_N__h14 1.37421e+07
+RNR1736 PAD_N__h3 PAD_N__h15 1.62064e+07
+RNR1737 PAD_N__h3 PAD_N__h16 1.87142e+07
+RNR1738 PAD_N__h3 PAD_N__h17 2.13588e+07
+RNR1739 PAD_N__h3 PAD_N__h18 2.44974e+07
+RNR1740 PAD_N__h3 PAD_N__h19 2.74349e+07
+RNR1741 PAD_N__h3 PAD_N__h20 3.04254e+07
+RNR1742 PAD_N__h3 PAD_N__h21 3.4163e+07
+RNR1743 PAD_N__h3 PAD_N__h22 3.93841e+07
+RNR1744 PAD_N__h3 PAD_N__h23 4.40553e+07
+RNR1745 PAD_N__h3 PAD_N__h24 4.6539e+07
+RNR1746 PAD_N__h4 PAD_N__h5 683.154
+RNR1747 PAD_N__h4 PAD_N__h6 2082.26
+RNR1748 PAD_N__h4 PAD_N__h7 7128.84
+RNR1749 PAD_N__h4 PAD_N__h8 22270.3
+RNR1750 PAD_N__h4 PAD_N__h9 77438.8
+RNR1751 PAD_N__h4 PAD_N__h10 254299
+RNR1752 PAD_N__h4 PAD_N__h11 773226
+RNR1753 PAD_N__h4 PAD_N__h12 2.02464e+06
+RNR1754 PAD_N__h4 PAD_N__h13 3.25227e+06
+RNR1755 PAD_N__h4 PAD_N__h14 3.99072e+06
+RNR1756 PAD_N__h4 PAD_N__h15 4.70634e+06
+RNR1757 PAD_N__h4 PAD_N__h16 5.43462e+06
+RNR1758 PAD_N__h4 PAD_N__h17 6.20262e+06
+RNR1759 PAD_N__h4 PAD_N__h18 7.11408e+06
+RNR1760 PAD_N__h4 PAD_N__h19 7.96712e+06
+RNR1761 PAD_N__h4 PAD_N__h20 8.83558e+06
+RNR1762 PAD_N__h4 PAD_N__h21 9.92097e+06
+RNR1763 PAD_N__h4 PAD_N__h22 1.14372e+07
+RNR1764 PAD_N__h4 PAD_N__h23 1.27937e+07
+RNR1765 PAD_N__h4 PAD_N__h24 1.3515e+07
+RNR1766 PAD_N__h5 PAD_N__h6 632.994
+RNR1767 PAD_N__h5 PAD_N__h7 2198.6
+RNR1768 PAD_N__h5 PAD_N__h8 6890.2
+RNR1769 PAD_N__h5 PAD_N__h9 23980.4
+RNR1770 PAD_N__h5 PAD_N__h10 78767
+RNR1771 PAD_N__h5 PAD_N__h11 239514
+RNR1772 PAD_N__h5 PAD_N__h12 627165
+RNR1773 PAD_N__h5 PAD_N__h13 1.00745e+06
+RNR1774 PAD_N__h5 PAD_N__h14 1.2362e+06
+RNR1775 PAD_N__h5 PAD_N__h15 1.45788e+06
+RNR1776 PAD_N__h5 PAD_N__h16 1.68348e+06
+RNR1777 PAD_N__h5 PAD_N__h17 1.92138e+06
+RNR1778 PAD_N__h5 PAD_N__h18 2.20372e+06
+RNR1779 PAD_N__h5 PAD_N__h19 2.46797e+06
+RNR1780 PAD_N__h5 PAD_N__h20 2.73699e+06
+RNR1781 PAD_N__h5 PAD_N__h21 3.07321e+06
+RNR1782 PAD_N__h5 PAD_N__h22 3.54288e+06
+RNR1783 PAD_N__h5 PAD_N__h23 3.9631e+06
+RNR1784 PAD_N__h5 PAD_N__h24 4.18652e+06
+RNR1785 PAD_N__h6 PAD_N__h7 716.46
+RNR1786 PAD_N__h6 PAD_N__h8 2272.43
+RNR1787 PAD_N__h6 PAD_N__h9 7936.21
+RNR1788 PAD_N__h6 PAD_N__h10 26090.7
+RNR1789 PAD_N__h6 PAD_N__h11 79354.4
+RNR1790 PAD_N__h6 PAD_N__h12 207804
+RNR1791 PAD_N__h6 PAD_N__h13 333817
+RNR1792 PAD_N__h6 PAD_N__h14 409616
+RNR1793 PAD_N__h6 PAD_N__h15 483070
+RNR1794 PAD_N__h6 PAD_N__h16 557822
+RNR1795 PAD_N__h6 PAD_N__h17 636651
+RNR1796 PAD_N__h6 PAD_N__h18 730205
+RNR1797 PAD_N__h6 PAD_N__h19 817763
+RNR1798 PAD_N__h6 PAD_N__h20 906904
+RNR1799 PAD_N__h6 PAD_N__h21 1.01831e+06
+RNR1800 PAD_N__h6 PAD_N__h22 1.17394e+06
+RNR1801 PAD_N__h6 PAD_N__h23 1.31318e+06
+RNR1802 PAD_N__h6 PAD_N__h24 1.38721e+06
+RNR1803 PAD_N__h7 PAD_N__h8 664.198
+RNR1804 PAD_N__h7 PAD_N__h9 2355.75
+RNR1805 PAD_N__h7 PAD_N__h10 7775.9
+RNR1806 PAD_N__h7 PAD_N__h11 23674.6
+RNR1807 PAD_N__h7 PAD_N__h12 62017.7
+RNR1808 PAD_N__h7 PAD_N__h13 99638.4
+RNR1809 PAD_N__h7 PAD_N__h14 122266
+RNR1810 PAD_N__h7 PAD_N__h15 144192
+RNR1811 PAD_N__h7 PAD_N__h16 166505
+RNR1812 PAD_N__h7 PAD_N__h17 190035
+RNR1813 PAD_N__h7 PAD_N__h18 217960
+RNR1814 PAD_N__h7 PAD_N__h19 244095
+RNR1815 PAD_N__h7 PAD_N__h20 270703
+RNR1816 PAD_N__h7 PAD_N__h21 303957
+RNR1817 PAD_N__h7 PAD_N__h22 350410
+RNR1818 PAD_N__h7 PAD_N__h23 391972
+RNR1819 PAD_N__h7 PAD_N__h24 414070
+RNR1820 PAD_N__h8 PAD_N__h9 751.021
+RNR1821 PAD_N__h8 PAD_N__h10 2508.61
+RNR1822 PAD_N__h8 PAD_N__h11 7661.12
+RNR1823 PAD_N__h8 PAD_N__h12 20089.8
+RNR1824 PAD_N__h8 PAD_N__h13 32289.1
+RNR1825 PAD_N__h8 PAD_N__h14 39625.1
+RNR1826 PAD_N__h8 PAD_N__h15 46731.7
+RNR1827 PAD_N__h8 PAD_N__h16 53963.3
+RNR1828 PAD_N__h8 PAD_N__h17 61589.2
+RNR1829 PAD_N__h8 PAD_N__h18 70639.5
+RNR1830 PAD_N__h8 PAD_N__h19 79109.9
+RNR1831 PAD_N__h8 PAD_N__h20 87733.2
+RNR1832 PAD_N__h8 PAD_N__h21 98510.7
+RNR1833 PAD_N__h8 PAD_N__h22 113566
+RNR1834 PAD_N__h8 PAD_N__h23 127036
+RNR1835 PAD_N__h8 PAD_N__h24 134198
+RNR1836 PAD_N__h9 PAD_N__h10 831.791
+RNR1837 PAD_N__h9 PAD_N__h11 2566.05
+RNR1838 PAD_N__h9 PAD_N__h12 6752.19
+RNR1839 PAD_N__h9 PAD_N__h13 10866.6
+RNR1840 PAD_N__h9 PAD_N__h14 13339.1
+RNR1841 PAD_N__h9 PAD_N__h15 15732.1
+RNR1842 PAD_N__h9 PAD_N__h16 18166.7
+RNR1843 PAD_N__h9 PAD_N__h17 20734
+RNR1844 PAD_N__h9 PAD_N__h18 23780.8
+RNR1845 PAD_N__h9 PAD_N__h19 26632.3
+RNR1846 PAD_N__h9 PAD_N__h20 29535.4
+RNR1847 PAD_N__h9 PAD_N__h21 33163.6
+RNR1848 PAD_N__h9 PAD_N__h22 38231.9
+RNR1849 PAD_N__h9 PAD_N__h23 42766.5
+RNR1850 PAD_N__h9 PAD_N__h24 45177.6
+RNR1851 PAD_N__h10 PAD_N__h11 708.17
+RNR1852 PAD_N__h10 PAD_N__h12 1893.12
+RNR1853 PAD_N__h10 PAD_N__h13 3065.23
+RNR1854 PAD_N__h10 PAD_N__h14 3767.45
+RNR1855 PAD_N__h10 PAD_N__h15 4444.26
+RNR1856 PAD_N__h10 PAD_N__h16 5132.18
+RNR1857 PAD_N__h10 PAD_N__h17 5857.48
+RNR1858 PAD_N__h10 PAD_N__h18 6718.22
+RNR1859 PAD_N__h10 PAD_N__h19 7523.8
+RNR1860 PAD_N__h10 PAD_N__h20 8343.93
+RNR1861 PAD_N__h10 PAD_N__h21 9368.93
+RNR1862 PAD_N__h10 PAD_N__h22 10800.8
+RNR1863 PAD_N__h10 PAD_N__h23 12081.8
+RNR1864 PAD_N__h10 PAD_N__h24 12763
+RNR1865 PAD_N__h11 PAD_N__h12 578.244
+RNR1866 PAD_N__h11 PAD_N__h13 957.212
+RNR1867 PAD_N__h11 PAD_N__h14 1182.05
+RNR1868 PAD_N__h11 PAD_N__h15 1395.5
+RNR1869 PAD_N__h11 PAD_N__h16 1611.69
+RNR1870 PAD_N__h11 PAD_N__h17 1839.49
+RNR1871 PAD_N__h11 PAD_N__h18 2109.81
+RNR1872 PAD_N__h11 PAD_N__h19 2362.8
+RNR1873 PAD_N__h11 PAD_N__h20 2620.35
+RNR1874 PAD_N__h11 PAD_N__h21 2942.25
+RNR1875 PAD_N__h11 PAD_N__h22 3391.91
+RNR1876 PAD_N__h11 PAD_N__h23 3794.21
+RNR1877 PAD_N__h11 PAD_N__h24 4008.12
+RNR1878 PAD_N__h12 PAD_N__h13 324.455
+RNR1879 PAD_N__h12 PAD_N__h14 407.747
+RNR1880 PAD_N__h12 PAD_N__h15 482.808
+RNR1881 PAD_N__h12 PAD_N__h16 557.843
+RNR1882 PAD_N__h12 PAD_N__h17 636.732
+RNR1883 PAD_N__h12 PAD_N__h18 730.308
+RNR1884 PAD_N__h12 PAD_N__h19 817.881
+RNR1885 PAD_N__h12 PAD_N__h20 907.034
+RNR1886 PAD_N__h12 PAD_N__h21 1018.46
+RNR1887 PAD_N__h12 PAD_N__h22 1174.11
+RNR1888 PAD_N__h12 PAD_N__h23 1313.36
+RNR1889 PAD_N__h12 PAD_N__h24 1387.41
+RNR1890 PAD_N__h13 PAD_N__h14 164.513
+RNR1891 PAD_N__h13 PAD_N__h15 198.684
+RNR1892 PAD_N__h13 PAD_N__h16 230.224
+RNR1893 PAD_N__h13 PAD_N__h17 262.899
+RNR1894 PAD_N__h13 PAD_N__h18 301.558
+RNR1895 PAD_N__h13 PAD_N__h19 337.722
+RNR1896 PAD_N__h13 PAD_N__h20 374.536
+RNR1897 PAD_N__h13 PAD_N__h21 420.545
+RNR1898 PAD_N__h13 PAD_N__h22 484.816
+RNR1899 PAD_N__h13 PAD_N__h23 542.319
+RNR1900 PAD_N__h13 PAD_N__h24 572.893
+RNR1901 PAD_N__h14 PAD_N__h15 117.842
+RNR1902 PAD_N__h14 PAD_N__h16 138.52
+RNR1903 PAD_N__h14 PAD_N__h17 158.532
+RNR1904 PAD_N__h14 PAD_N__h18 181.913
+RNR1905 PAD_N__h14 PAD_N__h19 203.739
+RNR1906 PAD_N__h14 PAD_N__h20 225.949
+RNR1907 PAD_N__h14 PAD_N__h21 253.706
+RNR1908 PAD_N__h14 PAD_N__h22 292.479
+RNR1909 PAD_N__h14 PAD_N__h23 327.17
+RNR1910 PAD_N__h14 PAD_N__h24 345.615
+RNR1911 PAD_N__h15 PAD_N__h16 93.7363
+RNR1912 PAD_N__h15 PAD_N__h17 108.787
+RNR1913 PAD_N__h15 PAD_N__h18 125.134
+RNR1914 PAD_N__h15 PAD_N__h19 140.19
+RNR1915 PAD_N__h15 PAD_N__h20 155.481
+RNR1916 PAD_N__h15 PAD_N__h21 174.582
+RNR1917 PAD_N__h15 PAD_N__h22 201.263
+RNR1918 PAD_N__h15 PAD_N__h23 225.135
+RNR1919 PAD_N__h15 PAD_N__h24 237.827
+RNR1920 PAD_N__h16 PAD_N__h17 81.0601
+RNR1921 PAD_N__h16 PAD_N__h18 94.4486
+RNR1922 PAD_N__h16 PAD_N__h19 105.988
+RNR1923 PAD_N__h16 PAD_N__h20 117.579
+RNR1924 PAD_N__h16 PAD_N__h21 132.029
+RNR1925 PAD_N__h16 PAD_N__h22 152.207
+RNR1926 PAD_N__h16 PAD_N__h23 170.26
+RNR1927 PAD_N__h16 PAD_N__h24 179.859
+RNR1928 PAD_N__h17 PAD_N__h18 73.9463
+RNR1929 PAD_N__h17 PAD_N__h19 83.7474
+RNR1930 PAD_N__h17 PAD_N__h20 93.0462
+RNR1931 PAD_N__h17 PAD_N__h21 104.504
+RNR1932 PAD_N__h17 PAD_N__h22 120.475
+RNR1933 PAD_N__h17 PAD_N__h23 134.764
+RNR1934 PAD_N__h17 PAD_N__h24 142.362
+RNR1935 PAD_N__h18 PAD_N__h19 65.6206
+RNR1936 PAD_N__h18 PAD_N__h20 73.6853
+RNR1937 PAD_N__h18 PAD_N__h21 82.8858
+RNR1938 PAD_N__h18 PAD_N__h22 95.5542
+RNR1939 PAD_N__h18 PAD_N__h23 106.888
+RNR1940 PAD_N__h18 PAD_N__h24 112.914
+RNR1941 PAD_N__h19 PAD_N__h20 60.1794
+RNR1942 PAD_N__h19 PAD_N__h21 68.2693
+RNR1943 PAD_N__h19 PAD_N__h22 78.7078
+RNR1944 PAD_N__h19 PAD_N__h23 88.0432
+RNR1945 PAD_N__h19 PAD_N__h24 93.0067
+RNR1946 PAD_N__h20 PAD_N__h21 56.0496
+RNR1947 PAD_N__h20 PAD_N__h22 64.6409
+RNR1948 PAD_N__h20 PAD_N__h23 72.3078
+RNR1949 PAD_N__h20 PAD_N__h24 76.3843
+RNR1950 PAD_N__h21 PAD_N__h22 50.0625
+RNR1951 PAD_N__h21 PAD_N__h23 56.0003
+RNR1952 PAD_N__h21 PAD_N__h24 59.1574
+RNR1953 PAD_N__h22 PAD_N__h23 40.7253
+RNR1954 PAD_N__h22 PAD_N__h24 43.0213
+RNR1955 PAD_N__h23 PAD_N__h24 31.6808
+RNR1956 RX_N RX_N__mim 118.431
+RNR1957 RX_N RX_N__dev 141.323
+RNR1958 RX_N RX_N__dev 152.296
+RNR1959 RX_N RX_N__dev 90.2213
+RNR1960 RX_N__mim RX_N__dev 59.0883
+RNR1961 RX_N__mim RX_N__dev 53.9111
+RNR1962 RX_N__mim RX_N__dev 44.4823
+RTUP16 a_85492_91054_r# a_85492_91054# 15.1698
+RTUP18 a_87628_91054_r# a_87628_91054# 15.5381
+RTUN22 a_91900_152846_r# a_91900_152846# 16.2583
+RTUN14 a_83356_152846_r# a_83356_152846# 14.7822
+RTUN5 a_73744_152046_r# a_73744_152046# 12.0474
+RTUN7 a_75880_152046_r# a_75880_152046# 12.4122
+RTUP17 a_86560_91054_r# a_86560_91054# 15.3535
+RTUP3 a_71608_90254_r# a_71608_90254# 11.7231
+RTUP24 a_94036_91054_r# a_94036_91054# 16.6456
+RTUP9 a_78016_90254_r# a_78016_90254# 12.7984
+RTUN19 a_88696_152846_r# a_88696_152846# 15.702
+RTUN9 a_78016_152046_r# a_78016_152046# 12.7789
+RTUN11 a_80152_152846_r# a_80152_152846# 14.2318
+RTUN1 a_69448_149284_r# a_69448_149284# 6.87922
+RTUP22 a_91900_91054_r# a_91900_91054# 16.2781
+RTUP15 a_84424_91054_r# a_84424_91054# 14.9863
+RTUP0 a_68216_96914_r# a_68216_96914# 6.73577
+RTUN12 a_81220_152846_r# a_81220_152846# 14.4141
+RTUP13 a_82288_91054_r# a_82288_91054# 14.6185
+RTUP20 a_89764_91054_r# a_89764_91054# 15.9056
+RTUP2 a_70540_90254_r# a_70540_90254# 16.2072
+RTUN6 a_74812_152046_r# a_74812_152046# 12.2289
+RTUP8 a_76948_90254_r# a_76948_90254# 12.6154
+RTUP11 a_80152_91054_r# a_80152_91054# 14.2516
+RTUN21 a_90832_152846_r# a_90832_152846# 16.0607
+RTUN23 a_92968_152846_r# a_92968_152846# 16.4421
+RTUN15 a_84424_152846_r# a_84424_152846# 14.9665
+RTUP4 a_72676_90254_r# a_72676_90254# 11.8854
+RTUN2 a_70540_152046_r# a_70540_152046# 16.1853
+RTUN20 a_89764_152846_r# a_89764_152846# 15.8859
+RTUN13 a_82288_152846_r# a_82288_152846# 14.5988
+RTUN4 a_72676_152046_r# a_72676_152046# 11.8659
+RTUP21 a_90832_91054_r# a_90832_91054# 16.0813
+RTUP23 a_92968_91054_r# a_92968_91054# 16.4618
+RTUP1 a_69448_96914_r# a_69448_96914# 6.90117
+RTUN16 a_85492_152846_r# a_85492_152846# 15.1501
+RTUP14 a_83356_91054_r# a_83356_91054# 14.8019
+RTUP6 a_74812_90254_r# a_74812_90254# 12.2484
+RTUN10 a_79084_152846_r# a_79084_152846# 14.0414
+RTUN0 a_68216_149284_r# a_68216_149284# 6.71378
+RTUP12 a_81220_91054_r# a_81220_91054# 14.4339
+RTUN3 a_71608_152046_r# a_71608_152046# 11.7036
+RTUP19 a_88696_91054_r# a_88696_91054# 15.7218
+RTUN24 a_94036_152846_r# a_94036_152846# 16.6259
+RTUN18 a_87628_152846_r# a_87628_152846# 15.5183
+RTUP10 a_79084_91054_r# a_79084_91054# 14.0612
+RTUN17 a_86560_152846_r# a_86560_152846# 15.3338
+RTUN8 a_76948_152046_r# a_76948_152046# 12.5959
+RTUP5 a_73744_90254_r# a_73744_90254# 12.0669
+RTUP7 a_75880_90254_r# a_75880_90254# 12.4317
+.ends
+

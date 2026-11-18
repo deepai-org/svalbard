@@ -1,0 +1,7050 @@
+{
+ "gds": "build/f6/pad_hspad.gds",
+ "gds_sha256": "8c8e2533a57d5bc828ad382d658091080b1eb65da7163ad8aa4f50682530e22b",
+ "top": "pad_hspad",
+ "resistances": {
+  "typ": {
+   "M1": 0.09,
+   "M2": 0.09,
+   "M3": 0.09,
+   "M4": 0.09,
+   "M5": 0.04,
+   "V1": 4.5,
+   "V2": 4.5,
+   "V3": 4.5,
+   "V4": 4.5
+  },
+  "high": {
+   "M1": 0.104,
+   "M2": 0.104,
+   "M3": 0.104,
+   "M4": 0.104,
+   "M5": 0.049,
+   "V1": 15.0,
+   "V2": 15.0,
+   "V3": 15.0,
+   "V4": 15.0
+  }
+ },
+ "tech_checked": false,
+ "nets": {
+  "TU0_N": {
+   "name": "TU0_N",
+   "seeds": [
+    [
+     "M3",
+     342.28,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.198,
+    "M3": 0.32
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 1
+   },
+   "mesh_nodes": 1117,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 18,
+     "x": 342.08,
+     "y": 746.75,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 342.28,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 42
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 6.71378
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 342.28,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 342.18,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5043,
+        "via": "V1",
+        "x": 342.48,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       6.713784096026392
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 14.4063
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 342.28,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 342.18,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5015,
+        "via": "V1",
+        "x": 342.48,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.406304743313088
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.7
+  },
+  "TU1_N": {
+   "name": "TU1_N",
+   "seeds": [
+    [
+     "M3",
+     347.62,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.526,
+    "M3": 0.648
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 2
+   },
+   "mesh_nodes": 1116,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 20,
+     "x": 348.24,
+     "y": 746.75,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 347.62,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 42
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 6.87922
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 348.44,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 348.34,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 348.64,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       6.879220238279147
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 14.60078
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 348.44,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 348.34,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 348.64,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.600778639419376
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU2_N": {
+   "name": "TU2_N",
+   "seeds": [
+    [
+     "M3",
+     352.96,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.278,
+    "M3": 0.976
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 2
+   },
+   "mesh_nodes": 1100,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 354.4,
+     "y": 746.75,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 352.96,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 42
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 16.18532
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 354.6,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 2,
+       "single_cut_vias": [
+        {
+         "via": "V2",
+         "cuts": 1,
+         "x": 352.96,
+         "y": 755.31,
+         "current_fraction": 1.0
+        },
+        {
+         "via": "V2",
+         "cuts": 1,
+         "x": 354.8,
+         "y": 755.31,
+         "current_fraction": 1.0
+        }
+       ],
+       "fewest_cuts_on_path": {
+        "via": "V2",
+        "cuts": 1,
+        "x": 352.96,
+        "y": 755.31,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 1.0,
+        "via": "V2",
+        "x": 352.96,
+        "y": 755.31
+       },
+       "flags": [
+        "2 single-cut via(s) on the path"
+       ]
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       16.185316710387102
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 44.95133
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 354.6,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 2,
+       "single_cut_vias": [
+        {
+         "via": "V2",
+         "cuts": 1,
+         "x": 352.96,
+         "y": 755.31,
+         "current_fraction": 1.0
+        },
+        {
+         "via": "V2",
+         "cuts": 1,
+         "x": 354.8,
+         "y": 755.31,
+         "current_fraction": 1.0
+        }
+       ],
+       "fewest_cuts_on_path": {
+        "via": "V2",
+        "cuts": 1,
+        "x": 352.96,
+        "y": 755.31,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 1.0,
+        "via": "V2",
+        "x": 354.8,
+        "y": 755.31
+       },
+       "flags": [
+        "2 single-cut via(s) on the path"
+       ]
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       44.951327087629515
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU3_N": {
+   "name": "TU3_N",
+   "seeds": [
+    [
+     "M3",
+     358.3,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 1.304
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1120,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 360.56,
+     "y": 746.75,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 358.3,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 42
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 11.70363
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 358.1,
+        "y": 755.51,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 360.66,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5046,
+        "via": "V1",
+        "x": 360.96,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       11.703626902466171
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 29.97257
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 358.1,
+        "y": 755.51,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 360.66,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 360.96,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       29.972567004845697
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU4_N": {
+   "name": "TU4_N",
+   "seeds": [
+    [
+     "M3",
+     363.64,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 1.632
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1128,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 366.72,
+     "y": 746.75,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 363.64,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 42
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 11.86589
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 366.92,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 366.82,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 367.12,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       11.865893016991116
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 30.16009
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 366.92,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 366.82,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 367.12,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       30.1600927082186
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU5_N": {
+   "name": "TU5_N",
+   "seeds": [
+    [
+     "M3",
+     368.98,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 1.96
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1136,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 372.88,
+     "y": 746.75,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 368.98,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 42
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 12.04745
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 373.08,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 372.98,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 373.28,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       12.047446692646107
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 30.36989
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 373.08,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 372.98,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 373.28,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       30.36988994863321
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU6_N": {
+   "name": "TU6_N",
+   "seeds": [
+    [
+     "M3",
+     374.32,
+     753.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 2.288
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1144,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 379.04,
+     "y": 746.75,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 374.32,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 42
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 12.22891
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 379.24,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 379.14,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 379.44,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       12.228909198035677
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 30.57967
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 379.24,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 379.14,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 379.44,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       30.579668343242314
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU7_N": {
+   "name": "TU7_N",
+   "seeds": [
+    [
+     "M3",
+     379.66,
+     754.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 2.616
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1152,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 385.2,
+     "y": 746.75,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 379.66,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 42
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 12.41222
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 385.4,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 385.3,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 385.6,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       12.412218330981126
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 30.79145
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 385.4,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 385.3,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 385.6,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       30.79145245488093
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU8_N": {
+   "name": "TU8_N",
+   "seeds": [
+    [
+     "M3",
+     385.0,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 2.944
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1160,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 391.36,
+     "y": 746.75,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 385.0,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 42
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 12.59593
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 391.56,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 391.46,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 391.76,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       12.59593074356201
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 31.0037
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 391.56,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 391.46,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 391.76,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       31.003697187853806
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU9_N": {
+   "name": "TU9_N",
+   "seeds": [
+    [
+     "M3",
+     390.34000000000003,
+     754.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 3.272
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1168,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 397.52,
+     "y": 746.75,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 390.34,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 42
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 12.77893
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 397.72,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 397.62,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 397.92,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       12.778932376658927
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 31.21521
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 397.72,
+        "y": 746.95,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 397.62,
+        "y": 746.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 397.92,
+        "y": 746.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       31.21521254497313
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU10_N": {
+   "name": "TU10_N",
+   "seeds": [
+    [
+     "M3",
+     395.68,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 3.6
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 952,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 403.68,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 395.68,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.04144
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 403.88,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 403.78,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 404.08,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.041444575233871
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 32.67423
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 403.88,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 403.78,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 404.08,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       32.67422551294773
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU11_N": {
+   "name": "TU11_N",
+   "seeds": [
+    [
+     "M3",
+     401.02,
+     754.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 3.928
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 962,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 409.84,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 401.02,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.23182
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 410.04,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 409.94,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 410.24,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.231821882452703
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 32.89424
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 410.04,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 409.94,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 410.24,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       32.894242422270594
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU12_N": {
+   "name": "TU12_N",
+   "seeds": [
+    [
+     "M3",
+     406.36,
+     749.71
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 4.256
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 970,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 416.0,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 406.36,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.41412
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 406.16,
+        "y": 749.91,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 416.1,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 416.4,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.414119812536821
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 33.10501
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 406.16,
+        "y": 749.91,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 416.1,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 416.4,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       33.10500507252367
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU13_N": {
+   "name": "TU13_N",
+   "seeds": [
+    [
+     "M3",
+     411.7,
+     754.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 4.584
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 978,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 422.16,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 411.7,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.59878
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 422.36,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 422.26,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 422.56,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.598783412042186
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 33.31829
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 422.36,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 422.26,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 422.56,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       33.31828823744627
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU14_N": {
+   "name": "TU14_N",
+   "seeds": [
+    [
+     "M3",
+     417.04,
+     753.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 4.912
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 986,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 428.32,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 417.04,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.78218
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 428.52,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 428.42,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 428.72,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.782181064473273
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 33.53024
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 428.52,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 428.42,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 428.72,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       33.530241963265134
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU15_N": {
+   "name": "TU15_N",
+   "seeds": [
+    [
+     "M3",
+     422.38,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 5.24
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 994,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 434.48,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 422.38,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.96655
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 434.68,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 434.58,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 434.88,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.966547959732813
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 33.74323
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 434.68,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 434.58,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 434.88,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       33.743231982256475
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU16_N": {
+   "name": "TU16_N",
+   "seeds": [
+    [
+     "M3",
+     427.72,
+     754.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 5.568
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1002,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 440.64,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 427.72,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 15.1501
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 440.84,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 440.74,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 441.04,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       15.150099508328516
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 33.95537
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 440.84,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 440.74,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 441.04,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       33.95536615106153
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU17_N": {
+   "name": "TU17_N",
+   "seeds": [
+    [
+     "M3",
+     433.06,
+     753.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 5.896
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1010,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 446.8,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 433.06,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 15.33375
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 447.0,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 446.9,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 447.2,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       15.333748539733891
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 34.16761
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 447.0,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 446.9,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 447.2,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       34.16761019883079
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU18_N": {
+   "name": "TU18_N",
+   "seeds": [
+    [
+     "M3",
+     438.4,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 6.224
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1018,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 452.96,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 438.4,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 15.51833
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 453.16,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 453.06,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 453.36,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       15.518325693702707
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 34.38084
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 453.16,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 453.06,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 453.36,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       34.380843046653865
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU19_N": {
+   "name": "TU19_N",
+   "seeds": [
+    [
+     "M3",
+     443.74,
+     754.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 6.552
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1026,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 459.12,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 443.74,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 15.70205
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 443.54,
+        "y": 754.51,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 459.22,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 459.52,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       15.70205490020697
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 34.59318
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 443.54,
+        "y": 754.51,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 459.22,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 459.52,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       34.59318239160136
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU20_N": {
+   "name": "TU20_N",
+   "seeds": [
+    [
+     "M3",
+     449.08,
+     753.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 6.88
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1034,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 465.28,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 449.08,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 15.88586
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 465.48,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 465.38,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 465.68,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       15.885855407359642
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 34.8056
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 465.48,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 465.38,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 465.68,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       34.805601376591724
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU21_N": {
+   "name": "TU21_N",
+   "seeds": [
+    [
+     "M3",
+     454.42,
+     749.71
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 7.208
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1044,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 471.44,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 454.42,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 16.06072
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 454.22,
+        "y": 749.91,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 471.54,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 471.84,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       16.060718518720986
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 35.00775
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 454.22,
+        "y": 749.91,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 471.54,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 471.84,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       35.007745501339485
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU22_N": {
+   "name": "TU22_N",
+   "seeds": [
+    [
+     "M3",
+     459.76,
+     755.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 7.536
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1052,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 477.6,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 459.76,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 16.25834
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 477.8,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 477.7,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 478.0,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       16.258338457766353
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 35.23597
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 477.8,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 477.7,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 478.0,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       35.2359674634989
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU23_N": {
+   "name": "TU23_N",
+   "seeds": [
+    [
+     "M3",
+     465.1,
+     754.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 7.864
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1060,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 483.76,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 465.1,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 16.44207
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 483.96,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 483.86,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 484.16,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       16.44206565307718
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 35.4483
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 483.96,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 483.86,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 484.16,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       35.44830447441207
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU24_N": {
+   "name": "TU24_N",
+   "seeds": [
+    [
+     "M3",
+     470.44,
+     753.31
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 8.192
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1068,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 489.92,
+     "y": 745.95,
+     "kind": "res",
+     "contacts": 4
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 470.44,
+     "y": 770.23,
+     "kind": "nmos",
+     "contacts": 25
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 16.62586
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 490.12,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 490.02,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5045,
+        "via": "V1",
+        "x": 490.32,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       16.625857211515143
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 35.66071
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 490.12,
+        "y": 746.15,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 490.02,
+        "y": 745.95,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5016,
+        "via": "V1",
+        "x": 490.32,
+        "y": 745.95
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       35.66071311484815
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU0_P": {
+   "name": "TU0_P",
+   "seeds": [
+    [
+     "M3",
+     342.28,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.198,
+    "M3": 0.32
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 1
+   },
+   "mesh_nodes": 1117,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 342.28,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 42
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 18,
+     "x": 342.08,
+     "y": 484.75,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 6.73577
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 342.08,
+        "y": 468.62,
+        "current_fraction": 0.7053
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 342.18,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.502,
+        "via": "V1",
+        "x": 342.48,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       6.735766241206357
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 14.43138
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 342.08,
+        "y": 466.629,
+        "current_fraction": 0.5948
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 342.18,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5007,
+        "via": "V1",
+        "x": 342.48,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.431375071117133
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU1_P": {
+   "name": "TU1_P",
+   "seeds": [
+    [
+     "M3",
+     347.62,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.526,
+    "M3": 0.648
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 2
+   },
+   "mesh_nodes": 1116,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 347.62,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 42
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 20,
+     "x": 348.24,
+     "y": 484.75,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 6.90117
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 347.42,
+        "y": 468.62,
+        "current_fraction": 0.7053
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 348.34,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 348.64,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       6.901170642143338
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 14.62577
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 347.42,
+        "y": 466.629,
+        "current_fraction": 0.5948
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 348.34,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 348.64,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.62577294032969
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU2_P": {
+   "name": "TU2_P",
+   "seeds": [
+    [
+     "M3",
+     352.96,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.278,
+    "M3": 0.976
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 2
+   },
+   "mesh_nodes": 1100,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 352.96,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 42
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 354.4,
+     "y": 484.75,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 16.20725
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 354.6,
+        "y": 476.39,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 2,
+       "single_cut_vias": [
+        {
+         "via": "V2",
+         "cuts": 1,
+         "x": 352.96,
+         "y": 476.19,
+         "current_fraction": 1.0
+        },
+        {
+         "via": "V2",
+         "cuts": 1,
+         "x": 354.8,
+         "y": 476.19,
+         "current_fraction": 1.0
+        }
+       ],
+       "fewest_cuts_on_path": {
+        "via": "V2",
+        "cuts": 1,
+        "x": 352.96,
+        "y": 476.19,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 1.0,
+        "via": "V2",
+        "x": 352.96,
+        "y": 476.19
+       },
+       "flags": [
+        "2 single-cut via(s) on the path"
+       ]
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       16.207247780295955
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 44.97627
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 354.6,
+        "y": 476.39,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 2,
+       "single_cut_vias": [
+        {
+         "via": "V2",
+         "cuts": 1,
+         "x": 352.96,
+         "y": 476.19,
+         "current_fraction": 1.0
+        },
+        {
+         "via": "V2",
+         "cuts": 1,
+         "x": 354.8,
+         "y": 476.19,
+         "current_fraction": 1.0
+        }
+       ],
+       "fewest_cuts_on_path": {
+        "via": "V2",
+        "cuts": 1,
+        "x": 352.96,
+        "y": 476.19,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 1.0,
+        "via": "V2",
+        "x": 352.96,
+        "y": 476.19
+       },
+       "flags": [
+        "2 single-cut via(s) on the path"
+       ]
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       44.9762662262073
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU3_P": {
+   "name": "TU3_P",
+   "seeds": [
+    [
+     "M3",
+     358.3,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 1.304
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1120,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 358.3,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 42
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 360.56,
+     "y": 484.75,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 11.72306
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 358.1,
+        "y": 468.62,
+        "current_fraction": 0.7053
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 360.66,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5026,
+        "via": "V1",
+        "x": 360.96,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       11.723061749259285
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 29.99456
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 358.1,
+        "y": 466.629,
+        "current_fraction": 0.5948
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 360.66,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5009,
+        "via": "V1",
+        "x": 360.96,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       29.994564707077007
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU4_P": {
+   "name": "TU4_P",
+   "seeds": [
+    [
+     "M3",
+     363.64,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 1.632
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1128,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 363.64,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 42
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 366.72,
+     "y": 484.75,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 11.88537
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 363.44,
+        "y": 468.62,
+        "current_fraction": 0.7053
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 366.82,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 367.12,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       11.885366987343321
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 30.18211
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 363.44,
+        "y": 466.629,
+        "current_fraction": 0.5948
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 366.82,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 367.12,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       30.182106613301592
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU5_P": {
+   "name": "TU5_P",
+   "seeds": [
+    [
+     "M3",
+     368.98,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 1.96
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1136,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 368.98,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 42
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 372.88,
+     "y": 484.75,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 12.06692
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 368.78,
+        "y": 468.62,
+        "current_fraction": 0.7053
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 372.98,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 373.28,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       12.06692096352776
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 30.3919
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 368.78,
+        "y": 466.629,
+        "current_fraction": 0.5948
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 372.98,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 373.28,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       30.391903980647612
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU6_P": {
+   "name": "TU6_P",
+   "seeds": [
+    [
+     "M3",
+     374.32,
+     478.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 2.288
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1144,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 374.32,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 42
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 379.04,
+     "y": 484.75,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 12.24838
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 374.12,
+        "y": 468.624,
+        "current_fraction": 0.7052
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 379.14,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 379.44,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       12.24838370346594
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 30.60168
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 374.12,
+        "y": 466.632,
+        "current_fraction": 0.5948
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 379.14,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 379.44,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       30.601682451824683
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU7_P": {
+   "name": "TU7_P",
+   "seeds": [
+    [
+     "M3",
+     379.66,
+     477.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 2.616
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1152,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 379.66,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 42
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 385.2,
+     "y": 484.75,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 12.43169
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 379.46,
+        "y": 468.623,
+        "current_fraction": 0.7053
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 385.3,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 385.6,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       12.431692992809783
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 30.81347
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 379.46,
+        "y": 466.63,
+        "current_fraction": 0.5948
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 385.3,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 385.6,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       30.813466640019545
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU8_P": {
+   "name": "TU8_P",
+   "seeds": [
+    [
+     "M3",
+     385.0,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 2.944
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1160,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 385.0,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 42
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 391.36,
+     "y": 484.75,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 12.61541
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 384.8,
+        "y": 468.62,
+        "current_fraction": 0.7053
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 391.46,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 391.76,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       12.615405526011658
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 31.02571
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 384.8,
+        "y": 466.629,
+        "current_fraction": 0.5948
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 391.46,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 391.76,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       31.025711435663016
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU9_P": {
+   "name": "TU9_P",
+   "seeds": [
+    [
+     "M3",
+     390.34000000000003,
+     477.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 5.54,
+    "M2": 10.758,
+    "M3": 3.272
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1168,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 168,
+     "x": 390.34,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 42
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 397.52,
+     "y": 484.75,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 12.79841
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 397.72,
+        "y": 477.39,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 397.62,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 397.92,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       12.798407271658059
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 31.23723
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 397.72,
+        "y": 477.39,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 397.62,
+        "y": 484.75,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 397.92,
+        "y": 484.75
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       31.237226828555414
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU10_P": {
+   "name": "TU10_P",
+   "seeds": [
+    [
+     "M3",
+     395.68,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 3.6
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 952,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 395.68,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 403.68,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.06119
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 395.48,
+        "y": 464.627,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 403.78,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 404.08,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.061189930966389
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 32.69685
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 395.48,
+        "y": 462.634,
+        "current_fraction": 0.5947
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 403.78,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 404.08,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       32.69684823196484
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU11_P": {
+   "name": "TU11_P",
+   "seeds": [
+    [
+     "M3",
+     401.02,
+     477.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 3.928
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 962,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 401.02,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 409.84,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.25157
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 410.04,
+        "y": 477.39,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 409.94,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 410.24,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.251566572142421
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 32.91686
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 410.04,
+        "y": 477.39,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 409.94,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 410.24,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       32.916864833110985
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU12_P": {
+   "name": "TU12_P",
+   "seeds": [
+    [
+     "M3",
+     406.36,
+     481.79
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 4.256
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 970,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 406.36,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 416.0,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.43386
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 406.16,
+        "y": 464.634,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 416.1,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 416.4,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.433864502237718
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 33.12763
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 406.16,
+        "y": 462.639,
+        "current_fraction": 0.5946
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 416.1,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 416.4,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       33.127627386242295
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU13_P": {
+   "name": "TU13_P",
+   "seeds": [
+    [
+     "M3",
+     411.7,
+     477.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 4.584
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 978,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 411.7,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 422.16,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.61853
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 411.5,
+        "y": 464.629,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 422.26,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 422.56,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.61852830963741
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 33.34091
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 411.5,
+        "y": 462.635,
+        "current_fraction": 0.5946
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 422.26,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 422.56,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       33.34091073596299
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU14_P": {
+   "name": "TU14_P",
+   "seeds": [
+    [
+     "M3",
+     417.04,
+     478.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 4.912
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 986,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 417.04,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 428.32,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.80193
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 416.84,
+        "y": 464.63,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 428.42,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 428.72,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.801926014658138
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 33.55286
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 416.84,
+        "y": 462.636,
+        "current_fraction": 0.5946
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 428.42,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 428.72,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       33.55286445953926
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU15_P": {
+   "name": "TU15_P",
+   "seeds": [
+    [
+     "M3",
+     422.38,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 5.24
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 994,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 422.38,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 434.48,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 14.98629
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 422.18,
+        "y": 464.627,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 434.58,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 434.88,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       14.986293049964504
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 33.76585
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 422.18,
+        "y": 462.634,
+        "current_fraction": 0.5947
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 434.58,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 434.88,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       33.76585458913146
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU16_P": {
+   "name": "TU16_P",
+   "seeds": [
+    [
+     "M3",
+     427.72,
+     477.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 5.568
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1002,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 427.72,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 440.64,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 15.16984
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 427.52,
+        "y": 464.629,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 440.74,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 441.04,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       15.169844628717858
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 33.97799
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 427.52,
+        "y": 462.635,
+        "current_fraction": 0.5946
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 440.74,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 441.04,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       33.97798874365855
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU17_P": {
+   "name": "TU17_P",
+   "seeds": [
+    [
+     "M3",
+     433.06,
+     478.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 5.896
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1010,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 433.06,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 446.8,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 15.35349
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 432.86,
+        "y": 464.63,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 446.9,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 447.2,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       15.35349368704801
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 34.19023
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 432.86,
+        "y": 462.636,
+        "current_fraction": 0.5946
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 446.9,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 447.2,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       34.19023277830575
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU18_P": {
+   "name": "TU18_P",
+   "seeds": [
+    [
+     "M3",
+     438.4,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 6.224
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1018,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 438.4,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 452.96,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 15.53807
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 453.16,
+        "y": 476.39,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 453.06,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 453.36,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       15.538070959586365
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 34.40347
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 453.16,
+        "y": 476.39,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 453.06,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 453.36,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       34.40346572773302
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU19_P": {
+   "name": "TU19_P",
+   "seeds": [
+    [
+     "M3",
+     443.74,
+     477.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 6.552
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1026,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 443.74,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 459.12,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 15.7218
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 443.54,
+        "y": 464.629,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 459.22,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 459.52,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       15.721800178157403
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 34.61581
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 443.54,
+        "y": 462.635,
+        "current_fraction": 0.5946
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 459.22,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 459.52,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       34.61580505075619
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU20_P": {
+   "name": "TU20_P",
+   "seeds": [
+    [
+     "M3",
+     449.08,
+     478.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 6.88
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1034,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 449.08,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 465.28,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 15.9056
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 448.88,
+        "y": 464.63,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 465.38,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 465.68,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       15.905600696727145
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 34.82822
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 448.88,
+        "y": 462.636,
+        "current_fraction": 0.5946
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 465.38,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 465.68,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       34.82822401598724
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU21_P": {
+   "name": "TU21_P",
+   "seeds": [
+    [
+     "M3",
+     454.42,
+     481.79
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 7.208
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1044,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 454.42,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 471.44,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 16.0813
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 454.22,
+        "y": 464.634,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 471.54,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5033,
+        "via": "V2",
+        "x": 455.02,
+        "y": 481.79
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       16.081299172980543
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 35.0314
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 454.22,
+        "y": 462.639,
+        "current_fraction": 0.5946
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 471.54,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5012,
+        "via": "V2",
+        "x": 455.02,
+        "y": 481.79
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       35.03140248282893
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU22_P": {
+   "name": "TU22_P",
+   "seeds": [
+    [
+     "M3",
+     459.76,
+     476.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 7.536
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1052,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 459.76,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 477.6,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 16.27808
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 459.56,
+        "y": 464.627,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 477.7,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 478.0,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       16.27808351839082
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 35.25859
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 459.56,
+        "y": 462.634,
+        "current_fraction": 0.5947
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 477.7,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 478.0,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       35.258590057925524
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU23_P": {
+   "name": "TU23_P",
+   "seeds": [
+    [
+     "M3",
+     465.1,
+     477.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 7.864
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1060,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 465.1,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 483.76,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 16.46181
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 464.9,
+        "y": 464.629,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 483.86,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 484.16,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       16.46181072590463
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 35.47093
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 464.9,
+        "y": 462.635,
+        "current_fraction": 0.5946
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 483.86,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 484.16,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       35.47092704703947
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  },
+  "TU24_P": {
+   "name": "TU24_P",
+   "seeds": [
+    [
+     "M3",
+     470.44,
+     478.19
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 0.2,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 3.7,
+    "M2": 12.678,
+    "M3": 8.192
+   },
+   "via_cuts": {
+    "V1": 8,
+    "V2": 4
+   },
+   "mesh_nodes": 1068,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "c0": {
+     "layer": "M1",
+     "cells": 100,
+     "x": 470.44,
+     "y": 461.27,
+     "kind": "nmos",
+     "contacts": 25
+    },
+    "c1": {
+     "layer": "M1",
+     "cells": 16,
+     "x": 489.92,
+     "y": 485.55,
+     "kind": "res",
+     "contacts": 4
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "a|b": 16.6456
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 470.24,
+        "y": 464.63,
+        "current_fraction": 0.7051
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 490.02,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5022,
+        "via": "V1",
+        "x": 490.32,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       16.645602296736694
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "a|b": 35.68334
+     },
+     "paths": {
+      "a|b": {
+       "narrowest_on_path": {
+        "width_um": 0.4,
+        "layer": "M2",
+        "x": 470.24,
+        "y": 462.636,
+        "current_fraction": 0.5946
+       },
+       "max_run_current_density_per_um": 2.5,
+       "single_cut_vias_on_path": 0,
+       "single_cut_vias": [],
+       "fewest_cuts_on_path": {
+        "via": "V1",
+        "cuts": 2,
+        "x": 490.02,
+        "y": 485.55,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 0.5008,
+        "via": "V1",
+        "x": 490.32,
+        "y": 485.55
+       },
+       "flags": []
+      }
+     },
+     "reduced_network": [
+      [
+       "c0",
+       "c1",
+       35.68333566818875
+      ]
+     ]
+    }
+   },
+   "groups": {
+    "a": {
+     "members": [
+      "c0"
+     ],
+     "ballast_ohm": null
+    },
+    "b": {
+     "members": [
+      "c1"
+     ],
+     "ballast_ohm": null
+    }
+   },
+   "seconds": 0.1
+  }
+ }
+}

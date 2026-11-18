@@ -23,6 +23,21 @@
           a 1 um M5 strap to the side edge (x 492), 5 levels below and 4 above the RX pair.
           RX_P / RX_N: mirror-identical routes (M4 trunk extension 18 um, 0.6 um M5 strap) to ADJACENT side pins at
           x 492, 6 um apart, in the middle of the channel. RAILPRE / VSS down from the P-leg bank exactly as before.
+
+  R-fixed leg (PC-14, 2026-11-14): when the leg's layout-info.json carries `r_fix` (hs_leg_layout.py default build), the
+          stacked composer also
+          - joins the two legs' TERM_VCM straps (30 um Metal4+Metal5 at the leg tops) with a 23 um Metal4 trunk across the
+            channel and taps the TERM_VCM pin strap from the channel MIDLINE (Metal4 bridge + finger + via4 array), the old
+            single via4 on the 1 um trunk is dropped;
+          - leaves the PAD feed's via4 array to the leg (landing pad there) instead of its own 3 x 3 stack;
+          - adds via4 arrays where the shell joins its Metal4 PAD trunks to the Metal5 trunks with ONE cut each
+            ((288, 416) for PAD_P, (304, 432) for PAD_N): the whole termination current runs through those cuts;
+          - keeps the channel and every pin where they were when the leg height changes (P leg anchored at its top).
+          A legacy leg (no `r_fix`) gives the published geometry.
+
+  ESD / pad-side overlays (PC-15, 2026-11-18, `esd_overlays`, R-fixed build only): same-net metal and via arrays in the top cell on
+          the shell's bond pad -> diode, diode -> clamp and VSS return paths (shell, network and array generators are not edited).
+          Ring band (y < 396): only the two VSS Metal2 strips are widened; no Metal3-5, no Via3 / Via4 there.
 """
 import json, re, shutil, subprocess, sys, hashlib
 from pathlib import Path
@@ -102,10 +117,112 @@ def assemble(work):
     b = root.dbbox(); (work / 'geometry.json').write_text(json.dumps(dict(bbox_um=[b.left, b.bottom, b.right, b.top], area_um2=b.width() * b.height())) + '\n')
 
 
+# PC-15 overlay options (stacked, R-fixed build only).  All coordinates are pad_hspad um; the shell places the protection
+# network at (0, 440) and its diode array at (150, 460) (fingers at x 150 + 8 i; rows nd2ps/pd2nw per leg, see protection_array.py).
+ESD_OPT = dict(
+    p_trunk_m5_to=183.,       # PAD_P Metal5 overlay on the Metal4 trunk ends here (at least the feeder; 279 = almost up to the Metal5 trunk)
+    n_riser_to=310.,          # PAD_N Metal5 riser (x 302-306, y 506-738) widened to this x (306 = unchanged); keeps bond -> heads P / N equal
+)
+
+
+def esd_overlays(box, M, V, varray, opt=ESD_OPT):
+    """Same-net metal / via overlays on the shell's pad-side and ESD paths (shell, network and array cells are not edited).
+    PAD_P / PAD_N: via arrays where the Metal2 neck meets the Metal4 trunk, Metal5 over the trunks, a Metal5 feeder per pad
+    right of the diode array, a Metal3 bar per diode row and a Metal1..Metal3 via column on every diode centre stripe.
+    VSS: Metal1 widening + via columns on the nd2ps anode rings, Metal4 bars into the Metal4 VSS strip, via arrays at the
+    single cuts of the return, Metal5 over the Metal4 VSS trunk, wider Metal2 strips to the ring VSS stacks.
+    ESD_RAIL: Metal1 widening + via columns on the pd2nw cathode rings, Metal5 bars into a widened Metal5 rail strip,
+    Metal5 / Metal4 / Metal3 link from that strip to the shunt clamp's rail plate."""
+    def pad(lo, hi, x1, y1, x2, y2, pitch=.62, cuts=None):      # metal lo..hi over the box, via columns / arrays between
+        for m in range(lo, hi + 1): box(M[m], x1, y1, x2, y2)
+        for v in range(lo, hi):
+            for b in (cuts or [(x1, y1, x2, y2)]): varray(v, *b, pitch=pitch)
+    FX = [150. + 8. * i for i in range(4)]
+    XP, XN = (178., 183.), (199., 204.)                        # Metal5 feeders, 16 um apart (the Metal3 pad buses are x 185-187 / 189-191)
+    # --- PAD: diode rows (y0 of the row, centre yc of the via column / bar); row 460: a foreign Metal2 bar at y 458.5-459.0.
+    # Per finger a Metal1-Metal3 via column on the centre stripe (the array's own Via1 is at y0), per row a 4.4 um Metal3 bar.
+    # PAD_P: bar straight into the feeder.  PAD_N: the PAD_P Metal3 bus (x 185-187, all rows) is in the way -> Metal4 hop over it.
+    for pad_, rows in (('P', ((460., 463.1), (500., 500.), (620., 620.))), ('N', ((540., 540.), (580., 580.), (660., 660.)))):
+        for y0, yc in rows:
+            y1, y2 = yc - 2.2, yc + 2.2
+            for fx in FX: pad(1, 3, fx - .385, y1, fx + .385, y2, pitch=.62)     # 7 cuts; in the rows with yc = y0 the middle Via1 is the array's own
+            yb = min(y1, y0 - .5)                               # the Metal3 bar also covers the array's 0.48 um Metal2 bar at y0 ...
+            for fx in FX:                                       # ... and ties it with a row of Via2 (else its single Via2 at the bus carries > 3 %)
+                varray(2, fx + .6, y0 - .33, min(fx + 7.4, 185.3 if pad_ == 'P' else 176.3), y0 + .33)
+            if pad_ == 'P':
+                box(M[3], FX[0] - .385, yb, 187., y2); pad(3, 5, XP[0], y1, XP[1], y2, pitch=.7)   # Metal4 stops before the PAD_N Metal4 (x 184, y 494-506)
+            else:
+                box(M[3], FX[0] - .385, yb, 176.5, y2); box(M[4], 166.5, y1, XN[1], y2)
+                varray(3, 166.9, y1, 173.1, y2); varray(3, 174.9, y1, 176.5, y2); varray(4, XN[0], y1, XN[1], y2)
+                varray(3, 189.3, y1, 190.7, y2)             # the hop also ties the PAD_N Metal3 bus (old path: one Via2 per row)
+    box(M[5], XP[0], 411., XP[1], 623.)                         # PAD_P feeder, from the Metal4 trunk (y 410-422)
+    box(M[5], XN[0], 495., XN[1], 663.)                         # PAD_N feeder, from the shell's Metal4 bar (x 184-310, y 494-506) ...
+    varray(4, XN[0], 495., XN[1], 505.)
+    box(M[5], XN[1], 496., 283., 504.); varray(4, XN[1], 496., 283., 504.)     # ... which gets Metal5 on top (inset 2 um; 3 um clear of the PAD_P Metal5 trunk x 286-290)
+    varray(4, 298., 494., 310., 506., skip=(304., 500.))        # ... and an array around its single Via4 to the Metal5 trunk
+    varray(4, 282., 474., 294., 486., skip=(288., 480.))        # same for the PAD_P bar (x 180-294, y 474-486): the old path stays in parallel
+    for x, ya in ((186., 474.), (190., 494.)):                  # ... and Via3 columns beside the single Via3 bus -> bar cuts
+        varray(3, x - .7, ya, x + .7, ya + 5.4); varray(3, x - .7, ya + 6.6, x + .7, ya + 12.)
+    box(M[5], 243., 428., 279., 436.); varray(4, 243., 428., 279., 436.)        # Metal5 over the PAD_N Metal4 trunk (y 426-438), inset 2 um, 3 um clear of the PAD_P Metal5 trunk (x 282)
+    # Metal5 over the PAD_P Metal4 trunk (inset 2 um), open at the VSS Metal5 strip (x 136-140)
+    for x1, x2 in ((32., 135.4), (140.6, max(opt['p_trunk_m5_to'], XP[1]))):
+        box(M[5], x1, 412., x2, 420.); varray(4, x1, 412., x2, 420.)
+    # necks -> trunks: Metal3 pad + Via2 / Via3 arrays beside the shell's 3 x 3 stacks at (37.5, 416) / (248.5, 432)
+    pad(2, 4, 33.7, 410.2, 41.3, 419.8, pitch=.7, cuts=[(33.7, 410.2, 36.3, 419.8), (38.7, 410.2, 41.3, 419.8)])
+    pad(2, 4, 244.7, 429.2, 252.3, 435.8, pitch=.7, cuts=[(244.7, 429.2, 247.3, 435.8), (249.7, 429.2, 252.3, 435.8)])   # above the VSS Metal3 wire (y 427.3-428.7)
+    if opt['n_riser_to'] > 306.: box(M[5], 302., 506., opt['n_riser_to'], 738.)
+    # --- VSS: nd2ps anode rings (rows 460, 540): ring Metal1 is 0.23 um wide -> widen outwards, via columns, Metal4 bar to the strip (x 132-141)
+    for y0 in (460., 540.):
+        yv = y0 - 8.
+        for fx in FX:
+            for s in (-1., 1.):
+                box(M[1], fx + s * .915, y0 - 13.195, fx + s * 1.7, y0 + 13.195)
+                pad(2, 4, fx + s * .95, yv - 2.5, fx + s * 1.7, yv + 2.5)
+                for b in ((yv - 2.5, yv - .45), (yv + .45, yv + 2.5)) if s > 0 else ((yv - 2.5, yv + 2.5),):     # the array's Via1 is at (fx + 1.03, yv)
+                    varray(1, fx + s * .95, b[0], fx + s * 1.7, b[1], pitch=.62)
+        box(M[4], 141., yv - 2.5, FX[3] + 1.7, yv + 2.5)
+    # --- ESD_RAIL: pd2nw cathode rings (rows 500, 580, 620, 660), inside the SUB ring (Metal1 from fx +- 1.755; its via pad at y0 - 8, right side)
+    for y0 in (500., 580., 620., 660.):
+        yr = y0 + 8.
+        for fx in FX:
+            box(M[1], fx - 1.52, y0 - 13.155, fx - .875, y0 + 13.155)
+            box(M[1], fx + .875, y0 - 13.155, fx + 1.52, y0 - 8.6); box(M[1], fx + .875, y0 - 7.4, fx + 1.52, y0 + 13.155)
+            for s in (-1., 1.):
+                pad(2, 5, fx + s * .88, yr - 1.5, fx + s * 1.52, yr + 2.5)
+                for b in ((yr - 1.5, yr - .45), (yr + .45, yr + 2.5)) if s > 0 else ((yr - 1.5, yr + 2.5),):     # the array's Via1 is at (fx + 0.99, yr)
+                    varray(1, fx + s * .88, b[0], fx + s * 1.52, b[1], pitch=.62)
+        box(M[5], 134., yr - 1.5, FX[3] + 1.52, yr + 2.5)
+    box(M[5], 134., 447., 146., 719.)                          # rail strip x 126-134 widened (over the Metal4 VSS strip, clear of the pad bars)
+    box(M[5], 134., 713.5, 200., 741.5)                         # ... and on to the shunt clamp's rail plate (Metal2 / Metal3, y 745.2-768.7); 28 um: MSLOT5.1 (no Metal5 wider than 30 um)
+    pad(4, 5, 146., 722., 200., 741.5, pitch=.7)
+    box(M[3], 146., 722., 200., 745.3); varray(3, 146., 722., 200., 741.5)
+    # canonical clamp (x 0-75): its rail Metal3 pads (y 712.2-718.8) reach the Metal5 rail bar through ONE Via3 / Via4 at (6.055, 715),
+    # its VSS Metal3 columns (y 704.2-710.8) reach the Metal4 VSS through ONE Via3 at (12.905, 707)
+    for x1, x2 in ((1.525, 10.585), (13.99, 23.67), (25.84, 35.52), (39.37, 49.05), (51.22, 60.9), (64.305, 73.365)):
+        a, b = max(round(x1 + .115, 2), 2.3), round(x2 - .115, 2)       # the Metal5 rail bar starts at x 2.055
+        box(M[4], a, 713.4, b, 718.7)
+        for v in (3, 4):
+            for c, d in ((a, 5.4), (6.7, b)) if x1 < 6. else ((a, b),): varray(v, c, 713.4, d, 718.7)
+    for x1, x2 in ((12.405, 13.405), (24.255, 25.255), (36.325, 38.565), (49.635, 50.635), (61.485, 62.485)):
+        for y1, y2 in ((704.21, 706.41), (707.59, 710.79)) if x1 < 13. else ((704.21, 710.79),): varray(3, x1, y1, x2, y2)
+    # Metal3 under the Metal4 VSS strip (x 132-141) from the array to the wide Metal4 below the shunt clamp
+    box(M[3], 132., 447., 141., 677.); varray(3, 132., 447., 141., 677.)
+    # --- VSS return: arrays at the single cuts, Metal5 over the Metal4 trunk (y 396-404), wider Metal2 strips to the ring stacks
+    varray(4, 136.2, 438.2, 139.8, 443.3); varray(4, 136.2, 400.6, 139.8, 403.8)
+    box(M[5], 7., 396.5, 224., 401.5); varray(4, 7., 396.5, 135.5, 401.5); varray(4, 140.5, 396.5, 224., 401.5)
+    for x1, x2, xs in ((.5, 25.5, 10.), (211.5, 236.5, 221.)):
+        box(M[2], x1, 74.305, x2, 404.)
+        a, b = max(x1, 6.) + .2, min(x2, 225.) - .2
+        pad(3, 3, a, 396.2, b, 403.8)
+        for v in (2, 3):
+            varray(v, a, 396.2, xs - .7, 403.8); varray(v, xs + .7, 396.2, b, 403.8)
+
+
 def assemble_stacked(work, cfg):
     import klayout.db as k
     tx = cfg['trunk_x']; ltop = cfg['leg_top']; lright = cfg['leg_right']   # leg bbox top / right edge (leg-local)
-    X, Y_PLEG = 340., 440.             # P leg origin (unmirrored); the cell's side edge is X + lright = 492
+    fix = cfg.get('r_fix')
+    X, Y_PLEG = 340., 594.75 - ltop    # P leg origin (unmirrored), anchored at its top (440 for the 154.75 um PD21 leg); side edge X + lright = 492
     EDGE, PITCH, RXSEP = 4., 2.5, 6.   # channel: leg edge / RX pair clearance, shared-strap pitch, RX_P-RX_N pin pitch
     LOW = ['TERM_TRIM0', 'TERM_TRIM1', 'TERM_TRIM2', 'TERM_TRIM3', 'VSS']   # straps between the P leg and RX_P
     HIGH = ['VDD', 'TERM_ENABLE', 'TERM_VCM', 'VBIAS', 'RAILPRE']           # straps between RX_N and the N leg
@@ -147,11 +264,13 @@ def assemble_stacked(work, cfg):
     # P leg: shell PAD_P M5 trunk (x 282-294, from y 410) -> M5 at y 416, BELOW the PAD_N trunk start (y 426), so the
     # pair never crosses -> up over the P leg bank to the via stack on the P leg PAD trunk
     y_padp = Y_PLEG + cfg['pad_trunk_lo'] + 1.5
-    box(M[5], 282., 414., xpad + 2., 418.); box(M[5], xpad - 2., 414., xpad + 2., y_padp); stack(xpad, y_padp, 4, 5, 3)
+    box(M[5], 282., 414., xpad + 2., 418.); box(M[5], xpad - 2., 414., xpad + 2., y_padp)
+    if not fix: stack(xpad, y_padp, 4, 5, 3)      # R-fixed leg: the leg has its own landing pad + via4 array there
     # N leg: shell PAD_N M5 trunk (x 298-310) sideways into the N leg PAD trunk; the stub beyond the via stack mirrors
     # the PAD_P run over the bank (same length, same leg metal underneath) and ends open: P/N pad C balance only
     y_padn = Y_NLEG - (cfg['pad_trunk_lo'] + 1.5)
-    box(M[5], 298., y_padn - 2., xpad + 2., y_padn + 2.); stack(xpad, y_padn, 4, 5, 3)
+    box(M[5], 298., y_padn - 2., xpad + 2., y_padn + 2.)
+    if not fix: stack(xpad, y_padn, 4, 5, 3)
     box(M[5], xpad - 2., y_padn, xpad + 2., y_padn + (y_padp - 414.))
     # shared nets: the two legs' M4 trunks joined straight across the channel; port nets get an M5 strap to the side edge
     # (crossing at the leg trunk's own width for the current-carrying nets: TERM_VCM carries the differential
@@ -160,7 +279,7 @@ def assemble_stacked(work, cfg):
         w = {'VSS': 2., 'TERM_VCM': 1.}.get(net, .5)
         wire(4, (tr(net), p_top - 1.), (tr(net), n_top + 1.), w)
         if net != 'RAILPRE':     # internal node: no strap, no label
-            stack(tr(net), level[net], 4, 5)
+            if not (fix and net == 'TERM_VCM'): stack(tr(net), level[net], 4, 5)
             box(M[5], tr(net), level[net] - .5, xedge, level[net] + .5); T(net, 5, xedge - .5, level[net])
     # RX_P / RX_N: mirror-identical routes (P/N balance at the CTLE input): RX trunk -> 18 um M4 extension into the
     # channel -> 0.6 um M5 strap to the cell's side edge = adjacent side pins, RXSEP apart
@@ -174,6 +293,27 @@ def assemble_stacked(work, cfg):
     xv = tr('VSS'); yv = Y_PLEG + cfg['vss_lo'] + 1.
     wire(4, (xv, yv), (xv, 428.), 2.); stack(xv, 428., 3, 4, 2)
     wire(3, (xv, 428.), (138., 428.), 1.); stack(138., 428., 3, 5, 2)
+    if fix:
+        def varray(v, x1, y1, x2, y2, skip=None, pitch=.7):       # via cuts on a 0.7 um grid inside the box, >= 0.2 um from its edges
+                                                                  # (V4.2b: cuts of arrays larger than 3 x 3 need 0.36 um spacing)
+            nx = int((x2 - x1 - .4 - .26) / pitch) + 1; ny = int((y2 - y1 - .4 - .26) / pitch) + 1
+            x0 = (x1 + x2) / 2 - (nx - 1) * pitch / 2; y0 = (y1 + y2) / 2 - (ny - 1) * pitch / 2
+            for i in range(nx):
+                for j in range(ny):
+                    cx, cy = x0 + i * pitch, y0 + j * pitch
+                    if skip and abs(cx - skip[0]) < 1e-6 and abs(cy - skip[1]) < 1e-6: continue
+                    box(V[v], cx - .13, cy - .13, cx + .13, cy + .13)
+        # TERM_VCM: wide Metal4 trunk between the leg straps (the channel's Metal5 belongs to the pin straps), pin tap on the midline
+        s1, s2 = X + fix['vcm_strap'][0], X + fix['vcm_strap'][1]; mid = (p_top + n_top) / 2; lv = level['TERM_VCM']
+        xf = s2 - 4.5                                   # finger: 4.5 um wide, 2.5 um right of the trunk
+        box(M[4], s1, p_top - 1., xf - 2.5, n_top + 1.)
+        box(M[4], xf - 2.5, mid - 1.5, xf, mid + 1.5)   # bridge at the midline: the only connection of the finger
+        box(M[4], xf, mid - 1.5, s2, lv + .8)
+        box(M[5], xf, lv - .8, s2, lv + .8); varray(4, xf, lv - .8, s2, lv + .8)
+        # shell PAD exits: Metal4 trunk under the Metal5 trunk, one cut each in the shell -> arrays around that cut
+        for cx, cy in ((288., 416.), (304., 432.)):
+            varray(4, cx - 6., cy - 6., cx + 6., cy + 6., skip=(cx, cy))
+        esd_overlays(box, M, V, varray)
     T('PAD_P', 5, 288., 905.); T('PAD_N', 5, 304., 905.)
     T('ESD_RAIL', 3, 130., 444.)
     import marker_merge
@@ -205,6 +345,10 @@ def generate(work, shell, leg, network, stacked=False):
     tx = {n: v[0][0] for n, v in lab.items() if not n.startswith('TU')}
     lo = lambda n: min(p[1] for p in lab[n] if p[2] == 0)
     cfg = dict(trunk_x=tx, leg_top=info['bbox'][3], leg_right=info['bbox'][2], pad_trunk_lo=lo('PAD'), railpre_lo=lo('RAILPRE'), vss_lo=lo('VSS'), stacked=stacked)
+    linfo = json.loads((leg / 'layout-info.json').read_text()) if (leg / 'layout-info.json').exists() else {}
+    if linfo.get('r_fix'):
+        if not stacked: raise ValueError('the R-fixed leg is only composed in the stacked build')
+        cfg['r_fix'] = linfo['r_fix']
     (work / 'config.json').write_text(json.dumps(cfg, indent=1))
     subprocess.run(['docker', 'run', '--rm', '--network', 'none', '--entrypoint', 'python3', '--mount', f'type=bind,src={work},dst=/work', IMAGE,
                     '/work/hs_pad_compose.py', '--inside', '/work'], check=True)

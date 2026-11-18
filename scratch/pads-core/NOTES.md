@@ -102,3 +102,21 @@ Load rule: <= 3 heavy jobs incl. sub-agents, OMP_NUM_THREADS=1. Disk 97 %: keep 
   (2) txpad row plan + trimmed termination (+ 0.6x MAIN if decided); (3) wirepad R-aware bench; (4) return-side resistance into the hspad model, N-positive and
   high-metal HBM into sims.sh; (5) RL at 2.8 nH bond (rl_cob uses 2.32 nH); (6) assembly-level extraction of the Metal2 neck under the rails (about 0.12 pF per pad, unmodelled);
   (7) agnd_pad.py and termination_buffer_array_layout.py (WT24 default-preserving edit) are still uncommitted and unreviewed.
+- 11-18 (later)  RESUME POINT. Decisions in force: ESD architecture = pad-site primary diodes to the ring rails, all 7 families (PC-27); bond map RF_RX 68/67,
+  BB_I 70/69 applied (PC-29, commit ca3cb2e1). Rows PC-22..31. An account usage limit stopped one sub-agent (resets Nov 24 21:00 UTC); others may stop the same way.
+  IN FLIGHT, UNPUBLISHED, UNCOMMITTED (generator edits in $P/analog/pads: pad_site_primary.py NEW, hs_pad_compose.py, hs_leg_layout.py, circuits.py,
+  protection_device_audit.py; all meant to default to the published geometry):
+   * pad_hspad option A: scratch/pads-core/esdopt/hs/ (STATUS.md; final candidate build/a4: 5+5 site diodes per pad, shell array deleted, Metal1 under the necks,
+     leg base unit 4.2 um). Interim numbers of the a3 twin: 2 kV HBM vs VSS +6.1 / -3.5 V typ (+7.0 / -4.1 high), vs VDD +4.4 / -5.5 V, PAD-TO-PAD 9.6 V (11.1 high:
+     over 8.0 V at the bond pad, no device over 8.0), bond->heads 4.9-5.2 ohm, RX loss 1.2 dB, 1 floating node (shell). Final evidence queue was running.
+   * pad_txpad rework: scratch/pads-core/esdopt/tx/ (STATUS.md; build b/a2: trimmed termination 8 base + 15 trim units, output path 1.37 / 1.76 ohm, 39 / 56 mV at 21 mA;
+     corner tables, checks, ESD, AC still to run; option `steering_widths_um` default off = the 0.6x MAIN switch hook). No WT row with requirements had arrived: defaults used.
+   * pad-site cell usage: scratch/pads-core/esdopt/site/READY.md. New pad port DVDD (lands on the ring; benches must drive it).
+   * Pad-on-rail DRC (sign-off: 12 Via3 + 10 Via4 per bond site): cause per the hspad designer = the family shell's own VSS ring stack at site (9-11, 77.3-79.3)
+     (V3.1 / V3.2a / V4.1 / V4.2a against the rail cell's cuts); recipe = delete that stack's Via3 / Via4 / Metal4 / Metal5, keep Metal2 / Via2 / Metal3. NOT independently
+     confirmed; the standard tool $P/analog/pads/rail_site_check.py was NOT written (agent stopped by the limit; brief is in the session, work dir scratch/pads-core/railcheck/ empty).
+  NEXT, in order: (1) collect the hspad a4 and txpad final reports (STATUS.md files), (2) write rail_site_check.py with a failing self-test and run it on both candidates and all
+  published families, (3) independent review of each candidate (fresh agent, artefacts only), publish on GO (file-list pattern: hsfix/final_part2.md), rows to wired RX / wired TX /
+  chip-top (new DVDD port, trim pins on pad_txpad), (4) pad-to-pad HBM over 8 V at the bond pad: decide limit point (bond pad vs devices) or add fingers, (5) USB, reference,
+  rf-pair, rf-tx, single-leg with the same site cell; RF_TX / USB VBUS / TMDS need the PC-31 ruling first (RF_TX: no up-diode to the supply without it), rf_rx answers PC-30,
+  (6) back-feed board rule into spec/board-requirements.md once PC-31 is ruled.

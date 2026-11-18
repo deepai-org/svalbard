@@ -185,6 +185,13 @@ man['left_out'] = plan['left_out']
 man['counts'] = {}
 for i in man['instances']: man['counts'][i['kind']] = man['counts'].get(i['kind'], 0)+1
 assert [c.name for c in ly.top_cells()] == [TOP], [c.name for c in ly.top_cells()]
+# cell -> the top-level children (blocks, ring, seal ring, ID cells) that contain it: deep-mode DRC reports per cell
+owner = {}
+for inst in top.each_inst():
+    c = inst.cell
+    for ci in [c.cell_index()]+list(c.called_cells()):
+        owner.setdefault(ly.cell(ci).name, set()).add(c.name)
+json.dump({k: sorted(v) for k, v in owner.items()}, open('/run/skel/cell_owner.json', 'w'))
 ly.write('/run/'+OUT)
 json.dump(man, open('/run/skel/manifest.json', 'w'), indent=0)
 print('pad mask:', man['pad_mask'], '| snaps:', [(q['pad'], q['shift_um']) for q in man['pad_snap']], '| restored:', man['ring_sites_restored'])

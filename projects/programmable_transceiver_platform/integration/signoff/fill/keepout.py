@@ -13,7 +13,7 @@ area = 0.0; n = 0; reg = db.Region(); named = []
 for i in man['instances']:
     m = i['master']
     if kset == 'allblocks':
-        r = None if (m == 'pt_digital_macro' or i['name'].startswith('pad_') or i['kind'] == 'reserve') else dict(layers=['PMNDMY', 'NDMY'], margin_um=0)
+        r = None if (m == 'pt_digital_macro' or i['name'].startswith('pad_') or i['kind'] == 'reserve') else dict(layers=['PMNDMY'], margin_um=0)
     else:
         r = next((r for r in rows if r['master'] == m and kset in r['sets']), None)
     if not r: continue

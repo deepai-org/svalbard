@@ -2843,6 +2843,84 @@
    "target": "on-chip chain NF <= 4.1 dB DSB on the real channel, at tt, ss and the pessimistic end, with the LO as delivered",
    "rows": [
     {
+     "view": "extpp",
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "lo": "floor_0v90",
+     "lo_level": [
+      "sine",
+      2.44,
+      0.11
+     ],
+     "carrier_distance_mm": 2.0,
+     "nf_dsb_db": 14.70859704215233,
+     "nf_ssb_db": 17.596702159816825,
+     "gain_sig_db": {
+      "4.0MHz": 13.79,
+      "6.0MHz": 14.03,
+      "8.5MHz": 13.93
+     },
+     "f_parts": {
+      "sig": 3.6238,
+      "img": 3.4227,
+      "h3u": 0.0,
+      "h3l": 0.0,
+      "h5u": 0.0,
+      "h5l": 0.0,
+      "ota1": 20.2127,
+      "ota2": 21.6846,
+      "r1": 4.299,
+      "r2": 4.1688,
+      "h3u_lna": 0.0366,
+      "h3l_lna": 0.0366,
+      "h5u_lna": 0.0077,
+      "h5l_lna": 0.0077
+     },
+     "run_by": "scratch/rf-lna-q/e15.py (same calls as lna_close.chain_point)"
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "lo": "cml_1v05",
+     "lo_level": [
+      "sine",
+      2.44,
+      0.26
+     ],
+     "carrier_distance_mm": 2.0,
+     "nf_dsb_db": 8.108313763067743,
+     "nf_ssb_db": 10.881550517408389,
+     "gain_sig_db": {
+      "4.0MHz": 25.96,
+      "6.0MHz": 24.93,
+      "8.5MHz": 23.32
+     },
+     "f_parts": {
+      "sig": 2.7694,
+      "img": 2.4752,
+      "h3u": 0.0,
+      "h3l": 0.0,
+      "h5u": 0.0,
+      "h5l": 0.0,
+      "ota1": 3.2898,
+      "ota2": 3.3233,
+      "r1": 0.1838,
+      "r2": 0.1783,
+      "h3u_lna": 0.0126,
+      "h3l_lna": 0.0126,
+      "h5u_lna": 0.0028,
+      "h5l_lna": 0.0028
+     },
+     "run_by": "scratch/rf-lna-q/e15.py (same calls as lna_close.chain_point)"
+    },
+    {
      "view": "extpr",
      "corner": [
       "typical",

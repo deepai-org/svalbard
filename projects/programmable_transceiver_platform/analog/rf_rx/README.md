@@ -210,7 +210,7 @@ fixed before the runs. Rows marked **miss** are misses; nothing here is publishe
 | S11 on the real channel, carrier parts at connector + 2 mm, fitted per chip | ≤ −10 dB, 2.395–2.4885 GHz | −10.8 to −11.7 dB; at 10 mm −9.9 dB | pass / **miss** at 10 mm |
 | LNA gain, source EMF to mixer feeds (50 Ω per leg model), real channel | — | tt 0.5–0.8 dB (ideal lossless match 3.3 dB); ss −1.2…−0.3; ff 1.4–2.1; pessimistic end −6.2…−5.9 dB | information |
 | LNA NF including the real channel (2.4–2.7 dB of loss before the LNA) | ≤ 6.0 dB; pessimistic end derated +1.5 dB | tt 3.6–3.9; ss 4.0–4.4; ff 3.3–3.6; sf 3.8–4.1; fs 3.4–3.8 dB; pessimistic end 5.3–5.6 dB (7.1 derated) | pass / **miss** at the pessimistic end |
-| Chain NF, DSB, real channel, LO as delivered (sine, best real level), small TIA | ≤ 4.1 dB | tt 6.15 dB (LNA + channel 3.9 dB, TIA terms + 2.3 dB), gain 31.2 dB; other points in the evidence file | **miss** |
+| Chain NF, DSB, real channel, LO as delivered (sine, best real level), small TIA | ≤ 4.1 dB | tt, LO ±0.37 V: 6.15 dB (LNA + channel 3.9 dB, TIA terms +2.3 dB), gain 31.2 dB; ss 32 °C 3.15 V, LO ±0.26 V: 8.11 dB, gain 26.0 dB; pessimistic end, LO ±0.11 V: 14.7 dB, gain 13.8 dB (weak LO: the TIA terms dominate) | **miss** |
 
 ## 6. Open items
 

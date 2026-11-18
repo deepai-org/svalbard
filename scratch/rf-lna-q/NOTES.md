@@ -107,3 +107,6 @@ Scratch: `scratch/rf-lna-q/` (scripts e1..eN, logs, `w/` work dirs). Predecessor
   K >= 7.1, Re_diff >= 1.50, Re_cm >= 2.98 ohm 5 MHz-1 GHz (no negative resonance: 0.25 ohm per wire damps it), 0.55-0.59 at 30 GHz.
 - Bounce -> differential input (lna_close.bounce): A -17.9 dB nominal, B -40.3 dB (with die decap; -29 without).  rf_rx asks for B.
 - Pad C tolerance (close/pad_c_tolerance.json): +0.1 pF/leg = +0.15 dB NF, -0.27 dB gain; S11 fails above ~+0.4 pF.
+- Chain NF on L6, real channel (connector + 2 mm), LO as delivered (tb.LO_REAL), small TIA: tt +-0.37 V 6.15 dB DSB (gain 31.2 dB);
+  extpr ss 32 C 3.15 V +-0.26 V 8.11 dB (26.0 dB); extpp ss +-0.11 V 14.7 dB (13.8 dB).  Target 4.1 dB: MISS everywhere.
+  Warning for reruns: pass the LO as tb.LO_REAL[name]; a bare string silently runs the ideal square LO.

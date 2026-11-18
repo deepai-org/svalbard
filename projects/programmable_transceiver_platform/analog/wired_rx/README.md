@@ -2,7 +2,8 @@
 
 Wired receive chain: pad control, equaliser, sampler bank, capture front end, clock-phase trim, line
 detectors and the analog cell of the CDR. **Not qualified.** With the real neighbours connected the published
-chain does not receive at 2.5 Gb/s or above (see Open items 1 and 2).
+chain does not receive at 2.5 Gb/s or above; the fixes are staged and none is published (see Staged
+candidates and Open items 1 to 4).
 
 This file describes what is published in `generated/` and committed. Pin-level bindings are in `PINS.md`
 and `integration/top/pt_chip.conn` (the one connectivity source). Risks are in `spec/risk-register.md`
@@ -233,7 +234,9 @@ python3 run_fallback.py [--only CASE ...]          # external clock -> slicer ->
 `run_wired_rx.sh` → `run_family.py`: schematics (`netlists.py`), Magic layout, DRC and extraction, Netgen
 LVS, GDS export and KLayout GF180 DRC, extracted ngspice at nominal and the 12 corners, safety cases,
 evidence JSON. Tools run in pinned containers without network; raw output goes to `scratch/wired_rx/`.
-The flow writes into `generated/`: do not run it on a working tree with unfinished source edits.
+The flow writes into `generated/`. **Do not run it for `ctle`, `rxselect`, `detect` or `ptrim`**: their committed
+sources are the staged candidates, ahead of the published cells, and `sims.py` / `evidence.py` still describe
+the published pins and loads.
 
 | File | Role |
 |---|---|
@@ -249,33 +252,76 @@ The flow writes into `generated/`: do not run it on a working tree with unfinish
 | `cdr_model.py`, `cdr_pi_model.py` | behavioural CDR loop models (sizing only; `generated/cdr-model.json`) |
 | `rtl/` | retired word-domain CDR logic (Open item 9) |
 
+## Staged candidates (not published)
+
+Nothing below is in `generated/`; the chip top still binds the published cells. Sources of all four are
+committed (`netlists.py`, `ctle.spice`, `rxselect.spice`, `detect.spice`, `ptrim.spice`, `ptrim_compact.py`,
+`capture.py`). Work directories, benches, declared limits and logs: `scratch/wired_rx/r11/STATUS.md`
+(owner), `r10ctle/`, `r10ptrim/`, `r10detect/`, `r10cap/`; independent reviews in `r11/review/`.
+
+| Candidate | Staged at | Outline µm | Layout checks from the GDS on disk | Why not published |
+|---|---|---|---|---|
+| `pt_ctle` r4 (source-follower output drives `SL` directly) | `r10ctle/stage/gen` | 203.4 × 423.6 | DRC 0, LVS unique without property errors (author and reviewer), precheck 0 / 0 | Review NO-GO: gain and `SL` common mode depend on bias current × load resistance (−1.3 to −6.7 dB at 1.25 GHz with a slow resistor and an absolute 10 µA bias); with metal resistance extracted the chain loses 0.3–1.1 dB; isolated wells need deep n-well (INT-30) |
+| `pt_rxselect` r2 (equaliser branch removed) | `r10ctle/stage/gen` | 47.6 × 84.1 | as above | Port change: only together with `pt_ctle` r4; pass path 41–54 Ω per leg with resistance extracted |
+| `pt_ptrim` r10 (channel 0 doubled, trim split over two nodes) | `r10ptrim/final/gen` | see `r10ptrim/STATUS.md` | DRC 0, LVS unique incl. read-back, precheck 0 / 0 | No resistance-aware extraction, matrix incomplete, no independent review |
+| `pt_detect` r10 (ratio-set thresholds, HS signal detect) | `r10detect/stage/q27/gen` | 167.1 × 541.1 | DRC 0, LVS unique incl. read-back, three negative controls, precheck 0 / 0 | Supply and ground are single 0.44 µm trunks (median 50 Ω to the device sources); fails at the pessimistic slow corner at 3.15 and 3.50 V; USB HS with the real pad and the HS signal detect on the real chain not run |
+| `pt_wrx_cap` r7e (compact; `LDE` edge detect, stronger clock drivers) | `r10cap/r7e/gen` | 1241.2 × 242.2 | DRC 0, flat LVS 4856 = 4856 devices without property errors, width control caught, precheck 0 / 0 | Fails a gating case of its own flow (full rate); review GO with conditions |
+
+Chain results with real neighbours (`scratch/wired_rx/r11/chain/tran.json`, `capb.json`, `clk.json`): transmitter 120 mVppd →
+chip-on-board → republished `pad_hspad` (resistance-aware model) → `pt_ctle` r4 → sampler bank, clocked by
+the extracted ring's phases (settled, replayed) through `pt_ptrim` r10; capacitance-only extractions of our
+own cells. Eye at `SL` in mVppd / width in UI at 60 mVppd, wrong decisions on the data samplers.
+
+| Rate (mode, ring) | tt/27/3.30 | ss/32/3.15 | ss/32/3.50 | ff/22/3.35 | ss pessimistic 3.15 | ss pessimistic 3.50 |
+|---|---|---|---|---|---|---|
+| 0.48 Gb/s (full, 480 MHz) | not run | not run | not run | not run | not run | not run |
+| 1.25 Gb/s (half, 625 MHz) | not run | 109 / 0.80, 0 of 108: pass | not run | not run | not run | not run |
+| 2.5 Gb/s (quarter, 625 MHz) | 109 / 0.63, 0 of 112: pass | 108 / 0.53, 0 of 112: pass; capture r7e behind the real sampler bank and clocks: 0 errors in 200 bits | not run | not run | 94 / 0.43, 0 of 112: pass (the capture alone fails at this bound) | not run |
+| 2.7 Gb/s (quarter, 675 MHz) | not run | not run | not run | not run | not run | not run |
+| 3.24 Gb/s (quarter, 810 MHz) | 103 / 0.45, 0 of 112: pass | 88 / 0.35, 36 of 110 wrong: **fail** (0 of 112 with ideal 50 % clocks: the ring's 0.60–0.63 duty) | 90 / 0.40, 1 of 112 wrong: **fail**, not rescued by the supply trim | not run | not run | not run |
+
+Not run at all: sf / fs, the 6 dB-channel stimulus, uncalibrated trim codes, the high-metal pad, our own cells
+with resistance extracted (linear estimate: −5 to −17 % of eye), bench B beyond the one cell and its control.
+The eye-at-sampler margins of this bench below 0.15 UI and its error count as a system statement are not
+trusted by the bench review (`r11/review/capture/REVIEW.md`): the data phase is placed on a linear-estimate
+eye centre, not on the real crossings, and the error count reads the sampler outputs at the best phase.
+The eye at `SL`, the trim numbers and the ss 3.24 Gb/s failure are trusted.
+
 ## Open items
 
-1. **The chain does not receive at ≥ 2.5 Gb/s with its real load** (WRX-20). Extracted `pt_ctle` →
-   `pt_rxselect` → `pt_slicer` input: −8.0 dB at 1.25 GHz at tt (−9.6 dB at ss/32 °C/3.15 V), −3 dB bandwidth
-   248 MHz, CTLE output common mode 1.47 V where the slicer was qualified at 1.0 V
-   (`scratch/wired_rx/r9chain/res.json`). A source-follower output stage (+6.3 mA, slicer input common mode
-   about 0.4 V) is approved and not built. A CTLE repack is staged and on hold for it. Unfinished
-   working-tree edits of `netlists.py`, `ctle.spice`, `rxselect.spice` and `wrx_flow.py` belong to this fix.
-2. **`pt_ptrim` cannot drive the real clock loads** (WRX-21, WRX-15): `CKP0` carries about 965 fF and
-   `CKP1..7` 370–480 fF (slicer plus capture). A compact layout of the present circuit is staged
-   (`ptrim_compact.py`, unfinished working-tree edits); the circuit fix is not built. The block has no
-   evidence file.
-3. **No chain result exists** for rate × corner × supply with real clocks, real loads and the package. The
-   slicer has only three corners on r7 and none at the follower's common mode. A path for 2.7–3.24 Gb/s at
-   the pessimistic device values is not designed.
-4. **Capture**: the published r6 has no current evidence (`wrx_cap-evidence.json` and
-   `wrx_fallback-evidence.json` hash an older extraction and both record a fail). The committed `capture.py`
-   is the compact r7c source (staged outline 1212.6 × 242.2 µm, `WSTB` instead of `DX/WCLK40`), which fails
-   one gating case (`LDE` edge on the capture clock edge) and is not published; the chip top binds r6.
-   Unfinished working-tree edits of `capture.py` continue from r7c (WRX-09, WRX-12, WRX-22).
+1. **The published chain does not receive at ≥ 2.5 Gb/s with its real load** (WRX-20): −8.0 dB at 1.25 GHz
+   into the sampler bank. The fix (`pt_ctle` r4, `pt_rxselect` r2) is staged and not publishable as it is:
+   bias scheme (per-die bias code observed at `SL`, or a regulated output common mode), wider load-return,
+   follower-output, tail and input wiring, then resistance-aware extraction, sf/fs and resistor cross
+   corners. The equaliser has no spare gain at 1.6 GHz: its peak codes only cut low-frequency gain, so the
+   republished pad's extra 1.5 dB comes straight off the eye.
+2. **`pt_ptrim` (published) cannot drive the real clock loads** (WRX-21, WRX-15). The staged r10 does; with
+   the extracted ring it equalises the eight clock edges to 2–6 ps (ring spread 40–54 ps at the sampler,
+   trim range 96 ps at ss 625 MHz but only 61 ps for a need of 54 ps at ss 810 MHz). Its clock duty at
+   ss 810 MHz is 0.60–0.63 (the ring's own duty). Supply current 24–31 mA.
+3. **2.7–3.24 Gb/s is not received at the slow corner with the built architecture** (quarter rate on a
+   675–810 MHz ring, one sampler bank): the eye is open (88 mV) but the sampler bank does not deliver
+   decisions at ss/3.15 V on an 810 MHz ring, and the capture's slot-enable chain has no margin above
+   625 MHz at the slow corner. The eighth-rate architecture is not designed. The rate × corner table above
+   is incomplete (see `scratch/wired_rx/r11/STATUS.md` for what was not run).
+4. **Capture**: the published r6 has no current evidence and double-seeds a word for a band of `LDE`
+   phases. The staged r7e removes that (one `LDE` phase under 1 ps wide can still drop a word; minimum
+   `LDE` width is the period minus 300 ps) and drives its clocks rail to rail, but: full rate is a race
+   between the 8:1 phase multiplexer and the slot clock (fails at tt for phase select 0, passes at ff;
+   quarter and half rate do not use that path); the pessimistic slow corner fails at ring 625 MHz at 3.15
+   and 3.50 V (slot-enable chain); nominal ss/3.15 V at 625 MHz passes on thin margin. 0.48 Gb/s can be
+   received in quarter mode at ring 480 MHz with the phase picked in the digital macro (not verified
+   end to end). The fix (selected sample registered before the lanes, pipelined slot enables) is a new
+   capture revision (WRX-09, WRX-12, WRX-22).
 5. **CDR closed loop is not run on r13** (WRX-01): the integral path of r13 is slower than the revision the
    loop was last run on. Also open: mismatch Monte Carlo with trim, the enable/safe sweep, sf/fs corners, the
    source of an idle `VCTRL` drift on the ring side, ring start-up with a slow enable ramp (WRX-23). The
    `cdr.spice` header comment still quotes the trim as "1/8 vote, ±3.9 votes".
-6. **`pt_detect`**: disconnect at 0.5 V line common mode fails at slow corners; thresholds depend on the
-   layout parasitics, so a smaller layout needs a threshold redesign (unfinished working-tree edit of
-   `detect.spice`). No detector exists for the HS pair (WRX-08).
+6. **`pt_detect`**: the published r7 fails disconnect at 0.5 V line common mode at slow corners and its
+   thresholds depend on layout parasitics. The staged r10 fixes both at the nominal corners with a
+   supply-dependent threshold code (01 at 3.15 V, 00 at 3.3 V, 10 at 3.50 V) and adds the HS signal detect
+   (taps of 5 kΩ on `SL`, not built in any cell), but needs wide supply trunks and a fix for the
+   pessimistic slow corner (WRX-08).
 7. **Forwarded clock on the AUX_CLK pair**: the 25–810 MHz receiver bench, the 3.1 mm differential route and
    the pad-exclusion rule are not done; the path needs the debug island on.
 8. **Stale evidence**: every evidence file except `cdr-evidence.json` hashes flow scripts (`netlists.py`,

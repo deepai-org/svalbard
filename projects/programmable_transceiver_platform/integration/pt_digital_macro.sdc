@@ -3,11 +3,15 @@
 #
 # Clock targets (ns). Override any period by setting the Tcl variable before sourcing
 # (verification/digital_hardening/sta_signoff.tcl re-sources this file at other rates).
-#   sclk      SPI SCLK. Bench uses 10 MHz; spec starts at <=1 MHz. Constrained at 10 MHz (2026-11-11; was
-#             20 MHz with no spec basis): Mode 0 makes the register-file write (data validation on the
-#             last data bit) and the read response a HALF-period path; post-route ss_032C_3v15 needs
-#             ~36 ns for the write validation, which 20 MHz (25 ns) cannot give. The address/command
-#             decode is multicycle (pt_spi cmd_r/rd_addr) and reads use registered candidates.
+#   sclk      SPI SCLK. Requirement: <= 5 MHz (spec/tapeout-plan.md, block-diagram.md, fpga-connection-plan.md;
+#             bring-up <= 1 MHz). Constrained at 5 MHz = 200 ns. Mode 0 makes the register-file write (data
+#             validation on the last data bit) and the read response a HALF-period path (100 ns at 5 MHz;
+#             the write validation needs ~36 ns post-route at ss_032C_3v15). The address/command decode is
+#             multicycle (pt_spi cmd_r/rd_addr) and reads use registered candidates. The former 10 MHz
+#             constraint (a margin choice with no spec basis) was missed by 0.54 ns post-CTS at 71 %
+#             utilisation; 10 MHz is not a requirement and is reported as fmax only. The simulation benches
+#             clock SCLK at 10 MHz. PT_SCLK_PERIOD=<ns> (run_digital_hardening.sh passes it on) overrides.
+#             Bounds of quasi-static crossings into SCLK stay at 100 ns (SCLK_XING below).
 #   ref       reference into the calibrator (REF_IN after the clocktree; the calibrator is a
 #             slow SAR, any slower reference is fine). 100 MHz.
 #   hword     host DDR clock from the clocktree (transport rework 2026-11-10): line/16, or the fixed
@@ -29,7 +33,7 @@
 #             counters through a stopped-only select mux, so they are logically exclusive with each other.
 # Experiment hook: PT_SCLK_PERIOD in the environment overrides the SCLK constraint (area/closure studies).
 if {[info exists ::env(PT_SCLK_PERIOD)]} { set SCLK_PERIOD $::env(PT_SCLK_PERIOD) }
-foreach {v d} {SCLK_PERIOD 100.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WRX_PERIOD 12.3
+foreach {v d} {SCLK_PERIOD 200.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WRX_PERIOD 12.3
                RFTX_PERIOD 20.0 RFRX_PERIOD 20.0 CTW_PERIOD 6.4 CTDET_PERIOD 6.4 FC_PERIOD 6.4} {
     if {![info exists $v]} { set $v $d }
 }
@@ -39,6 +43,7 @@ if {![info exists HOST_RATE_DIV]} {
     if {[info exists ::env(PT_HOST_RATE_DIV)]} { set HOST_RATE_DIV $::env(PT_HOST_RATE_DIV) }
 }
 if {[lsearch -exact {1 2 4} $HOST_RATE_DIV] < 0} {error "HOST_RATE_DIV must be 1, 2 or 4"}
+set SCLK_XING [expr {$SCLK_PERIOD < 100.0 ? $SCLK_PERIOD : 100.0}]
 set HDDR_PERIOD [expr {$HOST_RATE_DIV * $HWORD_PERIOD}]
 set HCORE_PERIOD [expr {2.0 * $HDDR_PERIOD}]
 # HLINK_PERIOD: the word time (half a DDR period); kept as a variable for the reports only.
@@ -555,7 +560,7 @@ foreach n {al_sy lk_sy fk_sy} {
 set sync_first [concat $sync_first $wrx_first]
 if {[llength $sync_first]} { set_false_path -to $sync_first }
 # 1b. Reset synchronizers (pt_async_fifo wr_reset/rd_reset, pt_enable_release release_state,
-#     pt_pair_word_boundary reset_release, pt_host_link hrs/wrs). Their asynchronous reset is
+#     pt_host_link drs/crs, pt_h2d_gearbox hrs). Their asynchronous reset is
 #     driven from other domains (ENABLE release, rate-switch hold, rst_n); assertion is
 #     asynchronous by design and release is re-timed by the two-flop chain itself. Only the
 #     async RN/SN pins of these flops are cut; their D paths stay timed in their own domain.
@@ -626,11 +631,11 @@ foreach {f wrs rds} [list *core.ingress $ingress_clks hcore *core.egress hcore $
 #    playback entries are written on the SCLK fall with ENABLE=0 and read by the owner clock only
 #    after ENABLE=1 releases the reader (synchronized). Protocol-protected; bounded to the reader.
 set cb [pt_cells {*core.ingress.mem*}]
-if {[llength $cb]} { pt_bound_xing $SCLK_PERIOD -from $cb -to [get_clocks sclk] }
+if {[llength $cb]} { pt_bound_xing $SCLK_XING -from $cb -to [get_clocks sclk] }
 # capture_done is a pt_core output register; synthesis names it after the pt_digital net
 # (digital.capture_done_<cell>), so match it anywhere (AC1 run0: the bound silently missed it).
 set cd [pt_cells {*capture_done*}]
-if {[llength $cd]} { pt_bound_xing $SCLK_PERIOD -from $cd -to [get_clocks sclk] }
+if {[llength $cd]} { pt_bound_xing $SCLK_XING -from $cd -to [get_clocks sclk] }
 if {$mem_on} {
     foreach c [concat $egress_clks hcore] { set_false_path -from [get_clocks egress_mem_sclk] -to [get_clocks $c] }
 }
@@ -640,7 +645,7 @@ foreach inst {fca fcb} {
     set g [pt_cells "*${inst}.s1*"]
     if {[llength $g]} { pt_bound_xing $REF_PERIOD -from [get_clocks $fc_clks] -to $g }
     set h [pt_cells "*${inst}.hold*"]
-    if {[llength $h]} { pt_bound_xing $SCLK_PERIOD -from $h -to [get_clocks sclk] }
+    if {[llength $h]} { pt_bound_xing $SCLK_XING -from $h -to [get_clocks sclk] }
     # Window evaluation: snapshot, fb_prev and the captured configuration are loaded at least 5
     # reference cycles before the result registers that use them (window end -> ev_cnt countdown;
     # a configuration capture inside that interval suppresses the metric update). Checked by

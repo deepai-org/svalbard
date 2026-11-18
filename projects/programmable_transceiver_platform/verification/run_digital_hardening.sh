@@ -33,17 +33,25 @@ fi
 docker image inspect "$DIGITAL_IMAGE" --format '{{.Id}} {{.Architecture}}' > "$OUT/digital-image.txt"
 docker image inspect "$ANALOG_IMAGE" --format '{{.Id}} {{.Architecture}}' > "$OUT/analog-image.txt"
 RUN="$OUT/design/runs/$TAG"
+# snapshot of the step script for this output directory (a running flow does not follow later edits of the tree)
+[ -f "$OUT/repair_design_pt.tcl" ] || cp "$PROJ/verification/digital_hardening/repair_design_pt.tcl" "$OUT/repair_design_pt.tcl"
 
+# The flow's repair_design step script is replaced by digital_hardening/repair_design_pt.tcl (gain buffering
+# before the final global placement, see its header and config.json meta.substituting_steps).
 dk() { # dk <image> <cpus> <mem> <command>
   docker run --rm --network none --cpus "$2" --memory "$3" --memory-swap "$3" --pids-limit 4096 \
     --user "$(id -u):$(id -g)" -e HOME=/out/home -e TMPDIR=/out/tmp -e OMP_NUM_THREADS=1 \
-    -v "$PROJ:/src:ro" -v "$OUT:/out" --entrypoint /bin/bash "$1" -lc "$4"
+    -v "$PROJ:/src:ro" -v "$OUT:/out" \
+    -v "$OUT/repair_design_pt.tcl:/usr/local/lib/python3.12/dist-packages/librelane/scripts/openroad/repair_design.tcl:ro" \
+    --entrypoint /bin/bash "$1" -lc "$4"
 }
 
 for stage in "${stages[@]}"; do
 case "$stage" in
 pnr)
   rm -rf "$OUT/design"; mkdir -p "$OUT/design/rtl" "$OUT/home" "$OUT/tmp"
+  cp "$PROJ/verification/digital_hardening/repair_design_pt.tcl" "$OUT/repair_design_pt.tcl"
+  sha256sum "$OUT/repair_design_pt.tcl" > "$OUT/repair_design_pt.sha256"
   cp "$PROJ"/rtl/*.sv "$PROJ"/rtl/*.svh "$PROJ"/rtl/*.vh "$OUT/design/rtl/"
   cp "$PROJ/integration/pt_digital_macro.sdc" "$PROJ/verification/digital_hardening/config.json" "$PROJ/verification/digital_hardening/pin_order.cfg" \
      "$PROJ/verification/digital_hardening/hio_placement.cfg" "$PROJ/integration/pt_cts_h2d.tcl" "$OUT/design/"
@@ -61,12 +69,27 @@ pnr)
   # DESIGN_REPAIR_BUFFER_GAIN from the environment): builds balanced repeater trees instead of the
   # serial buf_1/buf_2 chains the slew-driven repair left on high-fanout control nets (TC1-TC4).
   BUFFER_GAIN="${PT_REPAIR_BUFFER_GAIN:-4.0}"; echo "$BUFFER_GAIN" > "$OUT/repair-buffer-gain.txt"
-  dk "$DIGITAL_IMAGE" "$CPUS" "$MEM" "set -e; cd /out/design; export DESIGN_REPAIR_BUFFER_GAIN=$BUFFER_GAIN; librelane --version > /out/librelane-version.txt 2>&1 || true
+  dk "$DIGITAL_IMAGE" "$CPUS" "$MEM" "set -e; cd /out/design; export DESIGN_REPAIR_BUFFER_GAIN=$BUFFER_GAIN PT_GAIN_BEFORE_GPL=1 ${PT_SCLK_PERIOD:+PT_SCLK_PERIOD=$PT_SCLK_PERIOD}; librelane --version > /out/librelane-version.txt 2>&1 || true
     if [ -f /opt/svalbard/toolchain.json ]; then cp /opt/svalbard/toolchain.json /out/toolchain.json; fi
     librelane --manual-pdk --pdk-root /pdk -p gf180mcuD -s gf180mcu_fd_sc_mcu7t5v0 -j $CPUS --run-tag $TAG \
       --hide-progress-bar config.json > /out/librelane.log 2>&1" || pnr_rc=$?
   echo "librelane_rc=$pnr_rc" >> "$OUT/librelane.log"
   tail -n 30 "$OUT/librelane.log"
+  # Gates on the two repair passes, whatever the flow's own result: the replaced step script really ran (pass 1
+  # then pass 2), every dont-touch name resolved, and no clamp pin has anything before its isolation AND2 (CP4-1).
+  gate=0
+  p1=$(ls "$RUN"/*-openroad-repairdesignpostgpl/openroad-repairdesignpostgpl.log 2>/dev/null | head -n 1)
+  p2=$(ls "$RUN"/*-openroad-repairdesignpostgpl-1/openroad-repairdesignpostgpl-1.log 2>/dev/null | head -n 1)
+  { [ -n "$p1" ] && grep -q "pt: repair_design pass 1" "$p1"; } || { echo "GATE: repair pass 1 missing" >&2; gate=1; }
+  { [ -n "$p2" ] && grep -q "pt: repair_design pass 2" "$p2"; } || { echo "GATE: repair pass 2 missing" >&2; gate=1; }
+  if grep -l "STA-0101" "$RUN"/*-openroad-repairdesign*/*.log "$RUN"/*-openroad-resizertiming*/*.log 2>/dev/null | head -n 1 | grep -q .; then
+    echo "GATE: a dont-touch name did not resolve (STA-0101)" >&2; gate=1; fi
+  for nl in "$RUN"/*-openroad-repairdesignpostgpl-1/*.nl.v "$RUN"/*-openroad-resizertimingpostcts/*.nl.v "$RUN"/*-openroad-resizertimingpostgrt/*.nl.v "$RUN"/final/nl/*.nl.v; do
+    [ -f "$nl" ] || continue
+    python3 "$PROJ/verification/digital_hardening/clamp_check.py" "$nl" > "$OUT/clamp_check.$(basename "$(dirname "$nl")").log" 2>&1 || { echo "GATE: clamp_check failed on $nl" >&2; gate=1; }
+  done
+  echo "gate_rc=$gate" >> "$OUT/librelane.log"
+  if [ "$gate" -ne 0 ]; then exit 3; fi
   if [ "$pnr_rc" -ne 0 ]; then exit "$pnr_rc"; fi
   ;;
 export)

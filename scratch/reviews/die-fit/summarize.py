@@ -2,7 +2,7 @@
 """Die-fit: collect run/fit-*.json into one table (markdown on stdout, summary.json)."""
 import json, glob, os
 HERE = os.path.dirname(os.path.abspath(__file__)); rows = []
-ORDER = ['b', 'c', 'cr', 'b-flow', 'c-flow', 'b-h5', 'c-h5', 'c-l1', 'c-l2', 'c-l3', 'c-l4', 'c-l5', 'c-l5-flow', 'cr-l5', 'b-l5', 'c-l6', 'cr-l6', 'b-l6', 'b-g500', 'b-g700', 'b-g900', 'b-g1100']
+ORDER = ['s', 't', 'lb', 's-flow', 't-flow', 'lb-flow', 's-m28', 's-m32', 't-m36', 't-m28', 't-l1', 't-l2', 't-l3', 't-l4', 't-l4-m28', 't-l4-flow', 's-l4', 'lb-l3', 'lb-l3-flow', 'lb-m32', 'lb-m36']
 for t in ORDER:
     f = f'{HERE}/run/fit-{t}.json'
     if not os.path.exists(f): continue
@@ -13,10 +13,12 @@ for t in ORDER:
     if r['nopad']: opts.append('debug pads on provider cells')
     if not r['bank']: opts.append('no bank')
     if r['ring_um']: opts.append(f"ring +{r['ring_um']:.0f}")
-    if r['dropped']: opts.append('OPEN/SHORT frames out' + (', qdum + lo_obs in the QVCO slot' if 'lo_obs' in r['dropped'] else ''))
+    if r['dropped']: opts.append('qdum + lo_obs in the QVCO slot')
+    mm2 = r['macro']['w']*r['macro']['h']/1e6
+    opts.insert(0, f'macro {mm2:.2f}')
     if r['grow_um']: opts.append(f"die +{r['grow_um']:.0f} um tall")
     if all(x['strategy'] == 2 for x in tr): opts.append('flow-first order only')
-    rows.append(dict(tag=t, scen=r['scenario'], opts=', '.join(opts) or 'baseline', core=r['core_mm2'], blocks=r['blocks'], demand=r['block_demand_mm2'],
+    rows.append(dict(tag=t, scen=r['scenario'], opts=', '.join(opts), core=r['core_mm2'], blocks=r['blocks'], demand=r['block_demand_mm2'],
                      placed=r['placed'], placed_mm2=r['placed_mm2'], unplaced=len(r['unplaced']), unplaced_mm2=r['unplaced_mm2'], halo=r['halo_area_mm2'],
                      free=r['free_after_mm2'], use80=r['free_usable_80um_mm2'], use200=r['free_usable_200um_mm2'], scrap=r['scrap_lt80um_mm2'],
                      relaxed=[x[0] for x in r['relaxed']], rule_fails=len(r['rule_fails']), macro=f"{r['macro']['w']:.0f} x {r['macro']['h']:.0f}",

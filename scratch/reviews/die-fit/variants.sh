@@ -1,29 +1,29 @@
 #!/bin/bash
-# all die-fit packing runs on ledger v2, one after another, one thread (2 macro shapes x 3 ordering strategies each)
+# all die-fit packing runs on the current ledger, strictly one after another, one thread
+# (2 macro shapes x 3 ordering strategies each; STRAT=2 = signal-flow / supply order only)
 cd "$(dirname "$0")"
-M=MACRO=1716:1262,2024:954; T=TRIES=3
+T=TRIES=3
 L1=NOPAD=pad_bb_i,pad_bb_q,pad_wmon
-./runset.sh b     SCEN=B $M TRIES=6
-./runset.sh c     SCEN=C $M TRIES=6
-./runset.sh cr    SCEN=CR $M $T
-./runset.sh b-flow SCEN=B STRAT=2 $M $T
-./runset.sh c-flow SCEN=C STRAT=2 $M $T
-./runset.sh b-h5  SCEN=B HALO=5 $M $T
-./runset.sh c-h5  SCEN=C HALO=5 $M $T
-./runset.sh c-l1  SCEN=C $L1 $M $T
-./runset.sh c-l2  SCEN=C $L1 BANK=0 $M $T
-./runset.sh c-l3  SCEN=C $L1 BANK=0 RING=36 $M $T
-./runset.sh c-l4  SCEN=C $L1 BANK=0 RING=36 HALO=6 $M $T
-./runset.sh c-l5  SCEN=C $L1 BANK=0 RING=36 HALO=6 DROP=char_rffet_open,char_rffet_short $M $T
-./runset.sh c-l5-flow SCEN=C $L1 BANK=0 RING=36 HALO=6 DROP=char_rffet_open,char_rffet_short STRAT=2 $M $T
-./runset.sh cr-l5 SCEN=CR $L1 BANK=0 RING=36 HALO=6 DROP=char_rffet_open,char_rffet_short $M $T
-./runset.sh b-l5  SCEN=B $L1 BANK=0 RING=36 HALO=6 DROP=char_rffet_open,char_rffet_short $M $T
-./runset.sh b-g500 SCEN=B GROW=500 $M $T
-./runset.sh b-g700 SCEN=B GROW=700 $M $T
-./runset.sh b-g900 SCEN=B GROW=900 $M $T
-./runset.sh b-g1100 SCEN=B GROW=1100 $M $T
-
-D6=DROP=char_rffet_open,char_rffet_short,lo_mmd_qdum,lo_obs
-./runset.sh c-l6  SCEN=C $L1 BANK=0 RING=36 $D6 $M $T
-./runset.sh cr-l6 SCEN=CR $L1 BANK=0 RING=36 $D6 $M $T
-./runset.sh b-l6  SCEN=B $L1 BANK=0 RING=36 $D6 $M $T
+D6=DROP=lo_mmd_qdum,lo_obs
+./runset.sh s      SCEN=S TRIES=6
+./runset.sh t      SCEN=T TRIES=6
+./runset.sh lb     SCEN=LB TRIES=6
+./runset.sh s-flow SCEN=S STRAT=2 $T
+./runset.sh t-flow SCEN=T STRAT=2 $T
+./runset.sh lb-flow SCEN=LB STRAT=2 $T
+./runset.sh s-m28  SCEN=S MACRO_MM2=2.814 $T
+./runset.sh s-m32  SCEN=S MACRO_MM2=3.200 $T
+./runset.sh t-m36  SCEN=T MACRO_MM2=3.648 $T
+./runset.sh t-m28  SCEN=T MACRO_MM2=2.814 $T
+./runset.sh t-l1   SCEN=T $L1 $T
+./runset.sh t-l2   SCEN=T $L1 BANK=0 $T
+./runset.sh t-l3   SCEN=T $L1 BANK=0 RING=36 $T
+./runset.sh t-l4   SCEN=T $L1 BANK=0 RING=36 $D6 $T
+./runset.sh t-l4-m28 SCEN=T $L1 BANK=0 RING=36 $D6 MACRO_MM2=2.814 $T
+./runset.sh t-l4-flow SCEN=T $L1 BANK=0 RING=36 $D6 STRAT=2 $T
+./runset.sh s-l4   SCEN=S $L1 BANK=0 RING=36 $D6 $T
+./runset.sh lb-l3  SCEN=LB BANK=0 RING=36 $T
+./runset.sh lb-l3-flow SCEN=LB BANK=0 RING=36 STRAT=2 $T
+./runset.sh lb-m32 SCEN=LB MACRO_MM2=3.200 $T
+./runset.sh lb-m36 SCEN=LB MACRO_MM2=3.648 $T
+echo ALLDONE >> run/runset.status

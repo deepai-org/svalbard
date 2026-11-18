@@ -1,0 +1,2781 @@
+{
+"scenario": "T",
+"ring_um": 36.0,
+"grow_um": 0.0,
+"nopad": [
+"pad_bb_i",
+"pad_bb_q",
+"pad_wmon"
+],
+"tries": 3,
+"halo_um": 10.0,
+"bank": false,
+"corridor": true,
+"dropped": [
+"lo_mmd_qdum",
+"lo_obs"
+],
+"macro": {
+"w": 2024.0,
+"h": 1581.2,
+"x0": 954.0
+},
+"trials": [
+{
+"strategy": 2,
+"macro_w": 1716.0,
+"macro_h": 1865.0,
+"macro_x0": 1262.0,
+"placed": 198,
+"unplaced": 7,
+"unplaced_mm2": 1.4988,
+"relaxed": 2,
+"free_mm2": 1.4994,
+"flow_cost_mm": 120.2
+},
+{
+"strategy": 2,
+"macro_w": 1716.0,
+"macro_h": 1865.0,
+"macro_x0": 1262.0,
+"placed": 198,
+"unplaced": 7,
+"unplaced_mm2": 1.4988,
+"relaxed": 2,
+"free_mm2": 1.4994,
+"flow_cost_mm": 120.2
+},
+{
+"strategy": 2,
+"macro_w": 1716.0,
+"macro_h": 1865.0,
+"macro_x0": 1262.0,
+"placed": 198,
+"unplaced": 7,
+"unplaced_mm2": 1.4988,
+"relaxed": 2,
+"free_mm2": 1.4994,
+"flow_cost_mm": 120.2
+},
+{
+"strategy": 2,
+"macro_w": 2024.0,
+"macro_h": 1581.2,
+"macro_x0": 954.0,
+"placed": 199,
+"unplaced": 6,
+"unplaced_mm2": 1.1688,
+"relaxed": 2,
+"free_mm2": 1.1,
+"flow_cost_mm": 117.8
+},
+{
+"strategy": 2,
+"macro_w": 2024.0,
+"macro_h": 1581.2,
+"macro_x0": 954.0,
+"placed": 199,
+"unplaced": 6,
+"unplaced_mm2": 1.1688,
+"relaxed": 2,
+"free_mm2": 1.1,
+"flow_cost_mm": 117.8
+},
+{
+"strategy": 2,
+"macro_w": 2024.0,
+"macro_h": 1581.2,
+"macro_x0": 954.0,
+"placed": 199,
+"unplaced": 6,
+"unplaced_mm2": 1.1688,
+"relaxed": 2,
+"free_mm2": 1.1,
+"flow_cost_mm": 117.8
+}
+],
+"core_mm2": 13.299,
+"blocks": 205,
+"block_demand_mm2": 6.866,
+"placed": 199,
+"placed_mm2": 5.697,
+"unplaced": [
+[
+"adc_q",
+"no free position of this size (geometry)",
+330000
+],
+[
+"bbfilter_i",
+"no free position of this size (geometry)",
+230000
+],
+[
+"bbfilter_q",
+"no free position of this size (geometry)",
+230000
+],
+[
+"lo_lf",
+"no free position of this size (geometry)",
+194122
+],
+[
+"refbuf",
+"no free position of this size (geometry)",
+117089
+],
+[
+"char_rffet_short",
+"no free position of this size (geometry)",
+67600
+]
+],
+"unplaced_mm2": 1.169,
+"relaxed": [
+[
+"qvco",
+"max distance to switch/partner"
+],
+[
+"wrx_cap",
+"max distance to switch/partner"
+]
+],
+"halo_area_mm2": 1.047,
+"free_after_mm2": 1.1,
+"free_usable_80um_mm2": 0.672,
+"free_usable_200um_mm2": 0.317,
+"scrap_lt80um_mm2": 0.428,
+"rule_audit": [
+{
+"aggressor": "digital",
+"victim": "adc_i",
+"min_um": 210,
+"gap_um": 1656.7,
+"ok": true
+},
+{
+"aggressor": "digital",
+"victim": "core_bias",
+"min_um": 100,
+"gap_um": 1655.9,
+"ok": true
+},
+{
+"aggressor": "digital",
+"victim": "lna",
+"min_um": 1000,
+"gap_um": 1777.4,
+"ok": true
+},
+{
+"aggressor": "digital",
+"victim": "qvco",
+"min_um": 300,
+"gap_um": 303.8,
+"ok": true
+},
+{
+"aggressor": "wrx_cap",
+"victim": "adc_i",
+"min_um": 200,
+"gap_um": 736.6,
+"ok": true
+},
+{
+"aggressor": "r8arch_capture_b",
+"victim": "adc_i",
+"min_um": 200,
+"gap_um": 316.6,
+"ok": true
+},
+{
+"aggressor": "pll_cdr",
+"victim": "qvco",
+"min_um": 500,
+"gap_um": 549.1,
+"ok": true
+},
+{
+"aggressor": "pll_tx",
+"victim": "qvco",
+"min_um": 500,
+"gap_um": 1347.2,
+"ok": true
+},
+{
+"aggressor": "pll_cdr",
+"victim": "adc_i",
+"min_um": 200,
+"gap_um": 1214.4,
+"ok": true
+},
+{
+"aggressor": "aosc",
+"victim": "lna",
+"min_um": 300,
+"gap_um": 669.1,
+"ok": true
+},
+{
+"aggressor": "aosc",
+"victim": "por",
+"min_um": 300,
+"gap_um": 1235.7,
+"ok": true
+},
+{
+"aggressor": "rfdriver",
+"victim": "core_bias",
+"min_um": 340,
+"gap_um": 2522.8,
+"ok": true
+},
+{
+"aggressor": "rfdriver",
+"victim": "adc_i",
+"min_um": 839,
+"gap_um": 2401.2,
+"ok": true
+},
+{
+"aggressor": "rfdriver",
+"victim": "lna",
+"min_um": 1000,
+"gap_um": 2480.2,
+"ok": true
+},
+{
+"aggressor": "wiredtx",
+"victim": "adc_i",
+"min_um": 97,
+"gap_um": 2307.4,
+"ok": true
+},
+{
+"aggressor": "qvco",
+"victim": "lna",
+"min_um": 250,
+"gap_um": 979.5,
+"ok": true
+},
+{
+"aggressor": "west_edge",
+"victim": "qvco",
+"min_um": 1500,
+"gap_um": 1617.0,
+"ok": true
+},
+{
+"aggressor": "rf_tx_band",
+"victim": "qvco",
+"min_um": 800,
+"gap_um": 1495.9,
+"ok": true
+}
+],
+"rule_fails": [],
+"switches": [
+{
+"switch": "isw_wired_cap",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3262,
+426,
+3505,
+690
+],
+"edge_gaps": {
+"W": 2846,
+"E": 11,
+"S": 10,
+"N": 4016
+}
+},
+{
+"switch": "isw_lod",
+"pad_edge": "W",
+"pad_coord": 556.5,
+"rect": [
+426,
+426,
+690,
+669
+],
+"edge_gaps": {
+"W": 10,
+"E": 2826,
+"S": 10,
+"N": 4037
+}
+},
+{
+"switch": "isw_rf_rx",
+"pad_edge": "W",
+"pad_coord": 978.5,
+"rect": [
+426,
+690,
+658,
+905
+],
+"edge_gaps": {
+"W": 10,
+"E": 2858,
+"S": 274,
+"N": 3801
+}
+},
+{
+"switch": "isw_wired_rx",
+"pad_edge": "E",
+"pad_coord": 556.5,
+"rect": [
+3058,
+426,
+3242,
+627
+],
+"edge_gaps": {
+"W": 2642,
+"E": 274,
+"S": 10,
+"N": 4079
+}
+},
+{
+"switch": "isw_rf_tx",
+"pad_edge": "W",
+"pad_coord": 3932.5,
+"rect": [
+426,
+4122,
+627,
+4306
+],
+"edge_gaps": {
+"W": 10,
+"E": 2889,
+"S": 3706,
+"N": 400
+}
+},
+{
+"switch": "isw_wired_tx",
+"pad_edge": "E",
+"pad_coord": 2244.5,
+"rect": [
+3322,
+1574,
+3506,
+1775
+],
+"edge_gaps": {
+"W": 2906,
+"E": 10,
+"S": 1158,
+"N": 2931
+}
+},
+{
+"switch": "isw_pll",
+"pad_edge": "E",
+"pad_coord": 4143.5,
+"rect": [
+3202,
+4494,
+3386,
+4695
+],
+"edge_gaps": {
+"W": 2786,
+"E": 130,
+"S": 4078,
+"N": 11
+}
+},
+{
+"switch": "isw_lo",
+"pad_edge": "W",
+"pad_coord": 2666.5,
+"rect": [
+426,
+2622,
+610,
+2795
+],
+"edge_gaps": {
+"W": 10,
+"E": 2906,
+"S": 2206,
+"N": 1911
+}
+}
+],
+"straps": [
+{
+"block": "usb_txdrv",
+"island": "wired_tx",
+"mA": 20.0,
+"dist_um": 1637,
+"m5_width_um": 153.9
+},
+{
+"block": "wrx_cap",
+"island": "wired_cap",
+"mA": 46.64,
+"dist_um": 666,
+"m5_width_um": 145.9
+},
+{
+"block": "qvco",
+"island": "lo",
+"mA": 29.0,
+"dist_um": 1007,
+"m5_width_um": 137.3
+},
+{
+"block": "lo_ext",
+"island": "lod",
+"mA": 13.74,
+"dist_um": 1581,
+"m5_width_um": 102.1
+},
+{
+"block": "pll_cdr",
+"island": "pll",
+"mA": 10.2,
+"dist_um": 2036,
+"m5_width_um": 97.6
+},
+{
+"block": "lo_mmd",
+"island": "lod",
+"mA": 34.8,
+"dist_um": 497,
+"m5_width_um": 81.3
+},
+{
+"block": "rx_aux_clk",
+"island": "debug",
+"mA": 4.63,
+"dist_um": 2985,
+"m5_width_um": 65.0
+},
+{
+"block": "wtx_ser8d",
+"island": "wired_tx",
+"mA": 10.0,
+"dist_um": 1115,
+"m5_width_um": 52.4
+},
+{
+"block": "clk_obs",
+"island": "debug",
+"mA": 4.96,
+"dist_um": 2134,
+"m5_width_um": 49.7
+},
+{
+"block": "dac_i",
+"island": "conv",
+"mA": 2.28,
+"dist_um": 4179,
+"m5_width_um": 44.8
+},
+{
+"block": "wiredtx",
+"island": "wired_tx",
+"mA": 5.0,
+"dist_um": 1771,
+"m5_width_um": 41.6
+},
+{
+"block": "prescale_conv",
+"island": "pll",
+"mA": 2.4,
+"dist_um": 3614,
+"m5_width_um": 40.8
+},
+{
+"block": "ptrim",
+"island": "wired_cap",
+"mA": 21.0,
+"dist_um": 393,
+"m5_width_um": 38.8
+},
+{
+"block": "prescale",
+"island": "pll",
+"mA": 2.4,
+"dist_um": 2714,
+"m5_width_um": 30.6
+},
+{
+"block": "prescale_hf",
+"island": "pll",
+"mA": 2.4,
+"dist_um": 2494,
+"m5_width_um": 28.1
+},
+{
+"block": "lna",
+"island": "rf_rx",
+"mA": 21.4,
+"dist_um": 233,
+"m5_width_um": 23.5
+},
+{
+"block": "bb_tap_q",
+"island": "debug",
+"mA": 1.5,
+"dist_um": 2719,
+"m5_width_um": 19.2
+},
+{
+"block": "bb_tap_wmon",
+"island": "debug",
+"mA": 1.5,
+"dist_um": 2568,
+"m5_width_um": 18.1
+},
+{
+"block": "pll_vreg2",
+"island": "pll",
+"mA": 1.0,
+"dist_um": 3769,
+"m5_width_um": 17.7
+},
+{
+"block": "obs_pre4_pll",
+"island": "debug",
+"mA": 1.5,
+"dist_um": 2284,
+"m5_width_um": 16.1
+},
+{
+"block": "obs_pre4_cdr",
+"island": "debug",
+"mA": 1.5,
+"dist_um": 2212,
+"m5_width_um": 15.6
+},
+{
+"block": "clockmux",
+"island": "pll",
+"mA": 1.55,
+"dist_um": 2100,
+"m5_width_um": 15.3
+},
+{
+"block": "obs_pre4_aux",
+"island": "debug",
+"mA": 1.5,
+"dist_um": 2064,
+"m5_width_um": 14.6
+},
+{
+"block": "rfdriver",
+"island": "rf_tx",
+"mA": 61.7,
+"dist_um": 23,
+"m5_width_um": 14.5
+},
+{
+"block": "rxmix_i",
+"island": "rf_rx",
+"mA": 3.09,
+"dist_um": 989,
+"m5_width_um": 14.4
+}
+],
+"strap_m5_area_mm2": 2.347,
+"macro_signal_wire_mm": 1079.2,
+"route_top": [
+[
+"slicer",
+89,
+2376
+],
+[
+"core_bias",
+79,
+1656
+],
+[
+"ptrim",
+41,
+2090
+],
+[
+"wrx_cap",
+72,
+1144
+],
+[
+"adc_i",
+31,
+1657
+],
+[
+"vthdac",
+17,
+2505
+],
+[
+"dac_q",
+13,
+2501
+],
+[
+"detect",
+12,
+2494
+],
+[
+"lna",
+16,
+1868
+],
+[
+"ctle",
+8,
+2345
+],
+[
+"termination",
+9,
+1754
+],
+[
+"clockmux",
+20,
+726
+],
+[
+"lo_mmd",
+8,
+1773
+],
+[
+"cdr",
+14,
+803
+],
+[
+"rxmix_q",
+8,
+1358
+]
+],
+"fixed": {
+"digital": [
+954.0,
+3124.8,
+2978.0,
+4706.0
+],
+"d2h_strip": [
+1387.7,
+416.0,
+2700.0,
+440.0
+],
+"wtx_tcoil_rsv": [
+2900.0,
+2922.0,
+3470.0,
+3042.0
+],
+"lo_legs_rsv": [
+954.0,
+2215.0,
+1003.0,
+3090.0
+],
+"corridor_s_rsv": [
+2281.2,
+450.0,
+2327.7,
+3114.8
+]
+},
+"pads": {
+"pad_rf_rx": [
+[
+26.0,
+1362.9,
+938.9,
+1673.0
+]
+],
+"pad_ref": [
+[
+26.0,
+2209.8,
+938.9,
+2611.0
+]
+],
+"pad_aux_clk": [
+[
+26.0,
+3053.8,
+938.9,
+3455.0
+]
+],
+"pad_rf_tx": [
+[
+26.0,
+4316.9,
+938.9,
+4627.0
+]
+],
+"pad_hs_rx": [
+[
+2993.1,
+735.1,
+3906.0,
+1227.1
+],
+[
+2993.1,
+1227.1,
+3480.0,
+1259.0
+]
+],
+"pad_wtx_ext": [
+[
+2993.1,
+3050.9,
+3906.0,
+3361.0
+]
+],
+"pad_usb": [
+[
+2991.1,
+1787.8,
+3906.0,
+2309.0
+],
+[
+2691.1,
+1787.8,
+2991.1,
+1977.5
+]
+],
+"pad_wire_tx": [
+[
+2991.1,
+2431.0,
+3906.0,
+2912.2
+],
+[
+2831.1,
+2770.8,
+2991.1,
+2912.2
+]
+]
+},
+"placed_rects": {
+"isw_wired_cap": {
+"rect": [
+3262.0,
+426.0,
+3505.1,
+689.6
+],
+"rot": true,
+"grp": "core"
+},
+"isw_lod": {
+"rect": [
+426.0,
+426.0,
+689.6,
+669.1
+],
+"rot": false,
+"grp": "core"
+},
+"isw_rf_rx": {
+"rect": [
+426.0,
+690.0,
+657.6,
+905.1
+],
+"rot": false,
+"grp": "core"
+},
+"isw_wired_rx": {
+"rect": [
+3058.0,
+426.0,
+3241.6,
+627.1
+],
+"rot": false,
+"grp": "core"
+},
+"isw_rf_tx": {
+"rect": [
+426.0,
+4122.0,
+627.1,
+4305.6
+],
+"rot": true,
+"grp": "core"
+},
+"isw_debug": {
+"rect": [
+2998.0,
+4494.0,
+3181.6,
+4695.1
+],
+"rot": false,
+"grp": "core"
+},
+"isw_wired_tx": {
+"rect": [
+3322.0,
+1574.0,
+3505.6,
+1775.1
+],
+"rot": false,
+"grp": "core"
+},
+"isw_pll": {
+"rect": [
+3202.0,
+4494.0,
+3385.6,
+4695.1
+],
+"rot": false,
+"grp": "core"
+},
+"isw_conv": {
+"rect": [
+2086.0,
+450.0,
+2259.1,
+633.6
+],
+"rot": true,
+"grp": "core"
+},
+"isw_lo": {
+"rect": [
+426.0,
+2622.0,
+609.6,
+2795.1
+],
+"rot": false,
+"grp": "core"
+},
+"qvco": {
+"rect": [
+1617.0,
+1973.0,
+2244.9,
+2821.0
+],
+"rot": true,
+"grp": "lo"
+},
+"lo_mmd": {
+"rect": [
+882.0,
+974.0,
+1265.8,
+1351.9
+],
+"rot": true,
+"grp": "lod"
+},
+"lo_vreg": {
+"rect": [
+1242.0,
+2210.0,
+1578.2,
+3102.5
+],
+"rot": false,
+"grp": "lo"
+},
+"lna": {
+"rect": [
+666.0,
+1130.0,
+861.3,
+1349.8
+],
+"rot": true,
+"grp": "rf_rx"
+},
+"lna_ind_p": {
+"rect": [
+965.0,
+1389.0,
+1225.0,
+1655.0
+],
+"rot": false,
+"grp": "rf_rx"
+},
+"lna_ind_n": {
+"rect": [
+861.0,
+673.0,
+1121.0,
+939.0
+],
+"rot": false,
+"grp": "rf_rx"
+},
+"lna_deg_p": {
+"rect": [
+441.0,
+1177.0,
+599.8,
+1335.8
+],
+"rot": false,
+"grp": "rf_rx"
+},
+"lna_deg_n": {
+"rect": [
+441.0,
+941.0,
+599.8,
+1099.8
+],
+"rot": false,
+"grp": "rf_rx"
+},
+"rxmix_i": {
+"rect": [
+862.0,
+1690.0,
+1054.7,
+1873.9
+],
+"rot": false,
+"grp": "rf_rx"
+},
+"rxmix_q": {
+"rect": [
+658.0,
+1686.0,
+841.9,
+1878.7
+],
+"rot": true,
+"grp": "rf_rx"
+},
+"rfdriver": {
+"rect": [
+650.0,
+3830.0,
+853.5,
+4305.8
+],
+"rot": true,
+"grp": "rf_tx"
+},
+"txmix_i": {
+"rect": [
+538.0,
+3866.0,
+629.2,
+4100.9
+],
+"rot": true,
+"grp": "rf_tx"
+},
+"txmix_q": {
+"rect": [
+698.0,
+3718.0,
+932.9,
+3809.2
+],
+"rot": false,
+"grp": "rf_tx"
+},
+"ctle": {
+"rect": [
+2786.0,
+426.0,
+2980.0,
+780.0
+],
+"rot": false,
+"grp": "wired_rx"
+},
+"slicer": {
+"rect": [
+2398.0,
+450.0,
+2765.8,
+748.8
+],
+"rot": true,
+"grp": "wired_rx"
+},
+"ptrim": {
+"rect": [
+2758.0,
+802.0,
+2981.7,
+1035.2
+],
+"rot": true,
+"grp": "wired_cap"
+},
+"wrx_cap": {
+"rect": [
+2434.0,
+770.0,
+2676.7,
+1980.5
+],
+"rot": true,
+"grp": "wired_cap"
+},
+"r8arch_slicer_b": {
+"rect": [
+2698.0,
+1270.0,
+2996.8,
+1637.8
+],
+"rot": false,
+"grp": "-"
+},
+"r8arch_capture_b": {
+"rect": [
+2014.0,
+726.0,
+2256.7,
+1936.5
+],
+"rot": true,
+"grp": "-"
+},
+"pll_cdr": {
+"rect": [
+2794.0,
+1990.0,
+2977.3,
+2682.7
+],
+"rot": false,
+"grp": "pll"
+},
+"cdr": {
+"rect": [
+2514.0,
+2002.0,
+2773.3,
+2321.8
+],
+"rot": false,
+"grp": "pll"
+},
+"wtx_mux8": {
+"rect": [
+3150.0,
+1482.0,
+3298.6,
+1773.3
+],
+"rot": true,
+"grp": "wired_tx"
+},
+"wtx_ser8d": {
+"rect": [
+2458.0,
+2342.0,
+2773.6,
+3084.1
+],
+"rot": true,
+"grp": "wired_tx"
+},
+"wiredtx": {
+"rect": [
+2998.0,
+3374.0,
+3150.0,
+3917.9
+],
+"rot": true,
+"grp": "wired_tx"
+},
+"pll_tx": {
+"rect": [
+2998.0,
+3938.0,
+3168.4,
+4319.5
+],
+"rot": false,
+"grp": "pll"
+},
+"usb_txdrv": {
+"rect": [
+3170.0,
+3374.0,
+3283.5,
+3642.6
+],
+"rot": false,
+"grp": "wired_tx"
+},
+"lo_ext": {
+"rect": [
+1078.0,
+1862.0,
+1446.2,
+2187.9
+],
+"rot": true,
+"grp": "lod"
+},
+"termination": {
+"rect": [
+3018.0,
+1270.0,
+3359.9,
+1411.1
+],
+"rot": true,
+"grp": "wired_rx"
+},
+"term_buffer": {
+"rect": [
+3306.0,
+3374.0,
+3427.3,
+3745.0
+],
+"rot": false,
+"grp": "wired_tx"
+},
+"attached_tx_interlock": {
+"rect": [
+2382.0,
+2046.0,
+2492.1,
+2318.5
+],
+"rot": false,
+"grp": "wired_tx"
+},
+"rx_ref_in": {
+"rect": [
+630.0,
+2622.0,
+828.0,
+2734.8
+],
+"rot": false,
+"grp": "core"
+},
+"rx_aux_clk": {
+"rect": [
+730.0,
+3466.0,
+928.0,
+3578.8
+],
+"rot": false,
+"grp": "debug"
+},
+"rx_wtx_ext": {
+"rect": [
+3170.0,
+3666.0,
+3282.8,
+3864.0
+],
+"rot": true,
+"grp": "debug"
+},
+"pll_vreg2": {
+"rect": [
+1602.0,
+1490.0,
+1991.3,
+1935.4
+],
+"rot": true,
+"grp": "pll"
+},
+"adc_i": {
+"rect": [
+1286.0,
+666.0,
+1697.4,
+1468.1
+],
+"rot": false,
+"grp": "conv"
+},
+"core_bias": {
+"rect": [
+1742.0,
+754.0,
+1993.8,
+1468.9
+],
+"rot": true,
+"grp": "core"
+},
+"dac_i": {
+"rect": [
+3306.0,
+3766.0,
+3503.5,
+4424.1
+],
+"rot": true,
+"grp": "conv"
+},
+"dac_q": {
+"rect": [
+710.0,
+426.0,
+1368.2,
+623.5
+],
+"rot": false,
+"grp": "conv"
+},
+"lo_pfdcp": {
+"rect": [
+574.0,
+1902.0,
+1056.9,
+2159.0
+],
+"rot": true,
+"grp": "lo"
+},
+"detect": {
+"rect": [
+1566.0,
+450.0,
+2063.3,
+631.0
+],
+"rot": true,
+"grp": "wired_rx"
+},
+"char_rffet": {
+"rect": [
+1322.0,
+1490.0,
+1582.0,
+1750.0
+],
+"rot": false,
+"grp": "core"
+},
+"char_rffet_open": {
+"rect": [
+674.0,
+2782.0,
+934.0,
+3042.0
+],
+"rot": false,
+"grp": "core"
+},
+"clk_obs": {
+"rect": [
+1842.0,
+2974.0,
+2256.5,
+3101.5
+],
+"rot": true,
+"grp": "debug"
+},
+"r8arch_blend_pd8": {
+"rect": [
+2698.0,
+1062.0,
+2885.1,
+1249.1
+],
+"rot": false,
+"grp": "-"
+},
+"char_atb": {
+"rect": [
+678.0,
+690.0,
+825.0,
+882.1
+],
+"rot": true,
+"grp": "core"
+},
+"char_cmldiv": {
+"rect": [
+2698.0,
+1658.0,
+2963.8,
+1762.8
+],
+"rot": true,
+"grp": "debug"
+},
+"wordclk_rx": {
+"rect": [
+3382.0,
+1270.0,
+3506.0,
+1470.2
+],
+"rot": true,
+"grp": "wired_cap"
+},
+"vthdac": {
+"rect": [
+1390.0,
+450.0,
+1530.5,
+620.1
+],
+"rot": false,
+"grp": "wired_rx"
+},
+"vco_replica": {
+"rect": [
+2998.0,
+4366.0,
+3193.5,
+4473.1
+],
+"rot": false,
+"grp": "debug"
+},
+"bb_tap_i": {
+"rect": [
+3406.0,
+4498.0,
+3505.1,
+4694.9
+],
+"rot": false,
+"grp": "debug"
+},
+"bb_tap_q": {
+"rect": [
+3030.0,
+1578.0,
+3129.1,
+1774.9
+],
+"rot": false,
+"grp": "debug"
+},
+"bb_tap_wmon": {
+"rect": [
+1722.0,
+2906.0,
+1821.1,
+3102.9
+],
+"rot": false,
+"grp": "debug"
+},
+"clockmux": {
+"rect": [
+2998.0,
+2334.0,
+3177.8,
+2418.3
+],
+"rot": false,
+"grp": "pll"
+},
+"rxlevel": {
+"rect": [
+3198.0,
+2342.0,
+3367.5,
+2419.8
+],
+"rot": true,
+"grp": "wired_rx"
+},
+"aosc": {
+"rect": [
+1382.0,
+1770.0,
+1581.6,
+1834.5
+],
+"rot": false,
+"grp": "core"
+},
+"prescale": {
+"rect": [
+2374.0,
+2346.0,
+2437.6,
+2544.1
+],
+"rot": true,
+"grp": "pll"
+},
+"prescale_conv": {
+"rect": [
+2350.0,
+1470.0,
+2413.6,
+1668.1
+],
+"rot": true,
+"grp": "pll"
+},
+"prescale_hf": {
+"rect": [
+2374.0,
+2566.0,
+2437.6,
+2764.1
+],
+"rot": true,
+"grp": "pll"
+},
+"ctle_follower_x2": {
+"rect": [
+3018.0,
+1434.0,
+3118.0,
+1534.0
+],
+"rot": false,
+"grp": "-"
+},
+"lna_additions": {
+"rect": [
+1482.0,
+2090.0,
+1582.0,
+2190.0
+],
+"rot": false,
+"grp": "-"
+},
+"txpad_bias": {
+"rect": [
+3222.0,
+3886.0,
+3282.5,
+4050.3
+],
+"rot": true,
+"grp": "wired_tx"
+},
+"wmon_sel": {
+"rect": [
+3002.0,
+650.0,
+3137.8,
+722.4
+],
+"rot": true,
+"grp": "wired_rx"
+},
+"char_ro33": {
+"rect": [
+3214.0,
+4334.0,
+3283.6,
+4473.3
+],
+"rot": false,
+"grp": "debug"
+},
+"ring_osc": {
+"rect": [
+3190.0,
+4118.0,
+3238.7,
+4313.7
+],
+"rot": true,
+"grp": "debug"
+},
+"por": {
+"rect": [
+2370.0,
+2786.0,
+2436.7,
+2928.0
+],
+"rot": true,
+"grp": "core"
+},
+"char_ro50": {
+"rect": [
+2794.0,
+2970.0,
+2864.5,
+3102.4
+],
+"rot": false,
+"grp": "debug"
+},
+"hsbias": {
+"rect": [
+2362.0,
+2978.0,
+2436.5,
+3100.7
+],
+"rot": true,
+"grp": "wired_tx"
+},
+"lo_obs_q": {
+"rect": [
+1486.0,
+1970.0,
+1579.6,
+2066.4
+],
+"rot": true,
+"grp": "lod"
+},
+"rxselect": {
+"rect": [
+2918.0,
+1058.0,
+2981.2,
+1197.8
+],
+"rot": false,
+"grp": "wired_rx"
+},
+"refvcm": {
+"rect": [
+426.0,
+2062.0,
+479.3,
+2196.9
+],
+"rot": true,
+"grp": "pll"
+},
+"atb0_pad": {
+"rect": [
+1634.0,
+3002.0,
+1700.4,
+3101.8
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_pad": {
+"rect": [
+1842.0,
+2886.0,
+1941.8,
+2952.4
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_grp0": {
+"rect": [
+2350.0,
+1926.0,
+2411.9,
+2025.3
+],
+"rot": true,
+"grp": "core"
+},
+"atb0_grp1": {
+"rect": [
+2350.0,
+1806.0,
+2411.9,
+1905.3
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_grp0": {
+"rect": [
+1482.0,
+1886.0,
+1581.3,
+1947.9
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_grp1": {
+"rect": [
+1262.0,
+1770.0,
+1361.3,
+1831.9
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_grp2": {
+"rect": [
+1962.0,
+2890.0,
+2061.3,
+2951.9
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_grp3": {
+"rect": [
+2350.0,
+1350.0,
+2411.9,
+1449.3
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_grp4": {
+"rect": [
+1142.0,
+1690.0,
+1241.3,
+1751.9
+],
+"rot": false,
+"grp": "core"
+},
+"wtx_fallback_control": {
+"rect": [
+2162.0,
+2894.0,
+2259.9,
+2953.8
+],
+"rot": false,
+"grp": "wired_tx"
+},
+"rf_timebase_h2dclk_detect": {
+"rect": [
+1150.0,
+2214.0,
+1220.7,
+2284.7
+],
+"rot": false,
+"grp": "-"
+},
+"bias_ext": {
+"rect": [
+1718.0,
+666.0,
+1782.6,
+730.6
+],
+"rot": false,
+"grp": "core"
+},
+"txsum": {
+"rect": [
+874.0,
+4010.0,
+923.2,
+4091.0
+],
+"rot": true,
+"grp": "rf_tx"
+},
+"obs_pre4_wire": {
+"rect": [
+3450.0,
+3618.0,
+3478.7,
+3745.8
+],
+"rot": true,
+"grp": "debug"
+},
+"obs_pre4_wsmp": {
+"rect": [
+3450.0,
+3470.0,
+3478.7,
+3597.8
+],
+"rot": true,
+"grp": "debug"
+},
+"obs_pre4_ref": {
+"rect": [
+2850.0,
+2730.0,
+2977.8,
+2758.7
+],
+"rot": false,
+"grp": "debug"
+},
+"obs_pre4_aux": {
+"rect": [
+806.0,
+4666.0,
+933.8,
+4694.7
+],
+"rot": false,
+"grp": "debug"
+},
+"obs_pre4_pll": {
+"rect": [
+874.0,
+4178.0,
+902.7,
+4305.8
+],
+"rot": true,
+"grp": "debug"
+},
+"obs_pre4_cdr": {
+"rect": [
+658.0,
+4666.0,
+785.8,
+4694.7
+],
+"rot": false,
+"grp": "debug"
+},
+"vcm_buffer": {
+"rect": [
+2358.0,
+1730.0,
+2412.8,
+1784.8
+],
+"rot": false,
+"grp": "-"
+},
+"fwd_clk_repeaters": {
+"rect": [
+654.0,
+3466.0,
+708.8,
+3520.8
+],
+"rot": false,
+"grp": "-"
+},
+"agnd_tie": {
+"rect": [
+820.0,
+1068.0,
+864.7,
+1112.7
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf1": {
+"rect": [
+1796.0,
+2856.0,
+1826.8,
+2891.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf14": {
+"rect": [
+1240.0,
+924.0,
+1270.8,
+959.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf22": {
+"rect": [
+1192.0,
+2300.0,
+1227.3,
+2330.8
+],
+"rot": true,
+"grp": "core"
+},
+"atb0_leaf29": {
+"rect": [
+780.0,
+1080.0,
+810.8,
+1115.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf35": {
+"rect": [
+1096.0,
+1684.0,
+1126.8,
+1719.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf36": {
+"rect": [
+836.0,
+968.0,
+866.8,
+1003.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf55": {
+"rect": [
+1072.0,
+1816.0,
+1107.3,
+1846.8
+],
+"rot": true,
+"grp": "core"
+},
+"atb0_leaf56": {
+"rect": [
+608.0,
+1856.0,
+643.3,
+1886.8
+],
+"rot": true,
+"grp": "core"
+},
+"atb0_leaf58": {
+"rect": [
+868.0,
+3824.0,
+903.3,
+3854.8
+],
+"rot": true,
+"grp": "core"
+},
+"atb0_leaf43": {
+"rect": [
+3008.0,
+604.0,
+3043.3,
+634.8
+],
+"rot": true,
+"grp": "core"
+},
+"atb0_leaf44": {
+"rect": [
+2388.0,
+764.0,
+2418.8,
+799.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf45": {
+"rect": [
+2708.0,
+1016.0,
+2743.3,
+1046.8
+],
+"rot": true,
+"grp": "core"
+},
+"atb0_leaf46": {
+"rect": [
+2468.0,
+1996.0,
+2498.8,
+2031.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf47": {
+"rect": [
+2984.0,
+1652.0,
+3014.8,
+1687.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf48": {
+"rect": [
+1964.0,
+708.0,
+1999.3,
+738.8
+],
+"rot": true,
+"grp": "core"
+},
+"atb0_leaf49": {
+"rect": [
+2788.0,
+2700.0,
+2818.8,
+2735.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf50": {
+"rect": [
+2428.0,
+1996.0,
+2458.8,
+2031.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf51": {
+"rect": [
+3132.0,
+1432.0,
+3162.8,
+1467.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf52": {
+"rect": [
+2788.0,
+2744.0,
+2818.8,
+2779.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf53": {
+"rect": [
+3164.0,
+3888.0,
+3194.8,
+3923.3
+],
+"rot": false,
+"grp": "core"
+},
+"atb0_leaf54": {
+"rect": [
+3184.0,
+4068.0,
+3214.8,
+4103.3
+],
+"rot": false,
+"grp": "core"
+},
+"iso_conv_clk": {
+"rect": [
+3444.0,
+3424.0,
+3476.9,
+3455.2
+],
+"rot": false,
+"grp": "conv"
+},
+"iso_rf_rx_clk": {
+"rect": [
+1116.0,
+1816.0,
+1148.9,
+1847.2
+],
+"rot": false,
+"grp": "core"
+},
+"iso_host_clk": {
+"rect": [
+3172.0,
+1436.0,
+3204.9,
+1467.2
+],
+"rot": false,
+"grp": "core"
+},
+"iso_pll_tx_fbck": {
+"rect": [
+3444.0,
+3384.0,
+3476.9,
+3415.2
+],
+"rot": false,
+"grp": "core"
+},
+"iso_aux_ck": {
+"rect": [
+2384.0,
+1684.0,
+2416.9,
+1715.2
+],
+"rot": false,
+"grp": "pll"
+},
+"iso_lo_obs": {
+"rect": [
+1276.0,
+1484.0,
+1307.2,
+1516.9
+],
+"rot": true,
+"grp": "debug"
+},
+"iso_clk_obs": {
+"rect": [
+1240.0,
+880.0,
+1271.2,
+912.9
+],
+"rot": true,
+"grp": "core"
+},
+"iso_cdr_up_0": {
+"rect": [
+2984.0,
+1752.0,
+3015.3,
+1781.0
+],
+"rot": false,
+"grp": "pll"
+},
+"iso_cdr_up_1": {
+"rect": [
+2984.0,
+1696.0,
+3015.3,
+1725.0
+],
+"rot": false,
+"grp": "pll"
+},
+"iso_cdr_up_2": {
+"rect": [
+2956.0,
+1212.0,
+2987.3,
+1241.0
+],
+"rot": false,
+"grp": "pll"
+},
+"iso_cdr_up_3": {
+"rect": [
+2900.0,
+1224.0,
+2929.0,
+1255.3
+],
+"rot": true,
+"grp": "pll"
+},
+"iso_cdr_dn_0": {
+"rect": [
+1924.0,
+708.0,
+1953.0,
+739.3
+],
+"rot": true,
+"grp": "pll"
+},
+"iso_cdr_dn_1": {
+"rect": [
+3480.0,
+4440.0,
+3511.3,
+4469.0
+],
+"rot": false,
+"grp": "pll"
+},
+"iso_cdr_dn_2": {
+"rect": [
+704.0,
+644.0,
+733.0,
+675.3
+],
+"rot": true,
+"grp": "pll"
+},
+"iso_cdr_dn_3": {
+"rect": [
+568.0,
+1856.0,
+597.0,
+1887.3
+],
+"rot": true,
+"grp": "pll"
+},
+"iso_wtx_dx": {
+"rect": [
+2788.0,
+2788.0,
+2817.0,
+2819.3
+],
+"rot": true,
+"grp": "wired_tx"
+},
+"atb1_leaf1": {
+"rect": [
+2064.0,
+648.0,
+2094.6,
+675.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf2": {
+"rect": [
+2116.0,
+2932.0,
+2146.6,
+2959.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf3": {
+"rect": [
+2712.0,
+980.0,
+2742.6,
+1007.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf4": {
+"rect": [
+1760.0,
+2860.0,
+1787.0,
+2890.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf5": {
+"rect": [
+1200.0,
+932.0,
+1230.6,
+959.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf6": {
+"rect": [
+1200.0,
+2340.0,
+1227.0,
+2370.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf7": {
+"rect": [
+740.0,
+1088.0,
+770.6,
+1115.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf8": {
+"rect": [
+1256.0,
+1656.0,
+1283.0,
+1686.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf9": {
+"rect": [
+1160.0,
+932.0,
+1190.6,
+959.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf11": {
+"rect": [
+1072.0,
+1780.0,
+1102.6,
+1807.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf12": {
+"rect": [
+616.0,
+1816.0,
+643.0,
+1846.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf13": {
+"rect": [
+868.0,
+3864.0,
+898.6,
+3891.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf14": {
+"rect": [
+3012.0,
+568.0,
+3042.6,
+595.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf15": {
+"rect": [
+2356.0,
+444.0,
+2383.0,
+474.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf16": {
+"rect": [
+2716.0,
+940.0,
+2743.0,
+970.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf17": {
+"rect": [
+2392.0,
+1304.0,
+2419.0,
+1334.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf18": {
+"rect": [
+3216.0,
+1440.0,
+3246.6,
+1467.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf19": {
+"rect": [
+2064.0,
+684.0,
+2094.6,
+711.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf20": {
+"rect": [
+2788.0,
+2828.0,
+2815.0,
+2858.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf21": {
+"rect": [
+2348.0,
+1684.0,
+2375.0,
+1714.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf33": {
+"rect": [
+3256.0,
+1440.0,
+3286.6,
+1467.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf43": {
+"rect": [
+2788.0,
+2924.0,
+2815.0,
+2954.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf44": {
+"rect": [
+3224.0,
+4072.0,
+3251.0,
+4102.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf10": {
+"rect": [
+3260.0,
+4072.0,
+3290.6,
+4099.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf22": {
+"rect": [
+2960.0,
+3056.0,
+2987.0,
+3086.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf23": {
+"rect": [
+1216.0,
+1820.0,
+1246.6,
+1847.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf24": {
+"rect": [
+3296.0,
+1436.0,
+3323.0,
+1466.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf25": {
+"rect": [
+3484.0,
+3012.0,
+3511.0,
+3042.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf26": {
+"rect": [
+2232.0,
+2852.0,
+2262.6,
+2879.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf27": {
+"rect": [
+1280.0,
+1724.0,
+1307.0,
+1754.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf28": {
+"rect": [
+1244.0,
+840.0,
+1271.0,
+870.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf40": {
+"rect": [
+2076.0,
+2932.0,
+2106.6,
+2959.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf41": {
+"rect": [
+1220.0,
+1780.0,
+1247.0,
+1810.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf58": {
+"rect": [
+2076.0,
+2892.0,
+2103.0,
+2922.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf29": {
+"rect": [
+1176.0,
+1820.0,
+1206.6,
+1847.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf30": {
+"rect": [
+1884.0,
+712.0,
+1914.6,
+739.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf31": {
+"rect": [
+3260.0,
+4108.0,
+3290.6,
+4135.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf32": {
+"rect": [
+804.0,
+644.0,
+831.0,
+674.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf34": {
+"rect": [
+908.0,
+2176.0,
+938.6,
+2203.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf35": {
+"rect": [
+1180.0,
+1784.0,
+1210.6,
+1811.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf36": {
+"rect": [
+2028.0,
+648.0,
+2055.0,
+678.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf37": {
+"rect": [
+2112.0,
+2896.0,
+2142.6,
+2923.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf38": {
+"rect": [
+2716.0,
+900.0,
+2743.0,
+930.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf39": {
+"rect": [
+2192.0,
+2852.0,
+2222.6,
+2879.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf47": {
+"rect": [
+840.0,
+1012.0,
+867.0,
+1042.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf48": {
+"rect": [
+1200.0,
+2380.0,
+1227.0,
+2410.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf42": {
+"rect": [
+700.0,
+1088.0,
+730.6,
+1115.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf45": {
+"rect": [
+1256.0,
+1620.0,
+1286.6,
+1647.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf46": {
+"rect": [
+804.0,
+928.0,
+831.0,
+958.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf49": {
+"rect": [
+1096.0,
+1728.0,
+1126.6,
+1755.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf50": {
+"rect": [
+616.0,
+1776.0,
+643.0,
+1806.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf51": {
+"rect": [
+868.0,
+3900.0,
+895.0,
+3930.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf52": {
+"rect": [
+3012.0,
+532.0,
+3042.6,
+559.0
+],
+"rot": false,
+"grp": "core"
+},
+"atb1_leaf53": {
+"rect": [
+2356.0,
+484.0,
+2383.0,
+514.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf54": {
+"rect": [
+2716.0,
+860.0,
+2743.0,
+890.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf55": {
+"rect": [
+2392.0,
+1264.0,
+2419.0,
+1294.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf56": {
+"rect": [
+2392.0,
+1224.0,
+2419.0,
+1254.6
+],
+"rot": true,
+"grp": "core"
+},
+"atb1_leaf57": {
+"rect": [
+2104.0,
+684.0,
+2134.6,
+711.0
+],
+"rot": false,
+"grp": "core"
+},
+"iso_wmon": {
+"rect": [
+2976.0,
+2704.0,
+2985.3,
+2714.2
+],
+"rot": false,
+"grp": "debug"
+},
+"pd_clk_obs": {
+"rect": [
+2356.0,
+2040.0,
+2366.2,
+2049.3
+],
+"rot": true,
+"grp": "core"
+}
+}
+}

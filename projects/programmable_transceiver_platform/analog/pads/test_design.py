@@ -56,7 +56,7 @@ class DesignBoundary(unittest.TestCase):
             (root/'wired-transmit-screen.json').write_text(json.dumps(data))
             result=tx_macro_power_budget(root)['modes']['TMDS']['blocks']
             override=self.architecture['resource_policy']['branch_current_overrides_ma']['wired_tmds']
-            # TMDS is a wiredtx configuration (consolidation-pass.md item 4): its drive is charged to wiredtx.
+            # TMDS is a wiredtx configuration: its drive is charged to wiredtx.
             self.assertNotIn('tmds',result)
             self.assertEqual(result['wiredtx']['wired_mode_allocation_ma'],override['wiredtx'])
             self.assertAlmostEqual(result['wiredtx']['measured_macro_mean_ma'],30.)

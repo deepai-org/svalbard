@@ -1,413 +1,290 @@
-# Die-fit study (2026-11-14)
+# Die fit (state of 2026-11-18)
 
-Question: can everything the chip now needs be placed, powered and routed on the fixed 3.932 x 5.122 mm die
-(core 3028 x 4218 um = 12.772 mm2)? If not, by how much does it miss and what are the options?
+Fixed die 3.932 x 5.122 mm = 20.140 mm2. Pad ring and seal band 7.368 mm2, core 3028 x 4218 um = 12.772 mm2.
 
-Paper/script study. No circuit simulation, no design file changed. Work dir `scratch/reviews/die-fit/`.
-Two light KLayout read-only measurements were run (one job, one thread each): Metal4/Metal5-free area of the staged
-layouts (`m45free_staged.json`, controls reproduce area pass 4 to the last digit) and the real footprint of the USB and
-wired-TX pads (`padnotch.json`).
+**The design does not fit. As built it is 2.8-3.5 mm2 over (3.2-3.9 with the channels of what does not place).
+With every assigned target met it is 1.5-2.0 over. It places completely only when every block is at its lower
+bound, the debug pads are on provider cells, there is no decap bank and the digital macro is back at 2.81 mm2;
+with the macro at the 3.65 mm2 it is at today, 0.16-0.90 mm2 stays out even then.** Routing and decap risks are
+on top (section 4).
 
-STATUS: complete. Verdict in section 4, levers in section 5, reviewer's corrections in section 6.
+Work directory `die-fit/`. Ledger: `ledger.py` -> `ledger.md` (by master), `ledger.csv` (per instance, with the
+lever of each row). Layout numbers: `meas/measure.py` -> `meas/measured.json`. Packer: `packer.py`, `fit.py`,
+`variants.sh` -> `run/`. Overheads: `overheads.py` -> `overheads.json`. Rows for owners: `DF-1..12` in
+`interface-changes.md`.
 
-## 1. Demand ledger
+## 1. Ledger
 
-Files: `die-fit/ledger.py` (generator), `ledger.csv` (one row per instance of `pt_chip.conn`: 241 instances after
-CP4-1/2/3 and the ten-island change, plus 14 booked items), `ledger.md` (per master, with source and confidence for
-every number). This is ledger v2: the independent reviewer's corrections (section 6, `die-fit/review.md`) are applied.
-The pre-review ledger and its packing runs are kept in `die-fit/run/v1/`.
+One row per instance of `integration/top/pt_chip.conn` (241) plus 13 booked items that are not instances.
+Every layout number is the KLayout bounding box of the GDS on disk, measured on 2026-11-18 (107 layouts, one
+job, read-only); nothing is copied from earlier tables. Custom pads are booked at their occupied core intrusion
+(lateral extent of drawn shapes per 50 um of depth beyond the 426 um ring band).
 
-Scenarios:
-- **A** = published outlines only (git HEAD `generated/`). Never-built items at their estimate. The R8-ARCH second
-  capture is booked on the published r6 master (0.956), because that is what "nothing staged publishes" means; with the
-  0.29 compact reserve of record instead, A is 0.667 smaller.
-- **B** = everything that is staged publishes as measured (bounding boxes of the staged GDS).
-- **C** = every assigned repack target of area pass 4 is met, or the staged size where that is already smaller.
-- **Cr** = C, but where the owner has declared a target unreachable or nothing backs it, the backed value is used
-  (ADC 0.35 each instead of 0.33, `pt_detect` and the CDR ring unchanged, WMON pad as drawn). Added after the review.
-- The digital macro is 2.814 mm2 in all of them: the digital owner states 2.45 is not reachable, and the macro still
-  has to absorb the decode glue, 130 isolation AND2s, LO/CDR/USB control and decap row cells (cells 1.764 mm2 = 67.4 %).
-- Decisions CP4-2 (polyphase deleted) and CP4-3 (WCLK_IN pads and receiver deleted) are applied in all, because the
-  conn file already has them.
+- **published**: layout in `analog/*/generated`.
+- **as built**: the newest layout on disk that is meant to ship: a staged repack where one exists, else the
+  published cell; an estimate where nothing is drawn.
+- **target**: the assigned target (area pass 4 or owner), else as built.
+- **lower bound**: for a drawn block, outline - empty - half of the remaining device-free area, never above
+  the target. "Empty" = nothing drawn on any layer, 3 um clear, in pieces of 20 um or more; "device-free" = no
+  COMP, Poly, n-well or MIM in such pieces (routing channels plus empty area). Spirals, pads and estimates keep
+  their value unless a named lever removes them (`ledger.csv`, column `lever`).
 
-| category | items | A published | B staged | C target | Cr backed targets |
+| category | items | published | as built | target | lower bound |
 |---|---:|---:|---:|---:|---:|
-| digital macro | 1 | 2.814 | 2.814 | 2.814 | 2.814 |
-| custom pads (true occupied core intrusion) | 11 | 2.252 | 2.164 | 2.054 | 2.101 |
-| analog blocks that v6 / area pass 4 placed (incl. all ten island switches) | 199 | 8.138 | 6.360 | 5.605 | 5.769 |
-| in the conn, in no floorplan or never built | 30 | 0.810 | 0.810 | 0.810 | 0.810 |
-| booked, not in the conn (R8-ARCH, tx8, decap bank, D2H strip, T-coil, never-built additions) | 14 | 1.838 | 1.197 | 1.197 | 1.197 |
-| **total demand** | 255 | **15.851** | **13.345** | **12.480** | **12.690** |
-| core | | 12.772 | 12.772 | 12.772 | 12.772 |
-| **raw margin** (before channels, corridors, scrap, extra decap) | | **-3.079** | **-0.573** | **+0.292** | **+0.082** |
+| digital macro | 1 | none routed | 3.648 E | 3.200 E | 2.814 |
+| custom pads, occupied core intrusion | 11 | 2.443 (bounding boxes) | 2.037 | 1.934 | 1.394 |
+| analog blocks in `pt_chip.conn` | 229 | 8.497 | 7.097 | 6.140 | 5.251 |
+| booked, not instances | 13 | | 1.237 | 1.237 | 0.784 |
+| **block demand** | 254 | | **14.020** | **12.512** | **10.243** |
+| of it rows that contain an estimate (E) | | | 4.857 | 4.409 | 3.633 |
+| core | | | 12.772 | 12.772 | 12.772 |
+| **raw margin, before channels, corridors and scrap** | | | **-1.247** | **+0.260** | **+2.529** |
 
-Confidence of scenario B: about 9.0 mm2 measured on published GDS/LEF (H), 3.6 mm2 measured on staged or v5 layouts
-(M), 0.8 mm2 estimates (L). The largest estimate is the QVCO regulator.
+By status (as built): published 6.00 mm2, laid out but unpublished 7.01 (of it the macro 3.65), schematic or
+generator only 0.84, missing 0.17.
 
-### 1.1 What no floorplan had counted (scenario B, mm2)
+### 1.1 Rows of 0.04 mm2 and more (all rows: `die-fit/ledger.md`)
 
-| item | mm2 | source | confidence |
+P published, U laid out and unpublished, S schematic or generator only, M missing. E = the row contains an
+estimate. mm2, summed over the instances of a master.
+
+| item | n | status | W x H um, as built | published | as built | target | lower bound | empty / device-free |
+|---|---:|---|---|---:|---:|---:|---:|---|
+| `pt_digital_macro` | 1 | U E | 1716 x 2126 (failed global routing) | | 3.648 | 3.200 | 2.814 | |
+| `pad_rf_pair` (RF_RX, BB_I, BB_Q, WTX_EXT) | 4 | P | 310 x 913 | 0.604 | 0.588 | 0.588 | 0.147 | |
+| `pt_lc_qvco5` | 1 | P | 848 x 628 metal (bounding box 898 x 653 with keep-out) | 0.586 | 0.532 | 0.532 | 0.532 | spiral |
+| `pt_adc_i`, `pt_adc_q` | 2 | U | 480.3 x 936.3 | 1.156 | 0.899 | 0.660 | 0.509 | 20 % / 67 % |
+| `pt_lo_vreg` | 1 | U | 407.4 x 1081.6 | | 0.441 | 0.300 | 0.300 | 11 % / 29 % |
+| decap macro-edge bank (1.5 nF) | 1 | S E | 26 tiles of 125 x 120 | | 0.390 | 0.390 | 0 | |
+| `pad_refpad` (REF, AUX_CLK) | 2 | P | 401 x 913 | 0.391 | 0.343 | 0.343 | 0.343 | |
+| `pad_wirepad` (USB) | 1 | P | 521 x 1435, L-shaped | 0.526 | 0.342 | 0.300 | 0.300 | |
+| `pt_bbfilter_i`, `_q` | 2 | P | 586.3 x 583.1 | 0.684 | 0.684 | 0.460 | 0.391 | 25 % / 61 % |
+| `pt_core_bias` | 1 | U | 925.6 x 326.0 | 0.302 | 0.302 | 0.180 | 0.163 | 26 % / 66 % |
+| `pt_wrx_cap` | 1 | U | 1210.5 x 242.7 (r7c) | 0.956 | 0.294 | 0.294 | 0.253 | 5 % / 23 % |
+| second capture for > 2.5 Gb/s receive | 1 | S E | as `pt_wrx_cap` | | 0.294 | 0.294 | 0.294 | |
+| `pad_txpad` (WIRE_TX) | 1 | P | 481 x 1227, L-shaped | 0.385 | 0.268 | 0.247 | 0.247 | |
+| `wtx_ser8d` (new transmit path) | 1 | U | 742.1 x 315.6 | | 0.234 | 0.234 | 0.171 | 7 % / 47 % |
+| `pad_hspad` (WIRE_RX) | 1 | P | 492 x 913 | 0.240 | 0.209 | 0.209 | 0.209 | |
+| `pt_lo_lf` | 1 | P | 402.8 x 482.0 | 0.194 | 0.194 | 0.194 | 0.149 | 1 % / 1 % |
+| `isw_debug` x 5, `isw_wired` x 2, `isw_conv` x 2, `isw_rf` | 10 | P | 184-264 x 173-243 | 0.427 | 0.427 | 0.427 | 0.362 | 8-11 % / 20-24 % |
+| `pt_detect` | 1 | P | 251.3 x 690.4 | 0.173 | 0.173 | 0.090 | 0.090 | 8 % / 71 % |
+| `pt_pll_vreg2` | 1 | P | 445.4 x 389.4 | 0.173 | 0.173 | 0.173 | 0.146 | 7 % / 24 % |
+| `pt_pll_ring` | 1 | P | 210.0 x 793.5 | 0.167 | 0.167 | 0.127 | 0.127 | 2 % / 43 % |
+| `pad_rftxpad` | 1 | P | 310 x 913 | 0.151 | 0.147 | 0.147 | 0.147 | |
+| `pt_lo_mmd` | 1 | U | 377.9 x 383.8 | 0.361 | 0.145 | 0.145 | 0.115 | 3 % / 38 % |
+| `pad_single_leg` (WMON) | 1 | P | 302 x 913 | 0.147 | 0.140 | 0.100 | 0 | |
+| `pt_lna_ind` | 2 | U | 260 x 266 | 0.138 | 0.138 | 0.138 | 0.138 | spiral |
+| `pt_dac_i`, `_q` | 2 | U | 668.5 x 200.6 | 0.372 | 0.268 | 0.260 | 0.202 | 14 % / 35 % |
+| `pt_lo_ext` | 1 | U | 343.1 x 387.7 | 0.155 | 0.133 | 0.120 | 0.098 | 8 % / 45 % |
+| `pt_lo_pfdcp` | 1 | P | 257.0 x 482.9 | 0.124 | 0.124 | 0.124 | 0.096 | 4 % / 41 % |
+| `pt_refbuf` | 1 | P | 391.0 x 299.5 | 0.117 | 0.117 | 0.117 | 0.084 | 24 % / 33 % |
+| `pt_slicer` | 1 | P | 298.8 x 367.8 | 0.110 | 0.110 | 0.110 | 0.081 | 7 % / 47 % |
+| second slicer bank | 1 | S E | as `pt_slicer` | | 0.110 | 0.110 | 0.110 | |
+| `pt_rfdriver` | 1 | P | 475.8 x 203.5 | 0.097 | 0.097 | 0.097 | 0.075 | 5 % / 40 % |
+| `pt_pll_ring_core` | 1 | P | 196.0 x 438.9 | 0.086 | 0.086 | 0.065 | 0.065 | 1 % / 37 % |
+| `pt_cdr` | 1 | P | 259.3 x 319.8 | 0.083 | 0.083 | 0.083 | 0.076 | 0 % / 18 % |
+| `pt_wiredtx` less its quarter-rate core | 1 | U E | 544 x 152 | 0.246 | 0.083 | 0.083 | 0.083 | |
+| `term_buffer` | 1 | P | 156.8 x 479.6 | 0.075 | 0.075 | 0.045 | 0.037 | 24 % / 76 % |
+| `pt_ctle` | 1 | U E | 194 x 354 (owner's number, not re-measured) | 0.133 | 0.069 | 0.069 | 0.069 | |
+| TX T-coil reserve | 1 | M E | 570 x 120 | | 0.068 | 0.068 | 0.068 | |
+| `pt_char_rffet`, `_open`, `_short` | 3 | P | 260 x 260 | 0.203 | 0.203 | 0.203 | 0.172 | probe frames |
+| `pt_diff_clk_rx` | 3 | P | 198.0 x 112.8 | 0.067 | 0.067 | 0.067 | 0.054 | 0 % / 38 % |
+| `atb_leaf_s` x 58, `atb_leaf_f` x 21 | 79 | P | 30.6 x 27.0, 30.8 x 35.3 | 0.071 | 0.071 | 0.071 | 0.071 | |
+| `pt_bb_tap` | 3 | U | 99.1 x 196.9 | 0.059 | 0.059 | 0.059 | 0.046 | 4 % / 37 % |
+| `pt_clk_obs16` | 1 | U | 127.5 x 414.5 | 0.092 | 0.053 | 0.053 | 0.053 | 0 % / 0 % |
+| `pt_lna_deg` | 2 | S E | 140 um spiral, generator only | | 0.050 | 0.050 | 0.050 | |
+| `pt_termination`, `tx_interlock` | 2 | P | 141 x 342, 139 x 345 | 0.096 | 0.096 | 0.078 | 0.067 | |
+| `pt_ptrim` | 1 | U E | about 190 x 211 (redesign candidates) | 0.290 | 0.045 | 0.045 | 0.045 | |
+| `wtx_mux8` (new transmit path) | 1 | U | 291.3 x 148.6 | | 0.043 | 0.043 | 0.043 | 8 % / 9 % |
+| `atb_grp` x 7, `pt_lna` | 8 | P / U | 99 x 62, 220 x 195 | 0.086 | 0.086 | 0.086 | 0.078 | |
+
+Estimates in the ledger (flag E), largest first: the digital macro (no routed result at any size for the
+current RTL); the decap bank (cell published, bank not drawn); the second slicer, capture and blender for
+receive above 2.5 Gb/s (0.44, architecture not designed); `pt_wiredtx` remainder (0.083: no block top of the
+new transmitter exists; wired TX is 0.360 in all if the new path replaces the quarter-rate core, 0.524 if both
+stay); `pt_ctle` staged size; T-coil reserve; `pt_lna_deg`; `pt_ptrim`; D2H output strip 0.031; CTLE followers,
+LNA additions, VCM buffer, clock repeaters, RF-mode time base, `pt_agnd_tie` (0.033 together).
+
+Differences against the ledger of 14 Nov that come from measuring instead of copying: `pt_lo_vreg` 0.441 (was
+0.30), `pt_lna_ind` 0.069 each (was 0.036-0.050), `pt_bb_tap` 0.0195 each (was 0.010), `pt_refpad` occupied
+0.171 each (was 0.195, the cell tapers), `pad_hspad` 0.209 (was 0.240), `pt_cdr` 0.083 published,
+`pt_txpad_bias` 0.0099, `pt_refvcm` 0.0072, the QVCO bounding box (keep-out now inside the cell).
+
+### 1.2 What is not block area
+
+| item | mm2 | basis | estimate? |
 |---|---:|---|---|
-| decap macro-edge bank (1.5 nF) | 0.390 | power-delivery.md 4.2 | M |
-| characterization: three GSG probe frames 430 x 260 (`pt_char_rffet`, `_open`, `_short`) | 0.335 | char_rffet.lef | H |
-| QVCO regulator `pt_lo_vreg` (never built; 30 mA, 50-59 dB, 7 nV/rtHz) | 0.300 (0.25-0.38) | `scratch/lo-ap4/vreg2/reg.py` device list (review R1; first estimate 0.12) | L |
-| five more island switches (ten islands, 0.426 total against 0.236) | 0.190 | power-delivery.md 2, conn | H |
-| characterization: `pt_char_atb`, `ro33`, `ro50`, `cmldiv` | 0.075 | LEF | H |
-| LNA degeneration spirals x 2 | 0.050 | rf-lna-p NOTES | M |
-| WMON pad: published cell is 302 um wide, floorplans book the undrawn 205 um B cell | 0.047 | util.json vs v5 floorplan | M |
-| `pt_usb_txdrv` | 0.031 | USB-INTEGRATION.md | M |
-| bias_ext, refvcm, txpad_bias (staged in `scratch/pads-core/bias/pub`), agnd_tie, VCM buffer, forwarded-clock repeaters | 0.032 | layouts / estimates | M/L |
-| tx8 reserve overrun (serq8 built at 0.352, booking assumed 0.325) | 0.022 | wired_tx INTEGRATION.md 7 | L |
-| 16 isolation clamps + 2 pull-downs left outside the macro | 0.016 | iso-placement.json | H |
-| ptrim output stage (MW-14-FIX) | 0.015 | estimate | L |
-| CTLE source follower x 2 (one per slicer bank) | 0.010 | wired_rx README Resume 9 | L |
-| LNA tail source / gate R / damping, D-EXTCLK selector, FLL driver | 0.010 | review R12 allowance | L |
-| RF-mode time base + H2D_CLK present detector (rest of the monitor is RTL) | 0.005 | review R11 | L |
-| **sum** | **1.528** | | |
+| pad ring and seal band (outside the core) | 7.368 | die - core; seal ring inside the 26 um edge band | no |
+| pad-ring corners | 0 usable | measured on `provider-reference-ring.gds`: each 452 um corner is rail except one 99 x 99 um square and the die-edge band (`meas/ringfree.json`) | no |
+| routing channels: 10 um halo on every block (25 um round spirals, 4 um round leaf cells) | 0.76-1.07 | packer, section 3 | derived |
+| fixed corridors: D2H / ADC data / SPI north-south 46.5 um wide, external-LO legs 49 x 875 um | 0.172 (0.129 + 0.043) | placed as obstacles | E |
+| pad side-pin channel (stacked `pad_hspad`), ptrim pin channel | 0.02 | in the pad obstacle / block width | E |
+| decap, 5.4 nF plan: bank 0.390 in the ledger; grid MIM, row fill and bond-site tiles take no core area | 0.390 | `spec/power-delivery.md` 4.2 | E |
+| fill keep-outs (QVCO, four LNA spirals, T-coil, rings, probe frames) | no core area; about 1.4 mm2 excluded from fill = 1.7 points of Metal1/Metal2 density | 1.2 points per mm2 (`signoff-gap.md`) | E |
+| packing scrap (free slivers below 80 um) | 0.30-0.57 | packer | measured on the packings |
 
-Not booked, flagged: the 1.16 nF of island-local decap that power-delivery.md assumes "inside the blocks" (nobody has
-shown it; exposure up to 0.29 mm2 if it has to be added outside); an external capacitor pad for the QVCO regulator.
+## 2. Packing
 
-### 1.2 Double counting and over-booking found
+Constructive packer on a 2 um bitmap; every lattice position of both orientations is tested, hard constraints
+are masks, cost = signal-flow and supply distance - contact length. Self-checks pass (`run/selftest.log`).
+Three orderings per macro shape (area-descending; giants then flow list; flow list first) and two macro shapes
+of equal area (1716 um and 2024 um wide; the host-link edge needs 1716 um).
 
-| item | effect mm2 | evidence |
-|---|---:|---|
-| USB pad (`pad_wirepad`) was booked as its bounding box 521 x 1435. Beyond a depth of 913 um only a 188 um wide attachment column exists; the other 333 x 523 um is empty in every layer | -0.174 | `padnotch.json` (the v5 floorplan had this notch; v6 and area pass 4 lost it) |
-| TX pad (`pad_txpad`): column 139 um wide beyond 913 um; 342 x 312 um empty | -0.107 | `padnotch.json` |
-| Consequence for lever AP4-6 (attachment repack): worth 0.063 mm2, not 0.19; most of the claimed saving was the notch | | |
-| `steer_0..3` and the CML pre-drivers inside `tx8_rsv` are the same function (the pre-drivers replace them) | -0.035 | wired_tx INTEGRATION.md l.20 (review R6) |
-| `h2d_gearbox_rsv` booked for nothing: the H2D capture flops are in the macro top rows | -0.031 (B), -0.093 (A) | interface-changes l.580, mode-walk l.484 (review R4) |
-| `lc_load_rsv` 0.10 in v6 is the LNA tank coil pair: not added on top of `pt_lna_ind` | (not added) | v6 inventory note RC-16j |
-| CP4 inventory total 13.74 counted 146 clamps outside the macro; 130 are now AND2 in the macro | -0.119 | conn commit 0006a99 |
-| Supply/clock monitor booked as an analog block; `pt_monitor` is RTL in the macro | -0.015 | review R11 |
-| Staged `pt_lo_mmd_qdum` + one `pt_lo_obs` fit the empty slot A inside the QVCO outline | -0.028, kept as a lever (section 5), not taken in the ledger: no one has placed them there | lo-ap4 NOTES l.54 (review R5) |
+Rules applied:
+- Fixed: the custom pads at their bond sites with their true shapes, the macro on the north edge, the D2H
+  strip, the T-coil reserve, the two corridors.
+- Never relaxed: halo; the 23 keep-aways of the v6 floorplan (macro to ADC 210 um, to LNA 1000 um, to QVCO
+  300 um; rings to QVCO 500 um; rfdriver to LNA and ADC; capture to ADC 200 um; ...); **QVCO placement rule
+  of INT23**: spiral centres 1.7 mm or more from the west die edge and 1.0 mm or more along the edge from the
+  RF_TX pads, applied to the cell edge as 1.5 mm and 0.8 mm.
+- Relaxed only when nothing else is feasible, and reported: island switch within 150 um of the core ring and
+  600 um along it from its supply pad (ten islands, G4); blocks above 20 mA within 500 um of their switch (G6).
 
-## 2. Supply, routing and decap overheads (derived, `die-fit/overheads.py`, `overheads.json`)
+Scenarios: **S** as built, **T** targets, **LB** lower bounds (LB also has BB_I, BB_Q, WMON and WTX_EXT pads
+off the core and no decap bank). "Unplaced" is what does not fit; the first number is the densest packing
+found, the second the flow-first ordering (signal flow and supply adjacency honoured first).
 
-### 2.1 What the conn file asks the routing to carry
+| run | scenario | macro mm2 | other options | core | to place | unplaced, densest | unplaced, flow-first | channels | free left / usable by a 60 um block |
+|---|---|---:|---|---:|---:|---:|---:|---:|---|
+| `s` | S | 3.65 | | 12.772 | 8.241 | **2.80** | **3.47** | 0.76 | 0.33 / 0 |
+| `s-m32` | S | 3.20 | | 12.772 | 8.241 | 2.43 | 3.02 | 0.82 | 0.30 / 0 |
+| `s-m28` | S | 2.81 | | 12.772 | 8.241 | 2.11 | 2.80 | 0.84 | 0.33 / 0 |
+| `t` | T | 3.20 | | 12.772 | 7.284 | **1.46** | **2.00** | 0.88 | 0.38 / 0 |
+| `t-m36` | T | 3.65 | | 12.772 | 7.284 | 1.80 | 2.53 | 0.84 | 0.32 / 0 |
+| `t-m28` | T | 2.81 | | 12.772 | 7.284 | 1.12 | 1.82 | 0.93 | 0.32 / 0 |
+| `t-l1` | T | 3.20 | BB_I, BB_Q, WMON on provider cells | 12.772 | 7.284 | 1.05 | 1.65 | 0.91 | 0.34 / 0 |
+| `t-l2` | T | 3.20 | + no decap bank | 12.772 | 6.894 | 0.70 | 1.37 | 0.96 | 0.33 / 0 |
+| `t-l3` | T | 3.20 | + core ring 2 x 25 -> 2 x 12 um | 13.299 | 6.894 | 0.44 | 1.17 | 1.02 | 0.41 / 0 |
+| `t-l4` | T | 3.20 | + qdum and lo_obs inside the QVCO outline | 13.299 | 6.866 | **0.41** | **1.17** | 1.02 | 0.41 / 0 |
+| `t-l4-m28` | T | 2.81 | same | 13.299 | 6.866 | 0.17 | 1.23 | 1.09 | 0.43 / 0 |
+| `s-l4` | S | 3.65 | same four levers | 13.299 | 7.823 | 1.57 | 2.52 | 0.90 | 0.27 / 0 |
+| `lb` | LB | 2.81 | | 12.772 | 5.942 | **0** | **0.42** | 1.07 | 0.97 / 0.47 |
+| `lb-l3` | LB | 2.81 | core ring 2 x 12 um | 13.299 | 5.942 | 0 | 0.20 | 1.07 | 1.37 / 0.80 |
+| `lb-m32` | LB | 3.20 | | 12.772 | 5.942 | 0.03 | 0.56 | 1.05 | 0.67 / 0.13 |
+| `lb-m36` | LB | 3.65 | | 12.772 | 5.942 | 0.16 | 0.90 | 0.99 | 0.43 / 0.01 |
 
-| class | nets | note |
-|---|---:|---|
-| static control from the macro (`c_*`, one wire per bit) | 531 | biggest consumers: slicer 89, core_bias 74, ptrim 40, bbfilter 36 + 36, wiredtx 21, vthdac 17, clockmux 16, lna 15 |
-| status to the macro (`s_*`) | 11 | |
-| other macro-to-analog signals (data words, clocks, codes) | 304 | capture 63, wired TX 43, ADC 25 + 25, DAC 11 + 11 |
-| macro to pads (D2H 10 + clk, H2D 10 + clk, SPI, debug) | 38 | H2D abuts the macro; D2H runs the full core height to the south pad row |
-| analog nets between instances | 269 | ring phase buses 29 (CDRPH, CKP, SLS, TXPH), bias currents 25, ATB tree 35, LO / RF differential 32, CDR votes 19, local 129 |
-| supply nets | 18 | VDD, VSS, AGND_RX, VDD_LO, ten island rails, four ESD rails |
-
-### 2.2 Routing demand measured on the packed floorplans
-
-Wire length = for every macro net, Manhattan edge-to-edge distance macro to block; for analog nets, half-perimeter of
-the instance centres. Track area = length x pitch: 0.56 um (minimum Metal2-4 pitch) or 1.12 um (double pitch) and three
-double pitches per wire for ring phases, LO and the 3.1 mm forwarded clock (shielded pairs). A channel offers its
-preferred-direction signal layer plus 30 % of Metal4/Metal5 (the rest of those two is grid, island straps and plates),
-60 % routable: capacity = channel area x 0.78.
-
-| floorplan | control mm | data/clock mm | analog mm | track area mm2, all minimum pitch | track area, data + analog at double pitch | channel area needed (min / double) | channel area the 10 um halo gives | endpoints on unplaced blocks (not counted) |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| B, densest packing | 511 | 337 + 34 (D2H) | 493 | 0.85 | 1.41 | 1.08 / 1.80 | 0.82 | 250 |
-| C, densest packing | 491 | 438 + 34 | 511 | 0.93 | 1.58 | 1.19 / 2.03 | 0.87 | 179 |
-| B, flow-first order | 694 | 352 + 34 | 363 | 0.88 | 1.37 | 1.13 / 1.76 | 0.93 | 230 |
-| C, flow-first order | 738 | 364 + 34 | 401 | 0.93 | 1.46 | 1.20 / 1.87 | 0.94 | 218 |
-| C + levers (`c-l6`, nearly everything placed) | 464 | 367 + 32 | 647 | 1.03 | 1.80 | 1.32 / 2.31 | 1.03 | 38 |
-
-- The allowance used before was 10 % of block area = 0.855 mm2. Derived need: **1.1-1.3 mm2 if every wire is at minimum
-  pitch, 1.8-2.3 mm2 with data, clocks and analog at double pitch.** The 20 um channels of the packer (10 um halo per
-  block, the v6 rule) supply 0.8-1.0 mm2, plus the two fixed corridors below. So the old allowance was 0.25-0.45 mm2
-  too small at best, and shrinking the halo is not a lever unless wiring goes over blocks.
-- The 531 static control wires are the largest single item (about 0.5 m). They are DC signals: they can cross over the
-  decap bank, the pad attachment columns and blocks that leave Metal3 free. That is where the missing channel area has
-  to come from; no block states today which layers it leaves free for through-routing.
-- Fixed corridors, placed as obstacles in the packer: D2H / ADC-data / SPI north-south corridor 46.5 um x 2784 um =
-  **0.129 mm2** (v5 `rsv_corridor_s`, dropped without replacement in v6) and the external-LO G-S-G-S-G legs along the
-  REF / AUX_CLK pad tips, 49 x 875 um = **0.043 mm2**. The forwarded wire clock (3.1 mm, shielded pair, about 7 um wide)
-  fits in the channels.
-- Side-pin blocks: the stacked `pad_hspad` puts RX_P/RX_N and its controls on a side edge: a 32 um channel beside the
-  pad (0.016 mm2, booked as part of the pad obstacle). The compact `pt_ptrim` has 56 pins on one edge: 32 um added to
-  its width. The LO cells have their ports on the top edge in Metal5 (inside the halo).
-
-### 2.3 Power grid and island straps
-
-- G1 asks for 30 % of Metal4 and of Metal5 (15 % per net) over the whole analog core, blocks included: 3.0 mm2 per layer.
-- Measured Metal4/Metal5-free area (>= 20 um tiles) over the outlines, scenario B: 2.16 mm2 of 7.98 mm2 (27 %); 2.31 mm2
-  of outlines have no measurement (core_bias, switches, never-built cells, probe frames). Blocks that cannot give 30 %
-  push **0.28 mm2** of straps into the channels (measured blocks only; up to 0.98 mm2 if the unmeasured blocks give
-  nothing). The channels can carry 0.28 mm2 on Metal4/Metal5; they cannot carry 0.98 mm2 and signals as well. G3 (a ring
-  of equal cross-section around every block that uses Metal4/Metal5) is therefore affordable only for the measured set;
-  each unmeasured block has to state that the mesh may cross it.
-- Island straps (G6: Metal5 width >= 0.47 um per mA per 100 um). power-delivery.md assumes each block within about
-  500 um of its switch, about 0.3 mm2 of Metal5 in total. In the packed floorplans the same rule gives **3.6-6.5 mm2**
-  of Metal5, which does not exist. Causes, all structural (they appear in every run):
-  1. `lod` switch at pad 74 (south-west corner) but `lo_ext` has to sit at the REF / AUX_CLK pad tips, 1.0-5.7 mm away
-     (62-368 um of strap for 13.7 mA), and `lo_mmd` has to touch the QVCO tank, which sits at the `lo` switch (pad 64,
-     2.1 mm from pad 74).
-  2. `pll` switch at pad 35 (north-east) but both rings have to sit at the capture / ptrim (south-east) and at the wired
-     TX: 2.0-4.1 mm, 94-198 um of strap each.
-  3. `wired_tx`: within 600 um of pad 26 the ring edge is covered by the USB and TX pads; the nearest free ring edge
-     puts the switch 520-750 um from `pt_wiredtx` (the 500 um rule is relaxed in every run) and 1.1-2.5 mm from the USB
-     driver.
-  4. `debug`: its loads are spread over the die by nature (clk_obs, vco_replica, rx_aux_clk 2-4 mm from one switch).
-  5. `wired_rx` / `wired_cap` share the 273 um of ring edge below the HS pad; ctle and slicer land 2.3-2.8 mm away
-     whenever the south-east corner is full.
-- Consequence: the supply rules, not only signal flow, force each island to be compact around its switch. Packing in
-  that order costs 0.6 mm2 more scrap than the densest packing (section 3). The G4 pad assignment of `lod`, `pll` and
-  `wired_tx` needs another look by the power-delivery owner before a v7 floorplan.
-
-### 2.4 Decap: what fits over the blocks after the repacks
-
-Plan (power-delivery.md 4.2): 5.4 nF = row fill 0.45 + bond-site tiles 0.45 + grid MIM 3.0 (2.0 minimum) + bank 1.5 +
-island-local 1.16 (in the model). The grid MIM needs 1.05 mm2 of plate for 2.0 nF and 1.58 mm2 for 3.0 nF, on outlines
-whose Metal4/Metal5 are free. Measured free area (>= 20 um tiles, 3 um keep-off, same method as area pass 4; the two
-control cells reproduce `m45free.json` exactly):
-
-| | A published | B staged | C targets |
-|---|---:|---:|---:|
-| free Metal4/Metal5 over analog outlines, spirals excluded (mm2) | 2.84 (area pass 4: 2.86) | **1.88** | **1.34** (estimate: free area shrinks one for one with the outline) |
-| share of it that 2.0 nF of plates needs | 37 % | 56 % | 78 % |
-| share that 3.0 nF needs | 56 % | 84 % | 118 % (impossible) |
-| usable if plates stay off half of the ADC, bbfilter, LNA, mixer, loop-filter and refbuf area (mm2) | 2.25 | 1.36 | 1.04 |
-| plate capacitance at 55 % coverage of the usable area (nF) | 2.4 | **1.4** | **1.1** |
-
-Measured examples: ADC 0.300 -> 0.208 mm2 free, DAC 0.138 -> 0.092, `lo_mmd` 0.119 -> 0.015, capture 0.344 -> 0.081,
-`pt_cdr` 0.055 -> 0, `lo_ext` 0.028 -> 0.010, `clk_obs16` 0.
-
-- **The repacks eat the decap.** Every repack removes Metal4/Metal5-free area almost one for one. The 3.0 nF grid-MIM
-  target is gone in B and C, and the 2.0 nF minimum needs plates over 56-78 % of everything that is left, including
-  over the ADC inputs and the loop filter. Realistic: 1.1-1.4 nF.
-- To still reach the plan's 5.4 nF, the missing 0.6-0.9 nF (against the 2.0 nF minimum) or 1.6-1.9 nF (against the
-  3.0 nF target) has to become stacked tiles at 3.9-4.2 fF/um2: **+0.15 to +0.47 mm2** on top of the 0.39 mm2 bank.
-  Otherwise the total is 3.5-3.9 nF, which power-delivery.md 4.3 places "between the lines: good for neither".
-- Also unverified: the 1.16 nF "island-local, inside the blocks" (up to 0.29 mm2 if it is not there).
-
-### 2.5 Fill
-
-No core area, but two limits on the floorplan (signoff-gap.md): a fill keep-out costs about 1.2 points of Metal1 /
-Metal2 density per mm2 excluded, so keep-outs fit over the spirals and oscillators (QVCO 0.53, four LNA spirals with
-their 25 um ring 0.25, T-coil 0.07, rings 0.25: about 1.1 mm2, 1.3 points) but not over all 8 mm2 of analog (30 %
-limit). And the denser the packing, the fewer open channels remain to carry the density; the bank tiles help. DCF.1a
-needs NDMY / IND_MK markers on every spiral: owner work, no area.
-
-## 3. Packing attempt (`die-fit/packer.py`, `fit.py`, results in `die-fit/run/`)
-
-### 3.1 The packer
-
-Replaces the seeded greedy spiral of v6 / area pass 4. Constructive packer on a 2 um occupancy bitmap: for every block,
-**every** lattice position of both orientations is tested with a summed-area table (so a hole that exists cannot be
-missed), hard constraints are applied as masks, and the feasible position with the lowest cost is taken. Cost = weighted
-Manhattan gap to the already placed partners (signal flow and island switch) + a weak pull to the island's region -
-0.6 x contact length (touching-perimeter rule, which is what keeps scrap low).
-
-- Fixed: the eleven custom pads at their bond sites with their true shapes (L-shaped USB and TX pads, staged stacked
-  HS pad with its side-pin channel), the D2H strip, the TX T-coil reserve, the two corridors of 2.2.
-- Digital macro: 2.814 mm2 at the north edge, aspect ratio and x position searched (1716 x 1640 and 2024 x 1390 in
-  the final runs; 1500 x 1876 as well in the pre-review runs, never the best).
-- Never relaxed: 10 um halo per block (25 um around spirals, 4 um around leaf cells), the 23 keep-away rules of v6
-  (digital to ADC 210 um, to LNA 1000 um, to QVCO 300 um; rings to QVCO 500 um; PA to LNA / ADC; capture to ADC 200 um ...).
-- Relaxed only if nothing else is feasible, and then reported: island switch within 150 um of the core ring and
-  600 um along the ring from its supply pad (G4); blocks above 20 mA within 500 um of their switch (G6).
-- Decap bank: 26 tiles of 125 x 120 um that must lie within 250 um of the macro.
-- Search: three placement orders (area-descending; giants then flow list; flow list first) per macro shape; the two
-  baselines also with random order jitter (12 trials), the variants 6 trials. The best run is the one with the least unplaced area, then fewest relaxations, then
-  lowest flow cost. One thread, 9 s per trial.
-
-Self-checks (`python3 packer.py`, all pass; log `run/selftest.log`):
-
-| case | by hand | packer |
-|---|---|---|
-| four 50 x 50 in 100 x 100 | exact fit, scrap 0 | 4 placed, free 0 |
-| three 80 x 40 in 120 x 80 | fits only if one is rotated to 40 x 80 | 3 placed (one rotated), free 0 |
-| 100 x 40 and 40 x 60 in the L left by a fixed 60 x 60 obstacle | exact fit | 2 placed, free 0 |
-| five 50 x 50 in 100 x 100 (over-full by area) | one must stay out | 4 placed, 1 reported unplaced |
-| two 60 x 60 in 100 x 100 (area fits, geometry does not) | only one fits | 1 placed, 1 unplaced, free 6400 |
-| two 20 x 20 that must be 55 apart, strip 100 long / 80 long | possible (max 60) / impossible (max 40) | placed 60 apart / unplaced "keep-away" |
-| load that cannot be within 5 of its switch | must be placed with the violation named | placed, relaxation recorded |
-
-Every chip run is also checked by an independent pairwise rectangle test (no overlap, all inside the core): no errors.
-
-### 3.2 Results (ledger v2)
-
-"Blocks to place" excludes pads, macro and fixed reserves. "Unplaced" is what does not fit; "usable" is free area that
-can still take a block of 60 um or more.
-
-| run | scenario | options | core | blocks to place mm2 | placed | unplaced n / mm2 | channels (halo) | free left | of it usable >= 60 um | relaxed | macro | trials |
-|---|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|---:|
-| b | B | baseline | 12.772 | 8.273 | 211 / 6.132 | 25 / **2.141** | 0.815 | 0.347 | 0.0 | wiredtx, ptrim | 2024 x 1390 | 12 |
-| c | C | baseline | 12.772 | 7.518 | 214 / 6.171 | 20 / **1.347** | 0.874 | 0.363 | 0.0 | wiredtx | 2024 x 1390 | 12 |
-| cr | CR | baseline | 12.772 | 7.681 | 214 / 6.071 | 20 / **1.61** | 0.86 | 0.43 | 0.024 | wrx_cap, wiredtx, lna, ptrim | 2024 x 1390 | 6 |
-| b-flow | B | flow-first order only | 12.772 | 8.273 | 225 / 5.551 | 11 / **2.722** | 0.932 | 0.81 | 0.244 | rfdriver, wrx_cap, wiredtx | 2024 x 1390 | 6 |
-| c-flow | C | flow-first order only | 12.772 | 7.518 | 224 / 5.572 | 10 / **1.947** | 0.94 | 0.895 | 0.304 | rfdriver, wrx_cap, wiredtx | 2024 x 1390 | 6 |
-| b-h5 | B | halo 5 | 12.772 | 8.273 | 213 / 6.551 | 23 / **1.722** | 0.453 | 0.354 | 0.0 | wiredtx, lo_mmd, lna, ptrim | 2024 x 1390 | 6 |
-| c-h5 | C | halo 5 | 12.772 | 7.518 | 220 / 6.475 | 14 / **1.043** | 0.487 | 0.51 | 0.0 | wrx_cap, lo_mmd, ptrim | 2024 x 1390 | 6 |
-| c-l1 | C | debug pads on provider cells | 12.772 | 7.518 | 209 / 6.506 | 25 / **1.012** | 0.907 | 0.399 | 0.0 | wiredtx, ptrim | 2024 x 1390 | 6 |
-| c-l2 | C | debug pads on provider cells, no bank | 12.772 | 7.128 | 186 / 6.452 | 22 / **0.676** | 0.95 | 0.433 | 0.0 | wiredtx, rfdriver, lna, ptrim | 1716 x 1640 | 6 |
-| c-l3 | C | debug pads on provider cells, no bank, ring +36 | 13.299 | 7.128 | 199 / 6.812 | 9 / **0.316** | 1.001 | 0.403 | 0.0 | wiredtx, rfdriver, ptrim | 2024 x 1390 | 6 |
-| c-l4 | C | halo 6, debug pads on provider cells, no bank, ring +36 | 13.299 | 7.128 | 205 / 6.904 | 3 / **0.224** | 0.66 | 0.706 | 0.161 | wiredtx, rfdriver, ptrim | 2024 x 1390 | 6 |
-| c-l5 | C | halo 6, debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out | 13.299 | 6.905 | 204 / 6.837 | 2 / **0.068** | 0.68 | 0.769 | 0.136 | wiredtx, ptrim | 1716 x 1640 | 6 |
-| c-l5-flow | C | halo 6, debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out, flow-first order only | 13.299 | 6.905 | 202 / 6.003 | 4 / **0.902** | 0.657 | 1.612 | 1.108 | wrx_cap, wiredtx | 2024 x 1390 | 6 |
-| cr-l5 | CR | halo 6, debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out | 13.299 | 7.068 | 202 / 6.878 | 4 / **0.19** | 0.659 | 0.749 | 0.169 | wiredtx, ptrim | 1716 x 1640 | 6 |
-| b-l5 | B | halo 6, debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out | 13.299 | 7.66 | 191 / 7.171 | 17 / **0.488** | 0.595 | 0.451 | 0.0 | wrx_cap, wiredtx, lo_mmd, lna, ptrim | 1716 x 1640 | 6 |
-| c-l6 | C | debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out, qdum + lo_obs in the QVCO slot | 13.299 | 6.877 | 195 / 6.686 | 9 / **0.191** | 1.033 | 0.514 | 0.0 | wiredtx, ptrim | 1716 x 1640 | 6 |
-| cr-l6 | CR | debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out, qdum + lo_obs in the QVCO slot | 13.299 | 7.04 | 195 / 6.779 | 9 / **0.261** | 1.005 | 0.431 | 0.014 | wiredtx, rfdriver, ptrim | 2024 x 1390 | 6 |
-| b-l6 | B | debug pads on provider cells, no bank, ring +36, OPEN/SHORT frames out, qdum + lo_obs in the QVCO slot | 13.299 | 7.632 | 178 / 6.821 | 28 / **0.81** | 0.925 | 0.422 | 0.0 | wrx_cap, wiredtx, lo_mmd, ptrim | 1716 x 1640 | 6 |
-| b-g500 | B | die +500 um tall | 14.286 | 8.273 | 222 / 7.06 | 14 / **1.214** | 0.956 | 0.769 | 0.161 | wrx_cap, wiredtx, lna, ptrim | 1716 x 1640 | 6 |
-| b-g700 | B | die +700 um tall | 14.892 | 8.273 | 226 / 7.656 | 10 / **0.617** | 1.048 | 0.67 | 0.061 | wrx_cap, wiredtx, rfdriver, lna, ptrim | 1716 x 1640 | 6 |
-| b-g900 | B | die +900 um tall | 15.497 | 8.273 | 230 / 8.044 | 6 / **0.229** | 1.088 | 0.833 | 0.267 | wrx_cap, wiredtx, lo_mmd, rfdriver, lna, ptrim | 1716 x 1640 | 6 |
-| b-g1100 | B | die +1100 um tall | 16.103 | 8.273 | 236 / 8.273 | 0 / **0.0** | 1.158 | 1.105 | 0.412 | wrx_cap, wiredtx, lo_mmd, ptrim | 2024 x 1390 | 6 |
-
-Images: `die-fit/run/fit-b.png` (scenario B), `fit-c.png` (scenario C), `fit-cr.png`, and one per variant
-(`fit-c-l6.png` is the lever stack, `fit-b-g1100.png` the die at which B places).
+Images: `run/fit-<run>.png` for `s`, `t`, `lb`, `s-flow`, `t-flow`, `t-l4`, `lb-l3`, `lb-m36`. All runs: `run/summary.md`, `run/fit-<run>.json`.
 
 Reading:
-- **B does not fit: 25 blocks, 2.14 mm2, stay out, and the 0.35 mm2 left free is slivers below 80 um.** Unplaced in
-  the best run: both captures (0.29 each), pll_vreg2, CDR ring, lo_mmd, a DAC, and smaller ones. With their channels
-  the shortfall is 2.3 mm2.
-- **C does not fit either: 20 blocks, 1.35 mm2** (1.5 with channels). Cr: 1.61 (1.75).
-- The macro's aspect ratio is not a lever: best results for 1716 x 1640 and 2024 x 1390 differ by less than 0.1 mm2.
-- Honouring signal flow and supply adjacency (flow-first order) leaves 0.6 mm2 more unplaced than the densest packing
-  (B 2.72, C 1.95), because the pad-pinned chains fragment the space before the large blocks arrive. A hand floorplan
-  will do better than this heuristic, but not for free: the densest packings above scatter the chains (slicer away from
-  the HS pad, LNA placed last), so they are lower bounds on the shortfall, not buildable plans.
-- Halving the channels (5 um halo) recovers only 0.3-0.4 mm2 and contradicts 2.2.
+- The densest packings scatter the chains and are lower bounds on the shortfall, not buildable plans; the
+  flow-first packings are what a floorplan that honours signal flow and supply distance looks like to this
+  heuristic. A hand floorplan lands between the two.
+- The unplaced area needs its own channels: add about 13 % (as built 3.2-3.9, targets 1.65-2.3).
+- No keep-away rule fails in any run. The QVCO sits at x = 1617 um, 1.0 mm from its `lo` switch, in every
+  run: the INT23 rule and the supply-pad rule G4 (switch at pad 64 on the west edge) cannot both hold. Strap
+  need 135-150 um of Metal5 for 15 mV, or the switch moves inboard on a raw-VDD trunk.
+- Also relaxed in most runs: `wtx_mux8` and `pt_ptrim` (no legal switch position within 500 um), `wrx_cap`
+  and `rfdriver` in some.
+- Macro: each 0.1 mm2 of macro costs 0.08-0.10 mm2 of unplaced area. Its aspect ratio is not a lever.
 
-### 3.3 Binding constraints (what the packer ran into, in order of cost)
+## 3. Routing, grid and decap on these packings (`overheads.json`)
 
-1. Area. Every baseline run ends with zero usable free area; nothing else matters until about 1.5-2.3 mm2 is found.
-2. The east and west core edges are 48-50 % pad (2.04 and 2.11 mm of 4.22 mm); the pads reach 487 um into the core. All
-   pad-pinned blocks compete for the 20 um to 500 um wide gaps between them.
-3. Capture: two 1211 x 243 um cells that must sit near the slicers and the HS pad and at least 200 um from both ADCs.
-   They are unplaced in most B runs for the keep-away, not for area.
-4. Island switches: eight of ten are pinned to a 1.2 mm stretch of ring edge at their supply pad; `wired_tx` has no
-   legal place within 500 um of its 37 mA load (relaxed in every run), `ptrim` / `wrx_cap` / `lna` / `lo_mmd` /
-   `rfdriver` each lose the 500 um rule in some runs.
-5. Digital keep-aways: LNA 1000 um from the macro, ADC 210 um, QVCO 300 um. With the macro on the north edge the whole
-   RF RX front end has to live south of y = 2100 um on the west side, where `lod`, `rf_rx`, the bbfilters and the ADCs
-   also want to be.
-6. The decap bank occupies the first 130 um around the macro; that band was dead for the ADCs anyway, but not for
-   the wired blocks and core_bias.
-7. Spirals: six (QVCO, four LNA spirals, T-coil) with a 25 um ring; the four LNA spirals are the blocks most often left
-   unplaced among the small ones, because they come late and need 190-290 um squares next to the LNA.
+| floorplan | control wire mm | data / clock mm | analog mm | channel area needed: all minimum pitch / data, clock and analog at double pitch | channel area the halo gives | endpoints on unplaced blocks (not counted) |
+|---|---:|---:|---:|---:|---:|---:|
+| `s` | 361 | 256 + 30 | 427 | 0.87 / 1.48 | 0.76 | 303 |
+| `t` | 330 | 350 + 29 | 576 | 1.07 / 1.89 | 0.88 | 175 |
+| `t-l4` | 410 | 283 + 30 | 591 | 1.14 / 1.99 | 1.02 | 73 |
+| `lb` | 537 | 356 + 32 | 509 | 1.17 / 1.96 | 1.07 | 12 |
+| `lb-l3` | 699 | 410 + 35 | 454 | 1.26 / 2.02 | 1.07 | 12 |
 
-## 4. Verdict
+- Method as before: Manhattan lengths from the conn (531 static control bits, 304 data and clock nets, 269
+  analog nets), track pitch 0.56 or 1.12 um, three double pitches for ring phases, LO and the forwarded clock;
+  a channel offers one signal layer plus 30 % of Metal4/Metal5, 60 % routable.
+- **The channels are 0.1-0.2 mm2 short at minimum pitch and 0.7-1.0 mm2 short at realistic pitch.** The
+  difference has to cross blocks. Metal3-free area inside the outlines, measured: 3.3 mm2 as built, 2.5 with
+  targets, 1.8 at the lower bounds. No block states today which layer may be crossed (DF-12).
+- Grid and plates. Metal4/Metal5-free area over the block outlines, spirals excluded and half of the
+  sensitive blocks' area unused: **1.93 mm2 as built, 1.34 with targets, 0.73 at the lower bounds: 2.0 / 1.4 /
+  0.8 nF** of grid MIM at 55 % plate coverage, against the 2.0 nF minimum and 3.0 nF target of the decap plan.
+  Blocks that cannot give the 30 % the grid asks for push 0.43 / 0.54 / 0.88 mm2 of straps into the channels.
+- So the area levers and the decap plan work against each other: at the lower bounds the plan loses the bank
+  (1.5 nF) and 1.2 nF of grid MIM, leaving about 2.9 nF of the 5.4 (if the 1.16 nF "inside the blocks" exists,
+  which nobody has shown). `spec/power-delivery.md` 4.3 rates 2-3.5 nF as good for neither clock line.
+  Replacing 1.2 nF by stacked tiles costs 0.30 mm2.
 
-**Not everything fits. The coordinator's "short by about 1.5 mm2 after all staged repacks" is too optimistic: with
-everything staged published as measured (B) the die is short by 2.1-2.3 mm2 in the densest packing found, and by about
-2.9 mm2 when signal flow and the supply rules are honoured. Even with every repack target met (C) it is short by
-1.3-1.5 mm2.**
+## 4. Shortfall
 
-| mm2 | A published | B staged | C targets | Cr backed targets |
-|---|---:|---:|---:|---:|
-| core | 12.772 | 12.772 | 12.772 | 12.772 |
-| ledger demand (section 1) | 15.851 | 13.345 | 12.480 | 12.690 |
-| raw margin | -3.08 | -0.57 | +0.29 | +0.08 |
-| channels: 10 um halo on every block (measured 13-14 % of placed block area) | -1.10 | -1.00 | -0.99 | -1.00 |
-| fixed corridors (D2H north-south 0.129, LO legs 0.043) | -0.17 | -0.17 | -0.17 | -0.17 |
-| macro halo, pad side-pin channels | -0.06 | -0.06 | -0.06 | -0.06 |
-| packing scrap (measured, densest packing: slivers below 80 um) | -0.35 | -0.35 | -0.36 | -0.43 |
-| **margin, arithmetic** | **-4.8** | **-2.15** | **-1.29** | **-1.58** |
-| **shortfall, packer** (unplaced + its channels) | not run | **-2.3** | **-1.5** | **-1.75** |
-| the same with flow-first order | | -2.9 | -2.1 | |
-| not included above, risks: | | | | |
-| routing beyond what the channels give (2.2) | | 0 to -0.8 | 0 to -1.0 | |
-| decap: tiles to replace grid MIM that the repacks removed (2.4) | | -0.15 to -0.40 | -0.22 to -0.47 | |
-| island-local decap not shown to exist | | 0 to -0.29 | 0 to -0.29 | |
-| grid: unmeasured blocks that do not let the mesh cross | | Metal4/5 only, no core area | | |
+| mm2 | as built | targets met | targets + assembly and pad levers (`t-l4`) | lower bounds, macro 2.81 | lower bounds, macro 3.65 |
+|---|---:|---:|---:|---:|---:|
+| block demand | 14.02 | 12.51 | 11.69 | 10.24 | 11.08 |
+| unplaced, densest to flow-first | 2.80-3.47 | 1.46-2.00 | 0.41-1.17 | 0-0.42 | 0.16-0.90 |
+| **shortfall with the channels of the unplaced blocks** | **3.2-3.9** | **1.65-2.3** | **0.5-1.3** | **0-0.5** | **0.2-1.0** |
+| not included: routing beyond the channels | 0.1-0.7 | 0.2-1.0 | 0.1-1.0 | 0.1-0.9 | same |
+| not included: tiles for grid MIM the repacks remove | 0-0.25 | 0.15-0.40 | 0.15-0.40 + the bank | 0.30 + the bank | same |
+| not included: island-local decap not shown to exist | 0-0.29 | 0-0.29 | 0-0.29 | 0-0.29 | same |
 
-Why it differs from the 1.5 mm2 tally: the tally did not have the QVCO regulator at its real size (+0.30), the
-characterization cells (+0.41), the published WMON pad (+0.05), the corridors (+0.17) or measured scrap, and it did not
-know that the pads were over-booked by 0.28.
+The earlier tally (0.03-0.18 short against targets, 0.65-0.73 against as built, after levers) no longer holds:
+the macro grew from 2.81 to 3.20-3.65 (+0.39 to +0.83), the QVCO regulator is 0.44 as laid out, the LNA coils
+are 0.069 each, and the QVCO rule is now applied. The polyphase deletion, the shared AUX clock pair and the
+new transmit path (0.108 below the old booking) are in.
 
-Scenario A is 0.67 better if the R8-ARCH second capture is booked at the 0.29 reserve of record instead of the
-published r6 master; it does not change the picture.
+## 5. Where the area is: levers, ranked by as built minus lower bound
 
-**For information only (the die is fixed):** scenario B places completely, densest packing, with four supply-distance
-relaxations, when the die is 1.10 mm taller: **3.932 x 6.222 mm = 24.5 mm2 (+21 %)**, core 16.10 mm2
-(`run/fit-b-g1100.json`; +0.9 mm leaves 0.23 mm2 out, +0.7 mm 0.62, +0.5 mm 1.21). With the flow-first order 0.79 mm2
-is still out at +1.1 mm; extrapolated, a flow-honouring B needs about +1.5 mm (about 26 mm2). Scenario C by the same
-slope (0.30 mm2 of core per 0.1 mm) needs about +0.5 mm (22.1 mm2); extrapolated, not run.
+Sum of all ledger rows: 3.78 mm2 (row 3, the core ring, is core area and is not in that sum). "Invalidates" = verification that has to be rerun. Owner in brackets; rows `DF-n`
+in `interface-changes.md` carry the hand-over.
 
-## 5. Remaining levers, ranked (sizes in core mm2; "packer" = measured on scenario C as cumulative runs)
+| # | block or item | as built | lower bound | gain | lever | risk | invalidates |
+|---|---|---:|---:|---:|---|---|---|
+| 1 | digital macro [digital, DF-2] | 3.648 | 2.814 | 0.83 (0.45 to the target) | owner's list: clock buffers 0.136 and gain buffers 0.27 mm2 of cells, single-rank trims, duplicated per-mode logic; the congestion that failed r7c | no outline of the current RTL has routed: the lower bound is the last outline that routed with older RTL | nothing signed off yet; every later STA / hold / GLS run |
+| 2 | BB_I, BB_Q, WMON pads on provider `asig_5p0` cells [pads, rf_rx, DF-6] | 0.434 | 0 | 0.43 (packer 0.41) | AP4-7: zero core intrusion | bandwidth and HBM of the provider cell on the fallback-RX and debug paths | bb_tap, fallback-RX, WMON benches; HBM screen of three pads |
+| 3 | core ring 2 x 25 -> 2 x 12 um, core edge out by 36 um [assembly, power delivery] | | | 0.53 gross, 0.26 in the packer | AP4-10b, G8 | 0.5-0.9 mV more drop | EM at 85 C and the static-drop run |
+| 4 | decap macro-edge bank [power delivery, DF-11] | 0.390 | 0 | 0.39 (packer 0.35) | no dedicated bank | decap 5.4 -> 3.9 nF or less; ripple limit 150 mV is already met without margin | decap response, ring-PLL and QVCO ripple tables |
+| 5 | `pt_adc_i`, `_q` [converters, no owner, DF-9] | 0.899 | 0.509 | 0.39 (0.24 to the target) | staged cell is 67 % device-free: Metal3 channel bank (51 % of the old height), two 120 x 75 macro rows in a 408 um row, shared guard rings in the SAR logic | matching-critical rows must not move; the two cheaper attempts failed | ENOB, INL, EN = 0 current, every staged ADC run |
+| 6 | `pt_bbfilter_i`, `_q` [rf_rx, DF-3] | 0.684 | 0.391 | 0.29 (0.22 to the target) | 25 % empty; MIM (0.034 each) over the amplifiers; abutted rows | coupling into the active-RC nodes | FS-2 extracted set, noise, DCOC |
+| 7 | WTX_EXT pad [pads, wired TX; user decision OCP-2] | 0.147 | 0 | 0.15 | fallback input on the USB pads | loses USB HS transmit from external data | `wtx_ext_rx` bench on the USB pad model |
+| 8 | `pt_lo_vreg` [LO, paused, DF-5] | 0.441 | 0.300 | 0.14 | requalify at the -60 dBc spur limit: smaller hold capacitors (47 % of the cell is COMP), second follower stage | rejection at 78.125 MHz without the external capacitor | regulator PSRR, noise, line step |
+| 9 | `pt_core_bias` [core support, DF-10] | 0.302 | 0.163 | 0.14 | cells are 0.105 of the 0.302 composite: two abutted rows | shared infrastructure, no-dead-chip | composite LVS, bias observation, PD2-14 |
+| 10 | RF probe frames [characterization] | 0.335 | 0.172 | **0.133 done** + 0.031 by stacking | 260 x 260 frames; one 260 x 660 column on shared ground pads | 200 um port spacing is near the minimum for facing GSG probes | none simulated; DRC / LVS redone |
+| 11 | `pt_detect` [wired RX, DF-4] | 0.173 | 0.090 | 0.08 | 71 % device-free | layout-only repack moved the thresholds: needs the redesign | squelch / disconnect / OOB thresholds |
+| 12 | island switches x 10 | 0.427 | 0.362 | 0.065 | 8-11 % empty at the edge bars | drop is at 18.4 of 20 mV | full-RC drop, EM, soft start |
+| 13 | USB and TX pad attachment columns [pads] | 0.610 | 0.547 | 0.063 | AP4-6a: column 523 -> 300 um and 312 -> 160 um | pad requalification | HBM, pad capacitance, return loss |
+| 14 | `wtx_ser8d` [wired TX, DF-7] | 0.234 | 0.171 | 0.063 | routing channels are 127 of 315 um of height | timing margin of the new path at ss | extracted eye table |
+| 15 | `pt_lo_lf` [LO, paused] | 0.194 | 0.149 | 0.045 (0.12-0.15 with OCP-1) | MIM over the 490 pF MOS capacitor C2; or C2 on the carrier | DRC of MIM over the n-well capacitor; ground-difference spur if off chip | loop phase margin and noise |
+| 16 | `pt_wrx_cap`, `pt_pll_ring`, `term_buffer`, `pt_lo_ext`, `pt_refbuf`, `pt_dac_i/q`, `pt_lo_mmd`, `pt_slicer`, `pt_lo_pfdcp`, `pt_pll_vreg2` | 1.61 | 1.24 | 0.37 (0.03-0.04 each) | measured device-free 23-76 %; refbuf: 0.055 of MIM beside the amplifier | per block | each block's extracted set |
+| 17 | sharing (CP4-4, 7, 8, 10; QVCO corner slots; steering buffers; `tx_interlock`) | | | 0.12 | `wordclk` into the capture, one prescaler chain, two `obs_pre4` on ring FBCK, qdum + lo_obs in the QVCO outline | LO26 for the QVCO slots | small cells |
+| 18 | everything else (below 0.02 each) | | | 0.18 | | | |
 
-| # | lever | size | packer: C unplaced | cost / condition | owner |
-|---|---|---:|---:|---|---|
-| | C baseline | | 1.35 | | |
-| 1 | AP4-7: BB_I, BB_Q, WMON on provider `asig_5p0` cells (no core intrusion) | 0.40 (C), 0.45 (B) | 1.01 | debug / fallback-RX bandwidth and HBM screen on the provider cell; three provider sites | pads, rf_rx |
-| 2 | no dedicated decap bank in the core | 0.39 | 0.68 | total decap 5.4 -> 3.9 nF or less (2.4); power-delivery.md says the plan already closes without margin; alternatives: 2.0 nF of 3.3 V tiles consolidated in the macro's free sites (digital routing does not converge at 66 % today), or bond-site tiles 0.45 -> 1.15 nF if the pad escapes move | power delivery, digital |
-| 3 | AP4-10b core ring 2 x 25 -> 2 x 12 um (core edge out by 36 um) | 0.38 net of pad fronts (0.53 gross) | 0.32 | EM at 85 C and IR rerun; power-delivery.md G8 puts the cost at 0.5-0.9 mV | assembly, power delivery |
-| 4 | characterization probe frames: OPEN and SHORT out of the core (0.224), or all three drawn tighter (430 x 260 -> about 300 x 200: 0.15) | 0.15-0.22 | 0.19 (with 5) | de-embedding accuracy of the fT/fmax measurement, or owner relayout; frames could also share one set of GND pads | characterization |
-| 5 | QVCO corner slot A for staged `lo_mmd_qdum` + `lo_obs` (slot B for the second lo_obs) | 0.03-0.04 | (in the 0.19) | supply/substrate lines of LO-coherent neighbours at 25 um from the tank are not quantified (lo-ap4 NOTES) | LO, assembly |
-| 6 | AP4-6b: ESD diode rows under the provider rail band of each custom bond | 0.15-0.19 | not run (pad redesign) | pad generator rework, full requalification (HBM, pad C, return loss) | pads |
-| 7 | ADC SAR logic: abutted / shared guard rings | 0.07 each, 0.14 | B only (C already assumes 0.33) | generator rewrite, INL/ENOB re-extraction; the owner's two cheaper attempts failed | converters |
-| 8 | X5: TMDS legs onto MAIN, delete steer_4/5 | 0.04 + 0.017 (the 0.017 is already in C) | | MAIN leg must tolerate the 3.3 V pull-up | wired TX, pads |
-| 9 | AP4-6a pad attachment repack | 0.063 (was claimed 0.19; in C) | | generator rework, requalification | pads |
-| 10 | WMON: draw the 205 um B cell (if lever 1 fails) | 0.047 (in C) | | new pad cell, requalification | pads |
-| 11 | QVCO regulator: external capacitor instead of 62 on-chip cap units | up to 0.15 | | one pad site (none is spare) and a board part; or a relaxed spur limit (-61 instead of -80 dBc: power-delivery.md 5.1) | LO, user |
-| 12 | halo 10 -> 6 um | 0.35 nominal, 0.09 in the packer | 0.32 -> 0.22 | contradicts 2.2: channels are already 0.25-0.45 mm2 short; only with wiring over blocks | assembly |
-| 13 | macro aspect ratio | 0 | no effect | | |
-| 14 | macro utilisation 67 -> 75 % | 0.29 | | not available: routing does not converge at 66 %, and the macro still gains glue, clamps and control | digital |
-| 15 | MIM over blocks | no area | | a decap source, 1.1-1.4 nF after the repacks (2.4), not an area lever any more | power delivery |
-| 16 | static control through local shift registers at the big consumers (slicer, core_bias, bbfilter, ptrim: 275 of 531 bits) | routing only: about a third of the channel need | | reverses "decode glue lives in the macro" for those blocks | digital, block owners |
+Not area in the ledger, but they decide whether the area is usable:
+- Routing over blocks (section 3): without it the channels are 0.7-1.0 mm2 short.
+- Halo 10 -> 6 um: 0.09-0.35 in the packer, and it takes the same amount out of the channels.
+- Blocks under the pad ring or in its corners: nothing (section 1.2). ESD rows under the provider rail band of
+  the custom pads (AP4-6b, 0.15-0.19) is a pad redesign and is not in any column.
+- Duplicated bias, reference and DAC cells: consolidation pass 4 found 0.03 mm2; the masters are single
+  instances of their function. The measured duplicates are small cells (three `pt_bb_tap`, three
+  `pt_prescale`, six `pt_obs_pre4`, three `pt_diff_clk_rx`: 0.19 mm2 in all).
 
-Stack on C at the 10 um halo (levers 1-5, run `c-l6`): **0.19 mm2 still unplaced** in the densest packing, 0.83 in the
-flow-first order. Adding 6 and 8 brings C to about zero, with no margin for the risks of section 4. On Cr the same
-stack leaves 0.26, on B 0.81 (`cr-l6`, `b-l6`). B needs the whole B -> C step as well (ADC 0.45 -> 0.33, both
-bbfilters, core_bias, detect, CDR ring, TX ring, term_buffer, pad attachments: 0.87) of which 0.21 is declared
-unreachable by the owners (Cr).
+## 6. Done in this pass
 
-### 5.1 Needs a user decision (not levers this study may take)
+- **RF probe frames** `pt_char_rffet`, `_open`, `_short`: 430 x 260 -> 260 x 260 um each, -0.133 mm2 (commit
+  be37cc6). Port pad centres 200 um apart, ground rails inside the pad columns, pads and openings unchanged.
+  On the GDS read back from disk: Magic DRC 0, KLayout DRC 0, DUT LVS unique after rename; OPEN keeps G, D,
+  GND separate, SHORT merges them. Stack check (`rffet.py stack`) with a failing negative control. Independent
+  review GO-with-conditions (`die-fit/rffet-review.md`): the two code and record conditions are closed; the
+  third is an accepted risk for the user (probe spacing). Extracted pad capacitance unchanged within 0.5 fF;
+  leads 62 um instead of 112 um.
+- Nothing else was edited. Every other lever is in a block that has an owner, is paused (LO), or needs
+  extracted reruns that were not started here (converters, core bias, island switches).
 
-1. **The fixed die against full scope.** After every owner-level lever (1-10) scenario C closes at about zero and the
-   backed-target scenario Cr is 0.1-0.3 short, before routing and decap risk. The die at which B fits is 24.5 mm2
-   (section 4). Stated for information.
-2. **Decap bank or ripple limit** (power-delivery.md decision 2, now sharper): the bank costs 0.39 mm2 and the repacks
-   removed 1.6-1.9 nF of the grid MIM the plan relied on.
-3. **OPEN / SHORT de-embedding frames in the core** (0.224): keep, shrink, or accept a less accurate device-speed
-   measurement.
-4. **Debug / fallback pads**: BB_I, BB_Q (also the fallback-RX path) and WMON on provider cells (lever 1) changes their
-   bandwidth and protection; WTX_EXT pair + receiver + fallback control (0.18) is a pure fallback.
-5. **Reserves for what is not demonstrated**: R8-ARCH second slicer + capture + blenders (0.44) and the eighth-rate TX
-   reserve (0.22). Both are booked in full here because the mandate keeps the rates; neither is closed in simulation.
-6. **QVCO regulator**: 0.30 mm2 on chip, or an external capacitor on a pad site that is not free, or a relaxed spur limit.
-7. **Supply-pad assignment of `lod`, `pll`, `wired_tx`** (2.3): the floorplan cannot satisfy G4/G6 and signal flow
-   together; either the islands are re-cut or longer straps (Metal5 that the grid also needs) are accepted.
-8. **Channels**: route the 531 static control wires over blocks (owners must free a layer) or pay 0.25-0.45 mm2 more
-   channel area than any floorplan so far has booked.
+## 7. What does not fit even with every lever
 
-## 6. Independent review of the ledger (`die-fit/review.md`)
+- **The macro at 3.65 mm2.** With every block at its lower bound, four pads off the core and no decap bank,
+  0.16 mm2 is still unplaced in the densest packing and 0.90 in the flow-first one; routing beyond the
+  channels and decap replacement come on top. At 3.20 the densest packing just closes (0.03) and the
+  flow-first one is 0.56 short. Only at 2.81 does the lower-bound set place with free area left (0.47-0.80
+  mm2 usable).
+- **Full decap plan and full repack together.** At the lower bounds the die holds about 2.9 nF of the 5.4 nF
+  plan; restoring it costs 0.39 (bank) + 0.30 (tiles) mm2 that the lower-bound packing does not have unless
+  the macro is at 2.81.
+- **QVCO placement rule with the `lo` switch at pad 64.** Not an area miss: a rule conflict that every
+  packing shows (section 2).
+- The lower bounds themselves are a measured rule, not designs: 3.6 mm2 of the 10.24 is estimate rows, and
+  the ADC (0.254 each), the baseband filter (0.196 each) and the core bias (0.163) have never been drawn at
+  those sizes.
 
-One reviewer (separate agent, read-only) tried to break ledger v1. The arithmetic and the no-double-count checks held
-(pad intrusions, staged cells, tx8 sum, island switches 0.426, LEF sizes, decap bank). Corrections taken into v2:
+## 8. Limits
 
-| ID | finding | A | B | C |
-|---|---|---:|---:|---:|
-| R1 | `pt_lo_vreg` 0.12 not defensible: the LO owner's regulator schematic has about 0.24 mm2 of bare devices -> 0.30 (0.25-0.38) | +0.180 | +0.180 | +0.180 |
-| R3 | RF RX "published" was the uncommitted working tree: HEAD is lna 78k, rxmix 76k each, bb_tap 10k | +0.107 | 0 | 0 |
-| R4 | `h2d_gearbox_rsv` books nothing (H2D capture flops are in the macro top rows) | -0.093 | -0.031 | -0.031 |
-| R6 | `steer_0..3` double counted with the CML pre-drivers in `tx8_rsv`; steer_4/5 unused | -0.035 | -0.035 | -0.052 |
-| R9 | capture target 0.290 is below the staged r7c 0.294 (two instances) | 0 | 0 | +0.008 |
-| R10 | refvcm, txpad_bias, bias taps have staged layouts (7.4k, 12.5k, 2 x 2.2k) | +0.009 | +0.009 | +0.009 |
-| R11 | supply/clock monitor is RTL; only a time base and a clock-present detector stay outside | -0.015 | -0.015 | +0.005 |
-| R12 | allowance for LNA tail / gate R / damping, D-EXTCLK selector, FLL driver | +0.010 | +0.010 | +0.010 |
-| | **net** | **+0.163** | **+0.118** | **+0.129** |
-
-Handled differently from the reviewer's proposal:
-- R2 (ADC 0.33 unreachable, floor 0.35) and R7 (CDR ring 0.127 is not an assigned target), plus the flags on
-  `pt_detect` 0.09 and the undrawn WMON cell: C is kept as defined ("all targets met") and scenario **Cr** was added
-  with the backed values (+0.21 over C).
-- R5 (qdum + lo_obs inside the QVCO outline, -0.028): kept as lever 5, not taken in the ledger, because nobody has
-  placed them there and the coupling is not quantified.
-- R8 (A books the second capture on r6): kept, stated as a definition with its size (0.667).
-- Not corrected, flagged by the reviewer and repeated in 1.1: island-local decap 1.16 nF assumed inside the blocks;
-  `d2h_gearbox_rsv` should be renamed (it is the hand-placed D2H output strip / pad repeaters).
-
-## 7. Files
-
-- `die-fit/ledger.py`, `ledger.csv`, `ledger.md`, `ledger.json`: the ledger (v2).
-- `die-fit/m45free_staged.py/.json`, `padnotch.py/.json`: the two layout measurements.
-- `die-fit/packer.py` (engine + self-checks), `fit.py` (chip scenarios, report, render), `variants.sh`, `runset.sh`.
-- `die-fit/run/fit-<tag>.json/.png`, `run/summary.md`, `summary.json`; `run/v1/` pre-review B and C.
-- `die-fit/overheads.py`, `overheads.json`: net counts, routing, grid and decap derivations.
-- `die-fit/review.md`: the independent review.
-
-Not done / limits: no GDS assembly, no router, no DRC; outlines are rectangles; wire lengths are Manhattan estimates;
-the packer is a constructive heuristic (a lower bound on what a hand floorplan can place is not proven, only the area
-arithmetic is); scenario A was not packed; the C-target Metal4/Metal5-free areas are estimates, B's are measured.
+No GDS assembly, router or DRC of a floorplan; outlines are rectangles except the pads; wire lengths are
+Manhattan estimates; the packer is a heuristic. The lower-bound rule (all empty area and half of the
+device-free area recovered) is uniform and not block-specific. `pt_ctle`, `pt_ptrim`, `pt_lna_deg` and the
+`pt_wiredtx` remainder are owners' numbers, not measured here. Metal-free areas for targets and lower bounds
+are scaled from the as-built measurement one for one. Fill density with the keep-outs was not run.

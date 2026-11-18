@@ -1,7 +1,6 @@
-"""LNTA tank inductor (RC-16j): same generator/model family as the QVCO spiral (analog/timing/lcvco/spiral.py),
-geometry: 170 um outer, 3 turns, 15 um, L 1.35 nH, Q_eff 5.4.  TWO single-ended spirals, VDD -> tank_p and VDD -> tank_n
-(they also carry the DC: no resistive feed, which cost 2.6 dB of tank swing); 2 x 35.7k um^2.
-family).  Variants (coordinator: size at PESSIMISTIC values):
+"""LNA tank inductor: same generator/model family as the QVCO spiral (analog/timing/lcvco/spiral.py), geometry: 220 um outer,
+4 turns, 20 um, L 2.01 nH, Q_eff 7.0 nominal.  TWO single-ended spirals, vtk -> tank_p and vtk -> tank_n (they carry the DC);
+2 x 57.2k um^2.  Variants (sized at the PESSIMISTIC values):
   pt_lna_ind       nominal model
   pt_lna_ind_pess  L -15 %, Rs scaled so that Q_eff = 4 at 2.44 GHz, worst substrate
   pt_lna_ind_lhi   L +10 %, nominal Q
@@ -63,22 +62,29 @@ if __name__ == '__main__':
         print('deg', v, {k: round(m[k], 2) for k in ('L_nH', 'Rs_ohm', 'Rdc_ohm', 'Q_series', 'footprint_um2', 'Cox_total_fF')})
 
 
-def layout():
-    """Magic layout of pt_lna_ind (DRC) with the QVCO spiral generator; output in generated/lna_ind.{mag,gds}."""
+def layout(which='ind'):
+    """Magic layout + DRC of pt_lna_ind (which='ind') or pt_lna_deg ('deg') with the QVCO spiral generator; output in
+    generated/lna_<which>.{mag,gds}.  DRC-only cells (no devices): benches insert the models above."""
     import subprocess, shutil, rfrx_flow as flow
-    work = flow.SCRATCH / 'lna_ind'
+    g, cell = (G, 'pt_lna_ind') if which == 'ind' else (G_DEG, 'pt_lna_deg')
+    work = flow.SCRATCH / f'lna_{which}'
     work.mkdir(parents=True, exist_ok=True)
-    tcl = SP.layout_tcl(G, cell='pt_lna_ind').replace('pt_spiral_ind', 'pt_lna_ind')
+    for f in work.glob('pt_lna_*'):
+        f.unlink()
+    if (work / 'drc.txt').exists():
+        (work / 'drc.txt').unlink()
+    tcl = SP.layout_tcl(g, cell=cell).replace('pt_spiral_ind', cell)
     (work / 'spiral.tcl').write_text(tcl)
-    cmd = ['docker', 'run', '--rm', '--network', 'none', '--cpus', '2', '--memory', '6g', '--entrypoint', '/bin/sh',
+    cmd = ['docker', 'run', '--rm', '--network', 'none', '--cpus', '2', '--memory', '6g', '--env', 'OMP_NUM_THREADS=1', '--entrypoint', '/bin/sh',
            '--mount', f'type=bind,src={work},dst=/work', '-w', '/work', SP.DIGITAL_IMAGE, '-c',
            'magic -dnull -noconsole -rcfile /pdk/gf180mcuD/libs.tech/magic/gf180mcuD.magicrc /work/spiral.tcl > magic.log 2>&1']
     subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
     drc = (work / 'drc.txt').read_text() if (work / 'drc.txt').exists() else 'missing'
-    for f in work.glob('pt_lna_ind.*'):
-        shutil.copy(f, flow.GENERATED / f.name.replace('pt_lna_ind', 'lna_ind'))
+    for f in work.glob(f'{cell}.*'):
+        shutil.copy(f, flow.GENERATED / f.name.replace(cell, f'lna_{which}'))
     return drc.split('\n', 1)[0].strip()
 
 
 if __name__ == '__main__' and len(sys.argv) > 1 and sys.argv[1] == 'layout':
-    print('DRC', layout())
+    for w_ in ('ind', 'deg'):
+        print(w_, 'DRC', layout(w_))

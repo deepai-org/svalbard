@@ -1,492 +1,2877 @@
 {
  "block": "lna",
  "top_cell": "pt_lna",
- "source_hashes": {
-  "lna.spice": "sha256:ac5dfd439b8fda5b5df5ddd48ae9db0cccc2cc2fea47b01211749c0745b2f663",
-  "netlists.py": "sha256:fb4f51b6eede1d916e5a24128fdbfc250408585f135fdfdde4622b62084fbd93",
-  "rfrx_flow.py": "sha256:6fa4ba2ff246182b7c47dd4d2a9c95652d70c09a833ab3674ecb170dd0ee15a1"
+ "state": "candidate",
+ "limits": {
+  "idd_rx_ma": 19.0,
+  "idd_lo_ma": 11.8,
+  "re_diff_ohm": 1.0,
+  "re_cm_ohm": 1.0,
+  "s11_db": -10.0,
+  "lna_nf_db": 6.0,
+  "derate_db": 1.5,
+  "chain_nf_dsb_db": 4.1
  },
- "artifact_hashes": {
-  "lna.gds": "sha256:461087f9dcae15f046ded92ae6019cfc6f988d34ec69ddfe2b48670edb87ea62",
-  "lna.mag": "sha256:1a35a2c015bc8b394362823eef8fe07eb84d04a2fe54dae087462fc67f75e1e8",
-  "lna.ext.spice": "sha256:a34c6f51d6eee29688d623c0d361c51d2d6d13182c3c946e276551e3d96d29bf",
-  "lna-lvs.txt": "sha256:b3f2d5fc0d8e17787f7953383e607f4686dd0b62831639dc7203df5a60284951"
+ "hashes": {
+  "lna.spice": "504964bcc0cf0ccca40b366257b0619d18e5f0fbc4b35bccd52b08e268ccec24",
+  "lna.gds": "35d452a9991ac4f47fe8dc2f70ebecb21ee61a93f10163dfc79e1e9e660347b2",
+  "lna.ext.spice": "f54ca98d02981ceb5e424444deb188c911ba69d58c5e019b55444e3046a35af4",
+  "netlists.py": "c63cf7cc66c2b344e03ed8c641ce338fa28b373da8585ccf6855f14242d6a993",
+  "lna_ind.gds": "34bc21cd194812899e1020af38a8eaa410b13d80927b8058ce714fb0933c5645",
+  "lna_deg.gds": "13409c57d37bac1581c3f6ef4567b35bc5bb54f0e683692795234a7412994591"
  },
- "images": {
-  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
-  "analog_ref": "hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3",
-  "digital": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
-  "digital_tag": "svalbard/librelane-gf180-canary:2026.08"
- },
- "pdk": "gf180mcuD; layout/LVS: canary image /pdk/gf180mcuD; simulation: analog image ciel gf180mcu f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
- "area": {
+ "layout": {
+  "area_um2": 60752.0,
   "bbox_um": [
-   1.5,
-   -0.2,
-   178.14,
-   110.98
+   1.1,
+   0.6,
+   254.15,
+   240.68
   ],
-  "area_um2": 19639.0
- },
- "tests": {
-  "safe": {
-   "state": "pass",
-   "cases": [
-    {
-     "case": "reset/off: all controls 0, island on 3.3 V",
-     "rail_current_a": 1.417574e-10,
-     "note": "includes the 10 uA reference only if it flowed from the rail; reference is a separate source here"
-    },
-    {
-     "case": "off, 85 C, 3.63 V",
-     "rail_current_a": 3.379925e-10
-    },
-    {
-     "case": "island unpowered, controls and RF_RX_P at 3.63 V, 27 C",
-     "pad_current_a": 7.069962e-15,
-     "control_current_a": 0.0,
-     "rail_current_a": 6.593598e-21
-    },
-    {
-     "case": "same, 85 C",
-     "pad_current_a": 7.065298e-15,
-     "control_current_a": 0.0,
-     "rail_current_a": 6.394776e-20
-    },
-    {
-     "case": "same, 0 C",
-     "pad_current_a": 7.073037e-15,
-     "control_current_a": 0.0,
-     "rail_current_a": 5.476602e-21
-    },
-    {
-     "case": "RF pad isolation with LNA off (gain to mixer node, dB)",
-     "value": -34.6326
-    }
-   ],
-   "notes": "Pad side of Cin is a MIM bottom plate (no junction on RF_RX). Tail/diode off and load supply PMOS off at reset; island_off weakly clamps rf_out_p/n (W/L=1/10)."
-  },
-  "clean": {
-   "state": "pass",
-   "drc": {
-    "tool": "Magic 8.3.623 drc(full), euclidean",
-    "errors": 0,
-    "error_tiles": "0",
-    "report": "generated/lna-layout.json",
-    "klayout_crosscheck": {
-     "ran": true,
-     "violations": 0,
-     "by_rule": {},
-     "deck": "gf180mcuD klayout (sak-drc.sh -k)"
-    }
+  "magic_drc": 0,
+  "klayout_drc": 0,
+  "lvs": "Circuits match uniquely.",
+  "readback_lvs": {
+   "tool": "scratch/integration/signoff-gap/lvs/rb_lvs.py (GDS copied to an empty directory, Magic gds read, extract, netgen with property comparison)",
+   "gds_sha256": "35d452a9991ac4f47fe8dc2f70ebecb21ee61a93f10163dfc79e1e9e660347b2",
+   "reference": "schematic lna.spice + the antenna diodes the layout placed (lvs_reference.spice)",
+   "netgen": "netgen: Final result: Circuits match uniquely.",
+   "netgen_unique": true,
+   "property_errors": false,
+   "devices_ref": 981,
+   "devices_readback": 981,
+   "census_exact": false,
+   "census_difference": {
+    "ppolyf_u_1k r_length=8.667e-06 r_width=1e-06": [
+     3.0,
+     0
+    ],
+    "ppolyf_u_1k r_length=8.67e-06 r_width=1e-06": [
+     0,
+     3.0
+    ]
    },
-   "lvs": {
-    "tool": "Netgen 1.5.316 gf180mcuD_setup.tcl",
-    "result": "Circuits match uniquely.",
-    "unique_match": true,
-    "report": "generated/lna-lvs.txt"
-   },
-   "extracted_nominal": {
-    "condition": "tt 27 C 3.3 V, extracted with parasitic C",
-    "idd_a": 0.002745179,
-    "gain_db": -11.0062,
-    "zin_re_ohm": 4.287244,
-    "zin_im_ohm": -160.696,
-    "nf_db": 11.7965,
-    "vd_cm_v": 1.575951
+   "census_note": "three segments of the cascode-divider resistor are 8.667 um in the netlist and 8.67 um drawn (5 nm grid); within the netgen tolerance",
+   "negative_control": {
+    "change": "gate resistor width 82 -> 80 um in the reference",
+    "netgen": "netgen: Final result: Circuits match uniquely.\nProperty errors were found.\n\nThe following cells had property errors:\n pt",
+    "fails_as_required": true
    }
-  },
-  "observable": {
-   "state": "pass",
-   "atb_taps": [
-    {
-     "port": "atb_nbias",
-     "node": "tail mirror gate (ibias diode)"
-    },
-    {
-     "port": "atb_vdcm",
-     "node": "drain common mode via 2 x 20 kohm",
-     "nominal_v": 1.575951
-    }
-   ],
-   "status_bits": [],
-   "clock_obs": [],
-   "notes": "Register map ATB code 16 lna_bias; drain CM tap needs an ATB code at integration."
-  },
-  "fallback": {
-   "state": "pass",
-   "routes": [
-    {
-     "route": "rf_lna_bypass",
-     "control": "byp=1 (debug.rf_rx_bypass.lna), en=0",
-     "pads": [
-      "RF_RX_P",
-      "RF_RX_N"
-     ],
-     "bypass_gain_into_mixer_model_db": -12.0252,
-     "chain_conversion_gain_db": {
-      "gain_i_db": 10.914592780746768,
-      "gain_q_db": 12.641982609526835,
-      "bb_pp_i_v": 0.0310495,
-      "bb_pp_q_v": 0.0290076,
-      "idd_a": 0.00381818,
-      "f_lo_hz": 2400000000.0,
-      "f_if_hz": 5000000.0,
-      "rf_emf_amp_diff_v": 0.003,
-      "board_match": null,
-      "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
-     }
-    }
-   ],
-   "bypass_loading_fF": 53.785399999999996,
-   "bypass_loading_note": "off-state capacitance of one 60/0.28 bypass NMOS seen from one side at 2.4 GHz (schematic device)"
   }
  },
- "performance_vs_target": [
-  {
-   "metric": "voltage gain into 50 ohm/leg mixer-input model, 2.4 GHz (dB)",
-   "target": "20 (gain code 3)",
-   "extracted_nominal": -11.0062,
-   "schematic_nominal": -9.85045
-  },
-  {
-   "metric": "NF, 100 ohm diff source, no board match (dB)",
-   "target": 6.0,
-   "extracted_nominal": 11.7965
-  },
-  {
-   "metric": "NF with ideal lossless board L-match (dB)",
-   "target": 6.0,
-   "extracted_nominal": 3.284737,
-   "detail": {
-    "match": {
-     "order": "series_at_pad",
-     "series_leg": [
-      "L",
-      5.9999075266525975e-09
-     ],
-     "shunt_diff": [
-      "C",
-      3.1333196345924206e-12
-     ],
-     "q": 4.724934693784418
-    },
-    "gain_db": 2.293593
-   }
-  },
-  {
-   "metric": "differential input impedance at 2.4 GHz (ohm)",
-   "target": "100 (board matching allowed)",
-   "extracted_nominal": [
-    4.287244,
-    -160.696
-   ]
-  },
-  {
-   "metric": "gain_lo step (dB)",
-   "target": "codes -6/0/10/20 dB",
-   "extracted_nominal": -2.957700000000001
-  },
-  {
-   "metric": "supply current active (mA)",
-   "target": 3.0,
-   "extracted_nominal": 2.745179
-  },
-  {
-   "metric": "IIP3 (dBm)",
-   "target": 0.0,
-   "extracted_nominal": null,
-   "note": "not simulated"
-  },
-  {
-   "metric": "chain NF incl. noise folding (transient noise, I output), board match: 5-9 MHz / 2-9 MHz band (dB)",
-   "target": 6.0,
-   "extracted_nominal": [
-    12.078812204425695,
-    14.08502827165847
+ "extraction": "capacitance only (Magic ext2spice cthresh 0); wire and via resistance NOT extracted",
+ "tests": {
+  "supply_current": {
+   "target": "RX <= 19.0 mA, lobias <= 11.8 mA at all 20 corners",
+   "rx_ma": [
+    17.748929999999998,
+    18.620189999999997
    ],
-   "detail": {
-    "gain_i_db": 28.879500800886497,
-    "out_psd_i_v2_hz": 3.280458356036894e-14,
-    "bins": 10,
-    "nf_i_db": 14.08502827165847,
-    "psd_by_band": {
-     "2-3MHz": 8.134816337932692e-14,
-     "5-7MHz": 1.8887286400437217e-14,
-     "7-9MHz": 2.2450090810821674e-14
-    },
-    "nf_i_5to9mhz_db": 12.078812204425695,
-    "mode": "lna",
-    "board_match": {
-     "order": "series_at_pad",
-     "series_leg": [
-      "L",
-      5.9999075266525975e-09
-     ],
-     "shunt_diff": [
-      "C",
-      3.1333196345924206e-12
-     ],
-     "q": 4.724934693784418
-    },
-    "lna_nf_input_db": 3.284737,
-    "ota_en_v_rthz": 7.080991e-09,
-    "band_hz": [
-     2000000.0,
-     9000000.0
-    ],
-    "analysed_window_s": [
-     1e-06,
-     3e-06
-    ],
-    "trnoise_k": 1.6903560324032997e-11,
-    "channel": "I (Q mixer present, noiseless)",
-    "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
-    "board_lna_15db_1p5db_nf_db": 3.4063206672641733,
-    "board_lna_15db_1p5db_nf_5to9mhz_db": 2.7675586763167948
-   }
-  },
-  {
-   "metric": "same with a board LNA (15 dB gain, 1.5 dB NF) ahead of the on-chip LNA (dB, Friis), 5-9 / 2-9 MHz",
-   "extracted_nominal": [
-    2.7675586763167948,
-    3.4063206672641733
-   ]
-  },
-  {
-   "metric": "chain NF via the LNA bypass (unmatched), 5-9 / 2-9 MHz, and with the board LNA 5-9 / 2-9 MHz (dB)",
-   "extracted_nominal": [
-    21.548912969891166,
-    28.808165873784578,
-    7.707300510482082,
-    14.05079702650983
+   "lobias_ma": [
+    10.80035,
+    11.44479
    ],
-   "detail": {
-    "gain_i_db": 14.660120580936413,
-    "out_psd_i_v2_hz": 3.683920650450937e-14,
-    "bins": 10,
-    "nf_i_db": 28.808165873784578,
-    "psd_by_band": {
-     "2-3MHz": 1.5649825209449456e-13,
-     "5-7MHz": 3.536478985855367e-15,
-     "7-9MHz": 1.0312411228170763e-14
-    },
-    "nf_i_5to9mhz_db": 21.548912969891166,
-    "mode": "bypass",
-    "board_match": null,
-    "lna_nf_input_db": null,
-    "ota_en_v_rthz": 7.080991e-09,
-    "band_hz": [
-     2000000.0,
-     9000000.0
-    ],
-    "analysed_window_s": [
-     1e-06,
-     3e-06
-    ],
-    "trnoise_k": 1.6903560324032997e-11,
-    "channel": "I (Q mixer present, noiseless)",
-    "model": "white trnoise sources: source 2x50 ohm, LNA input-referred (its AC NF), TIA OTA input-referred, Rtia thermal; real LO switching folds them. Not modelled: switch Ron noise, VCM/bias noise, flicker below the band, LNA noise correlation.",
-    "board_lna_15db_1p5db_nf_db": 14.05079702650983,
-    "board_lna_15db_1p5db_nf_5to9mhz_db": 7.707300510482082
-   }
-  },
-  {
-   "metric": "RF pad -> I/Q baseband conversion gain with LNA, no board match (dB)",
-   "extracted_nominal": {
-    "gain_i_db": 15.306376163340252,
-    "gain_q_db": 14.555090874385225,
-    "bb_pp_i_v": 0.0428942,
-    "bb_pp_q_v": 0.0340914,
-    "idd_a": 0.00655294,
-    "f_lo_hz": 2400000000.0,
-    "f_if_hz": 5000000.0,
-    "rf_emf_amp_diff_v": 0.003,
-    "board_match": null,
-    "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
-   }
-  },
-  {
-   "metric": "same with ideal lossless board L-match (dB)",
-   "extracted_nominal": {
-    "gain_i_db": 26.26686493810461,
-    "gain_q_db": 26.84577022967936,
-    "bb_pp_i_v": 0.133344,
-    "bb_pp_q_v": 0.143819,
-    "idd_a": 0.00655297,
-    "f_lo_hz": 2400000000.0,
-    "f_if_hz": 5000000.0,
-    "rf_emf_amp_diff_v": 0.003,
-    "board_match": {
-     "order": "series_at_pad",
-     "series_leg": [
-      "L",
-      5.9999075266525975e-09
-     ],
-     "shunt_diff": [
-      "C",
-      3.1333196345924206e-12
-     ],
-     "q": 4.724934693784418
-    },
-    "lo": "ideal 0/VDD square, 50% duty, 20 ps edges, I/Q 90 deg"
-   }
-  },
-  {
-   "metric": "corner sweep (ext, active)",
+   "off_a": [
+    1.246816e-09,
+    7.344047e-09
+   ],
    "rows": [
     {
-     "corner": {
-      "mos": "typical",
-      "temp_c": 22,
-      "vdd_v": 3.15
-     },
-     "gain_db": -10.9521,
-     "nf_db": 11.75767,
-     "idd_a": 0.002715488,
-     "zin_re_ohm": 4.277639,
-     "zin_im_ohm": -160.579
+     "corner": [
+      "typical",
+      22,
+      3.15
+     ],
+     "lobias": false,
+     "idd_ma": 18.128410000000002,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "typical",
-      "temp_c": 22,
-      "vdd_v": 3.35
-     },
-     "gain_db": -10.8786,
-     "nf_db": 11.69193,
-     "idd_a": 0.00275668,
-     "zin_re_ohm": 4.297318,
-     "zin_im_ohm": -160.734
+     "corner": [
+      "typical",
+      22,
+      3.15
+     ],
+     "lobias": true,
+     "idd_ma": 11.03524,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "typical",
-      "temp_c": 32,
-      "vdd_v": 3.15
-     },
-     "gain_db": -11.1696,
-     "nf_db": 11.93348,
-     "idd_a": 0.00271262,
-     "zin_re_ohm": 4.267201,
-     "zin_im_ohm": -160.578
+     "corner": [
+      "typical",
+      22,
+      3.35
+     ],
+     "lobias": false,
+     "idd_ma": 18.47385,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "typical",
-      "temp_c": 32,
-      "vdd_v": 3.35
-     },
-     "gain_db": -11.0986,
-     "nf_db": 11.8697,
-     "idd_a": 0.002752577,
-     "zin_re_ohm": 4.286276,
-     "zin_im_ohm": -160.733
+     "corner": [
+      "typical",
+      22,
+      3.35
+     ],
+     "lobias": true,
+     "idd_ma": 11.2072,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "ss",
-      "temp_c": 22,
-      "vdd_v": 3.15
-     },
-     "gain_db": -11.5553,
-     "nf_db": 12.31258,
-     "idd_a": 0.00256283,
-     "zin_re_ohm": 3.78126,
-     "zin_im_ohm": -158.238
+     "corner": [
+      "typical",
+      32,
+      3.15
+     ],
+     "lobias": false,
+     "idd_ma": 17.9408,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "ss",
-      "temp_c": 22,
-      "vdd_v": 3.35
-     },
-     "gain_db": -11.4113,
-     "nf_db": 12.1908,
-     "idd_a": 0.00265274,
-     "zin_re_ohm": 3.813076,
-     "zin_im_ohm": -158.376
+     "corner": [
+      "typical",
+      32,
+      3.15
+     ],
+     "lobias": true,
+     "idd_ma": 10.980369999999999,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "ss",
-      "temp_c": 32,
-      "vdd_v": 3.15
-     },
-     "gain_db": -11.7543,
-     "nf_db": 12.47555,
-     "idd_a": 0.002569815,
-     "zin_re_ohm": 3.77056,
-     "zin_im_ohm": -158.234
+     "corner": [
+      "typical",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "idd_ma": 18.28625,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "ss",
-      "temp_c": 32,
-      "vdd_v": 3.35
-     },
-     "gain_db": -11.6211,
-     "nf_db": 12.362,
-     "idd_a": 0.002653101,
-     "zin_re_ohm": 3.800148,
-     "zin_im_ohm": -158.378
+     "corner": [
+      "typical",
+      32,
+      3.35
+     ],
+     "lobias": true,
+     "idd_ma": 11.149650000000001,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "ff",
-      "temp_c": 22,
-      "vdd_v": 3.15
-     },
-     "gain_db": -10.5548,
-     "nf_db": 11.37588,
-     "idd_a": 0.002810412,
-     "zin_re_ohm": 4.967524,
-     "zin_im_ohm": -163.172
+     "corner": [
+      "ss",
+      22,
+      3.15
+     ],
+     "lobias": false,
+     "idd_ma": 17.885640000000002,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "ff",
-      "temp_c": 22,
-      "vdd_v": 3.35
-     },
-     "gain_db": -10.4905,
-     "nf_db": 11.31727,
-     "idd_a": 0.002844985,
-     "zin_re_ohm": 4.985955,
-     "zin_im_ohm": -163.314
+     "corner": [
+      "ss",
+      22,
+      3.15
+     ],
+     "lobias": true,
+     "idd_ma": 10.84365,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "ff",
-      "temp_c": 32,
-      "vdd_v": 3.15
-     },
-     "gain_db": -10.7814,
-     "nf_db": 11.55727,
-     "idd_a": 0.002804501,
-     "zin_re_ohm": 4.962127,
-     "zin_im_ohm": -163.163
+     "corner": [
+      "ss",
+      22,
+      3.35
+     ],
+     "lobias": false,
+     "idd_ma": 18.21368,
+     "pass": true
     },
     {
-     "corner": {
-      "mos": "ff",
-      "temp_c": 32,
-      "vdd_v": 3.35
-     },
-     "gain_db": -10.7188,
-     "nf_db": 11.49984,
-     "idd_a": 0.002838319,
-     "zin_re_ohm": 4.98019,
-     "zin_im_ohm": -163.305
+     "corner": [
+      "ss",
+      22,
+      3.35
+     ],
+     "lobias": true,
+     "idd_ma": 11.00712,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "lobias": false,
+     "idd_ma": 17.748929999999998,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "lobias": true,
+     "idd_ma": 10.80035,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ss",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "idd_ma": 18.07632,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ss",
+      32,
+      3.35
+     ],
+     "lobias": true,
+     "idd_ma": 10.9609,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ff",
+      22,
+      3.15
+     ],
+     "lobias": false,
+     "idd_ma": 18.13087,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ff",
+      22,
+      3.15
+     ],
+     "lobias": true,
+     "idd_ma": 11.25959,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ff",
+      22,
+      3.35
+     ],
+     "lobias": false,
+     "idd_ma": 18.50875,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ff",
+      22,
+      3.35
+     ],
+     "lobias": true,
+     "idd_ma": 11.44479,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.15
+     ],
+     "lobias": false,
+     "idd_ma": 17.87579,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.15
+     ],
+     "lobias": true,
+     "idd_ma": 11.18999,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "idd_ma": 18.2515,
+     "pass": true
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": true,
+     "idd_ma": 11.37283,
+     "pass": true
+    },
+    {
+     "corner": [
+      "sf",
+      22,
+      3.15
+     ],
+     "lobias": false,
+     "idd_ma": 17.98589,
+     "pass": true
+    },
+    {
+     "corner": [
+      "sf",
+      22,
+      3.15
+     ],
+     "lobias": true,
+     "idd_ma": 11.0807,
+     "pass": true
+    },
+    {
+     "corner": [
+      "sf",
+      22,
+      3.35
+     ],
+     "lobias": false,
+     "idd_ma": 18.33212,
+     "pass": true
+    },
+    {
+     "corner": [
+      "sf",
+      22,
+      3.35
+     ],
+     "lobias": true,
+     "idd_ma": 11.24961,
+     "pass": true
+    },
+    {
+     "corner": [
+      "sf",
+      32,
+      3.15
+     ],
+     "lobias": false,
+     "idd_ma": 17.78945,
+     "pass": true
+    },
+    {
+     "corner": [
+      "sf",
+      32,
+      3.15
+     ],
+     "lobias": true,
+     "idd_ma": 11.02673,
+     "pass": true
+    },
+    {
+     "corner": [
+      "sf",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "idd_ma": 18.135910000000003,
+     "pass": true
+    },
+    {
+     "corner": [
+      "sf",
+      32,
+      3.35
+     ],
+     "lobias": true,
+     "idd_ma": 11.19313,
+     "pass": true
+    },
+    {
+     "corner": [
+      "fs",
+      22,
+      3.15
+     ],
+     "lobias": false,
+     "idd_ma": 18.273020000000002,
+     "pass": true
+    },
+    {
+     "corner": [
+      "fs",
+      22,
+      3.15
+     ],
+     "lobias": true,
+     "idd_ma": 11.006760000000002,
+     "pass": true
+    },
+    {
+     "corner": [
+      "fs",
+      22,
+      3.35
+     ],
+     "lobias": false,
+     "idd_ma": 18.620189999999997,
+     "pass": true
+    },
+    {
+     "corner": [
+      "fs",
+      22,
+      3.35
+     ],
+     "lobias": true,
+     "idd_ma": 11.18267,
+     "pass": true
+    },
+    {
+     "corner": [
+      "fs",
+      32,
+      3.15
+     ],
+     "lobias": false,
+     "idd_ma": 18.09576,
+     "pass": true
+    },
+    {
+     "corner": [
+      "fs",
+      32,
+      3.15
+     ],
+     "lobias": true,
+     "idd_ma": 10.95189,
+     "pass": true
+    },
+    {
+     "corner": [
+      "fs",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "idd_ma": 18.44259,
+     "pass": true
+    },
+    {
+     "corner": [
+      "fs",
+      32,
+      3.35
+     ],
+     "lobias": true,
+     "idd_ma": 11.124979999999999,
+     "pass": true
     }
-   ]
+   ],
+   "pass": true
+  },
+  "stability": {
+   "target": "every row: mu > 1, K > 1, min Re(Zin) >= 1.0 ohm (differential) and min Re(Zcm) >= 1.0 ohm (common mode), 0.1-30 GHz, real extracted mixers",
+   "rows": 56,
+   "min_mu": 1.0080316667247275,
+   "min_k": 2.9408290086016318,
+   "min_re_diff_ohm": 0.9750838,
+   "min_re_cm_ohm_physical_supply": 0.4331538,
+   "min_re_cm_ohm_undamped_island_decap": -29.4792,
+   "passive_reference": [
+    {
+     "group": "B passive reference (LNA disabled)",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "mode": "off"
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120744123573646,
+     "f_min_mu": 100000000.0,
+     "min_k": 364.3545689987102,
+     "min_mu_above_1ghz": 1.0171992018358622,
+     "min_re_zin_real_mixer_ohm": 0.8334221,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.3941057,
+     "f_min_re_zcm_hz": 30000000000.0
+    }
+   ],
+   "pass_differential": false,
+   "pass_common_mode": false,
+   "failing_rows_differential": 25,
+   "failing_rows_common_mode": 56,
+   "detail": [
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "typical",
+      22,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.009598193213948,
+     "f_min_mu": 100000000.0,
+     "min_k": 8.234852601642528,
+     "min_mu_above_1ghz": 1.0156827693678745,
+     "min_re_zin_real_mixer_ohm": 1.091183,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5089575,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "typical",
+      22,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.009598096105159,
+     "f_min_mu": 100000000.0,
+     "min_k": 8.112624446207215,
+     "min_mu_above_1ghz": 1.0156699391157389,
+     "min_re_zin_real_mixer_ohm": 1.087921,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5087186,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "typical",
+      32,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0096992602359784,
+     "f_min_mu": 100000000.0,
+     "min_k": 8.342230266653964,
+     "min_mu_above_1ghz": 1.0157920451429467,
+     "min_re_zin_real_mixer_ohm": 1.089979,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5072683,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "typical",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.009699163488012,
+     "f_min_mu": 100000000.0,
+     "min_k": 8.215799264042762,
+     "min_mu_above_1ghz": 1.0157788041295246,
+     "min_re_zin_real_mixer_ohm": 1.086595,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5069634,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "ss",
+      22,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0080318759335558,
+     "f_min_mu": 100000000.0,
+     "min_k": 10.187460866124217,
+     "min_mu_above_1ghz": 1.0158804105465389,
+     "min_re_zin_real_mixer_ohm": 1.106941,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5306634,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "ss",
+      22,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0080316667247275,
+     "f_min_mu": 100000000.0,
+     "min_k": 9.903663193182012,
+     "min_mu_above_1ghz": 1.0158617932756222,
+     "min_re_zin_real_mixer_ohm": 1.102431,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.529917,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0081147034947295,
+     "f_min_mu": 100000000.0,
+     "min_k": 10.323635130709514,
+     "min_mu_above_1ghz": 1.0159712859000476,
+     "min_re_zin_real_mixer_ohm": 1.10848,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.530232,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "ss",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0081145030979786,
+     "f_min_mu": 100000000.0,
+     "min_k": 10.042320781081566,
+     "min_mu_above_1ghz": 1.0159532067350536,
+     "min_re_zin_real_mixer_ohm": 1.104098,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5295207,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      22,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0119415499094653,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.817166432066298,
+     "min_mu_above_1ghz": 1.0164498291972894,
+     "min_re_zin_real_mixer_ohm": 1.016647,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.465292,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      22,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.011941453050604,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.678115672767643,
+     "min_mu_above_1ghz": 1.0164190735376326,
+     "min_re_zin_real_mixer_ohm": 1.003398,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4614277,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0120709940470316,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.890692194936246,
+     "min_mu_above_1ghz": 1.0165848356678362,
+     "min_re_zin_real_mixer_ohm": 1.011397,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.462143,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120708978894106,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.74633221639908,
+     "min_mu_above_1ghz": 1.0165533438706695,
+     "min_re_zin_real_mixer_ohm": 0.9979917,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4581964,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "sf",
+      22,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0095984813799137,
+     "f_min_mu": 100000000.0,
+     "min_k": 9.059230540086393,
+     "min_mu_above_1ghz": 1.0157488792773566,
+     "min_re_zin_real_mixer_ohm": 1.119136,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5199292,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "sf",
+      22,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.009598383513238,
+     "f_min_mu": 100000000.0,
+     "min_k": 8.914669277229338,
+     "min_mu_above_1ghz": 1.0157371215580564,
+     "min_re_zin_real_mixer_ohm": 1.116209,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5198343,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "sf",
+      32,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0096995386592682,
+     "f_min_mu": 100000000.0,
+     "min_k": 9.187140079317075,
+     "min_mu_above_1ghz": 1.0158583661753529,
+     "min_re_zin_real_mixer_ohm": 1.118263,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5183767,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "sf",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0096994421807937,
+     "f_min_mu": 100000000.0,
+     "min_k": 9.039409909162261,
+     "min_mu_above_1ghz": 1.0158464853774,
+     "min_re_zin_real_mixer_ohm": 1.115343,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5182535,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "fs",
+      22,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0095979189467907,
+     "f_min_mu": 100000000.0,
+     "min_k": 7.523476523607879,
+     "min_mu_above_1ghz": 1.0156116307926224,
+     "min_re_zin_real_mixer_ohm": 1.060435,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4969957,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "fs",
+      22,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.009597806641568,
+     "f_min_mu": 100000000.0,
+     "min_k": 7.399444390189215,
+     "min_mu_above_1ghz": 1.0155930740991488,
+     "min_re_zin_real_mixer_ohm": 1.054653,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4958134,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "fs",
+      32,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0096989943543333,
+     "f_min_mu": 100000000.0,
+     "min_k": 7.611644950769867,
+     "min_mu_above_1ghz": 1.015720188974242,
+     "min_re_zin_real_mixer_ohm": 1.058686,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4951064,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A corners",
+     "view": "extpr",
+     "corner": [
+      "fs",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0096988809286147,
+     "f_min_mu": 100000000.0,
+     "min_k": 7.48073673336945,
+     "min_mu_above_1ghz": 1.015700461784018,
+     "min_re_zin_real_mixer_ohm": 1.052429,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4937406,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extlo",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lhi",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0120703433433664,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.097216267990142,
+     "min_mu_above_1ghz": 1.0166757026953137,
+     "min_re_zin_real_mixer_ohm": 1.142151,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4809726,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extlo",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0120702111111592,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.048171471197457,
+     "min_mu_above_1ghz": 1.0166567027543576,
+     "min_re_zin_real_mixer_ohm": 1.148026,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4858357,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extlo",
+     "corner": [
+      "ff",
+      22,
+      3.35
+     ],
+     "degeneration_model": "lhi",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.011940882142535,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.037863425610355,
+     "min_mu_above_1ghz": 1.0165402944256718,
+     "min_re_zin_real_mixer_ohm": 1.149155,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.485178,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extlo",
+     "corner": [
+      "ff",
+      22,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.011940742741271,
+     "f_min_mu": 100000000.0,
+     "min_k": 5.989460161295375,
+     "min_mu_above_1ghz": 1.0165210306731154,
+     "min_re_zin_real_mixer_ohm": 1.155305,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4901251,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extlo",
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "degeneration_model": "lhi",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0081140014121113,
+     "f_min_mu": 100000000.0,
+     "min_k": 9.365973515094785,
+     "min_mu_above_1ghz": 1.0163597214130036,
+     "min_re_zin_real_mixer_ohm": 1.284841,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5745495,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extlo",
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.00811384848415,
+     "f_min_mu": 100000000.0,
+     "min_k": 9.224965263667098,
+     "min_mu_above_1ghz": 1.0163443704760313,
+     "min_re_zin_real_mixer_ohm": 1.291613,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5776798,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extlo",
+     "corner": [
+      "typical",
+      27,
+      3.3
+     ],
+     "degeneration_model": "lhi",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.009648489783394,
+     "f_min_mu": 100000000.0,
+     "min_k": 7.420255144361222,
+     "min_mu_above_1ghz": 1.015971804251413,
+     "min_re_zin_real_mixer_ohm": 1.254652,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5443374,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extlo",
+     "corner": [
+      "typical",
+      27,
+      3.3
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0096483346318792,
+     "f_min_mu": 100000000.0,
+     "min_k": 7.327098011963994,
+     "min_mu_above_1ghz": 1.015953626530205,
+     "min_re_zin_real_mixer_ohm": 1.261699,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5484178,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extpp",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "pess",
+     "lobias": false,
+     "case": {},
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120898057689518,
+     "f_min_mu": 100000000.0,
+     "min_k": 12.674991574886581,
+     "min_mu_above_1ghz": 1.0190378051934443,
+     "min_re_zin_real_mixer_ohm": 0.9750838,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4939738,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extpp",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120898618106642,
+     "f_min_mu": 100000000.0,
+     "min_k": 13.900306580702567,
+     "min_mu_above_1ghz": 1.0190733565351593,
+     "min_re_zin_real_mixer_ohm": 0.9875351,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.498468,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extpp",
+     "corner": [
+      "ff",
+      22,
+      3.35
+     ],
+     "degeneration_model": "pess",
+     "lobias": false,
+     "case": {},
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0119604242966782,
+     "f_min_mu": 100000000.0,
+     "min_k": 12.480077680317736,
+     "min_mu_above_1ghz": 1.0189041989990548,
+     "min_re_zin_real_mixer_ohm": 0.9766549,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4958242,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extpp",
+     "corner": [
+      "ff",
+      22,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0119604853542175,
+     "f_min_mu": 100000000.0,
+     "min_k": 13.70124953448069,
+     "min_mu_above_1ghz": 1.018941151622973,
+     "min_re_zin_real_mixer_ohm": 0.9895002,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5003332,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extpp",
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "degeneration_model": "pess",
+     "lobias": false,
+     "case": {},
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0081423928965412,
+     "f_min_mu": 100000000.0,
+     "min_k": 20.33769629367119,
+     "min_mu_above_1ghz": 1.0191798795207727,
+     "min_re_zin_real_mixer_ohm": 0.9752009,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5202824,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extpp",
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0081424627578615,
+     "f_min_mu": 100000000.0,
+     "min_k": 21.660980313855237,
+     "min_mu_above_1ghz": 1.019190796128356,
+     "min_re_zin_real_mixer_ohm": 0.9879329,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5230652,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extpp",
+     "corner": [
+      "typical",
+      27,
+      3.3
+     ],
+     "degeneration_model": "pess",
+     "lobias": false,
+     "case": {},
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0096724133613793,
+     "f_min_mu": 100000000.0,
+     "min_k": 15.795273208373375,
+     "min_mu_above_1ghz": 1.0185546923049418,
+     "min_re_zin_real_mixer_ohm": 0.995714,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5161117,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "A model ends",
+     "view": "extpp",
+     "corner": [
+      "typical",
+      27,
+      3.3
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.009672489077117,
+     "f_min_mu": 100000000.0,
+     "min_k": 17.108115938541722,
+     "min_mu_above_1ghz": 1.0185762499903595,
+     "min_re_zin_real_mixer_ohm": 1.009399,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.5197142,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "B states",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "ct": 0
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.012070829106068,
+     "f_min_mu": 100000000.0,
+     "min_k": 7.557189564760316,
+     "min_mu_above_1ghz": 1.0159634139356928,
+     "min_re_zin_real_mixer_ohm": 0.9979306,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4331538,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "B states",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "ct": 15
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120709010861912,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.873175243453417,
+     "min_mu_above_1ghz": 1.0167457136035234,
+     "min_re_zin_real_mixer_ohm": 0.99806,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4804977,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "B states",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "rt": true
+     },
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0120741470460084,
+     "f_min_mu": 100000000.0,
+     "min_k": 9.045754151753096,
+     "min_mu_above_1ghz": 1.0169211332534354,
+     "min_re_zin_real_mixer_ohm": 1.000704,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4665072,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "B states",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "att": 31
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120724589130476,
+     "f_min_mu": 100000000.0,
+     "min_k": 14.00873987250486,
+     "min_mu_above_1ghz": 1.016947972527659,
+     "min_re_zin_real_mixer_ohm": 0.9985869,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4522531,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "B states",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "att": 63
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120744269644872,
+     "f_min_mu": 100000000.0,
+     "min_k": 384.7733280842958,
+     "min_mu_above_1ghz": 1.017192526957092,
+     "min_re_zin_real_mixer_ohm": 0.9989274,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4468986,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "B states",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "mode": "bypass"
+     },
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0452906997222473,
+     "f_min_mu": 30000000000.0,
+     "min_k": 2.9408290086016318,
+     "min_mu_above_1ghz": 1.0452906997222473,
+     "min_re_zin_real_mixer_ohm": 1.020575,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4904585,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "B passive reference (LNA disabled)",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "mode": "off"
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120744123573646,
+     "f_min_mu": 100000000.0,
+     "min_k": 364.3545689987102,
+     "min_mu_above_1ghz": 1.0171992018358622,
+     "min_re_zin_real_mixer_ohm": 0.8334221,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.3941057,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "S1 no credit",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "lsup": 2.5e-10
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.012070900281412,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.744231994753462,
+     "min_mu_above_1ghz": 1.0165531652079225,
+     "min_re_zin_real_mixer_ohm": 0.9980697,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4782783,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "S1 no credit",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "lsup": 2e-09
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120708945815575,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.750740369469588,
+     "min_mu_above_1ghz": 1.016554771465363,
+     "min_re_zin_real_mixer_ohm": 0.9979806,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4555647,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "S1 RF bond tolerance",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "bond": 2.65e-09
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120708978895636,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.746332560736105,
+     "min_mu_above_1ghz": 1.0165533439353276,
+     "min_re_zin_real_mixer_ohm": 0.9978522,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4581615,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "S1 RF bond tolerance",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "bond": 3.35e-09
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120708978893418,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.74633190929495,
+     "min_mu_above_1ghz": 1.0165533438047238,
+     "min_re_zin_real_mixer_ohm": 0.9981486,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4582356,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "S2 real PDN",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "cdie": 5.4e-09,
+      "rdie": 0.1,
+      "rsw": 0.3,
+      "lsup": 2.5e-10
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120709028740862,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.749314244971671,
+     "min_mu_above_1ghz": 1.0165543530456675,
+     "min_re_zin_real_mixer_ohm": 0.9985425,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4888385,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "S2 real PDN",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "cdie": 5.4e-09,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 5e-10
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.012070903978663,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.748816267192146,
+     "min_mu_above_1ghz": 1.0165542266321572,
+     "min_re_zin_real_mixer_ohm": 0.9983071,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4722392,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "S2 real PDN",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "cdie": 3e-09,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 1e-09
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.012070904904464,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.750511190588567,
+     "min_mu_above_1ghz": 1.016554559720411,
+     "min_re_zin_real_mixer_ohm": 0.998287,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4660151,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "S2 real PDN",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "cdec": 1e-10,
+      "rsw": 0.25,
+      "cdie": 5.4e-09,
+      "rdie": 0.05,
+      "lsup": 5e-10
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.012070904328122,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.749494549730999,
+     "min_mu_above_1ghz": 1.0165543795045482,
+     "min_re_zin_real_mixer_ohm": 0.9983586,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4668574,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "S2 real PDN",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "cdec": 5e-10,
+      "rsw": 0.25,
+      "cdie": 5.4e-09,
+      "rdie": 0.05,
+      "lsup": 5e-10
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.01207090431929,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.749455686873048,
+     "min_mu_above_1ghz": 1.0165543909352084,
+     "min_re_zin_real_mixer_ohm": 0.9983538,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4668858,
+     "f_min_re_zcm_hz": 30000000000.0
+    },
+    {
+     "group": "S3 undamped island decap, no die decap",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "cdec": 1e-10
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120708975990413,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.748046432313728,
+     "min_mu_above_1ghz": 1.0165541404928282,
+     "min_re_zin_real_mixer_ohm": 0.997923,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": -3.84267,
+     "f_min_re_zcm_hz": 335312669.0
+    },
+    {
+     "group": "S3 undamped island decap, no die decap",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "cdec": 5e-10
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120708956922118,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.74791983288555,
+     "min_mu_above_1ghz": 1.0165540093070822,
+     "min_re_zin_real_mixer_ohm": 0.997919,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": -29.4792,
+     "f_min_re_zcm_hz": 158551887.0
+    },
+    {
+     "group": "S3 undamped island decap, no die decap",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "cdec": 1e-10,
+      "lsup": 2e-09
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.0120708932868914,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.751757162807951,
+     "min_mu_above_1ghz": 1.0165548110619202,
+     "min_re_zin_real_mixer_ohm": 0.9979132,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": -13.5938,
+     "f_min_re_zcm_hz": 237312930.0
+    },
+    {
+     "group": "S3 undamped island decap, no die decap",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": false,
+     "case": {
+      "cdec": 5e-10,
+      "lsup": 2.5e-10
+     },
+     "pass_differential": false,
+     "pass_common_mode": false,
+     "min_mu": 1.012070900187951,
+     "f_min_mu": 100000000.0,
+     "min_k": 6.745427087305538,
+     "min_mu_above_1ghz": 1.016553518117167,
+     "min_re_zin_real_mixer_ohm": 0.9979874,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": -4.86134,
+     "f_min_re_zcm_hz": 316539955.0
+    },
+    {
+     "group": "B duplex bias",
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "degeneration_model": "lowr",
+     "lobias": true,
+     "case": {},
+     "pass_differential": true,
+     "pass_common_mode": false,
+     "min_mu": 1.0120715477483988,
+     "f_min_mu": 100000000.0,
+     "min_k": 7.547903578423261,
+     "min_mu_above_1ghz": 1.0166294820428872,
+     "min_re_zin_real_mixer_ohm": 1.001603,
+     "f_min_re_zin_hz": 30000000000.0,
+     "min_re_zcm_real_mixer_ohm": 0.4603359,
+     "f_min_re_zcm_hz": 30000000000.0
+    }
+   ],
+   "pass": false,
+   "minima_0p1_to_8_ghz_ohm": {
+    "differential_active": 2.46921364,
+    "common_mode_active_physical_supply": 0.68287149,
+    "common_mode_active_undamped_island_decap": -29.479239,
+    "differential_disabled": 1.37253593,
+    "common_mode_disabled": 1.80290225,
+    "note": "information only: the pass fields use the 0.1-30 GHz minimum; above ~9 GHz the enabled and the disabled LNA read the same (passive network)"
+   }
+  },
+  "stability_5mhz_to_1ghz_real_pdn": {
+   "target": "min Re(Zcm) >= 1.0 ohm and min Re(Zin) >= 1.0 ohm from 5 MHz (supply anti-resonance), real-PDN cases, RX and duplex bias",
+   "min_re_cm_ohm": -12.7828,
+   "failing_rows": 3,
+   "rows": [
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "case": {
+      "cdie": 5.4e-09,
+      "rdie": 0.1,
+      "rsw": 0.3,
+      "lsup": 2.5e-10
+     },
+     "pass_common_mode": true,
+     "pass_differential": true,
+     "min_mu": 1.012037507403796,
+     "f_min_mu": 5000000.0,
+     "min_k": 9.704559688495392,
+     "min_mu_above_1ghz": 1.0165272925461593,
+     "min_re_zin_real_mixer_ohm": 8.156878,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": 2.854585,
+     "f_min_re_zcm_hz": 1000000000.0
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "case": {
+      "cdie": 5.4e-09,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 5e-10
+     },
+     "pass_common_mode": true,
+     "pass_differential": true,
+     "min_mu": 1.0120375074014496,
+     "f_min_mu": 5000000.0,
+     "min_k": 9.704208802128575,
+     "min_mu_above_1ghz": 1.0165271662973907,
+     "min_re_zin_real_mixer_ohm": 8.156036,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": 2.842698,
+     "f_min_re_zcm_hz": 1000000000.0
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "case": {
+      "cdie": 3e-09,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 1e-09
+     },
+     "pass_common_mode": false,
+     "pass_differential": true,
+     "min_mu": 1.0120375074015786,
+     "f_min_mu": 5000000.0,
+     "min_k": 9.70786349325686,
+     "min_mu_above_1ghz": 1.0165274974590701,
+     "min_re_zin_real_mixer_ohm": 8.155828,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": -0.742961,
+     "f_min_re_zcm_hz": 66370132.9
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "case": {
+      "cdie": 3e-09,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 2e-09
+     },
+     "pass_common_mode": false,
+     "pass_differential": true,
+     "min_mu": 1.012037507401795,
+     "f_min_mu": 5000000.0,
+     "min_k": 9.715416131151311,
+     "min_mu_above_1ghz": 1.0165281770002794,
+     "min_re_zin_real_mixer_ohm": 8.15539,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": -9.77327,
+     "f_min_re_zcm_hz": 46709411.3
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "case": {
+      "cdie": 3e-09,
+      "rdie": 0.1,
+      "rsw": 0.3,
+      "lsup": 1e-09
+     },
+     "pass_common_mode": true,
+     "pass_differential": true,
+     "min_mu": 1.0120375074039851,
+     "f_min_mu": 5000000.0,
+     "min_k": 9.710011596863854,
+     "min_mu_above_1ghz": 1.0165277854538355,
+     "min_re_zin_real_mixer_ohm": 8.156569,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": 2.84997,
+     "f_min_re_zcm_hz": 1000000000.0
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": false,
+     "case": {
+      "cdie": 9e-10,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 1e-09,
+      "cdec": 5e-10
+     },
+     "pass_common_mode": false,
+     "pass_differential": true,
+     "min_mu": 1.0120375074016335,
+     "f_min_mu": 5000000.0,
+     "min_k": 9.707976711583322,
+     "min_mu_above_1ghz": 1.0165275049570148,
+     "min_re_zin_real_mixer_ohm": 8.155828,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": -12.7828,
+     "f_min_re_zcm_hz": 96504031.9
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": true,
+     "case": {
+      "cdie": 5.4e-09,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 5e-10
+     },
+     "pass_common_mode": true,
+     "pass_differential": true,
+     "min_mu": 1.0120375081445832,
+     "f_min_mu": 5000000.0,
+     "min_k": 10.767353266841248,
+     "min_mu_above_1ghz": 1.0166028607635842,
+     "min_re_zin_real_mixer_ohm": 7.471878,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": 2.162085,
+     "f_min_re_zcm_hz": 1000000000.0
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": true,
+     "case": {
+      "cdie": 3e-09,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 1e-09
+     },
+     "pass_common_mode": true,
+     "pass_differential": true,
+     "min_mu": 1.0120375081447284,
+     "f_min_mu": 5000000.0,
+     "min_k": 10.771473657874603,
+     "min_mu_above_1ghz": 1.0166031518214143,
+     "min_re_zin_real_mixer_ohm": 7.471699,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": 2.154366,
+     "f_min_re_zcm_hz": 1000000000.0
+    },
+    {
+     "corner": [
+      "ff",
+      32,
+      3.35
+     ],
+     "lobias": true,
+     "case": {
+      "cdie": 3e-09,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 2e-09
+     },
+     "pass_common_mode": true,
+     "pass_differential": true,
+     "min_mu": 1.0120375081446293,
+     "f_min_mu": 5000000.0,
+     "min_k": 10.779993337345081,
+     "min_mu_above_1ghz": 1.0166037494936773,
+     "min_re_zin_real_mixer_ohm": 7.471321,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": 2.143565,
+     "f_min_re_zcm_hz": 1000000000.0
+    },
+    {
+     "corner": [
+      "typical",
+      27,
+      3.3
+     ],
+     "lobias": false,
+     "case": {
+      "cdie": 3e-09,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 2e-09
+     },
+     "pass_common_mode": true,
+     "pass_differential": true,
+     "min_mu": 1.009607239411064,
+     "f_min_mu": 5000000.0,
+     "min_k": 9.941546061949065,
+     "min_mu_above_1ghz": 1.01569297458335,
+     "min_re_zin_real_mixer_ohm": 9.147181,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": 3.639485,
+     "f_min_re_zcm_hz": 1000000000.0
+    },
+    {
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "lobias": false,
+     "case": {
+      "cdie": 3e-09,
+      "rdie": 0.03,
+      "rsw": 0.2,
+      "lsup": 2e-09
+     },
+     "pass_common_mode": true,
+     "pass_differential": true,
+     "min_mu": 1.0080628775079066,
+     "f_min_mu": 5000000.0,
+     "min_k": 11.265679324933089,
+     "min_mu_above_1ghz": 1.015925374458334,
+     "min_re_zin_real_mixer_ohm": 9.710256,
+     "f_min_re_zin_hz": 1000000000.0,
+     "min_re_zcm_real_mixer_ohm": 4.329659,
+     "f_min_re_zcm_hz": 1000000000.0
+    }
+   ],
+   "pass": false
+  },
+  "band_on_real_channel": {
+   "target": "S11 <= -10.0 dB over 2.395-2.4885 GHz; LNA NF incl. the real COB channel and lossy carrier parts <= 6.0 dB (extpp: + 1.5 dB derate)",
+   "note": "carrier parts fitted PER CHIP (per-board tuning); closure over part and bond tolerance with one fixed BOM is NOT shown",
+   "rows": [
+    {
+     "view": "extpr",
+     "corner": [
+      "typical",
+      32,
+      3.15
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 9,
+     "zpad_ohm": [
+      8.289234,
+      -78.5631
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       9.1877599288406e-08
+      ],
+      [
+       "sC",
+       4.2669235158954883e-13
+      ]
+     ],
+     "s11_worst_db": -11.3959219,
+     "gain_db": [
+      0.329616382,
+      0.650391469
+     ],
+     "nf_db": [
+      3.65462142,
+      3.93835307
+     ],
+     "gain_ideal_lossless_match_db": 3.128368,
+     "nf_own_ideal_match_db": 2.365139,
+     "channel_and_match_loss_db": 2.477976531,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "typical",
+      22,
+      3.35
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 9,
+     "zpad_ohm": [
+      8.439293,
+      -78.658
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       9.080245582219552e-08
+      ],
+      [
+       "sC",
+       4.29128520450849e-13
+      ]
+     ],
+     "s11_worst_db": -11.4764623,
+     "gain_db": [
+      0.655233947,
+      0.966608554
+     ],
+     "nf_db": [
+      3.59041718,
+      3.87912267
+     ],
+     "gain_ideal_lossless_match_db": 3.412719,
+     "nf_own_ideal_match_db": 2.32543,
+     "channel_and_match_loss_db": 2.446110446,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 6,
+     "zpad_ohm": [
+      8.825599,
+      -75.8336
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       7.158437493237339e-08
+      ],
+      [
+       "sC",
+       4.2970332639341606e-13
+      ]
+     ],
+     "s11_worst_db": -11.6279403,
+     "gain_db": [
+      -1.15585003,
+      -0.826224546
+     ],
+     "nf_db": [
+      4.14889797,
+      4.42390068
+     ],
+     "gain_ideal_lossless_match_db": 1.567381,
+     "nf_own_ideal_match_db": 2.816835,
+     "channel_and_match_loss_db": 2.393605546,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "ss",
+      22,
+      3.35
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 6,
+     "zpad_ohm": [
+      9.01895,
+      -76.0348
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       7.10684298221236e-08
+      ],
+      [
+       "sC",
+       4.329779049696317e-13
+      ]
+     ],
+     "s11_worst_db": -11.7281983,
+     "gain_db": [
+      -0.657861344,
+      -0.337782433
+     ],
+     "nf_db": [
+      4.02243856,
+      4.30419424
+     ],
+     "gain_ideal_lossless_match_db": 2.017583,
+     "nf_own_ideal_match_db": 2.726107,
+     "channel_and_match_loss_db": 2.3553654330000002,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "ff",
+      32,
+      3.15
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 9,
+     "zpad_ohm": [
+      7.209767,
+      -81.7629
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       1.5424856001146167e-07
+      ],
+      [
+       "sC",
+       4.1587922743146484e-13
+      ]
+     ],
+     "s11_worst_db": -10.7972836,
+     "gain_db": [
+      1.36234986,
+      1.75968513
+     ],
+     "nf_db": [
+      3.34037637,
+      3.62226918
+     ],
+     "gain_ideal_lossless_match_db": 4.448819,
+     "nf_own_ideal_match_db": 2.065562,
+     "channel_and_match_loss_db": 2.68913387,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "ff",
+      22,
+      3.35
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 9,
+     "zpad_ohm": [
+      7.257906,
+      -82.0944
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       1.598366127175462e-07
+      ],
+      [
+       "sC",
+       4.1725947731010965e-13
+      ]
+     ],
+     "s11_worst_db": -10.8217489,
+     "gain_db": [
+      1.71255916,
+      2.11300138
+     ],
+     "nf_db": [
+      3.28361444,
+      3.56680148
+     ],
+     "gain_ideal_lossless_match_db": 4.785498,
+     "nf_own_ideal_match_db": 2.026236,
+     "channel_and_match_loss_db": 2.6724966199999995,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "sf",
+      32,
+      3.15
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 9,
+     "zpad_ohm": [
+      8.42478,
+      -77.7208
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       8.480026812051083e-08
+      ],
+      [
+       "sC",
+       4.270700468951273e-13
+      ]
+     ],
+     "s11_worst_db": -11.4576088,
+     "gain_db": [
+      -0.321230915,
+      -0.00272031113
+     ],
+     "nf_db": [
+      3.84316893,
+      4.11814902
+     ],
+     "gain_ideal_lossless_match_db": 2.454916,
+     "nf_own_ideal_match_db": 2.521535,
+     "channel_and_match_loss_db": 2.45763631113,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "sf",
+      22,
+      3.35
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 9,
+     "zpad_ohm": [
+      8.593615,
+      -77.8032
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       8.345814134454164e-08
+      ],
+      [
+       "sC",
+       4.300032951456736e-13
+      ]
+     ],
+     "s11_worst_db": -11.5515252,
+     "gain_db": [
+      0.0332896127,
+      0.341882531
+     ],
+     "nf_db": [
+      3.76530432,
+      4.0451676
+     ],
+     "gain_ideal_lossless_match_db": 2.764918,
+     "nf_own_ideal_match_db": 2.472642,
+     "channel_and_match_loss_db": 2.423035469,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "fs",
+      32,
+      3.15
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 9,
+     "zpad_ohm": [
+      8.122048,
+      -79.4604
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       1.0136625084056577e-07
+      ],
+      [
+       "sC",
+       4.258323993969498e-13
+      ]
+     ],
+     "s11_worst_db": -11.3141846,
+     "gain_db": [
+      0.924023566,
+      1.24886502
+     ],
+     "nf_db": [
+      3.500805,
+      3.79087233
+     ],
+     "gain_ideal_lossless_match_db": 3.754019,
+     "nf_own_ideal_match_db": 2.23299,
+     "channel_and_match_loss_db": 2.5051539800000002,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "fs",
+      22,
+      3.35
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 9,
+     "zpad_ohm": [
+      8.235716,
+      -79.6312
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       1.012887255448005e-07
+      ],
+      [
+       "sC",
+       4.2783394914439087e-13
+      ]
+     ],
+     "s11_worst_db": -11.3751589,
+     "gain_db": [
+      1.24887512,
+      1.56523986
+     ],
+     "nf_db": [
+      3.44263115,
+      3.73700832
+     ],
+     "gain_ideal_lossless_match_db": 4.044663,
+     "nf_own_ideal_match_db": 2.195511,
+     "channel_and_match_loss_db": 2.4794231399999997,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "typical",
+      27,
+      3.3
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 9,
+     "zpad_ohm": [
+      8.373246,
+      -78.6195
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       9.13084633515955e-08
+      ],
+      [
+       "sC",
+       4.280463041062758e-13
+      ]
+     ],
+     "s11_worst_db": -11.4412039,
+     "gain_db": [
+      0.529987492,
+      0.84486817
+     ],
+     "nf_db": [
+      3.61230471,
+      3.89916503
+     ],
+     "gain_ideal_lossless_match_db": 3.304912,
+     "nf_own_ideal_match_db": 2.337776,
+     "channel_and_match_loss_db": 2.46004383,
+     "pass_s11": true,
+     "pass_nf": true
+    },
+    {
+     "view": "extpr",
+     "corner": [
+      "typical",
+      27,
+      3.3
+     ],
+     "carrier_distance_mm": 10.0,
+     "ct": 9,
+     "zpad_ohm": [
+      8.373246,
+      -78.6195
+     ],
+     "carrier_parts": [
+      [
+       "sL",
+       6.3370693599441475e-09
+      ],
+      [
+       "pC",
+       8.565016794351176e-13
+      ]
+     ],
+     "s11_worst_db": -9.94565894,
+     "gain_db": [
+      -0.923636256,
+      -0.531666419
+     ],
+     "nf_db": [
+      4.21721706,
+      4.31534671
+     ],
+     "gain_ideal_lossless_match_db": 3.304912,
+     "nf_own_ideal_match_db": 2.337776,
+     "channel_and_match_loss_db": 3.836578419,
+     "pass_s11": false,
+     "pass_nf": true
+    },
+    {
+     "view": "extpp",
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 12,
+     "zpad_ohm": [
+      8.788301,
+      -65.2294
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       4.460090504460425e-08
+      ],
+      [
+       "sC",
+       4.1096858500954296e-13
+      ]
+     ],
+     "s11_worst_db": -11.579086,
+     "gain_db": [
+      -6.16456348,
+      -5.94485232
+     ],
+     "nf_db": [
+      5.32167119,
+      5.59164419
+     ],
+     "gain_ideal_lossless_match_db": -3.42741,
+     "nf_own_ideal_match_db": 3.739404,
+     "channel_and_match_loss_db": 2.51744232,
+     "pass_s11": true,
+     "pass_nf": false
+    },
+    {
+     "view": "extpp",
+     "corner": [
+      "ss",
+      32,
+      3.15
+     ],
+     "carrier_distance_mm": 10.0,
+     "ct": 12,
+     "zpad_ohm": [
+      8.788301,
+      -65.2294
+     ],
+     "carrier_parts": [
+      [
+       "sL",
+       5.6879124873019624e-09
+      ],
+      [
+       "pC",
+       1.0030903779813012e-12
+      ]
+     ],
+     "s11_worst_db": -9.946304,
+     "gain_db": [
+      -7.61105074,
+      -7.31607775
+     ],
+     "nf_db": [
+      6.14678877,
+      6.29618479
+     ],
+     "gain_ideal_lossless_match_db": -3.42741,
+     "nf_own_ideal_match_db": 3.739404,
+     "channel_and_match_loss_db": 3.8886677499999998,
+     "pass_s11": false,
+     "pass_nf": false
+    },
+    {
+     "view": "extpp",
+     "corner": [
+      "typical",
+      32,
+      3.15
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 12,
+     "zpad_ohm": [
+      8.049849,
+      -67.1359
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       5.015135832043596e-08
+      ],
+      [
+       "sC",
+       4.034117878746371e-13
+      ]
+     ],
+     "s11_worst_db": -11.2185258,
+     "gain_db": [
+      -5.02694652,
+      -4.6965987
+     ],
+     "nf_db": [
+      4.66457407,
+      4.96016746
+     ],
+     "gain_ideal_lossless_match_db": -2.05233,
+     "nf_own_ideal_match_db": 3.160319,
+     "channel_and_match_loss_db": 2.6442687,
+     "pass_s11": true,
+     "pass_nf": false
+    },
+    {
+     "view": "extlo",
+     "corner": [
+      "ff",
+      22,
+      3.35
+     ],
+     "carrier_distance_mm": 2.0,
+     "ct": 6,
+     "zpad_ohm": [
+      8.455131,
+      -88.1669
+     ],
+     "carrier_parts": [
+      [
+       "pL",
+       4.0346181273090706e-07
+      ],
+      [
+       "sC",
+       4.492856244553549e-13
+      ]
+     ],
+     "s11_worst_db": -11.4517069,
+     "gain_db": [
+      2.8489987,
+      3.11734979
+     ],
+     "nf_db": [
+      3.11450683,
+      3.35906497
+     ],
+     "gain_ideal_lossless_match_db": 5.475377,
+     "nf_own_ideal_match_db": 1.954224,
+     "channel_and_match_loss_db": 2.35802721,
+     "pass_s11": true,
+     "pass_nf": true
+    }
+   ],
+   "pass": false
+  },
+  "chain_nf": {
+   "target": "on-chip chain NF <= 4.1 dB DSB on the real channel, at tt, ss and the pessimistic end, with the LO as delivered",
+   "rows": [
+    {
+     "view": "extpr",
+     "corner": [
+      "typical",
+      27,
+      3.3
+     ],
+     "lo": "ext_best_1v16",
+     "lo_level": [
+      "sine",
+      2.44,
+      0.37
+     ],
+     "carrier_distance_mm": 2.0,
+     "nf_dsb_db": 6.147617281327024,
+     "nf_ssb_db": 8.912551557689106,
+     "gain_sig_db": {
+      "4.0MHz": 31.18,
+      "6.0MHz": 29.76,
+      "8.5MHz": 27.96
+     },
+     "f_parts": {
+      "sig": 2.4542,
+      "img": 2.1846,
+      "h3u": 0.0,
+      "h3l": 0.0,
+      "h5u": 0.0,
+      "h5l": 0.0,
+      "ota1": 1.5365,
+      "ota2": 1.5239,
+      "r1": 0.0333,
+      "r2": 0.0326,
+      "h3u_lna": 0.0081,
+      "h3l_lna": 0.0081,
+      "h5u_lna": 0.0018,
+      "h5l_lna": 0.0018
+     },
+     "run_by": "scratch/rf-lna-q/e15.py (same calls as lna_close.chain_point)"
+    }
+   ],
+   "pass": false
+  },
+  "negative_controls": {
+   "cm_bench_on_broken_lna": {
+    "min_mu": 1.0120708599614847,
+    "f_min_mu": 100000000.0,
+    "min_k": 6.743139876411165,
+    "min_mu_above_1ghz": 1.0165479815874172,
+    "min_re_zin_real_mixer_ohm": 0.9971779,
+    "f_min_re_zin_hz": 30000000000.0,
+    "min_re_zcm_real_mixer_ohm": -25.5186,
+    "f_min_re_zcm_hz": 751190243.0
+   },
+   "cm_bench_fails_as_required": true,
+   "bench_selftest": {
+    "T1_nf_matched_termination": {
+     "expected_db": 3.01,
+     "got_db": 3.010298,
+     "ok": true
+    },
+    "B1_broken_series_resistors": {
+     "expected_db": 3.01,
+     "got_db": 7.982529,
+     "must_fail": true,
+     "check_fails": true
+    },
+    "T2_nf_6dB_pad_plus_termination": {
+     "expected_db": 9.03,
+     "got_db": 9.0309,
+     "ok": true
+    },
+    "T3_s11_ladder_vs_analytic": {
+     "max_err_db": 6.31603753800114e-05,
+     "ok": true
+    },
+    "T3b_s11_lossy_trimmer_ladder_vs_analytic": {
+     "max_err_db": 0.0006472457314661284,
+     "ok": true
+    },
+    "B2_broken_bond_value": {
+     "max_err_db": 7.190205736997919,
+     "must_fail": true,
+     "check_fails": true
+    },
+    "T4_lna_only_output_noise_noiseless_load": {
+     "expected_v2_hz": 1.32608575152e-19,
+     "got_v2_hz": 1.326346928673653e-19,
+     "ok": true
+    },
+    "T4b_output_noise_with_bench_load": {
+     "expected_v2_hz": 6.6304287576e-19,
+     "got_v2_hz": 6.630688396389342e-19,
+     "ok": true
+    },
+    "T5_rein_series_rc": {
+     "expected_ohm": 2.5507196377553063,
+     "got_ohm": 2.55272,
+     "ok": true
+    },
+    "B3_broken_negative_resistance": {
+     "got_ohm": -6.39782,
+     "must_fail": true,
+     "check_fails": true
+    },
+    "T6_chain_det_lna_term_noiseless_lna": {
+     "expected_db": 0.0,
+     "got_db": -1.50988e-06,
+     "ok": true
+    },
+    "B4_broken_old_method_counts_load_noise": {
+     "got_db": 3.086775,
+     "must_fail": true,
+     "check_fails": true
+    },
+    "T7_stability_k_of_6dB_pad": {
+     "expected_k": 2.125,
+     "got_k": 2.122087080436679,
+     "got_mu": 3.99350157348891,
+     "ok": true
+    },
+    "B5_broken_active_two_port": {
+     "got_k": -0.9972914748211443,
+     "got_mu": -0.9983754134011081,
+     "got_re_zin_ohm": -116.315,
+     "must_fail": true,
+     "check_fails": true
+    },
+    "all_ok": true
+   },
+   "pass": true
   }
- ],
- "excluded_coverage": [
-  "IIP3/P1dB not simulated",
-  "S11 with a real board network not simulated (ideal L-match only)",
-  "gain codes implemented: active (high) and gain_lo shunt only; -6/0/10/20 dB mapping open",
-  "ESD/pad network modelled as 0.5 pF per leg only",
-  "no Monte Carlo"
+ },
+ "all_pass": false,
+ "not_covered": [
+  "wire / via resistance (C-only extraction)",
+  "Monte Carlo / mismatch",
+  "IIP3 / IIP2",
+  "one fixed carrier BOM over tolerance",
+  "fallback external LNA through the bypass path",
+  "fill over the spirals, EM model of the spirals (analytic model only)"
  ]
 }

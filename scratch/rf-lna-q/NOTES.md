@@ -41,3 +41,63 @@ Scratch: `scratch/rf-lna-q/` (scripts e1..eN, logs, `w/` work dirs). Predecessor
 - Remaining by construction: an undamped lossless island decap without die decap (S3) still fails (-12 / -46 ohm at 0.34 / 0.16
   GHz); it passes with decap ESR >= 0.5 x sqrt(L/C) (100 pF: 2 ohm, 500 pF: 1 ohm) or with the real die decap behind the island
   switch. Passive floor above 16 GHz: 0.83-1.02 ohm (disabled LNA: 0.83).
+
+## Design as implemented (netlists.py lna(), final layout L6: 60,752 um2, Magic DRC 0, KLayout 0, LVS unique)
+- True differential pair: CS 450/0.28, gate R 12 ohm, degeneration spirals 0.47 nH to pin `tail`; cascoded tail (505/0.5 +
+  252.5/0.28) mirrored x168 from the 100 uA reference; lobias adds reference width.  Gate CM: replica diode on 7 kohm.
+- 25 ohm ppoly across each degeneration spiral (e12): removes the differential negative-resistance dip at 13 GHz far more
+  cheaply than gate R (NF own 1.95 dB at 10 ohm + 30 ohm damper vs 2.45 dB at 22 ohm gate R, same margin).
+- Tank: centre tap pin `vtk`, PMOS feed 400/0.28 (~12 ohm), 19 pF NMOS gate capacitor (6 units 12 x 20 x 3 um; a 20 pF MIM
+  does not fit over the core), dump branch of the attenuator on vtk.  Coil 220 um / 4 t (2.01 nH; pess = Q 4, L -15 %: Rp 105).
+  Trim bank 0.05 / 0.1 / 0.2 / 0.4 pF, switches 30 x 2^k (the old bank's off-state parasitics alone were 0.8 pF per leg).
+- Cascode-gate "keep / dump" switches are PMOS (the NMOS ones clipped the cascode gate at VDD - Vth); vcas = 0.87 x VDD.
+- CM loss network 0.2 pF per pad + 180 ohm (final, L6).  0.1 pF + 200 ohm (L5) left only 0.33 ohm of in-band CM margin with the
+  real die decap; 0.3 pF + 60 ohm costs pad-side C: Re(Zpad) 7 instead of 9 ohm = 0.6 dB more channel loss (e14).
+- 20 kohm across each mixer feed pair: two-port K was < 1 below 0.7 GHz on the first extracted layout (output port lossless
+  when the mixers are off); with it K >= 5.
+- Emission order matters for area: splitting input / output devices into two loops cost 6k um2 and was reverted.
+- MIM sides 12.0 and 15.0 / 15.02 um fail the standalone PCell DRC in this flow; 12.02, 14.1, 16.0 pass.
+
+## Results on the intermediate layout L5 (superseded by L6; L6 numbers are in scratch/rf_rx/close/*.json and lna-evidence.json)
+- e13_L5: extpr ff lowr: K 5.6, mu > 1, Re_diff min 1.18 (30 GHz end), Re_cm 1.18 at 2.4 GHz, < 1 above 9 GHz (passive floor:
+  the disabled LNA shows the same), 0.46 at 30 GHz.  tt: Zin 8.9-j85.8, gain +3.89 dB (ct 9), NF own 2.37 dB (ideal match);
+  extpp ss: -3.27 dB, 3.77 dB; extpr ss: +1.9 dB, 2.85 dB.  Currents 17.7-18.5 mA RX, 10.8-11.5 mA lobias (schematic e6).
+- Real channel (ch1.py, e14, e15): loss of channel + per-chip carrier match (pess part Q, connector + 2 mm) vs Re(Zpad):
+  6.4 ohm 3.3 dB | 10 ohm 2.24 | 12.7 ohm 1.85 | 20 ohm 1.26 | 30 ohm 0.91 dB (10 mm: 5.0 / 3.5 / 2.9 / 2.0 / 1.4).  The bond +
+  trace series loss (~4.4 ohm differential at Q 40-50) against a 9 ohm pad resistance is the floor: ~2.3 dB at tt.
+  ngspice (lna_band, lossy ladder): tt S11 -11.4 dB, gain 1.25-1.55 dB, LNA NF incl. channel 3.52-3.75 dB; extpp ss: gain
+  -5.8..-5.6 dB, NF 5.18-5.41 dB.  => chain 4.1 dB DSB cannot be met on this channel (LNA + channel alone is 3.5-3.75 dB at tt).
+- Chain runs (e15 ... chain): 3 um transients take ~1 h each under load; json in e15_*.json.
+
+## Coordinator message 2026-11-18 (evidence audit): done / open
+- Sources committed (4488095); interface rows RQ-1..3 (pins tail / vtk, spirals, supply rule).
+- sf / fs corners are in lna_close.py.  R+C extraction: not in the rf_rx flow (C-only) - open.
+
+## Final layout L6 (2026-11-18), evidence scratch/rf_rx/close/*.json -> analog/rf_rx/generated/lna-evidence.json (lna_close.py)
+- Currents, 20 corners (tt/ss/ff/sf/fs): RX 17.75-18.62 mA (limit 19.0), lobias 10.80-11.44 mA (11.8): PASS.  Off 1.2 / 7.3 nA.
+- Stability 0.1-30 GHz, 56 active rows: mu >= 1.008, K >= 2.94.  Differential min Re 0.975-1.29 ohm, every minimum at 30 GHz
+  (disabled LNA 0.83 ohm): 24 rows miss 1.0 by <= 0.025 ohm.  Common mode 0.43-0.58 ohm at 30 GHz (disabled 0.39): all rows MISS the
+  1.0 ohm limit as written; below 8 GHz >= 1.4 ohm with the real PDN at RX bias.  S3 (undamped island decap): -3.8..-29.5 ohm: FAIL.
+- Band on the real channel (connector + 2 mm, per-chip parts, pess part Q): S11 <= -10.8 dB; LNA NF incl. channel 3.3-4.4 dB over
+  5 processes (limit 6.0: pass); extpp ss 5.3-5.6 dB (+1.5 derate = 7.1: FAIL); 10 mm: S11 -9.9 dB (FAIL), NF 4.2-4.3 dB tt.
+  Loss in front of the LNA 2.4-2.7 dB.
+- Read-back LVS from the GDS (rb_lvs.py): netgen unique with properties, 981 = 981 devices; census flags 8.667 vs 8.67 um on three
+  resistor segments; negative control (gate R 82 -> 80 um) fails as required.
+- Chain (L5 layout, 0.1 pF CM caps, ideal square LO, real channel): tt 6.27 dB DSB (LNA + channel 3.75 dB, TIA terms +2.5 dB,
+  gain 34.0 dB); extpp ss 10.9 dB (gain 26.7 dB).  L6 chain runs: e15_*.json in this directory.
+- Independent review 4 (reviewer scratch scratch/review-lna4/): NO-GO for publication in this state, no redesign needed for
+  stability.  Findings to act on: (1) bench blind below 100 MHz: supply anti-resonance with the die decap gives Re(Zcm) -0.7..-12.7
+  ohm at 45-100 MHz at ff with low-loss die decap and >= 1 nH per rail (lna_close.py stab_lf reproduces it); (2) duplex bias with the
+  real PDN 0.74-0.88 ohm in band; (3) lever: halve / remove the degeneration spirals (+0.95..1.8 dB gain, same LNA + channel NF,
+  frees up to 50k um2) - NOT done, needs a corner scan; (4) no secondary ESD clamp at the gate behind the 4.4 pF MIM, no HBM
+  check; full rail on the 19 pF MOS capacitor whenever the island is on; (5) spiral mutual coupling unmodelled; C-only extraction.
+
+## NEXT (order)
+1. Degeneration inductance scan 0 / 0.12 / 0.24 / 0.47 nH over corners and views (gain, NF on the channel, S11, stability incl.
+   stab_lf, compression); decide on the two 25.2k um2 spirals.
+2. Supply anti-resonance: either more CM loss below 100 MHz (cannot come from 0.2 pF) or an interface requirement on the die
+   decap (>= 3 nF with >= 0.1 ohm, <= 0.5 nH per rail) - quantify with stab_lf.
+3. R+C extraction of the core (the LO flow has an extresist recipe: analog/timing/lcvco/run_qvco_r5_ext.py); EM / coupling of the
+   four spirals; start-up transient; HBM check of the gate or a secondary clamp.
+4. Chain NF: TIA size decision (x3: about -1.5 dB, +36k um2 per mixer), fallback external LNA through `byp`.
+5. Bring characterize.py / summarize.py in line with lna_close.py (they still carry the pre-COB board network).

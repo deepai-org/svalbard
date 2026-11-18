@@ -827,7 +827,9 @@ def _ladder_net(m):
     lossy, w = m.get('lossy', False), 2 * math.pi * m.get('f_q', 2.44e9)
     rs = lambda l, q: f' {w * l / q:.4g}' if lossy else ''
     s, cur = '', {'p': 'rf_in_p', 'n': 'rf_in_n'}
-    for i, (t, v) in enumerate(m['net']):
+    for i, el in enumerate(m['net']):
+        t, v = el[0], el[1]
+        qe = el[2] if len(el) > 2 else None      # optional per-element Q (real-channel ladders, lna_match.channel_ladder)
         if t in ('sL', 'sC'):
             for sd in 'pn':
                 nxt = f'bl{i}_{sd}'
@@ -836,9 +838,9 @@ def _ladder_net(m):
                     s += f'Lbw{sd} {cur[sd]} bq{sd}a {lba}\nRbw{sd} bq{sd}a bq{sd} {w * lba / LM.Q_BOND if lossy else 1e-6:.4g}\n'
                     s += f'Lbx{i}{sd} bq{sd} bx{i}{sd} {lx}\nRbx{i}{sd} bx{i}{sd} {nxt} {w * lx / LM.Q_L if lossy else 1e-6:.4g}\n'
                 elif t == 'sL':
-                    s += f'Lbx{i}{sd} {cur[sd]} bx{i}{sd} {v}\nRbx{i}{sd} bx{i}{sd} {nxt} {w * v / LM.Q_L if lossy else 1e-6:.4g}\n'
+                    s += f'Lbx{i}{sd} {cur[sd]} bx{i}{sd} {v}\nRbx{i}{sd} bx{i}{sd} {nxt} {w * v / (qe or LM.Q_L) if lossy else 1e-6:.4g}\n'
                 else:
-                    s += f'Cbx{i}{sd} {cur[sd]} {nxt} {v}\n'
+                    s += f'Cbx{i}{sd} {cur[sd]} bx{i}{sd} {v}\nRbx{i}{sd} bx{i}{sd} {nxt} {1 / (w * v * (qe or LM.Q_C)) if lossy else 1e-6:.4g}\n'
                 cur[sd] = nxt
         elif t == 'pT':
             a, b = cur['p'], cur['n']
@@ -849,9 +851,9 @@ def _ladder_net(m):
         elif t == 'pC':
             s += f'Cbx{i}d {cur["p"]} {cur["n"]} {v}\n'
             if lossy:
-                s += f'Rbx{i}d {cur["p"]} {cur["n"]} {LM.Q_C / (w * v):.4g}\n'
+                s += f'Rbx{i}d {cur["p"]} {cur["n"]} {(qe or LM.Q_C) / (w * v):.4g}\n'
         else:
-            s += f'Lbx{i}d {cur["p"]} {cur["n"]} {v}\n'
+            s += f'Lbx{i}d {cur["p"]} bx{i}m {v}\nRbx{i}d bx{i}m {cur["n"]} {w * v / (qe or LM.Q_L) if lossy else 1e-6:.4g}\n'
     return s + f'Rbjp sp {cur["p"]} 1m\nRbjn sn {cur["n"]} 1m\n'
 
 

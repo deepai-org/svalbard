@@ -12,11 +12,11 @@ sources: `chip-top-pins.md`. Risks: IDs refer to `spec/risk-register.md`.
 | `bbfilter_i`, `bbfilter_q` | `pt_bbfilter_i/q` | published, committed | 341,901 (586.3 × 583.15) | 0 / 0, unique | current: matches netlist and GDS |
 | `bb_tap` | `pt_bb_tap` | published on disk; netlist and records not committed | 19,511 (99.08 × 196.92) | 0 / 0, unique | current: matches netlist and GDS |
 | `rxmix_i`, `rxmix_q` | `pt_rxmix_i/q` | candidate, not published | 35,442 (192.73 × 183.9) | 0 / 0, unique | same netlist, earlier layout: to be rerun |
-| `lna` | `pt_lna` | candidate, not published (review NO-GO) | 42,921 (219.77 × 195.3), plus four spirals | 0 / 0, unique | none valid: evidence is from an older netlist |
+| `lna` | `pt_lna` | candidate, not published (stability closed in the active range; noise figure misses) | 60,752 (253.05 × 240.08), plus two 57.2k tank and two 25.2k degeneration spirals | 0 / 0, unique; read-back from GDS unique | `generated/lna-evidence.json` (current, `lna_close.py`) |
 
 Areas and DRC/LVS are from `generated/<block>-layout.json`. `integration/top/pt_chip.conn` binds the cells in
 `generated/` (masters `generated/<block>.ext.spice`), including the candidate LNA and mixer pin lists. The
-`lna`, `rxmix_*` and `bb_tap` netlists and records in git are older than the cells on disk (see Open items).
+The netlists and layout records of all blocks in git match the cells on disk; `pt_lna` has two new pins (`tail`, `vtk`).
 
 ## 2. Files and how to run
 
@@ -24,7 +24,8 @@ Areas and DRC/LVS are from `generated/<block>-layout.json`. `integration/top/pt_
 | --- | --- |
 | `netlists.py` | writes every `<block>.spice` (single source of the circuits; top cell `pt_<block>`) |
 | `bbf_fd.py`, `bbf_layout.py`, `bbf_bench.py` | baseband filter circuit, layout and benches (with bench self-tests) |
-| `lna_layout.py`, `lna_spiral.py`, `lna_match.py` | compact LNA/mixer layout, spiral cells and models, match and stability benches |
+| `lna_layout.py`, `lna_spiral.py`, `lna_match.py` | compact LNA/mixer layout, spiral cells and models, stability bench, real-channel ladder and per-chip match fit |
+| `lna_close.py` | LNA closing evidence: currents (20 corners), stability matrix, band rows on the real channel, negative controls → `generated/lna-evidence.json` |
 | `rfrx_flow.py`, `generate_<block>.py` | layout, Magic DRC, extraction, Netgen LVS, GDS export, KLayout DRC |
 | `tb.py`, `simlib.py`, `linearity.py`, `bench_selftest.py` | ngspice testbenches (schematic or extracted view) and their self-tests |
 | `characterize.py` | runs benches; writes `generated/<block>-evidence.json`, `generated/rf_rx_chain.json` |
@@ -40,8 +41,8 @@ Pinned images, `--network none --cpus 3 --memory 6g`: layout, Magic DRC (`drc(fu
 LVS in `svalbard/librelane-gf180-canary:2026.08` (Magic 8.3.623, Netgen 1.5.316); GDS export (Magic 8.3.678),
 KLayout DRC and ngspice in `hpretl/iic-osic-tools@sha256:89641950…`. The GDS is exported with the second
 image because Magic 8.3.623 does not write the HRES marker (62/0) for `ppolyf_u_1k`. Raw output:
-`scratch/rf_rx/` (gitignored). Do not run `run_rf_rx.sh` or `summarize.py` on the working tree until the LNA
-redesign is closed: they would replace the filter and tap records with a mixed set.
+`scratch/rf_rx/` (gitignored). Do not run `run_rf_rx.sh` or `summarize.py` yet (Open item 8); the LNA evidence
+comes from `python3 lna_close.py currents|stab|band|neg|write`.
 
 ## 3. Common rules
 
@@ -103,18 +104,39 @@ Off: OTA outputs high-Z (external-downconverter inject through `bb_tap`).
 
 ### lna (candidate)
 
-LC-tuned transconductance stage: pseudo-differential common-source pair (450/0.28 per side, ~10 Ω series gate
-resistors, replica gate bias), one cascode (300/0.28) per leg into the tank nodes `tank_p/n`, and a 16 µm MIM
-from the tank to each mixer (`rf_out_*` → rxmix_i, `rf_outq_*` → rxmix_q). The tank inductors (`pt_lna_ind`,
-170 µm, 3 turns, 1.35 nH) and the on-chip source-degeneration inductors (`pt_lna_deg`, 140 µm, 2 turns,
-0.47 nH) are separate DRC-only spiral cells placed at assembly; there are no source pads. Controls: `ct[3:0]`
-tank tune (reset 7); `att[4:0]` + `gain_lo` (MSB) attenuator; `lobias` reduced bias for duplex; `byp` pad to
-both mixer feeds with the LNA off (fallback external LNA); `se` single-ended input; `rt` Q-spoil.
-Supply-current limits in `characterize.py`: ≤ 19.0 mA (RX bias), ≤ 11.8 mA (`lobias=1`).
+LC-tuned transconductance stage, true differential:
 
-Bench views: `ext` = extracted; `extpr` = extracted + `pad_rf_pair` + gate resistance 150 Ω/10 µm; `extpp` =
-pessimistic end (Rg 200 Ω/10 µm, +25 % device C, pad C +30 %, spiral Q 4 / L −15 %); `extlo` = optimistic end
-(Rg 60 Ω/10 µm, pad C −20 %, spiral L +10 %).
+- Common-source pair 450/0.28 per side, ~12 Ω series gate resistors, AC-coupled from the pads (47 µm MIM). The sources go
+  through the on-chip degeneration spirals (`pt_lna_deg`, 0.47 nH each, 25 Ω ppoly in parallel with each spiral) to the
+  common pin `tail`: a cascoded NMOS tail current source, mirrored from `ibias` (no replica bias; `lobias` switches extra
+  reference width in). Gate common mode from a replica diode on a level resistor.
+- One cascode (300/0.28, 64 units) per leg into `tank_p/n`; current-steering attenuator `att[4:0]` + `gain_lo` (MSB):
+  units are steered to the tank or dumped onto `vtk` (cascode gates switched by PMOS pass devices).
+- Tank: two `pt_lna_ind` spirals (220 µm, 4 turns, 2.01 nH) from the centre tap `vtk` to `tank_p/n`; `vtk` is fed from
+  `VDD` through an always-on PMOS (~12 Ω) and returned to `VSS` by a 19 pF NMOS gate capacitor, so the load current
+  closes on chip and not through the supply bonds. `ct[3:0]` tank tune, 0.05 pF per leg per LSB.
+- 16 µm MIM from each tank node to each mixer (`rf_out_*` → rxmix_i, `rf_outq_*` → rxmix_q), 20 kΩ across each pair.
+- Common-mode loss network: 0.1 pF from each RF pad to one node, 200 Ω from there to `VSS` (differential: only pad
+  capacitance).
+- `byp`: pad to both mixer feeds through a series MIM with the LNA off (fallback external LNA); `se` single-ended
+  input; `rt` Q-spoil.
+
+Why the stage looks like this (common-mode stability, RFR-14): in a pseudo-differential stage the common-mode drain
+current returns through the supply and ground bonds; above the resonance of the bond loop with the on-chip
+VDD–VSS capacitance the chip ground moves against the board like a capacitive source impedance and the
+common-mode input resistance goes negative (−57 Ω at 1.1 GHz on the previous cell). The tail removes the
+common-mode current, the local return keeps what is left on chip, and the loss network outweighs the remaining
+tail-capacitance term. The 25 Ω across each degeneration spiral damps the spiral / source-capacitance resonance
+near 13 GHz, which is where the differential input resistance used to go negative.
+
+Supply-current limits: ≤ 19.0 mA (RX bias), ≤ 11.8 mA (`lobias=1`), at every corner. Evidence script:
+`lna_close.py` (limits are constants in the file) → `generated/lna-evidence.json`.
+
+Bench views: `ext` = extracted (capacitance only); `extpr` = extracted + `pad_rf_pair` delta + gate resistance
+150 Ω/10 µm; `extpp` = pessimistic end (Rg 200 Ω/10 µm, +25 % device C, pad C +30 %, spiral Q 4 / L −15 %); `extlo`
+= low-loss end (Rg 60 Ω/10 µm, pad C −20 %, spiral L +10 %). Input network in the band and chain rows: the real COB
+channel (`lna_match.channel_ladder`: bond 2.45 nH, 5.5 mm of 86.6 Ω trace, via, connector, carrier line) with lossy
+carrier parts fitted per chip.
 
 <!-- RESULTS:BEGIN (rendered by summarize.py from generated/*.json) -->
 ## 5. Results
@@ -167,39 +189,66 @@ tt/ss/ff × 22/32 °C × 3.15/3.35 V. Only blocks with current evidence are list
 
 <!-- RESULTS:END -->
 
+## 5a. LNA candidate: results against the limits (`generated/lna-evidence.json`, written by `lna_close.py`)
+
+Extracted (capacitance only), 20 corners = tt / ss / ff / sf / fs × 22 / 32 °C × 3.15 / 3.35 V unless stated. Limits were
+fixed before the runs. Rows marked **miss** are misses; nothing here is published.
+
+| Row | Limit | Result | State |
+| --- | --- | --- | --- |
+| Area; Magic / KLayout DRC; LVS; read-back LVS from the GDS | 0 / 0, unique | 60,752 µm²; 0 / 0; unique; unique (981 devices), negative control fails as required | pass |
+| Supply current, RX bias / `lobias` | ≤ 19.0 / ≤ 11.8 mA at every corner | 17.75–18.62 / 10.80–11.44 mA; off 1–7 nA | pass |
+| Two-port stability, 56 rows (corners, model ends, states, supply cases), 0.1–30 GHz | μ > 1, K > 1 | μ ≥ 1.008, K ≥ 2.94 | pass |
+| Differential min Re(Zin), real mixers, 0.1–30 GHz | ≥ 1.0 Ω | 0.975–1.29 Ω, every minimum at 30 GHz (disabled LNA: 0.83 Ω); ≥ 2.5 Ω below 8 GHz; 25 rows below 1.0 | **miss** |
+| Common-mode min Re(Zcm), 0.1–30 GHz, physical supply cases | ≥ 1.0 Ω | 0.43–0.58 Ω at 30 GHz (disabled LNA: 0.39 Ω); below 8 GHz ≥ 1.4 Ω with the real supply network, 0.68 Ω with 2 nH bonds and no decap; duplex bias with the real network 0.74–0.88 Ω in band (review 4) | **miss** |
+| Same, undamped 100 / 500 pF on the island rail, no die decap | ≥ 1.0 Ω | −3.8 to −29.5 Ω at 0.16–0.34 GHz | **miss** (rule RQ-3) |
+| Same from 5 MHz, real supply network (anti-resonance with the die decap) | ≥ 1.0 Ω | 3 nF / 0.03 Ω / 1–2 nH per rail at ff: −0.74 / −9.8 Ω at 66 / 47 MHz; ≥ 2.1 Ω with 5.4 nF and ≤ 0.5 nH, with 0.1 Ω of decap loss, at tt, ss and in duplex bias | **miss** (RQ-3a) |
+| Negative controls | bench must fail | broken LNA (tail shorted, feed on VDD, CM network shorted): −25.5 Ω; bench self-tests all as required | pass |
+| S11 on the real channel, carrier parts at connector + 2 mm, fitted per chip | ≤ −10 dB, 2.395–2.4885 GHz | −10.8 to −11.7 dB; at 10 mm −9.9 dB | pass / **miss** at 10 mm |
+| LNA gain, source EMF to mixer feeds (50 Ω per leg model), real channel | — | tt 0.5–0.8 dB (ideal lossless match 3.3 dB); ss −1.2…−0.3; ff 1.4–2.1; pessimistic end −6.2…−5.9 dB | information |
+| LNA NF including the real channel (2.4–2.7 dB of loss before the LNA) | ≤ 6.0 dB; pessimistic end derated +1.5 dB | tt 3.6–3.9; ss 4.0–4.4; ff 3.3–3.6; sf 3.8–4.1; fs 3.4–3.8 dB; pessimistic end 5.3–5.6 dB (7.1 derated) | pass / **miss** at the pessimistic end |
+| Chain NF, DSB, real channel, LO as delivered (sine, best real level), small TIA | ≤ 4.1 dB | tt 6.15 dB (LNA + channel 3.9 dB, TIA terms + 2.3 dB), gain 31.2 dB; other points in the evidence file | **miss** |
+
 ## 6. Open items
 
-1. **LNA redesign open, review NO-GO** (`scratch/review-lna3/REPORT.md`, state in `scratch/rf-lna-p/NOTES.md`;
-   RFR-11..14). On-chip source degeneration is adopted and the source pads are withdrawn. Not closed:
-   common-mode input resistance is negative with supply-bond inductance; differential stability margin fails at
-   ff with the present gate resistors; pessimistic-corner chain NF is far above the 4.1 dB on-chip target
-   (tank Q).
-2. **LNA input match.** The board network the benches assume (`lna_match.BOARD_TRIM`, B18/B25) cannot be built
-   on the COB (no signal passives on the COB; nearest part is on the carrier). The match on the real package
-   channel is not done (RFR-13).
-3. **Fallback external LNA** (allowed off-chip item, `byp` path): input impedance, gain plan and NF not simulated.
-4. **LNA ground.** `AGND_RX` must be planned on standard bond fingers; the fixed 74-wire bond layout has no
-   down-bonds or extra openings. The mixer `VSS` is bound to `VSS` at the top while the LNA uses `AGND_RX`
-   (`integration/top/decisions.md` D-LNA).
-5. **Spiral cells.** `pt_lna_ind` exists as a DRC-only GDS without an LVS netlist; `pt_lna_deg` has a generator
-   and model only. Both are `demand` masters in `integration/top/masters.txt`. Fill keep-out over the spirals
-   is not defined.
-6. **Mixers with the real LO.** As published, `pt_lo_ext` into the extracted mixers loses 3.3 dB at tt and
-   9.8 dB at ss/32 °C/3.15 V against the ideal square LO used here (`analog/timing/README.md`, MW-20). Chain
-   gain and NF must be restated with the real LO levels.
-7. **Stale records.** `generated/lna-evidence.json`, `rf_rx_chain.json`, `rf_rx_linearity.json` and
-   `rf_rx-summary.json` describe earlier LNA/mixer cells. `rxmix_*-evidence.json` matches the current netlist
-   but an earlier layout (GDS hash differs). The filter's chain-NF penalty row uses a pinned chain reference
-   from an earlier LNA; only its filter-alone noise is quoted above (MOD-05).
-8. **Uncommitted work.** `lna.spice`, `rxmix_*.spice`, `bb_tap.spice`, the Python sources and their
-   `generated/` records differ from git; `lna_layout.py`, `lna_spiral.py`, `lna_match.py` and
-   `bench_selftest.py` are untracked. The canonical `run_rf_rx.sh` has not been run on this tree.
-9. **bbfilter.** Current 5.22 mA against the 3.77 mA allocation (PWR-08); narrowest cutoff 1.56 MHz, so LoRa
-   203/406 kHz channels need a lower cutoff; calibration routine (inject → observe) not modelled; area repack
-   not started; no Monte Carlo (RFR-02, CNV-01).
-10. **DC offset.** TIA offset DAC and filter fine DAC are FPGA-calibrated; residual and dynamic offset against
+1. **LNA noise figure misses the on-chip target (RFR-01, RFR-13).** See the LNA rows in section 5a. The pad resistance of
+   the stage is 7–9 Ω (0.55 pF of pad capacitance per leg divides the gate impedance), the bond plus COB trace put about
+   4.4 Ω of series loss in front of it, and no part can sit on the COB: 2.4–2.7 dB is lost before the LNA at
+   connector + 2 mm, 3.8 dB at 10 mm. The small TIA (decision in force) adds about 2.5 dB at tt. Levers not used: larger
+   TIA (×3: −1.5 dB, +36k µm² per mixer), lower RF pad capacitance (pads), a reworked shunt part on the COB (not allowed
+   on the unmodified board), the off-chip fallback LNA.
+2. **LNA stability rows that miss their limit.** (a) Above about 9 GHz both the differential and the common-mode input
+   resistance fall below 1.0 Ω (0.98–1.3 Ω and 0.43–0.58 Ω at 30 GHz); the disabled LNA reads 0.83 / 0.39 Ω there, so
+   this is the passive pad network, not the stage; the limit as written (0.1–30 GHz) is not met. (b) An undamped
+   capacitor of 100–500 pF directly on the rf_rx island rail with no die decap behind it gives −4 to −29 Ω of
+   common-mode resistance at 0.16–0.34 GHz: rule RQ-3 for the power-delivery owner.
+   (c) Below 100 MHz the bond loop resonates with the die decap: at ff, with low-loss die decap (0.03 Ω) and ≥ 1 nH per
+   rail, the common-mode resistance is negative in a band under 1 MHz wide at 45–100 MHz (`lna_close.py stab_lf`); in
+   duplex bias with the real supply network it is 0.74–0.88 Ω in the signal band (review 4).
+   Independent review 4 (reviewer scratch `scratch/review-lna4/`): NO-GO for publication in this state.
+3. **LNA input match** is fitted per chip (per-board tuned carrier parts, B18/B25). One fixed BOM over part and bond
+   tolerance is not shown; at 10 mm the fitted network reaches only −9.9 dB.
+4. **Extraction is capacitance-only** for every block here: wire and via resistance are not in any number (gate and
+   source wiring resistance adds directly to the LNA noise). No Monte Carlo.
+5. **Fallback external LNA** (allowed off-chip item, `byp` path): input impedance, gain plan and NF not simulated.
+6. **Spiral cells** `pt_lna_ind`, `pt_lna_deg`: DRC-clean GDS, analytic models only (no EM, no LVS netlist, no mutual
+   coupling: k = ±0.1 moves the pad resistance by ∓1.3 / +1.6 Ω); fill keep-out over them is not defined (SG-3). Review 4:
+   halving or removing the degeneration spirals keeps the LNA-plus-channel NF and adds 1–1.8 dB of gain (not yet scanned
+   over corners). No secondary ESD clamp at the gates behind the 4.4 pF input MIMs and no HBM check of this cell. The LNA uses die `VSS` (PC-21): ground-injection gain not simulated (PD2-15).
+7. **Mixers with the real LO.** As published, `pt_lo_ext` into the extracted mixers loses 3.3 dB at tt and 9.8 dB at
+   ss/32 °C/3.15 V against the ideal square LO (`analog/timing/README.md`, MW-20).
+8. **Stale records.** `rf_rx_chain.json`, `rf_rx_linearity.json`, `rf_rx-summary.json` and `rxmix_*-evidence.json`
+   describe earlier cells; `characterize.py --blocks lna` still contains the pre-COB board network and is superseded
+   for the LNA by `lna_close.py`. The filter's chain-NF penalty row uses a pinned chain reference from an earlier LNA
+   (MOD-05). Do not run `run_rf_rx.sh` or `summarize.py` until `characterize.py` is brought in line.
+9. **Read-back LVS note.** Three segments of the cascode-divider resistor are 8.667 µm in the netlist and 8.67 µm
+   drawn; netgen matches uniquely with properties, the device census flags the 3 nm.
+10. **bbfilter.** Current 5.22 mA against the 3.77 mA allocation (PWR-08); narrowest cutoff 1.56 MHz, so LoRa
+    203/406 kHz channels need a lower cutoff; calibration routine (inject → observe) not modelled; area repack
+    not started; no Monte Carlo (RFR-02, CNV-01).
+11. **DC offset.** TIA offset DAC and filter fine DAC are FPGA-calibrated; residual and dynamic offset against
     ADC full scale at high PGA gain is open (RXR-02).
-11. **Not covered in any bench:** wire and via resistance (C-only extraction), supply and substrate coupling,
-    IIP2, LO leakage to the antenna port, corners for linearity (RFR-05, RFR-07).
-12. **Analog nets crossing islands without isolation** (`DAC*`, `ADC*`, `BB*_OBS/INJ`): rule or clamp to be
+12. **Not covered in any bench:** supply and substrate coupling, IIP2, IIP3, LO leakage to the antenna port, corners
+    for linearity (RFR-05, RFR-07).
+13. **Analog nets crossing islands without isolation** (`DAC*`, `ADC*`, `BB*_OBS/INJ`): rule or clamp to be
     agreed (`integration/top/decisions.md` D-ANA).

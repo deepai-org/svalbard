@@ -221,11 +221,11 @@ LNA_PORTS = ['rf_in_p', 'rf_in_n', 'rf_out_p', 'rf_out_n', 'rf_outq_p', 'rf_outq
              'ct3', 'att0', 'att1', 'att2', 'att3', 'att4', 'src_p', 'src_n', 'tank_p', 'tank_n', 'lobias', 'tail', 'vtk']
 # D-RX-1 shunt-C trim, 4 bits (RC-16e): LSB 25 um^2 MIM per leg (5 um = minimum MIM side), range 15 LSB
 # (the old 3-bit trim had 7 LSB of 31 um^2); board match derived at code 7 (reset); envelope corners land at 3..12.
-LNA_CT_SIDE = (6.0, 8.5, 12.02, 17.0)   # ct0..ct3 = LC-tank tune trim (MIM per side 36..289 um^2) for the 2.0 nH tank coil, reset 7; spans L -15 %..+10 %
+LNA_CT_SIDE = (5.0, 7.1, 10.0, 14.1)   # ct0..ct3 = LC-tank tune trim (MIM per side 36..289 um^2) for the 2.0 nH tank coil, reset 7; spans L -15 %..+10 %
 LNA_TANK_FIX = 0                # fixed tank MIM across tank_p/tank_n (side, um)
 LNA_RFEED_L, LNA_RFEED_W = 0, 12.   # RC-16j: no resistive feed (the two tank spirals carry the DC)
 LNA_CMIX = 16.0                  # tank -> mixer coupling MIM side (um), per mixer per leg
-LNA_WCT = 40.                    # bit-0 differential switch width (x2, x4, x8)
+LNA_WCT = 30.                    # bit-0 differential switch width (x2, x4, x8)
 LNA_WSE, LNA_WRT = 60., 10.      # SE switch (D-RX-2), termination switch (RC-9)
 # pre-LNA attenuator (fork P): 5-bit binary-weighted NMOS switches directly across the two stage-1 gates
 # (gates sit at the same DC bias vg), behind the input coupling MIMs: 6 bits att0..att4 + gain_lo (MSB).
@@ -256,7 +256,8 @@ LNA_RCAS = (4.0, 26.0)           # cascode gate divider VDD -> vcas -> VSS (um o
 LNA_CCT_FW, LNA_CCT_NF, LNA_CCT_L, LNA_CCT_N = 20.0, 12, 3.0, 6   # 6 units x 12 fingers x 20 um x 3 um ~ 19 pF
 # Common-mode-only input loss: one MIM from each RF pad to the node ncm, one resistor from ncm to VSS (differential: ncm is
 # a virtual ground, the MIMs are plain pad capacitance; common mode: series R-C loss that outweighs the tail-capacitance term)
-LNA_CCM, LNA_RCM_W = 12.25, 17.  # 0.3 pF per leg; ppoly 1 um / 17 um ~ 60 ohm
+LNA_CCM, LNA_RCM_W = 10.0, 5.5   # 0.2 pF per leg (pad-side capacitance costs input resistance = channel loss; 0.1 pF left 0.33 ohm of
+                                 # common-mode margin with the real die decap); ppoly 1 um / 5.5 um ~ 180 ohm
 LNA_FW = 5.
 LNA_ATT_AT, LNA_BYP_AT, LNA_BYP_W = 'steer', 'pad', 10.
 LNA_BYP_C = 20.0                 # bypass series MIM side (um), ~0.8 pF   # RC-16j probes: 'tank' / 'pad' move them off the gate
@@ -355,9 +356,6 @@ def lna():
         else:
             s.nmos(t, 'vcas', x, LNA_WCAS)
         _res_fold(s, f'src_{sd}', 'tail', 1.0, LNA_RDEG_W)
-    for sd in 'pn':
-        t = f'tank_{sd}'
-        g = f'rf_in_{sd}' if not LNA_CIN else f'g_{sd}'
         if LNA_RFEED_L:
             _res_fold(s, 'VDD', t, LNA_RFEED_L, LNA_RFEED_W)
         for out in (f'rf_out_{sd}', f'rf_outq_{sd}'):

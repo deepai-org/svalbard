@@ -340,9 +340,9 @@ XMN237 VSS vtk VSS VSS nfet_03v3 w=19.98u l=3u
 XMN238 VSS vtk VSS VSS nfet_03v3 w=19.98u l=3u
 XMN239 VSS vtk VSS VSS nfet_03v3 w=19.98u l=3u
 XMN240 VSS vtk VSS VSS nfet_03v3 w=19.98u l=3u
-XC3 rf_in_p ncm cap_mim_2f0_m4m5_noshield c_width=12.25u c_length=12.25u
-XC4 rf_in_n ncm cap_mim_2f0_m4m5_noshield c_width=12.25u c_length=12.25u
-XR3 ncm VSS VSS ppolyf_u_1k r_width=17u r_length=1u
+XC3 rf_in_p ncm cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+XC4 rf_in_n ncm cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+XR3 ncm VSS VSS ppolyf_u_1k r_width=5.5u r_length=1u
 XR4 vgr vg VSS ppolyf_u_1k r_width=1u r_length=10u
 XC5 vg VSS cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
 XMP90 vtop enb VDD VDD pfet_03v3 w=4u l=0.28u
@@ -571,19 +571,23 @@ XMN449 vtk cgd5 x_p VSS nfet_03v3 w=5u l=0.28u
 XMN450 vtk cgd5 x_p VSS nfet_03v3 w=5u l=0.28u
 XMN451 vtk cgd5 x_p VSS nfet_03v3 w=5u l=0.28u
 XR9 src_p tail VSS ppolyf_u_1k r_width=40u r_length=1u
-XR10_0 vg r10_s1 VSS ppolyf_u_1k r_width=1u r_length=10u
-XR10_1 r10_s1 r10_s2 VSS ppolyf_u_1k r_width=1u r_length=10u
-XR10_2 r10_s2 r10_s3 VSS ppolyf_u_1k r_width=1u r_length=10u
-XR10_3 r10_s3 r10_s4 VSS ppolyf_u_1k r_width=1u r_length=10u
-XR10_4 r10_s4 r10_s5 VSS ppolyf_u_1k r_width=1u r_length=10u
-XR10_5 r10_s5 g_n VSS ppolyf_u_1k r_width=1u r_length=10u
-XR11 g_n gi_n VSS ppolyf_u_1k r_width=82u r_length=1u
-XMN452 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
-XMN453 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
-XMN454 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
-XMN455 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
-XMN456 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
-XMN457 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
+XC8 tank_p rf_out_p cap_mim_2f0_m4m5_noshield c_width=16u c_length=16u
+XMN452 rf_out_p island_off VSS VSS nfet_03v3 w=1u l=10u
+XC9 tank_p rf_outq_p cap_mim_2f0_m4m5_noshield c_width=16u c_length=16u
+XMN453 rf_outq_p island_off VSS VSS nfet_03v3 w=1u l=10u
+XR10 tank_p atb_vdcm VSS ppolyf_u_1k r_width=1u r_length=10u
+XC10 bpc_p rf_in_p cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+XMN454 bpc_p byp rf_out_p VSS nfet_03v3 w=5u l=0.28u
+XMN455 bpc_p byp rf_out_p VSS nfet_03v3 w=5u l=0.28u
+XMN456 bpc_p byp rf_outq_p VSS nfet_03v3 w=5u l=0.28u
+XMN457 bpc_p byp rf_outq_p VSS nfet_03v3 w=5u l=0.28u
+XR11_0 vg r11_s1 VSS ppolyf_u_1k r_width=1u r_length=10u
+XR11_1 r11_s1 r11_s2 VSS ppolyf_u_1k r_width=1u r_length=10u
+XR11_2 r11_s2 r11_s3 VSS ppolyf_u_1k r_width=1u r_length=10u
+XR11_3 r11_s3 r11_s4 VSS ppolyf_u_1k r_width=1u r_length=10u
+XR11_4 r11_s4 r11_s5 VSS ppolyf_u_1k r_width=1u r_length=10u
+XR11_5 r11_s5 g_n VSS ppolyf_u_1k r_width=1u r_length=10u
+XR12 g_n gi_n VSS ppolyf_u_1k r_width=82u r_length=1u
 XMN458 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
 XMN459 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
 XMN460 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
@@ -668,44 +672,44 @@ XMN538 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
 XMN539 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
 XMN540 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
 XMN541 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
-XC8 g_n rf_in_n cap_mim_2f0_m4m5_noshield c_width=47u c_length=47u
-XMN542 tank_n vcas x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN543 tank_n cgk0 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN544 vtk cgd0 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN545 tank_n cgk1 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN546 tank_n cgk1 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN547 vtk cgd1 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN548 vtk cgd1 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN549 tank_n cgk2 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN550 tank_n cgk2 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN551 tank_n cgk2 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN552 tank_n cgk2 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN553 vtk cgd2 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN554 vtk cgd2 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN555 vtk cgd2 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN556 vtk cgd2 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN557 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN558 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN559 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN560 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN561 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN562 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN542 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
+XMN543 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
+XMN544 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
+XMN545 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
+XMN546 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
+XMN547 x_n gi_n src_n VSS nfet_03v3 w=5u l=0.28u
+XC11 g_n rf_in_n cap_mim_2f0_m4m5_noshield c_width=47u c_length=47u
+XMN548 tank_n vcas x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN549 tank_n cgk0 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN550 vtk cgd0 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN551 tank_n cgk1 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN552 tank_n cgk1 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN553 vtk cgd1 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN554 vtk cgd1 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN555 tank_n cgk2 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN556 tank_n cgk2 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN557 tank_n cgk2 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN558 tank_n cgk2 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN559 vtk cgd2 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN560 vtk cgd2 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN561 vtk cgd2 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN562 vtk cgd2 x_n VSS nfet_03v3 w=4.69u l=0.28u
 XMN563 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
 XMN564 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN565 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN566 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN567 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN568 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN569 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN570 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN565 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN566 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN567 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN568 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN569 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN570 tank_n cgk3 x_n VSS nfet_03v3 w=4.69u l=0.28u
 XMN571 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
 XMN572 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
-XMN573 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN574 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN575 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN576 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN577 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN578 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN573 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN574 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN575 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN576 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN577 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
+XMN578 vtk cgd3 x_n VSS nfet_03v3 w=4.69u l=0.28u
 XMN579 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN580 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN581 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
@@ -715,12 +719,12 @@ XMN584 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN585 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN586 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN587 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN588 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN589 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN590 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN591 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN592 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN593 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN588 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN589 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN590 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN591 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN592 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN593 tank_n cgk4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN594 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN595 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN596 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
@@ -730,12 +734,12 @@ XMN599 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN600 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN601 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN602 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN603 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN604 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN605 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN606 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN607 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN608 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN603 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN604 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN605 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN606 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN607 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN608 vtk cgd4 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN609 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN610 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN611 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
@@ -760,12 +764,12 @@ XMN629 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN630 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN631 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN632 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN633 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN634 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN635 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN636 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN637 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
-XMN638 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN633 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN634 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN635 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN636 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN637 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN638 tank_n cgk5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN639 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN640 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN641 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
@@ -790,17 +794,13 @@ XMN659 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN660 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN661 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
 XMN662 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
-XR12 src_n tail VSS ppolyf_u_1k r_width=40u r_length=1u
-XC9 tank_p rf_out_p cap_mim_2f0_m4m5_noshield c_width=16u c_length=16u
-XMN663 rf_out_p island_off VSS VSS nfet_03v3 w=1u l=10u
-XC10 tank_p rf_outq_p cap_mim_2f0_m4m5_noshield c_width=16u c_length=16u
-XMN664 rf_outq_p island_off VSS VSS nfet_03v3 w=1u l=10u
-XR13 tank_p atb_vdcm VSS ppolyf_u_1k r_width=1u r_length=10u
-XC11 bpc_p rf_in_p cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
-XMN665 bpc_p byp rf_out_p VSS nfet_03v3 w=5u l=0.28u
-XMN666 bpc_p byp rf_out_p VSS nfet_03v3 w=5u l=0.28u
-XMN667 bpc_p byp rf_outq_p VSS nfet_03v3 w=5u l=0.28u
-XMN668 bpc_p byp rf_outq_p VSS nfet_03v3 w=5u l=0.28u
+XMN663 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN664 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN665 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN666 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN667 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
+XMN668 vtk cgd5 x_n VSS nfet_03v3 w=5u l=0.28u
+XR13 src_n tail VSS ppolyf_u_1k r_width=40u r_length=1u
 XC12 tank_n rf_out_n cap_mim_2f0_m4m5_noshield c_width=16u c_length=16u
 XMN669 rf_out_n island_off VSS VSS nfet_03v3 w=1u l=10u
 XC13 tank_n rf_outq_n cap_mim_2f0_m4m5_noshield c_width=16u c_length=16u
@@ -846,9 +846,9 @@ XMN685 cgk5 gain_lo VSS VSS nfet_03v3 w=1u l=0.28u
 XMP102 cgd5 gain_lo_b vcas VDD pfet_03v3 w=2u l=0.28u
 XMN686 cgd5 gain_lo_b VSS VSS nfet_03v3 w=1u l=0.28u
 XX8 ct0 ct0_b VDD VSS pt_rfrx_inv
-XC15 tank_p x0c_p cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+XC15 tank_p x0c_p cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
 XMN687 x0c_p VSS ct0_b VSS nfet_03v3 w=1u l=1u
-XC16 tank_n x0c_n cap_mim_2f0_m4m5_noshield c_width=6u c_length=6u
+XC16 tank_n x0c_n cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
 XMN688 x0c_n VSS ct0_b VSS nfet_03v3 w=1u l=1u
 XMN689 x0c_p ct0 x0c_n VSS nfet_03v3 w=5u l=0.28u
 XMN690 x0c_p ct0 x0c_n VSS nfet_03v3 w=5u l=0.28u
@@ -856,13 +856,13 @@ XMN691 x0c_p ct0 x0c_n VSS nfet_03v3 w=5u l=0.28u
 XMN692 x0c_p ct0 x0c_n VSS nfet_03v3 w=5u l=0.28u
 XMN693 x0c_p ct0 x0c_n VSS nfet_03v3 w=5u l=0.28u
 XMN694 x0c_p ct0 x0c_n VSS nfet_03v3 w=5u l=0.28u
-XMN695 x0c_p ct0 x0c_n VSS nfet_03v3 w=5u l=0.28u
-XMN696 x0c_p ct0 x0c_n VSS nfet_03v3 w=5u l=0.28u
 XX9 ct1 ct1_b VDD VSS pt_rfrx_inv
-XC17 tank_p x1c_p cap_mim_2f0_m4m5_noshield c_width=8.5u c_length=8.5u
-XMN697 x1c_p VSS ct1_b VSS nfet_03v3 w=1u l=1u
-XC18 tank_n x1c_n cap_mim_2f0_m4m5_noshield c_width=8.5u c_length=8.5u
-XMN698 x1c_n VSS ct1_b VSS nfet_03v3 w=1u l=1u
+XC17 tank_p x1c_p cap_mim_2f0_m4m5_noshield c_width=7.1u c_length=7.1u
+XMN695 x1c_p VSS ct1_b VSS nfet_03v3 w=1u l=1u
+XC18 tank_n x1c_n cap_mim_2f0_m4m5_noshield c_width=7.1u c_length=7.1u
+XMN696 x1c_n VSS ct1_b VSS nfet_03v3 w=1u l=1u
+XMN697 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
+XMN698 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
 XMN699 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
 XMN700 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
 XMN701 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
@@ -873,17 +873,17 @@ XMN705 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
 XMN706 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
 XMN707 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
 XMN708 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
-XMN709 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
-XMN710 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
-XMN711 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
-XMN712 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
-XMN713 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
-XMN714 x1c_p ct1 x1c_n VSS nfet_03v3 w=5u l=0.28u
 XX10 ct2 ct2_b VDD VSS pt_rfrx_inv
-XC19 tank_p x2c_p cap_mim_2f0_m4m5_noshield c_width=12.02u c_length=12.02u
-XMN715 x2c_p VSS ct2_b VSS nfet_03v3 w=1u l=1u
-XC20 tank_n x2c_n cap_mim_2f0_m4m5_noshield c_width=12.02u c_length=12.02u
-XMN716 x2c_n VSS ct2_b VSS nfet_03v3 w=1u l=1u
+XC19 tank_p x2c_p cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+XMN709 x2c_p VSS ct2_b VSS nfet_03v3 w=1u l=1u
+XC20 tank_n x2c_n cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+XMN710 x2c_n VSS ct2_b VSS nfet_03v3 w=1u l=1u
+XMN711 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
+XMN712 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
+XMN713 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
+XMN714 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
+XMN715 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
+XMN716 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
 XMN717 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
 XMN718 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
 XMN719 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
@@ -902,25 +902,25 @@ XMN731 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
 XMN732 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
 XMN733 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
 XMN734 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN735 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN736 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN737 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN738 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN739 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN740 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN741 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN742 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN743 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN744 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN745 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN746 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN747 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
-XMN748 x2c_p ct2 x2c_n VSS nfet_03v3 w=5u l=0.28u
 XX11 ct3 ct3_b VDD VSS pt_rfrx_inv
-XC21 tank_p x3c_p cap_mim_2f0_m4m5_noshield c_width=17u c_length=17u
-XMN749 x3c_p VSS ct3_b VSS nfet_03v3 w=1u l=1u
-XC22 tank_n x3c_n cap_mim_2f0_m4m5_noshield c_width=17u c_length=17u
-XMN750 x3c_n VSS ct3_b VSS nfet_03v3 w=1u l=1u
+XC21 tank_p x3c_p cap_mim_2f0_m4m5_noshield c_width=14.1u c_length=14.1u
+XMN735 x3c_p VSS ct3_b VSS nfet_03v3 w=1u l=1u
+XC22 tank_n x3c_n cap_mim_2f0_m4m5_noshield c_width=14.1u c_length=14.1u
+XMN736 x3c_n VSS ct3_b VSS nfet_03v3 w=1u l=1u
+XMN737 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN738 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN739 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN740 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN741 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN742 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN743 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN744 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN745 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN746 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN747 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN748 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN749 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
+XMN750 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
 XMN751 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
 XMN752 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
 XMN753 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
@@ -955,54 +955,24 @@ XMN781 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
 XMN782 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
 XMN783 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
 XMN784 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN785 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN786 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN787 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN788 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN789 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN790 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN791 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN792 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN793 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN794 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN795 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN796 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN797 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN798 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN799 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN800 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN801 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN802 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN803 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN804 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN805 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN806 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN807 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN808 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN809 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN810 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN811 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN812 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN813 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
-XMN814 x3c_p ct3 x3c_n VSS nfet_03v3 w=5u l=0.28u
 XX12 se se_b VDD VSS pt_rfrx_inv
 XC23 rf_in_n se_x cap_mim_2f0_m4m5_noshield c_width=11.6u c_length=11.6u
-XMN815 se_x VSS se_b VSS nfet_03v3 w=1u l=1u
-XMN816 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN817 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN818 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN819 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN820 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN821 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN822 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN823 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN824 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN825 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN826 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
-XMN827 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN785 se_x VSS se_b VSS nfet_03v3 w=1u l=1u
+XMN786 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN787 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN788 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN789 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN790 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN791 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN792 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN793 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN794 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN795 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN796 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
+XMN797 se_x se VSS VSS nfet_03v3 w=5u l=0.28u
 XC24 rf_in_p VSS cap_mim_2f0_m4m5_noshield c_width=5.5u c_length=5.5u
 XR17 g_p rt_p VSS ppolyf_u_1k r_width=2u r_length=3u
 XR18 g_n rt_n VSS ppolyf_u_1k r_width=2u r_length=3u
-XMN828 rt_p rt rt_n VSS nfet_03v3 w=5u l=0.28u
-XMN829 rt_p rt rt_n VSS nfet_03v3 w=5u l=0.28u
+XMN798 rt_p rt rt_n VSS nfet_03v3 w=5u l=0.28u
+XMN799 rt_p rt rt_n VSS nfet_03v3 w=5u l=0.28u
 .ends

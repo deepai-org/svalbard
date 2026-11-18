@@ -27,7 +27,9 @@ KT = 4 * 1.380649e-23 * 300.15
 
 
 def _sub(body):
-    return f'.subckt pt_lna {PORTS}\n{body}\n.ends\n'
+    # DC ties on the spiral pins: the benches hang the degeneration / tank spiral models on src_*, tail, vtk, tank_* (floating in a hand-built 'LNA')
+    ties = ''.join(f'Rtie{k} {n} VSS 1e6\n' for k, n in enumerate(('src_p', 'src_n', 'tail', 'vtk', 'tank_p', 'tank_n')))
+    return f'.subckt pt_lna {PORTS}\n{body}\n{ties}.ends\n'
 
 
 def _buf(src_p='rf_in_p', src_n='rf_in_n', gain=1.0):

@@ -10,25 +10,27 @@ debug: bit 5).
 
 ```
 .subckt pt_lna rf_in_p rf_in_n rf_out_p rf_out_n rf_outq_p rf_outq_n ibias en gain_lo byp ct0 ct1 ct2 se rt
-+ island_off atb_nbias atb_vdcm VDD VSS ct3 att0 att1 att2 att3 att4 src_p src_n tank_p tank_n lobias
++ island_off atb_nbias atb_vdcm VDD VSS ct3 att0 att1 att2 att3 att4 src_p src_n tank_p tank_n lobias tail vtk
 ```
 
 | Pin | Connect to | Notes |
 | --- | --- | --- |
 | `rf_in_p`, `rf_in_n` | protected `RF_RX_P` / `RF_RX_N` pad nodes | AC-coupled inside the LNA (MIM); no DC path to the pad |
-| `rf_out_p`, `rf_out_n` | `rxmix_i.rf_p/n` only | one output pair per mixer, each with its own 16 µm coupling MIM from the tank |
+| `rf_out_p`, `rf_out_n` | `rxmix_i.rf_p/n` only | one output pair per mixer, each with its own 16 µm coupling MIM from the tank; 20 kΩ across each pair inside the LNA |
 | `rf_outq_p`, `rf_outq_n` | `rxmix_q.rf_p/n` only | must not be left open or shorted to `rf_out_*` |
-| `tank_p`, `tank_n` | one `pt_lna_ind` spiral each: terminal A = rf_rx rail, B = `tank_p` (resp. `tank_n`) | 170 µm, 3 turns, 1.35 nH; carries the LNA DC current. Abut the tank pins, keep the two spirals ≥ 1 diameter apart or orthogonal, no fill / MIM / decap over them. Without the spirals the LNA has no DC feed |
-| `src_p`, `src_n` | one `pt_lna_deg` spiral each: terminal A = `src_p` (resp. `src_n`), B = `AGND_RX` | on-chip source degeneration, 140 µm, 2 turns, 0.47 nH; not pads. Abut the source pins, ground end straight onto the LNA ground strap, no fill / MIM / decap over them; carries the stage DC current |
+| `tank_p`, `tank_n` | one `pt_lna_ind` spiral each: terminal A = `vtk`, B = `tank_p` (resp. `tank_n`) | 220 µm, 4 turns, 2.01 nH, 57.2k µm² each; carries half the LNA DC current. Abut the tank pins, keep the two spirals ≥ 1 diameter apart or orthogonal, no fill / MIM / decap over them. Without the spirals the LNA has no DC feed |
+| `vtk` | terminal A of both `pt_lna_ind` spirals, nothing else | tank centre tap: fed inside the core from `VDD` through an always-on PMOS (~12 Ω) and returned to `VSS` by a 19 pF MOS capacitor; carries the full 18–19 mA; VDD − 0.2 V. No decap, ESD or other block on this net |
+| `src_p`, `src_n` | one `pt_lna_deg` spiral each: terminal A = `src_p` (resp. `src_n`), B = `tail` | on-chip source degeneration, 140 µm, 2 turns, 0.47 nH, 25.2k µm² each; not pads. Abut the source pins, no fill / MIM / decap over them; each carries half the stage DC current |
+| `tail` | terminal B of both `pt_lna_deg` spirals, nothing else | drain of the on-chip cascoded tail current source (true differential pair); ~0.8 V; carries the full stage current. The spiral substrate / shield terminal goes to the LNA `VSS` |
 | `ibias` | 10 µA sourced from the RF bias bank (`BIAS_lna`) | NMOS diode on the pin |
 | `en` | `lna.state != off` | |
 | `att0..att4`, `gain_lo` | `lna.match.att[4:0]`, `lna.match.gain_lo` | attenuator code = {`gain_lo`, `att4..att0`}; `gain_lo` is the MSB, not a fixed gain step |
 | `byp` | `debug.rf_rx_bypass.lna` | pad to both mixer feeds through a series MIM; use with `en` = 0 (validator rule `lna_bypass_vs_lna`) |
-| `ct0..ct3` | `lna.match.ctrim[3:0]`, reset 7 | tank tune |
+| `ct0..ct3` | `lna.match.ctrim[3:0]`, reset 7 | tank tune (0.05 pF per leg per LSB); bring-up tunes on the baseband noise floor |
 | `se`, `rt` | `lna.match.se`, `lna.match.rterm`, reset 0 | single-ended input; Q-spoil |
 | `lobias` | `lna.bias.lo`, reset 0 | 1 = reduced bias; validator rule `lna_reduced_bias_with_tx` requires 1 whenever the RF driver is active |
 | `atb_nbias`, `atb_vdcm` | ATB1 code 16 (`lna_bias`), code 15 (`rf_vcm`) | |
-| `VDD`, `VSS` | rf_rx island rail, `AGND_RX` | |
+| `VDD`, `VSS` | rf_rx island rail, die `VSS` | no undamped decap directly on the island rail at the LNA (RQ-3) |
 
 ## 2. pt_rxmix_i / pt_rxmix_q
 
@@ -120,9 +122,9 @@ models, or `('include', deck)` for the extracted LO distribution).
 
 ## 6. Open items
 
-- LNA and mixer cells are not published; the pin lists above are the ones bound at the top and may still change
-  with the LNA stability fix.
+- LNA and mixer cells are not published; the pin lists above are the ones to bind (interface rows RQ-1, RQ-2).
+
 - `pt_lna_ind` and `pt_lna_deg` have no LVS netlist and are `demand` masters (`integration/top/decisions.md` D-LNA).
-- `AGND_RX` has no bond plan under the fixed bond layout; whether the mixers share it is not agreed (D-LNA).
+- The LNA `VSS` is die VSS (PC-21); there is no `AGND_RX` net.
 - The unused N leg and inject path of `bb_tap_wmon` at the ties above: to be confirmed safe (D-WMON).
 - `DAC*`, `ADC*` and `BB*_OBS/INJ` cross islands without isolation (D-ANA).

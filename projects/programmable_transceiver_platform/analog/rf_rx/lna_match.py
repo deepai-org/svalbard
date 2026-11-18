@@ -496,3 +496,75 @@ def board_trim_nominal(work, view, corner):
 # 1.20 dB (Q 80); tt nominal 1.25 / 0.69 dB.
 BOARD_TRIM = dict(topo=['sL', 'pC', 'sL', 'pT'], ratio=2.5,
                   net=[['sL', 3.23e-9], ['pC', 1.50e-12], ['sL', 1.305e-9], ['pT', 0.825e-12]])
+
+
+# ---------------------------------------------------------------- real COB channel (RFR-13)
+# Differential-mode ladder of the real RF_RX path (spec/package-channel.md, design-assumptions.md row "RF_RX path"): bond ->
+# finger -> 5.5 mm of 86.6 ohm COB trace (3 sections) -> via -> connector -> d_mm of 100 ohm carrier line -> carrier parts.
+# Per-leg series L with its Q; per-leg shunt C to ground enters as half its value across the pair.  No part can sit on the COB.
+CH_BOND, CH_BOND_Q, CH_TRACE_MM = 2.45e-9, 50., 5.5
+CARRIER_Q = dict(pess=dict(L=40., C=100.), opt=dict(L=80., C=300.))
+
+
+def channel_ladder(parts, d_mm=2.0, bond=CH_BOND, conn=(1.0e-9, 0.25e-12), tscale=1.0, q='pess', ct=None):
+    """parts: carrier match elements from the channel end toward the source, e.g. [('pL', 7e-8), ('sC', 0.4e-12)]."""
+    net = [['sL', bond, CH_BOND_Q], ['pC', 0.08e-12 / 2, 50.]]
+    for _ in range(3):
+        net += [['sL', 0.511e-9 * CH_TRACE_MM * tscale / 3, 40.], ['pC', 0.0681e-12 * CH_TRACE_MM * tscale / 3 / 2, 50.]]
+    net += [['sL', 0.30e-9, 40.], ['pC', 0.16e-12 / 2, 50.], ['sL', conn[0], 40.], ['pC', conn[1] / 2, 50.]]
+    n2 = max(1, int(round(d_mm / 3)))
+    for _ in range(n2):
+        net += [['sL', 0.33e-9 * d_mm / n2, 60.], ['pC', 0.134e-12 * d_mm / n2 / 2, 50.]]
+    cq = CARRIER_Q[q]
+    net += [[t_, v, cq['L'] if t_ in ('sL', 'pL') else cq['C']] for t_, v in parts]
+    m = dict(order='ladder', lossy=True, lb=bond, lb_actual=bond, net=net, d_mm=d_mm, parts=[list(x) for x in parts], part_q=q)
+    if ct is not None:
+        m['ct'] = ct
+    return m
+
+
+def _abcd_ladder(net, F, f_q=2.44e9):
+    """Differential ABCD (source side -> pad) of a channel_ladder()['net'] list; element loss as in tb._ladder_net."""
+    w, w0 = 2 * np.pi * F, 2 * np.pi * f_q
+    A = np.ones_like(F, dtype=complex); B = np.zeros_like(A); C = np.zeros_like(A); D = np.ones_like(A)
+    for t_, v, q in reversed(net):
+        if t_ == 'sL':
+            z = 2 * (1j * w * v + w0 * v / q); A, B, C, D = A, A * z + B, C, C * z + D
+        elif t_ == 'sC':
+            z = 2 * (1 / (1j * w * v) + 1 / (w0 * v * q)); A, B, C, D = A, A * z + B, C, C * z + D
+        else:
+            y = (1j * w * v + w0 * v / q) if t_ == 'pC' else 1 / (1j * w * v + w0 * v / q)
+            A, B, C, D = A + B * y, B, C + D * y, D
+    return A, B, C, D
+
+
+def channel_eval(net, F, z, rs=100.):
+    """S11 (dB) at the source and transducer loss (dB) into the pad impedance z(F)."""
+    A, B, C, D = _abcd_ladder(net, F); i2 = 1 / z; v1 = A + B * i2; i1 = C + D * i2; zin = v1 / i1
+    s11 = 20 * np.log10(np.abs((zin - rs) / (zin + rs)))
+    return s11, -10 * np.log10(np.real(1 / np.conj(z)) / (np.abs(v1 + rs * i1) ** 2 / (4 * rs)))
+
+
+CH_TOPOS = (('pL', 'sC'), ('sC', 'pC'), ('sL', 'pC'))
+
+
+def channel_fit(zpad, d_mm=2.0, q='pess', topos=CH_TOPOS, seeds=5, **kw):
+    """Per-chip carrier match on the real channel for a pad impedance zpad at 2.44 GHz (series R-C model across the band):
+    least in-band loss with S11 <= -10.5 dB over 2.395-2.4885 GHz.  Returns (channel_ladder dict, worst S11, worst in-band loss)."""
+    from scipy.optimize import minimize
+    F = np.linspace(2.395e9, 2.4885e9, 41); band = (F >= 2.4e9) & (F <= 2.4835e9)
+    c = -1 / (2 * np.pi * 2.44e9 * zpad.imag); z = zpad.real + 1 / (1j * 2 * np.pi * F * c)
+    start = {'sL': 3e-9, 'sC': 1.0e-12, 'pC': 1.0e-12, 'pL': 4e-9}
+    best = None
+    for topo in topos:
+        def ev(x):
+            s11, loss = channel_eval(channel_ladder(list(zip(topo, np.exp(x))), d_mm=d_mm, q=q, **kw)['net'], F, z)
+            return s11.max(), loss[band].max()
+        for s in range(seeds):
+            x0 = np.log([start[t_] for t_ in topo]) + np.random.RandomState(s).normal(0, 0.7, len(topo)) * (s > 0)
+            r = minimize(lambda x: ev(x)[1] + 3 * max(0, ev(x)[0] + 10.5), x0, method='Nelder-Mead', options=dict(maxiter=600, xatol=1e-3, fatol=1e-4))
+            s11, loss = ev(r.x)
+            if best is None or loss + 5 * max(0, s11 + 10) < best[0]:
+                best = (loss + 5 * max(0, s11 + 10), topo, np.exp(r.x), s11, loss)
+    _, topo, vals, s11, loss = best
+    return channel_ladder([(t_, float(v)) for t_, v in zip(topo, vals)], d_mm=d_mm, q=q, **kw), float(s11), float(loss)

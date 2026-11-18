@@ -339,6 +339,13 @@ PKG_MODEL = Path(__file__).resolve().parents[4] / 'scratch' / 'reviews' / 'pads-
 L_BOND_SUP = 1.0e-9     # VDD / VSS bond + package per pin (pessimistic: no island decap credited off chip)
 
 
+def _die_ref(deck):
+    """Control, bias, offset-DAC and LO sources of the stability decks are on-chip signals: reference them to the die VSS node
+    (review 5: referenced to board ground they shunt the ground bounce and hid 0.2-0.5 ohm of common-mode loss at 5-9 GHz)."""
+    import re
+    return re.sub(r'(?m)^(V(?!DDX)\w+ \S+) 0 ', r'\1 vss ', deck)
+
+
 def stability(work, view, corner, ct=7, att=0, mode='active', rt=False, f1=0.1e9, f2=30e9, ppd=40, ls=None, bond=None, lsup=None,
               csrc=0., deg=None, cdec=0., rdec=0., rsw=0., cdie=0., rdie=0., pkg=None):
     """LNA two-port with RF bond wires (`bond`, default BOND = 3.0 nH/leg), source downbonds `ls` (default tb.LNA_LS)
@@ -406,7 +413,7 @@ let z22=v(rf_out_p)-v(rf_out_n)
 wrdata {tag}_b.txt z12 z22
 .endc
 """
-    tb.run(work, f'{tag}.cir', body, corner)
+    tb.run(work, f'{tag}.cir', _die_ref(body), corner)
     a = S.read_table(Path(work) / f'{tag}_a.txt'); b = S.read_table(Path(work) / f'{tag}_b.txt')
     f = np.array([r[0] for r in a])
     z11 = np.array([complex(r[1], r[2]) for r in a]); z21 = np.array([complex(r[4], r[5]) for r in a])
@@ -447,7 +454,7 @@ print zmin
 wrdata {tag}_mx{lo}_zr.txt zr
 .endc
 """
-        log, m = tb.run(work, f'{tag}_mx{lo}.cir', body2, corner)
+        log, m = tb.run(work, f'{tag}_mx{lo}.cir', _die_ref(body2), corner)
         rein.append(m.get('zmin'))
         zt = S.read_table(Path(work) / f'{tag}_mx{lo}_zr.txt')
         if zt:
@@ -455,7 +462,7 @@ wrdata {tag}_mx{lo}_zr.txt zr
         # common mode: equal in-phase currents into both bond ends, Zcm = v_avg / (2 x 0.5 A)
         body3 = body2.replace('Iin pn pp DC 0 AC 1', 'Icp 0 pp DC 0 AC 0.5\nIcn 0 pn DC 0 AC 0.5').replace(
             'let zr=real(v(pp)-v(pn))', 'let zr=real((v(pp)+v(pn))/2)').replace(f'{tag}_mx{lo}_zr.txt', f'{tag}_cm{lo}_zr.txt')
-        log, m3 = tb.run(work, f'{tag}_cm{lo}.cir', body3, corner)
+        log, m3 = tb.run(work, f'{tag}_cm{lo}.cir', _die_ref(body3), corner)
         recm.append(m3.get('zmin'))
         zt = S.read_table(Path(work) / f'{tag}_cm{lo}_zr.txt')
         if zt:

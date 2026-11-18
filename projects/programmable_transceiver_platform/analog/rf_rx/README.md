@@ -12,7 +12,7 @@ sources: `chip-top-pins.md`. Risks: IDs refer to `spec/risk-register.md`.
 | `bbfilter_i`, `bbfilter_q` | `pt_bbfilter_i/q` | published, committed | 341,901 (586.3 × 583.15) | 0 / 0, unique | current: matches netlist and GDS |
 | `bb_tap` | `pt_bb_tap` | published on disk | 19,511 (99.08 × 196.92) | 0 / 0, unique | current: matches netlist and GDS (20 corners) |
 | `rxmix_i`, `rxmix_q` | `pt_rxmix_i/q` | candidate, not published | 35,442 (192.73 × 183.9) | 0 / 0, unique | current (reduced 10-corner set); chain NF / IIP3 rows open |
-| `lna` | `pt_lna` | candidate, not published (stability passes on the package model to 8 GHz; noise figure, IIP3 and one S11 row miss) | 64,712 (266.04 × 243.24), plus two 57.2k tank and two 14.0k degeneration spirals | 0 / 0, unique; read-back from GDS unique | `generated/lna-evidence.json` (current, `lna_close.py`) |
+| `lna` | `pt_lna` | candidate, not published (reviews 4 and 5: NO-GO as recorded; stable in every physical case tried, margins miss above 5 GHz; noise figure, IIP3 and one S11 row miss) | 64,712 (266.04 × 243.24), plus two 57.2k tank and two 14.0k degeneration spirals | 0 / 0, unique; read-back from GDS unique | `generated/lna-evidence.json` (current, `lna_close.py`) |
 
 Areas and DRC/LVS are from `generated/<block>-layout.json`. `integration/top/pt_chip.conn` binds the cells in
 `generated/` (masters `generated/<block>.ext.spice`), including the candidate LNA and mixer pin lists. The
@@ -115,7 +115,7 @@ LC-tuned transconductance stage, true differential:
 - One cascode (300/0.28, 64 units) per leg into `tank_p/n`; current-steering attenuator `att[4:0]` + `gain_lo` (MSB):
   units are steered to the tank or dumped onto `vtk` (cascode gates switched by PMOS pass devices).
 - Tank: two `pt_lna_ind` spirals (220 µm, 4 turns, 2.01 nH) from the centre tap `vtk` to `tank_p/n`; `vtk` is fed from
-  `VDD` through an always-on PMOS (~12 Ω) and returned to `VSS` by a 19 pF `nfet_06v0` gate capacitor, so the load current
+  `VDD` through an always-on PMOS (~12 Ω) and returned to `VSS` by a 10 pF `nfet_06v0` gate capacitor, so the load current
   closes on chip and not through the supply bonds. `ct[3:0]` tank tune, 0.05 pF per leg per LSB.
 - Secondary ESD clamps behind the pad MIMs: an off PMOS (junction to `VDD`) and an off NMOS (junction to `VSS`), 4 µm each,
   at both gate nodes and both bypass nodes.
@@ -200,13 +200,13 @@ on bonds 67/68 (site option B). Limits were fixed before the runs. Rows marked *
 
 | Row | Limit | Result | State |
 | --- | --- | --- | --- |
-| Area; Magic / KLayout DRC; LVS; read-back LVS from the GDS | 0 / 0, unique | 64,712 µm² (266.04 × 243.24); 0 / 0; unique; unique (1016 devices; census flags 8.667 vs 8.67 µm on three resistor segments), negative control fails as required; spirals DRC 0 | pass |
+| Area; Magic / KLayout DRC; LVS; read-back LVS from the GDS | 0 / 0, unique | 64,712 µm² (266.04 × 243.24); 0 / 0; unique; unique (1060 devices, GDS 34c8dcd1; census flags 8.667 vs 8.67 µm on three resistor segments), negative control fails as required; spirals DRC 0 | pass |
 | Supply current, RX bias / `lobias` | ≤ 19.0 / ≤ 11.8 mA at every corner | 17.75–18.62 / 10.80–11.45 mA; off 1–8 nA | pass |
-| Stability on the pads owner's coupled bond model, site B × min / nom / max, 38 rows (supply cases incl. 0.9–5.4 nF die decap and 500 pF on the island, RX and duplex bias, five processes, attenuator 63, bypass, tank codes), 5 MHz–30 GHz | μ > 1, K > 1, Re(Zin) ≥ 1.0 Ω, Re(Zcm) ≥ 1.0 Ω | μ ≥ 1.007, K ≥ 3.0, differential ≥ 1.33 Ω; common mode ≥ 1.10 Ω from 5 MHz to 8 GHz in every row; 0.52 Ω at 30 GHz (passive pad network) | pass to 8 GHz; **miss** above 9 GHz as written (kept, coordinator decision) |
-| Same limits on lossless lumped rails (no wire resistance), 61 rows 0.1–30 GHz + 11 rows from 5 MHz | same | μ ≥ 1.007, K ≥ 2.96; differential 0.81–1.04 Ω and common mode 0.40–0.52 Ω at 30 GHz (disabled LNA 0.70 / 0.37 Ω); 3 nF / 0.03 Ω die decap with 1 / 2 nH per rail at ff: 0.0 / −4.3 Ω at 67 / 47 MHz; 0.9 nF + 500 pF island: −13.8 Ω at 97 MHz; undamped island decap alone: −8.5 to −38.7 Ω | **miss** (RQ-3, RQ-3a stand as supply requirements) |
-| Start-up transients (enable step at ff, island power-up at ss; coupled model, low-loss supply, real mixers), 16 µs | no oscillation: detrended residual ≤ 1 mV pp over 12–16 µs | residuals ≤ 5 µV, differential ≤ 0.2 µV pp; bias settles monotonically with τ ≈ 1.6 µs (about 8 µs to 1 %) | pass |
+| Stability on the pads owner's coupled bond model, site B × min / nom / max, 38 rows (supply cases incl. 0.9–5.4 nF die decap and 500 pF on the island, RX and duplex bias, five processes, attenuator 63, bypass, tank codes), 5 MHz–30 GHz; control, bias and LO sources referenced to die VSS | μ > 1, K > 1, Re(Zin) ≥ 1.0 Ω, Re(Zcm) ≥ 1.0 Ω | μ ≥ 1.007, K ≥ 3.0, differential ≥ 1.33 Ω (≥ 3.0 Ω below 8 GHz); common mode ≥ 2.1 Ω from 5 MHz to 1 GHz, positive everywhere, but below 1.0 Ω from about 5 GHz up: 0.78–0.99 Ω at 5–8 GHz in 37 of 38 rows (disabled LNA 1.07 Ω at 8 GHz), 0.53 Ω at 30 GHz | **miss** above about 5 GHz |
+| Same limits on lossless lumped rails (no wire resistance), 61 rows 0.1–30 GHz + 11 rows from 5 MHz | same | μ ≥ 1.007, K ≥ 2.96; differential 0.81–1.04 Ω and common mode 0.37–0.55 Ω at 30 GHz (disabled LNA 0.70 / 0.35 Ω); 3 nF / 0.03 Ω die decap with 1 / 2 nH per rail at ff: −0.85 / −6.4 Ω at 67 / 47 MHz; 0.9 nF + 500 pF island: −14.9 Ω at 97 MHz; undamped island decap alone: −9 to −41 Ω; passes with 0.5 nH per rail or 0.1 Ω of decap loss | **miss** (RQ-3, RQ-3a stand as supply requirements) |
+| Start-up transients (enable step at ff, island power-up at ss; coupled model, low-loss supply, real mixers), 16 µs | no oscillation: detrended residual ≤ 1 mV pp over 12–16 µs | residuals ≤ 5 µV, raw ≤ 56 µV pp, differential ≤ 0.2 µV pp; bias settles with τ ≈ 1.6 µs (about 8 µs to 1 %); duplex-enable and ff power-up cases: see the evidence file | pass (two cases) |
 | Negative controls | bench must fail | broken LNA (tail shorted, feed on VDD, CM network shorted): −38 Ω; bench self-tests all as required | pass |
-| 2 kV HBM on RF_RX_P, LNA unpowered (pads owner's bench), with the secondary clamps | ≤ 5.0 V on every 3.3 V oxide | CS gates ≤ 1.0 V, no device over the limit (without the clamps: 5.3–5.8 V gate-to-bulk, 5.9–6.4 V on the bypass switches) | pass |
+| 2 kV HBM on RF_RX_P, LNA unpowered (pads owner's bench), with the secondary clamps | ≤ 5.0 V on every 3.3 V oxide | CS gates ≤ 1.0 V, no device over the limit (without the clamps: 5.3–5.8 V gate-to-bulk, 5.9–6.4 V on the bypass switches: that run is the failing control; the MIM-shorted control no longer fails with the clamps) | pass |
 | S11 on the real channel, carrier parts at connector + 2 mm, fitted per chip | ≤ −10 dB, 2.395–2.4885 GHz | −10.4 to −11.1 dB; ff −9.94 dB; at 10 mm −10.0 dB | **miss** at ff by 0.06 dB |
 | LNA gain, source EMF to mixer feeds (50 Ω per leg model), real channel | — | tt 0.9–1.2 dB (ideal lossless match 4.4 dB); ss −1.0…−0.1; ff 1.8–2.6; pessimistic end −6.2…−5.9 dB | information |
 | LNA NF including the real channel (3.0–3.5 dB of loss before the LNA; pad resistance 5–7 Ω) | ≤ 6.0 dB; pessimistic end derated +1.5 dB | tt 3.7–4.0; ss 4.1–4.6; ff 3.3–3.7; sf 3.8–4.2; fs 3.5–3.9 dB; pessimistic end 5.5–5.8 dB (7.3 derated) | pass / **miss** at the pessimistic end |
@@ -231,9 +231,10 @@ measured OTA noise, not rerun); LO drive at the ideal-square level instead of th
    it: 18 dB of loss from the pads to the mixers, about 20 dB system NF with a 15 dB external LNA (helper run, previous
    layout); it is a rescue path for a dead LNA only.
 2. **LNA stability rows that miss their limit.** (a) Above about 9 GHz the resistances sit on the passive pad network and
-   are below 1.0 Ω (kept as a miss). (b) With lossless lumped rails the supply anti-resonance (45–100 MHz) and an undamped
-   island decap still give negative common-mode resistance; with the pads owner's coupled model (0.25 Ω per wire) every row
-   passes to 8 GHz. Supply rules RQ-3 / RQ-3a are requirements on power delivery.
+   are below 1.0 Ω (kept as a miss); with the bench sources referenced to die VSS (review 5) the common mode is already
+   0.78–0.99 Ω from about 5 GHz, where the disabled LNA still reads above 1 Ω. (b) With lossless lumped rails the supply anti-resonance (45–100 MHz) and an undamped
+   island decap still give negative common-mode resistance; with the pads owner's coupled model every row is ≥ 2.1 Ω
+   below 1 GHz. Supply rules RQ-3 / RQ-3a are requirements on power delivery.
 3. **S11 at ff is −9.94 dB**, IIP3 −11.0 dBm (tt, ideal match), pessimistic-end LNA NF 5.5–5.8 dB: see 5a. The match is
    fitted per chip (per-board tuned carrier parts, B18/B25); one fixed BOM over tolerance is not shown.
 4. **Extraction is capacitance-only.** A Magic `extresist` netlist of the LNA GDS was produced (1,372 resistors, same ports
@@ -249,7 +250,7 @@ measured OTA noise, not rerun); LO drive at the ideal-square level instead of th
 8. **Records.** `rxmix_*`, `bb_tap`, `rf_rx_chain.json` and the summary are regenerated from the cells on disk (mixers on
    a reduced 10-corner set); `rf_rx_linearity.json` is stale. `run_rf_rx.sh` is evidence-only by default; section 5 above
    is not re-rendered (`summarize.py --readme`).
-9. **LNA warm-up** is about 8 µs after `en` (gate-bias filter). The 19 pF tank-return capacitor is on 6 V devices; the
+9. **LNA warm-up** is about 8 µs after `en` (gate-bias filter). The tank-return capacitor (10 pF) is on 6 V devices; the
    always-on feed PMOS and the cascode see the full rail whenever the island is on.
 10. **bbfilter.** Current 5.22 mA against the 3.77 mA allocation (PWR-08); narrowest cutoff 1.56 MHz, so LoRa
     203/406 kHz channels need a lower cutoff; calibration routine (inject → observe) not modelled; area repack

@@ -254,7 +254,7 @@ LNA_RGM = 7.0                    # level resistor (um of 1 um ppoly, ~7 kohm x 1
 # does not fit over the core); the attenuator dump branch also ends on vtk.
 LNA_WFD = 400.
 LNA_RCAS = (4.0, 26.0)           # cascode gate divider VDD -> vcas -> VSS (um of 1 um ppoly)
-LNA_CCT_FW, LNA_CCT_NF, LNA_CCT_L, LNA_CCT_N = 20.0, 12, 2.0, 9   # 9 units x 12 fingers x 20 um x 2 um of nfet_06v0 gate ~ 19 pF: the node sits at
+LNA_CCT_FW, LNA_CCT_NF, LNA_CCT_L, LNA_CCT_N = 20.0, 12, 2.0, 9   # 9 units x 12 fingers x 20 um x 2 um of nfet_06v0 gate ~ 10 pF (91.5 fF per finger; the 3.3 V version was 17.6 pF): the node sits at
                                  # the full rail whenever the island is on; the 6 V oxide (15 nm) has margin at 3.63 V that the 3.3 V oxide has not
 LNA_WESD = 4.                    # secondary ESD clamps behind the pad MIMs (gates g_p / g_n, bypass nodes bpc_p / bpc_n): one off PMOS (drain
                                  # junction to the n-well = diode to VDD) and one off NMOS (junction diode to VSS) per node; 2 kV HBM on the pad

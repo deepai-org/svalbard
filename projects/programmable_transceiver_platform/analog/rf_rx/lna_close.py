@@ -437,7 +437,7 @@ def write():
             tests[key_] = x_
     su = ld('startup')
     if su:
-        tests['startup_transient'] = dict(target='enable step and island power-up on the coupled package model (site B) with the low-loss supply: quiet after 2.5 us (<= 1 mV pp), DC current reached', rows=su, **{'pass': all(r['pass'] for r in su)})
+        tests['startup_transient'] = dict(target='enable step and island power-up on the coupled package model (site B) with the low-loss supply, 16 us: over 12-16 us pad and tank voltages <= 1 mV pp after removal of a quadratic settling trend, raw differential <= 1 mV pp, DC current reached (first version: 4 us with a raw window from 2.5 us, failed on monotone bias settling only: scratch/rf_rx/close_startup_4us.json)', rows=su, **{'pass': all(r['pass'] for r in su)})
     pk, pc = ld('pkg'), ld('pad_c_tolerance')
     if pk:
         srows = [r for r in pk['stability'] if 'error' not in r]

@@ -139,3 +139,20 @@ sign-off.
 - Open: ring phase spacing -44 / +70 ps at ss (WT33) absorbed only by hand-derived trim codes, no on-chip calibration; POST bank same-sign mode 28 errors; stopped-ring current interlock; power 22-28 mA MAIN only, 44-52 mA with POST; block top does not exist.
 - Area: new path 0.278 mm2 against 0.22 reserve; net +0.085 mm2 over today's transmitter if it replaces the quarter-rate core, steering buffers and `tr7`.
 - Coordinator recommendations, not yet user-confirmed: adopt the new path as the single transmit path once it publishes; ring owner fixes phase spacing to about +-10 ps and the trim stays as residual; pads go ahead with the 0.6x MAIN switch; accept the MAIN-only current, subject to the power-delivery budget for that island being rechecked.
+
+### Round started 2026-11-18 (user: "work on these", all eight items)
+
+Agent IDs by role (verify before any SendMessage):
+
+| Role | Agent ID | Directories it may edit |
+|---|---|---|
+| RF RX / LNA | a09c6a4be6f49e716 | analog/rf_rx |
+| Shuttle acceptance (precheck, fill, top DRC/LVS) | a912644b99f31bf31 | integration/signoff |
+| Wired RX | af72cfb7b4d5300b5 | analog/wired_rx, analog/timing (receive parts) |
+| Pads (termination, LNA ground plan) | a07714b3f18166709 | analog/pads, scratch/reviews/pads-core |
+| Digital macro timing/area | ac1c48346cd362a80 | rtl, sim, verification/digital_hardening, SDC |
+| Wired TX | a24b8b22700674705 | analog/wired_tx |
+| Area ledger / reduction | ab39f0b6ba2280833 | scratch/reviews/die-fit*, unowned blocks only |
+| Housekeeping / evidence audit | afc52a09b47511c00 | non-owned files, scratch/reviews/evidence-audit.md |
+
+Limits given: 3 sims (RF RX, wired RX, pads, wired TX, digital sims), 2 heavy jobs (signoff, area, audit, digital hardening), OMP_NUM_THREADS=1. Not started, awaiting user decisions: LO ring phase fix, 0.6x MAIN pad switch, OCP-2, HT40 ruling.

@@ -180,3 +180,11 @@ User chose option A: primary ESD diodes inside the pad site tied straight to the
 - `pt_chip.conn`: LNA pins `tail`, `vtk` bound (RQ-1); spirals rebound to `LNA_VTK` / `LNA_TAIL`; `AGND_RX`, its two down-bond pads and the tie are removed, LNA and RF RX pad ground are die VSS (no down-bonds on the fixed bond layout). Chip-top check back to unbound=0.
 - Bond map: RF_RX moves to bonds 67/68, BB_I to 69/70 (PC-26, RQ-5; both owners asked for it): die-VSS bounce pickup into the RF input falls from about -18 dB to -40 dB; cost is 8-9 dB more external-LO coupling, to be checked by the RF RX owner. Pads owner applies it to the bond map and contract.
 - LNA status: candidate, NO-GO for publication. Real fails: common-mode Re(Z) negative at 47-66 MHz at ff with 3 nF decap and 1-2 nH rails (supply anti-resonance), 0.74-0.88 ohm in band in duplex bias; chain NF 6.15 dB tt / 8.1 dB ss against 4.1 dB (package loss 2.4-2.7 dB before the LNA is a floor). Supply rules RQ-3/3a accepted as requirements on power delivery: no undamped capacitor >= 50 pF on the rf_rx island rail, die decap >= 3 nF with anti-resonance Q <= 3, <= 0.5 nH per rail. This conflicts with the area lever of dropping the decap bank (die-fit lower bound holds about 2.9 nF).
+
+### Wired TX session 13 ended early (2026-11-18)
+
+- Nothing published. Resume point `scratch/wired_tx/STATUS.md` ("RESUME HERE"), facts `analog/wired_tx/README.md`, rows WT38-WT40.
+- Cause of the 3.125 Gb/s pessimistic failure found (hop timing in `wtx_ser8d`) and fixed: real chain 0 errors / 360 bits, eye 0.122 V untrimmed (still a fail on the eye; pad=C, ring=layout-11Nov, schematic mux).
+- `pt_wiredtx8` exists as a first layout pass (DRC 0, LVS unique from disk, 0.351 mm2 bounding box); the schematic is ahead of it (phase buffers) and the second pass stopped half way when the layout sub-agent hit its usage limit.
+- With the pads owner's R-aware transmit pad the eye roughly halves (ss 3.125 Gb/s mux level 0.367 -> 0.203 V typical metal, errors at high metal).
+- Simulation queues were left running detached (pad matrix, trim calibration with the real ring, ring tuning); the rate x corner table on final netlists, supply / Monte Carlo rows and the independent review are not done.

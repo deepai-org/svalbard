@@ -117,11 +117,11 @@ Each line is a gate. "Gap" is the state today.
 | Chip-level analysis | Extracted critical nets resimulated per chain; substrate and supply coupling; supply drop and decap response ([power-delivery.md](power-delivery.md)); power-up, reset and isolation | Models exist; nothing run on a routed top |
 | Top routing | Signal, supply and LO routing complete | Not started |
 | Fill | Top-level fill run by us, with block-owned keep-out markers; density and DCF.1a clean; fill-aware re-extraction of the inductors and other sensitive blocks | No fill step in the flow; no block GDS carries a keep-out marker; stock fill lands in the QVCO spirals (`scratch/reviews/signoff-gap.md`) |
-| Read-back LVS | Every published GDS and the top re-extracted from disk and matched, device parameters compared | Clean on 74 block GDS; the QVCO top cell has no netlist; no top-level LVS |
+| Read-back LVS | Every published GDS and the top re-extracted from disk and matched, device parameters compared | 84 block GDS match the netlists the chip top binds (18 Nov); `pt_pll_ring_core` and the rf_rx cells in rework do not match their committed schematics; the QVCO top cell cannot be compared (spirals extract as shorts); no top-level LVS; not a gate in the flows |
 | Top-level DRC and antenna | KLayout and Magic clean on the filled top, antenna included | Not run on a routed top; `adc_i` has 7 antenna violations |
 | Precheck | wafer.space precheck 1.7.4 with PDK `792ef67` passes in one work directory on the submitted file | Project flows use an older deck without DCF.1a; the live image is amd64-only and has not been run |
 | Process options | Every layer used is in the wafer.space mask set | ESD implant layer 24/0, deep n-well and SAB devices unconfirmed |
-| Evidence | A hash-matched evidence record for every published GDS | Staleness script exists (`scratch/reviews/pre-mortem/`); audit not run |
+| Evidence | A hash-matched evidence record for every published GDS | Audit of 18 Nov: published status not supported for 31 of 83 blocks; 21 GDS without a precheck DRC record (`scratch/reviews/evidence-audit.md`) |
 | Package and board | Bond map and per-pin channel fixed ([package-channel.md](package-channel.md)); board obligations complete ([board-requirements.md](board-requirements.md)) | B18 and B25 not met; carrier, gateware and bring-up software not started |
 | Slot | A Run 3 slot is held | Open with the user |
 | Submission package | Immutable GDS with checksums, bond map, bring-up board checklist, bring-up script | Not started |

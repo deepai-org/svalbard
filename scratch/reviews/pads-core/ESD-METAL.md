@@ -55,26 +55,17 @@ HBM / CDM pass on record is capacitance-only and is not evidence.** For the 8.0 
 | `pad_hspad` | Candidate `scratch/pads-core/hsfix/build/f6` (GDS sha 8c8e2533...): leg re-strapped and resized, overlays on the pad, VSS and rail paths in the top cell. Termination passes with resistance extracted (section 4). Bond pad to diodes 5.2-6.0 ohm (was 28-32), VSS return 2.1-3.1 ohm (was 27-58), rail to clamp 0.5-0.8 ohm (was 12-20); no single cut carries more than 3.5 %. HBM with pad-side resistance in the model: 11.6-12.2 V at the bond pad at 2 kV (published cell 38.3-38.9 V), 6.8-7.3 V at 1 kV, no MOS over the 6.0 V screen in either; with the return resistance added by arithmetic about +4.7 V / +2.3 V. **2 kV is not met; 1 kV is marginal.** |
 | all other families | Not fixed. |
 
-## 4. Why overlays are not enough, and the proposed layout fix
+## 4. Decided layout fix (user decision 2026-11-18, row PC-27)
 
-The remaining 4.0 ohm of `pad_hspad` is the Metal2 neck through the ring band. Widening it costs about 5 fF per um of
-width in the cell and about 15 fF per um against the ring rails above it (the existing neck already has about
-0.12 pF to the rails that no pad model contains). Reaching 1 ohm that way costs about 0.3-0.9 pF per pad: acceptable
-for USB, reference, BB, WMON and RF_TX, not for WIRE_RX and RF_RX.
+Overlays cannot go below the Metal2 neck through the ring band (4-8 ohm in every family), and widening the neck costs
+about 5 fF per um in the cell plus about 15 fF per um against the ring rails (the existing neck already has about
+0.12 pF to the rails that no pad model contains).
 
-Proposed for every family: **primary diodes at the bond pad, inside the pad site, tied straight to the ring rails**
-(the `pad_tlp_flat` pattern: 0.44 ohm, clean under the rail cell). The neck then carries signal current only, and
-the core-side network becomes the secondary stage. Two variants:
-
-| Variant | Up-diodes go to | Cost |
-|---|---|---|
-| V1 | ring DVDD (the 18 provider RC clamps discharge it) | a pad above the unpowered supply back-feeds the chip, as every provider pad already does; changes the "stress-safe" behaviour of USB, WIRE_TX and the reference pads with the chip off |
-| V2 | VSS only at the pad (down-diodes), up-diodes stay on the isolated rail in the core | negative zaps fixed, positive zaps still through the neck: needs the wide neck and its capacitance |
-
-V1 needs a decision (user / coordinator): it reverses the isolated-rail policy. Work per family either way: new pad-site
-cell, shell regeneration, extraction with resistance, HBM / CDM with resistance, review. `pad_txpad` needs a new row
-plan for its output and termination wiring on top (list in `scratch/pads-core/txr/STATUS.md`); the open 0.6x MAIN
-switch resize would be done in the same pass.
+**Decided: primary diodes at the bond pad, inside the pad site, tied straight to the ring rails** (down-diodes to ring
+VSS, up-diodes to the ring supply; the `pad_tlp_flat` pattern, 0.44 ohm). The neck then carries signal current only
+and the core-side network is the secondary stage. Back-feed into an unpowered chip is accepted; the board controls
+sequencing. Applies to all seven families, in the order `pad_txpad`, `pad_hspad`, USB, reference, RF pair, RF TX,
+single-leg. No family is rebuilt this way yet: candidates are in work under `scratch/pads-core/esdopt/`.
 
 ## 5. Rule from now on
 

@@ -50,7 +50,7 @@ def _summary(r):
                 pass_=_serial_ok(r), reason=r.get('reason') or r.get('error'))
 
 
-RJ_RMS_S = 2e-12   # ring random jitter budget (spec/interface-architecture-changes.md S5: <= 2 ps rms)
+RJ_RMS_S = 2e-12   # ring random jitter budget (spec/performance-requirements.md WR-PLL-JIT: <= 2 ps rms)
 Q_1E12 = 7.034
 
 
@@ -259,7 +259,7 @@ def build():
     # TMDS configuration record
     tm = sims.get('int_tmds_h1g25')
     tm_e = _eye(tm)
-    ev_t = dict(block='tmds', **head, configuration_of='wiredtx (spec/consolidation-pass.md item 4)', tests=dict(
+    ev_t = dict(block='tmds', **head, configuration_of='wiredtx (README.md line 48: TMDS is a configuration of the same output stage)', tests=dict(
         safe=dict(state=ev['tests']['safe']['state'], cases=['see wiredtx-evidence.json safe'],
                   notes='Same hardware as wiredtx; EN_TMDS gates the TMDS steering commands and the TMDS tail DAC.'),
         clean=dict(state='pass' if (clean_pass and tm and tm.get('ok')) else 'fail',

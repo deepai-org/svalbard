@@ -10,8 +10,8 @@ consolidation.
 - **No payload mode ran end to end at the start of this week; the control plane now exists in RTL** and every
   mode family closes in a stub simulation. Nothing is hardened, routed or signed off.
 - **Two chips, each fits its own die** (`die-fit.md`, split 2026-11-19): every block placed with the full 5.4 nF
-  decap plan and the routing channels; margin after routing `pt_rf` +0.8 mm² as built (+1.9 targets), `pt_wired` +2.3
-  (+2.9). Macro outlines from synthesis (no place and route yet). User direction: full scope across the pair, make
+  decap plan and the routing channels; margin after routing `pt_rf` +0.8 mm² as built (+1.9 targets), `pt_wired` +2.2
+  (+2.8). Macro outlines from synthesis (no place and route yet). User direction: full scope across the pair, make
   2.7–3.24 Gb/s work, minimise area over time.
 - **Agents:** the user stopped all agents on 14 Nov. Stopped agents cannot be resumed; start fresh ones from
   the notes listed in section 4. Running now: wired TX (fresh, 2.7–3.24 Gb/s path).

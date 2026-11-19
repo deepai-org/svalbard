@@ -2,7 +2,7 @@
 
 Each chip has its own fixed die 3.932 x 5.122 mm (core 3028 x 4218 um = 12.772 mm2) on its own wafer.space slot.
 **Both chips fit, as built, with every block placed, the full 5.4 nF decap plan (D9) and the routing channels:
-margin after routing `pt_rf` +0.8 mm2, `pt_wired` +2.3 mm2 (targets met: +1.9 / +2.9; lower bounds: +3.3 / +3.6).**
+margin after routing `pt_rf` +0.8 mm2, `pt_wired` +2.2 mm2 (targets met: +1.9 / +2.8; lower bounds: +3.3 / +3.5).**
 These are packer placements of measured outlines (no top-level wiring); the macro outlines come from synthesis of each
 chip configuration, not from place and route.
 
@@ -52,9 +52,9 @@ delivery model (PD2) has not been rerun per chip with each chip's macro current 
 | `pt_rf` S | 1716 x 1256 | 6.611 | 209 / 0 | 0.871 | 1.750 | 1.277 | 0.473 | 0.44 | **+0.84** | - |
 | `pt_rf` T | 1716 x 1256 | 5.803 | 209 / 0 | 0.838 | 2.606 | 2.278 | 0.328 | 0.35 | **+1.93** | - |
 | `pt_rf` LB | 1716 x 1062 | 5.095 | 204 / 0 | 0.769 | 3.993 | 3.708 | 0.285 | 0.42 | **+3.29** | - |
-| `pt_wired` S | 1716 x 1554 | 4.362 | 216 / 0 | 0.614 | 3.231 | 2.955 | 0.276 | 0.64 | **+2.31** | wrx_cap |
-| `pt_wired` T | 1716 x 1554 | 4.031 | 214 / 0 | 0.585 | 3.707 | 3.439 | 0.268 | 0.53 | **+2.91** | wrx_cap |
-| `pt_wired` LB | 1716 x 1350 | 3.673 | 210 / 0 | 0.537 | 4.550 | 4.265 | 0.285 | 0.66 | **+3.60** | ptrim |
+| `pt_wired` S | 1716 x 1554 | 4.362 | 216 / 0 | 0.614 | 3.249 | 2.885 | 0.364 | 0.70 | **+2.18** | wrx_cap |
+| `pt_wired` T | 1716 x 1554 | 4.031 | 214 / 0 | 0.585 | 3.725 | 3.492 | 0.233 | 0.71 | **+2.78** | wrx_cap |
+| `pt_wired` LB | 1716 x 1350 | 3.673 | 210 / 0 | 0.537 | 4.568 | 4.256 | 0.312 | 0.74 | **+3.52** | wrx_cap |
 
 - Margin = free core that still takes a >= 60 um block, minus the routing that the halo channels cannot carry at
   realistic pitch (control at minimum pitch, data / clock / analog at double pitch, `overheads.py`). Pads at their
@@ -63,9 +63,11 @@ delivery model (PD2) has not been rerun per chip with each chip's macro current 
 - **Keep-away rules: 0 failures on both chips**, including the INT23 QVCO rule (spirals >= 1.7 mm from the west edge and
   >= 1.0 mm from the RF_TX pads), macro to LNA >= 1000 um (1112 um in S), rings to QVCO >= 500 um, aosc to ADC. On `pt_rf`
   the external-LO pads are on the east edge, 2.1-2.6 mm from RF_RX.
-- Relaxed: `wrx_cap` / `ptrim` cannot get within 500 um of the `wired_cap` switch with its partners (G6 rule); the
+- Pad cells sit at their measured offset from the site midpoint (`OFS` in `fit.py`); the `pt_rf` runs predate that
+  correction (12-60 um along the edge, no overlap in the `pt_rf` skeleton; rerun with `chip.sh rf` when next touched).
+- Relaxed: `wrx_cap` cannot get within 500 um of the `wired_cap` switch with its partners (G6 rule); the
   island strap needs to be wider there or the switch moves (owner, phase 4).
-- `pt_wired` forwarded wire clock (AUX_CLK pair on the west edge to the CDR): 2 x 2.0 mm in S. Moving the AUX pair to the
+- `pt_wired` forwarded wire clock (AUX_CLK pair on the west edge to the CDR): 2 x 1.9 mm in S. Moving the AUX pair to the
   east edge would shorten it but needs an east site pair (all twelve are used): phase 4 item.
 - Macro outlines are synthesis estimates scaled at the r8d density (79.5 %); a +10 % macro costs about 0.2 mm2 (rf) and
   0.27 mm2 (wired) of margin.

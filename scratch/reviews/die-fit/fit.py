@@ -127,6 +127,10 @@ BOND = [l.split()[:4] for l in open(f'{P_}/integration/chips/{CHIP}/bond_map.txt
 # custom pad families: width along the edge (um) and depth from the die edge (cell drawn from 26 um); measured cells (ledger)
 FAM = {'pad_rf_pair': (310.06, 912.9), 'pad_rftxpad': (310.06, 912.9), 'pad_refpad': (401.2, 912.9), 'pad_hspad': (492.0, 912.9),
        'pad_wirepad': (521.2, 914.9), 'pad_txpad': (481.2, 914.9), 'pad_single_leg': (205.0, 912.9)}
+# offset of each family's cell centre from the midpoint of its sites, along the edge (the bond openings are not centred in
+# the cell; measured as the snap of the skeleton build, integration/signoff/skeleton/build.py, 2026-11-19)
+OFS = {'pad_rf_pair': 11.945, 'pad_rftxpad': 11.945, 'pad_refpad': 60.38, 'pad_hspad': 102.945, 'pad_wirepad': -90.62,
+       'pad_txpad': 100.38, 'pad_single_leg': -97.455}
 def pads():
     """custom pad rectangles of this chip, centred on the bond centres of their sites (bond_map.txt)"""
     MASTER = {r['item']: r['master'] for r in L['rows']}
@@ -137,7 +141,7 @@ def pads():
     for n, ys in by.items():
         m = MASTER[n]; w, d = FAM[m]
         if m == 'pad_single_leg' and SCEN == 'S': w = 302.2
-        mid = sum(ys)/len(ys); side = next(r[1] for r in BOND if r[3] == n)
+        mid = sum(ys)/len(ys)+OFS[m]; side = next(r[1] for r in BOND if r[3] == n)
         x0, x1 = (26.0, 26.0+d) if side == 'west' else (3906.0-d, 3906.0)
         P[n] = [(x0, mid-w/2, x1, mid+w/2)]
         if m == 'pad_hspad': P[n].append((x0 if side == 'west' else 3480.0, mid+w/2, x1 if side == 'west' else x1-d+487.0, mid+w/2+32.0))

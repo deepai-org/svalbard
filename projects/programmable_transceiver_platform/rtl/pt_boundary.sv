@@ -34,7 +34,7 @@ module pt_det_clk(input wire clk, rst_n, en, input wire[21:0] cfg_rate_khz, outp
 endmodule
 
 // CP4-1 island isolation inside the macro: every input that comes from a switched island is ANDed with that
-// island's island_on on the FIRST gate after the pin (integration/top/generated/macro_clamps.txt). A kept
+// island's island_on on the FIRST gate after the pin (integration/chips/<chip>/generated/macro_clamps.txt). A kept
 // and2 cell. OPEN for the hardening flow (review finding 1): the 130 pin nets must be excluded from input-port
 // buffering and hold repair, and the routed netlist checked (only load of each pin = its iso_and).
 module pt_iso_and #(parameter W = 1, CLK = 0)(input wire[W-1:0] a, input wire on, output wire[W-1:0] y);

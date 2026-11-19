@@ -1,7 +1,7 @@
 // Analog control decode (mode-walk rework, rows TOP-1, TOP-10..18; coordinator decision: the decode glue lives in
 // the digital macro and the register map follows the cells). One named output per analog control pin group,
 // already decoded (one-hot where the cell is one-hot), at the cell's width. The list, widths, resets and
-// encodings are integration/top/ctl_ports.txt; the consumers are in integration/top/pt_chip.conn.
+// encodings are integration/chips/ctl_ports.txt; the consumers are in integration/chips/{rf,wired}/chip.conn.
 // Inputs are the register-file buses (island-gated: a field of a switched island reads 0 while that island is
 // off; fault-forced), so every output of a switched island is 0 while the island is off. Outputs whose decode
 // would otherwise be non-zero at field value 0 are ANDed with island_on here.

@@ -14,7 +14,7 @@ sources: `chip-top-pins.md`. Risks: IDs refer to `spec/risk-register.md`.
 | `rxmix_i`, `rxmix_q` | `pt_rxmix_i/q` | candidate, not published | 35,442 (192.73 × 183.9) | 0 / 0, unique | current (reduced 10-corner set); chain NF / IIP3 rows open |
 | `lna` | `pt_lna` | candidate, not published (reviews 4 and 5: NO-GO as recorded; stable in every physical case tried, margins miss above 5 GHz; noise figure, IIP3 and one S11 row miss) | 64,712 (266.04 × 243.24), plus two 57.2k tank and two 14.0k degeneration spirals | 0 / 0, unique; read-back from GDS unique | `generated/lna-evidence.json` (current, `lna_close.py`) |
 
-Areas and DRC/LVS are from `generated/<block>-layout.json`. `integration/top/pt_chip.conn` binds the cells in
+Areas and DRC/LVS are from `generated/<block>-layout.json`. `integration/chips/{rf,wired}/chip.conn` binds the cells in
 `generated/` (masters `generated/<block>.ext.spice`), including the candidate LNA and mixer pin lists. The
 The netlists and layout records of all blocks in git match the cells on disk; `pt_lna` has two new pins (`tail`, `vtk`).
 
@@ -260,4 +260,4 @@ measured OTA noise, not rerun); LO drive at the ideal-square level instead of th
 12. **Not covered in any bench:** supply and substrate coupling, IIP2, IIP3, LO leakage to the antenna port, corners
     for linearity (RFR-05, RFR-07).
 13. **Analog nets crossing islands without isolation** (`DAC*`, `ADC*`, `BB*_OBS/INJ`): rule or clamp to be
-    agreed (`integration/top/decisions.md` D-ANA).
+    agreed (`integration/chips/decisions.md` D-ANA).

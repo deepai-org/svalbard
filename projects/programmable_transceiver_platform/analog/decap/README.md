@@ -1,7 +1,7 @@
 # `pt_decap_tile`: MOS decoupling tile (core 3.3 V)
 
 Tileable MOS decap. Where and how many tiles are placed is the power-delivery plan's decision
-(`spec/power-delivery.md`, decap table); the tile is not instantiated in `integration/top/pt_chip.conn`.
+(`spec/power-delivery.md`, decap table); the tile is not instantiated in `integration/chips/{rf,wired}/chip.conn`.
 
 | Item | Value |
 |---|---|

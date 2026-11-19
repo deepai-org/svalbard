@@ -1,6 +1,6 @@
 // Host GPIO link logic (hostio, digital half), AC-1 pad-edge architecture
 // (AC-1, spec/interface-requirements.md HL rows). The provider gf180mcu_fd_io
-// pad cells (integration/pt_chip.sv pt_host_physical) own ESD, level, drive,
+// pad cells (integration/chips/<chip>/generated/pt_chip.sv pt_host_physical) own ESD, level, drive,
 // slew and the PAD->Y receiver; everything clocked lives here, inside
 // pt_digital_macro, in two small pad-edge regions.
 //

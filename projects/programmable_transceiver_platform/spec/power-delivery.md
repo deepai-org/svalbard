@@ -125,7 +125,7 @@ Notes:
 
 Ten islands, each on one of the five verified switch masters in `analog/island_support` (DRC / LVS clean,
 full-RC drop <= 20 mV at the master's design current at all 13 functional points). Instances and enable
-groups are in `integration/top/pt_chip.conn`.
+groups are in `integration/chips/{rf,wired}/chip.conn`.
 
 Sizing rule: the design current of an island is the sum of the worst in-window currents of its blocks, with
 1.25 x on every contribution that is an estimate or a limit and on the rfdriver die-rail share. At that current

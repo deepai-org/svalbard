@@ -1,6 +1,6 @@
 // Wired-TX launch / enable control for the REAL published cells (replaces the serializer model in
 // pt_clocktree_slow: MW-15/16/17, D-CT, D-TMDS, D-PLLEN, WT25/26/28/30, TOP-17). Drives the "wired transmit"
-// ports and the TX-ring rows of integration/top/ctl_ports.txt:
+// ports and the TX-ring rows of integration/chips/ctl_ports.txt:
 //   pll_tx (pt_pll_ring_core) EN / N4 / N8 / BAND, pt_wiredtx SER_EN / MODE_H / MODE_F, core_bias EN_wiredtx,
 //   tx interlock REQ_MAIN / REQ_POST / REQ_DETECT / REQ_TERM, pt_wtx_fallback_control raw latch inputs,
 //   and the transport's wire_tx_request (no analog producer: D-VALID, WT25(6)).

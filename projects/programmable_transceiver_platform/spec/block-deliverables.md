@@ -30,7 +30,7 @@ Each family lives in `analog/<family>/`:
 | `README.md` | Current pass / fail / unverified state, pins, controls, test-bus taps |
 
 Bulky output (waveforms, intermediate databases) goes to the repository `scratch/` directory and is not committed.
-A pin name at the chip top is the published subcircuit's pin; `integration/top/masters.txt` reads it from there.
+A pin name at the chip top is the published subcircuit's pin; `integration/chips/masters.txt` reads it from there.
 
 ## Evidence record
 

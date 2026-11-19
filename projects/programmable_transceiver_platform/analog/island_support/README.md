@@ -10,7 +10,7 @@ another source, every number comes from `evidence.json` (written by `run.sh`).
 | `atb_leaf_s`, `atb_leaf_f`, `atb_grp`, `atb_pad` | analog test bus switches | none in the tree (see Open items) |
 
 Ten islands use the four switch masters; the partition, currents and grid rules are in
-`spec/power-delivery.md` section 2. Chip instances and bindings are in `integration/top/pt_chip.conn`.
+`spec/power-delivery.md` section 2. Chip instances and bindings are in `integration/chips/{rf,wired}/chip.conn`.
 
 ## Conditions
 
@@ -79,7 +79,7 @@ Integration requirements:
 ## 2. Isolation cells
 
 Island-to-macro inputs (about 130) are clamped inside the digital macro with AND cells gated by `island_on`.
-The cells here serve the nets that stay outside the macro: 16 clamps and 2 pull-downs in `pt_chip.conn`.
+The cells here serve the nets that stay outside the macro: 16 clamps and 2 pull-downs in the chip conns.
 Their `ISO` input is the macro's `island_off[k]` of the driving island.
 
 ### 2a. Cell family
@@ -119,7 +119,7 @@ ATB0 is the force bus and ATB1 the sense bus. The register file decodes one-hot 
 all-open commit between two non-zero codes; leaves are bare switches. Break-before-make and default-open
 hardware lives once per group (`atb_grp`, local bus to global bus) and once per pad (`atb_pad`).
 
-| Cell | Instances in `pt_chip.conn` | Switch | Area (µm²) |
+| Cell | Instances in the chip conns | Switch | Area (µm²) |
 | --- | ---: | --- | ---: |
 | `atb_leaf_s` (sense) | 58 | inverter + T-switch, middle node shunted to VSS while open | 827 |
 | `atb_leaf_f` (force) | 21 | same, wider devices | 1 086 |
@@ -192,7 +192,7 @@ Risks: ISL-01, ISL-02, ISL-03, LU-02, LU-03, PDN-05, PDN-07, PDN-08, INT-04, INT
   the run). All GDS and extraction hashes of the ten original cells still match.
 - The ATB cells have no published GDS or extraction in the tree; `verification/kl_block_drc_blocks.json` points
   at `scratch/island-support-20261108-075605/` for them, for `iso_clamp` and for the switches.
-- `generated/iso-family/iso-placement.json` describes an earlier clamp placement; `pt_chip.conn` is the
+- `generated/iso-family/iso-placement.json` describes an earlier clamp placement; the chip conns are the
   binding in force.
 - ATB leaves on the five bias trunk nodes and on `VREF0` of the converter reference are not gated by the
   rail that owns the node (interface row PC-10).

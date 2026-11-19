@@ -16,7 +16,7 @@ drc/run_all.sh fill/rf_filled.gds pt_chip_top skel_rf_filled # density, antenna,
 python3 drc/locate.py <run>/drc/<tag>/report.lyrdb.gz        # violations per rule and per block
 precheck/run_precheck.sh <abs gds> pt_chip_top <new workdir> 4 && python3 precheck/summarise.py <workdir>   # the shuttle's own precheck
 lvs/run_controls.sh                                          # LVS proof: routed fixture passes, three broken variants fail
-python3 lvs/gen_netlist.py <run>/lvs/pt_chip_top.ref.spice   # reference netlist from integration/top/pt_chip.conn
+python3 lvs/gen_netlist.py <run>/lvs/pt_chip_top.ref.spice   # reference netlist from integration/chips/{rf,wired}/chip.conn
 ./kl.sh lvs/top_lvs.py -rd gds=skel/pt_chip_skel.gds -rd top=pt_chip_top -rd ref=lvs/pt_chip_top.ref.spice \
         -rd out=lvs/skel -rd manifest=skel/manifest.json -rd flatten=retained_provider_ring -rd skip=digital   # 1 min
 ```
@@ -111,7 +111,7 @@ Filled skeleton (`rf` set, first policy), shuttle deck 792ef67 on KLayout 0.30.9
 keeps only the pins of the black boxes (every direct child of the top). A top wire on unlabelled block metal becomes a
 nameless pin; two pins joined inside a block become one pin. It then compares twice: KLayout's netlist compare
 (topological, black-box pins by name) and, with the manifest, net by net by name (open / short / internal).
-Reference: `gen_netlist.py`, flat from `pt_chip.conn`, one empty subckt per master with the published pin list.
+Reference: `gen_netlist.py`, flat from the chip conns, one empty subckt per master with the published pin list.
 
 - Engine check on real routed data: `pt_core_bias_routed.gds` (37 leaf instances, 152 nets) against the routing
   flow's own schematic: match; with two nets swapped on one instance: 2 net mismatches.

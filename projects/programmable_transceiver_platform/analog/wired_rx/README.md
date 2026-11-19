@@ -6,7 +6,7 @@ chain does not receive at 2.5 Gb/s or above; the fixes are staged and none is pu
 candidates and Open items 1 to 4).
 
 This file describes what is published in `generated/` and committed. Pin-level bindings are in `PINS.md`
-and `integration/top/pt_chip.conn` (the one connectivity source). Risks are in `spec/risk-register.md`
+and `integration/chips/{rf,wired}/chip.conn` (the one connectivity source). Risks are in `spec/risk-register.md`
 (WRX-01..WRX-23); this file only cites IDs.
 
 Operating window for every performance statement: junction 22–32 °C, die supply 3.15–3.35 V, all process

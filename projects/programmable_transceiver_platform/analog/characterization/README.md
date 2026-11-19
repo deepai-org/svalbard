@@ -1,7 +1,7 @@
 # Characterization structures
 
 First-die characterization structures of `spec/tapeout-plan.md`. Each is reachable from the bench. Bindings
-are those of `integration/top/pt_chip.conn`; register fields are in `spec/register-map.md`.
+are those of `integration/chips/{rf,wired}/chip.conn`; register fields are in `spec/register-map.md`.
 
 | Structure | Cell | Built here | Access | Evidence |
 | --- | --- | --- | --- | --- |
@@ -154,7 +154,7 @@ python3 rffet.py layout && python3 rffet.py export   # + `python3 rffet.py stack
 
 Risks: INT-04, MOD-06, MOD-14 (`spec/risk-register.md`).
 
-- `pt_char_cmldiv.BIAS` and `pt_vco_replica.ATB_VTAIL` have no ATB code (unbound in `pt_chip.conn`).
+- `pt_char_cmldiv.BIAS` and `pt_vco_replica.ATB_VTAIL` have no ATB code (unbound in the chip conns).
 - `generated/referenced-structures.json` and `generated/esd_test.lef` describe the single-leg `ESD_TEST` cell;
   the chip binds `pad_tlp` on that site instead, so the `abstracts` step needs repointing.
 - `char_atb-evidence.json` hashes the GDS from before the subcell rename, and `run_char.py`, `convkit.py`,

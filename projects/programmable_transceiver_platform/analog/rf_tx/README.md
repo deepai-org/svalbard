@@ -10,7 +10,7 @@ and matched by the board. Numbers come from `generated/*-evidence.json`, `genera
 
 ## Status
 
-All four blocks are published in `generated/` and bound in `integration/top/pt_chip.conn` (rf_tx island).
+All four blocks are published in `generated/` and bound in `integration/chips/{rf,wired}/chip.conn` (rf_tx island).
 Every `source_hashes` and `output_hashes` entry in the evidence files matches the current sources, GDS and
 extracted netlists.
 

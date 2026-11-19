@@ -10,7 +10,7 @@ Operating conditions (`scratch/reviews/MANDATE.md` section 2): performance at 22
 
 ## 1. Pad set
 
-Bindings are from `integration/top/pt_chip.conn`, sites from `spec/contract.json`
+Bindings are from `integration/chips/{rf,wired}/chip.conn`, sites from `spec/contract.json`
 `assembly_policy.bond_map_current`, tiers from MANDATE section 6.
 
 | Instance | Master | Pins | Site | HBM tier |

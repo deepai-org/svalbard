@@ -5,10 +5,10 @@
 // frequency counters (pt_freq_count, inside pt_digital) and the
 // clocked half of hostio (pt_host_link: DDR/SDR capture, launch and forwarded clock).
 // Pad cells are NOT in this macro: they are provider gf180mcu_fd_io cells in the ring
-// (integration/pt_chip.sv pt_host_physical). This macro drives their A/OE/SL/PDRV pins and takes
+// (integration/chips/<chip>/generated/pt_chip.sv pt_host_physical). This macro drives their A/OE/SL/PDRV pins and takes
 // their Y outputs. Hardening flow: verification/run_digital_hardening.sh.
 // Analog boundary (mode-walk rework 2026-11-14, rows TOP-1..4, TOP-10..18): the macro presents one named, decoded
-// port per analog control pin group (c_*, integration/top/ctl_ports.txt; rtl/pt_ctl_decode.sv and the control blocks
+// port per analog control pin group (c_*, integration/chips/ctl_ports.txt; rtl/pt_ctl_decode.sv and the control blocks
 // pt_wtx_ctl / pt_wrx_ctl / pt_usb), takes named status inputs (s_*), clamps every island-sourced input on its first
 // gate (CP4-1, pt_iso_and) and makes the sample valids itself. analog_cfg / debug_cfg / en_eff are internal.
 // Reset: rtl/pt_por_path.sv: rst_n = RESET_N AND (por_n OR por_bypass (strap) OR the pad-free rescue latch).
@@ -67,7 +67,7 @@ module pt_digital_macro(
  input  wire s_adc_i_ovl, s_adc_i_b_ovl, s_adc_q_ovl, s_adc_q_b_ovl, s_adc_i_done, s_adc_i_b_done, s_adc_q_done, s_adc_q_b_done,
  input  wire s_detect_diff_pos, s_detect_diff_neg, s_detect_se_p, s_detect_se_n,
  input  wire s_wrx_slp, s_wrx_slm, s_wtx_ext_data, s_aux_present, s_wtx_ext_present,
- // decoded analog control ports (integration/top/ctl_ports.txt)
+ // decoded analog control ports (integration/chips/ctl_ports.txt)
  output wire c_aosc_en,
  output wire c_biasgen_ena,
  output wire c_biasgen_ref_sel_vbg,

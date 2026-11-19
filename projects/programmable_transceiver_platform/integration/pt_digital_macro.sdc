@@ -398,7 +398,7 @@ if {[llength $cs_data_ends]} {
 # blocks) are quasi-static levels launched by the register file on the SCLK fall (same budget as before). The ports
 # with a second, asynchronous source (fast gain on the LNA / PGA pins, transport mute, in-band thresholds, the
 # ref_clk-sequenced wired TX enables, USB pre-driver levels on wire_tx_clk) are constrained from SCLK only:
-# their other launch clocks are false paths to these ports (static-level contract of integration/top/ctl_ports.txt).
+# their other launch clocks are false paths to these ports (static-level contract of integration/chips/ctl_ports.txt).
 set pt_ctl_ports [get_ports {c_* island_en* island_on* island_off* atb0_* atb1_* rx_en_* clk_obs_oe wire_rx_ptrim_en
     dbg_obs0* dbg_obs1* d2h_oe d2h_pdrv* d2h_sl}]
 set pt_ctl_static {}

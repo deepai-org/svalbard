@@ -1,6 +1,6 @@
 // Wired-RX CDR control plane (rows MW-10, MW-11, MW-12, MW-35, D-CDRCTL), standard cells.
 // Replaces analog/wired_rx/rtl/pt_wrx_cdr_loop.sv (retired pins freq_hold / bb_up / bb_dn / bb_gain)
-// against the PUBLISHED pins bound in integration/top/pt_chip.conn:
+// against the PUBLISHED pins bound in integration/chips/{rf,wired}/chip.conn:
 //   pt_cdr.FUP/FDN            <- c_cdr_fup / c_cdr_fdn          (reference domain, level pulses)
 //   pt_wrx_cap.PSEL[2:0]      <- c_wrx_cap_psel                 (wire_rx_clk domain)
 //   pt_wrx_cap.SLIPP/SLIPM    <- c_wrx_cap_slipp / _slipm       (wire_rx_clk domain, slip TAGS)

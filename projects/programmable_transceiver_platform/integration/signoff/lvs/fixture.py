@@ -1,7 +1,7 @@
 # KLayout: routed mini chip for the LVS positive and negative controls.
 #   kl.sh lvs/fixture.py -rd insts=a,b,c [-rd bridge=1 | -rd openvia=1]
 # Takes the cells of the named instances out of the skeleton GDS (real blocks and placeholders, exactly as assembled),
-# places them in rows with routing channels and routes EVERY net of pt_chip.conn that has two or more pins among them
+# places them in rows with routing channels and routes EVERY net of the chip conns that has two or more pins among them
 # (reference: /run/lvs/fix/fixture.ref.spice from gen_netlist.py --only). Router: Lee maze on a 2 um grid, Metal4 and
 # Metal5, via stacks from the pin layer; obstacles are the real block metal on every layer.
 # Output /run/lvs/fix/fixture.gds (top pt_fixture) + fixture_manifest.json.  bridge=1 adds one Metal4 strap from a routed net

@@ -229,7 +229,7 @@ exercised by `verification/check_regfile.py`):
 | `VREF0`, `VCM` | 2, 3 | 1.01 V, VDD/2 | sense only | |
 | `idac1_source_ibias` | 57 | current into an SMU at about 1 V | sense only | `idac1_source` ≠ 0 |
 
-## Chip binding (`integration/top/pt_chip.conn`)
+## Chip binding (`integration/chips/{rf,wired}/chip.conn`)
 
 | Instance | Cell | Notes |
 | --- | --- | --- |
@@ -266,7 +266,7 @@ Risks: PWR-02, MOD-17, INT-04, PDN-08 (`spec/risk-register.md`).
 
 - Bank rails with ten islands: the five banks and `bias_ext` as bound do not keep every bank and tap on its
   trunk diode's rail (interface row PC-5; proposal: all bank rails on the core rail).
-- `pt_chip.conn` still names `pt_bias_ext` and binds `txpad_bias` with an `EN_TERM` pin and no detect pins; the
+- the chip conns still name `pt_bias_ext` and binds `txpad_bias` with an `EN_TERM` pin and no detect pins; the
   published cells are `pt_bias_tap2` and `pt_txpad_bias` with `EN`, `EN_DET`, `IBIAS_DET`, `DETECT_PBIAS`.
   `IBIAS_DET` has no source yet.
 - ATB leaves on the five trunk nodes (codes 14, 22, 29, 35, 56) are not gated by the rail of the bank that owns

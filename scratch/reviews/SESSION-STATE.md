@@ -73,9 +73,12 @@ depends on it); timing at 3.5 V; ring-monitor readout; macro area (cells 1.404 m
 TOP-25 items (LO enables on the rf group, D-DATAOFF checks, K7 leaves, K1 enable rules); IX-12; USB HS bit
 repetition; DG6-7 questions to wired RX.
 
-**Chip top** — `integration/top/` (`pt_chip.conn`, `run.sh`, `decisions.md`), `scratch/chip-top/NOTES.md`.
-Open: regression non-zero; last decisions edits unreviewed; `netlist.py` not switched to the conn;
-bond map in `spec/contract.json` stale; D-LOVREG, D-ANA, D-PWR bias-bank rails.
+**Chip tops (two chips)** — `integration/chips/` (`rf/` and `wired/`: `chip.conn`, `bond_map.txt`, `run.sh`;
+shared `common.conn`, `check_top.py <chip>`, `decisions.md`), `spec/chips.json`, rows SPL-1..5.
+State: both chips at 0 in every connectivity category including the bond map; non-zero only for demand (rf 8,
+wired 4) and staged (rf 4) instances and the isolation audit's open items. Open: D-SPLIT-* in `decisions.md`
+(per-chip `core_bias`, supply cells at signal sites, `bias_ext` split), D-LOVREG, D-ANA, D-PWR bias-bank rails;
+`netlist.py` (chip assembly) not switched to the conns.
 
 **Wired RX** — `analog/wired_rx/README.md` (Resume 9), `PINS.md`, STATUS files in `scratch/wired_rx/*`.
 Published: `pt_cdr` r13 (0.083 mm²). Capture r7c (0.294 mm², −0.66) fails one case (LDE edge on the capture

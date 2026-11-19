@@ -12,5 +12,5 @@ python3 projects/programmable_transceiver_platform/docs/diagrams/generate_normat
 ```
 
 Until the generator is updated, read the chip structure from `spec/block-diagram.md` and
-`integration/top/pt_chip.conn`. Which conn instances build each inventory block is in the inventory's
+`integration/chips/{rf,wired}/chip.conn`. Which conn instances build each inventory block is in the inventory's
 `chip_implementation` section, checked by `python3 spec/check_architecture_conn.py`.

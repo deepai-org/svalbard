@@ -82,11 +82,11 @@ Route names are the keys of `tapeout-readiness.json:fallback_routes`.
 
 `tapeout-readiness.json` still names the deleted `WCLK_IN` pair in `wire_clk_wclk_in`,
 `wire_cdr_external_clock`, `wire_rx_board_retimer` and `wire_rx_tmds_forwarded_clock`; the
-forwarded wire clock uses the `AUX_CLK` pair (`integration/top/pt_chip.conn`).
+forwarded wire clock uses the `AUX_CLK` pair (`integration/chips/{rf,wired}/chip.conn`).
 
 ## Debug and test pads
 
-From `integration/top/pt_chip.conn` and `package-channel.json`.
+From `integration/chips/{rf,wired}/chip.conn` and `package-channel.json`.
 
 | Edge | Pads | Use |
 | --- | --- | --- |
@@ -111,7 +111,7 @@ Each line is a gate. "Gap" is the state today.
 | Gate | Requirement | Gap |
 | --- | --- | --- |
 | Die fit | Every block placed inside 3.932 × 5.122 mm with routing channels, supply grid and decap | Does not fit: 0.03–0.18 mm² short if every repack target is met, 0.65–0.73 mm² short with cells as staged, after the area levers taken so far (`scratch/reviews/die-fit.md`). No floorplan newer than v6 |
-| Connectivity | `pt_chip.conn` regression at zero; every instance bound to a published layout | 0 unbound pins; 12 instances unbuilt and 4 converters staged (`integration/top/check_top.py`: `demand=12 staged=4`) |
+| Connectivity | chip-top regression of both chips at zero; every instance bound to a published layout | 0 unbound pins; 12 instances unbuilt and 4 converters staged (`integration/chips/check_top.py`: `demand=12 staged=4`) |
 | Blocks | Four tests passed per block, at every in-window corner, against real neighbours | Open blocks listed in `SESSION-STATE.md` section 4 |
 | Digital macro | Hardened; setup, hold with on-chip variation, 3.5 V and ff views closed; gate-level simulation; clamp cells intact | Not hardened on the current RTL; setup not closed |
 | Chip-level analysis | Extracted critical nets resimulated per chain; substrate and supply coupling; supply drop and decap response ([power-delivery.md](power-delivery.md)); power-up, reset and isolation | Models exist; nothing run on a routed top |

@@ -2,8 +2,8 @@
 
 The boundary of `rtl/pt_digital_macro.sv`, the one standard-cell macro of the chip, as committed. Every analog
 control pin group is driven by one named, decoded macro port; `analog_cfg`, `debug_cfg` and the enable vector are
-internal to the macro. The connection of each port is in `integration/top/pt_chip.conn`; widths, reset values and
-encodings of the control ports are in `integration/top/ctl_ports.txt`; register fields are in
+internal to the macro. The connection of each port is in `integration/chips/{rf,wired}/chip.conn`; widths, reset values and
+encodings of the control ports are in `integration/chips/ctl_ports.txt`; register fields are in
 `spec/register-map.md`. The pad cells are not in the macro: they are provider `gf180mcu_fd_io` cells in the ring
 (`integration/pt_provider_io.sv`), and the macro drives their `A` / `OE` / `SL` / `PDRV` pins and takes their `Y`
 outputs.
@@ -82,7 +82,7 @@ bit 3 unused, bit 4 conv, bit 5 debug.
 
 Isolation of island-to-macro signals is inside the macro: 130 input bits from switched islands are ANDed with
 `island_on` of their group on the first gate after the pin (`pt_iso_and`; list in
-`integration/top/generated/macro_clamps.txt`). The hardening flow must not buffer those pins.
+`integration/chips/<chip>/generated/macro_clamps.txt`). The hardening flow must not buffer those pins.
 
 The fault comes from the macro's supply/clock monitor (`rtl/pt_monitor.sv`): reference and input clock activity,
 the two lock indications from the frequency counters, and the island power-goods, on the always-on oscillator as
@@ -115,7 +115,7 @@ Raw asynchronous levels, synchronised inside the macro.
 
 ### Decoded control ports
 
-216 output ports `c_*`, 531 bits, one per analog control pin group, with the net name used in `pt_chip.conn`.
+216 output ports `c_*`, 531 bits, one per analog control pin group, with the net name used in the chip conns.
 
 | Group | Ports | Bits |
 |---|---|---|
@@ -146,11 +146,11 @@ Rules:
 
 | Check | What it covers |
 |---|---|
-| `integration/top/run.sh` | Port list against the conn and `ctl_ports.txt`, boundary simulation of the real macro against the generated stub with two negative controls, isolation audit |
+| `integration/chips/run.sh` | Port list against the conn and `ctl_ports.txt`, boundary simulation of the real macro against the generated stub with two negative controls, isolation audit |
 | `make transceiver-top-modes` | Generated `pt_chip.sv` is current, register map against cell pins, per-mode chip simulation, clamp list, decode table |
 | `make transceiver-ctl-blocks` | Monitor, USB, wired control blocks, POR path, SPI chip-select race |
 | `make transceiver-regfile` | Generator outputs are current, register file behaviour |
 | `make transceiver-digital-hardening` | Synthesis, place and route, timing |
 
-Open items at this boundary are in `integration/top/decisions.md` (D-FAULT, D-CAP, D-ATB, D-100B, D-TRIMISL).
+Open items at this boundary are in `integration/chips/decisions.md` (D-FAULT, D-CAP, D-ATB, D-100B, D-TRIMISL).
 The working tree may hold RTL edits that are not committed; this file describes the committed macro.

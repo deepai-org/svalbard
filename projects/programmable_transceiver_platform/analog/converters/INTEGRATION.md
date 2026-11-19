@@ -9,8 +9,8 @@ Two interfaces exist and they differ in the clock pins:
 | DAC outline | 674.50 × 275.93 µm (0.186 mm²) | 668.50 × 200.63 µm (0.134 mm²) |
 | State | published; evidence in `generated/` | not published; Magic DRC 0, LVS unique, precheck 0/0 on the staged GDS |
 
-`integration/top/pt_chip.conn` binds the ADCs and DACs to the **staged** pin list (masters marked `staged` in
-`integration/top/masters.txt`, decision D-CONV), so sections 1 to 6 describe that contract. Section 7 gives the
+`integration/chips/{rf,wired}/chip.conn` binds the ADCs and DACs to the **staged** pin list (masters marked `staged` in
+`integration/chips/masters.txt`, decision D-CONV), so sections 1 to 6 describe that contract. Section 7 gives the
 published pin lists. `refbuf` is the same in both.
 
 All pins are Metal4 at the block's north edge in the west trunk bank. `adc_q` / `dac_q` have the layouts of
@@ -21,7 +21,7 @@ All pins are Metal4 at the block's north edge in the west trunk bank. `adc_q` / 
 Each ADC and DAC has one clock pin `CLK`: 3.3 V CMOS, single-ended, gate-only (safe with the conv island off),
 gated on the block by the block's own enable. The top does not shape or invert the clock.
 
-| Block | `CLK` net in `pt_chip.conn` |
+| Block | `CLK` net in the chip conns |
 |---|---|
 | adc_i, adc_q | `CONV_CLK_C` = `clockmux.CONV_CLK` through one `iso_clamp_x4` in the conv domain |
 | dac_i, dac_q | `rf_tx_clk_out` of the digital macro (source-synchronous TX) |
@@ -74,7 +74,7 @@ The converters produce no clocks and no request.
 
 ## 3. References and bias
 
-| Pin | Block | Net in `pt_chip.conn` | Notes |
+| Pin | Block | Net in the chip conns | Notes |
 |---|---|---|---|
 | `VREF0` | refbuf | `VREF0_MASTER` (1.0 V from core bias) | gate input, no DC load |
 | `VREF` | refbuf (out), adc_i, adc_q | `VREF_CONV` | one refbuf for both ADCs (**OPEN**: benched with one ADC). ≥ 2 µm wide, star from the refbuf, away from clocks. ATB node `conv_vref`. |

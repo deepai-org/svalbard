@@ -8,7 +8,7 @@ over 10-200 MHz and less than 5 ps peak of supply-borne ring jitter (risk PDN-04
 
 Ports (`generated/pt_pll_vreg2_layout.spice`): `VIN VOUT_TX VOUT_CDR VSS BYP_TX BYP_CDR ATB_OUT ATB_G`
 
-| Pin | Chip-top net (`integration/top/pt_chip.conn`, instance `pll_vreg2`, pll island) | Notes |
+| Pin | Chip-top net (`integration/chips/{rf,wired}/chip.conn`, instance `pll_vreg2`, pll island) | Notes |
 | --- | --- | --- |
 | `VIN` | `RAIL_pll` | switched pll island rail |
 | `VOUT_TX` | `VREG_TX` -> `pll_tx.VDD` | the output inside the OTA loop |
@@ -82,7 +82,7 @@ Risks: `spec/risk-register.md` PDN-04, LO-02.
 * Rejection below about 1 MHz is small (8-11 dB at 100 kHz); the loop bandwidth of the ring PLL is relied on
   there, without a simulation of the two together.
 * `ATB_OUT` / `ATB_G` are unbound at chip top; the enable terms `vreg_tx_ok` / `vreg_rx_ok` of the rings
-  (`integration/top/ctl_ports.txt`) have no source in this cell.
+  (`integration/chips/ctl_ports.txt`) have no source in this cell.
 * This cell does not meet the QVCO rail requirement; the QVCO needs its own regulator
   (`../timing/LO-INTEGRATION.md` section 3).
 * `pll_vreg.py` has an uncommitted one-line bench edit (ring port list).

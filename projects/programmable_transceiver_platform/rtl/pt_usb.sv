@@ -19,7 +19,7 @@
 //       (high-Z; SE1 is never driven).  RX: {SE_N, SE_P} at the bit centre (00 SE0, 11 SE1).
 //
 // Two output sets, bind one:
-//   direct gates  c_usb_hs_p/n, c_usb_fs_high_p/n, c_usb_fs_low_p/n   (pt_chip.conn today; break-
+//   direct gates  c_usb_hs_p/n, c_usb_fs_high_p/n, c_usb_fs_low_p/n   (the chip conns today; break-
 //                 before-make of 1 + cfg_bbm tx_clk cycles per leg in RTL; HS only static levels)
 //   pre-driver    usb_hs_en, usb_hs_drv, usb_fs_en, usb_tx_dp, usb_tx_dn, usb_tx_oe
 //                 (pt_usb_txdrv HS_EN, HS_DRV, FS_EN, TX_DP, TX_DN, TX_OE; its own analog BBM)

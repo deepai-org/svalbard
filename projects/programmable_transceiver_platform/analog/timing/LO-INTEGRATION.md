@@ -1,8 +1,8 @@
 # LO subsystem: pin list and connection intent for chip-top integration
 
 Pin orders are the `.subckt` lines of the named netlists; if a netlist and this file disagree, the netlist wins.
-The bindings below are the ones in `integration/top/pt_chip.conn`; control decode is
-`integration/top/ctl_ports.txt`. Block results and open items: [`README.md`](README.md).
+The bindings below are the ones in `integration/chips/{rf,wired}/chip.conn`; control decode is
+`integration/chips/ctl_ports.txt`. Block results and open items: [`README.md`](README.md).
 
 ## 0. Status
 
@@ -180,7 +180,7 @@ the mixers at the west edge); the floorplan has to resolve it.
 * `VDD_LO` state in `lo_mode` 1 and 3: the regulator is off while `lo_ext` biases the tank nodes (top decision
   D-LOVREG). `pt_lo_vreg` is not published.
 * `integration/core_bias.py` still names the QVCO bias output `lc_vco_reserved` and has no `lo_pfdcp` output;
-  `pt_chip.conn` binds `BIAS_qvco` and `BIAS_lo_pfdcp`.
+  the chip conns bind `BIAS_qvco` and `BIAS_lo_pfdcp`.
 * External-LO leakage through the bond wires into RF_RX (interface row INT23-1) and the minimum external drive
   in `lo_mode` 3 are open.
 * AUX_CLK as the forwarded wire clock: receiver bench (25-810 MHz with the 3.1 mm route), the register rule that

@@ -1,11 +1,11 @@
 # Wired RX: pin list and connection at chip top
 
 Pins of the published wired RX cells and the nets they are bound to. The binding itself lives in
-`integration/top/pt_chip.conn` (the one connectivity source; `integration/top/check_top.py` reads each
+`integration/chips/{rf,wired}/chip.conn` (the one connectivity source; `integration/chips/check_top.py` reads each
 cell's pin list from its published `generated/<block>.ext.spice`). This file restates it per cell; where the
 two differ, the conn file is right. Control-port widths, resets, encodings and register fields are in
-`integration/top/ctl_ports.txt`; open disagreements between owners are the `D-` rows of
-`integration/top/decisions.md`.
+`integration/chips/ctl_ports.txt`; open disagreements between owners are the `D-` rows of
+`integration/chips/decisions.md`.
 
 Net prefixes: `c_*` control from `pt_digital_macro`, `s_*` status into it, `RAIL_<island>` switched supply of
 an island, `BIAS_*` a 10 µA output of the bias bank, `ATBN_*` an analog test-bus node.

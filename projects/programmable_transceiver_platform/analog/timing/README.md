@@ -10,7 +10,7 @@ Performance window: junction 22-32 C, die supply 3.15-3.35 V, all process corner
 a 3.50 V setpoint by the board. Safety window: 0-3.63 V, 0-85 C.
 
 Chip-top pin list, nets, supplies, controls and placement rules of the RF LO: [`LO-INTEGRATION.md`](LO-INTEGRATION.md).
-Chip connectivity: `integration/top/pt_chip.conn`; control decode: `integration/top/ctl_ports.txt`.
+Chip connectivity: `integration/chips/{rf,wired}/chip.conn`; control decode: `integration/chips/ctl_ports.txt`.
 
 ## Reproduce
 
@@ -47,9 +47,9 @@ selects carry at most one 1; all-zero means stopped. A clock select is changed o
 ## Blocks
 
 Outline = bounding box of the published GDS (`generated/<block>.gds`). Island names are those of
-`spec/power-delivery.md` (ten islands) as bound in `pt_chip.conn`.
+`spec/power-delivery.md` (ten islands) as bound in the chip conns.
 
-| Block (version) | Ports | Function | Outline um, mm2 | Rail in `pt_chip.conn` |
+| Block (version) | Ports | Function | Outline um, mm2 | Rail in the chip conns |
 | --- | --- | --- | --- | --- |
 | `pt_pll_ring` (r9v) | `REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL N5 N10 KP0..KP2 FU0..FU3 FD0..FD3 BAND VDD VSS` | CDR ring PLL, also the host_follow PLL. See "`pt_pll_ring`" below | 210.0 x 793.5, 0.167 | `pll_cdr`: `VREG_CDR` (pll island through `pt_pll_vreg2`) |
 | `pt_pll_ring_core` (r9d) | `REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL BAND VDD VSS` | Line (TX) ring PLL: `pt_pll_ring` without the fast-tune array and the N5 / N10 path | 196.0 x 438.9, 0.086 | `pll_tx`: `VREG_TX` |
@@ -93,7 +93,7 @@ Outline = bounding box of the published GDS (`generated/<block>.gds`). Island na
 
 ### Register-map glue (combinational, all outputs reset to 0)
 
-The decode is standard cells inside the digital macro; `integration/top/ctl_ports.txt` is the binding list.
+The decode is standard cells inside the digital macro; `integration/chips/ctl_ports.txt` is the binding list.
 
 | Field | Macro port | Analog pins |
 | --- | --- | --- |
@@ -270,8 +270,8 @@ DBG-02, MT-03. LO-01 is listed there as closed but applies again (the QVCO runs 
    Repacked `pt_lo_mmd`, `pt_lo_mmd_qdum`, `pt_lo_obs`, `pt_clk_obs16` and `pt_lo_ext` (row plan `ap4`) are
    staged in `scratch/lo-ap4/`, not published; the staged `pt_lo_mmd` awaits its bench and review.
 6. No QVCO regulator is published. `lo_vreg.spice` (`pt_lo_vreg`) is in-flight work: staged at 0.44 mm2, not
-   reviewed, and the tank-connected cells are verified only at a 1.7 V tank common mode. `pt_chip.conn`
-   instances it as a build demand.
+   reviewed, and the tank-connected cells are verified only at a 1.7 V tank common mode. The chip conns
+   instance it as a build demand.
 7. Loop: lock time at the slow filter corner; `pt_lo_pfdcp` presets VTUNE to VDD/2, not to the 2.1 V the jitter
    and lock analyses assume; no transistor-level closed-loop lock result; Kvco bound not extracted (LO-13).
 8. `pt_lo_obs` does not divide at ss / 3.15 V (4 of 24 corner cases).

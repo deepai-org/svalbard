@@ -1,17 +1,22 @@
 # Chip block diagram
 
-The programmable transceiver is one GF180MCU mixed-signal die of 3.932 × 5.122 mm on the wafer.space chip-on-board
-with its one fixed 74-wire bond layout, controlled and fed by an FPGA host. It contains an RF receive and transmit
-chain with an on-chip quadrature LO, a wired serial receive and transmit path (including the 2.7–3.24 Gb/s rates) with
-USB, two ADCs and two DACs, two ring PLLs with a CDR, and one digital macro with the SPI and the parallel host link.
-Off-chip are only passives, the FPGA and a fallback LNA.
+The programmable transceiver is two GF180MCU mixed-signal dice of 3.932 × 5.122 mm, each on its own wafer.space
+chip-on-board with the one fixed 74-wire bond layout, controlled and fed by an FPGA host. **`pt_rf`** holds the RF
+receive and transmit chain with the on-chip quadrature LO, two ADCs and two DACs. **`pt_wired`** holds the wired serial
+receive and transmit path (including the 2.7–3.24 Gb/s rates) with USB. Each chip has its own POR, bias, island
+switches, the two ring PLLs (on `pt_rf` the TX ring makes the host and converter clocks and the CDR ring is the second
+host-clock route), the reference and AUX clock inputs, the ATB tree, the observation pads and one digital macro with the
+SPI and the parallel host link. Off-chip are only passives, the FPGA and a fallback LNA. The chains below are drawn
+once; each block is on the chip that carries its island (`spec/chips.json`).
 
-The chip connectivity source of truth is `integration/top/pt_chip.conn` (checked by `integration/top/check_top.py`,
-regression `integration/top/run.sh`). This document is a reading aid for it: where they differ, the conn decides.
-Open disagreements between neighbouring blocks are the D-rows of `integration/top/decisions.md`; supplies, islands,
+The connectivity source of truth is `integration/chips/{rf,wired}/chip.conn` (shared part `common.conn`; checked by
+`integration/chips/check_top.py <chip>`, regression `integration/chips/<chip>/run.sh`; bond maps
+`integration/chips/<chip>/bond_map.txt`). This document is a reading aid for them: where they differ, the conns decide.
+Open disagreements between neighbouring blocks are the D-rows of `integration/chips/decisions.md`; supplies, islands,
 grid and decap are in `power-delivery.md`; registers are in `register-map.md`; risks are in `risk-register.md`.
 
-The conn holds 241 instances (151 without the ATB tree), 57 pad nets and 216 control ports (531 bits) from the macro.
+`pt_rf` has 191 instances, `pt_wired` 184; the macro presents 216 control ports (531 bits), each chip uses the ports of
+its own blocks.
 
 ## 1. Signal chains
 
@@ -202,7 +207,7 @@ contract, published netlist still differs.
 - Reset path (`pt_por_path`): `rst_n` = RESET_N AND (POR OR the `por_bypass` strap OR the keyed, pad-free rescue
   latch). The POR state stays readable over SPI.
 - SPI and the generated register file; decode (`pt_ctl_decode`) that turns register fields into one named control
-  port per analog pin group (`c_*`, listed in `integration/top/ctl_ports.txt`). The decode glue is in the macro, not
+  port per analog pin group (`c_*`, listed in `integration/chips/ctl_ports.txt`). The decode glue is in the macro, not
   in the analog top.
 - Host link (`pt_host_link`): 10-bit H2D capture and 10-bit D2H launch with forwarded clocks; shared transport, FIFOs,
   capture/playback memory, pattern generator and checker, frequency counters.
@@ -212,7 +217,7 @@ contract, published netlist still differs.
 - Fault monitor (`pt_monitor`), derived inside the macro. Its time base is the management oscillator or the divided
   transport clock. The external `fault` pin is tied to VSS in the conn.
 - Isolation: every input that comes from a switched island is ANDed with that group's `island_on` on its first gate
-  (130 inputs: wired 69, conv 51, pll 5, debug 4, rf 1; `integration/top/generated/macro_clamps.txt`). Three clock
+  (130 inputs: wired 69, conv 51, pll 5, debug 4, rf 1; `integration/chips/<chip>/generated/macro_clamps.txt`). Three clock
   nets keep an outside clamp because CLK_OBS shares them: `rf_rx_clk`, `host_word_clk`, `fc_src[0]`.
 - Island control: `island_en`, `island_on`, `island_off` per enable group; a group is good when all of its
   switches report power-good (`s_pg_*`).

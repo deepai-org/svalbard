@@ -1,7 +1,7 @@
 # RF RX family: pins and connections at chip top
 
 Pin order is the `.subckt` order of the block `.spice` files in this directory (single source: `netlists.py`).
-Bindings are those in `integration/top/pt_chip.conn`; register fields are those in `spec/register-map.md`.
+Bindings are those in `integration/chips/{rf,wired}/chip.conn`; register fields are those in `spec/register-map.md`.
 `lna` and `rxmix_i/q` are unpublished candidates (see `README.md` section 1); `bbfilter_i/q` and `bb_tap` are
 published. All `island_off` pins take the digital macro's `island_off` bit of their island (rf_rx: bit 1,
 debug: bit 5).
@@ -124,7 +124,7 @@ models, or `('include', deck)` for the extracted LO distribution).
 
 - LNA and mixer cells are not published; the pin lists above are the ones to bind (interface rows RQ-1, RQ-2).
 
-- `pt_lna_ind` and `pt_lna_deg` have no LVS netlist and are `demand` masters (`integration/top/decisions.md` D-LNA).
+- `pt_lna_ind` and `pt_lna_deg` have no LVS netlist and are `demand` masters (`integration/chips/decisions.md` D-LNA).
 - The LNA `VSS` is die VSS (PC-21); there is no `AGND_RX` net.
 - The unused N leg and inject path of `bb_tap_wmon` at the ties above: to be confirmed safe (D-WMON).
 - `DAC*`, `ADC*` and `BB*_OBS/INJ` cross islands without isolation (D-ANA).

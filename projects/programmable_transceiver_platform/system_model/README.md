@@ -3,7 +3,7 @@
 Python models of the transceiver architecture. They read `spec/contract.json` and `spec/analog-architecture.json`
 and exercise transport, resource ownership, clocking and signal-quality behaviour with numerical circuit
 abstractions. They are not evidence for the transistor design: block results come from the extracted layouts in
-`analog/<family>/generated/`, and chip connectivity from `integration/top/pt_chip.conn`.
+`analog/<family>/generated/`, and chip connectivity from `integration/chips/{rf,wired}/chip.conn`.
 
 | Path | Content |
 | --- | --- |

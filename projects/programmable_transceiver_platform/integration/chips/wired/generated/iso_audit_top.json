@@ -45,7 +45,7 @@
  "counts": {
   "K1": 16,
   "K2": 49,
-  "K3": 0,
+  "K3": 1,
   "K4": 0,
   "K5": 40,
   "K6": 0,
@@ -55,6 +55,7 @@
   "K1 island-to-island / island-to-core gate with no clamp": 16,
   "K2 pad back-drive into an off island": 9,
   "K2 core / digital source onto p-diffusion of an off island": 40,
+  "K3 switch": 1,
   "K5 contention": 40,
   "K7 ATB leaf not gated by its island": 6
  },
@@ -775,6 +776,11 @@
    "detail": "no reset/off-state rule"
   },
   {
+   "rule": "K3",
+   "inst": "isw_wired_tx_b",
+   "detail": "PG is NC_111, expected s_pg_wired_tx"
+  },
+  {
    "rule": "K5",
    "net": "wire_tx_data[0]",
    "drivers": [
@@ -1188,8 +1194,8 @@
  "macro_internal_clamps": 77,
  "k1_clamped_ok": 91,
  "coverage": {
-  "instances": 260,
-  "nets": 1080,
+  "instances": 261,
+  "nets": 1082,
   "unbound_ports": 0,
   "iso_clamp_instances": 90
  },

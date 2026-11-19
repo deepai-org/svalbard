@@ -7,7 +7,7 @@ Both chips carry the same always-on reference chain on core VDD: biasgen (patche
 and `pt_bias_root` (five switched 10 uA trunk legs). Each trunk feeds one island bank whose PMOS diode and
 mirrors sit on that island's rail (a bank must share the rail of every consumer tap it serves: README
 'Conditions of use'). Banks are the qualified `pt_bias_bank<N>` cells; a bank with fewer consumers than
-outputs has the spare outputs disabled (EN = VSS) and tied to VSS.
+outputs has the spare outputs disabled (EN = VSS), drains open.
 
 Trunk legs of `pt_bias_root` are named RF, CONV, PLL, WIRE, DEBUG; the table TRUNKS says which leg serves
 which island on each chip. Two trunks of one enable group share one enable gate (dist_en AND island_on).
@@ -185,7 +185,9 @@ def build(read, chip):
                 and_gate('Xoutput_'+consumer, 'EN_'+consumer, 'ON_'+group, 'BANK_EN_'+consumer)
                 bank['EN'+str(index)] = 'BANK_EN_'+consumer
             else:
-                bank['OUT'+str(index)] = 'VSS'
+                # spare output: disabled, drain left on a private net (a VSS tie beside a used output
+                # brings a supply route between two signal pins of the bank)
+                bank['OUT'+str(index)] = f'SPARE_{trunk}_{index}'
                 bank['EN'+str(index)] = 'VSS'
         source, cell = cells['pt_bias_bank'+str(size)]
         body.append(instance('Xbank_'+trunk, cell, source, bank))
@@ -202,7 +204,7 @@ def build(read, chip):
                                              for t, v in trunks.items()},
                 observation_bindings=observation, control_instances=control_instances,
                 notes=['Parent connects real consumer IBIAS pins and effective enables.',
-                       'Each bank sits on the rail of its consumers; spare bank outputs are disabled and tied to VSS.',
+                       'Each bank sits on the rail of its consumers; spare bank outputs are disabled, drains open.',
                        'Unused root legs are disabled with their drains on VSS.',
                        'Extracted reference models retain all capacitances; PNP name corrected as documented.',
                        'VREF0 (5/6 VBG) and VCM (VDD/2) come from the passive pt_bias_vref on core VDD.'])

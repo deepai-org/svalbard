@@ -557,9 +557,10 @@ module pt_analog_top_stub(
  assign s_pg_wired_rx = island_en[0];
  wire p_isw_debug__EN = island_en[5];
  assign s_pg_debug = island_en[5];
- wire p_isw_wired_tx__EN = island_en[0];
+ wire p_isw_wired_tx_a__EN = island_en[0];
  assign ISO_wired_tx = ~island_en[0];
  assign s_pg_wired_tx = island_en[0];
+ wire p_isw_wired_tx_b__EN = island_en[0];
  wire p_isw_wired_cap__EN = island_en[0];
  assign s_pg_wired_cap = island_en[0];
  wire p_pad_hs_rx__TERM_ENABLE = HS_TERM_ENABLE;

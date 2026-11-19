@@ -90,8 +90,12 @@ inst core_bias pt_core_bias_wired core
 # island_off[group bit], which honours pgood_override (D-ISO; PD2-2 asks for the switch ISO instead).
 inst isw_{wired_rx,debug} isw_debug core
   VDD~VDD VISL~RAIL_\1 VSS~VSS EN=island_en[{0,5}] ISO>- PG>s_pg_\1
-inst isw_wired_tx isw_debug core
+# wired_tx: 105 mA worst / 131 mA design (WT40 block + POST + pad tail): two isw_wired in parallel on one VISL bar,
+# symmetric feeds (spec/power-delivery.md, PDS-1). PG and ISO of switch a only; b's PG is not observed (CB8-4).
+inst isw_wired_tx_a isw_wired core
   VDD~VDD VISL~RAIL_wired_tx VSS~VSS EN=island_en[0] ISO>ISO_wired_tx PG>s_pg_wired_tx      # ISO used by the fallback control only
+inst isw_wired_tx_b isw_wired core
+  VDD~VDD VISL~RAIL_wired_tx VSS~VSS EN=island_en[0] ISO>- PG>-
 inst isw_wired_cap isw_wired core
   VDD~VDD VISL~RAIL_wired_cap VSS~VSS EN=island_en[0] ISO>- PG>s_pg_wired_cap
 inst pad_wtx_ext pad_rf_pair debug

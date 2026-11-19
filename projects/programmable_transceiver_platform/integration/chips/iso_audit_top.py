@@ -161,7 +161,7 @@ def make_audit(work, facts):
             for inst, i in facts['inst'].items():
                 if not i['master'].startswith('isw_'): continue
                 pins = {p: n for n, us in self.users.items() for ii, p, _ in us if ii == inst}
-                isl = inst[4:]; bit = ct.GROUP_BIT[isl]
+                isl = re.sub(r'_[ab]$', '', inst[4:]); bit = ct.GROUP_BIT[isl]      # _a/_b: paralleled switches of one island
                 rows.append(dict(inst=inst, **pins))
                 if pins.get('EN') != f'island_en[{bit}]':
                     fails.append(dict(rule='K3', inst=inst, detail=f"EN is {pins.get('EN')}, expected island_en[{bit}] (reset 0)"))

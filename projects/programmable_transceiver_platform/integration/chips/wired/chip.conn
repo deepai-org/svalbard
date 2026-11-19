@@ -60,9 +60,10 @@ inst digital pt_digital_macro chip
 macroclamp pll ct_wclk|fc_src\[1\]|s_pll_(tx|cdr)_lock
 macroclamp debug fc_src\[[23]\]|s_(aux|wtx_ext)_present
 macroclamp wired wire_rx_data\[\d+\]|wire_rx_edge\[\d+\]|wire_rx_clk|wire_tx_clk|s_detect_\w+|s_wrx_sl[pm]|s_wtx_ext_data
-inst core_bias pt_core_bias core
-  VDD~VDD VSS~VSS RAIL_rf~VSS RAIL_conv~VSS RAIL_pll~RAIL_pll RAIL_wired~RAIL_wired_rx RAIL_debug~RAIL_debug      # bank rails: D-PWR; rf / conv banks unpowered on this chip (D8)
-  ON_wired=island_on[0] ON_rf=VSS ON_pll=island_on[2] ON_conv=VSS ON_debug=island_on[5]
+# per-chip core bias (D8, integration/core_bias.py TRUNKS): each bank on the rail of its consumers
+inst core_bias pt_core_bias_wired core
+  VDD~VDD VSS~VSS RAIL_pll~RAIL_pll RAIL_wired_rx~RAIL_wired_rx RAIL_wired_tx~RAIL_wired_tx RAIL_debug~RAIL_debug
+  ON_wired=island_on[0] ON_pll=island_on[2] ON_debug=island_on[5]
   C_core_biasgen_ena=c_biasgen_ena C_core_biasgen_ref_sel_vbg=c_biasgen_ref_sel_vbg
   C_core_biasgen_ref_sel_coarse=c_biasgen_ref_sel_coarse C_core_biasgen_ref_sel_fine=c_biasgen_ref_sel_fine
   C_core_biasgen_idac2_source_{0:4}=c_biasgen_idac2_source[\1] C_core_biasgen_idac1_source_{0:4}=c_biasgen_idac1_source[\1]
@@ -70,24 +71,17 @@ inst core_bias pt_core_bias core
   C_core_biasgen_voltgen_source_{0:4}=c_biasgen_voltgen_source[\1] C_core_biasgen_voltgen_sink1_{0:2}=c_biasgen_voltgen_sink1[\1]
   C_core_biasgen_voltgen_sink2_{0:2}=c_biasgen_voltgen_sink2[\1]
   C_core_refchain_bgap_ena=c_bgap_ena C_core_refchain_bgap_trim_{0:15}=c_bgap_trim[\1]
-  C_core_refchain_dist_en_rf=VSS C_core_refchain_dist_en_conv=VSS C_core_refchain_dist_en_pll=c_bias_dist_en_pll
-  C_core_refchain_dist_en_wire=c_bias_dist_en_wire C_core_refchain_dist_en_debug=c_bias_dist_en_debug
-  EN_{lna,rxmix_i,rxmix_q,bbfilter_i,bbfilter_q,txmix_i,txmix_q,rfdriver,adc_i,adc_q,dac_i,dac_q,refbuf}=VSS      # rf / conv banks: no consumer here
-  BIAS_{lna,rxmix_i,rxmix_q,bbfilter_i,bbfilter_q,txmix_i,txmix_q,rfdriver,adc_i,adc_q,dac_i,dac_q,refbuf}~-
+  C_core_refchain_dist_en_pll=c_bias_dist_en_pll C_core_refchain_dist_en_wire=c_bias_dist_en_wire
+  C_core_refchain_dist_en_debug=c_bias_dist_en_debug
   EN_pll_ring_tx=c_pll_tx_en BIAS_pll_ring_tx~BIAS_pll_ring_tx EN_pll_ring_rx=c_pll_cdr_en BIAS_pll_ring_rx~BIAS_pll_ring_rx
-  EN_pll_ring_host=c_cdr_en BIAS_pll_ring_host~BIAS_cdr      # spare output (pll_host deleted) feeds pt_cdr.IBIAS (D-BIAS)
-  BIAS_lc_vco_reserved~-                                     # EN tied low inside core_bias: unusable (D-BIAS)
+  EN_cdr=c_cdr_en BIAS_cdr~BIAS_cdr
   EN_ctle=c_ctle_en BIAS_ctle~BIAS_ctle EN_detect=c_detect_en BIAS_detect~BIAS_detect
-  EN_wiredtx=c_wiredtx_bias_en BIAS_wiredtx~BIAS_wiredtx
-  EN_bb_tap_{i,q}=VSS BIAS_bb_tap_{i,q}~- EN_bb_tap_wmon=c_bb_tap_wmon_bias_en BIAS_bb_tap_wmon~BIAS_bb_tap_wmon
-  ROOT_REF~ATBN_master_ibias VREF0~VREF0_MASTER VCM~VCM_MASTER TRK_RF~- TRK_WIRE~ATBN_wire_ibias
-  TRK_PLL~ATBN_pll_ibias TRK_CONV~- VBG~ATBN_vbg TRK_DEBUG~ATBN_debug_ibias IDAC1~ATBN_idac1
+  EN_wiredtx=c_wiredtx_bias_en BIAS_wiredtx~BIAS_wiredtx EN_hsbias=c_hsbias_en BIAS_hsbias~BIAS_hsbias
+  EN_bb_tap_wmon=c_bb_tap_wmon_bias_en BIAS_bb_tap_wmon~BIAS_bb_tap_wmon
+  ROOT_REF~ATBN_master_ibias VREF0~VREF0_MASTER VCM~VCM_MASTER VBG~ATBN_vbg IDAC1~ATBN_idac1
+  TRK_WIRED_RX~ATBN_wire_ibias TRK_PLL~ATBN_pll_ibias TRK_DEBUG~ATBN_debug_ibias
+  TRK_WIRED_TX~-      # wired_tx trunk: no ATB leaf on pt_wired yet (interface row CB8-2)
   VGEN_SOURCE~- VGEN_SINK1~- VGEN_SINK2~-
-# missing bias outputs (MW-30): build demand, D-BIAS
-inst bias_ext pt_bias_ext core demand
-  EN_qvco=VSS BIAS_qvco~- EN_lo_pfdcp=VSS BIAS_lo_pfdcp~-      # qvco / lo_pfdcp taps: pt_rf (assignment: bias_ext split)
-  EN_hsbias=c_hsbias_en BIAS_hsbias~BIAS_hsbias TRK_PLL~ATBN_pll_ibias TRK_WIRE~ATBN_wire_ibias
-  RAIL_pll~VSS RAIL_wired~RAIL_wired_tx VSS~VSS
 
 # Islands and switches (spec/power-delivery.md section 2, PD2-2): ten islands on the five verified switch masters.
 # Enable groups: wired = wired_rx + wired_cap + wired_tx (island_en[0]); rf = rf_rx + rf_tx + lod + lo (island_en[1]);

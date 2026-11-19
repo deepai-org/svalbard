@@ -1,7 +1,7 @@
 # common.conn: chip-level connectivity shared by pt_rf and pt_wired (programmable transceiver, GF180, two-chip split:
 # MANDATE 1, scratch/reviews/SPLIT-PLAN.md, assignment scratch/reviews/split/assignment.md). Included by rf/chip.conn and
 # wired/chip.conn; it holds every instance that both chips carry with the same binding. Instances of one chip, and
-# shared instances whose binding differs per chip (digital macro, core_bias, bias_ext, clockmux, the two rings, cdr,
+# shared instances whose binding differs per chip (digital macro, core_bias, clockmux, the two rings, cdr,
 # clk_obs), are in the chip file. Owner: chip-top integration. Hand-edited plain text; integration/chips/check_top.py
 # <chip> parses and checks the chip (this file included) and writes <chip>/generated/.
 #

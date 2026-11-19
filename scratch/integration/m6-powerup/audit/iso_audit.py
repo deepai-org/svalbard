@@ -250,6 +250,11 @@ class Audit:
                 if not is_gate or self.master.get(inst, '').startswith('iso_pd'):
                     continue
                 rd = self.gate_domain(inst)
+                if inst == 'core_bias':
+                    # a trunk node: the bank's diode-connected PMOS (drain on the island rail's well) owns the gates
+                    # on it, so they sit in that island, not in the core; control gates have no p-diffusion
+                    wells = {b for k, b in terms if k == 'pdiff' and b and b.startswith('RAIL_')}
+                    rd = self.term_domain(inst, wells.pop()) if len(wells) == 1 else rd
                 if rd in sdom and len(sdom) == 1:
                     continue
                 if self.master.get(inst, '').startswith('iso_clamp'):

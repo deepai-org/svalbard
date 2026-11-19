@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Bias trunk audit: every cell pin named *IBIAS*/IB_* in a chip-level cell must (a) appear as a core_bias
-consumer (integration/core_bias.py CONSUMERS) and (b) terminate inside the cell on an NMOS diode to VSS
+consumer (integration/core_bias.py TRUNKS, either chip) and (b) terminate inside the cell on an NMOS diode to VSS
 (core_bias banks SOURCE 10 uA from the island rail).  Prints per-pin: first-level devices on the bias net,
 classification, and whether core_bias has an output for it.  --selftest injects (1) a PMOS-diode consumer
 and (2) a consumer missing from CONSUMERS and requires both to be flagged."""
@@ -17,11 +17,11 @@ CELLS={ # instance -> (file, subckt, core_bias consumer name or None)
  'refbuf':('analog/converters/refbuf.spice','pt_refbuf','refbuf'),
  'pll_cdr':('analog/timing/pll_ring.spice','pt_pll_ring','pll_ring_rx'),
  'pll_tx':('analog/timing/pll_ring_core.spice','pt_pll_ring_core','pll_ring_tx'),
- 'lo_pfdcp':('analog/timing/lo_pfdcp.spice','pt_lo_pfdcp',None),
- 'qvco':('analog/timing/lcvco/qvco5.spice',None,'lc_vco_reserved'),
- 'cdr':('analog/wired_rx/cdr.spice','pt_cdr',None),
+ 'lo_pfdcp':('analog/timing/lo_pfdcp.spice','pt_lo_pfdcp','lo_pfdcp'),
+ 'qvco':('analog/timing/lcvco/qvco5.spice',None,'qvco'),
+ 'cdr':('analog/wired_rx/cdr.spice','pt_cdr','cdr'),
  'ctle':('analog/wired_rx/ctle.spice','pt_ctle','ctle'),'detect':('analog/wired_rx/detect.spice','pt_detect','detect'),
- 'wiredtx':('analog/wired_tx/wiredtx.spice','pt_wiredtx','wiredtx'),'hsbias':('analog/wired_tx/hsbias.spice','pt_wtx_hsbias',None),
+ 'wiredtx':('analog/wired_tx/wiredtx.spice','pt_wiredtx','wiredtx'),'hsbias':('analog/wired_tx/hsbias.spice','pt_wtx_hsbias','hsbias'),
  'bb_tap':('analog/rf_rx/bb_tap.spice','pt_bb_tap','bb_tap_i'),
 }
 def load(path):
@@ -99,14 +99,13 @@ def run(cells,consumers):
             flag=[]
             if not ok_dir: flag.append('DIRECTION?')
             if not ok_src: flag.append('NO core_bias OUTPUT')
-            if cons=='lc_vco_reserved': flag.append('core_bias EN tied VSS (integration/core_bias.py:128)')
             print(f'{inst}.{p} [{f}] -> {sorted(k)} consumer={cons} {" ".join(flag) or "ok"}')
             if flag: bad.append(f'{inst}.{p}')
     return bad
 if __name__=='__main__':
     sys.path.insert(0,P+'/integration'); 
-    src=open(P+'/integration/core_bias.py').read()
-    cons=eval(re.search(r'CONSUMERS = (\{.*?\n\})',src,re.S).group(1))
+    import core_bias
+    cons={f'{c}.{t}':v[4] for c,tr in core_bias.TRUNKS.items() for t,v in tr.items()}
     allc=[c for v in cons.values() for c in v]
     if '--selftest' in sys.argv:
         import tempfile

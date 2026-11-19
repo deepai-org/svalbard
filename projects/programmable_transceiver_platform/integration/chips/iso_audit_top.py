@@ -65,14 +65,14 @@ def build(work, chip):
         m = masters[name]
         if m['kind'] == 'file' or m['kind'] == 'staged':
             subname[name] = load(name)
-        elif name == 'pt_core_bias':
+        elif name == f'pt_core_bias_{chip}':
             sys.path.insert(0, ct.P+'/integration'); sys.path.insert(0, ct.P+'/verification')
             try:
                 import core_bias
                 from pathlib import Path
-                cb = core_bias.build(lambda p: Path(p).read_text())
+                cb = core_bias.build(lambda p: Path(p).read_text(), chip)
                 assert cb['pins'] == m['pins'], 'masters.txt core_bias pin list is stale against integration/core_bias.py'
-                lib.append(re.sub(r'\n\+\s*', ' ', cb['text'])); subname[name] = 'pt_core_bias'
+                lib.append(re.sub(r'\n\+\s*', ' ', cb['text'])); subname[name] = cb['top']
             except Exception as e:      # noqa
                 note.append(f'core_bias: builder not usable here ({type(e).__name__}: {e}); empty box'); empty.append(name)
         elif name in ('iso_clamp_x4', 'iso_pd'):
@@ -94,7 +94,7 @@ def build(work, chip):
     iso_m = masters['iso_clamp']; iso_sub = subname['iso_clamp']; iso_pins = published_pins('iso_clamp')
     for name, i in inst.items():
         home = 'core' if i['group'] in ct.ALWAYS_ON else GROUP[i['group']]
-        placed.append(dict(name=name, island=home, master=i['master'] if i['master'] != 'pt_core_bias' else 'core_bias'))
+        placed.append(dict(name=name, island=home, master=i['master'] if not i['master'].startswith('pt_core_bias') else 'core_bias'))
         m = masters[i['master']]
         if name == 'digital':
             row = []

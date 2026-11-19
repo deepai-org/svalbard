@@ -1,0 +1,197 @@
+item,master,group,kind,status,est,pub_um2,asbuilt_um2,target_um2,lb_um2,w,h,mkey,source,lever
+host,pt_host_physical,chip,conn,P,,0,0,0,0,,,,provider ring,-
+debug_pads,pt_debug_physical,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_por_bypass,pad_strap,chip,conn,P,,0,0,0,0,,,,provider site,-
+por,por,core,conn,P,,9469,9469,9469,9469,142.01,66.68,por,"vendored, unmodified",none (no-dead-chip infrastructure)
+aosc,pt_aosc,core,conn,P,,12864,12864,12864,8558,199.56,64.46,pt_aosc,,67 % of the outline has no device: repack to two rows
+isw_pll,isw_debug,core,conn,P,,36922,36922,36922,31801,183.6,201.1,isw_debug,,as isw_wired
+pad_dvdd_0,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvdd_1,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvdd_2,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvdd_3,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvdd_4,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvdd_5,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_vdd_0,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_vdd_1,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvss_0,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvss_1,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvss_2,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvss_3,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvss_4,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvss_5,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvss_6,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_dvss_7,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_vss_0,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_vss_1,prov_supply,chip,conn,P,,0,0,0,0,,,,provider ring,-
+pad_ref,pad_refpad,pll,pad,P,,195358,171506,171506,171506,401.22,912.91,,"published 401.22 x 912.91; bbox inside the core 0.1954, occupied (50 um depth bands) 0.1715","taper: 401 um wide at the ring, 318 um at the tip"
+pad_aux_clk,pad_refpad,pll,pad,P,,195358,171506,171506,171506,401.22,912.91,,"published 401.22 x 912.91; bbox inside the core 0.1954, occupied (50 um depth bands) 0.1715","taper: 401 um wide at the ring, 318 um at the tip"
+refvcm,pt_refvcm,pll,conn,P,,7192,7192,7192,6873,134.93,53.3,CB_pt_refvcm,,none
+rx_ref_in,pt_diff_clk_rx,core,conn,P,,22341,22341,22341,18136,197.99,112.84,pt_diff_clk_rx,,38 % device-free
+iso_host_clk,iso_clamp_x4,core,conn,P,,1025,1025,1025,1025,32.88,31.18,iso_clamp_x4,,-
+prescale,pt_prescale,pll,conn,P,,12600,12600,12600,9709,198.08,63.61,pt_prescale,,CP4-7: prescale + prescale_conv as one chain
+prescale_hf,pt_prescale,pll,conn,P,,12600,12600,12600,9709,198.08,63.61,pt_prescale,,CP4-7: prescale + prescale_conv as one chain
+pll_vreg2,pt_pll_vreg2,pll,conn,P,,173424,173424,173424,146263,445.42,389.35,pt_pll_vreg2,,dense (48 % COMP)
+iso_pll_tx_fbck,iso_clamp_x4,core,conn,P,,1025,1025,1025,1025,32.88,31.18,iso_clamp_x4,,-
+rx_aux_clk,pt_diff_clk_rx,debug,conn,P,,22341,22341,22341,18136,197.99,112.84,pt_diff_clk_rx,,38 % device-free
+iso_aux_ck,iso_clamp_x4,pll,conn,P,,1025,1025,1025,1025,32.88,31.18,iso_clamp_x4,,-
+ring_osc,pt_ring_osc,debug,conn,P,,9522,9522,9522,8567,195.68,48.66,pt_ring_osc,,CP4-R4: same structure as pt_char_ro33?
+vco_replica,pt_vco_replica,debug,conn,P,,20941,20941,20941,18088,195.47,107.13,pt_vco_replica,,-
+obs_pre4_wire,pt_obs_pre4,debug,conn,P,,3667,3667,3667,3667,127.8,28.69,pt_obs_pre4,,CP4-4: two of six replaced by ring FBCK
+obs_pre4_wsmp,pt_obs_pre4,debug,conn,P,,3667,3667,3667,3667,127.8,28.69,pt_obs_pre4,,CP4-4: two of six replaced by ring FBCK
+obs_pre4_ref,pt_obs_pre4,debug,conn,P,,3667,3667,3667,3667,127.8,28.69,pt_obs_pre4,,CP4-4: two of six replaced by ring FBCK
+obs_pre4_aux,pt_obs_pre4,debug,conn,P,,3667,3667,3667,3667,127.8,28.69,pt_obs_pre4,,CP4-4: two of six replaced by ring FBCK
+obs_pre4_pll,pt_obs_pre4,debug,conn,P,,3667,3667,3667,0,127.8,28.69,pt_obs_pre4,lb: CP4-4,CP4-4: two of six replaced by ring FBCK
+obs_pre4_cdr,pt_obs_pre4,debug,conn,P,,3667,3667,3667,0,127.8,28.69,pt_obs_pre4,lb: CP4-4,CP4-4: two of six replaced by ring FBCK
+pd_clk_obs,iso_pd,core,conn,P,,95,95,95,95,9.3,10.21,iso_pd,,-
+iso_clk_obs,iso_clamp_x4,core,conn,P,,1025,1025,1025,1025,32.88,31.18,iso_clamp_x4,,-
+char_atb,pt_char_atb,core,conn,P,,28239,28239,28239,14705,192.1,147.0,pt_char_atb,,45 % empty
+atb0_leaf1,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf29,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf55,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf56,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf58,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_grp0,atb_grp,core,conn,P,,6145,6145,6145,5562,99.34,61.86,atb_grp,,-
+atb0_leaf43,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf44,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf45,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf46,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf47,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf48,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf49,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf50,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf51,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf52,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf53,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_leaf54,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb0_grp1,atb_grp,core,conn,P,,6145,6145,6145,5562,99.34,61.86,atb_grp,,-
+atb0_pad,atb_pad,core,conn,P,,6626,6626,6626,6626,99.82,66.38,atb_pad,,-
+atb0_io,atb_provider_pad,chip,conn,P,,0,0,0,0,,,,provider ring,-
+atb1_leaf1,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf2,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf3,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf4,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf5,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf6,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf9,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf12,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf13,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_grp0,atb_grp,core,conn,P,,6145,6145,6145,5562,99.34,61.86,atb_grp,,-
+atb1_leaf43,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf44,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_grp1,atb_grp,core,conn,P,,6145,6145,6145,5562,99.34,61.86,atb_grp,,-
+atb1_leaf25,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf41,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf58,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_grp2,atb_grp,core,conn,P,,6145,6145,6145,5562,99.34,61.86,atb_grp,,-
+atb1_leaf29,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf30,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf31,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf32,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf34,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf37,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf47,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf48,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_grp3,atb_grp,core,conn,P,,6145,6145,6145,5562,99.34,61.86,atb_grp,,-
+atb1_leaf42,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf45,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf46,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf49,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf50,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf51,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf52,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf53,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf54,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf55,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf56,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf57,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_grp4,atb_grp,core,conn,P,,6145,6145,6145,5562,99.34,61.86,atb_grp,,-
+atb1_pad,atb_pad,core,conn,P,,6626,6626,6626,6626,99.82,66.38,atb_pad,,-
+atb1_io,atb_provider_pad,chip,conn,P,,0,0,0,0,,,,provider ring,-
+digital,pt_digital_macro,chip,conn,U,E,0,2666252,2666252,2316973,,,,synthesized 1.299 mm2 of cells (0.945 x the both-halves build) -> outline 1716 x 1553.76 (verification/digital_hardening/wired/config.json); no place and route of this configuration yet,"RTL reductions (single-rank trims, per-mode duplicates), clock-buffer and gain-buffer area, gated clocks / one read tree (assignment section 4 levers): owner"
+core_bias,pt_core_bias,core,conn,U,,301799,301799,180000,163148,925.65,326.04,pt_core_bias,"composed by integration builder, scratch/core-bias-routing-20261110-compact (not in generated/); one composite on both chips until the per-chip bank list (D8, D-SPLIT-BIAS)","bandgap + biasgen + root + 4 banks + vref measure 0.105 mm2 as cells; the composite is 0.302: 26 % empty, 66 % device-free. Re-place in two abutted rows"
+bias_ext,pt_bias_ext,core,conn,P,,4173,4173,4173,4173,,,CB_pt_bias_tap2,two pt_bias_tap2 cells,none
+isw_wired_rx,isw_debug,core,conn,P,,36922,36922,36922,31801,183.6,201.1,isw_debug,,as isw_wired
+isw_debug,isw_debug,core,conn,P,,36922,36922,36922,31801,183.6,201.1,isw_debug,,as isw_wired
+isw_wired_tx,isw_debug,core,conn,P,,36922,36922,36922,31801,183.6,201.1,isw_debug,,as isw_wired
+isw_wired_cap,isw_wired,core,conn,P,,64081,64081,64081,53923,263.6,243.1,isw_wired,,pass device is 48 % COMP: dense. MIM over it is free decap
+pad_wtx_ext,pad_rf_pair,debug,pad,P,,150971,146890,146890,146890,310.06,912.91,,"published 310.06 x 912.91; bbox inside the core 0.1510, occupied (50 um depth bands) 0.1469; OCP-2 closed (D7): WTX_EXT keeps its own pads on pt_wired",ESD rows under the provider rail band (AP4-6b)
+pad_wmon,pad_single_leg,debug,pad,P,,147139,140099,99817,0,302.19,912.91,,"published 302.19 x 912.91; bbox inside the core 0.1471, occupied (50 um depth bands) 0.1401; target: 205 um B cell (undrawn); lb: provider cell (AP4-7)",ESD rows under the provider rail band (AP4-6b)
+pad_tlp,pad_tlp,core,conn,P,,0,0,0,0,,,,in-ring site 68 x 124,-
+pad_hs_rx,pad_hspad,wired_rx,pad,P,,239589,209492,209492,209492,492.06,912.91,,"published 492.06 x 912.91; bbox inside the core 0.2396, occupied (50 um depth bands) 0.2095",stacked cell is published
+pad_usb,pad_wirepad,wired_tx,pad,P,,525765,341926,300144,300144,521.22,1434.72,,"published 521.22 x 1434.72; bbox inside the core 0.5258, occupied (50 um depth bands) 0.3419; target: attachment column 523 -> 300 um deep",attachment column repack (AP4-6a); ESD rows under the rail band (AP4-6b)
+pad_wire_tx,pad_txpad,wired_tx,pad,P,,385322,268476,247315,247315,481.22,1226.72,,"published 481.22 x 1226.72; bbox inside the core 0.3853, occupied (50 um depth bands) 0.2685; target: column 312 -> 160 um",as wirepad; 0.6x MAIN switch (WT34)
+bb_tap_wmon,pt_bb_tap,debug,conn,U,,19511,19511,19511,15491,99.08,196.92,pt_bb_tap,working tree,37 % device-free
+iso_wmon,iso_pd,debug,conn,P,,95,95,95,95,9.3,10.21,iso_pd,,-
+clockmux,pt_clockmux,pll,conn,P,,15160,15160,15160,9934,179.84,84.3,pt_clockmux,,"16 % empty, 53 % device-free"
+pll_tx,pt_pll_ring_core,pll,conn,P,,86020,86020,65000,65000,196.0,438.88,pt_pll_ring_core,,37 % device-free
+pll_cdr,pt_pll_ring,pll,conn,P,,166657,166657,127000,127000,210.02,793.53,pt_pll_ring,,slab-collapse of the device-free band y 258-447
+cdr,pt_cdr,pll,conn,P,,82901,82901,82901,75569,259.26,319.76,pt_cdr,,dense (r13)
+iso_cdr_up_0,iso_clamp,pll,conn,P,,906,906,906,906,31.28,28.96,iso_clamp,,-
+iso_cdr_up_1,iso_clamp,pll,conn,P,,906,906,906,906,31.28,28.96,iso_clamp,,-
+iso_cdr_up_2,iso_clamp,pll,conn,P,,906,906,906,906,31.28,28.96,iso_clamp,,-
+iso_cdr_up_3,iso_clamp,pll,conn,P,,906,906,906,906,31.28,28.96,iso_clamp,,-
+iso_cdr_dn_0,iso_clamp,pll,conn,P,,906,906,906,906,31.28,28.96,iso_clamp,,-
+iso_cdr_dn_1,iso_clamp,pll,conn,P,,906,906,906,906,31.28,28.96,iso_clamp,,-
+iso_cdr_dn_2,iso_clamp,pll,conn,P,,906,906,906,906,31.28,28.96,iso_clamp,,-
+iso_cdr_dn_3,iso_clamp,pll,conn,P,,906,906,906,906,31.28,28.96,iso_clamp,,-
+rx_wtx_ext,pt_diff_clk_rx,debug,conn,P,,22341,22341,22341,18136,197.99,112.84,pt_diff_clk_rx,,38 % device-free
+iso_wtx_dx,iso_clamp,wired_tx,conn,P,,906,906,906,906,31.28,28.96,iso_clamp,,-
+clk_obs,pt_clk_obs16,debug,conn,U,,92036,52854,52854,52854,127.5,414.54,STG_pt_clk_obs16,staged,dense
+termination,pt_termination,wired_rx,conn,P,,48249,48249,48249,36631,141.12,341.9,pt_termination,,42 % device-free
+rxlevel,pt_rxlevel,wired_rx,conn,P,,13180,13180,13180,13180,77.76,169.5,pt_rxlevel,,dense
+ctle,pt_ctle,wired_rx,conn,U,E,133483,68676,68676,68676,,,,"staged 194 x 354 per the owner (NO-GO, superseded by the follower redesign): not re-measured, no current GDS",owner
+rxselect,pt_rxselect,wired_rx,conn,P,,8841,8841,8841,6227,63.22,139.84,pt_rxselect,,-
+wmon_sel,pt_wmon_sel,wired_rx,conn,P,,9835,9835,9835,8019,72.42,135.8,pt_wmon_sel,,-
+detect,pt_detect,wired_rx,conn,P,,173480,173480,90000,90000,251.26,690.44,pt_detect,,71 % device-free; layout-only repack failed its thresholds: needs the r7i redesign
+wordclk_rx,pt_wordclk,wired_cap,conn,P,,24822,24822,24822,0,200.18,124.0,pt_wordclk,lb: CP4-8,CP4-8: counter into pt_wrx_cap
+vthdac,pt_vthdac,wired_rx,conn,P,,23891,23891,23891,20709,140.46,170.09,pt_vthdac,,-
+ptrim,pt_ptrim,wired_cap,conn,U,E,289747,45000,45000,45000,,,,published 449 x 645 cell is not functional; redesign candidates l2-l6 are 188-227 x 211 um per scratch/wired_rx/r10ptrim/STATUS.md (no top GDS found),owner
+slicer,pt_slicer,wired_rx,conn,P,,109899,109899,109899,80507,298.8,367.8,pt_slicer,,47 % device-free
+wrx_cap,pt_wrx_cap,wired_cap,conn,U,,956461,293813,293813,252677,1210.55,242.71,STG_pt_wrx_cap,staged r7c (fails one extracted case),dense after the repack
+wiredtx,pt_wiredtx,wired_tx,conn,U,E,246188,82717,82717,82717,,,,"published 543.9 x 452.7 less the quarter-rate core wtx_serq4c (530 x 308, measured) that the new path replaces; no block top of the new transmitter exists",owner
+steer_0,tx_steer,wired_tx,conn,P,,8677,0,0,0,54.58,158.98,,retires with the new transmit path (WT34/WT36),"steer_0..3 retire with the new transmit path (WT34), steer_4/5 unused (X5)"
+steer_1,tx_steer,wired_tx,conn,P,,8677,0,0,0,54.58,158.98,,as steer_0,"steer_0..3 retire with the new transmit path (WT34), steer_4/5 unused (X5)"
+steer_2,tx_steer,wired_tx,conn,P,,8677,0,0,0,54.58,158.98,,as steer_0,"steer_0..3 retire with the new transmit path (WT34), steer_4/5 unused (X5)"
+steer_3,tx_steer,wired_tx,conn,P,,8677,0,0,0,54.58,158.98,,as steer_0,"steer_0..3 retire with the new transmit path (WT34), steer_4/5 unused (X5)"
+steer_4,tx_steer,wired_tx,conn,P,,8677,8677,0,0,54.58,158.98,tx_steer,unused today (X5),"steer_0..3 retire with the new transmit path (WT34), steer_4/5 unused (X5)"
+steer_5,tx_steer,wired_tx,conn,P,,8677,8677,0,0,54.58,158.98,tx_steer,unused today (X5),"steer_0..3 retire with the new transmit path (WT34), steer_4/5 unused (X5)"
+attached_tx_interlock,tx_interlock,wired_tx,conn,P,,48100,48100,30000,30000,139.42,345.0,tx_interlock_thick,,TMDS half tied off (CP4-R3)
+term_buffer,term_buffer,wired_tx,conn,P,,75196,75196,45000,37498,156.8,479.56,term_buffer,,"24 % empty, 76 % device-free"
+txpad_bias,pt_txpad_bias,wired_tx,conn,P,,9936,9936,9936,0,164.34,60.46,CB_pt_txpad_bias,lb: CP4-10,CP4-10: a tap of the termination divider
+usb_txdrv,pt_usb_txdrv,wired_tx,conn,P,,30481,30481,30481,29237,113.48,268.6,pt_usb_txdrv,rev 3 unreviewed,dense
+hsbias,pt_wtx_hsbias,wired_tx,conn,P,,9137,9137,9137,8282,122.65,74.5,pt_wtx_hsbias,,-
+wtx_fallback_control,pt_wtx_fallback_control,wired_tx,conn,P,,5861,5861,5861,5021,97.95,59.84,pt_wtx_fallback_control,,-
+char_ro33,pt_char_ro33,debug,conn,P,,9698,9698,9698,7813,69.64,139.26,pt_char_ro33,,-
+char_ro50,pt_char_ro50,debug,conn,P,,9330,9330,9330,7409,70.46,132.42,pt_char_ro50,,-
+char_cmldiv,pt_char_cmldiv,debug,conn,P,,27841,27841,27841,15121,104.76,265.76,pt_char_cmldiv,,36 % empty
+atb0_leaf22,atb_leaf_f,core,conn,P,,1086,1086,1086,1086,30.8,35.26,atb_leaf_f,,as atb_leaf_s
+atb1_leaf7,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf10,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf22,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf23,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf24,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf26,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf27,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf28,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+atb1_leaf40,atb_leaf_s,core,conn,P,,827,827,827,827,30.58,27.04,atb_leaf_s,,58 leaves of 30.6 x 27.0: abut in rows with a shared guard ring
+pad_xvss_0,prov_supply_sig,chip,conn,P,,0,0,0,0,,,,provider supply cell at a signal site (in the ring),-
+pad_xvss_1,prov_supply_sig,chip,conn,P,,0,0,0,0,,,,provider supply cell at a signal site (in the ring),-
+pad_xvss_2,prov_supply_sig,chip,conn,P,,0,0,0,0,,,,provider supply cell at a signal site (in the ring),-
+pad_xvss_3,prov_supply_sig,chip,conn,P,,0,0,0,0,,,,provider supply cell at a signal site (in the ring),-
+pad_xvss_4,prov_supply_sig,chip,conn,P,,0,0,0,0,,,,provider supply cell at a signal site (in the ring),-
+pad_xvss_5,prov_supply_sig,chip,conn,P,,0,0,0,0,,,,provider supply cell at a signal site (in the ring),-
+pad_xvss_6,prov_supply_sig,chip,conn,P,,0,0,0,0,,,,provider supply cell at a signal site (in the ring),-
+pad_xvdd_0,prov_supply_sig,chip,conn,P,,0,0,0,0,,,,provider supply cell at a signal site (in the ring),-
+pad_xvdd_1,prov_supply_sig,chip,conn,P,,0,0,0,0,,,,provider supply cell at a signal site (in the ring),-
+wtx_ser8d,(booked),wired_tx,booked,U,,0,234198,234198,170972,742.12,315.58,STG_wtx_ser8d,"new transmit path stream macro, generated/fast (unpublished), measured",47 % device-free: routing channels are 127 of 315 um of height (owner lever)
+wtx_mux8,(booked),wired_tx,booked,U,,0,43299,43299,43299,291.3,148.64,STG_wtx_mux8,"new transmit path muxing pre-driver, scratch/wired_tx/s12 rev2, measured",-
+r8arch_slicer_b,(booked),-,booked,S,E,0,109899,109899,109899,298.8,367.8,pt_slicer,second slicer bank for > 2.5 Gb/s receive = pt_slicer outline; architecture not designed,-
+r8arch_capture_b,(booked),-,booked,S,E,0,293813,293813,293813,1210.55,242.71,STG_pt_wrx_cap,second capture = staged r7c outline; not designed,-
+r8arch_blend_pd8,(booked),-,booked,M,E,0,35000,35000,35000,,,,estimate (area pass 4),-
+ctle_follower_x2,(booked),-,booked,M,E,0,10000,10000,10000,,,,"two CTLE source followers (MW-13-FIX), 0.003-0.005 each",-
+wtx_tcoil_rsv,(booked),wired_tx,booked,M,E,0,68400,68400,68400,,,,TX T-coil reserve 570 x 120 (v5 floorplan),-
+d2h_strip,(booked),-,booked,M,E,0,31495,31495,31495,,,,D2H output strip / pad repeaters 1312 x 24 at the south pad row,-
+decap_macro_edge_bank,(booked),-,booked,S,E,0,390000,390000,390000,,,,"1.5 nF bank of pt_decap_tile + MIM within 250 um of the macro (power-delivery.md 4.2); tile cell published, bank not drawn. Kept on both chips (D9: full 5.4 nF)",lb 0 = no dedicated bank (decap 5.4 -> 3.9 nF or stacked tiles elsewhere): power delivery decision
+decap_tiles,(booked),-,booked,S,E,0,641485,641485,641485,,,,"stacked MOS + MIM tiles (pt_decap_tile + MIM, 4 fF/um2) for the part of the 5.4 nF plan that the bank, grid MIM over the blocks, macro row fill and bond-site tiles do not give (decap.json, D9)",-
+rf_timebase_h2dclk_detect,(booked),-,booked,M,E,0,5000,5000,5000,,,,time base for RF modes + H2D_CLK present detector (rest of the monitor is RTL),-
+fwd_clk_repeaters,(booked),-,booked,M,E,0,3000,3000,3000,,,,repeaters / shield for the AUX_CLK to wired forwarded clock (short on pt_wired: the pad pair is on the same chip as the CDR),-

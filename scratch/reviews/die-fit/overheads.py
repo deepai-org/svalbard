@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Die-fit study: supply / routing / decap overheads DERIVED from the connectivity and from the packed floorplans.
-Inputs: pt_chip.conn, run/fit-<tag>.json (placement), meas/measured.json (Metal4/Metal5/Metal3-free area), ledger.json.
-Output: overheads.json + printed tables.   python3 overheads.py [tagB tagC]"""
+"""Die-fit study of one chip: supply / routing / decap overheads DERIVED from the connectivity and the packed floorplans.
+Inputs: integration/chips/<chip>/chip.conn, run/<chip>/fit-<tag>.json (placement), meas/measured.json (Metal4/Metal5/Metal3-free
+area), <chip>/ledger.json. Output: <chip>/overheads.json + printed tables.   CHIP=rf|wired python3 overheads.py [tagB tagC]"""
 import sys, os, re, json, math, collections
 R = '/home/ubuntu/svalbard'; P = f'{R}/projects/programmable_transceiver_platform'; HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, f'{P}/integration/top')
+sys.path.insert(0, f'{P}/integration/chips')
 import check_top
-inst, ports, waive, err = check_top.parse(open(f'{P}/integration/top/pt_chip.conn').read())
+CHIP = os.environ['CHIP']
+inst, ports, waive, err = check_top.parse(check_top.read_conn(f'{P}/integration/chips/{CHIP}/chip.conn'))
 tags = sys.argv[1:] or ['s', 't', 'lb']
-L = json.load(open(f'{HERE}/ledger.json'))
+L = json.load(open(f'{HERE}/{CHIP}/ledger.json'))
 out = {}
 
 # ---- 1. net counts from the conn ------------------------------------------------------------------------------------------
@@ -40,7 +41,7 @@ PITCH_REAL = 1.12     # double pitch: hand-routed analog top, shields on clocks/
 def mg(r1, r2): return max(r2[0]-r1[2], r1[0]-r2[2], 0.0)+max(r2[1]-r1[3], r1[1]-r2[3], 0.0)
 def ctr(r): return ((r[0]+r[2])/2, (r[1]+r[3])/2)
 for tag in tags:
-    f = f'{HERE}/run/fit-{tag}.json'
+    f = f'{HERE}/run/{CHIP}/fit-{tag}.json'
     if not os.path.exists(f): continue
     J = json.load(open(f)); pr = {n: d['rect'] for n, d in J['placed_rects'].items()}; dg = J['fixed']['digital']
     pads = {n: rs[0] for n, rs in J['pads'].items()}; allr = dict(pr); allr.update(pads); allr['digital'] = dg
@@ -65,7 +66,8 @@ for tag in tags:
             an_len[k] += hp; an_n[k] += 1
     # fixed long routes that the conn does not show as lengths
     d2h = 11*(dg[1]-452.0+300)          # D2H[9:0]+clk from the macro south edge to the south pad row (corridor)
-    fwd = 2*3100.0                      # forwarded wire clock on the AUX_CLK pair: 3.1 mm differential (CP4-3)
+    # forwarded wire clock on the AUX_CLK pair (CP4-3): pad to the CDR on pt_wired, from the placement (0 on pt_rf)
+    fwd = 2*mg(allr['pad_aux_clk'], allr['cdr']) if CHIP == 'wired' and 'pad_aux_clk' in allr and 'cdr' in allr else 0.0
     # track area: static control at min pitch; fast digital (data/clock words) and analog at double pitch (shield/space);
     # ring phases and LO as shielded pairs: 3 x double pitch per wire
     def area(p_ctl, p_fast):
@@ -118,4 +120,4 @@ for s in out['m45']:
 print('M45', json.dumps(out['m45'], indent=0))
 rowsm.sort(key=lambda x: -x[3]); print('S: largest free M4/M5 areas:', [(n, round(f/1e3)) for n, m, a, f in rowsm[:14]])
 out['m45_S_top'] = [(n, round(a), round(f)) for n, m, a, f in rowsm[:20]]
-json.dump(out, open(f'{HERE}/overheads.json', 'w'), indent=1)
+json.dump(out, open(f'{HERE}/{CHIP}/overheads.json', 'w'), indent=1)

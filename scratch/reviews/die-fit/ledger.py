@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Die-area ledger (current state). One row per instance of integration/top/pt_chip.conn plus booked items that are
-not instances. Every layout number is read from meas/measured.json (KLayout bounding boxes measured on the GDS on disk
-by meas/measure.py); nothing is copied from older tables. Numbers that are not measured carry flag E (estimate).
+"""Die-area ledger of one chip (current state). One row per instance of integration/chips/<chip>/chip.conn plus booked
+items that are not instances (each booked item names the chips that carry it). Every layout number is read from
+meas/measured.json (KLayout bounding boxes measured on the GDS on disk by meas/measure.py); nothing is copied from older
+tables. Numbers that are not measured carry flag E (estimate).
 
-    python3 ledger.py          -> ledger.csv, ledger.json, ledger.md
+    CHIP=rf|wired python3 ledger.py          -> <chip>/ledger.csv, <chip>/ledger.json, <chip>/ledger.md
 
 Columns (um2):
   pub      bounding box of the published layout (analog/*/generated), 0 if none
@@ -16,11 +17,14 @@ Status: P published | U laid out, unpublished | S schematic or generator only | 
 import sys, csv, json, collections, os, subprocess
 R = '/home/ubuntu/svalbard'; P = f'{R}/projects/programmable_transceiver_platform'
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, f'{P}/integration/top')
+sys.path.insert(0, f'{P}/integration/chips')
 import check_top
-inst, ports, waive, err = check_top.parse(open(f'{P}/integration/top/pt_chip.conn').read())
+CHIP = os.environ['CHIP']; assert CHIP in ('rf', 'wired'), 'CHIP=rf|wired'
+OUT = f'{HERE}/{CHIP}'; os.makedirs(OUT, exist_ok=True)
+inst, ports, waive, err = check_top.parse(check_top.read_conn(f'{P}/integration/chips/{CHIP}/chip.conn'))
 assert not err
-CONN_REV = subprocess.run(['git', '-C', R, 'log', '-1', '--format=%h', '--', f'{P}/integration/top/pt_chip.conn'], capture_output=True, text=True).stdout.strip()
+CONN_REV = subprocess.run(['git', '-C', R, 'log', '-1', '--format=%h', '--', f'{P}/integration/chips'], capture_output=True, text=True).stdout.strip()
+MACRO = json.load(open(f'{HERE}/macro.json'))[CHIP]      # per-chip macro outline: synthesis of the chip configuration (split phase 2)
 MS = json.load(open(f'{HERE}/meas/measured.json'))
 DIE = (3932.0, 5122.0); CORE = (3028.0, 4218.0); CORE_MM2 = CORE[0]*CORE[1]/1e6; RING_DEPTH = 426.0   # pad cells start 26 um inside the die edge; core at 452
 
@@ -39,17 +43,16 @@ def pad_intr(k):
 D = dict
 M = {
  # ---- digital, always-on ---------------------------------------------------------------------------------------------
- 'pt_digital_macro': D(pub=None, stg=3648353, tgt=3200340, lb=2814240, st='U', flag='E',
-     src='no routed macro of the current RTL exists. asbuilt = r7c outline 1716 x 2126.08 (failed global routing, congestion, 2026-11-14 12:42); target = 1716 x 1865 (r7b, 71 % after CTS, did not route); lb = 1716 x 1640 (TC7, the last outline that routed, older RTL at 66.6 %). scratch/digital-timing-close/macro-area.md, r7c.out',
-     lever='RTL reductions (single-rank trims, per-mode duplicates), clock-buffer and gain-buffer area (0.136 + 0.27 mm2 measured by the owner), congestion is at the H2D/clamp pins, not global: owner'),
+ 'pt_digital_macro': D(pub=None, stg=MACRO['asbuilt_um2'], tgt=MACRO['target_um2'], lb=MACRO['lb_um2'], st='U', flag='E', src=MACRO['source'],
+     lever='RTL reductions (single-rank trims, per-mode duplicates), clock-buffer and gain-buffer area, gated clocks / one read tree (assignment section 4 levers): owner'),
  'por': D(pub='por', st='P', lb=bbox('por'), src='vendored, unmodified', lever='none (no-dead-chip infrastructure)'),
  'pt_aosc': D(pub='pt_aosc', st='P', lever='67 % of the outline has no device: repack to two rows'),
- 'pt_core_bias': D(pub='pt_core_bias', tgt=180000, st='U', src='composed by integration builder, scratch/core-bias-routing-20261110-compact (not in generated/)',
+ 'pt_core_bias': D(pub='pt_core_bias', tgt=180000, st='U', src='composed by integration builder, scratch/core-bias-routing-20261110-compact (not in generated/); one composite on both chips until the per-chip bank list (D8, D-SPLIT-BIAS)',
      lever='bandgap + biasgen + root + 4 banks + vref measure 0.105 mm2 as cells; the composite is 0.302: 26 % empty, 66 % device-free. Re-place in two abutted rows'),
  'pt_bias_ext': D(pub='CB_pt_bias_tap2', mult=2, st='P', src='two pt_bias_tap2 cells', lever='none'),
  'isw_wired': D(pub='isw_wired', st='P', lever='pass device is 48 % COMP: dense. MIM over it is free decap'),
  'isw_rf': D(pub='isw_rf', st='P', lever='as isw_wired'), 'isw_conv': D(pub='isw_conv', st='P', lever='as isw_wired'), 'isw_debug': D(pub='isw_debug', st='P', lever='as isw_wired'),
- 'prov_supply': D(zero='provider ring'), 'pad_downbond': D(zero='provider ring site; not available on the fixed bond layout'),
+ 'prov_supply': D(zero='provider ring'), 'prov_supply_sig': D(zero='provider supply cell at a signal site (in the ring)'), 'pad_downbond': D(zero='provider ring site; not available on the fixed bond layout'),
  'pad_strap': D(zero='provider site'), 'pad_tlp': D(zero='in-ring site 68 x 124'), 'pt_host_physical': D(zero='provider ring'),
  'pt_debug_physical': D(zero='provider ring'), 'atb_provider_pad': D(zero='provider ring'),
  'pt_agnd_tie': D(pub=None, stg=2000, st='M', flag='E', src='estimate', lever='-'),
@@ -135,12 +138,12 @@ INST = {
  'steer_4': (None, 0, 0, 'unused today (X5)'), 'steer_5': (None, 0, 0, 'unused today (X5)'),
  'pad_bb_i': (None, None, 0, 'lb: provider asig_5p0 cell, no core intrusion (AP4-7)'), 'pad_bb_q': (None, None, 0, 'as pad_bb_i'),
  'pad_wmon': (None, 205.0*486.91, 0, 'target: 205 um B cell (undrawn); lb: provider cell (AP4-7)'),
- 'pad_wtx_ext': (None, None, 0, 'lb: fallback input on the USB pads (OCP-2, user decision open)'),
+ 'pad_wtx_ext': (None, None, None, 'OCP-2 closed (D7): WTX_EXT keeps its own pads on pt_wired'),
  'lo_mmd_qdum': (None, None, 0, 'lb: inside the QVCO outline (slot A)'), 'lo_obs': (None, None, 0, 'lb: inside the QVCO outline'),
  'obs_pre4_pll': (None, None, 0, 'lb: CP4-4'), 'obs_pre4_cdr': (None, None, 0, 'lb: CP4-4'), 'prescale_conv': (None, None, 0, 'lb: CP4-7'),
  'wordclk_rx': (None, None, 0, 'lb: CP4-8'), 'txpad_bias': (None, None, 0, 'lb: CP4-10'),
 }
-# booked items that are not instances of pt_chip.conn: (asbuilt, target, lb, status, flag, source)
+# booked items that are not instances of the chip conns: (asbuilt, target, lb, status, flag, source); BOOKED_CHIP names the chips
 BOOKED = {
  'wtx_ser8d': (bbox('STG_wtx_ser8d'), None, lbf('STG_wtx_ser8d'), 'U', '', 'new transmit path stream macro, generated/fast (unpublished), measured'),
  'wtx_mux8': (bbox('STG_wtx_mux8'), None, bbox('STG_wtx_mux8'), 'U', '', 'new transmit path muxing pre-driver, scratch/wired_tx/s12 rev2, measured'),
@@ -150,12 +153,21 @@ BOOKED = {
  'ctle_follower_x2': (10000, None, None, 'M', 'E', 'two CTLE source followers (MW-13-FIX), 0.003-0.005 each'),
  'wtx_tcoil_rsv': (68400, None, None, 'M', 'E', 'TX T-coil reserve 570 x 120 (v5 floorplan)'),
  'd2h_strip': (31495, None, None, 'M', 'E', 'D2H output strip / pad repeaters 1312 x 24 at the south pad row'),
- 'decap_macro_edge_bank': (390000, None, 0, 'S', 'E', '1.5 nF bank of pt_decap_tile + MIM within 250 um of the macro (power-delivery.md 4.2); tile cell published, bank not drawn'),
+ 'decap_macro_edge_bank': (390000, None, None, 'S', 'E', '1.5 nF bank of pt_decap_tile + MIM within 250 um of the macro (power-delivery.md 4.2); tile cell published, bank not drawn. Kept on both chips (D9: full 5.4 nF)'),
+ 'decap_tiles': (None, None, None, 'S', 'E', 'stacked MOS + MIM tiles (pt_decap_tile + MIM, 4 fF/um2) for the part of the 5.4 nF plan that the bank, grid MIM over the blocks, macro row fill and bond-site tiles do not give (decap.json, D9)'),
  'rf_timebase_h2dclk_detect': (5000, None, None, 'M', 'E', 'time base for RF modes + H2D_CLK present detector (rest of the monitor is RTL)'),
  'lna_additions': (10000, None, None, 'M', 'E', 'LNA tail source, gate R, damping; D-EXTCLK selector; FLL driver'),
  'vcm_buffer': (3000, None, None, 'M', 'E', 'CNV-06: the VCM source is a bare divider'),
- 'fwd_clk_repeaters': (3000, None, None, 'M', 'E', 'repeaters / shield for the 3.1 mm AUX_CLK to wired forwarded clock'),
+ 'fwd_clk_repeaters': (3000, None, None, 'M', 'E', 'repeaters / shield for the AUX_CLK to wired forwarded clock (short on pt_wired: the pad pair is on the same chip as the CDR)'),
 }
+BOOKED_CHIP = {'wtx_ser8d': 'wired', 'wtx_mux8': 'wired', 'r8arch_slicer_b': 'wired', 'r8arch_capture_b': 'wired', 'r8arch_blend_pd8': 'wired',
+               'ctle_follower_x2': 'wired', 'wtx_tcoil_rsv': 'wired', 'fwd_clk_repeaters': 'wired', 'lna_additions': 'rf', 'vcm_buffer': 'rf',
+               'd2h_strip': 'both', 'decap_macro_edge_bank': 'both', 'decap_tiles': 'both', 'rf_timebase_h2dclk_detect': 'both'}
+assert set(BOOKED_CHIP) == set(BOOKED)
+BOOKED = {k: v for k, v in BOOKED.items() if BOOKED_CHIP[k] in ('both', CHIP)}
+DEC = json.load(open(f'{HERE}/decap.json')).get(CHIP) if os.path.exists(f'{HERE}/decap.json') else None   # tiles per scenario (decap.py; first pass: 0)
+DEC = DEC or dict(tiles_um2=dict(asbuilt=0, target=0, lb=0))
+BOOKED['decap_tiles'] = (DEC['tiles_um2']['asbuilt'], DEC['tiles_um2']['target'], DEC['tiles_um2']['lb']) + BOOKED['decap_tiles'][3:]
 
 rows = []
 def add(item, master, group, kind, pub, ab, tg, lb, st, flag, src, lever, shape=None, mkey=''):
@@ -196,13 +208,13 @@ for name, (ab, tg, lb, st, flag, src) in BOOKED.items():
         {'decap_macro_edge_bank': 'lb 0 = no dedicated bank (decap 5.4 -> 3.9 nF or stacked tiles elsewhere): power delivery decision',
          'wtx_ser8d': '47 % device-free: routing channels are 127 of 315 um of height (owner lever)'}.get(name, '-'), (MS[k]['w'], MS[k]['h']) if k else None, k or '')
 
-with open(f'{HERE}/ledger.csv', 'w', newline='') as f:
+with open(f'{OUT}/ledger.csv', 'w', newline='') as f:
     w = csv.DictWriter(f, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)
 def cat(r):
     if r['master'] == 'pt_digital_macro': return '1 digital macro'
     if r['kind'] == 'pad': return '2 custom pads (occupied core intrusion)'
-    if r['kind'] == 'booked': return '4 booked, not instances of pt_chip.conn'
-    return '3 analog blocks in pt_chip.conn'
+    if r['kind'] == 'booked': return '4 booked, not instances of the conn'
+    return '3 analog blocks in the conn'
 K = ('pub_um2', 'asbuilt_um2', 'target_um2', 'lb_um2')
 tot = collections.OrderedDict(); T = [0]*4; est = [0]*4
 for r in rows:
@@ -217,8 +229,8 @@ for r in rows:
     for i, kk in enumerate(K): e['a'][i] += r[kk]
 mm = lambda x: f'{x/1e6:.4f}'
 SN = {'P': 'published', 'U': 'laid out, unpublished', 'S': 'schematic / generator only', 'M': 'missing'}
-out = ['# Die-area ledger (generated by ledger.py; per-instance rows in ledger.csv)', '',
-       f'{len(inst)} instances of `pt_chip.conn` (commit {CONN_REV}) + {len(BOOKED)} booked items. Core mm2. Layout numbers are KLayout bounding boxes measured on the GDS on disk (`meas/measured.json`); **E** marks every row that contains an estimate.', '',
+out = [f'# Die-area ledger of pt_{CHIP} (generated by ledger.py; per-instance rows in ledger.csv)', '',
+       f'{len(inst)} instances of `integration/chips/{CHIP}/chip.conn` (commit {CONN_REV}) + {len(BOOKED)} booked items. Core mm2. Layout numbers are KLayout bounding boxes measured on the GDS on disk (`meas/measured.json`); **E** marks every row that contains an estimate.', '',
        '| category | items | published | as built | target | lower bound |', '|---|---:|---:|---:|---:|---:|']
 for k in sorted(tot):
     c = tot[k]; out.append(f'| {k} | {c[4]} | {c[0]/1e6:.3f} | {c[1]/1e6:.3f} | {c[2]/1e6:.3f} | {c[3]/1e6:.3f} |')
@@ -236,6 +248,6 @@ def dens(r):
 for k, e in sorted(bym.items(), key=lambda kv: -kv[1]['a'][1]):
     r = e['r']; wh = f"{r['w']} x {r['h']}" if r['w'] else ''
     out.append(f"| {k} | {e['n']} | {SN[r['status']]} | {r['est']} | {wh} | {mm(e['a'][0])} | {mm(e['a'][1])} | {mm(e['a'][2])} | {mm(e['a'][3])} | {dens(r)} | {r['source']} |")
-open(f'{HERE}/ledger.md', 'w').write('\n'.join(out)+'\n')
-json.dump(dict(rows=rows, totals_um2=T, est_um2=est, by_cat={k: v for k, v in tot.items()}, core_mm2=CORE_MM2), open(f'{HERE}/ledger.json', 'w'), indent=0)
+open(f'{OUT}/ledger.md', 'w').write('\n'.join(out)+'\n')
+json.dump(dict(chip=CHIP, rows=rows, totals_um2=T, est_um2=est, by_cat={k: v for k, v in tot.items()}, core_mm2=CORE_MM2), open(f'{OUT}/ledger.json', 'w'), indent=0)
 print('\n'.join(out[:14]))

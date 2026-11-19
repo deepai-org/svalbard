@@ -1,0 +1,289 @@
+{
+ "nets": {
+  "control_bits": 277,
+  "status_bits": 8,
+  "macro_direct_to_analog": 177,
+  "macro_to_pads": 38,
+  "analog_multi_instance": 159,
+  "analog_classes": {
+   "other analog / local": 67,
+   "ring phases (CDRPH/CKP/SLS/TXPH)": 4,
+   "ATB tree (ATB*)": 31,
+   "bias currents (BIAS_*)": 20,
+   "LO / RF differential (LO_*, RFA_*, LNA_*)": 34,
+   "CDR votes (CDR_UP/DN, WRX_UP/DN)": 3
+  },
+  "supply_nets": [
+   "ESD_RAIL_bb",
+   "ESD_RAIL_rf_rx",
+   "ESD_RAIL_rf_tx",
+   "RAIL_conv",
+   "RAIL_debug",
+   "RAIL_lo",
+   "RAIL_lod",
+   "RAIL_pll",
+   "RAIL_rf_rx",
+   "RAIL_rf_tx",
+   "VDD",
+   "VDD_LO",
+   "VSS"
+  ]
+ },
+ "routing_s": {
+  "control_wire_mm": 382.0,
+  "fast_digital_wire_mm": 252.8,
+  "d2h_wire_mm": 35.9,
+  "analog_wire_mm": {
+   "other": 133.2,
+   "ring": 9.9,
+   "atb": 88.9,
+   "bias": 62.8,
+   "lo_rf": 40.3
+  },
+  "analog_net_count": {
+   "other": 69,
+   "ring": 4,
+   "atb": 29,
+   "bias": 20,
+   "lo_rf": 34
+  },
+  "fwd_clk_mm": 0.0,
+  "endpoints_on_unplaced_blocks": 0,
+  "unplaced_with_nets": {},
+  "track_area_mm2": {
+   "min_pitch": 0.62,
+   "control_min_fast_double": 1.025,
+   "all_double": 1.239
+  },
+  "channel_area_mm2": 0.871,
+  "channel_track_capacity_mm2": 0.679,
+  "corridor_and_lo_legs_mm2": 0.186,
+  "channel_need_mm2": {
+   "min_pitch": 0.794,
+   "control_min_fast_double": 1.314,
+   "all_double": 1.589
+  },
+  "ten_pct_allowance_mm2": 0.855,
+  "strap_m5_area_mm2": 0.886
+ },
+ "routing_t": {
+  "control_wire_mm": 302.4,
+  "fast_digital_wire_mm": 253.1,
+  "d2h_wire_mm": 35.9,
+  "analog_wire_mm": {
+   "other": 117.5,
+   "ring": 9.6,
+   "atb": 77.2,
+   "bias": 39.9,
+   "lo_rf": 40.6
+  },
+  "analog_net_count": {
+   "other": 69,
+   "ring": 4,
+   "atb": 29,
+   "bias": 20,
+   "lo_rf": 34
+  },
+  "fwd_clk_mm": 0.0,
+  "endpoints_on_unplaced_blocks": 0,
+  "unplaced_with_nets": {},
+  "track_area_mm2": {
+   "min_pitch": 0.547,
+   "control_min_fast_double": 0.924,
+   "all_double": 1.093
+  },
+  "channel_area_mm2": 0.838,
+  "channel_track_capacity_mm2": 0.654,
+  "corridor_and_lo_legs_mm2": 0.186,
+  "channel_need_mm2": {
+   "min_pitch": 0.701,
+   "control_min_fast_double": 1.185,
+   "all_double": 1.402
+  },
+  "ten_pct_allowance_mm2": 0.855,
+  "strap_m5_area_mm2": 1.215
+ },
+ "routing_lb": {
+  "control_wire_mm": 270.7,
+  "fast_digital_wire_mm": 298.6,
+  "d2h_wire_mm": 38.0,
+  "analog_wire_mm": {
+   "other": 128.3,
+   "ring": 2.0,
+   "atb": 79.4,
+   "bias": 35.9,
+   "lo_rf": 34.8
+  },
+  "analog_net_count": {
+   "other": 62,
+   "ring": 2,
+   "atb": 29,
+   "bias": 20,
+   "lo_rf": 33
+  },
+  "fwd_clk_mm": 0.0,
+  "endpoints_on_unplaced_blocks": 9,
+  "unplaced_with_nets": {
+   "prescale_conv": 5,
+   "obs_pre4_pll": 1,
+   "obs_pre4_cdr": 1,
+   "lo_mmd_qdum": 1,
+   "lo_obs": 1
+  },
+  "track_area_mm2": {
+   "min_pitch": 0.538,
+   "control_min_fast_double": 0.925,
+   "all_double": 1.077
+  },
+  "channel_area_mm2": 0.769,
+  "channel_track_capacity_mm2": 0.6,
+  "corridor_and_lo_legs_mm2": 0.195,
+  "channel_need_mm2": {
+   "min_pitch": 0.69,
+   "control_min_fast_double": 1.186,
+   "all_double": 1.38
+  },
+  "ten_pct_allowance_mm2": 0.855,
+  "strap_m5_area_mm2": 0.726
+ },
+ "m45": {
+  "S": {
+   "outline": 6.249,
+   "free": 2.349,
+   "free_nospiral": 2.003,
+   "free_usable": 1.478,
+   "grid_displaced": 0.308,
+   "nodata": 0.546,
+   "m3free": 2.175,
+   "plate_nF_at_55pct_of_usable": 1.54,
+   "fraction_of_usable_for_2nF": 0.71,
+   "fraction_of_usable_for_3nF": 1.07
+  },
+  "T": {
+   "outline": 5.441,
+   "free": 1.591,
+   "free_nospiral": 1.246,
+   "free_usable": 0.952,
+   "grid_displaced": 0.389,
+   "nodata": 0.546,
+   "m3free": 1.447,
+   "plate_nF_at_55pct_of_usable": 0.99,
+   "fraction_of_usable_for_2nF": 1.1,
+   "fraction_of_usable_for_3nF": 1.66
+  },
+  "LB": {
+   "outline": 4.733,
+   "free": 1.007,
+   "free_nospiral": 0.661,
+   "free_usable": 0.532,
+   "grid_displaced": 0.641,
+   "nodata": 0.546,
+   "m3free": 0.931,
+   "plate_nF_at_55pct_of_usable": 0.56,
+   "fraction_of_usable_for_2nF": 1.97,
+   "fraction_of_usable_for_3nF": 2.97
+  }
+ },
+ "m45_S_top": [
+  [
+   "qvco",
+   532476,
+   328990
+  ],
+  [
+   "lo_vreg",
+   440652,
+   240005
+  ],
+  [
+   "adc_i",
+   449686,
+   207688
+  ],
+  [
+   "adc_q",
+   449686,
+   207688
+  ],
+  [
+   "bbfilter_i",
+   341901,
+   182133
+  ],
+  [
+   "bbfilter_q",
+   341901,
+   182133
+  ],
+  [
+   "pll_vreg2",
+   173424,
+   146408
+  ],
+  [
+   "lo_lf",
+   194122,
+   133207
+  ],
+  [
+   "core_bias",
+   301799,
+   118180
+  ],
+  [
+   "dac_i",
+   134121,
+   92398
+  ],
+  [
+   "dac_q",
+   134121,
+   92398
+  ],
+  [
+   "refbuf",
+   117089,
+   41222
+  ],
+  [
+   "lo_pfdcp",
+   124110,
+   35305
+  ],
+  [
+   "rfdriver",
+   96812,
+   27746
+  ],
+  [
+   "lna",
+   42921,
+   23026
+  ],
+  [
+   "rxmix_i",
+   35442,
+   19452
+  ],
+  [
+   "rxmix_q",
+   35442,
+   19452
+  ],
+  [
+   "char_rffet",
+   67600,
+   18572
+  ],
+  [
+   "char_rffet_open",
+   67600,
+   18572
+  ],
+  [
+   "char_rffet_short",
+   67600,
+   18572
+  ]
+ ]
+}

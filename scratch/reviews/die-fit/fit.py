@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Die-fit: packing attempt on the fixed die with the real packer (packer.py).
+"""Die-fit of one chip: packing attempt on the fixed die with the real packer (packer.py).
 
-  SCEN=S|T|LB  [HALO=10] [MACRO=W:x0,...] [BANK=1] [TAG=..]  python3 fit.py
+  CHIP=rf|wired SCEN=S|T|LB  [HALO=10] [MACRO=W:x0,...] [BANK=1] [TILES=1] [TAG=..]  python3 fit.py
   S = as built (newest layout on disk), T = targets met, LB = every block at its defensible lower bound (ledger.py).
-Inputs: ledger.json (areas and measured shapes), pt_chip.conn groups (via the ledger),
-consolidation-pass-4 inventory.csv (worst currents), netcounts.json (signal counts per instance).
-Outputs: run/fit-<tag>.json, run/fit-<tag>.png.  No design file is touched.
+Inputs: <chip>/ledger.json (areas and measured shapes, decap tiles from decap.py), the chip's bond map and the provider
+site coordinates (custom pad positions), consolidation-pass-4 inventory.csv (worst currents), netcounts.json (signal
+counts per instance). Outputs: run/<chip>/fit-<tag>.json, run/<chip>/fit-<tag>.png.  No design file is touched.
 """
 import os, sys, json, math, csv, re, time
 import numpy as np
@@ -14,17 +14,20 @@ HERE = os.path.dirname(os.path.abspath(__file__)); R = '/home/ubuntu/svalbard'
 sys.path.insert(0, HERE)
 from packer import Packer, overlap_check
 
+CHIP = os.environ['CHIP']; assert CHIP in ('rf', 'wired')
+P_ = f'{R}/projects/programmable_transceiver_platform'
 SCEN = os.environ.get('SCEN', 'S'); HALO = float(os.environ.get('HALO', '10')); TAG = os.environ.get('TAG', SCEN.lower())
 BANK = os.environ.get('BANK', '1') == '1'           # dedicated macro-edge decap bank (0.39 mm2)
+TILES = os.environ.get('TILES', '1') == '1'         # decap tiles for the rest of the 5.4 nF plan (decap.py), 125 x 120 um each
 CORRIDOR = os.environ.get('CORRIDOR', '1') == '1'   # N-S bus corridor from the macro to the south pad row
 DROP = set(filter(None, os.environ.get('DROP', '').split(',')))   # lever experiments: items removed from the inventory
-MACROS = [tuple(float(v) for v in m.split(':')) for m in os.environ.get('MACRO', '1716:1262,2024:954').split(',')]
+MACROS = [tuple(float(v) for v in m.split(':')) for m in os.environ.get('MACRO', '1716:1108,1716:1262').split(',')]
 GROW = float(os.environ.get('GROW', '0'))          # information only: die/core made taller by GROW um (north edge moves)
 NOPAD = set(filter(None, os.environ.get('NOPAD', '').split(',')))   # lever experiments: custom pads with zero core intrusion
 TRIES = int(os.environ.get('TRIES', '1')); SEED = int(os.environ.get('SEED', '1'))
 RING = float(os.environ.get('RING', '0'))          # AP4-10b: core ring narrowed, core edge moves out by RING um on every side
 DIE = (0.0, 0.0, 3932.0, 5122.0+GROW); CORE = (452.0-RING, 452.0-RING, 3480.0+RING, 4670.0+GROW+RING)
-L = json.load(open(f'{HERE}/ledger.json')); KEY = {'S': 'asbuilt_um2', 'T': 'target_um2', 'LB': 'lb_um2'}[SCEN.upper()]; SCEN = SCEN.upper()
+L = json.load(open(f'{HERE}/{CHIP}/ledger.json')); KEY = {'S': 'asbuilt_um2', 'T': 'target_um2', 'LB': 'lb_um2'}[SCEN.upper()]; SCEN = SCEN.upper()
 ROW = {r['item']: r for r in L['rows']}
 MACRO_A = float(os.environ.get('MACRO_MM2', 0))*1e6 or float(ROW['digital'][KEY])   # digital macro outline area of the scenario
 mA = {r['inst']: float(r['mA_worst']) for r in csv.DictReader(open(f'{R}/scratch/reviews/consolidation-pass-4/inventory.csv'))}
@@ -39,7 +42,7 @@ def shape(r, area):
     k = math.sqrt(area/(w*h)); k = 1.0 if abs(k-1) < 0.012 else k
     return round(w*k, 2), round(h*k, 2)
 
-FIXED_ITEMS = {'wtx_tcoil_rsv', 'd2h_strip', 'decap_macro_edge_bank'}
+FIXED_ITEMS = {'wtx_tcoil_rsv', 'd2h_strip', 'decap_macro_edge_bank', 'decap_tiles'}
 SPIRAL = ('lna_ind', 'lna_deg', 'qvco')
 blocks = {}
 for r in L['rows']:
@@ -55,6 +58,9 @@ if 'ptrim' in blocks: blocks['ptrim']['w'] += 32.0
 if BANK and ROW['decap_macro_edge_bank'][KEY] > 0:
     for i in range(26):
         blocks[f'decap_bank_{i:02d}'] = dict(w=125.0, h=120.0, grp='core', master='decap', halo=0.0, rot=True, mA=0, nets=0)
+if TILES and ROW.get('decap_tiles', {}).get(KEY, 0) > 0:      # stacked MOS + MIM tiles: any hole, placed last (no flow partner)
+    for i in range(math.ceil(ROW['decap_tiles'][KEY]/15000.0)):
+        blocks[f'decap_tile_{i:02d}'] = dict(w=125.0, h=120.0, grp='core', master='decap', halo=0.0, rot=True, mA=0, nets=0)
 
 # ---- signal-flow / supply targets ---------------------------------------------------------------------------------------
 T = {
@@ -83,14 +89,20 @@ T = {
  'clk_obs': [('clockmux', 1)], 'bias_ext': [('core_bias', 3)], 'fwd_clk_repeaters': [('rx_aux_clk', 2)], 'atb0_pad': [('digital', 1)], 'atb1_pad': [('digital', 1)],
 }
 for i in range(6): T[f'steer_{i}'] = [('pad_wire_tx', 3)]
-# region anchors (x, y): where a group goes before its partners exist (supply pads per power-delivery.md G4)
-ANCH = {'rf_rx': (1050, 1250), 'conv': (1900, 1100), 'lo': (1350, 2500), 'lod': (1350, 2300), 'rf_tx': (800, 4050), 'pll': (3000, 1500),
-        'wired_rx': (2700, 900), 'wired_cap': (2400, 900), 'wired_tx': (2600, 2600), 'debug': (3250, 4200), 'core': (2000, 2000)}
-ANCH_B = {'adc_i': (1750, 1200), 'adc_q': (2250, 1200), 'bbfilter_i': (1400, 900), 'bbfilter_q': (1400, 1700), 'dac_i': (1100, 3700), 'dac_q': (1100, 3300),
-          'core_bias': (2000, 2700), 'qvco': (1420, 2550), 'wrx_cap': (2500, 600), 'r8arch_capture_b': (2500, 900)}
-# supply pads (chip um, from scratch/pads-core/bond/bond-audit.json): island -> (edge, coordinate along that edge)
-G4 = {'wired_cap': ('E', 556.5), 'wired_rx': ('E', 556.5), 'wired_tx': ('E', 2244.5), 'rf_rx': ('W', 978.5), 'rf_tx': ('W', 3932.5),
-      'lod': ('W', 556.5), 'lo': ('W', 2666.5), 'pll': ('E', 4143.5)}
+# region anchors (x, y) per chip: where a group goes before its partners exist; supply pads (G4: island -> (edge, coordinate of
+# the supply bond along that edge), bond_map.txt sites at analog/pads/generated/provider-sites.json bond centres)
+if CHIP == 'rf':     # RF chain on the west (RF_RX inputs[9/8], RF_TX inputs[1/0]); external-LO / REF pads on the east (bidir[20..24])
+    ANCH = {'rf_rx': (1150, 1950), 'conv': (1700, 1300), 'lo': (2500, 2900), 'lod': (2300, 2600), 'rf_tx': (1100, 4100), 'pll': (3000, 1600),
+            'debug': (2600, 3800), 'core': (2000, 2400)}
+    ANCH_B = {'adc_i': (1650, 1250), 'adc_q': (2200, 1250), 'bbfilter_i': (1350, 1500), 'bbfilter_q': (1350, 2400), 'dac_i': (1500, 3700),
+              'dac_q': (1500, 3300), 'core_bias': (2100, 2300), 'qvco': (2450, 2900), 'lo_ext': (2700, 3050), 'lo_vreg': (2950, 2400)}
+    G4 = {'rf_rx': ('W', 2666.5), 'rf_tx': ('W', 3510.5), 'lod': ('E', 2033.5), 'lo': ('E', 2033.5), 'conv': ('W', 978.5), 'pll': ('E', 4143.5),
+          'debug': ('E', 556.5)}
+else:                # HS RX, USB, WIRE_TX, WTX_EXT on the east (bidir[14..24]); REF / AUX, WMON, TLP on the west
+    ANCH = {'wired_rx': (2700, 1000), 'wired_cap': (2400, 1000), 'wired_tx': (2600, 2600), 'pll': (2200, 1500), 'debug': (1200, 3000),
+            'core': (1800, 2300)}
+    ANCH_B = {'core_bias': (1800, 2300), 'wrx_cap': (2400, 700), 'r8arch_capture_b': (2300, 1000), 'pll_cdr': (2100, 1300)}
+    G4 = {'wired_cap': ('E', 556.5), 'wired_rx': ('E', 556.5), 'wired_tx': ('E', 2244.5), 'pll': ('E', 4143.5), 'debug': ('W', 2666.5)}
 # keep-away rules (v6 list, unchanged): aggressor, victim, um
 RULES = [('digital', 'adc_i', 210), ('digital', 'adc_q', 210), ('digital', 'core_bias', 100), ('digital', 'bbfilter_i', 100), ('digital', 'bbfilter_q', 100),
          ('digital', 'lna', 1000), ('digital', 'qvco', 300), ('wrx_cap', 'adc_i', 200), ('wrx_cap', 'adc_q', 200), ('r8arch_capture_b', 'adc_i', 200),
@@ -110,16 +122,32 @@ TIER1 = ['qvco', 'lo_mmd', 'lo_vreg', 'lna', 'lna_ind_p', 'lna_ind_n', 'lna_deg_
          'usb_txdrv', 'lo_ext', 'termination', 'term_buffer', 'attached_tx_interlock', 'rx_ref_in', 'rx_aux_clk', 'rx_wtx_ext', 'pll_vreg2']
 
 # ---- fixed geometry --------------------------------------------------------------------------------------------------------
+SITES = json.load(open(f'{P_}/analog/pads/generated/provider-sites.json'))['sites']
+BOND = [l.split()[:4] for l in open(f'{P_}/integration/chips/{CHIP}/bond_map.txt') if l.strip() and not l.startswith('#')]
+# custom pad families: width along the edge (um) and depth from the die edge (cell drawn from 26 um); measured cells (ledger)
+FAM = {'pad_rf_pair': (310.06, 912.9), 'pad_rftxpad': (310.06, 912.9), 'pad_refpad': (401.2, 912.9), 'pad_hspad': (492.0, 912.9),
+       'pad_wirepad': (521.2, 914.9), 'pad_txpad': (481.2, 914.9), 'pad_single_leg': (205.0, 912.9)}
 def pads():
-    P = {'pad_rf_rx': [(26.0, 1362.945, 938.91, 1673.0)], 'pad_bb_i': [(26.0, 1784.945, 938.91, 2095.0)], 'pad_ref': [(26.0, 2209.78, 938.91, 2611.0)],
-         'pad_aux_clk': [(26.0, 3053.78, 938.91, 3455.0)], 'pad_bb_q': [(26.0, 3472.945, 938.91, 3783.0)], 'pad_rf_tx': [(26.0, 4316.945, 938.91, 4627.0)],
-         'pad_hs_rx': [(2993.09, 735.055, 3906.0, 1227.055), (2993.09, 1227.055, 3480.0, 1259.0)],   # staged stacked cell + 32 um side-pin channel
-         'pad_wtx_ext': [(2993.09, 3050.945, 3906.0, 3361.0)]}
-    col_u = 522.6 if SCEN == 'S' else 300.0; col_t = 311.82 if SCEN == 'S' else 160.0
-    P['pad_usb'] = [(2991.1, 1787.78, 3906.0, 2309.0), (2991.1-col_u, 1787.78, 2991.1, 1977.5)]
-    P['pad_wire_tx'] = [(2991.1, 2431.0, 3906.0, 2912.22), (2991.1-col_t, 2770.8, 2991.1, 2912.22)]
-    P['pad_wmon'] = [(2993.09, 3472.945, 3906.0, 3678.0 if SCEN != 'S' else 3775.1)]
-    for n in (NOPAD | ({'pad_bb_i', 'pad_bb_q', 'pad_wmon', 'pad_wtx_ext'} if SCEN == 'LB' else set())): P.pop(n, None)
+    """custom pad rectangles of this chip, centred on the bond centres of their sites (bond_map.txt)"""
+    MASTER = {r['item']: r['master'] for r in L['rows']}
+    by = {}
+    for site, side, net, inst in BOND:
+        if MASTER.get(inst) in FAM: by.setdefault(inst, []).append(SITES[site]['bond_center_um'][1])
+    P = {}
+    for n, ys in by.items():
+        m = MASTER[n]; w, d = FAM[m]
+        if m == 'pad_single_leg' and SCEN == 'S': w = 302.2
+        mid = sum(ys)/len(ys); side = next(r[1] for r in BOND if r[3] == n)
+        x0, x1 = (26.0, 26.0+d) if side == 'west' else (3906.0-d, 3906.0)
+        P[n] = [(x0, mid-w/2, x1, mid+w/2)]
+        if m == 'pad_hspad': P[n].append((x0 if side == 'west' else 3480.0, mid+w/2, x1 if side == 'west' else x1-d+487.0, mid+w/2+32.0))
+        if m == 'pad_wirepad':          # attachment column, inboard of the first site
+            col = 522.6 if SCEN == 'S' else 300.0
+            P[n].append((x0-col, mid-w/2, x0, mid-w/2+189.7) if side == 'east' else (x1, mid-w/2, x1+col, mid-w/2+189.7))
+        if m == 'pad_txpad':
+            col = 311.82 if SCEN == 'S' else 160.0
+            P[n].append((x0-col, mid+w/2-141.4, x0, mid+w/2) if side == 'east' else (x1, mid+w/2-141.4, x1+col, mid+w/2))
+    for n in (NOPAD | ({'pad_bb_i', 'pad_bb_q', 'pad_wmon'} if SCEN == 'LB' else set())): P.pop(n, None)
     return P
 
 def run(mw, mx0, rng=None, strat=0):
@@ -128,10 +156,13 @@ def run(mw, mx0, rng=None, strat=0):
         p.fixed(n, rs)
     dig = (mx0, CORE[3]-mh, mx0+mw, CORE[3]); p.fixed('digital', [dig], halo=HALO)
     P_ = pads()
-    p.rects['west_edge'] = (0.0, -1e6, 0.0, 1e6); p.rects['rf_tx_band'] = (-1e6, 4316.9, 1e6, 4627.0)
+    p.rects['west_edge'] = (0.0, -1e6, 0.0, 1e6)
+    if 'pad_rf_tx' in P_: p.rects['rf_tx_band'] = (-1e6, P_['pad_rf_tx'][0][1], 1e6, P_['pad_rf_tx'][0][3])
     fixed = {'digital': dig}
-    rsv = {'d2h_strip': (1387.7, CORE[1], 2700.0, CORE[1]+24.0), 'wtx_tcoil_rsv': (2900.0, 2922.0, 3470.0, 3042.0),
-           'lo_legs_rsv': (954.0, 2215.0, 1003.0, 3090.0)}
+    rsv = {'d2h_strip': (1387.7, CORE[1], 2700.0, CORE[1]+24.0)}
+    if CHIP == 'wired': rsv['wtx_tcoil_rsv'] = (2900.0, 2922.0, 3470.0, 3042.0)
+    if CHIP == 'rf' and 'pad_ref' in P_:      # external-LO legs from the east REF / AUX pads to lo_ext
+        rsv['lo_legs_rsv'] = (P_['pad_ref'][0][0]-49.0, P_['pad_ref'][0][1], P_['pad_ref'][0][0], P_['pad_aux_clk'][0][3])
     if CORRIDOR:
         cx = min(max(2281.2, dig[0]+100), dig[2]-150)
         rsv['corridor_s_rsv'] = (cx, CORE[1]+34.0, cx+46.5, dig[1]-HALO)
@@ -148,9 +179,10 @@ def run(mw, mx0, rng=None, strat=0):
         order += sorted([n for n in blocks if n not in order and blocks[n]['w']*blocks[n]['h'] >= 1.9e5], key=lambda n: -blocks[n]['w']*blocks[n]['h'])
     if strat >= 1:
         order += [n for n in TIER1 if n in blocks and n not in order]
-    rest = [n for n in blocks if n not in order]
+    rest = [n for n in blocks if n not in order and not n.startswith('decap_tile')]
     jit = {n: (1.0 if rng is None else math.exp(rng.normal(0, 0.35))) for n in rest}
     order += sorted(rest, key=lambda n: -blocks[n]['w']*blocks[n]['h']*jit[n])
+    order += [n for n in blocks if n.startswith('decap_tile')]      # tiles last: they take the holes the blocks leave
     big = [n for n in order if blocks[n]['w']*blocks[n]['h'] > 3e4 and not n.startswith(('decap', 'isw', 'char'))]
     li = 0
     for n in order:
@@ -165,7 +197,7 @@ def run(mw, mx0, rng=None, strat=0):
             tg = [('digital', 5)]; mg = [('digital', 125.0)]; aw = 0.0
         elif b['master'].startswith('atb_leaf') or b['master'].startswith('iso_'):
             tg = [(big[li % len(big)], 1.0)]; li += 1; aw = 0.02
-        elif n.startswith('char') or n in ('por', 'aosc', 'ring_osc', 'vco_replica') or n.startswith('obs_pre4'):
+        elif n.startswith(('char', 'decap_tile')) or n in ('por', 'aosc', 'ring_osc', 'vco_replica') or n.startswith('obs_pre4'):
             aw = 0.02                           # no flow partner: take any hole (pure compaction)
         if b['mA'] > 0 and f'isw_{g}' in blocks and not n.startswith('isw_'):
             tg.append((f'isw_{g}', 0.05*b['mA']))    # supply flow: every island block is pulled to its switch in proportion to its current (G5/G6 strap)
@@ -248,8 +280,9 @@ report = dict(scenario=SCEN, ring_um=RING, grow_um=GROW, nopad=sorted(NOPAD), tr
               macro_signal_wire_mm=round(wire_um/1e3, 1), route_top=sorted(route, key=lambda t: -t[1]*t[2])[:15],
               fixed={k: [round(v, 1) for v in r] for k, r in fixed.items()}, pads={k: [[round(v, 1) for v in r] for r in rs] for k, rs in pads().items()},
               placed_rects={n: dict(rect=[round(v, 1) for v in d['rect']], rot=d['rot'], grp=blocks[n]['grp']) for n, d in p.placed.items()})
-os.makedirs(f'{HERE}/run', exist_ok=True)
-json.dump(report, open(f'{HERE}/run/fit-{TAG}.json', 'w'), indent=0)
+RUN = f'{HERE}/run/{CHIP}'; os.makedirs(RUN, exist_ok=True)
+report['chip'] = CHIP
+json.dump(report, open(f'{RUN}/fit-{TAG}.json', 'w'), indent=0)
 print(json.dumps({k: v for k, v in report.items() if k not in ('placed_rects', 'rule_audit', 'pads', 'fixed', 'trials', 'straps', 'route_top')}, indent=0)[:3500])
 
 # ---- render ------------------------------------------------------------------------------------------------------------------
@@ -276,7 +309,7 @@ for n, r in fixed.items():
     if n != 'digital': box(r, '#eeeeee', '#888')
 for n, pl in p.placed.items():
     r = pl['rect']; b = blocks[n]
-    if n.startswith('decap_bank'): box(r, '#c9dcf2', '#8aa8d0'); continue
+    if n.startswith(('decap_bank', 'decap_tile')): box(r, '#c9dcf2', '#8aa8d0'); continue
     f, o = COL.get(b['grp'], ('#eee', '#444'))
     if n.startswith('isw_'): f, o = '#404040', '#000'
     if n.startswith(('r8arch', 'wtx_ser8d', 'wtx_mux8')) or ROW.get(n, {}).get('est'): o = '#d000d0'
@@ -289,7 +322,7 @@ x0 = int(DIE[2]*Sx)+14; y = 56
 def line(t, f=F, col='#000'):
     global y
     d.text((x0, y), t, fill=col, font=f); y += 16 if f is F else 20
-d.text((10, 12), f'Die-fit scenario {SCEN}: {dict(S="as built (newest layout on disk)", T="all targets met", LB="every block at its lower bound")[SCEN]}  (tag {TAG}, halo {HALO:.0f} um)', fill='#000', font=FT)
+d.text((10, 12), f'pt_{CHIP} die-fit scenario {SCEN}: {dict(S="as built (newest layout on disk)", T="all targets met", LB="every block at its lower bound")[SCEN]}  (tag {TAG}, halo {HALO:.0f} um)', fill='#000', font=FT)
 line(f'core {CORE[2]-CORE[0]:.0f} x {CORE[3]-CORE[1]:.0f} = {core_a/1e6:.3f} mm2', FB)
 line(f'blocks to place: {len(blocks)}  ({blk_a/1e6:.3f} mm2)')
 line(f'placed: {len(p.placed)}  ({plc_a/1e6:.3f} mm2)', FB, '#006000')
@@ -307,5 +340,5 @@ for n, why in p.relaxed[:14]:
     line(f'  {n}: {why[:44]}', F, '#a05000')
 line(f'keep-away rule fails: {len(report["rule_fails"])}', FB)
 line('legend: black = island switch, blue tiles = decap bank,', F); line('magenta outline = estimate or reserve (not a measured layout)', F)
-im.save(f'{HERE}/run/fit-{TAG}.png')
-print('wrote', f'{HERE}/run/fit-{TAG}.png', f'{time.time()-t0:.0f}s')
+im.save(f'{RUN}/fit-{TAG}.png')
+print('wrote', f'{RUN}/fit-{TAG}.png', f'{time.time()-t0:.0f}s')

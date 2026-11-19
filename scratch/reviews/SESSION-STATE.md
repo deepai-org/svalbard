@@ -9,10 +9,10 @@ consolidation.
 
 - **No payload mode ran end to end at the start of this week; the control plane now exists in RTL** and every
   mode family closes in a stub simulation. Nothing is hardened, routed or signed off.
-- **The design does not fit the fixed die** (`die-fit.md`): short 2.1–2.3 mm² with staged cells as measured,
-  1.3–1.75 mm² with every repack target met, before routing (1.1–2.3 mm² needed vs 0.8–1.0 available) and
-  decap risk. After die-fit levers 1–5 plus off-chip passives items: 0.03–0.18 mm² short (targets met),
-  0.65–0.73 short (staged). User direction: keep full scope, make 2.7–3.24 Gb/s work, minimise area over time.
+- **Two chips, each fits its own die** (`die-fit.md`, split 2026-11-19): every block placed with the full 5.4 nF
+  decap plan and the routing channels; margin after routing `pt_rf` +0.8 mm² as built (+1.9 targets), `pt_wired` +2.3
+  (+2.9). Macro outlines from synthesis (no place and route yet). User direction: full scope across the pair, make
+  2.7–3.24 Gb/s work, minimise area over time.
 - **Agents:** the user stopped all agents on 14 Nov. Stopped agents cannot be resumed; start fresh ones from
   the notes listed in section 4. Running now: wired TX (fresh, 2.7–3.24 Gb/s path).
 
@@ -121,9 +121,10 @@ Open: digital's real current shape; decap after repacks (over-block MIM shrinks 
 routing vs supply-pad positions (lod, pll, wired_tx conflict with signal flow); PSRR evidence rows PD2-14..19;
 regulator stack-up for supply trim; reliability at 3.5 V.
 
-**Assembly / floorplan** — no owner running. v6 is the last floorplan; packer and ledger in
-`die-fit/`. Needs: ledger keeper, v7 with supply grid, ten islands, placement rules from INT23, side-edge
-hspad pins, fill flow with keep-out markers.
+**Assembly / floorplan** — no owner running. Per-chip ledger, decap plan and packer in `die-fit/` (`chip.sh <chip>`);
+sign-off skeletons per chip (`integration/signoff`, `SIGNOFF_CHIP`, `skeleton/floorplan-<chip>.json`). Needs: owner
+floorplans with the supply grid and islands, island straps for `wrx_cap` / `ptrim` (G6), the `pt_wired` forwarded-clock
+route (AUX pair on the west edge), per-chip power-delivery rerun (D9), side-edge hspad pins.
 
 **Not started:** adversarial evidence audit (staleness script exists in `pre-mortem/`); bring-up software,
 FPGA gateware and carrier design; brownout and slow-corner ramps of the power-up check; top-level routing and

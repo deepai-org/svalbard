@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Audit the nominal assembled bring-up milestone from its actual waveform.
+"""Chip: PT_CHIP=rf|wired (default rf; integration/chips/<chip>/generated/pt_chip.sv).
+Audit the nominal assembled bring-up milestone from its actual waveform.
 
 Record the running simulator/library/deck identities with --record-runtime PID.
 After the producer finishes, check source freshness, parent connectivity and
@@ -68,7 +69,7 @@ def audit(out):
     snapshot = json.loads((out/'runtime-snapshot.json').read_text())
     assert identities(out, snapshot['executable']) == snapshot['artifact_hashes'], 'runtime artifact changed'
     assert sha(out/'pt_chip.spice') == report['deck_sha256'], 'reported deck changed'
-    parent = power.chip_connectivity((power.PROJECT/'integration/pt_chip.sv').read_text())
+    parent = power.chip_connectivity((power.PROJECT/f"integration/chips/{__import__('os').environ.get('PT_CHIP', 'rf')}/generated/pt_chip.sv").read_text())
     assert parent == experiment['parent_connectivity'], 'parent hierarchy differs'
     assert bridge['projections'] == {k: list(v) for k, v in fallback.projections().items()}, 'control projection changed'
     w = np.loadtxt(out/'wave.txt', skiprows=1)

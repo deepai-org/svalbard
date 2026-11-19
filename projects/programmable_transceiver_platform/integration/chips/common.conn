@@ -1,0 +1,256 @@
+# common.conn: chip-level connectivity shared by pt_rf and pt_wired (programmable transceiver, GF180, two-chip split:
+# MANDATE 1, scratch/reviews/SPLIT-PLAN.md, assignment scratch/reviews/split/assignment.md). Included by rf/chip.conn and
+# wired/chip.conn; it holds every instance that both chips carry with the same binding. Instances of one chip, and
+# shared instances whose binding differs per chip (digital macro, core_bias, bias_ext, clockmux, the two rings, cdr,
+# clk_obs), are in the chip file. Owner: chip-top integration. Hand-edited plain text; integration/chips/check_top.py
+# <chip> parses and checks the chip (this file included) and writes <chip>/generated/.
+#
+# inst <name> <master> <group>      group = core | chip | one of the supply islands: wired_rx wired_cap wired_tx
+#                                    rf_rx rf_tx lod lo pll conv debug (spec/power-delivery.md section 2); each chip
+#                                    has only its own islands (spec/chips.json)
+#   pin=net   input (load)          pin>net   output (the one driver)        pin~net   analog / supply / passive
+#   net "-" = intentional no-connect (only with > or ~; each one is listed by the checker)
+#   {a:b} / {x,y} expand (left side: cartesian product; \1 \2 = value of the n-th group counted across the
+#   instance name and the pin; braces on the right side advance in step with the left side)
+# include <file>                    text of another conn file (path relative to the including file)
+# port <net>                        bond pad / package pin (the chip's bond_map.txt bonds each one)
+# waive <inst>.<pin-regex> <text>   island crossing without an iso cell, with the reason
+# swap <inst>.<pin-regex> <text>    intended P/N swap (check_top.py derives P/N, I/Q and bit order from the names)
+# macroclamp <group> <pin-regex>    macro input the digital macro clamps itself (CP4-1)
+# Nets: c_* = control from pt_digital_macro (one macro port per name, widths/resets in ctl_ports.txt);
+#       s_* = status into the macro.  Everything not on instance `digital`, `host`, `debug_pads`, `atb*_io`,
+#       `pad_por_bypass` and the supply-site cells is inside pt_analog_top.
+# Masters and pin lists: masters.txt (pins are read from each block's published subckt).
+# Disagreements between neighbours are NOT hidden here: see decisions.md (D-numbers quoted in comments).
+
+port RESET_N
+port SPI_SCLK
+port SPI_CS_N
+port SPI_MOSI
+port SPI_MISO
+port H2D[{0:9}]
+port H2D_CLK
+port D2H[{0:9}]
+port D2H_CLK
+port REF_IN
+port REF_IN_N
+port AUX_CLK_P
+port AUX_CLK_N
+port ATB0
+port ATB1
+port CLK_OBS
+port DBG_OBS0
+port DBG_OBS1
+port POR_BYPASS
+port VDD
+port VSS
+
+# ================= chip level: provider pads and the digital macro =================
+inst host pt_host_physical chip
+  RESET_N~RESET_N SPI_SCLK~SPI_SCLK SPI_CS_N~SPI_CS_N SPI_MOSI~SPI_MOSI SPI_MISO~SPI_MISO
+  H2D[{0:9}]~H2D[\1] H2D_CLK~H2D_CLK D2H[{0:9}]~D2H[\1] D2H_CLK~D2H_CLK VDD~VDD VSS~VSS
+  rst_n>reset_n_pad sclk>spi_sclk cs_n>spi_cs_n mosi>spi_mosi miso=spi_miso miso_oe=spi_miso_oe
+  h2d_clk>h2d_clk h2d_pin[{0:9}]>h2d_pin[\1] d2h_pin[{0:9}]=d2h_pin[\1] d2h_clk_pin=d2h_clk_pin
+  d2h_oe=d2h_oe d2h_pdrv[{0:1}]=d2h_pdrv[\1] d2h_sl=d2h_sl
+inst debug_pads pt_debug_physical chip
+  VDD~VDD VSS~VSS CLK_OBS~CLK_OBS DBG_OBS0~DBG_OBS0 DBG_OBS1~DBG_OBS1
+  clk_obs=clk_obs clk_obs_oe=clk_obs_oe dbg_obs0=dbg_obs0 dbg_obs0_oe=dbg_obs0_oe dbg_obs1=dbg_obs1 dbg_obs1_oe=dbg_obs1_oe
+# DT-10 / MW-26 / always-on audit: bonded strap with pad pull-down (digital is adding the pad; site open, D-POR)
+inst pad_por_bypass pad_strap chip
+  PAD~POR_BYPASS Y>por_bypass VDD~VDD VSS~VSS
+
+# ================= always-on core rail =================
+inst por por core
+  vdd3v3~VDD vss~VSS ena=VDD porb>por_n por>- por_unbuf~-
+inst aosc pt_aosc core
+  EN=c_aosc_en CLK>fc_src[4] ATB_X~- VDD~VDD VSS~VSS      # ATB_X = timing capacitor node, must stay unloaded
+inst isw_pll isw_debug core
+  VDD~VDD VISL~RAIL_pll VSS~VSS EN=island_en[2] ISO>- PG>s_pg_pll
+
+# Supply and ground pads at the 18 fixed provider sites (DVDD = VDD and DVSS = VSS are one net each, tied in every cell:
+# power-delivery section 6). Free signal sites of each chip carry more supply / ground bonds (pad_xvdd_* / pad_xvss_* in
+# the chip file, bond_map.txt). The fixed bond layout has no down-bonds (PC-21, RQ-1): the LNA ground is die VSS.
+inst pad_dvdd_{0:5} prov_supply chip
+  PAD~VDD
+inst pad_vdd_{0:1} prov_supply chip
+  PAD~VDD
+inst pad_dvss_{0:7} prov_supply chip
+  PAD~VSS
+inst pad_vss_{0:1} prov_supply chip
+  PAD~VSS
+inst pad_ref pad_refpad pll
+  PAD_P~REF_IN PAD_N~REF_IN_N VSS~VSS VCM~REF_VCM ATB_ESD_RAIL~-
+inst pad_aux_clk pad_refpad pll
+  PAD_P~AUX_CLK_P PAD_N~AUX_CLK_N VSS~VSS VCM~REF_VCM ATB_ESD_RAIL~-
+inst refvcm pt_refvcm pll demand
+  VCM~REF_VCM EN=c_refvcm_en VDD~RAIL_pll VSS~VSS      # refpad VCM (VDD/2 in the LO bench) has no source (MW-6), D-REFVCM
+
+# ================= clocks (pll island) =================
+# REF_IN receiver on the always-on core rail, OUTN -> ref_clk (LO-INTEGRATION.md section 5, MW-2a); not in the v6 floorplan
+inst rx_ref_in pt_diff_clk_rx core
+  INP~REF_IN INN~REF_IN_N EN=c_rx_ref_en SE=VSS OUTP>- OUTN>ref_clk PRESENT>s_ref_present ATB_DET~- VDD~VDD VSS~VSS
+inst iso_host_clk iso_clamp_x4 core
+  A=HOST_CLK ISO=island_off[2] Y>host_word_clk VDD~VDD VSS~VSS
+# three prescalers (LO-INTEGRATION.md section 5): line ring -> HOST_INT (+ macro ct_wclk), line ring -> CONV_INT,
+# host_follow (CDR) ring -> HF.  One is in the v6 floorplan.  D-CLK
+inst prescale pt_prescale pll
+  CK_IN=WIRE_CK EN=c_prescale_en D2=c_prescale_d[0] D4=c_prescale_d[1] D8=c_prescale_d[2] D16=c_prescale_d[3] CK_OUT>PRE_CK VDD~RAIL_pll VSS~VSS
+inst prescale_hf pt_prescale pll
+  CK_IN=CDRPH[0] EN=c_prescale_hf_en D2=c_prescale_hf_d[0] D4=c_prescale_hf_d[1] D8=c_prescale_hf_d[2] D16=c_prescale_hf_d[3] CK_OUT>PRE_HF_CK VDD~RAIL_pll VSS~VSS
+# regulated ring supplies (MW-31): one pt_pll_vreg2 for both rings
+inst pll_vreg2 pt_pll_vreg2 pll
+  VIN~RAIL_pll VOUT_TX~VREG_TX VOUT_CDR~VREG_CDR VSS~VSS BYP_TX=c_pllvreg_byp_tx BYP_CDR=c_pllvreg_byp_cdr ATB_OUT~- ATB_G~-
+inst iso_pll_tx_fbck iso_clamp_x4 core
+  A=PLL_TX_FBCK ISO=island_off[2] Y>fc_src[0] VDD~VDD VSS~VSS
+
+# ================= debug-island clock receivers, replicas, CLK_OBS =================
+# CP4-3 (user 2026-11-14): the forwarded wire clock (WCLK_IN) arrives on the AUX_CLK pad pair; pad_wclk_in,
+# rx_wclk_in, obs_pre4_wclk and two clamps are deleted; clockmux.WCK and cdr.WCK_IN take AUX_CK_P. Conditions: D-AUXWCK
+inst rx_aux_clk pt_diff_clk_rx debug
+  INP~AUX_CLK_P INN~AUX_CLK_N EN=rx_en_aux SE=VSS OUTP>AUX_CK OUTN>- PRESENT>AUX_PRESENT ATB_DET~- VDD~RAIL_debug VSS~VSS
+inst iso_aux_ck iso_clamp_x4 pll
+  A=AUX_CK ISO=island_off[5] Y>AUX_CK_P VDD~RAIL_pll VSS~VSS
+inst ring_osc pt_ring_osc debug
+  EN=c_ring_osc_en OUT>RING_OSC_CK VDD~RAIL_debug VSS~VSS
+inst vco_replica pt_vco_replica debug
+  EN=c_vco_replica_en VCTRL~VCO_REPLICA_VCTRL OUT>VCO_REPLICA_CK ATB_VTAIL~- VDD~RAIL_debug VSS~VSS
+# /4 prescalers in front of CLK_OBS for the fast sources (clk_obs16.spice header): one is in the floorplan, seven are needed (D-OBS)
+inst obs_pre4_{wire,wsmp,ref,aux,pll,cdr} pt_obs_pre4 debug
+  CK={WIRE_CK,WSMP_CK,ref_clk,AUX_CK,TXPH[1],CDRPH[1]} EN=c_obs_pre4_en[{0:5}] OUT>OBS4_\1 VDD~RAIL_debug VSS~VSS
+waive obs_pre4_(wire|wsmp|pll|cdr).CK input is NAND(CK, EN); digital keeps EN = 0 while the pll island is off (ctl_ports.txt)
+# clk_obs16 OUT is high-Z while EN = 0 (clk_obs16.spice): pull it down whenever the cell is not driving, so the
+# always-on clamp input never floats with the debug island on (D-OBS)
+inst pd_clk_obs iso_pd core
+  Y~CLK_OBS_DBG ISO=c_clk_obs_off VSS~VSS
+inst iso_clk_obs iso_clamp_x4 core
+  A=CLK_OBS_DBG ISO=island_off[5] Y>clk_obs VDD~VDD VSS~VSS
+
+# ================= characterization structures (analog/characterization; published cells, NOT in the v6 floorplan: D-CHAR)
+inst char_atb pt_char_atb core
+  {RN_LNA,RP_LNA,RN_MIX,RP_MIX,RN_SMP,RP_SMP,RN_DRV,RP_DRV,RES_A,RES_B,MIM_A,MIM_B}~CHAR_\1 VSS~VSS      # two-terminal devices, ATB codes 43-54
+
+# ---- ATB tree (always-on core rail). One leaf per (bus, code); dead codes are tied to VSS on purpose (decisions.md D-ATB).
+inst atb0_leaf1 atb_leaf_f core
+  NODE~ATBN_master_ibias BUS~ATB0_LOCAL0 SEL=atb0_sw[0] VDD~VDD VSS~VSS
+inst atb0_leaf29 atb_leaf_f core
+  NODE~ATBN_pll_ibias BUS~ATB0_LOCAL0 SEL=atb0_sw[28] VDD~VDD VSS~VSS
+inst atb0_leaf55 atb_leaf_f core
+  NODE~ATBN_vbg BUS~ATB0_LOCAL0 SEL=atb0_sw[54] VDD~VDD VSS~VSS
+inst atb0_leaf56 atb_leaf_f core
+  NODE~ATBN_debug_ibias BUS~ATB0_LOCAL0 SEL=atb0_sw[55] VDD~VDD VSS~VSS
+inst atb0_leaf58 atb_leaf_f core
+  NODE~VCO_REPLICA_VCTRL BUS~ATB0_LOCAL0 SEL=atb0_sw[57] VDD~VDD VSS~VSS
+inst atb0_grp0 atb_grp core
+  NODE~ATB0_LOCAL0 BUS~ATB0_GLOBAL SEL=atb0_grp[0] VDD~VDD VSS~VSS
+inst atb0_leaf43 atb_leaf_f core
+  NODE~CHAR_RN_LNA BUS~ATB0_LOCAL1 SEL=atb0_sw[42] VDD~VDD VSS~VSS
+inst atb0_leaf44 atb_leaf_f core
+  NODE~CHAR_RP_LNA BUS~ATB0_LOCAL1 SEL=atb0_sw[43] VDD~VDD VSS~VSS
+inst atb0_leaf45 atb_leaf_f core
+  NODE~CHAR_RN_MIX BUS~ATB0_LOCAL1 SEL=atb0_sw[44] VDD~VDD VSS~VSS
+inst atb0_leaf46 atb_leaf_f core
+  NODE~CHAR_RP_MIX BUS~ATB0_LOCAL1 SEL=atb0_sw[45] VDD~VDD VSS~VSS
+inst atb0_leaf47 atb_leaf_f core
+  NODE~CHAR_RN_SMP BUS~ATB0_LOCAL1 SEL=atb0_sw[46] VDD~VDD VSS~VSS
+inst atb0_leaf48 atb_leaf_f core
+  NODE~CHAR_RP_SMP BUS~ATB0_LOCAL1 SEL=atb0_sw[47] VDD~VDD VSS~VSS
+inst atb0_leaf49 atb_leaf_f core
+  NODE~CHAR_RN_DRV BUS~ATB0_LOCAL1 SEL=atb0_sw[48] VDD~VDD VSS~VSS
+inst atb0_leaf50 atb_leaf_f core
+  NODE~CHAR_RP_DRV BUS~ATB0_LOCAL1 SEL=atb0_sw[49] VDD~VDD VSS~VSS
+inst atb0_leaf51 atb_leaf_f core
+  NODE~CHAR_RES_A BUS~ATB0_LOCAL1 SEL=atb0_sw[50] VDD~VDD VSS~VSS
+inst atb0_leaf52 atb_leaf_f core
+  NODE~CHAR_RES_B BUS~ATB0_LOCAL1 SEL=atb0_sw[51] VDD~VDD VSS~VSS
+inst atb0_leaf53 atb_leaf_f core
+  NODE~CHAR_MIM_A BUS~ATB0_LOCAL1 SEL=atb0_sw[52] VDD~VDD VSS~VSS
+inst atb0_leaf54 atb_leaf_f core
+  NODE~CHAR_MIM_B BUS~ATB0_LOCAL1 SEL=atb0_sw[53] VDD~VDD VSS~VSS
+inst atb0_grp1 atb_grp core
+  NODE~ATB0_LOCAL1 BUS~ATB0_GLOBAL SEL=atb0_grp[1] VDD~VDD VSS~VSS
+inst atb0_pad atb_pad core
+  PAD~ATB0 BUS~ATB0_GLOBAL SEL=atb0_en VDD~VDD VSS~VSS
+inst atb0_io atb_provider_pad chip
+  ASIG5V~ATB0 DVDD~VDD DVSS~VSS VDD~VDD VSS~VSS
+inst atb1_leaf1 atb_leaf_s core
+  NODE~ATBN_master_ibias BUS~ATB1_LOCAL0 SEL=atb1_sw[0] VDD~VDD VSS~VSS
+inst atb1_leaf2 atb_leaf_s core
+  NODE~VREF0_MASTER BUS~ATB1_LOCAL0 SEL=atb1_sw[1] VDD~VDD VSS~VSS
+inst atb1_leaf3 atb_leaf_s core
+  NODE~VCM_MASTER BUS~ATB1_LOCAL0 SEL=atb1_sw[2] VDD~VDD VSS~VSS
+inst atb1_leaf4 atb_leaf_s core
+  NODE~VSS BUS~ATB1_LOCAL0 SEL=atb1_sw[3] VDD~VDD VSS~VSS   # DEAD: monitor block never built; must never reach the POR vcap node
+inst atb1_leaf5 atb_leaf_s core
+  NODE~VDD BUS~ATB1_LOCAL0 SEL=atb1_sw[4] VDD~VDD VSS~VSS
+inst atb1_leaf6 atb_leaf_s core
+  NODE~VDD BUS~ATB1_LOCAL0 SEL=atb1_sw[5] VDD~VDD VSS~VSS
+inst atb1_leaf9 atb_leaf_s core
+  NODE~RAIL_pll BUS~ATB1_LOCAL0 SEL=atb1_sw[8] VDD~VDD VSS~VSS
+inst atb1_leaf12 atb_leaf_s core
+  NODE~RAIL_debug BUS~ATB1_LOCAL0 SEL=atb1_sw[11] VDD~VDD VSS~VSS
+inst atb1_leaf13 atb_leaf_s core
+  NODE~VSS BUS~ATB1_LOCAL0 SEL=atb1_sw[12] VDD~VDD VSS~VSS
+inst atb1_grp0 atb_grp core
+  NODE~ATB1_LOCAL0 BUS~ATB1_GLOBAL SEL=atb1_grp[0] VDD~VDD VSS~VSS
+inst atb1_leaf43 atb_leaf_s core
+  NODE~CHAR_RN_LNA BUS~ATB1_LOCAL1 SEL=atb1_sw[42] VDD~VDD VSS~VSS
+inst atb1_leaf44 atb_leaf_s core
+  NODE~CHAR_RP_LNA BUS~ATB1_LOCAL1 SEL=atb1_sw[43] VDD~VDD VSS~VSS
+inst atb1_grp1 atb_grp core
+  NODE~ATB1_LOCAL1 BUS~ATB1_GLOBAL SEL=atb1_grp[1] VDD~VDD VSS~VSS
+inst atb1_leaf25 atb_leaf_s core
+  NODE~VSS BUS~ATB1_LOCAL2 SEL=atb1_sw[24] VDD~VDD VSS~VSS   # DEAD: no slicer bias node (old rule loaded SL_P)
+inst atb1_leaf41 atb_leaf_s core
+  NODE~VSS BUS~ATB1_LOCAL2 SEL=atb1_sw[40] VDD~VDD VSS~VSS   # DEAD: no usbfs block
+inst atb1_leaf58 atb_leaf_s core
+  NODE~VCO_REPLICA_VCTRL BUS~ATB1_LOCAL2 SEL=atb1_sw[57] VDD~VDD VSS~VSS
+inst atb1_grp2 atb_grp core
+  NODE~ATB1_LOCAL2 BUS~ATB1_GLOBAL SEL=atb1_grp[2] VDD~VDD VSS~VSS
+inst atb1_leaf29 atb_leaf_s core
+  NODE~ATBN_pll_ibias BUS~ATB1_LOCAL3 SEL=atb1_sw[28] VDD~VDD VSS~VSS
+inst atb1_leaf30 atb_leaf_s core
+  NODE~ATBN_pll_vctrl BUS~ATB1_LOCAL3 SEL=atb1_sw[29] VDD~VDD VSS~VSS
+inst atb1_leaf31 atb_leaf_s core
+  NODE~BIAS_pll_ring_tx BUS~ATB1_LOCAL3 SEL=atb1_sw[30] VDD~VDD VSS~VSS
+inst atb1_leaf32 atb_leaf_s core
+  NODE~REF_VCM BUS~ATB1_LOCAL3 SEL=atb1_sw[31] VDD~VDD VSS~VSS
+inst atb1_leaf34 atb_leaf_s core
+  NODE~ATBN_cdr_bias BUS~ATB1_LOCAL3 SEL=atb1_sw[33] VDD~VDD VSS~VSS
+inst atb1_leaf37 atb_leaf_s core
+  NODE~VCM_MASTER BUS~ATB1_LOCAL3 SEL=atb1_sw[36] VDD~VDD VSS~VSS
+inst atb1_leaf47 atb_leaf_s core
+  NODE~CHAR_RN_SMP BUS~ATB1_LOCAL3 SEL=atb1_sw[46] VDD~VDD VSS~VSS
+inst atb1_leaf48 atb_leaf_s core
+  NODE~CHAR_RP_SMP BUS~ATB1_LOCAL3 SEL=atb1_sw[47] VDD~VDD VSS~VSS
+inst atb1_grp3 atb_grp core
+  NODE~ATB1_LOCAL3 BUS~ATB1_GLOBAL SEL=atb1_grp[3] VDD~VDD VSS~VSS
+inst atb1_leaf42 atb_leaf_s core
+  NODE~ATBN_debug_buffer_bias BUS~ATB1_LOCAL4 SEL=atb1_sw[41] VDD~VDD VSS~VSS
+inst atb1_leaf45 atb_leaf_s core
+  NODE~CHAR_RN_MIX BUS~ATB1_LOCAL4 SEL=atb1_sw[44] VDD~VDD VSS~VSS
+inst atb1_leaf46 atb_leaf_s core
+  NODE~CHAR_RP_MIX BUS~ATB1_LOCAL4 SEL=atb1_sw[45] VDD~VDD VSS~VSS
+inst atb1_leaf49 atb_leaf_s core
+  NODE~CHAR_RN_DRV BUS~ATB1_LOCAL4 SEL=atb1_sw[48] VDD~VDD VSS~VSS
+inst atb1_leaf50 atb_leaf_s core
+  NODE~CHAR_RP_DRV BUS~ATB1_LOCAL4 SEL=atb1_sw[49] VDD~VDD VSS~VSS
+inst atb1_leaf51 atb_leaf_s core
+  NODE~CHAR_RES_A BUS~ATB1_LOCAL4 SEL=atb1_sw[50] VDD~VDD VSS~VSS
+inst atb1_leaf52 atb_leaf_s core
+  NODE~CHAR_RES_B BUS~ATB1_LOCAL4 SEL=atb1_sw[51] VDD~VDD VSS~VSS
+inst atb1_leaf53 atb_leaf_s core
+  NODE~CHAR_MIM_A BUS~ATB1_LOCAL4 SEL=atb1_sw[52] VDD~VDD VSS~VSS
+inst atb1_leaf54 atb_leaf_s core
+  NODE~CHAR_MIM_B BUS~ATB1_LOCAL4 SEL=atb1_sw[53] VDD~VDD VSS~VSS
+inst atb1_leaf55 atb_leaf_s core
+  NODE~ATBN_vbg BUS~ATB1_LOCAL4 SEL=atb1_sw[54] VDD~VDD VSS~VSS
+inst atb1_leaf56 atb_leaf_s core
+  NODE~ATBN_debug_ibias BUS~ATB1_LOCAL4 SEL=atb1_sw[55] VDD~VDD VSS~VSS
+inst atb1_leaf57 atb_leaf_s core
+  NODE~ATBN_idac1 BUS~ATB1_LOCAL4 SEL=atb1_sw[56] VDD~VDD VSS~VSS
+inst atb1_grp4 atb_grp core
+  NODE~ATB1_LOCAL4 BUS~ATB1_GLOBAL SEL=atb1_grp[4] VDD~VDD VSS~VSS
+inst atb1_pad atb_pad core
+  PAD~ATB1 BUS~ATB1_GLOBAL SEL=atb1_en VDD~VDD VSS~VSS
+inst atb1_io atb_provider_pad chip
+  ASIG5V~ATB1 DVDD~VDD DVSS~VSS VDD~VDD VSS~VSS

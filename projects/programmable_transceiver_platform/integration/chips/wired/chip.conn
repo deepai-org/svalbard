@@ -1,0 +1,280 @@
+# wired/chip.conn: connectivity of pt_wired: wired RX / TX, USB, Ethernet. The shared part is ../common.conn (included below);
+# syntax in its header. Bond map: bond_map.txt. Regression: run.sh. Which fields / islands this chip has: spec/chips.json.
+
+include ../common.conn
+
+port WIRE_RX_P
+port WIRE_RX_N
+port WIRE_TX_P
+port WIRE_TX_N
+port USB_DP
+port USB_DN
+port WTX_EXT_P
+port WTX_EXT_N
+port WMON
+port TLP_TEST
+
+inst digital pt_digital_macro chip
+  # reset, SPI, host link (unchanged ports)
+  reset_n_pad=reset_n_pad por_n=por_n por_bypass=por_bypass
+  spi_sclk=spi_sclk spi_cs_n=spi_cs_n spi_mosi=spi_mosi spi_miso>spi_miso spi_miso_oe>spi_miso_oe
+  host_word_clk=host_word_clk h2d_clk=h2d_clk h2d_pin[{0:9}]=h2d_pin[\1]
+  d2h_pin[{0:9}]>d2h_pin[\1] d2h_clk_pin>d2h_clk_pin d2h_oe>d2h_oe d2h_pdrv[{0:1}]>d2h_pdrv[\1] d2h_sl>d2h_sl
+  # CP4-1: every macro input that comes from a switched island is clamped INSIDE the macro (AND2 standard cell with
+  # island_on[k], first gate after the pin, excluded from port buffering / hold fixing); see the macroclamp lines below.
+  # Three clock nets keep an outside clamp because clk_obs also uses them: rf_rx_clk, host_word_clk, fc_src[0].
+  ref_clk=ref_clk wire_rx_clk=WRX_WCLK40 wire_tx_clk=WTX_WCLK40 rf_rx_clk=VSS rf_tx_clk=VSS
+  ct_wclk=PRE_CK ct_det_clk>ct_det_clk
+  fc_src[0]=fc_src[0] fc_src[1]=PLL_CDR_FBCK fc_src[2]=RING_OSC_CK fc_src[3]=VCO_REPLICA_CK fc_src[4]=fc_src[4] fc_src[5]=VSS
+  # wired datapath.  wire_rx_valid / wire_tx_request are made inside the macro (pt_wrx_ctl / pt_wtx_ctl; D-VALID, TOP-3): no pins
+  wire_rx_data[{0:39}]=WRX_DX[\1] wire_rx_edge[{0:19}]=WRX_EW[\1]
+  wire_tx_data[{0:39}]>wire_tx_data[\1]
+  # RF datapath: not on this chip
+  rf_rx_sample[{0:23}]=VSS rf_rx_sample_b[{0:23}]=VSS rf_rx_ph_i=VSS rf_rx_ph_q=VSS rf_tx_sample[{0:23}]>- rf_tx_clk_out>-
+  # islands, ATB, debug pads (unchanged ports)
+  island_en[{0,2,5}]>island_en[\1] island_en[{1,3,4}]>-
+  island_on[{0,2,5}]>island_on[\1] island_on[{1,3,4}]>-
+  island_off[{0,2,5}]>island_off[\1] island_off[{1,3,4}]>-
+  s_pg_{wired_rx,wired_cap,wired_tx,pll,debug}=s_pg_\1      # per-switch power-good; the macro ANDs each enable group
+  s_pg_{rf_rx,rf_tx,lod,lo,conv}=VSS      # no rf / conv island on this chip
+  wired_on_ext=wired_on_ext
+  atb0_sw[{0,21,28,42,43,44,45,46,47,48,49,50,51,52,53,54,55,57}]>atb0_sw[\1] atb0_sw[{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,29,30,31,32,33,34,35,36,37,38,39,40,41,56}]>-
+  atb1_sw[{0,1,2,3,4,5,6,8,9,11,12,21,22,23,24,25,26,27,28,29,30,31,33,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57}]>atb1_sw[\1]
+  atb1_sw[{7,10,13,14,15,16,17,18,19,20,32,34,35,37,38}]>-      # leaves of rf / conv nodes: not on this chip
+  atb0_grp[{0:1}]>atb0_grp[\1] atb1_grp[{0:4}]>atb1_grp[\1]
+  atb0_en>atb0_en atb1_en>atb1_en
+  rx_en_aux>rx_en_aux rx_en_wclk>- rx_en_wtx_ext>rx_en_wtx_ext
+  clk_obs_oe>clk_obs_oe dbg_obs0>dbg_obs0 dbg_obs0_oe>dbg_obs0_oe dbg_obs1>dbg_obs1 dbg_obs1_oe>dbg_obs1_oe
+  wire_rx_ptrim_en>wire_rx_ptrim_en
+  # status into the macro (replaces analog_status[11:0] / wire_analog_status[12:0], D-STATUS)
+  s_pll_tx_lock=PLL_TX_LOCK s_pll_cdr_lock=PLL_CDR_LOCK s_ref_present=s_ref_present s_refbuf_ready=VSS
+  s_adc_{i,i_b,q,q_b}_{ovl,done}=VSS      # converter status: not on this chip
+  s_detect_diff_pos=DET_DIFF_POS s_detect_diff_neg=DET_DIFF_NEG s_detect_se_p=DET_SE_P s_detect_se_n=DET_SE_N
+  s_wrx_slp=WRX_SLP s_wrx_slm=WRX_SLM s_wtx_ext_data=WTX_EXT_DATA
+  s_aux_present=AUX_PRESENT s_wtx_ext_present=WTX_EXT_PRESENT
+  fault=VSS      # no monitor block exists (D-FAULT); floating high would force every TX path off
+  # every c_* net is a macro output port of the same name (ctl_ports.txt); they are not repeated here. Ports of the
+  # other chip's fields (spec/chips.json) have no consumer on this chip.
+
+# macroclamp <island> <macro pin regex>: inputs the macro must AND with island_on[bit(island)] before any other gate
+macroclamp pll ct_wclk|fc_src\[1\]|s_pll_(tx|cdr)_lock
+macroclamp debug fc_src\[[23]\]|s_(aux|wtx_ext)_present
+macroclamp wired wire_rx_data\[\d+\]|wire_rx_edge\[\d+\]|wire_rx_clk|wire_tx_clk|s_detect_\w+|s_wrx_sl[pm]|s_wtx_ext_data
+inst core_bias pt_core_bias core
+  VDD~VDD VSS~VSS RAIL_rf~VSS RAIL_conv~VSS RAIL_pll~RAIL_pll RAIL_wired~RAIL_wired_rx RAIL_debug~RAIL_debug      # bank rails: D-PWR; rf / conv banks unpowered on this chip (D8)
+  ON_wired=island_on[0] ON_rf=VSS ON_pll=island_on[2] ON_conv=VSS ON_debug=island_on[5]
+  C_core_biasgen_ena=c_biasgen_ena C_core_biasgen_ref_sel_vbg=c_biasgen_ref_sel_vbg
+  C_core_biasgen_ref_sel_coarse=c_biasgen_ref_sel_coarse C_core_biasgen_ref_sel_fine=c_biasgen_ref_sel_fine
+  C_core_biasgen_idac2_source_{0:4}=c_biasgen_idac2_source[\1] C_core_biasgen_idac1_source_{0:4}=c_biasgen_idac1_source[\1]
+  C_core_biasgen_bandgap_sink1_{0:2}=c_biasgen_bandgap_sink1[\1] C_core_biasgen_bandgap_sink2_{0:1}=c_biasgen_bandgap_sink2[\1]
+  C_core_biasgen_voltgen_source_{0:4}=c_biasgen_voltgen_source[\1] C_core_biasgen_voltgen_sink1_{0:2}=c_biasgen_voltgen_sink1[\1]
+  C_core_biasgen_voltgen_sink2_{0:2}=c_biasgen_voltgen_sink2[\1]
+  C_core_refchain_bgap_ena=c_bgap_ena C_core_refchain_bgap_trim_{0:15}=c_bgap_trim[\1]
+  C_core_refchain_dist_en_rf=VSS C_core_refchain_dist_en_conv=VSS C_core_refchain_dist_en_pll=c_bias_dist_en_pll
+  C_core_refchain_dist_en_wire=c_bias_dist_en_wire C_core_refchain_dist_en_debug=c_bias_dist_en_debug
+  EN_{lna,rxmix_i,rxmix_q,bbfilter_i,bbfilter_q,txmix_i,txmix_q,rfdriver,adc_i,adc_q,dac_i,dac_q,refbuf}=VSS      # rf / conv banks: no consumer here
+  BIAS_{lna,rxmix_i,rxmix_q,bbfilter_i,bbfilter_q,txmix_i,txmix_q,rfdriver,adc_i,adc_q,dac_i,dac_q,refbuf}~-
+  EN_pll_ring_tx=c_pll_tx_en BIAS_pll_ring_tx~BIAS_pll_ring_tx EN_pll_ring_rx=c_pll_cdr_en BIAS_pll_ring_rx~BIAS_pll_ring_rx
+  EN_pll_ring_host=c_cdr_en BIAS_pll_ring_host~BIAS_cdr      # spare output (pll_host deleted) feeds pt_cdr.IBIAS (D-BIAS)
+  BIAS_lc_vco_reserved~-                                     # EN tied low inside core_bias: unusable (D-BIAS)
+  EN_ctle=c_ctle_en BIAS_ctle~BIAS_ctle EN_detect=c_detect_en BIAS_detect~BIAS_detect
+  EN_wiredtx=c_wiredtx_bias_en BIAS_wiredtx~BIAS_wiredtx
+  EN_bb_tap_{i,q}=VSS BIAS_bb_tap_{i,q}~- EN_bb_tap_wmon=c_bb_tap_wmon_bias_en BIAS_bb_tap_wmon~BIAS_bb_tap_wmon
+  ROOT_REF~ATBN_master_ibias VREF0~VREF0_MASTER VCM~VCM_MASTER TRK_RF~- TRK_WIRE~ATBN_wire_ibias
+  TRK_PLL~ATBN_pll_ibias TRK_CONV~- VBG~ATBN_vbg TRK_DEBUG~ATBN_debug_ibias IDAC1~ATBN_idac1
+  VGEN_SOURCE~- VGEN_SINK1~- VGEN_SINK2~-
+# missing bias outputs (MW-30): build demand, D-BIAS
+inst bias_ext pt_bias_ext core demand
+  EN_qvco=VSS BIAS_qvco~- EN_lo_pfdcp=VSS BIAS_lo_pfdcp~-      # qvco / lo_pfdcp taps: pt_rf (assignment: bias_ext split)
+  EN_hsbias=c_hsbias_en BIAS_hsbias~BIAS_hsbias TRK_PLL~ATBN_pll_ibias TRK_WIRE~ATBN_wire_ibias
+  RAIL_pll~VSS RAIL_wired~RAIL_wired_tx VSS~VSS
+
+# Islands and switches (spec/power-delivery.md section 2, PD2-2): ten islands on the five verified switch masters.
+# Enable groups: wired = wired_rx + wired_cap + wired_tx (island_en[0]); rf = rf_rx + rf_tx + lod + lo (island_en[1]);
+# pll (2), conv (4), debug (5). Switches of a group start together; each PG goes to the macro (s_pg_*), which ANDs the
+# group (replaces island_pgood[5:0]). Switch ISO outputs are unused: the remaining outside clamps follow the macro's
+# island_off[group bit], which honours pgood_override (D-ISO; PD2-2 asks for the switch ISO instead).
+inst isw_{wired_rx,debug} isw_debug core
+  VDD~VDD VISL~RAIL_\1 VSS~VSS EN=island_en[{0,5}] ISO>- PG>s_pg_\1
+inst isw_wired_tx isw_debug core
+  VDD~VDD VISL~RAIL_wired_tx VSS~VSS EN=island_en[0] ISO>ISO_wired_tx PG>s_pg_wired_tx      # ISO used by the fallback control only
+inst isw_wired_cap isw_wired core
+  VDD~VDD VISL~RAIL_wired_cap VSS~VSS EN=island_en[0] ISO>- PG>s_pg_wired_cap
+inst pad_wtx_ext pad_rf_pair debug
+  PAD_P~WTX_EXT_P PAD_N~WTX_EXT_N VSS~VSS ESD_RAIL~ESD_RAIL_wtx_ext ATB_ESD_RAIL~-
+inst pad_wmon pad_single_leg debug
+  PAD_P~WMON VSS~VSS ESD_RAIL~ESD_RAIL_wtx_ext ATB_ESD_RAIL~-
+inst pad_tlp pad_tlp core
+  PAD~TLP_TEST VSS~VSS VDD~VDD      # PD48b TLP/ESD test site (pad_tlp_flat, CP4-R2)
+inst pad_hs_rx pad_hspad wired_rx
+  VSS~VSS VDD~RAIL_wired_rx TERM_VCM~HS_TERM_VCM TERM_ENABLE=HS_TERM_ENABLE TERM_TRIM{0:3}=HS_TERM_TRIM[\1]
+  VBIAS~HS_VBIAS RX_P~HSRX_P RX_N~HSRX_N PAD_P~WIRE_RX_P PAD_N~WIRE_RX_N
+inst pad_usb pad_wirepad wired_tx
+  PAD_P~USB_DP PAD_N~USB_DN VDD~RAIL_wired_tx VSS~VSS TERM_VCM~TERM_VCM TERM_ENABLE=TERM_ENABLE DIFF_ENABLE=DIFF_ENABLE
+  DIV_ENABLE=DIV_ENABLE BYPASS_ENABLE=BYPASS_ENABLE RX_P~URX_P RX_N~URX_N HS_PBIAS~HS_PBIAS
+  HS_P=USB_HS_P HS_N=USB_HS_N FS_HIGH_P=USB_FS_HIGH_P FS_HIGH_N=USB_FS_HIGH_N FS_LOW_P=USB_FS_LOW_P FS_LOW_N=USB_FS_LOW_N
+  PULLUP_P=c_usb_pullup_p PULLUP_N=c_usb_pullup_n PULLDOWN_P=c_usb_pulldown_p PULLDOWN_N=c_usb_pulldown_n
+  TERM_TRIM{0:2}=c_usb_term_trim[\1] LS_SLOW=c_usb_ls_slow ATB_ESD_RAIL~-      # USB data pins: D-USB (MW-18)
+inst pad_wire_tx pad_txpad wired_tx
+  PAD_P~WIRE_TX_P PAD_N~WIRE_TX_N VDD~RAIL_wired_tx VSS~VSS CASCODE~RAIL_wired_tx
+  MAIN_P=TX_MAIN_P MAIN_N=TX_MAIN_N MAIN_BIAS~TX_MAIN_BIAS POST_P=TX_POST_P POST_N=TX_POST_N POST_BIAS~TX_POST_BIAS
+  TMDS_P=VSS TMDS_N=VSS TMDS_BIAS~VSS      # TMDS branch removed from pt_wiredtx (WT22): tied off (MW-17), D-TMDS
+  DETECT_ENABLE=TX_EN_DETECT DETECT_PBIAS~RAIL_wired_tx TERM_ENABLE=TX_EN_TERM TERM_VCM~TX_TERM_VCM ATB_ESD_RAIL~-
+inst bb_tap_wmon pt_bb_tap debug
+  in_p~WMON_IN in_n~VSS pad_p~WMON pad_n~- inj_p~- inj_n~- ibias~BIAS_bb_tap_wmon obs_en=c_wmon_obs_en inj_en=VSS
+  island_off=island_off[5] atb_nbias~ATBN_debug_buffer_bias VDD~RAIL_debug VSS~VSS      # unused N leg / inject path: D-WMON;
+  # atb_nbias: ATB1 code 42 observes this buffer on pt_wired (bb_tap_i on pt_rf)
+inst iso_wmon iso_pd debug
+  Y~WMON_IN ISO=island_off[0] VSS~VSS
+inst clockmux pt_clockmux pll
+  PLLW=TXPH[0] REF=ref_clk AUX=AUX_CK_P WCK=AUX_CK_P H2D=h2d_clk WSI=CDRPH[0] CONV_INT=VSS HOST_INT=PRE_CK HF=PRE_HF_CK
+  PS_REF=c_clockmux_ps[0] PS_AUX=c_clockmux_ps[1] PS_H2D=c_clockmux_ps[2]
+  WS_PLL=c_clockmux_ws[0] WS_REF=c_clockmux_ws[1] WS_AUX=c_clockmux_ws[2] WS_WCK=c_clockmux_ws[3]
+  SS_INT=c_clockmux_ss[0] SS_REF=c_clockmux_ss[1] SS_WCK=c_clockmux_ss[2]
+  CS_INT=VSS CS_REF=VSS CS_AUX=VSS CS_HF=VSS      # converter clock select: pt_rf
+  HS_INT=c_clockmux_hs[0] HS_HF=c_clockmux_hs[1]
+  PREF>PREF WIRE>WIRE_CK WSMP>WSMP_CK CONV_CLK>- HOST_CLK>HOST_CLK VDD~RAIL_pll VSS~VSS      # CONV_CLK: converters are on pt_rf
+inst pll_tx pt_pll_ring_core pll
+  REF=PREF EN=c_pll_tx_en N4=c_pll_tx_n4 N8=c_pll_tx_n8 HOLD=VSS IBIAS~BIAS_pll_ring_tx PH{0,1,2,4,6}>TXPH[\1] PH{3,5,7}>-
+  LOCK>PLL_TX_LOCK FBCK>PLL_TX_FBCK REFO>- ATB_VCTRL~ATBN_pll_vctrl BAND=c_pll_tx_band VDD~VREG_TX VSS~VSS
+inst pll_cdr pt_pll_ring pll
+  REF=CDR_REF EN=c_pll_cdr_en N4=c_pll_cdr_n4 N8=c_pll_cdr_n8 N5=c_pll_cdr_n5 N10=c_pll_cdr_n10 HOLD=CDR_HOLD
+  IBIAS~BIAS_pll_ring_rx PH{0:7}>CDRPH[\1] LOCK>PLL_CDR_LOCK FBCK>PLL_CDR_FBCK REFO>- ATB_VCTRL~CDR_VCTRL
+  KP{0:2}=c_pll_cdr_kp[\1] FU{0:3}=CDR_UP[\1] FD{0:3}=CDR_DN[\1] BAND=c_pll_cdr_band VDD~VREG_CDR VSS~VSS
+# pt_cdr r13 (published 2026-11-14, with the OTA offset trim otr[4:0], otrs).  IB_PLL is left open: the ring takes BIAS_pll_ring_rx (D-BIAS)
+inst cdr pt_cdr pll
+  VDD_PLL_SW~RAIL_pll VSS~VSS IBIAS~BIAS_cdr cdr_en=c_cdr_en pfd_mode=c_cdr_pfd_mode ref_sel=c_cdr_ref_sel g{0:2}=c_cdr_g[\1]
+  UP{0:3}=CDR_UP[\1] DN{0:3}=CDR_DN[\1] FUP=c_cdr_fup FDN=c_cdr_fdn IB_PLL~- HOLD_PLL>CDR_HOLD VCTRL~CDR_VCTRL
+  REF_IN=PREF WCK_IN=AUX_CK_P REF_PLL>CDR_REF atb_cdr_pbias~ATBN_cdr_bias
+  otr{0:4}=c_cdr_otr[\1] otrs=c_cdr_otr[5]
+# capture votes cross wired -> pll (one ring cycle wide: clamp delay/pulse fidelity not benched, D-ISO)
+inst iso_cdr_up_{0:3} iso_clamp pll
+  A=WRX_UP[\1] ISO=island_off[0] Y>CDR_UP[\1] VDD~RAIL_pll VSS~VSS
+inst iso_cdr_dn_{0:3} iso_clamp pll
+  A=WRX_DN[\1] ISO=island_off[0] Y>CDR_DN[\1] VDD~RAIL_pll VSS~VSS
+swap rx_wtx_ext.INP legs swapped on purpose so that OUTN carries the data (analog/wired_tx/wtx_ext_rx.spice, WT28)
+inst rx_wtx_ext pt_diff_clk_rx debug
+  INP~WTX_EXT_N INN~WTX_EXT_P EN=rx_en_wtx_ext SE=VSS OUTP>- OUTN>WTX_DX_DBG PRESENT>WTX_EXT_PRESENT ATB_DET~- VDD~RAIL_debug VSS~VSS
+inst iso_wtx_dx iso_clamp wired_tx
+  A=WTX_DX_DBG ISO=island_off[5] Y>WTX_DX VDD~RAIL_wired_tx VSS~VSS
+inst clk_obs pt_clk_obs16 debug
+  IN0=VSS IN1=VSS IN2=OBS4_wire IN3=OBS4_wsmp IN4=VSS IN5=OBS4_ref IN6=OBS4_aux IN7=VSS IN8=OBS4_pll
+  IN9=fc_src[0] IN10=RING_OSC_CK IN11=VCO_REPLICA_CK IN12=fc_src[4] IN13=host_word_clk IN14=OBS4_cdr
+  IN15A=CHAR_RO33_CK IN15B=CHAR_RO50_CK IN15C=CHAR_CMLDIV_CK      # char_speed: enable one structure at a time
+  S{0:3}=c_clk_obs_s[\1] N{0:2}=c_clk_obs_n[\1] EN=c_clk_obs_en OUT>CLK_OBS_DBG VDD~RAIL_debug VSS~VSS
+
+# ================= wired receive (wired island) =================
+inst termination pt_termination wired_rx
+  VDD_WIRE_SW~RAIL_wired_rx VSS~VSS term_en=c_term_en term_mode{0:1}=c_term_mode[\1] hs_en=c_term_hs_en hs_term_en=c_term_hs_term_en
+  hs_trim{0:3}=c_term_hs_trim[\1] TERM_ENABLE>TERM_ENABLE DIFF_ENABLE>DIFF_ENABLE TERM_VCM~TERM_VCM
+  HS_TERM_ENABLE>HS_TERM_ENABLE HS_TERM_TRIM{0:3}>HS_TERM_TRIM[\1] HS_TERM_VCM~HS_TERM_VCM HS_VBIAS~HS_VBIAS
+inst rxlevel pt_rxlevel wired_rx
+  VDD_WIRE_SW~RAIL_wired_rx VSS~VSS rxlevel_en=c_rxlevel_en rxlevel_half=c_rxlevel_half DIV_ENABLE>DIV_ENABLE BYPASS_ENABLE>BYPASS_ENABLE
+# HS pair -> CTLE only (MW-8); USB pair -> rxselect direct, detect, wmon (analog/wired_rx/README.md "Architecture")
+inst ctle pt_ctle wired_rx
+  VDD_WIRE_SW~RAIL_wired_rx VSS~VSS IBIAS~BIAS_ctle ctle_en=c_ctle_en wire_ctle_bypass=c_ctle_bypass ctle_peak{0:2}=c_ctle_peak[\1]
+  lf_zero{0:2}=c_ctle_lf_zero[\1] RX_P~HSRX_P RX_N~HSRX_N CTLE_P~CTLE_P CTLE_N~CTLE_N atb_ctle_pbias~ATBN_ctle_bias atb_ctle_src~-
+inst rxselect pt_rxselect wired_rx
+  VDD_WIRE_SW~RAIL_wired_rx VSS~VSS rxselect_en=c_rxselect_en rxselect_direct=c_rxselect_direct CTLE_P~CTLE_P CTLE_N~CTLE_N
+  RX_P~URX_P RX_N~URX_N SL_P~SL_P SL_N~SL_N
+inst wmon_sel pt_wmon_sel wired_rx
+  VDD_WIRE_SW~RAIL_wired_rx VSS~VSS wmon_en=c_wmon_en wmon_sel{0:1}=c_wmon_sel[\1] RX_P~URX_P RX_N~URX_N CTLE_P~CTLE_P CTLE_N~CTLE_N WMON_IN~WMON_IN
+inst detect pt_detect wired_rx
+  VDD_WIRE_SW~RAIL_wired_rx VSS~VSS IBIAS~BIAS_detect det_en=c_detect_en det_clk=ct_det_clk RX_P~URX_P RX_N~URX_N TX_P~WIRE_TX_P TX_N~WIRE_TX_N
+  det_thr{0:1}=c_detect_thr[\1] det_se{0:1}=c_detect_se[\1] det_src_tx=c_detect_src_tx det_inject=c_detect_inject
+  DIFF_POS>DET_DIFF_POS DIFF_NEG>DET_DIFF_NEG SE_P>DET_SE_P SE_N>DET_SE_N atb_det_vref~ATBN_detect_vref
+# RX word divider (MW-11, analog/wired_rx/PINS.md: `wordclk_rx` on CKP[0], same island as the capture). The single
+# pt_wordclk of the floorplan is used here; the wired TX has its own dividers. D-WORDCLK
+inst wordclk_rx pt_wordclk wired_cap
+  CK=CKP[0] EN=c_wordclk_en D10=c_wordclk_d10 D20=c_wordclk_d20 WORD_CLK>- LDE>WRX_LDE LD>- LDB>- VDD~RAIL_wired_cap VSS~VSS
+inst vthdac pt_vthdac wired_rx
+  VDD_WIRE_SW~RAIL_wired_rx VSS~VSS vth_en=c_vthdac_en A{0:7}=c_vthdac_a[\1] B{0:7}=c_vthdac_b[\1] VTAP~VTAP VTAN~VTAN VTBP~VTBP VTBN~VTBN
+inst ptrim pt_ptrim wired_cap
+  VDD_WIRE_SW~RAIL_wired_cap VSS~VSS ptrim_en=wire_rx_ptrim_en PH{0:7}=CDRPH[\1] CKP{0:7}>CKP[\1] T{0:7}_{0:4}=c_ptrim_t\1[\2]
+waive ptrim.PH\d input is NAND(PHk, ptrim_en); the macro must force wire_rx_ptrim_en = 0 while the pll island is off (ctl_ports.txt). Ring swing is the regulated 0.9 x rail (MW-14/MW-31 load and level: D-PTRIM)
+inst slicer pt_slicer wired_rx
+  VDD_WIRE_SW~RAIL_wired_rx VSS~VSS slicer_en=c_slicer_en SL_P~SL_P SL_N~SL_N CKP{0:7}=CKP[\1] QCK>-
+  D{0:3}>SLS[{0,2,4,6}] E{0:3}>SLS[{1,3,5,7}]
+  trim_{d,e}{0:3}_{p0,p1,p2,n0,n1,n2,f0,f1,f2,f3}=c_slicer_trim_\1\2[{0:9}]
+  vsel_e{0:3}_{0:1}=c_slicer_vsel_e\1[\2] VTAP~VTAP VTAN~VTAN VTBP~VTBP VTBN~VTBN
+inst wrx_cap pt_wrx_cap wired_cap
+  S{0:7}=SLS[\1] CKP{0:7}=CKP[\1] EN=c_wrx_cap_en LDE=WRX_LDE RCS=c_wrx_cap_rcs B2=c_wrx_cap_b2 B1=c_wrx_cap_b1
+  PSEL{0:2}=c_wrx_cap_psel[\1] SLIPP=c_wrx_cap_slipp SLIPM=c_wrx_cap_slipm
+  DW{0:19}>- EW{0:19}>WRX_EW[\1] SLP>WRX_SLP SLM>WRX_SLM UP{0:3}>WRX_UP[\1] DN{0:3}>WRX_DN[\1]
+  DX{0:39}>WRX_DX[\1] WCLK40>WRX_WCLK40 VDD~RAIL_wired_cap VSS~VSS
+
+# ================= wired transmit (wired island) =================
+# ring phases PH0/2/4/6 go straight to the serializer (analog/wired_tx/INTEGRATION.md section 2, WT25/WT26/WT29:
+# benched from the extracted ring at the regulated swing). No clamp: the macro must hold c_pll_tx_en = 0 while the
+# pll island is off (ring EN clamps its phase outputs).  PH1/3/5/7: matched dummy routes (D-PHLOAD)
+waive wiredtx.WTX_PH\d+ first gate in pt_wiredtx is NAND(PH, serializer enable) (analog/wired_tx/wiredtx.spice:89-96); the macro must hold c_wiredtx_ser_en = 0 while the pll island is off (no clamp, per the wired TX owner, WT25). A floating phase input is then harmless; not benched
+inst wiredtx pt_wiredtx wired_tx
+  WTX_PH0=TXPH[0] WTX_PH90=TXPH[2] WTX_PH180=TXPH[4] WTX_PH270=TXPH[6] MODE_H=c_wiredtx_mode_h MODE_F=c_wiredtx_mode_f
+  D{0:39}=wire_tx_data[\1] WORD_CLK>- WORD_CLK40>WTX_WCLK40 SER_EN=c_wiredtx_ser_en WTX_EXT=c_wiredtx_ext DX=WTX_DX
+  POST_POL=c_wiredtx_post_pol EN_MAIN=TX_EN_MAIN EN_POST=TX_EN_POST ISLAND_OFF=island_off[0] IBIAS~BIAS_wiredtx
+  MAIN_CODE{0:7}=c_wiredtx_main_code[\1] POST_CODE{0:7}=c_wiredtx_post_code[\1]
+  CMD_MAIN_P>CMD_MAIN_P CMD_MAIN_N>CMD_MAIN_N CMD_POST_P>CMD_POST_P CMD_POST_N>CMD_POST_N
+  MAIN_BIAS~TX_MAIN_BIAS POST_BIAS~TX_POST_BIAS WTX_EXT_DATA>WTX_EXT_DATA ATB_NBIAS~ATBN_wiredtx_bias ATB_PBIAS~- VDD~RAIL_wired_tx VSS~VSS
+# pad attachment cells (pads owner; floorplan steer_0..5, attached_tx_interlock, term_buffer)
+inst steer_{0:3} tx_steer wired_tx
+  VDD~RAIL_wired_tx VSS~VSS IN=CMD_{MAIN_P,MAIN_N,POST_P,POST_N} OUT>TX_{MAIN_P,MAIN_N,POST_P,POST_N}
+inst steer_{4:5} tx_steer wired_tx
+  VDD~RAIL_wired_tx VSS~VSS IN=VSS OUT>-      # TMDS steering buffers: no source since WT22 (D-TMDS)
+inst attached_tx_interlock tx_interlock wired_tx
+  VDD~RAIL_wired_tx VSS~VSS REQ_MAIN=c_txpad_req_main REQ_POST=c_txpad_req_post REQ_TMDS=VSS REQ_DETECT=c_txpad_req_detect
+  REQ_TERM=c_txpad_req_term RESET=island_off[0] QUALIFIED=island_on[0] SUPPLY_OK=s_pg_wired_tx CONFLICT>- VALID>-
+  EN_MAIN>TX_EN_MAIN EN_POST>TX_EN_POST EN_TMDS>- EN_DETECT>TX_EN_DETECT EN_TERM>TX_EN_TERM
+inst term_buffer term_buffer wired_tx
+  VDD~RAIL_wired_tx VSS~VSS REF~TX_BUF_REF BIAS~TX_BUF_BIAS OUT~TX_TERM_VCM ENABLE=TX_EN_TERM
+# buffer reference / bias are ideal sources in every pads bench (MW walk 6.3): build demand, D-TXTERM.
+# DETECT_PBIAS = RAIL_wired (detect source off) until pads state a bias source (wired TX INTEGRATION.md section 4)
+inst txpad_bias pt_txpad_bias wired_tx demand
+  BUF_REF~TX_BUF_REF BUF_BIAS~TX_BUF_BIAS EN_TERM=TX_EN_TERM VDD~RAIL_wired_tx VSS~VSS
+# USB line pre-driver (analog/wired_tx/USB-INTEGRATION.md): HS data = the serializer CMD_MAIN pair; FS/LS and chirp from the macro
+inst usb_txdrv pt_usb_txdrv wired_tx
+  CMD_P=CMD_MAIN_P CMD_N=CMD_MAIN_N HS_EN=c_usb_hs_en HS_DRV=c_usb_hs_drv FS_EN=c_usb_fs_en TX_DP=c_usb_tx_dp TX_DN=c_usb_tx_dn
+  TX_OE=c_usb_tx_oe ISLAND_OFF=island_off[0] HS_STR{0:1}=c_usb_hs_str[\1] HS_PBIAS~HS_PBIAS HS_P>USB_HS_P HS_N>USB_HS_N
+  FS_HIGH_P>USB_FS_HIGH_P FS_HIGH_N>USB_FS_HIGH_N FS_LOW_P>USB_FS_LOW_P FS_LOW_N>USB_FS_LOW_N VDD~RAIL_wired_tx VSS~VSS
+inst hsbias pt_wtx_hsbias wired_tx
+  IBIAS~BIAS_hsbias EN=c_hsbias_en C{0:7}=c_hsbias_c[\1] HS_PBIAS~HS_PBIAS VDD~RAIL_wired_tx VSS~VSS
+# bring-up fallback control. Its external-route request (pin still named TMDS_REQUEST, decode branch == 2) must reach
+# the interlock REQ_MAIN (WT28); REQ_MAIN has one pin, so the macro ORs that condition into c_txpad_req_main and the
+# cell output is left open (D-TMDS: or add an OR cell on the wired rail)
+inst wtx_fallback_control pt_wtx_fallback_control wired_tx
+  L_BRANCH{0:1}=c_wtxfb_branch[\1] L_STATE{0:1}=c_wtxfb_state[\1] L_IDLE=c_wtxfb_idle L_STAGE_TMDS=c_wtxfb_stage_tmds
+  L_EXT_ENABLE=c_wiredtx_ext ISO_wired=ISO_wired_tx FORCE_LEAF=atb0_sw[21] TMDS_REQUEST>- WIRED_ON>wired_on_ext
+  FORCE_SELECTED>WTX_FORCE_SELECTED RAIL_wired~RAIL_wired_tx VDD~VDD VSS~VSS
+waive (digital\.wired_on_ext|atb0_leaf22\.SEL) WIRED_ON and FORCE_SELECTED are made on the cell's core-VDD side (analog/bringup_control/build.py: bringup_inv / bringup_and on VDD)
+inst char_ro33 pt_char_ro33 debug
+  EN=c_char_en[0] OUT>CHAR_RO33_CK VDD~RAIL_debug VSS~VSS
+inst char_ro50 pt_char_ro50 debug
+  EN=c_char_en[1] OUT>CHAR_RO50_CK VDD~RAIL_debug VSS~VSS
+inst char_cmldiv pt_char_cmldiv debug
+  EN=c_char_en[2] OUT>CHAR_CMLDIV_CK BIAS~- VDD~RAIL_debug VSS~VSS      # BIAS sense has no ATB code (requested by the owner)
+inst atb0_leaf22 atb_leaf_f core
+  NODE~ATBN_wire_ibias BUS~ATB0_LOCAL0 SEL=WTX_FORCE_SELECTED VDD~VDD VSS~VSS
+inst atb1_leaf7 atb_leaf_s core
+  NODE~RAIL_wired_rx BUS~ATB1_LOCAL0 SEL=atb1_sw[6] VDD~VDD VSS~VSS
+inst atb1_leaf10 atb_leaf_s core
+  NODE~RAIL_wired_tx BUS~ATB1_LOCAL2 SEL=atb1_sw[9] VDD~VDD VSS~VSS
+inst atb1_leaf22 atb_leaf_s core
+  NODE~ATBN_wire_ibias BUS~ATB1_LOCAL2 SEL=atb1_sw[21] VDD~VDD VSS~VSS
+inst atb1_leaf23 atb_leaf_s core
+  NODE~HS_VBIAS BUS~ATB1_LOCAL2 SEL=atb1_sw[22] VDD~VDD VSS~VSS
+inst atb1_leaf24 atb_leaf_s core
+  NODE~ATBN_ctle_bias BUS~ATB1_LOCAL2 SEL=atb1_sw[23] VDD~VDD VSS~VSS
+inst atb1_leaf26 atb_leaf_s core
+  NODE~ATBN_wiredtx_bias BUS~ATB1_LOCAL2 SEL=atb1_sw[25] VDD~VDD VSS~VSS
+inst atb1_leaf27 atb_leaf_s core
+  NODE~TERM_VCM BUS~ATB1_LOCAL2 SEL=atb1_sw[26] VDD~VDD VSS~VSS
+inst atb1_leaf28 atb_leaf_s core
+  NODE~ATBN_detect_vref BUS~ATB1_LOCAL2 SEL=atb1_sw[27] VDD~VDD VSS~VSS
+inst atb1_leaf40 atb_leaf_s core
+  NODE~BIAS_hsbias BUS~ATB1_LOCAL2 SEL=atb1_sw[39] VDD~VDD VSS~VSS
+
+# Supply / ground bonds on free signal sites (D12; bond_map.txt gives the site and the reason of each). Provider supply
+# cell at a signal site; no COB capacitor on these fingers.
+inst pad_xvss_{0:6} prov_supply chip
+  PAD~VSS
+inst pad_xvdd_{0:1} prov_supply chip
+  PAD~VDD

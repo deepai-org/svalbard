@@ -285,9 +285,17 @@ transceiver-block-kldrc-check:
 transceiver-gds-collisions:
 	$(PYTHON) $(KLDRC)/gds_cell_collisions.py --json scratch/kl-block-drc/collisions.json
 
-.PHONY: transceiver-chip-io
-transceiver-chip-io:
-	$(PYTHON) projects/programmable_transceiver_platform/verification/check_chip_io.py
+# Two chips (pt_rf, pt_wired; spec/chips.json): each chip-level target has a -rf / -wired variant; the plain target runs both.
+.PHONY: transceiver-chip-io transceiver-chip-io-rf transceiver-chip-io-wired
+transceiver-chip-io: transceiver-chip-io-rf transceiver-chip-io-wired
+transceiver-chip-io-rf transceiver-chip-io-wired: transceiver-chip-io-%:
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_chip_io.py $*
+
+# Chip-top regression (connectivity, bond map, boundary sim, isolation audit): integration/chips/<chip>/run.sh
+.PHONY: transceiver-chip-top transceiver-chip-top-rf transceiver-chip-top-wired
+transceiver-chip-top: transceiver-chip-top-rf transceiver-chip-top-wired
+transceiver-chip-top-rf transceiver-chip-top-wired: transceiver-chip-top-%:
+	OMP_NUM_THREADS=1 sh projects/programmable_transceiver_platform/integration/chips/$*/run.sh
 
 .PHONY: transceiver-chip-power
 transceiver-chip-power:
@@ -379,16 +387,18 @@ transceiver-ctl-blocks:
 	cd projects/programmable_transceiver_platform && OMP_NUM_THREADS=1 $(PYTHON) verification/check_monitor.py && \
 	$(PYTHON) verification/check_usb.py && $(PYTHON) verification/check_wtx_ctl.py && $(PYTHON) verification/check_wrx_ctl.py && \
 	$(PYTHON) verification/check_por_path.py && $(PYTHON) verification/check_spi_csn_race.py
-# Chip-level control plane per mode family: generated pt_chip.sv is current, register map vs cell pins (0 mismatches),
-# the real macro against the stub analog top of integration/top/pt_chip.conn (133 checks, decode mutants must fail),
-# CP4-1 clamp coverage, island-off zero masks.
-transceiver-top-modes:
-	$(PYTHON) projects/programmable_transceiver_platform/integration/gen_pt_chip.py --check
+# Chip-level control plane per mode family, per chip: generated pt_chip.sv files are current, register map vs cell pins
+# (0 mismatches), the real macro against the stub analog top of integration/chips/<chip>/chip.conn (decode mutants must
+# fail), CP4-1 clamp coverage, island-off zero masks; then the exhaustive decode table of the macro.
+.PHONY: transceiver-top-modes-rf transceiver-top-modes-wired
+transceiver-top-modes: transceiver-top-modes-rf transceiver-top-modes-wired
 	$(PYTHON) scratch/reviews/mode-walk/cfg_map.py --selftest
 	$(PYTHON) scratch/reviews/mode-walk/cfg_map.py | grep -q "^TOTAL: 0 pin groups without a field, 0 width mismatches, 0 orphan fields"
-	$(PYTHON) projects/programmable_transceiver_platform/verification/check_top_modes.py
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_decode_table.py
-# G3 closure gate: the strap pad is bound in the generated integration/pt_chip.sv since 2026-11-14 (passes).
+transceiver-top-modes-rf transceiver-top-modes-wired: transceiver-top-modes-%:
+	$(PYTHON) projects/programmable_transceiver_platform/integration/gen_pt_chip.py --check $*
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_top_modes.py $*
+# G3 closure gate: the strap pad is bound in the generated pt_chip.sv of both chips (integration/chips/<chip>/generated/).
 .PHONY: transceiver-por-bypass-chip
 transceiver-por-bypass-chip:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_por_bypass.py --chip

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Check analog-architecture.json `chip_implementation` against integration/top/pt_chip.conn.
+"""Check analog-architecture.json `chip_implementation` against the two chips' conns (integration/chips/{rf,wired}/chip.conn).
 
-The conn is the connectivity source of truth. The architecture inventory keeps the functional blocks the models
+The conns are the connectivity source of truth; an instance name means the same block on both chips, so the check runs on
+the union of the two instance sets. The architecture inventory keeps the functional blocks the models
 and the register generator use; `chip_implementation` says which conn instances build each of them.
 Passes when: every conn instance is claimed exactly once (by a block or an infrastructure group), every
 pattern matches at least one conn instance, every inventory block has an entry (an empty list needs a reason
@@ -13,15 +14,20 @@ import fnmatch, json, sys
 from pathlib import Path
 
 P = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(P / 'integration/top'))
+sys.path.insert(0, str(P / 'integration/chips'))
 import check_top  # noqa: E402  (the conn parser)
 
 
 def main():
     arch = json.loads((P / 'spec/analog-architecture.json').read_text())
     impl = arch['chip_implementation']
-    inst, _ports, _waive, perr = check_top.parse((P / 'integration/top/pt_chip.conn').read_text())
-    err = [f'conn: {e}' for e in perr]
+    inst, err = {}, []
+    for chip in ('rf', 'wired'):
+        i, _ports, _waive, perr = check_top.parse(check_top.read_conn(str(P / f'integration/chips/{chip}/chip.conn')))
+        err += [f'{chip} conn: {e}' for e in perr]
+        for n, v in i.items():
+            if n in inst and inst[n]['master'] != v['master']: err.append(f'{n}: master {v["master"]} on pt_{chip}, {inst[n]["master"]} on the other chip')
+            inst.setdefault(n, v)
     claims = {}
     for kind in ('blocks', 'infrastructure'):
         for owner, patterns in impl[kind].items():
@@ -55,7 +61,7 @@ def main():
                     err.append(f'control_field_cells.{prefix}: {pat} matches no conn instance')
     for e in err:
         print('FAIL', e)
-    print(f'architecture vs conn: {len(inst)} conn instances, {len(blocks)} inventory blocks, '
+    print(f'architecture vs conns: {len(inst)} instances on the two chips, {len(blocks)} inventory blocks, '
           f'{sum(1 for v in impl["blocks"].values() if v)} with instances, {len(err)} problems')
     return 1 if err else 0
 

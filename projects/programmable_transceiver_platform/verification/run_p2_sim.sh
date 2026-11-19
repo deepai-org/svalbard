@@ -27,6 +27,8 @@ if [ "$1" = pattern ]; then   # pt_digital-level loopback through the legacy wir
   vvp -n "$OUT/tb_digital_prbs.vvp" | tee "$OUT/tb_digital_prbs.log" | tail -3
   grep -q "^DIGITAL_PRBS_PASS\$" "$OUT/tb_digital_prbs.log"
 fi
-iverilog -g2012 -I rtl -s pt_chip -o "$OUT/pt_chip.vvp" integration/pt_chip.sv rtl/*.sv > "$OUT/pt_chip_elab.log" 2>&1 \
-  || { cat "$OUT/pt_chip_elab.log"; exit 1; }
-echo "pt_chip elaboration: ok"
+for c in rf wired; do
+  iverilog -g2012 -I rtl -s pt_chip -o "$OUT/pt_chip.vvp" integration/chips/$c/generated/pt_chip.sv rtl/*.sv > "$OUT/pt_chip_elab.log" 2>&1 \
+    || { cat "$OUT/pt_chip_elab.log"; exit 1; }
+  echo "pt_chip elaboration (pt_$c): ok"
+done

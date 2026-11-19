@@ -119,7 +119,7 @@ if __name__=='__main__':
         assert any(f=='debug.dbg_obs.sel0' for f in r.get('internal_missing',[]))
         print('SELFTEST PASS: narrowed field, deleted field and missing internal field all reported'); sys.exit(0)
     r=run(fields,pins)
-    rtl=''.join(open(f).read() for f in glob.glob(P+'/rtl/pt_*.sv')+[P+'/integration/pt_chip.sv'] if not f.endswith('pt_regfile.sv'))
+    rtl=''.join(open(f).read() for f in glob.glob(P+'/rtl/pt_*.sv')+glob.glob(P+'/integration/chips/*/generated/pt_chip.sv') if not f.endswith('pt_regfile.sv'))
     rtl_used={f['name'] for f in fields.values() if f['bus'] and (re.search(r'PT_[AD]_'+f['sv'].upper()+r'_(LSB|W)\b',rtl) or re.search(r'\bf_'+f['sv']+r'\b',rtl))}
     for n in r['internal_missing']: r['nofield'].append(('macro',n,'INTERNAL consumer table names a field that does not exist'))
     print('== (1) cell control pins with NO register field on the bus')

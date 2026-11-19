@@ -655,21 +655,25 @@ def main():
     lines = subprocess.run(['vvp', '-n', str(leg / 'tb.vvp')], capture_output=True, text=True, check=True).stdout.splitlines()
     report['legacy_equivalence'] = [ln for ln in lines if ln.startswith('legacy') or ln in ('PASS', 'FAIL')]
     ok = ok and 'PASS' in lines
-    # Chip integration: the top elaborates with every RTL file and exposes all 19 debug sites.
+    # Chip integration: each chip top elaborates with every RTL file, and every debug site is a port of the chip that has it.
     readiness = json.loads((P / 'spec/tapeout-readiness.json').read_text())
-    chip = (P / 'integration/pt_chip.sv').read_text()
-    header = chip[chip.index('module pt_chip('):chip.index(');', chip.index('module pt_chip('))]
     # Sites retired since tapeout-readiness.json debug_sites was written (the list there is stale: coordinator/spec owner):
     # WCLK_OBS, WDBG_OBS (PD22, now USB_DP/DN), ESD_TEST (PD35, now TLP_TEST), WCLK_IN_P/N (CP4-3, on the AUX_CLK pair).
     retired = {'WCLK_OBS', 'WDBG_OBS', 'ESD_TEST', 'WCLK_IN_P', 'WCLK_IN_N'}
-    header = re.sub(r'\[\d+:0\]', ' ', header)
-    missing = [d['name'] for d in readiness['debug_sites'] if d['name'] not in retired and d['name'] not in header.replace(',', ' ').split()]
     rtl = sorted(str(x) for x in (P / 'rtl').glob('*.sv'))
-    elab = subprocess.run(['iverilog', '-g2012', '-I', str(P / 'rtl'), '-s', 'pt_chip', '-o', str(out / 'chip.vvp'),
-                           str(P / 'integration/pt_chip.sv')] + rtl, capture_output=True, text=True)
-    report['chip_integration'] = dict(debug_sites=len(readiness['debug_sites']), missing_debug_ports=missing,
-                                      elaborates=elab.returncode == 0, elaboration_errors=elab.stderr[-1000:])
-    ok = ok and not missing and elab.returncode == 0
+    ports, elab_ok, errs = set(), True, ''
+    for c in ('rf', 'wired'):
+        top = P / f'integration/chips/{c}/generated/pt_chip.sv'
+        chip = top.read_text()
+        header = chip[chip.index('module pt_chip('):chip.index(');', chip.index('module pt_chip('))]
+        ports |= set(re.sub(r'\[\d+:0\]', ' ', header).replace(',', ' ').split())
+        elab = subprocess.run(['iverilog', '-g2012', '-I', str(P / 'rtl'), '-s', 'pt_chip', '-o', str(out / f'chip_{c}.vvp'),
+                               str(top)] + rtl, capture_output=True, text=True)
+        elab_ok = elab_ok and elab.returncode == 0; errs += elab.stderr[-500:]
+    missing = [d['name'] for d in readiness['debug_sites'] if d['name'] not in retired and d['name'] not in ports]
+    report['chip_integration'] = dict(chips=['pt_rf', 'pt_wired'], debug_sites=len(readiness['debug_sites']), missing_debug_ports=missing,
+                                      elaborates=elab_ok, elaboration_errors=errs[-1000:])
+    ok = ok and not missing and elab_ok
     report['status'] = 'pass' if ok else 'fail'
     print(json.dumps(report, indent=1))
     (out / 'report.json').write_text(json.dumps(report, indent=1) + '\n')

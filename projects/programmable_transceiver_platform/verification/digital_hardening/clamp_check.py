@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CP4-1 condition on a gate-level netlist of pt_digital_macro (any flow stage, final included):
 
-  every pin of integration/top/generated/macro_clamps.txt is connected to exactly one cell input,
+  every pin of integration/chips/<chip>/generated/macro_clamps.txt is connected to exactly one cell input,
   an input of a gf180mcu_fd_sc_mcu7t5v0__and2_* whose instance name ends in `.iso_and`, plus (optionally)
   antenna diodes; no buffer, hold cell or any other load sits between the pin and the AND2, and there are
   exactly as many `.iso_and` cells as listed pins. The other input of each AND2 must not be a constant.
@@ -9,7 +9,8 @@
   instances, because OpenROAD then refuses to buffer the nets they load (rst_n, island_on: RSZ-3006). What protects
   the pin is the dont_touch on the pin NET (RSZ_DONT_TOUCH_LIST) and this check on the final netlist.
 
-Usage: clamp_check.py <netlist.v> [--clamps macro_clamps.txt]   (exit 1 on any violation)
+Usage: clamp_check.py <netlist.v> [--chip rf|wired | --clamps macro_clamps.txt]   (exit 1 on any violation)
+       without --chip / --clamps: the union of both chips' lists (a macro that serves both chips)
 Self-test: clamp_check.py --selftest  (three injected faults must be caught)
 """
 import re
@@ -17,7 +18,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-CLAMPS = HERE.parents[1] / 'integration/top/generated/macro_clamps.txt'
+CHIPS = HERE.parents[1] / 'integration/chips'
 INST = re.compile(r'^\s*(gf180mcu_\w+)\s+(\\\S+\s|\w+)\s*\((.*?)\)\s*;', re.S | re.M)
 CONN = re.compile(r'\.(\w+)\s*\(\s*(.*?)\s*\)\s*(?:,|$)', re.S)
 
@@ -94,10 +95,12 @@ def selftest():
 def main():
     if '--selftest' in sys.argv:
         return selftest()
-    clamps_path = CLAMPS
     if '--clamps' in sys.argv:
-        clamps_path = sys.argv[sys.argv.index('--clamps') + 1]
-    clamps = read_clamps(clamps_path)
+        clamps = read_clamps(sys.argv[sys.argv.index('--clamps') + 1])
+    elif '--chip' in sys.argv:
+        clamps = read_clamps(CHIPS / sys.argv[sys.argv.index('--chip') + 1] / 'generated/macro_clamps.txt')
+    else:
+        clamps = read_clamps(CHIPS / 'rf/generated/macro_clamps.txt') | read_clamps(CHIPS / 'wired/generated/macro_clamps.txt')
     errs, n = check(Path(sys.argv[1]).read_text(), clamps)
     for e in errs:
         print('CLAMP-ERROR', e)

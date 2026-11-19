@@ -2339,7 +2339,7 @@
         "design": "qvco (pt_lc_qvco5: quadrature straight from the coupled LC oscillators) + lo_ext (LO distribution to the mixers; external passive I/Q LO input)",
         "retired_design": "pt_quadrature (divider quadrature generator)",
         "charged": true,
-        "reference": "integration/top/pt_chip.conn (qvco, lo_ext); lo_ext evidence books its area against the quadrature ceiling"
+        "reference": "integration/chips/{rf,wired}/chip.conn (qvco, lo_ext); lo_ext evidence books its area against the quadrature ceiling"
       },
       "outputs": [
         "lo_i",
@@ -12639,7 +12639,7 @@
     }
   ],
   "chip_implementation": {
-    "source": "integration/top/pt_chip.conn (connectivity source of truth); reading aid spec/block-diagram.md",
+    "source": "integration/chips/{rf,wired}/chip.conn (connectivity source of truth); reading aid spec/block-diagram.md",
     "check": "python3 spec/check_architecture_conn.py",
     "scope": "Cross-reference only. blocks, nets and functional_paths of this file are the functional inventory the system model reads; pin-level connectivity, pin names and net contracts of the built cells are in the conn and the published netlists, not here. control_fields follows the built cells (rtl/gen/gen_regfile.py).",
     "blocks": {
@@ -12706,8 +12706,8 @@
         "pad_vdd_*",
         "pad_dvss_*",
         "pad_vss_*",
-        "pad_agnd_rx_*",
-        "agnd_tie",
+        "pad_xvdd_*",
+        "pad_xvss_*",
         "por"
       ],
       "quadrature": [

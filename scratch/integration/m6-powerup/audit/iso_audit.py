@@ -135,7 +135,8 @@ def rtl_facts():
             for k in range(w):
                 bit[f"{f['bus']}_cfg[{f['bus_lsb']+k}]"] = dict(field=f['name'], islands=f['islands'],
                                                                reset=(int(f['default'] or 0) >> k) & 1 if not f.get('decode') else None)
-    por_expr = re.search(r'wire rst_n\s*=\s*([^;]*);', mac).group(1).strip()
+    m = re.search(r'wire rst_n\s*=\s*([^;]*);', mac)       # since r6 the reset is made in pt_por_path (instance output)
+    por_expr = m.group(1).strip() if m else 'pt_por_path.rst_n (rtl/pt_por_path.sv)'
     return direction, en_eff, atb, bit, por_expr
 
 

@@ -10,18 +10,28 @@ module tb_chip_io;
  wire SPI_MISO; wire[9:0] D2H; wire D2H_CLK;
  wire DBG_OBS0,DBG_OBS1,CLK_OBS; reg strap_drive=0; wire POR_BYPASS=strap_drive;
  supply1 vdd; supply0 vss; wire[9:0] h2d=0; wire h2d_clk=0;
- reg por=0; reg pg_w=0;   // wired group power-good (all three wired switches)
- // pt_chip is generated from integration/top/pt_chip.conn; the analog top is a black box here, so its outputs that
- // this bench needs (POR, island power-good) are forced; every other analog output floats and is clamped or unused.
+ reg por=0; reg pg_w=0;   // power-good of the chip's own payload group (wired on pt_wired, rf on pt_rf: all its switches)
+ // pt_chip is generated from integration/chips/<chip>/chip.conn (compile with -DPT_CHIP_RF or -DPT_CHIP_WIRED); the analog
+ // top is a black box here, so its outputs that this bench needs (POR, island power-good) are forced; every other analog
+ // output floats and is clamped or unused.
+`ifdef PT_CHIP_RF
+ localparam GB = 1;   // enable group of the payload islands on this chip
+`else
+ localparam GB = 0;
+`endif
  pt_chip dut(.RESET_N(RESET_N),.SPI_SCLK(SPI_SCLK),.SPI_CS_N(SPI_CS_N),.SPI_MOSI(SPI_MOSI),
   .SPI_MISO(SPI_MISO),.H2D(h2d),.H2D_CLK(h2d_clk),.D2H(D2H),.D2H_CLK(D2H_CLK),
   .DBG_OBS0(DBG_OBS0),.DBG_OBS1(DBG_OBS1),.CLK_OBS(CLK_OBS),.POR_BYPASS(POR_BYPASS),.VDD(vdd),.VSS(vss));
  initial begin
   force dut.por_n=por;
-  force dut.s_pg_wired_rx=pg_w; force dut.s_pg_wired_cap=pg_w; force dut.s_pg_wired_tx=pg_w;
-  force dut.s_pg_rf_rx=1'b0; force dut.s_pg_rf_tx=1'b0; force dut.s_pg_lod=1'b0; force dut.s_pg_lo=1'b0;
-  force dut.s_pg_pll=1'b0; force dut.s_pg_conv=1'b0; force dut.s_pg_debug=1'b0;
-  force dut.ref_clk=1'b0; force dut.host_word_clk=1'b0; force dut.rf_rx_clk=1'b0; force dut.wired_on_ext=1'b0;
+`ifdef PT_CHIP_RF
+  force dut.s_pg_rf_rx=pg_w; force dut.s_pg_rf_tx=pg_w; force dut.s_pg_lod=pg_w; force dut.s_pg_lo=pg_w; force dut.s_pg_conv=1'b0;
+  force dut.rf_rx_clk=1'b0;
+`else
+  force dut.s_pg_wired_rx=pg_w; force dut.s_pg_wired_cap=pg_w; force dut.s_pg_wired_tx=pg_w; force dut.wired_on_ext=1'b0;
+`endif
+  force dut.s_pg_pll=1'b0; force dut.s_pg_debug=1'b0;
+  force dut.ref_clk=1'b0; force dut.host_word_clk=1'b0;
   force dut.fc_src=5'b0; force dut.s_ref_present=1'b0; force dut.clk_obs=1'b0;
  end
  task spi(input[7:0] command,address,input[15:0] value,output[15:0] result);
@@ -64,14 +74,14 @@ module tb_chip_io;
   if(SPI_MISO!==1'bz) $fatal(1,"MISO drives while reset is asserted");
   cs_drive=1; por=1; reset_drive=1; #100;
   read_reg(0,16'h5356); read_reg(8,16'h0003); read_reg(8'h0d,16'h0003); read_reg(8'h0a,0);
-  write_reg(8'h40,1); write_reg(6,1);
-  if(dut.m_island_en!==6'b000001 || dut.m_island_on!==0) $fatal(1,"island must wait for power-good");
-  write_reg(8'h4d,4); write_reg(6,1); #50;
-  if(DBG_OBS0!==0) $fatal(1,"wired PG observation low");
+  write_reg(8'h40,16'd1<<GB); write_reg(6,1);
+  if(dut.m_island_en!==(6'd1<<GB) || dut.m_island_on!==0) $fatal(1,"island must wait for power-good");
+  write_reg(8'h4d,4+GB); write_reg(6,1); #50;     // DBG_OBS0 = island_pgood of the payload group
+  if(DBG_OBS0!==0) $fatal(1,"payload-group PG observation low");
   // Boundary stimulus stands in for the missing physical island in THIS test.
   pg_w=1; #50;
-  read_reg(8'h0a,16'h0101);
-  if(DBG_OBS0!==1) $fatal(1,"wired PG did not reach the debug pad");
+  read_reg(8'h0a,16'h0101<<GB);
+  if(DBG_OBS0!==1) $fatal(1,"payload-group PG did not reach the debug pad");
   pg_w=0; #50;
   read_reg(8'h0a,0);
   if(DBG_OBS0!==0 || dut.m_island_on!==0) $fatal(1,"PG loss not observed/isolated");

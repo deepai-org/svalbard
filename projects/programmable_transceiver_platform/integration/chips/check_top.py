@@ -1,32 +1,40 @@
 #!/usr/bin/env python3
-"""Chip-top connectivity regression (one command, exits non-zero on any finding).
+"""Chip-top connectivity regression of one chip (one command, exits non-zero on any finding).
 
-Reads pt_chip.conn (the one chip-level connectivity), masters.txt (where each block's published pin list is),
-ctl_ports.txt (every control port the digital macro must present) and compares against the block netlists,
-the v6 floorplan, spec/register-map.json and rtl/pt_digital_macro.sv.
+    check_top.py <chip> [--selftest] [--write] [-v] [--no-modewalk]        chip = rf | wired (spec/chips.json)
+
+Reads <chip>/chip.conn (the chip's connectivity; it includes common.conn), <chip>/bond_map.txt, masters.txt (where each
+block's published pin list is), ctl_ports.txt (every control port the digital macro must present) and spec/chips.json
+(which islands and register fields the chip has) and compares against the block netlists, the v6 floorplan,
+spec/register-map.json and rtl/pt_digital_macro.sv.
 
 Checks (each has a count; all must be 0 for PASS):
   unbound      pin of a published subckt that pt_chip.conn does not bind, or a bound pin the subckt lacks
   dangling     net with one connection that is not a bond pad
   undriven     net with loads (=) and no driver (>), no analog member (~), not a supply
   multidrive   net with more than one driver (>)
-  missing      v6 floorplan block without an instance (and instances the floorplan lacks, reported separately)
+  missing      v6 (single-die) floorplan block that neither chip instances (and instances the floorplan lacks, listed)
   crossing     digital signal leaving a switched island without an iso cell or a waiver
   alwayson     input of an always-on (core/chip) instance driven from a switched island, or not driven
   pn           P/N or I/Q crossed between a block's pin names and its net names, or a *_P chip pin bonded to an N pad leg
                (`swap <inst>.<pin-regex> <reason>` declares an intended swap)
   order        a pin bus (ct0..3, CODE0..9) bound to a net bus out of order
-  ctl          c_* net vs ctl_ports.txt (unknown port, width, gaps), table rows nobody uses
+  ctl          c_* net vs ctl_ports.txt (unknown port, width, gaps), table rows nobody uses; a row whose register
+               fields are all on the other chip (spec/chips.json) must have no consumer here, and every other row must
+               have one
   cfg          ctl_ports.txt vs spec/register-map.json: second, independent derivation of the cfg binding
                (field missing / dropped from the bus, width or reset different, decode not in the macro)
   macro        target macro port list (conn) vs rtl/pt_digital_macro.sv
-  supply       an instance's supply pin is not the rail of its declared island
+  supply       an instance's supply pin is not the rail of its declared island, or the island is not on this chip
+  bond         bond_map.txt vs the conn: every chip port bonded once, every bonded net a chip port, the bonding instance
+               carries that net, the 18 provider supply sites unchanged, sites = the provider inventory, P/N pairs on
+               adjacent sites, one supply-site cell per VDD / VSS bond, host / debug rows identical on both chips
   iso          clamp ISO is not island_off[] of the island that drives it, or the clamp is not in the receiver's island
   demand       instances of blocks that do not exist yet
   staged       instances bound to an owner's staged pin contract that the published netlist does not match yet
 Also runs the three mode-walk scripts' self-tests (scratch/reviews/mode-walk) when present.
 --selftest injects one fault per check into a copy of the inputs and requires each to be reported.
---write regenerates generated/pt_analog_top.spice and generated/pt_analog_top.sv.
+--write regenerates <chip>/generated/ (pt_analog_top.spice, pt_analog_top.sv, the stub, tb_ctl.svh, macro_clamps.txt).
 """
 import re, sys, os, json, itertools, collections, subprocess
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -37,6 +45,7 @@ SUPPLY = re.compile(r'^(VDD|VSS|AGND_RX|RAIL_\w+|VREG_\w+|VDD_LO)$')
 GROUP_BIT = {'wired_rx': 0, 'wired_cap': 0, 'wired_tx': 0, 'rf_rx': 1, 'rf_tx': 1, 'lod': 1, 'lo': 1, 'pll': 2, 'conv': 4, 'debug': 5}
 GROUP_NAME = {0: 'wired', 1: 'rf', 2: 'pll', 4: 'conv', 5: 'debug'}
 ALWAYS_ON = ('core', 'chip')
+CHIPS = json.load(open(P+'/spec/chips.json'))['chips']
 FP6 = ROOT+'/scratch/chip-assembly-v6/run/floorplan-v6.json'
 # floorplan name -> instance name where they differ; floorplan entries that are not blocks
 FP_ALIAS = {'clk_obs16': 'clk_obs', 'obs_pre4': 'obs_pre4_wire', 'wordclk': 'wordclk_rx', 'isw_wired': 'isw_wired_cap', 'isw_rf': 'isw_rf_rx', 'atb0_pad': 'atb0_pad', 'atb1_pad': 'atb1_pad'}
@@ -69,6 +78,27 @@ def subst(s, vals):
 def fill(s, choice):
     it = iter(choice)
     return re.sub(r'\{[^{}]*\}', lambda m: next(it), s)
+
+
+def read_conn(path):
+    """Text of a conn file with every `include <file>` line replaced by that file's text (relative to the includer)."""
+    out = []
+    for line in open(path).read().split('\n'):
+        t = line.split('#')[0].split()
+        if t[:1] == ['include']:
+            out.append(read_conn(os.path.join(os.path.dirname(path), t[1])))
+        else: out.append(line)
+    return '\n'.join(out)
+
+
+def field_on_chip(name, chip):
+    """A register field is on a chip unless it matches the other chip's only-list (spec/chips.json)."""
+    return not any(re.fullmatch(r, name) for o, c in CHIPS.items() if o != chip for r in c['only_fields'])
+
+
+def load_bond(text):
+    """bond_map.txt -> list of (site, side, net, instance)"""
+    return [tuple(l.split()[:4]) for l in text.split('\n') if l.strip() and not l.startswith('#')]
 
 
 def parse(text):
@@ -193,17 +223,26 @@ def bus(net):
     return (m.group(1), int(m.group(2))) if m else (net, None)
 
 
+# ctl_ports.txt sections whose consumers are on one chip only (the other sections serve both chips)
+SECTION_CHIP = {'RF receive': 'rf', 'converters': 'rf', 'RF transmit': 'rf', 'LO': 'rf',
+                'wired receive': 'wired', 'wired transmit': 'wired', 'USB pad': 'wired'}
+
+
 def load_ctl(text):
-    rows = collections.OrderedDict()
+    rows = collections.OrderedDict(); sec = ''
     for line in text.split('\n'):
+        m = re.match(r'# ---- (.*?)(?: \(.*)?$', line)
+        if m: sec = m.group(1).strip()
         if not line.strip() or line.startswith('#'): continue
         c = [x.strip() for x in line.split('|')]
-        rows[c[0]] = dict(width=int(c[1]), reset=int(c[2], 0), enc=c[3], field=c[4], note=c[5] if len(c) > 5 else '')
+        rows[c[0]] = dict(width=int(c[1]), reset=int(c[2], 0), enc=c[3], field=c[4], note=c[5] if len(c) > 5 else '', section=sec)
     return rows
 
 
-def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
-    R = collections.OrderedDict((k, []) for k in ('syntax unbound dangling undriven multidrive missing crossing alwayson supply iso pn order ctl cfg macro demand staged'.split()))
+def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6, chip, bond, others, contract):
+    """others = instance names of the other chip (for the floorplan check); contract = spec/contract.json"""
+    R = collections.OrderedDict((k, []) for k in ('syntax unbound dangling undriven multidrive missing crossing alwayson supply iso pn order ctl cfg macro bond demand staged'.split()))
+    islands = set(CHIPS[chip]['islands'])
     info = collections.OrderedDict()
     inst, ports, waive, err = parse(conn)
     R['syntax'] += err
@@ -270,6 +309,7 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
         return n == 'VDD' if g in ALWAYS_ON else (n == 'RAIL_'+g or (g == 'pll' and n in ('VREG_TX', 'VREG_CDR')) or (g == 'lo' and n == 'VDD_LO'))
     for name, i in inst.items():
         if i['group'] not in ALWAYS_ON and i['group'] not in GROUP_BIT: R['supply'].append(f'{name}: unknown island {i["group"]}')
+        elif i['group'] not in ALWAYS_ON and i['group'] not in islands: R['supply'].append(f'{name}: island {i["group"]} is not on pt_{chip}')
     for name, i in inst.items():        # supply pin net must match the instance's declared island
         for p in ('VDD', 'VDD_WIRE_SW', 'VDD_PLL_SW', 'vdd3v3', 'DVDD'):
             if p in i['pins'] and not rail_ok(i['group'], i['pins'][p][1]) and i['master'] != 'pt_wtx_fallback_control':
@@ -338,21 +378,45 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
             if inst[u[0]]['master'].startswith('pad_') and re.fullmatch(r'PAD_[PN]', u[1]):
                 q, pol = partner(port)
                 if pol and u[1][-1] != pol and q in ports: R['pn'].append(f'{port} is bonded to {u[0]}.{u[1]}')
-    try:        # bond map (spec/contract.json bond_map_current) vs the chip ports of the conn: names only, information
-        bm = json.load(open(P+'/spec/contract.json'))
-        def find(o):
-            if isinstance(o, dict):
-                if 'bond_map_current' in o: return o['bond_map_current']
-                for v in o.values():
-                    r = find(v)
-                    if r: return r
-        bm = find(bm) or {}
-        names = {re.split(r'[ (]', v)[0] for side in ('west', 'east', 'north') for v in bm.get(side, {}).values()}
-        names = {x for x in names if re.fullmatch(r'[A-Z][A-Z0-9_]*', x)}
-        host = {p for p in ports if re.match(r'(RESET_N|SPI_|H2D|D2H|VDD$|VSS$)', p)}
-        info['bond map vs conn ports'] = dict(in_map_not_in_conn=sorted(names-ports), in_conn_not_in_map=sorted(ports-names-host))
-    except Exception as e:
-        info['bond map vs conn ports'] = f'not checked ({e})'
+    # --- bond map
+    inv = contract['assembly_policy']['provider_site_inventory']['ordered_sites_by_side']
+    pos = {site: (side, k) for side, v in inv.items() for k, site in enumerate(v)}
+    sites = [x[0] for x in bond]
+    if sorted(sites) != sorted(pos): R['bond'].append(f'sites differ from the provider inventory: missing {sorted(set(pos)-set(sites))}, extra {sorted(set(sites)-set(pos))}')
+    for x in collections.Counter(sites).items():
+        if x[1] > 1: R['bond'].append(f'site {x[0]} listed {x[1]} times')
+    bonded = collections.Counter(x[2] for x in bond)
+    for site, side, net, iname in bond:
+        if site in pos and pos[site][0] != side: R['bond'].append(f'{site}: side {side}, the inventory says {pos[site][0]}')
+        fixed = re.fullmatch(r'(dvdd|vdd|dvss|vss)_pads\[(\d)\]\.pad', site)
+        if fixed and (net != ('VDD' if 'dd' in fixed.group(1) else 'VSS') or iname != f'pad_{fixed.group(1)}_{fixed.group(2)}'):
+            R['bond'].append(f'{site}: provider supply site carries {net} / {iname} (fixed: preserve_provider_power_ground_assignments)')
+        if iname not in inst: R['bond'].append(f'{site}: instance {iname} not in the conn'); continue
+        if net not in [n for _, n in inst[iname]['pins'].values()]: R['bond'].append(f'{site}: {iname} has no pin on {net}')
+        if net in ('VDD', 'VSS') and not (inst[iname]['master'] == 'prov_supply' and inst[iname]['pins'].get('PAD', ('', ''))[1] == net):
+            R['bond'].append(f'{site}: {net} bond on {iname}, which is not a {net} supply-site cell')
+    sup = [n for n, i in inst.items() if i['master'] == 'prov_supply']
+    for n in sup:
+        if sum(1 for x in bond if x[3] == n) != 1: R['bond'].append(f'{n}: supply-site cell bonded {sum(1 for x in bond if x[3] == n)} times')
+    for p in sorted(ports - {'VDD', 'VSS'}):
+        if bonded[p] != 1: R['bond'].append(f'chip port {p} bonded {bonded[p]} times')
+    for n in bonded:
+        if n not in ports: R['bond'].append(f'{n}: bonded but not a port of the conn')
+    where = {x[2]: x[0] for x in bond}
+    for p in ports:
+        q, pol = partner(p)
+        if pol == 'P' and q in ports and p in where and q in where:
+            (s1, k1), (s2, k2) = pos.get(where[p], ('?', 0)), pos.get(where[q], ('!', 9))
+            if s1 != s2 or abs(k1-k2) != 1: R['bond'].append(f'{p} / {q} on {where[p]} / {where[q]}: not adjacent sites')
+    if 'REF_IN' in where and 'REF_IN_N' in where:
+        (s1, k1), (s2, k2) = pos[where['REF_IN']], pos[where['REF_IN_N']]
+        if s1 != s2 or abs(k1-k2) != 1: R['bond'].append('REF_IN / REF_IN_N: not adjacent sites')
+    for o in CHIPS:     # the host link, SPI, debug and ATB rows are fixed by the macro edge: identical on both chips
+        if o == chip: continue
+        ob = {x[0]: x[2] for x in load_bond(open(f'{HERE}/{o}/bond_map.txt').read())}
+        for site, side, net, iname in bond:
+            if side in ('north', 'south') and ob.get(site) != net: R['bond'].append(f'{site} ({side}): {net} here, {ob.get(site)} on pt_{o}')
+    info['bond sites'] = dict(collections.Counter('signal' if x[2] not in ('VDD', 'VSS') else x[2] + (' (fixed)' if re.match(r'(d?vdd|d?vss)_pads', x[0]) else ' (signal site)') for x in bond))
     ana = []
     for n, users in nets.items():       # analog nets that span two switched islands with no iso_pd on them (information, D-ANA)
         if SUPPLY.match(n) or n in ports: continue
@@ -370,18 +434,24 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
     # --- missing instances
     want = [w for w in list(fp6['placed'])+list(fp6['failures']) if not FP_SKIP.match(w)]
     for w in want:
-        if FP_ALIAS.get(w, w) not in inst: R['missing'].append(f'v6 floorplan block {w} has no instance')
+        if FP_ALIAS.get(w, w) not in inst and FP_ALIAS.get(w, w) not in others: R['missing'].append(f'v6 floorplan block {w} has no instance on either chip')
     fpn = {FP_ALIAS.get(w, w) for w in want}
     info['instances not in the v6 floorplan'] = sorted({re.sub(r'_?\d+$', '', n) if n.startswith('iso_') else n for n, i in inst.items()
         if n not in fpn and i['group'] != 'chip' and not n.startswith(('atb', 'pad_'))})
     # --- control ports
+    def row_here(c):        # on this chip unless its section is the other chip's, or every field it decodes is the other chip's
+        fs = [f for f in c['field'].split('+') if f not in ('', '-')]
+        return SECTION_CHIP.get(c['section'], chip) == chip and (not fs or any(field_on_chip(f, chip) for f in fs))
+    absent = {b for b, c in ctl.items() if not row_here(c)}
+    info['control ports of the other chip (no consumer here)'] = len(absent)
     for base, idxs in sorted(cbits.items()):
         w = 1 if idxs == {None} else (max(idxs)+1 if None not in idxs else -1)
-        if base not in ctl: R['ctl'].append(f'{base}[{w}] used in pt_chip.conn but not in ctl_ports.txt'); continue
+        if base not in ctl: R['ctl'].append(f'{base}[{w}] used in the conn but not in ctl_ports.txt'); continue
+        if base in absent: R['ctl'].append(f'{base}: consumer on pt_{chip}, but its field(s) {ctl[base]["field"]} are on the other chip only (spec/chips.json)')
         if w != ctl[base]['width']: R['ctl'].append(f'{base}: conn uses width {w}, ctl_ports.txt says {ctl[base]["width"]}')
         if w > 1 and idxs != set(range(w)): R['ctl'].append(f'{base}: bits {sorted(set(range(w))-idxs)} have no consumer')
     for base in ctl:
-        if base not in cbits: R['ctl'].append(f'{base}: in ctl_ports.txt, no consumer pin in pt_chip.conn')
+        if base not in cbits and base not in absent: R['ctl'].append(f'{base}: in ctl_ports.txt, no consumer pin on pt_{chip}')
     cons = collections.defaultdict(set)
     for n, users in nets.items():
         b0 = bus(n)[0]
@@ -413,14 +483,14 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6):
         if b not in rtl: R['macro'].append(f'macro lacks port {b}[{w}]')
         elif rtl[b][1] != w: R['macro'].append(f'macro port {b}: width {rtl[b][1]} in RTL, {w} in the top')
     for b in rtl:
-        if b not in target: R['macro'].append(f'macro port {b}[{rtl[b][1]}] has no connection in the top (remove, or state its consumer)')
+        if b not in target and b not in absent: R['macro'].append(f'macro port {b}[{rtl[b][1]}] has no connection in the top (remove, or state its consumer)')
     info['instances'] = len(inst); info['pins bound'] = sum(len(i['pins']) for i in inst.values())
     info['control ports (c_*)'] = f'{len(cbits)} ports, {sum(len(v) for v in cbits.values())} bits'
     return R, info, inst, masters, nets, ports
 
 
-def write_outputs(inst, masters, nets, ports):
-    OUT = os.environ.get('PT_TOP_OUT', HERE+'/generated'); os.makedirs(OUT, exist_ok=True)
+def write_outputs(inst, masters, nets, ports, chip):
+    OUT = os.environ.get('PT_TOP_OUT', f'{HERE}/{chip}/generated'); os.makedirs(OUT, exist_ok=True)
     inside = {n for n, i in inst.items() if i['group'] != 'chip'}
     top = []      # nets that leave the analog top
     for n, users in nets.items():
@@ -429,7 +499,7 @@ def write_outputs(inst, masters, nets, ports):
             if any(u[0] in inside for u in users): top.append(n)
     key = lambda n: (bus(n)[0], bus(n)[1] or 0)
     top = sorted(set(top), key=key)
-    L = ['* pt_analog_top: GENERATED from integration/top/pt_chip.conn by check_top.py --write. Do not edit.',
+    L = [f'* pt_analog_top of pt_{chip}: GENERATED from integration/chips/{chip}/chip.conn by check_top.py {chip} --write. Do not edit.',
          '* Structural only: block subckts come from the files in masters.txt. NC_* = intentional no-connect.',
          '.subckt pt_analog_top '+' '.join(top)]
     nc = 0
@@ -452,7 +522,7 @@ def write_outputs(inst, masters, nets, ports):
         us = [u for n in nets if bus(n)[0] == base for u in nets[n]]
         if base in ports or any(u[2] == '~' for u in us) or SUPPLY.match(base): return 'inout'
         return 'output' if any(u[2] == '>' and u[0] in inside for u in us) else 'input'
-    V = ['// pt_analog_top black box: GENERATED from integration/top/pt_chip.conn by check_top.py --write. Do not edit.',
+    V = [f'// pt_analog_top black box of pt_{chip}: GENERATED from integration/chips/{chip}/chip.conn by check_top.py {chip} --write. Do not edit.',
          '(* blackbox *) module pt_analog_top(']
     V.append(',\n'.join(f' {direction(base)} wire{"" if idxs == {None} else " ["+str(max(idxs))+":0]"} {base}' for base, idxs in b.items()))
     V.append(');\nendmodule')
@@ -460,7 +530,7 @@ def write_outputs(inst, masters, nets, ports):
     # behavioural stub for the boundary sim (sim/tb_top_boundary.sv): every block input is a named probe wire
     # p_<inst>__<pin>; island switch PG = EN; iso clamp Y = A & !ISO; POR released; every other output 0.
     vn = lambda n: n if bus(n)[1] is None else f'{bus(n)[0]}[{bus(n)[1]}]'
-    S = ['// pt_analog_top_stub: GENERATED from pt_chip.conn by check_top.py --write (stub for sim/tb_top_boundary.sv). Do not edit.',
+    S = [f'// pt_analog_top_stub of pt_{chip}: GENERATED from {chip}/chip.conn by check_top.py {chip} --write (stub for sim/tb_top_*.sv). Do not edit.',
          '`default_nettype wire', 'module pt_analog_top_stub(']
     S.append(',\n'.join(f' {direction(base)} wire{"" if idxs == {None} else " ["+str(max(idxs))+":0]"} {base}' for base, idxs in b.items()))
     S.append(');')
@@ -485,7 +555,8 @@ def write_outputs(inst, masters, nets, ports):
     open(OUT+'/pt_analog_top_stub.sv', 'w').write('\n'.join(S)+'\n')
     cs = sorted(k for k in b if k.startswith('c_'))
     wid = {k: (1 if b[k] == {None} else max(b[k])+1) for k in cs}
-    open(OUT+'/tb_ctl.svh', 'w').write('// GENERATED by check_top.py --write: every control port of the analog top\n'
+    open(OUT+'/tb_ctl.svh', 'w').write(f'// GENERATED by check_top.py {chip} --write: every control port of the analog top of pt_{chip}\n'
+        + f'`define PT_CHIP_{chip.upper()}\n'
         + ''.join(f'wire{"" if wid[k] == 1 else " ["+str(wid[k]-1)+":0]"} {k};\n' for k in cs)
         + f'wire [{sum(wid.values())-1}:0] ctl_all = {{{", ".join(cs)}}};\n'
         + '`define PT_CTL_CONNECT ' + ', '.join(f'.{k}({k})' for k in cs) + '\n'
@@ -493,50 +564,87 @@ def write_outputs(inst, masters, nets, ports):
     return len(top)
 
 
-def load():
+def load(chip):
     rd = lambda f: open(f).read()
-    return (rd(os.environ.get('PT_TOP_CONN', HERE+'/pt_chip.conn')), rd(HERE+'/masters.txt'), rd(HERE+'/ctl_ports.txt'),
-            json.load(open(P+'/spec/register-map.json')), rtl_macro_ports(rd(P+'/rtl/pt_digital_macro.sv')), json.load(open(FP6)))
+    conn = rd(os.environ['PT_TOP_CONN']) if 'PT_TOP_CONN' in os.environ else read_conn(f'{HERE}/{chip}/chip.conn')
+    others = set()
+    for o in CHIPS:
+        if o != chip: others |= set(parse(read_conn(f'{HERE}/{o}/chip.conn'))[0])
+    return (conn, rd(HERE+'/masters.txt'), rd(HERE+'/ctl_ports.txt'), json.load(open(P+'/spec/register-map.json')),
+            rtl_macro_ports(rd(P+'/rtl/pt_digital_macro.sv')), json.load(open(FP6)), chip, load_bond(rd(f'{HERE}/{chip}/bond_map.txt')),
+            others, json.load(open(P+'/spec/contract.json')))
 
 
-def selftest():
-    conn, mt, ct, reg, rtl, fp = load()
-    base, *_ = check(conn, mt, ct, reg, rtl, fp)
+def selftest(chip):
+    conn, mt, ct, reg, rtl, fp, _, bond, others, contract = load(chip)
+    base, *_ = check(conn, mt, ct, reg, rtl, fp, chip, bond, others, contract)
     def new(kind, **kw):
-        args = dict(conn=conn, mt=mt, ct=ct, reg=reg, rtl=rtl, fp=fp); args.update(kw)
-        got, *_ = check(args['conn'], args['mt'], args['ct'], args['reg'], args['rtl'], args['fp'])
+        args = dict(conn=conn, mt=mt, ct=ct, reg=reg, rtl=rtl, fp=fp, bond=bond, others=others); args.update(kw)
+        got, *_ = check(args['conn'], args['mt'], args['ct'], args['reg'], args['rtl'], args['fp'], chip, args['bond'], args['others'], contract)
         return [x for x in got[kind] if x not in base[kind]]
-    cases = [
-        ('unbound', dict(conn=conn.replace(' gain_lo=c_lna_gain_lo', '', 1)), 'lna.gain_lo'),
-        ('unbound', dict(conn=conn.replace(' byp=c_lna_byp', ' byp=c_lna_byp bogus=VSS', 1)), 'lna.bogus'),
+    swapbond = lambda a, b: [(x[0], x[1], {a: b, b: a}.get(x[2], x[2]), x[3]) for x in bond]
+    # one fault per check; the cases on shared instances run on both chips, the others on the chip that has the block
+    both = [
+        ('unbound', dict(conn=conn.replace(' ena=VDD porb', ' porb', 1)), 'por.ena'),
+        ('unbound', dict(conn=conn.replace(' ena=VDD porb', ' ena=VDD bogus=VSS porb', 1)), 'por.bogus'),
         ('dangling', dict(conn=conn.replace('LOCK>PLL_TX_LOCK', 'LOCK>PLL_TX_LOCKX', 1)), 'PLL_TX_LOCKX'),
         ('undriven', dict(conn=conn.replace('LOCK>PLL_TX_LOCK', 'LOCK>-', 1)), 'PLL_TX_LOCK'),
         ('multidrive', dict(conn=conn.replace('OUTP>AUX_CK OUTN>-', 'OUTP>AUX_CK OUTN>AUX_CK', 1)), 'AUX_CK'),
-        ('missing', dict(conn=re.sub(r'inst vthdac .*\n(  .*\n)+', '', conn, 1)), 'vthdac'),
-        ('crossing', dict(conn=conn.replace(' DX=WTX_DX\n', ' DX=WTX_DX_DBG\n', 1)), 'wiredtx.DX'),
         ('alwayson', dict(conn=conn.replace('EN=c_aosc_en CLK', 'EN=AOSC_EN_FLOAT CLK', 1)), 'aosc.EN'),
-        ('supply', dict(conn=conn.replace('inst lna pt_lna rf_rx', 'inst lna pt_lna conv', 1)), 'lna.VDD'),
+        ('supply', dict(conn=conn.replace('inst ring_osc pt_ring_osc debug', 'inst ring_osc pt_ring_osc pll', 1)), 'ring_osc.VDD'),
         ('iso', dict(conn=conn.replace('A=HOST_CLK ISO=island_off[2]', 'A=HOST_CLK ISO=island_off[0]', 1)), 'iso_host_clk'),
-        ('iso', dict(conn=conn.replace('inst iso_wtx_dx iso_clamp wired_tx', 'inst iso_wtx_dx iso_clamp pll', 1).replace('Y>WTX_DX VDD~RAIL_wired_tx', 'Y>WTX_DX VDD~RAIL_pll', 1)), 'iso_wtx_dx'),
-        ('staged', dict(mt=mt.replace('master pt_lo_lf          A/timing/generated/lo_lf.ext.spice:pt_lo_lf', 'master pt_lo_lf          staged A/timing/generated/lo_lf.ext.spice:pt_lo_lf CP VT VSS X', 1)), 'lo_lf'),
+        ('iso', dict(conn=conn.replace('inst iso_aux_ck iso_clamp_x4 pll', 'inst iso_aux_ck iso_clamp_x4 debug', 1).replace('Y>AUX_CK_P VDD~RAIL_pll', 'Y>AUX_CK_P VDD~RAIL_debug', 1)), 'iso_aux_ck'),
+        ('staged', dict(mt=re.sub(r'master pt_prescale +(\S+)', r'master pt_prescale staged \1 CK_IN EN X', mt, 1)), 'prescale'),
         ('alwayson', dict(conn=conn.replace('macroclamp debug fc_src', 'macroclamp debug fc_srcX', 1)), 'digital.fc_src[2]'),
-        ('iso', dict(conn=conn.replace('macroclamp pll rf_tx_clk|', 'macroclamp conv rf_tx_clk|macroclamp_none|', 1)), 'digital.rf_tx_clk'),
+        ('iso', dict(conn=conn.replace('macroclamp pll ct_wclk|', 'macroclamp conv ct_wclk|macroclamp_none|', 1)), 'digital.ct_wclk'),
+        ('pn', dict(conn=conn.replace('INP~AUX_CLK_P INN~AUX_CLK_N', 'INP~AUX_CLK_N INN~AUX_CLK_P', 1)), 'rx_aux_clk'),
+        ('order', dict(conn=conn.replace('D2=c_prescale_d[0] D4=c_prescale_d[1]', 'D2=c_prescale_d[1] D4=c_prescale_d[0]', 1)), 'prescale'),
+        ('ctl', dict(ct=re.sub(r'^c_clk_obs_s\s*\|\s*4', 'c_clk_obs_s | 3', ct, 1, re.M)), 'c_clk_obs_s'),
+        ('ctl', dict(ct=re.sub(r'^c_clk_obs_n\s*\|.*\n', '', ct, 1, re.M)), 'c_clk_obs_n'),
+        ('ctl', dict(ct=re.sub(r'^(c_ring_osc_en \| 1 \| 0 \| )[^|]*', r'\1(state == active) & island_on[2] ', ct, 1, re.M)), 'c_ring_osc_en'),
+        ('cfg', dict(reg=dict(reg, fields=[dict(f, bus_bits=5) if f['name'] == 'core.biasgen.voltgen_sink2' else f for f in reg['fields']])), 'c_biasgen_voltgen_sink2'),
+        ('cfg', dict(reg=dict(reg, fields=[dict(f, default=1) if f['name'] == 'core.biasgen.voltgen_sink2' else f for f in reg['fields']])), 'c_biasgen_voltgen_sink2'),
+        ('macro', dict(rtl={k: v for k, v in rtl.items() if k != 'por_bypass'}), 'por_bypass'),
+        ('demand', dict(conn=conn.replace('inst ring_osc pt_ring_osc debug', 'inst ring_osc pt_ring_osc debug demand', 1)), 'ring_osc'),
+        ('bond', dict(bond=[x for x in bond if x[2] != 'SPI_MISO']), 'SPI_MISO'),
+        ('bond', dict(bond=[x if x[2] != 'SPI_MISO' else (x[0], x[1], 'SPI_MISOX', x[3]) for x in bond]), 'SPI_MISOX'),
+        ('bond', dict(bond=[x if x[0] != 'dvss_pads[0].pad' else (x[0], x[1], 'VDD', x[3]) for x in bond]), 'dvss_pads[0].pad'),
+        ('bond', dict(bond=swapbond('AUX_CLK_N', 'REF_IN_N')), 'not adjacent'),
+        ('bond', dict(conn=conn + '\ninst pad_xvss_99 prov_supply chip\n  PAD~VSS\n'), 'pad_xvss_99'),
+    ]
+    rf = [
+        ('missing', dict(conn=re.sub(r'inst qvco .*\n(  .*\n)+', '', conn, 1)), 'qvco'),
+        ('crossing', dict(conn=conn.replace('CLK=CONV_CLK_C ACQ', 'CLK=CONV_CLK ACQ', 1)), 'adc_i.CLK'),
+        ('supply', dict(conn=conn.replace('inst lna pt_lna rf_rx', 'inst lna pt_lna conv', 1)), 'lna.VDD'),
+        ('supply', dict(conn=conn.replace('inst lna pt_lna rf_rx', 'inst lna pt_lna wired_rx', 1)), 'not on pt_rf'),
+        ('staged', dict(mt=mt.replace('master pt_lo_lf          A/timing/generated/lo_lf.ext.spice:pt_lo_lf', 'master pt_lo_lf          staged A/timing/generated/lo_lf.ext.spice:pt_lo_lf CP VT VSS X', 1)), 'lo_lf'),
         ('pn', dict(conn=conn.replace('rf_in_p~RF_RX_P rf_in_n~RF_RX_N', 'rf_in_p~RF_RX_N rf_in_n~RF_RX_P', 1)), 'lna'),
         ('pn', dict(conn=conn.replace('PAD_P~RF_TX_P PAD_N~RF_TX_N', 'PAD_P~RF_TX_N PAD_N~RF_TX_P', 1)), 'RF_TX_P'),
         ('pn', dict(conn=conn.replace('lo_p~LO_\\U1P lo_n~LO_\\U1N bb_p', 'lo_p~LO_QP lo_n~LO_QN bb_p', 1)), 'rxmix_i'),
-        ('order', dict(conn=conn.replace('ct{0:3}=c_lna_ct[\\1]', 'ct{0,2,1,3}=c_lna_ct[{0:3}]', 1)), 'lna'),
-        ('supply', dict(conn=conn.replace('IBIAS~BIAS_ctle ctle_en', 'IBIAS~BIAS_ctle ctle_en', 1).replace('inst ctle pt_ctle wired_rx\n  VDD_WIRE_SW~RAIL_wired_rx VSS~VSS', 'inst ctle pt_ctle wired_rx\n  VDD_WIRE_SW~RAIL_wired_rx VSS~AGND_RX', 1)), 'ctle.VSS'),
         ('pn', dict(conn=conn.replace('EN=c_adc_\\1_en ILEN', 'EN=c_adc_q_en ILEN', 1)), 'adc_i.EN'),
+        ('order', dict(conn=conn.replace('ct{0:3}=c_lna_ct[\\1]', 'ct{0,2,1,3}=c_lna_ct[{0:3}]', 1)), 'lna'),
         ('ctl', dict(ct=re.sub(r'^(c_lna_en \| 1 \| 0 \| )[^|]*', r'\1(state == active) & island_on[2] ', ct, 1, re.M)), 'c_lna_en'),
-        ('ctl', dict(ct=re.sub(r'^c_lna_att\s*\|\s*5', 'c_lna_att | 4', ct, 1, re.M)), 'c_lna_att'),
-        ('ctl', dict(ct=re.sub(r'^c_rfdriver_mute\s*\|.*\n', '', ct, 1, re.M)), 'c_rfdriver_mute'),
+        ('ctl', dict(conn=conn.replace('inst lna pt_lna rf_rx', 'inst lna pt_lna rf_rx\n  dbg_probe=c_ctle_en', 1)), 'c_ctle_en'),
         ('cfg', dict(reg=dict(reg, fields=[dict(f, bus_bits=3) if f['name'] == 'lna.match.ctrim' else f for f in reg['fields']])), 'c_lna_ct'),
-        ('cfg', dict(reg=dict(reg, fields=[dict(f, default=0) if f['name'] == 'lna.match.ctrim' else f for f in reg['fields']])), 'c_lna_ct'),
-        ('macro', dict(rtl={k: v for k, v in rtl.items() if k != 'por_bypass'}), 'por_bypass'),
         ('demand', dict(conn=conn.replace('inst lo_lf pt_lo_lf lo', 'inst lo_lf pt_lo_lf lo demand', 1)), 'lo_lf'),
+        ('bond', dict(bond=[x if x[3] != 'pad_xvss_0' else (x[0], x[1], 'RF_RX_P', 'pad_rf_rx') for x in bond]), 'RF_RX_P bonded 2'),
+    ]
+    wired = [
+        ('missing', dict(conn=re.sub(r'inst vthdac .*\n(  .*\n)+', '', conn, 1)), 'vthdac'),
+        ('crossing', dict(conn=conn.replace(' DX=WTX_DX\n', ' DX=WTX_DX_DBG\n', 1)), 'wiredtx.DX'),
+        ('supply', dict(conn=conn.replace('inst ctle pt_ctle wired_rx', 'inst ctle pt_ctle conv', 1)), 'not on pt_wired'),
+        ('iso', dict(conn=conn.replace('inst iso_wtx_dx iso_clamp wired_tx', 'inst iso_wtx_dx iso_clamp pll', 1).replace('Y>WTX_DX VDD~RAIL_wired_tx', 'Y>WTX_DX VDD~RAIL_pll', 1)), 'iso_wtx_dx'),
+        ('pn', dict(conn=conn.replace('PAD_P~WIRE_RX_P PAD_N~WIRE_RX_N', 'PAD_P~WIRE_RX_N PAD_N~WIRE_RX_P', 1)), 'WIRE_RX_P'),
+        ('pn', dict(conn=conn.replace('RX_P~HSRX_P RX_N~HSRX_N CTLE_P', 'RX_P~HSRX_N RX_N~HSRX_P CTLE_P', 1)), 'ctle'),
+        ('order', dict(conn=conn.replace('C{0:7}=c_hsbias_c[\\1]', 'C{0,2,1,3,4,5,6,7}=c_hsbias_c[{0:7}]', 1)), 'hsbias'),
+        ('ctl', dict(ct=re.sub(r'^(c_ctle_en \| 1 \| 0 \| )[^|]*', r'\1(state == active) & island_on[2] ', ct, 1, re.M)), 'c_ctle_en'),
+        ('ctl', dict(conn=conn.replace('inst ctle pt_ctle wired_rx', 'inst ctle pt_ctle wired_rx\n  dbg_probe=c_lna_en', 1)), 'c_lna_en'),
+        ('cfg', dict(reg=dict(reg, fields=[dict(f, bus_bits=1) if f['name'] == 'termination.config.hs_trim' else f for f in reg['fields']])), 'c_term_hs_trim'),
+        ('demand', dict(conn=conn.replace('inst vthdac pt_vthdac wired_rx', 'inst vthdac pt_vthdac wired_rx demand', 1)), 'vthdac'),
+        ('bond', dict(bond=[x if x[3] != 'pad_xvss_5' else (x[0], x[1], 'WIRE_TX_P', 'pad_wire_tx') for x in bond]), 'WIRE_TX_P bonded 2'),
     ]
     ok = True
-    for kind, kw, needle in cases:
+    for kind, kw, needle in both + (rf if chip == 'rf' else wired):
         got = new(kind, **kw); hit = any(needle in g for g in got)
         print(f'  selftest {kind:10s} inject -> {"detected" if hit else "MISSED"}: {got[0] if got else ""}')
         ok &= hit
@@ -544,10 +652,14 @@ def selftest():
 
 
 if __name__ == '__main__':
+    args = [a for a in sys.argv[1:] if not a.startswith('-')]
+    if len(args) != 1 or args[0] not in CHIPS: sys.exit(f'usage: check_top.py <{"|".join(CHIPS)}> [--selftest] [--write] [-v] [--no-modewalk]')
+    chip = args[0]
     if '--selftest' in sys.argv:
-        sys.exit(0 if selftest() else 1)
-    conn, mt, ct, reg, rtl, fp = load()
-    R, info, inst, masters, nets, ports = check(conn, mt, ct, reg, rtl, fp)
+        sys.exit(0 if selftest(chip) else 1)
+    conn, mt, ct, reg, rtl, fp, _, bond, others, contract = load(chip)
+    R, info, inst, masters, nets, ports = check(conn, mt, ct, reg, rtl, fp, chip, bond, others, contract)
+    print(f'pt_{chip}')
     verbose = '-v' in sys.argv
     for k, v in R.items():
         print(f'[{k}] {len(v)}')
@@ -557,16 +669,16 @@ if __name__ == '__main__':
     for k, v in info.items(): print(f'({k}) {v}')
     if '--write' in sys.argv:
         BITS = {v: k for k, v in GROUP_NAME.items()}
-        os.makedirs(os.environ.get('PT_TOP_OUT', HERE+'/generated'), exist_ok=True)
-        open(os.environ.get('PT_TOP_OUT', HERE+'/generated')+'/macro_clamps.txt', 'w').write(
-            '# GENERATED by check_top.py --write (CP4-1): macro inputs to AND with island_on[bit] on the first gate after the pin\n# pin island island_on_bit\n'
+        OUT = os.environ.get('PT_TOP_OUT', f'{HERE}/{chip}/generated'); os.makedirs(OUT, exist_ok=True)
+        open(OUT+'/macro_clamps.txt', 'w').write(
+            f'# GENERATED by check_top.py {chip} --write (CP4-1): macro inputs of pt_{chip} to AND with island_on[bit] on the first gate after the pin\n# pin island island_on_bit\n'
             + ''.join(f'{p} {g} {BITS[g]}\n' for p, g in sorted(mcl.items(), key=lambda x: (x[1], c_key(x[0])))))
-    if '--write' in sys.argv: print('(analog top ports written)', write_outputs(inst, masters, nets, ports))
+        print('(analog top ports written)', write_outputs(inst, masters, nets, ports, chip))
     mw = ROOT+'/scratch/reviews/mode-walk'; bad = 0
     if '--no-modewalk' not in sys.argv and os.path.isdir(mw):
         for s in ('top_pins.py', 'cfg_map.py', 'bias_sum.py'):
             r = subprocess.run([sys.executable, s, '--selftest'], cwd=mw, capture_output=True, text=True)
             print(f'(mode-walk {s} --selftest) {"PASS" if r.returncode == 0 else "FAIL"}'); bad += r.returncode != 0
     total = sum(len(v) for v in R.values())+bad
-    print('SUMMARY ' + ' '.join(f'{k}={len(v)}' for k, v in R.items()) + f' -> {"PASS" if total == 0 else "FAIL"}')
+    print(f'SUMMARY pt_{chip} ' + ' '.join(f'{k}={len(v)}' for k, v in R.items()) + f' -> {"PASS" if total == 0 else "FAIL"}')
     sys.exit(0 if total == 0 else 1)

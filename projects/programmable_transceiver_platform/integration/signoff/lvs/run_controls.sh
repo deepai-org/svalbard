@@ -1,5 +1,5 @@
 #!/bin/bash
-# LVS proof on the routed fixture (real block cells and placeholders out of the skeleton GDS, nets from pt_chip.conn):
+# LVS proof on the routed fixture (real block cells and placeholders out of the skeleton GDS, nets from the chip conns):
 #   positive control must PASS; three negative controls must FAIL:
 #   swap    two nets exchanged on one instance in the reference (iso_cdr_up_0 VDD <-> VSS)
 #   openvia one routed Via4 removed from the layout
@@ -8,8 +8,8 @@
 . "$(dirname "$0")/../env.sh"
 F=${FIXTURE:-aosc,ring_osc,vco_replica,prescale,prescale_conv,prescale_hf,wordclk_rx,obs_pre4_wire,obs_pre4_ref,obs_pre4_pll,iso_cdr_up_0,iso_cdr_dn_0,iso_clk_obs,refvcm,bias_ext,txpad_bias,lo_vreg,isw_pll,lo_obs_q,hsbias}
 D=$RUN/lvs/fix; mkdir -p "$D"; rc=0
-python3 "$SO/lvs/gen_netlist.py" "$D/fixture.ref.spice" --top pt_fixture --only "$F" || exit 1
-python3 "$SO/lvs/gen_netlist.py" "$D/fixture.swap.spice" --top pt_fixture --only "$F" --swap iso_cdr_up_0:VDD:VSS || exit 1
+python3 "$SO/lvs/gen_netlist.py" "$D/fixture.ref.spice" --chip "$SIGNOFF_CHIP" --top pt_fixture --only "$F" || exit 1
+python3 "$SO/lvs/gen_netlist.py" "$D/fixture.swap.spice" --chip "$SIGNOFF_CHIP" --top pt_fixture --only "$F" --swap iso_cdr_up_0:VDD:VSS || exit 1
 "$SO/kl.sh" lvs/fixture.py -rd insts="$F" || exit 1
 "$SO/kl.sh" lvs/fixture.py -rd insts="$F" -rd openvia=1 > /dev/null || exit 1
 "$SO/kl.sh" lvs/fixture.py -rd insts="$F" -rd bridge=1 > /dev/null || exit 1

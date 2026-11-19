@@ -62,8 +62,6 @@ c_bb_tap_obs_en | 1 | 0 | bb_tap.mode is an observe_* mode | debug.bb_tap.mode |
 c_bb_tap_inj_en | 1 | 0 | bb_tap.mode is an inject_* mode | debug.bb_tap.mode |
 c_bb_tap_i_bias_en | 1 | 0 | (bb_tap.mode != off) & island_on[5] | debug.bb_tap.mode | core_bias EN_bb_tap_i
 c_bb_tap_q_bias_en | 1 | 0 | (bb_tap.mode != off) & island_on[5] | debug.bb_tap.mode |
-c_bb_tap_wmon_bias_en | 1 | 0 | (wmon_select != off) & island_on[5] | debug.wmon_select.select |
-c_wmon_obs_en | 1 | 0 | wmon_select != off | debug.wmon_select.select | bb_tap_wmon obs_en
 # ---- converters
 c_adc_i_en | 1 | 0 | (state == active) & island_on[4] | adc_i.state.state | today en_eff[0]
 c_adc_q_en | 1 | 0 | (state == active) & island_on[4] | adc_q.state.state | today en_eff[1]
@@ -102,8 +100,8 @@ c_lo_pfdcp_en | 1 | 0 | same as c_qvco_en | rfpll.state.state+rfpll.config.lo_mo
 c_lo_icp | 2 | 0 | direct | rfpll.config.lo_icp | (was: new field rfpll.config.lo_icp[1:0] (LO18): Icp = 25 uA x (1 + ICP0 + 2 ICP1))
 c_lo_vreg_en | 1 | 0 | c_qvco_en OR c_lo_pfdcp_en (island_on[1]) | rfpll.state.state+rfpll.config.lo_mode | for the demanded quiet-rail regulator (LO22). OPEN (D-LOVREG): in LO modes 1 and 3 the QVCO tank is DC-biased by lo_ext while VDD_LO would be off; the LO owner states the required VDD_LO state
 c_lo_obs_en | 1 | 0 | clk_obs.source == rf_lo (1) | debug.clk_obs.source |
-c_refvcm_en | 1 | 0 | c_lo_ext OR c_rx_ref_en OR rx_en_aux | rfpll.config.lo_mode+refinput.state.state | for the demanded refpad VCM source
 # ---- clocks
+c_refvcm_en | 1 | 0 | c_lo_ext OR c_rx_ref_en OR rx_en_aux | rfpll.config.lo_mode+refinput.state.state | for the demanded refpad VCM source
 c_rx_ref_en | 1 | 0 | (refinput.state == active) & lo_mode not in {1, 3} | refinput.state.state+rfpll.config.lo_mode | REF_IN carries the 2.4 GHz LO in modes 1 and 3
 c_clockmux_ps | 3 | 0 | one-hot {ref, aux, h2d}; 0 = stopped | clockmux.config.ring_ref | (was: new field "ring-PLL reference" {0 stopped, 1 ref, 2 aux, 3 h2d} (timing README); refinput.select.branch means something else)
 c_clockmux_ws | 4 | 0 | one-hot {pll, ref, aux, wck} = (code == 1/2/3/4) | debug.clk_select.wire_line |
@@ -148,6 +146,8 @@ c_clk_obs_s | 4 | 0 | source code 1..15 = S; codes 16/17 must not alias (they se
 c_clk_obs_n | 3 | 0 | direct | debug.clk_obs.divider_log2 |
 c_obs_pre4_en | 6 | 0 | one-hot: bit k = (clk_obs.source == {2 wire_line, 3 wire_sample, 5 ref_in, 6 aux_clk, 8 pll_vco, 14 cdr_recovered}) & island_on[2 or 5] of the source | debug.clk_obs.source | source 7 (wclk_in) is the AUX_CLK pair since CP4-3; sources 2,3,5,6,14 are on the regfile's forbidden list today (MW-29)
 # ---- wired receive
+c_bb_tap_wmon_bias_en | 1 | 0 | (wmon_select != off) & island_on[5] | debug.wmon_select.select |
+c_wmon_obs_en | 1 | 0 | wmon_select != off | debug.wmon_select.select | bb_tap_wmon obs_en
 c_term_en | 1 | 0 | p_load != off or differential_100_enable | termination.config.p_load+termination.config.differential_100_enable | USB pair
 c_term_mode | 2 | 0 | 00 off, 01 shunt to 1.2 V (50_to_vcm), 10 100 ohm differential, 11 shunt to VSS (45_to_ground) | termination.config.p_load+termination.config.differential_100_enable | raw bits would select the wrong network (MW walk D8)
 c_term_hs_en | 1 | 0 | direct | termination.config.hs_enable | (was: new field (HS pair bias on: without it the CTLE input sits at 0 V, MW-9))

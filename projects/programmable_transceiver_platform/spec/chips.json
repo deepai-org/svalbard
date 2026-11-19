@@ -1,0 +1,38 @@
+{
+  "about": "The two chips of the split (MANDATE 1, scratch/reviews/SPLIT-PLAN.md, assignment scratch/reviews/split/assignment.md). One block library, one RTL, one register address map: this file says which enable groups, islands and register fields each chip has. Read by integration/chips/check_top.py, verification/check_contract.py and spec/check_performance_requirements.py. A field is on a chip unless it matches the other chip's only-list.",
+  "chips": {
+    "rf": {
+      "name": "pt_rf",
+      "chip_id": 1,
+      "scope": "RF receive and transmit, LO synthesis (QVCO, dividers, LO regulator), external-LO input, ADC/DAC I/Q, baseband filter, RF test structures, plus the shared infrastructure, the TX ring and (D2) the CDR ring as the second host-clock route",
+      "enable_groups": {"rf": 1, "pll": 2, "conv": 4, "debug": 5},
+      "islands": ["rf_rx", "rf_tx", "lod", "lo", "pll", "conv", "debug"],
+      "only_fields": [
+        "debug\\.island_power\\.(rf|conv)", "debug\\.pgood_override\\.(rf|conv)", "debug\\.clk_select\\.conv_sample", "clockmux\\.config\\.conv_prescale",
+        "debug\\.bb_tap\\..*", "debug\\.rf_(rx|tx|bb)_bypass\\..*", "debug\\.bias_override\\..*",
+        "consolidation\\.(bbfilter|txmix)\\..*", "rxmix\\.offset\\..*", "core\\.refchain\\.dist_en_(rf|conv)",
+        "adc(_i|_q)?\\..*", "dac_[iq]\\..*", "refbuf\\..*", "lna\\..*", "rxmix_[iq]\\..*", "txmix_[iq]\\..*", "txsum\\..*",
+        "rfdriver\\..*", "rfpll\\..*", "bbfilter_[iq]\\..*",
+        "digital\\.guard_config\\.(gain_settle_ticks|rx_to_tx_ticks|tx_to_rx_ticks)", "digital\\.hop_config\\..*",
+        "digital\\.transport_config\\.tx_interp", "monitor\\.config\\.require_rf_lock"
+      ]
+    },
+    "wired": {
+      "name": "pt_wired",
+      "chip_id": 2,
+      "scope": "wired RX (CTLE, slicer, capture, CDR ring, phase trim, detect), wired TX (fast path, USB and 100BASE-TX drivers), forwarded/AUX clock, wired monitors, speed test structures, plus the shared infrastructure",
+      "enable_groups": {"wired": 0, "pll": 2, "debug": 5},
+      "islands": ["wired_rx", "wired_cap", "wired_tx", "pll", "debug"],
+      "only_fields": [
+        "debug\\.island_power\\.wired", "debug\\.pgood_override\\.wired",
+        "debug\\.wire_bypass\\..*", "debug\\.wtx_ext\\..*", "debug\\.wmon_select\\..*",
+        "debug\\.replica\\.(ro33|ro50|cmldiv)_enable", "consolidation\\.(wiredtx_stage|detect)\\..*", "debug\\.pattern\\..*",
+        "core\\.refchain\\.dist_en_wire", "ctle\\..*", "detect\\..*", "digital\\.guard_config\\.wire_trim_settle_ui",
+        "digital\\.transport_config\\.(direct_stream_enable|linecode)", "rxlevel\\..*", "rxselect\\..*", "slicer\\..*",
+        "termination\\..*", "txpad\\..*", "usbdrive\\..*", "usbfs\\..*", "usbhs\\..*", "wiredtx\\..*", "cdr\\.phase_trim\\..*",
+        "usb\\.config\\..*", "wrx\\..*"
+      ]
+    }
+  },
+  "obsolete_fields": ["debug\\.island_power\\.usb", "debug\\.pgood_override\\.usb"]
+}

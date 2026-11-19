@@ -1,33 +1,35 @@
 #!/usr/bin/env python3
-"""Chip-level control-plane simulation per mode family (integration/top/sim/tb_top_modes.sv): the real digital macro
-against the stub analog top generated from integration/top/pt_chip.conn. Generates the bench's field table from
-spec/register-map.json and the expected reset vector from integration/top/ctl_ports.txt, runs the bench (must pass)
-and decode mutants (each must FAIL)."""
+"""Chip-level control-plane simulation per mode family (integration/chips/sim/tb_top_modes.sv), for each chip: the real
+digital macro against the stub analog top generated from integration/chips/<chip>/chip.conn. Generates the bench's field
+table from spec/register-map.json and the expected reset vector from integration/chips/ctl_ports.txt, runs the bench
+(must pass) and the decode mutants that reach that chip's blocks (each must FAIL).
+    check_top_modes.py [rf|wired ...] [--no-mutants]        (default: both chips)"""
 import json, re, subprocess, sys, tempfile
 from pathlib import Path
-P = Path(__file__).resolve().parents[1]; TOP = P/'integration/top'
-MUTANTS = {   # file, old, new
-    'ps_onehot_swapped': ('pt_ctl_decode.sv', "assign c_clockmux_ps = {ring_ref == 2'd3, ring_ref == 2'd2, ring_ref == 2'd1};", "assign c_clockmux_ps = {ring_ref == 2'd1, ring_ref == 2'd2, ring_ref == 2'd3};"),
-    'lo_ref_interlock_missing': ('pt_ctl_decode.sv', "assign c_rx_ref_en = (f_refinput_state__state == ACTIVE) & ~lo_external;", "assign c_rx_ref_en = (f_refinput_state__state == ACTIVE);"),
-    'q_gain_from_i': ('pt_ctl_decode.sv', 'rx_gain_active ? agc_pga : f_bbfilter_q_trim__gain', 'rx_gain_active ? agc_pga : f_bbfilter_i_trim__gain'),
-    'bgap_interlock_missing': ('pt_ctl_decode.sv', 'assign c_bias_dist_en_rf = f_core_refchain__dist_en_rf & bg_ok;', 'assign c_bias_dist_en_rf = f_core_refchain__dist_en_rf;'),
-    'warm_enables': ('pt_ctl_decode.sv', "wire lo_synth_en = (f_rfpll_state__state == ACTIVE) & (lo_mode == 2'd2) & on_rf;", "wire lo_synth_en = (f_rfpll_state__state != 2'd0) & (lo_mode == 2'd2) & on_rf;"),
-    'obs_alias': ('pt_ctl_decode.sv', "assign c_clk_obs_s = (obs_src >= 5'd15) ? 4'd15 : obs_src[3:0];", 'assign c_clk_obs_s = obs_src[3:0];'),
-    'island_gate_lut': ('pt_ctl_decode.sv', 'wire[7:0] pga_i = pga_lut(rx_gain_active ? agc_pga : f_bbfilter_i_trim__gain) & {8{on_rf}};', 'wire[7:0] pga_i = pga_lut(rx_gain_active ? agc_pga : f_bbfilter_i_trim__gain);'),
-    'fault_not_to_wtx': ('pt_digital_macro.sv', '.vreg_tx_ok(vreg_tx_ok), .fault(fault_eff), .fc_tx_in_tol', ".vreg_tx_ok(vreg_tx_ok), .fault(1'b0), .fc_tx_in_tol"),
-    'monitor_unbound': ('pt_digital_macro.sv', 'assign fault_eff = fault | mon_fault;', 'assign fault_eff = fault;'),
+P = Path(__file__).resolve().parents[1]; TOP = P/'integration/chips'
+MUTANTS = {   # file, old, new, chips on which the bench must detect it
+    'ps_onehot_swapped': ('pt_ctl_decode.sv', "assign c_clockmux_ps = {ring_ref == 2'd3, ring_ref == 2'd2, ring_ref == 2'd1};", "assign c_clockmux_ps = {ring_ref == 2'd1, ring_ref == 2'd2, ring_ref == 2'd3};", ('rf', 'wired')),
+    'lo_ref_interlock_missing': ('pt_ctl_decode.sv', "assign c_rx_ref_en = (f_refinput_state__state == ACTIVE) & ~lo_external;", "assign c_rx_ref_en = (f_refinput_state__state == ACTIVE);", ('rf',)),
+    'q_gain_from_i': ('pt_ctl_decode.sv', 'rx_gain_active ? agc_pga : f_bbfilter_q_trim__gain', 'rx_gain_active ? agc_pga : f_bbfilter_i_trim__gain', ('rf',)),
+    'bgap_interlock_missing': ('pt_ctl_decode.sv', 'assign c_bias_dist_en_rf = f_core_refchain__dist_en_rf & bg_ok;', 'assign c_bias_dist_en_rf = f_core_refchain__dist_en_rf;', ('rf',)),
+    'warm_enables': ('pt_ctl_decode.sv', "wire lo_synth_en = (f_rfpll_state__state == ACTIVE) & (lo_mode == 2'd2) & on_rf;", "wire lo_synth_en = (f_rfpll_state__state != 2'd0) & (lo_mode == 2'd2) & on_rf;", ('rf',)),
+    'obs_alias': ('pt_ctl_decode.sv', "assign c_clk_obs_s = (obs_src >= 5'd15) ? 4'd15 : obs_src[3:0];", 'assign c_clk_obs_s = obs_src[3:0];', ('rf', 'wired')),
+    'bgap_interlock_missing_wire': ('pt_ctl_decode.sv', 'assign c_bias_dist_en_wire = f_core_refchain__dist_en_wire & bg_ok;', 'assign c_bias_dist_en_wire = f_core_refchain__dist_en_wire;', ('wired',)),
+    'island_gate_lut': ('pt_ctl_decode.sv', 'wire[7:0] pga_i = pga_lut(rx_gain_active ? agc_pga : f_bbfilter_i_trim__gain) & {8{on_rf}};', 'wire[7:0] pga_i = pga_lut(rx_gain_active ? agc_pga : f_bbfilter_i_trim__gain);', ('rf',)),
+    'fault_not_to_wtx': ('pt_digital_macro.sv', '.vreg_tx_ok(vreg_tx_ok), .fault(fault_eff), .fc_tx_in_tol', ".vreg_tx_ok(vreg_tx_ok), .fault(1'b0), .fc_tx_in_tol", ('wired',)),
+    'monitor_unbound': ('pt_digital_macro.sv', 'assign fault_eff = fault | mon_fault;', 'assign fault_eff = fault;', ('rf', 'wired')),
     # monitor time base (monitor.config.timebase, section 9b of the bench)
-    'mon_timebase_select_stuck0': ('pt_digital_macro.sv', '.I1(mon_host_clk), .S(f_monitor_config__timebase), .Z(mon_clk));', ".I1(mon_host_clk), .S(1'b0), .Z(mon_clk));"),
-    'mon_clk_tied_to_aosc': ('pt_digital_macro.sv', 'pt_monitor monitor(.rst_n(rst_n), .mon_clk(mon_clk),', 'pt_monitor monitor(.rst_n(rst_n), .mon_clk(fc[4]),'),
-    'mon_timebase_not_divided': ('pt_digital_macro.sv', 'pt_clock_mux mon_mux(.I0(fc[4]), .I1(mon_host_clk),', 'pt_clock_mux mon_mux(.I0(fc[4]), .I1(core_clk),'),
-    'mon_timebase_select_inverted': ('pt_digital_macro.sv', 'pt_clock_mux mon_mux(.I0(fc[4]), .I1(mon_host_clk),', 'pt_clock_mux mon_mux(.I0(mon_host_clk), .I1(fc[4]),'),
+    'mon_timebase_select_stuck0': ('pt_digital_macro.sv', '.I1(mon_host_clk), .S(f_monitor_config__timebase), .Z(mon_clk));', ".I1(mon_host_clk), .S(1'b0), .Z(mon_clk));", ('rf', 'wired')),
+    'mon_clk_tied_to_aosc': ('pt_digital_macro.sv', 'pt_monitor monitor(.rst_n(rst_n), .mon_clk(mon_clk),', 'pt_monitor monitor(.rst_n(rst_n), .mon_clk(fc[4]),', ('rf', 'wired')),
+    'mon_timebase_not_divided': ('pt_digital_macro.sv', 'pt_clock_mux mon_mux(.I0(fc[4]), .I1(mon_host_clk),', 'pt_clock_mux mon_mux(.I0(fc[4]), .I1(core_clk),', ('rf', 'wired')),
+    'mon_timebase_select_inverted': ('pt_digital_macro.sv', 'pt_clock_mux mon_mux(.I0(fc[4]), .I1(mon_host_clk),', 'pt_clock_mux mon_mux(.I0(mon_host_clk), .I1(fc[4]),', ('rf', 'wired')),
 }
 
 
-def gen(work):
+def gen(work, chip):
     reg = json.loads((P/'spec/register-map.json').read_text())
     F = {f['name']: f for f in reg['fields']}
-    L = ['// GENERATED by verification/check_top_modes.py from spec/register-map.json and integration/top/ctl_ports.txt']
+    L = [f'// GENERATED by verification/check_top_modes.py for pt_{chip} from spec/register-map.json and integration/chips/ctl_ports.txt']
     for f in reg['fields']:
         if len(f['chunks']) == 1 and f['bits'] <= 16:
             c = f['chunks'][0]
@@ -38,8 +40,8 @@ def gen(work):
     L.append(f"`define PT_TB_LSB_BBI_QT {F['bbfilter_i.trim.qt']['chunks'][0]['reg_lsb']}")
     # expected value of ctl_all with every island on: the reset column, in the order of generated/tb_ctl.svh
     resets = {c[0].strip(): (int(c[1]), int(c[2])) for c in (l.split('|') for l in (TOP/'ctl_ports.txt').read_text().split('\n') if l.startswith('c_'))}
-    order = re.search(r'ctl_all = \{([^}]*)\}', (TOP/'generated/tb_ctl.svh').read_text()).group(1).replace(' ', '').split(',')
-    assert set(order) == set(resets), set(order) ^ set(resets)
+    order = re.search(r'ctl_all = \{([^}]*)\}', (TOP/chip/'generated/tb_ctl.svh').read_text()).group(1).replace(' ', '').split(',')
+    assert set(order) <= set(resets), set(order) - set(resets)      # the chip's ports: the rows with a consumer on this chip
     L.append('`define PT_TB_CTL_RESET {' + ', '.join(f"{resets[n][0]}'d{resets[n][1]}" for n in order) + '}')
     # with every island off: only the always-on (core rail) ports keep their reset value, plus the CLK_OBS pull-down control
     txt = (TOP/'ctl_ports.txt').read_text(); aon = set(re.findall(r'^(c_\w+)', txt[txt.index('# ---- always-on'):txt.index('# ---- RF receive')], re.M)) | {'c_clk_obs_off'}
@@ -47,7 +49,7 @@ def gen(work):
     # TOP-25 (5): every control port bit that reaches a cell of enable group k must read 0 while that group is off.
     # Consumers from the conn (instance group = supply island); the three ports that are deliberately not 0 are named.
     sys.path.insert(0, str(TOP)); import check_top as ct
-    inst = ct.parse((TOP/'pt_chip.conn').read_text())[0]
+    inst = ct.parse(ct.read_conn(TOP/chip/'chip.conn'))[0]
     GROUP = dict(wired_rx=0, wired_cap=0, wired_tx=0, rf_rx=1, rf_tx=1, lod=1, lo=1, pll=2, conv=4, debug=5)
     cons = {}
     for name, i in inst.items():
@@ -67,41 +69,46 @@ def gen(work):
             bits = [None] if w == 1 else range(int(lo if lo else hi), int(hi) + 1) if hi else range(w)
             for b in bits: clamp[name if b is None else f'{name}[{b}]'] = int(on)
     bad = []; listed = set()
-    for line in (TOP/'generated/macro_clamps.txt').read_text().split('\n'):
+    for line in (TOP/chip/'generated/macro_clamps.txt').read_text().split('\n'):
         if not line or line.startswith('#'): continue
         pin, _, bit = line.split(); listed.add(pin)
         if clamp.get(pin) != int(bit): bad.append(f'{pin}: clamp island_on[{clamp.get(pin)}] in the macro, list says [{bit}]')
-    bad += [f'{p}: clamped in the macro but not in generated/macro_clamps.txt' for p in clamp if p not in listed]
-    if bad: sys.exit('TOP_MODES_CHECK_FAIL: CP4-1 macro clamps\n' + '\n'.join(bad[:20]))
-    print(f'CP4-1: {len(clamp)} clamped input bits in the macro cover generated/macro_clamps.txt')
+    # pins of the other chip's blocks are tied in this chip's conn: clamped in the macro, not listed here (phase 2: per-chip macro)
+    tied = {p for p, (k, n) in inst['digital']['pins'].items() if n in ('VSS', 'VDD')}
+    bad += [f'{p}: clamped in the macro but not in {chip}/generated/macro_clamps.txt' for p in clamp if p not in listed and p not in tied]
+    if bad: sys.exit(f'TOP_MODES_CHECK_FAIL: pt_{chip}: CP4-1 macro clamps\n' + '\n'.join(bad[:20]))
+    print(f'pt_{chip} CP4-1: {len(clamp)} clamped input bits in the macro cover {chip}/generated/macro_clamps.txt ({len([p for p in clamp if p not in listed])} more on tied pins)')
 
 
-def run(work, rtl_dir):
-    vvp = work/'tb.vvp'
-    c = subprocess.run(['iverilog', '-g2012', '-I', str(rtl_dir), '-I', str(TOP/'generated'), '-I', str(work), '-s', 'tb_top_modes', '-o', str(vvp),
-                        str(TOP/'sim/tb_top_modes.sv'), str(TOP/'generated/pt_analog_top_stub.sv'), *map(str, sorted(rtl_dir.glob('*.sv')))], capture_output=True, text=True)
+def run(work, rtl_dir, chip):
+    vvp = work/'tb.vvp'; G = TOP/chip/'generated'
+    c = subprocess.run(['iverilog', '-g2012', '-I', str(rtl_dir), '-I', str(G), '-I', str(work), '-s', 'tb_top_modes', '-o', str(vvp),
+                        str(TOP/'sim/tb_top_modes.sv'), str(G/'pt_analog_top_stub.sv'), *map(str, sorted(rtl_dir.glob('*.sv')))], capture_output=True, text=True)
     if c.returncode: sys.exit('TOP_MODES_CHECK_FAIL: compile\n' + '\n'.join(l for l in c.stderr.split('\n') if 'warning' not in l)[:4000])
     out = subprocess.run(['vvp', '-n', str(vvp)], capture_output=True, text=True, timeout=1800).stdout
     return bool(re.search(r'^TOP_MODES_PASS', out, re.M)), out
 
 
 def main():
-    with tempfile.TemporaryDirectory() as t:
-        t = Path(t); gen(t)
-        ok, out = run(t, P/'rtl')
-        print('\n'.join(l for l in out.split('\n') if l.startswith(('FAIL', 'TOP_MODES', '   commit'))))
-        if not ok: sys.exit('TOP_MODES_CHECK_FAIL: bench failed on the RTL')
-        if '--no-mutants' in sys.argv: return
-        import shutil
-        for name, (fname, old, new) in MUTANTS.items():
-            src = (P/'rtl'/fname).read_text()
-            assert src.count(old) == 1, f'mutant {name}: source text changed'
-            rtl = t/f'rtl_{name}'
-            shutil.copytree(P/'rtl', rtl, ignore=shutil.ignore_patterns('gen', '__pycache__'))
-            (rtl/fname).write_text(src.replace(old, new))
-            ok, out = run(t, rtl)
-            if ok: sys.exit(f'TOP_MODES_CHECK_FAIL: mutant {name} was not detected')
-            print(f'mutant {name}: detected ({len(re.findall("^FAIL", out, re.M))} failing checks)')
+    chips = [a for a in sys.argv[1:] if not a.startswith('-')] or ['rf', 'wired']
+    for chip in chips:
+        with tempfile.TemporaryDirectory() as t:
+            t = Path(t); gen(t, chip)
+            ok, out = run(t, P/'rtl', chip)
+            print('\n'.join(f'pt_{chip}: {l}' for l in out.split('\n') if l.startswith(('FAIL', 'TOP_MODES', '   commit'))))
+            if not ok: sys.exit(f'TOP_MODES_CHECK_FAIL: pt_{chip}: bench failed on the RTL')
+            if '--no-mutants' in sys.argv: continue
+            import shutil
+            for name, (fname, old, new, on) in MUTANTS.items():
+                if chip not in on: continue
+                src = (P/'rtl'/fname).read_text()
+                assert src.count(old) == 1, f'mutant {name}: source text changed'
+                rtl = t/f'rtl_{name}'
+                shutil.copytree(P/'rtl', rtl, ignore=shutil.ignore_patterns('gen', '__pycache__'))
+                (rtl/fname).write_text(src.replace(old, new))
+                ok, out = run(t, rtl, chip)
+                if ok: sys.exit(f'TOP_MODES_CHECK_FAIL: pt_{chip}: mutant {name} was not detected')
+                print(f'pt_{chip}: mutant {name}: detected ({len(re.findall("^FAIL", out, re.M))} failing checks)')
     print('TOP_MODES_CHECK_PASS')
 
 

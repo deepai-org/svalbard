@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Run the M6 isolation-state audit (scratch/integration/m6-powerup/audit/iso_audit.py, rules K1..K8) on
-integration/top/pt_chip.conn instead of the old binder netlist.
+"""Run the M6 isolation-state audit (scratch/integration/m6-powerup/audit/iso_audit.py, rules K1..K8) on one chip:
+    iso_audit_top.py <rf|wired> [--selftest] [-v]        (integration/chips/<chip>/chip.conn)
 
-What this does: builds a device-terminal chip netlist from pt_chip.conn + the extracted block netlists named in
+What this does: builds a device-terminal chip netlist from the chip's conn + the extracted block netlists named in
 masters.txt (same shape as the binder's pt_chip_full.spice: subckt library + one top subckt), then runs the
 UNMODIFIED audit rules on it through a thin subclass. Differences from the binder run, all stated in the output:
-  * islands: the ten supply islands are presented to the audit as their five enable groups (wired, rf, pll, conv,
+  * islands: the chip's supply islands are presented to the audit as their five enable groups (wired, rf, pll, conv,
     debug), because the islands of a group are switched by the same register bit and the audit reasons about
     on/off states. RAIL_<island> nets are therefore merged per group in the audit view only.
   * CP4-1: each macro input listed by a `macroclamp` line is shown to the audit as an iso_clamp in the core domain
@@ -37,9 +37,9 @@ def audit_net(n):
     return n
 
 
-def build(work):
-    conn, mt, ctl_txt, reg, rtl, fp = ct.load()
-    R, info, inst, masters, nets, ports = ct.check(conn, mt, ctl_txt, reg, rtl, fp)
+def build(work, chip):
+    conn, mt, ctl_txt, reg, rtl, fp, _, bond, others, contract = ct.load(chip)
+    R, info, inst, masters, nets, ports = ct.check(conn, mt, ctl_txt, reg, rtl, fp, chip, bond, others, contract)
     mc = info['_macroclamp']
     lib, empty, note = [], [], []
     subname = {}
@@ -80,7 +80,8 @@ def build(work):
             masters[name] = dict(kind='file', path=p, sub=name+'_pex', pins=m['pins']); subname[name] = load(name)
         else:
             empty.append(name)
-    L = ['* audit netlist generated from integration/top/pt_chip.conn by iso_audit_top.py'] + lib
+    if 'iso_clamp' not in subname: subname['iso_clamp'] = load('iso_clamp')      # CP4-1 stand-in cell, even with no iso_clamp instance
+    L = [f'* audit netlist generated from integration/chips/{chip}/chip.conn by iso_audit_top.py'] + lib
     for name in empty:
         if name == 'pt_digital_macro': continue
         L.append(f'.subckt {name} '+' '.join(masters[name]['pins'])+f'\n.ends {name}'); subname[name] = name
@@ -155,7 +156,7 @@ def make_audit(work, facts):
             for n in list(self.users):          # the macro presents c_* nets under the port's own name
                 pass
 
-        def k3_switch(self):                    # ten switches, five enable bits, per-switch power-good to the macro
+        def k3_switch(self):                    # the chip's switches, its enable bits, per-switch power-good to the macro
             fails, rows = [], []
             for inst, i in facts['inst'].items():
                 if not i['master'].startswith('isw_'): continue
@@ -191,12 +192,13 @@ def classify(r, facts):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--selftest', action='store_true'); ap.add_argument('--out', default=HERE+'/generated/iso_audit_top.json')
+    ap = argparse.ArgumentParser(); ap.add_argument('chip', choices=sorted(ct.CHIPS)); ap.add_argument('--selftest', action='store_true'); ap.add_argument('--out')
     ap.add_argument('--keep', help='directory for the generated audit netlist (default: temporary)'); ap.add_argument('-v', action='store_true')
     a = ap.parse_args()
+    a.out = a.out or f'{HERE}/{a.chip}/generated/iso_audit_top.json'
     work = a.keep or tempfile.mkdtemp(prefix='pt_iso_audit_')
     os.makedirs(work, exist_ok=True)
-    facts = build(work)
+    facts = build(work, a.chip)
     A, TopAudit = make_audit(work, facts)
     try:
         x = TopAudit(); src = 'working tree'
@@ -208,7 +210,7 @@ def main():
     print('RTL facts (ATB decode gating, reset expression) from:', src)
     r = x.run()
     groups = classify(r, facts)
-    print(f'ISO AUDIT on pt_chip.conn: {"FAIL" if r["fail"] else "PASS"}  {r["counts"]}  (total {len(r["fails"])})')
+    print(f'ISO AUDIT on pt_{a.chip}: {"FAIL" if r["fail"] else "PASS"}  {r["counts"]}  (total {len(r["fails"])})')
     for k, v in groups.items():
         print(f'  [{k}] {len(v)}')
         for f in (v if a.v else v[:4]):
@@ -245,7 +247,8 @@ def main():
     if a.selftest:
         ok = True
         clamp = next(n for n, i in facts['inst'].items() if i['master'].startswith('iso_clamp'))
-        leaf = next(l['sel'] for l in r['atb_leaves'] if l['rtl_gate_islands'] and not l['node'].startswith(('RAIL_', 'VDD', 'VSS')))
+        leaf = next(l['sel'] for l in r['atb_leaves'] if l['rtl_gate_islands'] and not l['node'].startswith(('RAIL_', 'VDD', 'VSS'))
+                    and set(l['node_domains']) & set(ct.GROUP_NAME.values()))      # a node with devices on a switched island
         def run(mut, rule, label):
             nonlocal ok
             y = TopAudit(); msg = mut(y); rr = y.run(); d = rr['counts'][rule]-r['counts'][rule]
@@ -258,10 +261,11 @@ def main():
                         y.users[f'island_on[{b}]'].append(u); return f'{clamp}.ISO moved from {n} to island_on[{b}]'
         run(invert, 'K1', 'inverted clamp control')
         run(lambda y: y.inject(f'remove_clamp={clamp}'), 'K1', 'clamp removed')
-        run(lambda y: y.inject('force_on=rf_rx'), 'K3', 'switch forced on')
+        run(lambda y: y.inject('force_on=' + ('rf_rx' if a.chip == 'rf' else 'wired_rx')), 'K3', 'switch forced on')
         run(lambda y: y.inject(f'ungate_atb={leaf}'), 'K7', 'ATB island gate removed')
-        hit = 'lna.en' in dircheck('lna.en')[0]
-        print(f'  selftest direction marker: lna.en marked as a driver -> D1 {"DETECTED" if hit else "MISSED"}'); ok = ok and hit
+        pin = 'lna.en' if a.chip == 'rf' else 'ctle.ctle_en'
+        hit = pin in dircheck(pin)[0]
+        print(f'  selftest direction marker: {pin} marked as a driver -> D1 {"DETECTED" if hit else "MISSED"}'); ok = ok and hit
         print('ISO AUDIT SELFTEST', 'PASS' if ok else 'FAIL')
         rc = rc or (0 if ok else 3)
         if not ok: rc = 3

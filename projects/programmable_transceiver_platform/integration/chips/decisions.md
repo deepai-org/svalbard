@@ -1,9 +1,10 @@
-# Chip top: open items
+# Chip tops: open items
 
-Open build demands and open decisions at the chip top. `pt_chip.conn` binds the unambiguous part of each and
-quotes the D- tag in a comment; "Bound as" is what the conn does until the owner answers. Decided items are not
-listed: they are in the conn, in `ctl_ports.txt` and in `../macro-contract.md`. Risks are in
-`../../spec/risk-register.md`. Regression: `run.sh`.
+Open build demands and open decisions at the tops of `pt_rf` and `pt_wired`. The chip conns (`rf/chip.conn`,
+`wired/chip.conn`, both including `common.conn`) bind the unambiguous part of each and quote the D- tag in a comment;
+"Bound as" is what the conns do until the owner answers. An item about blocks of one chip concerns that chip only.
+Decided items are not listed: they are in the conns, in `ctl_ports.txt`, in `../macro-contract.md` and in
+`../../spec/chips.json`. Risks are in `../../spec/risk-register.md`. Regression: `<chip>/run.sh`.
 
 ## A. Build demands and bindings that lag the design
 
@@ -25,6 +26,10 @@ listed: they are in the conn, in `ctl_ports.txt` and in `../macro-contract.md`. 
 | D-ISOCELL | `iso_clamp_x4` and `iso_pd` are used from `scratch/iso-family` | pads | Publish the cells |
 | D-FLOOR | Instances the last floorplan (v6) lacks: `rx_ref_in`, `prescale_conv`, `prescale_hf`, five more `obs_pre4`, `lo_obs_q`, every isolation cell, the demand blocks, one more ATB0 fast leaf (code 58) | assembly | Place them in the next floorplan |
 | D-POLY | `pt_polyphase` is deleted from the conn but still named in `check_top.py` and in `verification/chip_assembly/` (`inventory.py`, `netlist.py`, `floorplan_rules.py`) | chip-top, assembly | Remove it there |
+
+| D-SPLIT-BIAS | `pt_core_bias` is one composite on both chips: the banks of the other chip's islands sit on `VSS` with their enables tied low (`RAIL_wired` on `pt_rf`; `RAIL_rf`, `RAIL_conv` on `pt_wired`). D8 asks for one generator with a per-chip bank list and one composite per chip | core_support | Per-chip composites; the conns then drop the tied banks |
+| D-SPLIT-SUPSITE | Supply / ground bonds on free signal sites (`pad_xvdd_*`, `pad_xvss_*`, master `prov_supply`) need a provider supply cell (or a custom cell) at a signal site, with its clamp, and the tester diode check (PKG-11) | pads | Confirm the cell per site; add it to the pad ring generator |
+| D-SPLIT-BIASEXT | `pt_bias_ext` is bound on both chips with the other chip's tap tied off; the assignment splits it into two `pt_bias_tap2` cells (qvco / lo_pfdcp on `pt_rf`, hsbias on `pt_wired`) | core_support | Publish the per-chip cells |
 
 ## B. Open decisions
 

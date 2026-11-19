@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Live SPI -> physical reference chain -> complete ATB tree -> provider pads.
+"""Chip: PT_CHIP=rf|wired (default rf; integration/chips/<chip>/generated/pt_chip.sv).
+Live SPI -> physical reference chain -> complete ATB tree -> provider pads.
 
 Checks real core-node bindings, physical island switches and all bias banks.
 The fixture uses explicit diode consumer loads and a board reset/POR boundary;
@@ -99,7 +100,7 @@ def build(out, pdk, support, ng, reuse_bridge=False, idac1_smu=False):
     read(PROJECT/'verification/check_chip_power.py')
     read(PROJECT/'verification/audit_core_bias_observation.py')
     read(PROJECT/'verification/audit_chip_bringup.py')
-    graph = power.chip_connectivity(read(PROJECT/'integration/pt_chip.sv'))
+    graph = power.chip_connectivity(read(PROJECT/f"integration/chips/{__import__('os').environ.get('PT_CHIP', 'rf')}/generated/pt_chip.sv"))
     for port in ['debug_cfg', 'island_en', 'island_on', 'island_pgood',
                  'atb0_sw', 'atb1_sw', 'atb0_grp', 'atb1_grp', 'atb0_en', 'atb1_en']:
         assert graph['digital'][port] == graph['analog'][port], 'Parent connection mismatch: '+port

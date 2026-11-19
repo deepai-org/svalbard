@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exercise pt_chip SPI/pad binding; analog inputs remain explicit test stimuli.
+"""Exercise pt_chip SPI/pad binding of each chip (pt_rf, pt_wired); analog inputs remain explicit test stimuli.
 
 Fetches the unmodified provider Verilog from the installed offline PDK image,
 or accepts --io-model. Does not qualify physical power-up or fallback data.
@@ -29,8 +29,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--io-model', type=Path)
     parser.add_argument('--output-dir', type=Path, default=ROOT/'scratch/chip-io')
+    parser.add_argument('chips', nargs='*', default=['rf', 'wired'])
     args = parser.parse_args()
-    out = args.output_dir.resolve()
+    for chip in args.chips:
+        run_chip(chip, args.output_dir.resolve()/chip, args.io_model.resolve() if args.io_model else None)
+
+
+def run_chip(chip, out, model):
     out.mkdir(parents=True, exist_ok=True)
     report_path = out/'report.json'
     # A failed rerun must not leave an old passing report at the output path.
@@ -38,9 +43,7 @@ def main():
     for name in ('compile.log', 'sim.log', 'chip-io.vcd'):
         (out/name).unlink(missing_ok=True)
     image_id = None
-    if args.io_model:
-        model = args.io_model.resolve()
-    else:
+    if model is None:
         image_id = run(['docker', 'image', 'inspect', IMAGE, '--format', '{{.Id}}']).stdout.strip()
         container = run(['docker', 'create', '--network', 'none', image_id]).stdout.strip()
         model = out/'gf180mcu_fd_io.v'
@@ -48,9 +51,9 @@ def main():
             run(['docker', 'cp', f'{container}:{PROVIDER_PATH}', str(model)])
         finally:
             run(['docker', 'rm', container])
-    sources = [PROJECT/'sim/tb_chip_io.sv', PROJECT/'integration/pt_chip.sv',
+    sources = [PROJECT/'sim/tb_chip_io.sv', PROJECT/f'integration/chips/{chip}/generated/pt_chip.sv',
                PROJECT/'integration/pt_provider_io.sv', *sorted((PROJECT/'rtl').glob('*.sv'))]
-    compile_command = ['iverilog', '-g2012', '-Dfunctional', '-DPT_EXTERNAL_IO',
+    compile_command = ['iverilog', '-g2012', '-Dfunctional', '-DPT_EXTERNAL_IO', f'-DPT_CHIP_{chip.upper()}',
                        '-I', str(PROJECT/'rtl'), '-s', 'tb_chip_io', '-o', str(out/'chip.vvp'),
                        *map(str, sources), str(model)]
     compile_result = subprocess.run(compile_command, cwd=out, text=True,
@@ -66,13 +69,13 @@ def main():
     sources += list((PROJECT/'rtl').glob('*.svh'))
     sources.append(Path(__file__).resolve())
     report = {
-        'status': 'pass', 'scope': 'digital_integration_through_provider_functional_pad_models',
+        'status': 'pass', 'chip': f'pt_{chip}', 'scope': 'digital_integration_through_provider_functional_pad_models',
         'goal_complete': False,
         'provider': {'image': IMAGE if image_id else None, 'image_id': image_id,
                      'file': PROVIDER_PATH if image_id else str(model), 'sha256': digest(model)},
         'source_hashes': {str(p.relative_to(ROOT)): digest(p) for p in sources},
         'checks': ['SPI ID and ABI reads through provider pads with payload clocks stopped',
-                   'SPI shadow write and commit drives only the selected island enable',
+                   'SPI shadow write and commit drives only the selected island enable (the chip\'s payload group)',
                    'effective island enable waits for power-good and isolates on its loss',
                    'power-good boundary stimulus reaches SPI status and DBG_OBS0 pad',
                    'reset clears island enables and ATB selects, tristates host/debug outputs',
@@ -88,7 +91,7 @@ def main():
         'trace': 'chip-io.vcd',
     }
     report_path.write_text(json.dumps(report, indent=2)+'\n')
-    print(sim.stdout.strip())
+    print(f'pt_{chip}:', sim.stdout.strip())
     print(f'Report: {report_path}')
 
 

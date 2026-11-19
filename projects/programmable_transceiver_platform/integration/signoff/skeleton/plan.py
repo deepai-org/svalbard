@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Skeleton chip plan: which cell goes where, real GDS or placeholder.
 
-Inputs : skeleton/floorplan-skel.json (die-fit packer result), integration/top/pt_chip.conn + masters.txt (instances,
+Inputs : skeleton/floorplan-skel.json (die-fit packer result), integration/chips/<chip>/chip.conn + masters.txt (instances,
          masters, pin lists), GDS candidates per master.
 Output : <run>/skel/plan.json for skeleton/build.py (KLayout).  Light, host python, no tools.
 
@@ -13,15 +13,16 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__)); SO = os.path.dirname(HERE)
 P = os.path.dirname(os.path.dirname(SO)); ROOT = os.path.dirname(os.path.dirname(P))
 RUN = os.environ.get('SIGNOFF_RUN', ROOT+'/scratch/integration/signoff-run')
-sys.path.insert(0, P+'/integration/top')
+sys.path.insert(0, P+'/integration/chips')
 import check_top as ct
 
 A = 'projects/programmable_transceiver_platform/analog/'
 IS = 'scratch/island-support-20261108-075605/'
 fp = json.load(open(HERE+'/floorplan-skel.json'))
 staged = json.load(open(ROOT+'/scratch/reviews/die-fit/m45free_staged.json'))
-inst, ports, _w, err = ct.parse(open(P+'/integration/top/pt_chip.conn').read())
-masters = ct.load_masters(open(P+'/integration/top/masters.txt').read())
+CHIP = os.environ['SIGNOFF_CHIP']        # rf | wired
+inst, ports, _w, err = ct.parse(ct.read_conn(f'{P}/integration/chips/{CHIP}/chip.conn'))
+masters = ct.load_masters(open(P+'/integration/chips/masters.txt').read())
 assert not err, err
 
 # master -> [(gds path relative to repo root, top cell or None, kind)], first that fits its floorplan rectangle is used

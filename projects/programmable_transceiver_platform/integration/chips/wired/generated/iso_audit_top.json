@@ -43,66 +43,22 @@
   "wiredtx.D9"
  ],
  "counts": {
-  "K1": 20,
-  "K2": 55,
+  "K1": 16,
+  "K2": 49,
   "K3": 0,
   "K4": 0,
   "K5": 40,
   "K6": 0,
-  "K7": 15
+  "K7": 6
  },
  "groups": {
-  "K1 island-to-island / island-to-core gate with no clamp": 20,
-  "K2 pad back-drive into an off island": 11,
-  "K2 core / digital source onto p-diffusion of an off island": 44,
+  "K1 island-to-island / island-to-core gate with no clamp": 16,
+  "K2 pad back-drive into an off island": 9,
+  "K2 core / digital source onto p-diffusion of an off island": 40,
   "K5 contention": 40,
-  "K7 ATB leaf not gated by its island": 15
+  "K7 ATB leaf not gated by its island": 6
  },
  "fails": [
-  {
-   "rule": "K1",
-   "net": "BBI_OBS_N",
-   "driver_islands": [
-    "rf"
-   ],
-   "receiver": "bb_tap_i.in_n",
-   "receiver_domain": "debug",
-   "detail": "gate floats when the driving island is off (no iso_clamp)",
-   "severity": "medium"
-  },
-  {
-   "rule": "K1",
-   "net": "BBI_OBS_P",
-   "driver_islands": [
-    "rf"
-   ],
-   "receiver": "bb_tap_i.in_p",
-   "receiver_domain": "debug",
-   "detail": "gate floats when the driving island is off (no iso_clamp)",
-   "severity": "medium"
-  },
-  {
-   "rule": "K1",
-   "net": "BBQ_OBS_N",
-   "driver_islands": [
-    "rf"
-   ],
-   "receiver": "bb_tap_q.in_n",
-   "receiver_domain": "debug",
-   "detail": "gate floats when the driving island is off (no iso_clamp)",
-   "severity": "medium"
-  },
-  {
-   "rule": "K1",
-   "net": "BBQ_OBS_P",
-   "driver_islands": [
-    "rf"
-   ],
-   "receiver": "bb_tap_q.in_p",
-   "receiver_domain": "debug",
-   "detail": "gate floats when the driving island is off (no iso_clamp)",
-   "severity": "medium"
-  },
   {
    "rule": "K1",
    "net": "CDRPH[0]",
@@ -281,28 +237,6 @@
   },
   {
    "rule": "K2",
-   "net": "RF_TX_N",
-   "victim": "rfdriver.pad_n",
-   "well": "~int",
-   "island": "rf",
-   "via": "pdiff",
-   "source": "<pad>.RF_TX_N",
-   "source_domain": "pad",
-   "detail": "pad can be driven externally while the island is off"
-  },
-  {
-   "rule": "K2",
-   "net": "RF_TX_P",
-   "victim": "rfdriver.pad_p",
-   "well": "~int",
-   "island": "rf",
-   "via": "pdiff",
-   "source": "<pad>.RF_TX_P",
-   "source_domain": "pad",
-   "detail": "pad can be driven externally while the island is off"
-  },
-  {
-   "rule": "K2",
    "net": "TX_TERM_VCM",
    "victim": "term_buffer.OUT",
    "well": "~int",
@@ -399,50 +333,6 @@
    "source": "<pad>.WIRE_TX_P",
    "source_domain": "pad",
    "detail": "pad can be driven externally while the island is off"
-  },
-  {
-   "rule": "K2",
-   "net": "rf_tx_sample[14]",
-   "victim": "dac_q.CODE0",
-   "well": "RAIL_conv",
-   "island": "conv",
-   "via": "pdiff",
-   "source": "digital.rf_tx_sample[14]",
-   "source_domain": "core",
-   "detail": "no reset/off-state rule"
-  },
-  {
-   "rule": "K2",
-   "net": "rf_tx_sample[15]",
-   "victim": "dac_q.CODE1",
-   "well": "RAIL_conv",
-   "island": "conv",
-   "via": "pdiff",
-   "source": "digital.rf_tx_sample[15]",
-   "source_domain": "core",
-   "detail": "no reset/off-state rule"
-  },
-  {
-   "rule": "K2",
-   "net": "rf_tx_sample[2]",
-   "victim": "dac_i.CODE0",
-   "well": "RAIL_conv",
-   "island": "conv",
-   "via": "pdiff",
-   "source": "digital.rf_tx_sample[2]",
-   "source_domain": "core",
-   "detail": "no reset/off-state rule"
-  },
-  {
-   "rule": "K2",
-   "net": "rf_tx_sample[3]",
-   "victim": "dac_i.CODE1",
-   "well": "RAIL_conv",
-   "island": "conv",
-   "via": "pdiff",
-   "source": "digital.rf_tx_sample[3]",
-   "source_domain": "core",
-   "detail": "no reset/off-state rule"
   },
   {
    "rule": "K2",
@@ -1246,56 +1136,6 @@
   },
   {
    "rule": "K7",
-   "leaf": "atb1_leaf2",
-   "node": "VREF0_MASTER",
-   "island": "conv",
-   "sel": "atb1_sw[1]",
-   "bus": "ATB1 sense",
-   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
-   "leaf": "atb1_leaf3",
-   "node": "VCM_MASTER",
-   "island": "conv",
-   "sel": "atb1_sw[2]",
-   "bus": "ATB1 sense",
-   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
-   "leaf": "atb0_leaf14",
-   "node": "ATBN_rf_ibias",
-   "island": "rf",
-   "sel": "atb0_sw[13]",
-   "bus": "ATB0 force",
-   "detail": "leaf on an island node but its select is not gated by island_on[1]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
-   "leaf": "atb1_leaf14",
-   "node": "ATBN_rf_ibias",
-   "island": "rf",
-   "sel": "atb1_sw[13]",
-   "bus": "ATB1 sense",
-   "detail": "leaf on an island node but its select is not gated by island_on[1]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
-   "leaf": "atb0_leaf22",
-   "detail": "select WTX_FORCE_SELECTED has no decode in pt_regfile.sv"
-  },
-  {
-   "rule": "K7",
-   "leaf": "atb1_leaf22",
-   "node": "ATBN_wire_ibias",
-   "island": "wired",
-   "sel": "atb1_sw[21]",
-   "bus": "ATB1 sense",
-   "detail": "leaf on an island node but its select is not gated by island_on[0]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
    "leaf": "atb0_leaf29",
    "node": "ATBN_pll_ibias",
    "island": "pll",
@@ -1311,24 +1151,6 @@
    "sel": "atb1_sw[28]",
    "bus": "ATB1 sense",
    "detail": "leaf on an island node but its select is not gated by island_on[2]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
-   "leaf": "atb0_leaf35",
-   "node": "ATBN_conv_ibias",
-   "island": "conv",
-   "sel": "atb0_sw[34]",
-   "bus": "ATB0 force",
-   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
-   "leaf": "atb1_leaf35",
-   "node": "ATBN_conv_ibias",
-   "island": "conv",
-   "sel": "atb1_sw[34]",
-   "bus": "ATB1 sense",
-   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
   },
   {
    "rule": "K7",
@@ -1350,53 +1172,35 @@
   },
   {
    "rule": "K7",
-   "leaf": "atb1_leaf33",
-   "node": "ATBN_quadrature_bias",
-   "island": "rf",
-   "sel": "atb1_sw[32]",
-   "bus": "ATB1 sense",
-   "detail": "leaf on an island node but its select is not gated by island_on[1]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+   "leaf": "atb0_leaf22",
+   "detail": "select WTX_FORCE_SELECTED has no decode in pt_regfile.sv"
   },
   {
    "rule": "K7",
-   "leaf": "atb0_leaf58",
-   "node": "VCO_REPLICA_VCTRL",
-   "island": "debug",
-   "sel": "atb0_sw[57]",
-   "bus": "ATB0 force",
-   "detail": "leaf on an island node but its select is not gated by island_on[5]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
-   "leaf": "atb1_leaf58",
-   "node": "VCO_REPLICA_VCTRL",
-   "island": "debug",
-   "sel": "atb1_sw[57]",
+   "leaf": "atb1_leaf22",
+   "node": "ATBN_wire_ibias",
+   "island": "wired",
+   "sel": "atb1_sw[21]",
    "bus": "ATB1 sense",
-   "detail": "leaf on an island node but its select is not gated by island_on[5]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
+   "detail": "leaf on an island node but its select is not gated by island_on[0]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
   }
  ],
- "macro_internal_clamps": 130,
- "k1_clamped_ok": 145,
+ "macro_internal_clamps": 77,
+ "k1_clamped_ok": 91,
  "coverage": {
-  "instances": 371,
-  "nets": 1489,
+  "instances": 261,
+  "nets": 1099,
   "unbound_ports": 0,
-  "iso_clamp_instances": 146
+  "iso_clamp_instances": 90
  },
  "empty_boxes": [
   "atb_provider_pad",
-  "pad_downbond",
   "pad_strap",
   "prov_supply",
-  "pt_agnd_tie",
   "pt_bias_ext",
   "pt_debug_physical",
   "pt_digital_macro",
   "pt_host_physical",
-  "pt_lna_deg",
-  "pt_lna_ind",
-  "pt_lo_vreg",
   "pt_refvcm",
   "pt_txpad_bias"
  ]

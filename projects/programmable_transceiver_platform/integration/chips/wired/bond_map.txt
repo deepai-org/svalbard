@@ -1,0 +1,80 @@
+# Bond map of pt_wired: all 74 sites of the fixed wafer.space COB layout (one wire per site, no down-bonds, no extra wires).
+# Columns: site  side  net  instance  note.  Site names and order: spec/contract.json assembly_policy.provider_site_inventory
+# (each side in template order). Fixed provider supply / ground sites keep their nets. A VDD / VSS bond on a signal site
+# (instance pad_xvdd_* / pad_xvss_*: provider supply cell at that site) has no COB 1 uF capacitor: 8.1-8.7 nH to the first
+# capacitor against 4.0-4.6 nH on a provider supply finger. Checked by integration/chips/check_top.py (bond) and
+# verification/check_contract.py (per-chip bond ledger). South / north rows (host link, SPI, debug, ATB) are the same on both chips.
+dvdd_pads[5].pad west  VDD        pad_dvdd_5         provider supply site (fixed)
+dvss_pads[7].pad west  VSS        pad_dvss_7         provider supply site (fixed)
+vdd_pads[1].pad  west  VDD        pad_vdd_1          provider supply site (fixed)
+vss_pads[1].pad  west  VSS        pad_vss_1          provider supply site (fixed)
+inputs[11].pad   west  VSS        pad_xvss_0         ground
+inputs[10].pad   west  VSS        pad_xvss_1         ground
+inputs[9].pad    west  WMON       pad_wmon
+inputs[8].pad    west  VSS        pad_xvss_2         ground
+inputs[7].pad    west  TLP_TEST   pad_tlp            TLP/ESD test site (D5)
+inputs[6].pad    west  VSS        pad_xvss_3         ground
+dvdd_pads[4].pad west  VDD        pad_dvdd_4         provider supply site (fixed)
+dvss_pads[6].pad west  VSS        pad_dvss_6         provider supply site (fixed)
+inputs[5].pad    west  AUX_CLK_P  pad_aux_clk        forwarded wire clock + aux clock
+inputs[4].pad    west  AUX_CLK_N  pad_aux_clk
+inputs[3].pad    west  REF_IN     pad_ref            reference
+inputs[2].pad    west  REF_IN_N   pad_ref
+dvdd_pads[3].pad west  VDD        pad_dvdd_3         provider supply site (fixed)
+dvss_pads[5].pad west  VSS        pad_dvss_5         provider supply site (fixed)
+inputs[1].pad    west  VSS        pad_xvss_4         ground
+inputs[0].pad    west  VDD        pad_xvdd_0         supply
+dvdd_pads[0].pad east  VDD        pad_dvdd_0         provider supply site (fixed)
+dvss_pads[1].pad east  VSS        pad_dvss_1         provider supply site (fixed)
+bidir[14].pad    east  WIRE_RX_N  pad_hs_rx
+bidir[15].pad    east  WIRE_RX_P  pad_hs_rx
+bidir[16].pad    east  POR_BYPASS pad_por_bypass    
+bidir[17].pad    east  VSS        pad_xvss_5         HS driver ground between WIRE_RX and USB
+bidir[18].pad    east  USB_DN     pad_usb
+bidir[19].pad    east  USB_DP     pad_usb
+dvdd_pads[1].pad east  VDD        pad_dvdd_1         provider supply site (fixed)
+dvss_pads[2].pad east  VSS        pad_dvss_2         provider supply site (fixed)
+bidir[20].pad    east  WIRE_TX_N  pad_wire_tx
+bidir[21].pad    east  WIRE_TX_P  pad_wire_tx
+bidir[22].pad    east  VSS        pad_xvss_6         HS driver ground between WIRE_TX and WTX_EXT
+bidir[23].pad    east  WTX_EXT_P  pad_wtx_ext        fallback external serial data
+bidir[24].pad    east  WTX_EXT_N  pad_wtx_ext
+bidir[25].pad    east  VDD        pad_xvdd_1         HS driver (wired_tx island) supply next to vss_pads[0] / vdd_pads[0]
+vss_pads[0].pad  east  VSS        pad_vss_0          provider supply site (fixed)
+vdd_pads[0].pad  east  VDD        pad_vdd_0          provider supply site (fixed)
+dvss_pads[3].pad east  VSS        pad_dvss_3         provider supply site (fixed)
+dvdd_pads[2].pad east  VDD        pad_dvdd_2         provider supply site (fixed)
+analog[1].pad    north ATB1       atb1_io           
+analog[0].pad    north ATB0       atb0_io           
+bidir[39].pad    north DBG_OBS1   debug_pads        
+bidir[38].pad    north DBG_OBS0   debug_pads        
+bidir[37].pad    north CLK_OBS    debug_pads        
+bidir[36].pad    north H2D[9]     host              
+bidir[35].pad    north H2D[8]     host              
+bidir[34].pad    north H2D_CLK    host              
+dvss_pads[4].pad north VSS        pad_dvss_4         provider supply site (fixed)
+bidir[33].pad    north H2D[7]     host              
+bidir[32].pad    north H2D[6]     host              
+bidir[31].pad    north H2D[5]     host              
+bidir[30].pad    north H2D[4]     host              
+bidir[29].pad    north H2D[3]     host              
+bidir[28].pad    north H2D[2]     host              
+bidir[27].pad    north H2D[1]     host              
+bidir[26].pad    north H2D[0]     host              
+clk_pad          south D2H[0]     host              
+rst_n_pad        south RESET_N    host              
+bidir[0].pad     south D2H[1]     host              
+bidir[1].pad     south D2H[2]     host              
+bidir[2].pad     south D2H[3]     host              
+bidir[3].pad     south D2H[4]     host              
+bidir[4].pad     south D2H[5]     host              
+bidir[5].pad     south D2H_CLK    host              
+dvss_pads[0].pad south VSS        pad_dvss_0         provider supply site (fixed)
+bidir[6].pad     south D2H[6]     host              
+bidir[7].pad     south D2H[7]     host              
+bidir[8].pad     south D2H[8]     host              
+bidir[9].pad     south D2H[9]     host              
+bidir[10].pad    south SPI_CS_N   host              
+bidir[11].pad    south SPI_SCLK   host              
+bidir[12].pad    south SPI_MOSI   host              
+bidir[13].pad    south SPI_MISO   host              

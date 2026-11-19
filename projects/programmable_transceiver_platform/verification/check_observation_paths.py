@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Assembled-RTL check of every mapped observation selection.
+"""Chip: PT_CHIP=rf|wired (default rf; integration/chips/<chip>/generated/pt_chip.sv).
+Assembled-RTL check of every mapped observation selection.
 
 For each spec/debug-controls.json:block_observation entry this generates a
 pt_chip test (provider pad models, real SPI) that resets the chip, programs
@@ -312,7 +313,7 @@ def main():
         cases = negative(cases, a.negative)
     tb = out/'tb_observation_paths.sv'
     tb.write_text(testbench(cases))
-    sources = [tb, PROJECT/'integration/pt_chip.sv', PROJECT/'integration/pt_provider_io.sv',
+    sources = [tb, PROJECT/f"integration/chips/{__import__('os').environ.get('PT_CHIP', 'rf')}/generated/pt_chip.sv", PROJECT/'integration/pt_provider_io.sv',
                *sorted((PROJECT/'rtl').glob('*.sv'))]
     compile_result = subprocess.run(['iverilog', '-g2012', '-Dfunctional', '-DPT_EXTERNAL_IO', '-I', str(PROJECT/'rtl'),
                                      '-s', 'tb_observation_paths', '-o', str(out/'paths.vvp'), *map(str, sources),

@@ -3,7 +3,7 @@
 ctl_ports.txt + the analog owners' pin files (not from the RTL)."""
 import json, re, random, sys
 from pathlib import Path
-P = Path(__file__).resolve().parents[2] if "decode_table" in str(Path(__file__).resolve()) else Path("/home/ubuntu/svalbard/projects/programmable_transceiver_platform"); TOP = P/"integration/top"
+P = Path(__file__).resolve().parents[2] if "decode_table" in str(Path(__file__).resolve()) else Path("/home/ubuntu/svalbard/projects/programmable_transceiver_platform"); TOP = P/"integration/chips"
 reg = json.loads((P/'spec/register-map.json').read_text())
 rf = (P/'rtl/pt_regfile.sv').read_text()
 FIELDS = [f for f in reg['fields'] if re.search(r'reg\[(\d+):0\]s_%s[,;]' % f['sv'], rf)]

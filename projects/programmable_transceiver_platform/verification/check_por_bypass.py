@@ -71,14 +71,15 @@ def main():
 
 
 def chip():
-    """G3 closure tripwire: fails while the chip top still ties the strap to a constant."""
-    top = (PROJECT/'integration/pt_chip.sv').read_text()
-    m = re.search(r'\.por_bypass\((\w+)\)', top)
-    if not m:
-        sys.exit('POR_BYPASS_CHIP_FAIL: pt_digital_macro.por_bypass is not connected in pt_chip.sv')
-    if re.search(r'wire\s+%s\s*=\s*1\'b[01]' % m[1], top) or re.fullmatch(r"1'b[01]", m[1]):
-        sys.exit(f'POR_BYPASS_CHIP_FAIL: pt_chip.sv ties {m[1]} to a constant: no strap pad is bound (interface row DT-10), G3 is open')
-    print('POR_BYPASS_CHIP_PASS strap bound to', m[1])
+    """G3 closure tripwire, per chip: fails while a chip top still ties the strap to a constant."""
+    for c in ('rf', 'wired'):
+        top = (PROJECT/f'integration/chips/{c}/generated/pt_chip.sv').read_text()
+        m = re.search(r'\.por_bypass\((\w+)\)', top)
+        if not m:
+            sys.exit(f'POR_BYPASS_CHIP_FAIL: pt_{c}: pt_digital_macro.por_bypass is not connected in pt_chip.sv')
+        if re.search(r'wire\s+%s\s*=\s*1\'b[01]' % m[1], top) or re.fullmatch(r"1'b[01]", m[1]):
+            sys.exit(f'POR_BYPASS_CHIP_FAIL: pt_{c}: pt_chip.sv ties {m[1]} to a constant: no strap pad is bound (interface row DT-10), G3 is open')
+        print(f'POR_BYPASS_CHIP_PASS pt_{c}: strap bound to', m[1])
 
 
 if __name__ == '__main__':

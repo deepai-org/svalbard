@@ -134,3 +134,13 @@ scratch/rf_rx/close/*.json -> generated/lna-evidence.json. Earlier stage outputs
   rxmix / bb_tap / chain / summary regenerated. Review 5 brief: scratch/review-lna5/BRIEF.md.
 - NEXT: (1) R+C netlist debug; (2) Monte Carlo; (3) S11 ff and IIP3 misses: less pad-side C (pads ESD option A may give it back) or
   accept; (4) bypass path resize decision; (5) lumped-rail LF rows: more vg filtering does not remove the 0.9 nF + island case.
+
+## Round 3 (pt_rf after the split, started 2026-11-19)
+Declared before any run of this round (not to be moved):
+- Ground model (analog/rf_rx/pkg_rf.py): known answer = the same model on the OLD map within 2 dB / 20 % of the pads owner's B model
+  (bounce conversion / |Z(die VSS)|); negative control (RFNC, no coupling into the RX wires) below -80 dB.
+- stab_rf (lna_close.py): limits of stab_b unchanged: mu > 1, K > 1, Re(Zdiff) >= 1.0, Re(Zcm) >= 1.0 ohm, 5 MHz-30 GHz, die-VSS
+  referenced sources; the 5-8 GHz common-mode minimum is reported separately. OLD_* and LNA-off rows are same-bench references.
+- R+C extraction: usable only if its DC supply current is within 2 % of the C-only extraction at tt and the four tail / bias node
+  voltages within 20 mV; negative control: the C-only netlist with one bias resistor opened must fail the same comparison.
+- IIP3 >= -10 dBm, S11 <= -10 dB, chain NF <= 4.1 dB DSB: limits as in round 1/2.

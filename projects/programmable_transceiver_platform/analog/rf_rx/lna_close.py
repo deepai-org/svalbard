@@ -190,17 +190,19 @@ print gb vb
                 bounce_to_input_referred_db=20 * math.log10(r))
 
 
-def stab_b():
+def stab_b(px='B', name='stab_b', extra=()):
     """Round 2 (coordinator 2026-11-18): the decided bond map = site option B.  Pads owner's coupled model, three bounds, supply cases
-    incl. the low-loss / low-decap ones of review 4, RX and duplex bias, both sweeps (5 MHz-1 GHz at 400 / decade, 0.1-30 GHz)."""
+    incl. the low-loss / low-decap ones of review 4, RX and duplex bias, both sweeps (5 MHz-1 GHz at 400 / decade, 0.1-30 GHz).
+    px / name: model prefix and output (stab_rf: the pt_rf bond map, analog/rf_rx/pkg_rf.py)."""
     sup = (dict(), dict(cdie=3e-9, rdie=0.03, rsw=0.2), dict(cdie=5.4e-9, rdie=0.1, rsw=0.3), dict(cdie=0.9e-9, rdie=0.03, rsw=0.2, cdec=500e-12))
-    cases = [(m, FF, 'lowr', lob, k) for m in ('B_min', 'B_nom', 'B_max') for k in sup for lob in (False, True)]
-    cases += [('B_nom', c, None, lob, sup[1]) for c in (NOM, SS, ('sf', 22, 3.35), ('fs', 22, 3.35), ('ff', 22, 3.35)) for lob in (False, True)]
-    cases += [('B_max', FF, 'lowr', False, dict(sup[1], att=63)), ('B_max', FF, 'lowr', False, dict(sup[1], mode='bypass')), ('B_max', FF, 'lowr', False, dict(sup[1], ct=0)),
-              ('B_max', FF, 'lowr', False, dict(sup[1], ct=15))]
+    cases = [(f'{px}_{b}', FF, 'lowr', lob, k) for b in ('min', 'nom', 'max') for k in sup for lob in (False, True)]
+    cases += [(f'{px}_nom', c, None, lob, sup[1]) for c in (NOM, SS, ('sf', 22, 3.35), ('fs', 22, 3.35), ('ff', 22, 3.35)) for lob in (False, True)]
+    cases += [(f'{px}_max', FF, 'lowr', False, dict(sup[1], att=63)), (f'{px}_max', FF, 'lowr', False, dict(sup[1], mode='bypass')), (f'{px}_max', FF, 'lowr', False, dict(sup[1], ct=0)),
+              (f'{px}_max', FF, 'lowr', False, dict(sup[1], ct=15))]
+    cases += list(extra)
     def one(i, m, c, dg, lob, k):
         out = dict(model=m, corner=c, degeneration_model=dg or 'nom', lobias=lob, case=k)
-        wd = OUT / 'stab_b' / f'c{i:02d}'
+        wd = OUT / name / f'c{i:02d}'
         tb.set_lobias(lob)
         try:
             for tag, sw in (('lf', dict(f1=5e6, f2=1e9, ppd=400)), ('hf', dict())):
@@ -223,7 +225,17 @@ def stab_b():
             out['pass_common_mode'] = bool(out['min_re_cm_ohm'] >= LIM['re_cm_ohm'])
             out['pass_common_mode_5mhz_8ghz'] = bool(out['min_re_cm_ohm_5mhz_8ghz'] >= LIM['re_cm_ohm'])
         return out
-    save('stab_b', par([(lambda i=i, c_=c_: one(i, *c_)) for i, c_ in enumerate(cases)]))
+    save(name, par([(lambda i=i, c_=c_: one(i, *c_)) for i, c_ in enumerate(cases)]))
+
+
+def stab_rf():
+    """pt_rf bond map (D-SPLIT-RFGND): the stab_b matrix on generated/pkg-rf-bond-model.spice (all west bonds coupled, the nine extra
+    ground bonds on signal fingers), plus same-bench references: the old single-chip map in the same model (OLD_*) and the disabled LNA."""
+    import pkg_rf
+    LM.PKG_MODEL = pkg_rf.OUTF
+    s1 = dict(cdie=3e-9, rdie=0.03, rsw=0.2)
+    ref = [(m, FF, 'lowr', False, s1) for m in ('OLD_min', 'OLD_nom', 'OLD_max')] + [(m, FF, 'lowr', False, dict(s1, mode='off')) for m in ('RF_nom', 'OLD_nom')]
+    stab_b('RF', 'stab_rf', ref)
 
 
 def startup(model='B_max', corner=FF, kind='enable', lob=False, tstop=16e-6):
@@ -461,4 +473,4 @@ def write():
 
 
 if __name__ == '__main__':
-    {'currents': currents, 'stab': stab, 'stab_extra': stab_extra, 'stab_lf': stab_lf, 'band': band, 'chain': chain, 'pkg': pkg, 'stab_b': stab_b, 'startup': startup_all, 'neg': neg, 'write': write}[sys.argv[1]]()
+    {'currents': currents, 'stab': stab, 'stab_extra': stab_extra, 'stab_lf': stab_lf, 'band': band, 'chain': chain, 'pkg': pkg, 'stab_b': stab_b, 'stab_rf': stab_rf, 'startup': startup_all, 'neg': neg, 'write': write}[sys.argv[1]]()

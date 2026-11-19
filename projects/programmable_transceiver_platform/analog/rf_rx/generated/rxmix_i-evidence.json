@@ -2,20 +2,20 @@
  "block": "rxmix_i",
  "top_cell": "pt_rxmix_i",
  "source_hashes": {
-  "rxmix_i.spice": "sha256:b13199310e3bf6a8a4ded608d0bba1d8f61b0162c306b1c84a1ce2e40893390f",
-  "netlists.py": "sha256:8970c3f2053764293d83fd8bc8594a46ce034bf9da4482fbaf2c901ed0e3e4d7",
-  "rfrx_flow.py": "sha256:c95720b6e4fada3bcf478c3e5559efc5c938169f08421996760c8ea656bc7aaa",
+  "rxmix_i.spice": "sha256:3f42e31712b443a8f6e74e051cd3e71fcdb17103c5f3ed15351f0848977b2ef0",
+  "netlists.py": "sha256:6f9a5d5b26aeb41d0605c253d5889fb55f6fe933616a2cad17afee1c695fd58c",
+  "rfrx_flow.py": "sha256:63672f98151199b105229b7fe9eac98adbd827bd04a6c9928d1c394122fb8537",
   "lna_layout.py": "sha256:2eca16a78bbd49b95ffc82dfedc22e077d943776a5023a6374f892bdae39886b"
  },
  "artifact_hashes": {
-  "rxmix_i.gds": "sha256:bc92bfbca1d7b90f0e22563a511c91f239e283bffb3b8a0151207970a2506222",
-  "rxmix_i.mag": "sha256:c15a8e31ae56f128e0de57660939c66ef92024d35a939e6cff88f8d4cc8feb17",
-  "rxmix_i.ext.spice": "sha256:96dbb322ed2a723764dd63452ba27fe937911ebcda004d83f5a107251f726161",
-  "rxmix_i-lvs.txt": "sha256:3af54a0a325f30a2a6ee71eb4dbfa0badb80390e0242a7034996231c08c52e33"
+  "rxmix_i.gds": "sha256:5a3d0feff93ca13b598212c4dad1093ee0c27c5e06e10ae0b0979c7393126608",
+  "rxmix_i.mag": "sha256:450d635b15e90bed6c2191d65eff64320b74e1e6a7dbcc7d37773d04f263f11e",
+  "rxmix_i.ext.spice": "sha256:559fced4bb7d7751d0d1a4e4e38d49da33c2230214c46d2867ef2ad27901aaa1",
+  "rxmix_i-lvs.txt": "sha256:fdc11d7ca9a0c4613a295de9995bb2d38bb012608d95faeaf9f3d8e3cba9db34"
  },
  "simulated_netlist_sha256": {
-  "rxmix_i.ext.spice": "sha256:96dbb322ed2a723764dd63452ba27fe937911ebcda004d83f5a107251f726161",
-  "rxmix_i.spice": "sha256:b13199310e3bf6a8a4ded608d0bba1d8f61b0162c306b1c84a1ce2e40893390f"
+  "rxmix_i.ext.spice": "sha256:559fced4bb7d7751d0d1a4e4e38d49da33c2230214c46d2867ef2ad27901aaa1",
+  "rxmix_i.spice": "sha256:3f42e31712b443a8f6e74e051cd3e71fcdb17103c5f3ed15351f0848977b2ef0"
  },
  "layout_record_vs_disk": {
   "cell_files_differ": [],
@@ -35,9 +35,9 @@
    1.09,
    0.6,
    190.97,
-   275.16
+   279.72
   ],
-  "area_um2": 52131.0
+  "area_um2": 52997.0
  },
  "tests": {
   "safe": {
@@ -54,30 +54,30 @@
     },
     {
      "case": "island unpowered, en/island_off/LO (pll island) at 3.63 V, 27 C; rf nodes have no DC source (behind LNA MIM caps)",
-     "rail_current_a": 2.755288e-31,
-     "rf_pin_current_a": 1.444803e-32,
+     "rail_current_a": 3.24009e-31,
+     "rf_pin_current_a": 1.907318e-32,
      "control_current_a": 0.0,
      "forced_bb_current_a": null,
-     "bb_p_v": 5.31307e-26,
-     "bb_n_v": 5.31307e-26
+     "bb_p_v": 7.013954e-26,
+     "bb_n_v": 7.013953e-26
     },
     {
      "case": "same 85 C",
-     "rail_current_a": 1.376401e-29,
-     "rf_pin_current_a": 4.001716e-30,
+     "rail_current_a": 8.332078e-28,
+     "rf_pin_current_a": 3.182525e-31,
      "control_current_a": 0.0,
      "forced_bb_current_a": null,
-     "bb_p_v": -1.60246e-23,
-     "bb_n_v": -1.55189e-23
+     "bb_p_v": -1.59541e-24,
+     "bb_n_v": -8.79889e-25
     },
     {
      "case": "same 0 C",
-     "rail_current_a": 8.000994e-31,
-     "rf_pin_current_a": 3.991736e-33,
+     "rail_current_a": 1.083461e-30,
+     "rf_pin_current_a": 3.908315e-33,
      "control_current_a": 0.0,
      "forced_bb_current_a": null,
-     "bb_p_v": 8.895292e-25,
-     "bb_n_v": -8.64403e-25
+     "bb_p_v": 6.953189e-25,
+     "bb_n_v": -6.67932e-25
     }
    ],
    "notes": "LO drives only NMOS gates (no junction to the pll island). OTA outputs high-Z when off."
@@ -104,11 +104,11 @@
    },
    "extracted_nominal": {
     "condition": "tt 27 C 3.3 V, extracted with parasitic C",
-    "conversion_gain_db": 24.3568489193988,
-    "bb_tone_amp_v": 0.16513626056437936,
-    "bb_pp_v": 0.331255,
-    "bb_offset_v": -0.0264553,
-    "idd_a": 0.00455966,
+    "conversion_gain_db": 24.43747650126477,
+    "bb_tone_amp_v": 0.16667629000284692,
+    "bb_pp_v": 0.334133,
+    "bb_offset_v": -0.0251384,
+    "idd_a": 0.00504319,
     "vcm_v": 1.61424,
     "rf_amp_diff_v": 0.01,
     "if_hz": 5000000.0,
@@ -120,10 +120,10 @@
    "offset_dac": {
     "pins": "ofs0..ofs4 (magnitude), ofs_sign",
     "calibration_nominal": {
-     "raw_offset_v": -0.0264555,
-     "lsb_v": -0.0050134375,
+     "raw_offset_v": -0.0251393,
+     "lsb_v": -0.0050051625,
      "code": -5,
-     "residual_v": -0.00182617
+     "residual_v": -0.000549788
     }
    },
    "atb_taps": [
@@ -169,21 +169,21 @@
   {
    "metric": "conversion gain, 300 ohm/leg source, 2.4 GHz ideal square LO, 5 MHz IF (dB)",
    "target": "> 0 (arch, voltage)",
-   "extracted_nominal": 24.3568489193988,
-   "schematic_nominal": 24.392630853389367,
+   "extracted_nominal": 24.43747650126477,
+   "schematic_nominal": 24.457117795697286,
    "pass": true
   },
   {
    "metric": "same with the LO as delivered (differential sine on 2.44 V, tb.LO_REAL): tt 27 C 3.3 V at +-0.37 V (ext_best_1v16) / ss 32 C 3.15 V at +-0.26 V (cml_1v05) (dB)",
    "target": "> 0 (arch, voltage)",
    "extracted_nominal": [
-    21.47008677339261,
-    19.430308436053025
+    21.48063552084683,
+    19.440235263932816
    ],
-   "loss_vs_ideal_square_lo_tt_db": 2.886762146006191,
+   "loss_vs_ideal_square_lo_tt_db": 2.9568409804179403,
    "supply_ma": [
-    4.59199,
-    4.24923
+    5.0755,
+    4.6974
    ],
    "errors": [],
    "note": null,
@@ -192,15 +192,15 @@
   {
    "metric": "supply current, RX state (hib = 1: extra TIA OTA tail on) (mA)",
    "target": "<= 6.2 (power_budget.py RF_EVIDENCE_MA rxmix 6.11)",
-   "extracted_nominal": 4.55966,
+   "extracted_nominal": 5.04319,
    "pass": true
   },
   {
    "metric": "supply current / conversion gain, duplex state (hib = 0: base tail 1.2 mA each) (mA, dB)",
    "target": "<= 3.1 mA (power_budget.py RXMIX_DUPLEX_MA); gain within 1 dB of the RX state",
    "extracted_nominal": [
-    3.01287,
-    23.694506150349742
+    3.0130299999999997,
+    23.697404374025822
    ],
    "pass": true
   },
@@ -214,15 +214,15 @@
    "metric": "TIA output offset raw / after FPGA calibration with the offset DAC (V); DAC LSB (V)",
    "target": "|residual| < 10 mV referred to the filter input",
    "extracted_nominal": [
-    -0.0264555,
-    -0.00182617,
-    -0.0050134375
+    -0.0251393,
+    -0.000549788,
+    -0.0050051625
    ],
    "detail": {
-    "raw_offset_v": -0.0264555,
-    "lsb_v": -0.0050134375,
+    "raw_offset_v": -0.0251393,
+    "lsb_v": -0.0050051625,
     "code": -5,
-    "residual_v": -0.00182617
+    "residual_v": -0.000549788
    },
    "pass": true
   },
@@ -262,10 +262,10 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "raw_offset_v": -0.0271569,
-     "lsb_v": -0.005049212500000001,
+     "raw_offset_v": -0.0258094,
+     "lsb_v": -0.00504165,
      "code": -5,
-     "residual_v": -0.00237881,
+     "residual_v": -0.0010677,
      "pass": true
     },
     {
@@ -274,10 +274,10 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "raw_offset_v": -0.0247704,
-     "lsb_v": -0.0049617375000000005,
+     "raw_offset_v": -0.0235473,
+     "lsb_v": -0.004951224999999999,
      "code": -5,
-     "residual_v": -0.000377396,
+     "residual_v": 0.000814742,
      "pass": true
     },
     {
@@ -286,10 +286,10 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "raw_offset_v": -0.0312474,
-     "lsb_v": -0.0059714500000000005,
+     "raw_offset_v": -0.0297249,
+     "lsb_v": -0.0059660375,
      "code": -5,
-     "residual_v": -0.00197626,
+     "residual_v": -0.000468958,
      "pass": true
     },
     {
@@ -298,10 +298,10 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "raw_offset_v": -0.0281602,
-     "lsb_v": -0.005869675000000001,
+     "raw_offset_v": -0.026785,
+     "lsb_v": -0.005863637499999999,
      "code": -5,
-     "residual_v": 0.00066873,
+     "residual_v": 0.00202435,
      "pass": true
     },
     {
@@ -310,10 +310,10 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "raw_offset_v": -0.0220328,
-     "lsb_v": -0.004104125,
+     "raw_offset_v": -0.0208929,
+     "lsb_v": -0.0040917125000000006,
      "code": -5,
-     "residual_v": -0.00186951,
+     "residual_v": -0.000788873,
      "pass": true
     },
     {
@@ -322,10 +322,10 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "raw_offset_v": -0.0203377,
-     "lsb_v": -0.0040310125,
+     "raw_offset_v": -0.0193026,
+     "lsb_v": -0.0040123625,
      "code": -5,
-     "residual_v": -0.000502511,
+     "residual_v": 0.000457106,
      "pass": true
     },
     {
@@ -334,10 +334,10 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "raw_offset_v": -0.0263935,
-     "lsb_v": -0.00504625,
+     "raw_offset_v": -0.0250945,
+     "lsb_v": -0.0050409999999999995,
      "code": -5,
-     "residual_v": -0.00164041,
+     "residual_v": -0.000366606,
      "pass": true
     },
     {
@@ -346,10 +346,10 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "raw_offset_v": -0.0238616,
-     "lsb_v": -0.0049573875,
+     "raw_offset_v": -0.0226936,
+     "lsb_v": -0.004951262499999999,
      "code": -5,
-     "residual_v": 0.000508058,
+     "residual_v": 0.00165529,
      "pass": true
     },
     {
@@ -358,10 +358,10 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "raw_offset_v": -0.0275049,
-     "lsb_v": -0.0050518625000000004,
+     "raw_offset_v": -0.0261356,
+     "lsb_v": -0.0050420125,
      "code": -5,
-     "residual_v": -0.0027029,
+     "residual_v": -0.00138951,
      "pass": true
     },
     {
@@ -370,10 +370,10 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "raw_offset_v": -0.0253204,
-     "lsb_v": -0.0049626125000000005,
+     "raw_offset_v": -0.0240572,
+     "lsb_v": -0.00495025,
      "code": -5,
-     "residual_v": -0.000923189,
+     "residual_v": 0.0003017,
      "pass": true
     }
    ]
@@ -394,9 +394,9 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 24.459453383592415,
-     "idd_a": 0.00457928,
-     "bb_offset_v": -0.0271567,
+     "conversion_gain_db": 24.542664743905004,
+     "idd_a": 0.00506267,
+     "bb_offset_v": -0.0258086,
      "vcm_v": 1.63963,
      "pass": true
     },
@@ -406,9 +406,9 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 24.168281968721644,
-     "idd_a": 0.00449052,
-     "bb_offset_v": -0.0247704,
+     "conversion_gain_db": 24.246729328484484,
+     "idd_a": 0.00497036,
+     "bb_offset_v": -0.0235465,
      "vcm_v": 1.53919,
      "pass": true
     },
@@ -418,9 +418,9 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 24.561726658124318,
-     "idd_a": 0.00440717,
-     "bb_offset_v": -0.031257,
+     "conversion_gain_db": 24.71640897938876,
+     "idd_a": 0.00488051,
+     "bb_offset_v": -0.0297322,
      "vcm_v": 1.64176,
      "pass": true
     },
@@ -430,9 +430,9 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 24.19289703687955,
-     "idd_a": 0.00421812,
-     "bb_offset_v": -0.0281689,
+     "conversion_gain_db": 24.347934638675394,
+     "idd_a": 0.00466629,
+     "bb_offset_v": -0.0267907,
      "vcm_v": 1.54116,
      "pass": true
     },
@@ -442,9 +442,9 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 23.637732017774002,
-     "idd_a": 0.00470729,
-     "bb_offset_v": -0.0220319,
+     "conversion_gain_db": 23.648591169718422,
+     "idd_a": 0.00518444,
+     "bb_offset_v": -0.0208977,
      "vcm_v": 1.63576,
      "pass": true
     },
@@ -454,9 +454,9 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 23.378766109101832,
-     "idd_a": 0.00464228,
-     "bb_offset_v": -0.0203364,
+     "conversion_gain_db": 23.377403593274515,
+     "idd_a": 0.00512257,
+     "bb_offset_v": -0.0193003,
      "vcm_v": 1.53549,
      "pass": true
     },
@@ -466,9 +466,9 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 24.294424251721416,
-     "idd_a": 0.00464133,
-     "bb_offset_v": -0.0263987,
+     "conversion_gain_db": 24.368332460938493,
+     "idd_a": 0.00511822,
+     "bb_offset_v": -0.0250987,
      "vcm_v": 1.64231,
      "pass": true
     },
@@ -478,9 +478,9 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 23.95311116171417,
-     "idd_a": 0.00457466,
-     "bb_offset_v": -0.0238664,
+     "conversion_gain_db": 24.022284376369647,
+     "idd_a": 0.00505383,
+     "bb_offset_v": -0.0226973,
      "vcm_v": 1.54203,
      "pass": true
     },
@@ -490,9 +490,9 @@
       "temp_c": 22,
       "vdd_v": 3.35
      },
-     "conversion_gain_db": 24.562262256897505,
-     "idd_a": 0.00449797,
-     "bb_offset_v": -0.0275043,
+     "conversion_gain_db": 24.648648850932894,
+     "idd_a": 0.0049808,
+     "bb_offset_v": -0.0261339,
      "vcm_v": 1.63668,
      "pass": true
     },
@@ -502,9 +502,9 @@
       "temp_c": 32,
       "vdd_v": 3.15
      },
-     "conversion_gain_db": 24.294777784049973,
-     "idd_a": 0.00434824,
-     "bb_offset_v": -0.0253198,
+     "conversion_gain_db": 24.380521150644206,
+     "idd_a": 0.00481336,
+     "bb_offset_v": -0.0240555,
      "vcm_v": 1.53605,
      "pass": true
     }

@@ -150,9 +150,12 @@ endmodule
 `endif
 // rsel (D2H ping-pong read select, DG8-6) toggles on every load edge: before load edge m (hcore edge m)
 // it is m mod 2, the entry pt_d2h_pingpong overwrites at that same edge (written two hcore edges earlier).
-module pt_ddr_phase(input wire clk, rst_n, output reg load, output reg rsel);
+// run: 0 until the first edge after reset, one copy per lane (r9: one shared `run` flop fanned out into every
+// lane's hr_d and was the routed hddr worst path on both chips).
+module pt_ddr_phase(input wire clk, rst_n, output reg load, output reg rsel, output reg run);
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin load <= 1'b1; rsel <= 1'b0; end else begin load <= ~load; rsel <= rsel ^ load; end
+        if (!rst_n) begin load <= 1'b1; rsel <= 1'b0; run <= 1'b0; end
+        else begin load <= ~load; rsel <= rsel ^ load; run <= 1'b1; end
 endmodule
 
 // D2H ping-pong hand-over (DG8-6, hcore domain). The running XOR prefix P_k = w_0 ^ ... ^ w_k of the
@@ -219,12 +222,11 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] pp0, 
     // One load / nsel phase-flop pair per pin bit (timing 2026-11-11: per-2-bit groups had fanout 12
     // on `load`, TC4 hddr +0.004 ns against a 0.64 ns target).
     wire [9:0] load, rsel, nsel, lpq;
-    reg run;   // 0 until the first hddr edge after reset
-    always @(posedge ddr_clk or negedge rst_n) if (!rst_n) run <= 1'b0; else run <= 1'b1;
+    wire [9:0] run;   // per lane: 0 until the first hddr edge after reset
     genvar g;
     generate for (g = 0; g < 10; g = g + 1) begin : phases
-        pt_ddr_phase phase(.clk(ddr_clk), .rst_n(rst_n), .load(load[g]), .rsel(rsel[g]));
-        pt_ddr_nphase nphase(.clk(ddr_clk), .rst_n(nrst_n), .run(run), .phase(load[g]), .nsel(nsel[g]), .lp(lpq[g]));
+        pt_ddr_phase phase(.clk(ddr_clk), .rst_n(rst_n), .load(load[g]), .rsel(rsel[g]), .run(run[g]));
+        pt_ddr_nphase nphase(.clk(ddr_clk), .rst_n(nrst_n), .run(run[g]), .phase(load[g]), .nsel(nsel[g]), .lp(lpq[g]));
     end endgenerate
     // prefix: the ping-pong entry read at this load edge (rsel per bit group, from the bit's own phase cell)
     wire [39:0] prefix;
@@ -276,7 +278,7 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] pp0, 
         //    one rising edge earlier from the next state of x / f3 (x' = load ? prefix : x, f3' = load ? f3
         //    : x.P3) and lp, so the falling flop takes a register directly (no logic in the half period, like
         //    lp -> nsel).
-        wire s_r = lpq[gq] & run;
+        wire s_r = lpq[gq] & run[gq];
         wire lr_d = qr_d[gq] ^ (s_r ? x[gq+10] : f3[gq]);
         // load selects last (r9: load -> hr was the hddr worst path behind the ping-pong read mux): both
         // alternatives are computed from registers, the late-arriving phase only picks one.

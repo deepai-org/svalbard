@@ -684,5 +684,8 @@ def netgen_lvs(work, layout_spice, layout_cell, schematic_spice, schematic_cell,
     text = (Path(work) / out).read_text() if (Path(work) / out).exists() else ''
     final = text[text.rfind('Final result'):] if 'Final result' in text else text[-2000:]
     unique = 'Circuits match uniquely' in final or 'Netlists match uniquely' in final
-    return dict(unique_match=unique and 'mismatch' not in final.lower().replace('property errors', ''),
-                summary=final.strip()[:600], log=out)
+    # netgen prints "Circuits match uniquely." also when device W / L / multiplier differ ("Property errors were
+    # found"): a parameter error is not a match (WR11-7; same rule as wired_rx/wrx_flow.py lvs)
+    prop = 'property errors' in text.lower()
+    return dict(unique_match=unique and not prop and 'mismatch' not in final.lower(),
+                property_errors=prop, summary=final.strip()[:600], log=out)

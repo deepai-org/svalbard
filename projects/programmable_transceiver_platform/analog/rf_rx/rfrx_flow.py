@@ -24,6 +24,7 @@ Images (always --network none, bounded CPU/memory):
   ANALOG  hpretl/iic-osic-tools (pinned digest)     ngspice-46, /foss/pdks/gf180mcuD
 """
 import hashlib
+import os
 import json
 import math
 import re
@@ -789,7 +790,8 @@ def sim_header(corner='typical', temp=27):
             f'.lib {ANALOG_PDK}/libs.tech/ngspice/sm141064.ngspice res_{rc}\n'
             f'.lib {ANALOG_PDK}/libs.tech/ngspice/sm141064.ngspice mimcap_{rc}\n'
             f'.lib {ANALOG_PDK}/libs.tech/ngspice/sm141064.ngspice diode_{rc}\n'   # antenna diodes (extracted)
-            f'.option temp={temp} gmin=1e-12 reltol=1e-3\n')
+            f'.option temp={temp} gmin=1e-12 reltol=1e-3\n'
+            + (f'.param sw_stat_mismatch=1\n.option seed={os.environ["RFRX_MC_SEED"]}\n' if os.environ.get('RFRX_MC_SEED') else ''))
 
 
 def ngspice(work, deck, *, timeout=3600):

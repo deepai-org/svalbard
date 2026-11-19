@@ -168,8 +168,8 @@ def ota_lownoise():
     s = ota('pt_rfrx_otan', **OTAN)
     if OTAN_XTAIL:
         s.ports.insert(5, 'pdx')                      # pdx = 1: extra tail off
-        s.pmos('ts2', 'pd', 'VDD', OTAN_XTAIL / 3)    # supply switch (enable), extra tail
-        s.pmos('ts3', 'pdx', 'ts2', OTAN_XTAIL / 3)   # supply switch (hib), extra tail
+        s.pmos('ts2', 'pd', 'VDD', OTAN_XTAIL * OTAN_XTAIL_SW)    # supply switch (enable), extra tail
+        s.pmos('ts3', 'pdx', 'ts2', OTAN_XTAIL * OTAN_XTAIL_SW)   # supply switch (hib), extra tail
         s.pmos('tail', 'vbp', 'ts3', OTAN_XTAIL, 1., fw=OTAN['fw'])
     return s
 
@@ -182,6 +182,7 @@ def ota_lownoise():
 TIA_X = 2
 TIA_HIB = True                   # coordinator ruling 2026-11-19: the extra tail is switched by pin hib (on in RX, off in duplex)
 OTAN = dict(tail=240. * (1 if TIA_HIB else TIA_X), win=1200. * TIA_X, lin=1., wl=20., ll=2., w6=13.3, w7=80., cc=48., rz=1., fw=20.)
+OTAN_XTAIL_SW = 1.0      # supply-switch width / extra-tail width; was 1/3 (starved the extra tail: RX 4.56 mA, en 1.75 nV/rtHz; now 5.05 mA, 1.68)
 OTAN_XTAIL = 240. * (TIA_X - 1) if TIA_HIB else 0.   # > 0: hib-switched extra tail; adds the rxmix pin hib and the OTA pin pdx
 OTAF = dict(tail=16., win=30., wl=8., w6=36., w7=72., cc=12.2, rz=3., l2=.5)
 # PGA stage-1 OTA: OTAF with every device doubled and the same Miller cap (~2x GBW, +~0.45 mA per OTA)

@@ -9,7 +9,15 @@ MOS_LINE = re.compile(r'^X(\S+)(\s.*\s)(nfet_03v3|pfet_03v3)(\s.*)?$', re.I)
 
 
 def ngspice_netlist(text):
-    """PDK MOS models are binned .model cards: rewrite X<name> ... nfet_03v3 as M lines."""
+    """Netlist as handed to ngspice.  Round 3 (coordinator ruling): X instances of nfet_03v3 / pfet_03v3 are KEPT.  The corner libraries
+    load the PDK `fets_mm` wrappers (subckt nfet_03v3 ... -> m0 with delvto / mulu0 from agauss, gated by sw_stat_mismatch), so X
+    instances carry mismatch in Monte Carlo and are identical to the bare model at sw_stat_mismatch = 0.  The old rewrite to M lines
+    (kept as ngspice_netlist_mline for comparison) bypassed the wrappers: Monte Carlo on it shows no mismatch (mc_selftest.py)."""
+    return text if text.endswith('\n') else text + '\n'
+
+
+def ngspice_netlist_mline(text):
+    """Pre-round-3 behaviour: rewrite X<name> ... nfet_03v3 as M lines (bypasses the PDK mismatch wrappers)."""
     out = []
     for line in text.splitlines():
         m = MOS_LINE.match(line)

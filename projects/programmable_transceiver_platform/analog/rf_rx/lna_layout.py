@@ -250,7 +250,7 @@ class Lay:
         trunk = {}
         for n in sorted(nets, key=lambda n: (n not in POWER, -(span[n][1] - span[n][0]))):
             lo, hi = span[n]
-            w = wwidth(n) if n in WIDE else .4
+            w = wwidth(n) if n in WIDE else (PWR_W if n in POWER else .4)
             own = sorted({round(x, 2) for ri in chans[n] for x, m in self.channel_terms(ri) if m == n})
             med = own[len(own) // 2]
             cands = sorted(own, key=lambda x: abs(x - med)) + \

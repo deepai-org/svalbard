@@ -124,7 +124,9 @@ def audit_idac1(out, runtime, w, wave_path, regmap, controls, stop):
     header = wave_path.open().readline().split()
     column = {name: i for i, name in enumerate(header)}
     assert header[0] == 'time'
-    smu, pad, src = column['i(VSMU)'], column['v(ATB1)'], column['v(Xchip.Xanalog.IDAC1)']
+    experiment = json.loads((out/'experiment.json').read_text())
+    idac1_net = experiment['node_bindings'][str(atb_code)]
+    smu, pad, src = column['i(VSMU)'], column['v(ATB1)'], column['v('+experiment['voltage_probes'][idac1_net]+')']
     t = w[:, 0]
     completed, pending, measured, decoded = [], [], {}, []
     for index, c in enumerate(run):
@@ -179,7 +181,16 @@ def audit(out, wave_name, destination):
     assert identities(out, runtime['executable']) == runtime['artifact_hashes'], 'Runtime circuit changed'
     regmap_source = next(p for p in frozen if p.endswith('/spec/register-map.json'))
     regmap = json.loads((out/frozen[regmap_source]['path']).read_text())
-    expected_spi = {0: 0x5356, 8: 2, 9: regmap['map_hash16'], 10: 0x3737, 5: 0}
+    # Per chip (PT_CHIP split): the island status after all of the chip's enable groups are switched on is
+    # derived from spec/chips.json; the ABI version from the generated register model.
+    chips_source = next(p for p in frozen if p.endswith('/spec/chips.json'))
+    groups = json.loads((out/frozen[chips_source]['path']).read_text())['chips'][experiment['chip']]['enable_groups']
+    on = sum(1 << bit for bit in groups.values())
+    model_source = next(p for p in frozen if p.endswith('/rtl/gen/pt_regmap.py'))
+    abi = int(re.search(r'^ABI_VERSION = (0x[0-9a-fA-F]+)', (out/frozen[model_source]['path']).read_text(), re.M).group(1), 16)
+    debug_source = next(p for p in frozen if p.endswith('/spec/debug-controls.json'))
+    ident = int(json.loads((out/frozen[debug_source]['path']).read_text())['spi_abi']['id_register']['value'], 16)
+    expected_spi = {0: ident, 8: abi, 9: regmap['map_hash16'], 10: on | (on << 8), 5: 0}
     wave_path = out/wave_name
     before = wave_path.stat()
     w = np.loadtxt(wave_path, skiprows=1)
@@ -227,10 +238,7 @@ def audit(out, wave_name, destination):
         currents = {}
         for index, consumer in enumerate(experiment['current_probes']):
             values = w[mask, current_start+index]
-            if consumer == 'lc_vco_reserved':
-                assert np.max(np.abs(values)) < 1e-9
-            else:
-                assert np.min(values) >= 9e-6 and np.max(values) <= 11e-6, consumer
+            assert np.min(values) >= 9e-6 and np.max(values) <= 11e-6, consumer
             currents[consumer] = dict(min_a=float(np.min(values)), max_a=float(np.max(values)))
         completed.append(dict(check='normal reference and bank currents over 5 us',
                               vbg_min_v=float(np.min(vbg)), vbg_max_v=float(np.max(vbg)), currents=currents))
@@ -290,7 +298,7 @@ def audit(out, wave_name, destination):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output-dir', type=Path, default=ROOT/'scratch/core-bias-observation-checkpointed')
+    parser.add_argument('--output-dir', type=Path, required=True, help='a check_core_bias_observation.py output dir')
     parser.add_argument('--wave', default='wave.txt')
     parser.add_argument('--report', default='core-bias-audit.json')
     args = parser.parse_args()

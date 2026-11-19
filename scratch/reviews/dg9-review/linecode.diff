@@ -1,0 +1,59 @@
+diff --git a/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc b/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc
+index fae09ab3..73d1f191 100644
+--- a/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc
++++ b/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc
+@@ -170,7 +170,10 @@ set_multicycle_path 4 -setup -end -from [get_clocks hcore] -to $hr_regs
+ set_multicycle_path 3 -hold -end -from [get_clocks hcore] -to $hr_regs
+ # Ping-pong read select (pt_ddr_phase rsel): it changes only on load edges and is used only on the next load
+ # edge, two hddr periods later (proof: the rsel assertion in pt_d2h_gearbox, `ifdef FORMAL).
+-set rsel_regs [get_cells -of_objects [get_pins -hierarchical *host.gearbox.phases*.phase.rsel*/Q]]
++set rsel_regs {}
++foreach c [get_cells -hierarchical -quiet -filter "ref_name =~ *__dff*" *rsel*] {
++    if {[string match {*host.gearbox.phases*phase/rsel*} [get_full_name $c]]} { lappend rsel_regs $c }
++}
+ if {[llength $rsel_regs] != 10} {error "Expected 10 D2H ping-pong read-select flops ([llength $rsel_regs])"}
+ set_multicycle_path 2 -setup -from $rsel_regs -to [concat $gearbox_regs $hr_regs]
+ set_multicycle_path 1 -hold -from $rsel_regs -to [concat $gearbox_regs $hr_regs]
+diff --git a/projects/programmable_transceiver_platform/rtl/pt_linecode.sv b/projects/programmable_transceiver_platform/rtl/pt_linecode.sv
+index 7b729bec..83bf4005 100644
+--- a/projects/programmable_transceiver_platform/rtl/pt_linecode.sv
++++ b/projects/programmable_transceiver_platform/rtl/pt_linecode.sv
+@@ -62,7 +62,20 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
+     integer h;
+     always @* begin hit_off = 4'd0; for (h = 9; h >= 0; h = h - 1) if (hit[h]) hit_off = h[3:0]; end
+     reg [3:0] cand; reg cand_v;
+-    wire adopt = s1v && |hit && (!aligned || hit_off != off) && cand_v && cand == hit_off;
++    // r9 (wrx: hit -> priority encoder -> compare -> adopt -> cand / off enables was the wrx worst path):
++    // the compares hit_off == off / cand use registered one-hot copies of off and cand and their
++    // below-masks, so they no longer wait for the encoder: hit_off == v  <=>  hit[v] && no hit below v.
++    // The encoder only feeds the off / cand data inputs. Same decisions, same stream.
++    reg [9:0] off_oh, off_bl, cand_oh, cand_bl;   // one-hot of off / cand, mask of the offsets below it
++    wire [9:0] low = hit & (~hit + 10'd1);        // lowest hit, one-hot (= 1 << hit_off when |hit)
++    wire [9:0] low_bl = low - 10'd1;
++    wire any_hit = |hit;
++    wire eq_off  = |(hit & off_oh)  && !(|(hit & off_bl));
++    wire eq_cand = |(hit & cand_oh) && !(|(hit & cand_bl));
++    wire adopt = s1v && any_hit && (!aligned || !eq_off) && cand_v && eq_cand;
++`ifdef FORMAL
++    always @* if (any_hit) begin assert(eq_off == (hit_off == off)); assert(eq_cand == (hit_off == cand)); end
++`endif
+     wire deliver = s1v && s1ok && aligned && !adopt;
+     // ---- stage 2: decode four symbols, split in two clocks (timing closure 2026-11-11, wrx at 12.3 ns):
+     // 2a registers the per-symbol table lookups (k28, 5b/6b {ok, EDCBA}, K28 3b/4b, 3b/4b, the 4b group),
+@@ -136,12 +149,13 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
+     always @(posedge clk or negedge rst_n)
+         if (!rst_n) begin
+             R <= 72'd0; koh <= 10'd1; emit <= 1'b0; off <= 4'd0; aligned <= 1'b0; code_error <= 1'b0; cand <= 4'd0; cand_v <= 1'b0;
++            off_oh <= 10'd1; off_bl <= 10'd0; cand_oh <= 10'd1; cand_bl <= 10'd0;
+             v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0;
+         end else if (!en_r2) begin R <= 72'd0; koh <= 10'd1; emit <= 1'b0; aligned <= 1'b0; cand_v <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0; end
+         else begin
+-            if (adopt) begin off <= hit_off; aligned <= 1'b1; cand_v <= 1'b0; end
+-            else if (s1v && |hit && aligned && hit_off == off) cand_v <= 1'b0;
+-            else if (s1v && |hit) begin cand <= hit_off; cand_v <= 1'b1; end
++            if (adopt) begin off <= hit_off; off_oh <= low; off_bl <= low_bl; aligned <= 1'b1; cand_v <= 1'b0; end
++            else if (s1v && any_hit && aligned && eq_off) cand_v <= 1'b0;
++            else if (s1v && any_hit) begin cand <= hit_off; cand_oh <= low; cand_bl <= low_bl; cand_v <= 1'b1; end
+             v2a <= deliver; v2b <= v2a; v2 <= v2b;
+             R <= kept | (v2 ? ins : 72'd0);
+             emit <= v2 && !koh[0];

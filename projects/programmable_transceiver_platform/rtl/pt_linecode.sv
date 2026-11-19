@@ -62,7 +62,20 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
     integer h;
     always @* begin hit_off = 4'd0; for (h = 9; h >= 0; h = h - 1) if (hit[h]) hit_off = h[3:0]; end
     reg [3:0] cand; reg cand_v;
-    wire adopt = s1v && |hit && (!aligned || hit_off != off) && cand_v && cand == hit_off;
+    // r9 (wrx: hit -> priority encoder -> compare -> adopt -> cand / off enables was the wrx worst path):
+    // the compares hit_off == off / cand use registered one-hot copies of off and cand and their
+    // below-masks, so they no longer wait for the encoder: hit_off == v  <=>  hit[v] && no hit below v.
+    // The encoder only feeds the off / cand data inputs. Same decisions, same stream.
+    reg [9:0] off_oh, off_bl, cand_oh, cand_bl;   // one-hot of off / cand, mask of the offsets below it
+    wire [9:0] low = hit & (~hit + 10'd1);        // lowest hit, one-hot (= 1 << hit_off when |hit)
+    wire [9:0] low_bl = low - 10'd1;
+    wire any_hit = |hit;
+    wire eq_off  = |(hit & off_oh)  && !(|(hit & off_bl));
+    wire eq_cand = |(hit & cand_oh) && !(|(hit & cand_bl));
+    wire adopt = s1v && any_hit && (!aligned || !eq_off) && cand_v && eq_cand;
+`ifdef FORMAL
+    always @* if (any_hit) begin assert(eq_off == (hit_off == off)); assert(eq_cand == (hit_off == cand)); end
+`endif
     wire deliver = s1v && s1ok && aligned && !adopt;
     // ---- stage 2: decode four symbols, split in two clocks (timing closure 2026-11-11, wrx at 12.3 ns):
     // 2a registers the per-symbol table lookups (k28, 5b/6b {ok, EDCBA}, K28 3b/4b, 3b/4b, the 4b group),
@@ -136,12 +149,13 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             R <= 72'd0; koh <= 10'd1; emit <= 1'b0; off <= 4'd0; aligned <= 1'b0; code_error <= 1'b0; cand <= 4'd0; cand_v <= 1'b0;
+            off_oh <= 10'd1; off_bl <= 10'd0; cand_oh <= 10'd1; cand_bl <= 10'd0;
             v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0;
         end else if (!en_r2) begin R <= 72'd0; koh <= 10'd1; emit <= 1'b0; aligned <= 1'b0; cand_v <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0; end
         else begin
-            if (adopt) begin off <= hit_off; aligned <= 1'b1; cand_v <= 1'b0; end
-            else if (s1v && |hit && aligned && hit_off == off) cand_v <= 1'b0;
-            else if (s1v && |hit) begin cand <= hit_off; cand_v <= 1'b1; end
+            if (adopt) begin off <= hit_off; off_oh <= low; off_bl <= low_bl; aligned <= 1'b1; cand_v <= 1'b0; end
+            else if (s1v && any_hit && aligned && eq_off) cand_v <= 1'b0;
+            else if (s1v && any_hit) begin cand <= hit_off; cand_oh <= low; cand_bl <= low_bl; cand_v <= 1'b1; end
             v2a <= deliver; v2b <= v2a; v2 <= v2b;
             R <= kept | (v2 ? ins : 72'd0);
             emit <= v2 && !koh[0];

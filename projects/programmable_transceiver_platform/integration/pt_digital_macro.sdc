@@ -170,7 +170,10 @@ set_multicycle_path 4 -setup -end -from [get_clocks hcore] -to $hr_regs
 set_multicycle_path 3 -hold -end -from [get_clocks hcore] -to $hr_regs
 # Ping-pong read select (pt_ddr_phase rsel): it changes only on load edges and is used only on the next load
 # edge, two hddr periods later (proof: the rsel assertion in pt_d2h_gearbox, `ifdef FORMAL).
-set rsel_regs [get_cells -of_objects [get_pins -hierarchical *host.gearbox.phases*.phase.rsel*/Q]]
+set rsel_regs {}
+foreach c [get_cells -hierarchical -quiet -filter "ref_name =~ *__dff*" *rsel*] {
+    if {[string match {*host.gearbox.phases*phase/rsel*} [get_full_name $c]]} { lappend rsel_regs $c }
+}
 if {[llength $rsel_regs] != 10} {error "Expected 10 D2H ping-pong read-select flops ([llength $rsel_regs])"}
 set_multicycle_path 2 -setup -from $rsel_regs -to [concat $gearbox_regs $hr_regs]
 set_multicycle_path 1 -hold -from $rsel_regs -to [concat $gearbox_regs $hr_regs]

@@ -11,6 +11,7 @@
  "rows": [
   {
    "id": "HL-RATE",
+   "chip": "both",
    "requirement": "312.5 Mb/s per pin, 10+1 pins/direction; framed wired rates at host word clock = line/8",
    "source": "spec/interface-requirements.md",
    "owner": "digital/hostio",
@@ -26,6 +27,7 @@
   },
   {
    "id": "HL-CORE",
+   "chip": "both",
    "requirement": "Core closes 78.125 MHz x 40 b and wired boundary line/40 across envelope",
    "source": "spec/interface-requirements.md",
    "owner": "digital",
@@ -41,6 +43,7 @@
   },
   {
    "id": "HL-D2H-MARGIN",
+   "chip": "both",
    "requirement": "D2H eye margin >= 0.15 UI at every in-envelope corner",
    "source": "spec/interface-requirements.md",
    "owner": "digital/hostio + board",
@@ -56,6 +59,7 @@
   },
   {
    "id": "HL-H2D-MARGIN",
+   "chip": "both",
    "requirement": "H2D capture margin >= 0.15 UI in envelope",
    "source": "spec/interface-requirements.md",
    "owner": "hostio",
@@ -71,11 +75,11 @@
   },
   {
    "id": "HL-SSO",
+   "chip": "both",
    "requirement": "Ground bounce <= 300 mV with 11 D2H outputs switching",
    "source": "spec/interface-requirements.md",
    "owner": "hostio + board",
-   "evidence": [
-    ],
+   "evidence": [],
    "status": "unverified",
    "basis": "supply-path simulations incomplete (evidence/supply-path-incomplete.json)",
    "primary_fix": "Tractable bank SSO sim; board HL-B4",
@@ -85,6 +89,7 @@
   },
   {
    "id": "HL-LATENCY",
+   "chip": "both",
    "requirement": "Command/response <= 400 ns (USB HS turnaround)",
    "source": "spec/interface-requirements.md",
    "owner": "digital",
@@ -98,6 +103,7 @@
   },
   {
    "id": "PWR-DIG-WIRED",
+   "chip": "wired",
    "requirement": "Digital macro <= 60 mA in wired/USB modes (SAIF-based)",
    "source": "spec/power-partition.md",
    "owner": "digital",
@@ -112,6 +118,7 @@
   },
   {
    "id": "PWR-DIG-RF",
+   "chip": "rf",
    "requirement": "Digital macro <= 40 mA in RF modes",
    "source": "spec/power-partition.md",
    "owner": "digital",
@@ -126,6 +133,7 @@
   },
   {
    "id": "PWR-HOST-RF",
+   "chip": "rf",
    "requirement": "RF modes run the host link at div2 (D2H always); exception: H2D full rate for GX-2 80 MS/s 12-bit TX, with D2H <= div2 (needs HB-4), else MODE8 at div2",
    "source": "spec/power-partition.md",
    "owner": "digital (recipe)",
@@ -139,6 +147,7 @@
   },
   {
    "id": "PWR-MODE-CEIL",
+   "chip": "both",
    "requirement": "Every primary mode within its current ceiling (240 RF / 292 wired-USB)",
    "source": "spec/power-partition.md",
    "owner": "spec (power)",
@@ -152,6 +161,7 @@
   },
   {
    "id": "PWR-DROP",
+   "chip": "both",
    "requirement": "Rail >= 3.15 V at die: total drop <= 117 mV",
    "source": "spec/power-partition.md",
    "owner": "spec (power) + integration",
@@ -168,6 +178,7 @@
   },
   {
    "id": "PWR-THERM",
+   "chip": "both",
    "requirement": "Tj 22-32 C over stopped-to-max mode step",
    "source": "spec/power-partition.md",
    "owner": "board + spec",
@@ -183,6 +194,7 @@
   },
   {
    "id": "WR-PCIE-BER",
+   "chip": "wired",
    "requirement": "2.5 GT/s BER 1e-12 at 95 % CL (3.0e12 bits)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + digital",
@@ -201,6 +213,7 @@
   },
   {
    "id": "WR-PCIE-JTOL",
+   "chip": "wired",
    "requirement": "2.5 GT/s jitter tolerance mask per standard",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
@@ -219,6 +232,7 @@
   },
   {
    "id": "WR-PCIE-PPM",
+   "chip": "wired",
    "requirement": "2.5 GT/s ppm offset + SSC",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
@@ -237,6 +251,7 @@
   },
   {
    "id": "WR-SATA-BER",
+   "chip": "wired",
    "requirement": "1.5 Gb/s BER 1e-12 at 95 % CL (3.0e12 bits)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + digital",
@@ -253,6 +268,7 @@
   },
   {
    "id": "WR-SATA-JTOL",
+   "chip": "wired",
    "requirement": "1.5 Gb/s jitter tolerance mask per standard",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
@@ -269,6 +285,7 @@
   },
   {
    "id": "WR-SATA-PPM",
+   "chip": "wired",
    "requirement": "1.5 Gb/s ppm offset + SSC",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
@@ -285,6 +302,7 @@
   },
   {
    "id": "WR-DP-BER",
+   "chip": "wired",
    "requirement": "1.62 Gb/s BER 1e-12 at 95 % CL (3.0e12 bits)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + digital",
@@ -301,6 +319,7 @@
   },
   {
    "id": "WR-DP-JTOL",
+   "chip": "wired",
    "requirement": "1.62 Gb/s jitter tolerance mask per standard",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
@@ -317,6 +336,7 @@
   },
   {
    "id": "WR-DP-PPM",
+   "chip": "wired",
    "requirement": "1.62 Gb/s ppm offset + SSC",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
@@ -333,6 +353,7 @@
   },
   {
    "id": "WR-SDI-BER",
+   "chip": "wired",
    "requirement": "1.485 Gb/s BER 1e-12 at 95 % CL (3.0e12 bits)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + digital",
@@ -349,6 +370,7 @@
   },
   {
    "id": "WR-SDI-JTOL",
+   "chip": "wired",
    "requirement": "1.485 Gb/s jitter tolerance mask per standard",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
@@ -365,6 +387,7 @@
   },
   {
    "id": "WR-SDI-PPM",
+   "chip": "wired",
    "requirement": "1.485 Gb/s ppm offset",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
@@ -381,6 +404,7 @@
   },
   {
    "id": "WR-GBE-BER",
+   "chip": "wired",
    "requirement": "1.25 GBd BER 1e-12 at 95 % CL (3.0e12 bits)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + digital",
@@ -399,6 +423,7 @@
   },
   {
    "id": "WR-GBE-JTOL",
+   "chip": "wired",
    "requirement": "1.25 GBd jitter tolerance mask per standard",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
@@ -417,6 +442,7 @@
   },
   {
    "id": "WR-GBE-PPM",
+   "chip": "wired",
    "requirement": "1.25 GBd ppm offset",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
@@ -435,6 +461,7 @@
   },
   {
    "id": "WR-PCIE-SSC",
+   "chip": "wired",
    "requirement": "0..-5000 ppm down-spread, 30-33 kHz tracked",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
@@ -451,6 +478,7 @@
   },
   {
    "id": "WR-SATA-SSC",
+   "chip": "wired",
    "requirement": "0..-5000 ppm down-spread, 30-33 kHz tracked",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
@@ -467,6 +495,7 @@
   },
   {
    "id": "WR-DP-SSC",
+   "chip": "wired",
    "requirement": "0..-5000 ppm down-spread, 30-33 kHz tracked",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
@@ -483,6 +512,7 @@
   },
   {
    "id": "WR-PCIE-TXSWING",
+   "chip": "wired",
    "requirement": "800-1200 mVppd",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
@@ -499,6 +529,7 @@
   },
   {
    "id": "WR-PCIE-TXJIT",
+   "chip": "wired",
    "requirement": "TJ <= 0.25 UI",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + timing",
@@ -515,6 +546,7 @@
   },
   {
    "id": "WR-PCIE-RL",
+   "chip": "wired",
    "requirement": "Diff RL >= 10 dB, CM >= 6 dB, 50 MHz-1.25 GHz",
    "source": "spec/interface-requirements.md",
    "owner": "pads + wired_rx/tx",
@@ -530,6 +562,7 @@
   },
   {
    "id": "WR-PAD-C",
+   "chip": "wired",
    "requirement": "Wired pad C <= 1.6 pF effective at 1.25 GHz",
    "source": "spec/interface-requirements.md",
    "owner": "pads",
@@ -543,6 +576,7 @@
   },
   {
    "id": "WR-SATA-TXSWING",
+   "chip": "wired",
    "requirement": "400-600 mVppd",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
@@ -558,6 +592,7 @@
   },
   {
    "id": "WR-SATA-OOB",
+   "chip": "wired",
    "requirement": "OOB squelch 50-200 mV, COMRESET/COMWAKE timing",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (detect)",
@@ -573,6 +608,7 @@
   },
   {
    "id": "WR-PCIE-DETECT",
+   "chip": "wired",
    "requirement": "Receiver detect + electrical idle",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx/wired_rx (detect)",
@@ -588,6 +624,7 @@
   },
   {
    "id": "WR-GBE-TXSWING",
+   "chip": "wired",
    "requirement": ">= 500 mVppd",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
@@ -604,6 +641,7 @@
   },
   {
    "id": "WR-TMDS-TXSWING",
+   "chip": "wired",
    "requirement": "TMDS 400-600 mV SE into 50 ohm to 3.3 V incl. ff clamp leakage",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx (tmds) + pads",
@@ -620,6 +658,7 @@
   },
   {
    "id": "WR-TMDS-BER",
+   "chip": "wired",
    "requirement": "TMDS RX/TX BER 1e-12 at 742.5 Mb/s and 1.485 Gb/s",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx",
@@ -637,6 +676,7 @@
   },
   {
    "id": "WR-SDI-TXSWING",
+   "chip": "wired",
    "requirement": "die >= 400 mVppd into board cable driver",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
@@ -652,6 +692,7 @@
   },
   {
    "id": "WR-USB-HSSWING",
+   "chip": "wired",
    "requirement": "HS 360-440 mV",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx (usbhs)",
@@ -668,6 +709,7 @@
   },
   {
    "id": "WR-USB-TURN",
+   "chip": "wired",
    "requirement": "HS turnaround <= 192 bit times (400 ns)",
    "source": "spec/interface-requirements.md",
    "owner": "digital + usbhs",
@@ -683,6 +725,7 @@
   },
   {
    "id": "WR-USB-FSLS",
+   "chip": "wired",
    "requirement": "FS edges 4-20 ns, LS 75-300 ns",
    "source": "spec/interface-requirements.md",
    "owner": "pads/usbdrive",
@@ -698,6 +741,7 @@
   },
   {
    "id": "WR-PLL-JIT",
+   "chip": "wired",
    "requirement": "Ring PLL RJ <= 2 ps rms, DJ <= 0.05 UI at 2.5 G",
    "source": "spec/interface-requirements.md",
    "owner": "timing (pll_ring)",
@@ -713,6 +757,7 @@
   },
   {
    "id": "WR-SER-DJ",
+   "chip": "wired",
    "requirement": "Serializer + pad DJ <= 0.15 UI",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
@@ -728,6 +773,7 @@
   },
   {
    "id": "WR-SLICER-OFFSET",
+   "chip": "wired",
    "requirement": "Sampler offset <= 10 mV after trim",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (slicer)",
@@ -743,6 +789,7 @@
   },
   {
    "id": "RF-WIFI-SENS",
+   "chip": "rf",
    "requirement": "MCS0 -82 dBm, MCS7 -64 dBm",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
@@ -760,6 +807,7 @@
   },
   {
    "id": "RF-WIFI-ACR",
+   "chip": "rf",
    "requirement": "Adjacent +16 dB (MCS0)",
    "source": "spec/interface-requirements.md",
    "owner": "converters (adc) + rf_rx filter",
@@ -775,6 +823,7 @@
   },
   {
    "id": "RF-WIFI-EVM",
+   "chip": "rf",
    "requirement": "TX EVM MCS0 -5 dB .. MCS7 -27 dB at >= -10 dBm mean",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -790,6 +839,7 @@
   },
   {
    "id": "RF-WIFI-MASK",
+   "chip": "rf",
    "requirement": "HE20 mask 0/-20/-28/-40 dBr",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -805,6 +855,7 @@
   },
   {
    "id": "RF-TX-ACLR",
+   "chip": "rf",
    "requirement": "ACLR <= -28 dBc",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -820,6 +871,7 @@
   },
   {
    "id": "RF-TX-HARM",
+   "chip": "rf",
    "requirement": "H2/H3 <= -40 dBc at pad",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -835,6 +887,7 @@
   },
   {
    "id": "RF-TX-POUT",
+   "chip": "rf",
    "requirement": "0 dBm constant envelope; >= -10 dBm OFDM mean",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -850,6 +903,7 @@
   },
   {
    "id": "RF-BLE-SENS",
+   "chip": "rf",
    "requirement": "-70 dBm",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
@@ -863,6 +917,7 @@
   },
   {
    "id": "RF-BLE-IBE",
+   "chip": "rf",
    "requirement": "In-band emissions -20 dBm @2 MHz, -30 dBm >=3 MHz",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -876,6 +931,7 @@
   },
   {
    "id": "RF-154-SENS",
+   "chip": "rf",
    "requirement": "-85 dBm",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
@@ -889,6 +945,7 @@
   },
   {
    "id": "RF-154-EVM",
+   "chip": "rf",
    "requirement": "EVM <= 35 %",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -904,6 +961,7 @@
   },
   {
    "id": "RF-BT-EDR",
+   "chip": "rf",
    "requirement": "DEVM <= 20 % / 13 %",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -919,6 +977,7 @@
   },
   {
    "id": "RF-RX-IIP3",
+   "chip": "rf",
    "requirement": "IIP3 >= -10 dBm at max gain",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
@@ -934,6 +993,7 @@
   },
   {
    "id": "RF-TX-IRR",
+   "chip": "rf",
    "requirement": "TX IRR >= 35 dB (>= 40 after cal)",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -949,6 +1009,7 @@
   },
   {
    "id": "RF-RX-IRR",
+   "chip": "rf",
    "requirement": "RX IRR >= 25 dB (>= 35 after cal)",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
@@ -962,6 +1023,7 @@
   },
   {
    "id": "RF-TX-MUTE",
+   "chip": "rf",
    "requirement": "Mute isolation >= 40 dB",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -975,6 +1037,7 @@
   },
   {
    "id": "RF-WIFI-LOLEAK",
+   "chip": "rf",
    "requirement": "LO leakage <= -30 dBc",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
@@ -988,6 +1051,7 @@
   },
   {
    "id": "RF-LO-JIT",
+   "chip": "rf",
    "requirement": "LO total <= 1.05 ps; I/Q skew <= 1.16 ps",
    "source": "spec/interface-requirements.md",
    "owner": "timing (lo_ext) + board",
@@ -1004,6 +1068,7 @@
   },
   {
    "id": "WR-SATA2-BER",
+   "chip": "wired",
    "requirement": "3.0 Gb/s BER 1e-12 at 95 % CL (3.0e12 bits)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + timing + digital",
@@ -1024,6 +1089,7 @@
   },
   {
    "id": "WR-SATA2-TXSWING",
+   "chip": "wired",
    "requirement": "Gen2i 400-700 mVppd",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
@@ -1040,6 +1106,7 @@
   },
   {
    "id": "WR-SATA2-TXJIT",
+   "chip": "wired",
    "requirement": "Gen2i TJ <= 0.37 UI, DJ <= 0.19 UI (fbaud/500)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + timing",
@@ -1056,6 +1123,7 @@
   },
   {
    "id": "WR-SATA2-JTOL",
+   "chip": "wired",
    "requirement": "Gen2i JTOL TJ 0.60 / DJ 0.42 UI",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
@@ -1073,6 +1141,7 @@
   },
   {
    "id": "WR-SATA2-RXSENS",
+   "chip": "wired",
    "requirement": "RX >= 275 mVppd",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (ctle, slicer)",
@@ -1090,6 +1159,7 @@
   },
   {
    "id": "WR-SATA2-RL",
+   "chip": "wired",
    "requirement": "Diff RL >= 8 dB to 2.4 GHz (>= 10 dB to 1.2 GHz)",
    "source": "spec/interface-requirements.md",
    "owner": "pads + wired_rx/tx",
@@ -1106,6 +1176,7 @@
   },
   {
    "id": "WR-DPHBR-TXJIT",
+   "chip": "wired",
    "requirement": "HBR TX TJ at TP2 per DP 1.2 (verify)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + timing",
@@ -1122,6 +1193,7 @@
   },
   {
    "id": "WR-DPHBR-JTOL",
+   "chip": "wired",
    "requirement": "HBR sink JTOL per DP CTS (verify)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
@@ -1139,6 +1211,7 @@
   },
   {
    "id": "WR-DPHBR-RL",
+   "chip": "wired",
    "requirement": "RX diff RL >= 10 dB to 1.35 GHz",
    "source": "spec/interface-requirements.md",
    "owner": "pads + wired_rx",
@@ -1154,6 +1227,7 @@
   },
   {
    "id": "WR-3G1-BER",
+   "chip": "wired",
    "requirement": "3.125 GBd BER 1e-12 at 95 % CL (XAUI lane / 2500BASE-X)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + timing + digital",
@@ -1175,6 +1249,7 @@
   },
   {
    "id": "WR-3G1-TXSWING",
+   "chip": "wired",
    "requirement": ">= 800 mVppd (XAUI 800-1600)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
@@ -1191,6 +1266,7 @@
   },
   {
    "id": "WR-3G1-TXJIT",
+   "chip": "wired",
    "requirement": "TJ <= 0.35 UI (112 ps), DJ <= 0.17 UI",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + timing",
@@ -1207,6 +1283,7 @@
   },
   {
    "id": "WR-3G1-JTOL",
+   "chip": "wired",
    "requirement": "RX TJ 0.65 / DJ 0.37 UI, corner 1.875 MHz",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
@@ -1224,6 +1301,7 @@
   },
   {
    "id": "WR-3G1-PPM",
+   "chip": "wired",
    "requirement": "+-100 ppm, no SSC",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
@@ -1241,6 +1319,7 @@
   },
   {
    "id": "WR-3G1-RL",
+   "chip": "wired",
    "requirement": "Diff RL >= 10 dB to 625 MHz, >= 6 dB at 1.5625 GHz",
    "source": "spec/interface-requirements.md",
    "owner": "pads + wired_rx/tx",
@@ -1257,6 +1336,7 @@
   },
   {
    "id": "WR-RATE-CONT",
+   "chip": "wired",
    "requirement": "Every line rate 0.48-3.24 Gb/s reachable on the primary route, no gaps",
    "source": "spec/interface-requirements.md",
    "owner": "timing (pll_ring) + wired_rx + wired_tx + digital (clocktree)",
@@ -1275,6 +1355,7 @@
   },
   {
    "id": "WR-RATE-EDGE",
+   "chip": "wired",
    "requirement": ">= 3 % margin at every band edge (ring <= 393 MHz and >= 834 MHz regulated)",
    "source": "spec/interface-requirements.md",
    "owner": "timing (pll_ring, pll_vreg) + wired_rx (samplers, wrx_cap) + wired_tx",
@@ -1292,6 +1373,7 @@
   },
   {
    "id": "WR-RATE-LOW",
+   "chip": "wired",
    "requirement": "Rates below 0.48 Gb/s via ring /2^k TX and FPGA oversampling / reduced-rate CDR",
    "source": "spec/interface-requirements.md",
    "owner": "digital (clocktree) + wired_rx",
@@ -1307,6 +1389,7 @@
   },
   {
    "id": "WR-HL-LINECODE",
+   "chip": "wired",
    "requirement": "Host link carries 3.0-3.24 Gb/s lines with >= 4 % margin: fixed 312.5 MHz host word clock, 8b/10b offload both directions, L=256 frames (HL-FRAME), reversible north bank RX2 for raw RX (HL-DIR)",
    "source": "spec/interface-requirements.md",
    "owner": "digital (wired boundary, transport) + hostio",
@@ -1325,6 +1408,7 @@
   },
   {
    "id": "RF-BLE-CODED-SENS",
+   "chip": "rf",
    "requirement": "LE Coded S=8 <= -82 dBm, S=2 <= -75 dBm (target -95 / -90)",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + FPGA demod",
@@ -1341,6 +1425,7 @@
   },
   {
    "id": "RF-BLE-CODED-CI",
+   "chip": "rf",
    "requirement": "LE Coded C/I co-channel 12 dB (S=8) / 17 dB (S=2), adjacent per table",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + converters",
@@ -1356,6 +1441,7 @@
   },
   {
    "id": "RF-BLE-CODED-PKT",
+   "chip": "rf",
    "requirement": "17.04 ms packets: gain/DC loop/LO stable; drift <= +-50 kHz",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + timing (LO) + digital (AGC)",
@@ -1372,6 +1458,7 @@
   },
   {
    "id": "RF-CS-HOP",
+   "chip": "rf",
    "requirement": "CS step hop: LO phase-settled (<= 2 deg) within T_FCS - 5 us; advertise T_FCS 80 us",
    "source": "spec/interface-requirements.md",
    "owner": "timing (rf PLL/QVCO, lo_ext) + board LO + digital",
@@ -1390,6 +1477,7 @@
   },
   {
    "id": "RF-CS-TIP",
+   "chip": "rf",
    "requirement": "TX<->RX direction change on same channel <= 30 us, LO phase-continuous (T_IP2 <= 40 us)",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx + rf_rx + timing + digital",
@@ -1406,6 +1494,7 @@
   },
   {
    "id": "RF-CS-PHASE",
+   "chip": "rf",
    "requirement": "Per-tone round-trip phase: <= 2 deg LO drift TX->RX tone, <= 5 deg rms random, <= 10 deg linear across band after cal",
    "source": "spec/interface-requirements.md",
    "owner": "timing (LO) + rf_rx + rf_tx",
@@ -1422,6 +1511,7 @@
   },
   {
    "id": "RF-CS-IQ",
+   "chip": "rf",
    "requirement": "IQ tone-phase error <= 1 deg (IRR >= 35 dB after cal) across 2402-2480 MHz",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + timing (LO I/Q trim) + FPGA cal",
@@ -1438,6 +1528,7 @@
   },
   {
    "id": "RF-CS-RTT",
+   "chip": "rf",
    "requirement": "Deterministic TX-launch -> RX-sample latency <= 5 ns rms; ToA <= 10 ns rms",
    "source": "spec/interface-requirements.md",
    "owner": "digital (scheduler, converters FIFO) + converters",
@@ -1453,6 +1544,7 @@
   },
   {
    "id": "RF-CS-ANT",
+   "chip": "rf",
    "requirement": "N_AP=1 first die; multi-antenna via FPGA-driven external switch, no chip pin",
    "source": "spec/interface-requirements.md",
    "owner": "board + FPGA",
@@ -1468,6 +1560,7 @@
   },
   {
    "id": "RF-CS-RANGE",
+   "chip": "rf",
    "requirement": "PBR <= 0.5 m rms, RTT <= 3 m rms (cabled 1-10 m equivalent)",
    "source": "spec/interface-requirements.md",
    "owner": "system (rf_rx + rf_tx + timing + FPGA)",
@@ -1485,6 +1578,7 @@
   },
   {
    "id": "RF-154-TURN",
+   "chip": "rf",
    "requirement": "RX<->TX turnaround <= 192 us (12 symbols); channel switch <= 500 us",
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx + rf_rx + digital",
@@ -1500,6 +1594,7 @@
   },
   {
    "id": "RF-154-CCA",
+   "chip": "rf",
    "requirement": "CCA/ED over 128 us, ED range >= 40 dB, +-6 dB",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + converters + digital",
@@ -1515,6 +1610,7 @@
   },
   {
    "id": "RF-154-FTOL",
+   "chip": "rf",
    "requirement": "TX frequency +-40 ppm",
    "source": "spec/interface-requirements.md",
    "owner": "timing (LO ref) + board",
@@ -1530,6 +1626,7 @@
   },
   {
    "id": "RF-THREAD-CSL",
+   "chip": "rf",
    "requirement": "CSL scheduled TX/RX with deterministic latency <= +-16 us; RX warm-up <= 100 us",
    "source": "spec/interface-requirements.md",
    "owner": "digital (scheduler) + rf_rx",
@@ -1545,6 +1642,7 @@
   },
   {
    "id": "RF-PROF-ZIGBEE",
+   "chip": "rf",
    "requirement": "Zigbee = RF-154-* profile, no new PHY demand",
    "source": "spec/interface-requirements.md",
    "owner": "spec",
@@ -1558,6 +1656,7 @@
   },
   {
    "id": "RF-PROF-MATTER",
+   "chip": "rf",
    "requirement": "Matter = Thread / Wi-Fi / BLE profile, no new PHY demand",
    "source": "spec/interface-requirements.md",
    "owner": "spec",
@@ -1571,6 +1670,7 @@
   },
   {
    "id": "RF-RX-MAXIN",
+   "chip": "rf",
    "requirement": "Max input: Wi-Fi -20 dBm mean, BLE -10 dBm, 15.4 -20 dBm without TIA/LNA clipping",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
@@ -1587,6 +1687,7 @@
   },
   {
    "id": "RF-RX-AGC",
+   "chip": "rf",
    "requirement": "Gain range >= 70 dB (>= 30 dB pre-filter, <= 6 dB steps); step settle <= 0.5 us; decision->gain <= 1 us; AGC <= 4 us",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + digital (opcode4) + FPGA",
@@ -1600,6 +1701,7 @@
   },
   {
    "id": "RF-RX-OVLD",
+   "chip": "rf",
    "requirement": "Pre-filter overload flag at TIA output within 0.2 us, in status + D2H stream",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + digital",
@@ -1611,6 +1713,7 @@
   },
   {
    "id": "RF-RX-RECOV",
+   "chip": "rf",
    "requirement": "Recovery <= 2 us after pulsed in-band blocker at every gain state",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
@@ -1622,6 +1725,7 @@
   },
   {
    "id": "RF-RX-DCOC",
+   "chip": "rf",
    "requirement": "DC offset at ADC <= 5 % FS at every PGA code used; dynamic offset <= 5 % FS",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + FPGA",
@@ -1635,6 +1739,7 @@
   },
   {
    "id": "RF-RX-IIP2",
+   "chip": "rf",
    "requirement": "IIP2 >= +47 dBm at max gain (or low-IF operation)",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
@@ -1646,6 +1751,7 @@
   },
   {
    "id": "RF-RX-FLICK",
+   "chip": "rf",
    "requirement": "Low-IF/zero-IF channel NF <= 5-9 MHz NF + 3 dB",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
@@ -1659,6 +1765,7 @@
   },
   {
    "id": "RF-RX-LOPN",
+   "chip": "rf",
    "requirement": "LO phase noise mask <= -107 dBc/Hz @3 MHz, -120 @40 MHz, -130 @>=100 MHz",
    "source": "spec/interface-requirements.md",
    "owner": "board (B35) + timing (future on-chip LO)",
@@ -1672,6 +1779,7 @@
   },
   {
    "id": "RF-RX-FREF",
+   "chip": "rf",
    "requirement": "LO and sample clock from one +-10 ppm reference; FPGA CFO range >= +-250 kHz",
    "source": "spec/interface-requirements.md",
    "owner": "board (B35) + FPGA",
@@ -1685,6 +1793,7 @@
   },
   {
    "id": "RF-RX-LOLEAK",
+   "chip": "rf",
    "requirement": "LO leakage at RF_RX <= -57 dBm (LO, 2LO)",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + assembly",
@@ -1698,6 +1807,7 @@
   },
   {
    "id": "RF-RX-SPUR",
+   "chip": "rf",
    "requirement": "CW spur <= -100 dBm input-referred on channels in use",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + assembly + digital (clock plan)",
@@ -1711,6 +1821,7 @@
   },
   {
    "id": "RF-RX-COEX",
+   "chip": "rf",
    "requirement": "Co-located LTE/NR/5 GHz Wi-Fi: desense <= 3 dB at +13 dBm with B34",
    "source": "spec/interface-requirements.md",
    "owner": "board (B34) + rf_rx",
@@ -1724,6 +1835,7 @@
   },
   {
    "id": "RF-RX-NFSYS",
+   "chip": "rf",
    "requirement": "System NF at antenna <= 8 dB incl. balun, match, T/R switch, coex filter at P2",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + board",
@@ -1737,6 +1849,7 @@
   },
   {
    "id": "RF-RX-ESD",
+   "chip": "rf",
    "requirement": "RF_RX: 2 kV HBM and +10 dBm CW survivable; board TVS for IEC +-8 kV",
    "source": "spec/interface-requirements.md",
    "owner": "pads + rf_rx + board (B36)",
@@ -1750,6 +1863,7 @@
   },
   {
    "id": "RF-RX-PSRR",
+   "chip": "rf",
    "requirement": "RX with board ripple (B37): spurs <= RF-RX-SPUR, desense <= 0.5 dB",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + board (B37)",
@@ -1763,6 +1877,7 @@
   },
   {
    "id": "RF-COEX-PTA",
+   "chip": "rf",
    "requirement": "3-wire PTA in FPGA; grant-to-mute <= 2 us",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + digital",
@@ -1774,6 +1889,7 @@
   },
   {
    "id": "WR-100TX-TXLVL",
+   "chip": "wired",
    "requirement": "100BASE-TX MLT-3 950-1050 mV peak, symmetry 0.98-1.02, overshoot <=5 % via MAIN+POST summed into the B39 network",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + pads + board (B39)",
@@ -1788,6 +1904,7 @@
   },
   {
    "id": "WR-100TX-TXSHAPE",
+   "chip": "wired",
    "requirement": "Rise/fall 3-5 ns, symmetry <=0.5 ns, 0-level cancellation residue <=1 % after the filter",
    "source": "spec/interface-requirements.md",
    "owner": "board (B39) + wired_tx",
@@ -1802,6 +1919,7 @@
   },
   {
    "id": "WR-100TX-TXJIT",
+   "chip": "wired",
    "requirement": "TX jitter <=1.4 ns pp (first die <=0.7 ns) at 125 MBd +/-50 ppm",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + FPGA",
@@ -1815,6 +1933,7 @@
   },
   {
    "id": "WR-100TX-RL",
+   "chip": "wired",
    "requirement": "TX/RX RL >=16 dB 2-30 MHz, 30-60 MHz slope, >=10 dB 60-80 MHz",
    "source": "spec/interface-requirements.md",
    "owner": "board (B38/B39) + pads",
@@ -1829,6 +1948,7 @@
   },
   {
    "id": "WR-100TX-RXEQ",
+   "chip": "wired",
    "requirement": "Operate 0-100 m Cat5 with NEXT: inner eye >=0.5 of outer level after EQ",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (CTLE)",
@@ -1842,6 +1962,7 @@
   },
   {
    "id": "WR-100TX-RXTH",
+   "chip": "wired",
    "requirement": "Two decision thresholds +/-90..+/-135 mV plus +/-50 mV DC-restore headroom (range >= +/-250 mV, LSB <=4 mV)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (slicer) + digital",
@@ -1855,6 +1976,7 @@
   },
   {
    "id": "WR-100TX-BLW",
+   "chip": "wired",
    "requirement": "Baseline wander incl. killer packet: residual after DC restore <= half-eye margin",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + digital + wired_rx",
@@ -1868,6 +1990,7 @@
   },
   {
    "id": "WR-100TX-CDR",
+   "chip": "wired",
    "requirement": "125 MBd +/-50 ppm recovered by 6x FPGA oversampling on two lanes",
    "source": "spec/interface-requirements.md",
    "owner": "digital (capture raw mode) + FPGA",
@@ -1882,6 +2005,7 @@
   },
   {
    "id": "WR-100TX-SD",
+   "chip": "wired",
    "requirement": "Signal detect assert >1000 mVppd / deassert <200 mVppd",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (detect) + FPGA",
@@ -1895,6 +2019,7 @@
   },
   {
    "id": "WR-100TX-BER",
+   "chip": "wired",
    "requirement": "BER <=1e-10 at 95 % CL at 0/50/100 m",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + all above",
@@ -1908,6 +2033,7 @@
   },
   {
    "id": "WR-100TX-HOST",
+   "chip": "wired",
    "requirement": "D2H 1.5 Gb/s (2 x 750 Mb/s) and H2D 2.0 Gb/s simultaneously, plus threshold updates",
    "source": "spec/interface-requirements.md",
    "owner": "digital (transport) + hostio",
@@ -1922,6 +2048,7 @@
   },
   {
    "id": "WR-100TX-ANEG",
+   "chip": "wired",
    "requirement": "Auto-negotiation FLP (non-compliant amplitude: 1.16-1.27 V vs 2.2 V); forced 100 FD primary",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + wired_tx",
@@ -1935,6 +2062,7 @@
   },
   {
    "id": "RF-HT40-TX",
+   "chip": "rf",
    "requirement": "HT40/HE40 TX: 40 MHz mask, MCS0-4 EVM <= -19 dB at >= -13 dBm; DAC 80 MS/s host-fed",
    "source": "spec/interface-requirements.md",
    "owner": "digital + converters + rf_rx (filter) + rf_tx",
@@ -1946,6 +2074,7 @@
   },
   {
    "id": "RF-HT40-RX",
+   "chip": "rf",
    "requirement": "HT40/HE40 RX sensitivity class (MCS0 -79, MCS7 -61 dBm); droop <= 3 dB at 19.1 MHz all corners; ACR declared not met",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx (bbfilter) + digital",
@@ -1961,6 +2090,7 @@
   },
   {
    "id": "RF-XLO-RANGE",
+   "chip": "rf",
    "requirement": "External-LO RX/TX 0.6-2.8 GHz with band board kits; 2.2-2.8 GHz NF <= +1 dB, Pout >= -1.5 dB vs 2.45 GHz",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + rf_tx + timing (lo_ext) + digital (clock plan) + board (B42)",
@@ -1976,6 +2106,7 @@
   },
   {
    "id": "RF-QVCO-RANGE",
+   "chip": "rf",
    "requirement": "QVCO band codes and frequency loop accept any target in the tank range; 2.40-2.50 GHz guaranteed, 2.3-2.7 GHz per-die",
    "source": "spec/interface-requirements.md",
    "owner": "timing (lcvco, frequency loop)",
@@ -1989,6 +2120,7 @@
   },
   {
    "id": "RF-SUBG-PROF",
+   "chip": "rf",
    "requirement": "Sub-GHz / L-band profiles (LoRa 868/915, 802.15.4g/Wi-SUN, 802.11ah, 23 cm, DECT) via RF-XLO-RANGE",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + board (B42, B5)",
@@ -2002,6 +2134,7 @@
   },
   {
    "id": "RF-GNSS-RX",
+   "chip": "rf",
    "requirement": "GNSS L1/L2/L5/E5/E6 RX: >= 21 MHz gap-free capture, NF <= 3 dB with B44, no clock harmonic in main lobe +-1 MHz",
    "source": "spec/interface-requirements.md",
    "owner": "board (B44) + digital (clock plan) + FPGA",
@@ -2015,6 +2148,7 @@
   },
   {
    "id": "RF-DUPLEX",
+   "chip": "rf",
    "requirement": "Simultaneous TX+RX on one LO: validator accepts filter-RX + tx_dac_direct and filter-TX + rx_direct; TX->RX isolation >= 30 dB; RX works with -30 dBm self-leakage",
    "source": "spec/interface-requirements.md",
    "owner": "digital (validator) + rf_rx + rf_tx + pads",
@@ -2028,6 +2162,7 @@
   },
   {
    "id": "RF-RADAR",
+   "chip": "rf",
    "requirement": "CW-Doppler (offset IF), FMCW (external ramp <= 83.5 MHz or +-20 MHz digital chirp), stepped-frequency; leakage <= -30 dBm at RF_RX",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + board (B43) + rf_rx",
@@ -2041,6 +2176,7 @@
   },
   {
    "id": "RF-BLE-CTE",
+   "chip": "rf",
    "requirement": "BLE AoA/AoD CTE: switch via FPGA GPIO +-125 ns to sample index; filter settles <= 2 deg in 0.5 us; gain/DC/LO hold; RF_TX survives 100 ns hot switch",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + digital (IX-8) + rf_rx + rf_tx (GX-8) + board (B41)",
@@ -2054,6 +2190,7 @@
   },
   {
    "id": "RF-SDR-CAPTURE",
+   "chip": "rf",
    "requirement": "Gap-free I/Q stream 40/20/10/5 MS/s >= 1 h, span >= 36 MHz (wide code), concurrent multi-protocol RX, RSSI +-3 dB after cal",
    "source": "spec/interface-requirements.md",
    "owner": "digital (transport) + rf_rx + FPGA",
@@ -2067,6 +2204,7 @@
   },
   {
    "id": "RF-SDR-SCAN",
+   "chip": "rf",
    "requirement": "Spectrum scan: warm hop <= 50 us/step, gain tagged per step; 2.2-2.7 GHz in <= 2 ms",
    "source": "spec/interface-requirements.md",
    "owner": "digital (warm hop) + board (B35/B42)",
@@ -2080,6 +2218,7 @@
   },
   {
    "id": "RF-SELFTEST",
+   "chip": "rf",
    "requirement": "Loopback BIST: IRR, LO leakage, filter corner/Q-trim, DC table, gain steps via mute-leakage loopback",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + digital (GX-3) + rf_rx + rf_tx",
@@ -2091,6 +2230,7 @@
   },
   {
    "id": "RF-PROF-SWITCH",
+   "chip": "rf",
    "requirement": "Atomic profile switch (LO hop + bw/wide + rx_direct/tx_dac_direct + gain) at a warm-hop epoch <= 50 us",
    "source": "spec/interface-requirements.md",
    "owner": "digital (regfile update class, warm hop) + rf_rx",
@@ -2102,6 +2242,7 @@
   },
   {
    "id": "RF-MULTICHIP",
+   "chip": "rf",
    "requirement": "Phase-coherent multi-die: one LO, one H2D-derived sample clock, sync_arm aligns sample epochs to the same sample; inter-die phase drift <= 2 deg rms / 10 min after cal",
    "source": "spec/interface-requirements.md",
    "owner": "digital (clocktree sync) + board (B45)",

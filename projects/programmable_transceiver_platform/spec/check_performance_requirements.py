@@ -9,6 +9,8 @@ is rendered from it with --write-md. The check fails (exit 1) when:
   - a fallback is not a readiness fallback route, a board requirement ID,
     or a register field present in register-map.md;
   - a row that is not 'meets' has no primary fix (MANDATE: primary route first);
+  - a row's chip is not rf / wired / both (spec/chips.json; RF-* rows are pt_rf, WR-* rows pt_wired, HL-* rows both),
+    or a register field named as its fallback is not on that chip (a 'both' row: on both chips);
   - the rendered .md is out of date (unless --write-md).
 It does not judge whether evidence is current; see source hashes in each evidence file.
 """
@@ -24,16 +26,16 @@ def render(t):
     out = ['# Performance requirements traceability', '',
            f'Rendered from `spec/performance-requirements.json` by `spec/check_performance_requirements.py --write-md`. Do not edit by hand.',
            'Status uses the performance-review legend (meets / marginal / fails / unverified), envelope only (Tj 22–32 °C, 3.15–3.35 V, all process corners).',
-           'Per MANDATE.md the **primary fix** is the plan; fallbacks are backups.', '',
-           'Summary: ' + ', '.join(f'{s} {cnt[s]}' for s in STATUSES) + f' (total {len(rows)}).', '',
-           '| ID | Requirement | Owner | Evidence | Status | Basis | Primary fix | Fallback (backup) |',
-           '|---|---|---|---|---|---|---|---|']
+           'Per MANDATE.md the **primary fix** is the plan; fallbacks are backups. Chip: pt_rf (rf), pt_wired (wired) or both (each die meets the row on its own).', '',
+           'Summary: ' + ', '.join(f'{s} {cnt[s]}' for s in STATUSES) + f' (total {len(rows)}; ' + ', '.join(f'{c} {sum(r["chip"] == c for r in rows)}' for c in ('rf', 'wired', 'both')) + ').', '',
+           '| ID | Chip | Requirement | Owner | Evidence | Status | Basis | Primary fix | Fallback (backup) |',
+           '|---|---|---|---|---|---|---|---|---|']
     esc = lambda s: str(s).replace('|', '\\|')
     for r in rows:
         ev = '<br>'.join(f'`{e}`' for e in r['evidence']) or '—'
         fb = ', '.join(f'`{f}`' for f in r['fallback']) or '—'
         st = r['status'] if r['status'] == 'meets' else f"**{r['status']}**"
-        out.append(f"| {r['id']} | {esc(r['requirement'])} | {esc(r['owner'])} | {ev} | {st} | {esc(r['basis'])} | {esc(r['primary_fix'])} | {fb} |")
+        out.append(f"| {r['id']} | {r['chip']} | {esc(r['requirement'])} | {esc(r['owner'])} | {ev} | {st} | {esc(r['basis'])} | {esc(r['primary_fix'])} | {fb} |")
     return '\n'.join(out) + '\n'
 
 def main():
@@ -43,6 +45,10 @@ def main():
     board = (ROOT / 'spec/board-requirements.md').read_text()
     board_ids = set(re.findall(r'^\| (B\d+a?|HL-B\d+) \|', board, re.M))
     regmap = (ROOT / 'spec/register-map.md').read_text() + (ROOT / 'spec/interface-requirements.md').read_text()
+    chips = json.loads((ROOT / 'spec/chips.json').read_text())['chips']
+    fields = {f['name'] for f in json.loads((ROOT / 'spec/register-map.json').read_text())['fields']}
+    def on_chip(field, chip):
+        return not any(re.fullmatch(x, field) for o, c in chips.items() if o != chip for x in c['only_fields'])
     seen = set()
     for r in t['rows']:
         i = r['id']
@@ -52,6 +58,9 @@ def main():
         if not src.exists() or not re.search(r'\b' + re.escape(i) + r'\b', src.read_text()):
             errs.append(f'{i}: id not found in {r["source"]}')
         if r['status'] not in STATUSES: errs.append(f'{i}: bad status {r["status"]}')
+        want = 'rf' if i.startswith('RF-') else 'wired' if i.startswith('WR-') else 'both' if i.startswith('HL-') else None
+        if r.get('chip') not in ('rf', 'wired', 'both') or (want and r['chip'] != want):
+            errs.append(f'{i}: chip {r.get("chip")} (expected {want or "rf / wired / both"})')
         for e in r['evidence']:
             if not (ROOT / e).exists(): errs.append(f'{i}: missing evidence {e}')
         if r['status'] == 'meets' and not r['evidence']: errs.append(f'{i}: meets without evidence')
@@ -60,6 +69,10 @@ def main():
         for f in r['fallback']:
             if f in routes or f in board_ids: continue
             m = re.match(r'(debug\.[a-z_.]+)', f)
+            if m and m.group(1) in fields:
+                bad = [c for c in (chips if r.get('chip') == 'both' else [r.get('chip')]) if c in chips and not on_chip(m.group(1), c)]
+                if bad: errs.append(f'{i}: fallback field {m.group(1)} is not on pt_{bad[0]}')
+                continue
             if m and m.group(1).split('.')[-1] in regmap: continue
             errs.append(f'{i}: unknown fallback {f}')
     md = render(t)

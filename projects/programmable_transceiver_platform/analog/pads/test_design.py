@@ -184,16 +184,38 @@ class DesignBoundary(unittest.TestCase):
                 actual,simulated,_=supplemental_graphs(records,model)
                 self.assertNotEqual(actual,simulated)
 
+    def _maps(self):
+        return {c: (PROJECT / 'integration/chips' / c / 'bond_map.txt').read_text() for c in ('rf', 'wired')}
+
+    def test_sites_come_from_the_chip_bond_maps(self):
+        rf, wired = resolve(self.architecture, self.contract, chip='rf'), resolve(self.architecture, self.contract, chip='wired')
+        self.assertEqual(sorted(rf['families']), ['reference_clock', 'rf_receive', 'rf_transmit'])
+        self.assertEqual(sorted(wired['families']), ['reference_clock', 'wired_receive_usb', 'wired_transmit'])
+        self.assertNotEqual(rf['families']['reference_clock']['pads'], wired['families']['reference_clock']['pads'])
+        self.contract['assembly_policy']['candidate_signal_sites'] = {}     # the single-die map is not read
+        self.assertEqual(resolve(self.architecture, self.contract, chip='rf')['families'], rf['families'])
+
     def test_physical_alias_rejected(self):
-        sites = self.contract['assembly_policy']['candidate_signal_sites']
-        sites['RF_RX_P'] = sites['RF_TX_P']
-        with self.assertRaisesRegex(ValueError, 'Multiple signals'):
-            resolve(self.architecture, self.contract)
+        maps = self._maps()
+        maps['rf'] = maps['rf'].replace('RF_RX_N    pad_rf_rx', 'RF_TX_P    pad_rf_rx')
+        with self.assertRaisesRegex(ValueError, 'multiple sites'):
+            resolve(self.architecture, self.contract, chip='rf', bond_maps=maps)
 
     def test_missing_bond_site_rejected(self):
-        self.contract['assembly_policy']['candidate_signal_sites']['REF_IN'] = 'invented'
-        with self.assertRaisesRegex(ValueError, 'no provider site'):
-            resolve(self.architecture, self.contract)
+        maps = self._maps()
+        maps['wired'] = maps['wired'].replace('REF_IN_N', 'VSS     ')
+        with self.assertRaisesRegex(ValueError, 'only REF_IN bonded'):
+            resolve(self.architecture, self.contract, chip='wired', bond_maps=maps)
+
+    def test_split_pair_rejected(self):
+        maps = self._maps()
+        lines = maps['wired'].splitlines()
+        a = next(i for i, l in enumerate(lines) if ' WIRE_TX_N ' in l); b = next(i for i, l in enumerate(lines) if 'pad_xvdd_1' in l)
+        sa, sb = lines[a].split()[0], lines[b].split()[0]
+        lines[a], lines[b] = lines[a].replace(sa, sb, 1), lines[b].replace(sb, sa, 1)
+        maps['wired'] = '\n'.join(lines)
+        with self.assertRaisesRegex(ValueError, 'neighbouring'):
+            resolve(self.architecture, self.contract, chip='wired', bond_maps=maps)
 
     def test_changed_architecture_propagates(self):
         self.architecture['blocks']['rfpad']['parameters']['capacitance_f_per_leg'] = .8e-12

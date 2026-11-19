@@ -1,0 +1,57 @@
+{
+ "gds": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_tx/generated/fast/wtx_ser8d.gds",
+ "gds_sha256": "a3f204ce42eee26ac578a034026a40b03ada2b84aa218c6ce7843c7bc8872a2d",
+ "hops": {
+  "0": [
+   6
+  ],
+  "1": [
+   7
+  ],
+  "2": [
+   0
+  ],
+  "3": [
+   0
+  ],
+  "4": [
+   6,
+   2
+  ],
+  "5": [
+   7,
+   3
+  ],
+  "6": [
+   6,
+   4
+  ],
+  "7": [
+   7,
+   5
+  ]
+ },
+ "magic_drc_count": "0",
+ "bbox_um": "1.5 0 743.62 198.18",
+ "negative_controls": {
+  "neg_fswap (outputs of XH3_0 and XH4_1 swapped)": "Final result: Top level cell failed pin matching.",
+  "neg_hopclk (XH0_0 clocked by Q7 instead of Q6)": "Final result: Top level cell failed pin matching.",
+  "neg_prop (first nfet with w=2u in the reference: w 2u -> 2.2u; Netgen names the cell)": "Final result: Circuits match uniquely. . The following cells had property errors: wtx_qph",
+  "neg_dswap (XL0 data pins D0 / D8 swapped)": "Final result: Top level cell failed pin matching. The following cells had property errors: wtx_ser8d"
+ },
+ "lvs": {
+  "ref = top_spice() + cells + diodes": "Final result: Circuits match uniquely. .",
+  "ref = top_spice() + cells, NO diodes (expected to differ by the diodes only)": "Final result: Top level cell failed pin matching."
+ },
+ "ports_ok wtx_ser8d.lvs.spice": true,
+ "sha256 wtx_ser8d.lvs.spice": "5372f5db9c1250fc624d0d369f5c8b44948d35041935d17f0fa995e7c4a6946f",
+ "ports_ok wtx_ser8d.flatc.spice": true,
+ "sha256 wtx_ser8d.flatc.spice": "6a22e5f1c5be45e3fb6c5c81efe8a4690bc16a4071463bdfcf47d4aa5a40f554",
+ "klayout_drc": {
+  "ran": true,
+  "violations": 0,
+  "by_rule": {},
+  "deck": "gf180mcuD KLayout (sak-drc.sh -k)"
+ }
+}
+diodes 39

@@ -22,32 +22,26 @@ at 320 ps. Streams 1-4 are captured at phases 5, 6, 7, 0 and have 0.24-1.3 ns.
 Fix: new hop plan in `ser8d_macro.py` (first capture at phase 6 or 7, final hop 6 slots before the slice window),
 see "Hop plan" below. Not yet laid out.
 
-## RESUME HERE (state at 2026-11-18 07:50 UTC; session 13 ended early: the layout sub-agent hit its usage limit)
-1. Layout state. Built and checked from disk (pass 1): `wtx_ser8d` (final HOPS, but `s13/ser8d/verify.py v`, `rc.py`,
-   `ctab.py` NOT re-run after the last hop-table change), `wtx_mux8` revision 3, `wtx8_aux` (two parts), `pt_wiredtx8`
-   (744.1 x 471.3 um, `s13/top/REPORT.md`). `pt_wiredtx8_layout.py` in analog/wired_tx is the pass-1 generator that matches
-   the artefacts in `generated/fast/`. Pass 2 was in progress when the agent stopped: `s13/top/pt_wiredtx8_layout.pass2-wip.py`,
-   `s13/top/wtx_mux8_layout.pass2-wip.py` (= the current `analog/wired_tx/wtx_mux8_layout.py`, UNVERIFIED edits: header feed
-   under the risers), `s13/top/serm5/` (D trunks to the bottom edge). Pass-2 brief: seam <= 40 um, D pins on the bottom
-   edge, trims / codes / statics out beside the mux, bias pins to the pad edge, phase buffers `wtx8_phbuf` at the pin row
-   (schematic `wtx8_top.py` already has them: the schematic is AHEAD of the pass-1 layout, LVS of the pass-1 GDS against
-   the current `wtx8_top.netlist()` will fail on XPB / PS nets), R+C netlist with the mux bus resistance carried in.
-2. After pass 2: probe run at ss pessimistic and ff (`s13/probe.py` style) to confirm the stream timing with the buffer
-   delay (stream must change outside -0.1..+0.35 ns (ss pess.) / 0..+0.25 ns (ff) after its slice's phase edge; today
-   1.5-1.95 ns ss, 0.65-1.0 ns ff before the buffers add about 0.15 ns).
-3. Queues still running detached when the session ended (one simulation each, results land in files): `s13/padr/q.sh`
-   (`padr.log`: matrix A pad models, then B requirement sweep -> finish row WT39), `s13/q_x2.sh` (`q_x.log` line
-   `x3_cal_ssp` = extracted mux eye with calibrated codes) -> `q_cal.sh` (`cal_*.out`, `calres/*.json`: trim codes with the
-   real ring, both ring versions) -> `q_tune.sh` (`q_tune.log`, ring VCTRL for all table rates incl. sf / fs at an ASSUMED
-   ring supply of 2.75 V). Stop all with `touch s13/STOPQ` (q_tune does not honour it: kill it).
-4. Then the table on the final netlists: `s13/chain13.py` (options `top_ext=generated/fast/pt_wiredtx8.ext.spice`,
-   `pad_model` C / RT / RH, `ring_ver`, `n_over`, `codes`, `supply`, `tap`, `idle`), worker `s13/worker13.sh <jobfile>`,
-   table `s13/table13.py`. `top_ext` has never been run. Planned rows: 3.125 and 3.24 at tt / ss / ss 3.50 / ff / sf / fs /
-   ss pess. 3.15 and 3.50 with the pessimistic ring; 2.5, 2.7, 3.0 at tt / ss / ss pess.; 0.48 (n = 5 at 2.4) and 1.25
-   (n = 2) at ss / ss pess. / ff; kill control; pad=RC-typ at 2.7 / 3.125 / 3.24 tt and ss; R+C netlists for what publishes.
-5. Not started: supply-impedance rows, Monte Carlo (`m9.py mc_seed=`), interlock stop / stuck / mid-level / ramp rows on
-   the extracted netlist, EM current at ff 3.63 V 85 C (`m9.py c=ffhot`), idle and CMOS tap in the real chain (`q_c.sh`),
-   POST targets at ff / tt, independent review of session 13 (fresh agent, files not conclusions), publish.
+## RESUME HERE (state at 2026-11-19, session 14; nothing published)
+Done this session:
+- Queues collected: pad matrix A / B (`s13/padr/padr.log`), `x3_cal_ssp` (`s13/q_x.log`), real-ring calibration (`s13/calres/`,
+  ss pess. codes [0,1,3,3,4,5,3,7], residual 10.6 ps > 8 ps limit), ring tuning (`s13/q_tune.log`). Row WT41.
+- `wtx_ser8d` final hop table re-verified from disk (`s13/ser8d/verify_s14.log`): DRC 0/0, LVS unique, 4 negative controls fail.
+- `pt_wiredtx8` pass 2 (commit 3334a8ca, `s13/top/REPORT.md`): 0.298 mm2 box / 0.274 used, seam 38.4 um, DRC 0/0, LVS unique, 4 neg.
+  controls fail. OPEN: TR* trim pins are internal Metal3 (edge routing = 47.9 um seam, or move mux trim pins to its right side).
+- Interlock on the EXTRACTED mux (`s13/ilk/ilk_ext.log`, `q_ilk_ext.sh`): stop 11110000 ssp 33.9 -> 0.001 mA in 247 ns, ff 36.8 -> 0.001
+  in 206 ns; all-0 / all-1 0.001 mA in 2-3 ns. Mid-level (1.35 V all phases): slices off (gates 0 V) but 6.1-6.2 mA flows (phase-input
+  crowbar, not slice current) and at ff RUN stays HIGH (detector does not flag mid level). x_neg_nointerlock is NOT a valid negative
+  control (ext= ignores interlock=false): redo with a netlist that has the detector output tied high. Not run: stuck phase, supply ramp.
+- Full-coverage resistance audit (`s14/rcov/RCOV.md`, commit be6e0c04): drawn-R netlists cover 6-14 % of nets; 191 nets over the
+  declared thresholds; the drawn lumps are 1.4-20x BELOW extresist (MAIN_P 0.26 vs 5.5 ohm, block PH 5.2 vs 53 ohm). The `*.rc.spice`
+  rows are therefore optimistic. Next netlist for the table: the extresist netlist (s14/rcov/ext_keep.py) per cell, not the drawn one.
+- First block-level real-chain rows (`s13/resultsC/t14_*`, top_ext = pass-2 `pt_wiredtx8.rc.spice`, ring=layout-11Nov pess., ss pess.
+  3.15 V, 3.125 Gb/s, mux-bench codes): pad=C 0 err / 320, eye 0.157 V / 0.55 UI FAIL; pad=RC-typ 0 err / 360, 0.090 V FAIL; I 55.8 mA.
+  Each row takes about 4 h on the full block netlist.
+Next: (1) re-calibrate trim codes on the block (phase buffers, PS skew 41-103 fF) and rerun the two rows; (2) switch to extresist
+netlists; (3) table rows with the reworked pad when published (else S=0.6 MAIN switch fallback, which gave 0.213 V with RC-typ at mux
+level); (4) stuck / ramp interlock rows and mid-level detector fix; (5) supply impedance, MC, review, publish; (6) retire quarter-rate TX.
 
 ## State at 2026-11-18 07:05 UTC
 - `wtx_ser8d` rebuilt with the final hop plan (`ser8d_macro.HOPS`, docstring = timing data): 744.12 x 197.68 um

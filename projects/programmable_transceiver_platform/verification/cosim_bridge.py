@@ -18,7 +18,8 @@ def checked(command, log, cwd=None):
 
 
 def compile_bridge(sources, top, out, ngspice_source, includes=(), defines=(), expose_outputs=None,
-                   projections=None, expose_inputs=None):
+                   projections=None, expose_inputs=None, parameters=None):
+    """parameters: {name: integer} overrides of the top module's parameters (e.g. PT_CHIP of pt_digital_macro)."""
     out = Path(out).resolve()
     out.mkdir(parents=True, exist_ok=True)
     ngspice_source = Path(ngspice_source).resolve()
@@ -30,6 +31,8 @@ def compile_bridge(sources, top, out, ngspice_source, includes=(), defines=(), e
                  '-CFLAGS', f'-I{ngspice_source}/src/include']
     arguments += [f'-I{Path(p).resolve()}' for p in includes]
     arguments += [f'-D{name}' for name in defines]
+    parameters = dict(parameters or {})
+    arguments += [f'-G{name}={int(value)}' for name, value in parameters.items()]
     arguments += sources
     checked(arguments, out/'verilate.log')
     if expose_outputs is not None or expose_inputs is not None:
@@ -77,8 +80,9 @@ def compile_bridge(sources, top, out, ngspice_source, includes=(), defines=(), e
             local.append(f'assign {name} = {source}[{bit}+:{width}];')
         adapter = out/'boundary.sv'
         adapter.write_text('`timescale 1ns/1ps\nmodule '+top+'_cosim(\n'+',\n'.join(declarations)+
-                           ');\n'+'\n'.join(local)+'\n'+top+' digital('+',\n'.join(connections)+');\nendmodule\n')
+                           ');\n'+'\n'.join(local)+'\n'+top+(' #('+', '.join(f'.{k}({int(v)})' for k, v in parameters.items())+')' if parameters else '')+' digital('+',\n'.join(connections)+');\nendmodule\n')
         arguments[arguments.index('--top-module')+1] = top+'_cosim'
+        arguments = [a for a in arguments if not str(a).startswith('-G')]   # the adapter sets them on the instance
         arguments.append(adapter)
         sources.append(adapter)
         checked(arguments, out/'verilate-boundary.log')
@@ -175,7 +179,7 @@ extern "C" void Cosim_setup(co_info* info) {
                     ngspice_source/'src/include/ngspice/cosim.h']
     manifest = {'top': top, 'inputs': [p[0] for p in inputs],
                 'outputs': [p[0] for p in outputs], 'library': str(out/'digital.so'),
-                'projections': projections or {},
+                'projections': projections or {}, 'parameters': parameters,
                 'exposed_input_ports': sorted(expose_inputs) if expose_inputs is not None else None,
                 'source_hashes': {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
                                   for p in hash_inputs}}

@@ -2,12 +2,12 @@
  "drc_count": 0,
  "drc_raw": "0",
  "bbox_um": [
-  1.09,
+  1.1,
   0.6,
-  193.82,
-  184.5
+  310.52,
+  158.62
  ],
- "area_um2": 35442.0,
+ "area_um2": 48895.0,
  "lvs": {
   "unique_match": true,
   "final_result": "Circuits match uniquely.",
@@ -15,50 +15,44 @@
  },
  "layout_generator": "lna_layout.py (compact flat, MIMs over active)",
  "compact": {
-  "rw": 194.8,
-  "width": 195.9,
-  "height": 186.1,
-  "area_est": 36461,
+  "rw": 312.0,
+  "width": 312.6,
+  "height": 160.2,
+  "area_est": 50088,
   "rows": [
    [
-    27,
-    31,
+    39,
+    41,
     23.6,
-    193.9
+    289.3
    ],
    [
-    14,
-    21,
+    3,
+    9,
     23.2,
-    162.0
+    310.6
    ],
    [
-    2,
     10,
-    23.2,
-    192.4
-   ],
-   [
-    11,
     13,
     23.2,
-    186.9
+    307.7
    ],
    [
-    2,
-    6,
+    3,
+    7,
     23.2,
-    192.4
+    310.6
    ],
    [
-    9,
-    11,
-    15.2,
-    120.3
+    10,
+    13,
+    23.2,
+    307.7
    ]
   ],
   "ncaps": 7,
-  "ntrunks": 33,
+  "ntrunks": 29,
   "antenna_diodes_placed": 0,
   "antenna_diodes_failed": 0
  },
@@ -80,15 +74,16 @@
  "digital_tag": "svalbard/librelane-gf180-canary:2026.08",
  "drc_details": "",
  "sources": {
-  "rxmix_q.spice": "sha256:1e386e3b9f8a7be1133c56f607b41a066117ba94d3a86d3f36d6d15ba26a5336",
-  "netlists.py": "sha256:e8b5131003592b2b926e26a883c1e663ed152ab76ea2749d15d34d02db936db7",
+  "rxmix_q.spice": "sha256:509149519c45ec8b4ddf71c8650cbbecffdb1ff9490bdbac9fb4cea07395fafa",
+  "netlists.py": "sha256:39fa1d24d7339691499cf3ea19751d9ff3678958a191cbea968c6f3cbbd7faee",
   "rfrx_flow.py": "sha256:c95720b6e4fada3bcf478c3e5559efc5c938169f08421996760c8ea656bc7aaa",
-  "lna_layout.py": "sha256:c38df64a5e08e31d46b05f04f2398d11e379e9d94d5c95a212192a787b50cc6a"
+  "lna_layout.py": "sha256:a90a3e98fe5c9c6fe83ebcef923efe4ef5176fb4ffeb584cb91c7c375fc00b08"
  },
  "artifacts": {
-  "rxmix_q.gds": "sha256:cd2abfa993d49d0d017311f4f482d45e481c76885111d243a603d41fc7eeac6c",
-  "rxmix_q.mag": "sha256:ba085ecb3d946d9b4e041bc03db7c39c599583e699a1570a1e1519931edec8c2",
-  "rxmix_q.ext.spice": "sha256:3a32deb8a1f82200bba07cc9d28dacf5005ac8eb3bc63abb5d00ccc5e1c6a3c7",
-  "rxmix_q-lvs.txt": "sha256:d7f7fcf2514bd23b846c36a13e0b0280d254e1530e65c2453c2c2e057d8eba25"
- }
+  "rxmix_q.gds": "sha256:5531685d1ad11b31e0761d56900aafe208bdd9838e2a5515ab3a7c8ca040ae3b",
+  "rxmix_q.mag": "sha256:6cc965d0e540bb5ff9baf698d0126ca67b7d0c251749f823300e28a9be50d7a9",
+  "rxmix_q.ext.spice": "sha256:293378bfac0f5cdbd2e128cb1605ccee0444b59ce3b4b1aafd6a0dc9592dca41",
+  "rxmix_q-lvs.txt": "sha256:0541eb2b6275528b885e76e63206120d90075d8b3d3d19217a0e21ab3b8c35b7"
+ },
+ "layout_generator_note": "TIA x2 (rf_rx helper 2026-11-19): generated with lna_layout.py as committed at HEAD 6dd3b0f0 (sha above); the working-tree copy carries the LNA owner in-progress WIDE routing (VDD/VSS/tail/x_p/x_n widened), which on this cell gives 85,918 um2 and 3948 KLayout V2.2b"
 }

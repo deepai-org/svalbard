@@ -40,6 +40,7 @@ c_rxmix_i_en | 1 | 0 | (state == active) & island_on[1] | rxmix_i.state.state | 
 c_rxmix_q_en | 1 | 0 | (state == active) & island_on[1] | rxmix_q.state.state | today en_eff[9]
 c_rxmix_i_ofs | 6 | 0 | direct | rxmix.offset.i_code | bit 5 = ofs_sign
 c_rxmix_q_ofs | 6 | 0 | direct | rxmix.offset.q_code | bit 5 = ofs_sign
+c_rxmix_hib | 1 | 1 | direct | rf_rx.tia_hib | both mixers hib (RQ-15)
 c_bbfilter_i_en | 1 | 0 | (direction != isolated) & island_on[1] | consolidation.bbfilter.direction | no en_eff bit today (MW-4)
 c_bbfilter_q_en | 1 | 0 | (direction != isolated) & island_on[1] | consolidation.bbfilter.direction |
 c_bbfilter_dir_tx | 1 | 0 | direction == tx, or bb_tap.mode == inject_tx_mixer | consolidation.bbfilter.direction+debug.bb_tap.mode |

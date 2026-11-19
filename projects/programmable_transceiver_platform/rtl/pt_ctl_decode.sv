@@ -32,7 +32,7 @@ module pt_ctl_decode(
  // ---- RF receive
  output wire c_lna_en, c_lna_gain_lo, c_lna_byp, output wire[3:0] c_lna_ct, output wire c_lna_se, c_lna_rt,
  output wire[4:0] c_lna_att, output wire c_lna_lobias,
- output wire c_rxmix_i_en, c_rxmix_q_en, output wire[5:0] c_rxmix_i_ofs, c_rxmix_q_ofs,
+ output wire c_rxmix_i_en, c_rxmix_q_en, output wire[5:0] c_rxmix_i_ofs, c_rxmix_q_ofs, output wire c_rxmix_hib,
  output wire c_bbfilter_i_en, c_bbfilter_q_en, c_bbfilter_dir_tx, c_bbfilter_inj, output wire[1:0] c_bbfilter_obs_sel,
  output wire c_bbfilter_rx_direct, c_bbfilter_byp_s1, c_bbfilter_byp_s23,
  output wire[6:0] c_bbfilter_i_cut, c_bbfilter_q_cut, output wire[5:0] c_bbfilter_i_gain, c_bbfilter_q_gain,
@@ -129,6 +129,7 @@ module pt_ctl_decode(
  assign c_rxmix_q_en = (f_rxmix_q_state__state == ACTIVE) & on_rf;
  assign c_rxmix_i_ofs = f_rxmix_offset__i_code;
  assign c_rxmix_q_ofs = f_rxmix_offset__q_code;
+ assign c_rxmix_hib = f_rf_rx__tia_hib;
  wire[1:0] bb_dir = f_consolidation_bbfilter__direction;  // 0 isolated, 1 rx, 2 tx
  wire[2:0] tap = f_debug_bb_tap__mode; // 0 off 1 observe_rx_mixer 2 observe_rx_filter 3 observe_rx_pga 4 inject_rx
                                        // 5 observe_tx 6 inject_tx_filter 7 inject_tx_mixer

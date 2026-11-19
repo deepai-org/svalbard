@@ -126,7 +126,7 @@ inst lna_deg_{p,n} pt_lna_deg rf_rx demand
   A~LNA_SRC_\U1 B~LNA_TAIL              # on-chip source degeneration 0.47 nH, to the LNA's tail node
 inst rxmix_{i,q} pt_rxmix_\1 rf_rx
   rf_p~RFA_\U1_P rf_n~RFA_\U1_N lo_p~LO_\U1P lo_n~LO_\U1N bb_p~BB\U1_RX_P bb_n~BB\U1_RX_N ibias~BIAS_rxmix_\1
-  en=c_rxmix_\1_en ofs{0:4}=c_rxmix_\1_ofs[\2] ofs_sign=c_rxmix_\1_ofs[5] island_off=island_off[1]
+  en=c_rxmix_\1_en ofs{0:4}=c_rxmix_\1_ofs[\2] ofs_sign=c_rxmix_\1_ofs[5] island_off=island_off[1] hib=c_rxmix_hib
   atb_vcm~- atb_vbp~{ATBN_rxmix_bias,-} VDD~RAIL_rf_rx VSS~VSS
 inst bbfilter_{i,q} pt_bbfilter_\1 rf_rx
   rx_in_p~BB\U1_RX_P rx_in_n~BB\U1_RX_N tx_in_p~DAC\U1_P tx_in_n~DAC\U1_N inj_p~BB\U1_INJ_P inj_n~BB\U1_INJ_N

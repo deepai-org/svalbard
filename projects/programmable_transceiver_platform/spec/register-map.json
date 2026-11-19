@@ -571,7 +571,7 @@
  "break_before_make_rule": "A commit may not change one of these fields directly from one non-zero code to a different non-zero code; it must commit the zero (stopped/off/open) code first. Two SPI transactions separate the commits, far exceeding the 4 ns switch dead time in control_semantics.switch_dead_time_s.",
  "bus_widths": {
   "analog": 610,
-  "debug": 220
+  "debug": 221
  },
  "cdc_semantics": "The register file is clocked only by SPI SCLK and asynchronously reset by RESET_N AND POR. Active fields are quasi-static: they change only on a successful commit, which also toggles commit_toggle. A consuming clock domain that must see a coherent multi-bit value synchronizes commit_toggle through two flops and reloads its local copy on a toggle edge; the next commit cannot occur for at least one more 32-clock SPI transaction. Purely analog consumers see each field change once per commit; stopped-only fields are changed only while their outputs are isolated.",
  "chip_ids": {
@@ -5212,6 +5212,56 @@
    "trim": null,
    "unit": "code",
    "update": "live",
+   "values": null
+  },
+  {
+   "address_slots": 1,
+   "allowed": null,
+   "atb_bus": null,
+   "bits": 1,
+   "bus": "debug",
+   "bus_bits": 1,
+   "bus_lsb": 220,
+   "chips": [
+    "rf"
+   ],
+   "chunks": [
+    {
+     "addr": 90,
+     "field_lsb": 0,
+     "reg_lsb": 0,
+     "width": 1
+    }
+   ],
+   "clear_when_running": null,
+   "decode": null,
+   "decoded_bits": null,
+   "default": 1,
+   "direct": false,
+   "field": "tia_hib",
+   "gate_and": null,
+   "group": "rf_rx",
+   "islands": [
+    "rf"
+   ],
+   "kind": "debug",
+   "live": false,
+   "mantissa_bits": null,
+   "maximum": 1,
+   "meaning": null,
+   "minimum": 0,
+   "name": "rf_rx.tia_hib",
+   "range_text": null,
+   "split": false,
+   "store": [
+    0,
+    0
+   ],
+   "store_mask": 1,
+   "sv": "rf_rx__tia_hib",
+   "trim": null,
+   "unit": "code",
+   "update": "stopped",
    "values": null
   },
   {
@@ -15523,6 +15573,19 @@
    "update": "live"
   },
   {
+   "description": "Mixer TIA bias option (row RQ-15): tia_hib drives the hib pin of both mixers (pt_rxmix_i / pt_rxmix_q); 1 = high-bias (reset, the qualified state), 0 = the x2 duplex current setting of the RF RX owner (analog/rf_rx/README.md).",
+   "fallback_routes": [],
+   "fields": [
+    "rf_rx.tia_hib"
+   ],
+   "kind": "debug",
+   "name": "rf_rx",
+   "registers": [
+    90
+   ],
+   "update": "stopped"
+  },
+  {
    "description": null,
    "fallback_routes": [],
    "fields": [
@@ -16531,8 +16594,8 @@
   "wired": 0
  },
  "last_analog": 183,
- "last_debug": 89,
- "map_hash16": 44420,
+ "last_debug": 90,
+ "map_hash16": 62604,
  "obs_status": [
   "island_pgood_wired",
   "island_pgood_rf",
@@ -17371,6 +17434,21 @@
    "kind": "debug",
    "reset": 0,
    "writable_mask": 511
+  },
+  {
+   "addr": 90,
+   "chunks": [
+    [
+     "rf_rx.tia_hib",
+     0,
+     1,
+     0
+    ]
+   ],
+   "group": "rf_rx",
+   "kind": "debug",
+   "reset": 1,
+   "writable_mask": 1
   },
   {
    "addr": 96,

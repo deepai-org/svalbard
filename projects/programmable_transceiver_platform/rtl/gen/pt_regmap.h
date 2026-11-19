@@ -6,7 +6,7 @@
 #define PT_SPI_CMD_READ 0x00u
 #define PT_ID_VALUE 0x5356u
 #define PT_ABI_VERSION 0x0003u
-#define PT_MAP_HASH 0xAD84u
+#define PT_MAP_HASH 0xF48Cu
 #define PT_COMMIT_CMD 0x0001u
 #define PT_REVERT_CMD 0x0002u
 #define PT_REG_ID 0x00u
@@ -828,6 +828,14 @@
 #define PT_DEBUG_CALIBRATION_VALID_IMPL_MASK 0x1u  /* implemented bits; 0 = no hardware, reads 0 */
 #define PT_DEBUG_CALIBRATION_VALID_MIN 0u
 #define PT_DEBUG_CALIBRATION_VALID_MAX 1u
+#define PT_RF_RX_TIA_HIB_ADDR 0x5Au
+#define PT_RF_RX_TIA_HIB_SHIFT 0u
+#define PT_RF_RX_TIA_HIB_WIDTH 1u
+#define PT_RF_RX_TIA_HIB_MASK 0x0001u
+#define PT_RF_RX_TIA_HIB_DEFAULT 1u
+#define PT_RF_RX_TIA_HIB_IMPL_MASK 0x1u  /* implemented bits; 0 = no hardware, reads 0 */
+#define PT_RF_RX_TIA_HIB_MIN 0u
+#define PT_RF_RX_TIA_HIB_MAX 1u
 #define PT_ADC_I_CONFIG_INPUT_TEST_ADDR 0x60u
 #define PT_ADC_I_CONFIG_INPUT_TEST_SHIFT 0u
 #define PT_ADC_I_CONFIG_INPUT_TEST_WIDTH 2u

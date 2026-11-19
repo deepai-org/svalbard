@@ -162,6 +162,7 @@ module pt_analog_top_stub(
  input wire c_rfdriver_se,
  input wire c_ring_osc_en,
  input wire c_rx_ref_en,
+ input wire c_rxmix_hib,
  input wire c_rxmix_i_en,
  input wire [5:0] c_rxmix_i_ofs,
  input wire c_rxmix_q_en,
@@ -606,6 +607,7 @@ module pt_analog_top_stub(
  wire p_rxmix_i__ofs4 = c_rxmix_i_ofs[4];
  wire p_rxmix_i__ofs_sign = c_rxmix_i_ofs[5];
  wire p_rxmix_i__island_off = island_off[1];
+ wire p_rxmix_i__hib = c_rxmix_hib;
  wire p_rxmix_q__en = c_rxmix_q_en;
  wire p_rxmix_q__ofs0 = c_rxmix_q_ofs[0];
  wire p_rxmix_q__ofs1 = c_rxmix_q_ofs[1];
@@ -614,6 +616,7 @@ module pt_analog_top_stub(
  wire p_rxmix_q__ofs4 = c_rxmix_q_ofs[4];
  wire p_rxmix_q__ofs_sign = c_rxmix_q_ofs[5];
  wire p_rxmix_q__island_off = island_off[1];
+ wire p_rxmix_q__hib = c_rxmix_hib;
  wire p_bbfilter_i__en = c_bbfilter_i_en;
  wire p_bbfilter_i__dir_tx = c_bbfilter_dir_tx;
  wire p_bbfilter_i__inj = c_bbfilter_inj;

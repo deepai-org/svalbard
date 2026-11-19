@@ -83,6 +83,7 @@ wire[15:0]f_debug_freq_count_b__target=debug_cfg[209:194]; // debug.freq_count_b
 wire[0:0]f_core_aosc__enable=debug_cfg[210:210]; // core.aosc.enable, reset 0
 wire[7:0]f_debug_calibration__tag=debug_cfg[218:211]; // debug.calibration.tag, reset 0
 wire[0:0]f_debug_calibration__valid=debug_cfg[219:219]; // debug.calibration.valid, reset 0
+wire[0:0]f_rf_rx__tia_hib=debug_cfg[220:220]; // rf_rx.tia_hib, reset 1
 wire[1:0]f_adc_i_config__input_test=analog_cfg[1:0]; // adc_i.config.input_test, reset 0
 wire[1:0]f_adc_i_state__state=analog_cfg[3:2]; // adc_i.state.state, reset 0
 wire[1:0]f_adc_q_config__input_test=analog_cfg[5:4]; // adc_q.config.input_test, reset 0

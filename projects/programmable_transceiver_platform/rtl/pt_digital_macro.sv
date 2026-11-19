@@ -104,6 +104,7 @@ module pt_digital_macro(
  output wire c_rxmix_q_en,
  output wire[5:0] c_rxmix_i_ofs,
  output wire[5:0] c_rxmix_q_ofs,
+ output wire c_rxmix_hib,               // rf_rx.tia_hib: both mixers hib (RQ-15)
  output wire c_bbfilter_i_en,
  output wire c_bbfilter_q_en,
  output wire c_bbfilter_dir_tx,
@@ -494,6 +495,7 @@ module pt_digital_macro(
   .c_rxmix_q_en(c_rxmix_q_en),
   .c_rxmix_i_ofs(c_rxmix_i_ofs),
   .c_rxmix_q_ofs(c_rxmix_q_ofs),
+  .c_rxmix_hib(c_rxmix_hib),
   .c_bbfilter_i_en(c_bbfilter_i_en),
   .c_bbfilter_q_en(c_bbfilter_q_en),
   .c_bbfilter_dir_tx(c_bbfilter_dir_tx),

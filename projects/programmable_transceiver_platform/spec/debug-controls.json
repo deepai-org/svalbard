@@ -1784,6 +1784,23 @@
           "meaning": "1 = the trims hold a completed calibration for this tag"
         }
       }
+    },
+    "rf_rx": {
+      "description": "Mixer TIA bias option (row RQ-15): tia_hib drives the hib pin of both mixers (pt_rxmix_i / pt_rxmix_q); 1 = high-bias (reset, the qualified state), 0 = the x2 duplex current setting of the RF RX owner (analog/rf_rx/README.md).",
+      "update": "stopped",
+      "islands": [
+        "rf"
+      ],
+      "live": false,
+      "fields": {
+        "tia_hib": {
+          "bits": 1,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
     }
   },
   "rules": [

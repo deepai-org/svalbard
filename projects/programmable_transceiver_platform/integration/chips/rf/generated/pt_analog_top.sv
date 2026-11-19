@@ -161,6 +161,7 @@
  input wire c_rfdriver_se,
  input wire c_ring_osc_en,
  input wire c_rx_ref_en,
+ input wire c_rxmix_hib,
  input wire c_rxmix_i_en,
  input wire [5:0] c_rxmix_i_ofs,
  input wire c_rxmix_q_en,

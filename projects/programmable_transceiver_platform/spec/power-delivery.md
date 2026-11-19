@@ -16,7 +16,7 @@ up to a 3.50 V setpoint.
 | --- | --- | --- |
 | Islands (`spec/chips.json`) | rf_rx, rf_tx, lod, lo, pll, conv, debug | wired_rx, wired_cap, wired_tx, pll, debug |
 | Bonds (`integration/chips/<chip>/bond_map.txt`) | 10 supply, 19 ground | 10 supply, 17 ground |
-| Mode ceilings (digital at PWR-DIG) | Pass; DXe +6.6 mA, DXa +5.6. At the area-scaled macro (62.6 mA) TXe, TXa, DXe, DXa exceed by 3.5-17 mA | **Miss: W 410 mA, U 364 mA against 360** (pt_wiredtx8 currents, WT40) |
+| Mode ceilings (digital at PWR-DIG) | Pass; DXe +6.6 mA, DXa +5.6. At the area-scaled macro (62.6 mA) TXe, TXa, DXe, DXa exceed by 3.5-17 mA | Pass against 430 mA (thermal-set, section 1.1), POST on: W 410 (+20), U 364 (+66); W at the area-scaled macro +2.6, at 81.8 mA -1.9 |
 | Island switches | Pass, 7 masters, 0.289 mm2 | Pass with **two `isw_wired` in parallel on wired_tx**; 6 masters, 0.303 mm2 |
 | Static drop (117 mV) | Pass: worst 94.3 mV (`lo_mmd`), 96.0 at 81.8 mA | Pass: worst 109.0 mV (`wrx_cap`), 109.2 at 81.8 mA |
 | Decap | 5.40 nF as packed | 5.41 nF as packed |
@@ -52,21 +52,40 @@ Mode totals (mA), worst in-window analog:
 | pt_rf | TXa | 223.4 | 344.4 | 363.6 | 321.8 | 37.5 | 340 | +18.2 | -23.6 |
 | pt_rf | DXe | 155.0 | 276.1 | 295.2 | 253.4 | 37.5 | 260 | +6.6 | -35.2 |
 | pt_rf | DXa | 236.0 | 357.0 | 376.2 | 334.4 | 37.5 | 340 | +5.6 | -36.2 |
-| pt_wired | W | 233.3 | 427.4 | 431.9 | 410.1 | 0 | 360 | **-50.1** | -71.9 |
-| pt_wired | U | 186.7 | 380.8 | 385.4 | 363.6 | 0 | 360 | **-3.6** | -25.4 |
-| pt_wired | T | 79.0 | 273.1 | 277.6 | 255.8 | 0 | 360 | +104.2 | +82.4 |
+| pt_wired | W | 233.3 | 427.4 | 431.9 | 410.1 | 0 | 430 | +19.9 | -1.9 |
+| pt_wired | U | 186.7 | 380.8 | 385.4 | 363.6 | 0 | 430 | +66.4 | +44.6 |
+| pt_wired | T | 79.0 | 273.1 | 277.6 | 255.8 | 0 | 430 | +174.2 | +152.4 |
 
 Requirements (traced in `performance-requirements.json`; IDs in [power-partition.md](power-partition.md)):
 
-- **PWR-MODE-CEIL:** total current per chip, including the 37.5 mA rfdriver board feed, within 360 mA (pt_wired), 260 mA
-  (pt_rf, external LO), 340 mA (pt_rf, on-chip LO) at worst in-window analog currents. **pt_wired misses it in W and U**
-  (PDS-2); the ceiling is not raised here.
+- **PWR-MODE-CEIL:** total current per chip, including the 37.5 mA rfdriver board feed, within 430 mA (pt_wired, POST
+  allowed), 260 mA (pt_rf, external LO), 340 mA (pt_rf, on-chip LO) at worst in-window analog currents, digital at PWR-DIG.
+  What the pt_wired value protects: section 1.1.
 - **PWR-DIG-WIRED / PWR-DIG-RF:** macro <= 60 mA (pt_wired) and <= 40 mA (pt_rf), unused domains clock-gated, signed off
   with activity-annotated power per chip. pt_rf at its area-scaled 62.6 mA exceeds the TX and DX ceilings by 3.5-17 mA.
 - **PWR-HOST-RF:** RF modes run the host link at div2.
 - **PWR-DROP:** <= 117 mV from the source (3.3 V - 1 %) to any block tap (section 4).
-- **PWR-THERM:** junction 22-32 C across the stopped-to-maximum step: 3.35 V x 360 mA + 51 mW = 1.26 W needs <= 6.4 C/W
-  (board requirement B2a: 5.2 C/W). pt_wired at 410 mA draws 1.37 W and needs <= 5.8 C/W; still inside B2a.
+- **PWR-THERM:** junction 22-32 C across the stopped-to-maximum step (section 1.1).
+
+### 1.1 What the pt_wired ceiling protects
+
+The ceiling is not a physical limit by itself; it stands for the tightest of four. Checked at W = 410 mA (POST on, digital
+at PWR-DIG) and at 432 mA (worst analog, digital 81.8 mA, host 8 pF):
+
+| Limit | Source | Value at 410 / 432 mA | Binds at |
+| --- | --- | --- | --- |
+| Junction 22-32 C across the stopped (15 mW) to maximum step, 2 C plate tolerance: 8 C span | MANDATE 2, B2a | P = 3.35 V x I + 51 mW (TMDS pad and RX divider dissipation, `power_budget.py`): 1.42 / 1.50 W; needs theta(junction-plate) <= 5.7 / 5.4 C/W | **430 mA at 5.42 C/W (3.35 V); 5.19 C/W at the 3.50 V trim setpoint.** B2a requires <= 5.2 C/W |
+| Theta, bounded | `package-channel.md` 2 (cold finger through 0.3 mm of 3 W/m K gel: about 5 C/W + 1-2 spreading; bottom path through the paddle vias 35-45 C/W, connector on the back); `wafer-space-answers.md` (250 um die, conductive epoxy not confirmed, 4.0 x 5.2 mm GND paddle, 6 vias) | low 5.0 C/W (gel only), high 7.0 C/W (gel + spreading); free air 40-100 C/W | at 7 C/W the 8 C span holds only 1.14 W = 326 mA: the B2a cold finger at <= 5.2 C/W is required for any ceiling above 326 mA |
+| Supply cell / bond EM, 125 mA per cell at 85 C (six Metal2 strips, 60 um, DRM 2.09 mA/um) | section 3 | worst supply bond 97.5 mA (78 %); one open supply bond (`dvdd_pads[1]`): 120.6 mA on `dvdd_pads[0]` (96 %); one open ground bond: 86.6 mA | about 445 mA total with one open bond; not binding at 430 |
+| Provider rails (DVDD 124 um, Metal3/4/5) | DRM 14.2 | ring segment current below the worst bond current: < 0.2 mA/um | no |
+| Wire | section 3 | 0.8 mil Al, 11.5 K rise at 87.5 mA, about 23 K at 120 mA | no |
+| Board regulator | B2a (>= 0.45 A at the sense point) | 0.41 / 0.43 A | 450 mA (margin 40 mA at PWR-DIG) |
+
+So the binding limit is thermal (PWR-THERM with the B2a plate): 430 mA, 4.9 % above W with POST on. POST is allowed. W at
+the unscaled 81.8 mA macro (432 mA) is 1.9 mA over and needs 5.40 C/W, inside B2a's 5.2; it is the digital PWR-DIG
+requirement that keeps it under. With one open supply bond the static IR budget is missed (126.9 mV at `wrx_cap`) while EM
+still holds: an open bond is a yield / bring-up case, not an operating point. The 3.50 V trim setpoint on a slow die sits
+exactly at B2a (5.19 C/W).
 
 Carried as estimates or limits (1.25 x in the switch sizing): `pt_wiredtx8` and its POST and pad tail (WT40, block not
 published, no ff run), `pll_tx` ring core, `pll_misc`, `lo_mmd_qdum`, QVCO buffer, `lo_pfdcp`, `lo_vreg`, `rxselect`,
@@ -355,7 +374,8 @@ given, not a pass or fail: the supply-rejection evidence is the demand (PD2-14..
 
 - **PDS-1** (assembly, user): pt_wired wired_tx on two `isw_wired` in parallel (one VISL bar), +0.091 mm2 against the
   packed `isw_debug`.
-- **PDS-2** (coordinator, wired_tx, digital): pt_wired W 410 mA and U 364 mA exceed the 360 mA ceiling at PWR-DIG.
+- **PDS-2** (closed by PDS-6): pt_wired ceiling 430 mA, thermal-set.
+- **PDS-6** (board): B2a theta(junction-plate) <= 5.2 C/W is now binding for pt_wired; regulator >= 0.45 A leaves 20 mA.
 - **PDS-3** (floorplan): straps wider than practical at the packed distances (`wrx_cap` 323 um, `pt_wiredtx8` 290 um,
   `lo_mmd` 154 um, `pll_cdr` on pt_wired 161 um).
 - **PDS-4** (digital): two-phase launch (PD2-6) is required on both chips; on pt_wired without margin.
@@ -364,7 +384,7 @@ given, not a pass or fail: the supply-rejection evidence is the demand (PD2-14..
 ## 9. Evidence and regression
 
 - `spec/budgets/power_budget.py --reconcile [rf|wired]`: sections 1 and 2; exits non-zero if an island exceeds 20 mV or
-  its masters' current, or a case exceeds its ceiling at PWR-DIG (pt_wired fails W and U today, PDS-2). `--check` writes
+  its masters' current, or a case exceeds its ceiling at PWR-DIG. `--check` writes
   `power-budget.json` with `pd2_reconciliation.<chip>`.
 - `scratch/integration/m1-pdn/run.sh rf|wired` runs, one job at a time: `sanity.py` (solver against hand answers and
   ngspice, failing negative case), `e0_sanity_model.py` (builder against a hand calculation with the chip's bond count;

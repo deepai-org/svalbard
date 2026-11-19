@@ -394,7 +394,10 @@ SWITCH_DROP_LIMIT_MV = 20.0
 # from one bench). The drop limit and the master's design current are both checked at that current.
 EST_MARGIN = 1.25
 # Restated ceilings (mA, total chip current incl. the rfdriver board feed), worst in-envelope analog + digital at PWR-DIG.
-PD2_CEILING_MA = {'wired_usb': 360, 'rf_external_lo': 260, 'rf_autonomous_lo': 340}   # >= 4 % over the worst case of each group
+# What a ceiling protects (spec/power-delivery.md section 1): junction 22-32 C across the stopped-to-max step with the B2a
+# cold finger (<= 5.2 C/W, 2 C control tolerance: 8 C span), bond / supply-cell EM (125 mA per cell at 85 C, one open bond
+# included), the board regulator (B2a >= 0.45 A). Thermal binds: 430 mA at 3.35 V = 1.49 W needs <= 5.42 C/W.
+PD2_CEILING_MA = {'wired_usb': 430, 'rf_external_lo': 260, 'rf_autonomous_lo': 340}   # pt_wired / pt_rf, mA at PWR-DIG
 
 
 def pd2_expand(row):

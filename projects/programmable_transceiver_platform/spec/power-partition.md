@@ -6,7 +6,7 @@ This file only defines the requirement IDs that `performance-requirements.json` 
 
 | ID | Requirement |
 | --- | --- |
-| PWR-MODE-CEIL | Total chip current stays within 360 mA in wired and USB modes, 260 mA in RF modes with the external LO and 340 mA in RF modes with the on-chip LO, at worst in-window analog currents, including the 37.5 mA rfdriver board feed. |
+| PWR-MODE-CEIL | Total chip current stays within 430 mA in wired and USB modes (pt_wired; set by PWR-THERM with the B2a cold finger), 260 mA in RF modes with the external LO and 340 mA in RF modes with the on-chip LO, at worst in-window analog currents, including the 37.5 mA rfdriver board feed. |
 | PWR-DIG-WIRED | The digital macro draws at most 60 mA in wired and USB modes, with unused domains clock-gated, signed off with activity-annotated power. |
 | PWR-DIG-RF | The digital macro draws at most 40 mA in RF modes, same sign-off. |
 | PWR-HOST-RF | RF modes run the host link at div2 (`debug.host_link.rate`). |

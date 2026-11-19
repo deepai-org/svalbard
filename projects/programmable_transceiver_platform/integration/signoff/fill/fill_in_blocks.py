@@ -3,7 +3,7 @@
 # and the drawn + dummy density inside the outline.  -> /run/fill/fill_in_blocks.json
 import json
 import klayout.db as db
-man = json.load(open('/run/skel/manifest.json'))
+man = json.load(open('/run/chip/manifest.json'))
 rows = json.load(open('/so/fill/keepouts.json'))['rows']
 masters = {r['master'] for r in rows}
 ly = db.Layout(); ly.read('/run/'+gds); top = ly.top_cell()

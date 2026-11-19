@@ -10,8 +10,9 @@ Work directory `die-fit/`, one run per chip: `chip.sh <rf|wired>` = `ledger.py` 
 `integration/chips/<chip>/chip.conn` + booked items, measured outlines from `meas/measured.json`) -> `decap.py` (5.4 nF
 plan) -> `ledger.py` (tiles booked) -> `fit.py` (packer, scenarios S / T / LB, 12 trials each) -> `overheads.py`
 (routing, grid) -> `summarize.py`. Outputs: `<chip>/ledger.{md,csv,json}`, `<chip>/overheads.json`, `<chip>/summary.json`,
-`run/<chip>/fit-{s,t,lb}.{json,png}`, `decap.json`, `macro.json` (macro outlines). The skeleton floorplans of
-`integration/signoff/skeleton/floorplan-<chip>.json` are the S packings.
+`run/<chip>/fit-{s,t,lb}.{json,png}`, `decap.json`, `macro.json` (macro outlines). The chip floorplans are made by
+`integration/assembly/floorplan.py`, which runs `fit.py` (S) with the real pad-cell footprints (`PADS_JSON`) and the GDS
+outlines (`SIZES_JSON`) instead of the modelled ones.
 
 ## 1. Ledger (mm2; S = as built, T = targets, LB = lower bounds)
 

@@ -10,9 +10,9 @@ import json, os, collections
 import klayout.db as db
 G = dict(globals())
 want = G['insts'].split(',')
-man = json.load(open('/run/skel/manifest.json'))
+man = json.load(open('/run/chip/manifest.json'))
 byname = {i['name']: i for i in man['instances']}
-src = db.Layout(); src.read('/run/skel/pt_chip_skel.gds')
+src = db.Layout(); src.read('/run/chip/pt_chip_top.gds')
 ly = db.Layout(); ly.dbu = 0.001
 top = ly.create_cell('pt_fixture')
 um = lambda v: int(round(v*1000))

@@ -1,0 +1,13 @@
+#!/bin/bash
+# Run one command in the LibreLane GF180 image (OpenROAD + KLayout python), network off, one heavy job.
+#   tool.sh <chip> [-c cpus] <command...>      (cpus <= 4, OMP_NUM_THREADS=1)
+# Mounts: /repo = repository (read-only), /run = scratch/integration/assembly-<chip> (read-write), /asm = this directory.
+A=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$A/../../../.." && pwd)
+CHIP=$1; shift; RUN=${ASM_RUN:-$ROOT/scratch/integration/assembly-$CHIP}; mkdir -p "$RUN"
+CPUS=1; [ "$1" = -c ] && { CPUS=$2; shift 2; }
+[ "$CPUS" -le 4 ] || { echo "cpus > 4 not allowed" >&2; exit 2; }
+IMG=${ASM_IMAGE:-svalbard/librelane-gf180-guarded:2026.11}
+exec docker run --rm --name "asm-$CHIP-$$" --label svalbard.assembly=1 --network none --cpus "$CPUS" --memory "${ASM_MEM:-24g}" --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp -e OMP_NUM_THREADS=1 -e CHIP="$CHIP" -e THREADS="$CPUS" \
+  -v "$ROOT":/repo:ro -v "$RUN":/run -v "$A":/asm:ro --entrypoint /bin/bash "$IMG" -c \
+  'export PATH=/foss/tools/bin:/foss/tools/klayout:$PATH; cd /run; exec "$@"' tool "$@"

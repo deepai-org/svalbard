@@ -1,7 +1,7 @@
 # Sourced by the signoff scripts. Paths of the tool image and the two PDK deck trees.
 SO=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd); ROOT=$(cd "$SO/../../../.." && pwd)
-CHIP=${SIGNOFF_CHIP:?SIGNOFF_CHIP=rf|wired}        # the chip whose skeleton the flows work on
-RUN=${SIGNOFF_RUN:-$ROOT/scratch/integration/signoff-run-$CHIP}
+CHIP=${SIGNOFF_CHIP:?SIGNOFF_CHIP=rf|wired}        # the chip whose assembled GDS the flows work on
+RUN=${SIGNOFF_RUN:-$ROOT/scratch/integration/assembly-$CHIP}   # the assembly run of the chip (integration/assembly)
 # Project KLayout 0.30.9 image (aarch64); its /foss/pdks/gf180mcuD is the project PDK (open_pdks f6eeac7).
 KL_IMAGE=${KL_IMAGE:-sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305}
 # Shuttle PDK (open_pdks 792ef67): a directory with drc/ (KLayout deck) and scripts/ (fill). Default: the copy made by the

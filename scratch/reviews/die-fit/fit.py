@@ -37,7 +37,9 @@ nc = json.load(open(f'{HERE}/netcounts.json'))
 # ---- shapes: measured W x H of the ledger row (scaled to the scenario area), unknown blocks square ----------------------
 SHAPE = {'tx_interlock': (139.4, 345.0), 'pt_ptrim': (190.0, 211.2), 'pt_lo_vreg': (407.4, 1081.6), 'pt_ctle': (194.0, 354.0), 'pt_wiredtx': (543.9, 152.0),
          'd2h_strip': (1312.3, 24.0), 'wtx_tcoil_rsv': (570.0, 120.0)}
+SIZES = json.load(open(os.environ['SIZES_JSON'])) if os.environ.get('SIZES_JSON') else {}   # master -> [w, h] measured on the GDS (assembly flow)
 def shape(r, area):
+    if SIZES.get(r['master']): return tuple(SIZES[r['master']])
     w, h = (float(r['w']), float(r['h'])) if r['w'] else SHAPE.get(r['master'] if r['kind'] == 'conn' else r['item'], (1, 1))
     k = math.sqrt(area/(w*h)); k = 1.0 if abs(k-1) < 0.012 else k
     return round(w*k, 2), round(h*k, 2)
@@ -128,11 +130,14 @@ BOND = [l.split()[:4] for l in open(f'{P_}/integration/chips/{CHIP}/bond_map.txt
 FAM = {'pad_rf_pair': (310.06, 912.9), 'pad_rftxpad': (310.06, 912.9), 'pad_refpad': (401.2, 912.9), 'pad_hspad': (492.0, 912.9),
        'pad_wirepad': (521.2, 914.9), 'pad_txpad': (481.2, 914.9), 'pad_single_leg': (205.0, 912.9)}
 # offset of each family's cell centre from the midpoint of its sites, along the edge (the bond openings are not centred in
-# the cell; measured as the snap of the skeleton build, integration/signoff/skeleton/build.py, 2026-11-19)
+# the cell; measured as the snap of the former skeleton build, 2026-11-19; the assembly flow passes the real footprints)
 OFS = {'pad_rf_pair': 11.945, 'pad_rftxpad': 11.945, 'pad_refpad': 60.38, 'pad_hspad': 102.945, 'pad_wirepad': -90.62,
        'pad_txpad': 100.38, 'pad_single_leg': -97.455}
 def pads():
-    """custom pad rectangles of this chip, centred on the bond centres of their sites (bond_map.txt)"""
+    """custom pad rectangles of this chip, centred on the bond centres of their sites (bond_map.txt); PADS_JSON (assembly
+    flow): the footprints of the real pad cells as placed on the template openings, used as they are"""
+    if os.environ.get('PADS_JSON'):
+        return {n: [tuple(r) for r in rs] for n, rs in json.load(open(os.environ['PADS_JSON'])).items()}
     MASTER = {r['item']: r['master'] for r in L['rows']}
     by = {}
     for site, side, net, inst in BOND:
@@ -284,7 +289,7 @@ report = dict(scenario=SCEN, ring_um=RING, grow_um=GROW, nopad=sorted(NOPAD), tr
               macro_signal_wire_mm=round(wire_um/1e3, 1), route_top=sorted(route, key=lambda t: -t[1]*t[2])[:15],
               fixed={k: [round(v, 1) for v in r] for k, r in fixed.items()}, pads={k: [[round(v, 1) for v in r] for r in rs] for k, rs in pads().items()},
               placed_rects={n: dict(rect=[round(v, 1) for v in d['rect']], rot=d['rot'], grp=blocks[n]['grp']) for n, d in p.placed.items()})
-RUN = f'{HERE}/run/{CHIP}'; os.makedirs(RUN, exist_ok=True)
+RUN = os.environ.get('RUNDIR', f'{HERE}/run/{CHIP}'); os.makedirs(RUN, exist_ok=True)
 report['chip'] = CHIP
 json.dump(report, open(f'{RUN}/fit-{TAG}.json', 'w'), indent=0)
 print(json.dumps({k: v for k, v in report.items() if k not in ('placed_rects', 'rule_audit', 'pads', 'fixed', 'trials', 'straps', 'route_top')}, indent=0)[:3500])

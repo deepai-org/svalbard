@@ -1,9 +1,9 @@
 # KLayout: add top-level fill keep-out markers over the instances a set of keepouts.json names.
-#   kl.sh fill/keepout.py -rd inp=skel/pt_chip_skel.gds -rd out=fill/<tag>_ko.gds -rd kset=must|rf|analog|none|allblocks
+#   kl.sh fill/keepout.py -rd inp=chip/pt_chip_top.gds -rd out=fill/<tag>_ko.gds -rd kset=must|rf|analog|none|allblocks
 # allblocks = every block instance that is not the digital macro or a pad (upper bound of what could be excluded).
 import json
 import klayout.db as db
-man = json.load(open('/run/skel/manifest.json'))
+man = json.load(open('/run/chip/manifest.json'))
 rows = json.load(open('/so/fill/keepouts.json'))['rows']
 LAY = {'PMNDMY': (152, 5), 'NDMY': (111, 5), 'IND_MK': (151, 5)}
 ly = db.Layout(); ly.read('/run/'+inp)

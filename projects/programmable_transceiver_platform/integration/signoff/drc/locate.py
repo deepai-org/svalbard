@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Attribute the violations of a KLayout report to the blocks of the skeleton.
+"""Attribute the violations of a KLayout report to the blocks of the assembled chip.
 The deck runs in deep mode: an item is reported in the cell it occurs in, in that cell's coordinates. Items in a cell
-below the top are attributed to the top-level child that contains the cell (skel/cell_owner.json); items in the top cell
+below the top are attributed to the top-level child that contains the cell (chip/cell_owner.json); items in the top cell
 by position, as follows.
   locate.py <report.lyrdb[.gz]> [manifest.json]   -> prints rule x owner counts, writes <report dir>/by_owner.json
 Owner = the instance whose placed outline contains the violation's centre (smallest outline wins); otherwise the region:
@@ -9,7 +9,7 @@ ring (pad ring band), seal (outer 26 um), or top (core area outside every block)
 import sys, gzip, json, re, collections, os, xml.etree.ElementTree as ET
 rep = sys.argv[1]
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../..'))
-man = json.load(open(sys.argv[2] if len(sys.argv) > 2 else ROOT+f"/scratch/integration/signoff-run-{os.environ['SIGNOFF_CHIP']}/skel/manifest.json"))
+man = json.load(open(sys.argv[2] if len(sys.argv) > 2 else ROOT+f"/scratch/integration/assembly-{os.environ['SIGNOFF_CHIP']}/chip/manifest.json"))
 inst = [(i['name'], i['master'], i['bbox']) for i in man['instances'] if i.get('bbox') and i.get('cell')]
 inst.sort(key=lambda t: (t[2][2]-t[2][0])*(t[2][3]-t[2][1]))
 def owner(x, y):
@@ -19,7 +19,7 @@ def owner(x, y):
     if x < 442 or y < 442 or x > 3490 or y > 4680: return 'ring', 'provider pad ring'
     return 'top', 'between blocks'
 cnt = collections.Counter(); ex = {}
-co = json.load(open(os.path.join(os.path.dirname(sys.argv[2]) if len(sys.argv) > 2 else ROOT+f"/scratch/integration/signoff-run-{os.environ['SIGNOFF_CHIP']}/skel", 'cell_owner.json')))
+co = json.load(open(os.path.join(os.path.dirname(sys.argv[2]) if len(sys.argv) > 2 else ROOT+f"/scratch/integration/assembly-{os.environ['SIGNOFF_CHIP']}/chip", 'cell_owner.json')))
 TOPS = ('pt_chip_top', 'pt_fixture')
 f = gzip.open(rep) if rep.endswith('.gz') else open(rep, 'rb')
 num = re.compile(r'(-?[\d.]+),(-?[\d.]+)')

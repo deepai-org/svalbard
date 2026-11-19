@@ -1,9 +1,9 @@
 #!/bin/bash
 # Full-die dummy fill with the shuttle PDK's fill scripts (792ef67: COMP, Poly2, Metal1-5), with a keep-out set.
-#   run_fill.sh <kset: none|must|rf|analog|allblocks> [threads=2] [input gds rel. to run dir = skel/pt_chip_skel.gds]
+#   run_fill.sh <kset: none|must|rf|analog|allblocks> [threads=2] [input gds rel. to run dir = chip/pt_chip_top.gds]
 # Output <run>/fill/<kset>_filled.gds, <kset>_fill.log (runtime, peak memory). One heavy job per call.
 . "$(dirname "$0")/../env.sh"
-K=$1; THR=${2:-2}; IN=${3:-skel/pt_chip_skel.gds}
+K=$1; THR=${2:-2}; IN=${3:-chip/pt_chip_top.gds}
 [ "$THR" -le 4 ] || { echo "threads > 4 not allowed"; exit 2; }
 mkdir -p "$RUN/fill"
 SRC=$IN

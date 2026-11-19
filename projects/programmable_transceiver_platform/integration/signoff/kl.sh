@@ -1,10 +1,10 @@
 #!/bin/bash
 # Project KLayout 0.30.9 (aarch64 image), batch mode, network off.
 #   kl.sh [-c cpus] <script.py|.rb|.drc> [-rd k=v ...]
-# Mounts: /repo = repository (read-only), /run = scratch/integration/signoff-run-<chip> (read-write), /so = this directory (read-only).
+# Mounts: /repo = repository (read-only), /run = scratch/integration/assembly-<chip> (read-write), /so = this directory (read-only).
 # Machine rule: cpus <= 4, OMP_NUM_THREADS=1.
 SO=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$SO/../../../.." && pwd)
-RUN=${SIGNOFF_RUN:-$ROOT/scratch/integration/signoff-run-${SIGNOFF_CHIP:?SIGNOFF_CHIP=rf|wired}}; mkdir -p "$RUN"
+RUN=${SIGNOFF_RUN:-$ROOT/scratch/integration/assembly-${SIGNOFF_CHIP:?SIGNOFF_CHIP=rf|wired}}; mkdir -p "$RUN"
 CPUS=1; [ "$1" = -c ] && { CPUS=$2; shift 2; }
 [ "$CPUS" -le 4 ] || { echo "cpus > 4 not allowed" >&2; exit 2; }
 IMG=${KL_IMAGE:-sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305}

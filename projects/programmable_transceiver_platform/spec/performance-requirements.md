@@ -4,7 +4,7 @@ Rendered from `spec/performance-requirements.json` by `spec/check_performance_re
 Status uses the performance-review legend (meets / marginal / fails / unverified), envelope only (Tj 22–32 °C, 3.15–3.35 V, all process corners).
 Per MANDATE.md the **primary fix** is the plan; fallbacks are backups. Chip: pt_rf (rf), pt_wired (wired) or both (each die meets the row on its own).
 
-Summary: meets 4, marginal 12, fails 39, unverified 87 (total 142; rf 66, wired 67, both 9).
+Summary: meets 4, marginal 12, fails 40, unverified 87 (total 143; rf 67, wired 67, both 9).
 
 | ID | Chip | Requirement | Owner | Evidence | Status | Basis | Primary fix | Fallback (backup) |
 |---|---|---|---|---|---|---|---|---|
@@ -68,6 +68,7 @@ Summary: meets 4, marginal 12, fails 39, unverified 87 (total 142; rf 66, wired 
 | RF-154-EVM | rf | EVM <= 35 % | rf_tx | `analog/rf_tx/generated/rfdriver-evidence.json` | **unverified** | not simulated | EVM sim | `rf_tx_external_upconverter` |
 | RF-BT-EDR | rf | DEVM <= 20 % / 13 % | rf_tx | `analog/rf_tx/generated/rfdriver-evidence.json` | **unverified** | linear -5.6 dBm; no DEVM | Linear driver | `rf_tx_external_upconverter` |
 | RF-RX-IIP3 | rf | IIP3 >= -10 dBm at max gain | rf_rx | `analog/rf_rx/generated/lna-evidence.json` | **unverified** | not simulated | Two-tone sim | `rf_lna_bypass` |
+| RF-LNA-STAB | rf | LNA unconditionally stable on the pt_rf package model (3 bounds, supply cases, all corners): mu, K > 1; Re(Zin,diff) >= 1.0 ohm; Re(Zcm) >= 1.0 ohm below 5 GHz; from 5 GHz Re(Zcm) >= 0.5 ohm and >= 0.8 x the LNA-off value at the same frequency (coordinator ruling 2026-11-19) | rf_rx | `analog/rf_rx/generated/lna-evidence.json` | **fails** | metal-aware view, 41 rows: differential passes; common mode 0.93-0.99 ohm below 5 GHz in 18 rows (duplex bias / low-inductance ff) and 0.71 x LNA-off at 5 GHz in 40 rows | placement-level LNA relayout (less source / tank route resistance), then common-mode loss retune | `rf_lna_bypass` |
 | RF-TX-IRR | rf | TX IRR >= 35 dB (>= 40 after cal) | rf_tx | `analog/rf_tx/generated/txmix_i-evidence.json` | **marginal** | 61.6 dB ideal LO linear; 33.1 dB saturated | Real-LO sim | `rf_tx_external_upconverter` |
 | RF-RX-IRR | rf | RX IRR >= 25 dB (>= 35 after cal) | rf_rx | `analog/rf_rx/generated/rxmix_i-evidence.json` | meets | ~29 dB uncorrected from 0.6 dB I/Q gain (tt only) | FPGA correction | — |
 | RF-TX-MUTE | rf | Mute isolation >= 40 dB | rf_tx | `analog/rf_tx/generated/rfdriver-evidence.json` | **fails** | 22-24 dB | Series mute switch / driver off | — |

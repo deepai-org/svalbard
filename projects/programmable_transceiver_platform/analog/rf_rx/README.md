@@ -205,6 +205,7 @@ nets (`lna_netres.py`, pads owner's mesh solver), cross-checked by Magic `extres
 | Supply current, RX / `lobias`, 20 corners, rext | ≤ 19.0 / ≤ 11.8 mA | 14.5–15.5 / 9.9–10.3 mA (C-only 18.2: metal drops on VSS / tail cost 16 %) | pass, below design point |
 | Electromigration of the stage-current routes (85 °C, 2.09 mA/µm, 0.58 mA/cut) | pass | estimate only (`scratch/rf-lna-q/em3.py`, two-terminal mesh solves, no superposition): tracks 1.98–2.07 mA/µm (1–5 % margin); per cut ≤ 0.46 mA on the full-current paths, 0.25 mA on the small gain-step units at their own current | not signed off (old layout ~30× over) |
 | Stability, pt_rf bond model × 3 bounds, 38 rows + references, 5 MHz–30 GHz, rext | μ, K > 1; Re ≥ 1.0 Ω | μ ≥ 1.008, K ≥ 2.95, differential ≥ 1.17 Ω; common mode 0.74–1.34 Ω at 5–8 GHz (LNA off 0.90), 0.45 Ω at 30 GHz; ≥ 1.07 Ω below 1 GHz | **miss** (common mode) |
+| Common mode as ruled (spec RF-LNA-STAB, `lna_close.py cm_limit`): ≥ 1.0 Ω below 5 GHz; from 5 GHz ≥ 0.5 Ω and ≥ 0.8 × LNA-off | as stated | below 5 GHz min 0.93 Ω (18 / 41 rows); at 5 GHz 0.68–0.79 × LNA-off (40 / 41 rows) | **miss** |
 | Same, old map vs pt_rf map (same bench) | — | identical within 0.01 Ω: the ground inductance is not the lever | information |
 | S11, real channel, per-chip carrier fit, rext | ≤ −10 dB | tt −9.69, ff −9.07, ss −10.10, pessimistic −10.43 dB | **miss** |
 | LNA NF incl. channel, rext | ≤ 6.0 dB (pessimistic +1.5) | tt 4.8–5.1, ff 4.3–4.6, ss 5.5–5.8, pessimistic 7.1–7.4 (8.9 derated) dB; gain tt −3.3…−2.6 dB | pass / **miss** pessimistic |

@@ -912,7 +912,7 @@
    ],
    "status": "meets",
    "basis": "10-18 dB margin by cascade (analytic on extracted NF)",
-   "primary_fix": "—",
+   "primary_fix": "\u2014",
    "fallback": []
   },
   {
@@ -940,7 +940,7 @@
    ],
    "status": "meets",
    "basis": "margin by cascade",
-   "primary_fix": "—",
+   "primary_fix": "\u2014",
    "fallback": []
   },
   {
@@ -987,6 +987,22 @@
    "status": "unverified",
    "basis": "not simulated",
    "primary_fix": "Two-tone sim",
+   "fallback": [
+    "rf_lna_bypass"
+   ]
+  },
+  {
+   "id": "RF-LNA-STAB",
+   "chip": "rf",
+   "requirement": "LNA unconditionally stable on the pt_rf package model (3 bounds, supply cases, all corners): mu, K > 1; Re(Zin,diff) >= 1.0 ohm; Re(Zcm) >= 1.0 ohm below 5 GHz; from 5 GHz Re(Zcm) >= 0.5 ohm and >= 0.8 x the LNA-off value at the same frequency (coordinator ruling 2026-11-19)",
+   "source": "analog/rf_rx/README.md",
+   "owner": "rf_rx",
+   "evidence": [
+    "analog/rf_rx/generated/lna-evidence.json"
+   ],
+   "status": "fails",
+   "basis": "metal-aware view, 41 rows: differential passes; common mode 0.93-0.99 ohm below 5 GHz in 18 rows (duplex bias / low-inductance ff) and 0.71 x LNA-off at 5 GHz in 40 rows",
+   "primary_fix": "placement-level LNA relayout (less source / tank route resistance), then common-mode loss retune",
    "fallback": [
     "rf_lna_bypass"
    ]

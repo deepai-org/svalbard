@@ -474,5 +474,56 @@ def write():
     print('all_pass', rec['all_pass'], {k: v.get('pass') for k, v in tests.items()})
 
 
+
+CM_HF = dict(f_split=5e9, abs_ohm=0.5, rel_off=0.8)     # coordinator ruling 2026-11-19: from 5 GHz up Re(Zcm) >= 0.5 ohm and >= 0.8 x LNA-off
+
+
+def cm_limit():
+    """Common-mode limit as ruled: below 5 GHz Re(Zcm) >= 1.0 ohm (5 MHz sweep + hf curves); from 5 GHz Re(Zcm) >= 0.5 ohm and
+    >= 0.8 x the LNA-off value at the same frequency, model and corner (off curves run here, supply case 3 nF / 0.03 / 0.2 ohm)."""
+    import pkg_rf
+    LM.PKG_MODEL = pkg_rf.OUTF
+    rows = json.loads((OUT / 'stab_rf.json').read_text())
+    keys = sorted({(r['model'], tuple(r['corner'])) for r in rows if r['case'].get('mode') != 'off'})
+    s1 = dict(cdie=3e-9, rdie=0.03, rsw=0.2)
+    def off(k):
+        wd = OUT / 'cm_off' / f'{k[0]}_{tb._tag(k[1])}'
+        LM.stability(wd, 'extpr', k[1], deg='lowr' if k[1] == FF else None, pkg=k[0], mode='off', **s1)
+        return k, wd
+    offs = dict(par([(lambda k=k: off(k)) for k in keys]))
+    def curve(d, kind):
+        fs = sorted(Path(d).glob(f'*_{kind}?_zr.txt'))
+        a = [np.array(S.read_table(f)) for f in fs]
+        return a[0][:, 0], np.min(np.stack([x[:, 1] for x in a]), axis=0)
+    out = []
+    for i, r in enumerate(rows):
+        if r['case'].get('mode') == 'off' or 'error' in r:
+            continue
+        f, z = curve(OUT / 'stab_rf' / f'c{i:02d}' / 'hf', 'cm')
+        fo, zo = curve(offs[(r['model'], tuple(r['corner']))], 'cm')
+        zo = np.interp(f, fo, zo)
+        lo, hi = f < CM_HF['f_split'], f >= CM_HF['f_split']
+        lim = np.maximum(CM_HF['abs_ohm'], CM_HF['rel_off'] * zo[hi])
+        marg = z[hi] - lim; j = int(np.argmin(marg))
+        below = min(float(z[lo].min()), r['lf']['min_re_zcm_real_mixer_ohm'])
+        out.append(dict(row=i, model=r['model'], corner=r['corner'], case=r['case'], cm_min_below_5ghz=below, pass_below_5ghz=below >= 1.0,
+                        cm_hf_worst_margin_ohm=float(marg[j]), at_hz=float(f[hi][j]), cm_there=float(z[hi][j]), off_there=float(zo[hi][j]),
+                        pass_hf=bool(marg.min() >= 0)))
+    save('cm_limit', out)
+    print('rows', len(out), 'fail <5G', sum(not o['pass_below_5ghz'] for o in out), 'fail >=5G', sum(not o['pass_hf'] for o in out),
+          'min <5G %.3f' % min(o['cm_min_below_5ghz'] for o in out), 'worst hf margin %.3f' % min(o['cm_hf_worst_margin_ohm'] for o in out))
+
+
+def write3():
+    """Round-3 evidence record (metal-aware view rext): generated/lna-evidence.json from close_rext/ and r3/ (band rows)."""
+    R = flow.SCRATCH / 'close_rext'; ld = lambda n: json.loads((R / f'{n}.json').read_text()) if (R / f'{n}.json').exists() else None
+    band = json.loads((flow.SCRATCH / 'r3' / 'rext' / 'band.json').read_text())
+    cur = ld('currents'); st = ld('stab_rf'); cm = ld('cm_limit'); ch = ld('chain')
+    rec = dict(block='lna', layout=json.loads((GEN / 'lna-layout.json').read_text()).get('area_um2'),
+               gds_sha256=sha(GEN / 'lna.gds'), view='rext: lna.ext.spice + solved metal networks (lna_netres.py); limits in lna_close.LIM / CM_HF',
+               limits=dict(LIM, cm_hf=CM_HF), currents=cur, stability=st, cm_limit=cm, band=band, chain=ch,
+               bounce=ld('bounce_rf'), not_run=['IIP3 over corners', 'Monte Carlo', 'read-back LVS of this GDS', 'EM sign-off per segment'])
+    (GEN / 'lna-evidence.json').write_text(json.dumps(rec, indent=1, default=str)); print('written', GEN / 'lna-evidence.json')
+
 if __name__ == '__main__':
-    {'currents': currents, 'stab': stab, 'stab_extra': stab_extra, 'stab_lf': stab_lf, 'band': band, 'chain': chain, 'pkg': pkg, 'stab_b': stab_b, 'stab_rf': stab_rf, 'startup': startup_all, 'neg': neg, 'write': write}[sys.argv[1]]()
+    {'currents': currents, 'stab': stab, 'stab_extra': stab_extra, 'stab_lf': stab_lf, 'band': band, 'chain': chain, 'pkg': pkg, 'stab_b': stab_b, 'stab_rf': stab_rf, 'cm_limit': cm_limit, 'write3': write3, 'startup': startup_all, 'neg': neg, 'write': write}[sys.argv[1]]()

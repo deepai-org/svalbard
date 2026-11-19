@@ -85,3 +85,53 @@ publishable candidate. Nothing is copied to $P/analog/pads/generated/, nothing c
   (costs about 0.45 ohm on the P leg only).
 - Under-rail capacitance MEASURED (Magic, rail cells over the cell at x 0 and 211): f6 159.9 fF per pad (the 0.12 pF on record was an estimate), a3 206.1 fF.
 - FINAL CANDIDATE `build/a4` = `./build.sh leg5 a4 --site-primary --no-core-array '--esd-opt={"neck_m1": true}'`; RUNNING `./q3.sh a4 leg5` (build, R extraction incl. low metal, everything else). Progress `q3.progress`, `q2.progress`.
+
+# FINAL: candidate a4 (2026-11-18/19), evidence complete, NOT published, NOT committed
+`build/a4/pad_hspad.gds` sha256 286715686f0c7c7dec766ac00ed9337b3b7987ad4a87ed81dab2269090f19001, `physical.spice` db7a4a1c..., leg `build/leg5/pt_hs_leg.gds` 145109eb... (`--lb=4.2`),
+models `models/a4_r_{low,typ,high}.spice` 2f7c0ffb / 56f421f8 / 86175218 (+ `_rail` variants with 206.05 fF per pad under-rail).
+Generators: pad_site_primary.py 5ff82d2a..., hs_pad_compose.py fa37ee49..., hs_leg_layout.py fc9c763a..., protection_device_audit.py 2b6745db...
+Command: `./build.sh leg5 a4 --site-primary --no-core-array '--esd-opt={"neck_m1": true}'`; everything else by `./q3.sh a4 leg5` (all rerun on this GDS).
+- Layout: Magic DRC 0, composer LVS match, device audit match; read-back LVS match vs simulated netlist and vs composer schematic (`checks/a4/rb/{pos,sch}`), controls fail
+  (`neg` RX swap: netlists do not match; `neg2` one site diode missing: property error); KLayout precheck 0 / 0 (`checks/a4/kldrc`); latch-up 0 um2 at 15 um (`checks/a4/lu.json`);
+  pad ON the rail cells: connectivity clean (`railconn.txt`), precheck main 0 / antenna 0 (`checks/a4/kldrc_rail`; rail-only `checks/railonly` 0; a3 with the shell's ring stacks: 132);
+  floating lines 1 (shell piece m2_2279_124800#). Outline (-0.055, 0)-(492, 912.91) and all pins unchanged; NEW label / port DVDD (Metal3 at (57.75, 141.4) and (268.75, 141.4)).
+  Default composer paths: R-fixed no-flag build XOR 0 vs the published GDS; legacy-leg build XOR 0 vs `../../hsfix/build/flegacy6` (`default-xor.txt`).
+- R (ohm typ / high / low): bond -> heads P 5.24 / 7.16 / 3.68, N 4.88 / 6.81 / 3.35; bond -> site down-diodes 0.18 / 0.51, up-diodes 0.60 / 1.04; VSS landings -> anodes 0.048 / 0.155; DVDD landings -> n-wells 0.089 / 0.284.
+- ESD (`esd/a4r{t,h}.json`, `esd/a4r{t,h}_cdie.json`, `esdtab.py`): see the table in the final report. Misses: pad-to-pad 2 kV 9.61 V typ / 11.10 V high against the declared 8.0 V bond-pad limit
+  (no device over its transient limit: worst gate 5.78 / 6.63 V, worst diode reverse 6.16 / 7.12 V); 25 MOS over the 6.0 V DC screen at 2 kV with high metal (6.46-6.63 V);
+  CDM surrogate: positive against VSS 8.67 / 12.23 / 13.60 V at 1 / 2 / 3 A without die capacitance (5.65 / 9.54 / 12.38 V with 1 nF), 25 termination switches over 8.0 V from 1 A (2 A with 1 nF).
+- Termination (`term-table-a4.txt`): crossing codes low 4.3-9.0, typ 4.9-9.8, high 5.8-11.0; best code 95.6-103.8 ohm, P-N <= 0.36 ohm; single code typ 7: 84.8-119.2, high 9: 82.0-111.8, LOW 7: 79.9-114.4 = MISS by 0.1 ohm.
+- AC (`bench/a4*-ac.json`, `-rxpath.json`): see final report. P/N 10.9 fF.
+- Not done: independent review; f6 through the new ESD bench (f6 column is read from its records); ss / ff device corners in the ESD matrix (typical 27 C only); mismatch; assembly-level extraction beyond the two rail cells;
+  mirrored placement (`--mirror`) of the pad-on-rail check; `rail_site_check.py` did not exist when the queue ended (own composite used); shell regeneration to delete the dead isolated rail / clamps and the array feed stubs.
+
+# REVIEW AND RESOLUTION (pads owner, 2026-11-19): a4 NOT published
+Independent review `review-a4/REVIEW.md` (fresh agent, artefacts only): NO-GO against the declared limits. Layout evidence confirmed on the exact GDS
+(sha, LVS controls fail, precheck 0/0 alone and on the rail cell, `rail_site_check.py` PASS, latch-up 0, default XOR 0). Generator shas re-checked
+after the 08:00 mtime touch: identical to the record (5ff82d2a / fa37ee49 / fc9c763a / 2b6745db), so the provenance finding is closed.
+Misses: (1) pad-to-pad 2 kV at the bond pad, (2) CDM surrogate (25 termination switches over 8.0 V from 1 A without die capacitance, from 2 A with 1 nF),
+(3) pad C incl. under-rail 1.26-1.32 pF vs 1.15 (and +37 fF over the published cell, against wired RX's "not above published"), (4) single-code
+termination at low metal by 0.1 ohm. New: RX_P reaches 4.65 V (2 kV HBM) / 6.1 V (CDM 1 A) above VSS behind the MIM; the consumer (CTLE input) oxide is not in the bench.
+
+## Pad-to-pad 2 kV: judged at the devices (owner's judgement; the declared bond-pad figure stays a recorded miss)
+Basis: 8.0 V is the 6 V-oxide transient limit (`spec/design-assumptions.md`, "Gate oxide transient limit"). The bond pad and its plate carry no thin
+oxide; every device with a terminal on the pad nets is in the bench's device check. Worst gate 5.78 V typ / 6.63 V high metal (limit 8.0), worst diode
+reverse 6.16 / 7.12 V (model breakdown nd2ps_06v0 bv 11 V, pd2nw_06v0 bv 10.5 V; sm141064.ngspice), MIM 3.87 / 4.60 V (limit 6 V). So pad-to-pad HBM
+passes at the devices with 1.4 V of oxide margin at high metal. Condition: the receiver input behind RX_P/N must be added (finding 5).
+Reaching 8.0 V at the bond pad: what-if `whatif/` (site diodes scaled in the a4 typ model, finger metal not added = optimistic): x1.6 (8 fingers per row)
+P+N 7.95 V, x2.0 7.38 V. The site holds at most 5 fingers per row beside the 8 um neck (`pad_site_primary.py`), and each extra finger costs about 20-28 fF
+per leg; "lower finger resistance" is the same trade (diode series resistance and junction C both scale with area).
+
+## CDM surrogate
+What-if at 1 A, no die capacitance: x1.6 fingers P+VSS 8.01 V, termination switches 7.61 V (0 over 8.0); x2.0 7.79 V / 7.40 V; pad-to-pad stays 9.9-10.3 V
+because the provider ring itself rises to 5.3 V DVDD-DVSS in 1 ns without die capacitance. With 1 nF on the ring (the die carries 5.4 nF of decap, D9)
+5 fingers pass at 1 A (pad 5.65 V, worst gate 5.42 V) and fail at 2 A. The published f6 on the same bench (`esd/f6rt.json`): bond pad far higher
+(2 kV P+N 22.8 V, P+VSS 11.9 V; CDM 1 A P+N 18.5 V) but its termination switches stay at 5.2 V at CDM 1 A because the core diode array sits next to
+them; a4 removed that array, i.e. the local secondary clamp of the switches.
+The current a 250 V CDM event drives into this bare die is not established in the repo (open: PAD-11 / README item 3).
+
+## What would make it a GO (not done; each costs capacitance or needs a ruling)
+- Secondary protection next to the termination switches (the a1 variant keeps the core array: about +0.3 pF per leg), or gate-follows-drain coupling
+  of the switch gates (leg redesign), and the receiver input in the bench.
+- Or: rulings that (a) pad-to-pad is judged at the devices, (b) CDM is judged with die capacitance, (c) the required CDM current, and (d) a C budget
+  above published for option A (wired RX).

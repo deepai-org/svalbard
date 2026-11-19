@@ -212,7 +212,8 @@ is the safe state.
 Bring-up sequence:
 
 1. Islands off, all fields at reset.
-2. `core.biasgen.ena` = 1 and `core.refchain.bgap_ena` = 1. Wait ≥ 100 µs.
+2. `core.biasgen.ena` = 1 and `core.refchain.bgap_ena` = 1. Wait ≥ 100 µs and clock ≥ 256 SCLK cycles of SPI traffic: the
+   interlock counts SCLK, which runs only during transfers (board rule B54). Until then every bias output stays off.
 3. `ref_sel_vbg` = 1, `ref_sel_coarse` = 1.
 4. Power an island, set its `dist_en`, then the block enables.
 

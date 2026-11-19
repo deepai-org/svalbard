@@ -1,0 +1,22 @@
+diff --git a/projects/programmable_transceiver_platform/spec/debug-controls.json b/projects/programmable_transceiver_platform/spec/debug-controls.json
+index f4e98a68..60dac876 100644
+--- a/projects/programmable_transceiver_platform/spec/debug-controls.json
++++ b/projects/programmable_transceiver_platform/spec/debug-controls.json
+@@ -1453,7 +1453,7 @@
+       }
+     },
+     "core.biasgen": {
+-      "description": "Master bias generator gf180mcu_ocd_ip__biasgen (README field names bias.*). All resets are the safe state. ref_sel_fine is gated in hardware (fine_eff = ref_sel_fine & ref_sel_coarse) and also rejected at commit. Bring-up order (analog/core_support/README.md 'Register requirements'): (1) islands off, all fields at reset; (2) ena=1 and core.refchain.bgap_ena=1 (sinks 7/3, trim 8), wait >= 100 us; (3) ref_sel_vbg=1, ref_sel_coarse=1; (4) power an island, set core.refchain.dist_en_<island>=1, then the block enables. Per-die trims (bandgap trim, idac2_source) are applied by host software after every reset.",
++      "description": "Master bias generator gf180mcu_ocd_ip__biasgen (README field names bias.*). All resets are the safe state. ref_sel_fine is gated in hardware (fine_eff = ref_sel_fine & ref_sel_coarse) and also rejected at commit. Bring-up order (analog/core_support/README.md 'Register requirements'): (1) islands off, all fields at reset; (2) ena=1 and core.refchain.bgap_ena=1 (sinks 7/3, trim 8), wait >= 100 us AND clock >= 256 SCLK cycles of SPI traffic (the bandgap interlock counts SCLK, which runs only during transfers; see core.refchain); (3) ref_sel_vbg=1, ref_sel_coarse=1; (4) power an island, set core.refchain.dist_en_<island>=1, then the block enables. Per-die trims (bandgap trim, idac2_source) are applied by host software after every reset.",
+       "update": "stopped",
+       "islands": [],
+       "live": false,
+@@ -1547,7 +1547,7 @@
+       }
+     },
+     "core.refchain": {
+-      "description": "Bandgap (README bgap.*) and bias-distribution root trunk-leg enables (README dist.en_<island> = EN_<ISLAND>). Trunk enables are not island-gated: the documented idac2 trim runs dist_en_debug=1 with the debug island unpowered. Bandgap-before-consumers interlock (always-on audit F5, in RTL: rtl/pt_ctl_decode.sv pt_bgap_interlock): the macro holds c_biasgen_ref_sel_vbg and every c_bias_dist_en_* at 0 until bgap_ena has been 1 for 256 SCLK cycles (>= 10 us for SCLK <= 25 MHz; 51 us at the 5 MHz limit: the consumers switch on in the eighth SPI transaction after the commit); bgap_ena = 0 clears it. The fields themselves read back as written.",
++      "description": "Bandgap (README bgap.*) and bias-distribution root trunk-leg enables (README dist.en_<island> = EN_<ISLAND>). Trunk enables are not island-gated: the documented idac2 trim runs dist_en_debug=1 with the debug island unpowered. Bandgap-before-consumers interlock (always-on audit F5, in RTL: rtl/pt_ctl_decode.sv pt_bgap_interlock): the macro holds c_biasgen_ref_sel_vbg and every c_bias_dist_en_* at 0 until bgap_ena has been 1 for 256 SCLK cycles; bgap_ena = 0 clears it. SCLK runs only during SPI transfers, so idle time does not count: after writing bgap_ena = 1 the host must clock at least 256 SCLK cycles (e.g. nine 32-clock ID reads) before ref_sel_vbg and the dist_en / block enables take effect; until then every bias output stays off although the fields read back as written. Bandgap settling (VBG within 1 % 10-20 us after VDD, full extracted chain, function window incl. ss) is covered by 256 SCLK at any SCLK <= 12.8 MHz (51 us at the 5 MHz limit, 256 us at the 1 MHz bring-up clock); the host's own >= 100 us wait after bgap_ena stays the bring-up rule. The fields themselves read back as written.",
+       "update": "stopped",
+       "islands": [],
+       "live": false,

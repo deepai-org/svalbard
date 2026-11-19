@@ -108,8 +108,12 @@ The shuttle's own flow runs here natively: gf180mcu-precheck 1.7.4, KLayout 0.30
 3.1.0.dev3, PDK 792ef67, from the flake's pinned nix closure inside docker (`precheck/NOTES.md`: build, the 17 steps
 and which are gating). `precheck/pdk-diff.md`: 792ef67 against the project's f6eeac7.
 
-On the filled `pt_rf` skeleton (`--slot 1x1 --cob --id DEADBEEF --workers 1 --threads 4`): running at the time of
-writing (about 3 h); `precheck/summarise.py scratch/integration/signoff-run-rf/precheck`.
+On the filled `pt_rf` skeleton (`--slot 1x1 --cob --id DEADBEEF --workers 1 --threads 4`, about 2 h 50 min, exit 1):
+read / top cell / size / pad mask (74 openings) / ID cells pass; density 3 x DCF.1a (gating); zero-area 0; antenna 0;
+Magic DRC 0; **KLayout DRC 5521** (gating). Most of them sit inside `pt_cdr` (r13, published; front-end and Metal1
+rules CO.*, DF.*, NP.*, M1.2a) and `pt_diff_clk_rx`, two cells the single-die skeleton had left out; the rest are the
+pad via-array overlap on the provider ring (SO-1). Owners: wired RX / timing for `pt_cdr`, timing for
+`pt_diff_clk_rx` (block DRC with the shuttle deck). Summary: `precheck/summarise.py scratch/integration/signoff-run-rf/precheck`.
 
 ## Known failures and gaps
 

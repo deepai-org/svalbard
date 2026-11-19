@@ -33,14 +33,21 @@ Worst routed setup per group:
 The D2H hand-over (DG8-6, -5.5 routed in r8d) is gone from both lists. Timing is NOT closed on either chip.
 NOT done on these runs: export, `sta_signoff.py`, GLS, evidence JSON, slew / cap list analysis.
 
+## Clean baseline pt_wired (b7fc8be6 RTL: aligner reverted, gearbox run per lane), routed, ss_032C_3v15
+
+DRC 0 / LVS match / antenna 0; hold ff_022C_3v35 -0.04 (H2D input window). Worst setup per group: hcore -5.14
+(host.h2d.rb -> frame_rx.cat: H2D FIFO read into the frame aligner), wrx -3.87 (lc_rx hit -> off), ref -3.28
+(regs.wtx_state -> pad_seq.left), egress_wtx -2.93 (roh2), wtx -2.38 (prbs.h -> pat_word), hddr -2.34 (was -3.02),
+h2d_cap -1.82, fc4 -1.79, hsdr -1.49, h2d -1.22, ctw -1.20, async -0.80, hword -0.75.
+pt_rf baseline on the same RTL: still running at the time of writing (`scratch/digital_hardening-rf`).
+
 ## Open, in order
 
-1. Rerun both chips on f5fe8a78 (aligner reverted) for a clean baseline.
-2. hddr: `gearbox.run` fans out into every hr_d (s_r = lpq & run); replicate `run` per lane or fold it into lp.
+1. hddr: lp -> hr (remaining after the per-lane run copy).
 3. hcore: rf in_rd_step -> frame_tx pre_quads; wired h2d.rb -> frame_rx.cat. ref (wired): regs.wtx_state ->
    pad_seq (the r9 request stage moved the path, did not remove it). egress_wtx roh2 one-hot read; wtx egress.pe ->
    wire_idle. wrx aligner: needs a real extra stage (alignment decision one word later), not the one-hot compare.
-4. Per-domain, per-edge switching charge per chip for the power-delivery model (PDS-4, coordinator 2026-11-19), then
+4. Switching charge per edge sent (DG9-6). Then
    bank clock gating if it closes the 150 mV ripple budget (approved on that condition); skewed second root only
    after asking the coordinator.
 5. Slew / cap violations (counts above), sign-off STA, GLS, evidence.

@@ -118,8 +118,8 @@ Bias pins: `ibias2_1u` from biasgen `bandgap_sink1` (code 7), `ibias1_250n` from
 | Stand-alone, ideal bias, tt/ss/ff × −40…125 °C | 1.204–1.220 V; 87–161 µA |
 | Full chain (bandgap + biasgen coarse, `idac2` code 10 + distribution), function window, 14 points | all start; `vbg` 1.207–1.219 V; outputs 7.64–12.14 µA; chain supply 0.30–0.52 mA; `vbg` within 1 % 10–20 µs after VDD reaches 90 % |
 | Start-up, 0 → 3.63 V in 1 µs–1 s, 0–85 °C (28 runs) | all start; peak supply ≤ 0.42 mA |
-| ATB0 force of 1.2 V with `ena` = 0 | force source carries 15–34 pA; `idac2` 8.0–11.6 µA |
-| ATB0 force with `ena` = 1 | 5.1 µA through the leaf, `vbg` stays 1.212 V: disable the bandgap before forcing |
+| ATB0 force of 1.2 V with `ena` = 0 | force source carries about 5 µA: `pt_bias_vref`'s VREF0 divider (six 40 kΩ poly, about 240 kΩ, no enable) loads `VBG`; through the leaf, group and pad switches that drops 11.6 mV (extracted chip bench, `check_core_bias_observation.py`), so an open-loop 1.2 V force misses the 10 mV accuracy. Use force-and-sense (below). `idac2` 8.0–11.6 µA |
+| ATB0 force with `ena` = 1 | the bandgap holds `vbg` at 1.212 V against the force: disable the bandgap before forcing |
 | Crossed MOS × resistor corners incl. sf/fs, extracted (`scratch/pads-core/corners/`) | outputs 7.88–11.81 µA, `vbg` 1.206–1.221 V, all start |
 
 Two properties that are not in the evidence file (`scratch/reviews/always-on-audit.md` F4, F5):
@@ -229,9 +229,9 @@ exercised by `verification/check_regfile.py`):
 
 | Node | ATB code | Nominal | Force on ATB0 | Precondition for force |
 | --- | --- | --- | --- | --- |
-| `VBG` | 55 | 1.21 V | 1.2 V | `bgap_ena` = 0 |
+| `VBG` | 55 | 1.21 V | 1.2 V, force-and-sense: force on ATB0, read `VBG` on ATB1 code 55, raise the force by the difference (about 12 mV for the 5 µA divider load) | `bgap_ena` = 0 |
 | `ROOT_REF` | 1 | 0.92 V | 10 µA into the node | `idac2_source` = 0 or `biasgen.ena` = 0 |
-| `TRK_RF`, `TRK_WIRE`, `TRK_PLL`, `TRK_CONV`, `TRK_DEBUG` | 14, 22, 29, 35, 56 | about 2.0 V | 10 µA out of the node | that `dist_en` = 0 |
+| `TRK_RF_RX`, `TRK_CONV` (pt_rf), `TRK_WIRED_RX` (pt_wired), `TRK_PLL`, `TRK_DEBUG`; `TRK_LO`, `TRK_WIRED_TX` have no code yet (CB8-8) | 14, 35, 22, 29, 56 | about 2.0 V | 10 µA out of the node | that `dist_en` = 0 |
 | `VREF0`, `VCM` | 2, 3 | 1.01 V, VDD/2 | sense only | |
 | `idac1_source_ibias` | 57 | current into an SMU at about 1 V | sense only | `idac1_source` ≠ 0 |
 

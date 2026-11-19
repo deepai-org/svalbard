@@ -27,6 +27,55 @@ PWR_W = 0.8
 CAP_SEP = 1.4       # cap footprint to cap footprint
 PIN_DY = 0.55       # cap pin y above channel top
 ORDER = 'net'
+# Round 3 (R+C extraction): every net was drawn with 0.3 um Metal2 tracks / 0.4 um Metal3 trunks, so the 18.6 mA tail current
+# crossed ~89 ohm of Metal2 (DC point 4.95 instead of 18.3 mA) and ran at ~60 mA/um against the 2.09 mA/um DRM 14.2 limit
+# (85 C).  Nets that carry DC current get k track slots (width k*TP - 0.4) and a trunk of the same width, joined by via arrays.
+# Sized for the worst-corner current: 18.6 mA (tail, supply, tank feed) -> 9.4 um; 9.3 mA per side -> 4.5 um.
+WIDE_LNA = {'VDD': 14, 'VSS': 14, 'tailx': 14, 'tail': 14, 'vtk': 14,
+        'src_p': 7, 'src_n': 7, 'x_p': 7, 'x_n': 7, 'tank_p': 7, 'tank_n': 7}
+WIDE = {}            # set per cell in build_compact (pt_lna only; rxmix keeps the plain router)
+VP = 0.66           # via-array pitch (0.52-0.6 um arrays fail KLayout V2.2b; integration fixed its arrays at 0.62)
+
+
+def heavy(d):
+    """MOS that carries the stage's DC current: different S/D nets, one of them a non-supply WIDE net, >= 20 um."""
+    return (d.kind == 'mos' and d.nodes[0] != d.nodes[2] and d.w * d.nf >= 20.
+            and bool({d.nodes[0], d.nodes[2]} & (set(WIDE) - set(POWER))))
+
+
+def heavy_geom(work, d, g):
+    """Round 3: per-strip escapes for a heavy multi-finger MOS.  The PCell escape (one 0.4 um Metal2 strap per terminal, one via
+    at the device end) carried the whole device current (R+C: 21 ohm VDD -> feed PMOS, 89 ohm tail).  Every S/D strip gets a
+    Metal2 stub toward the device centre with two Via1 and two Via2 cuts and its own 0.4 um Metal3 drop to the channel track
+    (strips within 1.0 um of the gate / body escapes keep only the strap).  Returns a copy of g with 'taps' [(x, y_low, term)]."""
+    r = F._rects(work / (prim_key(d) + '.mag'))
+    diff = next(k for k in ('ndiffc', 'pdiffc', 'mvndiffc', 'mvpdiffc') if k in r)
+    strips = sorted(r[diff], key=lambda a: a[0])
+    ylo, yhi = min(a[1] for a in strips), max(a[3] for a in strips)
+    if yhi - ylo < 2.0:
+        return g
+    yd, ys = yhi - .24, ylo + .24
+    xs = [(a[0] + a[2]) / 2 for a in strips]
+    gx, bx = g['esc'][1], g['esc'][3]
+    extra, taps = list(g['extra']), []
+    for i, x in enumerate(xs):
+        if abs(x - gx) < 1.0 or abs(x - bx) < 1.0:
+            continue
+        y = ys if i % 2 == 0 else yd
+        y2 = y + .66 if i % 2 == 0 else y - .66
+        lo, hi = min(y, y2), max(y, y2)
+        extra += [('rect', 'metal1', x - .19, lo - .19, x + .19, hi + .19),
+                  ('rect', 'via1', x - .13, y2 - .13, x + .13, y2 + .13),
+                  ('rect', 'metal2', x - .2, lo - .2, x + .2, hi + .2),
+                  ('rect', 'via2', x - .14, y - .14, x + .14, y + .14), ('rect', 'via2', x - .14, y2 - .14, x + .14, y2 + .14),
+                  ('rect', 'metal3', x - .2, lo - .2, x + .2, hi + .2)]
+        taps.append((x, lo, 2 if i % 2 == 0 else 0))
+    return dict(g, extra=extra, taps=taps)
+
+
+def wwidth(n):
+    k = WIDE.get(n, 1)
+    return TW if k == 1 else k * TP - .4
 
 
 def flatten(subs, top):
@@ -65,22 +114,33 @@ def cap_geom(g):
                 fp=(m4[0] - .3, y_tab - .5, m4[2] + .3, m4[3]), y_tab=y_tab)
 
 
-def lefted(ivs, gap=1.2):
+def lefted(ivs, gap=1.2, wide=()):
+    """Left-edge track assignment; a net in `wide` takes WIDE[n] consecutive slots (first fit)."""
     tracks, tidx = [], {}
     for lo_, hi_, n in sorted(ivs):
-        for ti, last in enumerate(tracks):
-            if last + gap < lo_:
-                tracks[ti] = hi_; tidx[n] = ti; break
-        else:
-            tracks.append(hi_); tidx[n] = len(tracks) - 1
+        k = WIDE[n] if n in wide else 1; ti = 0
+        while not all(j >= len(tracks) or tracks[j] + gap < lo_ for j in range(ti, ti + k)):
+            ti += 1
+        for j in range(ti, ti + k):
+            if j >= len(tracks): tracks.append(hi_)
+            else: tracks[j] = hi_
+        tidx[n] = ti
     return tidx, len(tracks)
+
+
+def via_array(p, x, y, wx, wy, low, high):
+    """Via cuts on a VP grid inside a wx x wy overlap centred on (x, y) (at least one)."""
+    nx, ny = max(1, int((wx - .4) / VP) + 1), max(1, int((wy - .4) / VP) + 1)
+    for i in range(nx):
+        for j in range(ny):
+            p.via(_snap(x + (i - (nx - 1) / 2) * VP), _snap(y + (j - (ny - 1) / 2) * VP), low, high)
 
 
 class Lay:
     def __init__(self, devs, geoms, ports, rw):
         self.devs, self.geoms, self.ports, self.rw = devs, geoms, ports, rw
         hclass = lambda it: round(math.log((it[1]['fp'][3] - it[1]['fp'][1]) + 1.) / math.log(1.6))
-        act = [(d, geoms[prim_key(d)]) for d in devs if d.kind != 'cap']
+        act = [(d, geoms.get((prim_key(d), d.name), geoms[prim_key(d)])) for d in devs if d.kind != 'cap']
         self.caps = [(d, cap_geom(geoms[prim_key(d)])) for d in devs if d.kind == 'cap']
         if ORDER == 'height':
             act_o = [t[1] for t in sorted(enumerate(act), key=lambda t: (hclass(t[1]), t[0]))]
@@ -103,8 +163,14 @@ class Lay:
                 pos.append(ox)
                 for ex, n in zip(g['esc'], d.nodes):
                     esc.append((ox + ex, n))
+                for tx_, _, ti in g.get('taps', ()):
+                    esc.append((ox + tx_, d.nodes[ti]))
                 cx += g['fp'][2] - g['fp'][0] + GAP
-            self.rows.append(dict(items=items, pos=pos, esc=esc, used=cx,
+            # nets whose channel track carries DC current in this row: S/D of a MOS with different S/D nets and >= 20 um total width
+            # (switches, MOS capacitors and bias devices do not qualify: at least one S/D net must be a non-supply WIDE net)
+            wide = {n for d, _ in items if d.kind == 'mos' and d.nodes[0] != d.nodes[2] and d.w * d.nf >= 20.
+                    and {d.nodes[0], d.nodes[2]} & (set(WIDE) - set(POWER)) for n in (d.nodes[0], d.nodes[2]) if n in WIDE}
+            self.rows.append(dict(items=items, pos=pos, esc=esc, used=cx, wide=wide,
                                   row_h=max(g['fp'][3] - g['fp'][1] for _, g in items)))
         self.width = max(r['used'] for r in self.rows)
         self.cap_pins = {}      # channel -> [(x, net)]
@@ -123,12 +189,14 @@ class Lay:
             for x, n in self.channel_terms(ri):
                 lo, hi = ext.get(n, (math.inf, -math.inf))
                 ext[n] = (min(lo, x), max(hi, x))
-            for n, (tx, _, lo, hi) in trunk.items():
+            for n, (tx, tw_, lo, hi) in trunk.items():
                 if lo <= ri <= hi and n in ext:
-                    ext[n] = (min(ext[n][0], tx), max(ext[n][1], tx))
-            tidx, ntr = lefted([(a, b, n) for n, (a, b) in ext.items()])
+                    pad = tw_ / 2 if n in WIDE else 0.
+                    ext[n] = (min(ext[n][0], tx - pad), max(ext[n][1], tx + pad))
+            tidx, ntr = lefted([(a, b, n) for n, (a, b) in ext.items()], wide=r['wide'])
             r['band0'] = y
-            r['track'] = {n: y + .6 + tidx[n] * TP for n in tidx}
+            r['track'] = {n: y + .6 + (tidx[n] + ((WIDE[n] if n in r['wide'] else 1) - 1) / 2) * TP for n in tidx}
+            r['tw'] = {n: (wwidth(n) if n in r['wide'] else TW) for n in tidx}
             r['ext'] = ext
             r['band_top'] = y + .6 + ntr * TP + .2
             r['pin_y'] = r['band_top'] + PIN_DY
@@ -182,7 +250,7 @@ class Lay:
         trunk = {}
         for n in sorted(nets, key=lambda n: (n not in POWER, -(span[n][1] - span[n][0]))):
             lo, hi = span[n]
-            w = PWR_W if n in POWER else .4
+            w = wwidth(n) if n in WIDE else .4
             own = sorted({round(x, 2) for ri in chans[n] for x, m in self.channel_terms(ri) if m == n})
             med = own[len(own) // 2]
             cands = sorted(own, key=lambda x: abs(x - med)) + \
@@ -263,6 +331,13 @@ class Lay:
                     p.via(E, ty, 2, 3)
                     lo_, hi_ = reach.get(net, (math.inf, -math.inf))
                     reach[net] = (min(lo_, E), max(hi_, E))
+                for tx_, ty_, ti in g.get('taps', ()):
+                    net = d.nodes[ti]; X, Y = ox + tx_, oy + ty_; ty = r['track'][net]
+                    p.net = net
+                    p.wire('metal3', X, Y, X, ty)
+                    via_array(p, X, ty, .4, r['tw'][net], 2, 3)
+                    lo_, hi_ = reach.get(net, (math.inf, -math.inf))
+                    reach[net] = (min(lo_, X), max(hi_, X))
             r['reach'] = reach
         for d, g, ri, x in self.cap_place:
             r = self.rows[ri]
@@ -291,15 +366,25 @@ class Lay:
                 if net in self.trunk and self.trunk[net][2] <= ri <= self.trunk[net][3]:
                     tx = xo + self.trunk[net][0]
                     xa, xe = min(xa, tx), max(xe, tx)
-                    p.via(tx, ty, 2, 3)
-                if xe > xa:
-                    p.wire('metal2', xa, ty, xe, ty, width=TW)
+                    if net in WIDE:
+                        via_array(p, tx, ty, self.trunk[net][1], r['tw'][net], 2, 3)
+                        xa, xe = min(xa, tx - self.trunk[net][1] / 2 + .2), max(xe, tx + self.trunk[net][1] / 2 - .2)
+                    else:
+                        p.via(tx, ty, 2, 3)
+                if xe > xa or net in WIDE:
+                    hw = max(r['tw'][net], .4) / 2 if net in WIDE else TW / 2   # wide: full width in y, 0.2 um end extension in x
+                    p.rect('metal2', xa - .2, ty - hw, xe + .2, ty + hw)
         port_y = 1.0
         for n, (tx, tw, lo, hi) in self.trunk.items():
             ylo = port_y if lo < 0 else self.rows[lo]['track'][n]
             yhi = self.rows[hi]['track'][n]
             p.net = n
-            p.wire('metal3', xo + tx, ylo, xo + tx, max(yhi, ylo + 1.), width=tw)
+            if n in WIDE:      # wide trunk: extend only over its own end tracks, not tw/2 into the device rows
+                ea = self.rows[lo]['tw'][n] / 2 if lo >= 0 else .2
+                eb = self.rows[hi]['tw'][n] / 2
+                p.rect('metal3', xo + tx - tw / 2, ylo - max(ea, .2), xo + tx + tw / 2, max(yhi, ylo + 1.) + max(eb, .2))
+            else:
+                p.wire('metal3', xo + tx, ylo, xo + tx, max(yhi, ylo + 1.), width=tw)
         p.net = None
         req = ad.requests_from_shapes(p.shapes, terminals)
         dcmds, diodes = ad.plan(req, [s[:5] for s in p.shapes], keepouts, taps=taps)
@@ -392,17 +477,22 @@ def build(devs, geoms, ports, rw):
     return L
 
 
-LNA_ROW_WIDTH = 250.   # LNA core (tank and degeneration spirals are separate cells)
+LNA_ROW_WIDTH = 190.   # LNA core (round 3: wide current-carrying tracks and per-strip taps; 190 gives the smallest area) (tank and degeneration spirals are separate cells)
 
 
 def build_compact(spice, top, work, row_width=None, dry=False):
     """Lay out `top` (flat) from `spice` into `work`; DRC + extraction + LVS. Returns a build_block()-style dict."""
+    global WIDE
+    WIDE = WIDE_LNA if top == 'pt_lna' else {}
     src = Path(spice).resolve(); work = Path(work).resolve()
     subs = F.parse_spice(src)
     devs, ports = flatten(subs, top)
     work.mkdir(parents=True, exist_ok=True)
     (work / src.name).write_text(src.read_text())
     geoms = F.build_primitives(work, devs)
+    for d in devs:
+        if heavy(d) and d.nf > 1:
+            geoms[(prim_key(d), d.name)] = heavy_geom(work, d, geoms[prim_key(d)])
     if row_width:
         rws = [float(row_width)]
     else:

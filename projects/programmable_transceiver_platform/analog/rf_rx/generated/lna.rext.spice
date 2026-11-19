@@ -1,0 +1,3361 @@
+* NGSPICE file created from pt_lna.ext - technology: gf180mcuD
+
+.subckt pt_lna rf_in_p rf_in_n rf_out_p rf_out_n rf_outq_p rf_outq_n ibias en gain_lo  byp ct0 ct1 ct2 se rt island_off atb_nbias atb_vdcm VDD VSS ct3 att0 att1 att2 att3  att4 src_p src_n tank_p tank_n lobias tail vtk
+X0 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X2 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X3 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X4 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0.34568n ps=1.49464m w=10u l=3u
+X5 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=1.18747n ps=4.79672m w=19.98u l=2u
+X6 x2c_n ct2 x2c_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X7 tank_n__XMN590_d cgk4 x_n__XMN590_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X8 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X9 x_n__XMN574_s cgk3 tank_n__XMN574_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X10 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X11 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X12 x_p__XMN386_s cgd4 vtk__XMN386_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X13 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X14 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X15 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X16 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X17 att4_b att4 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X18 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X19 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X20 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X21 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X22 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X23 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X24 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X25 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X26 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X27 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X28 vtk__XMN605_d cgd4 x_n__XMN605_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X29 tank_p__XMN371_d cgk4 x_p__XMN371_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X30 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X31 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X32 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X33 g_n rf_in_n cap_mim_2f0_m4m5_noshield c_width=47u c_length=47u
+X34 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X35 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X36 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X37 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X38 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X39 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X40 VSS vtk VSS VSS nfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=2u
+X41 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X42 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X43 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X44 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X45 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X46 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X47 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X48 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X49 x2c_p VSS ct2_b VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X50 cgd4 att4_b vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X51 tank_n__XMN574_d cgk3 x_n__XMN574_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X52 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X53 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X54 vtk__XMN386_d cgd4 x_p__XMN386_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X55 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X56 att2_b att2 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X57 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X58 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X59 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X60 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X61 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X62 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X63 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X64 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X65 r7_s3 r7_s4 VSS ppolyf_u_1k r_width=1u r_length=10u
+X66 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X67 cgd3 att3_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X68 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X69 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X70 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X71 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X72 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X73 x_p__XMN371_s cgk4 tank_p__XMN371_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X74 r7_s5 g_p VSS ppolyf_u_1k r_width=1u r_length=10u
+X75 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X76 tank_n__XMN590_d cgk4 x_n__XMN590_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X77 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X78 atb_nbias atb_nbias VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.5u
+X79 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X80 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X81 r6_s1 r6_s2 VSS ppolyf_u_1k r_width=1u r_length=8.67u
+X82 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X83 x1c_n ct1 x1c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X84 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X85 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X86 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X87 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X88 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X89 x_n__XMN582_s cgd3 vtk__XMN582_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X90 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X91 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X92 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X93 vtk cgd0 x_p VSS nfet_03v3 ad=2.0636p pd=10.26u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X94 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X95 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X96 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X97 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X98 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X99 rt_p rt rt_n VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X100 vtk__XMN605_d cgd4 x_n__XMN605_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X101 tank_p__XMN371_d cgk4 x_p__XMN371_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X102 tank_p cgk0 x_p VSS nfet_03v3 ad=2.0636p pd=10.26u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X103 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X104 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X105 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X106 x0c_n ct0 x0c_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X107 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X108 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X109 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X110 tank_p x1c_p cap_mim_2f0_m4m5_noshield c_width=7.1u c_length=7.1u
+X111 se_b se VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X112 src_p tail VSS ppolyf_u_1k r_width=40u r_length=1u
+X113 tank_p__XMN355_d cgk3 x_p__XMN355_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X114 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X115 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X116 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X117 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X118 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X119 r4_s4 r4_s5 VSS ppolyf_u_1k r_width=1u r_length=10u
+X120 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X121 bpc_n byp rf_out_n VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X122 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X123 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X124 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X125 vtk__XMN386_d cgd4 x_p__XMN386_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X126 VDD pb vtg VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
+X127 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X128 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X129 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X130 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X131 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X132 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X133 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X134 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X135 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X136 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X137 x_p__XMN363_s cgd3 vtk__XMN363_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X138 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X139 x_p__XMN371_s cgk4 tank_p__XMN371_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X140 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X141 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X142 x_p__XMN355_s cgk3 tank_p__XMN355_d VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X143 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X144 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X145 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X146 x3c_n ct3 x3c_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X147 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X148 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X149 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X150 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X151 g_n gi_n VSS ppolyf_u_1k r_width=82u r_length=1u
+X152 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X153 se_x se VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X154 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X155 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X156 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X157 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X158 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X159 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X160 tank_n cgk2 x_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X161 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X162 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X163 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X164 vtk__XMN363_d cgd3 x_p__XMN363_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X165 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X166 cgk4 att4 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X167 cgd5 gain_lo_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X168 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X169 x1c_n ct1 x1c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X170 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D0 VSS att1 diode_nd2ps_03v3 pj=2.52u area=0.3969p
+X171 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X172 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X173 enb en VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X174 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X175 rf_out_p byp bpc_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X176 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X177 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X178 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X179 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X180 r7_s2 r7_s3 VSS ppolyf_u_1k r_width=1u r_length=10u
+X181 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X182 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X183 vtk__XMN605_d cgd4 x_n__XMN605_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X184 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X185 VSS vtk VSS VSS nfet_06v0 ad=8.7912p pd=40.84u as=0 ps=0 w=19.98u l=2u
+X186 VSS se se_x VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X187 x0c_p ct0 x0c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X188 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X189 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X190 x_p__XMN355_s cgk3 tank_p__XMN355_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X191 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X192 VSS lobias vlo VSS nfet_03v3 ad=1.76p pd=8.88u as=1.04p ps=4.52u w=4u l=0.28u
+X193 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X194 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X195 x_n__XMN590_s cgk4 tank_n__XMN590_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X196 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X197 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X198 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X199 vtc pb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
+X200 g_p rf_in_p cap_mim_2f0_m4m5_noshield c_width=47u c_length=47u
+X201 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X202 tank_p cgk2 x_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X203 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X204 cgd1 att1_b vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X205 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X206 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X207 ibias atb_nbias VSS ppolyf_u_1k r_width=2u r_length=2u
+X208 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X209 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X210 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X211 x_n__XMN605_s cgd4 vtk__XMN605_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X212 x_p__XMN371_s cgk4 tank_p__XMN371_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X213 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X214 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X215 tank_n rf_out_n cap_mim_2f0_m4m5_noshield c_width=16u c_length=16u
+X216 bpc_n rf_in_n cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+X217 x1c_n ct1 x1c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X218 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X219 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X220 rf_out_p island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+X221 enb en VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X222 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X223 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X224 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X225 x3c_n VSS ct3_b VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X226 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X227 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X228 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X229 cgd5 gain_lo_b vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X230 cgk1 att1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X231 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X232 x_p__XMN386_s cgd4 vtk__XMN386_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X233 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X234 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X235 cgd3 att3_b vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X236 vtk__XMN605_d cgd4 x_n__XMN605_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X237 tank_p cgk1 x_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X238 x_p cgk2 tank_p VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X239 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X240 vlo lobias VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=0.28u
+X241 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X242 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X243 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X244 bpc_p rf_in_p cap_mim_2f0_m4m5_noshield c_width=20u c_length=20u
+X245 ct1_b ct1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X246 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X247 cgk3 att3 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X248 x0c_n VSS ct0_b VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X249 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X250 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X251 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X252 tank_p__XMN371_d cgk4 x_p__XMN371_s VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X253 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X254 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X255 x_n__XMN590_s cgk4 tank_n__XMN590_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X256 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X257 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X258 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X259 x1c_p ct1 x1c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X260 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X261 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X262 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X263 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X264 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X265 ct3_b ct3 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X266 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X267 vtk cgd1 x_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X268 x_n cgd2 vtk VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X269 rf_outq_p island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+X270 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X271 r11_s1 r11_s2 VSS ppolyf_u_1k r_width=1u r_length=10u
+X272 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X273 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X274 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X275 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X276 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X277 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X278 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X279 pb atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
+X280 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X281 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X282 x_n__XMN605_s cgd4 vtk__XMN605_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X283 x_p__XMN371_s cgk4 tank_p__XMN371_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X284 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X285 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X286 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X287 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X288 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X289 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X290 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X291 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X292 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X293 VDD pb pb VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
+X294 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X295 vgr enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X296 ct2_b ct2 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X297 tank_n__XMN590_d cgk4 x_n__XMN590_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X298 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X299 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X300 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X301 x_p__XMN386_s cgd4 vtk__XMN386_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X302 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X303 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X304 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X305 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X306 ct2_b ct2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X307 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X308 tank_n x3c_n cap_mim_2f0_m4m5_noshield c_width=14.1u c_length=14.1u
+X309 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X310 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X311 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X312 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X313 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X314 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X315 tank_p__XMN371_d cgk4 x_p__XMN371_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X316 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X317 x1c_p ct1 x1c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X318 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X319 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X320 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X321 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X322 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X323 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X324 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X325 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X326 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X327 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X328 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X329 vtk__XMN386_d cgd4 x_p__XMN386_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X330 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X331 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X332 VSS se se_x VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X333 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X334 rf_in_n ncm cap_mim_2f0_m4m5_noshield c_width=11.6u c_length=11.6u
+X335 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X336 cgd1 att1_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X337 x0c_p ct0 x0c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X338 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X339 x_p__XMN355_s cgk3 tank_p__XMN355_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X340 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X341 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X342 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X343 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X344 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X345 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X346 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X347 rf_out_p r15_s1 VSS ppolyf_u_1k r_width=1u r_length=10u
+X348 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X349 VSS atb_nbias pb VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
+X350 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X351 tank_n x2c_n cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X352 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X353 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X354 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X355 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X356 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X357 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X358 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X359 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X360 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X361 tank_p__XMN371_d cgk4 x_p__XMN371_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X362 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X363 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X364 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X365 att3_b att3 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X366 r11_s3 r11_s4 VSS ppolyf_u_1k r_width=1u r_length=10u
+X367 tank_p__XMN355_d cgk3 x_p__XMN355_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X368 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X369 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X370 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X371 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X372 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
+X373 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X374 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X375 rf_outq_p byp bpc_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X376 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X377 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X378 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X379 vtk__XMN386_d cgd4 x_p__XMN386_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X380 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X381 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X382 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X383 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X384 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X385 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X386 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X387 x_n cgk2 tank_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X388 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X389 x_p__XMN363_s cgd3 vtk__XMN363_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X390 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X391 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X392 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X393 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X394 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X395 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X396 vgr vgr vgm VSS nfet_03v3 ad=2.112p pd=10.48u as=2.112p ps=10.48u w=4.8u l=0.28u
+X397 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X398 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X399 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X400 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X401 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X402 VSS vtk VSS VSS nfet_06v0 ad=8.7912p pd=40.84u as=0 ps=0 w=19.98u l=2u
+X403 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X404 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X405 vtr vtg VSS VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.5u
+X406 cgk5 gain_lo vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X407 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X408 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X409 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X410 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X411 x_n__XMN605_s cgd4 vtk__XMN605_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X412 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X413 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X414 cgk3 att3 vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X415 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X416 tank_n x0c_n cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
+X417 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X418 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X419 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X420 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X421 x0c_n ct0 x0c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X422 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X423 vtk__XMN582_d cgd3 x_n__XMN582_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X424 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X425 x_n cgk1 tank_n VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X426 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X427 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X428 ct1_b ct1 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X429 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X430 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X431 tank_n__XMN590_d cgk4 x_n__XMN590_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X432 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X433 x1c_n ct1 x1c_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X434 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X435 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X436 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X437 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X438 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X439 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X440 bpc_n VDD VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X441 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X442 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X443 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X444 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X445 vtk__XMN605_d cgd4 x_n__XMN605_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X446 vtop vcas VSS ppolyf_u_1k r_width=1u r_length=4u
+X447 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X448 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X449 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X450 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X451 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X452 vtc vtc VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X453 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X454 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X455 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X456 att3_b att3 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X457 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X458 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X459 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X460 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X461 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X462 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X463 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X464 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X465 VSS vtk VSS VSS nfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=2u
+X466 rf_in_p VSS cap_mim_2f0_m4m5_noshield c_width=5.5u c_length=5.5u
+X467 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X468 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X469 vtk__XMN386_d cgd4 x_p__XMN386_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X470 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X471 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X472 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X473 tank_p cgk2 x_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X474 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X475 tank_n atb_vdcm VSS ppolyf_u_1k r_width=1u r_length=10u
+X476 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X477 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X478 rf_outq_p r16_s1 VSS ppolyf_u_1k r_width=1u r_length=10u
+X479 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X480 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+D1 VSS att3 diode_nd2ps_03v3 pj=3.08u area=0.5929p
+X481 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X482 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X483 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X484 g_n rt_n VSS ppolyf_u_1k r_width=2u r_length=3u
+X485 x_p__XMN371_s cgk4 tank_p__XMN371_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X486 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X487 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X488 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X489 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X490 x1c_n ct1 x1c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X491 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X492 tank_n__XMN574_d cgk3 x_n__XMN574_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X493 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X494 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X495 r4_s1 r4_s2 VSS ppolyf_u_1k r_width=1u r_length=10u
+X496 VSS vtk VSS VSS nfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=2u
+X497 ct0_b ct0 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X498 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X499 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X500 vtk cgd2 x_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X501 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+D2 VSS gain_lo diode_nd2ps_03v3 pj=3u area=0.5625p
+X502 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X503 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X504 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X505 r11_s5 g_n VSS ppolyf_u_1k r_width=1u r_length=10u
+X506 x_p__XMN386_s cgd4 vtk__XMN386_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X507 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X508 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X509 vcas VSS cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X510 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X511 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X512 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X513 cgd2 att2_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X514 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X515 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X516 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X517 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X518 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X519 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X520 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X521 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X522 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X523 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X524 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X525 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X526 x1c_p ct1 x1c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X527 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X528 vtk__XMN386_d cgd4 x_p__XMN386_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X529 vgr pb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
+X530 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X531 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X532 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X533 x_n cgd2 vtk VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X534 x_p__XMN371_s cgk4 tank_p__XMN371_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X535 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X536 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X537 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X538 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X539 bpc_p VSS VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X540 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X541 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X542 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X543 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X544 vtg vtc vtr VSS nfet_03v3 ad=0.66p pd=3.88u as=0.66p ps=3.88u w=1.5u l=0.28u
+X545 x3c_p VSS ct3_b VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X546 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X547 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X548 x_p__XMN386_s cgd4 vtk__XMN386_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X549 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X550 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X551 x0c_n ct0 x0c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X552 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X553 vcas r6_s1 VSS ppolyf_u_1k r_width=1u r_length=8.67u
+X554 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X555 ncm VSS VSS ppolyf_u_1k r_width=10.5u r_length=1u
+X556 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X557 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X558 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X559 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X560 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X561 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X562 vtk cgd1 x_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X563 x_p cgd2 vtk VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X564 tank_p__XMN371_d cgk4 x_p__XMN371_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X565 x0c_p VSS ct0_b VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X566 cgd2 att2_b vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X567 x1c_p ct1 x1c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X568 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X569 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X570 se_x se VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X571 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X572 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X573 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X574 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X575 rt_n rt rt_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X576 r4_s3 r4_s4 VSS ppolyf_u_1k r_width=1u r_length=10u
+X577 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X578 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X579 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X580 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X581 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X582 x_n__XMN582_s cgd3 vtk__XMN582_d VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X583 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X584 vtc enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X585 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X586 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X587 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X588 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X589 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X590 rf_out_n byp bpc_n VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X591 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X592 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X593 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X594 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X595 bpc_p byp rf_outq_p VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X596 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X597 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X598 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X599 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X600 VSS se se_x VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X601 cgk5 gain_lo VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X602 VSS vtk VSS VSS nfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=2u
+X603 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X604 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X605 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X606 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X607 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X608 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X609 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X610 pb atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X611 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X612 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X613 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X614 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X615 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X616 tank_n__XMN574_d cgk3 x_n__XMN574_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X617 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X618 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X619 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X620 x1c_n VSS ct1_b VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X621 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X622 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X623 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X624 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X625 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X626 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X627 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X628 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X629 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X630 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X631 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X632 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X633 g_p VSS VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X634 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X635 tank_p rf_out_p cap_mim_2f0_m4m5_noshield c_width=16u c_length=16u
+X636 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X637 rf_out_n island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+X638 x_n__XMN582_s cgd3 vtk__XMN582_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X639 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X640 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X641 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X642 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X643 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X644 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X645 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X646 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X647 x1c_p ct1 x1c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X648 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X649 x_n__XMN574_s cgk3 tank_n__XMN574_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X650 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X651 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X652 r7_s1 r7_s2 VSS ppolyf_u_1k r_width=1u r_length=10u
+X653 tank_p x3c_p cap_mim_2f0_m4m5_noshield c_width=14.1u c_length=14.1u
+X654 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X655 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X656 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X657 cgk1 att1 vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X658 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X659 vtg pb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
+X660 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X661 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=1.1p pd=5.88u as=0.65p ps=3.02u w=2.5u l=0.28u
+X662 gain_lo_b gain_lo VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X663 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X664 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X665 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X666 cgk2 att2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X667 x_n__XMN590_s cgk4 tank_n__XMN590_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X668 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X669 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X670 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X671 r7_s4 r7_s5 VSS ppolyf_u_1k r_width=1u r_length=10u
+X672 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X673 VSS vtk VSS VSS nfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=2u
+X674 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X675 vtk__XMN582_d cgd3 x_n__XMN582_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X676 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X677 cgk0 att0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X678 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X679 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X680 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X681 rf_outq_n island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+X682 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X683 r6_s2 VSS VSS ppolyf_u_1k r_width=1u r_length=8.67u
+X684 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X685 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X686 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X687 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X688 x_p__XMN386_s cgd4 vtk__XMN386_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X689 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X690 x_n__XMN605_s cgd4 vtk__XMN605_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X691 x_p cgk2 tank_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X692 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X693 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X694 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X695 r4_s2 r4_s3 VSS ppolyf_u_1k r_width=1u r_length=10u
+X696 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X697 x2c_n VSS ct2_b VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X698 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X699 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X700 vtc VSS cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X701 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X702 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X703 vtk__XMN605_d cgd4 x_n__XMN605_s VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X704 tank_p__XMN371_d cgk4 x_p__XMN371_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X705 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X706 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X707 att1_b att1 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X708 tank_n__XMN590_d cgk4 x_n__XMN590_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X709 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X710 g_p VDD VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X711 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X712 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X713 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X714 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X715 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X716 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X717 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X718 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X719 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X720 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X721 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X722 vtk__XMN363_d cgd3 x_p__XMN363_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X723 vtk__XMN386_d cgd4 x_p__XMN386_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X724 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X725 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X726 x_p cgk1 tank_p VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X727 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X728 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X729 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X730 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X731 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X732 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X733 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X734 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X735 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X736 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X737 pb en VDD VDD pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X738 x1c_n ct1 x1c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X739 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X740 cgk2 att2 vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X741 att4_b att4 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X742 vg r11_s1 VSS ppolyf_u_1k r_width=1u r_length=10u
+X743 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X744 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X745 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X746 tank_p x2c_p cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X747 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X748 VSS se se_x VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X749 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X750 cgk0 att0 vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X751 x_n cgd1 vtk VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X752 vtk cgd2 x_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X753 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X754 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X755 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X756 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X757 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X758 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X759 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X760 VSS vtk VSS VSS nfet_06v0 ad=8.7912p pd=40.84u as=0 ps=0 w=19.98u l=2u
+X761 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X762 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X763 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X764 bpc_p byp rf_out_p VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X765 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X766 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X767 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X768 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X769 vtg VSS cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X770 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X771 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X772 se_x se VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X773 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X774 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X775 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X776 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
+X777 vtk__XMN582_d cgd3 x_n__XMN582_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X778 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X779 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X780 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X781 vgm VSS VSS ppolyf_u_1k r_width=1u r_length=7u
+X782 src_n tail VSS ppolyf_u_1k r_width=40u r_length=1u
+X783 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X784 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X785 tank_p__XMN355_d cgk3 x_p__XMN355_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X786 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X787 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X788 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X789 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X790 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X791 vtk cgd2 x_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X792 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X793 rf_outq_n byp bpc_n VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X794 VSS vg VSS VSS nfet_03v3 ad=4.4p pd=20.88u as=0 ps=0 w=10u l=3u
+X795 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X796 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X797 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X798 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X799 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X800 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X801 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X802 VSS atb_nbias pb VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X803 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X804 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X805 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X806 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X807 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X808 att1_b att1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X809 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X810 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X811 se_b se VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X812 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X813 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X814 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X815 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X816 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X817 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X818 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X819 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X820 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X821 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X822 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X823 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X824 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X825 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X826 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X827 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X828 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X829 x_p cgd2 vtk VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X830 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X831 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X832 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X833 vtop enb VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X834 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X835 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X836 x_n__XMN605_s cgd4 vtk__XMN605_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X837 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X838 pb pb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
+X839 se_x se VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X840 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X841 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X842 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X843 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X844 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X845 tank_n vcas x_n VSS nfet_03v3 ad=2.0636p pd=10.26u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X846 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X847 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X848 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X849 tank_n__XMN590_d cgk4 x_n__XMN590_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X850 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X851 cgd0 att0_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X852 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X853 cgk4 att4 vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X854 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X855 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X856 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X857 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X858 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X859 ct0_b ct0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X860 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X861 vtr vtg vlo VSS nfet_03v3 ad=1.232p pd=6.48u as=1.232p ps=6.48u w=2.8u l=0.5u
+X862 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X863 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X864 vtk cgd0 x_n VSS nfet_03v3 ad=2.0636p pd=10.26u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X865 vtk__XMN605_d cgd4 x_n__XMN605_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X866 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X867 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X868 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X869 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X870 tank_p atb_vdcm VSS ppolyf_u_1k r_width=1u r_length=10u
+X871 g_p rt_p VSS ppolyf_u_1k r_width=2u r_length=3u
+X872 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X873 r11_s2 r11_s3 VSS ppolyf_u_1k r_width=1u r_length=10u
+D3 VSS att0 diode_nd2ps_03v3 pj=2.6u area=0.4225p
+X874 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X875 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X876 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X877 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X878 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X879 x_n__XMN590_s cgk4 tank_n__XMN590_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X880 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X881 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X882 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X883 att0_b att0 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X884 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X885 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X886 g_n VSS VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X887 tank_p rf_outq_p cap_mim_2f0_m4m5_noshield c_width=16u c_length=16u
+X888 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X889 tank_n__XMN574_d cgk3 x_n__XMN574_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X890 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X891 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X892 VSS vtk VSS VSS nfet_06v0 ad=8.7912p pd=40.84u as=0 ps=0 w=19.98u l=2u
+X893 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X894 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X895 att0_b att0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X896 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X897 vtg enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X898 se_x VSS se_b VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X899 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X900 vg VSS cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
+X901 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X902 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X903 x_p__XMN363_s cgd3 vtk__XMN363_d VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X904 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X905 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X906 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X907 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X908 tank_n__XMN590_d cgk4 x_n__XMN590_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X909 tank_p x0c_p cap_mim_2f0_m4m5_noshield c_width=5u c_length=5u
+X910 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X911 atb_nbias enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X912 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X913 x_n__XMN582_s cgd3 vtk__XMN582_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X914 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X915 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X916 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X917 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X918 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X919 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X920 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X921 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X922 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X923 x_n__XMN574_s cgk3 tank_n__XMN574_d VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X924 vtk__XMN605_d cgd4 x_n__XMN605_s VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X925 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X926 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X927 se_x se VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X928 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X929 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X930 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X931 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X932 tank_p__XMN355_d cgk3 x_p__XMN355_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X933 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=1.1p ps=5.88u w=2.5u l=0.28u
+X934 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X935 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X936 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X937 gain_lo_b gain_lo VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X938 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X939 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X940 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X941 x_n__XMN590_s cgk4 tank_n__XMN590_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X942 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X943 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X944 rf_in_n se_x cap_mim_2f0_m4m5_noshield c_width=11.6u c_length=11.6u
+X945 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X946 vtk__XMN582_d cgd3 x_n__XMN582_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X947 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X948 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X949 r4_s5 vg VSS ppolyf_u_1k r_width=1u r_length=10u
+X950 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X951 vg r7_s1 VSS ppolyf_u_1k r_width=1u r_length=10u
+X952 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X953 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X954 r15_s1 rf_out_n VSS ppolyf_u_1k r_width=1u r_length=10u
+X955 tank_p vcas x_p VSS nfet_03v3 ad=2.0636p pd=10.26u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X956 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X957 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X958 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X959 g_n VDD VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X960 x_p__XMN363_s cgd3 vtk__XMN363_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X961 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X962 x_p__XMN371_s cgk4 tank_p__XMN371_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X963 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X964 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X965 bpc_n VSS VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X966 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X967 tank_n rf_outq_n cap_mim_2f0_m4m5_noshield c_width=16u c_length=16u
+X968 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X969 x_p__XMN355_s cgk3 tank_p__XMN355_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X970 vgr r4_s1 VSS ppolyf_u_1k r_width=1u r_length=10u
+X971 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X972 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X973 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X974 ct3_b ct3 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X975 x_n__XMN620_s cgk5 tank_n__XMN620_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X976 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X977 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X978 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X979 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X980 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X981 x_n__XMN574_s cgk3 tank_n__XMN574_d VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X982 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X983 x_p__XMN386_s cgd4 vtk__XMN386_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X984 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X985 r11_s4 r11_s5 VSS ppolyf_u_1k r_width=1u r_length=10u
+X986 se_x se VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X987 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X988 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X989 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X990 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X991 tank_n cgk2 x_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X992 vtk__XMN386_d cgd4 x_p__XMN386_s VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X993 vtk__XMN363_d cgd3 x_p__XMN363_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X994 tank_p__XMN371_d cgk4 x_p__XMN371_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X995 g_p gi_p VSS ppolyf_u_1k r_width=82u r_length=1u
+X996 vtk__XMN431_d cgd5 x_p__XMN431_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X997 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X998 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X999 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X1000 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1001 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1002 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1003 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X1004 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X1005 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X1006 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1007 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1008 att2_b att2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X1009 VSS se se_x VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1010 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1011 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X1012 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X1013 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X1014 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1015 x0c_p ct0 x0c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X1016 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X1017 cgd0 att0_b vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X1018 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1019 tank_n cgk1 x_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X1020 x_n cgk2 tank_n VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X1021 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1022 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X1023 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1024 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X1025 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1026 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X1027 x_n__XMN590_s cgk4 tank_n__XMN590_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1028 VSS__XMN17_s vtg tailx__XMN17_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X1029 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+D4 VSS att2 diode_nd2ps_03v3 pj=3.08u area=0.5929p
+X1030 bpc_n byp rf_outq_n VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X1031 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1032 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1033 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X1034 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X1035 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X1036 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1037 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1038 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1039 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X1040 x_n__XMN605_s cgd4 vtk__XMN605_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1041 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X1042 tailx__XMN17_d vtg VSS__XMN17_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X1043 x_p gi_p src_p__XMN249_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1044 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X1045 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1046 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1047 VDD pb vgr VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
+X1048 rf_in_p ncm cap_mim_2f0_m4m5_noshield c_width=11.6u c_length=11.6u
+X1049 r16_s1 rf_outq_n VSS ppolyf_u_1k r_width=1u r_length=10u
+X1050 x_p__XMN401_s cgk5 tank_p__XMN401_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1051 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1052 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X1053 tail__XMN118_d vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X1054 tank_n__XMN590_d cgk4 x_n__XMN590_s VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X1055 x_p cgd1 vtk VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X1056 vtk cgd2 x_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
+X1057 x_p__XMN431_s cgd5 vtk__XMN431_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1058 vtk__XMN650_d cgd5 x_n__XMN650_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1059 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1060 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X1061 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X1062 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X1063 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X1064 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1065 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X1066 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X1067 VSS se se_x VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1068 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1069 tank_n__XMN620_d cgk5 x_n__XMN620_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1070 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1071 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1072 x1c_p VSS ct1_b VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=1u
+X1073 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1074 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1075 vtk__XMP10_d VSS VDD__XMP10_s VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1076 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1077 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X1078 x_n__XMN590_s cgk4 tank_n__XMN590_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1079 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X1080 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X1081 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X1082 x1c_p ct1 x1c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1083 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1084 cgd4 att4_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X1085 tank_n x1c_n cap_mim_2f0_m4m5_noshield c_width=7.1u c_length=7.1u
+X1086 tank_n cgk0 x_n VSS nfet_03v3 ad=2.0636p pd=10.26u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X1087 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+X1088 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X1089 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X1090 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X1091 tank_p__XMN401_d cgk5 x_p__XMN401_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1092 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1093 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1094 x_n__XMN650_s cgd5 vtk__XMN650_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1095 x_n gi_n src_n__XMN468_s VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1096 vtk__XMN363_d cgd3 x_p__XMN363_s VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
+X1097 x_n__XMN605_s cgd4 vtk__XMN605_d VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1098 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X1099 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X1100 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1101 src_p__XMN249_s gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1102 tailx vtc tail__XMN118_d VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+X1103 bpc_p VDD VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X1104 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+D5 VSS att4 diode_nd2ps_03v3 pj=3.08u area=0.5929p
+X1105 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
+X1106 VDD pb vtc VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
+X1107 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X1108 src_n__XMN468_s gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1109 VDD__XMP10_s VSS vtk__XMP10_d VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+C0 att0 rt 0.02647f
+C1 island_off att3 0.05064f
+C2 g_p bpc_n 1.12435f
+C3 gain_lo src_p 0.34149f
+C4 ct2 rf_outq_n 0.06501f
+C5 gain_lo bpc_p 0.07485f
+C6 gain_lo cgk4 7.48392f
+C7 lobias vtg 0.03869f
+C8 vgr rf_in_p 0.69611f
+C9 ct1 x2c_n 0.03841f
+C10 r7_s4 r7_s3 0.34671f
+C11 atb_vdcm cgd5 0.07526f
+C12 tank_n x2c_p 8.31946f
+C13 att2 x1c_n 0.03024f
+C14 g_p se_x 0.0685f
+C15 g_p att4 0.02654f
+C16 VDD r11_s5 0.00211f
+C17 x0c_n x3c_n 0.07231f
+C18 att0 cgd1 0.06061f
+C19 vtc x3c_n 0
+C20 cgd3 x2c_n 0.09892f
+C21 rf_out_p bpc_n 0.13437f
+C22 cgk1 cgd1 0.0146f
+C23 byp x2c_n 0.04227f
+C24 tail vcas 2.39766f
+C25 vgr x2c_n 0.04804f
+C26 vtk rf_outq_n 3.55646f
+C27 rf_outq_n rf_in_n 0.08224f
+C28 rf_outq_n src_n 0.33892f
+C29 ct2 tail 0.71027f
+C30 r7_s3 vcas 0.70357f
+C31 rf_out_p se_x 0.06612f
+C32 g_n att0 0.02717f
+C33 rf_out_p att4 0.08168f
+C34 atb_vdcm rt 0.05201f
+C35 enb x2c_p 0.03914f
+C36 island_off cgk5 0.05422f
+C37 x2c_p ct2_b 0.64454f
+C38 x2c_n x1c_n 0.08635f
+C39 ct3_b x1c_p 0.00109f
+C40 r4_s2 tank_n 0
+C41 cgd5 cgd4 0.08544f
+C42 g_n cgk1 0.0285f
+C43 x3c_p ct0 0.06395f
+C44 g_n r11_s3 0
+C45 ct0 ct3 0.02645f
+C46 tank_p vcas 19.7236f
+C47 atb_vdcm cgd1 0.06398f
+C48 tail src_n 4.739f
+C49 tail vtk 19.2183f
+C50 tail rf_in_n 0.86981f
+C51 se cgk3 0.07983f
+C52 ct2 tank_p 0.5405f
+C53 src_p att3 0.31617f
+C54 vtk r11_s4 0.00287f
+C55 r11_s4 src_n 0.00213f
+C56 x_n cgk2 2.8738f
+C57 vg vcas 0.04688f
+C58 att2 bpc_n 0.07163f
+C59 VDD cgd0 2.19258f
+C60 g_p ibias 0.50441f
+C61 rt cgd4 0.0794f
+C62 bpc_p att3 0.07175f
+C63 att3 cgk4 0.05213f
+C64 rf_outq_p x0c_n 0.03753f
+C65 g_n vtr 2.03576f
+C66 bpc_n rf_in_p 2.91403f
+C67 rf_outq_p vtc 0.03772f
+C68 g_p att0 0.02654f
+C69 cgd0 att1_b 0
+C70 g_n atb_vdcm 0.08868f
+C71 bpc_p vlo 0.033f
+C72 att2 se_x 0.03419f
+C73 att4 att2 9.64267f
+C74 tank_n cgk2 1.59052f
+C75 x0c_n x0c_p 42.9066f
+C76 se x1c_p 0.06155f
+C77 rf_in_p se_x 7.90614f
+C78 island_off x_p 0.56016f
+C79 cgd4 cgd1 0.05661f
+C80 tail r11_s5 0
+C81 tank_p vtk 19.4503f
+C82 tank_p src_n 3.50437f
+C83 bpc_n x2c_n 0.04221f
+C84 gain_lo vcas 0.60162f
+C85 tank_p rf_in_n 0.88346f
+C86 r11_s5 r11_s4 0.31975f
+C87 rf_out_p att0 6.66578f
+C88 rt_p rt_n 0.96181f
+C89 vg vtk 3.64609f
+C90 vg src_n 0.00218f
+C91 gain_lo ct2 0.02775f
+C92 vg rf_in_n 4.82542f
+C93 rf_outq_p cgk0 0.06717f
+C94 VDD x2c_p 0.52654f
+C95 src_p cgk5 0.1862f
+C96 rf_out_p cgk1 0.06446f
+C97 g_n cgd4 0.0815f
+C98 rf_out_p r11_s3 0
+C99 r4_s4 tank_p 0
+C100 x3c_n x3c_p 30.197f
+C101 se_x x2c_n 0.07027f
+C102 bpc_p cgk5 0.02744f
+C103 att4 x2c_n 0.03487f
+C104 g_p vtr 0
+C105 ct0_b cgk3 0
+C106 cgk5 cgk4 0.06569f
+C107 cgd5 rt 0.0985f
+C108 cgd0 rf_outq_n 0.17434f
+C109 gain_lo_b att4_b 0
+C110 g_p atb_vdcm 0.05217f
+C111 x3c_n ct3 11.2902f
+C112 r11_s2 cgk0 0
+C113 att1 x0c_n 0.03656f
+C114 g_p atb_nbias 1.22198f
+C115 tank_p r11_s5 0.00125f
+C116 x_n cgd2 1.53978f
+C117 cgd5 cgd1 0.07516f
+C118 gain_lo vtk 1.91772f
+C119 gain_lo src_n 0.33705f
+C120 rf_out_p atb_vdcm 0.09349f
+C121 ct1 att3_b 0
+C122 ibias rf_in_p 0.06883f
+C123 att2 att0 0.02624f
+C124 tail cgd0 7.47359f
+C125 tank_n x0c_n 1.06913f
+C126 rf_out_n ct0 0.06453f
+C127 tank_n cgd2 0.67736f
+C128 vtc tank_n 1.81257f
+C129 g_p cgd4 0.07963f
+C130 rf_outq_n x2c_p 0.07753f
+C131 g_n cgd5 0.10338f
+C132 r7_s2 r7_s1 0.34671f
+C133 src_p x_p 0.14869p
+C134 se se_b 0.73002f
+C135 cgd3 att3_b 0.12142f
+C136 att3 vcas 0.85765f
+C137 rt cgd1 0.09025f
+C138 x_n cgk0 1.26845f
+C139 bpc_p x_p 0.62138f
+C140 x_p cgk4 2.78008f
+C141 ct1 ct0 0.02907f
+C142 rf_outq_p x3c_p 0.08551f
+C143 ct2 att3 0.03218f
+C144 VDD cgk2 1.13507f
+C145 rf_outq_p ct3 0.08337f
+C146 enb x0c_n 0.0481f
+C147 att0 x2c_n 0.03975f
+C148 rf_out_p cgd4 0.05443f
+C149 vtg bpc_p 0.28543f
+C150 tank_n cgk0 0.50808f
+C151 enb vtc 0.10667f
+C152 cgk3 x1c_p 0.13382f
+C153 att2_b vcas 0.98452f
+C154 att3_b x1c_n 0
+C155 x0c_p x3c_p 0.07597f
+C156 cgk2 att1_b 0.27481f
+C157 tank_p cgd0 0.29247f
+C158 tail x2c_p 0.46482f
+C159 g_n rt 14.0143f
+C160 cgd3 ct0 0.09647f
+C161 byp ct0 0.06452f
+C162 att2 atb_vdcm 0.05156f
+C163 x0c_p ct3 0.06661f
+C164 vg cgd0 0.03551f
+C165 vtr rf_in_p 0.00444f
+C166 r7_s4 r4_s5 0.68264f
+C167 g_p cgd5 0.09874f
+C168 VDD gain_lo_b 2.26166f
+C169 vtk att3 1.76788f
+C170 g_n cgd1 0.09235f
+C171 att3 src_n 0.31173f
+C172 cgk5 vcas 0.66206f
+C173 x1c_n ct0 0.03189f
+C174 atb_nbias rf_in_p 0.40493f
+C175 rf_in_n vlo 0.49007f
+C176 cgd1 ct1_b 0.00341f
+C177 vtc tailx 9.94947f
+C178 ct2 cgk5 0.08318f
+C179 r4_s5 vcas 0.00135f
+C180 atb_vdcm x2c_n 0.04143f
+C181 tank_p x2c_p 12.9266f
+C182 rf_out_n x3c_n 0.04103f
+C183 att1 x3c_p 0.02699f
+C184 rf_out_p cgd5 0.07402f
+C185 att2 cgd4 0.05305f
+C186 se island_off 0.0523f
+C187 gain_lo cgd0 0.0899f
+C188 g_p rt 40.9502f
+C189 att1 ct3 0.02632f
+C190 x_n x3c_p 0.58891f
+C191 x_n ct3 0.56871f
+C192 ct1 x3c_n 0.03791f
+C193 VDD x0c_n 0.96631f
+C194 VDD cgd2 0.96719f
+C195 rf_outq_p att0_b 1.9885f
+C196 tank_n x3c_p 0.4974f
+C197 g_p cgd1 0.09048f
+C198 vtc VDD 2.38378f
+C199 VDD gi_p 0.00536f
+C200 vtk cgk5 1.27606f
+C201 rf_out_p rt 0.08335f
+C202 cgk5 src_n 0.36956f
+C203 cgd2 att1_b 0.04152f
+C204 cgd4 x2c_n 0.09892f
+C205 cgd3 x3c_n 0.1026f
+C206 r4_s2 tank_p 0
+C207 tank_n ct3 0.48187f
+C208 island_off r11_s1 0
+C209 att4 att3_b 0.01014f
+C210 tail cgk2 0.06905f
+C211 byp x3c_n 0.04227f
+C212 ncm x1c_p 0.03266f
+C213 r4_s5 vtk 0.02467f
+C214 x_p vcas 7.53187f
+C215 vgr x3c_n 0.00108f
+C216 bpc_n ct0 0.07412f
+C217 gain_lo x2c_p 0.02641f
+C218 ct2 x_p 0.61097f
+C219 g_n g_p 28.5617f
+C220 att2 cgd5 0.07183f
+C221 rf_out_p cgd1 0.05425f
+C222 pb enb 0.04453f
+C223 r4_s4 r4_s5 0.5478f
+C224 VDD cgk0 4.16176f
+C225 enb x3c_p 0.65483f
+C226 vtg vcas 4.53442f
+C227 g_p ct1_b 0
+C228 se_b x1c_p 0
+C229 x3c_n x1c_n 0.08785f
+C230 rf_outq_p rf_out_n 3.92091f
+C231 se_x ct0 0.03555f
+C232 att4 ct0 0.00151f
+C233 rf_out_n x0c_p 0.03148f
+C234 se src_p 0.32975f
+C235 tank_p cgk2 1.59052f
+C236 x0c_n rf_outq_n 0.03613f
+C237 rf_out_p g_n 0.12111f
+C238 cgd0 att3 0.08525f
+C239 rf_outq_p ct1 0.08991f
+C240 vtc rf_outq_n 0.10037f
+C241 se bpc_p 0.07341f
+C242 se cgk4 0.07983f
+C243 att2 rt 0.02647f
+C244 vtk x_p 0.15535p
+C245 att0_b att1 0.01014f
+C246 x_p src_n 3.03413f
+C247 vg cgk2 0.00188f
+C248 cgd5 x2c_n 0.11361f
+C249 rf_outq_p r15_s1 0.14454f
+C250 r16_s1 cgk3 0
+C251 ct1 x0c_p 0.07125f
+C252 g_p r6_s1 0
+C253 rf_outq_p cgd3 0.05595f
+C254 tailx x3c_p 1.25622f
+C255 vtg vtk 1.99523f
+C256 rf_outq_p byp 0.41824f
+C257 vtg rf_in_n 1.30433f
+C258 tailx ct3 1.16874f
+C259 rf_outq_p vgr 0.04017f
+C260 att2 cgd1 0.0937f
+C261 island_off cgk3 0.06107f
+C262 src_p r11_s1 0
+C263 rf_outq_n cgk0 0.0752f
+C264 tail x0c_n 0.59634f
+C265 x0c_p cgd3 0.10179f
+C266 att0_b tank_n 0
+C267 tail cgd2 0.16254f
+C268 att3 x2c_p 0.02486f
+C269 bpc_p r11_s1 0.02721f
+C270 vtc tail 17.0563f
+C271 byp x0c_p 0.03272f
+C272 att1 rf_out_n 0
+C273 rt x2c_n 0.07043f
+C274 bpc_n x3c_n 0.04221f
+C275 byp r11_s2 0.07293f
+C276 vgr x0c_p 0.03673f
+C277 rf_outq_p x1c_n 0.03193f
+C278 rf_out_p g_p 0.08359f
+C279 rf_out_n x_n 0.59118f
+C280 g_n att2 0.02745f
+C281 pb VDD 9.96121f
+C282 VDD x3c_p 2.10018f
+C283 cgd0 cgk5 0.11827f
+C284 enb r7_s5 0.61831f
+C285 island_off x1c_p 0.02508f
+C286 att0 ct0 0.02749f
+C287 r7_s2 src_p 0.00203f
+C288 x0c_p x1c_n 4.69822f
+C289 g_n rf_in_p 5.56614f
+C290 ct1 att1 0.0285f
+C291 att2 ct1_b 0
+C292 cgd1 x2c_n 0.11812f
+C293 ct0_b cgk4 0.00109f
+C294 se_x x3c_n 0.09026f
+C295 VDD ct3 1.23257f
+C296 att4 x3c_n 0.03487f
+C297 tank_n rf_out_n 25.519f
+C298 ct1 x_n 0.63406f
+C299 ct2 ct3_b 0.0017f
+C300 tank_p x0c_n 0.29314f
+C301 tail cgk0 9.42025f
+C302 r11_s4 cgk0 0
+C303 gain_lo gain_lo_b 0.20411f
+C304 att1 cgd3 0.05402f
+C305 tank_p cgd2 0.52492f
+C306 vtc tank_p 3.66062f
+C307 byp att1 0.00244f
+C308 r7_s3 cgk0 0
+C309 r4_s3 x0c_p 0.68362f
+C310 vg cgd2 1.50399f
+C311 x_n cgd3 2.49877f
+C312 vtc vg 0.05532f
+C313 g_n x2c_n 0.06894f
+C314 vg gi_p 0.04703f
+C315 byp x_n 0.62832f
+C316 ct1 tank_n 0.53197f
+C317 cgk5 x2c_p 0.08501f
+C318 g_p att2 0.02675f
+C319 ct1 att4_b 0
+C320 enb rf_out_n 0.06033f
+C321 tank_n r15_s1 0.00114f
+C322 att1 x1c_n 0.03563f
+C323 r4_s1 x0c_p 0.68173f
+C324 cgd0 x_p 23.4483f
+C325 rf_outq_n x3c_p 0.06354f
+C326 atb_vdcm ct0 0.05405f
+C327 src_p cgk3 0.39556f
+C328 tank_n cgd3 0.96944f
+C329 g_p rf_in_p 6.59899f
+C330 rf_outq_p bpc_n 0.08284f
+C331 byp tank_n 0.30228f
+C332 tank_p cgk0 0.41522f
+C333 se vcas 0.21391f
+C334 x_n x1c_n 0.0073f
+C335 bpc_p cgk3 0.04629f
+C336 cgk4 cgk3 0.0589f
+C337 vgr tank_n 2.11634f
+C338 att4_b cgd3 1.97924f
+C339 rf_outq_n ct3 0.06219f
+C340 vg cgk0 1.13305f
+C341 gain_lo x0c_n 0.03745f
+C342 ct2 se 0.00162f
+C343 bpc_n x0c_p 0.03266f
+C344 rf_outq_p se_x 0.06612f
+C345 ct1 ct2_b 0.00109f
+C346 rf_out_p att2 0.08292f
+C347 r7_s5 VDD 0.00464f
+C348 rf_outq_p att4 0.08198f
+C349 src_p x1c_p 0.42054f
+C350 rf_out_p rf_in_p 2.07236f
+C351 g_p x2c_n 0.06218f
+C352 tank_n x1c_n 17.3144f
+C353 att0 x3c_n 0.03975f
+C354 tailx rf_out_n 2.5947f
+C355 bpc_p x1c_p 0.04537f
+C356 cgk4 x1c_p 0.09289f
+C357 cgk2 att2_b 0.07668f
+C358 x0c_p se_x 0.24475f
+C359 VDD att0_b 2.00525f
+C360 att4_b x1c_n 0
+C361 tail x3c_p 0.68527f
+C362 cgd4 ct0 5.00044f
+C363 att4 x0c_p 0.0304f
+C364 x_p x2c_p 0.58505f
+C365 enb vgr 7.70967f
+C366 r7_s1 src_p 0.00211f
+C367 r7_s4 r7_s2 0.02977f
+C368 att0_b att1_b 0
+C369 att3 gain_lo_b 0
+C370 r11_s2 gi_n 0
+C371 r4_s3 tank_n 0.00406f
+C372 tail ct3 0.66237f
+C373 se vtk 1.84826f
+C374 se src_n 0.32531f
+C375 rf_out_p x2c_n 0.03606f
+C376 ct1 tailx 1.30526f
+C377 enb x1c_n 0.04315f
+C378 bpc_n att1 20.9195f
+C379 vtg x2c_p 0.00605f
+C380 ct2_b x1c_n 0.00183f
+C381 bpc_n x_n 0.63591f
+C382 VDD rf_out_n 1.06101f
+C383 r4_s1 tank_n 0.00406f
+C384 r7_s2 vcas 0.09284f
+C385 lobias bpc_p 0.00595f
+C386 tailx byp 1.30748f
+C387 tank_p x3c_p 4.72525f
+C388 atb_vdcm x3c_n 0.04143f
+C389 att1 se_x 0.03261f
+C390 tailx vgr 1.25291f
+C391 att4 att1 0.02578f
+C392 r11_s1 src_n 0.00401f
+C393 x_n se_x 0.79752f
+C394 tank_p ct3 0.5081f
+C395 r16_s1 island_off 0
+C396 tank_n bpc_n 1.10715f
+C397 att4 x_n 0.5525f
+C398 att0_b rf_outq_n 0
+C399 cgd5 ct0 0.18978f
+C400 x_n gi_n 9.20058f
+C401 ct1 VDD 2.33248f
+C402 x0c_n att3 0.0355f
+C403 rf_outq_p att0 0.21782f
+C404 att3 cgd2 0.00115f
+C405 cgk5 gain_lo_b 1.22213f
+C406 ct1 att1_b 0.00175f
+C407 rf_outq_p cgk1 0.06446f
+C408 rt_p x1c_p 0
+C409 rf_outq_p r11_s3 0
+C410 vtc vlo 0
+C411 VDD r15_s1 0.00253f
+C412 att2 x2c_n 0.03533f
+C413 VDD cgd3 2.3033f
+C414 tank_n se_x 1.21562f
+C415 att0 x0c_p 0.03019f
+C416 byp VDD 1.24078f
+C417 att4 tank_n 0.46944f
+C418 r15_s1 att1_b 0
+C419 vgr VDD 2.70136f
+C420 att4 att4_b 0.19858f
+C421 cgk3 vcas 1.0133f
+C422 cgd3 att1_b 0
+C423 att3_b cgd1 0.0017f
+C424 cgd2 att2_b 1.1392f
+C425 rf_in_p x2c_n 0
+C426 cgd4 x3c_n 0.1026f
+C427 x_p cgk2 1.59813f
+C428 byp att1_b 0
+C429 enb bpc_n 0.04609f
+C430 rt ct0 0.02647f
+C431 rf_out_n rf_outq_n 11.2498f
+C432 ct2 cgk3 0.08318f
+C433 gain_lo x3c_p 0.07225f
+C434 r11_s3 r11_s2 0.31975f
+C435 r7_s5 r7_s3 0.02977f
+C436 VDD x1c_n 15.296f
+C437 gain_lo ct3 0.02634f
+C438 enb se_x 1.97572f
+C439 rf_outq_p atb_vdcm 10.552f
+C440 cgd1 ct0 0.10554f
+C441 ct3_b x2c_p 0.00636f
+C442 x0c_n cgk5 0.11048f
+C443 vcas x1c_p 14.9815f
+C444 ct1 rf_outq_n 0.06655f
+C445 r4_s5 x0c_n 0.0343f
+C446 se cgd0 0.08774f
+C447 att1 att0 25.5083f
+C448 ct2 x1c_p 12.3918f
+C449 atb_vdcm x0c_p 0.03188f
+C450 r7_s1 vcas 0.70357f
+C451 r15_s1 rf_outq_n 0
+C452 att1 cgk1 0.14418f
+C453 tailx bpc_n 1.72142f
+C454 x_n att0 0.56205f
+C455 vtk cgk3 33.5112f
+C456 cgk3 src_n 0.47113f
+C457 rf_outq_n cgd3 0.05316f
+C458 tail rf_out_n 23.6323f
+C459 atb_vdcm r11_s2 0.07192f
+C460 byp rf_outq_n 0.48153f
+C461 x_n cgk1 0.71756f
+C462 vgr rf_outq_n 0.1453f
+C463 cgd5 x3c_n 0.11729f
+C464 g_n ct0 0.02717f
+C465 tailx se_x 0
+C466 src_p island_off 15.0702f
+C467 att4 tailx 1.13488f
+C468 cgk5 cgk0 0.00155f
+C469 rf_outq_p cgd4 0.05635f
+C470 tank_n att0 0.00713f
+C471 ct1 tail 0.73644f
+C472 vtk x1c_p 19.9258f
+C473 tank_n cgk1 0.47019f
+C474 x1c_p src_n 0.17361f
+C475 rf_outq_n x1c_n 0.0352f
+C476 bpc_p island_off 0.07296f
+C477 island_off cgk4 0.05403f
+C478 se x2c_p 0.0584f
+C479 x0c_p cgd4 0.10204f
+C480 x0c_n x_p 0.84213f
+C481 VDD bpc_n 12.1656f
+C482 tail r15_s1 0
+C483 tail cgd3 0.74522f
+C484 tank_p rf_out_n 0.66543f
+C485 rt x3c_n 0.07043f
+C486 att3 x3c_p 0.03249f
+C487 atb_vdcm att1 0
+C488 x_p cgd2 0.37941f
+C489 byp tail 0.60374f
+C490 r4_s4 x1c_p 0
+C491 byp r11_s4 0.07293f
+C492 bpc_n att1_b 0
+C493 enb ibias 0.03815f
+C494 gi_p x_p 9.20058f
+C495 vgr tail 0.62168f
+C496 att3 ct3 0.03079f
+C497 atb_vdcm x_n 0.60299f
+C498 VDD se_x 0.34286f
+C499 att4 VDD 3.43046f
+C500 g_p ct0 0.02654f
+C501 VDD gi_n 0.00536f
+C502 vtc vtg 18.7467f
+C503 ct1 tank_p 0.56534f
+C504 cgd1 x3c_n 0.12179f
+C505 r6_s1 r6_s2 0.30493f
+C506 tail x1c_n 0.57444f
+C507 att4 att1_b 0
+C508 g_p r6_s2 0
+C509 lobias rf_in_n 0.22954f
+C510 tank_n atb_vdcm 12.2579f
+C511 ct2 se_b 0
+C512 x_p cgk0 1.30336f
+C513 rf_outq_p cgd5 0.07586f
+C514 att1 cgd4 0.05402f
+C515 tank_p cgd3 0.78518f
+C516 byp tank_p 0.5886f
+C517 rf_out_p ct0 24.5607f
+C518 g_n x3c_n 0.0696f
+C519 x_n cgd4 2.61578f
+C520 vg cgd3 0
+C521 vtk ncm 3.09781f
+C522 gain_lo rf_out_n 0.06421f
+C523 vgr tank_p 0.12946f
+C524 byp vg 0.03861f
+C525 x0c_p cgd5 0.27486f
+C526 ncm rf_in_n 2.5158f
+C527 tailx att0 1.14909f
+C528 bpc_n rf_outq_n 1.48225f
+C529 cgk5 x3c_p 0.089f
+C530 enb vtr 0
+C531 cgk5 ct3 0.07896f
+C532 cgd0 cgk3 0.16071f
+C533 tank_p x1c_n 0.34889f
+C534 rf_outq_p rt 0.08381f
+C535 src_p bpc_p 17.7144f
+C536 src_p cgk4 0.18527f
+C537 att2 att3_b 1.97914f
+C538 tank_n cgd4 0.82142f
+C539 rf_outq_n se_x 0.07672f
+C540 ct1 gain_lo 0.02862f
+C541 att4 rf_outq_n 0.06111f
+C542 vg x1c_n 0.11507f
+C543 bpc_p cgk4 0.02754f
+C544 ibias VDD 0.04575f
+C545 enb atb_nbias 0.13089f
+C546 cgd4 att4_b 0.12396f
+C547 x0c_p rt 0.0669f
+C548 r16_s1 vcas 0.06267f
+C549 gain_lo cgd3 7.40902f
+C550 rf_outq_p cgd1 0.05613f
+C551 r4_s3 tank_p 0
+C552 gain_lo byp 0.06421f
+C553 cgd0 x1c_p 0.12853f
+C554 tail bpc_n 0.72559f
+C555 VDD att0 2.69619f
+C556 att1 cgd5 0.07312f
+C557 g_p x3c_n 0.06218f
+C558 VDD cgk1 0.89296f
+C559 att2 ct0 0
+C560 att0 att1_b 0
+C561 island_off vcas 0.14275f
+C562 VDD r11_s3 0.00211f
+C563 x_n cgd5 2.91936f
+C564 x0c_p cgd1 0.13342f
+C565 tailx atb_vdcm 1.25456f
+C566 cgk1 att1_b 0.04558f
+C567 cgk3 x2c_p 0.11687f
+C568 x_p x3c_p 0.58891f
+C569 r4_s1 tank_p 0
+C570 tail se_x 0.08738f
+C571 ct2 island_off 0.05454f
+C572 att4 tail 0.644f
+C573 rf_outq_p g_n 0.12163f
+C574 gain_lo x1c_n 0.03137f
+C575 x_p ct3 0.56871f
+C576 tank_n cgd5 0.5908f
+C577 att1 rt 0.02647f
+C578 rf_out_n att3 0.06111f
+C579 rf_out_p x3c_n 0.03606f
+C580 pb vtg 0.23621f
+C581 vtg x3c_p 0.00142f
+C582 tank_p bpc_n 0.9917f
+C583 vtr VDD 0.0079f
+C584 g_n x0c_p 0.0683f
+C585 r16_s1 src_n 0
+C586 x_n rt 0.57312f
+C587 g_n r11_s2 0
+C588 x2c_n ct0 0.03674f
+C589 x2c_p x1c_p 0.07002f
+C590 r6_s1 vtop 0.02977f
+C591 VDD atb_vdcm 0.74721f
+C592 r7_s5 r4_s5 0.00155f
+C593 island_off vtk 1.80357f
+C594 att0 rf_outq_n 0.00214f
+C595 ct1 att3 0.03304f
+C596 island_off src_n 15.0618f
+C597 att1 cgd1 0.06308f
+C598 tank_p se_x 0.85441f
+C599 att4 tank_p 0.50465f
+C600 atb_vdcm att1_b 0
+C601 r7_s4 src_p 0.00119f
+C602 cgk1 rf_outq_n 0.07135f
+C603 tank_p gi_n 0
+C604 atb_nbias VDD 1.6634f
+C605 se x0c_n 0.06277f
+C606 tank_n rt 0.48525f
+C607 x_n cgd1 2.00117f
+C608 vg se_x 0.0617f
+C609 r15_s1 att3 0
+C610 vg gi_n 0
+C611 rf_outq_p g_p 0.08405f
+C612 ct0_b gain_lo_b 0
+C613 att3 cgd3 0.05302f
+C614 byp att3 0.06111f
+C615 r4_s2 x1c_p 0
+C616 ct1 att2_b 0
+C617 g_n att1 0.02717f
+C618 VDD cgd4 2.04055f
+C619 att2 x3c_n 0.03533f
+C620 src_p vcas 1.08748f
+C621 g_p x0c_p 0.06706f
+C622 tank_n cgd1 16.3942f
+C623 rf_out_n cgk5 0.05559f
+C624 gain_lo bpc_n 0.07381f
+C625 g_n x_n 2.27769f
+C626 vgr vlo 0
+C627 island_off r11_s5 0
+C628 tail att0 0.00161f
+C629 bpc_p vcas 0.05298f
+C630 cgk4 vcas 0.81147f
+C631 ct2 src_p 0.34801f
+C632 cgd4 att1_b 0
+C633 att4_b cgd1 0
+C634 pb en 0.08898f
+C635 rf_outq_p rf_out_p 41.7373f
+C636 tail cgk1 12.906f
+C637 att3 x1c_n 0.02982f
+C638 tail r11_s3 0
+C639 ct2 bpc_p 0.07564f
+C640 r11_s4 r11_s3 0.32071f
+C641 atb_vdcm rf_outq_n 11.8632f
+C642 ct2 cgk4 0.08318f
+C643 gain_lo se_x 0.03419f
+C644 att4 gain_lo 26.6679f
+C645 ct1 cgk5 0.0856f
+C646 g_n tank_n 0.50189f
+C647 rf_out_p x0c_p 0.03138f
+C648 x0c_n ct0_b 0.07369f
+C649 rf_out_p r11_s2 0.07277f
+C650 x3c_n x2c_n 0.1194f
+C651 att2_b x1c_n 0
+C652 se_b x2c_p 0
+C653 x3c_p ct3_b 0.5707f
+C654 gain_lo_b cgk3 0.00109f
+C655 cgk5 cgd3 0.0614f
+C656 g_p att1 0.02654f
+C657 byp cgk5 0.05661f
+C658 tank_p att0 0.52831f
+C659 src_p vtk 3.94469f
+C660 ct3_b ct3 1.18288f
+C661 src_p src_n 1.98321f
+C662 r11_s1 cgk0 0
+C663 tailx rt 1.17796f
+C664 g_p x_n 0.57547f
+C665 VDD cgd5 2.23211f
+C666 bpc_p vtk 1.51511f
+C667 vtk cgk4 1.56806f
+C668 bpc_p rf_in_n 3.1094f
+C669 bpc_p src_n 0.7025f
+C670 cgk4 src_n 0.36874f
+C671 tank_p cgk1 0.37801f
+C672 rf_outq_n cgd4 0.0535f
+C673 tail atb_vdcm 0.52749f
+C674 rf_out_n x_p 0.59118f
+C675 atb_vdcm r11_s4 0.07192f
+C676 tank_p r11_s3 0.00125f
+C677 g_n enb 0.16376f
+C678 rf_outq_p att2 0.0833f
+C679 cgk5 x1c_n 0.1012f
+C680 gain_lo_b x1c_p 0
+C681 cgd0 island_off 0.16418f
+C682 rf_out_p att1 0.00769f
+C683 g_p tank_n 0.48705f
+C684 rf_outq_p rf_in_p 3.22159f
+C685 r4_s5 x1c_n 0.03452f
+C686 vtg rf_out_n 0.12837f
+C687 bpc_n att3 0.07071f
+C688 r7_s2 cgk0 0
+C689 ct1 x_p 0.63406f
+C690 rf_out_p x_n 0.58813f
+C691 att2 x0c_p 0.03082f
+C692 VDD rt 27.9098f
+C693 se x3c_p 29.7864f
+C694 src_p r11_s5 0
+C695 x0c_n cgk3 0.44291f
+C696 r7_s4 vcas 0.09284f
+C697 cgk3 cgd2 0.00707f
+C698 x_p cgd3 2.49797f
+C699 gain_lo att0 0.02733f
+C700 att3 se_x 0.03373f
+C701 tank_p atb_vdcm 13.3697f
+C702 bpc_p r11_s5 0.00309f
+C703 tail cgd4 0.74683f
+C704 se ct3 28.0757f
+C705 att4 att3 26.6083f
+C706 byp x_p 0.62832f
+C707 g_n tailx 40.1676f
+C708 rf_outq_p x2c_n 0.03707f
+C709 r4_s3 r4_s5 0.25636f
+C710 rf_out_p tank_n 0.55268f
+C711 r6_s1 enb 0.61831f
+C712 atb_vdcm vg 0.03783f
+C713 g_p enb 0.28243f
+C714 g_p ct2_b 0
+C715 VDD cgd1 18.7899f
+C716 rf_outq_n cgd5 0.0733f
+C717 island_off x2c_p 0.02996f
+C718 x0c_n x1c_p 0.07261f
+C719 x0c_p x2c_n 0.07471f
+C720 cgd1 att1_b 0.13832f
+C721 x_p x1c_n 0.61306f
+C722 vgr vtg 0.11863f
+C723 cgk3 cgk0 0.00255f
+C724 att2 att1 0.02624f
+C725 ct2 vcas 0.22062f
+C726 bpc_n cgk5 0.06373f
+C727 g_n VDD 8.38886f
+C728 att2 x_n 0.56634f
+C729 tank_p cgd4 0.63753f
+C730 rf_out_p enb 0.04443f
+C731 rf_outq_n rt 0.06248f
+C732 VDD ct1_b 2.7251f
+C733 gain_lo atb_vdcm 0.05374f
+C734 vg cgd4 0
+C735 vgm rf_in_n 0.12691f
+C736 g_p tailx 46.7403f
+C737 cgk5 se_x 0.10392f
+C738 cgd5 r11_s4 0.00569f
+C739 tail cgd5 1.19882f
+C740 src_p cgd0 0.29158f
+C741 att4 cgk5 0.05198f
+C742 att1_b ct1_b 0
+C743 att2 tank_n 0.48021f
+C744 r4_s5 se_x 0
+C745 bpc_p cgd0 0.03699f
+C746 cgd0 cgk4 0.10605f
+C747 lobias vtc 0.03375f
+C748 att1 x2c_n 0.04098f
+C749 att2 att4_b 0.0017f
+C750 tank_n rf_in_p 1.23421f
+C751 vtk vcas 6.78476f
+C752 vcas rf_in_n 4.23245f
+C753 vcas src_n 1.17224f
+C754 rf_outq_n cgd1 0.06222f
+C755 r7_s1 cgk0 0
+C756 x_n x2c_n 2.04249f
+C757 att0 att3 0.02578f
+C758 ct2 vtk 1.9563f
+C759 x0c_n ncm 0.11207f
+C760 ct2 src_n 0.34357f
+C761 rf_out_p tailx 2.59373f
+C762 r6_s1 VDD 0.00408f
+C763 vtc ncm 0.0021f
+C764 tail rt 0.66293f
+C765 g_p VDD 23.5243f
+C766 gain_lo cgd4 0.19385f
+C767 ct1 ct3_b 0
+C768 vgr en 0
+C769 bpc_n x_p 0.62636f
+C770 tank_p cgd5 0.2998f
+C771 tank_n x2c_n 8.98467f
+C772 src_p x2c_p 0.34798f
+C773 g_n rf_outq_n 0.06389f
+C774 enb rf_in_p 1.0749f
+C775 bpc_p x2c_p 0.04062f
+C776 cgk4 x2c_p 0.08501f
+C777 cgk3 x3c_p 0.08769f
+C778 tail cgd1 0.9566f
+C779 x_p se_x 0.79752f
+C780 att4 x_p 0.5525f
+C781 vtg bpc_n 1.57786f
+C782 cgk3 ct3 0.07896f
+C783 vtk src_n 9.76548f
+C784 rf_out_p VDD 1.50604f
+C785 vtk rf_in_n 13.9699f
+C786 se rf_out_n 0.06277f
+C787 rf_out_p att1_b 0.00186f
+C788 tank_p rt 0.51945f
+C789 vtr vlo 0.93591f
+C790 atb_vdcm att3 0.05064f
+C791 att0 cgk5 0.05156f
+C792 enb x2c_n 0.04915f
+C793 vtg se_x 0.40563f
+C794 x3c_p x1c_p 0.0703f
+C795 g_n tail 6.4721f
+C796 ct3_b x1c_n 0
+C797 x2c_n ct2_b 0.07369f
+C798 tailx att2 1.16379f
+C799 r4_s4 vtk 0
+C800 x3c_n ct0 0.03658f
+C801 g_n r11_s4 0.03008f
+C802 cgk1 cgk5 0.00261f
+C803 ct1 se 0
+C804 gain_lo cgd5 0.07477f
+C805 tailx rf_in_p 10.2453f
+C806 g_p rf_outq_n 0.06264f
+C807 x1c_p ct3 0.06182f
+C808 tank_p cgd1 19.1935f
+C809 se cgd3 0.07983f
+C810 r11_s5 src_n 0.00212f
+C811 vg cgd1 0.04004f
+C812 se byp 0.06277f
+C813 att3 cgd4 0.05198f
+C814 att2 VDD 3.85265f
+C815 rf_out_p rf_outq_n 0.09668f
+C816 cgd0 vcas 0.4973f
+C817 g_n tank_p 0.58368f
+C818 gain_lo rt 0.02647f
+C819 x0c_n island_off 0.03556f
+C820 VDD rf_in_p 2.0723f
+C821 src_p cgk2 0.02666f
+C822 att2 att1_b 0.00829f
+C823 atb_vdcm cgk5 0.05616f
+C824 g_p tail 0.66559f
+C825 g_n vg 0
+C826 ct2 cgd0 0.09109f
+C827 se x1c_n 0.07139f
+C828 att0 x_p 0.5525f
+C829 g_p r7_s3 0
+C830 byp r11_s1 0.62041f
+C831 cgk1 x_p 0.20852f
+C832 gain_lo cgd1 0.0971f
+C833 r16_s1 cgk0 0
+C834 rf_outq_p ct0 0.11561f
+C835 ct1 ct0_b 0
+C836 VDD x2c_n 0.76168f
+C837 rf_out_p r11_s4 0.07277f
+C838 rf_out_p tail 1.03547f
+C839 vcas x2c_p 0.20242f
+C840 se_b x3c_p 0.00488f
+C841 ct0_b cgd3 0
+C842 island_off cgk0 0.07596f
+C843 x0c_p ct0 0.5304f
+C844 cgd5 att3 0.07086f
+C845 gain_lo_b cgk4 0.00596f
+C846 rt rt_n 0.27729f
+C847 cgd0 vtk 5.57454f
+C848 cgk5 cgd4 36.4886f
+C849 cgd0 src_n 7.99526f
+C850 g_n gain_lo 0.02717f
+C851 g_p tank_p 0.52257f
+C852 se_b ct3 0.00128f
+C853 att2 rf_outq_n 0.06203f
+C854 ct2 x2c_p 1.88689f
+C855 r6_s1 vg 0
+C856 g_p vg 0.03745f
+C857 rf_out_n cgk3 0.06319f
+C858 rf_outq_n rf_in_p 0.08502f
+C859 atb_vdcm x_p 0.60299f
+C860 ct0_b x1c_n 0
+C861 vtr vtg 0.74837f
+C862 se bpc_n 0.07198f
+C863 rf_out_p tank_p 10.1254f
+C864 att3 rt 0.03088f
+C865 ct1 cgk3 0.0856f
+C866 src_p x0c_n 0.29631f
+C867 ibias en 0.0366f
+C868 rf_out_n x1c_p 0.02615f
+C869 att1 ct0 0.03581f
+C870 tank_n att3_b 0
+C871 src_p cgd2 0.08013f
+C872 rf_out_p vg 0.03949f
+C873 rf_outq_n x2c_n 0.16437f
+C874 vtk x2c_p 1.5636f
+C875 x2c_p rf_in_n 0.0027f
+C876 x2c_p src_n 0.22846f
+C877 tail att2 0.65968f
+C878 src_p gi_p 8.64296f
+C879 bpc_p x0c_n 0.03788f
+C880 x0c_n cgk4 0.11524f
+C881 se se_x 2.03254f
+C882 att4 se 0.02667f
+C883 r15_s1 cgk3 0
+C884 g_n rt_n 0.57887f
+C885 x_n ct0 0.60371f
+C886 att4_b att3_b 0
+C887 g_p gain_lo 0.02654f
+C888 vtc bpc_p 0.47252f
+C889 cgd3 cgk3 23.569f
+C890 tail rf_in_p 1.06848f
+C891 cgk5 cgd5 40.8839f
+C892 byp cgk3 0.06567f
+C893 att3 cgd1 0.78754f
+C894 x_p cgd4 2.61578f
+C895 rf_outq_p x3c_n 0.03707f
+C896 ct1 x1c_p 0.91589f
+C897 tank_n ct0 0.5087f
+C898 island_off x3c_p 0.05306f
+C899 src_p cgk0 0.48461f
+C900 cgk3 x1c_n 0.14212f
+C901 att2_b cgd1 0.0018f
+C902 x0c_p x3c_n 0.07672f
+C903 cgk2 vcas 0.90257f
+C904 cgd3 x1c_p 0.09289f
+C905 r4_s2 vtk 0
+C906 tail x2c_n 0.7001f
+C907 byp x1c_p 0.02739f
+C908 rf_out_p gain_lo 0.08649f
+C909 g_n att3 0.03179f
+C910 island_off ct3 0.05172f
+C911 att2 tank_p 0.52126f
+C912 cgk5 rt 0.0794f
+C913 vgr x1c_p 0.0371f
+C914 cgk4 cgk0 0
+C915 r11_s1 gi_n 0
+C916 g_n vlo 0.38561f
+C917 tank_p rf_in_p 0.69841f
+C918 r4_s4 r4_s2 0.02977f
+C919 g_p rt_n 0.38553f
+C920 vg rf_in_p 0
+C921 x1c_n x1c_p 24.8892f
+C922 cgk5 cgd1 0.05661f
+C923 cgd5 x_p 2.91936f
+C924 att4 ct0_b 0
+C925 gain_lo_b vcas 0.68917f
+C926 atb_nbias en 0.04233f
+C927 enb r6_s2 0.00158f
+C928 att1 x3c_n 0.04098f
+C929 tank_p x2c_n 9.62779f
+C930 se att0 0.02661f
+C931 vtk cgk2 3.20113f
+C932 cgk2 src_n 0.03775f
+C933 lobias vgr 0.03324f
+C934 g_p att3 0.0311f
+C935 x_n x3c_n 0.6086f
+C936 r4_s3 x1c_p 0
+C937 gain_lo att2 0.0026f
+C938 g_n cgk5 0.0815f
+C939 g_p vlo 0
+C940 rf_outq_p x0c_p 0.03239f
+C941 ct1 se_b 0
+C942 rt x_p 0.57312f
+C943 tailx ct0 1.24186f
+C944 bpc_n cgk3 0.07279f
+C945 cgd0 x2c_p 0.1188f
+C946 vgr ncm 0.02308f
+C947 r4_s1 x1c_p 0
+C948 att0_b r16_s1 0
+C949 rf_outq_p r11_s2 0.07282f
+C950 VDD att3_b 2.94393f
+C951 src_p x3c_p 0.336f
+C952 tank_n x3c_n 5.91773f
+C953 rf_out_p att3 0.08162f
+C954 x0c_n vcas 0.0371f
+C955 cgk3 se_x 0.10392f
+C956 att3_b att1_b 0
+C957 src_p ct3 0.325f
+C958 cgd2 vcas 0.3879f
+C959 bpc_p x3c_p 0.15897f
+C960 cgk4 x3c_p 0.08826f
+C961 att4 cgk3 9.90732f
+C962 vtc vcas 0.08866f
+C963 att0_b island_off 0
+C964 ncm x1c_n 9.05684f
+C965 x_p cgd1 1.99901f
+C966 ct2 x0c_n 0.06501f
+C967 bpc_p ct3 0.07283f
+C968 r7_s4 cgk0 0
+C969 cgk4 ct3 0.07896f
+C970 r11_s3 r11_s1 0.02977f
+C971 gain_lo x2c_n 0.03642f
+C972 bpc_n x1c_p 0.02732f
+C973 se atb_vdcm 0.0523f
+C974 VDD ct0 1.51444f
+C975 r16_s1 rf_out_n 0.00544f
+C976 enb x3c_n 0.30669f
+C977 g_p cgk5 0.07963f
+C978 se_b x1c_n 0
+C979 rf_outq_p att1 4.11783f
+C980 se_x x1c_p 0.05946f
+C981 att4 x1c_p 0.02489f
+C982 r6_s1 r4_s5 0.00155f
+C983 g_n x_p 0.59428f
+C984 g_p r4_s5 0.57173f
+C985 VDD r6_s2 0.00125f
+C986 vcas cgk0 0.66769f
+C987 rf_outq_p x_n 0.61837f
+C988 rf_out_n island_off 12.4394f
+C989 att1 x0c_p 0.03142f
+C990 x0c_n vtk 1.47882f
+C991 x0c_n src_n 0.29142f
+C992 g_n vtg 3.48361f
+C993 vtk cgd2 1.74007f
+C994 cgd2 src_n 0.09032f
+C995 vtc vtk 1.32209f
+C996 vtc rf_in_n 0.57622f
+C997 r4_s1 ncm 0.02977f
+C998 atb_vdcm r11_s1 0
+C999 att2 att3 38.8219f
+C1000 rf_out_p cgk5 0.05492f
+C1001 se cgd4 0.07983f
+C1002 rf_outq_p tank_n 22.5865f
+C1003 r4_s4 x0c_n 0.6187f
+C1004 r16_s1 r15_s1 0.02977f
+C1005 ct1 island_off 0.05607f
+C1006 byp r16_s1 0.61826f
+C1007 cgd0 cgk2 0.03377f
+C1008 vtop enb 0.51982f
+C1009 r7_s5 src_p 0.00168f
+C1010 rf_in_p vlo 0.02526f
+C1011 att2 att2_b 2.17688f
+C1012 tank_n x0c_p 0.50265f
+C1013 r15_s1 island_off 0
+C1014 rf_outq_n ct0 0.06452f
+C1015 att0 cgk3 0.06061f
+C1016 island_off cgd3 0.05228f
+C1017 g_p x_p 2.25927f
+C1018 byp island_off 0.03792f
+C1019 vtk cgk0 1.98461f
+C1020 cgk0 src_n 8.88035f
+C1021 pb vgm 0.74918f
+C1022 cgk1 cgk3 0
+C1023 att3 x2c_n 0.03487f
+C1024 ncm se_x 0.44728f
+C1025 rf_outq_p enb 0.03887f
+C1026 att1 x_n 0.59898f
+C1027 g_p vtg 7.27986f
+C1028 VDD x3c_n 0.66874f
+C1029 att2 cgk5 0.0528f
+C1030 island_off x1c_n 0.03462f
+C1031 se cgd5 0.09893f
+C1032 att0 x1c_p 0.02486f
+C1033 rf_out_p x_p 0.58813f
+C1034 enb x0c_p 0.04296f
+C1035 vcas x3c_p 0.21621f
+C1036 se_x se_b 0.07395f
+C1037 ct0_b cgd4 0.0017f
+C1038 tail ct0 0.70204f
+C1039 tank_n att1 0.00236f
+C1040 src_p rf_out_n 0.33724f
+C1041 vcas ct3 0.21217f
+C1042 ct2 x3c_p 0.03669f
+C1043 r11_s5 cgk0 0
+C1044 tank_n x_n 94.9615f
+C1045 bpc_p rf_out_n 0.07433f
+C1046 atb_vdcm cgk3 0.06398f
+C1047 rf_out_p vtg 0.04563f
+C1048 rf_out_n cgk4 0.05454f
+C1049 rf_outq_p tailx 2.49054f
+C1050 ct2 ct3 26.6514f
+C1051 ct1 src_p 0.36058f
+C1052 se rt 0.04509f
+C1053 cgk5 x2c_n 0.09892f
+C1054 vtop VDD 1.27145f
+C1055 cgd0 x0c_n 0.1358f
+C1056 ct1 bpc_p 0.07718f
+C1057 ct1 cgk4 0.0856f
+C1058 cgd0 cgd2 0.03522f
+C1059 cgd0 gi_p 0.00201f
+C1060 r16_s1 bpc_n 0.00296f
+C1061 atb_vdcm x1c_p 0.02654f
+C1062 pb rf_in_n 0.1857f
+C1063 vtk x3c_p 1.88522f
+C1064 tank_p ct0 0.54391f
+C1065 x3c_p src_n 0.33156f
+C1066 rf_outq_n x3c_n 0.5297f
+C1067 src_p cgd3 0.18481f
+C1068 g_p en 0.0906f
+C1069 byp src_p 0.37182f
+C1070 att2 x_p 0.56634f
+C1071 x3c_p rf_in_n 0.48915f
+C1072 r7_s4 r7_s5 0.35051f
+C1073 se cgd1 0.09068f
+C1074 ct0_b cgd5 1.05994f
+C1075 bpc_p cgd3 0.02759f
+C1076 cgk4 cgd3 41.8294f
+C1077 cgd4 cgk3 0.05703f
+C1078 rf_outq_p VDD 1.52447f
+C1079 vtk ct3 1.82012f
+C1080 byp bpc_p 11.1001f
+C1081 byp cgk4 0.05661f
+C1082 src_n ct3 0.32056f
+C1083 bpc_n island_off 0.0419f
+C1084 att4 r16_s1 0
+C1085 vgr bpc_p 0.03744f
+C1086 rf_outq_p att1_b 0.00279f
+C1087 vg r6_s2 0.11757f
+C1088 VDD x0c_p 1.07028f
+C1089 enb tank_n 0.25232f
+C1090 cgd0 cgk0 0.13752f
+C1091 src_p x1c_n 7.2929f
+C1092 g_p ct3_b 0
+C1093 g_n se 0.07878f
+C1094 VDD r11_s2 0.08888f
+C1095 lobias vtr 0.00279f
+C1096 island_off se_x 0.0652f
+C1097 vtg rf_in_p 0.65775f
+C1098 r7_s5 vcas 0.70679f
+C1099 tailx att1 1.22624f
+C1100 x0c_n x2c_p 0.06328f
+C1101 att4 island_off 0.05064f
+C1102 cgk4 x1c_n 0.1012f
+C1103 vtc x2c_p 0.0115f
+C1104 cgd4 x1c_p 0.09289f
+C1105 bpc_p x1c_n 0.1083f
+C1106 tail x3c_n 0.7001f
+C1107 x_p x2c_n 0.57897f
+C1108 att0_b vcas 1.96848f
+C1109 gain_lo ct0 22.0928f
+C1110 vtg x2c_n 0.00513f
+C1111 rt_p ct1 0
+C1112 cgd5 cgk3 0.07465f
+C1113 tailx tank_n 13.7971f
+C1114 g_n r11_s1 0
+C1115 rf_outq_p rf_outq_n 0.1352f
+C1116 r4_s2 x0c_n 0.6187f
+C1117 VDD att1 2.1297f
+C1118 VDD x_n 7.55855f
+C1119 tank_p x3c_n 0.9784f
+C1120 g_p se 0.03735f
+C1121 att1 att1_b 0.39696f
+C1122 rf_out_n vcas 0.14723f
+C1123 rf_outq_n x0c_p 0.031f
+C1124 ct2 rf_out_n 0.06501f
+C1125 cgd5 x1c_p 0.10758f
+C1126 src_p bpc_n 0.37047f
+C1127 r16_s1 att0 0.00724f
+C1128 en rf_in_p 0.08497f
+C1129 rt cgk3 0.0794f
+C1130 att3 att3_b 0.20152f
+C1131 enb tailx 2.06924f
+C1132 ct1 vcas 0.22584f
+C1133 VDD tank_n 17.8678f
+C1134 bpc_p bpc_n 1.12777f
+C1135 bpc_n cgk4 0.06373f
+C1136 vgr vgm 1.1688f
+C1137 cgd0 x3c_p 0.08889f
+C1138 rf_outq_p r11_s4 0.07282f
+C1139 rf_outq_p tail 1.0622f
+C1140 att0 island_off 0
+C1141 rf_out_p se 0.08384f
+C1142 src_p se_x 0.42053f
+C1143 tank_n att1_b 0
+C1144 VDD att4_b 2.5957f
+C1145 att4 src_p 0.31617f
+C1146 ct1 ct2 23.2671f
+C1147 r15_s1 vcas 0.05445f
+C1148 island_off cgk1 0.07071f
+C1149 cgd0 ct3 0.08687f
+C1150 bpc_p se_x 0.03441f
+C1151 island_off r11_s3 0
+C1152 cgk3 cgd1 10.1216f
+C1153 cgk4 se_x 0.10392f
+C1154 att4 bpc_p 0.07175f
+C1155 att4 cgk4 0.17523f
+C1156 cgd2 cgk2 0.09115f
+C1157 att3_b att2_b 0.00242f
+C1158 cgd3 vcas 0.45287f
+C1159 att4_b att1_b 0
+C1160 tail x0c_p 0.47563f
+C1161 byp vcas 0.1539f
+C1162 rt x1c_p 0.06495f
+C1163 rf_out_n src_n 0.34923f
+C1164 att3 ct0 0
+C1165 att1 rf_outq_n 0
+C1166 rf_out_n vtk 1.90368f
+C1167 r11_s4 r11_s2 0.02977f
+C1168 rf_out_n rf_in_n 0.5675f
+C1169 tail r11_s2 0.67183f
+C1170 ct2 cgd3 0.08318f
+C1171 vgr vcas 0.03544f
+C1172 gain_lo x3c_n 0.03642f
+C1173 ct2 byp 0.06501f
+C1174 vtop vg 0
+C1175 enb VDD 23.0883f
+C1176 x_n rf_outq_n 0.57656f
+C1177 VDD ct2_b 1.46748f
+C1178 r16_s1 atb_vdcm 0
+C1179 rf_out_p r11_s1 0
+C1180 g_n cgk3 0.0815f
+C1181 g_p r7_s2 0
+C1182 x3c_p x2c_p 0.06697f
+C1183 rf_outq_p tank_p 2.89076f
+C1184 ct3_b x2c_n 0.00308f
+C1185 cgd1 x1c_p 0.12427f
+C1186 vcas x1c_n 0.04499f
+C1187 ct1 vtk 2.0307f
+C1188 ct1 src_n 0.35614f
+C1189 ct2 x1c_n 0.07974f
+C1190 rf_outq_p vg 0.03898f
+C1191 x2c_p ct3 8.95504f
+C1192 tank_n rf_outq_n 3.4453f
+C1193 atb_vdcm island_off 23.8607f
+C1194 se att2 0.17683f
+C1195 r15_s1 src_n 0
+C1196 tank_p x0c_p 1.02049f
+C1197 vtk cgd3 2.86427f
+C1198 cgd3 src_n 0.36832f
+C1199 tank_p r11_s2 0.09112f
+C1200 byp vtk 2.02223f
+C1201 byp src_n 21.3704f
+C1202 vg x0c_p 0.0053f
+C1203 g_n x1c_p 0.06213f
+C1204 tailx VDD 11.9703f
+C1205 tail x_n 5.96743f
+C1206 vgr vtk 1.7344f
+C1207 vg r11_s2 0.02977f
+C1208 vgr rf_in_n 6.10626f
+C1209 cgk5 ct0 5.05167f
+C1210 x1c_p ct1_b 0.56913f
+C1211 src_p att0 0.33025f
+C1212 enb rf_outq_n 0.04074f
+C1213 vtk x1c_n 2.66988f
+C1214 bpc_p att0 0.0813f
+C1215 rf_outq_p gain_lo 0.08665f
+C1216 x1c_n src_n 0.28093f
+C1217 g_p cgk3 0.07963f
+C1218 src_p cgk1 0.02871f
+C1219 att0 cgk4 0.05156f
+C1220 src_p r11_s3 0
+C1221 att0_b cgd0 0.11194f
+C1222 island_off cgd4 0.05312f
+C1223 tail tank_n 3.93362f
+C1224 se x2c_n 0.06789f
+C1225 r4_s5 r6_s2 0
+C1226 bpc_p r11_s3 0.00309f
+C1227 cgk1 cgk4 0.0013f
+C1228 tank_p att1 0.56212f
+C1229 att3 x3c_n 0.03487f
+C1230 gain_lo x0c_p 0.03216f
+C1231 r4_s4 x1c_n 0
+C1232 byp r11_s5 0.6187f
+C1233 g_n lobias 0.03688f
+C1234 bpc_n vcas 0.1649f
+C1235 r4_s3 vtk 0.00327f
+C1236 rf_out_p cgk3 0.05399f
+C1237 g_p x1c_p 0.05675f
+C1238 VDD att1_b 16.2515f
+C1239 att2 ct0_b 0
+C1240 ct2 bpc_n 0.07422f
+C1241 enb tail 1.04141f
+C1242 vcas se_x 0.2488f
+C1243 tailx rf_outq_n 1.19934f
+C1244 att4 vcas 0.73753f
+C1245 cgd0 rf_out_n 0.16615f
+C1246 r4_s4 r4_s3 0.1852f
+C1247 g_p r7_s1 0
+C1248 src_p atb_vdcm 0.37473f
+C1249 tank_n tank_p 9.00364f
+C1250 r4_s1 vtk 0.00352f
+C1251 x_p ct0 0.60371f
+C1252 cgd2 cgk0 5.26123f
+C1253 att4 ct2 0.02775f
+C1254 ct2 se_x 0.02869f
+C1255 enb r7_s3 0.61831f
+C1256 gi_p cgk0 5.98047f
+C1257 atb_vdcm cgk4 0.05492f
+C1258 tank_n vg 0.0457f
+C1259 bpc_p atb_vdcm 0.07815f
+C1260 rf_out_p x1c_p 0.02605f
+C1261 island_off cgd5 0.07333f
+C1262 ct1 cgd0 0.0934f
+C1263 gain_lo att1 0.02733f
+C1264 bpc_n rf_in_n 4.57699f
+C1265 bpc_n src_n 0.42101f
+C1266 bpc_n vtk 21.1095f
+C1267 g_p lobias 0.03324f
+C1268 cgk5 x3c_n 0.1026f
+C1269 gain_lo x_n 0.599f
+C1270 VDD rf_outq_n 2.46518f
+C1271 cgd0 cgd3 0.10362f
+C1272 tailx tail 0.36714p
+C1273 enb tank_p 1.91744f
+C1274 rf_outq_p att3 0.08196f
+C1275 rf_out_n x2c_p 0.03102f
+C1276 byp cgd0 0.16615f
+C1277 src_p cgd4 0.18518f
+C1278 att2 cgk3 0.24317f
+C1279 vtk se_x 13.5972f
+C1280 rf_outq_n att1_b 0
+C1281 enb vg 0.04058f
+C1282 att4 vtk 1.76788f
+C1283 se_x rf_in_n 1.78412f
+C1284 se_x src_n 0.4157f
+C1285 att4 src_n 0.31173f
+C1286 gi_n src_n 8.64296f
+C1287 island_off rt 0.05201f
+C1288 bpc_p cgd4 0.02751f
+C1289 cgd4 cgk4 50.2892f
+C1290 gain_lo tank_n 0.50509f
+C1291 x0c_p att3 0.03019f
+C1292 r16_s1 cgd1 0
+C1293 gain_lo att4_b 0.01014f
+C1294 r4_s4 se_x 0
+C1295 ct1 x2c_p 0.02815f
+C1296 cgd0 x1c_n 0.14451f
+C1297 att2 x1c_p 0.02536f
+C1298 att0 vcas 0.40201f
+C1299 tail VDD 8.24544f
+C1300 island_off cgd1 0.06107f
+C1301 g_p se_b 0
+C1302 x0c_n x3c_p 0.07156f
+C1303 VDD r11_s4 0.08888f
+C1304 pb vtc 1.10703f
+C1305 tailx tank_p 15.2255f
+C1306 cgk3 x2c_n 0.13079f
+C1307 cgk1 vcas 0.31847f
+C1308 cgd3 x2c_p 0.08501f
+C1309 vtop r4_s5 0.00147f
+C1310 byp x2c_p 0.03226f
+C1311 x_p x3c_n 0.59905f
+C1312 ct2 att0 0.02773f
+C1313 VDD r7_s3 0.01127f
+C1314 x0c_n ct3 0.06219f
+C1315 vgr x2c_p 0.03896f
+C1316 rf_outq_p cgk5 0.05697f
+C1317 src_p cgd5 0.29365f
+C1318 g_n island_off 0.08861f
+C1319 att1 att3 0.02578f
+C1320 vtg x3c_n 0.01338f
+C1321 bpc_p cgd5 0.03699f
+C1322 cgd5 cgk4 0.08146f
+C1323 x2c_n x1c_p 2.11465f
+C1324 x_n att3 0.5525f
+C1325 x2c_p x1c_n 0.07909f
+C1326 x0c_p cgk5 0.10295f
+C1327 VDD tank_p 17.3546f
+C1328 cgk5 r11_s2 0.00279f
+C1329 lobias rf_in_p 0.04105f
+C1330 r4_s5 x0c_p 0.06497f
+C1331 att0 vtk 1.7779f
+C1332 att0 src_n 24.4998f
+C1333 VDD vg 0.10286f
+C1334 r4_s2 vgr 0.02977f
+C1335 atb_vdcm vcas 0.14891f
+C1336 gain_lo tailx 1.23201f
+C1337 cgd0 bpc_n 0.20675f
+C1338 cgk1 vtk 0.73774f
+C1339 src_p rt 0.31341f
+C1340 tail rf_outq_n 27.702f
+C1341 cgk1 src_n 0.08778f
+C1342 tank_n att3 0.46963f
+C1343 r11_s3 src_n 0.00255f
+C1344 ct2 atb_vdcm 0.05454f
+C1345 bpc_p rt 0.0711f
+C1346 att3 att4_b 0.00109f
+C1347 rt cgk4 0.0794f
+C1348 ncm rf_in_p 2.90443f
+C1349 r4_s2 x1c_n 0
+C1350 ct1 cgk2 0
+C1351 g_p island_off 0.05217f
+C1352 cgd0 se_x 0.09915f
+C1353 att4 cgd0 0.08525f
+C1354 rf_outq_p x_p 0.61837f
+C1355 cgd0 gi_n 0.00201f
+C1356 src_p cgd1 0.28651f
+C1357 att1 cgk5 0.05402f
+C1358 cgk4 cgd1 0.05852f
+C1359 se ct0 0.02663f
+C1360 rf_out_p r16_s1 0.69323f
+C1361 cgd4 vcas 0.37546f
+C1362 x_n cgk5 3.44857f
+C1363 gain_lo VDD 2.89031f
+C1364 bpc_p cgd1 0.03693f
+C1365 vtr rf_in_n 0.24311f
+C1366 r4_s2 r4_s3 0.32138f
+C1367 x0c_p x_p 0.6304f
+C1368 rf_outq_p vtg 0.05209f
+C1369 atb_vdcm vtk 1.94348f
+C1370 tail r11_s4 0.67183f
+C1371 tank_p rf_outq_n 0.60765f
+C1372 atb_vdcm src_n 0.36755f
+C1373 bpc_n x2c_p 0.0322f
+C1374 x_p r11_s2 0
+C1375 r11_s5 r11_s3 0.02977f
+C1376 enb vlo 0.00237f
+C1377 ct2 cgd4 0.08318f
+C1378 gain_lo att1_b 0
+C1379 rf_out_p island_off 11.8958f
+C1380 ct1 gain_lo_b 0
+C1381 g_n src_p 6.15878f
+C1382 tank_n cgk5 3.58905f
+C1383 g_n bpc_p 1.57023f
+C1384 g_n cgk4 0.0815f
+C1385 se_x x2c_p 0.06039f
+C1386 x3c_n ct3_b 0.07369f
+C1387 se_b x2c_n 0
+C1388 cgk2 x1c_n 0
+C1389 r4_s2 r4_s1 0.32052f
+C1390 att4 x2c_p 0.02486f
+C1391 r7_s5 cgk0 0
+C1392 r4_s5 tank_n 0.00208f
+C1393 gain_lo_b cgd3 0.0017f
+C1394 x3c_p ct3 3.53569f
+C1395 rf_out_n x0c_n 0.03662f
+C1396 tailx att3 1.13488f
+C1397 vtc rf_out_n 0.09942f
+C1398 att0_b cgk0 0.08062f
+C1399 VDD rt_n 0.00121f
+C1400 rt_p rt 0.20042f
+C1401 tail tank_p 7.26439f
+C1402 vtk cgd4 4.4752f
+C1403 cgd4 src_n 0.36874f
+C1404 att1 x_p 0.58943f
+C1405 atb_vdcm r11_s5 0
+C1406 tank_p r11_s4 0.08885f
+C1407 att2 r16_s1 0
+C1408 tail vg 6.42183f
+C1409 cgd5 vcas 0.31873f
+C1410 gain_lo rf_outq_n 0.06421f
+C1411 ct0_b ct0 0.12673f
+C1412 gain_lo_b x1c_n 0
+C1413 r6_s1 src_p 0.00112f
+C1414 cgd0 att0 0.16824f
+C1415 ct1 x0c_n 0.06663f
+C1416 ct1 cgd2 0
+C1417 enb r4_s5 0.31343f
+C1418 g_p src_p 10.6769f
+C1419 ct2 cgd5 0.10229f
+C1420 att2 island_off 0.05156f
+C1421 cgd0 cgk1 0.12097f
+C1422 g_p bpc_p 0.07193f
+C1423 g_p cgk4 0.07963f
+C1424 tank_n x_p 3.05257f
+C1425 rf_out_n cgk0 0.07613f
+C1426 x0c_n cgd3 0.10681f
+C1427 se x3c_n 0.07931f
+C1428 VDD att3 3.94153f
+C1429 byp x0c_n 0.03786f
+C1430 cgk3 att3_b 1.21118f
+C1431 VDD vlo 0
+C1432 rt vcas 0.21162f
+C1433 vgr x0c_n 0.06742f
+C1434 att3 att1_b 0.00213f
+C1435 vtc vgr 7.87885f
+C1436 rf_out_p src_p 0.33953f
+C1437 g_n rt_p 0.08718f
+C1438 tank_p vg 0.53084f
+C1439 gain_lo tail 0.6967f
+C1440 ct2 rt 0.03618f
+C1441 vtg tank_n 1.81724f
+C1442 vtk cgd5 6.91881f
+C1443 rf_out_p bpc_p 1.35871f
+C1444 cgd5 src_n 0.58447f
+C1445 VDD att2_b 2.93974f
+C1446 island_off x2c_n 0.03997f
+C1447 rf_out_p cgk4 0.05443f
+C1448 rt_p ct1_b 0.00173f
+C1449 att0 x2c_p 0.02973f
+C1450 x0c_n x1c_n 0.07585f
+C1451 cgd2 x1c_n 0
+C1452 cgk3 ct0 0.09973f
+C1453 att3_b x1c_p 0
+C1454 atb_vdcm cgd0 0.16855f
+C1455 att2_b att1_b 0
+C1456 cgd1 vcas 2.06154f
+C1457 r15_s1 cgk0 0
+C1458 g_n vgm 0.8034f
+C1459 gi_n cgk2 0.02666f
+C1460 cgd3 cgk0 0
+C1461 byp cgk0 0.06735f
+C1462 ct2 cgd1 0.09403f
+C1463 enb vtg 0.10893f
+C1464 r4_s3 x0c_n 0.07293f
+C1465 VDD cgk5 1.8759f
+C1466 gain_lo tank_p 0.5403f
+C1467 vtk rt 1.83435f
+C1468 g_n vcas 0.21823f
+C1469 rt src_n 0.31341f
+C1470 rf_outq_n att3 0.06111f
+C1471 x1c_p ct0 0.02683f
+C1472 VDD r4_s5 5.08338f
+C1473 rt_p g_p 1.19596f
+C1474 att4 gain_lo_b 0
+C1475 g_n ct2 0.11905f
+C1476 rf_outq_p se 0.08428f
+C1477 att2 src_p 0.32371f
+C1478 r4_s1 x0c_n 0.08458f
+C1479 cgd0 cgd4 0.10992f
+C1480 rf_out_n x3c_p 0.06354f
+C1481 att2 bpc_p 0.07267f
+C1482 att2 cgk4 0.0533f
+C1483 atb_vdcm x2c_p 0.03142f
+C1484 g_p r7_s4 0.02999f
+C1485 vtk cgd1 2.1659f
+C1486 cgd1 src_n 0.46982f
+C1487 se x0c_p 0.06719f
+C1488 rf_out_n ct3 0.06219f
+C1489 g_p vgm 0.08702f
+C1490 bpc_p rf_in_p 2.92284f
+C1491 r7_s1 r6_s2 0.0241f
+C1492 tailx vtg 24.5196f
+C1493 bpc_n x0c_n 0.03779f
+C1494 tail att3 0.644f
+C1495 ct1 x3c_p 0.04201f
+C1496 vtc bpc_n 1.51573f
+C1497 rf_outq_p r11_s1 0
+C1498 r6_s1 vcas 0.97779f
+C1499 g_n vtk 1.90589f
+C1500 g_n src_n 10.7554f
+C1501 ct1 ct3 0.00127f
+C1502 g_p vcas 0.28628f
+C1503 src_p x2c_n 0.34467f
+C1504 g_n rf_in_n 10.4255f
+C1505 VDD x_p 7.55855f
+C1506 x0c_n se_x 0.07618f
+C1507 rf_outq_n cgk5 0.05395f
+C1508 att4 x0c_n 0.03558f
+C1509 enb en 3.41138f
+C1510 g_p ct2 0.02925f
+C1511 bpc_p x2c_n 0.04758f
+C1512 cgk4 x2c_n 0.09892f
+C1513 vtc se_x 0.03259f
+C1514 cgd4 x2c_p 0.08501f
+C1515 cgk3 x3c_n 0.13446f
+C1516 cgd3 x3c_p 0.08769f
+C1517 cgk1 cgk2 5.03956f
+C1518 byp x3c_p 0.06354f
+C1519 gi_n cgd2 0.02913f
+C1520 pb vgr 0.38689f
+C1521 r11_s2 r11_s1 0.32071f
+C1522 cgd0 cgd5 6.224f
+C1523 cgd3 ct3 0.07896f
+C1524 byp ct3 0.06219f
+C1525 se att1 0.02661f
+C1526 vtg VDD 1.98024f
+C1527 bpc_n cgk0 0.06668f
+C1528 rf_out_p vcas 0.19398f
+C1529 tank_p att3 0.50465f
+C1530 se x_n 0.57744f
+C1531 x3c_p x1c_n 0.08014f
+C1532 x3c_n x1c_p 0.07811f
+C1533 rf_out_p ct2 0.08714f
+C1534 g_n r11_s5 0.17659f
+C1535 ct0_b x0c_p 0.51995f
+C1536 r6_s1 vtk 0.00373f
+C1537 se_x cgk0 0.00619f
+C1538 tail cgk5 0.7499f
+C1539 g_p vtk 1.8419f
+C1540 gi_n cgk0 5.97739f
+C1541 g_p src_n 0.31469f
+C1542 x1c_n ct3 0.07113f
+C1543 g_p rf_in_n 0.04634f
+C1544 se tank_n 0.48856f
+C1545 cgd0 rt 0.08731f
+C1546 rf_outq_n x_p 0.57655f
+C1547 att0_b rf_out_n 0
+C1548 cgd5 x2c_p 0.09969f
+C1549 r7_s3 r4_s5 0.00155f
+C1550 vgm rf_in_p 1.37716f
+C1551 rf_outq_p cgk3 0.05599f
+C1552 rf_out_p vtk 1.88422f
+C1553 rf_out_p rf_in_n 0.38011f
+C1554 rf_out_p src_n 0.33122f
+C1555 cgd0 cgd1 0.09189f
+C1556 gain_lo att3 0.00232f
+C1557 vtg rf_outq_n 2.20828f
+C1558 att2 vcas 0.91765f
+C1559 x0c_n att0 0.03533f
+C1560 tank_p cgk5 3.40551f
+C1561 en VDD 2.83639f
+C1562 ct2 att2 0.02778f
+C1563 x0c_p cgk3 0.1428f
+C1564 vg cgk5 0.00388f
+C1565 rf_in_p vcas 0
+C1566 cgk1 cgd2 0.03733f
+C1567 r4_s5 tank_p 0
+C1568 rt x2c_p 0.06054f
+C1569 tail x_p 5.9698f
+C1570 rf_outq_p x1c_p 0.02705f
+C1571 g_n cgd0 0.08941f
+C1572 bpc_n x3c_p 0.20283f
+C1573 r4_s5 vg 10.9697f
+C1574 x_p r11_s4 0
+C1575 byp att0_b 0.00175f
+C1576 VDD ct3_b 1.28623f
+C1577 bpc_n ct3 0.0714f
+C1578 island_off ct0 0.05405f
+C1579 rf_out_p r11_s5 0
+C1580 x0c_p x1c_p 0.07708f
+C1581 vtg tail 0.84487f
+C1582 ct1 rf_out_n 0.06655f
+C1583 se_x x3c_p 0.03003f
+C1584 vcas x2c_n 1.21864f
+C1585 att4 x3c_p 0.05017f
+C1586 se_b x3c_n 0.00234f
+C1587 att0 cgk0 0.14717f
+C1588 cgd1 x2c_p 0.1042f
+C1589 gain_lo_b cgd4 1.98693f
+C1590 tailx se 1.18698f
+C1591 se_x ct3 0.02897f
+C1592 att2 vtk 1.81248f
+C1593 ct2 x2c_n 12.8146f
+C1594 att2 src_n 0.31927f
+C1595 vtc vtr 0.23283f
+C1596 cgk1 cgk0 0.03998f
+C1597 att4 ct3 0.02636f
+C1598 atb_vdcm x0c_n 0.03701f
+C1599 r15_s1 rf_out_n 0.26192f
+C1600 r11_s3 cgk0 0
+C1601 gain_lo cgk5 0.17887f
+C1602 rf_out_n cgd3 0.05414f
+C1603 att1 cgk3 0.06308f
+C1604 vtk rf_in_p 3.04726f
+C1605 rf_in_p rf_in_n 3.69846f
+C1606 tank_p x_p 94.9293f
+C1607 byp rf_out_n 0.43629f
+C1608 vgr rf_out_n 0.10481f
+C1609 x_n cgk3 3.21992f
+C1610 g_n x2c_p 0.05903f
+C1611 vg x_p 1.63516f
+C1612 g_p cgd0 0.08754f
+C1613 enb r7_s2 0.07195f
+C1614 vtg tank_p 2.94572f
+C1615 ct1 cgd3 0.0856f
+C1616 ct1 byp 0.06655f
+C1617 rf_out_n x1c_n 0.03569f
+C1618 att1 x1c_p 0.02609f
+C1619 se VDD 0.92118f
+C1620 vtk x2c_n 1.519f
+C1621 x2c_n rf_in_n 0.00243f
+C1622 x2c_n src_n 0.34109f
+C1623 vtg vg 2.41303f
+C1624 tank_n cgk3 14.8868f
+C1625 atb_vdcm cgk0 0.07328f
+C1626 x0c_n cgd4 0.10205f
+C1627 x_n x1c_p 0.01505f
+C1628 att4_b cgk3 0.00591f
+C1629 byp r15_s1 0.62001f
+C1630 x0c_p ncm 8.34244f
+C1631 byp cgd3 0.05661f
+C1632 cgd5 gain_lo_b 0.12464f
+C1633 att3 att2_b 0.00692f
+C1634 rf_out_p cgd0 0.15212f
+C1635 pb ibias 0.00544f
+C1636 ct1 x1c_n 14.7021f
+C1637 gain_lo x_p 0.599f
+C1638 att0_b bpc_n 0.00109f
+C1639 g_p x2c_p 0.05233f
+C1640 src_p ct0 0.34406f
+C1641 tank_n x1c_p 0.34619f
+C1642 att0 x3c_p 0.02699f
+C1643 island_off x3c_n 0.03997f
+C1644 VDD r11_s1 0.00211f
+C1645 bpc_p ct0 0.07516f
+C1646 cgd3 x1c_n 0.1012f
+C1647 att4_b x1c_p 0
+C1648 cgk2 cgd1 0.2091f
+C1649 att0 ct3 0.02632f
+C1650 byp x1c_n 0.03693f
+C1651 src_p r6_s2 0.00183f
+C1652 cgk4 ct0 0.10602f
+C1653 cgk5 att3 0.05181f
+C1654 cgd4 cgk0 0
+C1655 vgr x1c_n 0.03756f
+C1656 se rf_outq_n 0.06277f
+C1657 rf_out_p x2c_p 0.02605f
+C1658 VDD ct0_b 1.16232f
+C1659 x0c_n cgd5 7.83118f
+C1660 enb x1c_p 0.03827f
+C1661 g_n cgk2 0.02645f
+C1662 bpc_n rf_out_n 1.4866f
+C1663 r7_s2 VDD 0.08981f
+C1664 ct2_b x1c_p 0.00636f
+C1665 att2 cgd0 0.08663f
+C1666 gain_lo_b cgd1 0
+C1667 pb vtr 0.00156f
+C1668 enb r7_s1 0.61831f
+C1669 atb_vdcm x3c_p 0.05306f
+C1670 rf_outq_p r16_s1 0.37473f
+C1671 rf_out_n se_x 0.03125f
+C1672 ct1 bpc_n 0.07955f
+C1673 att4 rf_out_n 0.06111f
+C1674 tank_n ncm 0.08656f
+C1675 r4_s3 x1c_n 0.61829f
+C1676 vgr r4_s1 0.36539f
+C1677 pb atb_nbias 0.43799f
+C1678 se tail 0.67227f
+C1679 atb_vdcm ct3 0.05172f
+C1680 x0c_n rt 0.06248f
+C1681 r15_s1 bpc_n 0.02708f
+C1682 rf_outq_p island_off 0.17792f
+C1683 cgd5 cgk0 0.00203f
+C1684 enb lobias 0.03821f
+C1685 ct1 se_x 0.02814f
+C1686 bpc_n cgd3 0.06373f
+C1687 att3 x_p 0.5525f
+C1688 att4 ct1 0.02862f
+C1689 cgd0 x2c_n 0.13251f
+C1690 byp bpc_n 11.1171f
+C1691 r4_s1 x1c_n 0.61829f
+C1692 src_p x3c_n 0.3556f
+C1693 att2 x2c_p 0.02532f
+C1694 vgr bpc_n 1.20808f
+C1695 VDD cgk3 2.38593f
+C1696 island_off x0c_p 0.03042f
+C1697 x0c_n cgd1 9.0767f
+C1698 att4 r15_s1 0
+C1699 island_off r11_s2 0.07185f
+C1700 bpc_p x3c_n 0.04109f
+C1701 cgd4 x3c_p 0.08826f
+C1702 att0_b att0 0.20746f
+C1703 cgd2 cgd1 0.19501f
+C1704 rf_in_p x2c_p 0
+C1705 att3_b vcas 0.98716f
+C1706 cgd3 se_x 0.10392f
+C1707 att4 cgd3 0.18898f
+C1708 cgk3 att1_b 0
+C1709 cgk4 x3c_n 0.1026f
+C1710 byp se_x 0.07567f
+C1711 att4 byp 0.06111f
+C1712 tail r11_s1 0
+C1713 vtg vlo 0.23171f
+C1714 vgr se_x 0.03155f
+C1715 bpc_n x1c_n 0.03686f
+C1716 cgd4 ct3 0.07896f
+C1717 r4_s3 r4_s1 0.02977f
+C1718 se tank_p 0.52041f
+C1719 VDD x1c_p 15.5457f
+C1720 g_n x0c_n 0.06389f
+C1721 g_n cgd2 0.02892f
+C1722 g_n vtc 1.25718f
+C1723 x2c_n x2c_p 47.5869f
+C1724 vcas ct0 0.23582f
+C1725 se_x x1c_n 0.0643f
+C1726 att4 x1c_n 0.02982f
+C1727 cgd1 cgk0 0.07318f
+C1728 VDD r7_s1 0.00408f
+C1729 cgk5 x_p 3.44857f
+C1730 att1 island_off 0
+C1731 rf_out_n att0 0
+C1732 r6_s2 vcas 0.6428f
+C1733 ct2 ct0 0.02794f
+C1734 tailx ncm 0
+C1735 rf_out_n cgk1 0.0716f
+C1736 x_n island_off 0.5598f
+C1737 tank_p r11_s1 0.00125f
+C1738 rf_outq_n cgk3 0.06222f
+C1739 r7_s2 r7_s3 0.35051f
+C1740 cgd5 x3c_p 0.1081f
+C1741 r16_s1 tank_n 0.00114f
+C1742 att0_b atb_vdcm 0
+C1743 lobias VDD 0.04126f
+C1744 rf_outq_p src_p 0.35401f
+C1745 vg r11_s1 0.31459f
+C1746 ct1 att0 0.0285f
+C1747 g_n cgk0 1.41197f
+C1748 gain_lo se 0.02665f
+C1749 rf_outq_p bpc_p 1.33692f
+C1750 cgd5 ct3 0.09806f
+C1751 rf_outq_p cgk4 0.05595f
+C1752 tank_n island_off 0.43673f
+C1753 g_p x0c_n 0.06264f
+C1754 att2 cgk2 1.59568f
+C1755 src_p x0c_p 0.30144f
+C1756 rf_outq_n x1c_p 0.02566f
+C1757 g_p vtc 0.08884f
+C1758 vtk ct0 1.93291f
+C1759 att0 cgd3 0.05156f
+C1760 ct0 src_n 0.33962f
+C1761 src_p r11_s2 0.75182f
+C1762 byp att0 8.13306f
+C1763 bpc_p x0c_p 6.94268f
+C1764 g_p gi_p 5.70614f
+C1765 x0c_p cgk4 0.1019f
+C1766 atb_vdcm rf_out_n 0.1091f
+C1767 bpc_p r11_s2 0.07198f
+C1768 tail cgk3 0.95806f
+C1769 cgk1 cgd3 0
+C1770 r6_s2 vtk 0
+C1771 byp cgk1 0.06457f
+C1772 rt x3c_p 0.07142f
+C1773 r7_s2 vg 0.02977f
+C1774 byp r11_s3 0.6187f
+C1775 bpc_n se_x 0.03079f
+C1776 att4 bpc_n 0.07071f
+C1777 rt ct3 0.03741f
+C1778 VDD se_b 1.10366f
+C1779 rf_out_p x0c_n 0.03652f
+C1780 rf_out_p vtc 0.02569f
+C1781 att2 gain_lo_b 0
+C1782 att0 x1c_n 0.0344f
+C1783 g_p cgk0 1.41505f
+C1784 r6_s1 cgk0 0
+C1785 cgd1 x3c_p 0.09183f
+C1786 vcas x3c_n 0.33533f
+C1787 ct1 atb_vdcm 0.05607f
+C1788 att4 se_x 0.03419f
+C1789 tail x1c_p 0.35025f
+C1790 src_p att1 0.35036f
+C1791 ct2 x3c_n 0.03809f
+C1792 gain_lo ct0_b 0
+C1793 cgd1 ct3 0.08981f
+C1794 bpc_p att1 0.08376f
+C1795 atb_vdcm r15_s1 0
+C1796 tank_p cgk3 17.7938f
+C1797 rf_out_n cgd4 0.05454f
+C1798 atb_vdcm cgd3 0.05492f
+C1799 att1 cgk4 0.05402f
+C1800 vtr vgr 0
+C1801 byp atb_vdcm 21.035f
+C1802 pb g_n 0.42875f
+C1803 g_n x3c_p 0.08031f
+C1804 x_n cgk4 2.78008f
+C1805 vg cgk3 0
+C1806 rf_out_p cgk0 0.06723f
+C1807 se att3 0.03112f
+C1808 tailx island_off 1.16326f
+C1809 r7_s3 r7_s1 0.02977f
+C1810 src_p tank_n 1.83486f
+C1811 g_n ct3 0.08027f
+C1812 ct1 cgd4 0.08557f
+C1813 att2 x0c_n 0.03599f
+C1814 tank_p x1c_p 21.6276f
+C1815 vtop vcas 0.49664f
+C1816 atb_vdcm x1c_n 0.03608f
+C1817 tank_n cgk4 2.4589f
+C1818 x3c_n src_n 0.34109f
+C1819 att2 cgd2 0.24402f
+C1820 vtk x3c_n 17.266f
+C1821 tank_n bpc_p 0.59628f
+C1822 x3c_n rf_in_n 0
+C1823 VDD r16_s1 0.0081f
+C1824 vg x1c_p 0.03489f
+C1825 cgk4 att4_b 1.2136f
+C1826 cgd4 cgd3 0.06415f
+C1827 vtc rf_in_p 5.76335f
+C1828 bpc_n att0 0.30701f
+C1829 byp cgd4 0.05661f
+C1830 tail ncm 0.00279f
+C1831 r16_s1 att1_b 0
+C1832 rf_outq_p vcas 0.38723f
+C1833 bpc_n cgk1 0.06381f
+C1834 gain_lo cgk3 0.10327f
+C1835 VDD island_off 0.72377f
+C1836 r7_s1 vg 0.34534f
+C1837 pb g_p 5.96791f
+C1838 rf_out_n cgd5 0.07405f
+C1839 cgd0 ct0 0.09037f
+C1840 g_p x3c_p 0.13875f
+C1841 att0 se_x 0.03125f
+C1842 rf_outq_p ct2 0.0876f
+C1843 att4 att0 0.02578f
+C1844 x0c_n x2c_n 0.07023f
+C1845 enb bpc_p 0.17381f
+C1846 x0c_p vcas 0.03197f
+C1847 cgd4 x1c_n 0.10118f
+C1848 se cgk5 0.07983f
+C1849 g_p ct3 0.03041f
+C1850 cgk1 se_x 0.58014f
+C1851 vtc x2c_n 0.00643f
+C1852 cgk1 gi_n 0.02871f
+C1853 vtop vtk 0.00201f
+C1854 ct0_b att3 0
+C1855 gain_lo x1c_p 0.02644f
+C1856 r11_s3 gi_n 0
+C1857 ct2 x0c_p 0.0695f
+C1858 ct1 cgd5 0.10471f
+C1859 rf_out_n rt 0.06248f
+C1860 rf_out_p x3c_p 0.0851f
+C1861 tank_p ncm 0.09043f
+C1862 r16_s1 rf_outq_n 0.26202f
+C1863 cgd5 cgd3 0.0793f
+C1864 atb_vdcm bpc_n 0.36513f
+C1865 tailx src_p 6.7437f
+C1866 rf_out_p ct3 0.08295f
+C1867 rf_outq_p vtk 1.98137f
+C1868 x2c_p ct0 0.0267f
+C1869 vg ncm 2.70872f
+C1870 byp cgd5 0.07572f
+C1871 rf_outq_p rf_in_n 0.19121f
+C1872 rf_outq_p src_n 0.34767f
+C1873 tailx bpc_p 3.66359f
+C1874 island_off rf_outq_n 25.5414f
+C1875 ct1 rt 0.16868f
+C1876 rf_out_n cgd1 0.06319f
+C1877 att1 vcas 6.43001f
+C1878 att4 atb_vdcm 0.05064f
+C1879 vtk x0c_p 0.95527f
+C1880 atb_vdcm se_x 0.0652f
+C1881 x0c_p src_n 0.23363f
+C1882 r11_s2 src_n 0.00222f
+C1883 x_n vcas 8.3677f
+C1884 ct2 att1 0.02773f
+C1885 cgd5 x1c_n 0.11588f
+C1886 se x_p 0.57744f
+C1887 att3 cgk3 0.17376f
+C1888 ct2 x_n 0.61097f
+C1889 ct0_b cgk5 0.00591f
+C1890 rt cgd3 0.0794f
+C1891 VDD src_p 4.34277f
+C1892 tail r16_s1 0
+C1893 byp rt 0.06248f
+C1894 bpc_n cgd4 0.06373f
+C1895 r4_s4 x0c_p 0.00309f
+C1896 g_n rf_out_n 0.06389f
+C1897 cgd0 x3c_n 0.12829f
+C1898 ct1 cgd1 0.09663f
+C1899 rf_outq_p r11_s5 0
+C1900 g_p r7_s5 0.20259f
+C1901 att2 x3c_p 24.8868f
+C1902 VDD bpc_p 11.9049f
+C1903 VDD cgk4 2.12864f
+C1904 tank_n vcas 5.40598f
+C1905 r7_s2 r4_s5 0.68264f
+C1906 att0 cgk1 0.06446f
+C1907 enb r7_s4 0.07195f
+C1908 pb rf_in_p 0.91663f
+C1909 island_off r11_s4 0.07185f
+C1910 tail island_off 0.55659f
+C1911 r15_s1 cgd1 0
+C1912 att4_b vcas 0.8318f
+C1913 att2 ct3 0.02641f
+C1914 cgd3 cgd1 33.1185f
+C1915 cgd4 se_x 0.10392f
+C1916 cgk4 att1_b 0
+C1917 ct2 tank_n 0.51427f
+C1918 byp cgd1 0.06567f
+C1919 enb vgm 0.00296f
+C1920 att4 cgd4 0.05257f
+C1921 att3 x1c_p 0.02489f
+C1922 rt x1c_n 0.0613f
+C1923 att1 vtk 2.14274f
+C1924 att1 src_n 0.01124f
+C1925 g_n ct1 23.5682f
+C1926 x_n src_n 0.14645p
+C1927 ct1 ct1_b 1.20511f
+C1928 x_n vtk 0.15544p
+C1929 g_n cgd3 0.0815f
+C1930 enb vcas 0.90787f
+C1931 att2_b x1c_p 0
+C1932 rf_out_p att0_b 0.00599f
+C1933 x3c_p x2c_n 0.07636f
+C1934 g_n byp 0.09971f
+C1935 x3c_n x2c_p 19.2795f
+C1936 cgd1 x1c_n 0.13254f
+C1937 cgk5 cgk3 0.05585f
+C1938 g_n vgr 0.30145f
+C1939 ct2 ct2_b 1.17397f
+C1940 g_p rf_out_n 0.06264f
+C1941 x2c_n ct3 0.07832f
+C1942 bpc_n cgd5 0.08284f
+C1943 tank_n vtk 48.0998f
+C1944 src_p rf_outq_n 0.33484f
+C1945 tank_p island_off 0.53133f
+C1946 tank_n rf_in_n 1.45994f
+C1947 tank_n src_n 1.78913f
+C1948 atb_vdcm att0 0.00154f
+C1949 atb_nbias ibias 0.39161f
+C1950 atb_vdcm cgk1 0.07f
+C1951 vg island_off 0.04051f
+C1952 bpc_p rf_outq_n 0.07335f
+C1953 rf_outq_n cgk4 0.05316f
+C1954 atb_vdcm r11_s3 0
+C1955 g_n x1c_n 0.0669f
+C1956 lobias vlo 0.20645f
+C1957 rf_outq_p cgd0 0.15956f
+C1958 att4 cgd5 0.07098f
+C1959 r4_s4 tank_n 0
+C1960 cgd5 se_x 0.12303f
+C1961 cgk5 x1c_p 0.09289f
+C1962 g_p ct1 0.13146f
+C1963 rt_p VDD 0
+C1964 gain_lo_b ct0 0.00992f
+C1965 x1c_n ct1_b 0.07369f
+C1966 rf_out_p rf_out_n 0.14302f
+C1967 bpc_n rt 0.06357f
+C1968 r4_s5 x1c_p 0
+C1969 cgd0 x0c_p 0.14477f
+C1970 enb vtk 1.14766f
+C1971 r7_s4 VDD 0.09019f
+C1972 ct2 tailx 1.25702f
+C1973 enb rf_in_n 0.20279f
+C1974 g_p cgd3 0.07963f
+C1975 tail src_p 6.37239f
+C1976 VDD vgm 0.01146f
+C1977 g_p byp 0.06264f
+C1978 att0 cgd4 0.05156f
+C1979 src_p r11_s4 0.75182f
+C1980 att3_b cgd2 0
+C1981 g_p vgr 0.8128f
+C1982 cgk1 cgd4 0.0013f
+C1983 r7_s1 r4_s5 0.00155f
+C1984 rf_out_p ct1 0.08945f
+C1985 tail bpc_p 1.21864f
+C1986 rt se_x 0
+C1987 bpc_p r11_s4 0.07198f
+C1988 x_p cgk3 3.21909f
+C1989 r4_s4 enb 0.88742f
+C1990 tail cgk4 0.74683f
+C1991 gain_lo island_off 0.05374f
+C1992 r7_s3 src_p 0
+C1993 att4 rt 0.02647f
+C1994 rf_outq_p x2c_p 0.02705f
+C1995 bpc_n cgd1 0.07279f
+C1996 rf_out_p r15_s1 0.83808f
+C1997 g_p x1c_n 0.06146f
+C1998 VDD vcas 11.1841f
+C1999 rf_out_p cgd3 0.05393f
+C2000 rf_out_p byp 0.55576f
+C2001 x0c_n ct0 0.62274f
+C2002 x0c_p x2c_p 0.06775f
+C2003 ct2 VDD 1.57426f
+C2004 vcas att1_b 14.806f
+C2005 cgd1 se_x 0.10369f
+C2006 att4 cgd1 0.10887f
+C2007 cgd0 att1 0.10962f
+C2008 rf_out_p vgr 0.02735f
+C2009 tailx vtk 12.7855f
+C2010 tailx rf_in_n 6.95191f
+C2011 tailx src_n 6.28154f
+C2012 x_p x1c_p 0.59637f
+C2013 g_n bpc_n 3.93496f
+C2014 src_p tank_p 4.32673f
+C2015 att2 rf_out_n 0.06203f
+C2016 cgd0 x_n 22.0258f
+C2017 src_p vg 5.34669f
+C2018 bpc_p tank_p 2.9029f
+C2019 tank_p cgk4 2.2746f
+C2020 atb_vdcm cgd4 0.05585f
+C2021 rf_out_n rf_in_p 0.29524f
+C2022 att0 cgd5 0.07066f
+C2023 rf_out_p x1c_n 0.03092f
+C2024 bpc_p vg 0.09845f
+C2025 vg cgk4 0
+C2026 g_n se_x 0.06645f
+C2027 g_n att4 0.02731f
+C2028 ct1 att2 0.02921f
+C2029 cgk1 cgd5 0.00261f
+C2030 g_n gi_n 5.70614f
+C2031 tank_n cgd0 0.7268f
+C2032 VDD rf_in_n 1.19073f
+C2033 VDD src_n 4.34454f
+C2034 r4_s2 x0c_p 0.00309f
+C2035 VDD vtk 0.18923p
+C2036 r16_s1 att3 0
+C2037 att2 r15_s1 0
+C2038 att1 x2c_p 0.03096f
+C2039 rf_out_n x2c_n 0.04103f
+C2040 att2 cgd3 0.05469f
+C2041 byp att2 0.06203f
+C2042 r6_s2 cgk0 0
+C2043 rf_outq_n vcas 0.20033f
+C2044 x_n x2c_p 0.59461f
+C2045 rf_in_p VSS 36.4961f
+C2046 rf_in_n VSS 21.0277f
+C2047 lobias VSS 2.06422f
+C2048 ibias VSS 1.96299f
+C2049 atb_nbias VSS 9.75922f
+C2050 en VSS 6.98954f
+C2051 tank_p VSS 0.11059p
+C2052 src_p VSS 57.7494f
+C2053 vtk VSS 0.52961p
+C2054 att1 VSS 6.58603f
+C2055 att0 VSS 7.40031f
+C2056 rf_outq_p VSS 14.1918f
+C2057 rf_out_p VSS 15.5599f
+C2058 byp VSS 16.0687f
+C2059 atb_vdcm VSS 9.90869f
+C2060 tank_n VSS 74.9336f
+C2061 rf_outq_n VSS 16.8322f
+C2062 rf_out_n VSS 15.1043f
+C2063 island_off VSS 30.0551f
+C2064 tail VSS 0.12819p
+C2065 src_n VSS 53.3819f
+C2066 ct0 VSS 8.14568f
+C2067 gain_lo VSS 7.63415f
+C2068 att4 VSS 8.52628f
+C2069 att3 VSS 21.0952f
+C2070 att2 VSS 10.7226f
+C2071 se VSS 10.967f
+C2072 ct3 VSS 20.9931f
+C2073 ct2 VSS 15.0859f
+C2074 ct1 VSS 28.2154f
+C2075 rt VSS 6.11668f
+C2076 VDD VSS 0.31087p
+C2077 vlo VSS 2.899f
+C2078 vtr VSS 3.35767f
+C2079 vgm VSS 2.91423f
+C2080 pb VSS 5.28979f
+C2081 vtg VSS 72.4791f
+C2082 tailx VSS 0.34188p
+C2083 vtc VSS 54.8704f
+C2084 r4_s4 VSS 1.88486f
+C2085 r4_s3 VSS 2.24884f
+C2086 r4_s2 VSS 2.23757f
+C2087 r4_s1 VSS 2.27635f
+C2088 vgr VSS 19.0531f
+C2089 ncm VSS 10.5825f
+C2090 r7_s5 VSS 2.27658f
+C2091 r7_s4 VSS 3.23571f
+C2092 r7_s3 VSS 2.13981f
+C2093 r7_s2 VSS 3.23235f
+C2094 r7_s1 VSS 2.15734f
+C2095 r6_s2 VSS 2.37661f
+C2096 r6_s1 VSS 2.16316f
+C2097 vtop VSS 1.69226f
+C2098 enb VSS 21.6543f
+C2099 r4_s5 VSS 9.16311f
+C2100 gi_p VSS 46.7128f
+C2101 x_p VSS 96.8087f
+C2102 r11_s5 VSS 2.37743f
+C2103 r11_s4 VSS 3.01093f
+C2104 r11_s3 VSS 2.22958f
+C2105 r11_s2 VSS 3.01062f
+C2106 r11_s1 VSS 2.24048f
+C2107 vg VSS 0.10665p
+C2108 bpc_p VSS 28.6763f
+C2109 gi_n VSS 46.6876f
+C2110 x_n VSS 90.4045f
+C2111 cgk1 VSS 25.5236f
+C2112 cgd0 VSS 56.8434f
+C2113 cgk0 VSS 43.0139f
+C2114 att0_b VSS 2.71574f
+C2115 r16_s1 VSS 2.61084f
+C2116 r15_s1 VSS 2.44385f
+C2117 bpc_n VSS 20.6035f
+C2118 x0c_n VSS 18.6057f
+C2119 x0c_p VSS 16.0738f
+C2120 ct0_b VSS 2.59603f
+C2121 cgd5 VSS 38.4348f
+C2122 cgk5 VSS 29.5953f
+C2123 gain_lo_b VSS 3.0986f
+C2124 cgd4 VSS 21.8208f
+C2125 cgk4 VSS 21.9532f
+C2126 att4_b VSS 3.65646f
+C2127 cgd3 VSS 19.0303f
+C2128 cgk3 VSS 21.6721f
+C2129 att3_b VSS 4.11415f
+C2130 cgd2 VSS 10.682f
+C2131 cgk2 VSS 14.2949f
+C2132 att2_b VSS 4.19906f
+C2133 cgd1 VSS 35.7757f
+C2134 vcas VSS 52.977f
+C2135 att1_b VSS 5.95272f
+C2136 se_x VSS 40.6278f
+C2137 se_b VSS 1.67134f
+C2138 x3c_n VSS 18.27f
+C2139 x3c_p VSS 14.2445f
+C2140 ct3_b VSS 2.86772f
+C2141 x2c_n VSS 17.7246f
+C2142 x2c_p VSS 12.9747f
+C2143 ct2_b VSS 3.35874f
+C2144 x1c_n VSS 18.8468f
+C2145 x1c_p VSS 15.7989f
+C2146 ct1_b VSS 3.5059f
+C2147 rt_n VSS 2.42864f
+C2148 g_n VSS 98.42921f
+C2149 rt_p VSS 3.59788f
+C2150 g_p VSS 0.10859p
+* reduced metal networks of the current-carrying nets (lna_netres.py, netres.py corner typ)
+Rnr_VDD_0 VDD VDD__XMP10_s 1.76418
+Rnr_VSS_0 VSS VSS__XMN17_s 1.61606
+Rnr_vtk_0 vtk vtk__XMP10_d 2.89293
+Rnr_vtk_1 vtk vtk__XMN363_d 107.85
+Rnr_vtk_2 vtk vtk__XMN386_d 39.0574
+Rnr_vtk_3 vtk vtk__XMN431_d 11.5215
+Rnr_vtk_4 vtk vtk__XMN582_d 164.164
+Rnr_vtk_5 vtk vtk__XMN605_d 59.4396
+Rnr_vtk_6 vtk vtk__XMN650_d 17.5273
+Rnr_vtk_7 vtk__XMP10_d vtk__XMN363_d 149.757
+Rnr_vtk_8 vtk__XMP10_d vtk__XMN386_d 54.234
+Rnr_vtk_9 vtk__XMP10_d vtk__XMN431_d 15.9985
+Rnr_vtk_10 vtk__XMP10_d vtk__XMN582_d 227.954
+Rnr_vtk_11 vtk__XMP10_d vtk__XMN605_d 82.5361
+Rnr_vtk_12 vtk__XMP10_d vtk__XMN650_d 24.3379
+Rnr_vtk_13 vtk__XMN363_d vtk__XMN386_d 10.9497
+Rnr_vtk_14 vtk__XMN363_d vtk__XMN431_d 9.67142
+Rnr_vtk_15 vtk__XMN363_d vtk__XMN582_d 1029.4
+Rnr_vtk_16 vtk__XMN363_d vtk__XMN605_d 372.718
+Rnr_vtk_17 vtk__XMN363_d vtk__XMN650_d 109.906
+Rnr_vtk_18 vtk__XMN386_d vtk__XMN431_d 3.50247
+Rnr_vtk_19 vtk__XMN386_d vtk__XMN582_d 372.793
+Rnr_vtk_20 vtk__XMN386_d vtk__XMN605_d 134.979
+Rnr_vtk_21 vtk__XMN386_d vtk__XMN650_d 39.802
+Rnr_vtk_22 vtk__XMN431_d vtk__XMN582_d 109.97
+Rnr_vtk_23 vtk__XMN431_d vtk__XMN605_d 39.8173
+Rnr_vtk_24 vtk__XMN431_d vtk__XMN650_d 11.7412
+Rnr_vtk_25 vtk__XMN582_d vtk__XMN605_d 10.8011
+Rnr_vtk_26 vtk__XMN582_d vtk__XMN650_d 9.31256
+Rnr_vtk_27 vtk__XMN605_d vtk__XMN650_d 3.37183
+Rnr_tail_0 tail tail__XMN118_d 2.66064
+Rnr_tailx_0 tailx__XMN17_d tailx 4.73974
+Rnr_src_p_0 src_p src_p__XMN249_s 7.07523
+Rnr_src_n_0 src_n src_n__XMN468_s 8.24368
+Rnr_x_p_0 x_p x_p__XMN355_s 356.996
+Rnr_x_p_1 x_p x_p__XMN363_s 332.26
+Rnr_x_p_2 x_p x_p__XMN371_s 131.382
+Rnr_x_p_3 x_p x_p__XMN386_s 92.9871
+Rnr_x_p_4 x_p x_p__XMN401_s 28.2557
+Rnr_x_p_5 x_p x_p__XMN431_s 12.4188
+Rnr_x_p_6 x_p__XMN355_s x_p__XMN363_s 18.2102
+Rnr_x_p_7 x_p__XMN355_s x_p__XMN371_s 13.1234
+Rnr_x_p_8 x_p__XMN355_s x_p__XMN386_s 21.1229
+Rnr_x_p_9 x_p__XMN355_s x_p__XMN401_s 21.115
+Rnr_x_p_10 x_p__XMN355_s x_p__XMN431_s 38.8461
+Rnr_x_p_11 x_p__XMN363_s x_p__XMN371_s 12.2141
+Rnr_x_p_12 x_p__XMN363_s x_p__XMN386_s 19.6593
+Rnr_x_p_13 x_p__XMN363_s x_p__XMN401_s 19.652
+Rnr_x_p_14 x_p__XMN363_s x_p__XMN431_s 36.1545
+Rnr_x_p_15 x_p__XMN371_s x_p__XMN386_s 7.7737
+Rnr_x_p_16 x_p__XMN371_s x_p__XMN401_s 7.77081
+Rnr_x_p_17 x_p__XMN371_s x_p__XMN431_s 14.2962
+Rnr_x_p_18 x_p__XMN386_s x_p__XMN401_s 5.49986
+Rnr_x_p_19 x_p__XMN386_s x_p__XMN431_s 10.1183
+Rnr_x_p_20 x_p__XMN401_s x_p__XMN431_s 3.07461
+Rnr_x_n_0 x_n x_n__XMN574_s 306.955
+Rnr_x_n_1 x_n x_n__XMN582_s 285.688
+Rnr_x_n_2 x_n x_n__XMN590_s 112.969
+Rnr_x_n_3 x_n x_n__XMN605_s 79.9571
+Rnr_x_n_4 x_n x_n__XMN620_s 24.2973
+Rnr_x_n_5 x_n x_n__XMN650_s 10.6795
+Rnr_x_n_6 x_n__XMN574_s x_n__XMN582_s 18.2157
+Rnr_x_n_7 x_n__XMN574_s x_n__XMN590_s 13.1291
+Rnr_x_n_8 x_n__XMN574_s x_n__XMN605_s 21.1403
+Rnr_x_n_9 x_n__XMN574_s x_n__XMN620_s 21.1676
+Rnr_x_n_10 x_n__XMN574_s x_n__XMN650_s 39.2462
+Rnr_x_n_11 x_n__XMN582_s x_n__XMN590_s 12.2194
+Rnr_x_n_12 x_n__XMN582_s x_n__XMN605_s 19.6756
+Rnr_x_n_13 x_n__XMN582_s x_n__XMN620_s 19.7011
+Rnr_x_n_14 x_n__XMN582_s x_n__XMN650_s 36.5272
+Rnr_x_n_15 x_n__XMN590_s x_n__XMN605_s 7.78029
+Rnr_x_n_16 x_n__XMN590_s x_n__XMN620_s 7.79036
+Rnr_x_n_17 x_n__XMN590_s x_n__XMN650_s 14.4439
+Rnr_x_n_18 x_n__XMN605_s x_n__XMN620_s 5.51384
+Rnr_x_n_19 x_n__XMN605_s x_n__XMN650_s 10.223
+Rnr_x_n_20 x_n__XMN620_s x_n__XMN650_s 3.10657
+Rnr_tank_p_0 tank_p tank_p__XMN355_d 153.516
+Rnr_tank_p_1 tank_p tank_p__XMN371_d 50.6554
+Rnr_tank_p_2 tank_p tank_p__XMN401_d 11.1453
+Rnr_tank_p_3 tank_p__XMN355_d tank_p__XMN371_d 8.38631
+Rnr_tank_p_4 tank_p__XMN355_d tank_p__XMN401_d 9.19995
+Rnr_tank_p_5 tank_p__XMN371_d tank_p__XMN401_d 3.0357
+Rnr_tank_n_0 tank_n tank_n__XMN574_d 170.053
+Rnr_tank_n_1 tank_n tank_n__XMN590_d 56.1125
+Rnr_tank_n_2 tank_n tank_n__XMN620_d 12.3457
+Rnr_tank_n_3 tank_n__XMN574_d tank_n__XMN590_d 8.38086
+Rnr_tank_n_4 tank_n__XMN574_d tank_n__XMN620_d 9.16
+Rnr_tank_n_5 tank_n__XMN590_d tank_n__XMN620_d 3.02253
+.ends
+

@@ -11,7 +11,9 @@ from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 import rfrx_flow as flow, tb, lna_match as LM, simlib as S
 
-OUT = flow.SCRATCH / 'close'
+import os
+# RFRX_LNA_SRC=rext (tb.netlist): the LNA with its solved metal networks (lna_netres.py); outputs go to close_rext/
+OUT = flow.SCRATCH / ('close' if os.environ.get('RFRX_LNA_SRC', 'ext') == 'ext' else 'close_' + os.environ['RFRX_LNA_SRC'])
 GEN = flow.GENERATED
 PROCS = ('typical', 'ss', 'ff', 'sf', 'fs')
 CORNERS = [(p, t, v) for p in PROCS for t in (22, 32) for v in (3.15, 3.35)]

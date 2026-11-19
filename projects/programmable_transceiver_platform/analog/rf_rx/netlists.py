@@ -160,7 +160,8 @@ def ota_fast():
 
 
 def ota_lownoise():
-    """Mixer TIA OTA: 3600/1 PMOS pair, NMOS load 20/2, 400 uA output stage, 5 pF Miller cap.  Tail 1.2 mA always plus
+    """Mixer TIA OTA (default TIA_X = 2, no hib: 2400/1 PMOS pair, 2.4 mA tail always on; see OTAN below).  Fork P2 history:
+    3600/1 PMOS pair, NMOS load 20/2, 400 uA output stage, 5 pF Miller cap.  Tail 1.2 mA always plus
     OTAN_XTAIL (2.4 mA) switched in by hib = 1 (RX modes; fork P2: en 2.41 -> 1.38 nV/rtHz tt, chain DSB -1.6 dB at the
     ideal match).  hib = 0 (duplex, the validator ties it to NOT lna.bias.lo) keeps the 1.2 mA tail (power_budget duplex).
     A longer load (L 4/6 um, lower flicker) was rejected: out-of-band IIP3 -15.2/-19.0 dBm vs -11.2 at L 2."""
@@ -176,7 +177,10 @@ def ota_lownoise():
 # Coordinator decision 2026-11-13: the fork V TIA (pair 1200 um, tail 240 um = 1.2 mA, no hib pin; 35.4k um^2 per mixer) is the
 # design until the LNA gain problem is solved.  The fork P2 x3 option (win 3600, OTAN_XTAIL 480, pin hib; 71.5k um^2, en 1.44
 # nV/rtHz, measured +1.55 mA per OTA) and x2 (win 2400, OTAN_XTAIL 240; 52.1k um^2, en 1.75) stay selectable here.
-OTAN = dict(tail=240., win=1200., lin=1., wl=20., ll=2., w6=13.3, w7=80., cc=48., rz=1., fw=20.)
+# RF RX round 3 (2026-11-19): TIA x2 is the default, in the no-hib form (pair 2400, tail 480 = 2.4 mA always on, one state for
+# RX and duplex, no new pin; rf_rx helper, scratch/rf-rx-tia/).  TIA_X = 1 restores the fork V cell (pair 1200, tail 240).
+TIA_X = 2
+OTAN = dict(tail=240. * TIA_X, win=1200. * TIA_X, lin=1., wl=20., ll=2., w6=13.3, w7=80., cc=48., rz=1., fw=20.)
 OTAN_XTAIL = 0.                  # > 0: hib-switched extra tail; adds the rxmix pin hib and the OTA pin pdx
 OTAF = dict(tail=16., win=30., wl=8., w6=36., w7=72., cc=12.2, rz=3., l2=.5)
 # PGA stage-1 OTA: OTAF with every device doubled and the same Miller cap (~2x GBW, +~0.45 mA per OTA)
@@ -318,7 +322,7 @@ def lna():
     s.cap('vtg', 'VSS', 10.)
     s.cap('vtc', 'VSS', 10.)
     s.nmos('tailx', 'vtg', 'VSS', LNA_WT, LNA_LT)
-    s.nmos('tail', 'vtc', 'tailx', LNA_WTC)
+    s.nmos('tail', 'vtc', 'tailx', LNA_WTC, fw=2.5)   # round 3: 2.5 um fingers keep each S/D strip <= 0.4 mA (EM, 85 C)
     # tank feed and local return of the load current
     s.pmos('vtk', 'VSS', 'VDD', LNA_WFD)
     for k in range(LNA_CCT_N):     # finger width alternates by 0.02 um so that the layout keeps the units as separate devices (rows can wrap)

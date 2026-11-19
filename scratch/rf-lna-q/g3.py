@@ -29,7 +29,7 @@ X1 rf_in_p rf_in_n rf_out_p rf_out_n rf_outq_p rf_outq_n ibias en gain_lo byp ct
 op
 let idd=-i(VDD)
 print idd
-print {pr}
+{chr(10).join('print ' + q for q in pr.split())}
 .endc
 """
 def one(tag, text):
@@ -43,7 +43,8 @@ def one(tag, text):
         mm = re.match(r'\s*(v\(\S+\)|idd)\s*=\s*(\S+)', l)
         if mm: v[mm.group(1)] = float(mm.group(2))
     return v
-rc = (Q / 'rc' / 'pt_lna_flat.rc.spice').read_text().replace('pt_lna_flat', 'pt_lna')
+import os
+rc = Path(os.environ.get('RCNET', str(Q / 'rc' / 'pt_lna_flat.rc.spice'))).read_text().replace('pt_lna_flat', 'pt_lna')
 ref = (flow.GENERATED / 'lna.ext.spice').read_text()
 which = sys.argv[1:] or ['c', 'rc']
 out = {}

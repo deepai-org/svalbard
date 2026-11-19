@@ -44,7 +44,9 @@ def with_lna_ind(text, variant=None):
 def netlist(work, block, view):
     if view == 'selftest':
         return S.prepare(work, SELFTEST_NETLIST[block], f'{block}_selftest.spice')
-    src = HERE / f'{block}.spice' if view == 'sch' else flow.GENERATED / f'{block}.ext.spice'
+    # RFRX_LNA_SRC=rext: the LNA's extracted netlist with the solved metal networks of its current-carrying nets (lna_netres.py)
+    ext = os.environ.get('RFRX_LNA_SRC', 'ext') if block == 'lna' else 'ext'
+    src = HERE / f'{block}.spice' if view == 'sch' else flow.GENERATED / f'{block}.{ext}.spice'
     if block == 'lna' and view in ('sch', 'ext'):
         work.mkdir(parents=True, exist_ok=True)
         t = with_lna_ind(src.read_text())

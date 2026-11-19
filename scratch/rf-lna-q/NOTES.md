@@ -159,3 +159,9 @@ Results so far (round 3):
   `extresist simplify off` (all 84 nets): old L8 GDS 4.18 mA (C-only 18.3) -> the old DC error is a real layout defect, not the
   partial extraction; new layout 15.4 mA, matching the mesh-solver view lna.rext.spice (15.2 mA) within 1.5 %, nodes within ~10 mV.
   Raw extresist capacitors are double-counted (wired RX finding): use extresist only for R; recipe now `simplify off`.
+- Coordinator check (lumped vs full-coverage R): the evidence view rext is NOT hand-drawn. It is a mesh solve of Metal1-5 and
+  every via cut; it omits contacts and the light nets. Compared against the full-coverage Magic extraction (simplify off, all 84
+  nets, contacts included) with the limits declared above: supply current 15.23 vs 15.44 mA (-1.4 %, pass <= 2 %). Bias nodes
+  differ by 7-18 mV (pass <= 20 mV). atb_vdcm differs by 47 mV and tailx by 41 mV: these are not like-for-like, because the
+  observation node and the bare label node are on light / unsolved metal in rext. rext is the slightly pessimistic view (less
+  current). The hand patch Rvtkport (1.85 ohm) existed only in the superseded rc3 netlist and is used nowhere.

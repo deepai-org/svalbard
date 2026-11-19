@@ -11,8 +11,8 @@ enables and the ATB selects, over SPI through the provider host pads.
 Normal run: all islands of the chip on, nominal reference programming, then every ATB1 code of the chip whose
 leaf taps a net this fixture drives (core-bias outputs, island rails, supplies, consumer bias nets) is selected in
 turn and the ATB1 pad must equal that net within 5 mV; VREF0 = 5/6 VBG, VCM = VDD/2, the bandgap window and every
-consumer bank output 10 uA +/-10 % into its diode load; core and host supply taps (codes 5, 6) must be
-distinguishable; finally VBG is forced through ATB0 after its source is disabled and sensed on ATB1.
+consumer bank output 10 uA +/-10 % into its diode load; core and host supply taps (codes 5, 6) both sense VDD and
+agree (one supply net by design); finally VBG is forced through ATB0 after its source is disabled and sensed on ATB1.
 --idac1-smu: spare IDAC1 through ATB1 code 57 into a 1 V SMU, codes 0/4/8/0.
 The independent auditor (audit_core_bias_observation.py) re-derives the SPI expectations from the specification.
 Every failed assertion is collected and reported (status fail); none stops the others.
@@ -407,10 +407,15 @@ def assess(out, experiment):
         observed.append(dict(code=code, net=source, pad_v=actual, source_v=expected, error_v=error, time_s=when))
     by_code = {row['code']: row for row in observed}
     if 5 in by_code and 6 in by_code:
+        # Core and host supply are one net by design (spec/power-delivery.md: one external supply; the provider ring
+        # joins every supply bond, DVDD/VDD tied in each dvdd cell; ruling of the power-delivery owner 2026-11-19).
+        # The single-die check that the two taps differ came from a fixture with a separate host supply site, not
+        # from the spec. Both leaves must sense the conn's VDD and agree within the static drop between their
+        # sites (one node in this fixture: the 5 mV sense tolerance).
+        for code in (5, 6):
+            require(by_code[code]['net'] == 'VDD', f'supply tap code {code} is bound to {by_code[code]["net"]}, not VDD')
         separation = abs(by_code[5]['pad_v']-by_code[6]['pad_v'])
-        require(separation > 4*.005 and by_code[5]['net'] != by_code[6]['net'],
-                f'core / host supply taps (codes 5, 6) not distinguishable: both on {by_code[5]["net"]}/{by_code[6]["net"]}, '
-                f'{separation*1e3:.1f} mV apart')
+        require(separation <= .005, f'core / host supply taps (codes 5, 6) differ by {separation*1e3:.1f} mV')
     if 2 in by_code:
         require(0.97 <= by_code[2]['pad_v'] <= 1.05, f'VREF0 {by_code[2]["pad_v"]:.4f} V out of window')
         require(abs(by_code[2]['pad_v']-value('VBG', by_code[2]['time_s'])*5/6) <= .01, 'VREF0 is not 5/6 VBG')

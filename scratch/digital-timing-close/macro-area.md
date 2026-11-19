@@ -1,39 +1,96 @@
-# Digital macro area for the die-fit study (digital owner; refined as runs finish)
+# Digital macro area (digital owner, 2026-11-18)
 
-## v2, 2026-11-14 07:52 UTC: first placement of the r7 tree (run r7a, 1716 x 1865 = 3.200 mm2, core 3.116 mm2)
+**Outline of record: 1716 x 1640 um = 2.814 mm2** (core 2.736 mm2). Run r8d is routed at this size (79.5 %
+utilisation at the end of the flow, detailed routing 0 violations, DRC 0, LVS match). Timing is not closed at
+ss_032C_3v15 (`NOTES.md`). 3.20 mm2 is not needed for routing. A probe at 1716 x 1562 = 2.68 mm2 placed and
+globally routed at 81.4 % but with clearly worse timing; it was not taken through detailed routing.
+Cells after CTS and repair 2.123 mm2 (77.6 %), the basis of the tables below.
 
-**The v1 number is too LOW. Book 3.5 mm2 (range 3.3 - 3.8) until r7a has been through global routing.**
+## Where the cells are (r8d, after CTS and timing repair, mm2)
 
-Measured on r7a (tree of 07:38, includes the monitor time base and the CP4-1 clamps):
-- cells after synthesis 1.428 mm2 (flops 0.718);
-- after global placement + design repair (step 28): 1.969 mm2 of logic and buffers + 0.093 mm2 of tap / endcap cells
-  = 2.061 mm2 = **66.1 % of the core already, before CTS, setup repair and hold fixing** (r5 at the same step:
-  1.60-1.62). Split: logic 1.555 (resized up from 1.428), gain buffers 0.270, max-cap buffers 0.077, wire repeaters
-  0.030, port buffers 0.016, slew 0.011.
-- still to come in this run: clock trees, post-CTS setup repair, hold buffers (pC6: +0.15 mm2 for these on r5).
-  Expected 2.2 - 2.3 mm2 = 71 - 74 % at this outline; no run above 66.6 % has ever finished global routing.
-- at the 64 % that is known to route: core 2.25 / 0.64 = 3.5 mm2, outline 3.6 mm2; at 68 %: outline 3.4 mm2.
-The number is replaced by the routed result (or the GRT failure) of r7a as soon as it exists (v3).
+| class | area | count |
+|---|---|---|
+| combinational logic (after sizing) | 0.775 | 30,400 |
+| flops | 0.720 | 10,062 |
+| buffers inserted by the flow (fanout trees 0.24, wire repeaters 0.07, slew / cap, ports, setup, hold) | 0.389 | 13,900 |
+| clock tree buffers | 0.132 | 1,208 |
+| tap and endcap cells | 0.081 | 18,500 |
+| inverters, ties, synthesis buffers | 0.026 | 2,100 |
+| total | 2.123 | |
 
-## v1, 2026-11-14 07:20 UTC: FIRST ESTIMATE, no P&R of the r6 RTL yet (scaled from measured runs)
+By cell type the largest are dffrnq_1 0.34, **mux2_2 0.21 (6,470 cells: the hold path of every enabled flop;
+the library has no enable flop)**, dffq_1 0.20, dffnrnq_1 0.14, buf_8 0.14, clkbuf_16 0.13.
 
-**Book 3.2 mm2 (range 3.0 - 3.45) for the digital macro, not 2.814.** Outline is free in aspect; the
-host-link edge (H2D/D2H pins, south) needs >= 1716 um of width as today, so e.g. 1716 x 1865 (3.20 mm2).
+## By module (run r8c, same outline and netlist, after CTS and timing repair; inserted buffers charged to the driver's module)
 
-Basis (all measured unless marked):
-- Cell area after synthesis of the committed r6 RTL (syn_r6t): 1.404 mm2 (r5: 1.241).
-- Growth synthesis -> placed/repaired/CTS/hold, measured on r5 RTL: x1.29 after post-GPL repair (1.60), x1.42 after the
-  post-CTS timing resizer + hold (pC6: 1.764; 0.26 mm2 of that was setup repair on paths that are now being closed in
-  RTL, 0.014 mm2 hold buffers at the 8 % OCV / foundry-ff hold flow).
-  -> r6 cells after CTS/hold: 1.85 - 2.0 mm2 (estimate; lower end if the RTL closure removes the setup-repair buffers).
-- Utilisation that routes: 66.6 % routed clean at 1716 x 1640 (TC7); 67-77 % did NOT finish global routing
-  (TC8/10/12/13/14). pC6 (67.4 %) was never routed. So the routable ceiling is taken as 64 % (range 62 - 66 %) of the
-  core area; core area = 0.93 x outline (2.617 of 2.814 mm2: rings, tap/endcap margins).
-  -> core 1.9 / 0.64 = 2.97 mm2 -> outline 3.19 mm2.
-- Whitespace at that point: 1.07 mm2 -> about 0.7 nF of pt_decap50 row fill (PD2-7 asked >= 0.45 nF).
+| module | mm2 | share | of which inserted buffers | flops |
+|---|---|---|---|---|
+| `digital.control.regs` | 0.3393 | 15.7% | 0.0789 | 1649 |
+| `digital.core.ingress` | 0.2586 | 12.0% | 0.0548 | 1645 |
+| `digital.core.egress` | 0.2361 | 10.9% | 0.0433 | 1522 |
+| `CLOCKTREE` | 0.1757 | 8.1% | 0.0002 | 2 |
+| `digital.core.lc_tx` | 0.0957 | 4.4% | 0.0152 | 389 |
+| `TAP/ENDCAP` | 0.0814 | 3.8% | 0.0000 | 0 |
+| `digital.core.lc_rx` | 0.0776 | 3.6% | 0.0137 | 378 |
+| `host.h2d` | 0.0625 | 2.9% | 0.0062 | 500 |
+| `wrx` | 0.0601 | 2.8% | 0.0053 | 399 |
+| `digital.control` | 0.0485 | 2.2% | 0.0235 | 148 |
+| `digital.fca` | 0.0464 | 2.1% | 0.0031 | 278 |
+| `digital.fcb` | 0.0461 | 2.1% | 0.0033 | 276 |
+| `digital.control.spi` | 0.0454 | 2.1% | 0.0052 | 63 |
+| `digital.core` | 0.0416 | 1.9% | 0.0088 | 234 |
+| `usb` | 0.0404 | 1.9% | 0.0045 | 273 |
+| `digital.core.frame_rx` | 0.0378 | 1.7% | 0.0053 | 267 |
+| `digital.core.frame_tx` | 0.0364 | 1.7% | 0.0045 | 239 |
+| `digital.prbs_check` | 0.0353 | 1.6% | 0.0024 | 190 |
+| `(top:debug_cfg_ra)` | 0.0289 | 1.3% | 0.0071 | 143 |
+| `(top:analog_cfg_r)` | 0.0287 | 1.3% | 0.0067 | 124 |
+| `(top:por_path/rst)` | 0.0251 | 1.2% | 0.0250 | 0 |
+| `digital.core.collect` | 0.0172 | 0.8% | 0.0016 | 116 |
+| `host.gearbox` | 0.0158 | 0.7% | 0.0006 | 143 |
+| `monitor` | 0.0142 | 0.7% | 0.0015 | 90 |
+| `digital.interp.lane` | 0.0133 | 0.6% | 0.0003 | 104 |
+| `digital.core.unpacker` | 0.0129 | 0.6% | 0.0015 | 64 |
+| `digital.core.packer` | 0.0117 | 0.5% | 0.0026 | 63 |
+| `wtx` | 0.0114 | 0.5% | 0.0010 | 72 |
+| `digital.prbs` | 0.0112 | 0.5% | 0.0017 | 34 |
+| `(top:analog_cfg)` | 0.0108 | 0.5% | 0.0028 | 0 |
 
-What can still move the number:
-- down: cheap RTL reductions ordered by the coordinator (static trims without shadow rank, duplicated per-mode logic):
-  expected 0.03 - 0.08 mm2 of cells (one dffrnq_1 = 65.9 um2; about 400-1200 flops) -> -0.05 .. -0.13 mm2 of outline.
-- up: clock staggering buffers (PD2-6), hold fixing at the foundry-ff corner on the routed design.
-- The first routed run of the r6 RTL replaces this section with measured numbers (v2).
+r8c carried 0.044 mm2 more clock buffers than r8d (an abandoned CTS clustering setting); the other rows are
+the same within run-to-run noise.
+
+- Register file 0.34: 830 stored bits, 663 of them with a shadow rank (transactional commit with rule checks),
+  1,741 enable muxes, the read mux.
+- The two transport banks 0.49: 2 x 28 x 40 flop arrays that are also the capture / playback memory, each with an
+  enable mux per bit and THREE parallel 28:1 read trees with registered partial results (added for timing).
+- The 130 isolation clamps are 0.003 mm2 (count x cell area); monitors 0.014; pattern generator and checker 0.047; both frequency
+  counters 0.093; USB 0.040.
+
+## What changed against r7 (3.20 mm2 did not route at 71 %)
+
+| | r7b / r7c | r8d |
+|---|---|---|
+| half-perimeter wire after CTS | 7.9 m (r7c) | 6.1 m |
+| routed length (global) | 16.7 m, did not converge | 8.6 m |
+| cells after the post-placement repair | 1.969 mm2 | 1.86 mm2 |
+| cells after CTS + repair | 2.225 (r7b), 2.241 (r7c) | 2.123 |
+
+## Levers not taken, largest first (none removes a capability)
+
+| lever | cells saved | what it takes |
+|---|---|---|
+| Gated clocks instead of enable muxes on the transport banks (2,240 mux2_2) | 0.07 + their enable buffer trees | a clock gate from characterised cells (falling-edge flop + AND2; the characteriser does not handle the library's latch-based gate), 56 gated subtrees through CTS, hold at the bank inputs |
+| The same on the register file (1,741 mux2_2) | 0.06 | the write decision is taken on the last data bit, half an SCLK period before the write edge: needs a latch gate or a restructured write |
+| One read tree with a two-entry skid instead of three parallel trees in each transport bank | ~0.10 | CDC FIFO read path redesign (stale prefetch of entries not yet written), formal / exhaustive check |
+| Direct (no shadow) fields for static trims | 0.03-0.05 | generator support for "direct but locked while ENABLE" |
+| Fanout-tree gain 4 -> 6..8 | up to 0.1 | slower high-fanout nets; only after the depth-critical paths are pipelined |
+| Reset-less flops where a reset is not needed | ~0.02 | per-block review |
+Latches for the static configuration rank need latch timing models first (the characteriser skips latch cells).
+Sharing the pattern checker, monitors and counters between modes is already done (one of each, mode-muxed).
+
+## Shape and pins
+
+Width 1716 um is set by the two hand-placed host-link blocks (D2H 11 lanes on the south edge, H2D 10 lanes on
+the north edge) and the 835 pins; height is free in steps of 7.84 um (`hio_shift.py`). At 2.81 mm2 the pin
+edges are not the limit (port nets are 1 % of the wire). A wider, lower shape needs the two blocks regenerated
+and has not been tried.

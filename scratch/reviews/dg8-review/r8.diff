@@ -1,0 +1,279 @@
+diff --git a/Makefile b/Makefile
+index 85098d4..5ce3554 100644
+--- a/Makefile
++++ b/Makefile
+@@ -471,6 +471,7 @@ transceiver-digital-rtl-checks: transceiver-top-modes transceiver-dense-transpor
+ 	$(PYTHON) verification/check_interp2x.py | grep -q INTERP2X_PASS && \
+ 	$(PYTHON) verification/check_linecode.py | grep -q LINECODE_PASS && \
+ 	$(PYTHON) verification/check_fast_gain.py | grep -q FAST_GAIN_PASS && \
++	$(PYTHON) verification/check_fast_vth.py | grep -q FAST_VTH_PASS && \
+ 	iverilog -g2012 -I rtl -s tb_agc_override -o /tmp/pt_agc_override.vvp rtl/*.sv sim/tb_agc_override.sv && \
+ 	vvp -n /tmp/pt_agc_override.vvp | grep -q AGC_OVERRIDE_PASS
+ 
+@@ -490,9 +491,6 @@ transceiver-stream-codec:
+ transceiver-rtl-primitives:
+ 	bash projects/programmable_transceiver_platform/verification/run_rtl_primitives.sh
+ 
+-.PHONY: transceiver-gray-prefix-proof
+-transceiver-gray-prefix-proof:
+-	bash projects/programmable_transceiver_platform/verification/run_gray_prefix.sh
+ 
+ .PHONY: transceiver-block-receiver
+ transceiver-block-receiver:
+diff --git a/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc b/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc
+index 5634dbf..8d28bd0 100644
+--- a/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc
++++ b/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc
+@@ -3,11 +3,12 @@
+ #
+ # Clock targets (ns). Override any period by setting the Tcl variable before sourcing
+ # (verification/digital_hardening/sta_signoff.tcl re-sources this file at other rates).
+-#   sclk      SPI SCLK. Bench uses 10 MHz; spec starts at <=1 MHz. Constrained at 10 MHz (2026-11-11; was
+-#             20 MHz with no spec basis): Mode 0 makes the register-file write (data validation on the
+-#             last data bit) and the read response a HALF-period path; post-route ss_032C_3v15 needs
+-#             ~36 ns for the write validation, which 20 MHz (25 ns) cannot give. The address/command
+-#             decode is multicycle (pt_spi cmd_r/rd_addr) and reads use registered candidates.
++#   sclk      SPI SCLK. Requirement: <= 5 MHz (spec/tapeout-plan.md, block-diagram.md, fpga-connection-plan.md;
++#             bring-up <= 1 MHz). Constrained at 5 MHz = 200 ns. Mode 0 makes the register-file write (data
++#             validation on the last data bit) and the read response a HALF-period path (100 ns at 5 MHz;
++#             the write validation needs ~36 ns post-route at ss_032C_3v15). The address/command decode is
++#             multicycle (pt_spi cmd_r/rd_addr) and reads use registered candidates. The simulation benches
++#             clock SCLK at 10 MHz; PT_SCLK_PERIOD=100 in the environment re-times the macro at 10 MHz.
+ #   ref       reference into the calibrator (REF_IN after the clocktree; the calibrator is a
+ #             slow SAR, any slower reference is fine). 100 MHz.
+ #   hword     host DDR clock from the clocktree (transport rework 2026-11-10): line/16, or the fixed
+@@ -29,7 +30,7 @@
+ #             counters through a stopped-only select mux, so they are logically exclusive with each other.
+ # Experiment hook: PT_SCLK_PERIOD in the environment overrides the SCLK constraint (area/closure studies).
+ if {[info exists ::env(PT_SCLK_PERIOD)]} { set SCLK_PERIOD $::env(PT_SCLK_PERIOD) }
+-foreach {v d} {SCLK_PERIOD 100.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WRX_PERIOD 12.3
++foreach {v d} {SCLK_PERIOD 200.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WRX_PERIOD 12.3
+                RFTX_PERIOD 20.0 RFRX_PERIOD 20.0 CTW_PERIOD 6.4 CTDET_PERIOD 6.4 FC_PERIOD 6.4} {
+     if {![info exists $v]} { set $v $d }
+ }
+@@ -555,7 +556,7 @@ foreach n {al_sy lk_sy fk_sy} {
+ set sync_first [concat $sync_first $wrx_first]
+ if {[llength $sync_first]} { set_false_path -to $sync_first }
+ # 1b. Reset synchronizers (pt_async_fifo wr_reset/rd_reset, pt_enable_release release_state,
+-#     pt_pair_word_boundary reset_release, pt_host_link hrs/wrs). Their asynchronous reset is
++#     pt_host_link drs/crs, pt_h2d_gearbox hrs). Their asynchronous reset is
+ #     driven from other domains (ENABLE release, rate-switch hold, rst_n); assertion is
+ #     asynchronous by design and release is re-timed by the two-flop chain itself. Only the
+ #     async RN/SN pins of these flops are cut; their D paths stay timed in their own domain.
+diff --git a/projects/programmable_transceiver_platform/rtl/pt_boundary.sv b/projects/programmable_transceiver_platform/rtl/pt_boundary.sv
+index bfa1541..ece54e9 100644
+--- a/projects/programmable_transceiver_platform/rtl/pt_boundary.sv
++++ b/projects/programmable_transceiver_platform/rtl/pt_boundary.sv
+@@ -37,11 +37,17 @@ endmodule
+ // island's island_on on the FIRST gate after the pin (integration/top/generated/macro_clamps.txt). A kept
+ // and2 cell. OPEN for the hardening flow (review finding 1): the 130 pin nets must be excluded from input-port
+ // buffering and hold repair, and the routed netlist checked (only load of each pin = its iso_and).
+-module pt_iso_and #(parameter W = 1)(input wire[W-1:0] a, input wire on, output wire[W-1:0] y);
++module pt_iso_and #(parameter W = 1, CLK = 0)(input wire[W-1:0] a, input wire on, output wire[W-1:0] y);
+  genvar i;
+  generate for (i = 0; i < W; i = i + 1) begin : g
+ `ifdef SYNTHESIS
+-  (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__and2_1 iso_and(.A1(a[i]), .A2(on), .Z(y[i]));
++  // CLK = 1: clock clamp. The cell drives the root of a clock net (0.09 pF placed: 3 ns edge and 2.4 ns
++  // of delay from an and2_1 at ss), which no resizer step touches, so it is a drive-4 cell from the start.
++  if (CLK) begin : c
++   (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__and2_4 iso_and(.A1(a[i]), .A2(on), .Z(y[i]));
++  end else begin : d
++   (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__and2_1 iso_and(.A1(a[i]), .A2(on), .Z(y[i]));
++  end
+ `else
+   assign y[i] = a[i] & on;
+ `endif
+diff --git a/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv b/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv
+index 331420e..dd7e457 100644
+--- a/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv
++++ b/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv
+@@ -316,19 +316,19 @@ module pt_digital_macro(
+   .on(island_on[4]), .y({refbuf_ready, adc_q_b_done, adc_q_done, adc_i_b_done, adc_i_done, adc_q_b_ovl, adc_q_ovl, adc_i_b_ovl, adc_i_ovl}));
+  wire[5:0] fc; wire aux_present, wtx_ext_present;
+  assign fc[0] = fc_src[0], fc[4] = fc_src[4];        // tx ring FBCK (outside clamp, shared with CLK_OBS), aosc (core rail)
+- pt_iso_and #(2) iso_fc_src_debug(.a(fc_src[3:2]), .on(island_on[5]), .y(fc[3:2]));
++ pt_iso_and #(2, 1) iso_fc_src_debug(.a(fc_src[3:2]), .on(island_on[5]), .y(fc[3:2]));
+  pt_iso_and #(2) iso_s_debug(.a({s_wtx_ext_present, s_aux_present}), .on(island_on[5]), .y({wtx_ext_present, aux_present}));
+  wire ct_wclk_c, rf_tx_clk_c, pll_cdr_lock, pll_tx_lock;
+- pt_iso_and #(1) iso_ct_wclk(.a(ct_wclk), .on(island_on[2]), .y(ct_wclk_c));
+- pt_iso_and #(1) iso_fc_src_1(.a(fc_src[1]), .on(island_on[2]), .y(fc[1]));
+- pt_iso_and #(1) iso_fc_src_5(.a(fc_src[5]), .on(island_on[1]), .y(fc[5]));   // lo_mmd.FB: lo island = rf enable group
+- pt_iso_and #(1) iso_rf_tx_clk(.a(rf_tx_clk), .on(island_on[2]), .y(rf_tx_clk_c));
++ pt_iso_and #(1, 1) iso_ct_wclk(.a(ct_wclk), .on(island_on[2]), .y(ct_wclk_c));
++ pt_iso_and #(1, 1) iso_fc_src_1(.a(fc_src[1]), .on(island_on[2]), .y(fc[1]));
++ pt_iso_and #(1, 1) iso_fc_src_5(.a(fc_src[5]), .on(island_on[1]), .y(fc[5]));   // lo_mmd.FB: lo island = rf enable group
++ pt_iso_and #(1, 1) iso_rf_tx_clk(.a(rf_tx_clk), .on(island_on[2]), .y(rf_tx_clk_c));
+  pt_iso_and #(2) iso_s_pll(.a({s_pll_tx_lock, s_pll_cdr_lock}), .on(island_on[2]), .y({pll_tx_lock, pll_cdr_lock}));
+  wire det_diff_pos, det_diff_neg, det_se_p, det_se_n, wrx_slp, wrx_slm, wtx_ext_data, wire_rx_clk_c, wire_tx_clk_c;
+  pt_iso_and #(7) iso_s_wired(.a({s_wtx_ext_data, s_wrx_slm, s_wrx_slp, s_detect_se_n, s_detect_se_p, s_detect_diff_neg, s_detect_diff_pos}),
+   .on(island_on[0]), .y({wtx_ext_data, wrx_slm, wrx_slp, det_se_n, det_se_p, det_diff_neg, det_diff_pos}));
+- pt_iso_and #(1) iso_wire_rx_clk(.a(wire_rx_clk), .on(island_on[0]), .y(wire_rx_clk_c));
+- pt_iso_and #(1) iso_wire_tx_clk(.a(wire_tx_clk), .on(island_on[0]), .y(wire_tx_clk_c));
++ pt_iso_and #(1, 1) iso_wire_rx_clk(.a(wire_rx_clk), .on(island_on[0]), .y(wire_rx_clk_c));
++ pt_iso_and #(1, 1) iso_wire_tx_clk(.a(wire_tx_clk), .on(island_on[0]), .y(wire_tx_clk_c));
+  wire[39:0] wrx_dx; wire[19:0] wrx_ew;
+  pt_iso_and #(40) iso_wire_rx_data(.a(wire_rx_data), .on(island_on[0]), .y(wrx_dx));
+  pt_iso_and #(20) iso_wire_rx_edge(.a(wire_rx_edge), .on(island_on[0]), .y(wrx_ew));
+diff --git a/projects/programmable_transceiver_platform/rtl/pt_quad_link.sv b/projects/programmable_transceiver_platform/rtl/pt_quad_link.sv
+index 6f29d94..223d770 100644
+--- a/projects/programmable_transceiver_platform/rtl/pt_quad_link.sv
++++ b/projects/programmable_transceiver_platform/rtl/pt_quad_link.sv
+@@ -173,7 +173,8 @@ module pt_quad_rx(input wire clk,rst_n,payload_iq,input wire[39:0]in_quad,
+  wire[5:0]inact_n=payload_iq?fields_n[5:0]:fields_n[11:6];
+  wire[3:0]op_n=fields_n[21:18];wire[7:0]arg_n=fields_n[29:22];
+  wire legal_n=(op_n==0&&arg_n==0)||((op_n==1||op_n==2)&&arg_n<=1)||
+-              (op_n==4&&payload_iq&&adv_n==0&&!arg_n[7]&&arg_n[4:0]<=5'd16);
++              (op_n==4&&payload_iq&&adv_n==0&&!arg_n[7]&&arg_n[4:0]<=5'd16)||
++              ((op_n==5||op_n==6)&&!payload_iq);   // IX-11 fast thresholds: wired ownership, any 8-bit code
+  // TC9 (hcore, aligned_r -> syndrome -> hpre -1.1 ns mid-PnR): the syndrome bits and the four other
+  // check flags are registered separately with q; hpre is their AND (same value, checks(q)).
+  reg[6:0]hsyn;reg htag,hadv,hina,hleg;
+diff --git a/projects/programmable_transceiver_platform/verification/check_top_modes.py b/projects/programmable_transceiver_platform/verification/check_top_modes.py
+index 74679f5..4686b45 100644
+--- a/projects/programmable_transceiver_platform/verification/check_top_modes.py
++++ b/projects/programmable_transceiver_platform/verification/check_top_modes.py
+@@ -60,7 +60,7 @@ def gen(work):
+     # CP4-1: every pin of generated/macro_clamps.txt goes through a pt_iso_and instance gated by island_on[bit] in the macro
+     macro = (P/'rtl/pt_digital_macro.sv').read_text()
+     clamp = {}; rtlp = ct.rtl_macro_ports(macro)
+-    for expr, on in re.findall(r'pt_iso_and #\(\d+\) \w+\(\.a\((.*?)\),\s*\.on\(island_on\[(\d)\]\)', macro, re.S):
++    for expr, on in re.findall(r'pt_iso_and #\(\d+(?:,\s*\d+)?\) \w+\(\.a\((.*?)\),\s*\.on\(island_on\[(\d)\]\)', macro, re.S):
+         for name, hi, lo in re.findall(r'([A-Za-z_]\w*)(?:\[(\d+)(?::(\d+))?\])?', expr):
+             if name not in rtlp: sys.exit(f'TOP_MODES_CHECK_FAIL: pt_iso_and input {name} is not a macro port (a clamp must be the first gate after the pin)')
+             w = rtlp[name][1]
+diff --git a/projects/programmable_transceiver_platform/verification/digital_hardening/config.json b/projects/programmable_transceiver_platform/verification/digital_hardening/config.json
+index 826fd67..0c025a3 100644
+--- a/projects/programmable_transceiver_platform/verification/digital_hardening/config.json
++++ b/projects/programmable_transceiver_platform/verification/digital_hardening/config.json
+@@ -1,4 +1,11 @@
+ {
++  "meta": {
++    "version": 1,
++    "flow": "Classic",
++    "substituting_steps": {
++      "-OpenROAD.GlobalPlacement": "OpenROAD.RepairDesignPostGPL"
++    }
++  },
+   "DESIGN_NAME": "pt_digital_macro",
+   "VERILOG_FILES": [
+     "dir::rtl/pt_digital_macro.sv",
+@@ -91,7 +98,7 @@
+   "VDD_PIN_VOLTAGE": "3.30",
+   "FP_SIZING": "absolute",
+   "FP_ASPECT_RATIO": 1,
+-  "PL_TARGET_DENSITY_PCT": 68,
++  "PL_TARGET_DENSITY_PCT": 82,
+   "RT_MAX_LAYER": "Metal5",
+   "PDN_MULTILAYER": false,
+   "PDN_VERTICAL_LAYER": "Metal4",
+@@ -120,7 +127,7 @@
+     0,
+     0,
+     1716,
+-    1865
++    1640.0
+   ],
+   "DESIGN_REPAIR_BUFFER_INPUT_PORTS": true,
+   "DESIGN_REPAIR_BUFFER_OUTPUT_PORTS": true,
+@@ -170,27 +177,6 @@
+       ],
+       "orientation": "N"
+     },
+-    "digital.fca.blk_clock_buf.cell": {
+-      "location": [
+-        882,
+-        1307
+-      ],
+-      "orientation": "N"
+-    },
+-    "digital.fca.fjc.cell": {
+-      "location": [
+-        882,
+-        1307
+-      ],
+-      "orientation": "N"
+-    },
+-    "digital.fca.fjc.d_gf180mcu_fd_sc_mcu7t5v0__mux2_2_Z": {
+-      "location": [
+-        882,
+-        1307
+-      ],
+-      "orientation": "N"
+-    },
+     "digital.interp.core_clock_mux.cell": {
+       "location": [
+         428,
+@@ -226,27 +212,6 @@
+       ],
+       "orientation": "N"
+     },
+-    "host.divider.cdiv.cell": {
+-      "location": [
+-        557,
+-        658
+-      ],
+-      "orientation": "N"
+-    },
+-    "host.divider.cdiv.d_gf180mcu_fd_sc_mcu7t5v0__clkinv_1_ZN": {
+-      "location": [
+-        557,
+-        658
+-      ],
+-      "orientation": "N"
+-    },
+-    "host.divider.core_root.cell": {
+-      "location": [
+-        557,
+-        658
+-      ],
+-      "orientation": "N"
+-    },
+     "host.en_d_gf180mcu_fd_sc_mcu7t5v0__and2_1_A2": {
+       "location": [
+         685,
+@@ -684,6 +649,13 @@
+     "wire_rx_edge[17]",
+     "wire_rx_edge[18]",
+     "wire_rx_edge[19]",
+-    "wire_tx_clk"
+-  ]
++    "wire_tx_clk",
++    "host.divider.c",
++    "digital.fca.blk_clock_buf.I",
++    "digital.fcb.blk_clock_buf.I"
++  ],
++  "CTS_DELAY_BUFFER_DERATE_PCT": 0,
++  "CTS_APPLY_NDR": "none",
++  "CTS_SINK_CLUSTERING_SIZE": 30,
++  "CTS_SINK_CLUSTERING_MAX_DIAMETER": 90
+ }
+diff --git a/projects/programmable_transceiver_platform/verification/run_digital_hardening.sh b/projects/programmable_transceiver_platform/verification/run_digital_hardening.sh
+index 6d755b3..195ad6e 100755
+--- a/projects/programmable_transceiver_platform/verification/run_digital_hardening.sh
++++ b/projects/programmable_transceiver_platform/verification/run_digital_hardening.sh
+@@ -34,10 +34,14 @@ docker image inspect "$DIGITAL_IMAGE" --format '{{.Id}} {{.Architecture}}' > "$O
+ docker image inspect "$ANALOG_IMAGE" --format '{{.Id}} {{.Architecture}}' > "$OUT/analog-image.txt"
+ RUN="$OUT/design/runs/$TAG"
+ 
++# The flow's repair_design step script is replaced by digital_hardening/repair_design_pt.tcl (gain buffering
++# before the final global placement, see its header and config.json meta.substituting_steps).
+ dk() { # dk <image> <cpus> <mem> <command>
+   docker run --rm --network none --cpus "$2" --memory "$3" --memory-swap "$3" --pids-limit 4096 \
+     --user "$(id -u):$(id -g)" -e HOME=/out/home -e TMPDIR=/out/tmp -e OMP_NUM_THREADS=1 \
+-    -v "$PROJ:/src:ro" -v "$OUT:/out" --entrypoint /bin/bash "$1" -lc "$4"
++    -v "$PROJ:/src:ro" -v "$OUT:/out" \
++    -v "$PROJ/verification/digital_hardening/repair_design_pt.tcl:/usr/local/lib/python3.12/dist-packages/librelane/scripts/openroad/repair_design.tcl:ro" \
++    --entrypoint /bin/bash "$1" -lc "$4"
+ }
+ 
+ for stage in "${stages[@]}"; do
+@@ -61,7 +65,7 @@ pnr)
+   # DESIGN_REPAIR_BUFFER_GAIN from the environment): builds balanced repeater trees instead of the
+   # serial buf_1/buf_2 chains the slew-driven repair left on high-fanout control nets (TC1-TC4).
+   BUFFER_GAIN="${PT_REPAIR_BUFFER_GAIN:-4.0}"; echo "$BUFFER_GAIN" > "$OUT/repair-buffer-gain.txt"
+-  dk "$DIGITAL_IMAGE" "$CPUS" "$MEM" "set -e; cd /out/design; export DESIGN_REPAIR_BUFFER_GAIN=$BUFFER_GAIN; librelane --version > /out/librelane-version.txt 2>&1 || true
++  dk "$DIGITAL_IMAGE" "$CPUS" "$MEM" "set -e; cd /out/design; export DESIGN_REPAIR_BUFFER_GAIN=$BUFFER_GAIN PT_GAIN_BEFORE_GPL=${PT_GAIN_BEFORE_GPL:-1}; librelane --version > /out/librelane-version.txt 2>&1 || true
+     if [ -f /opt/svalbard/toolchain.json ]; then cp /opt/svalbard/toolchain.json /out/toolchain.json; fi
+     librelane --manual-pdk --pdk-root /pdk -p gf180mcuD -s gf180mcu_fd_sc_mcu7t5v0 -j $CPUS --run-tag $TAG \
+       --hide-progress-bar config.json > /out/librelane.log 2>&1" || pnr_rc=$?

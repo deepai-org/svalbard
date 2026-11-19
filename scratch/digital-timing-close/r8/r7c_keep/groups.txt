@@ -1,0 +1,23 @@
+== max 34-openroad-stamidpnr-2
+   -4.61 hddr           host.gearbox.prefix[11] -> host.gearbox.lq[1].hr
+   -4.16 egress_wtx     digital.core.egress.roh2[23] -> digital.core.egress.roh2[6]
+   -3.79 wrx            digital.core.lc_rx.hit[8] -> digital.core.lc_rx.cand[1]
+   -3.39 ref            digital.control.regs.wtx_state[2] -> wtx.pad_seq.left[4]
+   -2.93 wtx            digital.core.lc_tx.sPv2 -> digital.core.lc_tx.sP[33]
+   -2.89 fc0            digital.fca.fjc.cell -> digital.fca.fjc.cell
+   -2.89 fc1            digital.fca.fjc.cell -> digital.fca.fjc.cell
+   -2.89 fc2            digital.fca.fjc.cell -> digital.fca.fjc.cell
+   -2.89 fc3            digital.fca.fjc.cell -> digital.fca.fjc.cell
+   -2.89 fc5            digital.fca.fjc.cell -> digital.fca.fjc.cell
+   -2.33 fc4            monitor.qcnt[1] -> monitor.q_done_q
+   -2.17 hcore          digital.core.ingress.roh1[4] -> digital.core.ingress.p1a[12]
+   -1.50 h2d_cap        host.h2d.hnr[2].hn/nsel -> host.h2d.fhh[4].c.n.lf
+   -1.04 h2d            host.h2d.phase[0] -> host.h2d.entries[1].slice[0].enable/q
+   -1.02 asynchronous   core_rst_n -> digital.control.regs.status[10]
+   -0.51 hword          host_rate.cur[1] -> host_rate.cur[1]
+   -0.40 ctw            det.detect.ra_b -> det.detect.b
+   -0.25 hsdr           host.en_d -> host.en_sdr
+    0.64 h2d_pin        monitor.in_div[0] -> monitor.in_div[3]
+== min 34-openroad-stamidpnr-2
+   -1.73 ingress_rfrx   digital.core.packer.bits[2] -> digital.core.ingress.din[2]
+   -1.10 h2d_cap        h2d_pin[2] -> host.h2d.cap[2].cf.n.lf

@@ -1,0 +1,24 @@
+== max max_ss_032C_3v15
+   -5.49 hddr           host.gearbox.prefix[10] -> host.gearbox.lq[0].hr
+   -3.96 wtx            digital.core.lc_tx.sA[20] -> digital.core.lc_q[22]
+   -3.45 wrx            digital.prbs_check.mism_pad[25] -> digital.prbs_check.grp[16]
+   -3.31 egress_wtx     digital.core.egress.roh2[15] -> digital.core.egress.roh2[9]
+   -2.53 hcore          host.sen.q[0] -> host.carry[1]
+   -2.38 h2d_cap        host.h2d.hnr[2].hn/nsel -> host.h2d.fhh[4].c.n.lf
+   -2.28 ref            wtx.pad_seq.request[1] -> wtx.ser_q
+   -1.62 fc4            monitor.qcnt[1] -> monitor.q_done_q
+   -1.38 hsdr           host.en_d -> host.en_sdr
+   -0.98 h2d            host.h2d.phase[1] -> host.h2d.entries[2].slice[2].enable/q
+   -0.94 ctw            det.detect.last_oh[0] -> det.detect.coh[0]
+   -0.86 asynchronous   vreg_seq.rdy_tx -> wtx.ser_q
+   -0.78 hword          host_rate.ne -> host_rate.gap[1]
+   -0.20 ingress_wrx    usb.rx_data[23] -> digital.core.ingress.din[23]
+    0.32 h2d_pin        monitor.in_div[0] -> monitor.in_div[3]
+    0.95 fc0            digital.fcb.enrep[0].r/q -> digital.fcb.fj[0]
+    0.95 fc1            digital.fcb.enrep[0].r/q -> digital.fcb.fj[0]
+    0.95 fc2            digital.fcb.enrep[0].r/q -> digital.fcb.fj[0]
+    0.95 fc3            digital.fcb.enrep[0].r/q -> digital.fcb.fj[0]
+    0.95 fc5            digital.fcb.enrep[0].r/q -> digital.fcb.fj[0]
+== min max_ss_032C_3v15
+   -1.21 h2d_cap        h2d_pin[2] -> host.h2d.fhh[2].c.n.lf
+    0.11 wrx            wire_rx_data[25] -> lane.quad[25]

@@ -9,7 +9,7 @@ for (F, D, B), O in zip(V, R):
     Oi = {k: (int(v, 16) if 'x' not in v and 'z' not in v else None) for k, v in O.items()}
     E = model.expect(F, D, Oi)
     for n, w, _ in PORTS:
-        if n in model.DYNAMIC or E.get(n) is None: continue
+        if n in model.DYNAMIC or E.get(n) is None or n not in COMPARED: continue
         if Oi[n] != E[n]:
             bad[n] += 1; ex.setdefault(n, []).append((E[n], O[n], F, D))
 print(len(V) - nf, 'vectors compared;', 'mismatching ports:', len(bad))

@@ -24,6 +24,11 @@
 // of it (hddr: pad-edge DDR launch and gearbox), pt_host_link divides that by 2 for the 78.125 MHz
 // core clock that runs the whole 40-bit transport; H2D_CLK clocks the H2D capture and quad-FIFO
 // write side.
+// Chip configuration (split 2026-11-19, decision D4, spec/chips.json): parameter PT_CHIP = 1 for pt_rf, 2 for pt_wired
+// (3 = both halves: module-level benches only; no chip is built with it). One RTL, one port list: on each chip the
+// inputs of the other chip's blocks are tied in the chip conn and ignored here (their islands never come on: the island
+// power fields are not stored, so every clamp below reads 0; rf_rx_clk, wired_on_ext and the power-good inputs of the
+// absent groups are forced low), and the register fields of the other chip are not stored (rtl/pt_regfile.sv).
 `include "pt_regmap_defs.svh"
 `default_nettype none
 module pt_digital_macro(
@@ -285,6 +290,7 @@ module pt_digital_macro(
  output wire c_usb_ls_slow,
  output wire[2:0] c_usb_term_trim
 );
+ parameter integer PT_CHIP = 3;     // 1 = pt_rf, 2 = pt_wired, 3 = both halves (benches only); see the header
  // ---------------- reset (rtl/pt_por_path.sv), reset-seen key (INT6)
  wire rst_n, ovr_armed, por_masked;
  pt_por_path por_path(.reset_n_pad(reset_n_pad), .por_n(por_n), .por_bypass(por_bypass), .spi_cs_n(spi_cs_n),
@@ -293,45 +299,51 @@ module pt_digital_macro(
  pt_reset_seen rseen(.rst_n(rst_n), .clk(spi_sclk), .seen(reset_seen));
 
  // ---------------- island state. Without a reset since power-up (reset_seen = 0) no island is enabled.
+ localparam ON_RF = (PT_CHIP & 1) != 0, ON_WIRED = (PT_CHIP & 2) != 0;
+ // enable groups of the chip: 0 wired, 1 rf, 2 pll, 4 conv, 5 debug (3 reserved)
+ localparam[`PT_ISLAND_W-1:0] PG_MASK = {1'b1, ON_RF ? 1'b1 : 1'b0, 1'b0, 1'b1, ON_RF ? 1'b1 : 1'b0, ON_WIRED ? 1'b1 : 1'b0};
  wire[`PT_ISLAND_W-1:0] island_pgood = {s_pg_debug, s_pg_conv, 1'b0, s_pg_pll, s_pg_rf_rx & s_pg_rf_tx & s_pg_lod & s_pg_lo,
-  s_pg_wired_rx & s_pg_wired_cap & s_pg_wired_tx};
+  s_pg_wired_rx & s_pg_wired_cap & s_pg_wired_tx} & PG_MASK;
  wire[`PT_ISLAND_W-1:0] island_en_reg, island_on_reg; // register file: switch enable; switch on AND (pgood OR override)
  wire[`PT_ISLAND_W-1:0] ion = island_on_reg & {`PT_ISLAND_W{reset_seen}};
  assign island_en = island_en_reg & {`PT_ISLAND_W{reset_seen}};
- assign island_on = ion | {{(`PT_ISLAND_W-1){1'b0}}, wired_on_ext};
+ assign island_on = ion | {{(`PT_ISLAND_W-1){1'b0}}, wired_on_ext & ON_WIRED};
  assign island_off = ~island_on;
+ wire rf_rx_clk_i = ON_RF ? rf_rx_clk : 1'b0;      // outside-clamped (CLK_OBS shares it): forced low on pt_wired
 
- // ---------------- CP4-1: island-sourced inputs, AND with island_on on the first gate (generated/macro_clamps.txt;
+ // ---------------- CP4-1: island-sourced inputs, AND with island_on on the first gate (<chip>/generated/macro_clamps.txt;
+ // third parameter: the clamp exists only on the chip that has the source block (ON_RF / ON_WIRED, split D4);
  // verification/check_top_modes.py compares this list with it; the hardening flow must not buffer these pins). conv = 4, debug = 5, pll = 2, wired = 0.
  wire[23:0] rf_rx_a, rf_rx_b; wire rf_ph_i, rf_ph_q;
  assign rf_rx_a[1:0] = rf_rx_sample[1:0], rf_rx_a[13:12] = rf_rx_sample[13:12];     // tied low at chip level
  assign rf_rx_b[1:0] = rf_rx_sample_b[1:0], rf_rx_b[13:12] = rf_rx_sample_b[13:12];
- pt_iso_and #(10) iso_rf_rx_sample_i(.a(rf_rx_sample[11:2]), .on(island_on[4]), .y(rf_rx_a[11:2]));
- pt_iso_and #(10) iso_rf_rx_sample_q(.a(rf_rx_sample[23:14]), .on(island_on[4]), .y(rf_rx_a[23:14]));
- pt_iso_and #(10) iso_rf_rx_sample_b_i(.a(rf_rx_sample_b[11:2]), .on(island_on[4]), .y(rf_rx_b[11:2]));
- pt_iso_and #(10) iso_rf_rx_sample_b_q(.a(rf_rx_sample_b[23:14]), .on(island_on[4]), .y(rf_rx_b[23:14]));
- pt_iso_and #(2) iso_rf_rx_ph(.a({rf_rx_ph_q, rf_rx_ph_i}), .on(island_on[4]), .y({rf_ph_q, rf_ph_i}));
+ pt_iso_and #(10, 0, ON_RF) iso_rf_rx_sample_i(.a(rf_rx_sample[11:2]), .on(island_on[4]), .y(rf_rx_a[11:2]));
+ pt_iso_and #(10, 0, ON_RF) iso_rf_rx_sample_q(.a(rf_rx_sample[23:14]), .on(island_on[4]), .y(rf_rx_a[23:14]));
+ pt_iso_and #(10, 0, ON_RF) iso_rf_rx_sample_b_i(.a(rf_rx_sample_b[11:2]), .on(island_on[4]), .y(rf_rx_b[11:2]));
+ pt_iso_and #(10, 0, ON_RF) iso_rf_rx_sample_b_q(.a(rf_rx_sample_b[23:14]), .on(island_on[4]), .y(rf_rx_b[23:14]));
+ pt_iso_and #(2, 0, ON_RF) iso_rf_rx_ph(.a({rf_rx_ph_q, rf_rx_ph_i}), .on(island_on[4]), .y({rf_ph_q, rf_ph_i}));
  wire adc_i_ovl, adc_i_b_ovl, adc_q_ovl, adc_q_b_ovl, adc_i_done, adc_i_b_done, adc_q_done, adc_q_b_done, refbuf_ready;
- pt_iso_and #(9) iso_s_conv(.a({s_refbuf_ready, s_adc_q_b_done, s_adc_q_done, s_adc_i_b_done, s_adc_i_done, s_adc_q_b_ovl, s_adc_q_ovl, s_adc_i_b_ovl, s_adc_i_ovl}),
+ pt_iso_and #(9, 0, ON_RF) iso_s_conv(.a({s_refbuf_ready, s_adc_q_b_done, s_adc_q_done, s_adc_i_b_done, s_adc_i_done, s_adc_q_b_ovl, s_adc_q_ovl, s_adc_i_b_ovl, s_adc_i_ovl}),
   .on(island_on[4]), .y({refbuf_ready, adc_q_b_done, adc_q_done, adc_i_b_done, adc_i_done, adc_q_b_ovl, adc_q_ovl, adc_i_b_ovl, adc_i_ovl}));
  wire[5:0] fc; wire aux_present, wtx_ext_present;
  assign fc[0] = fc_src[0], fc[4] = fc_src[4];        // tx ring FBCK (outside clamp, shared with CLK_OBS), aosc (core rail)
  pt_iso_and #(2, 1) iso_fc_src_debug(.a(fc_src[3:2]), .on(island_on[5]), .y(fc[3:2]));
- pt_iso_and #(2) iso_s_debug(.a({s_wtx_ext_present, s_aux_present}), .on(island_on[5]), .y({wtx_ext_present, aux_present}));
+ pt_iso_and #(1) iso_s_debug(.a(s_aux_present), .on(island_on[5]), .y(aux_present));
+ pt_iso_and #(1, 0, ON_WIRED) iso_s_debug_w(.a(s_wtx_ext_present), .on(island_on[5]), .y(wtx_ext_present));   // WTX_EXT receiver: pt_wired
  wire ct_wclk_c, rf_tx_clk_c, pll_cdr_lock, pll_tx_lock;
  pt_iso_and #(1, 1) iso_ct_wclk(.a(ct_wclk), .on(island_on[2]), .y(ct_wclk_c));
  pt_iso_and #(1, 1) iso_fc_src_1(.a(fc_src[1]), .on(island_on[2]), .y(fc[1]));
- pt_iso_and #(1, 1) iso_fc_src_5(.a(fc_src[5]), .on(island_on[1]), .y(fc[5]));   // lo_mmd.FB: lo island = rf enable group
- pt_iso_and #(1, 1) iso_rf_tx_clk(.a(rf_tx_clk), .on(island_on[2]), .y(rf_tx_clk_c));
+ pt_iso_and #(1, 1, ON_RF) iso_fc_src_5(.a(fc_src[5]), .on(island_on[1]), .y(fc[5]));   // lo_mmd.FB: lo island = rf enable group
+ pt_iso_and #(1, 1, ON_RF) iso_rf_tx_clk(.a(rf_tx_clk), .on(island_on[2]), .y(rf_tx_clk_c));
  pt_iso_and #(2) iso_s_pll(.a({s_pll_tx_lock, s_pll_cdr_lock}), .on(island_on[2]), .y({pll_tx_lock, pll_cdr_lock}));
  wire det_diff_pos, det_diff_neg, det_se_p, det_se_n, wrx_slp, wrx_slm, wtx_ext_data, wire_rx_clk_c, wire_tx_clk_c;
- pt_iso_and #(7) iso_s_wired(.a({s_wtx_ext_data, s_wrx_slm, s_wrx_slp, s_detect_se_n, s_detect_se_p, s_detect_diff_neg, s_detect_diff_pos}),
+ pt_iso_and #(7, 0, ON_WIRED) iso_s_wired(.a({s_wtx_ext_data, s_wrx_slm, s_wrx_slp, s_detect_se_n, s_detect_se_p, s_detect_diff_neg, s_detect_diff_pos}),
   .on(island_on[0]), .y({wtx_ext_data, wrx_slm, wrx_slp, det_se_n, det_se_p, det_diff_neg, det_diff_pos}));
- pt_iso_and #(1, 1) iso_wire_rx_clk(.a(wire_rx_clk), .on(island_on[0]), .y(wire_rx_clk_c));
- pt_iso_and #(1, 1) iso_wire_tx_clk(.a(wire_tx_clk), .on(island_on[0]), .y(wire_tx_clk_c));
+ pt_iso_and #(1, 1, ON_WIRED) iso_wire_rx_clk(.a(wire_rx_clk), .on(island_on[0]), .y(wire_rx_clk_c));
+ pt_iso_and #(1, 1, ON_WIRED) iso_wire_tx_clk(.a(wire_tx_clk), .on(island_on[0]), .y(wire_tx_clk_c));
  wire[39:0] wrx_dx; wire[19:0] wrx_ew;
- pt_iso_and #(40) iso_wire_rx_data(.a(wire_rx_data), .on(island_on[0]), .y(wrx_dx));
- pt_iso_and #(20) iso_wire_rx_edge(.a(wire_rx_edge), .on(island_on[0]), .y(wrx_ew));
+ pt_iso_and #(40, 0, ON_WIRED) iso_wire_rx_data(.a(wire_rx_data), .on(island_on[0]), .y(wrx_dx));
+ pt_iso_and #(20, 0, ON_WIRED) iso_wire_rx_edge(.a(wire_rx_edge), .on(island_on[0]), .y(wrx_ew));
 
  // ---------------- register file, transport, pattern, counters (pt_digital)
  // INT6 / review finding 5: until a real reset has been seen every register-file output is forced to 0 here (fields,
@@ -380,9 +392,9 @@ module pt_digital_macro(
  wire[15:0] rf_trim, wire_trim, clock_trim, status; wire enable, mode8, commit_toggle; wire[11:0] cal_trial;
  wire[39:0] wire_tx_quad; wire wire_tx_valid, wire_idle; wire[23:0] rf_tx_sample_q;
  assign rf_tx_sample = rf_tx_sample_q & {24{island_on[4]}};
- pt_digital digital(.rst_n(rst_n), .ref_clk(ref_clk), .host_sclk(spi_sclk), .host_cs_n(spi_cs_n), .host_mosi(spi_mosi),
+ pt_digital #(.PT_CHIP(PT_CHIP)) digital(.rst_n(rst_n), .ref_clk(ref_clk), .host_sclk(spi_sclk), .host_cs_n(spi_cs_n), .host_mosi(spi_mosi),
   .host_miso(spi_miso), .host_miso_oe(spi_miso_oe), .host_tx_clk(core_clk), .host_rx_clk(core_clk), .core_rst_n(core_rst_n),
-  .wire_rx_clk(wire_rx_clk_c), .wire_tx_clk(wire_tx_clk_c), .rf_rx_clk(rf_rx_clk), .rf_tx_clk(rf_tx_clk_c),
+  .wire_rx_clk(wire_rx_clk_c), .wire_tx_clk(wire_tx_clk_c), .rf_rx_clk(rf_rx_clk_i), .rf_tx_clk(rf_tx_clk_c),
   .h2d_quad(h2d_quad), .d2h_quad(d2h_quad), .wire_rx_data(core_rx_quad), .wire_rx_valid(core_rx_valid),
   .wire_tx_data(wire_tx_quad), .wire_tx_valid(wire_tx_valid), .wire_idle(wire_idle), .wire_tx_request(core_tx_request),
   .rf_rx_sample(rf_rx_merged), .rf_rx_valid(rf_rx_valid), .rf_tx_sample(rf_tx_sample_q), .rf_tx_valid(),
@@ -723,7 +735,7 @@ module pt_digital_macro(
  assign wire_tx_data = wire_tx_quad & {40{island_on[0]}};
 
  // ---------------- RF RX sample register (rtl/pt_boundary.sv pt_adc_merge) and the detector clock
- pt_adc_merge adc_merge(.clk(rf_rx_clk), .rst_n(rst_n), .adc_en(c_adc_i_en | c_adc_q_en), .ilen(c_adc_ilen),
+ pt_adc_merge adc_merge(.clk(rf_rx_clk_i), .rst_n(rst_n), .adc_en(c_adc_i_en | c_adc_q_en), .ilen(c_adc_ilen),
   .ph_i(rf_ph_i), .ph_q(rf_ph_q), .sample_a(rf_rx_a), .sample_b(rf_rx_b), .sample(rf_rx_merged), .valid(rf_rx_valid));
  wire det_clk_q;
  pt_det_clk det(.clk(ct_wclk_c), .rst_n(rst_n), .en(c_detect_en), .cfg_rate_khz(f_cdr_config__nominal_rate_khz), .det_clk(det_clk_q));

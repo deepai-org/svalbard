@@ -7,10 +7,23 @@ P = Path(__file__).resolve().parents[2] if "decode_table" in str(Path(__file__).
 reg = json.loads((P/'spec/register-map.json').read_text())
 rf = (P/'rtl/pt_regfile.sv').read_text()
 FIELDS = [f for f in reg['fields'] if re.search(r'reg\[(\d+):0\]s_%s[,;]' % f['sv'], rf)]
+# Chip view (split, D4): PT_CHIP=1 (pt_rf) / 2 (pt_wired) / 3 (both halves). On a chip only its fields are driven (the
+# others stay 0, as the register file holds them) and only the ports with a consumer on the chip are compared.
+import os, sys as _sys
+PT_CHIP = int(os.environ.get('PT_CHIP', '3'))
+CHIP = {1: 'rf', 2: 'wired'}.get(PT_CHIP)
+def present(f): return CHIP is None or CHIP in f['chips']
 def width(f):
     m = re.search(r'reg\[(\d+):0\]s_%s[,;]' % f['sv'], rf); f['direct_wire'] = bool(re.search(r'wire\[\d+:0\]a_%s=' % f['sv'], rf)); return int(m.group(1)) + 1
 for f in FIELDS: f['w'] = width(f)
 PORTS = [(c[0].strip(), int(c[1]), int(c[2])) for c in (l.split('|') for l in (TOP/'ctl_ports.txt').read_text().split('\n') if l.startswith('c_'))]
+if CHIP:
+    _sys.path.insert(0, str(TOP)); import check_top as _ct
+    _conn = _ct.parse(_ct.read_conn(str(TOP/CHIP/'chip.conn')))[0]
+    _used = {_ct.bus(n)[0] for i in _conn.values() for _, n in i['pins'].values()}
+    COMPARED = {n for n, _, _ in PORTS if n in _used}      # ports with a consumer on this chip
+else:
+    COMPARED = {n for n, _, _ in PORTS}
 DYN = [('rx_gain', 7), ('rx_gain_active', 1), ('rf_mute', 1), ('vth_fast', 2), ('vth_a', 8), ('vth_b', 8), ('vreg_tx_ok', 1), ('vreg_rx_ok', 1), ('bg_ok', 1)]
 BENCH = [('fault_pin', 1), ('pg', 10), ('wired_on_ext', 1)]
 EXTRA = [('island_on', 6), ('island_en', 6), ('wire_rx_ptrim_en', 1), ('rx_en_aux', 1), ('rx_en_wtx_ext', 1), ('wire_tx_data', 40), ('rf_tx_sample', 24)]
@@ -29,7 +42,7 @@ def write_tb(nvec, settle, out='tb_dec.sv'):
          ' always #10 ref_clk = ~ref_clk;', ' reg wtx_clk = 0; always #10.4 wtx_clk = c_wiredtx_ser_en ? ~wtx_clk : 1\'b0;']
     for n, w, _ in PORTS: L.append(f' wire [{w-1}:0] {n};')
     L += [' wire [5:0] island_on, island_en, island_off; wire wire_rx_ptrim_en, rx_en_aux, rx_en_wtx_ext; wire [39:0] wire_tx_data; wire [23:0] rf_tx_sample;',
-          ' pt_digital_macro dut(.reset_n_pad(rst_pad), .por_n(1\'b1), .por_bypass(1\'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),',
+          f' pt_digital_macro #(.PT_CHIP({PT_CHIP})) dut(.reset_n_pad(rst_pad), .por_n(1\'b1), .por_bypass(1\'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),',
           '  .island_en(island_en), .island_on(island_on), .island_off(island_off), .s_pg_wired_rx(pg[0]), .s_pg_wired_cap(pg[1]), .s_pg_wired_tx(pg[2]), .s_pg_rf_rx(pg[3]),',
           '  .s_pg_rf_tx(pg[4]), .s_pg_lod(pg[5]), .s_pg_lo(pg[6]), .s_pg_pll(pg[7]), .s_pg_conv(pg[8]), .s_pg_debug(pg[9]), .wired_on_ext(wired_on_ext),',
           '  .wire_rx_ptrim_en(wire_rx_ptrim_en), .fault(fault_pin), .rx_en_aux(rx_en_aux), .rx_en_wtx_ext(rx_en_wtx_ext), .wire_tx_data(wire_tx_data), .rf_tx_sample(rf_tx_sample),',

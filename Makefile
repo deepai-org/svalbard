@@ -429,8 +429,12 @@ transceiver-regfile-report: transceiver-regfile transceiver-regfile-formal trans
 transceiver-regfile:
 	$(PYTHON) projects/programmable_transceiver_platform/rtl/gen/gen_regfile.py --check
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_regfile.py
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_regfile.py --chip rf
+	$(PYTHON) projects/programmable_transceiver_platform/verification/check_regfile.py --chip wired
 transceiver-regfile-formal:
 	bash projects/programmable_transceiver_platform/verification/run_regfile_formal.sh
+	PT_CHIP=1 bash projects/programmable_transceiver_platform/verification/run_regfile_formal.sh
+	PT_CHIP=2 bash projects/programmable_transceiver_platform/verification/run_regfile_formal.sh
 transceiver-regfile-synth:
 	bash projects/programmable_transceiver_platform/verification/run_regfile_synth.sh
 
@@ -449,11 +453,14 @@ transceiver-p2-synth:
 # Freeze stage 1 (control and digital): LibreLane hardening of rtl/pt_digital_macro.sv, analog-image
 # GDS export + KLayout DRC/antenna, per-clock/per-corner STA, post-route gate-level simulation,
 # host-link pad screen -> evidence/digital-hardening-evidence.json. Stages can be run alone:
-# make transceiver-digital-hardening DIGITAL_HARDENING_STAGES="sta gls report".
+# make transceiver-digital-hardening-rf DIGITAL_HARDENING_STAGES="sta gls report". One configuration per chip
+# (verification/digital_hardening/{rf,wired}/config.json); transceiver-digital-synth-area: cell area per chip (no PnR).
 DIGITAL_HARDENING_STAGES ?=
-.PHONY: transceiver-digital-hardening transceiver-digital-rtl-checks
-transceiver-digital-hardening: transceiver-digital-rtl-checks transceiver-pair-word-formal transceiver-pair-gearbox-formal transceiver-freq-count-formal
-	bash projects/programmable_transceiver_platform/verification/run_digital_hardening.sh $(DIGITAL_HARDENING_STAGES)
+.PHONY: transceiver-digital-hardening-rf transceiver-digital-hardening-wired transceiver-digital-rtl-checks transceiver-digital-synth-area
+transceiver-digital-hardening-rf transceiver-digital-hardening-wired: transceiver-digital-hardening-%: transceiver-digital-rtl-checks transceiver-pair-word-formal transceiver-pair-gearbox-formal transceiver-freq-count-formal
+	CHIP=$* bash projects/programmable_transceiver_platform/verification/run_digital_hardening.sh $(DIGITAL_HARDENING_STAGES)
+transceiver-digital-synth-area:
+	for c in 1 2 3; do bash projects/programmable_transceiver_platform/verification/digital_hardening/synth_area.sh $$c || exit 1; done
 # RTL checks of the blocks added for the hardened macro: registered-read FIFO equivalence,
 # frequency counter (P3-7), the AC-1 40-bit wired boundary end to end through the pad-edge host
 # link (S2/S3), the AC-1 transport CDC FIFO (any even depth, conservative counts), the IX-2 8b/10b

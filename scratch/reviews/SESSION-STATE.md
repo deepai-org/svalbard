@@ -62,16 +62,15 @@ data); whether our Run 3 slot is purchased; the email to wafer.space (14 items a
 
 ## 4. Workstreams: state and resume point
 
-**Digital** — notes `scratch/digital-timing-close/NOTES.md` (sections r6), rows DG6-1..16.
-Done: register/decode rework (cfg and macro-port diffs 0), `pt_chip.sv` generated from the conn, strap bound,
-second POR path, SPI one-flop write, in-macro clamps, new control logic (wired TX launch, CDR loop, USB FS/LS,
-monitor, LO integer-N), stub mode sim (135 checks). Regression green on commit 9211b44.
-Open: independent review of 9211b44's pipelining; flow readiness (clamp pins excluded from buffering,
-dont-touch, sta_signoff/gls on new ports, pin order); setup closure (post-synthesis ref −2.39 ns); harden with
-the pC6 hold flow; routed OCV sign-off; GLS; clock-launch staggering and per-mode power analysis (decap plan
-depends on it); timing at 3.5 V; ring-monitor readout; macro area (cells 1.404 mm², write `macro-area.md`);
-TOP-25 items (LO enables on the rf group, D-DATAOFF checks, K7 leaves, K1 enable rules); IX-12; USB HS bit
-repetition; DG6-7 questions to wired RX.
+**Digital** — notes `scratch/digital-timing-close/NOTES.md` (r8), rows DG8-1..8, SPL-7.
+One RTL, two chip configurations: `pt_digital_macro` parameter `PT_CHIP` (1 = `pt_rf`, 2 = `pt_wired`; 3 = both
+halves, module-level benches only). Fields of the other chip are not stored (register-map per-chip view, D4; `pt_rf`
+447 bits, `pt_wired` 648), `status.chip.id` at 0xFE, the other chip's CP4-1 clamps are not built. Hardening configs
+`verification/digital_hardening/{rf,wired}/config.json`. Synthesized cell area (yosys, no PnR): `pt_rf` 1.053 mm2,
+`pt_wired` 1.299, both halves 1.375; outlines at r8d density 1716 x 1256 (2.155 mm2) and 1716 x 1554 (2.666).
+Open: place and route of both configurations (hio placement for the `pt_rf` height, pin order with the tied ports),
+timing closure (r8d: worst setup -5.49 ns at ss, D2H hand-over DG8-6, applies to both), GLS, routed sign-off,
+per-mode power analysis per chip.
 
 **Chip tops (two chips)** — `integration/chips/` (`rf/` and `wired/`: `chip.conn`, `bond_map.txt`, `run.sh`;
 shared `common.conn`, `check_top.py <chip>`, `decisions.md`), `spec/chips.json`, rows SPL-1..5.

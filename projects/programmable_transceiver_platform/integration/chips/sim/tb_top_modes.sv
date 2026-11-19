@@ -33,7 +33,7 @@ module tb_top_modes;
  always @(posedge aosc) n_aosc = n_aosc + 1;
  task count_clocks; begin n_mon = 0; n_core = 0; n_aosc = 0; #4096; end endtask
  task clear_mon_fault; begin setf(`F_MONITOR_RESET__CLEAR_FAULT, 1); commit(1, "monitor clear_fault 1"); setf(`F_MONITOR_RESET__CLEAR_FAULT, 0); commit(1, "monitor clear_fault 0"); #500; end endtask
- pt_digital_macro dut(.reset_n_pad(rst_pad), .por_n(por_n), .por_bypass(1'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),
+ pt_digital_macro #(.PT_CHIP(`PT_CHIP_ID)) dut(.reset_n_pad(rst_pad), .por_n(por_n), .por_bypass(1'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),
   .spi_miso(miso), .spi_miso_oe(miso_oe), .island_en(island_en), .island_on(island_on), .island_off(island_off),
   .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_rf_rx(s_pg_rf_rx),
   .s_pg_rf_tx(s_pg_rf_tx), .s_pg_lod(s_pg_lod), .s_pg_lo(s_pg_lo), .s_pg_pll(s_pg_pll), .s_pg_conv(s_pg_conv), .s_pg_debug(s_pg_debug),

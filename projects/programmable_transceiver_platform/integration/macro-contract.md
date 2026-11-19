@@ -1,6 +1,9 @@
 # Digital macro boundary
 
-The boundary of `rtl/pt_digital_macro.sv`, the one standard-cell macro of the chip, as committed. Every analog
+The boundary of `rtl/pt_digital_macro.sv`, the standard-cell macro of each chip, as committed. One RTL and one port list
+serve both chips; parameter `PT_CHIP` (1 = `pt_rf`, 2 = `pt_wired`) selects the configuration: the register fields of the
+other chip are not stored (read 0, `spec/register-map.md` per-chip view), its CP4-1 clamps are not built and its inputs
+are ignored (tied off in that chip's conn), so its logic synthesizes away; its control ports have no consumer on the chip. Every analog
 control pin group is driven by one named, decoded macro port; `analog_cfg`, `debug_cfg` and the enable vector are
 internal to the macro. The connection of each port is in `integration/chips/{rf,wired}/chip.conn`; widths, reset values and
 encodings of the control ports are in `integration/chips/ctl_ports.txt`; register fields are in
@@ -150,7 +153,7 @@ Rules:
 | `make transceiver-top-modes` | Generated `pt_chip.sv` is current, register map against cell pins, per-mode chip simulation, clamp list, decode table |
 | `make transceiver-ctl-blocks` | Monitor, USB, wired control blocks, POR path, SPI chip-select race |
 | `make transceiver-regfile` | Generator outputs are current, register file behaviour |
-| `make transceiver-digital-hardening` | Synthesis, place and route, timing |
+| `make transceiver-digital-hardening-rf` / `-wired` | Synthesis, place and route, timing of one chip configuration (`PT_CHIP`) |
 
 Open items at this boundary are in `integration/chips/decisions.md` (D-FAULT, D-CAP, D-ATB, D-100B, D-TRIMISL).
 The working tree may hold RTL edits that are not committed; this file describes the committed macro.

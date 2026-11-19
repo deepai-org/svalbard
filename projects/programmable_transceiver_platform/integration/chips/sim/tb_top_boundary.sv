@@ -47,7 +47,7 @@ module tb_top_boundary;
  assign {s_pg_rf_rx, s_pg_rf_tx, s_pg_lod, s_pg_lo, s_pg_conv} = 5'b0;
 `endif
  // The real macro: every c_* port connects by name. Inputs this bench does not exercise are 0.
- pt_digital_macro dut(.reset_n_pad(rst_pad), .por_n(por_n), .por_bypass(1'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),
+ pt_digital_macro #(.PT_CHIP(`PT_CHIP_ID)) dut(.reset_n_pad(rst_pad), .por_n(por_n), .por_bypass(1'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),
   .spi_miso(miso), .spi_miso_oe(miso_oe), .island_en(island_en), .island_on(island_on), .island_off(island_off),
   .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_rf_rx(s_pg_rf_rx),
   .s_pg_rf_tx(s_pg_rf_tx), .s_pg_lod(s_pg_lod), .s_pg_lo(s_pg_lo), .s_pg_pll(s_pg_pll), .s_pg_conv(s_pg_conv), .s_pg_debug(s_pg_debug),

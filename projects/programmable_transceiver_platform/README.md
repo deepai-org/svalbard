@@ -52,7 +52,8 @@ Requirements with their IDs are in [`spec/interface-requirements.md`](spec/inter
   has its own pad pair and line driver. A forwarded wire clock enters on the `AUX_CLK` pad pair.
 - **Clocks (both):** two ring PLLs. The TX ring makes the host word clock and (on `pt_rf`) the converter clock
   (host_follow); the CDR ring recovers the wire clock on `pt_wired` and is the second host-clock route on `pt_rf`.
-- **Digital:** one standard-cell macro per chip from one RTL (`rtl/pt_digital_macro.sv`) with SPI, the generated register file, the
+- **Digital:** one standard-cell macro per chip from one RTL (`rtl/pt_digital_macro.sv`, parameter `PT_CHIP`: 1 = `pt_rf`,
+  2 = `pt_wired`; hardening configurations `verification/digital_hardening/{rf,wired}/`) with SPI, the generated register file, the
   control decode for every analog pin, the framed host transport, capture/playback memory, pattern
   generator/checker, frequency counters, USB FS/LS line logic and the supply/clock monitor.
 - **Infrastructure:** POR with a strap-selected bypass, bandgap and bias distribution, supply islands behind
@@ -79,7 +80,7 @@ Requirements with their IDs are in [`spec/interface-requirements.md`](spec/inter
 | Chip connectivity (every instance, pin, pad, island) | [`integration/chips/rf/chip.conn`](integration/chips/rf/chip.conn) and [`integration/chips/wired/chip.conn`](integration/chips/wired/chip.conn), both including [`common.conn`](integration/chips/common.conn); checked by `integration/chips/check_top.py <chip>`; masters in `masters.txt`, macro control ports in `ctl_ports.txt` |
 | Bond map of each chip | `integration/chips/<chip>/bond_map.txt` (all 74 sites) |
 | Chip-level structural RTL | `integration/chips/<chip>/generated/pt_chip.sv`, generated from the conn by `integration/gen_pt_chip.py` |
-| Registers | `rtl/gen/gen_regfile.py` generates `rtl/pt_regfile.sv`, the `pt_regmap_*` headers and [`spec/register-map.md`](spec/register-map.md) / `.json` from `spec/analog-architecture.json` and `spec/debug-controls.json`. Never edit the generated files |
+| Registers | One address map, per-chip view (fields of the other chip not stored, read 0; `status.chip.id`). `rtl/gen/gen_regfile.py` generates `rtl/pt_regfile.sv`, the `pt_regmap_*` headers and [`spec/register-map.md`](spec/register-map.md) / `.json` from `spec/analog-architecture.json` and `spec/debug-controls.json`. Never edit the generated files |
 | Digital/analog boundary | [`integration/macro-contract.md`](integration/macro-contract.md) |
 | Host transport | [`spec/streaming-transport-v2.md`](spec/streaming-transport-v2.md) |
 | Requirements | [`spec/interface-requirements.md`](spec/interface-requirements.md), [`spec/performance-requirements.md`](spec/performance-requirements.md) |
@@ -123,4 +124,5 @@ make transceiver-block-kldrc BLOCK=<name>   # precheck-deck KLayout DRC and ante
 ```
 
 `run.sh` rewrites `integration/chips/<chip>/generated/`; it exits non-zero while demand and staged instances remain.
-`make transceiver-digital-hardening` runs the place-and-route flow and is heavy.
+`make transceiver-digital-hardening-rf` / `-wired` run the place-and-route flow of one chip configuration and are heavy;
+`make transceiver-digital-synth-area` synthesizes both configurations for cell area.

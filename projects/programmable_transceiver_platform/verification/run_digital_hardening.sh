@@ -13,11 +13,14 @@
 #     pads    provider gf180mcu_fd_io Liberty screen for the host link (toggle-rate estimate)
 #     report  evidence JSON
 # Containers: --network none, bounded CPU/memory, OMP_NUM_THREADS=1, at most one at a time.
-# Output: scratch/digital_hardening/ (override with OUT=...).
+# Chip (required): CHIP=rf|wired selects the configuration (digital_hardening/<chip>/config.json merged over
+# digital_hardening/config.json: PT_CHIP parameter and outline) and the chip's CP4-1 clamp list.
+# Output: scratch/digital_hardening-<chip>/ (override with OUT=...).
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../../.." && pwd)
 PROJ="$ROOT/projects/programmable_transceiver_platform"
-OUT="${OUT:-$ROOT/scratch/digital_hardening}"
+CHIP="${CHIP:?CHIP=rf|wired}"
+OUT="${OUT:-$ROOT/scratch/digital_hardening-$CHIP}"
 DIGITAL_IMAGE="${SVALBARD_DIGITAL_IMAGE:-svalbard/librelane-gf180-guarded:2026.11}"
 ANALOG_IMAGE="${SVALBARD_ANALOG_IMAGE:-sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305}"
 CPUS="${CPUS:-6}"
@@ -59,6 +62,9 @@ pnr)
   # against ss_032C_3v15 (and hold against ff) directly, not a derated tt library.
   mkdir -p "$OUT/design/lib"; cp "$PROJ"/verification/digital_hardening/liberty/*.lib "$OUT/design/lib/"
   # Optional overrides (recorded in the evidence), e.g. LL_OVERRIDE='{"RT_MAX_LAYER": "Metal5"}'
+  # chip configuration (split, D10): PT_CHIP and the outline of digital_hardening/<chip>/config.json
+  python3 -c 'import json,sys;p=sys.argv[1];c=json.load(open(p));o=json.load(open(sys.argv[2]));o.pop("about",None);c.update(o);json.dump(c,open(p,"w"),indent=2)' \
+    "$OUT/design/config.json" "$PROJ/verification/digital_hardening/$CHIP/config.json"
   if [ -n "${LL_OVERRIDE:-}" ]; then
     python3 -c 'import json,sys;p=sys.argv[1];c=json.load(open(p));c.update(json.loads(sys.argv[2]));json.dump(c,open(p,"w"),indent=2)' \
       "$OUT/design/config.json" "$LL_OVERRIDE"
@@ -86,7 +92,7 @@ pnr)
     echo "GATE: a dont-touch name did not resolve (STA-0101)" >&2; gate=1; fi
   for nl in "$RUN"/*-openroad-repairdesignpostgpl-1/*.nl.v "$RUN"/*-openroad-resizertimingpostcts/*.nl.v "$RUN"/*-openroad-resizertimingpostgrt/*.nl.v "$RUN"/final/nl/*.nl.v; do
     [ -f "$nl" ] || continue
-    python3 "$PROJ/verification/digital_hardening/clamp_check.py" "$nl" > "$OUT/clamp_check.$(basename "$(dirname "$nl")").log" 2>&1 || { echo "GATE: clamp_check failed on $nl" >&2; gate=1; }
+    python3 "$PROJ/verification/digital_hardening/clamp_check.py" "$nl" --chip "$CHIP" > "$OUT/clamp_check.$(basename "$(dirname "$nl")").log" 2>&1 || { echo "GATE: clamp_check failed on $nl" >&2; gate=1; }
   done
   echo "gate_rc=$gate" >> "$OUT/librelane.log"
   if [ "$gate" -ne 0 ]; then exit 3; fi

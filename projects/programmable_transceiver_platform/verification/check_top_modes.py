@@ -62,7 +62,9 @@ def gen(work, chip):
     # CP4-1: every pin of generated/macro_clamps.txt goes through a pt_iso_and instance gated by island_on[bit] in the macro
     macro = (P/'rtl/pt_digital_macro.sv').read_text()
     clamp = {}; rtlp = ct.rtl_macro_ports(macro)
-    for expr, on in re.findall(r'pt_iso_and #\(\d+(?:,\s*\d+)?\) \w+\(\.a\((.*?)\),\s*\.on\(island_on\[(\d)\]\)', macro, re.S):
+    here = {'ON_RF': chip == 'rf', 'ON_WIRED': chip == 'wired'}       # third parameter: clamp present on this chip only
+    for present, expr, on in re.findall(r'pt_iso_and #\(\d+(?:,\s*\d+)?(?:,\s*(ON_RF|ON_WIRED))?\) \w+\(\.a\((.*?)\),\s*\.on\(island_on\[(\d)\]\)', macro, re.S):
+        if present and not here[present]: continue
         for name, hi, lo in re.findall(r'([A-Za-z_]\w*)(?:\[(\d+)(?::(\d+))?\])?', expr):
             if name not in rtlp: sys.exit(f'TOP_MODES_CHECK_FAIL: pt_iso_and input {name} is not a macro port (a clamp must be the first gate after the pin)')
             w = rtlp[name][1]
@@ -73,11 +75,9 @@ def gen(work, chip):
         if not line or line.startswith('#'): continue
         pin, _, bit = line.split(); listed.add(pin)
         if clamp.get(pin) != int(bit): bad.append(f'{pin}: clamp island_on[{clamp.get(pin)}] in the macro, list says [{bit}]')
-    # pins of the other chip's blocks are tied in this chip's conn: clamped in the macro, not listed here (phase 2: per-chip macro)
-    tied = {p for p, (k, n) in inst['digital']['pins'].items() if n in ('VSS', 'VDD')}
-    bad += [f'{p}: clamped in the macro but not in {chip}/generated/macro_clamps.txt' for p in clamp if p not in listed and p not in tied]
+    bad += [f'{p}: clamped in the macro but not in {chip}/generated/macro_clamps.txt' for p in clamp if p not in listed]
     if bad: sys.exit(f'TOP_MODES_CHECK_FAIL: pt_{chip}: CP4-1 macro clamps\n' + '\n'.join(bad[:20]))
-    print(f'pt_{chip} CP4-1: {len(clamp)} clamped input bits in the macro cover {chip}/generated/macro_clamps.txt ({len([p for p in clamp if p not in listed])} more on tied pins)')
+    print(f'pt_{chip} CP4-1: the {len(clamp)} clamped input bits of the pt_{chip} macro configuration are {chip}/generated/macro_clamps.txt')
 
 
 def run(work, rtl_dir, chip):

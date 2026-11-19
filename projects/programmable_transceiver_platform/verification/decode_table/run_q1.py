@@ -6,7 +6,9 @@ def base(rand=True):
     F = {}
     for f in FIELDS:
         F[f['name']] = random.choice(list(legal(f))) if rand and random.random() < 0.8 else default(f)
-    for n in PWR: F[n] = 1
+    for f in FIELDS:
+        if not present(f): F[f['name']] = 0              # not stored on this chip
+    for n in PWR: F[n] = 1 if present(next((f for f in FIELDS if f['name'] == n), dict(chips=['rf', 'wired']))) else 0
     for f in FIELDS:
         if f['name'].startswith('debug.pgood_override'): F[f['name']] = 0
         if f['name'].startswith(('debug.atb', 'monitor.', 'debug.dbg_obs', 'debug.host_link', 'debug.pattern', 'digital.', 'debug.freq_count')): F[f['name']] = default(f)
@@ -19,7 +21,7 @@ for _ in range(600): V.append(base())
 for f in FIELDS:                                   # every legal value of every field (<= 64 values, else walking bits + random)
     vals = list(legal(f))
     if len(vals) > 64: vals = sorted(set([0, vals[-1]] + [1 << b for b in range(f['w']) if (1 << b) <= vals[-1]] + [vals[-1] ^ (1 << b) for b in range(f['w']) if 0 <= (vals[-1] ^ (1 << b)) <= vals[-1]] + random.sample(vals, 8)))
-    if f['name'] in PWR or f['name'].startswith('debug.pgood'): continue
+    if f['name'] in PWR or f['name'].startswith('debug.pgood') or not present(f): continue
     for x in vals:
         F, D, B = base(rand=random.random() < 0.5); F[f['name']] = x
         if f['name'] == 'core.biasgen.ref_sel_fine': F['core.biasgen.ref_sel_coarse'] = 1
@@ -36,7 +38,7 @@ for (F, D, B), O in zip(V, R):
     Oi = {k: (int(v, 16) if 'x' not in v and 'z' not in v else None) for k, v in O.items()}
     E = model.expect(F, D, Oi)
     for n, w, _ in PORTS:
-        if n in model.DYNAMIC: continue
+        if n in model.DYNAMIC or n not in COMPARED: continue
         if n not in E: bad['NO MODEL ' + n] += 1; continue
         if E[n] is None: continue
         if Oi[n] != E[n]:

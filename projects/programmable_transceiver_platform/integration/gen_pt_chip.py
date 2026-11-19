@@ -74,7 +74,7 @@ def main(chip):
         if d == 'input' and not n.startswith('c_') and n in driven and w > 1:
             for i in range(w):
                 if i not in driven[n]: a(f" assign {n}[{i}] = 1'b0;   // no macro driver in the conn")
-    a(' pt_digital_macro digital(' + ',\n  '.join(', '.join(conns[i:i + 6]) for i in range(0, len(conns), 6)) + ');')
+    a(f' pt_digital_macro #(.PT_CHIP({ct.CHIPS[chip]["chip_id"]})) digital(' + ',\n  '.join(', '.join(conns[i:i + 6]) for i in range(0, len(conns), 6)) + ');')
     h = inst['host']['pins']
     a(' // Host pads: provider cells only (integration/pt_provider_io.sv); the logical supply groups are one VDD / VSS here.')
     a(' pt_host_physical host(.RESET_N(RESET_N), .SPI_SCLK(SPI_SCLK), .SPI_CS_N(SPI_CS_N), .SPI_MOSI(SPI_MOSI), .SPI_MISO(SPI_MISO),')

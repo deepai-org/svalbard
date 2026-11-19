@@ -768,7 +768,7 @@ module pt_chip(
  assign rf_tx_sample[1] = 1'b0;   // no macro driver in the conn
  assign rf_tx_sample[12] = 1'b0;   // no macro driver in the conn
  assign rf_tx_sample[13] = 1'b0;   // no macro driver in the conn
- pt_digital_macro digital(.reset_n_pad(m_reset_n_pad), .por_n(m_por_n), .por_bypass(m_por_bypass), .spi_sclk(m_spi_sclk), .spi_cs_n(m_spi_cs_n), .spi_mosi(m_spi_mosi),
+ pt_digital_macro #(.PT_CHIP(1)) digital(.reset_n_pad(m_reset_n_pad), .por_n(m_por_n), .por_bypass(m_por_bypass), .spi_sclk(m_spi_sclk), .spi_cs_n(m_spi_cs_n), .spi_mosi(m_spi_mosi),
   .spi_miso(m_spi_miso), .spi_miso_oe(m_spi_miso_oe), .host_word_clk(m_host_word_clk), .h2d_clk(m_h2d_clk), .h2d_pin(m_h2d_pin), .d2h_pin(m_d2h_pin),
   .d2h_clk_pin(m_d2h_clk_pin), .d2h_oe(m_d2h_oe), .d2h_pdrv(m_d2h_pdrv), .d2h_sl(m_d2h_sl), .ref_clk(m_ref_clk), .wire_rx_clk(m_wire_rx_clk),
   .wire_tx_clk(m_wire_tx_clk), .rf_rx_clk(m_rf_rx_clk), .rf_tx_clk(m_rf_tx_clk), .ct_wclk(m_ct_wclk), .ct_det_clk(m_ct_det_clk), .fc_src(m_fc_src),

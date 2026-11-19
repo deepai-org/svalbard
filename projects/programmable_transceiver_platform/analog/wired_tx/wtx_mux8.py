@@ -16,7 +16,7 @@ edges, so the ring's phase duty cycle does not enter.
     ENM = 0, OVP = OVN = 0: no leg conducts, loads on: both outputs at the top level (idle, both pad gates high);
     ENM = 0, OVP = OVN = 1: both legs of the conducting slice on (idle, both outputs at mid level);
     ENM = 0, EXT = 1, OVP = !DX, OVN = DX: fallback data.  While the ring runs (RUN = 1) the slices work as usual and
-      only the data comes from OVP / OVN.  When the ring does not run, EXTF = EXT & !RUN forces every X k high (B high)
+      only the data comes from OVP / OVN.  When the ring does not run, RUN = 0 forces every X k high (B high) and EXTF = EXT & !RUN
       and pulls the MAIN XT k low (window always open): all eight slices conduct in parallel, steered by OVP / OVN;
       each slice carries 1/8 of the bank current, the same average as in normal operation (ring-independent, slow:
       the eightfold pull-down takes the outputs to 0.13 V and the pad gates cross low).
@@ -24,10 +24,12 @@ edges, so the ring's phase duty cycle does not enter.
   XORed with POL (0 = de-emphasis when the POST outputs are wired with the opposite sense, 1 = same sign).
   loads: poly resistors to TOP behind a PMOS header; outputs pulled to VSS when the bank is off.
   stopped-ring interlock: four charge pumps watch the eight conduction windows on private copies of the phase
-    inputs PH k (so the detector keeps seeing the ring while EXTF forces the X k; pump j:
+    inputs PH k (an input stage with hysteresis per phase, then XE k = !PH k, XD k = PH k: a phase at mid level, or a
+    stalled ring with a small residual swing, leaves XE / XD static and no pump moves charge; the detector keeps seeing
+    the ring while RUN forces the X k; pump j:
     charge moves VDD -> A_j in window 2j and A_j -> N_j in window 2j+1, a long-channel NMOS discharges N_j; the four
     series PMOS gates of a pump include a signal and its complement, so no static state conducts).  RUN = all four
-    N_j high.  Bank enables: MAIN = EN_MAIN & (RUN | EXT), POST = EN_POST & RUN & !EXT.
+    N_j high.  Bank enables: MAIN = EN_MAIN & (RUN | EXT), POST = EN_POST & RUN & !EXT; I0 k = NAND(PH k, RUN).
   observation: RUN; AVG_P / AVG_N = MAIN_P / MAIN_N through 100 kohm (slot-width calibration by DC voltage).
 
     python3 wtx_mux8.py            # writes generated/fast/wtx_mux8.spice (schematic)
@@ -41,7 +43,8 @@ NTR = 4
 # sizes (um): (wn, wp) for gates
 P = dict(i0=(6, 6), i0x=1.0, i0b=(8, 16), i1=(20, 40), tg=(8, 16), nor=(4, 44), i2=(4, 12), i3=(28, 10), wt=36.0, wb=70.0,
          ctrim=(3.0, 1.0), wts=1.3, rl=(10.0, 3.4), rcm=(40.0, 0.8), hdr=160.0, gate=(2, 4), gdrv=(3, 6), pd=2.0, ravg=(1.0, 100.0),
-         det=dict(buf=(0.5, 1.0), sw=1.0, ca=(4.0, 2.0), cn=(4.0, 3.0), leak=(0.3, 50.0), nleak=2, sense=(2.0, 0.5), sl=0.5))
+         det=dict(buf=(0.5, 1.0), sw=1.0, ca=(4.0, 2.0), cn=(4.0, 3.0), leak=(0.3, 50.0), nleak=2, sense=(2.0, 0.5), sl=0.5,
+                 hys=((1.0, 1.8, 0.5), (0.45, 1.1, 0.5), (0.5, 1.0))))
 PORTS = ([f'PH{k}' for k in range(8)] + [f'F{k}' for k in range(8)] + [f'TR{k}_{b}' for k in range(8) for b in range(NTR)]
          + ['ENM', 'ENP', 'POL', 'EN_MAIN', 'EN_POST', 'EXT', 'OVP', 'OVN', 'RUN', 'AVG_P', 'AVG_N',
             'MAIN_P', 'MAIN_N', 'POST_P', 'POST_N', 'VDD', 'VSS'])
@@ -54,8 +57,8 @@ def fet(name, typ, d, g, s, w, l=0.28, mmax=10.0):
             f'pd={wf + 0.96:.3f}u ps={wf + 0.96:.3f}u' for i in range(nf)]
 
 
-def inv(n, a, y, wn, wp):
-    return fet(n + 'n', 'n', y, a, 'VSS', wn) + fet(n + 'p', 'p', y, a, 'VDD', wp)
+def inv(n, a, y, wn, wp, l=0.28):
+    return fet(n + 'n', 'n', y, a, 'VSS', wn, l=l) + fet(n + 'p', 'p', y, a, 'VDD', wp, l=l)
 
 
 def nand2(n, a, b, y, wn, wp):
@@ -89,8 +92,13 @@ def aoi21(n, a1, a2, b, y, wn, wp):
 
 def detector(p):
     L = []
+    h1, hk, h2 = p['hys']
     for k in range(8):
-        L += inv(f'DA{k}', f'PH{k}', f'XE{k}', *p['buf']) + inv(f'DB{k}', f'XE{k}', f'XD{k}', *p['buf'])      # XE = !PH, XD = PH
+        # input stage with hysteresis (VL 0.47-1.12 V, VH 1.63-2.33 V over tt ss ff sf fs, 2.97-3.63 V, 0-85 C):
+        # PH -> DH1 -> XH, XH -> DH2 -> XS, keeper DK: XS -> XH.  A phase at mid level, or a stalled ring with a small
+        # residual swing around it, never crosses both thresholds: XS (and XE / XD) stay static and no pump moves charge.
+        L += inv(f'DH1{k}', f'PH{k}', f'XH{k}', *h1) + inv(f'DH2{k}', f'XH{k}', f'XS{k}', *h2) + inv(f'DK{k}', f'XS{k}', f'XH{k}', *hk)
+        L += inv(f'DA{k}', f'XS{k}', f'XE{k}', *p['buf']) + inv(f'DB{k}', f'XE{k}', f'XD{k}', *p['buf'])      # XE = !PH, XD = PH
     for j in range(4):
         a, b, c = 2 * j, 2 * j + 1, (2 * j + 2) % 8
         L += fet(f'DP1{j}', 'p', f'DM1{j}', f'XE{a}', 'VDD', p['sw']) + fet(f'DP2{j}', 'p', f'DA{j}', f'XD{b}', f'DM1{j}', p['sw'])
@@ -112,8 +120,15 @@ def netlist(par=None, name='wtx_mux8', interlock=True):
     g = p['gate']
     L = [f'.subckt {name} ' + ' '.join(PORTS)]
     L += inv('IPOL', 'POL', 'POLB', 1, 2) + inv('IEXT', 'EXT', 'EXTB', 1, 2)
-    # EXTF = EXT & !RUN: the static (all slices parallel) path is used only when the ring does not run
-    L += nor2('GXF', 'EXTB', 'RUN', 'EXTF', 2, 8) + inv('GXFI', 'EXTF', 'EXTFB', 4, 8)
+    # EXTF = EXT & !RUN: the static (all slices parallel) path is used only when the ring does not run.
+    # RUNI = RUN (copy from the detector's RUNB): second input of every I0; RUN = 0 holds every X k high (all slices
+    # off unless EXTF opens the windows) and keeps the phase-input chain out of its crowbar region whatever the
+    # phase levels are (a phase at mid level otherwise draws about 1 mA per slice in I0 / I0b).
+    L += nor2('GXF', 'EXTB', 'RUN', 'EXTF', 2, 8)
+    if interlock:
+        L += inv('GXFI', 'RUNB', 'RUNI', 4, 8)
+    else:
+        L += ['RRUNI RUNI VDD 1']
     # block-level enables (static CMOS)
     if interlock:
         L += detector(p['det'])
@@ -126,7 +141,7 @@ def netlist(par=None, name='wtx_mux8', interlock=True):
         L += inv('GEMa', 'EN_MAIN', 'ENMXb', 1, 2) + inv('GEM3', 'ENMXb', 'ENMI', 4, 8) + inv('GEQa', 'EN_POST', 'ENQXb', 1, 2) + inv('GEQ2', 'ENQXb', 'ENQI', 4, 8)
         L += ['RRUN RUN VDD 1']
     # ENMI / ENQI: internal bank enables.  tgM = ENMI & !EXT, extM = ENMI & EXT
-    L += nand2('GTG', 'ENMI', 'EXTFB', 'TGMB', 2, 4) + inv('GTGI', 'TGMB', 'TGM', 4, 8)
+    L += nand2('GTG', 'ENMI', 'RUNI', 'TGMB', 2, 4) + inv('GTGI', 'TGMB', 'TGM', 4, 8)
     L += nand2('GXM', 'ENMI', 'EXTF', 'EXTMB', 2, 4) + inv('GXMI', 'EXTMB', 'EXTM', 4, 8)
     L += inv('GQB', 'ENQI', 'ENQIB', 4, 8)
     L += bank('M', 'ENMI', 'MAIN_P', 'MAIN_N', p) + bank('Q', 'ENQI', 'POST_P', 'POST_N', p)
@@ -135,8 +150,8 @@ def netlist(par=None, name='wtx_mux8', interlock=True):
     for k in range(8):
         km = (k - 1) % 8
         # phase path: Y = NAND(PH, EXTB), PH next to the output
-        L += fet(f'I0na_{k}', 'n', f'Y{k}', f'PH{k}', f'I0m_{k}', p['i0'][0]) + fet(f'I0nb_{k}', 'n', f'I0m_{k}', 'EXTFB', 'VSS', p['i0'][0])
-        L += fet(f'I0pa_{k}', 'p', f'Y{k}', f'PH{k}', 'VDD', p['i0'][1]) + fet(f'I0pb_{k}', 'p', f'Y{k}', 'EXTFB', 'VDD', p['i0x'])
+        L += fet(f'I0na_{k}', 'n', f'Y{k}', f'PH{k}', f'I0m_{k}', p['i0'][0]) + fet(f'I0nb_{k}', 'n', f'I0m_{k}', 'RUNI', 'VSS', p['i0'][0])
+        L += fet(f'I0pa_{k}', 'p', f'Y{k}', f'PH{k}', 'VDD', p['i0'][1]) + fet(f'I0pb_{k}', 'p', f'Y{k}', 'RUNI', 'VDD', p['i0x'])
         for b in range(NTR):
             L += fet(f'TS{b}_{k}', 'n', f'Y{k}', f'TR{k}_{b}', f'YC{b}_{k}', p['wts'] * 2 ** b)
             L += fet(f'TC{b}_{k}', 'n', 'VSS', f'YC{b}_{k}', 'VSS', p['ctrim'][0] * 2 ** b, l=p['ctrim'][1])

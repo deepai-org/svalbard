@@ -22,8 +22,9 @@ Vertical wiring in the seam: Metal3 from pins above (they never meet each other:
 buffer's PS track to clear them), Metal5 from ser8d pins below.
 Phase nets: the ring sees, per phase, the block pin (Metal5 pad under the mux PH k pin), a Metal3 stub of the same length
 up to the mux pin and the first buffer inverter on that stub: identical geometry for all eight.
-Pins: PH k as above; D0..D39, WORD_CLK40: Metal5 on the bottom edge (ser8d's own port trunks continued down); trim bits:
-Metal3 pads at the bottom of the seam straight below the mux pins (NOT on the block boundary, see REPORT); control ports
+Pins: PH k as above; D0..D39, WORD_CLK40: Metal5 on the bottom edge (ser8d's own port trunks continued down); trim bits
+TR k_b: the mux's Metal4 pins on its right side, continued under the right-hand supply bars to the block edge at the free
+top right corner (x = end of the used outline, mux rows y); control ports
 (codes, statics, IBIAS, ATB_*, TX_RUN, WTX_EXT_DATA): Metal2 on the left edge (lowest-x pins) or the right edge, split
 where the fewest Metal2 tracks result; MAIN_BIAS / POST_BIAS: Metal4 on the top edge over the aux cell; TAP_P / TAP_N:
 Metal4 on the left edge near the top; MAIN / POST: the mux's risers on the top edge; supplies: Metal5 bars left of the
@@ -216,11 +217,8 @@ def build(work=None, bare=False):
             pins[n] = ('metal2', 0.6 if side == 'L' else s(Wb - 0.6), y)
         else:
             g.label(n, 'metal2', lo + 0.5, y)
-    for n in trim:                         # trim bits: pins at the bottom of the seam straight below the mux pins
-        x = top_t[n][0]
-        g.rect('metal3', x - 0.2, Y0 + 1.2, x + 0.2, Ym + 0.4)
-        m3.append(x)
-        pins[n] = ('metal3', x, s(Y0 + 1.6))
+    if trim:
+        raise RuntimeError('mux trim pins on the bottom edge: this generator expects them on the mux right side')
     # ------------------------------------------------------------------ supplies
     em = {}
     xr0 = s(XM + MR['size_um'][0] + 2.0)                   # right-hand bars: directly right of the mux
@@ -406,18 +404,37 @@ def build(work=None, bare=False):
         if n in ('VDD', 'VSS'):
             for a, b in xbar[n]:
                 g.label(n, 'metal5', s((a + b) / 2), s(Yt - 20.0), i + 1)
+        elif n.startswith('TR'):
+            continue                       # labelled with the trim wires below
         else:
             layer, x, y = pins[n]
             g.label(n, layer, x, y, i + 1)
-    L.run_tcl(work, NAME, g.tcl(NAME, extra=inst))
     xk = s(xbar['VSS'][1][1] + 0.5)                        # the block's upper part ends here: the top right corner is not used
+    # ------------------------------------------------------------------ trim bits: the mux's Metal4 pins on its right side, continued
+    #                                                                    under the right-hand Metal5 bars to the block edge at the free corner
+    trims = {}
+    for port, net in cn['wtx_mux8'].items():
+        if not port.startswith('TR'):
+            continue
+        (layer, x, y), = MR['pins'][port]
+        if layer != 'metal4':
+            raise RuntimeError(f'mux trim pin {port} is not on Metal4')
+        xa_, ya_ = s(XM + x), s(Ym + y)
+        g.rect('metal4', xa_ - 0.2, ya_ - 0.2, xk, ya_ + 0.2)
+        pins[net] = ('metal4', s(xk - 0.6), ya_)
+        trims[net] = dict(y=ya_, metal4_um=round(xk - xa_, 1))
+    for i, n in enumerate(T.PORTS):
+        if n.startswith('TR'):
+            layer, x, y = pins[n]
+            g.label(n, layer, x, y, i + 1)
+    L.run_tcl(work, NAME, g.tcl(NAME, extra=inst))
     poly = [[0, 0], [Wb, 0], [Wb, Ym], [xk, Ym], [xk, Yt], [0, Yt]]
     res = dict(size_um=[Wb, Yt], bbox_area_um2=round(Wb * Yt, 1), used_polygon=poly, used_area_um2=round(Wb * Ym + xk * (Yt - Ym), 1),
                free_corner=dict(box=[xk, Ym, Wb, Yt], area_um2=round((Wb - xk) * (Yt - Ym), 1)),
                seam_um=[Y0, Ym], zones_y=dict(B=yB0, PS=yP0, T=yT0, vss_rail=[yvs, s(yvs + RAIL_VSS)], vdd_rail=[yvd, s(yvd + RAIL_VDD)], buffers=[by0, s(by0 + brow.top)], ph_pins=ypin),
                tracks=dict(F_and_SERQ=nF, PS=nP, metal2=n2), buffer_cell_um=[round(brow.width, 2), round(brow.top, 2)], mux_origin=[XM, Ym], aux_origin=[s(XA - 1.9), Ym],
                ph=tab, decap=dict(fingers=ndec, rows=nrow, per_row=nfin, w=d['w'], l=d['l'], box=[dec_x0, s(Ym + 1.0), dec_x1, dec_y1]),
-               pins={n: list(v) for n, v in pins.items()}, supply_bars=xbar, bar_y=[yT0, Yt], em_cuts=em, mux_vss_necks_x=necks, rail_stitches=nst,
+               pins={n: list(v) for n, v in pins.items()}, trim_wires=trims, supply_bars=xbar, bar_y=[yT0, Yt], em_cuts=em, mux_vss_necks_x=necks, rail_stitches=nst,
                f_wires_um={n: round(m4nets[n][1] - m4nets[n][0], 1) for n in m4nets}, ser_straps_in_rails={k: len(v) for k, v in ext.items()},
                header_strap=dict(y=[yh0, s(Yt - 0.2)], left_end_x=xl_end, right_start_x=xr_start), ser_trunks={n: DC[p_]['lo'] for n, p_ in down_pins.items()},
                rail_holes=holes, vss_metal2_at_hole_um=round(yhole - yvs, 2), exits={n: v[2] for n, v in m2nets.items() if v[2]},
@@ -433,7 +450,7 @@ def reference():
 
 def negatives(sch):
     """references that must NOT match: two phases swapped at the mux, stream rotation off by one, OVP / OVN swapped at the mux,
-    the outputs of the phase buffers 0 and 1 swapped at ser8d."""
+    the outputs of the phase buffers 0 and 1 swapped at ser8d, two trim pins (TR6_0 / TR7_3, right-side Metal4) swapped at the mux."""
     xm = next(l for l in sch.splitlines() if l.startswith('XMUX '))
     tk = xm.split()
     a = list(tk)
@@ -447,8 +464,12 @@ def negatives(sch):
     d = xs.split()
     i0 = d.index('PS0')
     d[i0], d[i0 + 1] = d[i0 + 1], d[i0]
+    e = list(tk)
+    i0, i1 = mux8.PORTS.index('TR6_0') + 1, mux8.PORTS.index('TR7_3') + 1
+    e[i0], e[i1] = e[i1], e[i0]
     return {'neg_ph0_ph1_swapped_at_mux': sch.replace(xm, ' '.join(a)), 'neg_stream_rotation_plus_one': sch.replace(xm, ' '.join(b)),
-            'neg_ovp_ovn_swapped_at_mux': sch.replace(xm, ' '.join(c)), 'neg_buffer_outputs_ps0_ps1_swapped_at_ser8d': sch.replace(xs, ' '.join(d))}
+            'neg_ovp_ovn_swapped_at_mux': sch.replace(xm, ' '.join(c)), 'neg_buffer_outputs_ps0_ps1_swapped_at_ser8d': sch.replace(xs, ' '.join(d)),
+            'neg_trim_pins_tr6_0_tr7_3_swapped_at_mux': sch.replace(xm, ' '.join(e))}
 
 
 def cval(x):

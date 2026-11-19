@@ -16,14 +16,18 @@ Floorplan (bottom = phase / stream edge, top = pad edge); all device sizes from 
               Metal1 below, the four output buses on Metal5 over / above the fingers (order MAIN_N, MAIN_P, POST_P, POST_N)
       preQ    POST bank pre-driver: I3, I2, TG + keeper, 2 x NOR                             (row flipped)
       preM    MAIN bank pre-driver, + the EXT pull-down of XT; TGM / TGMB / ENMI / EXTM run through
-      in      I0 = NAND(PH, EXTFB), I0b, I1, stream gates U / V (AOI21); ENM / OVP / OVN / EXTFB run through   (flipped)
-      gate    POST stream gating (FB, F xor POL, UP / VP) and the run detector's inverters DA, DB at the PH pin column
+      in      I0 = NAND(PH, RUNI), I0b, I1, stream gates U / V (AOI21); ENM / OVP / OVN / RUNI run through   (flipped)
+      gate    POST stream gating (FB, F xor POL, UP / VP) and the run detector's input stage at the PH pin column
+              (hysteresis DH1 / DK / DH2, then DA -> XE, DB -> XD)
       trim    NMOS-only strip: 4-bit trim switches and MOS caps on Y                         (flipped; no well, one rail)
     Rows are compiled by XRow (column description and geometry of timing's compact.Row, plus shared tracks, through
     tracks, per-gate channel length, NMOS-only strips, no edge ports); inter-row nets are Metal3 columns over the cells.
     Only ring nets leave a slice sideways: B (to the previous phase's stack), UP / VP (previous phase's POST data): Metal4
     tracks of the SAME length for every phase (two slice pitches); and XE / XD (detector) on 16 Metal4 tracks over the
-    trim strip / gate row, all of the same full length, to the pump chains in the control block.
+    trim strip / gate row, all of the same full length, to the pump chains in the control block; trim bits TR k_b on
+    32 Metal4 tracks over the gate / in rows (bit b of the slice at position p on track 8 b + p, pitch 0.72 um) from the
+    slice's TR b column to the RIGHT edge of the mux: the trim pins are on the right side (Metal4), all other signal
+    pins on the bottom edge (Metal3).
   Control block (class Ctl, left): rows aligned with the slice rows; detector (pump switch chains, MOS caps, sense, RUN),
     enable logic, header-gate inverters, off-state pull-downs under the bus ends; the leak devices are four vertical
     diffusion lines under two 50 um poly plates on VDD in the column left of it.
@@ -925,6 +929,7 @@ def check(work, cell, sch_text, sch_cell=None, lvs=True):
 # ------------------------------------------------------------------------------------------------ slice rows (revision 3)
 NTR = mux8.NTR
 XP = 0.84                     # pitch of the detector's XE / XD Metal4 tracks
+TRP = 0.72                    # pitch of the trim Metal4 tracks (Metal4 0.4 wide, 0.32 apart)
 TRIM_WN = 6.0                 # finger width limit of the trim strip (4.0 does not fit the slice width)
 
 
@@ -964,9 +969,14 @@ def row_gate(P, min_width=0.0):
     gw = P['gate']
     WN, WP = gw
     cols, net = [], []
-    for pre, a, y in (('da', 'PH', 'XE'), ('db', 'XE', 'XD')):      # at the left end, under I0: one short PH column
-        c, n = g_inv(pre, a, y, *P['det']['buf'], WN, WP)
-        join(cols, c)
+    # at the left end, under I0 (one short PH column): run detector input stage with hysteresis DH1 PH -> XH, keeper
+    # DK XS -> XH, DH2 XH -> XS, then DA XS -> XE, DB XE -> XD
+    # (single-finger inverters; every second one mirrored so that neighbours share an output or a rail contact)
+    h1, hk, h2 = P['det']['hys']
+    for pre, a, y, sz, rev in (('dh1', 'PH', 'XH', h1, 0), ('dk', 'XS', 'XH', hk, 1), ('dh2', 'XH', 'XS', h2, 0),
+                               ('da', 'XS', 'XE', P['det']['buf'], 1), ('db', 'XE', 'XD', P['det']['buf'], 0)):
+        c, n = g_inv(pre, a, y, sz[0], sz[1], WN, WP, *sz[2:])
+        join(cols, c[::-1] if rev else c)
         net += n
     for kind, pre, *pins in (('i', 'gf', 'F', 'FB'), ('n', 'gx1', 'F', 'POLB', 'N1'), ('n', 'gx2', 'FB', 'POL', 'N2'),
                              ('n', 'gx3', 'N1', 'N2', 'FP'), ('i', 'gx4', 'FP', 'FPB'),
@@ -974,17 +984,17 @@ def row_gate(P, min_width=0.0):
         c, n = (g_inv if kind == 'i' else g_nand2)(pre, *pins, *gw, WN, WP)
         join(cols, c)
         net += n
-    tr = dict(F=0, UPO=0, VPO=0, FB=1, FPB=1, N1=2, N2=3, FP=3, ENP=4, POL=5, POLB=6, PH=3, XE=2, XD=3)
+    tr = dict(F=0, UPO=0, VPO=0, FB=1, FPB=1, N1=2, N2=3, FP=3, ENP=4, POL=5, POLB=6, PH=3, XH=0, XS=1, XE=2, XD=3)
     return XRow('gate', cols, WN, WP, through=['ENP', 'POL', 'POLB'], min_width=min_width, tracks=tr), net
 
 
 def row_in(P, min_width=0.0):
-    """phase input chain I0 (NAND PH, EXTFB), I0b, I1 and the MAIN stream gates U / V (AOI21)."""
+    """phase input chain I0 (NAND PH, RUNI), I0b, I1 and the MAIN stream gates U / V (AOI21)."""
     WN, WP = 4.0, 8.0
     if P['gdrv'][0] > WN or P['gdrv'][1] > WP:
         raise ValueError('gdrv finger wider than the row')
     cols, net = [], []
-    c, n = g_nand2('i0', 'PH', 'EXTFB', 'Y', P['i0'][0], P['i0'][1], WN, WP, wpb=P['i0x'])
+    c, n = g_nand2('i0', 'PH', 'RUNI', 'Y', P['i0'][0], P['i0'][1], WN, WP, wpb=P['i0x'])
     join(cols, c)
     net += n
     if not any(l.split()[0] == 'Xi0na1' for l in n):
@@ -997,8 +1007,8 @@ def row_in(P, min_width=0.0):
         c, n = g_aoi21(pre, a1, 'ENM', b, y, *P['gdrv'])
         join(cols, c)
         net += n
-    tr = dict(ENM=0, OVP=1, OVN=2, EXTFB=3, i0m=4, gum=4, gvm=4, PH=5, X=5, F=5, FB=5, Y=6, UO=6, VO=6, Z=7, guz=7, gvz=7)
-    return XRow('in', cols, WN, WP, through=['ENM', 'OVP', 'OVN', 'EXTFB'], min_width=min_width, tracks=tr), net
+    tr = dict(ENM=0, OVP=1, OVN=2, RUNI=3, i0m=4, gum=4, gvm=4, PH=5, X=5, F=5, FB=5, Y=6, UO=6, VO=6, Z=7, guz=7, gvz=7)
+    return XRow('in', cols, WN, WP, through=['ENM', 'OVP', 'OVN', 'RUNI'], min_width=min_width, tracks=tr), net
 
 
 def row_pre(P, tag, min_width=0.0):
@@ -1099,6 +1109,20 @@ class Slice(RBlock):
         self.det_y = {'XE': s(yg - 0.5 - 7 * XP), 'XD': s(yg + RAIL_W + 1.1)}
         if self.det_y['XE'] < 0.6:
             raise ValueError('no room for the XE tracks over the trim strip')
+        # trim tracks (Metal4, drawn by the top over the gate / in rows): bit b of the slice at position p on
+        # tr_ys[8 b + p], from the slice's TR b column to the right edge of the mux (trim pins on the right side)
+        # (pitch TRP; clear of the Metal2-5 VDD via stacks on the in row's rail and below the stacks on the preM VSS rail)
+        y_in, y_pm = self.rows['in'][1], self.rows['preM'][1]
+        lo_bad, hi_bad = y_in + 0.05 - 0.28 - 0.2, y_in + 0.55 + 0.28 + 0.2
+        ys_, y = [], s(self.det_y['XD'] + 7 * XP + 1.2)
+        while len(ys_) < 32:
+            if y + 0.2 > y_pm + 0.05 - 0.28:
+                raise ValueError('no room for the 32 trim tracks below the preM VSS rail stacks')
+            if not (lo_bad < y < hi_bad):
+                ys_.append(s(y))
+            y += TRP
+        self.tr_ys = ys_
+        self.tr_y0 = ys_[0]
         self.route()
         self.finish()
         self.rail_m2()
@@ -1139,7 +1163,7 @@ class Slice(RBlock):
         c('XE', [('gate', 'XE')], det('XE'))
         c('XD', [('gate', 'XD')], det('XD'))
         for b in range(NTR):
-            c(f'TR{b}', [('trim', f'TR{b}')], (0.2,))
+            c(f'TR{b}', [('trim', f'TR{b}')], (self.tr_ys[8 * b], self.tr_ys[8 * b + 7]))
 
 
 # ------------------------------------------------------------------------------------------------ resistor PCells
@@ -1187,7 +1211,7 @@ class Ctl(RBlock):
       trim strip   detector MOS caps CN j / CA j
       gate row     the four pump switch chains (series PMOS; gates XE / XD arrive on the Metal4 detector tracks)
       in row       sense inverters, RUN logic, POLB
-      preM row     EXTB, EXTF / EXTFB, RXB, ENM0
+      preM row     EXTB, EXTF, RUNI (= RUN, from RUNB), RXB, ENM0
       preQ row     bank enables ENMI / ENQI / ENQIB, TGM / TGMB, EXTM, header-gate inverters ENBM / ENBQ
       above        off-state pull-downs of the four outputs under the bus ends
       left column  the leak devices (nleak x 0.3 / 50 um in series per pump, vertical, common poly plates on VDD).
@@ -1269,12 +1293,12 @@ class Ctl(RBlock):
                 row('in', [sense[0], NR('DR01', 'DRB0', 'DRB1', 'DR01', 4.0, 8.0), sense[1],
                            ND('DRN', 'DR01', 'DR23', 'RUNB', 4.0, 8.0), I('DRI', 'RUNB', 'RUN', 4.0, 8.0), sense[2],
                            NR('DR23', 'DRB2', 'DRB3', 'DR23', 4.0, 8.0), sense[3], I('IPOL', 'POL', 'POLB', 4.0, 8.0)], 4.0, 8.0),      # order: four free tracks only
-                row('preM', [I('IEXT', 'EXT', 'EXTB', 8.0, 12.0), NR('GXF', 'EXTB', 'RUN', 'EXTF', 8.0, 12.0), I('GXFI', 'EXTF', 'EXTFB', 8.0, 12.0),
+                row('preM', [I('IEXT', 'EXT', 'EXTB', 8.0, 12.0), NR('GXF', 'EXTB', 'RUN', 'EXTF', 8.0, 12.0), I('GXFI', 'RUNB', 'RUNI', 8.0, 12.0),
                              NR('GRE', 'RUN', 'EXT', 'RXB', 8.0, 12.0), I('GEMI', 'EN_MAIN', 'ENMAINB', 8.0, 12.0),
                              NR('GEM', 'RXB', 'ENMAINB', 'ENM0', 8.0, 12.0)], 8.0, 12.0),
                 row('preQ', [I('IEM', 'ENMI', 'ENBM', 8.0, 12.0), I('IEQ', 'ENQI', 'ENBQ', 8.0, 12.0),
                              I('GEM2', 'ENM0', 'ENMIB', 8.0, 12.0), I('GEM3', 'ENMIB', 'ENMI', 8.0, 12.0),
-                             ND('GTG', 'ENMI', 'EXTFB', 'TGMB', 8.0, 12.0), I('GTGI', 'TGMB', 'TGM', 8.0, 12.0),
+                             ND('GTG', 'ENMI', 'RUNI', 'TGMB', 8.0, 12.0), I('GTGI', 'TGMB', 'TGM', 8.0, 12.0),
                              ND('GXM', 'ENMI', 'EXTF', 'EXTMB', 8.0, 12.0), I('GXMI', 'EXTMB', 'EXTM', 8.0, 12.0),
                              g_nand3('geq', 'EN_POST', 'RUN', 'EXTB', 'ENQN', d['GEQa'], d['GEQd']), I('GEQ2', 'ENQN', 'ENQI', 8.0, 12.0),
                              I('GQB', 'ENQI', 'ENQIB', 8.0, 12.0)], 8.0, 12.0)]
@@ -1352,8 +1376,9 @@ class Ctl(RBlock):
             self.g.via(xb, yj, 3, 4)
         for n in ('TGM', 'TGMB', 'EXTM', 'ENMI'):
             c(n, [('preQ', n), ('preM', n)])
-        link('EXTFB', ('in', 'EXTFB'), ('preM', 'EXTFB'))
-        link('EXTFB_Q', ('in', 'EXTFB'), ('preQ', 'EXTFB'))
+        link('RUNI', ('in', 'RUNI'), ('preM', 'RUNI'))
+        link('RUNI_Q', ('in', 'RUNI'), ('preQ', 'RUNI'))
+        link('RUNB', ('in', 'RUNB'), ('preM', 'RUNB'))
         for n in ('EXTB', 'EXTF', 'ENM0'):
             link(n, ('preM', n), ('preQ', n))
         link('POLB', ('in', 'POLB'), ('gate', 'POLB'))
@@ -1697,9 +1722,18 @@ def build_top(P=None, work=None, checks=True):
     g.rect('metal1', xt - 0.19, yv + 0.1, xt + 0.19, yv + RAIL_W - 0.1)
     g.rect('via1', xt - 0.13, yv + 0.17, xt + 0.13, yv + RAIL_W - 0.17)
     g.rect('metal1', xe + 2.6 + 1.265, yv, xe + 6.1 - 1.265, yv + RAIL_W)      # ring to ring (Metal1; the rings do not overlap)
+    # ---- trim bits: Metal4 tracks from each slice's TR b column to the right edge (pins on the right side)
+    xedge = s(xe + RIGHT_W)
+    for p_, k in enumerate(ORDER):
+        for b in range(NTR):
+            xc, y = s(xs(p_) + sl.pin[f'TR{b}'][0]), sl.tr_ys[8 * b + p_]
+            g.rect('metal4', xc - 0.2, y - 0.2, xedge, y + 0.2)
+            g.via(xc, y, 3, 4)
+            ports[f'TR{k}_{b}'] = ('metal4', s(xedge - 0.2), y)
+            geo.setdefault('trim_track_um', {})[f'TR{k}_{b}'] = round(xedge - xc, 1)
     # ---- ports (order of wtx_mux8.PORTS)
     for p_, k in enumerate(ORDER):
-        for n, name in [('PH', f'PH{k}'), ('F', f'F{k}')] + [(f'TR{b}', f'TR{k}_{b}') for b in range(NTR)]:
+        for n, name in (('PH', f'PH{k}'), ('F', f'F{k}')):
             ports[name] = ('metal3', xs(p_) + sl.pin[n][0], 0.2)
     for n in ('ENM', 'ENP', 'POL', 'EN_MAIN', 'EN_POST', 'EXT', 'OVP', 'OVN', 'RUN'):
         ports[n] = ('metal3', LEAK_W + ctl.pin[n][0], 0.2)
@@ -1746,7 +1780,7 @@ def cap_table(path, sep='/'):
         per[n] = [round(tot.get(f'{n}{k}', 0.0), 2) for k in range(8)]
     out['per_slice'] = per
     out['per_slice_min_max'] = {n: [min(v), max(v)] for n, v in per.items()}
-    for n in ('ENM', 'ENP', 'OVP', 'OVN', 'EXTFB', 'TGM', 'TGMB', 'EXTM', 'ENMI', 'ENQI', 'ENQIB', 'ENBM', 'ENBQ', 'POLB'):
+    for n in ('ENM', 'ENP', 'OVP', 'OVN', 'RUNI', 'TGM', 'TGMB', 'EXTM', 'ENMI', 'ENQI', 'ENQIB', 'ENBM', 'ENBQ', 'POLB'):
         out[n] = round(tot.get(n, 0.0), 1)
     for j in range(4):
         out[f'DA{j}'], out[f'DN{j}'] = round(tot.get(f'DA{j}', 0.0), 1), round(tot.get(f'DN{j}', 0.0), 1)
@@ -1823,7 +1857,8 @@ def negatives(sch):
     return {'neg_finger_wrong_output': sub('XMPM_3_0 MAIN_N APM3 SM3', 'XMPM_3_0 MAIN_P APM3 SM3'),
             'neg_slice_inputs_swapped': sub('XGU_2na1_0 U2 F2 ', 'XGU_2na1_0 U2 F3 ').replace('XGU_3na1_0 U3 F3 ', 'XGU_3na1_0 U3 F2 ', 1),
             'neg_device_width': sub(l0, l0.replace(f' w={w0}u', f' w={float(w0) * 1.1:.3f}u')),
-            'neg_trim_bits_swapped': sub('XTS0_5_0 Y5 TR5_0 ', 'XTS0_5_0 Y5 TR5_1 ').replace('XTS1_5_0 Y5 TR5_1 ', 'XTS1_5_0 Y5 TR5_0 ', 1)}
+            'neg_trim_bits_swapped': sub('XTS0_5_0 Y5 TR5_0 ', 'XTS0_5_0 Y5 TR5_1 ').replace('XTS1_5_0 Y5 TR5_1 ', 'XTS1_5_0 Y5 TR5_0 ', 1),
+            'neg_detector_keeper3_from_xe3': sub('XDK3n_0 XH3 XS3 ', 'XDK3n_0 XH3 XE3 ').replace('XDK3p_0 XH3 XS3 ', 'XDK3p_0 XH3 XE3 ', 1)}
 
 
 def export_gds(work, cell=TOP):

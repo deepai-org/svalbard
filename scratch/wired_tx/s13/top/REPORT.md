@@ -1,30 +1,32 @@
-# pt_wiredtx8 block top layout, pass 2: state 2026-11-19
+# pt_wiredtx8 block top layout: state 2026-11-19 (session 14, trim pins on the mux's right side)
 
-Generator `analog/wired_tx/pt_wiredtx8_layout.py`. Reference: `wtx8_top.netlist()`, which includes `XPB wtx8_phbuf`, the PS nets, FROT = 2, and `XDEC wtx8_decap` with n = 686 (the generator wrote that value). Children come from `generated/fast`:
-- `wtx_ser8d` was read only and not rebuilt.
-- `wtx_mux8` and `wtx8_aux` were rebuilt today (see section 8).
+Generator `analog/wired_tx/pt_wiredtx8_layout.py`. Reference: `wtx8_top.netlist()`, which includes `XPB wtx8_phbuf`, the PS nets, FROT = 2, and `XDEC wtx8_decap` with n = 686. Children:
+- `wtx_ser8d`: read only (generated/fast), not rebuilt.
+- `wtx_mux8`: rebuilt in session 14 (interlock detector with hysteresis input stage, I0 gated by RUN, trim pins on its right side; `s13/mux3/REPORT.md`), from `s13/mux3/build`.
+- `wtx8_aux`: unchanged (pass-2 build).
 
-I ran every check below on the final GDS read back from disk. Nothing is committed.
+Every check below was run on the final GDS read back from disk (`top/verify`). Nothing is committed.
 
 ## 1. Outline, area, seam
 
 | part | um | um2 |
 |---|---|---|
-| **bounding box** | **744.12 x 400.56** | **298065** (0.298 mm2; pass 1: 350674) |
-| used outline (L shape, the top right corner is not part of the block) | (0,0) (744.12,0) (744.12,236.12) (598.7,236.12) (598.7,400.56) (0,400.56) | **274152** |
+| **bounding box** | **744.12 x 400.56** | **298065** (0.298 mm2) |
+| used outline (L shape, the top right corner is not part of the block) | (0,0) (744.12,0) (744.12,236.12) (598.7,236.12) (598.7,400.56) (0,400.56) | **274152** (unchanged) |
 | free top right corner | x 598.7..744.12, y 236.12..400.56 | 23913 |
 | wtx_ser8d (bottom) | 744.12 x 197.68 | 147098 |
-| **seam** (all top-level signal wiring, rails, phase buffers) | **744.12 x 38.44** (y 197.68..236.12; pass 1: 110.14) | 28604 |
+| **seam** (all top-level signal wiring, rails, phase buffers) | **744.12 x 38.44** (y 197.68..236.12) | 28604 |
 | wtx_mux8, origin (242.1, 236.12) | 324.6 x 164.44 | 53377 |
 | wtx8_aux side cell, origin (171.3, 236.12) | as the aux report | |
 | decap: 14 rows x 49 = 686 NMOS 8 / 2 um, box x 28.0..169.3, y 237.12..390.56 | | 10976 of gate |
 | supply bars (Metal5), y 214.02..400.56 | VSS 0.5..12.5 and 584.2..598.2; VDD 14.0..26.0 and 568.7..582.7 | |
+| trim wires TR0_0..TR7_3 (Metal4, 0.4 um, y 255.0..278.76, x 566.7..598.7) | from the mux's right edge under the right-hand Metal5 bars to the block edge at the free corner, 32.2 um each | |
 
 The seam is 38.44 um, inside the 40 um limit:
 
 ```
  y um
- 236.12          mux / aux bottom edge (their signal pins: Metal3)
+ 236.12          mux / aux bottom edge (their signal pins: Metal3; the mux's trim pins are on its right side, not here)
  229.52..234.52  VDD rail, Metal4 || Metal2, 5 um
  221.42..230.12  phase buffers wtx8_phbuf (cell 9.92 x 8.7 um): cell VDD rail on the VDD rail's lower edge, cell VSS rail in the VSS rail
  214.02..228.52  VSS rail, Metal4 || Metal2, 14.5 um (over each buffer the Metal2 stops 8.0 um up; Metal4 is continuous)
@@ -34,27 +36,24 @@ The seam is 38.44 um, inside the 40 um limit:
  197.68          top edge of wtx_ser8d
 ```
 
-What changed from the WIP layout to reach this:
-- The buffers moved out of zone B into the rail band.
-- The Metal2 rail is cut only above each buffer cell.
-- The control ports now leave on the left or the right edge, whichever gives fewer Metal2 tracks (31 down to 18). The Metal2 tracks pass under the mux.
-- The gap above ser8d went from 2.4 to 1.0 um.
+How the seam fits: the buffers sit in the rail band; the Metal2 rail is cut only above each buffer cell; the control ports leave on the left or the right edge, whichever gives fewer Metal2 tracks (18), and the Metal2 tracks pass under the mux; the gap above ser8d is 1.0 um. The trim bits no longer enter the seam (section 5).
 
 ## 2. Checks on the final GDS
 
-GDS: `generated/fast/pt_wiredtx8.gds` (sha256:9414183aeff017d913069bf08c9dd7638116edda477dbe7f410ac4f9f1eade82). It was exported with the analog image and read back in the fresh directory `top/verify`.
+GDS: `s13/top/out/pt_wiredtx8.gds` (sha256:d595e0e8a523cd6fc9c3ebfe089f791b3484537b70f8f4acf1295ab9e160864a), exported with the analog image and read back in the fresh directory `top/verify`; copied unchanged to `generated/fast/pt_wiredtx8.gds` (see section 7).
 
 | check | result |
 |---|---|
 | Magic DRC `drc(full)` | **0** |
 | KLayout DRC (`sak-drc.sh -k`, gf180mcuD) | **0** |
-| Netgen LVS vs `wtx8_top.netlist()` (hierarchical; phase buffers and decap flattened at top level) | **Final result: Circuits match uniquely.** |
+| Netgen LVS vs `wtx8_top.netlist()` (hierarchical; phase buffers and decap flattened at top level) | **Final result: Circuits match uniquely.** (36 / 36 devices, 155 / 155 nets at top level, 0 property errors) |
 | negative control: PH0 / PH1 swapped at the mux (XMUX line) | FAILS as required (Top level cell failed pin matching) |
 | negative control: stream rotation off by one (FROT 3) | FAILS as required (Netlists do not match) |
 | negative control: OVP / OVN swapped at the mux | FAILS as required (Netlists do not match) |
 | negative control: buffer outputs PS0 / PS1 swapped at ser8d (XSER line) | FAILS as required (Netlists do not match) |
+| negative control: trim pins TR6_0 / TR7_3 swapped at the mux (the new right-side Metal4 pins) | FAILS as required (Top level cell failed pin matching) |
 | Magic `antennacheck` | violations **0** |
-| flat C netlist: port order = `wtx8_top.PORTS` | True; 1662 child substrate nodes moved to VSS by `fix_vsubs`, none left |
+| flat C netlist: port order = `wtx8_top.PORTS` | True; 1678 child substrate nodes moved to VSS by `fix_vsubs`, none left; 3018 nfet, 2251 pfet, 10 poly resistors |
 
 The negative controls are changed reference netlists, not changed layouts. No separate KLayout antenna deck was run.
 
@@ -67,11 +66,11 @@ Each PH k has the same geometry:
 
 | | PH0..PH7 |
 |---|---|
-| wire C, top-level wiring alone | 6.8..7.0 fF (spread 0.2 fF) |
-| wire C, whole block (incl. the mux's internal phase wiring) | 17.6..17.8 fF (pass 1: 113.8..119.0 fF) |
+| wire C, top-level wiring alone | 6.7..7.0 fF (spread 0.3 fF) |
+| wire C, whole block (incl. the mux's internal phase wiring) | 17.8..18.6 fF |
 | gate load added by the buffer | 2 + 4 um of gate, about 13 fF (2.2 fF/um estimate, not simulated) |
 
-So the ring sees about 31 fF per phase plus the mux's own PH gates. Pass 1 was about 115 fF of wire alone.
+So the ring sees about 31 fF per phase plus the mux's own PH gates (I0 6 / 6 um; detector input DH1 1.0 / 1.8 um at L = 0.5 um).
 
 ## 4. PS (buffer to ser8d), F and SERQ nets
 
@@ -84,18 +83,18 @@ The PS nets are not equalised: the ser8d phase pins are spread over 650 um.
 
 | k | PS Metal4 (um) | PS drawn R (ohm) | PS wire C top / block (fF) | F track (um) | F drawn R (ohm) | F wire C top / block (fF) |
 |---|---|---|---|---|---|---|
-| 0 | 199.9 | 50.4 | 43.4 / 66.4 | 262.1 | 59.0 | 36.6 / 49.7 |
-| 1 | 167.2 | 42.8 | 37.0 / 56.6 | 26.5 | 6.0 | 11.6 / 33.4 |
-| 2 | 146.2 | 37.8 | 33.1 / 54.2 | 224.2 | 50.4 | 39.2 / 62.3 |
-| 3 | 124.0 | 33.1 | 30.0 / 51.9 | 303.9 | 68.4 | 50.8 / 71.6 |
-| 4 | 63.7 | 18.8 | 18.8 / 40.9 | 234.2 | 52.7 | 43.5 / 65.1 |
-| 5 | 98.9 | 27.2 | 24.8 / 47.0 | 86.1 | 19.4 | 17.4 / 36.9 |
-| 6 | 259.1 | 63.0 | 52.5 / 74.6 | 42.6 | 9.6 | 12.4 / 32.7 |
-| 7 | 419.3 | 99.7 | 80.3 / 103.3 | 270.1 | 60.8 | 41.4 / 60.9 |
+| 0 | 199.9 | 50.4 | 43.4 / 66.4 | 262.1 | 59.0 | 36.4 / 49.5 |
+| 1 | 167.2 | 42.8 | 36.7 / 56.3 | 26.5 | 6.0 | 11.3 / 33.1 |
+| 2 | 146.2 | 37.8 | 32.5 / 53.6 | 224.2 | 50.4 | 37.9 / 60.8 |
+| 3 | 124.0 | 33.1 | 29.5 / 51.3 | 303.9 | 68.4 | 49.8 / 70.5 |
+| 4 | 63.7 | 18.8 | 18.4 / 40.6 | 234.2 | 52.7 | 42.6 / 64.5 |
+| 5 | 98.9 | 27.2 | 24.3 / 46.6 | 86.1 | 19.4 | 17.2 / 37.1 |
+| 6 | 259.1 | 63.0 | 51.7 / 73.8 | 42.6 | 9.6 | 12.2 / 33.2 |
+| 7 | 419.3 | 99.7 | 79.2 / 102.3 | 270.1 | 60.8 | 40.8 / 60.7 |
 
 SERQ: 183.4 um, 41.3 ohm.
 
-The PS load ranges from 41 to 103 fF on a 6 / 12 um inverter. By my estimate that is roughly 0.1 ns of skew between the ser8d phases. This has not been simulated: the probe run (STATUS item 2) has to confirm the stream timing with the buffers in.
+The PS load ranges from 41 to 102 fF on a 6 / 12 um inverter. By my estimate that is roughly 0.1 ns of skew between the ser8d phases. This has not been simulated: the probe run (STATUS item 2) has to confirm the stream timing with the buffers in.
 
 ## 5. Block pins (port names for the bench = `wtx8_top.PORTS`, 124 ports, in this order)
 
@@ -115,7 +114,7 @@ Pin positions (all are in `out/report.json` -> `pins`, as layer, x, y):
 - **Left edge, Metal4:** TAP_P / TAP_N at y 389.42 / 390.32, above the decap rows.
 - **PH0..PH7:** Metal5 pads at y 213.02, under the mux PH pins (x 285.25 / 354.25 / 423.25 / 492.25 / 526.75 / 457.75 / 388.75 / 319.75). The ring has to come over the mux or through the seam to reach them.
 - **VDD / VSS:** the Metal5 bars (section 1), labelled 20 um below the top edge.
-- **TR0_0..TR7_3: Metal3 pads inside the block** at y 199.28, straight under the mux trim pins (x 287.7..542.2). **They are not on the block boundary.** See section 9.
+- **TR0_0..TR7_3: Metal4 on the block edge at the free top-right corner** (x 598.1, the inner vertical edge of the L outline, y 255.0..278.76, pitch 0.72 um). The mux brings them out on its right side (Metal4, 32 tracks over its gate / in rows); the block continues each one 32.2 um under the right-hand VDD / VSS Metal5 bars to the edge. Order from the bottom: track 8 b + p for bit b of the slice at position p (phase order 0 7 1 6 2 5 3 4), i.e. TR0_0 TR7_0 TR1_0 TR6_0 TR2_0 TR5_0 TR3_0 TR4_0 TR0_1 ...; exact y per pin in `out/report.json` -> `pins`.
 
 ## 6. Supplies and electromigration
 
@@ -125,7 +124,7 @@ What connects to them:
 - ser8d's Metal5 straps run up into the rails (17 VSS, 16 VDD). A strap that would run into a phase pin pad, or under the other net's bar, stays inside ser8d.
 - 11 + 11 Metal2-Metal4 stitches tie the two rail layers together.
 - The mux's 9 VSS straps come down as 2.5 um necks. Its 8 logic VDD straps go straight into the VDD rail.
-- Each header is fed from the VDD bars by a Metal5 strap along the top edge. Inside the mux the bank now passes under the output risers on Metal1-4 (mux EM rows: 32.9 / 39.3 %). This closes pass 1's open item about the header middle segment.
+- Each header is fed from the VDD bars by a Metal5 strap along the top edge. Inside the mux the bank passes under the output risers on Metal1-4 (mux EM rows: 32.9 / 39.3 %).
 
 Currents:
 - the two banks: 26 mA each;
@@ -155,12 +154,14 @@ The model puts the VSS current at the left : right bars at 26 : 54 mA. The right
 
 ## 7. Netlists
 
-- **`generated/fast/pt_wiredtx8.ext.spice`** (sha256:23fa691a1809c05269d1c95a32bb1436c9a23704e355040eec561d7e392b0838):
+All four files are written to `s13/top/out` by the generator and copied unchanged to `generated/fast` (hashes identical).
+
+- **`generated/fast/pt_wiredtx8.ext.spice`** (sha256:9a4ac15115696d473e3d71c8e09ab1e0b35a0fb31aa5b62bf221c4dc65a1f926):
   - one flat C-only netlist of the whole block;
   - port order `wtx8_top.PORTS`;
-  - 2994 nfet, 2227 pfet, 10 poly resistors.
-- **`generated/fast/pt_wiredtx8.rc.spice`** (sha256:093fdbec947efecca97ba4b588b2f94904efa215adcabb3aaa6764de7d9a9be3): the same netlist plus drawn resistance, added in two steps by `pt_wiredtx8_layout.add_rc`.
-  1. **Mux-internal (new in pass 2):** `wtx_mux8_layout.add_wire_r` runs on the `XMUX/` nodes with the mux's own report. It adds 108 resistors:
+  - 3018 nfet, 2251 pfet, 10 poly resistors.
+- **`generated/fast/pt_wiredtx8.rc.spice`** (sha256:ec4c2d3f9eee8802c71b3309dfb2463bd96565e1729ffdf942c5e324502a809d): the same netlist plus DRAWN resistance, added in two steps by `pt_wiredtx8_layout.add_rc` (the drawn lumps are optimistic against extresist, `s14/rcov/RCOV.md`).
+  1. **Mux-internal:** `wtx_mux8_layout.add_wire_r` runs on the `XMUX/` nodes with the mux's own report. It adds 108 resistors:
      - the gate-line trunks X, XTM, XTQ, APM, ANM, APQ, ANQ of all eight slices (13.5 / 2.4 / 2.2 / 13.4 / 13.6 / 6.1 / 6.2 ohm);
      - the ring wires BM / BQ (30.2 / 24.5 ohm);
      - the Metal5 ladders of the four output buses, with a node per slice (`MAIN_P#k` ...), the tap node, and the strap to the pin.
@@ -172,36 +173,34 @@ The model puts the VSS current at the left : right bars at 26 : 54 mA. The right
      - F k, SERQ: -> `#s` (ser8d side).
      - VDD / VSS: one lumped resistor per child, in ohm: VSS mux 0.342 / ser 0.406 / aux 1.489; VDD mux 0.849 / ser 0.962 / aux 1.317. These are coarse.
 
-  Connectivity check on the file: every split node has devices on it, except the four bus tap nodes `#t`, which carry only resistors (as intended). It has not been simulated.
-- **`generated/fast/pt_wiredtx8.lvs.spice`** (sha256:c1be2d3e6779ccead3218b6fc9bc64c682cc6bea92e6cc879583ac7b4f135ed9): hierarchical LVS netlist of the read-back GDS.
-- **`generated/fast/pt_wiredtx8.spice`:** the intended netlist, regenerated with `python3 wtx8_top.py` (decap n = 686).
+  Connectivity check on the file: every split node has devices on it, except the four bus tap nodes `#t`, which carry only resistors (as intended). Trim wires carry no added R (static nets). The session-14 netlist has not been simulated at block level.
+- **`generated/fast/pt_wiredtx8.lvs.spice`** (sha256:6baeb34706f25e92b7f3f1d21d4c8de164c61fa15a25079414da5ff067b548ad): hierarchical LVS netlist of the read-back GDS.
+- **`generated/fast/pt_wiredtx8.gds`** (sha256:d595e0e8a523cd6fc9c3ebfe089f791b3484537b70f8f4acf1295ab9e160864a).
+- **`generated/fast/pt_wiredtx8.spice`:** the intended netlist, regenerated with `python3 wtx8_top.py` (decap n = 686; it includes the revision-3 mux schematic of `wtx_mux8.netlist()`).
 
-## 8. Children rebuilt today
+## 8. Children
 
-| child | what was run | result |
+| child | state | result |
 |---|---|---|
-| `wtx_mux8` (WIP header feed under the risers, now verified) | `wtx_mux8_layout.py` | 324.6 x 164.44 um. Magic DRC 0, KLayout 0, LVS unique, 4 / 4 negative controls fail, antenna 0. EM worst: drain stub 13.6 %. Bus wire C 100.6 / 109.4 / 119.3 / 122.8 fF |
-| `wtx8_aux` | `wtx8_aux_layout.py` | Magic DRC 0, KLayout 0, LVS unique, 2 / 2 negative controls fail |
+| `wtx_mux8` | rebuilt in session 14 (`wtx_mux8_layout.py`): detector input stage with hysteresis, I0 gated by RUN, trim pins on its right side | 324.6 x 164.44 um (unchanged). Magic DRC 0, KLayout 0, LVS unique, 5 / 5 negative controls fail, antenna 0. EM worst: drain stub 13.6 %. Bus wire C 100.6 / 109.4 / 119.3 / 122.8 fF (unchanged) |
+| `wtx8_aux` | pass-2 build, unchanged | Magic DRC 0, KLayout 0, LVS unique, 2 / 2 negative controls fail |
+| `wtx_ser8d` | read only | |
 
-## 9. Open items and what did not converge
+## 9. Open items
 
-- **Trim bits TR0_0..TR7_3 are not on the block boundary.**
-  - They are Metal3 pads at the bottom of the seam under the mux, so nothing outside can reach them without crossing ser8d or the seam.
-  - The mux has its trim pins on its bottom edge, so any route to an edge needs about 16-33 more horizontal tracks in the seam. I measured this with all 32 trims as Metal2 edge ports: 33 tracks, seam 47.9 um.
-  - The real fix is a mux change: bring its trim pins out on its right side into the free corner.
-  - This is your decision: (a) a seam of about 48 um with the trims on the edges, (b) the mux change, or (c) leave them as they are.
 - **The PH pins are inside the block**, under the mux, as the brief asked: "at the pin row". The ring has to be routed to them.
-- **PS loads are unequal** (41..103 fF); estimated skew is about 0.1 ns. The probe run has to confirm it.
-- **Not done:** any simulation, Magic extresist on the block, a KLayout antenna deck, fill, and an independent review.
-- **ser8d inputs:** I did not touch `wtx_ser8d` or its running re-verification (`s13/ser8d/v`). `serm5/dcols.json`, the trunk positions, was taken from the 06:01 GDS, which is still the published one. If ser8d changes, `dcols.json` has to be remade from a flattened ser8d (`serm5/f.tcl` + `m5.json`).
+- **PS loads are unequal** (41..102 fF); estimated skew is about 0.1 ns. The block-level real-chain rows have to confirm it.
+- **Not done:** Magic extresist on the block, a KLayout antenna deck, fill, an independent review, any simulation of the session-14 block netlist.
+- **ser8d inputs:** `wtx_ser8d` was not touched. `serm5/dcols.json`, the trunk positions, was taken from the 06:01 GDS, which is still the published one. If ser8d changes, `dcols.json` has to be remade from a flattened ser8d (`serm5/f.tcl` + `m5.json`).
 
 ## 10. Reproduce
 
 ```
 cd projects/programmable_transceiver_platform/analog/wired_tx
-OMP_NUM_THREADS=1 python3 wtx_mux8_layout.py            # mux, verify, generated/fast
+OMP_NUM_THREADS=1 python3 wtx_mux8_layout.py            # mux, verify, generated/fast (session 14: run without the copy, s14/ilk/build_mux.py)
 OMP_NUM_THREADS=1 python3 wtx8_aux_layout.py            # needs the mux report
 OMP_NUM_THREADS=1 python3 pt_wiredtx8_layout.py         # about 40 s; writes DECAP n into wtx8_top.py if it differs
+                                                        # (session 14: s14/ilk/build_top.py = the same without the copy to generated/fast)
 OMP_NUM_THREADS=1 python3 pt_wiredtx8_layout.py build   # layout + DRC / LVS in top/build only
 python3 wtx8_top.py                                     # intended netlist generated/fast/pt_wiredtx8.spice
 ```

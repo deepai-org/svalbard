@@ -164,50 +164,81 @@ def bridge_storage_inventory():
               'Sharing with bulk wired/RF transport and diagnostic memory is not yet resolved.')
 
 
-def assembly_ledger(c):
-    """Separate required functions, retained pad sites and unknown board terminals."""
+def load_bond_map(path):
+    """integration/chips/<chip>/bond_map.txt -> [(site, side, net, instance)]"""
+    return [tuple(l.split()[:4]) for l in Path(path).read_text().splitlines() if l.strip() and not l.startswith('#')]
+
+
+# logical contract pin name -> chip port name (the host and SPI pins kept their contract names)
+PIN_ALIAS = {'HOST_CS_N': 'SPI_CS_N', 'HOST_SCLK': 'SPI_SCLK', 'HOST_MOSI': 'SPI_MOSI', 'HOST_MISO': 'SPI_MISO'}
+
+
+def assembly_ledger(c, bond_maps=None):
+    """Per chip: the bond map against the fixed provider sites (supplies kept, pairs adjacent, no site or signal
+    twice), the logical contract pins served by the two chips, and no protocol profile spanning both chips."""
     inventory=c['assembly_policy']['provider_site_inventory']
     sides=inventory['ordered_sites_by_side']
     sites=[site for group in sides.values() for site in group]
     require(len(set(sites))==len(sites), 'duplicate provider site')
-    fixed={f'{prefix}_pads[{i}].pad'
+    fixed={f'{prefix}_pads[{i}].pad': ('VDD' if 'dd' in prefix else 'VSS')
            for prefix,count in [('dvdd',6),('dvss',8),('vdd',2),('vss',2)]
            for i in range(count)}
-    require(fixed.issubset(sites), 'missing fixed provider supply site')
-    signals=[p for p in c['pins'] if p['direction']!='power']
-    mapping=c['assembly_policy']['candidate_signal_sites']
-    require(set(mapping)=={p['name'] for p in signals},'provider signal mapping coverage')
-    require(len(set(mapping.values()))==len(mapping),'duplicate provider signal assignment')
-    require(set(mapping.values())<=set(sites)-fixed,'provider signal uses unavailable or fixed supply site')
+    require(set(fixed).issubset(sites), 'missing fixed provider supply site')
+    if bond_maps is None:
+        root=CONTRACT.parent.parent
+        bond_maps={chip: load_bond_map(root/path) for chip,path in c['assembly_policy']['bond_maps'].items() if chip.startswith('pt_')}
     locations={site:(side,index) for side,group in sides.items() for index,site in enumerate(group)}
-    for prefix in ('RF_RX','RF_TX','WIRE_RX','WIRE_TX'):
-        positive=locations[mapping[prefix+'_P']];negative=locations[mapping[prefix+'_N']]
-        require(positive[0]==negative[0] and abs(positive[1]-negative[1])==1,'differential pair adjacency')
-    positive=locations[mapping['REF_IN']];negative=locations[mapping['REF_IN_N']]
-    require(positive[0]==negative[0] and abs(positive[1]-negative[1])==1,'reference pair adjacency')
-    neighbors=[]
-    for name,site in mapping.items():
-        side,index=locations[site]
-        grounds=[(abs(index-j),v) for j,v in enumerate(sides[side]) if v.startswith(('dvss_pads','vss_pads'))]
-        distance,ground=min(grounds)
-        neighbors.append(dict(signal=name,site=site,side=side,nearest_same_edge_ground=ground,
-            separation_in_list_positions=distance))
-    minimum=len(signals)+len(fixed)
-    return dict(status='open_physical_mapping',closed=False,
-        provider_sites=len(sites),fixed_supply_return_sites=len(fixed),
-        provider_signal_sites=len(sites)-len(fixed),
-        required_functional_signals=len(signals),
-        spare_signal_sites=len(sites)-len(fixed)-len(signals),
-        required_signals_plus_fixed_supply_sites=minimum,
-        logical_terminal_target=c['limits']['total_terminals'],
-        minimum_excess_over_logical_target=max(0,minimum-c['limits']['total_terminals']),
-        retained_site_excess_over_logical_target=max(0,len(sites)-c['limits']['total_terminals']),
+    chips={}
+    for chip,rows in bond_maps.items():
+        listed=[r[0] for r in rows]
+        require(len(set(listed))==len(listed), f'{chip}: duplicate provider site in the bond map')
+        require(set(listed)==set(sites), f'{chip}: bond map does not cover exactly the provider sites')
+        for site,side,net,_ in rows:
+            require(locations[site][0]==side, f'{chip}: {site} on the wrong side')
+            if site in fixed: require(net==fixed[site], f'{chip}: fixed supply site {site} carries {net}')
+        signals=[(net,site) for site,_,net,_ in rows if net not in ('VDD','VSS')]
+        where=dict(signals)
+        require(len(where)==len(signals), f'{chip}: duplicate provider signal assignment')
+        for p in where:
+            if p.endswith('_P') and p[:-2]+'_N' in where:
+                a,b=locations[where[p]],locations[where[p[:-2]+'_N']]
+                require(a[0]==b[0] and abs(a[1]-b[1])==1, f'{chip}: {p[:-2]} pair adjacency')
+        if 'REF_IN' in where:
+            a,b=locations[where['REF_IN']],locations[where['REF_IN_N']]
+            require(a[0]==b[0] and abs(a[1]-b[1])==1, f'{chip}: reference pair adjacency')
+        neighbors=[]
+        for name,site in where.items():
+            side,index=locations[site]
+            grounds=[(abs(index-j),r[0]) for j,v in enumerate(sides[side]) for r in rows if r[0]==v and r[2]=='VSS']
+            distance,ground=min(grounds)
+            neighbors.append(dict(signal=name,site=site,side=side,nearest_same_edge_ground=ground,separation_in_list_positions=distance))
+        extra={n: sum(1 for site,_,net,_ in rows if net==n and site not in fixed) for n in ('VDD','VSS')}
+        chips[chip]=dict(provider_sites=len(sites),fixed_supply_return_sites=len(fixed),provider_signal_sites=len(sites)-len(fixed),
+            signal_bonds=len(where),supply_bonds_on_signal_sites=extra['VDD'],ground_bonds_on_signal_sites=extra['VSS'],
+            unused_sites=len(sites)-len(fixed)-len(where)-extra['VDD']-extra['VSS'],signal_assignment=neighbors,
+            ports=sorted(where))
+    host=[s for s in sites if locations[s][0] in ('north','south')]
+    maps={chip: {r[0]: r[2] for r in rows} for chip,rows in bond_maps.items()}
+    for s in host:
+        require(len({m[s] for m in maps.values()})==1, f'host / debug site {s} differs between the chips')
+    served={}
+    for p in c['pins']:
+        if p['direction']=='power': continue
+        n=PIN_ALIAS.get(p['name'],p['name']).replace('D2H_D[','D2H[').replace('H2D_D[','H2D[')
+        on=[chip for chip in maps if n in maps[chip].values()]
+        require(on, f'contract pin {p["name"]} is bonded on neither chip')
+        served[p['name']]=on
+    profiles={}
+    for prof in c['protocol_profiles']:
+        on=[chip for chip in maps if all(PIN_ALIAS.get(x,x) in maps[chip].values() for x in prof['pins'])]
+        require(on, f'protocol profile {prof["id"]} has no chip with all its pins (a profile must not span the two chips)')
+        profiles[prof['id']]=on
+    return dict(status='open_physical_mapping',closed=False,chips=chips,
+        contract_pins_by_chip=served,protocol_profiles_by_chip=profiles,
         delivered_board_terminal_count=inventory['delivered_board_terminal_count'],
-        candidate_signal_assignment=neighbors,
-        unused_signal_sites=[s for s in sites if s not in fixed and s not in mapping.values()],
         differential_pairs_adjacent_in_template=True,
         independent_external_domain_rails_proven=False,
-        scope='Candidate signal assignment and template-list adjacency only, not physical distance or return impedance. Unused signals do not remove physical sites or bonds; board connector count and electrical qualification remain unknown.')
+        scope='Per-chip bond maps against template-list adjacency only, not physical distance or return impedance. A supply or ground bond on a signal site has no COB capacitor. Board connector count and electrical qualification remain unknown.')
 
 
 def periodic_stream_bound(*, arrival_item_hz, item_bits, word_hz,

@@ -1,6 +1,7 @@
 """Negative checks for pin, direction and capacity mistakes in the contract."""
 import copy
 import json
+from pathlib import Path
 import unittest
 import sys
 from check_contract import CONTRACT, check, resource_ledger, assembly_ledger, operating_clock_ledger, periodic_stream_bound, milestone_coverage
@@ -305,31 +306,41 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(modes[0]['used_words_per_direction'], {'d2h': 58, 'h2d': 58})
         self.assertEqual(modes[1]['used_words_per_direction'], {'d2h': 59, 'h2d': 59})
 
-    def test_physical_sites_cannot_be_hidden_by_logical_budget(self):
+    def test_physical_sites_per_chip(self):
         r=assembly_ledger(self.c)
-        self.assertEqual((r['provider_sites'],r['provider_signal_sites'],r['fixed_supply_return_sites']),(74,56,18))
-        self.assertEqual(r['required_signals_plus_fixed_supply_sites'],55)
-        self.assertEqual(r['minimum_excess_over_logical_target'],4)
-        self.assertEqual(r['spare_signal_sites'],19)
+        self.assertEqual(sorted(r['chips']),['pt_rf','pt_wired'])
+        for chip,signals in (('pt_rf',45),('pt_wired',47)):
+            x=r['chips'][chip]
+            self.assertEqual((x['provider_sites'],x['provider_signal_sites'],x['fixed_supply_return_sites']),(74,56,18))
+            self.assertEqual(x['signal_bonds'],signals)
+            self.assertEqual(x['unused_sites'],0)      # every free signal site is a supply / ground bond (D12)
+        self.assertEqual(r['protocol_profiles_by_chip']['wifi_he20'],['pt_rf'])
+        self.assertEqual(r['protocol_profiles_by_chip']['pcie_gen1'],['pt_wired'])
         self.assertFalse(r['closed'])
         self.assertIsNone(r['delivered_board_terminal_count'])
         sites=self.c['assembly_policy']['provider_site_inventory']['ordered_sites_by_side']
         sites['south'].remove('dvss_pads[0].pad')
         with self.assertRaisesRegex(ValueError,'missing fixed provider'):assembly_ledger(self.c)
 
-    def test_signal_map_preserves_supplies_and_pair_adjacency(self):
-        mapping=self.c['assembly_policy']['candidate_signal_sites']
-        mapping['REF_IN']='dvss_pads[5].pad'
-        with self.assertRaisesRegex(ValueError,'fixed supply site'):assembly_ledger(self.c)
-        mapping['REF_IN']='inputs[1].pad'
-        mapping['REF_IN_N']='inputs[2].pad'
-        with self.assertRaisesRegex(ValueError,'reference pair adjacency'):assembly_ledger(self.c)
-        mapping['REF_IN_N']='inputs[0].pad'
-        mapping['RF_RX_N']='inputs[9].pad'
-        with self.assertRaisesRegex(ValueError,'pair adjacency'):assembly_ledger(self.c)
-        mapping['RF_RX_N']='inputs[10].pad'
-        mapping['HOST_MISO']=mapping['HOST_MOSI']
-        with self.assertRaisesRegex(ValueError,'duplicate provider'):assembly_ledger(self.c)
+    def test_bond_maps_preserve_supplies_pairs_and_profiles(self):
+        from check_contract import load_bond_map
+        root=Path(__file__).resolve().parents[1]
+        good={chip: load_bond_map(root/path) for chip,path in self.c['assembly_policy']['bond_maps'].items() if chip.startswith('pt_')}
+        def edit(chip,fn):
+            m={k:list(v) for k,v in good.items()}; m[chip]=[fn(r) for r in m[chip]]; return m
+        swap=lambda a,b: (lambda r: (r[0],r[1],{a:b,b:a}.get(r[2],r[2]),r[3]))
+        with self.assertRaisesRegex(ValueError,'fixed supply site'):
+            assembly_ledger(self.c,edit('pt_rf',lambda r: (r[0],r[1],'REF_IN',r[3]) if r[0]=='dvss_pads[5].pad' else r))
+        with self.assertRaisesRegex(ValueError,'reference pair adjacency'):
+            assembly_ledger(self.c,edit('pt_rf',lambda r: (r[0],r[1],{'REF_IN_N':'VSS','bidir[25].pad':'REF_IN_N'}.get(r[2],{'bidir[25].pad':'REF_IN_N'}.get(r[0],r[2])),r[3])))
+        with self.assertRaisesRegex(ValueError,'RF_RX pair adjacency'):
+            assembly_ledger(self.c,edit('pt_rf',swap('RF_RX_N','BB_I_P')))
+        with self.assertRaisesRegex(ValueError,'duplicate provider signal'):
+            assembly_ledger(self.c,edit('pt_wired',lambda r: (r[0],r[1],'SPI_MISO',r[3]) if r[0]=='bidir[12].pad' else r))
+        with self.assertRaisesRegex(ValueError,'differs between the chips'):
+            assembly_ledger(self.c,edit('pt_wired',swap('D2H[1]','D2H[2]')))
+        with self.assertRaisesRegex(ValueError,'span the two chips|bonded on neither'):
+            assembly_ledger(self.c,edit('pt_wired',lambda r: (r[0],r[1],'VSS',r[3]) if r[2]=='WIRE_TX_P' else r))
 
     def test_clock_ownership_and_half_rate_rf_capacity(self):
         rows=operating_clock_ledger(self.c)['configurations']

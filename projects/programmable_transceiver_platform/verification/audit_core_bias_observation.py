@@ -272,11 +272,12 @@ def audit(out, wave_name, destination):
     else:
         assert not current_measurements and not meters, 'Unexpected current measurement schema'
     forced = experiment['forced_at']
-    if forced is not None and stop >= forced:
-        mask = window(experiment['forced_at'], 5e-6)
+    if forced is not None and stop >= experiment.get('corrected_at', forced):
+        # force-and-sense (core_support README): checked after the one correction step
+        mask = window(experiment.get('corrected_at', forced), 5e-6)
         assert np.max(np.abs(w[mask, columns['VBG']]-1.2)) <= .01, 'VBG force failed'
         assert np.max(np.abs(w[mask, columns['ATB1']]-w[mask, columns['VBG']])) <= .005
-        completed.append(dict(check='VBG external force and sense over 5 us'))
+        completed.append(dict(check='VBG external force-and-sense over 5 us'))
     elif forced is not None:
         pending.append('VBG external force and sense')
     if not complete:

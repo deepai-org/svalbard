@@ -12,7 +12,8 @@ Normal run: all islands of the chip on, nominal reference programming, then ever
 leaf taps a net this fixture drives (core-bias outputs, island rails, supplies, consumer bias nets) is selected in
 turn and the ATB1 pad must equal that net within 5 mV; VREF0 = 5/6 VBG, VCM = VDD/2, the bandgap window and every
 consumer bank output 10 uA +/-10 % into its diode load; core and host supply taps (codes 5, 6) both sense VDD and
-agree (one supply net by design); finally VBG is forced through ATB0 after its source is disabled and sensed on ATB1.
+agree (one supply net by design); finally VBG is forced through ATB0 after its source is disabled and sensed on ATB1, with one force-and-sense
+correction step (core_support README); the open-loop value is reported as information.
 --idac1-smu: spare IDAC1 through ATB1 code 57 into a 1 V SMU, codes 0/4/8/0.
 The independent auditor (audit_core_bias_observation.py) re-derives the SPI expectations from the specification.
 Every failed assertion is collected and reported (status fail); none stops the others.
@@ -123,10 +124,12 @@ def sequence(model, codes, idac1_smu=False, negative=None):
     regs.write(**{'core.refchain.bgap_ena': 0, 'debug.atb.atb0': 55, 'debug.atb.atb1': 55})
     regs.commit()
     spi.time += 30e-6
-    forced_at = spi.time
+    forced_at = spi.time        # open loop: the board reads VBG on ATB1 here (force-and-sense, core_support README)
+    spi.time += 20e-6
+    corrected_at = spi.time     # after one correction step: force 1.2 V + (1.2 V - VBG read)
     spi.read(5, 0)
     return dict(spi=spi, reads=spi.reads, normal_at=normal_at, observations=observations, forced_at=forced_at,
-                stop=spi.time+5e-6)
+                corrected_at=corrected_at, stop=spi.time+5e-6)
 
 
 def build(out, pdk, island_pex, ng, chip, reuse_bridge=False, idac1_smu=False, negative=None):
@@ -306,7 +309,17 @@ def build(out, pdk, island_pex, ng, chip, reuse_bridge=False, idac1_smu=False, n
              'VRESET RESET_N 0 PWL(0 0 2u 0 2.000002u 3.3)', 'VPOR POR_N 0 PWL(0 0 2u 0 2.000002u 3.3)',
              '.model host_switch sw(Ron=1 Roff=1e12 Vt=3.2 Vh=0.05)', *spi.sources(),
              'RMISO MISO 0 1g', 'CMISO MISO 0 5p', 'RMETER ATB1 0 1g', 'CMETER ATB1 0 10p',
-             'VFORCE FORCE_BOARD 0 PWL(0 0 3u 0 3.00001u 1.2)', 'RFORCE FORCE_BOARD ATB0 100']
+             'RFORCE FORCE_BOARD ATB0 100']
+    if plan.get('corrected_at') is not None:
+        # Force-and-sense board instrument: an ideal buffer samples ATB1 (code 55 = VBG) at forced_at, then the force
+        # is raised by (1.2 V - sample) one microsecond later. The pt_bias_vref divider (about 5 uA) stays on VBG.
+        tc = plan['forced_at']
+        deck += ['Esense SENSE_BUF 0 ATB1 0 1', '.model sample_switch sw(Ron=1 Roff=1e12 Vt=0.5 Vh=0)',
+                 f'Vsample SAMPLE_CTL 0 PWL(0 1 {tc:.16g} 1 {tc+1e-9:.16g} 0)',
+                 'Ssample SENSE_BUF SENSE_HELD SAMPLE_CTL 0 sample_switch', 'Csample SENSE_HELD 0 1n',
+                 f'BFORCE FORCE_BOARD 0 V=(time > 3u ? 1.2 : 0) + (time > {tc+1e-6:.16g} ? 1.2-V(SENSE_HELD) : 0)']
+    else:
+        deck += ['VFORCE FORCE_BOARD 0 PWL(0 0 3u 0 3.00001u 1.2)']
     if idac1_smu:
         # A real current measurement loads the sense pad at its compliance voltage.
         deck += ['VSMU SMU_BOARD 0 1', 'RSMU SMU_BOARD ATB1 10']
@@ -423,9 +436,14 @@ def assess(out, experiment):
         half = value('VDD', by_code[3]['time_s'])/2
         require(abs(by_code[3]['pad_v']-half) <= .02*half, f'VCM {by_code[3]["pad_v"]:.4f} V is not VDD/2 ({half:.4f})')
     forced = experiment['forced_at']
+    open_loop = None
     if forced is not None:
-        require(abs(value('VBG', forced)-1.2) <= .01, 'VBG force failed')
-        require(abs(value('ATB1', forced)-value('VBG', forced)) <= .005, 'forced VBG not observable')
+        corrected = experiment['corrected_at']
+        open_loop = dict(vbg_v=value('VBG', forced), atb0_v=value('ATB0', forced), atb1_v=value('ATB1', forced))
+        require(abs(value('ATB1', forced)-value('VBG', forced)) <= .005, 'ATB1 code 55 does not sense VBG while forced')
+        require(abs(value('VBG', corrected)-1.2) <= .01,
+                f'VBG force-and-sense: VBG {value("VBG", corrected):.4f} V after one correction (limit 1.2 V +/-10 mV)')
+        require(abs(value('ATB1', corrected)-value('VBG', corrected)) <= .005, 'forced VBG not observable')
     from audit_core_bias_observation import audit
     try:
         independent = audit(out, 'wave.txt', out/'core-bias-audit.json')
@@ -438,7 +456,8 @@ def assess(out, experiment):
                   scope=f'pt_{experiment["chip"]}: SPI-controlled extracted core bias and the chip ATB tree of the conn',
                   spi_reads=reads, nominal_vbg_v=vbg, nominal_bias_currents_a=currents, observations=observed,
                   not_observed=experiment['not_observed'],
-                  forced_vbg_v=value('VBG', forced) if forced is not None else None,
+                  forced_vbg_v=value('VBG', experiment['corrected_at']) if forced is not None else None,
+                  forced_open_loop_info=open_loop,
                   idac1_smu=experiment.get('idac1_smu', False),
                   current_observations=[row for row in independent['completed_checks'] if row.get('check') == 'IDAC1 SMU current'],
                   frozen_source_manifest=experiment.get('frozen_source_manifest'),

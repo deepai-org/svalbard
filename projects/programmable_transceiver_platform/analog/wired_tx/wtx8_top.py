@@ -83,7 +83,7 @@ def aux(name='wtx8_aux', tap=None):
 
 # supply decoupling of the block: NMOS gate capacitors between VDD and VSS, laid out by pt_wiredtx8_layout.py in the free
 # area left of the mux.  n = number of fingers the layout holds (the layout generator asserts it places exactly n).
-DECAP = dict(w=8.0, l=2.0, n=637)
+DECAP = dict(w=8.0, l=2.0, n=686)
 PHBUF = ((2, 4), (6, 12))      # two inverters per phase in front of wtx_ser8d (the ring then drives only the mux stub)
 
 

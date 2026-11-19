@@ -1,5 +1,7 @@
 # wtx_mux8 revision 3 layout (+ wtx8_aux): report of the layout sub-agent, 2026-11-18
 
+State 2026-11-19 (block-top pass 2): the generator now also runs Metal2-4 across each header rail under the output risers (every segment fed through the rail; EM rows `header M / Q rail under the first riser`, margins 32.9 / 39.3 %); outline 324.6 x **164.44** um; re-run from disk: Magic DRC 0, KLayout 0, LVS unique, 4 / 4 negative controls fail, antenna 0 (`out/report.json`).  Numbers below that predate this are marked by the 163.44 um outline.
+
 Generator: `analog/wired_tx/wtx_mux8_layout.py` (one file; `mux8_layout.py`, `mux8_layout2.py`, `mux8.py` and `scratch/wired_tx/s12` were read, not edited, not imported).  Reference: flat `wtx_mux8.netlist()` as on disk at the time of the final build (with the 05:45 UTC change of `CHANGES.txt`: detector inverters on PH k, EXTF / EXTFB).  Nothing committed.
 
 Everything in sections 1-5 was RUN by me on the final GDS unless a line says "read" or "not done".

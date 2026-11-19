@@ -203,12 +203,13 @@ nets (`lna_netres.py`, pads owner's mesh solver), cross-checked by Magic `extres
 | --- | --- | --- | --- |
 | Layout | DRC 0 / 0, LVS unique | 129,592 µm²; 0 / 0; unique (read-back LVS not redone) | pass (area +64.9k) |
 | Supply current, RX / `lobias`, 20 corners, rext | ≤ 19.0 / ≤ 11.8 mA | 14.5–15.5 / 9.9–10.3 mA (C-only 18.2: metal drops on VSS / tail cost 16 %) | pass, below design point |
-| Electromigration of the stage-current routes (85 °C, 2.09 mA/µm, 0.58 mA/cut) | pass | tracks ≤ 2.07 mA/µm, ≤ 0.46 mA per cut (mesh solver) | pass (old layout ~30× over) |
+| Electromigration of the stage-current routes (85 °C, 2.09 mA/µm, 0.58 mA/cut) | pass | estimate only (`scratch/rf-lna-q/em3.py`, two-terminal mesh solves, no superposition): tracks 1.98–2.07 mA/µm (1–5 % margin); per cut ≤ 0.46 mA on the full-current paths, 0.25 mA on the small gain-step units at their own current | not signed off (old layout ~30× over) |
 | Stability, pt_rf bond model × 3 bounds, 38 rows + references, 5 MHz–30 GHz, rext | μ, K > 1; Re ≥ 1.0 Ω | μ ≥ 1.008, K ≥ 2.95, differential ≥ 1.17 Ω; common mode 0.74–1.34 Ω at 5–8 GHz (LNA off 0.90), 0.45 Ω at 30 GHz; ≥ 1.07 Ω below 1 GHz | **miss** (common mode) |
 | Same, old map vs pt_rf map (same bench) | — | identical within 0.01 Ω: the ground inductance is not the lever | information |
 | S11, real channel, per-chip carrier fit, rext | ≤ −10 dB | tt −9.69, ff −9.07, ss −10.10, pessimistic −10.43 dB | **miss** |
-| LNA NF incl. channel, rext | ≤ 6.0 dB (pessimistic +1.5) | tt 4.8–5.1, ff 4.3–4.6, ss 5.5–5.8, pessimistic 7.2–7.4 (8.9 derated) dB; gain tt −3.3…−2.6 dB | pass / **miss** pessimistic |
-| Chain NF DSB, real channel, LO as delivered, small TIA, rext | ≤ 4.1 dB | tt 6.26 (31.0 dB), ss 7.80 (26.1 dB), pessimistic 15.2 dB (11.6 dB) | **miss** |
+| LNA NF incl. channel, rext | ≤ 6.0 dB (pessimistic +1.5) | tt 4.8–5.1, ff 4.3–4.6, ss 5.5–5.8, pessimistic 7.1–7.4 (8.9 derated) dB; gain tt −3.3…−2.6 dB | pass / **miss** pessimistic |
+| Chain NF DSB, real channel, LO as delivered, small (x1) TIA, rext | ≤ 4.1 dB | tt 6.26 (31.0 dB), ss 7.80 (26.1 dB), pessimistic 15.2 dB (11.6 dB) | **miss** |
+| TIA x2 (now the default), same-bench delta on the C-only LNA (`scratch/rf-rx-tia/chain_ab.json`) | — | −0.61 / −0.92 / −1.69 dB (C-only chain 5.07 / 6.35 / 12.74 dB); not yet run on rext | information |
 | Fallback: external LNA (15 dB, NF 1 dB, 2.5 dB before, 0.8 dB balun) in front of the active LNA; Friis on the chain rows | system 8 dB | tt 3.9, ss 4.1, pessimistic 6.5 dB (20 dB gain: 3.6 / 3.7 / 4.7) | pass (cascade, not a joint simulation) |
 | Die-VSS bounce → differential input at 2421.875 MHz, through the LNA, 5.4 nF decap | — | pt_rf map −38.4 / −44.1 / −59.7 dB (min / nom / max; old map −47.2 nom); with the D2H-dominated bounce rescaled to the pt_rf ground (0.25 / 2.5 / 12.5 mV rms): about −91 / −83 / −90 dBm against −100 dBm | **miss** (PD2-15) |
 | IIP3, Monte Carlo | ≥ −10 dBm | not run on this layout (last: −11.0 dBm, tt, ideal match, previous layout) | open |
@@ -223,7 +224,7 @@ loses against `ext`.
 1. **LNA noise figure misses the on-chip target (RFR-01, RFR-13;** `scratch/reviews/physical-limits.md` **RX-CHLOSS).**
    Pad resistance 5–7 Ω behind about 4.5 Ω of bond and trace loss, no part possible on the COB: 3.0–3.5 dB is lost before
    the LNA. The path that meets the 8 dB system figure is an external LNA in front of the ACTIVE on-chip LNA (estimate
-   3.9–6.2 dB system NF with 15 dB of external gain, from the chain rows). The bypass path (`byp`, LNA off) does NOT meet
+   3.9 / 4.1 / 6.5 dB system NF at tt / ss / pessimistic with 15 dB of external gain: a cascade on the rext chain rows). The bypass path (`byp`, LNA off) does NOT meet
    it: 18 dB of loss from the pads to the mixers, about 20 dB system NF with a 15 dB external LNA (helper run, previous
    layout); it is a rescue path for a dead LNA only.
 2. **LNA stability rows that miss their limit.** (a) Above about 9 GHz the resistances sit on the passive pad network and
@@ -231,7 +232,7 @@ loses against `ext`.
    0.78–0.99 Ω from about 5 GHz, where the disabled LNA still reads above 1 Ω. (b) With lossless lumped rails the supply anti-resonance (45–100 MHz) and an undamped
    island decap still give negative common-mode resistance; with the pads owner's coupled model every row is ≥ 2.1 Ω
    below 1 GHz. Supply rules RQ-3 / RQ-3a are requirements on power delivery.
-3. **S11 at ff is −9.94 dB**, IIP3 −11.0 dBm (tt, ideal match), pessimistic-end LNA NF 5.5–5.8 dB: see 5a. The match is
+3. **S11 misses at tt / ff (−9.69 / −9.07 dB, rext)**, IIP3 −11.0 dBm (previous layout, tt, ideal match), pessimistic-end LNA NF 7.1–7.4 dB: see 5a. The match is
    fitted per chip (per-board tuned carrier parts, B18/B25); one fixed BOM over tolerance is not shown.
 4. **LNA layout: metal resistance of the stage-current routes** (5a). The earlier DC-point error of the R+C netlist was a real
    layout defect (stage current through 0.3 µm Metal2 and single PCell escapes; 4.2 mA instead of 18.3 on the old GDS with all nets
@@ -244,7 +245,7 @@ loses against `ext`.
 6. **Spiral cells** `pt_lna_ind`, `pt_lna_deg`: DRC-clean GDS, analytic models only (no EM, no LVS netlist, no mutual
    coupling); fill keep-out over them is not defined (SG-3). Removing the degeneration spirals altogether was scanned over
    corners: +2 dB gain, same NF, stable, but S11 −8.9…−9.9 dB; they were halved instead (2 × 14.0k µm²).
-7. **Mixers with the real LO.** `pt_lo_ext` into the extracted mixers loses 1.9 dB at tt and 3.9 dB at ss/32 °C/3.15 V
+7. **Mixers with the real LO.** `pt_lo_ext` into the extracted mixers loses 2.97 dB at tt with the x2 TIA (`generated/rxmix_i-evidence.json`; 1.88 dB with x1)
    against the ideal square LO at the levels used here (MW-20).
 8. **Records.** `rxmix_*`, `bb_tap`, `rf_rx_chain.json` and the summary are regenerated from the cells on disk (mixers on
    a reduced 10-corner set); `rf_rx_linearity.json` is stale. `run_rf_rx.sh` is evidence-only by default; section 5 above

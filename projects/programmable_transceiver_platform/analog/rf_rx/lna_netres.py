@@ -23,6 +23,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[3]
 W = REPO / 'scratch' / 'rf_rx' / 'netres'
 NETS = ('VDD', 'VSS', 'vtk', 'tail', 'tailx', 'src_p', 'src_n', 'x_p', 'x_n', 'tank_p', 'tank_n')
+LL.WIDE = LL.WIDE_LNA      # the LNA routing (build_compact sets it per cell; this module only builds pt_lna)
 NETRES = REPO / 'scratch' / 'pads-core' / 'hsfix' / 'netres.py'
 
 

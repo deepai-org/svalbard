@@ -89,6 +89,10 @@ def sequence(model, codes, idac1_smu=False, negative=None):
                    if f.startswith('core.refchain.dist_en_') and not pt_regmap.FIELD_BY_NAME[f].get('absent')})
     regs.write(**normal)
     regs.commit()
+    # rtl pt_bgap_interlock: the trunk enables and ref_sel_vbg stay 0 until the bandgap has been enabled for 256 SCLK
+    # cycles; SCLK only runs during transfers, so clock it with nine ID reads (288 cycles).
+    for _ in range(9):
+        spi.read(0, pt_regmap.ID_VALUE)
     spi.time += 80e-6
     normal_at = spi.time
     spi.read(5, 0)
@@ -482,6 +486,7 @@ if __name__ == '__main__':
                               stop_s=experiment['stop']), indent=2))
         sys.exit(0)
     (out/'wave.txt').unlink(missing_ok=True)
+    (out/'runtime-snapshot.json').unlink(missing_ok=True)     # identities of a previous run in this dir
     started = time.monotonic()
     with (out/'ngspice.log').open('w') as log:
         with subprocess.Popen([str(args.ngspice_source.resolve()/'src/ngspice'), '-b', 'pt_chip.spice'], cwd=out,

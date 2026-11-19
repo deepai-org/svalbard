@@ -328,3 +328,9 @@ Sources used (all public, fetched 2026-11-14):
 12. Run 2 / Run 3 e-test data: will it be shared as for Run 1?
 13. Do the stock `dvdd` / `dvss` cells short all supply pads and all ground pads on the die, as the project's supply plan assumes?
 14. Current rating per connector contact (HCTL HC-PBB40C-70DP-0.4V-02) and per bond wire.
+15. Supply cells on signal sites (D-SPLIT-SUPSITE). We keep every template power / ground pad and the 74 bond positions, and put
+    stock `gf180mcu_fd_io__dvss` (or `__dvdd`) cells at some `bidir[]` / `inputs[]` sites to get extra ground / supply bonds
+    (same 75 x 350 um footprint and opening; precheck `CheckPadMask` passes). (a) Is that acceptable for the standard COB build?
+    (b) How does the COB electrical test treat those fingers: they read as a short to the ground rail (dvss) or to the supply
+    (dvdd) instead of a diode; will such a die be rejected as a "pad-to-ground-rail short", and can we give you a per-finger
+    expectation list?

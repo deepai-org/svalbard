@@ -42,7 +42,7 @@ RUN="$OUT/design/runs/$TAG"
 # The flow's repair_design step script is replaced by digital_hardening/repair_design_pt.tcl (gain buffering
 # before the final global placement, see its header and config.json meta.substituting_steps).
 dk() { # dk <image> <cpus> <mem> <command>
-  docker run --rm --network none --cpus "$2" --memory "$3" --memory-swap "$3" --pids-limit 4096 \
+  docker run --rm --name "dig-$CHIP-$(date +%s%N | cut -c1-13)" --network none --cpus "$2" --memory "$3" --memory-swap "$3" --pids-limit 4096 \
     --user "$(id -u):$(id -g)" -e HOME=/out/home -e TMPDIR=/out/tmp -e OMP_NUM_THREADS=1 -e PT_CHIP="$CHIP" \
     -v "$PROJ:/src:ro" -v "$OUT:/out" \
     -v "$OUT/repair_design_pt.tcl:/usr/local/lib/python3.12/dist-packages/librelane/scripts/openroad/repair_design.tcl:ro" \

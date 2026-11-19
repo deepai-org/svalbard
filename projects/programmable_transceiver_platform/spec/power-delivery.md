@@ -1,491 +1,392 @@
-# Power delivery: budget, islands, grid, decap, rails, bonds
+# Power delivery: budget, islands, grid, decap, rails, bonds (pt_rf and pt_wired)
 
-The requirement the floorplan, the blocks and the board are checked against. Demands on other owners are rows
-`PD2-*` in `scratch/reviews/interface-changes.md`; risks are in [risk-register.md](risk-register.md).
-Numbers written `a / b / c` are optimistic / nominal / pessimistic. Model and regression:
-`scratch/integration/m1-pdn/` (section 8). Budget script: `spec/budgets/power_budget.py`.
+The requirement the floorplans, the blocks and the boards of the two chips are checked against. Demands on other owners
+are rows `PD2-*` and `PDS-*` in `scratch/reviews/interface-changes.md`; risks are in [risk-register.md](risk-register.md).
+Numbers written `a / b / c` are optimistic / nominal / pessimistic. Model: `scratch/integration/m1-pdn/` (one model,
+chip parameter; section 9). Budget: `spec/budgets/power_budget.py --reconcile [rf|wired]`.
 
-Two chips (split 2026-11-19): `pt_rf` carries the rf_rx, rf_tx, lod, lo, pll, conv and debug islands, `pt_wired` the
-wired_rx, wired_cap, wired_tx, pll and debug islands (`spec/chips.json`); each has its own supply, ring and bonds,
-with the free signal sites as extra supply / ground bonds (`integration/chips/<chip>/bond_map.txt`: `pt_rf` 10 supply
-and 19 ground bonds, `pt_wired` 10 and 17). The budget, model and numbers below are still the single-die ones; the
-model has not been rerun per chip (decision D9; the full 5.4 nF plan is booked on both chips in the die fit).
-
-Supply topology: one external supply. The provider ring joins all eight supply bonds into one net and all ten
-ground bonds into another; named supply sites are labels, not isolated feeds. The switched islands hang off the
-ring; the digital macro, the host pads and the always-on core (POR, bias, oscillator, reference receiver) are on
-the raw ring. Operating window 3.15-3.35 V at the die; slow dies may be trimmed up to a 3.50 V setpoint.
+Each chip has one external supply. The provider ring joins all supply bonds into one net and all ground bonds into
+another. The switched islands hang off the ring; the digital macro, the host pads and the always-on core (POR, bias,
+oscillator, reference receiver) are on the raw ring. Operating window 3.15-3.35 V at the die; slow dies may be trimmed
+up to a 3.50 V setpoint.
 
 ## 0. Status
 
-| Item | State at the pessimistic bound |
-| --- | --- |
-| Budget | Mode ceilings 360 / 260 / 340 mA (wired and USB / RF with external LO / RF with on-chip LO). They hold only with the digital macro at its PWR-DIG requirement; at the macro's last measured 81.8 mA five cases exceed them (section 1). |
-| Island switches | Closes. Ten islands on the five verified switch masters; worst drop 18.4 mV of 20 mV at the design current; electromigration at 85 C <= 55 % of the limit (section 2). |
-| Static drop | Closes as a requirement, not as an extraction: worst tap 106.4 mV of 117 mV with a 15 % / 15 % Metal5 / Metal4 grid, 97.8 mV at 20 % (section 3). Ripple is on top of it (section 7). |
-| Decap | **Does not close on decap alone, and closes without margin with the digital demand.** The plan (5.4 nF) gives 394 mV pk-pk at the macro for 60 mA launched in one packet per cycle (limit 150 mV), and 132 / 142 / 150 mV if the macro's 78.125 MHz component is cut to 10 % of that case. The plan depends on the digital macro's real current shape, which is not known (section 4). After the block repacks the free area over blocks holds only 1.1-1.4 nF of grid MIM against the 2.0 nF minimum. |
-| QVCO rail | Open: own regulated rail; the regulator is to be requalified against the -60 dBc per tone spur limit and shrunk (section 5.1, PD2-11). |
-| LNA ground | Open: 44 / 62 / 76 dB needed from die VSS to the LNA input. The LNA uses die VSS; no separate ground pad is possible on the fixed bond layout (section 5.2). |
-| Ring PLL | Regulated: passes with a two-phase macro (0.35 / 1.2 / 2.2 ps), fails single-phase at the pessimistic end (9.0 ps against 5). Regulator bypass is not an operating mode (section 5.3). |
-| ADC | Default sample rate 39.0625 MS/s in RF modes, which puts every 78.125 MHz multiple on DC; 40 MS/s stays selectable and needs 30-45 dB of unproven supply rejection (section 5.4). |
-| D2H rail | No split (section 5.5). |
-| Bonds | Fixed map, 8 supply and 10 ground bonds. Electromigration passes at 85 C: worst supply bond 87.5 mA against 125 mA per cell (section 6). |
-| Supply rejection evidence | Missing for every victim; demand rows PD2-14..19 with the spectrum at each tap (section 7). |
-| Supply trim | Regulator stack-up for the 3.50 V setpoint and reliability at 3.5 V are not evaluated. |
+| Item | pt_rf | pt_wired |
+| --- | --- | --- |
+| Islands (`spec/chips.json`) | rf_rx, rf_tx, lod, lo, pll, conv, debug | wired_rx, wired_cap, wired_tx, pll, debug |
+| Bonds (`integration/chips/<chip>/bond_map.txt`) | 10 supply, 19 ground | 10 supply, 17 ground |
+| Mode ceilings (digital at PWR-DIG) | Pass; DXe +6.6 mA, DXa +5.6. At the area-scaled macro (62.6 mA) TXe, TXa, DXe, DXa exceed by 3.5-17 mA | **Miss: W 410 mA, U 364 mA against 360** (pt_wiredtx8 currents, WT40) |
+| Island switches | Pass, 7 masters, 0.289 mm2 | Pass with **two `isw_wired` in parallel on wired_tx**; 6 masters, 0.303 mm2 |
+| Static drop (117 mV) | Pass: worst 94.3 mV (`lo_mmd`), 96.0 at 81.8 mA | Pass: worst 109.0 mV (`wrx_cap`), 109.2 at 81.8 mA |
+| Decap | 5.40 nF as packed | 5.41 nF as packed |
+| Macro ripple, limit 150 mV pk-pk | Pass only two-phase: 97 mV at 40 mA residual 0.15; single-phase 212 mV fails | Pass only two-phase, no margin: 148 mV at 60 mA residual 0.15; single-phase 313 mV fails |
+| RQ-3 / RQ-3a (rf_rx) | Pass on the supply side (section 5) | n/a |
+| QVCO regulator | Requirement for -60 dBc per tone: 33 dB at 78.125 MHz single-phase, 27 dB two-phase (section 6.1) | n/a |
+| Ring PLL (regulated, limit 5 ps) | 7.3 ps single-phase (miss), 4.3 ps two-phase | 5.0 ps single-phase (at the limit), 1.7 ps two-phase |
+| Bond EM (125 mA per cell, 85 C) | Pass: worst 42 mA | Pass: worst 97.5 mA (`dvdd_pads[0]`) |
+| Supply rejection evidence | Missing for every victim (PD2-14..19) | same |
+| Supply trim | 3.50 V setpoint stack-up and reliability not evaluated | same |
 
 ## 1. Budget against block evidence
 
-Source of every number: `spec/budgets/power_budget.py` (`--reconcile` prints these tables;
-`power-budget.json:pd2_reconciliation` holds them). "Budget" is `analog-architecture.json` `current_budget_ma`.
-"Worst" is the worst value inside the window (tt/ss/ff, 22-32 C, 3.15-3.35 V). Views: ext = extracted,
-sch = schematic, est = no bench exists, lim = owner's limit. Cases: W wired 2.5 Gb/s with the on-chip PLL (ring
-625 MHz), U USB HS, T TMDS (TX only), RX / TX / DX = RF receive / transmit / duplex, suffix e = external LO,
-a = on-chip LO.
+Source: `spec/budgets/power_budget.py --reconcile` (row table per chip, sources per row; `power-budget.json`
+`pd2_reconciliation.<chip>`). "Worst" is the worst value inside the window (tt/ss/ff, 22-32 C, 3.15-3.35 V). Views:
+ext extracted, sch schematic, est no bench, lim owner's limit. Cases: pt_rf RX / TX / DX (RF receive / transmit /
+duplex; e = external LO, a = on-chip LO); pt_wired W (2.5-3.125 Gb/s, on-chip PLL), U (USB HS), T (TMDS TX only).
 
-| Block | Island | Case | Budget (mA) | Measured nominal | Worst in-envelope | View | Source |
-| --- | --- | --- | ---: | ---: | ---: | --- | --- |
-| lna | rf_rx | RXe | 11.85 | 18.90 | 21.40 | lim | owner limit 19.0 / 11.8 mA (RX / low-bias); 21.40 / 13.43 at ff/22/3.35 on the last simulated candidate (scratch/rf-lna-p/v8/idd.log); the LNA is not closed |
-| rxmix_i | rf_rx | RXe | 0.58 | 3.01 | 3.09 | ext | analog/rf_rx/generated/rxmix_i-evidence.json extracted_nominal.idd_a |
-| rxmix_q | rf_rx | RXe | 0.58 | 3.01 | 3.09 | ext | same, rxmix_q |
-| bbfilter_i | rf_rx | RXe | 3.77 | 5.22 | 5.32 | ext | analog/rf_rx/generated/bbfilter_i-evidence.json extracted_nominal.idd_a |
-| bbfilter_q | rf_rx | RXe | 3.77 | 5.22 | 5.32 | ext | same, bbfilter_q |
-| txsum | rf_tx | TXe | 2.02 | 2.01 | 2.03 | ext | rf_tx-sim-ext.json chain_dc supply_mA.txsum (carries both txmix tails) |
-| rfdriver | rf_tx | TXe | 61.70 | 58.40 | 61.70 | ext | rf_tx-sim-ext.json chain_zero 58.40, scratch/rf-tx-d3/imax.json 61.694 ff/22/3.35 overdriven; TOTAL incl. the board feed: die rail = 0.393 x total (22.9 / 24.3 mA), board feed through the RF_TX pads = 0.607 x total, returning through die VSS |
-| adc_i | conv | RXe | 8.00 | 5.73 | 6.30 | ext | converters/generated/adc_i-evidence.json 5.731 at 40 MS/s; no corner current recorded: worst = 1.1 x (assumed) |
-| adc_q | conv | RXe | 8.00 | 5.72 | 6.30 | ext | adc_q-evidence.json 5.721; worst assumed 1.1 x |
-| dac_i | conv | TXe | 2.00 | 2.07 | 2.28 | ext | dac_i-evidence.json 2.069; worst assumed 1.1 x |
-| dac_q | conv | TXe | 2.00 | 2.07 | 2.28 | ext | dac_q-evidence.json; worst assumed 1.1 x |
-| refbuf | conv | RXe | 1.56 | 1.56 | 1.56 | ext | refbuf-evidence.json quiescent 0.553 (0.556 ff) + 1.0 mA delivered-reference allowance |
-| qvco | lo | RXa | 12.00 | 23.50 | 25.00 | ext | scratch/lo/r5_pn/ext12.json i_vdd_ma 22.11-25.01 over four tank cases (no tt/27 run of r6b) |
-| lo_pfdcp | lo | RXa | none | 1.00 | 1.50 | est | LO-INTEGRATION.md section 3: order 1 mA, not measured |
-| lo_vreg | lo | RXa | none | 0.50 | 1.00 | est | VDD_LO regulator quiescent: allowance (PD2-11) |
-| lo_mmd | lod | RXa | none | 26.30 | 34.80 | ext | scratch/lo/r4_loop/f/mmdxA.json, mmdxB.json idd_ma at 3.1 GHz: tt 25.8-26.3, ff/22/3.35 34.76, ss 18.8-19.3 (24.3-25.1 tt at 2.4-2.45 GHz in the logs) |
-| qvco_pre | lod | RXa | none | 3.00 | 4.00 | est | LO-INTEGRATION.md section 3: lo_qvco.VDDB PRE buffer, "a few mA" of 2.4 GHz CMOS current, not measured |
-| lo_mmd_qdum | lod | RXa | none | 8.00 | 10.00 | est | LO-INTEGRATION.md: ~8 mA by design (two 2.6 mA latches + followers), not measured |
-| lo_ext | lod | RXe | 18.83 | 11.30 | 13.74 | ext | scratch/timing/lo_ext/results.json internal 11.05 / 13.65; scratch/lo/r4_lo11/results.json external via the CML driver 11.2-11.3 / 13.74 (published lo_ext-evidence.json 16.02 is stale) |
-| pll_cdr | pll | W | 3.97 | 6.94 | 10.20 | ext | timing/generated/pll_ring-evidence.json i_on_ma 6.94 at 625 MHz, host_follow 6.85; no corners on the r9v cell: worst = older supply sweep 10.2 (pll_vreg/evidence/pll_ring-f-vs-supply.json) |
-| pll_tx | pll | W | 3.97 | 6.94 | 10.20 | est | pt_pll_ring_core has NO current evidence: taken equal to pll_cdr |
-| pll_misc | pll | W | none | 1.00 | 2.00 | est | pt_cdr analog cell + pt_pll_vreg2 quiescent: not in any evidence file |
-| clockmux | pll | W | 9.67 | 1.35 | 1.55 | ext | timing/generated/clockmux-evidence.json (9.67 mA budget is not in the current file) |
-| wordclk | pll | W | 10.48 | 2.30 | 2.42 | ext | timing/generated/wordclk-evidence.json 1.18-2.30, 2.42 ff/32/3.35 (no clocktree evidence exists) |
-| rx_ref_in | raw ring | W | 3.55 | 3.49 | 4.63 | ext | timing/generated/diff_clk_rx-evidence.json 3.49 at 100 MHz, 4.63 ff/32/3.35; on the always-on core rail at the REF pad (LO-INTEGRATION.md), not on the pll island; off in the external-LO cases (REF_IN carries the LO) |
-| prescale | pll | RXe | none | 1.99 | 2.40 | ext | timing/generated/prescale-evidence.json 1.99 at 2.5 GHz /16, tt only: worst assumed 1.2 x |
-| ctle | wired_rx | W | 5.33 | 4.91 | 5.31 | ext | wired_rx/generated/ctle-evidence.json |
-| slicer | wired_rx | W | 16.10 | 7.25 | 9.80 | ext | slicer-evidence.json iavg 7.25 at 625 quarter, 6.33 USB HS; worst = 32.2 mW at 810 quarter; USB worst assumed |
-| detect | wired_rx | W | 1.66 | 2.31 | 2.38 | ext | detect-evidence.json |
-| termination | wired_rx | W | 1.23 | 1.25 | 1.56 | ext | termination-evidence.json idd_div |
-| rxlevel | wired_rx | W | 0.04 | 0.03 | 0.04 | ext | rxlevel-evidence.json |
-| rxselect | wired_rx | W | 2.00 | 2.00 | 2.00 | est | no active current in rxselect-evidence.json: the 2 mA allocation is kept |
-| vthdac | wired_rx | W | none | 0.53 | 0.70 | ext | vthdac-evidence.json extracted i_uA |
-| ctle_follower | wired_rx | W | none | 6.30 | 6.90 | est | CTLE source followers (approved, MW-13-FIX), 3 mA/side + 0.3 mA bias; not built; worst assumed 1.1 x |
-| ptrim | wired_cap | W | none | 18.00 | 21.00 | est | pt_ptrim real-load redesign (MW-14-FIX), 18-21 mA for 8 channels at 625 MHz; not built; USB scaled by 480/625 |
-| wrx_cap | wired_cap | W | none | 44.78 | 46.64 | ext | staged r7 scratch/wired_rx/r7cap/stage/results.json 44.78 at 625 MHz (45.15 ff), 34.87 at 480; worst = published r5h wrx_cap-evidence.json ext_q625 46.64 (corner not recorded; schematic 19.78); USB worst assumed 1.05 x |
-| wiredtx | wired_tx | W | 36.00 | 35.30 | 37.46 | ext | scratch/wired_tx/sim-results.json cornerq2.5 33.21 ss - 37.46 ff/22/3.35 (no tt run: nominal = mid), int_tmds_q1g485 29.90 |
-| usbhs | wired_tx | U | 24.00 | 18.20 | 20.00 | ext | analog/pads/README.md 16.9-18.2 mA after trim; worst assumed 1.1 x |
-| bias | raw ring | W | 1.40 | 0.40 | 0.52 | sch | core_support/README.md 0.30-0.52 over the function window |
-| aosc | raw ring | W | 0.22 | 0.38 | 0.48 | ext | timing/generated/aosc-evidence.json i_on_ma (register reset = enabled) |
-| usbfs | raw ring | U | 8.00 | 8.00 | 8.00 | est | allocation (provider pad drivers), no bench |
+**Digital macro per chip.** One RTL, two configurations. The macro current is the measured both-halves figure (72.09 mA
+nominal, AC1_R4 vectorless; 81.79 mA worst, CLOSE_R2) scaled by the synthesized cell area of each configuration against
+the both-halves build: pt_rf 1.053 / 1.375 = 0.766 (55.2 / 62.6 mA), pt_wired 1.299 / 1.375 = 0.945 (68.1 / 77.3 mA).
+Same RTL, clocks and density, so current is taken proportional to cells. The unscaled 81.79 mA stays as the pessimistic
+bound and is carried as its own column in every static result. Host IO is 95.2 mA typical, 116.8 mA at 8 pF, halved in
+RF modes (PWR-HOST-RF).
 
-Mode totals (mA). The digital macro is 72.1 mA (vectorless, run AC1_R4) to 81.8 mA (run CLOSE_R2); neither is
-the current RTL. Host IO is 95.2 mA typical, 116.8 mA at 8 pF, halved in RF modes.
+Mode totals (mA), worst in-window analog:
 
-| Case | Analog nominal | Analog worst | Total nominal (digital 72.1) | Total worst (digital 81.8) | Total worst, digital at PWR-DIG | of which board feed | Ceiling | Margin at PWR-DIG | Margin at 81.8 mA |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| W | 145.5 | 165.8 | 312.8 | 364.4 | 342.6 | 0.0 | 360 | +17.4 | -4.4 |
-| U | 110.1 | 126.7 | 277.4 | 325.4 | 303.6 | 0.0 | 360 | +56.4 | +34.6 |
-| T | 42.8 | 49.6 | 210.2 | 248.2 | 226.4 | 0.0 | 360 | +133.6 | +111.8 |
-| RXe | 71.0 | 82.5 | 190.7 | 222.7 | 180.9 | 0.0 | 260 | +79.0 | +37.3 |
-| RXa | 136.8 | 163.5 | 256.5 | 303.7 | 261.9 | 0.0 | 340 | +78.1 | +36.3 |
-| TXe | 116.9 | 130.2 | 236.6 | 270.4 | 228.6 | 37.5 | 260 | +31.4 | -10.4 |
-| TXa | 182.7 | 211.2 | 302.4 | 351.4 | 309.6 | 37.5 | 340 | +30.4 | -11.4 |
-| DXe | 128.3 | 142.8 | 248.0 | 283.0 | 241.2 | 37.5 | 260 | +18.8 | -23.0 |
-| DXa | 194.1 | 223.8 | 313.8 | 364.0 | 322.2 | 37.5 | 340 | +17.8 | -24.0 |
-| stopped | 0.8 | 1.0 | 3.8 | 4.0 | 4.0 | 0.0 | 360 | +356.0 | +356.0 |
+| Chip | Case | Analog worst | Total, digital area-scaled | Total, digital 81.8 | Total, digital at PWR-DIG | Board feed | Ceiling | Margin at PWR-DIG | Margin at 81.8 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| pt_rf | RXe | 94.7 | 215.8 | 234.9 | 193.2 | 0 | 260 | +66.8 | +25.1 |
+| pt_rf | RXa | 175.7 | 296.7 | 315.9 | 274.1 | 0 | 340 | +65.9 | +24.1 |
+| pt_rf | TXe | 142.4 | 263.5 | 282.6 | 240.8 | 37.5 | 260 | +19.2 | -22.6 |
+| pt_rf | TXa | 223.4 | 344.4 | 363.6 | 321.8 | 37.5 | 340 | +18.2 | -23.6 |
+| pt_rf | DXe | 155.0 | 276.1 | 295.2 | 253.4 | 37.5 | 260 | +6.6 | -35.2 |
+| pt_rf | DXa | 236.0 | 357.0 | 376.2 | 334.4 | 37.5 | 340 | +5.6 | -36.2 |
+| pt_wired | W | 233.3 | 427.4 | 431.9 | 410.1 | 0 | 360 | **-50.1** | -71.9 |
+| pt_wired | U | 186.7 | 380.8 | 385.4 | 363.6 | 0 | 360 | **-3.6** | -25.4 |
+| pt_wired | T | 79.0 | 273.1 | 277.6 | 255.8 | 0 | 360 | +104.2 | +82.4 |
 
-Requirements (traced in `performance-requirements.json`; IDs are defined in [power-partition.md](power-partition.md)):
+Requirements (traced in `performance-requirements.json`; IDs in [power-partition.md](power-partition.md)):
 
-- **PWR-MODE-CEIL:** total chip current, including the 37.5 mA rfdriver board feed, stays within 360 mA
-  (wired, USB), 260 mA (RF, external LO) and 340 mA (RF, on-chip LO) at worst in-window analog currents.
-- **PWR-DIG-WIRED / PWR-DIG-RF:** the digital macro draws <= 60 mA in wired and USB modes and <= 40 mA in RF
-  modes, unused domains clock-gated, signed off with activity-annotated power. The ceilings depend on it (PD2-6):
-  at 81.8 mA wired (364 mA), RF TX (270 / 351 mA) and duplex (283 / 364 mA) exceed them.
-- **PWR-HOST-RF:** RF modes run the host link at div2 (`debug.host_link.rate`).
-- **PWR-DROP:** <= 117 mV from the source (3.3 V - 1 %) to any block tap, so the die stays >= 3.15 V (section 3).
-- **PWR-THERM:** junction 22-32 C across the stopped-to-maximum mode step. 3.35 V x 360 mA + 51 mW = 1.26 W
-  needs <= 6.4 C/W from junction to the temperature-controlled surface; board requirement B2a asks 5.2 C/W.
-  Stopped power is 15 mW. Not evaluated at the 3.50 V setpoint.
+- **PWR-MODE-CEIL:** total current per chip, including the 37.5 mA rfdriver board feed, within 360 mA (pt_wired), 260 mA
+  (pt_rf, external LO), 340 mA (pt_rf, on-chip LO) at worst in-window analog currents. **pt_wired misses it in W and U**
+  (PDS-2); the ceiling is not raised here.
+- **PWR-DIG-WIRED / PWR-DIG-RF:** macro <= 60 mA (pt_wired) and <= 40 mA (pt_rf), unused domains clock-gated, signed off
+  with activity-annotated power per chip. pt_rf at its area-scaled 62.6 mA exceeds the TX and DX ceilings by 3.5-17 mA.
+- **PWR-HOST-RF:** RF modes run the host link at div2.
+- **PWR-DROP:** <= 117 mV from the source (3.3 V - 1 %) to any block tap (section 4).
+- **PWR-THERM:** junction 22-32 C across the stopped-to-maximum step: 3.35 V x 360 mA + 51 mW = 1.26 W needs <= 6.4 C/W
+  (board requirement B2a: 5.2 C/W). pt_wired at 410 mA draws 1.37 W and needs <= 5.8 C/W; still inside B2a.
 
-Notes:
-
-- **rfdriver:** 61.7 mA is the total. 61 % of it is the output-pair tail, which enters through the RF_TX pads
-  from the board chokes (35.3 of 58.15 mA in `rf_tx-sim-ext.json:safe_en_lo_stopped`, the only bench that
-  separates the two). The die rail carries 22.9 / 24.3 mA. The board share returns through the die ground bonds.
-- **Estimates and limits the budget carries:** `pll_tx` ring core (no current evidence), `lo_mmd_qdum`, QVCO
-  buffer, `lo_pfdcp`, the `pt_cdr` analog cell, `pt_pll_vreg2` quiescent, `rxselect`, `pt_ptrim`, the CTLE
-  followers, ADC/DAC corner currents, the USB worst values and the LNA.
-- **Currents flagged to their owners as high (PD2-3):** `pt_wrx_cap` 44.8 mA extracted against 19.8 mA
-  schematic, and `pt_ptrim` 18-21 mA to drive it; `lo_mmd` 26-35 mA plus a dummy of about 8 mA; wiredtx in TMDS
-  29.9 mA; `clk_obs` 4.96 mA each and `vco_replica` up to 11.8 mA; the digital macro.
+Carried as estimates or limits (1.25 x in the switch sizing): `pt_wiredtx8` and its POST and pad tail (WT40, block not
+published, no ff run), `pll_tx` ring core, `pll_misc`, `lo_mmd_qdum`, QVCO buffer, `lo_pfdcp`, `lo_vreg`, `rxselect`,
+`pt_ptrim`, CTLE followers, the LNA (owner limit), ADC/DAC corner currents, USB worst values. On pt_rf the TX ring and
+the CDR ring both run in the RF cases (split D1, D2).
 
 ## 2. Islands and switches
 
-Ten islands, each on one of the five verified switch masters in `analog/island_support` (DRC / LVS clean,
-full-RC drop <= 20 mV at the master's design current at all 13 functional points). Instances and enable
-groups are in `integration/chips/{rf,wired}/chip.conn`.
+Sizing rule: design current of an island = sum of the worst in-window currents of its blocks, with 1.25 x on every
+estimate or limit and on the rfdriver die-rail share (39.3 %). At that current the full-RC worst-corner drop must be
+<= 20 mV and the current must not exceed the design current of the master (n masters in parallel: n x current,
+Ron / n, n x area). Masters (`analog/island_support`): `isw_wired` 80 mA / 0.2484 ohm / 0.0641 mm2, `isw_rf` 55 / 0.3007 /
+0.0500, `isw_debug` 40 / 0.3878 / 0.0370, `isw_conv` 30 / 0.4807 / 0.0320 (published); `isw_pll` 60 / 0.2877 / 0.0530
+(verified, not published).
 
-Sizing rule: the design current of an island is the sum of the worst in-window currents of its blocks, with
-1.25 x on every contribution that is an estimate or a limit and on the rfdriver die-rail share. At that current
-the full-RC worst-corner drop must be <= 20 mV and the current must not exceed the master's design current.
+| Chip | Island | Worst (mA) | Design (mA) | Case | Master | n | Capacity (mA) | Drop at design (mV) | Area (mm2) | Smallest single master that passes |
+| --- | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | --- |
+| pt_rf | rf_rx | 38.2 | 43.6 | RXe | isw_rf | 1 | 55 | 13.1 | 0.0500 | isw_rf |
+| pt_rf | rf_tx | 26.3 | 32.3 | DXa | isw_debug | 1 | 40 | 12.5 | 0.0370 | isw_debug |
+| pt_rf | lod | 70.6 | 74.1 | RXa | isw_wired | 1 | 80 | 18.4 | 0.0641 | isw_wired |
+| pt_rf | lo | 27.5 | 28.1 | DXa | isw_conv | 1 | 30 | 13.5 | 0.0320 | isw_conv |
+| pt_rf | pll | 27.6 | 30.7 | RXe | isw_debug | 1 | 40 | 11.9 | 0.0370 | isw_debug |
+| pt_rf | conv | 18.7 | 18.7 | DXe | isw_conv | 1 | 30 | 9.0 | 0.0320 | isw_conv |
+| pt_rf | debug | 40.0 | 40.0 | rule | isw_debug | 1 | 40 | 15.5 | 0.0370 | isw_debug |
+| pt_wired | wired_rx | 28.7 | 30.9 | W | isw_debug | 1 | 40 | 12.0 | 0.0370 | isw_debug |
+| pt_wired | wired_cap | 67.6 | 72.9 | W | isw_wired | 1 | 80 | 18.1 | 0.0641 | isw_wired |
+| pt_wired | wired_tx | 105.0 | 131.2 | W | **isw_wired** | **2** | 160 | 16.3 | 0.1282 | none |
+| pt_wired | pll | 26.4 | 29.4 | W | isw_debug | 1 | 40 | 11.4 | 0.0370 | isw_conv (29.4 of 30 mA: no margin, not taken) |
+| pt_wired | debug | 40.0 | 40.0 | rule | isw_debug | 1 | 40 | 15.5 | 0.0370 | isw_debug |
 
-| Island | Worst current (mA) | Design current, 1.25 x on estimates (mA) | Case | Switch master | Master design (mA) | Drop at worst (mV) | Drop at design (mV) | Area (mm2) |
-| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| pll | 26.4 | 29.4 | W | isw_debug | 40 | 10.2 | 11.4 | 0.0370 |
-| wired_rx | 28.7 | 30.9 | W | isw_debug | 40 | 11.1 | 12.0 | 0.0370 |
-| wired_cap | 67.6 | 72.9 | W | isw_wired | 80 | 16.8 | 18.1 | 0.0641 |
-| wired_tx | 37.5 | 37.5 | W | isw_debug | 40 | 14.5 | 14.5 | 0.0370 |
-| rf_rx | 38.2 | 43.6 | RXe | isw_rf | 55 | 11.5 | 13.1 | 0.0500 |
-| conv | 18.7 | 18.7 | DXe | isw_conv | 30 | 9.0 | 9.0 | 0.0320 |
-| lod | 70.6 | 74.1 | RXa | isw_wired | 80 | 17.5 | 18.4 | 0.0641 |
-| lo | 27.5 | 28.1 | DXa | isw_conv | 30 | 13.2 | 13.5 | 0.0320 |
-| rf_tx | 26.3 | 32.3 | DXa | isw_debug | 40 | 10.2 | 12.5 | 0.0370 |
-| debug | 40.0 | 40.0 | debug rule: at most 40 mA of debug loads enabled at once (all on = 51 / 56 mA) | isw_debug | 40 | 15.5 | 15.5 | 0.0370 |
+Switch area: pt_rf 0.289 mm2, pt_wired 0.303 mm2.
 
-| Island | Members | Enable |
+- **wired_tx.** W = `pt_wiredtx8` 60 mA (53 at ss, x 1.13 for ff) + POST 24 + pad MAIN tail 21 = 105 mA worst, 131 mA
+  design. One `isw_wired` carries 80 mA and drops 32.6 mV at 131 mA: fails. Two in parallel: 160 mA, 16.3 mV. With POST
+  off (MAIN only): 81 / 101 mA design, still over one `isw_wired` (25.2 mV). `isw_wired` + `isw_debug` (120 mA, 0.151
+  ohm) fails at 131 mA. A single larger master (>= 135 mA class, about 0.11 mm2) would do the same job in one cell; not
+  designed. Area delta against the `isw_debug` the packer booked: +0.091 mm2.
+- Every other master is already the smallest published one that passes; the only further lever is `isw_conv` on the
+  pt_wired pll island (-0.005 mm2) at zero current margin, not taken.
+- Enables (PD2-2): pt_rf `rf` = rf_rx + rf_tx + lod + lo, `pll`, `conv`, `debug`; pt_wired `wired` = wired_rx +
+  wired_cap + wired_tx, `pll`, `debug`. PG to the register file is the AND of the group.
+- Debug island rule on both chips: at most 40 mA of debug loads enabled at once.
+- EM at 85 C (DRM 14.2): `isw_wired` at 74.1 mA: Metal3 stripes 1.14 mA/um (55 %); each of the two wired_tx masters
+  carries 65.6 mA at design (equal sharing requires the two cells on one VISL bar with symmetric feeds). Hand
+  calculation from the layout geometry.
+- Soft start (`analog/island_support/pd2-softstart.json`): dip 0 mV, peak current 1.0 x load, EN to PG <= 8.4 us at the
+  previous island loads; the two-master wired_tx and the new wired_tx load are not run.
+
+## 3. Bonds
+
+| Chip | Supply bonds | Ground bonds |
 | --- | --- | --- |
-| wired_rx | ctle (and its followers), slicer, detect, termination, rxlevel, rxselect, vthdac, RX pad blocks | `wired` |
-| wired_cap | `pt_wrx_cap`, `pt_ptrim` | `wired` |
-| wired_tx | `pt_wiredtx`, TX pad, USB HS driver | `wired` |
-| rf_rx | lna, rxmix_i/q, bbfilter_i/q | `rf` |
-| rf_tx | rfdriver (die-rail part), txmix_i/q, txsum | `rf` |
-| lod (VDD_LOD) | `lo_mmd`, `lo_mmd_qdum`, `lo_ext`, `lo_obs`, QVCO buffer | `rf` |
-| lo (input of the VDD_LO regulator) | QVCO regulator, QVCO, `lo_pfdcp` | `rf` (PD2-2 asks for its own bit) |
-| pll | `pt_pll_vreg2` (both rings), clockmux, wordclk, prescale, `pt_cdr` analog | `pll` |
-| conv | adc_i/q, dac_i/q, refbuf | `conv` |
-| debug | debug blocks; rule: at most 40 mA enabled at once (all on is 51 / 56 mA) | `debug` |
+| pt_rf | 8 provider (`dvdd_pads[0..5]`, `vdd_pads[0..1]`) + `inputs[3]` (rf_tx feed), `bidir[19]` (lo feed) | 10 provider + 9 on signal sites (`inputs[2,4,5]`, `bidir[14,15,17,18,22,25]`) |
+| pt_wired | 8 provider + `inputs[0]`, `bidir[25]` (HS driver supply) | 10 provider + 7 on signal sites (`inputs[1,6,8,10,11]`, `bidir[17,22]`) |
 
-- Area: 0.427 mm2 of switches; installed capacity 475 mA.
-- The section 3 runs add 25 % on the switch resistance at the pessimistic end (wired_cap 21.0 mV, lod 21.9 mV);
-  the 117 mV total still closes.
-- Switches that share an enable start together. Power-good to the register file is the AND of the group; each
-  switch's ISO drives its own island's clamps (PD2-2). The `lo` island needs its own enable bit (PD2-2).
-- `rx_ref_in` sits on the always-on rail at the REF pad, not on the pll island.
-- **Electromigration at 85 C** (GF180MCU DRM 14.2: Metal1-4 2.09 mA/um, Metal5 4.5 mA/um, vias 0.58 mA/cut):
-  `isw_wired` at 74.1 mA: Metal5 stripes 0.71 mA/um, Metal3 stripes alone 1.14 mA/um (55 %), edge bar 0.77 mA/um
-  with the four required feeds. Hand calculation from `layout.py` geometry, not an extracted current-density run.
-- **Soft start** (`analog/island_support/pd2-softstart.json`, extracted masters, 3.3 V, tt / ss / ff): ring dip
-  0 mV; peak switch current 1.00 x the island load; rail 10-90 % in 1.1-4.8 us; EN to PG <= 8.4 us. One enable
-  edge on the four RF-side islands draws 156 mA and steps the ring by 19 mV; the three wired islands 132 mA and
-  16 mV. That step lands on every running block: configure islands before payload (PDN-08). Loads are
-  resistors; 3.15 / 3.35 V were not run.
-- Required of the floorplan (ISL-01): ring and island grid strapped to each edge bar at >= 4 evenly spaced points
-  or continuously.
-- Debug island rule: at most 40 mA of debug loads enabled at once.
+- The bonds on signal sites are modelled as present: they are pending **D-SPLIT-SUPSITE**
+  (`integration/chips/decisions.md`). A supply bond on a signal site has no COB 1 uF capacitor (8.1-8.7 nH to the first
+  capacitor against 4.0-4.6 nH); the model gives it none.
+- Per-cell rating at 85 C: 125 mA (six Metal2 strips, 60 um, 2.09 mA/um).
+- Bond currents, worst case, pessimistic set with the macro at 81.8 mA (`e7_static.py`): pt_rf worst supply bond 41.8 mA
+  (`dvdd_pads[2]`, DXa), ground 41.2 mA (`dvss_pads[4]`); pt_wired worst supply 97.5 mA (`dvdd_pads[0]`, W, 78 % of the
+  rating), ground 77.8 mA (`dvss_pads[0]`). Ring drop 28.1 mV (pt_rf), 47.8 mV (pt_wired).
 
-## 3. Supply grid the floorplan must implement
+## 4. Supply grid and static drop
 
-Budget: 117 mV DC from the source (3.267 V) to any block tap, supply drop plus ground rise, at the pessimistic
-set and worst in-window currents with the digital macro at 81.8 mA.
+Budget: 117 mV DC from the source (3.267 V) to any block tap, supply drop plus ground rise, at the pessimistic set and
+worst in-window currents.
 
 | ID | Requirement | Value |
 | --- | --- | --- |
-| G1 | Raw VDD and VSS mesh over the whole analog core, over blocks too | Metal5 vertical and Metal4 horizontal straps, **>= 15 % coverage per net on each layer** (sheet <= 0.47 ohm/sq vertical and <= 0.69 ohm/sq horizontal per net at maximum sheet resistance), 20 % wanted (it restores the margin the wired RX additions took), via4 at every same-net crossing |
-| G2 | Strap pattern | VDD and VSS straps adjacent (paired), pair pitch <= 70 um, so the loop inductance stays below the 0.4 nH per 250 um square the model assumes at its pessimistic end |
-| G3 | Blocks that use Metal4 or Metal5 inside | A VDD/VSS ring of the same total cross-section around them; no gap in the mesh wider than 250 um |
-| G4 | Island switch position | VDD edge bar within 150 um of the core ring and within 600 um (along the ring) of a supply pad: wired_cap and wired_rx at pad 18, wired_tx at pad 26, rf_rx at pad 72, rf_tx at pad 58, lod at pad 74, lo at pad 64, pll at pad 35. A switch further in needs a raw-VDD trunk that drops <= 5 mV at the island's design current |
-| G5 | Island rails | Metal5 (or Metal5 + Metal4) from the VISL edge bar; **<= 15 mV from the bar to any block supply pin at that block's worst current**; VSS of island blocks is the G1 mesh |
-| G6 | Switch-to-block distance | Follows from G5: Metal5 strap width >= 0.47 um per mA per 100 um of length (0.07 ohm/sq). The table below gives the width at the distance the model assumes (blocks above 20 mA within about 500 um of their switch): 107 um for `pt_wrx_cap` at 490 um, 93 um for `pt_wiredtx` at 530 um, 75 um for `lo_mmd` at 460 um, 72 um for the LNA at 720 um |
-| G7 | Digital macro | Its VDD/VSS rings tied to the core ring along the whole north and east sides and to the G1 mesh on the west and south sides at <= 80 um pitch; macro internal grid is the digital owner's (PD2-7) |
-| G8 | Core ring | 2 x 25 um may narrow to 2 x 12 um (AP4-10b): the provider rails carry the ring current and are uncut (section 6). Cost 0.5-0.9 mV |
+| G1 | Raw VDD and VSS mesh over the whole analog core, over blocks too | Metal5 vertical and Metal4 horizontal straps, >= 15 % coverage per net on each layer, 20 % wanted; via4 at every same-net crossing |
+| G2 | Strap pattern | VDD and VSS straps paired, pair pitch <= 70 um (loop <= 0.4 nH per 250 um square) |
+| G3 | Blocks that use Metal4 or Metal5 inside | VDD/VSS ring of the same cross-section around them; no mesh gap wider than 250 um |
+| G4 | Island switch position | VDD edge bar within 150 um of the core ring, as the die-fit packing places them (`scratch/reviews/die-fit/run/<chip>/fit-s.json`, `switches`) |
+| G5 | Island rails | Metal5 (or Metal5 + Metal4) from the VISL bar; <= 15 mV from the bar to any block supply pin at the worst current of all blocks on that pin |
+| G6 | Switch-to-block strap width | Metal5 >= 0.47 um per mA per 100 um. At the packed distances (table below) several straps are wider than practical: move the switch or the block, or add a raw-VDD trunk (PDS-3) |
+| G7 | Digital macro | Rings tied to the core ring along the north side and to the G1 mesh on the other sides at <= 80 um pitch (PD2-7) |
+| G8 | Core ring | 2 x 25 um (may narrow to 2 x 12 um); provider rails uncut through every site |
 
-Result with G1-G7 at their limits (`e7_static_v7.py`, `out/e7_static_v7_base.txt`), worst taps:
+Results (`e7_static.py chip=<chip>`; pess = pessimistic set and worst currents with the area-scaled macro; last column
+the macro at 81.8 mA):
 
-| Tap | Island | mA worst | Drop opt / nom / pess (mV) | Pessimistic split: to switch / switch / strap / ground rise | Metal5 strap for 15 mV at the modelled distance |
-| --- | --- | ---: | --- | --- | ---: |
-| wrx_cap | wired_cap | 46.6 | 72.6 / 84.3 / 106.4 | 39.5 / 21.0 / 15.0 / 30.9 | 107 um |
-| ptrim | wired_cap | 21.0 | 65.2 / 75.8 / 97.9 | 39.5 / 21.0 / 15.0 / 22.4 | 48 um |
-| slicer | wired_rx | 9.8 | 56.5 / 65.4 / 88.0 | 34.2 / 13.9 / 15.0 / 24.9 | 17 um |
-| wiredtx | wired_tx | 37.5 | 59.3 / 68.5 / 85.9 | 30.5 / 18.2 / 15.0 / 22.2 | 93 um |
-| lo_mmd | lod | 34.8 | 52.1 / 60.1 / 91.5 | 34.7 / 21.9 / 15.0 / 19.9 | 75 um |
-| lo_ext | lod | 13.7 | 53.5 / 61.6 / 91.7 | 34.6 / 21.9 / 15.0 / 20.2 | 55 um |
-| qvco_pre | lod | 4.0 | 55.0 / 63.9 / 94.4 | 34.7 / 21.9 / 15.0 / 22.8 | 42 um |
-| lna | rf_rx | 21.4 | 53.4 / 61.2 / 81.7 | 31.7 / 14.4 / 15.0 / 20.6 | 72 um |
-| qvco (regulator input) | lo | 25.0 | 53.1 / 61.1 / 78.3 | 23.9 / 16.5 / 15.0 / 22.8 | 74 um |
-| rfdriver | rf_tx | 61.7 | 51.6 / 59.0 / 72.9 | 23.3 / 12.7 / 15.0 / 21.8 | 34 um |
-| adc_i | conv | 6.3 | 48.1 / 55.0 / 71.5 | 26.7 / 11.2 / 15.0 / 18.6 | 46 um |
-| pll_tx | pll | 10.2 | 37.4 / 42.6 / 63.2 | 23.8 / 12.8 / 15.0 / 11.6 | 19 um |
-| digital macro | raw | 81.8 | 25.2 / 31.4 / 44.0 | ground rise 18.5 | |
-| core_bias | raw | 0.5 | 27.1 / 31.9 / 46.7 | ground rise 19.9 | |
+| Chip | Tap | Island | mA | Drop opt / nom / pess / pess-81.8 (mV) | Split: to switch / switch / strap / ground | Metal5 strap at the packed distance |
+| --- | --- | --- | ---: | --- | --- | ---: |
+| pt_rf | lo_mmd | lod | 34.8 | 53.5 / 61.9 / 94.3 / 96.0 | 34.0 / 21.9 / 15.0 / 23.5 | 154 um |
+| pt_rf | lo_ext | lod | 13.7 | 52.4 / 61.2 / 91.6 / 94.0 | 34.0 / 21.9 / 15.0 / 20.7 | 123 um |
+| pt_rf | qvco (regulator input) | lo | 25.0 | 51.3 / 58.5 / 77.4 / 78.6 | 28.0 / 16.5 / 15.0 / 17.9 | 60 um |
+| pt_rf | rfdriver | rf_tx | 61.7 | 45.1 / 50.9 / 62.2 / 64.1 | 14.9 / 12.7 / 15.0 / 19.6 | 29 um |
+| pt_rf | lna | rf_rx | 21.4 | 38.6 / 43.4 / 55.3 / 56.5 | 12.4 / 14.4 / 15.0 / 13.5 | 92 um |
+| pt_rf | adc_q | conv | 6.3 | 38.0 / 42.6 / 54.4 / 55.6 | 13.2 / 11.2 / 15.0 / 15.0 | 63 um |
+| pt_rf | pll_tx | pll | 10.2 | 29.8 / 33.1 / 50.6 / 52.3 | 14.4 / 13.4 / 15.0 / 7.9 | 29 um |
+| pt_rf | digital macro | raw | 62.6 | 23.1 / 28.8 / 41.6 / 46.0 | ground 19.5 | |
+| pt_wired | wrx_cap | wired_cap | 46.6 | 73.7 / 85.5 / 109.0 / 109.2 | 41.2 / 21.0 / 15.0 / 31.8 | **323 um** |
+| pt_wired | ptrim | wired_cap | 21.0 | 68.1 / 79.1 / 103.7 / 103.9 | 41.2 / 21.0 / 15.0 / 26.5 | 96 um |
+| pt_wired | pt_wiredtx8 (+POST) | wired_tx | 84.0 | 62.9 / 73.2 / 98.6 / 99.0 | 27.6 / 16.3 / 15.0 / 39.7 | **290 um** |
+| pt_wired | slicer | wired_rx | 9.8 | 49.4 / 56.8 / 78.1 / 78.3 | 28.5 / 13.9 / 15.0 / 20.7 | 34 um |
+| pt_wired | pll_tx | pll | 10.2 | 42.6 / 48.9 / 71.2 / 71.5 | 17.7 / 12.8 / 15.0 / 25.7 | 109 um |
+| pt_wired | pll_cdr | pll | 10.2 | 41.5 / 47.6 / 69.5 / 69.9 | 17.7 / 12.8 / 15.0 / 24.0 | 161 um |
+| pt_wired | digital macro | raw | 77.3 | 28.0 / 35.3 / 50.2 / 51.1 | ground 24.3 | |
 
-- Margin at the worst tap: 10.6 mV (9 %) at 15 % coverage, 19.2 mV (16 %) at 20 %. The lowest DC rail is
-  3.161 V at `pt_wrx_cap`.
-- Coverage sweep at the pessimistic set (`out/e7_coverage_sweep.txt`): 8 % fails (134.8 mV), 10 % fails
-  (122.9 mV), **15 % 106.4 mV**, 20 % 97.8 mV, 25 % 92.3 mV.
-- Hand check of the worst tap: board 0.020 ohm x 364 mA = 7.3 mV; bond and finger trace (0.15 + 0.055 ohm) x
-  87.5 mA = 17.9 mV; switch 0.2484 ohm x 1.25 x 67.6 mA = 21.0 mV; strap 15.0 mV; ground bond 0.15 ohm x
-  71.0 mA = 10.7 mV: 71.9 mV. The rest is the model's ring and mesh: 14.3 mV on the supply side and 20.2 mV on
-  the ground side. Sum 106.4 mV.
-- G4 conflicts with signal flow for the lod, pll and wired_tx islands (their loads do not sit at the listed
-  supply pads); the strap routing is open.
+- Margin at the worst tap: pt_rf 22.7 mV (19 %), pt_wired 8.0 mV (7 %) at 15 % coverage. pt_wired needs the 20 %
+  coverage (G1 "wanted") for margin; not rerun at 20 %.
+- The model sets every strap to exactly 15 mV (G5); the widths in the last column are what that costs at the packed
+  distances. `wrx_cap` (1.5 mm from `isw_wired_cap`), `pt_wiredtx8` and `lo_mmd` / `lo_ext` need the switch moved
+  toward the load or a raw-VDD trunk that is not in the model.
 
-## 4. Decap
+## 5. Decap
 
-### 4.1 Demand
+### 5.1 The plan per chip, as packed (D9)
 
-The macro's ripple is set by its supply-current spectrum against the impedance it sees. The loop inductance
-is about 0.5 nH, so 3-9 nF of die capacitance puts the anti-resonance at 70-100 MHz, next to the 78.125 MHz
-launch rate (Q 2.3-3.1). At 60 mA with the pessimistic pulse (1.6 ns base) on the worst of the three networks
-(`e8_decap_v7.py`, `out/e8_decap_v7.txt`):
+Full 5.4 nF on both chips (`scratch/reviews/die-fit/decap.json`, as built; positions from the packing):
 
-| Decap | Total (nF) | Macro pk-pk (mV): single-phase / residual 0.2 / 0.15 / 0.1 / balanced | core_bias pk-pk: single-phase / 0.15 / balanced | f_ar opt / nom / pess (MHz) | Q (pess) |
-| --- | ---: | --- | --- | --- | ---: |
-| Intrinsic only (negative control) | 0 | 1549 / 686 / 633 / 579 / 471 | 1409 / 573 / 428 | 162 / 182 / 233 | 4.1 |
-| Row fill + bond-site tiles only | 0.9 | 919 / 707 / 694 / 681 / 655 | 766 / 577 / 545 | 137 / 143 / 156 | 3.1 |
-| Plan, every part x 0.7 | 3.8 | 365 / 172 / 161 / 150 / 127 | 244 / 124 / 105 | 99 / 95 / 95 | 3.1 |
-| Plan with MIM at its 2.0 nF minimum | 4.4 | 373 / 163 / 150 / 137 / 112 | 249 / 111 / 88 | 95 / 92 / 88 | 3.1 |
-| Plan with the bank at 0.75 nF | 4.65 | 405 / 174 / 160 / 146 / 117 | 264 / 110 / 85 | 95 / 92 / 88 | 2.8 |
-| Plan without the row fill | 4.95 | 407 / 174 / 160 / 145 / 116 | 266 / 105 / 78 | 92 / 88 / 84 | 2.8 |
-| Plan without the bond-site tiles | 4.95 | 387 / 161 / 147 / 133 / 105 | 262 / 104 / 77 | 92 / 88 / 84 | 2.8 |
-| **Plan** | **5.4** | 394 / 161 / 146 / 132 / 103 | 272 / 100 / 71 | 88 / 84 / 81 | 2.8 |
-| Plan, bank 2.0 nF | 5.9 | 361 / 147 / 135 / 122 / 97 | 258 / 92 / 63 | 88 / 81 / 78 | 2.4 |
-| Plan, bank 3.0 nF | 6.9 | 282 / 121 / 113 / 104 / 88 | 206 / 75 / 53 | 81 / 78 / 72 | 2.3 |
-| Plan, every part x 1.3 | 7.0 | 294 / 124 / 116 / 107 / 90 | 218 / 76 / 52 | 81 / 75 / 72 | 2.4 |
-| Plan with MIM 5.0 nF | 7.4 | 286 / 125 / 117 / 109 / 94 | 206 / 72 / 50 | 78 / 75 / 69 | 2.4 |
-| 6 nF MOS inside the macro outline (reference, not buildable) | 6 | 156 / 75 / 70 / 66 / 56 | 138 / 65 / 52 | 81 / 78 / 72 | 1.1 |
-| 8 nF MOS inside the macro outline (reference, not buildable) | 8 | 113 / 53 / 50 / 48 / 42 | 100 / 48 / 39 | 72 / 66 / 59 | 1.0 |
+| Part | pt_rf (nF) | pt_wired (nF) | Where | Structure, loss |
+| --- | ---: | ---: | --- | --- |
+| Row fill | 0.34 | 0.43 | Free sites of the macro | `pt_decap50_*`, tau 60 ps |
+| Bond-site tiles | 0.23 | 0.26 | Under the provider rail of the custom pad sites (12 / 14 sites) | `pt_decap_tile`, tau 335 ps |
+| Grid MIM | 1.54 | 0.65 | Plates over the Metal4/Metal5-free block outlines (spirals excluded) | `cap_mim_2f0_m4m5_noshield`, 1.9 fF/um2 |
+| Macro-edge bank | 1.50 | 1.50 | `decap_bank_00..25`: pt_rf along the south edge of the macro (y 3284-3404) and its west / east sides; pt_wired along the west side (x 972-1097) and the south edge (y 2980-3105) | `pt_decap_tile` + MIM, 60 / 40 % |
+| Stacked tiles | 1.79 (0.447 mm2, 30 cells) | 2.57 (0.641 mm2, 43 cells) | `decap_tile_*` where the packer found room: pt_rf mostly on the west edge (x 452-577), around the ADCs and LNA (x 1250-1770); pt_wired on the west edge, around `core_bias` / `pll_cdr` (x 1000-1700, y 1900-2650) and the north-east corner | same as the bank |
+| **Total** | **5.40** | **5.41** | | about 60 % of the capacitance lossy |
 
-"Single-phase" is all of the macro's charge in one packet per 12.8 ns cycle. The other columns split the launch
-charge over the two half-cycles; the number is what is left of the 78.125 MHz component and its odd harmonics
-(0.2 = a 60 / 40 split, 0.15 = 57.5 / 42.5, 0.1 = 55 / 45, 0 = balanced). With the nominal pulse (2.4 ns) the
-plan gives 342 / 128 / 115 / 103 / 77 mV. At the low capacitance corner (MIM and tiles x 0.88, row fill 0.30 nF)
-it gives 395 / 170 / 156 / 142 / 114 mV.
+Island-local: the plan adds no capacitor on any island rail. The model carries 50-250 pF of block capacitance per island
+at 0.3 ohm.
 
-- **Limit used:** 150 mV pk-pk at the macro (+-2.3 %); the digital owner has to confirm it with a matching
-  timing derate (PD2-5).
-- **Single-phase 60 mA does not close with any decap this die can hold.** It needs about 8 nF of lossy decap
-  inside the macro outline (113 mV). More decap outside the macro does not converge: 3.8, 4.4, 5.4 and 7.0 nF
-  give 365, 373, 394 and 294 mV, because the anti-resonance moves across 78.125 MHz.
-- **Single-phase current the plan can carry at 150 mV:** 23-26 mA.
-- **With the 78.125 MHz component at 10 %** (PD2-6): 132 mV at nominal capacitance, 142 mV at the low
-  capacitance corner, 150 mV with every part at 0.7 x. With 15 %: 146 / 156 / 161 mV.
-- **At 81.8 mA** the plan gives 180 mV at 10 % and 141 mV balanced (194 / 156 mV at the low capacitance corner).
-- So the decap closes only as the pair (plan, PD2-6), and its margin is thin. If PD2-6 cannot be met the
-  remaining levers are a lower digital current, a larger allowed ripple with a timing derate, or a 3 nF
-  macro-edge bank (0.77 mm2 instead of 0.39 mm2, 104 mV at 10 %).
+### 5.2 Macro ripple (`e8_decap.py`)
 
-### 4.2 The plan
+Case pt_rf DXa (D2H at div2), pt_wired W (D2H at 156.25 MHz). Limit 150 mV pk-pk at the macro (PD2-5). The two-phase
+columns use the PWR-DIG current with the pessimistic pulse on the worst network; residual = what is left of the
+78.125 MHz component (0.15 = 57.5 / 42.5 split, PD2-6).
 
-| Part | Capacitance | Where | Structure | Density (measured) | Area |
-| --- | ---: | --- | --- | --- | --- |
-| Row fill | 0.45 nF (0.3-0.6) | Free sites of the digital macro | `pt_decap50_*` in place of library `fillcap` (5 V devices; thin oxide in the rows fails DV.9 / DV.3-8) | 0.65-0.71 fF/um2 against 0.54 for `fillcap` | none (inside the macro) |
-| Bond-site tiles | 0.45 nF | Under the provider rail cell of the custom bond sites, between the DVDD / DVSS rails (computed for 24 sites; the current pad list has 22) | `pt_decap_tile` (COMP/Poly/Metal1 only) | 2.33 fF/um2 of tile; 0.193 mm2 is free of Metal2 as well (0.495 mm2 if the pad escapes are moved) | none (ring band) |
-| Grid MIM | 3.0 nF target, **2.0 nF minimum** | Over the block outlines and channels whose Metal4 / Metal5 are free (2.86 mm2 of outlines per AP4): the G1 straps widened into plates, a Metal5 plate of one net over a Metal4 plate of the other, polarity alternating from band to band so both nets keep both layers | `cap_mim_2f0_m4m5_noshield`, units <= 100 x 100 um, no Via3 under a plate | 1.9 fF/um2 of plate (1.8 / 2.0 / 2.2) | no core area, but Metal4 and Metal5: 1.05 mm2 of plate for 2.0 nF (37 % of the free outline area on both layers), 1.58 mm2 for 3.0 nF (55 %) |
-| Macro-edge bank | 1.5 nF | Against the west, south and east edges of the macro, within 250 um | `pt_decap_tile` with MIM above (0.9 nF MOS + 0.6 nF MIM) | 3.9-4.2 fF/um2 stacked | **0.39 mm2** of core |
-| Island-local | 1.16 nF in the model (50-250 pF per island) | On each island rail, at the loads | block-internal / MIM | | inside the blocks |
+| Chip | Plan | Macro pk-pk pess (area-scaled / 81.8 mA) | PWR-DIG: single / 60-40 / 0.15 / 0.1 / balanced | core_bias at 0.15 | D2H at macro / core_bias (pess) | f_ar opt / nom / pess (MHz) | Zpk pess (ohm) | Q pess |
+| --- | --- | --- | --- | ---: | --- | --- | ---: | ---: |
+| pt_rf | intrinsic only (negative control) | 1393 / 1819 | 889 / 563 / 543 / 524 / 485 | 512 | 1031 / 1083 | 198 / 223 / 274 | 4.24 | 3.9 |
+| pt_rf | rows + bond sites only (negative control) | 887 / 1158 | 566 / 320 / 305 / 290 / 261 | 243 | 595 / 697 | 175 / 182 / 206 | 2.69 | 3.1 |
+| pt_rf | **plan 5.4 nF** | 332 / 434 | **212 / 104 / 97 / 91 / 77** | 59 | 136 / 292 | 103 / 95 / 92 | 0.88 | 2.1 |
+| pt_rf | plan x 0.7 | 351 / 458 | 224 / 123 / 117 / 111 / 99 | 87 | 170 / 324 | 117 / 112 / 108 | 1.11 | 2.3 |
+| pt_rf | plan without grid MIM | 334 / 436 | 213 / 116 / 110 / 104 / 92 | 75 | 162 / 337 | 117 / 108 / 103 | 0.97 | 2.0 |
+| pt_wired | intrinsic only (negative control) | 2330 / 2467 | 1809 / 1120 / 1078 / 1036 / 952 | 1012 | 1542 / 1539 | 252 / 274 / 349 | 4.59 | 3.6 |
+| pt_wired | rows + bond sites only (negative control) | 1215 / 1286 | 944 / 496 / 469 / 442 / 387 | 430 | 534 / 519 | 198 / 206 / 214 | 2.50 | 2.8 |
+| pt_wired | **plan 5.4 nF** | 403 / 427 | **313 / 157 / 148 / 138 / 119** | 87 | 109 / 124 | 108 / 99 / 92 | 0.86 | 2.0 |
+| pt_wired | plan x 0.7 | 434 / 460 | 337 / 192 / 183 / 174 / 156 | 129 | 177 / 193 | 127 / 117 / 108 | 1.07 | 2.2 |
+| pt_wired | plan x 1.3 | 376 / 398 | 292 / 140 / 131 / 121 / 102 | 70 | 76 / 90 | 95 / 88 / 81 | 0.72 | 1.7 |
+| pt_wired | plan without tiles | 458 / 485 | 356 / 221 / 213 / 205 / 189 | 194 | 263 / 270 | 137 / 132 / 122 | 1.18 | 2.2 |
 
-- **Grid MIM.** A Metal5-vertical / Metal4-horizontal mesh at the G1 minimum overlaps the opposite net only at
-  crossings: 4.5 % of the area, 0.85 nF over the whole analog core. 2-3 nF therefore needs plates over free
-  block outlines, taking Metal4 and Metal5 to 37-55 % coverage there. The plates are cut at every same-net via4
-  column, and no Via3 may sit under a plate. This is rule arithmetic from the `mim_b.rb` deck; no layout or DRC
-  run exists (PD2-9). With the repacked blocks the free outline area holds 1.1-1.4 nF.
-- Core area: 0.39 mm2 (macro-edge bank) + 0.427 mm2 (switches).
-- Leakage of the whole plan, ff / 85 C / 3.63 V: below 0.4 uA. The PDK MOS models have no gate leakage.
-- `pt_decap_tile` time constant is about 335 ps (152 ps tie device + 175-195 ps of pfet channel that the
-  extraction cannot see). It holds its capacitance at 156 MHz and loses most of it above 500 MHz.
+- Neither chip closes with a single-phase macro (pt_rf 212 mV, pt_wired 313 mV). Both close only with the two-phase launch
+  of PD2-6: pt_rf with margin (97 mV), pt_wired without (148 mV at residual 0.15, 138 at 0.1; 183 mV with every part at
+  0.7 x). The reference "8 nF MOS inside the macro" gives 72 / 114 mV single-phase; it is not buildable.
+- The anti-resonance of both plans is at 92-108 MHz with Q 2.0-2.3, between 78.125 and 156.25 MHz (|Z| 0.69-0.74 ohm at
+  78.125, 0.31-0.33 at 156.25, pess). The previous rule stands: keep at least one third of the raw-rail capacitance
+  lossy (tiles, row cells); never add MIM without tiles on the same straps.
+- The eight 1 uF COB capacitors are mandatory (BP-4).
 
-### 4.3 Anti-resonance placement and damping
+### 5.3 Supply impedance at each island rail (`e11_islands.py`)
 
-| Total die decap | Anti-resonance | Verdict |
+|Z| seen at the VISL node against the VSS mesh at the switch, 1 MHz-1 GHz, plan as packed, opt / nom / pess:
+
+| Chip | Island | Peak |Z| (ohm) | f_ar (MHz) | Q | |Z| at 78.125 MHz | |Z| at 156.25 MHz |
+| --- | --- | --- | --- | --- | --- | --- |
+| pt_rf | rf_rx | 0.98 / 1.16 / 1.32 | 104 / 96 / 93 | 1.8 / 1.7 / 1.6 | 0.66 / 0.87 / 1.12 | 0.59 / 0.67 / 0.79 |
+| pt_rf | rf_tx | 1.08 / 1.28 / 1.48 | 104 / 96 / 93 | 1.8 / 1.6 / 1.4 | 0.76 / 0.99 / 1.27 | 0.67 / 0.79 / 0.95 |
+| pt_rf | lod | 1.13 / 1.35 / 1.57 | 104 / 96 / 93 | 1.5 / 1.5 / 1.3 | 0.81 / 1.06 / 1.37 | 0.74 / 0.88 / 1.04 |
+| pt_rf | lo | 1.31 / 1.58 / 1.86 | 104 / 96 / 93 | 1.1 / 1.1 / broad | 0.98 / 1.28 / 1.64 | 0.93 / 1.11 / 1.34 |
+| pt_rf | pll | 1.08 / 1.29 / 1.50 | 104 / 96 / 93 | 1.6 / 1.5 / 1.2 | 0.76 / 1.00 / 1.28 | 0.70 / 0.85 / 1.03 |
+| pt_rf | conv | 1.16 / 1.38 / 1.59 | 104 / 96 / 93 | 1.6 / 1.5 / 1.3 | 0.83 / 1.08 / 1.37 | 0.75 / 0.89 / 1.07 |
+| pt_rf | debug | 1.10 / 1.31 / 1.53 | 104 / 100 / 93 | 1.4 / 1.4 / 1.1 | 0.75 / 1.00 / 1.29 | 0.77 / 0.89 / 1.05 |
+| pt_wired | wired_rx | 1.19 / 1.38 / 1.56 | 108 / 100 / 93 | 1.5 / 1.4 / 1.1 | 0.79 / 1.03 / 1.32 | 0.82 / 0.93 / 1.08 |
+| pt_wired | wired_cap | 1.25 / 1.45 / 1.64 (1.90 at 1 GHz) | 108 / 100 / 93 | 1.5 / 1.3 / 1.1 | 0.85 / 1.10 / 1.40 | 0.86 / 0.98 / 1.13 |
+| pt_wired | wired_tx | 0.91 / 1.04 / 1.15 | 108 / 100 / 93 | 1.9 / 1.9 / 1.7 | 0.55 / 0.72 / 0.93 | 0.55 / 0.60 / 0.68 |
+| pt_wired | pll | 1.08 / 1.26 / 1.44 | 108 / 104 / 96 | 1.5 / 1.5 / 1.1 | 0.70 / 0.91 / 1.17 | 0.73 / 0.85 / 1.01 |
+| pt_wired | debug | 1.04 / 1.23 / 1.41 | 108 / 100 / 93 | 1.7 / 1.5 / 1.4 | 0.67 / 0.90 / 1.17 | 0.70 / 0.78 / 0.90 |
+
+The island rail sees the die anti-resonance through its switch resistance, which lowers Q and adds 0.2-0.5 ohm.
+
+### 5.4 RQ-3 / RQ-3a on pt_rf
+
+| Rule | Value | Result |
 | --- | --- | --- |
-| below 1.5 nF | 140-170 MHz | **Avoid:** on 156.25 MHz (|Z| 1.6-2.5 ohm there) |
-| 2-3.5 nF | 100-125 MHz | Between the lines: |Z| 0.6-0.9 ohm at 78.125 MHz and 0.34-0.5 ohm at 156.25 MHz; good for neither |
-| **4.4-6 nF (plan: 5.4)** | 78-95 MHz | On 78.125 MHz: |Z| 0.9-1.2 ohm there, 0.23-0.26 ohm at 156.25 MHz. **Right only if the macro's 78.125 MHz component is small (two-phase); wrong for a single-phase macro** |
-| 6-9 nF | 60-80 MHz | On 78.125 MHz with lower |Z| (0.8-0.9 ohm) |
-| above 12 nF | below 60 MHz | Clear of the clock; not available |
+| Die decap >= 3 nF | 5.40 nF | Pass |
+| Anti-resonance Q <= 3 | 1.8 / 1.7 / 1.6 at the rf_rx rail; 2.3 / 2.0 / 2.1 at the macro | Pass |
+| <= 0.5 nH per rail seen from the rf_rx switch | loop 0.61 / 0.73 / 0.88 nH (Im Z / w at 30 MHz with all die capacitance removed: bonds, package, COB capacitors), 0.30 / 0.37 / 0.44 nH per rail as loop / 2 | Pass, 12 % margin at the pessimistic set |
+| No undamped capacitor >= 50 pF on the rf_rx rail | The plan adds none. Block-internal capacitance is the rf_rx owner's: any >= 50 pF needs >= 0.5 sqrt(L_loop / C) in series (1 ohm at 120 pF, 0.4 ohm at 500 pF) or must sit on the die-rail side of the switch | Pass for the supply plan |
 
-- The plan is built for a macro whose supply current is dominated by 156.25 MHz (PD2-6).
-- **Damping.** The plan has Q 2.7 / 3.1 / 2.8 with 33 % of its capacitance lossy (row cells and tiles). Rule
-  for the floorplan: never add MIM without tiles on the same straps, and keep at least one third of the raw-rail
-  capacitance in tiles or row cells. The plan's peak is 0.86 / 1.02 / 1.19 ohm; the package criterion (2 ohm,
-  30-400 MHz) is met.
-- The eight 1 uF board capacitors are mandatory (BP-4): without them every figure is 1.2-1.5 x worse.
+- Negative control: intrinsic decap only gives Q 3.8 at the rail (pess): fails as it must.
+- The per-rail split assumes symmetric supply and ground halves; the 19 ground bonds make the ground half smaller than
+  the supply half, so the supply rail alone may be above 0.44 nH. Not separated in the model.
+- The LNA common-mode resistance itself (RQ-3a's bench, `analog/rf_rx/lna_close.py stab_lf`) stays the rf_rx owner's
+  check against these numbers.
 
-## 5. Rails
+## 6. Rails
 
-### 5.1 QVCO: own regulated rail (VDD_LO)
+### 6.1 QVCO: own regulated rail (VDD_LO), pt_rf
 
-The QVCO, `lo_pfdcp` and the regulator sit on the `lo` island (30 mA switch master, 13.5 mV at the 28.1 mA
-design current), fed from the ring at pad 64. Regulator input, pessimistic: 3.19 V DC minimum (78 mV total
-drop). Spur limit at the QVCO: **-60 dBc per tone (0.2 ps)**, K = -59.7 MHz/V. Ripple at the regulator input
-(`e9_victims_v7.py`, tap `qvco`, mV peak, opt / nom / pess) and the rejection it implies; the "allowed" and
-"rejection" columns are the model's -80 dBc figures shifted by 20 dB:
+The QVCO, `lo_pfdcp` and the regulator sit on the `lo` island (`isw_conv`, 13.5 mV at 28.1 mA), fed from `bidir[19]`
+(VDD bond on a signal site, pending D-SPLIT-SUPSITE). Regulator input, pessimistic: 3.19 V DC minimum (77-79 mV total
+drop). Spur limit at the QVCO **-60 dBc per tone**, K = -59.7 MHz/V: allowed ripple at the QVCO = 2 f x 10^-3 / K
+(2.62 mV at 78.125 MHz, 33.5 uV at 1 MHz). pt_rf has no wired blocks: the aggressors are the macro, D2H at div2, the ADCs,
+the PA envelope. Ripple at the regulator input (`e9_victims.py chip=rf`, tap `qvco`, mV peak, opt / nom / pess) and the
+rejection it needs; macro and D2H add at the same frequency:
 
-| Line | Single-phase digital | Two-phase (residual 0.15) | Allowed at the QVCO | Rejection needed (dB), single / two-phase |
+| Line | Ripple, single-phase macro | Ripple, two-phase (0.15) | Allowed at the QVCO | Rejection needed (dB), single / two-phase, pess |
 | --- | --- | --- | --- | --- |
-| PA envelope 1 MHz (RF TX, assumed 5 / 15 / 30 % of 61.7 mA) | 0.10 / 0.37 / 0.90 | same | 33.5 uV | 9 / 21 / 29 |
-| PA envelope 5 / 10 / 20 MHz | 0.10-0.16 / 0.37-0.60 / 0.90-1.46 | same | 167 / 335 / 670 uV | 15 / 10 / 7 at pess |
-| 78.125 MHz, digital macro | 26 / 60 / 160 | 3.9 / 9.1 / 24 | 2.62 mV | 20 / 27 / 36, two-phase 4 / 11 / 19 |
-| 78.125 MHz, D2H at div2 (RF modes) | 5.3 / 24 / 67 | same | 2.62 mV | 6 / 19 / 28 |
-| 80 MHz, ADC conversion current | 13 / 19 / 24 | same | 2.68 mV | 14 / 17 / 19 |
-| 156.25 MHz, digital and D2H | 8.0 / 15 / 37 and 3.3 / 12 / 26 | same | 5.23 mV | 4 / 9 / 17 and 0 / 7 / 14 |
-| 234-312 MHz | 3.4 / 7.2 / 20 | 0.9 / 4.4 / 13 | 7.9-10.5 mV | 0 / 0 / 8 |
+| 1 MHz PA envelope (assumed 5 / 15 / 30 % of 61.7 mA) | 0.022 / 0.075 / 0.165 | same | 33.5 uV | 13.9 |
+| 5-20 MHz PA envelope | 0.02-0.04 / 0.08-0.14 / 0.18-0.33 | same | 168-670 uV | 0.4 at 5 MHz, 0 above |
+| 40 / 80 / 120 MHz ADC | 3.5 / 13.0 / 9.8 (pess) | same | 1.34 / 2.68 / 4.02 mV | 8.2 / 13.7 / 7.8 |
+| 78.125 MHz macro + D2H | 17.2 / 48.3 / 113 | 5.7 / 21.4 / 56 | 2.62 mV | **32.7 / 26.6** |
+| 156.25 MHz macro + D2H | 13.5 / 31.1 / 60.6 | same | 5.23 mV | 21.3 |
+| 234-312 MHz | 29.7 / 27.7 (pess) | | 7.9-10.5 mV | 11.6 / 8.5 |
+| 390-470 MHz | 17.5-18.9 (pess) | | 13-16 mV | 2.5 |
 
-Regulator requirement (PD2-11):
+Regulator requirement (PD2-11, restated for pt_rf):
 
 | Quantity | Requirement |
 | --- | --- |
-| Rejection, input rail to QVCO supply | >= 30 dB from 100 kHz to 2 MHz; >= 20 dB at 5 MHz falling to 10 dB at 20 MHz; >= 39 dB at 78.125 MHz (digital and D2H lines add at the same frequency in RF modes: 227 mV; 31 dB with a two-phase macro; 21 dB with a two-phase macro and D2H at slow slew); >= 20 dB at 80 and 156.25 MHz; >= 10 dB at 234-312 MHz |
+| Rejection, input to QVCO supply | >= 14 dB from 100 kHz to 2 MHz; >= 1 dB at 5 MHz; >= 33 dB at 78.125 MHz (27 dB with a two-phase macro); >= 14 dB at 80 MHz; >= 22 dB at 156.25 MHz; >= 12 dB at 234 MHz, 9 dB at 312 MHz, 3 dB at 390-470 MHz |
 | Load | 30 mA (QVCO 25.0 worst + `lo_pfdcp` 1.5 + margin) |
-| Input | 3.15 V DC minimum (die floor); 3.19 V at the pessimistic static drop |
-| Dropout | Whatever keeps the QVCO inside its tuning range: the LO owner states the minimum VDD_LO; 0.35 V gives 2.80 V |
+| Input | 3.15 V DC minimum; 3.19 V at the pessimistic static drop |
+| Dropout | set by the minimum VDD_LO at which the QVCO covers its range (LO owner) |
 | Output noise | <= 7 nV/rtHz from 100 kHz to 1 MHz (LO-11) |
-| Line step | PA turn-on moves the input by 4.9 / 7.2 / 11.6 mV, and an island group turning on by 16-19 mV: <= 0.1 mV at the output |
-| Ground | QVCO and charge-pump returns star-connected at the regulator's output capacitor, one tie to the VSS mesh |
+| Line step | PA turn-on and the RF enable group (one edge, 156 mA, 19 mV ring step): <= 0.1 mV at the output |
+| Ground | QVCO and charge-pump returns star-connected at the regulator output capacitor, one tie to the VSS mesh |
 
-- A `pt_pll_vreg`-class native follower gives 23-27 dB from 10 to 200 MHz at 6 mA and 0.31-0.50 V dropout.
-  That covers every line above except 78.125 MHz with a single-phase macro; its rejection below 10 MHz is not
-  in evidence. The regulator as laid out occupies 0.44 mm2 and is to be requalified and shrunk.
-- Pad 64 (PWR_AUX_1) is where the `lo` switch sits.
+- A `pt_pll_vreg`-class native follower (23-27 dB from 10 to 200 MHz, 0.31-0.50 V dropout) meets every line with a
+  two-phase macro and every line but 78.125 MHz single-phase (needs 33 dB); its rejection below 10 MHz is not in evidence.
+- The laid-out regulator (`pt_lo_vreg`, 0.44 mm2) is to be requalified against this table and shrunk.
 
-### 5.2 LNA ground
+### 6.2 LNA ground, pt_rf
 
-- Die VSS at the LNA against board ground at 2421.875 MHz (31st harmonic of the D2H div2 comb and the macro) is
-  0.34 / 3.0 / 14.6 mV rms. Against -100 dBm (2.24 uV rms) the LNA needs 44 / 62 / 76 dB of rejection from die
-  VSS to its input. In duplex the PA puts 2.1 / 7.5 / 21 mV rms at 2.4 GHz on VSS (SUB-07).
-- The LNA uses die VSS: the fixed bond layout offers no extra pad, down-bond or double bond, and a ground on a
-  standard finger returns through 1.9-7.5 nH (`scratch/reviews/pads-core/wafer-space-consequences.md`). Ground
-  site `vss_pads[1]` (bond 71) on its own on-die net is the runner-up, to be used only if the extracted LNA
-  shows at least 10 dB net benefit.
-- The rejection itself is not in evidence (PD2-15). Until it is, the working set is: D2H slow slew in RF modes
-  (the optimistic source set, 44 dB needed), D2H div4 where the payload allows, and 2421.875 MHz out of the
-  channel plan.
+- Die VSS at the LNA against board ground at 2421.875 MHz (31st harmonic of D2H div2): 241 / 2207 / 11195 uV rms with 19
+  ground bonds; the LNA needs 41 / 60 / 74 dB of rejection from die VSS to its input for -100 dBm. In duplex the PA
+  fundamental puts 1.5 / 5.9 / 17.8 mV rms on VSS (57 / 68 / 78 dB). Dedicated LNA ground bonds are now possible on pt_rf
+  (split phase 4, pads owner); this model ties every ground bond to the common mesh.
+- The rejection itself is not in evidence (PD2-15). Working set: D2H slow slew in RF modes, div4 where the payload allows,
+  2421.875 MHz out of the channel plan.
 
-### 5.3 Ring PLLs
+### 6.3 Ring PLLs
 
-Ring deterministic jitter, peak, from the ripple at the `pt_pll_vreg2` input (extracted sensitivity
-0.045 ps/mV at 78 MHz regulated, 0.55 ps/mV in bypass):
+Deterministic jitter from the ripple at the `pt_pll_vreg2` input (extracted sensitivity 0.045 ps/mV at 78 MHz, regulated;
+limit 5 ps), opt / nom / pess:
 
-| Case | Regulated (limit 5 ps) | Bypass (limit 20 ps) |
+| Chip | Single-phase macro | Two-phase (0.15) |
 | --- | --- | --- |
-| Wired, single-phase digital | 1.5 / 5.0 / 9.0 | 18 / 62 / 110 |
-| Wired, two-phase (residual 0.15) | 0.35 / 1.2 / 2.2 | 4.3 / 14 / 27 |
-| RF (host_follow ring), single-phase | 2.6 / 5.7 / 13.4 | 32 / 70 / 164 |
-| RF, two-phase | 1.4 / 3.1 / 6.6 | 18 / 38 / 81 |
+| pt_rf (RXa) | 1.7 / 3.7 / **7.3** | 1.1 / 2.2 / 4.3 |
+| pt_wired (W) | 0.9 / 2.8 / 5.0 | 0.3 / 1.0 / 1.7 |
 
-- **Bypass (BYP = 1) is not an operating mode.** It fails at the pessimistic end even with a two-phase macro. It
-  is the reset state and a bench fallback only; firmware clears it before any payload (PD2-13).
-- ss / 810 MHz needs bypass (>= 3.02 V at the ring) at an untrimmed supply.
-- Regulated mode depends on the same digital demand as the decap plan (PD2-6). In RF modes the remaining 6.6 ps
-  comes from D2H at 78.125 MHz: D2H slow slew or div4 removes it.
-- `pt_pll_vreg2` has no evidence above 200 MHz, where its input carries 2.7 / 11 / 26 mV at 312.5 MHz and up to
-  14 mV at 625 MHz (PD2-17).
+Bypass (BYP = 1) is not an operating mode (PD2-13). In RF modes the D2H at 78.125 MHz carries 39 mV of the pt_rf input
+ripple: D2H slow slew or div4 removes most of it.
 
-### 5.4 ADC clock
+### 6.4 ADC clock, pt_rf
 
-- **Default 39.0625 MS/s in RF modes** (78.125 MHz / 2, `conv_sample` = host_follow): every multiple of
-  78.125 MHz lands on DC. What remains is the non-periodic part of the D2H data and the ADC's own conversion
-  current. 20 / 40 MHz-channel waveforms need a 128/125 resampler in the host.
-- 40 MS/s is selectable. There the 78.125 MHz multiples alias in band (1.875 MHz, 3.75 MHz, ...): the worst line
-  on the conv island is 25 / 59 / 156 mV (digital, single-phase) or 6.4 / 29 / 78 mV (D2H at div2). For a
-  -60 dBFS spur the reference buffer and comparator need 29 / 37 / 45 dB of supply rejection, or 17 / 30 / 39 dB
-  with a two-phase macro. None is in evidence (PD2-16).
+Default 39.0625 MS/s in RF modes puts every 78.125 MHz multiple on DC. At 40 MS/s the worst aliasing line on the conv
+island is the macro at 78.125 MHz: 12.5 / 29.2 / 61.7 mV, needing 23 / 31 / 37 dB of reference-buffer and comparator
+supply rejection for a -60 dBFS spur (PD2-16). The ADCs' own conversion current puts 44-62 mV at 40-160 MHz on the
+`adc_i` tap.
 
-### 5.5 D2H rail
+### 6.5 D2H rail
 
-Wired mode, 116.8 mA at 8 pF, with the decap plan (`e10_host_bonds_v7.py`), mV pk-pk, opt / nom / pess:
-
-| Option | Host rail | Host-row ground bounce | D2H at the macro | D2H at core_bias |
-| --- | --- | --- | --- | --- |
-| Common ring | 15 / 72 / 226 | 19 / 147 / 655 | 8 / 34 / 93 | 14 / 64 / 203 |
-| Split rail on pads 18, 74 with grounds 9, 19, 73, no own decap | 283 / 2429 / 12658 | 74 / 609 / 2820 | 0 / 1 / 4 | 0 / 2 / 8 |
-
-- **No D2H rail split.** A split takes D2H off the core rail, but it needs at least 1 nF of its own decap at the
-  south pad row (0.26 mm2 that does not exist there), takes two corner supply bonds from the ring, quadruples
-  the host ground bounce, means cutting the provider rails (the ESD path), and still leaves the RX spur short
-  of -100 dBm.
-- Instead (PD2-8): D2H defaults at slow slew and the lowest drive that meets timing, a two-group launch stagger
-  (`hostio.controls.d2h_stagger`), and div4 in RF modes when the payload allows. The optimistic column is that
-  configuration.
-- The pessimistic D2H figure at core_bias (203 mV) is all eleven pins toggling together at 156.25 MHz with
-  0.76 ns edges into 8 pF.
-
-## 6. Bonds
-
-- The bond map is fixed: 8 supply and 10 ground bonds on the provider sites, 0.8 mil aluminium wire, no added
-  or converted supply bonds ([package-channel.md](package-channel.md)).
-- **Ring continuity, measured** on `scratch/chip-assembly-v5/run2/pt_chip_top.gds`: all four provider rails
-  (DVDD 124.0 um, DVSS 101.4 um, VDD 14 um, VSS 14 um, each on Metal3, Metal4 and Metal5) run at full width
-  through all 74 sites and the four corners. To be rechecked on the next assembly.
-- DVDD and VDD are one net, tied inside each of the 8 `dvdd` cells; DVSS and VSS likewise in the 10 `dvss` cells.
-- **Per-cell rating:** all pad current leaves the bond stack on six Metal2 strips, 60 um in total. At the DRM
-  14.2 limit for 85 C (2.09 mA/um) that is **125 mA per cell**. At the 125 C column (0.67 mA/um) the cell holds
-  40 mA; sign-off is at 85 C. The pads owner confirms the Metal2 path (PD2-10).
-- **Bond currents** (`e7_static_v7.py`, wired mode, opt / nom / pess): worst supply bond 75.6 / 75.9 / 87.5 mA
-  (pad 18, 70 % of the cell rating), worst ground bond 62.7 / 62.2 / 71.0 mA (pad 19), ring drop
-  28.2 / 33.3 / 44.6 mV. One open supply bond adds 5-14 mA to a neighbour, which still passes. The wire itself
-  rises 11.5 K at 87.5 mA.
-- The model uses the supply-bond length range for the ground bonds; it has not been rerun with the per-bond
-  values now in `package-channel.json`.
+No split (common ring) on either chip. D2H at the macro / core_bias, pess: pt_rf 136 / 292 mV pk-pk (div2, 78.125 MHz),
+pt_wired 109 / 124 mV (156.25 MHz). PD2-8 stands: slow slew and lowest drive by default, two-group stagger, div4 in RF
+modes when the payload allows.
 
 ## 7. Supply ripple each block must tolerate
 
-The 117 mV of section 3 is a DC budget and the 3.15 V die floor is a DC floor. The ripple below sits on top of
-it: at the wired RX taps the DC rail is 3.161-3.18 V at the pessimistic bound and carries 60 mV rms (two-phase
-macro) to 125 mV rms (single-phase), so the instantaneous rail goes below 3.15 V. Blocks are verified at 3.15 V
-DC; what they do with this ripple is the missing evidence the demand rows ask for.
+The 117 mV of section 4 is a DC budget; the ripple below sits on top of it. Differential rail at the tap, worst line in
+each band, mV peak, pessimistic (`e9_victims.py`, plan as packed); single-phase / two-phase (0.15) macro:
 
-With the decap plan, the grid of section 3 and the currents of section 1 (`e9_victims_v7.py`). Differential rail
-at the tap, mV peak of the worst line in each band, opt / nom / pess. "1-ph" is a single-phase macro, "2-ph" is
-residual 0.15.
-
-| Tap (demand) | Mode | 30-100 MHz, 1-ph | 30-100 MHz, 2-ph | 100-200 MHz | 200-500 MHz | 0.5-1 GHz | 1-6 GHz | rms, 1-ph / 2-ph (pess) |
+| Chip | Tap (demand) | Case | 30-100 MHz | 100-200 MHz | 200-500 MHz | 0.5-1 GHz | 1-6 GHz | rms |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| core_bias: bandgap, biasgen (PD2-14) | wired | 24 / 82 / 145 | 3.5 / 12 / 22 | 8.1 / 23 / 39 | 3.6 / 20 / 61 | 0.27 / 4.0 / 22 | 0.06 / 0.61 / 2.9 | 122 / 64 |
-| core_bias | RF | 24 / 55 / 145 | 14 / 27 / 72 | 8.1 / 16 / 39 | 3.5 / 9.8 / 30 | 0.08 / 2.0 / 11 | 0.20 / 1.8 / 18 | 130 / 78 |
-| refbuf (PD2-16) | RF RX | 26 / 59 / 156 | 26 / 37 / 78 | 15 / 20 / 38 | 5.8 / 14 / 25 | 0.40 / 4.8 / 15 | 0.04 / 0.32 / 1.5 | 147 / 97 |
-| ADC comparator, adc_i tap (PD2-16) | RF RX | 53 / 65 / 156 | 53 / 65 / 77 | 37 / 46 / 52 | 18 / 38 / 50 | 2.3 / 17 / 42 | 0.04 / 0.32 / 1.5 | 203 / 171 |
-| lna rail (PD2-15) | RF RX | 24 / 55 / 147 | 14 / 26 / 71 | 8.0 / 15 / 38 | 3.4 / 7.9 / 25 | 0.06 / 1.7 / 10 | 0.05 / 0.23 / 1.6 | 127 / 73 |
-| slicer, wired RX (PD2-19) | wired | 25 / 87 / 154 | 3.8 / 13 / 23 | 8.2 / 23 / 38 | 3.5 / 16 / 49 | 1.1 / 8.6 / 24 | 0.26 / 1.9 / 5.8 | 125 / 60 |
-| pt_pll_vreg2 input (PD2-17) | wired | 29 / 99 / 174 | 4.4 / 15 / 26 | 8.4 / 24 / 38 | 4.4 / 15 / 27 | 0.19 / 2.6 / 14 | 0.12 / 0.39 / 1.1 | 134 / 50 |
-| lo_mmd, VDD_LOD (PD2-11) | RF | 23 / 54 / 144 | 14 / 26 / 71 | 8.0 / 16 / 39 | 3.5 / 9.5 / 30 | 0.07 / 1.9 / 11 | 2.2 / 11 / 49 | 133 / 85 |
-| qvco regulator input (PD2-11) | RF TX | 26 / 60 / 160 | 5.3 / 24 / 67 | 8.0 / 15 / 37 | 3.4 / 7.2 / 20 | 0.09 / 1.0 / 5.6 | 0.17 / 0.39 / 1.6 | 129 / 62 |
-| wiredtx | wired | 27 / 92 / 162 | 4.0 / 14 / 24 | 8.1 / 23 / 36 | 3.5 / 11 / 27 | 4.6 / 14 / 38 | 6.6 / 20 / 54 | 136 / 74 |
-| rfdriver | RF TX | 28 / 64 / 168 | 5.3 / 24 / 66 | 8.2 / 15 / 36 | 3.9 / 8.3 / 22 | 0.17 / 1.5 / 12 | 12 / 29 / 58 | 144 / 80 |
-| POR | wired | 25 / 87 / 154 | 3.8 / 13 / 23 | 8.0 / 23 / 37 | 3.4 / 11 / 30 | 0.14 / 2.1 / 13 | 0.05 / 0.32 / 1.7 | 118 / 47 |
+| pt_rf | core_bias (PD2-14) | RXa | 63 / 51 | 39 | 31 | 17 | 1.7 | 80 / 66 |
+| pt_rf | refbuf (PD2-16) | RXa | 62 / 46 | 35 | 24 | 14 | 1.7 | 90 / 78 |
+| pt_rf | adc_i (PD2-16) | RXa | 62 / 62 | 53 | 49 | 42 | 1.3 | 168 / 161 |
+| pt_rf | lna rail (PD2-15) | RXa | 66 / 42 | 30 | 16 | 4.7 | 0.7 | 68 / 48 |
+| pt_rf | qvco regulator input (PD2-11) | RXa | 67 / 46 | 31 | 17 | 8.1 | 1.7 | 71 / 52 |
+| pt_rf | lo_mmd, VDD_LOD (PD2-11) | RXa | 71 / 46 | 31 | 17 | 6.3 | 82 (own 3 GHz) | 95 / 80 |
+| pt_rf | pll_vreg2 input (PD2-17) | RXa | 76 / 39 | 31 | 18 | 8.4 | 1.7 | 74 / 48 |
+| pt_rf | rfdriver | TXa | 77 / 42 | 32 | 20 | 9.4 | 47 (own 4.8 GHz) | 85 / 63 |
+| pt_wired | core_bias (PD2-14) | W | 92 / 14 | 43 | 26 | | | 83 / 50 |
+| pt_wired | slicer (PD2-19) | W | 73 / 11 | 49 | 71 | 43 | | 98 / 81 |
+| pt_wired | pll_vreg2 input (PD2-17) | W | 82 / 12 | 43 | 26 | | | 80 / 52 |
+| pt_wired | pt_wiredtx8 | W | 83 / 12 | 42 | 30 | | | 218 / 210 |
+| pt_wired | wrx_cap | W | 75 / 11 | 48 | 63 | | | 232 / 226 |
 
-- The lines are 78.125 MHz and its multiples (macro; D2H at 156.25 MHz in wired modes and 78.125 MHz in RF
-  modes), 40 MHz multiples from the ADCs at 40 MS/s, 625 MHz multiples from `pt_wrx_cap` and `pt_wiredtx`, and
-  1-20 MHz PA envelope (0.1-0.2 / 0.4-0.6 / 0.9-1.5 mV on the lo rail, 2 / 7 / 16 mV on the rf_tx rail).
-- A stiff grid shares the macro's ripple with everything, and the plan's anti-resonance is near 78 MHz: the
-  two-phase demand matters to every victim, not only to the macro.
-- POR: no false trip (needs >= 1 ms below 1.0-1.5 V; the worst instantaneous rail is above 2.7 V).
+Full line lists: `scratch/integration/m1-pdn/out/<chip>/e9_victims_{base,twophase}.txt`. For the victims the ripple is
+given, not a pass or fail: the supply-rejection evidence is the demand (PD2-14..19).
 
-## 8. Evidence and regression
+## 8. Demands
 
-- `spec/budgets/power_budget.py --reconcile`: tables of sections 1 and 2; exits non-zero if an island exceeds
-  20 mV or its master's design current, or a case exceeds its ceiling with the macro at PWR-DIG; it also lists
-  the cases over the ceiling at 81.8 mA. `--check` is the allocation check.
-- `scratch/integration/m1-pdn/`: `sanity.py` and `e0`-`e6` are the regression; `pd2cfg.py` holds the islands,
-  positions, grid requirement and decap plan; `e7_static_v7.py`, `e8_decap_v7.py`, `e9_victims_v7.py`,
-  `e10_host_bonds_v7.py` produce sections 3 to 7.
-- Bench proof: `sanity.py` (divider, RLC against closed form and ngspice, coupled bonds) and
-  `e0_sanity_model.py`. Negative controls that fail as they must: grid at 8 % and 10 %, intrinsic decap only
-  (1549 mV), row fill + bond sites only (919 mV), an abrupt switch gate (92 mV ring dip, 126 mA peak).
+- **PDS-1** (assembly, user): pt_wired wired_tx on two `isw_wired` in parallel (one VISL bar), +0.091 mm2 against the
+  packed `isw_debug`.
+- **PDS-2** (coordinator, wired_tx, digital): pt_wired W 410 mA and U 364 mA exceed the 360 mA ceiling at PWR-DIG.
+- **PDS-3** (floorplan): straps wider than practical at the packed distances (`wrx_cap` 323 um, `pt_wiredtx8` 290 um,
+  `lo_mmd` 154 um, `pll_cdr` on pt_wired 161 um).
+- **PDS-4** (digital): two-phase launch (PD2-6) is required on both chips; on pt_wired without margin.
+- **PDS-5** (LO owner): QVCO regulator against the section 6.1 table.
+
+## 9. Evidence and regression
+
+- `spec/budgets/power_budget.py --reconcile [rf|wired]`: sections 1 and 2; exits non-zero if an island exceeds 20 mV or
+  its masters' current, or a case exceeds its ceiling at PWR-DIG (pt_wired fails W and U today, PDS-2). `--check` writes
+  `power-budget.json` with `pd2_reconciliation.<chip>`.
+- `scratch/integration/m1-pdn/run.sh rf|wired` runs, one job at a time: `sanity.py` (solver against hand answers and
+  ngspice, failing negative case), `e0_sanity_model.py` (builder against a hand calculation with the chip's bond count;
+  negative control no decap + one supply bond fails), `e7_static.py` (section 4, bonds), `e8_decap.py` (section 5.2;
+  negative controls intrinsic-only and rows + bond sites only fail), `e9_victims.py` (sections 6-7, single- and
+  two-phase), `e11_islands.py` (sections 5.3-5.4; intrinsic-only fails RQ-3a). Outputs `out/<chip>/`.
+- Configuration: `chipcfg.py` reads the packing (`scratch/reviews/die-fit/run/<chip>/fit-s.json`), the decap split
+  (`die-fit/decap.json`), the bond maps, `spec/chips.json` and `power_budget.py`; it holds nothing chip-specific of its own.
 - Soft start: `analog/island_support/pd2_softstart.py`, `pd2-softstart.json`.
 
-## 9. Not verified
+## 10. Not verified
 
-- No layout exists for the grid, the MIM plates or the tile banks, and no DRC run. Sections 3 and 4 are
-  requirements checked at their limits on a 13 x 18 mesh, not extractions.
-- The digital macro's real supply current (average per mode, pulse shape, split between clock domains).
-  Everything in section 4 is conditional on PD2-6. A lumped hand model of the single-phase case is very
-  sensitive to the loop inductance (about 200 mV at 0.5 nH, 360-600 mV at 0.8 nH).
-- The rfdriver die-rail share (39.3 %) comes from one bench with the LO stopped; the PA envelope current is an
-  assumption (5 / 15 / 30 %).
-- Currents carried as estimates or limits (section 1). Six of the ten islands depend on at least one.
-- Electromigration is a hand calculation at 85 C; the Metal2 path in the supply cells was measured on the v5 GDS.
-- Soft start: resistor loads, 3.3 V only; the group cases use schematic masters.
-- Everything above 1 GHz (LNA in-band ground voltage, 2.4 GHz columns) is order-of-magnitude.
-- Victim supply rejection (section 7): for those the ripple is given, not a pass or fail.
-- Supply ramps faster than 10 us fire the provider supply-pad clamps (`scratch/reviews/integration-m6.md`):
-  board rule, supply slew <= 0.3 V/us and no hot-plug.
-- Everything at the 3.50 V trim setpoint; board ground plane ideal; carrier placement not swept.
+- No layout of the grid, the MIM plates, the bank or the tile cells, and no DRC; sections 4 and 5 are requirements
+  checked at their limits on a 13 x 18 mesh with the as-built packing, not extractions. The packing is the die-fit
+  scenario S; owner floorplans will move switches, tiles and loads.
+- The digital macro's current per chip: area-scaled, no per-chip power run; its pulse shape and two-phase split (PD2-6).
+- `pt_wiredtx8` current (unpublished, ss only, ff by ratio), POST and pad tail on the island rail as WT40 states.
+- The supply / ground bonds on signal sites (D-SPLIT-SUPSITE) are modelled as present; bond lengths are the supply-bond
+  range for every bond, not the per-bond values of `package-channel.json`.
+- The two-master wired_tx switch: current sharing, soft start and EM not run.
+- The per-rail split of the loop inductance seen from the rf_rx switch.
+- The rfdriver die-rail share (one bench) and the PA envelope current (assumption).
+- Everything above 1 GHz is order-of-magnitude. Victim supply rejection (section 7).
+- Supply ramps faster than 10 us fire the supply-pad clamps: board rule supply slew <= 0.3 V/us, no hot-plug.
+- The 3.50 V trim setpoint; board ground plane ideal.

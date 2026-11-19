@@ -2,13 +2,14 @@
 # Routing LVS of the routed core-bias block (Magic + Netgen, GF180 setup).
 #
 # Leaf masters are black boxes (lvs_abstract.py: pin conductors + port
-# labels only, from the qualified GDS), so extraction yields the top-level net connectivity of all 152 nets to the 283
-# instance terminals and 122 boundary pins. The reference is the frozen
+# labels only, from the qualified GDS), so extraction yields the top-level net connectivity of every net to every
+# instance terminal and boundary pin. The reference is the frozen
 # pt_core_bias.spice top cell with matching black-box stubs. Device-level LVS
 # of each master is a separate (per-master) qualification; shorts from routes
 # into master-internal metal are covered by audit_routes.py.
 # Also writes a magic C extraction (coupling + area/fringe) of the routed top.
 set -u
+: "${CB_TOP:?pt_core_bias_<chip>}"
 rm -rf /work/lvs && mkdir -p /work/lvs/neg && cd /work/lvs
 klayout -b -r /flow/lvs_abstract.py > abstract.log 2>&1 || { cat abstract.log; exit 1; }
 python3 - <<'EOF'
@@ -18,7 +19,8 @@ src = Path('/input/pt_core_bias.spice').read_text().replace('\n+', ' ')
 subckts = {m[1]: m[2].split() for m in re.finditer(r'^\.subckt (\S+) (.*)$', src, re.M)}
 masters = [p.stem for p in Path('/input').glob('*.lef') if '.' not in p.stem]
 lefpins = {m: re.findall(r'^  PIN (\S+)', Path(f'/input/{m}.lef').read_text(), re.M) for m in masters}
-top = re.search(r'^\.subckt pt_core_bias (.*?)^\.ends', src, re.M | re.S)[0]
+import os
+top = re.search(r'^\.subckt '+os.environ['CB_TOP']+r' (.*?)^\.ends', src, re.M | re.S)[0]
 import json
 terms = json.loads(Path('/input/physical-terminals.json').read_text())['nets']
 tnet = {(t['instance'], t['pin']): net for net, ts in terms.items() for t in ts}
@@ -42,13 +44,14 @@ for line in top.splitlines():
 Path('schematic.spice').write_text('\n'.join(out)+'\n')
 print('SCHEMATIC_STUBS', len(masters), 'dropped private ports', dropped, 'bound extra pins', extra)
 EOF
-cat > extract.tcl <<'EOF'
+MASTERS=$(cd /input && ls *.lef | sed 's/\.lef$//' | grep -v '\.' | tr '\n' ' ')
+cat > extract.tcl <<EOF
 gds read pt_core_bias.gds
-foreach m {gf180mcu_ocd_ip__biasgen gf180mcu_ocd_ip__bandgap bringup_and pt_bias_bank3 pt_bias_bank4 pt_bias_bank5 pt_bias_bank8 pt_bias_root pt_bias_vref} {
-  load $m
+foreach m {$MASTERS} {
+  load \$m
   property LEFview TRUE
 }
-load pt_core_bias
+load ${CB_TOP}
 select top cell
 extract do local
 extract all
@@ -58,11 +61,11 @@ ext2spice -o layout.spice
 quit -noprompt
 EOF
 magic -dnull -noconsole -rcfile /foss/pdks/gf180mcuD/libs.tech/magic/gf180mcuD.magicrc extract.tcl > extract.log 2>&1
-netgen -batch lvs "layout.spice pt_core_bias" "schematic.spice pt_core_bias" \
+netgen -batch lvs "layout.spice ${CB_TOP}" "schematic.spice ${CB_TOP}" \
   /foss/pdks/gf180mcuD/libs.tech/netgen/gf180mcuD_setup.tcl lvs.out -blackbox > netgen.log 2>&1
 # Negative control: the same flow on a copy with one VDD-VSS Metal3 bridge.
 cp schematic.spice extract.tcl neg/ && (cd neg && magic -dnull -noconsole -rcfile /foss/pdks/gf180mcuD/libs.tech/magic/gf180mcuD.magicrc extract.tcl > extract.log 2>&1 && \
-  netgen -batch lvs "layout.spice pt_core_bias" "schematic.spice pt_core_bias" \
+  netgen -batch lvs "layout.spice ${CB_TOP}" "schematic.spice ${CB_TOP}" \
   /foss/pdks/gf180mcuD/libs.tech/netgen/gf180mcuD_setup.tcl lvs.out -blackbox > netgen.log 2>&1)
 negok=false
 if [ -s neg/lvs.out ] && ! grep -q "Circuits match uniquely" neg/lvs.out && grep -q "Final result" neg/lvs.out; then negok=true; fi
@@ -71,9 +74,9 @@ status=fail
 if grep -q "Final result: Circuits match uniquely" lvs.out && [ "$negok" = true ]; then status=pass; fi
 # Parasitic C extraction of the routed top (masters abstract).
 mkdir -p pex && cd pex
-cat > pex.tcl <<'EOF'
+cat > pex.tcl <<EOF
 gds read /work/lvs/pt_core_bias.gds
-load pt_core_bias
+load ${CB_TOP}
 select top cell
 extract do capacitance
 extract do coupling

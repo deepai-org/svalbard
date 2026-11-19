@@ -18,11 +18,17 @@ rows = []
 placement = json.loads((base/'geometry-audit.json').read_text())
 terminals = json.loads((base/'physical-terminals.json').read_text())
 master_of = {i['name']: i['master'] for i in placement['instances']}
-tied = {}
+# A pin tied to a supply in only some instances of its master (a spare bank output on one chip, a used one
+# on another bank instance) stays a signal pin in the shared abstract.
+tied_at = {}
 for net, terms in terminals['nets'].items():
     if net in ('VDD', 'VSS') or net.startswith('RAIL_'):
         for t in terms:
-            tied.setdefault(master_of[t['instance']], set()).add(t['pin'])
+            tied_at.setdefault((master_of[t['instance']], t['pin']), set()).add(t['instance'])
+tied = {}
+for (master, pin), insts in tied_at.items():
+    if insts == {i for i, m in master_of.items() if m == master}:
+        tied.setdefault(master, set()).add(pin)
 
 
 def fmt_poly(poly, dbu):

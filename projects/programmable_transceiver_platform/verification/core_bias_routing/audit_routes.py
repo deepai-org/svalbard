@@ -1,6 +1,6 @@
 # KLayout stage, independent of the router: usage
 #   klayout -b -rd wires=<json> -rd report=<json> -r audit_routes.py
-# For every one of the 152 nets, using only exported rectangles, the audited
+# For every net, using only exported rectangles, the audited
 # terminal map and the qualified master GDS:
 #  * the net's route metal, its terminal rectangles and boundary pins form ONE
 #    component (vias must land on metal both below and above);
@@ -18,7 +18,7 @@ w = json.loads(wires_path.read_text()); terminals = json.loads((source/'physical
 placement = json.loads((source/'geometry-audit.json').read_text())
 LAYERS = {'Metal1': (34, 0), 'Metal2': (36, 0), 'Metal3': (42, 0), 'Metal4': (46, 0), 'Metal5': (81, 0)}
 METALS = list(LAYERS)
-assert set(w['nets']) == set(terminals['nets']) and len(w['nets']) == 152
+assert set(w['nets']) == set(terminals['nets'])
 
 # Master metal of the whole placement, in route DBU (2 per GDS DBU).
 gds = pya.Layout(); gds.read(str(source/'pt_core_bias_placement.gds')); top = gds.cell('pt_core_bias_placement')
@@ -112,7 +112,7 @@ for m in METALS:
                 errors.append(dict(net=a, other_net=b, layer=m, reason='metal contact between distinct nets'))
 supply = [n for n in names if n in ('VDD', 'VSS') or n.startswith('RAIL_')]
 result = dict(status='pass' if not errors else 'fail',
-              scope='Independent union/via connectivity and short check of all 152 nets (145 signal + 7 supply) against '
+              scope=f'Independent union/via connectivity and short check of all {len(names)} nets ({len(names)-len(supply)} signal + {len(supply)} supply) against '
                     'the audited terminal map, exported boundary metal and the qualified master GDS metal.',
               nets=len(names), supply_nets=supply, instance_terminals_checked=checked, boundary_pins_checked=bpins,
               metal_components=polygons, errors=errors[:200], error_count=len(errors),

@@ -1,15 +1,15 @@
 # OpenROAD Python stage. Usage: openroad -python prepare.py power|signal
 #
-# power : fresh database from the audited placement. All 152 nets and 122
-#         boundary pins exist, but only the seven supply nets are connected to
+# power : fresh database from the audited placement. All nets and
+#         boundary pins exist, but only the supply nets are connected to
 #         their instance terminals, so the router builds the power network
 #         first in an otherwise empty channel set. Supply nets are temporarily
 #         routed as non-special nets with a wide non-default rule (NDR).
 # signal: start from the routed power database. Convert every supply wire to
 #         FIXED special wiring (electrical POWER/GROUND role restored,
-#         master terminal types restored), then connect the 145 signal nets so
+#         master terminal types restored), then connect the signal nets so
 #         the signal router treats the finished power network as fixed metal.
-import odb, json, hashlib, re, sys
+import odb, json, hashlib, re, sys, os
 from pathlib import Path
 
 mode = sys.argv[-1]; assert mode in ('power', 'signal'), mode
@@ -17,6 +17,8 @@ base = Path('/input'); work = Path('/work')
 placement = json.loads((base/'geometry-audit.json').read_text())
 terminals = json.loads((base/'physical-terminals.json').read_text())
 pins = json.loads((base/'pin-inputs.json').read_text())
+N_TERMS = sum(map(len, terminals['nets'].values()))
+N_SUPPLY = sum(1 for n in terminals['nets'] if n in ('VDD', 'VSS') or n.startswith('RAIL_'))
 TLEF = '/pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/techlef/gf180mcu_fd_sc_mcu7t5v0__nom.tlef'
 SUPPLY = lambda n: n in ('VDD', 'VSS') or n.startswith('RAIL_')
 ROLE = lambda n: 'GROUND' if n == 'VSS' else 'POWER'
@@ -24,12 +26,15 @@ ROLE = lambda n: 'GROUND' if n == 'VSS' else 'POWER'
 # minimum width: the bank supply pins are 0.44 um strips at 0.6 um gaps, and a
 # 2 um Metal5 wire there produced an unreported short (VSS/RAIL_wired) in trial 1;
 # spacing never below the technology minimum (MT.2a = 0.46 um on Metal5).
-NDR_WIDTH = {1: .23, 2: 2.0, 3: 2.0, 4: 2.0, 5: .44}
+# Metal5 supply wires at 1.0 um (0.44 um left the Metal4/Metal5 hops at one cut and VDD at 28 mV; 1.5 um
+# lands on the biasgen MIM top plate, MIMTM.1). Shorts are caught by audit_routes.py.
+M5 = 1.0
+NDR_WIDTH = {1: .23, 2: 2.0, 3: 2.0, 4: 2.0, 5: M5}
 NDR_SPACE = {1: .23, 2: .28, 3: .28, 4: .28, 5: .46}
 # VDD/VSS carry the whole block current (1 mA budget + returned rail current):
 # at 2 um their max-corner IR drop exceeded 10 mV, so they get 4 um on
 # Metal2-Metal4 (supply_ir.py). Rails (<= 0.22 mA) keep 2 um.
-MAIN_WIDTH = {1: .23, 2: 4.0, 3: 4.0, 4: 4.0, 5: .44}
+MAIN_WIDTH = {1: .23, 2: 4.0, 3: 4.0, 4: 4.0, 5: M5}
 PG_PIN_HALF = 2.0
 SIG_PITCH = 2.8
 # Die size: the placement's die_um (compact I9 placement) or the original 1000 x 400 um.
@@ -51,7 +56,7 @@ if mode == 'power':
     for item in pins['cells']:
         odb.read_lef(db, str(work/'precise'/item['lef']))
     tech = db.getTech(); u = tech.getDbUnitsPerMicron()
-    chip = odb.dbChip.create(db, tech); block = odb.dbBlock.create(chip, 'pt_core_bias')
+    chip = odb.dbChip.create(db, tech); block = odb.dbBlock.create(chip, os.environ['CB_TOP'])
     block.setDefUnits(u); block.setDieArea(odb.Rect(0, 0, round(DIE_W*u), round(DIE_H*u)))
     nets = {name: odb.dbNet.create(block, name) for name in terminals['nets']}
     instances = {}
@@ -105,7 +110,7 @@ if mode == 'power':
         odb.dbBox.create(bp, layer, *rect)
         boundary.append(dict(net=name, side=side, layer=layer.getName(), rect_um=[v/u for v in rect],
                              electrical_use=ROLE(name) if SUPPLY(name) else 'SIGNAL'))
-    assert checked == 283 and len(boundary) == 122 and len(nets) == 152, (checked, len(boundary), len(nets))
+    assert (checked, len(boundary), len(nets)) == (N_TERMS, len(terminals['boundary_pins']), len(terminals['nets'])), (checked, len(boundary), len(nets))
     ndr = odb.dbTechNonDefaultRule.create(block, 'core_bias_supply_2um')  # block NDR: decoder resolves rules per block
     ndr_main = odb.dbTechNonDefaultRule.create(block, 'core_bias_main_4um')
     for rule_set, widths in ((ndr, NDR_WIDTH), (ndr_main, MAIN_WIDTH)):
@@ -225,9 +230,9 @@ else:
         for term in terms:
             instances[term['instance']].findITerm(term['pin']).connect(net); connected += 1
     roles = {n.getName(): n.getSigType() for n in block.getNets() if SUPPLY(n.getName())}
-    assert all(roles[n] == ROLE(n) for n in roles) and len(converted) == 7, roles
+    assert all(roles[n] == ROLE(n) for n in roles) and len(converted) == N_SUPPLY, roles
     attached = sum(1 for n in block.getNets() for _ in n.getITerms())
-    assert attached == 283, attached
+    assert attached == N_TERMS, attached
     odb.write_db(db, str(work/'signal-placed.odb')); odb.write_def(block, str(work/'signal-placed.def'))
     (work/'signal-import-report.json').write_text(json.dumps(dict(
         status='signal_database_prepared', supply_special_boxes=converted, supply_via_arrays_cuts=arrays, supply_roles=roles,

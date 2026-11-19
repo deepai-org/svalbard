@@ -23,7 +23,7 @@ Currents (not assumed margins):
   RAIL_x  (active outputs + 1 TRK diode branch) x 12.14 uA x 2; each pt_bias_bankN
           leg is the same 2 x 5/4 um PMOS as the TRK diode (pt_core_bias.spice),
           12.14 uA = maximum pre-trim output (tapeout-readiness core bias entry);
-          bank_pll has its 4th (lc_vco_reserved) enable tied off, counted anyway
+          spare (disabled) bank outputs are counted anyway
   VSS     VDD + sum of rail currents (every rail returns through VSS)
 Reported (not gated): the bound with the whole net current at the single
 worst terminal, I_total * R_eff(pin, terminal). Masters' internal resistance
@@ -42,8 +42,9 @@ CUT_125 = 0.18e-3  # A per cut, DRM 125 C / tech LEF DCCURRENTDENSITY
 IR_LIMIT = .010  # V, 0.3 % of 3.3 V
 w = json.loads((work/'routed.json').read_text()); u = w['dbu_per_um']
 import os
-inp = Path(os.environ.get('CORE_BIAS_INPUT', str(work.parents[0]/'core-bias-physical-terminals-current')))
+inp = Path(os.environ['CORE_BIAS_INPUT'])
 terms = json.loads((inp/'physical-terminals.json').read_text())
+placement = json.loads((inp/'placement-inputs.json').read_text())
 
 
 def overlap(a, b):
@@ -59,10 +60,15 @@ def half_r(box, layer, toward):
 
 
 # Rails feed one pt_bias_bankN each: N output legs + the TRK diode leg.
-RAIL_A = {r: (n+1)*12.14e-6*2 for r, n in dict(RAIL_rf=8, RAIL_conv=5, RAIL_pll=4, RAIL_wired=3, RAIL_debug=3).items()}
+# Every output of the bank counts, spare (disabled) ones included.
+RAIL_A = {}
+for inst in placement['instances']:
+    if inst['master'].startswith('pt_bias_bank'):
+        n = int(inst['master'][len('pt_bias_bank'):])
+        RAIL_A[inst['connections']['VDD']] = (n+1)*12.14e-6*2
 NET_A = dict(VDD=i_vdd, VSS=i_vdd+sum(RAIL_A.values()), **RAIL_A)
 out = {}; ok = True
-for name in ['VDD', 'VSS', 'RAIL_rf', 'RAIL_conv', 'RAIL_pll', 'RAIL_wired', 'RAIL_debug']:
+for name in ['VDD', 'VSS']+sorted(RAIL_A):
     net = w['nets'][name]; I = NET_A[name]
     metal = [(s['layer'], s['box_dbu']) for s in net['shapes'] if s['layer'].startswith('Metal')]
     metal += [(p['layer'], p['box_dbu']) for p in net['pins']]

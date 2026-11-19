@@ -9,19 +9,20 @@
 #   routed.json              routing-run geometry (for the layout negative)
 # and the Avalon standard-cell library mounted at its PDK path.
 set -u
+: "${CB_TOP:?pt_core_bias_<chip>}"
 cd /work
 AVALON=/foss/pdks/gf180mcuD/libs.ref/gf180mcu_as_sc_mcu7t3v3/spice/gf180mcu_as_sc_mcu7t3v3.spice
 SETUP=/foss/pdks/gf180mcuD/libs.tech/netgen/gf180mcuD_setup.tcl
 test -s "$AVALON" || { echo "missing Avalon spice"; exit 1; }
 mkdir -p ext
-cat > extract.tcl <<'EOF'
+cat > extract.tcl <<EOF
 crashbackups stop
 drc off
 gds readonly true
 gds read /work/pt_core_bias_routed.gds
-load pt_core_bias
-flatten pt_core_bias_flat
-load pt_core_bias_flat
+load ${CB_TOP}
+flatten ${CB_TOP}_flat
+load ${CB_TOP}_flat
 select top cell
 extract path /work/ext
 extract no all
@@ -50,7 +51,7 @@ run_lvs() {  # $1 reference, $2 report, [$3 layout netlist]
 set circuit1 [readnet spice ${3:-/work/layout_flat_pnpalias.spice}]
 set circuit2 [readnet spice $AVALON]
 readnet spice /work/$1 \$circuit2
-lvs "\$circuit1 pt_core_bias_flat" "\$circuit2 pt_core_bias" $SETUP /work/$2
+lvs "\$circuit1 ${CB_TOP}_flat" "\$circuit2 ${CB_TOP}" $SETUP /work/$2
 EOF
   NETGEN_COLUMNS=100 netgen -batch source "$2.tcl" > "$2.log" 2>&1 < /dev/null
 }

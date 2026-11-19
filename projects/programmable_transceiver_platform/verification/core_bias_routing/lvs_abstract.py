@@ -2,8 +2,10 @@
 # routed GDS by a black box holding only its pin conductors (each audited pin
 # rectangle grown to the full master polygon it belongs to on that layer)
 # with port labels (layer/10). Masters' devices are excluded on purpose:
-# their device-level LVS is per-master; this checks the 152 routed nets.
+# their device-level LVS is per-master; this checks every routed net.
 import pya, json
+import os
+TOP = os.environ['CB_TOP']  # pt_core_bias_<chip>, set by run_core_bias_routing.py
 from pathlib import Path
 base = Path('/input')
 audit = json.loads((base/'pin-audit.json').read_text()); layers = audit['pdk_layers']
@@ -11,7 +13,8 @@ masters = [c['cell'] for c in json.loads((base/'pin-inputs.json').read_text())['
 lay = pya.Layout(); lay.read('/work/pt_core_bias_routed.gds')
 count = 0
 for name in masters:
-    cell = lay.cell(name); assert cell is not None, name
+    cell = lay.cell(TOP+'__'+name) or lay.cell(name); assert cell is not None, name
+    cell.name = name  # black boxes carry the schematic master names
     keep = []
     for pin in audit['pin_details']:
         if pin['cell'] != name:
@@ -25,7 +28,7 @@ for name in masters:
     for ln, dt, region, pname, at in keep:
         cell.shapes(lay.layer(ln, dt)).insert(region)
         cell.shapes(lay.layer(ln, 10)).insert(pya.Text(pname, pya.Trans(at))); count += 1
-top = lay.cell('pt_core_bias')
+top = lay.cell(TOP)
 opt = pya.SaveLayoutOptions(); opt.select_cell(top.cell_index()); opt.write_context_info = False
 lay.write('/work/lvs/pt_core_bias.gds', opt)
 # Negative control layout: one Metal3 bridge between the nearest VDD and VSS

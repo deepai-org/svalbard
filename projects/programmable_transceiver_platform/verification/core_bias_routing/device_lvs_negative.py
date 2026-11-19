@@ -1,9 +1,11 @@
 # Layout negative control for device-level LVS: insert into the COMPLETE
 # routed GDS the same Metal3 VDD-VSS bridge the routing LVS uses.
 import pya, json
+import os
+TOP = os.environ['CB_TOP']  # pt_core_bias_<chip>, set by run_core_bias_routing.py
 from pathlib import Path
 lay = pya.Layout(); lay.read('/work/pt_core_bias_routed.gds')
-top = lay.cell('pt_core_bias')
+top = lay.cell(TOP)
 w = json.loads(Path('/work/routed.json').read_text())['nets']
 a = next(x for x in w['VDD']['shapes'] if x['layer'] == 'Metal3' and x['kind'] == 'segment')
 b = min((x for x in w['VSS']['shapes'] if x['layer'] == 'Metal3' and x['kind'] == 'segment'),

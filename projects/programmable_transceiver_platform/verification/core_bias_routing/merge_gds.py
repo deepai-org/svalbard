@@ -1,7 +1,8 @@
 # KLayout stage: write the routed core-bias GDS from the exported geometry
 # (routes, vias, boundary pins + labels) on top of the qualified placement,
 # then prove every leaf master is unchanged (zero XOR on every layer).
-import pya, json, re, hashlib
+import pya, json, re, hashlib, os
+TOP = os.environ['CB_TOP']
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -15,7 +16,7 @@ for e in ET.parse('/foss/pdks/gf180mcuD/libs.tech/klayout/tech/gf180mcu.lyp').it
 assert len(layers) == 9, layers
 layout = pya.Layout(); layout.read(str(base/'pt_core_bias_placement.gds'))
 top = layout.cell('pt_core_bias_placement'); assert top is not None
-top.name = 'pt_core_bias'
+top.name = TOP
 scale = wires['dbu_per_um']*layout.dbu; assert scale == 2, scale
 count = 0
 for name, net in wires['nets'].items():
@@ -44,8 +45,8 @@ for item in manifest['cells']:
 renamed = 0
 for ci in check.cell(top.name).called_cells():
     c = check.cell(ci)
-    if not c.name.startswith('pt_core_bias__'):
-        c.name = 'pt_core_bias__' + c.name; renamed += 1
+    if not c.name.startswith(TOP+'__'):
+        c.name = TOP+'__' + c.name; renamed += 1
 options = pya.SaveLayoutOptions(); options.select_cell(check.cell(top.name).cell_index()); options.write_context_info = False
 check.write(str(out/'pt_core_bias_routed.gds'), options)
 result = dict(renamed_subcells=renamed, status='routed_gds', nets=len(wires['nets']), route_shapes=count, master_xor=xor,

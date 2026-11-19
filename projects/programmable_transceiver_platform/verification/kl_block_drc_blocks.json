@@ -186,11 +186,6 @@
    "top": "gf180mcu_ocd_ip__por",
    "owner": "unowned:core_support"
   },
-  "core_bias": {
-   "gds": "scratch/core-bias-routing-20261109-101927/pt_core_bias_routed.gds",
-   "top": "pt_core_bias",
-   "owner": "unowned:core_support"
-  },
   "isw_wired": {
    "gds": "scratch/island-support-20261108-075605/layout/isw_wired.gds",
    "top": "isw_wired",
@@ -271,11 +266,6 @@
    "top": "pad_tlp_flat",
    "owner": "pads"
   },
-  "pt_bias_tap2": {
-   "gds": "projects/programmable_transceiver_platform/analog/core_support/distribution/generated/pt_bias_tap2.gds.gz",
-   "top": "pt_bias_tap2",
-   "owner": "core_support"
-  },
   "pt_refvcm": {
    "gds": "projects/programmable_transceiver_platform/analog/core_support/distribution/generated/pt_refvcm.gds.gz",
    "top": "pt_refvcm",
@@ -345,6 +335,16 @@
    "gds": "projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/rf-tx/pad.gds",
    "top": "pad_rftxpad",
    "owner": "pads"
+  },
+  "core_bias_rf": {
+   "gds": "scratch/core-bias-rf/routing/pt_core_bias_routed.gds",
+   "top": "pt_core_bias_rf",
+   "owner": "unowned:core_support"
+  },
+  "core_bias_wired": {
+   "gds": "scratch/core-bias-wired/routing/pt_core_bias_routed.gds",
+   "top": "pt_core_bias_wired",
+   "owner": "unowned:core_support"
   }
  }
 }

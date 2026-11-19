@@ -27,9 +27,12 @@ import device_lvs_reference as reference  # noqa: E402
 
 IMAGE = 'sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305'
 AVALON = ROOT/'scratch/core_support/avalon_lib'
+# per chip: one instance net exchanged, and two consumers' bank outputs exchanged
 NEGATIVES = {
-    'reference_neg.spice': dict(instance='Xbank_conv', a='BANK_EN_adc_i', b='BIAS_adc_i'),
-    'reference_neg_swap.spice': dict(instance='Xbank_rf', a='BIAS_lna', b='BIAS_rxmix_i'),
+    'rf': {'reference_neg.spice': dict(instance='Xbank_conv', a='BANK_EN_adc_i', b='BIAS_adc_i'),
+           'reference_neg_swap.spice': dict(instance='Xbank_rf_rx', a='BIAS_lna', b='BIAS_rxmix_i')},
+    'wired': {'reference_neg.spice': dict(instance='Xbank_wired_rx', a='BANK_EN_ctle', b='BIAS_ctle'),
+              'reference_neg_swap.spice': dict(instance='Xbank_wired_tx', a='BIAS_wiredtx', b='BIAS_hsbias')},
 }
 
 
@@ -37,12 +40,6 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def latest_routing():
-    runs = sorted(p for p in (ROOT/'scratch').glob('core-bias-routing-2*') if p.is_dir())
-    passing = [p for p in runs if (p/'report.json').exists() and
-               json.loads((p/'report.json').read_text()).get('status') == 'pass']
-    assert passing, 'No passing core-bias routing run'
-    return passing[-1]
 
 
 def property_errors(text):
@@ -117,11 +114,17 @@ def missing_terminal_devices(layout_text):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--routing-dir', type=Path)
-    ap.add_argument('--output-dir', type=Path, default=ROOT/'scratch/core-bias-device-lvs')
+    ap.add_argument('--chip', choices=sorted(NEGATIVES), required=True)
+    ap.add_argument('--routing-dir', type=Path, help='default scratch/core-bias-<chip>/routing')
+    ap.add_argument('--output-dir', type=Path, help='default scratch/core-bias-<chip>/device-lvs')
     a = ap.parse_args()
-    routing = (a.routing_dir or latest_routing()).resolve()
+    routing = (a.routing_dir or ROOT/f'scratch/core-bias-{a.chip}/routing').resolve()
     routing_report = json.loads((routing/'report.json').read_text())
+    # connectivity, DRC and routing LVS must pass; the supply IR result is reported, not a precondition
+    assert all(routing_report['checks'][:-1]) and routing_report['chip'] == a.chip, 'routing run did not pass'
+    top = routing_report['top']
+    negatives_spec = NEGATIVES[a.chip]
+    a.output_dir = a.output_dir or ROOT/f'scratch/core-bias-{a.chip}/device-lvs'
     inp = Path(routing_report['input'])
     out = a.output_dir.resolve()
     if out.exists():
@@ -132,9 +135,10 @@ def main():
     assert sha(extracted) == routing_report['input_hashes']['pt_core_bias.spice'], 'Routing input netlist changed'
     shutil.copy(routing/'pt_core_bias_routed.gds', out)
     shutil.copy(routing/'routed.json', out)
-    built = reference.build(extracted, out/'reference.spice')
-    negatives = {name: reference.build(extracted, out/name, mutate) for name, mutate in NEGATIVES.items()}
+    built = reference.build(extracted, out/'reference.spice', top=top)
+    negatives = {name: reference.build(extracted, out/name, mutate, top=top) for name, mutate in negatives_spec.items()}
     cmd = ['docker', 'run', '--rm', '--network', 'none', '--user', f'{os.getuid()}:{os.getgid()}', '-e', 'HOME=/tmp',
+           '-e', f'CB_TOP={top}', '-e', 'OMP_NUM_THREADS=1', '--cpus', '2',
            '-e', 'PDK=gf180mcuD', '-e', 'PDK_ROOT=/foss/pdks', '-e', 'PDKPATH=/foss/pdks/gf180mcuD',
            '-v', f'{out}:/work', '-v', f'{FLOW}:/flow:ro', '--mount',
            f'type=bind,src={AVALON},dst=/foss/pdks/gf180mcuD/libs.ref/gf180mcu_as_sc_mcu7t3v3,readonly',
@@ -148,7 +152,7 @@ def main():
         r'^X\S+ .*pnp_05p00x05p00(?: m=(\d+))?', (out/'reference.spice').read_text(), re.M))
     main_result = final(out/'lvs_device.out')
     negative_results = {name: final(out/(name.replace('reference', 'lvs_device').replace('.spice', '.out')))
-                        for name in NEGATIVES}
+                        for name in negatives_spec}
     negative_results['layout_vdd_vss_bridge'] = final(out/'lvs_device_neg_layout.out')
     checks = dict(
         match=main_result['match'],
@@ -170,7 +174,8 @@ def main():
         not missing['suspect'] and missing['total'] == fb['kinds'].get('device missing 1 terminal', 0))
     report = dict(
         status='pass' if all(checks.values()) else 'fail',
-        scope='device-level LVS: flat Magic extraction of the complete routed core-bias GDS vs schematic-leaf reference',
+        top=top, chip=a.chip,
+        scope='device-level LVS: flat Magic extraction of the complete routed core-bias GDS (read back from disk) vs schematic-leaf reference',
         routing_run=str(routing.relative_to(ROOT)),
         routed_gds_sha256=sha(out/'pt_core_bias_routed.gds'),
         checks=checks, result=main_result, negative_controls=negative_results,

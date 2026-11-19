@@ -1,6 +1,7 @@
 # KLayout stage: validate the geometry export (including non-default-rule
 # widths, tapers, patches and special-net vias) against KLayout's own LEF/DEF
 # reader of the router's DEF. Top-level routing metal and cuts must XOR to zero.
+import os
 import pya, json, glob, re
 from pathlib import Path
 
@@ -15,7 +16,7 @@ cfg.macro_resolution_mode = 1  # LEF abstracts only; masters compared elsewhere
 d = pya.Layout(); d.read(str(work/'routed.def'), opt)
 dtop = d.top_cell()
 masters = {c['cell'] for c in json.loads(Path('/input/pin-inputs.json').read_text())['cells']}
-g = pya.Layout(); g.read(str(work/'pt_core_bias_routed.gds')); gtop = g.cell('pt_core_bias')
+g = pya.Layout(); g.read(str(work/'pt_core_bias_routed.gds')); gtop = g.cell(os.environ['CB_TOP'])
 gds_map = json.loads((work/'gds-report.json').read_text())['layer_map']
 scale = g.dbu/d.dbu
 result = {}; ok = True

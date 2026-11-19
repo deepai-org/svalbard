@@ -116,15 +116,21 @@ Path('/work/physical-terminals.json').write_text(json.dumps(terminals,indent=2)+
 '''
 
 
-# I9 compact arrangement: vref joins the biasgen/bandgap row, the root joins the enable-gate
-# row (gates at 12 um instead of 20 um), each per-island bank stays one intact master.
-COMPACT_PLAN = dict(die_um=[950., 330.], row_gap_um=20., gap_um=dict(**{'and': 12.}),
-                    rows=[['Xbiasgen', 'Xbandgap', 'Xvref'],
-                          ['Xbank_rf', 'Xbank_conv', 'Xbank_pll', 'Xbank_wired', 'Xbank_debug'],
-                          ['Xroot', 'ANDS']])
+# Per-chip compact arrangement (D8): 20 um between masters and rows (the routing channels), enable gates
+# at 12 um, each bank one intact master; rows wrap at the die width.
+PLANS = {
+    'rf': dict(die_um=[720., 320.], row_gap_um=20., gap_um=dict(**{'and': 12.}),
+               rows=[['Xbiasgen', 'Xbandgap'],
+                     ['Xbank_conv', 'Xbank_rf_rx', 'Xvref', 'Xbank_pll'],
+                     ['Xbank_lo', 'Xbank_debug', 'Xroot', 'ANDS']]),
+    'wired': dict(die_um=[720., 265.], row_gap_um=20., gap_um=dict(**{'and': 12.}),
+                  rows=[['Xbiasgen', 'Xbandgap'],
+                        ['Xbank_debug', 'Xbank_pll', 'Xbank_wired_rx', 'Xbank_wired_tx'],
+                        ['Xvref', 'Xroot', 'ANDS']]),
+}
 
 
-def place(out, plan=None):
+def place(out, chip, plan):
     out.mkdir(parents=True, exist_ok=True)
     assert not (out/'report.json').exists(), 'Use a fresh output directory'
     sources = {}
@@ -136,7 +142,8 @@ def place(out, plan=None):
                  PROJECT/'verification/check_chip_power.py']:
         read(path)
     (out/'audit_macro_pins.py').write_text(read(PROJECT/'verification/audit_macro_pins.py'))
-    core = build(read)
+    core = build(read, chip)
+    top = core['top']
     (out/'pt_core_bias.spice').write_text(core['text'])
     qualification = json.loads(read(PROJECT/'analog/core_support/evidence/core_support_evidence.json'))
     model_manifest = json.loads(read(PROJECT/'integration/models/core_bias/manifest.json'))
@@ -154,6 +161,9 @@ def place(out, plan=None):
     for name, info in qualification['distribution']['layout'].items():
         choices[name] = ('analog/core_support/distribution/generated/'+name+'.gds.gz',
                          info['hashes'][name+'.gds'])
+    used = {line.split()[-1] for line in core['text'].split(f'.subckt {top} ', 1)[1].splitlines() if line.startswith('X')}
+    assert used <= set(choices), used-set(choices)
+    choices = {k: v for k, v in choices.items() if k in used}
     masters = {}
     for name, (ref, digest) in choices.items():
         path = PROJECT/ref
@@ -196,13 +206,13 @@ def place(out, plan=None):
                               capture_output=True, text=True, timeout=180)
     (out/'leaf-abstract.log').write_text(abstract.stdout+abstract.stderr)
     abstract.check_returncode()
-    pin_inputs = dict(scope='All nine core-reference/distribution/vref/enable-gate masters; routing excluded', cells=[])
+    pin_inputs = dict(scope=f'All {len(masters)} core-reference/distribution/vref/enable-gate masters of {top}; routing excluded', cells=[])
     for name, info in masters.items():
         pin_inputs['cells'].append(dict(cell=name, gds=info['file'], lef=name+'.lef',
                                        gds_sha256=hashlib.sha256((out/info['file']).read_bytes()).hexdigest(),
                                        lef_sha256=hashlib.sha256((out/(name+'.lef')).read_bytes()).hexdigest()))
     (out/'pin-inputs.json').write_text(json.dumps(pin_inputs,indent=2)+'\n')
-    body = core['text'].split('.subckt pt_core_bias ', 1)[1].splitlines()[1:]
+    body = core['text'].split(f'.subckt {top} ', 1)[1].splitlines()[1:]
     instances = []
     for line in body:
         if not line.startswith('X'):
@@ -218,8 +228,8 @@ def place(out, plan=None):
         private = [p for p in connections if master == 'bringup_and' and p not in ('A','B','Y','VDD','VSS')]
         instances.append(dict(name=words[0], master=master, connections=connections,
                               extracted_private_pins=private))
-    assert len(instances) == 37 and len(core['control_instances']) == 28
-    manifest = dict(plan=plan or {}, masters=masters, instances=instances, boundary_pins=core['pins'],
+    assert len([i for i in instances if i['master'] == 'bringup_and']) == len(core['control_instances'])
+    manifest = dict(top=top, chip=chip, plan=plan, masters=masters, instances=instances, boundary_pins=core['pins'],
                     control_bindings=core['control_bindings'], observation_bindings=core['observation_bindings'])
     (out/'placement-inputs.json').write_text(json.dumps(manifest, indent=2)+'\n')
     (out/'layout.py').write_text(LAYOUT)
@@ -231,7 +241,7 @@ def place(out, plan=None):
     geometry = json.loads((out/'geometry-audit.json').read_text())
     terminals = json.loads((out/'physical-terminals.json').read_text())
     assert all(hashlib.sha256(Path(p).read_bytes()).hexdigest() == h for p,h in sources.items())
-    result = dict(status='unrouted_placement', instances=len(instances), boundary_pins=len(core['pins']),
+    result = dict(status='unrouted_placement', top=top, chip=chip, instances=len(instances), boundary_pins=len(core['pins']),
                   geometry=geometry, source_hashes=sources, image=IMAGE,
                   physical_terminals=terminals['terminal_count'], physical_nets=len(terminals['nets']),
                   artifact_hashes={f:hashlib.sha256((out/f).read_bytes()).hexdigest() for f in
@@ -248,8 +258,7 @@ def place(out, plan=None):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output-dir', type=Path, default=ROOT/'scratch/core-bias-physical-placement')
-    parser.add_argument('--compact', action='store_true',
-                        help='I9: 950 x 330 um die (fits >= 100 um from the macro); per-island banks kept whole')
+    parser.add_argument('--chip', choices=sorted(PLANS), required=True)
+    parser.add_argument('--output-dir', type=Path)
     a = parser.parse_args()
-    place(a.output_dir.resolve(), COMPACT_PLAN if a.compact else None)
+    place((a.output_dir or ROOT/f'scratch/core-bias-{a.chip}/placement').resolve(), a.chip, PLANS[a.chip])

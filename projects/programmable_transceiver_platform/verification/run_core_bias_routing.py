@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Maintained core-bias routing flow (37 placed cells, 152 nets).
+"""Maintained core-bias routing flow, one run per chip (pt_core_bias_rf, pt_core_bias_wired).
 
 Stages (all tools pinned in container images, see IMAGES):
   1. precise abstracts        (KLayout)  real master metal as OBS; supply pins own their rails
-  2. supply-first routing     (OpenROAD) 7 supply nets, NDR 4 um VDD/VSS, 2 um rails
-  3. signal routing           (OpenROAD) 145 nets around the FIXED supply network,
+  2. supply-first routing     (OpenROAD) supply nets, NDR 4 um VDD/VSS, 2 um rails
+  3. signal routing           (OpenROAD) signal nets around the FIXED supply network,
                                          supply nets restored to special POWER/GROUND
   4. geometry export          (OpenROAD) all regular + special rectangles, NDR widths
   5. routed GDS + master XOR  (KLayout)
   6. independent audit        (KLayout)  connectivity / shorts incl. master-internal metal
   7. negative controls        audit must reject: deleted segment, deleted via,
                               cross-net bridge, detached supply pin
-  8. KLayout GF180 DRC, Magic+Netgen LVS against pt_core_bias.spice, magic extraction
+  8. KLayout GF180 DRC, Magic+Netgen LVS against the generated netlist, magic extraction
   9. supply current / IR / EM from the exported supply geometry against the GF180MCU
      DRM 14.2 via/metal ratings, max-corner resistance (supply_ir.py)
 
@@ -35,8 +35,12 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def docker(kind, inp, work, cmd, log, threads=8):
+TOP = None  # pt_core_bias_<chip>, from the placement's placement-inputs.json
+
+
+def docker(kind, inp, work, cmd, log, threads=4):
     args = ['docker', 'run', '--rm', '--network', 'none', '--user', f'{os.getuid()}:{os.getgid()}', '-e', 'HOME=/tmp',
+            '-e', f'CB_TOP={TOP}', '-e', 'OMP_NUM_THREADS=1', '--cpus', '4',
             '-e', f'ROUTE_THREADS={threads}', '-v', f'{inp}:/input:ro', '-v', f'{work}:/work', '-v', f'{FLOW}:/flow:ro']
     if kind == 'openroad':
         args += ['--entrypoint', 'openroad', IMAGES[kind]] + cmd
@@ -54,14 +58,25 @@ def drc_count(path):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--input', type=Path, default=ROOT/'scratch/core-bias-physical-terminals-current')
-    ap.add_argument('--output-dir', type=Path, default=ROOT/f'scratch/core-bias-routing-{time.strftime("%Y%m%d-%H%M%S")}')
+    ap.add_argument('--chip', choices=['rf', 'wired'], required=True)
+    ap.add_argument('--input', type=Path, help='placement directory (default scratch/core-bias-<chip>/placement)')
+    ap.add_argument('--output-dir', type=Path, help='default scratch/core-bias-<chip>/routing')
     ap.add_argument('--from-stage', type=int, default=1)
     ap.add_argument('--supply-current-ma', type=float, default=1.0,
                     help='VDD current for IR/EM in mA (default: the 1 mA bias current_budget_ma); VSS = VDD + rail currents, see supply_ir.py.')
     a = ap.parse_args()
-    inp = a.input.resolve(); work = a.output_dir.resolve(); work.mkdir(parents=True, exist_ok=True)
-    rep = dict(status='running', input=str(inp), images=IMAGES, flow_hashes={p.name: sha(p) for p in sorted(FLOW.iterdir()) if p.is_file()},
+    global TOP
+    inp = (a.input or ROOT/f'scratch/core-bias-{a.chip}/placement').resolve()
+    work = (a.output_dir or ROOT/f'scratch/core-bias-{a.chip}/routing').resolve(); work.mkdir(parents=True, exist_ok=True)
+    placement = json.loads((inp/'placement-inputs.json').read_text())
+    TOP = placement['top']; assert placement['chip'] == a.chip, (placement['chip'], a.chip)
+    terminals = json.loads((inp/'physical-terminals.json').read_text())
+    n_nets = len(terminals['nets']); n_supply = sum(1 for n in terminals['nets'] if SUPPLY(n))
+    n_terms = sum(map(len, terminals['nets'].values())); n_boundary = len(terminals['boundary_pins'])
+    n_cells = len(placement['instances'])
+    # spare bank drains are single-terminal private nets: present, never routed
+    n_single = sum(1 for n, t in terminals['nets'].items() if not SUPPLY(n) and len(t) == 1 and n not in terminals['boundary_pins'])
+    rep = dict(status='running', top=TOP, chip=a.chip, input=str(inp), images=IMAGES, flow_hashes={p.name: sha(p) for p in sorted(FLOW.iterdir()) if p.is_file()},
                input_hashes={f: sha(inp/f) for f in ['geometry-audit.json', 'placement-inputs.json', 'physical-terminals.json',
                                                      'pin-inputs.json', 'pin-audit.json', 'pt_core_bias_placement.gds', 'pt_core_bias.spice']})
     s = a.from_stage
@@ -71,7 +86,7 @@ def main():
         docker('openroad', inp, work, ['-python', '-exit', '/flow/prepare.py', 'power'], 'prepare-power.log')
         docker('openroad', inp, work, ['-exit', '/flow/route_power.tcl'], 'route-power.log')
         docker('openroad', inp, work, ['-python', '-exit', '/flow/export_wires.py', '/work/power-routed.odb',
-                                       '/work/power-routed.def', '/work/power-wires.json', '7', '0'], 'export-power.log')
+                                       '/work/power-routed.def', '/work/power-wires.json', str(n_supply), '0'], 'export-power.log')
     rep['power_router_violations'] = drc_count(work/'power-route.drc')
     if s <= 3:
         docker('openroad', inp, work, ['-python', '-exit', '/flow/prepare.py', 'signal'], 'prepare-signal.log')
@@ -79,7 +94,7 @@ def main():
     rep['signal_router_violations'] = drc_count(work/'signal-route.drc')
     if s <= 4:
         docker('openroad', inp, work, ['-python', '-exit', '/flow/export_wires.py', '/work/routed.odb',
-                                       '/work/routed.def', '/work/routed.json', '145', '7'], 'export.log')
+                                       '/work/routed.def', '/work/routed.json', str(n_nets-n_supply-n_single), str(n_supply)], 'export.log')
     if s <= 5:
         docker('klayout', inp, work, 'klayout -b -r /flow/merge_gds.py', 'merge-gds.log')
         docker('klayout', inp, work, 'klayout -b -r /flow/def_crosscheck.py', 'def-crosscheck.log')
@@ -141,8 +156,8 @@ def main():
     controls = json.loads((work/'negative-controls.json').read_text())
     if s <= 8:
         docker('klayout', inp, work, PDKENV+' && rm -rf /work/drc && mkdir -p /work/drc && '
-               'cp /work/pt_core_bias_routed.gds /work/drc/pt_core_bias.gds && cd /work/drc && '
-               'sak-drc.sh -k -w /work/drc/out /work/drc/pt_core_bias.gds && grep -q gf180mcu /work/drc/out/*/*.log', 'drc.log')
+               f'cp /work/pt_core_bias_routed.gds /work/drc/{TOP}.gds && cd /work/drc && '
+               f'sak-drc.sh -k -w /work/drc/out /work/drc/{TOP}.gds && grep -q gf180mcu /work/drc/out/*/*.log', 'drc.log')
         docker('klayout', inp, work, PDKENV+' && bash /flow/lvs.sh', 'lvs.log')
     if s <= 9:
         subprocess.run([sys.executable, str(FLOW/'supply_ir.py'), str(work), str(a.supply_current_ma)], env={**os.environ, 'CORE_BIAS_INPUT': str(inp)})
@@ -157,12 +172,12 @@ def main():
                def_crosscheck=defx['status'], klayout_drc_violations=drc, lvs=lvs, supply_ir=ir['status'])
     checks = [rep['power_router_violations'] == 0, rep['signal_router_violations'] == 0, rep['supply_special'],
               all(rep['supply_roles'][n] == ('GROUND' if n == 'VSS' else 'POWER') for n in rep['supply_roles']),
-              audit['status'] == 'pass' and audit['nets'] == 152 and audit['instance_terminals_checked'] == 283 and audit['boundary_pins_checked'] == 122,
+              audit['status'] == 'pass' and (audit['nets'], audit['instance_terminals_checked'], audit['boundary_pins_checked']) == (n_nets, n_terms, n_boundary),
               all(c['rejected'] for c in controls.values()), defx['status'] == 'pass', drc == 0,
               lvs['status'] == 'pass', lvs.get('pex_status') == 'pass', ir['status'] == 'pass']
     rep['checks'] = checks
     rep['status'] = 'pass' if all(checks) else 'fail'
-    rep['scope'] = ('Core-bias 37-cell block routing: 152 nets (7 supply), 283 instance terminals, 122 boundary pins. '
+    rep['scope'] = (f'{TOP} block routing: {n_cells} cells, {n_nets} nets ({n_supply} supply), {n_terms} instance terminals, {n_boundary} boundary pins. '
                     'Block-level only; full-chip floorplan, PDN, antenna/density and signoff remain separate gates.')
     (work/'report.json').write_text(json.dumps(rep, indent=2)+'\n')
     print(json.dumps({k: rep[k] for k in ['status', 'checks', 'power_router_violations', 'signal_router_violations',

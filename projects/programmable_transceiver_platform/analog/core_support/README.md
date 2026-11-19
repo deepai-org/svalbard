@@ -17,7 +17,6 @@ its `source_hashes_sha256` match the current files).
 | Distribution root | `pt_bias_root` | `distribution/generated/` | 157.70 × 25.06 |
 | Island banks | `pt_bias_bank3`, `bank4`, `bank5`, `bank8` | `distribution/generated/` | 154.42 × 27.26, 174.30 × 46.32, 176.38 × 50.82, 183.88 × 77.98 |
 | Master voltage references | `pt_bias_vref` | `distribution/generated/` | 88.80 × 56.68 |
-| Two-output trunk tap | `pt_bias_tap2` | `distribution/generated/` | 93.74 × 23.66 |
 | Reference-pad common mode | `pt_refvcm` | `distribution/generated/` | 137.88 × 53.98 |
 | TX-pad bias | `pt_txpad_bias` | `distribution/generated/` | 167.29 × 61.14 |
 
@@ -143,22 +142,29 @@ a switched PMOS source. Layout uses the row generator `analog/rf_tx/layoutlib.py
 | --- | --- | --- | --- |
 | `pt_bias_root` | `VSS ROOT_REF EN_RF EN_CONV EN_PLL EN_WIRE EN_DEBUG TRK_RF TRK_CONV TRK_PLL TRK_WIRE TRK_DEBUG` | core | NMOS diode on `ROOT_REF` plus five 1:1 legs, each behind a switch |
 | `pt_bias_bank<N>` | `VDD VSS TRK EN0..EN<N-1> OUT0..OUT<N-1>` | island | PMOS diode on `TRK` plus N switched 1:1 mirrors |
-| `pt_bias_tap2` | `VDD VSS TRK EN0 EN1 OUT0 OUT1` | its bank's rail | two more switched outputs on an existing trunk (no diode) |
 | `pt_bias_vref` | `VDD VSS VBG VREF0 VCM` | core | passive: `VREF0` = 5/6·`VBG`, `VCM` = VDD/2 |
 | `pt_refvcm` | `VDD VSS EN VCM` | pll | gated VDD/2 for the reference-pad `VCM` pins |
 | `pt_txpad_bias` | `VDD VSS EN BUF_REF BUF_BIAS EN_DET IBIAS_DET DETECT_PBIAS` | wired_tx | gated TX termination-buffer reference (VDD/2) and bias (3/11 VDD) dividers; ×5 mirror for the TX-pad detect PMOS bias |
 
-| Trunk | Bank | Outputs |
-| --- | --- | --- |
-| rf | `pt_bias_bank8` | lna, rxmix_i, rxmix_q, bbfilter_i, bbfilter_q, txmix_i, txmix_q, rfdriver |
-| conv | `pt_bias_bank5` | adc_i, adc_q, dac_i, dac_q, refbuf |
-| pll | `pt_bias_bank4` | pll_ring_tx, pll_ring_rx, `pt_cdr` (the output named `pll_ring_host`), one output with `EN` tied low |
-| wire | `pt_bias_bank3` | ctle, detect, wiredtx |
-| debug | `pt_bias_bank3` | bb_tap_i, bb_tap_q, bb_tap_wmon |
+Trunks per chip (`integration/core_bias.py` TRUNKS; one generator, one composite per chip, decision D8). Each
+bank sits on the rail of its consumers; spare bank outputs are disabled (EN = VSS) with open drains; unused root
+legs are disabled with their drains on VSS. Two trunks of one enable group share one enable gate.
 
-Physical, all nine cells: Magic DRC 0, KLayout DRC 0, LVS match uniquely (`<cell>-layout.json`, `<cell>-lvs.txt`).
+| Chip | Trunk (root leg) | Bank, rail | Outputs | ATB |
+| --- | --- | --- | --- | --- |
+| `pt_rf` | rf_rx (RF) | `pt_bias_bank8`, `RAIL_rf_rx` | lna, rxmix_i, rxmix_q, bbfilter_i, bbfilter_q, txmix_i, txmix_q, rfdriver | 14 |
+| `pt_rf` | conv (CONV) | `pt_bias_bank5`, `RAIL_conv` | adc_i, adc_q, dac_i, dac_q, refbuf | 35 |
+| `pt_rf` | pll (PLL) | `pt_bias_bank3`, `RAIL_pll` | pll_ring_tx, pll_ring_rx, cdr | 29 |
+| `pt_rf` | lo (WIRE) | `pt_bias_bank3`, `RAIL_lo` | qvco, lo_pfdcp, spare | none |
+| `pt_rf` | debug (DEBUG) | `pt_bias_bank3`, `RAIL_debug` | bb_tap_i, bb_tap_q, spare | 56 |
+| `pt_wired` | pll (PLL) | `pt_bias_bank3`, `RAIL_pll` | pll_ring_tx, pll_ring_rx, cdr | 29 |
+| `pt_wired` | wired_rx (WIRE) | `pt_bias_bank3`, `RAIL_wired_rx` | ctle, detect, spare | 22 |
+| `pt_wired` | wired_tx (RF) | `pt_bias_bank3`, `RAIL_wired_tx` | wiredtx, hsbias, spare | none |
+| `pt_wired` | debug (DEBUG) | `pt_bias_bank3`, `RAIL_debug` | bb_tap_wmon, 2 spare | 56 |
+
+Physical, all eight cells: Magic DRC 0, KLayout DRC 0, LVS match uniquely (`<cell>-layout.json`, `<cell>-lvs.txt`).
 HRES: `pt_bias_vref` 10 of 10, `pt_refvcm` 4 of 4, `pt_txpad_bias` 13 of 13. Extraction is capacitance only.
-`pt_bias_tap2`, `pt_refvcm` and `pt_txpad_bias` also have LVS on the GDS read back from disk with a failing
+`pt_refvcm` and `pt_txpad_bias` also have LVS on the GDS read back from disk with a failing
 negative control, and precheck-deck records (`<cell>-kldrc.json`: main 0, antenna 0, sha-matched, registered in
 `verification/kl_block_drc_blocks.json`). LEF abstracts exist for the root, the banks and `pt_bias_vref`
 (`abstract-evidence.json`).
@@ -171,7 +177,6 @@ negative control, and precheck-deck records (`<cell>-kldrc.json`: main 0, antenn
 | Island rail at 0 V, trunk and enables high | no output current | evidence file |
 | 10 µA sunk from `TRK_RF` with all trunks disabled | 10.02 µA on the 8 rf outputs, ≤ 12 pA elsewhere; `TRK_RF` at 1.98 V | evidence file |
 | 0 → 3.63 V in 10 µs, enables low / high | outputs ≤ 10 nA peak / ≤ 10.21 µA peak | evidence file |
-| `pt_bias_tap2`, extracted, 19 corners | 10.05–10.20 µA, tap/bank ratio 1.0000 on one rail; **3.4 % per 10 mV of rail offset** | `scratch/reviews/pads-core/CORE-SUPPORT-CELLS.md` |
 | `pt_refvcm` | `VCM`/VDD 0.4984–0.4992, 15–29 µA; off: 0 V, ≤ 2.3 nA; 40 kΩ source | same |
 | `pt_txpad_bias` | `BUF_REF`/VDD 0.4967–0.4984, `BUF_BIAS`/VDD 0.2714–0.2721, about 195 µA on; detect source 49.5–50.8 µA per pad leg from 10 µA into `IBIAS_DET` | same |
 | `pt_bias_vref` | `VREF0` = 1.010 V at `VBG` 1.212 V; `VCM` divider about 20 µA | netlist; always-on audit F4 |
@@ -234,11 +239,7 @@ exercised by `verification/check_regfile.py`):
 | Instance | Cell | Notes |
 | --- | --- | --- |
 | `por` | `gf180mcu_ocd_ip__por` | core rail |
-| `core_bias` | `pt_core_bias` (bandgap, biasgen, root, five banks, `pt_bias_vref`; assembled by `verification/core_bias_routing/`) | bank rails: rf_rx, conv, pll, wired_rx, debug |
-| `pad_por_bypass` | provider input pad | `Y` → `por_bypass` |
-| `refvcm` | `pt_refvcm` | `RAIL_pll`, `VCM` → both reference pad pairs |
-| `txpad_bias` | `pt_txpad_bias` | `RAIL_wired_tx` |
-| `bias_ext` | demand for three more outputs (qvco, lo_pfdcp, hsbias) | to be met with `pt_bias_tap2` instances |
+| `core_bias` | `pt_core_bias_rf` / `pt_core_bias_wired` (bandgap, biasgen, root, the chip's banks, `pt_bias_vref`; routed by `verification/run_core_bias_routing.py --chip <chip>`) | trunk table above |
 
 ## Flow
 
@@ -257,17 +258,15 @@ Containers run with `--network none`, bounded CPU and memory, `OMP_NUM_THREADS=1
 | `flow/crosscheck_canary.sh` | digital-image DRC/LVS and the HRES negative control |
 | `flow/sim_core_support.py`, `flow/sim_bandgap.py` | POR, biasgen, bandgap and chain simulations |
 | `distribution/generate_dist.py`, `sim_dist.py` | root, banks, `pt_bias_vref`: layout, DRC, LVS, simulations |
-| `distribution/generate_ext.py` (`circuits_ext.py`) | `pt_bias_tap2`, `pt_refvcm`, `pt_txpad_bias` layout |
+| `distribution/generate_ext.py` (`circuits_ext.py`) | `pt_refvcm`, `pt_txpad_bias` layout (`pt_bias_tap2` is still in the generator, unused: the per-chip banks replaced it) |
 | `flow/summarize.py` | writes the evidence file; exits non-zero on an LVS failure |
 
 ## Open items
 
 Risks: PWR-02, MOD-17, INT-04, PDN-08 (`spec/risk-register.md`).
 
-- Bank rails with ten islands: the five banks and `bias_ext` as bound do not keep every bank and tap on its
-  trunk diode's rail (interface row PC-5; proposal: all bank rails on the core rail).
-- the chip conns still name `pt_bias_ext` and binds `txpad_bias` with an `EN_TERM` pin and no detect pins; the
-  published cells are `pt_bias_tap2` and `pt_txpad_bias` with `EN`, `EN_DET`, `IBIAS_DET`, `DETECT_PBIAS`.
+- The chip conns bind `txpad_bias` with an `EN_TERM` pin and no detect pins; the
+  published `pt_txpad_bias` has `EN`, `EN_DET`, `IBIAS_DET`, `DETECT_PBIAS`.
   `IBIAS_DET` has no source yet.
 - ATB leaves on the five trunk nodes (codes 14, 22, 29, 35, 56) are not gated by the rail of the bank that owns
   the trunk: a closed leaf with that rail off drives the bank diode into the dead rail (interface row PC-10).
@@ -279,7 +278,7 @@ Risks: PWR-02, MOD-17, INT-04, PDN-08 (`spec/risk-register.md`).
   and the resistor × MIM rows.
 - No mismatch or Monte Carlo on any cell. Consumers are modelled as ideal sources or NMOS diodes; trunk wire
   RC is not modelled.
-- `pt_bias_tap2`, `pt_refvcm`, `pt_txpad_bias`: no LEF abstracts; results are not in the evidence file; the ×5
+- `pt_refvcm`, `pt_txpad_bias`: no LEF abstracts; results are not in the evidence file; the ×5
   detect mirror was not re-reviewed after the rebuild.
 - The layout records of the root, the banks and `pt_bias_vref` carry generator hashes
   (`rf_tx/layoutlib.py`, `rf_tx/circuits.py`, for root and banks also `circuits_dist.py`) that differ from the

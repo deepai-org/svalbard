@@ -93,12 +93,12 @@ def check_published():
             assert sums.get(path.name) == sha(path), ('LVS reference does not match SHA256SUMS', path)
 
 
-def build(extracted_path, output, mutate=None):
+def build(extracted_path, output, mutate=None, top='pt_core_bias'):
     check_published()
     extracted = subckts(Path(extracted_path).read_text())
-    top_pins, top_body = extracted['pt_core_bias']
+    top_pins, top_body = extracted[top]
     text, sources, schematic_pins, emitted = [], {}, {}, set()
-    text.append('* Device-level LVS reference for pt_core_bias (see device_lvs_reference.py)')
+    text.append(f'* Device-level LVS reference for {top} (see device_lvs_reference.py)')
     for master, path in SCHEMATICS.items():
         sources[str(path)] = sha(path)
         library = subckts(path.read_text())
@@ -143,7 +143,7 @@ def build(extracted_path, output, mutate=None):
         a, b = f.index(mutate['a']), f.index(mutate['b'])
         f[a], f[b] = f[b], f[a]
         lines[index] = ' '.join(f)
-    text.append('.subckt pt_core_bias '+' '.join(top_pins)+'\n'+'\n'.join(lines)+'\n.ends\n')
+    text.append(f'.subckt {top} '+' '.join(top_pins)+'\n'+'\n'.join(lines)+'\n.ends\n')
     Path(output).write_text('\n'.join(text)+'\n')
     return dict(instances=instances, dropped_private_ports=dropped, intent_bound_pins=intent_bound,
                 schematic_sources=sources, extracted_port_source=dict(path=str(extracted_path), sha256=sha(extracted_path)),

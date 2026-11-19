@@ -152,7 +152,7 @@ legs are disabled with their drains on VSS. Two trunks of one enable group share
 
 | Chip | Trunk (root leg) | Bank, rail | Outputs | ATB |
 | --- | --- | --- | --- | --- |
-| `pt_rf` | rf_rx (RF) | `pt_bias_bank8`, `RAIL_rf_rx` | lna, rxmix_i, rxmix_q, bbfilter_i, bbfilter_q, txmix_i, txmix_q, rfdriver | 14 |
+| `pt_rf` | rf_rx (RF) | `pt_bias_bank8`, `RAIL_rf_rx` | lna, rxmix_i, rxmix_q, bbfilter_i, bbfilter_q; txmix_i, txmix_q, rfdriver sit on `RAIL_rf_tx` (same enable; the one exception, see `core_bias.py`) | 14 |
 | `pt_rf` | conv (CONV) | `pt_bias_bank5`, `RAIL_conv` | adc_i, adc_q, dac_i, dac_q, refbuf | 35 |
 | `pt_rf` | pll (PLL) | `pt_bias_bank3`, `RAIL_pll` | pll_ring_tx, pll_ring_rx, cdr | 29 |
 | `pt_rf` | lo (WIRE) | `pt_bias_bank3`, `RAIL_lo` | qvco, lo_pfdcp, spare | none |

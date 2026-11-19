@@ -12,11 +12,13 @@ Cases (each a separate transient):
   window   tt/ss/ff x 22/32 C x 3.15/3.35 V and tt/27 C/3.3 V: every used output 7.5-12.2 uA (README:
            7.52-12.06 uA behind the untrimmed biasgen), VBG 1.19-1.23 V
   trim     ss/32 C/3.50 V (per-chip supply trim setpoint): same limits
-  off_<t>  tt/27/3.3 with trunk <t>'s dist_en = 0: its outputs <= 5 nA, every other output in the window
+  off_<t>  tt/27/3.3 with trunk <t>'s dist_en = 0: outputs of every trunk on that field <= 5 nA, others in window
+  on_<g>   tt/27/3.3 with island_on of enable group <g> = 0: that group's outputs <= 5 nA, others in window
   rail_<t> tt/27/3.3 with trunk <t>'s island rail at 0 V (dist_en and enables high): its outputs <= 5 nA,
            every other output in the window
   en_<c>   tt/27/3.3 with one consumer's EN = 0: that output <= 5 nA, the others in the window
-Negative control (must FAIL the same limits): idac2 = 0 (no root reference).
+Negative control (must FAIL the same limits, always run): idac2 = 0 (no root reference).
+Not covered: a swapped BIAS/EN binding inside a bank gives identical currents; device LVS against build() guards it.
 
 Usage: check_core_bias_chip.py --chip rf|wired [--output-dir DIR] [--jobs 1]
 """
@@ -86,7 +88,7 @@ def deck(core, corner, temp, vdd, mods):
             trunk = next(k for k, v in core['trunks'].items() if v['rail'] == pin)
             src.append(f'V{pin} {pin} 0 ' + ('0' if trunk in mods.get('rail_off', ()) else hi))
         elif pin.startswith('ON_'):
-            src.append(f'V{pin} {pin} 0 {hi}')
+            src.append(f'V{pin} {pin} 0 ' + ('0' if pin[3:] in mods.get('on_off', ()) else hi))
         elif pin.startswith('EN_'):
             consumer = pin[3:]
             src.append(f'V{pin} {pin} 0 ' + ('0' if consumer in mods.get('en_off', ()) else late))
@@ -124,8 +126,17 @@ def run(out, name, text):
 def judge(core, vals, mods):
     used = [c for cs in core['consumers'].values() for c in cs]
     off = set(mods.get('en_off', ()))
-    for t in list(mods.get('dist_off', ()))+list(mods.get('rail_off', ())):
+    trunks = core['trunks']
+    for t in mods.get('dist_off', ()):  # the field is shared by every trunk on it
+        for u, v in trunks.items():
+            if v['dist_en'] == trunks[t]['dist_en']:
+                off |= set(core['consumers'][u])
+    for t in mods.get('rail_off', ()):
         off |= set(core['consumers'][t])
+    for g in mods.get('on_off', ()):
+        for u, v in trunks.items():
+            if v['group'] == g:
+                off |= set(core['consumers'][u])
     errors = []
     for c in used:
         i = vals.get('i_'+c.lower(), float('nan'))  # i(Vm_BIAS_c): from the composite into the consumer diode
@@ -165,12 +176,15 @@ def main():
     for t in core['trunks']:
         cases.append((f'off_{t}', 'tt', 27, 3.3, dict(dist_off=[t])))
         cases.append((f'rail_{t}', 'tt', 27, 3.3, dict(rail_off=[t])))
+    for g in sorted({v['group'] for v in core['trunks'].values()}):
+        cases.append((f'on_{g}', 'tt', 27, 3.3, dict(on_off=[g])))
     for cs in core['consumers'].values():
-        cases.append((f'en_{cs[0]}', 'tt', 27, 3.3, dict(en_off=[cs[0]])))
+        for c in cs:
+            cases.append((f'en_{c}', 'tt', 27, 3.3, dict(en_off=[c])))
     negative = ('negative_idac2_0', 'tt', 27, 3.3, dict(idac2=0))
     cases.append(negative)
     if a.only:
-        keep = set(a.only.split(','))
+        keep = set(a.only.split(','))|{negative[0]}  # the negative control always runs
         cases = [c for c in cases if c[0] in keep]
     results = {}
     for name, corner, temp, vdd, mods in cases:
@@ -184,7 +198,7 @@ def main():
         print(name, 'PASS' if not errors else 'FAIL '+'; '.join(errors[:3]), flush=True)
     positives = {k: v for k, v in results.items() if not k.startswith('negative')}
     neg = results.get(negative[0])
-    status = 'pass' if all(not r['errors'] for r in positives.values()) and (neg is None or neg['errors']) else 'fail'
+    status = 'pass' if all(not r['errors'] for r in positives.values()) and neg is not None and neg['errors'] else 'fail'
     window = [r for k, r in positives.items() if k.startswith(('window', 'trim'))]
     report = dict(status=status, top=core['top'], chip=a.chip,
                   scope='extracted composite (C only), NMOS-diode consumers, transient start-up, per case',

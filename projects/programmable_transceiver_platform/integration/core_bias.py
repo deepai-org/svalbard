@@ -6,7 +6,9 @@ the netlist of `pt_core_bias_<chip>`.
 Both chips carry the same always-on reference chain on core VDD: biasgen (patched), bandgap, `pt_bias_vref`
 and `pt_bias_root` (five switched 10 uA trunk legs). Each trunk feeds one island bank whose PMOS diode and
 mirrors sit on that island's rail (a bank must share the rail of every consumer tap it serves: README
-'Conditions of use'). Banks are the qualified `pt_bias_bank<N>` cells; a bank with fewer consumers than
+'Conditions of use'). One exception: on pt_rf the rf_rx bank also feeds txmix_i/q and rfdriver on RAIL_rf_tx
+(the root has five legs, all used on pt_rf). Both rails switch on the same enable (rf group, island_on[1]) and
+each consumer is an NMOS diode, so a dead rf_tx rail only takes up to 10 uA per output into an unpowered diode. Banks are the qualified `pt_bias_bank<N>` cells; a bank with fewer consumers than
 outputs has the spare outputs disabled (EN = VSS), drains open.
 
 Trunk legs of `pt_bias_root` are named RF, CONV, PLL, WIRE, DEBUG; the table TRUNKS says which leg serves

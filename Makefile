@@ -299,7 +299,7 @@ transceiver-chip-top-rf transceiver-chip-top-wired: transceiver-chip-top-%:
 
 .PHONY: transceiver-chip-power
 transceiver-chip-power:
-	$(PYTHON) projects/programmable_transceiver_platform/verification/check_chip_power.py
+	for c in rf wired; do PT_CHIP=$$c $(PYTHON) projects/programmable_transceiver_platform/verification/check_chip_power.py || exit 1; done
 
 .PHONY: transceiver-chip-fallback transceiver-chip-fallback-route
 transceiver-chip-fallback:
@@ -323,7 +323,7 @@ transceiver-observation-coverage:
 # Assembled-RTL check of every mapped observation selection (block_observation);
 # coverage grades entries with it when its report matches debug-controls.json.
 transceiver-observation-paths:
-	$(PYTHON) projects/programmable_transceiver_platform/verification/check_observation_paths.py --output-dir scratch/observation-paths
+	for c in rf wired; do PT_CHIP=$$c $(PYTHON) projects/programmable_transceiver_platform/verification/check_observation_paths.py --output-dir scratch/observation-paths-$$c || exit 1; done
 
 .PHONY: transceiver-transport-budget
 transceiver-transport-budget: transceiver-dense-transport transceiver-dense-service transceiver-dense-pair transceiver-dense-pair-link transceiver-pair-gearbox transceiver-dense-rf-service transceiver-dense-rf-burst transceiver-sync-fifo-depth transceiver-shared-egress-lifecycle
@@ -403,7 +403,7 @@ transceiver-top-modes-rf transceiver-top-modes-wired: transceiver-top-modes-%:
 transceiver-por-bypass-chip:
 	$(PYTHON) projects/programmable_transceiver_platform/verification/check_por_bypass.py --chip
 transceiver-core-bias-observation:
-	$(PYTHON) projects/programmable_transceiver_platform/verification/check_core_bias_observation.py --output-dir scratch/core-bias-observation-current
+	for c in rf wired; do PT_CHIP=$$c $(PYTHON) projects/programmable_transceiver_platform/verification/check_core_bias_observation.py --output-dir scratch/core-bias-observation-current-$$c || exit 1; done
 
 .PHONY: transceiver-chip-assembly
 transceiver-chip-assembly:
@@ -419,7 +419,7 @@ transceiver-core-bias-device-lvs:
 
 .PHONY: transceiver-core-bias-idac1-observation
 transceiver-core-bias-idac1-observation:
-	$(PYTHON) projects/programmable_transceiver_platform/verification/check_core_bias_observation.py --idac1-smu --output-dir scratch/core-bias-idac1-observation-current
+	for c in rf wired; do PT_CHIP=$$c $(PYTHON) projects/programmable_transceiver_platform/verification/check_core_bias_observation.py --idac1-smu --output-dir scratch/core-bias-idac1-observation-current-$$c || exit 1; done
 
 # Generated SPI register file: map/RTL freshness, iverilog+verilator model comparison,
 # legacy pt_control equivalence and chip elaboration; SymbiYosys proof; GF180 size.

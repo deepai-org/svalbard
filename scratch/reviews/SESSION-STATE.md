@@ -75,9 +75,9 @@ repetition; DG6-7 questions to wired RX.
 
 **Chip tops (two chips)** — `integration/chips/` (`rf/` and `wired/`: `chip.conn`, `bond_map.txt`, `run.sh`;
 shared `common.conn`, `check_top.py <chip>`, `decisions.md`), `spec/chips.json`, rows SPL-1..5.
-State: both chips at 0 in every connectivity category including the bond map; non-zero only for demand (rf 8,
-wired 4) and staged (rf 4) instances and the isolation audit's open items. Open: D-SPLIT-* in `decisions.md`
-(per-chip `core_bias`, supply cells at signal sites, `bias_ext` split), D-LOVREG, D-ANA, D-PWR bias-bank rails;
+State: both chips at 0 in every connectivity category including the bond map; non-zero only for demand (rf 19,
+wired 13, of them 11 / 9 supply cells on signal sites) and staged (rf 4) instances and the isolation audit's open items. Open: D-SPLIT-* in `decisions.md`
+(per-chip `core_bias`, supply cells at signal sites, `bias_ext` split, pad generator site map, RF ground model, dead checks), D-LOVREG, D-ANA, D-PWR bias-bank rails;
 `netlist.py` (chip assembly) not switched to the conns.
 
 **Wired RX** — `analog/wired_rx/README.md` (Resume 9), `PINS.md`, STATUS files in `scratch/wired_rx/*`.

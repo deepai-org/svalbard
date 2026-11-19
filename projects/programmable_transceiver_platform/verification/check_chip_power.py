@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chip: PT_CHIP=rf|wired (default rf; integration/chips/<chip>/generated/pt_chip.sv).
+"""Chip: PT_CHIP=rf|wired (required; reads integration/chips/<chip>/generated/pt_chip.sv). Failing at the split base already (stale against the r6+ RTL), see integration/chips/decisions.md D-SPLIT-DEADCHK.
 Live mixed-level bring-up: real POR/island/pad circuits and control RTL.
 
 The generated SPICE pt_chip contains pt_host_physical, pt_analog_physical,
@@ -181,7 +181,7 @@ def build(out, bridge, pdk, island_pex, *, extension=None, sequence=control_sequ
         path = Path(path).resolve()
         used.append(path)
         return path.read_text()
-    chip = read(PROJECT/f"integration/chips/{__import__('os').environ.get('PT_CHIP', 'rf')}/generated/pt_chip.sv")
+    chip = read(PROJECT/f"integration/chips/{__import__('os').environ['PT_CHIP']}/generated/pt_chip.sv")
     parent_graph = chip_connectivity(chip)
     digital = re.search(r'pt_digital_macro digital\((.*?)\);', chip, re.S).group(1)
     bindings = dict(re.findall(r'\.(\w+)\(([^()]*)\)', digital))
@@ -323,7 +323,7 @@ def build(out, bridge, pdk, island_pex, *, extension=None, sequence=control_sequ
     used += [Path(__file__).resolve()]
     return dict(reads=spi.reads, **scenario,
                 moscap_realization='analytical_charge_integral' if charge_moscap else 'native_nonlinear_capacitance',
-                assembly_source=f"integration/chips/{__import__('os').environ.get('PT_CHIP', 'rf')}/generated/pt_chip.sv", digital_bindings=bindings,
+                assembly_source=f"integration/chips/{__import__('os').environ['PT_CHIP']}/generated/pt_chip.sv", digital_bindings=bindings,
                 parent_connectivity=parent_graph,
                 board_assumptions=dict(supervisor_release_v=3.25, supervisor_assert_v=3.15,
                                        startup_hold_s=.001, spi_hz=10e6,

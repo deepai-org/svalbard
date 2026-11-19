@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chip: PT_CHIP=rf|wired (default rf; integration/chips/<chip>/generated/pt_chip.sv).
+"""Chip: PT_CHIP=rf|wired (required; reads integration/chips/<chip>/generated/pt_chip.sv). Failing at the split base already (stale against the r6+ RTL), see integration/chips/decisions.md D-SPLIT-DEADCHK.
 Assembled-RTL check of every mapped observation selection.
 
 For each spec/debug-controls.json:block_observation entry this generates a
@@ -313,7 +313,7 @@ def main():
         cases = negative(cases, a.negative)
     tb = out/'tb_observation_paths.sv'
     tb.write_text(testbench(cases))
-    sources = [tb, PROJECT/f"integration/chips/{__import__('os').environ.get('PT_CHIP', 'rf')}/generated/pt_chip.sv", PROJECT/'integration/pt_provider_io.sv',
+    sources = [tb, PROJECT/f"integration/chips/{__import__('os').environ['PT_CHIP']}/generated/pt_chip.sv", PROJECT/'integration/pt_provider_io.sv',
                *sorted((PROJECT/'rtl').glob('*.sv'))]
     compile_result = subprocess.run(['iverilog', '-g2012', '-Dfunctional', '-DPT_EXTERNAL_IO', '-I', str(PROJECT/'rtl'),
                                      '-s', 'tb_observation_paths', '-o', str(out/'paths.vvp'), *map(str, sources),

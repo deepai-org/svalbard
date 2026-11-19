@@ -333,8 +333,10 @@ class ContractTests(unittest.TestCase):
             assembly_ledger(self.c,edit('pt_rf',lambda r: (r[0],r[1],'REF_IN',r[3]) if r[0]=='dvss_pads[5].pad' else r))
         with self.assertRaisesRegex(ValueError,'reference pair adjacency'):
             assembly_ledger(self.c,edit('pt_rf',lambda r: (r[0],r[1],{'REF_IN_N':'VSS','bidir[25].pad':'REF_IN_N'}.get(r[2],{'bidir[25].pad':'REF_IN_N'}.get(r[0],r[2])),r[3])))
-        with self.assertRaisesRegex(ValueError,'RF_RX pair adjacency'):
-            assembly_ledger(self.c,edit('pt_rf',swap('RF_RX_N','BB_I_P')))
+        with self.assertRaisesRegex(ValueError,'RF_RX_P / RF_RX_N pair adjacency'):
+            assembly_ledger(self.c,edit('pt_rf',swap('RF_RX_N','BB_Q_P')))
+        with self.assertRaisesRegex(ValueError,'USB_DP / USB_DN pair adjacency'):
+            assembly_ledger(self.c,edit('pt_wired',swap('USB_DN','WIRE_TX_N')))
         with self.assertRaisesRegex(ValueError,'duplicate provider signal'):
             assembly_ledger(self.c,edit('pt_wired',lambda r: (r[0],r[1],'SPI_MISO',r[3]) if r[0]=='bidir[12].pad' else r))
         with self.assertRaisesRegex(ValueError,'differs between the chips'):

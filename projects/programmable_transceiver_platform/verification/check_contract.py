@@ -200,9 +200,10 @@ def assembly_ledger(c, bond_maps=None):
         where=dict(signals)
         require(len(where)==len(signals), f'{chip}: duplicate provider signal assignment')
         for p in where:
-            if p.endswith('_P') and p[:-2]+'_N' in where:
-                a,b=locations[where[p]],locations[where[p[:-2]+'_N']]
-                require(a[0]==b[0] and abs(a[1]-b[1])==1, f'{chip}: {p[:-2]} pair adjacency')
+            q=p[:-2]+'_N' if p.endswith('_P') else p[:-2]+'DN' if p.endswith('DP') else None     # WIRE_TX_P/_N, USB_DP/DN
+            if q in where:
+                a,b=locations[where[p]],locations[where[q]]
+                require(a[0]==b[0] and abs(a[1]-b[1])==1, f'{chip}: {p} / {q} pair adjacency')
         if 'REF_IN' in where:
             a,b=locations[where['REF_IN']],locations[where['REF_IN_N']]
             require(a[0]==b[0] and abs(a[1]-b[1])==1, f'{chip}: reference pair adjacency')

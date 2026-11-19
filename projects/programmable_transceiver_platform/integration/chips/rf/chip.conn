@@ -284,8 +284,8 @@ inst atb1_leaf39 atb_leaf_s core
   NODE~ATBN_dac_bias BUS~ATB1_LOCAL3 SEL=atb1_sw[38] VDD~VDD VSS~VSS
 
 # Supply / ground bonds on free signal sites (D12; bond_map.txt gives the site and the reason of each). Provider supply
-# cell at a signal site; no COB capacitor on these fingers.
-inst pad_xvss_{0:8} prov_supply chip
+# cell at a signal site (demand master until the pads owner confirms it: D-SPLIT-SUPSITE); no COB capacitor on these fingers.
+inst pad_xvss_{0:8} prov_supply_sig chip
   PAD~VSS
-inst pad_xvdd_{0:1} prov_supply chip
+inst pad_xvdd_{0:1} prov_supply_sig chip
   PAD~VDD

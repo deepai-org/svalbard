@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chip: PT_CHIP=rf|wired (default rf; integration/chips/<chip>/generated/pt_chip.sv).
+"""Chip: PT_CHIP=rf|wired (required; reads integration/chips/<chip>/generated/pt_chip.sv). Failing at the split base already (stale against the r6+ RTL), see integration/chips/decisions.md D-SPLIT-DEADCHK.
 Live SPI -> physical reference chain -> complete ATB tree -> provider pads.
 
 Checks real core-node bindings, physical island switches and all bias banks.
@@ -100,7 +100,7 @@ def build(out, pdk, support, ng, reuse_bridge=False, idac1_smu=False):
     read(PROJECT/'verification/check_chip_power.py')
     read(PROJECT/'verification/audit_core_bias_observation.py')
     read(PROJECT/'verification/audit_chip_bringup.py')
-    graph = power.chip_connectivity(read(PROJECT/f"integration/chips/{__import__('os').environ.get('PT_CHIP', 'rf')}/generated/pt_chip.sv"))
+    graph = power.chip_connectivity(read(PROJECT/f"integration/chips/{__import__('os').environ['PT_CHIP']}/generated/pt_chip.sv"))
     for port in ['debug_cfg', 'island_en', 'island_on', 'island_pgood',
                  'atb0_sw', 'atb1_sw', 'atb0_grp', 'atb1_grp', 'atb0_en', 'atb1_en']:
         assert graph['digital'][port] == graph['analog'][port], 'Parent connection mismatch: '+port

@@ -8,18 +8,18 @@ dvdd_pads[5].pad west  VDD        pad_dvdd_5         provider supply site (fixed
 dvss_pads[7].pad west  VSS        pad_dvss_7         provider supply site (fixed)
 vdd_pads[1].pad  west  VDD        pad_vdd_1          provider supply site (fixed)
 vss_pads[1].pad  west  VSS        pad_vss_1          provider supply site (fixed)
-inputs[11].pad   west  VSS        pad_xvss_0         RF ground beside RF_RX_P (LNA return)
-inputs[10].pad   west  RF_RX_P    pad_rf_rx
-inputs[9].pad    west  RF_RX_N    pad_rf_rx
-inputs[8].pad    west  VSS        pad_xvss_1         RF ground beside RF_RX_N (LNA return)
-inputs[7].pad    west  VSS        pad_xvss_2         LNA / mixer ground
-inputs[6].pad    west  VDD        pad_xvdd_0         rf_rx island supply feed next to dvdd_pads[4]
+inputs[11].pad   west  BB_I_P     pad_bb_i
+inputs[10].pad   west  BB_I_N     pad_bb_i
+inputs[9].pad    west  RF_RX_P    pad_rf_rx          PC-26 option B: quiet signal pairs on both flanks, ground bonds one pair further out
+inputs[8].pad    west  RF_RX_N    pad_rf_rx
+inputs[7].pad    west  BB_Q_P     pad_bb_q
+inputs[6].pad    west  BB_Q_N     pad_bb_q
 dvdd_pads[4].pad west  VDD        pad_dvdd_4         provider supply site (fixed)
 dvss_pads[6].pad west  VSS        pad_dvss_6         provider supply site (fixed)
-inputs[5].pad    west  BB_I_P     pad_bb_i
-inputs[4].pad    west  BB_I_N     pad_bb_i
-inputs[3].pad    west  BB_Q_P     pad_bb_q
-inputs[2].pad    west  BB_Q_N     pad_bb_q
+inputs[5].pad    west  VSS        pad_xvss_0         ground (RF receive side, beyond the BB_Q pair and the fixed supply pair)
+inputs[4].pad    west  VSS        pad_xvss_1         ground
+inputs[3].pad    west  VDD        pad_xvdd_0         rf_tx island / RF driver supply feed
+inputs[2].pad    west  VSS        pad_xvss_2         RF driver ground next to dvdd_pads[3] / dvss_pads[5]
 dvdd_pads[3].pad west  VDD        pad_dvdd_3         provider supply site (fixed)
 dvss_pads[5].pad west  VSS        pad_dvss_5         provider supply site (fixed)
 inputs[1].pad    west  RF_TX_P    pad_rf_tx

@@ -393,9 +393,10 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6, chip, bond, others, cont
             R['bond'].append(f'{site}: provider supply site carries {net} / {iname} (fixed: preserve_provider_power_ground_assignments)')
         if iname not in inst: R['bond'].append(f'{site}: instance {iname} not in the conn'); continue
         if net not in [n for _, n in inst[iname]['pins'].values()]: R['bond'].append(f'{site}: {iname} has no pin on {net}')
-        if net in ('VDD', 'VSS') and not (inst[iname]['master'] == 'prov_supply' and inst[iname]['pins'].get('PAD', ('', ''))[1] == net):
-            R['bond'].append(f'{site}: {net} bond on {iname}, which is not a {net} supply-site cell')
-    sup = [n for n, i in inst.items() if i['master'] == 'prov_supply']
+        want = 'prov_supply' if fixed else 'prov_supply_sig'          # provider supply site / supply cell on a signal site
+        if net in ('VDD', 'VSS') and not (inst[iname]['master'] == want and inst[iname]['pins'].get('PAD', ('', ''))[1] == net):
+            R['bond'].append(f'{site}: {net} bond on {iname}, which is not a {net} {want} cell')
+    sup = [n for n, i in inst.items() if i['master'] in ('prov_supply', 'prov_supply_sig')]
     for n in sup:
         if sum(1 for x in bond if x[3] == n) != 1: R['bond'].append(f'{n}: supply-site cell bonded {sum(1 for x in bond if x[3] == n)} times')
     for p in sorted(ports - {'VDD', 'VSS'}):
@@ -610,7 +611,8 @@ def selftest(chip):
         ('bond', dict(bond=[x if x[2] != 'SPI_MISO' else (x[0], x[1], 'SPI_MISOX', x[3]) for x in bond]), 'SPI_MISOX'),
         ('bond', dict(bond=[x if x[0] != 'dvss_pads[0].pad' else (x[0], x[1], 'VDD', x[3]) for x in bond]), 'dvss_pads[0].pad'),
         ('bond', dict(bond=swapbond('AUX_CLK_N', 'REF_IN_N')), 'not adjacent'),
-        ('bond', dict(conn=conn + '\ninst pad_xvss_99 prov_supply chip\n  PAD~VSS\n'), 'pad_xvss_99'),
+        ('bond', dict(conn=conn + '\ninst pad_xvss_99 prov_supply_sig chip\n  PAD~VSS\n'), 'pad_xvss_99'),
+        ('bond', dict(conn=conn.replace('inst pad_dvss_{0:7} prov_supply chip', 'inst pad_dvss_{0:7} prov_supply_sig chip', 1)), 'dvss_pads'),
     ]
     rf = [
         ('missing', dict(conn=re.sub(r'inst qvco .*\n(  .*\n)+', '', conn, 1)), 'qvco'),

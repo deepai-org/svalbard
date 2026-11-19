@@ -105,3 +105,6 @@ master pad_downbond      demand pads PAD
 master pt_agnd_tie       demand pads A B
 # provider supply / ground pad cells (dvdd, dvss, vdd, vss of the retained ring): one bond each
 master prov_supply       inline PAD
+# supply / ground bond on a free signal site (D12, bond_map.txt): a provider supply cell (or a custom cell) at a signal site; demand until
+# the pads owner confirms the cell, its clamp and the tester diode check per site (D-SPLIT-SUPSITE)
+master prov_supply_sig demand pads PAD

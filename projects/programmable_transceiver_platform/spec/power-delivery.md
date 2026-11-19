@@ -5,8 +5,14 @@ The requirement the floorplan, the blocks and the board are checked against. Dem
 Numbers written `a / b / c` are optimistic / nominal / pessimistic. Model and regression:
 `scratch/integration/m1-pdn/` (section 8). Budget script: `spec/budgets/power_budget.py`.
 
+Two chips (split 2026-11-19): `pt_rf` carries the rf_rx, rf_tx, lod, lo, pll, conv and debug islands, `pt_wired` the
+wired_rx, wired_cap, wired_tx, pll and debug islands (`spec/chips.json`); each has its own supply, ring and bonds,
+with the free signal sites as extra supply / ground bonds (`integration/chips/<chip>/bond_map.txt`: `pt_rf` 10 supply
+and 19 ground bonds, `pt_wired` 10 and 17). The budget, model and numbers below are still the single-die ones; the
+model has not been rerun per chip (decision D9; the full 5.4 nF plan is booked on both chips in the die fit).
+
 Supply topology: one external supply. The provider ring joins all eight supply bonds into one net and all ten
-ground bonds into another; named supply sites are labels, not isolated feeds. Ten switched islands hang off the
+ground bonds into another; named supply sites are labels, not isolated feeds. The switched islands hang off the
 ring; the digital macro, the host pads and the always-on core (POR, bias, oscillator, reference receiver) are on
 the raw ring. Operating window 3.15-3.35 V at the die; slow dies may be trimmed up to a 3.50 V setpoint.
 

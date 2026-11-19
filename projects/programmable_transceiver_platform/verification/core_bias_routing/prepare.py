@@ -201,12 +201,14 @@ else:
                 xs, ys = grid(round(.62*u))
             added = 0
             placed = cuts[(name, level)]
+            own = {(cx, cy) for cx in xs for cy in ys}  # this array's grid, router cut included
             for cx in xs:
                 for cy in ys:
-                    # Arrays filled from two nearby router cuts sit on offset
-                    # grids; skip any cut closer than the 0.62 um array pitch
-                    # (0.36 um spacing, Vn.2b) to one already placed.
-                    if (cx, cy) != (x, y) and all(max(abs(cx-px), abs(cy-py)) >= round(.62*u) for px, py in placed):
+                    # Cuts of this array keep their own grid pitch (0.52 um up to 3 x 3); arrays filled from
+                    # two nearby router cuts sit on offset grids, so any cut closer than the 0.62 um array
+                    # pitch (0.36 um spacing, Vn.2b) to a cut of ANOTHER array or router via is skipped.
+                    if (cx, cy) != (x, y) and all((px, py) in own or max(abs(cx-px), abs(cy-py)) >= round(.62*u)
+                                                  for px, py in placed):
                         placed.append((cx, cy))
                         tcl.append(f"odb::dbSBox_create $sw [$t findLayer Via{level}] {cx-h} {cy-h} {cx+h} {cy+h} NONE"); n += 1; added += 1
             if added:

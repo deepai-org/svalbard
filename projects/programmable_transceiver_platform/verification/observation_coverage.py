@@ -138,18 +138,28 @@ def inventory(output, require_complete=False, paths_report=None):
     controls = json.loads(read(controls_path))
     arch = json.loads(read(PROJECT/'spec/analog-architecture.json'))['blocks']
     mapping_errors, _, port_gaps = validate_mapping(controls, ledger, arch, read)
-    paths = {}
-    paths_state = 'missing'
-    if paths_report and paths_report.exists():
-        report = json.loads(read(paths_report))
+    # One path report per chip (check_observation_paths.py, PT_CHIP=rf|wired). An entry has RTL evidence when it
+    # passed on a chip that simulates it; entries not on a chip are listed there as not simulated.
+    paths, states = {}, []
+    for report_path in paths_report or []:
+        if not report_path.exists():
+            states.append(f'{report_path.name}: missing')
+            continue
+        report = json.loads(read(report_path))
+        tag = report.get('chip', report_path.parent.name)
         if report.get('controls_sha256') != hashlib.sha256(controls_path.read_bytes()).hexdigest():
-            paths_state = 'stale (debug-controls.json changed since the path check)'
+            states.append(f'{tag}: stale (debug-controls.json changed since the path check)')
         elif report.get('negative') or report.get('mutation'):
-            paths_state = 'ignored (negative-control run)'
+            states.append(f'{tag}: ignored (negative-control run)')
         else:
-            paths_state = report.get('status')
-            paths = {(c['block'], c['index']): c for c in report['cases']}
-            paths.update({(c['block'], c['index']): dict(c, status='not_simulated') for c in report['not_simulated']})
+            states.append(f'{tag}: {report.get("status")}')
+            for c in report['not_simulated']:
+                paths.setdefault((c['block'], c['index']), dict(c, status='not_simulated'))
+            for c in report['cases']:
+                key = (c['block'], c['index'])
+                if report.get('status') == 'pass' or paths.get(key, {}).get('status') != 'pass':
+                    paths[key] = c if report.get('status') == 'pass' else dict(c, status='fail')
+    paths_state = '; '.join(states) or 'missing'
     fixture = fixture_evidence(read)
     nodes = {n['name']: n for n in controls['atb_nodes']}
     mapping = controls.get('block_observation', {}).get('blocks', {})
@@ -227,7 +237,7 @@ def inventory(output, require_complete=False, paths_report=None):
     tier_counts = Counter(max(c['evidence'], key=['mapped', 'rtl_selection', 'analog_fixture'].index)
                           for r in rows for c in r['checklist'])
     report = dict(status='open' if open_rows else 'complete',
-                  mapping_errors=mapping_errors, path_check=dict(report=str(paths_report), state=paths_state),
+                  mapping_errors=mapping_errors, path_check=dict(reports=[str(p) for p in paths_report or []], state=paths_state),
                   entry_evidence=dict(tier_counts),
                   declared_blocks=len(rows), observation_states=counts,
                   policy='Existing pass states are reported, not independently re-signed; candidate codes are not bindings.',
@@ -284,6 +294,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, default=ROOT/'scratch/observation-coverage/report.json')
     parser.add_argument('--require-complete', action='store_true')
-    parser.add_argument('--paths-report', type=Path, default=ROOT/'scratch/observation-paths/report.json')
+    parser.add_argument('--paths-report', type=Path, nargs='*',
+                        default=[ROOT/f'scratch/observation-paths-{c}/report.json' for c in ('rf', 'wired')])
     args = parser.parse_args()
-    inventory(args.output.resolve(), args.require_complete, args.paths_report.resolve())
+    inventory(args.output.resolve(), args.require_complete, [p.resolve() for p in args.paths_report])

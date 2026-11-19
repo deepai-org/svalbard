@@ -144,3 +144,18 @@ Declared before any run of this round (not to be moved):
 - R+C extraction: usable only if its DC supply current is within 2 % of the C-only extraction at tt and the four tail / bias node
   voltages within 20 mV; negative control: the C-only netlist with one bias resistor opened must fail the same comparison.
 - IIP3 >= -10 dBm, S11 <= -10 dB, chain NF <= 4.1 dB DSB: limits as in round 1/2.
+Results so far (round 3):
+- Ground model (pkg_rf.py, generated/pkg-rf-check.json): known answer OLD vs pads B within 1.7 dB / 8 %; negative control -300 dB.
+  pt_rf map vs old map, nominal, with 5.4 nF die decap: |Z(die VSS)| at 2.42 GHz 2.21 vs 2.64 ohm (0.145 vs 0.174 nH effective),
+  bounce conversion -40.2 vs -38.6 dB. The nine extra VSS bonds sit on signal fingers (5.8 nH to board ground through the carrier):
+  near-zero effect at RF. Only bond 71 is within 3 sites of RF_RX (unchanged). Dominant 2421.875 MHz aggressor is D2H (same on
+  both chips), not the macro. No better ground-site choice exists (per-bond conversions of 59-62 are 0.002-0.008).
+- stab_rf: identical to the OLD map within 0.01 ohm; the 5-8 GHz common-mode miss does not depend on the bond inductance.
+- R+C: the DC error is REAL (layout): 0.3 um M2 tracks + single PCell escapes. Fixed partly in lna_layout.py (wide tracks, via
+  arrays, per-strip taps, pt_lna only): 129,592 um2. Magic extresist breaks meshes into trees -> use lna_netres.py (pads mesh
+  solver) -> generated/lna.rext.spice. Metal-aware: current 14.5-15.5 mA (C-only 18.2), tt NF 4.8-5.1, S11 -9.7 (FAIL).
+  Remaining route R: src 7-8, tank 9-14, x 7-12, tailx 4.7 ohm -> needs a placement-level LNA layout (heavy devices adjacent).
+- Coordinator lead (extresist writes R on a subset of nets): confirmed, `extresist tolerance 10` wrote 39-57 of 84 nets. Rerun with
+  `extresist simplify off` (all 84 nets): old L8 GDS 4.18 mA (C-only 18.3) -> the old DC error is a real layout defect, not the
+  partial extraction; new layout 15.4 mA, matching the mesh-solver view lna.rext.spice (15.2 mA) within 1.5 %, nodes within ~10 mV.
+  Raw extresist capacitors are double-counted (wired RX finding): use extresist only for R; recipe now `simplify off`.

@@ -243,8 +243,10 @@ budget-sized ideal capacitors on top of extracted capacitance.
    discharge loop, confirmed by hand calculation, Magic `extresist` and a separate solver on all seven families. No
    family meets its HBM tier; every HBM / CDM number in section 4 except the `pad_hspad` rows is capacitance-only and
    is not evidence. `pad_hspad` is improved (5–6 Ω pad side) but still misses 2 kV. Decided fix (PC-27): primary diodes at the
-   bond pad tied to the ring rails, all families; back-feed is accepted and sequenced by the board. In work, no
-   family rebuilt yet. (PAD-11)
+   bond pad tied to the ring rails, all families; back-feed is accepted and sequenced by the board (`spec/board-requirements.md`
+   B53). Candidates under `scratch/pads-core/esdopt/`: `pad_hspad` a4 complete and reviewed NO-GO (pad-to-pad and CDM at the
+   termination switches, pad C; rulings asked in PC-36), `pad_txpad` a4 in evidence; the other five families not started.
+   `RF_TX` gets no diode to the supply (it swings above it). (PAD-11)
 2. **`pad_txpad` and `pad_wirepad` signal paths.** `pad_txpad` termination is 287 Ω differential at tt with metal
    resistance (92 Ω without), 16–19 Ω sit between the bond pad and the output cascodes, and the termination is
    untrimmed (152 / 58 Ω at ss / ff even without metal): `scratch/pads-core/txr/STATUS.md`. `pad_wirepad` has about

@@ -76,3 +76,17 @@ area-lever list (most become optional).
 
 Operating window, verification discipline, evidence rules (R+C extraction, sf/fs, real neighbours), the ESD
 option A decision, per-chip supply trim, COB packaging, and all open block defects.
+
+## Phase 0 result and coordinator decisions (2026-11-19)
+
+Audit: `split/assignment.md`. No capability lost. Margins with full decap: pt_rf +2.0 to +2.5 mm2 as built, pt_wired +3.1 to +3.5.
+Decided, all as the audit recommended:
+- D1 TX ring, its regulator, clockmux and prescalers on both chips (pt_rf's host word and converter clocks come from it). "Rings are wired-only" above is corrected by this.
+- D2 CDR ring also on pt_rf as the second host-clock route.
+- D3 AUX_CLK pad and receiver duplicated (external-LO Q leg on pt_rf, forwarded wire clock on pt_wired).
+- D4 One register map, per-chip view: absent fields not stored, read 0; chip-ID status field.
+- D5 TLP test pad on pt_wired only. D6 char_atb, ring_osc, vco_replica on both; speed cells on pt_wired; RF probe frames on pt_rf.
+- D7 OCP-2 closed (not needed). LO loop-filter capacitor stays on chip; two pt_rf sites reserved as fallback.
+- D8 core_bias per chip from one generator with a parameter. D9 full 5.4 nF decap on both.
+- D10 macro outlines about 2.0 mm2 (rf) and 2.6 mm2 (wired). D11 start from the 238-instance conn. D12 free pad sites to ground/supply bonds.
+- interface-changes.md rows before line 1447 are treated as closed or superseded; any still live is re-raised by its owner in phase 4.

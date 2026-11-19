@@ -9,7 +9,12 @@ commit-while-running, reset in the middle of a transaction, and a seeded random
 phase. sim/tb_regfile.sv executes it over the SPI pins under Icarus and Verilator;
 every read and every output snapshot is compared with the model.
 
-    python3 verification/check_regfile.py [--random N] [--seed S] [--sim iverilog|verilator|both]
+    python3 verification/check_regfile.py [--random N] [--seed S] [--sim iverilog|verilator|both] [--chip rf|wired]
+
+--chip runs the same stimulus against the chip's view (split decision D4: pt_mgmt parameter PT_CHIP; the model's
+chip_view): fields of the other chip are not stored, read 0 and ignore writes; rules whose fields all belong to the
+other chip drop out; rules that cannot be violated without a field of the other chip are listed, not driven.
+Without --chip: the both-halves build (PT_CHIP 3), plus the legacy equivalence and the chip-top elaboration.
 """
 import argparse
 import importlib.util
@@ -25,6 +30,10 @@ ROOT = P.parents[1]
 _spec = importlib.util.spec_from_file_location('pt_regmap', P / 'rtl/gen/pt_regmap.py')
 M = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(M)
+CHIP = sys.argv[sys.argv.index('--chip') + 1] if '--chip' in sys.argv else None
+CHIP_ID = {None: 3, 'rf': 1, 'wired': 2}[CHIP]
+if CHIP:
+    M.chip_view(CHIP)
 
 STATUS, OBS, WSTAT, CAPTURE = 0xA5C3, 0x9E3779B9, 0x6A09, 0x5A1234
 LEGACY_LOCKED = (0x02, 0x04, 0x10, 0x11, 0x12, 0x21, 0x22, 0x23)
@@ -47,7 +56,7 @@ class Model:
     def __init__(self):
         self.pgood = 0
         self.fault = 0
-        self.status_inputs = {}
+        self.status_inputs = dict(chip_id=CHIP_ID)
         self.reset()
         self.por_flag = self.rst_flag = 1   # bench starts with a power-on reset
 
@@ -192,7 +201,7 @@ class Stimulus:
         self.cmds.append(f'2 {pgood:02x} {fault:x} 0')
 
     def status(self, locked, lost, errors_gray):
-        self.m.status_inputs = dict(pattern_locked=locked, pattern_lost_lock=lost, pattern_errors_gray=errors_gray)
+        self.m.status_inputs = dict(chip_id=CHIP_ID, pattern_locked=locked, pattern_lost_lock=lost, pattern_errors_gray=errors_gray)
         self.cmds.append(f'7 {locked | (lost << 1):x} {errors_gray:04x} 0')
 
     def snap(self):
@@ -294,6 +303,14 @@ def all_islands_on():
     return {f'debug.island_power.{i}': 1 for i in M.ISLANDS}
 
 
+def want(code, op, value):
+    """Directed-stimulus sanity check (the stimulus does what it intends). In the per-chip view a directed step may touch
+    fields of the other chip; there only the model-versus-RTL comparison of every read and snapshot counts."""
+    if CHIP is None:
+        assert (code == value) if op == '==' else (code != value), (code, op, value)
+    return code
+
+
 def build(seed, n_random):
     m = Model()
     s = Stimulus(m)
@@ -349,9 +366,13 @@ def build(seed, n_random):
         s.write(0x05, 0x7F)
         s.write(0x04, 0)
     # C. One violating and one satisfying commit per rule.
-    rule_hits = []
+    rule_hits = []; not_violable = []
     for idx, rule in enumerate(M.RULES):
+        if rule.get('absent'):
+            continue
         bad, good = rule_configs(rule)
+        if any(F[n].get('absent') and v for n, v in bad.items()):     # needs a field of the other chip: cannot be violated here
+            not_violable.append(rule['id']); continue
         cfg = M.reset_config()
         cfg.update(bad)
         assert not M.rule_ok(rule, cfg), rule['id']
@@ -385,62 +406,62 @@ def build(seed, n_random):
             'usbhs.bias.code': 0x7F, 'usbhs.bias.enable': 1}
     s.reset()
     s.set_fields(rich)
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.snap()
     s.set_fields(all_islands_on())
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     for pgood, fault in ((0, 0), (full, 0), (0b010101, 0), (full, 1), (0, 1), (full, 0)):
         s.inputs(pgood, fault)
         s.snap()
         s.read(0x0A)
         s.read(0x0B)
     s.set_fields({f'debug.pgood_override.{i}': 1 for i in ('rf', 'pll', 'debug')})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.inputs(0, 0)
     s.snap()
     s.read(0x0A)
     # Core reference-chain force preconditions (analog/core_support/README.md).
     s.set_fields({'debug.atb.atb0': 0})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.set_fields({'core.refchain.bgap_ena': 1, 'core.biasgen.ena': 1})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.set_fields({'debug.atb.atb0': 55})                       # VBG force with the bandgap on
-    assert s.commit() != 0
+    want(s.commit(), "!=", 0)
     s.write(0x06, M.REVERT_CMD)
     s.set_fields({'debug.atb.atb0': 1})                        # ROOT_REF force with idac2 running
-    assert s.commit() != 0
+    want(s.commit(), "!=", 0)
     s.set_fields({'core.biasgen.idac2_source': 0})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.set_fields({'debug.atb.atb0': 0})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.set_fields({'core.refchain.dist_en_debug': 1, 'debug.atb.atb0': 56})   # TRK_DEBUG, island on
-    assert s.commit() != 0
+    want(s.commit(), "!=", 0)
     s.set_fields({'debug.island_power.debug': 0})              # README idac2 trim: island off
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.set_fields({'core.biasgen.ref_sel_fine': 1})             # fine-only range
-    assert s.commit() != 0
+    want(s.commit(), "!=", 0)
     s.write(0x06, M.REVERT_CMD)
     s.set_fields({'core.biasgen.ref_sel_coarse': 1, 'core.biasgen.ref_sel_fine': 1, 'core.refchain.bgap_trim': 5})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.inputs(full, 0)
     s.snap()
     s.set_fields({'debug.atb.atb0': 0})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.set_fields({'debug.atb.atb0': 14})                       # TRK_RF force, trunk off: allowed
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.set_fields({'debug.atb.atb0': 2})       # sense-only node on the force bus: write rejected
     s.read(0x05)
     s.read(F['debug.atb.atb0']['chunks'][0]['addr'])
     s.write(0x05, 0x7F)
     # E. Break-before-make.
     s.set_fields({'debug.atb.atb1': 15})
-    assert s.commit() != 0
+    want(s.commit(), "!=", 0)
     s.set_fields({'debug.atb.atb1': 0})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.set_fields({'debug.atb.atb1': 15})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.set_fields({'debug.clk_select.wire_line': 1})
-    assert s.commit() != 0
+    want(s.commit(), "!=", 0)
     s.write(0x06, M.REVERT_CMD)
     s.snap()
     # F. Commit while running: only live fields may change.
@@ -450,12 +471,12 @@ def build(seed, n_random):
     s.read(0x05)
     s.write(0x05, 0x7F)
     s.set_fields({'debug.dbg_obs.sel0': 9, 'debug.island_power.conv': 0})
-    assert s.commit() == M.CODE_RUNNING
+    want(s.commit(), "==", M.CODE_RUNNING)
     s.set_fields({'debug.island_power.conv': 1})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.snap()
     s.set_fields({'debug.atb.atb1': 0})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.write(0x07, 1)
     for a in sorted({c['addr'] for c in F['debug.dbg_obs.sel0']['chunks'] + F['debug.atb.atb1']['chunks']}):
         s.read(a)
@@ -466,7 +487,7 @@ def build(seed, n_random):
     s.write(0x0D, 0x0003)
     s.read(0x0D)
     s.set_fields({'debug.dbg_obs.sel1': 36})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.snap()
     s.reset()                      # RESET_N only: rst_flag set, por_flag stays clear
     s.read(0x0D)
@@ -479,20 +500,20 @@ def build(seed, n_random):
     # F2b. Pattern injection: live while running, but only with a pattern mode committed.
     s.write(0x01, 1)
     s.set_fields({'debug.pattern.inject': 1})
-    assert s.commit() == 1 + [r['id'] for r in M.RULES].index('pattern_inject_needs_mode')
+    want(s.commit(), "==", 1 + [r['id'] for r in M.RULES].index('pattern_inject_needs_mode'))
     s.write(0x06, M.REVERT_CMD)
     s.set_fields({'debug.pattern.tx_mode': 1})
-    assert s.commit() == M.CODE_RUNNING             # mode is not live
+    want(s.commit(), "==", M.CODE_RUNNING)             # mode is not live
     s.write(0x06, M.REVERT_CMD)
     s.write(0x01, 0)
     s.set_fields({'debug.pattern.tx_mode': 1})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.write(0x01, 1)
     s.set_fields({'debug.pattern.inject': 1, 'debug.pattern.check_clear': 1})
-    assert s.commit() == 0                          # live fields while running
+    want(s.commit(), "==", 0)                          # live fields while running
     s.snap()
     s.set_fields({'debug.pattern.inject': 0, 'debug.pattern.check_clear': 0})
-    assert s.commit() == 0
+    want(s.commit(), "==", 0)
     s.write(0x01, 0)
     # F3. Read-only status: synchronized, Gray-decoded, writes rejected as address errors.
     st_addrs = sorted({sf['addr'] for sf in M.STATUS_FIELDS})
@@ -558,17 +579,17 @@ def build(seed, n_random):
     s.snap()
     for a in range(256):
         s.read(a)
-    return s, dict(registers_swept=swept, rejected_value_writes=rejected_values, rule_hits=rule_hits)
+    return s, dict(registers_swept=swept, rejected_value_writes=rejected_values, rule_hits=rule_hits, rules_not_violable_on_chip=not_violable)
 
 
 def run_sim(sim, out, files):
     out.mkdir(parents=True, exist_ok=True)
     inc = str(P / 'rtl')
     if sim == 'iverilog':
-        subprocess.run(['iverilog', '-g2012', '-I', inc, '-o', str(out / 'tb.vvp')] + files, check=True)
+        subprocess.run(['iverilog', '-g2012', f'-DPT_CHIP_ID={CHIP_ID}', '-I', inc, '-o', str(out / 'tb.vvp')] + files, check=True)
         r = subprocess.run(['vvp', '-n', 'tb.vvp'], cwd=out, capture_output=True, text=True, check=True)
     else:
-        subprocess.run(['verilator', '--binary', '--timing', '-Wno-fatal', '-Wno-lint', '-Wno-style', '-O1',
+        subprocess.run(['verilator', '--binary', '--timing', '-Wno-fatal', '-Wno-lint', '-Wno-style', '-O1', f'-DPT_CHIP_ID={CHIP_ID}',
                         '-I' + inc, '--top-module', 'tb_regfile', '-Mdir', str(out / 'obj'), '-o', 'tb'] + files,
                        check=True, capture_output=True, text=True)
         r = subprocess.run([str(out / 'obj' / 'tb')], cwd=out, capture_output=True, text=True, check=True)
@@ -616,10 +637,11 @@ def main():
     ap.add_argument('--seed', type=int, default=20261108)
     ap.add_argument('--sim', choices=['iverilog', 'verilator', 'both'], default='both')
     ap.add_argument('--out', default=str(ROOT / 'scratch/pt_regfile/sim'))
+    ap.add_argument('--chip', choices=['rf', 'wired'], help='per-chip view (read at import, see the module docstring)')
     ap.add_argument('--rtl', default=str(P / 'rtl/pt_regfile.sv'), help='register file under test (mutation checks)')
     args = ap.parse_args()
     stim, info = build(args.seed, args.random)
-    out = Path(args.out).resolve()
+    out = Path(args.out).resolve() / (CHIP or '')
     files = [str(P / 'sim/tb_regfile.sv'), str(P / 'rtl/pt_spi.sv'), args.rtl]
     sims = ['iverilog', 'verilator'] if args.sim == 'both' else [args.sim]
     report = dict(seed=args.seed, random_operations=args.random, commands=len(stim.cmds),
@@ -629,8 +651,11 @@ def main():
     rule_codes = {code for _, code in info['rule_hits']}
     report['directed_rule_violations_rejected'] = sum(1 for _, code in info['rule_hits'] if code)
     report['rule_codes_exercised'] = sorted(c for c in stim.stats['codes'] if 0 < c < 0x80)
-    report['all_rule_codes_exercised'] = all((i + 1) in stim.stats['codes'] for i in range(len(M.RULES)))
-    ok = report['all_rule_codes_exercised'] and report['directed_rule_violations_rejected'] == len(M.RULES)
+    driven = [i for i, r in enumerate(M.RULES) if not r.get('absent') and r['id'] not in info['rules_not_violable_on_chip']]
+    report['chip'] = f'pt_{CHIP}' if CHIP else 'both halves (PT_CHIP 3)'
+    report['rules_absent_on_chip'] = [r['id'] for r in M.RULES if r.get('absent')]
+    report['all_rule_codes_exercised'] = all((i + 1) in stim.stats['codes'] for i in driven)
+    ok = report['all_rule_codes_exercised'] and report['directed_rule_violations_rejected'] == len(driven)
     for sim in sims:
         d = out / sim
         if d.exists():
@@ -647,6 +672,11 @@ def main():
         report[sim] = dict(status='pass' if not mism else 'fail', records_checked=checked, mismatches=mism[:20],
                            stdout=stdout.strip().splitlines()[-1:] if stdout else [])
         ok = ok and not mism
+    if CHIP:        # the legacy equivalence and the chip-top elaboration run once, without --chip
+        report['status'] = 'pass' if ok else 'fail'
+        print(json.dumps(report, indent=1))
+        (out / 'report.json').write_text(json.dumps(report, indent=1) + '\n')
+        return 0 if ok else 1
     # Legacy pt_control equivalence (lockstep, random legacy-address transactions).
     leg = out / 'legacy'
     leg.mkdir(parents=True, exist_ok=True)

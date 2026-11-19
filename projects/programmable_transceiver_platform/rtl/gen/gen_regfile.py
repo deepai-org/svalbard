@@ -4,6 +4,7 @@
 Inputs:  spec/analog-architecture.json:control_fields (analog boundary fields)
          spec/debug-controls.json (island, debug, fallback and consolidation controls,
          illegal-combination rules, break-before-make and fault-forcing lists)
+         spec/chips.json (which fields each chip has: one address map, per-chip view, decision D4)
 Outputs: spec/register-map.json, spec/register-map.md, rtl/pt_regfile.sv,
          rtl/pt_regmap_defs.svh, rtl/gen/pt_regmap.h, rtl/gen/pt_regmap.py
 
@@ -13,6 +14,7 @@ Outputs: spec/register-map.json, spec/register-map.md, rtl/pt_regfile.sv,
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -249,6 +251,15 @@ def build_model():
             hi, lo = f['store']
             f['store_mask'] = ((1 << (hi - lo + 1)) - 1) << lo
         f['default'] &= f['store_mask']
+    # Per-chip view (split decision D4): one address map; a field of the other chip's only-list (spec/chips.json) is
+    # not stored on a chip, reads 0 and ignores writes (pt_regfile parameter PT_CHIP). Obsolete fields are on neither.
+    chips = json.loads((P / 'spec/chips.json').read_text())
+    for f in fields:
+        if any(re.fullmatch(x, f['name']) for x in chips['obsolete_fields']):
+            f['chips'] = []
+        else:
+            f['chips'] = [c for c in chips['chips'] if not any(re.fullmatch(x, f['name']) for o, oc in chips['chips'].items()
+                                                                   if o != c for x in oc['only_fields'])]
     for reg in registers:
         reg['writable_mask'] = sum(((1 << w) - 1) << rl for _, _, w, rl in reg['chunks'])
         del reg['used']
@@ -331,6 +342,7 @@ def build_model():
         wire_status=dbg['wire_status'], fields=fields, groups=[dict(name=g['name'], kind=g['kind'],
             description=g['description'], update=g['update'], registers=g['registers'],
             fallback_routes=g['fallback_routes'], fields=[f['name'] for f in g['fields']]) for g in groups],
+        chip_ids={c: v['chip_id'] for c, v in chips['chips'].items()},
         registers=registers, status_registers=status_regs, status_fields=status_fields, rules=rules, break_before_make=bbm, split_fields=split, fault_forced=forced,
         bus_widths=widths, atb_width=len(atb_nodes), atb_groups=dbg.get('atb_groups', {}),
         atb_switch_dead_time_s=dbg.get('atb_switch_dead_time_s'), last_debug=last_debug, last_analog=last_analog,
@@ -506,7 +518,9 @@ def emit_sv(model):
     a('// active atomically. Pad/analog outputs are island-isolated (forced to 0) and fault-released.')
     a('// pt_mgmt: pt_spi (unchanged Mode-0 cmd8/addr8/data16 ABI) plus pt_regfile; replaces pt_control.')
     a('`default_nettype none')
-    a('module pt_regfile(')
+    a('// PT_CHIP (split, D4): bit 0 = pt_rf fields present, bit 1 = pt_wired fields present. 1 = pt_rf, 2 = pt_wired,')
+    a('// 3 = both halves (module-level benches only). A field of the absent chip is not stored: reset 0, writes ignored, reads 0.')
+    a('module pt_regfile #(parameter integer PT_CHIP = 3)(')
     a(' input wire rst_n,sclk,')
     a(' input wire por_n, // POR alone (rst_n = RESET_N AND (por_n OR the por_bypass strap)); sets the sticky POR flag')
     a(' input wire[2:0]por_path, // rtl/pt_por_path.sv levels read back raw in RESET_STATUS b4:b2: {por_masked, ovr_armed (second rescue path latched), por_bypass strap (G3, DT-10)}')
@@ -530,6 +544,13 @@ def emit_sv(model):
     a(' output reg commit_toggle,output wire config_error' +
       ''.join(f',\n input wire[{sf["bits"] - 1}:0]{sf["port"]}' for sf in model['status_fields']) + ');')
     a(f' localparam[15:0]ID=16\'h5356,ABI_VERSION=16\'h{0x0003:04X},MAP_HASH=16\'h{model["map_hash16"]:04X};')
+    a(' // Per-chip field presence (spec/chips.json): PR_<field> = 1 when the field is stored on this chip.')
+    a(" localparam[0:0]ON_RF=(PT_CHIP&1)!=0,ON_WIRED=(PT_CHIP&2)!=0;")
+    for f in fields:
+        if set(f['chips']) != {'rf', 'wired'}:
+            cond = '&&'.join({'rf': 'ON_RF', 'wired': 'ON_WIRED'}[c] for c in f['chips']) or "1'b0"
+            if len(f['chips']) == 2: cond = "1'b1"
+            a(f' localparam[0:0]PR_{f["sv"]}={cond};')
     a(' // Legacy state (identical behaviour to pt_control).')
     a(' // MEMORY v3 (AC-1 sharing S1): capture/playback live in the transport banks, quad (40-bit) indexed.')
     a(' // 0x21/0x24 stage quad bits [15:0]/[31:16]; a 0x22 write stores {wr_data[7:0],stage} at INDEX.')
@@ -673,7 +694,13 @@ def emit_sv(model):
     a(' // Commit validation on the complete shadow configuration.')
     a(f' wire[{len(rules) - 1}:0]rule_ok_s;')
     for i, r in enumerate(rules):
-        a(f' assign rule_ok_s[{i}]={sv_rule(r, "s_", by_name)}; // {r["id"]}')
+        names = {c[0] for c in r['if_any'] + r['if_all'] + r['then_all']}
+        on = sorted({c for n in names for c in by_name[n]['chips']})
+        expr = sv_rule(r, "s_", by_name)
+        if on != ['rf', 'wired']:      # every field of the rule belongs to one chip: the rule drops out on the other (D4)
+            present = '||'.join({'rf': 'ON_RF', 'wired': 'ON_WIRED'}[c] for c in on) or "1'b0"
+            expr = f'(!({present})||{expr})'
+        a(f' assign rule_ok_s[{i}]={expr}; // {r["id"]}')
     split = model['split_fields']
     a(f' wire[{max(len(split), 1) - 1}:0]split_ok;')
     for i, name in enumerate(split):
@@ -723,7 +750,7 @@ def emit_sv(model):
             if not f['split'] and f['store'] is not None:
                 c = sv_check(f, f'wr_data[{rl + w - 1}:{rl}]')
                 if c != "1'b1":
-                    terms.append(c)
+                    terms.append(c if set(f['chips']) == {'rf', 'wired'} else f'(!PR_{f["sv"]}||{c})')     # absent: any value accepted, ignored
         expr = '&&'.join(terms) or "1'b1"
         a(f" wire wok_{reg['addr']:02X}={expr};")
     # Sequential block.
@@ -742,6 +769,8 @@ def emit_sv(model):
             continue
         hi, lo = f['store']
         d = sv_const(hi - lo + 1, f['default'] >> lo)
+        if set(f['chips']) != {'rf', 'wired'}:
+            d = f'(PR_{f["sv"]}?{d}:{sv_const(hi - lo + 1, 0)})'
         if f['direct']:
             a(f'   {store_reg(f, "s")[0]}<={d};')
         else:
@@ -794,7 +823,10 @@ def emit_sv(model):
             reg_name, base = store_reg(f, 's')
             full = (ih - il + 1) == (hi - lo + 1)
             dst = reg_name if full else f'{reg_name}[{ih}:{il}]'
-            a(f'       {dst}<=wr_data[{rl + ih - fl}:{rl + il - fl}];')
+            src = f'wr_data[{rl + ih - fl}:{rl + il - fl}]'
+            if set(f['chips']) != {'rf', 'wired'}:
+                src = f'({{{ih - il + 1}{{PR_{f["sv"]}}}}}&{src})'      # absent on this chip: the write is ignored
+            a(f'       {dst}<={src};')
         a('      end else begin cfg_err[0]<=1;err_addr<=wr_addr;end')
     a('     default:begin rejected<=1;cfg_err[1]<=1;err_addr<=wr_addr;end')
     a('    endcase')
@@ -842,7 +874,7 @@ def emit_sv(model):
     emit_formal(model, a, by_name)
     a('endmodule')
     a('')
-    a('module pt_mgmt(input wire rst_n,por_n,input wire[2:0]por_path,input wire sclk,cs_n,mosi,output wire miso,miso_oe,')
+    a('module pt_mgmt #(parameter integer PT_CHIP = 3)(input wire rst_n,por_n,input wire[2:0]por_path,input wire sclk,cs_n,mosi,output wire miso,miso_oe,')
     a(' input wire[15:0]status,output wire enable,mode8,output wire[15:0]rf_trim,wire_trim,clock_trim,')
     a(' output wire memory_write,output wire[4:0]memory_index,output wire[39:0]memory_wdata,')
     a(' input wire[39:0]capture_data,input wire capture_done,output wire playback_enable,capture_enable,')
@@ -863,7 +895,7 @@ def emit_sv(model):
     a(' // SPI port) take it on the falling SCLK edge after the 32nd rising edge (STA: launch/capture on')
     a(' // the sclk fall edge, output budgets relative to it in integration/pt_digital_macro.sdc).')
     a(' wire sclk_regs=~sclk;')
-    a(' pt_regfile regs(.rst_n(rst_n),.por_n(por_n),.por_path(por_path),.sclk(sclk_regs),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),')
+    a(' pt_regfile #(.PT_CHIP(PT_CHIP)) regs(.rst_n(rst_n),.por_n(por_n),.por_path(por_path),.sclk(sclk_regs),.wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),')
     a('  .rd_addr(rd_addr),.rd_data(rd_data),.rd_hi(rd_hi),.rd_data0(rd_data0),.rd_data1(rd_data1),')
     a('  .status(status),.enable(enable),.mode8(mode8),')
     a('  .rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),.memory_write(memory_write),')
@@ -883,23 +915,39 @@ def emit_sv(model):
     return '\n'.join(L) + '\n'
 
 
+def rule_presence(r, by_name):
+    """'' when the rule is on both chips, else the SV condition under which it is enforced (split, D4)."""
+    on = sorted({c for x in r['if_any'] + r['if_all'] + r['then_all'] for c in by_name[x[0]]['chips']})
+    return '' if on == ['rf', 'wired'] else ('||'.join({'rf': 'ON_RF', 'wired': 'ON_WIRED'}[c] for c in on) or "1'b0")
+
+
 def emit_formal(model, a, by_name):
-    """Safety properties, compiled only for formal (yosys read -formal defines FORMAL)."""
+    """Safety properties, compiled only for formal (yosys read -formal defines FORMAL). Chip-aware (PT_CHIP)."""
     fields, rules, islands = model['fields'], model['rules'], model['islands']
+    def dflt(f):
+        d = sv_const(f['bits'], f['default'])
+        return d if set(f['chips']) == {'rf', 'wired'} else f'(PR_{f["sv"]}?{d}:{sv_const(f["bits"], 0)})'
+    def wrap(r, expr):
+        c = rule_presence(r, by_name)
+        return expr if not c else f'(!({c})||{expr})'
+
     a('`ifdef FORMAL')
     a(' // P1 reset: asynchronous reset returns every register to its declared default, so every island')
     a(' // switch, ATB switch, debug driver and island-gated output is off.')
     a(' always @*begin')
     a('  if(!rst_n)begin')
     for f in fields:
-        a(f'   assert(a_{f["sv"]}=={sv_const(f["bits"], f["default"])}&&s_{f["sv"]}=={sv_const(f["bits"], f["default"])});')
+        a(f'   assert(a_{f["sv"]}=={dflt(f)}&&s_{f["sv"]}=={dflt(f)});')
     a('   assert(island_en==0&&island_on==0&&atb0_sw==0&&atb1_sw==0&&atb0_grp==0&&atb1_grp==0&&!atb0_en&&!atb1_en);')
     a('   assert(!clk_obs_oe&&!dbg_obs0_oe&&!dbg_obs1_oe);')
     a('   assert(!rx_en_aux&&!rx_en_wclk&&!rx_en_wtx_ext&&!enable&&!playback_enable&&!capture_enable);')
     for bus in ('analog', 'debug'):
+      imgs = {}
+      for view, present in (('3', ('rf', 'wired')), ('1', ('rf',)), ('2', ('wired',))):
         image = 0
         for f in fields:
-            if f['bus'] == bus and not f['islands']:
+            if f['bus'] == bus and not f['islands'] and any(c in f['chips'] for c in present) and \
+                    (len(f['chips']) == 2 or all(c in present for c in f['chips']) or len(present) == 2):
                 v = f['default'] >> f['store'][1]
                 if f['decode'] == 'thermometer':
                     v = (1 << v) - 1
@@ -908,8 +956,9 @@ def emit_formal(model, a, by_name):
                 if f['gate_and']:
                     v = v if by_name[f['gate_and']]['default'] else 0
                 image |= v << f['bus_lsb']
-        w = model['bus_widths'][bus]
-        a(f"   assert({bus}_cfg=={w}'h{image:X}); // island-gated fields 0, ungated core fields at defaults")
+        imgs[view] = image
+      w = model['bus_widths'][bus]
+      a(f"   assert({bus}_cfg==(PT_CHIP==1?{w}'h{imgs['1']:X}:PT_CHIP==2?{w}'h{imgs['2']:X}:{w}'h{imgs['3']:X})); // island-gated fields 0, ungated core fields at defaults (per chip)")
     for f in fields:
         if f['islands']:
             a(f'   assert(o_{f["sv"]}=={sv_const(f["bits"], 0)});')
@@ -921,18 +970,19 @@ def emit_formal(model, a, by_name):
     for f in fields:
         if f['store'] is None:
             continue
-        a(f'  assert({sv_check(f, "a_" + f["sv"])});')
+        pr = '' if set(f['chips']) == {'rf', 'wired'} else f'!PR_{f["sv"]}||'       # absent on this chip: held at 0
+        a(f'  assert({pr}{sv_check(f, "a_" + f["sv"])});')
         if not f['split']:
-            a(f'  assert({sv_check(f, "s_" + f["sv"])});')
+            a(f'  assert({pr}{sv_check(f, "s_" + f["sv"])});')
     for r in rules:
-        a(f'  assert({sv_rule(r, "a_", by_name)}); // {r["id"]}')
+        a(f'  assert({wrap(r, sv_rule(r, "a_", by_name))}); // {r["id"]}')
     a(' end')
     a(' // P3 every pad/node exclusion rule holds on the pad-facing outputs, for every island,')
     a(' // power-good and fault input combination.')
     a(' always @*begin')
     for r in rules:
         if r['cls'] in ('pad', 'ownership'):
-            a(f'  assert({sv_rule(r, "o_", by_name)}); // {r["id"]}')
+            a(f'  assert({wrap(r, sv_rule(r, "o_", by_name))}); // {r["id"]}')
     a('  assert((atb0_sw&(atb0_sw-1\'b1))==0&&(atb1_sw&(atb1_sw-1\'b1))==0);')
     a('  assert((atb0_grp&(atb0_grp-1\'b1))==0&&(atb1_grp&(atb1_grp-1\'b1))==0); // at most one group per bus')
     a('  assert(atb0_en==(atb0_grp!=0)&&atb1_en==(atb1_grp!=0)); // pad select iff a group is selected')
@@ -975,10 +1025,14 @@ def emit_formal(model, a, by_name):
         z = sv_const(f['bits'], 0)
         a(f'  assert($past(a_{f["sv"]})=={z}||a_{f["sv"]}=={z}||a_{f["sv"]}==$past(a_{f["sv"]}));')
     a(' end')
-    a(' // Non-vacuity: these fallback configurations are reachable through SPI writes and commits.')
+    a(' // Non-vacuity: these fallback configurations are reachable through SPI writes and commits (each on its chip).')
+    a(' generate if(ON_RF)begin:cov_rf')
+    a("  always @*cover(island_on[%d]&&o_debug_bb_tap__mode==3'd%d);" % (islands['rf'], by_name['debug.bb_tap.mode']['values'].index('inject_rx')))
+    a(' end endgenerate')
+    a(' generate if(ON_WIRED)begin:cov_wired')
+    a("  always @*cover(island_on[%d]&&o_debug_wtx_ext__enable==1'b1);" % islands['wired'])
+    a(' end endgenerate')
     a(' always @*begin')
-    a("  cover(island_on[%d]&&o_debug_bb_tap__mode==3'd%d);" % (islands['rf'], by_name['debug.bb_tap.mode']['values'].index('inject_rx')))
-    a("  cover(island_on[%d]&&o_debug_wtx_ext__enable==1'b1);" % islands['wired'])
     a("  cover(atb0_sw[0]&&o_core_biasgen__ena==1'b1); // ROOT_REF forced with the biasgen on (idac2 = 0)")
     a("  cover(atb0_sw[54]&&o_core_biasgen__ena==1'b1); // VBG forced with the bandgap off")
     a(' end')
@@ -1004,6 +1058,10 @@ def default_text(f):
     if f['values'] is not None:
         return f"{f['default']} ({f['values'][f['default']]})"
     return str(f['default'])
+
+
+def chiptext(f):
+    return 'both' if len(f['chips']) == 2 else f['chips'][0] if f['chips'] else 'none (obsolete)'
 
 
 def emit_markdown(model):
@@ -1182,8 +1240,8 @@ def emit_markdown(model):
     a('and active reset value. Island lists name the islands that must be on for the field to reach')
     a('its output; `live` fields may be committed while ENABLE=1.')
     a('')
-    a('| Addr | Group | Bits | Field | Reset | Accepted | Islands | Bus |')
-    a('| --- | --- | --- | --- | --- | --- | --- | --- |')
+    a('| Addr | Group | Bits | Field | Reset | Accepted | Islands | Bus | Chips |')
+    a('| --- | --- | --- | --- | --- | --- | --- | --- | --- |')
     for reg in regs:
         for name, fl, w, rl in reg['chunks']:
             f = by_name[name]
@@ -1196,7 +1254,20 @@ def emit_markdown(model):
             elif f['store'] != [f['bits'] - 1, 0]:
                 flags += f" (bits {f['store'][0]}:{f['store'][1]} implemented)"
             a(f"| 0x{reg['addr']:02X} | `{reg['group']}` | {rl + w - 1}:{rl} | `{f['field']}`{part}{flags} | "
-              f"{default_text(f)} | {field_range_text(f)} | {','.join(f['islands']) or '-'} | {bus} |")
+              f"{default_text(f)} | {field_range_text(f)} | {','.join(f['islands']) or '-'} | {bus} | {chiptext(f)} |")
+    a('')
+    a('## Per-chip view (split, decision D4)')
+    a('')
+    a('One address map serves both chips. A field of the other chip (Chips column; `spec/chips.json`) is not stored on a chip: it')
+    a('resets to 0, reads 0, and a write to it is accepted and ignored, so one host driver serves both. `status.chip.id` tells the')
+    a('chips apart (1 = `pt_rf`, 2 = `pt_wired`). The digital macro takes the chip as parameter `PT_CHIP` (1, 2; 3 = both halves,')
+    a('module-level benches only).')
+    a('')
+    a('| Chip | Fields stored | Bits stored |')
+    a('| --- | ---: | ---: |')
+    for c in model['chip_ids']:
+        on = [f for f in fields if c in f['chips'] and f['store'] is not None]
+        a(f"| `pt_{c}` | {len(on)} of {len(fields)} | {sum(f['store'][0] - f['store'][1] + 1 for f in on)} |")
     a('')
     trimmed = [f for f in fields if f['trim'] and 'keep' in f['trim']]
     dropped = [f for f in trimmed if f['store'] is None]

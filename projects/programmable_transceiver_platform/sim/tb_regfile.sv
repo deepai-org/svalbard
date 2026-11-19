@@ -2,6 +2,9 @@
 // verification/check_regfile.py writes the command file, runs this bench under
 // iverilog and verilator, and compares the log against the generated reference
 // model (rtl/gen/pt_regmap.py). The bench itself only drives pins and logs.
+`ifndef PT_CHIP_ID
+ `define PT_CHIP_ID 3      // per-chip view: check_regfile.py --chip rf|wired compiles with PT_CHIP_ID 1 / 2
+`endif
 `timescale 1ns/1ps
 `include "pt_regmap_defs.svh"
 module tb_regfile;
@@ -16,7 +19,7 @@ module tb_regfile;
  wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe;
  localparam[15:0]STATUS=16'hA5C3;localparam[31:0]OBS=32'h9E37_79B9;localparam[15:0]WSTAT=16'h6A09;
  localparam[23:0]CAPTURE=24'h5A_1234;
- pt_mgmt dut(.rst_n(rst_n),.por_n(por_n),.por_path(3'b0),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso),.miso_oe(miso_oe),
+ pt_mgmt #(.PT_CHIP(`PT_CHIP_ID)) dut(.rst_n(rst_n),.por_n(por_n),.por_path(3'b0),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso),.miso_oe(miso_oe),
   .status(STATUS),.enable(enable),.mode8(mode8),.rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),
   .memory_write(memory_write),.memory_index(memory_index),.memory_wdata(memory_wdata),
   .capture_data(CAPTURE),.capture_done(1'b0),.playback_enable(playback_enable),.capture_enable(capture_enable),
@@ -27,7 +30,7 @@ module tb_regfile;
   .dbg_obs1(dbg_obs1),.dbg_obs1_oe(dbg_obs1_oe),
   .commit_toggle(commit_toggle),.config_error(config_error),
   .pattern_locked(pat_locked),.pattern_lost_lock(pat_lost),.pattern_errors_gray(pat_err_gray),
-  .fca_locked(1'b0),.fca_lost(1'b0),.fca_diff(14'd0),.fca_count(16'd0),.fcb_locked(1'b0),.fcb_lost(1'b0),.fcb_diff(14'd0),.fcb_count(16'd0),.mon_cause(10'd0),.mon_cause_clk(1'd0),.mon_ready(1'd0),.mon_dead(1'd0),.mon_ref_alive(1'd0),.mon_in_alive(1'd0),.mon_fault(1'd0),.mon_qualified(10'd0),.wtx_state(3'd0),.wtx_seq_fault(1'd0),.wtx_ring_ready(1'd0),.wrx_state(3'd0),.wrx_flags(8'd0),.wrx_fll_err(14'd0),.wrx_viol(5'd0),.wrx_fll_win(8'd0),.wrx_pick_acc(8'd0),.wrx_slip_cnt(8'd0),.usb_line(2'd0),.usb_flags(7'd0),.usb_stream(5'd0));
+  .fca_locked(1'b0),.fca_lost(1'b0),.fca_diff(14'd0),.fca_count(16'd0),.fcb_locked(1'b0),.fcb_lost(1'b0),.fcb_diff(14'd0),.fcb_count(16'd0),.mon_cause(10'd0),.mon_cause_clk(1'd0),.mon_ready(1'd0),.mon_dead(1'd0),.mon_ref_alive(1'd0),.mon_in_alive(1'd0),.mon_fault(1'd0),.mon_qualified(10'd0),.wtx_state(3'd0),.wtx_seq_fault(1'd0),.wtx_ring_ready(1'd0),.wrx_state(3'd0),.wrx_flags(8'd0),.wrx_fll_err(14'd0),.wrx_viol(5'd0),.wrx_fll_win(8'd0),.wrx_pick_acc(8'd0),.wrx_slip_cnt(8'd0),.usb_line(2'd0),.usb_flags(7'd0),.usb_stream(5'd0),.chip_id(2'd`PT_CHIP_ID));
 
  integer fd,log,code,op,a,b,c,i,ncmd;
  reg[15:0]rd;reg[31:0]frame;

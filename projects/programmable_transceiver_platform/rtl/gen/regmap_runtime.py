@@ -84,6 +84,8 @@ def cond_ok(cond, cfg):
 
 
 def rule_ok(rule, cfg):
+    if rule.get('absent'):      # every field of the rule is absent on this chip (chip_view): the rule drops out
+        return True
     trig = any(cond_ok(c, cfg) for c in rule['if_any']) if rule['if_any'] else True
     if rule['if_all']:
         trig = trig and all(cond_ok(c, cfg) for c in rule['if_all'])
@@ -92,6 +94,21 @@ def rule_ok(rule, cfg):
 
 def reset_config():
     return {f['name']: f['default'] for f in FIELDS}
+
+
+def chip_view(chip):
+    """Turn the tables into the view of one chip ('rf' or 'wired'; split decision D4): a field whose `chips` list lacks
+    the chip is not stored (reset 0, reads 0, writes accepted and ignored), as pt_regfile does with PT_CHIP."""
+    for f in FIELDS:
+        if chip not in f['chips']:
+            f['absent'] = True
+            f['store_mask'] = 0
+            f['default'] = 0
+    for reg in REGISTERS:
+        reg['reset'] = sum(((FIELD_BY_NAME[n]['default'] >> fl) & ((1 << w) - 1)) << rl for n, fl, w, rl in reg['chunks'])
+    for rule in RULES:
+        if all(FIELD_BY_NAME[c[0]].get('absent') for c in rule['if_any'] + rule['if_all'] + rule['then_all']):
+            rule['absent'] = True
 
 
 def register_at(addr):
@@ -103,7 +120,7 @@ def reg_write_ok(reg, data):
         return False
     for name, field_lsb, width, reg_lsb in reg['chunks']:
         f = _field(name)
-        if f['split'] or f['store'] is None:   # split: checked at commit; dropped: write-ignored
+        if f['split'] or f['store'] is None or f.get('absent'):   # split: checked at commit; dropped / absent: write-ignored
             continue
         if not field_ok(f, (data >> reg_lsb) & ((1 << width) - 1)):
             return False

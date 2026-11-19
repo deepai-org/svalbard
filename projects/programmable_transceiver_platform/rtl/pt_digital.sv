@@ -1,5 +1,6 @@
 `include "pt_regmap_defs.svh"
-module pt_digital(input wire rst_n,ref_clk,
+// PT_CHIP (split, D4; rtl/pt_regfile.sv): 1 = pt_rf, 2 = pt_wired, 3 = both halves (module-level benches only).
+module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  // Host-transport reset: rst_n AND the reduced-rate switch hold (pt_host_rate_clock).
  input wire core_rst_n,
  input wire host_sclk,host_cs_n,host_mosi,output wire host_miso,host_miso_oe,
@@ -58,7 +59,8 @@ module pt_digital(input wire rst_n,ref_clk,
  wire pattern_locked,pattern_lost_lock;wire[15:0]pattern_errors_gray;
  wire fca_locked,fca_lost,fcb_locked,fcb_lost;wire[13:0]fca_diff,fcb_diff;wire[15:0]fca_count,fcb_count;
  pt_toggle_div hd(host_rx_clk,core_rst_n,host_rx_div);
- pt_mgmt control(.rst_n(rst_n),.por_n(por_n),.por_path(por_path),.sclk(host_sclk),.cs_n(host_cs_n),.mosi(host_mosi),.miso(host_miso),.miso_oe(host_miso_oe),
+ localparam[1:0] CHIP_ID = PT_CHIP;
+ pt_mgmt #(.PT_CHIP(PT_CHIP)) control(.rst_n(rst_n),.por_n(por_n),.por_path(por_path),.sclk(host_sclk),.cs_n(host_cs_n),.mosi(host_mosi),.miso(host_miso),.miso_oe(host_miso_oe),
   .status(status),.enable(enable),.mode8(mode8),.rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),
   .memory_write(memory_write),.memory_index(index),.memory_wdata(memory_wdata),.capture_data(capture_data),
   .capture_done(capture_done),.playback_enable(playback_enable),.capture_enable(capture_enable),
@@ -75,7 +77,8 @@ module pt_digital(input wire rst_n,ref_clk,
   .mon_cause(mon_cause),.mon_cause_clk(mon_cause_clk),.mon_ready(mon_ready),.mon_dead(mon_dead),.mon_ref_alive(mon_ref_alive),
   .mon_in_alive(mon_in_alive),.mon_fault(mon_fault),.mon_qualified(mon_qualified),.wtx_state(wtx_state),.wtx_seq_fault(wtx_seq_fault),
   .wtx_ring_ready(wtx_ring_ready),.wrx_state(wrx_state),.wrx_flags(wrx_flags),.wrx_fll_err(wrx_fll_err),.wrx_viol(wrx_viol),
-  .wrx_fll_win(wrx_fll_win),.wrx_pick_acc(wrx_pick_acc),.wrx_slip_cnt(wrx_slip_cnt),.usb_line(usb_line),.usb_flags(usb_flags),.usb_stream(usb_stream));
+  .wrx_fll_win(wrx_fll_win),.wrx_pick_acc(wrx_pick_acc),.wrx_slip_cnt(wrx_slip_cnt),.usb_line(usb_line),.usb_flags(usb_flags),.usb_stream(usb_stream),
+  .chip_id(CHIP_ID));   // status.chip.id
  // Frequency counters (rtl/pt_freq_count.sv, consolidation P3-7). status.pll_lock is reserved (reads 0).
  pt_freq_count fca(.rst_n(rst_n),.cfg_source(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__SOURCE_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__SOURCE_W]),
   .cfg_window(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__WINDOW_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__WINDOW_W]),

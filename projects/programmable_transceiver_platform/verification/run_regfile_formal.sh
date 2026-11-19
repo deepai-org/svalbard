@@ -4,7 +4,8 @@
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../../.." && pwd)
 PROJ="$ROOT/projects/programmable_transceiver_platform"
-OUT="${OUT:-$ROOT/scratch/pt_regfile/formal}"
+CHIP="${PT_CHIP:-3}"                    # register-file view: 1 = pt_rf, 2 = pt_wired, 3 = both halves (split, D4)
+OUT="${OUT:-$ROOT/scratch/pt_regfile/formal$([ "$CHIP" = 3 ] || echo "-chip$CHIP")}"
 RTL="${RTL:-$PROJ/rtl/pt_regfile.sv}"   # override only for mutation checks
 # SVALBARD_DIGITAL_IMAGE is deliberately not used: the LibreLane canary image has no SMT solver
 # (no yices/boolector/bitwuzla/z3), so sby must run in the iic-osic-tools image.
@@ -14,8 +15,9 @@ docker run --rm --network none --cpus 4 --memory 8g --entrypoint bash \
   -v "$PROJ:/src:ro" -v "$RTL:/rtl_under_test.sv:ro" -v "$OUT:/out" "$IMAGE" -lc \
   'set -e; cd /out; cp -r /src/verification/formal work; mkdir -p rtl; cp /rtl_under_test.sv rtl/pt_regfile.sv;
    cd work; sed -i "s#../../rtl/pt_regfile.sv#/out/rtl/pt_regfile.sv#" pt_regfile.sby;
+   sed -i "s#^prep -top pt_regfile_fv#chparam -set PT_CHIP '"$CHIP"' pt_regfile\nprep -top pt_regfile_fv#" pt_regfile.sby;
    yosys -V; sby -V 2>/dev/null || true; sby -f pt_regfile.sby' > "$OUT/sby.log" 2>&1 || status=$?
-grep -E "DONE|summary|PASS|FAIL|Assert|assert|Reached|cover" "$OUT/sby.log" | tail -40
+echo "PT_CHIP=$CHIP"; grep -E "DONE|summary|PASS|FAIL|Assert|assert|Reached|cover" "$OUT/sby.log" | tail -40
 for t in prove cover; do
   s=$(cat "$OUT/work/pt_regfile_$t/status" 2>/dev/null || echo missing)
   echo "task $t: $s"

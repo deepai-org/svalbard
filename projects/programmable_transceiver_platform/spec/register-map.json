@@ -574,6 +574,10 @@
   "debug": 220
  },
  "cdc_semantics": "The register file is clocked only by SPI SCLK and asynchronously reset by RESET_N AND POR. Active fields are quasi-static: they change only on a successful commit, which also toggles commit_toggle. A consuming clock domain that must see a coherent multi-bit value synchronizes commit_toggle through two flops and reloads its local copy on a toggle edge; the next commit cannot occur for at least one more 32-clock SPI transaction. Purely analog consumers see each field change once per commit; stopped-only fields are changed only while their outputs are isolated.",
+ "chip_ids": {
+  "rf": 1,
+  "wired": 2
+ },
  "commit_semantics": "SPI writes go to shadow registers (write-time range/encoding check per register; fields wider than 16 bits are range-checked at commit). Writing COMMIT (0x06 bit 0) validates the complete shadow (split-field ranges, every rule above, break-before-make against the active set, and - while the legacy payload ENABLE is 1 - that only live fields differ) and copies shadow to active in one SCLK edge, or rejects the commit, keeps the prior active configuration and latches CONFIG_ERROR (control_semantics.illegal). Bit 1 reverts shadow to active.",
  "fault_forced": {
   "dac_i.config.hold_zero": 1,
@@ -604,6 +608,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 0,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 64,
@@ -649,6 +656,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 1,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 64,
@@ -694,6 +704,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 2,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 64,
@@ -738,6 +752,7 @@
    "bits": 1,
    "bus": null,
    "bus_lsb": null,
+   "chips": [],
    "chunks": [
     {
      "addr": 64,
@@ -785,6 +800,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 3,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 64,
@@ -830,6 +848,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 4,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 64,
@@ -875,6 +897,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 5,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 65,
@@ -920,6 +945,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 6,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 65,
@@ -965,6 +993,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 7,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 65,
@@ -1009,6 +1041,7 @@
    "bits": 1,
    "bus": null,
    "bus_lsb": null,
+   "chips": [],
    "chunks": [
     {
      "addr": 65,
@@ -1056,6 +1089,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 8,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 65,
@@ -1101,6 +1137,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 9,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 65,
@@ -1152,6 +1192,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 10,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 66,
@@ -1211,6 +1255,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 13,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 66,
@@ -1271,6 +1319,9 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 16,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 66,
@@ -1330,6 +1381,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 19,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 66,
@@ -1393,6 +1448,9 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 22,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 67,
@@ -1450,6 +1508,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 25,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 68,
@@ -1497,6 +1558,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 26,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 69,
@@ -1544,6 +1608,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 27,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 70,
@@ -1591,6 +1658,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 28,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 70,
@@ -1638,6 +1708,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 29,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 71,
@@ -1685,6 +1758,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 30,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 72,
@@ -1738,6 +1814,9 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 31,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 73,
@@ -1814,6 +1893,10 @@
    "bits": 6,
    "bus": null,
    "bus_lsb": null,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 74,
@@ -1917,6 +2000,10 @@
    "bits": 6,
    "bus": null,
    "bus_lsb": null,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 74,
@@ -1962,6 +2049,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 34,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 75,
@@ -2028,6 +2118,10 @@
    "bus": "debug",
    "bus_bits": 5,
    "bus_lsb": 35,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 76,
@@ -2094,6 +2188,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 40,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 76,
@@ -2141,6 +2239,10 @@
    "bus": "debug",
    "bus_bits": 6,
    "bus_lsb": 43,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 77,
@@ -2186,6 +2288,10 @@
    "bus": "debug",
    "bus_bits": 6,
    "bus_lsb": 49,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 77,
@@ -2231,6 +2337,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 55,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 78,
@@ -2278,6 +2388,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 56,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 78,
@@ -2325,6 +2439,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 57,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 78,
@@ -2372,6 +2489,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 58,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 78,
@@ -2419,6 +2539,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 59,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 78,
@@ -2470,6 +2593,10 @@
    "bus": "debug",
    "bus_bits": 2,
    "bus_lsb": 60,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 79,
@@ -2523,6 +2650,10 @@
    "bus": "debug",
    "bus_bits": 2,
    "bus_lsb": 62,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 79,
@@ -2576,6 +2707,9 @@
    "bus": "debug",
    "bus_bits": 2,
    "bus_lsb": 64,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 80,
@@ -2627,6 +2761,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 66,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 80,
@@ -2674,6 +2811,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 67,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 80,
@@ -2724,6 +2864,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 68,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 81,
@@ -2778,6 +2921,9 @@
    "bus": "debug",
    "bus_bits": 2,
    "bus_lsb": 69,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 81,
@@ -2829,6 +2975,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 71,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 82,
@@ -2876,6 +3025,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 72,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 83,
@@ -2932,6 +3084,9 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 73,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 84,
@@ -2986,6 +3141,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 76,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 84,
@@ -3031,6 +3189,9 @@
    "bus": "debug",
    "bus_bits": 10,
    "bus_lsb": 77,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 84,
@@ -3076,6 +3237,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 87,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 84,
@@ -3121,6 +3285,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 88,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 84,
@@ -3175,6 +3342,9 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 89,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 85,
@@ -3229,6 +3399,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 92,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 85,
@@ -3274,6 +3447,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 93,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 85,
@@ -3319,6 +3495,9 @@
    "bus": "debug",
    "bus_bits": 6,
    "bus_lsb": 94,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 86,
@@ -3366,6 +3545,9 @@
    "bus": "debug",
    "bus_bits": 6,
    "bus_lsb": 100,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 86,
@@ -3413,6 +3595,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 106,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 87,
@@ -3458,6 +3644,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 107,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 87,
@@ -3503,6 +3693,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 108,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 87,
@@ -3548,6 +3742,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 109,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 87,
@@ -3593,6 +3791,10 @@
    "bus": "debug",
    "bus_bits": 5,
    "bus_lsb": 110,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 87,
@@ -3638,6 +3840,10 @@
    "bus": "debug",
    "bus_bits": 5,
    "bus_lsb": 115,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 87,
@@ -3683,6 +3889,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 120,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 88,
@@ -3728,6 +3938,10 @@
    "bus": "debug",
    "bus_bits": 2,
    "bus_lsb": 123,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 88,
@@ -3773,6 +3987,10 @@
    "bus": "debug",
    "bus_bits": 5,
    "bus_lsb": 125,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 88,
@@ -3818,6 +4036,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 130,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 88,
@@ -3863,6 +4085,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 133,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 88,
@@ -3908,6 +4134,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 136,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 89,
@@ -3953,6 +4183,10 @@
    "bus": "debug",
    "bus_bits": 16,
    "bus_lsb": 137,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 89,
@@ -3998,6 +4232,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 153,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 89,
@@ -4043,6 +4280,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 154,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 89,
@@ -4088,6 +4328,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 155,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 89,
@@ -4133,6 +4377,9 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 156,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 89,
@@ -4178,6 +4425,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 157,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 89,
@@ -4231,6 +4482,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 158,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 232,
@@ -4289,6 +4544,10 @@
    "bus": "debug",
    "bus_bits": 2,
    "bus_lsb": 161,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 232,
@@ -4348,6 +4607,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 163,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 232,
@@ -4407,6 +4670,10 @@
    "bus": "debug",
    "bus_bits": 2,
    "bus_lsb": 166,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 232,
@@ -4457,6 +4724,10 @@
    "bus": "debug",
    "bus_bits": 16,
    "bus_lsb": 168,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 233,
@@ -4510,6 +4781,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 184,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 234,
@@ -4568,6 +4843,10 @@
    "bus": "debug",
    "bus_bits": 2,
    "bus_lsb": 187,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 234,
@@ -4627,6 +4906,10 @@
    "bus": "debug",
    "bus_bits": 3,
    "bus_lsb": 189,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 234,
@@ -4686,6 +4969,10 @@
    "bus": "debug",
    "bus_bits": 2,
    "bus_lsb": 192,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 234,
@@ -4736,6 +5023,10 @@
    "bus": "debug",
    "bus_bits": 16,
    "bus_lsb": 194,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 235,
@@ -4781,6 +5072,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 210,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 94,
@@ -4829,6 +5124,10 @@
    "bus": "debug",
    "bus_bits": 8,
    "bus_lsb": 211,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 95,
@@ -4874,6 +5173,10 @@
    "bus": "debug",
    "bus_bits": 1,
    "bus_lsb": 219,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 95,
@@ -4919,6 +5222,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 0,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 96,
@@ -4970,6 +5276,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 2,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 97,
@@ -5021,6 +5330,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 4,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 98,
@@ -5072,6 +5384,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 6,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 99,
@@ -5122,6 +5437,10 @@
    "bits": 10,
    "bus": null,
    "bus_lsb": null,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 100,
@@ -5171,6 +5490,10 @@
    "bus": "analog",
    "bus_bits": 22,
    "bus_lsb": 8,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 102,
@@ -5228,6 +5551,10 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 30,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 104,
@@ -5284,6 +5611,10 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 32,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 105,
@@ -5342,6 +5673,10 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 34,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 105,
@@ -5401,6 +5736,9 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 37,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 105,
@@ -5460,6 +5798,10 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 40,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 105,
@@ -5513,6 +5855,9 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 43,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 106,
@@ -5560,6 +5905,9 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 46,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 106,
@@ -5611,6 +5959,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 49,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 107,
@@ -5662,6 +6013,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 51,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 108,
@@ -5713,6 +6067,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 52,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 109,
@@ -5764,6 +6121,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 54,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 110,
@@ -5815,6 +6175,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 55,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 111,
@@ -5866,6 +6229,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 57,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 112,
@@ -5913,6 +6279,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 59,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 112,
@@ -5960,6 +6329,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 61,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 112,
@@ -6011,6 +6383,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 62,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 113,
@@ -6061,6 +6436,9 @@
    "bits": 9,
    "bus": null,
    "bus_lsb": null,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 114,
@@ -6107,6 +6485,9 @@
    "bits": 9,
    "bus": null,
    "bus_lsb": null,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 115,
@@ -6153,6 +6534,9 @@
    "bits": 9,
    "bus": null,
    "bus_lsb": null,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 116,
@@ -6199,6 +6583,9 @@
    "bits": 8,
    "bus": null,
    "bus_lsb": null,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 117,
@@ -6245,6 +6632,9 @@
    "bits": 11,
    "bus": null,
    "bus_lsb": null,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 118,
@@ -6291,6 +6681,9 @@
    "bits": 16,
    "bus": null,
    "bus_lsb": null,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 119,
@@ -6338,6 +6731,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 64,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 120,
@@ -6383,6 +6780,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 65,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 120,
@@ -6431,6 +6831,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 66,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 120,
@@ -6479,6 +6882,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 67,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 120,
@@ -6524,6 +6930,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 68,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 121,
@@ -6569,6 +6979,10 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 69,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 121,
@@ -6614,6 +7028,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 71,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 121,
@@ -6659,6 +7077,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 72,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 121,
@@ -6708,6 +7130,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 73,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 122,
@@ -6759,6 +7184,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 75,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 123,
@@ -6804,6 +7233,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 76,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 123,
@@ -6849,6 +7282,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 77,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 123,
@@ -6894,6 +7330,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 78,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 123,
@@ -6939,6 +7379,10 @@
    "bus": "analog",
    "bus_bits": 6,
    "bus_lsb": 79,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 123,
@@ -6984,6 +7428,10 @@
    "bus": "analog",
    "bus_bits": 12,
    "bus_lsb": 85,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 124,
@@ -7029,6 +7477,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 97,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 124,
@@ -7074,6 +7526,10 @@
    "bus": "analog",
    "bus_bits": 16,
    "bus_lsb": 98,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 125,
@@ -7119,6 +7575,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 114,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 126,
@@ -7168,6 +7628,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 115,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 127,
@@ -7223,6 +7686,10 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 117,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 128,
@@ -7272,6 +7739,9 @@
    "bus": "analog",
    "bus_bits": 4,
    "bus_lsb": 119,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 129,
@@ -7319,6 +7789,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 123,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 129,
@@ -7366,6 +7839,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 124,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 130,
@@ -7417,6 +7893,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 125,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 131,
@@ -7473,6 +7952,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 127,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 132,
@@ -7525,6 +8007,9 @@
    "bus": "analog",
    "bus_bits": 4,
    "bus_lsb": 129,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 132,
@@ -7572,6 +8057,9 @@
    "bus": "analog",
    "bus_bits": 6,
    "bus_lsb": 133,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 132,
@@ -7619,6 +8107,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 139,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 132,
@@ -7666,6 +8157,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 141,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 132,
@@ -7713,6 +8207,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 142,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 132,
@@ -7764,6 +8261,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 143,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 133,
@@ -7819,6 +8319,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 145,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 134,
@@ -7874,6 +8377,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 147,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 135,
@@ -7929,6 +8435,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 149,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 136,
@@ -7983,6 +8492,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 151,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 137,
@@ -8037,6 +8549,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 152,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 138,
@@ -8088,6 +8603,9 @@
    "bus": "analog",
    "bus_bits": 10,
    "bus_lsb": 154,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 139,
@@ -8135,6 +8653,9 @@
    "bus": "analog",
    "bus_bits": 10,
    "bus_lsb": 164,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 140,
@@ -8182,6 +8703,9 @@
    "bus": "analog",
    "bus_bits": 10,
    "bus_lsb": 174,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 141,
@@ -8229,6 +8753,9 @@
    "bus": "analog",
    "bus_bits": 10,
    "bus_lsb": 184,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 142,
@@ -8276,6 +8803,9 @@
    "bus": "analog",
    "bus_bits": 10,
    "bus_lsb": 194,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 143,
@@ -8323,6 +8853,9 @@
    "bus": "analog",
    "bus_bits": 10,
    "bus_lsb": 204,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 144,
@@ -8370,6 +8903,9 @@
    "bus": "analog",
    "bus_bits": 10,
    "bus_lsb": 214,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 145,
@@ -8417,6 +8953,9 @@
    "bus": "analog",
    "bus_bits": 10,
    "bus_lsb": 224,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 146,
@@ -8468,6 +9007,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 234,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 147,
@@ -8519,6 +9061,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 236,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 148,
@@ -8570,6 +9115,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 237,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 148,
@@ -8621,6 +9169,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 239,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 148,
@@ -8668,6 +9219,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 240,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 148,
@@ -8715,6 +9269,9 @@
    "bus": "analog",
    "bus_bits": 4,
    "bus_lsb": 241,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 148,
@@ -8766,6 +9323,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 245,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 149,
@@ -8821,6 +9381,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 247,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 150,
@@ -8877,6 +9440,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 249,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 151,
@@ -8929,6 +9495,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 251,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 151,
@@ -8980,6 +9549,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 252,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 152,
@@ -9035,6 +9607,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 254,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 153,
@@ -9090,6 +9665,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 256,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 154,
@@ -9141,6 +9719,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 258,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 155,
@@ -9188,6 +9769,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 259,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 155,
@@ -9235,6 +9819,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 260,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 155,
@@ -9282,6 +9869,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 261,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 155,
@@ -9329,6 +9919,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 262,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 155,
@@ -9379,6 +9972,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 263,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 155,
@@ -9429,6 +10025,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 264,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 155,
@@ -9476,6 +10075,9 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 265,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 156,
@@ -9523,6 +10125,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 273,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 156,
@@ -9569,6 +10174,9 @@
    "bits": 8,
    "bus": null,
    "bus_lsb": null,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 157,
@@ -9618,6 +10226,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 274,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 157,
@@ -9665,6 +10276,9 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 275,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 157,
@@ -9712,6 +10326,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 278,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 157,
@@ -9759,6 +10376,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 279,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 157,
@@ -9806,6 +10426,9 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 281,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 158,
@@ -9853,6 +10476,9 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 289,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 158,
@@ -9900,6 +10526,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 297,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 159,
@@ -9947,6 +10576,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 298,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 160,
@@ -9998,6 +10630,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 299,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 161,
@@ -10049,6 +10684,10 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 301,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 229,
@@ -10096,6 +10735,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 304,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 229,
@@ -10143,6 +10786,10 @@
    "bus": "analog",
    "bus_bits": 6,
    "bus_lsb": 305,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 229,
@@ -10190,6 +10837,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 311,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 236,
@@ -10238,6 +10888,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 316,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 236,
@@ -10286,6 +10939,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 321,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 236,
@@ -10334,6 +10990,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 326,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 237,
@@ -10382,6 +11041,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 331,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 237,
@@ -10430,6 +11092,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 336,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 237,
@@ -10478,6 +11143,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 341,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 238,
@@ -10526,6 +11194,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 346,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 238,
@@ -10574,6 +11245,9 @@
    "bus": "analog",
    "bus_bits": 4,
    "bus_lsb": 351,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 230,
@@ -10621,6 +11295,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 355,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 230,
@@ -10668,6 +11345,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 356,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 230,
@@ -10715,6 +11395,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 357,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 230,
@@ -10762,6 +11445,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 362,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 230,
@@ -10809,6 +11495,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 363,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 231,
@@ -10856,6 +11546,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 364,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 231,
@@ -10903,6 +11597,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 365,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 162,
@@ -10950,6 +11647,9 @@
    "bus": "analog",
    "bus_bits": 6,
    "bus_lsb": 366,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 163,
@@ -10997,6 +11697,9 @@
    "bus": "analog",
    "bus_bits": 6,
    "bus_lsb": 372,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 163,
@@ -11044,6 +11747,9 @@
    "bus": "analog",
    "bus_bits": 6,
    "bus_lsb": 378,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 164,
@@ -11091,6 +11797,9 @@
    "bus": "analog",
    "bus_bits": 6,
    "bus_lsb": 384,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 164,
@@ -11138,6 +11847,9 @@
    "bus": "analog",
    "bus_bits": 7,
    "bus_lsb": 390,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 165,
@@ -11185,6 +11897,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 397,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 165,
@@ -11232,6 +11947,9 @@
    "bus": "analog",
    "bus_bits": 4,
    "bus_lsb": 402,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 165,
@@ -11279,6 +11997,9 @@
    "bus": "analog",
    "bus_bits": 9,
    "bus_lsb": 406,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 166,
@@ -11326,6 +12047,9 @@
    "bus": "analog",
    "bus_bits": 7,
    "bus_lsb": 415,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 167,
@@ -11373,6 +12097,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 422,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 167,
@@ -11420,6 +12147,9 @@
    "bus": "analog",
    "bus_bits": 4,
    "bus_lsb": 427,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 167,
@@ -11467,6 +12197,9 @@
    "bus": "analog",
    "bus_bits": 9,
    "bus_lsb": 431,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 168,
@@ -11514,6 +12247,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 440,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 169,
@@ -11561,6 +12297,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 441,
+   "chips": [
+    "rf"
+   ],
    "chunks": [
     {
      "addr": 169,
@@ -11608,6 +12347,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 443,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 170,
@@ -11659,6 +12402,10 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 444,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 170,
@@ -11710,6 +12457,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 446,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 170,
@@ -11757,6 +12508,10 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 447,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 170,
@@ -11809,6 +12564,10 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 455,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 170,
@@ -11861,6 +12620,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 457,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 171,
@@ -11914,6 +12677,10 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 458,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 171,
@@ -11967,6 +12734,10 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 461,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 171,
@@ -12014,6 +12785,10 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 462,
+   "chips": [
+    "rf",
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 171,
@@ -12061,6 +12836,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 465,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 172,
@@ -12108,6 +12886,9 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 466,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 172,
@@ -12155,6 +12936,9 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 474,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 173,
@@ -12202,6 +12986,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 482,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 173,
@@ -12249,6 +13036,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 484,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 173,
@@ -12296,6 +13086,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 486,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 173,
@@ -12343,6 +13136,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 488,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 173,
@@ -12390,6 +13186,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 490,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 174,
@@ -12441,6 +13240,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 491,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 174,
@@ -12496,6 +13298,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 493,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 174,
@@ -12547,6 +13352,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 495,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 175,
@@ -12594,6 +13402,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 496,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 175,
@@ -12641,6 +13452,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 497,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 175,
@@ -12688,6 +13502,9 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 499,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 175,
@@ -12735,6 +13552,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 507,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 175,
@@ -12782,6 +13602,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 509,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 175,
@@ -12829,6 +13652,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 510,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 175,
@@ -12876,6 +13702,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 511,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 176,
@@ -12923,6 +13752,9 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 512,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 176,
@@ -12970,6 +13802,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 520,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 176,
@@ -13017,6 +13852,9 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 525,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 177,
@@ -13064,6 +13902,9 @@
    "bus": "analog",
    "bus_bits": 4,
    "bus_lsb": 533,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 177,
@@ -13111,6 +13952,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 537,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 178,
@@ -13161,6 +14005,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 538,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 178,
@@ -13211,6 +14058,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 540,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 178,
@@ -13256,6 +14106,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 541,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 178,
@@ -13301,6 +14154,9 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 542,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 178,
@@ -13346,6 +14202,9 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 545,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 178,
@@ -13391,6 +14250,9 @@
    "bus": "analog",
    "bus_bits": 12,
    "bus_lsb": 553,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 179,
@@ -13436,6 +14298,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 565,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 179,
@@ -13481,6 +14346,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 566,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 179,
@@ -13526,6 +14394,9 @@
    "bus": "analog",
    "bus_bits": 8,
    "bus_lsb": 567,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 180,
@@ -13571,6 +14442,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 575,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 181,
@@ -13616,6 +14490,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 576,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 181,
@@ -13661,6 +14538,9 @@
    "bus": "analog",
    "bus_bits": 6,
    "bus_lsb": 577,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 181,
@@ -13706,6 +14586,9 @@
    "bus": "analog",
    "bus_bits": 4,
    "bus_lsb": 583,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 181,
@@ -13751,6 +14634,9 @@
    "bus": "analog",
    "bus_bits": 3,
    "bus_lsb": 587,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 181,
@@ -13796,6 +14682,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 590,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 181,
@@ -13841,6 +14730,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 591,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 182,
@@ -13886,6 +14778,9 @@
    "bus": "analog",
    "bus_bits": 1,
    "bus_lsb": 592,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 182,
@@ -13931,6 +14826,9 @@
    "bus": "analog",
    "bus_bits": 5,
    "bus_lsb": 593,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 182,
@@ -13976,6 +14874,9 @@
    "bus": "analog",
    "bus_bits": 4,
    "bus_lsb": 598,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 182,
@@ -14021,6 +14922,9 @@
    "bus": "analog",
    "bus_bits": 4,
    "bus_lsb": 602,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 182,
@@ -14066,6 +14970,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 606,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 183,
@@ -14116,6 +15023,9 @@
    "bus": "analog",
    "bus_bits": 2,
    "bus_lsb": 608,
+   "chips": [
+    "wired"
+   ],
    "chunks": [
     {
      "addr": 183,
@@ -15622,7 +16532,7 @@
  },
  "last_analog": 183,
  "last_debug": 89,
- "map_hash16": 33017,
+ "map_hash16": 44420,
  "obs_status": [
   "island_pgood_wired",
   "island_pgood_rf",
@@ -20361,6 +21271,19 @@
    "reg_lsb": 9,
    "reserved": false,
    "sync": true
+  },
+  {
+   "addr": 254,
+   "bits": 2,
+   "encoding": "binary",
+   "field": "id",
+   "group": "status.chip",
+   "meaning": "1 = pt_rf, 2 = pt_wired (3 = the both-halves build used by module-level benches only; no chip is built with it)",
+   "name": "status.chip.id",
+   "port": "chip_id",
+   "reg_lsb": 0,
+   "reserved": false,
+   "sync": false
   }
  ],
  "status_registers": [
@@ -20645,6 +21568,19 @@
     ]
    ],
    "group": "status.usb",
+   "kind": "status"
+  },
+  {
+   "addr": 254,
+   "chunks": [
+    [
+     "status.chip.id",
+     0,
+     2,
+     0
+    ]
+   ],
+   "group": "status.chip",
    "kind": "status"
   }
  ],

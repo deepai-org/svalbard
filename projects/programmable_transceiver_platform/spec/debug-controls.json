@@ -3218,6 +3218,17 @@
             "meaning": "{tx_armed, tx_blocked, tx_underrun, tx_busy, rx_active}"
           }
         }
+      },
+      "status.chip": {
+        "description": "Which chip this die is (split 2026-11-19, decision D4): one address map serves pt_rf and pt_wired; software reads the chip ID before it writes anything. Constant per hardened configuration (pt_digital_macro parameter PT_CHIP), read directly (sync=false).",
+        "fields": {
+          "id": {
+            "bits": 2,
+            "port": "chip_id",
+            "sync": false,
+            "meaning": "1 = pt_rf, 2 = pt_wired (3 = the both-halves build used by module-level benches only; no chip is built with it)"
+          }
+        }
       }
     }
   },

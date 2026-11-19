@@ -6,7 +6,7 @@
 #define PT_SPI_CMD_READ 0x00u
 #define PT_ID_VALUE 0x5356u
 #define PT_ABI_VERSION 0x0003u
-#define PT_MAP_HASH 0x80F9u
+#define PT_MAP_HASH 0xAD84u
 #define PT_COMMIT_CMD 0x0001u
 #define PT_REVERT_CMD 0x0002u
 #define PT_REG_ID 0x00u
@@ -2503,6 +2503,9 @@
 #define PT_STATUS_USB_STREAM_ADDR 0xFDu  /* read-only */
 #define PT_STATUS_USB_STREAM_SHIFT 9u
 #define PT_STATUS_USB_STREAM_WIDTH 5u
+#define PT_STATUS_CHIP_ID_ADDR 0xFEu  /* read-only */
+#define PT_STATUS_CHIP_ID_SHIFT 0u
+#define PT_STATUS_CHIP_ID_WIDTH 2u
 #define PT_ATB_MASTER_IBIAS 1u
 #define PT_ATB_MASTER_VREF0 2u
 #define PT_ATB_MASTER_VCM 3u

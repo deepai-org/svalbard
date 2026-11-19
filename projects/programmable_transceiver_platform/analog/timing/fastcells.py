@@ -285,6 +285,49 @@ def phbuf8():
     return row, ports + ['VDD', 'VSS'], net
 
 
+def phbuf8x():
+    """ct_phbuf8 + duty correction (timing r12, TIM-15): cross-coupled inverter pairs (NMOS 2 / PMOS 4 um each way)
+    between the complementary nodes M_k / M_k+4 (I_k and I_k+4 are complementary ring phases).  The ring's low-threshold
+    restore inverters see a header-starved swing, so all eight phases come out high for too long (0.61-0.63 duty at ss
+    810 MHz on the extracted pll_ring); the latch pairs force M_k = !M_k+4 and centre the crossing (bench 0.51-0.52).
+    Each cross inverter shares the M_k drain contact of the main inverter (one gate + one source column per phase)."""
+    S = C('VSS', 'VDD', same=False)
+    cols, net = [], []
+    for k in range(8):
+        tap = 'DKB' if k == 0 else f'U{k}'
+        x = f'M{(k + 4) % 8}'
+        cols += [S, G(f'I{k}', 1, 2), C(tap), BRK,
+                 S, G(f'I{k}', 2, 4), C(f'M{k}'), G(x, 2, 4), S, BRK,
+                 S, G(f'M{k}', 3, 6), C(f'PH{k}'), G(f'M{k}', 3, 6), S, BRK]
+        net += [fet(f'u{k}n', tap, f'I{k}', 'VSS', 'VSS', 1), fet(f'u{k}p', tap, f'I{k}', 'VDD', 'VDD', 2, 'p'),
+                fet(f'm{k}n', f'M{k}', f'I{k}', 'VSS', 'VSS', 2), fet(f'm{k}p', f'M{k}', f'I{k}', 'VDD', 'VDD', 4, 'p'),
+                fet(f'x{k}n', f'M{k}', x, 'VSS', 'VSS', 2), fet(f'x{k}p', f'M{k}', x, 'VDD', 'VDD', 4, 'p'),
+                fet(f'o{k}a', f'PH{k}', f'M{k}', 'VSS', 'VSS', 3), fet(f'o{k}b', f'PH{k}', f'M{k}', 'VDD', 'VDD', 6, 'p'),
+                fet(f'o{k}c', f'PH{k}', f'M{k}', 'VSS', 'VSS', 3), fet(f'o{k}d', f'PH{k}', f'M{k}', 'VDD', 'VDD', 6, 'p')]
+    cols += [S, G('DKB', 2, 4), C('DK')]
+    net += [fet('dkn', 'DK', 'DKB', 'VSS', 'VSS', 2), fet('dkp', 'DK', 'DKB', 'VDD', 'VDD', 4, 'p')]
+    ports = [f'I{k}' for k in range(8)] + [f'PH{k}' for k in range(8)] + ['DK']
+    row = compact.Row('ct_phbuf8x', cols, ports=ports, wn=2, wp=4)
+    row.track_order = ([f'I{k}' for k in range(8)] + [f'M{k}' for k in range(8)]
+                       + ['DKB'] + [f'PH{k}' for k in range(8)] + ['DK'])
+    return row, ports + ['VDD', 'VSS'], net
+
+
+def phbuf8y():
+    """ct_phbuf8 with the r12 cross-coupled pairs APPENDED at the row end (same columns, pins and rails as ct_phbuf8 up
+    to DK, so the cell drops into an existing routed block in place of ct_phbuf8; pt_pll_ring r9v ECO).  Pair k:
+    M_k <- inv(M_k+4), M_k+4 <- inv(M_k), NMOS 2 / PMOS 4 um, the two inverters sharing one source column."""
+    row, ports, net = phbuf8()
+    S = C('VSS', 'VDD', same=False)
+    for k in range(4):
+        a, b = f'M{k}', f'M{k + 4}'
+        row.cols += [BRK, C(a), G(b, 2, 4), S, G(a, 2, 4), C(b)]
+        net += [fet(f'x{k}an', a, b, 'VSS', 'VSS', 2), fet(f'x{k}ap', a, b, 'VDD', 'VDD', 4, 'p'),
+                fet(f'x{k}bn', b, a, 'VSS', 'VSS', 2), fet(f'x{k}bp', b, a, 'VDD', 'VDD', 4, 'p')]
+    row.name = 'ct_phbuf8y'
+    return row, ports, net
+
+
 def tspcd():
     """TSPC D flip-flop (rising CK) with reset: Q = NOR(QB, ENB)."""
     row, ports, net = tspc2()
@@ -473,7 +516,7 @@ def rxamp(F=8):
     return row, ports + ['VDD', 'VSS'], net
 
 
-CELLS = dict(ct_rxamp=rxamp, ct_locml=locml, ct_div5=div5core, ct_tspcn3=tspcn3, ct_mux4=mux4, ct_tspcd=tspcd, ct_phbuf8=phbuf8, ct_rxout=rxout, ct_lim=lim, ct_ring8=ring8, ct_ring9=ring9, ct_tspc2=tspc2, ct_lodrv=lodrv, ct_rxin=rxin)
+CELLS = dict(ct_rxamp=rxamp, ct_locml=locml, ct_div5=div5core, ct_tspcn3=tspcn3, ct_mux4=mux4, ct_tspcd=tspcd, ct_phbuf8=phbuf8, ct_phbuf8x=phbuf8x, ct_phbuf8y=phbuf8y, ct_rxout=rxout, ct_lim=lim, ct_ring8=ring8, ct_ring9=ring9, ct_tspc2=tspc2, ct_lodrv=lodrv, ct_rxin=rxin)
 
 
 def subckt(name, ports, net):

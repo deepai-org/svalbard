@@ -1,0 +1,21 @@
+{
+ "antenna_diodes_removed": 20,
+ "gds": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/timing/generated/pll_ring.gds",
+ "gds_sha256": "bf0450b013d7f36183d0399ed57d6604f7e6cad9069e028ae099d0419c737959",
+ "ref": "/home/ubuntu/svalbard/scratch/timing/drc12/ref/pll_ring_pub_sch.spice",
+ "ref_sha256": "c651f5e0af4adfd41ab4f69e5f5936dbea482ebee06a73ddc26bd655477a9e7b",
+ "lvs": {
+  "unique_match": true,
+  "property_errors": false,
+  "summary": "Final result: Circuits match uniquely.\n.",
+  "log": "lvs.txt"
+ },
+ "negative_control": {
+  "edits": 1,
+  "unique_match": false,
+  "property_errors": true,
+  "summary": "Final result: Circuits match uniquely.\nProperty errors were found.\n\nThe following cells had property errors:\n pt_pll_ring",
+  "log": "lvs_neg.txt"
+ },
+ "clean": true
+}

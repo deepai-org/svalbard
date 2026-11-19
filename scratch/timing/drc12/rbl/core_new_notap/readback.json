@@ -1,0 +1,21 @@
+{
+ "antenna_diodes_removed": 0,
+ "gds": "/home/ubuntu/svalbard/scratch/timing/drc12/core_new.gds",
+ "gds_sha256": "b294ab9b0d8a5b98b0fd9cfa4eb5ed071bf4d88038fd5449461c44ecfd77ece8",
+ "ref": "/home/ubuntu/svalbard/scratch/timing/drc12/ref/pll_ring_core_new.spice",
+ "ref_sha256": "0012d7838d19044d542f4a5dc9f58413b676d8f0236f30e1976372d4978b8286",
+ "lvs": {
+  "unique_match": true,
+  "property_errors": false,
+  "summary": "Final result: Circuits match uniquely.\n.",
+  "log": "lvs.txt"
+ },
+ "negative_control": {
+  "edits": 1,
+  "unique_match": false,
+  "property_errors": true,
+  "summary": "Final result: Circuits match uniquely.\nProperty errors were found.\n\nThe following cells had property errors:\n pt_pll_ring_core",
+  "log": "lvs_neg.txt"
+ },
+ "clean": true
+}

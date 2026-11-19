@@ -1,5 +1,5 @@
 * SPDX-License-Identifier: Apache-2.0
-* VERSION: pt_pll_ring_core r9d (2026-11-11, RINGAREA, consolidation pass 3 X4, WT21 BAND bit) -- ports REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL BAND VDD VSS
+* VERSION: pt_pll_ring_core r12 STAGED (2026-11-19, TIM-12 committed ct_ring9 + ct_phbuf8x duty pairs; scratch/timing/pll_ring_core/stage, not published) / r9d (2026-11-11, RINGAREA, consolidation pass 3 X4, WT21 BAND bit) -- ports REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL BAND VDD VSS
 * Line (TX) ring variant of pt_pll_ring r9c WITHOUT the CDR-only fast-tune array and WITHOUT the N5/N10 /10 path
 * (feedback /8 (N8|N4) or /16, reference /2 on N4).  Same ct_ring9 core, phase buffer, PFD/pump/filter and divider tap.
 * r9 (IX-1, PD9, AC3-W9; 2026-11-10): (1) ring cell ct_ring9 (interleaved layout, 2x ring devices): the extracted
@@ -30,7 +30,7 @@
 .include pll.spice
 .include generated/fast/ct_ring9.spice
 .include generated/fast/ct_tspc2.spice
-.include generated/fast/ct_phbuf8.spice
+.include generated/fast/ct_phbuf8x.spice
 .include generated/fast/ct_mux4.spice
 .include generated/fast/ct_tspcd.spice
 .include generated/fast/ct_div5.spice
@@ -134,7 +134,7 @@ XRPU VPB EN VDD VDD pfet_03v3 w=1u l=0.28u
 XHD VH VPB VDD VDD pfet_03v3 w=10u l=0.28u m=8
 XRING O0 O1 O2 O3 O4 O5 O6 O7 ENB VT VH VDD VSS ct_ring9
 * common-mode-insensitive phase restore + balanced port drivers
-XPHB O4 O5 O6 O7 O0 O1 O2 O3 PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 ODC VDD VSS ct_phbuf8
+XPHB O4 O5 O6 O7 O0 O1 O2 O3 PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 ODC VDD VSS ct_phbuf8x
 * feedback /16 from the dedicated divider tap
 * divider clock ODC from ct_phbuf8 (tapped at input 0, dummy-balanced)
 XD1 ODC Q1 ENB VDD VSS ct_tspc2
